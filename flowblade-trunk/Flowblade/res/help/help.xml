@@ -1,0 +1,2072 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article lang="en_GB">
+    <articleinfo>
+        <title>Flowblade Movie Editor Quick Reference</title>
+        <author><personname><firstname>Janne</firstname><surname>Liljeblad</surname></personname></author>
+            <copyright> 
+                <year>2010</year>
+                <holder>Janne Liljeblad</holder> 
+            </copyright> 
+    </articleinfo>
+
+    <sect1>
+        <title>Introduction</title>
+        <imageobject>
+            <imagedata fileref="/usr/share/pyshared/Flowblade/res/help/flowblade.png"/>
+        </imageobject>
+		<sect2>
+            <title>Application description</title>
+            <para>
+                <guilabel>Flowblade Movie Editor</guilabel> is a multitrack non-linear video editor for Linux.
+            </para>
+            <para>
+                With <guilabel>Flowblade Movie Editor</guilabel> you can compose movies from video clips, audio clips and graphics files.
+                Clips can be cut at the desired frames, filters can be added to clips, 
+                and you can create multilayer composite images using compositor objects.
+            </para>
+		</sect2>
+        
+		<sect2>
+            <title>Film style editing</title>
+			<para>
+                <guilabel>Flowblade Movie Editor</guilabel> employs editing paradigm that could be called 
+                <emphasis>film style editing</emphasis> or <emphasis>insert editing</emphasis>. Other applications that have similar editing paragims include
+                <guilabel>Avid Media Composer</guilabel> and <guilabel>Final Cut X</guilabel>, which calls the concept "magnetic timeline".
+            </para> 
+			<para>
+                In <emphasis>film style editing</emphasis> clips are usually automatically placed tightly after the previous clip - or between two 
+                existing clips - when they
+                are inserted on the timeline. Edits are fine tuned by trimming in and out points of clips, or by cutting and deleting parts of clips.
+            </para>
+			<para>
+                <guilabel>Flowblade Movie Editor</guilabel> provides functionality to set sync relations between clips to help 
+                with audio split editing, and creating composite images using two or more clips on different tracks. 
+            </para>
+		</sect2>    
+	</sect1>
+
+    <sect1>
+        <title>Basic Editing</title>
+        <para>
+            This section describes the minimal workflow for making a movie using only a single track. 
+            Full editing workflow is described in detail in the later sections.
+        </para>
+        <sect2>
+            <title>1) Creating a New Project</title>
+            <variablelist>
+                <varlistentry>
+                    <term><title>Menu</title></term>
+                    <listitem>
+                      <para>
+                        Select <menuchoice><guimenu>File</guimenu><guimenuitem>New</guimenuitem></menuchoice> from menu.
+                      </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><title>Project Tab</title></term>
+                    <listitem>
+                      <para>
+                        Press <guibutton>New</guibutton> button in <guilabel>Project</guilabel> tab.
+                      </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><title>Keyboard Shortcut</title></term>
+                    <listitem>
+                      <para>
+                        Press <keycombo><keycap>Control</keycap><keycap>N</keycap></keycombo>.
+                      </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+            <para>
+                <guilabel>Flowblade Movie Editor</guilabel> saves work in project files. 
+                A project contains one or more <emphasis>Sequences</emphasis> of edited media and a collection of <emphasis>Media Files</emphasis> stored in <emphasis>Bins</emphasis>.
+            </para>
+            <important>
+                <title>Project Profile</title>
+                <para>
+                            The only parameter that can be selected for a new project is the project profile.
+                </para>
+                <para/>
+                <figure> 
+                    <title>New Project Window</title> 
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="/usr/share/pyshared/Flowblade/res/help/new_project_dialog.png"/>
+                        </imageobject>
+                    </mediaobject>
+                </figure>
+                <para>
+                    Video material might internally be scaled to profile dimensions, so selecting <emphasis>Project Profile</emphasis>
+                    with smaller pixel dimensions than the rendered output leads to decreased quality.
+                    <guilabel>Flowblade Movie Editor</guilabel> handles image data internally as YUV420 frames, 
+                    so the encoding generally associated with a given profile has no affect on quality before rendering.
+                </para>
+                <para>
+                    For best possible quality the input material, <emphasis>Project Profile</emphasis> and <emphasis>Rendering Profile</emphasis>
+                    should all have the same pixel dimensions and pixel aspect ratio.
+                </para>            
+            </important>
+        </sect2>
+ 
+        <sect2>
+            <title>2) Working with Media Files</title>
+            <para>
+                <guilabel>Flowblade Movie Editor</guilabel> holds files in <guilabel>Media</guilabel> tab. 
+                Files are listed in unnamed table that displays 
+                contents of the currently selected <emphasis>Bin</emphasis>. <emphasis>Bins</emphasis> are listed in the <guilabel>Bins</guilabel> table.
+            </para>
+            <sect3>
+                <title>Opening Media Files</title>
+                   <orderedlist spacing="compact">
+                      <listitem>
+                         <para>Press <guibutton>Add</guibutton> button above the unnamed <emphasis>Bin</emphasis> contents table in the <guilabel>Media</guilabel> tab.</para>
+                      </listitem>
+                      <listitem>
+                         <para>Use dialog to find and select files.</para>
+                      </listitem>
+                      <listitem>
+                         <para>Files are displayed in unnamed <emphasis>Bin</emphasis> contents table with thumbnails.</para>
+                      </listitem>
+                   </orderedlist>
+                   <note>Note that creating thumbnails for many simultaniously opened files will take some time.</note>
+            </sect3>
+            <sect3>
+                <title>Working with Bins</title>
+                <variablelist>
+                    <varlistentry>
+                        <term><title>Adding a Bin:</title></term>
+                        <listitem>
+                          <para>
+                            Press <guibutton>Add</guibutton> button above <guilabel>Bins</guilabel> table.
+                          </para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><title>Deleting a Bin:</title></term>
+                        <listitem>
+                          <para>
+                            Press <guibutton>Delete</guibutton> button in above <guilabel>Bins</guilabel> table.
+                            <emphasis>Bin</emphasis> must be empty before removing. A project must always have at least one <emphasis>Bin</emphasis>.
+                          </para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><title>Renaming a Bin:</title></term>
+                        <listitem>
+                          <para>
+                            Double click on the <emphasis>Bin</emphasis> name.
+                          </para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><title>Moving files to another Bin:</title></term>
+                        <listitem>
+                          <para>
+                            <orderedlist spacing="compact">
+                                <listitem>
+                                    <para>Select one or more files in the unnamed table.</para>
+                                </listitem>
+                                <listitem>
+                                    <para>While holding down the left mouse button after last selection drag files on 
+                                    top of a <emphasis>Bin</emphasis> in the <guilabel>Bins</guilabel> table.</para>
+                                </listitem>
+                           </orderedlist>
+                          </para>
+                        </listitem>
+                    </varlistentry>
+                </variablelist>           
+            </sect3>
+        </sect2>
+
+        <sect2>
+            <title>3) Using Timeline</title>
+            <sect3>
+                <title>Scrolling Timeline</title>
+                <para>
+                    <orderedlist spacing="compact" numeration="lowerroman">
+                        <listitem>
+                            <para>
+                                Press and Drag <guilabel>Scrollbar</guilabel> below <guilabel>Timeline</guilabel>
+                            </para>
+                        </listitem>
+
+                       <listitem>
+                            <para>
+                                Scroll <guilabel>Mouse Middle</guilabel> button on top of <guilabel>Timeline</guilabel>.
+                            </para>
+                        </listitem>
+                    </orderedlist>
+                </para>
+            </sect3>
+            <sect3>
+                <title>Zooming Timeline</title>
+                <para>
+                    <orderedlist spacing="compact" numeration="lowerroman">
+                        <listitem>
+                            <para>
+                                Click <guilabel>Zoom In</guilabel>,  <guilabel>Zoom Out</guilabel> or  <guilabel>Zoom Length</guilabel> buttons.
+                            </para>
+                        </listitem>
+
+                       <listitem>
+                            <para>
+                                Scroll <guilabel>Mouse Middle</guilabel> button on top of <guilabel>Timeline</guilabel> while holding down <guilabel>Control</guilabel> key.
+                            </para>
+                        </listitem>
+                    </orderedlist>
+                </para>
+            </sect3>
+            <sect3>
+                <title>Changing Current Frame when Timeline is displayed on Monitor</title>
+                <para>
+                    <orderedlist spacing="compact" numeration="lowerroman">
+                        <listitem>
+                            <para>
+                                Drag with <guilabel>Right Mouse</guilabel> button starting from  an empty space in the 
+                                <guilabel>Timeline</guilabel>.
+                            </para>
+                        </listitem>
+                        
+                        <listitem>
+                            <para>
+                                Drag with <guilabel>Left Mouse</guilabel> button on the
+                                <guilabel>Frame Scale</guilabel>.
+                            </para>
+                        </listitem>
+                        
+                        <listitem>
+                            <para>
+                                Drag with <guilabel>Left Mouse</guilabel> on the
+                                <guilabel>Monitor Position Bar</guilabel>.
+                            </para>
+                        </listitem>
+                        
+                        <listitem>
+                            <para>
+                                Click <guilabel>Left Arrow</guilabel> key or <guilabel>Right Arrow</guilabel> key to move to next or previous frame.
+                            </para>
+                        </listitem>
+
+                       <listitem>
+                            <para>
+                                Click <guilabel>Up Arrow</guilabel> key or <guilabel>Down Arrow</guilabel> 
+                                key to move to next or previous cut on topmost active track.
+                            </para>
+                        </listitem>
+
+                       <listitem>
+                            <para>
+                                Click <guilabel>Next</guilabel> or <guilabel>Prev</guilabel> button in 
+                                <guilabel>Monitor Buttons</guilabel> area to move to next or previous frame.
+                            </para>
+                        </listitem>
+                    </orderedlist>
+                </para>
+            </sect3>
+            <sect3>
+                <title>Changing Current Frame when Clip is displayed on Monitor</title>
+                <para>
+                    <orderedlist spacing="compact" numeration="lowerroman">
+                        
+                       <listitem>
+                            <para>
+                                Drag with <guilabel>Left Mouse</guilabel> on the
+                                <guilabel>Monitor Position Bar</guilabel>.
+                            </para>
+                        </listitem>
+                        
+                        <listitem>
+                            <para>
+                                Click <guilabel>Left Arrow</guilabel> key or <guilabel>Right Arrow</guilabel> key to move to next or previous frame.
+                            </para>
+                        </listitem>
+
+                       <listitem>
+                            <para>
+                                Click <guilabel>Next</guilabel> or <guilabel>Prev</guilabel> button in 
+                                <guilabel>Monitor Buttons</guilabel> area to move to next or previous frame.
+                            </para>
+                        </listitem>
+                    </orderedlist>
+                </para>
+            </sect3>
+            <sect3>
+                <title>Switching between Timeline and Clip Display</title>
+                <para>
+                    <orderedlist spacing="compact" numeration="lowerroman">
+                        
+                       <listitem>
+                            <para>
+                                Click <guilabel>Timeline</guilabel> or <guilabel>Clip</guilabel> button in 
+                                <guilabel>Monitor Buttons</guilabel> area.
+                            </para>
+                            <imageobject>
+                                <imagedata fileref="/usr/share/pyshared/Flowblade/res/help/monitor_buttons.png"/>
+                            </imageobject>
+                        </listitem>
+                        
+                        <listitem>
+                            <para>
+                                Drag <emphasis>Media File</emphasis> on top of <guilabel>Monitor</guilabel>
+                                to display Clip.
+                            </para>
+                        </listitem>
+                    </orderedlist>
+
+                </para>
+            </sect3>
+            <sect3>
+                <title>Setting Active Tracks</title>
+                <para>
+                    Click <guilabel>Track Active Switch</guilabel> on the right side of <guilabel>Tracks Column</guilabel> area.
+                </para>
+                <imageobject>
+                    <title>Tracks Column</title>
+                    <imagedata fileref="/usr/share/pyshared/Flowblade/res/help/tracks_column.png"/>
+                </imageobject>
+                <orderedlist spacing="compact" numeration="lowerroman">
+                    <title>Effects of Track Active State</title>
+                       <listitem>
+                            <para>
+                                Cuts are only performed on active <guilabel>Tracks</guilabel>.
+                            </para>
+                        </listitem>
+                        
+                        <listitem>
+                            <para>
+                                Inserting <emphasis>Media File</emphasis> currently displayed in <guilabel>Monitor</guilabel>
+                                using <guilabel>Insert From Monitor</guilabel>, <guilabel>Append From Monitor</guilabel> or 
+                                <guilabel>3-Point Ovewrite</guilabel> buttons places clip on the top most active 
+                                <guilabel>Track</guilabel> indicated by <guilabel>arrow icon</guilabel>.
+                            </para>
+                        </listitem>
+                    </orderedlist>
+            </sect3>
+
+            <sect3>
+                <title>Selecting clips</title>
+                <variablelist>                        
+                    <varlistentry>
+                        <term><title>Selecting single clip</title></term>
+                        <listitem>
+                            <para>
+
+                                Click on a clip with <guibutton>Left Mouse Button</guibutton>.
+                            </para>
+                        </listitem>
+                    </varlistentry>
+
+                    <varlistentry>
+                        <term><title>Selecting multiple clips on the same track</title></term>
+                        <listitem>
+                           <orderedlist spacing="compact">
+                                <listitem>
+                                    <para>
+                                        Click on a clip with <guibutton>Left Mouse Button</guibutton>.
+                                    </para>
+                                </listitem>
+                                <listitem>
+                                    <para>
+                                        Click on another clip on the same track with
+                                        <guilabel>Control</guilabel> + <guilabel>Left Mouse</guilabel> button.
+                                     </para>
+                                </listitem>
+                                <listitem>
+                                    <para>All clips between clicked clips will be selected.</para>
+                                </listitem>
+                            </orderedlist>
+                            <note>
+                                There is no box selection or any other means of 
+                                selecting clips from different <guilabel>Tracks</guilabel> at the same time.
+                            </note>
+                        </listitem>
+                    </varlistentry>
+                    
+                    <varlistentry>
+                        <term><title>Deselecting all clips</title></term>
+                        <listitem>
+                            <para>
+                                Click on Timeline area background.
+                            </para>
+                        </listitem>
+                    </varlistentry>                        
+                </variablelist>
+           </sect3>
+       </sect2> 
+    
+        <sect2>
+                <title>4) Adding clips to Sequence</title>
+                <sect3>
+                    <title>Drag'n'Drop</title>
+                    <para>
+                        Press on a <emphasis>Media File</emphasis> in <guilabel>Media</guilabel> tab and drag it on top of the track you want to place it on. 
+                    </para>
+                    <para>
+                        Clip will be inserted on the track at the nearest cut.
+                    </para>
+                </sect3>
+                <sect3>
+                    <title>From Monitor</title>
+                    <variablelist>                        
+                        <varlistentry>
+                            <term><title>1) Open clip in <guilabel>Monitor</guilabel> by either:</title></term>
+                            <listitem>
+                               <orderedlist spacing="compact" numeration="loweralpha">
+                                  <listitem>
+                                      double clicking on thumbnail icon,
+                                  </listitem>
+                                  <listitem>
+                                      dragging <emphasis>Media File</emphasis> on top of <guilabel>Monitor</guilabel> or
+                                  </listitem>
+                                  <listitem>
+                                     selecting <menuchoice><guimenuitem>Open in Clip Monitor</guimenuitem></menuchoice> from <guilabel>Right Mouse context menu</guilabel>.
+                                  </listitem>
+                               </orderedlist>
+                            </listitem>
+                        </varlistentry>
+
+                        <varlistentry>
+                            <term><title>2) Select insert range</title></term>
+                            <listitem>
+                                <para>
+                                    Use <guilabel>Mark In</guilabel> and <guilabel>Mark Out</guilabel> buttons to select insert range.
+                                    If range is not set, then the full clip length will be inserted.
+                                </para>
+                            </listitem>
+                        </varlistentry>
+                        
+                        <varlistentry>
+                            <term><title>3) Press 'Insert From Monitor' button</title></term>
+                            <listitem>
+                                <para>
+                                    Clip will be inserted on the first active track at the cut nearest of the currently displayed frame. 
+                                    First active track is marked by down arrow in the track <guilabel>Active Switch</guilabel>. 
+                                </para>
+                            </listitem>
+                        </varlistentry>                        
+                    </variablelist>
+                    
+                </sect3>  
+       </sect2>
+
+        <sect2>
+                <title>5) Cutting and Trimming Clips</title>
+                Once you have placed clips on the Timeline to form a Sequence, you will probably need to refine the cuts between clips.
+                <sect3>
+                    <title>Cutting Clips</title>
+                    
+                    <variablelist>                        
+                        <varlistentry>
+                            <term><title>1) Select cut frame</title></term>
+                            <listitem>
+                                <para>
+                                    Cut is always made before currently displayed frame on all active tracks.
+                                </para>
+                                <para>
+                                    If you wish to cut off piece from start of the clip, drag <guilabel>Current Frame Pointer</guilabel> to the first frame you wish to have displayed after cut clip piece is removed.
+                                </para>
+                               <para>
+                                    If you wish to cut off piece from end of the clip, drag <guilabel>Current Frame Pointer</guilabel> to the last frame you wish to have displayed, 
+                                    and then move one frame forward. 
+                                </para>
+                            </listitem>
+                        </varlistentry>
+
+                        <varlistentry>
+                            <term><title>2) Cut clip</title></term>
+                            <listitem>
+                                <para>
+                                    Press <guilabel>Cut</guilabel> button or press <guilabel>X</guilabel> on the keyboard.
+                                </para>
+                            </listitem>
+                        </varlistentry>
+                        
+                        <varlistentry>
+                            <term><title>3) Select and delete cut clip piece</title></term>
+                            <listitem>
+                                <para>
+                                     Click on the cut clip piece and either press <guilabel>DELETE</guilabel> key or <guilabel>Splice Out</guilabel> button of <guilabel>Lift</guilabel> button.
+                                </para>
+                            </listitem>
+                        </varlistentry>                        
+                    </variablelist>
+ 
+                    <important>
+                        <title>Use Keyboard Shortcuts</title>
+                        <para>
+                          It is much faster to use <guilabel>X</guilabel> key to cut clips and <guilabel>DELETE</guilabel> key to splice out clips than it is to use buttons for the same operations.
+                        </para>
+                    </important>
+        
+                </sect3>
+                <sect3>
+                    <title>Trimming Clips</title>
+                    <variablelist>                        
+                        <varlistentry>
+                            <term><title>1) Select trimmed cut and side</title></term>
+                            <listitem>
+                                <para>
+                                    Drag <guilabel>Current Frame Pointer</guilabel> near the cut you wish to trim, on the side of the clip you wish trim.
+                                </para>
+                            </listitem>
+                        </varlistentry>
+
+                        <varlistentry>
+                            <term><title>2) Enter 'One Roll Trim' mode</title></term>
+                            <listitem>
+                                <para>
+                                    Press <guilabel>One Roll Trim</guilabel> button or press <guilabel>T</guilabel> key to enter <guilabel>One Roll Trim</guilabel> mode.
+                                </para>
+                            </listitem>
+                        </varlistentry>
+                        
+                          <varlistentry>
+                            <term><title>3) Select new in or out frame</title></term>
+                            <listitem>
+                                <para>
+                                    Left drag on track to select frame of press <guilabel>Next Frame</guilabel> or <guilabel>Previous Frame</guilabel> buttons.             
+                                </para>
+                            </listitem>
+                        </varlistentry>
+
+                          <varlistentry>
+                            <term><title>4) View trimmed cut</title></term>
+                            <listitem>
+                                <para>
+                                    Press <guilabel>Play Loop</guilabel> to view edit.
+                                </para>
+                            </listitem>
+                        </varlistentry>
+
+                          <varlistentry>
+                            <term><title>5) Select new trim</title></term>
+                            <listitem>
+                                <para>
+                                    Holding down <guilabel>CTRL</guilabel> key and clicking <guilabel>Left Mouse</guilabel> on clip starts new trim edit.
+                                </para>
+                            </listitem>
+                        </varlistentry>
+
+                          <varlistentry>
+                            <term><title>6) Exit 'One Roll Trim' mode</title></term>
+                            <listitem>
+                                <para>
+                                    Clicking <guilabel>Left Mouse</guilabel> on empty part of timeline or pressing <guilabel>Insert Move</guilabel> button begins Insert Move edit mode.
+                                </para>
+                            </listitem>
+                        </varlistentry>
+                    </variablelist>   
+                </sect3>
+       </sect2>
+        <sect2>
+                <title>6) Moving Clips</title>
+                    <variablelist>                        
+                        <varlistentry>
+                            <term><title>1) Enter 'Insert Move' mode if necessery</title></term>
+                            <listitem>
+                                <para>
+                                    Press <guilabel>Insert Move</guilabel> button or press <guilabel>I</guilabel> key.
+                                </para>
+                            </listitem>
+                        </varlistentry>
+
+                        <varlistentry>
+                            <term><title>2) Select clip</title></term>
+                            <listitem>
+                                <para>
+                                    Click <guilabel>Left Mouse</guilabel> on a clip.
+                                </para>
+                            </listitem>
+                        </varlistentry>
+
+                        <varlistentry>
+                            <term><title>3) Select other end of clip range if moving multiple clips</title></term>
+                            <listitem>
+                                <para>
+                                    Click <guilabel>CTRL</guilabel>+<guilabel>Left Mouse</guilabel> on the clip you wish to be the other end of move clip range.
+                                </para>
+                            </listitem>
+                        </varlistentry>
+
+                        <varlistentry>
+                            <term><title>4) Drag Clip(s) to new position</title></term>
+                            <listitem>
+                                <para>
+                                    <orderedlist spacing="compact" numeration="loweralpha">
+                                      <listitem>
+                                          If moving single clip, click <guilabel>Left Mouse</guilabel> and drag clip to a new position.
+                                      </listitem>
+                                      <listitem>
+                                          If moving multiple clips, click <guilabel>CTRL</guilabel>+<guilabel>Left Mouse</guilabel> and drag clips to a new position.
+                                      </listitem>
+                                    </orderedlist>
+                                    <para>
+                                        Yellow arrow displays insert point.
+                                    </para>
+                                </para>
+                            </listitem>
+                        </varlistentry>
+
+                    </variablelist>  
+       </sect2>
+        <sect2>
+                <title>7) Rendering Movie</title>
+                     <sect3>
+                        <title>Selecting Parameters</title>
+                        <orderedlist spacing="compact" numeration="lowerroman">
+                            <listitem>
+                                <para>
+                                    <emphasis>Folder</emphasis> <guilabel>File Select Button</guilabel> will select folder to place the output file in.
+                                </para>
+                            </listitem>
+
+                           <listitem>
+                                <para>
+                                    <emphasis>Name</emphasis> <guilabel>Entry</guilabel> provides means to set the name of the output file.
+                                </para>
+                            </listitem>
+                            
+                           <listitem>
+                                <para>
+                                    <emphasis>Encoding / Format</emphasis> <guilabel>Drop Down Menu</guilabel> and <emphasis>Quality</emphasis> <guilabel>Drop Down Menu</guilabel> make it possible to select the type of file to be rendered.
+                                </para>
+                            </listitem>
+                        </orderedlist>
+                     </sect3>
+                     <sect3>
+                        <title>Rendering output</title>
+                        <orderedlist spacing="compact">
+                            <listitem>
+                                <para>
+                                    Press <emphasis>Render</emphasis> <guilabel>Button</guilabel> to begin rendering.
+                                </para>
+                            </listitem>
+
+                            <listitem>
+                                <para>
+                                    A <guilabel>Render Window</guilabel> will open displaying information on file path of render file,
+                                    estimated time left, render time and <guilabel>Progress bar</guilabel> widget.
+                                </para>
+                            </listitem>
+                            
+                            <listitem>
+                                <para>
+                                    After rendering is complete, <guilabel>Render Window</guilabel> will close automatically.
+                                </para>
+                            </listitem>
+                        </orderedlist>
+                     </sect3>
+       </sect2>
+    </sect1>
+
+    <sect1>
+        <title>Edit Modes</title>
+        <para>
+            <guilabel>Flowblade Movie Editor</guilabel> has four edit modes, two move modes and two trim modes. 
+            When editing user will always be in one of the four modes, except when selecting a <emphasis>Sync Parent Clip</emphasis>, which is indicated by cursor changing to a target cross. 
+        </para>
+        <sect2>
+            <title>Insert Move</title>
+            <para>
+                Splice out one or more clips and insert them at desired cut on any track.
+            </para>
+            <variablelist>                        
+                <varlistentry>
+                    <term><title>1) Enter 'Insert Move' mode</title></term>
+                    <listitem>
+                        <para>
+                            Press <guilabel>Insert Move</guilabel> button or press <guilabel>I</guilabel> key.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term><title>2) Select clip</title></term>
+                    <listitem>
+                        <para>
+                            Click <guilabel>Left Mouse</guilabel> on a clip.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term><title>3) Select other end of clip range if moving multiple clips</title></term>
+                    <listitem>
+                        <para>
+                            Click <guilabel>CTRL</guilabel>+<guilabel>Left Mouse</guilabel> on the clip you wish to be the other end of move clip range.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term><title>4) Drag Clip(s) to new position</title></term>
+                    <listitem>
+                        <para>
+                            <orderedlist spacing="compact" numeration="loweralpha">
+                              <listitem>
+                                  If moving single clip, click <guilabel>Left Mouse</guilabel> and drag clip to a new position.
+                              </listitem>
+                              <listitem>
+                                  If moving multiple clips, click <guilabel>CTRL</guilabel>+<guilabel>Left Mouse</guilabel> and drag clips to a new position.
+                              </listitem>
+                            </orderedlist>
+                            <para>
+                                Yellow arrow displays insert point.
+                            </para>
+                            <para>
+                                You can also move clips to a different track.
+                            </para>
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+            </variablelist>  
+
+       </sect2>
+        <sect2>
+            <title>Overwrite Move</title>
+            <para>
+                Lift out one or more clips and insert them at any point to overwrite on any track.
+            </para>
+            <variablelist>                        
+                <varlistentry>
+                    <term><title>1) Enter 'Overwrite Move' mode</title></term>
+                    <listitem>
+                        <para>
+                            Press <guilabel>Overwrite Move</guilabel> button.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term><title>2) Select clip</title></term>
+                    <listitem>
+                        <para>
+                            Click <guilabel>Left Mouse</guilabel> on a clip.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term><title>3) Select other end of clip range if moving multiple clips</title></term>
+                    <listitem>
+                        <para>
+                            Click <guilabel>CTRL</guilabel>+<guilabel>Left Mouse</guilabel> on the clip you wish to be the other end of move clip range.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term><title>4) Drag Clip(s) to new position</title></term>
+                    <listitem>
+                        <para>
+                            <orderedlist spacing="compact" numeration="loweralpha">
+                              <listitem>
+                                  If moving single clip, click <guilabel>Left Mouse</guilabel> and drag clip to a new position.
+                              </listitem>
+                              <listitem>
+                                  If moving multiple clips, click <guilabel>CTRL</guilabel>+<guilabel>Left Mouse</guilabel> and drag clips to a new position.
+                              </listitem>
+                            </orderedlist>
+                            <para>
+                                Red shadow clips show overwrite area.
+                            </para>
+                            <para>
+                                You can also move clips to a different track.
+                            </para>
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+            </variablelist>  
+        </sect2>
+        <sect2>
+            <title>One Roll Trim</title>
+            <para>
+                Make clip longer or shorter from either clip's end or from clip's beginning.
+            </para>
+            <variablelist>                        
+                <varlistentry>
+                    <term><title>1) Select trimmed cut and side</title></term>
+                    <listitem>
+                        <para>
+                            Drag <guilabel>Current Frame Pointer</guilabel> near the cut you wish to trim, on the side of the clip you wish trim.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term><title>2) Enter 'One Roll Trim' mode</title></term>
+                    <listitem>
+                        <para>
+                            Press <guilabel>One Roll Trim</guilabel> button or press <guilabel>T</guilabel> key to enter <guilabel>One Roll Trim</guilabel> mode.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                
+                  <varlistentry>
+                    <term><title>3) Select new in or out frame</title></term>
+                    <listitem>
+                        <para>
+                            Left drag on track to select in or out frame, or press <guilabel>Next Frame</guilabel> or <guilabel>Previous Frame</guilabel> buttons.             
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                  <varlistentry>
+                    <term><title>4) View trimmed cut</title></term>
+                    <listitem>
+                        <para>
+                            Press <guilabel>Play Loop</guilabel> button to view edit.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                  <varlistentry>
+                    <term><title>5) Select new trim</title></term>
+                    <listitem>
+                        <para>
+                            Holding down <guilabel>CTRL</guilabel> key and clicking <guilabel>Left Mouse</guilabel> on clip starts new trim edit.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                  <varlistentry>
+                    <term><title>6) Exit 'One Roll Trim' mode</title></term>
+                    <listitem>
+                        <para>
+                            Clicking <guilabel>Left Mouse</guilabel> on empty part of timeline, or pressing buttons for other modes exits <emphasis>One Roll Trim</emphasis> mode.
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>   
+        </sect2>
+        <sect2>
+            <title>Two Roll Trim</title>
+            <para>
+                Move edit point between two clips so that their combined length stays the same.
+            </para>
+            <variablelist>                        
+                <varlistentry>
+                    <term><title>1) Select trimmed cut</title></term>
+                    <listitem>
+                        <para>
+                            Drag <guilabel>Current Frame Pointer</guilabel> near the cut you wish to trim, on the side of the cut you wish be displayed during edit.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term><title>2) Enter 'Two Roll Trim' mode</title></term>
+                    <listitem>
+                        <para>
+                            Press <guilabel>Two Roll Trim</guilabel> button.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                
+                  <varlistentry>
+                    <term><title>3) Select new in or out frame</title></term>
+                    <listitem>
+                        <para>
+                            Left drag on track to select cut frame of press <guilabel>Next Frame</guilabel> or <guilabel>Previous Frame</guilabel> buttons.             
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                  <varlistentry>
+                    <term><title>4) View trimmed cut</title></term>
+                    <listitem>
+                        <para>
+                            Press <guilabel>Play Loop</guilabel> to view edit.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                  <varlistentry>
+                    <term><title>5) Select new trim</title></term>
+                    <listitem>
+                        <para>
+                            Holding down <guilabel>CTRL</guilabel> key and clicking <guilabel>Left Mouse</guilabel> on clip starts new trim edit.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                  <varlistentry>
+                    <term><title>6) Exit 'Two Roll Trim' mode</title></term>
+                    <listitem>
+                        <para>
+                            Clicking <guilabel>Left Mouse</guilabel> on empty part of timeline or pressing buttons for other modes exits <emphasis>Two Roll Trim</emphasis> mode.
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>   
+        </sect2>
+    </sect1>
+
+    <sect1>
+        <title>Creating Composited Images</title>
+        <para>
+            <guilabel>Flowblade Movie Editor</guilabel> uses <emphasis>Compositors</emphasis> to mix images from two different tracks. 
+            By combining multiple tracks and multiple <emphasis>Compositors</emphasis> complex composite images can be achieved.
+        </para>
+        <para>
+            <emphasis>Compositors</emphasis> have a <emphasis>Source</emphasis>
+            track and a <emphasis>Destination</emphasis> track. 
+            On the <guilabel>Timeline</guilabel> <emphasis>Compositor</emphasis> is displayed as a dark rectangular 
+            object that is displayed on top of two tracks. <emphasis>Source</emphasis> track is always the one above <emphasis>Compositor</emphasis>,
+            but <emphasis>Destination</emphasis> track may be any of the tracks below it. 
+        </para>
+        <para>
+            Parameters defining the resulting composite are edited in the <guilabel>Compositors</guilabel> tab.
+        </para>
+        <para>
+            There is a subtype of <emphasis>Compositors</emphasis> called <emphasis>Blenders</emphasis>. 
+            <emphasis>Blenders</emphasis> do the standard blends like <emphasis>Add, Softlight</emphasis> and <emphasis>Darken</emphasis>,
+            but offer no transformations, nor any method to control the amount of blend. 
+        </para>
+ 
+        <sect2>
+            <title>Compositor Workflow</title>
+                <sect3>
+                    <title>Creating a Compositor</title>
+                    <para>
+                        Click <guilabel>Right Mouse</guilabel> on any clip on tracks from <guilabel>V5</guilabel> to <guilabel>V2</guilabel>
+                        and select for example <menuchoice><guimenu>Add Compositor</guimenu><guimenuitem>Dissolve</guimenuitem></menuchoice>
+                        or <menuchoice><guimenu>Add Blender</guimenu><guimenuitem>Softlight</guimenuitem></menuchoice> from popupmenu
+                        to create a new <emphasis>Compositor</emphasis>.
+                    </para>
+                </sect3>
+
+                <sect3>
+                    <title>Trimmimg or Moving a Compositor</title>
+                    <para>
+                        To trim <emphasis>Compositor</emphasis> start and end points: Press and drag <guilabel>Left Mouse</guilabel> near either end of <emphasis>Compositor</emphasis> on <guilabel>Timeline</guilabel>.
+                    </para>
+                    <para>
+                        To move <emphasis>Compositor</emphasis>: Press and drag <guilabel>Left Mouse</guilabel> in the middle of <emphasis>Compositor</emphasis> on <guilabel>Timeline</guilabel>.
+                    </para>
+                </sect3>
+
+                <sect3>
+                    <title>Editing Compositor Parameters in Compositors Tab</title>
+                    <para>
+                        Double click <emphasis>Compositor</emphasis> with <guilabel>Left Mouse</guilabel>.
+                    </para>
+                    <para>
+                        Click <guilabel>Right Mouse</guilabel> on any <emphasis>Compositor</emphasis> 
+                        and select <menuchoice><guimenuitem>Open In Compositor Editor</guimenuitem></menuchoice>
+                    </para>
+                    <para>
+                        Edit parameters using value editors.
+                    </para>
+                </sect3>
+
+                <sect3>
+                    <title>Deleting Compositor</title>
+                    <para>
+                        Click <guilabel>Left Mouse</guilabel> on any <emphasis>Compositor</emphasis> to select it
+                        and press <guilabel>Delete</guilabel> key.
+                    </para>
+                </sect3>
+                
+            </sect2>
+
+            <sect2>
+                <title>Compositor are executed from top to bottom</title>
+                <sect3>
+                    <title>Rendering Composited images</title>
+                    <para>
+                        In <guilabel>Flowblade Movie Editor</guilabel> the order of rendering is top-to-bottom,
+                        instead of bottom-to-top like in <emphasis>Gimp</emphasis> or <emphasis>Photoshop</emphasis>.
+                    </para>
+                    <para>
+                        When attempting certain type of multilayer composites this yields results that seem unintuitive, 
+                        unless the user is aware of rendering order of <emphasis>Compositors</emphasis>.
+                    </para>
+                    <para>
+                        <orderedlist spacing="compact">
+                            <title>Rendering A Composited Frame</title>
+                            <listitem>
+                                <para>
+                                    For each frame it is checked if there is a <emphasis>Compositor</emphasis> covering this frame that has track <guilabel>V5</guilabel> as
+                                    <emphasis>Source</emphasis> track.
+                                    If such <emphasis>Compositor</emphasis> is found, do composite on <emphasis>Destination</emphasis> track.
+                              </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                     If next track is <emphasis>Source</emphasis> of <emphasis>Compositor</emphasis> covering this frame, that <emphasis>Compositor</emphasis> is rendered. 
+                                     This is done until there is track that isn't a <emphasis>Source</emphasis> track of any 
+                                     <emphasis>Compositor</emphasis>. That frame on last this track may already been a <emphasis>Destination</emphasis> 
+                                     of a <emphasis>Compositor</emphasis>.
+                                </para>   
+                            </listitem>
+                       </orderedlist>
+                    </para>
+                </sect3>
+                <sect3>
+                    <title>Example</title>
+            <variablelist>
+                <varlistentry>
+                    <term><title>1. Creating a 3-layer composite</title></term>
+                    <listitem>
+                                <para>
+                                    In this example we demonstrate how top-to-bottom <emphasis>Compositor</emphasis> 
+                                    order affects compositing.
+                                    We are trying to make word 'GO' apperar on top of 2-color
+                                    background made by combining red and blue Color Clips using 'Free Stripes' wipe.
+                                </para>
+                                <para>
+                                    To make alpha transparency work the GO.PNG graphic has to composited using 'Dissolve'.
+                                </para>
+                                <para>
+                                    <title>clips: RED and BLUE Color Clips and GO.PNG graphic with alpha transparenscy.</title>
+                                    <imageobject>
+                                        <imagedata fileref="/usr/share/pyshared/Flowblade/res/help/comp_clips.png"/>
+                                    </imageobject>
+                                </para>
+                                <para>
+                                    <title>Desired result</title>
+                                    <imageobject>
+                                        <imagedata fileref="/usr/share/pyshared/Flowblade/res/help/correct_comp.png"/>
+                                    </imageobject>
+                              </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><title>2. Gimp/Photoshop style layer order yields wrong result</title></term>
+                    <listitem>
+                                <para>
+                                    Here we have arranged clips on the tracks as we would arrange layers in Gimp.
+                                </para>
+                                <para>
+                                    <title>Gimp style layer order</title>
+                                    <imageobject>
+                                        <imagedata fileref="/usr/share/pyshared/Flowblade/res/help/wrong_timeline.png"/>
+                                    </imageobject>
+                                <para>
+                                </para>
+                                    What happens here is that first 'GO.PNG' is composited on 'RED' Color Clip, and the resulting image
+                                    is composited using 'Free Stripes' wipe on top of 'BLUE' Color Clip. We get the wrong result.
+                                </para>
+                                <para>
+                                    <title>Wrong result</title>
+                                    <imageobject>
+                                        <imagedata fileref="/usr/share/pyshared/Flowblade/res/help/wrong_comp.png"/>
+                                    </imageobject>
+                                </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term><title>3. Correct layer order when compositing order is top-to-bottom</title></term>
+                    <listitem>
+                                <para>
+                                    Here we have arranged clips in correct order for the desired result.
+                                </para>
+                                <para>
+                                    <title>Correct layer order</title>
+                                    <imageobject>
+                                        <imagedata fileref="/usr/share/pyshared/Flowblade/res/help/correct_timeline.png"/>
+                                    </imageobject>
+                                    <imageobject>
+                                        <imagedata fileref="/usr/share/pyshared/Flowblade/res/help/correct_dest.png"/>
+                                    </imageobject>
+                                <para>
+                                </para>
+                                    Here 'RED' Color Clip  is first composited using 'Free Stripes' wipe on 'BLUE' Color Clip.
+                                    After that 'GO.PNG' is composited on top of the resulting image (that is already rendered on track V1) using 'Dissolve' to get final output image.
+                                </para>
+                                <note>Destination track in 'Region' <emphasis>Compositor</emphasis> is V1, Source track is V3.</note>
+                                <para>
+                                    <title>Correct result</title>
+                                    <imageobject>
+                                        <imagedata fileref="/usr/share/pyshared/Flowblade/res/help/correct_comp.png"/>
+                                    </imageobject>
+                                </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+
+                </sect3> 
+            </sect2>
+
+            <sect2>
+                <title>TABLE: Compositors</title> 
+                <table id="flowblade-compositors" frame="all">
+                    <title>Compositors</title> 
+                    <tgroup cols="2" colsep="1" rowsep="1">
+                         <colspec colname="COLSPEC0" colwidth="50*"/>
+                         <colspec colname="COLSPEC1"/>
+
+                         <thead>
+                                <row valign="top">
+                                  <entry colname="COLSPEC0">
+                                         <para>Compositor</para></entry>
+                                  <entry colname="COLSPEC1">
+                                         <para>Description</para></entry>
+                                </row>
+                         </thead> 
+                         <tbody> 
+                           <row valign="top">
+                             <entry><para>Affine</para></entry>
+                             <entry><para>Does affine transform (move-rotate-skew) before compositing. Has keyframed mix, position and rotation, and non-keyframed skew.</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Dissolve</para></entry>
+                             <entry><para>Does keyframed mix.</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Picture in Picture</para></entry>
+                             <entry><para>Does picture in picture composite with keyframed mix and transform.</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Dissolve</para></entry>
+                             <entry><para>Does picture in picture composite with keyframed mix, wipe and transform.</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Dissolve</para></entry>
+                             <entry><para>Does a non-keyframed full wipe that has the same duration as the clip.</para></entry>
+                           </row>
+                         </tbody>
+                    </tgroup>
+                </table>
+            </sect2>
+            <sect2>
+                <title>TABLE: Blenders</title> 
+                <table id="flowblade-blenders" frame="all">
+                    <title>Blenders</title> 
+                    <tgroup cols="2" colsep="1" rowsep="1">
+                         <colspec colname="COLSPEC0" colwidth="50*"/>
+                         <colspec colname="COLSPEC1"/>
+
+                         <thead>
+                                <row valign="top">
+                                  <entry colname="COLSPEC0">
+                                         <para>Blend Mode</para></entry>
+                                  <entry colname="COLSPEC1">
+                                         <para>Description</para></entry>
+                                </row>
+                         </thead> 
+                         <tbody> 
+                           <row valign="top">
+                             <entry><para>Add</para></entry>
+                             <entry><para>This blend mode simply adds pixel values of one layer with the other. In case of values above 255 (in the case of RGB), white is displayed.</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Burn</para></entry>
+                             <entry><para>The Burn mode divides the inverted bottom layer by the top layer, and then inverts the result.</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry>Color Only<para></para></entry>
+                             <entry><para>Color blend mode preserves the luma of the bottom layer, while adopting the hue and chroma of the top layer.</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Darken</para></entry>
+                             <entry><para>Darken takes the darkest value for each pixel from each layer.</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Difference</para></entry>
+                             <entry><para>Difference subtracts the top layer from the bottom layer or the other way round, to always get a positive value. Blending with black produces no change, as values for all colours are 0. (The RGB value for black is 0,0,0). Blending with white inverts the picture.One of the main utilities for this is during the editing process, when it can be used to verify alignment of pictures with similar content</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Divide</para></entry>
+                             <entry><para>This blend mode simply divides pixel values of one layer with the other.</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Dodge</para></entry>
+                             <entry><para>Dodge blend mode divides the bottom layer by the inverted top layer. This decreases the contrast to make the bottom layer reflect the top layer: the brighter the top layer, the more its colour affects the bottom layer.</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Grain Extract</para></entry>
+                             <entry><para></para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Grain Merge</para></entry>
+                             <entry><para></para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Hardlight</para></entry>
+                             <entry><para>Hard Light combines Multiply and Screen blend modes. As opposed to Overlay, the contrast is also increased.</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Hue</para></entry>
+                             <entry><para>Hue blend mode preserves the luma and chroma of the bottom layer, while adopting the hue of the top layer.</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Lighten</para></entry>
+                             <entry><para>Lighten takes the lightest pixel from each layer.</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Multiply</para></entry>
+                             <entry><para>Multiply blend mode multiplies the numbers for each pixel of the top layer with the corresponding pixel for the bottom layer. As a simple multiplication for 8-bit/channel can get values as high as 65025 (255*255), which is far higher than the maximum allowed value, 255, the result is divided by 255.</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Overlay</para></entry>
+                             <entry><para>Overlay combines Multiply and Screen blend modes. Light parts of the picture become lighter and dark parts become darker. An overlay with the same picture looks like an S-curve.</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Saturation</para></entry>
+                             <entry><para>Saturation blend mode preserves the luma and hue of the bottom layer, while adopting the chroma of the top layer.</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Screen</para></entry>
+                             <entry><para>With Screen blend mode the values of the pixels in the two layers are negated, multiplied, and then negated again. This is in some way the opposite of multiply. The result is a brighter picture.</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Softlight</para></entry>
+                             <entry><para>This is a softer version of Overlay. Applying pure black or white does not result in pure black or white.</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Subtract</para></entry>
+                             <entry><para>This blend mode simply subtracts pixel values of one layer with the other. In case of negative values, black is displayed.</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Value</para></entry>
+                             <entry><para>Value blend mode preserves the hue and chroma of the bottom layer, while adopting the luma of the top layer.</para></entry>
+                           </row>
+                         </tbody>
+                    </tgroup>
+                </table>
+                <note>
+                Blend descriptions are from Wikipedia and are under <guilabel>Creative Commons Attribution-ShareAlike License</guilabel>.
+                </note>
+            </sect2>
+    </sect1>
+
+    <sect1>
+        <title>Adding Filters</title>
+        <para>
+            In <guilabel>Flowblade Movie Editor</guilabel> you can add a <emphasis>Filters</emphasis> to all clips to modify output image and audio.
+            Parameters defing output are edited in the <guilabel>Filters</guilabel> tab. Clips will display small filter icon if a filter has been added to them.
+            To have any effect, the filters that modify  
+            alpha channel have to be mixed with images from other clips using <emphasis>Compositors</emphasis>.  
+        </para>
+        <sect2>
+            <title>Filter Workflow</title>
+            <sect3>
+                <title>Adding Filter</title>
+                <orderedlist spacing="compact" numeration="lowerroman">
+                    <listitem>
+                        <para>
+                            Click <guilabel>Right Mouse</guilabel> on any clip and select for example
+                            <menuchoice><guimenu>Add Filter</guimenu><guimenuitem>Blur</guimenuitem><guimenuitem>Pixelize</guimenuitem></menuchoice> from popup menu.
+                        </para>
+                    </listitem>
+
+                   <listitem>
+                        <para>
+                            In <guilabel>Filters</guilabel> tab: double click on a filter in the currently displayed filters group.
+                        </para>
+                    </listitem>
+                    
+                   <listitem>
+                        <para>
+                            In <guilabel>Filters</guilabel> tab: drag a filter from the currently displayed filters group to the  
+                            <guilabel>Filters Stack</guilabel> table below.
+                        </para>
+                    </listitem>
+                </orderedlist>
+            </sect3>
+            <sect3>
+                <title>Opening Filter for Editing in Filters tab</title>
+                <orderedlist spacing="compact" numeration="lowerroman">
+                    <listitem>
+                        <para>
+                            Click <guilabel>Right Mouse</guilabel> on any clip and select
+                            <menuchoice><guimenuitem>Open in Filters Editor</guimenuitem></menuchoice> from popup menu.
+                        </para>
+                    </listitem>
+
+                   <listitem>
+                        <para>
+                            Double click on any clip.
+                        </para>
+                    </listitem>
+                </orderedlist>
+            </sect3>
+            <sect3>
+                <title>Cloning Filters from other Clips</title>
+                <orderedlist spacing="compact" numeration="lowerroman">
+                    <listitem>
+                        <para>
+                            Click <guilabel>Right Mouse</guilabel> on any clip and select
+                            <menuchoice><guimenu>Clone Filters</guimenu><guimenuitem>From Next Clip</guimenuitem></menuchoice>
+                            or <menuchoice><guimenu>Clone Filters</guimenu><guimenuitem>From Previous Clip</guimenuitem></menuchoice> from popup menu.
+                        </para>
+                    </listitem>
+                </orderedlist>
+            </sect3>
+            <sect3>
+                <title>Deleting Filters from Clips</title>
+                <orderedlist spacing="compact" numeration="lowerroman">
+                    <listitem>
+                        <para>
+                            Select filter in <guilabel>Filters Stack</guilabel> table and click <guilabel>Delete</guilabel> button above.
+                        </para>
+                    </listitem>
+
+                   <listitem>
+                        <para>
+                             Select filter in <guilabel>Filters Stack</guilabel> table and press <guilabel>Delete</guilabel> key.
+                        </para>
+                   </listitem>
+
+                   <listitem>
+                        <para>
+                             Select clip or range of clips in <guilabel>Timeline</guilabel> and
+                             select <menuchoice><guimenu>Edit</guimenu><guimenuitem>Clear Filters From Selected</guimenuitem></menuchoice>
+                             from application menu.
+                        </para>
+                    </listitem>
+                </orderedlist>
+            </sect3>
+        </sect2>
+        <sect2>
+            <title>TABLE: Filters </title> 
+            <table id="flowblade-filters" frame="all">
+
+                <tgroup cols="2" colsep="1" rowsep="1">
+                     <colspec colname="COLSPEC0" colwidth="50*"/>
+                     <colspec colname="COLSPEC1"/>
+                     <thead>
+                            <row valign="top">
+                              <entry colname="COLSPEC0"><para>Group</para></entry>
+                              <entry colname="COLSPEC1"><para>Filter</para></entry>
+                            </row>
+                     </thead> 
+                     <tbody> 
+                           <row valign="top">
+                             <entry><para>Alpha</para></entry>
+                             <entry><para>Alpha Gradient</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Alpha</para></entry>
+                             <entry><para>Alpha Shape</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Alpha</para></entry>
+                             <entry><para>Crop</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry>Artistic<para></para></entry>
+                             <entry><para>Cartoon</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Artistic</para></entry>
+                             <entry><para>Charcoal</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Artistic</para></entry>
+                             <entry><para>Color Clustering</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Artistic</para></entry>
+                             <entry><para>Glow</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Artistic</para></entry>
+                             <entry><para>Old Film</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Artistic</para></entry>
+                             <entry><para>Scanlines</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio</para></entry>
+                             <entry><para>Mono to Stereo</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio</para></entry>
+                             <entry><para>Pan</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio</para></entry>
+                             <entry><para>Pan Keyframed</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio</para></entry>
+                             <entry><para>Swap Channels</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio</para></entry>
+                             <entry><para>Volume</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para>Bandpass</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para>Chorus - Multivoice</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para>Declipper</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para>Delayorama</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para>Distort - Barry's Satan</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para>Distort - Diode Processor</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para></para>Distort - Foldover</entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para></para>Distort - Pointer Cast</entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para>Distort - Sinus Wavewarap</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para>Equalize - DJ 3-band</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para></para>Equalize - Multiband</entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para></para>Flanger - DJ</entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para></para>Frequency Shift - Bode/Moog</entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para>GSM Simulator</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para>Highpass - Butterworth</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para>Lowpass - Butterworth</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para>Noise Gate</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para>Pitchscaler - High Quality</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para>Pitchshifter - AM</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para>Rate Shifter</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para>Reverb - GVerb</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para></para>Reverb - Plate</entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para>Signal Shifter</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Audio Filter</para></entry>
+                             <entry><para>Vinyl Effect</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Blur</para></entry>
+                             <entry><para>Blur</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Blur</para></entry>
+                             <entry><para>Grain</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Blur</para></entry>
+                             <entry><para>Pixelize</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Color</para></entry>
+                             <entry><para>Brightness</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Color</para></entry>
+                             <entry><para>Brightness Keyframed</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Color</para></entry>
+                             <entry><para>Contrast</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Color</para></entry>
+                             <entry><para>Greyscale</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Color</para></entry>
+                             <entry><para></para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Color</para></entry>
+                             <entry><para>Hue</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Color</para></entry>
+                             <entry><para>Invert</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Color</para></entry>
+                             <entry><para>Levels</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Color</para></entry>
+                             <entry><para>Saturation</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Color</para></entry>
+                             <entry><para>Sepia</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Color</para></entry>
+                             <entry><para>Tint</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Color</para></entry>
+                             <entry><para>White Balance</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Color Effect</para></entry>
+                             <entry><para>Color Hold</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Color Effect</para></entry>
+                             <entry><para>Color Clustering</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Color Effect</para></entry>
+                             <entry><para>Color Distance</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Color Effect</para></entry>
+                             <entry><para>Primaries</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Color Effect</para></entry>
+                             <entry><para></para>Technicolor</entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Color Effect</para></entry>
+                             <entry><para>Three Layer</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Color Effect</para></entry>
+                             <entry><para>Threshold</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Color Effect</para></entry>
+                             <entry><para>Threshold0r</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Distort</para></entry>
+                             <entry><para>Flip</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Distort</para></entry>
+                             <entry><para>Lens Correction</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Distort</para></entry>
+                             <entry><para>Mirror</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Distort</para></entry>
+                             <entry><para>V Sync</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Distort</para></entry>
+                             <entry><para>Waves</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Edge</para></entry>
+                             <entry><para>Edge Glow</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Edge</para></entry>
+                             <entry><para>Sobel</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Fix</para></entry>
+                             <entry><para>Denoise</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Fix</para></entry>
+                             <entry><para>Letterbox</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Fix</para></entry>
+                             <entry><para>Sharpness</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Movement</para></entry>
+                             <entry><para>Baltan</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Movement</para></entry>
+                             <entry><para>Nervous</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Movement</para></entry>
+                             <entry><para>Vertigo</para></entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Transform</para></entry>
+                             <entry><para>Rotate</para></entry>
+                           </row>
+                     </tbody>
+                </tgroup>
+            </table>
+        </sect2>
+    </sect1>
+
+    <sect1>
+        <title>Clip Synching and Audio Split Editing</title>
+            <para>
+                In <guilabel>Flowblade Movie Editor</guilabel> you can set clips' positions to follow another clips' positions on request. 
+            </para>          
+            <para>     
+                This is done by setting clip to be a <emphasis>Sync Child Clip</emphasis> clips by selecting a 
+                clip on track <guilabel>V1</guilabel> as its <emphasis>Sync Parent Clip</emphasis>.
+            </para>          
+            <para>               
+                Only clips on track <guilabel>V1</guilabel> can be <emphasis>Sync Parent Clips</emphasis>. This is done to encourage edit style in which
+                the main body of the <emphasis>Sequence</emphasis> is on track <guilabel>V1</guilabel> and composites and audio split edits are done relative to 
+                the clip sequence on track <guilabel>V1</guilabel>.
+            </para>          
+            <para>  
+                Sync feature helps preserve earlier work an multitrack composites and audio split edits 
+                when clips are no longer in correct positions relative to each other, because of edits elsewhere on the <emphasis>Sequence</emphasis>.
+            </para>          
+            <para>             
+                Resyncs are only done on request to avoid jumping of clips on the timeline while editing.
+                Explicit resyncs are also better from the point of view of avoiding side effects when doing edits.
+            </para>
+        <sect2>
+            <title>Setting Sync Parent</title>
+               <orderedlist spacing="compact">
+                    <listitem>
+                        <para>
+                            Click <guilabel>Right Mouse</guilabel> on clip and select
+                            <menuchoice><guimenuitem>Select Sync Parent Clip...</guimenuitem></menuchoice> on any clip NOT on track <guilabel>V1</guilabel>.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Cursor turs into a Target Cross. Click on clip on track <guilabel>V1</guilabel> to select it as 
+                            <guilabel>Sync Parent Clip</guilabel>.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Sync Relation is established between the two clips. Cursor turns back into a default pointer.
+                            Sync State Stripe appers on the <guilabel>Sync Child Clip</guilabel>.
+                        </para>
+                    </listitem>
+                </orderedlist>
+        </sect2>
+        <sect2>
+            <title>Sync State Indicator Stripes on Clips</title>
+               <orderedlist spacing="compact" numeration="lowerroman">
+                    <listitem>
+                        <para>
+                            <guilabel>Green</guilabel> means that clip is in sync with parent.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            <guilabel>Red</guilabel> means that clip is NOT in sync with parent.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            <guilabel>Gray</guilabel> means that <guilabel>Sync Parent Clip</guilabel> is no longer on track <guilabel>V1</guilabel>.
+                        </para>
+                    </listitem>
+                </orderedlist>
+        </sect2>
+        <sect2>
+            <title>Resynching Sync Child Clips</title>
+               <orderedlist spacing="compact" numeration="lowerroman">
+                    <listitem>
+                        <para>
+                            Select <menuchoice><guimenu>Edit</guimenu><guimenuitem>Resync All</guimenuitem></menuchoice>
+                            to resync all <guilabel>Sync Child Clips</guilabel>.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Select <menuchoice><guimenu>Edit</guimenu><guimenuitem>Resync Selected</guimenuitem></menuchoice>
+                            to resync selected <guilabel>Sync Child Clips</guilabel>.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Click <guilabel>Right Mouse</guilabel> on <guilabel>Sync Child Clip</guilabel>
+                            and select<menuchoice><guimenuitem>Resync</guimenuitem></menuchoice> from popoup menu
+                            to resync single clip.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Press <guilabel>Resync Selected</guilabel> button
+                            to resync selected <guilabel>Sync Child Clips</guilabel>.
+                        </para>
+                    </listitem>
+                </orderedlist>
+        </sect2>
+        <sect2>
+            <title>Synching Composited Clips</title>
+               <orderedlist spacing="compact" numeration="lowerroman">
+                    <listitem>
+                        <para>
+                            If apporiate set all clips that are part of a multi track composite synched to the same clip.
+                        </para>
+                    </listitem>
+                </orderedlist>
+        </sect2>
+        <sect2>
+            <title>Audio Split Synching</title>
+               <orderedlist spacing="compact">
+                    <listitem>
+                        <para>
+                            Click <guilabel>Right Mouse</guilabel> on clip in track <guilabel>V1</guilabel>
+                            and select <menuchoice><guimenuitem>Split Audio Synched</guimenuitem></menuchoice>.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Do Audio Split Editing using <guilabel>Two Roll Trim</guilabel> mode to maintain sync with parent clip.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Resync Audio as needed.
+                        </para>
+                    </listitem>
+                </orderedlist>
+        </sect2>
+        <sect2>
+            <title>Clearing Sync Parent relation</title>
+               <orderedlist spacing="compact" numeration="lowerroman">
+                    <listitem>
+                        <para>
+                            Click <guilabel>Right Mouse</guilabel> on <guilabel>Sync Child Clip</guilabel>
+                            and select <menuchoice><guimenuitem>Clear Sync Relation</guimenuitem></menuchoice>.
+                        </para>
+                    </listitem>
+                </orderedlist>
+        </sect2>
+    </sect1>
+
+    <sect1>
+        <title>Rendering</title>
+        <para>
+            This section gives in-depth information of rendering output in <guilabel>Flowblade Movie Editor</guilabel>.
+        </para>
+        <sect2>
+            <title>Rendering behind the scenes: MLT and libavformat(FFMpeg)</title>
+            <para>
+                <guilabel>Flowblade Movie Editor</guilabel> is a Python application interfacing to MLT multitrack media framework. 
+                Other video editing applications build on top of MLT include <guilabel>OpenShot</guilabel> and <guilabel>Kdenlive</guilabel>.
+            </para>
+            <para>
+                MLT uses C-library libavformat(FFMpeg) to render output files, and rendering is defined by setting FFMpeg encoding parameters. 
+                These parameters are delivered from <guilabel>Flowblade Movie Editor</guilabel> to MLT by creating a "avformat" Consumer object for 
+                a  given <emphasis>Render Profile</emphasis>, and then setting its <emphasis>Rendering Args</emphasis>. 
+                These latter arguments are exactly the same which are used when using FFmpeg to encode video files. 
+            </para>
+            <para>
+                 Rendering arguments for encoding different types of video files are pre-packed and can be selected using 
+                 <guilabel>Encocing / Format</guilabel> and <guilabel>Quality</guilabel> <emphasis>Drop Down Menus</emphasis>. Arguments can be refined 
+                 by checking <guilabel>Render with args</guilabel> <emphasis>Checkbox</emphasis> and changing args values and/or adding/removing args.
+            </para>
+            <para>
+                 Any kind of video files supported by the installed version of MLT can be encoded by creating a user defined
+                 <emphasis>Render Profile</emphasis> and setting its <emphasis>Rendering Args</emphasis>. Google for FFMpeg encoding to find Args combinations for different video files.
+            </para>
+            <para>
+                Search web for information on encoding files with FFMpeg to get examples of <emphasis>Rendering Args</emphasis> that can be used.
+            </para>
+            <para>
+                <title>Flowblade rendering pipeline</title>
+                <imageobject>
+                    <imagedata fileref="/usr/share/pyshared/Flowblade/res/help/encoding.png"/>
+                </imageobject>
+            </para>
+        </sect2>
+
+    </sect1>
+
+    <sect1>
+        <title>Appendix A: Buttons</title>
+        <sect2>
+            <title>Timeline Buttons and Position Timecode Display</title>
+            <figure> 
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="/usr/share/pyshared/Flowblade/res/help/timeline_buttons.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+            <sect3>
+                <title>Buttons Functionality</title>
+                <para><title><guilabel>1. Position Timecode Display</guilabel></title></para>
+                <orderedlist spacing="compact">
+                    <title><guilabel>2. Edit Mode</guilabel> buttons</title>
+                    <listitem>
+                        <para><guilabel>Overwrite Move</guilabel></para>
+                    </listitem>
+                    <listitem>
+                        <para><guilabel>Insert Move</guilabel></para>
+                    </listitem>
+                    <listitem>
+                        <para><guilabel>One Roll Trim</guilabel></para>
+                    </listitem>
+                    <listitem>
+                        <para><guilabel>Two Roll Trim</guilabel></para>
+                    </listitem>
+                </orderedlist>
+
+                <orderedlist spacing="compact">
+                    <title><guilabel>3. Undo / Redo</guilabel> buttons</title>
+                    <listitem>
+                        <para><guilabel>Undo</guilabel></para>
+                    </listitem>
+                    <listitem>
+                        <para><guilabel>Redo</guilabel></para>
+                    </listitem>
+                </orderedlist>
+
+                <orderedlist spacing="compact">
+                    <title><guilabel>4. Zoom</guilabel> buttons</title>
+                    <listitem>
+                        <para><guilabel>Zoom In</guilabel></para>
+                    </listitem>
+                    <listitem>
+                        <para><guilabel>Zoom Out</guilabel></para>
+                    </listitem>
+                    <listitem>
+                        <para><guilabel>Zoom To Sequence Length</guilabel></para>
+                    </listitem>
+                </orderedlist> 
+
+                <orderedlist spacing="compact">
+                    <title><guilabel>5. Edit Action</guilabel> buttons</title>
+                    <listitem>
+                        <para><guilabel>Lift Clip</guilabel></para>
+                    </listitem>
+                    <listitem>
+                        <para><guilabel>Splice Out Clip</guilabel></para>
+                    </listitem>
+                    <listitem>
+                        <para><guilabel>Cut Clip</guilabel></para>
+                    </listitem>
+                    <listitem>
+                        <para><guilabel>Resync Selected Clips</guilabel></para>
+                    </listitem>
+                </orderedlist>
+
+                <orderedlist spacing="compact">
+                    <title><guilabel>6. Monitor Clip Insert</guilabel> buttons</title>
+                    <listitem>
+                        <para><guilabel>3 - Point Overwrite</guilabel></para>
+                    </listitem>
+                    <listitem>
+                        <para><guilabel>Insert At Closest Cut To Current Frame</guilabel></para>
+                    </listitem>
+                    <listitem>
+                        <para><guilabel>Append At Track End</guilabel></para>
+                    </listitem>
+                </orderedlist>
+            </sect3>
+        </sect2>
+        <sect2>
+            <title>Monitor Buttons and Position Bar</title>
+            <figure> 
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="/usr/share/pyshared/Flowblade/res/help/monitor_controls.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+            <sect3>   
+              <title>Buttons Functionality</title>               
+                  <orderedlist spacing="compact">
+                        <listitem>
+                            <para><guilabel>Timeline</guilabel> and <guilabel>Clip Monitor</guilabel> buttons.</para>
+                        </listitem>
+                        <listitem>
+                            <para><guilabel>Position Bar</guilabel></para>
+                        </listitem>
+                        <listitem>
+                            <para><guilabel>FF</guilabel> and <guilabel>Rewind</guilabel> buttons.</para>
+                        </listitem>
+                        <listitem>
+                            <para><guilabel>Previous Frame</guilabel> and <guilabel>Next Frame</guilabel> buttons.</para>
+                        </listitem>
+                        <listitem>
+                            <para><guilabel>Play</guilabel> and <guilabel>Stop</guilabel> buttons.</para>
+                        </listitem>
+                        <listitem>
+                            <para><guilabel>Set In Point</guilabel> and <guilabel>Set Out Point</guilabel> buttons.</para>
+                        </listitem>
+                        <listitem>
+                            <para><guilabel>Go To In Point</guilabel> and <guilabel>Go To Out Point</guilabel> buttons.</para>
+                        </listitem>
+                        <listitem>
+                            <para><guilabel>Clear In And Out Points</guilabel> button.</para>
+                        </listitem>
+                        <listitem>
+                            <para><guilabel>Monitor View Select</guilabel> button: Program Video/Vectorscope/RGBParade.</para>
+                        </listitem>
+                </orderedlist>
+            </sect3>
+        </sect2>
+    </sect1>
+
+    <sect1>
+        <title>Appendix B: Keyboard Shortcuts</title>
+        <sect2>
+                <title>General Shortcuts</title> 
+                <table id="general-shortcut" frame="all">
+ 
+                  <tgroup cols="2" colsep="1" rowsep="1">
+                         <colspec colname="COLSPEC0" colwidth="50*"/>
+                         <colspec colname="COLSPEC1"/>
+                         <thead>
+                                <row valign="top">
+                                  <entry colname="COLSPEC0">
+                                         <para>Keyboard Shortcut</para></entry>
+                                  <entry colname="COLSPEC1">
+                                         <para>Function</para></entry>
+                                </row>
+                         </thead> 
+                         <tbody> 
+                           <row valign="top">
+                             <entry><para><guilabel>Control + n</guilabel></para></entry>
+                             <entry><para>Create New Project</para> </entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para><guilabel>Control + s</guilabel></para></entry>
+                             <entry><para>Save Project</para> </entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para><guilabel>Delete</guilabel></para></entry>
+                             <entry><para></para>Delete selected item</entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para><guilabel>Escape</guilabel></para></entry>
+                             <entry><para></para>Stop rendering waveform image</entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para><guilabel>Control + q</guilabel></para></entry>
+                             <entry><para></para>Quit application</entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para><guilabel>Control + z</guilabel></para></entry>
+                             <entry><para></para>Undo</entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para><guilabel>Control + y</guilabel></para></entry>
+                             <entry><para></para>Redo</entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para><guilabel>Control + o</guilabel></para></entry>
+                             <entry><para></para>Open Project</entry>
+                           </row>
+                         </tbody>
+                  </tgroup>
+                </table>
+        </sect2>
+        <sect2>
+                <title>Timeline Shortcuts</title>
+                <table id="Timeline-shortcut" frame="all">
+ 
+                  <tgroup cols="2" colsep="1" rowsep="1">
+                         <colspec colname="COLSPEC0" colwidth="50*"/>
+                         <colspec colname="COLSPEC1"/>
+                         <thead>
+                                <row valign="top">
+                                  <entry colname="COLSPEC0">
+                                         <para>Keyboard Shortcut</para></entry>
+                                  <entry colname="COLSPEC1">
+                                         <para>Function</para></entry>
+                                </row>
+                         </thead> 
+                         <tbody> 
+                           <row valign="top">
+                             <entry><para><guilabel>-</guilabel></para></entry>
+                             <entry><para>Zoom Out</para> </entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para><guilabel>+</guilabel></para></entry>
+                             <entry><para>Zoom In</para> </entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para>Left Arrow<guilabel></guilabel></para></entry>
+                             <entry><para>Previous Frame</para> </entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para><guilabel>Right Arrow</guilabel></para></entry>
+                             <entry><para>Next Frame</para> </entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para><guilabel>Up Arrow</guilabel></para></entry>
+                             <entry><para>Next Cut</para> </entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para><guilabel>Down Arrow</guilabel></para></entry>
+                             <entry><para>Previous Cut</para> </entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para><guilabel>x</guilabel></para></entry>
+                             <entry><para>Cut Clip</para> </entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para><guilabel>Delete</guilabel></para></entry>
+                             <entry><para>Deleted selected clips on blanks</para> </entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para><guilabel>i</guilabel></para></entry>
+                             <entry><para>Go to Insert Move mode</para> </entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para><guilabel>t</guilabel></para></entry>
+                             <entry><para>Go to One Roll Trim mode</para> </entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para><guilabel>Space</guilabel></para></entry>
+                             <entry><para>Start/Stop playback</para> </entry>
+                           </row>
+                         </tbody>
+                  </tgroup>
+                </table>
+        </sect2>
+    </sect1>
+</article> 

@@ -1,0 +1,755 @@
+"""
+Module contains class Sequence that is the multitrack media object being edited
+by the application. A project has 1-n of these.
+"""
+import copy
+import gnomevfs
+import mlt
+import time #added when testing 
+import types
+import os
+
+import appconsts
+import edit
+import editorstate
+import editorpersistance
+import mltfilters
+import mlttransitions
+import respaths
+import utils
+
+# Media types for tracks or clips
+UNKNOWN = appconsts.UNKNOWN
+VIDEO = appconsts.VIDEO
+AUDIO = appconsts.AUDIO
+IMAGE = appconsts.IMAGE
+RENDERED_VIDEO = appconsts.RENDERED_VIDEO
+PATTERN_PRODUCER = appconsts.PATTERN_PRODUCER
+
+# Allowed editing operations on a track
+FREE = appconsts.FREE # all edits allowed
+SYNC_LOCKED = appconsts.SYNC_LOCKED # FEATURE NOT AVAILABLE TO USER CURRENTLY!
+                # no insert, splice out or one roll trim. 
+                # Allowed edits do not change positions of later clips 
+LOCKED = appconsts.LOCKED # no edits allowed
+
+# Display heights
+TRACK_HEIGHT_NORMAL = appconsts.TRACK_HEIGHT_NORMAL # track height in canvas and column
+TRACK_HEIGHT_SMALL = appconsts.TRACK_HEIGHT_SMALL # track height in canvas and column
+
+# MLT types
+MLT_PLAYLIST = 0
+MLT_PRODUCER = 1
+MLT_FILTER = 2
+
+# Number of tracks available
+AUDIO_TRACKS_COUNT = 4
+VIDEO_TRACKS_COUNT = 5
+
+# Output modes. These correspond to option indexes in guicomponents.get_monitor_view_select_combo()
+PROGRAM_OUT_MODE = 0
+VECTORSCOPE_MODE = 1
+RGB_PARADE_MODE = 2
+
+# black clip
+black_track_clip = None
+
+# Mute states as (video_on, audio_on) tuples
+# Indexes correspond to "hide" property values 0 - 3
+# for playlists in MLT
+# USED FOR TRACKS, NOT CLIPS. Clips handled using values in appconsts.py
+MUTE_STATES = [(True, True), (False, True), (True, False), (False, False)]
+
+
+class Sequence:
+    """
+    Multitrack MLT object
+    """
+    def __init__(self, profile, name="sequence"):
+        
+        # Data members
+        self.name = name # name of sequence
+        self.next_id = 0 # id for next created clip
+        self.profile = profile
+        self.tracks = []
+        self.compositors = []
+        self.markers = [] #future feature
+        self.proxyclips = {} #future feature
+        self.rendered_versions = {} #future feature
+        
+        # MLT objects for a multitrack sequence
+        self.init_mlt_objects()
+
+    # ----------------------------------- mlt init
+    def init_mlt_objects(self):
+        # MLT objects for multitrack sequence
+        self.tractor = mlt.Tractor()
+
+        self.tractor.mark_in = -1
+        self.tractor.mark_out = -1
+        
+        self.field = self.tractor.field()
+        self.multitrack = self.tractor.multitrack()
+        
+        self.vectorscope = mlt.Filter(self.profile, "frei0r.vectorscope")
+        self.rgbparade =  mlt.Filter(self.profile, "frei0r.rgbparade")
+        self.outputfilter = None
+    
+    # ---------------------------------------- tracks
+    def create_default_tracks(self):
+        """
+        This is done when sequnece first created, but when sequence is loaded
+        tracks are added using add_track(...)
+        """
+        # Default tracks
+        # black bg track
+        self.add_track(VIDEO)
+        
+        # Audio tracks
+        audio_tracks = AUDIO_TRACKS_COUNT
+        for i in range(0, audio_tracks):
+            track = self.add_track(AUDIO)
+            track.height = TRACK_HEIGHT_SMALL
+        
+        # Video tracks
+        self.first_video_index = audio_tracks + 1 # index of first editable video track
+        video_tracks = VIDEO_TRACKS_COUNT
+        for i in range(0, video_tracks):
+            self.add_track(VIDEO) # editable
+            if i > 0:
+                track_index = i + self.first_video_index
+                self.tracks[track_index].height = TRACK_HEIGHT_SMALL # only V1 is normal size after creation
+                self.tracks[track_index].active = False # only V1 is active after creation
+
+        # ---Hidden track--- #
+        # Hidden video track for clip ang trimming display.
+        # Hidden track is a video track that is always the topmost track.
+        # It is used when displaying monitor clip and
+        # displaying the clip that is being trim edited. When trim is loop previewed
+        # the hidden track is cleared so that the edit that is on the tracks
+        # below can be viewed.
+        self.add_track(VIDEO, True) 
+
+        # Create black bg clip and set in and out
+        global black_track_clip
+        black_track_clip = self.create_file_producer_clip(respaths.BLACK_IMAGE_PATH)
+        clip_in = 0
+        clip_out = 0
+        black_track_clip.clip_in = clip_in
+        black_track_clip.clip_out = clip_out
+
+        # Add black clip to black bg track
+        self.tracks[0].clips.append(black_track_clip) # py
+        self.tracks[0].append(black_track_clip, clip_in, clip_out) # mlt
+
+    def add_track(self, type, is_hidden=False):
+        """ 
+        Creates a MLT playlist object, adds project
+        data and adds to tracks list.
+        """
+        new_track = mlt.Playlist()
+
+        self._add_track_attributes(new_track, type)
+        new_track.is_sync_track = False
+
+        # Connect to MLT multitrack
+        self.multitrack.connect(new_track, len(self.tracks))
+        
+        # Add to tracklist and set id to list index
+        new_track.id = len(self.tracks)
+        self.tracks.append(new_track)
+        
+        # Mix all audio to track 1 by combining them one after another 
+        # using an always active field transition.
+        if ((new_track.id > 1) # black bg or track1 it's self does not need to be mixed
+            and (is_hidden == False)): # We actually do want hidden track to cover all audio below, which happens if it is not mixed.
+            self._mix_audio_for_track(new_track)
+        
+        # Add method that returns track name
+        new_track.get_name = lambda : utils.get_track_name(new_track, self) 
+        
+        return new_track
+
+    def _mix_audio_for_track(self, track):
+        transition = mlt.Transition(self.profile, "mix")
+        transition.set("in", 0)
+        transition.set("out", 0)
+        transition.set("a_track", 1)
+        transition.set("b_track", track.id)
+        transition.set("always_active", 1)
+        transition.set("combine", 1)
+        self.field.plant_transition(transition, 1, track.id)
+
+    def _add_track_attributes(self, track, type):                
+        # Add data attr
+        track.type = type
+        track.sequence = self
+        
+        # Add state attr
+        track.active = True
+
+        # Set initial video and audio playback values
+        if type == VIDEO:
+            track.mute_state = 0 # video on, audio on as mlt "hide" value
+        else:
+            track.mute_state = 1 # video off, audio on as mlt "hide" value
+        track.set("hide", track.mute_state)
+
+        # This is kept in sync with mlt.Playlist inner data
+        track.clips = []
+        
+        # Display height
+        track.height = TRACK_HEIGHT_NORMAL
+        
+        # Tracks may be FREE or LOCKED
+        track.edit_freedom = FREE
+  
+    def get_tracks_height(self):
+        h = 0
+        for i in range (1, len(self.tracks) - 1):# visible tracks
+            track = self.tracks[i]
+            h += track.height
+        return  h
+        # Add method that returns audio sync track index name
+
+    def first_video_track(self):
+        return self.tracks[self.first_video_index]
+    
+    def all_tracks_off(self):
+        for i in range (1, len(self.tracks) - 1):
+            track = self.tracks[i]
+            if track.active == True:
+                return False
+        return True
+
+    # -------------------------------------------------- clips
+    def create_file_producer_clip(self, path, new_clip_name=None):
+        """
+        Creates MLT Producer and adds attributes to it, but does 
+        not add it to track/playlist object.
+        """
+        producer = mlt.Producer(self.profile, path) # this runs 0.5s+
+        producer.path = path
+        producer.filters = []
+        
+        (dir, file_name) = os.path.split(path)
+        (name, ext) = os.path.splitext(file_name)
+        producer.name = name
+        if new_clip_name != None:
+            producer.name = new_clip_name
+        producer.media_type = get_media_type(path)
+        
+        self.add_clip_attr(producer)
+        
+        return producer
+
+    def create_pattern_producer(self, pattern_producer_data):
+        """
+        pattern_producer_data is instance of projectdata.BinColorClip
+        """
+        if pattern_producer_data.patter_producer_type == appconsts.COLOR_CLIP:
+            clip = self._create_color_clip(pattern_producer_data.gdk_color_str,
+                                          pattern_producer_data.name)
+        
+        # Save creation data (instance of projectdata.BinColorClip) for cloning when editing or doing save/load 
+        clip.create_data = copy.copy(pattern_producer_data)
+        clip.create_data.icon = None # this is not pickleable, recreate when needed
+        return clip
+
+    def _create_color_clip(self, gdk_color_str, name):
+        mlt_color = utils.gdk_color_str_to_mlt_color_str(gdk_color_str)
+        producer = mlt.Producer(self.profile, "colour", mlt_color)
+        producer.path = ""
+        producer.filters = []
+        producer.gdk_color_str = gdk_color_str
+
+        producer.name = name
+        producer.media_type = PATTERN_PRODUCER
+        self.add_clip_attr(producer)
+        return producer
+
+    def add_clip_attr(self, clip):
+        """
+        File producers, transitions and black clips have same
+        clip attributes.
+        """
+        clip.id = self.get_next_id()
+        # example: in 10, out 10 == 1 frame long clip
+        clip.clip_in = -1 # inclusive. -1 == not set
+        clip.clip_out = -1 # inclusive, -1 == not set 
+        clip.is_blanck_clip = False
+        clip.selected = False
+        clip.sync_data = None 
+        clip.mute_filter = None #
+        clip.stream_indexes = None # a, v stream indexes when not muted
+        clip.clip_length = lambda: _clip_length(clip)
+        clip.waveform_data = None
+    
+    def clone_clip_range_and_filters(self, clip, clone_clip):
+        """
+        Clones clip range properties and filters that are needed for clip to be
+        used in another clip's place, but not id, master_clip and selection
+        properties that are part of original clips state in sequence.
+        """
+        clone_clip.clip_in = clip.clip_in
+        clone_clip.clip_out = clip.clip_out
+        clone_clip.filters = []
+        
+        for filter in clip.filters:
+            clone_filter = mltfilters.clone_filter_object(filter, self.profile)
+            clone_clip.attach(clone_filter.mlt_filter)
+            clone_clip.filters.append(clone_filter)
+
+    def clone_filters(self, clip):
+        clone_filters = []
+        for f in clip.filters:
+            clone_filter = mltfilters.clone_filter_object(f, self.profile)
+            clone_filters.append(clone_filter)
+        return clone_filters
+
+    def get_next_id(self):
+        """
+        Growing id for newly created clip or transition. 
+        """
+        self.next_id += 1
+        return self.next_id - 1
+        
+    # ------------------------------------------ blanks
+    def create_and_insert_blank(self, track, index, length):
+        """
+        Used for persistance.
+        """
+        edit._insert_blank(track, index, length)
+        return track.clips[index]
+    
+    def append_blank(self, blank_length, track):
+        """
+        Used in hack for trim editing last clip of a track.
+        """
+        index = len(track.clips)
+        edit._insert_blank(track, index, blank_length)
+        
+    def remove_last_clip(self, track):
+        """
+        Used in hack for trim editing last clip of a track.
+        """
+        clip = edit._remove_clip(track, len(track.clips) - 1)
+
+    # ------------------------------------------ filters
+    def create_filter(self, filter_info):
+        filter_object = mltfilters.FilterObject(filter_info)
+        filter_object.create_mlt_filter(self.profile)
+        return filter_object
+
+    def create_multipart_filter(self, filter_info, clip):
+        filter_object = mltfilters.MultipartFilterObject(filter_info)
+        filter_object.create_mlt_filters(self.profile, clip)
+        return filter_object
+
+    # ------------------------------------------------------ compositors
+    def create_compositor(self, compositor_type_index):
+        compositor = mlttransitions.create_compositor(compositor_type_index)
+        compositor.create_mlt_objects(self.profile)
+        return compositor
+
+    def restack_compositors(self):
+        self.sort_compositors()
+
+        new_compositors = []
+        for compositor in self.compositors:
+            if compositor.planted == False:
+                self._plant_compositor(compositor)
+                new_compositors.append(compositor)
+            else:
+                clone_compositor = self._create_and_plant_clone_compositor(compositor)
+                new_compositors.append(clone_compositor)
+        self.compositors = new_compositors
+
+    def _plant_compositor(self, compositor):
+        self.field.plant_transition(compositor.transition.mlt_transition, 
+                                    int(compositor.transition.a_track), 
+                                    int(compositor.transition.b_track))
+        compositor.planted = True
+
+    def _create_and_plant_clone_compositor(self, old_compositor):
+        # Remove old compositor
+        edit.old_compositors.append(old_compositor) # HACK. Garbage collecting compositors causes crashes.
+        self.field.disconnect_service(old_compositor.transition.mlt_transition)
+        
+        # Create and plant new compositor
+        compositor = self.create_compositor(old_compositor.compositor_index)
+        compositor.clone_properties(old_compositor)
+        compositor.set_in_and_out(old_compositor.clip_in, old_compositor.clip_out)
+        compositor.transition.set_tracks(old_compositor.transition.a_track, old_compositor.transition.b_track)
+        self._plant_compositor(compositor)
+        return compositor
+    
+    def get_compositors(self):
+        return self.compositors
+
+    def add_compositor(self, compositor):
+        self.compositors.append(compositor)
+
+    def remove_compositor(self, old_compositor):
+        edit.old_compositors.append(old_compositor)# HACK. Garbage collecting compositors causes crashes.
+        try:
+            self.compositors.remove(old_compositor)
+        except ValueError: # has been restacked since creation, needs to looked up using destroy_id
+            found = False
+            for comp in self.compositors:
+                if comp.destroy_id == old_compositor.destroy_id:
+                    found = True
+                    self.compositors.remove(comp)
+                    edit.old_compositors.append(comp)
+                    old_compositor = comp
+            if found == False:
+                raise ValueError('compositor not found using destroy_id')
+            
+        self.field.disconnect_service(old_compositor.transition.mlt_transition)
+
+    def get_compositor_for_destroy_id(self, destroy_id):
+        for comp in self.compositors:
+            if comp.destroy_id == destroy_id:
+                return comp
+        raise ValueError('compositor for id not found')
+
+    def sort_compositors(self):
+        """
+        Compositor order must be from top to bottom or will nort work.
+        """
+        self.compositors.sort(_sort_compositors_comparator)
+
+    # -------------------------- monitor clip, trimming display, output mode and hidden track
+    def display_monitor_clip(self, path, pattern_producer_data=None):
+        """
+        Adds media clip to hidden track for viewing and for setting mark
+        in and mark out points.
+        """
+        track = self.tracks[-1] # Always last track
+        if pattern_producer_data == None:
+            self.monitor_clip = self.create_file_producer_clip(path)
+        else:
+            self.monitor_clip = self.create_pattern_producer(pattern_producer_data)
+        
+        edit._insert_clip(track, self.monitor_clip, 0, 0, \
+                          self.monitor_clip.get_length() - 1)
+        self._mute_editable()
+        return self.monitor_clip
+
+    def display_trim_clip(self, path, clip_start_pos, patter_producer_data=None):
+        """
+        Adds clip to hidden track for trim editing display.
+        """
+        track = self.tracks[-1] # Always last track
+        
+        # Display trimmmed clip on hidden track by creating copy of it.
+        # File producer
+        if path != None:
+            clip = self.create_file_producer_clip(path)
+            
+            if clip_start_pos > 0:
+                edit._insert_blank(track, 0, clip_start_pos)
+                edit._insert_clip(track, clip, 1, 0, clip.get_length() - 1)
+            else:
+                edit._insert_clip(track, clip, 1, -clip_start_pos, clip.get_length() - 1) # insert index 1 ?
+        # Pattern producer
+        else:
+            clip = self.create_pattern_producer(patter_producer_data)
+            edit._insert_clip(track, clip, 0, 0, clip.get_length() - 1)
+        
+        self._mute_editable()
+
+    def hide_hidden_clips(self):
+        """
+        Called to temporarely remove hidden clips for trim mode loop playback
+        """
+        self.tracks[-1].clear()
+        self._unmute_editable()
+
+    def redisplay_hidden_clips(self):
+        """
+        Called after trim mode loop playback to redisplay hidden track clips
+        """
+        clips = self.tracks[-1].clips
+        self.tracks[-1].clips = []
+        for i in range(0, len(clips)):
+            clip = clips[i]
+            if clip.is_blanck_clip:
+                edit._insert_blank(self.tracks[-1], i, 
+                                   clip.clip_out - clip.clip_in + 1)
+            else:
+                edit._insert_clip(self.tracks[-1], clip, i, 
+                                   clip.clip_in, clip.clip_out)
+        self._mute_editable()
+
+    def clear_hidden_track(self):
+        """
+        Last track is hidden track used to display clips and trim edits.
+        Here that track is cleared of any content.
+        """
+        self.tracks[-1].clear()
+        self.tracks[-1].clips = []
+        self._unmute_editable()
+    
+    def _mute_editable(self):
+        for i in range(1, len(self.tracks) - 1):
+            track = self.tracks[i]
+            track.set("hide", 3)
+    
+    def _unmute_editable(self):
+        for i in range(1, len(self.tracks) - 1):
+            track = self.tracks[i]
+            track.set("hide", int(track.mute_state))
+
+    def set_output_mode(self, mode):
+        if self.outputfilter != None:
+            self.tractor.detach(self.outputfilter)
+        
+        self.outputfilter = None
+
+        if mode == PROGRAM_OUT_MODE:
+            return
+        elif mode == VECTORSCOPE_MODE:
+            self.tractor.attach(self.vectorscope)
+            self.outputfilter = self.vectorscope
+        elif mode == RGB_PARADE_MODE:
+            self.tractor.attach(self.rgbparade)
+            self.outputfilter = self.rgbparade
+
+    # ------------------------------------------------ length, seek, misc
+    def update_length(self):
+        """
+        Set black to track length of sequence.
+        """
+        global black_track_clip 
+        c_in = 0
+        c_out = self.get_length()
+        black_track_clip.clip_in = c_in
+        black_track_clip.clip_out = c_out
+        black_track_clip.set_in_and_out(c_in, c_out)
+ 
+    def get_length(self):
+        return self.multitrack.get_length()
+
+    def resize_tracks_to_fit(self, allocation):
+        x, y, w, panel_height = allocation
+        count = 0
+        fix_next = True
+        while(fix_next):
+            tracks_height = self.get_tracks_height()
+            if tracks_height < panel_height:
+                fix_next = False
+            elif count + 1 == self.first_video_index:
+                # This shold not happen because track heights should be set up so that minimized app 
+                # has enough space to display all tracks.
+                print "sequence.resize_tracks_to_fit (): COULD_NOT MAKE TRACKS TO FIT PANEL HEIGHT ???!!??"
+                fix_next = False
+            else:
+                self.tracks[1 + count].height = TRACK_HEIGHT_SMALL
+                self.tracks[len(self.tracks) - 2 - count].height = TRACK_HEIGHT_SMALL
+                count += 1
+
+    def find_next_cut_frame(self, tline_frame):
+        """
+        Returns frame of next cut in active tracks relative to timeline.
+        """
+        cut_frame = -1
+        for i in range(1, len(self.tracks)):
+            track = self.tracks[i]
+            if track.active == False:
+                continue
+            
+            # Get index and clip
+            index = track.get_clip_index_at(tline_frame)
+            try:
+                clip = track.clips[index]            
+            except Exception:
+                continue # Frame after last clip in track
+            
+            # Get next cut frame
+            clip_start_in_tline = track.clip_start(index)
+            length = clip.clip_out - clip.clip_in 
+            next_cut_frame = clip_start_in_tline + length + 1 # +1 clip out inclusive
+ 
+            # Set cut frame
+            if cut_frame == -1:
+                cut_frame = next_cut_frame
+            elif next_cut_frame < cut_frame:
+                cut_frame = next_cut_frame
+                
+        return cut_frame
+
+    def find_prev_cut_frame(self, tline_frame):
+        """
+        Returns frame of next cut in active tracks relative to timeline.
+        """
+        cut_frame = -1
+        for i in range(1, len(self.tracks)):
+            track = self.tracks[i]
+            if track == False:
+                continue
+            
+            # Get index and clip start
+            index = track.get_clip_index_at(tline_frame)
+            clip_start_frame = track.clip_start(index)
+            
+            # If we are on cut, we want previous cut
+            if clip_start_frame == tline_frame:
+                index = index - 1
+            
+            # Check index
+            try:
+                clip = track.clips[index]            
+            except Exception:
+                continue # index not good clip
+            
+            # Get prev cut frame
+            next_cut_frame = track.clip_start(index)
+            
+            # Set cut frame
+            if cut_frame == -1:
+                cut_frame = next_cut_frame
+            elif next_cut_frame > cut_frame:
+                cut_frame = next_cut_frame
+                
+        return cut_frame
+    
+    def get_closest_cut_frame(self, track_id, frame):
+        track = self.tracks[track_id]
+        index = track.get_clip_index_at(frame)
+        try:
+            clip = track.clips[index]            
+        except Exception:
+            return -1
+            
+        start_frame = track.clip_start(index)
+        start_dist = frame - start_frame
+        end_frame = start_frame + (clip.clip_out - clip.clip_in + 1) # frames are inclusive
+        end_dist = end_frame - frame
+        
+        if start_dist < end_dist:
+            return start_frame
+        else:
+            return end_frame
+        
+        return start_frame # equal distance
+
+    def get_first_active_track(self):
+        """
+        This done in a way that user sees the track displayed as top most
+        on screen being the first active when doing for e.g. a monitor insert.
+        track: 0, black bg video
+        tracks: 1 - (self.first_video_index - 1), audio, numbred to user in oppposite direction as 1 - n (user_index = self.first_video_index - index)
+        tracks: self.first_video_index - (len - 2), video, numbred to user as 1 - n (user_index = index - self.first_video_index + 1)
+        track: (len - 1). hidden video track for trim and clip display
+        """
+        # Video
+        for i in range(len(self.tracks) - 2, self.first_video_index - 1, -1):
+            if self.tracks[i].active:
+                return self.tracks[i]
+        # Audio
+        for i in range(self.first_video_index - 1, 0, -1):
+            if self.tracks[i].active:
+                return self.tracks[i]
+
+        return None
+
+    def get_clip_index(self, track, frame):
+        """
+        Returns index or -1 if frame not on a clip
+        """
+        index = track.get_clip_index_at(frame)
+        try:
+            clip = track.clips[index]
+        except Exception:
+            return -1
+        
+        return index
+
+    def next_mute_state(self, track_index):
+        # track.mute_state values corrspond to mlt "hide" values
+        track = self.tracks[track_index]
+        if track.type == VIDEO:
+            track.mute_state = track.mute_state + 1
+            if track.mute_state > 3:
+                track.mute_state = 0 # mlt "hide" all on
+        else:
+            if track.mute_state == 1:
+                track.mute_state = 3 # mlt "hide" all off
+            else:
+                track.mute_state = 1 # mlt "hide" video off
+        track.set("hide", int(track.mute_state))
+
+    def set_track_mute_state(self, track_index, mute_state):
+        track = self.tracks[track_index]
+        track.mute_state = mute_state
+        track.set("hide", int(track.mute_state))
+
+    def print_all(self):
+        print "------------------------######"
+        for i in range(0, len(self.tracks)):
+            print "TRACK:", i
+            self.print_track(i)
+
+    def print_track(self, track_id):
+        track = self.tracks[track_id]
+
+        print "PYTHON"
+        for i in range(0, len(track.clips)):
+            clip = track.clips[i]
+            if clip.is_blank():
+                msg = "BLANK"
+            else:
+                msg = clip.name
+     
+            print i, ": id:", clip.id, " in:",clip.clip_in," out:", \
+            clip.clip_out, msg
+
+
+        print "MLT"
+        for i in range(0, track.count()):
+            clip = track.get_clip(i)
+            print i, " in:", clip.get_in()," out:", clip.get_out()
+
+
+    def print_compositors(self):
+        for compositor in self.compositors:
+            print "---"
+            print compositor.name
+            print "a_track:" , compositor.transition.a_track
+            print "b_track:" , compositor.transition.b_track
+
+# ------------------------------------------------ module util methods
+def get_media_type(file_path):
+    """
+    Returns media type of file.
+    """ 
+    try:
+        mime_type = gnomevfs.get_mime_type(file_path)
+    except:
+        # INFOWINDOW
+        pass
+        
+    if mime_type.startswith("video"):
+        return VIDEO
+    
+    if mime_type.startswith("audio"):
+        return AUDIO
+    
+    if mime_type.startswith("image"):
+        return IMAGE
+    
+    return UNKNOWN
+    
+def _clip_length(clip):
+    return clip.clip_out - clip.clip_in + 1
+
+def _sort_compositors_comparator(a_comp, b_comp):
+    # compositors on top most tracks first
+    if a_comp.transition.b_track > b_comp.transition.b_track:
+        return -1
+    elif a_comp.transition.b_track < b_comp.transition.b_track:
+        return 1
+    else:
+        return 0
+        

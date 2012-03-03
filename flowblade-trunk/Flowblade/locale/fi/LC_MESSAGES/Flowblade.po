@@ -1,0 +1,2670 @@
+# Finnish translations for PACKAGE package.
+# Copyright (C) 2011 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Janne Liljeblad <janne@janne-kx557aa-uuw-a6521-sc>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-03-02 20:01+0200\n"
+"PO-Revision-Date: 2011-12-13 23:55+0200\n"
+"Last-Translator: Janne Liljeblad <janne@janne-kx557aa-uuw-a6521-sc>\n"
+"Language-Team: Finnish\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: app.py:363
+msgid "Too small screen for this application."
+msgstr "Näyttö on liian pieni tälle ohjelmalle."
+
+#: app.py:366
+msgid "Minimum screen dimensions for this application are 1152 x 864.\n"
+msgstr "Minimi näyttö koko tällle ohjelmalle on 1152 x 864.\n"
+
+#: app.py:367
+msgid "Your screen dimensions are "
+msgstr "Sinun näyttösi koko on "
+
+#: app.py:383
+msgid "Project has not been saved since it was opened."
+msgstr "Projektia ei ole tallennettu aikaisemmin."
+
+#: app.py:388
+msgid "Project was saved less than a minute ago."
+msgstr "Projekti tallennettiin viimeksi alle minuutti sitten."
+
+#: app.py:391
+msgid "Project was saved one minute ago."
+msgstr "Projekti tallennettiin viimeksi minuutti sitten."
+
+#: app.py:393
+msgid "Project was saved "
+msgstr "Projektia ei ole tallennettu aikaisemmin"
+
+#: app.py:393
+msgid " minutes ago."
+msgstr " minuuttia sitten."
+
+#: app.py:403 useraction.py:248
+msgid "Project has not been saved previously"
+msgstr "Projektia ei ole tallennettu aikaisemmin"
+
+#: app.py:404 useraction.py:249
+msgid "Save project with File -> Save As before closing."
+msgstr ""
+"Tallenna projekti valinnalla Tiedosto -> Tallenna nimellä ennen sulkemista."
+
+#: useraction.py:84
+msgid "Opening"
+msgstr "Avaa"
+
+#: useraction.py:339
+msgid "Render file name entry is empty"
+msgstr "Nimi argumentti on tyhjä"
+
+#: useraction.py:340
+msgid "You have to provide a name for the file to be rendered."
+msgstr "Rendattavalle tiedostolle täytyy antaa nimi."
+
+#: useraction.py:345
+msgid "Rendering file already exists!"
+msgstr "Rendattava tiedosto on jo olemassa!"
+
+#: useraction.py:346
+msgid "Do you want to overwrite existing file?"
+msgstr "Haluatko kirjoittaa olemassa olevan tiedoston päälle?"
+
+#: useraction.py:374
+msgid "Render range not defined"
+msgstr "Renderöinti profiilia ei ole määritelty"
+
+#: useraction.py:375
+msgid ""
+"Define render range using Mark In and Mark Out points\n"
+"orselect range option 'Program length' to start rendering."
+msgstr ""
+
+#: useraction.py:411
+msgid "Open.."
+msgstr "Avaa"
+
+#: useraction.py:421
+msgid "All files"
+msgstr "Kaikki tiedostot"
+
+#: useraction.py:452
+msgid "Can't make home folder thumbnails folder"
+msgstr "Et voi valita kotikansiotasi mediaikoni kansioksi"
+
+#: useraction.py:453
+msgid "Please create and select some other folder then '"
+msgstr "Luo ja valitse joku toinen kansio kuin '"
+
+#: useraction.py:454
+msgid "' as thumbnails folder"
+msgstr "' mediaikoni kansioksi."
+
+#: useraction.py:585
+msgid "Can't remove a non-empty bin"
+msgstr "Et voi poistaa laatikkoa jos se ei ole tyhjä."
+
+#: useraction.py:586
+msgid "You must remove all files from the bin before deleting it."
+msgstr ""
+"Sinun täytyy poistaa kaikki tiedostot laatikosta ennen kuin poistat sen."
+
+#: useraction.py:594
+msgid "Can't remove last bin"
+msgstr "Et voi poistaa viimeista laatikkoa"
+
+#: useraction.py:595
+msgid "There must always exist at least one bin."
+msgstr "Vähintään yksi laatikko taytyy aina olla olemassa."
+
+#: useraction.py:683
+msgid "Selected sequence is already being edited"
+msgstr "Valittu ohjelma on jo editoitavana"
+
+#: useraction.py:684
+msgid ""
+"Select another sequence. Press Add -button to create a\n"
+"new sequence if needed."
+msgstr ""
+"Valitse toinen ohjelma. Paina tarvittaessa Lisää -nappia luodaksesi\n"
+"uuden ohjelman"
+
+#: useraction.py:720
+msgid ""
+"Are you sure you want to delete\n"
+"sequence '"
+msgstr ""
+"Oletko varma että haluat poistaa\n"
+"ohjelman '"
+
+#: useraction.py:720
+msgid "'?"
+msgstr "'?"
+
+#: useraction.py:721
+msgid "This operation can not be undone. Sequence will be permanently lost."
+msgstr "Tätä toimintoa ei voida peruuttaa. Ohjelma menetetään pysyvästi."
+
+#: useraction.py:737
+msgid "Can't remove last sequence"
+msgstr "Et voi poistaa viimeistä ohjelmaa"
+
+#: useraction.py:738
+msgid "There must always exist at least one sequence."
+msgstr "Projektissa täytyy olla olemassa aina vähintään yksi ohjelma."
+
+#: useraction.py:831
+msgid "Confirm user profile delete!"
+msgstr "Vahvista käyttäjän luoman profiilin poisto!"
+
+#: useraction.py:832
+msgid "This operation cannot be undone."
+msgstr "Tätä toimintoa ei voida peruuttaa."
+
+#: editorwindow.py:85
+msgid "_File"
+msgstr "_Tiedosto"
+
+#: editorwindow.py:86
+msgid "_New..."
+msgstr "Uusi..."
+
+#: editorwindow.py:87
+msgid "_Open..."
+msgstr "Avaa..."
+
+#: editorwindow.py:88
+msgid "Open Recent"
+msgstr "Avaa äskettäinen"
+
+#: editorwindow.py:89
+msgid "_Save"
+msgstr "Tallenna"
+
+#: editorwindow.py:90
+msgid "_Save As..."
+msgstr "Tallenna nimellä..."
+
+#: editorwindow.py:91
+msgid "_Close"
+msgstr "Sulje"
+
+#: editorwindow.py:92
+msgid "_Quit"
+msgstr "Lopeta"
+
+#: editorwindow.py:93
+msgid "_Edit"
+msgstr "_Muokkaa"
+
+#: editorwindow.py:94
+msgid "_Undo"
+msgstr "Uudelleen"
+
+#: editorwindow.py:95
+msgid "_Redo"
+msgstr "Kumoa"
+
+#: editorwindow.py:96
+msgid "Create Color Clip..."
+msgstr "Luo värileike..."
+
+#: editorwindow.py:97
+msgid "Clear Filters From Selected"
+msgstr "Poista suotimet valituista"
+
+#: editorwindow.py:98
+msgid "Consolidate Selected Blanks"
+msgstr "Yhdistä valitut tyhjät"
+
+#: editorwindow.py:99
+msgid "Consolidate All Blanks"
+msgstr "Yhdistä kaikki tyhjät"
+
+#: editorwindow.py:100
+msgid "Resync All"
+msgstr "Synkronisoi kaikki"
+
+#: editorwindow.py:101
+msgid "Resync Selected"
+msgstr "Synkronisoi valitut"
+
+#: editorwindow.py:102
+msgid "Recreate Media Icons..."
+msgstr "Uudelleen luo media-ikonit..."
+
+#: editorwindow.py:103 dialogs.py:538
+msgid "Profiles Manager"
+msgstr "Profiili Mangeri"
+
+#: editorwindow.py:104
+msgid "Preferences"
+msgstr "Asetukset"
+
+#: editorwindow.py:105
+msgid "_Help"
+msgstr "Ohje"
+
+#: editorwindow.py:106
+msgid "Contents"
+msgstr "Sisältö"
+
+#: editorwindow.py:107 dialogs.py:241
+msgid "About"
+msgstr "Tietoja"
+
+#: editorwindow.py:239
+msgid "Open"
+msgstr "Avaa"
+
+#: editorwindow.py:240
+msgid "New"
+msgstr "Uusi"
+
+#: editorwindow.py:300
+msgid "Media"
+msgstr "Media"
+
+#: editorwindow.py:301
+msgid "Filters"
+msgstr "Suodin"
+
+#: editorwindow.py:302
+msgid "Compositors"
+msgstr "Yhdistäjät"
+
+#: editorwindow.py:303
+msgid "Project"
+msgstr "Projekti"
+
+#: editorwindow.py:304 render.py:363
+msgid "Render"
+msgstr "Renderöinti"
+
+#: editorwindow.py:468
+msgid "Timeline"
+msgstr "Aikajana"
+
+#: editorwindow.py:475
+msgid "Clip"
+msgstr "Leike"
+
+#: editorwindow.py:774
+msgid "Timeline current frame timecode"
+msgstr "Tämän hetkisen ruudun aikakoodi"
+
+#: editorwindow.py:776
+msgid "Zoom In"
+msgstr "Zoomaa sisään"
+
+#: editorwindow.py:777
+msgid "Zoom Out"
+msgstr "Zoomaa ulos"
+
+#: editorwindow.py:778
+msgid "Zoom to Sequence length"
+msgstr "Zoomaa ohjelman pituuteen"
+
+#: editorwindow.py:780
+msgid "Insert Move - i"
+msgstr "Väliinsijoitus siirto - i"
+
+#: editorwindow.py:781
+msgid "One Roll Trim - t"
+msgstr "Toispuoleinen trimmi - t"
+
+#: editorwindow.py:782
+msgid "Two Roll Trim"
+msgstr "Kaksipuoleinen trimmi"
+
+#: editorwindow.py:783
+msgid "Overwrite Move"
+msgstr "Ylikirjoitus siirto"
+
+#: editorwindow.py:785
+msgid "Cut - x"
+msgstr "Leikkaa - x"
+
+#: editorwindow.py:786
+msgid "Splice Out Clip"
+msgstr "Poista leike välistä"
+
+#: editorwindow.py:787
+msgid "Lift Clip"
+msgstr "Nosta leike"
+
+#: editorwindow.py:788
+msgid "Resync Selected Clips"
+msgstr "Synkronoi valitut leikkeet"
+
+#: editorwindow.py:790
+msgid "Insert Monitor Clip Range"
+msgstr "Väliinsijoita monitorileike"
+
+#: editorwindow.py:791
+msgid "Overwrite Selected Clips with Monitor Clip Range"
+msgstr "Ylikirjoita valitut monitorileikkeellä"
+
+#: editorwindow.py:792
+msgid "Append Monitor Clip Range"
+msgstr "Lisää monitorileike perään"
+
+#: editorwindow.py:794
+msgid "Undo"
+msgstr "Kumoa"
+
+#: editorwindow.py:795
+msgid "Redo"
+msgstr "Uudelleen"
+
+#: editorwindow.py:797
+msgid "Play"
+msgstr "Toista"
+
+#: editorwindow.py:798
+msgid "Stop"
+msgstr "Pysäytä"
+
+#: editorwindow.py:799
+msgid "Previous frame"
+msgstr "Edellinen ruutu"
+
+#: editorwindow.py:800
+msgid "Next frame"
+msgstr "Seuraava ruutu"
+
+#: editorwindow.py:802
+msgid "Fast Forward"
+msgstr "Nopeasti eteenpäin"
+
+#: editorwindow.py:803
+msgid "Rewind"
+msgstr "Nopeasti taaksepäin"
+
+#: editorwindow.py:805
+msgid "Set Mark In"
+msgstr "Aseta aloitus merkki"
+
+#: editorwindow.py:806
+msgid "Set Mark Out"
+msgstr "Aseta lopetus merkki"
+
+#: editorwindow.py:807
+msgid "Clear Marks"
+msgstr "Poista merkit"
+
+#: editorwindow.py:808
+msgid "Go to Mark In"
+msgstr "Siirry aloitus merkkiin"
+
+#: editorwindow.py:809
+msgid "Go to Mark Out"
+msgstr "Siirry lopetus merkkiin"
+
+#: editorwindow.py:811
+msgid "Select view mode: Program Video/Vectorscope/RGBParade"
+msgstr "Valitse katselutila: Ohjelma / Vektoriskooppi / RGB Paraati"
+
+#: editorwindow.py:813
+msgid "Monitor program current frame timecode"
+msgstr "Monitori ohjelman aikakoodi"
+
+#: editorwindow.py:814
+msgid "Current Monitor program name"
+msgstr "Monitori ohjelman nimi"
+
+#: editorwindow.py:815
+msgid "Monitor program Mark In timecode"
+msgstr "Monitori ohjelman aloitusmerkin aikakoodi"
+
+#: editorwindow.py:816
+msgid "Monitor program Mark Out timecode"
+msgstr "Monitori ohjelman lopetusmerkin aikakoodi"
+
+#: editorwindow.py:817
+msgid "Monitor program selected range length"
+msgstr "Monitori ohjelman valitun alueen pituus"
+
+#: editorwindow.py:819
+msgid "Monitor program current position"
+msgstr "Paikka monitori ohjelmassa"
+
+#: editorwindow.py:821
+msgid "Display Current Sequence on Timeline"
+msgstr "Näytä ohjelma aikajanalla"
+
+#: editorwindow.py:822
+msgid "Display Monitor Clip"
+msgstr "Näytä monitorileike"
+
+#: editorwindow.py:824
+msgid "Open Project File"
+msgstr "Avaa projektitiedosto"
+
+#: editorwindow.py:825
+msgid "Open New Project"
+msgstr "Avaa uusi projekti"
+
+#: clipeffectseditor.py:81
+msgid "Quit editing Clip in editor"
+msgstr "Lopeta leikkeen editointi"
+
+#: clipeffectseditor.py:91 panels.py:38 panels.py:57 panels.py:75
+#: mlttransitions.py:99
+msgid "Add"
+msgstr "Lisää"
+
+#: clipeffectseditor.py:92 compositeeditor.py:33 guicomponents.py:766
+#: guicomponents.py:817 guicomponents.py:972 panels.py:39 panels.py:58
+#: panels.py:76
+msgid "Delete"
+msgstr "Poista"
+
+#: clipeffectseditor.py:101
+msgid "Clip being edited"
+msgstr "Editoitava leike"
+
+#: clipeffectseditor.py:102
+msgid "Clip Filter Stack"
+msgstr "Leikkeen suodinpino"
+
+#: clipeffectseditor.py:103
+msgid "Add Filter to Clip Filter Stack"
+msgstr "Lisää suodin leikkeen suodinpinoon"
+
+#: clipeffectseditor.py:104
+msgid "Delete Filter from Clip Filter Stack"
+msgstr "Poista suodin leikkeen suodinpinoon"
+
+#: clipeffectseditor.py:295
+msgid "No editable parameters"
+msgstr "Ei editoitavia parametreja"
+
+#: compositeeditor.py:35 render.py:367 keyframeeditor.py:994
+msgid "Reset"
+msgstr "Resetoi"
+
+#: compositeeditor.py:39 compositeeditor.py:106
+msgid "No Compositor"
+msgstr "Ei yhdistäjää"
+
+#: compositeeditor.py:131
+msgid "Destination track:"
+msgstr "Kohde raita:"
+
+#: dialogs.py:27
+msgid "New Project"
+msgstr "Uusi projekti"
+
+#: dialogs.py:38
+msgid "Project profile:"
+msgstr "Projektin profiili:"
+
+#: dialogs.py:48 panels.py:98
+msgid "Profile"
+msgstr "Profiili"
+
+#: dialogs.py:73
+msgid "Select Project File"
+msgstr "Valitse projektitiedosto"
+
+#: dialogs.py:86
+msgid "Save Project As"
+msgstr "Tallenna projekti nimellä"
+
+#: dialogs.py:104
+msgid "Save Render Args As"
+msgstr "Tallenna renderöintiargumentit nimellä"
+
+#: dialogs.py:120
+msgid "Load Render Args File"
+msgstr "Lataa renderöintiargumentit"
+
+#: dialogs.py:135 dialogs.py:175 dialogs.py:194
+msgid "Cancel"
+msgstr "Peruuta"
+
+#: dialogs.py:136
+msgid "Ok"
+msgstr "Ok"
+
+#: dialogs.py:137
+msgid "Select Thumbnail Folder"
+msgstr "Valitse media-ikoni kansio"
+
+#: dialogs.py:149
+msgid "Render Progress"
+msgstr "Rederöinnin edistyminen"
+
+#: dialogs.py:165 dialogs.py:184
+msgid "Save project '"
+msgstr "Tallennetaanko projekti '"
+
+#: dialogs.py:165
+msgid "' before exiting?"
+msgstr "' ennen sulkemista?"
+
+#: dialogs.py:174 dialogs.py:193
+msgid "Don't Save"
+msgstr "Älä tallenna"
+
+#: dialogs.py:176 dialogs.py:195
+msgid "Save"
+msgstr "Tallenna"
+
+#: dialogs.py:184
+msgid "' before closing project?"
+msgstr "' ennen sulkemista?"
+
+#: dialogs.py:334
+msgid "Application"
+msgstr "Ohjelma"
+
+#: dialogs.py:335
+msgid "Thanks"
+msgstr "Kiitokset"
+
+#: dialogs.py:336
+msgid "License"
+msgstr "Lisenssi"
+
+#: dialogs.py:343
+msgid "Create Color Clip"
+msgstr "Luo värileike"
+
+#: dialogs.py:346
+msgid "Create"
+msgstr "Luo"
+
+#: dialogs.py:354
+msgid "Editor Preferences"
+msgstr "Asetukset"
+
+#: dialogs.py:365
+msgid "General"
+msgstr "Yleiset"
+
+#: dialogs.py:366
+msgid "Editing"
+msgstr "Editointi"
+
+#: dialogs.py:374 guicomponents.py:970
+msgid "File Properties"
+msgstr "Tiedoston ominaisuudet"
+
+#: dialogs.py:390
+msgid "Clip Properties"
+msgstr "Leikkeen ominaisuudet"
+
+#: dialogs.py:406
+msgid "Composite Target Track"
+msgstr "Yhdistäjän kohde raita"
+
+#: dialogs.py:409 guicomponents.py:857
+msgid "Add Compositor"
+msgstr "Lisää yhdistäjä"
+
+#: dialogs.py:430
+msgid "Loading project"
+msgstr "Ladataan projektia"
+
+#: dialogs.py:467
+msgid "Loading Media Files"
+msgstr "Ladataan media tiedostoja"
+
+#: dialogs.py:503
+msgid "Recreating icons"
+msgstr "Uudelleen luo media-ikonit"
+
+#: dialogs.py:540
+msgid "Close Manager"
+msgstr "Sulje manageri"
+
+#: dialogs.py:559
+msgid "Create New Profile"
+msgstr "Luo uusi profiili"
+
+#: dialogs.py:560
+msgid "Manage Profiles"
+msgstr "Hallitse profiileja"
+
+#: editevent.py:67
+msgid "Can't put an audio clip on a video track."
+msgstr "Et voi laittaa äänileikettä videoraidalle."
+
+#: editevent.py:68 editevent.py:873 editevent.py:879 movemodes.py:550
+msgid "Track "
+msgstr "Raita "
+
+#: editevent.py:68
+msgid " is a video track and can't display audio only material."
+msgstr " on video raita, eikä toista kuvatonta äänimateriaalia."
+
+#: editevent.py:699
+msgid "Not enough vertical space on Timeline to expand track"
+msgstr ""
+"Aikajanalla ei ole pystysuunnassa riittävästi tilaa raidan laajentamiseksi"
+
+#: editevent.py:700
+msgid ""
+"Maximize or resize application window to get more\n"
+"space for tracks if possible."
+msgstr ""
+"Jos mahdollista, maximoi tai suurenna ohjeman ikkuna saadaksesi\n"
+"lisää tilaa raidoille."
+
+# haloo!
+#: editevent.py:872
+msgid "Can't enter "
+msgstr "Et voi editoida"
+
+# haloo!
+#: editevent.py:872
+msgid " on a locked track"
+msgstr " lukittua raitaa"
+
+#: editevent.py:873 editevent.py:879
+msgid " is locked. Unlock track to edit it."
+msgstr " on lukittu. Vapauta raita editoidaksesi sitä.\n"
+
+#: editevent.py:878
+msgid "Can't do "
+msgstr "Et voi editoida "
+
+#: editevent.py:878
+msgid " edit on a locked track"
+msgstr " lukittua raitaa"
+
+#: editorpersistance.py:98
+msgid "Empty"
+msgstr "Tyhjä"
+
+#: guicomponents.py:407
+msgid "default"
+msgstr ""
+
+#: guicomponents.py:418
+msgid "Clip:"
+msgstr "Leike:"
+
+#: guicomponents.py:422
+msgid "Track:"
+msgstr "Raita:"
+
+#: guicomponents.py:425
+msgid "Pos:"
+msgstr "Paikka:"
+
+#: guicomponents.py:447
+msgid "<b>Clip: </b>"
+msgstr "<b>Leike: </b>"
+
+#: guicomponents.py:449
+msgid "<b>Track: </b>"
+msgstr "<b>Raita: </b>"
+
+#: guicomponents.py:451 guicomponents.py:462 guicomponents.py:571
+msgid "<b>Position:</b>"
+msgstr "<b>Paikka:</b>"
+
+#: guicomponents.py:458
+msgid "<b>Clip:</b>"
+msgstr "<b>Leike:</b>"
+
+#: guicomponents.py:460
+msgid "<b>Track:</b>"
+msgstr "<b>Raita: </b>"
+
+#: guicomponents.py:543
+msgid "Compositor"
+msgstr "Yhdistäjät"
+
+#: guicomponents.py:545
+msgid "Blend"
+msgstr "Blendaus"
+
+#: guicomponents.py:561
+msgid "<b>Type:</b>"
+msgstr "<b>Tyyppi:</b>"
+
+#: guicomponents.py:565
+msgid "<b>Source Track:</b>"
+msgstr "<b>Lähde raita: </b>"
+
+#: guicomponents.py:568
+msgid "<b>Destination Track:</b>"
+msgstr "<b>Kohde raita: </b>"
+
+#: guicomponents.py:574
+msgid "<b>Length:</b>"
+msgstr "<b>Pituus:</b>"
+
+#: guicomponents.py:664 guicomponents.py:668
+msgid "Lock Track"
+msgstr "Lukitse raita"
+
+#: guicomponents.py:665 guicomponents.py:669
+msgid "Unlock Track"
+msgstr "Vapauta raita"
+
+#: guicomponents.py:673
+msgid "Large Height"
+msgstr "Suuri korkeus"
+
+#: guicomponents.py:677
+msgid "Normal Height"
+msgstr "Normaali korkeus"
+
+#: guicomponents.py:694 guicomponents.py:775
+msgid "Open in Filters Editor"
+msgstr "Avaa suodineditorissa"
+
+#: guicomponents.py:701 guicomponents.py:777 guicomponents.py:969
+msgid "Open in Clip Monitor"
+msgstr "Avaa leike monitorissa"
+
+#: guicomponents.py:708
+msgid "Split Audio"
+msgstr "Halkaise audio"
+
+#: guicomponents.py:714
+msgid "Split Audio Synched"
+msgstr "Halkaise audio synkronoituna"
+
+#: guicomponents.py:720 guicomponents.py:791
+msgid "Display Waveform"
+msgstr "Näytä aaltomuoto"
+
+#: guicomponents.py:723 guicomponents.py:794
+msgid "Clear Waveform"
+msgstr "Poista aaltomuoto"
+
+#: guicomponents.py:730 guicomponents.py:783
+msgid "Resync"
+msgstr "Synkronoi kaikki"
+
+#: guicomponents.py:731 guicomponents.py:784
+msgid "Clear Sync Relation"
+msgstr "Poista synkronointi suhde"
+
+#: guicomponents.py:733 guicomponents.py:786
+msgid "Select Sync Parent Clip..."
+msgstr "Valitse synkronointi emoleike"
+
+#: guicomponents.py:755 guicomponents.py:807
+msgid "Clip Info"
+msgstr "Leike info"
+
+#: guicomponents.py:761
+msgid "Strech Prev Clip to Cover"
+msgstr "Pidennä edellistä leikettä peittämään"
+
+#: guicomponents.py:762
+msgid "Strech Next Clip to Cover"
+msgstr "Pidennä seuraavaa leikettä peittämään"
+
+#: guicomponents.py:764
+msgid "Consolidate"
+msgstr "Yhdistä kaikki tyhjät"
+
+#: guicomponents.py:813
+msgid "Open In Compositor Editor"
+msgstr "Avaa yhdistajäeditorissa"
+
+#: guicomponents.py:815
+msgid "Sync with Origin Clip"
+msgstr "Synkronoi lähde leikkeen kanssa"
+
+#: guicomponents.py:821
+msgid "Add Filter"
+msgstr "Lisää suodin"
+
+#: guicomponents.py:842
+msgid "Add Audio Filter"
+msgstr "Lisää audio suodin"
+
+#: guicomponents.py:873
+msgid "Add Blend"
+msgstr "Lisää sekoittaja"
+
+#: guicomponents.py:889
+msgid "Clone Filters"
+msgstr "Kloonaa suotimet"
+
+#: guicomponents.py:893
+msgid "From Next Clip"
+msgstr "Seuraavasta leikkeestä"
+
+#: guicomponents.py:898
+msgid "From Previous Clip"
+msgstr "Edellisestä leikkeestä"
+
+#: guicomponents.py:907 guicomponents.py:927
+msgid "Mute"
+msgstr "Hiljennä"
+
+#: guicomponents.py:911 guicomponents.py:931
+msgid "Unmute"
+msgstr "Poista hiljennys"
+
+#: guicomponents.py:917 guicomponents.py:946
+msgid "Mute Audio"
+msgstr "Sammuta ääni"
+
+#: guicomponents.py:940
+msgid "Mute Video"
+msgstr "Sammuta kuva"
+
+#: guicomponents.py:953
+msgid "Mute All"
+msgstr "Sammuta kaikki"
+
+#: guicomponents.py:977
+msgid "Toggle Active"
+msgstr "Vaihda aktiivisuustilaa"
+
+#: guicomponents.py:978
+msgid "Reset Values"
+msgstr "Resetoi arvot"
+
+#: guicomponents.py:1020
+msgid "Description:"
+msgstr "Kuvaus:"
+
+#: guicomponents.py:1022
+msgid "Dimensions:"
+msgstr "Ulottuvuudet:"
+
+#: guicomponents.py:1024
+msgid "Frames per second:"
+msgstr "Ruutuja sekunnissa:"
+
+#: guicomponents.py:1026
+msgid "Size:"
+msgstr "Koko:"
+
+#: guicomponents.py:1028
+msgid "Pixel aspect ratio: "
+msgstr "Pikselin muotosuhde:"
+
+#: guicomponents.py:1030 panels.py:703
+msgid "Progressive:"
+msgstr "Progressiivinen:"
+
+#: guicomponents.py:1057
+msgid "Yes"
+msgstr "Kyllä"
+
+#: guicomponents.py:1059
+msgid "No"
+msgstr "Ei"
+
+#: movemodes.py:549
+msgid "Can't do edit on a locked track"
+msgstr "Et voi editoida lukittua raitaa"
+
+#: movemodes.py:550
+msgid " is locked. Unlock track to edit it.\n"
+msgstr " on lukittu. Vapauta raita editoidaksesi sitä.\n"
+
+# WWWWWWWWWWWWWTFFFFFFFFFFFFF???????????
+#: movemodes.py:551
+msgid "Deactive track "
+msgstr "Laita pois päältä raita "
+
+#: movemodes.py:551
+msgid " if you wish to edit tracks below it."
+msgstr " jos haluat editoda raitaa sen alla."
+
+#: panels.py:42
+msgid "Add Media File to Bin"
+msgstr "Lisää mediatiedosto laatikkoon"
+
+#: panels.py:43
+msgid "Delete Media File from Bin"
+msgstr "Poista mediatiedosto laatikosta"
+
+#: panels.py:61
+msgid "Add Bin to Project"
+msgstr "Lisää laatikko projekiin"
+
+#: panels.py:62
+msgid "Delete Bin from Project"
+msgstr "Poista laatikko projektista"
+
+#: panels.py:71
+msgid "Bins"
+msgstr "Laatikot"
+
+#: panels.py:77
+msgid "Edit"
+msgstr "Muokkaa"
+
+#: panels.py:78
+msgid "Add new Sequence to Project"
+msgstr "Lisää uusi ohjelma projektiin"
+
+#: panels.py:79
+msgid "Delete Sequence from Project"
+msgstr "Poista ohjelma projektista"
+
+#: panels.py:80
+msgid "Start editing Sequence"
+msgstr "Editoi ohjelmaa"
+
+#: panels.py:94
+msgid "Sequences"
+msgstr "Ohjelmat"
+
+#: panels.py:102
+msgid "Name"
+msgstr "Nimi"
+
+#: panels.py:107
+msgid "Folder:"
+msgstr "Kansio:"
+
+#: panels.py:112 panels.py:574
+msgid "Name:"
+msgstr "Nimi:"
+
+#: panels.py:118
+msgid "Render Range:"
+msgstr "Renderöinti alue:"
+
+#: panels.py:126
+msgid "File"
+msgstr "Tiedosto"
+
+#: panels.py:133
+msgid "Use Project Profile:"
+msgstr "Käytä projektin profiilia:"
+
+#: panels.py:144
+msgid "Render Profile"
+msgstr "Renderöinti profiili"
+
+#: panels.py:156
+msgid "Encoding Format"
+msgstr "Enkoodaus formaatti"
+
+#: panels.py:167
+msgid "Render using args:"
+msgstr "Renderöi argumenteilla"
+
+#: panels.py:189
+msgid "Render Args"
+msgstr "Renderöinti argumentit"
+
+#: panels.py:211
+msgid "Select folder for new thumbnails."
+msgstr "Valitse kansio uusille mediaikoneille"
+
+#: panels.py:212
+msgid "Old thumbnails in this or other projects will"
+msgstr "Vanhat media-ikonit"
+
+#: panels.py:213
+msgid ""
+" still be available,\n"
+"this only affects thumnails that are created for new media.\n"
+msgstr ""
+" ovat edelleen käytettävissä,\n"
+"tämä vaikuttaa vain uusiin mediaikoneihin.\n"
+
+#: panels.py:214
+msgid ""
+"\n"
+"Setting your home folder as thumbnails folder is not allowed."
+msgstr ""
+"\n"
+"Et voi asettaa koti kansiotasi media-ikoni kansioksi."
+
+#: panels.py:375
+msgid "Select Filter Group"
+msgstr "Valitse suodin ryhmä"
+
+#: panels.py:376
+msgid "Current group Filters"
+msgstr "Suotimet tässä ryhmässä"
+
+#: panels.py:479
+msgid "Color Clip"
+msgstr "Värileike"
+
+#: panels.py:487
+msgid "Clip Name"
+msgstr "Leikkeen nimi"
+
+#: panels.py:488
+msgid "Select Color"
+msgstr "Valitse väri"
+
+#: panels.py:518 render.py:272
+msgid "Select Folder"
+msgstr "Valitse kansio"
+
+#: panels.py:526
+msgid "Default profile"
+msgstr "Oletus profiili"
+
+#: panels.py:527
+msgid "Remember media directory"
+msgstr "Muista media kansio"
+
+#: panels.py:528
+msgid "Undo stack size"
+msgstr "Peruutuspinon koko"
+
+#: panels.py:529
+msgid "Thumbnail folder"
+msgstr "Media-ikoni kansio"
+
+#: panels.py:530
+msgid "Display Splash Screen"
+msgstr "Näytä alkukuva"
+
+#: panels.py:557
+msgid "Autoplay new clip in Clip Monitor"
+msgstr "Toista uusi leike heti monitorissa"
+
+#: panels.py:558
+msgid "Center current frame on playback stop"
+msgstr "Keskitä pysäytys ruutuun"
+
+#: panels.py:575
+msgid "Path:"
+msgstr "Polku:"
+
+#: panels.py:576 panels.py:605
+msgid "Image Size:"
+msgstr "Kuvan koko"
+
+#: panels.py:577
+msgid "Playtime:"
+msgstr "Soittoaika:"
+
+#: panels.py:578
+msgid "Video Codec:"
+msgstr "Video koodekki:"
+
+#: panels.py:579
+msgid "Audio Codec:"
+msgstr "Audio koodekki:"
+
+#: panels.py:580
+msgid "Audio Channels:"
+msgstr "Audio kanavat"
+
+#: panels.py:581
+msgid "Audio Sample Rate:"
+msgstr "Audio näytetaajuus:"
+
+#: panels.py:604
+msgid "Clip Length:"
+msgstr "Leikkeen pituus:"
+
+#: panels.py:606
+msgid "Media Path:"
+msgstr "Media polku:"
+
+#: panels.py:630
+msgid "Composite clip on:"
+msgstr "Yhdistäjän kohde:"
+
+#: panels.py:637
+msgid "Load values"
+msgstr "Ladataan arvot"
+
+#: panels.py:678
+msgid "Save New Profile"
+msgstr "Tallenna uusi profiili"
+
+#: panels.py:694
+msgid "Description.:"
+msgstr "Kuvaus:"
+
+#: panels.py:695
+msgid "Frame rate num.:"
+msgstr "Ruutuja sekunnissa nimittäjä:"
+
+#: panels.py:696
+msgid "Frame rate den.:"
+msgstr "Ruutuja sekunnissa osoittaja:"
+
+#: panels.py:697
+msgid "Width:"
+msgstr "Leveys:"
+
+#: panels.py:698
+msgid "Height:"
+msgstr "Korkeus:"
+
+#: panels.py:699
+msgid "Sample aspect num.:"
+msgstr "Pikseli muoto nimittäjä:"
+
+#: panels.py:700
+msgid "Sample aspect den.:"
+msgstr "Pikseli muoto osoittaja:"
+
+#: panels.py:701
+msgid "Display aspect num.:"
+msgstr "Näyttö muoto nimittäjä"
+
+#: panels.py:702
+msgid "Display aspect den.:"
+msgstr "Näyttö muoto osoittaja"
+
+#: panels.py:730
+msgid "User "
+msgstr "Käyttäjä "
+
+#: panels.py:746
+msgid "Delete Selected"
+msgstr "Poista valitut"
+
+#: panels.py:753
+msgid "Visible"
+msgstr "Näkyvät"
+
+#: panels.py:755
+msgid "Hide Selected"
+msgstr "Piilota valitut"
+
+#: panels.py:757
+msgid "Hidden"
+msgstr "Piiloitetut"
+
+#: panels.py:759
+msgid "Unhide Selected"
+msgstr "Näytä valitut"
+
+#: panels.py:790
+msgid "User Profiles"
+msgstr "Käyttäjäprofiilit"
+
+#: panels.py:791
+msgid "Factory Profiles"
+msgstr "Tehdasprofiilit"
+
+#: persistance.py:229
+msgid "Building sequence "
+msgstr "Rakennetaan ohjelmaa "
+
+#: persistance.py:240
+msgid "Loading icons"
+msgstr "Ladataan ikoneita"
+
+#: projectdata.py:38
+msgid "untitled"
+msgstr ""
+
+#: projectdata.py:137
+msgid "bin_"
+msgstr ""
+
+#: projectdata.py:145
+msgid "sequence_"
+msgstr "ohjelma_"
+
+#: render.py:303
+msgid "Quality:"
+msgstr "Laatu:"
+
+#: render.py:309
+msgid "Audio:"
+msgstr "Audio:"
+
+#: render.py:333
+msgid "Load Selection"
+msgstr "Lataa valinta"
+
+#: render.py:344
+msgid "Program length"
+msgstr "Ohjelman pituus"
+
+#: render.py:345
+msgid "Marked range"
+msgstr "Merkitty alue"
+
+#: render.py:381
+msgid "Select folder to place rendered file in"
+msgstr "Valitse kansio johon tallennetaan renderöity tiedosto"
+
+#: render.py:382
+msgid "Give name for rendered file"
+msgstr "Anne nimi renderöidylle tiedostolle"
+
+#: render.py:383
+msgid "Select used project profile for rendering"
+msgstr "Valitse profiili renderöinnille"
+
+#: render.py:384
+msgid "Select render profile"
+msgstr "Valitse renderöinti profiili"
+
+#: render.py:385
+msgid "Select Render encoding"
+msgstr "Valitse renderöinti enkoodaus"
+
+#: render.py:386
+msgid "Select Render quality"
+msgstr "Valitse renderöinti laatu"
+
+#: render.py:387
+msgid "Render using key=value rendering options"
+msgstr "Renderöi käyttämällä avain=arvo pareja"
+
+#: render.py:388
+msgid "Load render options from currently selected encoding"
+msgstr "Lataa renderöiti arjot valittuna olevasta enkoodauksesta"
+
+#: render.py:389
+msgid "Edit render options"
+msgstr "Editoi renderöinti arvoja"
+
+#: render.py:390
+msgid "Select render range"
+msgstr "Valitse renderöinti alue"
+
+#: render.py:391
+msgid "Reset all render options to defaults"
+msgstr "Palaa oletusarvoihin"
+
+#: render.py:392
+msgid "Begin Rendering"
+msgstr "Aloita renderöinti"
+
+#: render.py:393
+msgid "Info on setting FFMpeg options"
+msgstr ""
+
+#: render.py:394
+msgid "Render profile info"
+msgstr "Renderöiti profiili info"
+
+#: render.py:395
+msgid "Save Render Args into a text file"
+msgstr "Tallenna renderöinti argumentit tiedostoon"
+
+#: render.py:396
+msgid "Load Render Args from a text file"
+msgstr "Lataa renderöintiargumentit tiedostosta"
+
+#: render.py:409
+msgid "<b>Output File: </b>"
+msgstr "<b>Tuotettu tiedosto: </b>"
+
+#: render.py:411 render.py:434 render.py:449
+msgid "<b>Estimated time left: </b>"
+msgstr "<b>Arvioitu aika: </b>"
+
+#: render.py:413 render.py:436 render.py:451
+msgid "<b>Render time: </b>"
+msgstr "<b>Kulunut aika: </b>"
+
+#: render.py:453
+msgid "Render Complete!"
+msgstr "Renderöinti valmis!"
+
+#: render.py:577
+msgid "Error on line "
+msgstr "Virhe rivillä "
+
+#: render.py:577
+msgid ""
+"\n"
+"Line contents: "
+msgstr ""
+"\n"
+"Rivin sisältö: "
+
+#: render.py:590
+msgid "No '=' found."
+msgstr "Ei löydetty '=' merkkiä."
+
+#: render.py:593
+msgid "Number of tokens on line is "
+msgstr "Symbolien määrä rivillä on "
+
+#: render.py:593
+msgid ", should be 2 (key, value)."
+msgstr ", pitäisi olla 2. (avain, arvo)"
+
+#: render.py:597
+msgid "Arg name token is empty."
+msgstr "Nimi argumenntti on tyhjä"
+
+#: render.py:599
+msgid "Arg value token is empty."
+msgstr "Arvo argumentti on tyhjä"
+
+#: render.py:603
+msgid "Non-ascii char in Arg name."
+msgstr "Ei-ascii merkki nimi argumentissa"
+
+#: render.py:607
+msgid "Non-ascii char in Arg value."
+msgstr "Ei-ascii merkki arvo argumentissa"
+
+#: render.py:609
+msgid "Whitespace in Arg name."
+msgstr "Whitespace-kirjain nimi argumentissa"
+
+#: render.py:611
+msgid "Whitespace in Arg value."
+msgstr "Whitespace-kirjain arvo argumentissa"
+
+#: syncsplitevent.py:104
+msgid "Sync parent clips must be on track V1"
+msgstr "Synkroni emon tulee olla raidalla V1"
+
+#: syncsplitevent.py:105
+msgid "Selected synch parent clip is on track "
+msgstr "Valittu emoleike on raidalla "
+
+#: syncsplitevent.py:105
+msgid ""
+".\n"
+"You can only synch to clips that are on track V1."
+msgstr ""
+".\n"
+"Voit synkronida vain leikkeisiin, jotka ovat raidalla V1."
+
+#: translations.py:55 translations.py:326
+msgid "Color"
+msgstr "Väri"
+
+#: translations.py:56
+msgid "Color Effect"
+msgstr "Väriefekti"
+
+#: translations.py:57
+msgid "Audio"
+msgstr "Ääni"
+
+#: translations.py:58
+msgid "Audio Filter"
+msgstr "Äänisuodin"
+
+#: translations.py:59 translations.py:112 translations.py:291
+#: translations.py:368
+msgid "Blur"
+msgstr "Sumennus"
+
+#: translations.py:60 translations.py:378 propertyeditorbuilder.py:321
+#: propertyeditorbuilder.py:374
+msgid "Distort"
+msgstr "Vääristys"
+
+#: translations.py:61 propertyeditorbuilder.py:323
+#: propertyeditorbuilder.py:376
+msgid "Alpha"
+msgstr "Alpha"
+
+#: translations.py:62
+msgid "Movement"
+msgstr "Liike"
+
+#: translations.py:63
+msgid "Transform"
+msgstr "Transformaatio"
+
+#: translations.py:64
+msgid "Edge"
+msgstr "Reuna"
+
+#: translations.py:65
+msgid "Fix"
+msgstr "Korjaus"
+
+#: translations.py:66
+msgid "Artistic"
+msgstr "Taiteellinen"
+
+#: translations.py:70
+msgid "Alpha Gradient"
+msgstr "Alpha liuku"
+
+#: translations.py:71
+msgid "Crop"
+msgstr "Rajaus"
+
+#: translations.py:72
+msgid "Alpha Shape"
+msgstr "Alpha muoto"
+
+#: translations.py:74 translations.py:176
+msgid "Volume"
+msgstr "Äänen voimakkuus"
+
+#: translations.py:75
+msgid "Pan"
+msgstr "Panorointi"
+
+#: translations.py:76
+msgid "Pan Keyframed"
+msgstr "Panorointi animoitu"
+
+#: translations.py:77
+msgid "Mono to Stereo"
+msgstr "Mono stereoksi"
+
+#: translations.py:78
+msgid "Swap Channels"
+msgstr "Vaihda kanavat"
+
+#: translations.py:80
+msgid "Pitchshifter"
+msgstr "Korkeussiirto"
+
+#: translations.py:81
+msgid "Distort - Barry's Satan"
+msgstr "Särö - Barry's Satan"
+
+#: translations.py:82
+msgid "Frequency Shift - Bode/Moog"
+msgstr "Taajuus siirto - Bode/Moog"
+
+#: translations.py:83
+msgid "Equalize - DJ 3-band"
+msgstr "Ekvalisointi - DJ 3-kaista"
+
+#: translations.py:84
+msgid "Flanger - DJ"
+msgstr "Flangeri - DJ"
+
+#: translations.py:85
+msgid "Declipper"
+msgstr "Leikkauksen poisto"
+
+#: translations.py:86
+msgid "Delayorama"
+msgstr "Viive"
+
+#: translations.py:87
+msgid "Distort - Diode Processor"
+msgstr "Särö - Diode Processor"
+
+#: translations.py:88
+msgid "Distort - Foldover"
+msgstr "Särö - Foldover"
+
+#: translations.py:89
+msgid "Highpass - Butterworth"
+msgstr "Ylipäästö - Butterworth"
+
+#: translations.py:90
+msgid "Lowpass - Butterworth"
+msgstr "Alipäästö - Butterworth"
+
+#: translations.py:91
+msgid "GSM Simulator"
+msgstr "GSM simulaattori"
+
+#: translations.py:92
+msgid "Reverb - GVerb"
+msgstr ""
+
+#: translations.py:93
+msgid "Noise Gate"
+msgstr "Hälinä portti"
+
+#: translations.py:94
+msgid "Bandpass"
+msgstr "Kaistapäästö"
+
+#: translations.py:95
+msgid "Pitchscaler - High Quality"
+msgstr "Korkeusskaalaaja - Korkea laatu"
+
+#: translations.py:96
+msgid "Equalize - Multiband"
+msgstr "Ekvalisointi - monikaista"
+
+#: translations.py:97
+msgid "Reverb - Plate"
+msgstr ""
+
+#: translations.py:98
+msgid "Distort - Pointer cast"
+msgstr "Särö - Pointer cast"
+
+#: translations.py:99
+msgid "Rate Shifter"
+msgstr "Määrän siirto"
+
+#: translations.py:100
+msgid "Signal Shifter"
+msgstr "Signaalin siirto"
+
+#: translations.py:101
+msgid "Distort - Sinus Wavewrap"
+msgstr "Särö - Sinus Wavewrap"
+
+#: translations.py:102
+msgid "Vinyl Effect"
+msgstr "Vinyyyli Efekti"
+
+#: translations.py:103
+msgid "Chorus - Multivoice"
+msgstr "Kuoro - Moniääni"
+
+#: translations.py:105
+msgid "Charcoal"
+msgstr "Hiili"
+
+#: translations.py:106
+msgid "Glow"
+msgstr "Hehku"
+
+#: translations.py:107
+msgid "Old Film"
+msgstr "Vanha elokuva"
+
+#: translations.py:108
+msgid "Scanlines"
+msgstr "Ruutujuovat"
+
+#: translations.py:109
+msgid "Cartoon"
+msgstr "Sarjakuva"
+
+#: translations.py:111
+msgid "Pixelize"
+msgstr "Pikselöi"
+
+#: translations.py:113
+msgid "Grain"
+msgstr "Rae"
+
+#: translations.py:115
+msgid "Grayscale"
+msgstr "Harmaaskaala"
+
+#: translations.py:116 translations.py:306 translations.py:308
+msgid "Contrast"
+msgstr "Kontrasti"
+
+#: translations.py:117 translations.py:309 mlttransitions.py:113
+msgid "Saturation"
+msgstr "Värikylläisyys"
+
+#: translations.py:118 translations.py:290 translations.py:342
+#: translations.py:367 translations.py:381 translations.py:385
+msgid "Invert"
+msgstr "Invertoi"
+
+#: translations.py:119 translations.py:310 mlttransitions.py:109
+msgid "Hue"
+msgstr "Sävy"
+
+#: translations.py:120 translations.py:307 translations.py:311
+#: translations.py:312
+msgid "Brightness"
+msgstr "Valoisuus"
+
+#: translations.py:121
+msgid "Sepia"
+msgstr "Seepia"
+
+#: translations.py:122
+msgid "Tint"
+msgstr "Värjäys"
+
+#: translations.py:123
+msgid "White Balance"
+msgstr "Valkotasapaino"
+
+#: translations.py:124
+msgid "Levels"
+msgstr "Tasot"
+
+#: translations.py:126
+msgid "Color Clustering"
+msgstr "Väri ryhmät"
+
+#: translations.py:127
+msgid "Chroma Hold"
+msgstr "Värin pito"
+
+#: translations.py:128
+msgid "Three Layer"
+msgstr "Kolmikerros"
+
+#: translations.py:129
+msgid "Threshold0r"
+msgstr "Raja-arvo - Freix0r"
+
+#: translations.py:130
+msgid "Technicolor"
+msgstr ""
+
+#: translations.py:131
+msgid "Primaries"
+msgstr "Päävärit"
+
+#: translations.py:132
+msgid "Color Distance"
+msgstr "Väri etaisyys"
+
+#: translations.py:133 translations.py:328 translations.py:333
+msgid "Threshold"
+msgstr "Raja-arvo"
+
+#: translations.py:135
+msgid "Waves"
+msgstr "Aallot"
+
+#: translations.py:136
+msgid "Lens Correction"
+msgstr "Linssin korjaus"
+
+#: translations.py:137 translations.py:340
+msgid "Flip"
+msgstr "Käännä"
+
+#: translations.py:138
+msgid "Mirror"
+msgstr "Peili"
+
+#: translations.py:139
+msgid "V Sync"
+msgstr ""
+
+#: translations.py:141
+msgid "Edge Glow"
+msgstr "Reuna hehku"
+
+#: translations.py:142
+msgid "Sobel"
+msgstr ""
+
+#: translations.py:144
+msgid "Denoise"
+msgstr "Kohinanpoisto"
+
+#: translations.py:145
+msgid "Sharpness"
+msgstr "Terävöitys"
+
+#: translations.py:146
+msgid "Letterbox"
+msgstr "Mustat reunan"
+
+#: translations.py:148
+msgid "Baltan"
+msgstr ""
+
+#: translations.py:149
+msgid "Vertigo"
+msgstr "Huimaus"
+
+#: translations.py:150
+msgid "Nervous"
+msgstr "Hermoustunut"
+
+#: translations.py:151
+msgid "Freeze"
+msgstr "Pysäystyskuva"
+
+#: translations.py:153 translations.py:336
+msgid "Rotate"
+msgstr "Kierrä"
+
+#: translations.py:154
+msgid "Shear"
+msgstr "Vinouta"
+
+#: translations.py:155
+msgid "Translate"
+msgstr "Siirrä"
+
+#: translations.py:160 translations.py:343
+msgid "Position"
+msgstr "Paikka"
+
+#: translations.py:161
+msgid "Grad width"
+msgstr "Liuku leveys"
+
+#: translations.py:162 translations.py:174 translations.py:337
+msgid "Tilt"
+msgstr "Kallistus"
+
+#: translations.py:163
+msgid "Min"
+msgstr ""
+
+#: translations.py:164
+msgid "Max"
+msgstr ""
+
+#: translations.py:165 translations.py:363
+msgid "Left"
+msgstr "Vasen"
+
+#: translations.py:166 translations.py:364
+msgid "Right"
+msgstr "Oikea"
+
+#: translations.py:167 translations.py:365
+msgid "Top"
+msgstr "Ylä"
+
+#: translations.py:168 translations.py:366
+msgid "Bottom"
+msgstr "Ala"
+
+#: translations.py:169
+msgid "Shape"
+msgstr "Muoto"
+
+#: translations.py:170
+msgid "Pos X"
+msgstr "Paikka X"
+
+#: translations.py:171
+msgid "Pos Y"
+msgstr "Paikka Y"
+
+#: translations.py:172
+msgid "Size X"
+msgstr "Koko X"
+
+#: translations.py:173
+msgid "Size Y"
+msgstr "Koko Y"
+
+#: translations.py:175
+msgid "Trans. Width"
+msgstr "Siirt. leveys"
+
+#: translations.py:177 translations.py:178
+msgid "Left/Right"
+msgstr "Vasen/oikea"
+
+#: translations.py:179 translations.py:182 translations.py:185
+#: translations.py:187 translations.py:191 translations.py:195
+#: translations.py:196 translations.py:207 translations.py:209
+#: translations.py:212 translations.py:215 translations.py:218
+#: translations.py:221 translations.py:229 translations.py:237
+#: translations.py:241 translations.py:243 translations.py:259
+#: translations.py:263 translations.py:266 translations.py:268
+#: translations.py:270 translations.py:272 translations.py:278
+#: translations.py:285
+msgid "Dry/Wet"
+msgstr "Kuiva/Märkä"
+
+#: translations.py:180
+msgid "Pitch Shift"
+msgstr "Korkeuden siirto"
+
+#: translations.py:181
+msgid "Buffer Size"
+msgstr "Bufferin koko"
+
+#: translations.py:183
+msgid "Decay Time(samples)"
+msgstr "hilj. kesto(sampleinä)"
+
+#: translations.py:184
+msgid "Knee Point(dB)"
+msgstr "Polvi kohta(dB)"
+
+#: translations.py:186
+msgid "Frequency shift"
+msgstr "Taajuuden siirto"
+
+#: translations.py:188
+msgid "Low Gain(dB)"
+msgstr "Matala vahvistus(dB)"
+
+#: translations.py:189
+msgid "Mid Gain(dB)"
+msgstr "Keski vahvistus(dB)"
+
+#: translations.py:190
+msgid "High Gain(dB)"
+msgstr "Korkea vahvistus(dB)"
+
+#: translations.py:192
+msgid "Oscillation period(s)"
+msgstr "Oskillaation kesto(s)"
+
+#: translations.py:193
+msgid "Oscillation depth(ms)"
+msgstr "Oskillaation syvyys(ms)"
+
+#: translations.py:194
+msgid "Feedback%"
+msgstr "Kierto%"
+
+#: translations.py:197
+msgid "Random seed"
+msgstr "Satunnaissiemen"
+
+#: translations.py:198
+msgid "Input Gain(dB)"
+msgstr "Sisään vahvistus(dB)"
+
+#: translations.py:199
+msgid "Feedback(%)"
+msgstr "Kierto(%)"
+
+#: translations.py:200
+msgid "Number of taps"
+msgstr "Koputuksien luku"
+
+#: translations.py:201
+msgid "First Delay(s)"
+msgstr "Ensi viive(s)"
+
+#: translations.py:202
+msgid "Delay Range(s)"
+msgstr "Viive alue(s)"
+
+#: translations.py:203
+msgid "Delay Change"
+msgstr "Viive muutos"
+
+#: translations.py:204
+msgid "Delay Random(%)"
+msgstr "Viive satunnaisuus(%)"
+
+#: translations.py:205
+msgid "Amplitude Change"
+msgstr "Voimakkuuden muutos"
+
+#: translations.py:206
+msgid "Amplitude Random(%)"
+msgstr "Voimakkuuden satunnaisuus"
+
+#: translations.py:208 translations.py:271 translations.py:317
+#: translations.py:349
+msgid "Amount"
+msgstr "Määrä"
+
+#: translations.py:210
+msgid "Drive"
+msgstr "Ajo"
+
+#: translations.py:211
+msgid "Skew"
+msgstr "Vinoutus"
+
+#: translations.py:213 translations.py:216
+msgid "Cutoff Frequency(Hz)"
+msgstr "Katkaisu taajuus(Hz)"
+
+#: translations.py:214 translations.py:217
+msgid "Resonance"
+msgstr "Resonassi"
+
+#: translations.py:219
+msgid "Passes"
+msgstr "Läpimenot"
+
+#: translations.py:220
+msgid "Error Rate"
+msgstr "Virhe nopus"
+
+#: translations.py:222
+msgid "Roomsize"
+msgstr "Huoneen koko"
+
+#: translations.py:223
+msgid "Reverb time(s)"
+msgstr "Kaiku aika(s)"
+
+#: translations.py:224 translations.py:261
+msgid "Damping"
+msgstr "Vaimennus"
+
+#: translations.py:225
+msgid "Input bandwith"
+msgstr "Sisään kaistanleveys"
+
+#: translations.py:226
+msgid "Dry signal level(dB)"
+msgstr "Kuiva signaali taso(dB)"
+
+#: translations.py:227
+msgid "Early reflection level(dB)"
+msgstr "Varhainen heijastus taso(dB)"
+
+#: translations.py:228
+msgid "Tail level(dB)"
+msgstr "Häntä taso(dB)"
+
+#: translations.py:230
+msgid "LF keyfilter(Hz)"
+msgstr "LF rakofiltteri(Hz)"
+
+#: translations.py:231
+msgid "HF keyfilter(Hz)"
+msgstr "HF rakofiltteri(Hz)"
+
+#: translations.py:232
+msgid "Threshold(dB)"
+msgstr "Raja(dB)"
+
+#: translations.py:233
+msgid "Attack(ms)"
+msgstr "Nousu(ms)"
+
+#: translations.py:234
+msgid "Hold(ms)"
+msgstr "Pito(ms)"
+
+#: translations.py:235
+msgid "Decay(ms)"
+msgstr "Lasku(ms)"
+
+#: translations.py:236
+msgid "Range(dB)"
+msgstr "Alue(dB)"
+
+#: translations.py:238
+msgid "Center Frequency(Hz)"
+msgstr "Keskustaajuus(Hz)"
+
+#: translations.py:239
+msgid "Bandwidth(Hz)"
+msgstr "Kaistanleveys(Hz)"
+
+#: translations.py:240
+msgid "Stages"
+msgstr "Vaiheet"
+
+#: translations.py:242
+msgid "Pitch-coefficient"
+msgstr "Korkeus-koefisentti"
+
+#: translations.py:244
+msgid "50Hz gain"
+msgstr "50Hz vahvistus"
+
+#: translations.py:245
+msgid "100Hz gain"
+msgstr "100Hz vahvistus"
+
+#: translations.py:246
+msgid "156Hz gain"
+msgstr "156Hz vahvistus"
+
+#: translations.py:247
+msgid "220Hz gain"
+msgstr "220Hz vahvistus"
+
+#: translations.py:248
+msgid "311Hz gain"
+msgstr "311Hz vahvistus"
+
+#: translations.py:249
+msgid "440Hz gain"
+msgstr "440Hz vahvistus"
+
+#: translations.py:250
+msgid "622Hz gain"
+msgstr "622Hz vahvistus"
+
+#: translations.py:251
+msgid "880Hz gain"
+msgstr "880Hz vahvistus"
+
+#: translations.py:252
+msgid "1250Hz gain"
+msgstr "1250Hz vahvistus"
+
+#: translations.py:253
+msgid "1750Hz gain"
+msgstr "1750Hz vahvistus"
+
+#: translations.py:254
+msgid "2500Hz gain"
+msgstr "2500Hz vahvistus"
+
+#: translations.py:255
+msgid "3500Hz gain"
+msgstr "3500Hz vahvistus"
+
+#: translations.py:256
+msgid "5000Hz gain"
+msgstr "5000Hz vahvistus"
+
+#: translations.py:257
+msgid "100000Hz gain"
+msgstr "100000Hz vahvistus"
+
+#: translations.py:258
+msgid "200000Hz gain"
+msgstr "200000Hz vahvistus"
+
+#: translations.py:260
+msgid "Reverb time"
+msgstr "Kaiku aika"
+
+#: translations.py:262 translations.py:265
+msgid "Dry/Wet mix"
+msgstr "Kuiva/märkä mix"
+
+#: translations.py:264
+msgid "Effect cutoff(Hz)"
+msgstr "Efektin leikkuu(Hz)"
+
+#: translations.py:267
+msgid "Rate"
+msgstr "Vauhti"
+
+#: translations.py:269
+msgid "Sift"
+msgstr "Siirto"
+
+#: translations.py:273
+msgid "Year"
+msgstr "Vuosi"
+
+#: translations.py:274
+msgid "RPM"
+msgstr "KPM"
+
+#: translations.py:275
+msgid "Surface warping"
+msgstr "Pinta vääristymä"
+
+#: translations.py:276
+msgid "Cracle"
+msgstr "Rahina"
+
+#: translations.py:277
+msgid "Wear"
+msgstr "Kuluma"
+
+#: translations.py:279
+msgid "Number of voices"
+msgstr "Äänien määrä"
+
+#: translations.py:280
+msgid "Delay base(ms)"
+msgstr "Viive pohja(ms)"
+
+#: translations.py:281
+msgid "Voice separation(ms)"
+msgstr "Äänien ero(ms)"
+
+#: translations.py:282
+msgid "Detune(%)"
+msgstr "Epäviritys(%)"
+
+#: translations.py:283
+msgid "Oscillation frequency(Hz)"
+msgstr "Oskillaation taajuus(Hz)"
+
+#: translations.py:284
+msgid "Output attenuation(dB)"
+msgstr "Ulos vaimennus(dB)"
+
+#: translations.py:286
+msgid "X Scatter"
+msgstr "X hajonta"
+
+#: translations.py:287
+msgid "Y Scatter"
+msgstr "Y hajonta"
+
+#: translations.py:288
+msgid "Scale"
+msgstr "Skaala"
+
+#: translations.py:289
+msgid "Mix"
+msgstr "Sekoitus"
+
+#: translations.py:292
+msgid "Delta"
+msgstr "Muutos"
+
+#: translations.py:293
+msgid "Duration"
+msgstr "Kesto"
+
+#: translations.py:294
+msgid "Bright. up"
+msgstr "Valoisuus ylös"
+
+#: translations.py:295
+msgid "Bright. down"
+msgstr "Valoisuus alas"
+
+#: translations.py:296
+msgid "Bright. dur."
+msgstr "Valoisuus kesto"
+
+#: translations.py:297
+msgid "Develop up"
+msgstr "Kehitys ylös"
+
+#: translations.py:298
+msgid "Develop down"
+msgstr "Kehitys alas"
+
+#: translations.py:299
+msgid "Develop dur."
+msgstr "Kehitys kesto"
+
+#: translations.py:300
+msgid "Triplevel"
+msgstr "Happotaso"
+
+#: translations.py:301
+msgid "Difference Space"
+msgstr "Eroavaruus"
+
+#: translations.py:302
+msgid "Block width"
+msgstr "Lohko leveys"
+
+#: translations.py:303
+msgid "Block height"
+msgstr "Lohko korkeus"
+
+#: translations.py:304 translations.py:350
+msgid "Size"
+msgstr "Koko"
+
+#: translations.py:305
+msgid "Noise"
+msgstr "Kohina"
+
+#: translations.py:313
+msgid "U"
+msgstr "U"
+
+#: translations.py:314
+msgid "V"
+msgstr "V"
+
+#: translations.py:315 translations.py:322
+msgid "Black"
+msgstr "Musta"
+
+#: translations.py:316 translations.py:323
+msgid "White"
+msgstr "Valkoinen"
+
+#: translations.py:318
+msgid "Neutral Color"
+msgstr "Neutraali väri"
+
+#: translations.py:319 translations.py:320
+msgid "Input"
+msgstr "Sisään"
+
+#: translations.py:321
+msgid "Gamma"
+msgstr ""
+
+#: translations.py:324
+msgid "Num"
+msgstr "Numero"
+
+#: translations.py:325
+msgid "Dist. weight"
+msgstr "Välimatka paino"
+
+#: translations.py:327
+msgid "Variance"
+msgstr "VAihtelu"
+
+#: translations.py:329
+msgid "Red Saturation"
+msgstr "Punaisen värikylläisyys"
+
+#: translations.py:330
+msgid "Yellow Saturation"
+msgstr "Keltaisen värikylläisyys"
+
+#: translations.py:331
+msgid "Factor"
+msgstr "Faktori"
+
+#: translations.py:332
+msgid "Source color"
+msgstr "Lähde väri"
+
+#: translations.py:334
+msgid "Amplitude"
+msgstr "Voimakkkuus"
+
+#: translations.py:335
+msgid "Frequency"
+msgstr "Taajuus"
+
+#: translations.py:338
+msgid "Center Correct"
+msgstr "Keskus korjaus"
+
+#: translations.py:339
+msgid "Edges Correct"
+msgstr "Reuna korjaus"
+
+#: translations.py:341
+msgid "Axis"
+msgstr "Akseli"
+
+#: translations.py:344
+msgid "Edge Lightning"
+msgstr "Reuna vaalennus"
+
+#: translations.py:345
+msgid "Edge Brightness"
+msgstr "Reuna valoisuus"
+
+#: translations.py:346
+msgid "Non-Edge Brightness"
+msgstr "Ei-reuna valoisuus"
+
+#: translations.py:347
+msgid "Spatial"
+msgstr "Tila"
+
+#: translations.py:348
+msgid "Temporal"
+msgstr "Aika"
+
+#: translations.py:351
+msgid "Border width"
+msgstr "Raja leveys"
+
+#: translations.py:352
+msgid "Phase Incr."
+msgstr "Vaiheen lisäys"
+
+#: translations.py:353
+msgid "Zoom"
+msgstr "Zoom määrä"
+
+#: translations.py:354
+msgid "Freeze Frame"
+msgstr "Pysäytys ruutu"
+
+#: translations.py:355
+msgid "Freeze After"
+msgstr "Pysäytä jälkeen"
+
+#: translations.py:356
+msgid "Freeze Before"
+msgstr "Pysäytä ennen"
+
+#: translations.py:357
+msgid "Angle"
+msgstr "Kulma"
+
+#: translations.py:358 translations.py:361 translations.py:362
+msgid "transition.geometry"
+msgstr ""
+
+#: translations.py:359 translations.py:376
+msgid "Shear X"
+msgstr "Vinous X"
+
+#: translations.py:360 translations.py:377
+msgid "Shear Y"
+msgstr "Vinous Y"
+
+#: translations.py:369 translations.py:370 translations.py:375
+#: translations.py:379
+msgid "Opacity"
+msgstr "Läpinäkyvyys"
+
+#: translations.py:371
+msgid "Rotate X"
+msgstr "Kierrä X"
+
+#: translations.py:372
+msgid "Rotate Y"
+msgstr "Kierrä Y"
+
+#: translations.py:373
+msgid "Rotate Z"
+msgstr "Kierrä Z"
+
+#: translations.py:380 translations.py:384
+msgid "Wipe Type"
+msgstr "Siirt. tyyppi"
+
+#: translations.py:382 translations.py:386
+msgid "Softness"
+msgstr "Pehmeys"
+
+#: translations.py:383
+msgid "Wipe Amount"
+msgstr "Siirt. määrä"
+
+#: mlttransitions.py:46
+msgid "Vertical From Center"
+msgstr "Pysty keskeltä"
+
+#: mlttransitions.py:47
+msgid "Vertical Top to Bottom"
+msgstr "Pysty ylhäältä"
+
+#: mlttransitions.py:48
+msgid "Vertical Bottom to Top"
+msgstr "Pysty alhaalta"
+
+#: mlttransitions.py:49
+msgid "Horizontal From Center"
+msgstr "Vaaka keskeltä"
+
+#: mlttransitions.py:50
+msgid "Horizontal Left to Right"
+msgstr "Vaaka vasemmalta"
+
+#: mlttransitions.py:51
+msgid "Horizontal Right to Left"
+msgstr "Vaaka oikealta"
+
+#: mlttransitions.py:52
+msgid "Clock Left To Right"
+msgstr "Kello vasemmalle"
+
+#: mlttransitions.py:53
+msgid "Clock Right to Left"
+msgstr "Kello oikealle"
+
+#: mlttransitions.py:54
+msgid "Clock Symmetric"
+msgstr "Kello symmetrinen"
+
+#: mlttransitions.py:55
+msgid "Stripes Horizontal"
+msgstr "Raidat vaaka"
+
+#: mlttransitions.py:56
+msgid "Stripes Horizontal Big"
+msgstr "Raidat vaaka iso"
+
+#: mlttransitions.py:57
+msgid "Stripes Horizontal Moving"
+msgstr "Raidat vaaka liike"
+
+#: mlttransitions.py:58
+msgid "Stripes Vertical"
+msgstr "Raidat pysty"
+
+#: mlttransitions.py:59
+msgid "Stripes Vertical Big"
+msgstr "Raidat pysty iso"
+
+#: mlttransitions.py:60
+msgid "Burst"
+msgstr "Purkaus"
+
+#: mlttransitions.py:61
+msgid "Circle From In"
+msgstr "Ympyrä ulos"
+
+#: mlttransitions.py:62
+msgid "Circle From Out"
+msgstr "Ympyrä sisään"
+
+#: mlttransitions.py:63
+msgid "Cloud"
+msgstr "Pilvi"
+
+#: mlttransitions.py:64
+msgid "Hatched 1"
+msgstr "Kuvio 1"
+
+#: mlttransitions.py:65
+msgid "Hatched 2"
+msgstr "Kuvio 2"
+
+#: mlttransitions.py:66
+msgid "Hourglass"
+msgstr "Tiimalasi"
+
+#: mlttransitions.py:67
+msgid "Puddles"
+msgstr "Lammikot"
+
+#: mlttransitions.py:68
+msgid "Rings"
+msgstr "Renkaat"
+
+#: mlttransitions.py:69
+msgid "Rectangle From In"
+msgstr "Suorakulmio ulos"
+
+#: mlttransitions.py:70
+msgid "Rectangle From Out"
+msgstr "Suorakulmio sisään"
+
+#: mlttransitions.py:71
+msgid "Rectangle Bars"
+msgstr "Suorakulmio kaistat"
+
+#: mlttransitions.py:72
+msgid "Sand"
+msgstr "Hiekka"
+
+#: mlttransitions.py:73
+msgid "Sphere"
+msgstr "Pyöreä"
+
+#: mlttransitions.py:74
+msgid "Spiral Abstract"
+msgstr "Spiraali abstrakti"
+
+#: mlttransitions.py:75
+msgid "Spiral"
+msgstr "Spiraali"
+
+#: mlttransitions.py:76
+msgid "Spiral Galaxy"
+msgstr "Spiraali galaksi"
+
+#: mlttransitions.py:77
+msgid "Spiral Big"
+msgstr "Spiraali suuri"
+
+#: mlttransitions.py:78
+msgid "Spiral Medium"
+msgstr "Spiraali keskikoko"
+
+#: mlttransitions.py:79
+msgid "Spots"
+msgstr "Pilkut"
+
+#: mlttransitions.py:80
+msgid "Star"
+msgstr "Tähdet"
+
+#: mlttransitions.py:81
+msgid "Arch"
+msgstr "Kaaret"
+
+#: mlttransitions.py:82
+msgid "Patches"
+msgstr "Paikat"
+
+#: mlttransitions.py:83
+msgid "Free Stripes"
+msgstr "Vapaat raidat"
+
+#: mlttransitions.py:84
+msgid "Free Curves"
+msgstr "Vapaat kurvit"
+
+#: mlttransitions.py:85
+msgid "Diagonal 1"
+msgstr "Diagonaali 1"
+
+#: mlttransitions.py:86
+msgid "Diagonal 2"
+msgstr "Diagonaali 2"
+
+#: mlttransitions.py:87
+msgid "Diagonal 3"
+msgstr "Diagonaali 3"
+
+#: mlttransitions.py:88
+msgid "Diagonal 4"
+msgstr "Diagonaali 4"
+
+#: mlttransitions.py:89
+msgid "Checkerboard"
+msgstr "Shakkilauta"
+
+#: mlttransitions.py:92
+msgid "Affine"
+msgstr "Affiini"
+
+#: mlttransitions.py:93
+msgid "Dissolve"
+msgstr "Ristikuva"
+
+#: mlttransitions.py:94
+msgid "Picture in Picture"
+msgstr "Kuva kuvassa"
+
+#: mlttransitions.py:95
+msgid "Region"
+msgstr "Alue"
+
+#: mlttransitions.py:96
+msgid "Wipe Clip Length"
+msgstr "Siirtymä"
+
+#: mlttransitions.py:100
+msgid "Burn"
+msgstr "Lisävalota"
+
+#: mlttransitions.py:101
+msgid "Color only"
+msgstr "Väri"
+
+#: mlttransitions.py:102
+msgid "Darken"
+msgstr "Tummenna"
+
+#: mlttransitions.py:103
+msgid "Difference"
+msgstr "Erotus"
+
+#: mlttransitions.py:104
+msgid "Divide"
+msgstr "Jaa"
+
+#: mlttransitions.py:105
+msgid "Dodge"
+msgstr "Varjosta"
+
+#: mlttransitions.py:106
+msgid "Grain extract"
+msgstr "Värin vähennys"
+
+#: mlttransitions.py:107
+msgid "Grain merge"
+msgstr "Värin lisäys"
+
+#: mlttransitions.py:108
+msgid "Hardlight"
+msgstr "Kova valo"
+
+#: mlttransitions.py:110
+msgid "Lighten"
+msgstr "Vaalenna"
+
+#: mlttransitions.py:111
+msgid "Multiply"
+msgstr "Kerro"
+
+#: mlttransitions.py:112
+msgid "Overlay"
+msgstr "Peite"
+
+#: mlttransitions.py:114
+msgid "Screen"
+msgstr "Näyttö"
+
+#: mlttransitions.py:115
+msgid "Softlight"
+msgstr "Pehmeä valo"
+
+#: mlttransitions.py:116
+msgid "Subtract"
+msgstr "Vähennä"
+
+#: mlttransitions.py:117
+msgid "Value"
+msgstr "Arvo"
+
+#: propertyeditorbuilder.py:187
+msgid "Height"
+msgstr "Korkeus"
+
+#: propertyeditorbuilder.py:300 propertyeditorbuilder.py:353
+msgid "Nothing"
+msgstr "Ei mitään"
+
+#: propertyeditorbuilder.py:300 propertyeditorbuilder.py:353
+msgid "Progressive"
+msgstr "Progressiivinen"
+
+#: propertyeditorbuilder.py:300 propertyeditorbuilder.py:353
+msgid "Deinterlace"
+msgstr ""
+
+#: propertyeditorbuilder.py:300 propertyeditorbuilder.py:353
+msgid "Both"
+msgstr "Molemmat"
+
+#: propertyeditorbuilder.py:310 propertyeditorbuilder.py:363
+msgid "Force"
+msgstr "Pakoita"
+
+#: propertyeditorbuilder.py:320 propertyeditorbuilder.py:373
+msgid "Align"
+msgstr "Kohdista"
+
+#: keyframeeditor.py:992
+msgid "View:"
+msgstr "Näkymä:"
+
+#: keyframeeditor.py:995
+msgid "Ratio"
+msgstr "Suhde"
+
+#: keyframeeditor.py:996
+msgid "Reset source image to original position and size"
+msgstr "Resetoi lähdäkuva alkuperäiseen sijaintiin ja kokoon"
+
+#: keyframeeditor.py:997
+msgid "Set source image to original aspect ratio."
+msgstr "Aseta lähdekuva alkuperäiseen kuvasuhteeseen"
+
+#: keyframeeditor.py:1004
+msgid "Large"
+msgstr "Suuri"
+
+#: keyframeeditor.py:1005
+msgid "Medium"
+msgstr "Keskikokoinen"
+
+#: keyframeeditor.py:1006
+msgid "Small"
+msgstr "Pieni"
+
+

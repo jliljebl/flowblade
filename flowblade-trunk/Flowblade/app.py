@@ -1,0 +1,432 @@
+"""
+Application module.
+
+Handles application initialization, shutdown, opening projects and changing
+sequences.
+"""
+import glib
+import gobject
+import gtk
+import mlt
+import multiprocessing
+import os
+import time
+import threading
+
+import clipeffectseditor
+import cliprenderer
+import compositeeditor
+import dialogs
+import dnd
+import edit
+import editevent
+import editorpersistance
+import editorstate
+import editorwindow
+import gui
+import guicomponents
+import keyevents
+import keyframeeditor
+import mltenv
+import mltfilters
+import mltplayer
+import mltprofiles
+import mlttransitions
+import monitorevent
+import movemodes
+import persistance
+import projectdata
+import propertyedit
+import render
+import respaths
+import sequence
+import test
+import tlinewidgets
+import translations
+import trimmodes
+import undo
+import updater
+import useraction
+import utils
+
+splash_screen = None
+splash_timeout_id = -1
+too_small_timeout_id = -1
+
+def main(root_path):
+    """
+    Called at application start.
+    Initializes application with default project.
+    """
+    # Set paths.
+    respaths.set_paths(root_path)
+
+    # Create hidden folders if needed
+    if not os.path.exists(utils.get_hidden_user_dir_path()):
+        os.mkdir(utils.get_hidden_user_dir_path())
+    if not os.path.exists(utils.get_hidden_user_dir_path() + mltprofiles.USER_PROFILES_DIR):
+        os.mkdir(utils.get_hidden_user_dir_path() + mltprofiles.USER_PROFILES_DIR)
+
+    # Load editor prefs and list of recent projects
+    editorpersistance.load()
+    
+    # Init translations module with translations data
+    translations.init_languages()
+    translations.load_filters_translations()
+    mlttransitions.init_module()
+
+    # Check for codecs and formats on the system
+    mltenv.check_available_features()
+    render.load_render_profiles()
+
+    # Load filter and compositor descriptions from xml files.
+    mltfilters.load_filters_xml()
+    mlttransitions.load_compositors_xml()
+
+    # Init gtk threads
+    gtk.gdk.threads_init()
+
+    # Adjust gui parameters for smaller screens
+    scr_w = gtk.gdk.screen_width()
+    scr_h = gtk.gdk.screen_height()
+    if scr_w < 1220:
+        editorwindow.NOTEBOOK_WIDTH = 580
+        editorwindow.MONITOR_AREA_WIDTH = 500
+    if scr_h < 960:
+        editorwindow.TOP_ROW_HEIGHT = 460
+
+    # Refuse to run on too small screen.
+    if scr_w < 1152 or scr_h < 864:
+        _too_small_screen_exit()
+        return
+
+    # Splash screen
+    if editorpersistance.prefs.display_splash_screen == True: 
+        show_splash_screen()
+
+    # Init MLT framework
+    mlt.Factory().init()
+
+    # Create list of available mlt profiles
+    mltprofiles.load_profile_list()
+    
+    # There is always a project open so at startup we create a default project.
+    # Set default project as the project being edited.
+    editorstate.project = projectdata.get_default_project()
+
+    # Create player object
+    create_player()
+
+    # Create main window and set widget handles in gui.py for more convenient reference.
+    create_gui()
+
+    # Inits widgets with project data
+    init_project_gui()
+
+    # Inits widgets with current sequence data
+    init_sequence_gui()
+
+    # Launch player now that data and gui exist
+    launch_player()
+
+    # Editor and modules need some more initializing
+    init_editor_state()
+
+    # Tracks need to be recentered if window is resized.
+    # Connect listener for this now that the tline panel size allocation is sure to be available.
+    gui.editor_window.window.connect("size-allocate", lambda w, e:updater.window_resized())
+    gui.editor_window.window.connect("window-state-event", lambda w, e:updater.window_resized())
+
+    # show splash
+    if editorpersistance.prefs.display_splash_screen == True: 
+        global splash_timeout_id
+        splash_timeout_id = gobject.timeout_add(2600, destroy_splash_screen)
+        splash_screen.show_all()
+
+    # Launch gtk+ main loop
+    gtk.main()
+
+# ---------------------------------- program, sequence and preoject init
+def create_gui():
+    """
+    Called at app start to create gui objects and handles for them.
+    """
+    tlinewidgets.load_icons()
+
+    updater.set_default_edit_mode_callback = editevent.set_default_edit_mode
+    updater.load_icons()
+
+    # Create window and all child components
+    editor_window = editorwindow.EditorWindow()
+    
+    # Make references to various gui components available via gui module
+    gui.capture_references(editor_window)
+
+    # Connect window global key listener
+    gui.editor_window.window.connect("key-press-event", keyevents.key_down)
+    
+    # Give undo a reference to uimanager for menuitem state changes
+    undo.set_menu_items(gui.editor_window.uimanager)
+    
+    # Set button to display sequence in toggled state.
+    gui.sequence_editor_b.set_active(True)
+
+def create_player():
+    """
+    Creates mlt player object
+    """
+    # Create player and make available from editorstate module.
+    editorstate.player = mltplayer.Player(editorstate.project.profile)
+    editorstate.player.set_tracktor_producer(editorstate.current_sequence().tractor)
+
+def launch_player():
+    # Create SDL output consumer
+    editorstate.player.set_sdl_xwindow(gui.tline_display)
+    editorstate.player.create_sdl_consumer()
+
+    # Display current sequence tractor
+    updater.display_sequence_in_monitor()
+    
+    # Connect buttons to player methods
+    gui.editor_window.connect_player(editorstate.player)
+    
+    # Start player.
+    editorstate.player.start()
+
+def init_project_gui():
+    """
+    Called after project load to initialize interface
+    """
+    # Display media files
+    gui.media_list_view.fill_data_model()
+    try: # Fails if current bin is empty
+        selection = gui.media_list_view.treeview.get_selection()
+        selection.select_path("0")
+    except Exception:
+        pass
+        
+    # Display bins
+    gui.bin_list_view.fill_data_model()
+    selection = gui.bin_list_view.treeview.get_selection()
+    selection.select_path("0")
+    
+    # Display sequences
+    gui.sequence_list_view.fill_data_model()
+    selection = gui.sequence_list_view.treeview.get_selection()
+    selected_index = editorstate.project.sequences.index(editorstate.current_sequence())
+    selection.select_path(str(selected_index))
+
+    render.set_default_values_for_widgets()
+
+def init_sequence_gui():
+    """
+    Called after project load or changing current sequence 
+    to initialize interface.
+    """
+    # A media file always needs to be selected to make pop-ups work
+    # to user expectations
+    selection = gui.media_list_view.treeview.get_selection()
+    selection.select_path("0")
+
+    # Set initial timeline scale draw params
+    editorstate.current_sequence().update_length()
+    updater.update_pix_per_frame_full_view()
+    updater.init_tline_scale()
+    updater.repaint_tline()
+
+def init_editor_state():
+    """
+    Called after project load or changing current sequence 
+    to initalize editor state.
+    """
+    render.fill_out_profile_widgets()
+    
+    # Display project data in 'Project' panel
+    updater.update_project_info(editorstate.project)
+
+    # Set initial edit mode and set initial gui state
+    gui.mode_buttons[editorstate.INSERT_MOVE].set_active(True)
+    
+    gui.clip_editor_b.set_sensitive(False)
+    gui.editor_window.window.set_title(editorstate.project.name + " - Flowblade")
+    updater.set_stopped_configuration()
+    gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(False)
+    gui.editor_window.uimanager.get_widget("/MenuBar/EditMenu/Undo").set_sensitive(False)
+    gui.editor_window.uimanager.get_widget("/MenuBar/EditMenu/Redo").set_sensitive(False)
+    
+    # Center tracks vertical display and init some listeners to
+    # new value and repaint tracks column.
+    tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.allocation)
+    gui.tline_column.init_listeners()
+    gui.tline_column.widget.queue_draw()
+
+    # Clear editors 
+    clipeffectseditor.clear_clip()
+    compositeeditor.clear_compositor()
+    
+    # Show first pages on notebooks
+    gui.middle_notebook.set_current_page(0)
+    
+    # Clear clip selection.
+    movemodes.clear_selection_values()
+
+    # Create array needed to update compositors after all edits
+    editorstate.current_sequence().restack_compositors()
+
+    # Enable edit action GUI updates
+    # These are turned off initially so we can build test projects 
+    # with code by using edit.py module which causes gui updates to happen.
+    edit.do_gui_update = True
+    
+def new_project(profile_index):
+    profile = mltprofiles.get_profile_for_index(profile_index)
+    new_project = projectdata.Project(profile)
+    open_project(new_project)
+        
+def open_project(new_project):
+    editorstate.project = new_project
+
+    # Inits widgets with project data
+    init_project_gui()
+    
+    # Inits widgets with current sequence data
+    init_sequence_gui()
+
+    # Set and display current sequence tractor
+    display_current_sequence()
+    
+    # Editor and modules need some more initializing
+    init_editor_state()
+    
+    # For save time message on close
+    useraction.save_time = None
+
+def change_current_sequence(index):
+    editorstate.project.c_seq = editorstate.project.sequences[index]
+    
+    # Inits widgets with current sequence data
+    init_sequence_gui()
+
+    # Set and display current sequence tractor
+    display_current_sequence()
+    
+    # Editor and modules needs to do some initializing
+    init_editor_state()
+
+    # Display current sequence selected in gui.
+    gui.sequence_list_view.fill_data_model()
+    selection = gui.sequence_list_view.treeview.get_selection()
+    selected_index = editorstate.project.sequences.index(editorstate.current_sequence())
+    selection.select_path(str(selected_index))
+
+def display_current_sequence():
+    # Get shorter alias.
+    player = editorstate.player
+
+    player.consumer.stop()
+    player.init_for_profile(editorstate.project.profile)
+    player.create_sdl_consumer()
+    player.set_tracktor_producer(editorstate.current_sequence().tractor)
+    player.connect_and_start()
+    updater.display_sequence_in_monitor()
+    player.seek_frame(0)
+    updater.repaint_tline()
+
+# ------------------------------------------------- splash screen
+def show_splash_screen():
+    global splash_screen
+    splash_screen = gtk.Window(gtk.WINDOW_TOPLEVEL)
+    splash_screen.set_border_width(0)
+    splash_screen.set_decorated(False)
+    splash_screen.set_position(gtk.WIN_POS_CENTER)
+    splash_screen.set_resizable(False)
+    img = gtk.image_new_from_file(respaths.IMAGE_PATH + "flowblade_splash_black_small.png")
+    splash_screen.add(img)
+    splash_screen.set_keep_above(True)
+    while(gtk.events_pending()):
+        gtk.main_iteration()
+
+def destroy_splash_screen():
+    splash_screen.destroy()
+    gobject.source_remove(splash_timeout_id)
+
+
+# ------------------------------------------------------- too small screen
+def _too_small_screen_exit():
+    global too_small_timeout_id
+    too_small_timeout_id = gobject.timeout_add(200, _show_too_small_info)
+    # Launch gtk+ main loop
+    gtk.main()
+
+def _show_too_small_info():
+    gobject.source_remove(too_small_timeout_id)
+    primary_txt = _("Too small screen for this application.")
+    scr_w = gtk.gdk.screen_width()
+    scr_h = gtk.gdk.screen_height()
+    secondary_txt = _("Minimum screen dimensions for this application are 1152 x 864.\n") + \
+                    _("Your screen dimensions are ") + str(scr_w) + " x " + str(scr_h) + "."
+    dialogs.warning_message_with_callback(primary_txt, secondary_txt, None, False, _exit_too_small)
+
+def _exit_too_small(dialog, response):
+    dialog.destroy()
+    # Exit gtk main loop.
+    gtk.main_quit() 
+    
+# ------------------------------------------------------ shutdown
+def shutdown():
+    dialogs.exit_confirm_dialog(_shutdown_dialog_callback, get_save_time_msg(), gui.editor_window.window, editorstate.PROJECT().name)
+    return True # Signal that event is handled, otherwise it'll destroy window anyway
+
+
+def get_save_time_msg():
+    if useraction.save_time == None:
+        return _("Project has not been saved since it was opened.")
+    
+    save_ago = (time.clock() - useraction.save_time) / 60.0
+
+    if save_ago < 1:
+        return _("Project was saved less than a minute ago.")
+
+    if save_ago < 2:
+        return _("Project was saved one minute ago.")
+    
+    return _("Project was saved ") + str(int(save_ago)) + _(" minutes ago.")
+
+def _shutdown_dialog_callback(dialog, response_id):
+    dialog.destroy()
+    if response_id == gtk.RESPONSE_CLOSE:# "Don't Save"
+        pass
+    elif response_id ==  gtk.RESPONSE_YES:# "Save"
+        if editorstate.PROJECT().last_save_path != None:
+            persistance.save_project(editorstate.PROJECT(), editorstate.PROJECT().last_save_path)
+        else:
+            dialogs.warning_message(_("Project has not been saved previously"), 
+                                    _("Save project with File -> Save As before closing."),
+                                    gui.editor_window.window)
+            return
+    else: # "Cancel"
+        return
+
+    # --- APP SHUT DOWN --- #
+    print "exiting app..."
+    
+    # Block reconnecting consumer before setting window not visible
+    updater.player_refresh_enabled = False
+    gui.editor_window.window.set_visible(False)
+
+    # Wait window to be hidden or it will freeze before disappering
+    while(gtk.events_pending()):
+        gtk.main_iteration()
+ 
+    # Close threads and stop mlt consumers
+    projectdata.thumbnail_thread.shutdown()
+    editorstate.player.shutdown() # has ticker thread and player threads running
+
+    # Wait threads to stop
+    while((editorstate.player.running == True) and (editorstate.player.ticker.exited == False)
+          and(projectdata.thumbnail_thread.stopped == False)):
+        pass
+
+    # Exit gtk main loop.
+    gtk.main_quit()
+    

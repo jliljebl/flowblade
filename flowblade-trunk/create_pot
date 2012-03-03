@@ -1,0 +1,7 @@
+#/usr/bin/bash
+
+# This is assumed to run from <app_root>
+cd Flowblade
+
+# Creates .pot file that can be turned to .po file for each language
+xgettext -o locale/Flowblade/Flowblade.pot app.py useraction.py editorwindow.py clipeffectseditor.py compositeeditor.py dialogs.py editevent.py editorpersistance.py guicomponents.py movemodes.py panels.py persistance.py projectdata.py render.py syncsplitevent.py translations.py mlttransitions.py propertyeditorbuilder.py keyframeeditor.py

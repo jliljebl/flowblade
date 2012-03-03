@@ -1,0 +1,46 @@
+#!/usr/bin/env python
+
+import os
+import sys
+
+print "FLOWBLADE MOVIE_EDITOR 0.6.0"
+print "----------------------------"
+
+# Get launch script dir
+launch_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+
+print "Launch script dir:", launch_dir
+
+# Update sys.path to include modules
+if launch_dir == "/usr/bin":
+    print "Running from installation..."
+    modules_path = "/usr/share/pyshared/Flowblade"
+else:
+    print "Running from filesystem..."
+    modules_path = launch_dir + "/Flowblade"
+
+sys.path.insert(0, modules_path)
+
+# Check that we have MLT, missing min version is fatal.
+try:
+    import mlt
+    print "MLT found, version:", mlt.LIBMLT_VERSION
+except:
+    print "MLT not found, exiting..."
+    sys.exit(1)
+    
+# Get app.py module
+"""
+try:
+    import app
+except Exception, err:
+    print "Failed to import module app.py to launch Flowblade!"
+    print "ERROR:", err
+    print "Installation was assumed to be at:", modules_path
+    sys.exit(1)
+"""
+import app
+
+# Launch application
+print "Starting app..."
+app.main(modules_path)

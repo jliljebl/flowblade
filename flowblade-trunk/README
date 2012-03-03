@@ -1,0 +1,13 @@
+Flowblade is a non-linear video editor for linux
+
+Main depencies
+--------------
+1) Python 2.5+ 
+2) GTK, PyGTK, Cairo 
+3) MLT Framework (http://www.mltframework.org)
+4) LADSPA Audio plugins
+5) Sox audio library
+6) Frei0r video effect library
+7) FFmpeg
+
+
