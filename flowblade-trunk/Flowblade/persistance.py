@@ -1,4 +1,24 @@
 """
+	Flowblade Movie Editor is a nonlinear video editor.
+    Copyright 2012 Janne Liljeblad.
+
+	This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+
+	Flowblade Movie Editor is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	Flowblade Movie Editor is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
+"""
 Module for saving and loading projects.
 
 Main functionality of the module is to replace unpickleable 
@@ -25,7 +45,6 @@ PLAY_LIST_REMOVE = ['this','sequence','get_name']
 CLIP_REMOVE = ['this','clip_length']
 TRANSITION_REMOVE = ['this']
 FILTER_REMOVE = ['mlt_filter','mlt_filters']
-#COMPOSITOR_REMOVE = ['this']
 MEDIA_FILE_REMOVE = ['icon']
 
 

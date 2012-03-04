@@ -1,4 +1,24 @@
 """
+	Flowblade Movie Editor is a nonlinear video editor.
+    Copyright 2012 Janne Liljeblad.
+
+	This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+
+	Flowblade Movie Editor is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	Flowblade Movie Editor is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
+"""
 Helper functions and data
 """
 import gtk
@@ -110,11 +130,7 @@ def get_file_thumbnail(icon_file):
         return None
     else:
         return pixbuf.scale_simple(64, 100, gtk.gdk.INTERP_BILINEAR)
-"""
-def get_thumnail_path(file_name):
-    tokens = file_name.split(".")
-    return respaths.THUMBNAIL_PATH + tokens[0] +  "_1.png"
-"""
+
 def get_track_name(track, sequence):
     if track.type == appconsts.VIDEO:
         # Video tracks are numbered to USER as 'V1' ,'V2' with 'V1' being
