@@ -38,7 +38,6 @@ if launch_dir == "/usr/bin":
 else:
     print "Running from filesystem..."
     modules_path = launch_dir + "/Flowblade"
-
 sys.path.insert(0, modules_path)
 
 # Check that we have MLT, missing min version is fatal.
@@ -50,7 +49,6 @@ except:
     sys.exit(1)
     
 # Get app.py module
-"""
 try:
     import app
 except Exception, err:
@@ -58,9 +56,8 @@ except Exception, err:
     print "ERROR:", err
     print "Installation was assumed to be at:", modules_path
     sys.exit(1)
-"""
-import app
+
 
 # Launch application
-print "Starting app..."
+print "starting app..."
 app.main(modules_path)
