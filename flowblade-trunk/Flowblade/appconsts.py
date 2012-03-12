@@ -30,6 +30,7 @@ IMAGE = 3
 RENDERED_VIDEO = 4 # not implemented
 PATTERN_PRODUCER = 5
 SYNC_AUDIO = 6
+FILE_DOES_NOT_EXIST = 7
 
 # Sync states of sync child clips
 SYNC_CORRECT = 0

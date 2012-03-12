@@ -22,7 +22,6 @@
 Module handles user actions that are not edits on the current sequence.
 Load, save, add media file, etc...
 """
-#import copy
 import gtk
 import os
 import sys
@@ -98,8 +97,17 @@ class LoadThread(threading.Thread):
         ticker = utils.Ticker(_load_pulse_bar, 0.15)
         ticker.start_ticker()
 
-        project = persistance.load_project(self.filename)
-
+        try:
+            project = persistance.load_project(self.filename)
+        except persistance.FileProducerNotFoundError as e:
+            print "did not find file:", e
+            gtk.gdk.threads_enter()
+            dialog.destroy()
+            gtk.gdk.threads_leave()
+            ticker.stop_ticker()
+            # INFOWINDOW
+            return
+    
         gtk.gdk.threads_enter()
         dialog.info.set_text(_("Opening"))
         gtk.gdk.threads_leave()

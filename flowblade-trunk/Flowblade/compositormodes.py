@@ -67,7 +67,7 @@ def delete_current_selection():
     compositor = None
 
 def mouse_press(event, frame):
-    track = current_sequence().tracks[compositor.transition.a_track]
+    track = current_sequence().tracks[compositor.transition.b_track - 1]
 
     global edit_data, sub_mode
     
@@ -100,19 +100,7 @@ def mouse_press(event, frame):
 def mouse_move(x, y, frame, state):
     global edit_data
     if sub_mode == TRIM_EDIT:
-        # bounds check
-        if edit_data["trim_is_clip_in"] == True:
-            if frame > edit_data["clip_out"]:
-                frame = edit_data["clip_out"]
-            edit_data["clip_in"] = frame
-        else:
-            if frame < edit_data["clip_in"]:
-                frame = edit_data["clip_in"]
-            edit_data["clip_out"] = frame
-        if edit_data["clip_in"] < 0:
-            edit_data["clip_in"] = 0
-        if edit_data["clip_out"] < 0:
-            edit_data["clip_out"] = 0
+        _bounds_check_trim(frame, edit_data)
     else:
         edit_data["current_frame"] = frame
 
@@ -126,19 +114,7 @@ def mouse_release(x, y, frame, state):
         tlinewidgets.set_edit_mode(None, tlinewidgets.draw_overwrite_overlay)
 
     if sub_mode == TRIM_EDIT:
-        # bounds check
-        if edit_data["trim_is_clip_in"] == True:
-            if frame > edit_data["clip_out"]:
-                frame = edit_data["clip_out"]
-            edit_data["clip_in"] = frame
-        else:
-            if frame < edit_data["clip_in"]:
-                frame = edit_data["clip_in"]
-            edit_data["clip_out"] = frame
-        if edit_data["clip_in"] < 0:
-            edit_data["clip_in"] = 0
-        if edit_data["clip_out"] < 0:
-            edit_data["clip_out"] = 0
+        _bounds_check_trim(frame, edit_data)
         data = {"compositor":compositor,
                 "clip_in":edit_data["clip_in"],
                 "clip_out":edit_data["clip_out"]}
@@ -160,3 +136,17 @@ def mouse_release(x, y, frame, state):
         action.do_edit()
     
     updater.repaint_tline()
+
+def _bounds_check_trim(frame, edit_data):
+    if edit_data["trim_is_clip_in"] == True:
+        if frame > edit_data["clip_out"]:
+            frame = edit_data["clip_out"]
+        edit_data["clip_in"] = frame
+    else:
+        if frame < edit_data["clip_in"]:
+            frame = edit_data["clip_in"]
+        edit_data["clip_out"] = frame
+    if edit_data["clip_in"] < 0:
+        edit_data["clip_in"] = 0
+    if edit_data["clip_out"] < 0:
+        edit_data["clip_out"] = 0

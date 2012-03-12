@@ -222,12 +222,18 @@ class ClipKeyFrameEditor:
                 icon = ACTIVE_KF_ICON
             else:
                 icon = NON_ACTIVE_KF_ICON
-            kf_pos = self._get_panel_pos_for_frame(frame)
+            try:
+                kf_pos = self._get_panel_pos_for_frame(frame)
+            except ZeroDivisionError: # math fails for 1 frame long clip
+                kf_pos = END_PAD
             cr.set_source_pixbuf(icon, kf_pos - 6, KF_Y)
             cr.paint()
 
         # Draw frame pointer
-        panel_pos = self._get_panel_pos()
+        try:
+            panel_pos = self._get_panel_pos()
+        except ZeroDivisionError: # math fails for 1 frame long clip
+            panel_pos = END_PAD
         cr.set_line_width(2.0)
         cr.set_source_rgb(*POINTER_COLOR)
         cr.move_to(panel_pos, 0)

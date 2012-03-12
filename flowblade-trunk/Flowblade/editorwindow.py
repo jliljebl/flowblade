@@ -395,7 +395,8 @@ class EditorWindow:
         edit_buttons_row = self._get_edit_buttons_row()
 
         # Timeline scale
-        self.tline_scale = tlinewidgets.TimeLineFrameScale(editevent.insert_move_mode_pressed)
+        self.tline_scale = tlinewidgets.TimeLineFrameScale(editevent.insert_move_mode_pressed,  
+                                                           updater.mouse_scroll_zoom)
         scale_frame = gtk.Frame()
         
         # Filler panel

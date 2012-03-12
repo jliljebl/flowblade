@@ -60,6 +60,15 @@ load_dialog = None
 all_clips = {}
 sync_clips = []
 
+class FileProducerNotFoundError(Exception):
+    """
+    We're only catching this, other errors we'll just crash on load
+    """
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
+
 # -------------------------------------------------- LOAD MESSAGES
 def _show_msg(msg, delay=0.0):
     gtk.gdk.threads_enter()
@@ -334,6 +343,8 @@ def fill_track_mlt(mlt_track, py_track):
         if ((clip.type == "Mlt__Producer") and clip.is_blanck_clip == False and 
             (clip.media_type != appconsts.PATTERN_PRODUCER)): 
             mlt_clip = sequence.create_file_producer_clip(clip.path)
+            if mlt_clip == None:
+                raise FileProducerNotFoundError(clip.path)
             mlt_clip.__dict__.update(clip.__dict__)
             fill_filters_mlt(mlt_clip, sequence)
         # pattern producer    

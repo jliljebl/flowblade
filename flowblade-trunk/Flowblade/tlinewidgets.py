@@ -341,7 +341,7 @@ def compositor_hit(frame, y, sorted_compositors):
     
     # Test if compositor hit on track top, so compositor hit on dest track side
     if y >= track_top and y < track_top + (COMPOSITOR_HEIGHT - COMPOSITOR_HEIGHT_OFF):
-       return _comp_hit_on_dest_track(frame, track, sorted_compositors)
+       return _comp_hit_on_below_track(frame, track, sorted_compositors)
        
     # Test if compositor hit on track bottom, so compositor hit on source track side      
     elif y >= (track_top + track.height - COMPOSITOR_HEIGHT_OFF) and y <=(track_top + track.height):
@@ -351,9 +351,9 @@ def compositor_hit(frame, y, sorted_compositors):
     else:
         return None
 
-def _comp_hit_on_dest_track(frame, track, sorted_compositors):
+def _comp_hit_on_below_track(frame, track, sorted_compositors):
     for comp in sorted_compositors:
-        if comp.transition.a_track == track.id:
+        if comp.transition.b_track - 1 == track.id:
             if comp.clip_in <= frame and comp.clip_out >= frame:
                 return comp
     return None
@@ -1123,13 +1123,14 @@ class TimeLineFrameScale:
     GUI component for displaying frame tme value scale.
     """
 
-    def __init__(self, set_default_callback):
+    def __init__(self, set_default_callback, mouse_scroll_listener):
         self.widget = CairoDrawableArea(WIDTH, 
                                         SCALE_HEIGHT, 
                                         self._draw)
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
+        self.widget.mouse_scroll_func = mouse_scroll_listener
         self.drag_on = False
         self.set_default_callback = set_default_callback
 
@@ -1172,17 +1173,6 @@ class TimeLineFrameScale:
         cr.set_source(grad)
         cr.rectangle(0,0,w,h)
         cr.fill()
-
-        """
-        # Draw 0 frame triangle if needed
-        if pos == 0:
-            # Set line attr for frames lines
-            cr.set_source_rgb(0.3,0.3,0.3)
-            cr.set_line_width(2.0)
-            cr.move_to(0.5, 0)
-            cr.line_to(0.5, h)
-            cr.stroke()
-        """
 
         # Set line attr for frames lines
         cr.set_source_rgb(0,0,0)

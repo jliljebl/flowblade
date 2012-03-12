@@ -45,6 +45,7 @@ AUDIO = appconsts.AUDIO
 IMAGE = appconsts.IMAGE
 RENDERED_VIDEO = appconsts.RENDERED_VIDEO
 PATTERN_PRODUCER = appconsts.PATTERN_PRODUCER
+FILE_DOES_NOT_EXIST = appconsts.FILE_DOES_NOT_EXIST
 
 # Allowed editing operations on a track
 FREE = appconsts.FREE # all edits allowed
@@ -258,7 +259,9 @@ class Sequence:
         if new_clip_name != None:
             producer.name = new_clip_name
         producer.media_type = get_media_type(path)
-        
+        if producer.media_type == FILE_DOES_NOT_EXIST:
+            return None
+
         self.add_clip_attr(producer)
         
         return producer
@@ -746,9 +749,11 @@ def get_media_type(file_path):
     """ 
     try:
         mime_type = gnomevfs.get_mime_type(file_path)
-    except:
-        # INFOWINDOW
-        pass
+    except Exception, err:
+        if not os.path.exists(file_path):
+            return FILE_DOES_NOT_EXIST
+        else:
+            return UNKNOWN
         
     if mime_type.startswith("video"):
         return VIDEO
