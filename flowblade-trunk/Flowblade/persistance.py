@@ -304,6 +304,7 @@ def fill_sequence_mlt(seq):
     
             compositor.transition.set_tracks(py_compositor.transition.a_track, py_compositor.transition.b_track)
             compositor.set_in_and_out(py_compositor.clip_in, py_compositor.clip_out)
+            compositor.origin_clip_id = py_compositor.origin_clip_id
             mlt_compositors.append(compositor)
 
     seq.compositors = mlt_compositors

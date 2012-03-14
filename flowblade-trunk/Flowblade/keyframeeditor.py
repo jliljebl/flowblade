@@ -224,7 +224,7 @@ class ClipKeyFrameEditor:
                 icon = NON_ACTIVE_KF_ICON
             try:
                 kf_pos = self._get_panel_pos_for_frame(frame)
-            except ZeroDivisionError: # math fails for 1 frame long clip
+            except ZeroDivisionError: # math fails for 1 frame clip
                 kf_pos = END_PAD
             cr.set_source_pixbuf(icon, kf_pos - 6, KF_Y)
             cr.paint()
@@ -232,7 +232,7 @@ class ClipKeyFrameEditor:
         # Draw frame pointer
         try:
             panel_pos = self._get_panel_pos()
-        except ZeroDivisionError: # math fails for 1 frame long clip
+        except ZeroDivisionError: # math fails for 1 frame clip
             panel_pos = END_PAD
         cr.set_line_width(2.0)
         cr.set_source_rgb(*POINTER_COLOR)
@@ -1011,21 +1011,18 @@ class GeometryEditorButtonsRow(gtk.HBox):
         editor_parent needs to implement interface:
         -------------------------------------------
         editor_parent.view_size_changed(widget_active_index)
-        editor_parent.reset_rect_pressed()
-        editor_parent.reset_rect_ratio_pressed()
+        editor_parent.menu_item_activated()
         """
         gtk.HBox.__init__(self, False, 2)  
         name_label = gtk.Label(_("View:"))
 
-        self.reset_b = gtk.Button(_("Reset"))
-        self.ratio_b = gtk.Button(_("Ratio"))
-        self.reset_b.set_tooltip_text(_("Reset source image to original position and size"))
-        self.ratio_b.set_tooltip_text(_("Set source image to original aspect ratio."))
-        self.reset_b.connect("clicked", lambda w,e: editor_parent.reset_rect_pressed(), 
-                             None)
-        self.ratio_b.connect("clicked", lambda w,e: editor_parent.reset_rect_ratio_pressed(), 
-                             None)
-
+        self.actions_b = gtk.MenuToolButton(gtk.STOCK_EXECUTE)
+        menu = gtk.Menu()
+        menu.add(self._get_menu_item(_("Reset Geometry"), editor_parent.menu_item_activated, "reset" ))
+        menu.add(self._get_menu_item(_("Geometry to Original Aspect Ratio"), editor_parent.menu_item_activated, "ratio" ))
+        self.actions_b.set_menu(menu)
+        self.actions_b.set_size_request(70, 25)
+        self.actions_b.set_tooltip_text(_("Edit Actions Menu"))
         size_select = gtk.combo_box_new_text()
         size_select.append_text(_("Large"))
         size_select.append_text(_("Medium"))
@@ -1041,11 +1038,15 @@ class GeometryEditorButtonsRow(gtk.HBox):
         self.pack_start(name_label, False, False, 0)
         self.pack_start(size_select, False, False, 0)
         self.pack_start(gtk.Label(), True, True, 0)
-        self.pack_start(self.reset_b, False, False, 0)
-        self.pack_start(self.ratio_b, False, False, 0)
+        self.pack_start(self.actions_b, False, False, 0)
         self.pack_start(guiutils.get_pad_label(2, 10), False, False, 0)
 
-
+    def _get_menu_item(self, text, callback, data):
+        item = gtk.MenuItem(text)
+        item.connect("activate", callback, data)
+        item.show()
+        return item
+    
 class AbstractKeyFrameEditor(gtk.VBox):
     """
     Extending editor is parent editor for ClipKeyFrameEditor and is updated
@@ -1333,17 +1334,23 @@ class GeometryEditor(AbstractKeyFrameEditor):
         kf_frame = self.clip_editor.get_active_kf_frame()
         self.update_editor_view_with_frame(kf_frame)
 
-    def reset_rect_pressed(self):
+    def _reset_rect_pressed(self):
         self.geom_kf_edit.reset_active_keyframe_rect(self.clip_editor.active_kf_index)
         frame = self.clip_editor.get_active_kf_frame()
         self.update_editor_view_with_frame(frame)
         self.update_property_value()
 
-    def reset_rect_ratio_pressed(self):
+    def _reset_rect_ratio_pressed(self):
         self.geom_kf_edit.reset_active_keyframe_rect_ratio(self.clip_editor.active_kf_index)
         frame = self.clip_editor.get_active_kf_frame()
         self.update_editor_view_with_frame(frame)
         self.update_property_value()
+
+    def menu_item_activated(self, widget, data):
+        if data == "reset":
+            self._reset_rect_pressed()
+        elif data == "ratio":
+            self._reset_rect_ratio_pressed()
 
     def update_editor_view(self, seek_tline_frame=False):
         # This gets called when tline frame is changed from outside

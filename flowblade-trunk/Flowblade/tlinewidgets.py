@@ -54,6 +54,8 @@ TEXT_X = 6 # pos for clip text
 TEXT_Y = 29 
 TEXT_Y_SMALL = 17
 WAVEFORM_PAD_LARGE = 3
+MARK_PAD = 6
+MARK_LINE_WIDTH = 4
 
 # tracks column consts
 COLUMN_WIDTH = 96 # column area width
@@ -168,6 +170,8 @@ BLANK_CLIP_COLOR_SELECTED_GRAD_L = (0, 0.7, 0.7, 1.0, 1)
 SYNC_OK_COLOR = (0.28, 0.65, 0.28)
 SYNC_OFF_COLOR = (0.77, 0.20, 0.3)
 SYNC_GONE_COLOR = (0.4, 0.4, 0.4)
+
+MARK_COLOR = (0.1, 0.1, 0.1)
 
 FRAME_SCALE_COLOR_GRAD = (1, 0.8, 0.8, 0.8, 1)
 FRAME_SCALE_COLOR_GRAD_L = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, GRAD_MULTIPLIER) 
@@ -1245,6 +1249,10 @@ class TimeLineFrameScale:
             text = utils.get_tc_string(i * tc_draw_step)
             cr.show_text(text);
 
+        # Draw marks
+        self.draw_mark_in(cr, h)
+        self.draw_mark_out(cr, h)
+    
         # Select draw colors and frame based on mode
         current_frame = PLAYER().tracktor_producer.frame()
         if timeline_visible():
@@ -1277,11 +1285,51 @@ class TimeLineFrameScale:
         cr.set_line_width(2.0)
         cr.set_line_join(cairo.LINE_JOIN_ROUND)
         cr.stroke()
-        
-    def draw_track(self, cr, track, y):
-        # Left most frame of first clip drawn
-        clip_start_frame = 0
 
+    def draw_mark_in(self, cr, h):
+        """
+        Draws mark in graphic if set.
+        """
+        mark_frame = current_sequence().tractor.mark_in
+        if mark_frame < 0:
+            return
+             
+        x = _get_frame_x(mark_frame)
+        cr.set_source_rgb(*MARK_COLOR)
+        cr.move_to (x, MARK_PAD)
+        cr.line_to (x, h - MARK_PAD)
+        cr.line_to (x - 2 * MARK_LINE_WIDTH, h - MARK_PAD)
+        cr.line_to (x - 2 * MARK_LINE_WIDTH, 
+                    h - MARK_LINE_WIDTH - MARK_PAD) 
+        cr.line_to (x - MARK_LINE_WIDTH, h - MARK_LINE_WIDTH - MARK_PAD )
+        cr.line_to (x - MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD)
+        cr.line_to (x - 2 * MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD )
+        cr.line_to (x - 2 * MARK_LINE_WIDTH, MARK_PAD)
+        cr.close_path();
+        cr.fill()
+
+    def draw_mark_out(self, cr, h):
+        """
+        Draws mark out graphic if set.
+        """
+        mark_frame = current_sequence().tractor.mark_out
+        if mark_frame < 0:
+            return
+             
+        x = _get_frame_x(mark_frame + 1)
+        cr.set_source_rgb(*MARK_COLOR)
+        cr.move_to (x, MARK_PAD)
+        cr.line_to (x, h - MARK_PAD)
+        cr.line_to (x + 2 * MARK_LINE_WIDTH, h - MARK_PAD)
+        cr.line_to (x + 2 * MARK_LINE_WIDTH, 
+                    h - MARK_LINE_WIDTH - MARK_PAD) 
+        cr.line_to (x + MARK_LINE_WIDTH, h - MARK_LINE_WIDTH - MARK_PAD )
+        cr.line_to (x + MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD)
+        cr.line_to (x + 2 * MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD )
+        cr.line_to (x + 2 * MARK_LINE_WIDTH, MARK_PAD)
+        cr.close_path();
+
+        cr.fill()
 
 class TimeLineColumnHead:
     """

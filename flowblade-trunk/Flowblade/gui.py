@@ -55,7 +55,7 @@ tline_display = None
 tline_scale = None
 tline_canvas = None
 tline_scroll = None
-tline_tc = None
+tline_info = None
 tline_column = None
 big_tc = None
 
@@ -79,7 +79,7 @@ def capture_references(new_editor_window):
     """
     global editor_window, media_list_view, bin_list_view, sequence_list_view, pos_bar, \
     tc, mark_in_display, mark_out_display, length_display, tline_display, \
-    tline_scale, tline_canvas, tline_scroll, tline_v_scroll, tline_tc, \
+    tline_scale, tline_canvas, tline_scroll, tline_v_scroll, tline_info, \
     tline_column, mode_buttons, play_b, clip_editor_b, sequence_editor_b, note_bg_color, fg_color, fg_color_tuple, bg_color_tuple, \
     effect_select_list_view, effect_select_combo_box, project_info_vbox, middle_notebook, big_tc, editmenu
 
@@ -106,7 +106,7 @@ def capture_references(new_editor_window):
     tline_scale = editor_window.tline_scale
     tline_canvas = editor_window.tline_canvas
     tline_scroll = editor_window.tline_scroller
-    tline_tc = editor_window.tline_tc
+    tline_info = editor_window.tline_info
     tline_column = editor_window.tline_column
 
     mode_buttons = [editor_window.insert_move_b,

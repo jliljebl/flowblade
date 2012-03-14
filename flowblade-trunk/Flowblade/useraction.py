@@ -22,6 +22,7 @@
 Module handles user actions that are not edits on the current sequence.
 Load, save, add media file, etc...
 """
+import gobject
 import gtk
 import os
 import sys
@@ -61,6 +62,8 @@ save_time = None
           
 profile_manager_dialog = None
 
+save_icon_remove_event_id = None
+
 #--------------------------------------- worker threads
 class RenderLauncher(threading.Thread):
     
@@ -90,6 +93,8 @@ class LoadThread(threading.Thread):
 
     def run(self):
         gtk.gdk.threads_enter()
+        updater.set_info_icon(gtk.STOCK_OPEN)
+
         dialog = dialogs.get_load_dialog()
         persistance.load_dialog = dialog
         gtk.gdk.threads_leave()
@@ -102,10 +107,14 @@ class LoadThread(threading.Thread):
         except persistance.FileProducerNotFoundError as e:
             print "did not find file:", e
             gtk.gdk.threads_enter()
+            updater.set_info_icon(None)
             dialog.destroy()
             gtk.gdk.threads_leave()
             ticker.stop_ticker()
-            # INFOWINDOW
+            primary_txt = _("File: ") + e.value + _(" was not found on load!")
+            secondary_txt = _("Place dummy file with same name and similar content to enable") + "\n" + _("project load. ") + \
+                            _("Doing so does not quarantee succesful load") + "\n" + _("if files have different properties.")
+            dialogs.warning_message(primary_txt, secondary_txt, None, is_info=False)
             return
     
         gtk.gdk.threads_enter()
@@ -122,6 +131,7 @@ class LoadThread(threading.Thread):
         gtk.gdk.threads_leave()
         
         gtk.gdk.threads_enter()
+        updater.set_info_icon(None)
         dialog.destroy()
         gtk.gdk.threads_leave()
 
@@ -294,7 +304,13 @@ def save_project():
     if PROJECT().last_save_path == None:
         save_project_as()
     else:
-        persistance.save_project(PROJECT(), PROJECT().last_save_path)
+        updater.set_info_icon(gtk.STOCK_SAVE)
+
+        persistance.save_project(PROJECT(), PROJECT().last_save_path) #<----- HERE
+
+        global save_icon_remove_event_id
+        save_icon_remove_event_id = gobject.timeout_add(500, remove_save_icon)
+
         global save_time
         save_time = time.clock()
         
@@ -310,7 +326,13 @@ def _save_as_dialog_callback(dialog, response_id):
         filenames = dialog.get_filenames()
         PROJECT().last_save_path = filenames[0]
         PROJECT().name = os.path.basename(filenames[0])
-        persistance.save_project(PROJECT(), PROJECT().last_save_path)
+        updater.set_info_icon(gtk.STOCK_SAVE)
+        
+        persistance.save_project(PROJECT(), PROJECT().last_save_path) #<----- HERE
+        
+        global save_icon_remove_event_id
+        save_icon_remove_event_id = gobject.timeout_add(500, remove_save_icon)
+
         global save_time
         save_time = time.clock()
 
@@ -327,6 +349,10 @@ def _save_as_dialog_callback(dialog, response_id):
         dialog.destroy()
     else:
         dialog.destroy()
+
+def remove_save_icon():
+    gobject.source_remove(save_icon_remove_event_id)
+    updater.set_info_icon(None)
 
 def open_recent_project(widget, index):
     path = editorpersistance.recent_projects.projects[index]
@@ -370,7 +396,7 @@ def render_timeline():
         return   
 
     if os.path.exists(render.get_file_path()):
-        primary_txt = _("Rendering file already exists!")
+        primary_txt = _("File: ") + render.get_file_path() + _(" already exists!")
         secondary_txt = _("Do you want to overwrite existing file?")
         dialogs.warning_confirmation(_render_overwrite_confirm_callback, primary_txt, secondary_txt, gui.editor_window.window)
     else:

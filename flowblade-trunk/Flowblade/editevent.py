@@ -484,7 +484,9 @@ def _compositor_menu_item_activated(widget, data):
             if clip.id == compositor.origin_clip_id:
                 origin_clip = clip
         if origin_clip == None:
-            # INFOWINDOW
+            dialogs.info_message(_("Origin clip not found!"), 
+                                 _("Clip used to create this Compositor has been removed\nor moved to different track."), 
+                                 gui.editor_window.window)
             return
         clip_index = track.clips.index(origin_clip)
         clip_start = track.clip_start(clip_index)
@@ -503,7 +505,9 @@ def _open_clip_in_effects_editor(data):
 def _open_clip_in_clip_monitor(data):
     clip, track, item_id, x = data
     
-    media_file = PROJECT().get_media_file_for_path(clip.path)    
+    media_file = PROJECT().get_media_file_for_path(clip.path)
+    media_file.mark_in = clip.clip_in
+    media_file.mark_out = clip.clip_out
     updater.set_and_display_monitor_media_file(media_file)
     gui.pos_bar.widget.grab_focus()
 

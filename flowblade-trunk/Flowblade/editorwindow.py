@@ -399,17 +399,20 @@ class EditorWindow:
                                                            updater.mouse_scroll_zoom)
         scale_frame = gtk.Frame()
         
-        # Filler panel
-        tline_c_head = tlinewidgets.TimeLineColumnHead()
-        
         # Timecode display
-        self.tline_tc = gtk.Label()
-        self.tline_tc.set_size_request(tlinewidgets.COLUMN_WIDTH, 
+        self.tline_info = gtk.HBox()
+        info_contents = gtk.Label()
+        self.tline_info.add(info_contents)
+        self.tline_info.info_contents = info_contents # this switched and sacved as member of its container
+        info_h = gtk.HBox()
+        info_h.pack_start(self.tline_info, False, False, 0)
+        info_h.pack_start(gtk.Label(), True, True, 0)
+        info_h.set_size_request(tlinewidgets.COLUMN_WIDTH, 
                                       tlinewidgets.SCALE_HEIGHT)
                                        
         # Timeline top row
         tline_hbox_1 = gtk.HBox()
-        tline_hbox_1.pack_start(self.tline_tc, False, False, 0)
+        tline_hbox_1.pack_start(info_h, False, False, 0)
         tline_hbox_1.pack_start(self.tline_scale.widget, True, True, 0)
         
         # Timeline column
@@ -436,8 +439,9 @@ class EditorWindow:
         
         # Bottom row filler
         left_corner = gtk.Label()
+        #font_desc = pango.FontDescription("normal 9")
         left_corner.set_size_request(tlinewidgets.COLUMN_WIDTH, 20)
-
+        #left_corner.modify_font(font_desc)
         # Timeline scroller
         self.tline_scroller = tlinewidgets.TimeLineScroller(
                                                 updater.tline_scrolled)

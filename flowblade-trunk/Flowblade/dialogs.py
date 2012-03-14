@@ -227,6 +227,7 @@ def warning_message(primary_txt, secondary_txt, parent_window, is_info=False):
 
 def warning_message_with_callback(primary_txt, secondary_txt, parent_window, is_info, callback):
     content = panels.get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info)
+    print type(parent_window)
     dialog = gtk.Dialog("",
                         parent_window,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,

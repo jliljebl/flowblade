@@ -206,6 +206,21 @@ def update_pix_per_frame_full_view():
     x, y, w, h = gui.tline_canvas.widget.allocation
     pix_per_frame_full_view = float(w) / length
 
+def set_info_icon(info_icon_id):
+    if info_icon_id == None:
+        widget = gtk.Label()
+    else:
+        widget = gtk.image_new_from_stock(info_icon_id, gtk.ICON_SIZE_MENU)
+    
+    gui.tline_info.remove(gui.tline_info.info_contents)
+    gui.tline_info.add(widget)
+    gui.tline_info.info_contents = widget
+    widget.show()
+    """
+    gui.tline_info.queue_draw()
+    while(gtk.events_pending()):
+        gtk.main_iteration()
+    """    
 
 # --- ZOOM
 def zoom_in():
@@ -262,6 +277,7 @@ def maybe_autocenter():
     if timeline_visible():
         if editorpersistance.prefs.auto_center_on_play_stop == True:
             center_tline_to_current_frame()
+
 
 # ----------------------------------------- monitor
 def display_clip_in_monitor(reset_saved_frames=True):
