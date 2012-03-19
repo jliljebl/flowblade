@@ -286,7 +286,6 @@ def range_overwrite_pressed():
 
     over_clip_out = over_clip.mark_in + range_length - 1
 
-    
     movemodes.clear_selected_clips() # edit consumes selection
     
     data = {"track":track,

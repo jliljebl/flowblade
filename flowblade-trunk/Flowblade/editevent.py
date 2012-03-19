@@ -866,6 +866,28 @@ def _do_filter_clone(clip, clone_clip):
     action = edit.clone_filters_action(data)
     action.do_edit()
 
+
+def splice_range():
+    # LOCKED TRAKS ??????????????
+    # EMPTY TRACKS ???????????
+    
+    # tractor is has mark in and mark
+    mark_in_frame = current_sequence().tractor.mark_in
+    mark_out_frame = current_sequence().tractor.mark_out
+    range_length = mark_out_frame - mark_in_frame + 1 # end is incl.
+    if mark_in_frame == -1 or mark_out_frame == -1:
+        # INFOWINDOW
+        return
+
+    movemodes.clear_selected_clips() # edit consumes selection
+    
+    data = {"mark_in_frame":mark_in_frame,
+            "mark_out_frame":mark_out_frame + 1} # +1 because mark is displayed and end of frame end this 
+                                                 # confirms to user expectation of
+                                                 # of how this should work
+    action = edit.range_splice_out_action(data)
+    action.do_edit()
+    
 # ---------------------------------- create clips
 def create_color_clip():
     dialogs.color_clip_dialog(_create_color_clip_callback)

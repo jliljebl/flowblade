@@ -1570,6 +1570,30 @@ def _range_over_redo(self):
                  self.clip_in, 
                  self.clip_out)
 
+#----------------- RANGE SPLICE OUT
+# not used, no workeee, try again later
+# "mark_in_frame","mark_out_frame"
+def range_splice_out_action(data):
+    action = EditAction(_range_splice_out_undo, range_splice_out_redo, data)
+    return action
+
+def _range_splice_out_undo(self):
+    for i in range(1, len(current_sequence().tracks)  - 1): # 1, -1 we're not extracting from hidden or black tracks
+        track = current_sequence().tracks[i]
+        track_extract_data = self.extract_ranges[i - 1]
+        _track_put_back_range(self.mark_in_frame, 
+                              track, 
+                              track_extract_data)
+    
+def range_splice_out_redo(self):
+    self.extract_ranges = []
+    for i in range(1, len(current_sequence().tracks)  - 1): # 1, -1 we're not extracting from hidden or black tracks
+        track = current_sequence().tracks[i]
+        track_extract_data = _track_extract_range(self.mark_in_frame, 
+                                                   self.mark_out_frame, 
+                                                   track)
+        self.extract_ranges.append(track_extract_data)
+                 
 # --------------------------------------------- help funcs for "range over" and "range splice out" edits 
 def _track_put_back_range(over_in, track, track_extract_data):
     # get index for first clip that was removed
@@ -1644,8 +1668,6 @@ def _track_extract_range(over_in, over_out, track):
     for i in range(track_extract_data.in_index, out_index):
         removed_clip = _remove_clip(track, track_extract_data.in_index)
         track_extract_data.removed_clips.append(removed_clip)
-
-    _remove_trailing_blanks(track)
 
     return track_extract_data
     
