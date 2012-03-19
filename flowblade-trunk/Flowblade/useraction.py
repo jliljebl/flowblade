@@ -267,7 +267,7 @@ def _load_project_dialog_callback(dialog, response_id):
     if response_id == gtk.RESPONSE_ACCEPT:
         filenames = dialog.get_filenames()
         dialog.destroy()
-        _actually_load_project(filenames[0])
+        actually_load_project(filenames[0])
     else:
         dialog.destroy()
 
@@ -296,7 +296,7 @@ def _close_dialog_callback(dialog, response_id):
     new_project = projectdata.Project(profile)
     app.open_project(new_project)
     
-def _actually_load_project(filename):
+def actually_load_project(filename):
     load_launch = LoadThread(filename)
     load_launch.start()
 
@@ -329,6 +329,9 @@ def _save_as_dialog_callback(dialog, response_id):
         updater.set_info_icon(gtk.STOCK_SAVE)
         
         persistance.save_project(PROJECT(), PROJECT().last_save_path) #<----- HERE
+        
+        app.stop_autosave()
+        app.start_autosave()
         
         global save_icon_remove_event_id
         save_icon_remove_event_id = gobject.timeout_add(500, remove_save_icon)
@@ -363,7 +366,7 @@ def open_recent_project(widget, index):
         return
 
     # INFOWINDOW confirm close current project
-    _actually_load_project(path)
+    actually_load_project(path)
 
 def about():
     dialogs.about_dialog(gui.editor_window)

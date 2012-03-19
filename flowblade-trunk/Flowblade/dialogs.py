@@ -586,3 +586,24 @@ def profiles_manager_dialog(callbacks):
     _default_behaviour(dialog)
     dialog.show_all()
     return dialog
+
+def autosave_recovery_dialog(callback, parent_window):
+    title = _("Open last autosave?")
+    msg1 = _("It seems that Flowblade exited abnormally last time.\n\n")
+    msg3 = _("It is NOT possible to open this autosaved version later.")
+    msg = msg1 + msg3
+    content = panels.get_warning_message_dialog_panel(title, msg)
+    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    align.set_padding(0, 12, 0, 0)
+    align.add(content)
+
+    dialog = gtk.Dialog("",
+                        parent_window,
+                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                        (_("Continue with default 'untitled' project").encode('utf-8'), gtk.RESPONSE_CANCEL,
+                        _("Open Autosaved Project").encode('utf-8'), gtk.RESPONSE_OK))
+
+    dialog.vbox.pack_start(align, True, True, 0)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback)
+    dialog.show_all()

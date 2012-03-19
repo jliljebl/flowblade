@@ -52,13 +52,6 @@ PROP_EXPRESSION = 2
 # Pattern producer types. Currently only 1 available.
 COLOR_CLIP = 1
 
-# Autosave options
-AUTO_SAVE_OPTS = ((-1, "No Autosave"),(2, "2 min"),(5, "5 min"),(10, "10 min"),(20,"20 min"))
-
-# Number of tracks in new project
-VTRACK_OPTS = ((3, "3"),(4, "4"),(5, "5"))
-ATRACK_OPTS = ((2, "2"),(3, "3"),(4, "4"))
-
 # Display heights for tracks.
 TRACK_HEIGHT_NORMAL = 50 # track height in canvas and column
 TRACK_HEIGHT_SMALL = 25 # track height in canvas and column

@@ -33,6 +33,7 @@ import os
 import time
 import threading
 
+import appconsts
 import clipeffectseditor
 import cliprenderer
 import compositeeditor
@@ -69,6 +70,11 @@ import updater
 import useraction
 import utils
 
+AUTOSAVE_DIR = "autosave/"
+AUTOSAVE_FILE = "autosave/autosave"
+autosave_timeout_id = -1
+recovery_dialog_id = -1
+
 splash_screen = None
 splash_timeout_id = -1
 too_small_timeout_id = -1
@@ -82,18 +88,21 @@ def main(root_path):
     respaths.set_paths(root_path)
 
     # Create hidden folders if needed
-    if not os.path.exists(utils.get_hidden_user_dir_path()):
-        os.mkdir(utils.get_hidden_user_dir_path())
-    if not os.path.exists(utils.get_hidden_user_dir_path() + mltprofiles.USER_PROFILES_DIR):
-        os.mkdir(utils.get_hidden_user_dir_path() + mltprofiles.USER_PROFILES_DIR)
+    user_dir = utils.get_hidden_user_dir_path()
+    if not os.path.exists(user_dir):
+        os.mkdir(user_dir)
+    if not os.path.exists(user_dir + mltprofiles.USER_PROFILES_DIR):
+        os.mkdir(user_dir + mltprofiles.USER_PROFILES_DIR)
+    if not os.path.exists(user_dir + AUTOSAVE_DIR):
+        os.mkdir(user_dir + AUTOSAVE_DIR)
 
-    # Load editor prefs and list of recent projects
-    editorpersistance.load()
-    
     # Init translations module with translations data
     translations.init_languages()
     translations.load_filters_translations()
     mlttransitions.init_module()
+
+    # Load editor prefs and list of recent projects
+    editorpersistance.load()
 
     # Check for codecs and formats on the system
     mltenv.check_available_features()
@@ -158,11 +167,18 @@ def main(root_path):
     gui.editor_window.window.connect("window-state-event", lambda w, e:updater.window_resized())
 
     # show splash
-    if editorpersistance.prefs.display_splash_screen == True: 
+    if ((editorpersistance.prefs.display_splash_screen == True) and
+        (not os.path.exists(user_dir + AUTOSAVE_FILE))):
         global splash_timeout_id
         splash_timeout_id = gobject.timeout_add(2600, destroy_splash_screen)
         splash_screen.show_all()
 
+    # Existance of autosaved file hints that program was exited abnormally
+    if os.path.exists(user_dir + AUTOSAVE_FILE):
+        gobject.timeout_add(10, autosave_recovery_dialog)
+    else:
+        start_autosave()
+    
     # Launch gtk+ main loop
     gtk.main()
 
@@ -304,6 +320,7 @@ def new_project(profile_index):
     open_project(new_project)
         
 def open_project(new_project):
+    stop_autosave()
     editorstate.project = new_project
 
     # Inits widgets with project data
@@ -320,8 +337,10 @@ def open_project(new_project):
     
     # For save time message on close
     useraction.save_time = None
+    start_autosave()
 
 def change_current_sequence(index):
+    stop_autosave()
     editorstate.project.c_seq = editorstate.project.sequences[index]
     
     # Inits widgets with current sequence data
@@ -338,6 +357,7 @@ def change_current_sequence(index):
     selection = gui.sequence_list_view.treeview.get_selection()
     selected_index = editorstate.project.sequences.index(editorstate.current_sequence())
     selection.select_path(str(selected_index))
+    start_autosave()
 
 def display_current_sequence():
     # Get shorter alias.
@@ -351,6 +371,42 @@ def display_current_sequence():
     updater.display_sequence_in_monitor()
     player.seek_frame(0)
     updater.repaint_tline()
+
+# ------------------------------------------------- autosave
+def autosave_recovery_dialog():
+    dialogs.autosave_recovery_dialog(autosave_dialog_callback, gui.editor_window.window)
+    return False
+
+def autosave_dialog_callback(dialog, response):
+    dialog.destroy()
+    if response == gtk.RESPONSE_OK:
+        useraction.actually_load_project(utils.get_hidden_user_dir_path() + AUTOSAVE_FILE)
+        
+def start_autosave():
+    global autosave_timeout_id
+    time_min = 1 # hard coded, there's code to make configurable later when project wizard etc. is added
+    autosave_delay_millis = time_min * 60 * 1000
+
+    print "autosave started"
+    autosave_timeout_id = gobject.timeout_add(autosave_delay_millis, do_autosave)
+    autosave_file = utils.get_hidden_user_dir_path() + AUTOSAVE_FILE
+    persistance.save_project(editorstate.PROJECT(), autosave_file)
+
+def stop_autosave():
+    global autosave_timeout_id
+    if autosave_timeout_id == -1:
+        return
+    gobject.source_remove(autosave_timeout_id)
+    autosave_timeout_id = -1
+
+def do_autosave():
+    project_path = editorstate.PROJECT().last_save_path 
+    if project_path == None:
+        return True
+
+    autosave_file = utils.get_hidden_user_dir_path() + AUTOSAVE_FILE
+    persistance.save_project(editorstate.PROJECT(), autosave_file)
+    return True
 
 # ------------------------------------------------- splash screen
 def show_splash_screen():
@@ -429,6 +485,9 @@ def _shutdown_dialog_callback(dialog, response_id):
 
     # --- APP SHUT DOWN --- #
     print "exiting app..."
+
+    # No more auto saving
+    stop_autosave()
     
     # Block reconnecting consumer before setting window not visible
     updater.player_refresh_enabled = False
@@ -445,6 +504,12 @@ def _shutdown_dialog_callback(dialog, response_id):
     # Wait threads to stop
     while((editorstate.player.running == True) and (editorstate.player.ticker.exited == False)
           and(projectdata.thumbnail_thread.stopped == False)):
+        pass
+
+    # Delete autosave file
+    try:
+        os.remove(utils.get_hidden_user_dir_path() + AUTOSAVE_FILE)
+    except:
         pass
 
     # Exit gtk main loop.

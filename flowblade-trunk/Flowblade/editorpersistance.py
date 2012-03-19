@@ -155,7 +155,7 @@ class EditorPreferences:
         self.open_in_last_opended_media_dir = True
         self.last_opened_media_dir = None
         self.img_length = 2000
-        self.auto_save_delay_value_index = 0 # value is index of appconsts.AUTO_SAVE_OPTS
+        self.auto_save_delay_value_index = 1 # value is index of self.AUTO_SAVE_OPTS
         self.undos_max = UNDO_STACK_DEFAULT
         self.default_profile_index = 10 # value is index of mltprofiles._profile_list
         self.auto_play_in_clip_monitor = False
@@ -163,4 +163,5 @@ class EditorPreferences:
         self.thumbnail_folder = None
         self.hidden_profile_names = []
         self.display_splash_screen = True
-    
+
+        self.AUTO_SAVE_OPTS = ((-1, _("No Autosave")),(2, _("1 min")),(2, _("2 min")),(5, _("5 min")))

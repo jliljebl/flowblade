@@ -560,15 +560,23 @@ def get_general_options_panel(folder_select_clicked_cb):
     display_splash_check = gtk.CheckButton()
     display_splash_check.set_active(prefs.display_splash_screen)
 
+    autosave_combo = gtk.combo_box_new_text()
+    for i in range(0, len(editorpersistance.prefs.AUTO_SAVE_OPTS)):
+        time, desc = editorpersistance.prefs.AUTO_SAVE_OPTS[i]
+        autosave_combo.append_text(desc)
+    autosave_combo.set_active(prefs.auto_save_delay_value_index)
+        
     # Layout
     row1 = get_two_column_box(gtk.Label(_("Default profile")), default_profile_combo, PREFERENCES_LEFT)
     row2 = get_two_column_box(gtk.Label(_("Remember media directory")), open_in_last_opened_check, PREFERENCES_LEFT)
     row3 = get_two_column_box(gtk.Label(_("Undo stack size")), undo_max_spin, PREFERENCES_LEFT)
     row4 = get_two_column_box(gtk.Label(_("Thumbnail folder")), folder_select, PREFERENCES_LEFT)
     row5 = get_two_column_box(gtk.Label(_("Display Splash Screen")), display_splash_check, PREFERENCES_LEFT)
-    
+    row6 = get_two_column_box(gtk.Label(_("Autosave every")), autosave_combo, PREFERENCES_LEFT)
+
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)
+    vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row3, False, False, 0)
     vbox.pack_start(row4, False, False, 0)
