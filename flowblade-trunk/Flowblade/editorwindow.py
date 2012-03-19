@@ -117,8 +117,6 @@ class EditorWindow:
             ('ClearFilters', None, _('Clear Filters From Selected'), None, None, lambda a:editevent.clear_filters()),
             ('ConsolidateSelectedBlanks', None, _('Consolidate Selected Blanks'), None, None, lambda a:editevent.consolidate_selected_blanks()),
             ('ConsolidateAllBlanks', None, _('Consolidate All Blanks'), None, None, lambda a:editevent.consolidate_all_blanks()),
-            ('ResyncAll', None, _('Resync All'), None, None, lambda a:syncsplitevent.resync_everything()),
-            ('ResyncSelected', None, _('Resync Selected'), None, None, lambda a:syncsplitevent.resync_selected()),
             ('RecreateMediaIcons', None, _('Recreate Media Icons...'), None, None, lambda a:useraction.recreate_media_file_icons()),
             ('ProfilesManager', None, _('Profiles Manager'), None, None, lambda a:useraction.profiles_manager()),
             ('Preferences', None, _('Preferences'), None, None, lambda a:useraction.display_preferences()),
@@ -145,9 +143,6 @@ class EditorWindow:
                     <separator/>
                     <menuitem action='ClearFilters'/>     
                     <separator/>
-                    <menuitem action='ResyncAll'/>
-                    <menuitem action='ResyncSelected'/>
-                    <separator/>
                     <menuitem action='ConsolidateSelectedBlanks'/>
                     <menuitem action='ConsolidateAllBlanks'/>
                     <separator/>
@@ -165,6 +160,12 @@ class EditorWindow:
           </menubar>
         </ui>"""
 
+        #            ('ResyncAll', None, _('Resync All'), None, None, lambda a:syncsplitevent.resync_everything()),
+        #            ('ResyncSelected', None, _('Resync Selected'), None, None, lambda a:syncsplitevent.resync_selected()),
+        #            <menuitem action='ResyncAll'/>
+        #            <menuitem action='ResyncSelected'/>
+        #            <separator/>
+                    
         action_group = gtk.ActionGroup('WindowActions')
         action_group.add_actions(menu_actions, user_data=None)
         ui = gtk.UIManager()
@@ -680,6 +681,10 @@ class EditorWindow:
         _b(self.resync_b, resync_icon)
 
         # Monitor insert buttons
+        self.overwrite_range_b = gtk.Button()
+        overwrite_r_clip_icon = gtk.image_new_from_file(IMG_PATH + "overwrite_range.png")
+        _b(self.overwrite_range_b, overwrite_r_clip_icon)
+        
         self.overwrite_b = gtk.Button()
         overwrite_clip_icon = gtk.image_new_from_file(IMG_PATH + "overwrite_clip.png")
         _b(self.overwrite_b, overwrite_clip_icon)
@@ -749,7 +754,8 @@ class EditorWindow:
         edit_buttons.pack_start(self.resync_b, False, True, 0)
 
         # Monitor source panel
-        monitor_input_buttons =  self._get_buttons_panel(3)
+        monitor_input_buttons =  self._get_buttons_panel(4)
+        monitor_input_buttons.pack_start(self.overwrite_range_b, False, True, 0)
         monitor_input_buttons.pack_start(self.overwrite_b, False, True, 0)
         monitor_input_buttons.pack_start(self.insert_b, False, True, 0)
         monitor_input_buttons.pack_start(self.append_b, False, True, 0)
@@ -788,6 +794,7 @@ class EditorWindow:
 
         self.insert_b.connect("clicked", lambda w,e: buttonevent.insert_button_pressed(), None)
         self.overwrite_b.connect("clicked", lambda w,e: buttonevent.three_point_overwrite_pressed(), None)
+        self.overwrite_range_b.connect("clicked", lambda w,e: buttonevent.range_overwrite_pressed(), None)
         self.append_b.connect("clicked", lambda w,e: buttonevent.append_button_pressed(), None)
 
         self.undo_b.connect("clicked", lambda w,e: editevent.do_undo(), None)
@@ -814,6 +821,7 @@ class EditorWindow:
 
         self.insert_b.set_tooltip_text(_("Insert Monitor Clip Range"))    
         self.overwrite_b.set_tooltip_text(_("Overwrite Selected Clips with Monitor Clip Range"))    
+        self.overwrite_range_b.set_tooltip_text(_("Overwrite Mark In/Mark Out Range with Monitor Clip Range"))    
         self.append_b.set_tooltip_text(_("Append Monitor Clip Range"))    
 
         self.undo_b.set_tooltip_text(_("Undo"))    

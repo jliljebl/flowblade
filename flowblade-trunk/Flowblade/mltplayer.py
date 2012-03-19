@@ -301,6 +301,7 @@ class Player(threading.Thread):
         self.connect_and_start()
         self.seek_frame(0)
         render.exit_render_gui()
+        render.maybe_open_rendered_file_in_bin()
 
     def shutdown(self):
         self.ticker.stop_ticker()

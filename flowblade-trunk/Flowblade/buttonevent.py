@@ -234,7 +234,7 @@ def three_point_overwrite_pressed():
     if over_clip == None:
         # INFOWINDOW
         return
-    over_length = over_clip.mark_out - over_clip.mark_in + 1 # + 1 out incl
+    over_length = over_clip.mark_out - over_clip.mark_in + 1 # + 1 out incl ?????????? what if over_clip.mark_out == -1  ?????????? 
     
     if over_length < range_length:
         # INFOWINDOW
@@ -257,6 +257,50 @@ def three_point_overwrite_pressed():
     action.do_edit()
 
     updater.display_tline_cut_frame(track, range_in)
+
+def range_overwrite_pressed():
+    # Get data
+    track = current_sequence().get_first_active_track()
+    if editevent.track_lock_check_and_user_info(track, range_overwrite_pressed, "range overwrite"):
+        return
+    
+    # tractor is has mark in and mark
+    mark_in_frame = current_sequence().tractor.mark_in
+    mark_out_frame = current_sequence().tractor.mark_out
+    range_length = mark_out_frame - mark_in_frame + 1 # end is incl.
+    if mark_in_frame == -1 or mark_out_frame == -1:
+        # INFOWINDOW
+        return
+
+    # Get over clip and check it overwrite range area
+    over_clip = _get_new_clip_from_clip_monitor()
+    if over_clip == None:
+        # INFOWINDOW
+        return
+    """
+    over_length = over_clip.mark_out - over_clip.mark_in + 1 # + 1 out incl
+    if over_length < range_length:
+        # INFOWINDOW
+        return
+    """
+
+    over_clip_out = over_clip.mark_in + range_length - 1
+
+    
+    movemodes.clear_selected_clips() # edit consumes selection
+    
+    data = {"track":track,
+            "clip":over_clip,
+            "clip_in":over_clip.mark_in,
+            "clip_out":over_clip_out,
+            "mark_in_frame":mark_in_frame,
+            "mark_out_frame":mark_out_frame + 1} # +1 because mark is displayed and end of frame end this 
+                                                 # confirms to user expectation of
+                                                 # of how this should work
+    action = edit.range_overwrite_action(data)
+    action.do_edit()
+
+    updater.display_tline_cut_frame(track, track.get_clip_index_at(mark_in_frame))
 
 def resync_button_pressed():
     syncsplitevent.resync_selected()

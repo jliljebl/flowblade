@@ -82,6 +82,8 @@ encoding_options = []
 quality_option_groups = {}
 quality_option_groups_default_index = {}
 
+open_media_file_callback = None # monkeypathced in by useraction to avoid circular import
+
 render_start_time = 0
 widgets = utils.EmptyClass()
 
@@ -358,7 +360,9 @@ def create_widgets():
     widgets.opts_view.set_sensitive(False)
     widgets.opts_view.set_pixels_above_lines(2)
     widgets.opts_view.set_left_margin(2)
-    
+
+    widgets.open_in_bin = gtk.CheckButton()
+
     # Range
     widgets.range_cb = gtk.combo_box_new_text()
     widgets.range_cb.append_text(_("Program length"))
@@ -474,6 +478,13 @@ def exit_render_gui():
     
     time.sleep(2.0)
     widgets.progress_window.destroy()
+
+def maybe_open_rendered_file_in_bin():
+    if widgets.open_in_bin.get_active() == False:
+        return
+        
+    file_path = get_file_path()
+    open_media_file_callback(file_path)
 
 def _get_current_profile():
     profile_index = widgets.out_profile_combo.get_active()

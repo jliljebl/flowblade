@@ -131,18 +131,10 @@ def get_render_panel_left(editor_window, options_clicked_cb, add_audio_panel):
     name_box.pack_start(render.widgets.extension_label, False, False, 0)    
     movie_name_row = get_two_column_box(gtk.Label(_("Name:")), name_box, 60)
 
-    filler_label2 = gtk.Label()
-    filler_label2.set_size_request(10, 2)
-    
-    range_row = gtk.HBox()
-    range_row.pack_start(gtk.Label(_("Render Range:")),  False, False, 0)
-    range_row.pack_start(filler_label2,  False, False, 0)
-    range_row.pack_start(render.widgets.range_cb,  True, True, 0)
-
     options_vbox = gtk.VBox(False, 2)
     options_vbox.pack_start(out_folder_row, False, False, 0)
     options_vbox.pack_start(movie_name_row, False, False, 0)
-    options_vbox.pack_start(range_row, False, False, 0)
+
     file_opts_panel = get_named_frame(_("File"), options_vbox)
     
     quality_row = get_two_column_box(render.widgets.quality_label,
@@ -207,7 +199,28 @@ def get_render_panel_right(render_clicked_cb):
     opts_vbox.pack_start(scroll_frame, True, True, 0)
     opts_vbox.pack_start(opts_buttons_row, False, False, 0)
     opts_panel = get_named_frame(_("Render Args"), opts_vbox)
-    
+
+    f_label1 = gtk.Label()
+    f_label1.set_size_request(10, 8)
+    f_label2 = gtk.Label()
+    f_label2.set_size_request(10, 2)
+    bin_row = gtk.HBox()
+    bin_row.pack_start(f_label1,  False, False, 0)
+    bin_row.pack_start(gtk.Label(_("Open Rendered File in Selected Bin:")),  False, False, 0)
+    bin_row.pack_start(f_label2,  False, False, 0)
+    bin_row.pack_start(render.widgets.open_in_bin,  False, False, 0)
+    bin_row.pack_start(gtk.Label(), True, True, 0)
+
+    filler_label1 = gtk.Label()
+    filler_label1.set_size_request(10, 8)
+    filler_label2 = gtk.Label()
+    filler_label2.set_size_request(10, 2)
+    range_row = gtk.HBox()
+    range_row.pack_start(filler_label1,  False, False, 0)
+    range_row.pack_start(gtk.Label(_("Render Range:")),  False, False, 0)
+    range_row.pack_start(filler_label2,  False, False, 0)
+    range_row.pack_start(render.widgets.range_cb,  True, True, 0)
+
     filler = gtk.Label()
     filler.set_size_request(10, 8)
     buttons_panel = gtk.HBox()
@@ -215,14 +228,19 @@ def get_render_panel_right(render_clicked_cb):
     buttons_panel.pack_start(render.widgets.reset_button, False, False, 0)
     buttons_panel.pack_start(gtk.Label(), True, True, 0)
     buttons_panel.pack_start(render.widgets.render_button, False, False, 0)
-    
+
     render.widgets.render_button.connect("clicked", 
                                          render_clicked_cb, 
                                          None)
 
+    vfiller = gtk.Label()
+    vfiller.set_size_request(10, 8)
     render_panel = gtk.VBox()
     render_panel.pack_start(opts_panel, False, False, 0)
     render_panel.pack_start(gtk.Label(), True, True, 0)
+    render_panel.pack_start(bin_row, False, False, 0)
+    render_panel.pack_start(range_row, False, False, 0)
+    render_panel.pack_start(vfiller, False, False, 0)
     render_panel.pack_start(buttons_panel, False, False, 0)
 
     return render_panel

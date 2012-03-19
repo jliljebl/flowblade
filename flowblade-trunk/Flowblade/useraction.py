@@ -413,7 +413,10 @@ def _do_rendering():
     render_consumer = render.get_render_consumer()
     if render_consumer == None:
         return
-        
+
+    render.open_media_file_callback = open_rendered_file # we'll get circular imports with useraction->mltplayer->render->useraction
+                                                         # if just try to import so we'll just monkeypatch this callback func in
+
     # Set render start and end points
     if render.widgets.range_cb.get_active() == 0:
         start_frame = 0
@@ -495,6 +498,10 @@ def _open_files_dialog_cb(file_select, response_id):
         return
 
     add_media_thread = AddMediaFilesThread(filenames)
+    add_media_thread.start()
+
+def open_rendered_file(rendered_file_path):
+    add_media_thread = AddMediaFilesThread([rendered_file_path])
     add_media_thread.start()
 
 def _select_thumbnail_dir_callback(dialog, response_id, data):
