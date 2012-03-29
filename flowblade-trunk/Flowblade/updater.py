@@ -68,7 +68,7 @@ prev_trim_icon = None
 stop_icon = None
 stop_trim_icon = None
 
-# Callback func to set default editmode
+# Callback func to set default editmode, set from outside of the module.
 set_default_edit_mode_callback = None
 
 # Timeline position is saved when clip is displayed
@@ -286,9 +286,8 @@ def display_clip_in_monitor(reset_saved_frames=True):
     """
     if MONITOR_MEDIA_FILE() == None:
         gui.editor_window.clip_editor_b.set_active(False)
-        # INFOWINDOW
         return
-        
+
     # Opening clip exits trim modes
     if not editorstate.current_is_move_mode():
         set_default_edit_mode_callback()

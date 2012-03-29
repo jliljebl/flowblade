@@ -263,7 +263,7 @@ def overwrite_move_press(event, frame):
         edit_data["over_in"] = -1
         edit_data["over_out"] = -1
         
-        # Length of moving clips/s
+        # Length of moving clip/s
         moving_length = 0
         clip_lengths = edit_data["clip_lengths"] 
         for length in clip_lengths:

@@ -129,9 +129,11 @@ def _save_treeview_selection(treeview):
 def _on_tline_drop(widget, context, x, y, timestamp, do_effect_drop_func, do_media_drop_func):
     if context.get_source_widget() == gui.effect_select_list_view.treeview:
         do_effect_drop_func(x, y)
+        gui.tline_canvas.widget.grab_focus()
     elif context.get_source_widget() == gui.media_list_view.treeview:
         media_file = _get_first_dragged_media_file()
         do_media_drop_func(media_file, x, y)
+        gui.tline_canvas.widget.grab_focus()
 
     context.finish(True, False, timestamp)
 

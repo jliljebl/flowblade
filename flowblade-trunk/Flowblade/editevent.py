@@ -405,7 +405,14 @@ def tline_effect_drop(x, y):
     clip, track, index = tlinewidgets.get_clip_track_and_index_for_pos(x, y)
     if clip == None:
         return
-
+    if track == None:
+        return
+    if track.id < 1 or track.id >= (len(current_sequence().tracks) - 1):
+        return 
+    if track_lock_check_and_user_info(track):
+        set_default_edit_mode()
+        return
+        
     if clip != clipeffectseditor.clip:
         clipeffectseditor.set_clip(clip, track, index)
     
@@ -417,6 +424,9 @@ def tline_media_drop(media_file, x, y):
         return
     if track.id < 1 or track.id >= (len(current_sequence().tracks) - 1):
         return 
+    if track_lock_check_and_user_info(track):
+        set_default_edit_mode()
+        return
 
     set_default_edit_mode()
 
@@ -906,22 +916,13 @@ def _create_color_clip_callback(dialog, response_id, widgets):
     dialog.destroy()
 
 # ------------------------------------ track locks handling
-def track_lock_check_and_user_info(track, calling_function, actionname):
+def track_lock_check_and_user_info(track, calling_function="this ain't used anymore", actionname="this ain't used anymore"):
 
     if track.edit_freedom == appconsts.LOCKED:
         track_name = utils.get_track_name(track, current_sequence())
 
-        # entering trim modes is forbidden for locked tracks
-        if ((calling_function == oneroll_trim_mode_pressed)
-            or (calling_function == tworoll_trim_mode_pressed)):
-            
-            primary_txt = _("Can't enter ") + actioname + _(" on a locked track")
-            secondary_txt = _("Track ") + track_name + _(" is locked. Unlock track to edit it.")
-            dialogs.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
-            return True
-            
         # No edits on locked tracks.
-        primary_txt = _("Can't do ") + actioname + _(" edit on a locked track")
+        primary_txt = _("Can't edit a locked track")
         secondary_txt = _("Track ") + track_name + _(" is locked. Unlock track to edit it.")
         dialogs.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
         return True

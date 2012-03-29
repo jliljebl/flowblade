@@ -128,7 +128,7 @@ def main(root_path):
     if scr_w < 1152 or scr_h < 864:
         _too_small_screen_exit()
         return
-
+    
     # Splash screen
     if editorpersistance.prefs.display_splash_screen == True: 
         show_splash_screen()
@@ -380,7 +380,7 @@ def autosave_recovery_dialog():
 def autosave_dialog_callback(dialog, response):
     dialog.destroy()
     if response == gtk.RESPONSE_OK:
-        useraction.actually_load_project(utils.get_hidden_user_dir_path() + AUTOSAVE_FILE)
+        useraction.actually_load_project(utils.get_hidden_user_dir_path() + AUTOSAVE_FILE, True)
         
 def start_autosave():
     global autosave_timeout_id

@@ -87,8 +87,9 @@ class RenderLauncher(threading.Thread):
 
 class LoadThread(threading.Thread):
     
-    def __init__(self, filename):
+    def __init__(self, filename, block_recent_files=False):
         self.filename = filename
+        self.block_recent_files
         threading.Thread.__init__(self)
 
     def run(self):
@@ -125,9 +126,11 @@ class LoadThread(threading.Thread):
         
         gtk.gdk.threads_enter()
         app.open_project(project)
-        
-        editorpersistance.add_recent_project_path(self.filename)
-        editorpersistance.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
+
+        if self.block_recent_files:
+            editorpersistance.add_recent_project_path(self.filename)
+            editorpersistance.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
+
         gtk.gdk.threads_leave()
         
         gtk.gdk.threads_enter()
@@ -296,8 +299,8 @@ def _close_dialog_callback(dialog, response_id):
     new_project = projectdata.Project(profile)
     app.open_project(new_project)
     
-def actually_load_project(filename):
-    load_launch = LoadThread(filename)
+def actually_load_project(filename, block_recent_files=False):
+    load_launch = LoadThread(filename, block_recent_files)
     load_launch.start()
 
 def save_project():

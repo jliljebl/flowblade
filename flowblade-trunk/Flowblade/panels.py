@@ -49,7 +49,7 @@ PREFERENCES_LEFT = 290
 # label column of profile manager panel
 PROFILE_MANAGER_LEFT = 265
 # Text edit area size for render opts
-FFMPEG_VIEW_SIZE = (200, 250) # width 200 seems to be ignored in current layout
+FFMPEG_VIEW_SIZE = (200, 210) # width 200 seems to be ignored in current layout
 # in, out and length timecodes in monitor area top row 
 TC_LABEL_WIDTH = 80
 
@@ -139,7 +139,7 @@ def get_render_panel_left(editor_window, options_clicked_cb, add_audio_panel):
     
     quality_row = get_two_column_box(render.widgets.quality_label,
                                      render.widgets.quality_cb, 
-                                     120)
+                                     80)
 
     use_project_profile_row = gtk.HBox()
     use_project_profile_row.pack_start(gtk.Label(_("Use Project Profile:")),  False, False, 0)
@@ -163,7 +163,11 @@ def get_render_panel_left(editor_window, options_clicked_cb, add_audio_panel):
     encoding_vbox = gtk.VBox(False, 2)
     encoding_vbox.pack_start(render.widgets.encodings_cb, False, False, 0)
     encoding_vbox.pack_start(quality_row, False, False, 0)
+
     if add_audio_panel:
+        audio_filler = gtk.Label()
+        audio_filler.set_size_request(10, 2)
+        encoding_vbox.pack_start(audio_filler, False, False, 0)
         encoding_vbox.pack_start(audio_panel, False, False, 0)
     encoding_panel = get_named_frame(_("Encoding Format"), encoding_vbox)
 
@@ -174,7 +178,7 @@ def get_render_panel_left(editor_window, options_clicked_cb, add_audio_panel):
     render_panel.pack_start(gtk.Label(), True, True, 0)
     return render_panel
 
-def get_render_panel_right(render_clicked_cb):
+def get_render_panel_right(render_clicked_cb, normal_height):
     use_opts_row = gtk.HBox()
     use_opts_row.pack_start(gtk.Label(_("Render using args:")),  False, False, 0)
     use_opts_row.pack_start(render.widgets.use_opts_check,  False, False, 0)
@@ -185,8 +189,13 @@ def get_render_panel_right(render_clicked_cb):
     sw = gtk.ScrolledWindow()
     sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
     sw.add(render.widgets.opts_view)
-    sw.set_size_request(*FFMPEG_VIEW_SIZE)
-
+    if normal_height:
+        sw.set_size_request(*FFMPEG_VIEW_SIZE)
+    else:
+        w, h = FFMPEG_VIEW_SIZE
+        h = h - 30
+        sw.set_size_request(w, h)
+        
     scroll_frame = gtk.Frame()
     scroll_frame.add(sw)
     
@@ -234,13 +243,15 @@ def get_render_panel_right(render_clicked_cb):
                                          None)
 
     vfiller = gtk.Label()
-    vfiller.set_size_request(10, 8)
+    vfiller.set_size_request(10, 22)
+    vfiller2 = gtk.Label()
+    vfiller2.set_size_request(10, 12)
     render_panel = gtk.VBox()
-    render_panel.pack_start(opts_panel, False, False, 0)
-    render_panel.pack_start(gtk.Label(), True, True, 0)
+    render_panel.pack_start(opts_panel, True, True, 0)
+    render_panel.pack_start(vfiller, False, False, 0)
     render_panel.pack_start(bin_row, False, False, 0)
     render_panel.pack_start(range_row, False, False, 0)
-    render_panel.pack_start(vfiller, False, False, 0)
+    render_panel.pack_start(vfiller2, False, False, 0)
     render_panel.pack_start(buttons_panel, False, False, 0)
 
     return render_panel

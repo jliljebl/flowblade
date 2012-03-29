@@ -26,6 +26,7 @@ import time #added for testing
 
 import appconsts
 import dialogs
+import gui
 import edit
 import editevent
 import editorstate
@@ -193,7 +194,7 @@ def insert_button_pressed():
     
     new_clip = _get_new_clip_from_clip_monitor()
     if new_clip == None:
-        # INFOWINDOW, no clip in monitor
+        dialogs.no_monitor_clip_info(gui.editor_window.window)
         return
 
     editevent.do_clip_insert(track, new_clip, tline_pos)
@@ -208,7 +209,7 @@ def append_button_pressed():
     
     new_clip = _get_new_clip_from_clip_monitor()
     if new_clip == None:
-        # INFOWINDOW, no clip in monitor
+        dialogs.no_monitor_clip_info(gui.editor_window.window)
         return
 
     editevent.do_clip_insert(track, new_clip, tline_pos)
@@ -232,12 +233,12 @@ def three_point_overwrite_pressed():
 
     over_clip = _get_new_clip_from_clip_monitor()
     if over_clip == None:
-        # INFOWINDOW
+        dialogs.no_monitor_clip_info(gui.editor_window.window)
         return
     over_length = over_clip.mark_out - over_clip.mark_in + 1 # + 1 out incl ?????????? what if over_clip.mark_out == -1  ?????????? 
     
     if over_length < range_length:
-        # INFOWINDOW
+        dialogs.monitor_clip_too_short(gui.editor_window.window)
         return
     
     over_clip_out = over_clip.mark_in + range_length - 1 # -1 out incl
@@ -275,14 +276,13 @@ def range_overwrite_pressed():
     # Get over clip and check it overwrite range area
     over_clip = _get_new_clip_from_clip_monitor()
     if over_clip == None:
-        # INFOWINDOW
+        dialogs.no_monitor_clip_info(gui.editor_window.window)
         return
-    """
+
     over_length = over_clip.mark_out - over_clip.mark_in + 1 # + 1 out incl
     if over_length < range_length:
-        # INFOWINDOW
+        dialogs.monitor_clip_too_short(gui.editor_window.window)
         return
-    """
 
     over_clip_out = over_clip.mark_in + range_length - 1
 

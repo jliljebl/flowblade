@@ -81,6 +81,18 @@ def key_down(widget, event):
     if event.keyval == gtk.keysyms.Delete:
         return _handle_delete()
 
+    # Pressing space when media file selected is interpreted as row activation which will open
+    # that media file in clip monitor, but we want play/pause *unless* item's name is being edited.
+    if gui.media_list_view.get_focus_child() != None:
+        if gui.media_list_view.text_rend_1.get_property("editing") == True:
+            return False
+        if event.keyval == gtk.keysyms.space:
+            if PLAYER().is_playing():
+                monitorevent.stop_pressed()
+            else:
+                monitorevent.play_pressed()
+            return True
+    """
     #debug
     if event.keyval == gtk.keysyms.F12:
         current_sequence().print_all()
@@ -88,11 +100,11 @@ def key_down(widget, event):
 
     #debug
     if event.keyval == gtk.keysyms.F11:
-        print "haloo"
         resync.calculate_and_set_child_clip_sync_states()
         updater.repaint_tline()
         return True
-
+    """
+    
     # Key event was not handled here.
     return False
     
@@ -123,14 +135,14 @@ def _handle_tline_key_event(event):
     
     # I
     if event.keyval == gtk.keysyms.i:
-        updater.set_mode_button_active(editorstate.INSERT_MOVE)
+        monitorevent.mark_in_pressed()
         return True
 
-    # T
-    if event.keyval == gtk.keysyms.t:
-        updater.set_mode_button_active(editorstate.ONE_ROLL_TRIM)
+    # I
+    if event.keyval == gtk.keysyms.o:
+        monitorevent.mark_out_pressed()
         return True
-
+    
     # SPACE
     if event.keyval == gtk.keysyms.space:
         if PLAYER().is_playing():
@@ -202,6 +214,16 @@ def _handle_clip_key_event(event):
             else:
                 monitorevent.play_pressed()
 
+        # I
+        if event.keyval == gtk.keysyms.i:
+            monitorevent.mark_in_pressed()
+            return True
+
+        # O
+        if event.keyval == gtk.keysyms.o:
+            monitorevent.mark_out_pressed()
+            return True
+
 def _handle_delete():
     # Delete media file
     if gui.media_list_view.get_focus_child() != None:
@@ -240,7 +262,7 @@ def _handle_delete():
         return True
 
     return False
-        
+
 def _get_focus_keyframe_editor(keyframe_editor_widgets):
     if keyframe_editor_widgets == None:
         return None

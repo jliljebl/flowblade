@@ -400,6 +400,9 @@ def fill_filters_mlt(mlt_clip, sequence):
             filter_object.create_mlt_filters(sequence.profile, mlt_clip)
             filter_object.attach_all_mlt_filters(mlt_clip)
 
+        if filter_object.active == False:
+            filter_object.update_mlt_disabled_value()
+
         filters.append(filter_object)
     
     mlt_clip.filters = filters

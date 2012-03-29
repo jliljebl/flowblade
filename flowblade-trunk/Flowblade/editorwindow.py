@@ -296,15 +296,16 @@ class EditorWindow:
         project_panel.add(project_vbox)
 
         # Render
-        add_audio_panel = True
+        normal_height = True
         if TOP_ROW_HEIGHT < 500: # small screens have no space to display this
-            add_audio_panel = False
+            normal_height = False
+
         render_panel_left = panels.get_render_panel_left(
                                 self,
                                 lambda w,e: useraction.open_additional_render_options_dialog(),
-                                add_audio_panel)
+                                True)
 
-        render_panel_right = panels.get_render_panel_right(lambda w,e: useraction.render_timeline())
+        render_panel_right = panels.get_render_panel_right(lambda w,e: useraction.render_timeline(), normal_height)
         render.widgets.opts_info_button.connect("clicked", lambda w: useraction.ffmpeg_opts_help())
 
         render_hbox = gtk.HBox(True, 5)

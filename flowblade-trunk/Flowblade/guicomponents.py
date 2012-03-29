@@ -257,6 +257,7 @@ class MediaListView(ImageTextTextListView):
         # Connect double-click listener and allow multiple selection
         self.treeview.connect("row-activated", 
                               row_activated_cb)
+
         tree_sel = self.treeview.get_selection()
         tree_sel.set_mode(gtk.SELECTION_MULTIPLE)
         self.text_rend_1.set_property("editable", True)

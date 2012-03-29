@@ -607,3 +607,13 @@ def autosave_recovery_dialog(callback, parent_window):
     _default_behaviour(dialog)
     dialog.connect('response', callback)
     dialog.show_all()
+
+def no_monitor_clip_info(parent_window):
+    primary_txt = _("No Clip loaded into Monitor")
+    secondary_txt = _("Can't do the requested edit because there is no Clip in Monitor.")
+    info_message(primary_txt, secondary_txt, parent_window)
+
+def monitor_clip_too_short(parent_window):
+    primary_txt = _("Defined range in Monitor Clip is too short")
+    secondary_txt = _("Can't do the requested edit because Mark In -> Mark Out Range or Clip is too short.")
+    info_message(primary_txt, secondary_txt, parent_window)

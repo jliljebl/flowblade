@@ -77,14 +77,18 @@ class PositionBar:
 
     def update_display_from_producer(self, producer):
         self.producer = producer
-        length = producer.get_length() # Get from MLT 
-        self.mark_in_norm = float(producer.mark_in) / length
-        self.mark_out_norm = float(producer.mark_out) / length
-        frame_pos = producer.frame()
-        norm_pos = float(frame_pos) / length
-        self._pos = self._get_panel_pos(norm_pos)
-        
-        # New state always needs to be displayd to user.
+        length = producer.get_length() # Get from MLT
+        try:
+            self.mark_in_norm = float(producer.mark_in) / length
+            self.mark_out_norm = float(producer.mark_out) / length
+            frame_pos = producer.frame()
+            norm_pos = float(frame_pos) / length
+            self._pos = self._get_panel_pos(norm_pos)
+        except ZeroDivisionError:
+            self.mark_in_norm = 0
+            self.mark_out_norm = 0
+            self._pos = self._get_panel_pos(0)
+
         self.widget.queue_draw()
 
     def _get_panel_pos(self, norm_pos):
