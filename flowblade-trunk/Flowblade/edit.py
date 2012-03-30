@@ -613,7 +613,6 @@ def overwrite_move_action(data):
     return action
 
 def _overwrite_move_undo(self):
-    print "_overwrite_move_undo" 
     track = self.track
         
     # Remove moved clips
@@ -699,7 +698,7 @@ def _overwrite_move_redo(self):
 
     # Cut at out point if not already on cut and out point inside track length
     if track.get_length() > self.over_out:
-        clip_in, clip_out = _overwrite_cut_track(track, self.over_out)
+        clip_in, clip_out = _overwrite_cut_track(track, self.over_out, True)
         self.out_clip_in = clip_in
         self.out_clip_length = clip_out - clip_in + 1 # Cut blank can't be reconstructed with clip_in data as it is always 0 for blank, so we use this
     else:
@@ -721,7 +720,7 @@ def _overwrite_move_redo(self):
 
     _remove_trailing_blanks(track)
 
-def _overwrite_cut_track(track, frame):
+def _overwrite_cut_track(track, frame, add_cloned_filters=False):
     """
     If frame is on an existing cut, then the method does nothing and returns tuple (-1, -1) 
     to signal that no cut was made.
@@ -741,8 +740,12 @@ def _overwrite_cut_track(track, frame):
         if clip.is_blank():
             add_clip = _cut_blank(track, index, clip_frame, clip)
         else:
-            add_clip = _create_clip_clone(clip)
+            add_clip = _create_clip_clone(clip)            
             _cut(track, index, clip_frame, clip, add_clip)
+            if add_cloned_filters:
+                clone_filters = current_sequence().clone_filters(clip)
+                add_clip.filters = clone_filters
+                _attach_all(add_clip) 
         return orig_in_out
     else:
         return (-1, -1)
@@ -848,7 +851,7 @@ def _multitrack_overwrite_move_redo(self):
 
     # Cut at out point if not already on cut
     if to_track.get_length() > self.over_out:
-        clip_in, clip_out = _overwrite_cut_track(to_track, self.over_out)
+        clip_in, clip_out = _overwrite_cut_track(to_track, self.over_out, True)
         self.out_clip_in = clip_in
         self.out_clip_length = clip_out - clip_in + 1 # Cut blank can't be reconstructed with clip_in data as it is always 0 for blank, so we use this
     else:
@@ -1654,7 +1657,7 @@ def _track_extract_range(over_in, over_out, track):
 
     # Cut at out point if not already on cut
     if track.get_length() > over_out:
-        clip_in, clip_out = _overwrite_cut_track(track, over_out)
+        clip_in, clip_out = _overwrite_cut_track(track, over_out,  True)
         track_extract_data.out_clip_in = clip_in
         track_extract_data.out_clip_length = clip_out - clip_in + 1 # Cut blank can't be reconstructed with clip_in data as it is always 0 for blank, so we use this
     else:

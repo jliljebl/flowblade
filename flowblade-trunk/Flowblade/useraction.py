@@ -89,7 +89,7 @@ class LoadThread(threading.Thread):
     
     def __init__(self, filename, block_recent_files=False):
         self.filename = filename
-        self.block_recent_files
+        self.block_recent_files = block_recent_files 
         threading.Thread.__init__(self)
 
     def run(self):
