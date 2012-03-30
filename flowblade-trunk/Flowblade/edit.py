@@ -633,9 +633,12 @@ def _overwrite_move_undo(self):
     
     # Fix out clip and remove cut created clip if out was cut
     if self.out_clip_in != -1:
+        _overwrite_restore_out(track, moved_index, self)
+        
         # If moved clip/s were last in the track and were moved slightly 
         # forward and were still last in track after move
         # this leaves a trailing black that has been removed and this will fail
+        """
         try:
             out_clip = _remove_clip(track, moved_index)
             if len(self.removed_clips) > 0: # If overwrite was done inside single clip everything is already in order
@@ -648,9 +651,9 @@ def _overwrite_move_undo(self):
                     _insert_blank(track, moved_index, self.out_clip_length)
                 self.removed_clips.pop(-1) 
         except:
-            print "paass"
             pass
-    
+        """
+
     # Put back old clips
     for i in range(0, len(self.removed_clips)):
         clip = self.removed_clips[i]
@@ -720,6 +723,7 @@ def _overwrite_move_redo(self):
 
     _remove_trailing_blanks(track)
 
+#------------------------------------------------------------- overwrite utils
 def _overwrite_cut_track(track, frame, add_cloned_filters=False):
     """
     If frame is on an existing cut, then the method does nothing and returns tuple (-1, -1) 
@@ -743,13 +747,34 @@ def _overwrite_cut_track(track, frame, add_cloned_filters=False):
             add_clip = _create_clip_clone(clip)            
             _cut(track, index, clip_frame, clip, add_clip)
             if add_cloned_filters:
-                clone_filters = current_sequence().clone_filters(clip)
-                add_clip.filters = clone_filters
-                _attach_all(add_clip) 
+                pass
+                #clone_filters = current_sequence().clone_filters(clip)
+                #add_clip.filters = clone_filters
+                #_attach_all(add_clip) 
         return orig_in_out
     else:
         return (-1, -1)
-        
+
+def _overwrite_restore_out(track, moved_index, self):
+    # self is the EditAction object
+
+    # If moved clip/s were last in the track and were moved slightly 
+    # forward and were still last in track after move
+    # this leaves a trailing black that has been removed and this will fail
+    try:
+        out_clip = _remove_clip(track, moved_index)
+        if len(self.removed_clips) > 0: # If overwrite was done inside single clip everything is already in order
+            if not out_clip.is_blanck_clip:
+                _insert_clip(track, out_clip, moved_index,
+                         self.out_clip_in, out_clip.clip_out)
+            else: # blanks can't be resized, so must put in new blank
+                _insert_blank(track, moved_index, self.out_clip_length)
+            self.removed_clips.pop(-1) 
+    except Exception, err:
+        #print 'print_exc():'
+        #traceback.print_exc(file=sys.stdout)
+        pass
+            
 #----------------- MULTITRACK OVERWRITE MOVE
 # "track","to_track","over_in","over_out","selected_range_in"
 # "selected_range_out","move_edit_done_func"
@@ -785,9 +810,12 @@ def _multitrack_overwrite_move_undo(self):
 
     # Fix out clip and remove cut created clip if out was cut
     if self.out_clip_in != -1:
+        _overwrite_restore_out(to_track, moved_index, self)
+        
         # If moved clip/s were last in the track and were moved slightly 
         # forward and were still last in track after move
         # this leaves a trailing black that has been removed and this will fail
+        """
         try:
             out_clip = _remove_clip(to_track, moved_index)
             if len(self.removed_clips) > 0: # If overwrite was done inside single clip everything is already in order
@@ -800,6 +828,7 @@ def _multitrack_overwrite_move_undo(self):
                 self.removed_clips.pop(-1)
         except:
             pass
+        """
 
     # Put back old clips
     for i in range(0, len(self.removed_clips)):
