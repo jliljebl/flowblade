@@ -33,6 +33,7 @@ import appconsts
 import edit
 import editorstate
 import editorpersistance
+import memoryleak
 import mltfilters
 import mlttransitions
 import respaths

@@ -206,35 +206,62 @@ class EditAction:
         # Functions that change state both ways.
         self.undo_func = undo_func
         self.redo_func = redo_func
-        
+    
         # Grabs data as object members.
         self.__dict__.update(data)
+        
+        # HACK!!!! Overwrite edits crash at redo(sometimes undo) when current frame inside 
+        # affected area if consumer running.
+        # Remove when fixed upstream.
+        self.stop_for_edit = False 
+        self.turn_on_stop_for_edit = False # set true in redo_func for edits that need it
         
     def do_edit(self):
         self.redo()
         undo.register_edit(self)
+        if self.turn_on_stop_for_edit:
+            self.stop_for_edit = True
 
     def undo(self):
         PLAYER().stop_playback()
+
+        # HACK, see above.
+        if self.stop_for_edit:
+            PLAYER().consumer.stop()
+
         movemodes.clear_selected_clips()  # selection very likely not valid soon after change in sequence
 
         self.undo_func(self)
 
         resync.calculate_and_set_child_clip_sync_states()
-    
+
+        # HACK, see above.
+        if self.stop_for_edit:
+            PLAYER().consumer.start()
+        
         if do_gui_update:
             self._update_gui()
             
     def redo(self):
         PLAYER().stop_playback()
+
+        # HACK, see above.
+        if self.stop_for_edit:
+            PLAYER().consumer.stop()
+
         movemodes.clear_selected_clips() # selection very likely not valid soon after change in sequence
 
         self.redo_func(self)
-        
+
         resync.calculate_and_set_child_clip_sync_states()
-            
+
+        # HACK, see above.
+        if self.stop_for_edit:
+            PLAYER().consumer.start()
+        
         if do_gui_update:
             self._update_gui()
+
         
     def _update_gui(self):
         updater.update_tline_scrollbar() # Slider needs adjust to possily new program length.
@@ -623,6 +650,8 @@ def _overwrite_move_undo(self):
         
     # Fix in clip and remove cut created clip if in was cut
     if self.in_clip_out != -1:
+        _overwrite_restore_in(track, moved_index, self)
+        """
         in_clip = _remove_clip(track, moved_index - 1)
         if in_clip.is_blanck_clip != True:
             _insert_clip(track, in_clip, moved_index - 1,
@@ -630,29 +659,11 @@ def _overwrite_move_undo(self):
         else: # blanks can't be resized, so must put in new blank
             _insert_blank(track, moved_index - 1, self.in_clip_out - in_clip.clip_in + 1)
         self.removed_clips.pop(0)
-    
+        """
+
     # Fix out clip and remove cut created clip if out was cut
     if self.out_clip_in != -1:
         _overwrite_restore_out(track, moved_index, self)
-        
-        # If moved clip/s were last in the track and were moved slightly 
-        # forward and were still last in track after move
-        # this leaves a trailing black that has been removed and this will fail
-        """
-        try:
-            out_clip = _remove_clip(track, moved_index)
-            if len(self.removed_clips) > 0: # If overwrite was done inside single clip everything is already in order
-                #_insert_clip(track, out_clip, moved_index,
-                #         self.out_clip_in, out_clip.clip_out)
-                if not out_clip.is_blanck_clip:
-                    _insert_clip(track, out_clip, moved_index,
-                             self.out_clip_in, out_clip.clip_out)
-                else: # blanks can't be resized, so must put in new blank
-                    _insert_blank(track, moved_index, self.out_clip_length)
-                self.removed_clips.pop(-1) 
-        except:
-            pass
-        """
 
     # Put back old clips
     for i in range(0, len(self.removed_clips)):
@@ -723,6 +734,9 @@ def _overwrite_move_redo(self):
 
     _remove_trailing_blanks(track)
 
+    # HACK, see EditAction for details
+    self.turn_on_stop_for_edit = True
+
 #------------------------------------------------------------- overwrite utils
 def _overwrite_cut_track(track, frame, add_cloned_filters=False):
     """
@@ -755,6 +769,16 @@ def _overwrite_cut_track(track, frame, add_cloned_filters=False):
     else:
         return (-1, -1)
 
+def _overwrite_restore_in(track, moved_index, self):
+    # self is the EditAction object
+    in_clip = _remove_clip(track, moved_index - 1)
+    if not in_clip.is_blanck_clip:
+        _insert_clip(track, in_clip, moved_index - 1,
+                     in_clip.clip_in, self.in_clip_out)
+    else: # blanks can't be resized, so put in new blank
+        _insert_blank(track, moved_index - 1, self.in_clip_out - in_clip.clip_in + 1)
+    self.removed_clips.pop(0)
+        
 def _overwrite_restore_out(track, moved_index, self):
     # self is the EditAction object
 
@@ -767,7 +791,7 @@ def _overwrite_restore_out(track, moved_index, self):
             if not out_clip.is_blanck_clip:
                 _insert_clip(track, out_clip, moved_index,
                          self.out_clip_in, out_clip.clip_out)
-            else: # blanks can't be resized, so must put in new blank
+            else: # blanks can't be resized, so put in new blank
                 _insert_blank(track, moved_index, self.out_clip_length)
             self.removed_clips.pop(-1) 
     except Exception, err:
@@ -795,11 +819,9 @@ def _multitrack_overwrite_move_undo(self):
 
     # Fix in clip and remove cut created clip if in was cut
     if self.in_clip_out != -1:
+        _overwrite_restore_in(to_track, moved_index, self)
+        """
         in_clip = _remove_clip(to_track, moved_index - 1)
-        #_insert_clip(to_track, in_clip, moved_index - 1,
-        #             in_clip.clip_in, self.in_clip_out)
-            
-        
         if in_clip.is_blanck_clip != True:
             _insert_clip(to_track, in_clip, moved_index - 1,
                          in_clip.clip_in, self.in_clip_out)
@@ -807,28 +829,11 @@ def _multitrack_overwrite_move_undo(self):
             _insert_blank(to_track, moved_index - 1, self.in_clip_out - in_clip.clip_in + 1)
 
         self.removed_clips.pop(0)
+        """
 
     # Fix out clip and remove cut created clip if out was cut
     if self.out_clip_in != -1:
         _overwrite_restore_out(to_track, moved_index, self)
-        
-        # If moved clip/s were last in the track and were moved slightly 
-        # forward and were still last in track after move
-        # this leaves a trailing black that has been removed and this will fail
-        """
-        try:
-            out_clip = _remove_clip(to_track, moved_index)
-            if len(self.removed_clips) > 0: # If overwrite was done inside single clip everything is already in order
-                if out_clip.is_blanck_clip != True:
-                    _insert_clip(to_track, out_clip, moved_index,
-                             self.out_clip_in, out_clip.clip_out)
-                else: # blanks can't be resized, so must put in new blank
-                    _insert_blank(to_track, moved_index, self.out_clip_length)
-
-                self.removed_clips.pop(-1)
-        except:
-            pass
-        """
 
     # Put back old clips
     for i in range(0, len(self.removed_clips)):
@@ -873,7 +878,7 @@ def _multitrack_overwrite_move_redo(self):
         _insert_blank(to_track, len(to_track.clips), gap)
     else:
         self.starts_after_end = False
-    
+
     # Cut at in point if not already on cut
     clip_in, clip_out = _overwrite_cut_track(to_track, self.over_in)
     self.in_clip_out = clip_out
@@ -902,9 +907,13 @@ def _multitrack_overwrite_move_redo(self):
 
     _remove_trailing_blanks(track)
     _remove_trailing_blanks(to_track)
-    
+
     # Remove wrong sized waveforms
     audiowaveform.maybe_delete_waveforms(self.moved_clips, to_track)
+    
+    # HACK, see EditAction for details
+    self.turn_on_stop_for_edit = True
+
     
 #------------------ TRIM CLIP START
 # "track","clip","index","delta","undo_done_callback"
@@ -1009,7 +1018,7 @@ def _add_multipart_filter_redo(self):
     self.filter_edit_done_func(self.clip, len(self.clip.filters) - 1) # updates effect stack
 
 #------------------- REMOVE FILTER
-# "clip","index,""filter_edit_done_func"
+# "clip","index","filter_edit_done_func"
 # Adds filter to clip.
 def remove_filter_action(data):
     action = EditAction(_remove_filter_undo,_remove_filter_redo, data)
@@ -1625,6 +1634,9 @@ def range_splice_out_redo(self):
                                                    self.mark_out_frame, 
                                                    track)
         self.extract_ranges.append(track_extract_data)
+
+    # HACK, see EditAction for details
+    self.turn_on_stop_for_edit = True
                  
 # --------------------------------------------- help funcs for "range over" and "range splice out" edits 
 def _track_put_back_range(over_in, track, track_extract_data):
@@ -1663,7 +1675,7 @@ def _track_put_back_range(over_in, track, track_extract_data):
 
     # Put back old clips
     for i in range(0, len(track_extract_data.removed_clips)):
-        clip = track_extract_data.removed_clips[i];
+        clip = track_extract_data.removed_clips[i]
         _insert_clip(track, clip, moved_index + i, clip.clip_in,
                      clip.clip_out)
                      
