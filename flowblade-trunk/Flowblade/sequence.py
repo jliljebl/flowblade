@@ -144,7 +144,7 @@ class Sequence:
                 self.tracks[track_index].active = False # only V1 is active after creation
 
         # ---Hidden track--- #
-        # Hidden video track for clip ang trimming display.
+        # Hidden video track for clip and trimming display.
         # Hidden track is a video track that is always the topmost track.
         # It is used when displaying monitor clip and
         # displaying the clip that is being trim edited. When trim is loop previewed
@@ -152,9 +152,13 @@ class Sequence:
         # below can be viewed.
         self.add_track(VIDEO, True) 
 
-        # Create black bg clip and set in and out
-        global black_track_clip
-        black_track_clip = self.create_file_producer_clip(respaths.BLACK_IMAGE_PATH)
+        # Create 1 fr long black bg clip and set in and out
+        global black_track_clip # btw, why global?
+        pattern_producer_data = utils.EmptyClass()
+        pattern_producer_data.patter_producer_type = appconsts.COLOR_CLIP
+        pattern_producer_data.gdk_color_str = "#000000000000"
+        pattern_producer_data.name = "black_bg"
+        black_track_clip = self.create_pattern_producer(pattern_producer_data)
         clip_in = 0
         clip_out = 0
         black_track_clip.clip_in = clip_in
@@ -250,7 +254,7 @@ class Sequence:
         Creates MLT Producer and adds attributes to it, but does 
         not add it to track/playlist object.
         """
-        producer = mlt.Producer(self.profile, path) # this runs 0.5s+
+        producer = mlt.Producer(self.profile, path) # this runs 0.5s+ on some clips
         producer.path = path
         producer.filters = []
         
