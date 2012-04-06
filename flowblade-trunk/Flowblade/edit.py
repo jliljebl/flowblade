@@ -651,15 +651,6 @@ def _overwrite_move_undo(self):
     # Fix in clip and remove cut created clip if in was cut
     if self.in_clip_out != -1:
         _overwrite_restore_in(track, moved_index, self)
-        """
-        in_clip = _remove_clip(track, moved_index - 1)
-        if in_clip.is_blanck_clip != True:
-            _insert_clip(track, in_clip, moved_index - 1,
-                         in_clip.clip_in, self.in_clip_out)
-        else: # blanks can't be resized, so must put in new blank
-            _insert_blank(track, moved_index - 1, self.in_clip_out - in_clip.clip_in + 1)
-        self.removed_clips.pop(0)
-        """
 
     # Fix out clip and remove cut created clip if out was cut
     if self.out_clip_in != -1:
@@ -711,13 +702,8 @@ def _overwrite_move_redo(self):
     self.in_clip_out = clip_out
 
     # Cut at out point if not already on cut and out point inside track length
-    if track.get_length() > self.over_out:
-        clip_in, clip_out = _overwrite_cut_track(track, self.over_out, True)
-        self.out_clip_in = clip_in
-        self.out_clip_length = clip_out - clip_in + 1 # Cut blank can't be reconstructed with clip_in data as it is always 0 for blank, so we use this
-    else:
-        self.out_clip_in = -1
-
+    _overwrite_cut_range_out(track, self)
+    
     # Splice out clips in overwrite range
     self.removed_clips = []
     in_index = track.get_clip_index_at(self.over_in)
@@ -769,6 +755,15 @@ def _overwrite_cut_track(track, frame, add_cloned_filters=False):
     else:
         return (-1, -1)
 
+def _overwrite_cut_range_out(track, self):
+    # Cut at out point if not already on cut and out point inside track length
+    if track.get_length() > self.over_out:
+        clip_in, clip_out = _overwrite_cut_track(track, self.over_out, True)
+        self.out_clip_in = clip_in
+        self.out_clip_length = clip_out - clip_in + 1 # Cut blank can't be reconstructed with clip_in data as it is always 0 for blank, so we use this
+    else:
+        self.out_clip_in = -1
+        
 def _overwrite_restore_in(track, moved_index, self):
     # self is the EditAction object
     in_clip = _remove_clip(track, moved_index - 1)
@@ -820,16 +815,6 @@ def _multitrack_overwrite_move_undo(self):
     # Fix in clip and remove cut created clip if in was cut
     if self.in_clip_out != -1:
         _overwrite_restore_in(to_track, moved_index, self)
-        """
-        in_clip = _remove_clip(to_track, moved_index - 1)
-        if in_clip.is_blanck_clip != True:
-            _insert_clip(to_track, in_clip, moved_index - 1,
-                         in_clip.clip_in, self.in_clip_out)
-        else: # blanks can't be resized, so must put in new blank
-            _insert_blank(to_track, moved_index - 1, self.in_clip_out - in_clip.clip_in + 1)
-
-        self.removed_clips.pop(0)
-        """
 
     # Fix out clip and remove cut created clip if out was cut
     if self.out_clip_in != -1:
@@ -884,12 +869,7 @@ def _multitrack_overwrite_move_redo(self):
     self.in_clip_out = clip_out
 
     # Cut at out point if not already on cut
-    if to_track.get_length() > self.over_out:
-        clip_in, clip_out = _overwrite_cut_track(to_track, self.over_out, True)
-        self.out_clip_in = clip_in
-        self.out_clip_length = clip_out - clip_in + 1 # Cut blank can't be reconstructed with clip_in data as it is always 0 for blank, so we use this
-    else:
-        self.out_clip_in = -1
+    _overwrite_cut_range_out(to_track, self)
 
     # Splice out clips in overwrite range
     self.removed_clips = []
