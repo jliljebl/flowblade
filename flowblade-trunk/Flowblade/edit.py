@@ -189,7 +189,85 @@ def _remove_consecutive_blanks(track, index):
         lengths.append(track.clips[index].clip_length())
         _remove_clip(track, index)
     return lengths
+
+#------------------------------------------------------------- overwrite util methods
+def _overwrite_cut_track(track, frame, add_cloned_filters=False):
+    """
+    If frame is on an existing cut, then the method does nothing and returns tuple (-1, -1) 
+    to signal that no cut was made.
+    
+    If frame is in middle of clip or blank, then the method cuts that item in two
+    and returns tuple of in and out frames of the clip that was cut as they
+    were before the cut, for the purpose of having information to do undo later.
+    
+    If cut was made it also clones fliters to new clip created by cut.
+    """
+    index = track.get_clip_index_at(frame)
+    clip = track.clips[index]
+    orig_in_out = (clip.clip_in, clip.clip_out)
+    clip_out = clip.clip_out        
+    clip_start_in_tline = track.clip_start(index)
+    clip_frame = frame - clip_start_in_tline + clip.clip_in
+    
+    if not _frame_on_cut(clip, clip_frame):
+        if clip.is_blank():
+            add_clip = _cut_blank(track, index, clip_frame, clip)
+        else:
+            add_clip = _create_clip_clone(clip)            
+            _cut(track, index, clip_frame, clip, add_clip)
+            if add_cloned_filters:
+                clone_filters = current_sequence().clone_filters(clip)
+                add_clip.filters = clone_filters
+                _attach_all(add_clip) 
+        return orig_in_out
+    else:
+        return (-1, -1)
+
+def _overwrite_cut_range_out(track, self):
+    # Cut at out point if not already on cut and out point inside track length
+    self.orig_out_clip = None
+    if track.get_length() > self.over_out:
+        clip_in, clip_out = _overwrite_cut_track(track, self.over_out, True)
+        self.out_clip_in = clip_in
+        self.out_clip_length = clip_out - clip_in + 1 # Cut blank can't be reconstructed with clip_in data as it is always 0 for blank, so we use this
+        if clip_in != -1: # if we did cut we'll need to restore the dut out clip
+                          # which is the original clip because 
+            orig_index = track.get_clip_index_at(self.over_out - 1)
+            self.orig_out_clip = track.clips[orig_index] 
+    else:
+        self.out_clip_in = -1
+
         
+def _overwrite_restore_in(track, moved_index, self):
+    # self is the EditAction object
+    in_clip = _remove_clip(track, moved_index - 1)
+    if not in_clip.is_blanck_clip:
+        _insert_clip(track, in_clip, moved_index - 1,
+                     in_clip.clip_in, self.in_clip_out)
+    else: # blanks can't be resized, so put in new blank
+        _insert_blank(track, moved_index - 1, self.in_clip_out - in_clip.clip_in + 1)
+    self.removed_clips.pop(0)
+        
+def _overwrite_restore_out(track, moved_index, self):
+    # self is the EditAction object
+
+    # If moved clip/s were last in the track and were moved slightly 
+    # forward and were still last in track after move
+    # this leaves a trailing black that has been removed and this will fail
+    try:
+        out_clip = _remove_clip(track, moved_index)
+        if len(self.removed_clips) > 0: # If overwrite was done inside single clip everything is already in order
+            if not out_clip.is_blanck_clip:
+                _insert_clip(track, self.orig_out_clip, moved_index,
+                         self.out_clip_in, out_clip.clip_out)
+            else: # blanks can't be resized, so put in new blank
+                _insert_blank(track, moved_index, self.out_clip_length)
+            self.removed_clips.pop(-1) 
+    except Exception, err:
+        #print 'print_exc():'
+        #traceback.print_exc(file=sys.stdout)
+        pass
+
 #---------------------------------------------- EDIT ACTION
 class EditAction:
     """
@@ -630,7 +708,6 @@ def _multitrack_insert_move_redo(self):
     self.move_edit_done_func(self.clips)
     
 
-    
 #----------------- OVERWRITE MOVE
 # "track","over_in","over_out","selected_range_in"
 # "selected_range_out","move_edit_done_func"
@@ -723,77 +800,7 @@ def _overwrite_move_redo(self):
     # HACK, see EditAction for details
     self.turn_on_stop_for_edit = True
 
-#------------------------------------------------------------- overwrite utils
-def _overwrite_cut_track(track, frame, add_cloned_filters=False):
-    """
-    If frame is on an existing cut, then the method does nothing and returns tuple (-1, -1) 
-    to signal that no cut was made.
-    
-    If frame is in middle of clip or blank, then the method cuts that item in two
-    and returns tuple of in and out frames of the clip that was cut as they
-    were before the cut, for the purpose of having information to do undo later.
-    """
-    index = track.get_clip_index_at(frame)
-    clip = track.clips[index]
-    orig_in_out = (clip.clip_in, clip.clip_out)
-    clip_out = clip.clip_out        
-    clip_start_in_tline = track.clip_start(index)
-    clip_frame = frame - clip_start_in_tline + clip.clip_in
-    
-    if not _frame_on_cut(clip, clip_frame):
-        if clip.is_blank():
-            add_clip = _cut_blank(track, index, clip_frame, clip)
-        else:
-            add_clip = _create_clip_clone(clip)            
-            _cut(track, index, clip_frame, clip, add_clip)
-            if add_cloned_filters:
-                pass
-                #clone_filters = current_sequence().clone_filters(clip)
-                #add_clip.filters = clone_filters
-                #_attach_all(add_clip) 
-        return orig_in_out
-    else:
-        return (-1, -1)
-
-def _overwrite_cut_range_out(track, self):
-    # Cut at out point if not already on cut and out point inside track length
-    if track.get_length() > self.over_out:
-        clip_in, clip_out = _overwrite_cut_track(track, self.over_out, True)
-        self.out_clip_in = clip_in
-        self.out_clip_length = clip_out - clip_in + 1 # Cut blank can't be reconstructed with clip_in data as it is always 0 for blank, so we use this
-    else:
-        self.out_clip_in = -1
-        
-def _overwrite_restore_in(track, moved_index, self):
-    # self is the EditAction object
-    in_clip = _remove_clip(track, moved_index - 1)
-    if not in_clip.is_blanck_clip:
-        _insert_clip(track, in_clip, moved_index - 1,
-                     in_clip.clip_in, self.in_clip_out)
-    else: # blanks can't be resized, so put in new blank
-        _insert_blank(track, moved_index - 1, self.in_clip_out - in_clip.clip_in + 1)
-    self.removed_clips.pop(0)
-        
-def _overwrite_restore_out(track, moved_index, self):
-    # self is the EditAction object
-
-    # If moved clip/s were last in the track and were moved slightly 
-    # forward and were still last in track after move
-    # this leaves a trailing black that has been removed and this will fail
-    try:
-        out_clip = _remove_clip(track, moved_index)
-        if len(self.removed_clips) > 0: # If overwrite was done inside single clip everything is already in order
-            if not out_clip.is_blanck_clip:
-                _insert_clip(track, out_clip, moved_index,
-                         self.out_clip_in, out_clip.clip_out)
-            else: # blanks can't be resized, so put in new blank
-                _insert_blank(track, moved_index, self.out_clip_length)
-            self.removed_clips.pop(-1) 
-    except Exception, err:
-        #print 'print_exc():'
-        #traceback.print_exc(file=sys.stdout)
-        pass
-            
+      
 #----------------- MULTITRACK OVERWRITE MOVE
 # "track","to_track","over_in","over_out","selected_range_in"
 # "selected_range_out","move_edit_done_func"
@@ -1591,34 +1598,11 @@ def _range_over_redo(self):
                  self.clip_in, 
                  self.clip_out)
 
-#----------------- RANGE SPLICE OUT
-# not used, no workeee, try again later
-# "mark_in_frame","mark_out_frame"
-def range_splice_out_action(data):
-    action = EditAction(_range_splice_out_undo, range_splice_out_redo, data)
-    return action
-
-def _range_splice_out_undo(self):
-    for i in range(1, len(current_sequence().tracks)  - 1): # 1, -1 we're not extracting from hidden or black tracks
-        track = current_sequence().tracks[i]
-        track_extract_data = self.extract_ranges[i - 1]
-        _track_put_back_range(self.mark_in_frame, 
-                              track, 
-                              track_extract_data)
-    
-def range_splice_out_redo(self):
-    self.extract_ranges = []
-    for i in range(1, len(current_sequence().tracks)  - 1): # 1, -1 we're not extracting from hidden or black tracks
-        track = current_sequence().tracks[i]
-        track_extract_data = _track_extract_range(self.mark_in_frame, 
-                                                   self.mark_out_frame, 
-                                                   track)
-        self.extract_ranges.append(track_extract_data)
-
     # HACK, see EditAction for details
     self.turn_on_stop_for_edit = True
                  
-# --------------------------------------------- help funcs for "range over" and "range splice out" edits 
+# --------------------------------------------- help funcs for "range over" and "range splice out" edits
+# NOTE: RANGE SPLICE OUT NOT IMPLEMENTED YET; SO THIS BASICALLY UNNECESSARY METHOD.
 def _track_put_back_range(over_in, track, track_extract_data):
     # get index for first clip that was removed
     moved_index = track.get_clip_index_at(over_in)
@@ -1641,7 +1625,7 @@ def _track_put_back_range(over_in, track, track_extract_data):
             if len(track_extract_data.removed_clips) > 0: # If overwrite was done inside single clip everything is already in order
                                                           # because setting in_clip back to its original length restores original state
                 if out_clip.is_blanck_clip != True:
-                    _insert_clip(track, out_clip, moved_index,
+                    _insert_clip(track, track_extract_data.orig_out_clip, moved_index,
                              track_extract_data.out_clip_in, out_clip.clip_out)
                 else: # blanks can't be resized, so must put in new blank
                     _insert_blank(track, moved_index, track_extract_data.out_clip_length)
@@ -1661,6 +1645,8 @@ def _track_put_back_range(over_in, track, track_extract_data):
                      
     _remove_trailing_blanks(track)
 
+# NOTE: RANGE SPLICE OUT NOT IMPLEMENTED YET; SO THIS IS BASICALLY UNNECESSARY METHOD CAUSING 
+# CODE DUPLICATION WITH OTHER OVERWRITE METHODS
 def _track_extract_range(over_in, over_out, track):
     track_extract_data = utils.EmptyClass()
 
@@ -1677,13 +1663,18 @@ def _track_extract_range(over_in, over_out, track):
     track_extract_data.in_clip_out = clip_out
 
     # Cut at out point if not already on cut
+    track_extract_data.orig_out_clip = None
     if track.get_length() > over_out:
         clip_in, clip_out = _overwrite_cut_track(track, over_out,  True)
         track_extract_data.out_clip_in = clip_in
         track_extract_data.out_clip_length = clip_out - clip_in + 1 # Cut blank can't be reconstructed with clip_in data as it is always 0 for blank, so we use this
+        if clip_in != -1: # if we did cut we'll need to restore the dut out clip
+                          # which is the original clip because 
+            orig_index = track.get_clip_index_at(over_out - 1)
+            track_extract_data.orig_out_clip = track.clips[orig_index] 
     else:
         track_extract_data.out_clip_in = -1
-
+        
     # Splice out clips in overwrite range
     track_extract_data.removed_clips = []
     track_extract_data.in_index = track.get_clip_index_at(over_in)
