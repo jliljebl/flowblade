@@ -158,10 +158,12 @@ class EncodingOption:
                 self.vcodec = token_sides[1]
             elif token_sides[0] == "f":
                 self.format = token_sides[1]
-                    
+
+
         self.supported = mltenv.render_profile_supported(self.format, 
                                                          self.vcodec,
                                                          self.acodec)
+        #print self.name, self.format, self.vcodec, self.acodec, self.supported
                                                          
     def get_args_vals_tuples_list(self, profile, quality_option):
         # Encoding options
@@ -223,7 +225,8 @@ def load_render_profiles():
     encoding_option_nodes = render_encoding_doc.getElementsByTagName(ENCODING_OPTION)
     for eo_node in encoding_option_nodes:
         encoding_option = EncodingOption(eo_node)
-        encoding_options.append(encoding_option)
+        if encoding_option.supported:
+            encoding_options.append(encoding_option)
         
 def get_render_consumer():
     """

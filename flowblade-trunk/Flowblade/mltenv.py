@@ -19,8 +19,7 @@
 """
 
 """
-Module checks environment for available codecs and formats
-IS THIS ACTUALLY USED NOW?. keep it anyway for possible future use
+Module checks environment for available codecs and formats.
 """
 import subprocess
 import os
@@ -85,7 +84,7 @@ def check_available_features():
     vcodecs = vc_file.readlines()[2:-1]
     vc_file.close()
     vcodecs = _strip_ends(vcodecs)
-
+    
     global formats
     f_file = open(utils.get_hidden_user_dir_path() + FORMATS_FILE)
     formats = f_file.readlines()[2:-1]
