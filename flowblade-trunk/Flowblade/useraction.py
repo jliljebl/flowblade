@@ -146,8 +146,7 @@ class AddMediaFilesThread(threading.Thread):
         threading.Thread.__init__(self)
         self.filenames = filenames
 
-    def run(self):
-        print time.clock()
+    def run(self): 
         gtk.gdk.threads_enter()
         watch = gtk.gdk.Cursor(gtk.gdk.WATCH)
         gui.editor_window.window.window.set_cursor(watch)
@@ -167,11 +166,6 @@ class AddMediaFilesThread(threading.Thread):
         if succes_new_file != None:
             editorpersistance.prefs.last_opened_media_dir = os.path.dirname(succes_new_file)
             editorpersistance.save()
-
-        # Give user info on duplicates ???
-        if duplicates > 0:
-            # INFOWINDOW ???
-            pass
 
         # Update editor gui
         gtk.gdk.threads_enter()
@@ -275,7 +269,6 @@ def _load_project_dialog_callback(dialog, response_id):
         dialog.destroy()
 
 def close_project():
-    # INFOWINDOW confirm
     dialogs.close_confirm_dialog(_close_dialog_callback, app.get_save_time_msg(), gui.editor_window.window, editorstate.PROJECT().name)
 
 def _close_dialog_callback(dialog, response_id):
@@ -363,12 +356,13 @@ def remove_save_icon():
 def open_recent_project(widget, index):
     path = editorpersistance.recent_projects.projects[index]
     if not os.path.exists(path):
-        # INFOWINDOW project is gone
         editorpersistance.recent_projects.projects.pop(index)
         editorpersistance.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
+        primary_txt = _("Project not found on disk")
+        secondary_txt = _("Project can't be loaded.")
+        dialogs.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return
 
-    # INFOWINDOW confirm close current project
     actually_load_project(path)
 
 def about():
@@ -985,7 +979,11 @@ def _preferences_dialog_callback(dialog, response_id, all_widgets):
     if response_id == gtk.RESPONSE_ACCEPT:
         editorpersistance.update_prefs_from_widgets(all_widgets)    
         editorpersistance.save()
-        # INFOWINDOW that restart is needed to make affective ??????
+        dialog.destroy()
+        primary_txt = _("Restart required for some setting changes to take effect.")
+        secondary_txt = _("If requested change is not in effect, restart application.")
+        dialogs.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        return
 
     dialog.destroy()
 

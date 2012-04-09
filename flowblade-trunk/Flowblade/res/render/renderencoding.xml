@@ -40,74 +40,26 @@
     <encodingoption name="MPEG-2 / .mpg" extension="mpg" audiodesc="mp2, 348kb/s, 48000Hz" type="av" resize="True" qgroup="qgroup1">
         <profile args="f=mpeg acodec=mp2 ab=384k ar=48000 vcodec=mpeg2video minrate=0 b=%BITRATE% bf=2 b_strategy=1 trellis=1" />
     </encodingoption>
-    <encodingoption name=" pimppa/ .mpg" extension="mpg" audiodesc="mp2, 348kb/s, 48000Hz" type="av" resize="True" qgroup="qgroup1">
-        <profile args="f=mpeg acodec=mp2 ab=384k ar=48000 vcodec=pimppa minrate=0 b=%BITRATE% bf=2 b_strategy=1 trellis=1" />
+    <encodingoption name="H.264 / .mp4" extension="mp4" audiodesc="mp3, 348kb/s, 48000Hz" type="av" resize="True" qgroup="qgroup1">
+        <profile args="f=mp4 s=%SCREENSIZE% hq=1 acodec=libmp3lame ab=384k ar=48000 pix_fmt=yuv420p vcodec=libx264 minrate=0 b=%BITRATE% b_strategy=1 subcmp=2 cmp=2 coder=1 flags=+loop flags2=dct8x8 qmax=51 subq=7 qmin=10 qcomp=0.6 qdiff=4 trellis=1 aspect=%ASPECT%"/>
     </encodingoption>
-    <!--- 
-    <encodingoption name="H.264 / .mp4" extension="mp4" audiodesc="mp2, 348kb/s, 48000Hz" type="av" resize="True" qgroup="qgroup1">
-        <profile args="f=mp4 s=%SCREENSIZE% hq=1 acodec=mp2 ab=384k ar=48000 pix_fmt=yuv420p vcodec=libx264 minrate=0 b=%BITRATE% b_strategy=1 subcmp=2 cmp=2 coder=1 flags=+loop flags2=dct8x8 qmax=51 subq=7 qmin=10 qcomp=0.6 qdiff=4 trellis=1 aspect=%ASPECT%"/>
-    </encodingoption>
-    <encodingoption name="H.264 / .avi" extension="avi" audiodesc="mp2, 348kb/s, 48000Hz" type="av" resize="True" qgroup="qgroup1">
-        <profile args="f=mp4 s=%SCREENSIZE% hq=1 acodec=mp2 ab=384k ar=48000 pix_fmt=yuv420p vcodec=libx264 minrate=0 b=%BITRATE% b_strategy=1 subcmp=2 cmp=2 coder=1 flags=+loop flags2=dct8x8 qmax=51 subq=7 qmin=10 qcomp=0.6 qdiff=4 trellis=1 aspect=%ASPECT%"/>
-    </encodingoption>
-    -->
-    <encodingoption name="MPEG-4 / .mov" extension="mov" type="av" audiodesc="mp2, 192kb/s, 48000Hz" resize="True" qgroup="qgroup1">
-        <profile args="f=mp4 s=%SCREENSIZE% hq=1 acodec=mp2 ab=192k ar=48000 vcodec=mpeg4 minrate=0 b=%BITRATE%"/>
-    </encodingoption>
-    <encodingoption name="MPEG-4 / .avi" extension="avi" audiodesc="mp2, 192kb/s, 48000Hz" type="av" resize="True" qgroup="qgroup1">
+    <encodingoption name="MPEG-4 / .mp4" extension="mov" type="av" audiodesc="mp2, 192kb/s, 48000Hz" resize="True" qgroup="qgroup1">
         <profile args="f=mp4 s=%SCREENSIZE% hq=1 acodec=mp2 ab=192k ar=48000 vcodec=mpeg4 minrate=0 b=%BITRATE%"/>
     </encodingoption>
     <encodingoption name="Theora / .ogg" extension="ogg" audiodesc="flac lossless" type="av" resize="True" qgroup="qgroup1">
         <profile args="f=ogg acodec=flac ac=2 vcodec=libtheora minrate=0 b=%BITRATE%" />
     </encodingoption>
-    <encodingoption name="DVD PAL 4:3 / .vob" audiodesc="ac3, 192kb/s, 48000Hz" extension="vob" type="av" resize="False" qgroup="variablenooption">
-        <profile  args="f=dvd vcodec=mpeg2video acodec=ac3 b=5000k maxrate=8000k minrate=0 bufsize=1835008 mux_packet_s=2048 mux_rate=10080000 ab=192k ar=48000 s=720x576 g=15 me_range=63 trellis=1 profile=dv_pal" />
-    </encodingoption>
-    <encodingoption name="DVD PAL 16:9 / .vob" extension="vob" audiodesc="ac3, 192kb/s, 48000Hz" type="av" resize="False" qgroup="variablenooption">
-        <profile args="f=dvd vcodec=mpeg2video acodec=ac3 b=5000k maxrate=8000k minrate=0 bufsize=1835008 mux_packet_s=2048 mux_rate=10080000 ab=192k ar=48000 s=720x576 g=15 me_range=63 trellis=1 profile=dv_pal_wide" />
-    </encodingoption>
-    <encodingoption name="DVD NTSC 4:3 / .vob" extension="vob" audiodesc="ac3, 192kb/s, 48000Hz" type="av" resize="False" qgroup="variablenooption">
-        <profile args="f=dvd vcodec=mpeg2video acodec=ac3 s=720x480 b=6000k maxrate=9000k minrate=0 bufsize=1835008 mux_packet_s=2048 mux_rate=10080000 ab=192k ar=48000 g=18 me_range=63 trellis=1 profile=dv_ntsc" />
-    </encodingoption>
-    <encodingoption name="DVD NTSC 16:9 / .vob" extension="vob" audiodesc="ac3, 192kb/s, 48000Hz" type="av" resize="False" qgroup="variablenooption">
-        <profile args="f=dvd vcodec=mpeg2video acodec=ac3 s=720x480 b=6000k maxrate=9000k minrate=0 bufsize=1835008 mux_packet_s=2048 mux_rate=10080000 ab=192k ar=48000 g=18 me_range=63 trellis=1 profile=dv_ntsc_wide" />
-    </encodingoption>
-    <!--- 
-    <encodingoption name="DV PAL 4:3 / .avi" extension="avi" audiodesc="pcm_s16le" type="av" resize="False" qgroup="not_settable">
-        <profile args="f=avi vcodec=dvvideo pix_fmt=yuv420p acodec=pcm_s16le s=720x576 profile=dv_pal" />
-    </encodingoption>
-    <encodingoption name="DV PAL 16:9 / .avi" extension="avi" audiodesc="pcm_s16le" type="av" resize="False" qgroup="not_settable">
-        <profile args="f=avi vcodec=dvvideo pix_fmt=yuv420p acodec=pcm_s16le s=720x576 profile=dv_pal_wide" />
-    </encodingoption>
-    <encodingoption name="DV NTSC 4:3 / .avi" extension="avi" audiodesc="pcm_s16le" type="av" resize="False" qgroup="not_settable">
-        <profile args="f=avi vcodec=dvvideo pix_fmt=yuv411p acodec=pcm_s16le s=720x480 profile=dv_ntsc" />
-    </encodingoption>
-    <encodingoption name="DV NTSC 16:9 / .avi" extension="avi" audiodesc="pcm_s16le" type="av" resize="False" qgroup="not_settable">
-        <profile args="f=avi vcodec=dvvideo pix_fmt=yuv411p acodec=pcm_s16le s=720x480 profile=dv_ntsc_wide" />
-    </encodingoption>
-    <encodingoption name="DVCPRO50 PAL 4:3 / .avi" extension="avi" audiodesc="pcm_s16le" type="av" resize="False" qgroup="not_settable">
-        <profile args="f=avi vcodec=dvvideo pix_fmt=yuv422p acodec=pcm_s16le s=720x576 profile=dv_pal" />
-    </encodingoption>
-    <encodingoption name="DVCPRO50 PAL 16:9 / .avi" extension="avi" audiodesc="pcm_s16le" type="av" resize="False" qgroup="not_settable">
-        <profile args="f=avi vcodec=dvvideo pix_fmt=yuv422p acodec=pcm_s16le s=720x576 profile=dv_pal_wide" />
-    </encodingoption>
-    <encodingoption name="DVCPRO50 NTSC 4:3 / .avi" extension="avi" audiodesc="pcm_s16le" type="av" resize="False" qgroup="not_settable">
-        <profile args="f=avi vcodec=dvvideo pix_fmt=yuv422p acodec=pcm_s16le s=720x480 profile=dv_ntsc" />
-    </encodingoption>
-    <encodingoption name="DVCPRO50 NTSC 16:9 / .avi" extension="avi" audiodesc="pcm_s16le" type="av" resize="False" qgroup="not_settable">
-        <profile args="f=avi vcodec=dvvideo pix_fmt=yuv422p acodec=pcm_s16le s=720x480 profile=dv_ntsc_wide" />
-    </encodingoption>
-    -->
-    <!--- 
-    <encodingoption name="Lossless H.264 / .mp4" extension="mp4" audiodesc="mp2, 384kb/s, 48000Hz"  type="av" resize="True" qgroup="lossless">
-        <profile args="f=mp4 acodec=mp2 ab=384k ar=48000 ac=2 pix_fmt=yuv420p vcodec=libx264 cqp=0 me_method=esa subq=8 qmin=10 qcomp=0.6 qdiff=4 qmax=51 coder=ac partitions=+parti4x4+parti8x8+partp4x4+partp8x8+partb8x8 refs=16 flags2=+dct8x8+mixed_refs trellis=1" />
-    </encodingoption>
-    -->
-    <encodingoption name="Lossless MPEG-4 / .mp4" extension="mp4" audiodesc="mp2, 384kb/s, 48000Hz" type="av" resize="True" qgroup="lossless">
-        <profile args="f=mp4 acodec=mp2 ab=384k ar=48000 ac=2 vcodec=mpeg4 qscale=1 qmin=1" />
+    <encodingoption name="Lossless HuffYUV / .avi" extension="avi" audiodesc="pcm lossless"  type="av" resize="True" qgroup="lossless">
+        <profile args="f=avi acodec=pcm_s16le ac=2 vcodec=huffyuv" />
     </encodingoption>
     <encodingoption name="Lossless MPEG-2 / .mpg" audiodesc="mp2, 384kb/s, 48000Hz"  extension="mpg" type="av" resize="True" qgroup="lossless">
        <profile args="f=mpeg acodec=mp2 ab=384k ar=48000 ac=2 vcodec=mpeg2video qscale=1 qmin=1 aspect=%ASPECT% intra=1" />
    </encodingoption>
+    <encodingoption name="Lossless MPEG-4 / .mp4" extension="mp4" audiodesc="mp3, 384kb/s, 48000Hz" type="av" resize="True" qgroup="lossless">
+        <profile args="f=mp4 acodec=libmp3lame ab=384k ar=48000 ac=2 vcodec=mpeg4 qscale=1 qmin=1" />
+    </encodingoption>
+    <encodingoption name="Lossless H.264 / .mp4" extension="mp4" audiodesc="aac, 384kb/s, 48000Hz"  type="av" resize="True" qgroup="lossless">
+        <profile args="f=mp4 acodec=aac ab=384k ar=48000 ac=2 pix_fmt=yuv420p vcodec=libx264 cqp=0 me_method=esa subq=8 qmin=10 qcomp=0.6 qdiff=4 qmax=51 coder=ac partitions=+parti4x4+parti8x8+partp4x4+partp8x8+partb8x8 refs=16 flags2=+dct8x8+mixed_refs trellis=1" />
+    </encodingoption>
 
 </renderencoding>

@@ -328,7 +328,6 @@ def overwrite_move_release(x, y, frame, state):
     
     # Moved lips are completely out of displayable track area, can't do edit.
     if over_out  < 1:
-        # INFOWINDOW
         return
         
     # Autocorrect moved clips to be fully on displayable track area

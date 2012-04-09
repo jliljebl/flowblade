@@ -20,7 +20,9 @@ import os, sys
 	You should have received a copy of the GNU General Public License
 	along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
-
+"""
+Script exracts params names from xml files into python code format for translation."
+"""
 script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
 #source_file_path = script_dir + "/Flowblade/res/filters/filters.xml"
 source_file_path = script_dir + "/Flowblade/res/filters/compositors.xml"

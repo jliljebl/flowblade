@@ -217,7 +217,9 @@ def append_button_pressed():
 def three_point_overwrite_pressed():
     # Check that state is good for edit
     if movemodes.selected_track == -1:
-        # INFOWINDOW
+        primary_txt = _("No Clips are selected!")
+        secondary_txt = _("You need to select clips to overwrite to perform this edit.")
+        dialogs.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return
 
     # Get data
@@ -270,7 +272,9 @@ def range_overwrite_pressed():
     mark_out_frame = current_sequence().tractor.mark_out
     range_length = mark_out_frame - mark_in_frame + 1 # end is incl.
     if mark_in_frame == -1 or mark_out_frame == -1:
-        # INFOWINDOW
+        primary_txt = _("Timeline Range not set!")
+        secondary_txt = _("You need to set Timeline Range using Mark In and Mark Out buttons\nto perform this edit.")
+        dialogs.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return
 
     # Get over clip and check it overwrite range area

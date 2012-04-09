@@ -758,8 +758,9 @@ def _consolidate_blanks_from_popup(data):
     
 def consolidate_selected_blanks():
     if movemodes.selected_track == -1:
-        # INFOWINDOW
+        # nothing selected
         return
+
     track = get_track(movemodes.selected_track)
     if track.clips[movemodes.selected_range_in].is_blanck_clip != True:
         return
@@ -784,7 +785,9 @@ def _cover_blank_from_prev(data):
         total_length += track.clips[i].clip_length()
     clip_handle = cover_clip.get_length() - cover_clip.clip_out - 1
     if total_length > clip_handle: # handle not long enough to cover blanks
-        # INFOWINDOW
+        primary_txt = _("Previous clip does not have enough material to cover blank area")
+        secondary_txt = _("Requested edit can't be done.")
+        dialogs.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return
     
     # Do edit
@@ -806,7 +809,9 @@ def _cover_blank_from_next(data):
     for i in range(movemodes.selected_range_in,  movemodes.selected_range_out + 1):
         total_length += track.clips[i].clip_length()
     if total_length > cover_clip.clip_in: # handle not long enough to cover blanks
-        # INFOWINDOW
+        primary_txt = _("Next clip does not have enough material to cover blank area")
+        secondary_txt = _("Requested edit can't be done.")
+        dialogs.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return 
 
     # Do edit
@@ -878,6 +883,8 @@ def _do_filter_clone(clip, clone_clip):
 
 
 def splice_range():
+    # NOT WORKING CURRENTLY, FEATURE MAY BE ADDED LATER
+    
     # LOCKED TRAKS ??????????????
     # EMPTY TRACKS ???????????
     
@@ -886,7 +893,6 @@ def splice_range():
     mark_out_frame = current_sequence().tractor.mark_out
     range_length = mark_out_frame - mark_in_frame + 1 # end is incl.
     if mark_in_frame == -1 or mark_out_frame == -1:
-        # INFOWINDOW
         return
 
     movemodes.clear_selected_clips() # edit consumes selection

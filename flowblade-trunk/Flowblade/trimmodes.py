@@ -190,7 +190,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
                                 # because cut is now at a different place.
         to_side_being_edited = editing_to_clip
     if edit_frame == -1:
-        # INFOWINDOW (or not)
+        print "set_oneroll_mode(), edit_frame == -1"
         set_exit_mode_func()
         return
 
@@ -206,9 +206,11 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     # made to do things that are needed in trim. User is advised to add black clip
     # even if temporary.
     if _trimmed_clip_is_blank():
-            # INFOWINDOW
-            set_exit_mode_func()
-            return
+        set_exit_mode_func()
+        primary_txt = _("Cant ONE ROLL TRIM blank clips.")
+        secondary_txt = _("You can use MOVE OVERWRITE or TWO ROLL TRIM edits instead\nto get the desired change.")
+        dialogs.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        return
 
     # Give timeline widget needed data
     tlinewidgets.set_edit_mode(edit_data,
@@ -414,18 +416,18 @@ def set_tworoll_mode(track, current_frame = -1):
     try:
         _set_edit_data(track, edit_frame)
     except:
-        # INFOWINDOW
+        _tworoll_init_failed_window()
         set_exit_mode_func()
         return
 
     if edit_frame == 0:
-        # INFOWINDOW
+        _tworoll_init_failed_window()
         set_exit_mode_func()
         return
 
     global edit_data
     if edit_data["from_clip"] == None:
-        # INFOWINDOW
+        _tworoll_init_failed_window()
         set_exit_mode_func()
         return
     
@@ -466,7 +468,12 @@ def set_tworoll_mode(track, current_frame = -1):
     PLAYER().seek_frame(edit_frame)
     updater.repaint_tline()
     updater.set_stopped_configuration()
-    
+
+def _tworoll_init_failed_window():
+    primary_txt = _("Initializing TWO ROLL TRIM failed")
+    secondary_txt = _("You are attempting TWO ROLL TRIM at a position in the timeline\nwhere it can't be performed.")
+    dialogs.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        
 def tworoll_trim_press(event, frame):
     """
     User presses mouse when in two roll mode.

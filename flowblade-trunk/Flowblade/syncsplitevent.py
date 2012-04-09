@@ -138,14 +138,17 @@ def _set_sync_parent_clip(event, frame):
         return
 
     # Parent and child can't be on the same track.
+    # Now that all parent clips must be on track V1 this is no longer shoild be possible.
     if parent_track == child_clip_track:
-        # INFOWINDOW, user might expect to be able to do this 
+        print "parent_track == child_clip_track"
         return
         
     parent_clip = parent_track.clips[parent_clip_index]
-    # These cannot be chained. 
+    
+    # These cannot be chained.
+    # Now that all parent clips must be on track V1 this is no longer shoild be possible.
     if parent_clip.sync_data != None:
-        # INFOWINDOW  
+        print "parent_clip.sync_data != None"
         return
 
     data = {"child_index":child_index,

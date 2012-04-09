@@ -26,6 +26,9 @@ import os
 import stat
 import sys
 
+import dialogs
+import gobject
+import gui
 import utils
 
 TEST_SCRIPT_FILE = "testscript.sh"
@@ -46,7 +49,7 @@ def check_available_features():
     """
     melt_path = whereis('melt')
     if melt_path == None:
-        # INFOWINDOW
+        gobject.timeout_add(2000, _show_no_melt_info)
         return
     
     global melt_available
@@ -91,7 +94,19 @@ def check_available_features():
     f_file.close()
     formats = _strip_ends(formats)
     
-def render_profile_supported(format, vcodec, acodec):   
+    """
+    print "formats:"
+    print formats
+    print "vcodecs:"
+    print vcodecs
+    print "acodecs:"
+    print acodecs
+    """
+
+def render_profile_supported(format, vcodec, acodec):
+    if melt_available == False:
+        return True
+
     if acodec in acodecs:
         if vcodec in vcodecs:
             if format in formats:
@@ -111,3 +126,9 @@ def _strip_ends(slist):
         rlist.append(s[4:-1])
         
     return rlist
+
+def _show_no_melt_info():
+    primary_txt = _("Program MELT not found!")
+    secondary_txt = _("All render encodings permitted but may not work!")
+    dialogs.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+    return False
