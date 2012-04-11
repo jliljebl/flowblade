@@ -21,7 +21,7 @@
 """
 Handles (most) events that are done to edit current sequence.
 
-Module updates current sequence data and calls GUI updates after edits are complete.
+Functions update current sequence data and calls GUI updates after edits are complete.
 
 Handles edit mode setting.
 
@@ -967,7 +967,7 @@ EDIT_MODE_FUNCS = {editorstate.INSERT_MOVE:INSERT_MOVE_FUNCS,
               
 # Functions to handle popup menu selections for strings 
 # set as activation messages in guicomponents.py
-# activation_message : _handler_func
+# activation_message -> _handler_func
 POPUP_HANDLERS = {"lock":_lock_track,
                   "unlock":_unlock_track,
                   "sync_lock":_sync_lock_track,

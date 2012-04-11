@@ -93,15 +93,6 @@ def check_available_features():
     formats = f_file.readlines()[2:-1]
     f_file.close()
     formats = _strip_ends(formats)
-    
-    """
-    print "formats:"
-    print formats
-    print "vcodecs:"
-    print vcodecs
-    print "acodecs:"
-    print acodecs
-    """
 
 def render_profile_supported(format, vcodec, acodec):
     if melt_available == False:

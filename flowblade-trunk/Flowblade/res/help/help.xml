@@ -1895,6 +1895,9 @@
                 <orderedlist spacing="compact">
                     <title><guilabel>6. Monitor Clip Insert</guilabel> buttons</title>
                     <listitem>
+                        <para><guilabel>Range Overwrite</guilabel></para>
+                    </listitem>
+                    <listitem>
                         <para><guilabel>3 - Point Overwrite</guilabel></para>
                     </listitem>
                     <listitem>
@@ -2054,11 +2057,11 @@
                            </row>
                            <row valign="top">
                              <entry><para><guilabel>i</guilabel></para></entry>
-                             <entry><para>Go to Insert Move mode</para> </entry>
+                             <entry><para>Set Mark In</para> </entry>
                            </row>
                            <row valign="top">
-                             <entry><para><guilabel>t</guilabel></para></entry>
-                             <entry><para>Go to One Roll Trim mode</para> </entry>
+                             <entry><para><guilabel>o</guilabel></para></entry>
+                             <entry><para>Set Mark Out</para> </entry>
                            </row>
                            <row valign="top">
                              <entry><para><guilabel>Space</guilabel></para></entry>
