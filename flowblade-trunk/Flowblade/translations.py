@@ -46,7 +46,7 @@ def init_languages():
 
     # Get the language to use
     global lang
-    # lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=["fi"], fallback=True) # Testing, comment out for production
+    #lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=["fi"], fallback=True) # Testing, comment out for production
     lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=langs, fallback=True)
     lang.install(APP_NAME) # makes _() a build-in available in all modules without imports
 

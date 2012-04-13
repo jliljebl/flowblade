@@ -810,12 +810,12 @@ class EditorWindow:
         self.zoom_out_b.set_tooltip_text(_("Zoom Out"))
         self.zoom_length_b.set_tooltip_text(_("Zoom to Sequence length"))
 
-        self.insert_move_b.set_tooltip_text(_("Insert Move - i"))      
-        self.one_roll_trim_b.set_tooltip_text(_("One Roll Trim - t"))           
+        self.insert_move_b.set_tooltip_text(_("Insert Move"))      
+        self.one_roll_trim_b.set_tooltip_text(_("One Roll Trim"))           
         self.tworoll_trim_b.set_tooltip_text(_("Two Roll Trim"))    
         self.overwrite_move_b.set_tooltip_text(_("Overwrite Move"))    
 
-        self.cut_b.set_tooltip_text(_("Cut - x"))    
+        self.cut_b.set_tooltip_text(_("Cut"))    
         self.splice_out_b.set_tooltip_text(_("Splice Out Clip"))    
         self.lift_b.set_tooltip_text(_("Lift Clip"))    
         self.resync_b.set_tooltip_text(_("Resync Selected Clips"))    

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-02 20:01+0200\n"
+"POT-Creation-Date: 2012-04-11 11:59+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,2632 +17,2742 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: app.py:363
+#: app.py:439
 msgid "Too small screen for this application."
 msgstr ""
 
-#: app.py:366
+#: app.py:442
 msgid "Minimum screen dimensions for this application are 1152 x 864.\n"
 msgstr ""
 
-#: app.py:367
+#: app.py:443
 msgid "Your screen dimensions are "
 msgstr ""
 
-#: app.py:383
+#: app.py:459
 msgid "Project has not been saved since it was opened."
 msgstr ""
 
-#: app.py:388
+#: app.py:464
 msgid "Project was saved less than a minute ago."
 msgstr ""
 
-#: app.py:391
+#: app.py:467
 msgid "Project was saved one minute ago."
 msgstr ""
 
-#: app.py:393
+#: app.py:469
 msgid "Project was saved "
 msgstr ""
 
-#: app.py:393
+#: app.py:469
 msgid " minutes ago."
 msgstr ""
 
-#: app.py:403 useraction.py:248
+#: app.py:479 useraction.py:282
 msgid "Project has not been saved previously"
 msgstr ""
 
-#: app.py:404 useraction.py:249
+#: app.py:480 useraction.py:283
 msgid "Save project with File -> Save As before closing."
 msgstr ""
 
-#: useraction.py:84
+#: useraction.py:115 useraction.py:399
+msgid "File: "
+msgstr ""
+
+#: useraction.py:115
+msgid " was not found on load!"
+msgstr ""
+
+#: useraction.py:116
+msgid "Place dummy file with same name and similar content to enable"
+msgstr ""
+
+#: useraction.py:116
+msgid "project load. "
+msgstr ""
+
+#: useraction.py:117
+msgid "Doing so does not quarantee succesful load"
+msgstr ""
+
+#: useraction.py:117
+msgid "if files have different properties."
+msgstr ""
+
+#: useraction.py:122
 msgid "Opening"
 msgstr ""
 
-#: useraction.py:339
+#: useraction.py:361
+msgid "Project not found on disk"
+msgstr ""
+
+#: useraction.py:362
+msgid "Project can't be loaded."
+msgstr ""
+
+#: useraction.py:393
 msgid "Render file name entry is empty"
 msgstr ""
 
-#: useraction.py:340
+#: useraction.py:394
 msgid "You have to provide a name for the file to be rendered."
 msgstr ""
 
-#: useraction.py:345
-msgid "Rendering file already exists!"
+#: useraction.py:399
+msgid " already exists!"
 msgstr ""
 
-#: useraction.py:346
+#: useraction.py:400
 msgid "Do you want to overwrite existing file?"
 msgstr ""
 
-#: useraction.py:374
+#: useraction.py:431
 msgid "Render range not defined"
 msgstr ""
 
-#: useraction.py:375
+#: useraction.py:432
 msgid ""
 "Define render range using Mark In and Mark Out points\n"
 "orselect range option 'Program length' to start rendering."
 msgstr ""
 
-#: useraction.py:411
+#: useraction.py:468
 msgid "Open.."
 msgstr ""
 
-#: useraction.py:421
+#: useraction.py:478
 msgid "All files"
 msgstr ""
 
-#: useraction.py:452
+#: useraction.py:513
 msgid "Can't make home folder thumbnails folder"
 msgstr ""
 
-#: useraction.py:453
+#: useraction.py:514
 msgid "Please create and select some other folder then '"
 msgstr ""
 
-#: useraction.py:454
+#: useraction.py:515
 msgid "' as thumbnails folder"
 msgstr ""
 
-#: useraction.py:585
+#: useraction.py:646
 msgid "Can't remove a non-empty bin"
 msgstr ""
 
-#: useraction.py:586
+#: useraction.py:647
 msgid "You must remove all files from the bin before deleting it."
 msgstr ""
 
-#: useraction.py:594
+#: useraction.py:655
 msgid "Can't remove last bin"
 msgstr ""
 
-#: useraction.py:595
+#: useraction.py:656
 msgid "There must always exist at least one bin."
 msgstr ""
 
-#: useraction.py:683
+#: useraction.py:744
 msgid "Selected sequence is already being edited"
 msgstr ""
 
-#: useraction.py:684
+#: useraction.py:745
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
 msgstr ""
 
-#: useraction.py:720
+#: useraction.py:781
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
 msgstr ""
 
-#: useraction.py:720
+#: useraction.py:781
 msgid "'?"
 msgstr ""
 
-#: useraction.py:721
+#: useraction.py:782
 msgid "This operation can not be undone. Sequence will be permanently lost."
 msgstr ""
 
-#: useraction.py:737
+#: useraction.py:798
 msgid "Can't remove last sequence"
 msgstr ""
 
-#: useraction.py:738
+#: useraction.py:799
 msgid "There must always exist at least one sequence."
 msgstr ""
 
-#: useraction.py:831
+#: useraction.py:892
 msgid "Confirm user profile delete!"
 msgstr ""
 
-#: useraction.py:832
+#: useraction.py:893
 msgid "This operation cannot be undone."
 msgstr ""
 
-#: editorwindow.py:85
-msgid "_File"
+#: useraction.py:983
+msgid "Restart required for some setting changes to take effect."
 msgstr ""
 
-#: editorwindow.py:86
-msgid "_New..."
-msgstr ""
-
-#: editorwindow.py:87
-msgid "_Open..."
-msgstr ""
-
-#: editorwindow.py:88
-msgid "Open Recent"
-msgstr ""
-
-#: editorwindow.py:89
-msgid "_Save"
-msgstr ""
-
-#: editorwindow.py:90
-msgid "_Save As..."
-msgstr ""
-
-#: editorwindow.py:91
-msgid "_Close"
-msgstr ""
-
-#: editorwindow.py:92
-msgid "_Quit"
-msgstr ""
-
-#: editorwindow.py:93
-msgid "_Edit"
-msgstr ""
-
-#: editorwindow.py:94
-msgid "_Undo"
-msgstr ""
-
-#: editorwindow.py:95
-msgid "_Redo"
-msgstr ""
-
-#: editorwindow.py:96
-msgid "Create Color Clip..."
-msgstr ""
-
-#: editorwindow.py:97
-msgid "Clear Filters From Selected"
-msgstr ""
-
-#: editorwindow.py:98
-msgid "Consolidate Selected Blanks"
-msgstr ""
-
-#: editorwindow.py:99
-msgid "Consolidate All Blanks"
-msgstr ""
-
-#: editorwindow.py:100
-msgid "Resync All"
-msgstr ""
-
-#: editorwindow.py:101
-msgid "Resync Selected"
-msgstr ""
-
-#: editorwindow.py:102
-msgid "Recreate Media Icons..."
-msgstr ""
-
-#: editorwindow.py:103 dialogs.py:538
-msgid "Profiles Manager"
-msgstr ""
-
-#: editorwindow.py:104
-msgid "Preferences"
+#: useraction.py:984
+msgid "If requested change is not in effect, restart application."
 msgstr ""
 
 #: editorwindow.py:105
-msgid "_Help"
+msgid "_File"
 msgstr ""
 
 #: editorwindow.py:106
+msgid "_New..."
+msgstr ""
+
+#: editorwindow.py:107
+msgid "_Open..."
+msgstr ""
+
+#: editorwindow.py:108
+msgid "Open Recent"
+msgstr ""
+
+#: editorwindow.py:109
+msgid "_Save"
+msgstr ""
+
+#: editorwindow.py:110
+msgid "_Save As..."
+msgstr ""
+
+#: editorwindow.py:111
+msgid "_Close"
+msgstr ""
+
+#: editorwindow.py:112
+msgid "_Quit"
+msgstr ""
+
+#: editorwindow.py:113
+msgid "_Edit"
+msgstr ""
+
+#: editorwindow.py:114
+msgid "_Undo"
+msgstr ""
+
+#: editorwindow.py:115
+msgid "_Redo"
+msgstr ""
+
+#: editorwindow.py:116
+msgid "Create Color Clip..."
+msgstr ""
+
+#: editorwindow.py:117
+msgid "Clear Filters From Selected"
+msgstr ""
+
+#: editorwindow.py:118
+msgid "Consolidate Selected Blanks"
+msgstr ""
+
+#: editorwindow.py:119
+msgid "Consolidate All Blanks"
+msgstr ""
+
+#: editorwindow.py:120
+msgid "Recreate Media Icons..."
+msgstr ""
+
+#: editorwindow.py:121 dialogs.py:559
+msgid "Profiles Manager"
+msgstr ""
+
+#: editorwindow.py:122
+msgid "Preferences"
+msgstr ""
+
+#: editorwindow.py:123
+msgid "_Help"
+msgstr ""
+
+#: editorwindow.py:124
 msgid "Contents"
 msgstr ""
 
-#: editorwindow.py:107 dialogs.py:241
+#: editorwindow.py:125 dialogs.py:262
 msgid "About"
 msgstr ""
 
-#: editorwindow.py:239
+#: editorwindow.py:260
 msgid "Open"
 msgstr ""
 
-#: editorwindow.py:240
+#: editorwindow.py:261
 msgid "New"
 msgstr ""
 
-#: editorwindow.py:300
+#: editorwindow.py:322
 msgid "Media"
 msgstr ""
 
-#: editorwindow.py:301
+#: editorwindow.py:323
 msgid "Filters"
 msgstr ""
 
-#: editorwindow.py:302
+#: editorwindow.py:324
 msgid "Compositors"
 msgstr ""
 
-#: editorwindow.py:303
+#: editorwindow.py:325
 msgid "Project"
 msgstr ""
 
-#: editorwindow.py:304 render.py:363
+#: editorwindow.py:326 render.py:390
 msgid "Render"
 msgstr ""
 
-#: editorwindow.py:468
+#: editorwindow.py:495
 msgid "Timeline"
 msgstr ""
 
-#: editorwindow.py:475
+#: editorwindow.py:502
 msgid "Clip"
 msgstr ""
 
-#: editorwindow.py:774
+#: editorwindow.py:807
 msgid "Timeline current frame timecode"
 msgstr ""
 
-#: editorwindow.py:776
+#: editorwindow.py:809
 msgid "Zoom In"
 msgstr ""
 
-#: editorwindow.py:777
+#: editorwindow.py:810
 msgid "Zoom Out"
 msgstr ""
 
-#: editorwindow.py:778
+#: editorwindow.py:811
 msgid "Zoom to Sequence length"
 msgstr ""
 
-#: editorwindow.py:780
+#: editorwindow.py:813
 msgid "Insert Move - i"
 msgstr ""
 
-#: editorwindow.py:781
+#: editorwindow.py:814
 msgid "One Roll Trim - t"
 msgstr ""
 
-#: editorwindow.py:782
+#: editorwindow.py:815
 msgid "Two Roll Trim"
 msgstr ""
 
-#: editorwindow.py:783
+#: editorwindow.py:816
 msgid "Overwrite Move"
 msgstr ""
 
-#: editorwindow.py:785
+#: editorwindow.py:818
 msgid "Cut - x"
 msgstr ""
 
-#: editorwindow.py:786
+#: editorwindow.py:819
 msgid "Splice Out Clip"
 msgstr ""
 
-#: editorwindow.py:787
+#: editorwindow.py:820
 msgid "Lift Clip"
 msgstr ""
 
-#: editorwindow.py:788
+#: editorwindow.py:821
 msgid "Resync Selected Clips"
 msgstr ""
 
-#: editorwindow.py:790
+#: editorwindow.py:823
 msgid "Insert Monitor Clip Range"
 msgstr ""
 
-#: editorwindow.py:791
+#: editorwindow.py:824
 msgid "Overwrite Selected Clips with Monitor Clip Range"
 msgstr ""
 
-#: editorwindow.py:792
+#: editorwindow.py:825
+msgid "Overwrite Mark In/Mark Out Range with Monitor Clip Range"
+msgstr ""
+
+#: editorwindow.py:826
 msgid "Append Monitor Clip Range"
 msgstr ""
 
-#: editorwindow.py:794
+#: editorwindow.py:828
 msgid "Undo"
 msgstr ""
 
-#: editorwindow.py:795
+#: editorwindow.py:829
 msgid "Redo"
 msgstr ""
 
-#: editorwindow.py:797
+#: editorwindow.py:831
 msgid "Play"
 msgstr ""
 
-#: editorwindow.py:798
+#: editorwindow.py:832
 msgid "Stop"
 msgstr ""
 
-#: editorwindow.py:799
+#: editorwindow.py:833
 msgid "Previous frame"
 msgstr ""
 
-#: editorwindow.py:800
+#: editorwindow.py:834
 msgid "Next frame"
 msgstr ""
 
-#: editorwindow.py:802
+#: editorwindow.py:836
 msgid "Fast Forward"
 msgstr ""
 
-#: editorwindow.py:803
+#: editorwindow.py:837
 msgid "Rewind"
 msgstr ""
 
-#: editorwindow.py:805
+#: editorwindow.py:839
 msgid "Set Mark In"
 msgstr ""
 
-#: editorwindow.py:806
+#: editorwindow.py:840
 msgid "Set Mark Out"
 msgstr ""
 
-#: editorwindow.py:807
+#: editorwindow.py:841
 msgid "Clear Marks"
 msgstr ""
 
-#: editorwindow.py:808
+#: editorwindow.py:842
 msgid "Go to Mark In"
 msgstr ""
 
-#: editorwindow.py:809
+#: editorwindow.py:843
 msgid "Go to Mark Out"
 msgstr ""
 
-#: editorwindow.py:811
+#: editorwindow.py:845
 msgid "Select view mode: Program Video/Vectorscope/RGBParade"
 msgstr ""
 
-#: editorwindow.py:813
+#: editorwindow.py:847
 msgid "Monitor program current frame timecode"
 msgstr ""
 
-#: editorwindow.py:814
+#: editorwindow.py:848
 msgid "Current Monitor program name"
 msgstr ""
 
-#: editorwindow.py:815
+#: editorwindow.py:849
 msgid "Monitor program Mark In timecode"
 msgstr ""
 
-#: editorwindow.py:816
+#: editorwindow.py:850
 msgid "Monitor program Mark Out timecode"
 msgstr ""
 
-#: editorwindow.py:817
+#: editorwindow.py:851
 msgid "Monitor program selected range length"
 msgstr ""
 
-#: editorwindow.py:819
+#: editorwindow.py:853
 msgid "Monitor program current position"
 msgstr ""
 
-#: editorwindow.py:821
+#: editorwindow.py:855
 msgid "Display Current Sequence on Timeline"
 msgstr ""
 
-#: editorwindow.py:822
+#: editorwindow.py:856
 msgid "Display Monitor Clip"
 msgstr ""
 
-#: editorwindow.py:824
+#: editorwindow.py:858
 msgid "Open Project File"
 msgstr ""
 
-#: editorwindow.py:825
+#: editorwindow.py:859
 msgid "Open New Project"
 msgstr ""
 
-#: clipeffectseditor.py:81
+#: clipeffectseditor.py:101
 msgid "Quit editing Clip in editor"
 msgstr ""
 
-#: clipeffectseditor.py:91 panels.py:38 panels.py:57 panels.py:75
-#: mlttransitions.py:99
+#: clipeffectseditor.py:111 panels.py:58 panels.py:77 panels.py:95
+#: mlttransitions.py:119
 msgid "Add"
 msgstr ""
 
-#: clipeffectseditor.py:92 compositeeditor.py:33 guicomponents.py:766
-#: guicomponents.py:817 guicomponents.py:972 panels.py:39 panels.py:58
-#: panels.py:76
+#: clipeffectseditor.py:112 compositeeditor.py:53 guicomponents.py:787
+#: guicomponents.py:838 guicomponents.py:993 panels.py:59 panels.py:78
+#: panels.py:96
 msgid "Delete"
 msgstr ""
 
-#: clipeffectseditor.py:101
+#: clipeffectseditor.py:121
 msgid "Clip being edited"
 msgstr ""
 
-#: clipeffectseditor.py:102
+#: clipeffectseditor.py:122
 msgid "Clip Filter Stack"
 msgstr ""
 
-#: clipeffectseditor.py:103
+#: clipeffectseditor.py:123
 msgid "Add Filter to Clip Filter Stack"
 msgstr ""
 
-#: clipeffectseditor.py:104
+#: clipeffectseditor.py:124
 msgid "Delete Filter from Clip Filter Stack"
 msgstr ""
 
-#: clipeffectseditor.py:295
+#: clipeffectseditor.py:315
 msgid "No editable parameters"
 msgstr ""
 
-#: compositeeditor.py:35 render.py:367 keyframeeditor.py:994
+#: compositeeditor.py:55 render.py:394
 msgid "Reset"
 msgstr ""
 
-#: compositeeditor.py:39 compositeeditor.py:106
+#: compositeeditor.py:59 compositeeditor.py:126
 msgid "No Compositor"
 msgstr ""
 
-#: compositeeditor.py:131
+#: compositeeditor.py:151
 msgid "Destination track:"
 msgstr ""
 
-#: dialogs.py:27
+#: dialogs.py:47
 msgid "New Project"
 msgstr ""
 
-#: dialogs.py:38
+#: dialogs.py:58
 msgid "Project profile:"
 msgstr ""
 
-#: dialogs.py:48 panels.py:98
+#: dialogs.py:68 panels.py:118
 msgid "Profile"
 msgstr ""
 
-#: dialogs.py:73
+#: dialogs.py:93
 msgid "Select Project File"
 msgstr ""
 
-#: dialogs.py:86
+#: dialogs.py:106
 msgid "Save Project As"
 msgstr ""
 
-#: dialogs.py:104
+#: dialogs.py:124
 msgid "Save Render Args As"
 msgstr ""
 
-#: dialogs.py:120
+#: dialogs.py:140
 msgid "Load Render Args File"
 msgstr ""
 
-#: dialogs.py:135 dialogs.py:175 dialogs.py:194
+#: dialogs.py:155 dialogs.py:195 dialogs.py:214
 msgid "Cancel"
 msgstr ""
 
-#: dialogs.py:136
+#: dialogs.py:156
 msgid "Ok"
 msgstr ""
 
-#: dialogs.py:137
+#: dialogs.py:157
 msgid "Select Thumbnail Folder"
 msgstr ""
 
-#: dialogs.py:149
+#: dialogs.py:169
 msgid "Render Progress"
 msgstr ""
 
-#: dialogs.py:165 dialogs.py:184
+#: dialogs.py:185 dialogs.py:204
 msgid "Save project '"
 msgstr ""
 
-#: dialogs.py:165
+#: dialogs.py:185
 msgid "' before exiting?"
 msgstr ""
 
-#: dialogs.py:174 dialogs.py:193
+#: dialogs.py:194 dialogs.py:213
 msgid "Don't Save"
 msgstr ""
 
-#: dialogs.py:176 dialogs.py:195
+#: dialogs.py:196 dialogs.py:215
 msgid "Save"
 msgstr ""
 
-#: dialogs.py:184
+#: dialogs.py:204
 msgid "' before closing project?"
 msgstr ""
 
-#: dialogs.py:334
+#: dialogs.py:355
 msgid "Application"
 msgstr ""
 
-#: dialogs.py:335
+#: dialogs.py:356
 msgid "Thanks"
 msgstr ""
 
-#: dialogs.py:336
+#: dialogs.py:357
 msgid "License"
 msgstr ""
 
-#: dialogs.py:343
+#: dialogs.py:364
 msgid "Create Color Clip"
 msgstr ""
 
-#: dialogs.py:346
+#: dialogs.py:367
 msgid "Create"
 msgstr ""
 
-#: dialogs.py:354
+#: dialogs.py:375
 msgid "Editor Preferences"
 msgstr ""
 
-#: dialogs.py:365
+#: dialogs.py:386
 msgid "General"
 msgstr ""
 
-#: dialogs.py:366
+#: dialogs.py:387
 msgid "Editing"
 msgstr ""
 
-#: dialogs.py:374 guicomponents.py:970
+#: dialogs.py:395 guicomponents.py:991
 msgid "File Properties"
 msgstr ""
 
-#: dialogs.py:390
+#: dialogs.py:411
 msgid "Clip Properties"
 msgstr ""
 
-#: dialogs.py:406
+#: dialogs.py:427
 msgid "Composite Target Track"
 msgstr ""
 
-#: dialogs.py:409 guicomponents.py:857
+#: dialogs.py:430 guicomponents.py:878
 msgid "Add Compositor"
 msgstr ""
 
-#: dialogs.py:430
+#: dialogs.py:451
 msgid "Loading project"
 msgstr ""
 
-#: dialogs.py:467
+#: dialogs.py:488
 msgid "Loading Media Files"
 msgstr ""
 
-#: dialogs.py:503
+#: dialogs.py:524
 msgid "Recreating icons"
 msgstr ""
 
-#: dialogs.py:540
+#: dialogs.py:561
 msgid "Close Manager"
 msgstr ""
 
-#: dialogs.py:559
+#: dialogs.py:580
 msgid "Create New Profile"
 msgstr ""
 
-#: dialogs.py:560
+#: dialogs.py:581
 msgid "Manage Profiles"
 msgstr ""
 
-#: editevent.py:67
+#: dialogs.py:591
+msgid "Open last autosave?"
+msgstr ""
+
+#: dialogs.py:592
+msgid ""
+"It seems that Flowblade exited abnormally last time.\n"
+"\n"
+msgstr ""
+
+#: dialogs.py:593
+msgid "It is NOT possible to open this autosaved version later."
+msgstr ""
+
+#: dialogs.py:603
+msgid "Continue with default 'untitled' project"
+msgstr ""
+
+#: dialogs.py:604
+msgid "Open Autosaved Project"
+msgstr ""
+
+#: dialogs.py:612
+msgid "No Clip loaded into Monitor"
+msgstr ""
+
+#: dialogs.py:613
+msgid "Can't do the requested edit because there is no Clip in Monitor."
+msgstr ""
+
+#: dialogs.py:617
+msgid "Defined range in Monitor Clip is too short"
+msgstr ""
+
+#: dialogs.py:618
+msgid ""
+"Can't do the requested edit because Mark In -> Mark Out Range or Clip is too "
+"short."
+msgstr ""
+
+#: editevent.py:87
 msgid "Can't put an audio clip on a video track."
 msgstr ""
 
-#: editevent.py:68 editevent.py:873 editevent.py:879 movemodes.py:550
+#: editevent.py:88 editevent.py:932 movemodes.py:569
 msgid "Track "
 msgstr ""
 
-#: editevent.py:68
+#: editevent.py:88
 msgid " is a video track and can't display audio only material."
 msgstr ""
 
-#: editevent.py:699
+#: editevent.py:497
+msgid "Origin clip not found!"
+msgstr ""
+
+#: editevent.py:498
+msgid ""
+"Clip used to create this Compositor has been removed\n"
+"or moved to different track."
+msgstr ""
+
+#: editevent.py:733
 msgid "Not enough vertical space on Timeline to expand track"
 msgstr ""
 
-#: editevent.py:700
+#: editevent.py:734
 msgid ""
 "Maximize or resize application window to get more\n"
 "space for tracks if possible."
 msgstr ""
 
-#: editevent.py:872
-msgid "Can't enter "
+#: editevent.py:788
+msgid "Previous clip does not have enough material to cover blank area"
 msgstr ""
 
-#: editevent.py:872
-msgid " on a locked track"
+#: editevent.py:789 editevent.py:813
+msgid "Requested edit can't be done."
 msgstr ""
 
-#: editevent.py:873 editevent.py:879
+#: editevent.py:812
+msgid "Next clip does not have enough material to cover blank area"
+msgstr ""
+
+#: editevent.py:931
+msgid "Can't edit a locked track"
+msgstr ""
+
+#: editevent.py:932
 msgid " is locked. Unlock track to edit it."
 msgstr ""
 
-#: editevent.py:878
-msgid "Can't do "
-msgstr ""
-
-#: editevent.py:878
-msgid " edit on a locked track"
-msgstr ""
-
-#: editorpersistance.py:98
+#: editorpersistance.py:118
 msgid "Empty"
 msgstr ""
 
-#: guicomponents.py:407
+#: editorpersistance.py:167
+msgid "No Autosave"
+msgstr ""
+
+#: editorpersistance.py:167
+msgid "1 min"
+msgstr ""
+
+#: editorpersistance.py:167
+msgid "2 min"
+msgstr ""
+
+#: editorpersistance.py:167
+msgid "5 min"
+msgstr ""
+
+#: guicomponents.py:428
 msgid "default"
 msgstr ""
 
-#: guicomponents.py:418
+#: guicomponents.py:439
 msgid "Clip:"
 msgstr ""
 
-#: guicomponents.py:422
+#: guicomponents.py:443
 msgid "Track:"
 msgstr ""
 
-#: guicomponents.py:425
+#: guicomponents.py:446
 msgid "Pos:"
 msgstr ""
 
-#: guicomponents.py:447
+#: guicomponents.py:468
 msgid "<b>Clip: </b>"
 msgstr ""
 
-#: guicomponents.py:449
+#: guicomponents.py:470
 msgid "<b>Track: </b>"
 msgstr ""
 
-#: guicomponents.py:451 guicomponents.py:462 guicomponents.py:571
+#: guicomponents.py:472 guicomponents.py:483 guicomponents.py:592
 msgid "<b>Position:</b>"
 msgstr ""
 
-#: guicomponents.py:458
+#: guicomponents.py:479
 msgid "<b>Clip:</b>"
 msgstr ""
 
-#: guicomponents.py:460
+#: guicomponents.py:481
 msgid "<b>Track:</b>"
 msgstr ""
 
-#: guicomponents.py:543
+#: guicomponents.py:564
 msgid "Compositor"
 msgstr ""
 
-#: guicomponents.py:545
+#: guicomponents.py:566
 msgid "Blend"
 msgstr ""
 
-#: guicomponents.py:561
+#: guicomponents.py:582
 msgid "<b>Type:</b>"
 msgstr ""
 
-#: guicomponents.py:565
+#: guicomponents.py:586
 msgid "<b>Source Track:</b>"
 msgstr ""
 
-#: guicomponents.py:568
+#: guicomponents.py:589
 msgid "<b>Destination Track:</b>"
 msgstr ""
 
-#: guicomponents.py:574
+#: guicomponents.py:595
 msgid "<b>Length:</b>"
 msgstr ""
 
-#: guicomponents.py:664 guicomponents.py:668
+#: guicomponents.py:685 guicomponents.py:689
 msgid "Lock Track"
 msgstr ""
 
-#: guicomponents.py:665 guicomponents.py:669
+#: guicomponents.py:686 guicomponents.py:690
 msgid "Unlock Track"
 msgstr ""
 
-#: guicomponents.py:673
+#: guicomponents.py:694
 msgid "Large Height"
 msgstr ""
 
-#: guicomponents.py:677
+#: guicomponents.py:698
 msgid "Normal Height"
 msgstr ""
 
-#: guicomponents.py:694 guicomponents.py:775
+#: guicomponents.py:715 guicomponents.py:796
 msgid "Open in Filters Editor"
 msgstr ""
 
-#: guicomponents.py:701 guicomponents.py:777 guicomponents.py:969
+#: guicomponents.py:722 guicomponents.py:798 guicomponents.py:990
 msgid "Open in Clip Monitor"
 msgstr ""
 
-#: guicomponents.py:708
+#: guicomponents.py:729
 msgid "Split Audio"
 msgstr ""
 
-#: guicomponents.py:714
+#: guicomponents.py:735
 msgid "Split Audio Synched"
 msgstr ""
 
-#: guicomponents.py:720 guicomponents.py:791
+#: guicomponents.py:741 guicomponents.py:812
 msgid "Display Waveform"
 msgstr ""
 
-#: guicomponents.py:723 guicomponents.py:794
+#: guicomponents.py:744 guicomponents.py:815
 msgid "Clear Waveform"
 msgstr ""
 
-#: guicomponents.py:730 guicomponents.py:783
+#: guicomponents.py:751 guicomponents.py:804
 msgid "Resync"
 msgstr ""
 
-#: guicomponents.py:731 guicomponents.py:784
+#: guicomponents.py:752 guicomponents.py:805
 msgid "Clear Sync Relation"
 msgstr ""
 
-#: guicomponents.py:733 guicomponents.py:786
+#: guicomponents.py:754 guicomponents.py:807
 msgid "Select Sync Parent Clip..."
 msgstr ""
 
-#: guicomponents.py:755 guicomponents.py:807
+#: guicomponents.py:776 guicomponents.py:828
 msgid "Clip Info"
 msgstr ""
 
-#: guicomponents.py:761
+#: guicomponents.py:782
 msgid "Strech Prev Clip to Cover"
 msgstr ""
 
-#: guicomponents.py:762
+#: guicomponents.py:783
 msgid "Strech Next Clip to Cover"
 msgstr ""
 
-#: guicomponents.py:764
+#: guicomponents.py:785
 msgid "Consolidate"
 msgstr ""
 
-#: guicomponents.py:813
+#: guicomponents.py:834
 msgid "Open In Compositor Editor"
 msgstr ""
 
-#: guicomponents.py:815
+#: guicomponents.py:836
 msgid "Sync with Origin Clip"
 msgstr ""
 
-#: guicomponents.py:821
+#: guicomponents.py:842
 msgid "Add Filter"
 msgstr ""
 
-#: guicomponents.py:842
+#: guicomponents.py:863
 msgid "Add Audio Filter"
 msgstr ""
 
-#: guicomponents.py:873
+#: guicomponents.py:894
 msgid "Add Blend"
 msgstr ""
 
-#: guicomponents.py:889
+#: guicomponents.py:910
 msgid "Clone Filters"
 msgstr ""
 
-#: guicomponents.py:893
+#: guicomponents.py:914
 msgid "From Next Clip"
 msgstr ""
 
-#: guicomponents.py:898
+#: guicomponents.py:919
 msgid "From Previous Clip"
 msgstr ""
 
-#: guicomponents.py:907 guicomponents.py:927
+#: guicomponents.py:928 guicomponents.py:948
 msgid "Mute"
 msgstr ""
 
-#: guicomponents.py:911 guicomponents.py:931
+#: guicomponents.py:932 guicomponents.py:952
 msgid "Unmute"
 msgstr ""
 
-#: guicomponents.py:917 guicomponents.py:946
+#: guicomponents.py:938 guicomponents.py:967
 msgid "Mute Audio"
 msgstr ""
 
-#: guicomponents.py:940
+#: guicomponents.py:961
 msgid "Mute Video"
 msgstr ""
 
-#: guicomponents.py:953
+#: guicomponents.py:974
 msgid "Mute All"
 msgstr ""
 
-#: guicomponents.py:977
+#: guicomponents.py:998
 msgid "Toggle Active"
 msgstr ""
 
-#: guicomponents.py:978
+#: guicomponents.py:999
 msgid "Reset Values"
 msgstr ""
 
-#: guicomponents.py:1020
+#: guicomponents.py:1041
 msgid "Description:"
 msgstr ""
 
-#: guicomponents.py:1022
+#: guicomponents.py:1043
 msgid "Dimensions:"
 msgstr ""
 
-#: guicomponents.py:1024
+#: guicomponents.py:1045
 msgid "Frames per second:"
 msgstr ""
 
-#: guicomponents.py:1026
+#: guicomponents.py:1047
 msgid "Size:"
 msgstr ""
 
-#: guicomponents.py:1028
+#: guicomponents.py:1049
 msgid "Pixel aspect ratio: "
 msgstr ""
 
-#: guicomponents.py:1030 panels.py:703
+#: guicomponents.py:1051 panels.py:760
 msgid "Progressive:"
 msgstr ""
 
-#: guicomponents.py:1057
+#: guicomponents.py:1078
 msgid "Yes"
 msgstr ""
 
-#: guicomponents.py:1059
+#: guicomponents.py:1080
 msgid "No"
 msgstr ""
 
-#: movemodes.py:549
+#: movemodes.py:568
 msgid "Can't do edit on a locked track"
 msgstr ""
 
-#: movemodes.py:550
+#: movemodes.py:569
 msgid " is locked. Unlock track to edit it.\n"
 msgstr ""
 
-#: movemodes.py:551
+#: movemodes.py:570
 msgid "Deactive track "
 msgstr ""
 
-#: movemodes.py:551
+#: movemodes.py:570
 msgid " if you wish to edit tracks below it."
 msgstr ""
 
-#: panels.py:42
+#: panels.py:62
 msgid "Add Media File to Bin"
 msgstr ""
 
-#: panels.py:43
+#: panels.py:63
 msgid "Delete Media File from Bin"
 msgstr ""
 
-#: panels.py:61
+#: panels.py:81
 msgid "Add Bin to Project"
 msgstr ""
 
-#: panels.py:62
+#: panels.py:82
 msgid "Delete Bin from Project"
 msgstr ""
 
-#: panels.py:71
+#: panels.py:91
 msgid "Bins"
 msgstr ""
 
-#: panels.py:77
+#: panels.py:97
 msgid "Edit"
 msgstr ""
 
-#: panels.py:78
+#: panels.py:98
 msgid "Add new Sequence to Project"
 msgstr ""
 
-#: panels.py:79
+#: panels.py:99
 msgid "Delete Sequence from Project"
 msgstr ""
 
-#: panels.py:80
+#: panels.py:100
 msgid "Start editing Sequence"
 msgstr ""
 
-#: panels.py:94
+#: panels.py:114
 msgid "Sequences"
 msgstr ""
 
-#: panels.py:102
+#: panels.py:122
 msgid "Name"
 msgstr ""
 
-#: panels.py:107
+#: panels.py:127
 msgid "Folder:"
 msgstr ""
 
-#: panels.py:112 panels.py:574
+#: panels.py:132 panels.py:631
 msgid "Name:"
 msgstr ""
 
-#: panels.py:118
-msgid "Render Range:"
-msgstr ""
-
-#: panels.py:126
+#: panels.py:138
 msgid "File"
 msgstr ""
 
-#: panels.py:133
+#: panels.py:145
 msgid "Use Project Profile:"
 msgstr ""
 
-#: panels.py:144
+#: panels.py:156
 msgid "Render Profile"
 msgstr ""
 
-#: panels.py:156
+#: panels.py:172
 msgid "Encoding Format"
 msgstr ""
 
-#: panels.py:167
+#: panels.py:183
 msgid "Render using args:"
 msgstr ""
 
-#: panels.py:189
+#: panels.py:210
 msgid "Render Args"
 msgstr ""
 
-#: panels.py:211
+#: panels.py:218
+msgid "Open Rendered File in Selected Bin:"
+msgstr ""
+
+#: panels.py:229
+msgid "Render Range:"
+msgstr ""
+
+#: panels.py:260
 msgid "Select folder for new thumbnails."
 msgstr ""
 
-#: panels.py:212
+#: panels.py:261
 msgid "Old thumbnails in this or other projects will"
 msgstr ""
 
-#: panels.py:213
+#: panels.py:262
 msgid ""
 " still be available,\n"
 "this only affects thumnails that are created for new media.\n"
 msgstr ""
 
-#: panels.py:214
+#: panels.py:263
 msgid ""
 "\n"
 "Setting your home folder as thumbnails folder is not allowed."
 msgstr ""
 
-#: panels.py:375
+#: panels.py:424
 msgid "Select Filter Group"
 msgstr ""
 
-#: panels.py:376
+#: panels.py:425
 msgid "Current group Filters"
 msgstr ""
 
-#: panels.py:479
+#: panels.py:528
 msgid "Color Clip"
 msgstr ""
 
-#: panels.py:487
+#: panels.py:536
 msgid "Clip Name"
 msgstr ""
 
-#: panels.py:488
+#: panels.py:537
 msgid "Select Color"
 msgstr ""
 
-#: panels.py:518 render.py:272
+#: panels.py:567 render.py:297
 msgid "Select Folder"
 msgstr ""
 
-#: panels.py:526
+#: panels.py:581
 msgid "Default profile"
 msgstr ""
 
-#: panels.py:527
+#: panels.py:582
 msgid "Remember media directory"
 msgstr ""
 
-#: panels.py:528
+#: panels.py:583
 msgid "Undo stack size"
 msgstr ""
 
-#: panels.py:529
+#: panels.py:584
 msgid "Thumbnail folder"
 msgstr ""
 
-#: panels.py:530
+#: panels.py:585
 msgid "Display Splash Screen"
 msgstr ""
 
-#: panels.py:557
+#: panels.py:586
+msgid "Autosave every"
+msgstr ""
+
+#: panels.py:614
 msgid "Autoplay new clip in Clip Monitor"
 msgstr ""
 
-#: panels.py:558
+#: panels.py:615
 msgid "Center current frame on playback stop"
 msgstr ""
 
-#: panels.py:575
+#: panels.py:632
 msgid "Path:"
 msgstr ""
 
-#: panels.py:576 panels.py:605
+#: panels.py:633 panels.py:662
 msgid "Image Size:"
 msgstr ""
 
-#: panels.py:577
+#: panels.py:634
 msgid "Playtime:"
 msgstr ""
 
-#: panels.py:578
+#: panels.py:635
 msgid "Video Codec:"
 msgstr ""
 
-#: panels.py:579
+#: panels.py:636
 msgid "Audio Codec:"
 msgstr ""
 
-#: panels.py:580
+#: panels.py:637
 msgid "Audio Channels:"
 msgstr ""
 
-#: panels.py:581
+#: panels.py:638
 msgid "Audio Sample Rate:"
 msgstr ""
 
-#: panels.py:604
+#: panels.py:661
 msgid "Clip Length:"
 msgstr ""
 
-#: panels.py:606
+#: panels.py:663
 msgid "Media Path:"
 msgstr ""
 
-#: panels.py:630
+#: panels.py:687
 msgid "Composite clip on:"
 msgstr ""
 
-#: panels.py:637
+#: panels.py:694
 msgid "Load values"
 msgstr ""
 
-#: panels.py:678
+#: panels.py:735
 msgid "Save New Profile"
 msgstr ""
 
-#: panels.py:694
+#: panels.py:751
 msgid "Description.:"
 msgstr ""
 
-#: panels.py:695
+#: panels.py:752
 msgid "Frame rate num.:"
 msgstr ""
 
-#: panels.py:696
+#: panels.py:753
 msgid "Frame rate den.:"
 msgstr ""
 
-#: panels.py:697
+#: panels.py:754
 msgid "Width:"
 msgstr ""
 
-#: panels.py:698
+#: panels.py:755
 msgid "Height:"
 msgstr ""
 
-#: panels.py:699
+#: panels.py:756
 msgid "Sample aspect num.:"
 msgstr ""
 
-#: panels.py:700
+#: panels.py:757
 msgid "Sample aspect den.:"
 msgstr ""
 
-#: panels.py:701
+#: panels.py:758
 msgid "Display aspect num.:"
 msgstr ""
 
-#: panels.py:702
+#: panels.py:759
 msgid "Display aspect den.:"
 msgstr ""
 
-#: panels.py:730
+#: panels.py:787
 msgid "User "
 msgstr ""
 
-#: panels.py:746
+#: panels.py:803
 msgid "Delete Selected"
 msgstr ""
 
-#: panels.py:753
+#: panels.py:810
 msgid "Visible"
 msgstr ""
 
-#: panels.py:755
+#: panels.py:812
 msgid "Hide Selected"
 msgstr ""
 
-#: panels.py:757
+#: panels.py:814
 msgid "Hidden"
 msgstr ""
 
-#: panels.py:759
+#: panels.py:816
 msgid "Unhide Selected"
 msgstr ""
 
-#: panels.py:790
+#: panels.py:847
 msgid "User Profiles"
 msgstr ""
 
-#: panels.py:791
+#: panels.py:848
 msgid "Factory Profiles"
 msgstr ""
 
-#: persistance.py:229
+#: persistance.py:257
 msgid "Building sequence "
 msgstr ""
 
-#: persistance.py:240
+#: persistance.py:268
 msgid "Loading icons"
 msgstr ""
 
-#: projectdata.py:38
+#: projectdata.py:58
 msgid "untitled"
 msgstr ""
 
-#: projectdata.py:137
+#: projectdata.py:157
 msgid "bin_"
 msgstr ""
 
-#: projectdata.py:145
+#: projectdata.py:165
 msgid "sequence_"
 msgstr ""
 
-#: render.py:303
+#: render.py:328
 msgid "Quality:"
 msgstr ""
 
-#: render.py:309
+#: render.py:334
 msgid "Audio:"
 msgstr ""
 
-#: render.py:333
+#: render.py:358
 msgid "Load Selection"
 msgstr ""
 
-#: render.py:344
+#: render.py:371
 msgid "Program length"
 msgstr ""
 
-#: render.py:345
+#: render.py:372
 msgid "Marked range"
 msgstr ""
 
-#: render.py:381
+#: render.py:408
 msgid "Select folder to place rendered file in"
 msgstr ""
 
-#: render.py:382
+#: render.py:409
 msgid "Give name for rendered file"
 msgstr ""
 
-#: render.py:383
+#: render.py:410
 msgid "Select used project profile for rendering"
 msgstr ""
 
-#: render.py:384
+#: render.py:411
 msgid "Select render profile"
 msgstr ""
 
-#: render.py:385
+#: render.py:412
 msgid "Select Render encoding"
 msgstr ""
 
-#: render.py:386
+#: render.py:413
 msgid "Select Render quality"
 msgstr ""
 
-#: render.py:387
+#: render.py:414
 msgid "Render using key=value rendering options"
 msgstr ""
 
-#: render.py:388
+#: render.py:415
 msgid "Load render options from currently selected encoding"
 msgstr ""
 
-#: render.py:389
+#: render.py:416
 msgid "Edit render options"
 msgstr ""
 
-#: render.py:390
+#: render.py:417
 msgid "Select render range"
 msgstr ""
 
-#: render.py:391
+#: render.py:418
 msgid "Reset all render options to defaults"
 msgstr ""
 
-#: render.py:392
+#: render.py:419
 msgid "Begin Rendering"
 msgstr ""
 
-#: render.py:393
+#: render.py:420
 msgid "Info on setting FFMpeg options"
 msgstr ""
 
-#: render.py:394
+#: render.py:421
 msgid "Render profile info"
 msgstr ""
 
-#: render.py:395
+#: render.py:422
 msgid "Save Render Args into a text file"
 msgstr ""
 
-#: render.py:396
+#: render.py:423
 msgid "Load Render Args from a text file"
 msgstr ""
 
-#: render.py:409
+#: render.py:436
 msgid "<b>Output File: </b>"
 msgstr ""
 
-#: render.py:411 render.py:434 render.py:449
+#: render.py:438 render.py:461 render.py:476
 msgid "<b>Estimated time left: </b>"
 msgstr ""
 
-#: render.py:413 render.py:436 render.py:451
+#: render.py:440 render.py:463 render.py:478
 msgid "<b>Render time: </b>"
 msgstr ""
 
-#: render.py:453
+#: render.py:480
 msgid "Render Complete!"
 msgstr ""
 
-#: render.py:577
+#: render.py:611
 msgid "Error on line "
 msgstr ""
 
-#: render.py:577
+#: render.py:611
 msgid ""
 "\n"
 "Line contents: "
 msgstr ""
 
-#: render.py:590
+#: render.py:624
 msgid "No '=' found."
 msgstr ""
 
-#: render.py:593
+#: render.py:627
 msgid "Number of tokens on line is "
 msgstr ""
 
-#: render.py:593
+#: render.py:627
 msgid ", should be 2 (key, value)."
 msgstr ""
 
-#: render.py:597
+#: render.py:631
 msgid "Arg name token is empty."
 msgstr ""
 
-#: render.py:599
+#: render.py:633
 msgid "Arg value token is empty."
 msgstr ""
 
-#: render.py:603
+#: render.py:637
 msgid "Non-ascii char in Arg name."
 msgstr ""
 
-#: render.py:607
+#: render.py:641
 msgid "Non-ascii char in Arg value."
 msgstr ""
 
-#: render.py:609
+#: render.py:643
 msgid "Whitespace in Arg name."
 msgstr ""
 
-#: render.py:611
+#: render.py:645
 msgid "Whitespace in Arg value."
 msgstr ""
 
-#: syncsplitevent.py:104
+#: syncsplitevent.py:124
 msgid "Sync parent clips must be on track V1"
 msgstr ""
 
-#: syncsplitevent.py:105
+#: syncsplitevent.py:125
 msgid "Selected synch parent clip is on track "
 msgstr ""
 
-#: syncsplitevent.py:105
+#: syncsplitevent.py:125
 msgid ""
 ".\n"
 "You can only synch to clips that are on track V1."
 msgstr ""
 
-#: translations.py:55 translations.py:326
+#: translations.py:75 translations.py:346
 msgid "Color"
 msgstr ""
 
-#: translations.py:56
+#: translations.py:76
 msgid "Color Effect"
 msgstr ""
 
-#: translations.py:57
+#: translations.py:77
 msgid "Audio"
 msgstr ""
 
-#: translations.py:58
+#: translations.py:78
 msgid "Audio Filter"
 msgstr ""
 
-#: translations.py:59 translations.py:112 translations.py:291
-#: translations.py:368
+#: translations.py:79 translations.py:132 translations.py:311
+#: translations.py:388
 msgid "Blur"
 msgstr ""
 
-#: translations.py:60 translations.py:378 propertyeditorbuilder.py:321
-#: propertyeditorbuilder.py:374
+#: translations.py:80 translations.py:398 propertyeditorbuilder.py:341
+#: propertyeditorbuilder.py:394
 msgid "Distort"
 msgstr ""
 
-#: translations.py:61 propertyeditorbuilder.py:323
-#: propertyeditorbuilder.py:376
+#: translations.py:81 propertyeditorbuilder.py:343
+#: propertyeditorbuilder.py:396
 msgid "Alpha"
 msgstr ""
 
-#: translations.py:62
+#: translations.py:82
 msgid "Movement"
 msgstr ""
 
-#: translations.py:63
+#: translations.py:83
 msgid "Transform"
 msgstr ""
 
-#: translations.py:64
+#: translations.py:84
 msgid "Edge"
 msgstr ""
 
-#: translations.py:65
+#: translations.py:85
 msgid "Fix"
 msgstr ""
 
-#: translations.py:66
+#: translations.py:86
 msgid "Artistic"
 msgstr ""
 
-#: translations.py:70
+#: translations.py:90
 msgid "Alpha Gradient"
 msgstr ""
 
-#: translations.py:71
+#: translations.py:91
 msgid "Crop"
 msgstr ""
 
-#: translations.py:72
+#: translations.py:92
 msgid "Alpha Shape"
 msgstr ""
 
-#: translations.py:74 translations.py:176
+#: translations.py:94 translations.py:196
 msgid "Volume"
 msgstr ""
 
-#: translations.py:75
+#: translations.py:95
 msgid "Pan"
 msgstr ""
 
-#: translations.py:76
+#: translations.py:96
 msgid "Pan Keyframed"
 msgstr ""
 
-#: translations.py:77
+#: translations.py:97
 msgid "Mono to Stereo"
 msgstr ""
 
-#: translations.py:78
+#: translations.py:98
 msgid "Swap Channels"
 msgstr ""
 
-#: translations.py:80
+#: translations.py:100
 msgid "Pitchshifter"
 msgstr ""
 
-#: translations.py:81
+#: translations.py:101
 msgid "Distort - Barry's Satan"
 msgstr ""
 
-#: translations.py:82
+#: translations.py:102
 msgid "Frequency Shift - Bode/Moog"
 msgstr ""
 
-#: translations.py:83
+#: translations.py:103
 msgid "Equalize - DJ 3-band"
 msgstr ""
 
-#: translations.py:84
+#: translations.py:104
 msgid "Flanger - DJ"
 msgstr ""
 
-#: translations.py:85
+#: translations.py:105
 msgid "Declipper"
 msgstr ""
 
-#: translations.py:86
+#: translations.py:106
 msgid "Delayorama"
 msgstr ""
 
-#: translations.py:87
+#: translations.py:107
 msgid "Distort - Diode Processor"
 msgstr ""
 
-#: translations.py:88
+#: translations.py:108
 msgid "Distort - Foldover"
 msgstr ""
 
-#: translations.py:89
+#: translations.py:109
 msgid "Highpass - Butterworth"
 msgstr ""
 
-#: translations.py:90
+#: translations.py:110
 msgid "Lowpass - Butterworth"
 msgstr ""
 
-#: translations.py:91
+#: translations.py:111
 msgid "GSM Simulator"
 msgstr ""
 
-#: translations.py:92
+#: translations.py:112
 msgid "Reverb - GVerb"
 msgstr ""
 
-#: translations.py:93
+#: translations.py:113
 msgid "Noise Gate"
 msgstr ""
 
-#: translations.py:94
+#: translations.py:114
 msgid "Bandpass"
 msgstr ""
 
-#: translations.py:95
+#: translations.py:115
 msgid "Pitchscaler - High Quality"
 msgstr ""
 
-#: translations.py:96
+#: translations.py:116
 msgid "Equalize - Multiband"
 msgstr ""
 
-#: translations.py:97
+#: translations.py:117
 msgid "Reverb - Plate"
 msgstr ""
 
-#: translations.py:98
+#: translations.py:118
 msgid "Distort - Pointer cast"
 msgstr ""
 
-#: translations.py:99
+#: translations.py:119
 msgid "Rate Shifter"
 msgstr ""
 
-#: translations.py:100
+#: translations.py:120
 msgid "Signal Shifter"
 msgstr ""
 
-#: translations.py:101
+#: translations.py:121
 msgid "Distort - Sinus Wavewrap"
 msgstr ""
 
-#: translations.py:102
+#: translations.py:122
 msgid "Vinyl Effect"
 msgstr ""
 
-#: translations.py:103
+#: translations.py:123
 msgid "Chorus - Multivoice"
 msgstr ""
 
-#: translations.py:105
+#: translations.py:125
 msgid "Charcoal"
 msgstr ""
 
-#: translations.py:106
+#: translations.py:126
 msgid "Glow"
 msgstr ""
 
-#: translations.py:107
+#: translations.py:127
 msgid "Old Film"
 msgstr ""
 
-#: translations.py:108
+#: translations.py:128
 msgid "Scanlines"
 msgstr ""
 
-#: translations.py:109
+#: translations.py:129
 msgid "Cartoon"
 msgstr ""
 
-#: translations.py:111
+#: translations.py:131
 msgid "Pixelize"
 msgstr ""
 
-#: translations.py:113
+#: translations.py:133
 msgid "Grain"
 msgstr ""
 
-#: translations.py:115
+#: translations.py:135
 msgid "Grayscale"
 msgstr ""
 
-#: translations.py:116 translations.py:306 translations.py:308
+#: translations.py:136 translations.py:326 translations.py:328
 msgid "Contrast"
 msgstr ""
 
-#: translations.py:117 translations.py:309 mlttransitions.py:113
+#: translations.py:137 translations.py:329 mlttransitions.py:133
 msgid "Saturation"
 msgstr ""
 
-#: translations.py:118 translations.py:290 translations.py:342
-#: translations.py:367 translations.py:381 translations.py:385
+#: translations.py:138 translations.py:310 translations.py:362
+#: translations.py:387 translations.py:401 translations.py:405
 msgid "Invert"
 msgstr ""
 
-#: translations.py:119 translations.py:310 mlttransitions.py:109
+#: translations.py:139 translations.py:330 mlttransitions.py:129
 msgid "Hue"
 msgstr ""
 
-#: translations.py:120 translations.py:307 translations.py:311
-#: translations.py:312
+#: translations.py:140 translations.py:327 translations.py:331
+#: translations.py:332
 msgid "Brightness"
 msgstr ""
 
-#: translations.py:121
+#: translations.py:141
 msgid "Sepia"
 msgstr ""
 
-#: translations.py:122
+#: translations.py:142
 msgid "Tint"
 msgstr ""
 
-#: translations.py:123
+#: translations.py:143
 msgid "White Balance"
 msgstr ""
 
-#: translations.py:124
+#: translations.py:144
 msgid "Levels"
 msgstr ""
 
-#: translations.py:126
+#: translations.py:146
 msgid "Color Clustering"
 msgstr ""
 
-#: translations.py:127
+#: translations.py:147
 msgid "Chroma Hold"
 msgstr ""
 
-#: translations.py:128
+#: translations.py:148
 msgid "Three Layer"
 msgstr ""
 
-#: translations.py:129
+#: translations.py:149
 msgid "Threshold0r"
 msgstr ""
 
-#: translations.py:130
+#: translations.py:150
 msgid "Technicolor"
 msgstr ""
 
-#: translations.py:131
+#: translations.py:151
 msgid "Primaries"
 msgstr ""
 
-#: translations.py:132
+#: translations.py:152
 msgid "Color Distance"
 msgstr ""
 
-#: translations.py:133 translations.py:328 translations.py:333
+#: translations.py:153 translations.py:348 translations.py:353
 msgid "Threshold"
 msgstr ""
 
-#: translations.py:135
+#: translations.py:155
 msgid "Waves"
 msgstr ""
 
-#: translations.py:136
+#: translations.py:156
 msgid "Lens Correction"
 msgstr ""
 
-#: translations.py:137 translations.py:340
+#: translations.py:157 translations.py:360
 msgid "Flip"
 msgstr ""
 
-#: translations.py:138
+#: translations.py:158
 msgid "Mirror"
 msgstr ""
 
-#: translations.py:139
+#: translations.py:159
 msgid "V Sync"
 msgstr ""
 
-#: translations.py:141
+#: translations.py:161
 msgid "Edge Glow"
 msgstr ""
 
-#: translations.py:142
+#: translations.py:162
 msgid "Sobel"
 msgstr ""
 
-#: translations.py:144
+#: translations.py:164
 msgid "Denoise"
 msgstr ""
 
-#: translations.py:145
+#: translations.py:165
 msgid "Sharpness"
 msgstr ""
 
-#: translations.py:146
+#: translations.py:166
 msgid "Letterbox"
 msgstr ""
 
-#: translations.py:148
+#: translations.py:168
 msgid "Baltan"
 msgstr ""
 
-#: translations.py:149
+#: translations.py:169
 msgid "Vertigo"
 msgstr ""
 
-#: translations.py:150
+#: translations.py:170
 msgid "Nervous"
 msgstr ""
 
-#: translations.py:151
+#: translations.py:171
 msgid "Freeze"
 msgstr ""
 
-#: translations.py:153 translations.py:336
+#: translations.py:173 translations.py:356
 msgid "Rotate"
 msgstr ""
 
-#: translations.py:154
+#: translations.py:174
 msgid "Shear"
 msgstr ""
 
-#: translations.py:155
+#: translations.py:175
 msgid "Translate"
 msgstr ""
 
-#: translations.py:160 translations.py:343
+#: translations.py:180 translations.py:363
 msgid "Position"
 msgstr ""
 
-#: translations.py:161
+#: translations.py:181
 msgid "Grad width"
 msgstr ""
 
-#: translations.py:162 translations.py:174 translations.py:337
+#: translations.py:182 translations.py:194 translations.py:357
 msgid "Tilt"
 msgstr ""
 
-#: translations.py:163
+#: translations.py:183
 msgid "Min"
 msgstr ""
 
-#: translations.py:164
+#: translations.py:184
 msgid "Max"
 msgstr ""
 
-#: translations.py:165 translations.py:363
+#: translations.py:185 translations.py:383
 msgid "Left"
 msgstr ""
 
-#: translations.py:166 translations.py:364
+#: translations.py:186 translations.py:384
 msgid "Right"
 msgstr ""
 
-#: translations.py:167 translations.py:365
+#: translations.py:187 translations.py:385
 msgid "Top"
 msgstr ""
 
-#: translations.py:168 translations.py:366
+#: translations.py:188 translations.py:386
 msgid "Bottom"
 msgstr ""
 
-#: translations.py:169
+#: translations.py:189
 msgid "Shape"
 msgstr ""
 
-#: translations.py:170
+#: translations.py:190
 msgid "Pos X"
 msgstr ""
 
-#: translations.py:171
+#: translations.py:191
 msgid "Pos Y"
 msgstr ""
 
-#: translations.py:172
+#: translations.py:192
 msgid "Size X"
 msgstr ""
 
-#: translations.py:173
+#: translations.py:193
 msgid "Size Y"
 msgstr ""
 
-#: translations.py:175
+#: translations.py:195
 msgid "Trans. Width"
 msgstr ""
 
-#: translations.py:177 translations.py:178
+#: translations.py:197 translations.py:198
 msgid "Left/Right"
 msgstr ""
 
-#: translations.py:179 translations.py:182 translations.py:185
-#: translations.py:187 translations.py:191 translations.py:195
-#: translations.py:196 translations.py:207 translations.py:209
-#: translations.py:212 translations.py:215 translations.py:218
-#: translations.py:221 translations.py:229 translations.py:237
-#: translations.py:241 translations.py:243 translations.py:259
-#: translations.py:263 translations.py:266 translations.py:268
-#: translations.py:270 translations.py:272 translations.py:278
-#: translations.py:285
+#: translations.py:199 translations.py:202 translations.py:205
+#: translations.py:207 translations.py:211 translations.py:215
+#: translations.py:216 translations.py:227 translations.py:229
+#: translations.py:232 translations.py:235 translations.py:238
+#: translations.py:241 translations.py:249 translations.py:257
+#: translations.py:261 translations.py:263 translations.py:279
+#: translations.py:283 translations.py:286 translations.py:288
+#: translations.py:290 translations.py:292 translations.py:298
+#: translations.py:305
 msgid "Dry/Wet"
 msgstr ""
 
-#: translations.py:180
+#: translations.py:200
 msgid "Pitch Shift"
 msgstr ""
 
-#: translations.py:181
+#: translations.py:201
 msgid "Buffer Size"
 msgstr ""
 
-#: translations.py:183
+#: translations.py:203
 msgid "Decay Time(samples)"
 msgstr ""
 
-#: translations.py:184
+#: translations.py:204
 msgid "Knee Point(dB)"
 msgstr ""
 
-#: translations.py:186
+#: translations.py:206
 msgid "Frequency shift"
 msgstr ""
 
-#: translations.py:188
+#: translations.py:208
 msgid "Low Gain(dB)"
 msgstr ""
 
-#: translations.py:189
+#: translations.py:209
 msgid "Mid Gain(dB)"
 msgstr ""
 
-#: translations.py:190
+#: translations.py:210
 msgid "High Gain(dB)"
 msgstr ""
 
-#: translations.py:192
+#: translations.py:212
 msgid "Oscillation period(s)"
 msgstr ""
 
-#: translations.py:193
+#: translations.py:213
 msgid "Oscillation depth(ms)"
 msgstr ""
 
-#: translations.py:194
+#: translations.py:214
 msgid "Feedback%"
 msgstr ""
 
-#: translations.py:197
+#: translations.py:217
 msgid "Random seed"
 msgstr ""
 
-#: translations.py:198
+#: translations.py:218
 msgid "Input Gain(dB)"
 msgstr ""
 
-#: translations.py:199
+#: translations.py:219
 msgid "Feedback(%)"
 msgstr ""
 
-#: translations.py:200
+#: translations.py:220
 msgid "Number of taps"
 msgstr ""
 
-#: translations.py:201
+#: translations.py:221
 msgid "First Delay(s)"
 msgstr ""
 
-#: translations.py:202
+#: translations.py:222
 msgid "Delay Range(s)"
 msgstr ""
 
-#: translations.py:203
+#: translations.py:223
 msgid "Delay Change"
 msgstr ""
 
-#: translations.py:204
+#: translations.py:224
 msgid "Delay Random(%)"
 msgstr ""
 
-#: translations.py:205
+#: translations.py:225
 msgid "Amplitude Change"
 msgstr ""
 
-#: translations.py:206
+#: translations.py:226
 msgid "Amplitude Random(%)"
 msgstr ""
 
-#: translations.py:208 translations.py:271 translations.py:317
-#: translations.py:349
+#: translations.py:228 translations.py:291 translations.py:337
+#: translations.py:369
 msgid "Amount"
 msgstr ""
 
-#: translations.py:210
+#: translations.py:230
 msgid "Drive"
 msgstr ""
 
-#: translations.py:211
+#: translations.py:231
 msgid "Skew"
 msgstr ""
 
-#: translations.py:213 translations.py:216
+#: translations.py:233 translations.py:236
 msgid "Cutoff Frequency(Hz)"
 msgstr ""
 
-#: translations.py:214 translations.py:217
+#: translations.py:234 translations.py:237
 msgid "Resonance"
 msgstr ""
 
-#: translations.py:219
+#: translations.py:239
 msgid "Passes"
 msgstr ""
 
-#: translations.py:220
+#: translations.py:240
 msgid "Error Rate"
 msgstr ""
 
-#: translations.py:222
+#: translations.py:242
 msgid "Roomsize"
 msgstr ""
 
-#: translations.py:223
+#: translations.py:243
 msgid "Reverb time(s)"
 msgstr ""
 
-#: translations.py:224 translations.py:261
+#: translations.py:244 translations.py:281
 msgid "Damping"
 msgstr ""
 
-#: translations.py:225
+#: translations.py:245
 msgid "Input bandwith"
 msgstr ""
 
-#: translations.py:226
+#: translations.py:246
 msgid "Dry signal level(dB)"
 msgstr ""
 
-#: translations.py:227
+#: translations.py:247
 msgid "Early reflection level(dB)"
 msgstr ""
 
-#: translations.py:228
+#: translations.py:248
 msgid "Tail level(dB)"
 msgstr ""
 
-#: translations.py:230
+#: translations.py:250
 msgid "LF keyfilter(Hz)"
 msgstr ""
 
-#: translations.py:231
+#: translations.py:251
 msgid "HF keyfilter(Hz)"
 msgstr ""
 
-#: translations.py:232
+#: translations.py:252
 msgid "Threshold(dB)"
 msgstr ""
 
-#: translations.py:233
+#: translations.py:253
 msgid "Attack(ms)"
 msgstr ""
 
-#: translations.py:234
+#: translations.py:254
 msgid "Hold(ms)"
 msgstr ""
 
-#: translations.py:235
+#: translations.py:255
 msgid "Decay(ms)"
 msgstr ""
 
-#: translations.py:236
+#: translations.py:256
 msgid "Range(dB)"
 msgstr ""
 
-#: translations.py:238
+#: translations.py:258
 msgid "Center Frequency(Hz)"
 msgstr ""
 
-#: translations.py:239
+#: translations.py:259
 msgid "Bandwidth(Hz)"
 msgstr ""
 
-#: translations.py:240
+#: translations.py:260
 msgid "Stages"
 msgstr ""
 
-#: translations.py:242
+#: translations.py:262
 msgid "Pitch-coefficient"
 msgstr ""
 
-#: translations.py:244
+#: translations.py:264
 msgid "50Hz gain"
 msgstr ""
 
-#: translations.py:245
+#: translations.py:265
 msgid "100Hz gain"
 msgstr ""
 
-#: translations.py:246
+#: translations.py:266
 msgid "156Hz gain"
 msgstr ""
 
-#: translations.py:247
+#: translations.py:267
 msgid "220Hz gain"
 msgstr ""
 
-#: translations.py:248
+#: translations.py:268
 msgid "311Hz gain"
 msgstr ""
 
-#: translations.py:249
+#: translations.py:269
 msgid "440Hz gain"
 msgstr ""
 
-#: translations.py:250
+#: translations.py:270
 msgid "622Hz gain"
 msgstr ""
 
-#: translations.py:251
+#: translations.py:271
 msgid "880Hz gain"
 msgstr ""
 
-#: translations.py:252
+#: translations.py:272
 msgid "1250Hz gain"
 msgstr ""
 
-#: translations.py:253
+#: translations.py:273
 msgid "1750Hz gain"
 msgstr ""
 
-#: translations.py:254
+#: translations.py:274
 msgid "2500Hz gain"
 msgstr ""
 
-#: translations.py:255
+#: translations.py:275
 msgid "3500Hz gain"
 msgstr ""
 
-#: translations.py:256
+#: translations.py:276
 msgid "5000Hz gain"
 msgstr ""
 
-#: translations.py:257
+#: translations.py:277
 msgid "100000Hz gain"
 msgstr ""
 
-#: translations.py:258
+#: translations.py:278
 msgid "200000Hz gain"
 msgstr ""
 
-#: translations.py:260
+#: translations.py:280
 msgid "Reverb time"
 msgstr ""
 
-#: translations.py:262 translations.py:265
+#: translations.py:282 translations.py:285
 msgid "Dry/Wet mix"
 msgstr ""
 
-#: translations.py:264
+#: translations.py:284
 msgid "Effect cutoff(Hz)"
 msgstr ""
 
-#: translations.py:267
+#: translations.py:287
 msgid "Rate"
 msgstr ""
 
-#: translations.py:269
+#: translations.py:289
 msgid "Sift"
 msgstr ""
 
-#: translations.py:273
+#: translations.py:293
 msgid "Year"
 msgstr ""
 
-#: translations.py:274
+#: translations.py:294
 msgid "RPM"
 msgstr ""
 
-#: translations.py:275
+#: translations.py:295
 msgid "Surface warping"
 msgstr ""
 
-#: translations.py:276
+#: translations.py:296
 msgid "Cracle"
 msgstr ""
 
-#: translations.py:277
+#: translations.py:297
 msgid "Wear"
 msgstr ""
 
-#: translations.py:279
+#: translations.py:299
 msgid "Number of voices"
 msgstr ""
 
-#: translations.py:280
+#: translations.py:300
 msgid "Delay base(ms)"
 msgstr ""
 
-#: translations.py:281
+#: translations.py:301
 msgid "Voice separation(ms)"
 msgstr ""
 
-#: translations.py:282
+#: translations.py:302
 msgid "Detune(%)"
 msgstr ""
 
-#: translations.py:283
+#: translations.py:303
 msgid "Oscillation frequency(Hz)"
 msgstr ""
 
-#: translations.py:284
+#: translations.py:304
 msgid "Output attenuation(dB)"
 msgstr ""
 
-#: translations.py:286
+#: translations.py:306
 msgid "X Scatter"
 msgstr ""
 
-#: translations.py:287
+#: translations.py:307
 msgid "Y Scatter"
 msgstr ""
 
-#: translations.py:288
+#: translations.py:308
 msgid "Scale"
 msgstr ""
 
-#: translations.py:289
+#: translations.py:309
 msgid "Mix"
 msgstr ""
 
-#: translations.py:292
+#: translations.py:312
 msgid "Delta"
 msgstr ""
 
-#: translations.py:293
+#: translations.py:313
 msgid "Duration"
 msgstr ""
 
-#: translations.py:294
+#: translations.py:314
 msgid "Bright. up"
 msgstr ""
 
-#: translations.py:295
+#: translations.py:315
 msgid "Bright. down"
 msgstr ""
 
-#: translations.py:296
+#: translations.py:316
 msgid "Bright. dur."
 msgstr ""
 
-#: translations.py:297
+#: translations.py:317
 msgid "Develop up"
 msgstr ""
 
-#: translations.py:298
+#: translations.py:318
 msgid "Develop down"
 msgstr ""
 
-#: translations.py:299
+#: translations.py:319
 msgid "Develop dur."
 msgstr ""
 
-#: translations.py:300
+#: translations.py:320
 msgid "Triplevel"
 msgstr ""
 
-#: translations.py:301
+#: translations.py:321
 msgid "Difference Space"
 msgstr ""
 
-#: translations.py:302
+#: translations.py:322
 msgid "Block width"
 msgstr ""
 
-#: translations.py:303
+#: translations.py:323
 msgid "Block height"
 msgstr ""
 
-#: translations.py:304 translations.py:350
+#: translations.py:324 translations.py:370
 msgid "Size"
 msgstr ""
 
-#: translations.py:305
+#: translations.py:325
 msgid "Noise"
 msgstr ""
 
-#: translations.py:313
+#: translations.py:333
 msgid "U"
 msgstr ""
 
-#: translations.py:314
+#: translations.py:334
 msgid "V"
 msgstr ""
 
-#: translations.py:315 translations.py:322
+#: translations.py:335 translations.py:342
 msgid "Black"
 msgstr ""
 
-#: translations.py:316 translations.py:323
+#: translations.py:336 translations.py:343
 msgid "White"
 msgstr ""
 
-#: translations.py:318
+#: translations.py:338
 msgid "Neutral Color"
 msgstr ""
 
-#: translations.py:319 translations.py:320
+#: translations.py:339 translations.py:340
 msgid "Input"
 msgstr ""
 
-#: translations.py:321
+#: translations.py:341
 msgid "Gamma"
 msgstr ""
 
-#: translations.py:324
+#: translations.py:344
 msgid "Num"
 msgstr ""
 
-#: translations.py:325
+#: translations.py:345
 msgid "Dist. weight"
 msgstr ""
 
-#: translations.py:327
+#: translations.py:347
 msgid "Variance"
 msgstr ""
 
-#: translations.py:329
+#: translations.py:349
 msgid "Red Saturation"
 msgstr ""
 
-#: translations.py:330
+#: translations.py:350
 msgid "Yellow Saturation"
 msgstr ""
 
-#: translations.py:331
+#: translations.py:351
 msgid "Factor"
 msgstr ""
 
-#: translations.py:332
+#: translations.py:352
 msgid "Source color"
 msgstr ""
 
-#: translations.py:334
+#: translations.py:354
 msgid "Amplitude"
 msgstr ""
 
-#: translations.py:335
+#: translations.py:355
 msgid "Frequency"
 msgstr ""
 
-#: translations.py:338
+#: translations.py:358
 msgid "Center Correct"
 msgstr ""
 
-#: translations.py:339
+#: translations.py:359
 msgid "Edges Correct"
 msgstr ""
 
-#: translations.py:341
+#: translations.py:361
 msgid "Axis"
 msgstr ""
 
-#: translations.py:344
+#: translations.py:364
 msgid "Edge Lightning"
 msgstr ""
 
-#: translations.py:345
+#: translations.py:365
 msgid "Edge Brightness"
 msgstr ""
 
-#: translations.py:346
+#: translations.py:366
 msgid "Non-Edge Brightness"
 msgstr ""
 
-#: translations.py:347
+#: translations.py:367
 msgid "Spatial"
 msgstr ""
 
-#: translations.py:348
+#: translations.py:368
 msgid "Temporal"
 msgstr ""
 
-#: translations.py:351
+#: translations.py:371
 msgid "Border width"
 msgstr ""
 
-#: translations.py:352
+#: translations.py:372
 msgid "Phase Incr."
 msgstr ""
 
-#: translations.py:353
+#: translations.py:373
 msgid "Zoom"
 msgstr ""
 
-#: translations.py:354
+#: translations.py:374
 msgid "Freeze Frame"
 msgstr ""
 
-#: translations.py:355
+#: translations.py:375
 msgid "Freeze After"
 msgstr ""
 
-#: translations.py:356
+#: translations.py:376
 msgid "Freeze Before"
 msgstr ""
 
-#: translations.py:357
+#: translations.py:377
 msgid "Angle"
 msgstr ""
 
-#: translations.py:358 translations.py:361 translations.py:362
+#: translations.py:378 translations.py:381 translations.py:382
 msgid "transition.geometry"
 msgstr ""
 
-#: translations.py:359 translations.py:376
+#: translations.py:379 translations.py:396
 msgid "Shear X"
 msgstr ""
 
-#: translations.py:360 translations.py:377
+#: translations.py:380 translations.py:397
 msgid "Shear Y"
 msgstr ""
 
-#: translations.py:369 translations.py:370 translations.py:375
-#: translations.py:379
+#: translations.py:389 translations.py:390 translations.py:395
+#: translations.py:399
 msgid "Opacity"
 msgstr ""
 
-#: translations.py:371
+#: translations.py:391
 msgid "Rotate X"
 msgstr ""
 
-#: translations.py:372
+#: translations.py:392
 msgid "Rotate Y"
 msgstr ""
 
-#: translations.py:373
+#: translations.py:393
 msgid "Rotate Z"
 msgstr ""
 
-#: translations.py:380 translations.py:384
+#: translations.py:400 translations.py:404
 msgid "Wipe Type"
 msgstr ""
 
-#: translations.py:382 translations.py:386
+#: translations.py:402 translations.py:406
 msgid "Softness"
 msgstr ""
 
-#: translations.py:383
+#: translations.py:403
 msgid "Wipe Amount"
 msgstr ""
 
-#: mlttransitions.py:46
+#: mlttransitions.py:66
 msgid "Vertical From Center"
 msgstr ""
 
-#: mlttransitions.py:47
+#: mlttransitions.py:67
 msgid "Vertical Top to Bottom"
 msgstr ""
 
-#: mlttransitions.py:48
+#: mlttransitions.py:68
 msgid "Vertical Bottom to Top"
 msgstr ""
 
-#: mlttransitions.py:49
+#: mlttransitions.py:69
 msgid "Horizontal From Center"
 msgstr ""
 
-#: mlttransitions.py:50
+#: mlttransitions.py:70
 msgid "Horizontal Left to Right"
 msgstr ""
 
-#: mlttransitions.py:51
+#: mlttransitions.py:71
 msgid "Horizontal Right to Left"
 msgstr ""
 
-#: mlttransitions.py:52
+#: mlttransitions.py:72
 msgid "Clock Left To Right"
 msgstr ""
 
-#: mlttransitions.py:53
+#: mlttransitions.py:73
 msgid "Clock Right to Left"
 msgstr ""
 
-#: mlttransitions.py:54
+#: mlttransitions.py:74
 msgid "Clock Symmetric"
 msgstr ""
 
-#: mlttransitions.py:55
+#: mlttransitions.py:75
 msgid "Stripes Horizontal"
 msgstr ""
 
-#: mlttransitions.py:56
+#: mlttransitions.py:76
 msgid "Stripes Horizontal Big"
 msgstr ""
 
-#: mlttransitions.py:57
+#: mlttransitions.py:77
 msgid "Stripes Horizontal Moving"
 msgstr ""
 
-#: mlttransitions.py:58
+#: mlttransitions.py:78
 msgid "Stripes Vertical"
 msgstr ""
 
-#: mlttransitions.py:59
+#: mlttransitions.py:79
 msgid "Stripes Vertical Big"
 msgstr ""
 
-#: mlttransitions.py:60
+#: mlttransitions.py:80
 msgid "Burst"
 msgstr ""
 
-#: mlttransitions.py:61
+#: mlttransitions.py:81
 msgid "Circle From In"
 msgstr ""
 
-#: mlttransitions.py:62
+#: mlttransitions.py:82
 msgid "Circle From Out"
 msgstr ""
 
-#: mlttransitions.py:63
+#: mlttransitions.py:83
 msgid "Cloud"
 msgstr ""
 
-#: mlttransitions.py:64
+#: mlttransitions.py:84
 msgid "Hatched 1"
 msgstr ""
 
-#: mlttransitions.py:65
+#: mlttransitions.py:85
 msgid "Hatched 2"
 msgstr ""
 
-#: mlttransitions.py:66
+#: mlttransitions.py:86
 msgid "Hourglass"
 msgstr ""
 
-#: mlttransitions.py:67
+#: mlttransitions.py:87
 msgid "Puddles"
 msgstr ""
 
-#: mlttransitions.py:68
+#: mlttransitions.py:88
 msgid "Rings"
 msgstr ""
 
-#: mlttransitions.py:69
+#: mlttransitions.py:89
 msgid "Rectangle From In"
 msgstr ""
 
-#: mlttransitions.py:70
+#: mlttransitions.py:90
 msgid "Rectangle From Out"
 msgstr ""
 
-#: mlttransitions.py:71
+#: mlttransitions.py:91
 msgid "Rectangle Bars"
 msgstr ""
 
-#: mlttransitions.py:72
+#: mlttransitions.py:92
 msgid "Sand"
 msgstr ""
 
-#: mlttransitions.py:73
+#: mlttransitions.py:93
 msgid "Sphere"
 msgstr ""
 
-#: mlttransitions.py:74
+#: mlttransitions.py:94
 msgid "Spiral Abstract"
 msgstr ""
 
-#: mlttransitions.py:75
+#: mlttransitions.py:95
 msgid "Spiral"
 msgstr ""
 
-#: mlttransitions.py:76
+#: mlttransitions.py:96
 msgid "Spiral Galaxy"
 msgstr ""
 
-#: mlttransitions.py:77
+#: mlttransitions.py:97
 msgid "Spiral Big"
 msgstr ""
 
-#: mlttransitions.py:78
+#: mlttransitions.py:98
 msgid "Spiral Medium"
 msgstr ""
 
-#: mlttransitions.py:79
+#: mlttransitions.py:99
 msgid "Spots"
 msgstr ""
 
-#: mlttransitions.py:80
+#: mlttransitions.py:100
 msgid "Star"
 msgstr ""
 
-#: mlttransitions.py:81
+#: mlttransitions.py:101
 msgid "Arch"
 msgstr ""
 
-#: mlttransitions.py:82
+#: mlttransitions.py:102
 msgid "Patches"
 msgstr ""
 
-#: mlttransitions.py:83
+#: mlttransitions.py:103
 msgid "Free Stripes"
 msgstr ""
 
-#: mlttransitions.py:84
+#: mlttransitions.py:104
 msgid "Free Curves"
 msgstr ""
 
-#: mlttransitions.py:85
+#: mlttransitions.py:105
 msgid "Diagonal 1"
 msgstr ""
 
-#: mlttransitions.py:86
+#: mlttransitions.py:106
 msgid "Diagonal 2"
 msgstr ""
 
-#: mlttransitions.py:87
+#: mlttransitions.py:107
 msgid "Diagonal 3"
 msgstr ""
 
-#: mlttransitions.py:88
+#: mlttransitions.py:108
 msgid "Diagonal 4"
 msgstr ""
 
-#: mlttransitions.py:89
+#: mlttransitions.py:109
 msgid "Checkerboard"
 msgstr ""
 
-#: mlttransitions.py:92
+#: mlttransitions.py:112
 msgid "Affine"
 msgstr ""
 
-#: mlttransitions.py:93
+#: mlttransitions.py:113
 msgid "Dissolve"
 msgstr ""
 
-#: mlttransitions.py:94
+#: mlttransitions.py:114
 msgid "Picture in Picture"
 msgstr ""
 
-#: mlttransitions.py:95
+#: mlttransitions.py:115
 msgid "Region"
 msgstr ""
 
-#: mlttransitions.py:96
+#: mlttransitions.py:116
 msgid "Wipe Clip Length"
 msgstr ""
 
-#: mlttransitions.py:100
+#: mlttransitions.py:120
 msgid "Burn"
 msgstr ""
 
-#: mlttransitions.py:101
+#: mlttransitions.py:121
 msgid "Color only"
 msgstr ""
 
-#: mlttransitions.py:102
+#: mlttransitions.py:122
 msgid "Darken"
 msgstr ""
 
-#: mlttransitions.py:103
+#: mlttransitions.py:123
 msgid "Difference"
 msgstr ""
 
-#: mlttransitions.py:104
+#: mlttransitions.py:124
 msgid "Divide"
 msgstr ""
 
-#: mlttransitions.py:105
+#: mlttransitions.py:125
 msgid "Dodge"
 msgstr ""
 
-#: mlttransitions.py:106
+#: mlttransitions.py:126
 msgid "Grain extract"
 msgstr ""
 
-#: mlttransitions.py:107
+#: mlttransitions.py:127
 msgid "Grain merge"
 msgstr ""
 
-#: mlttransitions.py:108
+#: mlttransitions.py:128
 msgid "Hardlight"
 msgstr ""
 
-#: mlttransitions.py:110
+#: mlttransitions.py:130
 msgid "Lighten"
 msgstr ""
 
-#: mlttransitions.py:111
+#: mlttransitions.py:131
 msgid "Multiply"
 msgstr ""
 
-#: mlttransitions.py:112
+#: mlttransitions.py:132
 msgid "Overlay"
 msgstr ""
 
-#: mlttransitions.py:114
+#: mlttransitions.py:134
 msgid "Screen"
 msgstr ""
 
-#: mlttransitions.py:115
+#: mlttransitions.py:135
 msgid "Softlight"
 msgstr ""
 
-#: mlttransitions.py:116
+#: mlttransitions.py:136
 msgid "Subtract"
 msgstr ""
 
-#: mlttransitions.py:117
+#: mlttransitions.py:137
 msgid "Value"
 msgstr ""
 
-#: propertyeditorbuilder.py:187
+#: propertyeditorbuilder.py:207
 msgid "Height"
 msgstr ""
 
-#: propertyeditorbuilder.py:300 propertyeditorbuilder.py:353
+#: propertyeditorbuilder.py:320 propertyeditorbuilder.py:373
 msgid "Nothing"
 msgstr ""
 
-#: propertyeditorbuilder.py:300 propertyeditorbuilder.py:353
+#: propertyeditorbuilder.py:320 propertyeditorbuilder.py:373
 msgid "Progressive"
 msgstr ""
 
-#: propertyeditorbuilder.py:300 propertyeditorbuilder.py:353
+#: propertyeditorbuilder.py:320 propertyeditorbuilder.py:373
 msgid "Deinterlace"
 msgstr ""
 
-#: propertyeditorbuilder.py:300 propertyeditorbuilder.py:353
+#: propertyeditorbuilder.py:320 propertyeditorbuilder.py:373
 msgid "Both"
 msgstr ""
 
-#: propertyeditorbuilder.py:310 propertyeditorbuilder.py:363
+#: propertyeditorbuilder.py:330 propertyeditorbuilder.py:383
 msgid "Force"
 msgstr ""
 
-#: propertyeditorbuilder.py:320 propertyeditorbuilder.py:373
+#: propertyeditorbuilder.py:340 propertyeditorbuilder.py:393
 msgid "Align"
 msgstr ""
 
-#: keyframeeditor.py:992
+#: keyframeeditor.py:1017
 msgid "View:"
 msgstr ""
 
-#: keyframeeditor.py:995
-msgid "Ratio"
+#: keyframeeditor.py:1021
+msgid "Reset Geometry"
 msgstr ""
 
-#: keyframeeditor.py:996
-msgid "Reset source image to original position and size"
+#: keyframeeditor.py:1022
+msgid "Geometry to Original Aspect Ratio"
 msgstr ""
 
-#: keyframeeditor.py:997
-msgid "Set source image to original aspect ratio."
+#: keyframeeditor.py:1025
+msgid "Edit Actions Menu"
 msgstr ""
 
-#: keyframeeditor.py:1004
+#: keyframeeditor.py:1027
 msgid "Large"
 msgstr ""
 
-#: keyframeeditor.py:1005
+#: keyframeeditor.py:1028
 msgid "Medium"
 msgstr ""
 
-#: keyframeeditor.py:1006
+#: keyframeeditor.py:1029
 msgid "Small"
 msgstr ""
