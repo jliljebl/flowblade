@@ -290,7 +290,7 @@ def oneroll_trim_release(x, y, frame, state):
     global exiting_mode
     if exiting_mode:
         exiting_mode = False
-        _clear_temp_clip()
+        clear_temp_clip()
         set_exit_mode_func()
         return
 
@@ -303,7 +303,7 @@ def _do_one_roll_trim_edit(frame):
     delta = frame - edit_data["edit_frame"]
     
     # Remove temp blank
-    _clear_temp_clip()
+    clear_temp_clip()
 
     # Do edit
     # case: editing to-side of cut
@@ -329,8 +329,7 @@ def _do_one_roll_trim_edit(frame):
         action.do_edit()
         # Edit is reinitialized in callback from edit action one_roll_trim_undo_done
 
-def _clear_temp_clip():
-    #global temp_blank_added
+def clear_temp_clip():
     # If we're editing out edit of last clip of track we'll add a temp blank that is 
     # removed here after edit is complete.
     if temp_blank_added == True:
