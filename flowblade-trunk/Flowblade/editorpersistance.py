@@ -135,7 +135,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
         # Unpack widgets
         gen_opts_widgets, edit_prefs_widgets = widgets_tuples_tuple
         default_profile_combo, open_in_last_opened_check, undo_max_spin, disp_splash = gen_opts_widgets
-        auto_play_in_clip_monitor_check, auto_center_check = edit_prefs_widgets
+        auto_play_in_clip_monitor_check, auto_center_check, auto_move_on_edit = edit_prefs_widgets
 
         global prefs
         prefs.open_in_last_opended_media_dir = open_in_last_opened_check.get_active()
@@ -145,6 +145,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
 
         prefs.auto_play_in_clip_monitor = auto_play_in_clip_monitor_check.get_active()
         prefs.auto_center_on_play_stop = auto_center_check.get_active()
+        prefs.auto_move_after_edit = auto_move_on_edit.get_active()
 
 class EditorPreferences:
     """
@@ -163,5 +164,6 @@ class EditorPreferences:
         self.thumbnail_folder = None
         self.hidden_profile_names = []
         self.display_splash_screen = True
+        self.auto_move_after_edit = False
 
         self.AUTO_SAVE_OPTS = ((-1, _("No Autosave")),(2, _("1 min")),(2, _("2 min")),(5, _("5 min")))

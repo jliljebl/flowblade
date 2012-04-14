@@ -400,10 +400,6 @@ def stop_autosave():
     autosave_timeout_id = -1
 
 def do_autosave():
-    project_path = editorstate.PROJECT().last_save_path 
-    if project_path == None:
-        return True
-
     autosave_file = utils.get_hidden_user_dir_path() + AUTOSAVE_FILE
     persistance.save_project(editorstate.PROJECT(), autosave_file)
     return True

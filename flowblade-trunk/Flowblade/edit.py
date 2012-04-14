@@ -316,7 +316,7 @@ class EditAction:
         # HACK, see above.
         if self.stop_for_edit:
             PLAYER().consumer.start()
-        
+
         if do_gui_update:
             self._update_gui()
             
@@ -336,7 +336,7 @@ class EditAction:
         # HACK, see above.
         if self.stop_for_edit:
             PLAYER().consumer.start()
-        
+
         if do_gui_update:
             self._update_gui()
 
@@ -1165,7 +1165,7 @@ def _move_compositor_undo(self):
     compositeeditor.set_compositor(self.compositor)
 
 def _move_compositor_redo(self):
-    # Compositors are recreated continually in sequnece.restack_compositors() and cannot be identified for undo/redo using object identity 
+    # Compositors are recreated continually in sequence.restack_compositors() and cannot be identified for undo/redo using object identity 
     # so these ids must be  preserved for all succesive versions of a compositor.
     if self.first_do == True:
         self.destroy_id = self.compositor.destroy_id

@@ -415,7 +415,7 @@ def _do_rendering():
         return
 
     render.open_media_file_callback = open_rendered_file # we'll get circular imports with useraction->mltplayer->render->useraction
-                                                         # if just try to import so we'll just monkeypatch this callback func in
+                                                         # if just try to import so we'll just put this callback func in
 
     # Set render start and end points
     if render.widgets.range_cb.get_active() == 0:
@@ -429,7 +429,7 @@ def _do_rendering():
     if start_frame == -1 or end_frame == -1:
         if render.widgets.range_cb.get_active() == 1:
             primary_txt = _("Render range not defined")
-            secondary_txt = _("Define render range using Mark In and Mark Out points\norselect range option 'Program length' to start rendering.")
+            secondary_txt = _("Define render range using Mark In and Mark Out points\nor select range option 'Program length' to start rendering.")
             dialogs.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
             return
 

@@ -432,8 +432,8 @@ def _move_mode_pressed(event, frame):
             _select_multiple_clips(track.id, range_in, range_out)
             pressed_on_selected = False
             drag_disabled = True
-    # case: CTRL down, combine selection with earlier selected clips 
-    elif (event.state & gtk.gdk.CONTROL_MASK):
+    # case: CTRL or SHIFT down, combine selection with earlier selected clips 
+    elif ((event.state & gtk.gdk.CONTROL_MASK) or (event.state & gtk.gdk.SHIFT_MASK)):
         # CTRL pressing blank clears selection
         if pressed_clip.is_blanck_clip:
             clear_selected_clips()

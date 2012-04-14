@@ -610,20 +610,25 @@ def get_edit_prefs_panel():
     auto_center_on_stop = gtk.CheckButton()
     auto_center_on_stop.set_active(prefs.auto_center_on_play_stop)
 
+    auto_move_on_edit = gtk.CheckButton()
+    auto_move_on_edit.set_active(prefs.auto_move_after_edit)
+    
     # Layout
     row1 = get_two_column_box(gtk.Label(_("Autoplay new Clips in Clip Monitor")), auto_play_in_clip_monitor, PREFERENCES_LEFT)
     row2 = get_two_column_box(gtk.Label(_("Center Current Frame on Playback Stop")), auto_center_on_stop, PREFERENCES_LEFT)
-
+    row3 = get_two_column_box(gtk.Label(_("Move Current Frame to Clip start after edit")), auto_move_on_edit, PREFERENCES_LEFT)
+    
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
+    #vbox.pack_start(row3, False, False, 0) feature disabled
     vbox.pack_start(gtk.Label(), True, True, 0)
     
     align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     align.set_padding(12, 0, 12, 12)
     align.add(vbox)
 
-    return align, (auto_play_in_clip_monitor, auto_center_on_stop)
+    return align, (auto_play_in_clip_monitor, auto_center_on_stop, auto_move_on_edit)
 
 def get_file_properties_panel(data):
     media_file, img, size, length, vcodec, acodec, channels, frequency = data

@@ -280,7 +280,6 @@ def tline_canvas_mouse_pressed(event, frame):
     if (event.button == 3):
         if (editorstate.current_is_move_mode()
             and timeline_visible()):
-            # Do seek or clip menu display(if ctrl pressed)
             if not(event.state & gtk.gdk.CONTROL_MASK):
                 success = _display_clip_menu(event.y, event, frame)
                 if not success:
