@@ -38,6 +38,7 @@ from editorstate import PLAYER
 import respaths
 import sequence
 import utils
+import updater
 
 REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is now relaculated on initilization so number here is irrelevent.
 
@@ -1141,7 +1142,7 @@ class TimeLineFrameScale:
     def _press_event(self, event):
         if event.button == 1 or event.button == 3:
             if not timeline_visible():
-                self.set_default_callback()
+                updater.display_sequence_in_monitor()
                 return
             PLAYER().seek_frame(get_frame(event.x))
             self.drag_on = True

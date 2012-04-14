@@ -237,7 +237,6 @@ def tline_canvas_mouse_pressed(event, frame):
     # default mode.
     if not timeline_visible():
         updater.display_sequence_in_monitor()
-        set_default_edit_mode()
         if (event.button == 1):
             # Now that we have correct edit mode we'll reenter
             # this method to get e.g. a select action

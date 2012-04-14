@@ -216,11 +216,6 @@ def set_info_icon(info_icon_id):
     gui.tline_info.add(widget)
     gui.tline_info.info_contents = widget
     widget.show()
-    """
-    gui.tline_info.queue_draw()
-    while(gtk.events_pending()):
-        gtk.main_iteration()
-    """    
 
 # --- ZOOM
 def zoom_in():
@@ -349,8 +344,7 @@ def display_sequence_in_monitor():
     """
     if PLAYER() == None: # this method gets called too early when initializing, hack fix.
         return
-    
-    
+
     # If this gets called without user having pressed 'Timeline' button we'll 
     # programmatically press it to recall this method to have the correct button down.
     if gui.sequence_editor_b.get_active() == False:
@@ -481,8 +475,6 @@ def display_marks_tc():
                 l = mark_out
             l_tc = utils.get_tc_string(l)
             gui.length_display.set_text(l_tc)
-        
-        
 
 # ----------------------------------------------- clip editors
 def clip_removed_during_edit(clip):
@@ -541,8 +533,6 @@ def _set_move_mode_buttons_enabled(enabled):
     gui.editor_window.append_b.set_sensitive(enabled)
     gui.editor_window.resync_b.set_sensitive(enabled)
     gui.editor_window.zoom_length_b.set_sensitive(enabled)
-    #gui.editor_window.undo_b.set_sensitive(enabled)
-    #gui.editor_window.redo_b.set_sensitive(enabled)
 
     # Monitor buttons
     gui.editor_window.rew_b.set_sensitive(enabled) 
