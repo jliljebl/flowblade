@@ -673,17 +673,17 @@ class GeometryKeyFrameEditor:
     Component is used as a part of e.g GeometryEditor, which handles
     also keyframe creation and deletion and opacity, and
     writing out the keyframes with combined information.
+
+    Needed parent_editor callback interface:
+        def geometry_edit_started(self)
+        def geometry_edit_finished(sel)
+        def update_request_from_geom_editor(self)
     """
     def __init__(self, editable_property, parent_editor):
         self.widget = CairoDrawableArea(GEOMETRY_EDITOR_WIDTH, 
                                         GEOMETRY_EDITOR_HEIGHT, 
                                         self._draw)
-        """
-        Needed parent_editor callback interface:
-            def geometry_edit_started(self)
-            def geometry_edit_finished(sel)
-            def update_request_from_geom_editor(self)
-        """
+
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
@@ -1320,6 +1320,20 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.geom_kf_edit.add_keyframe(self.clip_editor.current_clip_frame)
         
     def geometry_edit_finished(self): # callback from geom_kf_edit
+        self.geom_kf_edit.set_keyframe_to_edit_rect(self.clip_editor.active_kf_index)
+        self.update_editor_view_with_frame(self.clip_editor.current_clip_frame)
+        self.update_property_value()
+    
+    def arrow_edit(self, keyval):
+        if keyval == gtk.keysyms.Left:
+            self.geom_kf_edit.source_edit_rect.x -= 1
+        if keyval == gtk.keysyms.Right:
+            self.geom_kf_edit.source_edit_rect.x += 1
+        if keyval == gtk.keysyms.Up:
+            self.geom_kf_edit.source_edit_rect.y -= 1
+        if keyval == gtk.keysyms.Down:                         
+            self.geom_kf_edit.source_edit_rect.y += 1
+        
         self.geom_kf_edit.set_keyframe_to_edit_rect(self.clip_editor.active_kf_index)
         self.update_editor_view_with_frame(self.clip_editor.current_clip_frame)
         self.update_property_value()

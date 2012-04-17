@@ -28,6 +28,7 @@ import audiowaveform
 import buttonevent
 import clipeffectseditor
 import compositeeditor
+import keyframeeditor
 import compositormodes
 import gui
 import editevent
@@ -62,6 +63,12 @@ def key_down(widget, event):
             # by stopping signal
             gui.editor_window.window.emit_stop_by_name("key_press_event")
         return was_handled
+
+    was_handled = _handle_geometry_editor_arrow_keys(event)
+    if was_handled:
+        # Stop widget focus from travelling if arrow key pressed
+        gui.editor_window.window.emit_stop_by_name("key_press_event")
+        return True
 
     # Pressing timeline button obivously leaves user expecting
     # to have focus in timeline
@@ -263,14 +270,23 @@ def _handle_delete():
 
     return False
 
+def _handle_geometry_editor_arrow_keys(event):
+    if compositeeditor.keyframe_editor_widgets != None:
+        for kfeditor in compositeeditor.keyframe_editor_widgets:
+            if kfeditor.get_focus_child() != None:
+                if kfeditor.__class__ == keyframeeditor.GeometryEditor:
+                    if ((event.keyval == gtk.keysyms.Left) 
+                        or (event.keyval == gtk.keysyms.Right)
+                        or (event.keyval == gtk.keysyms.Up)
+                        or (event.keyval == gtk.keysyms.Down)):
+                        kfeditor.arrow_edit(event.keyval)
+                        return True
+    return False
+
 def _get_focus_keyframe_editor(keyframe_editor_widgets):
     if keyframe_editor_widgets == None:
         return None
     for kfeditor in keyframe_editor_widgets:
         if kfeditor.get_focus_child() != None:
-            print "jou"
-            print kfeditor
-            return kfeditor
-    
-    print "nou"
+           return kfeditor
     return None
