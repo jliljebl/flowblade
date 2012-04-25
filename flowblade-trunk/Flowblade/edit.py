@@ -224,6 +224,7 @@ def _overwrite_cut_track(track, frame, add_cloned_filters=False):
         return (-1, -1)
 
 def _overwrite_cut_range_out(track, self):
+    # self is the EditAction object
     # Cut at out point if not already on cut and out point inside track length
     self.orig_out_clip = None
     if track.get_length() > self.over_out:
@@ -237,7 +238,6 @@ def _overwrite_cut_range_out(track, self):
     else:
         self.out_clip_in = -1
 
-        
 def _overwrite_restore_in(track, moved_index, self):
     # self is the EditAction object
     in_clip = _remove_clip(track, moved_index - 1)
@@ -307,7 +307,7 @@ class EditAction:
         if self.stop_for_edit:
             PLAYER().consumer.stop()
 
-        movemodes.clear_selected_clips()  # selection very likely not valid soon after change in sequence
+        movemodes.clear_selected_clips()  # selection not valid soon after change in sequence
 
         self.undo_func(self)
 
@@ -327,7 +327,7 @@ class EditAction:
         if self.stop_for_edit:
             PLAYER().consumer.stop()
 
-        movemodes.clear_selected_clips() # selection very likely not valid soon after change in sequence
+        movemodes.clear_selected_clips() # selection not valid soon after change in sequence
 
         self.redo_func(self)
 
@@ -342,8 +342,8 @@ class EditAction:
 
         
     def _update_gui(self):
-        updater.update_tline_scrollbar() # Slider needs adjust to possily new program length.
-                                         # This REPAINTS TIMELINE as side effect.
+        updater.update_tline_scrollbar() # Slider needs to adjust to possily new program length.
+                                         # This REPAINTS TIMELINE as a side effect.
         updater.update_kf_editor()
 
 

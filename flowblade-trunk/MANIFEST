@@ -24,6 +24,7 @@ Flowblade/guicomponents.py
 Flowblade/guiutils.py
 Flowblade/keyevents.py
 Flowblade/keyframeeditor.py
+Flowblade/memoryleak.py
 Flowblade/mltenv.py
 Flowblade/mltfilters.py
 Flowblade/mltplayer.py
@@ -52,12 +53,11 @@ Flowblade/undo.py
 Flowblade/updater.py
 Flowblade/useraction.py
 Flowblade/utils.py
-Flowblade/locale/Flowblade/pyedit.pot
-Flowblade/locale/fi/LC_MESSAGES/new.po~
-Flowblade/locale/fi/LC_MESSAGES/pyedit.mo
-Flowblade/locale/fi/LC_MESSAGES/pyedit.po
-Flowblade/locale/fi/LC_MESSAGES/pyedit.po~
-Flowblade/locale/fi/LC_MESSAGES/pyedit_old.po
+Flowblade/locale/Flowblade/Flowblade.pot
+Flowblade/locale/fi/LC_MESSAGES/Flowblade.mo
+Flowblade/locale/fi/LC_MESSAGES/Flowblade.po
+Flowblade/locale/fi/LC_MESSAGES/Flowblade.po~
+Flowblade/locale/fi/LC_MESSAGES/Flowblade_merge.po~
 Flowblade/res/filters/compositors.xml
 Flowblade/res/filters/filters.xml
 Flowblade/res/filters/wipes/bi-linear_x.pgm
@@ -113,6 +113,7 @@ Flowblade/res/help/correct_dest.png
 Flowblade/res/help/correct_timeline.png
 Flowblade/res/help/encoding.png
 Flowblade/res/help/ffmpeg_opts_help.xml
+Flowblade/res/help/flowblade.png
 Flowblade/res/help/gpl3
 Flowblade/res/help/help.xml
 Flowblade/res/help/monitor_buttons.png
@@ -160,7 +161,6 @@ Flowblade/res/img/filter_clip_icon_sharp.png
 Flowblade/res/img/filter_off.png
 Flowblade/res/img/filter_on.png
 Flowblade/res/img/fix.png
-Flowblade/res/img/flowblade.png
 Flowblade/res/img/flowblade_splash_black_small.png
 Flowblade/res/img/flowbladeappicon.png
 Flowblade/res/img/forward.png
@@ -197,6 +197,7 @@ Flowblade/res/img/one_roll_trim.png
 Flowblade/res/img/over_move.png
 Flowblade/res/img/over_move_bu.png
 Flowblade/res/img/overwrite_clip.png
+Flowblade/res/img/overwrite_range.png
 Flowblade/res/img/path3293.png
 Flowblade/res/img/path3670.png
 Flowblade/res/img/path3676.png

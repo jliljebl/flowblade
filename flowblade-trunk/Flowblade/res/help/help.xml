@@ -1956,7 +1956,8 @@
     <sect1>
         <title>Appendix B: Keyboard Shortcuts</title>
         <sect2>
-                <title>General Shortcuts</title> 
+                <title>General Shortcuts</title>
+                <para>These are always available. </para>
                 <table id="general-shortcut" frame="all">
  
                   <tgroup cols="2" colsep="1" rowsep="1">
@@ -2009,6 +2010,7 @@
         </sect2>
         <sect2>
                 <title>Timeline Shortcuts</title>
+                <para>These are only available if timeline or related widget has keyboard focus.</para>
                 <table id="Timeline-shortcut" frame="all">
  
                   <tgroup cols="2" colsep="1" rowsep="1">
@@ -2066,6 +2068,43 @@
                            <row valign="top">
                              <entry><para><guilabel>Space</guilabel></para></entry>
                              <entry><para>Start/Stop playback</para> </entry>
+                           </row>
+                         </tbody>
+                  </tgroup>
+                </table>
+        </sect2>
+        <sect2>
+                <title>Geometry Editor Shortcuts</title>
+                <para>These are only available if Geometry Editor widget (in Picture in Picture or Region Compositors) has keyboard focus.</para>
+                <table id="Geometry-shortcut" frame="all">
+ 
+                  <tgroup cols="2" colsep="1" rowsep="1">
+                         <colspec colname="COLSPEC0" colwidth="50*"/>
+                         <colspec colname="COLSPEC1"/>
+                         <thead>
+                                <row valign="top">
+                                  <entry colname="COLSPEC0">
+                                         <para>Keyboard Shortcut</para></entry>
+                                  <entry colname="COLSPEC1">
+                                         <para>Function</para></entry>
+                                </row>
+                         </thead> 
+                         <tbody> 
+                           <row valign="top">
+                             <entry><para>Left Arrow<guilabel></guilabel></para></entry>
+                             <entry><para>Move Source Video Left</para> </entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para><guilabel>Right Arrow</guilabel></para></entry>
+                             <entry><para>Move Source Video Right</para> </entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para><guilabel>Up Arrow</guilabel></para></entry>
+                             <entry><para>Move Source Video Up</para> </entry>
+                           </row>
+                           <row valign="top">
+                             <entry><para><guilabel>Down Arrow</guilabel></para></entry>
+                             <entry><para>Move Source Video Down</para> </entry>
                            </row>
                          </tbody>
                   </tgroup>

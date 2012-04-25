@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 11:59+0300\n"
+"POT-Creation-Date: 2012-04-18 11:49+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,43 +17,43 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: app.py:439
+#: app.py:435
 msgid "Too small screen for this application."
 msgstr ""
 
-#: app.py:442
+#: app.py:438
 msgid "Minimum screen dimensions for this application are 1152 x 864.\n"
 msgstr ""
 
-#: app.py:443
+#: app.py:439
 msgid "Your screen dimensions are "
 msgstr ""
 
-#: app.py:459
+#: app.py:455
 msgid "Project has not been saved since it was opened."
 msgstr ""
 
-#: app.py:464
+#: app.py:460
 msgid "Project was saved less than a minute ago."
 msgstr ""
 
-#: app.py:467
+#: app.py:463
 msgid "Project was saved one minute ago."
 msgstr ""
 
-#: app.py:469
+#: app.py:465
 msgid "Project was saved "
 msgstr ""
 
-#: app.py:469
+#: app.py:465
 msgid " minutes ago."
 msgstr ""
 
-#: app.py:479 useraction.py:282
+#: app.py:475 useraction.py:282
 msgid "Project has not been saved previously"
 msgstr ""
 
-#: app.py:480 useraction.py:283
+#: app.py:476 useraction.py:283
 msgid "Save project with File -> Save As before closing."
 msgstr ""
 
@@ -116,7 +116,7 @@ msgstr ""
 #: useraction.py:432
 msgid ""
 "Define render range using Mark In and Mark Out points\n"
-"orselect range option 'Program length' to start rendering."
+"or select range option 'Program length' to start rendering."
 msgstr ""
 
 #: useraction.py:468
@@ -340,11 +340,11 @@ msgid "Zoom to Sequence length"
 msgstr ""
 
 #: editorwindow.py:813
-msgid "Insert Move - i"
+msgid "Insert Move"
 msgstr ""
 
 #: editorwindow.py:814
-msgid "One Roll Trim - t"
+msgid "One Roll Trim"
 msgstr ""
 
 #: editorwindow.py:815
@@ -356,7 +356,7 @@ msgid "Overwrite Move"
 msgstr ""
 
 #: editorwindow.py:818
-msgid "Cut - x"
+msgid "Cut"
 msgstr ""
 
 #: editorwindow.py:819
@@ -762,19 +762,19 @@ msgstr ""
 msgid "Empty"
 msgstr ""
 
-#: editorpersistance.py:167
+#: editorpersistance.py:169
 msgid "No Autosave"
 msgstr ""
 
-#: editorpersistance.py:167
+#: editorpersistance.py:169
 msgid "1 min"
 msgstr ""
 
-#: editorpersistance.py:167
+#: editorpersistance.py:169
 msgid "2 min"
 msgstr ""
 
-#: editorpersistance.py:167
+#: editorpersistance.py:169
 msgid "5 min"
 msgstr ""
 
@@ -986,7 +986,7 @@ msgstr ""
 msgid "Pixel aspect ratio: "
 msgstr ""
 
-#: guicomponents.py:1051 panels.py:760
+#: guicomponents.py:1051 panels.py:765
 msgid "Progressive:"
 msgstr ""
 
@@ -1062,7 +1062,7 @@ msgstr ""
 msgid "Folder:"
 msgstr ""
 
-#: panels.py:132 panels.py:631
+#: panels.py:132 panels.py:636
 msgid "Name:"
 msgstr ""
 
@@ -1143,11 +1143,11 @@ msgid "Select Folder"
 msgstr ""
 
 #: panels.py:581
-msgid "Default profile"
+msgid "Default Profile"
 msgstr ""
 
 #: panels.py:582
-msgid "Remember media directory"
+msgid "Remember last media directory"
 msgstr ""
 
 #: panels.py:583
@@ -1159,134 +1159,138 @@ msgid "Thumbnail folder"
 msgstr ""
 
 #: panels.py:585
-msgid "Display Splash Screen"
+msgid "Display splash screen"
 msgstr ""
 
 #: panels.py:586
-msgid "Autosave every"
+msgid "Autosave for crash recovery every"
 msgstr ""
 
-#: panels.py:614
-msgid "Autoplay new clip in Clip Monitor"
+#: panels.py:617
+msgid "Autoplay new Clips in Clip Monitor"
 msgstr ""
 
-#: panels.py:615
-msgid "Center current frame on playback stop"
+#: panels.py:618
+msgid "Center Current Frame on Playback Stop"
 msgstr ""
 
-#: panels.py:632
-msgid "Path:"
-msgstr ""
-
-#: panels.py:633 panels.py:662
-msgid "Image Size:"
-msgstr ""
-
-#: panels.py:634
-msgid "Playtime:"
-msgstr ""
-
-#: panels.py:635
-msgid "Video Codec:"
-msgstr ""
-
-#: panels.py:636
-msgid "Audio Codec:"
+#: panels.py:619
+msgid "Move Current Frame to Clip start after edit"
 msgstr ""
 
 #: panels.py:637
+msgid "Path:"
+msgstr ""
+
+#: panels.py:638 panels.py:667
+msgid "Image Size:"
+msgstr ""
+
+#: panels.py:639
+msgid "Playtime:"
+msgstr ""
+
+#: panels.py:640
+msgid "Video Codec:"
+msgstr ""
+
+#: panels.py:641
+msgid "Audio Codec:"
+msgstr ""
+
+#: panels.py:642
 msgid "Audio Channels:"
 msgstr ""
 
-#: panels.py:638
+#: panels.py:643
 msgid "Audio Sample Rate:"
 msgstr ""
 
-#: panels.py:661
+#: panels.py:666
 msgid "Clip Length:"
 msgstr ""
 
-#: panels.py:663
+#: panels.py:668
 msgid "Media Path:"
 msgstr ""
 
-#: panels.py:687
+#: panels.py:692
 msgid "Composite clip on:"
 msgstr ""
 
-#: panels.py:694
+#: panels.py:699
 msgid "Load values"
 msgstr ""
 
-#: panels.py:735
+#: panels.py:740
 msgid "Save New Profile"
 msgstr ""
 
-#: panels.py:751
+#: panels.py:756
 msgid "Description.:"
 msgstr ""
 
-#: panels.py:752
+#: panels.py:757
 msgid "Frame rate num.:"
 msgstr ""
 
-#: panels.py:753
+#: panels.py:758
 msgid "Frame rate den.:"
 msgstr ""
 
-#: panels.py:754
+#: panels.py:759
 msgid "Width:"
 msgstr ""
 
-#: panels.py:755
+#: panels.py:760
 msgid "Height:"
 msgstr ""
 
-#: panels.py:756
+#: panels.py:761
 msgid "Sample aspect num.:"
 msgstr ""
 
-#: panels.py:757
+#: panels.py:762
 msgid "Sample aspect den.:"
 msgstr ""
 
-#: panels.py:758
+#: panels.py:763
 msgid "Display aspect num.:"
 msgstr ""
 
-#: panels.py:759
+#: panels.py:764
 msgid "Display aspect den.:"
 msgstr ""
 
-#: panels.py:787
+#: panels.py:792
 msgid "User "
 msgstr ""
 
-#: panels.py:803
+#: panels.py:808
 msgid "Delete Selected"
 msgstr ""
 
-#: panels.py:810
+#: panels.py:815
 msgid "Visible"
 msgstr ""
 
-#: panels.py:812
+#: panels.py:817
 msgid "Hide Selected"
 msgstr ""
 
-#: panels.py:814
+#: panels.py:819
 msgid "Hidden"
 msgstr ""
 
-#: panels.py:816
+#: panels.py:821
 msgid "Unhide Selected"
 msgstr ""
 
-#: panels.py:847
+#: panels.py:852
 msgid "User Profiles"
 msgstr ""
 
-#: panels.py:848
+#: panels.py:853
 msgid "Factory Profiles"
 msgstr ""
 

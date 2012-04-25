@@ -23,7 +23,6 @@ import glob, os
 from distutils.core import setup
 
 # FLOWBLADE distutils setup.py script.
-# Running this by itself WILL NOT create a succesful installation.
 
 install_data = [('share/applications', ['installdata/flowblade.desktop']),
                 ('share/pixmaps', ['installdata/flowblade.png']),
@@ -45,9 +44,10 @@ setup(  name='flowblade',
         author='Janne Liljeblad',
         author_email='janne.liljeblad at gmail dot com',
         description='Non-linear video editor',
-        url='http://code.google.flowblade.com',
+        url='http://code.google.com/p/flowblade/',
         license='GNU GPL3',
         scripts=['flowblade'],
         packages=['Flowblade'],
         package_data={'Flowblade':flowblade_package_data + locale_files},
         data_files=install_data)
+
