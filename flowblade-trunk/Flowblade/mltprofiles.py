@@ -30,6 +30,7 @@ import utils
 
 # Inside hidden user folder
 USER_PROFILES_DIR = "user_profiles/"
+DEFAULT_DEFAULT_PROFILE = "DV/DVD PAL"
 
 # List of mlt profiles
 _profile_list = []
@@ -54,6 +55,10 @@ def load_profile_list():
     _factory_profiles.sort(_sort_profiles)
     _hidden_factory_profiles.sort(_sort_profiles)
     _user_profiles.sort(_sort_profiles)
+
+    for i in range(0, len(_profile_list)):
+        prof = _profile_list[i]
+        print i, prof[0]
 
 def _load_profiles_list(dir_path):
     load_profiles = []
@@ -104,6 +109,30 @@ def get_profile_for_index(index):
     profile_name, profile = _profile_list[index]
     return profile
 
+def get_profile_name_for_index(index):
+    profile_name, profile = _profile_list[index]
+    return profile_name
+    
+def get_default_profile():
+    return get_profile_for_index(get_default_profile_index())
+
+def get_default_profile_index():
+    """
+    We're making sure here that something is returned as default profile even user may have removed some profiles.
+    """
+    def_profile_index = get_index_for_name(editorpersistance.prefs.default_profile_name)
+    if def_profile_index == -1:
+        print "default profile from prefs nor found"
+        def_profile_index = get_index_for_name(DEFAULT_DEFAULT_PROFILE)
+        def_profile_name =  DEFAULT_DEFAULT_PROFILE
+        if def_profile_index == -1:
+            def_profile_index = 0
+            def_profile_name, profile = _profile_list[def_profile_index]
+            print "DEFAULT_DEFAULT_PROFILE deleted returning first profile"
+        editorpersistance.prefs.default_profile_name = def_profile_name
+        editorpersistance.save()
+    return def_profile_index
+    
 def get_index_for_name(lookup_profile_name):
     # fails if two profiles have same names
     for i in range(0, len(_profile_list)):

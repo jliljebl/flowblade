@@ -26,6 +26,7 @@ import os
 import pickle
 
 import utils
+import mltprofiles
 import respaths
 
 PREFS_DOC = "prefs"
@@ -139,8 +140,10 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
 
         global prefs
         prefs.open_in_last_opended_media_dir = open_in_last_opened_check.get_active()
-        prefs.display_splash_screen = disp_splash.get_active()        
-        prefs.default_profile_index = default_profile_combo.get_active()
+        prefs.display_splash_screen = disp_splash.get_active()
+
+        prefs.default_profile_name = mltprofiles.get_profile_name_for_index(default_profile_combo.get_active())
+        
         prefs.undos_max = undo_max_spin.get_adjustment().get_value()
 
         prefs.auto_play_in_clip_monitor = auto_play_in_clip_monitor_check.get_active()
@@ -158,7 +161,7 @@ class EditorPreferences:
         self.img_length = 2000
         self.auto_save_delay_value_index = 1 # value is index of self.AUTO_SAVE_OPTS
         self.undos_max = UNDO_STACK_DEFAULT
-        self.default_profile_index = 10 # value is index of mltprofiles._profile_list
+        self.default_profile_name = 10 # name of default profile
         self.auto_play_in_clip_monitor = False
         self.auto_center_on_play_stop = False
         self.thumbnail_folder = None

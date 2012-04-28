@@ -41,8 +41,8 @@ PROFILES_WIDTH = 480
 PROFILES_HEIGHT = 520
 
 def new_project_dialog(callback):
-    default_profile_index = editorpersistance.prefs.default_profile_index
-    default_profile = mltprofiles.get_profile_for_index(default_profile_index)
+    default_profile_index = mltprofiles.get_default_profile_index()
+    default_profile = mltprofiles.get_default_profile()
 
     dialog = gtk.Dialog(_("New Project"), None,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,

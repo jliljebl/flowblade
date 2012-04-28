@@ -558,7 +558,7 @@ def get_general_options_panel(folder_select_clicked_cb):
     profiles = mltprofiles.get_profiles()
     for profile in profiles:
         default_profile_combo.append_text(profile[0])
-    default_profile_combo.set_active(prefs.default_profile_index)
+    default_profile_combo.set_active( mltprofiles.get_default_profile_index())
 
     spin_adj = gtk.Adjustment(prefs.undos_max, editorpersistance.UNDO_STACK_MIN, editorpersistance.UNDO_STACK_MAX, 1)
     undo_max_spin = gtk.SpinButton(spin_adj)

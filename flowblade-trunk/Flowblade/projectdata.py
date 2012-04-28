@@ -297,7 +297,6 @@ class ThumbnailThread(threading.Thread):
                                      '%s' %  self.file_path)
         return self.producer.get_length()
 
-
     def shutdown(self):
         if self.consumer != None:
             self.consumer.stop()
@@ -309,7 +308,7 @@ def get_default_project():
     """
     Creates the project displayed at start up.
     """
-    profile = mltprofiles.get_profile_for_index(editorpersistance.prefs.default_profile_index)
+    profile = mltprofiles.get_default_profile()
     project = Project(profile)
     return project
 

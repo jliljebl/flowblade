@@ -905,8 +905,13 @@ def _profiles_delete_confirm_callback(dialog, response_id, data):
     for i in delete_indexes:
         pname, profile = mltprofiles.get_user_profiles()[i]
         profile_file_name = pname.lower().replace(os.sep, "_").replace(" ","_")
-        profile_path = respaths.USER_PROFILES + profile_file_name
-        os.remove(profile_path)
+        profile_path = utils.get_hidden_user_dir_path() + mltprofiles.USER_PROFILES_DIR + profile_file_name
+        print profile_path
+        try:
+            os.remove(profile_path)
+        except:
+            # This really should not happen
+            print "removed user profile already gone ???"
 
     mltprofiles.load_profile_list()
     user_profiles_view.fill_data_model(mltprofiles.get_user_profiles())
