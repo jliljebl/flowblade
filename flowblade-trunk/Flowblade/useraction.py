@@ -287,8 +287,7 @@ def _close_dialog_callback(dialog, response_id):
         return
         
     # This is the same as opening default project
-    p_index = editorpersistance.prefs.default_profile_index
-    profile = mltprofiles.get_profile_for_index(p_index)
+    profile = mltprofiles.get_default_profile()
     new_project = projectdata.Project(profile)
     app.open_project(new_project)
     
@@ -920,7 +919,7 @@ def _profiles_delete_confirm_callback(dialog, response_id, data):
 def _profiles_manager_hide_profiles_clicked(visible_view, hidden_view):
     visible_indexes = visible_view.get_selected_indexes_list()
     prof_names = []
-    default_profile = mltprofiles.get_profile_for_index(editorpersistance.prefs.default_profile_index)
+    default_profile = mltprofiles.get_default_profile()
     for i in visible_indexes:
         pname, profile = mltprofiles.get_factory_profiles()[i]
         if profile == default_profile:
@@ -941,7 +940,7 @@ def _profiles_manager_hide_profiles_clicked(visible_view, hidden_view):
 def _profiles_manager_unhide_profiles_clicked(visible_view, hidden_view):
     hidden_indexes = hidden_view.get_selected_indexes_list()
     prof_names = []
-    default_profile = mltprofiles.get_profile_for_index(editorpersistance.prefs.default_profile_index)
+    default_profile = mltprofiles.get_default_profile()
     for i in hidden_indexes:
         pname, profile = mltprofiles.get_hidden_profiles()[i]
         prof_names.append(pname)
@@ -958,6 +957,9 @@ def _fix_default_profile(default_profile):
     """
     Hiding and unhiding can make saved default project index point to wrong profile.
     """
+    pass
+    """
+    THIS WAS A DUMP HACK REMOVE WHEN SEEN NEXT AFTER A WHILE, BUT KEEP CODE NOW IF THIS STILL INVOLVED IN SOME BUG 
     new_index = mltprofiles.get_index_for_name(default_profile.description())
     if new_index == -1:
         print "Something very wrong in useraction._fix_default_profile"
@@ -966,7 +968,8 @@ def _fix_default_profile(default_profile):
 
         editorpersistance.prefs.default_profile_index = new_index
         editorpersistance.save()
-
+    """
+    
 # -------------------------------------------------------- effects editor
 def effect_select_row_double_clicked(treeview, tree_path, col):
     clipeffectseditor.add_currently_selected_effect()

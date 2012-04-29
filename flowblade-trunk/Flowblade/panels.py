@@ -693,8 +693,8 @@ def get_add_compositor_panel(current_sequence, data):
     return (vbox, track_combo)
 
 def get_create_profiles_panel(load_values_clicked, save_profile_clicked, user_profiles_list):
-    default_profile_index = editorpersistance.prefs.default_profile_index
-    default_profile = mltprofiles.get_profile_for_index(default_profile_index)
+    default_profile_index = mltprofiles.get_default_profile_index()
+    default_profile = mltprofiles.get_default_profile()
 
     load_profile_button = gtk.Button(_("Load values"))
 

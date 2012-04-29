@@ -421,7 +421,7 @@ class ProfileListView(gtk.VBox):
 
     def fill_data_model(self, profiles):
         self.storemodel.clear()
-        default_profile = mltprofiles.get_profile_for_index(editorpersistance.prefs.default_profile_index)
+        default_profile = mltprofiles.get_default_profile()
         for profile in profiles:
             row_data = [profile[0]]
             if default_profile == profile[1]:
