@@ -36,9 +36,9 @@ flowblade_package_data = ['res/filters/*.xml','res/filters/wipes/*','res/img/*',
 
 locale_files = []
 for filepath in glob.glob("Flowblade/locale/*/LC_MESSAGES/*"):
-	filepath = filepath.replace('Flowblade/', '')
-	locale_files.append(filepath)
-	
+    filepath = filepath.replace('Flowblade/', '')
+    locale_files.append(filepath)
+
 setup(  name='flowblade',
         version='0.6.0',
         author='Janne Liljeblad',

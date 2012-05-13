@@ -60,7 +60,7 @@ MARK_LINE_WIDTH = 4
 
 # tracks column consts
 COLUMN_WIDTH = 96 # column area width
-SCALE_HEIGHT = 25 # height of frane scakes area
+SCALE_HEIGHT = 25
 SCROLL_HEIGHT = 20
 MUTE_SWITCH_WIDTH = 18
 ACTIVE_SWITCH_WIDTH = 18
@@ -673,7 +673,7 @@ class TimeLineCanvas:
         for i in range(1, len(current_sequence().tracks) - 1): # black and hidden tracks are ignored
             self.draw_track(cr
                             ,current_sequence().tracks[i]
-                            ,_get_track_y(i) #REF_LINE_Y - i * TRACK_HEIGHT
+                            ,_get_track_y(i)
                             ,w)
 
         # Draw compositors
@@ -696,10 +696,6 @@ class TimeLineCanvas:
         # Draw edit mode overlay
         if self.edit_mode_overlay_draw_func != None:
             self.edit_mode_overlay_draw_func(cr,self.edit_mode_data)
-        
-        #if sequence.audio_waveform_data != None:
-        #    draw_bitmap(cr, sequence.audio_waveform_data)
-            
 
     def draw_track(self, cr, track, y, width):
         """
@@ -884,26 +880,6 @@ class TimeLineCanvas:
                     cr.set_source_pixbuf(icon, int(scale_in) + int(scale_length) - ix, y + iy)
                     cr.paint()
                     icon_slot = icon_slot + 1
-
-            """
-            # Draw transition icon 
-            if ((scale_length > FILL_MIN) 
-                and (clip.is_transition == True)):
-                cr.set_source_rgb(1.0, 1.0, 1.0)
-                cr.rectangle(scale_in + 2.5,
-                         y + 2.5, scale_length - 4.0, 
-                         track_height - 4.0)
-                cr.fill()
-
-                cr.set_source_rgb(0, 0, 0)
-                right = scale_in + 2.5 + scale_length - 6.0
-                down = y + 2.5 + track_height - 6.0
-                cr.move_to(right, y + 4.5)
-                cr.line_to(right, down)
-                cr.line_to(scale_in + 4.5, down)
-                cr.close_path()
-                cr.fill()
-            """
 
             # Get next draw position
             clip_start_frame += clip_length

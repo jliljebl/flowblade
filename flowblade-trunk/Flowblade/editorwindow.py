@@ -1,21 +1,21 @@
 """
-	Flowblade Movie Editor is a nonlinear video editor.
+    Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-	This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
 
-	Flowblade Movie Editor is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+    Flowblade Movie Editor is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-	Flowblade Movie Editor is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Flowblade Movie Editor is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU General Public License
+    along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 """
@@ -50,6 +50,7 @@ import tlinewidgets
 import useraction
 import updater
 import utils
+import vieweditor
 
 # GUI size params
 TOP_ROW_HEIGHT = 500 # defines app min height with tlinewidgets.HEIGHT
@@ -92,12 +93,13 @@ class EditorWindow:
         # Window
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.set_icon_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
+        self.window.set_border_width(5)
 
         # To ask confirmation for shutdown 
         self.window.connect("delete-event", lambda w, e:app.shutdown())
+
         # Player consumer has to be stopped and started when window resized
         self.window.connect("window-state-event", lambda w, e:updater.refresh_player())
-        self.window.set_border_width(5)
 
         # Build menubar
         # Menubar build resources
@@ -159,12 +161,6 @@ class EditorWindow:
                 </menu>
           </menubar>
         </ui>"""
-
-        #            ('ResyncAll', None, _('Resync All'), None, None, lambda a:syncsplitevent.resync_everything()),
-        #            ('ResyncSelected', None, _('Resync Selected'), None, None, lambda a:syncsplitevent.resync_selected()),
-        #            <menuitem action='ResyncAll'/>
-        #            <menuitem action='ResyncSelected'/>
-        #            <separator/>
                     
         action_group = gtk.ActionGroup('WindowActions')
         action_group.add_actions(menu_actions, user_data=None)
@@ -256,7 +252,7 @@ class EditorWindow:
         compositors_panel.set_padding(0, 0, 4, 0)
         compositors_panel.add(compositors_hbox)
 
-        # Project buttons and connect signals
+        # Project buttons
         self.open_project_b = gtk.Button(_("Open"))
         self.new_project_b = gtk.Button(_("New"))
     
@@ -267,7 +263,7 @@ class EditorWindow:
         project_buttons_box.pack_start(self.open_project_b)
         project_buttons_box.pack_start(self.new_project_b)
 
-        # Project 
+        # Project
         name_panel = panels.get_project_name_panel(editorstate.project.name)
 
         profile_info = panels.get_profile_info_panel(editorstate.project.profile)
@@ -329,7 +325,7 @@ class EditorWindow:
         tc_panel = panels.get_timecode_panel(self)
    
         # Video display
-        self.tline_display = gtk.DrawingArea()
+        self.tline_display = gtk.DrawingArea() 
         dnd.connect_video_monitor(self.tline_display)
 
         # Position bar and decorative frame  for it

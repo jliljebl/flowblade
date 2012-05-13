@@ -119,7 +119,7 @@ class Player(threading.Thread):
         self.consumer.connect(self.producer)
         self.producer.set_speed(0)
         self.consumer.start()
-
+ 
     def run(self):
         """
         Player thread loop. Loop runs until stop requested 
@@ -213,6 +213,31 @@ class Player(threading.Thread):
         # All user or program initiated seeks go through this method.
         if update_gui:
             updater.update_frame_displayers(frame)
+
+    def seek_and_get_rgb_frame(self, frame, update_gui=True):
+        # Force range
+        length = self.get_active_length()
+        if frame < 0:
+            frame = 0
+        elif frame >= length:
+            frame = length - 1
+
+        self.producer.set_speed(0)
+        self.producer.seek(frame) 
+
+        # GUI update path starts here.
+        # All user or program initiated seeks go through this method.
+        if update_gui:
+            updater.update_frame_displayers(frame)
+            
+        frame = self.producer.get_frame()
+        # And make sure we deinterlace if input is interlaced
+        frame.set("consumer_deinterlace", 1)
+
+        # Now we are ready to get the image and save it.
+        size = (self.profile.width(), self.profile.height())
+        rgb = frame.get_image(mlt.mlt_image_rgb24a, *size) 
+        return rgb
 
     def is_playing(self):
         return (self.producer.get_speed() != 0)

@@ -23,8 +23,8 @@
 import os
 import sys
 
-print "FLOWBLADE MOVIE_EDITOR 0.6.0"
-print "----------------------------"
+print "FLOWBLADE MOVIE_EDITOR branch TIP"
+print "---------------------------------"
 
 # Get launch script dir
 launch_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
@@ -39,6 +39,8 @@ else:
     print "Running from filesystem..."
     modules_path = launch_dir + "/Flowblade"
 sys.path.insert(0, modules_path)
+sys.path.insert(0, modules_path + "/vieweditor")
+sys.path.insert(0, modules_path + "/tools")
 
 # Check that we have MLT, missing min version is fatal.
 try:

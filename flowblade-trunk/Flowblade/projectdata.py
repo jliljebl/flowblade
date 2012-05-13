@@ -170,7 +170,7 @@ class Project:
         
     def exit_clip_renderer_process(self):
         pass
-        
+
 
 class MediaFile:
     """
@@ -201,6 +201,7 @@ class MediaFile:
             self.icon = icon.scale_simple(THUMB_WIDTH, THUMB_HEIGHT, \
                                           gtk.gdk.INTERP_BILINEAR)
 
+
 class BinColorClip:
     """
     Color Clip that can added to and edited in Sequence.
@@ -223,6 +224,7 @@ class BinColorClip:
         pixel = utils.gdk_color_str_to_int(self.gdk_color_str)
         icon.fill(pixel)
         self.icon = icon
+
 
 class Bin:
     """

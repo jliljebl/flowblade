@@ -436,7 +436,6 @@ def cut_action(data):
     return action
 
 def _cut_undo(self):
-    # Remove both and add old
     _remove_clip(self.track, self.index)
     _remove_clip(self.track, self.index)
     _insert_clip(self.track, self.clip, self.index, self.clip.clip_in, \

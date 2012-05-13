@@ -38,6 +38,7 @@ from editorstate import PLAYER
 from editorstate import timeline_visible
 import monitorevent
 import resync #debug
+import titler
 import updater
 import useraction
 
@@ -99,18 +100,19 @@ def key_down(widget, event):
             else:
                 monitorevent.play_pressed()
             return True
-    """
-    #debug
-    if event.keyval == gtk.keysyms.F12:
-        current_sequence().print_all()
-        return True
 
     #debug
-    if event.keyval == gtk.keysyms.F11:
-        resync.calculate_and_set_child_clip_sync_states()
-        updater.repaint_tline()
+    if event.keyval == gtk.keysyms.F12:
+        titler._titler.show_current_frame()
         return True
-    """
+
+    
+    #debug
+    if event.keyval == gtk.keysyms.F11:
+        titler.show_titler()
+        print "www"
+        return True
+    
     
     # Key event was not handled here.
     return False
