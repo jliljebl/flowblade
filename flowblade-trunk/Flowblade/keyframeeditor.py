@@ -1,21 +1,21 @@
 """
-	Flowblade Movie Editor is a nonlinear video editor.
+    Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-	This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
 
-	Flowblade Movie Editor is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+    Flowblade Movie Editor is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-	Flowblade Movie Editor is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Flowblade Movie Editor is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU General Public License
+    along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 """
@@ -44,6 +44,7 @@ import propertyparse
 import respaths
 import updater
 import utils
+import viewgeom
 
 # Draw consts
 CLIP_EDITOR_WIDTH = 250 
@@ -554,8 +555,8 @@ class EditRect:
         opposite_id = (ep_id + 4) % 8
         
         self.drag_ep = ep_id
-        self.guide_line = utils.get_line_for_points(self.edit_points[ep_id],
-                                                    self.edit_points[opposite_id])
+        self.guide_line = viewgeom.get_line_for_points( self.edit_points[ep_id],
+                                                        self.edit_points[opposite_id])
         x, y = self.edit_points[ep_id]
         self.start_x = x
         self.start_y = y

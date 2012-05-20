@@ -87,6 +87,9 @@ def main(root_path):
     # Set paths.
     respaths.set_paths(root_path)
 
+
+    print "gtk version:", gtk.gtk_version
+
     # Create hidden folders if not present
     user_dir = utils.get_hidden_user_dir_path()
     if not os.path.exists(user_dir):

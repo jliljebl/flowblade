@@ -1,21 +1,21 @@
 """
-	Flowblade Movie Editor is a nonlinear video editor.
+    Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-	This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
 
-	Flowblade Movie Editor is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+    Flowblade Movie Editor is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-	Flowblade Movie Editor is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Flowblade Movie Editor is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU General Public License
+    along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 """
@@ -240,60 +240,9 @@ def gdk_color_str_to_int(gdk_color_str):
     
     return (red << 24) + (green << 16) + (blue << 8)
 
-def get_line_for_points(p1, p2):
-    """
-    Points are (x, y) tuples
-    """
-    x1, y1 = p1
-    x2, y2 = p2
-
-    if (x1 == x2):
-        is_vertical = True;
-        x_icept = x1;
-        m = None
-        b = None
-    else:
-        is_vertical = False
-        # slope
-        m = (y2-y1) / (x2-x1)
-        # get y intercept b
-        b = y1 - (m * x1)
-        x_icept = None
-
-    return Line(m, b, is_vertical, x_icept)
-
 def do_nothing():
     pass
 
 def get_hidden_user_dir_path():
     return os.getenv("HOME") + "/.flowblade/"
 
-class Line:
-        """
-        Mathematical line using function y = mx + b.
-        """
-        def __init__(self, m, b, is_vertical, x_icept):
-            self.m = m
-            self.b = b
-            self.is_vertical = is_vertical
-            self.x_icept = x_icept
-
-        def get_normal_projection_point(self, p):
-            # Returns point on this line and that is also on the line 
-            # that is perpendicular with this and goes through provided point
-            x, y = p
-
-            # vertical
-            if (self.is_vertical == True):
-                return (self.x_icept, y)
-
-            # horizontal
-            if( self.m == 0 ):
-                return (x, self.b)
-                
-            # has slope
-            normal_m = -1.0 / self.m
-            normal_b = y - normal_m * x               
-            intersect_x = (normal_b - self.b) / (self.m - normal_m)
-            intersect_y = intersect_x * self.m + self.b
-            return (intersect_x, intersect_y)

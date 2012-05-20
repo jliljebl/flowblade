@@ -24,9 +24,15 @@ class EditPoint:
         self.start_y = y        
         self.display_type = MOVE_HANDLE
     
-    def set_pos(p):
+    def set_pos(self, p):
         self.x, self.y = p
+
+    def get_pos(self):
+        return (self.x, self.y)
     
+    def get_start_pos(self):
+        return (self.start_x, self.start_y)
+
     def save_start_pos(self):
         self.start_x = self.x
         self.start_y = self.y
@@ -36,12 +42,12 @@ class EditPoint:
         self.x = self.start_x + dx
         self.y = self.start_y + dy
 
-    def hit(self, test_p, scale=1.0):
+    def hit(self, test_p, view_scale=1.0):
         if not self.is_hittable:
             return False
         
         test_x, test_y = test_p
-        side_mult = 1.0 / scale        
+        side_mult = 1.0 / view_scale        
         if((test_x >= self.x - EDIT_POINT_SIDE_HALF * side_mult) 
             and (test_x <= self.x + EDIT_POINT_SIDE_HALF  * side_mult) 
             and (test_y >= self.y - EDIT_POINT_SIDE_HALF * side_mult)
@@ -58,7 +64,6 @@ class EditPoint:
             cr.rectangle(x - 4, y - 4, 8, 8)
             cr.fill()
 
-
 class EditPointShape:
     """
     A shape that user can move, rotate or scale on the screen to edit image data.
@@ -73,6 +78,13 @@ class EditPointShape:
     def translate_from_move_start(self, delta):
         for ep in self.edit_points:
             ep.translate_from_move_start(delta)
+            
+    def rotate_from_move_start(self, anchor, angle):
+        for ep in self.edit_points:
+            rotated_pos = viewgeom.rotate_point_around_point(angle,
+                                                            ep.get_start_pos(),
+                                                            anchor )
+            ep.set_pos(rotated_pos)
 
     def point_in_area(self, p):
         """
@@ -82,9 +94,9 @@ class EditPointShape:
         points = self.editpoints_as_tuples_list()
         return viewgeom.point_in_convex_polygon(p, points, 0)
 
-    def get_edit_point(self, p):
+    def get_edit_point(self, p, view_scale=1.0):
         for ep in self.edit_points:
-            if ep.hit(p) == True:
+            if ep.hit(p, view_scale) == True:
                 return ep
         return None
 
@@ -168,4 +180,27 @@ class SimpleRectEditShape(EditPointShape):
         self.edit_points[2].y = y + h
         self.edit_points[3].x = x
         self.edit_points[3].y = y + h
+    
+    def get_mid_point(self):
+        diag1 = viewgeom.get_line_for_points((self.edit_points[0].x, self.edit_points[0].y),
+                                          (self.edit_points[2].x, self.edit_points[2].y))
+        diag2 = viewgeom.get_line_for_points((self.edit_points[1].x, self.edit_points[1].y),
+                                            (self.edit_points[3].x, self.edit_points[3].y))
+        return diag1.get_intersection_point(diag2)
 
+    def get_handle_guides(self, hit_point):
+        index = self.edit_points.index(hit_point)
+        opp_handle_index = (index + 2) % 4;
+        opp_handle = self.edit_points[opp_handle_index]
+
+        guide_1_handle = self.edit_points[(opp_handle_index - 1) % 4]
+        guide_2_handle = self.edit_points[(opp_handle_index + 1) % 4]
+
+        guide_1 = viewgeom.get_vec_for_points(opp_handle.get_pos(), guide_1_handle.get_pos())
+        guide_2 = viewgeom.get_vec_for_points(opp_handle.get_pos(), guide_2_handle.get_pos())
+        guide_1.point_index = (opp_handle_index - 1) % 4
+        guide_2.point_index = (opp_handle_index + 1) % 4
+
+        return (guide_1, guide_2)
+        
+        

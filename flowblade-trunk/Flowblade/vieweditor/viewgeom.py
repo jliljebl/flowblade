@@ -1,4 +1,5 @@
 
+import math
 
 CLOCKWISE = 1
 COUNTER_CLOCKWISE = 2
@@ -44,3 +45,170 @@ def points_clockwise(p1, p2, p3):
         return True
     else:
         return False
+
+def rotate_point_around_point(rotation_angle, p, anchor):
+    px, py = p
+    ax, ay = anchor
+    offset_point = (px - ax, py - ay)
+    rx, ry = rotate_point_around_origo(rotation_angle, offset_point)
+    return (rx + ax, ry + ay)
+
+def rotate_point_around_origo(rotation_angle, p):
+    px, py = p
+    angle_rad = math.radians(rotation_angle)
+    sin_val = math.sin(angle_rad)
+    cos_val = math.cos(angle_rad)
+    new_x = px * cos_val - py * sin_val
+    new_y = px * sin_val + py * cos_val
+    return (new_x, new_y)
+
+def get_angle_in_deg(p1, corner, p2):
+    angle_in_rad = get_angle_in_rad(p1, corner, p2)
+    return math.degrees(angle_in_rad)
+
+def get_angle_in_rad(p1, corner, p2):
+    side1 = distance(p1, corner)
+    side2 = distance(p2, corner)
+    opposite_side = distance(p1, p2)
+    angle_cos = ((side1*side1) + (side2*side2) - (opposite_side*opposite_side)) / (2*side1*side2)
+    return math.acos(angle_cos)
+
+def distance(p1, p2):
+    x1, y1 = p1
+    x2, y2 = p2
+    return math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+
+
+def get_line_for_points(p1, p2):
+    m, b, is_vertical, x_icept = _get_line_params_for_points(p1, p2)
+    return Line(m, b, is_vertical, x_icept)
+
+def get_vec_for_points(p1, p2):
+    if p1 == p2:
+        return None
+
+    m, b, is_vertical, x_icept = _get_line_params_for_points(p1, p2)
+    return Vec(m, b, is_vertical, x_icept, p1, p2)
+    
+def _get_line_params_for_points(p1, p2):
+    x1, y1 = p1
+    x2, y2 = p2
+
+    if (x1 == x2):
+        is_vertical = True;
+        x_icept = x1;
+        m = None
+        b = None
+    else:
+        is_vertical = False
+        # slope
+        m = (y2-y1) / (x2-x1)
+        # get y intercept b
+        b = y1 - (m * x1)
+        x_icept = None
+
+    return (m, b, is_vertical, x_icept)
+    
+class Line:
+        """
+        Mathematical line using function y = mx + b.
+        """
+        def __init__(self, m, b, is_vertical, x_icept):
+            self.m = m
+            self.b = b
+            self.is_vertical = is_vertical
+            self.x_icept = x_icept
+
+        def get_normal_projection_point(self, p):
+            # Returns point on this line and that is also on the line 
+            # that is perpendicular with this and goes through provided point
+            x, y = p
+
+            # vertical
+            if (self.is_vertical == True):
+                return (self.x_icept, y)
+
+            # horizontal
+            if( self.m == 0 ):
+                return (x, self.b)
+
+            # has slope
+            normal_m = -1.0 / self.m
+            normal_b = y - normal_m * x               
+            intersect_x = (normal_b - self.b) / (self.m - normal_m)
+            intersect_y = intersect_x * self.m + self.b
+            return (intersect_x, intersect_y)
+
+        def get_intersection_point(self, i_line):
+            # If both are vertical, no inter section
+            if i_line.is_vertical and self.is_vertical:
+                return None
+
+            # If both have same slope and neither is vertical, no intersection
+            if (i_line.m == self.m) and (not i_line.is_vertical) and (not self.is_vertical):
+                return None
+                
+            # One line is vertical
+            if self.is_vertical: 
+                return get_isp_for_vert_and_non_vert(self, i_line)
+            if i_line.is_vertical:
+                return get_isp_for_vert_and_non_vert(i_line, self)
+
+            # Both lines are non-vertical
+            intersect_x = (i_line.b - self.b) / (self.m - i_line.m)
+            intersect_y = intersect_x * self.m + self.b
+            return (intersect_x, intersect_y)
+
+class Vec(Line):
+    """
+    A mathematical vector.
+    """
+    def __init__(self,  m, b, is_vertical, x_icept, start_point, end_point):
+        Line.__init__(self,  m, b, is_vertical, x_icept)
+        # start point and end point being on line is quaranteed by builder function so 
+        # don't use this constructor directly or set start or end points directly
+        # only use Vec.set_end_point_to_normal_projection() to set end point.
+        self.start_point = start_point
+        self.end_point = end_point
+        print start_point
+        print end_point
+        self.direction = self.get_direction()
+        self.orig_direction = self.direction
+    
+    def set_end_point_to_normal_projection(self, p):
+        self.end_point = self.get_normal_projection_point(p)
+    
+    def get_direction(self):
+        """
+        Return 1 or -1 for direction and 0 if length is zero and direction undetermined)
+        """
+        sx, sy = self.start_point
+        ex, ey = self.end_point
+
+        if self.is_vertical:
+            return (sy - ey) / abs(sy - ey)
+        else:
+            return (sx - ex ) / abs(sx - ex)
+
+    def get_length(self):
+        # Returns legtnh as positive if direction same as original and as negative if reversed
+        # and as zero is length is 0
+        if self.is_zero_length():
+            return 0;
+
+        current_direction = self.get_direction() / self.orig_direction
+        d = distance( self.start_point, self.end_point );
+        return current_direction * d
+
+    def is_zero_length(self):
+        if self.start_point == self.end_point:
+            return True
+        else:
+            return False
+    
+    def set_zero_length(self):
+        self.end_point = self.start_point
+
+def get_isp_for_vert_and_non_vert(vertical, non_vertical):
+    is_y = non_vertical.m * vertical.x_icept + non_vertical.b
+    return (vertical.x_icept, is_y)
