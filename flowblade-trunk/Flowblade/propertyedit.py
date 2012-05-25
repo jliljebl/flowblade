@@ -82,7 +82,7 @@ def get_filter_editable_properties(clip, filter_object, filter_index,
         p_name, p_value, p_type = filter_object.properties[i]
         args_str = filter_object.info.property_args[p_name]
         params = (clip, filter_index, (p_name, p_value, p_type), i, args_str)
-
+        #print "pname", p_name
         ep = _create_editable_property(p_type, args_str, params)
 
         ep.is_compositor_filter = compositor_filter

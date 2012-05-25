@@ -307,7 +307,7 @@ class EditAction:
         if self.stop_for_edit:
             PLAYER().consumer.stop()
 
-        movemodes.clear_selected_clips()  # selection not valid soon after change in sequence
+        movemodes.clear_selected_clips()  # selection not valid after change in sequence
 
         self.undo_func(self)
 
@@ -327,7 +327,7 @@ class EditAction:
         if self.stop_for_edit:
             PLAYER().consumer.stop()
 
-        movemodes.clear_selected_clips() # selection not valid soon after change in sequence
+        movemodes.clear_selected_clips() # selection not valid after change in sequence
 
         self.redo_func(self)
 

@@ -42,8 +42,30 @@
         <property name="Max" args="editor=no_editor exptype=keyframe_hcs">0=1</property>
         <property name="Operation" args="editor=no_editor">0.0</property>
     </filter>
-
-
+   <filter id="frei0r.alpha0ps">
+        <name>Alpha Modify</name>
+        <group>Alpha</group>  
+        <property name="Display" args="editor=no_editor">0.0</property>
+        <property name="Display input alpha" args="editor=no_editor">0</property>
+        <property name="Operation" args="editor=combobox exptype=default cbopts=Shave:0.21,Shrink!Hard:0.36,Shrink!Soft:0.50,Grow!Hard:0.64,Grow!Soft:0.79">0.21</property>
+        <property name="Threshold" args="editor=no_editor exptype=singlekeyframe">0=0.5</property>
+        <property name="Shrink/grow amount" args="range_in=0,100 range_out=0,1 exptype=singlekeyframe displayname=Amount">0=0.5</property>
+        <property name="Invert" args="editor=booleancheckbox displayname=Invert">0</property>
+   </filter>
+    <filter id="frei0r.select0r">
+        <name>Color Select</name>
+        <group>Alpha</group>  
+        <property name="Color to select" args="editor=color_select exptype=color displayname=Color">#00ff00</property>
+        <property name="Invert selection"  args="editor=booleancheckbox displayname=Invert">0</property>
+        <property name="Selection subspace" args="editor=combobox exptype=default cbopts=RGB:0.0,ABI:0.5,HCI:1.0">0.0</property>
+        <property name="Delta R / A / Hue" args="range_in=0,100 exptype=singlekeyframe displayname=R/A/Hue">0=0.2</property>
+        <property name="Delta G / B / Chroma" args="range_in=0,100 exptype=singlekeyframe displayname=G/B/Chroma">0=0.2</property>
+        <property name="Delta B / I / I" args="range_in=0,100 exptype=singlekeyframe displayname=B/I/I">0=0.2</property>
+        <property name="Edge mode" args="editor=combobox exptype=default cbopts=Hard:0.0,Fat:0.35,Normal:0.60,Skinny:1.0">0.0</property>
+        <property name="Subspace shape" args="editor=combobox displayname=Sel.!Space exptype=default cbopts=Box:0.0,Ellipsoid:0.5,Diamond:1.0">0.0</property>
+        <property name="Operation" args="editor=combobox exptype=default cbopts=Overwrite:0.0,Max:0.3,Min:0.5,Add:0.7,Subtract:1.0">0.0</property>
+    </filter>
+   
     <!-- AUDIO FILTER -->
     <filter id="volume" multipart="true">
         <name>Volume</name>
@@ -324,8 +346,13 @@
         <property name="triplevel" args="range_in=0,100 range_out=0.95,1 displayname=Triplevel">0.999</property>
         <property name="diffspace" args="range_in=0,100 range_out=0,0.04 displayname=Difference!Space">0.004</property>
     </filter>
-
-
+    <filter id="frei0r.vignette">
+        <name>Vignette</name>
+        <group>Artistic</group>
+        <property name="aspect" args="editor=keyframe_editor exptype=keyframe_hcs range_in=-100,100 displayname=Aspect">0=0.5</property>
+        <property name="clearCenter" args="editor=keyframe_editor exptype=keyframe_hcs range_in=0,100 displayname=Center!Size">0=0.5</property>
+        <property name="soft" args="editor=keyframe_editor exptype=keyframe_hcs range_in=0,100 displayname=Softness">0=0.2</property>
+    </filter>
 
     <!-- BLUR -->
     <filter id="frei0r.pixeliz0r">
@@ -346,8 +373,22 @@
         <property name="contrast" args="range_in=-33,99 range_out=0,400 displayname=Contrast">100</property>
         <property name="brightness" args="range_in=-33,99 range_out=0,344 displayname=Brightness">85</property>
     </filter>
-
-
+   <filter id="frei0r.IIRblur">
+         <name>IRR Blur</name>
+        <group>Blur</group>
+        <property name="Amount" args="range_in=0,100 displayname=Amount">0.25</property>
+        <property name="Type" args="editor=combobox exptype=default cbopts=Sharper:0.3,Fuzzier:0.8" >0.8</property>
+        <property name="Edge" args="editor=booleancheckbox displayname=Edge">1</property>
+   </filter>
+   <filter id="boxblur">
+        <name>Box Blur</name>
+        <group>Blur</group>
+        <property name="start" args="range_in=1,50 range_out=1,50 displayname=Blur!Amount">5</property>
+        <property name="end" args="editor=no_editor">5</property>
+        <property name="hori" args="range_in=1,50 range_out=1,50 displayname=Horizontal">7</property>
+        <property name="vert" args="range_in=1,50 range_out=1,50 displayname=Vertical">7</property>
+   </filter>
+   
 
     <!-- COLOR -->
     <filter id="greyscale">
@@ -413,8 +454,28 @@
         <property name="Black output" args="range_in=0,255 exptype=singlekeyframe">0=0</property>
         <property name="White output" args="range_in=0,255 exptype=singlekeyframe">0=1</property>
     </filter>
-
-
+   <filter id="frei0r.coloradj_RGB">
+        <name>RGB Adjustment</name>
+        <group>Color</group>
+        <property name="R" args="range_in=-50,50 exptype=singlekeyframe displayname=Red">0=0.5</property>
+        <property name="G" args="range_in=-50,50 exptype=singlekeyframe displayname=Green">0=0.5</property>
+        <property name="B" args="range_in=-50,50 exptype=singlekeyframe displayname=Blue">0=0.5</property>
+        <property name="Action" args="displayname=Action editor=combobox exptype=default cbopts=Add!Constant:0.0,Change!Gamma:0.5,Multiply:1.0">0.0</property>
+        <property name="Keep luma" args="editor=booleancheckbox">1</property>
+        <property name="Alpha controlled" args="editor=no_editor">0</property>
+        <property name="Luma formula" args="editor=combobox exptype=default cbopts=Rec.601:0.0,Rec.709:1.0">0.0</property>
+   </filter>
+   <filter id="frei0r.three_point_balance">
+        <name>3-Point balance</name>
+        <group>Color</group>
+        <property name="Black color" args="editor=color_select exptype=color displayname=Black">#000000</property>
+        <property name="Gray color" args="editor=color_select exptype=color displayname=Gray">#808080</property>
+        <property name="White color" args="editor=color_select exptype=color displayname=White">#ffffff</property>
+        <property name="Split preview" args="editor=booleancheckbox">0</property>
+        <property name="Source image on left side" args="editor=booleancheckbox displayname=Source!on!Left">1</property>
+   </filter>
+   
+   
 
     <!-- COLOR EFFECT -->
     <filter id="frei0r.cluster">
