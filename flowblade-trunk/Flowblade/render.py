@@ -329,7 +329,6 @@ def create_widgets():
 
     widgets.quality_cb = gtk.combo_box_new_text()
     _fill_quality_combo_box()
-    #widgets.quality_cb.set_active(DEFAULT_QUALITY_INDEX)
     
     widgets.audio_label = gtk.Label(_("Audio:"))        
     widgets.audio_desc = gtk.Label()

@@ -1,4 +1,5 @@
 
+import math
 import viewgeom
 
 # Edit point display types
@@ -8,7 +9,10 @@ CONTROL_POINT = 2
 INVISIBLE_POINT = 3
 TOP_LEFT_HANDLE = 4
 BOTTOM_RIGHT_HANDLE = 5
-        
+TOP_RIGHT_HANDLE = 6
+BOTTOM_LEFT_HANDLE = 7
+
+
 EDIT_POINT_SIDE_HALF = 4
 
 class EditPoint:
@@ -143,8 +147,20 @@ class EditPointShape:
         cr.close_path()
         cr.stroke()
 
-    
+    def get_panel_point(self, point_index, view_editor):
+         ep = self.edit_points[point_index]
+         return view_editor.movie_coord_to_panel_coord((ep.x, ep.y))
 
+    def get_first_two_points_rotation_angle(self):
+        anchor = (self.edit_points[0].x, self.edit_points[0].y)
+        p1 = (self.edit_points[0].x + 10, self.edit_points[0].y)
+        p2 = (self.edit_points[1].x,  self.edit_points[1].y)
+        if self.edit_points[0].y < self.edit_points[1].y:
+            return viewgeom.get_angle_in_rad(p1, anchor, p2)
+        else:
+            return 2 * math.pi - viewgeom.get_angle_in_rad(p1, anchor, p2)
+        
+        
 class SimpleRectEditShape(EditPointShape):
     """
     A rect with two corner handles that can be moved scaled or rotated.
@@ -159,12 +175,10 @@ class SimpleRectEditShape(EditPointShape):
         self.edit_points.append(EditPoint(x + w, y))
         self.edit_points.append(EditPoint(x + w, y + h))
         self.edit_points.append(EditPoint(x, y + h))
-        self.edit_points[0].display_type = TOP_LEFT_HANDLE
-        self.edit_points[2].display_type = BOTTOM_RIGHT_HANDLE
-        self.edit_points[1].display_type = INVISIBLE_POINT
-        self.edit_points[3].display_type = INVISIBLE_POINT
-        self.edit_points[1].is_hittable = False
-        self.edit_points[3].is_hittable = False
+        self.edit_points[0].display_type = MOVE_HANDLE
+        self.edit_points[2].display_type = MOVE_HANDLE
+        self.edit_points[1].display_type = MOVE_HANDLE
+        self.edit_points[3].display_type = MOVE_HANDLE
 
     def set_rect(self, rect):
         self.rect = rect

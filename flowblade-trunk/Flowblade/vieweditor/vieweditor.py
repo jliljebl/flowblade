@@ -23,6 +23,7 @@ class ViewEditor(gtk.Frame):
         self.origo = (MIN_PAD, MIN_PAD)
         
         self.bg_buf = None
+        self.write_out_layers = False
 
         self.edit_area = cairoarea.CairoDrawableArea(self.profile_w + MIN_PAD * 2, self.profile_h + MIN_PAD * 2, self._draw)
         self.edit_area.press_func = self._press_event
@@ -163,6 +164,15 @@ class ViewEditor(gtk.Frame):
             cr.paint()
             cr.restore()
         
+        if self.write_out_layers == True:
+            x, y, w, h = allocation
+            img_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+            cr = cairo.Context(img_surface)
+
         for editorlayer in self.edit_layers:
             editorlayer.draw(cr)
         
+        if self.write_out_layers == True:
+            img_surface.write_to_png("/home/janne/gfggfgf.png")
+            self.write_out_layers = False
+            

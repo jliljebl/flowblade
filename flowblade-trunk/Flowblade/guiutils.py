@@ -1,21 +1,21 @@
 """
-	Flowblade Movie Editor is a nonlinear video editor.
+    Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-	This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
 
-	Flowblade Movie Editor is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+    Flowblade Movie Editor is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-	Flowblade Movie Editor is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Flowblade Movie Editor is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU General Public License
+    along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 """
@@ -121,3 +121,31 @@ def get_two_column_editor_row(name, editor_widget):
     hbox.pack_start(label_box, False, False, 4)
     hbox.pack_start(editor_widget, True, True, 0)
     return hbox
+
+def get_named_frame(name, widget):
+    """
+    Gnome style named panel
+    """
+    if name != None:
+        label = bold_label(name)
+        label.set_justify(gtk.JUSTIFY_LEFT)
+        
+        label_box = gtk.HBox()
+        label_box.pack_start(label, False, False, 0)
+        label_box.pack_start(gtk.Label(), True, True, 0)
+
+    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment.set_padding(6, 0, 12, 0)
+    alignment.add(widget)
+    
+    frame = gtk.VBox()
+    if name != None:
+        frame.pack_start(label_box, False, False, 0)
+    frame.pack_start(alignment, True, True, 0)
+    
+    out_align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    out_align.set_padding(4, 4, 0, 4)
+    out_align.add(frame)
+    
+    return out_align
+    

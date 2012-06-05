@@ -9,7 +9,7 @@ import viewgeom
 MOVE_MODE = 0
 ROTATE_MODE = 1
     
-# Edit types
+# Edit types, used as kind of subtypes of modes if needed, e.g. MOVE_MODE can have MOVE_EDIT or HANDLE_EDIT 
 NO_EDIT = 0 # mouse hit meaningless
 ROTATE_EDIT = 1
 MOVE_EDIT = 2
@@ -128,7 +128,7 @@ class SimpleRectEditLayer(AbstactEditorLayer):
     def __init__(self, view_editor):
         AbstactEditorLayer.__init__(self, view_editor)
         self.edit_point_shape = vieweditorshape.SimpleRectEditShape()
-        self.edit_mode = ROTATE_MODE
+        self.edit_mode = MOVE_MODE
 
     def mouse_pressed(self):
         self.edit_point_shape.save_start_pos()
@@ -184,4 +184,16 @@ class SimpleRectEditLayer(AbstactEditorLayer):
         self.edit_point_shape.draw_line_shape(cr, self.view_editor, 2.0)
         cr.set_source_rgba(1,1,1,1)
         self.edit_point_shape.draw_points(cr, self.view_editor)
+
+
+class TextEditLayer(SimpleRectEditLayer):
+    def __init__(self, view_editor, text_layout):
+        SimpleRectEditLayer.__init__(self, view_editor)
+        self.text_layout = text_layout
+        self.edit_mode = ROTATE_MODE
         
+    def draw(self, cr):
+        SimpleRectEditLayer.draw(self, cr)
+        x, y = self.edit_point_shape.get_panel_point(0, self.view_editor)
+        rotation = self.edit_point_shape.get_first_two_points_rotation_angle()
+        self.text_layout.draw_layout(cr, x, y, rotation)

@@ -152,13 +152,6 @@ def get_transition_editable_properties(compositor):
     
     return editable_properties
 
-"""
-def get_ep_create_params(clip, filter_index, editable_property, property_index, args_str):
-    return (clip, filter_index, editable_property, property_index, args_str)
-
-def _get_transition_ep_create_params(clip, editable_property, property_index, args_str):
-    return (clip, editable_property, property_index, args_str)
-"""    
 
 # -------------------------------------------- property wrappers objs
 class AbstractProperty:
@@ -587,7 +580,8 @@ class ColorProperty(EditableProperty):
         
     def color_selected(self, color_button):
         color = color_button.get_color()
-        raw_r, raw_g, raw_b = utils.hex_to_rgb(color.to_string())
+        value = utils.hex_to_rgb(color.to_string())
+        raw_r, raw_g, raw_b = value
         val_str = "#" + utils.int_to_hex(int((float(raw_r) * 255.0) / 65535.0)) + \
                         utils.int_to_hex(int((float(raw_g) * 255.0) / 65535.0)) + \
                         utils.int_to_hex(int((float(raw_b) * 255.0) / 65535.0))

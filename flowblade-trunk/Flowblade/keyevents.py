@@ -113,7 +113,6 @@ def key_down(widget, event):
         print "www"
         return True
     
-    
     # Key event was not handled here.
     return False
     

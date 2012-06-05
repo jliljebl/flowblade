@@ -286,6 +286,7 @@ class Sequence:
 
     def _create_color_clip(self, gdk_color_str, name):
         mlt_color = utils.gdk_color_str_to_mlt_color_str(gdk_color_str)
+        #producer = mlt.Producer(self.profile, "frei0r.lissajous0r")
         producer = mlt.Producer(self.profile, "colour", mlt_color)
         producer.path = ""
         producer.filters = []

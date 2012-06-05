@@ -1230,8 +1230,6 @@ class MonitorTCDisplay:
         layout.set_text(frame_str)
         layout.set_font_description(self.font_desc)
 
-        pango_context.set_source_rgb(0.0, 0.0, 0)
-
         pango_context.set_source_rgb(0.7, 0.7, 0.7)
         pango_context.move_to(8, 2)
         pango_context.update_layout(layout)

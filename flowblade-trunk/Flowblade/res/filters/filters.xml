@@ -65,7 +65,15 @@
         <property name="Subspace shape" args="editor=combobox displayname=Sel.!Space exptype=default cbopts=Box:0.0,Ellipsoid:0.5,Diamond:1.0">0.0</property>
         <property name="Operation" args="editor=combobox exptype=default cbopts=Overwrite:0.0,Max:0.3,Min:0.5,Add:0.7,Subtract:1.0">0.0</property>
     </filter>
-   
+    <filter id="frei0r.spillsupress">
+        <name>Spill Supress</name>
+        <group>Alpha</group>  
+        <property name="supresstype" args="editor=combobox displayname=Supress exptype=default cbopts=Green:0.0,Blue:1.0">0.0</property>
+    </filter>
+
+
+
+
     <!-- AUDIO FILTER -->
     <filter id="volume" multipart="true">
         <name>Volume</name>
@@ -97,6 +105,7 @@
         <name>Swap Channels</name>
         <group>Audio</group>
     </filter>
+
 
 
     <!-- AUDIO FILTER -->
@@ -353,6 +362,20 @@
         <property name="clearCenter" args="editor=keyframe_editor exptype=keyframe_hcs range_in=0,100 displayname=Center!Size">0=0.5</property>
         <property name="soft" args="editor=keyframe_editor exptype=keyframe_hcs range_in=0,100 displayname=Softness">0=0.2</property>
     </filter>
+    <filter id="frei0r.emboss">
+        <name>Emboss</name>
+        <group>Artistic</group>
+        <property name="azimuth" args="range_in=0,360 range_out=0,360 displayname=Azimuth">135</property>
+        <property name="elevation" args="range_in=0,90 range_out=0,90 displayname=Elevation">30</property>
+        <property name="width45" args="range_in=0,40 range_out=0,40 displayname=Elevation">3</property>
+    </filter>
+    <filter id="frei0r.dither">
+        <name>Dither</name>
+        <group>Artistic</group>
+        <property name="levels" args="range_in=2,50 range_out=2,50 displayname=Levels">5</property>
+        <property name="matrixid" args="editor=combobox exptype=default cbopts=magic2x2:0.0,magic4x4:1.0,ordered4x4:2.0,lines4x4:3.0,halftone6x6:4.0,ordered6x6:5.0,ordered8x8:6.0,cluster3:7.0,cluster4:8.0,cluster8:9.0">0.0</property>
+    </filter>
+
 
     <!-- BLUR -->
     <filter id="frei0r.pixeliz0r">
@@ -388,7 +411,8 @@
         <property name="hori" args="range_in=1,50 range_out=1,50 displayname=Horizontal">7</property>
         <property name="vert" args="range_in=1,50 range_out=1,50 displayname=Vertical">7</property>
    </filter>
-   
+
+
 
     <!-- COLOR -->
     <filter id="greyscale">
@@ -474,8 +498,13 @@
         <property name="Split preview" args="editor=booleancheckbox">0</property>
         <property name="Source image on left side" args="editor=booleancheckbox displayname=Source!on!Left">1</property>
    </filter>
-   
-   
+    <filter id="gamma">
+        <name>Gamma</name>
+        <group>Color</group>
+        <property name="gamma" args="range_in=0,300 range_out=0.0,3.0 displayname=Gamma">1.00</property>
+    </filter>
+
+
 
     <!-- COLOR EFFECT -->
     <filter id="frei0r.cluster">
@@ -519,6 +548,15 @@
         <name>Threshold</name>
         <group>Color Effect</group>
         <property name="midpoint" args="range_in=0,255 range_out=0,255 displayname=Threshold">125.0</property>
+    </filter>
+    <filter id="frei0r.jannetest">
+        <name>JanneTest</name>
+        <group>Color Effect</group>
+    </filter>
+    <filter id="frei0r.posterize">
+        <name>Posterize</name>
+        <group>Color Effect</group>
+        <property name="levels" args="range_in=2,50 range_out=2,50 displayname=Levels">5</property>
     </filter>
 
 
