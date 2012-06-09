@@ -9,6 +9,7 @@ import cairoarea
 import cairo
 
 MIN_PAD = 20
+GUIDES_COLOR = (0.5, 0.5, 0.5, 1.0)
 
 class ViewEditor(gtk.Frame):
 
@@ -16,16 +17,16 @@ class ViewEditor(gtk.Frame):
         gtk.Frame.__init__(self)
         self.scale = 1.0
         self.profile_w = profile.width()
-        self.profile_h  = profile.height()
-        self.scaled_screen_width = self.profile_w
-        self.scales_screen_height = self.profile_h
-        self.aspect_ratio = 1.0
+        self.profile_h = profile.height()
+        self.aspect_ratio = float(profile.sample_aspect_num()) / profile.sample_aspect_den()
+        self.scaled_screen_width = self.profile_w * self.aspect_ratio # scale is gonna be 1.0 here
+        self.scaled_screen_height = self.profile_h
         self.origo = (MIN_PAD, MIN_PAD)
         
         self.bg_buf = None
         self.write_out_layers = False
 
-        self.edit_area = cairoarea.CairoDrawableArea(self.profile_w + MIN_PAD * 2, self.profile_h + MIN_PAD * 2, self._draw)
+        self.edit_area = cairoarea.CairoDrawableArea(int(self.scaled_screen_width + MIN_PAD * 2), self.profile_h + MIN_PAD * 2, self._draw)
         self.edit_area.press_func = self._press_event
         self.edit_area.motion_notify_func = self._motion_notify_event
         self.edit_area.release_func = self._release_event
@@ -34,12 +35,14 @@ class ViewEditor(gtk.Frame):
         self.scroll_window.add_with_viewport(self.edit_area)
         self.scroll_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self.scroll_window.show_all()
-        self.scroll_window.set_size_request(self.profile_w + MIN_PAD * 2 + 2, self.profile_h + MIN_PAD * 2 + 2) # +2 to not show scrollbars
+        self.scroll_window.set_size_request(int(self.scaled_screen_width + MIN_PAD * 2 + 2), self.profile_h + MIN_PAD * 2 + 2) # +2 to not show scrollbars
         self.add(self.scroll_window)
 
         self.edit_layers = []
         self.active_layer = None
         self.edit_target_layer = None
+        
+        self.set_scale_and_update(1.0)
 
     def set_scale_and_update(self, new_scale):
         self.scale = new_scale
@@ -54,7 +57,7 @@ class ViewEditor(gtk.Frame):
         x, y, scroll_w, scroll_h = self.scroll_window.get_allocation()
 
         # If scaled screen smaller then scroll window size center it and set origo
-        if ((self.scaled_screen_width < scroll_w) and (self.scales_screen_height < scroll_h)):
+        if ((self.scaled_screen_width < scroll_w) and (self.scaled_screen_height < scroll_h)):
             origo_x = (scroll_w - self.scaled_screen_width) / 2
             origo_y = (scroll_h - self.scaled_screen_height ) / 2
             self.origo = (int(origo_x), int(origo_y))
@@ -119,15 +122,15 @@ class ViewEditor(gtk.Frame):
         
         conv_mult = 1.0 / self.scale
 
-        movie_x = conv_mult * panel_o_x
-        movie_y = conv_mult * panel_o_y
+        movie_x =  (1.0 / (self.scale * self.aspect_ratio)) * panel_o_x
+        movie_y =  (1.0 / self.scale) * panel_o_y
         return (movie_x, movie_y)
     
     def movie_coord_to_panel_coord(self, movie_point):
         movie_x, movie_y = movie_point
         origo_x, origo_y = self.origo
         
-        panel_x = movie_x * self.scale + origo_x
+        panel_x = movie_x * self.scale * self.aspect_ratio + origo_x
         panel_y = movie_y * self.scale + origo_y
         return (panel_x, panel_y)
 
@@ -143,10 +146,6 @@ class ViewEditor(gtk.Frame):
         self.bg_buf = out
 
     def _draw(self, event, cr, allocation):
-        cr.set_source_rgb(0.6, 0.6, 0.6)
-        cr.rectangle(20, 20, 30, 10)
-        cr.fill()
-
         if self.bg_buf != None:
             # MLT Provides images in which R <-> B are swiched from what Cairo wants them,
             # so use numpy to switch them and to create a modifiable buffer for Cairo
@@ -175,4 +174,51 @@ class ViewEditor(gtk.Frame):
         if self.write_out_layers == True:
             img_surface.write_to_png("/home/janne/gfggfgf.png")
             self.write_out_layers = False
-            
+        
+        self._draw_guidelines(cr)
+        
+    def _draw_guidelines(self, cr):
+        ox, oy = self.origo
+        ox += 0.5
+        oy += 0.5
+        w = self.scaled_screen_width + ox
+        h = self.scaled_screen_height + oy
+        cr.move_to(ox, oy)
+        cr.line_to(w, oy)
+        cr.line_to(w, h)
+        cr.line_to(ox, h)
+        cr.close_path()
+        cr.set_line_width(1.0)
+        cr.set_source_rgba(*GUIDES_COLOR)
+        cr.stroke()
+
+        # Draw "safe" area, this is not based on any real specification
+        dimensions_safe_mult = 0.9
+        xin = ((w - ox) - ((w - ox) * dimensions_safe_mult)) / 2.0
+        yin = ((h - oy) - ((h - oy) * dimensions_safe_mult)) / 2.0
+        cr.move_to(ox + xin, oy + yin)
+        cr.line_to(w - xin, oy + yin)
+        cr.line_to(w - xin, h - yin)
+        cr.line_to(ox + xin, h - yin)
+        cr.close_path()
+        cr.stroke()
+        
+class ScaleSelector(gtk.VBox):
+    
+    def __init__(self, listener):
+        gtk.VBox.__init__(self)
+        self.listener = listener
+        self.scales = [0.25, 0.5, 1.0, 1.5, 2.0, 4.0]
+        combo = gtk.combo_box_new_text()
+        for scale in self.scales:
+            scale_str = str(int(100 * scale)) + "%"
+            combo.append_text(scale_str)
+        combo.set_active(2)
+        combo.connect("changed", 
+                              lambda w,e: self._scale_changed(w.get_active()), 
+                              None)    
+        self.add(combo)
+        
+    def _scale_changed(self, scale_index):
+        self.listener.scale_changed(self.scales[scale_index])
+        

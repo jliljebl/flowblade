@@ -128,6 +128,7 @@ class SimpleRectEditLayer(AbstactEditorLayer):
     def __init__(self, view_editor):
         AbstactEditorLayer.__init__(self, view_editor)
         self.edit_point_shape = vieweditorshape.SimpleRectEditShape()
+        self.update_rect = False # flag to reinit rect shape
         self.edit_mode = MOVE_MODE
 
     def mouse_pressed(self):
@@ -188,6 +189,7 @@ class SimpleRectEditLayer(AbstactEditorLayer):
 
 class TextEditLayer(SimpleRectEditLayer):
     def __init__(self, view_editor, text_layout):
+        # text_layout is titler.PangoLayout
         SimpleRectEditLayer.__init__(self, view_editor)
         self.text_layout = text_layout
         self.edit_mode = ROTATE_MODE
@@ -196,4 +198,13 @@ class TextEditLayer(SimpleRectEditLayer):
         SimpleRectEditLayer.draw(self, cr)
         x, y = self.edit_point_shape.get_panel_point(0, self.view_editor)
         rotation = self.edit_point_shape.get_first_two_points_rotation_angle()
-        self.text_layout.draw_layout(cr, x, y, rotation)
+        xscale = self.view_editor.scale * self.view_editor.aspect_ratio
+        yscale = self.view_editor.scale
+        self.text_layout.draw_layout(cr, x, y, rotation, xscale, yscale)
+        # Text in layout has changed
+        if self.update_rect:
+            w, h = self.text_layout.pixel_size
+            wp, hp = self.view_editor.movie_coord_to_panel_coord((w,h))
+            self.edit_point_shape.set_rect((0, 0, w, h))
+            self.update_rect = False 
+            self.view_editor.edit_area.queue_draw() # We need to redraw with new rect

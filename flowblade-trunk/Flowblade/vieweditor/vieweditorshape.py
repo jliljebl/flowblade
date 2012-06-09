@@ -182,7 +182,7 @@ class SimpleRectEditShape(EditPointShape):
 
     def set_rect(self, rect):
         self.rect = rect
-        self.reset_points(self)
+        self.reset_points()
 
     def reset_points(self):
         x, y, w, h = self.rect

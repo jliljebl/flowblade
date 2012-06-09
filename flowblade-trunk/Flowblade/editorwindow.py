@@ -46,6 +46,7 @@ import panels
 from positionbar import PositionBar
 import syncsplitevent
 import test
+import titler
 import tlinewidgets
 import useraction
 import updater
@@ -122,6 +123,8 @@ class EditorWindow:
             ('RecreateMediaIcons', None, _('Recreate Media Icons...'), None, None, lambda a:useraction.recreate_media_file_icons()),
             ('ProfilesManager', None, _('Profiles Manager'), None, None, lambda a:useraction.profiles_manager()),
             ('Preferences', None, _('Preferences'), None, None, lambda a:useraction.display_preferences()),
+            ('ToolsMenu', None, _('Tools')),
+            ('Titler', None, _('Titler'), None, None, lambda a:titler.show_titler()),
             ('HelpMenu', None, _('_Help')),
             ('QuickReference', None, _('Contents'), None, None, lambda a:useraction.quick_reference()),
             ('About', None, _('About'), None, None, lambda a:useraction.about())
@@ -153,6 +156,9 @@ class EditorWindow:
                     <menuitem action='RecreateMediaIcons'/>
                     <menuitem action='ProfilesManager'/>
                     <menuitem action='Preferences'/>
+                </menu>
+                <menu action='ToolsMenu'>
+                    <menuitem action='Titler'/>
                 </menu>
                 <menu action='HelpMenu'>
                     <menuitem action='QuickReference'/>

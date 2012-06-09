@@ -365,16 +365,17 @@
     <filter id="frei0r.emboss">
         <name>Emboss</name>
         <group>Artistic</group>
-        <property name="azimuth" args="range_in=0,360 range_out=0,360 displayname=Azimuth">135</property>
-        <property name="elevation" args="range_in=0,90 range_out=0,90 displayname=Elevation">30</property>
-        <property name="width45" args="range_in=0,40 range_out=0,40 displayname=Elevation">3</property>
+        <property name="azimuth" args="range_in=0,360 displayname=Azimuth">0.2</property>
+        <property name="elevation" args="range_in=0,90 displayname=Lightness">0.33</property>
+        <property name="width45" args="range_in=1,40 displayname=Bump!height">0.24</property>
     </filter>
     <filter id="frei0r.dither">
         <name>Dither</name>
         <group>Artistic</group>
-        <property name="levels" args="range_in=2,50 range_out=2,50 displayname=Levels">5</property>
-        <property name="matrixid" args="editor=combobox exptype=default cbopts=magic2x2:0.0,magic4x4:1.0,ordered4x4:2.0,lines4x4:3.0,halftone6x6:4.0,ordered6x6:5.0,ordered8x8:6.0,cluster3:7.0,cluster4:8.0,cluster8:9.0">0.0</property>
+        <property name="levels" args="range_in=2,50 displayname=Levels">0.2</property>
+        <property name="matrixid" args="editor=combobox displayname=Matrix!type exptype=default cbopts=magic2x2:0.0,magic4x4:0.12,ordered4x4:0.23,lines4x4:0.34,halftone6x6:0.45,ordered6x6:0.56,ordered8x8:0.67,cluster3:0.78,cluster4:0.89,cluster8:1.0">1.0</property>
     </filter>
+
 
 
     <!-- BLUR -->
@@ -556,7 +557,7 @@
     <filter id="frei0r.posterize">
         <name>Posterize</name>
         <group>Color Effect</group>
-        <property name="levels" args="range_in=2,50 range_out=2,50 displayname=Levels">5</property>
+        <property name="levels" args="range_in=2,50 displayname=Levels">0.093</property>
     </filter>
 
 
@@ -675,6 +676,7 @@
         <group>Transform</group>
         <property name="transition.geometry" args="editor=affine_filt_geom_slider exptype=geom_in_affine_filt">0,0:SCREENSIZE:100</property>
     </filter>
+
 
 
     <!-- compositor filters that are not displayed to user, not used currently -->

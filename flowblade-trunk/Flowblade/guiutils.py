@@ -149,3 +149,7 @@ def get_named_frame(name, widget):
     
     return out_align
     
+def pad_label(w, h):
+    pad_label = gtk.Label()
+    pad_label.set_size_request(w, h)
+    return pad_label
