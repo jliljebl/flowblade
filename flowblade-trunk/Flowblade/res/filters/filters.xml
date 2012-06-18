@@ -504,7 +504,13 @@
         <group>Color</group>
         <property name="gamma" args="range_in=0,300 range_out=0.0,3.0 displayname=Gamma">1.00</property>
     </filter>
-
+   <filter id="frei0r.colorize">
+        <name>Colorize</name>
+        <group>Color</group>
+        <property name="hue" args="range_in=0,360 displayname=Hue">0.5</property>
+        <property name="saturation" args="range_in=0,100 displayname=Saturation">0.5</property>
+        <property name="lightness" args="range_in=-100,100 displayname=Lightness">0.5</property>
+   </filter>
 
 
     <!-- COLOR EFFECT -->
@@ -559,8 +565,18 @@
         <group>Color Effect</group>
         <property name="levels" args="range_in=2,50 displayname=Levels">0.093</property>
     </filter>
-
-
+    <filter id="frei0r.colortap">
+        <name>ColorTap</name>
+        <group>Color Effect</group>
+    </filter>
+    <filter id="frei0r.softglow">
+        <name>SoftGlow</name>
+        <group>Color Effect</group>
+        <property name="blur" args="range_in=0,100 displayname=Blur">0.5</property>
+        <property name="brightness" args="range_in=0,100 displayname=Brightness">0.75</property>
+        <property name="sharpness" args="range_in=0,100 displayname=Sharpness">0.85</property>
+        <property name="blurblend" args="range_in=0,100 displayname=Blendtype">0.0</property>
+    </filter>
 
     <!-- DISTORT -->
     <filter id="frei0r.distort0r">

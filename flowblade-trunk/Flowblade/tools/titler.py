@@ -294,7 +294,6 @@ class Titler(gtk.Window):
         
         self.text_view.get_buffer().set_text(self.active_layout.text)
         r, g, b, a = self.active_layout.color_rgba
-        print r, g, b, a
         button_color = gtk.gdk.Color(r * 65535.0, g * 65535.0, b * 65535.0)
         self.color_button.set_color(button_color)
 
