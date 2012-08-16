@@ -471,7 +471,7 @@
     <filter id="frei0r.levels">
         <name>Levels</name>
         <group>Color</group>
-        <property name="Channel" args="editor=no_editor">0.3</property>
+        <property name="Channel" args="displayname=Channel editor=combobox exptype=default cbopts=Luma:0.3,Red:0.0,Green:0.1,Blue:0.2">0.3</property>
         <property name="Show histogram" args="editor=no_editor">0</property>
         <property name="Input black level" args="range_in=0,255 exptype=singlekeyframe">0=0</property>
         <property name="Input white level" args="range_in=0,255 exptype=singlekeyframe">0=1</property>

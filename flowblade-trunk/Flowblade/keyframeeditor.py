@@ -677,7 +677,7 @@ class GeometryKeyFrameEditor:
 
     Needed parent_editor callback interface:
         def geometry_edit_started(self)
-        def geometry_edit_finished(sel)
+        def geometry_edit_finished(self)
         def update_request_from_geom_editor(self)
     """
     def __init__(self, editable_property, parent_editor):
