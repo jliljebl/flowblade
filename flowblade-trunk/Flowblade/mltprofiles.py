@@ -58,7 +58,6 @@ def load_profile_list():
 
     for i in range(0, len(_profile_list)):
         prof = _profile_list[i]
-        print i, prof[0]
 
 def _load_profiles_list(dir_path):
     load_profiles = []

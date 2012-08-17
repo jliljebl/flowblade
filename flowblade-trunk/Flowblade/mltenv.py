@@ -21,6 +21,7 @@
 """
 Module checks environment for available codecs and formats.
 """
+import mlt
 import subprocess
 import os
 import stat
@@ -44,11 +45,64 @@ melt_available = False
 
 def check_available_features():
     """
+    Detect available feratures in the system. Method from Openshot av_formats.py
+    """
+    try:
+        print "Detecting environment..."
+        global acodecs        
+        global vcodecs    
+        global formats
+        acodecs = []
+        vcodecs = []
+        formats = []
+
+        # video codecs
+        cv = mlt.Consumer(mlt.Profile(), "avformat")
+        cv.set('vcodec', 'list')
+        cv.start()
+        codecs = mlt.Properties(cv.get_data('vcodec'))
+        for i in range(0, codecs.count()):
+            vcodecs.append(codecs.get(i))
+
+        # audio codecs
+        ca = mlt.Consumer(mlt.Profile(), "avformat")
+        ca.set('acodec', 'list')
+        ca.start()
+        codecs = mlt.Properties(ca.get_data('acodec'))
+        for i in range(0, codecs.count()):
+            acodecs.append(codecs.get(i))
+            
+        # formats
+        cf = mlt.Consumer(mlt.Profile(), "avformat")
+        cf.set('f', 'list')
+        cf.start()
+        codecs = mlt.Properties(cf.get_data('f'))
+        for i in range(0, codecs.count()):
+                formats.append(codecs.get(i))
+        print "MLT detection succeeded, " + str(len(formats)) + " formats, "  \
+        + str(len(vcodecs)) + " video codecs and " + str(len(acodecs)) + " audio codecs found."
+
+    except:
+        _check_available_features_with_melt()
+
+def _check_available_features_with_melt():  
+    """
+    Fallback method if other method of feature detection failes.
+    
     Create and run a script that genates lists files of codecs and formats and
     then them into lists.
     """
+    print "MLT detection failed, trying melt instead..."
+    global acodecs        
+    global vcodecs    
+    global formats
+    acodecs = None
+    vcodecs = None
+    formats = None
+
     melt_path = whereis('melt')
     if melt_path == None:
+        print "melt not found, environment unknown."
         gobject.timeout_add(2000, _show_no_melt_info)
         return
     
@@ -76,33 +130,39 @@ def check_available_features():
     process.wait()
 
     # Read script output to get codes and formats
-    global acodecs
+
     ac_file = open(utils.get_hidden_user_dir_path() + ACODECS_FILE)
     acodecs = ac_file.readlines()[2:-1]
     ac_file.close()
     acodecs = _strip_ends(acodecs)
 
-    global vcodecs
     vc_file = open(utils.get_hidden_user_dir_path() + VCODECS_FILE)
     vcodecs = vc_file.readlines()[2:-1]
     vc_file.close()
     vcodecs = _strip_ends(vcodecs)
-    
-    global formats
+
     f_file = open(utils.get_hidden_user_dir_path() + FORMATS_FILE)
     formats = f_file.readlines()[2:-1]
     f_file.close()
     formats = _strip_ends(formats)
+            
 
-def render_profile_supported(format, vcodec, acodec):
+def render_profile_supported(frmt, vcodec, acodec):
     if melt_available == False:
-        return True
+        return (True, "")
 
     if acodec in acodecs:
         if vcodec in vcodecs:
-            if format in formats:
-                return True
-    return False
+            if frmt in formats:
+                return (True, "")
+            else:
+                err_msg = "format " + frmt
+        else:
+            err_msg = "video codec " + vcodec
+    else:
+        err_msg = "audio codec " + acodec
+
+    return (False, err_msg)
     
 def whereis(program):
     for path in os.environ.get('PATH', '').split(':'):

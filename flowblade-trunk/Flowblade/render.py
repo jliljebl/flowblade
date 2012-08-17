@@ -20,7 +20,7 @@
 
 """
 Module loads render options, provides them in displayable form 
-and builds mlt.Consumer for rendering.
+and builds a mlt.Consumer for rendering on request.
 
 Rendering is done in app.player object of class mltplayer.Player
 """
@@ -160,10 +160,9 @@ class EncodingOption:
                 self.format = token_sides[1]
 
 
-        self.supported = mltenv.render_profile_supported(self.format, 
+        self.supported, self.err_msg = mltenv.render_profile_supported(self.format, 
                                                          self.vcodec,
                                                          self.acodec)
-        #print self.name, self.format, self.vcodec, self.acodec, self.supported
                                                          
     def get_args_vals_tuples_list(self, profile, quality_option):
         # Encoding options
@@ -221,12 +220,17 @@ def load_render_profiles():
         quality_option_groups[group_key] = quality_qroup
 
     # Create encoding options
+    print "Render profiles:"
     global encoding_options
     encoding_option_nodes = render_encoding_doc.getElementsByTagName(ENCODING_OPTION)
     for eo_node in encoding_option_nodes:
         encoding_option = EncodingOption(eo_node)
         if encoding_option.supported:
             encoding_options.append(encoding_option)
+            msg = "...available"
+        else:
+            msg = "...NOT available, " + encoding_option.err_msg + " missing"
+        print encoding_option.name + msg
         
 def get_render_consumer():
     """

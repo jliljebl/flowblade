@@ -87,7 +87,6 @@ def main(root_path):
     # Set paths.
     respaths.set_paths(root_path)
 
-
     print "gtk version:", gtk.gtk_version
 
     # Create hidden folders if not present
@@ -106,14 +105,6 @@ def main(root_path):
 
     # Load editor prefs and list of recent projects
     editorpersistance.load()
-
-    # Check for codecs and formats on the system
-    mltenv.check_available_features()
-    render.load_render_profiles()
-
-    # Load filter and compositor descriptions from xml files.
-    mltfilters.load_filters_xml()
-    mlttransitions.load_compositors_xml()
 
     # Init gtk threads
     gtk.gdk.threads_init()
@@ -138,6 +129,14 @@ def main(root_path):
 
     # Init MLT framework
     mlt.Factory().init()
+
+    # Check for codecs and formats on the system
+    mltenv.check_available_features()
+    render.load_render_profiles()
+
+    # Load filter and compositor descriptions from xml files.
+    mltfilters.load_filters_xml()
+    mlttransitions.load_compositors_xml()
 
     # Create list of available mlt profiles
     mltprofiles.load_profile_list()
