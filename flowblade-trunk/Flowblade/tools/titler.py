@@ -11,6 +11,7 @@ import vieweditor
 import vieweditorlayer
 
 _titler = None
+_titler_data = None
 
 DEFAULT_FONT_SIZE = 25
 
@@ -19,11 +20,43 @@ FACE_BOLD = "Bold"
 FACE_ITALIC = "Italic"
 FACE_BOLD_ITALIC = "Bold Italic"
 
+ALIGN_LEFT = 0
+ALIGN_CENTER = 1
+ALIGN_RIGHT = 2
+
 def show_titler():
+    global _titler_data
+    _titler_data = TitlerData()
+    
     global _titler
     _titler = Titler()
     _titler.show_current_frame()
 
+# ------------------------------------------------------------- data
+class TextLayer:
+    """
+    Data needed to create a pango text layout.
+    """
+    def __init__(self):
+        self.text = "Text"
+        self.font_desc = "Bitstream Vera Sans Mono Condensed 15"
+        self.color_rgba = (1, 1, 1, 1) 
+        self.alignment = ALIGN_LEFT
+        self.pixel_size = (100, 100)
+
+class TitlerData:
+    """
+    Data edited in titler editor
+    """
+    def __init__(self):
+        self.layers = []
+        self.add_layer()
+        
+    def add_layer(self):
+        self.active_layer = TextLayer()
+        self.layers.append(self.active_layer)
+        
+# ---------------------------------------------------------- editor
 class Titler(gtk.Window):
     def __init__(self):
         gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
@@ -31,7 +64,7 @@ class Titler(gtk.Window):
 
         self.block_updates = False
         
-        self.active_layout = PangoTextLayout()
+        self.active_layout = PangoTextLayout(_titler_data.active_layer)
         self.view_editor = vieweditor.ViewEditor(PLAYER().profile)
         edit_layer = vieweditorlayer.TextEditLayer(self.view_editor, self.active_layout)
         self.view_editor.edit_layers.append(edit_layer)
@@ -39,15 +72,15 @@ class Titler(gtk.Window):
 
         add_b = gtk.Button(_("Add"))
         del_b = gtk.Button(_("Delete"))
-        add_b.connect("clicked", self._add_layer_pressed, None)
-        del_b.connect("clicked", self._del_player_pressed, None)
+        add_b.connect("clicked", lambda w:self._add_layer_pressed())
+        del_b.connect("clicked", lambda w:self._del_player_pressed())
         add_del_box = gtk.HBox()
         add_del_box = gtk.HBox(True,1)
         add_del_box.pack_start(add_b)
         add_del_box.pack_start(del_b)
         
-        self.layer_list = TextLayerListView()
-        self.layer_list.set_size_request(300, 100)
+        self.layer_list = TextLayerListView(self._layer_selection_changed)
+        self.layer_list.set_size_request(300, 200)
     
         self.text_view = gtk.TextView()
         self.text_view.set_pixels_above_lines(2)
@@ -178,8 +211,9 @@ class Titler(gtk.Window):
         controls_panel_2.pack_start(paragraph_box, False, False, 0)
         
         controls_panel = gtk.VBox()
+
+        controls_panel.pack_start(guiutils.get_named_frame(_("Active Layer"),controls_panel_2), False, False, 0)
         controls_panel.pack_start(guiutils.get_named_frame(_("Layers"),controls_panel_1), False, False, 0)
-        controls_panel.pack_start(guiutils.get_named_frame(_("Layer Properties"),controls_panel_2), False, False, 0)
         controls_panel.pack_start(gtk.Label(), True, True, 0)
 
         editor_row = gtk.HBox()
@@ -220,8 +254,9 @@ class Titler(gtk.Window):
         alignment.add(titler_pane)
     
         self.add(alignment)
-        
-        self._load_active_layout()
+
+        self.layer_list.fill_data_model()
+        self._update_gui_with_active_layer_data()
         self.show_all()
 
     def show_current_frame(self):
@@ -237,11 +272,18 @@ class Titler(gtk.Window):
         self.view_editor.write_out_layers = True
         self.show_current_frame()
 
-    def _add_layer_pressed(self, button):
-        print "ad"
+    def _add_layer_pressed(self):
+        global _titler_data
+        _titler_data.add_layer()
+        self._update_gui_with_active_layer_data()
+        self._update_active_layout()
+        self.layer_list.fill_data_model()
 
-    def _del_player_pressed(self, button):
+    def _del_player_pressed(self):
         print "del"
+
+    def _layer_selection_changed(self):
+        print self.layer_list.get_selected_row()
 
     def _text_changed(self, widget):
         self._update_active_layer_rect()
@@ -257,13 +299,18 @@ class Titler(gtk.Window):
         if self.block_updates:
             return
 
+        global _titler_data
         buf = self.text_view.get_buffer()
         text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), include_hidden_chars=True)
-        self.active_layout.text = text
+        if text != _titler_data.active_layer.text:
+            update_layers_list = True
+        else:
+            update_layers_list = False
+
+        _titler_data.active_layer.text = text
         
         family = self.font_families[self.font_select.get_active()]
         size = str(self.size_spin.get_value_as_int())
-
         face = FACE_REGULAR
         if self.bold_font.get_active() and self.italic_font.get_active():
             face = FACE_BOLD_ITALIC
@@ -271,44 +318,56 @@ class Titler(gtk.Window):
             face = FACE_ITALIC
         elif self.bold_font.get_active():
             face = FACE_BOLD
-            
         desc_str = family.get_name() + " " + face + " " + size
-        self.active_layout.font_desc = pango.FontDescription(desc_str)
+        _titler_data.active_layer.font_desc = desc_str
 
         align = pango.ALIGN_LEFT
         if self.center_align.get_active():
             align = pango.ALIGN_CENTER
         elif  self.right_align.get_active():
              align = pango.ALIGN_RIGHT
-        self.active_layout.alignment = align
+        _titler_data.active_layer.alignment = align
 
         color = self.color_button.get_color()
         r, g, b = utils.hex_to_rgb(color.to_string())
-        new_color = ( r/65535.0, g/65535.0, b/65535.0, 1.0)
-        self.active_layout.color_rgba = new_color
-        
+        new_color = ( r/65535.0, g/65535.0, b/65535.0, 1.0)        
+        _titler_data.active_layer.color_rgba = new_color
+
+        self.active_layout.load_layer_data(_titler_data.active_layer)
+        if update_layers_list:
+            self.layer_list.fill_data_model()
+
         self.view_editor.edit_area.queue_draw()
 
-    def _load_active_layout(self):
+    def _update_gui_with_active_layer_data(self):
         self.block_updates = True
         
-        self.text_view.get_buffer().set_text(self.active_layout.text)
-        r, g, b, a = self.active_layout.color_rgba
+        self.text_view.get_buffer().set_text(_titler_data.active_layer.text)
+        r, g, b, a = _titler_data.active_layer.color_rgba
         button_color = gtk.gdk.Color(r * 65535.0, g * 65535.0, b * 65535.0)
         self.color_button.set_color(button_color)
 
         self.block_updates = False
 
+
+
+# --------------------------------------------------------- layer/s representation
 class PangoTextLayout:
     """
-    Data needed to create a pango text layout.
+    Wrapper for drawing current active layer.
+    
+    We need this wrapper because we want to save titler data using simple pickle
+    and therefore need to avoid using pango objects in layer data.
     """
-    def __init__(self):
-        self.text = "Text"
-        self.font_desc = pango.FontDescription("Bitstream Vera Sans Mono Condensed 15")
-        self.color_rgba = (1, 1, 1, 1) 
-        self.alignment = pango.ALIGN_LEFT
-        self.pixel_size = (100, 100)
+    def __init__(self, layer):
+        self.load_layer_data(layer)
+        
+    def load_layer_data(self, layer):    
+        self.text = layer.text
+        self.font_desc = pango.FontDescription(layer.font_desc)
+        self.color_rgba = layer.color_rgba
+        self.alignment = self._get_pango_alignment_for_layer(layer)
+        self.pixel_size = layer.pixel_size
         
     def draw_layout(self, cr, x, y, rotation, xscale, yscale):
         cr.save()
@@ -328,16 +387,24 @@ class PangoTextLayout:
 
         cr.restore()
 
-# ------------------------------------------------- item lists 
+    def _get_pango_alignment_for_layer(self, layer):
+        if layer.alignment == ALIGN_LEFT:
+            return pango.ALIGN_LEFT
+        elif layer.alignment == ALIGN_CENTER:
+            return pango.ALIGN_CENTER
+        else:
+            return pango.ALIGN_RIGHT
+
+
 class TextLayerListView(gtk.VBox):
 
-    def __init__(self):
+    def __init__(self, selection_changed_cb):
         gtk.VBox.__init__(self)
 
         style = self.get_style()
         bg_col = style.bg[gtk.STATE_NORMAL]
         
-       # Datamodel: icon, text, text
+       # Datamodel: str
         self.storemodel = gtk.ListStore(str)
  
         # Scroll container
@@ -351,13 +418,15 @@ class TextLayerListView(gtk.VBox):
         self.treeview.set_headers_visible(False)
         tree_sel = self.treeview.get_selection()
         tree_sel.set_mode(gtk.SELECTION_SINGLE)
-
+        tree_sel.connect("changed", lambda treeSel:selection_changed_cb())
+            
         # Column view
         self.text_col_1 = gtk.TreeViewColumn("text1")
 
         # Cell renderers
         self.text_rend_1 = gtk.CellRendererText()
         self.text_rend_1.set_property("ellipsize", pango.ELLIPSIZE_END)
+        self.text_rend_1.set_fixed_height_from_font(1)
 
         # Build column views
         self.text_col_1.set_expand(True)
@@ -365,8 +434,8 @@ class TextLayerListView(gtk.VBox):
         self.text_col_1.set_sizing(gtk.TREE_VIEW_COLUMN_GROW_ONLY)
         self.text_col_1.set_min_width(150)
         self.text_col_1.pack_start(self.text_rend_1)
-        self.text_col_1.add_attribute(self.text_rend_1, "text", 1)
-        
+        self.text_col_1.add_attribute(self.text_rend_1, "text", 0)
+
         # Add column views to view
         self.treeview.append_column(self.text_col_1)
 
@@ -378,3 +447,15 @@ class TextLayerListView(gtk.VBox):
     def get_selected_row(self):
         model, rows = self.treeview.get_selection().get_selected_rows()
         return max(rows)
+
+    def fill_data_model(self):
+        """
+        Creates displayed data.
+        Displays icon, sequence name and sequence length
+        """
+        self.storemodel.clear()
+        for layer in _titler_data.layers:
+            row_data = [layer.text]
+            self.storemodel.append(row_data)
+        
+        self.scroll.queue_draw()

@@ -117,7 +117,7 @@ def get_default_profile():
 
 def get_default_profile_index():
     """
-    We're making sure here that something is returned as default profile even user may have removed some profiles.
+    We're making sure here that something is returned as default profile even if user may have removed some profiles.
     """
     def_profile_index = get_index_for_name(editorpersistance.prefs.default_profile_name)
     if def_profile_index == -1:
