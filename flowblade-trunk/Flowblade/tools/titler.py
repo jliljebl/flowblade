@@ -45,6 +45,7 @@ class TextLayer:
         self.color_rgba = (1.0, 1.0, 1.0, 1.0) 
         self.alignment = ALIGN_LEFT
         self.pixel_size = (100, 100)
+        self.spacing = 5
 
     def get_font_desc_str(self):
         return self.font_family + " " + self.font_face + " " + str(self.font_size)
@@ -197,19 +198,6 @@ class Titler(gtk.Window):
         positions_box.pack_start(undo_pos, False, False, 0)
         positions_box.pack_start(gtk.Label(), True, True, 0)
 
-        adj = gtk.Adjustment(float(0), float(1), float(3000), float(1))
-        self.intendent = gtk.SpinButton(adj)
-        adj = gtk.Adjustment(float(0), float(1), float(3000), float(1))
-        self.spacing = gtk.SpinButton(adj) 
-        paragraph_box = gtk.HBox()
-        paragraph_box.pack_start(gtk.Label(), True, True, 0)
-        paragraph_box.pack_start(gtk.Label(_("Spacing")), False, False, 0)
-        paragraph_box.pack_start(self.spacing, False, False, 0)
-        paragraph_box.pack_start(guiutils.pad_label(5, 5), False, False, 0)
-        paragraph_box.pack_start(gtk.Label(_("Indent")), False, False, 0)
-        paragraph_box.pack_start(self.intendent, False, False, 0)
-        paragraph_box.pack_start(gtk.Label(), True, True, 0)
-        
         controls_panel_1 = gtk.VBox()
         controls_panel_1.pack_start(add_del_box, False, False, 0)
         controls_panel_1.pack_start(self.layer_list, False, False, 0)
@@ -218,46 +206,49 @@ class Titler(gtk.Window):
         controls_panel_2.pack_start(scroll_frame, False, False, 0)
         controls_panel_2.pack_start(font_main_row, False, False, 0)
         controls_panel_2.pack_start(buttons_box, False, False, 0)
-        controls_panel_2.pack_start(positions_box, False, False, 0)
-        controls_panel_2.pack_start(paragraph_box, False, False, 0)
         
         controls_panel = gtk.VBox()
-
         controls_panel.pack_start(guiutils.get_named_frame(_("Active Layer"),controls_panel_2), False, False, 0)
         controls_panel.pack_start(guiutils.get_named_frame(_("Layers"),controls_panel_1), False, False, 0)
         controls_panel.pack_start(gtk.Label(), True, True, 0)
 
+        display_current_frame = gtk.Button("Load current frame")
+   
+
+        view_editor_editor_buttons_row = gtk.HBox()
+        view_editor_editor_buttons_row.pack_start(positions_box, False, False, 0)
+        view_editor_editor_buttons_row.pack_start(gtk.Label(), True, True, 0)
+        view_editor_editor_buttons_row.pack_start(vieweditor.ScaleSelector(self), False, False, 0)
+        view_editor_editor_buttons_row.pack_start(display_current_frame, False, False, 0)
+        
+        editor_panel = gtk.VBox()
+        editor_panel.pack_start(self.view_editor, True, True, 0)
+        editor_panel.pack_start(view_editor_editor_buttons_row, False, False, 0)
+
         editor_row = gtk.HBox()
         editor_row.pack_start(controls_panel, False, False, 0)
-        editor_row.pack_start(self.view_editor, False, False, 0)
-
-        display_current_frame = gtk.Button("Load current frame")
-        save_label = gtk.Label("Open Graphic In Bin")
-        self.open_in_current_check = gtk.CheckButton()
-
-        editor_buttons_row_upper = gtk.HBox()
-        editor_buttons_row_upper.pack_start(gtk.Label(), True, True, 0)
-        editor_buttons_row_upper.pack_start(vieweditor.ScaleSelector(self), False, False, 0)
-        editor_buttons_row_upper.pack_start(display_current_frame, False, False, 0)
-        editor_buttons_row_upper.pack_start(save_label, False, False, 0)
-        editor_buttons_row_upper.pack_start(self.open_in_current_check , False, False, 0)
-
-        exit_b = gtk.Button("Exit")
-        save_titles_b = gtk.Button("Save Title")
+        editor_row.pack_start(editor_panel, False, False, 0)
 
         load_layers = gtk.Button("Load Layers")
         save_layers = gtk.Button("Save Layers")
+        
+        open_label = gtk.Label("Open Graphic In Bin")
+        self.open_in_current_check = gtk.CheckButton()
+
+        exit_b = gtk.Button("Exit")
+        save_titles_b = gtk.Button("Save Title")
 
         editor_buttons_row = gtk.HBox()
         editor_buttons_row.pack_start(load_layers, False, False, 0)
         editor_buttons_row.pack_start(save_layers, False, False, 0)
         editor_buttons_row.pack_start(gtk.Label(), True, True, 0)
+        editor_buttons_row.pack_start(open_label, False, False, 0)
+        editor_buttons_row.pack_start(self.open_in_current_check, False, False, 0)
         editor_buttons_row.pack_start(save_titles_b, False, False, 0)
         editor_buttons_row.pack_start(exit_b, False, False, 0)
 
         titler_pane = gtk.VBox()
         titler_pane.pack_start(editor_row, False, False, 0)
-        titler_pane.pack_start(editor_buttons_row_upper, False, False, 0)
         titler_pane.pack_start(editor_buttons_row, False, False, 0)
 
         alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
@@ -360,7 +351,7 @@ class Titler(gtk.Window):
         r, g, b = utils.hex_to_rgb(color.to_string())
         new_color = (r/65535.0, g/65535.0, b/65535.0, 1.0)        
         _titler_data.active_layer.color_rgba = new_color
-
+       
         self.active_layout.load_layer_data(_titler_data.active_layer)
         
         # We only wnat to update layer list data model when this called after user typing 
@@ -435,7 +426,7 @@ class PangoTextLayout:
         self.color_rgba = layer.color_rgba
         self.alignment = self._get_pango_alignment_for_layer(layer)
         self.pixel_size = layer.pixel_size
-        
+    
     def draw_layout(self, cr, x, y, rotation, xscale, yscale):
         cr.save()
         
