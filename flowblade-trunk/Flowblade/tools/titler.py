@@ -39,11 +39,16 @@ class TextLayer:
     """
     def __init__(self):
         self.text = "Text"
-        self.font_desc = "Bitstream Vera Sans Mono Condensed 15"
-        self.color_rgba = (1, 1, 1, 1) 
+        self.font_family = "Times New Roman"
+        self.font_face = FACE_REGULAR
+        self.font_size = 15
+        self.color_rgba = (1.0, 1.0, 1.0, 1.0) 
         self.alignment = ALIGN_LEFT
         self.pixel_size = (100, 100)
 
+    def get_font_desc_str(self):
+        return self.font_family + " " + self.font_face + " " + str(self.font_size)
+        
 class TitlerData:
     """
     Data edited in titler editor
@@ -97,11 +102,17 @@ class Titler(gtk.Window):
         
         font_map = pangocairo.cairo_font_map_get_default()
         unsorted_families = font_map.list_families()
+        if len(unsorted_families) == 0:
+            print "No font families found in system! Titler will not work."
         self.font_families = sorted(unsorted_families, key=lambda family: family.get_name())
-
+        self.font_family_indexes_for_name = {}
         combo = gtk.combo_box_new_text()
+        indx = 0
         for family in self.font_families:
             combo.append_text(family.get_name())
+            self.font_family_indexes_for_name[family.get_name()] = indx
+            indx += 1
+
         combo.set_active(0)
         self.font_select = combo
         self.font_select.connect("changed", self._edit_value_changed)
@@ -275,15 +286,30 @@ class Titler(gtk.Window):
     def _add_layer_pressed(self):
         global _titler_data
         _titler_data.add_layer()
-        self._update_gui_with_active_layer_data()
-        self._update_active_layout()
         self.layer_list.fill_data_model()
-
+        self._activate_layer(len(_titler_data.layers) - 1)
+        
     def _del_player_pressed(self):
-        print "del"
+        selected_row = self.layer_list.get_selected_row()
+        print selected_row
 
-    def _layer_selection_changed(self):
-        print self.layer_list.get_selected_row()
+    def _layer_selection_changed(self, selection):
+        selected_row = self.layer_list.get_selected_row()
+        # we're listeneing to "changed" on treeview and get some events
+        # when no layer is actually selected. 
+        # This happens when layer selection was not really changed.
+        if selected_row == -1:
+            return
+        
+        self._activate_layer(selected_row)
+        
+    def _activate_layer(self, layer_index):
+        global _titler_data
+        _titler_data.active_layer = _titler_data.layers[layer_index]
+        
+        self._update_gui_with_active_layer_data()
+        self.active_layout.load_layer_data(_titler_data.active_layer)
+        self.view_editor.edit_area.queue_draw()
 
     def _text_changed(self, widget):
         self._update_active_layer_rect()
@@ -295,7 +321,7 @@ class Titler(gtk.Window):
     def _edit_value_changed(self, widget):
         self._update_active_layout()
 
-    def _update_active_layout(self):
+    def _update_active_layout(self, fill_layers_data_if_needed=True):
         if self.block_updates:
             return
 
@@ -310,7 +336,10 @@ class Titler(gtk.Window):
         _titler_data.active_layer.text = text
         
         family = self.font_families[self.font_select.get_active()]
-        size = str(self.size_spin.get_value_as_int())
+        _titler_data.active_layer.font_family = family.get_name()
+
+        _titler_data.active_layer.font_size = self.size_spin.get_value_as_int()
+        
         face = FACE_REGULAR
         if self.bold_font.get_active() and self.italic_font.get_active():
             face = FACE_BOLD_ITALIC
@@ -318,34 +347,72 @@ class Titler(gtk.Window):
             face = FACE_ITALIC
         elif self.bold_font.get_active():
             face = FACE_BOLD
-        desc_str = family.get_name() + " " + face + " " + size
-        _titler_data.active_layer.font_desc = desc_str
-
-        align = pango.ALIGN_LEFT
+        _titler_data.active_layer.font_face = face
+        
+        align = ALIGN_LEFT
         if self.center_align.get_active():
-            align = pango.ALIGN_CENTER
+            align = ALIGN_CENTER
         elif  self.right_align.get_active():
-             align = pango.ALIGN_RIGHT
+             align = ALIGN_RIGHT
         _titler_data.active_layer.alignment = align
 
         color = self.color_button.get_color()
         r, g, b = utils.hex_to_rgb(color.to_string())
-        new_color = ( r/65535.0, g/65535.0, b/65535.0, 1.0)        
+        new_color = (r/65535.0, g/65535.0, b/65535.0, 1.0)        
         _titler_data.active_layer.color_rgba = new_color
 
         self.active_layout.load_layer_data(_titler_data.active_layer)
+        
+        # We only wnat to update layer list data model when this called after user typing 
         if update_layers_list:
             self.layer_list.fill_data_model()
 
         self.view_editor.edit_area.queue_draw()
 
     def _update_gui_with_active_layer_data(self):
+        # This a bit hackish, but works. Finding a method that blocks all
+        # gui events from being added to queue would be nice.
         self.block_updates = True
         
-        self.text_view.get_buffer().set_text(_titler_data.active_layer.text)
-        r, g, b, a = _titler_data.active_layer.color_rgba
-        button_color = gtk.gdk.Color(r * 65535.0, g * 65535.0, b * 65535.0)
+        layer = _titler_data.active_layer
+        
+        self.text_view.get_buffer().set_text(layer.text)
+        
+        r, g, b, a = layer.color_rgba
+        button_color = gtk.gdk.Color(red=r,
+                                     green=g,
+                                     blue=b)
         self.color_button.set_color(button_color)
+
+        if FACE_REGULAR == layer.font_face:
+            self.bold_font.set_active(False)
+            self.italic_font.set_active(False)
+        elif FACE_BOLD == layer.font_face:
+            self.bold_font.set_active(True)
+            self.italic_font.set_active(False)
+        elif FACE_ITALIC == layer.font_face:
+            self.bold_font.set_active(False)
+            self.italic_font.set_active(True) 
+        else:#FACE_BOLD_ITALIC
+            self.bold_font.set_active(True)
+            self.italic_font.set_active(True)
+
+        if layer.alignment == ALIGN_LEFT:
+            self.left_align.set_active(True)
+        elif layer.alignment == ALIGN_CENTER:
+            self.center_align.set_active(True)
+        else:#ALIGN_RIGHT
+            self.right_align.set_active(True)
+
+        self.size_spin.set_value(layer.font_size)
+        
+        try:
+            combo_index = self.font_family_indexes_for_name[layer.font_family]
+            self.font_select.set_active(combo_index)
+        except:# if font family not found we'll use first. This happens e.g at start-up if "Times New Roman" not in system.
+            family = self.font_families[0]
+            layer.font_family = family.get_name()
+            self.font_select.set_active(0)
 
         self.block_updates = False
 
@@ -364,7 +431,7 @@ class PangoTextLayout:
         
     def load_layer_data(self, layer):    
         self.text = layer.text
-        self.font_desc = pango.FontDescription(layer.font_desc)
+        self.font_desc = pango.FontDescription(layer.get_font_desc_str())
         self.color_rgba = layer.color_rgba
         self.alignment = self._get_pango_alignment_for_layer(layer)
         self.pixel_size = layer.pixel_size
@@ -401,8 +468,8 @@ class TextLayerListView(gtk.VBox):
     def __init__(self, selection_changed_cb):
         gtk.VBox.__init__(self)
 
-        style = self.get_style()
-        bg_col = style.bg[gtk.STATE_NORMAL]
+        #style = self.get_style()
+        #bg_col = style.bg[gtk.STATE_NORMAL]
         
        # Datamodel: str
         self.storemodel = gtk.ListStore(str)
@@ -418,7 +485,7 @@ class TextLayerListView(gtk.VBox):
         self.treeview.set_headers_visible(False)
         tree_sel = self.treeview.get_selection()
         tree_sel.set_mode(gtk.SELECTION_SINGLE)
-        tree_sel.connect("changed", lambda treeSel:selection_changed_cb())
+        tree_sel.connect("changed", selection_changed_cb)
             
         # Column view
         self.text_col_1 = gtk.TreeViewColumn("text1")
@@ -446,7 +513,13 @@ class TextLayerListView(gtk.VBox):
 
     def get_selected_row(self):
         model, rows = self.treeview.get_selection().get_selected_rows()
-        return max(rows)
+        # When listening to "changed" this gets called too often for our needs (namely when user types),
+        # but "row-activated" would activate layer changes only with double clicks, do we'll send -1 when this
+        # is called and layer is not actually changed. 
+        try:
+            return max(rows)[0]
+        except:
+            return -1
 
     def fill_data_model(self):
         """
@@ -459,3 +532,4 @@ class TextLayerListView(gtk.VBox):
             self.storemodel.append(row_data)
         
         self.scroll.queue_draw()
+
