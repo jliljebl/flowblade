@@ -28,6 +28,7 @@ Handles edit mode setting.
 Module passes mouse edit events to other modules, depending on current edit mode.
 """
 import gtk
+import os
 
 import appconsts
 import audiowaveform
@@ -43,6 +44,7 @@ from editorstate import PROJECT
 from editorstate import PLAYER
 from editorstate import timeline_visible
 from editorstate import EDIT_MODE
+import editorpersistance
 import gui
 import guicomponents
 import mltfilters
@@ -440,6 +442,13 @@ def tline_media_drop(media_file, x, y):
     new_clip.mark_in = 0
     new_clip.mark_out = new_clip.get_length() - 1 # - 1 because out is mark_out inclusive
 
+    # Graphics files get added with their default lengths
+    f_name, ext = os.path.splitext(media_file.name)
+    if utils.file_extension_is_graphics_file(ext):
+        in_fr, out_fr, l = editorpersistance.get_graphics_default_in_out_length()
+        new_clip.mark_in = in_fr
+        new_clip.mark_out = out_fr
+            
     do_clip_insert(track, new_clip, frame)
 
 

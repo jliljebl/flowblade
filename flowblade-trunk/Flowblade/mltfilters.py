@@ -59,6 +59,7 @@ group_icons = None
 # Filters that are used as parts of mlttransitions.CompositorObject
 # and are not displayed to user
 # dict name:FilterInfo
+# THIS IS NOT USED ANYMORE! DOUBLE CHECK THAT THIS REALLY IS THE CASE AND KILL!
 compositor_filters = {}
 
 # ICONS
@@ -161,17 +162,20 @@ class FilterObject:
     These objects are saved with projects. Thay are used to generate, 
     update and hold a reference to an mlt.Filter object attached to a mlt.Producer object
     representing a clip on the timeline.
+    
+    These are essentially wrappers to mlt.Filter objects which can't be saved or loaded with pickle().
     """
     def __init__(self, filter_info):
         self.info = filter_info
         # Values of these are edited by the user.
         self.properties = copy.deepcopy(filter_info.properties)
-        self.mlt_filter = None
-        self.active = True
+        self.mlt_filter = None # reference to MLT C-object
+        self.active = True 
 
         # PROP_EXPR values may have keywords that need to be replaced with
         # numerical values that depend on the profile we have. These need
         # to be replaced now that we have profile and we are ready to connect this.
+        # For example default values of some properties depend on the screen size of the project
         propertyparse.replace_value_keywords(self.properties, PROJECT().profile)
     
     def create_mlt_filter(self, mlt_profile):
@@ -183,8 +187,8 @@ class FilterObject:
         Called at creation time and when loaded to set all mlt properties
         of a compositor filter to correct values.
         """
-        for property in self.properties:
-            name, value, type = property
+        for prop in self.properties:
+            name, value, prop_type = prop
             self.mlt_filter.set(str(name), str(value)) # new const strings are created from values
     
     def update_mlt_disabled_value(self):
@@ -332,7 +336,7 @@ def load_filters_xml(services):
             print "MLT service " + filter_info.mlt_service_id + " not found."
             continue
 
-        if filter_info.mlt_service_id == "volume": # we need this filter to do mutes so save it
+        if filter_info.mlt_service_id == "volume": # we need this filter to do mutes so save reference to it
             global _volume_filter_info
             _volume_filter_info = filter_info
         if filter_info.group == COMPOSITOR_FILTER_GROUP:

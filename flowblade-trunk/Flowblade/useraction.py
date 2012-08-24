@@ -1000,7 +1000,10 @@ def _preferences_dialog_callback(dialog, response_id, all_widgets):
 def media_list_button_press(widget, event):
     if event.button == 3:
         row, column_title = _select_treeview_on_pos_and_return_row_and_column_title(event, gui.media_list_view.treeview)
-        media_file_id = current_bin().file_ids[row]
+        try:
+            media_file_id = current_bin().file_ids[row]
+        except:# right clicking on empty bin fails on previous line
+            return False
         guicomponents.diplay_media_file_popup_menu(PROJECT().media_files[media_file_id],
                                                    _media_file_menu_item_selected,
                                                    event)

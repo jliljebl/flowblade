@@ -189,6 +189,14 @@ class MediaFile:
         self.mark_in = -1
         self.mark_out = -1
         
+        # Set default length for graphics files
+        (f_name, ext) = os.path.splitext(self.name)
+        if utils.file_extension_is_graphics_file(ext):
+            in_fr, out_fr, l = editorpersistance.get_graphics_default_in_out_length()
+            self.mark_in = in_fr
+            self.mark_out = out_fr
+            self.length = l
+ 
     def create_icon(self):
         try:
             icon = gtk.gdk.pixbuf_new_from_file(self.icon_path)

@@ -95,7 +95,6 @@ def check_available_features(repo):
         envtransitions = mlt.Repository.transitions(repo)
         for i in range(mlt.Properties.count(envtransitions)):
             transitions[mlt.Properties.get_name(envtransitions, i)] = True
-            print mlt.Properties.get_name(envtransitions, i)
             
         print "MLT detection succeeded, " + str(len(formats)) + " formats, "  \
         + str(len(vcodecs)) + " video codecs and " + str(len(acodecs)) + " audio codecs found."

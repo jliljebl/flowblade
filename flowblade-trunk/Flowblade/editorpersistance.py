@@ -1,21 +1,21 @@
 """
-	Flowblade Movie Editor is a nonlinear video editor.
+    Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-	This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
 
-	Flowblade Movie Editor is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+    Flowblade Movie Editor is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-	Flowblade Movie Editor is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Flowblade Movie Editor is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU General Public License
+    along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 """
@@ -64,6 +64,19 @@ def load():
         recent_projects.projects = []
         write_file = file(recents_file_path, "wb")
         pickle.dump(recent_projects, write_file)
+
+    # version of program may have different prefs objects and 
+    # we may need to to update prefs on disk if user has e.g.
+    # installed later version of Flowblade
+    print len(prefs.__dict__)
+    current_prefs = EditorPreferences()
+    if len(prefs.__dict__) != len(current_prefs.__dict__):
+        current_prefs.__dict__.update(prefs.__dict__)
+        prefs = current_prefs
+        write_file = file(prefs_file_path, "wb")
+        pickle.dump(prefs, write_file)
+        print "prefs updated to new version"
+        print len(prefs.__dict__)
 
 def save():
     """
@@ -136,7 +149,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
         # Unpack widgets
         gen_opts_widgets, edit_prefs_widgets = widgets_tuples_tuple
         default_profile_combo, open_in_last_opened_check, undo_max_spin, disp_splash = gen_opts_widgets
-        auto_play_in_clip_monitor_check, auto_center_check, auto_move_on_edit = edit_prefs_widgets
+        auto_play_in_clip_monitor_check, auto_center_check, auto_move_on_edit, grfx_insert_length_spin = edit_prefs_widgets
 
         global prefs
         prefs.open_in_last_opended_media_dir = open_in_last_opened_check.get_active()
@@ -149,7 +162,15 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
         prefs.auto_play_in_clip_monitor = auto_play_in_clip_monitor_check.get_active()
         prefs.auto_center_on_play_stop = auto_center_check.get_active()
         prefs.auto_move_after_edit = auto_move_on_edit.get_active()
+ 
+        prefs.default_grfx_length = int(grfx_insert_length_spin.get_adjustment().get_value())
 
+def get_graphics_default_in_out_length():
+    in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
+    out_fr = in_fr + int(prefs.default_grfx_length) - 1 # -1, out inclusive
+    return (in_fr, out_fr, prefs.default_grfx_length)
+    
+    
 class EditorPreferences:
     """
     Class holds data of persistant user preferences for editor.
@@ -161,12 +182,14 @@ class EditorPreferences:
         self.img_length = 2000
         self.auto_save_delay_value_index = 1 # value is index of self.AUTO_SAVE_OPTS
         self.undos_max = UNDO_STACK_DEFAULT
-        self.default_profile_name = 10 # name of default profile
+        self.default_profile_name = 10 # index of default profile
         self.auto_play_in_clip_monitor = False
         self.auto_center_on_play_stop = False
         self.thumbnail_folder = None
         self.hidden_profile_names = []
         self.display_splash_screen = True
         self.auto_move_after_edit = False
+        self.default_grfx_length = 250 # value is in frames
 
-        self.AUTO_SAVE_OPTS = ((-1, _("No Autosave")),(2, _("1 min")),(2, _("2 min")),(5, _("5 min")))
+        self.AUTO_SAVE_OPTS = ((-1, _("No Autosave")),(1, _("1 min")),(2, _("2 min")),(5, _("5 min")))
+

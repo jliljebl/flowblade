@@ -216,6 +216,14 @@ def get_media_source_file_filter():
 
     return filter
 
+def file_extension_is_graphics_file(ext):
+    grphics_exts = [".bmp",".tiff",".gif",".tga",".png",".jpeg",".jpg"]
+    ext = ext.lower()
+    if ext in grphics_exts:
+        return True
+    else:
+        return False
+
 def hex_to_rgb(value):
     value = value.lstrip('#')
     lv = len(value)

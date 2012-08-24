@@ -269,6 +269,10 @@ class Sequence:
 
         self.add_clip_attr(producer)
         
+        #if ext is ".png":
+        #    print ".png"
+        #    edit._set_in_out(producer, 7500, 7510)
+        
         return producer
 
     def create_pattern_producer(self, pattern_producer_data):
@@ -295,6 +299,7 @@ class Sequence:
         producer.name = name
         producer.media_type = PATTERN_PRODUCER
         self.add_clip_attr(producer)
+        #edit._set_in_out(producer, 7500, 7510)
         return producer
 
     def add_clip_attr(self, clip):
