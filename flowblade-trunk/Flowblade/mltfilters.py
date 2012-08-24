@@ -118,7 +118,7 @@ class FilterInfo:
     """
     Info of a filter that is is available to the user.
     Constructor input is a dom node object.
-    THis used to create FilterObject objects.
+    This used to create FilterObject objects.
     """
     def __init__(self, filter_node):
         self.mlt_service_id = filter_node.getAttribute(ID)
@@ -311,13 +311,15 @@ class MultipartFilterObject:
         self.update_value(self.value, clip, mlt_profile)
 
 
-def load_filters_xml():
+def load_filters_xml(services):
     """
     Load filters document and save filters nodes as FilterInfo objects in array.
     Save them also as array of tuples of names and arrays of FilterInfo objects
     that represent named groups of filters as displayd to user.
     """
     _load_icons()
+    
+    print "Loading filters..."
     
     global filters_doc
     filters_doc = xml.dom.minidom.parse(respaths.FILTERS_XML_DOC)
@@ -326,6 +328,10 @@ def load_filters_xml():
     filter_nodes = filters_doc.getElementsByTagName(FILTER)
     for f_node in filter_nodes:
         filter_info = FilterInfo(f_node)
+        if (not filter_info.mlt_service_id in services) and len(services) > 0:
+            print "MLT service " + filter_info.mlt_service_id + " not found."
+            continue
+
         if filter_info.mlt_service_id == "volume": # we need this filter to do mutes so save it
             global _volume_filter_info
             _volume_filter_info = filter_info

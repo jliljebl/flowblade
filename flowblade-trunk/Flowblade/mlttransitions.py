@@ -300,16 +300,20 @@ class CompositorObject:
         self.transition.update_editable_mlt_properties()
 
 # -------------------------------------------------- compositor interface methods
-def load_compositors_xml():
+def load_compositors_xml(transitions):
     """
     Load filters document and create MLTCompositorInfo objects and
     put them in dict mlt_compositor_infos with names as keys.
     """
     compositors_doc = xml.dom.minidom.parse(respaths.COMPOSITORS_XML_DOC)
 
+    print "Loading transitions..."
     compositor_nodes = compositors_doc.getElementsByTagName(COMPOSITOR)
     for c_node in compositor_nodes:
         compositor_info = CompositorTransitionInfo(c_node)
+        if (not compositor_info.mlt_service_id in transitions) and len(transitions) > 0:
+            print "MLT transition " + compositor_info.mlt_service_id + " not found."
+            continue
         mlt_compositor_transition_infos[compositor_info.name] = compositor_info
 
 def get_wipe_resource_path(key):

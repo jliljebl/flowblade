@@ -128,15 +128,15 @@ def main(root_path):
         show_splash_screen()
 
     # Init MLT framework
-    mlt.Factory().init()
+    repo = mlt.Factory().init()
 
     # Check for codecs and formats on the system
-    mltenv.check_available_features()
+    mltenv.check_available_features(repo)
     render.load_render_profiles()
 
     # Load filter and compositor descriptions from xml files.
-    mltfilters.load_filters_xml()
-    mlttransitions.load_compositors_xml()
+    mltfilters.load_filters_xml(mltenv.services)
+    mlttransitions.load_compositors_xml(mltenv.transitions)
 
     # Create list of available mlt profiles
     mltprofiles.load_profile_list()

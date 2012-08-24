@@ -40,10 +40,12 @@ FORMATS_FILE = "formats"
 acodecs = None
 vcodecs = None
 formats = None
+services = None
+transitions = None
 
 melt_available = False
 
-def check_available_features():
+def check_available_features(repo):
     """
     Detect available feratures in the system. Method from Openshot av_formats.py
     """
@@ -52,9 +54,13 @@ def check_available_features():
         global acodecs        
         global vcodecs    
         global formats
+        global services
+        global transitions
         acodecs = []
         vcodecs = []
         formats = []
+        services = {}
+        transitions = {}
 
         # video codecs
         cv = mlt.Consumer(mlt.Profile(), "avformat")
@@ -79,8 +85,21 @@ def check_available_features():
         codecs = mlt.Properties(cf.get_data('f'))
         for i in range(0, codecs.count()):
                 formats.append(codecs.get(i))
+
+        # filters
+        envservices = mlt.Repository.filters(repo)
+        for i in range(mlt.Properties.count(envservices)):
+            services[mlt.Properties.get_name(envservices, i)] = True
+
+        # transitions
+        envtransitions = mlt.Repository.transitions(repo)
+        for i in range(mlt.Properties.count(envtransitions)):
+            transitions[mlt.Properties.get_name(envtransitions, i)] = True
+            print mlt.Properties.get_name(envtransitions, i)
+            
         print "MLT detection succeeded, " + str(len(formats)) + " formats, "  \
         + str(len(vcodecs)) + " video codecs and " + str(len(acodecs)) + " audio codecs found."
+        print str(len(services)) + " MLT services found."
 
     except:
         _check_available_features_with_melt()
