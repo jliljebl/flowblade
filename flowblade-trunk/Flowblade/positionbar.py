@@ -1,21 +1,21 @@
 """
-	Flowblade Movie Editor is a nonlinear video editor.
+    Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-	This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
 
-	Flowblade Movie Editor is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+    Flowblade Movie Editor is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-	Flowblade Movie Editor is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Flowblade Movie Editor is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU General Public License
+    along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 """
@@ -64,6 +64,7 @@ class PositionBar:
         self.mark_in_norm = -1.0 # program length normalized
         self.mark_out_norm = -1.0
         self.disabled = False
+        self.mouse_release_listener = None # when used in tools (Tiler ate.) this used to update bg image 
         
     def set_listener(self, listener):
         self.position_listener = listener
@@ -236,6 +237,9 @@ class PositionBar:
         self._pos = self._legalize_x(event.x)
         # Listener calls self.set_normalized_pos()
         self.position_listener(self.normalized_pos(), self.producer.get_length())
+        #
+        if self.mouse_release_listener != None:
+            self.mouse_release_listener(self.normalized_pos(), self.producer.get_length())
  
     def _legalize_x(self, x):
         """

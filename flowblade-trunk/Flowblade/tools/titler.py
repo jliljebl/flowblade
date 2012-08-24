@@ -6,6 +6,8 @@ import pangocairo
 
 from editorstate import PLAYER
 import utils
+import guicomponents
+import positionbar
 import guiutils
 import vieweditor
 import vieweditorlayer
@@ -101,6 +103,13 @@ class Titler(gtk.Window):
         scroll_frame = gtk.Frame()
         scroll_frame.add(self.sw)
         
+        self.tc_display = guicomponents.MonitorTCDisplay()
+        self.tc_display.use_internal_frame = True
+        self.pos_bar = positionbar.PositionBar()
+        self.pos_bar.set_listener(self.position_listener)
+        self.pos_bar.update_display_from_producer(PLAYER().producer)
+        self.pos_bar.mouse_release_listener = self.pos_bar_mouse_released
+       
         font_map = pangocairo.cairo_font_map_get_default()
         unsorted_families = font_map.list_families()
         if len(unsorted_families) == 0:
@@ -183,7 +192,11 @@ class Titler(gtk.Window):
         undo_icon = gtk.image_new_from_stock(gtk.STOCK_UNDO, 
                                        gtk.ICON_SIZE_BUTTON)
         undo_pos.set_image(undo_icon)
-        
+
+        timeline_box = gtk.HBox()
+        timeline_box.pack_start(self.tc_display.widget, False, False, 0)
+        timeline_box.pack_start(self.pos_bar.widget, True, True, 0)
+         
         positions_box = gtk.HBox()
         positions_box.pack_start(gtk.Label(), True, True, 0)
         positions_box.pack_start(gtk.Label("X"), False, False, 0)
@@ -213,7 +226,6 @@ class Titler(gtk.Window):
         controls_panel.pack_start(gtk.Label(), True, True, 0)
 
         display_current_frame = gtk.Button("Load current frame")
-   
 
         view_editor_editor_buttons_row = gtk.HBox()
         view_editor_editor_buttons_row.pack_start(positions_box, False, False, 0)
@@ -223,6 +235,7 @@ class Titler(gtk.Window):
         
         editor_panel = gtk.VBox()
         editor_panel.pack_start(self.view_editor, True, True, 0)
+        editor_panel.pack_start(timeline_box, False, False, 0)
         editor_panel.pack_start(view_editor_editor_buttons_row, False, False, 0)
 
         editor_row = gtk.HBox()
@@ -262,16 +275,31 @@ class Titler(gtk.Window):
         self.show_all()
 
     def show_current_frame(self):
-        rgbdata = PLAYER().seek_and_get_rgb_frame(PLAYER().current_frame())
+        frame = PLAYER().current_frame()
+        length = PLAYER().producer.get_length()
+        rgbdata = PLAYER().seek_and_get_rgb_frame(frame)
         self.view_editor.set_screen_rgb_data(rgbdata)
+        self.pos_bar.set_normalized_pos(float(frame)/float(length))
+        self.tc_display.set_frame(frame)
+        self.pos_bar.widget.queue_draw()
         self.view_editor.edit_area.queue_draw()
-
+        
     def scale_changed(self, new_scale):
         self.view_editor.set_scale_and_update(new_scale)
         self.view_editor.edit_area.queue_draw()
 
     def write_current_frame(self):
         self.view_editor.write_out_layers = True
+        self.show_current_frame()
+
+    def position_listener(self, normalized_pos, length):
+        frame = normalized_pos * length
+        self.tc_display.set_frame(int(frame))
+        self.pos_bar.widget.queue_draw()
+
+    def pos_bar_mouse_released(self, normalized_pos, length):
+        frame = int(normalized_pos * length)
+        PLAYER().seek_frame(frame)
         self.show_current_frame()
 
     def _add_layer_pressed(self):
@@ -506,7 +534,7 @@ class TextLayerListView(gtk.VBox):
         model, rows = self.treeview.get_selection().get_selected_rows()
         # When listening to "changed" this gets called too often for our needs (namely when user types),
         # but "row-activated" would activate layer changes only with double clicks, do we'll send -1 when this
-        # is called and layer is not actually changed. 
+        # is called and active layer is not actually changed. 
         try:
             return max(rows)[0]
         except:

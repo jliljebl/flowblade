@@ -1185,9 +1185,10 @@ class MonitorTCDisplay:
         self._draw_consts = (x, y, width, height, aspect, corner_radius, radius, degrees)
         
         self._frame = 0
+        self.use_internal_frame = False
 
     def set_frame(self, frame):
-        self._frame = frame
+        self._frame = frame # this is used in tools, editor window uses PLAYER frame
         self.widget.queue_draw()
 
     def _draw(self, event, cr, allocation):
@@ -1221,7 +1222,10 @@ class MonitorTCDisplay:
         cr.stroke()
 
         # Get current TIMELINE frame str
-        frame = PLAYER().tracktor_producer.frame()
+        if self.use_internal_frame:
+            frame = self._frame
+        else:
+            frame = PLAYER().tracktor_producer.frame()
         frame_str = utils.get_tc_string(frame)
 
         # Text
