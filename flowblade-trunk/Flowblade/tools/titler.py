@@ -89,7 +89,7 @@ class Titler(gtk.Window):
         add_del_box.pack_start(del_b)
         
         self.layer_list = TextLayerListView(self._layer_selection_changed)
-        self.layer_list.set_size_request(300, 200)
+        self.layer_list.set_size_request(300, 250)
     
         self.text_view = gtk.TextView()
         self.text_view.set_pixels_above_lines(2)
@@ -99,7 +99,7 @@ class Titler(gtk.Window):
         self.sw = gtk.ScrolledWindow()
         self.sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_ALWAYS)
         self.sw.add(self.text_view)
-        self.sw.set_size_request(300, 150)
+        self.sw.set_size_request(300, 275)
 
         scroll_frame = gtk.Frame()
         scroll_frame.add(self.sw)
@@ -130,7 +130,6 @@ class Titler(gtk.Window):
         adj = gtk.Adjustment(float(DEFAULT_FONT_SIZE), float(1), float(300), float(1))
         self.size_spin = gtk.SpinButton(adj)
         self.size_spin.connect("changed", self._edit_value_changed)
-        #self.size_spin.connect("activate", self._edit_value_changed)
         self.size_spin.connect("key-press-event", self._key_pressed_on_widget)
 
         font_main_row = gtk.HBox()
@@ -183,6 +182,13 @@ class Titler(gtk.Window):
         buttons_box.pack_start(self.color_button, False, False, 0)
         buttons_box.pack_start(gtk.Label(), True, True, 0)
 
+        load_layers = gtk.Button("Load Layers")
+        save_layers = gtk.Button("Save Layers")
+        
+        layers_save_buttons_row = gtk.HBox()
+        layers_save_buttons_row.pack_start(load_layers, False, False, 0)
+        layers_save_buttons_row.pack_start(save_layers, False, False, 0)
+        
         adj = gtk.Adjustment(float(0), float(1), float(3000), float(1))
         self.x_pos_spin = gtk.SpinButton(adj) 
         adj = gtk.Adjustment(float(0), float(1), float(3000), float(1))
@@ -210,12 +216,7 @@ class Titler(gtk.Window):
         timeline_box.pack_start(vieweditor.ScaleSelector(self), False, False, 0)
         
         positions_box = gtk.HBox()
-        #positions_box.pack_start(vieweditor.ScaleSelector(self), False, False, 0)
-        #positions_box.pack_start(prev_frame, False, False, 0)
-        #positions_box.pack_start(next_frame, False, False, 0)
         positions_box.pack_start(gtk.Label(), True, True, 0)
-        #positions_box.pack_start(guiutils.get_sized_button("Move", 100, 32), False, False, 0)
-        #positions_box.pack_start(guiutils.get_sized_button("Rotate", 100, 32), False, False, 0)
         positions_box.pack_start(gtk.Label("X pos"), False, False, 0)
         positions_box.pack_start(self.x_pos_spin, False, False, 0)
         positions_box.pack_start(guiutils.pad_label(10, 5), False, False, 0)
@@ -224,63 +225,55 @@ class Titler(gtk.Window):
         positions_box.pack_start(guiutils.pad_label(10, 5), False, False, 0)
         positions_box.pack_start(gtk.Label(_("Angle")), False, False, 0)
         positions_box.pack_start(self.rotation_spin, False, False, 0)
-        #positions_box.pack_start(guiutils.pad_label(5, 5), False, False, 0)
-        #positions_box.pack_start(undo_pos, False, False, 0)
         positions_box.pack_start(gtk.Label(), True, True, 0)
 
         controls_panel_1 = gtk.VBox()
         controls_panel_1.pack_start(add_del_box, False, False, 0)
         controls_panel_1.pack_start(self.layer_list, False, False, 0)
+        controls_panel_1.pack_start(layers_save_buttons_row, False, False, 0)
 
         controls_panel_2 = gtk.VBox()
-        controls_panel_2.pack_start(scroll_frame, False, False, 0)
+        controls_panel_2.pack_start(scroll_frame, True, True, 0)
         controls_panel_2.pack_start(font_main_row, False, False, 0)
         controls_panel_2.pack_start(buttons_box, False, False, 0)
         
         controls_panel = gtk.VBox()
-        controls_panel.pack_start(guiutils.get_named_frame(_("Active Layer"),controls_panel_2), False, False, 0)
+        controls_panel.pack_start(guiutils.get_named_frame(_("Active Layer"),controls_panel_2), True, True, 0)
         controls_panel.pack_start(guiutils.get_named_frame(_("Layers"),controls_panel_1), False, False, 0)
-        controls_panel.pack_start(gtk.Label(), True, True, 0)
-
+ 
         view_editor_editor_buttons_row = gtk.HBox()
         view_editor_editor_buttons_row.pack_start(positions_box, False, False, 0)
         view_editor_editor_buttons_row.pack_start(gtk.Label(), True, True, 0)
+
+        open_label = gtk.Label("Open Saved Title In Bin")
+        self.open_in_current_check = gtk.CheckButton()
+        self.open_in_current_check.set_active(True)
+
+        exit_b = guiutils.get_sized_button("Close", 150, 32)
+        save_titles_b = guiutils.get_sized_button("Save Title Graphic", 150, 32)
+        
+        editor_buttons_row = gtk.HBox()
+        editor_buttons_row.pack_start(gtk.Label(), True, True, 0)
+        editor_buttons_row.pack_start(open_label, False, False, 0)
+        editor_buttons_row.pack_start(self.open_in_current_check, False, False, 0)
+        editor_buttons_row.pack_start(guiutils.pad_label(24, 2), False, False, 0)
+        editor_buttons_row.pack_start(exit_b, False, False, 0)
+        editor_buttons_row.pack_start(save_titles_b, False, False, 0)
         
         editor_panel = gtk.VBox()
         editor_panel.pack_start(self.view_editor, True, True, 0)
         editor_panel.pack_start(timeline_box, False, False, 0)
         editor_panel.pack_start(guiutils.get_in_centering_alignment(view_editor_editor_buttons_row), False, False, 0)
+        editor_panel.pack_start(guiutils.pad_label(2, 24), False, False, 0)
+        editor_panel.pack_start(editor_buttons_row, False, False, 0)
 
         editor_row = gtk.HBox()
         editor_row.pack_start(controls_panel, False, False, 0)
         editor_row.pack_start(editor_panel, False, False, 0)
 
-        load_layers = gtk.Button("Load Layers")
-        save_layers = gtk.Button("Save Layers")
-        
-        open_label = gtk.Label("Open Graphic In Bin")
-        self.open_in_current_check = gtk.CheckButton()
-
-        exit_b = gtk.Button("Exit")
-        save_titles_b = gtk.Button("Save Title")
-
-        editor_buttons_row = gtk.HBox()
-        editor_buttons_row.pack_start(load_layers, False, False, 0)
-        editor_buttons_row.pack_start(save_layers, False, False, 0)
-        editor_buttons_row.pack_start(gtk.Label(), True, True, 0)
-        editor_buttons_row.pack_start(open_label, False, False, 0)
-        editor_buttons_row.pack_start(self.open_in_current_check, False, False, 0)
-        editor_buttons_row.pack_start(save_titles_b, False, False, 0)
-        editor_buttons_row.pack_start(exit_b, False, False, 0)
-
-        titler_pane = gtk.VBox()
-        titler_pane.pack_start(editor_row, False, False, 0)
-        titler_pane.pack_start(guiutils.pad_label(2, 24), False, False, 0)
-        titler_pane.pack_start(editor_buttons_row, False, False, 0)
-
         alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-        alignment.set_padding(8,8, 8, 8)
-        alignment.add(titler_pane)
+        alignment.set_padding(8,8,8,8)
+        alignment.add(editor_row)
     
         self.add(alignment)
 
