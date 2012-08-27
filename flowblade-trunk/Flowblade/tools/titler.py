@@ -9,6 +9,7 @@ import utils
 import guicomponents
 import positionbar
 import guiutils
+import respaths
 import vieweditor
 import vieweditorlayer
 
@@ -122,7 +123,6 @@ class Titler(gtk.Window):
             combo.append_text(family.get_name())
             self.font_family_indexes_for_name[family.get_name()] = indx
             indx += 1
-
         combo.set_active(0)
         self.font_select = combo
         self.font_select.connect("changed", self._edit_value_changed)
@@ -187,25 +187,36 @@ class Titler(gtk.Window):
         adj = gtk.Adjustment(float(0), float(1), float(3000), float(1))
         self.y_pos_spin = gtk.SpinButton(adj)
         adj = gtk.Adjustment(float(0), float(1), float(3000), float(1))
-        self.rotation_spin = gtk.SpinButton(adj) 
+        self.rotation_spin = gtk.SpinButton(adj)
+    
         undo_pos = gtk.Button()
         undo_icon = gtk.image_new_from_stock(gtk.STOCK_UNDO, 
                                        gtk.ICON_SIZE_BUTTON)
         undo_pos.set_image(undo_icon)
 
+        next_icon = gtk.image_new_from_file(respaths.IMAGE_PATH + "next_frame_s.png")
+        prev_icon = gtk.image_new_from_file(respaths.IMAGE_PATH + "prev_frame_s.png")
+        prev_frame = gtk.Button()
+        prev_frame.set_image(prev_icon)
+        next_frame = gtk.Button()
+        next_frame.set_image(next_icon)
+        
         timeline_box = gtk.HBox()
         timeline_box.pack_start(self.tc_display.widget, False, False, 0)
         timeline_box.pack_start(self.pos_bar.widget, True, True, 0)
          
         positions_box = gtk.HBox()
+        positions_box.pack_start(vieweditor.ScaleSelector(self), False, False, 0)
+        positions_box.pack_start(prev_frame, False, False, 0)
+        positions_box.pack_start(next_frame, False, False, 0)
         positions_box.pack_start(gtk.Label(), True, True, 0)
-        positions_box.pack_start(gtk.Label("X"), False, False, 0)
+        positions_box.pack_start(gtk.Label("X pos"), False, False, 0)
         positions_box.pack_start(self.x_pos_spin, False, False, 0)
         positions_box.pack_start(guiutils.pad_label(5, 5), False, False, 0)
-        positions_box.pack_start(gtk.Label("Y"), False, False, 0)
+        positions_box.pack_start(gtk.Label("Y pos"), False, False, 0)
         positions_box.pack_start(self.y_pos_spin, False, False, 0)
         positions_box.pack_start(guiutils.pad_label(5, 5), False, False, 0)
-        positions_box.pack_start(gtk.Label(_("A")), False, False, 0)
+        positions_box.pack_start(gtk.Label(_("Angle")), False, False, 0)
         positions_box.pack_start(self.rotation_spin, False, False, 0)
         positions_box.pack_start(guiutils.pad_label(5, 5), False, False, 0)
         positions_box.pack_start(undo_pos, False, False, 0)
@@ -225,13 +236,9 @@ class Titler(gtk.Window):
         controls_panel.pack_start(guiutils.get_named_frame(_("Layers"),controls_panel_1), False, False, 0)
         controls_panel.pack_start(gtk.Label(), True, True, 0)
 
-        display_current_frame = gtk.Button("Load current frame")
-
         view_editor_editor_buttons_row = gtk.HBox()
         view_editor_editor_buttons_row.pack_start(positions_box, False, False, 0)
         view_editor_editor_buttons_row.pack_start(gtk.Label(), True, True, 0)
-        view_editor_editor_buttons_row.pack_start(vieweditor.ScaleSelector(self), False, False, 0)
-        view_editor_editor_buttons_row.pack_start(display_current_frame, False, False, 0)
         
         editor_panel = gtk.VBox()
         editor_panel.pack_start(self.view_editor, True, True, 0)

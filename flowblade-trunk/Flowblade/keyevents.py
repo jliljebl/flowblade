@@ -65,6 +65,13 @@ def key_down(widget, event):
             gui.editor_window.window.emit_stop_by_name("key_press_event")
         return was_handled
 
+    # Insert shortcut keys need more focus then timeline shortcuts.
+    # these may already have been handled in timeline focus events
+    was_handled = _handle_insert_key_events(event)
+    if was_handled:
+        # Stop event handling here
+        return True
+        
     was_handled = _handle_geometry_editor_arrow_keys(event)
     if was_handled:
         # Stop widget focus from travelling if arrow key pressed
@@ -100,7 +107,7 @@ def key_down(widget, event):
             else:
                 monitorevent.play_pressed()
             return True
-
+    """
     #debug
     if event.keyval == gtk.keysyms.F12:
         titler._titler.show_current_frame()
@@ -110,9 +117,8 @@ def key_down(widget, event):
     #debug
     if event.keyval == gtk.keysyms.F11:
         titler.show_titler()
-        print "www"
-        return True
-    
+         return True
+    """
     # Key event was not handled here.
     return False
     
@@ -146,7 +152,7 @@ def _handle_tline_key_event(event):
         monitorevent.mark_in_pressed()
         return True
 
-    # I
+    # O
     if event.keyval == gtk.keysyms.o:
         monitorevent.mark_out_pressed()
         return True
@@ -158,11 +164,11 @@ def _handle_tline_key_event(event):
         else:
             monitorevent.play_pressed()
         return True
-            
+
+    
     # Key bindings for MOVE MODES
     if editorstate.current_is_move_mode():
-
-        # UP ARROW, next cut
+         # UP ARROW, next cut
         if event.keyval == gtk.keysyms.Up:
             tline_frame = PLAYER().tracktor_producer.frame()
             frame = current_sequence().find_next_cut_frame(tline_frame)
@@ -187,7 +193,22 @@ def _handle_tline_key_event(event):
         if event.keyval == gtk.keysyms.Right:
             PLAYER().seek_delta(1)
             return True
-        
+
+        # T
+        if event.keyval == gtk.keysyms.t:
+            buttonevent.three_point_overwrite_pressed()
+            return True
+
+        # Y
+        if event.keyval == gtk.keysyms.y:
+            buttonevent.insert_button_pressed()
+            return True
+
+        # U
+        if event.keyval == gtk.keysyms.u:
+            buttonevent.append_button_pressed()
+            return True
+            
         # DELETE
         if event.keyval == gtk.keysyms.Delete:
             # Clip selection and compositor selection are mutually exclusive, 
@@ -202,6 +223,31 @@ def _handle_tline_key_event(event):
 
     return False
 
+
+def _handle_insert_key_events(event):
+    if not(_timeline_has_focus() or
+            gui.pos_bar.widget.is_focus() or
+            gui.sequence_editor_b.has_focus() or
+            gui.clip_editor_b.has_focus()):
+        return False
+
+    # T
+    if event.keyval == gtk.keysyms.t:
+        buttonevent.three_point_overwrite_pressed()
+        return True
+
+    # Y
+    if event.keyval == gtk.keysyms.y:
+        buttonevent.insert_button_pressed()
+        return True
+
+    # U
+    if event.keyval == gtk.keysyms.u:
+        buttonevent.append_button_pressed()
+        return True
+            
+    return False
+        
 def _handle_clip_key_event(event):
     # Key bindings for MOVE MODES
     if editorstate.current_is_move_mode():                  
