@@ -1,4 +1,22 @@
+"""
+    Flowblade Movie Editor is a nonlinear video editor.
+    Copyright 2012 Janne Liljeblad.
 
+    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+
+    Flowblade Movie Editor is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Flowblade Movie Editor is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
+"""
 
 import sys
 
@@ -192,19 +210,19 @@ class TextEditLayer(SimpleRectEditLayer):
         # text_layout is titler.PangoLayout
         SimpleRectEditLayer.__init__(self, view_editor)
         self.text_layout = text_layout
-        self.edit_mode = ROTATE_MODE
-        
+        self.edit_mode = MOVE_MODE
+        self.update_rect = False
     def draw(self, cr):
-        SimpleRectEditLayer.draw(self, cr)
         x, y = self.edit_point_shape.get_panel_point(0, self.view_editor)
         rotation = self.edit_point_shape.get_first_two_points_rotation_angle()
         xscale = self.view_editor.scale * self.view_editor.aspect_ratio
         yscale = self.view_editor.scale
         self.text_layout.draw_layout(cr, x, y, rotation, xscale, yscale)
-        # Text in layout has changed
+        # Text size in layout may have changed for press or attribute change, 
+        # rect may need to beto updated for new size of layout
+        # Size of layout is always updated in self.text_layout.draw_layout(....)
         if self.update_rect:
             w, h = self.text_layout.pixel_size
-            wp, hp = self.view_editor.movie_coord_to_panel_coord((w,h))
-            self.edit_point_shape.set_rect((0, 0, w, h))
-            self.update_rect = False 
-            self.view_editor.edit_area.queue_draw() # We need to redraw with new rect
+            self.edit_point_shape.update_rect_size(w, h)
+            self.update_rect = False
+        SimpleRectEditLayer.draw(self, cr)

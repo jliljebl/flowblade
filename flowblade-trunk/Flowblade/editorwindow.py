@@ -443,9 +443,7 @@ class EditorWindow:
         
         # Bottom row filler
         left_corner = gtk.Label()
-        #font_desc = pango.FontDescription("normal 9")
         left_corner.set_size_request(tlinewidgets.COLUMN_WIDTH, 20)
-        #left_corner.modify_font(font_desc)
         # Timeline scroller
         self.tline_scroller = tlinewidgets.TimeLineScroller(
                                                 updater.tline_scrolled)

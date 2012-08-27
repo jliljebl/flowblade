@@ -163,7 +163,7 @@ class EditPointShape:
         
 class SimpleRectEditShape(EditPointShape):
     """
-    A rect with two corner handles that can be moved scaled or rotated.
+    A rect with four corner points.
     """
     def __init__(self):
         EditPointShape.__init__(self)
@@ -184,6 +184,18 @@ class SimpleRectEditShape(EditPointShape):
         self.rect = rect
         self.reset_points()
 
+    def update_rect_size(self, w, h):
+        self.rect = (self.edit_points[0].x, self.edit_points[0].y, w, h) 
+        x, y, w, h = self.rect
+        self.edit_points[0].x = x
+        self.edit_points[0].y = y
+        self.edit_points[1].x = x + w
+        self.edit_points[1].y = y
+        self.edit_points[2].x = x + w
+        self.edit_points[2].y = y + h
+        self.edit_points[3].x = x
+        self.edit_points[3].y = y + h
+        
     def reset_points(self):
         x, y, w, h = self.rect
         self.edit_points[0].x = x

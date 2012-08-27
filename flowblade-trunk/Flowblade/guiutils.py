@@ -148,8 +148,20 @@ def get_named_frame(name, widget):
     out_align.add(frame)
     
     return out_align
-    
+
+def get_in_centering_alignment(widget, xsc=0.0, ysc=0.0):
+    align = gtk.Alignment(xalign=0.5, yalign=0.5, xscale=xsc, yscale=ysc)
+    align.add(widget)
+    return align
+
 def pad_label(w, h):
     pad_label = gtk.Label()
     pad_label.set_size_request(w, h)
     return pad_label
+
+def get_sized_button(lable, w, h, clicked_listener=None):
+    b = gtk.Button(lable)
+    if clicked_listener != None:
+        b.connect("clicked", lambda w,e: clicked_listener())
+    b.set_size_request(w, h)
+    return b  
