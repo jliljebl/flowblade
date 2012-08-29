@@ -7,13 +7,18 @@ MOVE_HANDLE = 0
 ROTATE_HANDLE = 1
 CONTROL_POINT = 2
 INVISIBLE_POINT = 3
+"""
 TOP_LEFT_HANDLE = 4
 BOTTOM_RIGHT_HANDLE = 5
 TOP_RIGHT_HANDLE = 6
 BOTTOM_LEFT_HANDLE = 7
-
-
+"""
+# handle size
 EDIT_POINT_SIDE_HALF = 4
+
+# line types
+LINE_NORMAL = 0
+LINE_DASH = 1
 
 class EditPoint:
     """
@@ -26,8 +31,8 @@ class EditPoint:
         self.is_hittable = True
         self.start_x = x
         self.start_y = y        
-        self.display_type = MOVE_HANDLE
-    
+        self.display_type = MOVE_HANDLE # default value, can changed for different shapes and edit modes
+
     def set_pos(self, p):
         self.x, self.y = p
 
@@ -45,6 +50,11 @@ class EditPoint:
         dx, dy = delta
         self.x = self.start_x + dx
         self.y = self.start_y + dy
+
+    def translate(self, delta):
+        dx, dy = delta
+        self.x = self.x + dx
+        self.y = self.y + dy
 
     def hit(self, test_p, view_scale=1.0):
         if not self.is_hittable:
@@ -74,11 +84,20 @@ class EditPointShape:
     """
     def __init__(self):
         self.edit_points = []
+        self.line_width = 2.0
+        self.line_type = LINE_DASH
 
     def save_start_pos(self):
         for ep in self.edit_points:
             ep.save_start_pos()
-            
+
+    def translate_points_to_pos(self, px, py, anchor_point_index):
+        anchor = self.edit_points[anchor_point_index]
+        dx = px - anchor.x
+        dy = py - anchor.y
+        for ep in self.edit_points:
+            ep.translate((dx, dy))
+
     def translate_from_move_start(self, delta):
         for ep in self.edit_points:
             ep.translate_from_move_start(delta)
@@ -136,8 +155,8 @@ class EditPointShape:
         for ep in self.edit_points:
             ep.draw(cr, view_editor)
     
-    def draw_line_shape(self, cr, view_editor, line_width):
-        cr.set_line_width(line_width)
+    def draw_line_shape(self, cr, view_editor):
+        self._set_line(cr)
         x, y = view_editor.movie_coord_to_panel_coord((self.edit_points[0].x, self.edit_points[0].y))
         cr.move_to(x, y)
         for i in range(1, len(self.edit_points)):
@@ -146,7 +165,15 @@ class EditPointShape:
             cr.line_to(x, y)
         cr.close_path()
         cr.stroke()
-
+        cr.set_dash([]) # turn dashing off
+    
+    def _set_line(self, cr):
+        if self.line_type == LINE_DASH:
+            dashes = [6.0, 6.0, 6.0, 6.0] # ink, skip, ink, skip
+            offset = 0
+            cr.set_dash(dashes, offset)
+        cr.set_line_width(self.line_width)
+        
     def get_panel_point(self, point_index, view_editor):
          ep = self.edit_points[point_index]
          return view_editor.movie_coord_to_panel_coord((ep.x, ep.y))
@@ -159,8 +186,11 @@ class EditPointShape:
             return viewgeom.get_angle_in_rad(p1, anchor, p2)
         else:
             return 2 * math.pi - viewgeom.get_angle_in_rad(p1, anchor, p2)
-        
-        
+
+    def set_all_points_invisible(self):
+        for ep in self.edit_points:
+            ep.display_type = INVISIBLE_POINT
+
 class SimpleRectEditShape(EditPointShape):
     """
     A rect with four corner points.
@@ -171,6 +201,7 @@ class SimpleRectEditShape(EditPointShape):
         self.rotation = 0.0
 
         x, y, w, h = self.rect
+        # edit point 0 determines the position of the shape
         self.edit_points.append(EditPoint(x, y))
         self.edit_points.append(EditPoint(x + w, y))
         self.edit_points.append(EditPoint(x + w, y + h))
@@ -185,6 +216,7 @@ class SimpleRectEditShape(EditPointShape):
         self.reset_points()
 
     def update_rect_size(self, w, h):
+        # edit point 0 determines the position of the shape
         self.rect = (self.edit_points[0].x, self.edit_points[0].y, w, h) 
         x, y, w, h = self.rect
         self.edit_points[0].x = x
@@ -198,6 +230,7 @@ class SimpleRectEditShape(EditPointShape):
         
     def reset_points(self):
         x, y, w, h = self.rect
+        # edit point 0 determines the position of the shape
         self.edit_points[0].x = x
         self.edit_points[0].y = y
         self.edit_points[1].x = x + w
@@ -229,4 +262,4 @@ class SimpleRectEditShape(EditPointShape):
 
         return (guide_1, guide_2)
         
-        
+

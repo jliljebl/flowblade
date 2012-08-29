@@ -48,6 +48,7 @@ class AbstactEditorLayer:
         self.edit_mode = None # determines how mouse press is interpreted
         self.edit_type = None # is interpretation of purpose of mouse press, 
                                # not always used if mouse press in edit_mode can only interpreted in one way
+        self.mouse_released_listener = None
 
     # --------------------------------------------- state changes
     def frame_changed(self):
@@ -71,7 +72,7 @@ class AbstactEditorLayer:
         return False
 
     # ---------------------------------------------- mouse events
-    # All mouse coords in movie space, ViewEditor onle deals with panel space
+    # All mouse coords in movie space, ViewEditor deals with panel space
     def handle_mouse_press(self, p):
         self.mouse_start_point = p
         self.mouse_current_point = p
@@ -84,7 +85,10 @@ class AbstactEditorLayer:
 
     def handle_mouse_release(self, p):
         self.mouse_current_point = p
+        print self.mouse_current_point
         self.mouse_released()
+        if self.mouse_released_listener != None:
+            self.mouse_released_listener()
 
     def translate_points_for_mouse_move(self):
         sx, sy = self.mouse_start_point
@@ -148,6 +152,8 @@ class SimpleRectEditLayer(AbstactEditorLayer):
         self.edit_point_shape = vieweditorshape.SimpleRectEditShape()
         self.update_rect = False # flag to reinit rect shape
         self.edit_mode = MOVE_MODE
+        self.edit_point_shape.set_all_points_invisible()
+        self.resizing_allowed = True
 
     def mouse_pressed(self):
         self.edit_point_shape.save_start_pos()
@@ -185,6 +191,9 @@ class SimpleRectEditLayer(AbstactEditorLayer):
             self.mouse_rotation_last = 0.0
 
     def _update_corner_edit(self, delta):
+        if self.resizing_allowed == False:
+            return
+        
         self.last_press_hit_point.translate_from_move_start(delta)
 
         self.guide_1.set_end_point_to_normal_projection(self.last_press_hit_point.get_pos())
@@ -200,7 +209,7 @@ class SimpleRectEditLayer(AbstactEditorLayer):
 
     def draw(self, cr):
         cr.set_source_rgba(0.5,0.5,0.5,1)
-        self.edit_point_shape.draw_line_shape(cr, self.view_editor, 2.0)
+        self.edit_point_shape.draw_line_shape(cr, self.view_editor)
         cr.set_source_rgba(1,1,1,1)
         self.edit_point_shape.draw_points(cr, self.view_editor)
 
@@ -212,16 +221,20 @@ class TextEditLayer(SimpleRectEditLayer):
         self.text_layout = text_layout
         self.edit_mode = MOVE_MODE
         self.update_rect = False
+        self.edit_point_shape.line_type = vieweditorshape.LINE_DASH
+        self.resizing_allowed = False
+
     def draw(self, cr):
         x, y = self.edit_point_shape.get_panel_point(0, self.view_editor)
         rotation = self.edit_point_shape.get_first_two_points_rotation_angle()
         xscale = self.view_editor.scale * self.view_editor.aspect_ratio
         yscale = self.view_editor.scale
         self.text_layout.draw_layout(cr, x, y, rotation, xscale, yscale)
-        # Text size in layout may have changed for press or attribute change, 
-        # rect may need to beto updated for new size of layout
-        # Size of layout is always updated in self.text_layout.draw_layout(....)
+
         if self.update_rect:
+            # Text size in layout has changed for added text or attribute change.
+            # rect size needs to be updated for new size of layout
+            # Size of layout is always updated in self.text_layout.draw_layout(....)
             w, h = self.text_layout.pixel_size
             self.edit_point_shape.update_rect_size(w, h)
             self.update_rect = False

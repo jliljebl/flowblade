@@ -1035,7 +1035,7 @@ def get_profile_info_box(profile, show_description=True):
     return hbox
 
 def set_profile_info_labels_text(label, show_description):
-        # Labels text
+    # Labels text
     str_list = []
     if show_description:
         str_list.append(_("Description:"))

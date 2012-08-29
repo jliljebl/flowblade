@@ -69,6 +69,9 @@ def get_angle_in_deg(p1, corner, p2):
 def get_angle_in_rad(p1, corner, p2):
     side1 = distance(p1, corner)
     side2 = distance(p2, corner)
+    if side1==0.0 or side2==0.0:
+        # this get fed 0 lengh sides
+        return 0.0
     opposite_side = distance(p1, p2)
     angle_cos = ((side1*side1) + (side2*side2) - (opposite_side*opposite_side)) / (2*side1*side2)
     return math.acos(angle_cos)

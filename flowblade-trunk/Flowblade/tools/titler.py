@@ -1,15 +1,17 @@
 
-
+import copy
 import gtk
 import pango
 import pangocairo
+import pickle
 
+import dialogs
 from editorstate import PLAYER
-import utils
 import guicomponents
 import guiutils
 import respaths
 import positionbar
+import utils
 import vieweditor
 import vieweditorlayer
 
@@ -42,6 +44,9 @@ class TextLayer:
     """
     def __init__(self):
         self.text = "Text"
+        self.x = 0.0
+        self.y = 0.0
+        self.angle = 0.0
         self.font_family = "Times New Roman"
         self.font_face = FACE_REGULAR
         self.font_size = 15
@@ -49,22 +54,38 @@ class TextLayer:
         self.alignment = ALIGN_LEFT
         self.pixel_size = (100, 100)
         self.spacing = 5
+        self.pango_layout = PangoTextLayout(self)
 
     def get_font_desc_str(self):
         return self.font_family + " " + self.font_face + " " + str(self.font_size)
-        
+
+    def update_pango_layout(self):
+        self.pango_layout.load_layer_data(self)
+
+
 class TitlerData:
     """
     Data edited in titler editor
     """
     def __init__(self):
         self.layers = []
+        self.active_layer = None
         self.add_layer()
         
     def add_layer(self):
         self.active_layer = TextLayer()
         self.layers.append(self.active_layer)
-        
+
+    def get_active_layer_index(self):
+        return self.layers.index(self.active_layer)
+    
+    def save(self, save_file_path):
+        save_data = copy.deepcopy(self)
+        for layer in save_data.layers:
+            layer.pango_layout = None
+        write_file = file(save_file_path, "wb")
+        pickle.dump(save_data, write_file)
+    
 # ---------------------------------------------------------- editor
 class Titler(gtk.Window):
     def __init__(self):
@@ -73,21 +94,33 @@ class Titler(gtk.Window):
 
         self.block_updates = False
         
-        self.active_layout = PangoTextLayout(_titler_data.active_layer)
         self.view_editor = vieweditor.ViewEditor(PLAYER().profile)
-        edit_layer = vieweditorlayer.TextEditLayer(self.view_editor, self.active_layout)
-        self.view_editor.edit_layers.append(edit_layer)
-        self.view_editor.active_layer = edit_layer
+        
+        # The way this object is initialized assumes that _titler_data object is initalized first
+        view_editor_layer = vieweditorlayer.TextEditLayer(self.view_editor, _titler_data.active_layer.pango_layout)
+        view_editor_layer.mouse_released_listener  = self._editor_layer_mouse_released
+        self.view_editor.edit_layers.append(view_editor_layer)
+        self.view_editor.active_layer = view_editor_layer
+        self.view_editor.active_layer.active = True
 
         add_b = gtk.Button(_("Add"))
         del_b = gtk.Button(_("Delete"))
         add_b.connect("clicked", lambda w:self._add_layer_pressed())
-        del_b.connect("clicked", lambda w:self._del_player_pressed())
+        del_b.connect("clicked", lambda w:self._del_layer_pressed())
         add_del_box = gtk.HBox()
         add_del_box = gtk.HBox(True,1)
         add_del_box.pack_start(add_b)
         add_del_box.pack_start(del_b)
-        
+
+        center_h_icon = gtk.image_new_from_file(respaths.IMAGE_PATH + "center_horizontal.png")
+        center_v_icon = gtk.image_new_from_file(respaths.IMAGE_PATH + "center_vertical.png")
+        center_h = gtk.Button()
+        center_h.set_image(center_h_icon)
+        center_h.connect("clicked", lambda w:self._center_h_pressed())
+        center_v = gtk.Button()
+        center_v.set_image(center_v_icon)
+        center_v.connect("clicked", lambda w:self._center_v_pressed())
+            
         self.layer_list = TextLayerListView(self._layer_selection_changed)
         self.layer_list.set_size_request(300, 250)
     
@@ -106,11 +139,15 @@ class Titler(gtk.Window):
         
         self.tc_display = guicomponents.MonitorTCDisplay()
         self.tc_display.use_internal_frame = True
+        
         self.pos_bar = positionbar.PositionBar()
         self.pos_bar.set_listener(self.position_listener)
         self.pos_bar.update_display_from_producer(PLAYER().producer)
         self.pos_bar.mouse_release_listener = self.pos_bar_mouse_released
-       
+        pos_bar_frame = gtk.Frame()
+        pos_bar_frame.add(self.pos_bar.widget)
+        pos_bar_frame.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+        
         font_map = pangocairo.cairo_font_map_get_default()
         unsorted_families = font_map.list_families()
         if len(unsorted_families) == 0:
@@ -184,18 +221,28 @@ class Titler(gtk.Window):
 
         load_layers = gtk.Button("Load Layers")
         save_layers = gtk.Button("Save Layers")
-        
+        save_layers.connect("clicked", lambda w:self._save_pressed())
+        clear_layers = gtk.Button("Clear All")
+      
         layers_save_buttons_row = gtk.HBox()
-        layers_save_buttons_row.pack_start(load_layers, False, False, 0)
         layers_save_buttons_row.pack_start(save_layers, False, False, 0)
+        layers_save_buttons_row.pack_start(load_layers, False, False, 0)
+        layers_save_buttons_row.pack_start(gtk.Label(), True, True, 0)
+        layers_save_buttons_row.pack_start(clear_layers, False, False, 0)
         
-        adj = gtk.Adjustment(float(0), float(1), float(3000), float(1))
-        self.x_pos_spin = gtk.SpinButton(adj) 
-        adj = gtk.Adjustment(float(0), float(1), float(3000), float(1))
+        adj = gtk.Adjustment(float(0), float(0), float(3000), float(1))
+        self.x_pos_spin = gtk.SpinButton(adj)
+        self.x_pos_spin.connect("changed", self._position_value_changed)
+        self.x_pos_spin.connect("key-press-event", self._key_pressed_on_widget)
+        adj = gtk.Adjustment(float(0), float(0), float(3000), float(1))
         self.y_pos_spin = gtk.SpinButton(adj)
-        adj = gtk.Adjustment(float(0), float(1), float(3000), float(1))
+        self.y_pos_spin.connect("changed", self._position_value_changed)
+        self.y_pos_spin.connect("key-press-event", self._key_pressed_on_widget)
+        adj = gtk.Adjustment(float(0), float(0), float(3000), float(1))
         self.rotation_spin = gtk.SpinButton(adj)
-    
+        self.rotation_spin.connect("changed", self._position_value_changed)
+        self.rotation_spin.connect("key-press-event", self._key_pressed_on_widget)
+        
         undo_pos = gtk.Button()
         undo_icon = gtk.image_new_from_stock(gtk.STOCK_UNDO, 
                                        gtk.ICON_SIZE_BUTTON)
@@ -205,12 +252,14 @@ class Titler(gtk.Window):
         prev_icon = gtk.image_new_from_file(respaths.IMAGE_PATH + "prev_frame_s.png")
         prev_frame = gtk.Button()
         prev_frame.set_image(prev_icon)
+        prev_frame.connect("clicked", lambda w:self._prev_frame_pressed())
         next_frame = gtk.Button()
         next_frame.set_image(next_icon)
-        
+        next_frame.connect("clicked", lambda w:self._next_frame_pressed())
+
         timeline_box = gtk.HBox()
         timeline_box.pack_start(guiutils.get_in_centering_alignment(self.tc_display.widget), False, False, 0)
-        timeline_box.pack_start(guiutils.get_in_centering_alignment(self.pos_bar.widget, 1.0), True, True, 0)
+        timeline_box.pack_start(guiutils.get_in_centering_alignment(pos_bar_frame, 1.0), True, True, 0)
         timeline_box.pack_start(prev_frame, False, False, 0)
         timeline_box.pack_start(next_frame, False, False, 0)
         timeline_box.pack_start(vieweditor.ScaleSelector(self), False, False, 0)
@@ -223,8 +272,11 @@ class Titler(gtk.Window):
         positions_box.pack_start(gtk.Label("Y pos"), False, False, 0)
         positions_box.pack_start(self.y_pos_spin, False, False, 0)
         positions_box.pack_start(guiutils.pad_label(10, 5), False, False, 0)
-        positions_box.pack_start(gtk.Label(_("Angle")), False, False, 0)
-        positions_box.pack_start(self.rotation_spin, False, False, 0)
+        #positions_box.pack_start(gtk.Label(_("Angle")), False, False, 0)
+        #positions_box.pack_start(self.rotation_spin, False, False, 0)
+        positions_box.pack_start(guiutils.pad_label(10, 5), False, False, 0)
+        positions_box.pack_start(center_h, False, False, 0)
+        positions_box.pack_start(center_v, False, False, 0)
         positions_box.pack_start(gtk.Label(), True, True, 0)
 
         controls_panel_1 = gtk.VBox()
@@ -309,6 +361,18 @@ class Titler(gtk.Window):
         PLAYER().seek_frame(frame)
         self.show_current_frame()
 
+    def _save_pressed(self):
+        dialogs.save_titler_data_as_dialog(self._save_dialog_callback, "titler_layers", None)
+
+    def _save_dialog_callback(self, dialog, response_id):
+        if response_id == gtk.RESPONSE_ACCEPT:
+            filenames = dialog.get_filenames()
+            save_path = filenames[0]
+            _titler_data.save(save_path)
+            dialog.destroy()
+        else:
+            dialog.destroy()
+
     def _key_pressed_on_widget(self, widget, event):
         # update layer for enter on size spin
         if widget == self.size_spin and event.keyval == gtk.keysyms.Return:
@@ -316,17 +380,74 @@ class Titler(gtk.Window):
             self._update_active_layout()
             return True
 
+            # update layer for enter on x, y, angle
+        if ((event.keyval == gtk.keysyms.Return) and ((widget == self.x_pos_spin) or
+            (widget == self.y_pos_spin) or (widget == self.rotation_spin))):
+            self.x_pos_spin.update()
+            self.y_pos_spin.update()
+            self.rotation_spin.update()
+            _titler_data.active_layer.x = self.x_pos_spin.get_value()
+            _titler_data.active_layer.y = self.y_pos_spin.get_value()
+            self._update_editor_layer_pos()
+            self.view_editor.edit_area.queue_draw()
+            return True
+
         return False
-    
+
+    def _update_editor_layer_pos(self):
+        shape = self.view_editor.active_layer.edit_point_shape
+        shape.translate_points_to_pos(_titler_data.active_layer.x, 
+                                      _titler_data.active_layer.y, 0)
+
     def _add_layer_pressed(self):
         global _titler_data
         _titler_data.add_layer()
+        
+        view_editor_layer = vieweditorlayer.TextEditLayer(self.view_editor, _titler_data.active_layer.pango_layout)
+        view_editor_layer.mouse_released_listener  = self._editor_layer_mouse_released
+        self.view_editor.edit_layers.append(view_editor_layer)
+        
         self.layer_list.fill_data_model()
         self._activate_layer(len(_titler_data.layers) - 1)
         
-    def _del_player_pressed(self):
-        selected_row = self.layer_list.get_selected_row()
-        print selected_row
+    def _del_layer_pressed(self):
+        # we always need 1 layer
+        if len(_titler_data.layers) < 2:
+            return
+
+        #active_index = _titler_data.get_active_layer_index()
+        _titler_data.layers.remove(_titler_data.active_layer)
+        self.view_editor.edit_layers.remove(self.view_editor.active_layer)
+        self.layer_list.fill_data_model()
+        self._activate_layer(0)
+
+    def _center_h_pressed(self):
+        # calculate top left x pos for centering
+        w, h = _titler_data.active_layer.pango_layout.pixel_size
+        centered_x = self.view_editor.profile_w/2 - w/2
+        
+        # update data and view
+        _titler_data.active_layer.x = centered_x
+        self._update_editor_layer_pos()
+        self.view_editor.edit_area.queue_draw()
+
+    def _center_v_pressed(self):
+        # calculate top left x pos for centering
+        w, h = _titler_data.active_layer.pango_layout.pixel_size
+        centered_y = self.view_editor.profile_h/2 - h/2
+        
+        # update data and view
+        _titler_data.active_layer.y = centered_y
+        self._update_editor_layer_pos()
+        self.view_editor.edit_area.queue_draw()
+
+    def _prev_frame_pressed(self):
+        PLAYER().seek_delta(-1)
+        self.show_current_frame()
+
+    def _next_frame_pressed(self):
+        PLAYER().seek_delta(1)
+        self.show_current_frame()
 
     def _layer_selection_changed(self, selection):
         selected_row = self.layer_list.get_selected_row()
@@ -334,7 +455,7 @@ class Titler(gtk.Window):
         # when layer selection was not changed.
         if selected_row == -1:
             return
-        
+
         self._activate_layer(selected_row)
         
     def _activate_layer(self, layer_index):
@@ -342,16 +463,39 @@ class Titler(gtk.Window):
         _titler_data.active_layer = _titler_data.layers[layer_index]
         
         self._update_gui_with_active_layer_data()
-        self.active_layout.load_layer_data(_titler_data.active_layer)
+        _titler_data.active_layer.update_pango_layout()
+        self.view_editor.activate_layer(layer_index)
+        self.view_editor.active_layer.update_rect = True
         self.view_editor.edit_area.queue_draw()
 
-    def _text_changed(self, widget):
-        self._update_active_layer_rect()
+    def _editor_layer_mouse_released(self):
+        p = self.view_editor.active_layer.edit_point_shape.edit_points[0]
         
-    def _update_active_layer_rect(self):
-        # unneeded?
-        #self.view_editor.active_layer.update_rect = True
+        self.block_updates = True
+
+        self.x_pos_spin.set_value(p.x)
+        self.y_pos_spin.set_value(p.y)
+        #self.rotation_spin = gtk.SpinButton(adj)
+        
+        _titler_data.active_layer.x = p.x
+        _titler_data.active_layer.y = p.y
+
+        self.block_updates = False
+
+    def _text_changed(self, widget):
         self._update_active_layout()
+
+    def _position_value_changed(self, widget):
+        # mouse release when layer is moved causes this method to be called,
+        # but we don't want to do any additinal updates here for that event
+        # This is only used when user presses arrows in position spins.
+        if self.block_updates:
+            return
+
+        _titler_data.active_layer.x = self.x_pos_spin.get_value()
+        _titler_data.active_layer.y = self.y_pos_spin.get_value()
+        self._update_editor_layer_pos()
+        self.view_editor.edit_area.queue_draw()
 
     def _edit_value_changed(self, widget):
         self._update_active_layout()
@@ -396,9 +540,8 @@ class Titler(gtk.Window):
         new_color = (r/65535.0, g/65535.0, b/65535.0, 1.0)        
         _titler_data.active_layer.color_rgba = new_color
 
-        self.active_layout.load_layer_data(_titler_data.active_layer)
-
         self.view_editor.active_layer.update_rect = True
+        _titler_data.active_layer.update_pango_layout()
 
         # We only wnat to update layer list data model when this called after user typing 
         if update_layers_list:
@@ -451,6 +594,10 @@ class Titler(gtk.Window):
             layer.font_family = family.get_name()
             self.font_select.set_active(0)
 
+        self.x_pos_spin.set_value(layer.x)
+        self.y_pos_spin.set_value(layer.y)
+        self.rotation_spin.set_value(layer.angle)
+        
         self.block_updates = False
 
 
@@ -458,15 +605,15 @@ class Titler(gtk.Window):
 # --------------------------------------------------------- layer/s representation
 class PangoTextLayout:
     """
-    Wrapper for drawing current active layer.
+    Object for drawing current active layer with Pango.
     
-    We need this wrapper because we want to save titler data using simple pickle
-    and therefore need to avoid using pango objects in layer data.
+    Pixel size of layer can only be obtained when cairo context is available
+    for drawing, so pixel size of layer is saved here.
     """
     def __init__(self, layer):
         self.load_layer_data(layer)
         
-    def load_layer_data(self, layer):    
+    def load_layer_data(self, layer): 
         self.text = layer.text
         self.font_desc = pango.FontDescription(layer.get_font_desc_str())
         self.color_rgba = layer.color_rgba
@@ -505,12 +652,10 @@ class TextLayerListView(gtk.VBox):
 
     def __init__(self, selection_changed_cb):
         gtk.VBox.__init__(self)
-
-        #style = self.get_style()
-        #bg_col = style.bg[gtk.STATE_NORMAL]
+        self.layer_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "text_layer.png")
         
        # Datamodel: str
-        self.storemodel = gtk.ListStore(str)
+        self.storemodel = gtk.ListStore(gtk.gdk.Pixbuf, str)
  
         # Scroll container
         self.scroll = gtk.ScrolledWindow()
@@ -527,21 +672,32 @@ class TextLayerListView(gtk.VBox):
             
         # Column view
         self.text_col_1 = gtk.TreeViewColumn("text1")
-
+        self.icon_col_1 = gtk.TreeViewColumn("Icon")
+        
         # Cell renderers
         self.text_rend_1 = gtk.CellRendererText()
         self.text_rend_1.set_property("ellipsize", pango.ELLIPSIZE_END)
+        self.text_rend_1.set_property("font", "Sans Bold 10")
         self.text_rend_1.set_fixed_height_from_font(1)
-
+        self.icon_rend_1 = gtk.CellRendererPixbuf()
+        self.icon_rend_1.props.xpad = 6
+        self.icon_rend_1.set_fixed_size(40, 40)
+        
         # Build column views
+        self.icon_col_1.set_expand(False)
+        self.icon_col_1.set_spacing(5)
+        self.icon_col_1.pack_start(self.icon_rend_1)
+        self.icon_col_1.add_attribute(self.icon_rend_1, 'pixbuf', 0)
+
         self.text_col_1.set_expand(True)
         self.text_col_1.set_spacing(5)
         self.text_col_1.set_sizing(gtk.TREE_VIEW_COLUMN_GROW_ONLY)
         self.text_col_1.set_min_width(150)
         self.text_col_1.pack_start(self.text_rend_1)
-        self.text_col_1.add_attribute(self.text_rend_1, "text", 0)
+        self.text_col_1.add_attribute(self.text_rend_1, "text", 1)
 
         # Add column views to view
+        self.treeview.append_column(self.icon_col_1)
         self.treeview.append_column(self.text_col_1)
 
         # Build widget graph and display
@@ -566,7 +722,7 @@ class TextLayerListView(gtk.VBox):
         """
         self.storemodel.clear()
         for layer in _titler_data.layers:
-            row_data = [layer.text]
+            row_data = [self.layer_icon, layer.text]
             self.storemodel.append(row_data)
         
         self.scroll.queue_draw()

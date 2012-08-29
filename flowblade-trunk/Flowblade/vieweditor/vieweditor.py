@@ -63,6 +63,11 @@ class ViewEditor(gtk.Frame):
         
         self.set_scale_and_update(1.0)
 
+    def activate_layer(self, layer_index):
+        self.active_layer.active = False
+        self.active_layer = self.edit_layers[layer_index]
+        self.active_layer.active = True 
+
     def set_scale_and_update(self, new_scale):
         self.scale = new_scale
         self.set_scaled_screen_size()
