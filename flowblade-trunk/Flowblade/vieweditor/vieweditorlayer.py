@@ -85,7 +85,6 @@ class AbstactEditorLayer:
 
     def handle_mouse_release(self, p):
         self.mouse_current_point = p
-        print self.mouse_current_point
         self.mouse_released()
         if self.mouse_released_listener != None:
             self.mouse_released_listener()
@@ -141,7 +140,7 @@ class AbstactEditorLayer:
         return (cx - sx, cy - sy)
 
     # -------------------------------------------- draw
-    def draw(self, cr):
+    def draw(self, cr, write_out_layers):
         print "AbstactEditorLayer.draw not overridden in" + self.__class__
         sys.exit(1)
 
@@ -154,7 +153,9 @@ class SimpleRectEditLayer(AbstactEditorLayer):
         self.edit_mode = MOVE_MODE
         self.edit_point_shape.set_all_points_invisible()
         self.resizing_allowed = True
-
+        self.ACTIVE_COLOR = (0.55,0.55,0.55,1)
+        self.NOT_ACTIVE_COLOR = (0.2,0.2,0.2,1)
+        
     def mouse_pressed(self):
         self.edit_point_shape.save_start_pos()
         if self.edit_mode == MOVE_MODE:
@@ -207,10 +208,16 @@ class SimpleRectEditLayer(AbstactEditorLayer):
         self.edit_point_shape.edit_points[self.guide_1.point_index].set_pos(self.guide_1.end_point)
         self.edit_point_shape.edit_points[self.guide_2.point_index].set_pos(self.guide_2.end_point)
 
-    def draw(self, cr):
-        cr.set_source_rgba(0.5,0.5,0.5,1)
+    def draw(self, cr, write_out_layers):
+        if write_out_layers:
+            return # this is bounding boxes, handles etc.
+
+        if self.active:
+            cr.set_source_rgba(*self.ACTIVE_COLOR)
+        else:
+            cr.set_source_rgba(*self.NOT_ACTIVE_COLOR)
         self.edit_point_shape.draw_line_shape(cr, self.view_editor)
-        cr.set_source_rgba(1,1,1,1)
+        #cr.set_source_rgba(1,1,1,1)
         self.edit_point_shape.draw_points(cr, self.view_editor)
 
 
@@ -224,7 +231,7 @@ class TextEditLayer(SimpleRectEditLayer):
         self.edit_point_shape.line_type = vieweditorshape.LINE_DASH
         self.resizing_allowed = False
 
-    def draw(self, cr):
+    def draw(self, cr, write_out_layers):
         x, y = self.edit_point_shape.get_panel_point(0, self.view_editor)
         rotation = self.edit_point_shape.get_first_two_points_rotation_angle()
         xscale = self.view_editor.scale * self.view_editor.aspect_ratio
@@ -238,4 +245,4 @@ class TextEditLayer(SimpleRectEditLayer):
             w, h = self.text_layout.pixel_size
             self.edit_point_shape.update_rect_size(w, h)
             self.update_rect = False
-        SimpleRectEditLayer.draw(self, cr)
+        SimpleRectEditLayer.draw(self, cr, write_out_layers)

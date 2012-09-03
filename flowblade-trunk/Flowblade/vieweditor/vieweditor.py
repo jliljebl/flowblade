@@ -44,6 +44,7 @@ class ViewEditor(gtk.Frame):
         
         self.bg_buf = None
         self.write_out_layers = False
+        self.write_file_path = None
 
         self.edit_area = cairoarea.CairoDrawableArea(int(self.scaled_screen_width + MIN_PAD * 2), self.profile_h + MIN_PAD * 2, self._draw)
         self.edit_area.press_func = self._press_event
@@ -61,7 +62,17 @@ class ViewEditor(gtk.Frame):
         self.active_layer = None
         self.edit_target_layer = None
         
+        self.change_active_layer_for_hit = True
+        self.active_layer_changed_listener = None # interface: listener(new_active_index)
+                                                   # note: vieweditor calls activate_layer( ) when non-active layer hit
+                                                   # here so listener needs only to change its active layer, not call activate_layer(  ) here
+        
         self.set_scale_and_update(1.0)
+
+    def write_layers_to_png(self, save_path):
+        self.write_out_layers = True
+        self.write_file_path = save_path
+        self.edit_area.queue_draw()
 
     def activate_layer(self, layer_index):
         self.active_layer.active = False
@@ -116,6 +127,17 @@ class ViewEditor(gtk.Frame):
             self.edit_area.queue_draw()
             self.edit_target_layer = self.active_layer
             self.edit_target_layer.handle_mouse_press(p)
+        else:
+            if not self.change_active_layer_for_hit:
+                return
+            for i in range(len(self.edit_layers)):
+                layer = self.edit_layers[i]
+                if layer.hit(p):
+                    self.active_layer_changed_listener(i)
+                    self.activate_layer(i)
+                    self.edit_area.queue_draw()
+                    self.edit_target_layer = self.active_layer
+                    self.edit_target_layer.handle_mouse_press(p)
             
     def _motion_notify_event(self, x, y, state):
         """
@@ -188,16 +210,21 @@ class ViewEditor(gtk.Frame):
             cr.restore()
         
         if self.write_out_layers == True:
-            x, y, w, h = allocation
-            img_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+            # We need to go to 1.0 scale, 0,0 origo draw for out the file 
+            current_scale = self.scale
+            self.scale = 1.0
+            self.origo = (0.0, 0.0)
+            img_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.profile_w, self.profile_h)
             cr = cairo.Context(img_surface)
 
         for editorlayer in self.edit_layers:
-            editorlayer.draw(cr)
+            editorlayer.draw(cr, self.write_out_layers)
         
         if self.write_out_layers == True:
-            img_surface.write_to_png("/home/janne/gfggfgf.png")
+            img_surface.write_to_png(self.write_file_path)
+            self.write_file_path = None # to make sure user components set this every time
             self.write_out_layers = False
+            self.set_scale_and_update(current_scale) # return to user set scale
         
         self._draw_guidelines(cr)
         

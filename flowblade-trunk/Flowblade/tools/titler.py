@@ -95,6 +95,7 @@ class Titler(gtk.Window):
         self.block_updates = False
         
         self.view_editor = vieweditor.ViewEditor(PLAYER().profile)
+        self.view_editor.active_layer_changed_listener = self.active_layer_changed
         
         # The way this object is initialized assumes that _titler_data object is initalized first
         view_editor_layer = vieweditorlayer.TextEditLayer(self.view_editor, _titler_data.active_layer.pango_layout)
@@ -221,7 +222,7 @@ class Titler(gtk.Window):
 
         load_layers = gtk.Button("Load Layers")
         save_layers = gtk.Button("Save Layers")
-        save_layers.connect("clicked", lambda w:self._save_pressed())
+        save_layers.connect("clicked", lambda w:self._save_layers_pressed())
         clear_layers = gtk.Button("Clear All")
       
         layers_save_buttons_row = gtk.HBox()
@@ -297,15 +298,23 @@ class Titler(gtk.Window):
         view_editor_editor_buttons_row.pack_start(positions_box, False, False, 0)
         view_editor_editor_buttons_row.pack_start(gtk.Label(), True, True, 0)
 
+        keep_label = gtk.Label("Keep Layers When Closed")
+        self.keep_layers_check = gtk.CheckButton()
+        self.keep_layers_check.set_active(True)
+        
         open_label = gtk.Label("Open Saved Title In Bin")
         self.open_in_current_check = gtk.CheckButton()
         self.open_in_current_check.set_active(True)
 
         exit_b = guiutils.get_sized_button("Close", 150, 32)
         save_titles_b = guiutils.get_sized_button("Save Title Graphic", 150, 32)
+        save_titles_b.connect("clicked", lambda w:self._save_title_pressed())
         
         editor_buttons_row = gtk.HBox()
         editor_buttons_row.pack_start(gtk.Label(), True, True, 0)
+        editor_buttons_row.pack_start(keep_label, False, False, 0)
+        editor_buttons_row.pack_start(self.keep_layers_check, False, False, 0)
+        editor_buttons_row.pack_start(guiutils.pad_label(24, 2), False, False, 0)
         editor_buttons_row.pack_start(open_label, False, False, 0)
         editor_buttons_row.pack_start(self.open_in_current_check, False, False, 0)
         editor_buttons_row.pack_start(guiutils.pad_label(24, 2), False, False, 0)
@@ -361,10 +370,22 @@ class Titler(gtk.Window):
         PLAYER().seek_frame(frame)
         self.show_current_frame()
 
-    def _save_pressed(self):
-        dialogs.save_titler_data_as_dialog(self._save_dialog_callback, "titler_layers", None)
+    def _save_title_pressed(self):
+        dialogs.save_titler_graphic_as_dialog(self._save_title_dialog_callback, "title.png", None)
 
-    def _save_dialog_callback(self, dialog, response_id):
+    def _save_title_dialog_callback(self, dialog, response_id):
+        if response_id == gtk.RESPONSE_ACCEPT:
+            filenames = dialog.get_filenames()
+            save_path = filenames[0]
+            self.view_editor.write_layers_to_png(save_path)
+            dialog.destroy()
+        else:
+            dialog.destroy()
+
+    def _save_layers_pressed(self):
+        dialogs.save_titler_data_as_dialog(self._save_layers_dialog_callback, "titler_layers", None)
+
+    def _save_layers_dialog_callback(self, dialog, response_id):
         if response_id == gtk.RESPONSE_ACCEPT:
             filenames = dialog.get_filenames()
             save_path = filenames[0]
@@ -457,7 +478,13 @@ class Titler(gtk.Window):
             return
 
         self._activate_layer(selected_row)
-        
+
+    def active_layer_changed(self, layer_index):
+        global _titler_data
+        _titler_data.active_layer = _titler_data.layers[layer_index]
+        self._update_gui_with_active_layer_data()
+        _titler_data.active_layer.update_pango_layout()
+
     def _activate_layer(self, layer_index):
         global _titler_data
         _titler_data.active_layer = _titler_data.layers[layer_index]
