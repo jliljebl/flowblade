@@ -155,7 +155,11 @@ class SimpleRectEditLayer(AbstactEditorLayer):
         self.resizing_allowed = True
         self.ACTIVE_COLOR = (0.55,0.55,0.55,1)
         self.NOT_ACTIVE_COLOR = (0.2,0.2,0.2,1)
-        
+
+    def set_rect_pos(self, x, y):
+        # were always assuming that point 0 determines positiojn of shape
+        self.edit_point_shape.translate_points_to_pos(x, y, 0)
+
     def mouse_pressed(self):
         self.edit_point_shape.save_start_pos()
         if self.edit_mode == MOVE_MODE:
@@ -227,7 +231,6 @@ class TextEditLayer(SimpleRectEditLayer):
         SimpleRectEditLayer.__init__(self, view_editor)
         self.text_layout = text_layout
         self.edit_mode = MOVE_MODE
-        self.update_rect = False
         self.edit_point_shape.line_type = vieweditorshape.LINE_DASH
         self.resizing_allowed = False
 

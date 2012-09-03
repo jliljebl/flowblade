@@ -75,9 +75,18 @@ class ViewEditor(gtk.Frame):
         self.edit_area.queue_draw()
 
     def activate_layer(self, layer_index):
-        self.active_layer.active = False
+        if self.active_layer != None:
+            self.active_layer.active = False
         self.active_layer = self.edit_layers[layer_index]
         self.active_layer.active = True 
+
+    def clear_layers(self):
+        self.edit_layers = []
+        self.active_layer = None
+        self.edit_target_layer = None
+    
+    def add_layer(self, layer):
+        self.edit_layers.append(layer)
 
     def set_scale_and_update(self, new_scale):
         self.scale = new_scale

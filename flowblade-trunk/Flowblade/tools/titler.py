@@ -7,6 +7,8 @@ import pickle
 
 import dialogs
 from editorstate import PLAYER
+from editorstate import PROJECT
+import gui
 import guicomponents
 import guiutils
 import respaths
@@ -17,6 +19,9 @@ import vieweditorlayer
 
 _titler = None
 _titler_data = None
+
+_keep_titler_data = True
+_open_saved_in_bin = True
 
 DEFAULT_FONT_SIZE = 25
 
@@ -31,11 +36,21 @@ ALIGN_RIGHT = 2
 
 def show_titler():
     global _titler_data
-    _titler_data = TitlerData()
+    if _titler_data == None:
+        _titler_data = TitlerData()
     
     global _titler
     _titler = Titler()
+    _titler.load_titler_data()
     _titler.show_current_frame()
+
+def close_titler():
+    global _titler, _titler_data
+    _titler.window.destroy()
+    _titler = None
+    if not _keep_titler_data:
+        _titler_data = None
+
 
 # ------------------------------------------------------------- data
 class TextLayer:
@@ -46,7 +61,7 @@ class TextLayer:
         self.text = "Text"
         self.x = 0.0
         self.y = 0.0
-        self.angle = 0.0
+        self.angle = 0.0 # future feature
         self.font_family = "Times New Roman"
         self.font_face = FACE_REGULAR
         self.font_size = 15
@@ -54,7 +69,11 @@ class TextLayer:
         self.alignment = ALIGN_LEFT
         self.pixel_size = (100, 100)
         self.spacing = 5
-        self.pango_layout = PangoTextLayout(self)
+        self.pango_layout = None # PangoTextLayout(self)
+
+        self.drop_shadow = None # future feature, here to keep file compat once added
+        self.animation = None # future feature
+        self.layer_attributes = None # future feature (kerning etc. go here, we're not using all pango features)
 
     def get_font_desc_str(self):
         return self.font_family + " " + self.font_face + " " + str(self.font_size)
@@ -71,9 +90,12 @@ class TitlerData:
         self.layers = []
         self.active_layer = None
         self.add_layer()
+        self.scroll_params = None # future feature
         
     def add_layer(self):
+        # adding layer makes new layer active
         self.active_layer = TextLayer()
+        self.active_layer.pango_layout = PangoTextLayout(self.active_layer)
         self.layers.append(self.active_layer)
 
     def get_active_layer_index(self):
@@ -85,7 +107,11 @@ class TitlerData:
             layer.pango_layout = None
         write_file = file(save_file_path, "wb")
         pickle.dump(save_data, write_file)
-    
+   
+    def create_pango_layouts(self):
+        for layer in self.layers:
+            layer.pango_layout = PangoTextLayout(layer)
+            
 # ---------------------------------------------------------- editor
 class Titler(gtk.Window):
     def __init__(self):
@@ -97,13 +123,6 @@ class Titler(gtk.Window):
         self.view_editor = vieweditor.ViewEditor(PLAYER().profile)
         self.view_editor.active_layer_changed_listener = self.active_layer_changed
         
-        # The way this object is initialized assumes that _titler_data object is initalized first
-        view_editor_layer = vieweditorlayer.TextEditLayer(self.view_editor, _titler_data.active_layer.pango_layout)
-        view_editor_layer.mouse_released_listener  = self._editor_layer_mouse_released
-        self.view_editor.edit_layers.append(view_editor_layer)
-        self.view_editor.active_layer = view_editor_layer
-        self.view_editor.active_layer.active = True
-
         add_b = gtk.Button(_("Add"))
         del_b = gtk.Button(_("Delete"))
         add_b.connect("clicked", lambda w:self._add_layer_pressed())
@@ -221,10 +240,12 @@ class Titler(gtk.Window):
         buttons_box.pack_start(gtk.Label(), True, True, 0)
 
         load_layers = gtk.Button("Load Layers")
+        load_layers.connect("clicked", lambda w:self._load_layers_pressed())
         save_layers = gtk.Button("Save Layers")
         save_layers.connect("clicked", lambda w:self._save_layers_pressed())
         clear_layers = gtk.Button("Clear All")
-      
+        clear_layers.connect("clicked", lambda w:self._clear_layers_pressed())
+
         layers_save_buttons_row = gtk.HBox()
         layers_save_buttons_row.pack_start(save_layers, False, False, 0)
         layers_save_buttons_row.pack_start(load_layers, False, False, 0)
@@ -300,13 +321,16 @@ class Titler(gtk.Window):
 
         keep_label = gtk.Label("Keep Layers When Closed")
         self.keep_layers_check = gtk.CheckButton()
-        self.keep_layers_check.set_active(True)
+        self.keep_layers_check.set_active(_keep_titler_data)
+        self.keep_layers_check.connect("toggled", self._keep_layers_toggled)
         
         open_label = gtk.Label("Open Saved Title In Bin")
         self.open_in_current_check = gtk.CheckButton()
-        self.open_in_current_check.set_active(True)
+        self.open_in_current_check.set_active(_open_saved_in_bin)
+        self.open_in_current_check.connect("toggled", self._open_saved_in_bin)
 
         exit_b = guiutils.get_sized_button("Close", 150, 32)
+        exit_b.connect("clicked", lambda w:close_titler())
         save_titles_b = guiutils.get_sized_button("Save Title Graphic", 150, 32)
         save_titles_b.connect("clicked", lambda w:self._save_title_pressed())
         
@@ -342,6 +366,24 @@ class Titler(gtk.Window):
         self._update_gui_with_active_layer_data()
         self.show_all()
 
+    def load_titler_data(self):
+        # clear and then load layers, and set layer 0 active
+        self.view_editor.clear_layers()
+
+        global _titler_data
+        _titler_data.create_pango_layouts()
+
+        for layer in _titler_data.layers:
+            text_layer = vieweditorlayer.TextEditLayer(self.view_editor, layer.pango_layout)
+            text_layer.mouse_released_listener  = self._editor_layer_mouse_released
+            text_layer.set_rect_pos(layer.x, layer.y)
+            text_layer.update_rect = True
+            self.view_editor.add_layer(text_layer)
+
+        self._activate_layer(0)
+        self.layer_list.fill_data_model()
+        self.view_editor.edit_area.queue_draw()
+
     def show_current_frame(self):
         frame = PLAYER().current_frame()
         length = PLAYER().producer.get_length()
@@ -375,9 +417,19 @@ class Titler(gtk.Window):
 
     def _save_title_dialog_callback(self, dialog, response_id):
         if response_id == gtk.RESPONSE_ACCEPT:
-            filenames = dialog.get_filenames()
-            save_path = filenames[0]
-            self.view_editor.write_layers_to_png(save_path)
+            try:
+                filenames = dialog.get_filenames()
+                save_path = filenames[0]
+                self.view_editor.write_layers_to_png(save_path)
+                if _open_saved_in_bin:
+                    PROJECT().add_media_file(save_path)
+                    gui.media_list_view.fill_data_model()
+                    gui.bin_list_view.fill_data_model()
+                # INFOWINDOW
+            except:
+                # INFOWINDOW
+                dialog.destroy()
+                return
             dialog.destroy()
         else:
             dialog.destroy()
@@ -393,6 +445,43 @@ class Titler(gtk.Window):
             dialog.destroy()
         else:
             dialog.destroy()
+            
+    def _load_layers_pressed(self):
+        dialogs.load_titler_data_dialog(self._load_layers_dialog_callback)
+        
+    def _load_layers_dialog_callback(self, dialog, response_id):
+        if response_id == gtk.RESPONSE_ACCEPT:
+            try:
+                filenames = dialog.get_filenames()
+                load_path = filenames[0]
+                f = open(load_path)
+                new_data = pickle.load(f)
+                global _titler_data
+                _titler_data = new_data
+                self.load_titler_data()
+            except:
+                dialog.destroy()
+                # INFOWINDOW
+                return
+                
+            dialog.destroy()
+        else:
+            dialog.destroy()
+
+    def _clear_layers_pressed(self):
+        # INFOWINDOW
+        # CONFIRM WINDOW HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        global _titler_data
+        _titler_data = TitlerData()
+        self.load_titler_data()
+
+    def _keep_layers_toggled(self, widget):
+        global _keep_titler_data
+        _keep_titler_data = widget.get_active()
+
+    def _open_saved_in_bin(self, widget):
+        global _open_saved_in_bin
+        _open_saved_in_bin = widget.get_active()
 
     def _key_pressed_on_widget(self, widget, event):
         # update layer for enter on size spin

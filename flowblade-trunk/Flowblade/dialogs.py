@@ -102,6 +102,16 @@ def load_project_dialog(callback):
     dialog.connect('response', callback)
     dialog.show()
 
+def load_titler_data_dialog(callback):    
+    dialog = gtk.FileChooserDialog(_("Select Titler Data File"), None, 
+                                   gtk.FILE_CHOOSER_ACTION_OPEN, 
+                                   (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
+                                   gtk.STOCK_OK, gtk.RESPONSE_ACCEPT), None)
+    dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
+    dialog.set_select_multiple(False)
+    dialog.connect('response', callback)
+    dialog.show()
+    
 def save_project_as_dialog(callback, current_name, open_dir):    
     dialog = gtk.FileChooserDialog(_("Save Project As"), None, 
                                    gtk.FILE_CHOOSER_ACTION_SAVE, 
