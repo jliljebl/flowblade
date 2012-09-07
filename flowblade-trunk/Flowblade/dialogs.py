@@ -66,14 +66,35 @@ def new_project_dialog(callback):
     profiles_vbox.pack_start(profile_select, False, False, 0)
     profiles_vbox.pack_start(profile_info_box, False, False, 0)
     profiles_frame = panels.get_named_frame(_("Profile"), profiles_vbox)
+    
+    tracks_combo = gtk.combo_box_new_text()
+    tracks_combo.append_text(_("5 video, 4 audio"))
+    tracks_combo.append_text(_("4 video, 3 audio"))
+    tracks_combo.append_text(_("3 video, 2 audio"))
+    tracks_combo.append_text(_("2 video, 1 audio"))
+    tracks_combo.set_active(0)
+    tracks_combo_values_list = [(5,4),(4,3),(3,2),(2,1)]
+
+
+    tracks_select = panels.get_two_column_box(gtk.Label(_("Number of tracks:")),
+                                               tracks_combo,
+                                               250)
+    tracks_vbox = gtk.VBox(False, 2)
+    tracks_vbox.pack_start(tracks_select, False, False, 0)
+
+    tracks_frame = panels.get_named_frame(_("Tracks"), tracks_vbox)
+
+    vbox = gtk.VBox(False, 2)
+    vbox.add(profiles_frame)
+    vbox.add(tracks_frame)
 
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(6, 24, 12, 12)
-    alignment.add(profiles_frame)
+    alignment.add(vbox)
     
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, out_profile_combo)
+    dialog.connect('response', callback, out_profile_combo, tracks_combo, tracks_combo_values_list)
     out_profile_combo.connect('changed', lambda w: _new_project_profile_changed(w, profile_info_box))
     dialog.show_all()
     

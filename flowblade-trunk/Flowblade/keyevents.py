@@ -28,7 +28,6 @@ import audiowaveform
 import buttonevent
 import clipeffectseditor
 import compositeeditor
-import keyframeeditor
 import compositormodes
 import gui
 import editevent
@@ -36,8 +35,8 @@ import editorstate
 from editorstate import current_sequence
 from editorstate import PLAYER
 from editorstate import timeline_visible
+import keyframeeditor
 import monitorevent
-import resync #debug
 import titler
 import updater
 import useraction
@@ -67,7 +66,7 @@ def key_down(widget, event):
 
     # Insert shortcut keys need more focus then timeline shortcuts.
     # these may already have been handled in timeline focus events
-    was_handled = _handle_insert_key_events(event)
+    was_handled = _handle_extended_tline_focus_events(event)
     if was_handled:
         # Stop event handling here
         return True
@@ -208,7 +207,22 @@ def _handle_tline_key_event(event):
         if event.keyval == gtk.keysyms.u:
             buttonevent.append_button_pressed()
             return True
-            
+
+        # J
+        if event.keyval == gtk.keysyms.j:
+            monitorevent.j_pressed()
+            return True
+
+        # K
+        if event.keyval == gtk.keysyms.k:
+            monitorevent.k_pressed()
+            return True
+
+        # L
+        if event.keyval == gtk.keysyms.l:
+            monitorevent.l_pressed()
+            return True
+        
         # DELETE
         if event.keyval == gtk.keysyms.Delete:
             # Clip selection and compositor selection are mutually exclusive, 
@@ -224,7 +238,7 @@ def _handle_tline_key_event(event):
     return False
 
 
-def _handle_insert_key_events(event):
+def _handle_extended_tline_focus_events(event):
     if not(_timeline_has_focus() or
             gui.pos_bar.widget.is_focus() or
             gui.sequence_editor_b.has_focus() or
@@ -245,7 +259,23 @@ def _handle_insert_key_events(event):
     if event.keyval == gtk.keysyms.u:
         buttonevent.append_button_pressed()
         return True
-            
+
+    print "ww"
+    # J
+    if event.keyval == gtk.keysyms.j:
+        monitorevent.j_pressed()
+        return True
+
+    # K
+    if event.keyval == gtk.keysyms.k:
+        monitorevent.k_pressed()
+        return True
+
+    # L
+    if event.keyval == gtk.keysyms.l:
+        monitorevent.l_pressed()
+        return True
+
     return False
         
 def _handle_clip_key_event(event):

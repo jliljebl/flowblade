@@ -316,7 +316,9 @@ def init_editor_state():
     # with code by using edit.py module which causes gui updates to happen.
     edit.do_gui_update = True
     
-def new_project(profile_index):
+def new_project(profile_index, v_tracks, a_tracks):
+    sequence.VIDEO_TRACKS_COUNT = v_tracks
+    sequence.AUDIO_TRACKS_COUNT = a_tracks
     profile = mltprofiles.get_profile_for_index(profile_index)
     new_project = projectdata.Project(profile)
     open_project(new_project)
