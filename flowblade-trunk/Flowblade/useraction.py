@@ -832,8 +832,13 @@ def sequence_name_edited(cell, path, new_text, user_data):
 
 
 def change_sequence_track_count():
-    print "hailou"
-    pass
+    print "vidduuu"
+    cur_seq_index = PROJECT().sequences.index(PROJECT().c_seq)
+    new_seq = sequence.create_sequence_clone_with_different_track_count(PROJECT().c_seq, 3, 2)
+    PROJECT().sequences.insert(cur_seq_index, new_seq)
+    PROJECT().sequences.pop(cur_seq_index + 1)
+    app.change_current_sequence(cur_seq_index)
+    print "done"
 
 # --------------------------------------------------- profiles manager
 def profiles_manager():

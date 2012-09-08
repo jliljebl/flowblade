@@ -65,8 +65,8 @@ MLT_PRODUCER = 1
 MLT_FILTER = 2
 
 # Number of tracks available
-# NOTE: These are set from other modules when creating or loading projects
-# and used when creating sequences.
+# NOTE: These are set from other modules (and this one when cloning) when creating or loading projects
+# and used in Sequence.__init__(...) when creating sequences.
 # Hacky design, tracks count should be provided via constructor at creation time.
 AUDIO_TRACKS_COUNT = 4
 VIDEO_TRACKS_COUNT = 5
@@ -798,12 +798,15 @@ def _sort_compositors_comparator(a_comp, b_comp):
 
 # ----------------------------- sequence cloning for tracks count change
 def create_sequence_clone_with_different_track_count(old_seq, v_tracks, a_tracks):
+    # Create new sequence with different number of tracks
     global AUDIO_TRACKS_COUNT, VIDEO_TRACKS_COUNT
     AUDIO_TRACKS_COUNT = a_tracks
     VIDEO_TRACKS_COUNT = v_tracks
-    
     new_seq = Sequence(old_seq.profile, old_seq.name)
+    new_seq.create_default_tracks()
+    print new_seq.first_video_index
 
+    # Clone data from old sequnce to clone sequence
     if old_seq.first_video_index - 1 > a_tracks:
         _clone_for_fewer_tracks(old_seq, new_seq)
     else:
@@ -812,13 +815,24 @@ def create_sequence_clone_with_different_track_count(old_seq, v_tracks, a_tracks
     return new_seq
         
 def _clone_for_more_tracks(old_seq, new_seq):
-    pass
+    # clone track contentents
+    audio_tracks_count_diff = new_seq.first_video_index - old_seq.first_video_index
+    first_to_track_index = audio_tracks_count_diff + 1 # +1, black bg track
+    last_to_track_index = first_to_track_index + len(old_seq.tracks) - 3 # - 3 because: black bg track, hidden track, out inclusive
+    _clone_tracks(old_seq, new_seq, first_to_track_index, last_to_track_index, 1)
 
 def _clone_for_fewer_tracks(old_seq, new_seq):
     pass
 
+def _clone_tracks(old_seq, new_seq, first_to_track_index, last_to_track_index, first_from_track_index):
+    from_track_index = first_from_track_index
+    for i in range(first_to_track_index, last_to_track_index + 1):
+        from_track = old_seq.tracks[from_track_index]
+        to_track = new_seq.tracks[i]
+        _copy_track_contents(from_track, to_track, new_seq)
+        from_track_index = from_track_index + 1
+    
 def _copy_track_contents(from_track, to_track, to_sequence):
-      
     # Copy clips
     for i in range(0, len(from_track.clips)):
         clip = from_track.clips[i]
@@ -831,8 +845,5 @@ def _copy_track_contents(from_track, to_track, to_sequence):
     from_track.clips = []
 
     # Copy track attributes.
-    to_track.type = from_track.type
-    to_track.active = from_track.active
-    to_sequence.set_track_mute_state(self, to_track.id, from_track.mute_state)
-    to_track.height = from_track.height
+    to_sequence.set_track_mute_state(to_track.id, from_track.mute_state)
     to_track.edit_freedom = from_track.edit_freedom
