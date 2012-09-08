@@ -121,6 +121,7 @@ class EditorWindow:
             ('ConsolidateSelectedBlanks', None, _('Consolidate Selected Blanks'), None, None, lambda a:editevent.consolidate_selected_blanks()),
             ('ConsolidateAllBlanks', None, _('Consolidate All Blanks'), None, None, lambda a:editevent.consolidate_all_blanks()),
             ('RecreateMediaIcons', None, _('Recreate Media Icons...'), None, None, lambda a:useraction.recreate_media_file_icons()),
+            ('ChangeSequenceTracks', None, _('Change Sequence Tracks Count...'), None, None, lambda a:useraction.change_sequence_track_count()),
             ('ProfilesManager', None, _('Profiles Manager'), None, None, lambda a:useraction.profiles_manager()),
             ('Preferences', None, _('Preferences'), None, None, lambda a:useraction.display_preferences()),
             ('ToolsMenu', None, _('Tools')),
@@ -152,6 +153,8 @@ class EditorWindow:
                     <menuitem action='ConsolidateAllBlanks'/>
                     <separator/>
                     <menuitem action='CreateColorClip'/>
+                    <separator/>
+                    <menuitem action='ChangeSequenceTracks'/>
                     <separator/>
                     <menuitem action='RecreateMediaIcons'/>
                     <menuitem action='ProfilesManager'/>

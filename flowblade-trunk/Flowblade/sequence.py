@@ -65,8 +65,15 @@ MLT_PRODUCER = 1
 MLT_FILTER = 2
 
 # Number of tracks available
+# NOTE: These are set from other modules when creating or loading projects
+# and used when creating sequences.
+# Hacky design, tracks count should be provided via constructor at creation time.
 AUDIO_TRACKS_COUNT = 4
 VIDEO_TRACKS_COUNT = 5
+def set_track_counts(project):
+    global AUDIO_TRACKS_COUNT, VIDEO_TRACKS_COUNT
+    AUDIO_TRACKS_COUNT = project.sequences[0].first_video_index - 1
+    VIDEO_TRACKS_COUNT = AUDIO_TRACKS_COUNT + 1
 
 # Output modes. These correspond to option indexes in guicomponents.get_monitor_view_select_combo()
 PROGRAM_OUT_MODE = 0
@@ -95,9 +102,9 @@ class Sequence:
         self.profile = profile
         self.tracks = []
         self.compositors = []
-        self.markers = [] #future feature
-        self.proxyclips = {} #future feature
-        self.rendered_versions = {} #future feature
+        self.markers = [] #future feature, not used currently
+        self.proxyclips = {} #future feature, not used currently
+        self.rendered_versions = {} #future feature, not used currently
         
         # MLT objects for a multitrack sequence
         self.init_mlt_objects()
@@ -128,15 +135,15 @@ class Sequence:
         self.add_track(VIDEO)
         
         # Audio tracks
-        audio_tracks = AUDIO_TRACKS_COUNT
-        for i in range(0, audio_tracks):
+        #audio_tracks = AUDIO_TRACKS_COUNT
+        for i in range(0, AUDIO_TRACKS_COUNT):
             track = self.add_track(AUDIO)
             track.height = TRACK_HEIGHT_SMALL
         
         # Video tracks
-        self.first_video_index = audio_tracks + 1 # index of first editable video track
-        video_tracks = VIDEO_TRACKS_COUNT
-        for i in range(0, video_tracks):
+        self.first_video_index = AUDIO_TRACKS_COUNT + 1 # index of first editable video track
+        #video_tracks = VIDEO_TRACKS_COUNT
+        for i in range(0, VIDEO_TRACKS_COUNT):
             self.add_track(VIDEO) # editable
             if i > 0:
                 track_index = i + self.first_video_index
@@ -788,4 +795,44 @@ def _sort_compositors_comparator(a_comp, b_comp):
         return 1
     else:
         return 0
+
+# ----------------------------- sequence cloning for tracks count change
+def create_sequence_clone_with_different_track_count(old_seq, v_tracks, a_tracks):
+    global AUDIO_TRACKS_COUNT, VIDEO_TRACKS_COUNT
+    AUDIO_TRACKS_COUNT = a_tracks
+    VIDEO_TRACKS_COUNT = v_tracks
+    
+    new_seq = Sequence(old_seq.profile, old_seq.name)
+
+    if old_seq.first_video_index - 1 > a_tracks:
+        _clone_for_fewer_tracks(old_seq, new_seq)
+    else:
+        _clone_for_more_tracks(old_seq, new_seq)
         
+    return new_seq
+        
+def _clone_for_more_tracks(old_seq, new_seq):
+    pass
+
+def _clone_for_fewer_tracks(old_seq, new_seq):
+    pass
+
+def _copy_track_contents(from_track, to_track, to_sequence):
+      
+    # Copy clips
+    for i in range(0, len(from_track.clips)):
+        clip = from_track.clips[i]
+        if clip.is_blanck_clip != True:
+            edit.append_clip(to_track, clip, clip.clip_in, clip.clip_out)
+        else:
+            edit._insert_blank(to_track, i, clip.clip_out - clip.clip_in + 1)
+    
+    from_track.clear()
+    from_track.clips = []
+
+    # Copy track attributes.
+    to_track.type = from_track.type
+    to_track.active = from_track.active
+    to_sequence.set_track_mute_state(self, to_track.id, from_track.mute_state)
+    to_track.height = from_track.height
+    to_track.edit_freedom = from_track.edit_freedom

@@ -51,6 +51,7 @@ import projectdata
 import pulsedialogprocess
 import render
 import respaths
+import sequence
 import test
 import undo
 import updater
@@ -105,6 +106,7 @@ class LoadThread(threading.Thread):
 
         try:
             project = persistance.load_project(self.filename)
+            sequence.set_track_counts(project)
         except persistance.FileProducerNotFoundError as e:
             print "did not find file:", e
             gtk.gdk.threads_enter()
@@ -827,6 +829,11 @@ def sequence_name_edited(cell, path, new_text, user_data):
     PROJECT().sequences[int(path)].name = new_text
 
     _enable_save()
+
+
+def change_sequence_track_count():
+    print "hailou"
+    pass
 
 # --------------------------------------------------- profiles manager
 def profiles_manager():
