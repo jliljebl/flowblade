@@ -830,8 +830,13 @@ def sequence_name_edited(cell, path, new_text, user_data):
 
     _enable_save()
 
-
 def change_sequence_track_count():
+    dialogs.get_tracks_count_change_dialog(_change_track_count_dialog_callback)
+
+def _change_track_count_dialog_callback(dialog, response_id, tracks_combo, tracks_combo_values_list):
+    print tracks_combo_values_list
+    dialog.destroy()
+    """
     print "vidduuu"
     cur_seq_index = PROJECT().sequences.index(PROJECT().c_seq)
     new_seq = sequence.create_sequence_clone_with_different_track_count(PROJECT().c_seq, 3, 2)
@@ -839,6 +844,7 @@ def change_sequence_track_count():
     PROJECT().sequences.pop(cur_seq_index + 1)
     app.change_current_sequence(cur_seq_index)
     print "done"
+    """
 
 # --------------------------------------------------- profiles manager
 def profiles_manager():

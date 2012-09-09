@@ -27,6 +27,7 @@ import gtk
 import pango
 
 import guicomponents
+import guiutils
 import editorpersistance
 import mltprofiles
 import panels
@@ -66,16 +67,8 @@ def new_project_dialog(callback):
     profiles_vbox.pack_start(profile_select, False, False, 0)
     profiles_vbox.pack_start(profile_info_box, False, False, 0)
     profiles_frame = panels.get_named_frame(_("Profile"), profiles_vbox)
-    
-    tracks_combo = gtk.combo_box_new_text()
-    tracks_combo.append_text(_("5 video, 4 audio"))
-    tracks_combo.append_text(_("4 video, 3 audio"))
-    tracks_combo.append_text(_("3 video, 2 audio"))
-    tracks_combo.append_text(_("2 video, 1 audio"))
-    tracks_combo.set_active(0)
-    tracks_combo_values_list = [(5,4),(4,3),(3,2),(2,1)]
 
-
+    tracks_combo, tracks_combo_values_list = guicomponents.get_track_counts_combo_and_values_list()
     tracks_select = panels.get_two_column_box(gtk.Label(_("Number of tracks:")),
                                                tracks_combo,
                                                250)
@@ -683,3 +676,47 @@ def monitor_clip_too_short(parent_window):
     primary_txt = _("Defined range in Monitor Clip is too short")
     secondary_txt = _("Can't do the requested edit because Mark In -> Mark Out Range or Clip is too short.")
     info_message(primary_txt, secondary_txt, parent_window)
+
+
+def get_tracks_count_change_dialog(callback):
+    default_profile_index = mltprofiles.get_default_profile_index()
+    default_profile = mltprofiles.get_default_profile()
+
+    dialog = gtk.Dialog(_("Change Sequence Tracks Count"), None,
+                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                        (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
+                        "Change Tracks", gtk.RESPONSE_ACCEPT))
+
+    tracks_combo, tracks_combo_values_list = guicomponents.get_track_counts_combo_and_values_list()
+    tracks_select = panels.get_two_column_box(gtk.Label(_("New Number of Tracks:")),
+                                               tracks_combo,
+                                               250)
+    info_text = "Please note:\n" + \
+                "* It is recommended that you save Project before completing this operation\n" + \
+                "* There is no Undo for this operation\n" + \
+                "* Current Undo Stack will be destroyed\n" + \
+                "* All Clips and Compositors on deleted Tracks will be permanently destroyed"
+    info_label = gtk.Label(info_text)
+    info_label.set_use_markup(True)
+    info_box = guiutils.get_left_justified_box([info_label])
+
+    pad = guiutils.get_pad_label(24, 24)
+    
+    tracks_vbox = gtk.VBox(False, 2)
+    tracks_vbox.pack_start(info_box, False, False, 0)
+    tracks_vbox.pack_start(pad, False, False, 0)
+    tracks_vbox.pack_start(tracks_select, False, False, 0)
+    
+    #tracks_frame = panels.get_named_frame(_("Tracks"), tracks_vbox)
+
+    #vbox = gtk.VBox(False, 2)
+    #vbox.add(tracks_vbox)
+
+    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment.set_padding(6, 24, 24, 24)
+    alignment.add(tracks_vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, tracks_combo, tracks_combo_values_list)
+    dialog.show_all()

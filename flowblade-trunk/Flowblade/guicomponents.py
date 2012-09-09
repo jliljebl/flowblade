@@ -1266,3 +1266,13 @@ def get_gpl3_scroll_widget(size):
     sw.set_size_request(*size)
     
     return sw
+
+def get_track_counts_combo_and_values_list():
+    tracks_combo = gtk.combo_box_new_text()
+    tracks_combo.append_text(_("5 video, 4 audio"))
+    tracks_combo.append_text(_("4 video, 3 audio"))
+    tracks_combo.append_text(_("3 video, 2 audio"))
+    tracks_combo.append_text(_("2 video, 1 audio"))
+    tracks_combo.set_active(0)
+    tracks_combo_values_list = [(5,4),(4,3),(3,2),(2,1)]
+    return (tracks_combo, tracks_combo_values_list)
