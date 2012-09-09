@@ -425,6 +425,27 @@ class Sequence:
         self._plant_compositor(compositor)
         return compositor
     
+    def clone_compositors_from_sequence(self, from_sequence, track_delta):
+        # Used when cloning compositors to change track count by cloning sequence
+        new_compositors = []
+        for old_compositor in from_sequence.compositors:
+            clone_compositor = self._create_and_plant_clone_compositor_for_sequnce_clone(old_compositor, track_delta)
+            new_compositors.append(clone_compositor)
+        self.compositors = new_compositors
+
+    def _create_and_plant_clone_compositor_for_sequnce_clone(self, old_compositor, track_delta):
+        # Used when cloning compositors to change track count by cloning sequence
+        # Remove old compositor
+        edit.old_compositors.append(old_compositor) # HACK. Garbage collecting compositors causes crashes.
+        
+        # Create and plant new compositor
+        compositor = self.create_compositor(old_compositor.compositor_index)
+        compositor.clone_properties(old_compositor)
+        compositor.set_in_and_out(old_compositor.clip_in, old_compositor.clip_out)
+        compositor.transition.set_tracks(old_compositor.transition.a_track + track_delta, old_compositor.transition.b_track + track_delta)
+        self._plant_compositor(compositor)
+        return compositor
+        
     def get_compositors(self):
         return self.compositors
 
@@ -804,13 +825,16 @@ def create_sequence_clone_with_different_track_count(old_seq, v_tracks, a_tracks
     VIDEO_TRACKS_COUNT = v_tracks
     new_seq = Sequence(old_seq.profile, old_seq.name)
     new_seq.create_default_tracks()
-    print new_seq.first_video_index
 
-    # Clone data from old sequnce to clone sequence
+    # Clone track clips from old sequnce to clone sequence
     if old_seq.first_video_index - 1 > a_tracks:
         _clone_for_fewer_tracks(old_seq, new_seq)
     else:
         _clone_for_more_tracks(old_seq, new_seq)
+
+    # Clone compositors from old seq to new to correct tracks on new seq
+    track_delta = new_seq.first_video_index - old_seq.first_video_index
+    new_seq.clone_compositors_from_sequence(old_seq, track_delta)
         
     return new_seq
         
