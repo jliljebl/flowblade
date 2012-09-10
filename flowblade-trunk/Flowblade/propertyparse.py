@@ -149,7 +149,7 @@ def geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
     for token in kf_tokens:
         sides = token.split('=')
         values = sides[1].split(':')
-        pos = values[0].split(',')
+        pos = values[0].split('/')
         size = values[1].split('x')
         source_rect = [int(pos[0]), int(pos[1]), int(size[0]), int(size[1])]
         add_kf = (int(sides[0]), source_rect, out_to_in_func(float(values[2])))

@@ -195,7 +195,7 @@ def _get_affine_filt_geom_sliders(ep):
     
     #0,0:SCREENSIZE:100
     tokens = ep.value.split(":")
-    pos_tokens = tokens[0].split(",")
+    pos_tokens = tokens[0].split("/")
     size_tokens = tokens[1].split("x")
 
     x_adj = gtk.Adjustment(float(pos_tokens[0]), float(-scr_width), float(scr_width), float(1))

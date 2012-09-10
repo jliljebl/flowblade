@@ -39,6 +39,8 @@ import sequence
 import utils
 
 PROJECT_FILE_EXTENSION = ".flb"
+SAVEFILE_VERSION = 2 # this changed when backwards incompatible changes 
+                     # are introduced to allow for detecting and fixing them
 
 THUMB_WIDTH = 40
 THUMB_HEIGHT = 30
@@ -65,6 +67,7 @@ class Project:
         self.next_bin_number = 1 # This is for creating name for new bin 
         self.next_seq_number = 1 # This is for creating name for new bin
         self.last_save_path = None
+        self.SAVEFILE_VERSION = SAVEFILE_VERSION
         
         # c_seq is the currently edited Sequence
         self.add_unnamed_sequence()

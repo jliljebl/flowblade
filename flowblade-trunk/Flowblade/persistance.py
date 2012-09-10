@@ -248,8 +248,18 @@ def load_project(file_path):
     f = open(file_path)
     project = pickle.load(f)
 
+    if(not hasattr(project, "SAVEFILE_VERSION")):
+        project.SAVEFILE_VERSION = 1 # first save files did not have this
+    print "SAVEFILE_VERSION:", project.SAVEFILE_VERSION
+
     # Set MLT profile
     project.profile = mltprofiles.get_profile(project.profile_desc)
+    
+    # Some profiles may not be available in system
+    # inform user on fix
+    if project.profile == None:
+        print "pr None"
+
 
     # Add MLT objects to sequences.
     global all_clips, sync_clips
@@ -259,11 +269,13 @@ def load_project(file_path):
         sync_clips = []
                 
         seq.profile = project.profile
-        fill_sequence_mlt(seq)
+        fill_sequence_mlt(seq, project.SAVEFILE_VERSION)
         
     all_clips = {}
     sync_clips = []
-        
+
+    # fix SAVEFILE_VERSION 1 -> 2 Compability issue with x,y -> x/y in multiple compositors
+
     # Add icons to media files
     _show_msg(_("Loading icons"))
     for k, media_file in project.media_files.iteritems():
@@ -274,7 +286,7 @@ def load_project(file_path):
 
     return project
 
-def fill_sequence_mlt(seq):
+def fill_sequence_mlt(seq, SAVEFILE_VERSION):
     """
     Replaces sequences py objects with mlt objects
     """
@@ -294,6 +306,10 @@ def fill_sequence_mlt(seq):
     # Create and connect compositors.
     mlt_compositors = []
     for py_compositor in seq.compositors:
+            # Keeping backwards compability
+            if SAVEFILE_VERSION < 2:
+                FIX_1_TO_N_BACKWARDS_COMPOSITOR_COMPABILITY(py_compositor)
+        
             # Create new compositor object
             compositor = mlttransitions.create_compositor(py_compositor.compositor_index)                                        
             compositor.create_mlt_objects(seq.profile)
@@ -408,4 +424,12 @@ def fill_filters_mlt(mlt_clip, sequence):
     mlt_clip.filters = filters
     
 
-
+# ------------------------------------------------------- backwards compability
+def FIX_1_TO_N_BACKWARDS_COMPOSITOR_COMPABILITY(compositor):
+    print "fixing compositor"
+    new_properties = []
+    for prop in compositor.transition.properties:
+        name, value, prop_type = prop
+        value = value.replace(",","/")
+        new_properties.append((name, value, prop_type))
+    compositor.transition.properties = new_properties

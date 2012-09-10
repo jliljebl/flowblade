@@ -423,7 +423,7 @@ class AffineFilterGeomProperty(EditableProperty):
         h = h_s.get_adjustment().get_value()
         
         # x,y:widthxheight:opacity
-        val_str = str(x) + "," + str(y) + ":" + str(w) + "x" + str(h) + ":100"
+        val_str = str(x) + "/" + str(y) + ":" + str(w) + "x" + str(h) + ":100"
         self.write_value(val_str)
 
 
@@ -482,7 +482,7 @@ class OpacityInGeomKeyframeProperty(TransitionEditableProperty):
         for kf in keyframes:
             frame, opac = kf
             val_str += str(int(frame)) + "=" # frame
-            val_str += "0,0:" # pos
+            val_str += "0/0:" # pos
             val_str += str(self.screen_size_str) + ":" # size
             val_str += str(self.get_out_value(opac)) + ";" # opac with converted range from slider
         
@@ -514,7 +514,7 @@ class KeyFrameGeometryOpacityProperty(TransitionEditableProperty):
         for kf in keyframes:
             frame, rect, opac = kf
             val_str += str(int(frame)) + "=" # frame
-            val_str += str(int(rect[0])) + "," + str(int(rect[1])) + ":" # pos
+            val_str += str(int(rect[0])) + "/" + str(int(rect[1])) + ":" # pos
             val_str += str(int(rect[2])) + "x" + str(int(rect[3])) + ":" # size
             val_str += str(self.get_out_value(opac)) + ";" # opac with converted range from slider
         
