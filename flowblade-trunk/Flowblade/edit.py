@@ -358,7 +358,7 @@ class SyncData:
         self.clip_out = None
         self.master_clip = None
         self.master_inframe = None
-        self.master_audio_index = None
+        self.master_audio_index = None # this does nothing? try to remove.
            
 #-------------------- APPEND CLIP
 # "track","clip","clip_in","clip_out"

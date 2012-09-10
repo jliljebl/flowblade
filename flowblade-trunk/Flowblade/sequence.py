@@ -37,6 +37,7 @@ import memoryleak
 import mltfilters
 import mlttransitions
 import respaths
+import resync
 import utils
 
 # Media types for tracks or clips
@@ -841,7 +842,7 @@ def create_sequence_clone_with_different_track_count(old_seq, v_tracks, a_tracks
     new_seq = Sequence(old_seq.profile, old_seq.name)
     new_seq.create_default_tracks()
 
-    # Clone track clips from old sequnce to clone sequence
+    # Clone track clips from old sequence to clone sequence
     if old_seq.first_video_index - 1 > a_tracks:
         _clone_for_fewer_tracks(old_seq, new_seq)
     else:
@@ -850,8 +851,6 @@ def create_sequence_clone_with_different_track_count(old_seq, v_tracks, a_tracks
     # Clone compositors from old seq to new to correct tracks on new seq
     track_delta = new_seq.first_video_index - old_seq.first_video_index
     new_seq.clone_compositors_from_sequence(old_seq, track_delta)
-    
-    # Parenting update
 
     # copy next clip id data
     new_seq.next_id = old_seq.next_id

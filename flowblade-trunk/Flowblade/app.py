@@ -60,6 +60,7 @@ import projectdata
 import propertyedit
 import render
 import respaths
+import resync
 import sequence
 import test
 import tlinewidgets
@@ -349,6 +350,9 @@ def change_current_sequence(index):
     
     # Inits widgets with current sequence data
     init_sequence_gui()
+    
+    # update resync data
+    resync.sequence_changed(editorstate.project.c_seq)
 
     # Set and display current sequence tractor
     display_current_sequence()

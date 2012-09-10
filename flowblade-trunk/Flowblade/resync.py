@@ -49,10 +49,19 @@ def clip_removed_from_timeline(clip):
 def clip_sync_cleared(clip):
     # This and the method above are called for different purposes, so we'll 
     # keep them separate even though they do the same thing
+    # wut????? fix this
     try:
         sync_children.pop(clip)
     except KeyError:
         pass
+
+def sequence_changed(new_sequence):
+    global sync_children
+    sync_children = {}
+    for track in new_sequence.tracks:
+        for clip in track.clips:
+            clip_added_to_timeline(clip, track)
+    calculate_and_set_child_clip_sync_states()
 
 def calculate_and_set_child_clip_sync_states():
     parent_track = current_sequence().first_video_track()
@@ -60,7 +69,7 @@ def calculate_and_set_child_clip_sync_states():
         child_index = track.clips.index(child_clip)
         child_clip_start = track.clip_start(child_index) - child_clip.clip_in
 
-        print child_clip.id
+        #print child_clip.id
         parent_clip = child_clip.sync_data.master_clip
         try:
             parent_index = parent_track.clips.index(parent_clip)

@@ -712,7 +712,7 @@ def get_tracks_count_change_dialog(callback):
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, tracks_combo, tracks_combo_values_list)
+    dialog.connect('response', callback, tracks_combo)
     dialog.show_all()
 
 

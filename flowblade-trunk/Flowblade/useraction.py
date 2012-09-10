@@ -769,7 +769,7 @@ def _add_new_sequence_dialog_callback(dialog, response_id, widgets):
     
     # Get dialog data 
     name = name_entry.get_text()
-    print "name:", name
+
     if len(name) == 0:
         name = _("sequence_") + str(PROJECT().next_seq_number)
     v_tracks, a_tracks = appconsts.TRACK_CONFIGURATIONS[tracks_combo.get_active()]
@@ -856,17 +856,19 @@ def sequence_name_edited(cell, path, new_text, user_data):
 def change_sequence_track_count():
     dialogs.get_tracks_count_change_dialog(_change_track_count_dialog_callback)
 
-def _change_track_count_dialog_callback(dialog, response_id, tracks_combo, tracks_combo_values_list):
-    print tracks_combo_values_list
-    dialog.destroy()
+def _change_track_count_dialog_callback(dialog, response_id, tracks_combo):
+    if response_id != gtk.RESPONSE_ACCEPT:
+        dialog.destroy()
+        return
     
-    print "vidduuu"
+    v_tracks, a_tracks = appconsts.TRACK_CONFIGURATIONS[tracks_combo.get_active()]
+    dialog.destroy()
+
     cur_seq_index = PROJECT().sequences.index(PROJECT().c_seq)
-    new_seq = sequence.create_sequence_clone_with_different_track_count(PROJECT().c_seq, 3, 2)
+    new_seq = sequence.create_sequence_clone_with_different_track_count(PROJECT().c_seq, v_tracks, a_tracks)
     PROJECT().sequences.insert(cur_seq_index, new_seq)
     PROJECT().sequences.pop(cur_seq_index + 1)
     app.change_current_sequence(cur_seq_index)
-    print "done"
     
 
 # --------------------------------------------------- profiles manager
