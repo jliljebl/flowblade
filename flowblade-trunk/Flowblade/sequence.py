@@ -129,6 +129,17 @@ class Sequence:
         """
         This is done when sequnece first created, but when sequence is loaded
         tracks are added using add_track(...)
+        
+        TRACKS LAYOUT:
+        index                                           track type
+        -----                                           ----------
+        0                                               black bg track
+        1 - (self.first_video_index - 1)                audio tracks    
+        self.first_video_index - (len(self.tracks) - 2) video tracks
+        (len(self.tracks) - 1)                          hidden track
+        
+        Tracks are never changed after cration, changing tracks count feature is
+        achieved by creating a new sequence and cop
         """
         # Default tracks
         # black bg track
@@ -428,9 +439,13 @@ class Sequence:
     def clone_compositors_from_sequence(self, from_sequence, track_delta):
         # Used when cloning compositors to change track count by cloning sequence
         new_compositors = []
+        video_diff = self.first_video_index - from_sequence.first_video_index
         for old_compositor in from_sequence.compositors:
-            clone_compositor = self._create_and_plant_clone_compositor_for_sequnce_clone(old_compositor, track_delta)
-            new_compositors.append(clone_compositor)
+            print old_compositor.transition.b_track 
+            if old_compositor.transition.b_track + video_diff < len(self.tracks) - 1:
+                print "ee"
+                clone_compositor = self._create_and_plant_clone_compositor_for_sequnce_clone(old_compositor, track_delta)
+                new_compositors.append(clone_compositor)
         self.compositors = new_compositors
 
     def _create_and_plant_clone_compositor_for_sequnce_clone(self, old_compositor, track_delta):
@@ -846,7 +861,13 @@ def _clone_for_more_tracks(old_seq, new_seq):
     _clone_tracks(old_seq, new_seq, first_to_track_index, last_to_track_index, 1)
 
 def _clone_for_fewer_tracks(old_seq, new_seq):
-    pass
+    first_to_track_index = 1
+    last_to_track_index = first_to_track_index + len(new_seq.tracks) - 3 # - 3 because: black bg track, hidden track, out inclusive
+    audio_tracks_count_diff = old_seq.first_video_index - new_seq.first_video_index
+    from_track_index = audio_tracks_count_diff + 1  # +1, black bg track
+    print "www"
+    _clone_tracks(old_seq, new_seq, first_to_track_index, last_to_track_index, from_track_index)
+    print "rr"
 
 def _clone_tracks(old_seq, new_seq, first_to_track_index, last_to_track_index, first_from_track_index):
     from_track_index = first_from_track_index
