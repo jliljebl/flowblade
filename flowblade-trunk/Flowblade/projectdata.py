@@ -163,6 +163,9 @@ class Project:
         Adds sequence with default name
         """
         name = _("sequence_") + str(self.next_seq_number)
+        self.add_named_sequence(name)
+        
+    def add_named_sequence(self, name):
         seq = sequence.Sequence(self.profile, name)
         seq.create_default_tracks()
         self.sequences.append(seq)

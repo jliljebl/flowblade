@@ -1274,5 +1274,5 @@ def get_track_counts_combo_and_values_list():
     tracks_combo.append_text(_("3 video, 2 audio"))
     tracks_combo.append_text(_("2 video, 1 audio"))
     tracks_combo.set_active(0)
-    tracks_combo_values_list = [(5,4),(4,3),(3,2),(2,1)]
+    tracks_combo_values_list = appconsts.TRACK_CONFIGURATIONS
     return (tracks_combo, tracks_combo_values_list)

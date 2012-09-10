@@ -145,25 +145,24 @@ def get_recent_projects():
     return proj_list
         
 def update_prefs_from_widgets(widgets_tuples_tuple):
+    # Unpack widgets
+    gen_opts_widgets, edit_prefs_widgets = widgets_tuples_tuple
+    default_profile_combo, open_in_last_opened_check, undo_max_spin, disp_splash, default_tracks_combo = gen_opts_widgets
+    auto_play_in_clip_monitor_check, auto_center_check, auto_move_on_edit, grfx_insert_length_spin = edit_prefs_widgets
 
-        # Unpack widgets
-        gen_opts_widgets, edit_prefs_widgets = widgets_tuples_tuple
-        default_profile_combo, open_in_last_opened_check, undo_max_spin, disp_splash = gen_opts_widgets
-        auto_play_in_clip_monitor_check, auto_center_check, auto_move_on_edit, grfx_insert_length_spin = edit_prefs_widgets
+    global prefs
+    prefs.open_in_last_opended_media_dir = open_in_last_opened_check.get_active()
+    prefs.display_splash_screen = disp_splash.get_active()
 
-        global prefs
-        prefs.open_in_last_opended_media_dir = open_in_last_opened_check.get_active()
-        prefs.display_splash_screen = disp_splash.get_active()
+    prefs.default_profile_name = mltprofiles.get_profile_name_for_index(default_profile_combo.get_active())
+    prefs.track_configuration = default_tracks_combo.get_active()
+    prefs.undos_max = undo_max_spin.get_adjustment().get_value()
 
-        prefs.default_profile_name = mltprofiles.get_profile_name_for_index(default_profile_combo.get_active())
-        
-        prefs.undos_max = undo_max_spin.get_adjustment().get_value()
+    prefs.auto_play_in_clip_monitor = auto_play_in_clip_monitor_check.get_active()
+    prefs.auto_center_on_play_stop = auto_center_check.get_active()
+    prefs.auto_move_after_edit = auto_move_on_edit.get_active()
 
-        prefs.auto_play_in_clip_monitor = auto_play_in_clip_monitor_check.get_active()
-        prefs.auto_center_on_play_stop = auto_center_check.get_active()
-        prefs.auto_move_after_edit = auto_move_on_edit.get_active()
- 
-        prefs.default_grfx_length = int(grfx_insert_length_spin.get_adjustment().get_value())
+    prefs.default_grfx_length = int(grfx_insert_length_spin.get_adjustment().get_value())
 
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
@@ -190,6 +189,6 @@ class EditorPreferences:
         self.display_splash_screen = True
         self.auto_move_after_edit = False
         self.default_grfx_length = 250 # value is in frames
-
+        self.track_configuration = 0 # this is index on list appconsts.TRACK_CONFIGURATIONS
         self.AUTO_SAVE_OPTS = ((-1, _("No Autosave")),(1, _("1 min")),(2, _("2 min")),(5, _("5 min")))
 

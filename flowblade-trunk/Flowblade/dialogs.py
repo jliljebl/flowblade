@@ -677,7 +677,6 @@ def monitor_clip_too_short(parent_window):
     secondary_txt = _("Can't do the requested edit because Mark In -> Mark Out Range or Clip is too short.")
     info_message(primary_txt, secondary_txt, parent_window)
 
-
 def get_tracks_count_change_dialog(callback):
     default_profile_index = mltprofiles.get_default_profile_index()
     default_profile = mltprofiles.get_default_profile()
@@ -707,11 +706,6 @@ def get_tracks_count_change_dialog(callback):
     tracks_vbox.pack_start(pad, False, False, 0)
     tracks_vbox.pack_start(tracks_select, False, False, 0)
     
-    #tracks_frame = panels.get_named_frame(_("Tracks"), tracks_vbox)
-
-    #vbox = gtk.VBox(False, 2)
-    #vbox.add(tracks_vbox)
-
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(6, 24, 24, 24)
     alignment.add(tracks_vbox)
@@ -719,4 +713,49 @@ def get_tracks_count_change_dialog(callback):
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
     dialog.connect('response', callback, tracks_combo, tracks_combo_values_list)
+    dialog.show_all()
+
+
+def get_new_sequence_dialog(callback, default_name):
+    dialog = gtk.Dialog(_("Create New Sequence"), None,
+                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                        (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
+                        _("Create Sequence").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+
+    name_entry = gtk.Entry(30)
+    name_entry.set_width_chars(30)
+    name_entry.set_text(default_name)
+    name_entry.set_activates_default(True)
+
+    name_select = panels.get_two_column_box(gtk.Label(_("Sequence Name:")),
+                                               name_entry,
+                                               250)
+
+    tracks_combo, tracks_combo_values_list = guicomponents.get_track_counts_combo_and_values_list()
+    tracks_select = panels.get_two_column_box(gtk.Label(_("Number of Tracks:")),
+                                               tracks_combo,
+                                               250)
+
+    open_check = gtk.CheckButton()
+    open_check.set_active(True)
+    open_label = gtk.Label(_("Open For Editing:"))
+
+    open_hbox = gtk.HBox(False, 2)
+    open_hbox.pack_start(gtk.Label(), True, True, 0)
+    open_hbox.pack_start(open_label, False, False, 0)
+    open_hbox.pack_start(open_check, False, False, 0)
+    
+    tracks_vbox = gtk.VBox(False, 2)
+    tracks_vbox.pack_start(name_select, False, False, 0)
+    tracks_vbox.pack_start(tracks_select, False, False, 0)
+    tracks_vbox.pack_start(guiutils.get_pad_label(12, 12), False, False, 0)
+    tracks_vbox.pack_start(open_hbox, False, False, 0)
+    
+    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment.set_padding(6, 24, 24, 24)
+    alignment.add(tracks_vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, (name_entry, tracks_combo, open_check))
     dialog.show_all()

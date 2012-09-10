@@ -754,20 +754,44 @@ def change_edit_sequence():
     app.change_current_sequence(row)
     
 def add_new_sequence():
+    default_name = _("sequence_") + str(PROJECT().next_seq_number)
+    dialogs.get_new_sequence_dialog(_add_new_sequence_dialog_callback, default_name)
+    
+def _add_new_sequence_dialog_callback(dialog, response_id, widgets):    
     """
     Adds new unnamed sequence and sets it selected 
     """
+    if response_id != gtk.RESPONSE_ACCEPT:
+        dialog.destroy()
+        return
+    
+    name_entry, tracks_combo, open_check = widgets
+    
+    # Get dialog data 
+    name = name_entry.get_text()
+    print "name:", name
+    if len(name) == 0:
+        name = _("sequence_") + str(PROJECT().next_seq_number)
+    v_tracks, a_tracks = appconsts.TRACK_CONFIGURATIONS[tracks_combo.get_active()]
+    open_right_away = open_check.get_active()
+    
     # Get index for selected sequence
     selection = gui.sequence_list_view.treeview.get_selection()
     (model, rows) = selection.get_selected_rows()
     row = max(rows[0])
     
     # Add new sequence
-    PROJECT().add_unnamed_sequence()
+    sequence.AUDIO_TRACKS_COUNT = a_tracks
+    sequence.VIDEO_TRACKS_COUNT = v_tracks
+    PROJECT().add_named_sequence(name)
     gui.sequence_list_view.fill_data_model()
     
-    # Keep previous selection
-    selection.select_path(str(row))
+    if open_right_away == False:
+        selection.select_path(str(row)) # Keep previous selection
+    else:
+        app.change_current_sequence(len(PROJECT().sequences) - 1)
+    
+    dialog.destroy()
 
 def delete_selected_sequence():
     """
@@ -783,7 +807,6 @@ def delete_selected_sequence():
                                  _("Are you sure you want to delete\nsequence \'") + name + _("\'?"), 
                                  _("This operation can not be undone. Sequence will be permanently lost."), 
                                  gui.editor_window.window)
-
 
 def _delete_confirm_callback(dialog, response_id):
     if response_id != gtk.RESPONSE_ACCEPT:

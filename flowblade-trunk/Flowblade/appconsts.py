@@ -78,3 +78,6 @@ ARGS = "args"
 PROPERTY = "property"
 MLT_SERVICE = "mlt_service"
 EXTRA_EDITOR = "extraeditor"
+
+# Available tracks configurations for flowblade
+TRACK_CONFIGURATIONS = [(5,4),(4,3),(3,2),(2,1)]

@@ -567,7 +567,6 @@ def get_general_options_panel(folder_select_clicked_cb):
     folder_select = gtk.Button(_("Select Folder"))
     folder_select.connect("clicked" , folder_select_clicked_cb)
 
-    # Widgets
     display_splash_check = gtk.CheckButton()
     display_splash_check.set_active(prefs.display_splash_screen)
 
@@ -576,6 +575,9 @@ def get_general_options_panel(folder_select_clicked_cb):
         time, desc = editorpersistance.prefs.AUTO_SAVE_OPTS[i]
         autosave_combo.append_text(desc)
     autosave_combo.set_active(prefs.auto_save_delay_value_index)
+    
+    tracks_combo, values_list = guicomponents.get_track_counts_combo_and_values_list()
+    tracks_combo.set_active(prefs.track_configuration)
 
     # Layout
     row1 = get_two_column_box(gtk.Label(_("Default Profile")), default_profile_combo, PREFERENCES_LEFT)
@@ -584,9 +586,11 @@ def get_general_options_panel(folder_select_clicked_cb):
     row4 = get_two_column_box(gtk.Label(_("Thumbnail folder")), folder_select, PREFERENCES_LEFT)
     row5 = get_two_column_box(gtk.Label(_("Display splash screen")), display_splash_check, PREFERENCES_LEFT)
     row6 = get_two_column_box(gtk.Label(_("Autosave for crash recovery every")), autosave_combo, PREFERENCES_LEFT)
+    row7 = get_two_column_box(gtk.Label(_("Default tracks count")), tracks_combo, PREFERENCES_LEFT)
     
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)
+    # vbox.pack_start(row7, False, False, 0) # feature handled at project and sequence creatoin, delete preference if 
     vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row3, False, False, 0)
@@ -598,7 +602,7 @@ def get_general_options_panel(folder_select_clicked_cb):
     align.set_padding(12, 0, 12, 12)
     align.add(vbox)
 
-    return align, (default_profile_combo, open_in_last_opened_check, undo_max_spin, display_splash_check)
+    return align, (default_profile_combo, open_in_last_opened_check, undo_max_spin, display_splash_check, tracks_combo)
 
 def get_edit_prefs_panel():
     prefs = editorpersistance.prefs

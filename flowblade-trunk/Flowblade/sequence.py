@@ -138,7 +138,7 @@ class Sequence:
         self.first_video_index - (len(self.tracks) - 2) video tracks
         (len(self.tracks) - 1)                          hidden track
         
-        Tracks are never changed after cration, changing tracks count feature is
+        Tracks are never changed after creation, changing tracks count feature is
         achieved by creating a new sequence and cop
         """
         # Default tracks
@@ -850,7 +850,11 @@ def create_sequence_clone_with_different_track_count(old_seq, v_tracks, a_tracks
     # Clone compositors from old seq to new to correct tracks on new seq
     track_delta = new_seq.first_video_index - old_seq.first_video_index
     new_seq.clone_compositors_from_sequence(old_seq, track_delta)
-        
+    
+    # Parenting update
+
+    # copy next clip id data
+    new_seq.next_id = old_seq.next_id
     return new_seq
         
 def _clone_for_more_tracks(old_seq, new_seq):
@@ -865,9 +869,7 @@ def _clone_for_fewer_tracks(old_seq, new_seq):
     last_to_track_index = first_to_track_index + len(new_seq.tracks) - 3 # - 3 because: black bg track, hidden track, out inclusive
     audio_tracks_count_diff = old_seq.first_video_index - new_seq.first_video_index
     from_track_index = audio_tracks_count_diff + 1  # +1, black bg track
-    print "www"
     _clone_tracks(old_seq, new_seq, first_to_track_index, last_to_track_index, from_track_index)
-    print "rr"
 
 def _clone_tracks(old_seq, new_seq, first_to_track_index, last_to_track_index, first_from_track_index):
     from_track_index = first_from_track_index
