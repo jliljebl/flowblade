@@ -69,6 +69,15 @@ class FileProducerNotFoundError(Exception):
     def __str__(self):
         return repr(self.value)
 
+class ProjectProfileNotFoundError(Exception):
+    """
+    We're only catching this, other errors we'll just crash on load
+    """
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
+
 # -------------------------------------------------- LOAD MESSAGES
 def _show_msg(msg, delay=0.0):
     gtk.gdk.threads_enter()
@@ -258,8 +267,7 @@ def load_project(file_path):
     # Some profiles may not be available in system
     # inform user on fix
     if project.profile == None:
-        print "pr None"
-
+        raise ProjectProfileNotFoundError(project.profile_desc)
 
     # Add MLT objects to sequences.
     global all_clips, sync_clips
@@ -273,8 +281,6 @@ def load_project(file_path):
         
     all_clips = {}
     sync_clips = []
-
-    # fix SAVEFILE_VERSION 1 -> 2 Compability issue with x,y -> x/y in multiple compositors
 
     # Add icons to media files
     _show_msg(_("Loading icons"))
@@ -406,6 +412,8 @@ def fill_filters_mlt(mlt_clip, sequence):
     filters = []
     for py_filter in mlt_clip.filters:
         if py_filter.is_multi_filter == False:
+            if py_filter.info.mlt_service_id == "affine":
+                FIX_1_TO_N_BACKWARDS_FILTER_COMPABILITY(py_filter)
             filter_object = mltfilters.FilterObject(py_filter.info)
             filter_object.__dict__.update(py_filter.__dict__)
             filter_object.create_mlt_filter(sequence.profile)
@@ -426,10 +434,21 @@ def fill_filters_mlt(mlt_clip, sequence):
 
 # ------------------------------------------------------- backwards compability
 def FIX_1_TO_N_BACKWARDS_COMPOSITOR_COMPABILITY(compositor):
-    print "fixing compositor"
+    # fix SAVEFILE_VERSION 1 -> N compability issue with x,y -> x/y in compositors
     new_properties = []
     for prop in compositor.transition.properties:
         name, value, prop_type = prop
         value = value.replace(",","/")
         new_properties.append((name, value, prop_type))
     compositor.transition.properties = new_properties
+
+def FIX_1_TO_N_BACKWARDS_FILTER_COMPABILITY(py_filter):
+    # This is only called on "affine" filters
+    # fix SAVEFILE_VERSION 1 -> N compability issue with x,y -> x/y in compositors
+    print "fixing filter"
+    new_properties = []
+    for prop in py_filter.properties:
+        name, value, prop_type = prop
+        value = value.replace(",","/")
+        new_properties.append((name, value, prop_type))
+    py_filter.properties = new_properties

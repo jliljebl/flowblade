@@ -113,24 +113,30 @@ def main(root_path):
     # Adjust gui parameters for smaller screens
     scr_w = gtk.gdk.screen_width()
     scr_h = gtk.gdk.screen_height()
+    editorstate.SCREEN_HEIGHT = scr_h
+
     if scr_w < 1220:
         editorwindow.NOTEBOOK_WIDTH = 580
         editorwindow.MONITOR_AREA_WIDTH = 500
     if scr_h < 960:
         editorwindow.TOP_ROW_HEIGHT = 460
-
+    print scr_h
+    if scr_h < 863:
+        editorwindow.TOP_ROW_HEIGHT = 420
+        tlinewidgets.HEIGHT = 200 
+    """
     # Refuse to run on too small screen.
-    if scr_w < 1152 or scr_h < 864:
+    if scr_w < 1151 or scr_h < 767:
         _too_small_screen_exit()
         return
-    
+    """
     # Splash screen
     if editorpersistance.prefs.display_splash_screen == True: 
         show_splash_screen()
 
     # Init MLT framework
     repo = mlt.Factory().init()
-
+    
     # Check for codecs and formats on the system
     mltenv.check_available_features(repo)
     render.load_render_profiles()

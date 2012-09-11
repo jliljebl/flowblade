@@ -245,6 +245,8 @@ class Sequence:
         
         # Display height
         track.height = TRACK_HEIGHT_NORMAL
+        if editorstate.SCREEN_HEIGHT < 863:
+            track.height = TRACK_HEIGHT_SMALL
         
         # Tracks may be FREE or LOCKED
         track.edit_freedom = FREE
@@ -273,7 +275,7 @@ class Sequence:
         Creates MLT Producer and adds attributes to it, but does 
         not add it to track/playlist object.
         """
-        producer = mlt.Producer(self.profile, path) # this runs 0.5s+ on some clips
+        producer = mlt.Producer(self.profile, path) #(self.profile, path) # this runs 0.5s+ on some clips
         producer.path = path
         producer.filters = []
         
@@ -287,10 +289,6 @@ class Sequence:
             return None
 
         self.add_clip_attr(producer)
-        
-        #if ext is ".png":
-        #    print ".png"
-        #    edit._set_in_out(producer, 7500, 7510)
         
         return producer
 

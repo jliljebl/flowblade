@@ -19,7 +19,8 @@
 """
 
 """
-Module handles creating mlt.Filter objects and their python wrappers to be used in sequences.
+Module handles creating mlt.Filter objects and their FilterObject python wrappers that
+are attached to mlt:Producer objects.
 """
 import copy
 import gtk
@@ -41,7 +42,7 @@ FILTER = "filter"
 GROUP = "group"
 ID = "id"
 
-COMPOSITOR_FILTER_GROUP = "COMPOSITOR_FILTER"
+COMPOSITOR_FILTER_GROUP = "COMPOSITOR_FILTER" # THIS IS NOT USED ANYMORE! DOUBLE CHECK THAT THIS REALLY IS THE CASE AND KILL!
 MULTIPART_FILTER = "multipart" # identifies filter as multipart filter
 MULTIPART_PROPERTY = "multipartproperty" # Describes properties of multipart filter
 MULTIPART_START = "multistartprop" # name of property into which value at start of part-filter is set 
@@ -117,9 +118,9 @@ def get_translated_audio_group_name():
 
 class FilterInfo:
     """
-    Info of a filter that is is available to the user.
+    Info of a filter (mlt.Service) that is is available to the user.
     Constructor input is a dom node object.
-    This used to create FilterObject objects.
+    This is used to create FilterObject objects.
     """
     def __init__(self, filter_node):
         self.mlt_service_id = filter_node.getAttribute(ID)

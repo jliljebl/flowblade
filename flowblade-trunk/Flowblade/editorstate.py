@@ -49,6 +49,10 @@ _monitor_media_file = None
 # Flag for timeline/clip display in monitor
 _timeline_displayed = True
 
+# Used to alter gui layout and tracks configuration, set at startup
+SCREEN_HEIGHT = -1
+
+
 def current_is_move_mode():
     if ((edit_mode == INSERT_MOVE) or (edit_mode == OVERWRITE_MOVE)):
         return True

@@ -108,7 +108,7 @@ def k_pressed():
 def l_pressed():
     jkl_index = _get_jkl_speed_index()
     print jkl_index
-    if jkl_index < 5:# 5 is first forward speed, any smallre is backwaed, l starts forward slow from any backwards speed 
+    if jkl_index < 5:# 5 is first forward speed, any smaller is backward, l starts forward slow from any backwards speed 
         jkl_index = 5
     else:
         jkl_index = jkl_index + 1

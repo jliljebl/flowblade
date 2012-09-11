@@ -55,18 +55,19 @@ NORMALIZED_FLOAT = "NORMALIZED_FLOAT"                       # range 0.0 - 1.0
 #  PROP_EXPRESSION values, e.g. "exptype=keyframe_hcs"      parsed output
 DEFAULT = "default"                                         # value     (str(int), str(float))  
 SINGLE_KEYFRAME = "singlekeyframe"                          # 0=value
-OPACITY_IN_GEOM_SINGLE_KF = "opacity_in_geom_kf_single"     # 0=0,0:SCREEN_WIDTHxSCREEN_HEIGHT:opacity
-OPACITY_IN_GEOM_KF = "opacity_in_geom_kf"                   # frame=0,0:SCREEN_WIDTHxSCREEN_HEIGHT:opacity (kf_str;kf_str;kf_str;...;kf_str)
-GEOMETRY_OPACITY_KF ="geom_opac_kf"                         # frame=x,y:widthxheight:opacity
-GEOM_IN_AFFINE_FILTER = "geom_in_affine_filt"               # x,y:widthxheight:opacity
+OPACITY_IN_GEOM_SINGLE_KF = "opacity_in_geom_kf_single"     # 0=0/0:SCREEN_WIDTHxSCREEN_HEIGHT:opacity
+OPACITY_IN_GEOM_KF = "opacity_in_geom_kf"                   # frame=0/0:SCREEN_WIDTHxSCREEN_HEIGHT:opacity (kf_str;kf_str;kf_str;...;kf_str)
+GEOMETRY_OPACITY_KF ="geom_opac_kf"                         # frame=x/y:widthxheight:opacity
+GEOM_IN_AFFINE_FILTER = "geom_in_affine_filt"               # x/y:widthxheight:opacity
 KEYFRAME_HCS = "keyframe_hcs"                               # frame=value(;frame=value) HCS = half comma separeted
 KEYFRAME_HCS_TRANSITION = "keyframe_hcs_transition"         # frame=value(;frame=value) HCS = half comma separeted, used to edit transitions
 MULTIPART_KEYFRAME_HCS = "multipart_keyframe"               # frame=value(;frame=value) series of mlt.Filter objects that get their properties set, HCS = half comma separeted
 COLOR = "color"                                             # #rrggbb
 WIPE_RESOURCE = "wipe_resource"                             # /path/to/resource.pgm
 NOT_PARSED = "not_parsed"                                   # A write out value is not parsed from value
-NOT_PARSED_TRANSITION = "not_parsed_transition"             # A write out value is not parsed from value in transition object 
-DEFAULT_STEP = 1.0
+NOT_PARSED_TRANSITION = "not_parsed_transition"             # A write out value is not parsed from value in transition object
+
+DEFAULT_STEP = 1.0 # for sliders
                     
 def get_filter_editable_properties(clip, filter_object, filter_index, 
                                    track, clip_index, compositor_filter=False):
@@ -82,7 +83,7 @@ def get_filter_editable_properties(clip, filter_object, filter_index,
         p_name, p_value, p_type = filter_object.properties[i]
         args_str = filter_object.info.property_args[p_name]
         params = (clip, filter_index, (p_name, p_value, p_type), i, args_str)
-        #print "pname", p_name
+
         ep = _create_editable_property(p_type, args_str, params)
 
         ep.is_compositor_filter = compositor_filter
@@ -429,8 +430,10 @@ class AffineFilterGeomProperty(EditableProperty):
 
 class OpacityInGeomSKFProperty(TransitionEditableProperty):
     """
-    Converts adjustments to expressions like "0,0:720x576:76" for
+    Converts adjustments to expressions like "0/0:720x576:76" for
     opacity of 76% and creates adjustments from expressions.
+    
+    Only opacity part is edited.
     """
     def __init__(self, params):
         TransitionEditableProperty.__init__(self, params)
@@ -486,13 +489,15 @@ class OpacityInGeomKeyframeProperty(TransitionEditableProperty):
             val_str += str(self.screen_size_str) + ":" # size
             val_str += str(self.get_out_value(opac)) + ";" # opac with converted range from slider
         
+        print val_str
         val_str = val_str.strip(";")
+        #val_str = "0%/0%:100%x100%:50"
         self.write_value(val_str)
 
 
 class KeyFrameGeometryOpacityProperty(TransitionEditableProperty):
     """
-    Converts user edits to expressions like "12=11,21:720x576:76" for
+    Converts user edits to expressions like "12=11/21:720x576:76" for
     to keyframes for position scale and opacity.
     """
     def __init__(self, params):

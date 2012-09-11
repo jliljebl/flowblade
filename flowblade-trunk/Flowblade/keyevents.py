@@ -106,13 +106,13 @@ def key_down(widget, event):
             else:
                 monitorevent.play_pressed()
             return True
-    """
+
     #debug
     if event.keyval == gtk.keysyms.F12:
-        titler._titler.show_current_frame()
+        PLAYER().start_xml_rendering("/home/janne/flowXML.xml")
         return True
 
-    
+    """
     #debug
     if event.keyval == gtk.keysyms.F11:
         titler.show_titler()

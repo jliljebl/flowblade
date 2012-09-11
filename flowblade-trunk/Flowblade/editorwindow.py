@@ -305,10 +305,13 @@ class EditorWindow:
         if TOP_ROW_HEIGHT < 500: # small screens have no space to display this
             normal_height = False
 
+        add_audio_desc = True
+        if editorstate.SCREEN_HEIGHT < 863:
+            add_audio_desc = False
         render_panel_left = panels.get_render_panel_left(
                                 self,
                                 lambda w,e: useraction.open_additional_render_options_dialog(),
-                                True)
+                                add_audio_desc)
 
         render_panel_right = panels.get_render_panel_right(lambda w,e: useraction.render_timeline(), normal_height)
         render.widgets.opts_info_button.connect("clicked", lambda w: useraction.ffmpeg_opts_help())

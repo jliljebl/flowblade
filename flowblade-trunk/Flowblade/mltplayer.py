@@ -69,7 +69,8 @@ class Player(threading.Thread):
         self.is_rendering = False
         self.render_stop_frame = -1
         self.render_start_frame = -1
-
+        self.xml_render = False
+    
     def create_sdl_consumer(self):
         """
         Creates consumer with sdl output to a gtk+ widget.
@@ -77,11 +78,18 @@ class Player(threading.Thread):
         # Create consumer and set params
         self.consumer = mlt.Consumer(self.profile, "sdl")
         self.consumer.set("real_time", 1)
-        self.consumer.set("rescale", "1")
+        self.consumer.set("rescale", "nearest")
+        self.consumer.set("resize", 1)
+        self.consumer.set("progressive", 1)
 
+        print "description", self.profile.description()
         # Hold ref to switch back from rendering
         self.sdl_consumer = self.consumer 
 
+    def create_xml_consumer(self):
+        self.consumer = mlt.Consumer(self.profile, "xml", path)
+        self.xml_render = False
+        
     def set_sdl_xwindow(self, widget):
         """
         Connects SDL output to display widget's xwindow
@@ -304,6 +312,12 @@ class Player(threading.Thread):
         else:
             return gui.pos_bar.producer.get_length()
 
+    def start_xml_rendering(self, path):
+        print "start xml"
+        self.xml_render = True
+        xml_consumer = mlt.Consumer(self.profile, "xml", str(path))
+        self.start_rendering(xml_consumer)
+
     def start_rendering(self, render_consumer, start_frame=0, stop_frame=-1):
         self.ticker.stop_ticker()
         self.consumer.stop()
@@ -325,8 +339,12 @@ class Player(threading.Thread):
         self.consumer = self.sdl_consumer
         self.connect_and_start()
         self.seek_frame(0)
-        render.exit_render_gui()
-        render.maybe_open_rendered_file_in_bin()
+        if self.xml_render == False:
+            render.exit_render_gui()
+            render.maybe_open_rendered_file_in_bin()
+        else:
+            print "xml render done"
+            self.xml_render == False
 
     def shutdown(self):
         self.ticker.stop_ticker()

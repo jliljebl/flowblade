@@ -23,7 +23,7 @@
 import os
 import sys
 
-print "FLOWBLADE MOVIE_EDITOR repository branch TIP"
+print "FLOWBLADE MOVIE EDITOR repository branch TIP"
 print "--------------------------------------------"
 
 # Get launch script dir

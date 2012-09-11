@@ -200,6 +200,7 @@ class CompositorTransition:
             self._set_blend_service_default_values()
         
     def _set_composite_service_default_values(self):
+        #self.mlt_transition.set("start", "0/0:100%x100%")
         self.mlt_transition.set("automatic",1)
         self.mlt_transition.set("aligned", 1)
         self.mlt_transition.set("deinterlace",0)
@@ -229,7 +230,6 @@ class CompositorTransition:
         self.mlt_transition.set("fill",1)
         self.mlt_transition.set("operator","over")
         self.mlt_transition.set("luma_invert",0)
-        self.mlt_transition.set("fill",1)
         self.mlt_transition.set("progressive",1)
         self.mlt_transition.set("softness",0)
   
