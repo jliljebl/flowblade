@@ -55,6 +55,7 @@ COLOR_CLIP = 1
 # Display heights for tracks.
 TRACK_HEIGHT_NORMAL = 50 # track height in canvas and column
 TRACK_HEIGHT_SMALL = 25 # track height in canvas and column
+TRACK_HEIGHT_SMALLEST = 20 # track height in canvas and column
 
 # Property editing gui consts
 PROPERTY_ROW_HEIGHT = 22

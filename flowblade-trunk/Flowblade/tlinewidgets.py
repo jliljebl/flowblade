@@ -40,7 +40,7 @@ import sequence
 import utils
 import updater
 
-REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is now relaculated on initilization so number here is irrelevent.
+REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is now recalculated on initilization so number here is irrelevent.
 
 WIDTH = 430 # this has no effect if smaller then editorwindow.NOTEBOOK_WIDTH + editorwindow.MONITOR_AREA_WIDTH
 HEIGHT = 260 # defines window min height with editorwindow.TOP_ROW_HEIGHT ( NOTE: USE 210 for small when implementing it)
@@ -55,6 +55,7 @@ TEXT_X = 6 # pos for clip text
 TEXT_Y = 29 
 TEXT_Y_SMALL = 17
 WAVEFORM_PAD_LARGE = 3
+WAVEFORM_PAD_SMALL = 1
 MARK_PAD = 6
 MARK_LINE_WIDTH = 4
 
@@ -842,9 +843,9 @@ class TimeLineCanvas:
             # Draw audio waveform
             if clip.waveform_data != None and scale_length > FILL_MIN:
                 if track.height == sequence.TRACK_HEIGHT_NORMAL:
-                    y_pad = 3
+                    y_pad = WAVEFORM_PAD_LARGE
                 else:
-                    y_pad = 1
+                    y_pad = WAVEFORM_PAD_SMALL
                 waveform_pix_count = len(clip.waveform_data)
                 if clip.get_length() < waveform_pix_count:
                     waveform_pix_count = clip.get_length()

@@ -120,7 +120,7 @@ class WaveformCreator(threading.Thread):
         in_frame = clip.clip_in
         out_frame = clip.clip_out
 
-        if self.track_height == appconsts.TRACK_HEIGHT_SMALL:
+        if self.track_height == appconsts.TRACK_HEIGHT_SMALL or self.track_height == appconsts.TRACK_HEIGHT_SMALLEST:
             frame_image_height, draw_image_height, draw_image_first_row = SMALL_TRACK_DRAW_CONSTS
         else:
             frame_image_height, draw_image_height, draw_image_first_row = LARGE_TRACK_DRAW_CONSTS

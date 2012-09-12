@@ -31,6 +31,7 @@ import pangocairo
 import appconsts
 from cairoarea import CairoDrawableArea
 import editorpersistance
+import editorstate
 from editorstate import current_sequence
 from editorstate import current_bin
 from editorstate import PROJECT

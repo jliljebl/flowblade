@@ -34,6 +34,7 @@ import time
 import threading
 
 import appconsts
+import audiowaveform
 import clipeffectseditor
 import cliprenderer
 import compositeeditor
@@ -114,22 +115,13 @@ def main(root_path):
     scr_w = gtk.gdk.screen_width()
     scr_h = gtk.gdk.screen_height()
     editorstate.SCREEN_HEIGHT = scr_h
+    _set_draw_params(scr_w, scr_h)
 
-    if scr_w < 1220:
-        editorwindow.NOTEBOOK_WIDTH = 580
-        editorwindow.MONITOR_AREA_WIDTH = 500
-    if scr_h < 960:
-        editorwindow.TOP_ROW_HEIGHT = 460
-    print scr_h
-    if scr_h < 863:
-        editorwindow.TOP_ROW_HEIGHT = 420
-        tlinewidgets.HEIGHT = 200 
-    """
     # Refuse to run on too small screen.
     if scr_w < 1151 or scr_h < 767:
         _too_small_screen_exit()
         return
-    """
+
     # Splash screen
     if editorpersistance.prefs.display_splash_screen == True: 
         show_splash_screen()
@@ -353,7 +345,7 @@ def open_project(new_project):
 def change_current_sequence(index):
     stop_autosave()
     editorstate.project.c_seq = editorstate.project.sequences[index]
-    
+
     # Inits widgets with current sequence data
     init_sequence_gui()
     
@@ -437,7 +429,25 @@ def destroy_splash_screen():
     gobject.source_remove(splash_timeout_id)
 
 
-# ------------------------------------------------------- too small screen
+# ------------------------------------------------------- small screens
+def _set_draw_params(scr_w, scr_h):
+    if scr_w < 1220:
+        editorwindow.NOTEBOOK_WIDTH = 580
+        editorwindow.MONITOR_AREA_WIDTH = 500
+    if scr_h < 960:
+        editorwindow.TOP_ROW_HEIGHT = 460
+    if scr_h < 863:
+        editorwindow.TOP_ROW_HEIGHT = 420
+        sequence.TRACK_HEIGHT_SMALL = appconsts.TRACK_HEIGHT_SMALLEST
+        tlinewidgets.HEIGHT = 184
+        tlinewidgets.TEXT_Y_SMALL = 15
+        tlinewidgets.ID_PAD_Y_SMALL = 2
+        tlinewidgets.COMPOSITOR_HEIGHT_OFF = 7
+        tlinewidgets.COMPOSITOR_HEIGHT = 14
+        tlinewidgets.COMPOSITOR_TEXT_Y = 11
+        tlinewidgets.INSRT_ICON_POS_SMALL = (81, 4)
+        audiowaveform.SMALL_TRACK_DRAW_CONSTS = (60, 16, 5)
+
 def _too_small_screen_exit():
     global too_small_timeout_id
     too_small_timeout_id = gobject.timeout_add(200, _show_too_small_info)
@@ -449,7 +459,7 @@ def _show_too_small_info():
     primary_txt = _("Too small screen for this application.")
     scr_w = gtk.gdk.screen_width()
     scr_h = gtk.gdk.screen_height()
-    secondary_txt = _("Minimum screen dimensions for this application are 1152 x 864.\n") + \
+    secondary_txt = _("Minimum screen dimensions for this application are 1152 x 768.\n") + \
                     _("Your screen dimensions are ") + str(scr_w) + " x " + str(scr_h) + "."
     dialogs.warning_message_with_callback(primary_txt, secondary_txt, None, False, _exit_too_small)
 

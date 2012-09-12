@@ -71,6 +71,7 @@ MLT_FILTER = 2
 # Hacky design, tracks count should be provided via constructor at creation time.
 AUDIO_TRACKS_COUNT = 4
 VIDEO_TRACKS_COUNT = 5
+
 def set_track_counts(project):
     global AUDIO_TRACKS_COUNT, VIDEO_TRACKS_COUNT
     AUDIO_TRACKS_COUNT = project.sequences[0].first_video_index - 1
@@ -89,6 +90,7 @@ black_track_clip = None
 # for playlists in MLT
 # USED FOR TRACKS, NOT CLIPS. Clips handled using values in appconsts.py
 MUTE_STATES = [(True, True), (False, True), (True, False), (False, False)]
+
 
 
 class Sequence:
@@ -245,7 +247,7 @@ class Sequence:
         
         # Display height
         track.height = TRACK_HEIGHT_NORMAL
-        if editorstate.SCREEN_HEIGHT < 863:
+        if editorstate.SCREEN_HEIGHT < 863:# Fix for 786 screens
             track.height = TRACK_HEIGHT_SMALL
         
         # Tracks may be FREE or LOCKED

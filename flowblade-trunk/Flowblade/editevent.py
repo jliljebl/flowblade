@@ -637,6 +637,7 @@ def _mute_track(track, new_mute_state):
     gui.tline_column.widget.queue_draw()
 
 # ---------------------------------- tracks
+"""
 def add_track():
     dialogs.track_add_dialog(_add_track_callback)
     
@@ -678,7 +679,8 @@ def _delete_track_callback(dialog, response_id, deletable_track_indexes, combo_b
             current_sequence().first_video_index -= 1        
         updater.window_resized() # This does the needed recaculating and draws timeline.
         gui.tline_column.widget.queue_draw()
-        
+"""
+
 def track_active_switch_pressed(data):
     track = get_track(data.track) # data.track is index, not object
 
@@ -754,6 +756,8 @@ def _set_track_normal_height(track_index):
 def _set_track_small_height(track_index):
     track = get_track(track_index)
     track.height = appconsts.TRACK_HEIGHT_SMALL
+    if editorstate.SCREEN_HEIGHT < 863:
+        track.height = appconsts.TRACK_HEIGHT_SMALLEST
     
     tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.allocation)
     gui.tline_column.init_listeners()
