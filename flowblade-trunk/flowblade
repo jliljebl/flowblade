@@ -46,10 +46,11 @@ sys.path.insert(0, modules_path + "/tools")
 try:
     import mlt
     print "MLT found, version:", mlt.LIBMLT_VERSION
-except:
+except Exception, err:
     print "MLT not found, exiting..."
+    print "ERROR:", err
     sys.exit(1)
-    
+  
 # Get app.py module
 try:
     import app

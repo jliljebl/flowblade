@@ -755,7 +755,7 @@ def display_clip_popup_menu(event, clip, track, callback):
             clip_menu.add(_get_menu_item(_("Select Sync Parent Clip..."), callback, (clip, track, "set_master", event.x)))
         
         _add_separetor(clip_menu)
-    
+
     clip_menu.add(_get_mute_menu_item(event, clip, track, callback))
 
     _add_separetor(clip_menu)
@@ -988,8 +988,12 @@ def _set_non_sensite_if_state_matches(mutable, item, state):
 
 def diplay_media_file_popup_menu(media_file, callback, event):
     media_file_menu = gtk.Menu()
-    media_file_menu.add(_get_menu_item(_("Open in Clip Monitor"), callback,("Open in Clip Monitor", media_file, event)))
+    # "Open in Clip Monitor" is sent as event id, same for all below
+    # See useraction._media_file_menu_item_selected(...)
+    media_file_menu.add(_get_menu_item(_("Open in Clip Monitor"), callback,("Open in Clip Monitor", media_file, event))) 
     media_file_menu.add(_get_menu_item(_("File Properties"), callback, ("File Properties", media_file, event)))
+    _add_separetor(media_file_menu)
+    media_file_menu.add(_get_menu_item(_("Render Slow/Fast Motion File"), callback, ("Render Slow/Fast Motion File", media_file, event)))
     _add_separetor(media_file_menu)
     media_file_menu.add(_get_menu_item(_("Delete"), callback, ("Delete", media_file, event)))
     media_file_menu.popup(None, None, None, event.button, event.time)

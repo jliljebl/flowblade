@@ -290,8 +290,7 @@ class ThumbnailThread(threading.Thread):
         self.consumer.set("vcodec", "png")
 
         # Create one frame producer
-        self.producer = mlt.Producer(self.profile, \
-                                     '%s' %  self.file_path)
+        self.producer = mlt.Producer(self.profile, '%s' %  self.file_path)
         length = self.producer.get_length()
         frame = length / 2
         self.producer = self.producer.cut(frame, frame)
@@ -309,8 +308,7 @@ class ThumbnailThread(threading.Thread):
         self.file_path = file_path
 
         # Create one frame producer
-        self.producer = mlt.Producer(self.profile, \
-                                     '%s' %  self.file_path)
+        self.producer = mlt.Producer(self.profile, '%s' %  self.file_path)
         return self.producer.get_length()
 
     def shutdown(self):

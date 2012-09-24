@@ -351,6 +351,18 @@ def _save_as_dialog_callback(dialog, response_id):
     else:
         dialog.destroy()
 
+def export_melt_xml():
+    dialogs.export_xml_dialog(_export_melt_xml_dialog_callback, PROJECT().name)
+
+def _export_melt_xml_dialog_callback(dialog, response_id):
+    if response_id == gtk.RESPONSE_ACCEPT:
+        filenames = dialog.get_filenames()
+        save_path = filenames[0]
+        PLAYER().start_xml_rendering(save_path)
+        dialog.destroy()
+    else:
+        dialog.destroy()
+
 def remove_save_icon():
     gobject.source_remove(save_icon_remove_event_id)
     updater.set_info_icon(None)
@@ -1063,6 +1075,8 @@ def _media_file_menu_item_selected(widget, data):
         updater.set_and_display_monitor_media_file(media_file)
     if item_id == "Delete":
         delete_media_files()
+    if item_id == "Render Slow/Fast Motion File":
+        render.render_frame_buffer_clip(media_file)
 
 def filter_stack_button_press(widget, event):
     row, column_title = _select_treeview_on_pos_and_return_row_and_column_title(event, widget)

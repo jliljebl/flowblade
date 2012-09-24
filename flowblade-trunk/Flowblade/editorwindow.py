@@ -111,6 +111,7 @@ class EditorWindow:
             ('OpenRecent', None, _('Open Recent')),
             ('Save', None, _('_Save'), '<control>S', None, lambda a:useraction.save_project()),
             ('Save As', None, _('_Save As...'), None, None, lambda a:useraction.save_project_as()),
+            ('ExportXML', None, _('_Export XML...'), None, None, lambda a:useraction.export_melt_xml()),
             ('Close', None, _('_Close'), None, None, lambda a:useraction.close_project()),
             ('Quit', None, _('_Quit'), '<control>Q', None, lambda a:app.shutdown()),
             ('EditMenu', None, _('_Edit')),
@@ -139,6 +140,8 @@ class EditorWindow:
                     <menu action='OpenRecent'/>
                     <menuitem action='Save'/>
                     <menuitem action='Save As'/>
+                    <separator/>
+                    <menuitem action='ExportXML'/>
                     <separator/>
                     <menuitem action='Close'/>
                     <menuitem action='Quit'/>

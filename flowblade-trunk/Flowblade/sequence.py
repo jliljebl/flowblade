@@ -22,6 +22,7 @@
 Module contains class Sequence that is the multitrack media object being edited
 by the application. A project has 1-n of these.
 """
+
 import copy
 import gnomevfs
 import mlt
@@ -130,7 +131,7 @@ class Sequence:
     # ---------------------------------------- tracks
     def create_default_tracks(self):
         """
-        This is done when sequnece first created, but when sequence is loaded
+        This is done when sequence first created, but when sequence is loaded
         tracks are added using add_track(...)
         
         TRACKS LAYOUT:
@@ -142,7 +143,7 @@ class Sequence:
         (len(self.tracks) - 1)                          hidden track
         
         Tracks are never changed after creation, changing tracks count feature is
-        achieved by creating a new sequence and cop
+        achieved by creating a new sequence.
         """
         # Default tracks
         # black bg track
@@ -277,7 +278,7 @@ class Sequence:
         Creates MLT Producer and adds attributes to it, but does 
         not add it to track/playlist object.
         """
-        producer = mlt.Producer(self.profile, path) #(self.profile, path) # this runs 0.5s+ on some clips
+        producer = mlt.Producer(self.profile, path) # this runs 0.5s+ on some clips
         producer.path = path
         producer.filters = []
         
@@ -286,6 +287,27 @@ class Sequence:
         producer.name = name
         if new_clip_name != None:
             producer.name = new_clip_name
+        producer.media_type = get_media_type(path)
+        if producer.media_type == FILE_DOES_NOT_EXIST:
+            return None
+
+        self.add_clip_attr(producer)
+        
+        return producer
+
+    def create_slowmotion_producer(self, path, speed):
+        """
+        Creates MLT Producer and adds attributes to it, but does 
+        not add it to track/playlist object.
+        """
+        fr_path = "framebuffer:" + path + "?" + str(speed)
+        producer = mlt.Producer(self.profile, None, str(fr_path)) # this runs 0.5s+ on some clips
+ 
+        (folder, file_name) = os.path.split(path)
+        (name, ext) = os.path.splitext(file_name)
+        producer.name = name
+        producer.path = path
+        producer.speed = speed
         producer.media_type = get_media_type(path)
         if producer.media_type == FILE_DOES_NOT_EXIST:
             return None
@@ -309,7 +331,7 @@ class Sequence:
 
     def _create_color_clip(self, gdk_color_str, name):
         mlt_color = utils.gdk_color_str_to_mlt_color_str(gdk_color_str)
-        #producer = mlt.Producer(self.profile, "frei0r.lissajous0r")
+
         producer = mlt.Producer(self.profile, "colour", mlt_color)
         producer.path = ""
         producer.filters = []
@@ -318,7 +340,7 @@ class Sequence:
         producer.name = name
         producer.media_type = PATTERN_PRODUCER
         self.add_clip_attr(producer)
-        #edit._set_in_out(producer, 7500, 7510)
+
         return producer
 
     def add_clip_attr(self, clip):
@@ -348,8 +370,8 @@ class Sequence:
         clone_clip.clip_out = clip.clip_out
         clone_clip.filters = []
         
-        for filter in clip.filters:
-            clone_filter = mltfilters.clone_filter_object(filter, self.profile)
+        for f in clip.filters:
+            clone_filter = mltfilters.clone_filter_object(f, self.profile)
             clone_clip.attach(clone_filter.mlt_filter)
             clone_clip.filters.append(clone_filter)
 
@@ -493,7 +515,7 @@ class Sequence:
 
     def sort_compositors(self):
         """
-        Compositor order must be from top to bottom or will nort work.
+        Compositor order must be from top to bottom or will not work.
         """
         self.compositors.sort(_sort_compositors_comparator)
 
@@ -714,7 +736,7 @@ class Sequence:
 
     def get_first_active_track(self):
         """
-        This done in a way that user sees the track displayed as top most
+        This is done in a way that the user sees the track displayed as top most
         on screen being the first active when doing for e.g. a monitor insert.
         track: 0, black bg video
         tracks: 1 - (self.first_video_index - 1), audio, numbred to user in oppposite direction as 1 - n (user_index = self.first_video_index - index)

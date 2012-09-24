@@ -144,6 +144,20 @@ def save_project_as_dialog(callback, current_name, open_dir):
     dialog.connect('response', callback)
     dialog.show()
 
+def export_xml_dialog(callback, project_name):    
+    dialog = gtk.FileChooserDialog(_("Export Project as XML to"), None, 
+                                   gtk.FILE_CHOOSER_ACTION_SAVE, 
+                                   (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
+                                   _("Export").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
+    dialog.set_action(gtk.FILE_CHOOSER_ACTION_SAVE)
+    project_name = project_name.strip(".flb")
+    dialog.set_current_name(project_name + ".xml")
+    dialog.set_do_overwrite_confirmation(True)
+    
+    dialog.set_select_multiple(False)
+    dialog.connect('response', callback)
+    dialog.show()
+
 def save_titler_graphic_as_dialog(callback, current_name, open_dir):    
     dialog = gtk.FileChooserDialog(_("Save Titler Graphic As"), None, 
                                    gtk.FILE_CHOOSER_ACTION_SAVE, 
@@ -286,7 +300,6 @@ def warning_message(primary_txt, secondary_txt, parent_window, is_info=False):
 
 def warning_message_with_callback(primary_txt, secondary_txt, parent_window, is_info, callback):
     content = panels.get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info)
-    print type(parent_window)
     dialog = gtk.Dialog("",
                         parent_window,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
@@ -759,3 +772,5 @@ def get_new_sequence_dialog(callback, default_name):
     _default_behaviour(dialog)
     dialog.connect('response', callback, (name_entry, tracks_combo, open_check))
     dialog.show_all()
+
+

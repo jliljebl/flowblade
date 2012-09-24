@@ -35,6 +35,7 @@ from editorstate import current_sequence
 from editorstate import PROJECT
 import gui
 import guicomponents
+import guiutils
 import mltenv
 import mltprofiles
 import respaths
@@ -676,3 +677,124 @@ def _load_opts_dialog_callback(dialog, response_id):
         dialog.destroy()
     else:
         dialog.destroy()
+
+# ------------------------------------------------------------- framebuffer clip rendering
+# Rendering a slow fast motion version of media file is bin.
+# We're using 300 lines worth of copy/paste from above, because lazy
+def render_frame_buffer_clip(media_file):
+    
+    folder, file_name = os.path.split(media_file.path)
+    name, ext = os.path.splitext(file_name)
+        
+    dialog = gtk.Dialog(_("Render Slow/Fast Motion Video File"), None,
+                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                        (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
+                        _("Render").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+
+    media_file_label = gtk.Label("Source file: <b>" + media_file.name + "</b>")
+    media_file_label.set_use_markup(True)
+    mf_row = guiutils.get_left_justified_box([media_file_label])
+
+    fb_widgets = utils.EmptyClass()
+
+    fb_widgets.file_name = gtk.Entry()
+    fb_widgets.file_name.set_text(name + "_MOTION" + ext)
+    
+    fb_widgets.out_folder = gtk.FileChooserButton(_("Select Target Folder"))
+    fb_widgets.out_folder.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+    fb_widgets.out_folder.set_current_folder(folder)
+    
+    label = gtk.Label(_("Speed %:"))
+
+    adjustment = gtk.Adjustment(float(100), float(1), float(600), float(1))
+    hslider = gtk.HScale()
+    hslider.set_adjustment(adjustment)
+    hslider.set_draw_value(False)
+    
+    spin = gtk.SpinButton()
+    spin.set_adjustment(adjustment)
+
+    hslider.set_digits(0)
+    spin.set_digits(0)
+
+    slider_hbox = gtk.HBox(False, 4)
+    slider_hbox.pack_start(hslider, True, True, 0)
+    slider_hbox.pack_start(spin, False, False, 4)
+    slider_hbox.set_size_request(350,35)
+
+    hbox = gtk.HBox(False, 2)
+    hbox.pack_start(guiutils.pad_label(8, 8), False, False, 0)
+    hbox.pack_start(label, False, False, 0)
+    hbox.pack_start(slider_hbox, False, False, 0)
+
+    fb_widgets.use_project_profile_check = gtk.CheckButton()
+    fb_widgets.use_project_profile_check.set_active(True)
+    #fb_widgets.use_project_profile_check.connect("toggled", _use_project_check_toggled)
+
+    fb_widgets.out_profile_combo = gtk.combo_box_new_text() # filled later when current sequence known
+    #fb_widgets.out_profile_combo.connect('changed', lambda w:  _out_profile_changed())
+    #fb_widgets.out_profile_combo.set_sensitive(False)
+    _fill_FB_out_profile_widgets(fb_widgets)
+    
+    # Encoding
+    fb_widgets.encodings_cb = gtk.combo_box_new_text()
+    for encoding in encoding_options:
+        fb_widgets.encodings_cb.append_text(encoding.name)
+    fb_widgets.encodings_cb.set_active(DEFAULT_ENCODING_INDEX)
+    """
+    fb_widgets.encodings_cb.connect("changed", 
+                              lambda w,e: _encoding_selection_changed(), 
+                              None)
+    """
+    fb_widgets.quality_cb = gtk.combo_box_new_text()
+    _fill_FB_quality_combo_box(fb_widgets)
+    
+    vbox = gtk.VBox(False, 2)
+    vbox.pack_start(mf_row, False, False, 0)
+    vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
+    vbox.pack_start(hbox, False, False, 0)
+    vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(gtk.Label(_("Target File:")), fb_widgets.file_name, 120), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(gtk.Label(_("Target Folder:")), fb_widgets.out_folder, 120), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(gtk.Label(_("Target Profile:")), fb_widgets.out_profile_combo, 200), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(gtk.Label(_("Target Encoding:")), fb_widgets.encodings_cb, 200), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(gtk.Label(_("Target Quality:")), fb_widgets.quality_cb, 200), False, False, 0)
+
+    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment.set_padding(6, 24, 24, 24)
+    alignment.add(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogs._default_behaviour(dialog)
+    dialog.connect('response', _render_frame_buffer_clip_callback, hslider)
+    dialog.show_all()
+
+def _render_frame_buffer_clip_callback(dialog, response_id, data):
+    if response_id == gtk.RESPONSE_ACCEPT:
+        dialog.destroy()
+    else:
+        dialog.destroy()
+        
+def _fill_FB_out_profile_widgets(fb_widgets):
+    """
+    Called some time after widget creation when current_sequence is known and these can be filled.
+    """
+    fb_widgets.out_profile_combo.get_model().clear()
+    fb_widgets.out_profile_combo.append_text(current_sequence().profile.description())
+    profiles = mltprofiles.get_profiles()
+    for profile in profiles:
+        fb_widgets.out_profile_combo.append_text(profile[0])
+    fb_widgets.out_profile_combo.set_active(0)
+
+def _fill_FB_quality_combo_box(fb_widgets):
+    enc_index = fb_widgets.encodings_cb.get_active()
+    encoding = encoding_options[enc_index]
+
+    fb_widgets.quality_cb.get_model().clear()
+    for quality_option in encoding.quality_options:
+        fb_widgets.quality_cb.append_text(quality_option.name)
+
+    if encoding.quality_default_index != None:
+        fb_widgets.quality_cb.set_active(encoding.quality_default_index)
+    else:
+        fb_widgets.quality_cb.set_active(0)

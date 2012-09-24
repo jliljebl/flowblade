@@ -1684,6 +1684,24 @@ def _track_extract_range(over_in, over_out, track):
         track_extract_data.removed_clips.append(removed_clip)
 
     return track_extract_data
+
+# ------------------------------------------------ SLOW/FAST MOTION
+# "track","clip","clip_index","speed":speed}
+def replace_with_speed_changed_clip(data):
+    action = EditAction(_replace_with_speed_changed_clip_undo, _replace_with_speed_changed_clip_redo, data)
+    return action
+
+def _replace_with_speed_changed_clip_undo(self):
+    pass
+
+def _replace_with_speed_changed_clip_redo(self):
+    # Create slowmo clip if it does not exists
+    if not hasattr(self, "new_clip"):
+        self.new_clip = current_sequence().create_slowmotion_producer(self.clip.path, self.speed)
+    current_sequence().clone_clip_range_and_filters(self.clip, self.new_clip)
     
+    _remove_clip(self.track, self.clip_index)
+    _insert_clip(self.track, self.new_clip, self.clip_index, self.clip.clip_in, self.clip.clip_out)
+
+
     
-        

@@ -636,6 +636,7 @@ def _mute_track(track, new_mute_state):
     current_sequence().set_track_mute_state(track.id, new_mute_state)
     gui.tline_column.widget.queue_draw()
 
+
 # ---------------------------------- tracks
 """
 def add_track():
