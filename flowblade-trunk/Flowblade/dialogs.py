@@ -253,6 +253,22 @@ def render_progress_dialog(callback, parent_window):
     dialog.connect('response', callback)
     dialog.show()
     return dialog
+    
+def motion_clip_render_progress_dialog(callback, file_name, progress_bar, parent_window):
+    dialog = gtk.Dialog(_("Rendering Motion Clip"),
+                         parent_window,
+                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                         (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
+
+    panel = panels.get_motion_render_progress_panel(file_name, progress_bar)
+    
+    dialog.vbox.pack_start(panel, True, True, 0)
+    dialog.set_default_size(500, 125)
+    panel.show_all()
+    dialog.set_has_separator(False)
+    dialog.connect('response', callback)
+    dialog.show()
+    return dialog
 
 def exit_confirm_dialog(callback, msg, parent_window, project_name):
     title = _("Save project '") + project_name + _("' before exiting?")

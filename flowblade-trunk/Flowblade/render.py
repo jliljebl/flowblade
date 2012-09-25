@@ -28,6 +28,7 @@ import gtk
 import mlt
 import os
 import time
+import threading
 import xml.dom.minidom
 
 import dialogs
@@ -39,6 +40,7 @@ import guiutils
 import mltenv
 import mltprofiles
 import respaths
+import sequence
 import utils
 
 # File describing existing encoding and quality options
@@ -83,7 +85,7 @@ encoding_options = []
 quality_option_groups = {}
 quality_option_groups_default_index = {}
 
-open_media_file_callback = None # monkeypathced in by useraction to avoid circular import
+open_media_file_callback = None # monkeypathced in by useraction to avoid circular imports
 
 render_start_time = 0
 widgets = utils.EmptyClass()
@@ -799,10 +801,10 @@ def render_frame_buffer_clip(media_file):
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogs._default_behaviour(dialog)
-    dialog.connect('response', _render_frame_buffer_clip_callback, fb_widgets)
+    dialog.connect('response', _render_frame_buffer_clip_callback, fb_widgets, media_file)
     dialog.show_all()
 
-def _render_frame_buffer_clip_callback(dialog, response_id, fb_widgets):
+def _render_frame_buffer_clip_callback(dialog, response_id, fb_widgets, media_file):
     if response_id == gtk.RESPONSE_ACCEPT:
         # speed, filename folder
         speed = float(int(fb_widgets.hslider.get_value())) / 100.0
@@ -811,9 +813,7 @@ def _render_frame_buffer_clip_callback(dialog, response_id, fb_widgets):
         folder = filenames[0]
         write_file = folder + "/"+ file_name + fb_widgets.extension_label.get_text()
 
-        print write_file
-
-        """
+         # Profile
         profile_index = fb_widgets.out_profile_combo.get_active()
         if profile_index == 0:
             # project_profile is first selection in combo box
@@ -821,12 +821,52 @@ def _render_frame_buffer_clip_callback(dialog, response_id, fb_widgets):
         else:
             profile = mltprofiles.get_profile_for_index(profile_index - 1)
 
-        # Create render consumer
-        consumer = mlt.Consumer(profile, "avformat", file_path)
-        consumer.set("real_time", -1)
-        """
+        # Render consumer properties
+        encoding_option = encoding_options[fb_widgets.encodings_cb.get_active()]
+        quality_option = encoding_option.quality_options[fb_widgets.quality_cb.get_active()]
+
+        # Range
+        range_selection = fb_widgets.render_range.get_active()
         
         dialog.destroy()
+
+        # Create motion producer
+        fr_path = "framebuffer:" + media_file.path + "?" + str(speed)
+        motion_producer = mlt.Producer(profile, None, str(fr_path))
+    
+        # Create sequence and add motion producer into it
+        seq = sequence.Sequence(profile)
+        seq.create_default_tracks()
+        track = seq.tracks[seq.first_video_index]
+        track.append(motion_producer, 0, motion_producer.get_length() - 1)
+
+        # Create render consumer
+        consumer = mlt.Consumer(profile, "avformat", write_file)
+        consumer.set("real_time", -1)
+
+        # Set Encoding options
+        args_vals_list = encoding_option.get_args_vals_tuples_list(profile, quality_option)
+        for arg_val in args_vals_list:
+            k, v = arg_val
+            consumer.set(k, v)
+        # Set Quality options
+        for k, v in quality_option.add_map.iteritems():
+            consumer.set(str(k), str(v))
+
+        # start and end frames
+        start_frame = 0
+        end_frame = seq.get_length()
+        if range_selection == 1:
+            start_frame = media_file.mark_in
+            end_frame = media_file.mark_out
+ 
+        # Launch render
+        renderer = MotionFileRender(write_file, seq.tractor, consumer, start_frame, end_frame)
+        renderer.start()
+        
+        window_updates = ProgressWindowThread(renderer, write_file)
+        window_updates.start()
+        
     else:
         dialog.destroy()
      
@@ -863,3 +903,64 @@ def _fill_FB_extension_label(fb_widgets):
     ext = encoding_options[enc_index].extension
     fb_widgets.extension_label.set_text("." + ext)
     
+
+class MotionFileRender(threading.Thread):
+    
+    def __init__(self, file_name, producer, consumer, start_frame, stop_frame):
+        self.file_name = file_name
+        self.producer = producer
+        self.consumer = consumer
+        self.start_frame = start_frame
+        self.stop_frame = stop_frame
+
+        threading.Thread.__init__(self)
+
+    def run(self):
+        self.running = True
+        self.connect_and_start()
+    
+        while self.running:
+            if self.producer.frame() > self.stop_frame:
+                self.consumer.stop()
+                self.producer.set_speed(0)
+            time.sleep(0.1)
+
+    def connect_and_start(self):
+        self.consumer.purge()
+        self.consumer.connect(self.producer)
+        self.producer.set_speed(0)
+        self.producer.seek(self.start_frame) #self.producer.seek(start_frame)
+        self.consumer.start()
+        self.producer.set_speed(1)
+        
+class ProgressWindowThread(threading.Thread):
+    def __init__(self, clip_renderer, file_name):
+        self.file_name = file_name
+        self.clip_renderer = clip_renderer
+
+        threading.Thread.__init__(self)
+    
+    def run(self):        
+        self.running = True
+        progress_bar = gtk.ProgressBar()
+        dialog = dialogs.motion_clip_render_progress_dialog(self._render_stop, self.file_name, progress_bar, gui.editor_window.window)
+        producer = self.clip_renderer.producer
+        render_length = self.clip_renderer.stop_frame - self.clip_renderer.start_frame + 1
+        while self.running:            
+            if (producer.get_length() - 1) < 1:
+                render_fraction = 1.0
+            else:
+                current_frame = producer.frame() - self.clip_renderer.start_frame
+                render_fraction = (float(current_frame)) / (float(render_length))
+                if render_fraction > 1.0:
+                    render_fraction = 1.0
+            progress_bar.set_fraction(render_fraction)
+            if producer.get_speed() == 0:
+                self._render_stop(dialog, 0)
+            time.sleep(1)
+
+    def _render_stop(self, dialog, response_id):
+        dialog.destroy()
+        self.clip_renderer.running = False
+        self.running = False
+        open_media_file_callback(self.file_name)

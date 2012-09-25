@@ -313,6 +313,24 @@ def get_render_progress_panel():
     alignment.add(progress_vbox)
     return alignment
 
+def get_motion_render_progress_panel(file_name, progress_bar):
+    status_box = gtk.HBox(False, 2)
+    status_box.pack_start(gtk.Label(file_name),False, False, 0)
+    status_box.pack_start(gtk.Label(), True, True, 0)
+    
+    filler = gtk.Label()
+    filler.set_size_request(10, 10)
+
+    progress_vbox = gtk.VBox(False, 2)
+    progress_vbox.pack_start(status_box, False, False, 0)
+    progress_vbox.pack_start(filler, False, False, 0)
+    progress_vbox.pack_start(progress_bar, False, False, 0)
+    
+    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment.set_padding(12, 12, 12, 12)
+    alignment.add(progress_vbox)
+    return alignment
+
 def _group_selection_changed(group_combo, filters_list_view):
     group_name, filters_array = mltfilters.groups[group_combo.get_active()]
     filters_list_view.fill_data_model(filters_array)

@@ -1118,3 +1118,6 @@ def _select_treeview_on_pos_and_return_row_and_column_title(event, treeview):
     (model, rows) = selection.get_selected_rows()
     row = max(rows[0])
     return (row, title)
+
+# We need to do this on app start-up
+render.open_media_file_callback = open_rendered_file

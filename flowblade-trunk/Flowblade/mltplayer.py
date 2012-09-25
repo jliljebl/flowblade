@@ -313,7 +313,6 @@ class Player(threading.Thread):
             return gui.pos_bar.producer.get_length()
 
     def start_xml_rendering(self, path):
-        print "start xml"
         self.xml_render = True
         xml_consumer = mlt.Consumer(self.profile, "xml", str(path))
         self.start_rendering(xml_consumer)
@@ -343,7 +342,6 @@ class Player(threading.Thread):
             render.exit_render_gui()
             render.maybe_open_rendered_file_in_bin()
         else:
-            print "xml render done"
             self.xml_render == False
 
     def shutdown(self):
