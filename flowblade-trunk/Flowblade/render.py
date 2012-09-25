@@ -679,7 +679,7 @@ def _load_opts_dialog_callback(dialog, response_id):
         dialog.destroy()
 
 # ------------------------------------------------------------- framebuffer clip rendering
-# Rendering a slow fast motion version of media file is bin.
+# Rendering a slow/fast motion version of media file.
 # We're using 300 lines worth of copy/paste from above, because lazy
 def render_frame_buffer_clip(media_file):
     
@@ -691,10 +691,22 @@ def render_frame_buffer_clip(media_file):
                         (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
                         _("Render").encode('utf-8'), gtk.RESPONSE_ACCEPT))
 
-    media_file_label = gtk.Label("Source file: <b>" + media_file.name + "</b>")
-    media_file_label.set_use_markup(True)
-    mf_row = guiutils.get_left_justified_box([media_file_label])
-
+    media_file_label = gtk.Label(_("Source Media File: "))
+    media_name = gtk.Label("<b>" + media_file.name + "</b>")
+    media_name.set_use_markup(True)
+    SOURCE_PAD = 8
+    SOURCE_HEIGHT = 20
+    mf_row = guiutils.get_left_justified_box([media_file_label,  guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), media_name])
+    
+    mark_in = gtk.Label(_("<b>not set</b>"))
+    mark_out = gtk.Label(_("<b>not set</b>"))
+    if media_file.mark_in != -1:
+        mark_in = gtk.Label("<b>" + utils.get_tc_string(media_file.mark_in) + "</b>")
+    if media_file.mark_out != -1:
+        mark_out = gtk.Label("<b>" + utils.get_tc_string(media_file.mark_out) + "</b>")
+    mark_in.set_use_markup(True)
+    mark_out.set_use_markup(True)
+    
     fb_widgets = utils.EmptyClass()
 
     fb_widgets.file_name = gtk.Entry()
@@ -727,13 +739,7 @@ def render_frame_buffer_clip(media_file):
     hbox.pack_start(label, False, False, 0)
     hbox.pack_start(slider_hbox, False, False, 0)
 
-    fb_widgets.use_project_profile_check = gtk.CheckButton()
-    fb_widgets.use_project_profile_check.set_active(True)
-    #fb_widgets.use_project_profile_check.connect("toggled", _use_project_check_toggled)
-
-    fb_widgets.out_profile_combo = gtk.combo_box_new_text() # filled later when current sequence known
-    #fb_widgets.out_profile_combo.connect('changed', lambda w:  _out_profile_changed())
-    #fb_widgets.out_profile_combo.set_sensitive(False)
+    fb_widgets.out_profile_combo = gtk.combo_box_new_text()
     _fill_FB_out_profile_widgets(fb_widgets)
     
     # Encoding
@@ -741,16 +747,40 @@ def render_frame_buffer_clip(media_file):
     for encoding in encoding_options:
         fb_widgets.encodings_cb.append_text(encoding.name)
     fb_widgets.encodings_cb.set_active(DEFAULT_ENCODING_INDEX)
-    """
     fb_widgets.encodings_cb.connect("changed", 
-                              lambda w,e: _encoding_selection_changed(), 
+                              lambda w,e: _fill_FB_quality_combo_box(fb_widgets), 
                               None)
-    """
+
     fb_widgets.quality_cb = gtk.combo_box_new_text()
     _fill_FB_quality_combo_box(fb_widgets)
+
+    objects_list = gtk.TreeStore(str, bool)
+    objects_list.append(None, [_("Full Source Length"), True])
+    if media_file.mark_in != -1 and media_file.mark_out != -1:
+        range_available = True
+    else:
+        range_available = False
+    objects_list.append(None, [_("Source Mark In to Mark Out"), range_available])
     
+    fb_widgets.render_range = gtk.ComboBox(objects_list)
+    renderer_text = gtk.CellRendererText()
+    fb_widgets.render_range.pack_start(renderer_text, True)
+    fb_widgets.render_range.add_attribute(renderer_text, "text", 0)
+    fb_widgets.render_range.add_attribute(renderer_text, 'sensitive', 1)
+    fb_widgets.render_range.set_active(0)
+    fb_widgets.render_range.show()
+
+    """
+    fb_widgets.render_range = gtk.combo_box_new_text()
+    fb_widgets.render_range.append_text(_("Full Source Length"))
+    fb_widgets.render_range.append_text(_("Source Mark In to Mark Out"))
+    fb_widgets.render_range.set_active(0)
+    """
+
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(mf_row, False, False, 0)
+    vbox.pack_start(guiutils.get_left_justified_box([gtk.Label(_("Mark In: ")), guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), mark_in]), False, False, 0)
+    vbox.pack_start(guiutils.get_left_justified_box([gtk.Label(_("Mark Out: ")), guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), mark_out]), False, False, 0)
     vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
     vbox.pack_start(hbox, False, False, 0)
     vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
@@ -759,7 +789,9 @@ def render_frame_buffer_clip(media_file):
     vbox.pack_start(guiutils.get_two_column_box(gtk.Label(_("Target Profile:")), fb_widgets.out_profile_combo, 200), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(gtk.Label(_("Target Encoding:")), fb_widgets.encodings_cb, 200), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(gtk.Label(_("Target Quality:")), fb_widgets.quality_cb, 200), False, False, 0)
-
+    vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(gtk.Label(_("Rander Range:")), fb_widgets.render_range, 180), False, False, 0)
+    
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(6, 24, 24, 24)
     alignment.add(vbox)
@@ -774,7 +806,7 @@ def _render_frame_buffer_clip_callback(dialog, response_id, data):
         dialog.destroy()
     else:
         dialog.destroy()
-        
+     
 def _fill_FB_out_profile_widgets(fb_widgets):
     """
     Called some time after widget creation when current_sequence is known and these can be filled.

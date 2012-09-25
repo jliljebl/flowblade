@@ -50,6 +50,16 @@ def get_right_justified_box(widgets):
         hbox.pack_start(widget, False, False, 0)
     return hbox
 
+def get_sides_justified_box(widgets, count_of_widgets_on_the_left=1):
+    hbox = gtk.HBox()
+    wgets_added = 0
+    for widget in widgets:
+        hbox.pack_start(widget, False, False, 0)
+        wgets_added +=1
+        if wgets_added == count_of_widgets_on_the_left:
+            hbox.pack_start(gtk.Label(), True, True, 0)
+    return hbox
+    
 def get_two_column_box(widget1, widget2, left_width):
     hbox = gtk.HBox()
     left_box = get_left_justified_box([widget1])
