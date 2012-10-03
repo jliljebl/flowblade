@@ -375,6 +375,14 @@
         <property name="levels" args="range_in=2,50 displayname=Levels">0.2</property>
         <property name="matrixid" args="editor=combobox displayname=Matrix!type exptype=default cbopts=magic2x2:0.0,magic4x4:0.12,ordered4x4:0.23,lines4x4:0.34,halftone6x6:0.45,ordered6x6:0.56,ordered8x8:0.67,cluster3:0.78,cluster4:0.89,cluster8:1.0">1.0</property>
     </filter>
+   <filter id="frei0r.colorhalftone">
+        <name>ColorHalftone</name>
+        <group>Artistic</group>
+        <property name="dot_radius" args="range_in=1,10 range_out=0,1.0 displayname=Dot!Radius">0.4</property>
+        <property name="cyan_angle" args="range_in=0,360 range_out=0,1.0 displayname=Cyan!Amount">0.3</property>
+        <property name="magenta_angle" args="range_in=0,360 range_out=0,1.0 displayname=Magenta!Amount">0.45</property>
+        <property name="yellow_angle" args="range_in=0,360 range_out=0,1.0 displayname=Yellow!Amount">0.25</property>
+   </filter>
 
 
 
@@ -412,9 +420,15 @@
         <property name="hori" args="range_in=1,50 range_out=1,50 displayname=Horizontal">7</property>
         <property name="vert" args="range_in=1,50 range_out=1,50 displayname=Vertical">7</property>
    </filter>
+   <filter id="frei0r.rgbnoise">
+        <name>RGBNoise</name>
+        <group>Blur</group>
+        <property name="noise" args="range_in=0,100 range_out=0,1.0 displayname=Noise!Amount">0.2</property>
+   </filter>
 
-
-
+  
+  
+  
     <!-- COLOR -->
     <filter id="greyscale">
         <name>Grayscale</name>
@@ -568,6 +582,9 @@
     <filter id="frei0r.colortap">
         <name>ColorTap</name>
         <group>Color Effect</group>
+        <property name="table" args="editor=combobox exptype=default cbopts=XPro:xpro,OldPhoto:old_photo,Sepia:sepia,Heat:heat,XRay:xray,RedGreen:red_green,YellowBlue:yellow_blue,Esses:esses">xpro</property>
+
+        
     </filter>
     <filter id="frei0r.softglow">
         <name>SoftGlow</name>
@@ -577,6 +594,14 @@
         <property name="sharpness" args="range_in=0,100 displayname=Sharpness">0.85</property>
         <property name="blurblend" args="range_in=0,100 displayname=Blendtype">0.0</property>
     </filter>
+    <filter id="frei0r.sigmoidaltransfer">
+        <name>Stamp</name>
+        <group>Color Effect</group>
+        <property name="brightness" args="range_in=0,100 displayname=Brightness">0.75</property>
+        <property name="sharpness" args="range_in=0,100 displayname=Sharpness">0.85</property>
+    </filter>
+
+
 
     <!-- DISTORT -->
     <filter id="frei0r.distort0r">

@@ -92,6 +92,10 @@ widgets = utils.EmptyClass()
 
 aborted = False
 
+# Motion clip rendering
+motion_renderer = None
+motion_progress_update = None
+
 # Replace empty strings with None values
 def _get_attribute(node, attr_name):
     value = node.getAttribute(attr_name)
@@ -782,8 +786,8 @@ def render_frame_buffer_clip(media_file):
 
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(mf_row, False, False, 0)
-    vbox.pack_start(guiutils.get_left_justified_box([gtk.Label(_("Mark In: ")), guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), mark_in]), False, False, 0)
-    vbox.pack_start(guiutils.get_left_justified_box([gtk.Label(_("Mark Out: ")), guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), mark_out]), False, False, 0)
+    vbox.pack_start(guiutils.get_left_justified_box([gtk.Label(_("Source Mark In: ")), guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), mark_in]), False, False, 0)
+    vbox.pack_start(guiutils.get_left_justified_box([gtk.Label(_("Source_Mark Out: ")), guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), mark_out]), False, False, 0)
     vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
     vbox.pack_start(hbox, False, False, 0)
     vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
@@ -793,7 +797,7 @@ def render_frame_buffer_clip(media_file):
     vbox.pack_start(guiutils.get_two_column_box(gtk.Label(_("Target Encoding:")), fb_widgets.encodings_cb, 200), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(gtk.Label(_("Target Quality:")), fb_widgets.quality_cb, 200), False, False, 0)
     vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
-    vbox.pack_start(guiutils.get_two_column_box(gtk.Label(_("Rander Range:")), fb_widgets.render_range, 180), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(gtk.Label(_("Render Range:")), fb_widgets.render_range, 180), False, False, 0)
     
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(6, 24, 24, 24)
@@ -861,15 +865,29 @@ def _render_frame_buffer_clip_callback(dialog, response_id, fb_widgets, media_fi
             end_frame = media_file.mark_out
  
         # Launch render
-        renderer = MotionFileRender(write_file, seq.tractor, consumer, start_frame, end_frame)
-        renderer.start()
+        global motion_renderer, motion_progress_update
+        motion_renderer = MotionFileRender(write_file, seq.tractor, consumer, start_frame, end_frame)
+        motion_renderer.start()
         
-        window_updates = ProgressWindowThread(renderer, write_file)
-        window_updates.start()
+        progress_bar = gtk.ProgressBar()
+        dialog = dialogs.motion_clip_render_progress_dialog(_FB_render_stop, write_file, progress_bar, gui.editor_window.window)
+        
+        motion_progress_update = ProgressWindowThread(dialog, progress_bar, motion_renderer)
+        motion_progress_update.start()
         
     else:
         dialog.destroy()
-     
+
+def _FB_render_stop(dialog, response_id):
+    dialog.destroy()
+
+    global motion_renderer, motion_progress_update
+    motion_renderer.running = False
+    motion_progress_update.running = False
+    open_media_file_callback(motion_renderer.file_name)
+    motion_renderer.running = None
+    motion_progress_update.running = None
+    
 def _fill_FB_out_profile_widgets(fb_widgets):
     """
     Called some time after widget creation when current_sequence is known and these can be filled.
@@ -919,7 +937,7 @@ class MotionFileRender(threading.Thread):
         self.running = True
         self.connect_and_start()
     
-        while self.running:
+        while self.running: #set false from ProgressWindowThread
             if self.producer.frame() > self.stop_frame:
                 self.consumer.stop()
                 self.producer.set_speed(0)
@@ -932,35 +950,38 @@ class MotionFileRender(threading.Thread):
         self.producer.seek(self.start_frame) #self.producer.seek(start_frame)
         self.consumer.start()
         self.producer.set_speed(1)
-        
+    
+    def get_render_fraction(self):
+        render_length = self.stop_frame - self.start_frame + 1
+        if (self.producer.get_length() - 1) < 1:
+            render_fraction = 1.0
+        else:
+            current_frame = self.producer.frame() - self.start_frame
+            render_fraction = (float(current_frame)) / (float(render_length))
+        if render_fraction > 1.0:
+            render_fraction = 1.0
+        return render_fraction
+
+
 class ProgressWindowThread(threading.Thread):
-    def __init__(self, clip_renderer, file_name):
-        self.file_name = file_name
+    def __init__(self, dialog, progress_bar, clip_renderer):
+        self.dialog = dialog
+        self.progress_bar = progress_bar
         self.clip_renderer = clip_renderer
 
         threading.Thread.__init__(self)
     
     def run(self):        
         self.running = True
-        progress_bar = gtk.ProgressBar()
-        dialog = dialogs.motion_clip_render_progress_dialog(self._render_stop, self.file_name, progress_bar, gui.editor_window.window)
-        producer = self.clip_renderer.producer
-        render_length = self.clip_renderer.stop_frame - self.clip_renderer.start_frame + 1
-        while self.running:            
-            if (producer.get_length() - 1) < 1:
-                render_fraction = 1.0
-            else:
-                current_frame = producer.frame() - self.clip_renderer.start_frame
-                render_fraction = (float(current_frame)) / (float(render_length))
-                if render_fraction > 1.0:
-                    render_fraction = 1.0
-            progress_bar.set_fraction(render_fraction)
-            if producer.get_speed() == 0:
-                self._render_stop(dialog, 0)
+        
+        while self.running:         
+            render_fraction = self.clip_renderer.get_render_fraction()
+            self.progress_bar.set_fraction(render_fraction)
+            if self.clip_renderer.producer.get_speed() == 0:
+                self.progress_bar.set_fraction(1.0)
+                time.sleep(0.5)
+                _FB_render_stop(self.dialog, 0)
+                
             time.sleep(1)
 
-    def _render_stop(self, dialog, response_id):
-        dialog.destroy()
-        self.clip_renderer.running = False
-        self.running = False
-        open_media_file_callback(self.file_name)
+

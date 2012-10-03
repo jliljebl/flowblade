@@ -1,13 +1,17 @@
 
 import copy
 import gtk
+import os
 import pango
 import pangocairo
 import pickle
+import time
+import threading
 
 import dialogs
 from editorstate import PLAYER
 from editorstate import PROJECT
+import editorpersistance
 import gui
 import guicomponents
 import guiutils
@@ -419,18 +423,22 @@ class Titler(gtk.Window):
         if response_id == gtk.RESPONSE_ACCEPT:
             try:
                 filenames = dialog.get_filenames()
+                dialog.destroy()
                 save_path = filenames[0]
                 self.view_editor.write_layers_to_png(save_path)
+
+                while(gtk.events_pending()):
+                    #print "iter"
+                    gtk.main_iteration()
+ 
                 if _open_saved_in_bin:
-                    PROJECT().add_media_file(save_path)
-                    gui.media_list_view.fill_data_model()
-                    gui.bin_list_view.fill_data_model()
+                    open_in_bin_thread = AddMediaFileThread(save_path)
+                    open_in_bin_thread.start()
                 # INFOWINDOW
             except:
                 # INFOWINDOW
                 dialog.destroy()
                 return
-            dialog.destroy()
         else:
             dialog.destroy()
 
@@ -844,3 +852,19 @@ class TextLayerListView(gtk.VBox):
         self.scroll.queue_draw()
 
 
+class AddMediaFileThread(threading.Thread):
+    
+    def __init__(self, filename):
+        threading.Thread.__init__(self)
+        self.filename = filename
+
+    def run(self):
+        PROJECT().add_media_file(self.filename)
+        editorpersistance.prefs.last_opened_media_dir = os.path.dirname(self.filename)
+        editorpersistance.save()
+
+        # Update editor gui
+        gtk.gdk.threads_enter()
+        gui.media_list_view.fill_data_model()
+        gui.bin_list_view.fill_data_model()
+        gtk.gdk.threads_leave()

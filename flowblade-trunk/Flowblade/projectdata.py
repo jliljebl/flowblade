@@ -104,12 +104,12 @@ class Project:
         
         # Get length and icon
         if media_type == appconsts.AUDIO:
-            icon_path = respaths.IMAGE_PATH + "audio_file.png" # icon's from Oxygen theme, check licence sometimes
+            icon_path = respaths.IMAGE_PATH + "audio_file.png"
             length = thumbnail_thread.get_file_length(file_path)
         else: # For non-audio we need write a thumbbnail file and get file lengh while we're at it
-            (icon_path, length) = thumbnail_thread.write_image(file_path)
-        
-        # Create media file object
+             (icon_path, length) = thumbnail_thread.write_image(file_path)
+
+          # Create media file object
         media_file = MediaFile(self.next_media_file_id, file_path, 
                                file_name, media_type, length, icon_path)
             
@@ -258,7 +258,6 @@ class ThumbnailThread(threading.Thread):
         """
         Runs and blocks 
         """
-        # There are seg faults in MLT unless this...?
         self.file_path = ""
         self.thumbnail_path = ""
         self.consumer = None
@@ -290,7 +289,7 @@ class ThumbnailThread(threading.Thread):
         self.consumer.set("vcodec", "png")
 
         # Create one frame producer
-        self.producer = mlt.Producer(self.profile, '%s' %  self.file_path)
+        self.producer = mlt.Producer(self.profile, str(self.file_path))
         length = self.producer.get_length()
         frame = length / 2
         self.producer = self.producer.cut(frame, frame)
@@ -308,7 +307,7 @@ class ThumbnailThread(threading.Thread):
         self.file_path = file_path
 
         # Create one frame producer
-        self.producer = mlt.Producer(self.profile, '%s' %  self.file_path)
+        self.producer = mlt.Producer(self.profile, str(self.file_path))
         return self.producer.get_length()
 
     def shutdown(self):
