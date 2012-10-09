@@ -591,7 +591,7 @@
         <property name="blur" args="range_in=0,100 displayname=Blur">0.5</property>
         <property name="brightness" args="range_in=0,100 displayname=Brightness">0.75</property>
         <property name="sharpness" args="range_in=0,100 displayname=Sharpness">0.85</property>
-        <property name="blurblend" args="range_in=0,100 displayname=Blendtype">0.0</property>
+        <property name="blurblend" args="range_in=0,100 displayname=Blend!Type">0.0</property>
     </filter>
     <filter id="frei0r.sigmoidaltransfer">
         <name>Newspaper</name>
