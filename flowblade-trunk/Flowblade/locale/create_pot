@@ -1,0 +1,10 @@
+#/usr/bin/bash
+
+# Move to Flowblade root directory
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $SCRIPT_DIR
+cd ..
+ROOT_DIR=$(pwd)
+
+# Creates .pot file that can be turned to .po file for each language
+xgettext -o locale/Flowblade/Flowblade.pot app.py useraction.py editorwindow.py clipeffectseditor.py compositeeditor.py dialogs.py editevent.py editorpersistance.py guicomponents.py movemodes.py panels.py persistance.py projectdata.py render.py syncsplitevent.py translations.py mlttransitions.py propertyeditorbuilder.py keyframeeditor.py tools/titler.py

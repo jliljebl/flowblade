@@ -1,21 +1,21 @@
 """
-	Flowblade Movie Editor is a nonlinear video editor.
+    Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-	This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
 
-	Flowblade Movie Editor is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+    Flowblade Movie Editor is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-	Flowblade Movie Editor is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Flowblade Movie Editor is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU General Public License
+    along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import gettext
@@ -36,6 +36,7 @@ def init_languages():
     lc, encoding = locale.getdefaultlocale()
     if (lc):
         langs = [lc]
+    print "Locale:", lc
 
     language = os.environ.get('LANGUAGE', None)
     if (language):
@@ -46,8 +47,8 @@ def init_languages():
 
     # Get the language to use
     global lang
-    #lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=["fi"], fallback=True) # Testing, comment out for production
-    lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=langs, fallback=True)
+    lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=["fi"], fallback=True) # Testing, comment out for production
+    #lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=langs, fallback=True)
     lang.install(APP_NAME) # makes _() a build-in available in all modules without imports
 
 def get_filter_name(f_name):
@@ -173,9 +174,32 @@ def load_filters_translations():
     filter_names["Rotate"]= _("Rotate")
     filter_names["Shear"]= _("Shear")
     filter_names["Translate"]= _("Translate")
-    
+
+    # 0.8 added
+    filter_names["Color Select"]= _("Color Select")
+    filter_names["Alpha Modify"]= _("Alpha Modify")
+    filter_names["Spill Supress"]= _("Spill Supress")
+    filter_names["RGB Noise"]= _("RGB Noise")
+    filter_names["Box Blur"]= _("Box Blur")
+    filter_names["IRR Blur"]= _("IRR Blur")
+    filter_names["Color Halftone"]= _("Color Halftone")
+    filter_names["Dither"]= _("Dither")
+    filter_names["Vignette"]= _("Vignette")
+    filter_names["Emboss"]= _("Emboss")
+    filter_names["3 Point Balance"]= _("3 Point Balance")
+    filter_names["Colorize"]= _("Colorize")
+    filter_names["Brightness Keyframed"]= _("Brightness Keyframed")
+    filter_names["RGB Adjustment"]= _("RGB Adjustment")
+    filter_names["Color Tap"]= _("Color Tap")
+    filter_names["Posterize"]= _("Posterize")
+    filter_names["Soft Glow"]= _("Soft Glow")
+    filter_names["Newspaper"]= _("Newspaper")
+
+
+
     # param names
     global param_names
+
     # filters
     param_names["Position"] = _("Position")
     param_names["Grad width"] = _("Grad width")
@@ -391,6 +415,48 @@ def load_filters_translations():
     param_names["Rotate X"] = _("Rotate X")
     param_names["Rotate Y"] = _("Rotate Y")
     param_names["Rotate Z"] = _("Rotate Z")
+    # filters 0.8
+    param_names["Edge Mode"] = _("Edge Mode")
+    param_names["Sel. Space"] = _("Sel. Space")
+    param_names["Operation"] = _("Operation")
+    param_names["Hard"] = _("Hard")
+    param_names["R/A/Hue"] = _("R/A/Hue")
+    param_names["G/B/Chromae"] = _("G/B/Chroma")
+    param_names["B/I/I"] = _("B/I/I")
+    param_names["Supress"] = _("Supress")
+    param_names["Horizontal"] = _("Horizontal")
+    param_names["Vertical"] = _("Vertical")
+    param_names["Type"] = _("Type")
+    param_names["Edge"] = _("Edge")
+    param_names["Dot Radius"] = _("Dot Radius")
+    param_names["Cyan Angle"] = _("Cyan Angle")
+    param_names["Magenta Angle"] = _("Magenta Angle")
+    param_names["Yellow Angle"] = _("Yellow Angle")
+    param_names["Levels"] = _("Levels")
+    param_names["Matrix Type"] = _("Matrix Type")
+    param_names["Aspect"] = _("Aspect")
+    param_names["Center Size"] = _("Center Size")
+    param_names["Azimuth"] = _("Azimuth")
+    param_names["Lightness"] = _("Lightness")
+    param_names["Bump Height"] = _("Bump Height")
+    param_names["Gray"] = _("Gray")
+    param_names["Split Preview"] = _("Split Preview")
+    param_names["Source on Left"] = _("Source on Left")
+    param_names["Lightness"] = _("Lightness")
+    param_names["Input black level"] = _("Input black level")
+    param_names["Input white level"] = _("Input white level")
+    param_names["Black output"] = _("Black output")
+    param_names["White output"] = _("White output")
+    param_names["Red"] = _("Red")
+    param_names["Green"] = _("Green")
+    param_names["Blue"] = _("Blue")
+    param_names["Action"] = _("Action")
+    param_names["Keep Luma"] = _("Keep Luma")
+    param_names["Luma Formula"] = _("Luma Formula")
+    param_names["Effect"] = _("Effect")
+    param_names["Sharpness"] = _("Sharpness")
+    param_names["Blend Type"] = _("Blend Type")
+
     # compositors
     param_names["Opacity"] = _("Opacity")
     param_names["Shear X"] = _("Shear X")

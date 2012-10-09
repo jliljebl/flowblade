@@ -1,0 +1,25 @@
+#/usr/bin/bash
+
+# Get language
+LANG=$1
+echo "Compiling .mo file for ISO 639-1 language code: $LANG"
+
+# Move to Flowblade root directory
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $SCRIPT_DIR
+cd ..
+ROOT_DIR=$(pwd)
+
+# Check if directory for translation already exists
+PO_FILE=$ROOT_DIR"/locale/"$LANG"/LC_MESSAGES/Flowblade.po"
+if [ ! -f $PO_FILE ]; then
+  echo "Translation file $PO_FILE does not exist."
+  echo "No .mo files were compiled."
+  exit 1
+fi
+
+# Create mo file
+MO_FILE=$ROOT_DIR"/locale/"$LANG"/LC_MESSAGES/Flowblade.mo"
+msgfmt --output-file=$MO_FILE $PO_FILE
+
+echo "Done."

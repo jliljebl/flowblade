@@ -47,8 +47,8 @@ def new_project_dialog(callback):
 
     dialog = gtk.Dialog(_("New Project"), None,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
-                        gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
+                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                         _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
                         
     out_profile_combo = gtk.combo_box_new_text()
     profiles = mltprofiles.get_profiles()
@@ -106,8 +106,8 @@ def _new_project_profile_changed(combo_box, profile_info_box):
 def load_project_dialog(callback):    
     dialog = gtk.FileChooserDialog(_("Select Project File"), None, 
                                    gtk.FILE_CHOOSER_ACTION_OPEN, 
-                                   (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
-                                   gtk.STOCK_OK, gtk.RESPONSE_ACCEPT), None)
+                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                                    _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
     dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
     dialog.set_select_multiple(False)
     file_filter = gtk.FileFilter()
@@ -119,8 +119,8 @@ def load_project_dialog(callback):
 def load_titler_data_dialog(callback):    
     dialog = gtk.FileChooserDialog(_("Select Titler Data File"), None, 
                                    gtk.FILE_CHOOSER_ACTION_OPEN, 
-                                   (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
-                                   gtk.STOCK_OK, gtk.RESPONSE_ACCEPT), None)
+                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                                    _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
     dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
     dialog.set_select_multiple(False)
     dialog.connect('response', callback)
@@ -129,8 +129,8 @@ def load_titler_data_dialog(callback):
 def save_project_as_dialog(callback, current_name, open_dir):    
     dialog = gtk.FileChooserDialog(_("Save Project As"), None, 
                                    gtk.FILE_CHOOSER_ACTION_SAVE, 
-                                   (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
-                                   gtk.STOCK_SAVE, gtk.RESPONSE_ACCEPT), None)
+                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                                    _("Save").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
     dialog.set_action(gtk.FILE_CHOOSER_ACTION_SAVE)
     dialog.set_current_name(current_name)
     dialog.set_do_overwrite_confirmation(True)
@@ -147,7 +147,7 @@ def save_project_as_dialog(callback, current_name, open_dir):
 def export_xml_dialog(callback, project_name):    
     dialog = gtk.FileChooserDialog(_("Export Project as XML to"), None, 
                                    gtk.FILE_CHOOSER_ACTION_SAVE, 
-                                   (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
+                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
                                    _("Export").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
     dialog.set_action(gtk.FILE_CHOOSER_ACTION_SAVE)
     project_name = project_name.strip(".flb")
@@ -161,8 +161,8 @@ def export_xml_dialog(callback, project_name):
 def save_titler_graphic_as_dialog(callback, current_name, open_dir):    
     dialog = gtk.FileChooserDialog(_("Save Titler Graphic As"), None, 
                                    gtk.FILE_CHOOSER_ACTION_SAVE, 
-                                   (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
-                                   gtk.STOCK_SAVE, gtk.RESPONSE_ACCEPT), None)
+                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                                   _("Save").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
     dialog.set_action(gtk.FILE_CHOOSER_ACTION_SAVE)
     dialog.set_current_name(current_name)
     dialog.set_do_overwrite_confirmation(True)
@@ -177,10 +177,10 @@ def save_titler_graphic_as_dialog(callback, current_name, open_dir):
     dialog.show()
     
 def save_titler_data_as_dialog(callback, current_name, open_dir):    
-    dialog = gtk.FileChooserDialog(_("Save Tiler Layers As"), None, 
+    dialog = gtk.FileChooserDialog(_("Save Titler Layers As"), None, 
                                    gtk.FILE_CHOOSER_ACTION_SAVE, 
-                                   (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
-                                   gtk.STOCK_SAVE, gtk.RESPONSE_ACCEPT), None)
+                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                                   _("Save").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
     dialog.set_action(gtk.FILE_CHOOSER_ACTION_SAVE)
     dialog.set_current_name(current_name)
     dialog.set_do_overwrite_confirmation(True)
@@ -196,8 +196,8 @@ def save_titler_data_as_dialog(callback, current_name, open_dir):
 def save_ffmpep_optsdialog(callback, opts_extension):
     dialog = gtk.FileChooserDialog(_("Save Render Args As"), None, 
                                    gtk.FILE_CHOOSER_ACTION_SAVE, 
-                                   (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
-                                   gtk.STOCK_SAVE, gtk.RESPONSE_ACCEPT), None)
+                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                                   _("Save").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
     dialog.set_action(gtk.FILE_CHOOSER_ACTION_SAVE)
     dialog.set_current_name("untitled" + opts_extension)
     dialog.set_do_overwrite_confirmation(True)
@@ -212,8 +212,8 @@ def save_ffmpep_optsdialog(callback, opts_extension):
 def load_ffmpep_optsdialog(callback, opts_extension):
     dialog = gtk.FileChooserDialog(_("Load Render Args File"), None, 
                                    gtk.FILE_CHOOSER_ACTION_OPEN, 
-                                   (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
-                                   gtk.STOCK_OK, gtk.RESPONSE_ACCEPT), None)
+                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                                    _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
     dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
     dialog.set_select_multiple(False)
     file_filter = gtk.FileFilter()
@@ -242,7 +242,7 @@ def render_progress_dialog(callback, parent_window):
     dialog = gtk.Dialog(_("Render Progress"),
                          parent_window,
                          gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                         (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
+                         (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT))
 
     panel = panels.get_render_progress_panel()
     
@@ -258,7 +258,7 @@ def motion_clip_render_progress_dialog(callback, file_name, progress_bar, parent
     dialog = gtk.Dialog(_("Rendering Motion Clip"),
                          parent_window,
                          gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                         (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT))
+                         (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT))
 
     panel = panels.get_motion_render_progress_panel(file_name, progress_bar)
     
@@ -319,7 +319,7 @@ def warning_message_with_callback(primary_txt, secondary_txt, parent_window, is_
     dialog = gtk.Dialog("",
                         parent_window,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
+                        ( _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
     dialog.vbox.pack_start(content, True, True, 0)
     dialog.set_has_separator(False)
     dialog.set_resizable(False)
@@ -335,8 +335,8 @@ def warning_confirmation(callback, primary_txt, secondary_txt, parent_window, da
     dialog = gtk.Dialog("",
                         parent_window,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
-                        gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
+                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                         _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
     dialog.vbox.pack_start(align, True, True, 0)
     dialog.set_has_separator(False)
     dialog.set_resizable(False)
@@ -349,7 +349,7 @@ def warning_confirmation(callback, primary_txt, secondary_txt, parent_window, da
 def about_dialog(parent_window):
     dialog = gtk.Dialog(_("About"), None,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
+                        (_("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
 
     filler3 = gtk.Label()
     img = gtk.image_new_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
@@ -451,7 +451,7 @@ def about_dialog(parent_window):
 def color_clip_dialog(callback):
     dialog = gtk.Dialog(_("Create Color Clip"), None,
                     gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                    (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
+                    (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
                     _("Create").encode('utf-8'), gtk.RESPONSE_ACCEPT))
     alignment, selection_widgets = panels.get_color_clip_panel()
     dialog.connect('response', callback, selection_widgets)
@@ -462,8 +462,8 @@ def color_clip_dialog(callback):
 def preferences_dialog(callback, thumbs_clicked_callback):
     dialog = gtk.Dialog(_("Editor Preferences"), None,
                     gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                    (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
-                    gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
+                    (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                    _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
     
     gen_opts_panel, gen_opts_widgets = panels.get_general_options_panel(thumbs_clicked_callback)
     edit_prefs_panel, edit_prefs_widgets = panels.get_edit_prefs_panel()
@@ -482,7 +482,7 @@ def preferences_dialog(callback, thumbs_clicked_callback):
 def file_properties_dialog(data):
     dialog = gtk.Dialog(_("File Properties"), None,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
+                        ( _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
                         
     panel = panels.get_file_properties_panel(data)
 
@@ -498,7 +498,7 @@ def file_properties_dialog(data):
 def clip_properties_dialog(data):
     dialog = gtk.Dialog(_("Clip Properties"), None,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
+                        ( _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
                         
     panel = panels.get_clip_properties_panel(data)
 
@@ -514,7 +514,7 @@ def clip_properties_dialog(data):
 def add_compositor_dialog(current_sequence, callback, data):
     dialog = gtk.Dialog(_("Composite Target Track"), None,
                     gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                    (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
+                    (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
                     _("Add Compositor").encode('utf-8'), gtk.RESPONSE_ACCEPT))
     panel, track_combo = panels.get_add_compositor_panel(current_sequence, data)
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
@@ -712,18 +712,18 @@ def get_tracks_count_change_dialog(callback):
 
     dialog = gtk.Dialog(_("Change Sequence Tracks Count"), None,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
-                        "Change Tracks", gtk.RESPONSE_ACCEPT))
+                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                        _("Change Tracks"), gtk.RESPONSE_ACCEPT))
 
     tracks_combo, tracks_combo_values_list = guicomponents.get_track_counts_combo_and_values_list()
     tracks_select = panels.get_two_column_box(gtk.Label(_("New Number of Tracks:")),
                                                tracks_combo,
                                                250)
-    info_text = "Please note:\n" + \
-                "* It is recommended that you save Project before completing this operation\n" + \
-                "* There is no Undo for this operation\n" + \
-                "* Current Undo Stack will be destroyed\n" + \
-                "* All Clips and Compositors on deleted Tracks will be permanently destroyed"
+    info_text = _("Please note:\n") + \
+                _("* It is recommended that you save Project before completing this operation\n") + \
+                _("* There is no Undo for this operation\n") + \
+                _("* Current Undo Stack will be destroyed\n") + \
+                _("* All Clips and Compositors on deleted Tracks will be permanently destroyed")
     info_label = gtk.Label(info_text)
     info_label.set_use_markup(True)
     info_box = guiutils.get_left_justified_box([info_label])
@@ -748,7 +748,7 @@ def get_tracks_count_change_dialog(callback):
 def get_new_sequence_dialog(callback, default_name):
     dialog = gtk.Dialog(_("Create New Sequence"), None,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
+                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
                         _("Create Sequence").encode('utf-8'), gtk.RESPONSE_ACCEPT))
 
     name_entry = gtk.Entry(30)

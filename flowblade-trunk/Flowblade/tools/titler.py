@@ -1,3 +1,22 @@
+"""
+    Flowblade Movie Editor is a nonlinear video editor.
+    Copyright 2012 Janne Liljeblad.
+
+    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+
+    Flowblade Movie Editor is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Flowblade Movie Editor is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
+"""
 
 import copy
 import gtk
@@ -120,7 +139,7 @@ class TitlerData:
 class Titler(gtk.Window):
     def __init__(self):
         gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
-        self.set_title("Titler")
+        self.set_title(_("Titler"))
 
         self.block_updates = False
         
@@ -243,11 +262,11 @@ class Titler(gtk.Window):
         buttons_box.pack_start(self.color_button, False, False, 0)
         buttons_box.pack_start(gtk.Label(), True, True, 0)
 
-        load_layers = gtk.Button("Load Layers")
+        load_layers = gtk.Button(_("Load Layers"))
         load_layers.connect("clicked", lambda w:self._load_layers_pressed())
-        save_layers = gtk.Button("Save Layers")
+        save_layers = gtk.Button(_("Save Layers"))
         save_layers.connect("clicked", lambda w:self._save_layers_pressed())
-        clear_layers = gtk.Button("Clear All")
+        clear_layers = gtk.Button(_("Clear All"))
         clear_layers.connect("clicked", lambda w:self._clear_layers_pressed())
 
         layers_save_buttons_row = gtk.HBox()
@@ -323,19 +342,19 @@ class Titler(gtk.Window):
         view_editor_editor_buttons_row.pack_start(positions_box, False, False, 0)
         view_editor_editor_buttons_row.pack_start(gtk.Label(), True, True, 0)
 
-        keep_label = gtk.Label("Keep Layers When Closed")
+        keep_label = gtk.Label(_("Keep Layers When Closed"))
         self.keep_layers_check = gtk.CheckButton()
         self.keep_layers_check.set_active(_keep_titler_data)
         self.keep_layers_check.connect("toggled", self._keep_layers_toggled)
         
-        open_label = gtk.Label("Open Saved Title In Bin")
+        open_label = gtk.Label(_("Open Saved Title In Bin"))
         self.open_in_current_check = gtk.CheckButton()
         self.open_in_current_check.set_active(_open_saved_in_bin)
         self.open_in_current_check.connect("toggled", self._open_saved_in_bin)
 
-        exit_b = guiutils.get_sized_button("Close", 150, 32)
+        exit_b = guiutils.get_sized_button(_("Close"), 150, 32)
         exit_b.connect("clicked", lambda w:close_titler())
-        save_titles_b = guiutils.get_sized_button("Save Title Graphic", 150, 32)
+        save_titles_b = guiutils.get_sized_button(_("Save Title Graphic"), 150, 32)
         save_titles_b.connect("clicked", lambda w:self._save_title_pressed())
         
         editor_buttons_row = gtk.HBox()
@@ -427,8 +446,8 @@ class Titler(gtk.Window):
                 save_path = filenames[0]
                 self.view_editor.write_layers_to_png(save_path)
 
+                # This forces the file on disk whixh we need to do
                 while(gtk.events_pending()):
-                    #print "iter"
                     gtk.main_iteration()
  
                 if _open_saved_in_bin:

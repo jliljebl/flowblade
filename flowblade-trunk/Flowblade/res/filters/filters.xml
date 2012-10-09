@@ -61,7 +61,7 @@
         <property name="Delta R / A / Hue" args="range_in=0,100 exptype=singlekeyframe displayname=R/A/Hue">0=0.2</property>
         <property name="Delta G / B / Chroma" args="range_in=0,100 exptype=singlekeyframe displayname=G/B/Chroma">0=0.2</property>
         <property name="Delta B / I / I" args="range_in=0,100 exptype=singlekeyframe displayname=B/I/I">0=0.2</property>
-        <property name="Edge mode" args="editor=combobox exptype=default cbopts=Hard:0.0,Fat:0.35,Normal:0.60,Skinny:1.0">0.0</property>
+        <property name="Edge mode" args="editor=combobox exptype=default cbopts=Hard:0.0,Fat:0.35,Normal:0.60,Skinny:1.0 displayname=Edge!Mode">0.0</property>
         <property name="Subspace shape" args="editor=combobox displayname=Sel.!Space exptype=default cbopts=Box:0.0,Ellipsoid:0.5,Diamond:1.0">0.0</property>
         <property name="Operation" args="editor=combobox exptype=default cbopts=Overwrite:0.0,Max:0.3,Min:0.5,Add:0.7,Subtract:1.0">0.0</property>
     </filter>
@@ -367,21 +367,21 @@
         <group>Artistic</group>
         <property name="azimuth" args="range_in=0,360 displayname=Azimuth">0.2</property>
         <property name="elevation" args="range_in=0,90 displayname=Lightness">0.33</property>
-        <property name="width45" args="range_in=1,40 displayname=Bump!height">0.24</property>
+        <property name="width45" args="range_in=1,40 displayname=Bump!Height">0.24</property>
     </filter>
     <filter id="frei0r.dither">
         <name>Dither</name>
         <group>Artistic</group>
         <property name="levels" args="range_in=2,50 displayname=Levels">0.2</property>
-        <property name="matrixid" args="editor=combobox displayname=Matrix!type exptype=default cbopts=magic2x2:0.0,magic4x4:0.12,ordered4x4:0.23,lines4x4:0.34,halftone6x6:0.45,ordered6x6:0.56,ordered8x8:0.67,cluster3:0.78,cluster4:0.89,cluster8:1.0">1.0</property>
+        <property name="matrixid" args="editor=combobox displayname=Matrix!Type exptype=default cbopts=magic2x2:0.0,magic4x4:0.12,ordered4x4:0.23,lines4x4:0.34,halftone6x6:0.45,ordered6x6:0.56,ordered8x8:0.67,cluster3:0.78,cluster4:0.89,cluster8:1.0">1.0</property>
     </filter>
    <filter id="frei0r.colorhalftone">
-        <name>ColorHalftone</name>
+        <name>Color Halftone</name>
         <group>Artistic</group>
         <property name="dot_radius" args="range_in=1,10 range_out=0,1.0 displayname=Dot!Radius">0.4</property>
-        <property name="cyan_angle" args="range_in=0,360 range_out=0,1.0 displayname=Cyan!Amount">0.3</property>
-        <property name="magenta_angle" args="range_in=0,360 range_out=0,1.0 displayname=Magenta!Amount">0.45</property>
-        <property name="yellow_angle" args="range_in=0,360 range_out=0,1.0 displayname=Yellow!Amount">0.25</property>
+        <property name="cyan_angle" args="range_in=0,360 range_out=0,1.0 displayname=Cyan!Angle">0.3</property>
+        <property name="magenta_angle" args="range_in=0,360 range_out=0,1.0 displayname=Magenta!Angle">0.45</property>
+        <property name="yellow_angle" args="range_in=0,360 range_out=0,1.0 displayname=Yellow!Angle">0.25</property>
    </filter>
 
 
@@ -415,20 +415,19 @@
    <filter id="boxblur">
         <name>Box Blur</name>
         <group>Blur</group>
-        <property name="start" args="range_in=1,50 range_out=1,50 displayname=Blur!Amount">5</property>
+        <property name="start" args="range_in=1,50 range_out=1,50 displayname=Amount">5</property>
         <property name="end" args="editor=no_editor">5</property>
         <property name="hori" args="range_in=1,50 range_out=1,50 displayname=Horizontal">7</property>
         <property name="vert" args="range_in=1,50 range_out=1,50 displayname=Vertical">7</property>
    </filter>
    <filter id="frei0r.rgbnoise">
-        <name>RGBNoise</name>
+        <name>RGB Noise</name>
         <group>Blur</group>
-        <property name="noise" args="range_in=0,100 range_out=0,1.0 displayname=Noise!Amount">0.2</property>
+        <property name="noise" args="range_in=0,100 range_out=0,1.0 displayname=Amount">0.2</property>
    </filter>
 
-  
-  
-  
+
+
     <!-- COLOR -->
     <filter id="greyscale">
         <name>Grayscale</name>
@@ -500,17 +499,17 @@
         <property name="G" args="range_in=-50,50 exptype=singlekeyframe displayname=Green">0=0.5</property>
         <property name="B" args="range_in=-50,50 exptype=singlekeyframe displayname=Blue">0=0.5</property>
         <property name="Action" args="displayname=Action editor=combobox exptype=default cbopts=Add!Constant:0.0,Change!Gamma:0.5,Multiply:1.0">0.0</property>
-        <property name="Keep luma" args="editor=booleancheckbox">1</property>
+        <property name="Keep luma" args="editor=booleancheckbox displayname=Keep!Luma">1</property>
         <property name="Alpha controlled" args="editor=no_editor">0</property>
-        <property name="Luma formula" args="editor=combobox exptype=default cbopts=Rec.601:0.0,Rec.709:1.0">0.0</property>
+        <property name="Luma formula" args="editor=combobox exptype=default cbopts=Rec.601:0.0,Rec.709:1.0 displayname=Luma!Formula">0.0</property>
    </filter>
    <filter id="frei0r.three_point_balance">
-        <name>3-Point balance</name>
+        <name>3 Point Balance</name>
         <group>Color</group>
         <property name="Black color" args="editor=color_select exptype=color displayname=Black">#000000</property>
         <property name="Gray color" args="editor=color_select exptype=color displayname=Gray">#808080</property>
         <property name="White color" args="editor=color_select exptype=color displayname=White">#ffffff</property>
-        <property name="Split preview" args="editor=booleancheckbox">0</property>
+        <property name="Split preview" args="editor=booleancheckbox displayname=Split!Preview">0</property>
         <property name="Source image on left side" args="editor=booleancheckbox displayname=Source!on!Left">1</property>
    </filter>
     <filter id="gamma">
@@ -580,14 +579,14 @@
         <property name="levels" args="range_in=2,50 displayname=Levels">0.093</property>
     </filter>
     <filter id="frei0r.colortap">
-        <name>ColorTap</name>
+        <name>Color Tap</name>
         <group>Color Effect</group>
-        <property name="table" args="editor=combobox exptype=default cbopts=XPro:xpro,OldPhoto:old_photo,Sepia:sepia,Heat:heat,XRay:xray,RedGreen:red_green,YellowBlue:yellow_blue,Esses:esses">xpro</property>
+        <property name="table" args="editor=combobox displayname=Effect exptype=default cbopts=XPro:xpro,OldPhoto:old_photo,Sepia:sepia,Heat:heat,XRay:xray,RedGreen:red_green,YellowBlue:yellow_blue,Esses:esses">xpro</property>
 
         
     </filter>
     <filter id="frei0r.softglow">
-        <name>SoftGlow</name>
+        <name>Soft Glow</name>
         <group>Color Effect</group>
         <property name="blur" args="range_in=0,100 displayname=Blur">0.5</property>
         <property name="brightness" args="range_in=0,100 displayname=Brightness">0.75</property>
@@ -595,7 +594,7 @@
         <property name="blurblend" args="range_in=0,100 displayname=Blendtype">0.0</property>
     </filter>
     <filter id="frei0r.sigmoidaltransfer">
-        <name>Stamp</name>
+        <name>Newspaper</name>
         <group>Color Effect</group>
         <property name="brightness" args="range_in=0,100 displayname=Brightness">0.75</property>
         <property name="sharpness" args="range_in=0,100 displayname=Sharpness">0.85</property>
