@@ -3,7 +3,7 @@
 
     <!-- See propertyparse.py, propertyedit.py and propertyeditorbuilder.py modules for attr and argument keys and values explanations-->
     <!-- NOTE: 'displayname' args values have spaces encoded as ! character so "X Scatter" becomes "X!Scatter" -->
-    <!-- NOTE: extra spaces (more than 1) between key=value paiurs crash when opening filter in editor -->
+    <!-- NOTE: extra spaces (more than 1) between key=value pairs crash when opening filter in editor -->
 
 
 
@@ -105,6 +105,7 @@
         <name>Swap Channels</name>
         <group>Audio</group>
     </filter>
+
 
 
 
@@ -383,7 +384,14 @@
         <property name="magenta_angle" args="range_in=0,360 range_out=0,1.0 displayname=Magenta!Angle">0.45</property>
         <property name="yellow_angle" args="range_in=0,360 range_out=0,1.0 displayname=Yellow!Angle">0.25</property>
    </filter>
-
+    <filter id="frei0r.softglow">
+        <name>Soft Glow</name>
+        <group>Artistic</group>
+        <property name="blur" args="range_in=0,100 displayname=Blur">0.5</property>
+        <property name="brightness" args="range_in=0,100 displayname=Brightness">0.75</property>
+        <property name="sharpness" args="range_in=0,100 displayname=Sharpness">0.85</property>
+        <property name="blurblend" args="range_in=0,100 displayname=Blend!Type">0.0</property>
+    </filter>
 
 
     <!-- BLUR -->
@@ -462,12 +470,6 @@
         <group>Color</group>
         <multipartproperty multistartprop="start" multiendprop="end" args="editor=keyframe_editor range_in=0,100 exptype=multipart_keyframe displayname=Brightness">"0=1.0"</multipartproperty>
     </filter>
-    <filter id="sepia">
-        <name>Sepia</name>
-        <group>Color</group>
-        <property name="u" args="range_in=0,255 range_out=0,255 displayname=U">75</property>
-        <property name="v" args="range_in=0,255 range_out=0,255 displayname=V">150</property>
-    </filter>
     <filter id="frei0r.tint0r">
         <name>Tint</name>
         <group>Color</group>
@@ -475,12 +477,14 @@
         <property name="Map white to" args="editor=color_select exptype=color displayname=White">#ff8080</property>
         <property name="Tint amount" args="exptype=singlekeyframe range_in=0,100 displayname=Amount">0=0.25</property>
     </filter>
+    <!--
     <filter id="frei0r.balanc0r">
         <name>White Balance</name>
         <group>Color</group>
         <property name="Neutral Color" args="editor=color_select exptype=color displayname=Neutral!Color">#ffffff</property>
         <property name="Green Tint" args="editor=no_editor exptype=singlekeyframe">0=1.2</property>
     </filter>
+    -->
     <filter id="frei0r.levels">
         <name>Levels</name>
         <group>Color</group>
@@ -569,10 +573,12 @@
         <group>Color Effect</group>
         <property name="midpoint" args="range_in=0,255 range_out=0,255 displayname=Threshold">125.0</property>
     </filter>
+    <!--
     <filter id="frei0r.jannetest">
         <name>JanneTest</name>
         <group>Color Effect</group>
     </filter>
+    -->
     <filter id="frei0r.posterize">
         <name>Posterize</name>
         <group>Color Effect</group>
@@ -582,16 +588,6 @@
         <name>Color Tap</name>
         <group>Color Effect</group>
         <property name="table" args="editor=combobox displayname=Effect exptype=default cbopts=XPro:xpro,OldPhoto:old_photo,Sepia:sepia,Heat:heat,XRay:xray,RedGreen:red_green,YellowBlue:yellow_blue,Esses:esses">xpro</property>
-
-        
-    </filter>
-    <filter id="frei0r.softglow">
-        <name>Soft Glow</name>
-        <group>Color Effect</group>
-        <property name="blur" args="range_in=0,100 displayname=Blur">0.5</property>
-        <property name="brightness" args="range_in=0,100 displayname=Brightness">0.75</property>
-        <property name="sharpness" args="range_in=0,100 displayname=Sharpness">0.85</property>
-        <property name="blurblend" args="range_in=0,100 displayname=Blend!Type">0.0</property>
     </filter>
     <filter id="frei0r.sigmoidaltransfer">
         <name>Newspaper</name>
@@ -599,7 +595,12 @@
         <property name="brightness" args="range_in=0,100 displayname=Brightness">0.75</property>
         <property name="sharpness" args="range_in=0,100 displayname=Sharpness">0.85</property>
     </filter>
-
+    <filter id="sepia">
+        <name>Sepia</name>
+        <group>Color Effect</group>
+        <property name="u" args="range_in=0,255 range_out=0,255 displayname=U">75</property>
+        <property name="v" args="range_in=0,255 range_out=0,255 displayname=V">150</property>
+    </filter>
 
 
     <!-- DISTORT -->

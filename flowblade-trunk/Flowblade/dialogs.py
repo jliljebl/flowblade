@@ -789,4 +789,8 @@ def get_new_sequence_dialog(callback, default_name):
     dialog.connect('response', callback, (name_entry, tracks_combo, open_check))
     dialog.show_all()
 
-
+def not_valid_producer_dialog(file_path, parent_window):
+    primary_txt = _("Can't open non-valid media")
+    secondary_txt = _("File: ") + file_path + _("\nis not a valid media file.")
+    warning_message(primary_txt, secondary_txt, parent_window, is_info=True)
+    

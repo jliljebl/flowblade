@@ -162,9 +162,12 @@ class AddMediaFilesThread(threading.Thread):
             if PROJECT().media_file_exists(new_file):
                 duplicates = duplicates + 1
             else:
-                PROJECT().add_media_file(new_file)
-                succes_new_file = new_file
-
+                try:
+                    PROJECT().add_media_file(new_file)
+                    succes_new_file = new_file
+                except projectdata.ProducerNotValidError as err:
+                    dialogs.not_valid_producer_dialog(err.value, gui.editor_window.window)
+                    
         if succes_new_file != None:
             editorpersistance.prefs.last_opened_media_dir = os.path.dirname(succes_new_file)
             editorpersistance.save()
@@ -180,6 +183,7 @@ class AddMediaFilesThread(threading.Thread):
         normal_cursor = gtk.gdk.Cursor(gtk.gdk.LEFT_PTR) #RTL
         gui.editor_window.window.window.set_cursor(normal_cursor)
         gtk.gdk.threads_leave()
+        print "AddMediaFilesThread exit"
 
 
 class RecreateIconsThread(threading.Thread):

@@ -251,7 +251,13 @@ class Bin:
                            # Project.add_media_file(...)
         
         
-# THIS MAY NEED SOME TIDYING UP
+class ProducerNotValidError(Exception):
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
+
+
 class ThumbnailThread(threading.Thread):
 
     def run(self):
@@ -290,6 +296,9 @@ class ThumbnailThread(threading.Thread):
 
         # Create one frame producer
         self.producer = mlt.Producer(self.profile, str(self.file_path))
+        if self.producer.is_valid() == False:
+            raise ProducerNotValidError(file_path)
+
         length = self.producer.get_length()
         frame = length / 2
         self.producer = self.producer.cut(frame, frame)
