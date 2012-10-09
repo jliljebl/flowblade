@@ -2050,6 +2050,30 @@
                              <entry><para>Previous Cut</para> </entry>
                            </row>
                            <row valign="top">
+                             <entry><para><guilabel>j</guilabel></para></entry>
+                             <entry><para>Next Backwards Playback Speed</para></entry>
+                           </row>
+                          <row valign="top">
+                             <entry><para><guilabel>k</guilabel></para></entry>
+                             <entry><para>Pause Playback</para></entry>
+                           </row>
+                          <row valign="top">
+                             <entry><para><guilabel>l</guilabel></para></entry>
+                             <entry><para>Next Forward Playback Speed</para></entry>
+                           </row>
+                          <row valign="top">
+                             <entry><para><guilabel>t</guilabel></para></entry>
+                             <entry><para>3 Point Overwrite Insert</para></entry>
+                           </row>
+                          <row valign="top">
+                             <entry><para><guilabel>y</guilabel></para></entry>
+                             <entry><para>Insert </para></entry>
+                           </row>
+                          <row valign="top">
+                             <entry><para><guilabel>u</guilabel></para></entry>
+                             <entry><para>Append</para></entry>
+                           </row>
+                           <row valign="top">
                              <entry><para><guilabel>x</guilabel></para></entry>
                              <entry><para>Cut Clip</para> </entry>
                            </row>
