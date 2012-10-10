@@ -25,26 +25,26 @@
                 Clips can be cut at the desired frames, filters can be added to clips, 
                 and you can create multilayer composite images using compositor objects.
             </para>
-		</sect2>
-        
-		<sect2>
+        </sect2>
+
+        <sect2>
             <title>Film style editing</title>
-			<para>
+            <para>
                 <guilabel>Flowblade Movie Editor</guilabel> employs editing paradigm that could be called 
                 <emphasis>film style editing</emphasis> or <emphasis>insert editing</emphasis>. Other applications that have similar editing paragims include
                 <guilabel>Avid Media Composer</guilabel> and <guilabel>Final Cut X</guilabel>, which calls the concept "magnetic timeline".
             </para> 
-			<para>
+            <para>
                 In <emphasis>film style editing</emphasis> clips are usually automatically placed tightly after the previous clip - or between two 
                 existing clips - when they
                 are inserted on the timeline. Edits are fine tuned by trimming in and out points of clips, or by cutting and deleting parts of clips.
             </para>
-			<para>
+            <para>
                 <guilabel>Flowblade Movie Editor</guilabel> provides functionality to set sync relations between clips to help 
                 with audio split editing, and creating composite images using two or more clips on different tracks. 
             </para>
-		</sect2>    
-	</sect1>
+        </sect2>    
+    </sect1>
 
     <sect1>
         <title>Basic Editing</title>
@@ -87,7 +87,7 @@
             <important>
                 <title>Project Profile</title>
                 <para>
-                            The only parameter that can be selected for a new project is the project profile.
+                            The main parameter that can be selected for a new project is the project profile.
                 </para>
                 <para/>
                 <figure> 
@@ -98,6 +98,9 @@
                         </imageobject>
                     </mediaobject>
                 </figure>
+                <para>
+                    <emphasis>NOTE: Since version 0.8 you can also select number of tracks for the first Sequence here, not shown on the image above.</emphasis>
+                </para>
                 <para>
                     Video material might internally be scaled to profile dimensions, so selecting <emphasis>Project Profile</emphasis>
                     with smaller pixel dimensions than the rendered output leads to decreased quality.
@@ -110,9 +113,20 @@
                 </para>            
             </important>
         </sect2>
- 
+        <sect2> 
+            <title>2) Adding and removing new Sequences</title>
+            <para>
+                A Project contains one or more Sequences. Use Add and Delete buttons in the Project -tab. 
+                All Sequences use the same Profile.
+            </para>
+            <para>
+                When creating a new Sequence, you can choose how many Tracks there initially are in the Sequence. 
+                This can be changed later, but the operation destroys the Undo / Redo stack and all the Timeline
+                 Clips that do not fit in the newly created version of the Sequence. 
+            </para>
+        </sect2>
         <sect2>
-            <title>2) Working with Media Files</title>
+            <title>3) Working with Media Files</title>
             <para>
                 <guilabel>Flowblade Movie Editor</guilabel> holds files in <guilabel>Media</guilabel> tab. 
                 Files are listed in unnamed table that displays 
@@ -182,7 +196,7 @@
         </sect2>
 
         <sect2>
-            <title>3) Using Timeline</title>
+            <title>4) Using Timeline</title>
             <sect3>
                 <title>Scrolling Timeline</title>
                 <para>
@@ -398,7 +412,7 @@
        </sect2> 
     
         <sect2>
-                <title>4) Adding clips to Sequence</title>
+                <title>5) Adding clips to Sequence</title>
                 <sect3>
                     <title>Drag'n'Drop</title>
                     <para>
@@ -453,7 +467,7 @@
        </sect2>
 
         <sect2>
-                <title>5) Cutting and Trimming Clips</title>
+                <title>6) Cutting and Trimming Clips</title>
                 Once you have placed clips on the Timeline to form a Sequence, you will probably need to refine the cuts between clips.
                 <sect3>
                     <title>Cutting Clips</title>
@@ -562,7 +576,7 @@
                 </sect3>
        </sect2>
         <sect2>
-                <title>6) Moving Clips</title>
+                <title>7) Moving Clips</title>
                     <variablelist>                        
                         <varlistentry>
                             <term><title>1) Enter 'Insert Move' mode if necessery</title></term>
@@ -613,7 +627,7 @@
                     </variablelist>  
        </sect2>
         <sect2>
-                <title>7) Rendering Movie</title>
+                <title>8) Rendering Movie</title>
                      <sect3>
                         <title>Selecting Parameters</title>
                         <orderedlist spacing="compact" numeration="lowerroman">
@@ -1467,6 +1481,56 @@
     </sect1>
 
     <sect1>
+        <title>Slow / Fast Motion </title>
+            <para>
+                In Flowblade motion effects are achived by rendering slow / fast motion versions of video clips and placing those on the timeline.
+            </para>
+            <variablelist>                        
+                <varlistentry>
+                    <term><title>1) Open Motion Render Dialog</title></term>
+                    <listitem>
+                        <para>
+                            <guilabel>Right Mouse</guilabel> click on a Media File and select <menuchoice><guimenuitem>Render Slow / Fast Motion File</guimenuitem></menuchoice> from menu
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term><title>2) Edit parameters for the new motion Clip</title></term>
+                    <listitem>
+                        <para>
+                             a) Set speed
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                             b) Give name and location for motion Clip
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                             c) Select rendering parameters for motion Clip. It is probably a good idea to use a <guilabel>lossless format</guilabel> here to avoid any generational quality losses.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            d) Select render range, either: a) Full Source Clip, b) From Source Clip Mark In to Mark Out
+                        </para>
+                    </listitem>
+                </varlistentry>
+                
+                <varlistentry>
+                    <term><title>3) Create Motion Clip</title></term>
+                    <listitem>
+                        <para>
+                            Click <guilabel>Render</guilabel> button to create a new motion Clip
+                        </para>
+                    </listitem>
+                </varlistentry>                        
+            </variablelist>
+    </sect1>
+
+    <sect1>
         <title>Rendering</title>
         <para>
             This section gives in-depth information of rendering output in <guilabel>Flowblade Movie Editor</guilabel>.
@@ -1502,9 +1566,48 @@
                 </imageobject>
             </para>
         </sect2>
-
     </sect1>
 
+
+    <sect1>
+        <title>Tools</title>
+        <sect2>
+            <title>Titler</title>
+           <para>
+                <orderedlist spacing="compact">
+                    <title>Working with Titler</title>
+                    <listitem>
+                        <para>
+                           Add and remove layers in <emphasis>Layers</emphasis> area
+                      </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                             Edit layer properties and text in <emphasis>Active Layer</emphasis> area
+                        </para>   
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Set text position by dragging the active layer around in the <emphasis>View Editor</emphasis> area.
+                        </para>   
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Set background image from <emphasis>Timeline</emphasis> to position texts appropriately by dragging frame
+                            pointer in the <emphasis>Position Bar</emphasis>
+                        </para>   
+                    </listitem>
+                    <listitem>
+                        <para>
+                             Load and Save layers data in <emphasis>Layers Area</emphasis>
+                        </para>   
+                    </listitem>
+               </orderedlist>
+            </para>
+        </sect2>
+    </sect1>
+ 
+  
     <sect1>
         <title>Appendix A: Buttons</title>
         <sect2>
