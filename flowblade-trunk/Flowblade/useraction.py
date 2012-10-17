@@ -386,6 +386,9 @@ def open_recent_project(widget, index):
 def about():
     dialogs.about_dialog(gui.editor_window)
 
+def environment():
+    dialogs.environment_dialog(gui.editor_window)
+
 def quick_reference():
     #try:
         helpfile = "ghelp://" + respaths.HELP_DOC

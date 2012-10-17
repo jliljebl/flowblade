@@ -448,6 +448,26 @@ def about_dialog(parent_window):
     dialog.connect('response', _dialog_destroy)
     dialog.show_all()
 
+def environment_dialog(parent_window):
+    dialog = gtk.Dialog(_("About"), None,
+                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                        (_("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+
+    license_view = guicomponents.get_gpl3_scroll_widget((450, 370))
+
+    alignment3 = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment3.set_padding(6, 24, 12, 12)
+    alignment3.add(license_view)
+    alignment3.set_size_request(450, 370)
+    
+    notebook = gtk.Notebook()
+    notebook.set_size_request(450 + 10, 370 + 10)
+    notebook.append_page(alignment3, gtk.Label(_("General")))
+    
+    dialog.vbox.pack_start(notebook, True, True, 0)
+    dialog.connect('response', _dialog_destroy)
+    dialog.show_all()
+    
 def color_clip_dialog(callback):
     dialog = gtk.Dialog(_("Create Color Clip"), None,
                     gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,

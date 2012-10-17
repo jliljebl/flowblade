@@ -129,6 +129,7 @@ class EditorWindow:
             ('Titler', None, _('Titler'), None, None, lambda a:titler.show_titler()),
             ('HelpMenu', None, _('_Help')),
             ('QuickReference', None, _('Contents'), None, None, lambda a:useraction.quick_reference()),
+            ('Environment', None, _('Environment'), None, None, lambda a:useraction.environment()),
             ('About', None, _('About'), None, None, lambda a:useraction.about())
             ]
     
@@ -168,6 +169,7 @@ class EditorWindow:
                 </menu>
                 <menu action='HelpMenu'>
                     <menuitem action='QuickReference'/>
+                    <menuitem action='Environment'/>
                     <separator/>
                     <menuitem action='About'/>
                 </menu>
