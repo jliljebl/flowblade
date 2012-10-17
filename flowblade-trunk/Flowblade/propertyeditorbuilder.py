@@ -261,8 +261,10 @@ def _get_combo_box_row(editable_property):
     for option in opts:
         sides = option.split(":")   
         values.append(sides[1])
-        combo_box.append_text(sides[0].replace("!"," ")) # Spaces are separators in args
-                                                         # and are replaced with "!" charactes for names
+        opt = sides[0].replace("!"," ")# Spaces are separators in args
+                                       # and are replaced with "!" charactes for names
+        opt = translations.get_combo_option(opt)
+        combo_box.append_text(opt) 
 
     # Set initial value
     selection = values.index(editable_property.value)
@@ -454,6 +456,7 @@ def _get_boolean_check_box_button_column(name, editable_property):
 def _get_combo_box_column(name, values, editable_property):
     combo_box = gtk.combo_box_new_text()
     for val in values:
+        val = translations.get_combo_option(val)
         combo_box.append_text(val)
     
     # Set initial value

@@ -491,7 +491,6 @@ class OpacityInGeomKeyframeProperty(TransitionEditableProperty):
         
         print val_str
         val_str = val_str.strip(";")
-        #val_str = "0%/0%:100%x100%:50"
         self.write_value(val_str)
 
 

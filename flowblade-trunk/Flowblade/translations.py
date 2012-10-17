@@ -30,6 +30,7 @@ lang = None
 filter_groups = {}
 filter_names = {}
 param_names = {}
+combo_options = {}
 
 def init_languages():
     langs = []
@@ -47,8 +48,8 @@ def init_languages():
 
     # Get the language to use
     global lang
-    #lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=["fi"], fallback=True) # Testing, comment out for production
-    lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=langs, fallback=True)
+    lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=["fi"], fallback=True) # Testing, comment out for production
+    #lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=langs, fallback=True)
     lang.install(APP_NAME) # makes _() a build-in available in all modules without imports
 
 def get_filter_name(f_name):
@@ -68,6 +69,13 @@ def get_param_name(name):
         return param_names[name]
     except KeyError:
         return name
+
+def get_combo_option(c_opt):
+    print "c_opt", c_opt
+    try:
+        return combo_options[c_opt]
+    except KeyError:
+        return c_opt
         
 def load_filters_translations():
 
@@ -470,3 +478,52 @@ def load_filters_translations():
     param_names["Wipe Type"] = _("Wipe Type")
     param_names["Invert"] = _("Invert")
     param_names["Softness"] = _("Softness")
+    
+    # Combo options
+    global combo_options
+    combo_options["Shave"] = _("Shave")
+    combo_options["Rectangle"] = _("Rectangle")
+    combo_options["Ellipse"] = _("Ellipse")
+    combo_options["Triangle"] = _("Triangle")
+    combo_options["Diamond"] = _("Diamond")
+    combo_options["Shave"] = _("Shave")
+    combo_options["Shrink Hard"] = _("Shrink Hard")
+    combo_options["Shrink Soft"] = _("Shrink Soft")
+    combo_options["Grow Hard"] = _("Grow Hard")
+    combo_options["Grow Soft"] = _("Grow Soft")
+    combo_options["RGB"] = _("RGB")
+    combo_options["ABI"] = _("ABI")
+    combo_options["HCI"] = _("HCI")
+    combo_options["Hard"] = _("Hard")
+    combo_options["Fat"] = _("Fat")
+    combo_options["Normal"] = _("Normal")
+    combo_options["Skinny"] = _("Skinny")
+    combo_options["Ellipsoid"] = _("Ellipsoid")
+    combo_options["Diamond"] = _("Diamond")
+    combo_options["Overwrite"] = _("Overwrite")
+    combo_options["Max"] = _("Max")
+    combo_options["Min"] = _("Min")
+    combo_options["Add"] = _("Add")
+    combo_options["Subtract"] = _("Subtract")
+    combo_options["Green"] = _("Green")
+    combo_options["Blue"] = _("Blue")
+    combo_options["Sharper"] = _("Sharper")
+    combo_options["Fuzzier"] = _("Fuzzier")
+    combo_options["Luma"] = _("Luma")
+    combo_options["Red"] = _("Red")
+    combo_options["Green"] = _("Green")
+    combo_options["Blue"] = _("Blue")
+    combo_options["Add Constant"] = _("Add Constant")
+    combo_options["Change Gamma"] = _("Change Gamma")
+    combo_options["Multiply"] = _("Multiply")
+    combo_options["XPro"] = _("XPro")
+    combo_options["OldPhoto"] = _("OldPhoto")
+    combo_options["Sepia"] = _("Sepia")
+    combo_options["Heat"] = _("Heat")
+    combo_options["XRay"] = _("XRay")
+    combo_options["RedGreen"] = _("RedGreen")
+    combo_options["YellowBlue"] = _("YellowBlue")
+    combo_options["Esses"] = _("Esses")
+    combo_options["Horizontal"] = _("Horizontal")
+    combo_options["Vertical"] = _("Vertical")
+

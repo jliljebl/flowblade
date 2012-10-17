@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-09 09:32+0300\n"
+"POT-Creation-Date: 2012-10-17 10:00+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,15 +49,15 @@ msgstr ""
 msgid " minutes ago."
 msgstr ""
 
-#: app.py:499 useraction.py:285
+#: app.py:499 useraction.py:289
 msgid "Project has not been saved previously"
 msgstr ""
 
-#: app.py:500 useraction.py:286
+#: app.py:500 useraction.py:290
 msgid "Save project with File -> Save As before closing."
 msgstr ""
 
-#: useraction.py:117 useraction.py:413
+#: useraction.py:117 useraction.py:417 dialogs.py:794
 msgid "File: "
 msgstr ""
 
@@ -85,125 +85,125 @@ msgstr ""
 msgid "Opening"
 msgstr ""
 
-#: useraction.py:375
+#: useraction.py:379
 msgid "Project not found on disk"
 msgstr ""
 
-#: useraction.py:376
+#: useraction.py:380
 msgid "Project can't be loaded."
 msgstr ""
 
-#: useraction.py:407
+#: useraction.py:411
 msgid "Render file name entry is empty"
 msgstr ""
 
-#: useraction.py:408
+#: useraction.py:412
 msgid "You have to provide a name for the file to be rendered."
 msgstr ""
 
-#: useraction.py:413
+#: useraction.py:417
 msgid " already exists!"
 msgstr ""
 
-#: useraction.py:414
+#: useraction.py:418
 msgid "Do you want to overwrite existing file?"
 msgstr ""
 
-#: useraction.py:445
+#: useraction.py:449
 msgid "Render range not defined"
 msgstr ""
 
-#: useraction.py:446
+#: useraction.py:450
 msgid ""
 "Define render range using Mark In and Mark Out points\n"
 "or select range option 'Program length' to start rendering."
 msgstr ""
 
-#: useraction.py:482
+#: useraction.py:486
 msgid "Open.."
 msgstr ""
 
-#: useraction.py:492
+#: useraction.py:496
 msgid "All files"
 msgstr ""
 
-#: useraction.py:527
+#: useraction.py:531
 msgid "Can't make home folder thumbnails folder"
 msgstr ""
 
-#: useraction.py:528
+#: useraction.py:532
 msgid "Please create and select some other folder then '"
 msgstr ""
 
-#: useraction.py:529
+#: useraction.py:533
 msgid "' as thumbnails folder"
 msgstr ""
 
-#: useraction.py:660
+#: useraction.py:664
 msgid "Can't remove a non-empty bin"
 msgstr ""
 
-#: useraction.py:661
+#: useraction.py:665
 msgid "You must remove all files from the bin before deleting it."
 msgstr ""
 
-#: useraction.py:669
+#: useraction.py:673
 msgid "Can't remove last bin"
 msgstr ""
 
-#: useraction.py:670
+#: useraction.py:674
 msgid "There must always exist at least one bin."
 msgstr ""
 
-#: useraction.py:758
+#: useraction.py:762
 msgid "Selected sequence is already being edited"
 msgstr ""
 
-#: useraction.py:759
+#: useraction.py:763
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
 msgstr ""
 
-#: useraction.py:769 useraction.py:786 projectdata.py:168
+#: useraction.py:773 useraction.py:790 projectdata.py:168
 msgid "sequence_"
 msgstr ""
 
-#: useraction.py:819
+#: useraction.py:823
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
 msgstr ""
 
-#: useraction.py:819
+#: useraction.py:823
 msgid "'?"
 msgstr ""
 
-#: useraction.py:820
+#: useraction.py:824
 msgid "This operation can not be undone. Sequence will be permanently lost."
 msgstr ""
 
-#: useraction.py:835
+#: useraction.py:839
 msgid "Can't remove last sequence"
 msgstr ""
 
-#: useraction.py:836
+#: useraction.py:840
 msgid "There must always exist at least one sequence."
 msgstr ""
 
-#: useraction.py:947
+#: useraction.py:951
 msgid "Confirm user profile delete!"
 msgstr ""
 
-#: useraction.py:948
+#: useraction.py:952
 msgid "This operation cannot be undone."
 msgstr ""
 
-#: useraction.py:1047
+#: useraction.py:1051
 msgid "Restart required for some setting changes to take effect."
 msgstr ""
 
-#: useraction.py:1048
+#: useraction.py:1052
 msgid "If requested change is not in effect, restart application."
 msgstr ""
 
@@ -508,7 +508,7 @@ msgid "Quit editing Clip in editor"
 msgstr ""
 
 #: clipeffectseditor.py:111 panels.py:58 panels.py:77 panels.py:95
-#: mlttransitions.py:119 tools/titler.py:149
+#: translations.py:506 mlttransitions.py:119 tools/titler.py:149
 msgid "Add"
 msgstr ""
 
@@ -819,6 +819,16 @@ msgstr ""
 
 #: dialogs.py:770
 msgid "Open For Editing:"
+msgstr ""
+
+#: dialogs.py:793
+msgid "Can't open non-valid media"
+msgstr ""
+
+#: dialogs.py:794
+msgid ""
+"\n"
+"is not a valid media file."
 msgstr ""
 
 #: editevent.py:89
@@ -1669,1191 +1679,1315 @@ msgid ""
 "You can only synch to clips that are on track V1."
 msgstr ""
 
-#: translations.py:76 translations.py:370
+#: translations.py:84 translations.py:378
 msgid "Color"
 msgstr ""
 
-#: translations.py:77
+#: translations.py:85
 msgid "Color Effect"
 msgstr ""
 
-#: translations.py:78
+#: translations.py:86
 msgid "Audio"
 msgstr ""
 
-#: translations.py:79
+#: translations.py:87
 msgid "Audio Filter"
 msgstr ""
 
-#: translations.py:80 translations.py:133 translations.py:335
-#: translations.py:412
+#: translations.py:88 translations.py:141 translations.py:343
+#: translations.py:420
 msgid "Blur"
 msgstr ""
 
-#: translations.py:81 translations.py:464 propertyeditorbuilder.py:341
-#: propertyeditorbuilder.py:394
+#: translations.py:89 translations.py:472 propertyeditorbuilder.py:343
+#: propertyeditorbuilder.py:396
 msgid "Distort"
 msgstr ""
 
-#: translations.py:82 propertyeditorbuilder.py:343
-#: propertyeditorbuilder.py:396
+#: translations.py:90 propertyeditorbuilder.py:345
+#: propertyeditorbuilder.py:398
 msgid "Alpha"
 msgstr ""
 
-#: translations.py:83
+#: translations.py:91
 msgid "Movement"
 msgstr ""
 
-#: translations.py:84
+#: translations.py:92
 msgid "Transform"
 msgstr ""
 
-#: translations.py:85 translations.py:430
+#: translations.py:93 translations.py:438
 msgid "Edge"
 msgstr ""
 
-#: translations.py:86
+#: translations.py:94
 msgid "Fix"
 msgstr ""
 
-#: translations.py:87
+#: translations.py:95
 msgid "Artistic"
 msgstr ""
 
-#: translations.py:91
+#: translations.py:99
 msgid "Alpha Gradient"
 msgstr ""
 
-#: translations.py:92
+#: translations.py:100
 msgid "Crop"
 msgstr ""
 
-#: translations.py:93
+#: translations.py:101
 msgid "Alpha Shape"
 msgstr ""
 
-#: translations.py:95 translations.py:220
+#: translations.py:103 translations.py:228
 msgid "Volume"
 msgstr ""
 
-#: translations.py:96
+#: translations.py:104
 msgid "Pan"
 msgstr ""
 
-#: translations.py:97
+#: translations.py:105
 msgid "Pan Keyframed"
 msgstr ""
 
-#: translations.py:98
+#: translations.py:106
 msgid "Mono to Stereo"
 msgstr ""
 
-#: translations.py:99
+#: translations.py:107
 msgid "Swap Channels"
 msgstr ""
 
-#: translations.py:101
+#: translations.py:109
 msgid "Pitchshifter"
 msgstr ""
 
-#: translations.py:102
+#: translations.py:110
 msgid "Distort - Barry's Satan"
 msgstr ""
 
-#: translations.py:103
+#: translations.py:111
 msgid "Frequency Shift - Bode/Moog"
 msgstr ""
 
-#: translations.py:104
+#: translations.py:112
 msgid "Equalize - DJ 3-band"
 msgstr ""
 
-#: translations.py:105
+#: translations.py:113
 msgid "Flanger - DJ"
 msgstr ""
 
-#: translations.py:106
+#: translations.py:114
 msgid "Declipper"
 msgstr ""
 
-#: translations.py:107
+#: translations.py:115
 msgid "Delayorama"
 msgstr ""
 
-#: translations.py:108
+#: translations.py:116
 msgid "Distort - Diode Processor"
 msgstr ""
 
-#: translations.py:109
+#: translations.py:117
 msgid "Distort - Foldover"
 msgstr ""
 
-#: translations.py:110
+#: translations.py:118
 msgid "Highpass - Butterworth"
 msgstr ""
 
-#: translations.py:111
+#: translations.py:119
 msgid "Lowpass - Butterworth"
 msgstr ""
 
-#: translations.py:112
+#: translations.py:120
 msgid "GSM Simulator"
 msgstr ""
 
-#: translations.py:113
+#: translations.py:121
 msgid "Reverb - GVerb"
 msgstr ""
 
-#: translations.py:114
+#: translations.py:122
 msgid "Noise Gate"
 msgstr ""
 
-#: translations.py:115
+#: translations.py:123
 msgid "Bandpass"
 msgstr ""
 
-#: translations.py:116
+#: translations.py:124
 msgid "Pitchscaler - High Quality"
 msgstr ""
 
-#: translations.py:117
+#: translations.py:125
 msgid "Equalize - Multiband"
 msgstr ""
 
-#: translations.py:118
+#: translations.py:126
 msgid "Reverb - Plate"
 msgstr ""
 
-#: translations.py:119
+#: translations.py:127
 msgid "Distort - Pointer cast"
 msgstr ""
 
-#: translations.py:120
+#: translations.py:128
 msgid "Rate Shifter"
 msgstr ""
 
-#: translations.py:121
+#: translations.py:129
 msgid "Signal Shifter"
 msgstr ""
 
-#: translations.py:122
+#: translations.py:130
 msgid "Distort - Sinus Wavewrap"
 msgstr ""
 
-#: translations.py:123
+#: translations.py:131
 msgid "Vinyl Effect"
 msgstr ""
 
-#: translations.py:124
+#: translations.py:132
 msgid "Chorus - Multivoice"
 msgstr ""
 
-#: translations.py:126
+#: translations.py:134
 msgid "Charcoal"
 msgstr ""
 
-#: translations.py:127
+#: translations.py:135
 msgid "Glow"
 msgstr ""
 
-#: translations.py:128
+#: translations.py:136
 msgid "Old Film"
 msgstr ""
 
-#: translations.py:129
+#: translations.py:137
 msgid "Scanlines"
 msgstr ""
 
-#: translations.py:130
+#: translations.py:138
 msgid "Cartoon"
 msgstr ""
 
-#: translations.py:132
+#: translations.py:140
 msgid "Pixelize"
 msgstr ""
 
-#: translations.py:134
+#: translations.py:142
 msgid "Grain"
 msgstr ""
 
-#: translations.py:136
+#: translations.py:144
 msgid "Grayscale"
 msgstr ""
 
-#: translations.py:137 translations.py:350 translations.py:352
+#: translations.py:145 translations.py:358 translations.py:360
 msgid "Contrast"
 msgstr ""
 
-#: translations.py:138 translations.py:353 mlttransitions.py:133
+#: translations.py:146 translations.py:361 mlttransitions.py:133
 msgid "Saturation"
 msgstr ""
 
-#: translations.py:139 translations.py:334 translations.py:386
-#: translations.py:411 translations.py:467 translations.py:471
+#: translations.py:147 translations.py:342 translations.py:394
+#: translations.py:419 translations.py:475 translations.py:479
 msgid "Invert"
 msgstr ""
 
-#: translations.py:140 translations.py:354 mlttransitions.py:129
+#: translations.py:148 translations.py:362 mlttransitions.py:129
 msgid "Hue"
 msgstr ""
 
-#: translations.py:141 translations.py:351 translations.py:355
-#: translations.py:356
+#: translations.py:149 translations.py:359 translations.py:363
+#: translations.py:364
 msgid "Brightness"
 msgstr ""
 
-#: translations.py:142
+#: translations.py:150 translations.py:521
 msgid "Sepia"
 msgstr ""
 
-#: translations.py:143
+#: translations.py:151
 msgid "Tint"
 msgstr ""
 
-#: translations.py:144
+#: translations.py:152
 msgid "White Balance"
 msgstr ""
 
-#: translations.py:145 translations.py:435
+#: translations.py:153 translations.py:443
 msgid "Levels"
 msgstr ""
 
-#: translations.py:147
+#: translations.py:155
 msgid "Color Clustering"
 msgstr ""
 
-#: translations.py:148
+#: translations.py:156
 msgid "Chroma Hold"
 msgstr ""
 
-#: translations.py:149
+#: translations.py:157
 msgid "Three Layer"
 msgstr ""
 
-#: translations.py:150
+#: translations.py:158
 msgid "Threshold0r"
 msgstr ""
 
-#: translations.py:151
+#: translations.py:159
 msgid "Technicolor"
 msgstr ""
 
-#: translations.py:152
+#: translations.py:160
 msgid "Primaries"
 msgstr ""
 
-#: translations.py:153
+#: translations.py:161
 msgid "Color Distance"
 msgstr ""
 
-#: translations.py:154 translations.py:372 translations.py:377
+#: translations.py:162 translations.py:380 translations.py:385
 msgid "Threshold"
 msgstr ""
 
-#: translations.py:156
+#: translations.py:164
 msgid "Waves"
 msgstr ""
 
-#: translations.py:157
+#: translations.py:165
 msgid "Lens Correction"
 msgstr ""
 
-#: translations.py:158 translations.py:384
+#: translations.py:166 translations.py:392
 msgid "Flip"
 msgstr ""
 
-#: translations.py:159
+#: translations.py:167
 msgid "Mirror"
 msgstr ""
 
-#: translations.py:160
+#: translations.py:168
 msgid "V Sync"
 msgstr ""
 
-#: translations.py:162
+#: translations.py:170
 msgid "Edge Glow"
 msgstr ""
 
-#: translations.py:163
+#: translations.py:171
 msgid "Sobel"
 msgstr ""
 
-#: translations.py:165
+#: translations.py:173
 msgid "Denoise"
 msgstr ""
 
-#: translations.py:166 translations.py:457
+#: translations.py:174 translations.py:465
 msgid "Sharpness"
 msgstr ""
 
-#: translations.py:167
+#: translations.py:175
 msgid "Letterbox"
 msgstr ""
 
-#: translations.py:169
+#: translations.py:177
 msgid "Baltan"
 msgstr ""
 
-#: translations.py:170
+#: translations.py:178
 msgid "Vertigo"
 msgstr ""
 
-#: translations.py:171
+#: translations.py:179
 msgid "Nervous"
 msgstr ""
 
-#: translations.py:172
+#: translations.py:180
 msgid "Freeze"
 msgstr ""
 
-#: translations.py:174 translations.py:380
+#: translations.py:182 translations.py:388
 msgid "Rotate"
 msgstr ""
 
-#: translations.py:175
+#: translations.py:183
 msgid "Shear"
 msgstr ""
 
-#: translations.py:176
+#: translations.py:184
 msgid "Translate"
 msgstr ""
 
-#: translations.py:179
+#: translations.py:187
 msgid "Color Select"
 msgstr ""
 
-#: translations.py:180
+#: translations.py:188
 msgid "Alpha Modify"
 msgstr ""
 
-#: translations.py:181
+#: translations.py:189
 msgid "Spill Supress"
 msgstr ""
 
-#: translations.py:182
+#: translations.py:190
 msgid "RGB Noise"
 msgstr ""
 
-#: translations.py:183
+#: translations.py:191
 msgid "Box Blur"
 msgstr ""
 
-#: translations.py:184
+#: translations.py:192
 msgid "IRR Blur"
 msgstr ""
 
-#: translations.py:185
+#: translations.py:193
 msgid "Color Halftone"
 msgstr ""
 
-#: translations.py:186
+#: translations.py:194
 msgid "Dither"
 msgstr ""
 
-#: translations.py:187
+#: translations.py:195
 msgid "Vignette"
 msgstr ""
 
-#: translations.py:188
+#: translations.py:196
 msgid "Emboss"
 msgstr ""
 
-#: translations.py:189
+#: translations.py:197
 msgid "3 Point Balance"
 msgstr ""
 
-#: translations.py:190
+#: translations.py:198
 msgid "Colorize"
 msgstr ""
 
-#: translations.py:191
+#: translations.py:199
 msgid "Brightness Keyframed"
 msgstr ""
 
-#: translations.py:192
+#: translations.py:200
 msgid "RGB Adjustment"
 msgstr ""
 
-#: translations.py:193
+#: translations.py:201
 msgid "Color Tap"
 msgstr ""
 
-#: translations.py:194
+#: translations.py:202
 msgid "Posterize"
 msgstr ""
 
-#: translations.py:195
+#: translations.py:203
 msgid "Soft Glow"
 msgstr ""
 
-#: translations.py:196
+#: translations.py:204
 msgid "Newspaper"
 msgstr ""
 
-#: translations.py:204 translations.py:387
+#: translations.py:212 translations.py:395
 msgid "Position"
 msgstr ""
 
-#: translations.py:205
+#: translations.py:213
 msgid "Grad width"
 msgstr ""
 
-#: translations.py:206 translations.py:218 translations.py:381
+#: translations.py:214 translations.py:226 translations.py:389
 msgid "Tilt"
 msgstr ""
 
-#: translations.py:207
+#: translations.py:215 translations.py:505
 msgid "Min"
 msgstr ""
 
-#: translations.py:208
+#: translations.py:216 translations.py:504
 msgid "Max"
 msgstr ""
 
-#: translations.py:209 translations.py:407
+#: translations.py:217 translations.py:415
 msgid "Left"
 msgstr ""
 
-#: translations.py:210 translations.py:408
+#: translations.py:218 translations.py:416
 msgid "Right"
 msgstr ""
 
-#: translations.py:211 translations.py:409
+#: translations.py:219 translations.py:417
 msgid "Top"
 msgstr ""
 
-#: translations.py:212 translations.py:410
+#: translations.py:220 translations.py:418
 msgid "Bottom"
 msgstr ""
 
-#: translations.py:213
+#: translations.py:221
 msgid "Shape"
 msgstr ""
 
-#: translations.py:214
+#: translations.py:222
 msgid "Pos X"
 msgstr ""
 
-#: translations.py:215
+#: translations.py:223
 msgid "Pos Y"
 msgstr ""
 
-#: translations.py:216
+#: translations.py:224
 msgid "Size X"
 msgstr ""
 
-#: translations.py:217
+#: translations.py:225
 msgid "Size Y"
 msgstr ""
 
-#: translations.py:219
+#: translations.py:227
 msgid "Trans. Width"
 msgstr ""
 
-#: translations.py:221 translations.py:222
+#: translations.py:229 translations.py:230
 msgid "Left/Right"
 msgstr ""
 
-#: translations.py:223 translations.py:226 translations.py:229
-#: translations.py:231 translations.py:235 translations.py:239
-#: translations.py:240 translations.py:251 translations.py:253
-#: translations.py:256 translations.py:259 translations.py:262
-#: translations.py:265 translations.py:273 translations.py:281
-#: translations.py:285 translations.py:287 translations.py:303
-#: translations.py:307 translations.py:310 translations.py:312
-#: translations.py:314 translations.py:316 translations.py:322
-#: translations.py:329
+#: translations.py:231 translations.py:234 translations.py:237
+#: translations.py:239 translations.py:243 translations.py:247
+#: translations.py:248 translations.py:259 translations.py:261
+#: translations.py:264 translations.py:267 translations.py:270
+#: translations.py:273 translations.py:281 translations.py:289
+#: translations.py:293 translations.py:295 translations.py:311
+#: translations.py:315 translations.py:318 translations.py:320
+#: translations.py:322 translations.py:324 translations.py:330
+#: translations.py:337
 msgid "Dry/Wet"
 msgstr ""
 
-#: translations.py:224
+#: translations.py:232
 msgid "Pitch Shift"
 msgstr ""
 
-#: translations.py:225
+#: translations.py:233
 msgid "Buffer Size"
 msgstr ""
 
-#: translations.py:227
+#: translations.py:235
 msgid "Decay Time(samples)"
 msgstr ""
 
-#: translations.py:228
+#: translations.py:236
 msgid "Knee Point(dB)"
 msgstr ""
 
-#: translations.py:230
+#: translations.py:238
 msgid "Frequency shift"
 msgstr ""
 
-#: translations.py:232
+#: translations.py:240
 msgid "Low Gain(dB)"
 msgstr ""
 
-#: translations.py:233
+#: translations.py:241
 msgid "Mid Gain(dB)"
 msgstr ""
 
-#: translations.py:234
+#: translations.py:242
 msgid "High Gain(dB)"
 msgstr ""
 
-#: translations.py:236
+#: translations.py:244
 msgid "Oscillation period(s)"
 msgstr ""
 
-#: translations.py:237
+#: translations.py:245
 msgid "Oscillation depth(ms)"
 msgstr ""
 
-#: translations.py:238
+#: translations.py:246
 msgid "Feedback%"
 msgstr ""
 
-#: translations.py:241
+#: translations.py:249
 msgid "Random seed"
 msgstr ""
 
-#: translations.py:242
+#: translations.py:250
 msgid "Input Gain(dB)"
 msgstr ""
 
-#: translations.py:243
+#: translations.py:251
 msgid "Feedback(%)"
 msgstr ""
 
-#: translations.py:244
+#: translations.py:252
 msgid "Number of taps"
 msgstr ""
 
-#: translations.py:245
+#: translations.py:253
 msgid "First Delay(s)"
 msgstr ""
 
-#: translations.py:246
+#: translations.py:254
 msgid "Delay Range(s)"
 msgstr ""
 
-#: translations.py:247
+#: translations.py:255
 msgid "Delay Change"
 msgstr ""
 
-#: translations.py:248
+#: translations.py:256
 msgid "Delay Random(%)"
 msgstr ""
 
-#: translations.py:249
+#: translations.py:257
 msgid "Amplitude Change"
 msgstr ""
 
-#: translations.py:250
+#: translations.py:258
 msgid "Amplitude Random(%)"
 msgstr ""
 
-#: translations.py:252 translations.py:315 translations.py:361
-#: translations.py:393
+#: translations.py:260 translations.py:323 translations.py:369
+#: translations.py:401
 msgid "Amount"
 msgstr ""
 
-#: translations.py:254
+#: translations.py:262
 msgid "Drive"
 msgstr ""
 
-#: translations.py:255
+#: translations.py:263
 msgid "Skew"
 msgstr ""
 
-#: translations.py:257 translations.py:260
+#: translations.py:265 translations.py:268
 msgid "Cutoff Frequency(Hz)"
 msgstr ""
 
-#: translations.py:258 translations.py:261
+#: translations.py:266 translations.py:269
 msgid "Resonance"
 msgstr ""
 
-#: translations.py:263
+#: translations.py:271
 msgid "Passes"
 msgstr ""
 
-#: translations.py:264
+#: translations.py:272
 msgid "Error Rate"
 msgstr ""
 
-#: translations.py:266
+#: translations.py:274
 msgid "Roomsize"
 msgstr ""
 
-#: translations.py:267
+#: translations.py:275
 msgid "Reverb time(s)"
 msgstr ""
 
-#: translations.py:268 translations.py:305
+#: translations.py:276 translations.py:313
 msgid "Damping"
 msgstr ""
 
-#: translations.py:269
+#: translations.py:277
 msgid "Input bandwith"
 msgstr ""
 
-#: translations.py:270
+#: translations.py:278
 msgid "Dry signal level(dB)"
 msgstr ""
 
-#: translations.py:271
+#: translations.py:279
 msgid "Early reflection level(dB)"
 msgstr ""
 
-#: translations.py:272
+#: translations.py:280
 msgid "Tail level(dB)"
 msgstr ""
 
-#: translations.py:274
+#: translations.py:282
 msgid "LF keyfilter(Hz)"
 msgstr ""
 
-#: translations.py:275
+#: translations.py:283
 msgid "HF keyfilter(Hz)"
 msgstr ""
 
-#: translations.py:276
+#: translations.py:284
 msgid "Threshold(dB)"
 msgstr ""
 
-#: translations.py:277
+#: translations.py:285
 msgid "Attack(ms)"
 msgstr ""
 
-#: translations.py:278
+#: translations.py:286
 msgid "Hold(ms)"
 msgstr ""
 
-#: translations.py:279
+#: translations.py:287
 msgid "Decay(ms)"
 msgstr ""
 
-#: translations.py:280
+#: translations.py:288
 msgid "Range(dB)"
 msgstr ""
 
-#: translations.py:282
+#: translations.py:290
 msgid "Center Frequency(Hz)"
 msgstr ""
 
-#: translations.py:283
+#: translations.py:291
 msgid "Bandwidth(Hz)"
 msgstr ""
 
-#: translations.py:284
+#: translations.py:292
 msgid "Stages"
 msgstr ""
 
-#: translations.py:286
+#: translations.py:294
 msgid "Pitch-coefficient"
 msgstr ""
 
-#: translations.py:288
+#: translations.py:296
 msgid "50Hz gain"
 msgstr ""
 
-#: translations.py:289
+#: translations.py:297
 msgid "100Hz gain"
 msgstr ""
 
-#: translations.py:290
+#: translations.py:298
 msgid "156Hz gain"
 msgstr ""
 
-#: translations.py:291
+#: translations.py:299
 msgid "220Hz gain"
 msgstr ""
 
-#: translations.py:292
+#: translations.py:300
 msgid "311Hz gain"
 msgstr ""
 
-#: translations.py:293
+#: translations.py:301
 msgid "440Hz gain"
 msgstr ""
 
-#: translations.py:294
+#: translations.py:302
 msgid "622Hz gain"
 msgstr ""
 
-#: translations.py:295
+#: translations.py:303
 msgid "880Hz gain"
 msgstr ""
 
-#: translations.py:296
+#: translations.py:304
 msgid "1250Hz gain"
 msgstr ""
 
-#: translations.py:297
+#: translations.py:305
 msgid "1750Hz gain"
 msgstr ""
 
-#: translations.py:298
+#: translations.py:306
 msgid "2500Hz gain"
 msgstr ""
 
-#: translations.py:299
+#: translations.py:307
 msgid "3500Hz gain"
 msgstr ""
 
-#: translations.py:300
+#: translations.py:308
 msgid "5000Hz gain"
 msgstr ""
 
-#: translations.py:301
+#: translations.py:309
 msgid "100000Hz gain"
 msgstr ""
 
-#: translations.py:302
+#: translations.py:310
 msgid "200000Hz gain"
 msgstr ""
 
-#: translations.py:304
+#: translations.py:312
 msgid "Reverb time"
 msgstr ""
 
-#: translations.py:306 translations.py:309
+#: translations.py:314 translations.py:317
 msgid "Dry/Wet mix"
 msgstr ""
 
-#: translations.py:308
+#: translations.py:316
 msgid "Effect cutoff(Hz)"
 msgstr ""
 
-#: translations.py:311
+#: translations.py:319
 msgid "Rate"
 msgstr ""
 
-#: translations.py:313
+#: translations.py:321
 msgid "Sift"
 msgstr ""
 
-#: translations.py:317
+#: translations.py:325
 msgid "Year"
 msgstr ""
 
-#: translations.py:318
+#: translations.py:326
 msgid "RPM"
 msgstr ""
 
-#: translations.py:319
+#: translations.py:327
 msgid "Surface warping"
 msgstr ""
 
-#: translations.py:320
+#: translations.py:328
 msgid "Cracle"
 msgstr ""
 
-#: translations.py:321
+#: translations.py:329
 msgid "Wear"
 msgstr ""
 
-#: translations.py:323
+#: translations.py:331
 msgid "Number of voices"
 msgstr ""
 
-#: translations.py:324
+#: translations.py:332
 msgid "Delay base(ms)"
 msgstr ""
 
-#: translations.py:325
+#: translations.py:333
 msgid "Voice separation(ms)"
 msgstr ""
 
-#: translations.py:326
+#: translations.py:334
 msgid "Detune(%)"
 msgstr ""
 
-#: translations.py:327
+#: translations.py:335
 msgid "Oscillation frequency(Hz)"
 msgstr ""
 
-#: translations.py:328
+#: translations.py:336
 msgid "Output attenuation(dB)"
 msgstr ""
 
-#: translations.py:330
+#: translations.py:338
 msgid "X Scatter"
 msgstr ""
 
-#: translations.py:331
+#: translations.py:339
 msgid "Y Scatter"
 msgstr ""
 
-#: translations.py:332
+#: translations.py:340
 msgid "Scale"
 msgstr ""
 
-#: translations.py:333
+#: translations.py:341
 msgid "Mix"
 msgstr ""
 
-#: translations.py:336
+#: translations.py:344
 msgid "Delta"
 msgstr ""
 
-#: translations.py:337
+#: translations.py:345
 msgid "Duration"
 msgstr ""
 
-#: translations.py:338
+#: translations.py:346
 msgid "Bright. up"
 msgstr ""
 
-#: translations.py:339
+#: translations.py:347
 msgid "Bright. down"
 msgstr ""
 
-#: translations.py:340
+#: translations.py:348
 msgid "Bright. dur."
 msgstr ""
 
-#: translations.py:341
+#: translations.py:349
 msgid "Develop up"
 msgstr ""
 
-#: translations.py:342
+#: translations.py:350
 msgid "Develop down"
 msgstr ""
 
-#: translations.py:343
+#: translations.py:351
 msgid "Develop dur."
 msgstr ""
 
-#: translations.py:344
+#: translations.py:352
 msgid "Triplevel"
 msgstr ""
 
-#: translations.py:345
+#: translations.py:353
 msgid "Difference Space"
 msgstr ""
 
-#: translations.py:346
+#: translations.py:354
 msgid "Block width"
 msgstr ""
 
-#: translations.py:347
+#: translations.py:355
 msgid "Block height"
 msgstr ""
 
-#: translations.py:348 translations.py:394
+#: translations.py:356 translations.py:402
 msgid "Size"
 msgstr ""
 
-#: translations.py:349
+#: translations.py:357
 msgid "Noise"
 msgstr ""
 
-#: translations.py:357
+#: translations.py:365
 msgid "U"
 msgstr ""
 
-#: translations.py:358
+#: translations.py:366
 msgid "V"
 msgstr ""
 
-#: translations.py:359 translations.py:366
+#: translations.py:367 translations.py:374
 msgid "Black"
 msgstr ""
 
-#: translations.py:360 translations.py:367
+#: translations.py:368 translations.py:375
 msgid "White"
 msgstr ""
 
-#: translations.py:362
+#: translations.py:370
 msgid "Neutral Color"
 msgstr ""
 
-#: translations.py:363 translations.py:364
+#: translations.py:371 translations.py:372
 msgid "Input"
 msgstr ""
 
-#: translations.py:365
+#: translations.py:373
 msgid "Gamma"
 msgstr ""
 
-#: translations.py:368
+#: translations.py:376
 msgid "Num"
 msgstr ""
 
-#: translations.py:369
+#: translations.py:377
 msgid "Dist. weight"
 msgstr ""
 
-#: translations.py:371
+#: translations.py:379
 msgid "Variance"
 msgstr ""
 
-#: translations.py:373
+#: translations.py:381
 msgid "Red Saturation"
 msgstr ""
 
-#: translations.py:374
+#: translations.py:382
 msgid "Yellow Saturation"
 msgstr ""
 
-#: translations.py:375
+#: translations.py:383
 msgid "Factor"
 msgstr ""
 
-#: translations.py:376
+#: translations.py:384
 msgid "Source color"
 msgstr ""
 
-#: translations.py:378
+#: translations.py:386
 msgid "Amplitude"
 msgstr ""
 
-#: translations.py:379
+#: translations.py:387
 msgid "Frequency"
 msgstr ""
 
-#: translations.py:382
+#: translations.py:390
 msgid "Center Correct"
 msgstr ""
 
-#: translations.py:383
+#: translations.py:391
 msgid "Edges Correct"
 msgstr ""
 
-#: translations.py:385
+#: translations.py:393
 msgid "Axis"
 msgstr ""
 
-#: translations.py:388
+#: translations.py:396
 msgid "Edge Lightning"
 msgstr ""
 
-#: translations.py:389
+#: translations.py:397
 msgid "Edge Brightness"
 msgstr ""
 
-#: translations.py:390
+#: translations.py:398
 msgid "Non-Edge Brightness"
 msgstr ""
 
-#: translations.py:391
+#: translations.py:399
 msgid "Spatial"
 msgstr ""
 
-#: translations.py:392
+#: translations.py:400
 msgid "Temporal"
 msgstr ""
 
-#: translations.py:395
+#: translations.py:403
 msgid "Border width"
 msgstr ""
 
-#: translations.py:396
+#: translations.py:404
 msgid "Phase Incr."
 msgstr ""
 
-#: translations.py:397
+#: translations.py:405
 msgid "Zoom"
 msgstr ""
 
-#: translations.py:398
+#: translations.py:406
 msgid "Freeze Frame"
 msgstr ""
 
-#: translations.py:399
+#: translations.py:407
 msgid "Freeze After"
 msgstr ""
 
-#: translations.py:400
+#: translations.py:408
 msgid "Freeze Before"
 msgstr ""
 
-#: translations.py:401
+#: translations.py:409
 msgid "Angle"
 msgstr ""
 
-#: translations.py:402 translations.py:405 translations.py:406
+#: translations.py:410 translations.py:413 translations.py:414
 msgid "transition.geometry"
 msgstr ""
 
-#: translations.py:403 translations.py:462
+#: translations.py:411 translations.py:470
 msgid "Shear X"
 msgstr ""
 
-#: translations.py:404 translations.py:463
+#: translations.py:412 translations.py:471
 msgid "Shear Y"
 msgstr ""
 
-#: translations.py:413 translations.py:414 translations.py:461
-#: translations.py:465
+#: translations.py:421 translations.py:422 translations.py:469
+#: translations.py:473
 msgid "Opacity"
 msgstr ""
 
-#: translations.py:415
+#: translations.py:423
 msgid "Rotate X"
 msgstr ""
 
-#: translations.py:416
+#: translations.py:424
 msgid "Rotate Y"
 msgstr ""
 
-#: translations.py:417
+#: translations.py:425
 msgid "Rotate Z"
 msgstr ""
 
-#: translations.py:419
+#: translations.py:427
 msgid "Edge Mode"
 msgstr ""
 
-#: translations.py:420
+#: translations.py:428
 msgid "Sel. Space"
 msgstr ""
 
-#: translations.py:421
+#: translations.py:429
 msgid "Operation"
 msgstr ""
 
-#: translations.py:422
+#: translations.py:430 translations.py:497
 msgid "Hard"
 msgstr ""
 
-#: translations.py:423
+#: translations.py:431
 msgid "R/A/Hue"
 msgstr ""
 
-#: translations.py:424
+#: translations.py:432
 msgid "G/B/Chroma"
 msgstr ""
 
-#: translations.py:425
+#: translations.py:433
 msgid "B/I/I"
 msgstr ""
 
-#: translations.py:426
+#: translations.py:434
 msgid "Supress"
 msgstr ""
 
-#: translations.py:427
+#: translations.py:435 translations.py:527
 msgid "Horizontal"
 msgstr ""
 
-#: translations.py:428
+#: translations.py:436 translations.py:528
 msgid "Vertical"
 msgstr ""
 
-#: translations.py:429
+#: translations.py:437
 msgid "Type"
 msgstr ""
 
-#: translations.py:431
+#: translations.py:439
 msgid "Dot Radius"
 msgstr ""
 
-#: translations.py:432
+#: translations.py:440
 msgid "Cyan Angle"
 msgstr ""
 
-#: translations.py:433
+#: translations.py:441
 msgid "Magenta Angle"
 msgstr ""
 
-#: translations.py:434
+#: translations.py:442
 msgid "Yellow Angle"
 msgstr ""
 
-#: translations.py:436
+#: translations.py:444
 msgid "Matrix Type"
 msgstr ""
 
-#: translations.py:437
+#: translations.py:445
 msgid "Aspect"
 msgstr ""
 
-#: translations.py:438
+#: translations.py:446
 msgid "Center Size"
 msgstr ""
 
-#: translations.py:439
+#: translations.py:447
 msgid "Azimuth"
 msgstr ""
 
-#: translations.py:440 translations.py:445
+#: translations.py:448 translations.py:453
 msgid "Lightness"
 msgstr ""
 
-#: translations.py:441
+#: translations.py:449
 msgid "Bump Height"
 msgstr ""
 
-#: translations.py:442
+#: translations.py:450
 msgid "Gray"
 msgstr ""
 
-#: translations.py:443
+#: translations.py:451
 msgid "Split Preview"
 msgstr ""
 
-#: translations.py:444
+#: translations.py:452
 msgid "Source on Left"
 msgstr ""
 
-#: translations.py:446
+#: translations.py:454
 msgid "Input black level"
 msgstr ""
 
-#: translations.py:447
+#: translations.py:455
 msgid "Input white level"
 msgstr ""
 
-#: translations.py:448
+#: translations.py:456
 msgid "Black output"
 msgstr ""
 
-#: translations.py:449
+#: translations.py:457
 msgid "White output"
 msgstr ""
 
-#: translations.py:450
+#: translations.py:458 translations.py:513
 msgid "Red"
 msgstr ""
 
-#: translations.py:451
+#: translations.py:459 translations.py:508 translations.py:514
 msgid "Green"
 msgstr ""
 
-#: translations.py:452
+#: translations.py:460 translations.py:509 translations.py:515
 msgid "Blue"
 msgstr ""
 
-#: translations.py:453
+#: translations.py:461
 msgid "Action"
 msgstr ""
 
-#: translations.py:454
+#: translations.py:462
 msgid "Keep Luma"
 msgstr ""
 
-#: translations.py:455
+#: translations.py:463
 msgid "Luma Formula"
 msgstr ""
 
-#: translations.py:456
+#: translations.py:464
 msgid "Effect"
 msgstr ""
 
-#: translations.py:458
+#: translations.py:466
 msgid "Blend Type"
 msgstr ""
 
-#: translations.py:466 translations.py:470
+#: translations.py:474 translations.py:478
 msgid "Wipe Type"
 msgstr ""
 
-#: translations.py:468 translations.py:472
+#: translations.py:476 translations.py:480
 msgid "Softness"
 msgstr ""
 
-#: translations.py:469
+#: translations.py:477
 msgid "Wipe Amount"
+msgstr ""
+
+#: translations.py:484 translations.py:489
+msgid "Shave"
+msgstr ""
+
+#: translations.py:485
+msgid "Rectangle"
+msgstr ""
+
+#: translations.py:486
+msgid "Ellipse"
+msgstr ""
+
+#: translations.py:487
+msgid "Triangle"
+msgstr ""
+
+#: translations.py:488 translations.py:502
+msgid "Diamond"
+msgstr ""
+
+#: translations.py:490
+msgid "Shrink Hard"
+msgstr ""
+
+#: translations.py:491
+msgid "Shrink Soft"
+msgstr ""
+
+#: translations.py:492
+msgid "Grow Hard"
+msgstr ""
+
+#: translations.py:493
+msgid "Grow Soft"
+msgstr ""
+
+#: translations.py:494
+msgid "RGB"
+msgstr ""
+
+#: translations.py:495
+msgid "ABI"
+msgstr ""
+
+#: translations.py:496
+msgid "HCI"
+msgstr ""
+
+#: translations.py:498
+msgid "Fat"
+msgstr ""
+
+#: translations.py:499
+msgid "Normal"
+msgstr ""
+
+#: translations.py:500
+msgid "Skinny"
+msgstr ""
+
+#: translations.py:501
+msgid "Ellipsoid"
+msgstr ""
+
+#: translations.py:503
+msgid "Overwrite"
+msgstr ""
+
+#: translations.py:507 mlttransitions.py:136
+msgid "Subtract"
+msgstr ""
+
+#: translations.py:510
+msgid "Sharper"
+msgstr ""
+
+#: translations.py:511
+msgid "Fuzzier"
+msgstr ""
+
+#: translations.py:512
+msgid "Luma"
+msgstr ""
+
+#: translations.py:516
+msgid "Add Constant"
+msgstr ""
+
+#: translations.py:517
+msgid "Change Gamma"
+msgstr ""
+
+#: translations.py:518 mlttransitions.py:131
+msgid "Multiply"
+msgstr ""
+
+#: translations.py:519
+msgid "XPro"
+msgstr ""
+
+#: translations.py:520
+msgid "OldPhoto"
+msgstr ""
+
+#: translations.py:522
+msgid "Heat"
+msgstr ""
+
+#: translations.py:523
+msgid "XRay"
+msgstr ""
+
+#: translations.py:524
+msgid "RedGreen"
+msgstr ""
+
+#: translations.py:525
+msgid "YellowBlue"
+msgstr ""
+
+#: translations.py:526
+msgid "Esses"
 msgstr ""
 
 #: mlttransitions.py:66
@@ -3092,10 +3226,6 @@ msgstr ""
 msgid "Lighten"
 msgstr ""
 
-#: mlttransitions.py:131
-msgid "Multiply"
-msgstr ""
-
 #: mlttransitions.py:132
 msgid "Overlay"
 msgstr ""
@@ -3108,10 +3238,6 @@ msgstr ""
 msgid "Softlight"
 msgstr ""
 
-#: mlttransitions.py:136
-msgid "Subtract"
-msgstr ""
-
 #: mlttransitions.py:137
 msgid "Value"
 msgstr ""
@@ -3120,27 +3246,27 @@ msgstr ""
 msgid "Height"
 msgstr ""
 
-#: propertyeditorbuilder.py:320 propertyeditorbuilder.py:373
+#: propertyeditorbuilder.py:322 propertyeditorbuilder.py:375
 msgid "Nothing"
 msgstr ""
 
-#: propertyeditorbuilder.py:320 propertyeditorbuilder.py:373
+#: propertyeditorbuilder.py:322 propertyeditorbuilder.py:375
 msgid "Progressive"
 msgstr ""
 
-#: propertyeditorbuilder.py:320 propertyeditorbuilder.py:373
+#: propertyeditorbuilder.py:322 propertyeditorbuilder.py:375
 msgid "Deinterlace"
 msgstr ""
 
-#: propertyeditorbuilder.py:320 propertyeditorbuilder.py:373
+#: propertyeditorbuilder.py:322 propertyeditorbuilder.py:375
 msgid "Both"
 msgstr ""
 
-#: propertyeditorbuilder.py:330 propertyeditorbuilder.py:383
+#: propertyeditorbuilder.py:332 propertyeditorbuilder.py:385
 msgid "Force"
 msgstr ""
 
-#: propertyeditorbuilder.py:340 propertyeditorbuilder.py:393
+#: propertyeditorbuilder.py:342 propertyeditorbuilder.py:395
 msgid "Align"
 msgstr ""
 
