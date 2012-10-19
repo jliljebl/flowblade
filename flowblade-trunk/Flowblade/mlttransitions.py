@@ -52,6 +52,9 @@ PROP_EXPRESSION = appconsts.PROP_EXPRESSION
 # dict name : MLTCompositorInfo
 mlt_compositor_transition_infos = {}
 
+# Transitions not found in the system
+not_found_transitions = [] 
+
 # Wipes
 # User displayed name -> resource image
 wipe_lumas = None
@@ -313,6 +316,8 @@ def load_compositors_xml(transitions):
         compositor_info = CompositorTransitionInfo(c_node)
         if (not compositor_info.mlt_service_id in transitions) and len(transitions) > 0:
             print "MLT transition " + compositor_info.mlt_service_id + " not found."
+            global not_found_transitions
+            not_found_transitions.append(compositor_info)
             continue
         mlt_compositor_transition_infos[compositor_info.name] = compositor_info
 

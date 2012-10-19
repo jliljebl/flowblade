@@ -29,9 +29,15 @@ import pango
 import guicomponents
 import guiutils
 import editorpersistance
+import editorstate
+import locale
+import mltenv
 import mltprofiles
+import mltfilters
+import mlttransitions
 import panels
 import projectdata
+import render
 import respaths
 
 # Gui consts
@@ -449,25 +455,111 @@ def about_dialog(parent_window):
     dialog.show_all()
 
 def environment_dialog(parent_window):
-    dialog = gtk.Dialog(_("About"), None,
+    dialog = gtk.Dialog(_("Runtime Environment"), None,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                         (_("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
 
-    license_view = guicomponents.get_gpl3_scroll_widget((450, 370))
+    r1 = guiutils.get_left_justified_box([gtk.Label(_("MLT version: ")), gtk.Label(str(editorstate.mlt_version))])
+    r2 = guiutils.get_left_justified_box([gtk.Label(_("GTK version: ")), gtk.Label(str(editorstate.gtk_version))])
+    lc, encoding = locale.getdefaultlocale()
+    r3 = guiutils.get_left_justified_box([gtk.Label(_("Locale: ")), gtk.Label(str(lc))])
+    r3 = guiutils.get_left_justified_box([gtk.Label(_("App root: ")), gtk.Label(str(respaths.ROOT_PATH))])
 
-    alignment3 = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment3.set_padding(6, 24, 12, 12)
-    alignment3.add(license_view)
-    alignment3.set_size_request(450, 370)
+    vbox = gtk.VBox(False, 4)
+    vbox.pack_start(r1, False, False, 0)
+    vbox.pack_start(r2, False, False, 0)
+    vbox.pack_start(r3, False, False, 0)
+    vbox.pack_start(gtk.Label(), True, True, 0)
+
+    filters = sorted(mltenv.services)
+    filters_sw = _get_items_in_scroll_window(filters, 12, 300, 200)
+
+    transitions = sorted(mltenv.transitions)
+    transitions_sw = _get_items_in_scroll_window(transitions, 12, 300, 200)
+
+    v_codecs = sorted(mltenv.vcodecs)
+    v_codecs_sw = _get_items_in_scroll_window(v_codecs, 12, 300, 200)
+
+    a_codecs = sorted(mltenv.acodecs)
+    a_codecs_sw = _get_items_in_scroll_window(a_codecs, 12, 300, 200)
+
+    formats = sorted(mltenv.formats)
+    formats_sw = _get_items_in_scroll_window(formats, 12, 300, 200)
     
-    notebook = gtk.Notebook()
-    notebook.set_size_request(450 + 10, 370 + 10)
-    notebook.append_page(alignment3, gtk.Label(_("General")))
+    enc_ops = render.encoding_options + render.not_supported_encoding_options
+    enc_msgs = []
+    for e_opt in enc_ops:
+        if e_opt.supported:
+            msg = e_opt.name + _(" available.")
+        else:
+            msg = e_opt.name + _(" not available, ") + e_opt.err_msg + _(" missing.")
+        enc_msgs.append(msg)
+    enc_opt_sw = _get_items_in_scroll_window(enc_msgs, 100, 300, 200) # 100 == we want all of these to be in one column
+
+    missing_mlt_services = []
+    for f in mltfilters.not_found_filters:
+        msg = "mlt.Filter " + f.mlt_service_id + _(" for filter ") + f.name + _(" not found.")
+        missing_mlt_services.append(msg)
+    for t in mlttransitions.not_found_transitions:
+        msg = "mlt.Transition " + t.mlt_service_id + _(" for transition ") + t.name + _(" not found.")
+    missing_services_sw = _get_items_in_scroll_window(missing_mlt_services, 100, 300, 200) # 100 == we want all of these to be in one column
     
-    dialog.vbox.pack_start(notebook, True, True, 0)
+    l_pane = gtk.VBox(False, 4)
+    l_pane.pack_start(guiutils.get_named_frame(_("General"), vbox), False, False, 0)
+    l_pane.pack_start(guiutils.get_named_frame(_("MLT Filters"), filters_sw), False, False, 0)
+    l_pane.pack_start(guiutils.get_named_frame(_("MLT Transitions"), transitions_sw), False, False, 0)
+    l_pane.pack_start(guiutils.get_named_frame(_("Missing MLT Services"), missing_services_sw), False, False, 0)
+    l_pane.pack_start(gtk.Label(), True, True, 0)
+
+    r_pane = gtk.VBox(False, 4)
+    r_pane.pack_start(guiutils.get_named_frame(_("Video Codecs"), v_codecs_sw), False, False, 0)
+    r_pane.pack_start(guiutils.get_named_frame(_("Audio Codecs"), a_codecs_sw), False, False, 0)
+    r_pane.pack_start(guiutils.get_named_frame(_("Formats"), formats_sw), False, False, 0)
+    r_pane.pack_start(guiutils.get_named_frame(_("Render Options"), enc_opt_sw), False, False, 0)
+    r_pane.pack_start(gtk.Label(), True, True, 0)
+
+    pane = gtk.HBox(False, 4)
+    pane.pack_start(l_pane, False, False, 0)
+    pane.pack_start(r_pane, False, False, 0)
+    
+    a = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    a.set_padding(6, 24, 12, 12)
+    a.add(pane)
+    
+    dialog.vbox.pack_start(a, True, True, 0)
     dialog.connect('response', _dialog_destroy)
     dialog.show_all()
+
+def _get_items_in_scroll_window(items, rows_count, w, h):
+    row_widgets = []
+    for i in items:
+        row = guiutils.get_left_justified_box([gtk.Label(i)])
+        row_widgets.append(row)
+    items_pane = _get_item_columns_panel(row_widgets, rows_count)
+
+    sw = gtk.ScrolledWindow()
+    sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+    sw.add_with_viewport(items_pane)
+    sw.set_size_request(w, h)
+    return sw
     
+def _get_item_columns_panel(items, rows):
+    hbox = gtk.HBox(False, 4)
+    n_item = 0
+    col_items = 0
+    vbox = gtk.VBox()
+    hbox.pack_start(vbox, False, False, 0)
+    while n_item < len(items):
+        item = items[n_item]
+        vbox.pack_start(item, False, False, 0)
+        n_item += 1
+        col_items += 1
+        if col_items > rows:
+            vbox = gtk.VBox()
+            hbox.pack_start(vbox, False, False, 0)
+            col_items = 0
+    return hbox
+
 def color_clip_dialog(callback):
     dialog = gtk.Dialog(_("Create Color Clip"), None,
                     gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,

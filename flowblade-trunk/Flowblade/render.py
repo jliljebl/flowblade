@@ -82,6 +82,7 @@ SIZE_OPTION = "s"
 
 render_encoding_doc = None
 encoding_options = []
+not_supported_encoding_options = []
 quality_option_groups = {}
 quality_option_groups_default_index = {}
 
@@ -228,7 +229,7 @@ def load_render_profiles():
 
     # Create encoding options
     print "Render profiles:"
-    global encoding_options
+    global encoding_options, not_supported_encoding_options
     encoding_option_nodes = render_encoding_doc.getElementsByTagName(ENCODING_OPTION)
     for eo_node in encoding_option_nodes:
         encoding_option = EncodingOption(eo_node)
@@ -237,6 +238,7 @@ def load_render_profiles():
             msg = "...available"
         else:
             msg = "...NOT available, " + encoding_option.err_msg + " missing"
+            not_supported_encoding_options.append(encoding_option)
         print encoding_option.name + msg
         
 def get_render_consumer():

@@ -54,6 +54,9 @@ filters_doc = None
 # Filters are saved as tuples of group name and array of FilterInfo objects.
 groups = []
 
+# Filters that are not present in the system 
+not_found_filters = []
+
 # dict groupname -> icon
 group_icons = None
 
@@ -335,6 +338,8 @@ def load_filters_xml(services):
         filter_info = FilterInfo(f_node)
         if (not filter_info.mlt_service_id in services) and len(services) > 0:
             print "MLT service " + filter_info.mlt_service_id + " not found."
+            global not_found_filters
+            not_found_filters.append(filter_info)
             continue
 
         if filter_info.mlt_service_id == "volume": # we need this filter to do mutes so save reference to it
@@ -401,3 +406,9 @@ def attach_all_filters(clip):
         else:# f is mltfilters.MultiFilterObject
             f.attach_all_mlt_filters(clip)
             
+def get_all_found_filters():
+    all_filters = []
+    for group_tuple in groups:
+        gkey, group = group_tuple
+        all_filters = all_filters + group
+    return all_filters

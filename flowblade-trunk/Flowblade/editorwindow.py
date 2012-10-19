@@ -132,7 +132,7 @@ class EditorWindow:
             ('Environment', None, _('Environment'), None, None, lambda a:useraction.environment()),
             ('About', None, _('About'), None, None, lambda a:useraction.about())
             ]
-    
+
         menu_string = """<ui>
             <menubar name='MenuBar'>
                 <menu action='FileMenu'>

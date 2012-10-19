@@ -49,6 +49,7 @@ import gui
 import guicomponents
 import keyevents
 import keyframeeditor
+import mlt
 import mltenv
 import mltfilters
 import mltplayer
@@ -90,6 +91,8 @@ def main(root_path):
     respaths.set_paths(root_path)
 
     print "gtk version:", gtk.gtk_version
+    editorstate.gtk_version = gtk.gtk_version
+    editorstate.mlt_version = mlt.LIBMLT_VERSION
 
     # Create hidden folders if not present
     user_dir = utils.get_hidden_user_dir_path()

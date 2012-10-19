@@ -574,7 +574,7 @@
         <property name="midpoint" args="range_in=0,255 range_out=0,255 displayname=Threshold">125.0</property>
     </filter>
     <!--
-    <filter id="frei0r.jannetest">
+    <filter id="frei0r.jannetest3">
         <name>JanneTest</name>
         <group>Color Effect</group>
     </filter>

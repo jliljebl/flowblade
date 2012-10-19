@@ -166,9 +166,10 @@ def _check_available_features_with_melt():
             
 
 def render_profile_supported(frmt, vcodec, acodec):
+    """
     if melt_available == False:
         return (True, "")
-
+    """
     if acodec in acodecs:
         if vcodec in vcodecs:
             if frmt in formats:

@@ -52,6 +52,9 @@ _timeline_displayed = True
 # Used to alter gui layout and tracks configuration, set at startup
 SCREEN_HEIGHT = -1
 
+# Runtime environment data
+gtk_version = None
+mlt_version = None
 
 def current_is_move_mode():
     if ((edit_mode == INSERT_MOVE) or (edit_mode == OVERWRITE_MOVE)):
