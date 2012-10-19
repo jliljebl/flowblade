@@ -459,32 +459,33 @@ def environment_dialog(parent_window):
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                         (_("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
 
+    COLUMN_WIDTH = 450
+
     r1 = guiutils.get_left_justified_box([gtk.Label(_("MLT version: ")), gtk.Label(str(editorstate.mlt_version))])
     r2 = guiutils.get_left_justified_box([gtk.Label(_("GTK version: ")), gtk.Label(str(editorstate.gtk_version))])
     lc, encoding = locale.getdefaultlocale()
     r3 = guiutils.get_left_justified_box([gtk.Label(_("Locale: ")), gtk.Label(str(lc))])
-    r3 = guiutils.get_left_justified_box([gtk.Label(_("App root: ")), gtk.Label(str(respaths.ROOT_PATH))])
+    #r3 = guiutils.get_left_justified_box([gtk.Label(_("App root: ")), gtk.Label(str(respaths.ROOT_PATH))])
 
     vbox = gtk.VBox(False, 4)
     vbox.pack_start(r1, False, False, 0)
     vbox.pack_start(r2, False, False, 0)
     vbox.pack_start(r3, False, False, 0)
-    vbox.pack_start(gtk.Label(), True, True, 0)
 
     filters = sorted(mltenv.services)
-    filters_sw = _get_items_in_scroll_window(filters, 12, 300, 200)
+    filters_sw = _get_items_in_scroll_window(filters, 9, COLUMN_WIDTH, 180)
 
     transitions = sorted(mltenv.transitions)
-    transitions_sw = _get_items_in_scroll_window(transitions, 12, 300, 200)
+    transitions_sw = _get_items_in_scroll_window(transitions, 9, COLUMN_WIDTH, 180)
 
     v_codecs = sorted(mltenv.vcodecs)
-    v_codecs_sw = _get_items_in_scroll_window(v_codecs, 12, 300, 200)
+    v_codecs_sw = _get_items_in_scroll_window(v_codecs, 7, COLUMN_WIDTH, 145)
 
     a_codecs = sorted(mltenv.acodecs)
-    a_codecs_sw = _get_items_in_scroll_window(a_codecs, 12, 300, 200)
+    a_codecs_sw = _get_items_in_scroll_window(a_codecs, 7, COLUMN_WIDTH, 145)
 
     formats = sorted(mltenv.formats)
-    formats_sw = _get_items_in_scroll_window(formats, 12, 300, 200)
+    formats_sw = _get_items_in_scroll_window(formats, 7, COLUMN_WIDTH, 145)
     
     enc_ops = render.encoding_options + render.not_supported_encoding_options
     enc_msgs = []
@@ -494,7 +495,7 @@ def environment_dialog(parent_window):
         else:
             msg = e_opt.name + _(" not available, ") + e_opt.err_msg + _(" missing.")
         enc_msgs.append(msg)
-    enc_opt_sw = _get_items_in_scroll_window(enc_msgs, 100, 300, 200) # 100 == we want all of these to be in one column
+    enc_opt_sw = _get_items_in_scroll_window(enc_msgs, 5, COLUMN_WIDTH, 115)
 
     missing_mlt_services = []
     for f in mltfilters.not_found_filters:
@@ -502,14 +503,14 @@ def environment_dialog(parent_window):
         missing_mlt_services.append(msg)
     for t in mlttransitions.not_found_transitions:
         msg = "mlt.Transition " + t.mlt_service_id + _(" for transition ") + t.name + _(" not found.")
-    missing_services_sw = _get_items_in_scroll_window(missing_mlt_services, 100, 300, 200) # 100 == we want all of these to be in one column
+    missing_services_sw = _get_items_in_scroll_window(missing_mlt_services, 5, COLUMN_WIDTH, 100) # 100 == we want all of these to be in one column
     
     l_pane = gtk.VBox(False, 4)
     l_pane.pack_start(guiutils.get_named_frame(_("General"), vbox), False, False, 0)
     l_pane.pack_start(guiutils.get_named_frame(_("MLT Filters"), filters_sw), False, False, 0)
     l_pane.pack_start(guiutils.get_named_frame(_("MLT Transitions"), transitions_sw), False, False, 0)
-    l_pane.pack_start(guiutils.get_named_frame(_("Missing MLT Services"), missing_services_sw), False, False, 0)
-    l_pane.pack_start(gtk.Label(), True, True, 0)
+    l_pane.pack_start(guiutils.get_named_frame(_("Missing MLT Services"), missing_services_sw), True, True, 0)
+    #l_pane.pack_start(gtk.Label(), True, True, 0)
 
     r_pane = gtk.VBox(False, 4)
     r_pane.pack_start(guiutils.get_named_frame(_("Video Codecs"), v_codecs_sw), False, False, 0)
@@ -520,6 +521,7 @@ def environment_dialog(parent_window):
 
     pane = gtk.HBox(False, 4)
     pane.pack_start(l_pane, False, False, 0)
+    pane.pack_start(guiutils.pad_label(5, 5), False, False, 0)
     pane.pack_start(r_pane, False, False, 0)
     
     a = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
