@@ -462,62 +462,74 @@ def environment_dialog(parent_window):
     COLUMN_WIDTH = 450
 
     r1 = guiutils.get_left_justified_box([gtk.Label(_("MLT version: ")), gtk.Label(str(editorstate.mlt_version))])
-    r2 = guiutils.get_left_justified_box([gtk.Label(_("GTK version: ")), gtk.Label(str(editorstate.gtk_version))])
+    try:
+        major, minor, rev = editorstate.gtk_version
+        gtk_ver = str(major) + "." + str(minor) + "." + str(rev)
+    except:
+        gtk_ver = str(editorstate.gtk_version)
+    r2 = guiutils.get_left_justified_box([gtk.Label(_("GTK version: ")), gtk.Label(gtk_ver)])
     lc, encoding = locale.getdefaultlocale()
     r3 = guiutils.get_left_justified_box([gtk.Label(_("Locale: ")), gtk.Label(str(lc))])
-    #r3 = guiutils.get_left_justified_box([gtk.Label(_("App root: ")), gtk.Label(str(respaths.ROOT_PATH))])
+
+    if editorstate.app_running_from == editorstate.RUNNING_FROM_INSTALLATION:
+        run_type = _("INSTALLATION")
+    else:
+        run_type = _("DEVELOPER VERSION")
+        
+    r4 = guiutils.get_left_justified_box([gtk.Label(_("Running from: ")), gtk.Label(run_type)])
+
+    gen_items = [r1, r2, r3, r4]
 
     vbox = gtk.VBox(False, 4)
     vbox.pack_start(r1, False, False, 0)
     vbox.pack_start(r2, False, False, 0)
     vbox.pack_start(r3, False, False, 0)
+    vbox.pack_start(r4, False, False, 0)
 
     filters = sorted(mltenv.services)
-    filters_sw = _get_items_in_scroll_window(filters, 9, COLUMN_WIDTH, 180)
+    filters_sw = _get_items_in_scroll_window(filters, 7, COLUMN_WIDTH, 140)
 
     transitions = sorted(mltenv.transitions)
-    transitions_sw = _get_items_in_scroll_window(transitions, 9, COLUMN_WIDTH, 180)
+    transitions_sw = _get_items_in_scroll_window(transitions, 7, COLUMN_WIDTH, 140)
 
     v_codecs = sorted(mltenv.vcodecs)
-    v_codecs_sw = _get_items_in_scroll_window(v_codecs, 7, COLUMN_WIDTH, 145)
+    v_codecs_sw = _get_items_in_scroll_window(v_codecs, 6, COLUMN_WIDTH, 125)
 
     a_codecs = sorted(mltenv.acodecs)
-    a_codecs_sw = _get_items_in_scroll_window(a_codecs, 7, COLUMN_WIDTH, 145)
+    a_codecs_sw = _get_items_in_scroll_window(a_codecs, 6, COLUMN_WIDTH, 125)
 
     formats = sorted(mltenv.formats)
-    formats_sw = _get_items_in_scroll_window(formats, 7, COLUMN_WIDTH, 145)
+    formats_sw = _get_items_in_scroll_window(formats, 5, COLUMN_WIDTH, 105)
     
     enc_ops = render.encoding_options + render.not_supported_encoding_options
     enc_msgs = []
     for e_opt in enc_ops:
         if e_opt.supported:
-            msg = e_opt.name + _(" available.")
+            msg = e_opt.name + _(" AVAILABLE")
         else:
-            msg = e_opt.name + _(" not available, ") + e_opt.err_msg + _(" missing.")
+            msg = e_opt.name + _(" NOT AVAILABLE, ") + e_opt.err_msg + _(" MISSING")
         enc_msgs.append(msg)
     enc_opt_sw = _get_items_in_scroll_window(enc_msgs, 5, COLUMN_WIDTH, 115)
 
     missing_mlt_services = []
     for f in mltfilters.not_found_filters:
-        msg = "mlt.Filter " + f.mlt_service_id + _(" for filter ") + f.name + _(" not found.")
+        msg = "mlt.Filter " + f.mlt_service_id + _(" FOR FILTER ") + f.name + _(" NOT FOUND")
         missing_mlt_services.append(msg)
     for t in mlttransitions.not_found_transitions:
-        msg = "mlt.Transition " + t.mlt_service_id + _(" for transition ") + t.name + _(" not found.")
-    missing_services_sw = _get_items_in_scroll_window(missing_mlt_services, 5, COLUMN_WIDTH, 100) # 100 == we want all of these to be in one column
+        msg = "mlt.Transition " + t.mlt_service_id + _(" FOR TRANSITION ") + t.name + _(" NOT FOUND")
+    missing_services_sw = _get_items_in_scroll_window(missing_mlt_services, 5, COLUMN_WIDTH, 60)
     
     l_pane = gtk.VBox(False, 4)
     l_pane.pack_start(guiutils.get_named_frame(_("General"), vbox), False, False, 0)
     l_pane.pack_start(guiutils.get_named_frame(_("MLT Filters"), filters_sw), False, False, 0)
     l_pane.pack_start(guiutils.get_named_frame(_("MLT Transitions"), transitions_sw), False, False, 0)
     l_pane.pack_start(guiutils.get_named_frame(_("Missing MLT Services"), missing_services_sw), True, True, 0)
-    #l_pane.pack_start(gtk.Label(), True, True, 0)
 
     r_pane = gtk.VBox(False, 4)
     r_pane.pack_start(guiutils.get_named_frame(_("Video Codecs"), v_codecs_sw), False, False, 0)
     r_pane.pack_start(guiutils.get_named_frame(_("Audio Codecs"), a_codecs_sw), False, False, 0)
     r_pane.pack_start(guiutils.get_named_frame(_("Formats"), formats_sw), False, False, 0)
     r_pane.pack_start(guiutils.get_named_frame(_("Render Options"), enc_opt_sw), False, False, 0)
-    r_pane.pack_start(gtk.Label(), True, True, 0)
 
     pane = gtk.HBox(False, 4)
     pane.pack_start(l_pane, False, False, 0)
@@ -531,6 +543,7 @@ def environment_dialog(parent_window):
     dialog.vbox.pack_start(a, True, True, 0)
     dialog.connect('response', _dialog_destroy)
     dialog.show_all()
+    dialog.set_resizable(False)
 
 def _get_items_in_scroll_window(items, rows_count, w, h):
     row_widgets = []

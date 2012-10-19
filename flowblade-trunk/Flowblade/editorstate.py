@@ -55,6 +55,9 @@ SCREEN_HEIGHT = -1
 # Runtime environment data
 gtk_version = None
 mlt_version = None
+RUNNING_FROM_INSTALLATION = 0
+RUNNING_FROM_DEV_VERSION = 1
+app_running_from = RUNNING_FROM_INSTALLATION
 
 def current_is_move_mode():
     if ((edit_mode == INSERT_MOVE) or (edit_mode == OVERWRITE_MOVE)):
