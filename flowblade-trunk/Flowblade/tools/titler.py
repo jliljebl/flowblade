@@ -30,6 +30,7 @@ import threading
 import dialogs
 from editorstate import PLAYER
 from editorstate import PROJECT
+import editorstate
 import editorpersistance
 import gui
 import guicomponents
@@ -45,6 +46,15 @@ _titler_data = None
 
 _keep_titler_data = True
 _open_saved_in_bin = True
+
+VIEW_EDITOR_WIDTH = 815
+VIEW_EDITOR_HEIGHT = 620
+
+TEXT_LAYER_LIST_WIDTH = 300
+TEXT_LAYER_LIST_HEIGHT = 250
+
+TEXT_VIEW_WIDTH = 300
+TEXT_VIEW_HEIGHT = 275
 
 DEFAULT_FONT_SIZE = 25
 
@@ -141,9 +151,15 @@ class Titler(gtk.Window):
         gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
         self.set_title(_("Titler"))
 
+        if editorstate.SCREEN_HEIGHT < 800:
+            global TEXT_LAYER_LIST_HEIGHT, TEXT_VIEW_HEIGHT, VIEW_EDITOR_HEIGHT
+            TEXT_LAYER_LIST_HEIGHT = 200
+            TEXT_VIEW_HEIGHT = 225
+            VIEW_EDITOR_HEIGHT = 550
+
         self.block_updates = False
         
-        self.view_editor = vieweditor.ViewEditor(PLAYER().profile)
+        self.view_editor = vieweditor.ViewEditor(PLAYER().profile, VIEW_EDITOR_WIDTH, VIEW_EDITOR_HEIGHT)
         self.view_editor.active_layer_changed_listener = self.active_layer_changed
         
         add_b = gtk.Button(_("Add"))
@@ -165,7 +181,7 @@ class Titler(gtk.Window):
         center_v.connect("clicked", lambda w:self._center_v_pressed())
             
         self.layer_list = TextLayerListView(self._layer_selection_changed)
-        self.layer_list.set_size_request(300, 250)
+        self.layer_list.set_size_request(TEXT_LAYER_LIST_WIDTH, TEXT_LAYER_LIST_HEIGHT)
     
         self.text_view = gtk.TextView()
         self.text_view.set_pixels_above_lines(2)
@@ -175,7 +191,7 @@ class Titler(gtk.Window):
         self.sw = gtk.ScrolledWindow()
         self.sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_ALWAYS)
         self.sw.add(self.text_view)
-        self.sw.set_size_request(300, 275)
+        self.sw.set_size_request(TEXT_VIEW_WIDTH, TEXT_VIEW_HEIGHT)
 
         scroll_frame = gtk.Frame()
         scroll_frame.add(self.sw)

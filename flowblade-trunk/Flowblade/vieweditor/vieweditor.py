@@ -32,7 +32,7 @@ GUIDES_COLOR = (0.5, 0.5, 0.5, 1.0)
 
 class ViewEditor(gtk.Frame):
 
-    def __init__(self, profile):
+    def __init__(self, profile, scroll_width, scroll_height):
         gtk.Frame.__init__(self)
         self.scale = 1.0
         self.profile_w = profile.width()
@@ -55,7 +55,8 @@ class ViewEditor(gtk.Frame):
         self.scroll_window.add_with_viewport(self.edit_area)
         self.scroll_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self.scroll_window.show_all()
-        self.scroll_window.set_size_request(int(self.scaled_screen_width + MIN_PAD * 2 + 2), self.profile_h + MIN_PAD * 2 + 2) # +2 to not show scrollbars
+        self.scroll_window.set_size_request(scroll_width, scroll_height)  # +2 to not show scrollbars
+        #self.scroll_window.set_size_request(int(self.scaled_screen_width + MIN_PAD * 2 + 2), self.profile_h + MIN_PAD * 2 + 2) # +2 to not show scrollbars
         self.add(self.scroll_window)
 
         self.edit_layers = []

@@ -121,9 +121,9 @@ def main(root_path):
     _set_draw_params(scr_w, scr_h)
 
     # Refuse to run on too small screen.
-    if scr_w < 1151 or scr_h < 767:
-        _too_small_screen_exit()
-        return
+    #if scr_w < 1151 or scr_h < 767:
+    #    _too_small_screen_exit()
+    #    return
 
     # Splash screen
     if editorpersistance.prefs.display_splash_screen == True: 
