@@ -54,6 +54,6 @@ msginit --output-file=$TRANS_FILE --input=$SOURCE_POT --locale=$LANG
 
 # Give info
 echo "New translation file for $LANG_NAME was created."
-echo "Edit it and run 'create_mo $LANG' to compile binary file and test it."
+echo "Edit it and run 'compile_language $LANG' to compile binary file and test it."
 
 
