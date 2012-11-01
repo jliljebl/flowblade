@@ -149,20 +149,20 @@ def _handle_tline_key_event(event):
     
     # I
     if event.keyval == gtk.keysyms.i:
-        if (event.state & gtk.gdk.CONTROL_MASK):
-            monitorevent.to_mark_in_pressed()
-        else:
-            monitorevent.mark_in_pressed()
+        monitorevent.mark_in_pressed()
+        return True
+    if event.keyval == gtk.keysyms.I:
+        monitorevent.to_mark_in_pressed()
         return True
 
     # O
     if event.keyval == gtk.keysyms.o:
-        if (event.state & gtk.gdk.CONTROL_MASK):
-            monitorevent.to_mark_out_pressed()
-        else:
-            monitorevent.mark_out_pressed()
+        monitorevent.mark_out_pressed()
         return True
-    
+    if event.keyval == gtk.keysyms.O:
+        monitorevent.to_mark_out_pressed()
+        return True
+
     # SPACE
     if event.keyval == gtk.keysyms.space:
         if PLAYER().is_playing():
@@ -267,7 +267,6 @@ def _handle_extended_tline_focus_events(event):
         buttonevent.append_button_pressed()
         return True
 
-    print "ww"
     # J
     if event.keyval == gtk.keysyms.j:
         monitorevent.j_pressed()
