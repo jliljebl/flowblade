@@ -308,10 +308,16 @@ def _handle_clip_key_event(event):
         if event.keyval == gtk.keysyms.i:
             monitorevent.mark_in_pressed()
             return True
+        if event.keyval == gtk.keysyms.I:
+            monitorevent.to_mark_in_pressed()
+            return True
 
         # O
         if event.keyval == gtk.keysyms.o:
             monitorevent.mark_out_pressed()
+            return True
+        if event.keyval == gtk.keysyms.O:
+            monitorevent.to_mark_out_pressed()
             return True
 
 def _handle_delete():
