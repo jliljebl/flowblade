@@ -1207,7 +1207,7 @@ class TimeLineFrameScale:
                 cr.move_to(x, SCALE_HEIGHT)
                 cr.line_to(x, BIG_TICK_Y)
                 cr.stroke()
-        
+
         # Draw tc
         cr.select_font_face ("sans-serif",
                               cairo.FONT_SLANT_NORMAL,

@@ -71,7 +71,6 @@ def get_param_name(name):
         return name
 
 def get_combo_option(c_opt):
-    print "c_opt", c_opt
     try:
         return combo_options[c_opt]
     except KeyError:

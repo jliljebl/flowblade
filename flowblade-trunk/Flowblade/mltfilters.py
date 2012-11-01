@@ -203,9 +203,9 @@ class FilterObject:
     
     def reset_values(self,  mlt_profile=None, clip=None): #multipartfilters need profile and clip and caller doesn't know difference
         for i in range(0, len(self.properties)):
-            name, o_value, type = self.info.properties[i]
-            name, value, type = self.properties[i]
-            self.properties[i] = (name, o_value, type)
+            name, o_value, prop_type = self.info.properties[i]
+            name, value, prop_type = self.properties[i]
+            self.properties[i] = (name, o_value, prop_type)
         
         self.update_mlt_filter_properties_all()
 

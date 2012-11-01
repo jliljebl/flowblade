@@ -116,6 +116,7 @@ def init_module():
                     (_("Dissolve"),_create_dissolve_compositor),
                     (_("Picture in Picture"),_create_pict_in_pict_compositor),
                     (_("Region"), _create_region_wipe_compositor),
+                    (_("Affine Blend"), _create_affine_blend_compositor),
                     (_("Wipe Clip Length"), _create_wipe_compositor)]
 
     # name -> mlt_compositor_transition_infos key dict.
@@ -346,6 +347,10 @@ def create_compositor(compositor_type_index):
 # ------------------------------------------------- CompositorObject creators
 def _create_affine_compositor():
     transition_info = mlt_compositor_transition_infos["##affine"]
+    return CompositorObject(transition_info)
+
+def _create_affine_blend_compositor():
+    transition_info = mlt_compositor_transition_infos["##affineblend"]
     return CompositorObject(transition_info)
 
 def _create_pict_in_pict_compositor():

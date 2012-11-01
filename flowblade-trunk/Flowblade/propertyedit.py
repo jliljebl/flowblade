@@ -53,7 +53,8 @@ MULTIPART_END_PROP = "multiendprop"                         # Value used to set 
 NORMALIZED_FLOAT = "NORMALIZED_FLOAT"                       # range 0.0 - 1.0
 
 #  PROP_EXPRESSION values, e.g. "exptype=keyframe_hcs"      parsed output
-DEFAULT = "default"                                         # value     (str(int), str(float))  
+DEFAULT = "default"                                         # value     (str(int), str(float) or str(str))
+DEFAULT_TRANSITION = "default_transition"                   # value     (str(int), str(float) or str(str))
 SINGLE_KEYFRAME = "singlekeyframe"                          # 0=value
 OPACITY_IN_GEOM_SINGLE_KF = "opacity_in_geom_kf_single"     # 0=0/0:SCREEN_WIDTHxSCREEN_HEIGHT:opacity
 OPACITY_IN_GEOM_KF = "opacity_in_geom_kf"                   # frame=0/0:SCREEN_WIDTHxSCREEN_HEIGHT:opacity (kf_str;kf_str;kf_str;...;kf_str)
@@ -62,6 +63,8 @@ GEOM_IN_AFFINE_FILTER = "geom_in_affine_filt"               # x/y:widthxheight:o
 KEYFRAME_HCS = "keyframe_hcs"                               # frame=value(;frame=value) HCS = half comma separeted
 KEYFRAME_HCS_TRANSITION = "keyframe_hcs_transition"         # frame=value(;frame=value) HCS = half comma separeted, used to edit transitions
 MULTIPART_KEYFRAME_HCS = "multipart_keyframe"               # frame=value(;frame=value) series of mlt.Filter objects that get their properties set, HCS = half comma separeted
+FREI_POSITION_HCS = "frei_pos_hcs"                          # frame=x:y
+FREI_GEOM_HCS_TRANSITION = "frei_geom_hcs";                 # time=x:y:x_scale:y_scale:rotation:mix
 COLOR = "color"                                             # #rrggbb
 WIPE_RESOURCE = "wipe_resource"                             # /path/to/resource.pgm
 NOT_PARSED = "not_parsed"                                   # A write out value is not parsed from value
@@ -423,10 +426,16 @@ class AffineFilterGeomProperty(EditableProperty):
         y = y_s.get_adjustment().get_value()
         h = h_s.get_adjustment().get_value()
         
-        # x,y:widthxheight:opacity
+        # x/y:widthxheight:opacity
         val_str = str(x) + "/" + str(y) + ":" + str(w) + "x" + str(h) + ":100"
         self.write_value(val_str)
 
+class FreiPosHCSFilterProperty(EditableProperty):    
+    def adjustment_value_changed(self, adjustment):
+        value = adjustment.get_value()
+        out_value = self.get_out_value(value)
+        val_str = "0=" + str(out_value)
+        self.write_value(val_str)
 
 class OpacityInGeomSKFProperty(TransitionEditableProperty):
     """
@@ -489,7 +498,6 @@ class OpacityInGeomKeyframeProperty(TransitionEditableProperty):
             val_str += str(self.screen_size_str) + ":" # size
             val_str += str(self.get_out_value(opac)) + ";" # opac with converted range from slider
         
-        print val_str
         val_str = val_str.strip(";")
         self.write_value(val_str)
 
@@ -524,6 +532,10 @@ class KeyFrameGeometryOpacityProperty(TransitionEditableProperty):
         
         val_str = val_str.strip(";")
         self.write_value(val_str)
+
+class FreiGeomHCSTransitionProperty(TransitionEditableProperty):
+    def __init__(self, params):
+        TransitionEditableProperty.__init__(self, params)
 
 class KeyFrameHCSFilterProperty(EditableProperty):
     """
@@ -643,10 +655,13 @@ class MultipartKeyFrameProperty(AbstractProperty):
 # Note: HCS means half comma separated
 EDITABLE_PROPERTY_CREATORS = { \
     DEFAULT:lambda params : EditableProperty(params),
+    DEFAULT_TRANSITION:lambda params : TransitionEditableProperty(params),
     SINGLE_KEYFRAME:lambda params: SingleKeyFrameProperty(params),
     OPACITY_IN_GEOM_SINGLE_KF: lambda params : OpacityInGeomSKFProperty(params),
     OPACITY_IN_GEOM_KF: lambda params : OpacityInGeomKeyframeProperty(params),
     KEYFRAME_HCS: lambda params : KeyFrameHCSFilterProperty(params),
+    FREI_POSITION_HCS: lambda params : FreiPosHCSFilterProperty(params),
+    FREI_GEOM_HCS_TRANSITION: lambda params : FreiGeomHCSTransitionProperty(params),
     KEYFRAME_HCS_TRANSITION: lambda params : KeyFrameHCSTransitionProperty(params),
     MULTIPART_KEYFRAME_HCS: lambda params : MultipartKeyFrameProperty(params),
     COLOR: lambda params : ColorProperty(params),

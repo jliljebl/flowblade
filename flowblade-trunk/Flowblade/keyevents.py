@@ -149,12 +149,18 @@ def _handle_tline_key_event(event):
     
     # I
     if event.keyval == gtk.keysyms.i:
-        monitorevent.mark_in_pressed()
+        if (event.state & gtk.gdk.CONTROL_MASK):
+            monitorevent.to_mark_in_pressed()
+        else:
+            monitorevent.mark_in_pressed()
         return True
 
     # O
     if event.keyval == gtk.keysyms.o:
-        monitorevent.mark_out_pressed()
+        if (event.state & gtk.gdk.CONTROL_MASK):
+            monitorevent.to_mark_out_pressed()
+        else:
+            monitorevent.mark_out_pressed()
         return True
     
     # SPACE
