@@ -466,7 +466,6 @@ class Sequence:
         for old_compositor in from_sequence.compositors:
             print old_compositor.transition.b_track 
             if old_compositor.transition.b_track + video_diff < len(self.tracks) - 1:
-                print "ee"
                 clone_compositor = self._create_and_plant_clone_compositor_for_sequnce_clone(old_compositor, track_delta)
                 new_compositors.append(clone_compositor)
         self.compositors = new_compositors
@@ -642,7 +641,8 @@ class Sequence:
             elif count + 1 == self.first_video_index:
                 # This shold not happen because track heights should be set up so that minimized app 
                 # has enough space to display all tracks.
-                print "sequence.resize_tracks_to_fit (): COULD_NOT MAKE TRACKS TO FIT PANEL HEIGHT ???!!??"
+                # Yet it happens sometimes
+                print "sequence.resize_tracks_to_fit (): could not make panels fit"
                 fix_next = False
             else:
                 self.tracks[1 + count].height = TRACK_HEIGHT_SMALL

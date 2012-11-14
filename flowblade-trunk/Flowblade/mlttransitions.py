@@ -116,7 +116,7 @@ def init_module():
                     (_("Dissolve"),_create_dissolve_compositor),
                     (_("Picture in Picture"),_create_pict_in_pict_compositor),
                     (_("Region"), _create_region_wipe_compositor),
-                    (_("Affine Blend"), _create_affine_blend_compositor),
+                    #(_("Affine Blend"), _create_affine_blend_compositor),
                     (_("Wipe Clip Length"), _create_wipe_compositor)]
 
     # name -> mlt_compositor_transition_infos key dict.

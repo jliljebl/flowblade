@@ -826,7 +826,7 @@ def get_tracks_count_change_dialog(callback):
     dialog = gtk.Dialog(_("Change Sequence Tracks Count"), None,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                         (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                        _("Change Tracks"), gtk.RESPONSE_ACCEPT))
+                        _("Change Tracks").encode('utf-8'), gtk.RESPONSE_ACCEPT))
 
     tracks_combo, tracks_combo_values_list = guicomponents.get_track_counts_combo_and_values_list()
     tracks_select = panels.get_two_column_box(gtk.Label(_("New Number of Tracks:")),
