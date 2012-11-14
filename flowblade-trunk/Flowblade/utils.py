@@ -81,6 +81,7 @@ def clip_length_string(length):
     """ 
     Returns length string for length in frames.
     """
+    fr = length % fps()
     sec = length / fps()
     mins = sec / 60
     sec = int(math.floor(sec % 60))
@@ -91,12 +92,12 @@ def clip_length_string(length):
     if hours > 0:
         hr_str = str(hours) + "h"
     min_str = ""
-    if mins > 0:
+    if mins > 0 or hours > 0:
         min_str = str(mins) + "m"
-    if sec > 0:
+    if sec > 0 or min_str != "":
         s_str = str(sec) + "s"
     else:
-        s_str = str(length) + "fr"
+        s_str = str(fr) + "fr"
     return hr_str + min_str + s_str
 
 def get_tc_string(frame):
