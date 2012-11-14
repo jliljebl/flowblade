@@ -54,6 +54,7 @@ def key_down(widget, event):
         else:
             if editorstate.current_is_move_mode() == False:
                 editevent.set_default_edit_mode()
+            return True
 
     # If timeline widgets are in focus timeline keyevents are available
     if _timeline_has_focus():

@@ -388,6 +388,7 @@ def display_tline_cut_frame(track, index):
     PLAYER().seek_frame(clip_start_frame)
     
 def media_file_row_double_clicked(treeview, tree_path, col):
+    gui.tline_canvas.widget.grab_focus()
     row = max(tree_path)
     media_file_id = editorstate.current_bin().file_ids[row]
     media_file = PROJECT().media_files[media_file_id]
@@ -409,7 +410,6 @@ def set_and_display_monitor_media_file(media_file):
         display_clip_in_monitor(reset_saved_frames = False)
     else:
         gui.editor_window.clip_editor_b.set_active(True)
-
 
 # --------------------------------------- frame displayes
 def update_frame_displayers(frame):

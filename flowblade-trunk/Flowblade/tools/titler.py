@@ -289,7 +289,7 @@ class Titler(gtk.Window):
         layers_save_buttons_row.pack_start(save_layers, False, False, 0)
         layers_save_buttons_row.pack_start(load_layers, False, False, 0)
         layers_save_buttons_row.pack_start(gtk.Label(), True, True, 0)
-        layers_save_buttons_row.pack_start(clear_layers, False, False, 0)
+        #layers_save_buttons_row.pack_start(clear_layers, False, False, 0)
         
         adj = gtk.Adjustment(float(0), float(0), float(3000), float(1))
         self.x_pos_spin = gtk.SpinButton(adj)
@@ -583,6 +583,10 @@ class Titler(gtk.Window):
         _titler_data.active_layer.x = centered_x
         self._update_editor_layer_pos()
         self.view_editor.edit_area.queue_draw()
+        
+        self.block_updates = True
+        self.x_pos_spin.set_value(centered_x)
+        self.block_updates = False
 
     def _center_v_pressed(self):
         # calculate top left x pos for centering
@@ -593,6 +597,10 @@ class Titler(gtk.Window):
         _titler_data.active_layer.y = centered_y
         self._update_editor_layer_pos()
         self.view_editor.edit_area.queue_draw()
+        
+        self.block_updates = True
+        self.y_pos_spin.set_value(centered_y)
+        self.block_updates = False
 
     def _prev_frame_pressed(self):
         PLAYER().seek_delta(-1)

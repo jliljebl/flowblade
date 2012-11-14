@@ -441,12 +441,13 @@
         <name>Grayscale</name>
         <group>Color</group>
     </filter>
+    <!--
     <filter id="frei0r.cairogradient">
         <name>Cairogradient</name>
         <group>Color</group>
         <property name="pattern" args="editor=combobox exptype=default cbopts=Linear:gradient_linear,Radial:gradient_radial">gradient_linear</property>
-        <property name="start point" args="editor=no_editor exptype=frei_pos_hcs">0=0.5:0.5</property>
-        <property name="end point" args="editor=no_editor exptype=frei_pos_hcs">0=0.5:1.0;20=0.0:1.0</property>
+        <property name="start point" args="editor=no_editor exptype=frei_pos_hcs">0=0.5:0.0</property>
+        <property name="end point" args="editor=no_editor exptype=frei_pos_hcs">0=0.5:1.0</property>
         <property name="start color" args="editor=color_select exptype=color displayname=Start!Color">#ffffff</property>
         <property name="start opacity" args="editor=slider range_in=0,100">0.5</property>
         <property name="end color" args="editor=color_select exptype=color displayname=End!Color">#000000</property>
@@ -463,14 +464,17 @@
         <property name="blend mode" args="editor=combobox exptype=default cbopts=Normal:normal,Add:add,Saturate:saturate,Multiply:multiply,Screen:screen,Overlay:overlay,Darken:darken,Lighten:lighten,ColorDodge:colordodge,Colorburn:colorburn,Hardlight:hardlight,Softlight:softlight,Difference:difference,Exclusion:exclusion,HSLHue:hslhue,HSLSaturation:hslsaturation,HSLColor:hslcolor,HSLLuminosity:hslluminosity">normal</property>
         <property name="draw line" args="editor=combobox exptype=default cbopts=Yes:1.0,No:0.0">1.0</property>
         <property name="draw shape" args="editor=combobox exptype=default cbopts=Yes:1.0,No:0.0">1.0</property>
-        <property name="geometry" args="editor=no_editor exptype=default">0=100.0:100.0:400.0:200.0:0.0:1.0</property>
+        <property name="geometry" args="editor=no_editor exptype=default">0=100.0:100.0:200.0:200.0:0.0:1.0</property>
         <property name="aspect" args="editor=no_editor exptype=default">16:15</property>
         <property name="corner roundness" args="editor=no_editor exptype=default">1.0</property>
     </filter>
     <filter id="frei0r.cairoimagegrid">
         <name>Cairoimagegrid</name>
         <group>Color</group>
+        <property name="rows" args="editor=no_editor exptype=default">0.4</property>
+        <property name="columns" args="editor=no_editor exptype=default">0.1</property>
     </filter>
+    -->
     <filter id="frei0r.contrast0r">
         <name>Contrast</name>
         <group>Color</group>

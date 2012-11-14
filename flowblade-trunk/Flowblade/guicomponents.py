@@ -173,7 +173,6 @@ class ImageTextImageListView(gtk.VBox):
         # Cell renderers
         self.icon_rend_1 = gtk.CellRendererPixbuf()
         self.icon_rend_1.props.xpad = 6
-
         self.text_rend_1 = gtk.CellRendererText()
         self.text_rend_1.set_property("ellipsize", pango.ELLIPSIZE_END)
 
@@ -211,6 +210,9 @@ class ImageTextImageListView(gtk.VBox):
     def get_selected_rows_list(self):
         model, rows = self.treeview.get_selection().get_selected_rows()
         return rows
+
+def print_pillu():
+    print "pillu"
 
 class SequenceListView(ImageTextTextListView):
     """

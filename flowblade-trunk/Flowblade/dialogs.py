@@ -361,7 +361,7 @@ def about_dialog(parent_window):
     img = gtk.image_new_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
     flow_label = gtk.Label("Flowblade Movie Editor")
     filler0 = gtk.Label()
-    ver_label = gtk.Label("0.6.0")
+    ver_label = gtk.Label("0.8.0")
     filler1 = gtk.Label()
     janne_label = gtk.Label("Copyright 2012 Janne Liljeblad")
     licence_label = gtk.Label("Licensed under GPL 3")
@@ -381,7 +381,6 @@ def about_dialog(parent_window):
     vbox.pack_start(ver_label, False, False, 0)
     vbox.pack_start(filler1, False, False, 0)
     vbox.pack_start(janne_label, False, False, 0)
-    #vbox.pack_start(licence_label, False, False, 0)
     vbox.pack_start(filler2, True, True, 0)
    
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
@@ -391,18 +390,9 @@ def about_dialog(parent_window):
 
     up_label = gtk.Label("Upstream:")
     up_projs = gtk.Label("MLT")
-    up_projs2 = gtk.Label("FFMpeg, LADSPA, Sox, Cairo, Gnome, Linux")
+    up_projs2 = gtk.Label("FFMpeg, Frei0r, LADSPA, Cairo, Gnome, Linux")
     tools_label = gtk.Label("Tools:")
     tools_list = gtk.Label("Genie, Inkscape, Gimp, ack-grep")
-    vegas_label2 = gtk.Label("Image 'The Blade' in splash Creative Commons BY-NC-ND by"  )  
-    vegas_button = gtk.LinkButton("http://www.flickr.com/people/vegas/", "Marcus Vegas")
-    vegas_label3 = gtk.Label("Derivative use by permission.")
-
-    vegas_hbox = gtk.HBox(False, 4)
-    vegas_hbox.pack_start(gtk.Label(), True, True, 0)
-    vegas_hbox.pack_start(vegas_label2, False, False, 0)
-    vegas_hbox.pack_start(vegas_button, False, False, 0)
-    vegas_hbox.pack_start(gtk.Label(), True, True, 0)
 
     filler11 = gtk.Label()
     filler12 = gtk.Label()
@@ -416,8 +406,6 @@ def about_dialog(parent_window):
     
     up_label.modify_font(pango.FontDescription("sans bold 12"))
     tools_label.modify_font(pango.FontDescription("sans bold 12"))
-    vegas_label2.modify_font(pango.FontDescription("serif light 7"))
-    vegas_label3.modify_font(pango.FontDescription("serif light 7"))
     
     vbox2 = gtk.VBox(False, 4)
     vbox2.pack_start(filler14, False, False, 0)
@@ -429,8 +417,6 @@ def about_dialog(parent_window):
     vbox2.pack_start(tools_list, False, False, 0)
     vbox2.pack_start(filler12, False, False, 0)
     vbox2.pack_start(gtk.Label(), True, True, 0)
-    vbox2.pack_start(vegas_hbox, False, False, 0)
-    vbox2.pack_start(vegas_label3, False, False, 0)
 
     alignment2 = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     alignment2.set_padding(6, 24, 12, 12)
@@ -906,7 +892,7 @@ def get_new_sequence_dialog(callback, default_name):
     tracks_vbox.pack_start(tracks_select, False, False, 0)
     tracks_vbox.pack_start(guiutils.get_pad_label(12, 12), False, False, 0)
     tracks_vbox.pack_start(open_hbox, False, False, 0)
-    
+
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(6, 24, 24, 24)
     alignment.add(tracks_vbox)

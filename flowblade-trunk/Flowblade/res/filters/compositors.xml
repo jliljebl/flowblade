@@ -63,12 +63,14 @@
         <property name="composite.progressive" args="editor=no_editor">1</property>
         <extraeditor name="region_properties"></extraeditor> 
     </compositortransition>
+    <!--
     <compositortransition mlt_service="frei0r.cairoaffineblend">
         <name>##affineblend</name>
         <property name="geometry" args="editor=no_editor exptype=frei_geom_hcs">0=0.0:0.0:1.0:1.0:0.0:1.0</property>
         <property name="blend mode" args="editor=combobox exptype=default_transition cbopts=Normal:normal,Add:add,Saturate:saturate,Multiply:multiply,Screen:screen,Overlay:overlay,Darken:darken,Lighten:lighten,ColorDodge:colordodge,Colorburn:colorburn,Hardlight:hardlight,Softlight:softlight,Difference:difference,Exclusion:exclusion,HSLHue:hslhue,HSLSaturation:hslsaturation,HSLColor:hslcolor,HSLLuminosity:hslluminosity">normal</property>
     </compositortransition>
-
+    -->
+    
     <!-- BLENDS -->
     <compositortransition mlt_service="frei0r.darken">
         <name>##darken</name>

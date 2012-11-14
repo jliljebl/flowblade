@@ -40,14 +40,14 @@ for filepath in glob.glob("Flowblade/locale/*/LC_MESSAGES/*"):
     locale_files.append(filepath)
 
 setup(  name='flowblade',
-        version='0.6.0',
+        version='0.8.0',
         author='Janne Liljeblad',
         author_email='janne.liljeblad at gmail dot com',
         description='Non-linear video editor',
         url='http://code.google.com/p/flowblade/',
         license='GNU GPL3',
         scripts=['flowblade'],
-        packages=['Flowblade'],
+        packages=['Flowblade','Flowblade/tools','Flowblade/vieweditor'],
         package_data={'Flowblade':flowblade_package_data + locale_files},
         data_files=install_data)
 
