@@ -67,5 +67,4 @@ except Exception, err:
 
 
 # Launch application
-print "starting app..."
 app.main(modules_path)

@@ -68,15 +68,13 @@ def load():
     # version of program may have different prefs objects and 
     # we may need to to update prefs on disk if user has e.g.
     # installed later version of Flowblade
-    print len(prefs.__dict__)
     current_prefs = EditorPreferences()
     if len(prefs.__dict__) != len(current_prefs.__dict__):
         current_prefs.__dict__.update(prefs.__dict__)
         prefs = current_prefs
         write_file = file(prefs_file_path, "wb")
         pickle.dump(prefs, write_file)
-        print "prefs updated to new version"
-        print len(prefs.__dict__)
+        print "prefs updated to new version, new param count:", len(prefs.__dict__)
 
 def save():
     """
