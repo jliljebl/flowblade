@@ -182,12 +182,13 @@ def _do_clip_unmute(clip):
     clip.mute_filter = None
 
 def _remove_consecutive_blanks(track, index):
-    # WHAT IF TRACK ENDS WITH BLANKS??
-    # THIS MAY NOT BE ATTEMPTED IN SUCH A CASE?
+    print index
     lengths = []
     while track.clips[index].is_blanck_clip:
         lengths.append(track.clips[index].clip_length())
         _remove_clip(track, index)
+        if index == len(track.clips):
+            break
     return lengths
 
 #------------------------------------------------------------- overwrite util methods
