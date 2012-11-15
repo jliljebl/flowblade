@@ -214,14 +214,13 @@ class SimpleRectEditLayer(AbstactEditorLayer):
 
     def draw(self, cr, write_out_layers):
         if write_out_layers:
-            return # this is bounding boxes, handles etc.
+            return # this layer is not drawn when writing out layers
 
         if self.active:
             cr.set_source_rgba(*self.ACTIVE_COLOR)
         else:
             cr.set_source_rgba(*self.NOT_ACTIVE_COLOR)
         self.edit_point_shape.draw_line_shape(cr, self.view_editor)
-        #cr.set_source_rgba(1,1,1,1)
         self.edit_point_shape.draw_points(cr, self.view_editor)
 
 

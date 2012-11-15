@@ -45,7 +45,11 @@ sys.path.insert(0, modules_path + "/tools")
 # Check that we have MLT, missing is fatal.
 try:
     import mlt
-    print "MLT found, version:", mlt.LIBMLT_VERSION
+    try:
+        mlt_version = mlt.LIBMLT_VERSION
+        print "MLT found, version:", mlt_version
+    except:
+        print "MLT found but version info not available. MLT probably too old to work reliably..."
 except Exception, err:
     print "MLT not found, exiting..."
     print "ERROR:", err
