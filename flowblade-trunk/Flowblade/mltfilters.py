@@ -66,6 +66,8 @@ group_icons = None
 # THIS IS NOT USED ANYMORE! DOUBLE CHECK THAT THIS REALLY IS THE CASE AND KILL!
 compositor_filters = {}
 
+
+
 # ICONS
 FILTER_DEFAULT_ICON = None
 

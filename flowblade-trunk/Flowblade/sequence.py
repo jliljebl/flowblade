@@ -99,7 +99,7 @@ class Sequence:
     Multitrack MLT object
     """
     def __init__(self, profile, name="sequence"):
-        
+
         # Data members
         self.name = name # name of sequence
         self.next_id = 0 # id for next created clip
@@ -109,7 +109,7 @@ class Sequence:
         self.markers = [] #future feature, not used currently
         self.proxyclips = {} #future feature, not used currently
         self.rendered_versions = {} #future feature, not used currently
-        
+
         # MLT objects for a multitrack sequence
         self.init_mlt_objects()
 
@@ -120,7 +120,7 @@ class Sequence:
 
         self.tractor.mark_in = -1
         self.tractor.mark_out = -1
-        
+
         self.field = self.tractor.field()
         self.multitrack = self.tractor.multitrack()
         

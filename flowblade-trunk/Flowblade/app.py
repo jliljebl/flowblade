@@ -34,6 +34,7 @@ import time
 import threading
 
 import appconsts
+import audiomonitoring
 import audiowaveform
 import clipeffectseditor
 import cliprenderer
@@ -182,6 +183,9 @@ def main(root_path):
         gobject.timeout_add(10, autosave_recovery_dialog)
     else:
         start_autosave()
+
+    #audiomonitoring.add_audio_level_filter(editorstate.current_sequence().tractor, editorstate.current_sequence().profile)
+    #audiomonitoring.start_monitoring()
     
     # Launch gtk+ main loop
     gtk.main()
