@@ -240,7 +240,8 @@ def load_render_profiles():
             msg = "...NOT available, " + encoding_option.err_msg + " missing"
             not_supported_encoding_options.append(encoding_option)
         print encoding_option.name + msg
-        
+    encoding_options = []
+    
 def get_render_consumer():
     """
     Creates and sets parameters to mlt.Consumer 
@@ -438,6 +439,8 @@ def create_widgets():
     _fill_audio_desc()
 
 def set_default_values_for_widgets():
+    if len(encoding_options) == 0:# this won't work if no encoding options available
+        return                   # but we don't want crash, so that we can inform user
     widgets.encodings_cb.set_active(DEFAULT_ENCODING_INDEX)
     widgets.movie_name.set_text("movie")
     widgets.out_folder.set_current_folder(os.path.expanduser("~"))

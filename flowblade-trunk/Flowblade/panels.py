@@ -122,8 +122,12 @@ def get_project_name_panel(project_name):
     return get_named_frame(_("Name"), name_row)
 
 def get_render_panel_left(editor_window, options_clicked_cb, add_audio_panel):
-    render.create_widgets()
-
+    try:
+        render.create_widgets()
+    except IndexError:
+        print "No rendering options found"
+        return None
+        
     out_folder_row = get_two_column_box(gtk.Label(_("Folder:")),
                               render.widgets.out_folder, 60)
     name_box = gtk.HBox(False, 8)

@@ -318,12 +318,22 @@ class EditorWindow:
                                 lambda w,e: useraction.open_additional_render_options_dialog(),
                                 add_audio_desc)
 
-        render_panel_right = panels.get_render_panel_right(lambda w,e: useraction.render_timeline(), normal_height)
-        render.widgets.opts_info_button.connect("clicked", lambda w: useraction.ffmpeg_opts_help())
+        # 'None' here means that no possible rendering options were available
+        # and creating panel failed. Inform user of this and hide render GUI 
+        if render_panel_left == None:
+            render_hbox = gtk.VBox(False, 5)
+            render_hbox.pack_start(gtk.Label("Rendering disabled."), False, False, 0)
+            render_hbox.pack_start(gtk.Label("No available rendering options found."), False, False, 0)
+            render_hbox.pack_start(gtk.Label("See Help->Environment->Render Options for details."), False, False, 0)
+            render_hbox.pack_start(gtk.Label("Install codecs to make rendering available."), False, False, 0)
+            render_hbox.pack_start(gtk.Label(" "), True, True, 0)
+        else: # all is good
+            render_panel_right = panels.get_render_panel_right(lambda w,e: useraction.render_timeline(), normal_height)
+            render.widgets.opts_info_button.connect("clicked", lambda w: useraction.ffmpeg_opts_help())
 
-        render_hbox = gtk.HBox(True, 5)
-        render_hbox.pack_start(render_panel_left, True, True, 0)
-        render_hbox.pack_start(render_panel_right, True, True, 0)
+            render_hbox = gtk.HBox(True, 5)
+            render_hbox.pack_start(render_panel_left, True, True, 0)
+            render_hbox.pack_start(render_panel_right, True, True, 0)
 
         render_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
         render_panel.set_padding(6, 12, 12, 12)
