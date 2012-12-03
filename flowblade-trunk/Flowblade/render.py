@@ -240,7 +240,6 @@ def load_render_profiles():
             msg = "...NOT available, " + encoding_option.err_msg + " missing"
             not_supported_encoding_options.append(encoding_option)
         print encoding_option.name + msg
-    encoding_options = []
     
 def get_render_consumer():
     """
