@@ -329,7 +329,6 @@ class EditorWindow:
             render_hbox.pack_start(gtk.Label(" "), True, True, 0)
         else: # all is good
             render_panel_right = panels.get_render_panel_right(lambda w,e: useraction.render_timeline(), normal_height)
-            render.widgets.opts_info_button.connect("clicked", lambda w: useraction.ffmpeg_opts_help())
 
             render_hbox = gtk.HBox(True, 5)
             render_hbox.pack_start(render_panel_left, True, True, 0)

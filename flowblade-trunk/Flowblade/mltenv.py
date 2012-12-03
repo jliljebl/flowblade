@@ -21,6 +21,7 @@
 """
 Module checks environment for available codecs and formats.
 """
+import gobject
 import mlt
 import subprocess
 import os
@@ -28,7 +29,7 @@ import stat
 import sys
 
 import dialogs
-import gobject
+import editorstate
 import gui
 import utils
 
@@ -43,7 +44,7 @@ formats = None
 services = None
 transitions = None
 
-melt_available = False
+environment_detection_success = False
 
 def check_available_features(repo):
     """
@@ -56,6 +57,7 @@ def check_available_features(repo):
         global formats
         global services
         global transitions
+        global environment_detection_success
         acodecs = []
         vcodecs = []
         formats = []
@@ -100,76 +102,17 @@ def check_available_features(repo):
         + str(len(vcodecs)) + " video codecs and " + str(len(acodecs)) + " audio codecs found."
         print str(len(services)) + " MLT services found."
 
+        environment_detection_success = True
+
     except:
-        _check_available_features_with_melt()
-
-def _check_available_features_with_melt():  
-    """
-    Fallback method if other method of feature detection failes.
-    
-    Create and run a script that genates lists files of codecs and formats and
-    then them into lists.
-    """
-    print "MLT detection failed, trying melt instead..."
-    global acodecs        
-    global vcodecs    
-    global formats
-    acodecs = None
-    vcodecs = None
-    formats = None
-
-    melt_path = whereis('melt')
-    if melt_path == None:
-        print "melt not found, environment unknown."
-        gobject.timeout_add(2000, _show_no_melt_info)
-        return
-    
-    global melt_available
-    melt_available = True
-
-    # Write script to file
-    script_path = utils.get_hidden_user_dir_path() + TEST_SCRIPT_FILE
-    script = open(script_path, "w")
-    script.write('#!/bin/bash\n')
-    script.write('\n')
-    script.write(melt_path + " noise: -consumer avformat acodec=list > " +
-            utils.get_hidden_user_dir_path() + ACODECS_FILE + "\n")
-    script.write(melt_path + " noise: -consumer avformat vcodec=list > " +
-            utils.get_hidden_user_dir_path() + VCODECS_FILE + "\n")
-    script.write(melt_path + " noise: -consumer avformat f=list > " +
-            utils.get_hidden_user_dir_path() + FORMATS_FILE + "\n")
-    script.write('\n')
-    script.close()
-
-    # Run script
-    # Out put is seen on console if this is run from console.
-    os.chmod(script_path, stat.S_IRWXU)
-    process = subprocess.Popen(script_path)
-    process.wait()
-
-    # Read script output to get codes and formats
-
-    ac_file = open(utils.get_hidden_user_dir_path() + ACODECS_FILE)
-    acodecs = ac_file.readlines()[2:-1]
-    ac_file.close()
-    acodecs = _strip_ends(acodecs)
-
-    vc_file = open(utils.get_hidden_user_dir_path() + VCODECS_FILE)
-    vcodecs = vc_file.readlines()[2:-1]
-    vc_file.close()
-    vcodecs = _strip_ends(vcodecs)
-
-    f_file = open(utils.get_hidden_user_dir_path() + FORMATS_FILE)
-    formats = f_file.readlines()[2:-1]
-    f_file.close()
-    formats = _strip_ends(formats)
-            
+        print "Environment detection failed, environment unknown."
+        gobject.timeout_add(2000, _show_failed_environment_info)
 
 def render_profile_supported(frmt, vcodec, acodec):
-    """
-    if melt_available == False:
+
+    if environment_detection_success == False:
         return (True, "")
-    """
+
     if acodec in acodecs:
         if vcodec in vcodecs:
             if frmt in formats:
@@ -182,23 +125,13 @@ def render_profile_supported(frmt, vcodec, acodec):
         err_msg = "audio codec " + acodec
 
     return (False, err_msg)
+
+def _show_failed_environment_info():
+    primary_txt = "Environment detection failed!"
+    secondary_txt = "You will probably be presented with filters, transitions\nand rendering options that are not available on your system." + \
+    "\n---\nYou may experience sudden crashes when adding filters or\nattempting rendering." + \
+    "\n---\nYour MLT Version is: "+ editorstate.mlt_version + "\n" + \
+    "Only report this as a bug if the MLT version above is >= 0.7.6."
     
-def whereis(program):
-    for path in os.environ.get('PATH', '').split(':'):
-        if os.path.exists(os.path.join(path, program)) and \
-           not os.path.isdir(os.path.join(path, program)):
-            return os.path.join(path, program)
-    return None
-
-def _strip_ends(slist):
-    rlist = []
-    for s in slist:
-        rlist.append(s[4:-1])
-        
-    return rlist
-
-def _show_no_melt_info():
-    primary_txt = _("Program MELT not found!")
-    secondary_txt = _("All render encodings permitted but may not work!")
     dialogs.info_message(primary_txt, secondary_txt, gui.editor_window.window)
     return False

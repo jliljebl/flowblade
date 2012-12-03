@@ -350,10 +350,6 @@ def create_widgets():
     widgets.use_opts_check = gtk.CheckButton()
     widgets.use_opts_check.connect("toggled", _use_ffmpg_opts_check_toggled)
     
-    widgets.opts_info_button = gtk.Button()
-    icon = gtk.image_new_from_stock(gtk.STOCK_INFO, gtk.ICON_SIZE_MENU)
-    widgets.opts_info_button.set_image(icon)
-
     widgets.opts_save_button = gtk.Button()
     icon = gtk.image_new_from_stock(gtk.STOCK_SAVE, gtk.ICON_SIZE_MENU)
     widgets.opts_save_button.set_image(icon)
@@ -429,7 +425,6 @@ def create_widgets():
     widgets.range_cb.set_tooltip_text(_("Select render range"))
     widgets.reset_button.set_tooltip_text(_("Reset all render options to defaults"))
     widgets.render_button.set_tooltip_text(_("Begin Rendering"))
-    widgets.opts_info_button.set_tooltip_text(_("Info on setting FFMpeg options"))
     widgets.out_profile_info_box.set_tooltip_text(_("Render profile info"))
     widgets.opts_save_button.set_tooltip_text(_("Save Render Args into a text file"))
     widgets.opts_load_button.set_tooltip_text(_("Load Render Args from a text file"))

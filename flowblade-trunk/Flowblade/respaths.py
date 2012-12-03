@@ -32,14 +32,13 @@ WIPE_RESOURCES_PATH = None
 FILTERS_XML_DOC = None
 COMPOSITORS_XML_DOC = None
 HELP_DOC = None
-FFMPEG_HELP_DOC = None
 GPL_3_DOC = None
 LOCALE_PATH = None
 
 def set_paths(root_path):
     global ROOT_PATH, IMAGE_PATH, THUMBNAIL_PATH, PROFILE_PATH,\
     BLACK_IMAGE_PATH, FILTERS_XML_DOC, COMPOSITORS_XML_DOC, \
-    WIPE_RESOURCES_PATH, PREFS_PATH, HELP_DOC, FFMPEG_HELP_DOC, LOCALE_PATH, \
+    WIPE_RESOURCES_PATH, PREFS_PATH, HELP_DOC, LOCALE_PATH, \
     GPL_3_DOC
     
     ROOT_PATH = root_path
@@ -51,6 +50,5 @@ def set_paths(root_path):
     COMPOSITORS_XML_DOC = root_path + "/res/filters/compositors.xml"
     PREFS_PATH = root_path + "/res/prefs/"
     HELP_DOC = root_path + "/res/help/help.xml"
-    FFMPEG_HELP_DOC = root_path + "/res/help/ffmpeg_opts_help.xml"
     LOCALE_PATH = root_path + "/locale/"
     GPL_3_DOC = root_path + "/res/help/gpl3"

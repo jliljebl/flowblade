@@ -28,7 +28,8 @@ import os
 import sys
 import time
 import threading
-
+import webbrowser
+    
 import app
 import appconsts
 import clipeffectseditor
@@ -390,21 +391,12 @@ def environment():
     dialogs.environment_dialog(gui.editor_window)
 
 def quick_reference():
-    #try:
-        helpfile = "ghelp://" + respaths.HELP_DOC
-        screen = gtk.gdk.screen_get_default()
-        gtk.show_uri(screen, helpfile, gtk.get_current_event_time())
-   # except:
-        #print "help fail" 
+    try:
+        webbrowser.open('http://code.google.com/p/flowblade/wiki/FlowbladeReference')
+    except:
+        dialogs.info_message("Help page not found!", "Unfortunately the webresource containing help information\nfor this application was not found.", None)
 
-def ffmpeg_opts_help():
-    #try:
-        helpfile = "ghelp://" + respaths.FFMPEG_HELP_DOC
-        screen = gtk.gdk.screen_get_default()
-        gtk.show_uri(screen, helpfile, gtk.get_current_event_time())
-   # except:
-        #print "help fail" 
-        
+     
 # ---------------------------------- rendering
 def render_timeline():
     """

@@ -93,7 +93,10 @@ def main(root_path):
 
     print "GTK+ version:", gtk.gtk_version
     editorstate.gtk_version = gtk.gtk_version
-    editorstate.mlt_version = mlt.LIBMLT_VERSION
+    try:
+        editorstate.mlt_version = mlt.LIBMLT_VERSION
+    except:
+        editorstate.mlt_version = "0.0.99"
 
     # Create hidden folders if not present
     user_dir = utils.get_hidden_user_dir_path()
