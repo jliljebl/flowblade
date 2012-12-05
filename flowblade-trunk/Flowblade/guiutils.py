@@ -21,8 +21,9 @@
 """
 Module contains utility methods for creating GUI objects.
 """
-import appconsts
 import gtk
+
+import appconsts
 import respaths
 import translations
 

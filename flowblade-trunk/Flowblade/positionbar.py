@@ -20,7 +20,7 @@
 
 """
 Module contents: 
-class PositionBar - Position on a clip or a sequence
+class PositionBar - Displays position on a clip or a sequence
 """
 
 import cairo

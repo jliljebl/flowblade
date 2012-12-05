@@ -27,6 +27,7 @@ import pango
 import pygtk
 
 import app
+import audiomonitoring
 import buttonevent
 from cairoarea import CairoDrawableArea
 import clipeffectseditor
@@ -127,6 +128,7 @@ class EditorWindow:
             ('Preferences', None, _('Preferences'), None, None, lambda a:useraction.display_preferences()),
             ('ToolsMenu', None, _('Tools')),
             ('Titler', None, _('Titler'), None, None, lambda a:titler.show_titler()),
+            ('AudioMix', None, _('Audio Mixer'), None, None, lambda a:audiomonitoring.show_audio_monitor()),
             ('HelpMenu', None, _('_Help')),
             ('QuickReference', None, _('Contents'), None, None, lambda a:useraction.quick_reference()),
             ('Environment', None, _('Environment'), None, None, lambda a:useraction.environment()),
@@ -166,6 +168,7 @@ class EditorWindow:
                 </menu>
                 <menu action='ToolsMenu'>
                     <menuitem action='Titler'/>
+                    <menuitem action='AudioMix'/>
                 </menu>
                 <menu action='HelpMenu'>
                     <menuitem action='QuickReference'/>

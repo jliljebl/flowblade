@@ -211,9 +211,6 @@ class ImageTextImageListView(gtk.VBox):
         model, rows = self.treeview.get_selection().get_selected_rows()
         return rows
 
-def print_pillu():
-    print "pillu"
-
 class SequenceListView(ImageTextTextListView):
     """
     GUI component displaying list of sequences in project

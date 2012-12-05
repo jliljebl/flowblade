@@ -106,6 +106,7 @@ class Sequence:
         self.profile = profile
         self.tracks = []
         self.compositors = []
+        self.master_audio_gain = 1.0
         self.markers = [] #future feature, not used currently
         self.proxyclips = {} #future feature, not used currently
         self.rendered_versions = {} #future feature, not used currently
@@ -250,6 +251,9 @@ class Sequence:
         track.height = TRACK_HEIGHT_NORMAL
         if editorstate.SCREEN_HEIGHT < 863:# Fix for 786 screens
             track.height = TRACK_HEIGHT_SMALL
+        
+        # Audio master gain for this track
+        track.audio_gain = 1.0
         
         # Tracks may be FREE or LOCKED
         track.edit_freedom = FREE

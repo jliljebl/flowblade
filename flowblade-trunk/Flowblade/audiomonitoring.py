@@ -21,10 +21,14 @@ import cairo
 import gtk
 import mlt
 
-import sys
-
 from cairoarea import CairoDrawableArea
+import editorstate
+import guiutils
 import utils
+
+SLOT_W = 60
+METER_SLOT_H = 300
+CONTROL_SLOT_H = 300
 
 CHANNEL_METERS_AREA_HEIGHT = 300 
 CHANNEL_METERS_AREA_WIDTH = 300
@@ -50,13 +54,16 @@ YELLOW_1 = (1 - DB_IEC_MINUS_2 + 0.001, 1, 1, 0, 1)
 YELLOW_2 = (1 - DB_IEC_MINUS_6, 1, 1, 0, 1)
 GREEN_1 = (1 - DB_IEC_MINUS_6 + 0.001, 0, 1, 0, 1)
 GREEN_2 = (1, 0, 1, 0, 1)
-        
+
+LEFT_CHANNEL = "_audio_level.0"
+RIGHT_CHANNEL = "_audio_level.1"
 
 MONITORING_AVAILABLE = False
 
 _monitor_window = None
 _update_ticker = None
-_producer = None
+_level_filters = [] # 0 master, 1 - (len - 1) editable tracks
+_audio_levels = [] # 0 master, 1 - (len - 1) editable tracks
  
 def init():
     audio_level_filter = mlt.Filter(self.profile, "audiolevel")
@@ -68,75 +75,115 @@ def init():
     else:
         MONITORING_AVAILABLE = False
     
-def add_audio_level_filter(producer, profile):
-    audio_level_filter = mlt.Filter(profile, "audiolevel")
-    producer.attach(audio_level_filter)
-    producer.audio_level_filter = audio_level_filter
-    global _producer
-    _producer = producer
-    
-def remove_audio_level_filter(producer, profile):
-    producer.detach(producer.audio_level_filter)
-    producer.audio_level_filter = None
-
-def start_monitoring():
-    red = DB_IEC_MINUS_4
-    yellow = DB_IEC_MINUS_10
-
+def show_audio_monitor():
     global _monitor_window
+    if _monitor_window != None:
+        return
+    
+    _init_level_filters()
+
     _monitor_window = AudioMonitorWindow()
         
     global _update_ticker
     _update_ticker = utils.Ticker(_audio_monitor_update, 0.04)
     _update_ticker.start_ticker()
 
+def _init_level_filters():
+    # We're attaching level filters only to MLT objects and adding nothing to python objects,
+    # so when Sequence is saved these filters will automatically be removed.
+    # Filters are not part of sequence.Sequence object because they just used for monitoring,
+    #
+    # Track/master gain values are persistant, they're also editing desitions 
+    # and are therefpre part of Sequence objects.
+    global _level_filters
+    _level_filters = []
+    seq = editorstate.current_sequence()
+    # master level filter
+    _level_filters.append(_add_audio_level_filter(seq.tractor, seq.profile))
+    # editable track level filters
+    for i in range(1, len(seq.tracks) - 1):
+        _level_filters.append(_add_audio_level_filter(seq.tracks[i], seq.profile))
+
+def _add_audio_level_filter(producer, profile):
+    audio_level_filter = mlt.Filter(profile, "audiolevel")
+    producer.attach(audio_level_filter)
+    return audio_level_filter
+
 def _audio_monitor_update():
-    level_value = _producer.audio_level_filter.get("_audio_level.1")
+    global _audio_levels
+    _audio_levels = []
+    for i in range(0, len(_level_filters)):
+        audio_level_filter = _level_filters[i]
+        l_val = _get_channel_value(audio_level_filter, LEFT_CHANNEL)
+        r_val = _get_channel_value(audio_level_filter, RIGHT_CHANNEL)
+        _audio_levels.append((l_val, r_val))
+
+    _monitor_window.meters_area.widget.queue_draw()
+
+
+def _get_channel_value(audio_level_filter, channel_property):
+    level_value = audio_level_filter.get(channel_property)
     if level_value == None:
         level_value  = "0.0"
 
     try:
         level_float = float(level_value)
-    except Exception, err:
-        print err
+    except Exception:
         level_float = 0.0
-
-    _monitor_window.channel_meters.channel_values[0] = (level_float, level_float)
-    _monitor_window.channel_meters.widget.queue_draw()
-
-    """
-    level_steps = int(level_float * 20)
-    level_str = ''.join(["#" for num in xrange(level_steps)])
-    #print level_str
-    sys.stdout.write("\r\x1b[K"+level_str.__str__())
-    sys.stdout.flush()
-    """
     
+    return level_float
+        
 class AudioMonitorWindow(gtk.Window):
     def __init__(self):
         gtk.Window.__init__(self)
+        seq = editorstate.current_sequence()
+        meters_count = 1 + (len(seq.tracks) - 2) # master + editable tracks
+        self.gain_controls = []
+        
+        self.meters_area = MetersArea(meters_count)
+        gain_control_area = gtk.HBox(False, 0)
+        for i in range(0, meters_count):
+            if i == 0:
+                name = "Master"
+            else:
+                name = utils.get_track_name(seq.tracks[i], seq)
+            gain = GainControl(name)
+            if i == 0:
+                tmp = gain
+                gain = gtk.EventBox()
+                gain.add(tmp)
+                gain.modify_bg(gtk.STATE_NORMAL, gtk.gdk.Color(red=0.8, green=0.8, blue=0.8))
+            self.gain_controls.append(gain)
+            gain_control_area.pack_start(gain, False, False, 0)
 
-        self.channel_meters = ChannelMetersArea(1)
+        meters_frame = gtk.Frame()
+        meters_frame.add(self.meters_area.widget)
 
         pane = gtk.VBox(False, 1)
-        pane.pack_start(self.channel_meters.widget, True, True, 0)
-        
-        # Set pane and show window
-        self.add(pane)
-        self.show_all()
+        pane.pack_start(meters_frame, True, True, 0)
+        pane.pack_start(gain_control_area, True, True, 0)
 
-class ChannelMetersArea:
-    def __init__(self, channels_count):    
-        self.widget = CairoDrawableArea(CHANNEL_METERS_AREA_HEIGHT,
-                                        CHANNEL_METERS_AREA_WIDTH, 
-                                        self._draw)
-        self.channels_count = channels_count
+        align = gtk.Alignment()
+        align.set_padding(12, 12, 4, 4)
+        align.add(pane)
+
+        # Set pane and show window
+        self.add(align)
+        self.show_all()
+        self.set_resizable(False)
+
+class MetersArea:
+    def __init__(self, meters_count):
+        w = SLOT_W * meters_count
+        h = METER_SLOT_H
         
-        self.channel_values = [] # (l_value, r_value) tuples
-        self.channel_meters = [] # displays both l_Value and r_value
-        for i in range(0, self.channels_count):
-            self.channel_values.append((0.0, 0.0))
-            self.channel_meters.append(AudioMeter(METER_HEIGHT))
+        self.widget = CairoDrawableArea(w,
+                                        h, 
+                                        self._draw)
+        
+        self.audio_meters = [] # displays both l_Value and r_value
+        for i in range(0, meters_count):
+            self.audio_meters.append(AudioMeter(METER_HEIGHT))
             
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
@@ -157,12 +204,22 @@ class ChannelMetersArea:
         cr.set_dash(DASHES, 0) 
         cr.set_line_width(METER_WIDTH)
         
-        for i in range(0, self.channels_count):
-            meter = self.channel_meters[i]
-            l_value, r_value = self.channel_values[i]
-            meter.display_value(cr, 25, l_value)
+        for i in range(0, len(_audio_levels)):
+            meter = self.audio_meters[i]
+            l_value, r_value = _audio_levels[i]
+            x = i * SLOT_W
+            meter.display_value(cr, x, l_value, r_value)
 
 class AudioMeter:
+    def __init__(self, height):
+        self.left_channel = ChannelMeter(height)
+        self.right_channel = ChannelMeter(height)
+
+    def display_value(self, cr, x, value_left, value_right):
+        self.left_channel.display_value(cr, x + 18, value_left)
+        self.right_channel.display_value(cr, x + SLOT_W / 2 + 6, value_right)
+        
+class ChannelMeter:
     def __init__(self, height):
         self.height = height
         self.peak = 0.0
@@ -194,3 +251,48 @@ class AudioMeter:
         y = self.height -  (value * self.height)
         dash_sharp_pad = (self.height - y) % (DASH_INK + DASH_SKIP)
         return y + dash_sharp_pad
+
+
+class GainControl(gtk.Frame):
+    def __init__(self, name):
+        gtk.Frame.__init__(self)
+        self.adjustment = gtk.Adjustment(value=100, lower=0, upper=100, step_incr=1)
+        self.slider = gtk.VScale()
+        self.slider.set_adjustment(self.adjustment)
+        self.slider.set_size_request(SLOT_W - 10, CONTROL_SLOT_H - 105)
+        self.slider.set_inverted(True)
+        #for i in range(0, 6):
+        #    self.slider.add_mark(i * 20.0, gtk.POS_LEFT, "")#'<span font_desc="Sans 10">100</span>')
+
+        self.pan_adjustment = gtk.Adjustment(value=0, lower=-100, upper=100, step_incr=1)
+        self.pan_slider = gtk.HScale()
+        self.pan_slider.set_adjustment(self.pan_adjustment)
+        self.pan_slider.set_sensitive(False)
+        
+        self.pan_button = gtk.ToggleButton("Pan")
+        self.pan_button.connect("toggled", self.pan_active_toggled)
+
+        label = guiutils.bold_label(name)
+
+        vbox = gtk.VBox(False, 0)
+        vbox.pack_start(guiutils.get_pad_label(5,5), False, False, 0)
+        vbox.pack_start(label, False, False, 0)
+        vbox.pack_start(guiutils.get_pad_label(5,5), False, False, 0)
+        vbox.pack_start(self.slider, False, False, 0)
+        vbox.pack_start(self.pan_button, False, False, 0)
+        vbox.pack_start(self.pan_slider, False, False, 0)
+        vbox.pack_start(guiutils.get_pad_label(5,5), False, False, 0)
+
+        self.add(vbox)
+        self.set_size_request(SLOT_W, CONTROL_SLOT_H)
+        
+    def pan_active_toggled(self, widget):
+        if widget.get_active():
+            self.pan_slider.set_sensitive(True)
+        else:
+            self.pan_slider.set_sensitive(False)
+        
+        self.pan_slider.set_value(0.0)
+        
+        
+        
