@@ -29,9 +29,11 @@ import guiutils
 import utils
 
 SLOT_W = 60
-METER_SLOT_H = 416
+METER_SLOT_H = 426
 CONTROL_SLOT_H = 300
+Y_TOP_PAD = 12
 
+# Dash pattern used to create "LED"s
 DASH_INK = 5.0
 DASH_SKIP = 2.0
 DASHES = [DASH_INK, DASH_SKIP, DASH_INK, DASH_SKIP]
@@ -40,15 +42,19 @@ METER_LIGHTS = 57
 METER_HEIGHT = METER_LIGHTS * DASH_INK + (METER_LIGHTS - 1) * DASH_SKIP
 METER_WIDTH = 10
 
-# These are calculated using IEC_Scale function in MLT
+# These are calculated using IEC_Scale function in MLT and correspond to level values received here
 DB_IEC_MINUS_2 = 0.95
 DB_IEC_MINUS_4 = 0.9
 DB_IEC_MINUS_6 = 0.85
 DB_IEC_MINUS_10 = 0.75
 DB_IEC_MINUS_12 = 0.70
+DB_IEC_MINUS_20 = 0.5
+DB_IEC_MINUS_40 = 0.15
 
-PEAK_FRAMES = 5
+PEAK_FRAMES = 7
+OVER_FRAMES = 20
 
+# Color gradient used to draw "LED" colors
 RED_1 = (0, 1, 0, 0, 1)
 RED_2 = (1 - DB_IEC_MINUS_4, 1, 0, 0, 1)
 YELLOW_1 = (1 - DB_IEC_MINUS_4 + 0.001, 1, 1, 0, 1)
@@ -65,30 +71,9 @@ _monitor_window = None
 _update_ticker = None
 _level_filters = [] # 0 master, 1 - (len - 1) editable tracks
 _audio_levels = [] # 0 master, 1 - (len - 1) editable tracks
-
-def IEC_Scale(dB):
-    fScale = 1.0
-
-    if (dB < -70.0):
-        fScale = 0.0
-    elif (dB < -60.0):
-        fScale = (dB + 70.0) * 0.0025
-    elif (dB < -50.0):
-        fScale = (dB + 60.0) * 0.005 + 0.025
-    elif (dB < -40.0):
-        fScale = (dB + 50.0) * 0.0075 + 0.075
-    elif (dB < -30.0):
-        fScale = (dB + 40.0) * 0.015 + 0.15
-    elif (dB < -20.0):
-        fScale = (dB + 30.0) * 0.02 + 0.3
-    elif (dB < -0.001 or dB > 0.001):
-        fScale = (dB + 20.0) * 0.025 + 0.5
-
-    return fScale
     
 def init():
     audio_level_filter = mlt.Filter(self.profile, "audiolevel")
-    print DB_IEC_MINUS_2, DB_IEC_MINUS_6, IEC_Scale(12)
 
     global MONITORING_AVAILABLE
     if audio_level_filter != None:
@@ -97,7 +82,7 @@ def init():
         MONITORING_AVAILABLE = False
     
 def show_audio_monitor():
-    print DB_IEC_MINUS_2, DB_IEC_MINUS_6, IEC_Scale(-12)
+    #print DB_IEC_MINUS_2, DB_IEC_MINUS_6, IEC_Scale(-40)
     global _monitor_window
     if _monitor_window != None:
         return
@@ -205,7 +190,10 @@ class MetersArea:
         
         self.audio_meters = [] # displays both l_Value and r_value
         for i in range(0, meters_count):
-            self.audio_meters.append(AudioMeter(METER_HEIGHT))
+            meter = AudioMeter(METER_HEIGHT)
+            if i != meters_count - 1:
+                meter.right_channel.draw_dB = True
+            self.audio_meters.append(meter)
             
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
@@ -214,7 +202,7 @@ class MetersArea:
         cr.rectangle(0, 0, w, h)
         cr.fill()
 
-        grad = cairo.LinearGradient (0, 0, 0, METER_HEIGHT)
+        grad = cairo.LinearGradient (0, Y_TOP_PAD, 0, METER_HEIGHT + Y_TOP_PAD)
         grad.add_color_stop_rgba(*RED_1)
         grad.add_color_stop_rgba(*RED_2)
         grad.add_color_stop_rgba(*YELLOW_1)
@@ -250,12 +238,19 @@ class ChannelMeter:
         self.channel_text = channel_text
         self.peak = 0.0
         self.countdown = 0
+        self.draw_dB = False
+        self.over_countdown = 0
 
     def display_value(self, cr, x, value):
+        if value > 1.0:
+            cr.set_source_rgb(1,0,0)
+            self.over_countdown = OVER_FRAMES
+
         top = self.get_meter_y_for_value(value)
-        
-        cr.move_to(x, self.height)
-        cr.line_to(x, top)
+        if (self.height - top) < 5: # fix for meter y rounding for vol 0
+            top = self.height
+        cr.move_to(x, self.height + Y_TOP_PAD)
+        cr.line_to(x, top + Y_TOP_PAD)
         cr.stroke()
         
         if value > self.peak:
@@ -263,8 +258,10 @@ class ChannelMeter:
             self.countdown = PEAK_FRAMES
         
         if self.peak > value:
+            if self.peak > 1.0:
+                self.peak = 1.0
             cr.rectangle(x - METER_WIDTH / 2, 
-                         self.get_meter_y_for_value(self.peak) + DASH_SKIP * 2 + DASH_INK, # this y is just empirism, looks right
+                         self.get_meter_y_for_value(self.peak) + DASH_SKIP * 2 + DASH_INK + 3, # this y is just empirism, works
                          METER_WIDTH,
                          DASH_INK)
             cr.fill()
@@ -273,36 +270,57 @@ class ChannelMeter:
         if self.countdown <= 0:
              self.peak = 0
 
+        if self.over_countdown > 0:
+            cr.set_source_rgb(1,0.6,0.6)
+            cr.move_to(x, 0)
+            cr.line_to(x + 4, 4)
+            cr.line_to(x, 8)
+            cr.line_to(x - 4, 4)
+            cr.close_path()
+            cr.fill()
+            self.over_countdown = self.over_countdown - 1
+                    
         self.draw_channel_identifier(cr, x)
+
         
-        #cr.set_dash(DASHES, 0) 
-        #cr.set_line_width(1.0)
-        #self.draw_value_line(cr, x, DB_IEC_MINUS_4)
-        #self.draw_value_line(cr, x, DB_IEC_MINUS_12)
+        if self.draw_dB == True:
+            self.draw_value_line(cr, x, 1.0, "0", 6)
+            self.draw_value_line(cr, x, DB_IEC_MINUS_4,"-4", 3)
+            self.draw_value_line(cr, x, DB_IEC_MINUS_12, "-12", 0)
+            self.draw_value_line(cr, x, DB_IEC_MINUS_20, "-20", 0)
+            self.draw_value_line(cr, x, DB_IEC_MINUS_40, "-40", 0)
         
     def get_meter_y_for_value(self, value):
         y = self.get_y_for_value(value)
-        dash_sharp_pad = (self.height - y) % (DASH_INK + DASH_SKIP)
-        return y + dash_sharp_pad
+        # Get pad for y value between "LED"s
+        dash_sharp_pad = y % (DASH_INK + DASH_SKIP)
+        # Round to nearest full "LED" using pad value
+        if dash_sharp_pad < ((DASH_INK + DASH_SKIP) / 2):
+            meter_y = y - dash_sharp_pad
+        else:
+            dash_sharp_pad = (DASH_INK + DASH_SKIP) - dash_sharp_pad
+            meter_y = y + dash_sharp_pad
+        return meter_y
 
     def get_y_for_value(self, value):
         return self.height - (value * self.height)
     
-    def draw_value_line(self, cr, x, value):
+    def draw_value_line(self, cr, x, value, val_text, x_fine_tune):
         y = self.get_y_for_value(value)
-        cr.move_to(x, y)
-        cr.line_to(x + 10, y)
-        cr.stroke()
-    
+        self.draw_text(val_text, "Sans 8", cr, x + 11 + x_fine_tune, y - 8 + Y_TOP_PAD, (1,1,1))
+        
     def draw_channel_identifier(self, cr, x):
+        self.draw_text(self.channel_text, "Sans Bold 8", cr, x - 4, self.height + 2 + Y_TOP_PAD, (1,1,1))
+
+    def draw_text(self, text, font_desc, cr, x, y, color):
         pango_context = pangocairo.CairoContext(cr)
         layout = pango_context.create_layout()
-        layout.set_text(self.channel_text)
-        desc = pango.FontDescription("Sans Bold 8")
+        layout.set_text(text)
+        desc = pango.FontDescription(font_desc)
         layout.set_font_description(desc)
 
-        pango_context.set_source_rgb(1, 1, 1)
-        pango_context.move_to(x - 4, self.height + 2)
+        pango_context.set_source_rgb(*color)
+        pango_context.move_to(x, y)
         pango_context.update_layout(layout)
         pango_context.show_layout(layout)
         
