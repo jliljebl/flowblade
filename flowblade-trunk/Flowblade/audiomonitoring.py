@@ -20,6 +20,8 @@
 import cairo
 import gtk
 import mlt
+import pango
+import pangocairo
 
 from cairoarea import CairoDrawableArea
 import editorstate
@@ -27,32 +29,31 @@ import guiutils
 import utils
 
 SLOT_W = 60
-METER_SLOT_H = 300
+METER_SLOT_H = 416
 CONTROL_SLOT_H = 300
 
-CHANNEL_METERS_AREA_HEIGHT = 300 
-CHANNEL_METERS_AREA_WIDTH = 300
-
-METER_HEIGHT = 290
-METER_WIDTH = 10
-
-DASH_INK = 6.0
+DASH_INK = 5.0
 DASH_SKIP = 2.0
 DASHES = [DASH_INK, DASH_SKIP, DASH_INK, DASH_SKIP]
+
+METER_LIGHTS = 57
+METER_HEIGHT = METER_LIGHTS * DASH_INK + (METER_LIGHTS - 1) * DASH_SKIP
+METER_WIDTH = 10
 
 # These are calculated using IEC_Scale function in MLT
 DB_IEC_MINUS_2 = 0.95
 DB_IEC_MINUS_4 = 0.9
 DB_IEC_MINUS_6 = 0.85
 DB_IEC_MINUS_10 = 0.75
+DB_IEC_MINUS_12 = 0.70
 
 PEAK_FRAMES = 5
 
 RED_1 = (0, 1, 0, 0, 1)
-RED_2 = (1 - DB_IEC_MINUS_2, 1, 0, 0, 1)
-YELLOW_1 = (1 - DB_IEC_MINUS_2 + 0.001, 1, 1, 0, 1)
-YELLOW_2 = (1 - DB_IEC_MINUS_6, 1, 1, 0, 1)
-GREEN_1 = (1 - DB_IEC_MINUS_6 + 0.001, 0, 1, 0, 1)
+RED_2 = (1 - DB_IEC_MINUS_4, 1, 0, 0, 1)
+YELLOW_1 = (1 - DB_IEC_MINUS_4 + 0.001, 1, 1, 0, 1)
+YELLOW_2 = (1 - DB_IEC_MINUS_12, 1, 1, 0, 1)
+GREEN_1 = (1 - DB_IEC_MINUS_12 + 0.001, 0, 1, 0, 1)
 GREEN_2 = (1, 0, 1, 0, 1)
 
 LEFT_CHANNEL = "_audio_level.0"
@@ -64,10 +65,30 @@ _monitor_window = None
 _update_ticker = None
 _level_filters = [] # 0 master, 1 - (len - 1) editable tracks
 _audio_levels = [] # 0 master, 1 - (len - 1) editable tracks
- 
+
+def IEC_Scale(dB):
+    fScale = 1.0
+
+    if (dB < -70.0):
+        fScale = 0.0
+    elif (dB < -60.0):
+        fScale = (dB + 70.0) * 0.0025
+    elif (dB < -50.0):
+        fScale = (dB + 60.0) * 0.005 + 0.025
+    elif (dB < -40.0):
+        fScale = (dB + 50.0) * 0.0075 + 0.075
+    elif (dB < -30.0):
+        fScale = (dB + 40.0) * 0.015 + 0.15
+    elif (dB < -20.0):
+        fScale = (dB + 30.0) * 0.02 + 0.3
+    elif (dB < -0.001 or dB > 0.001):
+        fScale = (dB + 20.0) * 0.025 + 0.5
+
+    return fScale
+    
 def init():
     audio_level_filter = mlt.Filter(self.profile, "audiolevel")
-    print DB_IEC_MINUS_2, DB_IEC_MINUS_6
+    print DB_IEC_MINUS_2, DB_IEC_MINUS_6, IEC_Scale(12)
 
     global MONITORING_AVAILABLE
     if audio_level_filter != None:
@@ -76,6 +97,7 @@ def init():
         MONITORING_AVAILABLE = False
     
 def show_audio_monitor():
+    print DB_IEC_MINUS_2, DB_IEC_MINUS_6, IEC_Scale(-12)
     global _monitor_window
     if _monitor_window != None:
         return
@@ -130,7 +152,7 @@ def _get_channel_value(audio_level_filter, channel_property):
         level_float = float(level_value)
     except Exception:
         level_float = 0.0
-    
+
     return level_float
         
 class AudioMonitorWindow(gtk.Window):
@@ -192,36 +214,40 @@ class MetersArea:
         cr.rectangle(0, 0, w, h)
         cr.fill()
 
-        grad = cairo.LinearGradient (0, 0, 0, h)
+        grad = cairo.LinearGradient (0, 0, 0, METER_HEIGHT)
         grad.add_color_stop_rgba(*RED_1)
         grad.add_color_stop_rgba(*RED_2)
         grad.add_color_stop_rgba(*YELLOW_1)
         grad.add_color_stop_rgba(*YELLOW_2)
         grad.add_color_stop_rgba(*GREEN_1)
         grad.add_color_stop_rgba(*GREEN_2)
-        cr.set_source(grad)
 
-        cr.set_dash(DASHES, 0) 
-        cr.set_line_width(METER_WIDTH)
-        
         for i in range(0, len(_audio_levels)):
             meter = self.audio_meters[i]
             l_value, r_value = _audio_levels[i]
             x = i * SLOT_W
-            meter.display_value(cr, x, l_value, r_value)
+            meter.display_value(cr, x, l_value, r_value, grad)
 
 class AudioMeter:
     def __init__(self, height):
-        self.left_channel = ChannelMeter(height)
-        self.right_channel = ChannelMeter(height)
+        self.left_channel = ChannelMeter(height, "L")
+        self.right_channel = ChannelMeter(height, "R")
 
-    def display_value(self, cr, x, value_left, value_right):
+    def display_value(self, cr, x, value_left, value_right, grad):
+        cr.set_source(grad)
+        cr.set_dash(DASHES, 0) 
+        cr.set_line_width(METER_WIDTH)
         self.left_channel.display_value(cr, x + 18, value_left)
+
+        cr.set_source(grad)
+        cr.set_dash(DASHES, 0) 
+        cr.set_line_width(METER_WIDTH)
         self.right_channel.display_value(cr, x + SLOT_W / 2 + 6, value_right)
         
 class ChannelMeter:
-    def __init__(self, height):
+    def __init__(self, height, channel_text):
         self.height = height
+        self.channel_text = channel_text
         self.peak = 0.0
         self.countdown = 0
 
@@ -238,7 +264,7 @@ class ChannelMeter:
         
         if self.peak > value:
             cr.rectangle(x - METER_WIDTH / 2, 
-                         self.get_meter_y_for_value(self.peak) + DASH_SKIP,
+                         self.get_meter_y_for_value(self.peak) + DASH_SKIP * 2 + DASH_INK, # this y is just empirism, looks right
                          METER_WIDTH,
                          DASH_INK)
             cr.fill()
@@ -247,11 +273,39 @@ class ChannelMeter:
         if self.countdown <= 0:
              self.peak = 0
 
+        self.draw_channel_identifier(cr, x)
+        
+        #cr.set_dash(DASHES, 0) 
+        #cr.set_line_width(1.0)
+        #self.draw_value_line(cr, x, DB_IEC_MINUS_4)
+        #self.draw_value_line(cr, x, DB_IEC_MINUS_12)
+        
     def get_meter_y_for_value(self, value):
-        y = self.height -  (value * self.height)
+        y = self.get_y_for_value(value)
         dash_sharp_pad = (self.height - y) % (DASH_INK + DASH_SKIP)
         return y + dash_sharp_pad
 
+    def get_y_for_value(self, value):
+        return self.height - (value * self.height)
+    
+    def draw_value_line(self, cr, x, value):
+        y = self.get_y_for_value(value)
+        cr.move_to(x, y)
+        cr.line_to(x + 10, y)
+        cr.stroke()
+    
+    def draw_channel_identifier(self, cr, x):
+        pango_context = pangocairo.CairoContext(cr)
+        layout = pango_context.create_layout()
+        layout.set_text(self.channel_text)
+        desc = pango.FontDescription("Sans Bold 8")
+        layout.set_font_description(desc)
+
+        pango_context.set_source_rgb(1, 1, 1)
+        pango_context.move_to(x - 4, self.height + 2)
+        pango_context.update_layout(layout)
+        pango_context.show_layout(layout)
+        
 
 class GainControl(gtk.Frame):
     def __init__(self, name):
@@ -261,8 +315,6 @@ class GainControl(gtk.Frame):
         self.slider.set_adjustment(self.adjustment)
         self.slider.set_size_request(SLOT_W - 10, CONTROL_SLOT_H - 105)
         self.slider.set_inverted(True)
-        #for i in range(0, 6):
-        #    self.slider.add_mark(i * 20.0, gtk.POS_LEFT, "")#'<span font_desc="Sans 10">100</span>')
 
         self.pan_adjustment = gtk.Adjustment(value=0, lower=-100, upper=100, step_incr=1)
         self.pan_slider = gtk.HScale()
