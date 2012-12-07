@@ -95,6 +95,26 @@ def show_audio_monitor():
     _update_ticker = utils.Ticker(_audio_monitor_update, 0.04)
     _update_ticker.start_ticker()
 
+def close_audio_monitor():
+    global _update_ticker, _level_filters, _monitor_window, _audio_levels
+
+    _update_ticker.stop_ticker()
+
+    if len(_level_filters) != 0:
+        seq = editorstate.current_sequence()
+        
+        seq.tractor.detach(_level_filters[0])
+        # editable track level filters
+        for i in range(1, len(seq.tracks) - 1):
+            seq.tracks[i].detach(_level_filters[i])
+
+    if _monitor_window != None:
+        _monitor_window.set_visible(False)
+
+    _level_filters = []
+    _monitor_window = None
+    _audio_levels = []
+
 def _init_level_filters():
     # We're attaching level filters only to MLT objects and adding nothing to python objects,
     # so when Sequence is saved these filters will automatically be removed.
@@ -117,6 +137,9 @@ def _add_audio_level_filter(producer, profile):
     return audio_level_filter
 
 def _audio_monitor_update():
+    if _update_ticker.running == False: #filters have been killed
+        return
+    
     global _audio_levels
     _audio_levels = []
     for i in range(0, len(_level_filters)):
@@ -143,6 +166,8 @@ def _get_channel_value(audio_level_filter, channel_property):
 class AudioMonitorWindow(gtk.Window):
     def __init__(self):
         gtk.Window.__init__(self)
+        self.connect("delete-event", lambda w, e:close_audio_monitor())
+        
         seq = editorstate.current_sequence()
         meters_count = 1 + (len(seq.tracks) - 2) # master + editable tracks
         self.gain_controls = []
@@ -176,8 +201,10 @@ class AudioMonitorWindow(gtk.Window):
 
         # Set pane and show window
         self.add(align)
+        self.set_title(_("Audio Mix"))
         self.show_all()
         self.set_resizable(False)
+        
 
 class MetersArea:
     def __init__(self, meters_count):
@@ -243,7 +270,6 @@ class ChannelMeter:
 
     def display_value(self, cr, x, value):
         if value > 1.0:
-            cr.set_source_rgb(1,0,0)
             self.over_countdown = OVER_FRAMES
 
         top = self.get_meter_y_for_value(value)

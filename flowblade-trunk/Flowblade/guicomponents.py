@@ -1280,3 +1280,37 @@ def get_track_counts_combo_and_values_list():
     tracks_combo.set_active(0)
     tracks_combo_values_list = appconsts.TRACK_CONFIGURATIONS
     return (tracks_combo, tracks_combo_values_list)
+    
+def get_markers_menu_launcher(callback, pixbuf):
+    m_launch = PressLaunch(callback, pixbuf)
+    return m_launch
+
+def display_clip_popup_menu(event, callback):
+    menu = gtk.Menu()
+    menu.add(_get_menu_item(_("Add Marker"), callback, "add" ))
+    menu.add(_get_menu_item(_("Delete Marker"), callback, "delete" ))
+    menu.popup(None, None, None, event.button, event.time)
+     
+class PressLaunch:
+    def __init__(self, callback, pixbuf):
+        self.widget = CairoDrawableArea(22, 
+                                        22, 
+                                        self._draw)
+        self.widget.press_func = self._press_event
+        
+        self.callback = callback
+        self.pixbuf = pixbuf
+
+    def _draw(self, event, cr, allocation):
+        x, y, w, h = allocation
+        
+        # Draw bg
+        cr.set_source_rgb(*gui.bg_color_tuple)
+        cr.rectangle(0, 0, w, h)
+        cr.fill()
+        
+        cr.set_source_pixbuf(self.pixbuf, 6, 6)
+        cr.paint()
+
+    def _press_event(self, event):
+        self.callback(self.widget, event)

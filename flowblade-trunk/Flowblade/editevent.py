@@ -949,6 +949,13 @@ def track_lock_check_and_user_info(track, calling_function="this ain't used anym
     
     return False
 
+#------------------------------------------- tline markers
+def marker_menu_lauch_pressed(widget, event):
+    guicomponents.display_clip_popup_menu(event, _marker_menu_item_activated)
+
+def _marker_menu_item_activated(widget, data):
+    print data
+
 # ------------------------------------ function tables
 # mouse event indexes
 TL_MOUSE_PRESS = 0

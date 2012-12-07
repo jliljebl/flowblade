@@ -434,12 +434,16 @@ class EditorWindow:
         info_h = gtk.HBox()
         info_h.pack_start(self.tline_info, False, False, 0)
         info_h.pack_start(gtk.Label(), True, True, 0)
-        info_h.set_size_request(tlinewidgets.COLUMN_WIDTH, 
+        info_h.set_size_request(tlinewidgets.COLUMN_WIDTH  - 22, # room for markers_button below 
                                       tlinewidgets.SCALE_HEIGHT)
-                                       
+        
+        marker_pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "marker.png")
+        markers_launcher = guicomponents.get_markers_menu_launcher(editevent.marker_menu_lauch_pressed, marker_pixbuf)
+
         # Timeline top row
         tline_hbox_1 = gtk.HBox()
         tline_hbox_1.pack_start(info_h, False, False, 0)
+        tline_hbox_1.pack_start(markers_launcher.widget, False, False, 0)
         tline_hbox_1.pack_start(self.tline_scale.widget, True, True, 0)
         
         # Timeline column
@@ -558,7 +562,7 @@ class EditorWindow:
         self.rew_b = gtk.Button()
         self.rew_b.set_relief(gtk.RELIEF_NONE)
         _b(self.rew_b, rew_icon)
-        
+
         self.ff_b = gtk.Button()
         self.ff_b.set_relief(gtk.RELIEF_NONE)
         _b(self.ff_b, ff_icon)

@@ -520,6 +520,7 @@ def _shutdown_dialog_callback(dialog, response_id):
     updater.player_refresh_enabled = False
     gui.editor_window.window.set_visible(False)
 
+
     # Wait window to be hidden or it will freeze before disappering
     while(gtk.events_pending()):
         gtk.main_iteration()
@@ -527,10 +528,16 @@ def _shutdown_dialog_callback(dialog, response_id):
     # Close threads and stop mlt consumers
     projectdata.thumbnail_thread.shutdown()
     editorstate.player.shutdown() # has ticker thread and player threads running
+    audiomonitoring.close_audio_monitor()
+    
+    # wait toplevel tools windows to close
+    while(gtk.events_pending()):
+        gtk.main_iteration()
+        
 
     # Wait threads to stop
     while((editorstate.player.running == True) and (editorstate.player.ticker.exited == False)
-          and(projectdata.thumbnail_thread.stopped == False)):
+          and(projectdata.thumbnail_thread.stopped == False) and (audiomonitoring._update_ticker.exited == False)):
         pass
 
     # Delete autosave file
