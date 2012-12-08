@@ -906,4 +906,26 @@ def not_valid_producer_dialog(file_path, parent_window):
     primary_txt = _("Can't open non-valid media")
     secondary_txt = _("File: ") + file_path + _("\nis not a valid media file.")
     warning_message(primary_txt, secondary_txt, parent_window, is_info=True)
-    
+
+def marker_name_dialog(frame_str, callback):
+    dialog = gtk.Dialog(_("New Marker"), None,
+                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                        (_("Add Marker").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+
+    name_entry = gtk.Entry(30)
+    name_entry.set_width_chars(30)
+    name_entry.set_text("")
+    name_entry.set_activates_default(True)
+
+    name_select = panels.get_two_column_box(gtk.Label(_("Name for marker at ") + frame_str),
+                                               name_entry,
+                                               250)
+
+    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment.set_padding(6, 24, 24, 24)
+    alignment.add(name_select)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, name_entry)
+    dialog.show_all()

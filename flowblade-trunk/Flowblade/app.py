@@ -151,6 +151,9 @@ def main(root_path):
     # Set default project as the project being edited.
     editorstate.project = projectdata.get_default_project()
 
+    # Audiomonitoring being available needs to be known before GUI creation
+    audiomonitoring.init(editorstate.project.profile)
+    
     # Create player object
     create_player()
 

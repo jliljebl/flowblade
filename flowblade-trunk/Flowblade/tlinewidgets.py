@@ -104,6 +104,7 @@ INSERT_ARROW_ICON = None
 AUDIO_MUTE_ICON = None
 VIDEO_MUTE_ICON = None
 ALL_MUTE_ICON = None
+MARKER_ICON = None
 
 # tc frame scale consts
 SCALE_LINE_Y = 4.5 # scale horizontal line pos
@@ -225,7 +226,7 @@ shadow_frame = -1
 def load_icons():
     global AUDIO_ON_ICON, AUDIO_OFF_ICON, VIDEO_ON_ICON, VIDEO_OFF_ICON,\
     SYNC_LOCK_ICON, FULL_LOCK_ICON, SYNC_CLIP_ICON, FILTER_CLIP_ICON, VIEW_SIDE_ICON,\
-    COMPOSITOR_CLIP_ICON, INSERT_ARROW_ICON, AUDIO_MUTE_ICON, \
+    COMPOSITOR_CLIP_ICON, INSERT_ARROW_ICON, AUDIO_MUTE_ICON, MARKER_ICON, \
     VIDEO_MUTE_ICON, ALL_MUTE_ICON, TRACK_BG_ICON, MUTE_AUDIO_ICON, MUTE_VIDEO_ICON, MUTE_ALL_ICON
 
     AUDIO_ON_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "audio_on.png")
@@ -246,6 +247,7 @@ def load_icons():
     MUTE_AUDIO_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_audio_mute.png")
     MUTE_VIDEO_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_video_mute.png")
     MUTE_ALL_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_all_mute.png")
+    MARKER_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "marker.png")
 
 def set_ref_line_y(allocation):
     """
@@ -1230,7 +1232,14 @@ class TimeLineFrameScale:
         # Draw marks
         self.draw_mark_in(cr, h)
         self.draw_mark_out(cr, h)
-    
+        
+        # Draw markers
+        for i in range(0, len(seq.markers)):
+            marker_name, marker_frame = seq.markers[i]
+            x = math.floor(_get_frame_x(marker_frame))
+            cr.set_source_pixbuf(MARKER_ICON, x - 4, 15)
+            cr.paint()
+
         # Select draw colors and frame based on mode
         current_frame = PLAYER().tracktor_producer.frame()
         if timeline_visible():

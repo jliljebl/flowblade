@@ -108,6 +108,9 @@ class Sequence:
         self.compositors = []
         self.master_audio_gain = 1.0
         self.markers = [] #future feature, not used currently
+        self.markers.append(("marker1",50))
+        self.markers.append(("marker2",150))
+        self.markers.append(("marker3",200))
         self.proxyclips = {} #future feature, not used currently
         self.rendered_versions = {} #future feature, not used currently
 

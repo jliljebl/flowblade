@@ -72,14 +72,20 @@ _update_ticker = None
 _level_filters = [] # 0 master, 1 - (len - 1) editable tracks
 _audio_levels = [] # 0 master, 1 - (len - 1) editable tracks
     
-def init():
-    audio_level_filter = mlt.Filter(self.profile, "audiolevel")
+def init(profile):
+    audio_level_filter = mlt.Filter(profile, "audiolevel")
 
     global MONITORING_AVAILABLE
     if audio_level_filter != None:
         MONITORING_AVAILABLE = True
     else:
         MONITORING_AVAILABLE = False
+
+    # We want this to be always present when closing app or we'll need to handle it being missing.
+    global _update_ticker
+    _update_ticker = utils.Ticker(_audio_monitor_update, 0.04)
+    _update_ticker.start_ticker()
+    _update_ticker.stop_ticker()    
     
 def show_audio_monitor():
     #print DB_IEC_MINUS_2, DB_IEC_MINUS_6, IEC_Scale(-40)
@@ -137,7 +143,7 @@ def _add_audio_level_filter(producer, profile):
     return audio_level_filter
 
 def _audio_monitor_update():
-    if _update_ticker.running == False: #filters have been killed
+    if _monitor_window == None:
         return
     
     global _audio_levels

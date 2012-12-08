@@ -1285,10 +1285,20 @@ def get_markers_menu_launcher(callback, pixbuf):
     m_launch = PressLaunch(callback, pixbuf)
     return m_launch
 
-def display_clip_popup_menu(event, callback):
+def get_markers_popup_menu(event, callback):
+    seq = current_sequence()
+    markers_exist = len(seq.markers) != 0
     menu = gtk.Menu()
+    if markers_exist:
+        for i in range(0, len(seq.markers)):
+            marker = seq.markers[i]
+            name, frame = marker
+            item_str  = utils.get_tc_string(frame) + " " + name
+            menu.add(_get_menu_item(_(item_str), callback, str(i) ))
+        _add_separetor(menu)
     menu.add(_get_menu_item(_("Add Marker"), callback, "add" ))
-    menu.add(_get_menu_item(_("Delete Marker"), callback, "delete" ))
+    if markers_exist:
+        menu.add(_get_menu_item(_("Delete Marker"), callback, "delete" ))
     menu.popup(None, None, None, event.button, event.time)
      
 class PressLaunch:
