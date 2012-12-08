@@ -639,50 +639,6 @@ def _mute_track(track, new_mute_state):
 
 
 # ---------------------------------- tracks
-"""
-def add_track():
-    dialogs.track_add_dialog(_add_track_callback)
-    
-def _add_track_callback(dialog, response_id, side_combo):
-    dialog.destroy()
-    
-    if response_id == gtk.RESPONSE_ACCEPT:
-        if side_combo.get_active() == 0:
-            track_type = appconsts.VIDEO
-        else:
-            track_type = appconsts.AUDIO
-
-        current_sequence().user_add_new_track(track_type)            
-        add_index = len(current_sequence().tracks) - 1
-        get_track(add_index).height = appconsts.TRACK_HEIGHT_SMALL
-        updater.window_resized() # Recaculates and draws timeline.
-        gui.tline_column.widget.queue_draw()
-
-def delete_track():
-    deletable_indexes = [] # A1 or V1 can't be deleted
-    for i in range(1, current_sequence().first_video_index - 1):
-        deletable_indexes.append(i)
-    for i in range(current_sequence().first_video_index + 1, len(current_sequence().tracks) - 1):
-        deletable_indexes.append(i)
-
-    deletable_indexes.reverse()
-    dialogs.track_delete_dialog(_delete_track_callback, current_sequence(), deletable_indexes)
-
-def _delete_track_callback(dialog, response_id, deletable_track_indexes, combo_box):
-    selected = combo_box.get_active()
-    dialog.destroy()
-
-    if response_id == gtk.RESPONSE_ACCEPT:
-        del_index = deletable_track_indexes[selected]
-        edit.delete_sync_relations_from_track(get_track(del_index))
-        current_sequence().delete_track(del_index)
-        if del_index < current_sequence().first_video_index:
-            # audio track was deleted
-            current_sequence().first_video_index -= 1        
-        updater.window_resized() # This does the needed recaculating and draws timeline.
-        gui.tline_column.widget.queue_draw()
-"""
-
 def track_active_switch_pressed(data):
     track = get_track(data.track) # data.track is index, not object
 

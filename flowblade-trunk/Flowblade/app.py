@@ -536,7 +536,6 @@ def _shutdown_dialog_callback(dialog, response_id):
     # wait toplevel tools windows to close
     while(gtk.events_pending()):
         gtk.main_iteration()
-        
 
     # Wait threads to stop
     while((editorstate.player.running == True) and (editorstate.player.ticker.exited == False)
