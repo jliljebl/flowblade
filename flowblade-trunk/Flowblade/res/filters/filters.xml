@@ -455,12 +455,6 @@
         <property name="blend mode" args="editor=combobox exptype=default cbopts=Normal:normal,Add:add,Saturate:saturate,Multiply:multiply,Screen:screen,Overlay:overlay,Darken:darken,Lighten:lighten,ColorDodge:colordodge,Colorburn:colorburn,Hardlight:hardlight,Softlight:softlight,Difference:difference,Exclusion:exclusion,HSLHue:hslhue,HSLSaturation:hslsaturation,HSLColor:hslcolor,HSLLuminosity:hslluminosity">normal</property>
         <property name="offset" args="editor=slider range_in=0,100">0.0</property>
     </filter>
-    <filter id="frei0r.cairoimagegrid">
-        <name>Cairoimagegrid</name>
-        <group>Color</group>
-        <property name="rows" args="editor=no_editor exptype=default">0.4</property>
-        <property name="columns" args="editor=no_editor exptype=default">0.1</property>
-    </filter>
     -->
     <filter id="frei0r.contrast0r">
         <name>Contrast</name>
@@ -655,7 +649,12 @@
         <group>Distort</group>
         <property name="HSync" args="range_in=0,100 displayname=Position">0.5</property>
     </filter>
-
+    <filter id="frei0r.cairoimagegrid">
+        <name>Image Grid</name>
+        <group>Distort</group>
+        <property name="rows" args="range_in=1,20 displayname=Rows">0.1</property>
+        <property name="columns" args="range_in=1,20 displayname=Columns">0.1</property>
+    </filter>
 
 
     <!-- EDGE -->
