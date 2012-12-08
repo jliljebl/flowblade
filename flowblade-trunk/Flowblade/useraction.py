@@ -295,6 +295,9 @@ def _close_dialog_callback(dialog, response_id):
         return
         
     # This is the same as opening default project
+    sequence.AUDIO_TRACKS_COUNT = 4
+    sequence.VIDEO_TRACKS_COUNT = 5
+
     profile = mltprofiles.get_default_profile()
     new_project = projectdata.Project(profile)
     app.open_project(new_project)

@@ -312,7 +312,7 @@ class BinListView(ImageTextTextListView):
         for bin in PROJECT().bins:
             try:
                 #pixbuf = icon_theme.load_icon(gtk.STOCK_DIRECTORY, 24, 0)
-                pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "bin_box2.png")
+                pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "bin_3.png")
                 row_data = [pixbuf,
                             bin.name, 
                             str(len(bin.file_ids))]
