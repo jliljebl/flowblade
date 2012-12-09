@@ -742,6 +742,22 @@ class GeometryKeyFrameEditor:
         self.keyframes.pop(active_kf_index)
         self.keyframes.insert(active_kf_index, (frame, rect, opacity))   
 
+    def center_h_active_keyframe_rect(self, active_kf_index):
+        frame, old_rect, opacity = self.keyframes[active_kf_index]
+        ox, y, w, h = old_rect
+        x = self.source_width / 2 - w / 2
+        rect = [x, y, w, h ]
+        self.keyframes.pop(active_kf_index)
+        self.keyframes.insert(active_kf_index, (frame, rect, opacity))
+
+    def center_v_active_keyframe_rect(self, active_kf_index):
+        frame, old_rect, opacity = self.keyframes[active_kf_index]
+        x, oy, w, h = old_rect
+        y = self.source_height / 2 - h / 2
+        rect = [x, y, w, h ]
+        self.keyframes.pop(active_kf_index)
+        self.keyframes.insert(active_kf_index, (frame, rect, opacity))
+        
     def add_keyframe(self, frame):
         if self._frame_has_keyframe(frame) == True:
             return
@@ -1021,6 +1037,8 @@ class GeometryEditorButtonsRow(gtk.HBox):
         menu = gtk.Menu()
         menu.add(self._get_menu_item(_("Reset Geometry"), editor_parent.menu_item_activated, "reset" ))
         menu.add(self._get_menu_item(_("Geometry to Original Aspect Ratio"), editor_parent.menu_item_activated, "ratio" ))
+        menu.add(self._get_menu_item(_("Center Horizontal"), editor_parent.menu_item_activated, "hcenter" ))
+        menu.add(self._get_menu_item(_("Center Vertical"), editor_parent.menu_item_activated, "vcenter" ))
         self.actions_b.set_menu(menu)
         self.actions_b.set_size_request(70, 25)
         self.actions_b.set_tooltip_text(_("Edit Actions Menu"))
@@ -1361,12 +1379,28 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.update_editor_view_with_frame(frame)
         self.update_property_value()
 
+    def _center_horizontal(self):
+        self.geom_kf_edit.center_h_active_keyframe_rect(self.clip_editor.active_kf_index)
+        frame = self.clip_editor.get_active_kf_frame()
+        self.update_editor_view_with_frame(frame)
+        self.update_property_value()
+
+    def _center_vertical(self):
+        self.geom_kf_edit.center_v_active_keyframe_rect(self.clip_editor.active_kf_index)
+        frame = self.clip_editor.get_active_kf_frame()
+        self.update_editor_view_with_frame(frame)
+        self.update_property_value()
+            
     def menu_item_activated(self, widget, data):
         if data == "reset":
             self._reset_rect_pressed()
         elif data == "ratio":
             self._reset_rect_ratio_pressed()
-
+        elif data == "hcenter":
+            self._center_horizontal()
+        elif data == "vcenter":
+            self._center_vertical()
+    
     def update_editor_view(self, seek_tline_frame=False):
         # This gets called when tline frame is changed from outside
         # Call update_editor_view_with_frame that is used when udating from inside the object.
