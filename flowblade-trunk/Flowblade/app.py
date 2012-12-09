@@ -30,6 +30,7 @@ import gtk
 import mlt
 import multiprocessing
 import os
+import sys
 import time
 import threading
 
@@ -76,18 +77,27 @@ import utils
 
 AUTOSAVE_DIR = "autosave/"
 AUTOSAVE_FILE = "autosave/autosave"
+PID_FILE = "flowbladepidfile"
 autosave_timeout_id = -1
 recovery_dialog_id = -1
 
 splash_screen = None
 splash_timeout_id = -1
-too_small_timeout_id = -1
+exit_timeout_id = -1
+
+fp = None
 
 def main(root_path):
     """
     Called at application start.
     Initializes application with default project.
     """
+    # Allow only on instance to run
+    user_dir = utils.get_hidden_user_dir_path()
+    pid_file_path = user_dir + PID_FILE
+    # Exit and info dialog launched below
+    can_run = utils.single_instance_pid_file_test_and_write(pid_file_path)
+
     # Set paths.
     respaths.set_paths(root_path)
 
@@ -99,7 +109,7 @@ def main(root_path):
         editorstate.mlt_version = "0.0.99"
 
     # Create hidden folders if not present
-    user_dir = utils.get_hidden_user_dir_path()
+
     if not os.path.exists(user_dir):
         os.mkdir(user_dir)
     if not os.path.exists(user_dir + mltprofiles.USER_PROFILES_DIR):
@@ -117,6 +127,11 @@ def main(root_path):
 
     # Init gtk threads
     gtk.gdk.threads_init()
+
+    # Accept only 
+    if can_run == False:
+        _not_first_instance_exit()
+        return
 
     # Adjust gui parameters for smaller screens
     scr_w = gtk.gdk.screen_width()
@@ -459,24 +474,37 @@ def _set_draw_params(scr_w, scr_h):
         audiowaveform.SMALL_TRACK_DRAW_CONSTS = (60, 16, 5)
 
 def _too_small_screen_exit():
-    global too_small_timeout_id
-    too_small_timeout_id = gobject.timeout_add(200, _show_too_small_info)
+    global exit_timeout_id
+    exit_timeout_id = gobject.timeout_add(200, _show_too_small_info)
     # Launch gtk+ main loop
     gtk.main()
 
 def _show_too_small_info():
-    gobject.source_remove(too_small_timeout_id)
+    gobject.source_remove(exit_timeout_id)
     primary_txt = _("Too small screen for this application.")
     scr_w = gtk.gdk.screen_width()
     scr_h = gtk.gdk.screen_height()
     secondary_txt = _("Minimum screen dimensions for this application are 1152 x 768.\n") + \
                     _("Your screen dimensions are ") + str(scr_w) + " x " + str(scr_h) + "."
-    dialogs.warning_message_with_callback(primary_txt, secondary_txt, None, False, _exit_too_small)
+    dialogs.warning_message_with_callback(primary_txt, secondary_txt, None, False, _early_exit)
 
-def _exit_too_small(dialog, response):
+def _early_exit(dialog, response):
     dialog.destroy()
     # Exit gtk main loop.
     gtk.main_quit() 
+
+# ------------------------------------------------------- single instance
+def _not_first_instance_exit():
+    global exit_timeout_id
+    exit_timeout_id = gobject.timeout_add(200, _show_single_instance_info)
+    # Launch gtk+ main loop
+    gtk.main()
+
+def _show_single_instance_info():
+    gobject.source_remove(exit_timeout_id)
+    primary_txt = _("Another instance of Flowblade already running.")
+    secondary_txt = _("Only one instance of Flowblade is allowed to run at a time.")
+    dialogs.warning_message_with_callback(primary_txt, secondary_txt, None, False, _early_exit)
     
 # ------------------------------------------------------ shutdown
 def shutdown():
@@ -545,6 +573,12 @@ def _shutdown_dialog_callback(dialog, response_id):
     # Delete autosave file
     try:
         os.remove(utils.get_hidden_user_dir_path() + AUTOSAVE_FILE)
+    except:
+        pass
+
+    # Delete pid file
+    try:
+         os.remove(utils.get_hidden_user_dir_path() + PID_FILE)
     except:
         pass
 

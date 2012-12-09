@@ -255,3 +255,38 @@ def do_nothing():
 def get_hidden_user_dir_path():
     return os.getenv("HOME") + "/.flowblade/"
 
+def single_instance_pid_file_test_and_write(pid_file_path):
+    # Returns true if this instance can be run
+    # Users of this method should delete pid_file on exit
+    this_pid = os.getpid()
+
+    # If pid_file exists we may have
+    if os.path.exists(pid_file_path):
+        # get pid on pid file
+        pid_file = open(pid_file_path,"r")
+        pid_file_pid = int(pid_file.read())
+        pid_file.close()
+
+        # Check if process running with pid of pid file
+        pid_file_instance_running = False
+        pids = [pid for pid in os.listdir('/proc') if pid.isdigit()]
+        for running_pid in pids:
+            if int(running_pid) == pid_file_pid:
+                pid_file_instance_running = True
+        
+        if pid_file_instance_running == True:
+            # Instance with pid in the pid file is running.
+            return False
+        else:
+            # No process with same pid as pid file, we probably crashed last time
+            pid_file = open(pid_file_path,"wb")
+            pid_file.write(str(this_pid))
+            pid_file.close()
+            return True
+    else:
+        # This is the first instance running
+        pid_file = open(pid_file_path,"wb")
+        pid_file.write(str(this_pid))
+        pid_file.close()
+        return True
+

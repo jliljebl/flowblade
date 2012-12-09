@@ -38,6 +38,7 @@ import appconsts
 from editorstate import PLAYER
 from editorstate import current_sequence
 import gui
+import guicomponents
 import guiutils
 import propertyedit
 import propertyparse
@@ -1030,18 +1031,20 @@ class GeometryEditorButtonsRow(gtk.HBox):
         editor_parent.view_size_changed(widget_active_index)
         editor_parent.menu_item_activated()
         """
-        gtk.HBox.__init__(self, False, 2)  
+        gtk.HBox.__init__(self, False, 2)
+        
+        self.editor_parent = editor_parent
+        
         name_label = gtk.Label(_("View:"))
 
-        self.actions_b = gtk.MenuToolButton(gtk.STOCK_EXECUTE)
-        menu = gtk.Menu()
-        menu.add(self._get_menu_item(_("Reset Geometry"), editor_parent.menu_item_activated, "reset" ))
-        menu.add(self._get_menu_item(_("Geometry to Original Aspect Ratio"), editor_parent.menu_item_activated, "ratio" ))
-        menu.add(self._get_menu_item(_("Center Horizontal"), editor_parent.menu_item_activated, "hcenter" ))
-        menu.add(self._get_menu_item(_("Center Vertical"), editor_parent.menu_item_activated, "vcenter" ))
-        self.actions_b.set_menu(menu)
-        self.actions_b.set_size_request(70, 25)
-        self.actions_b.set_tooltip_text(_("Edit Actions Menu"))
+        pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "geom_action.png")
+        action_menu_button = guicomponents.PressLaunch(self._show_actions_menu, pixbuf)
+        
+        #self.actions_b = gtk.MenuToolButton(action_icon, None)
+
+        #self.actions_b.set_menu(menu)
+        #self.actions_b.set_size_request(70, 25)
+        #self.actions_b.set_tooltip_text(_("Edit Actions Menu"))
         size_select = gtk.combo_box_new_text()
         size_select.append_text(_("Large"))
         size_select.append_text(_("Medium"))
@@ -1057,8 +1060,16 @@ class GeometryEditorButtonsRow(gtk.HBox):
         self.pack_start(name_label, False, False, 0)
         self.pack_start(size_select, False, False, 0)
         self.pack_start(gtk.Label(), True, True, 0)
-        self.pack_start(self.actions_b, False, False, 0)
+        self.pack_start(action_menu_button.widget, False, False, 0)
         self.pack_start(guiutils.get_pad_label(2, 10), False, False, 0)
+
+    def _show_actions_menu(self, widget, event):
+        menu = gtk.Menu()
+        menu.add(self._get_menu_item(_("Reset Geometry"), self.editor_parent.menu_item_activated, "reset" ))
+        menu.add(self._get_menu_item(_("Geometry to Original Aspect Ratio"), self.editor_parent.menu_item_activated, "ratio" ))
+        menu.add(self._get_menu_item(_("Center Horizontal"), self.editor_parent.menu_item_activated, "hcenter" ))
+        menu.add(self._get_menu_item(_("Center Vertical"), self.editor_parent.menu_item_activated, "vcenter" ))
+        menu.popup(None, None, None, event.button, event.time)
 
     def _get_menu_item(self, text, callback, data):
         item = gtk.MenuItem(text)
