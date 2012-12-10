@@ -28,7 +28,7 @@ import os
 import stat
 import sys
 
-import dialogs
+import dialogutils
 import editorstate
 import gui
 import utils
@@ -132,5 +132,5 @@ def _show_failed_environment_info():
     "\n---\nYour MLT Version is: "+ editorstate.mlt_version + "\n" + \
     "Only report this as a bug if the MLT version above is >= 0.7.6."
     
-    dialogs.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
     return False

@@ -88,7 +88,7 @@ def do_clip_insert(track, new_clip, tline_pos):
     # Can't put audio media on video track 
     if ((new_clip.media_type == appconsts.AUDIO)
        and (track.type == appconsts.VIDEO)):        
-        dialogsutils.warning_message(_("Can't put an audio clip on a video track."), 
+        dialogutils.warning_message(_("Can't put an audio clip on a video track."), 
                                 _("Track ")+ utils.get_track_name(track, current_sequence()) + _(" is a video track and can't display audio only material."),
                                 gui.editor_window.window)
         return
@@ -505,7 +505,7 @@ def _compositor_menu_item_activated(widget, data):
             if clip.id == compositor.origin_clip_id:
                 origin_clip = clip
         if origin_clip == None:
-            dialogs.info_message(_("Origin clip not found!"), 
+            dialogutils.info_message(_("Origin clip not found!"), 
                                  _("Clip used to create this Compositor has been removed\nor moved to different track."), 
                                  gui.editor_window.window)
             return
@@ -700,7 +700,7 @@ def _set_track_normal_height(track_index):
     x, y, w, h = gui.tline_canvas.widget.allocation
     if new_h > h:
         track.height = appconsts.TRACK_HEIGHT_SMALL
-        dialogsutils.warning_message(_("Not enough vertical space on Timeline to expand track"), 
+        dialogutils.warning_message(_("Not enough vertical space on Timeline to expand track"), 
                                 _("Maximize or resize application window to get more\nspace for tracks if possible."),
                                 gui.editor_window.window,
                                 True)
@@ -759,7 +759,7 @@ def _cover_blank_from_prev(data):
     if total_length > clip_handle: # handle not long enough to cover blanks
         primary_txt = _("Previous clip does not have enough material to cover blank area")
         secondary_txt = _("Requested edit can't be done.")
-        dialogs.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return
     
     # Do edit
@@ -783,7 +783,7 @@ def _cover_blank_from_next(data):
     if total_length > cover_clip.clip_in: # handle not long enough to cover blanks
         primary_txt = _("Next clip does not have enough material to cover blank area")
         secondary_txt = _("Requested edit can't be done.")
-        dialogs.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return 
 
     # Do edit
@@ -1002,4 +1002,3 @@ POPUP_HANDLERS = {"lock":_lock_track,
                   "cover_with_next": _cover_blank_from_next,
                   "clone_filters_from_next": _clone_filters_from_next,
                   "clone_filters_from_prev": _clone_filters_from_prev}
-

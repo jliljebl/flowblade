@@ -22,10 +22,10 @@
 Module builds dialog windows. User input is handled at 
 callsites which provide callback methods for response signals.
 """
-
 import gtk
 import pango
 
+import dialogutils
 import guicomponents
 import guiutils
 import editorpersistance
@@ -277,7 +277,7 @@ def motion_clip_render_progress_dialog(callback, file_name, progress_bar, parent
 
 def exit_confirm_dialog(callback, msg, parent_window, project_name):
     title = _("Save project '") + project_name + _("' before exiting?")
-    content = panels.get_warning_message_dialog_panel(title, msg, False, gtk.STOCK_QUIT)
+    content = dialogutils.get_warning_message_dialog_panel(title, msg, False, gtk.STOCK_QUIT)
     align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     align.set_padding(0, 12, 0, 0)
     align.add(content)
@@ -296,7 +296,7 @@ def exit_confirm_dialog(callback, msg, parent_window, project_name):
 
 def close_confirm_dialog(callback, msg, parent_window, project_name):
     title = _("Save project '") + project_name + _("' before closing project?")
-    content = panels.get_warning_message_dialog_panel(title, msg, False, gtk.STOCK_QUIT)
+    content = dialogutils.get_warning_message_dialog_panel(title, msg, False, gtk.STOCK_QUIT)
     align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     align.set_padding(0, 12, 0, 0)
     align.add(content)
@@ -311,44 +311,6 @@ def close_confirm_dialog(callback, msg, parent_window, project_name):
     dialog.vbox.pack_start(align, True, True, 0)
     _default_behaviour(dialog)
     dialog.connect('response', callback)
-    dialog.show_all()
-
-def info_message(primary_txt, secondary_txt, parent_window):
-    warning_message(primary_txt, secondary_txt, parent_window, is_info=True)
-
-def warning_message(primary_txt, secondary_txt, parent_window, is_info=False):
-    warning_message_with_callback(primary_txt, secondary_txt, parent_window, is_info,_dialog_destroy)
-
-def warning_message_with_callback(primary_txt, secondary_txt, parent_window, is_info, callback):
-    content = panels.get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info)
-    dialog = gtk.Dialog("",
-                        parent_window,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        ( _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
-    dialog.vbox.pack_start(content, True, True, 0)
-    dialog.set_has_separator(False)
-    dialog.set_resizable(False)
-    dialog.connect('response', callback)
-    dialog.show_all()
-    
-def warning_confirmation(callback, primary_txt, secondary_txt, parent_window, data=None):
-    content = panels.get_warning_message_dialog_panel(primary_txt, secondary_txt)
-    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(0, 12, 0, 0)
-    align.add(content)
-    
-    dialog = gtk.Dialog("",
-                        parent_window,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                         _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
-    dialog.vbox.pack_start(align, True, True, 0)
-    dialog.set_has_separator(False)
-    dialog.set_resizable(False)
-    if data == None:
-        dialog.connect('response', callback)
-    else:
-        dialog.connect('response', callback, data)
     dialog.show_all()
 
 def about_dialog(parent_window):
@@ -792,7 +754,7 @@ def autosave_recovery_dialog(callback, parent_window):
     msg1 = _("It seems that Flowblade exited abnormally last time.\n\n")
     msg3 = _("It is NOT possible to open this autosaved version later.")
     msg = msg1 + msg3
-    content = panels.get_warning_message_dialog_panel(title, msg)
+    content = dialogutils.get_warning_message_dialog_panel(title, msg)
     align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     align.set_padding(0, 12, 0, 0)
     align.add(content)
@@ -807,16 +769,6 @@ def autosave_recovery_dialog(callback, parent_window):
     _default_behaviour(dialog)
     dialog.connect('response', callback)
     dialog.show_all()
-
-def no_monitor_clip_info(parent_window):
-    primary_txt = _("No Clip loaded into Monitor")
-    secondary_txt = _("Can't do the requested edit because there is no Clip in Monitor.")
-    info_message(primary_txt, secondary_txt, parent_window)
-
-def monitor_clip_too_short(parent_window):
-    primary_txt = _("Defined range in Monitor Clip is too short")
-    secondary_txt = _("Can't do the requested edit because Mark In -> Mark Out Range or Clip is too short.")
-    info_message(primary_txt, secondary_txt, parent_window)
 
 def get_tracks_count_change_dialog(callback):
     default_profile_index = mltprofiles.get_default_profile_index()
@@ -904,7 +856,7 @@ def get_new_sequence_dialog(callback, default_name):
 def not_valid_producer_dialog(file_path, parent_window):
     primary_txt = _("Can't open non-valid media")
     secondary_txt = _("File: ") + file_path + _("\nis not a valid media file.")
-    warning_message(primary_txt, secondary_txt, parent_window, is_info=True)
+    dialogutils.warning_message(primary_txt, secondary_txt, parent_window, is_info=True)
 
 def marker_name_dialog(frame_str, callback):
     dialog = gtk.Dialog(_("New Marker"), None,

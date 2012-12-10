@@ -25,7 +25,7 @@ import gtk
 import time #added for testing
 
 import appconsts
-import dialogs
+import dialogutils
 import gui
 import edit
 import editevent
@@ -194,7 +194,7 @@ def insert_button_pressed():
     
     new_clip = _get_new_clip_from_clip_monitor()
     if new_clip == None:
-        dialogs.no_monitor_clip_info(gui.editor_window.window)
+        no_monitor_clip_info(gui.editor_window.window)
         return
 
     editevent.do_clip_insert(track, new_clip, tline_pos)
@@ -209,7 +209,7 @@ def append_button_pressed():
     
     new_clip = _get_new_clip_from_clip_monitor()
     if new_clip == None:
-        dialogs.no_monitor_clip_info(gui.editor_window.window)
+        no_monitor_clip_info(gui.editor_window.window)
         return
 
     editevent.do_clip_insert(track, new_clip, tline_pos)
@@ -219,7 +219,7 @@ def three_point_overwrite_pressed():
     if movemodes.selected_track == -1:
         primary_txt = _("No Clips are selected!")
         secondary_txt = _("You need to select clips to overwrite to perform this edit.")
-        dialogs.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return
 
     # Get data
@@ -235,12 +235,12 @@ def three_point_overwrite_pressed():
 
     over_clip = _get_new_clip_from_clip_monitor()
     if over_clip == None:
-        dialogs.no_monitor_clip_info(gui.editor_window.window)
+        no_monitor_clip_info(gui.editor_window.window)
         return
     over_length = over_clip.mark_out - over_clip.mark_in + 1 # + 1 out incl ?????????? what if over_clip.mark_out == -1  ?????????? 
     
     if over_length < range_length:
-        dialogs.monitor_clip_too_short(gui.editor_window.window)
+        monitor_clip_too_short(gui.editor_window.window)
         return
     
     over_clip_out = over_clip.mark_in + range_length - 1 # -1 out incl
@@ -274,18 +274,18 @@ def range_overwrite_pressed():
     if mark_in_frame == -1 or mark_out_frame == -1:
         primary_txt = _("Timeline Range not set!")
         secondary_txt = _("You need to set Timeline Range using Mark In and Mark Out buttons\nto perform this edit.")
-        dialogs.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return
 
     # Get over clip and check it overwrite range area
     over_clip = _get_new_clip_from_clip_monitor()
     if over_clip == None:
-        dialogs.no_monitor_clip_info(gui.editor_window.window)
+        no_monitor_clip_info(gui.editor_window.window)
         return
 
     over_length = over_clip.mark_out - over_clip.mark_in + 1 # + 1 out incl
     if over_length < range_length:
-        dialogs.monitor_clip_too_short(gui.editor_window.window)
+        monitor_clip_too_short(gui.editor_window.window)
         return
 
     over_clip_out = over_clip.mark_in + range_length - 1
@@ -311,3 +311,15 @@ def resync_button_pressed():
 def view_mode_changed(combobox):
     editorstate.current_sequence().set_output_mode(combobox.get_active())
     
+    
+# ------------------------------------------------------- dialogs    
+def no_monitor_clip_info(parent_window):
+    primary_txt = _("No Clip loaded into Monitor")
+    secondary_txt = _("Can't do the requested edit because there is no Clip in Monitor.")
+    dialogutils.info_message(primary_txt, secondary_txt, parent_window)
+
+def monitor_clip_too_short(parent_window):
+    primary_txt = _("Defined range in Monitor Clip is too short")
+    secondary_txt = _("Can't do the requested edit because Mark In -> Mark Out Range or Clip is too short.")
+    dialogutils.info_message(primary_txt, secondary_txt, parent_window)
+

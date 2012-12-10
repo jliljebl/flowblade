@@ -472,50 +472,6 @@ def get_named_frame(name, widget):
     out_align.add(frame)
     
     return out_align
-    
-def get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=False, alternative_icon=None):
-    
-    if is_info == True:
-        icon = gtk.STOCK_DIALOG_INFO
-    else:
-        icon = gtk.STOCK_DIALOG_WARNING
-    
-    if alternative_icon != None:
-        icon = alternative_icon
-
-    warning_icon = gtk.image_new_from_stock(icon, gtk.ICON_SIZE_DIALOG)
-    icon_box = gtk.VBox(False, 2)
-    icon_box.pack_start(warning_icon, False, False, 0)
-    icon_box.pack_start(gtk.Label(), True, True, 0)
-    
-    p_label = guiutils.bold_label(primary_txt)
-    s_label = gtk.Label(secondary_txt)
-    texts_pad = gtk.Label()
-    texts_pad.set_size_request(12,12)
-
-    pbox = gtk.HBox(False, 1)
-    pbox.pack_start(p_label, False, False, 0)
-    pbox.pack_start(gtk.Label(), True, True, 0)
-
-    sbox = gtk.HBox(False, 1)
-    sbox.pack_start(s_label, False, False, 0)
-    sbox.pack_start(gtk.Label(), True, True, 0)
-    
-    text_box = gtk.VBox(False, 0)
-    text_box.pack_start(pbox, False, False, 0)
-    text_box.pack_start(texts_pad, False, False, 0)
-    text_box.pack_start(sbox, False, False, 0)
-    text_box.pack_start(gtk.Label(), True, True, 0)
-
-    hbox = gtk.HBox(False, 12)
-    hbox.pack_start(icon_box, False, False, 0)
-    hbox.pack_start(text_box, True, True, 0)
-    
-    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(12, 0, 12, 12)
-    align.add(hbox)
-    
-    return align
 
 def get_two_text_panel(primary_txt, secondary_txt):
     p_label = guiutils.bold_label(primary_txt)

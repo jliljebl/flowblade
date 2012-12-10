@@ -384,7 +384,7 @@ def open_recent_project(widget, index):
         editorpersistance.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
         primary_txt = _("Project not found on disk")
         secondary_txt = _("Project can't be loaded.")
-        dialogs.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return
 
     actually_load_project(path)
@@ -399,7 +399,7 @@ def quick_reference():
     try:
         webbrowser.open('http://code.google.com/p/flowblade/wiki/FlowbladeReference')
     except:
-        dialogs.info_message("Help page not found!", "Unfortunately the webresource containing help information\nfor this application was not found.", None)
+        dialogutils.info_message("Help page not found!", "Unfortunately the webresource containing help information\nfor this application was not found.", None)
 
      
 # ---------------------------------- rendering
@@ -416,7 +416,7 @@ def render_timeline():
     if os.path.exists(render.get_file_path()):
         primary_txt = _("File: ") + render.get_file_path() + _(" already exists!")
         secondary_txt = _("Do you want to overwrite existing file?")
-        dialogs.warning_confirmation(_render_overwrite_confirm_callback, primary_txt, secondary_txt, gui.editor_window.window)
+        dialogutils.warning_confirmation(_render_overwrite_confirm_callback, primary_txt, secondary_txt, gui.editor_window.window)
     else:
         _do_rendering()
 
@@ -528,7 +528,7 @@ def _select_thumbnail_dir_callback(dialog, response_id, data):
     dialog.destroy()
     if response_id == gtk.RESPONSE_YES:
         if folder ==  os.path.expanduser("~"):
-            dialogs.warning_message(_("Can't make home folder thumbnails folder"), 
+            dialogutils.warning_message(_("Can't make home folder thumbnails folder"), 
                                     _("Please create and select some other folder then \'") + 
                                     os.path.expanduser("~") + _("\' as thumbnails folder"), 
                                     gui.editor_window.window)
@@ -819,7 +819,7 @@ def delete_selected_sequence():
     row = max(rows[0])
     name = PROJECT().sequences[row].name
     
-    dialogs.warning_confirmation(_delete_confirm_callback, 
+    dialogutils.warning_confirmation(_delete_confirm_callback, 
                                  _("Are you sure you want to delete\nsequence \'") + name + _("\'?"), 
                                  _("This operation can not be undone. Sequence will be permanently lost."), 
                                  gui.editor_window.window)
@@ -935,7 +935,7 @@ def _profiles_manager_save_profile_clicked(widgets, user_profiles_view):
     profile_file.write(file_contents)
     profile_file.close()
 
-    dialogs.info_message("Profile '" +  description.get_text() + "' saved.", \
+    dialogutils.info_message("Profile '" +  description.get_text() + "' saved.", \
                  "You can now create a new project using the new profile.", gui.editor_window.window)
     
     mltprofiles.load_profile_list()
@@ -948,10 +948,10 @@ def _profiles_manager_delete_user_profiles_clicked(user_profiles_view):
     if len(delete_indexes) == 0:
         return
 
-    primary_txt = _("Confirm user profile delete!")
+    primary_txt = _("Confirm user profile delete")
     secondary_txt = _("This operation cannot be undone.") 
     
-    dialogs.warning_confirmation(_profiles_delete_confirm_callback, primary_txt, \
+    dialogutils.warning_confirmation(_profiles_delete_confirm_callback, primary_txt, \
                                  secondary_txt, gui.editor_window.window, \
                                 (user_profiles_view, delete_indexes))
 
@@ -1050,7 +1050,7 @@ def _preferences_dialog_callback(dialog, response_id, all_widgets):
         dialog.destroy()
         primary_txt = _("Restart required for some setting changes to take effect.")
         secondary_txt = _("If requested change is not in effect, restart application.")
-        dialogs.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return
 
     dialog.destroy()
