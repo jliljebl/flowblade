@@ -41,7 +41,6 @@ import guicomponents
 import mltplayer
 import monitorevent
 import movemodes
-import render
 import respaths
 import panels
 from positionbar import PositionBar

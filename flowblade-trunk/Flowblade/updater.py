@@ -38,7 +38,6 @@ import editorpersistance
 import mlt
 import panels
 import utils
-import render
 import respaths
 import tlinewidgets
 
