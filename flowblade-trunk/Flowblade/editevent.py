@@ -37,6 +37,7 @@ import clipeffectseditor
 import compositeeditor
 import compositormodes
 import dialogs
+import dialogutils
 import edit
 import editorstate
 from editorstate import current_sequence
@@ -87,7 +88,7 @@ def do_clip_insert(track, new_clip, tline_pos):
     # Can't put audio media on video track 
     if ((new_clip.media_type == appconsts.AUDIO)
        and (track.type == appconsts.VIDEO)):        
-        dialogs.warning_message(_("Can't put an audio clip on a video track."), 
+        dialogsutils.warning_message(_("Can't put an audio clip on a video track."), 
                                 _("Track ")+ utils.get_track_name(track, current_sequence()) + _(" is a video track and can't display audio only material."),
                                 gui.editor_window.window)
         return
@@ -699,7 +700,7 @@ def _set_track_normal_height(track_index):
     x, y, w, h = gui.tline_canvas.widget.allocation
     if new_h > h:
         track.height = appconsts.TRACK_HEIGHT_SMALL
-        dialogs.warning_message(_("Not enough vertical space on Timeline to expand track"), 
+        dialogsutils.warning_message(_("Not enough vertical space on Timeline to expand track"), 
                                 _("Maximize or resize application window to get more\nspace for tracks if possible."),
                                 gui.editor_window.window,
                                 True)
@@ -894,14 +895,13 @@ def _create_color_clip_callback(dialog, response_id, widgets):
 
 # ------------------------------------ track locks handling
 def track_lock_check_and_user_info(track, calling_function="this ain't used anymore", actionname="this ain't used anymore"):
-
     if track.edit_freedom == appconsts.LOCKED:
         track_name = utils.get_track_name(track, current_sequence())
 
         # No edits on locked tracks.
         primary_txt = _("Can't edit a locked track")
         secondary_txt = _("Track ") + track_name + _(" is locked. Unlock track to edit it.")
-        dialogs.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
+        dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
         return True
     
     return False

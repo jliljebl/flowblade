@@ -1,21 +1,21 @@
 """
-	Flowblade Movie Editor is a nonlinear video editor.
+    Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-	This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
 
-	Flowblade Movie Editor is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+    Flowblade Movie Editor is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-	Flowblade Movie Editor is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Flowblade Movie Editor is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU General Public License
+    along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 """
@@ -24,7 +24,7 @@ Module handles events related to audiosplits and setting clip sync relationships
 import gtk
 
 import appconsts
-import dialogs
+import dialogutils
 import edit
 import editorstate
 from editorstate import current_sequence
@@ -121,8 +121,8 @@ def _set_sync_parent_clip(event, frame):
     parent_track = tlinewidgets.get_track(event.y)
     
     if parent_track != current_sequence().tracks[current_sequence().first_video_index]:
-        dialogs.warning_message(_("Sync parent clips must be on track V1"), 
-                                _("Selected synch parent clip is on track ")+ utils.get_track_name(parent_track, current_sequence()) + _(".\nYou can only synch to clips that are on track V1."),
+        dialogutils.warning_message(_("Sync parent clips must be on track V1"), 
+                                _("Selected sync parent clip is on track ")+ utils.get_track_name(parent_track, current_sequence()) + _(".\nYou can only sync to clips that are on track V1."),
                                 gui.editor_window.window,
                                 True)
         return

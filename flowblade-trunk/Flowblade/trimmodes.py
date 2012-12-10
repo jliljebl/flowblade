@@ -23,7 +23,7 @@ Module handles user edit events for one- and tworoll trim modes.
 """
 
 import appconsts
-import dialogs
+import dialogutils
 import edit
 import editorstate
 from editorstate import current_sequence
@@ -209,7 +209,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         set_exit_mode_func()
         primary_txt = _("Cant ONE ROLL TRIM blank clips.")
         secondary_txt = _("You can use MOVE OVERWRITE or TWO ROLL TRIM edits instead\nto get the desired change.")
-        dialogs.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return
 
     # Give timeline widget needed data
@@ -471,7 +471,7 @@ def set_tworoll_mode(track, current_frame = -1):
 def _tworoll_init_failed_window():
     primary_txt = _("Initializing TWO ROLL TRIM failed")
     secondary_txt = _("You are attempting TWO ROLL TRIM at a position in the timeline\nwhere it can't be performed.")
-    dialogs.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         
 def tworoll_trim_press(event, frame):
     """

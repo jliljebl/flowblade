@@ -32,6 +32,7 @@ import threading
 import xml.dom.minidom
 
 import dialogs
+import dialogutils
 from editorstate import current_sequence
 from editorstate import PROJECT
 import gui
@@ -267,7 +268,7 @@ def get_render_consumer():
     else:
         args_vals_list, error = _get_ffmpeg_opts_args_vals_tuples_list()
         if error != None:
-            dialogs.warning_message("FFMPeg Args Error", error, gui.editor_window.window)
+            dialogutils.warning_message("FFMPeg Args Error", error, gui.editor_window.window)
             return None
         
     for arg_val in args_vals_list:

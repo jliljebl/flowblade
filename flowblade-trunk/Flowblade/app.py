@@ -40,6 +40,7 @@ import audiowaveform
 import clipeffectseditor
 import compositeeditor
 import dialogs
+import dialogutils
 import dnd
 import edit
 import editevent
@@ -488,7 +489,7 @@ def _show_too_small_info():
     scr_h = gtk.gdk.screen_height()
     secondary_txt = _("Minimum screen dimensions for this application are 1152 x 768.\n") + \
                     _("Your screen dimensions are ") + str(scr_w) + " x " + str(scr_h) + "."
-    dialogs.warning_message_with_callback(primary_txt, secondary_txt, None, False, _early_exit)
+    dialogutils.warning_message_with_callback(primary_txt, secondary_txt, None, False, _early_exit)
 
 def _early_exit(dialog, response):
     dialog.destroy()
@@ -506,7 +507,7 @@ def _show_single_instance_info():
     gobject.source_remove(exit_timeout_id)
     primary_txt = _("Another instance of Flowblade already running.")
     secondary_txt = _("Only one instance of Flowblade is allowed to run at a time.")
-    dialogs.warning_message_with_callback(primary_txt, secondary_txt, None, False, _early_exit)
+    dialogutils.warning_message_with_callback(primary_txt, secondary_txt, None, False, _early_exit)
     
 # ------------------------------------------------------ shutdown
 def shutdown():
@@ -536,7 +537,7 @@ def _shutdown_dialog_callback(dialog, response_id):
         if editorstate.PROJECT().last_save_path != None:
             persistance.save_project(editorstate.PROJECT(), editorstate.PROJECT().last_save_path)
         else:
-            dialogs.warning_message(_("Project has not been saved previously"), 
+            dialogutils.warning_message(_("Project has not been saved previously"), 
                                     _("Save project with File -> Save As before closing."),
                                     gui.editor_window.window)
             return

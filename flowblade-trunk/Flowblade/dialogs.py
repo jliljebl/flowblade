@@ -312,7 +312,7 @@ def close_confirm_dialog(callback, msg, parent_window, project_name):
     _default_behaviour(dialog)
     dialog.connect('response', callback)
     dialog.show_all()
-    
+
 def info_message(primary_txt, secondary_txt, parent_window):
     warning_message(primary_txt, secondary_txt, parent_window, is_info=True)
 

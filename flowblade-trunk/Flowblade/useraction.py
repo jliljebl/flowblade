@@ -35,6 +35,7 @@ import app
 import appconsts
 import clipeffectseditor
 import dialogs
+import dialogutils
 import gui
 import guicomponents
 import editorstate
@@ -119,7 +120,7 @@ class LoadThread(threading.Thread):
             primary_txt = _("File: ") + e.value + _(" was not found on load!")
             secondary_txt = _("Place dummy file with same name and similar content to enable") + "\n" + _("project load. ") + \
                             _("Doing so does not quarantee succesful load") + "\n" + _("if files have different properties.")
-            dialogs.warning_message(primary_txt, secondary_txt, None, is_info=False)
+            dialogutils.warning_message(primary_txt, secondary_txt, None, is_info=False)
             return
     
         gtk.gdk.threads_enter()
@@ -288,7 +289,7 @@ def _close_dialog_callback(dialog, response_id):
         if editorstate.PROJECT().last_save_path != None:
             persistance.save_project(editorstate.PROJECT(), editorstate.PROJECT().last_save_path)
         else:
-            dialogs.warning_message(_("Project has not been saved previously"), 
+            dialogutils.warning_message(_("Project has not been saved previously"), 
                                     _("Save project with File -> Save As before closing."),
                                     gui.editor_window.window)
             return
@@ -409,7 +410,7 @@ def render_timeline():
     if len(render.widgets.movie_name.get_text()) == 0:
         primary_txt = _("Render file name entry is empty")
         secondary_txt = _("You have to provide a name for the file to be rendered.")
-        dialogs.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
+        dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
         return   
 
     if os.path.exists(render.get_file_path()):
@@ -447,7 +448,7 @@ def _do_rendering():
         if render.widgets.range_cb.get_active() == 1:
             primary_txt = _("Render range not defined")
             secondary_txt = _("Define render range using Mark In and Mark Out points\nor select range option 'Program length' to start rendering.")
-            dialogs.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
+            dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
             return
 
     render.set_render_gui()
@@ -660,7 +661,7 @@ def delete_selected_bin():
     Deletes current bin if it's empty and at least one will be left.
     """
     if len(current_bin().file_ids) != 0:
-        dialogs.warning_message(_("Can't remove a non-empty bin"), 
+        dialogutils.warning_message(_("Can't remove a non-empty bin"), 
                                 _("You must remove all files from the bin before deleting it."),
                                 gui.editor_window.window)
         return
@@ -669,7 +670,7 @@ def delete_selected_bin():
     selection = gui.bin_list_view.treeview.get_selection()
     model, iter = selection.get_selected()
     if len(model) < 2:
-        dialogs.warning_message(_("Can't remove last bin"), 
+        dialogutils.warning_message(_("Can't remove last bin"), 
                                 _("There must always exist at least one bin."),
                                 gui.editor_window.window)
         return 
@@ -758,7 +759,7 @@ def change_edit_sequence():
     row = max(rows[0])
     current_index = PROJECT().sequences.index(current_sequence())
     if row == current_index:
-        dialogs.warning_message(_("Selected sequence is already being edited"), 
+        dialogutils.warning_message(_("Selected sequence is already being edited"), 
                                 _("Select another sequence. Press Add -button to create a\nnew sequence if needed."),
                                 gui.editor_window.window)
         return 
@@ -835,7 +836,7 @@ def _delete_confirm_callback(dialog, response_id):
 
     # Have to have one sequence.
     if len(model) < 2:
-        dialogs.warning_message(_("Can't remove last sequence"), 
+        dialogutils.warning_message(_("Can't remove last sequence"), 
                                 _("There must always exist at least one sequence."),
                                 gui.editor_window.window)
         return
@@ -926,7 +927,7 @@ def _profiles_manager_save_profile_clicked(widgets, user_profiles_view):
     profile_path = utils.get_hidden_user_dir_path() + mltprofiles.USER_PROFILES_DIR + profile_file_name
     
     if os.path.exists(profile_path):
-        dialogs.warning_message("Profile '" +  description.get_text() + "' already exists!", \
+        dialogutils.warning_message("Profile '" +  description.get_text() + "' already exists!", \
                                 "Delete profile and save again.",  gui.editor_window.window)
         return
 
@@ -982,7 +983,7 @@ def _profiles_manager_hide_profiles_clicked(visible_view, hidden_view):
     for i in visible_indexes:
         pname, profile = mltprofiles.get_factory_profiles()[i]
         if profile == default_profile:
-            dialogs.warning_message("Can't hide default Profile", 
+            dialogutils.warning_message("Can't hide default Profile", 
                                     "Profile '"+ profile.description() + "' is default profile and can't be hidden.", 
                                     profile_manager_dialog)
             return
