@@ -94,8 +94,18 @@ def main(root_path):
     Called at application start.
     Initializes application with default project.
     """
-    # Allow only on instance to run
+    # Create hidden folders if not present
     user_dir = utils.get_hidden_user_dir_path()
+    if not os.path.exists(user_dir):
+        os.mkdir(user_dir)
+    if not os.path.exists(user_dir + mltprofiles.USER_PROFILES_DIR):
+        os.mkdir(user_dir + mltprofiles.USER_PROFILES_DIR)
+    if not os.path.exists(user_dir + AUTOSAVE_DIR):
+        os.mkdir(user_dir + AUTOSAVE_DIR)
+    if not os.path.exists(user_dir + BATCH_DIR):
+        os.mkdir(user_dir + BATCH_DIR)
+        
+    # Allow only on instance to run
     pid_file_path = user_dir + PID_FILE
     # Exit and info dialog launched below if ca_run is False
     can_run = utils.single_instance_pid_file_test_and_write(pid_file_path)
@@ -110,16 +120,6 @@ def main(root_path):
     except:
         editorstate.mlt_version = "0.0.99"
 
-    # Create hidden folders if not present
-
-    if not os.path.exists(user_dir):
-        os.mkdir(user_dir)
-    if not os.path.exists(user_dir + mltprofiles.USER_PROFILES_DIR):
-        os.mkdir(user_dir + mltprofiles.USER_PROFILES_DIR)
-    if not os.path.exists(user_dir + AUTOSAVE_DIR):
-        os.mkdir(user_dir + AUTOSAVE_DIR)
-    if not os.path.exists(user_dir + BATCH_DIR):
-        os.mkdir(user_dir + BATCH_DIR)
 
     # Init translations module with translations data
     translations.init_languages()
