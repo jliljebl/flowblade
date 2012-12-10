@@ -285,7 +285,7 @@ def single_instance_pid_file_test_and_write(pid_file_path):
             return True
     else:
         # This is the first instance running
-        pid_file = open(pid_file_path,"wb")
+        pid_file = open(pid_file_path,"w+")
         pid_file.write(str(this_pid))
         pid_file.close()
         return True

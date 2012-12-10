@@ -63,6 +63,7 @@ import persistance
 import projectdata
 import propertyedit
 import render
+import renderconsumer
 import respaths
 import resync
 import sequence
@@ -156,7 +157,7 @@ def main(root_path):
     
     # Check for codecs and formats on the system
     mltenv.check_available_features(repo)
-    render.load_render_profiles()
+    renderconsumer.load_render_profiles()
 
     # Load filter and compositor descriptions from xml files.
     mltfilters.load_filters_xml(mltenv.services)

@@ -40,52 +40,12 @@ import guicomponents
 import guiutils
 import mltenv
 import mltprofiles
+import renderconsumer
 import respaths
 import sequence
 import utils
 
-# File describing existing encoding and quality options
-RENDER_ENCODING_FILE = "/res/render/renderencoding.xml"
-
-# User defined Ffmpeg opts file extension
-FFMPEG_OPTS_SAVE_FILE_EXTENSION = ".rargs"
-
-# Defaults
 DEFAULT_ENCODING_INDEX = 0
-
-# Node, attribute names.
-NAME = "name"
-TYPE = "type"
-ID = "id"
-EXTENSION = "extension"
-RESIZABLE = "resize"
-ARGS = "args"
-REPLACED_VALUES = "replvalues"
-ADDED_ATTRIBUTES = "addargs"
-BITRATE_OPTION = "boption"
-QUALITY_GROUP = "qualityqroup"
-ENCODING_OPTION = "encodingoption"
-QGROUP = "qgroup"
-DEFAULT_INDEX = "defaultindex"
-PROFILE = "profile"
-QUALITY = "quality"
-BITRATE = "bitrate"
-AUDIO_DESCRIPTION = "audiodesc"
-
-# Replace strings and attribute values
-BITRATE_RPL = "%BITRATE%"
-VARIABLE_VAL = "%VARIABLE%"
-SCREEN_SIZE_RPL = "%SCREENSIZE%"
-ASPECT_RPL = "%ASPECT%"
-
-# Option strings
-SIZE_OPTION = "s"
-
-render_encoding_doc = None
-encoding_options = []
-not_supported_encoding_options = []
-quality_option_groups = {}
-quality_option_groups_default_index = {}
 
 open_media_file_callback = None # monkeypathced in by useraction to avoid circular imports
 
@@ -98,208 +58,36 @@ aborted = False
 motion_renderer = None
 motion_progress_update = None
 
-# Replace empty strings with None values
-def _get_attribute(node, attr_name):
-    value = node.getAttribute(attr_name)
-    if value == "":
-        return None
-    
-    return value
-    
-class QualityOption:
-    """
-    A render quality option for an EncodingOption.
-    
-    Values of mlt render consumer properties (usually bitrate) that equal 
-    key expressions are replaced with corresponding values.
-    """
-    def __init__(self, quality_node):
-        self.name = _get_attribute(quality_node, NAME)
-        # Replaced render arguments
-        replaced_values_str = _get_attribute(quality_node, REPLACED_VALUES)
-        self.replaced_expressions = []
-        self.replace_map = {}
-        if replaced_values_str != None:
-            tokens = replaced_values_str.split(";")
-            for token in tokens:
-                token_sides = token.split(" ")
-                self.replaced_expressions.append(token_sides[0])
-                self.replace_map[token_sides[0]] = token_sides[1]
-        # Added render arguments
-        added_atrrs_str = _get_attribute(quality_node, ADDED_ATTRIBUTES)
-        self.add_map = {}
-        if added_atrrs_str != None:
-            tokens = added_atrrs_str.split(" ")
-            for token in tokens:
-                token_sides = token.split("=")
-                self.add_map[token_sides[0]] = token_sides[1]
-
-class EncodingOption:
-    """
-    An object that groups together vcodoc, acodec, format and quality options group.
-    Object is used to set mlt render consumer properties.
-    """
-    def __init__(self, option_node):
-        self.name = _get_attribute(option_node, NAME)
-        self.type = _get_attribute(option_node, TYPE)
-        self.resizable = (_get_attribute(option_node, RESIZABLE) == "True")
-        self.extension = _get_attribute(option_node, EXTENSION)
-        quality_qroup_id = _get_attribute(option_node, QGROUP)
-        self.quality_options = quality_option_groups[quality_qroup_id]
-        try:
-            quality_default_index = int(quality_option_groups_default_index[quality_qroup_id])
-        except KeyError:
-            quality_default_index = None
-        self.quality_default_index = quality_default_index
-        self.audio_desc = _get_attribute(option_node, AUDIO_DESCRIPTION)
-        profile_node = option_node.getElementsByTagName(PROFILE).item(0)
-        self.attr_string =  _get_attribute(profile_node, ARGS)
-        self.acodec = None
-        self.vcodec = None
-        self.format = None
-
-        tokens = self.attr_string.split(" ")
-        for token in tokens:
-            token_sides = token.split("=")
-            if token_sides[0] == "acodec":
-                self.acodec = token_sides[1]
-            elif token_sides[0] == "vcodec":
-                self.vcodec = token_sides[1]
-            elif token_sides[0] == "f":
-                self.format = token_sides[1]
-
-
-        self.supported, self.err_msg = mltenv.render_profile_supported(self.format, 
-                                                         self.vcodec,
-                                                         self.acodec)
-                                                         
-    def get_args_vals_tuples_list(self, profile, quality_option):
-        # Encoding options
-        tokens = self.attr_string.split(" ")
-        args_tuples = []
-        for token in tokens:
-            # Get property keys and values
-            token_sides = token.split("=")
-            arg1 = str(token_sides[0])
-            arg2 = str(token_sides[1])
-            
-            # Replace keyword values
-            if arg2 == SCREEN_SIZE_RPL:
-                arg2 = str(profile.width())+ "x" + str(profile.height())
-            if arg2 == ASPECT_RPL:
-                arg2 = "@" + str(profile.display_aspect_num()) + "/" + str(profile.display_aspect_den())
-
-            # Replace keyword values from quality options values
-            if arg2 in quality_option.replaced_expressions:
-                arg2 = str(quality_option.replace_map[arg2])
-            args_tuples.append((arg1, arg2))
-        
-        return args_tuples
-
-    def get_audio_description(self):
-        if self.audio_desc == None:
-            desc = "Not available"
-        else:
-            desc = self.audio_desc 
-        return "<small>" + desc + "</small>"
-    
-# ------------------------------------------------- init, other interface
-def load_render_profiles():
-    """
-    Load render profiles from xml into DOM at start-up and build
-    object tree.
-    """
-    file_path = respaths.ROOT_PATH + RENDER_ENCODING_FILE
-    global render_encoding_doc
-    render_encoding_doc = xml.dom.minidom.parse(file_path)
-
-    # Create quality option groups
-    global quality_option_groups
-    qgroup_nodes = render_encoding_doc.getElementsByTagName(QUALITY_GROUP)
-    for qgnode in qgroup_nodes:
-        quality_qroup = []
-        group_key = _get_attribute(qgnode, ID)
-        group_default_index = _get_attribute(qgnode, DEFAULT_INDEX)
-        if group_default_index != None: 
-            quality_option_groups_default_index[group_key] = group_default_index
-        option_nodes = qgnode.getElementsByTagName(QUALITY)
-        for option_node in option_nodes:
-            q_option = QualityOption(option_node)
-            quality_qroup.append(q_option)
-        quality_option_groups[group_key] = quality_qroup
-
-    # Create encoding options
-    print "Render profiles:"
-    global encoding_options, not_supported_encoding_options
-    encoding_option_nodes = render_encoding_doc.getElementsByTagName(ENCODING_OPTION)
-    for eo_node in encoding_option_nodes:
-        encoding_option = EncodingOption(eo_node)
-        if encoding_option.supported:
-            encoding_options.append(encoding_option)
-            msg = "...available"
-        else:
-            msg = "...NOT available, " + encoding_option.err_msg + " missing"
-            not_supported_encoding_options.append(encoding_option)
-        print encoding_option.name + msg
-    
+# -------------------------------------------------- render consumer
 def get_render_consumer():
-    """
-    Creates and sets parameters to mlt.Consumer 
-    based on current selections
-    """
     file_path = get_file_path()
     if file_path == None:
         return None
 
-    # Get render profile
     profile = _get_current_profile()
 
-    # Create render consumer
-    consumer = mlt.Consumer(profile, "avformat", file_path)
-    consumer.set("real_time", -1)
-
-    # Set render consumer properties
-    encoding_option = encoding_options[widgets.encodings_cb.get_active()]
-    quality_option = encoding_option.quality_options[widgets.quality_cb.get_active()]
-
-    # Encoding options
     if widgets.use_opts_check.get_active() == False:
-        args_vals_list = encoding_option.get_args_vals_tuples_list(profile, quality_option)
+        # Using options comboboxes
+        encoding_option_index = widgets.encodings_cb.get_active()
+        quality_option_index = widgets.quality_cb.get_active()
+        consumer = renderconsumer.get_render_consumer_for_encoding_and_quality( file_path,
+                                                                                profile,
+                                                                                encoding_option_index,
+                                                                                quality_option_index)
     else:
-        args_vals_list, error = _get_ffmpeg_opts_args_vals_tuples_list()
+        buf = widgets.opts_view.get_buffer()
+        consumer, error = renderconsumer.get_render_consumer_for_text_buffer(buf)
         if error != None:
             dialogutils.warning_message("FFMPeg Args Error", error, gui.editor_window.window)
             return None
         
-    for arg_val in args_vals_list:
-        k, v = arg_val
-        consumer.set(k, v)
-
-    # Quality options
-    for k, v in quality_option.add_map.iteritems():
-        consumer.set(str(k), str(v))
-        
     return consumer
-
+    
 def get_file_path():
     folder = widgets.out_folder.get_filenames()[0]        
     filename = widgets.movie_name.get_text()
     
     return folder + "/" + filename + widgets.extension_label.get_text()
-
-def get_quality_name(quality_option, render_profile):
-    name = quality_option.name
-    if name.find(BITRATE_RPL) != -1:
-        name = name.replace(BITRATE_RPL, (render_profile.bitrate + " kb/s"))
-    return name
-
-def get_size_string(group_index, profile_index):
-    profiles_group = profiles_groups[group_index]
-    if profiles_group.resizable == False:
-        profile = profiles_group.profiles[profile_index]
-        return profile.size_str
-    
-    return DEFAULT_SIZE_STR
 
 # --------------------------------------------------- gui
 def create_widgets():
@@ -329,7 +117,7 @@ def create_widgets():
     
     # Encoding
     widgets.encodings_cb = gtk.combo_box_new_text()
-    for encoding in encoding_options:
+    for encoding in renderconsumer.encoding_options:
         widgets.encodings_cb.append_text(encoding.name)
     widgets.encodings_cb.set_active(DEFAULT_ENCODING_INDEX)
     widgets.encodings_cb.connect("changed", 
@@ -434,7 +222,7 @@ def create_widgets():
     _fill_audio_desc()
 
 def set_default_values_for_widgets():
-    if len(encoding_options) == 0:# this won't work if no encoding options available
+    if len(renderconsumer.encoding_options) == 0:# this won't work if no encoding options available
         return                   # but we don't want crash, so that we can inform user
     widgets.encodings_cb.set_active(DEFAULT_ENCODING_INDEX)
     widgets.movie_name.set_text("movie")
@@ -567,7 +355,7 @@ def _encoding_selection_changed():
 
 def _fill_quality_combo_box():
     enc_index = widgets.encodings_cb.get_active()
-    encoding = encoding_options[enc_index]
+    encoding = renderconsumer.encoding_options[enc_index]
 
     widgets.quality_cb.get_model().clear()
     for quality_option in encoding.quality_options:
@@ -580,12 +368,12 @@ def _fill_quality_combo_box():
 
 def _fill_extension_label():
     enc_index = widgets.encodings_cb.get_active()
-    ext = encoding_options[enc_index].extension
+    ext = renderconsumer.encoding_options[enc_index].extension
     widgets.extension_label.set_text("." + ext)
 
 def _fill_audio_desc():
     enc_index = widgets.encodings_cb.get_active()
-    encoding = encoding_options[enc_index]
+    encoding = renderconsumer.encoding_options[enc_index]
     widgets.audio_desc.set_markup(encoding.get_audio_description())
    
 def _display_selection_in_opts_view():
@@ -606,56 +394,6 @@ def _fill_opts_view(encoding_option, quality_option, profile):
     text_buffer.set_text(text)
     widgets.opts_view.set_buffer(text_buffer)
 
-def _get_ffmpeg_opts_args_vals_tuples_list():
-    buf = widgets.opts_view.get_buffer()
-    end = buf.get_end_iter()
-    arg_vals = []
-    for i in range(0, buf.get_line_count()):
-        line_start = buf.get_iter_at_line(i)
-        if i == buf.get_line_count() - 1:
-            line_end = end
-        else:
-            line_end = buf.get_iter_at_line(i + 1)
-        av_tuple, error = _parse_line(line_start, line_end, buf)
-        if error != None:
-            errs_str = _("Error on line ") + str(i + 1) + ": " + error + _("\nLine contents: ") \
-                       + buf.get_text(line_start, line_end, include_hidden_chars=False)
-            return (None, errs_str)
-        if av_tuple != None:
-            arg_vals.append(av_tuple)
-    
-    return (arg_vals, None)
-
-def _parse_line(line_start, line_end, buf):
-    line = buf.get_text(line_start, line_end, include_hidden_chars=False)
-    if len(line) == 0:
-        return (None, None)
-    if line.find("=") == -1:
-        return (None, _("No \'=\' found."))
-    sides = line.split("=")
-    if len(sides) != 2:
-        return (None, _("Number of tokens on line is ")+ str(len(sides)) + _(", should be 2 (key, value)."))
-    k = sides[0].strip()
-    v = sides[1].strip()
-    if len(k) == 0:
-        return (None, _("Arg name token is empty."))
-    if len(v) == 0:
-        return (None, _("Arg value token is empty."))
-    try:
-        k.decode('ascii')
-    except UnicodeDecodeError:
-        return (None, _("Non-ascii char in Arg name."))
-    try:
-        v.decode('ascii')
-    except UnicodeDecodeError:
-        return (None, _("Non-ascii char in Arg value."))
-    if k.find(" ") != -1:
-        return (None,  _("Whitespace in Arg name."))
-    if v.find(" ") != -1:
-        return (None,  _("Whitespace in Arg value."))
-        
-    return ((k,v), None)
-     
 def _save_opts_pressed():
     dialogs.save_ffmpep_optsdialog(_save_opts_dialog_callback, FFMPEG_OPTS_SAVE_FILE_EXTENSION)
 
@@ -757,7 +495,7 @@ def render_frame_buffer_clip(media_file):
     
     # Encoding
     fb_widgets.encodings_cb = gtk.combo_box_new_text()
-    for encoding in encoding_options:
+    for encoding in renderconsumer.encoding_options:
         fb_widgets.encodings_cb.append_text(encoding.name)
     fb_widgets.encodings_cb.set_active(DEFAULT_ENCODING_INDEX)
     fb_widgets.encodings_cb.connect("changed", 
@@ -826,8 +564,8 @@ def _render_frame_buffer_clip_callback(dialog, response_id, fb_widgets, media_fi
             profile = mltprofiles.get_profile_for_index(profile_index - 1)
 
         # Render consumer properties
-        encoding_option = encoding_options[fb_widgets.encodings_cb.get_active()]
-        quality_option = encoding_option.quality_options[fb_widgets.quality_cb.get_active()]
+        encoding_option_index = fb_widgets.encodings_cb.get_active()
+        quality_option_index = fb_widgets.quality_cb.get_active()
 
         # Range
         range_selection = fb_widgets.render_range.get_active()
@@ -844,6 +582,7 @@ def _render_frame_buffer_clip_callback(dialog, response_id, fb_widgets, media_fi
         track = seq.tracks[seq.first_video_index]
         track.append(motion_producer, 0, motion_producer.get_length() - 1)
 
+        """
         # Create render consumer
         consumer = mlt.Consumer(profile, "avformat", write_file)
         consumer.set("real_time", -1)
@@ -857,13 +596,17 @@ def _render_frame_buffer_clip_callback(dialog, response_id, fb_widgets, media_fi
         for k, v in quality_option.add_map.iteritems():
             consumer.set(str(k), str(v))
 
+
+        """
+        consumer = renderconsumer.get_render_consumer_for_encoding_and_quality(write_file, profile, encoding_option_index, quality_option_index)
+        
         # start and end frames
         start_frame = 0
         end_frame = seq.get_length()
         if range_selection == 1:
             start_frame = media_file.mark_in
             end_frame = media_file.mark_out
- 
+            
         # Launch render
         global motion_renderer, motion_progress_update
         motion_renderer = MotionFileRender(write_file, seq.tractor, consumer, start_frame, end_frame)
@@ -905,7 +648,7 @@ def _FB_encoding_changed(fb_widgets):
  
 def _fill_FB_quality_combo_box(fb_widgets):
     enc_index = fb_widgets.encodings_cb.get_active()
-    encoding = encoding_options[enc_index]
+    encoding = renderconsumer.encoding_options[enc_index]
 
     fb_widgets.quality_cb.get_model().clear()
     for quality_option in encoding.quality_options:
@@ -918,7 +661,7 @@ def _fill_FB_quality_combo_box(fb_widgets):
 
 def _fill_FB_extension_label(fb_widgets):
     enc_index = fb_widgets.encodings_cb.get_active()
-    ext = encoding_options[enc_index].extension
+    ext = renderconsumer.encoding_options[enc_index].extension
     fb_widgets.extension_label.set_text("." + ext)
     
 

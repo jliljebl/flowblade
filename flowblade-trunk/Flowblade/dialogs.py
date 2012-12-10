@@ -25,6 +25,7 @@ callsites which provide callback methods for response signals.
 import gtk
 import pango
 
+import appconsts
 import dialogutils
 import guicomponents
 import guiutils
@@ -37,6 +38,7 @@ import mltfilters
 import mlttransitions
 import panels
 import render
+import renderconsumer
 import respaths
 
 # Gui consts
@@ -448,7 +450,7 @@ def environment_dialog(parent_window):
     formats = sorted(mltenv.formats)
     formats_sw = _get_items_in_scroll_window(formats, 5, COLUMN_WIDTH, 105)
     
-    enc_ops = render.encoding_options + render.not_supported_encoding_options
+    enc_ops = renderconsumer.encoding_options + renderconsumer.not_supported_encoding_options
     enc_msgs = []
     for e_opt in enc_ops:
         if e_opt.supported:
