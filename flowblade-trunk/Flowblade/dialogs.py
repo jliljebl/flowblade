@@ -36,7 +36,6 @@ import mltprofiles
 import mltfilters
 import mlttransitions
 import panels
-import projectdata
 import render
 import respaths
 
@@ -117,7 +116,7 @@ def load_project_dialog(callback):
     dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
     dialog.set_select_multiple(False)
     file_filter = gtk.FileFilter()
-    file_filter.add_pattern("*" + projectdata.PROJECT_FILE_EXTENSION)
+    file_filter.add_pattern("*" + appconsts.PROJECT_FILE_EXTENSION)
     dialog.add_filter(file_filter)
     dialog.connect('response', callback)
     dialog.show()
@@ -145,7 +144,7 @@ def save_project_as_dialog(callback, current_name, open_dir):
     
     dialog.set_select_multiple(False)
     file_filter = gtk.FileFilter()
-    file_filter.add_pattern("*" + projectdata.PROJECT_FILE_EXTENSION)
+    file_filter.add_pattern("*" + appconsts.PROJECT_FILE_EXTENSION)
     dialog.add_filter(file_filter)
     dialog.connect('response', callback)
     dialog.show()

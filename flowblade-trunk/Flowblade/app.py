@@ -38,7 +38,6 @@ import appconsts
 import audiomonitoring
 import audiowaveform
 import clipeffectseditor
-import cliprenderer
 import compositeeditor
 import dialogs
 import dnd
@@ -78,6 +77,7 @@ import utils
 AUTOSAVE_DIR = "autosave/"
 AUTOSAVE_FILE = "autosave/autosave"
 PID_FILE = "flowbladepidfile"
+BATCH_DIR = "batchrender/"
 autosave_timeout_id = -1
 recovery_dialog_id = -1
 
@@ -95,9 +95,9 @@ def main(root_path):
     # Allow only on instance to run
     user_dir = utils.get_hidden_user_dir_path()
     pid_file_path = user_dir + PID_FILE
-    # Exit and info dialog launched below
+    # Exit and info dialog launched below if ca_run is False
     can_run = utils.single_instance_pid_file_test_and_write(pid_file_path)
-
+                                    
     # Set paths.
     respaths.set_paths(root_path)
 
@@ -116,6 +116,8 @@ def main(root_path):
         os.mkdir(user_dir + mltprofiles.USER_PROFILES_DIR)
     if not os.path.exists(user_dir + AUTOSAVE_DIR):
         os.mkdir(user_dir + AUTOSAVE_DIR)
+    if not os.path.exists(user_dir + BATCH_DIR):
+        os.mkdir(user_dir + BATCH_DIR)
 
     # Init translations module with translations data
     translations.init_languages()

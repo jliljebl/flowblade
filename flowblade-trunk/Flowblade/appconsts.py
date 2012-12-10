@@ -22,6 +22,8 @@
 Module contains constant values that are used by multiple modules in the application. 
 """
 
+PROJECT_FILE_EXTENSION = ".flb"
+
 # Media types for tracks or clips
 UNKNOWN = 0
 VIDEO = 1

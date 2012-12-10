@@ -25,6 +25,7 @@ Load, save, add media file, etc...
 import gobject
 import gtk
 import os
+import subprocess
 import sys
 import time
 import threading
@@ -1121,5 +1122,12 @@ def _select_treeview_on_pos_and_return_row_and_column_title(event, treeview):
     row = max(rows[0])
     return (row, title)
 
+
+def lauch_batch_rendering():
+    subprocess.Popen([sys.executable, respaths.ROOT_PARENT + "flowbladebatch"], 
+                                    stdout=subprocess.PIPE, 
+                                    stderr=subprocess.STDOUT)
+    print "popopen"
+                                    
 # We need to do this on app start-up
 render.open_media_file_callback = open_rendered_file

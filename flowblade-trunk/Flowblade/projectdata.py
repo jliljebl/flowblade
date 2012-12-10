@@ -32,13 +32,12 @@ import threading
 
 import appconsts
 import editorpersistance
-import cliprenderer
 import mltprofiles
 import respaths
 import sequence
 import utils
 
-PROJECT_FILE_EXTENSION = ".flb"
+
 SAVEFILE_VERSION = 2 # this changed when backwards incompatible changes 
                      # are introduced to allow for detecting and fixing them
 
@@ -57,7 +56,7 @@ class Project:
     Only one sequence is edited at a time.
     """
     def __init__(self, profile): #profile is mlt.Profile here, made using file path
-        self.name = _("untitled") + PROJECT_FILE_EXTENSION
+        self.name = _("untitled") + appconsts.PROJECT_FILE_EXTENSION
         self.profile = profile
         self.profile_desc = profile.description()
         self.bins = []

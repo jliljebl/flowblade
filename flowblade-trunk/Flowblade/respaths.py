@@ -34,12 +34,13 @@ COMPOSITORS_XML_DOC = None
 HELP_DOC = None
 GPL_3_DOC = None
 LOCALE_PATH = None
+ROOT_PARENT = None
 
 def set_paths(root_path):
     global ROOT_PATH, IMAGE_PATH, THUMBNAIL_PATH, PROFILE_PATH,\
     BLACK_IMAGE_PATH, FILTERS_XML_DOC, COMPOSITORS_XML_DOC, \
     WIPE_RESOURCES_PATH, PREFS_PATH, HELP_DOC, LOCALE_PATH, \
-    GPL_3_DOC
+    GPL_3_DOC, ROOT_PARENT
     
     ROOT_PATH = root_path
     IMAGE_PATH = root_path + "/res/img/"
@@ -52,3 +53,7 @@ def set_paths(root_path):
     HELP_DOC = root_path + "/res/help/help.xml"
     LOCALE_PATH = root_path + "/locale/"
     GPL_3_DOC = root_path + "/res/help/gpl3"
+    ROOT_PARENT = ROOT_PATH.strip("Flowblade")
+    print "ggfg"
+    print ROOT_PARENT
+    

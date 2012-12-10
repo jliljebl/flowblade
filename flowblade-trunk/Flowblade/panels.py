@@ -397,8 +397,6 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     Use components created at clipeffectseditor.py.
     """
     clipeffectseditor.create_widgets()
-
-    #stack_label = guiutils.bold_label(_("FIlters Stack"))
     
     stack_buttons_box = gtk.HBox(True,1)
     stack_buttons_box.pack_start(clipeffectseditor.widgets.add_effect_b)
