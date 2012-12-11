@@ -170,24 +170,8 @@ def create_widgets():
     widgets.range_cb.set_active(0) 
 
     # Render, Reset buttons
-    widgets.render_button = gtk.Button()
-    render_icon = gtk.image_new_from_stock(gtk.STOCK_MEDIA_RECORD, 
-                                           gtk.ICON_SIZE_BUTTON)
+    widgets.render_button = guiutils.get_render_button()
 
-    render_pad1 = gtk.Label()
-    render_pad1.set_size_request(10, 10)
-    render_pad2 = gtk.Label()
-    render_pad2.set_size_request(5, 10)
-    render_pad3 = gtk.Label()
-    render_pad3.set_size_request(10, 10)
-    render_button_box = gtk.HBox()
-    render_button_box.pack_start(render_pad1, False, False, 0)
-    render_button_box.pack_start(render_icon, False, False, 0)
-    render_button_box.pack_start(render_pad2, False, False, 0)
-    render_button_box.pack_start(gtk.Label(_("Render")), False, False, 0)
-    render_button_box.pack_start(render_pad3, False, False, 0)
-    widgets.render_button.add(render_button_box)
-    
     widgets.reset_button = gtk.Button(_("Reset"))
     widgets.reset_button.connect("clicked", lambda w: set_default_values_for_widgets())
 
@@ -582,22 +566,6 @@ def _render_frame_buffer_clip_callback(dialog, response_id, fb_widgets, media_fi
         track = seq.tracks[seq.first_video_index]
         track.append(motion_producer, 0, motion_producer.get_length() - 1)
 
-        """
-        # Create render consumer
-        consumer = mlt.Consumer(profile, "avformat", write_file)
-        consumer.set("real_time", -1)
-
-        # Set Encoding options
-        args_vals_list = encoding_option.get_args_vals_tuples_list(profile, quality_option)
-        for arg_val in args_vals_list:
-            k, v = arg_val
-            consumer.set(k, v)
-        # Set Quality options
-        for k, v in quality_option.add_map.iteritems():
-            consumer.set(str(k), str(v))
-
-
-        """
         consumer = renderconsumer.get_render_consumer_for_encoding_and_quality(write_file, profile, encoding_option_index, quality_option_index)
         
         # start and end frames
