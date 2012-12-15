@@ -1403,10 +1403,9 @@ def get_all_tracks_popup_menu(event, callback):
     menu = gtk.Menu()
     menu.add(_get_menu_item(_("Maximize tracks Height"), callback, "max" ))
     menu.add(_get_menu_item(_("Minimize tracks Height"), callback, "min" ))
-    _add_separetor(menu)
-    menu.add(_get_menu_item(_("Change Tracks Count"), callback, "change" ))
     menu.popup(None, None, None, event.button, event.time)
-    
+
+
 class PressLaunch:
     def __init__(self, callback, pixbuf):
         self.widget = CairoDrawableArea(22, 
