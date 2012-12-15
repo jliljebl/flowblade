@@ -179,10 +179,6 @@ class RenderQueueView(gtk.VBox):
 
     def __init__(self):
         gtk.VBox.__init__(self)
-
-        
-        #style = self.get_style()
-        #bg_col = style.bg[gtk.STATE_NORMAL]
         
        # Datamodel: icon, text, text
         self.storemodel = gtk.ListStore(bool, str, str, str, str, str)

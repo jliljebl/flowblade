@@ -1040,11 +1040,6 @@ class GeometryEditorButtonsRow(gtk.HBox):
         pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "geom_action.png")
         action_menu_button = guicomponents.PressLaunch(self._show_actions_menu, pixbuf)
         
-        #self.actions_b = gtk.MenuToolButton(action_icon, None)
-
-        #self.actions_b.set_menu(menu)
-        #self.actions_b.set_size_request(70, 25)
-        #self.actions_b.set_tooltip_text(_("Edit Actions Menu"))
         size_select = gtk.combo_box_new_text()
         size_select.append_text(_("Large"))
         size_select.append_text(_("Medium"))

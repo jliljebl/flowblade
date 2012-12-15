@@ -100,7 +100,7 @@ def create_widgets():
     widgets.exit_button.connect("clicked", lambda w: _quit_editing_clip_clicked())
     widgets.exit_button.set_tooltip_text(_("Quit editing Clip in editor"))
 
-    widgets.effect_stack_view = guicomponents.FilterListView(lambda ts: effect_selection_changed())
+    widgets.effect_stack_view = guicomponents.FilterSwitchListView(lambda ts: effect_selection_changed(), toggle_filter_active)
     dnd.connect_stack_treeview(widgets.effect_stack_view)
     gui.effect_stack_list_view = widgets.effect_stack_view
     
@@ -232,6 +232,16 @@ def reset_filter_values():
     clip.filters[row_index].reset_values(PROJECT().profile, clip)
     effect_selection_changed()
 
+# NOTE: Filter active state toggled from:
+#       guicomponents.FilterSwitchListView callback
+#       useraction._filter_stack_menu_item_selected()
+def toggle_filter_active(row, update_stack_view=True):
+    filter_object = clip.filters[row]
+    filter_object.active = (filter_object.active == False)
+    filter_object.update_mlt_disabled_value()
+    if update_stack_view == True:
+        update_stack_view_changed_blocked()
+            
 def effect_selection_changed():
     global keyframe_editor_widgets
 
@@ -335,7 +345,7 @@ def filter_edit_done(edited_clip, index=-1):
     """
     EditAction object calls this after edits and undos and redos.
     """
-    if edited_clip != clip:
+    if edited_clip != clip: # This gets called by all undos/redos, we only want to update if clip being edited here is affected
         return
     
     global block_changed_update

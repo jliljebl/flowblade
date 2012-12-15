@@ -433,24 +433,27 @@ class EditorWindow:
         info_h = gtk.HBox()
         info_h.pack_start(self.tline_info, False, False, 0)
         info_h.pack_start(gtk.Label(), True, True, 0)
-        info_h.set_size_request(tlinewidgets.COLUMN_WIDTH  - 22, # room for markers_button below 
+        info_h.set_size_request(tlinewidgets.COLUMN_WIDTH  - 22 - 22, # room for 2 menu launch buttons 
                                       tlinewidgets.SCALE_HEIGHT)
-        
+
         marker_pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "marker.png")
         markers_launcher = guicomponents.get_markers_menu_launcher(editevent.marker_menu_lauch_pressed, marker_pixbuf)
+        tracks_launcher_pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_menu_launch.png")
+        tracks_launcher = guicomponents.PressLaunch(editevent.all_tracks_menu_launch_pressed, tracks_launcher_pixbuf)
 
         # Timeline top row
         tline_hbox_1 = gtk.HBox()
         tline_hbox_1.pack_start(info_h, False, False, 0)
+        tline_hbox_1.pack_start(tracks_launcher.widget, False, False, 0)
         tline_hbox_1.pack_start(markers_launcher.widget, False, False, 0)
         tline_hbox_1.pack_start(self.tline_scale.widget, True, True, 0)
-        
+
         # Timeline column
         self.tline_column = tlinewidgets.TimeLineColumn(
                             editevent.track_active_switch_pressed,
                             editevent.track_mute_switch_pressed,
                             editevent.track_center_pressed)
-                            
+
         # Timeline editpanel
         self.tline_canvas = tlinewidgets.TimeLineCanvas(
             editevent.tline_canvas_mouse_pressed,

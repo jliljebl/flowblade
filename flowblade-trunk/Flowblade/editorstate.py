@@ -21,7 +21,7 @@
 """
 Module holds current editor state.
 
-Accerssor methods are there mainly to improve code readability elsewhere.
+Accessor methods are there mainly to improve code readability elsewhere.
 
 We're using BIG_METHOD_NAMES() for state objects. This is a bit unusual
 but looks good when reading code.

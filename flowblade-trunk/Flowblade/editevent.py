@@ -942,7 +942,13 @@ def _marker_add_dialog_callback(dialog, response_id, name_entry):
     current_sequence().markers.append((name, current_frame))
     current_sequence().markers = sorted(current_sequence().markers, key=itemgetter(1))
     updater.repaint_tline()
-        
+
+def all_tracks_menu_launch_pressed(widget, event):
+    guicomponents.get_all_tracks_popup_menu(event, _all_tracks_item_activated)
+
+def _all_tracks_item_activated(widget, msg):
+    print msg
+
 # ------------------------------------ function tables
 # mouse event indexes
 TL_MOUSE_PRESS = 0

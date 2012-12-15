@@ -54,6 +54,4 @@ def set_paths(root_path):
     LOCALE_PATH = root_path + "/locale/"
     GPL_3_DOC = root_path + "/res/help/gpl3"
     ROOT_PARENT = ROOT_PATH.strip("Flowblade")
-    print "ggfg"
-    print ROOT_PARENT
     

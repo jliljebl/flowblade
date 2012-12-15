@@ -1013,23 +1013,7 @@ def _profiles_manager_unhide_profiles_clicked(visible_view, hidden_view):
     visible_view.fill_data_model(mltprofiles.get_factory_profiles())
     hidden_view.fill_data_model(mltprofiles.get_hidden_profiles())
 
-def _fix_default_profile(default_profile):
-    """
-    Hiding and unhiding can make saved default project index point to wrong profile.
-    """
-    pass
-    """
-    THIS WAS A DUMP HACK REMOVE WHEN SEEN NEXT AFTER A WHILE, BUT KEEP CODE NOW IF THIS STILL INVOLVED IN SOME BUG 
-    new_index = mltprofiles.get_index_for_name(default_profile.description())
-    if new_index == -1:
-        print "Something very wrong in useraction._fix_default_profile"
 
-    if editorpersistance.prefs.default_profile_index != new_index:
-
-        editorpersistance.prefs.default_profile_index = new_index
-        editorpersistance.save()
-    """
-    
 # -------------------------------------------------------- effects editor
 def effect_select_row_double_clicked(treeview, tree_path, col):
     clipeffectseditor.add_currently_selected_effect()
@@ -1089,24 +1073,20 @@ def filter_stack_button_press(widget, event):
     if event.button == 3:
         guicomponents.display_filter_stack_popup_menu(row, widget, _filter_stack_menu_item_selected, event)                                    
         return True
+    """
     if event.button == 1:
         if column_title == "icon2":
             # Toggle filter active state
-            filter_object = clipeffectseditor.clip.filters[row]
-            filter_object.active = (filter_object.active == False)
-            filter_object.update_mlt_disabled_value()
-            clipeffectseditor.update_stack_view_changed_blocked()
+            clipeffectseditor.toggle_filter_active(row)
             widget.get_selection().select_path(str(row))
+    """
     return False
 
 def _filter_stack_menu_item_selected(widget, data):
     item_id, row, treeview = data
     # Toggle filter active state
     if item_id == "toggle":
-        filter_object = clipeffectseditor.clip.filters[row]
-        filter_object.active = (filter_object.active == False)
-        filter_object.update_mlt_disabled_value()
-        clipeffectseditor.update_stack_view_changed_blocked()
+        clipeffectseditor.toggle_filter_active(row)
     if item_id == "reset":
         clipeffectseditor.reset_filter_values()
 
