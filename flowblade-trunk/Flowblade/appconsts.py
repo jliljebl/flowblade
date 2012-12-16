@@ -33,6 +33,7 @@ RENDERED_VIDEO = 4 # not implemented
 PATTERN_PRODUCER = 5
 SYNC_AUDIO = 6
 FILE_DOES_NOT_EXIST = 7
+IMAGE_SEQUENCE = 8
 
 # Sync states of sync child clips
 SYNC_CORRECT = 0
@@ -52,7 +53,7 @@ PROP_FLOAT = 1
 PROP_EXPRESSION = 2
 
 # Pattern producer types. Currently only 1 available.
-COLOR_CLIP = 1
+#COLOR_CLIP = 1
 
 # Display heights for tracks.
 TRACK_HEIGHT_NORMAL = 50 # track height in canvas and column
@@ -84,3 +85,8 @@ EXTRA_EDITOR = "extraeditor"
 
 # Available tracks configurations for flowblade
 TRACK_CONFIGURATIONS = [(5,4),(4,3),(3,2),(2,1),(8,1),(1,8)]
+
+# Thumbnail image dimensions
+THUMB_WIDTH = 40
+THUMB_HEIGHT = 30
+

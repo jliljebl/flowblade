@@ -209,7 +209,8 @@ class RecreateIconsThread(threading.Thread):
             recreate_progress_window.info.set_text(media_file.name)
             gtk.gdk.threads_leave()
 
-            if not isinstance(media_file, projectdata.BinColorClip):
+            if ((not isinstance(media_file, patternproducer.AbstractBinClip))
+                and (not isinstance(media_file, projectdata.BinColorClip))):
                 if media_file.icon_path == no_icon_path:
                     if media_file.type == appconsts.AUDIO:
                         icon_path = respaths.IMAGE_PATH + "audio_file.png"
@@ -389,6 +390,7 @@ def open_recent_project(widget, index):
 
     actually_load_project(path)
 
+# ------------------------------------------------------ help menu
 def about():
     dialogs.about_dialog(gui.editor_window)
 
@@ -517,6 +519,9 @@ def _open_files_dialog_cb(file_select, response_id):
 
     add_media_thread = AddMediaFilesThread(filenames)
     add_media_thread.start()
+
+def add_image_sequence():
+    print "add image sequence"
 
 def open_rendered_file(rendered_file_path):
     add_media_thread = AddMediaFilesThread([rendered_file_path])

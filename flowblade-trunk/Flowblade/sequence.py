@@ -37,6 +37,7 @@ import editorpersistance
 import memoryleak
 import mltfilters
 import mlttransitions
+import patternproducer
 import respaths
 import resync
 import utils
@@ -178,7 +179,7 @@ class Sequence:
         # Create 1 fr long black bg clip and set in and out
         global black_track_clip # btw, why global?
         pattern_producer_data = utils.EmptyClass()
-        pattern_producer_data.patter_producer_type = appconsts.COLOR_CLIP
+        pattern_producer_data.patter_producer_type = patternproducer.COLOR_CLIP
         pattern_producer_data.gdk_color_str = "#000000000000"
         pattern_producer_data.name = "black_bg"
         black_track_clip = self.create_pattern_producer(pattern_producer_data)
@@ -324,11 +325,18 @@ class Sequence:
         """
         pattern_producer_data is instance of projectdata.BinColorClip
         """
-        if pattern_producer_data.patter_producer_type == appconsts.COLOR_CLIP:
+        
+        clip = patternproducer.create_pattern_producer(self.profile, pattern_producer_data)
+        self.add_clip_attr(clip)
+        return clip
+
+
+        """    
+        if pattern_producer_data.patter_producer_type == patternproducer.COLOR_CLIP:
             clip = self._create_color_clip(pattern_producer_data.gdk_color_str,
                                           pattern_producer_data.name)
         
-        # Save creation data (instance of projectdata.BinColorClip) for cloning when editing or doing save/load 
+        # Save creation data for cloning when editing or doing save/load 
         clip.create_data = copy.copy(pattern_producer_data)
         clip.create_data.icon = None # this is not pickleable, recreate when needed
         return clip
@@ -346,6 +354,7 @@ class Sequence:
         self.add_clip_attr(producer)
 
         return producer
+        """
 
     def add_clip_attr(self, clip):
         """

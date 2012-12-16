@@ -362,7 +362,7 @@ def _fill_audio_desc():
    
 def _display_selection_in_opts_view():
     profile = _get_current_profile()
-    encoding_option = encoding_options[widgets.encodings_cb.get_active()]
+    encoding_option = renderconsumer.encoding_options[widgets.encodings_cb.get_active()]
     quality_option = encoding_option.quality_options[widgets.quality_cb.get_active()]
     _fill_opts_view(encoding_option, quality_option, profile)
 

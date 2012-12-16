@@ -52,6 +52,7 @@ import guicomponents
 import mltfilters
 import mlttransitions
 import movemodes
+import patternproducer
 import syncsplitevent
 import tlinewidgets
 import trimmodes
@@ -886,12 +887,35 @@ def _create_color_clip_callback(dialog, response_id, widgets):
         name = entry.get_text()
         color_str = color_button.get_color().to_string()
         
-        PROJECT().add_color_clip(name, color_str)
-
-        gui.media_list_view.fill_data_model()
-        gui.bin_list_view.fill_data_model()
+        media_object = patternproducer.create_bin_media_object(PROJECT().next_media_file_id, 
+                                                               name, 
+                                                               patternproducer.COLOR_CLIP, 
+                                                               color_str)
+        PROJECT().add_patter_producer_media_object(media_object)
+        _update_gui_for_patter_producer_media_object_add()
 
     dialog.destroy()
+
+def create_noise_clip():
+    media_object = patternproducer.create_bin_media_object(PROJECT().next_media_file_id, 
+                                                           _("Noise"), 
+                                                           patternproducer.NOISE_CLIP, 
+                                                           None)
+    PROJECT().add_patter_producer_media_object(media_object)
+    _update_gui_for_patter_producer_media_object_add()
+
+def create_bars_clip():
+    media_object = patternproducer.create_bin_media_object(PROJECT().next_media_file_id, 
+                                                           _("EBU Bars"), 
+                                                           patternproducer.EBUBARS_CLIP, 
+                                                           None)
+    PROJECT().add_patter_producer_media_object(media_object)
+    _update_gui_for_patter_producer_media_object_add()
+
+def _update_gui_for_patter_producer_media_object_add():
+    gui.media_list_view.fill_data_model()
+    gui.bin_list_view.fill_data_model()
+
 
 # ------------------------------------ track locks handling
 def track_lock_check_and_user_info(track, calling_function="this ain't used anymore", actionname="this ain't used anymore"):
@@ -948,6 +972,9 @@ def all_tracks_menu_launch_pressed(widget, event):
 
 def _all_tracks_item_activated(widget, msg):
     print msg
+
+def tline_colors_launch_pressed(widget, event):
+    print "gfggfgf"
 
 # ------------------------------------ function tables
 # mouse event indexes

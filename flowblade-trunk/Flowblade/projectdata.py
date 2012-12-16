@@ -33,6 +33,7 @@ import threading
 import appconsts
 import editorpersistance
 import mltprofiles
+import patternproducer
 import respaths
 import sequence
 import utils
@@ -41,8 +42,7 @@ import utils
 SAVEFILE_VERSION = 2 # this changed when backwards incompatible changes 
                      # are introduced to allow for detecting and fixing them
 
-THUMB_WIDTH = 40
-THUMB_HEIGHT = 30
+
 FALLBACK_THUMB = "fallback_thumb.png"
 
 # Singleton
@@ -113,15 +113,9 @@ class Project:
                                file_name, media_type, length, icon_path)
             
         self._add_media_object(media_file)
-
-    def add_color_clip(self, clip_name, gdk_color_str):
-        """
-        Adds color clip to project.
-        """
-        color_clip = BinColorClip(self.next_media_file_id, clip_name,
-                                  gdk_color_str)
-                                  
-        self._add_media_object(color_clip)
+        
+    def add_patter_producer_media_object(self, media_object):
+        self._add_media_object(media_object)
 
     def _add_media_object(self, media_object):
         """
@@ -205,20 +199,21 @@ class MediaFile:
     def create_icon(self):
         try:
             icon = gtk.gdk.pixbuf_new_from_file(self.icon_path)
-            self.icon = icon.scale_simple(THUMB_WIDTH, THUMB_HEIGHT, \
+            self.icon = icon.scale_simple(appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT, \
                                           gtk.gdk.INTERP_BILINEAR)
         except:
             print "failed to make icon from:", self.icon_path
             self.icon_path = respaths.IMAGE_PATH + FALLBACK_THUMB
             icon = gtk.gdk.pixbuf_new_from_file(self.icon_path)
-            self.icon = icon.scale_simple(THUMB_WIDTH, THUMB_HEIGHT, \
+            self.icon = icon.scale_simple(appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT, \
                                           gtk.gdk.INTERP_BILINEAR)
 
 
 class BinColorClip:
-    """
-    Color Clip that can added to and edited in Sequence.
-    """   
+    # DECPRECATED, this is replaced by patternproducer.BinColorClip.
+    # This is kept for project file backwards compatiblity,
+    # unpickle fails for color clips if this isn't here.
+    # kill 2014-ish
     def __init__(self, id, name, gdk_color_str):
         self.id = id
         self.name = name
@@ -227,13 +222,13 @@ class BinColorClip:
         self.type = appconsts.PATTERN_PRODUCER
         self.icon = None
         self.create_icon()
-        self.patter_producer_type = appconsts.COLOR_CLIP
+        self.patter_producer_type = patternproducer.COLOR_CLIP
 
         self.mark_in = -1
         self.mark_out = -1
 
     def create_icon(self):
-        icon = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, THUMB_WIDTH, THUMB_HEIGHT)
+        icon = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
         pixel = utils.gdk_color_str_to_int(self.gdk_color_str)
         icon.fill(pixel)
         self.icon = icon

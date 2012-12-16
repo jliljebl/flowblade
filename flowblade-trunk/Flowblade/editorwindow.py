@@ -117,14 +117,20 @@ class EditorWindow:
             ('EditMenu', None, _('_Edit')),
             ('Undo', None, _('_Undo'), '<control>Z', None, editevent.do_undo),
             ('Redo', None, _('_Redo'), '<control>Y', None, editevent.do_redo),
-            ('CreateColorClip', None, _('Create Color Clip...'), None, None, lambda a:editevent.create_color_clip()),
             ('ClearFilters', None, _('Clear Filters From Selected'), None, None, lambda a:editevent.clear_filters()),
             ('ConsolidateSelectedBlanks', None, _('Consolidate Selected Blanks'), None, None, lambda a:editevent.consolidate_selected_blanks()),
             ('ConsolidateAllBlanks', None, _('Consolidate All Blanks'), None, None, lambda a:editevent.consolidate_all_blanks()),
-            ('RecreateMediaIcons', None, _('Recreate Media Icons...'), None, None, lambda a:useraction.recreate_media_file_icons()),
             ('ChangeSequenceTracks', None, _('Change Sequence Tracks Count...'), None, None, lambda a:useraction.change_sequence_track_count()),
             ('ProfilesManager', None, _('Profiles Manager'), None, None, lambda a:useraction.profiles_manager()),
             ('Preferences', None, _('Preferences'), None, None, lambda a:useraction.display_preferences()),
+            ('ProjectMenu', None, _('Project')),
+            ('AddMediaClip', None, _('Add Media Clip...'), None, None, lambda a: useraction.add_media_files()),
+            ('AddImageSequence', None, _('Add Image Sequence...'), None, None, lambda a:useraction.add_image_sequence()),
+            ('CreateColorClip', None, _('Create Color Clip...'), None, None, lambda a:editevent.create_color_clip()),
+            ('PatternProducersMenu', None, _('Create Pattern Producer')),
+            ('CreateNoiseClip', None, _('Noise'), None, None, lambda a:editevent.create_noise_clip()),
+            ('CreateBarsClip', None, _('EBU75%Bars'), None, None, lambda a:editevent.create_bars_clip()),
+            ('RecreateMediaIcons', None, _('Recreate Media Icons...'), None, None, lambda a:useraction.recreate_media_file_icons()),
             ('ToolsMenu', None, _('Tools')),
             ('Titler', None, _('Titler'), None, None, lambda a:titler.show_titler()),
             ('AudioMix', None, _('Audio Mixer'), None, None, lambda a:audiomonitoring.show_audio_monitor()),
@@ -157,13 +163,22 @@ class EditorWindow:
                     <menuitem action='ConsolidateSelectedBlanks'/>
                     <menuitem action='ConsolidateAllBlanks'/>
                     <separator/>
-                    <menuitem action='CreateColorClip'/>
-                    <separator/>
                     <menuitem action='ChangeSequenceTracks'/>
                     <separator/>
-                    <menuitem action='RecreateMediaIcons'/>
                     <menuitem action='ProfilesManager'/>
                     <menuitem action='Preferences'/>
+                </menu> 
+                <menu action='ProjectMenu'>
+                    <menuitem action='AddMediaClip'/>
+                    <menuitem action='AddImageSequence'/>
+                    <separator/>
+                    <menuitem action='CreateColorClip'/>
+                    <menu action='PatternProducersMenu'>
+                        <menuitem action='CreateNoiseClip'/>
+                        <menuitem action='CreateBarsClip'/>    
+                    </menu>
+                    <separator/>
+                    <menuitem action='RecreateMediaIcons'/>
                 </menu>
                 <menu action='ToolsMenu'>
                     <menuitem action='Titler'/>
@@ -433,17 +448,20 @@ class EditorWindow:
         info_h = gtk.HBox()
         info_h.pack_start(self.tline_info, False, False, 0)
         info_h.pack_start(gtk.Label(), True, True, 0)
-        info_h.set_size_request(tlinewidgets.COLUMN_WIDTH  - 22 - 22, # room for 2 menu launch buttons 
+        info_h.set_size_request(tlinewidgets.COLUMN_WIDTH  - 22 - 22,# - 22, # room for 2 menu launch buttons 
                                       tlinewidgets.SCALE_HEIGHT)
 
         marker_pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "marker.png")
         markers_launcher = guicomponents.get_markers_menu_launcher(editevent.marker_menu_lauch_pressed, marker_pixbuf)
         tracks_launcher_pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_menu_launch.png")
         tracks_launcher = guicomponents.PressLaunch(editevent.all_tracks_menu_launch_pressed, tracks_launcher_pixbuf)
+        #tline_colors_launcher_pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "tline_colors_launch.png")
+        #tline_colors_launcher = guicomponents.PressLaunch(editevent.tline_colors_launch_pressed, tline_colors_launcher_pixbuf)
 
         # Timeline top row
         tline_hbox_1 = gtk.HBox()
         tline_hbox_1.pack_start(info_h, False, False, 0)
+        #tline_hbox_1.pack_start(tline_colors_launcher.widget, False, False, 0)
         tline_hbox_1.pack_start(tracks_launcher.widget, False, False, 0)
         tline_hbox_1.pack_start(markers_launcher.widget, False, False, 0)
         tline_hbox_1.pack_start(self.tline_scale.widget, True, True, 0)
