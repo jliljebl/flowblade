@@ -59,33 +59,12 @@ import undo
 import updater
 import utils
 
-mlt_renderer = None
 
 save_time = None
-          
 save_icon_remove_event_id = None
 
+
 #--------------------------------------- worker threads
-class RenderLauncher(threading.Thread):
-    
-    def __init__(self, render_consumer, start_frame, end_frame):
-        threading.Thread.__init__(self)
-        self.render_consumer = render_consumer
-        
-        # Hack. We seem to be getting range rendering starting 1-2 frame too late.
-        # Changing in out frame logic in monitor is not a good idea,
-        # especially as this may be mlt issue, so we just try this.
-        start_frame += -1
-        if start_frame < 0:
-            start_frame = 0
-        
-        self.start_frame = start_frame
-        self.end_frame = end_frame
-
-    def run(self):
-        
-        PLAYER().start_rendering(self.render_consumer, self.start_frame, self.end_frame)
-
 class LoadThread(threading.Thread):
     
     def __init__(self, filename, block_recent_files=False):
@@ -333,69 +312,9 @@ def open_recent_project(widget, index):
 
     actually_load_project(path)
 
-
-     
 # ---------------------------------- rendering
-def render_timeline():
-    """
-    Render (part of) of sequence to file.
-    """
-    if len(render.widgets.movie_name.get_text()) == 0:
-        primary_txt = _("Render file name entry is empty")
-        secondary_txt = _("You have to provide a name for the file to be rendered.")
-        dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
-        return   
-
-    if os.path.exists(render.get_file_path()):
-        primary_txt = _("File: ") + render.get_file_path() + _(" already exists!")
-        secondary_txt = _("Do you want to overwrite existing file?")
-        dialogutils.warning_confirmation(_render_overwrite_confirm_callback, primary_txt, secondary_txt, gui.editor_window.window)
-    else:
-        _do_rendering()
-
-def _render_overwrite_confirm_callback(dialog, response_id):
-    dialog.destroy()
-    
-    if response_id == gtk.RESPONSE_ACCEPT:
-        _do_rendering()
-
-def _do_rendering():
-    render.aborted = False
-    render_consumer = render.get_render_consumer()
-    if render_consumer == None:
-        return
-
-    render.open_media_file_callback = open_rendered_file # we'll get circular imports with useraction->mltplayer->render->useraction
-                                                         # if just try to import so we'll just put this callback func in
-
-    # Set render start and end points
-    if render.widgets.range_cb.get_active() == 0:
-        start_frame = 0
-        end_frame = -1 # renders till finish
-    else:
-        start_frame = current_sequence().tractor.mark_in
-        end_frame = current_sequence().tractor.mark_out
-    
-    # Only render a range if it is defined.
-    if start_frame == -1 or end_frame == -1:
-        if render.widgets.range_cb.get_active() == 1:
-            primary_txt = _("Render range not defined")
-            secondary_txt = _("Define render range using Mark In and Mark Out points\nor select range option 'Program length' to start rendering.")
-            dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
-            return
-
-    render.set_render_gui()
-    render.widgets.progress_window = dialogs.render_progress_dialog(
-                                        _render_cancel_callback,
-                                        gui.editor_window.window)
-    render_launch = RenderLauncher(render_consumer, start_frame, end_frame)
-    render_launch.start()
-
-def _render_cancel_callback(dialog, response_id):
-    render.aborted = True
-    dialog.destroy()
-    PLAYER().consumer.stop()
-    PLAYER().producer.set_speed(0)
+def do_rendering():
+    render.render_timeline()
 
      
 # ----------------------------------- media files
@@ -885,4 +804,6 @@ def lauch_batch_rendering():
                                     stderr=subprocess.STDOUT)
 
 # We need to do this on app start-up
+# we'll get circular imports with useraction->mltplayer->render->useraction
+# if just try to import so we'll just put this callback func in
 render.open_media_file_callback = open_rendered_file

@@ -35,6 +35,7 @@ import dialogs
 import dialogutils
 from editorstate import current_sequence
 from editorstate import PROJECT
+from editorstate import PLAYER
 import gui
 import guicomponents
 import guiutils
@@ -58,6 +59,85 @@ aborted = False
 motion_renderer = None
 motion_progress_update = None
 
+
+# ---------------------------------- rendering action and dialogs
+class RenderLauncher(threading.Thread):
+    
+    def __init__(self, render_consumer, start_frame, end_frame):
+        threading.Thread.__init__(self)
+        self.render_consumer = render_consumer
+        
+        # Hack. We seem to be getting range rendering starting 1-2 frame too late.
+        # Changing in out frame logic in monitor is not a good idea,
+        # especially as this may be mlt issue, so we just try this.
+        start_frame += -1
+        if start_frame < 0:
+            start_frame = 0
+        
+        self.start_frame = start_frame
+        self.end_frame = end_frame
+
+    def run(self):
+        PLAYER().start_rendering(self.render_consumer, self.start_frame, self.end_frame)
+
+
+def render_timeline():
+    if len(widgets.movie_name.get_text()) == 0:
+        primary_txt = _("Render file name entry is empty")
+        secondary_txt = _("You have to provide a name for the file to be rendered.")
+        dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
+        return   
+
+    if os.path.exists(get_file_path()):
+        primary_txt = _("File: ") + get_file_path() + _(" already exists!")
+        secondary_txt = _("Do you want to overwrite existing file?")
+        dialogutils.warning_confirmation(_render_overwrite_confirm_callback, primary_txt, secondary_txt, gui.editor_window.window)
+    else:
+        _do_rendering()
+
+def _render_overwrite_confirm_callback(dialog, response_id):
+    dialog.destroy()
+    
+    if response_id == gtk.RESPONSE_ACCEPT:
+        _do_rendering()
+
+def _do_rendering():
+    global aborted
+    aborted = False
+    render_consumer = get_render_consumer()
+    if render_consumer == None:
+        return
+
+    # Set render start and end points
+    if widgets.range_cb.get_active() == 0:
+        start_frame = 0
+        end_frame = -1 # renders till finish
+    else:
+        start_frame = current_sequence().tractor.mark_in
+        end_frame = current_sequence().tractor.mark_out
+    
+    # Only render a range if it is defined.
+    if start_frame == -1 or end_frame == -1:
+        if widgets.range_cb.get_active() == 1:
+            primary_txt = _("Render range not defined")
+            secondary_txt = _("Define render range using Mark In and Mark Out points\nor select range option 'Program length' to start rendering.")
+            dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
+            return
+
+    set_render_gui()
+    widgets.progress_window = dialogs.render_progress_dialog(
+                                        _render_cancel_callback,
+                                        gui.editor_window.window)
+    render_launch = RenderLauncher(render_consumer, start_frame, end_frame)
+    render_launch.start()
+
+def _render_cancel_callback(dialog, response_id):
+    global aborted
+    aborted = True
+    dialog.destroy()
+    PLAYER().consumer.stop()
+    PLAYER().producer.set_speed(0)
+    
 # -------------------------------------------------- render consumer
 def get_render_consumer():
     file_path = get_file_path()

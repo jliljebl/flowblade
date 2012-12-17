@@ -345,7 +345,7 @@ class EditorWindow:
             render_hbox.pack_start(gtk.Label("Install codecs to make rendering available."), False, False, 0)
             render_hbox.pack_start(gtk.Label(" "), True, True, 0)
         else: # all is good
-            render_panel_right = panels.get_render_panel_right(lambda w,e: useraction.render_timeline(), normal_height)
+            render_panel_right = panels.get_render_panel_right(lambda w,e: useraction.do_rendering(), normal_height)
 
             render_hbox = gtk.HBox(True, 5)
             render_hbox.pack_start(render_panel_left, True, True, 0)
