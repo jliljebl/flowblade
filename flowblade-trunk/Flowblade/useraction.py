@@ -50,7 +50,6 @@ import movemodes
 import panels
 import persistance
 import projectdata
-import pulsedialogprocess
 import render
 import respaths
 import sequence
