@@ -121,7 +121,7 @@ def get_project_name_panel(project_name):
     name_row = get_left_justified_box([gtk.Label(project_name)])
     return get_named_frame(_("Name"), name_row)
 
-def get_render_panel_left(editor_window, options_clicked_cb, add_audio_panel):
+def get_render_panel_left(editor_window, add_audio_panel):
     try:
         render.create_widgets()
     except IndexError:

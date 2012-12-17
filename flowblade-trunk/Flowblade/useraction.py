@@ -29,7 +29,6 @@ import subprocess
 import sys
 import time
 import threading
-import webbrowser
     
 import app
 import appconsts
@@ -64,8 +63,6 @@ mlt_renderer = None
 
 save_time = None
           
-profile_manager_dialog = None
-
 save_icon_remove_event_id = None
 
 #--------------------------------------- worker threads
@@ -186,62 +183,8 @@ class AddMediaFilesThread(threading.Thread):
         normal_cursor = gtk.gdk.Cursor(gtk.gdk.LEFT_PTR) #RTL
         gui.editor_window.window.window.set_cursor(normal_cursor)
         gtk.gdk.threads_leave()
-        print "AddMediaFilesThread exit"
 
 
-class RecreateIconsThread(threading.Thread):
-    
-    def __init__(self):
-        threading.Thread.__init__(self)
-
-    def run(self):
-
-        gtk.gdk.threads_enter()
-        recreate_progress_window = dialogs.get_recreate_icons_progress_dialog()
-        time.sleep(0.1)
-        gtk.gdk.threads_leave()
-
-        no_icon_path = respaths.IMAGE_PATH + projectdata.FALLBACK_THUMB
-        loaded = 0
-        for key in PROJECT().media_files.iterkeys():
-            media_file = PROJECT().media_files[key]
-            gtk.gdk.threads_enter()
-            recreate_progress_window.info.set_text(media_file.name)
-            gtk.gdk.threads_leave()
-
-            if ((not isinstance(media_file, patternproducer.AbstractBinClip))
-                and (not isinstance(media_file, projectdata.BinColorClip))):
-                if media_file.icon_path == no_icon_path:
-                    if media_file.type == appconsts.AUDIO:
-                        icon_path = respaths.IMAGE_PATH + "audio_file.png"
-                    else:
-                        (icon_path, length) = projectdata.thumbnail_thread.write_image(media_file.path)
-                    media_file.icon_path = icon_path
-                    media_file.create_icon()
-
-            loaded = loaded + 1
-            
-            gtk.gdk.threads_enter()
-            loaded_frac = float(loaded) / float(len(PROJECT().media_files))
-            recreate_progress_window.progress_bar.set_fraction(loaded_frac)
-            time.sleep(0.01)
-            gtk.gdk.threads_leave()
-
-        # Update editor gui
-        gtk.gdk.threads_enter()
-        recreate_progress_window.destroy()
-        time.sleep(0.3)
-        gtk.gdk.threads_leave()
-        
-        gtk.gdk.threads_enter()
-        gui.media_list_view.fill_data_model()
-        gui.bin_list_view.fill_data_model()
-        _enable_save()
-        
-        selection = gui.media_list_view.treeview.get_selection()
-        selection.select_path("0")
-        gtk.gdk.threads_leave()
-        
 def _load_pulse_bar():
     gtk.gdk.threads_enter()
     try: 
@@ -390,18 +333,6 @@ def open_recent_project(widget, index):
 
     actually_load_project(path)
 
-# ------------------------------------------------------ help menu
-def about():
-    dialogs.about_dialog(gui.editor_window)
-
-def environment():
-    dialogs.environment_dialog(gui.editor_window)
-
-def quick_reference():
-    try:
-        webbrowser.open('http://code.google.com/p/flowblade/wiki/FlowbladeReference')
-    except:
-        dialogutils.info_message("Help page not found!", "Unfortunately the webresource containing help information\nfor this application was not found.", None)
 
      
 # ---------------------------------- rendering
@@ -465,13 +396,8 @@ def _render_cancel_callback(dialog, response_id):
     dialog.destroy()
     PLAYER().consumer.stop()
     PLAYER().producer.set_speed(0)
+
      
-def open_additional_render_options_dialog():
-    dialogs.additional_options_dialog(_additional_options_dialog_callback)
-
-def _additional_options_dialog_callback(dialog, response_id, widgets):
-    dialog.destroy()
-
 # ----------------------------------- media files
 def add_media_files(this_call_is_retry=False):
     """
@@ -482,7 +408,7 @@ def add_media_files(this_call_is_retry=False):
         if this_call_is_retry == True:
             return
 
-        dialogs.select_thumbnail_dir(_select_thumbnail_dir_callback, gui.editor_window.window, os.path.expanduser("~"), True)
+        dialogs.select_thumbnail_dir(select_thumbnail_dir_callback, gui.editor_window.window, os.path.expanduser("~"), True)
         return
 
     file_select = gtk.FileChooserDialog(_("Open.."),None, 
@@ -527,7 +453,7 @@ def open_rendered_file(rendered_file_path):
     add_media_thread = AddMediaFilesThread([rendered_file_path])
     add_media_thread.start()
 
-def _select_thumbnail_dir_callback(dialog, response_id, data):
+def select_thumbnail_dir_callback(dialog, response_id, data):
     file_select, retry_add_media = data
     folder = file_select.get_filenames()[0]
     dialog.destroy()
@@ -644,10 +570,6 @@ def _display_file_info(media_file):
     frequency = str(frame.get_int("frequency")) + "Hz"
     
     dialogs.file_properties_dialog((media_file, img, size, length, vcodec, acodec, channels, frequency))
-
-def recreate_media_file_icons():
-    recreate_thread = RecreateIconsThread()
-    recreate_thread.start()
 
 # ------------------------------------ bins
 def add_new_bin():
@@ -892,157 +814,12 @@ def _change_track_count_dialog_callback(dialog, response_id, tracks_combo):
     app.change_current_sequence(cur_seq_index)
     
 
-# --------------------------------------------------- profiles manager
-def profiles_manager():
-    callbacks = (_profiles_manager_load_values_clicked, _profiles_manager_save_profile_clicked,
-                 _profiles_manager_delete_user_profiles_clicked, _profiles_manager_hide_profiles_clicked,
-                 _profiles_manager_unhide_profiles_clicked)
-
-    global profile_manager_dialog
-    profile_manager_dialog = dialogs.profiles_manager_dialog(callbacks)
-
-def _profiles_manager_load_values_clicked(widgets):
-    load_profile_combo, description, f_rate_num, f_rate_dem, width, height, \
-    s_rate_num, s_rate_dem, d_rate_num, d_rate_dem, progressive = widgets
-    
-    profile = mltprofiles.get_profile_for_index(load_profile_combo.get_active())
-    panels.fill_new_profile_panel_widgets(profile, widgets)
-
-def _profiles_manager_save_profile_clicked(widgets, user_profiles_view):
-    load_profile_combo, description, f_rate_num, f_rate_dem, width, height, \
-    s_rate_num, s_rate_dem, d_rate_num, d_rate_dem, progressive = widgets
-
-    profile_file_name = description.get_text().lower().replace(os.sep, "_").replace(" ","_")
-    
-    file_contents = "description=" + description.get_text() + "\n"
-    file_contents += "frame_rate_num=" + f_rate_num.get_text() + "\n"
-    file_contents += "frame_rate_den=" + f_rate_dem.get_text() + "\n"
-    file_contents += "width=" + width.get_text() + "\n"
-    file_contents += "height=" + height.get_text() + "\n"
-    if progressive.get_active() == True:
-        prog_val = "1"
-    else:
-        prog_val = "0"
-    file_contents += "progressive=" + prog_val + "\n"
-    file_contents += "sample_aspect_num=" + s_rate_num.get_text() + "\n"
-    file_contents += "sample_aspect_den=" + s_rate_dem.get_text() + "\n"
-    file_contents += "display_aspect_num=" + d_rate_num.get_text() + "\n"
-    file_contents += "display_aspect_den=" + d_rate_dem.get_text() + "\n"
-
-    profile_path = utils.get_hidden_user_dir_path() + mltprofiles.USER_PROFILES_DIR + profile_file_name
-    
-    if os.path.exists(profile_path):
-        dialogutils.warning_message("Profile '" +  description.get_text() + "' already exists!", \
-                                "Delete profile and save again.",  gui.editor_window.window)
-        return
-
-    profile_file = open(profile_path, "w")
-    profile_file.write(file_contents)
-    profile_file.close()
-
-    dialogutils.info_message("Profile '" +  description.get_text() + "' saved.", \
-                 "You can now create a new project using the new profile.", gui.editor_window.window)
-    
-    mltprofiles.load_profile_list()
-    render.reload_profiles()
-    user_profiles_view.fill_data_model(mltprofiles.get_user_profiles())
-
-
-def _profiles_manager_delete_user_profiles_clicked(user_profiles_view):
-    delete_indexes = user_profiles_view.get_selected_indexes_list()
-    if len(delete_indexes) == 0:
-        return
-
-    primary_txt = _("Confirm user profile delete")
-    secondary_txt = _("This operation cannot be undone.") 
-    
-    dialogutils.warning_confirmation(_profiles_delete_confirm_callback, primary_txt, \
-                                 secondary_txt, gui.editor_window.window, \
-                                (user_profiles_view, delete_indexes))
-
-def _profiles_delete_confirm_callback(dialog, response_id, data):
-    if response_id != gtk.RESPONSE_ACCEPT:
-        dialog.destroy()
-        return
-
-    user_profiles_view, delete_indexes = data
-    for i in delete_indexes:
-        pname, profile = mltprofiles.get_user_profiles()[i]
-        profile_file_name = pname.lower().replace(os.sep, "_").replace(" ","_")
-        profile_path = utils.get_hidden_user_dir_path() + mltprofiles.USER_PROFILES_DIR + profile_file_name
-        print profile_path
-        try:
-            os.remove(profile_path)
-        except:
-            # This really should not happen
-            print "removed user profile already gone ???"
-
-    mltprofiles.load_profile_list()
-    user_profiles_view.fill_data_model(mltprofiles.get_user_profiles())
-    dialog.destroy()
-
-def _profiles_manager_hide_profiles_clicked(visible_view, hidden_view):
-    visible_indexes = visible_view.get_selected_indexes_list()
-    prof_names = []
-    default_profile = mltprofiles.get_default_profile()
-    for i in visible_indexes:
-        pname, profile = mltprofiles.get_factory_profiles()[i]
-        if profile == default_profile:
-            dialogutils.warning_message("Can't hide default Profile", 
-                                    "Profile '"+ profile.description() + "' is default profile and can't be hidden.", 
-                                    profile_manager_dialog)
-            return
-        prof_names.append(pname)
-
-    editorpersistance.prefs.hidden_profile_names += prof_names
-    editorpersistance.save()
-
-    mltprofiles.load_profile_list()
-    _fix_default_profile(default_profile)
-    visible_view.fill_data_model(mltprofiles.get_factory_profiles())
-    hidden_view.fill_data_model(mltprofiles.get_hidden_profiles())
-
-def _profiles_manager_unhide_profiles_clicked(visible_view, hidden_view):
-    hidden_indexes = hidden_view.get_selected_indexes_list()
-    prof_names = []
-    default_profile = mltprofiles.get_default_profile()
-    for i in hidden_indexes:
-        pname, profile = mltprofiles.get_hidden_profiles()[i]
-        prof_names.append(pname)
-    
-    editorpersistance.prefs.hidden_profile_names = list(set(editorpersistance.prefs.hidden_profile_names) - set(prof_names))
-    editorpersistance.save()
-    
-    mltprofiles.load_profile_list()
-    _fix_default_profile(default_profile)
-    visible_view.fill_data_model(mltprofiles.get_factory_profiles())
-    hidden_view.fill_data_model(mltprofiles.get_hidden_profiles())
-
 
 # -------------------------------------------------------- effects editor
 def effect_select_row_double_clicked(treeview, tree_path, col):
     clipeffectseditor.add_currently_selected_effect()
 
 
-# ------------------------------------------------------- preferences
-def display_preferences():
-    dialogs.preferences_dialog(_preferences_dialog_callback, _thumbs_select_clicked)
-
-
-def _thumbs_select_clicked(widget):
-    dialogs.select_thumbnail_dir(_select_thumbnail_dir_callback, gui.editor_window.window, editorpersistance.prefs.thumbnail_folder, False)
-
-def _preferences_dialog_callback(dialog, response_id, all_widgets):
-    if response_id == gtk.RESPONSE_ACCEPT:
-        editorpersistance.update_prefs_from_widgets(all_widgets)    
-        editorpersistance.save()
-        dialog.destroy()
-        primary_txt = _("Restart required for some setting changes to take effect.")
-        secondary_txt = _("If requested change is not in effect, restart application.")
-        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
-        return
-
-    dialog.destroy()
 
 
 # --------------------------------------------------------- pop-up menus
@@ -1078,13 +855,6 @@ def filter_stack_button_press(widget, event):
     if event.button == 3:
         guicomponents.display_filter_stack_popup_menu(row, widget, _filter_stack_menu_item_selected, event)                                    
         return True
-    """
-    if event.button == 1:
-        if column_title == "icon2":
-            # Toggle filter active state
-            clipeffectseditor.toggle_filter_active(row)
-            widget.get_selection().select_path(str(row))
-    """
     return False
 
 def _filter_stack_menu_item_selected(widget, data):
@@ -1113,7 +883,6 @@ def lauch_batch_rendering():
     subprocess.Popen([sys.executable, respaths.ROOT_PARENT + "flowbladebatch"], 
                                     stdout=subprocess.PIPE, 
                                     stderr=subprocess.STDOUT)
-    print "popopen"
-                                    
+
 # We need to do this on app start-up
 render.open_media_file_callback = open_rendered_file

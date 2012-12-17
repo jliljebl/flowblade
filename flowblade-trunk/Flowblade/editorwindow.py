@@ -38,6 +38,7 @@ import editorpersistance
 import editorstate
 import gui
 import guicomponents
+import menuactions
 import mltplayer
 import monitorevent
 import movemodes
@@ -121,8 +122,8 @@ class EditorWindow:
             ('ConsolidateSelectedBlanks', None, _('Consolidate Selected Blanks'), None, None, lambda a:editevent.consolidate_selected_blanks()),
             ('ConsolidateAllBlanks', None, _('Consolidate All Blanks'), None, None, lambda a:editevent.consolidate_all_blanks()),
             ('ChangeSequenceTracks', None, _('Change Sequence Tracks Count...'), None, None, lambda a:useraction.change_sequence_track_count()),
-            ('ProfilesManager', None, _('Profiles Manager'), None, None, lambda a:useraction.profiles_manager()),
-            ('Preferences', None, _('Preferences'), None, None, lambda a:useraction.display_preferences()),
+            ('ProfilesManager', None, _('Profiles Manager'), None, None, lambda a:menuactions.profiles_manager()),
+            ('Preferences', None, _('Preferences'), None, None, lambda a:menuactions.display_preferences()),
             ('ProjectMenu', None, _('Project')),
             ('AddMediaClip', None, _('Add Media Clip...'), None, None, lambda a: useraction.add_media_files()),
             ('AddImageSequence', None, _('Add Image Sequence...'), None, None, lambda a:useraction.add_image_sequence()),
@@ -130,14 +131,14 @@ class EditorWindow:
             ('PatternProducersMenu', None, _('Create Pattern Producer')),
             ('CreateNoiseClip', None, _('Noise'), None, None, lambda a:editevent.create_noise_clip()),
             ('CreateBarsClip', None, _('EBU75%Bars'), None, None, lambda a:editevent.create_bars_clip()),
-            ('RecreateMediaIcons', None, _('Recreate Media Icons...'), None, None, lambda a:useraction.recreate_media_file_icons()),
+            ('RecreateMediaIcons', None, _('Recreate Media Icons...'), None, None, lambda a:menuactions.recreate_media_file_icons()),
             ('ToolsMenu', None, _('Tools')),
             ('Titler', None, _('Titler'), None, None, lambda a:titler.show_titler()),
             ('AudioMix', None, _('Audio Mixer'), None, None, lambda a:audiomonitoring.show_audio_monitor()),
             ('HelpMenu', None, _('_Help')),
-            ('QuickReference', None, _('Contents'), None, None, lambda a:useraction.quick_reference()),
-            ('Environment', None, _('Environment'), None, None, lambda a:useraction.environment()),
-            ('About', None, _('About'), None, None, lambda a:useraction.about())
+            ('QuickReference', None, _('Contents'), None, None, lambda a:menuactions.quick_reference()),
+            ('Environment', None, _('Environment'), None, None, lambda a:menuactions.environment()),
+            ('About', None, _('About'), None, None, lambda a:menuactions.about())
             ]
 
         menu_string = """<ui>
@@ -332,7 +333,6 @@ class EditorWindow:
             add_audio_desc = False
         render_panel_left = panels.get_render_panel_left(
                                 self,
-                                lambda w,e: useraction.open_additional_render_options_dialog(),
                                 add_audio_desc)
 
         # 'None' here means that no possible rendering options were available

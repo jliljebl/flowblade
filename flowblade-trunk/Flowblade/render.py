@@ -294,7 +294,7 @@ def fill_out_profile_widgets():
     _fill_info_box(current_sequence().profile)
 
 def reload_profiles():
-    load_render_profiles()
+    renderconsumer.load_render_profiles()
     fill_out_profile_widgets()
     
 def _use_project_check_toggled(checkbutton):

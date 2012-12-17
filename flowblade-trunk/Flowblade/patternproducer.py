@@ -127,6 +127,7 @@ class BinNoiseClip(AbstractBinClip):
     def create_icon(self):
         self.icon = gtk.gdk.pixbuf_new_from_file(respaths.PATTERN_PRODUCER_PATH + "noise_icon.png")
 
+
 class BinColorBarsClip(AbstractBinClip):
     def __init__(self, id, name):
         AbstractBinClip.__init__(self, id, name)
