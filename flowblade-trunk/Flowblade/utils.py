@@ -217,6 +217,18 @@ def get_media_source_file_filter():
 
     return filter
 
+def get_image_sequence_file_filter():
+    f = gtk.FileFilter()
+    f.set_name("Image files")
+    f.add_mime_type("image/bmp")
+    f.add_mime_type("image/tiff")
+    f.add_mime_type("image/gif")
+    f.add_mime_type("image/x-tga")
+    f.add_mime_type("image/png")
+    f.add_mime_type("image/jpeg")
+
+    return f
+
 def file_extension_is_graphics_file(ext):
     grphics_exts = [".bmp",".tiff",".gif",".tga",".png",".jpeg",".jpg"]
     ext = ext.lower()

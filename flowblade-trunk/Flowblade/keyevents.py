@@ -108,13 +108,12 @@ def key_down(widget, event):
                 monitorevent.play_pressed()
             return True
 
-    
+    """
     #debug
     if event.keyval == gtk.keysyms.F12:
-        print "www"
         useraction.lauch_batch_rendering()
         return True
-    """
+
     #debug
     if event.keyval == gtk.keysyms.F11:
         titler.show_titler()

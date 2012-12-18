@@ -25,14 +25,13 @@ Load, save, add media file, etc...
 import gobject
 import gtk
 import os
-import subprocess
 import sys
+import re
 import time
 import threading
     
 import app
 import appconsts
-import clipeffectseditor
 import dialogs
 import dialogutils
 import gui
@@ -44,8 +43,6 @@ from editorstate import PLAYER
 from editorstate import PROJECT
 from editorstate import MONITOR_MEDIA_FILE
 import editorpersistance
-import mltplayer
-import mltprofiles
 import movemodes
 import panels
 import persistance
@@ -54,7 +51,6 @@ import render
 import respaths
 import sequence
 import test
-import undo
 import updater
 import utils
 
@@ -222,8 +218,7 @@ def _close_dialog_callback(dialog, response_id):
     sequence.AUDIO_TRACKS_COUNT = 4
     sequence.VIDEO_TRACKS_COUNT = 5
 
-    profile = mltprofiles.get_default_profile()
-    new_project = projectdata.Project(profile)
+    new_project = projectdata.get_default_project()
     app.open_project(new_project)
     
 def actually_load_project(filename, block_recent_files=False):
@@ -279,18 +274,6 @@ def _save_as_dialog_callback(dialog, response_id):
         
         updater.update_project_info(PROJECT())
         
-        dialog.destroy()
-    else:
-        dialog.destroy()
-
-def export_melt_xml():
-    dialogs.export_xml_dialog(_export_melt_xml_dialog_callback, PROJECT().name)
-
-def _export_melt_xml_dialog_callback(dialog, response_id):
-    if response_id == gtk.RESPONSE_ACCEPT:
-        filenames = dialog.get_filenames()
-        save_path = filenames[0]
-        PLAYER().start_xml_rendering(save_path)
         dialog.destroy()
     else:
         dialog.destroy()
@@ -365,8 +348,36 @@ def _open_files_dialog_cb(file_select, response_id):
     add_media_thread.start()
 
 def add_image_sequence():
-    print "add image sequence"
+    dialogs.open_image_sequence_dialog(_add_image_sequence_callback, gui.editor_window.window)
 
+def _add_image_sequence_callback(dialog, response_id, data):
+    if response_id == gtk.RESPONSE_CANCEL:
+        dialog.destroy()
+        return
+
+    file_chooser, spin = data
+    frames_per_image = int(spin.get_value())
+    frame_file = file_chooser.get_filename()
+    dialog.destroy()
+    
+    if frame_file == None:
+        dialogutils.info_message("No file was selected", "Selected file a numbered file to add an Image Sequence to Project.", gui.editor_window.window)
+        return
+    
+    (folder, file_name) = os.path.split(frame_file)
+    try:
+        number_part = re.findall("[0-9]+", file_name)[0]
+    except:
+        dialogutils.info_message("Not a sequence file!", "Selected file does not have a number part in it,\nso it can't be an image sequence file.", gui.editor_window.window)
+        return
+
+    number_index = file_name.find(number_part)
+    sequence_name_part = file_name[0:number_index]
+    end_part = file_name[number_index + len(number_part):len(file_name)]
+    resource_str = sequence_name_part + "%" + str(number_part) + "d" + end_part
+
+    dialog.destroy()
+    
 def open_rendered_file(rendered_file_path):
     add_media_thread = AddMediaFilesThread([rendered_file_path])
     add_media_thread.start()
@@ -732,14 +743,6 @@ def _change_track_count_dialog_callback(dialog, response_id, tracks_combo):
     app.change_current_sequence(cur_seq_index)
     
 
-
-# -------------------------------------------------------- effects editor
-def effect_select_row_double_clicked(treeview, tree_path, col):
-    clipeffectseditor.add_currently_selected_effect()
-
-
-
-
 # --------------------------------------------------------- pop-up menus
 def media_list_button_press(widget, event):
     if event.button == 3:
@@ -766,23 +769,6 @@ def _media_file_menu_item_selected(widget, data):
     if item_id == "Render Slow/Fast Motion File":
         render.render_frame_buffer_clip(media_file)
 
-def filter_stack_button_press(widget, event):
-    row, column_title = _select_treeview_on_pos_and_return_row_and_column_title(event, widget)
-    if row == -1:
-        return False
-    if event.button == 3:
-        guicomponents.display_filter_stack_popup_menu(row, widget, _filter_stack_menu_item_selected, event)                                    
-        return True
-    return False
-
-def _filter_stack_menu_item_selected(widget, data):
-    item_id, row, treeview = data
-    # Toggle filter active state
-    if item_id == "toggle":
-        clipeffectseditor.toggle_filter_active(row)
-    if item_id == "reset":
-        clipeffectseditor.reset_filter_values()
-
 def _select_treeview_on_pos_and_return_row_and_column_title(event, treeview):
     selection = treeview.get_selection()
     path_pos_tuple = treeview.get_path_at_pos(int(event.x), int(event.y))
@@ -797,10 +783,7 @@ def _select_treeview_on_pos_and_return_row_and_column_title(event, treeview):
     return (row, title)
 
 
-def lauch_batch_rendering():
-    subprocess.Popen([sys.executable, respaths.ROOT_PARENT + "flowbladebatch"], 
-                                    stdout=subprocess.PIPE, 
-                                    stderr=subprocess.STDOUT)
+
 
 # We need to do this on app start-up
 # we'll get circular imports with useraction->mltplayer->render->useraction

@@ -52,7 +52,6 @@ import guicomponents
 import mltfilters
 import mlttransitions
 import movemodes
-import patternproducer
 import syncsplitevent
 import tlinewidgets
 import trimmodes
@@ -876,45 +875,6 @@ def splice_range():
                                                  # of how this should work
     action = edit.range_splice_out_action(data)
     action.do_edit()
-    
-# ---------------------------------- create clips
-def create_color_clip():
-    dialogs.color_clip_dialog(_create_color_clip_callback)
-
-def _create_color_clip_callback(dialog, response_id, widgets):
-    if response_id == gtk.RESPONSE_ACCEPT:
-        entry, color_button = widgets
-        name = entry.get_text()
-        color_str = color_button.get_color().to_string()
-        
-        media_object = patternproducer.create_bin_media_object(PROJECT().next_media_file_id, 
-                                                               name, 
-                                                               patternproducer.COLOR_CLIP, 
-                                                               color_str)
-        PROJECT().add_patter_producer_media_object(media_object)
-        _update_gui_for_patter_producer_media_object_add()
-
-    dialog.destroy()
-
-def create_noise_clip():
-    media_object = patternproducer.create_bin_media_object(PROJECT().next_media_file_id, 
-                                                           _("Noise"), 
-                                                           patternproducer.NOISE_CLIP, 
-                                                           None)
-    PROJECT().add_patter_producer_media_object(media_object)
-    _update_gui_for_patter_producer_media_object_add()
-
-def create_bars_clip():
-    media_object = patternproducer.create_bin_media_object(PROJECT().next_media_file_id, 
-                                                           _("EBU Bars"), 
-                                                           patternproducer.EBUBARS_CLIP, 
-                                                           None)
-    PROJECT().add_patter_producer_media_object(media_object)
-    _update_gui_for_patter_producer_media_object_add()
-
-def _update_gui_for_patter_producer_media_object_add():
-    gui.media_list_view.fill_data_model()
-    gui.bin_list_view.fill_data_model()
 
 
 # ------------------------------------ track locks handling

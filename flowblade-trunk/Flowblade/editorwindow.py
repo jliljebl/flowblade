@@ -28,6 +28,7 @@ import pygtk
 
 import app
 import audiomonitoring
+import batchrendering
 import buttonevent
 from cairoarea import CairoDrawableArea
 import clipeffectseditor
@@ -36,6 +37,7 @@ import dnd
 import editevent
 import editorpersistance
 import editorstate
+import exporting
 import gui
 import guicomponents
 import menuactions
@@ -44,6 +46,7 @@ import monitorevent
 import movemodes
 import respaths
 import panels
+import patternproducer
 from positionbar import PositionBar
 import syncsplitevent
 import test
@@ -112,7 +115,7 @@ class EditorWindow:
             ('OpenRecent', None, _('Open Recent')),
             ('Save', None, _('_Save'), '<control>S', None, lambda a:useraction.save_project()),
             ('Save As', None, _('_Save As...'), None, None, lambda a:useraction.save_project_as()),
-            ('ExportXML', None, _('_Export XML...'), None, None, lambda a:useraction.export_melt_xml()),
+            ('ExportXML', None, _('_Export XML...'), None, None, lambda a:exporting.MELT_XML_export()),
             ('Close', None, _('_Close'), None, None, lambda a:useraction.close_project()),
             ('Quit', None, _('_Quit'), '<control>Q', None, lambda a:app.shutdown()),
             ('EditMenu', None, _('_Edit')),
@@ -127,14 +130,15 @@ class EditorWindow:
             ('ProjectMenu', None, _('Project')),
             ('AddMediaClip', None, _('Add Media Clip...'), None, None, lambda a: useraction.add_media_files()),
             ('AddImageSequence', None, _('Add Image Sequence...'), None, None, lambda a:useraction.add_image_sequence()),
-            ('CreateColorClip', None, _('Create Color Clip...'), None, None, lambda a:editevent.create_color_clip()),
+            ('CreateColorClip', None, _('Create Color Clip...'), None, None, lambda a:patternproducer.create_color_clip()),
             ('PatternProducersMenu', None, _('Create Pattern Producer')),
-            ('CreateNoiseClip', None, _('Noise'), None, None, lambda a:editevent.create_noise_clip()),
-            ('CreateBarsClip', None, _('EBU75%Bars'), None, None, lambda a:editevent.create_bars_clip()),
+            ('CreateNoiseClip', None, _('Noise'), None, None, lambda a:patternproducer.create_noise_clip()),
+            ('CreateBarsClip', None, _('EBU Bars'), None, None, lambda a:patternproducer.create_bars_clip()),
             ('RecreateMediaIcons', None, _('Recreate Media Icons...'), None, None, lambda a:menuactions.recreate_media_file_icons()),
             ('ToolsMenu', None, _('Tools')),
             ('Titler', None, _('Titler'), None, None, lambda a:titler.show_titler()),
             ('AudioMix', None, _('Audio Mixer'), None, None, lambda a:audiomonitoring.show_audio_monitor()),
+            ('RenderQueue', None, _('Render Queue'), None, None, lambda a:batchrendering.lauch_batch_rendering()),
             ('HelpMenu', None, _('_Help')),
             ('QuickReference', None, _('Contents'), None, None, lambda a:menuactions.quick_reference()),
             ('Environment', None, _('Environment'), None, None, lambda a:menuactions.environment()),
@@ -184,6 +188,7 @@ class EditorWindow:
                 <menu action='ToolsMenu'>
                     <menuitem action='Titler'/>
                     <menuitem action='AudioMix'/>
+                    <menuitem action='RenderQueue'/>
                 </menu>
                 <menu action='HelpMenu'>
                     <menuitem action='QuickReference'/>
@@ -245,7 +250,7 @@ class EditorWindow:
         # Effects
         self.effect_select_list_view = guicomponents.FilterListView()
         self.effect_select_combo_box = gtk.combo_box_new_text()
-        self.effect_select_list_view.treeview.connect("row-activated", useraction.effect_select_row_double_clicked)
+        self.effect_select_list_view.treeview.connect("row-activated", clipeffectseditor.effect_select_row_double_clicked)
         dnd.connect_effects_select_tree_view(self.effect_select_list_view.treeview)
 
         clip_editor_panel = panels.get_clip_effects_editor_panel(
@@ -253,7 +258,7 @@ class EditorWindow:
                                     self.effect_select_list_view)
 
         clipeffectseditor.widgets.effect_stack_view.treeview.connect("button-press-event",
-                                              useraction.filter_stack_button_press)
+                                              clipeffectseditor.filter_stack_button_press)
                                               
         effects_editor_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
         effects_editor_panel.set_padding(4, 4, 4, 4)

@@ -2,6 +2,8 @@ import gobject
 import gtk
 import mlt
 import pango
+import subprocess
+import sys
 
 import editorpersistance
 import guiutils
@@ -27,6 +29,11 @@ RENDERED = 2
 render_queue = []
 batch_window = None
 
+def lauch_batch_rendering():
+    subprocess.Popen([sys.executable, respaths.ROOT_PARENT + "flowbladebatch"], 
+                                    stdout=subprocess.PIPE, 
+                                    stderr=subprocess.STDOUT)
+                                    
 def main(root_path):
     # Allow only on instance to run
     user_dir = utils.get_hidden_user_dir_path()

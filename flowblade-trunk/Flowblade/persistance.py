@@ -60,6 +60,8 @@ load_dialog = None
 all_clips = {}
 sync_clips = []
 
+show_messages = True
+
 class FileProducerNotFoundError(Exception):
     """
     We're only catching this, other errors we'll just crash on load
@@ -80,10 +82,11 @@ class ProjectProfileNotFoundError(Exception):
 
 # -------------------------------------------------- LOAD MESSAGES
 def _show_msg(msg, delay=0.0):
-    gtk.gdk.threads_enter()
-    load_dialog.info.set_text(msg)
-    time.sleep(delay)
-    gtk.gdk.threads_leave()
+    if show_messages == True:
+        gtk.gdk.threads_enter()
+        load_dialog.info.set_text(msg)
+        time.sleep(delay)
+        gtk.gdk.threads_leave()
 
 # -------------------------------------------------- SAVE
 def save_project(project, file_path):

@@ -26,6 +26,9 @@ import gtk
 import mlt
 
 import appconsts
+import dialogs
+from editorstate import PROJECT
+import gui
 import respaths
 import utils
 
@@ -34,6 +37,35 @@ UNDEFINED = 0
 COLOR_CLIP = 1
 NOISE_CLIP = 2
 EBUBARS_CLIP = 3
+
+# ---------------------------------------------------- mene create callbacks
+def create_color_clip():
+    dialogs.color_clip_dialog(_create_color_clip_callback)
+
+def _create_color_clip_callback(dialog, response_id, widgets):
+    if response_id == gtk.RESPONSE_ACCEPT:
+        entry, color_button = widgets
+        name = entry.get_text()
+        color_str = color_button.get_color().to_string()
+        media_object = BinColorClip(PROJECT().next_media_file_id, name, color_str)
+        PROJECT().add_patter_producer_media_object(media_object)
+        _update_gui_for_patter_producer_media_object_add()
+
+    dialog.destroy()
+
+def create_noise_clip():
+    media_object = BinNoiseClip(PROJECT().next_media_file_id, _("Noise"))
+    PROJECT().add_patter_producer_media_object(media_object)
+    _update_gui_for_patter_producer_media_object_add()
+
+def create_bars_clip():
+    media_object = BinColorBarsClip(PROJECT().next_media_file_id, _("EBU Bars"))
+    PROJECT().add_patter_producer_media_object(media_object)
+    _update_gui_for_patter_producer_media_object_add()
+
+def _update_gui_for_patter_producer_media_object_add():
+    gui.media_list_view.fill_data_model()
+    gui.bin_list_view.fill_data_model()
 
 # ---------------------------------------------------- interface
 def create_pattern_producer(profile, pattern_producer_data):
@@ -56,17 +88,6 @@ def create_pattern_producer(profile, pattern_producer_data):
     clip.create_data = copy.copy(pattern_producer_data)
     clip.create_data.icon = None # this is not pickleable, recreate when needed
     return clip
-
-def create_bin_media_object(id, name, producer_type, create_data):
-    if producer_type == COLOR_CLIP:
-        gdk_color_str = create_data
-        return BinColorClip(id, name, gdk_color_str)
-    elif producer_type == NOISE_CLIP:
-         return BinNoiseClip(id, name)
-    elif producer_type == EBUBARS_CLIP:
-         return BinColorBarsClip(id, name)
-    else:
-        print "Unknown producer_type at create_bin_media_object()"
 
 # --------------------------------------------------- producer create methods
 def _create_color_clip(profile, gdk_color_str):
@@ -97,10 +118,11 @@ class AbstractBinClip:
 
         self.mark_in = -1
         self.mark_out = -1
+        
+        self.create_icon()
 
     def create_icon(self):
         print "patter producer create_icon() not implemented"
-
 
 class BinColorClip(AbstractBinClip):
     """
@@ -109,7 +131,6 @@ class BinColorClip(AbstractBinClip):
     def __init__(self, id, name, gdk_color_str):
         AbstractBinClip.__init__(self, id, name)
         self.gdk_color_str = gdk_color_str
-        self.create_icon()
         self.patter_producer_type = COLOR_CLIP
 
     def create_icon(self):
@@ -121,17 +142,14 @@ class BinColorClip(AbstractBinClip):
 class BinNoiseClip(AbstractBinClip):
     def __init__(self, id, name):
         AbstractBinClip.__init__(self, id, name)
-        self.create_icon()
         self.patter_producer_type = NOISE_CLIP
 
     def create_icon(self):
         self.icon = gtk.gdk.pixbuf_new_from_file(respaths.PATTERN_PRODUCER_PATH + "noise_icon.png")
 
-
 class BinColorBarsClip(AbstractBinClip):
     def __init__(self, id, name):
         AbstractBinClip.__init__(self, id, name)
-        self.create_icon()
         self.patter_producer_type = EBUBARS_CLIP
 
     def create_icon(self):

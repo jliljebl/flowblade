@@ -17,8 +17,12 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
+import gtk
 import xml.dom.minidom
 
+import dialogs
+from editorstate import PLAYER
+from editorstate import PROJECT
 
 def DVD_AUTHOR_export(seq):
     impl = xml.dom.minidom.getDOMImplementation()
@@ -46,3 +50,14 @@ def DVD_AUTHOR_export(seq):
     #doc.writexml(f, encoding='utf-8')
     #f.close()
 
+def MELT_XML_export():
+    dialogs.export_xml_dialog(_export_melt_xml_dialog_callback, PROJECT().name)
+
+def _export_melt_xml_dialog_callback(dialog, response_id):
+    if response_id == gtk.RESPONSE_ACCEPT:
+        filenames = dialog.get_filenames()
+        save_path = filenames[0]
+        PLAYER().start_xml_rendering(save_path)
+        dialog.destroy()
+    else:
+        dialog.destroy()

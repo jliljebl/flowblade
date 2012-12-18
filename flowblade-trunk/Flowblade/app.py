@@ -15,7 +15,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
+    along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
 """
@@ -107,7 +107,7 @@ def main(root_path):
         
     # Allow only on instance to run
     pid_file_path = user_dir + PID_FILE
-    # Exit and info dialog launched below if ca_run is False
+    # Exit and info dialog launched below if can_run is False
     can_run = utils.single_instance_pid_file_test_and_write(pid_file_path)
                                     
     # Set paths.
@@ -119,7 +119,6 @@ def main(root_path):
         editorstate.mlt_version = mlt.LIBMLT_VERSION
     except:
         editorstate.mlt_version = "0.0.99"
-
 
     # Init translations module with translations data
     translations.init_languages()
@@ -166,9 +165,24 @@ def main(root_path):
     # Create list of available mlt profiles
     mltprofiles.load_profile_list()
     
-    # There is always a project open so at startup we create a default project.
-    # Set default project as the project being edited.
-    editorstate.project = projectdata.get_default_project()
+    # Launch association file if found in arguments
+    launch_file_path = get_assoc_file_path()
+    if launch_file_path != None:
+        try:
+            print "Launching assoc file:" +  launch_file_path
+            persistance.show_messages = False
+            editorstate.project = persistance.load_project(launch_file_path)
+            persistance.show_messages = True
+            check_crash = False
+        except:
+            editorstate.project = projectdata.get_default_project()
+            persistance.show_messages = True
+            check_crash = True
+    else:
+        # There is always a project open so at startup we create a default project.
+        # Set default project as the project being edited.
+        editorstate.project = projectdata.get_default_project()
+        check_crash = True
 
     # Audiomonitoring being available needs to be known before GUI creation
     audiomonitoring.init(editorstate.project.profile)
@@ -196,7 +210,7 @@ def main(root_path):
     gui.editor_window.window.connect("size-allocate", lambda w, e:updater.window_resized())
     gui.editor_window.window.connect("window-state-event", lambda w, e:updater.window_resized())
 
-    # show splash
+    # Show splash
     if ((editorpersistance.prefs.display_splash_screen == True) and
         (not os.path.exists(user_dir + AUTOSAVE_FILE))):
         global splash_timeout_id
@@ -204,7 +218,7 @@ def main(root_path):
         splash_screen.show_all()
 
     # Existance of autosaved file hints that program was exited abnormally
-    if os.path.exists(user_dir + AUTOSAVE_FILE):
+    if os.path.exists(user_dir + AUTOSAVE_FILE) and check_crash == True:
         gobject.timeout_add(10, autosave_recovery_dialog)
     else:
         start_autosave()
@@ -213,6 +227,23 @@ def main(root_path):
     gtk.main()
 
 # ---------------------------------- program, sequence and preoject init
+def get_assoc_file_path():
+    """
+    Check if were opening app with file association launch from Gnome
+    """
+    arg_str = ""
+    for arg in sys.argv:
+        arg_str = arg
+    
+    if len(arg_str) == 0:
+        return None
+    
+    ext_index = arg_str.find(".flb")
+    if ext_index == -1:
+        return None
+    else:
+        return arg_str
+
 def create_gui():
     """
     Called at app start to create gui objects and handles for them.

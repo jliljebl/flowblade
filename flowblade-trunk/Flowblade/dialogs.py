@@ -40,6 +40,7 @@ import panels
 import render
 import renderconsumer
 import respaths
+import utils
 
 # Gui consts
 PREFERENCES_WIDTH = 550
@@ -882,3 +883,36 @@ def marker_name_dialog(frame_str, callback):
     _default_behaviour(dialog)
     dialog.connect('response', callback, name_entry)
     dialog.show_all()
+
+def open_image_sequence_dialog(callback, parent_window):
+    cancel_str = _("Cancel").encode('utf-8')
+    ok_str = _("Ok").encode('utf-8')
+    dialog = gtk.Dialog(_("Add Image Sequence Clip"),
+                        parent_window,
+                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                        (cancel_str, gtk.RESPONSE_CANCEL,
+                        ok_str, gtk.RESPONSE_YES))
+
+    file_chooser = gtk.FileChooserButton("Select First Frame")
+    file_chooser.set_size_request(250, 25)
+    filt = utils.get_image_sequence_file_filter()
+    file_chooser.add_filter(filt)
+    row1 = guiutils.get_two_column_box(gtk.Label(_("First frame:")), file_chooser, 220)
+
+    adj = gtk.Adjustment(value=1, lower=1, upper=250, step_incr=1)
+    frames_per_image = gtk.SpinButton(adjustment=adj, climb_rate=1.0, digits=0)
+    row2 = guiutils.get_two_column_box(gtk.Label(_("Frames per Source Image:")), frames_per_image, 220)
+
+    vbox = gtk.VBox(False, 2)
+    vbox.pack_start(row1, False, False, 0)
+    vbox.pack_start(row2, False, False, 0)
+    
+    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment.set_padding(6, 24, 24, 24)
+    alignment.add(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, (file_chooser, frames_per_image))
+    dialog.show_all()
+    

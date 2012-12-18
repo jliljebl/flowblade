@@ -176,6 +176,13 @@ class Sequence:
         # below can be viewed.
         self.add_track(VIDEO, True) 
 
+        self._create_black_track_clip()
+
+        # Add black clip to black bg track
+        self.tracks[0].clips.append(black_track_clip) # py
+        self.tracks[0].append(black_track_clip, clip_in, clip_out) # mlt
+
+    def _create_black_track_clip(self):
         # Create 1 fr long black bg clip and set in and out
         global black_track_clip # btw, why global?
         pattern_producer_data = utils.EmptyClass()
@@ -183,14 +190,8 @@ class Sequence:
         pattern_producer_data.gdk_color_str = "#000000000000"
         pattern_producer_data.name = "black_bg"
         black_track_clip = self.create_pattern_producer(pattern_producer_data)
-        clip_in = 0
-        clip_out = 0
-        black_track_clip.clip_in = clip_in
-        black_track_clip.clip_out = clip_out
-
-        # Add black clip to black bg track
-        self.tracks[0].clips.append(black_track_clip) # py
-        self.tracks[0].append(black_track_clip, clip_in, clip_out) # mlt
+        black_track_clip.clip_in = 0
+        black_track_clip.clip_out = 0
 
     def add_track(self, type, is_hidden=False):
         """ 
@@ -329,32 +330,6 @@ class Sequence:
         clip = patternproducer.create_pattern_producer(self.profile, pattern_producer_data)
         self.add_clip_attr(clip)
         return clip
-
-
-        """    
-        if pattern_producer_data.patter_producer_type == patternproducer.COLOR_CLIP:
-            clip = self._create_color_clip(pattern_producer_data.gdk_color_str,
-                                          pattern_producer_data.name)
-        
-        # Save creation data for cloning when editing or doing save/load 
-        clip.create_data = copy.copy(pattern_producer_data)
-        clip.create_data.icon = None # this is not pickleable, recreate when needed
-        return clip
-
-    def _create_color_clip(self, gdk_color_str, name):
-        mlt_color = utils.gdk_color_str_to_mlt_color_str(gdk_color_str)
-
-        producer = mlt.Producer(self.profile, "colour", mlt_color)
-        producer.path = ""
-        producer.filters = []
-        producer.gdk_color_str = gdk_color_str
-
-        producer.name = name
-        producer.media_type = PATTERN_PRODUCER
-        self.add_clip_attr(producer)
-
-        return producer
-        """
 
     def add_clip_attr(self, clip):
         """
@@ -633,7 +608,10 @@ class Sequence:
         """
         Set black to track length of sequence.
         """
-        global black_track_clip 
+        global black_track_clip
+        if black_track_clip == None: # This fails for launch with asssoc Gnome file because this has not been made yet.
+                                      # This global black_track_clip is brain dead.  
+            self._create_black_track_clip()
         c_in = 0
         c_out = self.get_length()
         black_track_clip.clip_in = c_in

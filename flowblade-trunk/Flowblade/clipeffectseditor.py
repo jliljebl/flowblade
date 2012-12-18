@@ -71,6 +71,35 @@ def clip_removed_during_edit(removed_clip):
     if  clip == removed_clip:
         clear_clip()
 
+def effect_select_row_double_clicked(treeview, tree_path, col):
+    add_currently_selected_effect()
+
+def filter_stack_button_press(treeview, event):
+    path_pos_tuple = treeview.get_path_at_pos(int(event.x), int(event.y))
+    if path_pos_tuple == None:
+        row = -1 # Empty row was clicked
+    else:
+        path, column, x, y = path_pos_tuple
+        selection = treeview.get_selection()
+        selection.unselect_all()
+        selection.select_path(path)
+        (model, rows) = selection.get_selected_rows()
+        row = max(rows[0])
+    if row == -1:
+        return False
+    if event.button == 3:
+        guicomponents.display_filter_stack_popup_menu(row, treeview, _filter_stack_menu_item_selected, event)                                    
+        return True
+    return False
+
+def _filter_stack_menu_item_selected(widget, data):
+    item_id, row, treeview = data
+    # Toggle filter active state
+    if item_id == "toggle":
+        toggle_filter_active(row)
+    if item_id == "reset":
+        reset_filter_values()
+
 def _quit_editing_clip_clicked(): # this is a button callback
     clear_clip()
 
