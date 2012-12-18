@@ -115,7 +115,9 @@ class EditorWindow:
             ('OpenRecent', None, _('Open Recent')),
             ('Save', None, _('_Save'), '<control>S', None, lambda a:useraction.save_project()),
             ('Save As', None, _('_Save As...'), None, None, lambda a:useraction.save_project_as()),
-            ('ExportXML', None, _('_Export XML...'), None, None, lambda a:exporting.MELT_XML_export()),
+            ('ExportMenu', None, _('Export')),
+            ('ExportMeltXML', None, _('Export melt XML'), None, None, lambda a:exporting.MELT_XML_export()),
+            ('ExportDvdAuthorXML', None, _('Export DVDAuthor'), None, None, lambda a:exporting.DVD_AUTHOR_export()),
             ('Close', None, _('_Close'), None, None, lambda a:useraction.close_project()),
             ('Quit', None, _('_Quit'), '<control>Q', None, lambda a:app.shutdown()),
             ('EditMenu', None, _('_Edit')),
@@ -154,7 +156,10 @@ class EditorWindow:
                     <menuitem action='Save'/>
                     <menuitem action='Save As'/>
                     <separator/>
-                    <menuitem action='ExportXML'/>
+                    <menu action='ExportMenu'>
+                        <menuitem action='ExportMeltXML'/>
+                        <menuitem action='ExportDvdAuthorXML'/>
+                    </menu>
                     <separator/>
                     <menuitem action='Close'/>
                     <menuitem action='Quit'/>

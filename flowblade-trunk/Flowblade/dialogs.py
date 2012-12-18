@@ -916,3 +916,79 @@ def open_image_sequence_dialog(callback, parent_window):
     dialog.connect('response', callback, (file_chooser, frames_per_image))
     dialog.show_all()
     
+
+def export_dvd_author_dialog(callback, parent_window):
+    cancel_str = _("Cancel").encode('utf-8')
+    ok_str = _("Export").encode('utf-8')
+    dialog = gtk.Dialog(_("Export DVDAuthor"),
+                        parent_window,
+                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                        (cancel_str, gtk.RESPONSE_CANCEL,
+                        ok_str, gtk.RESPONSE_YES))
+    
+    INPUT_LABELS_WITDH = 220
+
+    proj_name = editorstate.PROJECT().name.strip(".flb")
+
+    markers_check = gtk.CheckButton()
+    markers_check.set_active(True)
+    row0 = guiutils.get_two_column_box(gtk.Label(_("Use Markers as Chapter Starts:")), markers_check, INPUT_LABELS_WITDH)
+
+    chapters_view = gtk.TextView()
+    chapters_view.set_sensitive(False)
+    chapters_view.set_pixels_above_lines(2)
+    chapters_view.set_left_margin(2)
+    
+    sw = gtk.ScrolledWindow()
+    sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_ALWAYS)
+    sw.add(chapters_view)
+    sw.set_size_request(400, 200)
+
+    scroll_frame = gtk.Frame()
+    scroll_frame.add(sw)
+    
+    file_chooser = gtk.FileChooserButton("Select First Frame")
+    file_chooser.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+    row1 = guiutils.get_two_column_box(gtk.Label(_("Select Work Folder:")), file_chooser, INPUT_LABELS_WITDH)
+
+    default_name = proj_name + ".xml"
+    name_entry = gtk.Entry(30)
+    name_entry.set_width_chars(30)
+    name_entry.set_text(default_name)
+    row2 = guiutils.get_two_column_box(gtk.Label(_("XML File Name:")), name_entry, INPUT_LABELS_WITDH)
+
+    render_check = gtk.CheckButton()
+    render_check.set_active(True)
+    row3 = guiutils.get_two_column_box(gtk.Label(_("Render VOB File:")), render_check, INPUT_LABELS_WITDH)
+    
+    dvd_type_combo = gtk.combo_box_new_text()
+    dvd_type_combo.append_text("DVD PAL")
+    dvd_type_combo.append_text("DVD NTSC")
+    dvd_type_combo.append_text("DVD PAL Widescreen")
+    dvd_type_combo.append_text("DVD NTSC Widescreen")
+    dvd_type_combo.set_active(0)
+    row4 = guiutils.get_two_column_box(gtk.Label(_("DVD Type:")), dvd_type_combo, INPUT_LABELS_WITDH)
+
+    default_vob_name = proj_name + ".vob"
+    vob_name_entry = gtk.Entry(30)
+    vob_name_entry.set_width_chars(30)
+    vob_name_entry.set_text(default_vob_name)
+    row5 = guiutils.get_two_column_box(gtk.Label(_("VOB File Name:")), vob_name_entry, INPUT_LABELS_WITDH)
+
+    vbox = gtk.VBox(False, 2)
+    vbox.pack_start(row0, False, False, 0)
+    vbox.pack_start(scroll_frame, False, False, 0)
+    vbox.pack_start(row1, False, False, 0)
+    vbox.pack_start(row2, False, False, 0)
+    vbox.pack_start(row3, False, False, 0)
+    vbox.pack_start(row4, False, False, 0)
+    vbox.pack_start(row5, False, False, 0)
+    
+    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment.set_padding(6, 24, 24, 24)
+    alignment.add(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, (file_chooser, name_entry, dvd_type_combo))
+    dialog.show_all()

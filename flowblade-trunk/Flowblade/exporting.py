@@ -23,8 +23,9 @@ import xml.dom.minidom
 import dialogs
 from editorstate import PLAYER
 from editorstate import PROJECT
+import gui
 
-def DVD_AUTHOR_export(seq):
+def DVD_AUTHOR_export():
     impl = xml.dom.minidom.getDOMImplementation()
     doc = impl.createDocument(None, "dvdauthor", None)
     
@@ -46,9 +47,13 @@ def DVD_AUTHOR_export(seq):
     vob_element.setAttribute("file", "video1.mpg")
     pgc_element.appendChild(vob_element)
     
+    dialogs.export_dvd_author_dialog(_export_dvd_author_dialog_callback, gui.editor_window.window)
     #f = open('/home/janne/dvdauthor.xml', 'wb')
     #doc.writexml(f, encoding='utf-8')
     #f.close()
+
+def _export_dvd_author_dialog_callback(dialog, response_id, data):
+    dialog.destroy()
 
 def MELT_XML_export():
     dialogs.export_xml_dialog(_export_melt_xml_dialog_callback, PROJECT().name)

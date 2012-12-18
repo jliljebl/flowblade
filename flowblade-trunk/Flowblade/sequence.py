@@ -180,7 +180,7 @@ class Sequence:
 
         # Add black clip to black bg track
         self.tracks[0].clips.append(black_track_clip) # py
-        self.tracks[0].append(black_track_clip, clip_in, clip_out) # mlt
+        self.tracks[0].append(black_track_clip, 0, 0) # mlt
 
     def _create_black_track_clip(self):
         # Create 1 fr long black bg clip and set in and out
