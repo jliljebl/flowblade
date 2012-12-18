@@ -62,6 +62,9 @@ LOCKED = appconsts.LOCKED # no edits allowed
 TRACK_HEIGHT_NORMAL = appconsts.TRACK_HEIGHT_NORMAL # track height in canvas and column
 TRACK_HEIGHT_SMALL = appconsts.TRACK_HEIGHT_SMALL # track height in canvas and column
 
+# pan magic value indicating that no pan is applied
+NO_PAN = -99
+
 # MLT types
 MLT_PLAYLIST = 0
 MLT_PRODUCER = 1
@@ -106,6 +109,7 @@ class Sequence:
         self.next_id = 0 # id for next created clip
         self.profile = profile
         self.master_audio_gain = 1.0
+        self.master_audio_pan = NO_PAN
         self.tracks = []
         self.compositors = []
         self.markers = [] # markers are tuples (name_str, frame_int)
@@ -122,7 +126,13 @@ class Sequence:
 
         self.tractor.mark_in = -1
         self.tractor.mark_out = -1
-        self.tractor.audio_gain = 1.0
+
+        # Only create and add pan filter if actual pan is applied
+        # This method gets called on load and we only want to add filter then if pan is applied,
+        # and not on initial creation.
+        # audiomonitoring.py calls add_track_pan_filter() when pan turned on for initial creation
+        if self.master_audio_pan != NO_PAN:
+            self.add_track_pan_filter(self.tractor, self.master_audio_pan)
 
         # Create and ad gain filter
         gain_filter = mlt.Filter(self.profile, "volume")
@@ -200,14 +210,14 @@ class Sequence:
         black_track_clip.clip_in = 0
         black_track_clip.clip_out = 0
 
-    def add_track(self, type, is_hidden=False):
+    def add_track(self, track_type, is_hidden=False):
         """ 
         Creates a MLT playlist object, adds project
         data and adds to tracks list.
         """
         new_track = mlt.Playlist()
 
-        self._add_track_attributes(new_track, type)
+        self._add_track_attributes(new_track, track_type)
         new_track.is_sync_track = False
 
         # Connect to MLT multitrack
@@ -227,21 +237,6 @@ class Sequence:
         new_track.get_name = lambda : utils.get_track_name(new_track, self) 
         
         return new_track
-
-    def _mix_audio_for_track(self, track):
-        # Create and add transition to combine track audios
-        transition = mlt.Transition(self.profile, "mix")
-        transition.set("a_track", 1)
-        transition.set("b_track", track.id)
-        transition.set("always_active", 1)
-        transition.set("combine", 1)
-        self.field.plant_transition(transition, 1, track.id)
-
-        # Create and ad gain filter
-        gain_filter = mlt.Filter(self.profile, "volume")
-        gain_filter.set("gain", str(track.audio_gain))
-        track.attach(gain_filter)
-        track.gain_filter = gain_filter
 
     def _add_track_attributes(self, track, type):                
         # Add data attr
@@ -266,12 +261,36 @@ class Sequence:
         if editorstate.SCREEN_HEIGHT < 863:# Fix for 786 screens
             track.height = TRACK_HEIGHT_SMALL
         
-        # Audio master gain for this track
-        track.audio_gain = 1.0
+        # Audio master gain for this track in case this is created for the first
+        # time. This gets called on load too, and we dont want to destroy existing gain value
+        if not hasattr(track, "audio_gain"):
+            track.audio_gain = 1.0 # active range 0 - 1
+        if not hasattr(track, "audio_pan"):
+            track.audio_pan = NO_PAN # active range 0-1, 0.5 is middle
         
         # Tracks may be FREE or LOCKED
         track.edit_freedom = FREE
-  
+
+    def _mix_audio_for_track(self, track):
+        # Create and add transition to combine track audios
+        transition = mlt.Transition(self.profile, "mix")
+        transition.set("a_track", 1)
+        transition.set("b_track", track.id)
+        transition.set("always_active", 1)
+        transition.set("combine", 1)
+        self.field.plant_transition(transition, 1, track.id)
+
+        # Create and ad gain filter
+        gain_filter = mlt.Filter(self.profile, "volume")
+        gain_filter.set("gain", str(track.audio_gain))
+        track.attach(gain_filter)
+        track.gain_filter = gain_filter
+
+        # Add pan filter if this track is panorated
+        if track.audio_pan != NO_PAN:
+            self.add_track_pan_filter(track, 0.5) 
+            track.audio_pan = 0.5
+
     def get_tracks_height(self):
         h = 0
         for i in range (1, len(self.tracks) - 1):# visible tracks
@@ -287,6 +306,27 @@ class Sequence:
     def set_master_gain(self, gain):
         self.tractor.gain_filter.set("gain", str(gain))
         self.master_audio_gain = gain
+
+    def add_track_pan_filter(self, track, value):
+        # This used for master too, and called with tractor then
+        pan_filter = mlt.Filter(self.profile, "panner")
+        pan_filter.set("start", value)
+        track.attach(pan_filter)
+        track.pan_filter = pan_filter 
+
+    def set_track_pan_value(self, track, value):
+        track.pan_filter.set("start", str(value))
+        track.audio_pan = value
+    
+    def remove_track_pan_filter(self, track):
+        # This used for master too, and called with tractor then
+        track.detach(track.pan_filter)
+        track.pan_filter = None
+        track.audio_pan = NO_PAN
+
+    def set_master_pan_value(self, value):
+        self.tractor.pan_filter.set("start", str(value))
+        self.master_audio_pan = value
 
     def first_video_track(self):
         return self.tracks[self.first_video_index]

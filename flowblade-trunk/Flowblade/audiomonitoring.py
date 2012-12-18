@@ -210,7 +210,7 @@ class AudioMonitorWindow(gtk.Window):
 
         # Set pane and show window
         self.add(align)
-        self.set_title(_("Audio Mix"))
+        self.set_title(_("Audio Mixer"))
         self.show_all()
         self.set_resizable(False)
         
@@ -379,6 +379,7 @@ class GainControl(gtk.Frame):
         self.pan_slider = gtk.HScale()
         self.pan_slider.set_adjustment(self.pan_adjustment)
         self.pan_slider.set_sensitive(False)
+        self.pan_slider.connect("value-changed", self.pan_changed)
 
         self.pan_button = gtk.ToggleButton("Pan")
         self.pan_button.connect("toggled", self.pan_active_toggled)
@@ -405,12 +406,17 @@ class GainControl(gtk.Frame):
             self.seq.set_track_gain(self.producer, gain)
         
     def pan_active_toggled(self, widget):
+        self.pan_slider.set_value(0.0)
         if widget.get_active():
             self.pan_slider.set_sensitive(True)
+            self.seq.add_track_pan_filter(self.producer, 0.5) # works for master (tractor) too
         else:
             self.pan_slider.set_sensitive(False)
-        
-        self.pan_slider.set_value(0.0)
-        
-        
-        
+            self.seq.remove_track_pan_filter(self.producer) # works for master (tractor) too
+
+    def pan_changed(self, slider):
+        pan_value = (slider.get_value() + 100) / 200.0
+        if self.is_master:
+            self.seq.set_master_pan_value(pan_value)
+        else:
+            self.seq.set_track_pan_value(self.producer, pan_value)
