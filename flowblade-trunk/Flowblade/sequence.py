@@ -105,9 +105,9 @@ class Sequence:
         self.name = name # name of sequence
         self.next_id = 0 # id for next created clip
         self.profile = profile
+        self.master_audio_gain = 1.0
         self.tracks = []
         self.compositors = []
-        self.master_audio_gain = 1.0
         self.markers = [] # markers are tuples (name_str, frame_int)
         self.proxyclips = {} #future feature, not used currently
         self.rendered_versions = {} #future feature, not used currently
@@ -122,7 +122,14 @@ class Sequence:
 
         self.tractor.mark_in = -1
         self.tractor.mark_out = -1
+        self.tractor.audio_gain = 1.0
 
+        # Create and ad gain filter
+        gain_filter = mlt.Filter(self.profile, "volume")
+        gain_filter.set("gain", str(self.master_audio_gain))
+        self.tractor.attach(gain_filter)
+        self.tractor.gain_filter = gain_filter
+        
         self.field = self.tractor.field()
         self.multitrack = self.tractor.multitrack()
         
@@ -222,14 +229,19 @@ class Sequence:
         return new_track
 
     def _mix_audio_for_track(self, track):
+        # Create and add transition to combine track audios
         transition = mlt.Transition(self.profile, "mix")
-        transition.set("in", 0)
-        transition.set("out", 0)
         transition.set("a_track", 1)
         transition.set("b_track", track.id)
         transition.set("always_active", 1)
         transition.set("combine", 1)
         self.field.plant_transition(transition, 1, track.id)
+
+        # Create and ad gain filter
+        gain_filter = mlt.Filter(self.profile, "volume")
+        gain_filter.set("gain", str(track.audio_gain))
+        track.attach(gain_filter)
+        track.gain_filter = gain_filter
 
     def _add_track_attributes(self, track, type):                
         # Add data attr
@@ -267,6 +279,14 @@ class Sequence:
             h += track.height
         return  h
         # Add method that returns audio sync track index name
+
+    def set_track_gain(self, track, gain):
+        track.gain_filter.set("gain", str(gain))
+        track.audio_gain = gain
+
+    def set_master_gain(self, gain):
+        self.tractor.gain_filter.set("gain", str(gain))
+        self.master_audio_gain = gain
 
     def first_video_track(self):
         return self.tracks[self.first_video_index]

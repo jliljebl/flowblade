@@ -74,7 +74,7 @@
 
 
 
-    <!-- AUDIO FILTER -->
+    <!-- AUDIO -->
     <filter id="volume" multipart="true">
         <name>Volume</name>
         <group>Audio</group>

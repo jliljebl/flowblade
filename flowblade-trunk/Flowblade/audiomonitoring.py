@@ -168,7 +168,8 @@ def _get_channel_value(audio_level_filter, channel_property):
         level_float = 0.0
 
     return level_float
-        
+
+
 class AudioMonitorWindow(gtk.Window):
     def __init__(self):
         gtk.Window.__init__(self)
@@ -180,12 +181,14 @@ class AudioMonitorWindow(gtk.Window):
         
         self.meters_area = MetersArea(meters_count)
         gain_control_area = gtk.HBox(False, 0)
+        seq = editorstate.current_sequence()
         for i in range(0, meters_count):
             if i == 0:
                 name = "Master"
+                gain = GainControl(name, seq, seq.tractor, True)
             else:
                 name = utils.get_track_name(seq.tracks[i], seq)
-            gain = GainControl(name)
+                gain = GainControl(name, seq, seq.tracks[i])
             if i == 0:
                 tmp = gain
                 gain = gtk.EventBox()
@@ -358,19 +361,25 @@ class ChannelMeter:
         
 
 class GainControl(gtk.Frame):
-    def __init__(self, name):
+    def __init__(self, name, seq, producer, is_master=False):
         gtk.Frame.__init__(self)
+        
+        self.seq = seq
+        self.producer = producer
+        self.is_master = is_master
+
         self.adjustment = gtk.Adjustment(value=100, lower=0, upper=100, step_incr=1)
         self.slider = gtk.VScale()
         self.slider.set_adjustment(self.adjustment)
         self.slider.set_size_request(SLOT_W - 10, CONTROL_SLOT_H - 105)
         self.slider.set_inverted(True)
-
+        self.slider.connect("value-changed", self.gain_changed)
+   
         self.pan_adjustment = gtk.Adjustment(value=0, lower=-100, upper=100, step_incr=1)
         self.pan_slider = gtk.HScale()
         self.pan_slider.set_adjustment(self.pan_adjustment)
         self.pan_slider.set_sensitive(False)
-        
+
         self.pan_button = gtk.ToggleButton("Pan")
         self.pan_button.connect("toggled", self.pan_active_toggled)
 
@@ -387,6 +396,13 @@ class GainControl(gtk.Frame):
 
         self.add(vbox)
         self.set_size_request(SLOT_W, CONTROL_SLOT_H)
+
+    def gain_changed(self, slider):
+        gain = slider.get_value() / 100.0
+        if self.is_master == True:
+            self.seq.set_master_gain(gain)
+        else:
+            self.seq.set_track_gain(self.producer, gain)
         
     def pan_active_toggled(self, widget):
         if widget.get_active():

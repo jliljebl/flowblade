@@ -25,6 +25,7 @@ Main functionality of the module is to replace unpickleable
 SwigPyObject MLT objects with pickleable python objects for save, 
 and then create MLT objects from pickled objects when project is loaded.
 """
+
 import copy
 import gtk
 import pickle
@@ -41,7 +42,7 @@ import resync
 # These are removed at save and recreated at load.
 PROJECT_REMOVE = ['profile','c_seq', 'thumbnail_thread']
 SEQUENCE_REMOVE = ['profile','field','multitrack','tractor','monitor_clip','vectorscope','audiowave','rgbparade','outputfilter']
-PLAY_LIST_REMOVE = ['this','sequence','get_name']
+PLAY_LIST_REMOVE = ['this','sequence','get_name','gain_filter']
 CLIP_REMOVE = ['this','clip_length']
 TRANSITION_REMOVE = ['this']
 FILTER_REMOVE = ['mlt_filter','mlt_filters']
