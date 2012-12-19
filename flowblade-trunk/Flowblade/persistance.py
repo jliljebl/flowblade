@@ -449,7 +449,6 @@ def FIX_1_TO_N_BACKWARDS_COMPOSITOR_COMPABILITY(compositor):
 def FIX_1_TO_N_BACKWARDS_FILTER_COMPABILITY(py_filter):
     # This is only called on "affine" filters
     # fix SAVEFILE_VERSION 1 -> N compability issue with x,y -> x/y in compositors
-    print "fixing filter"
     new_properties = []
     for prop in py_filter.properties:
         name, value, prop_type = prop

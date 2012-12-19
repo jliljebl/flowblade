@@ -372,11 +372,25 @@ def _add_image_sequence_callback(dialog, response_id, data):
         return
 
     number_index = file_name.find(number_part)
-    sequence_name_part = file_name[0:number_index]
+    path_name_part = file_name[0:number_index]
     end_part = file_name[number_index + len(number_part):len(file_name)]
-    resource_str = sequence_name_part + "%" + str(number_part) + "d" + end_part
-
+    resource_name_str = path_name_part + "%" + "0" + str(len(number_part)) + "d" + end_part + "?begin=" + number_part
+    
     dialog.destroy()
+    
+    resource_path = folder + "/" + resource_name_str
+    
+    print resource_path
+
+    if PROJECT().media_file_exists(frame_file):
+        print "file exists"
+        return
+    
+    PROJECT().add_media_file(resource_path)
+
+    gui.media_list_view.fill_data_model()
+    gui.bin_list_view.fill_data_model()
+        
     
 def open_rendered_file(rendered_file_path):
     add_media_thread = AddMediaFilesThread([rendered_file_path])
@@ -398,8 +412,7 @@ def select_thumbnail_dir_callback(dialog, response_id, data):
     
     if retry_add_media == True:
         add_media_files(True)
-    
-            
+
 def delete_media_files():
     """
     Deletes media file. Does not take into account if clips made from 

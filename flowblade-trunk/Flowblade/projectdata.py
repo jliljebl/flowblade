@@ -91,10 +91,6 @@ class Project:
         """
         Adds media file to project if exists and file is of right type.
         """
-        # Check and split path
-        if not os.path.exists(file_path):
-            pass #not impl
-            
         (dir, file_name) = os.path.split(file_path)
         (name, ext) = os.path.splitext(file_name)
         
@@ -108,12 +104,20 @@ class Project:
         else: # For non-audio we need write a thumbbnail file and get file lengh while we're at it
              (icon_path, length) = thumbnail_thread.write_image(file_path)
 
+        print length 
           # Create media file object
-        media_file = MediaFile(self.next_media_file_id, file_path, 
+        media_object = MediaFile(self.next_media_file_id, file_path, 
                                file_name, media_type, length, icon_path)
             
-        self._add_media_object(media_file)
-        
+        self._add_media_object(media_object)
+
+    def add_image_sequence_media_object(self, file_path, resource_path):
+        (icon_path, length) = thumbnail_thread.write_image_sequence_image(file_path, resource_path)
+        media_object = MediaFile(self.next_media_file_id, file_path, 
+                               file_name, media_type, length, icon_path)
+            
+        self._add_media_object(media_object)
+
     def add_patter_producer_media_object(self, media_object):
         self._add_media_object(media_object)
 
@@ -175,11 +179,11 @@ class MediaFile:
     """
     Media file that can added to and edited in Sequence.
     """
-    def __init__(self, id, file_path, name, type, length, icon_path):
+    def __init__(self, id, file_path, name, media_type, length, icon_path):
         self.id = id
         self.path = file_path
         self.name = name
-        self.type = type
+        self.type = media_type
         self.length = length
         self.icon_path = icon_path
         self.icon = None
@@ -302,6 +306,37 @@ class ThumbnailThread(threading.Thread):
         self.consumer.run()
         
         return (self.thumbnail_path, length)
+
+    """
+    def write_image_sequence_image(self, file_path, resource_path):
+        # Get data
+        self.file_path = file_path
+        md_str = md5.new(file_path).hexdigest()
+        #self.thumbnail_path = editorpersistance.prefs.thumbnail_folder + "/" + md_str +  ".png"
+        self.thumbnail_path = "/home/janne/thumbbbbbb.png"
+        
+        # Create consumer
+        self.consumer = mlt.Consumer(self.profile, "avformat", 
+                                     self.thumbnail_path)
+        self.consumer.set("real_time", 0)
+        self.consumer.set("vcodec", "png")
+
+
+        #self.producer = mlt.Producer(self.profile, None, resource_path)
+        self.producer = mlt.Producer(self.profile, "pixbuf", resource_path)
+        if self.producer.is_valid() == False:
+            raise ProducerNotValidError(file_path)
+
+        length = self.producer.get_length()
+        frame = length / 2
+        self.producer = self.producer.cut(frame, frame)
+
+        # Connect and write image
+        self.consumer.connect(self.producer)
+        self.consumer.run()
+        
+        return (self.thumbnail_path, length)
+    """
 
     def get_file_length(self, file_path):
         # This is used for audio files which don't need a thumbnail written
