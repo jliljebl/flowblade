@@ -377,8 +377,13 @@ def _add_image_sequence_callback(dialog, response_id, data):
     number_index = file_name.find(number_part)
     path_name_part = file_name[0:number_index]
     end_part = file_name[number_index + len(number_part):len(file_name)]
-    resource_name_str = path_name_part + "%" + "0" + str(len(number_part)) + "d" + end_part + "?begin=" + number_part
-
+    
+    # The better version with "?begin=xxx" only available after 0.8.7
+    if editorstate.mlt_version_is_equal_or_greater("0.8.5"):
+        resource_name_str = path_name_part + "%" + "0" + str(len(number_part)) + "d" + end_part + "?begin=" + number_part
+    else:
+        resource_name_str = path_name_part + "%" + "0" + str(len(number_part)) + "d" + end_part
+    
     # detect highest file
     # FIX: this fails if two similarily numbered sequences in same dir and both have same substring in frame name
     onlyfiles = [ f for f in listdir(folder) if isfile(join(folder,f)) ]

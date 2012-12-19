@@ -87,3 +87,12 @@ def get_track(index):
 
 def timeline_visible():
     return _timeline_displayed
+
+def mlt_version_is_equal_or_greater(test_version):
+    mlt_parts = mlt_version.split(".")
+    test_parts = test_version.split(".")
+    if test_parts[0] >= mlt_parts[0] and test_parts[1] >= mlt_parts[1] and test_parts[2] >= mlt_parts[2]:
+        return True
+    
+    return False
+    
