@@ -21,6 +21,7 @@
 """
 Module contains objects used to capture project data.
 """
+
 import gtk
 import multiprocessing
 import mlt
@@ -87,6 +88,13 @@ class Project:
             thumbnail_thread.set_context(self.profile)
             thumbnail_thread.start()
 
+    def add_image_sequence_media_object(self, resource_path, name, length):
+        media_object = self.add_media_file(resource_path)
+        media_object.length = length
+        media_object.name = name
+        #media_object.mark_in = 0
+        #media_object.mark_out = length
+
     def add_media_file(self, file_path):
         """
         Adds media file to project if exists and file is of right type.
@@ -104,19 +112,13 @@ class Project:
         else: # For non-audio we need write a thumbbnail file and get file lengh while we're at it
              (icon_path, length) = thumbnail_thread.write_image(file_path)
 
-        print length 
           # Create media file object
         media_object = MediaFile(self.next_media_file_id, file_path, 
                                file_name, media_type, length, icon_path)
             
         self._add_media_object(media_object)
-
-    def add_image_sequence_media_object(self, file_path, resource_path):
-        (icon_path, length) = thumbnail_thread.write_image_sequence_image(file_path, resource_path)
-        media_object = MediaFile(self.next_media_file_id, file_path, 
-                               file_name, media_type, length, icon_path)
-            
-        self._add_media_object(media_object)
+        
+        return media_object
 
     def add_patter_producer_media_object(self, media_object):
         self._add_media_object(media_object)
@@ -306,37 +308,6 @@ class ThumbnailThread(threading.Thread):
         self.consumer.run()
         
         return (self.thumbnail_path, length)
-
-    """
-    def write_image_sequence_image(self, file_path, resource_path):
-        # Get data
-        self.file_path = file_path
-        md_str = md5.new(file_path).hexdigest()
-        #self.thumbnail_path = editorpersistance.prefs.thumbnail_folder + "/" + md_str +  ".png"
-        self.thumbnail_path = "/home/janne/thumbbbbbb.png"
-        
-        # Create consumer
-        self.consumer = mlt.Consumer(self.profile, "avformat", 
-                                     self.thumbnail_path)
-        self.consumer.set("real_time", 0)
-        self.consumer.set("vcodec", "png")
-
-
-        #self.producer = mlt.Producer(self.profile, None, resource_path)
-        self.producer = mlt.Producer(self.profile, "pixbuf", resource_path)
-        if self.producer.is_valid() == False:
-            raise ProducerNotValidError(file_path)
-
-        length = self.producer.get_length()
-        frame = length / 2
-        self.producer = self.producer.cut(frame, frame)
-
-        # Connect and write image
-        self.consumer.connect(self.producer)
-        self.consumer.run()
-        
-        return (self.thumbnail_path, length)
-    """
 
     def get_file_length(self, file_path):
         # This is used for audio files which don't need a thumbnail written

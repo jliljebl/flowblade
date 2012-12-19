@@ -25,6 +25,8 @@ Load, save, add media file, etc...
 import gobject
 import gtk
 import os
+from os import listdir
+from os.path import isfile, join
 import sys
 import re
 import time
@@ -371,22 +373,35 @@ def _add_image_sequence_callback(dialog, response_id, data):
         dialogutils.info_message("Not a sequence file!", "Selected file does not have a number part in it,\nso it can't be an image sequence file.", gui.editor_window.window)
         return
 
+    # Create resource name with MLT syntax for MLT producer
     number_index = file_name.find(number_part)
     path_name_part = file_name[0:number_index]
     end_part = file_name[number_index + len(number_part):len(file_name)]
     resource_name_str = path_name_part + "%" + "0" + str(len(number_part)) + "d" + end_part + "?begin=" + number_part
+
+    # detect highest file
+    # FIX: this fails if two similarily numbered sequences in same dir and both have same substring in frame name
+    onlyfiles = [ f for f in listdir(folder) if isfile(join(folder,f)) ]
+    highest_file = frame_file
+    highest_number_part = int(number_part)
+    for f in onlyfiles:
+        file_number_part = int(re.findall("[0-9]+", f)[0])
+        if f.find(path_name_part) == -1:
+            continue
+        if file_number_part > highest_number_part:
+            highest_file = f
+            highest_number_part = file_number_part
     
     dialog.destroy()
     
     resource_path = folder + "/" + resource_name_str
-    
-    print resource_path
+    length = highest_number_part - int(number_part)
 
-    if PROJECT().media_file_exists(frame_file):
-        print "file exists"
-        return
-    
-    PROJECT().add_media_file(resource_path)
+    #if PROJECT().media_file_exists(frame_file):
+    #    print "file exists"
+    #    return
+
+    PROJECT().add_image_sequence_media_object(resource_path, file_name + "(img_seq)", length)
 
     gui.media_list_view.fill_data_model()
     gui.bin_list_view.fill_data_model()

@@ -299,13 +299,17 @@ def display_clip_in_monitor(reset_saved_frames=True):
     current_sequence().clear_hidden_track()
     
     # Create and display clip on hidden track
-    if MONITOR_MEDIA_FILE().type != appconsts.PATTERN_PRODUCER:
+    if MONITOR_MEDIA_FILE().type == appconsts.PATTERN_PRODUCER or MONITOR_MEDIA_FILE().type == appconsts.IMAGE_SEQUENCE:
+        # pattern producer image sequence
+        clip_producer = current_sequence().display_monitor_clip(None, MONITOR_MEDIA_FILE())
+    else:
         # File producers
         clip_producer = current_sequence().display_monitor_clip(MONITOR_MEDIA_FILE().path)
-    else:
-        # pattern producer
-        clip_producer = current_sequence().display_monitor_clip(None, MONITOR_MEDIA_FILE())
-
+    
+    # IMAGE_SEQUENCE files always return 15000 for get_length from mlt so we have patch that method
+    if MONITOR_MEDIA_FILE().type == appconsts.IMAGE_SEQUENCE:
+        clip_producer.get_length = lambda : MONITOR_MEDIA_FILE().length
+    
     clip_producer.mark_in = MONITOR_MEDIA_FILE().mark_in
     clip_producer.mark_out = MONITOR_MEDIA_FILE().mark_out
     

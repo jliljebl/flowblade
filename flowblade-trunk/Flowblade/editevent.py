@@ -444,9 +444,12 @@ def tline_media_drop(media_file, x, y):
     new_clip.mark_in = 0
     new_clip.mark_out = new_clip.get_length() - 1 # - 1 because out is mark_out inclusive
 
+    if media_file.type == appconsts.IMAGE_SEQUENCE:
+        new_clip.mark_out = media_file.length # so we're not using this for other files?
+        
     # Graphics files get added with their default lengths
     f_name, ext = os.path.splitext(media_file.name)
-    if utils.file_extension_is_graphics_file(ext):
+    if utils.file_extension_is_graphics_file(ext) and media_file.type != appconsts.IMAGE_SEQUENCE: # image sequneces are graphics files but have own length
         in_fr, out_fr, l = editorpersistance.get_graphics_default_in_out_length()
         new_clip.mark_in = in_fr
         new_clip.mark_out = out_fr

@@ -345,9 +345,6 @@ class Sequence:
         Creates MLT Producer and adds attributes to it, but does 
         not add it to track/playlist object.
         """
-        print path
-        print new_clip_name
-        
         producer = mlt.Producer(self.profile, path) # this runs 0.5s+ on some clips
         producer.path = path
         producer.filters = []
@@ -576,12 +573,17 @@ class Sequence:
         """
         Adds media clip to hidden track for viewing and for setting mark
         in and mark out points.
+        pattern_producer_data is MediaFile or AbstractPatternProduer object
         """
         track = self.tracks[-1] # Always last track
         if pattern_producer_data == None:
             self.monitor_clip = self.create_file_producer_clip(path)
         else:
-            self.monitor_clip = self.create_pattern_producer(pattern_producer_data)
+            if pattern_producer_data.type == IMAGE_SEQUENCE:
+                self.monitor_clip = self.create_file_producer_clip(pattern_producer_data.path)
+                #self.monitor_clip.set_in_and_out(0, pattern_producer_data.length)
+            else:
+                self.monitor_clip = self.create_pattern_producer(pattern_producer_data)
         
         edit._insert_clip(track, self.monitor_clip, 0, 0, \
                           self.monitor_clip.get_length() - 1)
@@ -860,7 +862,6 @@ class Sequence:
      
             print i, ": id:", clip.id, " in:",clip.clip_in," out:", \
             clip.clip_out, msg
-
 
         print "MLT"
         for i in range(0, track.count()):
