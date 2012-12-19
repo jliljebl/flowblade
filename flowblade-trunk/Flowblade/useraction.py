@@ -390,7 +390,10 @@ def _add_image_sequence_callback(dialog, response_id, data):
     highest_file = frame_file
     highest_number_part = int(number_part)
     for f in onlyfiles:
-        file_number_part = int(re.findall("[0-9]+", f)[0])
+        try:
+            file_number_part = int(re.findall("[0-9]+", f)[0])
+        except:
+            continue
         if f.find(path_name_part) == -1:
             continue
         if file_number_part > highest_number_part:
