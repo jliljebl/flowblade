@@ -22,6 +22,8 @@
 Module contains objects and methods needed to create render consumers.
 """
 import mlt
+import time
+import threading
 import xml.dom.minidom
 
 import mltenv
@@ -48,6 +50,7 @@ PROFILE = "profile"
 QUALITY = "quality"
 BITRATE = "bitrate"
 AUDIO_DESCRIPTION = "audiodesc"
+NON_USER = "nonuser"
 
 # Replace strings and attribute values
 BITRATE_RPL = "%BITRATE%"
@@ -63,6 +66,7 @@ encoding_options = []
 not_supported_encoding_options = []
 quality_option_groups = {}
 quality_option_groups_default_index = {}
+non_user_encodings = []
 
 # replace empty strings with None values
 def _get_attribute(node, attr_name):
@@ -110,6 +114,7 @@ class EncodingOption:
         self.type = _get_attribute(option_node, TYPE)
         self.resizable = (_get_attribute(option_node, RESIZABLE) == "True")
         self.extension = _get_attribute(option_node, EXTENSION)
+        self.nonuser = _get_attribute(option_node, NON_USER)
         quality_qroup_id = _get_attribute(option_node, QGROUP)
         self.quality_options = quality_option_groups[quality_qroup_id]
         try:
@@ -139,7 +144,7 @@ class EncodingOption:
                                                          self.vcodec,
                                                          self.acodec)
                                                          
-    def get_args_vals_tuples_list(self, profile, quality_option):
+    def get_args_vals_tuples_list(self, profile, quality_option=None):
         # Encoding options
         tokens = self.attr_string.split(" ")
         args_tuples = []
@@ -156,8 +161,9 @@ class EncodingOption:
                 arg2 = "@" + str(profile.display_aspect_num()) + "/" + str(profile.display_aspect_den())
 
             # Replace keyword values from quality options values
-            if arg2 in quality_option.replaced_expressions:
-                arg2 = str(quality_option.replace_map[arg2])
+            if quality_option != None:
+                if arg2 in quality_option.replaced_expressions:
+                    arg2 = str(quality_option.replace_map[arg2])
             args_tuples.append((arg1, arg2))
         
         return args_tuples
@@ -195,13 +201,17 @@ def load_render_profiles():
 
     # Create encoding options
     print "Render profiles:"
-    global encoding_options, not_supported_encoding_options
+    global encoding_options, not_supported_encoding_options, non_user_encodings
     encoding_option_nodes = render_encoding_doc.getElementsByTagName(ENCODING_OPTION)
     for eo_node in encoding_option_nodes:
         encoding_option = EncodingOption(eo_node)
         if encoding_option.supported:
-            encoding_options.append(encoding_option)
-            msg = "...available"
+            if encoding_option.nonuser == None:
+                encoding_options.append(encoding_option)
+                msg = "...available"
+            else:
+                non_user_encodings.append(encoding_option) 
+                msg = "...available as non-user encoding"
         else:
             msg = "...NOT available, " + encoding_option.err_msg + " missing"
             not_supported_encoding_options.append(encoding_option)
@@ -217,6 +227,12 @@ def get_render_consumer_for_encoding_and_quality(file_path, profile, enc_opt_ind
     # Quality options  key, value list
     for k, v in quality_option.add_map.iteritems():
         args_vals_list.append((str(k), str(v)))
+        
+    return get_mlt_render_consumer(file_path, profile, args_vals_list)
+
+def get_render_condumer_for_encoding(file_path, profile, encoding_option):
+    # Encoding options key, value list
+    args_vals_list = encoding_option.get_args_vals_tuples_list(profile)
         
     return get_mlt_render_consumer(file_path, profile, args_vals_list)
 
@@ -287,3 +303,65 @@ def _parse_line(line_start, line_end, buf):
         
     return ((k,v), None)
 
+
+class FileRenderPlayer(threading.Thread):
+    
+    def __init__(self, file_name, producer, consumer, start_frame, stop_frame):
+        self.file_name = file_name
+        self.producer = producer
+        self.consumer = consumer
+        self.start_frame = start_frame
+        self.stop_frame = stop_frame
+
+        threading.Thread.__init__(self)
+
+    def run(self):
+        self.running = True
+        self.connect_and_start()
+    
+        while self.running: #set false at user site
+            if self.producer.frame() > self.stop_frame:
+                self.consumer.stop()
+                self.producer.set_speed(0)
+            time.sleep(0.1)
+
+    def connect_and_start(self):
+        self.consumer.purge()
+        self.consumer.connect(self.producer)
+        self.producer.set_speed(0)
+        self.producer.seek(self.start_frame)
+        self.consumer.start()
+        self.producer.set_speed(1)
+    
+    def get_render_fraction(self):
+        render_length = self.stop_frame - self.start_frame + 1
+        if (self.producer.get_length() - 1) < 1:
+            render_fraction = 1.0
+        else:
+            current_frame = self.producer.frame() - self.start_frame
+            render_fraction = (float(current_frame)) / (float(render_length))
+        if render_fraction > 1.0:
+            render_fraction = 1.0
+        return render_fraction
+
+
+class ProgressWindowThread(threading.Thread):
+    def __init__(self, dialog, progress_bar, clip_renderer, callback):
+        self.dialog = dialog
+        self.progress_bar = progress_bar
+        self.clip_renderer = clip_renderer
+        self.callback = callback
+        threading.Thread.__init__(self)
+    
+    def run(self):        
+        self.running = True
+        
+        while self.running:         
+            render_fraction = self.clip_renderer.get_render_fraction()
+            self.progress_bar.set_fraction(render_fraction)
+            if self.clip_renderer.producer.get_speed() == 0:
+                self.progress_bar.set_fraction(1.0)
+                time.sleep(0.5)
+                self.callback(self.dialog, 0)
+                
+            time.sleep(1)

@@ -34,7 +34,7 @@
     <qualityqroup id="not_settable">
         <quality name="not settable"/>
     </qualityqroup>
-    
+
     <!-- encoding options group together codecs, file formats and quality option groups -->
     <!-- Actual encoding incantations lifted from Kdenlive -->
     <encodingoption name="MPEG-2 / .mpg" extension="mpg" audiodesc="mp2, 348kb/s, 48000Hz" type="av" resize="True" qgroup="qgroup1">
@@ -61,5 +61,17 @@
     <encodingoption name="Lossless H.264 / .mp4" extension="mp4" audiodesc="aac, 384kb/s, 48000Hz"  type="av" resize="True" qgroup="lossless">
         <profile args="f=mp4 acodec=aac ab=384k ar=48000 ac=2 pix_fmt=yuv420p vcodec=libx264 cqp=0 me_method=esa subq=8 qmin=10 qcomp=0.6 qdiff=4 qmax=51 coder=ac partitions=+parti4x4+parti8x8+partp4x4+partp8x8+partb8x8 refs=16 flags2=+dct8x8+mixed_refs trellis=1" />
     </encodingoption>
-    
+    <encodingoption name="DVD_PAL" extension="mpg" nonuser="True" audiodesc="NA"  type="av" resize="NA" qgroup="lossless">
+        <profile args="f=mpeg vcodec=mpeg2video acodec=ac3 b=5000k maxrate=8000k minrate=0 bufsize=1835008 packetsize=2048 muxrate=10080000 ab=192k ar=48000 s=720x576 g=15 me_range=63 trellis=1" />
+    </encodingoption>
+    <encodingoption name="DVD_PAL_WIDE" extension="mpg" nonuser="True" audiodesc="NA"  type="av" resize="NA" qgroup="lossless">
+        <profile args="f=mpeg vcodec=mpeg2video acodec=ac3 b=5000k maxrate=8000k minrate=0 bufsize=1835008 packetsize=2048 muxrate=10080000 ab=192k ar=48000 s=720x576 g=15 me_range=63 trellis=1" />
+    </encodingoption>
+    <encodingoption name="DVD_NTSC" extension="mpg" nonuser="True" audiodesc="NA"  type="av" resize="NA" qgroup="lossless">
+        <profile args="f=mpeg vcodec=mpeg2video acodec=ac3 s=720x480 b=6000k maxrate=9000k minrate=0 bufsize=1835008 packetsize=2048 muxrate=10080000 ab=192k ar=48000 g=18 me_range=63 trellis=1" />
+    </encodingoption>
+    <encodingoption name="DVD_NTSC_WIDE" extension="mpg" nonuser="True" audiodesc="NA"  type="av" resize="NA" qgroup="lossless">
+        <profile args="f=mpeg vcodec=mpeg2video acodec=ac3 s=720x480 b=6000k maxrate=9000k minrate=0 bufsize=1835008 packetsize=2048 muxrate=10080000 ab=192k ar=48000 g=18 me_range=63 trellis=1" />
+    </encodingoption>
+
 </renderencoding>

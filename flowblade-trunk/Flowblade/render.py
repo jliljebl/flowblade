@@ -78,6 +78,13 @@ class RenderLauncher(threading.Thread):
         self.end_frame = end_frame
 
     def run(self):
+        callbacks = utils.EmptyClass()
+        callbacks.set_render_progress_gui = set_render_progress_gui
+        callbacks.save_render_start_time = save_render_start_time
+        callbacks.exit_render_gui = exit_render_gui
+        callbacks.maybe_open_rendered_file_in_bin = maybe_open_rendered_file_in_bin
+        PLAYER().set_render_callbacks(callbacks)
+        
         PLAYER().start_rendering(self.render_consumer, self.start_frame, self.end_frame)
 
 
@@ -657,13 +664,15 @@ def _render_frame_buffer_clip_callback(dialog, response_id, fb_widgets, media_fi
             
         # Launch render
         global motion_renderer, motion_progress_update
-        motion_renderer = MotionFileRender(write_file, seq.tractor, consumer, start_frame, end_frame)
+        motion_renderer = renderconsumer.FileRenderPlayer(write_file, seq.tractor, consumer, start_frame, end_frame)
         motion_renderer.start()
         
-        progress_bar = gtk.ProgressBar()
-        dialog = dialogs.motion_clip_render_progress_dialog(_FB_render_stop, write_file, progress_bar, gui.editor_window.window)
+        title = _("Rendering Motion Clip")
         
-        motion_progress_update = ProgressWindowThread(dialog, progress_bar, motion_renderer)
+        progress_bar = gtk.ProgressBar()
+        dialog = dialogs.clip_render_progress_dialog(_FB_render_stop, title, write_file, progress_bar, gui.editor_window.window)
+        
+        motion_progress_update = renderconsumer.ProgressWindowThread(dialog, progress_bar, motion_renderer, _FB_render_stop)
         motion_progress_update.start()
         
     else:
@@ -711,68 +720,8 @@ def _fill_FB_extension_label(fb_widgets):
     enc_index = fb_widgets.encodings_cb.get_active()
     ext = renderconsumer.encoding_options[enc_index].extension
     fb_widgets.extension_label.set_text("." + ext)
-    
-
-class MotionFileRender(threading.Thread):
-    
-    def __init__(self, file_name, producer, consumer, start_frame, stop_frame):
-        self.file_name = file_name
-        self.producer = producer
-        self.consumer = consumer
-        self.start_frame = start_frame
-        self.stop_frame = stop_frame
-
-        threading.Thread.__init__(self)
-
-    def run(self):
-        self.running = True
-        self.connect_and_start()
-    
-        while self.running: #set false from ProgressWindowThread
-            if self.producer.frame() > self.stop_frame:
-                self.consumer.stop()
-                self.producer.set_speed(0)
-            time.sleep(0.1)
-
-    def connect_and_start(self):
-        self.consumer.purge()
-        self.consumer.connect(self.producer)
-        self.producer.set_speed(0)
-        self.producer.seek(self.start_frame) #self.producer.seek(start_frame)
-        self.consumer.start()
-        self.producer.set_speed(1)
-    
-    def get_render_fraction(self):
-        render_length = self.stop_frame - self.start_frame + 1
-        if (self.producer.get_length() - 1) < 1:
-            render_fraction = 1.0
-        else:
-            current_frame = self.producer.frame() - self.start_frame
-            render_fraction = (float(current_frame)) / (float(render_length))
-        if render_fraction > 1.0:
-            render_fraction = 1.0
-        return render_fraction
 
 
-class ProgressWindowThread(threading.Thread):
-    def __init__(self, dialog, progress_bar, clip_renderer):
-        self.dialog = dialog
-        self.progress_bar = progress_bar
-        self.clip_renderer = clip_renderer
 
-        threading.Thread.__init__(self)
-    
-    def run(self):        
-        self.running = True
-        
-        while self.running:         
-            render_fraction = self.clip_renderer.get_render_fraction()
-            self.progress_bar.set_fraction(render_fraction)
-            if self.clip_renderer.producer.get_speed() == 0:
-                self.progress_bar.set_fraction(1.0)
-                time.sleep(0.5)
-                _FB_render_stop(self.dialog, 0)
-                
-            time.sleep(1)
 
 

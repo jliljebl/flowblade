@@ -262,13 +262,29 @@ def render_progress_dialog(callback, parent_window):
     dialog.show()
     return dialog
     
-def motion_clip_render_progress_dialog(callback, file_name, progress_bar, parent_window):
-    dialog = gtk.Dialog(_("Rendering Motion Clip"),
+def clip_render_progress_dialog(callback, title, file_name, progress_bar, parent_window):
+    dialog = gtk.Dialog(title,
                          parent_window,
                          gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                          (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT))
 
-    panel = panels.get_motion_render_progress_panel(file_name, progress_bar)
+    status_box = gtk.HBox(False, 2)
+    status_box.pack_start(gtk.Label(file_name),False, False, 0)
+    status_box.pack_start(gtk.Label(), True, True, 0)
+    
+    filler = gtk.Label()
+    filler.set_size_request(10, 10)
+
+    progress_vbox = gtk.VBox(False, 2)
+    progress_vbox.pack_start(status_box, False, False, 0)
+    progress_vbox.pack_start(filler, False, False, 0)
+    progress_vbox.pack_start(progress_bar, False, False, 0)
+    
+    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment.set_padding(12, 12, 12, 12)
+    alignment.add(progress_vbox)
+    
+    panel = alignment
     
     dialog.vbox.pack_start(panel, True, True, 0)
     dialog.set_default_size(500, 125)
@@ -917,10 +933,10 @@ def open_image_sequence_dialog(callback, parent_window):
     dialog.show_all()
     
 
-def export_dvd_author_dialog(callback, parent_window):
+def export_dvd_author_dialog(callback, seq, parent_window):
     cancel_str = _("Cancel").encode('utf-8')
-    ok_str = _("Export").encode('utf-8')
-    dialog = gtk.Dialog(_("Export DVDAuthor"),
+    ok_str = _("Export Files").encode('utf-8')
+    dialog = gtk.Dialog(_("Export DVDAuthor Files"),
                         parent_window,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                         (cancel_str, gtk.RESPONSE_CANCEL,
@@ -935,10 +951,21 @@ def export_dvd_author_dialog(callback, parent_window):
     row0 = guiutils.get_two_column_box(gtk.Label(_("Use Markers as Chapter Starts:")), markers_check, INPUT_LABELS_WITDH)
 
     chapters_view = gtk.TextView()
-    chapters_view.set_sensitive(False)
     chapters_view.set_pixels_above_lines(2)
     chapters_view.set_left_margin(2)
     
+    chapters_txt = utils.get_tc_string(0) + " " + "chapter1\n"
+    chapter_count = 2
+    for marker in seq.markers:
+        name, frame = marker
+        chapter = utils.get_tc_string(frame) + " " + "chapter" + str(chapter_count) + "(" + name + ")" 
+        chapters_txt = chapters_txt + chapter
+        chapter_count += 1
+    
+    text_buffer = gtk.TextBuffer()
+    text_buffer.set_text(chapters_txt)
+    chapters_view.set_buffer(text_buffer)
+
     sw = gtk.ScrolledWindow()
     sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_ALWAYS)
     sw.add(chapters_view)
@@ -959,7 +986,7 @@ def export_dvd_author_dialog(callback, parent_window):
 
     render_check = gtk.CheckButton()
     render_check.set_active(True)
-    row3 = guiutils.get_two_column_box(gtk.Label(_("Render VOB File:")), render_check, INPUT_LABELS_WITDH)
+    row3 = guiutils.get_two_column_box(gtk.Label(_("Render MPEG File:")), render_check, INPUT_LABELS_WITDH)
     
     dvd_type_combo = gtk.combo_box_new_text()
     dvd_type_combo.append_text("DVD PAL")
@@ -967,13 +994,16 @@ def export_dvd_author_dialog(callback, parent_window):
     dvd_type_combo.append_text("DVD PAL Widescreen")
     dvd_type_combo.append_text("DVD NTSC Widescreen")
     dvd_type_combo.set_active(0)
-    row4 = guiutils.get_two_column_box(gtk.Label(_("DVD Type:")), dvd_type_combo, INPUT_LABELS_WITDH)
+    row4 = guiutils.get_two_column_box(gtk.Label(_("MPEG File for DVD Type:")), dvd_type_combo, INPUT_LABELS_WITDH)
 
-    default_vob_name = proj_name + ".vob"
-    vob_name_entry = gtk.Entry(30)
-    vob_name_entry.set_width_chars(30)
-    vob_name_entry.set_text(default_vob_name)
-    row5 = guiutils.get_two_column_box(gtk.Label(_("VOB File Name:")), vob_name_entry, INPUT_LABELS_WITDH)
+    default_vob_name = proj_name + ".mpg"
+    mpg_name_entry = gtk.Entry(30)
+    mpg_name_entry.set_width_chars(30)
+    mpg_name_entry.set_text(default_vob_name)
+    row5 = guiutils.get_two_column_box(gtk.Label(_("MPEG File Name:")), mpg_name_entry, INPUT_LABELS_WITDH)
+
+    markers_check.connect("toggled", _markers_chapters_check_toggled, (chapters_view, text_buffer, chapters_txt))
+    render_check.connect("toggled", _mpeg_render_check_toggled, (mpg_name_entry, dvd_type_combo))
 
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(row0, False, False, 0)
@@ -985,10 +1015,25 @@ def export_dvd_author_dialog(callback, parent_window):
     vbox.pack_start(row5, False, False, 0)
     
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(6, 24, 24, 24)
+    alignment.set_padding(24, 24, 24, 24)
     alignment.add(vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, (file_chooser, name_entry, dvd_type_combo))
+    dialog.connect('response', callback, (markers_check, file_chooser, name_entry, render_check, dvd_type_combo, mpg_name_entry))
     dialog.show_all()
+
+def _mpeg_render_check_toggled(widget, data):
+    mpg_name_entry, dvd_type_combo = data
+
+    mpg_name_entry.set_sensitive(widget.get_active())
+    dvd_type_combo.set_sensitive(widget.get_active())
+
+def _markers_chapters_check_toggled(widget, data):
+    chapters_view, text_buffer, chapters_text = data
+    if widget.get_active():
+        chapters_view.set_sensitive(True)
+        text_buffer.set_text(chapters_text)
+    else:
+        chapters_view.set_sensitive(False)
+        text_buffer.set_text("")

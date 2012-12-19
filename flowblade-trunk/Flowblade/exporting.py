@@ -23,9 +23,41 @@ import xml.dom.minidom
 import dialogs
 from editorstate import PLAYER
 from editorstate import PROJECT
+from editorstate import current_sequence
 import gui
+import mltprofiles
+import renderconsumer
+import utils
+
+mpeg_renderer = None
+progress_update = None
 
 def DVD_AUTHOR_export():
+    dialogs.export_dvd_author_dialog(_export_dvd_author_dialog_callback, 
+                                     current_sequence(),
+                                     gui.editor_window.window)
+
+def _export_dvd_author_dialog_callback(dialog, response_id, data):
+    if response_id != gtk.RESPONSE_YES:
+        dialog.destroy()
+        return
+
+    markers_check, file_chooser, name_entry, render_check, dvd_type_combo, mpg_name_entry = data
+    
+    file_dir = file_chooser.get_filename()
+    xml_file_path = file_dir + "/" + name_entry.get_text()
+    mpg_name = mpg_name_entry.get_text()
+    do_render = render_check.get_active()
+    dvd_type_index = dvd_type_combo.get_active()
+    render_file_path = file_dir + "/" + mpg_name
+
+    dialog.destroy()
+    
+    if file_dir == None:
+        print "file_dir None"
+        return
+
+    # Create and write XML file
     impl = xml.dom.minidom.getDOMImplementation()
     doc = impl.createDocument(None, "dvdauthor", None)
     
@@ -44,17 +76,76 @@ def DVD_AUTHOR_export():
     titles_element.appendChild(pgc_element)
 
     vob_element = doc.createElement("vob")
-    vob_element.setAttribute("file", "video1.mpg")
-    pgc_element.appendChild(vob_element)
+    chapters="0,"
+    for marker in current_sequence().markers:
+        name, frame = marker
+        tc_string = utils.get_tc_string(frame)
+        chapters = chapters + tc_string + ","
     
-    dialogs.export_dvd_author_dialog(_export_dvd_author_dialog_callback, gui.editor_window.window)
-    #f = open('/home/janne/dvdauthor.xml', 'wb')
-    #doc.writexml(f, encoding='utf-8')
-    #f.close()
+    chapters_final = chapters.rstrip(",")
 
-def _export_dvd_author_dialog_callback(dialog, response_id, data):
+    vob_element.setAttribute("chapters", chapters_final)
+    vob_element.setAttribute("file", mpg_name)
+    pgc_element.appendChild(vob_element)
+
+    try:
+        f = open(xml_file_path, 'wb')
+        doc.writexml(f, encoding='utf-8')
+        f.close()
+    except:
+        print "writing DVDAutnor xml failed"
+        return
+
+    if not do_render:
+        return
+    
+    # Render mpeg
+    # This relies on that first four renderconsumer.non_user_encodings[] objects
+    # having matching indexes to dvd_type_combo
+    enc_opt = renderconsumer.non_user_encodings[dvd_type_index]
+    if dvd_type_index == 0:
+        profile = mltprofiles.get_profile("DV/DVD PAL")
+    elif dvd_type_index == 1:
+        profile = mltprofiles.get_profile("DV/DVD Widescreen PAL")
+    elif dvd_type_index == 2:
+        profile = mltprofiles.get_profile("DV/DVD NTSC")
+    else:
+        profile = mltprofiles.get_profile("DV/DVD Widescreen NTSC")
+    
+    consumer = renderconsumer.get_render_condumer_for_encoding(render_file_path, profile, enc_opt)
+        
+    # start and end frames
+    start_frame = 0
+    end_frame = current_sequence().get_length()
+
+    # Launch render
+    global mpeg_renderer, progress_update
+    mpeg_renderer = PLAYER() # we're rendering from producer current sequence tracktor so we have to use PLAYER()
+    callbacks = utils.EmptyClass()
+    callbacks.set_render_progress_gui = set_render_progress_gui
+    callbacks.save_render_start_time = save_render_start_time
+    callbacks.exit_render_gui = exit_render_gui
+    callbacks.maybe_open_rendered_file_in_bin = maybe_open_rendered_file_in_bin
+    mpeg_renderer.set_render_callbacks(callbacks)
+    mpeg_renderer.start_rendering(consumer)
+
+    title = _("Rendering DVD Mpeg")
+            
+    progress_bar = gtk.ProgressBar()
+    dialog = dialogs.clip_render_progress_dialog(_mpeg_render_stop, title, render_file_path, progress_bar, gui.editor_window.window)
+    
+    progress_update = renderconsumer.ProgressWindowThread(dialog, progress_bar, mpeg_renderer, _mpeg_render_stop)
+    progress_update.start()
+
+def _mpeg_render_stop(dialog, response_id):
     dialog.destroy()
 
+    global mpeg_renderer, progress_update
+    mpeg_renderer.running = False
+    progress_update.running = False
+    mpeg_renderer = None
+    progress_update = None
+    
 def MELT_XML_export():
     dialogs.export_xml_dialog(_export_melt_xml_dialog_callback, PROJECT().name)
 
@@ -66,3 +157,18 @@ def _export_melt_xml_dialog_callback(dialog, response_id):
         dialog.destroy()
     else:
         dialog.destroy()
+
+
+# ----------------------- mlt player render callbacks, we need to set these no-op when not doing standard rendering
+# ----------------------- we're using different progress update mechanisms here
+def set_render_progress_gui(fraction):
+    pass
+    
+def save_render_start_time():
+    pass
+
+def exit_render_gui():
+    pass
+
+def maybe_open_rendered_file_in_bin():
+    pass

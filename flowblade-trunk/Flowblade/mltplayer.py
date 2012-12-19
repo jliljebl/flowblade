@@ -31,7 +31,6 @@ import threading
 
 import gui
 from editorstate import timeline_visible
-import render
 import respaths
 import utils
 import updater
@@ -70,6 +69,7 @@ class Player(threading.Thread):
         self.render_stop_frame = -1
         self.render_start_frame = -1
         self.xml_render = False
+        self.render_callbacks = None
     
     def create_sdl_consumer(self):
         """
@@ -287,7 +287,9 @@ class Player(threading.Thread):
                 else:
                     render_fraction = ((float(current_frame - self.render_start_frame)) / 
                       (float(self.render_stop_frame - self.render_start_frame)))
-            render.set_render_progress_gui(render_fraction)
+            
+            self.render_callbacks.set_render_progress_gui(render_fraction)
+            #render.set_render_progress_gui(render_fraction)
             return 
 
         # If we're out of active range, seek end and and stop play back
@@ -312,10 +314,19 @@ class Player(threading.Thread):
         else:
             return gui.pos_bar.producer.get_length()
 
+    def get_render_fraction(self):
+        if self.render_stop_frame == -1:
+            return float(self.producer.frame()) / float(self.producer.get_length() - 1)
+        else:
+            return float(self.producer.frame() - self.render_start_frame) / float(self.render_stop_frame - self.render_start_frame)
+
     def start_xml_rendering(self, path):
         self.xml_render = True
         xml_consumer = mlt.Consumer(self.profile, "xml", str(path))
         self.start_rendering(xml_consumer)
+
+    def set_render_callbacks(self, callbacks):
+        self.render_callbacks = callbacks
 
     def start_rendering(self, render_consumer, start_frame=0, stop_frame=-1):
         self.ticker.stop_ticker()
@@ -329,7 +340,8 @@ class Player(threading.Thread):
         self.producer.set_speed(1)
         self.consumer.start()
         self.is_rendering = True
-        render.save_render_start_time()
+        self.render_callbacks.save_render_start_time()
+        #render.save_render_start_time()
         self.ticker.start_ticker()
 
     def stop_rendering(self):
@@ -339,8 +351,10 @@ class Player(threading.Thread):
         self.connect_and_start()
         self.seek_frame(0)
         if self.xml_render == False:
-            render.exit_render_gui()
-            render.maybe_open_rendered_file_in_bin()
+            self.render_callbacks.exit_render_gui()
+            #render.exit_render_gui()
+            self.render_callbacks.maybe_open_rendered_file_in_bin()
+            #render.maybe_open_rendered_file_in_bin()
         else:
             self.xml_render == False
 
