@@ -27,10 +27,12 @@ import sys
 import appconsts
 from editorstate import PROJECT
 from editorstate import PLAYER
+from editorstate import current_sequence
 import keyframeeditor
 import mltfilters
 import mlttransitions
 import translations
+import utils
 
 EDITOR = "editor"
 
@@ -52,6 +54,7 @@ NO_EDITOR = "no_editor"                                     # No editor displaye
 
 COMPOSITE_EDITOR_BUILDER = "composite_properties"           # Creates a single row editor for multiple properties of composite transition
 REGION_EDITOR_BUILDER = "region_properties"                 # Creates a single row editor for multiple properties of region transition
+ROTATION_GEOMETRY_EDITOR_BUILDER = "rotation_geometry_editor" # Creates a single editor for multiple geometry values
 
 SCALE_DIGITS = "scale_digits"                               # Number of decimal digits displayed in a widget
 
@@ -365,6 +368,32 @@ def _compositor_editor_force_combo_box_callback(combo_box, data):
         deinterlace.write_value("1")
         progressive.write_value("1")
 
+def _create_rotion_geometry_editor(clip, editable_properties):
+    print "_create_rotion_geometry_editor"
+        
+    # Build a custom object that duck types for TransitionEditableProperty to use in editor
+    ep = utils.EmptyClass()
+    # pack real properties to go
+    ep.x = filter(lambda ep: ep.name == "x", editable_properties)[0]
+    ep.y = filter(lambda ep: ep.name == "y", editable_properties)[0]
+    ep.x_scale = filter(lambda ep: ep.name == "x scale", editable_properties)[0]
+    ep.y_scale = filter(lambda ep: ep.name == "y scale", editable_properties)[0]
+    ep.rotation = filter(lambda ep: ep.name == "rotation", editable_properties)[0]
+    ep.opacity = filter(lambda ep: ep.name == "opacity", editable_properties)[0]
+    # duck type methods, using opacity is not meaningful, any property with clip member could do
+    ep.get_clip_tline_pos = lambda : ep.opacity.clip.clip_in # clip is compositor, compositor in and out points staright in timeline frames
+    ep.get_clip_length = lambda : ep.opacity.clip.clip_out - ep.opacity.clip.clip_in + 1
+    ep.get_input_range_adjustment = lambda : gtk.Adjustment(float(100), float(0), float(100), float(1))
+    ep.get_display_name = lambda : "Opacity"
+    ep.get_pixel_aspect_ratio = lambda : (float(current_sequence().profile.sample_aspect_num()) / current_sequence().profile.sample_aspect_den())
+    ep.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
+    ep.write_out_keyframes = lambda w_kf : keyframeeditor.rotating_ge_write_out_keyframes(ep, w_kf)
+    # duck type members
+    ep.value = "0=0"
+
+    kf_edit = keyframeeditor.RotatingGeometryEditor(ep, False)
+    return kf_edit
+
 def _create_region_editor(clip, editable_properties):
     aligned = filter(lambda ep: ep.name == "composite.aligned", editable_properties)[0]
     distort = filter(lambda ep: ep.name == "composite.distort", editable_properties)[0]
@@ -509,5 +538,6 @@ EDITOR_ROW_CREATORS = { \
     CLIP_FRAME_SLIDER: lambda ep: _get_clip_frame_slider(ep),
     NO_EDITOR: lambda ep: _get_no_editor(),
     COMPOSITE_EDITOR_BUILDER: lambda comp, editable_properties: _create_composite_editor(comp, editable_properties),
-    REGION_EDITOR_BUILDER: lambda comp, editable_properties: _create_region_editor(comp, editable_properties)
+    REGION_EDITOR_BUILDER: lambda comp, editable_properties: _create_region_editor(comp, editable_properties),
+    ROTATION_GEOMETRY_EDITOR_BUILDER: lambda comp, editable_properties: _create_rotion_geometry_editor(comp, editable_properties)
     }

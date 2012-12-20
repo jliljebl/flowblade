@@ -116,7 +116,7 @@ def init_module():
                     (_("Dissolve"),_create_dissolve_compositor),
                     (_("Picture in Picture"),_create_pict_in_pict_compositor),
                     (_("Region"), _create_region_wipe_compositor),
-                    #(_("Affine Blend"), _create_affine_blend_compositor),
+                    (_("Affine Blend"), _create_affine_blend_compositor),
                     (_("Wipe Clip Length"), _create_wipe_compositor)]
 
     # name -> mlt_compositor_transition_infos key dict.
@@ -158,7 +158,7 @@ class CompositorTransitionInfo:
         # Property args saved in propertyname -> propertyargs_string dict
         self.property_args = propertyparse.node_list_to_args_dict(p_node_list)
         
-        #  Extra editors that handle hardcoded properties that have been set "no_editor"
+        #  Extra editors that handle properties that have been set "no_editor"
         e_node_list = compositor_node.getElementsByTagName(EXTRA_EDITOR)
         self.extra_editors = propertyparse.node_list_to_extraeditors_array(e_node_list)  
 

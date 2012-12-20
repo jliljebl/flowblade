@@ -24,14 +24,16 @@ compositors.
 
 NOTE: All the editors are composites of smaller objects (so that similar 
 but slighly different editors can be made in the future). There are a lots 
-of callbacks to parent objects, and the naming of the classes isn't probably 
-very good, so this may not be as readable code as it perhaps could be.
+of callbacks to parent objects, this makes design difficult to follow.
+
 """
+
 import cairo
 import copy
 import gtk
 import math
 import pango
+from itertools import izip
 
 from cairoarea import CairoDrawableArea
 import appconsts
@@ -66,7 +68,7 @@ GEOMETRY_EDITOR_WIDTH = 250
 GEOMETRY_EDITOR_HEIGHT = 200
 GEOM_EDITOR_SIZE_LARGE = 0.9
 GEOM_EDITOR_SIZE_SMALL = 0.3
-GEOM_EDITOR_SIZE_MEDIUM = 0.6 # screensize as fraction of available height
+GEOM_EDITOR_SIZE_MEDIUM = 0.6 # displayed screensize as fraction of available height
 GEOM_EDITOR_SIZES = [GEOM_EDITOR_SIZE_LARGE, GEOM_EDITOR_SIZE_MEDIUM, GEOM_EDITOR_SIZE_SMALL]
 
 # rectangle edit handles ids. Points numbered in clockwise direction to get opposite points easily.
@@ -79,9 +81,17 @@ BOTTOM_MIDDLE = 5
 BOTTOM_LEFT = 6
 MIDDLE_LEFT = 7
 
+# rotaing rectangle handle ids
+POS_CENTER = 0
+X_SCALE_HANDLE = 1
+Y_SCALE_HANDLE = 2
+
 # hit values for rect, edit point hits return edit point id
 AREA_HIT = 9
 NO_HIT = 10
+
+# hit values for rotating geom edits, NO_HIT used too
+POS_EDIT_HIT = 0
 
 # Colors
 POINTER_COLOR = (1, 0.3, 0.3)
@@ -500,6 +510,7 @@ class ClipKeyFrameEditor:
         frame, val = self.keyframes.pop(self.active_kf_index)
         self.keyframes.insert(self.active_kf_index,(new_frame, val))
 
+# -------------------------------------------------------------- shape objects
 class EditRect:
     """
     Line box with corner and middle handles that user can use to set
@@ -659,27 +670,20 @@ class EditRect:
             cr.set_source_rgb(0,1,0)
             cr.rectangle(x - 2, y - 2, 4, 4)
             cr.fill()
-        
+
+# ---------------------------------------------------- screen editors
 def _geom_kf_sort(kf):
     """
     Function is used to sort keyframes by frame number.
     """
-    frame, rect, opacity = kf
+    frame, shape, opacity = kf
     return frame 
         
-class GeometryKeyFrameEditor:
-    """
-    GUI component for editing position and scale values of keyframes 
-    of source image in compositors. 
-    
-    Component is used as a part of e.g GeometryEditor, which handles
-    also keyframe creation and deletion and opacity, and
-    writing out the keyframes with combined information.
 
-    Needed parent_editor callback interface:
-        def geometry_edit_started(self)
-        def geometry_edit_finished(self)
-        def update_request_from_geom_editor(self)
+class AbstractScreenEditor:
+    """
+    Base class for editors used to edit something on top of rectangle representing 
+    screen.
     """
     def __init__(self, editable_property, parent_editor):
         self.widget = CairoDrawableArea(GEOMETRY_EDITOR_WIDTH, 
@@ -693,10 +697,9 @@ class GeometryKeyFrameEditor:
         self.clip_length = editable_property.get_clip_length()
         self.pixel_aspect_ratio = editable_property.get_pixel_aspect_ratio()
         self.current_clip_frame = 0
-        self.source_edit_rect = None # Created later when we have allocation available
         
         # Keyframe tuples are of type (frame, rect, opacity)
-        self.keyframes = None # Set using set_keyframes()
+        self.keyframes = None # Set using set_keyframes() keyframes are in form [frame, shape, opacity]
         self.keyframe_parser = None # Function used to parse keyframes to tuples is different for different expressions
                                     # Parent editor sets this.
             
@@ -716,49 +719,63 @@ class GeometryKeyFrameEditor:
         self.source_height = source_height
         self.y_fract = y_fract
         self.screen_ratio = float(source_width) / float(source_height)
-    
+
+    # ---------------------------------------------------- draw params
+    def _create_coords(self):
+        self.coords = utils.EmptyClass()
+        panel_w = self.widget.allocation.width
+        panel_h = self.widget.allocation.height
+        self.coords.screen_h = panel_h * self.y_fract
+        self.coords.screen_w = self.coords.screen_h * self.screen_ratio * self.pixel_aspect_ratio
+        self.coords.orig_x = (panel_w - self.coords.screen_w) / 2.0
+        self.coords.orig_y = (panel_h - self.coords.screen_h) / 2.0
+        self.coords.x_scale = self.source_width / self.coords.screen_w
+        self.coords.y_scale = self.source_height / self.coords.screen_h
+
     def set_view_size(self, y_fract):
         self.y_fract = y_fract
         self._create_coords()
 
-    def set_keyframes(self, keyframes_str, out_to_in_func):
-        self.keyframes = self.keyframe_parser(keyframes_str, out_to_in_func)
-    
-    def set_keyframe_frame(self, active_kf_index, frame):
-        old_frame, rect, opacity = self.keyframes[active_kf_index]
-        self.keyframes.pop(active_kf_index)
-        self.keyframes.insert(active_kf_index, (frame, rect, opacity))        
-
-    def reset_active_keyframe_rect(self, active_kf_index):
-        frame, old_rect, opacity = self.keyframes[active_kf_index]
-        rect = [0, 0, self.source_width, self.source_height]
-        self.keyframes.pop(active_kf_index)
-        self.keyframes.insert(active_kf_index, (frame, rect, opacity))     
-
-    def reset_active_keyframe_rect_ratio(self, active_kf_index):
-        frame, old_rect, opacity = self.keyframes[active_kf_index]
-        x, y, w, h = old_rect
-        new_h = int(float(w) * (float(self.source_height) / float(self.source_width)))
-        rect = [x, y, w, new_h]
-        self.keyframes.pop(active_kf_index)
-        self.keyframes.insert(active_kf_index, (frame, rect, opacity))   
-
-    def center_h_active_keyframe_rect(self, active_kf_index):
-        frame, old_rect, opacity = self.keyframes[active_kf_index]
-        ox, y, w, h = old_rect
-        x = self.source_width / 2 - w / 2
-        rect = [x, y, w, h ]
-        self.keyframes.pop(active_kf_index)
-        self.keyframes.insert(active_kf_index, (frame, rect, opacity))
-
-    def center_v_active_keyframe_rect(self, active_kf_index):
-        frame, old_rect, opacity = self.keyframes[active_kf_index]
-        x, oy, w, h = old_rect
-        y = self.source_height / 2 - h / 2
-        rect = [x, y, w, h ]
-        self.keyframes.pop(active_kf_index)
-        self.keyframes.insert(active_kf_index, (frame, rect, opacity))
+    def get_screen_x(self, x):
+        p_x_from_origo = x - self.coords.orig_x
+        return p_x_from_origo * self.coords.x_scale
         
+    def get_screen_y(self, y):
+        p_y_from_origo = y - self.coords.orig_y
+        return p_y_from_origo * self.coords.y_scale
+
+    def get_panel_point(self, x, y):
+        px = self.coords.orig_x + x / self.coords.x_scale
+        py = self.coords.orig_y + y / self.coords.y_scale
+        return (px, py)       
+
+    # --------------------------------------------------------- updates 
+    def set_clip_frame(self, frame):
+        self.current_clip_frame = frame
+        self._clip_frame_changed()
+    
+    def _clip_frame_changed(self):
+        print "_clip_frame_changed not impl"
+
+    def set_keyframe_to_edit_shape(self, kf_index):
+        value_shape = self._get_current_screen_shape()
+        
+        frame, shape, opacity = self.keyframes[kf_index]
+        self.keyframes.pop(kf_index)
+        
+        new_kf = (frame, value_shape, opacity)
+        self.keyframes.append(new_kf)
+        self.keyframes.sort(key=_geom_kf_sort)
+        
+        self._update_shape()
+    
+    def _get_current_screen_shape(self):
+        print "_get_current_screen_shape not impl"
+    
+    def _update_shape(self):
+        print "_update_shape not impl"
+
+    # ------------------------------------------------- keyframes
     def add_keyframe(self, frame):
         if self._frame_has_keyframe(frame) == True:
             return
@@ -766,18 +783,18 @@ class GeometryKeyFrameEditor:
         # Get previous keyframe
         prev_kf = None
         for i in range(0, len(self.keyframes)):
-            p_frame, p_rect, p_opacity = self.keyframes[i]
+            p_frame, p_shape, p_opacity = self.keyframes[i]
             if p_frame < frame:
                 prev_kf = self.keyframes[i]                
         if prev_kf == None:
             prev_kf = self.keyframes[len(self.keyframes) - 1]
         
         # Add with values of previous
-        p_frame, p_rect, p_opacity = prev_kf
-        self.keyframes.append((frame, copy.deepcopy(p_rect), copy.deepcopy(p_opacity)))
+        p_frame, p_shape, p_opacity = prev_kf
+        self.keyframes.append((frame, copy.deepcopy(p_shape), copy.deepcopy(p_opacity)))
         
         self.keyframes.sort(key=_geom_kf_sort)
-    
+        
     def delete_active_keyframe(self, keyframe_index):
         #print keyframe_index
         if keyframe_index == 0:
@@ -793,23 +810,180 @@ class GeometryKeyFrameEditor:
                 return True
 
         return False
+
+    def set_keyframes(self, keyframes_str, out_to_in_func):
+        self.keyframes = self.keyframe_parser(keyframes_str, out_to_in_func)
+    
+    def set_keyframe_frame(self, active_kf_index, frame):
+        old_frame, shape, opacity = self.keyframes[active_kf_index]
+        self.keyframes.pop(active_kf_index)
+        self.keyframes.insert(active_kf_index, (frame, shape, opacity))    
+    
+    # ---------------------------------------------------- editor menu actions
+    def reset_active_keyframe_shape(self, active_kf_index):
+        print "reset_active_keyframe_shape not impl"
+
+    def reset_active_keyframe_rect_shape(self, active_kf_index):
+        print "reset_active_keyframe_rect_shape not impl" 
+
+    def center_h_active_keyframe_shape(self, active_kf_index):
+        print "center_h_active_keyframe_shape not impl"
+
+    def center_v_active_keyframe_shape(self, active_kf_index):
+        print "center_v_active_keyframe_shape not impl"
+
+    # ------------------------------------------------------ arrow edit
+    def handle_arrow_edit(self, keyval):
+        print "handle_arrow_edit not impl"
+
+    # -------------------------------------------------------- mouse events
+    def _press_event(self, event):
+        """
+        Mouse button callback
+        """
+        self.current_mouse_hit = self._check_shape_hit(event.x, event.y)
+        if self.current_mouse_hit == NO_HIT:
+            return
         
-    def set_clip_frame(self, frame):
-        self.current_clip_frame = frame
+        self.mouse_start_x = event.x
+        self.mouse_start_y = event.y
+
+        self._shape_press_event()
+
+        self.parent_editor.geometry_edit_started()
+        self.parent_editor.update_request_from_geom_editor()
+
+    def _check_shape_hit(self, x, y):
+        print "_check_shape_hit not impl"
+
+    def _shape_press_event(self):
+        print "_shape_press_event not impl"
+        
+    def _motion_notify_event(self, x, y, state):
+        """
+        Mouse move callback
+        """
+        if self.current_mouse_hit == NO_HIT:
+            return
+        
+        delta_x = x - self.mouse_start_x
+        delta_y = y - self.mouse_start_y
+        
+        self._shape__motion_notify_event(delta_x, delta_y)
+
+        self.parent_editor.queue_draw()
+    
+    def _shape__motion_notify_event(self, delta_x, delta_y):
+        print "_shape__motion_notify_event not impl"
+
+    
+    def _release_event(self, event):
+        if self.current_mouse_hit == NO_HIT:
+            return
+            
+        delta_x = event.x - self.mouse_start_x
+        delta_y = event.y - self.mouse_start_y
+
+        self._shape_release_event(delta_x, delta_y)
+            
+        self.parent_editor.geometry_edit_finished()
+
+    def _shape_release_event(self, delta_x, delta_y):
+        print "_shape_release_event not impl"
+        
+    # ----------------------------------------------- drawing
+    def _draw(self, event, cr, allocation):
+        """
+        Callback for repaint from CairoDrawableArea.
+        We get cairo contect and allocation.
+        """
+        if self.coords == None:
+            self._create_coords()
+        
+        x, y, w, h = allocation
+        
+        # Draw bg
+        cr.set_source_rgb(*(gui.bg_color_tuple))
+        cr.rectangle(0, 0, w, h)
+        cr.fill()
+        
+        # Draw screen
+        cr.set_source_rgb(0.6, 0.6, 0.6)
+        cr.rectangle(self.coords.orig_x, self.coords.orig_y, 
+                       self.coords.screen_w, self.coords.screen_h)
+        cr.fill()
+
+        screen_rect = [self.coords.orig_x, self.coords.orig_y, 
+                       self.coords.screen_w, self.coords.screen_h]
+        self._draw_edge(cr, screen_rect)
+        
+        self._draw_edit_shape(cr, allocation)
+
+    def _draw_edge(self, cr, rect):
+        cr.set_line_width(1.0)
+        cr.set_source_rgb(0, 0, 0)
+        cr.rectangle(rect[0] + 0.5, rect[1] + 0.5, rect[2], rect[3])
+        cr.stroke()
+
+    def _draw_edit_shape(self, cr, allocation):
+        print "_draw_edit_shape not impl."
+        
+
+class BoxGeometryScreenEditor(AbstractScreenEditor):
+    """
+    GUI component for editing position and scale values of keyframes 
+    of source image in compositors. 
+    
+    Component is used as a part of e.g GeometryEditor, which handles
+    also keyframe creation and deletion and opacity, and
+    writing out the keyframes with combined information.
+
+    Needed parent_editor callback interface:
+        def geometry_edit_started(self)
+        def geometry_edit_finished(self)
+        def update_request_from_geom_editor(self)
+    """
+    def __init__(self, editable_property, parent_editor):
+        AbstractScreenEditor.__init__(self, editable_property, parent_editor)
+        self.source_edit_rect = None # Created later when we have allocation available
+
+    def reset_active_keyframe_shape(self, active_kf_index):
+        frame, old_rect, opacity = self.keyframes[active_kf_index]
+        rect = [0, 0, self.source_width, self.source_height]
+        self.keyframes.pop(active_kf_index)
+        self.keyframes.insert(active_kf_index, (frame, rect, opacity))     
+
+    def reset_active_keyframe_rect_shape(self, active_kf_index):
+        frame, old_rect, opacity = self.keyframes[active_kf_index]
+        x, y, w, h = old_rect
+        new_h = int(float(w) * (float(self.source_height) / float(self.source_width)))
+        rect = [x, y, w, new_h]
+        self.keyframes.pop(active_kf_index)
+        self.keyframes.insert(active_kf_index, (frame, rect, opacity))   
+
+    def center_h_active_keyframe_shape(self, active_kf_index):
+        frame, old_rect, opacity = self.keyframes[active_kf_index]
+        ox, y, w, h = old_rect
+        x = self.source_width / 2 - w / 2
+        rect = [x, y, w, h ]
+        self.keyframes.pop(active_kf_index)
+        self.keyframes.insert(active_kf_index, (frame, rect, opacity))
+
+    def center_v_active_keyframe_shape(self, active_kf_index):
+        frame, old_rect, opacity = self.keyframes[active_kf_index]
+        x, oy, w, h = old_rect
+        y = self.source_height / 2 - h / 2
+        rect = [x, y, w, h ]
+        self.keyframes.pop(active_kf_index)
+        self.keyframes.insert(active_kf_index, (frame, rect, opacity))
+
+    def _clip_frame_changed(self):
         if self.source_edit_rect != None:
             self._update_source_rect()
-            
-    def set_keyframe_to_edit_rect(self, kf_index):
-        value_rect = self._get_source_edit_rect_to_screen_rect()
-        frame, rect, opacity = self.keyframes[kf_index]
-        self.keyframes.pop(kf_index)
-        new_kf = (frame, value_rect, opacity)
-        self.keyframes.append(new_kf)
-        
-        self.keyframes.sort(key=_geom_kf_sort)
-        
+    
+    def _update_shape(self):
         self._update_source_rect()
-
+    
     def _update_source_rect(self):
         for i in range(0, len(self.keyframes)):
             frame, rect, opacity = self.keyframes[i]
@@ -853,6 +1027,9 @@ class GeometryKeyFrameEditor:
         ph = h / self.coords.y_scale # scale is panel to screen, this is screen to panel
         return (px, py, pw, ph)
     
+    def _get_current_screen_shape(self):
+        return self._get_source_edit_rect_to_screen_rect()
+
     def _get_source_edit_rect_to_screen_rect(self):
         p_x_from_origo = self.source_edit_rect.x - self.coords.orig_x
         p_y_from_origo = self.source_edit_rect.y - self.coords.orig_y
@@ -863,43 +1040,8 @@ class GeometryKeyFrameEditor:
         screen_h = self.source_edit_rect.h * self.coords.y_scale
         
         return [screen_x, screen_y, screen_w, screen_h]
-        
-    def _create_coords(self):
-        self.coords = utils.EmptyClass()
-        panel_w = self.widget.allocation.width
-        panel_h = self.widget.allocation.height
-        self.coords.screen_h = panel_h * self.y_fract
-        self.coords.screen_w = self.coords.screen_h * self.screen_ratio * self.pixel_aspect_ratio
-        self.coords.orig_x = (panel_w - self.coords.screen_w) / 2.0
-        self.coords.orig_y = (panel_h - self.coords.screen_h) / 2.0
-        self.coords.x_scale = self.source_width / self.coords.screen_w
-        self.coords.y_scale = self.source_height / self.coords.screen_h
-        
-    def _draw(self, event, cr, allocation):
-        """
-        Callback for repaint from CairoDrawableArea.
-        We get cairo contect and allocation.
-        """
-        if self.coords == None:
-            self._create_coords()
-        
-        x, y, w, h = allocation
-        
-        # Draw bg
-        cr.set_source_rgb(*(gui.bg_color_tuple))
-        cr.rectangle(0, 0, w, h)
-        cr.fill()
-        
-        # Draw screen
-        cr.set_source_rgb(0.6, 0.6, 0.6)
-        cr.rectangle(self.coords.orig_x, self.coords.orig_y, 
-                       self.coords.screen_w, self.coords.screen_h)
-        cr.fill()
 
-        screen_rect = [self.coords.orig_x, self.coords.orig_y, 
-                       self.coords.screen_w, self.coords.screen_h]
-        self._draw_edge(cr, screen_rect)
-        
+    def _draw_edit_shape(self, cr, allocation):
         # Edit rect is created here only when we're sure to have allocation
         if self.source_edit_rect == None:
             self.source_edit_rect = EditRect(10, 10, 10, 10) # values are immediatyly overwritten
@@ -908,71 +1050,121 @@ class GeometryKeyFrameEditor:
         # Draw source
         self.source_edit_rect.draw(cr)
 
-    def _draw_edge(self, cr, rect):
-        cr.set_line_width(1.0)
-        cr.set_source_rgb(0, 0, 0)
-        cr.rectangle(rect[0] + 0.5, rect[1] + 0.5, rect[2], rect[3])
-        cr.stroke()
-        
-    def _press_event(self, event):
-        """
-        Mouse button callback
-        """
-        self.current_mouse_hit = self.source_edit_rect.check_hit(event.x, event.y)
-        if self.current_mouse_hit == NO_HIT:
-            return
-        
-        self.mouse_start_x = event.x
-        self.mouse_start_y = event.y
-
+    # ----------------------------------------- mouse press event
+    def _check_shape_hit(self, x, y):
+        return self.source_edit_rect.check_hit(x, y)
+    
+    def _shape_press_event(self):
         if self.current_mouse_hit == AREA_HIT:
             self.source_edit_rect.move_started()
         else:
             self.source_edit_rect.edit_point_drag_started(self.current_mouse_hit)
 
-        self.parent_editor.geometry_edit_started()
-        self.parent_editor.update_request_from_geom_editor()
-
-    def _motion_notify_event(self, x, y, state):
-        """
-        Mouse move callback
-        """
-        if self.current_mouse_hit == NO_HIT:
-            return
-        
-        delta_x = x - self.mouse_start_x
-        delta_y = y - self.mouse_start_y
-        
+    def _shape__motion_notify_event(self, delta_x, delta_y):
         if self.current_mouse_hit == AREA_HIT:
             self.source_edit_rect.move_drag(delta_x, delta_y)
         else:
             self.source_edit_rect.edit_point_drag(delta_x, delta_y)
 
-        self.parent_editor.queue_draw()
-        
-    def _release_event(self, event):
-        """
-        Mouse release callback.
-        """
-        if self.current_mouse_hit == NO_HIT:
-            return
-            
-        delta_x = event.x - self.mouse_start_x
-        delta_y = event.y - self.mouse_start_y
-        
+    def _shape_release_event(self, delta_x, delta_y):
         if self.current_mouse_hit == AREA_HIT:
             self.source_edit_rect.move_drag(delta_x, delta_y)
         else:
             self.source_edit_rect.edit_point_drag(delta_x, delta_y)
             self.source_edit_rect.clear_projection_point()
+
+    def handle_arrow_edit(self, keyval):
+        if keyval == gtk.keysyms.Left:
+            self.source_edit_rect.x -= 1
+        if keyval == gtk.keysyms.Right:
+            self.source_edit_rect.x += 1
+        if keyval == gtk.keysyms.Up:
+            self.source_edit_rect.y -= 1
+        if keyval == gtk.keysyms.Down:                         
+            self.source_edit_rect.y += 1
             
-        self.parent_editor.geometry_edit_finished()
-    
     def print_keyframes(self):
         print "geom edit keyframes:"
         for i in range(0, len(self.keyframes)):
             print self.keyframes[i]
 
+
+class RotatingScreenEditor(AbstractScreenEditor):
+    """
+    Needed parent_editor callback interface:
+        def geometry_edit_started(self)
+        def geometry_edit_finished(self)
+        def update_request_from_geom_editor(self)
+    """
+    def __init__(self, editable_property, parent_editor):
+        AbstractScreenEditor.__init__(self, editable_property, parent_editor)
+        self.edit_points = []
+        self.shape_x = None
+        self.shape_y = None
+        
+    def create_edit_points_and_values(self):
+        # creates untransformed edit shape to init array, values will overridden shortly
+        self.edit_points.append((self.source_width / 2, self.source_height / 2)) # center
+        self.edit_points.append((self.source_width, self.source_height / 2)) # x_Scale
+        self.edit_points.append((self.source_width / 2, 0)) # x_Scale
+        self.edit_points.append((0, 0)) # rotation
+        self.edit_points.append((self.source_width, 0)) # top right
+        self.edit_points.append((self.source_width, self.source_height)) # bottom right
+        self.edit_points.append((0, self.source_height)) # bottom left
+        
+        self.shape_x = self.source_width / 2
+        self.shape_y = self.source_height / 2
+        
+    def set_edit_points(self):
+        self.edit_points[POS_CENTER] = (self.x, self.y)
+        
+    def _check_shape_hit(self, x, y):
+        if self._check_point_hit((x, y), self.get_panel_point(*self.edit_points[0]), 10):
+            return POS_EDIT_HIT
+            
+        return NO_HIT
+    
+    def _check_point_hit(self, p, ep, TARGET_HALF):
+        x, y = p
+        ex, ey = ep
+        if (x >= ex - TARGET_HALF and x <= ex + TARGET_HALF and y >= ey - TARGET_HALF and y <= ey + TARGET_HALF):
+            return True
+
+        return False
+    
+    def _shape_press_event(self):
+        self.start_edit_points = copy.deepcopy(self.edit_points)
+
+    def _shape__motion_notify_event(self, delta_x, delta_y):
+        if self.current_mouse_hit == POS_EDIT_HIT:
+            dx = self.get_screen_x(self.coords.orig_x + delta_x)
+            dy = self.get_screen_y(self.coords.orig_y + delta_y)
+            for i in range(0,len(self.edit_points)):
+                sx, sy = self.start_edit_points[i]
+                self.edit_points[i] = (sx + dx, sy + dy)
+            
+    def _shape_release_event(self, delta_x, delta_y):
+        if self.current_mouse_hit == POS_EDIT_HIT:
+            dx = self.get_screen_x(self.coords.orig_x + delta_x)
+            dy = self.get_screen_y(self.coords.orig_y + delta_y)
+            for i in range(0,len(self.edit_points)):
+                sx, sy = self.start_edit_points[i]
+                self.edit_points[i] = (sx + dx, sy + dy)
+        
+    def _draw_edit_shape(self, cr, allocation):
+        for i in range(0,4):
+            x, y = self.get_panel_point(*self.edit_points[i])
+            cr.rectangle(x - 2, y - 2, 4, 4)
+            cr.fill()
+        x, y = self.get_panel_point(*self.edit_points[3])
+        cr.move_to(x, y)
+        for i in range(4,7):
+            x, y = self.get_panel_point(*self.edit_points[i])
+            cr.line_to(x, y)
+        cr.close_path()
+        cr.stroke()
+            
+# ----------------------------------------------------------- buttons objects
 class ClipEditorButtonsRow(gtk.HBox):
     """
     Row of buttons used to navigate and add keyframes and frame 
@@ -1071,7 +1263,9 @@ class GeometryEditorButtonsRow(gtk.HBox):
         item.connect("activate", callback, data)
         item.show()
         return item
-    
+
+# ------------------------------------------------------------ master editors
+
 class AbstractKeyFrameEditor(gtk.VBox):
     """
     Extending editor is parent editor for ClipKeyFrameEditor and is updated
@@ -1140,7 +1334,7 @@ class AbstractKeyFrameEditor(gtk.VBox):
     
     def update_editor_view(self, seek_tline=True):
         print "update_editor_view not implemented"
-        
+
 class KeyFrameEditor(AbstractKeyFrameEditor):
     """
     Class combines named value slider with ClipKeyFrameEditor and 
@@ -1253,17 +1447,21 @@ class GeometryEditor(AbstractKeyFrameEditor):
     """
     def __init__(self, editable_property, use_clip_in=True):
         AbstractKeyFrameEditor.__init__(self, editable_property, use_clip_in)
-        
-        # Create components
-        self.geom_buttons_row = GeometryEditorButtonsRow(self)
-
-        self.geom_kf_edit = GeometryKeyFrameEditor(editable_property, self)
+        self.init_geom_gui(editable_property)
+        self.init_non_geom_gui()
+    
+    def init_geom_gui(self, editable_property):
+        self.geom_kf_edit = BoxGeometryScreenEditor(editable_property, self)
         self.geom_kf_edit.init_editor(current_sequence().profile.width(),
                                       current_sequence().profile.height(),
                                       GEOM_EDITOR_SIZE_MEDIUM)
         editable_property.value.strip('"')
         self.geom_kf_edit.keyframe_parser = propertyparse.geom_keyframes_value_string_to_geom_kf_array
         self.geom_kf_edit.set_keyframes(editable_property.value, editable_property.get_in_value)
+    
+    def init_non_geom_gui(self):
+        # Create components
+        self.geom_buttons_row = GeometryEditorButtonsRow(self)
         
         g_frame = gtk.Frame()
         g_frame.set_shadow_type(gtk.SHADOW_ETCHED_IN)
@@ -1345,21 +1543,13 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.geom_kf_edit.add_keyframe(self.clip_editor.current_clip_frame)
         
     def geometry_edit_finished(self): # callback from geom_kf_edit
-        self.geom_kf_edit.set_keyframe_to_edit_rect(self.clip_editor.active_kf_index)
+        self.geom_kf_edit.set_keyframe_to_edit_shape(self.clip_editor.active_kf_index)
         self.update_editor_view_with_frame(self.clip_editor.current_clip_frame)
         self.update_property_value()
     
     def arrow_edit(self, keyval):
-        if keyval == gtk.keysyms.Left:
-            self.geom_kf_edit.source_edit_rect.x -= 1
-        if keyval == gtk.keysyms.Right:
-            self.geom_kf_edit.source_edit_rect.x += 1
-        if keyval == gtk.keysyms.Up:
-            self.geom_kf_edit.source_edit_rect.y -= 1
-        if keyval == gtk.keysyms.Down:                         
-            self.geom_kf_edit.source_edit_rect.y += 1
-        
-        self.geom_kf_edit.set_keyframe_to_edit_rect(self.clip_editor.active_kf_index)
+        self.geom_kf_edit.handle_arrow_edit(keyval)
+        self.geom_kf_edit.set_keyframe_to_edit_shape(self.clip_editor.active_kf_index)
         self.update_editor_view_with_frame(self.clip_editor.current_clip_frame)
         self.update_property_value()
         
@@ -1374,25 +1564,25 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.update_editor_view_with_frame(kf_frame)
 
     def _reset_rect_pressed(self):
-        self.geom_kf_edit.reset_active_keyframe_rect(self.clip_editor.active_kf_index)
+        self.geom_kf_edit.reset_active_keyframe_shape(self.clip_editor.active_kf_index)
         frame = self.clip_editor.get_active_kf_frame()
         self.update_editor_view_with_frame(frame)
         self.update_property_value()
 
     def _reset_rect_ratio_pressed(self):
-        self.geom_kf_edit.reset_active_keyframe_rect_ratio(self.clip_editor.active_kf_index)
+        self.geom_kf_edit.reset_active_keyframe_rect_shape(self.clip_editor.active_kf_index)
         frame = self.clip_editor.get_active_kf_frame()
         self.update_editor_view_with_frame(frame)
         self.update_property_value()
 
     def _center_horizontal(self):
-        self.geom_kf_edit.center_h_active_keyframe_rect(self.clip_editor.active_kf_index)
+        self.geom_kf_edit.center_h_active_keyframe_shape(self.clip_editor.active_kf_index)
         frame = self.clip_editor.get_active_kf_frame()
         self.update_editor_view_with_frame(frame)
         self.update_property_value()
 
     def _center_vertical(self):
-        self.geom_kf_edit.center_v_active_keyframe_rect(self.clip_editor.active_kf_index)
+        self.geom_kf_edit.center_v_active_keyframe_shape(self.clip_editor.active_kf_index)
         frame = self.clip_editor.get_active_kf_frame()
         self.update_editor_view_with_frame(frame)
         self.update_property_value()
@@ -1434,7 +1624,26 @@ class GeometryEditor(AbstractKeyFrameEditor):
             write_keyframes.append((frame, rect, opacity))
         
         self.editable_property.write_out_keyframes(write_keyframes)
+        
+ 
+ 
+class RotatingGeometryEditor(GeometryEditor):
+    
+    def init_geom_gui(self, editable_property):
+        self.geom_kf_edit = RotatingScreenEditor(editable_property, self)
+        self.geom_kf_edit.init_editor(current_sequence().profile.width(),
+                                      current_sequence().profile.height(),
+                                      GEOM_EDITOR_SIZE_MEDIUM)
+        self.geom_kf_edit.create_edit_points_and_values()
+        editable_property.value.strip('"')
+        self.geom_kf_edit.keyframe_parser = propertyparse.rotating_geom_keyframes_value_string_to_geom_kf_array
+        self.geom_kf_edit.set_keyframes(editable_property.value, editable_property.get_in_value)
 
+def rotating_ge_write_out_keyframes(ep, w_kf):
+    print "write rotating keyframe keyframes2"
+
+
+# ----------------------------------------------------------------- linear interpolation
 def _get_frame_value(frame, keyframes):
     for i in range(0, len(keyframes)):
         kf_frame, kf_value = keyframes[i]

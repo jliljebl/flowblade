@@ -151,13 +151,37 @@ def geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
         values = sides[1].split(':')
         pos = values[0].split('/')
         size = values[1].split('x')
-        source_rect = [int(pos[0]), int(pos[1]), int(size[0]), int(size[1])]
+        source_rect = [int(pos[0]), int(pos[1]), int(size[0]), int(size[1])] #x,y,width,height
         add_kf = (int(sides[0]), source_rect, out_to_in_func(float(values[2])))
         new_keyframes.append(add_kf)
  
     return new_keyframes
 
-
+def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
+    # Parse extraeditor value properties value string into (frame, source_rect, opacity)
+    # keyframe tuples.
+    new_keyframes = []
+    """
+    keyframes_str = keyframes_str.strip('"') # expression have sometimes quotes that need to go away
+    kf_tokens =  keyframes_str.split(';')
+    for token in kf_tokens:
+        sides = token.split('=')
+        values = sides[1].split(':')
+        frame = int(sides[0])
+        x = values[0]
+        y = values[1]
+        x_scale = values[2]
+        y_scale = values[3]
+        rotation = values[4]
+        opacity = values[5]
+        source_rect = [x,y,x_scale,y_scale,rotation]
+        add_kf = (frame, source_rect, opacity)
+        new_keyframes.append(add_kf)
+    """
+    source_rect = [0.4,0.4, 0.2, 0.2, 0] #[x,y,x_scale,y_scale,rotation]
+    add_kf = (0, source_rect, 100)
+    new_keyframes.append(add_kf)
+    return new_keyframes
 
 
 #------------------------------------------------------ util funcs
