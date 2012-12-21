@@ -1164,10 +1164,11 @@ class RotatingScreenEditor(AbstractScreenEditor):
         if self.current_mouse_hit == POS_HANDLE:
             dx = self.get_screen_x(self.coords.orig_x + delta_x)
             dy = self.get_screen_y(self.coords.orig_y + delta_y)
-            sx, sy = self.start_edit_points[0]
+            sx = self.get_screen_x(self.mouse_start_x)
+            sy = self.get_screen_y(self.mouse_start_y)
             self.shape_x = sx + dx
             self.shape_y = sy + dy
-            self._translate_edit_points()
+            self._update_edit_points()
         elif self.current_mouse_hit == X_SCALE_HANDLE:
             dp = self.get_delta_point(delta_x, delta_y, self.edit_points[X_SCALE_HANDLE])
             pp = self.guide.get_normal_projection_point(dp)
