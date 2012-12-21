@@ -74,8 +74,9 @@
         <property name="anchor x" args="editor=no_editor">0.5</property>
         <property name="anchor y" args="editor=no_editor">0.5</property>
         <property name="opacity" args="editor=no_editor">1.0</property>
+       <extraeditor name="rotation_geometry_editor"></extraeditor> 
         <property name="blend mode" args="editor=combobox exptype=default_transition cbopts=Normal:normal,Add:add,Saturate:saturate,Multiply:multiply,Screen:screen,Overlay:overlay,Darken:darken,Lighten:lighten,ColorDodge:colordodge,Colorburn:colorburn,Hardlight:hardlight,Softlight:softlight,Difference:difference,Exclusion:exclusion,HSLHue:hslhue,HSLSaturation:hslsaturation,HSLColor:hslcolor,HSLLuminosity:hslluminosity">normal</property>
-        <extraeditor name="rotation_geometry_editor"></extraeditor> 
+ 
     </compositortransition>
 
     <!--

@@ -100,7 +100,6 @@ def distance(p1, p2):
     x2, y2 = p2
     return math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
 
-
 def get_line_for_points(p1, p2):
     m, b, is_vertical, x_icept = _get_line_params_for_points(p1, p2)
     return Line(m, b, is_vertical, x_icept)
@@ -192,8 +191,6 @@ class Vec(Line):
         # only use Vec.set_end_point_to_normal_projection() to set end point.
         self.start_point = start_point
         self.end_point = end_point
-        print start_point
-        print end_point
         self.direction = self.get_direction()
         self.orig_direction = self.direction
     

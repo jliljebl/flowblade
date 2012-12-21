@@ -82,9 +82,10 @@ BOTTOM_LEFT = 6
 MIDDLE_LEFT = 7
 
 # rotaing rectangle handle ids
-POS_CENTER = 0
+POS_HANDLE = 0
 X_SCALE_HANDLE = 1
 Y_SCALE_HANDLE = 2
+ROTATION_HANDLE = 3
 
 # hit values for rect, edit point hits return edit point id
 AREA_HIT = 9
@@ -1106,22 +1107,28 @@ class RotatingScreenEditor(AbstractScreenEditor):
         # creates untransformed edit shape to init array, values will overridden shortly
         self.edit_points.append((self.source_width / 2, self.source_height / 2)) # center
         self.edit_points.append((self.source_width, self.source_height / 2)) # x_Scale
-        self.edit_points.append((self.source_width / 2, 0)) # x_Scale
+        self.edit_points.append((self.source_width / 2, 0)) # y_Scale
         self.edit_points.append((0, 0)) # rotation
         self.edit_points.append((self.source_width, 0)) # top right
         self.edit_points.append((self.source_width, self.source_height)) # bottom right
         self.edit_points.append((0, self.source_height)) # bottom left
-        
-        self.shape_x = self.source_width / 2
-        self.shape_y = self.source_height / 2
+
+        self.untrans_points = copy.deepcopy(self.edit_points)
+     
+        self.shape_x = self.source_width / 2 # always == self.edit_points[0] x
+        self.shape_y = self.source_height / 2 # always == self.edit_points[0] y
+        self.rotation = 0.0
+        self.x_scale = 1.0
+        self.y_scale = 1.0
         
     def set_edit_points(self):
         self.edit_points[POS_CENTER] = (self.x, self.y)
         
     def _check_shape_hit(self, x, y):
-        if self._check_point_hit((x, y), self.get_panel_point(*self.edit_points[0]), 10):
-            return POS_EDIT_HIT
-            
+        for i in range(0, 4):
+            if self._check_point_hit((x, y), self.get_panel_point(*self.edit_points[i]), 10):
+                return i #indexes correspond to edit_point_handle indexes
+
         return NO_HIT
     
     def _check_point_hit(self, p, ep, TARGET_HALF):
@@ -1135,22 +1142,114 @@ class RotatingScreenEditor(AbstractScreenEditor):
     def _shape_press_event(self):
         self.start_edit_points = copy.deepcopy(self.edit_points)
 
-    def _shape__motion_notify_event(self, delta_x, delta_y):
-        if self.current_mouse_hit == POS_EDIT_HIT:
-            dx = self.get_screen_x(self.coords.orig_x + delta_x)
-            dy = self.get_screen_y(self.coords.orig_y + delta_y)
-            for i in range(0,len(self.edit_points)):
-                sx, sy = self.start_edit_points[i]
-                self.edit_points[i] = (sx + dx, sy + dy)
+        if self.current_mouse_hit == X_SCALE_HANDLE:
+            self.guide = viewgeom.get_vec_for_points((self.shape_x,self.shape_y), self.edit_points[X_SCALE_HANDLE])
+        elif self.current_mouse_hit == Y_SCALE_HANDLE:
+            self.guide = viewgeom.get_vec_for_points((self.shape_x,self.shape_y), self.edit_points[Y_SCALE_HANDLE])
+        elif self.current_mouse_hit == ROTATION_HANDLE:
+            ax, ay = self.edit_points[POS_HANDLE]
+            zero_deg_point = (ax, ay + 10)
+            m_end_point = (self.get_screen_x(self.mouse_start_x), self.get_screen_y(self.mouse_start_y))
+            self.mouse_start_rotation = viewgeom.get_angle_in_deg(zero_deg_point, self.edit_points[POS_HANDLE], m_end_point)
+            self.mouse_rotation_last = 0.0
+            self.rotation_value_start = self.rotation
             
+    def _shape__motion_notify_event(self, delta_x, delta_y):
+        self._update_values_for_mouse_delta(delta_x, delta_y)
+
     def _shape_release_event(self, delta_x, delta_y):
-        if self.current_mouse_hit == POS_EDIT_HIT:
+        self._update_values_for_mouse_delta(delta_x, delta_y)
+    
+    def _update_values_for_mouse_delta(self, delta_x, delta_y):
+        if self.current_mouse_hit == POS_HANDLE:
             dx = self.get_screen_x(self.coords.orig_x + delta_x)
             dy = self.get_screen_y(self.coords.orig_y + delta_y)
-            for i in range(0,len(self.edit_points)):
-                sx, sy = self.start_edit_points[i]
-                self.edit_points[i] = (sx + dx, sy + dy)
+            sx, sy = self.start_edit_points[0]
+            self.shape_x = sx + dx
+            self.shape_y = sy + dy
+            self._translate_edit_points()
+        elif self.current_mouse_hit == X_SCALE_HANDLE:
+            dp = self.get_delta_point(delta_x, delta_y, self.edit_points[X_SCALE_HANDLE])
+            pp = self.guide.get_normal_projection_point(dp)
+            dist = viewgeom.distance(self.edit_points[POS_HANDLE], pp)
+            orig_dist = viewgeom.distance(self.untrans_points[POS_HANDLE], self.untrans_points[X_SCALE_HANDLE])
+            self.x_scale = dist / orig_dist
+            self._update_edit_points()
+        elif self.current_mouse_hit == Y_SCALE_HANDLE:
+            dp = self.get_delta_point(delta_x, delta_y, self.edit_points[Y_SCALE_HANDLE])
+            pp = self.guide.get_normal_projection_point(dp)
+            dist = viewgeom.distance(self.edit_points[POS_HANDLE], pp)
+            orig_dist = viewgeom.distance(self.untrans_points[POS_HANDLE], self.untrans_points[Y_SCALE_HANDLE])
+            self.y_scale = dist / orig_dist
+            self._update_edit_points()
+        elif self.current_mouse_hit == ROTATION_HANDLE:
+            ax, ay = self.edit_points[POS_HANDLE]
+            
+            m_start_point = (self.get_screen_x(self.mouse_start_x), self.get_screen_y(self.mouse_start_y))
+            m_end_point = (self.get_screen_x(self.mouse_start_x + delta_x), self.get_screen_y(self.mouse_start_y + delta_y))
+            current_mouse_rotation = self.get_mouse_rotation_angle(self.edit_points[POS_HANDLE], m_start_point, m_end_point)
+
+            self.rotation = self.rotation_value_start + current_mouse_rotation
+            self._update_edit_points()
+
+    def get_mouse_rotation_angle(self, anchor, mr_start, mr_end):
+        angle = viewgeom.get_angle_in_deg(mr_start, anchor, mr_end)
+        clockw = viewgeom.points_clockwise(mr_start, anchor, mr_end)
+        if not clockw: 
+            angle = -angle
+
+        # Crossed angle for 180 -> 181... range
+        crossed_angle = angle + 360.0
+
+        # Crossed angle for -180 -> 181 ...range.
+        if angle > 0:
+            crossed_angle = -360.0 + angle
+
+        # See if crossed angle closer to last angle.
+        if abs(self.mouse_rotation_last - crossed_angle) < abs(self.mouse_rotation_last - angle):
+            angle = crossed_angle
+
+        # Set last to get good results next time.
+        self.mouse_rotation_last = angle
+
+        return angle
         
+    def get_delta_point(self, delta_x, delta_y, ep):
+        dx = self.get_screen_x(self.coords.orig_x + delta_x)
+        dy = self.get_screen_y(self.coords.orig_y + delta_y)
+        sx = self.get_screen_x(self.mouse_start_x)
+        sy = self.get_screen_y(self.mouse_start_y)
+        return (sx + dx, sy + dy)
+
+    def _update_edit_points(self):
+        self.edit_points = copy.deepcopy(self.untrans_points) #reset before transform
+        self._translate_edit_points()
+        self._scale_edit_points()
+        self._rotate_edit_points()
+    
+    def _translate_edit_points(self):
+        ux, uy = self.untrans_points[0]
+        dx = self.shape_x - ux
+        dy = self.shape_y - uy
+        for i in range(0,len(self.edit_points)):
+            sx, sy = self.untrans_points[i]
+            self.edit_points[i] = (sx + dx, sy + dy)
+    
+    def _scale_edit_points(self):
+        ax, ay = self.edit_points[0]
+        sax, say = self.untrans_points[0]
+        for i in range(1, 7):
+            sx, sy = self.untrans_points[i]
+            x = ax + self.x_scale * (sx - sax)
+            y = ay + self.y_scale * (sy - say)
+            self.edit_points[i] = (x, y)
+
+    def _rotate_edit_points(self):
+        ax, ay = self.edit_points[0]
+        for i in range(1, 7):
+            x, y = viewgeom.rotate_point_around_point(self.rotation, self.edit_points[i], self.edit_points[0])
+            self.edit_points[i] = (x, y)
+
     def _draw_edit_shape(self, cr, allocation):
         for i in range(0,4):
             x, y = self.get_panel_point(*self.edit_points[i])
