@@ -518,7 +518,7 @@ class EditRect:
     position, width and height of rectangle geometry.
     """
     def __init__(self, x, y, w, h):
-        self.editable = True
+        #self.editable = True
         self.edit_points = {}
         self.x = x
         self.y = y
@@ -778,6 +778,7 @@ class AbstractScreenEditor:
 
     # ------------------------------------------------- keyframes
     def add_keyframe(self, frame):
+        print "hailou"
         if self._frame_has_keyframe(frame) == True:
             return
 
@@ -990,7 +991,7 @@ class BoxGeometryScreenEditor(AbstractScreenEditor):
             frame, rect, opacity = self.keyframes[i]
             if frame == self.current_clip_frame:
                 self.source_edit_rect.set_geom(*self._get_screen_to_panel_rect(rect))
-                self.source_edit_rect.editable = True
+                #self.source_edit_rect.editable = True
                 return
             
             try:
@@ -1002,11 +1003,11 @@ class BoxGeometryScreenEditor(AbstractScreenEditor):
                                  float((frame_n - frame))
                     frame_rect = self._get_interpolated_rect(rect, rect_n, time_fract)
                     self.source_edit_rect.set_geom(*self._get_screen_to_panel_rect(frame_rect))
-                    self.source_edit_rect.editable = False
+                    #self.source_edit_rect.editable = False
                     return
             except: # past last frame, use its value
                 self.source_edit_rect.set_geom(*self._get_screen_to_panel_rect(rect))
-                self.source_edit_rect.editable = False
+                #self.source_edit_rect.editable = False
                 return
                 
         print "reached end of _update_source_rect, this should be unreachable"
@@ -1096,12 +1097,17 @@ class RotatingScreenEditor(AbstractScreenEditor):
         def geometry_edit_started(self)
         def geometry_edit_finished(self)
         def update_request_from_geom_editor(self)
+        
+    Keyframes in form: [frame, [x, y, x_scale, y_scale, rotation] opacity]
     """
     def __init__(self, editable_property, parent_editor):
         AbstractScreenEditor.__init__(self, editable_property, parent_editor)
         self.edit_points = []
         self.shape_x = None
         self.shape_y = None
+        self.rotation = None
+        self.x_scale = None
+        self.y_scale = None
         
     def create_edit_points_and_values(self):
         # creates untransformed edit shape to init array, values will overridden shortly
@@ -1121,9 +1127,7 @@ class RotatingScreenEditor(AbstractScreenEditor):
         self.x_scale = 1.0
         self.y_scale = 1.0
         
-    def set_edit_points(self):
-        self.edit_points[POS_CENTER] = (self.x, self.y)
-        
+    # ------------------------------------------ hit testing
     def _check_shape_hit(self, x, y):
         for i in range(0, 4):
             if self._check_point_hit((x, y), self.get_panel_point(*self.edit_points[i]), 10):
@@ -1138,7 +1142,58 @@ class RotatingScreenEditor(AbstractScreenEditor):
             return True
 
         return False
+
+    # -------------------------------------------------------- updating
+    def _clip_frame_changed(self):
+        self._update_shape()
+            
+    def _get_current_screen_shape(self):
+        return [self.shape_x, self.shape_y, self.x_scale, self.y_scale, self.rotation]
+
+    def _update_shape(self):
+        for i in range(0, len(self.keyframes)):
+            frame, rect, opacity = self.keyframes[i]
+            if frame == self.current_clip_frame:
+                self.set_geom(*rect)
+                #self.source_edit_rect.editable = True
+                return
+            
+            try:
+                # See if frame between this and next keyframe
+                frame_n, rect_n, opacity_n = self.keyframes[i + 1]
+                if ((frame < self.current_clip_frame)
+                    and (self.current_clip_frame < frame_n)):
+                    time_fract = float((self.current_clip_frame - frame)) / \
+                                 float((frame_n - frame))
+                    frame_rect = self._get_interpolated_rect(rect, rect_n, time_fract)
+                    self.set_geom(*frame_rect)
+                    #self.source_edit_rect.editable = False
+                    return
+            except: # past last frame, use its value
+                self.set_geom(*rect)
+                #self.source_edit_rect.editable = False
+                return
     
+    def set_geom(self, x, y, x_scale, y_scale, rotation):
+        #print "set geom", x, y, x_scale, y_scale, rotation
+        self.shape_x = x
+        self.shape_y = y
+        self.x_scale = x_scale
+        self.y_scale = y_scale
+        self.rotation = rotation
+        self._update_edit_points()
+
+    def _get_interpolated_rect(self, rect_1, rect_2, fract):
+        x1, y1, xs1, ys1, r1 = rect_1
+        x2, y2, xs2, ys2, r2 = rect_2
+        x = x1 + (x2 - x1) * fract
+        y = y1 + (y2 - y1) * fract
+        xs = xs1 + (xs2 - xs1) * fract
+        ys = ys1 + (ys2 - ys1) * fract
+        r = r1 + (r2 - r1) * fract
+        return (x, y, xs, ys, r)
+        
+    # --------------------------------------------------------- mouse events
     def _shape_press_event(self):
         self.start_edit_points = copy.deepcopy(self.edit_points)
 
@@ -1740,7 +1795,7 @@ class RotatingGeometryEditor(GeometryEditor):
         self.geom_kf_edit.set_keyframes(editable_property.value, editable_property.get_in_value)
 
 def rotating_ge_write_out_keyframes(ep, w_kf):
-    print "write rotating keyframe keyframes2"
+    print w_kf
 
 
 # ----------------------------------------------------------------- linear interpolation

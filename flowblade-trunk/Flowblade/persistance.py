@@ -42,7 +42,7 @@ import resync
 # These are removed at save and recreated at load.
 PROJECT_REMOVE = ['profile','c_seq', 'thumbnail_thread']
 SEQUENCE_REMOVE = ['profile','field','multitrack','tractor','monitor_clip','vectorscope','audiowave','rgbparade','outputfilter']
-PLAY_LIST_REMOVE = ['this','sequence','get_name','gain_filter']
+PLAY_LIST_REMOVE = ['this','sequence','get_name','gain_filter','pan_filter']
 CLIP_REMOVE = ['this','clip_length']
 TRANSITION_REMOVE = ['this']
 FILTER_REMOVE = ['mlt_filter','mlt_filters']
@@ -312,6 +312,11 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
     for py_track in py_tracks:
         mlt_track = seq.add_track(py_track.type)
         fill_track_mlt(mlt_track, py_track)
+        # Set audio gain and pan filter values
+        if hasattr(mlt_track, "gain_filter"): # Hidden track and black track do not have these
+            mlt_track.gain_filter.set("gain", str(mlt_track.audio_gain))
+        if mlt_track.audio_pan != appconsts.NO_PAN:
+            seq.add_track_pan_filter(mlt_track, mlt_track.audio_pan) # only rtack with non-center pan values have pan filters
     
     # Create and connect compositors.
     mlt_compositors = []
@@ -346,7 +351,7 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
         except KeyError:
             clip.sync_data = None # masterclip no longer on track V1
             resync.clip_removed_from_timeline(clip)
-            
+
     seq.length = None
 
 def fill_track_mlt(mlt_track, py_track):

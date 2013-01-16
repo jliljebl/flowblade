@@ -90,3 +90,5 @@ TRACK_CONFIGURATIONS = [(5,4),(4,3),(3,2),(2,1),(8,1),(1,8)]
 THUMB_WIDTH = 40
 THUMB_HEIGHT = 30
 
+# Magic value for no pan being applied for audio producer
+NO_PAN = -99

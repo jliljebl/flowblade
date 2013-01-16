@@ -543,7 +543,12 @@
         <property name="saturation" args="range_in=0,100 displayname=Saturation">0.5</property>
         <property name="lightness" args="range_in=-100,100 displayname=Lightness">0.5</property>
    </filter>
-
+    <filter id="frei0r.colgate">
+        <name>Colgate White Balance</name>
+        <group>Color</group>
+        <property name="Neutral Color" args="editor=color_select exptype=color">#888888</property>
+        <property name="Color Temperature" args="range_in=1000,15000 range_out=0.067,1">0.5</property>
+    </filter>
 
     <!-- COLOR EFFECT -->
     <filter id="frei0r.cluster">

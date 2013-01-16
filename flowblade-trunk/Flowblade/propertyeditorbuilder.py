@@ -389,7 +389,7 @@ def _create_rotion_geometry_editor(clip, editable_properties):
     ep.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
     ep.write_out_keyframes = lambda w_kf : keyframeeditor.rotating_ge_write_out_keyframes(ep, w_kf)
     # duck type members
-    ep.value = "0=0"
+    ep.value = "0=0.4:0.4:0.2:0.2:0:1"
 
     kf_edit = keyframeeditor.RotatingGeometryEditor(ep, False)
     return kf_edit

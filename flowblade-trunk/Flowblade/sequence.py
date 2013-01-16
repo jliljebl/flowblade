@@ -64,7 +64,7 @@ TRACK_HEIGHT_NORMAL = appconsts.TRACK_HEIGHT_NORMAL # track height in canvas and
 TRACK_HEIGHT_SMALL = appconsts.TRACK_HEIGHT_SMALL # track height in canvas and column
 
 # pan magic value indicating that no pan is applied
-NO_PAN = -99
+NO_PAN = appconsts.NO_PAN #-99
 
 # MLT types
 MLT_PLAYLIST = 0
@@ -262,12 +262,9 @@ class Sequence:
         if editorstate.SCREEN_HEIGHT < 863:# Fix for 786 screens
             track.height = TRACK_HEIGHT_SMALL
         
-        # Audio master gain for this track in case this is created for the first
-        # time. This gets called on load too, and we dont want to destroy existing gain value
-        if not hasattr(track, "audio_gain"):
-            track.audio_gain = 1.0 # active range 0 - 1
-        if not hasattr(track, "audio_pan"):
-            track.audio_pan = NO_PAN # active range 0-1, 0.5 is middle
+        # Audio gain and pan values, these are overwritten later with saved values when loading 
+        track.audio_gain = 1.0 # active range 0 - 1
+        track.audio_pan = NO_PAN # active range 0-1, 0.5 is middle
         
         # Tracks may be FREE or LOCKED
         track.edit_freedom = FREE
@@ -303,6 +300,7 @@ class Sequence:
     def set_track_gain(self, track, gain):
         track.gain_filter.set("gain", str(gain))
         track.audio_gain = gain
+        print track.audio_gain
 
     def set_master_gain(self, gain):
         self.tractor.gain_filter.set("gain", str(gain))

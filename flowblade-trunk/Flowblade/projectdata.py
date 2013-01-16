@@ -92,8 +92,6 @@ class Project:
         media_object = self.add_media_file(resource_path)
         media_object.length = length
         media_object.name = name
-        #media_object.mark_in = 0
-        #media_object.mark_out = length
 
     def add_media_file(self, file_path):
         """

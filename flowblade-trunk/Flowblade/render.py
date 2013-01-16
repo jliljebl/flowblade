@@ -48,6 +48,9 @@ import utils
 
 DEFAULT_ENCODING_INDEX = 0
 
+# User defined Ffmpeg opts file extension
+FFMPEG_OPTS_SAVE_FILE_EXTENSION = ".rargs"
+
 open_media_file_callback = None # monkeypathced in by useraction to avoid circular imports
 
 render_start_time = 0
@@ -163,7 +166,9 @@ def get_render_consumer():
                                                                                 quality_option_index)
     else:
         buf = widgets.opts_view.get_buffer()
-        consumer, error = renderconsumer.get_render_consumer_for_text_buffer(buf)
+        consumer, error = renderconsumer.get_render_consumer_for_text_buffer(file_path,
+                                                                             profile,
+                                                                             buf)
         if error != None:
             dialogutils.warning_message("FFMPeg Args Error", error, gui.editor_window.window)
             return None

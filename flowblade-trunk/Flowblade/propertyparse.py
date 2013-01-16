@@ -158,32 +158,43 @@ def geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
     return new_keyframes
 
 def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
-    # Parse extraeditor value properties value string into (frame, source_rect, opacity)
+    # Parse extraeditor value properties value string into (frame, [x, y, x_scale, y_scale, rotation], opacity)
     # keyframe tuples.
     new_keyframes = []
-    """
+    screen_width = current_sequence().profile.width()
+    screen_height = current_sequence().profile.height()
     keyframes_str = keyframes_str.strip('"') # expression have sometimes quotes that need to go away
     kf_tokens =  keyframes_str.split(';')
     for token in kf_tokens:
         sides = token.split('=')
         values = sides[1].split(':')
         frame = int(sides[0])
-        x = values[0]
-        y = values[1]
-        x_scale = values[2]
-        y_scale = values[3]
-        rotation = values[4]
-        opacity = values[5]
+        # get values and convert "frei0r.cairoaffineblend" values to editor values
+        # this because all frei0r plugins require values in range 0 - 1
+        x = _get_frei0r_cairo_pixel_pos(float(values[0]), screen_width)
+        y = _get_frei0r_cairo_pixel_pos(float(values[1]), screen_height)
+        x_scale = _get_frei0r_cairo_scale(float(values[2]))
+        y_scale = _get_frei0r_cairo_scale(float(values[3]))
+        rotation = float(values[4]) * 360
+        opacity = float(values[5]) * 100
         source_rect = [x,y,x_scale,y_scale,rotation]
-        add_kf = (frame, source_rect, opacity)
+        add_kf = (frame, source_rect, float(opacity))
+        print add_kf
         new_keyframes.append(add_kf)
-    """
-    source_rect = [0.4,0.4, 0.2, 0.2, 0] #[x,y,x_scale,y_scale,rotation]
+
     add_kf = (0, source_rect, 100)
     new_keyframes.append(add_kf)
     return new_keyframes
 
+def _get_frei0r_cairo_pixel_pos(value, screen_dim):
+    # convert pixel positions to range used by frei0r cairo plugins
+    return -2.0 * screen_dim + value * 5.0 * screen_dim
+    
+def _get_frei0r_cairo_scale(scale):
+    return scale * 5.0
 
+
+    
 #------------------------------------------------------ util funcs
 def _property_type(value_str):
     """

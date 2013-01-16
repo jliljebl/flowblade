@@ -24,6 +24,7 @@ import mlt
 import pango
 import pangocairo
 
+import appconsts
 from cairoarea import CairoDrawableArea
 import editorstate
 import guiutils
@@ -156,7 +157,6 @@ def _audio_monitor_update():
         _audio_levels.append((l_val, r_val))
 
     _monitor_window.meters_area.widget.queue_draw()
-
 
 def _get_channel_value(audio_level_filter, channel_property):
     level_value = audio_level_filter.get(channel_property)
@@ -369,21 +369,40 @@ class GainControl(gtk.Frame):
         self.producer = producer
         self.is_master = is_master
 
-        self.adjustment = gtk.Adjustment(value=100, lower=0, upper=100, step_incr=1)
+        if is_master:
+            gain_value = seq.master_audio_gain # tractor master
+        else:
+            gain_value = producer.audio_gain # track
+        gain_value = gain_value * 100
+        
+        self.adjustment = gtk.Adjustment(value=gain_value, lower=0, upper=100, step_incr=1)
         self.slider = gtk.VScale()
         self.slider.set_adjustment(self.adjustment)
         self.slider.set_size_request(SLOT_W - 10, CONTROL_SLOT_H - 105)
         self.slider.set_inverted(True)
         self.slider.connect("value-changed", self.gain_changed)
    
-        self.pan_adjustment = gtk.Adjustment(value=0, lower=-100, upper=100, step_incr=1)
+        if is_master:
+            pan_value = seq.master_audio_pan
+        else:
+            pan_value = producer.audio_pan
+        if pan_value == appconsts.NO_PAN:
+            pan_value = 0.5 # center
+        pan_value = (pan_value - 0.5) * 200 # from range 0 - 1 to range -100 - 100
+
+        self.pan_adjustment = gtk.Adjustment(value=pan_value, lower=-100, upper=100, step_incr=1)
         self.pan_slider = gtk.HScale()
         self.pan_slider.set_adjustment(self.pan_adjustment)
-        self.pan_slider.set_sensitive(False)
         self.pan_slider.connect("value-changed", self.pan_changed)
 
         self.pan_button = gtk.ToggleButton("Pan")
         self.pan_button.connect("toggled", self.pan_active_toggled)
+        
+        if pan_value == 0.0:
+            self.pan_slider.set_sensitive(False)
+        else:
+            self.pan_button.set_active(True)
+            self.pan_adjustment.set_value(pan_value) # setting button active sets value = 0, set correct value again
 
         label = guiutils.bold_label(name)
 
@@ -410,10 +429,14 @@ class GainControl(gtk.Frame):
         self.pan_slider.set_value(0.0)
         if widget.get_active():
             self.pan_slider.set_sensitive(True)
-            self.seq.add_track_pan_filter(self.producer, 0.5) # works for master (tractor) too
+            self.seq.add_track_pan_filter(self.producer, 0.5)
+            if self.is_master:
+                self.seq.master_audio_pan = 0.5
         else:
             self.pan_slider.set_sensitive(False)
-            self.seq.remove_track_pan_filter(self.producer) # works for master (tractor) too
+            self.seq.remove_track_pan_filter(self.producer)
+            if self.is_master:
+                self.seq.master_audio_pan = appconsts.NO_PAN
 
     def pan_changed(self, slider):
         pan_value = (slider.get_value() + 100) / 200.0

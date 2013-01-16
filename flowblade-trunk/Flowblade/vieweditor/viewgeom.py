@@ -24,7 +24,7 @@ CLOCKWISE = 1
 COUNTER_CLOCKWISE = 2
 
 def point_in_convex_polygon(test_point, points, first_point_index):
-    # Polygon has to have > 2 points to caontain anything.
+    # Polygon has to have > 2 points to contain anything.
     if len(points) < 3:
         return False
 
