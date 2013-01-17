@@ -959,8 +959,14 @@ def _clone_for_fewer_tracks(old_seq, new_seq):
 def _clone_tracks(old_seq, new_seq, first_to_track_index, last_to_track_index, first_from_track_index):
     from_track_index = first_from_track_index
     for i in range(first_to_track_index, last_to_track_index + 1):
+        if from_track_index > len(old_seq.tracks) - 1: # when changing to a (8V,1A) tracks sequence this range needs to be checked for
+            continue 
         from_track = old_seq.tracks[from_track_index]
+        
+        if i > len(new_seq.tracks) - 1: # when changing to a (1V,8A) tracks sequence this range needs to be checked for
+            continue
         to_track = new_seq.tracks[i]
+
         _copy_track_contents(from_track, to_track, new_seq)
         from_track_index = from_track_index + 1
     
