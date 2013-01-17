@@ -97,6 +97,8 @@ black_track_clip = None
 # USED FOR TRACKS, NOT CLIPS. Clips handled using values in appconsts.py
 MUTE_STATES = [(True, True), (False, True), (True, False), (False, False)]
 
+# Track that all audio is mixed down to combine for output.
+AUDIO_MIX_DOWN_TRACK = 0
 
 
 class Sequence:
@@ -170,7 +172,6 @@ class Sequence:
         self.add_track(VIDEO)
         
         # Audio tracks
-        #audio_tracks = AUDIO_TRACKS_COUNT
         for i in range(0, AUDIO_TRACKS_COUNT):
             track = self.add_track(AUDIO)
             track.height = TRACK_HEIGHT_SMALL
@@ -230,7 +231,7 @@ class Sequence:
         
         # Mix all audio to track 1 by combining them one after another 
         # using an always active field transition.
-        if ((new_track.id > 1) # black bg or track1 it's self does not need to be mixed
+        if ((new_track.id > AUDIO_MIX_DOWN_TRACK) # black bg or track1 it's self does not need to be mixed
             and (is_hidden == False)): # We actually do want hidden track to cover all audio below, which happens if it is not mixed.
             self._mix_audio_for_track(new_track)
         
@@ -272,11 +273,11 @@ class Sequence:
     def _mix_audio_for_track(self, track):
         # Create and add transition to combine track audios
         transition = mlt.Transition(self.profile, "mix")
-        transition.set("a_track", 1)
+        transition.set("a_track", int(AUDIO_MIX_DOWN_TRACK))
         transition.set("b_track", track.id)
         transition.set("always_active", 1)
         transition.set("combine", 1)
-        self.field.plant_transition(transition, 1, track.id)
+        self.field.plant_transition(transition, int(AUDIO_MIX_DOWN_TRACK), track.id)
 
         # Create and ad gain filter
         gain_filter = mlt.Filter(self.profile, "volume")
@@ -300,7 +301,6 @@ class Sequence:
     def set_track_gain(self, track, gain):
         track.gain_filter.set("gain", str(gain))
         track.audio_gain = gain
-        print track.audio_gain
 
     def set_master_gain(self, gain):
         self.tractor.gain_filter.set("gain", str(gain))
@@ -512,7 +512,6 @@ class Sequence:
         new_compositors = []
         video_diff = self.first_video_index - from_sequence.first_video_index
         for old_compositor in from_sequence.compositors:
-            print old_compositor.transition.b_track 
             if old_compositor.transition.b_track + video_diff < len(self.tracks) - 1:
                 clone_compositor = self._create_and_plant_clone_compositor_for_sequnce_clone(old_compositor, track_delta)
                 new_compositors.append(clone_compositor)
@@ -697,7 +696,7 @@ class Sequence:
             elif count + 1 == self.first_video_index:
                 # This shold not happen because track heights should be set up so that minimized app 
                 # has enough space to display all tracks.
-                # Yet it happens sometimes
+                # Yet it happens sometimes, meh.
                 print "sequence.resize_tracks_to_fit (): could not make panels fit"
                 fix_next = False
             else:
