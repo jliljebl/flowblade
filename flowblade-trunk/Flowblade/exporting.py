@@ -63,7 +63,7 @@ def _export_dvd_author_dialog_callback(dialog, response_id, data):
     
     top_element = doc.documentElement
     
-    wmgm_element = doc.createElement("wmgm")
+    wmgm_element = doc.createElement("vmgm")
     top_element.appendChild(wmgm_element)
     
     titleset_element = doc.createElement("titleset")
@@ -71,6 +71,12 @@ def _export_dvd_author_dialog_callback(dialog, response_id, data):
     
     titles_element = doc.createElement("titles")
     titleset_element.appendChild(titles_element)
+
+    #video_element = doc.createElement("video")
+    #video_element.setAttribute("format", "pal")
+    #video_element.setAttribute("aspect", "4:3")
+    #<video format="pal" aspect="4:3" widescreen="nopanscan" />pal,  ntsc,  4:3,  16:9
+    #titles_element.appendChild(video_element)
 
     pgc_element = doc.createElement("pgc")
     titles_element.appendChild(pgc_element)

@@ -934,7 +934,20 @@ def all_tracks_menu_launch_pressed(widget, event):
     guicomponents.get_all_tracks_popup_menu(event, _all_tracks_item_activated)
 
 def _all_tracks_item_activated(widget, msg):
-    print msg
+    if msg == "min":
+        current_sequence().minimize_tracks_height()
+        tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.allocation)
+        gui.tline_column.init_listeners()
+        updater.repaint_tline()
+        gui.tline_column.widget.queue_draw()
+    
+    if msg == "max":
+        current_sequence().maximize_tracks_height(gui.tline_canvas.widget.allocation)
+        tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.allocation)
+        gui.tline_column.init_listeners()
+        updater.repaint_tline()
+        gui.tline_column.widget.queue_draw()
+    
 
 def tline_colors_launch_pressed(widget, event):
     print "gfggfgf"

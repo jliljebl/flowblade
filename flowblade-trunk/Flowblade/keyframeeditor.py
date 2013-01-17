@@ -24,8 +24,7 @@ compositors.
 
 NOTE: All the editors are composites of smaller objects (so that similar 
 but slighly different editors can be made in the future). There are a lots 
-of callbacks to parent objects, this makes design difficult to follow.
-
+of callbacks to parent objects, this makes the design difficult to follow.
 """
 
 import cairo
@@ -778,7 +777,6 @@ class AbstractScreenEditor:
 
     # ------------------------------------------------- keyframes
     def add_keyframe(self, frame):
-        print "hailou"
         if self._frame_has_keyframe(frame) == True:
             return
 

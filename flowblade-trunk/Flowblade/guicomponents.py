@@ -1394,9 +1394,13 @@ def get_markers_popup_menu(event, callback):
             item_str  = utils.get_tc_string(frame) + " " + name
             menu.add(_get_menu_item(_(item_str), callback, str(i) ))
         _add_separetor(menu)
+    else:
+        no_markers_item = _get_menu_item(_("No Markers"), callback, "dummy", False)
+        menu.add(no_markers_item)
+        _add_separetor(menu)
     menu.add(_get_menu_item(_("Add Marker"), callback, "add" ))
-    if markers_exist:
-        menu.add(_get_menu_item(_("Delete Marker"), callback, "delete" ))
+    del_item = _get_menu_item(_("Delete Marker"), callback, "delete", markers_exist==True)
+    menu.add(del_item)
     menu.popup(None, None, None, event.button, event.time)
 
 def get_all_tracks_popup_menu(event, callback):

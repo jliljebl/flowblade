@@ -290,13 +290,24 @@ class Sequence:
             self.add_track_pan_filter(track, 0.5) 
             track.audio_pan = 0.5
 
+    def minimize_tracks_height(self):
+        for i in range (1, len(self.tracks) - 1):# visible tracks
+            track = self.tracks[i]
+            track.height = TRACK_HEIGHT_SMALL
+
+    def maximize_tracks_height(self, allocation):
+        for i in range (1, len(self.tracks) - 1):# visible tracks
+            track = self.tracks[i]
+            track.height = TRACK_HEIGHT_NORMAL
+    
+        self.resize_tracks_to_fit(allocation)
+    
     def get_tracks_height(self):
         h = 0
         for i in range (1, len(self.tracks) - 1):# visible tracks
             track = self.tracks[i]
             h += track.height
         return  h
-        # Add method that returns audio sync track index name
 
     def set_track_gain(self, track, gain):
         track.gain_filter.set("gain", str(gain))
