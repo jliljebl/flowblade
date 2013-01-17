@@ -292,8 +292,7 @@ class BinListView(ImageTextTextListView):
     def __init__(self, bin_selection_cb, bin_name_edit_cb):
         ImageTextTextListView.__init__(self)
  
-        # No border for scroll container 
-        #self.scroll.set_shadow_type(gtk.SHADOW_NONE)
+        self.text_col_1.set_min_width(10)
 
         # Connect selection 'changed' signal
         tree_sel = self.treeview.get_selection()
@@ -311,7 +310,6 @@ class BinListView(ImageTextTextListView):
         icon_theme = gtk.icon_theme_get_default()
         for bin in PROJECT().bins:
             try:
-                #pixbuf = icon_theme.load_icon(gtk.STOCK_DIRECTORY, 24, 0)
                 pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "bin_3.png")
                 row_data = [pixbuf,
                             bin.name, 

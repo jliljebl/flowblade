@@ -242,14 +242,19 @@ class EditorWindow:
                                 lambda w,e: useraction.add_media_files(), 
                                 lambda w,e: useraction.delete_media_files())
         
-        mm_vbox = gtk.HBox()
-        mm_vbox.set_border_width(5)
-        mm_vbox.pack_start(bins_panel, False, False, 0)
-        mm_vbox.pack_start(media_panel, True, True, 0)
+        #mm_vbox = gtk.HBox()
+        #mm_vbox.set_border_width(5)
+        #mm_vbox.pack_start(bins_panel, False, False, 0)
+        #mm_vbox.pack_start(media_panel, True, True, 0)
+        
+        mm_paned = gtk.HPaned()
+        mm_paned.pack1(bins_panel)#, resize=True, shrink=False)
+        mm_paned.pack2(media_panel)#, resize=False, shrink=False)
         
         mm_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
         mm_panel.set_padding(0, 0, 4, 0)
-        mm_panel.add(mm_vbox)
+        #mm_panel.add(mm_vbox)
+        mm_panel.add(mm_paned)
 
         # Effects
         self.effect_select_list_view = guicomponents.FilterListView()

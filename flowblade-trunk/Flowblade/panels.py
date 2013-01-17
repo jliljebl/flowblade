@@ -70,7 +70,7 @@ def get_media_files_panel(media_list_view, add_cb, del_cb):
     panel.pack_start(buttons_box, False, True, 0)
     panel.pack_start(media_list_view, True, True, 0)
 
-    return get_named_frame(None, panel)
+    return get_named_frame(None, panel, 0)
 
 def get_bins_panel(bin_list_view, add_cb, delete_cb):
     # Create buttons and connect signals
@@ -88,7 +88,7 @@ def get_bins_panel(bin_list_view, add_cb, delete_cb):
     panel.pack_start(buttons_box, False, True, 0)
     panel.pack_start(bin_list_view, True, True, 0)
 
-    return get_named_frame(_("Bins"), panel)
+    return get_named_frame(_("Bins"), panel, 0, 0)
 
 def get_sequences_panel(sequence_list_view, edit_seq_cb, add_seq_cb, del_seq_cb):
     # Create buttons and connect signals
@@ -446,7 +446,7 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
 
     return effects_vbox
     
-def get_named_frame(name, widget):
+def get_named_frame(name, widget, left_padding=12, right_padding=6):
     """
     Gnome style named panel
     """
@@ -459,7 +459,7 @@ def get_named_frame(name, widget):
         label_box.pack_start(gtk.Label(), True, True, 0)
 
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(6, 0, 12, 0)
+    alignment.set_padding(right_padding, 0, left_padding, 0)
     alignment.add(widget)
     
     frame = gtk.VBox()
