@@ -129,6 +129,8 @@ class EncodingOption:
         self.vcodec = None
         self.format = None
 
+        print self.name
+
         tokens = self.attr_string.split(" ")
         for token in tokens:
             token_sides = token.split("=")

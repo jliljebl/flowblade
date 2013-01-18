@@ -1132,6 +1132,37 @@ def get_profile_info_box(profile, show_description=True):
     
     return hbox
 
+def get_profile_info_small_box(profile):
+    # Info text 
+    str_list = []
+    str_list.append(_("Size: ") + str(profile.width()))
+    str_list.append(" x ")    
+    str_list.append(str(profile.height()))
+    str_list.append(", " + str(profile.display_aspect_num()))
+    str_list.append(":")
+    str_list.append(str(profile.display_aspect_den()))
+    str_list.append("\n")
+    str_list.append(_("Fps: ") + str(profile.fps()))
+    pix_asp = float(profile.sample_aspect_num()) / profile.sample_aspect_den()
+    pa_str =  "%.2f" % pix_asp
+    str_list.append(", " + _("Pixel Aspect: ") + pa_str)
+    str_list.append("\n")
+    if profile.progressive() == True:
+        str_list.append(_("Progressive"))
+    else:
+        str_list.append(_("Interlaced"))
+
+    label_label_text = ''.join(str_list)
+    
+    # Labels text
+    label_label = gtk.Label(label_label_text)
+
+    # Create box
+    hbox = gtk.HBox()
+    hbox.pack_start(label_label, False, False, 0)
+    
+    return hbox
+
 def set_profile_info_labels_text(label, show_description):
     # Labels text
     str_list = []

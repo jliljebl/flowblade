@@ -112,8 +112,8 @@ def render_profile_supported(frmt, vcodec, acodec):
     if environment_detection_success == False:
         return (True, "")
 
-    if acodec in acodecs:
-        if vcodec in vcodecs:
+    if acodec in acodecs or acodec == None: # some render formats do not specify audio codecs
+        if vcodec in vcodecs or vcodec == None: # some render formats do not specify video codecs
             if frmt in formats:
                 return (True, "")
             else:

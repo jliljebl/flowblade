@@ -145,8 +145,19 @@ def get_render_panel_left(editor_window, add_audio_panel):
                                      render.widgets.quality_cb, 
                                      80)
 
+    render_type_vbox = gtk.VBox(False, 2)
+    render_type_vbox.pack_start(get_two_column_box(render.widgets.type_label,
+                                                   render.widgets.type_combo,
+                                                   80), 
+                                False, False, 0)
+    render_type_vbox.pack_start(get_two_column_box(render.widgets.presets_label,
+                                                   render.widgets.preset_encodings_cb,
+                                                   80),
+                                False, False, 0)
+    render_type_panel = get_named_frame(_("Render Type"), render_type_vbox)
+
     use_project_profile_row = gtk.HBox()
-    use_project_profile_row.pack_start(gtk.Label(_("Use Project Profile:")),  False, False, 0)
+    use_project_profile_row.pack_start(render.widgets.use_project_label,  False, False, 0)
     use_project_profile_row.pack_start(render.widgets.use_project_profile_check,  False, False, 0)
     use_project_profile_row.pack_start(gtk.Label(), True, True, 0)
 
@@ -177,6 +188,7 @@ def get_render_panel_left(editor_window, add_audio_panel):
 
     render_panel = gtk.VBox()
     render_panel.pack_start(file_opts_panel, False, False, 0)
+    render_panel.pack_start(render_type_panel, False, False, 0)
     render_panel.pack_start(profile_panel, False, False, 0)
     render_panel.pack_start(encoding_panel, False, False, 0)
     render_panel.pack_start(gtk.Label(), True, True, 0)
@@ -184,7 +196,7 @@ def get_render_panel_left(editor_window, add_audio_panel):
 
 def get_render_panel_right(render_clicked_cb, normal_height):
     use_opts_row = gtk.HBox()
-    use_opts_row.pack_start(gtk.Label(_("Render using args:")),  False, False, 0)
+    use_opts_row.pack_start(render.widgets.use_args_label,  False, False, 0)
     use_opts_row.pack_start(render.widgets.use_opts_check,  False, False, 0)
     use_opts_row.pack_start(gtk.Label(), True, True, 0)
     use_opts_row.pack_start(render.widgets.opts_load_button,  False, False, 0)

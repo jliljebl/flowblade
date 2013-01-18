@@ -194,6 +194,24 @@ def create_widgets():
     
     widgets.movie_name = gtk.Entry()
     widgets.movie_name.set_text("movie")
+
+    widgets.use_project_label = gtk.Label(_("Use Project Profile:"))
+    widgets.use_args_label = gtk.Label(_("Render using args:"))
+
+    # Render type
+    widgets.type_label = gtk.Label(_("Type:"))
+    widgets.presets_label = gtk.Label(_("Presets:")) 
+    widgets.type_combo = gtk.combo_box_new_text() # filled later when current sequence known
+    widgets.type_combo.append_text(_("User Defined"))
+    widgets.type_combo.append_text(_("Preset File type"))
+    widgets.type_combo.set_active(0)
+    widgets.type_combo.connect('changed', lambda w: _render_type_changed())
+    
+    widgets.preset_encodings_cb = gtk.combo_box_new_text()
+    for encoding in renderconsumer.non_user_encodings:
+        widgets.preset_encodings_cb.append_text(encoding.name)
+    widgets.preset_encodings_cb.set_active(0)
+    widgets.preset_encodings_cb.set_sensitive(False)
     
     # Render Profile
     widgets.use_project_profile_check = gtk.CheckButton()
@@ -306,6 +324,18 @@ def set_default_values_for_widgets():
     widgets.use_opts_check.set_active(False)
     widgets.use_project_profile_check.set_active(True)
 
+def enable_user_rendering(value):
+    widgets.encodings_cb.set_sensitive(value)
+    widgets.use_opts_check.set_sensitive(value)
+    widgets.use_project_profile_check.set_sensitive(value)
+    widgets.quality_cb.set_sensitive(value)
+    widgets.quality_label.set_sensitive(value)
+    widgets.audio_label.set_sensitive(value)   
+    widgets.audio_desc.set_sensitive(value)
+    widgets.info_panel.set_sensitive(value)
+    widgets.use_project_label.set_sensitive(value)
+    widgets.use_args_label.set_sensitive(value)
+
 def set_render_gui():
     widgets.status_label.set_text(_("<b>Output File: </b>") + get_file_path())
     widgets.status_label.set_use_markup(True)
@@ -388,7 +418,16 @@ def fill_out_profile_widgets():
 def reload_profiles():
     renderconsumer.load_render_profiles()
     fill_out_profile_widgets()
-    
+
+def _render_type_changed():
+    if widgets.type_combo.get_active() == 0:
+        enable_user_rendering(True)
+        set_default_values_for_widgets()
+        widgets.preset_encodings_cb.set_sensitive(False)
+    else:
+        enable_user_rendering(False)
+        widgets.preset_encodings_cb.set_sensitive(True)
+
 def _use_project_check_toggled(checkbutton):
     widgets.out_profile_combo.set_sensitive(checkbutton.get_active() == False)
     if checkbutton.get_active() == True:
@@ -419,7 +458,8 @@ def _fill_info_box(profile):
     for child in info_box_children:
         widgets.out_profile_info_box.remove(child)
     
-    info_panel = guicomponents.get_profile_info_box(profile, True)
+    info_panel = guicomponents.get_profile_info_small_box(profile)
+    widgets.info_panel = info_panel
     widgets.out_profile_info_box.add(info_panel)
     widgets.out_profile_info_box.show_all()
     info_panel.show()
