@@ -156,6 +156,11 @@ def get_render_consumer():
 
     profile = _get_current_profile()
 
+    if widgets.type_combo.get_active() == 1: # Preset encodings
+        encoding_option = renderconsumer.non_user_encodings[widgets.preset_encodings_cb.get_active()]
+        consumer = renderconsumer.get_render_condumer_for_encoding(file_path, profile, encoding_option)
+        return consumer
+
     if widgets.use_opts_check.get_active() == False:
         # Using options comboboxes
         encoding_option_index = widgets.encodings_cb.get_active()
@@ -212,7 +217,10 @@ def create_widgets():
         widgets.preset_encodings_cb.append_text(encoding.name)
     widgets.preset_encodings_cb.set_active(0)
     widgets.preset_encodings_cb.set_sensitive(False)
-    
+    widgets.preset_encodings_cb.connect("changed", 
+                              lambda w,e: _preset_selection_changed(), 
+                              None)
+
     # Render Profile
     widgets.use_project_profile_check = gtk.CheckButton()
     widgets.use_project_profile_check.set_active(True)
@@ -424,10 +432,17 @@ def _render_type_changed():
         enable_user_rendering(True)
         set_default_values_for_widgets()
         widgets.preset_encodings_cb.set_sensitive(False)
+        _fill_extension_label()
     else:
         enable_user_rendering(False)
         widgets.preset_encodings_cb.set_sensitive(True)
-
+        _preset_selection_changed()
+        widgets.opts_save_button.set_sensitive(False)
+        widgets.opts_load_button.set_sensitive(False)
+        widgets.load_selection_button.set_sensitive(False)
+        widgets.opts_view.set_sensitive(False)
+        widgets.opts_view.get_buffer().set_text("")
+    
 def _use_project_check_toggled(checkbutton):
     widgets.out_profile_combo.set_sensitive(checkbutton.get_active() == False)
     if checkbutton.get_active() == True:
@@ -464,6 +479,11 @@ def _fill_info_box(profile):
     widgets.out_profile_info_box.show_all()
     info_panel.show()
 
+def _preset_selection_changed():
+    enc_index = widgets.preset_encodings_cb.get_active()
+    ext = renderconsumer.non_user_encodings[enc_index].extension
+    widgets.extension_label.set_text("." + ext)
+    
 def _encoding_selection_changed():
     _fill_quality_combo_box()
     _fill_extension_label()
