@@ -1127,10 +1127,17 @@ class RotatingScreenEditor(AbstractScreenEditor):
         
     # ------------------------------------------ hit testing
     def _check_shape_hit(self, x, y):
+        edit_panel_points = []
+        for ep in self.edit_points:
+            edit_panel_points.append(self.get_panel_point(*ep))
+        
         for i in range(0, 4):
-            if self._check_point_hit((x, y), self.get_panel_point(*self.edit_points[i]), 10):
+            if self._check_point_hit((x, y), edit_panel_points[i], 10):
                 return i #indexes correspond to edit_point_handle indexes
 
+        if viewgeom.point_in_convex_polygon((x, y), edit_panel_points[3:7], 0) == True: # corners are edit points 3, 4, 5, 6
+            return AREA_HIT
+        
         return NO_HIT
     
     def _check_point_hit(self, p, ep, TARGET_HALF):
@@ -1206,6 +1213,9 @@ class RotatingScreenEditor(AbstractScreenEditor):
             self.mouse_start_rotation = viewgeom.get_angle_in_deg(zero_deg_point, self.edit_points[POS_HANDLE], m_end_point)
             self.mouse_rotation_last = 0.0
             self.rotation_value_start = self.rotation
+        elif self.current_mouse_hit == POS_HANDLE or self.current_mouse_hit == AREA_HIT:
+            self.start_shape_x = self.shape_x 
+            self.start_shape_y = self.shape_y
             
     def _shape__motion_notify_event(self, delta_x, delta_y):
         self._update_values_for_mouse_delta(delta_x, delta_y)
@@ -1214,13 +1224,13 @@ class RotatingScreenEditor(AbstractScreenEditor):
         self._update_values_for_mouse_delta(delta_x, delta_y)
     
     def _update_values_for_mouse_delta(self, delta_x, delta_y):
-        if self.current_mouse_hit == POS_HANDLE:
+        if self.current_mouse_hit == POS_HANDLE or self.current_mouse_hit == AREA_HIT:
             dx = self.get_screen_x(self.coords.orig_x + delta_x)
             dy = self.get_screen_y(self.coords.orig_y + delta_y)
-            sx = self.get_screen_x(self.mouse_start_x)
-            sy = self.get_screen_y(self.mouse_start_y)
-            self.shape_x = sx + dx
-            self.shape_y = sy + dy
+            #sx = self.get_screen_x(self.mouse_start_x)
+            #sy = self.get_screen_y(self.mouse_start_y)
+            self.shape_x = self.start_shape_x + dx
+            self.shape_y = self.start_shape_y + dy
             self._update_edit_points()
         elif self.current_mouse_hit == X_SCALE_HANDLE:
             dp = self.get_delta_point(delta_x, delta_y, self.edit_points[X_SCALE_HANDLE])
