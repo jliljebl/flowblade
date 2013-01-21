@@ -380,6 +380,9 @@ def _create_rotion_geometry_editor(clip, editable_properties):
     ep.y_scale = filter(lambda ep: ep.name == "y scale", editable_properties)[0]
     ep.rotation = filter(lambda ep: ep.name == "rotation", editable_properties)[0]
     ep.opacity = filter(lambda ep: ep.name == "opacity", editable_properties)[0]
+    # Screen width and height are needeed for frei0r conversions
+    ep.profile_width = current_sequence().profile.width()
+    ep.profile_height = current_sequence().profile.height()
     # duck type methods, using opacity is not meaningful, any property with clip member could do
     ep.get_clip_tline_pos = lambda : ep.opacity.clip.clip_in # clip is compositor, compositor in and out points staright in timeline frames
     ep.get_clip_length = lambda : ep.opacity.clip.clip_out - ep.opacity.clip.clip_in + 1
@@ -389,7 +392,28 @@ def _create_rotion_geometry_editor(clip, editable_properties):
     ep.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
     ep.write_out_keyframes = lambda w_kf : keyframeeditor.rotating_ge_write_out_keyframes(ep, w_kf)
     # duck type members
-    ep.value = "0=0.4:0.4:0.2:0.2:0:1"
+    print "epvalue:", ep.x.value
+    x_tokens = ep.x.value.split(";")
+    y_tokens = ep.y.value.split(";")
+    x_scale_tokens = ep.x_scale.value.split(";")
+    y_scale_tokens = ep.y_scale.value.split(";")
+    rotation_tokens = ep.rotation.value.split(";")
+    opacity_tokens = ep.opacity.value.split(";")
+    
+    value = ""
+    for i in range(0, len(x_tokens)): # these better match, same number of keyframes for all values, or this will not work
+        frame, x = x_tokens[i].split("=")
+        frame, y = y_tokens[i].split("=")
+        frame, x_scale = x_scale_tokens[i].split("=")
+        frame, y_scale = y_scale_tokens[i].split("=")
+        frame, rotation = rotation_tokens[i].split("=")
+        frame, opacity = opacity_tokens[i].split("=")
+        
+        frame_str = str(frame) + "=" + str(x) + ":" + str(y) + ":" + str(x_scale) + ":" + str(y_scale) + ":" + str(rotation) + ":" + str(opacity)
+        value += frame_str + ";"
+
+    ep.value = value.strip(";")
+    print ep.value
 
     kf_edit = keyframeeditor.RotatingGeometryEditor(ep, False)
     return kf_edit

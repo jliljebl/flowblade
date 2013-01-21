@@ -171,30 +171,40 @@ def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_
         frame = int(sides[0])
         # get values and convert "frei0r.cairoaffineblend" values to editor values
         # this because all frei0r plugins require values in range 0 - 1
-        x = _get_frei0r_cairo_pixel_pos(float(values[0]), screen_width)
-        y = _get_frei0r_cairo_pixel_pos(float(values[1]), screen_height)
-        x_scale = _get_frei0r_cairo_scale(float(values[2]))
-        y_scale = _get_frei0r_cairo_scale(float(values[3]))
+        print values[0]
+        x = _get_pixel_pos_from_frei0r_cairo_pos(float(values[0]), screen_width)
+        print x
+        y = _get_pixel_pos_from_frei0r_cairo_pos(float(values[1]), screen_height)
+        x_scale = _get_scale_from_frei0r_cairo_scale(float(values[2]))
+        y_scale = _get_scale_from_frei0r_cairo_scale(float(values[3]))
         rotation = float(values[4]) * 360
         opacity = float(values[5]) * 100
         source_rect = [x,y,x_scale,y_scale,rotation]
         add_kf = (frame, source_rect, float(opacity))
-        print add_kf
         new_keyframes.append(add_kf)
 
-    add_kf = (0, source_rect, 100)
-    new_keyframes.append(add_kf)
+    #add_kf = (0, source_rect, 100)
+    #new_keyframes.append(add_kf)
+    
+    print "new_keyframes:"
+    print new_keyframes
     return new_keyframes
 
-def _get_frei0r_cairo_pixel_pos(value, screen_dim):
-    # convert pixel positions to range used by frei0r cairo plugins
+def _get_pixel_pos_from_frei0r_cairo_pos(value, screen_dim):
+    # convert positions from range used by frei0r cairo plugins to pixel values
     return -2.0 * screen_dim + value * 5.0 * screen_dim
     
-def _get_frei0r_cairo_scale(scale):
+def _get_scale_from_frei0r_cairo_scale(scale):
     return scale * 5.0
 
-
+def get_frei0r_cairo_scale(scale):
+    return scale / 5.0
     
+def get_frei0r_cairo_position(pos, screen_dim):
+    pix_range = screen_dim * 5.0
+    range_pos = pos + screen_dim * 2.0
+    return range_pos / pix_range
+
 #------------------------------------------------------ util funcs
 def _property_type(value_str):
     """
