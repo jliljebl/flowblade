@@ -1227,8 +1227,6 @@ class RotatingScreenEditor(AbstractScreenEditor):
         if self.current_mouse_hit == POS_HANDLE or self.current_mouse_hit == AREA_HIT:
             dx = self.get_screen_x(self.coords.orig_x + delta_x)
             dy = self.get_screen_y(self.coords.orig_y + delta_y)
-            #sx = self.get_screen_x(self.mouse_start_x)
-            #sy = self.get_screen_y(self.mouse_start_y)
             self.shape_x = self.start_shape_x + dx
             self.shape_y = self.start_shape_y + dy
             self._update_edit_points()
@@ -1315,10 +1313,6 @@ class RotatingScreenEditor(AbstractScreenEditor):
             self.edit_points[i] = (x, y)
 
     def _draw_edit_shape(self, cr, allocation):
-        for i in range(0,4):
-            x, y = self.get_panel_point(*self.edit_points[i])
-            cr.rectangle(x - 2, y - 2, 4, 4)
-            cr.fill()
         x, y = self.get_panel_point(*self.edit_points[3])
         cr.move_to(x, y)
         for i in range(4,7):
@@ -1326,7 +1320,72 @@ class RotatingScreenEditor(AbstractScreenEditor):
             cr.line_to(x, y)
         cr.close_path()
         cr.stroke()
-            
+
+        self._draw_scale_arrow(cr, self.edit_points[2], 90)
+        self._draw_scale_arrow(cr, self.edit_points[1], 0)
+
+        x, y = self.get_panel_point(*self.edit_points[0])
+        cr.translate(x,y)
+        cr.rotate(math.radians(self.rotation))
+        CROSS_LENGTH = 3
+        cr.move_to(-0.5, -CROSS_LENGTH-0.5)
+        cr.line_to(-0.5, CROSS_LENGTH-0.5)
+        cr.set_line_width(1.0)
+        cr.stroke()
+        cr.move_to(-CROSS_LENGTH - 0.5, -0.5)
+        cr.line_to(CROSS_LENGTH - 0.5, -0.5)
+        cr.stroke()
+        cr.identity_matrix()
+        
+        x, y = self.get_panel_point(*self.edit_points[3])
+        cr.translate(x,y)
+        cr.rotate(math.radians(self.rotation))
+        cr.arc(0, 0, 6, math.radians(180), math.radians(-35))
+        cr.set_line_width(3.0)
+        cr.stroke()
+        cr.move_to(-6, 3)
+        cr.line_to(-9, 0)
+        cr.line_to(-3, 0)
+        cr.close_path()
+        cr.fill()
+        cr.arc(0, 0, 6, math.radians(0), math.radians(145))
+        cr.set_line_width(3.0)
+        cr.stroke()
+        cr.move_to(6, -3)
+        cr.line_to(9, 0)
+        cr.line_to(3, 0)
+        cr.close_path()
+        cr.fill()
+    
+    def _draw_scale_arrow(self, cr, edit_point, add_angle):
+        x, y = self.get_panel_point(*edit_point)
+        cr.translate(x,y)
+        cr.rotate(math.radians(self.rotation + add_angle))
+        
+        SHAFT_WIDTH = 2
+        SHAFT_LENGTH = 6
+        HEAD_WIDTH = 6
+        HEAD_LENGTH = 6
+        cr.move_to(0, - SHAFT_WIDTH)
+        cr.line_to(SHAFT_LENGTH, -SHAFT_WIDTH)
+        cr.line_to(SHAFT_LENGTH, -HEAD_WIDTH)
+        cr.line_to(SHAFT_LENGTH + HEAD_LENGTH, 0)
+        cr.line_to(SHAFT_LENGTH, HEAD_WIDTH)
+        cr.line_to(SHAFT_LENGTH, SHAFT_WIDTH)
+        cr.line_to(-SHAFT_LENGTH, SHAFT_WIDTH)
+        cr.line_to(-SHAFT_LENGTH, HEAD_WIDTH)
+        cr.line_to(-SHAFT_LENGTH - HEAD_LENGTH, 0)
+        cr.line_to(-SHAFT_LENGTH, -HEAD_WIDTH)
+        cr.line_to(-SHAFT_LENGTH, -SHAFT_WIDTH)
+        cr.close_path()
+ 
+        cr.set_source_rgb(1,1,1)
+        cr.fill_preserve()
+        cr.set_line_width(2.0)
+        cr.set_source_rgb(0,0,0)
+        cr.stroke()
+        cr.identity_matrix()
+
 # ----------------------------------------------------------- buttons objects
 class ClipEditorButtonsRow(gtk.HBox):
     """
