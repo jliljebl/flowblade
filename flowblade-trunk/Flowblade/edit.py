@@ -1075,7 +1075,7 @@ def _clone_filters_redo(self):
     _attach_all(self.clip)
 
 # -------------------------------------- ADD COMPOSITOR ACTION
-# "origin_clip_id",in_frame","out_frame","compositor_index","a_track","b_track"
+# "origin_clip_id",in_frame","out_frame","compositor_type","a_track","b_track"
 def add_compositor_action(data):
     action = EditAction(_add_compositor_undo, _add_compositor_redo, data)
     action.first_do = True
@@ -1093,7 +1093,7 @@ def _add_compositor_undo(self):
     self.compositor = None
 
 def _add_compositor_redo(self):    
-    self.compositor = current_sequence().create_compositor(self.compositor_index)
+    self.compositor = current_sequence().create_compositor(self.compositor_type)
     self.compositor.transition.set_tracks(self.a_track, self.b_track)
     self.compositor.set_in_and_out(self.in_frame, self.out_frame)
     self.compositor.origin_clip_id = self.origin_clip_id
@@ -1121,7 +1121,7 @@ def delete_compositor_action(data):
 def _delete_compositor_undo(self):
     old_compositor = self.compositor 
     
-    self.compositor = current_sequence().create_compositor(old_compositor.compositor_index)
+    self.compositor = current_sequence().create_compositor(old_compositor.type_id)
     self.compositor.clone_properties(old_compositor)
     self.compositor.set_in_and_out(old_compositor.clip_in, old_compositor.clip_out)
     self.compositor.transition.set_tracks(old_compositor.transition.a_track, old_compositor.transition.b_track)

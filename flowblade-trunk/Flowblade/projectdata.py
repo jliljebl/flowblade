@@ -40,7 +40,7 @@ import sequence
 import utils
 
 
-SAVEFILE_VERSION = 2 # this changed when backwards incompatible changes 
+SAVEFILE_VERSION = 3 # this changed when backwards incompatible changes 
                      # are introduced to allow for detecting and fixing them
 
 

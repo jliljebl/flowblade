@@ -52,6 +52,9 @@ PROP_EXPRESSION = appconsts.PROP_EXPRESSION
 # dict name : MLTCompositorInfo
 mlt_compositor_transition_infos = {}
 
+# Name -> type dict, used at creation when type is known, but name data has been left behind
+name_for_type = {}
+
 # Transitions not found in the system
 not_found_transitions = [] 
 
@@ -64,7 +67,7 @@ blenders = None
 def init_module():
 
     # translations and module load order make us do this in method instead of at module load
-    global wipe_lumas, compositors, blenders
+    global wipe_lumas, compositors, blenders, name_for_type
     wipe_lumas = { \
                 _("Vertical From Center"):"bi-linear_x.pgm",
                 _("Vertical Top to Bottom"):"wipe_top_to_bottom.svg",
@@ -111,14 +114,16 @@ def init_module():
                 _("Diagonal 4"):"wipe_diagonal_4.png",
                 _("Checkerboard"):"checkerboard_small.pgm"}
 
-    # Name -> creator funcion dict.
-    compositors = [ (_("Affine"),_create_affine_compositor),
-                    (_("Dissolve"),_create_dissolve_compositor),
-                    (_("Picture in Picture"),_create_pict_in_pict_compositor),
-                    (_("Region"), _create_region_wipe_compositor),
-                    (_("Affine Blend"), _create_affine_blend_compositor),
-                    (_("Blend"), _create_blend_compositor),
-                    (_("Wipe Clip Length"), _create_wipe_compositor)]
+    # name -> mlt_compositor_transition_infos key dict.
+    unsorted_compositors = [ (_("Affine"),"##affine"),
+                             (_("Dissolve"),"##opacity_kf"),
+                             (_("Picture in Picture"),"##pict_in_pict"),
+                             (_("Region"), "##region"),
+                             (_("Affine Blend"), "##affineblend"),
+                             (_("Blend"), "##blend"),
+                             (_("Wipe Clip Length"),"##wipe")]
+
+    compositors = sorted(unsorted_compositors, key=lambda comp: comp[0])   
 
     # name -> mlt_compositor_transition_infos key dict.
     blenders = [(_("Add"),"##add"),
@@ -140,6 +145,14 @@ def init_module():
                 (_("Softlight"),"##softlight"),
                 (_("Subtract"),"##subtract"),
                 (_("Value"),"##value")]
+
+    for comp in compositors:
+        name, comp_type = comp
+        name_for_type[comp_type] = name
+    
+    for blend in blenders:
+        name, comp_type = blend
+        name_for_type[comp_type] = name
 
 # ------------------------------------------ compositors
 class CompositorTransitionInfo:
@@ -281,7 +294,9 @@ class CompositorObject:
         self.name = None # ducktyping for clip for property editors
         self.selected = False
         self.origin_clip_id = None
-        self.destroy_id = os.urandom(16) # Objects are recreated often in Sequence.restack_compositors()
+        
+        self.destroy_id = os.urandom(16) # HACK, HACK, HACK - find a way to remove this stuff  
+                                         # Objects are recreated often in Sequence.restack_compositors()
                                          # and cannot be destroyd in undo/redo with object identidy.
                                          # This is cloned in clone_properties
 
@@ -327,59 +342,10 @@ def get_wipe_resource_path(key):
     img_file = wipe_lumas[key]
     return respaths.WIPE_RESOURCES_PATH + img_file
 
-def create_compositor(compositor_type_index):
-    if compositor_type_index < len(compositors): #Create compositor
-        name, create_func = compositors[compositor_type_index]
-        compositor = create_func()
-    else: # Create blender compositor
-        name, transition_id_str = blenders[compositor_type_index - len(compositors)]
-        compositor = _create_blender(transition_id_str)
-    """
-    for persistance, used to recreate at load
-    INDEXES:
-    0                     - len(compositors) - 1                     --- compositors
-    len(compositors)      - len(compositors) + len(blenders) - 1     --- blenders
-    """
-    compositor.compositor_index = compositor_type_index
-    compositor.name = name
+def create_compositor(compositor_type):
+    transition_info = mlt_compositor_transition_infos[compositor_type]
+    compositor = CompositorObject(transition_info)
+    compositor.compositor_index = -1 # not used since SAVEFILE = 3
+    compositor.name = name_for_type[compositor_type]
+    compositor.type_id = compositor_type # this is a string like "##add", "##affineblend", in compositors.xml it is name element: <name>##affine</name> etc...
     return compositor
-
-
-# ------------------------------------------------- CompositorObject creators
-def _create_affine_compositor():
-    transition_info = mlt_compositor_transition_infos["##affine"]
-    return CompositorObject(transition_info)
-
-def _create_affine_blend_compositor():
-    transition_info = mlt_compositor_transition_infos["##affineblend"]
-    return CompositorObject(transition_info)
-
-def _create_blend_compositor():
-    transition_info = mlt_compositor_transition_infos["##blend"]
-    return CompositorObject(transition_info)
-    
-def _create_pict_in_pict_compositor():
-    transition_info = mlt_compositor_transition_infos["##pict_in_pict"]
-    return CompositorObject(transition_info)
-
-def _create_dissolve_compositor():
-    transition_info = mlt_compositor_transition_infos["##opacity_kf"]
-    return CompositorObject(transition_info)
-
-def _create_region_wipe_compositor():
-    transition_info = mlt_compositor_transition_infos["##region"]
-    return CompositorObject(transition_info)
-
-def _create_wipe_compositor():
-    transition_info = mlt_compositor_transition_infos["##wipe"]
-    return CompositorObject(transition_info)
-
-def _create_blender(transition_id_str):
-    transition_info = mlt_compositor_transition_infos[transition_id_str]
-    return CompositorObject(transition_info)
- 
-def _get_transition_wrapper_object(transition_info):
-    return CompositorTransition(transition_info)
-
-
-

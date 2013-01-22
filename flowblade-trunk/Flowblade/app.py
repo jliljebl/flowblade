@@ -217,6 +217,8 @@ def main(root_path):
         splash_timeout_id = gobject.timeout_add(2600, destroy_splash_screen)
         splash_screen.show_all()
 
+    appconsts.SAVEFILE_VERSION = projectdata.SAVEFILE_VERSION
+
     # Existance of autosaved file hints that program was exited abnormally
     if os.path.exists(user_dir + AUTOSAVE_FILE) and check_crash == True:
         gobject.timeout_add(10, autosave_recovery_dialog)

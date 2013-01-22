@@ -567,7 +567,9 @@ def _add_filter(data):
 
 def _add_compositor(data):
     clip, track, item_id, item_data = data
-    x, compositor_index = item_data
+    x, compositor_type = item_data
+    #_do_add_compositor(x, compositor_type, track):
+
     frame = tlinewidgets.get_frame(x)
     clip_index = track.get_clip_index_at(frame)
 
@@ -582,31 +584,7 @@ def _add_compositor(data):
                 "out_frame":compositor_out,
                 "a_track":target_track_index,
                 "b_track":track.id,
-                "compositor_index":compositor_index}
-    action = edit.add_compositor_action(edit_data)
-    action.do_edit()
-    
-    updater.repaint_tline()
-
-def _add_blender(data):
-    clip, track, item_id, item_data = data
-    x, blender_index = item_data
-    compositor_index = blender_index + len(mlttransitions.compositors) # see mlttransitions.create_compositor()
-    frame = tlinewidgets.get_frame(x)
-    clip_index = track.get_clip_index_at(frame)
-
-    target_track_index = track.id - 1
-
-    compositor_in = current_sequence().tracks[track.id].clip_start(clip_index)
-    clip_length = clip.clip_out - clip.clip_in
-    compositor_out = compositor_in + clip_length
-
-    edit_data = {"origin_clip_id":clip.id,
-                "in_frame":compositor_in,
-                "out_frame":compositor_out,
-                "a_track":target_track_index,
-                "b_track":track.id,
-                "compositor_index":compositor_index}
+                "compositor_type":compositor_type}
     action = edit.add_compositor_action(edit_data)
     action.do_edit()
     
@@ -999,7 +977,6 @@ POPUP_HANDLERS = {"lock":_lock_track,
                   "resync":syncsplitevent.resync_clip,
                   "add_filter":_add_filter,
                   "add_compositor":_add_compositor,
-                  "add_blender":_add_blender,
                   "clear_sync_rel":syncsplitevent.clear_sync_relation,
                   "mute_clip":_mute_clip,
                   "mute_track":_mute_track,

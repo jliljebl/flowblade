@@ -92,3 +92,7 @@ THUMB_HEIGHT = 30
 
 # Magic value for no pan being applied for audio producer
 NO_PAN = -99
+
+# Copy of projectdata.SAVEFILE_VERSION is here to be available at savetime without importing projectdata
+# This is set at application startup in app.main()
+SAVEFILE_VERSION = -1

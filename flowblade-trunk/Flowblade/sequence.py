@@ -481,8 +481,8 @@ class Sequence:
         return filter_object
 
     # ------------------------------------------------------ compositors
-    def create_compositor(self, compositor_type_index):
-        compositor = mlttransitions.create_compositor(compositor_type_index)
+    def create_compositor(self, compositor_type):
+        compositor = mlttransitions.create_compositor(compositor_type)
         compositor.create_mlt_objects(self.profile)
         return compositor
 
@@ -511,7 +511,7 @@ class Sequence:
         self.field.disconnect_service(old_compositor.transition.mlt_transition)
         
         # Create and plant new compositor
-        compositor = self.create_compositor(old_compositor.compositor_index)
+        compositor = self.create_compositor(old_compositor.type_id)
         compositor.clone_properties(old_compositor)
         compositor.set_in_and_out(old_compositor.clip_in, old_compositor.clip_out)
         compositor.transition.set_tracks(old_compositor.transition.a_track, old_compositor.transition.b_track)
@@ -534,7 +534,7 @@ class Sequence:
         edit.old_compositors.append(old_compositor) # HACK. Garbage collecting compositors causes crashes.
         
         # Create and plant new compositor
-        compositor = self.create_compositor(old_compositor.compositor_index)
+        compositor = self.create_compositor(old_compositor.type_id)
         compositor.clone_properties(old_compositor)
         compositor.set_in_and_out(old_compositor.clip_in, old_compositor.clip_out)
         compositor.transition.set_tracks(old_compositor.transition.a_track + track_delta, old_compositor.transition.b_track + track_delta)

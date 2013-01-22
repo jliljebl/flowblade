@@ -975,10 +975,10 @@ def _get_compositors_add_menu_item(event, clip, track, callback, sensitive):
     
     for i in range(0, len(mlttransitions.compositors)):
         compositor = mlttransitions.compositors[i]
-        name, creator_func = compositor
+        name, compositor_type = compositor
         compositor_item = gtk.MenuItem(name)
         sub_menu.append(compositor_item)
-        compositor_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, i)))
+        compositor_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type)))
         compositor_item.show()
     menu_item.set_sensitive(sensitive)
     menu_item.show()
@@ -991,10 +991,10 @@ def _get_blenders_add_menu_item(event, clip, track, callback, sensitive):
     
     for i in range(0, len(mlttransitions.blenders)):
         blend = mlttransitions.blenders[i]
-        name, id_str = blend
+        name, compositor_type = blend
         blender_item = gtk.MenuItem(name)
         sub_menu.append(blender_item)
-        blender_item.connect("activate", callback, (clip, track, "add_blender", (event.x, i)))
+        blender_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type)))
         blender_item.show()
     menu_item.set_sensitive(sensitive)
     menu_item.show()

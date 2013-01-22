@@ -101,6 +101,9 @@ def save_project(project, file_path):
     
     # Set current sequence index
     s_proj.c_seq_index = project.sequences.index(project.c_seq)
+    
+    # Set save file version in case this is a resave of older file type. Older file type has been converted to newer file type on load.
+    s_proj.SAVEFILE_VERSION = appconsts.SAVEFILE_VERSION
  
     # Replace media file objects with pickleable copys
     media_files = {}
@@ -322,11 +325,11 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
     mlt_compositors = []
     for py_compositor in seq.compositors:
             # Keeping backwards compability
-            if SAVEFILE_VERSION < 2:
-                FIX_1_TO_N_BACKWARDS_COMPOSITOR_COMPABILITY(py_compositor)
+            if SAVEFILE_VERSION < 3:
+                FIX_BACKWARDS_COMPOSITOR_COMPABILITY(py_compositor, SAVEFILE_VERSION)
         
             # Create new compositor object
-            compositor = mlttransitions.create_compositor(py_compositor.compositor_index)                                        
+            compositor = mlttransitions.create_compositor(py_compositor.type_id)                                        
             compositor.create_mlt_objects(seq.profile)
 
             # Copy and set param values
@@ -442,7 +445,13 @@ def fill_filters_mlt(mlt_clip, sequence):
     
 
 # ------------------------------------------------------- backwards compability
-def FIX_1_TO_N_BACKWARDS_COMPOSITOR_COMPABILITY(compositor):
+def FIX_BACKWARDS_COMPOSITOR_COMPABILITY(compositor, SAVEFILE_VERSION):
+    if SAVEFILE_VERSION == 1:
+        FIX_1_TO_2_BACKWARDS_COMPOSITOR_COMPABILITY(compositor)
+    
+    FIX_2_TO_N_BACKWARDS_COMPOSITOR_COMPABILITY(compositor)
+    
+def FIX_1_TO_2_BACKWARDS_COMPOSITOR_COMPABILITY(compositor):
     # fix SAVEFILE_VERSION 1 -> N compability issue with x,y -> x/y in compositors
     new_properties = []
     for prop in compositor.transition.properties:
@@ -450,6 +459,10 @@ def FIX_1_TO_N_BACKWARDS_COMPOSITOR_COMPABILITY(compositor):
         value = value.replace(",","/")
         new_properties.append((name, value, prop_type))
     compositor.transition.properties = new_properties
+
+def FIX_2_TO_N_BACKWARDS_COMPOSITOR_COMPABILITY(compositor):
+    compositor.type_id = compositors_index_to_type_id[compositor.compositor_index]
+    print compositor.type_id
 
 def FIX_1_TO_N_BACKWARDS_FILTER_COMPABILITY(py_filter):
     # This is only called on "affine" filters
@@ -460,3 +473,13 @@ def FIX_1_TO_N_BACKWARDS_FILTER_COMPABILITY(py_filter):
         value = value.replace(",","/")
         new_properties.append((name, value, prop_type))
     py_filter.properties = new_properties
+
+
+
+
+# List is used to convert SAVEFILE_VERSIONs 1 and 2 to SAVEFILE_VERSIONs 3 -> n by getting type_id string for compositor index 
+compositors_index_to_type_id = ["##affine","##opacity_kf","##pict_in_pict", "##region","##wipe", "##add",
+                                "##burn", "##color_only", "##darken", "##difference", "##divide", "##dodge",
+                                "##grain_extract", "##grain_merge", "##hardlight", "##hue", "##lighten",
+                                "##multiply", "##overlay", "##saturation", "##screen", "##softlight",
+                                "##subtract", "##value"]
