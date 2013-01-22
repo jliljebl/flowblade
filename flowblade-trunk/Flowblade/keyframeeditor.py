@@ -1324,6 +1324,7 @@ class RotatingScreenEditor(AbstractScreenEditor):
         self._draw_scale_arrow(cr, self.edit_points[2], 90)
         self._draw_scale_arrow(cr, self.edit_points[1], 0)
 
+        # center cross
         x, y = self.get_panel_point(*self.edit_points[0])
         cr.translate(x,y)
         cr.rotate(math.radians(self.rotation))
@@ -1337,6 +1338,7 @@ class RotatingScreenEditor(AbstractScreenEditor):
         cr.stroke()
         cr.identity_matrix()
         
+        # roto handle
         x, y = self.get_panel_point(*self.edit_points[3])
         cr.translate(x,y)
         cr.rotate(math.radians(self.rotation))

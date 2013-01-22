@@ -63,7 +63,7 @@ blenders = None
 
 def init_module():
 
-    # translations and module load order make us do this
+    # translations and module load order make us do this in method instead of at module load
     global wipe_lumas, compositors, blenders
     wipe_lumas = { \
                 _("Vertical From Center"):"bi-linear_x.pgm",
@@ -117,6 +117,7 @@ def init_module():
                     (_("Picture in Picture"),_create_pict_in_pict_compositor),
                     (_("Region"), _create_region_wipe_compositor),
                     (_("Affine Blend"), _create_affine_blend_compositor),
+                    (_("Blend"), _create_blend_compositor),
                     (_("Wipe Clip Length"), _create_wipe_compositor)]
 
     # name -> mlt_compositor_transition_infos key dict.
@@ -353,6 +354,10 @@ def _create_affine_blend_compositor():
     transition_info = mlt_compositor_transition_infos["##affineblend"]
     return CompositorObject(transition_info)
 
+def _create_blend_compositor():
+    transition_info = mlt_compositor_transition_infos["##blend"]
+    return CompositorObject(transition_info)
+    
 def _create_pict_in_pict_compositor():
     transition_info = mlt_compositor_transition_infos["##pict_in_pict"]
     return CompositorObject(transition_info)
