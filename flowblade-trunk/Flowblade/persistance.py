@@ -102,7 +102,8 @@ def save_project(project, file_path):
     # Set current sequence index
     s_proj.c_seq_index = project.sequences.index(project.c_seq)
     
-    # Set save file version in case this is a resave of older file type. Older file type has been converted to newer file type on load.
+    # Set project SAVEFILE_VERSION to current in case this is a resave of older file type.
+    # Older file type has been converted to newer file type on load.
     s_proj.SAVEFILE_VERSION = appconsts.SAVEFILE_VERSION
  
     # Replace media file objects with pickleable copys

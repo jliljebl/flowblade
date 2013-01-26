@@ -68,6 +68,9 @@ MONITOR_AREA_WIDTH = 600 # defines app min width with NOTEBOOK_WIDTH 400 for sma
 BUTTON_HEIGHT = 34 # middle edit buttons row
 BUTTON_WIDTH = 48 # middle edit buttons row
 
+MODE_BUTTON_ACTIVE_COLOR = "#9d9d9d"
+MODE_BUTTON_PRELIGHT_COLOR = "#bdbdbd"
+
 BINS_HEIGHT = 250
 EFFECT_STACK_VIEW_HEIGHT = 160
 EFFECT_VALUE_EDITOR_HEIGHT = 200
@@ -764,22 +767,26 @@ class EditorWindow:
         self.insert_move_b.set_mode(False)
         insert_move_icon = gtk.image_new_from_file(IMG_PATH + "insert_move.png")
         _b(self.insert_move_b, insert_move_icon)
+        self._set_mode_button_colors(self.insert_move_b)
 
         self.one_roll_trim_b = gtk.RadioButton(self.insert_move_b)
         self.one_roll_trim_b.set_mode(False)
         one_roll_icon = gtk.image_new_from_file(IMG_PATH + "one_roll_trim.png")
         _b(self.one_roll_trim_b, one_roll_icon)
-    
+        self._set_mode_button_colors(self.one_roll_trim_b)
+
         self.overwrite_move_b = gtk.RadioButton(self.insert_move_b)
         self.overwrite_move_b.set_mode(False)
         over_move_icon = gtk.image_new_from_file(IMG_PATH + "over_move.png")
         _b(self.overwrite_move_b, over_move_icon)
-
+        self._set_mode_button_colors(self.overwrite_move_b)
+        
         self.tworoll_trim_b = gtk.RadioButton(self.insert_move_b)
         self.tworoll_trim_b.set_mode(False)
         two_roll_icon = gtk.image_new_from_file(IMG_PATH + "two_roll_trim.png")
         _b(self.tworoll_trim_b, two_roll_icon)
-
+        self._set_mode_button_colors(self.tworoll_trim_b)
+        
         # Undo / Redo buttons
         self.undo_b = gtk.Button()
         undo_icon = gtk.image_new_from_file(IMG_PATH + "undo.png")
@@ -864,9 +871,13 @@ class EditorWindow:
 
         return buttons_row
 
+    def _set_mode_button_colors(self, mode_button):
+        mode_button.modify_bg(gtk.STATE_ACTIVE, gtk.gdk.color_parse(MODE_BUTTON_ACTIVE_COLOR))
+        mode_button.modify_bg(gtk.STATE_PRELIGHT, gtk.gdk.color_parse(MODE_BUTTON_PRELIGHT_COLOR))
+            
     def _add_tool_tips(self):
         self.big_TC.widget.set_tooltip_text(_("Timeline current frame timecode"))
-        
+
         self.zoom_in_b.set_tooltip_text(_("Zoom In"))
         self.zoom_out_b.set_tooltip_text(_("Zoom Out"))
         self.zoom_length_b.set_tooltip_text(_("Zoom to Sequence length"))

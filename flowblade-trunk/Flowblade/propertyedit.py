@@ -58,7 +58,6 @@ DEFAULT_TRANSITION = "default_transition"                   # value     (str(int
 SINGLE_KEYFRAME = "singlekeyframe"                          # 0=value
 OPACITY_IN_GEOM_SINGLE_KF = "opacity_in_geom_kf_single"     # 0=0/0:SCREEN_WIDTHxSCREEN_HEIGHT:opacity
 OPACITY_IN_GEOM_KF = "opacity_in_geom_kf"                   # frame=0/0:SCREEN_WIDTHxSCREEN_HEIGHT:opacity (kf_str;kf_str;kf_str;...;kf_str)
-OPACITY_IN_SINGLE_VALUE_KF = "opacity_in_single_value_kf"   # frame=opacity
 GEOMETRY_OPACITY_KF ="geom_opac_kf"                         # frame=x/y:widthxheight:opacity
 GEOM_IN_AFFINE_FILTER = "geom_in_affine_filt"               # x/y:widthxheight:opacity
 KEYFRAME_HCS = "keyframe_hcs"                               # frame=value(;frame=value) HCS = half comma separeted
@@ -431,12 +430,14 @@ class AffineFilterGeomProperty(EditableProperty):
         val_str = str(x) + "/" + str(y) + ":" + str(w) + "x" + str(h) + ":100"
         self.write_value(val_str)
 
+
 class FreiPosHCSFilterProperty(EditableProperty):    
     def adjustment_value_changed(self, adjustment):
         value = adjustment.get_value()
         out_value = self.get_out_value(value)
         val_str = "0=" + str(out_value)
         self.write_value(val_str)
+
 
 class OpacityInGeomSKFProperty(TransitionEditableProperty):
     """
@@ -502,38 +503,6 @@ class OpacityInGeomKeyframeProperty(TransitionEditableProperty):
         val_str = val_str.strip(";")
         self.write_value(val_str)
 
-"""
-class OpacityInSingleValueKFProperty(TransitionEditableProperty):
-    
-    def __init__(self, params):
-        TransitionEditableProperty.__init__(self, params)
-        clip, prop, property_index, args_str = params
-        name, value, prop_type = prop
-        
-        # We need values of first keyframe for later
-        key_frames = value.split(";")
-        frame, self.first_kf_value = key_frames[0].split("=")
-        
-    def get_input_range_adjustment(self):
-        # initial opacity value
-        try:
-            step = propertyparse.get_args_num_value(self.args[STEP])
-        except:
-            step = DEFAULT_STEP
-        lower, upper = self.input_range
-        in_value = self.get_in_value(float(self.first_kf_value))
-        return gtk.Adjustment(float(in_value), float(lower), float(upper), float(step))
-
-    def write_out_keyframes(self, keyframes):
-        # key frame array of tuples (frame, opacity)
-        val_str = ""
-        for kf in keyframes:
-            frame, opac = kf
-            val_str += str(int(frame)) + "="  + str(self.get_out_value(opac)) + ";" # opac with converted range from slider
-        
-        val_str = val_str.strip(";")
-        self.write_value(val_str)
-"""
 
 class KeyFrameGeometryOpacityProperty(TransitionEditableProperty):
     """
@@ -566,9 +535,11 @@ class KeyFrameGeometryOpacityProperty(TransitionEditableProperty):
         val_str = val_str.strip(";")
         self.write_value(val_str)
 
+
 class FreiGeomHCSTransitionProperty(TransitionEditableProperty):
     def __init__(self, params):
         TransitionEditableProperty.__init__(self, params)
+
 
 class KeyFrameHCSFilterProperty(EditableProperty):
     """
@@ -590,6 +561,7 @@ class KeyFrameHCSFilterProperty(EditableProperty):
         
         val_str = val_str.strip(";")
         self.write_value(val_str)
+
 
 class KeyFrameHCSTransitionProperty(TransitionEditableProperty):
     """
@@ -614,6 +586,7 @@ class KeyFrameHCSTransitionProperty(TransitionEditableProperty):
         
         val_str = val_str.strip(";")
         self.write_value(val_str)
+
 
 class ColorProperty(EditableProperty):
     """
@@ -669,7 +642,7 @@ class MultipartKeyFrameProperty(AbstractProperty):
         except:
             step = DEFAULT_STEP
         lower, upper = self.input_range
-        ## stuff missing for load
+
         return gtk.Adjustment(float(0.1), float(lower), float(upper), float(step)) # Value set later to first kf value
 
     def write_out_keyframes(self, keyframes):
