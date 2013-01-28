@@ -798,12 +798,19 @@ class EditorWindow:
 
         # Mode buttons panel
         mode_buttons = self._get_buttons_panel(4, 38)
-        mode_buttons.set_size_request(195, 22)
+        mode_buttons.set_size_request(195, 24)
         mode_buttons.pack_start(self.overwrite_move_b, False, True, 0)
         mode_buttons.pack_start(self.insert_move_b, False, True, 0)
         mode_buttons.pack_start(self.one_roll_trim_b, False, True, 0)
         mode_buttons.pack_start(self.tworoll_trim_b, False, True, 0)
-
+        #mode_buttons.set_border_width(1)
+        
+        #mode_frame = gtk.Frame()
+        #mode_frame.add(mode_buttons)
+        #mode_frame.set_shadow_type(gtk.SHADOW_OUT)
+        #mode_frame.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse(MODE_BUTTON_PRELIGHT_COLOR))
+        #gtk.SHADOW_NONE, gtk.SHADOW_IN, gtk.SHADOW_OUT, gtk.SHADOW_ETCHED_IN, gtk.SHADOW_ETCHED_OUT
+    
         # Zoom buttons panel
         zoom_buttons = self._get_buttons_panel(3)
         zoom_buttons.pack_start(self.zoom_in_b, False, True, 0)
@@ -874,6 +881,7 @@ class EditorWindow:
     def _set_mode_button_colors(self, mode_button):
         mode_button.modify_bg(gtk.STATE_ACTIVE, gtk.gdk.color_parse(MODE_BUTTON_ACTIVE_COLOR))
         mode_button.modify_bg(gtk.STATE_PRELIGHT, gtk.gdk.color_parse(MODE_BUTTON_PRELIGHT_COLOR))
+        #mode_button.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse(MODE_BUTTON_PRELIGHT_COLOR))
             
     def _add_tool_tips(self):
         self.big_TC.widget.set_tooltip_text(_("Timeline current frame timecode"))

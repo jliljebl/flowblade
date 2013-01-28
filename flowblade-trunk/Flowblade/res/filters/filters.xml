@@ -550,6 +550,7 @@
         <property name="Color Temperature" args="range_in=1000,15000 range_out=0.067,1">0.5</property>
     </filter>
 
+
     <!-- COLOR EFFECT -->
     <filter id="frei0r.cluster">
         <name>Color Clustering</name>
