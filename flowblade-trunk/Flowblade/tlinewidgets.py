@@ -63,13 +63,13 @@ MARK_LINE_WIDTH = 4
 COLUMN_WIDTH = 96 # column area width
 SCALE_HEIGHT = 25
 SCROLL_HEIGHT = 20
-MUTE_SWITCH_WIDTH = 18
+MUTE_SWITCH_WIDTH = 8 # as mute switch no longer exists this is now essentially left pad width 
 ACTIVE_SWITCH_WIDTH = 18
 COMPOSITOR_HEIGHT_OFF = 10
 COMPOSITOR_HEIGHT = 20
 COMPOSITOR_TEXT_X = 6
 COMPOSITOR_TEXT_Y = 15
-ID_PAD_X = 18 # track id text pos
+ID_PAD_X = 28 # track id text pos
 ID_PAD_Y = 16 # track id text pos
 ID_PAD_Y_SMALL = 4 # track id text pos for small track
 VIDEO_TRACK_V_ICON_POS = (5, 16)
@@ -78,7 +78,8 @@ VIDEO_TRACK_V_ICON_POS_SMALL = (5, 3)
 VIDEO_TRACK_A_ICON_POS_SMALL = (5, 12)
 AUDIO_TRACK_ICON_POS = (5, 18)
 AUDIO_TRACK_ICON_POS_SMALL = (5, 6)
-MUTE_ICON_POS = (19, 7)
+MUTE_ICON_POS = (10, 3)
+MUTE_ICON_POS_NORMAL = (10, 14)
 LOCK_POS = (67, 2)
 INSRT_ICON_POS = (81, 18)
 INSRT_ICON_POS_SMALL = (81, 6)
@@ -94,6 +95,8 @@ TRACK_BG_ICON = None
 MUTE_VIDEO_ICON = None
 MUTE_AUDIO_ICON = None
 MUTE_ALL_ICON = None
+TRACK_ALL_ON_V_ICON = None
+TRACK_ALL_ON_A_ICON = None
 
 # clip icons
 SYNC_CLIP_ICON = None
@@ -196,13 +199,13 @@ SHADOW_POINTER_COLOR = (0.5, 0.5, 0.5)
 
 BLANK_SELECTED = (0.68, 0.68, 0.74)
 
-TRACK_GRAD_STOP1 = (1, 0.93, 0.93, 0.93, 1)
-TRACK_GRAD_STOP2 = (0.5, 0.58, 0.58, 0.58, 1)
-TRACK_GRAD_STOP3 = (0, 0.84, 0.84, 0.84, 1)
+TRACK_GRAD_STOP1 = (1, 0.68, 0.68, 0.68, 1) #0.93, 0.93, 0.93, 1)
+TRACK_GRAD_STOP2 = (0.5, 0.93, 0.93, 0.93, 1) # (0.5, 0.58, 0.58, 0.58, 1)
+TRACK_GRAD_STOP3 = (0, 0.93, 0.93, 0.93, 1) #0.58, 0.58, 0.58, 1) #(0, 0.84, 0.84, 0.84, 1)
 
-TRACK_GRAD_ORANGE_STOP1 = (1, 0.93, 0.62, 0.53, 1)
-TRACK_GRAD_ORANGE_STOP2 = (0.5, 0.58, 0.34, 0.34, 1)
-TRACK_GRAD_ORANGE_STOP3 = (0, 0.95, 0.69, 0.69, 1)
+TRACK_GRAD_ORANGE_STOP1 = (1,  0.4, 0.4, 0.4, 1)
+TRACK_GRAD_ORANGE_STOP2 = (1, 0.93, 0.62, 0.53, 1) #(0.5, 0.58, 0.34, 0.34, 1)
+TRACK_GRAD_ORANGE_STOP3 = (0,  0.68, 0.68, 0.68, 1)
 
 LIGHT_MULTILPLIER = 1.14
 DARK_MULTIPLIER = 0.74
@@ -227,7 +230,8 @@ def load_icons():
     global AUDIO_ON_ICON, AUDIO_OFF_ICON, VIDEO_ON_ICON, VIDEO_OFF_ICON,\
     SYNC_LOCK_ICON, FULL_LOCK_ICON, SYNC_CLIP_ICON, FILTER_CLIP_ICON, VIEW_SIDE_ICON,\
     COMPOSITOR_CLIP_ICON, INSERT_ARROW_ICON, AUDIO_MUTE_ICON, MARKER_ICON, \
-    VIDEO_MUTE_ICON, ALL_MUTE_ICON, TRACK_BG_ICON, MUTE_AUDIO_ICON, MUTE_VIDEO_ICON, MUTE_ALL_ICON
+    VIDEO_MUTE_ICON, ALL_MUTE_ICON, TRACK_BG_ICON, MUTE_AUDIO_ICON, MUTE_VIDEO_ICON, MUTE_ALL_ICON, \
+    TRACK_ALL_ON_V_ICON, TRACK_ALL_ON_A_ICON
 
     AUDIO_ON_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "audio_on.png")
     AUDIO_OFF_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "audio_off.png")
@@ -248,6 +252,11 @@ def load_icons():
     MUTE_VIDEO_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_video_mute.png")
     MUTE_ALL_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_all_mute.png")
     MARKER_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "marker.png")
+    TRACK_ALL_ON_V_ICON = _load_icon("track_all_on_V.png")
+    TRACK_ALL_ON_A_ICON = _load_icon("track_all_on_A.png")
+
+def _load_icon(icon_file):
+    return gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + icon_file)
 
 def set_ref_line_y(allocation):
     """
@@ -1029,7 +1038,7 @@ class TimeLineColumn:
         self.draw_edge(cr, rect)
         
         # Draw active switch bg end edge
-        rect = (MUTE_SWITCH_WIDTH + center_width, y, ACTIVE_SWITCH_WIDTH, track.height)
+        rect = (MUTE_SWITCH_WIDTH + center_width -1, y, ACTIVE_SWITCH_WIDTH + 1, track.height)
         cr.rectangle(*rect)
         if track.active:
             grad = cairo.LinearGradient(MUTE_SWITCH_WIDTH + center_width, y,
@@ -1062,12 +1071,20 @@ class TimeLineColumn:
         mute_icon = None
         if track.mute_state == appconsts.TRACK_MUTE_VIDEO and track.type == appconsts.VIDEO:
             mute_icon = MUTE_VIDEO_ICON
-        if track.mute_state == appconsts.TRACK_MUTE_AUDIO:
+        elif track.mute_state == appconsts.TRACK_MUTE_AUDIO:
             mute_icon = MUTE_AUDIO_ICON
-        if track.mute_state == appconsts.TRACK_MUTE_ALL:
+        elif track.mute_state == appconsts.TRACK_MUTE_ALL:
             mute_icon = MUTE_ALL_ICON
+        elif track.type == appconsts.VIDEO:
+            mute_icon = TRACK_ALL_ON_V_ICON
+        else:
+            mute_icon = TRACK_ALL_ON_A_ICON
+            
         if mute_icon != None:
             ix, iy = MUTE_ICON_POS
+            if track.height > sequence.TRACK_HEIGHT_SMALL:
+                print "asasasaassssssssssssssssssssss"
+                ix, iy = MUTE_ICON_POS_NORMAL
             cr.set_source_pixbuf(mute_icon, ix, y + iy)
             cr.paint()
 
@@ -1088,11 +1105,11 @@ class TimeLineColumn:
     def _add_gradient_color_stops(self, grad, track):
         if track.id == current_sequence().first_video_index: 
             grad.add_color_stop_rgba(*TRACK_GRAD_ORANGE_STOP1)
-            grad.add_color_stop_rgba(*TRACK_GRAD_ORANGE_STOP2)
+            #grad.add_color_stop_rgba(*TRACK_GRAD_ORANGE_STOP2)
             grad.add_color_stop_rgba(*TRACK_GRAD_ORANGE_STOP3)
         else:
             grad.add_color_stop_rgba(*TRACK_GRAD_STOP1)
-            grad.add_color_stop_rgba(*TRACK_GRAD_STOP2)
+            #grad.add_color_stop_rgba(*TRACK_GRAD_STOP2)
             grad.add_color_stop_rgba(*TRACK_GRAD_STOP3)
 
     def draw_edge(self, cr, rect):

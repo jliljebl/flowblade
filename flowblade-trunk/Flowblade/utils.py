@@ -261,6 +261,9 @@ def gdk_color_str_to_int(gdk_color_str):
     
     return (red << 24) + (green << 16) + (blue << 8)
 
+def get_cairo_color_tuple_255_rgb(r, g, b):
+    return (float(r)/255.0, float(g)/255.0, float(b)/255.0)
+
 def do_nothing():
     pass
 

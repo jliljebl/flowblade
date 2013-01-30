@@ -65,7 +65,7 @@ MEDIA_MANAGER_WIDTH = 250
 
 MONITOR_AREA_WIDTH = 600 # defines app min width with NOTEBOOK_WIDTH 400 for small
 
-BUTTON_HEIGHT = 34 # middle edit buttons row
+BUTTON_HEIGHT = 28 # middle edit buttons row
 BUTTON_WIDTH = 48 # middle edit buttons row
 
 MODE_BUTTON_ACTIVE_COLOR = "#9d9d9d"
@@ -380,6 +380,8 @@ class EditorWindow:
         self.notebook.append_page(compositors_panel, gtk.Label(_("Compositors")))
         self.notebook.append_page(project_panel, gtk.Label(_("Project")))
         self.notebook.append_page(render_panel, gtk.Label(_("Render")))
+        #self.notebook.set_show_tabs(False)
+        self.notebook.set_tab_pos(gtk.POS_BOTTOM)
 
         # Timecode panel
         tc_panel = panels.get_timecode_panel(self)

@@ -70,7 +70,7 @@ def get_media_files_panel(media_list_view, add_cb, del_cb):
     panel.pack_start(buttons_box, False, True, 0)
     panel.pack_start(media_list_view, True, True, 0)
 
-    return get_named_frame(None, panel, 0)
+    return panel #get_named_frame(None, panel, 0)
 
 def get_bins_panel(bin_list_view, add_cb, delete_cb):
     # Create buttons and connect signals

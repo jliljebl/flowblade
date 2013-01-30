@@ -52,6 +52,8 @@ SEPARATOR_WIDTH = 250
 MONITOR_COMBO_WIDTH = 47
 MONITOR_COMBO_HEIGHT = 16
 
+TC_COLOR = (0.7, 0.7, 0.7) #utils.get_cairo_color_tuple_255_rgb(25, 126, 179)
+
 BIG_TC_GRAD_STOPS = [   (1, 1, 1, 1, 0.2),
                         (0.8, 1, 1, 1, 0),
                         (0.51, 1, 1, 1, 0),
@@ -310,7 +312,7 @@ class BinListView(ImageTextTextListView):
         icon_theme = gtk.icon_theme_get_default()
         for bin in PROJECT().bins:
             try:
-                pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "bin_3.png")
+                pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "bin_5.png")
                 row_data = [pixbuf,
                             bin.name, 
                             str(len(bin.file_ids))]
@@ -1217,7 +1219,7 @@ class BigTCDisplay:
     
     def __init__(self):
         self.widget = CairoDrawableArea(170, 
-                                        20,
+                                        22,
                                         self._draw)
         self.font_desc = pango.FontDescription("Bitstream Vera Sans Mono Condensed 15")
         
@@ -1225,14 +1227,17 @@ class BigTCDisplay:
         x = 2
         y = 2
         width = 166
-        height = 30
+        height = 26
         aspect = 1.0
         corner_radius = height / 3.5
         radius = corner_radius / aspect
         degrees = M_PI / 180.0
-        
+
         self._draw_consts = (x, y, width, height, aspect, corner_radius, radius, degrees)
-    
+
+        self.TEXT_X = 18
+        self.TEXT_Y = 2
+
     def _draw(self, event, cr, allocation):
         """
         Callback for repaint from CairoDrawableArea.
@@ -1273,10 +1278,8 @@ class BigTCDisplay:
         layout.set_text(frame_str)
         layout.set_font_description(self.font_desc)
 
-        pango_context.set_source_rgb(0.0, 0.0, 0)
-
-        pango_context.set_source_rgb(0.7, 0.7, 0.7)
-        pango_context.move_to(18, 5)
+        pango_context.set_source_rgb(*TC_COLOR)#0.7, 0.7, 0.7)
+        pango_context.move_to(self.TEXT_X, self.TEXT_Y)
         pango_context.update_layout(layout)
         pango_context.show_layout(layout)
 
