@@ -94,6 +94,7 @@ FULL_LOCK_ICON = None
 TRACK_BG_ICON = None
 MUTE_VIDEO_ICON = None
 MUTE_AUDIO_ICON = None
+MUTE_AUDIO_A_ICON =  None
 MUTE_ALL_ICON = None
 TRACK_ALL_ON_V_ICON = None
 TRACK_ALL_ON_A_ICON = None
@@ -231,7 +232,7 @@ def load_icons():
     SYNC_LOCK_ICON, FULL_LOCK_ICON, SYNC_CLIP_ICON, FILTER_CLIP_ICON, VIEW_SIDE_ICON,\
     COMPOSITOR_CLIP_ICON, INSERT_ARROW_ICON, AUDIO_MUTE_ICON, MARKER_ICON, \
     VIDEO_MUTE_ICON, ALL_MUTE_ICON, TRACK_BG_ICON, MUTE_AUDIO_ICON, MUTE_VIDEO_ICON, MUTE_ALL_ICON, \
-    TRACK_ALL_ON_V_ICON, TRACK_ALL_ON_A_ICON
+    TRACK_ALL_ON_V_ICON, TRACK_ALL_ON_A_ICON, MUTE_AUDIO_A_ICON
 
     AUDIO_ON_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "audio_on.png")
     AUDIO_OFF_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "audio_off.png")
@@ -254,6 +255,7 @@ def load_icons():
     MARKER_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "marker.png")
     TRACK_ALL_ON_V_ICON = _load_icon("track_all_on_V.png")
     TRACK_ALL_ON_A_ICON = _load_icon("track_all_on_A.png")
+    MUTE_AUDIO_A_ICON = _load_icon("track_audio_mute_A.png") 
 
 def _load_icon(icon_file):
     return gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + icon_file)
@@ -1071,8 +1073,10 @@ class TimeLineColumn:
         mute_icon = None
         if track.mute_state == appconsts.TRACK_MUTE_VIDEO and track.type == appconsts.VIDEO:
             mute_icon = MUTE_VIDEO_ICON
-        elif track.mute_state == appconsts.TRACK_MUTE_AUDIO:
+        elif track.mute_state == appconsts.TRACK_MUTE_AUDIO and track.type == appconsts.VIDEO:
             mute_icon = MUTE_AUDIO_ICON
+        elif track.mute_state == appconsts.TRACK_MUTE_AUDIO and track.type == appconsts.AUDIO:
+            mute_icon = MUTE_AUDIO_A_ICON
         elif track.mute_state == appconsts.TRACK_MUTE_ALL:
             mute_icon = MUTE_ALL_ICON
         elif track.type == appconsts.VIDEO:
@@ -1083,7 +1087,6 @@ class TimeLineColumn:
         if mute_icon != None:
             ix, iy = MUTE_ICON_POS
             if track.height > sequence.TRACK_HEIGHT_SMALL:
-                print "asasasaassssssssssssssssssssss"
                 ix, iy = MUTE_ICON_POS_NORMAL
             cr.set_source_pixbuf(mute_icon, ix, y + iy)
             cr.paint()

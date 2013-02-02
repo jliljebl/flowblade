@@ -380,7 +380,7 @@ class EditorWindow:
         self.notebook.append_page(compositors_panel, gtk.Label(_("Compositors")))
         self.notebook.append_page(project_panel, gtk.Label(_("Project")))
         self.notebook.append_page(render_panel, gtk.Label(_("Render")))
-        #self.notebook.set_show_tabs(False)
+        self.notebook.set_show_tabs(False)
         self.notebook.set_tab_pos(gtk.POS_BOTTOM)
 
         # Timecode panel
@@ -441,9 +441,14 @@ class EditorWindow:
         monitor_frame.set_shadow_type(gtk.SHADOW_ETCHED_OUT)
         monitor_frame.set_size_request(MONITOR_AREA_WIDTH, TOP_ROW_HEIGHT)
 
+        # Notebook panel
+        notebook_vbox = gtk.VBox(False, 1)
+        notebook_vbox.pack_start(self.notebook, True, True)
+        notebook_vbox.pack_start(self._get_middle_buttons_row(), False, False)
+
         # Top row 
         top_paned = gtk.HPaned()
-        top_paned.pack1(self.notebook, resize=True, shrink=False)
+        top_paned.pack1(notebook_vbox, resize=True, shrink=False)
         top_paned.pack2(monitor_frame, resize=False, shrink=False)
 
         top_row_hbox = gtk.HBox(False, 0)
@@ -884,7 +889,62 @@ class EditorWindow:
         mode_button.modify_bg(gtk.STATE_ACTIVE, gtk.gdk.color_parse(MODE_BUTTON_ACTIVE_COLOR))
         mode_button.modify_bg(gtk.STATE_PRELIGHT, gtk.gdk.color_parse(MODE_BUTTON_PRELIGHT_COLOR))
         #mode_button.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse(MODE_BUTTON_PRELIGHT_COLOR))
-            
+
+    def _get_middle_buttons_row(self):
+        show_media_icon = gtk.image_new_from_file(IMG_PATH + "show_media.png") 
+        show_filters_icon = gtk.image_new_from_file(IMG_PATH + "show_filters.png") 
+        show_compositors_icon = gtk.image_new_from_file(IMG_PATH + "show_compositors.png")
+        show_sequences_icon = gtk.image_new_from_file(IMG_PATH + "show_sequences.png")
+        show_render_icon = gtk.image_new_from_file(IMG_PATH + "show_render.png") 
+        open_mixer_icon = gtk.image_new_from_file(IMG_PATH + "open_mixer.png") 
+        open_titler_icon = gtk.image_new_from_file(IMG_PATH + "open_titler.png") 
+        #save_icon = gtk.image_new_from_stock(gtk.STOCK_SAVE, gtk.ICON_SIZE_MENU)
+        #load_icon = gtk.image_new_from_stock(gtk.STOCK_OPEN, gtk.ICON_SIZE_MENU)
+        #quit_icon = gtk.image_new_from_stock(gtk.STOCK_QUIT, gtk.ICON_SIZE_MENU)
+        #new_icon = gtk.image_new_from_stock(gtk.STOCK_NEW, gtk.ICON_SIZE_MENU)
+
+        # Create buttons
+        self.show_media_panel_b = gtk.Button()
+        _b(self.show_media_panel_b, show_media_icon)
+        self.show_filters_panel_b = gtk.Button()
+        _b(self.show_filters_panel_b, show_filters_icon)
+        self.show_compositors_panel_b = gtk.Button()
+        _b(self.show_compositors_panel_b, show_compositors_icon)
+        self.show_sequences_panel_b = gtk.Button()
+        _b(self.show_sequences_panel_b, show_sequences_icon)
+        self.show_render_panel_b = gtk.Button()
+        _b(self.show_render_panel_b, show_render_icon)
+        self.open_mixer_b = gtk.Button()
+        _b(self.open_mixer_b, open_mixer_icon)
+        self.open_titler_b = gtk.Button()
+        _b(self.open_titler_b, open_titler_icon)
+        #save_b = gtk.Button()
+        #_b(save_b, save_icon)
+        #load_b = gtk.Button()
+        #_b(load_b, load_icon)
+        #quit_b = gtk.Button()
+        #_b(quit_b, quit_icon)
+        #new_b = gtk.Button()
+        #_b(new_b, new_icon)
+    
+        # Row
+        buttons_row = gtk.HBox(False, 1)
+        buttons_row.pack_start(self.show_media_panel_b, False, True, 0)
+        buttons_row.pack_start(self.show_filters_panel_b, False, True, 0)
+        buttons_row.pack_start(self.show_compositors_panel_b, False, True, 0)
+        buttons_row.pack_start(self.show_sequences_panel_b, False, True, 0)
+        buttons_row.pack_start(self.show_render_panel_b, False, True, 0)
+        #buttons_row.pack_start(gtk.Label(), True, True, 0)
+        #buttons_row.pack_start(new_b, False, True, 0)
+        #buttons_row.pack_start(save_b, False, True, 0)
+        #buttons_row.pack_start(load_b, False, True, 0)
+        #buttons_row.pack_start(quit_b, False, True, 0)
+        buttons_row.pack_start(gtk.Label(), True, True, 0)
+        buttons_row.pack_start(self.open_titler_b, False, True, 0)
+        buttons_row.pack_start(self.open_mixer_b, False, True, 0)
+        
+        return buttons_row
+
     def _add_tool_tips(self):
         self.big_TC.widget.set_tooltip_text(_("Timeline current frame timecode"))
 
