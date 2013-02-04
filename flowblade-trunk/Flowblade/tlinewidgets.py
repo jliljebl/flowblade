@@ -85,11 +85,6 @@ INSRT_ICON_POS = (81, 18)
 INSRT_ICON_POS_SMALL = (81, 6)
 
 # tracks column icons
-AUDIO_ON_ICON = None
-AUDIO_OFF_ICON = None
-VIDEO_ON_ICON = None
-VIDEO_OFF_ICON = None
-SYNC_LOCK_ICON = None
 FULL_LOCK_ICON = None
 TRACK_BG_ICON = None
 MUTE_VIDEO_ICON = None
@@ -100,7 +95,6 @@ TRACK_ALL_ON_V_ICON = None
 TRACK_ALL_ON_A_ICON = None
 
 # clip icons
-SYNC_CLIP_ICON = None
 FILTER_CLIP_ICON = None
 COMPOSITOR_CLIP_ICON = None
 VIEW_SIDE_ICON = None
@@ -231,19 +225,12 @@ canvas_widget = None
 shadow_frame = -1
 
 def load_icons():
-    global AUDIO_ON_ICON, AUDIO_OFF_ICON, VIDEO_ON_ICON, VIDEO_OFF_ICON,\
-    SYNC_LOCK_ICON, FULL_LOCK_ICON, SYNC_CLIP_ICON, FILTER_CLIP_ICON, VIEW_SIDE_ICON,\
+    global FULL_LOCK_ICON, FILTER_CLIP_ICON, VIEW_SIDE_ICON,\
     COMPOSITOR_CLIP_ICON, INSERT_ARROW_ICON, AUDIO_MUTE_ICON, MARKER_ICON, \
     VIDEO_MUTE_ICON, ALL_MUTE_ICON, TRACK_BG_ICON, MUTE_AUDIO_ICON, MUTE_VIDEO_ICON, MUTE_ALL_ICON, \
     TRACK_ALL_ON_V_ICON, TRACK_ALL_ON_A_ICON, MUTE_AUDIO_A_ICON, TC_POINTER_HEAD
 
-    AUDIO_ON_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "audio_on.png")
-    AUDIO_OFF_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "audio_off.png")
-    VIDEO_ON_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "video_on.png")
-    VIDEO_OFF_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "video_off.png")
-    SYNC_LOCK_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "sync_lock.png")
     FULL_LOCK_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "full_lock.png")
-    SYNC_CLIP_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "sync_clip.png")
     FILTER_CLIP_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "filter_clip_icon_sharp.png")
     COMPOSITOR_CLIP_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "compositor.png")
     VIEW_SIDE_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "view_side.png")

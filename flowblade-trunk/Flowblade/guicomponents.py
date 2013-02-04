@@ -334,23 +334,13 @@ class FilterListView(ImageTextImageListView):
             tree_sel = self.treeview.get_selection()
             tree_sel.connect("changed", selection_cb)
 
-        self.on_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "filter_on.png")       
-        self.off_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "filter_off.png")
-    
-    def fill_data_model(self, filter_group, filter_objects=None):
-
+    def fill_data_model(self, filter_group):
         self.storemodel.clear()
         for i in range(0, len(filter_group)):
             f = filter_group[i]
-            on_icon = None
-            if not(filter_objects == None):
-                if filter_objects[i].active == False:
-                    on_icon = self.off_icon
-                else:
-                    on_icon = self.on_icon
             row_data = [f.get_icon(),
                         translations.get_filter_name(f.name), 
-                        on_icon]
+                        None] # None is historical on/off icon thingy, not used anymore
             self.storemodel.append(row_data)
             self.scroll.queue_draw()
 
