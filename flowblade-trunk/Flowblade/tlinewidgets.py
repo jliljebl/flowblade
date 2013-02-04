@@ -110,6 +110,9 @@ VIDEO_MUTE_ICON = None
 ALL_MUTE_ICON = None
 MARKER_ICON = None
 
+# tc scale
+TC_POINTER_HEAD = None
+
 # tc frame scale consts
 SCALE_LINE_Y = 4.5 # scale horizontal line pos
 SMALL_TICK_Y = 18.5 # end for tick drawn in all scales 
@@ -232,7 +235,7 @@ def load_icons():
     SYNC_LOCK_ICON, FULL_LOCK_ICON, SYNC_CLIP_ICON, FILTER_CLIP_ICON, VIEW_SIDE_ICON,\
     COMPOSITOR_CLIP_ICON, INSERT_ARROW_ICON, AUDIO_MUTE_ICON, MARKER_ICON, \
     VIDEO_MUTE_ICON, ALL_MUTE_ICON, TRACK_BG_ICON, MUTE_AUDIO_ICON, MUTE_VIDEO_ICON, MUTE_ALL_ICON, \
-    TRACK_ALL_ON_V_ICON, TRACK_ALL_ON_A_ICON, MUTE_AUDIO_A_ICON
+    TRACK_ALL_ON_V_ICON, TRACK_ALL_ON_A_ICON, MUTE_AUDIO_A_ICON, TC_POINTER_HEAD
 
     AUDIO_ON_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "audio_on.png")
     AUDIO_OFF_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "audio_off.png")
@@ -253,11 +256,12 @@ def load_icons():
     MUTE_VIDEO_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_video_mute.png")
     MUTE_ALL_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_all_mute.png")
     MARKER_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "marker.png")
-    TRACK_ALL_ON_V_ICON = _load_icon("track_all_on_V.png")
-    TRACK_ALL_ON_A_ICON = _load_icon("track_all_on_A.png")
-    MUTE_AUDIO_A_ICON = _load_icon("track_audio_mute_A.png") 
+    TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V.png")
+    TRACK_ALL_ON_A_ICON = _load_pixbuf("track_all_on_A.png")
+    MUTE_AUDIO_A_ICON = _load_pixbuf("track_audio_mute_A.png") 
+    TC_POINTER_HEAD = _load_pixbuf("tc_pointer_head.png") 
 
-def _load_icon(icon_file):
+def _load_pixbuf(icon_file):
     return gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + icon_file)
 
 def set_ref_line_y(allocation):
@@ -1282,6 +1286,11 @@ class TimeLineFrameScale:
         cr.stroke()
 
         # Draw pos triangle
+        cr.set_source_pixbuf(TC_POINTER_HEAD, frame_x - 7.5, 0)
+        cr.paint()
+        #TC_POINTER_HEAD
+        
+        """
         cr.move_to(frame_x - 6, 0.5)
         cr.line_to(frame_x + 6, 0.5)
         cr.line_to(frame_x, 8.5)
@@ -1292,6 +1301,7 @@ class TimeLineFrameScale:
         cr.set_line_width(2.0)
         cr.set_line_join(cairo.LINE_JOIN_ROUND)
         cr.stroke()
+        """
 
     def draw_mark_in(self, cr, h):
         """

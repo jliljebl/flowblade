@@ -380,7 +380,7 @@ class EditorWindow:
         self.notebook.append_page(compositors_panel, gtk.Label(_("Compositors")))
         self.notebook.append_page(project_panel, gtk.Label(_("Project")))
         self.notebook.append_page(render_panel, gtk.Label(_("Render")))
-        self.notebook.set_show_tabs(False)
+        #self.notebook.set_show_tabs(False)
         self.notebook.set_tab_pos(gtk.POS_BOTTOM)
 
         # Timecode panel
@@ -421,9 +421,11 @@ class EditorWindow:
         switch_vbox.pack_start(switch_hbox, False, True, 0)
 
         # Switch / pos bar row
+        self.view_mode_select = guicomponents.get_monitor_view_select_combo(lambda w, e: buttonevent.view_mode_menu_lauched(w, e))
         sw_pos_hbox = gtk.HBox(False, 1)
         sw_pos_hbox.pack_start(switch_vbox, False, True, 0)
         sw_pos_hbox.pack_start(pos_bar_vbox, True, True, 0)
+        sw_pos_hbox.pack_start(self.view_mode_select.widget, False, False, 0)
         
         # Monitor
         monitor_vbox = gtk.VBox(False, 1)
@@ -444,7 +446,8 @@ class EditorWindow:
         # Notebook panel
         notebook_vbox = gtk.VBox(False, 1)
         notebook_vbox.pack_start(self.notebook, True, True)
-        notebook_vbox.pack_start(self._get_middle_buttons_row(), False, False)
+        #notebook_vbox.pack_start(self._get_middle_buttons_row(), False, False)
+        #self._get_middle_buttons_row()
 
         # Top row 
         top_paned = gtk.HPaned()
@@ -516,8 +519,7 @@ class EditorWindow:
         left_corner = gtk.Label()
         left_corner.set_size_request(tlinewidgets.COLUMN_WIDTH, 20)
         # Timeline scroller
-        self.tline_scroller = tlinewidgets.TimeLineScroller(
-                                                updater.tline_scrolled)
+        self.tline_scroller = tlinewidgets.TimeLineScroller(updater.tline_scrolled)
         
         # Timeline bottom row
         tline_hbox_3 = gtk.HBox()
@@ -647,26 +649,27 @@ class EditorWindow:
         self.to_mark_out_b.set_relief(gtk.RELIEF_NONE)
         _b(self.to_mark_out_b, to_mark_out_icon)
 
-        self.view_mode_select = guicomponents.get_monitor_view_select_combo()
+
 
         start_pad = gtk.Label()
-        start_pad.set_size_request(30, 23)
+        start_pad.set_size_request(65, 23)
         rewind_group = gtk.HBox(True, 1)
         rewind_group.set_size_request(50, 23)
         one_frame_group = gtk.HBox(True, 1)
         one_frame_group.set_size_request(50, 23)
         play_group = gtk.HBox(True, 1)
-        play_group.set_size_request(50, 23)
+        play_group.set_size_request(30, 23)
         in_out_group = gtk.HBox(True, 1)
         in_out_group.set_size_request(50, 23)
         to_marks_group = gtk.HBox(True, 1)
         to_marks_group.set_size_request(50, 23)
         end_pad = gtk.Label()
-        end_pad.set_size_request(0, 23)
+        end_pad.set_size_request(65, 23)
 
         # Create and return buttons panel
         player_buttons = gtk.HBox(False, 1)
         player_buttons.pack_start(start_pad, False, True, 0)
+        player_buttons.pack_start(gtk.Label(), True, True, 0)
         rewind_group.pack_start(self.rew_b, False, True, 0)
         rewind_group.pack_start(self.ff_b, False, True, 0)
         player_buttons.pack_start(rewind_group, False, True, 0)
@@ -689,7 +692,7 @@ class EditorWindow:
         player_buttons.pack_start(gtk.Label(), True, True, 0)
         player_buttons.pack_start(self.marks_clear_b, False, True, 0)
         player_buttons.pack_start(gtk.Label(), True, True, 0)
-        player_buttons.pack_start(self.view_mode_select,  False, True, 0)
+        #player_buttons.pack_start(self.view_mode_select,  False, True, 0)
         player_buttons.pack_start(end_pad, False, True, 0)
 
         return player_buttons
@@ -712,7 +715,7 @@ class EditorWindow:
         self.to_mark_in_b.connect("clicked", lambda w,e: monitorevent.to_mark_in_pressed(), None)
         self.to_mark_out_b.connect("clicked", lambda w,e: monitorevent.to_mark_out_pressed(), None)
 
-        self.view_mode_select.connect("changed", lambda w, e: buttonevent.view_mode_changed(w), None)
+        #self.view_mode_select.connect("changed", lambda w, e: buttonevent.view_mode_changed(w), None)
 
         # Monitor position bar
         self.pos_bar.set_listener(mltplayer.seek_position_normalized)
@@ -904,18 +907,34 @@ class EditorWindow:
         #new_icon = gtk.image_new_from_stock(gtk.STOCK_NEW, gtk.ICON_SIZE_MENU)
 
         # Create buttons
-        self.show_media_panel_b = gtk.Button()
+        self.show_media_panel_b = gtk.RadioButton()
+        self.show_media_panel_b.set_mode(False)
         _b(self.show_media_panel_b, show_media_icon)
-        self.show_filters_panel_b = gtk.Button()
+        self._set_mode_button_colors(self.show_media_panel_b)
+        
+        self.show_filters_panel_b = gtk.RadioButton(self.show_media_panel_b)
+        self.show_filters_panel_b.set_mode(False)
         _b(self.show_filters_panel_b, show_filters_icon)
-        self.show_compositors_panel_b = gtk.Button()
+        self._set_mode_button_colors(self.show_filters_panel_b)
+        
+        self.show_compositors_panel_b = gtk.RadioButton(self.show_media_panel_b)
+        self.show_compositors_panel_b.set_mode(False)
         _b(self.show_compositors_panel_b, show_compositors_icon)
-        self.show_sequences_panel_b = gtk.Button()
+        self._set_mode_button_colors(self.show_compositors_panel_b)
+                
+        self.show_sequences_panel_b = gtk.RadioButton(self.show_media_panel_b)
+        self.show_sequences_panel_b.set_mode(False)
         _b(self.show_sequences_panel_b, show_sequences_icon)
-        self.show_render_panel_b = gtk.Button()
+        self._set_mode_button_colors(self.show_sequences_panel_b)
+
+        self.show_render_panel_b = gtk.RadioButton(self.show_media_panel_b)
+        self.show_render_panel_b.set_mode(False)
         _b(self.show_render_panel_b, show_render_icon)
+        self._set_mode_button_colors(self.show_render_panel_b)
+        
         self.open_mixer_b = gtk.Button()
         _b(self.open_mixer_b, open_mixer_icon)
+        
         self.open_titler_b = gtk.Button()
         _b(self.open_titler_b, open_titler_icon)
         #save_b = gtk.Button()
@@ -926,7 +945,16 @@ class EditorWindow:
         #_b(quit_b, quit_icon)
         #new_b = gtk.Button()
         #_b(new_b, new_icon)
-    
+
+        # Connect signals
+        self.show_media_panel_b.connect("clicked", lambda w,e: updater.switch_notebook_panel(0), None)
+        self.show_filters_panel_b.connect("clicked", lambda w,e: updater.switch_notebook_panel(1), None)
+        self.show_compositors_panel_b.connect("clicked", lambda w,e: updater.switch_notebook_panel(2), None)
+        self.show_sequences_panel_b.connect("clicked", lambda w,e: updater.switch_notebook_panel(3), None)
+        self.show_render_panel_b.connect("clicked", lambda w,e: updater.switch_notebook_panel(4), None)
+        self.open_mixer_b.connect("clicked", lambda w: audiomonitoring.show_audio_monitor())
+        self.open_titler_b.connect("clicked", lambda w: titler.show_titler())
+            
         # Row
         buttons_row = gtk.HBox(False, 1)
         buttons_row.pack_start(self.show_media_panel_b, False, True, 0)
@@ -984,7 +1012,7 @@ class EditorWindow:
         self.to_mark_in_b.set_tooltip_text(_("Go to Mark In"))
         self.to_mark_out_b.set_tooltip_text(_("Go to Mark Out"))
 
-        self.view_mode_select.set_tooltip_text(_("Select view mode: Program Video/Vectorscope/RGBParade"))
+        self.view_mode_select.widget.set_tooltip_text(_("Select view mode: Program Video/Vectorscope/RGBParade"))
         
         self.tc.widget.set_tooltip_text(_("Monitor program current frame timecode"))
         self.monitor_source.set_tooltip_text(_("Current Monitor program name"))

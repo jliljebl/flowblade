@@ -563,5 +563,9 @@ def update_project_info(project):
     gui.project_info_vbox.show_all()
 
 
+# ------------------------------------------------ notebook
+def switch_notebook_panel(index):
+    #gui.notebook_buttons[index].set_active(True)
+    gui.middle_notebook.set_current_page(index)
 
 

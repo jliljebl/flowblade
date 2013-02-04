@@ -27,6 +27,7 @@ import time #added for testing
 import appconsts
 import dialogutils
 import gui
+import guicomponents
 import edit
 import editevent
 import editorstate
@@ -308,9 +309,12 @@ def range_overwrite_pressed():
 def resync_button_pressed():
     syncsplitevent.resync_selected()
 
-def view_mode_changed(combobox):
-    editorstate.current_sequence().set_output_mode(combobox.get_active())
+def view_mode_menu_lauched(launcher, event):
+    guicomponents.get_monitor_view_popupmenu(launcher, event, _view_mode_menu_item_item_activated)
     
+def _view_mode_menu_item_item_activated(widget, msg):
+    editorstate.current_sequence().set_output_mode(msg)
+    gui.editor_window.view_mode_select.set_pixbuf(msg)
     
 # ------------------------------------------------------- dialogs    
 def no_monitor_clip_info(parent_window):

@@ -69,8 +69,12 @@ def get_media_files_panel(media_list_view, add_cb, del_cb):
     panel = gtk.VBox()
     panel.pack_start(buttons_box, False, True, 0)
     panel.pack_start(media_list_view, True, True, 0)
-
-    return panel #get_named_frame(None, panel, 0)
+    
+    out_align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    out_align.set_padding(4, 4, 0, 4)
+    out_align.add(panel)
+    
+    return out_align
 
 def get_bins_panel(bin_list_view, add_cb, delete_cb):
     # Create buttons and connect signals
@@ -88,7 +92,7 @@ def get_bins_panel(bin_list_view, add_cb, delete_cb):
     panel.pack_start(buttons_box, False, True, 0)
     panel.pack_start(bin_list_view, True, True, 0)
 
-    return get_named_frame(_("Bins"), panel, 0, 0)
+    return get_named_frame(_("Bins"), panel, 0, 0, 0)
 
 def get_sequences_panel(sequence_list_view, edit_seq_cb, add_seq_cb, del_seq_cb):
     # Create buttons and connect signals
@@ -371,7 +375,6 @@ def get_compositor_clip_panel():
     return compositor_vbox
                                     
 def get_timecode_panel(editor_window):
-
     editor_window.tc = guicomponents.MonitorTCDisplay()
     editor_window.monitor_source = gtk.Label("sequence1")
     editor_window.monitor_source.set_ellipsize(pango.ELLIPSIZE_END)
@@ -386,19 +389,20 @@ def get_timecode_panel(editor_window):
     editor_window.length_entry.set_size_request(TC_LABEL_WIDTH, 20)
 
     row = gtk.HBox(False, 1)
+    #row.pack_start(guicomponents.get_monitor_view_select_combo(), False, False, 0)
     row.pack_start(editor_window.tc.widget, False, False, 0)
     filler = gtk.Label()
     filler.set_size_request(20, 20)
     row.pack_start(filler, False, False, 0)
     row.pack_start(editor_window.monitor_source, True, True, 0)
     row.pack_start(gtk.Label(), False, False, 0)
-    in_icon = gtk.image_new_from_file(respaths.IMAGE_PATH  + "mark_in_very_small.png") 
+    in_icon = gtk.image_new_from_file(respaths.IMAGE_PATH  + "mark_in_label.png") 
     row.pack_start(in_icon, False, False, 0)
     row.pack_start(editor_window.mark_in_entry, False, False, 0)
-    out_icon = gtk.image_new_from_file(respaths.IMAGE_PATH  + "mark_out_very_small.png") 
+    out_icon = gtk.image_new_from_file(respaths.IMAGE_PATH  + "mark_out_label.png") 
     row.pack_start(out_icon, False, False, 0)
     row.pack_start(editor_window.mark_out_entry, False, False, 0)
-    lengtht_icon = gtk.image_new_from_file(respaths.IMAGE_PATH  + "marks_length_small.png") 
+    lengtht_icon = gtk.image_new_from_file(respaths.IMAGE_PATH  + "marks_length_label.png") 
     row.pack_start(lengtht_icon, False, False, 0)
     row.pack_start(editor_window.length_entry, False, False, 0)
 
@@ -458,7 +462,7 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
 
     return effects_vbox
     
-def get_named_frame(name, widget, left_padding=12, right_padding=6):
+def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_padding=4):
     """
     Gnome style named panel
     """
@@ -480,7 +484,7 @@ def get_named_frame(name, widget, left_padding=12, right_padding=6):
     frame.pack_start(alignment, True, True, 0)
     
     out_align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    out_align.set_padding(4, 4, 0, 4)
+    out_align.set_padding(4, 4, 0, right_out_padding)
     out_align.add(frame)
     
     return out_align

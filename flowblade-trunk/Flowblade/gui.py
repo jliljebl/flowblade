@@ -61,6 +61,7 @@ big_tc = None
 
 # indexes match editmode values in editorstate.py
 mode_buttons = None
+notebook_buttons = None
 
 play_b = None
 clip_editor_b = None
@@ -81,7 +82,7 @@ def capture_references(new_editor_window):
     tc, mark_in_display, mark_out_display, length_display, tline_display, \
     tline_scale, tline_canvas, tline_scroll, tline_v_scroll, tline_info, \
     tline_column, mode_buttons, play_b, clip_editor_b, sequence_editor_b, note_bg_color, fg_color, fg_color_tuple, bg_color_tuple, \
-    effect_select_list_view, effect_select_combo_box, project_info_vbox, middle_notebook, big_tc, editmenu
+    effect_select_list_view, effect_select_combo_box, project_info_vbox, middle_notebook, big_tc, editmenu, notebook_buttons
 
     # Get references
     editor_window = new_editor_window
@@ -116,6 +117,15 @@ def capture_references(new_editor_window):
     play_b = editor_window.play_b
     clip_editor_b = editor_window.clip_editor_b
     sequence_editor_b = editor_window.sequence_editor_b
+
+    """ 
+    Feature postponed, but may still be introduced 
+    notebook_buttons = [editor_window.show_media_panel_b, 
+                        editor_window.show_filters_panel_b,
+                        editor_window.show_compositors_panel_b,
+                        editor_window.show_sequences_panel_b,
+                        editor_window.show_render_panel_b]
+    """
 
     big_tc = editor_window.big_TC
 

@@ -49,8 +49,8 @@ SEQUENCE_IMG_PATH = "/res/img/sequence.png"
 SEPARATOR_HEIGHT = 5
 SEPARATOR_WIDTH = 250
 
-MONITOR_COMBO_WIDTH = 47
-MONITOR_COMBO_HEIGHT = 16
+MONITOR_COMBO_WIDTH = 32
+MONITOR_COMBO_HEIGHT = 12
 
 TC_COLOR = (0.7, 0.7, 0.7) #utils.get_cairo_color_tuple_255_rgb(25, 126, 179)
 
@@ -740,7 +740,8 @@ class EditorSeparator:
         cr.stroke()
 
 # ---------------------------------------------- MISC WIDGETS
-def get_monitor_view_select_combo():
+def get_monitor_view_select_combo(callback):
+    """
     combo_list = gtk.ListStore(gtk.gdk.Pixbuf)
     combo_list.append([gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "program_view_2.png")])
     combo_list.append([gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "vectorscope.png")])
@@ -752,7 +753,14 @@ def get_monitor_view_select_combo():
     combobox.add_attribute(px, "pixbuf", 0)
     combobox.set_active(0)
     combobox.set_size_request(MONITOR_COMBO_WIDTH, MONITOR_COMBO_HEIGHT)
-    return combobox
+    """
+
+    pixbuf_list = [gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "program_view_2.png"), 
+                   gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "vectorscope.png"),
+                   gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "rgbparade.png")]
+    menu_launch = ImageMenuLaunch(callback, pixbuf_list, w=24, h=20)
+    menu_launch.pixbuf_y = 10
+    return menu_launch
 
 def get_compositor_track_select_combo(source_track, target_track, callback):
     tracks_combo = gtk.combo_box_new_text()
@@ -1116,6 +1124,15 @@ def _get_radio_menu_item(text, callback, group):
     item.show()
     return item
 
+def _get_image_menu_item(img, text, callback, data):
+    item = gtk.ImageMenuItem()
+    item.set_image(img)
+    item.connect("activate", callback, data)
+    item.set_always_show_image(True)
+    item.set_use_stock(False)
+    item.set_label(text)
+    item.show()
+    return item
 
 # --------------------------------------------------- profile info gui
 def get_profile_info_box(profile, show_description=True):
@@ -1441,16 +1458,28 @@ def get_all_tracks_popup_menu(event, callback):
     menu.add(_get_menu_item(_("Minimize tracks Height"), callback, "min" ))
     menu.popup(None, None, None, event.button, event.time)
 
+def get_monitor_view_popupmenu(launcher, event, callback):
+    menu = gtk.Menu()
+    menu.add(_get_image_menu_item(gtk.image_new_from_file(
+        respaths.IMAGE_PATH + "program_view_2.png"), _("Image"), callback, 0))
+    menu.add(_get_image_menu_item(gtk.image_new_from_file(
+        respaths.IMAGE_PATH + "vectorscope.png"), _("Vectorscope"), callback, 1))
+    menu.add(_get_image_menu_item(gtk.image_new_from_file(
+        respaths.IMAGE_PATH + "rgbparade.png"), _("RGB Parade"), callback, 2))
+    menu.popup(None, None, None, event.button, event.time)
+
 
 class PressLaunch:
-    def __init__(self, callback, pixbuf):
-        self.widget = CairoDrawableArea(22, 
-                                        22, 
+    def __init__(self, callback, pixbuf, w=22, h=22):
+        self.widget = CairoDrawableArea(w, 
+                                        h, 
                                         self._draw)
         self.widget.press_func = self._press_event
-        
+
         self.callback = callback
         self.pixbuf = pixbuf
+        self.pixbuf_x  = 6
+        self.pixbuf_y  = 6
 
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
@@ -1460,8 +1489,19 @@ class PressLaunch:
         cr.rectangle(0, 0, w, h)
         cr.fill()
         
-        cr.set_source_pixbuf(self.pixbuf, 6, 6)
+        cr.set_source_pixbuf(self.pixbuf, self.pixbuf_x, self.pixbuf_y)
         cr.paint()
 
     def _press_event(self, event):
         self.callback(self.widget, event)
+
+
+class ImageMenuLaunch(PressLaunch):
+    def __init__(self, callback, pixbuf_list, w=22, h=22):
+        PressLaunch.__init__(self, callback, pixbuf_list[0], w, h)
+        self.pixbuf_list = pixbuf_list
+
+    def set_pixbuf(self, pixbuf_index):
+        self.pixbuf = self.pixbuf_list[pixbuf_index]
+        self.widget.queue_draw()
+        
