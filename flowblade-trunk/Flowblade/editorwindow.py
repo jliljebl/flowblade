@@ -78,6 +78,7 @@ EFFECT_SELECT_EDITOR_HEIGHT = 140
 
 IMG_PATH = None
 
+
 def _b(button, icon, remove_relief=False):
     button.set_image(icon)
     button.set_property("can-focus",  False)
@@ -97,7 +98,7 @@ class EditorWindow:
     def __init__(self):
         global IMG_PATH
         IMG_PATH = respaths.IMAGE_PATH 
-        
+
         # Window
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.set_icon_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
@@ -389,7 +390,7 @@ class EditorWindow:
         # Video display
         self.tline_display = gtk.DrawingArea() 
         dnd.connect_video_monitor(self.tline_display)
-
+        
         # Position bar and decorative frame  for it
         self.pos_bar = PositionBar()
         pos_bar_frame = gtk.Frame()
@@ -1052,3 +1053,4 @@ class EditorWindow:
         panel = gtk.HBox(True, 0)
         panel.set_size_request(btns_count * btn_width, BUTTON_HEIGHT)
         return panel
+

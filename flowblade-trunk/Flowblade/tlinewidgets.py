@@ -43,7 +43,7 @@ import updater
 REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is now recalculated on initilization so number here is irrelevent.
 
 WIDTH = 430 # this has no effect if smaller then editorwindow.NOTEBOOK_WIDTH + editorwindow.MONITOR_AREA_WIDTH
-HEIGHT = 260 # defines window min height with editorwindow.TOP_ROW_HEIGHT ( NOTE: USE 210 for small when implementing it)
+HEIGHT = 260 # defines window min height with editorwindow.TOP_ROW_HEIGHT
 
 # Timeline draw constants
 # Other elements than black outline are not drawn if clip screen size
@@ -69,6 +69,10 @@ COMPOSITOR_HEIGHT_OFF = 10
 COMPOSITOR_HEIGHT = 20
 COMPOSITOR_TEXT_X = 6
 COMPOSITOR_TEXT_Y = 15
+COMPOSITOR_TRACK_X_PAD = 4
+COMPOSITOR_TRACK_ARROW_WIDTH = 6
+COMPOSITOR_TRACK_ARROW_HEAD_WIDTH = 10
+COMPOSITOR_TRACK_ARROW_HEAD_WIDTH_HEIGHT = 5
 ID_PAD_X = 29 # track id text pos
 ID_PAD_Y = 16 # track id text pos
 ID_PAD_Y_SMALL = 4 # track id text pos for small track
@@ -513,30 +517,40 @@ def draw_compositor_move_overlay(cr, data):
     clip_in = data["clip_in"]
     clip_length = data["clip_length"]
     y = data["compositor_y"]
-
+    compositor = data["compositor"]
+    
     draw_start = clip_in + (current_frame - press_frame)
     clip_start_frame = draw_start - pos
     scale_length = clip_length * pix_per_frame
     scale_in = clip_start_frame * pix_per_frame
-        
+
+    target_track =  current_sequence().tracks[compositor.transition.a_track]
+    target_y = _get_track_y(target_track.id) + target_track.height - COMPOSITOR_HEIGHT_OFF
+            
+    _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y)
+            
     cr.set_line_width(2.0)
     cr.set_source_rgb(*OVERLAY_COLOR)
-    cr.rectangle(scale_in, y + 1.5, scale_length, COMPOSITOR_HEIGHT)
     cr.stroke()
     
 def draw_compositor_trim(cr, data):
     clip_in = data["clip_in"]
     clip_out = data["clip_out"]
     y = data["compositor_y"]
+    compositor = data["compositor"]
 
     clip_start_frame = clip_in - pos
     clip_length = clip_out - clip_in + 1
     scale_length = clip_length * pix_per_frame
     scale_in = clip_start_frame * pix_per_frame
-        
+
+    target_track =  current_sequence().tracks[compositor.transition.a_track]
+    target_y = _get_track_y(target_track.id) + target_track.height - COMPOSITOR_HEIGHT_OFF
+            
+    _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y)
+    
     cr.set_line_width(2.0)
     cr.set_source_rgb(*OVERLAY_COLOR)
-    cr.rectangle(scale_in, y + 1.5, scale_length, COMPOSITOR_HEIGHT)
     cr.stroke()
     
     if data["trim_is_clip_in"] == True:
@@ -545,6 +559,20 @@ def draw_compositor_trim(cr, data):
         x = scale_in + scale_length - 26
     _draw_two_arrows(cr, x, y + 4, 4)
 
+def _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y):
+    cr.move_to(scale_in + 0.5, y + 0.5)
+    cr.line_to(scale_in + 0.5 + scale_length, y + 0.5)
+    cr.line_to(scale_in + 0.5 + scale_length, y + 0.5 + COMPOSITOR_HEIGHT)
+    cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD + 2 * COMPOSITOR_TRACK_ARROW_WIDTH, y + 0.5 + COMPOSITOR_HEIGHT)
+    cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD + 2 * COMPOSITOR_TRACK_ARROW_WIDTH, target_y + 0.5 - COMPOSITOR_TRACK_ARROW_HEAD_WIDTH_HEIGHT)
+    cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD + COMPOSITOR_TRACK_ARROW_WIDTH + COMPOSITOR_TRACK_ARROW_HEAD_WIDTH, target_y + 0.5 - COMPOSITOR_TRACK_ARROW_HEAD_WIDTH_HEIGHT)
+    cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD + COMPOSITOR_TRACK_ARROW_WIDTH, target_y + 0.5)
+    cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD + COMPOSITOR_TRACK_ARROW_WIDTH - COMPOSITOR_TRACK_ARROW_HEAD_WIDTH, target_y + 0.5 - COMPOSITOR_TRACK_ARROW_HEAD_WIDTH_HEIGHT)
+    cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD, target_y + 0.5 - COMPOSITOR_TRACK_ARROW_HEAD_WIDTH_HEIGHT)
+    cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD, y + 0.5 + COMPOSITOR_HEIGHT)
+    cr.line_to(scale_in + 0.5, y + 0.5 + COMPOSITOR_HEIGHT)
+    cr.close_path()
+            
 def _draw_two_arrows(cr, x, y, distance):
     """
     Draws two arrows indicating that user can drag in 
@@ -901,7 +929,11 @@ class TimeLineCanvas:
         for comp in compositors:
             # compositor clip and edge
             track = current_sequence().tracks[comp.transition.b_track]
+            target_track =  current_sequence().tracks[comp.transition.a_track]
+            
             y = _get_track_y(track.id) + track.height - COMPOSITOR_HEIGHT_OFF
+            target_y = _get_track_y(target_track.id) + target_track.height - COMPOSITOR_HEIGHT_OFF
+
             scale_in = (comp.clip_in - pos) * pix_per_frame
             scale_length = (comp.clip_out - comp.clip_in + 1) * pix_per_frame # +1, out inclusive
             if comp.selected == False:
@@ -909,9 +941,24 @@ class TimeLineCanvas:
             else:
                 color = COMPOSITOR_CLIP_SELECTED
             cr.set_source_rgba(*color)
-            cr.rectangle(scale_in + 0.5,
-                         y + 0.5, scale_length, 
-                         COMPOSITOR_HEIGHT)
+
+            _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y)
+            """
+            cr.move_to(scale_in + 0.5, y + 0.5)
+            cr.line_to(scale_in + 0.5 + scale_length, y + 0.5)
+            cr.line_to(scale_in + 0.5 + scale_length, y + 0.5 + COMPOSITOR_HEIGHT)
+            cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD + 2 * COMPOSITOR_TRACK_ARROW_WIDTH, y + 0.5 + COMPOSITOR_HEIGHT)
+            cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD + 2 * COMPOSITOR_TRACK_ARROW_WIDTH, target_y + 0.5 - COMPOSITOR_TRACK_ARROW_HEAD_WIDTH_HEIGHT)
+            cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD + COMPOSITOR_TRACK_ARROW_WIDTH + COMPOSITOR_TRACK_ARROW_HEAD_WIDTH, target_y + 0.5 - COMPOSITOR_TRACK_ARROW_HEAD_WIDTH_HEIGHT)
+            cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD + COMPOSITOR_TRACK_ARROW_WIDTH, target_y + 0.5)
+            cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD + COMPOSITOR_TRACK_ARROW_WIDTH - COMPOSITOR_TRACK_ARROW_HEAD_WIDTH, target_y + 0.5 - COMPOSITOR_TRACK_ARROW_HEAD_WIDTH_HEIGHT)
+            cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD, target_y + 0.5 - COMPOSITOR_TRACK_ARROW_HEAD_WIDTH_HEIGHT)
+            cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD, y + 0.5 + COMPOSITOR_HEIGHT)
+            cr.line_to(scale_in + 0.5, y + 0.5 + COMPOSITOR_HEIGHT)
+
+            cr.close_path()
+            """
+
             cr.fill_preserve()
 
             cr.set_source_rgb(0, 0, 0)

@@ -110,6 +110,7 @@ def capture_references(new_editor_window):
     tline_info = editor_window.tline_info
     tline_column = editor_window.tline_column
 
+    # wtf with the order, different from the one used to display buttons, meh
     mode_buttons = [editor_window.insert_move_b,
                     editor_window.overwrite_move_b,
                     editor_window.one_roll_trim_b,

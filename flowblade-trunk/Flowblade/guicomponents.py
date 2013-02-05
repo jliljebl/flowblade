@@ -52,7 +52,7 @@ SEPARATOR_WIDTH = 250
 MONITOR_COMBO_WIDTH = 32
 MONITOR_COMBO_HEIGHT = 12
 
-TC_COLOR = (0.7, 0.7, 0.7) #utils.get_cairo_color_tuple_255_rgb(25, 126, 179)
+TC_COLOR = (0.7, 0.7, 0.7)#utils.get_cairo_color_tuple_255_rgb(225, 180, 0)#(67, 193, 234)#(216, 160, 0)#(225, 180, 0) #(0.7, 0.7, 0.7) #
 
 BIG_TC_GRAD_STOPS = [   (1, 1, 1, 1, 0.2),
                         (0.8, 1, 1, 1, 0),
