@@ -30,6 +30,7 @@ import pangocairo
 
 import appconsts
 from cairoarea import CairoDrawableArea
+import dnd
 import editorpersistance
 import editorstate
 from editorstate import current_sequence
@@ -51,6 +52,9 @@ SEPARATOR_WIDTH = 250
 
 MONITOR_COMBO_WIDTH = 32
 MONITOR_COMBO_HEIGHT = 12
+
+MEDIA_OBJECT_WIDGET_WIDTH = 120
+MEDIA_OBJECT_WIDGET_HEIGHT = 105
 
 TC_COLOR = (0.7, 0.7, 0.7)#utils.get_cairo_color_tuple_255_rgb(225, 180, 0)#(67, 193, 234)#(216, 160, 0)#(225, 180, 0) #(0.7, 0.7, 0.7) #
 
@@ -696,6 +700,127 @@ class CompositorInfoPanel(gtk.VBox):
         self.destination_track.set_sensitive(value)
         self.position.set_sensitive(value)
         self.length.set_sensitive(value)
+
+# -------------------------------------------- media select panel
+class MediaPanel():
+    
+    def __init__(self):
+        self.widget = gtk.VBox()
+        self.row_widgets = []
+        self.selected_objects = []
+        self.columns = 3
+        
+    def get_selected_media_objects(self):
+        return self.selected_objects
+        
+    def media_object_selected(self, media_object, widget, event):
+        if (event.state & gtk.gdk.CONTROL_MASK):
+            widget.modify_bg(gtk.STATE_NORMAL, gui.selected_bg_color)
+            # only add to selected if not already there
+            try:
+                self.selected_objects.index(media_object)
+            except:
+                self.selected_objects.append(media_object)
+        else:
+            self.clear_selection()
+            widget.modify_bg(gtk.STATE_NORMAL, gui.selected_bg_color)
+            self.selected_objects.append(media_object)
+
+    def empty_pressed(self, widget, event):
+        self.clear_selection()
+
+    def clear_selection(self):
+        for m_obj in self.selected_objects:
+            m_obj.widget.modify_bg(gtk.STATE_NORMAL, gui.note_bg_color)
+        self.selected_objects = []
+
+    def columns_changed(self, adjustment):
+        self.columns = int(adjustment.get_value())
+        self.fill_data_model()
+
+    def fill_data_model(self):
+        for w in self.row_widgets:
+            self.widget.remove(w)
+        self.row_widgets = []
+
+        self.selected_objects = []
+
+        column = 0
+        bin_index = 0
+        row_box = gtk.HBox()
+        row_box.set_size_request(MEDIA_OBJECT_WIDGET_WIDTH * self.columns, MEDIA_OBJECT_WIDGET_HEIGHT)
+        for file_id in current_bin().file_ids:
+            media_file = PROJECT().media_files[file_id]
+            media_object = MediaObjectWidget(media_file, self.media_object_selected, bin_index)
+            dnd.connect_media_files_object_widget(media_object.widget)
+            row_box.pack_start(media_object.widget, False, False, 0)
+            column += 1
+            if column == self.columns:
+                filler = self._get_empty_filler()
+                row_box.pack_start(filler, True, True, 0)
+                self.widget.pack_start(row_box, False, False, 0)
+                self.row_widgets.append(row_box)
+                row_box = gtk.HBox()
+                column = 0
+            bin_index += 1
+
+        if column != 0:
+            filler = self._get_empty_filler()
+            row_box.pack_start(filler, True, True, 0)
+            self.widget.pack_start(row_box, False, False, 0)
+            self.row_widgets.append(row_box)
+
+        filler = self._get_empty_filler()
+        self.row_widgets.append(filler)
+        self.widget.pack_start(filler, True, True, 0)
+
+        self.widget.show_all()
+
+    def _get_empty_filler(self):
+        filler = gtk.EventBox()
+        filler.connect("button-press-event", lambda w,e: self.empty_pressed(w,e))
+        filler.add(gtk.Label())
+        return filler
+
+
+class MediaObjectWidget:
+    
+    def __init__(self, media_file, selected_callback, bin_index):
+        self.media_file = media_file
+        self.selected_callback = selected_callback
+        self.bin_index = bin_index
+
+        self.widget = gtk.EventBox()
+        self.widget.connect("button-press-event", lambda w,e: self.pressed(w,e))
+        self.widget.dnd_media_widget_attr = True # this is used to identify widget at dnd drop
+        self.widget.set_can_focus(True)
+ 
+        self.align = gtk.Alignment()
+        self.align.set_padding(3, 2, 3, 2)
+        self.align.set_size_request(MEDIA_OBJECT_WIDGET_WIDTH, MEDIA_OBJECT_WIDGET_HEIGHT)
+        
+        self.vbox = gtk.VBox()
+
+        img = gtk.Image()
+        img.set_from_pixbuf(media_file.icon)
+        txt = gtk.Label(media_file.name)
+        txt.modify_font(pango.FontDescription("sans 9"))
+        txt.set_ellipsize(pango.ELLIPSIZE_END)
+
+        self.vbox.pack_start(img, True, True, 0)
+        self.vbox.pack_start(txt, False, False, 0)
+        
+        self.align.add(self.vbox)
+        
+        self.widget.add(self.align)
+
+    def pressed(self, widget, event):
+        self.widget.grab_focus() 
+        if event.button == 1:
+            self.selected_callback(self, widget, event)
+        elif event.button == 3:
+            print "right mouse"
+
 
 # -------------------------------------------- context menus
 class EditorSeparator:

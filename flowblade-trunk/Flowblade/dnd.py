@@ -43,13 +43,22 @@ STRING_DATA_BITS = 8
 drag_data = None # Temp. holding for data during drag.
 
 # ----------------------------------------------- set gui components as drag sources and destinations
+"""
 def connect_media_files_tree_view(tree_view):
     tree_view.enable_model_drag_source(gtk.gdk.BUTTON1_MASK,
                                        [MEDIA_FILES_DND_TARGET], 
                                        gtk.gdk.ACTION_COPY)
     tree_view.connect_after('drag_begin', _media_files_drag_begin)
     tree_view.connect("drag_data_get", _media_files_drag_data_get)
+"""
 
+def connect_media_files_object_widget(widget):
+    widget.drag_source_set(gtk.gdk.BUTTON1_MASK,
+                           [MEDIA_FILES_DND_TARGET], 
+                           gtk.gdk.ACTION_COPY)
+    widget.connect_after('drag_begin', _media_files_drag_begin)
+    widget.connect("drag_data_get", _media_files_drag_data_get)
+    
 def connect_bin_tree_view(treeview, move_files_to_bin_func):
     treeview.enable_model_drag_dest([MEDIA_FILES_DND_TARGET],
                                     gtk.gdk.ACTION_DEFAULT)
@@ -84,13 +93,23 @@ def connect_tline(widget, do_effect_drop_func, do_media_drop_func):
     
 
 # ------------------------------------------------- handlers for drag events
+"""
 def _media_files_drag_begin(treeview, context):
     _save_treeview_selection(treeview)
     media_file = _get_first_dragged_media_file()
     context.set_icon_pixbuf(media_file.icon, MEDIA_ICON_WIDTH, MEDIA_ICON_HEIGHT)
+"""
+def _media_files_drag_begin(treeview, context):
+    _save_media_panel_selection()
+    media_object = drag_data[0]
+    context.set_icon_pixbuf(media_object.media_file.icon, MEDIA_ICON_WIDTH, MEDIA_ICON_HEIGHT)
 
+"""
 def _media_files_drag_data_get(treeview, context, selection, target_id, timestamp):
     _save_treeview_selection(treeview)
+"""
+def _media_files_drag_data_get(widget, context, selection, target_id, timestamp):
+    _save_media_panel_selection()
 
 def _effects_drag_begin(widget, context):
     pass 
@@ -104,7 +123,7 @@ def _effects_drag_data_get(treeview, context, selection, target_id, timestamp):
 
 def _on_monitor_drop(widget, context, x, y, timestamp):
     context.finish(True, False, timestamp)
-    media_file = _get_first_dragged_media_file()
+    media_file = drag_data[0].media_file
     updater.set_and_display_monitor_media_file(media_file)
     gui.pos_bar.widget.grab_focus()
 
@@ -114,10 +133,9 @@ def _on_effect_stack_drop(widget, context, x, y, timestamp):
     
 def _bin_drag_data_received(treeview, context, x, y, selection, info, etime, move_files_to_bin_func):
     bin_path, drop_pos = treeview.get_dest_row_at_pos(x, y)
-    file_row_tuples = drag_data
     moved_rows = []
-    for row in file_row_tuples:
-        moved_rows.append(max(row))
+    for media_object in drag_data:
+        moved_rows.append(media_object.bin_index)
     move_files_to_bin_func(max(bin_path), moved_rows)
     
 def _save_treeview_selection(treeview):
@@ -126,21 +144,30 @@ def _save_treeview_selection(treeview):
     global drag_data
     drag_data = rows
 
+def _save_media_panel_selection():
+    global drag_data
+    drag_data = gui.media_list_view.get_selected_media_objects()
+
 def _on_tline_drop(widget, context, x, y, timestamp, do_effect_drop_func, do_media_drop_func):
     if context.get_source_widget() == gui.effect_select_list_view.treeview:
         do_effect_drop_func(x, y)
         gui.tline_canvas.widget.grab_focus()
-    elif context.get_source_widget() == gui.media_list_view.treeview:
-        media_file = _get_first_dragged_media_file()
+    elif hasattr(context.get_source_widget(), "dnd_media_widget_attr"):
+        print "ewew"
+        media_file = drag_data[0].media_file
         do_media_drop_func(media_file, x, y)
         gui.tline_canvas.widget.grab_focus()
-
+    else:
+        print "wedfgfrt"
+    
     context.finish(True, False, timestamp)
 
 # ----------------------------------------------- 
+"""
 def _get_first_dragged_media_file():
     rows = drag_data
     row = rows[0]
     row_index = max(row)
     file_id = current_bin().file_ids[row_index] 
     return PROJECT().media_files[file_id]
+"""

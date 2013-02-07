@@ -154,8 +154,8 @@ class AddMediaFilesThread(threading.Thread):
         gui.bin_list_view.fill_data_model()
         _enable_save()
         
-        selection = gui.media_list_view.treeview.get_selection()
-        selection.select_path("0")
+        #selection = gui.media_list_view.treeview.get_selection()
+        #selection.select_path("0")
         normal_cursor = gtk.gdk.Cursor(gtk.gdk.LEFT_PTR) #RTL
         gui.editor_window.window.window.set_cursor(normal_cursor)
         gtk.gdk.threads_leave()
@@ -441,47 +441,37 @@ def delete_media_files():
     Deletes media file. Does not take into account if clips made from 
     media file are still in sequence.(maybe change this)
     """
-    selection = gui.media_list_view.treeview.get_selection()
-    (model, rows) = selection.get_selected_rows()
-    if len(rows) < 1:
+    selection = gui.media_list_view.get_selected_media_objects()
+    if len(selection) < 1:
         return
     
-    refs = []
     file_ids = []
     bin_indexes = []
     # Get:
     # - list of integer keys to delete from Project.media_files
     # - list of indexes to delete from Bin.file_ids
-    # - references to ListStore rows to delete from gui
-    for row in rows:
-        row_index = max(row) # row is single element tuple, for some reason
-        bin_indexes.append(row_index) 
-        file_id = current_bin().file_ids[row_index] 
+    for media_obj in selection:
+        file_id = media_obj.media_file.id
         file_ids.append(file_id)
-        media_file = PROJECT().media_files[file_id]
+        bin_indexes.append(media_obj.bin_index)
 
         # If clip is displayed in monitor clear it and disable clip button.
-        if media_file == MONITOR_MEDIA_FILE:
+        if media_obj.media_file == MONITOR_MEDIA_FILE:
             editorstate._monitor_media_file = None
             gui.clip_editor_b.set_sensitive(False)
-
-        ref = gtk.TreeRowReference(model, row)
-        refs.append(ref)
     
-    # Delete rows from ListStore (gui)
-    for ref in refs:
-        iter = model.get_iter(ref.get_path())
-        model.remove(iter)
-        
     # Delete from bin
     bin_indexes.reverse()
     for i in bin_indexes:
+        print i
         current_bin().file_ids.pop(i)
         
     # Delete from project
     for file_id in file_ids:
         PROJECT().media_files.pop(file_id)
-    
+
+    gui.media_list_view.fill_data_model()
+
     _enable_save()
 
 def media_file_name_edited(cell, path, new_text, user_data):
@@ -606,32 +596,50 @@ def bin_selection_changed(selection):
     PROJECT().c_bin = PROJECT().bins[row]
     gui.media_list_view.fill_data_model()
     
-def move_files_to_bin(new_bin, moved_rows):
+def move_files_to_bin(new_bin, bin_indexes):
     # If we're moving clips to bin that they're already in, do nothing.
     if PROJECT().bins[new_bin] == current_bin():
         return
-
-    # Delete from current bin
-    refs = []
-    moved_ids = []
+    
+    """
+    selection = gui.media_list_view.get_selected_media_objects()
+    if len(selection) < 1:
+        return
+    
+    file_ids = []
     bin_indexes = []
-    
-    selection = gui.media_list_view.treeview.get_selection()
-    (model, rows) = selection.get_selected_rows()
+    # Get:
+    # - list of integer keys to delete from Project.media_files
+    # - list of indexes to delete from Bin.file_ids
+    for media_obj in selection:
+        file_id = media_obj.media_file.id
+        file_ids.append(file_id)
+        bin_indexes.append(media_obj.bin_index)
 
-    for row_index in moved_rows:
-        bin_indexes.append(row_index)
-
-        ref = gtk.TreeRowReference(model, (row_index))
-        refs.append(ref)
+        # If clip is displayed in monitor clear it and disable clip button.
+        if media_obj.media_file == MONITOR_MEDIA_FILE:
+            editorstate._monitor_media_file = None
+            gui.clip_editor_b.set_sensitive(False)
     
-    # Delete rows from ListStore (gui)
-    for ref in refs:
-        iter = model.get_iter(ref.get_path())
-        model.remove(iter)
-        
     # Delete from bin
     bin_indexes.reverse()
+    for i in bin_indexes:
+        print i
+        current_bin().file_ids.pop(i)
+        
+    # Delete from project
+    for file_id in file_ids:
+        PROJECT().media_files.pop(file_id)
+
+    gui.media_list_view.fill_data_model()
+    """
+   
+
+    # Delete from current bin
+    moved_ids = []
+    bin_indexes.sort()
+    bin_indexes.reverse()
+    print bin_indexes
     for i in bin_indexes:
         moved_ids.append(current_bin().file_ids.pop(i))
         
@@ -639,8 +647,9 @@ def move_files_to_bin(new_bin, moved_rows):
     for file_id in moved_ids:
         PROJECT().bins[new_bin].file_ids.append(file_id)
 
+    gui.media_list_view.fill_data_model()
     gui.bin_list_view.fill_data_model()
-    gui.bin_list_view.queue_draw()
+
     
     
 

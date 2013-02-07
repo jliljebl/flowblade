@@ -72,7 +72,7 @@ note_bg_color = None
 fg_color = None
 fg_color_tuple = None
 bg_color_tuple = None
-    
+selected_bg_color = None
 
 def capture_references(new_editor_window):
     """
@@ -81,7 +81,7 @@ def capture_references(new_editor_window):
     global editor_window, media_list_view, bin_list_view, sequence_list_view, pos_bar, \
     tc, mark_in_display, mark_out_display, length_display, tline_display, \
     tline_scale, tline_canvas, tline_scroll, tline_v_scroll, tline_info, \
-    tline_column, mode_buttons, play_b, clip_editor_b, sequence_editor_b, note_bg_color, fg_color, fg_color_tuple, bg_color_tuple, \
+    tline_column, mode_buttons, play_b, clip_editor_b, sequence_editor_b, note_bg_color, fg_color, fg_color_tuple, bg_color_tuple, selected_bg_color, \
     effect_select_list_view, effect_select_combo_box, project_info_vbox, middle_notebook, big_tc, editmenu, notebook_buttons
 
     # Get references
@@ -135,6 +135,7 @@ def capture_references(new_editor_window):
     style = editor_window.notebook.get_style()
     note_bg_color = style.bg[gtk.STATE_NORMAL]
     fg_color = style.fg[gtk.STATE_NORMAL]
+    selected_bg_color = style.bg[gtk.STATE_SELECTED]
     
     # Get cairo color tuple from gtk.gdk.Color
     raw_r, raw_g, raw_b = hex_to_rgb(fg_color.to_string())

@@ -324,8 +324,9 @@ def init_sequence_gui():
     """
     # A media file always needs to be selected to make pop-ups work
     # to user expectations
-    selection = gui.media_list_view.treeview.get_selection()
-    selection.select_path("0")
+    #selection = gui.media_list_view.treeview.get_selection()
+    #selection.select_path("0")
+    
 
     # Set initial timeline scale draw params
     editorstate.current_sequence().update_length()

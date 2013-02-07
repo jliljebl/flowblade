@@ -98,7 +98,8 @@ def key_down(widget, event):
 
     # Pressing space when media file selected is interpreted as row activation which will open
     # that media file in clip monitor, but we want play/pause *unless* item's name is being edited.
-    if gui.media_list_view.get_focus_child() != None:
+    """
+    if gui.media_list_view.widget.get_focus_child() != None:
         if gui.media_list_view.text_rend_1.get_property("editing") == True:
             return False
         if event.keyval == gtk.keysyms.space:
@@ -107,6 +108,7 @@ def key_down(widget, event):
             else:
                 monitorevent.play_pressed()
             return True
+    """
 
     """
     #debug
@@ -323,9 +325,7 @@ def _handle_clip_key_event(event):
 
 def _handle_delete():
     # Delete media file
-    if gui.media_list_view.get_focus_child() != None:
-        if gui.media_list_view.text_rend_1.get_property("editing") == True:
-            return False
+    if gui.media_list_view.widget.get_focus_child() != None:
         useraction.delete_media_files()
         return True
 

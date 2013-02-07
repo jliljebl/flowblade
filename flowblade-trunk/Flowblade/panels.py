@@ -53,7 +53,7 @@ FFMPEG_VIEW_SIZE = (200, 210) # width 200 seems to be ignored in current layout
 # in, out and length timecodes in monitor area top row 
 TC_LABEL_WIDTH = 80
 
-def get_media_files_panel(media_list_view, add_cb, del_cb):
+def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb):
     # Create buttons and connect signals
     add_media_b = gtk.Button(_("Add"))
     del_media_b = gtk.Button(_("Delete"))    
@@ -61,10 +61,15 @@ def get_media_files_panel(media_list_view, add_cb, del_cb):
     del_media_b.connect("clicked", del_cb, None)
     add_media_b.set_tooltip_text(_("Add Media File to Bin"))
     del_media_b.set_tooltip_text(_("Delete Media File from Bin"))
-    
-    buttons_box = gtk.HBox(True,1)
-    buttons_box.pack_start(add_media_b)
-    buttons_box.pack_start(del_media_b)
+
+    adj = gtk.Adjustment(value=3, lower=1, upper=10, step_incr=1)
+    spin = gtk.SpinButton(adj)
+    spin.connect("changed", col_changed_cb)
+
+    buttons_box = gtk.HBox(False,1)
+    buttons_box.pack_start(add_media_b, True, True, 0)
+    buttons_box.pack_start(del_media_b, True, True, 0)
+    buttons_box.pack_start(spin, False, False, 0)
     
     panel = gtk.VBox()
     panel.pack_start(buttons_box, False, True, 0)

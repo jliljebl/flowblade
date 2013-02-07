@@ -235,29 +235,37 @@ class EditorWindow:
                                            lambda w,e: useraction.delete_selected_bin())
         bins_panel.set_size_request(MEDIA_MANAGER_WIDTH, BINS_HEIGHT)
 
+
+        self.media_list_view = guicomponents.MediaPanel()
+        media_scroll_window = gtk.ScrolledWindow()
+        media_scroll_window.add_with_viewport(self.media_list_view.widget)
+        media_scroll_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        media_scroll_window.set_size_request(guicomponents.MEDIA_OBJECT_WIDGET_WIDTH * self.media_list_view.columns + 10, guicomponents.MEDIA_OBJECT_WIDGET_HEIGHT)
+        media_scroll_window.show_all()
+        """
         self.media_list_view = guicomponents.MediaListView(
                                           updater.media_file_row_double_clicked,
-                                          useraction.media_file_name_edited)                                          
+                                          useraction.media_file_name_edited)
+                                                                    
         self.media_list_view.treeview.connect("button-press-event",
                                               useraction.media_list_button_press)
+
         dnd.connect_media_files_tree_view(self.media_list_view.treeview)
+        """
         media_panel = panels.get_media_files_panel(
-                                self.media_list_view,
+                                media_scroll_window,
+                                #self.media_list_view,
                                 lambda w,e: useraction.add_media_files(), 
-                                lambda w,e: useraction.delete_media_files())
-        
-        #mm_vbox = gtk.HBox()
-        #mm_vbox.set_border_width(5)
-        #mm_vbox.pack_start(bins_panel, False, False, 0)
-        #mm_vbox.pack_start(media_panel, True, True, 0)
-        
+                                lambda w,e: useraction.delete_media_files(),
+                                lambda a: self.media_list_view.columns_changed(a))
+
+    
         mm_paned = gtk.HPaned()
-        mm_paned.pack1(bins_panel)#, resize=True, shrink=False)
-        mm_paned.pack2(media_panel)#, resize=False, shrink=False)
+        mm_paned.pack1(bins_panel, resize=True, shrink=True)
+        mm_paned.pack2(media_panel, resize=True, shrink=False)
         
         mm_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
         mm_panel.set_padding(0, 0, 4, 0)
-        #mm_panel.add(mm_vbox)
         mm_panel.add(mm_paned)
 
         # Effects
