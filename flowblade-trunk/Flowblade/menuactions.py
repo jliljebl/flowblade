@@ -24,6 +24,7 @@ This module handles the less central actions inited by user from menu.
 
 import gtk
 import os
+import platform
 import threading
 import webbrowser
 import time
@@ -32,12 +33,17 @@ import editorpersistance
 import dialogs
 import dialogutils
 from editorstate import PROJECT
+import editorstate
 import gui
 import mltprofiles
+import mltenv
+import mltfilters
+import mlttransitions
 import panels
 import patternproducer
 import projectdata
 import render
+import renderconsumer
 import respaths
 import useraction
 import utils
@@ -109,8 +115,115 @@ def about():
     dialogs.about_dialog(gui.editor_window)
 
 def environment():
-    dialogs.environment_dialog(gui.editor_window)
+    dialogs.environment_dialog(gui.editor_window, write_env_data)
 
+# ----------------------------------------------------- environment data
+def write_env_data():
+    dialogs.save_env_data_dialog(write_out_env_data_cb)
+
+def write_out_env_data_cb(dialog, response_id):
+    if response_id == gtk.RESPONSE_ACCEPT:
+        filenames = dialog.get_filenames()
+        file_path = filenames[0]
+        # Build env data string list
+        str_list = []
+        str_list.append("FLOWBLADE RUNTIME ENVIROMNMENT\n")
+        str_list.append("------------------------------\n")
+        str_list.append("\n")
+        str_list.append("APPLICATION AND LIBRARIES\n")
+        str_list.append("-------------------------\n")
+        str_list.append("Application version: " + editorstate.appversion + "\n")
+        if editorstate.app_running_from == editorstate.RUNNING_FROM_INSTALLATION:
+            run_type = "INSTALLATION"
+        else:
+            run_type = "DEVELOPER VERSION"
+        str_list.append("Application running from: " + run_type + "\n")
+        str_list.append("MLT version: " + str(editorstate.mlt_version) + "\n")
+        try:
+            major, minor, rev = editorstate.gtk_version
+            gtk_ver = str(major) + "." + str(minor) + "." + str(rev)
+        except:
+            gtk_ver = str(editorstate.gtk_version)
+        str_list.append("GTK VERSION: " + gtk_ver + "\n")
+        str_list.append("SCREEN_HEIGHT: " +  str(editorstate.SCREEN_HEIGHT) + "\n")
+
+        str_list.append("\n")
+        str_list.append("PLATFORM\n")
+        str_list.append("--------\n")
+        str_list.append(platform.platform())
+
+        str_list.append("\n")
+        str_list.append("\n")
+        str_list.append("FORMATS\n")
+        str_list.append("-------\n")
+        sorted_formats = sorted(mltenv.formats)
+        for f in sorted_formats:
+            str_list.append(f + "\n")
+        str_list.append("\n")
+        str_list.append("\n")
+        str_list.append("VIDEO_CODECS\n")
+        str_list.append("------------\n")
+        sorted_vcodecs = sorted(mltenv.vcodecs)
+        for vc in sorted_vcodecs:
+            str_list.append(vc + "\n")
+        str_list.append("\n")
+        str_list.append("\n")
+        str_list.append("AUDIO_CODECS\n")
+        str_list.append("------------\n")
+        sorted_acodecs = sorted(mltenv.acodecs)
+        for ac in sorted_acodecs:
+            str_list.append(ac + "\n")
+        str_list.append("\n")
+        str_list.append("\n")
+        str_list.append("MLT SERVICES\n")
+        str_list.append("------------\n")
+        sorted_services = sorted(mltenv.services)
+        for s in sorted_services:
+            str_list.append(s + "\n")
+        str_list.append("\n")
+        str_list.append("\n")
+        str_list.append("MLT TRANSITIONS\n")
+        str_list.append("---------------\n")
+        sorted_transitions = sorted(mltenv.transitions)
+        for t in sorted_transitions:
+            str_list.append(t + "\n")
+        str_list.append("\n")
+        str_list.append("\n")
+        str_list.append("ENCODING OPTIONS\n")
+        str_list.append("----------------\n")
+        enc_ops = renderconsumer.encoding_options + renderconsumer.not_supported_encoding_options
+        enc_msgs = []
+        for e_opt in enc_ops:
+            if e_opt.supported:
+                msg = e_opt.name + " AVAILABLE\n"
+            else:
+                msg = e_opt.name + " NOT AVAILABLE, " + e_opt.err_msg + " MISSING\n"
+            str_list.append(msg)
+        str_list.append("\n")
+        str_list.append("\n")
+        str_list.append("MISSING FILTERS\n")
+        str_list.append("---------------\n")
+        for f in mltfilters.not_found_filters:
+            msg = "mlt.Filter " + f.mlt_service_id + " FOR FILTER " + f.name + " NOT FOUND\n"
+            str_list.append(msg)
+        str_list.append("\n")
+        str_list.append("\n")
+        str_list.append("MISSING TRANSITIONS\n")
+        str_list.append("---------------\n")
+        for t in mlttransitions.not_found_transitions:
+            msg = "mlt.Transition " + t.mlt_service_id + " FOR TRANSITION " + t.name + " NOT FOUND\n"
+            str_list.append(msg)
+
+        # Write out data
+        env_text = ''.join(str_list)
+        env_file = open(file_path, "w")
+        env_file.write(env_text)
+        env_file.close()
+
+        dialog.destroy()
+    else:
+        dialog.destroy()
+        
 def quick_reference():
     try:
         webbrowser.open('http://code.google.com/p/flowblade/wiki/FlowbladeReference')

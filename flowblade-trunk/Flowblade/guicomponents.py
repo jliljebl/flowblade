@@ -704,27 +704,35 @@ class CompositorInfoPanel(gtk.VBox):
 # -------------------------------------------- media select panel
 class MediaPanel():
     
-    def __init__(self):
+    def __init__(self, media_file_popup_cb):
         self.widget = gtk.VBox()
         self.row_widgets = []
         self.selected_objects = []
         self.columns = 3
+        self.media_file_popup_cb = media_file_popup_cb
         
     def get_selected_media_objects(self):
         return self.selected_objects
         
     def media_object_selected(self, media_object, widget, event):
-        if (event.state & gtk.gdk.CONTROL_MASK):
-            widget.modify_bg(gtk.STATE_NORMAL, gui.selected_bg_color)
-            # only add to selected if not already there
-            try:
-                self.selected_objects.index(media_object)
-            except:
+        widget.grab_focus() 
+        if event.button == 1:
+            if (event.state & gtk.gdk.CONTROL_MASK):
+                widget.modify_bg(gtk.STATE_NORMAL, gui.selected_bg_color)
+                # only add to selected if not already there
+                try:
+                    self.selected_objects.index(media_object)
+                except:
+                    self.selected_objects.append(media_object)
+            else:
+                self.clear_selection()
+                widget.modify_bg(gtk.STATE_NORMAL, gui.selected_bg_color)
                 self.selected_objects.append(media_object)
-        else:
+        elif event.button == 3:
             self.clear_selection()
-            widget.modify_bg(gtk.STATE_NORMAL, gui.selected_bg_color)
-            self.selected_objects.append(media_object)
+            display_media_file_popup_menu(media_object.media_file,
+                                          self.media_file_popup_cb,
+                                          event)
 
     def empty_pressed(self, widget, event):
         self.clear_selection()
@@ -791,7 +799,7 @@ class MediaObjectWidget:
         self.bin_index = bin_index
 
         self.widget = gtk.EventBox()
-        self.widget.connect("button-press-event", lambda w,e: self.pressed(w,e))
+        self.widget.connect("button-press-event", lambda w,e: selected_callback(self, w, e))
         self.widget.dnd_media_widget_attr = True # this is used to identify widget at dnd drop
         self.widget.set_can_focus(True)
  
@@ -813,13 +821,6 @@ class MediaObjectWidget:
         self.align.add(self.vbox)
         
         self.widget.add(self.align)
-
-    def pressed(self, widget, event):
-        self.widget.grab_focus() 
-        if event.button == 1:
-            self.selected_callback(self, widget, event)
-        elif event.button == 3:
-            print "right mouse"
 
 
 # -------------------------------------------- context menus
@@ -1204,7 +1205,7 @@ def _set_non_sensite_if_state_matches(mutable, item, state):
     if mutable.mute_state == state:
         item.set_sensitive(False)
 
-def diplay_media_file_popup_menu(media_file, callback, event):
+def display_media_file_popup_menu(media_file, callback, event):
     media_file_menu = gtk.Menu()
     # "Open in Clip Monitor" is sent as event id, same for all below
     # See useraction._media_file_menu_item_selected(...)
@@ -1212,8 +1213,7 @@ def diplay_media_file_popup_menu(media_file, callback, event):
     media_file_menu.add(_get_menu_item(_("File Properties"), callback, ("File Properties", media_file, event)))
     _add_separetor(media_file_menu)
     media_file_menu.add(_get_menu_item(_("Render Slow/Fast Motion File"), callback, ("Render Slow/Fast Motion File", media_file, event)))
-    _add_separetor(media_file_menu)
-    media_file_menu.add(_get_menu_item(_("Delete"), callback, ("Delete", media_file, event)))
+
     media_file_menu.popup(None, None, None, event.button, event.time)
 
 def display_filter_stack_popup_menu(row, treeview, callback, event):

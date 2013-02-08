@@ -461,9 +461,9 @@ def delete_media_files():
             gui.clip_editor_b.set_sensitive(False)
     
     # Delete from bin
+    bin_indexes.sort()
     bin_indexes.reverse()
     for i in bin_indexes:
-        print i
         current_bin().file_ids.pop(i)
         
     # Delete from project
@@ -600,46 +600,11 @@ def move_files_to_bin(new_bin, bin_indexes):
     # If we're moving clips to bin that they're already in, do nothing.
     if PROJECT().bins[new_bin] == current_bin():
         return
-    
-    """
-    selection = gui.media_list_view.get_selected_media_objects()
-    if len(selection) < 1:
-        return
-    
-    file_ids = []
-    bin_indexes = []
-    # Get:
-    # - list of integer keys to delete from Project.media_files
-    # - list of indexes to delete from Bin.file_ids
-    for media_obj in selection:
-        file_id = media_obj.media_file.id
-        file_ids.append(file_id)
-        bin_indexes.append(media_obj.bin_index)
-
-        # If clip is displayed in monitor clear it and disable clip button.
-        if media_obj.media_file == MONITOR_MEDIA_FILE:
-            editorstate._monitor_media_file = None
-            gui.clip_editor_b.set_sensitive(False)
-    
-    # Delete from bin
-    bin_indexes.reverse()
-    for i in bin_indexes:
-        print i
-        current_bin().file_ids.pop(i)
-        
-    # Delete from project
-    for file_id in file_ids:
-        PROJECT().media_files.pop(file_id)
-
-    gui.media_list_view.fill_data_model()
-    """
-   
 
     # Delete from current bin
     moved_ids = []
     bin_indexes.sort()
     bin_indexes.reverse()
-    print bin_indexes
     for i in bin_indexes:
         moved_ids.append(current_bin().file_ids.pop(i))
         
@@ -652,7 +617,6 @@ def move_files_to_bin(new_bin, bin_indexes):
 
     
     
-
 # ------------------------------------ sequences
 def change_edit_sequence():
     selection = gui.sequence_list_view.treeview.get_selection()
@@ -789,6 +753,7 @@ def _change_track_count_dialog_callback(dialog, response_id, tracks_combo):
     
 
 # --------------------------------------------------------- pop-up menus
+"""
 def media_list_button_press(widget, event):
     if event.button == 3:
         row, column_title = _select_treeview_on_pos_and_return_row_and_column_title(event, gui.media_list_view.treeview)
@@ -802,15 +767,13 @@ def media_list_button_press(widget, event):
         return True
             
     return False
-    
-def _media_file_menu_item_selected(widget, data):
+"""    
+def media_file_menu_item_selected(widget, data):
     item_id, media_file, event = data
     if item_id == "File Properties":
         _display_file_info(media_file)
     if item_id == "Open in Clip Monitor":
         updater.set_and_display_monitor_media_file(media_file)
-    if item_id == "Delete":
-        delete_media_files()
     if item_id == "Render Slow/Fast Motion File":
         render.render_frame_buffer_clip(media_file)
 
@@ -826,7 +789,6 @@ def _select_treeview_on_pos_and_return_row_and_column_title(event, treeview):
     (model, rows) = selection.get_selected_rows()
     row = max(rows[0])
     return (row, title)
-
 
 
 

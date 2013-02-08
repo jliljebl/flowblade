@@ -200,7 +200,6 @@ def save_titler_data_as_dialog(callback, current_name, open_dir):
     dialog.connect('response', callback)
     dialog.show()
 
-
 def save_ffmpep_optsdialog(callback, opts_extension):
     dialog = gtk.FileChooserDialog(_("Save Render Args As"), None, 
                                    gtk.FILE_CHOOSER_ACTION_SAVE, 
@@ -217,6 +216,18 @@ def save_ffmpep_optsdialog(callback, opts_extension):
     dialog.connect('response', callback)
     dialog.show()
 
+def save_env_data_dialog(callback):    
+    dialog = gtk.FileChooserDialog(_("Save Runtime Environment Data"), None, 
+                                   gtk.FILE_CHOOSER_ACTION_SAVE, 
+                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                                   _("Save").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
+    dialog.set_action(gtk.FILE_CHOOSER_ACTION_SAVE)
+    dialog.set_current_name("flowblade_runtime_environment_data")
+    dialog.set_do_overwrite_confirmation(True)
+    dialog.set_select_multiple(False)
+    dialog.connect('response', callback)
+    dialog.show()
+    
 def load_ffmpep_optsdialog(callback, opts_extension):
     dialog = gtk.FileChooserDialog(_("Load Render Args File"), None, 
                                    gtk.FILE_CHOOSER_ACTION_OPEN, 
@@ -420,7 +431,7 @@ def about_dialog(parent_window):
     dialog.connect('response', _dialog_destroy)
     dialog.show_all()
 
-def environment_dialog(parent_window):
+def environment_dialog(parent_window, write_data_cb):
     dialog = gtk.Dialog(_("Runtime Environment"), None,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                         (_("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
@@ -443,14 +454,16 @@ def environment_dialog(parent_window):
         run_type = _("DEVELOPER VERSION")
         
     r4 = guiutils.get_left_justified_box([gtk.Label(_("Running from: ")), gtk.Label(run_type)])
-
-    gen_items = [r1, r2, r3, r4]
-
+    write_button = gtk.Button("Write Environment Data to File")
+    write_button.connect("clicked", lambda w,e: write_data_cb(), None)
+    r5 = guiutils.get_left_justified_box([write_button])
+    
     vbox = gtk.VBox(False, 4)
     vbox.pack_start(r1, False, False, 0)
     vbox.pack_start(r2, False, False, 0)
     vbox.pack_start(r3, False, False, 0)
     vbox.pack_start(r4, False, False, 0)
+    vbox.pack_start(r5, False, False, 0)
 
     filters = sorted(mltenv.services)
     filters_sw = _get_items_in_scroll_window(filters, 7, COLUMN_WIDTH, 140)

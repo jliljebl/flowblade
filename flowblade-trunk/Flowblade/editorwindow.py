@@ -236,7 +236,7 @@ class EditorWindow:
         bins_panel.set_size_request(MEDIA_MANAGER_WIDTH, BINS_HEIGHT)
 
 
-        self.media_list_view = guicomponents.MediaPanel()
+        self.media_list_view = guicomponents.MediaPanel(useraction.media_file_menu_item_selected)
         media_scroll_window = gtk.ScrolledWindow()
         media_scroll_window.add_with_viewport(self.media_list_view.widget)
         media_scroll_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)

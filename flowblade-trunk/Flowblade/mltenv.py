@@ -134,3 +134,6 @@ def _show_failed_environment_info():
     
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
     return False
+
+    
+    

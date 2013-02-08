@@ -224,7 +224,9 @@ def main(root_path):
         gobject.timeout_add(10, autosave_recovery_dialog)
     else:
         start_autosave()
-  
+
+    #useraction.write_out_env_data(None)
+
     # Launch gtk+ main loop
     gtk.main()
 
