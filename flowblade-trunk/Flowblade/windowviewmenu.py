@@ -97,7 +97,8 @@ def _show_default_layout(widget):
         return # this may get called on start up before refs are available 
     if widget.get_active() == False: # setting radiobutton active called listener on all of groups items
         return
-    print "really show default screen"
+    if editorpersistance.prefs.default_layout == True:
+        return
     
     w.right_notebook.remove_page(0)
     w.notebook.insert_page(w.effects_panel, gtk.Label(_("Filters")), 1)
@@ -120,7 +121,8 @@ def _show_widescreen_layout(widget):
         return # this may get called on start up before refs are available
     if widget.get_active() == False:
         return
-    print "really show wide screen"
+    if editorpersistance.prefs.default_layout == False:
+        return
     _execute_widescreen_layout(w)
     
 def _execute_widescreen_layout(window):
@@ -301,17 +303,27 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
 def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     global w
     w = window
-    buttons_row.pack_start(_get_undo_buttons_panel(), False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
-    buttons_row.pack_start(_get_zoom_buttons_panel(), False, True, 10)
-    buttons_row.pack_start(gtk.Label(), True, True, 0)
-    buttons_row.pack_start(w.big_TC.widget, False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
-    buttons_row.pack_start(_get_mode_buttons_panel(), False, True, 0)
-    buttons_row.pack_start(gtk.Label(), True, True, 0)
-    buttons_row.pack_start(_get_edit_buttons_panel(), False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
-    buttons_row.pack_start(_get_monitor_insert_buttons(), False, True, 0)
+    left_panel = gtk.HBox(False, 0)    
+    left_panel.pack_start(_get_undo_buttons_panel(), False, True, 0)
+    left_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
+    left_panel.pack_start(_get_zoom_buttons_panel(), False, True, 0)
+    left_panel.pack_start(guiutils.get_pad_label(117, 10), False, True, 10) # to left and right panel same size for centering
+    left_panel.pack_start(gtk.Label(), True, True, 0)
+
+    middle_panel = gtk.HBox(False, 0) 
+    middle_panel.pack_start(w.big_TC.widget, False, True, 0)
+    middle_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
+    middle_panel.pack_start(_get_mode_buttons_panel(), False, True, 0)
+    
+    right_panel = gtk.HBox(False, 0) 
+    right_panel.pack_start(gtk.Label(), True, True, 0)
+    right_panel.pack_start(_get_edit_buttons_panel(), False, True, 0)
+    right_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
+    right_panel.pack_start(_get_monitor_insert_buttons(), False, True, 0)
+
+    buttons_row.pack_start(left_panel, True, True, 0)
+    buttons_row.pack_start(middle_panel, False, False, 0)
+    buttons_row.pack_start(right_panel, True, True, 0)
 
 def _get_mode_buttons_panel():
     mode_buttons = _get_buttons_panel(4, 38)
