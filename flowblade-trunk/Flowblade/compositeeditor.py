@@ -1,21 +1,21 @@
 """
-	Flowblade Movie Editor is a nonlinear video editor.
+    Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-	This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
 
-	Flowblade Movie Editor is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+    Flowblade Movie Editor is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-	Flowblade Movie Editor is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    Flowblade Movie Editor is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU General Public License
+    along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 """
@@ -26,6 +26,7 @@ import gtk
 
 import gui
 import guicomponents
+import guiutils
 import edit
 from editorstate import current_sequence
 import mlttransitions
@@ -142,14 +143,11 @@ def _display_compositor_edit_box():
                     current_sequence().tracks[compositor.transition.b_track], 
                     current_sequence().tracks[compositor.transition.a_track], 
                     _target_track_changed)
-    pad1 = gtk.Label()
-    pad1.set_size_request(5,3)
-    pad2 = gtk.Label()
-    pad2.set_size_request(5,3)
+
     target_row = gtk.HBox()
-    target_row.pack_start(pad1, False, False, 0)
+    target_row.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
     target_row.pack_start(gtk.Label(_("Destination track:")), False, False, 0)
-    target_row.pack_start(pad2, False, False, 0)
+    target_row.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
     target_row.pack_start(target_combo, False, False, 0)
     target_row.pack_start(gtk.Label(), True, True, 0)
     vbox.pack_start(target_row, False, False, 0)

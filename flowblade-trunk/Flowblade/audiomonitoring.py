@@ -17,7 +17,9 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
-
+"""
+Module handles initializing displaying audiomonitor tool.
+"""
 import cairo
 import gtk
 import mlt
@@ -129,7 +131,7 @@ def _init_level_filters():
     # Filters are not part of sequence.Sequence object because they just used for monitoring,
     #
     # Track/master gain values are persistant, they're also editing desitions 
-    # and are therefpre part of Sequence objects.
+    # and are therefore part of Sequence objects.
     global _level_filters
     _level_filters = []
     seq = editorstate.current_sequence()

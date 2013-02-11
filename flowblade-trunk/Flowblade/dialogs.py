@@ -283,12 +283,9 @@ def clip_render_progress_dialog(callback, title, file_name, progress_bar, parent
     status_box.pack_start(gtk.Label(file_name),False, False, 0)
     status_box.pack_start(gtk.Label(), True, True, 0)
     
-    filler = gtk.Label()
-    filler.set_size_request(10, 10)
-
     progress_vbox = gtk.VBox(False, 2)
     progress_vbox.pack_start(status_box, False, False, 0)
-    progress_vbox.pack_start(filler, False, False, 0)
+    progress_vbox.pack_start(guiutils.get_pad_label(10, 10), False, False, 0)
     progress_vbox.pack_start(progress_bar, False, False, 0)
     
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
@@ -348,31 +345,23 @@ def about_dialog(parent_window):
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                         (_("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
 
-    filler3 = gtk.Label()
     img = gtk.image_new_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
     flow_label = gtk.Label("Flowblade Movie Editor")
-    filler0 = gtk.Label()
     ver_label = gtk.Label("0.8.0")
-    filler1 = gtk.Label()
     janne_label = gtk.Label("Copyright 2012 Janne Liljeblad")
     licence_label = gtk.Label("Licensed under GPL 3")
-    filler2 = gtk.Label()
 
     flow_label.modify_font(pango.FontDescription("sans bold 14"))
 
-    filler0.set_size_request(30, 4)
-    filler1.set_size_request(30, 22)
-    filler3.set_size_request(30, 12)
-
     vbox = gtk.VBox(False, 4)
-    vbox.pack_start(filler3, False, False, 0)
+    vbox.pack_start(guiutils.get_pad_label(30, 12), False, False, 0)
     vbox.pack_start(img, False, False, 0)
-    vbox.pack_start(filler0, False, False, 0)
+    vbox.pack_start(guiutils.get_pad_label(30, 4), False, False, 0)
     vbox.pack_start(flow_label, False, False, 0)
     vbox.pack_start(ver_label, False, False, 0)
-    vbox.pack_start(filler1, False, False, 0)
+    vbox.pack_start(guiutils.get_pad_label(30, 22), False, False, 0)
     vbox.pack_start(janne_label, False, False, 0)
-    vbox.pack_start(filler2, True, True, 0)
+    vbox.pack_start(gtk.Label(), True, True, 0)
    
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(6, 24, 12, 12)
@@ -384,29 +373,19 @@ def about_dialog(parent_window):
     up_projs2 = gtk.Label("FFMpeg, Frei0r, LADSPA, Cairo, Gnome, Linux")
     tools_label = gtk.Label("Tools:")
     tools_list = gtk.Label("Genie, Inkscape, Gimp, ack-grep")
-
-    filler11 = gtk.Label()
-    filler12 = gtk.Label()
-    filler13 = gtk.Label()
-    filler14 = gtk.Label()
-    
-    filler11.set_size_request(30, 22)
-    filler12.set_size_request(30, 22)
-    filler13.set_size_request(30, 22)
-    filler14.set_size_request(30, 12)
     
     up_label.modify_font(pango.FontDescription("sans bold 12"))
     tools_label.modify_font(pango.FontDescription("sans bold 12"))
     
     vbox2 = gtk.VBox(False, 4)
-    vbox2.pack_start(filler14, False, False, 0)
+    vbox2.pack_start(guiutils.get_pad_label(30, 12), False, False, 0)
     vbox2.pack_start(up_label, False, False, 0)
     vbox2.pack_start(up_projs, False, False, 0)
     vbox2.pack_start(up_projs2, False, False, 0)
-    vbox2.pack_start(filler11, False, False, 0)
+    vbox2.pack_start(guiutils.get_pad_label(30, 22), False, False, 0)
     vbox2.pack_start(tools_label, False, False, 0)
     vbox2.pack_start(tools_list, False, False, 0)
-    vbox2.pack_start(filler12, False, False, 0)
+    vbox2.pack_start(guiutils.get_pad_label(30, 22), False, False, 0)
     vbox2.pack_start(gtk.Label(), True, True, 0)
 
     alignment2 = gtk.Alignment(0.5, 0.5, 1.0, 1.0)

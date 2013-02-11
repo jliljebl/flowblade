@@ -189,4 +189,6 @@ class EditorPreferences:
         self.default_grfx_length = 250 # value is in frames
         self.track_configuration = 0 # this is index on list appconsts.TRACK_CONFIGURATIONS
         self.AUTO_SAVE_OPTS = ((-1, _("No Autosave")),(1, _("1 min")),(2, _("2 min")),(5, _("5 min")))
-
+        self.tabs_on_top = False
+        self.midbar_tc_left = True
+        self.default_layout = True

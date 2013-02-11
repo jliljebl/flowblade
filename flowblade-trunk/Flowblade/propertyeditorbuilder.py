@@ -28,6 +28,7 @@ import appconsts
 from editorstate import PROJECT
 from editorstate import PLAYER
 from editorstate import current_sequence
+import guiutils
 import keyframeeditor
 import mltfilters
 import mlttransitions
@@ -335,20 +336,15 @@ def _create_composite_editor(clip, editable_properties):
     force_vbox.pack_start(gtk.Label(_("Force")), True, True, 0)
     force_vbox.pack_start(combo_box, True, True, 0)
 
-    pad1 = gtk.Label()
-    pad1.set_size_request(3,5)
-    pad2 = gtk.Label()
-    pad2.set_size_request(3,5)
-
     hbox = gtk.HBox(False, 4)
-    hbox.pack_start(pad1, False, False, 0)
+    hbox.pack_start(guiutils.get_pad_label(3, 5), False, False, 0)
     hbox.pack_start(_get_boolean_check_box_button_column(_("Align"), aligned), False, False, 0)
     hbox.pack_start(_get_boolean_check_box_button_column(_("Distort"), distort), False, False, 0)
     hbox.pack_start(gtk.Label(), True, True, 0)
     hbox.pack_start(_get_combo_box_column(_("Alpha"), values, operator), False, False, 0)
     hbox.pack_start(gtk.Label(), True, True, 0)
     hbox.pack_start(force_vbox, False, False, 0)
-    hbox.pack_start(pad2, False, False, 0)
+    hbox.pack_start(guiutils.get_pad_label(3, 5), False, False, 0)
     return hbox
 
 def _compositor_editor_force_combo_box_callback(combo_box, data):
@@ -438,20 +434,15 @@ def _create_region_editor(clip, editable_properties):
     force_vbox.pack_start(gtk.Label(_("Force")), True, True, 0)
     force_vbox.pack_start(combo_box, True, True, 0)
 
-    pad1 = gtk.Label()
-    pad1.set_size_request(3,5)
-    pad2 = gtk.Label()
-    pad2.set_size_request(3,5)
-
     hbox = gtk.HBox(False, 4)
-    hbox.pack_start(pad1, False, False, 0)
+    hbox.pack_start(guiutils.get_pad_label(3, 5), False, False, 0)
     hbox.pack_start(_get_boolean_check_box_button_column(_("Align"), aligned), False, False, 0)
     hbox.pack_start(_get_boolean_check_box_button_column(_("Distort"), distort), False, False, 0)
     hbox.pack_start(gtk.Label(), True, True, 0)
     hbox.pack_start(_get_combo_box_column(_("Alpha"), values, operator), False, False, 0)
     hbox.pack_start(gtk.Label(), True, True, 0)
     hbox.pack_start(force_vbox, False, False, 0)
-    hbox.pack_start(pad2, False, False, 0)
+    hbox.pack_start(guiutils.get_pad_label(3, 5), False, False, 0)
     return hbox
     
 def _get_force_combo_index(deinterlace, progressive):

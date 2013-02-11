@@ -27,10 +27,12 @@ import pango
 import pygtk
 
 import app
+import appconsts
 import audiomonitoring
 import batchrendering
 import buttonevent
 from cairoarea import CairoDrawableArea
+from cairoarea import CairoEventBox
 import clipeffectseditor
 import compositeeditor
 import dnd
@@ -40,6 +42,7 @@ import editorstate
 import exporting
 import gui
 import guicomponents
+import guiutils
 import menuactions
 import mltplayer
 import monitorevent
@@ -56,17 +59,17 @@ import useraction
 import updater
 import utils
 import vieweditor
+import windowviewmenu
 
 # GUI size params
+"""
 TOP_ROW_HEIGHT = 500 # defines app min height with tlinewidgets.HEIGHT
-NOTEBOOK_WIDTH = 600 # defines app min width with MONITOR_AREA_WIDTH
-NOTE_BOOK_LEFT_COLUMN = 300
+NOTEBOOK_WIDTH = appconsts.NOTEBOOK_WIDTH # defines app min width with MONITOR_AREA_WIDTH
+NOTEBOOK_WIDTH_SMALL = appconsts.NOTEBOOK_WIDTH_SMALL
+"""
 MEDIA_MANAGER_WIDTH = 250
 
 MONITOR_AREA_WIDTH = 600 # defines app min width with NOTEBOOK_WIDTH 400 for small
-
-BUTTON_HEIGHT = 28 # middle edit buttons row
-BUTTON_WIDTH = 48 # middle edit buttons row
 
 MODE_BUTTON_ACTIVE_COLOR = "#9d9d9d"
 MODE_BUTTON_PRELIGHT_COLOR = "#bdbdbd"
@@ -133,6 +136,8 @@ class EditorWindow:
             ('ChangeSequenceTracks', None, _('Change Sequence Tracks Count...'), None, None, lambda a:useraction.change_sequence_track_count()),
             ('ProfilesManager', None, _('Profiles Manager'), None, None, lambda a:menuactions.profiles_manager()),
             ('Preferences', None, _('Preferences'), None, None, lambda a:menuactions.display_preferences()),
+            ('ViewMenu', None, _('View')),
+            ('Layout', None, _('Add Media Clip...'), None, None, lambda a: useraction.add_media_files()),
             ('ProjectMenu', None, _('Project')),
             ('AddMediaClip', None, _('Add Media Clip...'), None, None, lambda a: useraction.add_media_files()),
             ('AddImageSequence', None, _('Add Image Sequence...'), None, None, lambda a:useraction.add_image_sequence()),
@@ -181,7 +186,9 @@ class EditorWindow:
                     <separator/>
                     <menuitem action='ProfilesManager'/>
                     <menuitem action='Preferences'/>
-                </menu> 
+                </menu>
+                <menu action='ViewMenu'>
+                </menu>
                 <menu action='ProjectMenu'>
                     <menuitem action='AddMediaClip'/>
                     <menuitem action='AddImageSequence'/>
@@ -219,7 +226,9 @@ class EditorWindow:
 
         # Add recent projects to menu
         editorpersistance.fill_recents_menu_widget(ui.get_widget('/MenuBar/FileMenu/OpenRecent'), useraction.open_recent_project)
-        
+
+        windowviewmenu.init_view_menu(ui.get_widget('/MenuBar/ViewMenu'))
+
         # Menu box
         menu_vbox = gtk.VBox(False, 0)
         menu_vbox.pack_start(self.menubar, False, True, 0)
@@ -240,18 +249,9 @@ class EditorWindow:
         media_scroll_window = gtk.ScrolledWindow()
         media_scroll_window.add_with_viewport(self.media_list_view.widget)
         media_scroll_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        media_scroll_window.set_size_request(guicomponents.MEDIA_OBJECT_WIDGET_WIDTH * self.media_list_view.columns + 10, guicomponents.MEDIA_OBJECT_WIDGET_HEIGHT)
+        media_scroll_window.set_size_request(guicomponents.MEDIA_OBJECT_WIDGET_WIDTH * self.media_list_view.columns + 70, guicomponents.MEDIA_OBJECT_WIDGET_HEIGHT)
         media_scroll_window.show_all()
-        """
-        self.media_list_view = guicomponents.MediaListView(
-                                          updater.media_file_row_double_clicked,
-                                          useraction.media_file_name_edited)
-                                                                    
-        self.media_list_view.treeview.connect("button-press-event",
-                                              useraction.media_list_button_press)
 
-        dnd.connect_media_files_tree_view(self.media_list_view.treeview)
-        """
         media_panel = panels.get_media_files_panel(
                                 media_scroll_window,
                                 #self.media_list_view,
@@ -290,9 +290,9 @@ class EditorWindow:
         effects_hbox.pack_start(clip_editor_panel, False, False, 0)
         effects_hbox.pack_start(effects_editor_panel, True, True, 0)
 
-        effects_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-        effects_panel.set_padding(0, 0, 4, 0)
-        effects_panel.add(effects_hbox)
+        self.effects_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+        self.effects_panel.set_padding(0, 0, 4, 0)
+        self.effects_panel.add(effects_hbox)
         
         # Compositors
         compositor_clip_panel = panels.get_compositor_clip_panel()
@@ -306,9 +306,9 @@ class EditorWindow:
         compositors_hbox.pack_start(compositor_clip_panel, False, False, 0)
         compositors_hbox.pack_start(compositor_editor_panel, True, True, 0)
 
-        compositors_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-        compositors_panel.set_padding(0, 0, 4, 0)
-        compositors_panel.add(compositors_hbox)
+        self.compositors_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+        self.compositors_panel.set_padding(0, 0, 4, 0)
+        self.compositors_panel.add(compositors_hbox)
 
         # Project buttons
         self.open_project_b = gtk.Button(_("Open"))
@@ -351,7 +351,7 @@ class EditorWindow:
 
         # Render
         normal_height = True
-        if TOP_ROW_HEIGHT < 500: # small screens have no space to display this
+        if appconsts.TOP_ROW_HEIGHT < 500: # small screens have no space to display this
             normal_height = False
 
         add_audio_desc = True
@@ -383,14 +383,17 @@ class EditorWindow:
 
         # Notebook
         self.notebook = gtk.Notebook()
-        self.notebook.set_size_request(NOTEBOOK_WIDTH, TOP_ROW_HEIGHT)
+        self.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH, appconsts.TOP_ROW_HEIGHT)
         self.notebook.append_page(mm_panel, gtk.Label(_("Media")))
-        self.notebook.append_page(effects_panel, gtk.Label(_("Filters")))
-        self.notebook.append_page(compositors_panel, gtk.Label(_("Compositors")))
+        self.notebook.append_page(self.effects_panel, gtk.Label(_("Filters")))
+        self.notebook.append_page(self.compositors_panel, gtk.Label(_("Compositors")))
         self.notebook.append_page(project_panel, gtk.Label(_("Project")))
         self.notebook.append_page(render_panel, gtk.Label(_("Render")))
-        #self.notebook.set_show_tabs(False)
         self.notebook.set_tab_pos(gtk.POS_BOTTOM)
+
+        # Right notebook, used for Widescreen and Two row layouts
+        self.right_notebook = gtk.Notebook()
+        self.right_notebook.set_tab_pos(gtk.POS_BOTTOM)
 
         # Timecode panel
         tc_panel = panels.get_timecode_panel(self)
@@ -407,9 +410,7 @@ class EditorWindow:
         
         # Positionbar vbox
         pos_bar_vbox = gtk.VBox(False, 1)
-        filler1 = gtk.Label()
-        filler1.set_size_request(5, 2)
-        pos_bar_vbox.pack_start(filler1, False, True, 0)
+        pos_bar_vbox.pack_start(guiutils.get_pad_label(5, 2), False, True, 0)
         pos_bar_vbox.pack_start(pos_bar_frame, False, True, 0)
 
         playback_buttons = self._get_player_buttons()
@@ -424,9 +425,7 @@ class EditorWindow:
 
         # Switch button box V, for centered buttons
         switch_vbox = gtk.VBox(False, 1)
-        filler333 = gtk.Label()
-        filler333.set_size_request(5, 2)
-        switch_vbox.pack_start(filler333, False, True, 0)
+        switch_vbox.pack_start(guiutils.get_pad_label(5, 2), False, True, 0)
         switch_vbox.pack_start(switch_hbox, False, True, 0)
 
         # Switch / pos bar row
@@ -450,27 +449,28 @@ class EditorWindow:
         monitor_frame = gtk.Frame()
         monitor_frame.add(monitor_align)
         monitor_frame.set_shadow_type(gtk.SHADOW_ETCHED_OUT)
-        monitor_frame.set_size_request(MONITOR_AREA_WIDTH, TOP_ROW_HEIGHT)
+        monitor_frame.set_size_request(MONITOR_AREA_WIDTH, appconsts.TOP_ROW_HEIGHT)
 
         # Notebook panel
         notebook_vbox = gtk.VBox(False, 1)
         notebook_vbox.pack_start(self.notebook, True, True)
-        #notebook_vbox.pack_start(self._get_middle_buttons_row(), False, False)
-        #self._get_middle_buttons_row()
 
-        # Top row 
+        # Top row paned
         top_paned = gtk.HPaned()
         top_paned.pack1(notebook_vbox, resize=True, shrink=False)
         top_paned.pack2(monitor_frame, resize=False, shrink=False)
 
-        top_row_hbox = gtk.HBox(False, 0)
-        filler4 = gtk.Label()
-        filler4.set_size_request(5, 5)
-        top_row_hbox.pack_start(top_paned, True, True, 0)
-        
-        # Edit buttons rows
-        edit_buttons_row = self._get_edit_buttons_row()
+        # top row
+        self.top_row_hbox = gtk.HBox(False, 0)
+        self.top_row_hbox.pack_start(top_paned, True, True, 0)
 
+        # Edit buttons rows
+        self.edit_buttons_row = self._get_edit_buttons_row()
+
+        self.edit_buttons_event_box = gtk.EventBox()
+        self.edit_buttons_event_box.add(self.edit_buttons_row)
+        self.edit_buttons_event_box.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse(appconsts.MIDBAR_COLOR))
+                
         # Timeline scale
         self.tline_scale = tlinewidgets.TimeLineFrameScale(editevent.insert_move_mode_pressed,  
                                                            updater.mouse_scroll_zoom)
@@ -546,16 +546,14 @@ class EditorWindow:
         self.tline_box.pack_start(tline_vbox, True, True, 0)
 
         # Timeline pane
-        filler_rp2 = gtk.Label()
-        filler_rp2.set_size_request(5, 4)
         tline_pane = gtk.VBox(False, 1)
-        tline_pane.pack_start(edit_buttons_row, False, True, 0)
-        tline_pane.pack_start(filler_rp2, False, True, 0)
+        tline_pane.pack_start(self.edit_buttons_event_box, False, True, 0)
+        tline_pane.pack_start(guiutils.get_pad_label(5, 4), False, True, 0)
         tline_pane.pack_start(self.tline_box, True, True, 0)
 
         # VPaned top row / timeline
         app_v_paned = gtk.VPaned()
-        app_v_paned.pack1(top_row_hbox, resize=False, shrink=False)
+        app_v_paned.pack1(self.top_row_hbox, resize=False, shrink=False)
         app_v_paned.pack2(tline_pane, resize=True, shrink=False)
 
         # Pane
@@ -565,6 +563,8 @@ class EditorWindow:
         
         # Tooltips
         self._add_tool_tips()
+
+        windowviewmenu.init_gui_to_prefs(self)
 
         # Set pane and show window
         self.window.add(pane)
@@ -658,10 +658,7 @@ class EditorWindow:
         self.to_mark_out_b.set_relief(gtk.RELIEF_NONE)
         _b(self.to_mark_out_b, to_mark_out_icon)
 
-
-
-        start_pad = gtk.Label()
-        start_pad.set_size_request(65, 23)
+        # Button groups
         rewind_group = gtk.HBox(True, 1)
         rewind_group.set_size_request(50, 23)
         one_frame_group = gtk.HBox(True, 1)
@@ -672,12 +669,10 @@ class EditorWindow:
         in_out_group.set_size_request(50, 23)
         to_marks_group = gtk.HBox(True, 1)
         to_marks_group.set_size_request(50, 23)
-        end_pad = gtk.Label()
-        end_pad.set_size_request(65, 23)
 
         # Create and return buttons panel
         player_buttons = gtk.HBox(False, 1)
-        player_buttons.pack_start(start_pad, False, True, 0)
+        player_buttons.pack_start(guiutils.get_pad_label(65, 23), False, True, 0)
         player_buttons.pack_start(gtk.Label(), True, True, 0)
         rewind_group.pack_start(self.rew_b, False, True, 0)
         rewind_group.pack_start(self.ff_b, False, True, 0)
@@ -702,7 +697,7 @@ class EditorWindow:
         player_buttons.pack_start(self.marks_clear_b, False, True, 0)
         player_buttons.pack_start(gtk.Label(), True, True, 0)
         #player_buttons.pack_start(self.view_mode_select,  False, True, 0)
-        player_buttons.pack_start(end_pad, False, True, 0)
+        player_buttons.pack_start(guiutils.get_pad_label(65, 23), False, True, 0)
 
         return player_buttons
         
@@ -730,178 +725,23 @@ class EditorWindow:
         self.pos_bar.set_listener(mltplayer.seek_position_normalized)
 
     def _get_edit_buttons_row(self):
-        # Create TC Display
-        self.big_TC = guicomponents.BigTCDisplay()
-        
-        # Create buttons
-        # Zoom buttnos
-        self.zoom_in_b = gtk.Button()
-        zoomin_icon = gtk.image_new_from_file(IMG_PATH + "zoom_in.png")
-        _b(self.zoom_in_b, zoomin_icon)
-
-        self.zoom_out_b = gtk.Button()
-        zoomout_icon = gtk.image_new_from_file(IMG_PATH + "zoom_out.png")
-        _b(self.zoom_out_b, zoomout_icon)
-
-        self.zoom_length_b = gtk.Button()
-        zoom_length_icon = gtk.image_new_from_file(IMG_PATH + "zoom_length.png")
-        _b(self.zoom_length_b, zoom_length_icon)
-
-        # Edit action buttons
-        self.splice_out_b = gtk.Button()
-        splice_out_icon = gtk.image_new_from_file(IMG_PATH + "splice_out.png")
-        _b(self.splice_out_b, splice_out_icon)
-
-        self.cut_b = gtk.Button()
-        cut_move_icon = gtk.image_new_from_file(IMG_PATH + "cut.png") 
-        _b(self.cut_b, cut_move_icon)
-
-        self.lift_b = gtk.Button()
-        lift_icon = gtk.image_new_from_file(IMG_PATH + "lift.png") 
-        _b(self.lift_b, lift_icon)
-
-        self.resync_b = gtk.Button()
-        resync_icon = gtk.image_new_from_file(IMG_PATH + "resync.png") 
-        _b(self.resync_b, resync_icon)
-
-        # Monitor insert buttons
-        self.overwrite_range_b = gtk.Button()
-        overwrite_r_clip_icon = gtk.image_new_from_file(IMG_PATH + "overwrite_range.png")
-        _b(self.overwrite_range_b, overwrite_r_clip_icon)
-        
-        self.overwrite_b = gtk.Button()
-        overwrite_clip_icon = gtk.image_new_from_file(IMG_PATH + "overwrite_clip.png")
-        _b(self.overwrite_b, overwrite_clip_icon)
-
-        self.insert_b = gtk.Button()
-        insert_clip_icon = gtk.image_new_from_file(IMG_PATH + "insert_clip.png")
-        _b(self.insert_b, insert_clip_icon)
-
-        self.append_b = gtk.Button()
-        append_clip_icon = gtk.image_new_from_file(IMG_PATH + "append_clip.png")
-        _b(self.append_b, append_clip_icon)
-        
-        # Mode buttons
-        self.insert_move_b = gtk.RadioButton()
-        self.insert_move_b.set_mode(False)
-        insert_move_icon = gtk.image_new_from_file(IMG_PATH + "insert_move.png")
-        _b(self.insert_move_b, insert_move_icon)
-        self._set_mode_button_colors(self.insert_move_b)
-
-        self.one_roll_trim_b = gtk.RadioButton(self.insert_move_b)
-        self.one_roll_trim_b.set_mode(False)
-        one_roll_icon = gtk.image_new_from_file(IMG_PATH + "one_roll_trim.png")
-        _b(self.one_roll_trim_b, one_roll_icon)
-        self._set_mode_button_colors(self.one_roll_trim_b)
-
-        self.overwrite_move_b = gtk.RadioButton(self.insert_move_b)
-        self.overwrite_move_b.set_mode(False)
-        over_move_icon = gtk.image_new_from_file(IMG_PATH + "over_move.png")
-        _b(self.overwrite_move_b, over_move_icon)
-        self._set_mode_button_colors(self.overwrite_move_b)
-        
-        self.tworoll_trim_b = gtk.RadioButton(self.insert_move_b)
-        self.tworoll_trim_b.set_mode(False)
-        two_roll_icon = gtk.image_new_from_file(IMG_PATH + "two_roll_trim.png")
-        _b(self.tworoll_trim_b, two_roll_icon)
-        self._set_mode_button_colors(self.tworoll_trim_b)
-        
-        # Undo / Redo buttons
-        self.undo_b = gtk.Button()
-        undo_icon = gtk.image_new_from_file(IMG_PATH + "undo.png")
-        _b(self.undo_b, undo_icon)
-
-        self.redo_b = gtk.Button()
-        redo_icon = gtk.image_new_from_file(IMG_PATH + "redo.png")
-        _b(self.redo_b, redo_icon)
-
-        # Mode buttons panel
-        mode_buttons = self._get_buttons_panel(4, 38)
-        mode_buttons.set_size_request(195, 24)
-        mode_buttons.pack_start(self.overwrite_move_b, False, True, 0)
-        mode_buttons.pack_start(self.insert_move_b, False, True, 0)
-        mode_buttons.pack_start(self.one_roll_trim_b, False, True, 0)
-        mode_buttons.pack_start(self.tworoll_trim_b, False, True, 0)
-        #mode_buttons.set_border_width(1)
-        
-        #mode_frame = gtk.Frame()
-        #mode_frame.add(mode_buttons)
-        #mode_frame.set_shadow_type(gtk.SHADOW_OUT)
-        #mode_frame.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse(MODE_BUTTON_PRELIGHT_COLOR))
-        #gtk.SHADOW_NONE, gtk.SHADOW_IN, gtk.SHADOW_OUT, gtk.SHADOW_ETCHED_IN, gtk.SHADOW_ETCHED_OUT
+        windowviewmenu.create_edit_buttons_row_buttons(self)
     
-        # Zoom buttons panel
-        zoom_buttons = self._get_buttons_panel(3)
-        zoom_buttons.pack_start(self.zoom_in_b, False, True, 0)
-        zoom_buttons.pack_start(self.zoom_out_b, False, True, 0)
-        zoom_buttons.pack_start(self.zoom_length_b, False, True, 0)
-
-        # Unro/Redo buttons panel
-        undo_buttons = self._get_buttons_panel(2)
-        undo_buttons.pack_start(self.undo_b, False, True, 0)
-        undo_buttons.pack_start(self.redo_b, False, True, 0)
-
-        # Edit buttons panel
-        edit_buttons = self._get_buttons_panel(4)
-        edit_buttons.pack_start(self.lift_b, False, True, 0)
-        edit_buttons.pack_start(self.splice_out_b, False, True, 0)
-        edit_buttons.pack_start(self.cut_b, False, True, 0)
-        edit_buttons.pack_start(self.resync_b, False, True, 0)
-
-        # Monitor source panel
-        monitor_input_buttons =  self._get_buttons_panel(4)
-        monitor_input_buttons.pack_start(self.overwrite_range_b, False, True, 0)
-        monitor_input_buttons.pack_start(self.overwrite_b, False, True, 0)
-        monitor_input_buttons.pack_start(self.insert_b, False, True, 0)
-        monitor_input_buttons.pack_start(self.append_b, False, True, 0)
-
-        tc_pad = gtk.Label()
-        tc_pad.set_size_request(7, 10)
-
-        # Row
         buttons_row = gtk.HBox(False, 1)
-        buttons_row.pack_start(self.big_TC.widget, False, True, 0)
-        buttons_row.pack_start(tc_pad, False, True, 0)
-        buttons_row.pack_start(mode_buttons, False, True, 0)
-        buttons_row.pack_start(gtk.Label(), True, True, 0)
-        buttons_row.pack_start(undo_buttons, False, True, 0)
-        buttons_row.pack_start(gtk.Label(), True, True, 0)
-        buttons_row.pack_start(zoom_buttons, False, True, 10)
-        buttons_row.pack_start(gtk.Label(), True, True, 0)
-        buttons_row.pack_start(edit_buttons, False, True, 0)
-        buttons_row.pack_start(gtk.Label(), True, True, 0)
-        buttons_row.pack_start(monitor_input_buttons, False, True, 0)
+        if editorpersistance.prefs.midbar_tc_left == True:
+            windowviewmenu.fill_with_TC_LEFT_pattern(buttons_row, self)
+        else:
+            windowviewmenu.fill_with_TC_MIDDLE_pattern(buttons_row, self)
 
-        # Connect signals
-        self.zoom_in_b.connect("clicked", lambda w,e: updater.zoom_in(), None)
-        self.zoom_out_b.connect("clicked", lambda w,e: updater.zoom_out(), None)
-        self.zoom_length_b.connect("clicked", lambda w,e: updater.zoom_project_length(), None)
-
-        self.insert_move_b.connect("clicked", lambda w,e: self._handle_mode_button_press(w), None)        
-        self.one_roll_trim_b.connect("clicked", lambda w,e: self._handle_mode_button_press(w), None)        
-        self.tworoll_trim_b.connect("clicked", lambda w,e: self._handle_mode_button_press(w), None)
-        self.overwrite_move_b.connect("clicked", lambda w,e: self._handle_mode_button_press(w), None)   
-
-        self.cut_b.connect("clicked", lambda w,e: buttonevent.cut_pressed(), None)
-        self.splice_out_b.connect("clicked", lambda w,e: buttonevent.splice_out_button_pressed(), None)
-        self.lift_b.connect("clicked", lambda w,e: buttonevent.lift_button_pressed(), None)
-        self.resync_b.connect("clicked", lambda w,e:buttonevent.resync_button_pressed(), None)
-
-        self.insert_b.connect("clicked", lambda w,e: buttonevent.insert_button_pressed(), None)
-        self.overwrite_b.connect("clicked", lambda w,e: buttonevent.three_point_overwrite_pressed(), None)
-        self.overwrite_range_b.connect("clicked", lambda w,e: buttonevent.range_overwrite_pressed(), None)
-        self.append_b.connect("clicked", lambda w,e: buttonevent.append_button_pressed(), None)
-
-        self.undo_b.connect("clicked", lambda w,e: editevent.do_undo(), None)
-        self.redo_b.connect("clicked", lambda w,e: editevent.do_redo(), None)
-
+        windowviewmenu.connect_edit_buttons(self)
+        
         return buttons_row
 
     def _set_mode_button_colors(self, mode_button):
         mode_button.modify_bg(gtk.STATE_ACTIVE, gtk.gdk.color_parse(MODE_BUTTON_ACTIVE_COLOR))
         mode_button.modify_bg(gtk.STATE_PRELIGHT, gtk.gdk.color_parse(MODE_BUTTON_PRELIGHT_COLOR))
-        #mode_button.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse(MODE_BUTTON_PRELIGHT_COLOR))
 
+    """
     def _get_middle_buttons_row(self):
         show_media_icon = gtk.image_new_from_file(IMG_PATH + "show_media.png") 
         show_filters_icon = gtk.image_new_from_file(IMG_PATH + "show_filters.png") 
@@ -981,6 +821,7 @@ class EditorWindow:
         buttons_row.pack_start(self.open_mixer_b, False, True, 0)
         
         return buttons_row
+    """
 
     def _add_tool_tips(self):
         self.big_TC.widget.set_tooltip_text(_("Timeline current frame timecode"))
@@ -1056,9 +897,5 @@ class EditorWindow:
             and (widget == self.overwrite_move_b)):
             editevent.overwrite_move_mode_pressed()
 
-    def _get_buttons_panel(self, btns_count, btn_width=BUTTON_WIDTH):
-        # Mode buttons panel
-        panel = gtk.HBox(True, 0)
-        panel.set_size_request(btns_count * btn_width, BUTTON_HEIGHT)
-        return panel
+
 

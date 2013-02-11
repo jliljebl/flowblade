@@ -185,4 +185,32 @@ class CairoDrawableArea(gtk.Widget):
     def do_leave_notify_event(self, event):
         self.leave_notify_func(event)
 
+# Sort of works, not used currently
+class CairoEventBox(gtk.EventBox):
 
+    __gsignals__ = { 'expose-event' : 'override' }
+
+    def __init__(self):
+        # Init widget.
+        gtk.EventBox.__init__(self)
+
+    def do_expose_event(self, event):
+        self.chain(event)
+        try:
+            cr = self.window.cairo_create()
+        except AttributeError:
+            print "Cairo create failed"
+            raise SystemExit
+
+        x, y, w, h = self.allocation
+        
+        # Draw bg
+        cr.set_source_rgb(1,0,0)
+        cr.rectangle(0, 0, w, h)
+        cr.fill()
+
+        for child in self.get_children():
+            child.do_expose_event(child, event)
+
+        return True
+        

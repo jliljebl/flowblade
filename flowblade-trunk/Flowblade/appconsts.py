@@ -60,6 +60,11 @@ TRACK_HEIGHT_NORMAL = 50 # track height in canvas and column
 TRACK_HEIGHT_SMALL = 25 # track height in canvas and column
 TRACK_HEIGHT_SMALLEST = 20 # track height in canvas and column
 
+# Notebook widths
+NOTEBOOK_WIDTH = 600 # defines app min width with MONITOR_AREA_WIDTH
+NOTEBOOK_WIDTH_WIDESCREEN = 500
+TOP_ROW_HEIGHT = 500
+
 # Property editing gui consts
 PROPERTY_ROW_HEIGHT = 22
 PROPERTY_NAME_WIDTH = 90
@@ -96,3 +101,6 @@ NO_PAN = -99
 # Copy of projectdata.SAVEFILE_VERSION is here to be available at savetime without importing projectdata
 # This is set at application startup in app.main()
 SAVEFILE_VERSION = -1
+
+# This color is used in two modules
+MIDBAR_COLOR = "#bdbdbd"

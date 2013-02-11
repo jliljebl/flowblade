@@ -497,12 +497,12 @@ def destroy_splash_screen():
 # ------------------------------------------------------- small screens
 def _set_draw_params(scr_w, scr_h):
     if scr_w < 1220:
-        editorwindow.NOTEBOOK_WIDTH = 580
+        appconsts.NOTEBOOK_WIDTH = 580
         editorwindow.MONITOR_AREA_WIDTH = 500
     if scr_h < 960:
-        editorwindow.TOP_ROW_HEIGHT = 460
+        appconsts.TOP_ROW_HEIGHT = 460
     if scr_h < 863:
-        editorwindow.TOP_ROW_HEIGHT = 420
+        appconsts.TOP_ROW_HEIGHT = 420
         sequence.TRACK_HEIGHT_SMALL = appconsts.TRACK_HEIGHT_SMALLEST
         tlinewidgets.HEIGHT = 184
         tlinewidgets.TEXT_Y_SMALL = 15

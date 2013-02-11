@@ -40,18 +40,19 @@ import render
 import respaths
 import utils
 
-# Size of half row when using two column row components created here
-HALF_ROW_WIDTH = 160
-# This subtracted from notebook width to get some component widths
-EFFECT_PANEL_WIDTH_PAD = 20
-# label column of preferences panel
-PREFERENCES_LEFT = 290
-# label column of profile manager panel
-PROFILE_MANAGER_LEFT = 265
-# Text edit area size for render opts
-FFMPEG_VIEW_SIZE = (200, 210) # width 200 seems to be ignored in current layout
-# in, out and length timecodes in monitor area top row 
-TC_LABEL_WIDTH = 80
+
+HALF_ROW_WIDTH = 160 # Size of half row when using two column row components created here
+EFFECT_PANEL_WIDTH_PAD = 20 # This is subtracted from notebook width to get some component widths
+PREFERENCES_LEFT = 290 # label column of preferences panel
+PROFILE_MANAGER_LEFT = 265 # label column of profile manager panel
+FFMPEG_VIEW_SIZE = (200, 210) # Text edit area size for render opts, width 200 seems to be ignored in current layout
+TC_LABEL_WIDTH = 80 # in, out and length timecodes in monitor area top row 
+COMPOSITOR_PANEL_LEFT_WIDTH = 160
+
+MEDIA_PANEL_MIN_ROWS = 2
+MEDIA_PANEL_MAX_ROWS = 8
+MEDIA_PANEL_DEFAULT_ROWS = 2
+
 
 def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb):
     # Create buttons and connect signals
@@ -64,7 +65,7 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb):
 
     columns_img = gtk.image_new_from_file(respaths.IMAGE_PATH + "columns.png")
         
-    adj = gtk.Adjustment(value=3, lower=1, upper=10, step_incr=1)
+    adj = gtk.Adjustment(value=MEDIA_PANEL_DEFAULT_ROWS, lower=MEDIA_PANEL_MIN_ROWS, upper=MEDIA_PANEL_MAX_ROWS, step_incr=1)
     spin = gtk.SpinButton(adj)
     spin.connect("changed", col_changed_cb)
 
@@ -174,9 +175,6 @@ def get_render_panel_left(editor_window, add_audio_panel):
     use_project_profile_row.pack_start(render.widgets.use_project_profile_check,  False, False, 0)
     use_project_profile_row.pack_start(gtk.Label(), True, True, 0)
 
-    filler_label = gtk.Label()
-    filler_label.set_size_request(100, 2)
-
     profile_vbox = gtk.VBox(False, 2)
     profile_vbox.pack_start(use_project_profile_row, False, False, 0)
     profile_vbox.pack_start(render.widgets.out_profile_combo, False, False, 0)
@@ -193,9 +191,7 @@ def get_render_panel_left(editor_window, add_audio_panel):
     encoding_vbox.pack_start(quality_row, False, False, 0)
 
     if add_audio_panel:
-        audio_filler = gtk.Label()
-        audio_filler.set_size_request(10, 2)
-        encoding_vbox.pack_start(audio_filler, False, False, 0)
+        encoding_vbox.pack_start(guiutils.get_pad_label(10, 2), False, False, 0)
         encoding_vbox.pack_start(audio_panel, False, False, 0)
     encoding_panel = get_named_frame(_("Encoding Format"), encoding_vbox)
 
@@ -238,31 +234,21 @@ def get_render_panel_right(render_clicked_cb, normal_height):
     opts_vbox.pack_start(opts_buttons_row, False, False, 0)
     opts_panel = get_named_frame(_("Render Args"), opts_vbox)
 
-    f_label1 = gtk.Label()
-    f_label1.set_size_request(10, 8)
-    f_label2 = gtk.Label()
-    f_label2.set_size_request(10, 2)
     bin_row = gtk.HBox()
-    bin_row.pack_start(f_label1,  False, False, 0)
+    bin_row.pack_start(guiutils.get_pad_label(10, 8),  False, False, 0)
     bin_row.pack_start(gtk.Label(_("Open Rendered File in Selected Bin:")),  False, False, 0)
-    bin_row.pack_start(f_label2,  False, False, 0)
+    bin_row.pack_start(guiutils.get_pad_label(10, 2),  False, False, 0)
     bin_row.pack_start(render.widgets.open_in_bin,  False, False, 0)
     bin_row.pack_start(gtk.Label(), True, True, 0)
 
-    filler_label1 = gtk.Label()
-    filler_label1.set_size_request(10, 8)
-    filler_label2 = gtk.Label()
-    filler_label2.set_size_request(10, 2)
     range_row = gtk.HBox()
-    range_row.pack_start(filler_label1,  False, False, 0)
+    range_row.pack_start(guiutils.get_pad_label(10, 8),  False, False, 0)
     range_row.pack_start(gtk.Label(_("Render Range:")),  False, False, 0)
-    range_row.pack_start(filler_label2,  False, False, 0)
+    range_row.pack_start(guiutils.get_pad_label(10, 2),  False, False, 0)
     range_row.pack_start(render.widgets.range_cb,  True, True, 0)
 
-    filler = gtk.Label()
-    filler.set_size_request(10, 8)
     buttons_panel = gtk.HBox()
-    buttons_panel.pack_start(filler, False, False, 0)
+    buttons_panel.pack_start(guiutils.get_pad_label(10, 8), False, False, 0)
     buttons_panel.pack_start(render.widgets.reset_button, False, False, 0)
     buttons_panel.pack_start(gtk.Label(), True, True, 0)
     buttons_panel.pack_start(render.widgets.render_button, False, False, 0)
@@ -271,16 +257,12 @@ def get_render_panel_right(render_clicked_cb, normal_height):
                                          render_clicked_cb, 
                                          None)
 
-    vfiller = gtk.Label()
-    vfiller.set_size_request(10, 22)
-    vfiller2 = gtk.Label()
-    vfiller2.set_size_request(10, 12)
     render_panel = gtk.VBox()
     render_panel.pack_start(opts_panel, True, True, 0)
-    render_panel.pack_start(vfiller, False, False, 0)
+    render_panel.pack_start(guiutils.get_pad_label(10, 22), False, False, 0)
     render_panel.pack_start(bin_row, False, False, 0)
     render_panel.pack_start(range_row, False, False, 0)
-    render_panel.pack_start(vfiller2, False, False, 0)
+    render_panel.pack_start(guiutils.get_pad_label(10, 12), False, False, 0)
     render_panel.pack_start(buttons_panel, False, False, 0)
 
     return render_panel
@@ -325,15 +307,12 @@ def get_render_progress_panel():
     est_box = gtk.HBox(False, 2)
     est_box.pack_start(render.widgets.estimation_label,False, False, 0)
     est_box.pack_start(gtk.Label(), True, True, 0)
-    
-    filler = gtk.Label()
-    filler.set_size_request(10, 10)
 
     progress_vbox = gtk.VBox(False, 2)
     progress_vbox.pack_start(status_box, False, False, 0)
     progress_vbox.pack_start(remaining_box, False, False, 0)
     progress_vbox.pack_start(passed_box, False, False, 0)
-    progress_vbox.pack_start(filler, False, False, 0)
+    progress_vbox.pack_start(guiutils.get_pad_label(10, 10), False, False, 0)
     progress_vbox.pack_start(render.widgets.progress_bar, False, False, 0)
     progress_vbox.pack_start(est_box, False, False, 0)
     
@@ -346,13 +325,10 @@ def get_motion_render_progress_panel(file_name, progress_bar):
     status_box = gtk.HBox(False, 2)
     status_box.pack_start(gtk.Label(file_name),False, False, 0)
     status_box.pack_start(gtk.Label(), True, True, 0)
-    
-    filler = gtk.Label()
-    filler.set_size_request(10, 10)
 
     progress_vbox = gtk.VBox(False, 2)
     progress_vbox.pack_start(status_box, False, False, 0)
-    progress_vbox.pack_start(filler, False, False, 0)
+    progress_vbox.pack_start(guiutils.get_pad_label(10, 10), False, False, 0)
     progress_vbox.pack_start(progress_bar, False, False, 0)
     
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
@@ -367,17 +343,14 @@ def _group_selection_changed(group_combo, filters_list_view):
 
 def get_compositor_clip_panel():
     compositeeditor.create_widgets()
-
-    filler1 = gtk.Label()
-    filler1.set_size_request(5, 3)
     
     compositor_vbox = gtk.VBox(False, 2)
     compositor_vbox.pack_start(compositeeditor.widgets.compositor_info, False, False, 0)
     compositor_vbox.pack_start(gtk.Label(), True, True, 0)
     compositor_vbox.pack_start(compositeeditor.widgets.reset_b, False, False, 0)
     compositor_vbox.pack_start(compositeeditor.widgets.delete_b, False, False, 0)
-    compositor_vbox.pack_start(filler1, False, False, 0)
-    compositor_vbox.set_size_request(190, 200)
+    compositor_vbox.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
+    compositor_vbox.set_size_request(COMPOSITOR_PANEL_LEFT_WIDTH, 200)
 
     compositeeditor.set_enabled(False)
     
@@ -400,9 +373,7 @@ def get_timecode_panel(editor_window):
     row = gtk.HBox(False, 1)
     #row.pack_start(guicomponents.get_monitor_view_select_combo(), False, False, 0)
     row.pack_start(editor_window.tc.widget, False, False, 0)
-    filler = gtk.Label()
-    filler.set_size_request(20, 20)
-    row.pack_start(filler, False, False, 0)
+    row.pack_start(guiutils.get_pad_label(20, 20), False, False, 0)
     row.pack_start(editor_window.monitor_source, True, True, 0)
     row.pack_start(gtk.Label(), False, False, 0)
     in_icon = gtk.image_new_from_file(respaths.IMAGE_PATH  + "mark_in_label.png") 
@@ -442,25 +413,19 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     clipeffectseditor.widgets.group_combo = group_combo_box
     clipeffectseditor.widgets.effect_list_view = effects_list_view
     clipeffectseditor.set_enabled(False)
-
-    filler2 = gtk.Label()
-    filler2.set_size_request(8, 2)
     
     combo_row = gtk.HBox(False, 2)
     combo_row.pack_start(group_combo_box, True, True, 0)
-    combo_row.pack_start(filler2, False, False, 0)
+    combo_row.pack_start(guiutils.get_pad_label(8, 2), False, False, 0)
     combo_row.pack_start(clipeffectseditor.widgets.exit_button, False, False, 0)
    
     group_name, filters_array = mltfilters.groups[0]
     effects_list_view.fill_data_model(filters_array)
     effects_list_view.treeview.get_selection().select_path("0")
     
-    filler = gtk.Label()
-    filler.set_size_request(2, 2)
-    
     effects_vbox = gtk.VBox(False, 2)
     effects_vbox.pack_start(clipeffectseditor.widgets.clip_info, False, False, 0)
-    effects_vbox.pack_start(filler, False, False, 0)
+    effects_vbox.pack_start(guiutils.get_pad_label(2, 2), False, False, 0)
     effects_vbox.pack_start(combo_row, False, False, 0)
     effects_vbox.pack_start(effects_list_view, True, True, 0)
     effects_vbox.pack_start(stack_buttons_box, False, False, 0)
@@ -653,12 +618,9 @@ def get_file_properties_panel(data):
     row4 = get_two_column_box(get_bold_label(_("Audio Channels:")), gtk.Label(channels))
     row5 = get_two_column_box(get_bold_label(_("Audio Sample Rate:")), gtk.Label(frequency))
     
-    filler = gtk.Label()
-    filler.set_size_request(12, 16)
-
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(img, False, False, 0)
-    vbox.pack_start(filler, False, False, 0)
+    vbox.pack_start(guiutils.get_pad_label(12, 16), False, False, 0)
     vbox.pack_start(row0, False, False, 0)
     vbox.pack_start(row00, False, False, 0)
     vbox.pack_start(row1, False, False, 0)
@@ -715,9 +677,6 @@ def get_create_profiles_panel(load_values_clicked, save_profile_clicked, user_pr
         load_profile_combo.append_text(profile[0])
     load_profile_combo.set_active(default_profile_index)  
 
-    filler1 = gtk.Label()
-    filler1.set_size_request(10, 10)
-
     description = gtk.Entry()
     description.set_text("User Created Profile")
 
@@ -744,9 +703,6 @@ def get_create_profiles_panel(load_values_clicked, save_profile_clicked, user_pr
 
     progressive = gtk.CheckButton()
     progressive.set_active(False)
-
-    filler2 = gtk.Label()
-    filler2.set_size_request(10, 10)
 
     save_button = gtk.Button(_("Save New Profile"))
 
@@ -781,7 +737,7 @@ def get_create_profiles_panel(load_values_clicked, save_profile_clicked, user_pr
     
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(profile_row, False, False, 0)
-    vbox.pack_start(filler1, False, False, 0)
+    vbox.pack_start(guiutils.get_pad_label(10, 10), False, False, 0)
     vbox.pack_start(row0, False, False, 0)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
@@ -792,7 +748,7 @@ def get_create_profiles_panel(load_values_clicked, save_profile_clicked, user_pr
     vbox.pack_start(row7, False, False, 0)
     vbox.pack_start(row8, False, False, 0)
     vbox.pack_start(row9, False, False, 0)
-    vbox.pack_start(filler2, False, False, 0)
+    vbox.pack_start(guiutils.get_pad_label(10, 10), False, False, 0)
     vbox.pack_start(save_row, False, False, 0)
     vbox.pack_start(gtk.Label(), True, True, 0)
 

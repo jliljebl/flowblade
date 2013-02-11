@@ -56,6 +56,8 @@ MONITOR_COMBO_HEIGHT = 12
 MEDIA_OBJECT_WIDGET_WIDTH = 120
 MEDIA_OBJECT_WIDGET_HEIGHT = 105
 
+CLIP_EDITOR_LEFT_WIDTH = 200
+
 TC_COLOR = (0.7, 0.7, 0.7)#utils.get_cairo_color_tuple_255_rgb(225, 180, 0)#(67, 193, 234)#(216, 160, 0)#(225, 180, 0) #(0.7, 0.7, 0.7) #
 
 BIG_TC_GRAD_STOPS = [   (1, 1, 1, 1, 0.2),
@@ -552,7 +554,7 @@ class ClipInfoPanel(gtk.VBox):
         self.pack_start(info_row_2, False, False, 0)
         self.pack_start(info_row_3, False, False, 0)
         
-        self.set_size_request(250, 56)
+        self.set_size_request(CLIP_EDITOR_LEFT_WIDTH, 56)
 
     def display_clip_info(self, clip, track, index):
         self.name_label.set_text(_("<b>Clip: </b>"))
@@ -589,10 +591,6 @@ class CompositorInfoPanel(gtk.VBox):
     def __init__(self):
         gtk.VBox.__init__(self, False, 2)
 
-        self.name_label = gtk.Label()
-        self.name_value = gtk.Label()
-        self.name_value.set_ellipsize(pango.ELLIPSIZE_END)
-
         self.source_track = gtk.Label()
         self.source_track_value = gtk.Label()
 
@@ -604,10 +602,6 @@ class CompositorInfoPanel(gtk.VBox):
 
         self.length = gtk.Label()
         self.length_value = gtk.Label()
-        
-        info_row_1 = gtk.HBox()
-        info_row_1.pack_start(self.name_label, False, True, 0)
-        info_row_1.pack_start(self.name_value, True, True, 0)
 
         info_row_2 = gtk.HBox()
         info_row_2.pack_start(self.source_track, False, True, 0)
@@ -626,36 +620,18 @@ class CompositorInfoPanel(gtk.VBox):
         info_row_5.pack_start(self.length_value, True, True, 0)
 
         PAD_HEIGHT = 2
-        filler1 = gtk.Label()
-        filler1.set_size_request(5, PAD_HEIGHT)
-        filler2 = gtk.Label()
-        filler2.set_size_request(5, PAD_HEIGHT)
-        filler3 = gtk.Label()
-        filler3.set_size_request(5, PAD_HEIGHT)
-        filler4 = gtk.Label()
-        filler4.set_size_request(5, PAD_HEIGHT)
-
-        self.pack_start(info_row_1, False, False, 0)
-        self.pack_start(filler1, False, False, 0)        
         self.pack_start(info_row_2, False, False, 0)
-        self.pack_start(filler2, False, False, 0) 
+        self.pack_start(guiutils.get_pad_label(5, PAD_HEIGHT), False, False, 0) 
         self.pack_start(info_row_3, False, False, 0)
-        self.pack_start(filler3, False, False, 0) 
+        self.pack_start(guiutils.get_pad_label(5, PAD_HEIGHT), False, False, 0) 
         self.pack_start(info_row_4, False, False, 0)
-        self.pack_start(filler4, False, False, 0) 
+        self.pack_start(guiutils.get_pad_label(5, PAD_HEIGHT), False, False, 0) 
         self.pack_start(info_row_5, False, False, 0)
         
         self.set_no_compositor_info()
         self.set_enabled(False)
-        self.set_size_request(250, 120)
 
     def display_compositor_info(self, compositor):
-        if compositor.compositor_index < len(mlttransitions.compositors):
-            comp_type = _("Compositor")
-        else:
-            comp_type = _("Blend")
-        self.name_value.set_text(comp_type)
-                
         src_track = utils.get_track_name(current_sequence().tracks[compositor.transition.b_track],current_sequence())
         self.source_track_value.set_text(src_track)
         
@@ -669,10 +645,6 @@ class CompositorInfoPanel(gtk.VBox):
         self.length_value.set_text(length)
 
     def set_no_compositor_info(self):
-        self.name_label.set_text(_("<b>Type:</b>"))
-        self.name_value.set_text("")
-        self.name_value.set_ellipsize(pango.ELLIPSIZE_END)
-
         self.source_track.set_text(_("<b>Source Track:</b>"))
         self.source_track_value.set_text("")
 
@@ -688,14 +660,12 @@ class CompositorInfoPanel(gtk.VBox):
         self._set_use_mark_up()
         
     def _set_use_mark_up(self):
-        self.name_label.set_use_markup(True)
         self.source_track.set_use_markup(True)
         self.destination_track.set_use_markup(True)
         self.position.set_use_markup(True)
         self.length.set_use_markup(True)
 
     def set_enabled(self, value):
-        self.name_label.set_sensitive(value)
         self.source_track.set_sensitive(value)
         self.destination_track.set_sensitive(value)
         self.position.set_sensitive(value)
@@ -708,7 +678,7 @@ class MediaPanel():
         self.widget = gtk.VBox()
         self.row_widgets = []
         self.selected_objects = []
-        self.columns = 3
+        self.columns = 2
         self.media_file_popup_cb = media_file_popup_cb
         
     def get_selected_media_objects(self):
@@ -1369,6 +1339,8 @@ class BigTCDisplay:
 
         self.TEXT_X = 18
         self.TEXT_Y = 2
+        
+        self.bg_color = utils.cairo_color_from_gdk_color(gtk.gdk.color_parse(appconsts.MIDBAR_COLOR)) #   *(gui.bg_color_tuple))
 
     def _draw(self, event, cr, allocation):
         """
@@ -1378,7 +1350,7 @@ class BigTCDisplay:
         x, y, w, h = allocation
 
         # Draw bg
-        cr.set_source_rgb(*(gui.bg_color_tuple))
+        cr.set_source_rgb(*self.bg_color) 
         cr.rectangle(0, 0, w, h)
         cr.fill()
 
