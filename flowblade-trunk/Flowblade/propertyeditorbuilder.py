@@ -365,8 +365,6 @@ def _compositor_editor_force_combo_box_callback(combo_box, data):
         progressive.write_value("1")
 
 def _create_rotion_geometry_editor(clip, editable_properties):
-    print "_create_rotion_geometry_editor"
-        
     # Build a custom object that duck types for TransitionEditableProperty to use in editor
     ep = utils.EmptyClass()
     # pack real properties to go
@@ -388,7 +386,6 @@ def _create_rotion_geometry_editor(clip, editable_properties):
     ep.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
     ep.write_out_keyframes = lambda w_kf : keyframeeditor.rotating_ge_write_out_keyframes(ep, w_kf)
     # duck type members
-    print "epvalue:", ep.x.value
     x_tokens = ep.x.value.split(";")
     y_tokens = ep.y.value.split(";")
     x_scale_tokens = ep.x_scale.value.split(";")

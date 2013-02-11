@@ -236,7 +236,7 @@ def get_render_panel_right(render_clicked_cb, normal_height):
 
     bin_row = gtk.HBox()
     bin_row.pack_start(guiutils.get_pad_label(10, 8),  False, False, 0)
-    bin_row.pack_start(gtk.Label(_("Open Rendered File in Selected Bin:")),  False, False, 0)
+    bin_row.pack_start(gtk.Label(_("Open File in Bin:")),  False, False, 0)
     bin_row.pack_start(guiutils.get_pad_label(10, 2),  False, False, 0)
     bin_row.pack_start(render.widgets.open_in_bin,  False, False, 0)
     bin_row.pack_start(gtk.Label(), True, True, 0)

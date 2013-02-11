@@ -140,11 +140,10 @@ def _execute_widescreen_layout(window):
     editorpersistance.save()
     
 def _show_buttons_TC_LEFT_layout(widget):
-    print "_show_buttons_TC_LEFT_layout"
     global w
     w = gui.editor_window
     if w == None:
-        return # this may get called on start up before refs are available
+        return
     if widget.get_active() == False:
         return
 
@@ -158,11 +157,10 @@ def _show_buttons_TC_LEFT_layout(widget):
     editorpersistance.save()
     
 def _show_buttons_TC_MIDDLE_layout(widget):
-    print "_show_buttons_TC_MIDDLE_layout"
     global w
     w = gui.editor_window
     if w == None:
-        return # this may get called on start up before refs are available
+        return
     if widget.get_active() == False:
         return
 
@@ -362,7 +360,7 @@ def _show_tabs_up(widget):
     global w
     w = gui.editor_window
     if w == None:
-        return # this may get called on start up before refs are available
+        return
     if widget.get_active() == False:
         return
     w.notebook.set_tab_pos(gtk.POS_TOP)
@@ -374,7 +372,7 @@ def _show_tabs_down(widget):
     global w
     w = gui.editor_window
     if w == None:
-        return # this may get called on start up before refs are available
+        return
     if widget.get_active() == False:
         return
     w.notebook.set_tab_pos(gtk.POS_BOTTOM)

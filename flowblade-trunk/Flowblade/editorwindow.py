@@ -282,7 +282,7 @@ class EditorWindow:
                                               clipeffectseditor.filter_stack_button_press)
                                               
         effects_editor_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-        effects_editor_panel.set_padding(4, 4, 4, 4)
+        effects_editor_panel.set_padding(0, 0, 4, 0)
         effects_editor_panel.add(clipeffectseditor.widgets.value_edit_frame)
         
         effects_hbox = gtk.HBox()
@@ -291,14 +291,14 @@ class EditorWindow:
         effects_hbox.pack_start(effects_editor_panel, True, True, 0)
 
         self.effects_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-        self.effects_panel.set_padding(0, 0, 4, 0)
+        self.effects_panel.set_padding(0, 0, 0, 0)
         self.effects_panel.add(effects_hbox)
         
         # Compositors
         compositor_clip_panel = panels.get_compositor_clip_panel()
 
         compositor_editor_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-        compositor_editor_panel.set_padding(4, 4, 4, 4)
+        compositor_editor_panel.set_padding(0, 0, 4, 0)
         compositor_editor_panel.add(compositeeditor.widgets.value_edit_frame)
 
         compositors_hbox = gtk.HBox()
@@ -307,7 +307,7 @@ class EditorWindow:
         compositors_hbox.pack_start(compositor_editor_panel, True, True, 0)
 
         self.compositors_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-        self.compositors_panel.set_padding(0, 0, 4, 0)
+        self.compositors_panel.set_padding(0, 0, 0, 0)
         self.compositors_panel.add(compositors_hbox)
 
         # Project buttons
@@ -346,7 +346,7 @@ class EditorWindow:
         project_vbox.pack_start(seq_panel, True, True, 0)
     
         project_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-        project_panel.set_padding(6, 6, 12, 6)
+        project_panel.set_padding(6, 0, 6, 6)
         project_panel.add(project_vbox)
 
         # Render
@@ -378,7 +378,7 @@ class EditorWindow:
             render_hbox.pack_start(render_panel_right, True, True, 0)
 
         render_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-        render_panel.set_padding(6, 12, 12, 12)
+        render_panel.set_padding(2, 6, 8, 6)
         render_panel.add(render_hbox)
 
         # Notebook

@@ -29,6 +29,7 @@ import guicomponents
 import guiutils
 import edit
 from editorstate import current_sequence
+import editorpersistance
 import mlttransitions
 import propertyeditorbuilder
 import propertyedit
@@ -73,10 +74,13 @@ def set_compositor(new_compositor):
     compositor = new_compositor
 
     widgets.compositor_info.display_compositor_info(compositor)
-    
+
     set_enabled(True)
     _display_compositor_edit_box()
-    gui.middle_notebook.set_current_page(2)
+    if editorpersistance.prefs.default_layout == True:
+        gui.middle_notebook.set_current_page(2)
+    else:
+        gui.editor_window.right_notebook.set_current_page(1)
 
 def clear_compositor():
     global compositor
@@ -151,6 +155,7 @@ def _display_compositor_edit_box():
     target_row.pack_start(target_combo, False, False, 0)
     target_row.pack_start(gtk.Label(), True, True, 0)
     vbox.pack_start(target_row, False, False, 0)
+    vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
 
     # Transition editors
     t_editable_properties = propertyedit.get_transition_editable_properties(compositor)

@@ -283,7 +283,7 @@ def create_widgets():
 
     # Range
     widgets.range_cb = gtk.combo_box_new_text()
-    widgets.range_cb.append_text(_("Program length"))
+    widgets.range_cb.append_text(_("Full length"))
     widgets.range_cb.append_text(_("Marked range"))
     widgets.range_cb.set_active(0) 
 

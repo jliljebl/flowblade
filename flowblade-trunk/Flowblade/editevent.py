@@ -568,7 +568,6 @@ def _add_filter(data):
 def _add_compositor(data):
     clip, track, item_id, item_data = data
     x, compositor_type = item_data
-    #_do_add_compositor(x, compositor_type, track):
 
     frame = tlinewidgets.get_frame(x)
     clip_index = track.get_clip_index_at(frame)
