@@ -167,6 +167,7 @@ def get_graphics_default_in_out_length():
     out_fr = in_fr + int(prefs.default_grfx_length) - 1 # -1, out inclusive
     return (in_fr, out_fr, prefs.default_grfx_length)
     
+
     
 class EditorPreferences:
     """
@@ -192,3 +193,4 @@ class EditorPreferences:
         self.tabs_on_top = False
         self.midbar_tc_left = True
         self.default_layout = True
+        self.exit_allocation = (0, 0)

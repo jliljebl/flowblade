@@ -587,13 +587,17 @@ def _shutdown_dialog_callback(dialog, response_id):
 
     # No more auto saving
     stop_autosave()
-    
+
+    # Save window dimensions on exit
+    x, y, w, h = gui.editor_window.window.get_allocation()
+    editorpersistance.prefs.exit_allocation = (w, h)
+    editorpersistance.save()
+
     # Block reconnecting consumer before setting window not visible
     updater.player_refresh_enabled = False
     gui.editor_window.window.set_visible(False)
 
-
-    # Wait window to be hidden or it will freeze before disappering
+    # Wait window to be hidden or it will freeze before disappearing
     while(gtk.events_pending()):
         gtk.main_iteration()
  
@@ -602,7 +606,7 @@ def _shutdown_dialog_callback(dialog, response_id):
     editorstate.player.shutdown() # has ticker thread and player threads running
     audiomonitoring.close_audio_monitor()
     
-    # wait toplevel tools windows to close
+    # Wait toplevel tools windows to close
     while(gtk.events_pending()):
         gtk.main_iteration()
 
