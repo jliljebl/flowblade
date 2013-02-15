@@ -1106,7 +1106,7 @@ class RotatingScreenEditor(AbstractScreenEditor):
         self.rotation = None
         self.x_scale = None
         self.y_scale = None
-        
+
     def create_edit_points_and_values(self):
         # creates untransformed edit shape to init array, values will overridden shortly
         self.edit_points.append((self.source_width / 2, self.source_height / 2)) # center
@@ -1148,6 +1148,38 @@ class RotatingScreenEditor(AbstractScreenEditor):
 
         return False
 
+    # ------------------------------------------------------- menu edit events
+    def reset_active_keyframe_shape(self, active_kf_index):
+        frame, trans, opacity = self.keyframes[active_kf_index]
+        new_trans = [self.source_width / 2, self.source_height / 2, 1.0, 1.0, 0]
+        self.keyframes.pop(active_kf_index)
+        self.keyframes.insert(active_kf_index, (frame, new_trans, opacity))
+        self._update_shape()
+
+    def reset_active_keyframe_rect_shape(self, active_kf_index):
+        frame, trans, opacity = self.keyframes[active_kf_index]
+        x, y, x_scale, y_scale, rotation = trans
+        new_trans = [x, y, x_scale, x_scale, rotation]
+        self.keyframes.pop(active_kf_index)
+        self.keyframes.insert(active_kf_index, (frame, new_trans, opacity))
+        self._update_shape()
+
+    def center_h_active_keyframe_shape(self, active_kf_index):
+        frame, trans, opacity = self.keyframes[active_kf_index]
+        x, y, x_scale, y_scale, rotation = trans
+        new_trans = [self.source_width / 2, y, x_scale, y_scale, rotation]
+        self.keyframes.pop(active_kf_index)
+        self.keyframes.insert(active_kf_index, (frame, new_trans, opacity))
+        self._update_shape()
+
+    def center_v_active_keyframe_shape(self, active_kf_index):
+        frame, trans, opacity = self.keyframes[active_kf_index]
+        x, y, x_scale, y_scale, rotation = trans
+        new_trans = [x, self.source_height / 2, x_scale, y_scale, rotation]
+        self.keyframes.pop(active_kf_index)
+        self.keyframes.insert(active_kf_index, (frame, new_trans, opacity))
+        self._update_shape()
+
     # -------------------------------------------------------- updating
     def _clip_frame_changed(self):
         self._update_shape()
@@ -1160,7 +1192,6 @@ class RotatingScreenEditor(AbstractScreenEditor):
             frame, rect, opacity = self.keyframes[i]
             if frame == self.current_clip_frame:
                 self.set_geom(*rect)
-                #self.source_edit_rect.editable = True
                 return
             
             try:
@@ -1172,11 +1203,9 @@ class RotatingScreenEditor(AbstractScreenEditor):
                                  float((frame_n - frame))
                     frame_rect = self._get_interpolated_rect(rect, rect_n, time_fract)
                     self.set_geom(*frame_rect)
-                    #self.source_edit_rect.editable = False
                     return
-            except: # past last frame, use its value
+            except: # past last frame, use its value  ( line: frame_n, rect_n, opacity_n = self.keyframes[i + 1] failed)
                 self.set_geom(*rect)
-                #self.source_edit_rect.editable = False
                 return
     
     def set_geom(self, x, y, x_scale, y_scale, rotation):
