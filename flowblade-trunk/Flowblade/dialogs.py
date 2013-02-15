@@ -864,6 +864,34 @@ def get_new_sequence_dialog(callback, default_name):
     dialog.connect('response', callback, (name_entry, tracks_combo, open_check))
     dialog.show_all()
 
+def get_new_media_name_dialog(callback, media_file):
+    dialog = gtk.Dialog(_("Rename New Media Object"), None,
+                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                        _("Rename").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+                        
+    name_entry = gtk.Entry(30)
+    name_entry.set_width_chars(30)
+    name_entry.set_text(media_file.name)
+    name_entry.set_activates_default(True)
+
+    name_select = panels.get_two_column_box(gtk.Label(_("New Name:")),
+                                               name_entry,
+                                               180)
+
+    tracks_vbox = gtk.VBox(False, 2)
+    tracks_vbox.pack_start(name_select, False, False, 0)
+    tracks_vbox.pack_start(guiutils.get_pad_label(12, 12), False, False, 0)
+
+    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment.set_padding(6, 24, 24, 24)
+    alignment.add(tracks_vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, (name_entry, media_file))
+    dialog.show_all()
+
 def not_valid_producer_dialog(file_path, parent_window):
     primary_txt = _("Can't open non-valid media")
     secondary_txt = _("File: ") + file_path + _("\nis not a valid media file.")

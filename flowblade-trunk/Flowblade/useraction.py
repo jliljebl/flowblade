@@ -474,23 +474,24 @@ def delete_media_files():
 
     _enable_save()
 
-def media_file_name_edited(cell, path, new_text, user_data):
+def display_media_file_rename_dialog(media_file):
+    dialogs.get_new_media_name_dialog(media_file_name_edited, media_file)
+
+def media_file_name_edited(dialog, response_id, data):
     """
     Sets edited value to liststore and project data.
     """
-    # Can't have empty string names
+    name_entry, media_file = data
+    new_text = name_entry.get_text()
+    dialog.destroy()
+            
+    if response_id != gtk.RESPONSE_ACCEPT:
+        return      
     if len(new_text) == 0:
         return
-    
-    # Update liststore data
-    liststore, column = user_data
-    liststore[path][column] = new_text
-    
-    # Set media file name
-    file_id = current_bin().file_ids[int(path)] 
-    media_file = PROJECT().media_files[file_id]
+
     media_file.name = new_text
-    _enable_save()
+    gui.media_list_view.fill_data_model()
 
 def _display_file_info(media_file):
     clip = current_sequence().create_file_producer_clip(media_file.path)
@@ -776,6 +777,8 @@ def media_file_menu_item_selected(widget, data):
         updater.set_and_display_monitor_media_file(media_file)
     if item_id == "Render Slow/Fast Motion File":
         render.render_frame_buffer_clip(media_file)
+    if item_id == "Rename":
+        display_media_file_rename_dialog(media_file)
 
 def _select_treeview_on_pos_and_return_row_and_column_title(event, treeview):
     selection = treeview.get_selection()

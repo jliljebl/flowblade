@@ -674,19 +674,22 @@ class CompositorInfoPanel(gtk.VBox):
 # -------------------------------------------- media select panel
 class MediaPanel():
     
-    def __init__(self, media_file_popup_cb):
+    def __init__(self, media_file_popup_cb, double_click_cb):
         self.widget = gtk.VBox()
         self.row_widgets = []
         self.selected_objects = []
         self.columns = 2
         self.media_file_popup_cb = media_file_popup_cb
+        self.double_click_cb = double_click_cb
         
     def get_selected_media_objects(self):
         return self.selected_objects
         
     def media_object_selected(self, media_object, widget, event):
-        widget.grab_focus() 
-        if event.button == 1:
+        widget.grab_focus()
+        if event.type == gtk.gdk._2BUTTON_PRESS:
+             self.double_click_cb(media_object.media_file)
+        elif event.button == 1:
             if (event.state & gtk.gdk.CONTROL_MASK):
                 widget.modify_bg(gtk.STATE_NORMAL, gui.selected_bg_color)
                 # only add to selected if not already there
@@ -703,6 +706,8 @@ class MediaPanel():
             display_media_file_popup_menu(media_object.media_file,
                                           self.media_file_popup_cb,
                                           event)
+        elif event.type == gtk.gdk._2BUTTON_PRESS:
+             print "double click"
 
     def empty_pressed(self, widget, event):
         self.clear_selection()
@@ -1179,6 +1184,8 @@ def display_media_file_popup_menu(media_file, callback, event):
     media_file_menu = gtk.Menu()
     # "Open in Clip Monitor" is sent as event id, same for all below
     # See useraction._media_file_menu_item_selected(...)
+    media_file_menu.add(_get_menu_item(_("Rename"), callback,("Rename", media_file, event))) 
+    _add_separetor(media_file_menu)
     media_file_menu.add(_get_menu_item(_("Open in Clip Monitor"), callback,("Open in Clip Monitor", media_file, event))) 
     media_file_menu.add(_get_menu_item(_("File Properties"), callback, ("File Properties", media_file, event)))
     _add_separetor(media_file_menu)

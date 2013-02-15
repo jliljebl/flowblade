@@ -51,6 +51,7 @@ _timeline_displayed = True
 
 # Used to alter gui layout and tracks configuration, set at startup
 SCREEN_HEIGHT = -1
+SCREEN_WIDTH = -1
 
 # Runtime environment data
 gtk_version = None

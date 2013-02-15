@@ -139,6 +139,7 @@ def main(root_path):
     # Adjust gui parameters for smaller screens
     scr_w = gtk.gdk.screen_width()
     scr_h = gtk.gdk.screen_height()
+    editorstate.SCREEN_WIDTH = scr_w
     editorstate.SCREEN_HEIGHT = scr_h
     _set_draw_params(scr_w, scr_h)
 

@@ -9,6 +9,7 @@ import appconsts
 import buttonevent
 import editevent
 import editorpersistance
+import editorstate
 import gui
 import guicomponents
 import guiutils
@@ -27,24 +28,25 @@ def init_view_menu(menu_item):
     Fills menu item with menuitems to open recent projects.
     """
     menu = menu_item.get_submenu()
-    
-    default = gtk.RadioMenuItem(None, "Default")
 
-    default.connect("activate", lambda w: _show_default_layout(w))
-    menu.append(default)
+    if editorstate.SCREEN_WIDTH > 1678:
+        default = gtk.RadioMenuItem(None, "Default")
 
-    widescreen = gtk.RadioMenuItem(default, "Widescreen")
-    widescreen.connect("activate", lambda w: _show_widescreen_layout(w))
-    menu.append(widescreen)
+        default.connect("activate", lambda w: _show_default_layout(w))
+        menu.append(default)
 
-    if editorpersistance.prefs.default_layout == True:
-        default.set_active(True)
-    else:
-        widescreen.set_active(True)
+        widescreen = gtk.RadioMenuItem(default, "Widescreen")
+        widescreen.connect("activate", lambda w: _show_widescreen_layout(w))
+        menu.append(widescreen)
 
-    sep = gtk.SeparatorMenuItem()
-    menu.append(sep)
-    
+        if editorpersistance.prefs.default_layout == True:
+            default.set_active(True)
+        else:
+            widescreen.set_active(True)
+
+        sep = gtk.SeparatorMenuItem()
+        menu.append(sep)
+
     tc_left = gtk.RadioMenuItem(None, "Middle bar TC Left")
     tc_left.set_active(True)
     tc_left.connect("activate", lambda w: _show_buttons_TC_LEFT_layout(w))
