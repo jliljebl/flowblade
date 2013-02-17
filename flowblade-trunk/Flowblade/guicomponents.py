@@ -1347,7 +1347,7 @@ class BigTCDisplay:
         self.TEXT_X = 18
         self.TEXT_Y = 2
         
-        self.bg_color = utils.cairo_color_from_gdk_color(gtk.gdk.color_parse(appconsts.MIDBAR_COLOR)) #   *(gui.bg_color_tuple))
+        #self.bg_color = gui.bg_color_tuple
 
     def _draw(self, event, cr, allocation):
         """
@@ -1357,7 +1357,7 @@ class BigTCDisplay:
         x, y, w, h = allocation
 
         # Draw bg
-        cr.set_source_rgb(*self.bg_color) 
+        cr.set_source_rgb(*gui.bg_color_tuple) 
         cr.rectangle(0, 0, w, h)
         cr.fill()
 

@@ -46,6 +46,7 @@ import guiutils
 import menuactions
 import mltplayer
 import monitorevent
+import monitorbuttonswidget
 import movemodes
 import respaths
 import panels
@@ -415,6 +416,8 @@ class EditorWindow:
         pos_bar_vbox.pack_start(pos_bar_frame, False, True, 0)
 
         playback_buttons = self._get_player_buttons()
+        self.monitor_buttons = monitorbuttonswidget.MonitorButtons()
+        playback_buttons = self.monitor_buttons.widget
 
         # Creates monitor switch buttons
         self._create_monitor_buttons()
@@ -438,7 +441,7 @@ class EditorWindow:
         
         # Monitor
         monitor_vbox = gtk.VBox(False, 1)
-        monitor_vbox.pack_start(tc_panel, False, True, 0)
+        #monitor_vbox.pack_start(tc_panel, False, True, 0)
         monitor_vbox.pack_start(self.tline_display, True, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
         monitor_vbox.pack_start(playback_buttons, False, True, 0)
@@ -467,16 +470,16 @@ class EditorWindow:
 
         # Edit buttons rows
         self.edit_buttons_row = self._get_edit_buttons_row()
-
-        self.edit_buttons_event_box = gtk.EventBox()
-        self.edit_buttons_event_box.add(self.edit_buttons_row)
-        self.edit_buttons_event_box.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse(appconsts.MIDBAR_COLOR))
+        self.edit_buttons_frame = gtk.Frame()
+        self.edit_buttons_frame.add(self.edit_buttons_row)
+        self.edit_buttons_frame.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+        # gtk.SHADOW_IN, gtk.SHADOW_OUT, gtk.SHADOW_ETCHED_IN, gtk.SHADOW_ETCHED_OUT
+        #self.edit_buttons_event_box.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse(appconsts.MIDBAR_COLOR))
                 
         # Timeline scale
         self.tline_scale = tlinewidgets.TimeLineFrameScale(editevent.insert_move_mode_pressed,  
                                                            updater.mouse_scroll_zoom)
-        scale_frame = gtk.Frame()
-        
+
         # Timecode display
         self.tline_info = gtk.HBox()
         info_contents = gtk.Label()
@@ -492,13 +495,10 @@ class EditorWindow:
         markers_launcher = guicomponents.get_markers_menu_launcher(editevent.marker_menu_lauch_pressed, marker_pixbuf)
         tracks_launcher_pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_menu_launch.png")
         tracks_launcher = guicomponents.PressLaunch(editevent.all_tracks_menu_launch_pressed, tracks_launcher_pixbuf)
-        #tline_colors_launcher_pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "tline_colors_launch.png")
-        #tline_colors_launcher = guicomponents.PressLaunch(editevent.tline_colors_launch_pressed, tline_colors_launcher_pixbuf)
 
         # Timeline top row
         tline_hbox_1 = gtk.HBox()
         tline_hbox_1.pack_start(info_h, False, False, 0)
-        #tline_hbox_1.pack_start(tline_colors_launcher.widget, False, False, 0)
         tline_hbox_1.pack_start(tracks_launcher.widget, False, False, 0)
         tline_hbox_1.pack_start(markers_launcher.widget, False, False, 0)
         tline_hbox_1.pack_start(self.tline_scale.widget, True, True, 0)
@@ -548,8 +548,8 @@ class EditorWindow:
 
         # Timeline pane
         tline_pane = gtk.VBox(False, 1)
-        tline_pane.pack_start(self.edit_buttons_event_box, False, True, 0)
-        tline_pane.pack_start(guiutils.get_pad_label(5, 4), False, True, 0)
+        tline_pane.pack_start(self.edit_buttons_frame, False, True, 0)
+        #tline_pane.pack_start(guiutils.get_pad_label(5, 4), False, True, 0)
         tline_pane.pack_start(self.tline_box, True, True, 0)
 
         # VPaned top row / timeline
@@ -709,6 +709,7 @@ class EditorWindow:
         
     def connect_player(self, mltplayer):
         # Buttons
+        """
         self.play_b.connect("clicked", lambda w,e: monitorevent.play_pressed(), None)
         self.stop_b.connect("clicked", lambda w,e: monitorevent.stop_pressed(), None)
         self.prev_b.connect("clicked", lambda w,e: monitorevent.prev_pressed(), None)
@@ -724,7 +725,22 @@ class EditorWindow:
         self.marks_clear_b.connect("clicked", lambda w,e: monitorevent.marks_clear_pressed(), None)
         self.to_mark_in_b.connect("clicked", lambda w,e: monitorevent.to_mark_in_pressed(), None)
         self.to_mark_out_b.connect("clicked", lambda w,e: monitorevent.to_mark_out_pressed(), None)
-
+        """
+        # NOTE: ORDER OF CALLBACKS IS THE SAME AS ORDER OF BUTTONS FROM LEFT TO RIGHT
+        pressed_callback_funcs = [monitorevent.rew_pressed,
+                                  monitorevent.ff_pressed,
+                                  monitorevent.prev_pressed,
+                                  monitorevent.next_pressed,
+                                  monitorevent.play_pressed,
+                                  monitorevent.stop_pressed,
+                                  monitorevent.mark_in_pressed,
+                                  monitorevent.mark_out_pressed,
+                                  monitorevent.marks_clear_pressed,
+                                  monitorevent.to_mark_in_pressed,
+                                  monitorevent.to_mark_out_pressed]
+        released_callback_funcs = [monitorevent.rew_released,
+                                   monitorevent.ff_released]
+        self.monitor_buttons.set_callbacks(pressed_callback_funcs, released_callback_funcs)
         #self.view_mode_select.connect("changed", lambda w, e: buttonevent.view_mode_changed(w), None)
 
         # Monitor position bar
