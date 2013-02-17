@@ -9,11 +9,23 @@ from cairoarea import CairoDrawableArea
 import gui
 import respaths
 
+"""
 BUTTONS_GRAD_STOPS = [   (1, 0.5, 0.5, 0.5, 1),
                         (0, 0.7, 0.7, 0.7, 1)]
-
+"""
 BUTTONS_PRESSED_GRAD_STOPS = [(1, 0.5, 0.5, 0.5, 1),
                              (0, 0.5, 0.5, 0.5, 1)]
+
+BUTTONS_GRAD_STOPS = [   (1, 1, 1, 1, 0.2),
+                        (0.8, 1, 1, 1, 0),
+                        (0.51, 1, 1, 1, 0),
+                        (0.50, 1, 1, 1, 0.25),
+                        (0, 1, 1, 1, 0.4)]
+                        
+LINE_GRAD_STOPS = [ (1, 0.7, 0.7, 0.7, 1),
+                            (0.95, 0.7, 0.7, 0.7, 1),
+                            (0.65, 0.3, 0.3, 0.3, 1),
+                            (0, 0.64, 0.64, 0.64, 1)]
                         
 WIDTH = 400
 HEIGHT = 30
@@ -81,7 +93,7 @@ class MonitorButtons:
         Mouse button callback
         """
         self.pressed_button = self._get_hit_code(event.x, event.y)
-        if self.pressed_button > -1 and self.pressed_button < len(self.icons):
+        if self.pressed_button >= 0 and self.pressed_button < len(self.icons):
             callback_func = self.pressed_callback_funcs[self.pressed_button] # index is set to match at editorwindow.py where callback func list is created
             callback_func()
         self.widget.queue_draw()
@@ -95,7 +107,7 @@ class MonitorButtons:
             if self.pressed_button > 0 and self.pressed_button < 2: # ff, rew
                 release_func = self.released_callback_funcs[self.pressed_button]
                 release_func()
-            self.pressed_button = -1
+            self.pressed_button = NO_HIT
         self.widget.queue_draw()
 
     def _release_event(self, event):
@@ -118,12 +130,11 @@ class MonitorButtons:
             if ((x >= button_x) and (x <= button_x + BUTTON_WIDTH)
                 and (y >= BUTTON_Y) and (y <= BUTTON_Y + BUTTON_HEIGHT)):
                     return i 
-            
             button_x += BUTTON_WIDTH
+
         return NO_HIT
 
     def set_callbacks(self, pressed_callback_funcs, released_callback_funcs):
-        print "wqsasdqweqwdas"
         self.pressed_callback_funcs = pressed_callback_funcs 
         self.released_callback_funcs = released_callback_funcs
 
@@ -155,15 +166,15 @@ class MonitorButtons:
         # line width for all strokes
         cr.set_line_width(1.0)
 
-        # buttons gradient 
+        # bg 
         self._set_button_draw_consts(x_start + 0.5, BUTTON_Y + 0.5, buttons_width, BUTTON_HEIGHT + 1.0)
         self._round_rect_path(cr)
-        grad = cairo.LinearGradient (x_start, BUTTON_Y, x_start, BUTTON_Y + BUTTON_HEIGHT)
-        for stop in BUTTONS_GRAD_STOPS:
-            grad.add_color_stop_rgba(*stop)
-        cr.set_source(grad)
-        cr.fill()
-
+        cr.set_source_rgb(0.75, 0.75, 0.75)
+        if self.pressed_button == -1:
+            cr.fill_preserve()
+        else:
+            cr.fill()
+    
         # pressed button gradient
         if self.pressed_button > -1:
             grad = cairo.LinearGradient (x_start, BUTTON_Y, x_start, BUTTON_Y + BUTTON_HEIGHT)
@@ -172,14 +183,44 @@ class MonitorButtons:
             cr.set_source(grad)
             cr.rectangle(x_start + self.pressed_button * BUTTON_WIDTH, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT)
             cr.fill()
-        
+            self._round_rect_path(cr)
+
+        #icons
+        x = x_start
+        for i in range(0, len(self.icons)):
+            icon = self.icons[i]
+            cr.set_source_pixbuf(icon, x + self.x_fix[i], BUTTON_IMAGE_Y)
+            cr.paint()
+            x += BUTTON_WIDTH
+
+        # glass gradient 
+        grad = cairo.LinearGradient (x_start, BUTTON_Y, x_start, BUTTON_Y + BUTTON_HEIGHT)
+        for stop in BUTTONS_GRAD_STOPS:
+            grad.add_color_stop_rgba(*stop)
+        cr.set_source(grad)
+        cr.fill()
+
+        # pressed button gradient
+        """
+        if self.pressed_button > -1:
+            grad = cairo.LinearGradient (x_start, BUTTON_Y, x_start, BUTTON_Y + BUTTON_HEIGHT)
+            for stop in BUTTONS_PRESSED_GRAD_STOPS:
+                grad.add_color_stop_rgba(*stop)
+            cr.set_source(grad)
+            cr.rectangle(x_start + self.pressed_button * BUTTON_WIDTH, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT)
+            cr.fill()
+        """
         #light accent
-        self._round_rect_path(cr)
-        cr.set_source_rgb(1,1,1)
-        cr.stroke()
+        #self._round_rect_path(cr)
+        #cr.set_source_rgb(1,1,1)
+        #cr.stroke()
 
         # dark line
-        cr.set_source_rgb(0.3,0.3,0.3)
+        #cr.set_source_rgb(0.3,0.3,0.3)
+        grad = cairo.LinearGradient (x_start, BUTTON_Y, x_start, BUTTON_Y + BUTTON_HEIGHT)
+        for stop in LINE_GRAD_STOPS:
+            grad.add_color_stop_rgba(*stop)
+        cr.set_source(grad)
         self._set_button_draw_consts(x_start + 0.5, BUTTON_Y + 0.5, buttons_width, BUTTON_HEIGHT)
         self._round_rect_path(cr)
         cr.stroke()
@@ -187,16 +228,16 @@ class MonitorButtons:
         # icons and vert lines
         x = x_start
         for i in range(0, len(self.icons)):
-            icon = self.icons[i]
-            cr.set_source_pixbuf(icon, x + self.x_fix[i], BUTTON_IMAGE_Y)
-            cr.paint()
+            #icon = self.icons[i]
+            #cr.set_source_pixbuf(icon, x + self.x_fix[i], BUTTON_IMAGE_Y)
+            #cr.paint()
             #cr.move_to(x + BUTTON_WIDTH, BUTTON_Y)
             if (i > 0) and (i < len(self.icons)):
                 cr.move_to(x + 0.5, BUTTON_Y)
                 cr.line_to(x + 0.5, BUTTON_Y + BUTTON_HEIGHT)
                 #cr.line_to(x + BUTTON_WIDTH, BUTTON_Y + BUTTON_HEIGHT)
                 
-                cr.set_source_rgb(0,0,0)
+                #cr.set_source_rgb(0,0,0)
                 cr.stroke()
             
             x += BUTTON_WIDTH
