@@ -415,9 +415,14 @@ class EditorWindow:
         pos_bar_vbox.pack_start(guiutils.get_pad_label(5, 2), False, True, 0)
         pos_bar_vbox.pack_start(pos_bar_frame, False, True, 0)
 
-        #player_buttons = self._get_player_buttons()
+        # Play buttons row
         self.player_buttons = glassbuttons.PlayerButtons()
-        #playback_buttons = self.player_buttons.widget
+        self.monitor_source.modify_font(pango.FontDescription("sans bold 8"))
+        player_buttons_row = gtk.HBox(False, 0)
+
+        player_buttons_row.pack_start(self.player_buttons.widget, False, True, 0)
+        #player_buttons_row.pack_start(gtk.Label(), True, True, 0)
+        player_buttons_row.pack_start(self.monitor_source, True, True, 0)
 
         # Creates monitor switch buttons
         self._create_monitor_buttons()
@@ -441,10 +446,9 @@ class EditorWindow:
         
         # Monitor
         monitor_vbox = gtk.VBox(False, 1)
-        #monitor_vbox.pack_start(tc_panel, False, True, 0)
         monitor_vbox.pack_start(self.tline_display, True, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
-        monitor_vbox.pack_start(self.player_buttons.widget, False, True, 0)
+        monitor_vbox.pack_start(player_buttons_row, False, True, 0)
         
         monitor_align = gtk.Alignment(xalign=0.0, yalign=0.0, xscale=1.0, yscale=1.0) 
         monitor_align.add(monitor_vbox)
@@ -580,20 +584,22 @@ class EditorWindow:
 
     def _create_monitor_buttons(self):
         # Monitor switch buttons
-        self.sequence_editor_b = gtk.RadioButton(None, _("Timeline"))
+        self.sequence_editor_b = gtk.RadioButton(None) #, _("Timeline"))
         self.sequence_editor_b.set_mode(False)
+        self.sequence_editor_b.set_image(gtk.image_new_from_file(IMG_PATH + "timeline_button.png"))
         self.sequence_editor_b.connect("clicked", 
                         lambda w,e: self._monitor_switch_handler(w), 
                         None)
         self.sequence_editor_b.set_size_request(100, 25)
 
-        self.clip_editor_b = gtk.RadioButton(self.sequence_editor_b,_("Clip"))
+        self.clip_editor_b = gtk.RadioButton(self.sequence_editor_b)#,_("Clip"))
         self.clip_editor_b.set_mode(False)
+        self.clip_editor_b.set_image(gtk.image_new_from_file(IMG_PATH + "clip_button.png"))
         self.clip_editor_b.connect("clicked",
                         lambda w,e: self._monitor_switch_handler(w),
                         None)
         self.clip_editor_b.set_size_request(100, 25)
-    
+
     def _monitor_switch_handler(self, widget):
         # We get two "clicked" events per toggle, send through only the one
         # from activated button
@@ -605,130 +611,9 @@ class EditorWindow:
             and (widget == self.clip_editor_b)):
             updater.display_clip_in_monitor()
     
-    def _get_player_buttons(self):
-        pass
-        """
-        # Icons
-        rew_icon = gtk.image_new_from_file(IMG_PATH + "backward_s.png")
-        ff_icon = gtk.image_new_from_file(IMG_PATH + "forward_s.png")
-        play_icon = gtk.image_new_from_file(IMG_PATH + "play_2_s.png")
-        stop_icon = gtk.image_new_from_file(IMG_PATH + "stop_s.png")
-        next_icon = gtk.image_new_from_file(IMG_PATH + "next_frame_s.png")
-        prev_icon = gtk.image_new_from_file(IMG_PATH + "prev_frame_s.png")
-        mark_in_icon = gtk.image_new_from_file(IMG_PATH + "mark_in_s.png")
-        mark_out_icon = gtk.image_new_from_file(IMG_PATH + "mark_out_s.png")
-        marks_clear_icon = gtk.image_new_from_file(IMG_PATH + "marks_clear_s.png") 
-        to_mark_in_icon = gtk.image_new_from_file(IMG_PATH + "to_mark_in_s.png")        
-        to_mark_out_icon = gtk.image_new_from_file(IMG_PATH + "to_mark_out_s.png") 
-        
-        # Create buttons
-        self.rew_b = gtk.Button()
-        self.rew_b.set_relief(gtk.RELIEF_NONE)
-        _b(self.rew_b, rew_icon)
-
-        self.ff_b = gtk.Button()
-        self.ff_b.set_relief(gtk.RELIEF_NONE)
-        _b(self.ff_b, ff_icon)
-        
-        self.next_b = gtk.Button()
-        self.next_b.set_relief(gtk.RELIEF_NONE)
-        _b(self.next_b, next_icon)
-        
-        self.prev_b = gtk.Button()
-        self.prev_b.set_relief(gtk.RELIEF_NONE)
-        _b(self.prev_b, prev_icon)
-        
-        self.play_b = gtk.Button()
-        self.play_b.set_relief(gtk.RELIEF_NONE)
-        _b(self.play_b, play_icon)
-        
-        self.stop_b = gtk.Button()
-        self.stop_b.set_relief(gtk.RELIEF_NONE)
-        _b(self.stop_b, stop_icon)
-
-        self.mark_in_b = gtk.Button()
-        self.mark_in_b.set_relief(gtk.RELIEF_NONE)
-        _b(self.mark_in_b, mark_in_icon)
-
-        self.mark_out_b = gtk.Button()
-        self.mark_out_b.set_relief(gtk.RELIEF_NONE)
-        _b(self.mark_out_b, mark_out_icon)
-
-        self.marks_clear_b = gtk.Button()
-        self.marks_clear_b.set_relief(gtk.RELIEF_NONE)
-        _b(self.marks_clear_b, marks_clear_icon)
-
-        self.to_mark_in_b = gtk.Button()
-        self.to_mark_in_b.set_relief(gtk.RELIEF_NONE)
-        _b(self.to_mark_in_b, to_mark_in_icon)
-
-        self.to_mark_out_b = gtk.Button()
-        self.to_mark_out_b.set_relief(gtk.RELIEF_NONE)
-        _b(self.to_mark_out_b, to_mark_out_icon)
-
-        # Button groups
-        rewind_group = gtk.HBox(True, 1)
-        rewind_group.set_size_request(50, 23)
-        one_frame_group = gtk.HBox(True, 1)
-        one_frame_group.set_size_request(50, 23)
-        play_group = gtk.HBox(True, 1)
-        play_group.set_size_request(30, 23)
-        in_out_group = gtk.HBox(True, 1)
-        in_out_group.set_size_request(50, 23)
-        to_marks_group = gtk.HBox(True, 1)
-        to_marks_group.set_size_request(50, 23)
-
-        # Create and return buttons panel
-        player_buttons = gtk.HBox(False, 1)
-        player_buttons.pack_start(guiutils.get_pad_label(65, 23), False, True, 0)
-        player_buttons.pack_start(gtk.Label(), True, True, 0)
-        rewind_group.pack_start(self.rew_b, False, True, 0)
-        rewind_group.pack_start(self.ff_b, False, True, 0)
-        player_buttons.pack_start(rewind_group, False, True, 0)
-        player_buttons.pack_start(gtk.Label(), True, True, 0)
-        one_frame_group.pack_start(self.prev_b, False, True, 0)
-        one_frame_group.pack_start(self.next_b, False, True, 0)
-        player_buttons.pack_start(one_frame_group, False, True, 0)
-        player_buttons.pack_start(gtk.Label(), True, True, 0)
-        play_group.pack_start(self.play_b, False, True, 0)
-        play_group.pack_start(self.stop_b, False, True, 0)
-        player_buttons.pack_start(play_group, False, True, 0)
-        player_buttons.pack_start(gtk.Label(), True, True, 0)
-        in_out_group.pack_start(self.mark_in_b, False, True, 0)
-        in_out_group.pack_start(self.mark_out_b, False, True, 0)
-        player_buttons.pack_start(in_out_group, False, True, 0)
-        player_buttons.pack_start(gtk.Label(), True, True, 0)
-        to_marks_group.pack_start(self.to_mark_in_b, False, True, 0)
-        to_marks_group.pack_start(self.to_mark_out_b, False, True, 0)
-        player_buttons.pack_start(to_marks_group, False, True, 0)
-        player_buttons.pack_start(gtk.Label(), True, True, 0)
-        player_buttons.pack_start(self.marks_clear_b, False, True, 0)
-        player_buttons.pack_start(gtk.Label(), True, True, 0)
-        #player_buttons.pack_start(self.view_mode_select,  False, True, 0)
-        player_buttons.pack_start(guiutils.get_pad_label(65, 23), False, True, 0)
-
-        return player_buttons
-        """
     
     def connect_player(self, mltplayer):
         # Buttons
-        """
-        self.play_b.connect("clicked", lambda w,e: monitorevent.play_pressed(), None)
-        self.stop_b.connect("clicked", lambda w,e: monitorevent.stop_pressed(), None)
-        self.prev_b.connect("clicked", lambda w,e: monitorevent.prev_pressed(), None)
-        self.next_b.connect("clicked", lambda w,e: monitorevent.next_pressed(), None)
-
-        self.ff_b.connect("pressed", lambda w,e: monitorevent.ff_pressed(), None)
-        self.ff_b.connect("released", lambda w,e: monitorevent.ff_released(), None)
-        self.rew_b.connect("pressed", lambda w,e: monitorevent.rew_pressed(), None)
-        self.rew_b.connect("released", lambda w,e: monitorevent.rew_released(), None)
-
-        self.mark_in_b.connect("clicked", lambda w,e: monitorevent.mark_in_pressed(), None)
-        self.mark_out_b.connect("clicked", lambda w,e: monitorevent.mark_out_pressed(), None)
-        self.marks_clear_b.connect("clicked", lambda w,e: monitorevent.marks_clear_pressed(), None)
-        self.to_mark_in_b.connect("clicked", lambda w,e: monitorevent.to_mark_in_pressed(), None)
-        self.to_mark_out_b.connect("clicked", lambda w,e: monitorevent.to_mark_out_pressed(), None)
-        """
         # NOTE: ORDER OF CALLBACKS IS THE SAME AS ORDER OF BUTTONS FROM LEFT TO RIGHT
         pressed_callback_funcs = [monitorevent.rew_pressed,
                                   monitorevent.ff_pressed,
@@ -744,7 +629,6 @@ class EditorWindow:
         released_callback_funcs = [monitorevent.rew_released,
                                    monitorevent.ff_released]
         self.player_buttons.set_callbacks(pressed_callback_funcs, released_callback_funcs)
-        #self.view_mode_select.connect("changed", lambda w, e: buttonevent.view_mode_changed(w), None)
 
         # Monitor position bar
         self.pos_bar.set_listener(mltplayer.seek_position_normalized)
@@ -759,92 +643,6 @@ class EditorWindow:
             windowviewmenu.fill_with_TC_MIDDLE_pattern(buttons_row, self)
 
         return buttons_row
-
-    def _set_mode_button_colors(self, mode_button):
-        mode_button.modify_bg(gtk.STATE_ACTIVE, gtk.gdk.color_parse(MODE_BUTTON_ACTIVE_COLOR))
-        mode_button.modify_bg(gtk.STATE_PRELIGHT, gtk.gdk.color_parse(MODE_BUTTON_PRELIGHT_COLOR))
-
-    """
-    def _get_middle_buttons_row(self):
-        show_media_icon = gtk.image_new_from_file(IMG_PATH + "show_media.png") 
-        show_filters_icon = gtk.image_new_from_file(IMG_PATH + "show_filters.png") 
-        show_compositors_icon = gtk.image_new_from_file(IMG_PATH + "show_compositors.png")
-        show_sequences_icon = gtk.image_new_from_file(IMG_PATH + "show_sequences.png")
-        show_render_icon = gtk.image_new_from_file(IMG_PATH + "show_render.png") 
-        open_mixer_icon = gtk.image_new_from_file(IMG_PATH + "open_mixer.png") 
-        open_titler_icon = gtk.image_new_from_file(IMG_PATH + "open_titler.png") 
-        #save_icon = gtk.image_new_from_stock(gtk.STOCK_SAVE, gtk.ICON_SIZE_MENU)
-        #load_icon = gtk.image_new_from_stock(gtk.STOCK_OPEN, gtk.ICON_SIZE_MENU)
-        #quit_icon = gtk.image_new_from_stock(gtk.STOCK_QUIT, gtk.ICON_SIZE_MENU)
-        #new_icon = gtk.image_new_from_stock(gtk.STOCK_NEW, gtk.ICON_SIZE_MENU)
-
-        # Create buttons
-        self.show_media_panel_b = gtk.RadioButton()
-        self.show_media_panel_b.set_mode(False)
-        _b(self.show_media_panel_b, show_media_icon)
-        self._set_mode_button_colors(self.show_media_panel_b)
-        
-        self.show_filters_panel_b = gtk.RadioButton(self.show_media_panel_b)
-        self.show_filters_panel_b.set_mode(False)
-        _b(self.show_filters_panel_b, show_filters_icon)
-        self._set_mode_button_colors(self.show_filters_panel_b)
-        
-        self.show_compositors_panel_b = gtk.RadioButton(self.show_media_panel_b)
-        self.show_compositors_panel_b.set_mode(False)
-        _b(self.show_compositors_panel_b, show_compositors_icon)
-        self._set_mode_button_colors(self.show_compositors_panel_b)
-                
-        self.show_sequences_panel_b = gtk.RadioButton(self.show_media_panel_b)
-        self.show_sequences_panel_b.set_mode(False)
-        _b(self.show_sequences_panel_b, show_sequences_icon)
-        self._set_mode_button_colors(self.show_sequences_panel_b)
-
-        self.show_render_panel_b = gtk.RadioButton(self.show_media_panel_b)
-        self.show_render_panel_b.set_mode(False)
-        _b(self.show_render_panel_b, show_render_icon)
-        self._set_mode_button_colors(self.show_render_panel_b)
-        
-        self.open_mixer_b = gtk.Button()
-        _b(self.open_mixer_b, open_mixer_icon)
-        
-        self.open_titler_b = gtk.Button()
-        _b(self.open_titler_b, open_titler_icon)
-        #save_b = gtk.Button()
-        #_b(save_b, save_icon)
-        #load_b = gtk.Button()
-        #_b(load_b, load_icon)
-        #quit_b = gtk.Button()
-        #_b(quit_b, quit_icon)
-        #new_b = gtk.Button()
-        #_b(new_b, new_icon)
-
-        # Connect signals
-        self.show_media_panel_b.connect("clicked", lambda w,e: updater.switch_notebook_panel(0), None)
-        self.show_filters_panel_b.connect("clicked", lambda w,e: updater.switch_notebook_panel(1), None)
-        self.show_compositors_panel_b.connect("clicked", lambda w,e: updater.switch_notebook_panel(2), None)
-        self.show_sequences_panel_b.connect("clicked", lambda w,e: updater.switch_notebook_panel(3), None)
-        self.show_render_panel_b.connect("clicked", lambda w,e: updater.switch_notebook_panel(4), None)
-        self.open_mixer_b.connect("clicked", lambda w: audiomonitoring.show_audio_monitor())
-        self.open_titler_b.connect("clicked", lambda w: titler.show_titler())
-            
-        # Row
-        buttons_row = gtk.HBox(False, 1)
-        buttons_row.pack_start(self.show_media_panel_b, False, True, 0)
-        buttons_row.pack_start(self.show_filters_panel_b, False, True, 0)
-        buttons_row.pack_start(self.show_compositors_panel_b, False, True, 0)
-        buttons_row.pack_start(self.show_sequences_panel_b, False, True, 0)
-        buttons_row.pack_start(self.show_render_panel_b, False, True, 0)
-        #buttons_row.pack_start(gtk.Label(), True, True, 0)
-        #buttons_row.pack_start(new_b, False, True, 0)
-        #buttons_row.pack_start(save_b, False, True, 0)
-        #buttons_row.pack_start(load_b, False, True, 0)
-        #buttons_row.pack_start(quit_b, False, True, 0)
-        buttons_row.pack_start(gtk.Label(), True, True, 0)
-        buttons_row.pack_start(self.open_titler_b, False, True, 0)
-        buttons_row.pack_start(self.open_mixer_b, False, True, 0)
-        
-        return buttons_row
-    """
 
     def _add_tool_tips(self):
         self.big_TC.widget.set_tooltip_text(_("Timeline current frame timecode"))
@@ -912,25 +710,3 @@ class EditorWindow:
 
     def handle_two_roll_mode_button_press(self):
         editevent.tworoll_trim_mode_pressed()
-
-    def _handle_mode_button_press(self, widget):
-        # We get two "clicked" events per mode toggle, send through only the one
-        # from the activated button
-        if ((self.insert_move_b.get_active() == True) 
-            and (widget == self.insert_move_b)):
-            editevent.insert_move_mode_pressed()
-
-        if ((self.one_roll_trim_b.get_active() == True) 
-            and (widget == self.one_roll_trim_b)):
-            editevent.oneroll_trim_mode_pressed()
-            
-        if ((self.tworoll_trim_b.get_active() == True) 
-            and (widget == self.tworoll_trim_b)):
-            editevent.tworoll_trim_mode_pressed()
-
-        if ((self.overwrite_move_b.get_active() == True) 
-            and (widget == self.overwrite_move_b)):
-            editevent.overwrite_move_mode_pressed()
-
-
-

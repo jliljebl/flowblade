@@ -370,11 +370,12 @@ def get_timecode_panel(editor_window):
     editor_window.length_entry.set_text("--:--:--:--")
     editor_window.length_entry.set_size_request(TC_LABEL_WIDTH, 20)
 
+    
     row = gtk.HBox(False, 1)
     #row.pack_start(guicomponents.get_monitor_view_select_combo(), False, False, 0)
     row.pack_start(editor_window.tc.widget, False, False, 0)
     row.pack_start(guiutils.get_pad_label(20, 20), False, False, 0)
-    row.pack_start(editor_window.monitor_source, True, True, 0)
+    #row.pack_start(editor_window.monitor_source, True, True, 0)
     row.pack_start(gtk.Label(), False, False, 0)
     in_icon = gtk.image_new_from_file(respaths.IMAGE_PATH  + "mark_in_label.png") 
     row.pack_start(in_icon, False, False, 0)
