@@ -181,31 +181,31 @@ def create_edit_buttons_row_buttons(editor_window):
     
     editor_window.big_TC = guicomponents.BigTCDisplay()
 
-    editor_window.zoom_buttons = glassbuttons.GlassButtonsGroup(46, 23, 1, 4, 4)
+    editor_window.zoom_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
     editor_window.zoom_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "zoom_in.png"), updater.zoom_in)
     editor_window.zoom_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "zoom_out.png"), updater.zoom_out)
     editor_window.zoom_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "zoom_length.png"), updater.zoom_project_length)
 
-    editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(46, 23, 1, 4, 4)
+    editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
     editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "splice_out.png"), buttonevent.splice_out_button_pressed)
     editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "cut.png"), buttonevent.cut_pressed)
     editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "lift.png"), buttonevent.lift_button_pressed)
     editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "resync.png"), buttonevent.resync_button_pressed)
 
-    editor_window.monitor_insert_buttons = glassbuttons.GlassButtonsGroup(46, 23, 1, 4, 4)
+    editor_window.monitor_insert_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
     editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "overwrite_range.png"), buttonevent.range_overwrite_pressed)
     editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "overwrite_clip.png"), buttonevent.three_point_overwrite_pressed)
     editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "insert_clip.png"), buttonevent.insert_button_pressed)
     editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "append_clip.png"), buttonevent.append_button_pressed)
     
-    editor_window.mode_buttons_group = glassbuttons.GlassButtonsToggleGroup(46, 23, 1, 4, 4)
+    editor_window.mode_buttons_group = glassbuttons.GlassButtonsToggleGroup(46, 23, 2, 4, 5)
     editor_window.mode_buttons_group.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "over_move.png"), editor_window.handle_over_move_mode_button_press)
     editor_window.mode_buttons_group.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "insert_move.png"), editor_window.handle_insert_move_mode_button_press)
     editor_window.mode_buttons_group.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "one_roll_trim.png"), editor_window.handle_one_roll_mode_button_press)
     editor_window.mode_buttons_group.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "two_roll_trim.png"), editor_window.handle_two_roll_mode_button_press)
     editor_window.mode_buttons_group.set_pressed_button(1)
 
-    editor_window.undo_redo = glassbuttons.GlassButtonsGroup(46, 23, 1, 2, 6)
+    editor_window.undo_redo = glassbuttons.GlassButtonsGroup(46, 23, 2, 2, 7)
     editor_window.undo_redo.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "undo.png"), editevent.do_undo)
     editor_window.undo_redo.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "redo.png"), editevent.do_redo)
     
@@ -213,7 +213,7 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     global w
     w = window
     buttons_row.pack_start(w.big_TC.widget, False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(7, 10), False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(7, 30), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     buttons_row.pack_start(_get_mode_buttons_panel(), False, True, 0)
     buttons_row.pack_start(gtk.Label(), True, True, 0)
     buttons_row.pack_start(_get_undo_buttons_panel(), False, True, 0)
