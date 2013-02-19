@@ -98,12 +98,14 @@ def load_icons():
 
 # --------------------------------- player
 def set_playing_configuration():
-    gui.editor_window.play_b.set_sensitive(False)
-    gui.editor_window.stop_b.set_sensitive(True)
+    pass
+    #gui.editor_window.play_b.set_sensitive(False)
+    #gui.editor_window.stop_b.set_sensitive(True)
     
 def set_stopped_configuration():
-    gui.editor_window.play_b.set_sensitive(True)
-    gui.editor_window.stop_b.set_sensitive(False)
+    pass
+    #gui.editor_window.play_b.set_sensitive(True)
+    #gui.editor_window.stop_b.set_sensitive(False)
 
 def refresh_player():
     # First event is initial window displayed event.
@@ -507,10 +509,10 @@ def set_trim_mode_gui():
 
     _set_move_mode_buttons_enabled(False)
     gui.pos_bar.disabled = True
-    gui.editor_window.play_b.set_image(play_loop_icon)
-    gui.editor_window.stop_b.set_image(stop_trim_icon)
-    gui.editor_window.next_b.set_image(next_trim_icon)
-    gui.editor_window.prev_b.set_image(prev_trim_icon)
+    #gui.editor_window.play_b.set_image(play_loop_icon)
+    #gui.editor_window.stop_b.set_image(stop_trim_icon)
+    #gui.editor_window.next_b.set_image(next_trim_icon)
+    #gui.editor_window.prev_b.set_image(prev_trim_icon)
     
     gui.editmenu.set_sensitive(False)
 
@@ -522,10 +524,10 @@ def set_move_mode_gui():
     
     _set_move_mode_buttons_enabled(True)
     gui.pos_bar.disabled = False
-    gui.editor_window.play_b.set_image(play_icon)
-    gui.editor_window.stop_b.set_image(stop_icon)
-    gui.editor_window.next_b.set_image(next_icon)
-    gui.editor_window.prev_b.set_image(prev_icon)
+    #gui.editor_window.play_b.set_image(play_icon)
+    #gui.editor_window.stop_b.set_image(stop_icon)
+    #gui.editor_window.next_b.set_image(next_icon)
+    #gui.editor_window.prev_b.set_image(prev_icon)
 
     gui.editmenu.set_sensitive(True)
     
@@ -533,36 +535,24 @@ def _set_move_mode_buttons_enabled(enabled):
     """
     Sets buttons that are only used in move modes enabled/disabled
     """
-    pass
-    """
-    # Timeline edit buttons
-    gui.editor_window.zoom_in_b.set_sensitive(enabled)
-    gui.editor_window.zoom_out_b.set_sensitive(enabled)
-    gui.editor_window.lift_b.set_sensitive(enabled)
-    gui.editor_window.cut_b.set_sensitive(enabled)
-    gui.editor_window.splice_out_b.set_sensitive(enabled)
-    gui.editor_window.overwrite_b.set_sensitive(enabled)
-    gui.editor_window.insert_b.set_sensitive(enabled)
-    gui.editor_window.append_b.set_sensitive(enabled)
-    gui.editor_window.resync_b.set_sensitive(enabled)
-    gui.editor_window.zoom_length_b.set_sensitive(enabled)
-
-    # Monitor buttons
-    gui.editor_window.rew_b.set_sensitive(enabled) 
-    gui.editor_window.ff_b.set_sensitive(enabled) 
-    gui.editor_window.mark_in_b.set_sensitive(enabled) 
-    gui.editor_window.mark_out_b.set_sensitive(enabled) 
-    gui.editor_window.marks_clear_b.set_sensitive(enabled)  
-    gui.editor_window.to_mark_in_b.set_sensitive(enabled)
-    gui.editor_window.to_mark_out_b .set_sensitive(enabled)
-    """
+    gui.editor_window.undo_redo.set_sensitive(enabled)
+    gui.editor_window.undo_redo.widget.queue_draw()
+    gui.editor_window.monitor_insert_buttons.set_sensitive(enabled)
+    gui.editor_window.monitor_insert_buttons.widget.queue_draw()
+    gui.editor_window.edit_buttons.set_sensitive(enabled)
+    gui.editor_window.edit_buttons.widget.queue_draw()
+    gui.editor_window.zoom_buttons.set_sensitive(enabled)
+    gui.editor_window.zoom_buttons.widget.queue_draw()
+    if enabled == False:
+        gui.editor_window.player_buttons.set_trim_sensitive_pattern()
+    else:
+        gui.editor_window.player_buttons.set_normal_sensitive_pattern()
 
 def set_next_prev_enabled(enabled):
     """
     Sets buttons enbled when doing trim playback.
     """
-    gui.editor_window.next_b.set_sensitive(enabled)  
-    gui.editor_window.prev_b.set_sensitive(enabled)  
+    gui.editor_window.player_buttons.set_trim_buttons_sensitive(enabled)
 
 def update_project_info(project):
     for child in gui.project_info_vbox.get_children():

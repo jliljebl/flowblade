@@ -110,7 +110,7 @@ def capture_references(new_editor_window):
     tline_column = editor_window.tline_column
 
     # wtf with the order, different from the one used to display buttons, meh
-    play_b = editor_window.play_b
+    #play_b = editor_window.play_b
     clip_editor_b = editor_window.clip_editor_b
     sequence_editor_b = editor_window.sequence_editor_b
 

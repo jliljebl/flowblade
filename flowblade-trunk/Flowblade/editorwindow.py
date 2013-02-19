@@ -415,9 +415,9 @@ class EditorWindow:
         pos_bar_vbox.pack_start(guiutils.get_pad_label(5, 2), False, True, 0)
         pos_bar_vbox.pack_start(pos_bar_frame, False, True, 0)
 
-        playback_buttons = self._get_player_buttons()
-        self.monitor_buttons = glassbuttons.MonitorButtons()
-        playback_buttons = self.monitor_buttons.widget
+        #player_buttons = self._get_player_buttons()
+        self.player_buttons = glassbuttons.PlayerButtons()
+        #playback_buttons = self.player_buttons.widget
 
         # Creates monitor switch buttons
         self._create_monitor_buttons()
@@ -444,7 +444,7 @@ class EditorWindow:
         #monitor_vbox.pack_start(tc_panel, False, True, 0)
         monitor_vbox.pack_start(self.tline_display, True, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
-        monitor_vbox.pack_start(playback_buttons, False, True, 0)
+        monitor_vbox.pack_start(self.player_buttons.widget, False, True, 0)
         
         monitor_align = gtk.Alignment(xalign=0.0, yalign=0.0, xscale=1.0, yscale=1.0) 
         monitor_align.add(monitor_vbox)
@@ -606,6 +606,8 @@ class EditorWindow:
             updater.display_clip_in_monitor()
     
     def _get_player_buttons(self):
+        pass
+        """
         # Icons
         rew_icon = gtk.image_new_from_file(IMG_PATH + "backward_s.png")
         ff_icon = gtk.image_new_from_file(IMG_PATH + "forward_s.png")
@@ -706,7 +708,8 @@ class EditorWindow:
         player_buttons.pack_start(guiutils.get_pad_label(65, 23), False, True, 0)
 
         return player_buttons
-        
+        """
+    
     def connect_player(self, mltplayer):
         # Buttons
         """
@@ -740,7 +743,7 @@ class EditorWindow:
                                   monitorevent.to_mark_out_pressed]
         released_callback_funcs = [monitorevent.rew_released,
                                    monitorevent.ff_released]
-        self.monitor_buttons.set_callbacks(pressed_callback_funcs, released_callback_funcs)
+        self.player_buttons.set_callbacks(pressed_callback_funcs, released_callback_funcs)
         #self.view_mode_select.connect("changed", lambda w, e: buttonevent.view_mode_changed(w), None)
 
         # Monitor position bar
@@ -868,19 +871,19 @@ class EditorWindow:
         #self.undo_b.set_tooltip_text(_("Undo"))    
         #self.redo_b.set_tooltip_text(_("Redo"))
 
-        self.play_b.set_tooltip_text(_("Play"))
-        self.stop_b.set_tooltip_text(_("Stop"))
-        self.prev_b.set_tooltip_text(_("Previous frame"))
-        self.next_b.set_tooltip_text(_("Next frame"))
+        #self.play_b.set_tooltip_text(_("Play"))
+        #self.stop_b.set_tooltip_text(_("Stop"))
+        #self.prev_b.set_tooltip_text(_("Previous frame"))
+        #self.next_b.set_tooltip_text(_("Next frame"))
 
-        self.ff_b.set_tooltip_text(_("Fast Forward"))
-        self.rew_b.set_tooltip_text(_("Rewind"))
+        #self.ff_b.set_tooltip_text(_("Fast Forward"))
+        #self.rew_b.set_tooltip_text(_("Rewind"))
 
-        self.mark_in_b.set_tooltip_text(_("Set Mark In"))
-        self.mark_out_b.set_tooltip_text(_("Set Mark Out"))
-        self.marks_clear_b.set_tooltip_text(_("Clear Marks"))
-        self.to_mark_in_b.set_tooltip_text(_("Go to Mark In"))
-        self.to_mark_out_b.set_tooltip_text(_("Go to Mark Out"))
+        #self.mark_in_b.set_tooltip_text(_("Set Mark In"))
+        #self.mark_out_b.set_tooltip_text(_("Set Mark Out"))
+        #self.marks_clear_b.set_tooltip_text(_("Clear Marks"))
+        #self.to_mark_in_b.set_tooltip_text(_("Go to Mark In"))
+        #self.to_mark_out_b.set_tooltip_text(_("Go to Mark Out"))
 
         self.view_mode_select.widget.set_tooltip_text(_("Select view mode: Program Video/Vectorscope/RGBParade"))
         

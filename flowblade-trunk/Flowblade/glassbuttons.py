@@ -15,16 +15,16 @@ BUTTONS_GRAD_STOPS = [   (1, 1, 1, 1, 0.2),
                         (0.50, 1, 1, 1, 0.25),
                         (0, 1, 1, 1, 0.4)]
 
-BUTTONS_PRESSED_GRAD_STOPS = [(1, 0.92, 0.47, 0.30, 1),
-                             (0, 0.6, 0.49, 0.35, 1)]
+BUTTONS_PRESSED_GRAD_STOPS = [(1, 0.7, 0.7, 0.7, 1),
+                             (0, 0.5, 0.5, 0.5, 1)]
                         
 LINE_GRAD_STOPS = [ (1, 0.66, 0.66, 0.66, 1),
                             (0.95, 0.7, 0.7, 0.7, 1),
                             (0.65, 0.3, 0.3, 0.3, 1),
                             (0, 0.64, 0.64, 0.64, 1)]
 
-BUTTON_NOT_SENSITIVE_GRAD_STOPS = [(1, 0.5, 0.5, 0.5, 0.7),
-                                    (0, 0.5, 0.5, 0.5, 0.7)]
+BUTTON_NOT_SENSITIVE_GRAD_STOPS = [(1, 0.9, 0.9, 0.9, 0.7),
+                                    (0, 0.9, 0.9, 0.9, 0.7)]
 
 CORNER_DIVIDER = 5
 
@@ -76,7 +76,7 @@ class AbstractGlassButtons:
 
         self._draw_consts = (x, y, width, height, aspect, corner_radius, radius)
     
-    def _init_sensitive(self, value=True):
+    def set_sensitive(self, value):
         self.sensitive = []
         for i in self.icons:
             self.sensitive.append(value)
@@ -105,12 +105,6 @@ class AbstractGlassButtons:
         print "_draw not impl"
 
     def _get_hit_code(self, x, y):
-        """
-        xa, ya, w, h = self.allocation
-        mid_x = w / 2
-        buttons_width = self.button_width * len(self.icons)
-        button_x = mid_x - (buttons_width / 2)
-        """
         button_x = self.button_x
         for i in range(0, len(self.icons)):
             if ((x >= button_x) and (x <= button_x + self.button_width)
@@ -130,7 +124,7 @@ class AbstractGlassButtons:
         cr.rectangle(0, 0, w, h)
         cr.fill()
 
-        # line width for all strokes
+        # Line width for all strokes
         cr.set_line_width(1.0)
 
         # bg 
@@ -139,7 +133,7 @@ class AbstractGlassButtons:
         cr.set_source_rgb(0.75, 0.75, 0.75)
         cr.fill_preserve()
     
-        # pressed button gradient
+        # Pressed button gradient
         if self.pressed_button > -1:
             grad = cairo.LinearGradient (self.button_x, self.button_y, self.button_x, self.button_y + self.button_height)
             for stop in BUTTONS_PRESSED_GRAD_STOPS:
@@ -151,7 +145,7 @@ class AbstractGlassButtons:
             cr.fill()
             cr.restore()
 
-        #icons
+        # Icons and sensitive gradient
         grad = cairo.LinearGradient (self.button_x, self.button_y, self.button_x, self.button_y + self.button_height)
         for stop in BUTTON_NOT_SENSITIVE_GRAD_STOPS:
             grad.add_color_stop_rgba(*stop)
@@ -162,6 +156,7 @@ class AbstractGlassButtons:
             cr.paint()
             if self.sensitive[i] == False:
                 cr.save()
+                self._round_rect_path(cr)
                 cr.set_source(grad)
                 cr.clip()
                 cr.rectangle(x, self.button_y, self.button_width, self.button_height)
@@ -169,7 +164,7 @@ class AbstractGlassButtons:
                 cr.restore()
             x += self.button_width
 
-        # glass gradient
+        # Glass gradient
         self._round_rect_path(cr)
         grad = cairo.LinearGradient (self.button_x, self.button_y, self.button_x, self.button_y + self.button_height)
         for stop in BUTTONS_GRAD_STOPS:
@@ -193,11 +188,10 @@ class AbstractGlassButtons:
                 cr.move_to(x + 0.5, self.button_y)
                 cr.line_to(x + 0.5, self.button_y + self.button_height)
                 cr.stroke()
-            
             x += self.button_width
 
         
-class MonitorButtons(AbstractGlassButtons):
+class PlayerButtons(AbstractGlassButtons):
 
     def __init__(self):
 
@@ -226,8 +220,19 @@ class MonitorButtons(AbstractGlassButtons):
         for i in range(0, len(self.icons)):
             self.image_y.append(MB_BUTTON_IMAGE_Y)
 
-        self._init_sensitive()
-        #self.sensitive[3] = False
+        self.set_sensitive(True)
+
+    def set_trim_sensitive_pattern(self):
+        self.sensitive = [False, False, True, True, True, True, False, False, False, False, False]
+        self.widget.queue_draw()
+
+    def set_normal_sensitive_pattern(self):
+        self.set_sensitive(True)
+        self.widget.queue_draw()
+
+    def set_trim_buttons_sensitive(self, value):
+        self.sensitive[2] = value
+        self.sensitive[3] = value
 
     # ------------------------------------------------------------- mouse events
     def _press_event(self, event):
@@ -305,7 +310,7 @@ class GlassButtonsGroup(AbstractGlassButtons):
 
     def _motion_notify_event(self, x, y, state):
         button_under = self._get_hit_code(x, y)
-        if self.pressed_button != button_under: # pressed button is released
+        if self.pressed_button != button_under: # pressed button is released if mouse moves from over it
             if self.pressed_button > 0 and self.pressed_button < len(self.icons):
                 release_func = self.released_callback_funcs[self.pressed_button]
                 release_func()
