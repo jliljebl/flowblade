@@ -10,6 +10,7 @@ import buttonevent
 import editevent
 import editorpersistance
 import editorstate
+import glassbuttons
 import gui
 import guicomponents
 import guiutils
@@ -154,7 +155,6 @@ def _show_buttons_TC_LEFT_layout(widget):
     _clear_container(w.edit_buttons_row)
     create_edit_buttons_row_buttons(w)
     fill_with_TC_LEFT_pattern(w.edit_buttons_row, w)
-    connect_edit_buttons(w)
     w.window.show_all()
 
     editorpersistance.prefs.midbar_tc_left = True
@@ -171,7 +171,6 @@ def _show_buttons_TC_MIDDLE_layout(widget):
     _clear_container(w.edit_buttons_row)
     create_edit_buttons_row_buttons(w)
     fill_with_TC_MIDDLE_pattern(w.edit_buttons_row, w)
-    connect_edit_buttons(w)
     w.window.show_all()
 
     editorpersistance.prefs.midbar_tc_left = False
@@ -180,112 +179,35 @@ def _show_buttons_TC_MIDDLE_layout(widget):
 def create_edit_buttons_row_buttons(editor_window):
     IMG_PATH = respaths.IMAGE_PATH
     
-    # Create TC Display
     editor_window.big_TC = guicomponents.BigTCDisplay()
 
-    # Zoom buttnos
-    editor_window.zoom_in_b = gtk.Button()
-    zoomin_icon = gtk.image_new_from_file(IMG_PATH + "zoom_in.png")
-    _b(editor_window.zoom_in_b, zoomin_icon)
+    editor_window.zoom_buttons = glassbuttons.GlassButtonsGroup(46, 23, 1, 4, 4)
+    editor_window.zoom_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "zoom_in.png"), updater.zoom_in)
+    editor_window.zoom_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "zoom_out.png"), updater.zoom_out)
+    editor_window.zoom_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "zoom_length.png"), updater.zoom_project_length)
 
-    editor_window.zoom_out_b = gtk.Button()
-    zoomout_icon = gtk.image_new_from_file(IMG_PATH + "zoom_out.png")
-    _b(editor_window.zoom_out_b, zoomout_icon)
+    editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(46, 23, 1, 4, 4)
+    editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "splice_out.png"), buttonevent.splice_out_button_pressed)
+    editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "cut.png"), buttonevent.cut_pressed)
+    editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "lift.png"), buttonevent.lift_button_pressed)
+    editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "resync.png"), buttonevent.resync_button_pressed)
 
-    editor_window.zoom_length_b = gtk.Button()
-    zoom_length_icon = gtk.image_new_from_file(IMG_PATH + "zoom_length.png")
-    _b(editor_window.zoom_length_b, zoom_length_icon)
-
-    # Edit action buttons
-    editor_window.splice_out_b = gtk.Button()
-    splice_out_icon = gtk.image_new_from_file(IMG_PATH + "splice_out.png")
-    _b(editor_window.splice_out_b, splice_out_icon)
-
-    editor_window.cut_b = gtk.Button()
-    cut_move_icon = gtk.image_new_from_file(IMG_PATH + "cut.png") 
-    _b(editor_window.cut_b, cut_move_icon)
-
-    editor_window.lift_b = gtk.Button()
-    lift_icon = gtk.image_new_from_file(IMG_PATH + "lift.png") 
-    _b(editor_window.lift_b, lift_icon)
-
-    editor_window.resync_b = gtk.Button()
-    resync_icon = gtk.image_new_from_file(IMG_PATH + "resync.png") 
-    _b(editor_window.resync_b, resync_icon)
-
-    # Monitor insert buttons
-    editor_window.overwrite_range_b = gtk.Button()
-    overwrite_r_clip_icon = gtk.image_new_from_file(IMG_PATH + "overwrite_range.png")
-    _b(editor_window.overwrite_range_b, overwrite_r_clip_icon)
+    editor_window.monitor_insert_buttons = glassbuttons.GlassButtonsGroup(46, 23, 1, 4, 4)
+    editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "overwrite_range.png"), buttonevent.range_overwrite_pressed)
+    editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "overwrite_clip.png"), buttonevent.three_point_overwrite_pressed)
+    editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "insert_clip.png"), buttonevent.insert_button_pressed)
+    editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "append_clip.png"), buttonevent.append_button_pressed)
     
-    editor_window.overwrite_b = gtk.Button()
-    overwrite_clip_icon = gtk.image_new_from_file(IMG_PATH + "overwrite_clip.png")
-    _b(editor_window.overwrite_b, overwrite_clip_icon)
+    editor_window.mode_buttons_group = glassbuttons.GlassButtonsToggleGroup(46, 23, 1, 4, 4)
+    editor_window.mode_buttons_group.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "over_move.png"), editor_window.handle_over_move_mode_button_press)
+    editor_window.mode_buttons_group.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "insert_move.png"), editor_window.handle_insert_move_mode_button_press)
+    editor_window.mode_buttons_group.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "one_roll_trim.png"), editor_window.handle_one_roll_mode_button_press)
+    editor_window.mode_buttons_group.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "two_roll_trim.png"), editor_window.handle_two_roll_mode_button_press)
+    editor_window.mode_buttons_group.set_pressed_button(1)
 
-    editor_window.insert_b = gtk.Button()
-    insert_clip_icon = gtk.image_new_from_file(IMG_PATH + "insert_clip.png")
-    _b(editor_window.insert_b, insert_clip_icon)
-
-    editor_window.append_b = gtk.Button()
-    append_clip_icon = gtk.image_new_from_file(IMG_PATH + "append_clip.png")
-    _b(editor_window.append_b, append_clip_icon)
-    
-    # Mode buttons
-    editor_window.insert_move_b = gtk.RadioButton()
-    editor_window.insert_move_b.set_mode(False)
-    insert_move_icon = gtk.image_new_from_file(IMG_PATH + "insert_move.png")
-    _b(editor_window.insert_move_b, insert_move_icon)
-    editor_window._set_mode_button_colors(editor_window.insert_move_b)
-
-    editor_window.one_roll_trim_b = gtk.RadioButton(editor_window.insert_move_b)
-    editor_window.one_roll_trim_b.set_mode(False)
-    one_roll_icon = gtk.image_new_from_file(IMG_PATH + "one_roll_trim.png")
-    _b(editor_window.one_roll_trim_b, one_roll_icon)
-    editor_window._set_mode_button_colors(editor_window.one_roll_trim_b)
-
-    editor_window.overwrite_move_b = gtk.RadioButton(editor_window.insert_move_b)
-    editor_window.overwrite_move_b.set_mode(False)
-    over_move_icon = gtk.image_new_from_file(IMG_PATH + "over_move.png")
-    _b(editor_window.overwrite_move_b, over_move_icon)
-    editor_window._set_mode_button_colors(editor_window.overwrite_move_b)
-    
-    editor_window.tworoll_trim_b = gtk.RadioButton(editor_window.insert_move_b)
-    editor_window.tworoll_trim_b.set_mode(False)
-    two_roll_icon = gtk.image_new_from_file(IMG_PATH + "two_roll_trim.png")
-    _b(editor_window.tworoll_trim_b, two_roll_icon)
-    editor_window._set_mode_button_colors(editor_window.tworoll_trim_b)
-    
-    # Undo / Redo buttons
-    editor_window.undo_b = gtk.Button()
-    undo_icon = gtk.image_new_from_file(IMG_PATH + "undo.png")
-    _b(editor_window.undo_b, undo_icon)
-
-    editor_window.redo_b = gtk.Button()
-    redo_icon = gtk.image_new_from_file(IMG_PATH + "redo.png")
-    _b(editor_window.redo_b, redo_icon)
-
-def connect_edit_buttons(editor_window):
-    editor_window.zoom_in_b.connect("clicked", lambda w,e: updater.zoom_in(), None)
-    editor_window.zoom_out_b.connect("clicked", lambda w,e: updater.zoom_out(), None)
-    editor_window.zoom_length_b.connect("clicked", lambda w,e: updater.zoom_project_length(), None)
-
-    editor_window.insert_move_b.connect("clicked", lambda w,e: editor_window._handle_mode_button_press(w), None)        
-    editor_window.one_roll_trim_b.connect("clicked", lambda w,e: editor_window._handle_mode_button_press(w), None)        
-    editor_window.tworoll_trim_b.connect("clicked", lambda w,e: editor_window._handle_mode_button_press(w), None)
-    editor_window.overwrite_move_b.connect("clicked", lambda w,e: editor_window._handle_mode_button_press(w), None)   
-
-    editor_window.cut_b.connect("clicked", lambda w,e: buttonevent.cut_pressed(), None)
-    editor_window.splice_out_b.connect("clicked", lambda w,e: buttonevent.splice_out_button_pressed(), None)
-    editor_window.lift_b.connect("clicked", lambda w,e: buttonevent.lift_button_pressed(), None)
-    editor_window.resync_b.connect("clicked", lambda w,e:buttonevent.resync_button_pressed(), None)
-
-    editor_window.insert_b.connect("clicked", lambda w,e: buttonevent.insert_button_pressed(), None)
-    editor_window.overwrite_b.connect("clicked", lambda w,e: buttonevent.three_point_overwrite_pressed(), None)
-    editor_window.overwrite_range_b.connect("clicked", lambda w,e: buttonevent.range_overwrite_pressed(), None)
-    editor_window.append_b.connect("clicked", lambda w,e: buttonevent.append_button_pressed(), None)
-
-    editor_window.undo_b.connect("clicked", lambda w,e: editevent.do_undo(), None)
-    editor_window.redo_b.connect("clicked", lambda w,e: editevent.do_redo(), None)
+    editor_window.undo_redo = glassbuttons.GlassButtonsGroup(46, 23, 1, 2, 6)
+    editor_window.undo_redo.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "undo.png"), editevent.do_undo)
+    editor_window.undo_redo.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "redo.png"), editevent.do_redo)
     
 def fill_with_TC_LEFT_pattern(buttons_row, window):
     global w
@@ -328,47 +250,19 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     buttons_row.pack_start(right_panel, True, True, 0)
 
 def _get_mode_buttons_panel():
-    mode_buttons = _get_buttons_panel(4, 38)
-    mode_buttons.set_size_request(195, 24)
-    mode_buttons.pack_start(w.overwrite_move_b, False, True, 0)
-    mode_buttons.pack_start(w.insert_move_b, False, True, 0)
-    mode_buttons.pack_start(w.one_roll_trim_b, False, True, 0)
-    mode_buttons.pack_start(w.tworoll_trim_b, False, True, 0)
-
-    return mode_buttons
+    return w.mode_buttons_group.widget
 
 def _get_zoom_buttons_panel():    
-    zoom_buttons = _get_buttons_panel(3)
-    zoom_buttons.pack_start(w.zoom_in_b, False, True, 0)
-    zoom_buttons.pack_start(w.zoom_out_b, False, True, 0)
-    zoom_buttons.pack_start(w.zoom_length_b, False, True, 0)
-    
-    return zoom_buttons
+    return w.zoom_buttons.widget
 
 def _get_undo_buttons_panel():
-    undo_buttons = _get_buttons_panel(2)
-    undo_buttons.pack_start(w.undo_b, False, True, 0)
-    undo_buttons.pack_start(w.redo_b, False, True, 0)
-
-    return undo_buttons
+    return w.undo_redo.widget
 
 def _get_edit_buttons_panel():
-    edit_buttons = _get_buttons_panel(4)
-    edit_buttons.pack_start(w.lift_b, False, True, 0)
-    edit_buttons.pack_start(w.splice_out_b, False, True, 0)
-    edit_buttons.pack_start(w.cut_b, False, True, 0)
-    edit_buttons.pack_start(w.resync_b, False, True, 0)
-    
-    return edit_buttons
+    return w.edit_buttons.widget
 
 def _get_monitor_insert_buttons():
-    monitor_input_buttons = _get_buttons_panel(4)
-    monitor_input_buttons.pack_start(w.overwrite_range_b, False, True, 0)
-    monitor_input_buttons.pack_start(w.overwrite_b, False, True, 0)
-    monitor_input_buttons.pack_start(w.insert_b, False, True, 0)
-    monitor_input_buttons.pack_start(w.append_b, False, True, 0)
-
-    return monitor_input_buttons
+    return w.monitor_insert_buttons.widget
 
 def _show_tabs_up(widget):
     global w

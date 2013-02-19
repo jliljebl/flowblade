@@ -40,13 +40,13 @@ import editevent
 import editorpersistance
 import editorstate
 import exporting
+import glassbuttons
 import gui
 import guicomponents
 import guiutils
 import menuactions
 import mltplayer
 import monitorevent
-import monitorbuttonswidget
 import movemodes
 import respaths
 import panels
@@ -416,7 +416,7 @@ class EditorWindow:
         pos_bar_vbox.pack_start(pos_bar_frame, False, True, 0)
 
         playback_buttons = self._get_player_buttons()
-        self.monitor_buttons = monitorbuttonswidget.MonitorButtons()
+        self.monitor_buttons = glassbuttons.MonitorButtons()
         playback_buttons = self.monitor_buttons.widget
 
         # Creates monitor switch buttons
@@ -755,8 +755,6 @@ class EditorWindow:
         else:
             windowviewmenu.fill_with_TC_MIDDLE_pattern(buttons_row, self)
 
-        windowviewmenu.connect_edit_buttons(self)
-        
         return buttons_row
 
     def _set_mode_button_colors(self, mode_button):
@@ -848,27 +846,27 @@ class EditorWindow:
     def _add_tool_tips(self):
         self.big_TC.widget.set_tooltip_text(_("Timeline current frame timecode"))
 
-        self.zoom_in_b.set_tooltip_text(_("Zoom In"))
-        self.zoom_out_b.set_tooltip_text(_("Zoom Out"))
-        self.zoom_length_b.set_tooltip_text(_("Zoom to Sequence length"))
+        #self.zoom_in_b.set_tooltip_text(_("Zoom In"))
+        #self.zoom_out_b.set_tooltip_text(_("Zoom Out"))
+        #self.zoom_length_b.set_tooltip_text(_("Zoom to Sequence length"))
 
-        self.insert_move_b.set_tooltip_text(_("Insert Move"))      
-        self.one_roll_trim_b.set_tooltip_text(_("One Roll Trim"))           
-        self.tworoll_trim_b.set_tooltip_text(_("Two Roll Trim"))    
-        self.overwrite_move_b.set_tooltip_text(_("Overwrite Move"))    
+        #self.insert_move_b.set_tooltip_text(_("Insert Move"))      
+        #self.one_roll_trim_b.set_tooltip_text(_("One Roll Trim"))           
+        #self.tworoll_trim_b.set_tooltip_text(_("Two Roll Trim"))    
+        #self.overwrite_move_b.set_tooltip_text(_("Overwrite Move"))    
 
-        self.cut_b.set_tooltip_text(_("Cut"))    
-        self.splice_out_b.set_tooltip_text(_("Splice Out Clip"))    
-        self.lift_b.set_tooltip_text(_("Lift Clip"))    
-        self.resync_b.set_tooltip_text(_("Resync Selected Clips"))    
+        #self.cut_b.set_tooltip_text(_("Cut"))    
+        #self.splice_out_b.set_tooltip_text(_("Splice Out Clip"))    
+        #self.lift_b.set_tooltip_text(_("Lift Clip"))    
+        #self.resync_b.set_tooltip_text(_("Resync Selected Clips"))    
 
-        self.insert_b.set_tooltip_text(_("Insert Monitor Clip Range"))    
-        self.overwrite_b.set_tooltip_text(_("Overwrite Selected Clips with Monitor Clip Range"))    
-        self.overwrite_range_b.set_tooltip_text(_("Overwrite Mark In/Mark Out Range with Monitor Clip Range"))    
-        self.append_b.set_tooltip_text(_("Append Monitor Clip Range"))    
+        #self.insert_b.set_tooltip_text(_("Insert Monitor Clip Range"))    
+        #self.overwrite_b.set_tooltip_text(_("Overwrite Selected Clips with Monitor Clip Range"))    
+        #self.overwrite_range_b.set_tooltip_text(_("Overwrite Mark In/Mark Out Range with Monitor Clip Range"))    
+        #self.append_b.set_tooltip_text(_("Append Monitor Clip Range"))    
 
-        self.undo_b.set_tooltip_text(_("Undo"))    
-        self.redo_b.set_tooltip_text(_("Redo"))
+        #self.undo_b.set_tooltip_text(_("Undo"))    
+        #self.redo_b.set_tooltip_text(_("Redo"))
 
         self.play_b.set_tooltip_text(_("Play"))
         self.stop_b.set_tooltip_text(_("Stop"))
@@ -899,6 +897,18 @@ class EditorWindow:
 
         self.open_project_b.set_tooltip_text(_("Open Project File"))
         self.new_project_b.set_tooltip_text(_("Open New Project"))
+
+    def handle_over_move_mode_button_press(self):
+        editevent.overwrite_move_mode_pressed()
+
+    def handle_insert_move_mode_button_press(self):
+        editevent.insert_move_mode_pressed()
+
+    def handle_one_roll_mode_button_press(self):
+        editevent.oneroll_trim_mode_pressed()
+
+    def handle_two_roll_mode_button_press(self):
+        editevent.tworoll_trim_mode_pressed()
 
     def _handle_mode_button_press(self, widget):
         # We get two "clicked" events per mode toggle, send through only the one

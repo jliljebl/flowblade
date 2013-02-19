@@ -109,6 +109,10 @@ class CairoDrawableArea(gtk.Widget):
         # Set size and place 
         self.window.move_resize(*self.allocation)
 
+    def set_pref_size(self, pref_width, pref_height):
+        self._pref_width = pref_width
+        self._pref_height = pref_height
+    
     # Gtk+ callback to ask widgets preferred size
     def do_size_request(self, requisition):        
         requisition.width = self._pref_width

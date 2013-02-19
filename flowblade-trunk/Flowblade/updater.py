@@ -489,7 +489,15 @@ def clear_clip_from_editors(clip):
 
 # ----------------------------------------- edit modes
 def set_mode_button_active(mode):
-    gui.mode_buttons[mode].set_active(True)
+    if mode == editorstate.INSERT_MOVE:
+        gui.editor_window.mode_buttons_group.set_pressed_button(1, True)
+    elif mode == editorstate.OVERWRITE_MOVE:
+        gui.editor_window.mode_buttons_group.set_pressed_button(0, True)
+    elif mode == editorstate.ONE_ROLL_TRIM:
+        gui.editor_window.mode_buttons_group.set_pressed_button(2, True)
+    elif mode == editorstate.TWO_ROLL_TRIM:
+        gui.editor_window.mode_buttons_group.set_pressed_button(3, True)
+
 
 def set_trim_mode_gui():
     """
@@ -525,6 +533,8 @@ def _set_move_mode_buttons_enabled(enabled):
     """
     Sets buttons that are only used in move modes enabled/disabled
     """
+    pass
+    """
     # Timeline edit buttons
     gui.editor_window.zoom_in_b.set_sensitive(enabled)
     gui.editor_window.zoom_out_b.set_sensitive(enabled)
@@ -545,7 +555,8 @@ def _set_move_mode_buttons_enabled(enabled):
     gui.editor_window.marks_clear_b.set_sensitive(enabled)  
     gui.editor_window.to_mark_in_b.set_sensitive(enabled)
     gui.editor_window.to_mark_out_b .set_sensitive(enabled)
-    
+    """
+
 def set_next_prev_enabled(enabled):
     """
     Sets buttons enbled when doing trim playback.
@@ -565,7 +576,6 @@ def update_project_info(project):
 
 # ------------------------------------------------ notebook
 def switch_notebook_panel(index):
-    #gui.notebook_buttons[index].set_active(True)
     gui.middle_notebook.set_current_page(index)
 
 

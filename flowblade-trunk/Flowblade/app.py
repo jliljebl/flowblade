@@ -348,7 +348,7 @@ def init_editor_state():
     updater.update_project_info(editorstate.project)
 
     # Set initial edit mode and set initial gui state
-    gui.mode_buttons[editorstate.INSERT_MOVE].set_active(True)
+    updater.set_mode_button_active(editorstate.INSERT_MOVE)
     
     gui.clip_editor_b.set_sensitive(False)
     gui.editor_window.window.set_title(editorstate.project.name + " - Flowblade")
