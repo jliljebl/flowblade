@@ -6,6 +6,7 @@ Module handles initializing and changing window contents acoording to user prefe
 import gtk
 
 import appconsts
+import audiomonitoring
 import buttonevent
 import editevent
 import editorpersistance
@@ -15,6 +16,7 @@ import gui
 import guicomponents
 import guiutils
 import respaths
+import titler
 import updater
 
 # editor window object
@@ -208,6 +210,10 @@ def create_edit_buttons_row_buttons(editor_window):
     editor_window.undo_redo = glassbuttons.GlassButtonsGroup(46, 23, 2, 2, 7)
     editor_window.undo_redo.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "undo.png"), editevent.do_undo)
     editor_window.undo_redo.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "redo.png"), editevent.do_redo)
+
+    editor_window.tools_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 14, 7)
+    editor_window.tools_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "open_mixer.png"), audiomonitoring.show_audio_monitor)
+    editor_window.tools_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "open_titler.png"), titler.show_titler)
     
 def fill_with_TC_LEFT_pattern(buttons_row, window):
     global w
@@ -216,6 +222,9 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     buttons_row.pack_start(guiutils.get_pad_label(7, 30), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     buttons_row.pack_start(_get_mode_buttons_panel(), False, True, 0)
     buttons_row.pack_start(gtk.Label(), True, True, 0)
+    if editorstate.SCREEN_WIDTH > 1279:
+        buttons_row.pack_start(_get_tools_buttons(), False, True, 0)
+        buttons_row.pack_start(gtk.Label(), True, True, 0)
     buttons_row.pack_start(_get_undo_buttons_panel(), False, True, 0)
     buttons_row.pack_start(gtk.Label(), True, True, 0)
     buttons_row.pack_start(_get_zoom_buttons_panel(), False, True, 10)
@@ -231,7 +240,12 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     left_panel.pack_start(_get_undo_buttons_panel(), False, True, 0)
     left_panel.pack_start(guiutils.get_pad_label(10, 30), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     left_panel.pack_start(_get_zoom_buttons_panel(), False, True, 0)
-    left_panel.pack_start(guiutils.get_pad_label(117, 10), False, True, 10) # to left and right panel same size for centering
+    if editorstate.SCREEN_WIDTH > 1279:
+        left_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
+        left_panel.pack_start(_get_tools_buttons(), False, True, 0)
+        left_panel.pack_start(guiutils.get_pad_label(50, 10), False, True, 10) # to left and right panel same size for centering
+    else:
+        left_panel.pack_start(guiutils.get_pad_label(60, 10), False, True, 10) # to left and right panel same size for centering
     left_panel.pack_start(gtk.Label(), True, True, 0)
 
     middle_panel = gtk.HBox(False, 0) 
@@ -263,6 +277,9 @@ def _get_edit_buttons_panel():
 
 def _get_monitor_insert_buttons():
     return w.monitor_insert_buttons.widget
+
+def _get_tools_buttons():
+    return w.tools_buttons.widget
 
 def _show_tabs_up(widget):
     global w
