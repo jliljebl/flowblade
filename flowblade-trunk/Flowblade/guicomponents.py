@@ -1336,7 +1336,7 @@ class BigTCDisplay:
         x = 2
         y = 2
         width = 166
-        height = 26
+        height = 24
         aspect = 1.0
         corner_radius = height / 3.5
         radius = corner_radius / aspect
@@ -1345,7 +1345,7 @@ class BigTCDisplay:
         self._draw_consts = (x, y, width, height, aspect, corner_radius, radius, degrees)
 
         self.TEXT_X = 18
-        self.TEXT_Y = 2
+        self.TEXT_Y = 1
         
         #self.bg_color = gui.bg_color_tuple
 

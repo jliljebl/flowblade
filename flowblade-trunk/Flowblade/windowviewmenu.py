@@ -229,7 +229,7 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     w = window
     left_panel = gtk.HBox(False, 0)    
     left_panel.pack_start(_get_undo_buttons_panel(), False, True, 0)
-    left_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
+    left_panel.pack_start(guiutils.get_pad_label(10, 30), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     left_panel.pack_start(_get_zoom_buttons_panel(), False, True, 0)
     left_panel.pack_start(guiutils.get_pad_label(117, 10), False, True, 10) # to left and right panel same size for centering
     left_panel.pack_start(gtk.Label(), True, True, 0)

@@ -98,7 +98,7 @@ POINTER_COLOR = (1, 0.3, 0.3)
 CLIP_EDITOR_BG_COLOR = (0.7, 0.7, 0.7)
 LIGHT_MULTILPLIER = 1.14
 DARK_MULTIPLIER = 0.74
-EDITABLE_RECT_COLOR = (0,0,0.7)
+EDITABLE_RECT_COLOR = (0,0,0)
 NOT_EDITABLE_RECT_COLOR = (1,0,0)
 
 # Editor states
@@ -1084,7 +1084,6 @@ class BoxGeometryScreenEditor(AbstractScreenEditor):
             self.source_edit_rect.y += 1
             
     def print_keyframes(self):
-        print "geom edit keyframes:"
         for i in range(0, len(self.keyframes)):
             print self.keyframes[i]
 
