@@ -545,7 +545,27 @@ def _show_clip_info(data):
     length = utils.get_tc_string(l_frames)
     
     dialogs.clip_properties_dialog((length, size, clip.path))
+
+def _rename_clip(data):
+    clip, track, item_id, x = data
+    dialogs.get_new_clip_name_dialog(_rename_clip_edited, clip)
+
+def _rename_clip_edited(dialog, response_id, data):
+    """
+    Sets edited value to liststore and project data.
+    """
+    name_entry, clip = data
+    new_text = name_entry.get_text()
+    dialog.destroy()
+            
+    if response_id != gtk.RESPONSE_ACCEPT:
+        return      
+    if len(new_text) == 0:
+        return
     
+    clip.name = new_text
+    updater.repaint_tline()
+
 def open_selection_in_effects():
     if movemodes.selected_range_in == -1:
         return
@@ -971,6 +991,7 @@ POPUP_HANDLERS = {"lock":_lock_track,
                   "open_in_editor":_open_clip_in_effects_editor,
                   "clip_info":_show_clip_info,
                   "open_in_clip_monitor":_open_clip_in_clip_monitor,
+                  "rename_clip":_rename_clip,
                   "split_audio":syncsplitevent.split_audio,
                   "split_audio_synched":syncsplitevent.split_audio_synched,
                   "resync":syncsplitevent.resync_clip,

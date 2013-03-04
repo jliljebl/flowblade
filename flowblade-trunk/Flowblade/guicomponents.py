@@ -916,7 +916,11 @@ def display_clip_popup_menu(event, clip, track, callback):
     if clip.media_type != appconsts.PATTERN_PRODUCER:
         clip_menu.add(_get_menu_item(_("Open in Clip Monitor"), callback,\
                       (clip, track, "open_in_clip_monitor", event.x)))
-                      
+
+
+    _add_separetor(clip_menu)
+    clip_menu.add(_get_menu_item(_("Rename Clip"), callback,\
+                      (clip, track, "rename_clip", event.x)))      
     _add_separetor(clip_menu)
 
     if track.type == appconsts.VIDEO:

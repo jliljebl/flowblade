@@ -609,8 +609,7 @@ class EditorWindow:
         if ((self.clip_editor_b.get_active() == True) 
             and (widget == self.clip_editor_b)):
             updater.display_clip_in_monitor()
-    
-    
+
     def connect_player(self, mltplayer):
         # Buttons
         # NOTE: ORDER OF CALLBACKS IS THE SAME AS ORDER OF BUTTONS FROM LEFT TO RIGHT
