@@ -31,47 +31,53 @@ def init_view_menu(menu_item):
     Fills menu item with menuitems to open recent projects.
     """
     menu = menu_item.get_submenu()
-
+    
+    
     if editorstate.SCREEN_WIDTH > 1678:
+        layout_menu_item = gtk.MenuItem("Window Layout")
+        layout_menu =  gtk.Menu()
         default = gtk.RadioMenuItem(None, "Default")
 
         default.connect("activate", lambda w: _show_default_layout(w))
-        menu.append(default)
+        layout_menu.append(default)
 
         widescreen = gtk.RadioMenuItem(default, "Widescreen")
         widescreen.connect("activate", lambda w: _show_widescreen_layout(w))
-        menu.append(widescreen)
+        layout_menu.append(widescreen)
 
         if editorpersistance.prefs.default_layout == True:
             default.set_active(True)
         else:
             widescreen.set_active(True)
+        layout_menu_item.set_submenu(layout_menu)
+        menu.append(layout_menu_item)
 
-        sep = gtk.SeparatorMenuItem()
-        menu.append(sep)
-
-    tc_left = gtk.RadioMenuItem(None, "Middle bar TC Left")
+    mb_menu_item = gtk.MenuItem("Middlebar Layout")
+    mb_menu =  gtk.Menu()
+    tc_left = gtk.RadioMenuItem(None, "TC Left")
     tc_left.set_active(True)
     tc_left.connect("activate", lambda w: _show_buttons_TC_LEFT_layout(w))
-    menu.append(tc_left)
+    mb_menu.append(tc_left)
 
-    tc_middle = gtk.RadioMenuItem(tc_left, "Middle bar TC Center")
+    tc_middle = gtk.RadioMenuItem(tc_left, "TC Center")
     tc_middle.connect("activate", lambda w: _show_buttons_TC_MIDDLE_layout(w))
-    menu.append(tc_middle)
+    mb_menu.append(tc_middle)
 
     if editorpersistance.prefs.midbar_tc_left == True:
         tc_left.set_active(True)
     else:
         tc_middle.set_active(True)
 
-    sep = gtk.SeparatorMenuItem()
-    menu.append(sep)
+    mb_menu_item.set_submenu(mb_menu)
+    menu.append(mb_menu_item)
 
-    tabs_up = gtk.RadioMenuItem(None, "Tabs Up")
+    tabs_menu_item = gtk.MenuItem("Tabs Position")
+    tabs_menu =  gtk.Menu()
+    tabs_up = gtk.RadioMenuItem(None, "Up")
     tabs_up.connect("activate", lambda w: _show_tabs_up(w))
-    menu.append(tabs_up)
+    tabs_menu.append(tabs_up)
     
-    tabs_down = gtk.RadioMenuItem(tabs_up, "Tabs Down")
+    tabs_down = gtk.RadioMenuItem(tabs_up, "Down")
     tabs_down.connect("activate", lambda w: _show_tabs_down(w))
 
     if editorpersistance.prefs.tabs_on_top == True:
@@ -79,7 +85,9 @@ def init_view_menu(menu_item):
     else:
         tabs_down.set_active(True)
 
-    menu.append(tabs_down)
+    tabs_menu.append(tabs_down)
+    tabs_menu_item.set_submenu(tabs_menu)
+    menu.append(tabs_menu_item)
 
 def init_gui_to_prefs(window):
     global w

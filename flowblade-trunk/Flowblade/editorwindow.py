@@ -477,8 +477,6 @@ class EditorWindow:
         self.edit_buttons_frame = gtk.Frame()
         self.edit_buttons_frame.add(self.edit_buttons_row)
         self.edit_buttons_frame.set_shadow_type(gtk.SHADOW_ETCHED_IN)
-        # gtk.SHADOW_IN, gtk.SHADOW_OUT, gtk.SHADOW_ETCHED_IN, gtk.SHADOW_ETCHED_OUT
-        #self.edit_buttons_event_box.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse(appconsts.MIDBAR_COLOR))
                 
         # Timeline scale
         self.tline_scale = tlinewidgets.TimeLineFrameScale(editevent.insert_move_mode_pressed,  
