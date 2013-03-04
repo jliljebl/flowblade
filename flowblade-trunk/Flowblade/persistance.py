@@ -375,6 +375,10 @@ def fill_track_mlt(mlt_track, py_track):
         mlt_clip = None
         append_created = True # blanks get appended at creation time, others don't
 
+        # Add color attribute if not found
+        if not hasattr(clip, "color"):
+            clip.color = None
+
         # normal clip
         if ((clip.type == "Mlt__Producer") and clip.is_blanck_clip == False and 
             (clip.media_type != appconsts.PATTERN_PRODUCER)): 

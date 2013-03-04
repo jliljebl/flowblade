@@ -575,7 +575,7 @@ class EditorWindow:
         self.window.set_title("Flowblade")
         self.window.set_position(gtk.WIN_POS_CENTER)  
         self.window.show_all()
-        
+
         # Maximize if it seems that we exited maximized
         w, h = editorpersistance.prefs.exit_allocation
         if (float(w) / editorstate.SCREEN_WIDTH > 0.95) and (float(h) / editorstate.SCREEN_HEIGHT > 0.95):

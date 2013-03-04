@@ -418,6 +418,7 @@ class Sequence:
         clip.stream_indexes = None # a, v stream indexes when not muted
         clip.clip_length = lambda: _clip_length(clip)
         clip.waveform_data = None
+        clip.color = None # None means that clip type default color is displayed
     
     def clone_clip_range_and_filters(self, clip, clone_clip):
         """

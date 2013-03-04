@@ -917,10 +917,26 @@ def display_clip_popup_menu(event, clip, track, callback):
         clip_menu.add(_get_menu_item(_("Open in Clip Monitor"), callback,\
                       (clip, track, "open_in_clip_monitor", event.x)))
 
-
     _add_separetor(clip_menu)
+    
     clip_menu.add(_get_menu_item(_("Rename Clip"), callback,\
-                      (clip, track, "rename_clip", event.x)))      
+                      (clip, track, "rename_clip", event.x)))
+
+    color_menu_item = gtk.MenuItem("Clip Color")
+    color_menu =  gtk.Menu()
+    color_menu.add(_get_menu_item(_("Default"), callback, (clip, track, "clip_color", "default")))
+    color_menu.add(_get_menu_item(_("Red"), callback, (clip, track, "clip_color", "red")))
+    color_menu.add(_get_menu_item(_("Green"), callback, (clip, track, "clip_color", "green")))
+    color_menu.add(_get_menu_item(_("Blue"), callback, (clip, track, "clip_color", "blue")))
+    color_menu.add(_get_menu_item(_("Orange"), callback, (clip, track, "clip_color", "orange")))
+    color_menu.add(_get_menu_item(_("Brown"), callback, (clip, track, "clip_color", "brown")))
+    color_menu.add(_get_menu_item(_("Olive"), callback, (clip, track, "clip_color", "olive")))
+    color_menu_item.set_submenu(color_menu)
+
+    clip_menu.add(color_menu_item)
+    color_menu_item.show_all()
+    clip_menu.add(_get_menu_item(_("Clip Info"), callback,\
+                  (clip, track, "clip_info", event.x)))
     _add_separetor(clip_menu)
 
     if track.type == appconsts.VIDEO:
@@ -970,10 +986,7 @@ def display_clip_popup_menu(event, clip, track, callback):
     
     _add_separetor(clip_menu)
     clip_menu.add(_get_clone_filters_menu_item(event, clip, track, callback))
-    _add_separetor(clip_menu)
 
-    clip_menu.add(_get_menu_item(_("Clip Info"), callback,\
-                  (clip, track, "clip_info", event.x)))
     clip_menu.popup(None, None, None, event.button, event.time)
 
 def display_blank_clip_popup_menu(event, clip, track, callback):

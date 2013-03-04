@@ -773,7 +773,9 @@ class TimeLineCanvas:
             # Fill clip bg 
             if scale_length > FILL_MIN:
                 # Select color
-                if clip.is_blanck_clip:
+                if clip.color != None:
+                    cr.set_source_rgb(*clip.color)
+                elif clip.is_blanck_clip:
                     if clip.selected:
                         grad = cairo.LinearGradient (0, y, 0, y + track_height)
                         grad.add_color_stop_rgba(*BLANK_CLIP_COLOR_SELECTED_GRAD)
