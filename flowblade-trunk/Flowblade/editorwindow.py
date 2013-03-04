@@ -417,6 +417,7 @@ class EditorWindow:
 
         # Play buttons row
         self.player_buttons = glassbuttons.PlayerButtons()
+        self.player_buttons.widget.set_tooltip_text(_("Rew, FF, Next, Prev, Play, Stop, Mark In, Mark Out, Clear Marks, To Mark In, To Mark Out"))
         self.monitor_source.modify_font(pango.FontDescription("sans bold 8"))
         player_buttons_row = gtk.HBox(False, 0)
 
@@ -645,49 +646,10 @@ class EditorWindow:
     def _add_tool_tips(self):
         self.big_TC.widget.set_tooltip_text(_("Timeline current frame timecode"))
 
-        #self.zoom_in_b.set_tooltip_text(_("Zoom In"))
-        #self.zoom_out_b.set_tooltip_text(_("Zoom Out"))
-        #self.zoom_length_b.set_tooltip_text(_("Zoom to Sequence length"))
-
-        #self.insert_move_b.set_tooltip_text(_("Insert Move"))      
-        #self.one_roll_trim_b.set_tooltip_text(_("One Roll Trim"))           
-        #self.tworoll_trim_b.set_tooltip_text(_("Two Roll Trim"))    
-        #self.overwrite_move_b.set_tooltip_text(_("Overwrite Move"))    
-
-        #self.cut_b.set_tooltip_text(_("Cut"))    
-        #self.splice_out_b.set_tooltip_text(_("Splice Out Clip"))    
-        #self.lift_b.set_tooltip_text(_("Lift Clip"))    
-        #self.resync_b.set_tooltip_text(_("Resync Selected Clips"))    
-
-        #self.insert_b.set_tooltip_text(_("Insert Monitor Clip Range"))    
-        #self.overwrite_b.set_tooltip_text(_("Overwrite Selected Clips with Monitor Clip Range"))    
-        #self.overwrite_range_b.set_tooltip_text(_("Overwrite Mark In/Mark Out Range with Monitor Clip Range"))    
-        #self.append_b.set_tooltip_text(_("Append Monitor Clip Range"))    
-
-        #self.undo_b.set_tooltip_text(_("Undo"))    
-        #self.redo_b.set_tooltip_text(_("Redo"))
-
-        #self.play_b.set_tooltip_text(_("Play"))
-        #self.stop_b.set_tooltip_text(_("Stop"))
-        #self.prev_b.set_tooltip_text(_("Previous frame"))
-        #self.next_b.set_tooltip_text(_("Next frame"))
-
-        #self.ff_b.set_tooltip_text(_("Fast Forward"))
-        #self.rew_b.set_tooltip_text(_("Rewind"))
-
-        #self.mark_in_b.set_tooltip_text(_("Set Mark In"))
-        #self.mark_out_b.set_tooltip_text(_("Set Mark Out"))
-        #self.marks_clear_b.set_tooltip_text(_("Clear Marks"))
-        #self.to_mark_in_b.set_tooltip_text(_("Go to Mark In"))
-        #self.to_mark_out_b.set_tooltip_text(_("Go to Mark Out"))
-
         self.view_mode_select.widget.set_tooltip_text(_("Select view mode: Program Video/Vectorscope/RGBParade"))
         
         self.tc.widget.set_tooltip_text(_("Monitor program current frame timecode"))
         self.monitor_source.set_tooltip_text(_("Current Monitor program name"))
-        self.mark_in_entry.set_tooltip_text(_("Monitor program Mark In timecode"))
-        self.mark_out_entry.set_tooltip_text(_("Monitor program Mark Out timecode"))
-        self.length_entry.set_tooltip_text(_("Monitor program selected range length"))
     
         self.pos_bar.widget.set_tooltip_text(_("Monitor program current position"))
         
