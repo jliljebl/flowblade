@@ -231,7 +231,7 @@ def tline_canvas_mouse_pressed(event, frame):
         mouse_disabled = True
         # Set INSERT_MODE with programmed click if insert mode button not down
         # and just calling the mode intilizing  method if button is already pressed
-        if  gui.mode_buttons[0].get_active() == False:
+        if  gui.editor_window.mode_buttons_group.pressed_button != 1:
             set_default_edit_mode()  
         else:
             insert_move_mode_pressed() 
