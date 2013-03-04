@@ -302,13 +302,13 @@ def display_clip_in_monitor(reset_saved_frames=True):
     
     # Create and display clip on hidden track
     if MONITOR_MEDIA_FILE().type == appconsts.PATTERN_PRODUCER or MONITOR_MEDIA_FILE().type == appconsts.IMAGE_SEQUENCE:
-        # pattern producer image sequence
+        # pattern producer or image sequence
         clip_producer = current_sequence().display_monitor_clip(None, MONITOR_MEDIA_FILE())
     else:
         # File producers
         clip_producer = current_sequence().display_monitor_clip(MONITOR_MEDIA_FILE().path)
     
-    # IMAGE_SEQUENCE files always return 15000 for get_length from mlt so we have patch that method
+    # IMAGE_SEQUENCE files always returns 15000 for get_length from mlt so we have to monkeypatch that method to get correct results
     if MONITOR_MEDIA_FILE().type == appconsts.IMAGE_SEQUENCE:
         clip_producer.get_length = lambda : MONITOR_MEDIA_FILE().length
     
@@ -429,16 +429,11 @@ def update_frame_displayers(frame):
     norm_pos = frame / float(producer_length) 
     gui.pos_bar.set_normalized_pos(norm_pos)
 
-    # Update monitor tc
-    gui.tc.set_frame(frame)
-    
-    # Repaint timeline widgets if sequence displayed.
-    if timeline_visible():
-        gui.tline_scale.widget.queue_draw()
-        gui.tline_canvas.widget.queue_draw()
-        gui.big_tc.widget.queue_draw()
-        clipeffectseditor.display_kfeditors_tline_frame(frame)
-        compositeeditor.display_kfeditors_tline_frame(frame)
+    gui.tline_scale.widget.queue_draw()
+    gui.tline_canvas.widget.queue_draw()
+    gui.big_tc.widget.queue_draw()
+    clipeffectseditor.display_kfeditors_tline_frame(frame)
+    compositeeditor.display_kfeditors_tline_frame(frame)
 
 def update_kf_editor():
     clipeffectseditor.update_kfeditors_positions()

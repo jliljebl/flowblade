@@ -31,8 +31,7 @@ def init_view_menu(menu_item):
     Fills menu item with menuitems to open recent projects.
     """
     menu = menu_item.get_submenu()
-    
-    
+
     if editorstate.SCREEN_WIDTH > 1678:
         layout_menu_item = gtk.MenuItem("Window Layout")
         layout_menu =  gtk.Menu()
