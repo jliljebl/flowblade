@@ -444,10 +444,14 @@ class EditorWindow:
         sw_pos_hbox.pack_start(switch_vbox, False, True, 0)
         sw_pos_hbox.pack_start(pos_bar_vbox, True, True, 0)
         sw_pos_hbox.pack_start(self.view_mode_select.widget, False, False, 0)
+
+        # Display wrapper alignment for better filling behaviour when resizing
+        disp_align = gtk.Alignment(xalign=0.0, yalign=0.0, xscale=1.0, yscale=1.0)
+        disp_align.add(self.tline_display)
         
         # Monitor
         monitor_vbox = gtk.VBox(False, 1)
-        monitor_vbox.pack_start(self.tline_display, True, True, 0)
+        monitor_vbox.pack_start(disp_align, True, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
         monitor_vbox.pack_start(player_buttons_row, False, True, 0)
         

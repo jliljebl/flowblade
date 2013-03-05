@@ -60,7 +60,6 @@ tline_column = None
 big_tc = None
 
 # indexes match editmode values in editorstate.py
-#mode_buttons = None
 notebook_buttons = None
 
 play_b = None
@@ -109,8 +108,6 @@ def capture_references(new_editor_window):
     tline_info = editor_window.tline_info
     tline_column = editor_window.tline_column
 
-    # wtf with the order, different from the one used to display buttons, meh
-    #play_b = editor_window.play_b
     clip_editor_b = editor_window.clip_editor_b
     sequence_editor_b = editor_window.sequence_editor_b
 
