@@ -889,6 +889,7 @@ def get_new_media_name_dialog(callback, media_file):
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
+    dialog.set_default_response(gtk.RESPONSE_ACCEPT)
     dialog.connect('response', callback, (name_entry, media_file))
     dialog.show_all()
 
@@ -917,6 +918,7 @@ def get_new_clip_name_dialog(callback, clip):
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
+    dialog.set_default_response(gtk.RESPONSE_ACCEPT)
     dialog.connect('response', callback, (name_entry, clip))
     dialog.show_all()
     
