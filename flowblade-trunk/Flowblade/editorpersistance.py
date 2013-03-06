@@ -194,3 +194,8 @@ class EditorPreferences:
         self.midbar_tc_left = True
         self.default_layout = True
         self.exit_allocation = (0, 0)
+        self.media_columns = 2
+        self.app_v_paned_position = 500 # Paned get/set position value
+        self.top_paned_position = 600 # Paned get/set position value
+        self.mm_paned_position = 260 # Paned get/set position value
+        

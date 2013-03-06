@@ -591,6 +591,9 @@ def _shutdown_dialog_callback(dialog, response_id):
     # Save window dimensions on exit
     x, y, w, h = gui.editor_window.window.get_allocation()
     editorpersistance.prefs.exit_allocation = (w, h)
+    editorpersistance.prefs.app_v_paned_position = gui.editor_window.app_v_paned.get_position()
+    editorpersistance.prefs.top_paned_position = gui.editor_window.top_paned.get_position()
+    editorpersistance.prefs.mm_paned_position = gui.editor_window.mm_paned.get_position()
     editorpersistance.save()
 
     # Block reconnecting consumer before setting window not visible

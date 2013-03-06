@@ -678,7 +678,7 @@ class MediaPanel():
         self.widget = gtk.VBox()
         self.row_widgets = []
         self.selected_objects = []
-        self.columns = 2
+        self.columns = editorpersistance.prefs.media_columns
         self.media_file_popup_cb = media_file_popup_cb
         self.double_click_cb = double_click_cb
         
@@ -719,6 +719,8 @@ class MediaPanel():
 
     def columns_changed(self, adjustment):
         self.columns = int(adjustment.get_value())
+        editorpersistance.prefs.media_columns = self.columns
+        editorpersistance.save()
         self.fill_data_model()
 
     def fill_data_model(self):

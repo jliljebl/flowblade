@@ -251,7 +251,7 @@ class EditorWindow:
         media_scroll_window = gtk.ScrolledWindow()
         media_scroll_window.add_with_viewport(self.media_list_view.widget)
         media_scroll_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        media_scroll_window.set_size_request(guicomponents.MEDIA_OBJECT_WIDGET_WIDTH * self.media_list_view.columns + 70, guicomponents.MEDIA_OBJECT_WIDGET_HEIGHT)
+        media_scroll_window.set_size_request(guicomponents.MEDIA_OBJECT_WIDGET_WIDTH * 2 + 70, guicomponents.MEDIA_OBJECT_WIDGET_HEIGHT)
         media_scroll_window.show_all()
 
         media_panel = panels.get_media_files_panel(
@@ -262,13 +262,13 @@ class EditorWindow:
                                 lambda a: self.media_list_view.columns_changed(a))
 
     
-        mm_paned = gtk.HPaned()
-        mm_paned.pack1(bins_panel, resize=True, shrink=True)
-        mm_paned.pack2(media_panel, resize=True, shrink=False)
+        self.mm_paned = gtk.HPaned()
+        self.mm_paned.pack1(bins_panel, resize=True, shrink=True)
+        self.mm_paned.pack2(media_panel, resize=True, shrink=False)
         
         mm_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
         mm_panel.set_padding(0, 0, 4, 0)
-        mm_panel.add(mm_paned)
+        mm_panel.add(self.mm_paned)
 
         # Effects
         self.effect_select_list_view = guicomponents.FilterListView()
@@ -469,13 +469,14 @@ class EditorWindow:
         notebook_vbox.pack_start(self.notebook, True, True)
 
         # Top row paned
-        top_paned = gtk.HPaned()
-        top_paned.pack1(notebook_vbox, resize=True, shrink=False)
-        top_paned.pack2(monitor_frame, resize=False, shrink=False)
+        self.top_paned = gtk.HPaned()
+        self.top_paned.pack1(notebook_vbox, resize=False, shrink=False)
+        self.top_paned.pack2(monitor_frame, resize=True, shrink=False)
+        #self.top_paned.connect("size-allocate", self.top_paned_resized)
 
         # top row
         self.top_row_hbox = gtk.HBox(False, 0)
-        self.top_row_hbox.pack_start(top_paned, True, True, 0)
+        self.top_row_hbox.pack_start(self.top_paned, True, True, 0)
 
         # Edit buttons rows
         self.edit_buttons_row = self._get_edit_buttons_row()
@@ -560,14 +561,14 @@ class EditorWindow:
         tline_pane.pack_start(self.tline_box, True, True, 0)
 
         # VPaned top row / timeline
-        app_v_paned = gtk.VPaned()
-        app_v_paned.pack1(self.top_row_hbox, resize=False, shrink=False)
-        app_v_paned.pack2(tline_pane, resize=True, shrink=False)
+        self.app_v_paned = gtk.VPaned()
+        self.app_v_paned.pack1(self.top_row_hbox, resize=False, shrink=False)
+        self.app_v_paned.pack2(tline_pane, resize=True, shrink=False)
 
         # Pane
         pane = gtk.VBox(False, 1)
         pane.pack_start(menu_vbox, False, True, 0)
-        pane.pack_start(app_v_paned, True, True, 0)
+        pane.pack_start(self.app_v_paned, True, True, 0)
         
         # Tooltips
         self._add_tool_tips()
@@ -577,14 +578,23 @@ class EditorWindow:
         # Set pane and show window
         self.window.add(pane)
         self.window.set_title("Flowblade")
-        self.window.set_position(gtk.WIN_POS_CENTER)  
-        self.window.show_all()
 
-        # Maximize if it seems that we exited maximized
+        # Maximize if it seems that we exited maximized, else set size
         w, h = editorpersistance.prefs.exit_allocation
         if (float(w) / editorstate.SCREEN_WIDTH > 0.95) and (float(h) / editorstate.SCREEN_HEIGHT > 0.95):
             self.window.maximize() 
+        else:
+            self.window.set_size_request(w, h)
+            self.window.set_position(gtk.WIN_POS_CENTER)
 
+        # Show window and all of its components
+        self.window.show_all()
+        
+        # Set Paned positions
+        self.mm_paned.set_position(editorpersistance.prefs.mm_paned_position)
+        self.top_paned.set_position(editorpersistance.prefs.top_paned_position)
+        self.app_v_paned.set_position(editorpersistance.prefs.app_v_paned_position)
+        
     def _create_monitor_buttons(self):
         # Monitor switch buttons
         self.sequence_editor_b = gtk.RadioButton(None) #, _("Timeline"))
@@ -673,3 +683,9 @@ class EditorWindow:
 
     def handle_two_roll_mode_button_press(self):
         editevent.tworoll_trim_mode_pressed()
+
+    def top_paned_resized(self, w, req):
+        print self.app_v_paned.get_position()
+        print self.top_paned.get_position()
+        print self.mm_paned.get_position()
+

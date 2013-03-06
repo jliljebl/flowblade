@@ -65,7 +65,7 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb):
 
     columns_img = gtk.image_new_from_file(respaths.IMAGE_PATH + "columns.png")
         
-    adj = gtk.Adjustment(value=MEDIA_PANEL_DEFAULT_ROWS, lower=MEDIA_PANEL_MIN_ROWS, upper=MEDIA_PANEL_MAX_ROWS, step_incr=1)
+    adj = gtk.Adjustment(value=editorpersistance.prefs.media_columns, lower=MEDIA_PANEL_MIN_ROWS, upper=MEDIA_PANEL_MAX_ROWS, step_incr=1)
     spin = gtk.SpinButton(adj)
     spin.connect("changed", col_changed_cb)
 
