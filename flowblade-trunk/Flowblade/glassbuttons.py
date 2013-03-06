@@ -50,6 +50,7 @@ class AbstractGlassButtons:
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
+        self.widget.grab_focus_on_press = False
 
         self.pressed_callback_funcs = None # set later
         self.released_callback_funcs = None # set later

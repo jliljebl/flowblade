@@ -147,7 +147,11 @@ class Sequence:
         self.multitrack = self.tractor.multitrack()
         
         self.vectorscope = mlt.Filter(self.profile, "frei0r.vectorscope")
+        self.vectorscope.set("mix", "0.5")
+        self.vectorscope.set("overlay sides", "0.0") 
         self.rgbparade =  mlt.Filter(self.profile, "frei0r.rgbparade")
+        self.rgbparade.set("mix", "0.4")
+        self.rgbparade.set("overlay sides", "0.0") 
         self.outputfilter = None
     
     # ---------------------------------------- tracks
@@ -397,7 +401,6 @@ class Sequence:
         """
         pattern_producer_data is instance of projectdata.BinColorClip
         """
-        
         clip = patternproducer.create_pattern_producer(self.profile, pattern_producer_data)
         self.add_clip_attr(clip)
         return clip
