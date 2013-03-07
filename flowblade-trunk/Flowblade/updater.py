@@ -36,6 +36,7 @@ from editorstate import PROJECT
 from editorstate import timeline_visible
 import editorpersistance
 import mlt
+import monitorevent
 import panels
 import utils
 import respaths
@@ -379,6 +380,13 @@ def display_sequence_in_monitor():
 
     repaint_tline()
 
+def switch_monitor_display():
+    monitorevent.stop_pressed()
+    if editorstate._timeline_displayed == True:
+        gui.editor_window.clip_editor_b.set_active(True)
+    else:
+        gui.editor_window.sequence_editor_b.set_active(True)
+
 def display_tline_cut_frame(track, index):
     """
     Displays sequence frame at cut
@@ -506,10 +514,6 @@ def set_trim_mode_gui():
 
     _set_move_mode_buttons_enabled(False)
     gui.pos_bar.disabled = True
-    #gui.editor_window.play_b.set_image(play_loop_icon)
-    #gui.editor_window.stop_b.set_image(stop_trim_icon)
-    #gui.editor_window.next_b.set_image(next_trim_icon)
-    #gui.editor_window.prev_b.set_image(prev_trim_icon)
     
     gui.editmenu.set_sensitive(False)
 
@@ -521,10 +525,6 @@ def set_move_mode_gui():
     
     _set_move_mode_buttons_enabled(True)
     gui.pos_bar.disabled = False
-    #gui.editor_window.play_b.set_image(play_icon)
-    #gui.editor_window.stop_b.set_image(stop_icon)
-    #gui.editor_window.next_b.set_image(next_icon)
-    #gui.editor_window.prev_b.set_image(prev_icon)
 
     gui.editmenu.set_sensitive(True)
     

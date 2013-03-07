@@ -173,7 +173,11 @@ def _handle_tline_key_event(event):
         else:
             monitorevent.play_pressed()
         return True
-
+    
+    # TAB
+    if event.keyval == gtk.keysyms.Tab:
+        updater.switch_monitor_display()
+        return True
     
     # Key bindings for MOVE MODES
     if editorstate.current_is_move_mode():
@@ -283,6 +287,11 @@ def _handle_extended_tline_focus_events(event):
     # L
     if event.keyval == gtk.keysyms.l:
         monitorevent.l_pressed()
+        return True
+
+    # TAB
+    if event.keyval == gtk.keysyms.Tab:
+        updater.switch_monitor_display()
         return True
 
     return False

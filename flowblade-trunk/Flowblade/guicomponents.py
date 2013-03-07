@@ -834,20 +834,6 @@ class EditorSeparator:
 
 # ---------------------------------------------- MISC WIDGETS
 def get_monitor_view_select_combo(callback):
-    """
-    combo_list = gtk.ListStore(gtk.gdk.Pixbuf)
-    combo_list.append([gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "program_view_2.png")])
-    combo_list.append([gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "vectorscope.png")])
-    combo_list.append([gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "rgbparade.png")])
-
-    px = gtk.CellRendererPixbuf()
-    combobox = gtk.ComboBox(combo_list)
-    combobox.pack_start(px, True)
-    combobox.add_attribute(px, "pixbuf", 0)
-    combobox.set_active(0)
-    combobox.set_size_request(MONITOR_COMBO_WIDTH, MONITOR_COMBO_HEIGHT)
-    """
-
     pixbuf_list = [gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "program_view_2.png"), 
                    gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "vectorscope.png"),
                    gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "rgbparade.png")]
@@ -920,26 +906,6 @@ def display_clip_popup_menu(event, clip, track, callback):
                       (clip, track, "open_in_clip_monitor", event.x)))
 
     _add_separetor(clip_menu)
-    
-    clip_menu.add(_get_menu_item(_("Rename Clip"), callback,\
-                      (clip, track, "rename_clip", event.x)))
-
-    color_menu_item = gtk.MenuItem("Clip Color")
-    color_menu =  gtk.Menu()
-    color_menu.add(_get_menu_item(_("Default"), callback, (clip, track, "clip_color", "default")))
-    color_menu.add(_get_menu_item(_("Red"), callback, (clip, track, "clip_color", "red")))
-    color_menu.add(_get_menu_item(_("Green"), callback, (clip, track, "clip_color", "green")))
-    color_menu.add(_get_menu_item(_("Blue"), callback, (clip, track, "clip_color", "blue")))
-    color_menu.add(_get_menu_item(_("Orange"), callback, (clip, track, "clip_color", "orange")))
-    color_menu.add(_get_menu_item(_("Brown"), callback, (clip, track, "clip_color", "brown")))
-    color_menu.add(_get_menu_item(_("Olive"), callback, (clip, track, "clip_color", "olive")))
-    color_menu_item.set_submenu(color_menu)
-
-    clip_menu.add(color_menu_item)
-    color_menu_item.show_all()
-    clip_menu.add(_get_menu_item(_("Clip Info"), callback,\
-                  (clip, track, "clip_info", event.x)))
-    _add_separetor(clip_menu)
 
     if track.type == appconsts.VIDEO:
 
@@ -991,6 +957,14 @@ def display_clip_popup_menu(event, clip, track, callback):
 
     clip_menu.popup(None, None, None, event.button, event.time)
 
+    _add_separetor(clip_menu)
+    
+    clip_menu.add(_get_menu_item(_("Rename Clip"), callback,\
+                      (clip, track, "rename_clip", event.x)))
+    clip_menu.add(_get_color_menu_item(clip, track, callback))  
+    clip_menu.add(_get_menu_item(_("Clip Info"), callback,\
+                  (clip, track, "clip_info", event.x)))
+
 def display_blank_clip_popup_menu(event, clip, track, callback):
     clip_menu = gtk.Menu()
     clip_menu.add(_get_menu_item(_("Strech Prev Clip to Cover"), callback, (clip, track, "cover_with_prev", event.x)))
@@ -1038,9 +1012,13 @@ def display_audio_clip_popup_menu(event, clip, track, callback):
     clip_menu.add(_get_audio_filters_add_menu_item(event, clip, track, callback))
 
     _add_separetor(clip_menu)
-
+    
+    clip_menu.add(_get_menu_item(_("Rename Clip"), callback,\
+                      (clip, track, "rename_clip", event.x)))
+    clip_menu.add(_get_color_menu_item(clip, track, callback))  
     clip_menu.add(_get_menu_item(_("Clip Info"), callback,\
                   (clip, track, "clip_info", event.x)))
+
     clip_menu.popup(None, None, None, event.button, event.time)
 
 def display_compositor_popup_menu(event, compositor, callback):
@@ -1191,9 +1169,22 @@ def _get_track_mute_menu_item(event, track, callback):
         _set_non_sensite_if_state_matches(track, item, appconsts.TRACK_MUTE_ALL)
         item.show()
 
-    
     menu_item.show()
     return menu_item
+
+def _get_color_menu_item(clip, track, callback):
+    color_menu_item = gtk.MenuItem("Clip Color")
+    color_menu =  gtk.Menu()
+    color_menu.add(_get_menu_item(_("Default"), callback, (clip, track, "clip_color", "default")))
+    color_menu.add(_get_menu_item(_("Red"), callback, (clip, track, "clip_color", "red")))
+    color_menu.add(_get_menu_item(_("Green"), callback, (clip, track, "clip_color", "green")))
+    color_menu.add(_get_menu_item(_("Blue"), callback, (clip, track, "clip_color", "blue")))
+    color_menu.add(_get_menu_item(_("Orange"), callback, (clip, track, "clip_color", "orange")))
+    color_menu.add(_get_menu_item(_("Brown"), callback, (clip, track, "clip_color", "brown")))
+    color_menu.add(_get_menu_item(_("Olive"), callback, (clip, track, "clip_color", "olive")))
+    color_menu_item.set_submenu(color_menu)
+    color_menu_item.show_all()
+    return color_menu_item 
 
 def _set_non_sensite_if_state_matches(mutable, item, state):
     if mutable.mute_state == state:
