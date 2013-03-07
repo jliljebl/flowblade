@@ -129,8 +129,8 @@ class BinColorClip(AbstractBinClip):
     Color Clip that can added to and edited in Sequence.
     """   
     def __init__(self, id, name, gdk_color_str):
-        AbstractBinClip.__init__(self, id, name)
         self.gdk_color_str = gdk_color_str
+        AbstractBinClip.__init__(self, id, name)
         self.patter_producer_type = COLOR_CLIP
 
     def create_icon(self):
