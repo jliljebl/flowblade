@@ -36,11 +36,11 @@ import gui
 import tlinewidgets
 import updater
 
-RENDERING_FRAME_DISPLAY_STEP = 100
+RENDERING_FRAME_DISPLAY_STEP = 500
 
 # If adding clip to the ones displaying waveforms makes number of frames displaying 
 # waveforms higher then this, some clips (FIFO) will no longer display waveforms
-max_displayed_frames = 1500
+max_displayed_frames = 150000
 
 # (frame_image_height, draw_image_height, draw_image_first_row)
 LARGE_TRACK_DRAW_CONSTS = (150, 45, 15)
@@ -77,11 +77,14 @@ def maybe_delete_waveforms(clip_list, new_track):
     When clips are moved to other tracks wave images maybe worng size,
     and if so delete wavorm images. Called from edit.py
     """
+    pass
+    """
     for clip in clip_list:
         if clip.waveform_data != None and clip.waveform_data_frame_height != new_track.height:
             waveform_displayer_clips.remove(clip)
             clip.waveform_data = None
             clip.waveform_data_frame_height = -1
+    """
 
 def clear_caches():
     global frames_cache, waveform_displayer_clips, waveform_thread
@@ -107,71 +110,85 @@ class WaveformCreator(threading.Thread):
     def run(self):
         global waveform_displayer_clip, frames_cache
 
+        # Display wait/busy cursor
         watch = gtk.gdk.Cursor(gtk.gdk.WATCH)
         gui.editor_window.window.window.set_cursor(watch)
         while(gtk.events_pending()):
             gtk.main_iteration()
         
-        pix_per_frame = updater.PIX_PER_FRAME_MAX
-        width = int(math.ceil(pix_per_frame))
+        #s = time.time()
         
+        # Get clip data
         clip = self.clip
         clip.waveform_data = None # attempted draws won't draw half done image array
         in_frame = clip.clip_in
         out_frame = clip.clip_out
 
-        if self.track_height == appconsts.TRACK_HEIGHT_SMALL or self.track_height == appconsts.TRACK_HEIGHT_SMALLEST:
-            frame_image_height, draw_image_height, draw_image_first_row = SMALL_TRACK_DRAW_CONSTS
-        else:
-            frame_image_height, draw_image_height, draw_image_first_row = LARGE_TRACK_DRAW_CONSTS
-
+        # Get calculated and cached values for  media object frame audio levels
         try:
-            large_track_frames, small_track_frames = frames_cache[clip.path]
+            prerendered_frames = frames_cache[clip.path]
         except KeyError:
             clip_media_length = PROJECT().get_media_file_for_path(clip.path).length
-            large_track_frames = []
-            small_track_frames = []
+            prerendered_frames = []
             for i in range(0, clip_media_length + 1):
-                large_track_frames.append(None)
-                small_track_frames.append(None)
-            frames_cache[clip.path] = (large_track_frames, small_track_frames)
+                prerendered_frames.append(None)
+            frames_cache[clip.path] = prerendered_frames
 
-        if self.track_height == appconsts.TRACK_HEIGHT_SMALL:
-            prerendered_frames = small_track_frames
-        else:
-            prerendered_frames = large_track_frames
-            
-        frame_images = []
+        # Calculate missing frame levels for current displayed clip area
+        # Update cache values of media object and create waveform data for clip object 
+        values = []
+        WAVE_IMG_HEIGHT = 50
+        WAVE_IMG_WIDTH = 10
+        VAL_MIN = 5100.0
+        VAL_MAX = 25000.0
+        VAL_RANGE = VAL_MAX - VAL_MIN
         for frame in range(in_frame, out_frame + 1):
             clip.seek(frame)
-            frame_img = prerendered_frames[frame] 
-            if frame_img == None:
-                wave_img_array = mlt.frame_get_waveform(clip.get_frame(), width, frame_image_height)
-                frame_img = self._draw_bitmap(wave_img_array, width, draw_image_height, draw_image_first_row)
-                prerendered_frames[frame] = frame_img
+            val = prerendered_frames[frame] 
+            if val == None:
+                wave_img_array = mlt.frame_get_waveform(clip.get_frame(), 10, 50)
+                val = 0
+                for i in range(0, len(wave_img_array)):
+                    val += max(struct.unpack("B", wave_img_array[i]))
+                if val > VAL_MAX:
+                    val = VAL_MAX
+                val = val - VAL_MIN
+                val = math.sqrt(float(val) / VAL_RANGE)
+                
+                prerendered_frames[frame] = val
 
-            frame_images.append(frame_img)
+            values.append(val)
 
             if self.abort == True:
                 break
-                
+            
             if (frame - in_frame) > 0 and ((frame - in_frame) % RENDERING_FRAME_DISPLAY_STEP) == 0:
-                clip.waveform_data = frame_images
+                clip.waveform_data = values
                 updater.repaint_tline()
                 while(gtk.events_pending()):
                     gtk.main_iteration()
-
-        clip.waveform_data = frame_images
-        clip.waveform_data_frame_height = self.track_height
+                    
+        """
+        e = time.time()
+        for i in range(0, 3220):#len(values)):
+            print i, values[i]
+        print "dur:", (e - s)
+        """
+        
+        # Set clip wavorm data and display
+        clip.waveform_data = values
         self._update_displayed(clip)
-
+        
+        # Display normal cursor
         normal_cursor = gtk.gdk.Cursor(gtk.gdk.LEFT_PTR)
         gui.editor_window.window.window.set_cursor(normal_cursor)
         updater.repaint_tline()
         
+        # Set thread ref to None to flag that no waveforms are being created
         global waveform_thread
         waveform_thread = None
 
+    """
     def _draw_bitmap(self, wave_img_array, w, h, start_line):
         pix_buf_array = numpy.zeros([h, w, 4],'B')
         for x in range(0, w):
@@ -181,6 +198,7 @@ class WaveformCreator(threading.Thread):
                 pix_buf_array[y][x] = (0, 0, 0, val) # image is full black, pattern is in alpha
 
         return gtk.gdk.pixbuf_new_from_array(pix_buf_array, gtk.gdk.COLORSPACE_RGB, 8)
+    """
 
     def _update_displayed(self, clip):
         global waveform_displayer_clips

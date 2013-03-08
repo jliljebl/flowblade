@@ -921,7 +921,7 @@ def display_clip_popup_menu(event, clip, track, callback):
     _add_separetor(clip_menu)
 
     if clip.waveform_data == None:
-       clip_menu.add(_get_menu_item(_("Display Waveform"), callback,\
+       clip_menu.add(_get_menu_item(_("Display Audio Level"), callback,\
                   (clip, track, "display_waveform", event.x), True))
     else:
        clip_menu.add(_get_menu_item(_("Clear Waveform"), callback,\
@@ -997,7 +997,7 @@ def display_audio_clip_popup_menu(event, clip, track, callback):
     _add_separetor(clip_menu)
 
     if clip.waveform_data == None:
-       clip_menu.add(_get_menu_item(_("Display Waveform"), callback,\
+       clip_menu.add(_get_menu_item(_("Display Audio Level"), callback,\
                   (clip, track, "display_waveform", event.x), True))
     else:
        clip_menu.add(_get_menu_item(_("Clear Waveform"), callback,\

@@ -54,8 +54,8 @@ FILL_MIN = 1 # if clip shorter, no fill
 TEXT_X = 6 # pos for clip text
 TEXT_Y = 29 
 TEXT_Y_SMALL = 17
-WAVEFORM_PAD_LARGE = 3
-WAVEFORM_PAD_SMALL = 1
+WAVEFORM_PAD_LARGE = 9
+WAVEFORM_PAD_SMALL = 4
 MARK_PAD = 6
 MARK_LINE_WIDTH = 4
 
@@ -876,17 +876,33 @@ class TimeLineCanvas:
 
             # Draw audio waveform
             if clip.waveform_data != None and scale_length > FILL_MIN:
+                cr.set_source_rgb(0, 0, 0)
                 if track.height == sequence.TRACK_HEIGHT_NORMAL:
                     y_pad = WAVEFORM_PAD_LARGE
+                    bar_height = 40.0
                 else:
                     y_pad = WAVEFORM_PAD_SMALL
-                waveform_pix_count = len(clip.waveform_data)
-                if clip.get_length() < waveform_pix_count:
-                    waveform_pix_count = clip.get_length()
-                for i in range(0, waveform_pix_count):
+                    bar_height = 20.0
+                level_pix_count = len(clip.waveform_data)
+                if clip.get_length() < level_pix_count:
+                    level_pix_count = clip.get_length()
+                draw_pix_per_frame = pix_per_frame
+                if draw_pix_per_frame < 1:
+                    draw_pix_per_frame = 1
+                    step = int(1 / pix_per_frame)
+                    if step < 1:
+                        step = 1
+                else:
+                    step = 1
+                draw_pix_per_frame += 0.5
+                for i in range(0, level_pix_count, step):
                     x = scale_in + i * pix_per_frame
-                    cr.set_source_pixbuf(clip.waveform_data[i], x, y + y_pad)
-                    cr.paint()
+                    h = bar_height * clip.waveform_data[i]
+                    if h < 1:
+                        h = 1
+                    cr.rectangle(x, y + y_pad + (bar_height - h), draw_pix_per_frame, h)
+                    cr.fill()
+                print level_pix_count, step, pix_per_frame, int(1 / pix_per_frame)
 
             # Draw text and filter, sync icons
             if scale_length > TEXT_MIN:
