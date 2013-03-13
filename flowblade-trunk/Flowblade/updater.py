@@ -338,6 +338,7 @@ def display_clip_in_monitor(reset_saved_frames=True):
     display_marks_tc()
     
     gui.pos_bar.widget.grab_focus()
+    gui.media_list_view.widget.queue_draw()
     
     if editorpersistance.prefs.auto_play_in_clip_monitor == True:
         PLAYER().start_playback()

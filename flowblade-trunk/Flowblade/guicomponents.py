@@ -681,6 +681,7 @@ class MediaPanel():
         self.columns = editorpersistance.prefs.media_columns
         self.media_file_popup_cb = media_file_popup_cb
         self.double_click_cb = double_click_cb
+        self.monitor_indicator = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "monitor_indicator.png")
         
     def get_selected_media_objects(self):
         return self.selected_objects
@@ -708,6 +709,7 @@ class MediaPanel():
                                           event)
         elif event.type == gtk.gdk._2BUTTON_PRESS:
              print "double click"
+        self.widget.queue_draw()
 
     def empty_pressed(self, widget, event):
         self.clear_selection()
@@ -736,8 +738,9 @@ class MediaPanel():
         row_box.set_size_request(MEDIA_OBJECT_WIDGET_WIDTH * self.columns, MEDIA_OBJECT_WIDGET_HEIGHT)
         for file_id in current_bin().file_ids:
             media_file = PROJECT().media_files[file_id]
-            media_object = MediaObjectWidget(media_file, self.media_object_selected, bin_index)
+            media_object = MediaObjectWidget(media_file, self.media_object_selected, bin_index, self.monitor_indicator)
             dnd.connect_media_files_object_widget(media_object.widget)
+            dnd.connect_media_files_object_cairo_widget(media_object.img)
             row_box.pack_start(media_object.widget, False, False, 0)
             column += 1
             if column == self.columns:
@@ -770,11 +773,12 @@ class MediaPanel():
 
 class MediaObjectWidget:
     
-    def __init__(self, media_file, selected_callback, bin_index):
+    def __init__(self, media_file, selected_callback, bin_index, indicator_icon):
         self.media_file = media_file
         self.selected_callback = selected_callback
         self.bin_index = bin_index
-
+        self.indicator_icon = indicator_icon
+        self.selected_callback = selected_callback
         self.widget = gtk.EventBox()
         self.widget.connect("button-press-event", lambda w,e: selected_callback(self, w, e))
         self.widget.dnd_media_widget_attr = True # this is used to identify widget at dnd drop
@@ -786,18 +790,34 @@ class MediaObjectWidget:
         
         self.vbox = gtk.VBox()
 
-        img = gtk.Image()
-        img.set_from_pixbuf(media_file.icon)
+        self.img = CairoDrawableArea(appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT, self._draw_icon)
+        self.img.press_func = self._press
+        self.img.dnd_media_widget_attr = True # this is used to identify widget at dnd drop
+
+        # Return these if there id problem with CairoDrawableArea icons, these get a lot of draw callbacks 
+        #img = gtk.Image() 
+        #img.set_from_pixbuf(media_file.icon)
         txt = gtk.Label(media_file.name)
         txt.modify_font(pango.FontDescription("sans 9"))
         txt.set_ellipsize(pango.ELLIPSIZE_END)
 
-        self.vbox.pack_start(img, True, True, 0)
+        self.vbox.pack_start(self.img, True, True, 0)
         self.vbox.pack_start(txt, False, False, 0)
         
         self.align.add(self.vbox)
         
         self.widget.add(self.align)
+
+    def _press(self, event):
+        self.selected_callback(self, self.widget, event)
+        
+    def _draw_icon(self, event, cr, allocation):
+        x, y, w, h = allocation
+        cr.set_source_pixbuf(self.media_file.icon, 0, 0)
+        cr.paint()
+        if self.media_file == editorstate.MONITOR_MEDIA_FILE():
+            cr.set_source_pixbuf(self.indicator_icon, 29, 22)
+            cr.paint()     
 
 
 # -------------------------------------------- context menus

@@ -879,7 +879,7 @@ class TimeLineCanvas:
                 if not clip.selected:
                     cr.set_source_rgb(0, 0, 0)
                 else:
-                    cr.set_source_rgb(0.5, 0.5, 0.5)
+                    cr.set_source_rgb(0.4, 0.4, 0.4)
                 if track.height == sequence.TRACK_HEIGHT_NORMAL:
                     y_pad = WAVEFORM_PAD_LARGE
                     bar_height = 40.0
@@ -917,7 +917,6 @@ class TimeLineCanvas:
                 cr.set_font_size(11)
                 cr.move_to(scale_in + TEXT_X, y + text_y)
                 cr.show_text(clip.name.upper())
-                #cr.show_text(str(clip.id).upper())
                 
                 icon_slot = 0
                 # Filter icon

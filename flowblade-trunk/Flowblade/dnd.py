@@ -65,6 +65,13 @@ def connect_media_files_object_widget(widget):
     widget.connect_after('drag_begin', _media_files_drag_begin)
     widget.connect("drag_data_get", _media_files_drag_data_get)
     
+def connect_media_files_object_cairo_widget(widget):
+    widget.drag_source_set(gtk.gdk.BUTTON1_MASK,
+                           [MEDIA_FILES_DND_TARGET], 
+                           gtk.gdk.ACTION_COPY)
+    widget.connect_after('drag_begin', _media_files_drag_begin)
+    widget.connect("drag_data_get", _media_files_drag_data_get)
+    
 def connect_bin_tree_view(treeview, move_files_to_bin_func):
     treeview.enable_model_drag_dest([MEDIA_FILES_DND_TARGET],
                                     gtk.gdk.ACTION_DEFAULT)
@@ -158,7 +165,7 @@ def _on_tline_drop(widget, context, x, y, timestamp, do_effect_drop_func, do_med
     if context.get_source_widget() == gui.effect_select_list_view.treeview:
         do_effect_drop_func(x, y)
         gui.tline_canvas.widget.grab_focus()
-    elif hasattr(context.get_source_widget(), "dnd_media_widget_attr"):
+    elif hasattr(context.get_source_widget(), "dnd_media_widget_attr") or hasattr(context.get_source_widget(), "dnd_media_widget_attr"):
         media_file = drag_data[0].media_file
         do_media_drop_func(media_file, x, y)
         gui.tline_canvas.widget.grab_focus()

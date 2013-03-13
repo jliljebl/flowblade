@@ -52,9 +52,6 @@ PROP_INT = 0
 PROP_FLOAT = 1
 PROP_EXPRESSION = 2
 
-# Pattern producer types. Currently only 1 available.
-#COLOR_CLIP = 1
-
 # Display heights for tracks.
 TRACK_HEIGHT_NORMAL = 50 # track height in canvas and column
 TRACK_HEIGHT_SMALL = 25 # track height in canvas and column
@@ -81,7 +78,7 @@ TRACK_MUTE_VIDEO = 1
 TRACK_MUTE_AUDIO = 2
 TRACK_MUTE_ALL = 3
 
-# XML Attribute and element names
+# XML Attribute and element names used in multiple modules
 NAME = "name"
 ARGS = "args"
 PROPERTY = "property"
