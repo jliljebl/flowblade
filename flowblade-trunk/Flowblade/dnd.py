@@ -42,6 +42,12 @@ STRING_DATA_BITS = 8
 
 drag_data = None # Temp. holding for data during drag.
 
+clip_icon = None
+
+def init():
+    global clip_icon
+    clip_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "clip_dnd.png")
+
 # ----------------------------------------------- set gui components as drag sources and destinations
 """
 def connect_media_files_tree_view(tree_view):
@@ -102,7 +108,7 @@ def _media_files_drag_begin(treeview, context):
 def _media_files_drag_begin(treeview, context):
     _save_media_panel_selection()
     media_object = drag_data[0]
-    context.set_icon_pixbuf(media_object.media_file.icon, MEDIA_ICON_WIDTH, MEDIA_ICON_HEIGHT)
+    context.set_icon_pixbuf(clip_icon, 30, 15)
 
 """
 def _media_files_drag_data_get(treeview, context, selection, target_id, timestamp):

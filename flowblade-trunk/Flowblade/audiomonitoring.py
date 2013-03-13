@@ -216,7 +216,7 @@ class AudioMonitorWindow(gtk.Window):
         self.set_title(_("Audio Mixer"))
         self.show_all()
         self.set_resizable(False)
-        
+        self.set_keep_above(True) # Perhaps configurable later
 
 class MetersArea:
     def __init__(self, meters_count):

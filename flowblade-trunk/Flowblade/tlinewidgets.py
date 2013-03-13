@@ -874,9 +874,12 @@ class TimeLineCanvas:
                     cr.set_source_rgb(*stripe_color)
                     cr.fill()
 
-            # Draw audio waveform
+            # Draw audio level data
             if clip.waveform_data != None and scale_length > FILL_MIN:
-                cr.set_source_rgb(0, 0, 0)
+                if not clip.selected:
+                    cr.set_source_rgb(0, 0, 0)
+                else:
+                    cr.set_source_rgb(0.5, 0.5, 0.5)
                 if track.height == sequence.TRACK_HEIGHT_NORMAL:
                     y_pad = WAVEFORM_PAD_LARGE
                     bar_height = 40.0
@@ -902,7 +905,6 @@ class TimeLineCanvas:
                         h = 1
                     cr.rectangle(x, y + y_pad + (bar_height - h), draw_pix_per_frame, h)
                     cr.fill()
-                print level_pix_count, step, pix_per_frame, int(1 / pix_per_frame)
 
             # Draw text and filter, sync icons
             if scale_length > TEXT_MIN:

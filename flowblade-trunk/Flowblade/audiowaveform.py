@@ -36,7 +36,7 @@ import gui
 import tlinewidgets
 import updater
 
-RENDERING_FRAME_DISPLAY_STEP = 500
+RENDERING_FRAME_DISPLAY_STEP = 100
 
 # If adding clip to the ones displaying waveforms makes number of frames displaying 
 # waveforms higher then this, some clips (FIFO) will no longer display waveforms
@@ -74,7 +74,7 @@ def clear_waveform(data):
     
 def maybe_delete_waveforms(clip_list, new_track):
     """
-    When clips are moved to other tracks wave images maybe worng size,
+    When clips are moved to other tracks wave images maybe wrong size,
     and if so delete wavorm images. Called from edit.py
     """
     pass
@@ -140,7 +140,7 @@ class WaveformCreator(threading.Thread):
         WAVE_IMG_HEIGHT = 50
         WAVE_IMG_WIDTH = 10
         VAL_MIN = 5100.0
-        VAL_MAX = 25000.0
+        VAL_MAX = 15000.0
         VAL_RANGE = VAL_MAX - VAL_MIN
         for frame in range(in_frame, out_frame + 1):
             clip.seek(frame)
@@ -167,13 +167,6 @@ class WaveformCreator(threading.Thread):
                 updater.repaint_tline()
                 while(gtk.events_pending()):
                     gtk.main_iteration()
-                    
-        """
-        e = time.time()
-        for i in range(0, 3220):#len(values)):
-            print i, values[i]
-        print "dur:", (e - s)
-        """
         
         # Set clip wavorm data and display
         clip.waveform_data = values
@@ -187,18 +180,6 @@ class WaveformCreator(threading.Thread):
         # Set thread ref to None to flag that no waveforms are being created
         global waveform_thread
         waveform_thread = None
-
-    """
-    def _draw_bitmap(self, wave_img_array, w, h, start_line):
-        pix_buf_array = numpy.zeros([h, w, 4],'B')
-        for x in range(0, w):
-            for y in range(0, h):
-                i = x + (y + start_line) * w
-                val = max(struct.unpack("B", wave_img_array[i]))
-                pix_buf_array[y][x] = (0, 0, 0, val) # image is full black, pattern is in alpha
-
-        return gtk.gdk.pixbuf_new_from_array(pix_buf_array, gtk.gdk.COLORSPACE_RGB, 8)
-    """
 
     def _update_displayed(self, clip):
         global waveform_displayer_clips

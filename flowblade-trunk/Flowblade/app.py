@@ -124,6 +124,7 @@ def main(root_path):
     translations.init_languages()
     translations.load_filters_translations()
     mlttransitions.init_module()
+    dnd.init()
 
     # Load editor prefs and list of recent projects
     editorpersistance.load()
@@ -131,7 +132,7 @@ def main(root_path):
     # Init gtk threads
     gtk.gdk.threads_init()
 
-    # Accept only 
+    # Accept only 1 running instance
     if can_run == False:
         _not_first_instance_exit()
         return
