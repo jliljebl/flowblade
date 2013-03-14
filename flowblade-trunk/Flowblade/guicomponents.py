@@ -711,6 +711,10 @@ class MediaPanel():
              print "double click"
         self.widget.queue_draw()
 
+    def select_media_file(self, media_file):
+        self.clear_selection()
+        self.selected_objects.append(self.widget_for_mediafile[media_file])
+
     def empty_pressed(self, widget, event):
         self.clear_selection()
 
@@ -729,7 +733,7 @@ class MediaPanel():
         for w in self.row_widgets:
             self.widget.remove(w)
         self.row_widgets = []
-
+        self.widget_for_mediafile = {}
         self.selected_objects = []
 
         column = 0
@@ -741,6 +745,7 @@ class MediaPanel():
             media_object = MediaObjectWidget(media_file, self.media_object_selected, bin_index, self.monitor_indicator)
             dnd.connect_media_files_object_widget(media_object.widget)
             dnd.connect_media_files_object_cairo_widget(media_object.img)
+            self.widget_for_mediafile[media_file] = media_object
             row_box.pack_start(media_object.widget, False, False, 0)
             column += 1
             if column == self.columns:
@@ -1072,16 +1077,31 @@ def _get_filters_add_menu_item(event, clip, track, callback):
     return menu_item
 
 def _get_audio_filters_add_menu_item(event, clip, track, callback):
-    menu_item = gtk.MenuItem(_("Add Audio Filter"))
+    menu_item = gtk.MenuItem(_("Add Filter"))
     sub_menu = gtk.Menu()
     menu_item.set_submenu(sub_menu)
     
-    filters_array = mltfilters.get_audio_filters_group()
+    audio_groups = mltfilters.get_audio_filters_groups()
+    for group in audio_groups:
+        group_name, filters_array = group
+        group_item = gtk.MenuItem(group_name)
+        sub_menu.append(group_item)
+        sub_sub_menu = gtk.Menu()
+        group_item.set_submenu(sub_sub_menu)
+        for filter_info in filters_array:
+            filter_item = gtk.MenuItem(translations.get_filter_name(filter_info.name))
+            sub_sub_menu.append(filter_item)
+            filter_item.connect("activate", callback, (clip, track, "add_filter", (event.x, filter_info)))
+            filter_item.show()
+        group_item.show()
+        
+    """
     for filter_info in filters_array:
         filter_item = gtk.MenuItem(translations.get_filter_name(filter_info.name))
         sub_menu.append(filter_item)
         filter_item.connect("activate", callback, (clip, track, "add_filter", (event.x, filter_info)))
         filter_item.show()
+    """
 
     menu_item.show()
     return menu_item
@@ -1214,7 +1234,8 @@ def display_media_file_popup_menu(media_file, callback, event):
     media_file_menu = gtk.Menu()
     # "Open in Clip Monitor" is sent as event id, same for all below
     # See useraction._media_file_menu_item_selected(...)
-    media_file_menu.add(_get_menu_item(_("Rename"), callback,("Rename", media_file, event))) 
+    media_file_menu.add(_get_menu_item(_("Rename"), callback,("Rename", media_file, event)))
+    media_file_menu.add(_get_menu_item(_("Delete"), callback,("Delete", media_file, event))) 
     _add_separetor(media_file_menu)
     media_file_menu.add(_get_menu_item(_("Open in Clip Monitor"), callback,("Open in Clip Monitor", media_file, event))) 
     media_file_menu.add(_get_menu_item(_("File Properties"), callback, ("File Properties", media_file, event)))

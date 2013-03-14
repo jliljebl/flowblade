@@ -246,11 +246,11 @@ def load_icons():
     MUTE_AUDIO_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_audio_mute.png")
     MUTE_VIDEO_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_video_mute.png")
     MUTE_ALL_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_all_mute.png")
-    MARKER_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "marker.png")
+    MARKER_ICON = _load_pixbuf("marker.png")
     TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V.png")
     TRACK_ALL_ON_A_ICON = _load_pixbuf("track_all_on_A.png")
     MUTE_AUDIO_A_ICON = _load_pixbuf("track_audio_mute_A.png") 
-    TC_POINTER_HEAD = _load_pixbuf("tc_pointer_head.png") 
+    TC_POINTER_HEAD = _load_pixbuf("tc_pointer_head.png")
 
 def _load_pixbuf(icon_file):
     return gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + icon_file)
@@ -1027,6 +1027,7 @@ class TimeLineColumn:
         tester = ValueTester(MUTE_SWITCH_WIDTH + center_width, COLUMN_WIDTH, 
                              self.active_listener)
         self.switch_testers.append(tester)
+
         # Center area tester
         tester = ValueTester(MUTE_SWITCH_WIDTH, COLUMN_WIDTH - ACTIVE_SWITCH_WIDTH, 
                              self.center_listener)

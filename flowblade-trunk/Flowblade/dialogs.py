@@ -946,6 +946,7 @@ def marker_name_dialog(frame_str, callback):
     alignment.add(name_select)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
+    dialog.set_default_response(gtk.RESPONSE_ACCEPT)
     _default_behaviour(dialog)
     dialog.connect('response', callback, name_entry)
     dialog.show_all()

@@ -379,15 +379,15 @@ def clone_filter_object(filter_object, mlt_profile):
 def get_compositor_filter(filter_id):
     return compositor_filters[filter_id]
 
-def get_audio_filters_group():
+def get_audio_filters_groups():
     for group_tuple in groups:
         gkey, group = group_tuple
         if gkey == translations.get_filter_group_name("Audio"):
-            return group
-    
-    # If we got here, something went wrong
-    print "no audio filters group found in mltfilters.get_audio_filters_group() !!!!!!!!!!!!!!!!!!!!"
-    return None
+            group_tuple1 = group_tuple
+        if gkey == translations.get_filter_group_name("Audio Filter"):
+            group_tuple2 = group_tuple
+
+    return [group_tuple1, group_tuple2]
 
 def get_volume_filters_info():
     return _volume_filter_info

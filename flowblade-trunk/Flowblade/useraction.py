@@ -779,6 +779,9 @@ def media_file_menu_item_selected(widget, data):
         render.render_frame_buffer_clip(media_file)
     if item_id == "Rename":
         display_media_file_rename_dialog(media_file)
+    if item_id == "Delete":
+        gui.media_list_view.select_media_file(media_file)
+        delete_media_files()
 
 def _select_treeview_on_pos_and_return_row_and_column_title(event, treeview):
     selection = treeview.get_selection()
