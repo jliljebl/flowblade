@@ -183,19 +183,26 @@ def _handle_tline_key_event(event):
     if editorstate.current_is_move_mode():
          # UP ARROW, next cut
         if event.keyval == gtk.keysyms.Up:
-            tline_frame = PLAYER().tracktor_producer.frame()
-            frame = current_sequence().find_next_cut_frame(tline_frame)
-            if frame != -1:
-                PLAYER().seek_frame(frame)
-                return True
+            if editorstate.timeline_visible():
+                tline_frame = PLAYER().tracktor_producer.frame()
+                frame = current_sequence().find_next_cut_frame(tline_frame)
+                if frame != -1:
+                    PLAYER().seek_frame(frame)
+                    return True
+            else:
+                monitorevent.up_arrow_seek_on_monitor_clip()
         
         # DOWN ARROW, prev cut
         if event.keyval == gtk.keysyms.Down:
-            tline_frame = PLAYER().tracktor_producer.frame()
-            frame = current_sequence().find_prev_cut_frame(tline_frame)
-            if frame != -1:
-                PLAYER().seek_frame(frame)
-                return True
+            if editorstate.timeline_visible():
+                tline_frame = PLAYER().tracktor_producer.frame()
+                frame = current_sequence().find_prev_cut_frame(tline_frame)
+                if frame != -1:
+                    PLAYER().seek_frame(frame)
+                    return True
+            else:
+                 monitorevent.down_arrow_seek_on_monitor_clip()
+                 return True
             
         # LEFT ARROW, prev frame
         if event.keyval == gtk.keysyms.Left:
@@ -308,7 +315,31 @@ def _handle_clip_key_event(event):
         if event.keyval == gtk.keysyms.Right:
             PLAYER().seek_delta(1)
             return 
-                 
+
+         # UP ARROW
+        if event.keyval == gtk.keysyms.Up:
+            if editorstate.timeline_visible():
+                tline_frame = PLAYER().tracktor_producer.frame()
+                frame = current_sequence().find_next_cut_frame(tline_frame)
+                if frame != -1:
+                    PLAYER().seek_frame(frame)
+                    return True
+            else:
+                 monitorevent.up_arrow_seek_on_monitor_clip()
+                 return True
+        
+         # DOWN ARROW, prev cut
+        if event.keyval == gtk.keysyms.Down:
+            if editorstate.timeline_visible():
+                tline_frame = PLAYER().tracktor_producer.frame()
+                frame = current_sequence().find_prev_cut_frame(tline_frame)
+                if frame != -1:
+                    PLAYER().seek_frame(frame)
+                    return True
+            else:
+                 monitorevent.down_arrow_seek_on_monitor_clip()
+                 return True
+
         # SPACE
         if event.keyval == gtk.keysyms.space:
             if PLAYER().is_playing():

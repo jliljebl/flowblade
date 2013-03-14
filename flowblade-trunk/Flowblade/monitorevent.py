@@ -211,3 +211,33 @@ def _do_marks_update():
         MONITOR_MEDIA_FILE().mark_out = producer.mark_out
         
     gui.pos_bar.update_display_from_producer(producer)
+
+# ------------------------------------------------------------ clip arrow seeks
+def up_arrow_seek_on_monitor_clip():
+    current_frame = PLAYER().producer.frame()
+
+    if current_frame < MONITOR_MEDIA_FILE().mark_in:
+        PLAYER().seek_frame(MONITOR_MEDIA_FILE().mark_in)
+        return 
+
+    if current_frame < MONITOR_MEDIA_FILE().mark_out:
+        PLAYER().seek_frame(MONITOR_MEDIA_FILE().mark_out)
+        return 
+
+    PLAYER().seek_frame(PLAYER().producer.get_length() - 1)
+
+def down_arrow_seek_on_monitor_clip():
+    current_frame = PLAYER().producer.frame()
+    mark_in = MONITOR_MEDIA_FILE().mark_in
+    mark_out = MONITOR_MEDIA_FILE().mark_out
+
+    if current_frame > mark_out and mark_out != -1:
+        PLAYER().seek_frame(MONITOR_MEDIA_FILE().mark_out)
+        return 
+
+    if current_frame > mark_in and mark_in != -1:
+        PLAYER().seek_frame(MONITOR_MEDIA_FILE().mark_in)
+        return 
+
+    PLAYER().seek_frame(0)
+    
