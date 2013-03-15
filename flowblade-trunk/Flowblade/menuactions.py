@@ -29,6 +29,7 @@ import threading
 import webbrowser
 import time
 
+import appconsts
 import editorpersistance
 import dialogs
 import dialogutils
@@ -100,8 +101,6 @@ class RecreateIconsThread(threading.Thread):
         gui.bin_list_view.fill_data_model()
         useraction._enable_save()
         
-        selection = gui.media_list_view.treeview.get_selection()
-        selection.select_path("0")
         gtk.gdk.threads_leave()
 
 
