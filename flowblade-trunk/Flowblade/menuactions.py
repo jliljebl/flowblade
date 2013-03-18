@@ -268,7 +268,7 @@ def _profiles_manager_save_profile_clicked(widgets, user_profiles_view):
     file_contents += "display_aspect_den=" + d_rate_dem.get_text() + "\n"
 
     profile_path = utils.get_hidden_user_dir_path() + mltprofiles.USER_PROFILES_DIR + profile_file_name
-    
+
     if os.path.exists(profile_path):
         dialogutils.warning_message("Profile '" +  description.get_text() + "' already exists!", \
                                 "Delete profile and save again.",  gui.editor_window.window)
