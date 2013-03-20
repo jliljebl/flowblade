@@ -96,6 +96,15 @@ def key_down(widget, event):
     if event.keyval == gtk.keysyms.Delete:
         return _handle_delete()
 
+    # Home
+    if event.keyval == gtk.keysyms.Home:
+        if PLAYER().is_playing():
+            monitorevent.stop_pressed()
+        PLAYER().seek_frame(0)
+        return True
+
+    # End
+    
     # Pressing space when media file selected is interpreted as row activation which will open
     # that media file in clip monitor, but we want play/pause *unless* item's name is being edited.
     """

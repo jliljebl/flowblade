@@ -184,7 +184,8 @@ MARK_COLOR = (0.1, 0.1, 0.1)
 FRAME_SCALE_COLOR_GRAD = (1, 0.8, 0.8, 0.8, 1)
 FRAME_SCALE_COLOR_GRAD_L = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, GRAD_MULTIPLIER) 
 
-BG_COLOR = (0.6, 0.6, 0.65)
+BG_COLOR = (0.5, 0.5, 0.55)#(0.6, 0.6, 0.65)
+TRACK_BG_COLOR = (0.25, 0.25, 0.27)#(0.6, 0.6, 0.65)
 
 COLUMN_ACTIVE_COLOR = (0.36, 0.37, 0.37)
 COLUMN_NOT_ACTIVE_COLOR = (0.65, 0.65, 0.65)
@@ -632,7 +633,8 @@ class TimeLineCanvas:
     GUI component for editing clips
     """
 
-    def __init__(self, press_listener, move_listener, release_listener, double_click_listener, mouse_scroll_listener):
+    def __init__(self, press_listener, move_listener, release_listener, double_click_listener,
+                    mouse_scroll_listener, leave_notify_listener, enter_notify_listener):
         # Create widget and connect listeners
         self.widget = CairoDrawableArea(WIDTH, 
                                         HEIGHT, 
@@ -648,6 +650,9 @@ class TimeLineCanvas:
         self.release_listener = release_listener
         self.double_click_listener = double_click_listener
 
+        self.widget.leave_notify_func = leave_notify_listener
+        self.widget.enter_notify_func = enter_notify_listener
+        
         # Edit mode
         self.edit_mode_data = None
         self.edit_mode_overlay_draw_func = draw_insert_overlay
@@ -701,7 +706,7 @@ class TimeLineCanvas:
         cr.set_source_rgb(*BG_COLOR)
         cr.rectangle(0, 0, w, h)
         cr.fill()
-    
+        
         # Draw tracks
         for i in range(1, len(current_sequence().tracks) - 1): # black and hidden tracks are ignored
             self.draw_track(cr
@@ -740,7 +745,7 @@ class TimeLineCanvas:
             text_y = TEXT_Y
         else:
             text_y = TEXT_Y_SMALL
-
+            
         # Get clip indexes for clips in first and last displayed frame.
         start = track.get_clip_index_at(int(pos))
         end = track.get_clip_index_at(int(pos + width / pix_per_frame))

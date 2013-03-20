@@ -185,10 +185,11 @@ def _show_buttons_TC_MIDDLE_layout(widget):
     editorpersistance.prefs.midbar_tc_left = False
     editorpersistance.save()
 
-def create_edit_buttons_row_buttons(editor_window):
+def create_edit_buttons_row_buttons(editor_window, modes_pixbufs):
     IMG_PATH = respaths.IMAGE_PATH
     
     editor_window.big_TC = guicomponents.BigTCDisplay()
+    editor_window.modes_selector = guicomponents.ToolSelector(editor_window.mode_selector_pressed, modes_pixbufs, 40, 22)
 
     editor_window.zoom_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
     editor_window.zoom_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "zoom_in.png"), updater.zoom_in)
@@ -233,14 +234,15 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     w = window
     buttons_row.pack_start(w.big_TC.widget, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, 30), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
-    buttons_row.pack_start(_get_mode_buttons_panel(), False, True, 0)
+    buttons_row.pack_start(w.modes_selector.widget, False, True, 0)
+    #buttons_row.pack_start(_get_mode_buttons_panel(), False, True, 0)
     buttons_row.pack_start(gtk.Label(), True, True, 0)
     if editorstate.SCREEN_WIDTH > 1279:
         buttons_row.pack_start(_get_tools_buttons(), False, True, 0)
         buttons_row.pack_start(gtk.Label(), True, True, 0)
     buttons_row.pack_start(_get_undo_buttons_panel(), False, True, 0)
     buttons_row.pack_start(gtk.Label(), True, True, 0)
-    buttons_row.pack_start(_get_zoom_buttons_panel(), False, True, 10)
+    buttons_row.pack_start(_get_zoom_buttons_panel(), False, True, 0)
     buttons_row.pack_start(gtk.Label(), True, True, 0)
     buttons_row.pack_start(_get_edit_buttons_panel(), False, True, 0)
     buttons_row.pack_start(gtk.Label(), True, True, 0)

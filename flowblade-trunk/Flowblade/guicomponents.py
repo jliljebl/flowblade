@@ -1613,6 +1613,17 @@ def get_monitor_view_popupmenu(launcher, event, callback):
         respaths.IMAGE_PATH + "rgbparade.png"), _("RGB Parade"), callback, 2))
     menu.popup(None, None, None, event.button, event.time)
 
+def get_mode_selector_popup_menu(launcher, event, callback):
+    menu = gtk.Menu()
+    menu.add(_get_image_menu_item(gtk.image_new_from_file(
+        respaths.IMAGE_PATH + "insertmove_cursor.png"), _("Insert Move"), callback, 0))
+    menu.add(_get_image_menu_item(gtk.image_new_from_file(
+        respaths.IMAGE_PATH + "overwrite_cursor.png"), _("Overwrite Move"), callback, 1))
+    menu.add(_get_image_menu_item(gtk.image_new_from_file(
+        respaths.IMAGE_PATH + "oneroll_left_cursor.png"), _("One Roll Trim"), callback, 2))
+    menu.add(_get_image_menu_item(gtk.image_new_from_file(
+        respaths.IMAGE_PATH + "tworoll_cursor.png"), _("Two Roll Trim"), callback, 3))
+    menu.popup(None, None, None, event.button, event.time)
 
 class PressLaunch:
     def __init__(self, callback, pixbuf, w=22, h=22):
@@ -1650,3 +1661,17 @@ class ImageMenuLaunch(PressLaunch):
         self.pixbuf = self.pixbuf_list[pixbuf_index]
         self.widget.queue_draw()
         
+
+class ToolSelector(ImageMenuLaunch):
+
+    def _draw(self, event, cr, allocation):
+ 
+        
+        PressLaunch._draw(self, event, cr, allocation)
+        
+        cr.move_to(27, 13)
+        cr.line_to(32, 18)
+        cr.line_to(37, 13)
+        cr.close_path()
+        cr.set_source_rgb(0, 0, 0)
+        cr.fill()

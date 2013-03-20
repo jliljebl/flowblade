@@ -125,7 +125,8 @@ def set_default_edit_mode():
     NOTE: As this uses 'programmed click', this method does nothing if insert mode button
     is already down.
     """
-    updater.set_mode_button_active(editorstate.INSERT_MOVE)
+    gui.editor_window.handle_insert_move_mode_button_press()
+    gui.editor_window.set_mode_selector_to_mode()
     
 def exit_trimmodes():
     # Stop trim mode looping using trimmodes.py methods for it

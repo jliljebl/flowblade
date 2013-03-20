@@ -56,6 +56,7 @@ import syncsplitevent
 import test
 import titler
 import tlinewidgets
+import trimmodes
 import useraction
 import updater
 import utils
@@ -82,6 +83,12 @@ EFFECT_SELECT_EDITOR_HEIGHT = 140
 
 IMG_PATH = None
 
+# Cursors
+OVERWRITE_CURSOR = None
+INSERTMOVE_CURSOR = None
+ONEROLL_LEFT_CURSOR = None
+ONEROLL_RIGHT_CURSOR = None
+TWOROLL_CURSOR = None
 
 def _b(button, icon, remove_relief=False):
     button.set_image(icon)
@@ -102,6 +109,14 @@ class EditorWindow:
     def __init__(self):
         global IMG_PATH
         IMG_PATH = respaths.IMAGE_PATH 
+
+        # Read cursors
+        global INSERTMOVE_CURSOR, OVERWRITE_CURSOR, TWOROLL_CURSOR, ONEROLL_LEFT_CURSOR, ONEROLL_RIGHT_CURSOR
+        INSERTMOVE_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "insertmove_cursor.png")
+        OVERWRITE_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "overwrite_cursor.png")
+        TWOROLL_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "tworoll_cursor.png")
+        ONEROLL_LEFT_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "oneroll_left_cursor.png")
+        ONEROLL_RIGHT_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "oneroll_right_cursor.png")
 
         # Window
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
@@ -422,7 +437,6 @@ class EditorWindow:
         player_buttons_row = gtk.HBox(False, 0)
 
         player_buttons_row.pack_start(self.player_buttons.widget, False, True, 0)
-        #player_buttons_row.pack_start(gtk.Label(), True, True, 0)
         player_buttons_row.pack_start(self.monitor_source, True, True, 0)
 
         # Creates monitor switch buttons
@@ -472,7 +486,6 @@ class EditorWindow:
         self.top_paned = gtk.HPaned()
         self.top_paned.pack1(notebook_vbox, resize=False, shrink=False)
         self.top_paned.pack2(monitor_frame, resize=True, shrink=False)
-        #self.top_paned.connect("size-allocate", self.top_paned_resized)
 
         # top row
         self.top_row_hbox = gtk.HBox(False, 0)
@@ -523,8 +536,10 @@ class EditorWindow:
             editevent.tline_canvas_mouse_moved,
             editevent.tline_canvas_mouse_released,
             editevent.tline_canvas_double_click,
-            updater.mouse_scroll_zoom)
-            
+            updater.mouse_scroll_zoom,
+            self.tline_cursor_leave, 
+            self.tline_cursor_enter)
+
         dnd.connect_tline(self.tline_canvas.widget, editevent.tline_effect_drop,  
                           editevent.tline_media_drop)
 
@@ -536,6 +551,7 @@ class EditorWindow:
         # Bottom row filler
         left_corner = gtk.Label()
         left_corner.set_size_request(tlinewidgets.COLUMN_WIDTH, 20)
+
         # Timeline scroller
         self.tline_scroller = tlinewidgets.TimeLineScroller(updater.tline_scrolled)
         
@@ -646,7 +662,8 @@ class EditorWindow:
         self.pos_bar.set_listener(mltplayer.seek_position_normalized)
 
     def _get_edit_buttons_row(self):
-        windowviewmenu.create_edit_buttons_row_buttons(self)
+        modes_pixbufs = [INSERTMOVE_CURSOR, OVERWRITE_CURSOR, ONEROLL_LEFT_CURSOR, TWOROLL_CURSOR]
+        windowviewmenu.create_edit_buttons_row_buttons(self, modes_pixbufs)
     
         buttons_row = gtk.HBox(False, 1)
         if editorpersistance.prefs.midbar_tc_left == True:
@@ -674,15 +691,75 @@ class EditorWindow:
 
     def handle_over_move_mode_button_press(self):
         editevent.overwrite_move_mode_pressed()
+        self.set_cursor_to_mode()
 
     def handle_insert_move_mode_button_press(self):
         editevent.insert_move_mode_pressed()
+        self.set_cursor_to_mode()
 
     def handle_one_roll_mode_button_press(self):
         editevent.oneroll_trim_mode_pressed()
+        self.set_cursor_to_mode()
 
     def handle_two_roll_mode_button_press(self):
         editevent.tworoll_trim_mode_pressed()
+        self.set_cursor_to_mode()
+
+    def mode_selector_pressed(self, selector, event):
+        guicomponents.get_mode_selector_popup_menu(selector, event, self._mode_selector_item_activated)
+    
+    def _mode_selector_item_activated(self, selector, mode):
+        if mode == 0:
+            self.handle_insert_move_mode_button_press()
+        if mode == 1:
+            self.handle_over_move_mode_button_press()
+        if mode == 2:
+            self.handle_one_roll_mode_button_press()
+        if mode == 3:
+            self.handle_two_roll_mode_button_press()
+        
+        self.set_cursor_to_mode()
+        self.set_mode_selector_to_mode()
+        
+    def set_cursor_to_mode(self):
+        if editorstate.cursor_on_tline == True:
+            display = gtk.gdk.display_get_default()
+            gdk_window = gui.tline_display.get_parent_window()
+            if editorstate.EDIT_MODE() == editorstate.INSERT_MOVE:
+                cursor = gtk.gdk.Cursor(display, INSERTMOVE_CURSOR, 0, 0)
+            elif editorstate.EDIT_MODE() == editorstate.OVERWRITE_MOVE:
+                cursor = gtk.gdk.Cursor(display, OVERWRITE_CURSOR, 6, 15)
+            elif editorstate.EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
+                cursor = gtk.gdk.Cursor(display, TWOROLL_CURSOR, 11, 9)
+            elif editorstate.EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
+                if trimmodes.edit_data["to_side_being_edited"] == False:
+                    cursor = gtk.gdk.Cursor(display, ONEROLL_LEFT_CURSOR, 8, 9)
+                else:
+                    cursor = gtk.gdk.Cursor(display, ONEROLL_RIGHT_CURSOR, 0, 9)
+            else:
+                cursor = gtk.gdk.Cursor(gtk.gdk.LEFT_PTR)
+            gdk_window.set_cursor(cursor)   
+        else:
+            gdk_window = gui.tline_display.get_parent_window();
+            gdk_window.set_cursor(gtk.gdk.Cursor(gtk.gdk.LEFT_PTR))
+
+    def set_mode_selector_to_mode(self):
+        if editorstate.EDIT_MODE() == editorstate.INSERT_MOVE:
+            self.modes_selector.set_pixbuf(0)
+        elif editorstate.EDIT_MODE() == editorstate.OVERWRITE_MOVE:
+            self.modes_selector.set_pixbuf(1)
+        elif editorstate.EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
+            self.modes_selector.set_pixbuf(2)
+        elif editorstate.EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
+            self.modes_selector.set_pixbuf(3)
+
+    def tline_cursor_leave(self, event):
+        editorstate.cursor_on_tline = False
+        self.set_cursor_to_mode()
+
+    def tline_cursor_enter(self, event):
+        editorstate.cursor_on_tline = True
+        self.set_cursor_to_mode()
 
     def top_paned_resized(self, w, req):
         print self.app_v_paned.get_position()

@@ -103,7 +103,6 @@ class RecreateIconsThread(threading.Thread):
         
         gtk.gdk.threads_leave()
 
-
 def recreate_media_file_icons():
     recreate_thread = RecreateIconsThread()
     recreate_thread.start()
