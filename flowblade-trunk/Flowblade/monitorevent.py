@@ -211,7 +211,8 @@ def _do_marks_update():
         MONITOR_MEDIA_FILE().mark_out = producer.mark_out
         
     gui.pos_bar.update_display_from_producer(producer)
-
+    gui.tline_scale.widget.queue_draw()
+    
 # ------------------------------------------------------------ clip arrow seeks
 def up_arrow_seek_on_monitor_clip():
     current_frame = PLAYER().producer.frame()

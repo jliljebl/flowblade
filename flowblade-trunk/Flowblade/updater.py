@@ -383,6 +383,8 @@ def display_sequence_in_monitor():
 
 def switch_monitor_display():
     monitorevent.stop_pressed()
+    if editorstate.MONITOR_MEDIA_FILE() == None:
+        return
     if editorstate._timeline_displayed == True:
         gui.editor_window.clip_editor_b.set_active(True)
     else:

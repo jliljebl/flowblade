@@ -1616,13 +1616,13 @@ def get_monitor_view_popupmenu(launcher, event, callback):
 def get_mode_selector_popup_menu(launcher, event, callback):
     menu = gtk.Menu()
     menu.add(_get_image_menu_item(gtk.image_new_from_file(
-        respaths.IMAGE_PATH + "insertmove_cursor.png"), _("Insert Move"), callback, 0))
+        respaths.IMAGE_PATH + "insertmove_cursor.png"),   _("Insert Move - 1"), callback, 0))
     menu.add(_get_image_menu_item(gtk.image_new_from_file(
-        respaths.IMAGE_PATH + "overwrite_cursor.png"), _("Overwrite Move"), callback, 1))
+        respaths.IMAGE_PATH + "overwrite_cursor.png"),    _("Overwrite Move - 2"), callback, 1))
     menu.add(_get_image_menu_item(gtk.image_new_from_file(
-        respaths.IMAGE_PATH + "oneroll_left_cursor.png"), _("One Roll Trim"), callback, 2))
+        respaths.IMAGE_PATH + "oneroll_left_cursor.png"), _("One Roll Trim - 3"), callback, 2))
     menu.add(_get_image_menu_item(gtk.image_new_from_file(
-        respaths.IMAGE_PATH + "tworoll_cursor.png"), _("Two Roll Trim"), callback, 3))
+        respaths.IMAGE_PATH + "tworoll_cursor.png"),      _("Two Roll Trim - 4"), callback, 3))
     menu.popup(None, None, None, event.button, event.time)
 
 class PressLaunch:
