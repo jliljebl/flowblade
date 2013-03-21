@@ -614,10 +614,9 @@ def _draw_mode_arrow(cr, x, y, color):
     cr.stroke()
     
 def _draw_trim_clip_overlay(cr, start_x, end_x, y, track_height):
-    #cr.set_source_rgba(*CLIP_OVERLAY_COLOR)
     cr.set_source_rgb(1, 1, 1)
     cr.rectangle(start_x, y, end_x - start_x, track_height)
-    cr.fill()
+    cr.stroke()
 
 def _draw_overwrite_clips_overlay(cr, start_x, end_x, y, track_height):
     cr.set_source_rgba(*OWERWRITE_OVERLAY_COLOR)
