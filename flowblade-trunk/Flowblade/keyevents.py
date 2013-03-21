@@ -191,15 +191,19 @@ def _handle_tline_key_event(event):
     # Number edit mode changes
     if event.keyval == gtk.keysyms._1:
         gui.editor_window.handle_insert_move_mode_button_press()
+        gui.editor_window.set_mode_selector_to_mode()
         return True
     if event.keyval == gtk.keysyms._2:
         gui.editor_window.handle_over_move_mode_button_press()
+        gui.editor_window.set_mode_selector_to_mode()
         return True
     if event.keyval == gtk.keysyms._3:
         gui.editor_window.handle_one_roll_mode_button_press()
+        gui.editor_window.set_mode_selector_to_mode()
         return True
     if event.keyval == gtk.keysyms._4:
         gui.editor_window.handle_two_roll_mode_button_press()
+        gui.editor_window.set_mode_selector_to_mode()
         return True
     
     # Key bindings for MOVE MODES
@@ -327,15 +331,19 @@ def _handle_extended_tline_focus_events(event):
     # Number edit mode changes
     if event.keyval == gtk.keysyms._1:
         gui.editor_window.handle_insert_move_mode_button_press()
+        gui.editor_window.set_mode_selector_to_mode()
         return True
     if event.keyval == gtk.keysyms._2:
         gui.editor_window.handle_over_move_mode_button_press()
+        gui.editor_window.set_mode_selector_to_mode()
         return True
     if event.keyval == gtk.keysyms._3:
         gui.editor_window.handle_one_roll_mode_button_press()
+        gui.editor_window.set_mode_selector_to_mode()
         return True
     if event.keyval == gtk.keysyms._4:
         gui.editor_window.handle_two_roll_mode_button_press()
+        gui.editor_window.set_mode_selector_to_mode()
         return True
 
     return False

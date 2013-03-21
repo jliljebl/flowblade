@@ -617,8 +617,12 @@ def _draw_trim_clip_overlay(cr, start_x, end_x, y, track_height):
     #cr.set_source_rgba(*CLIP_OVERLAY_COLOR)
     cr.set_source_rgb(1, 1, 1)
     cr.rectangle(start_x, y, end_x - start_x, track_height)
-    cr.stroke()
-    #cr.fill()
+    cr.fill()
+
+def _draw_overwrite_clips_overlay(cr, start_x, end_x, y, track_height):
+    cr.set_source_rgba(*OWERWRITE_OVERLAY_COLOR)
+    cr.rectangle(start_x, y, end_x - start_x, track_height)
+    cr.fill()
 
 def _draw_view_icon(cr, x, y):
     cr.set_source_pixbuf(VIEW_SIDE_ICON, x, y)

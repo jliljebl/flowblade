@@ -306,6 +306,8 @@ def tline_canvas_mouse_pressed(event, frame):
         trimmodes.clear_temp_clip()
         trimmodes.set_oneroll_mode(track, frame)
         mouse_disabled = True
+        gui.editor_window.set_cursor_to_mode()
+        gui.editor_window.set_mode_selector_to_mode()
     # LEFT BUTTON + CTRL: Select new trimmed clip in two roll trim mode
     elif (event.button == 1 
           and (event.state & gtk.gdk.CONTROL_MASK)
