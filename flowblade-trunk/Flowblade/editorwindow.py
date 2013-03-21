@@ -169,7 +169,11 @@ class EditorWindow:
             ('HelpMenu', None, _('_Help')),
             ('QuickReference', None, _('Contents'), None, None, lambda a:menuactions.quick_reference()),
             ('Environment', None, _('Environment'), None, None, lambda a:menuactions.environment()),
-            ('About', None, _('About'), None, None, lambda a:menuactions.about())
+            ('About', None, _('About'), None, None, lambda a:menuactions.about()),
+            ('InsertMode', None, None, '1', None, lambda a:_this_is_not_used()),
+            ('OverMode', None, None, '2', None, lambda a:_this_is_not_used()),
+            ('OneRollMode', None, None, '3', None, lambda a:_this_is_not_used()),
+            ('TwoRollMode', None, None, '4', None, lambda a:_this_is_not_used())
             ]
 
         menu_string = """<ui>
@@ -229,16 +233,35 @@ class EditorWindow:
                 </menu>
           </menubar>
         </ui>"""
-                    
+        
+        # Create global action group            
         action_group = gtk.ActionGroup('WindowActions')
         action_group.add_actions(menu_actions, user_data=None)
+        
+        # Create UIManager and add accelators to window
         ui = gtk.UIManager()
         ui.insert_action_group(action_group, 0)
         ui.add_ui_from_string(menu_string)
         accel_group = ui.get_accel_group()
         self.window.add_accel_group(accel_group)
+
+        # Get menu bar
         self.menubar = ui.get_widget('/MenuBar')
+        
+        # Set reference to UI manager and acclegroup
         self.uimanager = ui
+        self.accel_group = accel_group
+
+        # Accelerators for edit mode changes
+        """
+        mode_menu_actions = [
+            ('insert', None, None, '1', None, lambda a:_insert_mode_from_menu())]
+        action_group = gtk.ActionGroup('ModeActions')
+        action_group.add_actions(mode_menu_actions, user_data=None)
+        ui.insert_action_group(action_group, 0)
+        accel_group = ui.get_accel_group()
+        self.window.add_accel_group(accel_group)
+        """
 
         # Add recent projects to menu
         editorpersistance.fill_recents_menu_widget(ui.get_widget('/MenuBar/FileMenu/OpenRecent'), useraction.open_recent_project)
@@ -765,4 +788,9 @@ class EditorWindow:
         print self.app_v_paned.get_position()
         print self.top_paned.get_position()
         print self.mm_paned.get_position()
+
+
+
+def _this_is_not_used():
+    print "THIS WAS USED!!!!!"
 
