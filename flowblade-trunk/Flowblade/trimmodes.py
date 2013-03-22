@@ -255,11 +255,19 @@ def oneroll_trim_press(event, frame):
         set_no_edit_mode_func() # no furter mouse events for move and release will come here
         return
     
+    # 
+    if not _pressed_on_one_roll_active_area(frame):
+        track = tlinewidgets.get_track(event.y)
+        success = set_oneroll_mode(track, frame)
+        if not success:
+            set_no_edit_mode_func()
+        return
+
     # Get legal edit delta and set to edit mode data for overlay draw
     global edit_data
     frame = _legalize_one_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
-    delta = frame - edit_data["edit_frame"]
+    #delta = frame - edit_data["edit_frame"]
 
     # Get clip and correct frame to display from it 
     trim_limits = edit_data["trim_limits"]
@@ -276,11 +284,6 @@ def oneroll_trim_move(x, y, frame, state):
     """
     if exiting_mode:
         return
-
-    """
-    if mouse_disabled:
-        return
-    """
 
     # Get legal edit frame for overlay display
     global edit_data
@@ -306,13 +309,6 @@ def oneroll_trim_release(x, y, frame, state):
         clear_temp_clip()
         set_exit_mode_func()
         return
-
-    """
-    global mouse_disabled
-    if mouse_disabled:
-        mouse_disabled = False
-        return
-    """
     
     _do_one_roll_trim_edit(frame)
 
@@ -410,6 +406,25 @@ def _legalize_one_roll_trim(frame, trim_limits):
         frame = last
     
     return frame
+
+def _pressed_on_one_roll_active_area(frame):
+    trim_limits = edit_data["trim_limits"]
+    if edit_data["to_side_being_edited"]:
+        if frame < trim_limits["to_start"]:
+            return False
+        if frame > trim_limits["both_end"]:
+            return False
+        if frame < edit_data["edit_frame"]:
+            return False
+    else:
+        if frame < trim_limits["both_start"]:
+            return False
+        if frame > trim_limits["from_end"]:
+            return False
+        if frame > edit_data["edit_frame"]:
+            return False
+    
+    return True
 
 #---------------------------------------- TWO ROLL TRIM EVENTS
 def set_tworoll_mode(track, current_frame = -1):
