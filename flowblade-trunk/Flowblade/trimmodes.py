@@ -249,10 +249,10 @@ def oneroll_trim_press(event, frame):
     User presses mouse when in one roll mode.
     """
     if not _pressed_on_edited_track(event.y):
-        # Go to INSERT_MOVE mode
-        #global mouse_disabled
-        #mouse_disabled = True
-        set_no_edit_mode_func() # no furter mouse events for move and release will come here
+        track = tlinewidgets.get_track(event.y)
+        success = set_oneroll_mode(track, frame)
+        if not success:
+            set_no_edit_mode_func()
         return
     
     # 
@@ -260,14 +260,13 @@ def oneroll_trim_press(event, frame):
         track = tlinewidgets.get_track(event.y)
         success = set_oneroll_mode(track, frame)
         if not success:
-            set_no_edit_mode_func()
+            set_no_edit_mode_func() # no furter mouse events will come here
         return
 
     # Get legal edit delta and set to edit mode data for overlay draw
     global edit_data
     frame = _legalize_one_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
-    #delta = frame - edit_data["edit_frame"]
 
     # Get clip and correct frame to display from it 
     trim_limits = edit_data["trim_limits"]
