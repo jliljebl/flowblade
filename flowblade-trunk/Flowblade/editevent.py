@@ -127,8 +127,12 @@ def set_default_edit_mode():
     """
     gui.editor_window.handle_insert_move_mode_button_press()
     gui.editor_window.set_mode_selector_to_mode()
-    
-def exit_trimmodes():
+
+def set_post_undo_redo_edit_mode():
+    if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
+        oneroll_trim_no_edit_init()
+
+def stop_looping():
     # Stop trim mode looping using trimmodes.py methods for it
     # Called when entering move modes.
     if PLAYER().looping():
@@ -141,7 +145,7 @@ def insert_move_mode_pressed():
     """
     User selects insert move mode.
     """
-    exit_trimmodes()
+    stop_looping()
     current_sequence().clear_hidden_track()
 
     editorstate.edit_mode = editorstate.INSERT_MOVE
@@ -153,7 +157,7 @@ def overwrite_move_mode_pressed():
     """
     User selects overwrite move mode.
     """
-    exit_trimmodes()
+    stop_looping()
     current_sequence().clear_hidden_track()
 
     editorstate.edit_mode = editorstate.OVERWRITE_MOVE
@@ -161,27 +165,63 @@ def overwrite_move_mode_pressed():
 
     _set_move_mode()
 
-def oneroll_trim_mode_pressed():
-    """
-    User selects one roll mode
-    """
-    track = current_sequence().get_first_active_track()
-    if track == None:
-        return
+def oneroll_trim_no_edit_init():
+    print "oneroll_trim_no_edit_init"
+    stop_looping()
+    editorstate.edit_mode = editorstate.ONE_ROLL_TRIM_NO_EDIT
+    tlinewidgets.set_edit_mode(None, None) # No overlays are drwn in this edit mode
+    movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
+    updater.set_trim_mode_gui()
 
-    if track_lock_check_and_user_info(track, oneroll_trim_mode_pressed, "one roll trim mode"):
-        set_default_edit_mode()
-        return
+def oneroll_trim_no_edit_press(event, frame):
+    print "press"
+    success = oneroll_trim_mode_init(event.x, event.y)
+    if success:
+        pass
+        #global mouse_disabled
+        #mouse_disabled = True # we could just as well do this always since only press matters in ONE_ROLL_TRIM_NO_EDIT 
+    else:
+        print "stay in ONE_ROLL_TRIM_NO_EDIT"
+        editorstate.edit_mode = editorstate.ONE_ROLL_TRIM_NO_EDIT
+
+def oneroll_trim_no_edit_move(x, y, frame, state):
+    pass
+
+def oneroll_trim_no_edit_release(x, y, frame, state):
+    pass # mouse_disabled set False at tline_canvas_mouse_released()
     
-    exit_trimmodes() # Stops looping 
+def oneroll_trim_mode_init(x, y):
+    """
+    User enters ONE_ROLL_TRIM mode from ONE_ROLL_TRIM_NO_EDIT 
+    """
+    track = tlinewidgets.get_track(y)#current_sequence().get_first_active_track()
+    if track == None:
+        return False
+
+    if track_lock_check_and_user_info(track, oneroll_trim_mode_init, "one roll trim mode"):
+        set_default_edit_mode()
+        return False
+
+    stop_looping() 
     editorstate.edit_mode = editorstate.ONE_ROLL_TRIM
 
     movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
     updater.set_trim_mode_gui()
 
     # init mode
+    press_frame = tlinewidgets.get_frame(x)
     trimmodes.set_exit_mode_func = set_default_edit_mode
-    trimmodes.set_oneroll_mode(track)
+    trimmodes.set_no_edit_mode_func = oneroll_trim_no_edit_init
+    success = trimmodes.set_oneroll_mode(track, press_frame)
+    print "enter oneroll success:", success
+    return success
+
+def tworoll_trim_no_edit_init():
+    stop_looping() # Stops looping 
+    editorstate.edit_mode = editorstate.TWO_ROLL_TRIM_NO_EDIT
+
+    movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
+    updater.set_trim_mode_gui()
 
 def tworoll_trim_mode_pressed():
     """
@@ -195,14 +235,13 @@ def tworoll_trim_mode_pressed():
         set_default_edit_mode()
         return
 
-    exit_trimmodes() # Stops looping 
+    stop_looping()
     editorstate.edit_mode = editorstate.TWO_ROLL_TRIM
 
     movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
     updater.set_trim_mode_gui()
 
     trimmodes.set_exit_mode_func = set_default_edit_mode
-    trimmodes.launch_one_roll_trim = oneroll_trim_mode_pressed
     trimmodes.set_tworoll_mode(track)
 
 def _set_move_mode():
@@ -987,9 +1026,15 @@ OVERWRITE_MOVE_FUNCS = [movemodes.overwrite_move_press,
 ONE_ROLL_TRIM_FUNCS = [trimmodes.oneroll_trim_press, 
                        trimmodes.oneroll_trim_move,
                        trimmodes.oneroll_trim_release]
+ONE_ROLL_TRIM_NO_EDIT_FUNCS = [oneroll_trim_no_edit_press, 
+                               oneroll_trim_no_edit_move,
+                               oneroll_trim_no_edit_release]
 TWO_ROLL_TRIM_FUNCS = [trimmodes.tworoll_trim_press,
                        trimmodes.tworoll_trim_move,
                        trimmodes.tworoll_trim_release]
+TWO_ROLL_TRIM_NO_EDIT_FUNCS = [trimmodes.tworoll_trim_no_edit_press,
+                               trimmodes.tworoll_trim_no_edit_move,
+                               trimmodes.tworoll_trim_no_edit_release]
 COMPOSITOR_EDIT_FUNCS = [compositormodes.mouse_press,
                          compositormodes.mouse_move,
                          compositormodes.mouse_release]
@@ -999,8 +1044,10 @@ EDIT_MODE_FUNCS = {editorstate.INSERT_MOVE:INSERT_MOVE_FUNCS,
                    editorstate.OVERWRITE_MOVE:OVERWRITE_MOVE_FUNCS,
                    editorstate.ONE_ROLL_TRIM:ONE_ROLL_TRIM_FUNCS,
                    editorstate.TWO_ROLL_TRIM:TWO_ROLL_TRIM_FUNCS,
-                   editorstate.COMPOSITOR_EDIT:COMPOSITOR_EDIT_FUNCS}
-              
+                   editorstate.COMPOSITOR_EDIT:COMPOSITOR_EDIT_FUNCS,
+                   editorstate.ONE_ROLL_TRIM_NO_EDIT:ONE_ROLL_TRIM_NO_EDIT_FUNCS,
+                   editorstate.TWO_ROLL_TRIM_NO_EDIT:TWO_ROLL_TRIM_NO_EDIT_FUNCS}
+
 # Functions to handle popup menu selections for strings 
 # set as activation messages in guicomponents.py
 # activation_message -> _handler_func

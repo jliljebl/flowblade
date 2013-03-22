@@ -1628,7 +1628,7 @@ def get_mode_selector_popup_menu(launcher, event, callback):
     menu.add(menu_item)
 
     menu_item = _get_image_menu_item(gtk.image_new_from_file(
-        respaths.IMAGE_PATH + "oneroll_left_cursor.png"), _("One Roll Trim"), callback, 2)
+        respaths.IMAGE_PATH + "oneroll_cursor.png"), _("One Roll Trim"), callback, 2)
     menu_item.set_accel_path("<Actions>/WindowActions/OneRollMode")        
     menu.add(menu_item)
 
@@ -1677,10 +1677,7 @@ class ImageMenuLaunch(PressLaunch):
         
 
 class ToolSelector(ImageMenuLaunch):
-
     def _draw(self, event, cr, allocation):
- 
-        
         PressLaunch._draw(self, event, cr, allocation)
         
         cr.move_to(27, 13)

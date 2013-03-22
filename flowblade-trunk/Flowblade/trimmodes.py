@@ -45,14 +45,18 @@ edit_data = None
 # Flag for leaving trim mode
 exiting_mode = False
 
+# Flag for disbling mose event
+mouse_disabled = False
+
 # Flag for temporary blank needed for one roll trim editing track's last clip's out
 temp_blank_added = False
 
 # Function that sets edit mode when exiting with click on empty
 set_exit_mode_func = None
 
-# Relaunch with one roll trim mode full 
-launch_one_roll_trim = None
+# Function that return <X>_NO_EDIT mode that displays trim cursor but no edit is under way 
+set_no_edit_mode_func = None
+
 
 # ------------------------------------ module functions       
 def _get_trim_edit(track, frame):
@@ -171,6 +175,7 @@ def trim_looping_stopped():
                          edit_data["edit_frame"])
 
 
+
 # ------------------------------------- ONE ROLL TRIM EVENTS
 def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     """
@@ -191,8 +196,8 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         to_side_being_edited = editing_to_clip
     if edit_frame == -1:
         print "set_oneroll_mode(), edit_frame == -1"
-        set_exit_mode_func()
-        return
+        #set_exit_mode_func()
+        return False
 
     _set_edit_data(track, edit_frame)
 
@@ -210,7 +215,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         primary_txt = _("Cant ONE ROLL TRIM blank clips.")
         secondary_txt = _("You can use MOVE OVERWRITE or TWO ROLL TRIM edits instead\nto get the desired change.")
         dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
-        return
+        return False
 
     # Give timeline widget needed data
     tlinewidgets.set_edit_mode(edit_data,
@@ -236,6 +241,8 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         
     PLAYER().seek_frame(edit_frame)
     updater.set_stopped_configuration()
+    
+    return True
 
 def oneroll_trim_press(event, frame):
     """
@@ -243,8 +250,9 @@ def oneroll_trim_press(event, frame):
     """
     if not _pressed_on_edited_track(event.y):
         # Go to INSERT_MOVE mode
-        global exiting_mode
-        exiting_mode = True
+        #global mouse_disabled
+        #mouse_disabled = True
+        set_no_edit_mode_func() # no furter mouse events for move and release will come here
         return
     
     # Get legal edit delta and set to edit mode data for overlay draw
@@ -268,7 +276,12 @@ def oneroll_trim_move(x, y, frame, state):
     """
     if exiting_mode:
         return
-        
+
+    """
+    if mouse_disabled:
+        return
+    """
+
     # Get legal edit frame for overlay display
     global edit_data
     frame = _legalize_one_roll_trim(frame, edit_data["trim_limits"])
@@ -294,6 +307,13 @@ def oneroll_trim_release(x, y, frame, state):
         set_exit_mode_func()
         return
 
+    """
+    global mouse_disabled
+    if mouse_disabled:
+        mouse_disabled = False
+        return
+    """
+    
     _do_one_roll_trim_edit(frame)
 
 def _do_one_roll_trim_edit(frame):
@@ -472,7 +492,16 @@ def _tworoll_init_failed_window():
     primary_txt = _("Initializing TWO ROLL TRIM failed")
     secondary_txt = _("You are attempting TWO ROLL TRIM at a position in the timeline\nwhere it can't be performed.")
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
-        
+
+def tworoll_trim_no_edit_press(event, frame):
+    print "press"
+    
+def tworoll_trim_no_edit_move(x, y, frame, state):
+    pass
+
+def tworoll_trim_no_edit_release(x, y, frame, state):
+    pass
+    
 def tworoll_trim_press(event, frame):
     """
     User presses mouse when in two roll mode.

@@ -23,7 +23,7 @@ Module manages undo and redo stacks and executes edit actions from them
 on user requests.
 """
 import editorstate
-from editevent import set_default_edit_mode as default_edit_mode
+from editevent import set_post_undo_redo_edit_mode
 
 # Max stack size
 MAX_UNDOS = 35
@@ -85,8 +85,8 @@ def do_undo():
         redo_item.set_sensitive(False)
         return
 
-    # After undo we're always in INSERT_MOVE mode
-    _reset_default_editmode()
+    # After undo we may change edit mode
+    _set_post_edit_mode()
     
     # Move stack pointer down and do undo
     index = index - 1
@@ -111,8 +111,8 @@ def do_redo():
         redo_item.set_sensitive(False)
         return
 
-    # After redo we're always in INSERT_MOVE mode
-    _reset_default_editmode()
+    # After redo we may change edit mode
+    _set_post_edit_mode()
 
     # Do redo and move stack pointer up
     redo_edit = undo_stack[index]
@@ -124,6 +124,6 @@ def do_redo():
 
     undo_item.set_sensitive(True)
 
-def _reset_default_editmode():
+def _set_post_edit_mode():
     if editorstate.edit_mode != editorstate.INSERT_MOVE:
-        default_edit_mode()
+        set_post_undo_redo_edit_mode()

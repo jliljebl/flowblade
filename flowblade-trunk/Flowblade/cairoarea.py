@@ -63,7 +63,8 @@ class CairoDrawableArea(gtk.Widget):
     def do_realize(self):
         # Set an internal flag telling that we're realized
         self.set_flags(self.flags() | gtk.REALIZED)
-
+        
+        #gtk.gdk.POINTER_MOTION_MASK
         # Create GDK window
         self.window = gdk.Window(self.get_parent_window(),
                                  width=self.allocation.width,
