@@ -127,3 +127,4 @@ def do_redo():
 def _set_post_edit_mode():
     if editorstate.edit_mode != editorstate.INSERT_MOVE:
         set_post_undo_redo_edit_mode()
+        

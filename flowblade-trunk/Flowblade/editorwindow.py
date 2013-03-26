@@ -723,12 +723,10 @@ class EditorWindow:
         self.set_cursor_to_mode()
 
     def handle_one_roll_mode_button_press(self):
-        #editevent.oneroll_trim_mode_init()
         editevent.oneroll_trim_no_edit_init()
         self.set_cursor_to_mode()
 
     def handle_two_roll_mode_button_press(self):
-        #editevent.tworoll_trim_mode_pressed()
         editevent.tworoll_trim_no_edit_init()
         self.set_cursor_to_mode()
 

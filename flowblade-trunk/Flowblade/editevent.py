@@ -131,6 +131,8 @@ def set_default_edit_mode():
 def set_post_undo_redo_edit_mode():
     if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
         oneroll_trim_no_edit_init()
+    if EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
+        tworoll_trim_no_edit_init()
 
 def stop_looping():
     # Stop trim mode looping using trimmodes.py methods for it
@@ -166,7 +168,6 @@ def overwrite_move_mode_pressed():
     _set_move_mode()
 
 def oneroll_trim_no_edit_init():
-    print "oneroll_trim_no_edit_init"
     stop_looping()
     editorstate.edit_mode = editorstate.ONE_ROLL_TRIM_NO_EDIT
     tlinewidgets.set_edit_mode(None, None) # No overlays are drwn in this edit mode
@@ -174,27 +175,24 @@ def oneroll_trim_no_edit_init():
     updater.set_trim_mode_gui()
 
 def oneroll_trim_no_edit_press(event, frame):
-    print "press"
     success = oneroll_trim_mode_init(event.x, event.y)
     if success:
-        pass
-        #global mouse_disabled
-        #mouse_disabled = True # we could just as well do this always since only press matters in ONE_ROLL_TRIM_NO_EDIT 
+        global mouse_disabled
+        mouse_disabled = True
     else:
-        print "stay in ONE_ROLL_TRIM_NO_EDIT"
         editorstate.edit_mode = editorstate.ONE_ROLL_TRIM_NO_EDIT
 
 def oneroll_trim_no_edit_move(x, y, frame, state):
     pass
 
 def oneroll_trim_no_edit_release(x, y, frame, state):
-    pass # mouse_disabled set False at tline_canvas_mouse_released()
+    pass
     
 def oneroll_trim_mode_init(x, y):
     """
     User enters ONE_ROLL_TRIM mode from ONE_ROLL_TRIM_NO_EDIT 
     """
-    track = tlinewidgets.get_track(y)#current_sequence().get_first_active_track()
+    track = tlinewidgets.get_track(y)
     if track == None:
         return False
 
@@ -213,27 +211,41 @@ def oneroll_trim_mode_init(x, y):
     trimmodes.set_exit_mode_func = set_default_edit_mode
     trimmodes.set_no_edit_mode_func = oneroll_trim_no_edit_init
     success = trimmodes.set_oneroll_mode(track, press_frame)
-    print "enter oneroll success:", success
     return success
 
 def tworoll_trim_no_edit_init():
     stop_looping() # Stops looping 
     editorstate.edit_mode = editorstate.TWO_ROLL_TRIM_NO_EDIT
-
+    tlinewidgets.set_edit_mode(None, None) # No overlays are drwn in this edit mode
     movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
     updater.set_trim_mode_gui()
 
-def tworoll_trim_mode_pressed():
+def tworoll_trim_no_edit_press(event, frame):
+    print "press"
+    success = tworoll_trim_mode_init(event.x, event.y)
+    if success:
+        global mouse_disabled
+        mouse_disabled = True
+    else:
+        editorstate.edit_mode = editorstate.TWO_ROLL_TRIM_NO_EDIT
+    
+def tworoll_trim_no_edit_move(x, y, frame, state):
+    pass
+
+def tworoll_trim_no_edit_release(x, y, frame, state):
+    pass
+    
+def tworoll_trim_mode_init(x, y):
     """
     User selects two roll mode
     """
-    track = current_sequence().get_first_active_track()
+    track = tlinewidgets.get_track(y)
     if track == None:
-        return
+        return False
     
-    if track_lock_check_and_user_info(track, tworoll_trim_mode_pressed, "two roll trim mode",):
+    if track_lock_check_and_user_info(track, tworoll_trim_mode_init, "two roll trim mode",):
         set_default_edit_mode()
-        return
+        return False
 
     stop_looping()
     editorstate.edit_mode = editorstate.TWO_ROLL_TRIM
@@ -241,8 +253,11 @@ def tworoll_trim_mode_pressed():
     movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
     updater.set_trim_mode_gui()
 
+    press_frame = tlinewidgets.get_frame(x)
     trimmodes.set_exit_mode_func = set_default_edit_mode
-    trimmodes.set_tworoll_mode(track)
+    trimmodes.set_no_edit_mode_func = tworoll_trim_no_edit_init
+    success = trimmodes.set_tworoll_mode(track, press_frame)
+    return success
 
 def _set_move_mode():
     updater.set_move_mode_gui()
@@ -1032,9 +1047,9 @@ ONE_ROLL_TRIM_NO_EDIT_FUNCS = [oneroll_trim_no_edit_press,
 TWO_ROLL_TRIM_FUNCS = [trimmodes.tworoll_trim_press,
                        trimmodes.tworoll_trim_move,
                        trimmodes.tworoll_trim_release]
-TWO_ROLL_TRIM_NO_EDIT_FUNCS = [trimmodes.tworoll_trim_no_edit_press,
-                               trimmodes.tworoll_trim_no_edit_move,
-                               trimmodes.tworoll_trim_no_edit_release]
+TWO_ROLL_TRIM_NO_EDIT_FUNCS = [tworoll_trim_no_edit_press,
+                               tworoll_trim_no_edit_move,
+                               tworoll_trim_no_edit_release]
 COMPOSITOR_EDIT_FUNCS = [compositormodes.mouse_press,
                          compositormodes.mouse_move,
                          compositormodes.mouse_release]

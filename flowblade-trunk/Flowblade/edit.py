@@ -25,6 +25,7 @@ and sequence state changes as output.
 Edits, undos and redos are done by creating and calling methods on these 
 EditAction objects and placing them on the undo/redo stack.
 """
+
 import copy
 import time
 import thread
@@ -150,14 +151,33 @@ def _frame_on_cut(clip, clip_frame):
         
     return False
 
-def _remove_trailing_blanks(track):
-    clip = track.get_clip(track.count() - 1)
-    try: # trying his on empty track fails 
-        while(clip.is_blank()):
-            _remove_clip(track, track.count() - 1)
-            clip = track.get_clip(track.count() - 1)
-    except:
-        pass
+def _remove_trailing_blanks_undo(self):
+    for trailing_blank in self.trailing_blanks:
+        track_index, length = trailing_blank 
+        track = current_sequence().tracks[track_index]
+        _insert_blank(track, track.count(), length)
+
+def _remove_trailing_blanks_redo(self):
+    _remove_all_trailing_blanks(self)
+
+def _remove_all_trailing_blanks(self=None):
+    if self != None:
+        self.trailing_blanks = []
+    for i in range(1, len(current_sequence().tracks) - 1): # -1 because hidden track, 1 because black track
+        try: # trying his on track that 
+            track = current_sequence().tracks[i]
+            last_clip_index = track.count() - 1
+            clip = track.clips[last_clip_index]
+            if clip.is_blanck_clip:
+                length = clip.clip_length()
+                _remove_clip(track, last_clip_index)
+                if self != None:
+                    self.trailing_blanks.append((i, length))
+        except:
+            pass
+
+    if self != None:
+        print self.trailing_blanks
 
 def _create_clip_clone(clip):
     if clip.media_type != appconsts.PATTERN_PRODUCER:
@@ -308,8 +328,12 @@ class EditAction:
             PLAYER().consumer.stop()
 
         movemodes.clear_selected_clips()  # selection not valid after change in sequence
-
+        _remove_trailing_blanks_undo(self)
+        _consolidate_all_blanks_undo(self)
+    
         self.undo_func(self)
+
+        _remove_all_trailing_blanks(None)
 
         resync.calculate_and_set_child_clip_sync_states()
 
@@ -331,6 +355,8 @@ class EditAction:
 
         self.redo_func(self)
 
+        _consolidate_all_blanks_redo(self)
+        _remove_trailing_blanks_redo(self)
         resync.calculate_and_set_child_clip_sync_states()
 
         # HACK, see above.
@@ -751,7 +777,7 @@ def _overwrite_move_undo(self):
         clip = self.moved_clips[i];
         _insert_clip(track, clip, self.selected_range_in + i, clip.clip_in,
                      clip.clip_out)
-    _remove_trailing_blanks(track)
+    #_remove_trailing_blanks(track)
 
 def _overwrite_move_redo(self):
     self.moved_clips = []
@@ -794,7 +820,7 @@ def _overwrite_move_redo(self):
         clip = self.moved_clips[i]
         _insert_clip(track, clip, in_index + i, clip.clip_in, clip.clip_out)
 
-    _remove_trailing_blanks(track)
+    #_remove_trailing_blanks(track)
 
     # HACK, see EditAction for details
     self.turn_on_stop_for_edit = True
@@ -846,8 +872,8 @@ def _multitrack_overwrite_move_undo(self):
         _insert_clip(track, clip, self.selected_range_in + i, clip.clip_in,
                      clip.clip_out)
                      
-    _remove_trailing_blanks(track)
-    _remove_trailing_blanks(to_track)
+    #_remove_trailing_blanks(track)
+    #_remove_trailing_blanks(to_track)
 
 def _multitrack_overwrite_move_redo(self):
     self.moved_clips = []
@@ -891,8 +917,8 @@ def _multitrack_overwrite_move_redo(self):
         clip = self.moved_clips[i]
         _insert_clip(to_track, clip, in_index + i, clip.clip_in, clip.clip_out)
 
-    _remove_trailing_blanks(track)
-    _remove_trailing_blanks(to_track)
+    #_remove_trailing_blanks(track)
+    #_remove_trailing_blanks(to_track)
 
     # Remove wrong sized waveforms
     audiowaveform.maybe_delete_waveforms(self.moved_clips, to_track)
@@ -1219,7 +1245,7 @@ def _audio_splice_undo(self):
 
     _do_clip_unmute(self.parent_clip)
     
-    _remove_trailing_blanks(to_track)
+    #_remove_trailing_blanks(to_track)
 
 def _audio_splice_redo(self):
     # Get shorter name for readability
@@ -1258,7 +1284,7 @@ def _audio_splice_redo(self):
     filter = _create_mute_volume_filter(current_sequence())
     _do_clip_mute(self.parent_clip, filter)
     
-    _remove_trailing_blanks(to_track)
+    #_remove_trailing_blanks(to_track)
 
 # ------------------------------------------------- SPLIT TO SYNC
 # "parent_clip","audio_clip", "over_in","over_out","to_track","from_track","parent_index"
@@ -1543,7 +1569,7 @@ def _consolidate_all_blanks_undo(self):
         
 def _consolidate_all_blanks_redo(self):
     self.consolidate_actions = []
-    for i in range(1, len(current_sequence().tracks) - 1): # -1 because hidden track
+    for i in range(1, len(current_sequence().tracks) - 1): # -1 because hidden track, 1 because black track
         track = current_sequence().tracks[i]
         consolidaded_indexes = []
         try_do_next = True
@@ -1561,7 +1587,7 @@ def _consolidate_all_blanks_redo(self):
                     continue
                 except:
                     pass
-                
+
                 # Now consolidate from clip in index i
                 consolidaded_indexes.append(i)
                 removed_lengths = _remove_consecutive_blanks(track, i)
@@ -1642,7 +1668,7 @@ def _track_put_back_range(over_in, track, track_extract_data):
         _insert_clip(track, clip, moved_index + i, clip.clip_in,
                      clip.clip_out)
                      
-    _remove_trailing_blanks(track)
+    #_remove_trailing_blanks(track)
 
 # NOTE: RANGE SPLICE OUT NOT IMPLEMENTED YET; SO THIS IS BASICALLY UNNECESSARY METHOD CAUSING 
 # CODE DUPLICATION WITH OTHER OVERWRITE METHODS
