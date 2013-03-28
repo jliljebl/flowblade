@@ -164,7 +164,7 @@ def _remove_all_trailing_blanks(self=None):
     if self != None:
         self.trailing_blanks = []
     for i in range(1, len(current_sequence().tracks) - 1): # -1 because hidden track, 1 because black track
-        try: # trying his on track that 
+        try:
             track = current_sequence().tracks[i]
             last_clip_index = track.count() - 1
             clip = track.clips[last_clip_index]
@@ -175,9 +175,6 @@ def _remove_all_trailing_blanks(self=None):
                     self.trailing_blanks.append((i, length))
         except:
             pass
-
-    if self != None:
-        print self.trailing_blanks
 
 def _create_clip_clone(clip):
     if clip.media_type != appconsts.PATTERN_PRODUCER:

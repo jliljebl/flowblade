@@ -40,6 +40,8 @@ import sequence
 import utils
 import updater
 
+M_PI = math.pi
+
 REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is now recalculated on initilization so number here is irrelevent.
 
 WIDTH = 430 # this has no effect if smaller then editorwindow.NOTEBOOK_WIDTH + editorwindow.MONITOR_AREA_WIDTH
@@ -421,13 +423,14 @@ def draw_overwrite_overlay(cr, data):
     
     target_track = data["to_track_object"]
     y = _get_track_y(target_track.id)
-    
-    track_height = target_track.height
-    _draw_move_overlay(cr, data, y)
-    
     start_x = _get_frame_x(data["over_in"])
     end_x = _get_frame_x(data["over_out"])
+    
+    track_height = target_track.height
     _draw_overwrite_clips_overlay(cr, start_x, end_x, y, track_height)
+
+    _draw_move_overlay(cr, data, y)
+
     arrow_x = start_x + ((end_x - start_x)/2.0)
     _draw_mode_arrow(cr, arrow_x, y, OVERWRITE_MODE_COLOR)
 
@@ -444,7 +447,7 @@ def _draw_move_overlay(cr, data, y):
     clip_start_frame = draw_start - pos
         
     # Draw clips in draw range
-    cr.set_line_width(2.0)
+    cr.set_line_width(4.0)
     cr.set_source_rgb(*OVERLAY_COLOR)
     for i in range(0, len(clip_lengths)):
         clip_length = clip_lengths[i]
@@ -471,9 +474,11 @@ def draw_two_roll_overlay(cr, data):
     cr.stroke()
     
     selection_frame_x = _get_frame_x(data["selected_frame"])
-    _draw_selected_frame(cr, selection_frame_x, track_y, track_height)
-    
-    _draw_two_arrows(cr, frame_x - 15, track_y + track_height - 13, 10)
+
+    cr.set_source_rgb(*OVERLAY_SELECTION_COLOR)
+    cr.move_to(selection_frame_x - 0.5, track_y - 6.5)
+    cr.line_to(selection_frame_x - 0.5, track_y + track_height + 6.5)
+    cr.stroke()
     
     if data["to_side_being_edited"]:
         _draw_view_icon(cr, frame_x + 6, track_y + 1)
@@ -485,6 +490,22 @@ def draw_two_roll_overlay(cr, data):
     clip_over_end_x = _get_frame_x(trim_limits["both_end"] + 1) # trim limits leave 1 frame non-trimmable  
     _draw_trim_clip_overlay(cr, clip_over_start_x, clip_over_end_x, track_y, track_height)
 
+    radius = 5.0
+    degrees = M_PI/ 180.0
+    bit = 3
+    cr.set_source_rgb(0.9, 0.9, 0.2)#*OVERLAY_SELECTION_COLOR)
+    cr.set_line_width(2.0)
+    cr.move_to(selection_frame_x + radius + bit, track_y + track_height)
+    cr.arc (selection_frame_x + radius, track_y + track_height - radius, radius, 90 * degrees, 180.0 * degrees) 
+    cr.arc (selection_frame_x + radius, track_y + radius, radius,  180.0 * degrees, 270.0 * degrees)
+    cr.line_to(selection_frame_x + radius + bit, track_y)
+    cr.stroke()
+    cr.move_to(selection_frame_x - radius - bit, track_y)
+    cr.arc (selection_frame_x - radius, track_y + radius, radius,  -90.0 * degrees, 0.0 * degrees)
+    cr.arc (selection_frame_x - radius, track_y + track_height - radius, radius, 0 * degrees, 90.0 * degrees)
+    cr.line_to(selection_frame_x - radius - bit, track_y + track_height)
+    cr.stroke()
+    
 def draw_one_roll_overlay(cr, data):
     """
     Overlay for one roll trim edit mode
@@ -493,24 +514,39 @@ def draw_one_roll_overlay(cr, data):
     frame_x = _get_frame_x(edit_frame)
     track_height = current_sequence().tracks[data["track"]].height
     track_y = _get_track_y(data["track"])
-    cr.set_source_rgb(*OVERLAY_COLOR)
-    cr.move_to(frame_x, track_y - 3)
-    cr.line_to(frame_x, track_y + track_height + 3)
-    cr.stroke()
     
     selection_frame_x = _get_frame_x(data["selected_frame"])
-    _draw_selected_frame(cr, selection_frame_x, track_y, track_height)
-    
+        
     trim_limits = data["trim_limits"]
     if data["to_side_being_edited"]:
-        _draw_two_arrows(cr, frame_x, track_y + track_height - 13, 4)
         clip_over_end_x = _get_frame_x(trim_limits["both_end"] + 1) # trim limits leave 1 frame non-trimmable
         _draw_trim_clip_overlay(cr, selection_frame_x, clip_over_end_x, track_y, track_height)
     else:
-        _draw_two_arrows(cr, frame_x - 27, track_y + track_height - 13, 4)
         clip_over_start_x = _get_frame_x(trim_limits["both_start"] - 1) # trim limits leave 1 frame non-trimmable 
         _draw_trim_clip_overlay(cr, clip_over_start_x, selection_frame_x, track_y, track_height)
 
+    cr.set_source_rgb(*OVERLAY_SELECTION_COLOR)
+    cr.move_to(selection_frame_x - 0.5, track_y - 6.5)
+    cr.line_to(selection_frame_x - 0.5, track_y + track_height + 6.5)
+    cr.stroke()
+
+    radius = 5.0
+    degrees = M_PI/ 180.0
+    bit = 3
+    cr.set_source_rgb(0.9, 0.9, 0.2)#*OVERLAY_SELECTION_COLOR)
+    cr.set_line_width(2.0)
+    if data["to_side_being_edited"]:
+        cr.move_to(selection_frame_x + radius + bit, track_y + track_height)
+        cr.arc (selection_frame_x + radius, track_y + track_height - radius, radius, 90 * degrees, 180.0 * degrees) 
+        cr.arc (selection_frame_x + radius, track_y + radius, radius,  180.0 * degrees, 270.0 * degrees)
+        cr.line_to(selection_frame_x + radius + bit, track_y)
+    else:
+        cr.move_to(selection_frame_x - radius - bit, track_y)
+        cr.arc (selection_frame_x - radius, track_y + radius, radius,  -90.0 * degrees, 0.0 * degrees)
+        cr.arc (selection_frame_x - radius, track_y + track_height - radius, radius, 0 * degrees, 90.0 * degrees)
+        cr.line_to(selection_frame_x - radius - bit, track_y + track_height)
+    cr.stroke()
+    
 def draw_compositor_move_overlay(cr, data):
     # Get data
     press_frame = data["press_frame"]
