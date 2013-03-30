@@ -92,7 +92,7 @@ fp = None
 def main(root_path):
     """
     Called at application start.
-    Initializes application with default project.
+    Initializes application with a default project.
     """
     # Create hidden folders if not present
     user_dir = utils.get_hidden_user_dir_path()
@@ -118,12 +118,14 @@ def main(root_path):
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
     except:
-        editorstate.mlt_version = "0.0.99"
+        editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
     # Init translations module with translations data
     translations.init_languages()
     translations.load_filters_translations()
     mlttransitions.init_module()
+
+    # Load drag'n'drop images
     dnd.init()
 
     # Load editor prefs and list of recent projects
@@ -221,13 +223,11 @@ def main(root_path):
 
     appconsts.SAVEFILE_VERSION = projectdata.SAVEFILE_VERSION
 
-    # Existance of autosaved file hints that program was exited abnormally
+    # Existance of autosave file hints that program was exited abnormally
     if os.path.exists(user_dir + AUTOSAVE_FILE) and check_crash == True:
         gobject.timeout_add(10, autosave_recovery_dialog)
     else:
         start_autosave()
-
-    #useraction.write_out_env_data(None)
 
     # Launch gtk+ main loop
     gtk.main()

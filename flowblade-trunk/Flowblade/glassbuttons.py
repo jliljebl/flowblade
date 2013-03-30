@@ -130,7 +130,7 @@ class AbstractGlassButtons:
         # bg 
         self._set_button_draw_consts(self.button_x + 0.5, self.button_y + 0.5, buttons_width, self.button_height + 1.0)
         self._round_rect_path(cr)
-        cr.set_source_rgb(0.75, 0.75, 0.75)
+        cr.set_source_rgb(0.75, 0.75, 0.75)#*gui.bg_color_tuple)#0.75, 0.75, 0.75)
         cr.fill_preserve()
     
         # Pressed button gradient

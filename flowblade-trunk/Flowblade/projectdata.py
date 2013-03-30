@@ -63,6 +63,7 @@ class Project:
         self.bins = []
         self.media_files = {} # MediaFile.id(key) -> MediaFile object(value)
         self.sequences = []
+        self.events = []
         self.next_media_file_id = 0 
         self.next_bin_number = 1 # This is for creating name for new bin 
         self.next_seq_number = 1 # This is for creating name for new bin

@@ -555,6 +555,7 @@ def set_next_prev_enabled(enabled):
     gui.editor_window.player_buttons.set_trim_buttons_sensitive(enabled)
 
 def update_project_info(project):
+    """
     for child in gui.project_info_vbox.get_children():
         gui.project_info_vbox.remove(child)
     name_panel = panels.get_project_name_panel(project.name)
@@ -562,7 +563,7 @@ def update_project_info(project):
     gui.project_info_vbox.pack_start(name_panel, False, True, 0)
     gui.project_info_vbox.pack_start(profile_info, False, True, 0)
     gui.project_info_vbox.show_all()
-
+    """
 
 # ------------------------------------------------ notebook
 def switch_notebook_panel(index):

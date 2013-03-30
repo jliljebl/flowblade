@@ -254,6 +254,24 @@ class SequenceListView(ImageTextTextListView):
             self.scroll.queue_draw()
 
 
+class EventsListView(ImageTextTextListView):
+
+    def __init__(self):
+        ImageTextTextListView.__init__(self)
+        
+        # Icon path
+        self.icon_path = respaths.ROOT_PATH + SEQUENCE_IMG_PATH
+
+    def fill_data_model(self):
+        """
+        Creates displayed data.
+        Displays icon, sequence name and sequence length
+        """
+        self.storemodel.clear()
+
+
+
+
 class MediaListView(ImageTextTextListView):
     """
     GUI component displaying list of media files.
@@ -1408,7 +1426,7 @@ class BigTCDisplay:
         x, y, w, h = allocation
 
         # Draw bg
-        cr.set_source_rgb(*gui.bg_color_tuple) 
+        cr.set_source_rgba(*gui.bg_color_tuple) 
         cr.rectangle(0, 0, w, h)
         cr.fill()
 

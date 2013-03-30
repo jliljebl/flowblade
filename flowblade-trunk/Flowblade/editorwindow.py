@@ -352,45 +352,6 @@ class EditorWindow:
         self.compositors_panel.set_padding(0, 0, 0, 0)
         self.compositors_panel.add(compositors_hbox)
 
-        # Project buttons
-        self.open_project_b = gtk.Button(_("Open"))
-        self.new_project_b = gtk.Button(_("New"))
-    
-        self.open_project_b.connect("clicked", lambda e: useraction.load_project())
-        self.new_project_b.connect("clicked", lambda e: useraction.new_project())
-
-        project_buttons_box = gtk.HBox(True,1)
-        project_buttons_box.pack_start(self.open_project_b)
-        project_buttons_box.pack_start(self.new_project_b)
-
-        # Project
-        name_panel = panels.get_project_name_panel(editorstate.project.name)
-
-        profile_info = panels.get_profile_info_panel(editorstate.project.profile)
-        
-        self.project_info_vbox = gtk.VBox()
-        self.project_info_vbox.pack_start(name_panel, False, True, 0)
-        self.project_info_vbox.pack_start(profile_info, False, True, 0)
-        
-        # Sequence list
-        self.sequence_list_view = guicomponents.SequenceListView(
-                                        useraction.sequence_name_edited)
-        seq_panel = panels.get_sequences_panel(
-                             self.sequence_list_view,
-                             lambda w,e: useraction.change_edit_sequence(),
-                             lambda w,e: useraction.add_new_sequence(), 
-                             lambda w,e: useraction.delete_selected_sequence())
-
-        # Project vbox and panel
-        project_vbox = gtk.VBox()
-        project_vbox.pack_start(project_buttons_box, False, True, 0)
-        project_vbox.pack_start(self.project_info_vbox, False, True, 0)
-        project_vbox.pack_start(seq_panel, True, True, 0)
-    
-        project_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-        project_panel.set_padding(6, 0, 6, 6)
-        project_panel.add(project_vbox)
-
         # Render
         normal_height = True
         if appconsts.TOP_ROW_HEIGHT < 500: # small screens have no space to display this
@@ -423,6 +384,56 @@ class EditorWindow:
         render_panel.set_padding(2, 6, 8, 6)
         render_panel.add(render_hbox)
 
+        # Project
+        # Project buttons
+        """
+        self.open_project_b = gtk.Button(_("Open"))
+        self.new_project_b = gtk.Button(_("New"))
+    
+        self.open_project_b.connect("clicked", lambda e: useraction.load_project())
+        self.new_project_b.connect("clicked", lambda e: useraction.new_project())
+
+        project_buttons_box = gtk.HBox(True,1)
+        project_buttons_box.pack_start(self.open_project_b)
+        project_buttons_box.pack_start(self.new_project_b)
+        """
+        name_panel = panels.get_project_name_panel(editorstate.project.name)
+
+        profile_info = panels.get_profile_info_panel(editorstate.project.profile) #panels.get_profile_info_panel(editorstate.project.profile)
+        
+        self.project_info_vbox = gtk.VBox()
+        self.project_info_vbox.pack_start(name_panel, False, True, 0)
+        self.project_info_vbox.pack_start(profile_info, False, True, 0)
+        
+        # Sequence list
+        self.sequence_list_view = guicomponents.SequenceListView(
+                                        useraction.sequence_name_edited)
+        seq_panel = panels.get_sequences_panel(
+                             self.sequence_list_view,
+                             lambda w,e: useraction.change_edit_sequence(),
+                             lambda w,e: useraction.add_new_sequence(), 
+                             lambda w,e: useraction.delete_selected_sequence())
+
+        # Events List
+        self.events_list_view = guicomponents.EventsListView()
+
+        # Project vbox and panel
+        project_vbox = gtk.VBox()
+        #project_vbox.pack_start(project_buttons_box, False, True, 0)
+        project_vbox.pack_start(self.project_info_vbox, False, True, 0)
+        project_vbox.pack_start(seq_panel, True, True, 0)
+
+        # Events panel
+        events_panel = panels.get_events_panel(self.events_list_view)
+
+        project_hbox = gtk.HBox()
+        project_hbox.pack_start(project_vbox, False, True, 0)
+        project_hbox.pack_start(events_panel, True, True, 0)
+        
+        project_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+        project_panel.set_padding(6, 0, 6, 6)
+        project_panel.add(project_hbox)
+        
         # Notebook
         self.notebook = gtk.Notebook()
         self.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH, appconsts.TOP_ROW_HEIGHT)
@@ -711,8 +722,8 @@ class EditorWindow:
         self.sequence_editor_b.set_tooltip_text(_("Display Current Sequence on Timeline"))
         self.clip_editor_b.set_tooltip_text(_("Display Monitor Clip"))
 
-        self.open_project_b.set_tooltip_text(_("Open Project File"))
-        self.new_project_b.set_tooltip_text(_("Open New Project"))
+        #self.open_project_b.set_tooltip_text(_("Open Project File"))
+        #self.new_project_b.set_tooltip_text(_("Open New Project"))
 
     def handle_over_move_mode_button_press(self):
         editevent.overwrite_move_mode_pressed()

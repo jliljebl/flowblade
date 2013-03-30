@@ -89,7 +89,7 @@ def capture_references(new_editor_window):
     bin_list_view = editor_window.bin_list_view
     sequence_list_view = editor_window.sequence_list_view
     
-    project_info_vbox = editor_window.project_info_vbox
+    #project_info_vbox = editor_window.project_info_vbox
     middle_notebook = editor_window.notebook
     
     effect_select_list_view = editor_window.effect_select_list_view
@@ -115,7 +115,7 @@ def capture_references(new_editor_window):
 
     editmenu = editor_window.uimanager.get_widget('/MenuBar/EditMenu')
 
-    style = editor_window.notebook.get_style()
+    style = editor_window.edit_buttons_row.get_style()
     note_bg_color = style.bg[gtk.STATE_NORMAL]
     fg_color = style.fg[gtk.STATE_NORMAL]
     selected_bg_color = style.bg[gtk.STATE_SELECTED]

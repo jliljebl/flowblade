@@ -127,9 +127,26 @@ def get_sequences_panel(sequence_list_view, edit_seq_cb, add_seq_cb, del_seq_cb)
 
     return get_named_frame(_("Sequences"), panel)
 
+"""
 def get_profile_info_panel(profile):
     hbox = guicomponents.get_profile_info_box(profile, True)
     return get_named_frame(_("Profile"), hbox)
+"""
+
+def get_profile_info_panel(profile):
+    desc_label = gtk.Label(profile.description())
+    info = guicomponents.get_profile_info_small_box(profile)
+    panel = gtk.VBox()
+    panel.pack_start(guiutils.get_left_justified_box([desc_label]), False, True, 0)
+    panel.pack_start(info, False, True, 0)
+    return get_named_frame(_("Profile"), panel)
+    
+def get_events_panel(events_list_view): 
+    panel = gtk.VBox()
+    panel.pack_start(events_list_view, True, True, 0)
+    panel.set_size_request(500, 200)
+
+    return get_named_frame(_("Events"), panel, 0, 0, 0)
 
 def get_project_name_panel(project_name):
     name_row = get_left_justified_box([gtk.Label(project_name)])

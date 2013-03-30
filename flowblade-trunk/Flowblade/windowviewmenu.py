@@ -99,8 +99,8 @@ def init_gui_to_prefs(window):
         w.notebook.set_tab_pos(gtk.POS_BOTTOM)
         w.right_notebook.set_tab_pos(gtk.POS_BOTTOM)
 
-    if editorpersistance.prefs.default_layout == False:
-        _execute_widescreen_layout(window)
+    #if editorpersistance.prefs.default_layout == False:
+    #    _execute_widescreen_layout(window)
 
 def _show_default_layout(widget):
     global w
@@ -152,7 +152,7 @@ def _execute_widescreen_layout(window):
 
     editorpersistance.prefs.default_layout = False
     editorpersistance.save()
-    
+
 def _show_buttons_TC_LEFT_layout(widget):
     global w
     w = gui.editor_window
