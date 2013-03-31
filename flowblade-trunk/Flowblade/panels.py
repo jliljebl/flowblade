@@ -141,12 +141,39 @@ def get_profile_info_panel(profile):
     panel.pack_start(info, False, True, 0)
     return get_named_frame(_("Profile"), panel)
     
-def get_events_panel(events_list_view): 
-    panel = gtk.VBox()
-    panel.pack_start(events_list_view, True, True, 0)
-    panel.set_size_request(500, 200)
+def get_events_panel(events_list_view):
+    auto_log_mode_combo = gtk.combo_box_new_text()
+    auto_log_mode_combo.append_text(_("All Events"))
+    auto_log_mode_combo.append_text(_("Insert Events"))
+    auto_log_mode_combo.append_text(_("Range Events"))
+    auto_log_mode_combo.set_active(0)
+    delete_b = gtk.Button(_("Delete"))  
+    row1 =  gtk.HBox()
+    row1.pack_start(auto_log_mode_combo, False, True, 0)
+    row1.pack_start(gtk.Label(), True, True, 0)
+    row1.pack_start(delete_b, False, True, 0)
 
-    return get_named_frame(_("Events"), panel, 0, 0, 0)
+    logging_type_combo = gtk.combo_box_new_text()
+    logging_type_combo.append_text(_("Auto Log All"))
+    logging_type_combo.append_text(_("Auto Log Inserts"))
+    logging_type_combo.append_text(_("Auto Log Ranges"))
+    logging_type_combo.append_text(_("Manual Logging"))
+    logging_type_combo.set_active(0)
+    log_insert = gtk.Button(_("Log Insert"))
+    log_range = gtk.Button(_("Log Range"))
+    row2 =  gtk.HBox()
+    row2.pack_start(logging_type_combo, False, True, 0)
+    row2.pack_start(gtk.Label(), True, True, 0)
+    row2.pack_start(log_insert, False, True, 0)
+    row2.pack_start(log_range, False, True, 0)
+
+    panel = gtk.VBox()
+    panel.pack_start(row1, False, True, 0)
+    panel.pack_start(events_list_view, True, True, 0)
+    panel.pack_start(row2, False, True, 0)
+    panel.set_size_request(400, 200)
+
+    return get_named_frame(_("Media Log"), panel, 0, 0, 0)
 
 def get_project_name_panel(project_name):
     name_row = get_left_justified_box([gtk.Label(project_name)])

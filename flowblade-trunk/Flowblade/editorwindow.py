@@ -417,22 +417,23 @@ class EditorWindow:
         # Events List
         self.events_list_view = guicomponents.EventsListView()
 
-        # Project vbox and panel
-        project_vbox = gtk.VBox()
-        #project_vbox.pack_start(project_buttons_box, False, True, 0)
-        project_vbox.pack_start(self.project_info_vbox, False, True, 0)
-        project_vbox.pack_start(seq_panel, True, True, 0)
-
         # Events panel
         events_panel = panels.get_events_panel(self.events_list_view)
 
-        project_hbox = gtk.HBox()
-        project_hbox.pack_start(project_vbox, False, True, 0)
-        project_hbox.pack_start(events_panel, True, True, 0)
+        
+        # Project vbox and panel
+        project_vbox = gtk.HBox()
+        #project_vbox.pack_start(project_buttons_box, False, True, 0)
+        #project_vbox.pack_start(self.project_info_vbox, False, True, 0)
+        project_vbox.pack_start(seq_panel, False, True, 0)
+        project_vbox.pack_start(events_panel, True, True, 0)
+
+
+        #project_hbox.pack_start(events_panel, True, True, 0)
         
         project_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
         project_panel.set_padding(6, 0, 6, 6)
-        project_panel.add(project_hbox)
+        project_panel.add(project_vbox)
         
         # Notebook
         self.notebook = gtk.Notebook()
