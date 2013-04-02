@@ -86,8 +86,6 @@ IMG_PATH = None
 # Cursors
 OVERWRITE_CURSOR = None
 INSERTMOVE_CURSOR = None
-ONEROLL_LEFT_CURSOR = None
-ONEROLL_RIGHT_CURSOR = None
 ONEROLL_CURSOR = None
 TWOROLL_CURSOR = None
 
@@ -112,12 +110,10 @@ class EditorWindow:
         IMG_PATH = respaths.IMAGE_PATH 
 
         # Read cursors
-        global INSERTMOVE_CURSOR, OVERWRITE_CURSOR, TWOROLL_CURSOR, ONEROLL_LEFT_CURSOR, ONEROLL_RIGHT_CURSOR, ONEROLL_CURSOR
+        global INSERTMOVE_CURSOR, OVERWRITE_CURSOR, TWOROLL_CURSOR, ONEROLL_CURSOR
         INSERTMOVE_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "insertmove_cursor.png")
         OVERWRITE_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "overwrite_cursor.png")
         TWOROLL_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "tworoll_cursor.png")
-        #ONEROLL_LEFT_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "oneroll_left_cursor.png")
-        #ONEROLL_RIGHT_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "oneroll_right_cursor.png")
         ONEROLL_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "oneroll_cursor.png")
 
         # Window
@@ -141,21 +137,29 @@ class EditorWindow:
             ('Save', None, _('_Save'), '<control>S', None, lambda a:useraction.save_project()),
             ('Save As', None, _('_Save As...'), None, None, lambda a:useraction.save_project_as()),
             ('ExportMenu', None, _('Export')),
-            ('ExportMeltXML', None, _('Export melt XML'), None, None, lambda a:exporting.MELT_XML_export()),
-            ('ExportDvdAuthorXML', None, _('Export DVDAuthor files'), None, None, lambda a:exporting.DVD_AUTHOR_export()),
+            ('ExportMeltXML', None, _('melt XML'), None, None, lambda a:exporting.MELT_XML_export()),
+            ('ExportDvdAuthorXML', None, _('DVDAuthor files'), None, None, lambda a:exporting.DVD_AUTHOR_export()),
             ('Close', None, _('_Close'), None, None, lambda a:useraction.close_project()),
             ('Quit', None, _('_Quit'), '<control>Q', None, lambda a:app.shutdown()),
             ('EditMenu', None, _('_Edit')),
             ('Undo', None, _('_Undo'), '<control>Z', None, editevent.do_undo),
             ('Redo', None, _('_Redo'), '<control>Y', None, editevent.do_redo),
-            ('ClearFilters', None, _('Clear Filters From Selected'), None, None, lambda a:editevent.clear_filters()),
+            ('AddFromMonitor', None, _('Add Monitor Clip')),
+            ('AppendClip', None, _('Append'), None, None, lambda a:_this_is_not_used()),
+            ('InsertClip', None, _('Insert'), None, None, lambda a:_this_is_not_used()),
+            ('ThreepointOverWriteClip', None, _('Three Point Overwrite'), None, None, lambda a:_this_is_not_used()),
+            ('RangeOverWriteClip', None, _('Range Overwrite'), None, None, lambda a:_this_is_not_used()),
+            ('CutClip', None, _('Cut Clip'), None, None, lambda a:_this_is_not_used()),
+            ('DeleteClip', None, _('Delete'), None, None, lambda a:_this_is_not_used()),
+            ('SpliceOutClip', None, _('Splice Out'), None, None, lambda a:_this_is_not_used()),
+            ('ResyncSelected', None, _('Resync'), None, None, lambda a:_this_is_not_used()),
+            ('ClearFilters', None, _('Clear Filters'), None, None, lambda a:editevent.clear_filters()),
             ('ConsolidateSelectedBlanks', None, _('Consolidate Selected Blanks'), None, None, lambda a:editevent.consolidate_selected_blanks()),
             ('ConsolidateAllBlanks', None, _('Consolidate All Blanks'), None, None, lambda a:editevent.consolidate_all_blanks()),
             ('ChangeSequenceTracks', None, _('Change Sequence Tracks Count...'), None, None, lambda a:useraction.change_sequence_track_count()),
             ('ProfilesManager', None, _('Profiles Manager'), None, None, lambda a:menuactions.profiles_manager()),
             ('Preferences', None, _('Preferences'), None, None, lambda a:menuactions.display_preferences()),
             ('ViewMenu', None, _('View')),
-            ('Layout', None, _('Add Media Clip...'), None, None, lambda a: useraction.add_media_files()),
             ('ProjectMenu', None, _('Project')),
             ('AddMediaClip', None, _('Add Media Clip...'), None, None, lambda a: useraction.add_media_files()),
             ('AddImageSequence', None, _('Add Image Sequence...'), None, None, lambda a:useraction.add_image_sequence()),
@@ -164,13 +168,16 @@ class EditorWindow:
             ('CreateNoiseClip', None, _('Noise'), None, None, lambda a:patternproducer.create_noise_clip()),
             ('CreateBarsClip', None, _('EBU Bars'), None, None, lambda a:patternproducer.create_bars_clip()),
             ('RecreateMediaIcons', None, _('Recreate Media Icons...'), None, None, lambda a:menuactions.recreate_media_file_icons()),
+            ('RemoveUnusedMedia', None, _('Remove Unused Media...'), None, None, lambda a:_this_is_not_used()),
+            ('ProjectInfo', None, _('Project Info'), None, None, lambda a:menuactions.show_project_info()),
             ('ToolsMenu', None, _('Tools')),
             ('Titler', None, _('Titler'), None, None, lambda a:titler.show_titler()),
             ('AudioMix', None, _('Audio Mixer'), None, None, lambda a:audiomonitoring.show_audio_monitor()),
             ('RenderQueue', None, _('Render Queue'), None, None, lambda a:batchrendering.lauch_batch_rendering()),
             ('HelpMenu', None, _('_Help')),
             ('QuickReference', None, _('Contents'), None, None, lambda a:menuactions.quick_reference()),
-            ('Environment', None, _('Environment'), None, None, lambda a:menuactions.environment()),
+            ('Environment', None, _('Runtime Environment'), None, None, lambda a:menuactions.environment()),
+            ('KeyboardShortcuts', None, _('Keyboard Shortcuts'), None, None, lambda a:_this_is_not_used()),
             ('About', None, _('About'), None, None, lambda a:menuactions.about()),
             ('InsertMode', None, None, '1', None, lambda a:_this_is_not_used()),
             ('OverMode', None, None, '2', None, lambda a:_this_is_not_used()),
@@ -189,7 +196,6 @@ class EditorWindow:
                     <separator/>
                     <menu action='ExportMenu'>
                         <menuitem action='ExportMeltXML'/>
-                        <menuitem action='ExportDvdAuthorXML'/>
                     </menu>
                     <separator/>
                     <menuitem action='Close'/>
@@ -199,10 +205,18 @@ class EditorWindow:
                     <menuitem action='Undo'/>
                     <menuitem action='Redo'/>
                     <separator/>
-                    <menuitem action='ClearFilters'/>     
+                    <menu action='AddFromMonitor'>
+                        <menuitem action='AppendClip'/>
+                        <menuitem action='InsertClip'/>
+                        <menuitem action='ThreepointOverWriteClip'/>
+                        <menuitem action='RangeOverWriteClip'/>
+                    </menu>
                     <separator/>
-                    <menuitem action='ConsolidateSelectedBlanks'/>
-                    <menuitem action='ConsolidateAllBlanks'/>
+                    <menuitem action='CutClip'/>
+                    <menuitem action='DeleteClip'/>
+                    <menuitem action='SpliceOutClip'/>
+                    <menuitem action='ResyncSelected'/>
+                    <menuitem action='ClearFilters'/>     
                     <separator/>
                     <menuitem action='ChangeSequenceTracks'/>
                     <separator/>
@@ -222,6 +236,9 @@ class EditorWindow:
                     </menu>
                     <separator/>
                     <menuitem action='RecreateMediaIcons'/>
+                    <menuitem action='RemoveUnusedMedia'/>
+                    <separator/>
+                    <menuitem action='ProjectInfo'/>
                 </menu>
                 <menu action='ToolsMenu'>
                     <menuitem action='Titler'/>
@@ -229,6 +246,7 @@ class EditorWindow:
                 </menu>
                 <menu action='HelpMenu'>
                     <menuitem action='QuickReference'/>
+                    <menuitem action='KeyboardShortcuts'/>
                     <menuitem action='Environment'/>
                     <separator/>
                     <menuitem action='About'/>
@@ -253,17 +271,6 @@ class EditorWindow:
         # Set reference to UI manager and acclegroup
         self.uimanager = ui
         self.accel_group = accel_group
-
-        # Accelerators for edit mode changes
-        """
-        mode_menu_actions = [
-            ('insert', None, None, '1', None, lambda a:_insert_mode_from_menu())]
-        action_group = gtk.ActionGroup('ModeActions')
-        action_group.add_actions(mode_menu_actions, user_data=None)
-        ui.insert_action_group(action_group, 0)
-        accel_group = ui.get_accel_group()
-        self.window.add_accel_group(accel_group)
-        """
 
         # Add recent projects to menu
         editorpersistance.fill_recents_menu_widget(ui.get_widget('/MenuBar/FileMenu/OpenRecent'), useraction.open_recent_project)
@@ -383,27 +390,6 @@ class EditorWindow:
         render_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
         render_panel.set_padding(2, 6, 8, 6)
         render_panel.add(render_hbox)
-
-        # Project
-        # Project buttons
-        """
-        self.open_project_b = gtk.Button(_("Open"))
-        self.new_project_b = gtk.Button(_("New"))
-    
-        self.open_project_b.connect("clicked", lambda e: useraction.load_project())
-        self.new_project_b.connect("clicked", lambda e: useraction.new_project())
-
-        project_buttons_box = gtk.HBox(True,1)
-        project_buttons_box.pack_start(self.open_project_b)
-        project_buttons_box.pack_start(self.new_project_b)
-        """
-        name_panel = panels.get_project_name_panel(editorstate.project.name)
-
-        profile_info = panels.get_profile_info_panel(editorstate.project.profile) #panels.get_profile_info_panel(editorstate.project.profile)
-        
-        self.project_info_vbox = gtk.VBox()
-        self.project_info_vbox.pack_start(name_panel, False, True, 0)
-        self.project_info_vbox.pack_start(profile_info, False, True, 0)
         
         # Sequence list
         self.sequence_list_view = guicomponents.SequenceListView(
@@ -423,8 +409,6 @@ class EditorWindow:
         
         # Project vbox and panel
         project_vbox = gtk.HBox()
-        #project_vbox.pack_start(project_buttons_box, False, True, 0)
-        #project_vbox.pack_start(self.project_info_vbox, False, True, 0)
         project_vbox.pack_start(seq_panel, False, True, 0)
         project_vbox.pack_start(events_panel, True, True, 0)
 
@@ -722,9 +706,6 @@ class EditorWindow:
         
         self.sequence_editor_b.set_tooltip_text(_("Display Current Sequence on Timeline"))
         self.clip_editor_b.set_tooltip_text(_("Display Monitor Clip"))
-
-        #self.open_project_b.set_tooltip_text(_("Open Project File"))
-        #self.new_project_b.set_tooltip_text(_("Open New Project"))
 
     def handle_over_move_mode_button_press(self):
         editevent.overwrite_move_mode_pressed()

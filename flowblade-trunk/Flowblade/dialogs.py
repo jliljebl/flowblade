@@ -166,6 +166,17 @@ def export_xml_dialog(callback, project_name):
     dialog.connect('response', callback)
     dialog.show()
 
+def project_info_dialog(parent_window, callback):    
+    dialog = gtk.Dialog(_("Project Info"),
+                        parent_window,
+                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                        (_("Close").encode('utf-8'), gtk.RESPONSE_CLOSE))
+    panel = panels.get_project_info_panel()
+    dialog.vbox.pack_start(panel, True, True, 0)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback)
+    dialog.show_all()
+    
 def save_titler_graphic_as_dialog(callback, current_name, open_dir):    
     dialog = gtk.FileChooserDialog(_("Save Titler Graphic As"), None, 
                                    gtk.FILE_CHOOSER_ACTION_SAVE, 

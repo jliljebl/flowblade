@@ -107,6 +107,11 @@ def recreate_media_file_icons():
     recreate_thread = RecreateIconsThread()
     recreate_thread.start()
 
+def show_project_info():
+     dialogs.project_info_dialog(gui.editor_window.window, _show_project_info_callback)
+
+def _show_project_info_callback(dialog, response_id):
+    dialog.destroy()
 
 # ------------------------------------------------------ help menu
 def about():

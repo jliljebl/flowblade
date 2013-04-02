@@ -32,6 +32,7 @@ import guicomponents
 import guiutils
 import clipeffectseditor
 import compositeeditor
+import editorstate
 import editorpersistance
 import mltfilters
 import mltprofiles
@@ -866,6 +867,20 @@ def get_manage_profiles_panel(delete_user_profiles, hide_selected, unhide_select
     
     return (vbox, user_profiles_list)
 
+def get_project_info_panel():
+    name_panel = get_project_name_panel(editorstate.project.name)
+    profile_info = get_profile_info_panel(editorstate.project.profile)
+    
+    project_info_vbox = gtk.VBox()
+    project_info_vbox.pack_start(name_panel, False, True, 0)
+    project_info_vbox.pack_start(profile_info, False, True, 0)
+
+    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    align.set_padding(0, 24, 12, 12)
+    align.add(project_info_vbox)
+    
+    return align
+    
 # -------------------------------------------------- guiutils
 def get_bold_label(text):
     return guiutils.bold_label(text)

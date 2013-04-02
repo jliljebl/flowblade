@@ -23,6 +23,8 @@ import updater
 # This needs to be set here because gui.py module ref is not available at init time
 w = None
 
+m_pixbufs = None
+
 BUTTON_HEIGHT = 28 # middle edit buttons row
 BUTTON_WIDTH = 48 # middle edit buttons row
 
@@ -32,6 +34,7 @@ def init_view_menu(menu_item):
     """
     menu = menu_item.get_submenu()
 
+    """
     if editorstate.SCREEN_WIDTH > 1678:
         layout_menu_item = gtk.MenuItem("Window Layout")
         layout_menu =  gtk.Menu()
@@ -50,15 +53,16 @@ def init_view_menu(menu_item):
             widescreen.set_active(True)
         layout_menu_item.set_submenu(layout_menu)
         menu.append(layout_menu_item)
+    """
 
-    mb_menu_item = gtk.MenuItem("Middlebar Layout")
+    mb_menu_item = gtk.MenuItem(_("Middlebar Layout").encode('utf-8'))
     mb_menu =  gtk.Menu()
-    tc_left = gtk.RadioMenuItem(None, "TC Left")
+    tc_left = gtk.RadioMenuItem(None, _("Timecode Left").encode('utf-8'))
     tc_left.set_active(True)
     tc_left.connect("activate", lambda w: _show_buttons_TC_LEFT_layout(w))
     mb_menu.append(tc_left)
 
-    tc_middle = gtk.RadioMenuItem(tc_left, "TC Center")
+    tc_middle = gtk.RadioMenuItem(tc_left, _("Timecode Center").encode('utf-8'))
     tc_middle.connect("activate", lambda w: _show_buttons_TC_MIDDLE_layout(w))
     mb_menu.append(tc_middle)
 
@@ -70,7 +74,7 @@ def init_view_menu(menu_item):
     mb_menu_item.set_submenu(mb_menu)
     menu.append(mb_menu_item)
 
-    tabs_menu_item = gtk.MenuItem("Tabs Position")
+    tabs_menu_item = gtk.MenuItem(_("Tabs Position").encode('utf-8'))
     tabs_menu =  gtk.Menu()
     tabs_up = gtk.RadioMenuItem(None, "Up")
     tabs_up.connect("activate", lambda w: _show_tabs_up(w))
@@ -88,6 +92,33 @@ def init_view_menu(menu_item):
     tabs_menu_item.set_submenu(tabs_menu)
     menu.append(tabs_menu_item)
 
+    sep = gtk.SeparatorMenuItem()
+    menu.append(sep)
+    
+    show_monitor_info_item = gtk.CheckMenuItem(_("Show Monitor Source Profile/Encoding").encode('utf-8'))
+    show_monitor_info_item.set_active(True)
+    menu.append(show_monitor_info_item)
+
+    """
+    autoplay_item = gtk.CheckMenuItem(_("Autoplay Monitor Clips").encode('utf-8'))
+    autoplay_item.set_active(True)
+    menu.append(autoplay_item)
+
+    center_item = gtk.CheckMenuItem(_("Center on Playback Stop").encode('utf-8'))
+    center_item.set_active(True)
+    menu.append(center_item)
+    """
+
+    sep = gtk.SeparatorMenuItem()
+    menu.append(sep)
+    
+    zoom_in_menu_item = gtk.MenuItem(_("Zoom In").encode('utf-8'))
+    menu.append(zoom_in_menu_item)
+    zoom_out_menu_item = gtk.MenuItem(_("Zoom Out").encode('utf-8'))
+    menu.append(zoom_out_menu_item)
+    zoom_fit_menu_item = gtk.MenuItem(_("Zoom Fit").encode('utf-8'))
+    menu.append(zoom_fit_menu_item)
+            
 def init_gui_to_prefs(window):
     global w
     w = window
@@ -162,7 +193,7 @@ def _show_buttons_TC_LEFT_layout(widget):
         return
 
     _clear_container(w.edit_buttons_row)
-    create_edit_buttons_row_buttons(w)
+    _create_buttons(w)
     fill_with_TC_LEFT_pattern(w.edit_buttons_row, w)
     w.window.show_all()
 
@@ -178,7 +209,7 @@ def _show_buttons_TC_MIDDLE_layout(widget):
         return
 
     _clear_container(w.edit_buttons_row)
-    create_edit_buttons_row_buttons(w)
+    _create_buttons(w)
     fill_with_TC_MIDDLE_pattern(w.edit_buttons_row, w)
     w.window.show_all()
 
@@ -186,10 +217,14 @@ def _show_buttons_TC_MIDDLE_layout(widget):
     editorpersistance.save()
 
 def create_edit_buttons_row_buttons(editor_window, modes_pixbufs):
+    global m_pixbufs
+    m_pixbufs = modes_pixbufs
+    _create_buttons(editor_window)
+
+def _create_buttons(editor_window):
     IMG_PATH = respaths.IMAGE_PATH
-    
     editor_window.big_TC = guicomponents.BigTCDisplay()
-    editor_window.modes_selector = guicomponents.ToolSelector(editor_window.mode_selector_pressed, modes_pixbufs, 40, 22)
+    editor_window.modes_selector = guicomponents.ToolSelector(editor_window.mode_selector_pressed, m_pixbufs, 40, 22)
 
     editor_window.zoom_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
     editor_window.zoom_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "zoom_in.png"), updater.zoom_in)
@@ -235,7 +270,6 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     buttons_row.pack_start(w.big_TC.widget, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, 30), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     buttons_row.pack_start(w.modes_selector.widget, False, True, 0)
-    #buttons_row.pack_start(_get_mode_buttons_panel(), False, True, 0)
     buttons_row.pack_start(gtk.Label(), True, True, 0)
     if editorstate.SCREEN_WIDTH > 1279:
         buttons_row.pack_start(_get_tools_buttons(), False, True, 0)
@@ -266,7 +300,7 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     middle_panel = gtk.HBox(False, 0) 
     middle_panel.pack_start(w.big_TC.widget, False, True, 0)
     middle_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
-    middle_panel.pack_start(_get_mode_buttons_panel(), False, True, 0)
+    middle_panel.pack_start(w.modes_selector.widget, False, True, 0)
     
     right_panel = gtk.HBox(False, 0) 
     right_panel.pack_start(gtk.Label(), True, True, 0)
