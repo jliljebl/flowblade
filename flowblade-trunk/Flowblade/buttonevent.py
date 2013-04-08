@@ -25,6 +25,7 @@ import gtk
 import time #added for testing
 
 import appconsts
+import dialogs
 import dialogutils
 import gui
 import guicomponents
@@ -309,6 +310,145 @@ def range_overwrite_pressed():
 def resync_button_pressed():
     syncsplitevent.resync_selected()
 
+def add_transition_pressed():
+    print "add_transition_pressed"
+    if movemodes.selected_track == -1:
+        print "selected track"
+        # INFOWINDOW
+        return
+        
+    track = get_track(movemodes.selected_track)
+    clip_count = movemodes.selected_range_out - movemodes.selected_range_in + 1 # +1 out incl.
+    
+    if not (clip_count == 2):
+        # INFOWINDOW
+        print "clip count"
+        return
+
+    from_clip = track.clips[movemodes.selected_range_in]
+    to_clip = track.clips[movemodes.selected_range_out]
+    
+    # Get available clip handles to do transition
+    from_handle = from_clip.get_length() - from_clip.clip_out
+    from_clip_length = from_clip.clip_out - from_clip.clip_in                                                 
+    to_handle = to_clip.clip_in
+    to_clip_length = to_clip.clip_out - to_clip.clip_in
+    
+    if to_clip_length < from_handle:
+        from_handle = to_clip_length
+    if from_clip_length < to_handle:
+        to_handle = from_clip_length
+        
+    # Images have limitless handles, but we simulate that with big value
+    IMAGE_MEDIA_HANDLE_LENGTH = 1000
+    if from_clip.media_type == appconsts.IMAGE:
+        from_handle = IMAGE_MEDIA_HANDLE_LENGTH
+    if to_clip.media_type == appconsts.IMAGE:
+        to_handle = IMAGE_MEDIA_HANDLE_LENGTH
+     
+    max_length = from_handle + to_handle
+    if max_length == 0:
+        # INFOWINDOW
+        print "max_length"
+        return
+    
+    transition_data = {"track":track,
+                       "from_clip":from_clip,
+                       "to_clip":to_clip,
+                       "from_handle":from_handle,
+                       "to_handle":to_handle,
+                       "max_length":max_length}
+    dialogs.transition_edit_dialog(_add_transition_dialog_callback, transition_data)
+
+def _add_transition_dialog_callback(dialog, response_id, selection_widgets, transition_data):
+    if response_id == gtk.RESPONSE_ACCEPT:
+        _do_centered_transition(dialog, selection_widgets, transition_data)
+
+    dialog.destroy()
+
+def _do_centered_transition(dialog, selection_widgets, transition_data):
+    # Get input data
+    type_combo, pos_combo, length_entry = selection_widgets
+    #name, mlt_service = mlttransitions.transitions[type_combo.get_active()]
+    positioning = pos_combo.get_active()
+
+    try:
+        length = int(length_entry.get_text())
+    except Exception, e:
+        # INFOWINDOW, bad input
+        print str(e)
+        print "entry"
+        return
+
+    from_clip = transition_data["from_clip"]
+    to_clip = transition_data["to_clip"]
+
+    # Get values to build trnasition render sequence
+    # Divide transiotion lenght between clips, odd frame goes to from_clip 
+    real_length = length + 1 # first frame is full from clip frame so we are going to have to drop that
+    to_part = real_length / 2
+    from_part = real_length - to_part
+
+    # Compensate for odd/even
+    # i dunno, just works, I just tested this till it worked
+    if to_part == from_part:
+        add_thingy = 0
+    else:
+        add_thingy = 1
+    
+    if _check_transition_handles((from_part - add_thingy),
+                                 transition_data["from_handle"], 
+                                 to_part - (1 - add_thingy), 
+                                 transition_data["to_handle"]) == False:
+        print "no handles"
+        # INFOWINDOW
+        return
+    
+    # Get from in and out frames
+    from_in = from_clip.clip_out - from_part + add_thingy
+    from_out = from_in + length # or transition will include one frame too many
+    
+    # Get to in and out frames
+    to_in = to_clip.clip_in - to_part - 1 
+    to_out = to_in + length # or transition will include one frame too many
+
+    # Edit clears selection, get track index before selection is cleared
+    trans_index = movemodes.selected_range_out
+    movemodes.clear_selected_clips()
+    transition_mlt_id = "luma"
+    producer_tractor = mlttransitions.get_rendered_transition_tractor(  editorstate.current_sequence(),
+                                                                        from_clip,
+                                                                        to_clip,
+                                                                        from_out,
+                                                                        from_in,
+                                                                        to_out,
+                                                                        to_in,
+                                                                        transition_mlt_id)
+    data = {"transition_data":transition_data,
+            "transition_index":trans_index, # This has not been changed since dialog launched
+            "to_in":to_in, 
+            "to_out":to_out,
+            "from_in":from_in,
+            "from_out":from_out,
+            "from_part":from_part,
+            "to_part":to_part,
+            "mlt_service":mlt_service,
+            "length":int(length)}
+    action = edit.add_centered_transition_action(data)
+    action.do_edit()
+
+
+def _check_transition_handles(from_req, from_handle, to_req, to_handle):
+
+    if from_req > from_handle:
+        # INFOWINDOW
+        return False
+    if to_req  > to_handle:
+        # INFOWINDOW
+        return False
+    
+    return True
+    
 def view_mode_menu_lauched(launcher, event):
     guicomponents.get_monitor_view_popupmenu(launcher, event, _view_mode_menu_item_item_activated)
     

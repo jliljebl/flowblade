@@ -268,6 +268,21 @@ def select_thumbnail_dir(callback, parent_window, current_dir_path, retry_open_m
     dialog.connect('response', callback, (file_select, retry_open_media))
     dialog.show_all()
 
+def select_rendred_clips_dir(callback, parent_window, current_dir_path, retry_open_media):
+    panel, file_select = panels.get_render_folder_select_panel(current_dir_path)
+    cancel_str = _("Cancel").encode('utf-8')
+    ok_str = _("Ok").encode('utf-8')
+    dialog = gtk.Dialog(_("Select Thumbnail Folder"),
+                        parent_window,
+                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                        (cancel_str, gtk.RESPONSE_CANCEL,
+                        ok_str, gtk.RESPONSE_YES))
+
+    dialog.vbox.pack_start(panel, True, True, 0)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, (file_select, retry_open_media))
+    dialog.show_all()
+
 def render_progress_dialog(callback, parent_window):
     dialog = gtk.Dialog(_("Render Progress"),
                          parent_window,
@@ -555,13 +570,13 @@ def color_clip_dialog(callback):
     _default_behaviour(dialog)
     dialog.show_all()
 
-def preferences_dialog(callback, thumbs_clicked_callback):
+def preferences_dialog(callback, thumbs_clicked_callback, render_clicked_callback):
     dialog = gtk.Dialog(_("Editor Preferences"), None,
                     gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                     (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
                     _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
     
-    gen_opts_panel, gen_opts_widgets = panels.get_general_options_panel(thumbs_clicked_callback)
+    gen_opts_panel, gen_opts_widgets = panels.get_general_options_panel(thumbs_clicked_callback, render_clicked_callback)
     edit_prefs_panel, edit_prefs_widgets = panels.get_edit_prefs_panel()
 
     notebook = gtk.Notebook()
@@ -1099,3 +1114,17 @@ def _markers_chapters_check_toggled(widget, data):
     else:
         chapters_view.set_sensitive(False)
         text_buffer.set_text("")
+
+def transition_edit_dialog(callback, transition_data):
+    dialog = gtk.Dialog("Add Transition", None,
+                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                        (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
+                        "Apply", gtk.RESPONSE_ACCEPT))
+
+    alignment, type_combo, pos_combo, length_entry = panels.get_transition_panel(transition_data)
+    widgets = (type_combo, pos_combo, length_entry)
+    dialog.connect('response', callback, widgets, transition_data)
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    _default_behaviour(dialog)
+    dialog.show_all()
+    

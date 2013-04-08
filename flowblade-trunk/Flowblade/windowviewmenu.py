@@ -263,6 +263,9 @@ def _create_buttons(editor_window):
     editor_window.tools_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "open_mixer.png"), audiomonitoring.show_audio_monitor)
     editor_window.tools_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "open_titler.png"), titler.show_titler)
     editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer, Titler"))
+
+    editor_window.transition_button = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
+    editor_window.transition_button.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "dissolve.png"), buttonevent.add_transition_pressed)
     
 def fill_with_TC_LEFT_pattern(buttons_row, window):
     global w
@@ -276,9 +279,11 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
         buttons_row.pack_start(gtk.Label(), True, True, 0)
     buttons_row.pack_start(_get_undo_buttons_panel(), False, True, 0)
     buttons_row.pack_start(gtk.Label(), True, True, 0)
-    buttons_row.pack_start(_get_zoom_buttons_panel(), False, True, 0)
+    buttons_row.pack_start(_get_zoom_buttons_panel(),False, True, 0)
     buttons_row.pack_start(gtk.Label(), True, True, 0)
-    buttons_row.pack_start(_get_edit_buttons_panel(), False, True, 0)
+    buttons_row.pack_start(_get_edit_buttons_panel(),False, True, 0)
+    buttons_row.pack_start(gtk.Label(), True, True, 0)
+    buttons_row.pack_start(_get_transition_button(), False, True, 0)
     buttons_row.pack_start(gtk.Label(), True, True, 0)
     buttons_row.pack_start(_get_monitor_insert_buttons(), False, True, 0)
 
@@ -306,12 +311,15 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     right_panel.pack_start(gtk.Label(), True, True, 0)
     right_panel.pack_start(_get_edit_buttons_panel(), False, True, 0)
     right_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
+    right_panel.pack_start(_get_transition_button(), False, True, 0)
+    right_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
     right_panel.pack_start(_get_monitor_insert_buttons(), False, True, 0)
 
     buttons_row.pack_start(left_panel, True, True, 0)
     buttons_row.pack_start(middle_panel, False, False, 0)
     buttons_row.pack_start(right_panel, True, True, 0)
 
+# These get methods are unnecessery
 def _get_mode_buttons_panel():
     return w.mode_buttons_group.widget
 
@@ -330,6 +338,9 @@ def _get_monitor_insert_buttons():
 def _get_tools_buttons():
     return w.tools_buttons.widget
 
+def _get_transition_button():
+    return w.transition_button.widget
+    
 def _show_tabs_up(widget):
     global w
     w = gui.editor_window

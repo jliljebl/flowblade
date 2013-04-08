@@ -349,3 +349,75 @@ def create_compositor(compositor_type):
     compositor.name = name_for_type[compositor_type]
     compositor.type_id = compositor_type # this is a string like "##add", "##affineblend", in compositors.xml it is name element: <name>##affine</name> etc...
     return compositor
+
+
+
+# ------------------------------------------------------ rendered transitions
+# These are tractor objects used to create quick transitions.
+# action_object:"transition_data","to_in","to_out","from_in","from_out","from_part",
+#"to_part","mlt_service","positioning","length"
+#
+# transition_data contents:"track","from_clip", "to_clip","from_handle","to_handle","max_length"
+def get_rendered_transition_tractor(current_sequence, 
+                                    orig_from,
+                                    orig_to,
+                                    action_from_out,
+                                    action_from_in,
+                                    action_to_out,
+                                    action_to_in,
+                                    transition_mlt_id):
+    # New from clip
+    if orig_from.media_type != appconsts.PATTERN_PRODUCER:
+        from_clip = current_sequence.create_file_producer_clip(orig_from.path)# File producer
+    else:
+        from_clip = current_sequence.create_pattern_producer(orig_from.create_data) # pattern producer
+
+    # New to clip
+    if orig_to.media_type != appconsts.PATTERN_PRODUCER:
+        to_clip = current_sequence.create_file_producer_clip(orig_to.path)# File producer
+    else:
+        to_clip = current_sequence.create_pattern_producer(orig_to.create_data) # pattern producer
+
+    # Clone filters
+    current_sequence.clone_clip_range_and_filters(orig_from, from_clip)
+    current_sequence.clone_clip_range_and_filters(orig_to, to_clip)
+
+    # we'll set in and out points for images andpatter producers.
+    if from_clip.media_type == appconsts.IMAGE or from_clip.media_type == appconsts.PATTERN_PRODUCER:
+        length = action_from_out - action_from_in
+        from_clip.clip_in = 0
+        from_clip.clip_out = length
+    if to_clip.media_type == appconsts.IMAGE or to_clip.media_type == appconsts.PATTERN_PRODUCER:
+        length = action_to_out - action_to_in
+        to_clip.clip_in = 0
+        to_clip.clip_out = length
+
+    # Create tractor and tracks
+    tractor = mlt.Tractor()
+    multitrack = tractor.multitrack()
+    track0 = mlt.Playlist()
+    track1 = mlt.Playlist()
+    multitrack.connect(track0, 0)
+    multitrack.connect(track1, 1)
+    
+    # Add clips. Images and patter producers always fill full track.
+    if from_clip.media_type != appconsts.IMAGE and from_clip.media_type != appconsts.PATTERN_PRODUCER:
+        track0.insert(from_clip, 0, action_from_in, action_from_out)
+    else:
+        track0.insert(from_clip, 0, 0, action_from_out - action_from_in)
+        
+    if to_clip.media_type != appconsts.IMAGE and to_clip.media_type != appconsts.PATTERN_PRODUCER: 
+        track1.insert(to_clip, 0, action_to_in, action_to_out)
+    else:
+        track1.insert(to_clip, 0, 0,  action_to_out - action_to_in)
+
+    # Add transition
+    field = tractor.field()
+    transition = mlt.Transition(current_sequence.profile, str(transition_mlt_id))
+    transition.set("a_track", 0)
+    transition.set("b_track", 1)
+    transition.set("in", 0)
+    transition.set("out", tractor.get_length() - 1)
+    field.plant_transition(transition, 0,1)
+
+    return tractor

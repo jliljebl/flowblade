@@ -1622,7 +1622,68 @@ def _range_over_redo(self):
 
     # HACK, see EditAction for details
     self.turn_on_stop_for_edit = True
-                 
+
+
+#------------------- ADD CENTERED TRANSITION
+#"transition_data","transition_index","to_in","to_out","from_in","from_out","from_part",
+#"to_part","mlt_service","lenght"
+#
+# transition_data contents:"track","from_clip", "to_clip","from_handle","to_handle","max_length"
+def add_centered_transition_action(data):
+    action = EditAction(_add_centered_transition_undo, _add_centered_transition_redo, data)
+    return action
+
+def _add_centered_transition_undo(self):
+    index = self.transition_index
+    track = self.transition_data["track"]
+    from_clip = self.transition_data["from_clip"]
+    to_clip = self.transition_data["to_clip"]
+
+    for i in range(0, 3): # from, trans, to
+        _remove_clip(track, index - 1)
+    
+    _insert_clip(track, from_clip, index - 1, 
+                 from_clip.clip_in, self.orig_from_clip_out)
+    _insert_clip(track, to_clip, index, 
+                 self.orig_to_clip_in, to_clip.clip_out)
+
+def _add_centered_transition_redo(self):
+    t_data = self.transition_data
+    
+    # Get trnasition clip
+    try:# redo
+        transition_clip = self.transition_clip
+    except: # first edit
+        transition_clip = current_sequence().create_transition(self)
+
+    # get shorter refs
+    index = self.transition_index
+    track = t_data["track"]
+    from_clip = t_data["from_clip"]
+    to_clip = t_data["to_clip"]
+    
+    self.orig_from_clip_out = from_clip.clip_out
+    self.orig_to_clip_in = to_clip.clip_in
+
+    # from clip    
+    _remove_clip(track, index - 1)
+    _insert_clip(track, from_clip, index - 1, 
+                 from_clip.clip_in, self.from_in) # self.from_in == transition start on from clip
+    # to clip 
+    _remove_clip(track, index)
+    _insert_clip(track, to_clip, index, 
+                         self.to_out + 1, to_clip.clip_out)  # self.to_out == transition end on to clip
+                                                            # + 1  == because frame is part of inserted transition
+
+    _insert_clip(track, transition_clip, 
+                 self.transition_index, 1, # first frame is dropped as it is 100% from clip
+                 transition_clip.get_length() - 1)
+    
+    # These need to be copied for persistance purposes.
+    transition_clip.save_data.clip_in = transition.clip_in
+    transition_clip.save_data.clip_out = transition.clip_out      
+
+
 # --------------------------------------------- help funcs for "range over" and "range splice out" edits
 # NOTE: RANGE SPLICE OUT NOT IMPLEMENTED YET; SO THIS BASICALLY UNNECESSARY METHOD.
 def _track_put_back_range(over_in, track, track_extract_data):

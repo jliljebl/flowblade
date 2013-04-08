@@ -145,7 +145,7 @@ def get_recent_projects():
 def update_prefs_from_widgets(widgets_tuples_tuple):
     # Unpack widgets
     gen_opts_widgets, edit_prefs_widgets = widgets_tuples_tuple
-    default_profile_combo, open_in_last_opened_check, undo_max_spin, disp_splash, default_tracks_combo = gen_opts_widgets
+    default_profile_combo, open_in_last_opened_check, undo_max_spin, disp_splash = gen_opts_widgets
     auto_play_in_clip_monitor_check, auto_center_check, auto_move_on_edit, grfx_insert_length_spin = edit_prefs_widgets
 
     global prefs
@@ -153,7 +153,6 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.display_splash_screen = disp_splash.get_active()
 
     prefs.default_profile_name = mltprofiles.get_profile_name_for_index(default_profile_combo.get_active())
-    prefs.track_configuration = default_tracks_combo.get_active()
     prefs.undos_max = undo_max_spin.get_adjustment().get_value()
 
     prefs.auto_play_in_clip_monitor = auto_play_in_clip_monitor_check.get_active()
@@ -198,4 +197,4 @@ class EditorPreferences:
         self.app_v_paned_position = 500 # Paned get/set position value
         self.top_paned_position = 600 # Paned get/set position value
         self.mm_paned_position = 260 # Paned get/set position value
-        
+        self.render_folder = None

@@ -361,10 +361,13 @@ def _profiles_manager_unhide_profiles_clicked(visible_view, hidden_view):
 
 # ------------------------------------------------------- preferences
 def display_preferences():
-    dialogs.preferences_dialog(_preferences_dialog_callback, _thumbs_select_clicked)
+    dialogs.preferences_dialog(_preferences_dialog_callback, _thumbs_select_clicked, _renders_select_clicked)
 
 def _thumbs_select_clicked(widget):
     dialogs.select_thumbnail_dir(useraction.select_thumbnail_dir_callback, gui.editor_window.window, editorpersistance.prefs.thumbnail_folder, False)
+
+def _renders_select_clicked(widget):
+    dialogs.select_rendred_clips_dir(useraction.select_render_clips_dir_callback, gui.editor_window.window, editorpersistance.prefs.render_folder, False)
 
 def _preferences_dialog_callback(dialog, response_id, all_widgets):
     if response_id == gtk.RESPONSE_ACCEPT:

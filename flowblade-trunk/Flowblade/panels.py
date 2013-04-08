@@ -332,6 +332,27 @@ def get_thumbnail_select_panel(current_folder_path):
     
     return (panel, out_folder)
 
+def get_render_folder_select_panel(current_folder_path):    
+    texts_panel = get_two_text_panel(_("Select folder for rendered clips."), 
+                                     _("Old rendered clips in this or other projects will") + 
+                                     _(" still be available,\nthis only affects thumnails that are created for new media.\n") + 
+                                     _("\nSetting your home folder as folder for rendered clips is not allowed."))
+        
+    out_folder = gtk.FileChooserButton("Select Folder")
+    out_folder.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+    if current_folder_path != None:
+        out_folder.set_current_folder(current_folder_path)
+
+    out_folder_align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    out_folder_align.set_padding(12, 24, 12, 12)
+    out_folder_align.add(out_folder)
+    
+    panel = gtk.VBox()
+    panel.pack_start(texts_panel, False, False, 0)
+    panel.pack_start(out_folder_align, False, False, 0)
+    
+    return (panel, out_folder)
+    
 def _set_sensive_widgets(sensitive, list):
     for widget in list:
         widget.set_sensitive(sensitive)
@@ -559,7 +580,7 @@ def get_color_clip_panel():
 
     return align, (name_entry, color_button)
 
-def get_general_options_panel(folder_select_clicked_cb):
+def get_general_options_panel(folder_select_clicked_cb, render_folder_select_clicked_cb):
     prefs = editorpersistance.prefs
 
     # Widgets
@@ -576,8 +597,11 @@ def get_general_options_panel(folder_select_clicked_cb):
     undo_max_spin = gtk.SpinButton(spin_adj)
     undo_max_spin.set_numeric(True)
 
-    folder_select = gtk.Button(_("Select Folder"))
+    folder_select = gtk.Button(_("Select Folder")) # thumbnails
     folder_select.connect("clicked" , folder_select_clicked_cb)
+
+    render_folder_select = gtk.Button(_("Select Folder"))
+    render_folder_select.connect("clicked" , render_folder_select_clicked_cb)
 
     display_splash_check = gtk.CheckButton()
     display_splash_check.set_active(prefs.display_splash_screen)
@@ -587,9 +611,6 @@ def get_general_options_panel(folder_select_clicked_cb):
         time, desc = editorpersistance.prefs.AUTO_SAVE_OPTS[i]
         autosave_combo.append_text(desc)
     autosave_combo.set_active(prefs.auto_save_delay_value_index)
-    
-    tracks_combo, values_list = guicomponents.get_track_counts_combo_and_values_list()
-    tracks_combo.set_active(prefs.track_configuration)
 
     # Layout
     row1 = get_two_column_box(gtk.Label(_("Default Profile")), default_profile_combo, PREFERENCES_LEFT)
@@ -598,23 +619,23 @@ def get_general_options_panel(folder_select_clicked_cb):
     row4 = get_two_column_box(gtk.Label(_("Thumbnail folder")), folder_select, PREFERENCES_LEFT)
     row5 = get_two_column_box(gtk.Label(_("Display splash screen")), display_splash_check, PREFERENCES_LEFT)
     row6 = get_two_column_box(gtk.Label(_("Autosave for crash recovery every")), autosave_combo, PREFERENCES_LEFT)
-    row7 = get_two_column_box(gtk.Label(_("Default tracks count")), tracks_combo, PREFERENCES_LEFT)
-    
+    row8 = get_two_column_box(gtk.Label(_("Rendered Clips folder")), render_folder_select, PREFERENCES_LEFT)
+
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)
-    # vbox.pack_start(row7, False, False, 0) # feature handled at project and sequence creatoin, delete preference if 
     vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row3, False, False, 0)
     vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row5, False, False, 0)
+    vbox.pack_start(row8, False, False, 0)
     vbox.pack_start(gtk.Label(), True, True, 0)
     
     align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     align.set_padding(12, 0, 12, 12)
     align.add(vbox)
 
-    return align, (default_profile_combo, open_in_last_opened_check, undo_max_spin, display_splash_check, tracks_combo)
+    return align, (default_profile_combo, open_in_last_opened_check, undo_max_spin, display_splash_check)
 
 def get_edit_prefs_panel():
     prefs = editorpersistance.prefs
@@ -880,7 +901,67 @@ def get_project_info_panel():
     align.add(project_info_vbox)
     
     return align
+
+def get_transition_panel(trans_data):
+    type_combo_box = gtk.combo_box_new_text()
     
+    rendered_transitions = [("Dissolve","luma")]
+    for transition in rendered_transitions:
+        name, t_service_name = transition
+        type_combo_box.append_text(name)
+
+    type_combo_box.set_active(0)    
+    type_row = get_two_column_box(gtk.Label("Type:"), 
+                                 type_combo_box)
+                                 
+    pos_combo_box = gtk.combo_box_new_text()
+
+    # Index values correspond to constants in cliprenderer.py
+    pos_combo_box.append_text("Centered on cut")
+    pos_combo_box.append_text("Starting at Cut")
+    pos_combo_box.append_text("Ending at Cut")
+    pos_combo_box.set_active(0)    
+    pos_row = get_two_column_box(gtk.Label("Position:"), 
+                                 pos_combo_box)
+    
+    length_entry = gtk.Entry()
+    length_entry.set_text(str(30))    
+    length_row = get_two_column_box(gtk.Label("Length:"), 
+                                    length_entry)
+                                    
+    filler = gtk.Label()
+    filler.set_size_request(10,10)
+
+    out_clip_label = gtk.Label("From Clip Handle:")
+    out_clip_value = gtk.Label(trans_data["from_handle"])
+    
+    in_clip_label = gtk.Label("To Clip Handle:")
+    in_clip_value = gtk.Label(trans_data["to_handle"])
+
+
+    out_handle_row = get_two_column_box(out_clip_label, 
+                                        out_clip_value)
+    in_handle_row = get_two_column_box(in_clip_label, 
+                                       in_clip_value)
+
+    edit_vbox = gtk.VBox(False, 2)
+    edit_vbox.pack_start(type_row, False, False, 0)
+    edit_vbox.pack_start(pos_row, False, False, 0)
+    edit_vbox.pack_start(length_row, False, False, 0)
+
+    data_vbox = gtk.VBox(False, 2)
+    data_vbox.pack_start(out_handle_row, False, False, 0)
+    data_vbox.pack_start(in_handle_row, False, False, 0)
+
+    vbox = gtk.VBox(False, 2)
+    vbox.pack_start(get_named_frame("Transition Options",  edit_vbox))
+    vbox.pack_start(get_named_frame("Clips info",  data_vbox))
+
+    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment.set_padding(12, 24, 12, 12)
+    alignment.add(vbox)
+    return (alignment, type_combo_box, pos_combo_box, length_entry)
+
 # -------------------------------------------------- guiutils
 def get_bold_label(text):
     return guiutils.bold_label(text)
