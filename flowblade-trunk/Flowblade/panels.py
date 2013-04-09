@@ -143,7 +143,7 @@ def get_profile_info_panel(profile):
     panel.pack_start(info, False, True, 0)
     return get_named_frame(_("Profile"), panel)
     
-def get_events_panel(events_list_view):
+def get_media_log_events_panel(events_list_view):
     auto_log_mode_combo = gtk.combo_box_new_text()
     auto_log_mode_combo.append_text(_("All Events"))
     auto_log_mode_combo.append_text(_("Insert Events"))
@@ -893,10 +893,12 @@ def get_manage_profiles_panel(delete_user_profiles, hide_selected, unhide_select
 def get_project_info_panel():
     name_panel = get_project_name_panel(editorstate.project.name)
     profile_info = get_profile_info_panel(editorstate.project.profile)
+    events_panel = get_project_events_panel()
     
     project_info_vbox = gtk.VBox()
     project_info_vbox.pack_start(name_panel, False, True, 0)
     project_info_vbox.pack_start(profile_info, False, True, 0)
+    project_info_vbox.pack_start(events_panel, False, True, 0)
 
     align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     align.set_padding(0, 24, 12, 12)
@@ -904,6 +906,12 @@ def get_project_info_panel():
     
     return align
 
+def get_project_events_panel():
+    events_list = guicomponents.ProjectEventListView()
+    events_list.set_size_request(550, 300)
+    events_list.fill_data_model()
+    return guiutils.get_named_frame(_("Project Events"), events_list)
+    
 def get_transition_panel(trans_data):
     type_combo_box = gtk.combo_box_new_text()
     

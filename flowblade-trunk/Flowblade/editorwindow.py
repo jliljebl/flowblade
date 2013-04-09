@@ -400,12 +400,9 @@ class EditorWindow:
                              lambda w,e: useraction.add_new_sequence(), 
                              lambda w,e: useraction.delete_selected_sequence())
 
-        # Events List
-        self.events_list_view = guicomponents.EventsListView()
-
-        # Events panel
-        events_panel = panels.get_events_panel(self.events_list_view)
-
+        # Media log events List
+        self.media_log_events_list_view = guicomponents.MediaLogListView()
+        events_panel = panels.get_media_log_events_panel(self.media_log_events_list_view)
         
         # Project vbox and panel
         project_vbox = gtk.HBox()

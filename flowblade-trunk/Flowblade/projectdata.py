@@ -32,6 +32,7 @@ import thread
 import threading
 
 import appconsts
+import datetime
 import editorpersistance
 import mltprofiles
 import patternproducer
@@ -45,6 +46,14 @@ SAVEFILE_VERSION = 3 # this changed when backwards incompatible changes
 
 
 FALLBACK_THUMB = "fallback_thumb.png"
+
+# Project events
+EVENT_CREATED_BY_NEW_DIALOG = 0
+EVENT_CREATED_BY_SAVING = 1
+EVENT_SAVED = 2
+EVENT_SAVED_AS = 3
+EVENT_RENDERED = 4
+EVENT_OPENED = 5
 
 # Singleton
 thumbnail_thread = None
@@ -63,11 +72,12 @@ class Project:
         self.bins = []
         self.media_files = {} # MediaFile.id(key) -> MediaFile object(value)
         self.sequences = []
-        self.events = []
         self.next_media_file_id = 0 
         self.next_bin_number = 1 # This is for creating name for new bin 
         self.next_seq_number = 1 # This is for creating name for new bin
         self.last_save_path = None
+        self.events = []  # new
+        self.media_log = [] # new 
         self.SAVEFILE_VERSION = SAVEFILE_VERSION
         
         # c_seq is the currently edited Sequence
@@ -322,6 +332,38 @@ class ThumbnailThread(threading.Thread):
         if self.consumer != None:
             self.consumer.stop()
         self.running = False
+
+# ----------------------------------- project events
+class ProjectEvent:
+    def __init__(self, event_type, data):
+        self.event_type = event_type
+        self.timestamp = datetime.datetime.now()
+        self.data = data
+
+    def get_date_str(self):
+        date_str = self.timestamp.strftime('%d %B, %Y - %X')
+        date_str = date_str.lstrip('0')
+        return date_str
+
+    def get_description(self):
+        
+        if self.event_type == EVENT_CREATED_BY_NEW_DIALOG:
+            v, a = self.data
+            return "Created using dialog, " + str(v) + " video tracks, " + str(a) + " audio tracks"
+        elif self.event_type == EVENT_CREATED_BY_SAVING:
+            return "Created using Save As..., " + self.data
+        elif self.event_type == EVENT_SAVED:
+            return "Saved " + self.data
+        elif self.event_type == EVENT_SAVED_AS:
+            name, path = self.data
+            return "Saved as " + name + ", " + path
+        elif self.event_type == EVENT_RENDERED:
+            return "Rendered into " + self.data
+        elif self.event_type == EVENT_OPENED:
+            return "Opened"
+        else:
+            return "Unknown project event, bug or data corruption"
+
     
 
 # ------------------------------- MODULE FUNCTIONS

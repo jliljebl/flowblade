@@ -146,6 +146,70 @@ class ImageTextTextListView(gtk.VBox):
         model, rows = self.treeview.get_selection().get_selected_rows()
         return rows
 
+# ------------------------------------------------- item lists 
+class TextTextListView(gtk.VBox):
+    """
+    GUI component displaying list with columns: img, text, text
+    Middle column expands.
+    """
+
+    def __init__(self):
+        gtk.VBox.__init__(self)
+
+        style = self.get_style()
+        bg_col = style.bg[gtk.STATE_NORMAL]
+        
+       # Datamodel: text, text
+        self.storemodel = gtk.ListStore(str, str)
+ 
+        # Scroll container
+        self.scroll = gtk.ScrolledWindow()
+        self.scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        self.scroll.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+
+        # View
+        self.treeview = gtk.TreeView(self.storemodel)
+        self.treeview.set_property("rules_hint", True)
+        self.treeview.set_headers_visible(False)
+        tree_sel = self.treeview.get_selection()
+        tree_sel.set_mode(gtk.SELECTION_SINGLE)
+
+        # Column views
+        self.text_col_1 = gtk.TreeViewColumn("text1")
+        self.text_col_2 = gtk.TreeViewColumn("text2")
+        
+        # Cell renderers
+        self.text_rend_1 = gtk.CellRendererText()
+        self.text_rend_1.set_property("ellipsize", pango.ELLIPSIZE_END)
+
+        self.text_rend_2 = gtk.CellRendererText()
+        self.text_rend_2.set_property("yalign", 0.0)
+
+        # Build column views
+        self.text_col_1.set_expand(True)
+        self.text_col_1.set_spacing(5)
+        self.text_col_1.set_sizing(gtk.TREE_VIEW_COLUMN_GROW_ONLY)
+        self.text_col_1.set_min_width(150)
+        self.text_col_1.pack_start(self.text_rend_1)
+        self.text_col_1.add_attribute(self.text_rend_1, "text", 0)
+
+        self.text_col_2.set_expand(True)
+        self.text_col_2.pack_start(self.text_rend_2)
+        self.text_col_2.add_attribute(self.text_rend_2, "text", 1)
+        
+        # Add column views to view
+        self.treeview.append_column(self.text_col_1)
+        self.treeview.append_column(self.text_col_2)
+
+        # Build widget graph and display
+        self.scroll.add(self.treeview)
+        self.pack_start(self.scroll)
+        self.scroll.show_all()
+
+    def get_selected_rows_list(self):
+        model, rows = self.treeview.get_selection().get_selected_rows()
+        return rows
+        
 class ImageTextImageListView(gtk.VBox):
     """
     GUI component displaying list with columns: img, text, img
@@ -254,7 +318,26 @@ class SequenceListView(ImageTextTextListView):
             self.scroll.queue_draw()
 
 
-class EventsListView(ImageTextTextListView):
+class ProjectEventListView(TextTextListView):
+
+    def __init__(self):
+        TextTextListView.__init__(self)
+        self.text_col_1.set_min_width(170)
+
+    def fill_data_model(self):
+        """
+        Creates displayed data.
+        Displays icon, sequence name and sequence length
+        """
+        self.storemodel.clear()
+        for e in PROJECT().events:
+            t = e.get_date_str()
+            desc = e.get_description()
+            row_data = [t, desc]
+            self.storemodel.append(row_data)
+            self.scroll.queue_draw()
+
+class MediaLogListView(ImageTextTextListView):
 
     def __init__(self):
         ImageTextTextListView.__init__(self)
@@ -268,9 +351,11 @@ class EventsListView(ImageTextTextListView):
         Displays icon, sequence name and sequence length
         """
         self.storemodel.clear()
-
-
-
+        for log_event in PROJECT().media_log:
+            if log_event.starred == True:
+                icon = gtk.gdk.pixbuf_new_from_file(None)
+            else:
+                icon = None
 
 class MediaListView(ImageTextTextListView):
     """

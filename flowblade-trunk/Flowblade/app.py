@@ -104,7 +104,7 @@ def main(root_path):
         os.mkdir(user_dir + AUTOSAVE_DIR)
     if not os.path.exists(user_dir + BATCH_DIR):
         os.mkdir(user_dir + BATCH_DIR)
-        
+
     # Allow only on instance to run
     pid_file_path = user_dir + PID_FILE
     # Exit and info dialog launched below if can_run is False

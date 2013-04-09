@@ -182,8 +182,12 @@ def new_project():
 def _new_project_dialog_callback(dialog, response_id, profile_combo, tracks_combo, tracks_combo_values_list):
     v_tracks, a_tracks = tracks_combo_values_list[tracks_combo.get_active()]
     if response_id == gtk.RESPONSE_ACCEPT:
+        
         app.new_project(profile_combo.get_active(), v_tracks, a_tracks)
         dialog.destroy()
+        
+        project_event = projectdata.ProjectEvent(projectdata.EVENT_CREATED_BY_NEW_DIALOG, (v_tracks, a_tracks))
+        PROJECT().events.append(project_event)
     else:
         dialog.destroy()
 
@@ -254,7 +258,12 @@ def _save_as_dialog_callback(dialog, response_id):
         PROJECT().last_save_path = filenames[0]
         PROJECT().name = os.path.basename(filenames[0])
         updater.set_info_icon(gtk.STOCK_SAVE)
-        
+
+        if len(PROJECT().events) == 0: # Save as... with 0 project events is considered Project creation
+            print type(PROJECT().last_save_path)
+            p_event = projectdata.ProjectEvent(projectdata.EVENT_CREATED_BY_SAVING, PROJECT().last_save_path)
+            PROJECT().events.append(p_event)
+
         persistance.save_project(PROJECT(), PROJECT().last_save_path) #<----- HERE
         
         app.stop_autosave()
