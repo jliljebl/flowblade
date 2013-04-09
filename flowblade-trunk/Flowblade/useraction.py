@@ -260,10 +260,12 @@ def _save_as_dialog_callback(dialog, response_id):
         updater.set_info_icon(gtk.STOCK_SAVE)
 
         if len(PROJECT().events) == 0: # Save as... with 0 project events is considered Project creation
-            print type(PROJECT().last_save_path)
             p_event = projectdata.ProjectEvent(projectdata.EVENT_CREATED_BY_SAVING, PROJECT().last_save_path)
             PROJECT().events.append(p_event)
-
+        else:
+            p_event = projectdata.ProjectEvent(projectdata.EVENT_SAVED_AS, (PROJECT().name, PROJECT().last_save_path))
+            PROJECT().events.append(p_event)
+            
         persistance.save_project(PROJECT(), PROJECT().last_save_path) #<----- HERE
         
         app.stop_autosave()

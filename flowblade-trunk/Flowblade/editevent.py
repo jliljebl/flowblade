@@ -284,6 +284,7 @@ def tline_canvas_mouse_pressed(event, frame):
     if EDIT_MODE() == editorstate.SELECT_PARENT_CLIP:
         syncsplitevent.select_sync_parent_mouse_pressed(event, frame)
         mouse_disabled = True
+        # FIX THIS FOR SYNCH SHIT
         # Set INSERT_MODE with programmed click if insert mode button not down
         # and just calling the mode intilizing  method if button is already pressed
         if  gui.editor_window.mode_buttons_group.pressed_button != 1:

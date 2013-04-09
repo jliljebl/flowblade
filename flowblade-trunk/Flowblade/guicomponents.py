@@ -147,68 +147,7 @@ class ImageTextTextListView(gtk.VBox):
         return rows
 
 # ------------------------------------------------- item lists 
-class TextTextListView(gtk.VBox):
-    """
-    GUI component displaying list with columns: img, text, text
-    Middle column expands.
-    """
 
-    def __init__(self):
-        gtk.VBox.__init__(self)
-
-        style = self.get_style()
-        bg_col = style.bg[gtk.STATE_NORMAL]
-        
-       # Datamodel: text, text
-        self.storemodel = gtk.ListStore(str, str)
- 
-        # Scroll container
-        self.scroll = gtk.ScrolledWindow()
-        self.scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        self.scroll.set_shadow_type(gtk.SHADOW_ETCHED_IN)
-
-        # View
-        self.treeview = gtk.TreeView(self.storemodel)
-        self.treeview.set_property("rules_hint", True)
-        self.treeview.set_headers_visible(False)
-        tree_sel = self.treeview.get_selection()
-        tree_sel.set_mode(gtk.SELECTION_SINGLE)
-
-        # Column views
-        self.text_col_1 = gtk.TreeViewColumn("text1")
-        self.text_col_2 = gtk.TreeViewColumn("text2")
-        
-        # Cell renderers
-        self.text_rend_1 = gtk.CellRendererText()
-        self.text_rend_1.set_property("ellipsize", pango.ELLIPSIZE_END)
-
-        self.text_rend_2 = gtk.CellRendererText()
-        self.text_rend_2.set_property("yalign", 0.0)
-
-        # Build column views
-        self.text_col_1.set_expand(True)
-        self.text_col_1.set_spacing(5)
-        self.text_col_1.set_sizing(gtk.TREE_VIEW_COLUMN_GROW_ONLY)
-        self.text_col_1.set_min_width(150)
-        self.text_col_1.pack_start(self.text_rend_1)
-        self.text_col_1.add_attribute(self.text_rend_1, "text", 0)
-
-        self.text_col_2.set_expand(True)
-        self.text_col_2.pack_start(self.text_rend_2)
-        self.text_col_2.add_attribute(self.text_rend_2, "text", 1)
-        
-        # Add column views to view
-        self.treeview.append_column(self.text_col_1)
-        self.treeview.append_column(self.text_col_2)
-
-        # Build widget graph and display
-        self.scroll.add(self.treeview)
-        self.pack_start(self.scroll)
-        self.scroll.show_all()
-
-    def get_selected_rows_list(self):
-        model, rows = self.treeview.get_selection().get_selected_rows()
-        return rows
         
 class ImageTextImageListView(gtk.VBox):
     """
@@ -245,6 +184,7 @@ class ImageTextImageListView(gtk.VBox):
         # Cell renderers
         self.icon_rend_1 = gtk.CellRendererPixbuf()
         self.icon_rend_1.props.xpad = 6
+
         self.text_rend_1 = gtk.CellRendererText()
         self.text_rend_1.set_property("ellipsize", pango.ELLIPSIZE_END)
 
@@ -318,11 +258,72 @@ class SequenceListView(ImageTextTextListView):
             self.scroll.queue_draw()
 
 
-class ProjectEventListView(TextTextListView):
+class ProjectEventListView(gtk.VBox):
 
     def __init__(self):
-        TextTextListView.__init__(self)
-        self.text_col_1.set_min_width(170)
+        gtk.VBox.__init__(self)
+
+        style = self.get_style()
+        bg_col = style.bg[gtk.STATE_NORMAL]
+        
+       # Datamodel: text, text, text
+        self.storemodel = gtk.ListStore(str, str, str)
+ 
+        # Scroll container
+        self.scroll = gtk.ScrolledWindow()
+        self.scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        self.scroll.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+
+        # View
+        self.treeview = gtk.TreeView(self.storemodel)
+        self.treeview.set_property("rules_hint", True)
+        self.treeview.set_headers_visible(True)
+        tree_sel = self.treeview.get_selection()
+        tree_sel.set_mode(gtk.SELECTION_SINGLE)
+
+        # Column views
+        self.text_col_1 = gtk.TreeViewColumn("text1")
+        self.text_col_1.set_title(_("Date"))
+        self.text_col_2 = gtk.TreeViewColumn("text2")
+        self.text_col_2.set_title(_("Event"))
+        self.text_col_3 = gtk.TreeViewColumn("text3")
+        self.text_col_3.set_title(_("Path"))
+
+        # Cell renderers
+        self.text_rend_1 = gtk.CellRendererText()
+        self.text_rend_1.set_property("ellipsize", pango.ELLIPSIZE_END)
+
+        self.text_rend_2 = gtk.CellRendererText()
+        self.text_rend_2.set_property("yalign", 0.0)
+
+        self.text_rend_3 = gtk.CellRendererText()
+        self.text_rend_3.set_property("yalign", 0.0)
+
+        # Build column views
+        self.text_col_1.set_expand(True)
+        self.text_col_1.set_spacing(5)
+        self.text_col_1.set_sizing(gtk.TREE_VIEW_COLUMN_GROW_ONLY)
+        self.text_col_1.set_min_width(150)
+        self.text_col_1.pack_start(self.text_rend_1)
+        self.text_col_1.add_attribute(self.text_rend_1, "text", 0)
+
+        self.text_col_2.set_expand(True)
+        self.text_col_2.pack_start(self.text_rend_2)
+        self.text_col_2.add_attribute(self.text_rend_2, "text", 1)
+
+        self.text_col_3.set_expand(True)
+        self.text_col_3.pack_start(self.text_rend_3)
+        self.text_col_3.add_attribute(self.text_rend_3, "text", 2)
+        
+        # Add column views to view
+        self.treeview.append_column(self.text_col_1)
+        self.treeview.append_column(self.text_col_2)
+        self.treeview.append_column(self.text_col_3)
+
+        # Build widget graph and display
+        self.scroll.add(self.treeview)
+        self.pack_start(self.scroll)
+        self.scroll.show_all()
 
     def fill_data_model(self):
         """
@@ -332,18 +333,119 @@ class ProjectEventListView(TextTextListView):
         self.storemodel.clear()
         for e in PROJECT().events:
             t = e.get_date_str()
-            desc = e.get_description()
-            row_data = [t, desc]
+            desc, path = e.get_desc_and_path()
+            row_data = [t, desc, path]
             self.storemodel.append(row_data)
-            self.scroll.queue_draw()
+        
+        self.scroll.queue_draw()
+
 
 class MediaLogListView(ImageTextTextListView):
 
     def __init__(self):
-        ImageTextTextListView.__init__(self)
+        gtk.VBox.__init__(self)
+
+        style = self.get_style()
+        bg_col = style.bg[gtk.STATE_NORMAL]
         
-        # Icon path
-        self.icon_path = respaths.ROOT_PATH + SEQUENCE_IMG_PATH
+       # Datamodel: icon, text, text
+        self.storemodel = gtk.ListStore(gtk.gdk.Pixbuf, str, str, str, str, str, str)
+ 
+        # Scroll container
+        self.scroll = gtk.ScrolledWindow()
+        self.scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.scroll.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+
+        # View
+        self.treeview = gtk.TreeView(self.storemodel)
+        self.treeview.set_property("rules_hint", True)
+        self.treeview.set_headers_visible(True)
+        tree_sel = self.treeview.get_selection()
+        tree_sel.set_mode(gtk.SELECTION_SINGLE)
+
+        # Column views
+        self.icon_col_1 = gtk.TreeViewColumn("icon1")
+        self.icon_col_1.set_title(_("Starred"))
+        self.text_col_1 = gtk.TreeViewColumn("text1")
+        self.text_col_1.set_title(_("Event"))
+        self.text_col_2 = gtk.TreeViewColumn("text2")
+        self.text_col_2.set_title(_("Comment"))
+        self.text_col_3 = gtk.TreeViewColumn("text3")
+        self.text_col_3.set_title(_("File Name"))
+        self.text_col_4 = gtk.TreeViewColumn("text4")
+        self.text_col_4.set_title(_("Mark In"))
+        self.text_col_5 = gtk.TreeViewColumn("text5")
+        self.text_col_5.set_title(_("Mark Out"))
+        self.text_col_6 = gtk.TreeViewColumn("text6")
+        self.text_col_6.set_title(_("Date"))
+    
+        # Cell renderers
+        self.icon_rend_1 = gtk.CellRendererPixbuf()
+        self.icon_rend_1.props.xpad = 6
+        self.text_rend_1 = gtk.CellRendererText()
+        self.text_rend_1.set_property("ellipsize", pango.ELLIPSIZE_END)
+
+        self.text_rend_2 = gtk.CellRendererText()
+        self.text_rend_2.set_property("yalign", 0.0)
+
+        self.text_rend_3 = gtk.CellRendererText()
+        self.text_rend_3.set_property("yalign", 0.0)
+
+        self.text_rend_4 = gtk.CellRendererText()
+        self.text_rend_4.set_property("yalign", 0.0)
+
+        self.text_rend_5 = gtk.CellRendererText()
+        self.text_rend_5.set_property("yalign", 0.0)
+
+        self.text_rend_6 = gtk.CellRendererText()
+        self.text_rend_6.set_property("yalign", 0.0)
+
+        # Build column views
+        self.icon_col_1.set_expand(False)
+        self.icon_col_1.set_spacing(5)
+        self.icon_col_1.pack_start(self.icon_rend_1)
+        self.icon_col_1.add_attribute(self.icon_rend_1, 'pixbuf', 0)
+    
+        self.text_col_1.set_expand(True)
+        self.text_col_1.set_spacing(5)
+        self.text_col_1.set_sizing(gtk.TREE_VIEW_COLUMN_GROW_ONLY)
+        self.text_col_1.set_min_width(150)
+        self.text_col_1.pack_start(self.text_rend_1)
+        self.text_col_1.add_attribute(self.text_rend_1, "text", 1)
+
+        self.text_col_2.set_expand(True)
+        self.text_col_2.pack_start(self.text_rend_2)
+        self.text_col_2.add_attribute(self.text_rend_2, "text", 2)
+
+        self.text_col_3.set_expand(True)
+        self.text_col_3.pack_start(self.text_rend_3)
+        self.text_col_3.add_attribute(self.text_rend_3, "text", 3)
+
+        self.text_col_4.set_expand(True)
+        self.text_col_4.pack_start(self.text_rend_4)
+        self.text_col_4.add_attribute(self.text_rend_4, "text", 4)
+
+        self.text_col_5.set_expand(True)
+        self.text_col_5.pack_start(self.text_rend_5)
+        self.text_col_5.add_attribute(self.text_rend_5, "text", 5)
+
+        self.text_col_6.set_expand(True)
+        self.text_col_6.pack_start(self.text_rend_6)
+        self.text_col_6.add_attribute(self.text_rend_6, "text", 6)
+        
+        # Add column views to view
+        self.treeview.append_column(self.icon_col_1)
+        self.treeview.append_column(self.text_col_1)
+        self.treeview.append_column(self.text_col_2)
+        self.treeview.append_column(self.text_col_3)
+        self.treeview.append_column(self.text_col_4)
+        self.treeview.append_column(self.text_col_5)
+        self.treeview.append_column(self.text_col_6)
+
+        # Build widget graph and display
+        self.scroll.add(self.treeview)
+        self.pack_start(self.scroll)
+        self.scroll.show_all()
 
     def fill_data_model(self):
         """
@@ -356,7 +458,17 @@ class MediaLogListView(ImageTextTextListView):
                 icon = gtk.gdk.pixbuf_new_from_file(None)
             else:
                 icon = None
+            row_data = [icon, 
+                        log_event.get_event_name(),
+                        log_event.comment,
+                        log_event.name,
+                        log_event.get_mark_in_str(),
+                        log_event.get_mark_out_str(),
+                        log_event.get_date_str()]
+            self.storemodel.append(row_data)
 
+        self.scroll.queue_draw()
+        
 class MediaListView(ImageTextTextListView):
     """
     GUI component displaying list of media files.

@@ -41,6 +41,7 @@ import movemodes
 import mlttransitions
 import render
 import renderconsumer
+import projectdata
 import syncsplitevent
 import tlinewidgets
 import updater
@@ -202,6 +203,10 @@ def insert_button_pressed():
         return
 
     editevent.do_clip_insert(track, new_clip, tline_pos)
+    
+    print "jksksks"
+    projectdata.register_media_insert_event()
+    gui.editor_window.media_log_events_list_view.fill_data_model()
 
 def append_button_pressed():
     track = current_sequence().get_first_active_track()

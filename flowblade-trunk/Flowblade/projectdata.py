@@ -34,6 +34,7 @@ import threading
 import appconsts
 import datetime
 import editorpersistance
+import editorstate
 import mltprofiles
 import patternproducer
 import respaths
@@ -54,6 +55,10 @@ EVENT_SAVED = 2
 EVENT_SAVED_AS = 3
 EVENT_RENDERED = 4
 EVENT_OPENED = 5
+
+# Media log evnts
+MEDIA_LOG_INSERT = 0
+MEDIA_LOG_MARKS_SET = 1
 
 # Singleton
 thumbnail_thread = None
@@ -341,30 +346,67 @@ class ProjectEvent:
         self.data = data
 
     def get_date_str(self):
-        date_str = self.timestamp.strftime('%d %B, %Y - %X')
+        date_str = self.timestamp.strftime('%d %B, %Y - %H:%M')
         date_str = date_str.lstrip('0')
         return date_str
 
-    def get_description(self):
+    def get_desc_and_path(self):
         
         if self.event_type == EVENT_CREATED_BY_NEW_DIALOG:
             v, a = self.data
-            return "Created using dialog, " + str(v) + " video tracks, " + str(a) + " audio tracks"
+            return ("Created using dialog, " + str(v) + " V tracks, " + str(a) + " S tracks", None)
         elif self.event_type == EVENT_CREATED_BY_SAVING:
-            return "Created using Save As..., " + self.data
+            return ("Created using Save As... ", self.data)
         elif self.event_type == EVENT_SAVED:
-            return "Saved " + self.data
+            return ("Saved ", self.data)
         elif self.event_type == EVENT_SAVED_AS:
             name, path = self.data
-            return "Saved as " + name + ", " + path
+            return ("Saved as " + name, path)
         elif self.event_type == EVENT_RENDERED:
-            return "Rendered into " + self.data
+            return ("Rendered into ", self.data)
         elif self.event_type == EVENT_OPENED:
-            return "Opened"
+            return ("Opened", self.data)
         else:
-            return "Unknown project event, bug or data corruption"
+            return ("Unknown project event, bug or data corruption", None)
 
-    
+class MediaLogEvent:
+    def __init__(self, event_type, mark_in, mark_out, name, path):
+        self.event_type = event_type
+        self.timestamp = datetime.datetime.now()
+        self.mark_in = mark_in
+        self.mark_out = mark_out
+        self.name = name
+        self.path = path
+        self.comment = ""
+        self.starred = False
+
+    def get_event_name(self):
+        if self.event_type == MEDIA_LOG_INSERT:
+            return "Insert"
+        elif self.event_type == MEDIA_LOG_MARKS_SET:
+            return "Marks Set"
+
+    def get_mark_in_str(self):
+        return utils.get_tc_string(self.mark_in)
+
+    def get_mark_out_str(self):
+        return utils.get_tc_string(self.mark_out)
+        
+    def get_date_str(self):
+        date_str = self.timestamp.strftime('%d %B, %Y - %H:%M')
+        date_str = date_str.lstrip('0')
+        return date_str
+
+def register_media_insert_event():
+    project = editorstate.PROJECT()
+    media_file = editorstate.MONITOR_MEDIA_FILE()
+    log_event = MediaLogEvent(  MEDIA_LOG_INSERT,
+                                media_file.mark_in,
+                                media_file.mark_out,
+                                media_file.name,
+                                media_file.path)
+    project.media_log.append(log_event)
+
 
 # ------------------------------- MODULE FUNCTIONS
 def get_default_project():

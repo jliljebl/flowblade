@@ -36,6 +36,7 @@ from editorstate import current_is_move_mode
 from editorstate import timeline_visible
 from editorstate import PLAYER
 import respaths
+import resync
 import sequence
 import utils
 import updater
@@ -742,7 +743,11 @@ class TimeLineCanvas:
         cr.set_source_rgb(*BG_COLOR)
         cr.rectangle(0, 0, w, h)
         cr.fill()
-        
+
+        # Init sync draw structures
+        self.parent_positions = {}
+        self.sync_children = []
+
         # Draw tracks
         for i in range(1, len(current_sequence().tracks) - 1): # black and hidden tracks are ignored
             self.draw_track(cr
@@ -750,9 +755,9 @@ class TimeLineCanvas:
                             ,_get_track_y(i)
                             ,w)
 
-        # Draw compositors
         self.draw_compositors(cr)
-    
+        self.draw_sync_relations(cr)
+
         # Draw frame pointer
         current_frame = PLAYER().tracktor_producer.frame()
         if timeline_visible():
@@ -763,8 +768,8 @@ class TimeLineCanvas:
             cr.set_source_rgb(*SHADOW_POINTER_COLOR)
         disp_frame = pointer_frame - pos
         frame_x = math.floor(disp_frame * pix_per_frame) + 0.5
-        cr.move_to(frame_x, 0)#y1)
-        cr.line_to(frame_x, h)#y2)
+        cr.move_to(frame_x, 0)
+        cr.line_to(frame_x, h)
         cr.stroke()
 
         # Draw edit mode overlay
@@ -799,6 +804,11 @@ class TimeLineCanvas:
         # the first maybe partially displayed clip.
         clip_start_frame = clip_start_in_tline - pos
 
+        # Check if we need to collect positions for drawing sync relations 
+        collect_positions = False
+        if track.id == current_sequence().first_video_index:
+            collect_positions = True
+        
         # Draw clips in draw range
         for i in range(start, end):
 
@@ -810,6 +820,10 @@ class TimeLineCanvas:
             clip_length = clip_out - clip_in + 1 # +1 because in and out both inclusive
             scale_length = clip_length * pix_per_frame
             scale_in = clip_start_frame * pix_per_frame
+            
+            # Collect positions for drawing sync relations 
+            if collect_positions:
+                self.parent_positions[clip.id] = scale_in
             
             # Fill clip bg 
             if scale_length > FILL_MIN:
@@ -872,6 +886,10 @@ class TimeLineCanvas:
             if clip.is_blanck_clip:
                 clip_start_frame += clip_length
                 continue
+
+            # Save sync children data
+            if clip.sync_data != None:
+                self.sync_children.append((clip, track,scale_in)) 
 
             # Emboss
             if scale_length > EMBOSS_MIN:
@@ -1028,8 +1046,21 @@ class TimeLineCanvas:
             cr.show_text(comp.name.upper())
             
             cr.restore()
-        
 
+    def draw_sync_relations(self, cr):
+        cr.set_source_rgb(0, 1, 0)
+        parent_y = _get_track_y(current_sequence().first_video_index)
+        
+        for child_data in self.sync_children:
+            child_clip, track, child_x = child_data
+            child_y = _get_track_y(track.id)
+            parent_x = self.parent_positions[child_clip.sync_data.master_clip.id]
+            
+            cr.move_to(child_x, child_y)
+            cr.line_to(parent_x, parent_y)
+            cr.stroke()
+            
+            
 class TimeLineColumn:
     """
     GUI component for displaying and editing track parameters.
