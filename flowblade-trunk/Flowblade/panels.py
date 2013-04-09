@@ -321,7 +321,8 @@ def get_thumbnail_select_panel(current_folder_path):
         
     out_folder = gtk.FileChooserButton("Select Folder")
     out_folder.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
-    out_folder.set_current_folder(current_folder_path)
+    if current_folder_path != None:
+        out_folder.set_current_folder(current_folder_path)
     
     out_folder_align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     out_folder_align.set_padding(12, 24, 12, 12)
