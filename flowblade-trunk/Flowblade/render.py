@@ -26,6 +26,7 @@ Rendering is done in app.player object of class mltplayer.Player
 """
 import gtk
 import mlt
+import md5
 import os
 import time
 import threading
@@ -36,6 +37,7 @@ import dialogutils
 from editorstate import current_sequence
 from editorstate import PROJECT
 from editorstate import PLAYER
+import editorpersistance
 import gui
 import guicomponents
 import guiutils
@@ -787,6 +789,46 @@ def _fill_FB_extension_label(fb_widgets):
     fb_widgets.extension_label.set_text("." + ext)
 
 
+# ----------------------------------------------------------------------- single track transition render 
+def render_single_track_transition_clip(transition_producer, encoding_option_index, quality_option_index, file_ext, _render_complete):
+    # Profile
+    profile = PROJECT().profile
 
+    # Get path for created file
+    folder = editorpersistance.prefs.render_folder
+    file_name = md5.new(str(os.urandom(32))).hexdigest()
+    write_file = folder + "/"+ file_name + file_ext
+
+    # Render consumer
+    consumer = renderconsumer.get_render_consumer_for_encoding_and_quality(write_file, profile, encoding_option_index, quality_option_index)
+    
+    # start and end frames
+    start_frame = 0
+    end_frame = transition_producer.get_length()
+        
+    # Launch render
+    global motion_renderer, motion_progress_update
+    motion_renderer = renderconsumer.FileRenderPlayer(write_file, transition_producer, consumer, start_frame, end_frame)
+    motion_renderer.start()
+    
+    title = _("Rendering Transition Clip")
+    
+    progress_bar = gtk.ProgressBar()
+    dialog = dialogs.clip_render_progress_dialog(_transition_render_stop, title, write_file, progress_bar, gui.editor_window.window)
+    
+    motion_progress_update = renderconsumer.ProgressWindowThread(dialog, progress_bar, motion_renderer, _transition_render_stop)
+    motion_progress_update.start()
+
+def _transition_render_stop(dialog, response_id):
+    print "joooooooo"
+    dialog.destroy()
+
+    global motion_renderer, motion_progress_update
+    motion_renderer.running = False
+    motion_progress_update.running = False
+    open_media_file_callback(motion_renderer.file_name)
+    motion_renderer.running = None
+    motion_progress_update.running = None
+    
 
 

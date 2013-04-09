@@ -39,6 +39,8 @@ from editorstate import timeline_visible
 from editorstate import MONITOR_MEDIA_FILE
 import movemodes
 import mlttransitions
+import render
+import renderconsumer
 import syncsplitevent
 import tlinewidgets
 import updater
@@ -361,16 +363,15 @@ def add_transition_pressed():
     dialogs.transition_edit_dialog(_add_transition_dialog_callback, transition_data)
 
 def _add_transition_dialog_callback(dialog, response_id, selection_widgets, transition_data):
-    if response_id == gtk.RESPONSE_ACCEPT:
-        _do_centered_transition(dialog, selection_widgets, transition_data)
+    if response_id != gtk.RESPONSE_ACCEPT:
+        dialog.destroy()
+        return
 
-    dialog.destroy()
-
-def _do_centered_transition(dialog, selection_widgets, transition_data):
     # Get input data
-    type_combo, pos_combo, length_entry = selection_widgets
-    #name, mlt_service = mlttransitions.transitions[type_combo.get_active()]
-    positioning = pos_combo.get_active()
+    type_combo, length_entry, enc_combo, quality_combo = selection_widgets
+    encoding_option_index = enc_combo.get_active()
+    quality_option_index = quality_combo.get_active()
+    extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
 
     try:
         length = int(length_entry.get_text())
@@ -379,6 +380,8 @@ def _do_centered_transition(dialog, selection_widgets, transition_data):
         print str(e)
         print "entry"
         return
+
+    dialog.destroy()
 
     from_clip = transition_data["from_clip"]
     to_clip = transition_data["to_clip"]
@@ -389,8 +392,7 @@ def _do_centered_transition(dialog, selection_widgets, transition_data):
     to_part = real_length / 2
     from_part = real_length - to_part
 
-    # Compensate for odd/even
-    # i dunno, just works, I just tested this till it worked
+    # HACKFIX, I just tested this till it worked, not entirely sure on math here
     if to_part == from_part:
         add_thingy = 0
     else:
@@ -424,6 +426,17 @@ def _do_centered_transition(dialog, selection_widgets, transition_data):
                                                                         to_out,
                                                                         to_in,
                                                                         transition_mlt_id)
+
+    render.render_single_track_transition_clip(producer_tractor,
+                                        encoding_option_index,
+                                        quality_option_index, 
+                                        str(extension_text), 
+                                        _transition_render_complete)
+    
+
+def _transition_render_complete(clip_data):
+    pass
+    """
     data = {"transition_data":transition_data,
             "transition_index":trans_index, # This has not been changed since dialog launched
             "to_in":to_in, 
@@ -436,7 +449,7 @@ def _do_centered_transition(dialog, selection_widgets, transition_data):
             "length":int(length)}
     action = edit.add_centered_transition_action(data)
     action.do_edit()
-
+    """
 
 def _check_transition_handles(from_req, from_handle, to_req, to_handle):
 

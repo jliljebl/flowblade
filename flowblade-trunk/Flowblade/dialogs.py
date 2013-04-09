@@ -1121,8 +1121,8 @@ def transition_edit_dialog(callback, transition_data):
                         (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
                         "Apply", gtk.RESPONSE_ACCEPT))
 
-    alignment, type_combo, pos_combo, length_entry = panels.get_transition_panel(transition_data)
-    widgets = (type_combo, pos_combo, length_entry)
+    alignment, type_combo, length_entry, encodings_cb, quality_cb = panels.get_transition_panel(transition_data)
+    widgets = (type_combo, length_entry, encodings_cb, quality_cb)
     dialog.connect('response', callback, widgets, transition_data)
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
