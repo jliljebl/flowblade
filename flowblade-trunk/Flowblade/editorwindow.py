@@ -35,6 +35,7 @@ from cairoarea import CairoDrawableArea
 from cairoarea import CairoEventBox
 import clipeffectseditor
 import compositeeditor
+import dialogs
 import dnd
 import editevent
 import editorpersistance
@@ -179,7 +180,7 @@ class EditorWindow:
             ('HelpMenu', None, _('_Help')),
             ('QuickReference', None, _('Contents'), None, None, lambda a:menuactions.quick_reference()),
             ('Environment', None, _('Runtime Environment'), None, None, lambda a:menuactions.environment()),
-            ('KeyboardShortcuts', None, _('Keyboard Shortcuts'), None, None, lambda a:_this_is_not_used()),
+            ('KeyboardShortcuts', None, _('Keyboard Shortcuts'), None, None, lambda a:dialogs.keyboard_shortcuts_dialog(self.window)),
             ('About', None, _('About'), None, None, lambda a:menuactions.about()),
             ('InsertMode', None, None, '1', None, lambda a:_this_is_not_used()),
             ('OverMode', None, None, '2', None, lambda a:_this_is_not_used()),
@@ -312,7 +313,6 @@ class EditorWindow:
                                 lambda w,e: useraction.delete_media_files(),
                                 lambda a: self.media_list_view.columns_changed(a))
 
-    
         self.mm_paned = gtk.HPaned()
         self.mm_paned.pack1(bins_panel, resize=True, shrink=True)
         self.mm_paned.pack2(media_panel, resize=True, shrink=False)

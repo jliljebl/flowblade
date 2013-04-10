@@ -1127,4 +1127,74 @@ def transition_edit_dialog(callback, transition_data):
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
     dialog.show_all()
+
+KB_SHORTCUT_HALF_WIDTH = 200
+
+def keyboard_shortcuts_dialog(parent_window):    
+    dialog = gtk.Dialog(_("Keyboard Shortcuts"),
+                        parent_window,
+                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                        (_("Close").encode('utf-8'), gtk.RESPONSE_CLOSE))
     
+    general_vbox = gtk.VBox()
+    general_vbox.pack_start(_get_kb_row("Control + n", _("Create New Project")), False, False, 0)
+    general_vbox.pack_start(_get_kb_row("Control + s", _("Save Project")), False, False, 0)
+    general_vbox.pack_start(_get_kb_row("Delete", _("Delete Selected Item")), False, False, 0)
+    general_vbox.pack_start(_get_kb_row("Escape", _("Stop Rendering Audio Levels")), False, False, 0)
+    general_vbox.pack_start(_get_kb_row("Control + z", _("Quit")), False, False, 0)
+    general_vbox.pack_start(_get_kb_row("Control + y", _("Undo")), False, False, 0)
+    general_vbox.pack_start(_get_kb_row("Control + s", _("Redo")), False, False, 0)
+    general_vbox.pack_start(_get_kb_row("Control + o", _("Open Project")), False, False, 0)
+    general = guiutils.get_named_frame("General Shortcuts", general_vbox)
+
+    tline_vbox = gtk.VBox()
+    tline_vbox.pack_start(_get_kb_row("i", _("Mark In")))
+    tline_vbox.pack_start(_get_kb_row("o", _("Mark Out")))
+    tline_vbox.pack_start(_get_kb_row("x", _("Cut Clip")))
+    tline_vbox.pack_start(_get_kb_row("Delete",  _("Deleted clips or blanks")))
+    tline_vbox.pack_start(_get_kb_row("y", _("Insert")))
+    tline_vbox.pack_start(_get_kb_row("u", _("Append")))
+    tline_vbox.pack_start(_get_kb_row("t", _("3 Point Overwrite Insert")))
+    tline_vbox.pack_start(_get_kb_row("Space", _("Start / Stop playback")))
+    tline_vbox.pack_start(_get_kb_row("j", _("Backwards Playback Speed")))
+    tline_vbox.pack_start(_get_kb_row("k", _("Playback")))
+    tline_vbox.pack_start(_get_kb_row("l", _("Forward Playback Speed")))
+    tline = guiutils.get_named_frame("Timeline Shortcuts", tline_vbox)
+
+    geom_vbox = gtk.VBox()
+    geom_vbox.pack_start(_get_kb_row("Left Arrow ", _("Move Source Video Left")))
+    geom_vbox.pack_start(_get_kb_row("Right Arrow", _("Move Source Video Right")))
+    geom_vbox.pack_start(_get_kb_row("Up Arrow", _("Move Source Video Up")))
+    geom_vbox.pack_start(_get_kb_row("Down Arrow", _("Move Source Video Down"))) 
+    geom = guiutils.get_named_frame("Geomettry Editor Shortcuts", geom_vbox)
+    
+    panel = gtk.VBox()
+    panel.pack_start(general, False, False, 0)
+    panel.pack_start(tline, False, False, 0)
+    panel.pack_start(geom, False, False, 0)
+
+    sw = gtk.ScrolledWindow()
+    sw.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+    sw.add_with_viewport(panel)
+    sw.set_size_request(420, 400)
+    
+    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment.set_padding(24, 24, 24, 24)
+    alignment.add(sw)
+    
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    #dialog.set_size_request(440, 440)
+
+    _default_behaviour(dialog)
+    dialog.connect('response', _dialog_destroy)
+    dialog.show_all()
+    
+   
+def _get_kb_row(msg1, msg2):
+    label1 = gtk.Label(msg1)
+    label2 = gtk.Label(msg2)
+    KB_SHORTCUT_ROW_WIDTH = 400
+    KB_SHORTCUT_ROW_HEIGHT = 22
+    row = guiutils.get_two_column_box(label1, label2, 170)
+    row.set_size_request(KB_SHORTCUT_ROW_WIDTH, KB_SHORTCUT_ROW_HEIGHT)
+    return row
