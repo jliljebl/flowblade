@@ -198,3 +198,4 @@ class EditorPreferences:
         self.top_paned_position = 600 # Paned get/set position value
         self.mm_paned_position = 260 # Paned get/set position value
         self.render_folder = None
+        self.show_sequence_profile = True

@@ -95,8 +95,9 @@ def init_view_menu(menu_item):
     sep = gtk.SeparatorMenuItem()
     menu.append(sep)
     
-    show_monitor_info_item = gtk.CheckMenuItem(_("Show Monitor Source Profile/Encoding").encode('utf-8'))
-    show_monitor_info_item.set_active(True)
+    show_monitor_info_item = gtk.CheckMenuItem(_("Show Monitor Sequence Profile").encode('utf-8'))
+    show_monitor_info_item.set_active(editorpersistance.prefs.show_sequence_profile)
+    show_monitor_info_item.connect("toggled", lambda w: _show_monitor_info_toggled(w))
     menu.append(show_monitor_info_item)
 
     """
@@ -135,7 +136,7 @@ def init_gui_to_prefs(window):
 
     #if editorpersistance.prefs.default_layout == False:
     #    _execute_widescreen_layout(window)
-
+"""
 def _show_default_layout(widget):
     global w
     w = gui.editor_window
@@ -186,6 +187,7 @@ def _execute_widescreen_layout(window):
 
     editorpersistance.prefs.default_layout = False
     editorpersistance.save()
+"""
 
 def _show_buttons_TC_LEFT_layout(widget):
     global w
@@ -218,6 +220,18 @@ def _show_buttons_TC_MIDDLE_layout(widget):
 
     editorpersistance.prefs.midbar_tc_left = False
     editorpersistance.save()
+
+def _show_monitor_info_toggled(widget):
+    editorpersistance.prefs.show_sequence_profile = widget.get_active()
+    editorpersistance.save()
+
+    if editorstate.timeline_visible():
+        name = editorstate.current_sequence().name
+        profile_desc = editorstate.current_sequence().profile.description()
+        if editorpersistance.prefs.show_sequence_profile:
+            gui.editor_window.monitor_source.set_text(name + " / " + profile_desc)
+        else:
+            gui.editor_window.monitor_source.set_text(name)
 
 def create_edit_buttons_row_buttons(editor_window, modes_pixbufs):
     global m_pixbufs
@@ -322,7 +336,7 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     buttons_row.pack_start(middle_panel, False, False, 0)
     buttons_row.pack_start(right_panel, True, True, 0)
 
-# These get methods are unnecessery
+# These get methods are unnecessery, unless we later make possible to use differnt kinds of buttons
 def _get_mode_buttons_panel():
     return w.mode_buttons_group.widget
 

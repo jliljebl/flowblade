@@ -372,8 +372,12 @@ def display_sequence_in_monitor():
     saved_timeline_pos = -1
 
     # Display sequence name
-    name = current_sequence().name
-    gui.editor_window.monitor_source.set_text(name)
+    name = editorstate.current_sequence().name
+    profile_desc = editorstate.current_sequence().profile.description()
+    if editorpersistance.prefs.show_sequence_profile:
+        gui.editor_window.monitor_source.set_text(name + " / " + profile_desc)
+    else:
+        gui.editor_window.monitor_source.set_text(name)
     
     # Display marks and pos 
     gui.pos_bar.update_display_from_producer(PLAYER().producer)
