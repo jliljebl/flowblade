@@ -74,7 +74,7 @@ def prev_pressed():
         trimmodes.oneroll_prev_pressed()
     else:
         trimmodes.tworoll_prev_pressed()
-
+"""
 def ff_pressed():
     PLAYER().start_variable_speed_playback(FF_REW_SPEED)
         
@@ -86,7 +86,7 @@ def rew_pressed():
     
 def rew_released():
     PLAYER().stop_playback()
-    
+"""
 def j_pressed():
     jkl_index = _get_jkl_speed_index()
     print jkl_index

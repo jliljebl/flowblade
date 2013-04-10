@@ -43,6 +43,7 @@ import guicomponents
 import guiutils
 import mltenv
 import mltprofiles
+import projectdata
 import renderconsumer
 import respaths
 import sequence
@@ -136,6 +137,10 @@ def _do_rendering():
             dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
             return
 
+    file_path = get_file_path()
+    project_event = projectdata.ProjectEvent(projectdata.EVENT_RENDERED, file_path)
+    PROJECT().events.append(project_event)
+    
     set_render_gui()
     widgets.progress_window = dialogs.render_progress_dialog(
                                         _render_cancel_callback,

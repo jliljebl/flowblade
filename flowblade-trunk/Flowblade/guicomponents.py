@@ -271,7 +271,7 @@ class ProjectEventListView(gtk.VBox):
  
         # Scroll container
         self.scroll = gtk.ScrolledWindow()
-        self.scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        self.scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self.scroll.set_shadow_type(gtk.SHADOW_ETCHED_IN)
 
         # View

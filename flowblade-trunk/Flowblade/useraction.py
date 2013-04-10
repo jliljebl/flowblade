@@ -116,6 +116,9 @@ class LoadThread(threading.Thread):
         dialog.destroy()
         gtk.gdk.threads_leave()
 
+        project_event = projectdata.ProjectEvent(projectdata.EVENT_OPENED, self.filename)
+        project.events.append(project_event)
+        
         ticker.stop_ticker()
 
 class AddMediaFilesThread(threading.Thread):
@@ -186,7 +189,7 @@ def _new_project_dialog_callback(dialog, response_id, profile_combo, tracks_comb
         app.new_project(profile_combo.get_active(), v_tracks, a_tracks)
         dialog.destroy()
         
-        project_event = projectdata.ProjectEvent(projectdata.EVENT_CREATED_BY_NEW_DIALOG, (v_tracks, a_tracks))
+        project_event = projectdata.ProjectEvent(projectdata.EVENT_CREATED_BY_NEW_DIALOG, None)
         PROJECT().events.append(project_event)
     else:
         dialog.destroy()
@@ -236,6 +239,8 @@ def save_project():
         save_project_as()
     else:
         updater.set_info_icon(gtk.STOCK_SAVE)
+
+        PROJECT().events.append(projectdata.ProjectEvent(projectdata.EVENT_SAVED, PROJECT().last_save_path))
 
         persistance.save_project(PROJECT(), PROJECT().last_save_path) #<----- HERE
 

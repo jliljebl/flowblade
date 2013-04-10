@@ -87,6 +87,8 @@ splash_screen = None
 splash_timeout_id = -1
 exit_timeout_id = -1
 
+logger = None
+
 fp = None
 
 def main(root_path):
@@ -178,6 +180,8 @@ def main(root_path):
             editorstate.project = persistance.load_project(launch_file_path)
             persistance.show_messages = True
             check_crash = False
+            #project_event = projectdata.ProjectEvent(projectdata.EVENT_OPENED, launch_file_path)
+            #editorstate.project.events.append(project_event)
         except:
             editorstate.project = projectdata.get_default_project()
             persistance.show_messages = True
@@ -547,7 +551,25 @@ def _show_single_instance_info():
     primary_txt = _("Another instance of Flowblade already running.")
     secondary_txt = _("Only one instance of Flowblade is allowed to run at a time.")
     dialogutils.warning_message_with_callback(primary_txt, secondary_txt, None, False, _early_exit)
-    
+
+# ------------------------------------------------------- logging
+def init_logger():
+    try:
+        import logging
+        global logger
+        logger = logging.getLogger('flowblade')
+        hdlr = logging.FileHandler('/home/janne/flog')
+        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+        hdlr.setFormatter(formatter)
+        logger.addHandler(hdlr)
+        logger.setLevel(logging.INFO)
+    except:
+        print "logging failed"
+
+def log_msg(msg):
+    global logger
+    logger.info(msg)
+
 # ------------------------------------------------------ shutdown
 def shutdown():
     dialogs.exit_confirm_dialog(_shutdown_dialog_callback, get_save_time_msg(), gui.editor_window.window, editorstate.PROJECT().name)

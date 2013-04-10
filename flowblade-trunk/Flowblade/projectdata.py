@@ -351,10 +351,8 @@ class ProjectEvent:
         return date_str
 
     def get_desc_and_path(self):
-        
         if self.event_type == EVENT_CREATED_BY_NEW_DIALOG:
-            v, a = self.data
-            return ("Created using dialog, " + str(v) + " V tracks, " + str(a) + " S tracks", None)
+            return ("Created using dialog", None)
         elif self.event_type == EVENT_CREATED_BY_SAVING:
             return ("Created using Save As... ", self.data)
         elif self.event_type == EVENT_SAVED:
@@ -363,7 +361,7 @@ class ProjectEvent:
             name, path = self.data
             return ("Saved as " + name, path)
         elif self.event_type == EVENT_RENDERED:
-            return ("Rendered into ", self.data)
+            return ("Rendered ", self.data)
         elif self.event_type == EVENT_OPENED:
             return ("Opened", self.data)
         else:
