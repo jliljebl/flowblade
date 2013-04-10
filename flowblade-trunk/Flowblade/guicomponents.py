@@ -1818,12 +1818,17 @@ def get_markers_popup_menu(event, callback):
     menu.add(_get_menu_item(_("Add Marker"), callback, "add" ))
     del_item = _get_menu_item(_("Delete Marker"), callback, "delete", markers_exist==True)
     menu.add(del_item)
+    del_all_item = _get_menu_item(_("Delete All Markers"), callback, "deleteall", markers_exist==True)
+    menu.add(del_all_item)
     menu.popup(None, None, None, event.button, event.time)
 
 def get_all_tracks_popup_menu(event, callback):
     menu = gtk.Menu()
-    menu.add(_get_menu_item(_("Maximize tracks Height"), callback, "max" ))
-    menu.add(_get_menu_item(_("Minimize tracks Height"), callback, "min" ))
+    menu.add(_get_menu_item(_("Maximize Tracks"), callback, "max" ))
+    menu.add(_get_menu_item(_("Maximize Video Tracks"), callback, "maxvid" ))
+    menu.add(_get_menu_item(_("Maximize Audio Tracks"), callback, "maxaudio" ))
+    _add_separetor(menu)
+    menu.add(_get_menu_item(_("Minimize Tracks"), callback, "min" ))
     menu.popup(None, None, None, event.button, event.time)
 
 def get_monitor_view_popupmenu(launcher, event, callback):

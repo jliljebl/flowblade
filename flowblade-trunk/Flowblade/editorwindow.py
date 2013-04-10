@@ -150,9 +150,11 @@ class EditorWindow:
             ('ThreepointOverWriteClip', None, _('Three Point Overwrite'), None, None, lambda a:_this_is_not_used()),
             ('RangeOverWriteClip', None, _('Range Overwrite'), None, None, lambda a:_this_is_not_used()),
             ('CutClip', None, _('Cut Clip'), None, None, lambda a:_this_is_not_used()),
-            ('DeleteClip', None, _('Delete'), None, None, lambda a:_this_is_not_used()),
+            ('DeleteClip', None, _('Lift'), None, None, lambda a:_this_is_not_used()),
             ('SpliceOutClip', None, _('Splice Out'), None, None, lambda a:_this_is_not_used()),
             ('ResyncSelected', None, _('Resync'), None, None, lambda a:_this_is_not_used()),
+            ('SetSyncParent', None, _('Set Sync Parent'), None, None, lambda a:_this_is_not_used()),
+            ('AddTransition', None, _('Add SIngle Track Transition'), None, None, lambda a:_this_is_not_used()),
             ('ClearFilters', None, _('Clear Filters'), None, None, lambda a:editevent.clear_filters()),
             ('ConsolidateSelectedBlanks', None, _('Consolidate Selected Blanks'), None, None, lambda a:editevent.consolidate_selected_blanks()),
             ('ConsolidateAllBlanks', None, _('Consolidate All Blanks'), None, None, lambda a:editevent.consolidate_all_blanks()),
@@ -213,10 +215,14 @@ class EditorWindow:
                     </menu>
                     <separator/>
                     <menuitem action='CutClip'/>
-                    <menuitem action='DeleteClip'/>
                     <menuitem action='SpliceOutClip'/>
+                    <menuitem action='DeleteClip'/>
+                    <menuitem action='ClearFilters'/>
+                    <separator/>
+                    <menuitem action='SetSyncParent'/>
                     <menuitem action='ResyncSelected'/>
-                    <menuitem action='ClearFilters'/>     
+                    <separator/>
+                    <menuitem action='AddTransition'/>
                     <separator/>
                     <menuitem action='ChangeSequenceTracks'/>
                     <separator/>
