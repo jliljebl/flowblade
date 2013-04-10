@@ -145,16 +145,16 @@ class EditorWindow:
             ('Undo', None, _('_Undo'), '<control>Z', None, editevent.do_undo),
             ('Redo', None, _('_Redo'), '<control>Y', None, editevent.do_redo),
             ('AddFromMonitor', None, _('Add Monitor Clip')),
-            ('AppendClip', None, _('Append'), None, None, lambda a:_this_is_not_used()),
-            ('InsertClip', None, _('Insert'), None, None, lambda a:_this_is_not_used()),
-            ('ThreepointOverWriteClip', None, _('Three Point Overwrite'), None, None, lambda a:_this_is_not_used()),
-            ('RangeOverWriteClip', None, _('Range Overwrite'), None, None, lambda a:_this_is_not_used()),
-            ('CutClip', None, _('Cut Clip'), None, None, lambda a:_this_is_not_used()),
-            ('DeleteClip', None, _('Lift'), None, None, lambda a:_this_is_not_used()),
-            ('SpliceOutClip', None, _('Splice Out'), None, None, lambda a:_this_is_not_used()),
-            ('ResyncSelected', None, _('Resync'), None, None, lambda a:_this_is_not_used()),
+            ('AppendClip', None, _('Append'), None, None, lambda a:buttonevent.append_button_pressed()),
+            ('InsertClip', None, _('Insert'), None, None, lambda a:buttonevent.insert_button_pressed()),
+            ('ThreepointOverWriteClip', None, _('Three Point Overwrite'), None, None, lambda a:buttonevent.three_point_overwrite_pressed()),
+            ('RangeOverWriteClip', None, _('Range Overwrite'), None, None, lambda a:buttonevent.range_overwrite_pressed()),
+            ('CutClip', None, _('Cut Clip'), None, None, lambda a:buttonevent.cut_pressed()),
+            ('DeleteClip', None, _('Lift'), None, None, lambda a:buttonevent.lift_button_pressed()),
+            ('SpliceOutClip', None, _('Splice Out'), None, None, lambda a:buttonevent.splice_out_button_pressed()),
+            ('ResyncSelected', None, _('Resync'), None, None, lambda a:buttonevent.resync_button_pressed()),
             ('SetSyncParent', None, _('Set Sync Parent'), None, None, lambda a:_this_is_not_used()),
-            ('AddTransition', None, _('Add SIngle Track Transition'), None, None, lambda a:_this_is_not_used()),
+            ('AddTransition', None, _('Add Single Track Transition'), None, None, lambda a:buttonevent.add_transition_pressed()),
             ('ClearFilters', None, _('Clear Filters'), None, None, lambda a:editevent.clear_filters()),
             ('ConsolidateSelectedBlanks', None, _('Consolidate Selected Blanks'), None, None, lambda a:editevent.consolidate_selected_blanks()),
             ('ConsolidateAllBlanks', None, _('Consolidate All Blanks'), None, None, lambda a:editevent.consolidate_all_blanks()),
@@ -217,10 +217,8 @@ class EditorWindow:
                     <menuitem action='CutClip'/>
                     <menuitem action='SpliceOutClip'/>
                     <menuitem action='DeleteClip'/>
-                    <menuitem action='ClearFilters'/>
-                    <separator/>
-                    <menuitem action='SetSyncParent'/>
                     <menuitem action='ResyncSelected'/>
+                    <menuitem action='ClearFilters'/>
                     <separator/>
                     <menuitem action='AddTransition'/>
                     <separator/>

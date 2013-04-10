@@ -1057,8 +1057,11 @@ class TimeLineCanvas:
         for child_data in self.sync_children:
             child_clip, track, child_x = child_data
             child_y = _get_track_y(track.id)
-            parent_x = self.parent_positions[child_clip.sync_data.master_clip.id]
-
+            try:
+                parent_x = self.parent_positions[child_clip.sync_data.master_clip.id]
+            except KeyError: # parent clip not in tline view, don't draw - think about another solution
+                continue
+                
             cr.set_line_width(2.0)
             cr.set_source_rgb(0.1, 0.1, 0.1)
             cr.move_to(child_x + pad, child_y + pad)

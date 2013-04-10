@@ -113,10 +113,13 @@ def init_view_menu(menu_item):
     menu.append(sep)
     
     zoom_in_menu_item = gtk.MenuItem(_("Zoom In").encode('utf-8'))
+    zoom_in_menu_item.connect("activate", lambda w: updater.zoom_in())
     menu.append(zoom_in_menu_item)
     zoom_out_menu_item = gtk.MenuItem(_("Zoom Out").encode('utf-8'))
+    zoom_out_menu_item.connect("activate", lambda w: updater.zoom_out())
     menu.append(zoom_out_menu_item)
     zoom_fit_menu_item = gtk.MenuItem(_("Zoom Fit").encode('utf-8'))
+    zoom_fit_menu_item.connect("activate", lambda w: updater.zoom_project_length())
     menu.append(zoom_fit_menu_item)
             
 def init_gui_to_prefs(window):
