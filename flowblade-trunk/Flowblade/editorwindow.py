@@ -661,9 +661,7 @@ class EditorWindow:
     def connect_player(self, mltplayer):
         # Buttons
         # NOTE: ORDER OF CALLBACKS IS THE SAME AS ORDER OF BUTTONS FROM LEFT TO RIGHT
-        pressed_callback_funcs = [monitorevent.rew_pressed,
-                                  monitorevent.ff_pressed,
-                                  monitorevent.prev_pressed,
+        pressed_callback_funcs = [monitorevent.prev_pressed,
                                   monitorevent.next_pressed,
                                   monitorevent.play_pressed,
                                   monitorevent.stop_pressed,
@@ -672,9 +670,7 @@ class EditorWindow:
                                   monitorevent.marks_clear_pressed,
                                   monitorevent.to_mark_in_pressed,
                                   monitorevent.to_mark_out_pressed]
-        released_callback_funcs = [monitorevent.rew_released,
-                                   monitorevent.ff_released]
-        self.player_buttons.set_callbacks(pressed_callback_funcs, released_callback_funcs)
+        self.player_buttons.set_callbacks(pressed_callback_funcs)
 
         # Monitor position bar
         self.pos_bar.set_listener(mltplayer.seek_position_normalized)

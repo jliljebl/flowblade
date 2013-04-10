@@ -28,7 +28,7 @@ BUTTON_NOT_SENSITIVE_GRAD_STOPS = [(1, 0.9, 0.9, 0.9, 0.7),
 
 CORNER_DIVIDER = 5
 
-MB_BUTTONS_WIDTH = 387
+MB_BUTTONS_WIDTH = 317
 MB_BUTTONS_HEIGHT = 30
 MB_BUTTON_HEIGHT = 22
 MB_BUTTON_WIDTH = 35
@@ -198,8 +198,6 @@ class PlayerButtons(AbstractGlassButtons):
         AbstractGlassButtons.__init__(self, MB_BUTTON_WIDTH, MB_BUTTON_HEIGHT, MB_BUTTON_Y, MB_BUTTONS_WIDTH, MB_BUTTONS_HEIGHT)
 
         IMG_PATH = respaths.IMAGE_PATH
-        rew_icon = gtk.gdk.pixbuf_new_from_file(IMG_PATH + "backward_s.png")
-        ff_icon = gtk.gdk.pixbuf_new_from_file(IMG_PATH + "forward_s.png")
         play_icon = gtk.gdk.pixbuf_new_from_file(IMG_PATH + "play_2_s.png")
         stop_icon = gtk.gdk.pixbuf_new_from_file(IMG_PATH + "stop_s.png")
         next_icon = gtk.gdk.pixbuf_new_from_file(IMG_PATH + "next_frame_s.png")
@@ -210,20 +208,20 @@ class PlayerButtons(AbstractGlassButtons):
         to_mark_in_icon = gtk.gdk.pixbuf_new_from_file(IMG_PATH + "to_mark_in_s.png")        
         to_mark_out_icon = gtk.gdk.pixbuf_new_from_file(IMG_PATH + "to_mark_out_s.png") 
 
-        self.icons = [rew_icon, ff_icon,  prev_icon, next_icon, 
-                      play_icon, stop_icon, mark_in_icon, mark_out_icon, 
+        self.icons = [prev_icon, next_icon, play_icon, stop_icon, 
+                      mark_in_icon, mark_out_icon, 
                       marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
-        self.image_x = [7, 11, 8, 10,
-                      13, 13, 6, 14,
-                      5, 10, 9]
+        self.image_x = [8, 10, 13, 13, 6, 14, 5, 10, 9]
 
         for i in range(0, len(self.icons)):
             self.image_y.append(MB_BUTTON_IMAGE_Y)
 
+        self.pressed_callback_funcs = None # set using set_callbacks()
+
         self.set_sensitive(True)
 
     def set_trim_sensitive_pattern(self):
-        self.sensitive = [False, False, True, True, True, True, False, False, False, False, False]
+        self.sensitive = [True, True, True, True, False, False, False, False, False]
         self.widget.queue_draw()
 
     def set_normal_sensitive_pattern(self):
@@ -251,9 +249,6 @@ class PlayerButtons(AbstractGlassButtons):
         """
         button_under = self._get_hit_code(x, y)
         if self.pressed_button != button_under: # pressed button is released
-            if self.pressed_button >= 0 and self.pressed_button < 2: # ff, rew
-                release_func = self.released_callback_funcs[self.pressed_button]
-                release_func()
             self.pressed_button = NO_HIT
         self.widget.queue_draw()
 
@@ -261,15 +256,11 @@ class PlayerButtons(AbstractGlassButtons):
         """
         Mouse release callback
         """
-        if self.pressed_button >= 0 and self.pressed_button < 2: # ff, rew
-            release_func = self.released_callback_funcs[self.pressed_button]
-            release_func()
         self.pressed_button = -1
         self.widget.queue_draw()
 
-    def set_callbacks(self, pressed_callback_funcs, released_callback_funcs):
+    def set_callbacks(self, pressed_callback_funcs):
         self.pressed_callback_funcs = pressed_callback_funcs 
-        self.released_callback_funcs = released_callback_funcs
 
     # ---------------------------------------------------------------- painting
     def _draw(self, event, cr, allocation):
