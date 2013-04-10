@@ -338,7 +338,7 @@ class ThumbnailThread(threading.Thread):
             self.consumer.stop()
         self.running = False
 
-# ----------------------------------- project events
+# ----------------------------------- project and media log events
 class ProjectEvent:
     def __init__(self, event_type, data):
         self.event_type = event_type
@@ -382,7 +382,7 @@ class MediaLogEvent:
         if self.event_type == MEDIA_LOG_INSERT:
             return "Insert"
         elif self.event_type == MEDIA_LOG_MARKS_SET:
-            return "Marks Set"
+            return "Marks"
 
     def get_mark_in_str(self):
         return utils.get_tc_string(self.mark_in)
@@ -399,6 +399,18 @@ def register_media_insert_event():
     project = editorstate.PROJECT()
     media_file = editorstate.MONITOR_MEDIA_FILE()
     log_event = MediaLogEvent(  MEDIA_LOG_INSERT,
+                                media_file.mark_in,
+                                media_file.mark_out,
+                                media_file.name,
+                                media_file.path)
+    project.media_log.append(log_event)
+
+def register_media_marks_set_event():
+    project = editorstate.PROJECT()
+    media_file = editorstate.MONITOR_MEDIA_FILE()
+    if media_file.mark_in == -1 or media_file.mark_out == -1:
+        return
+    log_event = MediaLogEvent(  MEDIA_LOG_MARKS_SET,
                                 media_file.mark_in,
                                 media_file.mark_out,
                                 media_file.name,

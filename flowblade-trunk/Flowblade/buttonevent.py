@@ -204,7 +204,6 @@ def insert_button_pressed():
 
     editevent.do_clip_insert(track, new_clip, tline_pos)
     
-    print "jksksks"
     projectdata.register_media_insert_event()
     gui.editor_window.media_log_events_list_view.fill_data_model()
 
@@ -222,7 +221,10 @@ def append_button_pressed():
         return
 
     editevent.do_clip_insert(track, new_clip, tline_pos)
-    
+
+    projectdata.register_media_insert_event()
+    gui.editor_window.media_log_events_list_view.fill_data_model()
+
 def three_point_overwrite_pressed():
     # Check that state is good for edit
     if movemodes.selected_track == -1:
@@ -270,6 +272,9 @@ def three_point_overwrite_pressed():
 
     updater.display_tline_cut_frame(track, range_in)
 
+    projectdata.register_media_insert_event()
+    gui.editor_window.media_log_events_list_view.fill_data_model()
+
 def range_overwrite_pressed():
     # Get data
     track = current_sequence().get_first_active_track()
@@ -313,6 +318,9 @@ def range_overwrite_pressed():
     action.do_edit()
 
     updater.display_tline_cut_frame(track, track.get_clip_index_at(mark_in_frame))
+
+    projectdata.register_media_insert_event()
+    gui.editor_window.media_log_events_list_view.fill_data_model()
 
 def resync_button_pressed():
     syncsplitevent.resync_selected()

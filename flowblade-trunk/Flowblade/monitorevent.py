@@ -31,6 +31,7 @@ from editorstate import current_is_move_mode
 from editorstate import MONITOR_MEDIA_FILE
 import gui
 import movemodes
+import projectdata
 import trimmodes
 import updater
 
@@ -153,7 +154,11 @@ def mark_in_pressed():
 
     _do_marks_update()
     updater.display_marks_tc()
-
+    
+    if not timeline_visible():
+        projectdata.register_media_marks_set_event()
+        gui.editor_window.media_log_events_list_view.fill_data_model()
+        
 def mark_out_pressed():
     mark_out = PLAYER().producer.frame()
 
@@ -174,6 +179,10 @@ def mark_out_pressed():
     _do_marks_update()
     updater.display_marks_tc()
 
+    if not timeline_visible():
+        projectdata.register_media_marks_set_event()
+        gui.editor_window.media_log_events_list_view.fill_data_model()
+    
 def marks_clear_pressed():
     if timeline_visible():
         PLAYER().producer.mark_in = -1

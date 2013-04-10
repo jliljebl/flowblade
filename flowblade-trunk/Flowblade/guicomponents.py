@@ -46,6 +46,7 @@ import respaths
 import translations
 import utils
 
+STAR_IMG_PATH = "/res/img/star.png" 
 SEQUENCE_IMG_PATH = "/res/img/sequence.png" 
 SEPARATOR_HEIGHT = 5
 SEPARATOR_WIDTH = 250
@@ -365,7 +366,7 @@ class MediaLogListView(ImageTextTextListView):
 
         # Column views
         self.icon_col_1 = gtk.TreeViewColumn("icon1")
-        self.icon_col_1.set_title(_("Starred"))
+        self.icon_col_1.set_title(_("Star"))
         self.text_col_1 = gtk.TreeViewColumn("text1")
         self.text_col_1.set_title(_("Event"))
         self.text_col_2 = gtk.TreeViewColumn("text2")
@@ -382,12 +383,15 @@ class MediaLogListView(ImageTextTextListView):
         # Cell renderers
         self.icon_rend_1 = gtk.CellRendererPixbuf()
         self.icon_rend_1.props.xpad = 6
+
         self.text_rend_1 = gtk.CellRendererText()
         self.text_rend_1.set_property("ellipsize", pango.ELLIPSIZE_END)
 
         self.text_rend_2 = gtk.CellRendererText()
         self.text_rend_2.set_property("yalign", 0.0)
-
+        self.text_rend_2.set_property("editable", True)
+        #self.text_rend_2.connect("edited", seq_name_edited_cb, (self.storemodel, 2))
+                                 
         self.text_rend_3 = gtk.CellRendererText()
         self.text_rend_3.set_property("yalign", 0.0)
 
@@ -403,17 +407,20 @@ class MediaLogListView(ImageTextTextListView):
         # Build column views
         self.icon_col_1.set_expand(False)
         self.icon_col_1.set_spacing(5)
+        self.text_col_1.set_min_width(20)
         self.icon_col_1.pack_start(self.icon_rend_1)
         self.icon_col_1.add_attribute(self.icon_rend_1, 'pixbuf', 0)
     
         self.text_col_1.set_expand(True)
         self.text_col_1.set_spacing(5)
         self.text_col_1.set_sizing(gtk.TREE_VIEW_COLUMN_GROW_ONLY)
-        self.text_col_1.set_min_width(150)
+        self.text_col_1.set_min_width(50)
         self.text_col_1.pack_start(self.text_rend_1)
         self.text_col_1.add_attribute(self.text_rend_1, "text", 1)
 
         self.text_col_2.set_expand(True)
+        self.text_col_2.set_sizing(gtk.TREE_VIEW_COLUMN_GROW_ONLY)
+        self.text_col_2.set_min_width(150)
         self.text_col_2.pack_start(self.text_rend_2)
         self.text_col_2.add_attribute(self.text_rend_2, "text", 2)
 
@@ -453,9 +460,10 @@ class MediaLogListView(ImageTextTextListView):
         Displays icon, sequence name and sequence length
         """
         self.storemodel.clear()
+        star_icon_path = respaths.ROOT_PATH + STAR_IMG_PATH
         for log_event in PROJECT().media_log:
-            if log_event.starred == True:
-                icon = gtk.gdk.pixbuf_new_from_file(None)
+            if log_event.starred == False:
+                icon = gtk.gdk.pixbuf_new_from_file(star_icon_path)
             else:
                 icon = None
             row_data = [icon, 

@@ -759,6 +759,7 @@ class TimeLineCanvas:
         self.draw_sync_relations(cr)
 
         # Draw frame pointer
+        cr.set_line_width(1.0)
         current_frame = PLAYER().tracktor_producer.frame()
         if timeline_visible():
             pointer_frame = current_frame
@@ -1048,19 +1049,41 @@ class TimeLineCanvas:
             cr.restore()
 
     def draw_sync_relations(self, cr):
-        cr.set_source_rgb(0, 1, 0)
         parent_y = _get_track_y(current_sequence().first_video_index)
-        
+        radius = 4
+        small_radius = 2
+        pad = 6
+        degrees = M_PI / 180.0
         for child_data in self.sync_children:
             child_clip, track, child_x = child_data
             child_y = _get_track_y(track.id)
             parent_x = self.parent_positions[child_clip.sync_data.master_clip.id]
-            
-            cr.move_to(child_x, child_y)
-            cr.line_to(parent_x, parent_y)
+
+            cr.set_line_width(2.0)
+            cr.set_source_rgb(0.1, 0.1, 0.1)
+            cr.move_to(child_x + pad, child_y + pad)
+            cr.line_to(parent_x + pad, parent_y + pad)
             cr.stroke()
             
+            cr.move_to(child_x + pad, child_y + pad)
+            cr.arc (child_x + pad, child_y + pad, radius, 0.0 * degrees, 360.0 * degrees)
+            cr.fill()
             
+            cr.set_source_rgb(0.9, 0.9, 0.9)
+            cr.move_to(child_x + pad, child_y + pad)
+            cr.arc (child_x + pad, child_y + pad, small_radius, 0.0 * degrees, 360.0 * degrees)
+            cr.fill()
+
+            cr.set_source_rgb(0.1, 0.1, 0.1)
+            cr.move_to(parent_x + pad, parent_y + pad)
+            cr.arc(parent_x + pad, parent_y + pad, radius,  0.0 * degrees, 360.0 * degrees)
+            cr.fill()
+
+            cr.set_source_rgb(0.9, 0.9, 0.9)
+            cr.move_to(parent_x + pad, parent_y + pad)
+            cr.arc(parent_x + pad, parent_y + pad, small_radius,  0.0 * degrees, 360.0 * degrees)
+            cr.fill()
+
 class TimeLineColumn:
     """
     GUI component for displaying and editing track parameters.

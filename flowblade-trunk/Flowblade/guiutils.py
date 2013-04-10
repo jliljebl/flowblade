@@ -177,10 +177,6 @@ def get_sized_button(lable, w, h, clicked_listener=None):
     b.set_size_request(w, h)
     return b  
 
-    widgets.render_button = gtk.Button()
-    render_icon = gtk.image_new_from_stock(gtk.STOCK_MEDIA_RECORD, 
-                                           gtk.ICON_SIZE_BUTTON)
-
 def get_render_button():
     render_button = gtk.Button()
     render_icon = gtk.image_new_from_stock(gtk.STOCK_MEDIA_RECORD, 
