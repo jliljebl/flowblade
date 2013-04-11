@@ -984,6 +984,9 @@ def _marker_menu_item_activated(widget, msg):
         if mrk_index != -1:
             current_sequence().markers.pop(mrk_index)
             updater.repaint_tline()
+    elif msg == "deleteall":
+        current_sequence().markers = []
+        updater.repaint_tline()
     else:
         name, frame = current_sequence().markers[int(msg)]
         PLAYER().seek_frame(frame)
