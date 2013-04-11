@@ -1830,7 +1830,7 @@ def get_markers_popup_menu(event, callback):
 def get_all_tracks_popup_menu(event, callback):
     menu = gtk.Menu()
     menu.add(_get_menu_item(_("Maximize Tracks"), callback, "max" ))
-    menu.add(_get_menu_item(_("Maximize Video Tracks"), callback, "maxvid" ))
+    menu.add(_get_menu_item(_("Maximize Video Tracks"), callback, "maxvideo" ))
     menu.add(_get_menu_item(_("Maximize Audio Tracks"), callback, "maxaudio" ))
     _add_separetor(menu)
     menu.add(_get_menu_item(_("Minimize Tracks"), callback, "min" ))

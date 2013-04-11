@@ -1010,18 +1010,25 @@ def all_tracks_menu_launch_pressed(widget, event):
 def _all_tracks_item_activated(widget, msg):
     if msg == "min":
         current_sequence().minimize_tracks_height()
-        tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.allocation)
-        gui.tline_column.init_listeners()
-        updater.repaint_tline()
-        gui.tline_column.widget.queue_draw()
+        _tracks_resize_update()
     
     if msg == "max":
         current_sequence().maximize_tracks_height(gui.tline_canvas.widget.allocation)
-        tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.allocation)
-        gui.tline_column.init_listeners()
-        updater.repaint_tline()
-        gui.tline_column.widget.queue_draw()
+        _tracks_resize_update()
     
+    if msg == "maxvideo":
+        current_sequence().maximize_video_tracks_height(gui.tline_canvas.widget.allocation)
+        _tracks_resize_update()
+
+    if msg == "maxaudio":
+        current_sequence().maximize_audio_tracks_height(gui.tline_canvas.widget.allocation)
+        _tracks_resize_update()
+
+def _tracks_resize_update():
+    tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.allocation)
+    gui.tline_column.init_listeners()
+    updater.repaint_tline()
+    gui.tline_column.widget.queue_draw()
 
 def tline_colors_launch_pressed(widget, event):
     print "gfggfgf"

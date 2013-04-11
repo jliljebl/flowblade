@@ -305,7 +305,23 @@ class Sequence:
             track.height = TRACK_HEIGHT_NORMAL
     
         self.resize_tracks_to_fit(allocation)
+
+    def maximize_video_tracks_height(self, allocation):
+        self.minimize_tracks_height()
+        for i in range (self.first_video_index, len(self.tracks) - 1):# visible tracks
+            track = self.tracks[i]
+            track.height = TRACK_HEIGHT_NORMAL
     
+        self.resize_tracks_to_fit(allocation)
+
+    def maximize_audio_tracks_height(self, allocation):
+        self.minimize_tracks_height()
+        for i in range (1, self.first_video_index):
+            track = self.tracks[i]
+            track.height = TRACK_HEIGHT_NORMAL
+    
+        self.resize_tracks_to_fit(allocation)
+        
     def get_tracks_height(self):
         h = 0
         for i in range (1, len(self.tracks) - 1):# visible tracks
