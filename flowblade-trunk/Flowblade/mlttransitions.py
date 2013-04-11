@@ -48,6 +48,12 @@ PROP_INT = appconsts.PROP_INT
 PROP_FLOAT = appconsts.PROP_FLOAT
 PROP_EXPRESSION = appconsts.PROP_EXPRESSION
 
+# Renderered transitions
+R_DISSOLVE = 0
+R_WIPE = 1
+R_COLOR_DIP = 2
+rendered_transitions = None
+
 # Info objects used to create mlt.Transitions for CompositorObject objects.
 # dict name : MLTCompositorInfo
 mlt_compositor_transition_infos = {}
@@ -67,7 +73,7 @@ blenders = None
 def init_module():
 
     # translations and module load order make us do this in method instead of at module load
-    global wipe_lumas, compositors, blenders, name_for_type
+    global wipe_lumas, compositors, blenders, name_for_type, rendered_transitions
     wipe_lumas = { \
                 _("Vertical From Center"):"bi-linear_x.pgm",
                 _("Vertical Top to Bottom"):"wipe_top_to_bottom.svg",
@@ -153,7 +159,10 @@ def init_module():
     for blend in blenders:
         name, comp_type = blend
         name_for_type[comp_type] = name
-
+        
+    rendered_transitions = [  (_("Dissolve"), R_DISSOLVE), 
+                              (_("Wipe"), R_WIPE),
+                              (_("Color Dip"), R_COLOR_DIP)]
 # ------------------------------------------ compositors
 class CompositorTransitionInfo:
     """
@@ -353,11 +362,7 @@ def create_compositor(compositor_type):
 
 
 # ------------------------------------------------------ rendered transitions
-# These are tractor objects used to create quick transitions.
-# action_object:"transition_data","to_in","to_out","from_in","from_out","from_part",
-#"to_part","mlt_service","positioning","length"
-#
-# transition_data contents:"track","from_clip", "to_clip","from_handle","to_handle","max_length"
+# These are tractor objects used to create rendered transitions.
 def get_rendered_transition_tractor(current_sequence, 
                                     orig_from,
                                     orig_to,
@@ -400,7 +405,7 @@ def get_rendered_transition_tractor(current_sequence,
     multitrack.connect(track0, 0)
     multitrack.connect(track1, 1)
     
-    # Add clips. Images and patter producers always fill full track.
+    # Add clips. Images and pattern producers always fill full track.
     if from_clip.media_type != appconsts.IMAGE and from_clip.media_type != appconsts.PATTERN_PRODUCER:
         track0.insert(from_clip, 0, action_from_in, action_from_out)
     else:

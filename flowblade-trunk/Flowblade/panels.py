@@ -913,27 +913,28 @@ def get_project_events_panel():
     return guiutils.get_named_frame(_("Project Events"), events_list)
     
 def get_transition_panel(trans_data):
-    type_combo_box = gtk.combo_box_new_text()
-    
-    rendered_transitions = [("Dissolve","luma")]
-    for transition in rendered_transitions:
+    type_combo_box = gtk.combo_box_new_text()    
+    for transition in mlttransitions.rendered_transitions:
         name, t_service_name = transition
         type_combo_box.append_text(name)
+    type_combo_box.set_active(0)
 
-    type_combo_box.set_active(0)    
     type_row = get_two_column_box(gtk.Label("Type:"), 
                                  type_combo_box)
-                                 
-    pos_combo_box = gtk.combo_box_new_text()
 
-    # Index values correspond to constants in cliprenderer.py
-    pos_combo_box.append_text("Centered on cut")
-    pos_combo_box.append_text("Starting at Cut")
-    pos_combo_box.append_text("Ending at Cut")
-    pos_combo_box.set_active(0)    
-    pos_row = get_two_column_box(gtk.Label("Position:"), 
-                                 pos_combo_box)
-    
+    wipe_luma_combo_box = gtk.combo_box_new_text()
+    keys = mlttransitions.wipe_lumas.keys()
+    keys.sort()
+    for k in keys:
+        wipe_luma_combo_box.append_text(k)
+    wipe_luma_combo_box.set_active(0)
+    wipe_row = get_two_column_box(gtk.Label("Wipe Pattern:"), 
+                                 wipe_luma_combo_box)
+
+    color_button = gtk.ColorButton(gtk.gdk.Color(0.0, 0.0, 0.0))
+    color_button_box = guiutils.get_left_justified_box([color_button])
+    color_row = get_two_column_box(gtk.Label("Dip Color:"), color_button_box)
+
     length_entry = gtk.Entry()
     length_entry.set_text(str(30))    
     length_row = get_two_column_box(gtk.Label("Length:"), 
@@ -970,8 +971,9 @@ def get_transition_panel(trans_data):
     # Build panel
     edit_vbox = gtk.VBox(False, 2)
     edit_vbox.pack_start(type_row, False, False, 0)
-    #edit_vbox.pack_start(pos_row, False, False, 0)
     edit_vbox.pack_start(length_row, False, False, 0)
+    edit_vbox.pack_start(wipe_row, False, False, 0)
+    edit_vbox.pack_start(color_row, False, False, 0)
 
     data_vbox = gtk.VBox(False, 2)
     data_vbox.pack_start(out_handle_row, False, False, 0)
@@ -989,7 +991,7 @@ def get_transition_panel(trans_data):
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(12, 24, 12, 12)
     alignment.add(vbox)
-    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb)
+    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box)
 
 def _transition_encoding_changed(widgets):
     _fill_transition_quality_combo_box(widgets)
