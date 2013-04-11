@@ -937,6 +937,11 @@ class MediaPanel():
     def select_media_file(self, media_file):
         self.clear_selection()
         self.selected_objects.append(self.widget_for_mediafile[media_file])
+    
+    def select_media_file_list(self, media_files):
+        self.clear_selection()
+        for media_file in media_files:
+            self.selected_objects.append(self.widget_for_mediafile[media_file])        
 
     def empty_pressed(self, widget, event):
         self.clear_selection()

@@ -556,6 +556,33 @@ def _display_file_info(media_file):
     
     dialogs.file_properties_dialog((media_file, img, size, length, vcodec, acodec, channels, frequency))
 
+def remove_unused_media():
+    # Create path -> media item dict
+    path_to_media_object = {}
+    for key, media_item in PROJECT().media_files.items():
+        if media_item.path != "" and media_item.path != None:
+            path_to_media_object[media_item.path] = media_item
+    
+    # Remove all items from created dict that have a clip with same path on any of the sequences
+    for seq in PROJECT().sequences:
+        for track in seq.tracks:
+            for clip in track.clips:
+                try:
+                    removed = path_to_media_object.pop(clip.path)
+                    print removed.path
+                except:
+                    pass
+    
+    # Create a list of unused media objects
+    unused = []
+    for path, media_item in path_to_media_object.items():
+        unused.append(media_item)
+    
+    # It is most convenient to do remove via gui object
+    gui.media_list_view.select_media_file_list(unused)
+    delete_media_files()
+
+
 # ------------------------------------ bins
 def add_new_bin():
     """

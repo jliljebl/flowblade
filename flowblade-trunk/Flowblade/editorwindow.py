@@ -171,7 +171,7 @@ class EditorWindow:
             ('CreateNoiseClip', None, _('Noise'), None, None, lambda a:patternproducer.create_noise_clip()),
             ('CreateBarsClip', None, _('EBU Bars'), None, None, lambda a:patternproducer.create_bars_clip()),
             ('RecreateMediaIcons', None, _('Recreate Media Icons...'), None, None, lambda a:menuactions.recreate_media_file_icons()),
-            ('RemoveUnusedMedia', None, _('Remove Unused Media...'), None, None, lambda a:_this_is_not_used()),
+            ('RemoveUnusedMedia', None, _('Remove Unused Media...'), None, None, lambda a:useraction.remove_unused_media()),
             ('ProjectInfo', None, _('Project Info'), None, None, lambda a:menuactions.show_project_info()),
             ('ToolsMenu', None, _('Tools')),
             ('Titler', None, _('Titler'), None, None, lambda a:titler.show_titler()),
