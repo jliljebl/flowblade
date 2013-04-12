@@ -928,18 +928,30 @@ def get_transition_panel(trans_data):
     for k in keys:
         wipe_luma_combo_box.append_text(k)
     wipe_luma_combo_box.set_active(0)
-    wipe_row = get_two_column_box(gtk.Label("Wipe Pattern:"), 
+    wipe_label = gtk.Label("Wipe Pattern:")
+    wipe_row = get_two_column_box(wipe_label, 
                                  wipe_luma_combo_box)
 
     color_button = gtk.ColorButton(gtk.gdk.Color(0.0, 0.0, 0.0))
     color_button_box = guiutils.get_left_justified_box([color_button])
-    color_row = get_two_column_box(gtk.Label("Dip Color:"), color_button_box)
+    color_label = gtk.Label("Dip Color:")
+    color_row = get_two_column_box(color_label, color_button_box)
 
+    wipe_luma_combo_box.set_sensitive(False)
+    color_button.set_sensitive(False)
+    wipe_label.set_sensitive(False)
+    color_label.set_sensitive(False)
+
+    transition_type_widgets = (type_combo_box, wipe_luma_combo_box, color_button, wipe_label, color_label)
+    type_combo_box.connect("changed", 
+                              lambda w,e: _transition_type_changed(transition_type_widgets), 
+                              None)
+                              
     length_entry = gtk.Entry()
     length_entry.set_text(str(30))    
     length_row = get_two_column_box(gtk.Label("Length:"), 
                                     length_entry)
-                                    
+
     filler = gtk.Label()
     filler.set_size_request(10,10)
 
@@ -1010,9 +1022,23 @@ def _fill_transition_quality_combo_box(widgets):
     else:
         quality_cb.set_active(0)
 
-
-
-
+def _transition_type_changed(transition_type_widgets):
+    type_combo_box, wipe_luma_combo_box, color_button, wipe_label, color_label = transition_type_widgets
+    if type_combo_box.get_active() == 0:
+        wipe_luma_combo_box.set_sensitive(False)
+        color_button.set_sensitive(False)
+        wipe_label.set_sensitive(False)
+        color_label.set_sensitive(False)
+    elif type_combo_box.get_active() == 1:
+        wipe_luma_combo_box.set_sensitive(True)
+        color_button.set_sensitive(False)
+        wipe_label.set_sensitive(True)
+        color_label.set_sensitive(False)
+    else:
+        wipe_luma_combo_box.set_sensitive(False)
+        color_button.set_sensitive(True)
+        wipe_label.set_sensitive(False)
+        color_label.set_sensitive(True)
     
 # -------------------------------------------------- guiutils
 def get_bold_label(text):
