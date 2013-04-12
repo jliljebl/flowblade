@@ -553,8 +553,9 @@ def _display_file_info(media_file):
     frame = clip.get_frame()
     channels = str(frame.get_int("channels"))
     frequency = str(frame.get_int("frequency")) + "Hz"
-    
-    dialogs.file_properties_dialog((media_file, img, size, length, vcodec, acodec, channels, frequency))
+    fps = str(clip.get_fps())
+
+    dialogs.file_properties_dialog((media_file, img, size, length, vcodec, acodec, channels, frequency, fps))
 
 def remove_unused_media():
     # Create path -> media item dict

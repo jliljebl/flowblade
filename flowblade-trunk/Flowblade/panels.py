@@ -676,11 +676,12 @@ def get_edit_prefs_panel():
     return align, (auto_play_in_clip_monitor, auto_center_on_stop, auto_move_on_edit, gfx_length_spin)
 
 def get_file_properties_panel(data):
-    media_file, img, size, length, vcodec, acodec, channels, frequency = data
+    media_file, img, size, length, vcodec, acodec, channels, frequency, fps = data
     
     row0 = get_two_column_box(get_bold_label(_("Name:")), gtk.Label(media_file.name))
     row00 = get_two_column_box(get_bold_label(_("Path:")), gtk.Label(media_file.path))
     row1 = get_two_column_box(get_bold_label(_("Image Size:")), gtk.Label(size))
+    row111 = get_two_column_box(get_bold_label(_("Frames Per Second:")), gtk.Label(fps))
     row11 = get_two_column_box(get_bold_label(_("Playtime:")), gtk.Label(length))
     row2 = get_two_column_box(get_bold_label(_("Video Codec:")), gtk.Label(vcodec))
     row3 = get_two_column_box(get_bold_label(_("Audio Codec:")), gtk.Label(acodec))
@@ -693,6 +694,7 @@ def get_file_properties_panel(data):
     vbox.pack_start(row0, False, False, 0)
     vbox.pack_start(row00, False, False, 0)
     vbox.pack_start(row1, False, False, 0)
+    vbox.pack_start(row111, False, False, 0)
     vbox.pack_start(row11, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row3, False, False, 0)
@@ -700,7 +702,7 @@ def get_file_properties_panel(data):
     vbox.pack_start(row5, False, False, 0)
     vbox.pack_start(gtk.Label(), True, True, 0)
     
-    return vbox    
+    return vbox
     
 def get_clip_properties_panel(data):
     length, size, path = data
