@@ -337,7 +337,7 @@ def get_thumbnail_select_panel(current_folder_path):
 def get_render_folder_select_panel(current_folder_path):    
     texts_panel = get_two_text_panel(_("Select folder for rendered clips."), 
                                      _("Old rendered clips in this or other projects will") + 
-                                     _(" still be available,\nthis only affects thumnails that are created for new media.\n") + 
+                                     _(" still be available,\nthis only affects rendered files that are created from now on.\n") + 
                                      _("\nSetting your home folder as folder for rendered clips is not allowed."))
         
     out_folder = gtk.FileChooserButton("Select Folder")

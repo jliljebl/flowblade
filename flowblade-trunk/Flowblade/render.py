@@ -65,6 +65,8 @@ aborted = False
 motion_renderer = None
 motion_progress_update = None
 
+# Transition clip rendering 
+transition_render_done_callback = None
 
 # ---------------------------------- rendering action and dialogs
 class RenderLauncher(threading.Thread):
@@ -795,7 +797,11 @@ def _fill_FB_extension_label(fb_widgets):
 
 
 # ----------------------------------------------------------------------- single track transition render 
-def render_single_track_transition_clip(transition_producer, encoding_option_index, quality_option_index, file_ext, _render_complete):
+def render_single_track_transition_clip(transition_producer, encoding_option_index, quality_option_index, file_ext, transition_render_complete_cb):
+    # Set render complete callback to availble render stop callback using global variable
+    global transition_render_done_callback
+    transition_render_done_callback = transition_render_complete_cb
+
     # Profile
     profile = PROJECT().profile
 
@@ -831,9 +837,8 @@ def _transition_render_stop(dialog, response_id):
     global motion_renderer, motion_progress_update
     motion_renderer.running = False
     motion_progress_update.running = False
-    open_media_file_callback(motion_renderer.file_name)
+    #open_media_file_callback(motion_renderer.file_name)
     motion_renderer.running = None
     motion_progress_update.running = None
     
-
-
+    transition_render_done_callback(motion_renderer.file_name)

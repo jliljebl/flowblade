@@ -49,9 +49,10 @@ PROP_FLOAT = appconsts.PROP_FLOAT
 PROP_EXPRESSION = appconsts.PROP_EXPRESSION
 
 # Renderered transitions
-R_DISSOLVE = 0
-R_WIPE = 1
-R_COLOR_DIP = 2
+RENDERED_DISSOLVE = 0
+RENDERED_WIPE = 1
+RENDERED_COLOR_DIP = 2
+
 rendered_transitions = None
 
 # Info objects used to create mlt.Transitions for CompositorObject objects.
@@ -160,9 +161,10 @@ def init_module():
         name, comp_type = blend
         name_for_type[comp_type] = name
         
-    rendered_transitions = [  (_("Dissolve"), R_DISSOLVE), 
-                              (_("Wipe"), R_WIPE),
-                              (_("Color Dip"), R_COLOR_DIP)]
+    rendered_transitions = [  (_("Dissolve"), RENDERED_DISSOLVE), 
+                              (_("Wipe"), RENDERED_WIPE),
+                              (_("Color Dip"), RENDERED_COLOR_DIP)]
+
 # ------------------------------------------ compositors
 class CompositorTransitionInfo:
     """
@@ -370,7 +372,7 @@ def get_rendered_transition_tractor(current_sequence,
                                     action_from_in,
                                     action_to_out,
                                     action_to_in,
-                                    transition_mlt_id):
+                                    transition_type_selection_index):
     # New from clip
     if orig_from.media_type != appconsts.PATTERN_PRODUCER:
         from_clip = current_sequence.create_file_producer_clip(orig_from.path)# File producer
@@ -387,7 +389,7 @@ def get_rendered_transition_tractor(current_sequence,
     current_sequence.clone_clip_range_and_filters(orig_from, from_clip)
     current_sequence.clone_clip_range_and_filters(orig_to, to_clip)
 
-    # we'll set in and out points for images andpatter producers.
+    # we'll set in and out points for images and pattern producers.
     if from_clip.media_type == appconsts.IMAGE or from_clip.media_type == appconsts.PATTERN_PRODUCER:
         length = action_from_out - action_from_in
         from_clip.clip_in = 0
@@ -415,6 +417,13 @@ def get_rendered_transition_tractor(current_sequence,
         track1.insert(to_clip, 0, action_to_in, action_to_out)
     else:
         track1.insert(to_clip, 0, 0,  action_to_out - action_to_in)
+
+    name, transition_type = rendered_transitions[transition_type_selection_index]
+    if transition_type == RENDERED_DISSOLVE:
+        transition_mlt_id = "luma"
+    else:
+        print "not impl"
+        return
 
     # Add transition
     field = tractor.field()

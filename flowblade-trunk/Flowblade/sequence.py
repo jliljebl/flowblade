@@ -421,6 +421,9 @@ class Sequence:
         self.add_clip_attr(clip)
         return clip
 
+    def create_rendered_transition_clip(self, path):
+        return self.create_file_producer_clip(path)
+    
     def add_clip_attr(self, clip):
         """
         File producers, transitions and black clips have same

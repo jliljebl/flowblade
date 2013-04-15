@@ -23,10 +23,12 @@ Module builds dialog windows. User input is handled at
 callsites which provide callback methods for response signals.
 """
 import gtk
+import os
 import pango
 
 import appconsts
 import dialogutils
+import gui
 import guicomponents
 import guiutils
 import editorpersistance
@@ -268,7 +270,7 @@ def select_thumbnail_dir(callback, parent_window, current_dir_path, retry_open_m
     dialog.connect('response', callback, (file_select, retry_open_media))
     dialog.show_all()
 
-def select_rendred_clips_dir(callback, parent_window, current_dir_path, retry_open_media):
+def select_rendred_clips_dir(callback, parent_window, current_dir_path):
     panel, file_select = panels.get_render_folder_select_panel(current_dir_path)
     cancel_str = _("Cancel").encode('utf-8')
     ok_str = _("Ok").encode('utf-8')
@@ -280,9 +282,15 @@ def select_rendred_clips_dir(callback, parent_window, current_dir_path, retry_op
 
     dialog.vbox.pack_start(panel, True, True, 0)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, (file_select, retry_open_media))
+    dialog.connect('response', callback, file_select)
     dialog.show_all()
 
+def rendered_clips_no_home_folder_dialog():
+    dialogutils.warning_message(_("Can't make home folder render clips folder"), 
+                            _("Please create and select some other folder then \'") + 
+                            os.path.expanduser("~") + _("\' as render clips folder"), 
+                            gui.editor_window.window)
+                                    
 def render_progress_dialog(callback, parent_window):
     dialog = gtk.Dialog(_("Render Progress"),
                          parent_window,

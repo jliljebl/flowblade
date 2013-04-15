@@ -451,16 +451,12 @@ def select_thumbnail_dir_callback(dialog, response_id, data):
     if retry_add_media == True:
         add_media_files(True)
 
-def select_render_clips_dir_callback(dialog, response_id, data):
-    file_select, retry_add_media = data
+def select_render_clips_dir_callback(dialog, response_id, file_select):
     folder = file_select.get_filenames()[0]
     dialog.destroy()
     if response_id == gtk.RESPONSE_YES:
         if folder ==  os.path.expanduser("~"):
-            dialogutils.warning_message(_("Can't make home folder render clips folder"), 
-                                    _("Please create and select some other folder then \'") + 
-                                    os.path.expanduser("~") + _("\' as render clips folder"), 
-                                    gui.editor_window.window)
+            dialogs.rendered_clips_no_home_folder_dialog()
         else:
             editorpersistance.prefs.render_folder = folder
             editorpersistance.save()

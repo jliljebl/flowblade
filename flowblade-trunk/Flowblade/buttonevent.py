@@ -19,9 +19,10 @@
 """
 
 """
-Module handles button edit events from buttons above timeline.
+Module handles button edit events from buttons in the middle bar.
 """
 import gtk
+import os
 import time #added for testing
 
 import appconsts
@@ -31,6 +32,7 @@ import gui
 import guicomponents
 import edit
 import editevent
+import editorpersistance
 import editorstate
 from editorstate import get_track
 from editorstate import current_sequence
@@ -45,6 +47,9 @@ import projectdata
 import syncsplitevent
 import tlinewidgets
 import updater
+
+# Used to store transition render data to be used at render complete callback
+transition_render_data = None
 
 # --------------------------- module funcs
 def _get_new_clip_from_clip_monitor():
@@ -112,7 +117,7 @@ def cut_pressed():
         # Get cut frame in clip frames
         clip_start_in_tline = track.clip_start(index)
         clip_frame = tline_frame - clip_start_in_tline + clip.clip_in
-        
+
         # Dont edit if frame on cut.
         if clip_frame == clip.clip_in:
             continue
@@ -325,7 +330,7 @@ def range_overwrite_pressed():
 def resync_button_pressed():
     syncsplitevent.resync_selected()
 
-def add_transition_pressed():
+def add_transition_pressed(retry_from_render_folder_select=False):
     print "add_transition_pressed"
     if movemodes.selected_track == -1:
         print "selected track"
@@ -338,6 +343,12 @@ def add_transition_pressed():
     if not (clip_count == 2):
         # INFOWINDOW
         print "clip count"
+        return
+
+    if editorpersistance.prefs.render_folder == None:
+        if retry_from_render_folder_select == True:
+            return
+        dialogs.select_rendred_clips_dir(_add_transition_render_folder_select_callback, gui.editor_window.window, editorpersistance.prefs.render_folder)
         return
 
     from_clip = track.clips[movemodes.selected_range_in]
@@ -375,13 +386,25 @@ def add_transition_pressed():
                        "max_length":max_length}
     dialogs.transition_edit_dialog(_add_transition_dialog_callback, transition_data)
 
+def _add_transition_render_folder_select_callback(dialog, response_id, file_select):
+    folder = file_select.get_filenames()[0]
+    dialog.destroy()
+    if response_id == gtk.RESPONSE_YES:
+        if folder ==  os.path.expanduser("~"):
+            dialogs.rendered_clips_no_home_folder_dialog()
+        else:
+            editorpersistance.prefs.render_folder = folder
+            editorpersistance.save()
+            print "render folder set"
+            add_transition_pressed(True)
+
 def _add_transition_dialog_callback(dialog, response_id, selection_widgets, transition_data):
     if response_id != gtk.RESPONSE_ACCEPT:
         dialog.destroy()
         return
 
     # Get input data
-    type_combo, length_entry, enc_combo, quality_combo = selection_widgets
+    type_combo, length_entry, enc_combo, quality_combo, wipe_luma_combo_box = selection_widgets
     encoding_option_index = enc_combo.get_active()
     quality_option_index = quality_combo.get_active()
     extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
@@ -430,7 +453,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
     # Edit clears selection, get track index before selection is cleared
     trans_index = movemodes.selected_range_out
     movemodes.clear_selected_clips()
-    transition_mlt_id = "luma"
+    transition_type_selection_index = type_combo.get_active()
     producer_tractor = mlttransitions.get_rendered_transition_tractor(  editorstate.current_sequence(),
                                                                         from_clip,
                                                                         to_clip,
@@ -438,8 +461,12 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                                                                         from_in,
                                                                         to_out,
                                                                         to_in,
-                                                                        transition_mlt_id)
+                                                                        transition_type_selection_index)
 
+    # Save transition data into global variable to be available at render complete callback
+    global transition_render_data
+    transition_render_data = (trans_index, from_clip, to_clip,  transition_data["track"], from_in, to_out)
+    
     render.render_single_track_transition_clip(producer_tractor,
                                         encoding_option_index,
                                         quality_option_index, 
@@ -447,22 +474,24 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                                         _transition_render_complete)
     
 
-def _transition_render_complete(clip_data):
-    pass
-    """
-    data = {"transition_data":transition_data,
-            "transition_index":trans_index, # This has not been changed since dialog launched
-            "to_in":to_in, 
-            "to_out":to_out,
+def _transition_render_complete(clip_path):
+    print "render complete"
+    
+    transition_clip = current_sequence().create_rendered_transition_clip(clip_path)
+    
+    global transition_render_data
+    transition_index, from_clip, to_clip, track, from_in, to_out = transition_render_data
+
+    data = {"transition_clip":transition_clip,
+            "transition_index":transition_index,
+            "from_clip":from_clip,
+            "to_clip":to_clip,
+            "track":track,
             "from_in":from_in,
-            "from_out":from_out,
-            "from_part":from_part,
-            "to_part":to_part,
-            "mlt_service":mlt_service,
-            "length":int(length)}
+            "to_out":to_out}
+
     action = edit.add_centered_transition_action(data)
     action.do_edit()
-    """
 
 def _check_transition_handles(from_req, from_handle, to_req, to_handle):
 
@@ -472,9 +501,9 @@ def _check_transition_handles(from_req, from_handle, to_req, to_handle):
     if to_req  > to_handle:
         # INFOWINDOW
         return False
-    
+
     return True
-    
+
 def view_mode_menu_lauched(launcher, event):
     guicomponents.get_monitor_view_popupmenu(launcher, event, _view_mode_menu_item_item_activated)
     
