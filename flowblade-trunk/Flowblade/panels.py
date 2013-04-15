@@ -1005,7 +1005,7 @@ def get_transition_panel(trans_data):
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(12, 24, 12, 12)
     alignment.add(vbox)
-    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box)
+    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button)
 
 def _transition_encoding_changed(widgets):
     _fill_transition_quality_combo_box(widgets)

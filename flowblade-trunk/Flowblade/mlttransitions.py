@@ -30,6 +30,7 @@ import xml.dom.minidom
 
 import appconsts
 import mltfilters
+import patternproducer
 import persistance
 import propertyparse
 import respaths
@@ -367,7 +368,6 @@ def create_compositor(compositor_type):
     return compositor
 
 
-
 # ------------------------------------------------------ rendered transitions
 # These are tractor objects used to create rendered transitions.
 def get_rendered_transition_tractor(current_sequence, 
@@ -378,7 +378,8 @@ def get_rendered_transition_tractor(current_sequence,
                                     action_to_out,
                                     action_to_in,
                                     transition_type_selection_index,
-                                    wipe_luma_sorted_keys_index):
+                                    wipe_luma_sorted_keys_index,
+                                    gdk_color_str):
     # New from clip
     if orig_from.media_type != appconsts.PATTERN_PRODUCER:
         from_clip = current_sequence.create_file_producer_clip(orig_from.path)# File producer
@@ -413,57 +414,53 @@ def get_rendered_transition_tractor(current_sequence,
         to_clip.clip_in = 0
         to_clip.clip_out = length
 
-    # Add clips. Images and pattern producers always fill full track.
-    if from_clip.media_type != appconsts.IMAGE and from_clip.media_type != appconsts.PATTERN_PRODUCER:
-        track0.insert(from_clip, 0, action_from_in, action_from_out)
+    name, transition_type = rendered_transitions[transition_type_selection_index]
+    
+    # Add clips to tracks and create keyframe string to contron mixing
+    if transition_type == RENDERED_DISSOLVE or transition_type == RENDERED_WIPE:
+        # Add clips. Images and pattern producers always fill full track.
+        if from_clip.media_type != appconsts.IMAGE and from_clip.media_type != appconsts.PATTERN_PRODUCER:
+            track0.insert(from_clip, 0, action_from_in, action_from_out)
+        else:
+            track0.insert(from_clip, 0, 0, action_from_out - action_from_in)
+            
+        if to_clip.media_type != appconsts.IMAGE and to_clip.media_type != appconsts.PATTERN_PRODUCER: 
+            track1.insert(to_clip, 0, action_to_in, action_to_out)
+        else:
+            track1.insert(to_clip, 0, 0,  action_to_out - action_to_in)
+        kf_str = "0=0/0:100%x100%:0.0;"+ str(tractor.get_length() - 1) + "=0/0:100%x100%:100.0"
     else:
-        track0.insert(from_clip, 0, 0, action_from_out - action_from_in)
-        
-    if to_clip.media_type != appconsts.IMAGE and to_clip.media_type != appconsts.PATTERN_PRODUCER: 
-        track1.insert(to_clip, 0, action_to_in, action_to_out)
-    else:
-        track1.insert(to_clip, 0, 0,  action_to_out - action_to_in)
+        print "ssswswsw"
+        length = action_from_out - action_from_in
+        first_clip_length = length / 2
+        second_clip_length = length - first_clip_length
+        color_clip = patternproducer.create_color_producer(current_sequence.profile, gdk_color_str)
+        track0.insert(color_clip, 0, 0, length)
+        track1.insert(from_clip, 0, action_from_in, action_from_in + first_clip_length)
+        track1.insert(to_clip, 1, action_to_out - second_clip_length, action_to_out)
+        kf_str = "0=0/0:100%x100%:100.0;"+ str(first_clip_length) + "=0/0:100%x100%:0.0;" + str(tractor.get_length() - 1) + "=0/0:100%x100%:100.0"
 
     # Create transition
-    name, transition_type = rendered_transitions[transition_type_selection_index]
-    if transition_type == RENDERED_DISSOLVE:
-        transition = mlt.Transition(current_sequence.profile, "luma")
-
-    elif transition_type == RENDERED_WIPE:
-        print "jsjsjsjjsjs"
-        wipe_resource_path = get_wipe_resource_path_for_sorted_keys_index(wipe_luma_sorted_keys_index)
-        #frame=x/y:widthxheight:opacity
-        kf_str = "0=0/0:100%x100%:0.0;"+ str(tractor.get_length() - 1) + "=0/0:100%x100%:100.0"
-        print kf_str
-        transition = mlt.Transition(current_sequence.profile, "region")
-        transition.set("composite.geometry", str(kf_str))
-        transition.set("composite.luma", str(wipe_resource_path))
-        transition.set("composite.automatic",1)
-        transition.set("composite.aligned", 1)
-        transition.set("composite.deinterlace",0)
-        transition.set("composite.distort",0)
-        transition.set("composite.fill",1)
-        transition.set("composite.operator","over")
-        transition.set("composite.luma_invert",0)
-        transition.set("composite.progressive",1)
-        transition.set("composite.softness",0)
-        """
-        <property name="composite.geometry" args="editor=geometry_editor range_in=0,100 range_out=0,100 exptype=geom_opac_kf displayname=Wipe!Amount">"0=0/0:SCREENSIZE:100"</property>
-        <property name="composite.luma" args="editor=wipe_select exptype=wipe_resource displayname=Wipe!Type">WIPE_PATHbi-linear_y.pgm</property>
-        <property name="composite.luma_invert" args="editor=booleancheckbox displayname=Invert">0</property>
-        <property name="composite.softness" args="editor=slider range_in=0,100 displayname=Softness">0.5</property>        
-        <property name="composite.aligned" args="editor=no_editor">0</property>
-        <property name="composite.distort" args="editor=no_editor">0</property>
-        <property name="composite.fill" args="editor=no_editor">1</property>        
-        <property name="composite.operator" args="editor=no_editor exptype=not_parsed_transition">over</property>
-        <property name="composite.deinterlace" args="editor=no_editor">0</property>
-        <property name="composite.progressive" args="editor=no_editor">1</property>
-        """
+    transition = mlt.Transition(current_sequence.profile, "region")
+    transition.set("composite.geometry", str(kf_str)) # controls mix over time
+    transition.set("composite.automatic",1)
+    transition.set("composite.aligned", 1)
+    transition.set("composite.deinterlace",0)
+    transition.set("composite.distort",0)
+    transition.set("composite.fill",1)
+    transition.set("composite.operator","over")
+    transition.set("composite.luma_invert",0)
+    transition.set("composite.progressive",1)
+    transition.set("composite.softness",0)
     transition.set("in", 0)
     transition.set("out", tractor.get_length() - 1)
     transition.set("a_track", 0)
     transition.set("b_track", 1)
-        
+
+    if transition_type == RENDERED_WIPE:
+        wipe_resource_path = get_wipe_resource_path_for_sorted_keys_index(wipe_luma_sorted_keys_index)
+        transition.set("composite.luma", str(wipe_resource_path))
+
     # Add transition
     field = tractor.field()
     field.plant_transition(transition, 0,1)

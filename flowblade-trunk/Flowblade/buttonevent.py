@@ -404,11 +404,12 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
         return
 
     # Get input data
-    type_combo, length_entry, enc_combo, quality_combo, wipe_luma_combo_box = selection_widgets
+    type_combo, length_entry, enc_combo, quality_combo, wipe_luma_combo_box, color_button = selection_widgets
     encoding_option_index = enc_combo.get_active()
     quality_option_index = quality_combo.get_active()
     extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
     sorted_wipe_luma_index = wipe_luma_combo_box.get_active()
+    color_str = color_button.get_color().to_string()
 
     try:
         length = int(length_entry.get_text())
@@ -463,7 +464,8 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                                                                         to_out,
                                                                         to_in,
                                                                         transition_type_selection_index,
-                                                                        sorted_wipe_luma_index)
+                                                                        sorted_wipe_luma_index,
+                                                                        color_str)
 
     # Save transition data into global variable to be available at render complete callback
     global transition_render_data

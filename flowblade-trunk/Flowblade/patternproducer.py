@@ -73,7 +73,7 @@ def create_pattern_producer(profile, pattern_producer_data):
     pattern_producer_data is instance of projectdata.BinColorClip
     """
     if pattern_producer_data.patter_producer_type == COLOR_CLIP:
-        clip = _create_color_clip(profile, pattern_producer_data.gdk_color_str)
+        clip = create_color_producer(profile, pattern_producer_data.gdk_color_str)
     elif pattern_producer_data.patter_producer_type == NOISE_CLIP:
         clip = _create_noise_clip(profile)
     elif pattern_producer_data.patter_producer_type == EBUBARS_CLIP:
@@ -90,7 +90,7 @@ def create_pattern_producer(profile, pattern_producer_data):
     return clip
 
 # --------------------------------------------------- producer create methods
-def _create_color_clip(profile, gdk_color_str):
+def create_color_producer(profile, gdk_color_str):
     mlt_color = utils.gdk_color_str_to_mlt_color_str(gdk_color_str)
 
     producer = mlt.Producer(profile, "colour", mlt_color)
