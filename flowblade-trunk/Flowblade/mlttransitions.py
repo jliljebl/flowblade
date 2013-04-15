@@ -429,8 +429,7 @@ def get_rendered_transition_tractor(current_sequence,
         else:
             track1.insert(to_clip, 0, 0,  action_to_out - action_to_in)
         kf_str = "0=0/0:100%x100%:0.0;"+ str(tractor.get_length() - 1) + "=0/0:100%x100%:100.0"
-    else:
-        print "ssswswsw"
+    else: # RENDERED_COLOR_DIP
         length = action_from_out - action_from_in
         first_clip_length = length / 2
         second_clip_length = length - first_clip_length
@@ -457,6 +456,7 @@ def get_rendered_transition_tractor(current_sequence,
     transition.set("a_track", 0)
     transition.set("b_track", 1)
 
+    # Setting luma resource file turns dissolve into wipe
     if transition_type == RENDERED_WIPE:
         wipe_resource_path = get_wipe_resource_path_for_sorted_keys_index(wipe_luma_sorted_keys_index)
         transition.set("composite.luma", str(wipe_resource_path))
