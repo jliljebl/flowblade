@@ -229,7 +229,6 @@ class CompositorTransition:
             self._set_blend_service_default_values()
         
     def _set_composite_service_default_values(self):
-        #self.mlt_transition.set("start", "0/0:100%x100%")
         self.mlt_transition.set("automatic",1)
         self.mlt_transition.set("aligned", 1)
         self.mlt_transition.set("deinterlace",0)
@@ -349,6 +348,12 @@ def load_compositors_xml(transitions):
             continue
         mlt_compositor_transition_infos[compositor_info.name] = compositor_info
 
+def get_wipe_resource_path_for_sorted_keys_index(sorted_keys_index):
+    # This exists to avoid sending a list of sorted keys around or having to use global variables
+    keys = wipe_lumas.keys()
+    keys.sort()
+    return get_wipe_resource_path(keys[sorted_keys_index])
+    
 def get_wipe_resource_path(key):
     img_file = wipe_lumas[key]
     return respaths.WIPE_RESOURCES_PATH + img_file
@@ -372,7 +377,8 @@ def get_rendered_transition_tractor(current_sequence,
                                     action_from_in,
                                     action_to_out,
                                     action_to_in,
-                                    transition_type_selection_index):
+                                    transition_type_selection_index,
+                                    wipe_luma_sorted_keys_index):
     # New from clip
     if orig_from.media_type != appconsts.PATTERN_PRODUCER:
         from_clip = current_sequence.create_file_producer_clip(orig_from.path)# File producer
@@ -389,6 +395,14 @@ def get_rendered_transition_tractor(current_sequence,
     current_sequence.clone_clip_range_and_filters(orig_from, from_clip)
     current_sequence.clone_clip_range_and_filters(orig_to, to_clip)
 
+    # Create tractor and tracks
+    tractor = mlt.Tractor()
+    multitrack = tractor.multitrack()
+    track0 = mlt.Playlist()
+    track1 = mlt.Playlist()
+    multitrack.connect(track0, 0)
+    multitrack.connect(track1, 1)
+
     # we'll set in and out points for images and pattern producers.
     if from_clip.media_type == appconsts.IMAGE or from_clip.media_type == appconsts.PATTERN_PRODUCER:
         length = action_from_out - action_from_in
@@ -399,14 +413,6 @@ def get_rendered_transition_tractor(current_sequence,
         to_clip.clip_in = 0
         to_clip.clip_out = length
 
-    # Create tractor and tracks
-    tractor = mlt.Tractor()
-    multitrack = tractor.multitrack()
-    track0 = mlt.Playlist()
-    track1 = mlt.Playlist()
-    multitrack.connect(track0, 0)
-    multitrack.connect(track1, 1)
-    
     # Add clips. Images and pattern producers always fill full track.
     if from_clip.media_type != appconsts.IMAGE and from_clip.media_type != appconsts.PATTERN_PRODUCER:
         track0.insert(from_clip, 0, action_from_in, action_from_out)
@@ -418,20 +424,48 @@ def get_rendered_transition_tractor(current_sequence,
     else:
         track1.insert(to_clip, 0, 0,  action_to_out - action_to_in)
 
+    # Create transition
     name, transition_type = rendered_transitions[transition_type_selection_index]
     if transition_type == RENDERED_DISSOLVE:
-        transition_mlt_id = "luma"
-    else:
-        print "not impl"
-        return
+        transition = mlt.Transition(current_sequence.profile, "luma")
 
-    # Add transition
-    field = tractor.field()
-    transition = mlt.Transition(current_sequence.profile, str(transition_mlt_id))
-    transition.set("a_track", 0)
-    transition.set("b_track", 1)
+    elif transition_type == RENDERED_WIPE:
+        print "jsjsjsjjsjs"
+        wipe_resource_path = get_wipe_resource_path_for_sorted_keys_index(wipe_luma_sorted_keys_index)
+        #frame=x/y:widthxheight:opacity
+        kf_str = "0=0/0:100%x100%:0.0;"+ str(tractor.get_length() - 1) + "=0/0:100%x100%:100.0"
+        print kf_str
+        transition = mlt.Transition(current_sequence.profile, "region")
+        transition.set("composite.geometry", str(kf_str))
+        transition.set("composite.luma", str(wipe_resource_path))
+        transition.set("composite.automatic",1)
+        transition.set("composite.aligned", 1)
+        transition.set("composite.deinterlace",0)
+        transition.set("composite.distort",0)
+        transition.set("composite.fill",1)
+        transition.set("composite.operator","over")
+        transition.set("composite.luma_invert",0)
+        transition.set("composite.progressive",1)
+        transition.set("composite.softness",0)
+        """
+        <property name="composite.geometry" args="editor=geometry_editor range_in=0,100 range_out=0,100 exptype=geom_opac_kf displayname=Wipe!Amount">"0=0/0:SCREENSIZE:100"</property>
+        <property name="composite.luma" args="editor=wipe_select exptype=wipe_resource displayname=Wipe!Type">WIPE_PATHbi-linear_y.pgm</property>
+        <property name="composite.luma_invert" args="editor=booleancheckbox displayname=Invert">0</property>
+        <property name="composite.softness" args="editor=slider range_in=0,100 displayname=Softness">0.5</property>        
+        <property name="composite.aligned" args="editor=no_editor">0</property>
+        <property name="composite.distort" args="editor=no_editor">0</property>
+        <property name="composite.fill" args="editor=no_editor">1</property>        
+        <property name="composite.operator" args="editor=no_editor exptype=not_parsed_transition">over</property>
+        <property name="composite.deinterlace" args="editor=no_editor">0</property>
+        <property name="composite.progressive" args="editor=no_editor">1</property>
+        """
     transition.set("in", 0)
     transition.set("out", tractor.get_length() - 1)
+    transition.set("a_track", 0)
+    transition.set("b_track", 1)
+        
+    # Add transition
+    field = tractor.field()
     field.plant_transition(transition, 0,1)
 
     return tractor
