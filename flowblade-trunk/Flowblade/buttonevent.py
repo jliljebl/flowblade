@@ -340,7 +340,7 @@ def add_transition_pressed(retry_from_render_folder_select=False):
     track = get_track(movemodes.selected_track)
     clip_count = movemodes.selected_range_out - movemodes.selected_range_in + 1 # +1 out incl.
     
-    if not (clip_count == 2):
+    if not ((clip_count == 2) or (clip_count == 1)):
         # INFOWINDOW
         print "clip count"
         return
@@ -351,6 +351,12 @@ def add_transition_pressed(retry_from_render_folder_select=False):
         dialogs.select_rendred_clips_dir(_add_transition_render_folder_select_callback, gui.editor_window.window, editorpersistance.prefs.render_folder)
         return
 
+    if clip_count == 2:
+        _do_rendered_transition(track)
+    else:
+        _do_rendered_fade(track)
+        
+def _do_rendered_transition(track):
     from_clip = track.clips[movemodes.selected_range_in]
     to_clip = track.clips[movemodes.selected_range_out]
     
@@ -476,7 +482,6 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                                         quality_option_index, 
                                         str(extension_text), 
                                         _transition_render_complete)
-    
 
 def _transition_render_complete(clip_path):
     print "render complete"
@@ -508,6 +513,18 @@ def _check_transition_handles(from_req, from_handle, to_req, to_handle):
 
     return True
 
+def _do_rendered_fade(track):
+    clip = track.clips[movemodes.selected_range_in]
+
+    transition_data = {"track":track,
+                       "clip":clip}
+    
+    dialogs.fade_edit_dialog(_add_fade_dialog_callback, transition_data)
+
+def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition_data):
+    dialog.destroy()
+
+# --------------------------------------------------------- view move setting
 def view_mode_menu_lauched(launcher, event):
     guicomponents.get_monitor_view_popupmenu(launcher, event, _view_mode_menu_item_item_activated)
     

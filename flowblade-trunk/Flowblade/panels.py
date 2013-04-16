@@ -1025,6 +1025,57 @@ def get_transition_panel(trans_data):
     alignment.add(vbox)
     return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button)
 
+def get_fade_panel(fade_data):
+    type_combo_box = gtk.combo_box_new_text()    
+    type_combo_box.append_text(_("Fade In"))
+    type_combo_box.append_text(_("Fade Out"))
+    type_combo_box.set_active(0)
+
+    type_row = get_two_column_box(gtk.Label(_("Type:")), 
+                                 type_combo_box)
+
+    color_button = gtk.ColorButton(gtk.gdk.Color(0.0, 0.0, 0.0))
+    color_button_box = guiutils.get_left_justified_box([color_button])
+    color_label = gtk.Label("Color:")
+    color_row = get_two_column_box(color_label, color_button_box)
+                              
+    length_entry = gtk.Entry()
+    length_entry.set_text(str(30))    
+    length_row = get_two_column_box(gtk.Label("Length:"), 
+                                    length_entry)
+
+    # Encoding widgets
+    encodings_cb = gtk.combo_box_new_text()
+    for encoding in renderconsumer.encoding_options:
+        encodings_cb.append_text(encoding.name)
+    encodings_cb.set_active(0)
+
+    quality_cb = gtk.combo_box_new_text()
+    transition_widgets = (encodings_cb, quality_cb)
+    encodings_cb.connect("changed", 
+                              lambda w,e: _transition_encoding_changed(transition_widgets), 
+                              None)
+    _fill_transition_quality_combo_box(transition_widgets)
+    
+    # Build panel
+    edit_vbox = gtk.VBox(False, 2)
+    edit_vbox.pack_start(type_row, False, False, 0)
+    edit_vbox.pack_start(length_row, False, False, 0)
+    edit_vbox.pack_start(color_row, False, False, 0)
+    
+    enconding_vbox = gtk.VBox(False, 2)
+    enconding_vbox.pack_start(encodings_cb, False, False, 0)
+    enconding_vbox.pack_start(quality_cb, False, False, 0)
+    
+    vbox = gtk.VBox(False, 2)
+    vbox.pack_start(get_named_frame("Transition Options",  edit_vbox))
+    vbox.pack_start(get_named_frame("Encoding",  enconding_vbox))
+
+    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment.set_padding(12, 24, 12, 12)
+    alignment.add(vbox)
+    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb)
+    
 def _transition_encoding_changed(widgets):
     _fill_transition_quality_combo_box(widgets)
  
