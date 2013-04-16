@@ -44,7 +44,7 @@ import utils
 
 
 HALF_ROW_WIDTH = 160 # Size of half row when using two column row components created here
-EFFECT_PANEL_WIDTH_PAD = 20 # This is subtracted from notebook width to get some component widths
+EFFECT_PANEL_WIDTH_PAD = 20 # This is subtracted from notebgtk.Calendar ook width to get some component widths
 PREFERENCES_LEFT = 290 # label column of preferences panel
 PROFILE_MANAGER_LEFT = 265 # label column of profile manager panel
 FFMPEG_VIEW_SIZE = (200, 210) # Text edit area size for render opts, width 200 seems to be ignored in current layout
@@ -149,11 +149,24 @@ def get_media_log_events_panel(events_list_view):
     auto_log_mode_combo.append_text(_("Insert Events"))
     auto_log_mode_combo.append_text(_("Range Events"))
     auto_log_mode_combo.set_active(0)
-    delete_b = gtk.Button(_("Delete"))  
+    star_check = gtk.CheckButton()
+    star_check.set_active(True)
+    star_label = gtk.Image()
+    star_label.set_from_file(respaths.IMAGE_PATH + "star.png")
+    star_not_active_check = gtk.CheckButton()
+    star_not_active_check.set_active(True)
+    star_not_active_label = gtk.Image()
+    star_not_active_label.set_from_file(respaths.IMAGE_PATH + "star_not_active.png")
+    
     row1 =  gtk.HBox()
     row1.pack_start(auto_log_mode_combo, False, True, 0)
+    row1.pack_start(guiutils.get_pad_label(12, 12), False, True, 0)
+    row1.pack_start(star_check, False, True, 0)
+    row1.pack_start(star_label, False, True, 0)
+    row1.pack_start(guiutils.get_pad_label(12, 12), False, True, 0)
+    row1.pack_start(star_not_active_check, False, True, 0)
+    row1.pack_start(star_not_active_label, False, True, 0)
     row1.pack_start(gtk.Label(), True, True, 0)
-    row1.pack_start(delete_b, False, True, 0)
 
     logging_type_combo = gtk.combo_box_new_text()
     logging_type_combo.append_text(_("Auto Log All"))
@@ -161,13 +174,18 @@ def get_media_log_events_panel(events_list_view):
     logging_type_combo.append_text(_("Auto Log Ranges"))
     logging_type_combo.append_text(_("Manual Logging"))
     logging_type_combo.set_active(0)
-    log_insert = gtk.Button(_("Log Insert"))
-    log_range = gtk.Button(_("Log Range"))
+
+    log_range = gtk.Button()
+    log_range.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "log_range.png"))
+
+    append_displayed = gtk.Button()
+    append_displayed.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "append_media_log.png"))
+
     row2 =  gtk.HBox()
     row2.pack_start(logging_type_combo, False, True, 0)
-    row2.pack_start(gtk.Label(), True, True, 0)
-    row2.pack_start(log_insert, False, True, 0)
     row2.pack_start(log_range, False, True, 0)
+    row2.pack_start(gtk.Label(), True, True, 0)
+    row2.pack_start(append_displayed, False, True, 0)
 
     panel = gtk.VBox()
     panel.pack_start(row1, False, True, 0)

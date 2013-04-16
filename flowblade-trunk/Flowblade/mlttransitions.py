@@ -253,7 +253,7 @@ class CompositorTransition:
 
     def _set_region_service_default_values(self):
         self.mlt_transition.set("automatic",1)
-        self.mlt_transition.set("aligned", 1)
+        self.mlt_transition.set("aligned",1)
         self.mlt_transition.set("deinterlace",0)
         self.mlt_transition.set("distort",0)
         self.mlt_transition.set("fill",1)
