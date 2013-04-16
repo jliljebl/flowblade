@@ -933,10 +933,13 @@ def get_project_events_panel():
     return guiutils.get_named_frame(_("Project Events"), events_list)
     
 def get_transition_panel(trans_data):
-    type_combo_box = gtk.combo_box_new_text()    
-    for transition in mlttransitions.rendered_transitions:
-        name, t_service_name = transition
-        type_combo_box.append_text(name)
+    type_combo_box = gtk.combo_box_new_text()
+    name, t_service_id = mlttransitions.rendered_transitions[0]
+    type_combo_box.append_text(name)
+    name, t_service_id = mlttransitions.rendered_transitions[1]
+    type_combo_box.append_text(name)
+    name, t_service_id = mlttransitions.rendered_transitions[2]
+    type_combo_box.append_text(name)
     type_combo_box.set_active(0)
 
     type_row = get_two_column_box(gtk.Label("Type:"), 
@@ -1074,7 +1077,7 @@ def get_fade_panel(fade_data):
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(12, 24, 12, 12)
     alignment.add(vbox)
-    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb)
+    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, color_button)
     
 def _transition_encoding_changed(widgets):
     _fill_transition_quality_combo_box(widgets)

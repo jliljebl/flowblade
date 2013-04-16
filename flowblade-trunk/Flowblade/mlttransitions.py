@@ -53,8 +53,10 @@ PROP_EXPRESSION = appconsts.PROP_EXPRESSION
 RENDERED_DISSOLVE = 0
 RENDERED_WIPE = 1
 RENDERED_COLOR_DIP = 2
+RENDERED_FADE_IN = 3
+RENDERED_FADE_OUT = 4
 
-rendered_transitions = None
+rendered_transitions = None # list is set her at init_module() because otherwise translations can't be done (module load issue)
 
 # Info objects used to create mlt.Transitions for CompositorObject objects.
 # dict name : MLTCompositorInfo
@@ -161,10 +163,13 @@ def init_module():
     for blend in blenders:
         name, comp_type = blend
         name_for_type[comp_type] = name
-        
+    
+    # change this, tuples are not need we only need list of translatd names
     rendered_transitions = [  (_("Dissolve"), RENDERED_DISSOLVE), 
                               (_("Wipe"), RENDERED_WIPE),
-                              (_("Color Dip"), RENDERED_COLOR_DIP)]
+                              (_("Color Dip"), RENDERED_COLOR_DIP),
+                              (_("Fade In"), RENDERED_FADE_IN),
+                              (_("Fade Out"), RENDERED_FADE_OUT)]
 
 # ------------------------------------------ compositors
 class CompositorTransitionInfo:
@@ -380,21 +385,23 @@ def get_rendered_transition_tractor(current_sequence,
                                     transition_type_selection_index,
                                     wipe_luma_sorted_keys_index,
                                     gdk_color_str):
+
+    name, transition_type = rendered_transitions[transition_type_selection_index]
+
     # New from clip
     if orig_from.media_type != appconsts.PATTERN_PRODUCER:
         from_clip = current_sequence.create_file_producer_clip(orig_from.path)# File producer
     else:
         from_clip = current_sequence.create_pattern_producer(orig_from.create_data) # pattern producer
+    current_sequence.clone_clip_range_and_filters(orig_from, from_clip)
 
     # New to clip
-    if orig_to.media_type != appconsts.PATTERN_PRODUCER:
-        to_clip = current_sequence.create_file_producer_clip(orig_to.path)# File producer
-    else:
-        to_clip = current_sequence.create_pattern_producer(orig_to.create_data) # pattern producer
-
-    # Clone filters
-    current_sequence.clone_clip_range_and_filters(orig_from, from_clip)
-    current_sequence.clone_clip_range_and_filters(orig_to, to_clip)
+    if not(transition_type == RENDERED_FADE_IN or transition_type == RENDERED_FADE_OUT): # fades to not use to_clip
+        if orig_to.media_type != appconsts.PATTERN_PRODUCER:
+            to_clip = current_sequence.create_file_producer_clip(orig_to.path)# File producer
+        else:
+            to_clip = current_sequence.create_pattern_producer(orig_to.create_data) # pattern producer
+        current_sequence.clone_clip_range_and_filters(orig_to, to_clip)
 
     # Create tractor and tracks
     tractor = mlt.Tractor()
@@ -405,17 +412,23 @@ def get_rendered_transition_tractor(current_sequence,
     multitrack.connect(track1, 1)
 
     # we'll set in and out points for images and pattern producers.
-    if from_clip.media_type == appconsts.IMAGE or from_clip.media_type == appconsts.PATTERN_PRODUCER:
-        length = action_from_out - action_from_in
-        from_clip.clip_in = 0
-        from_clip.clip_out = length
-    if to_clip.media_type == appconsts.IMAGE or to_clip.media_type == appconsts.PATTERN_PRODUCER:
-        length = action_to_out - action_to_in
-        to_clip.clip_in = 0
-        to_clip.clip_out = length
+    if not(transition_type == RENDERED_FADE_IN or transition_type == RENDERED_FADE_OUT): # fades to not use to_clip or some other data used here
+        if from_clip.media_type == appconsts.IMAGE or from_clip.media_type == appconsts.PATTERN_PRODUCER:
+            length = action_from_out - action_from_in
+            from_clip.clip_in = 0
+            from_clip.clip_out = length
 
-    name, transition_type = rendered_transitions[transition_type_selection_index]
-    
+        if to_clip.media_type == appconsts.IMAGE or to_clip.media_type == appconsts.PATTERN_PRODUCER:
+            length = action_to_out - action_to_in
+            to_clip.clip_in = 0
+            to_clip.clip_out = length
+    else:
+        print "wedefffeeffe"
+        length = action_from_out
+        if from_clip.media_type == appconsts.IMAGE or from_clip.media_type == appconsts.PATTERN_PRODUCER:
+            from_clip.clip_in = 0
+            from_clip.clip_out = length
+
     # Add clips to tracks and create keyframe string to contron mixing
     if transition_type == RENDERED_DISSOLVE or transition_type == RENDERED_WIPE:
         # Add clips. Images and pattern producers always fill full track.
@@ -429,7 +442,7 @@ def get_rendered_transition_tractor(current_sequence,
         else:
             track1.insert(to_clip, 0, 0,  action_to_out - action_to_in)
         kf_str = "0=0/0:100%x100%:0.0;"+ str(tractor.get_length() - 1) + "=0/0:100%x100%:100.0"
-    else: # RENDERED_COLOR_DIP
+    elif transition_type == RENDERED_COLOR_DIP:
         length = action_from_out - action_from_in
         first_clip_length = length / 2
         second_clip_length = length - first_clip_length
@@ -438,6 +451,12 @@ def get_rendered_transition_tractor(current_sequence,
         track1.insert(from_clip, 0, action_from_in, action_from_in + first_clip_length)
         track1.insert(to_clip, 1, action_to_out - second_clip_length, action_to_out)
         kf_str = "0=0/0:100%x100%:100.0;"+ str(first_clip_length) + "=0/0:100%x100%:0.0;" + str(tractor.get_length() - 1) + "=0/0:100%x100%:100.0"
+    elif (transition_type == RENDERED_FADE_IN or transition_type == RENDERED_FADE_OUT):
+        color_clip = patternproducer.create_color_producer(current_sequence.profile, gdk_color_str)
+        track0.insert(color_clip, 0, 0, length)
+        track1.insert(from_clip, 0, 0, length)
+        if transition_type ==  RENDERED_FADE_IN:
+            kf_str = "0=0/0:100%x100%:0.0;"+ str(length) + "=0/0:100%x100%:100.0"
 
     # Create transition
     transition = mlt.Transition(current_sequence.profile, "region")

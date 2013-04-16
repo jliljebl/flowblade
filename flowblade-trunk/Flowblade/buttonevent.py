@@ -430,8 +430,8 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
     from_clip = transition_data["from_clip"]
     to_clip = transition_data["to_clip"]
 
-    # Get values to build trnasition render sequence
-    # Divide transiotion lenght between clips, odd frame goes to from_clip 
+    # Get values to build transition render sequence
+    # Divide transition lenght between clips, odd frame goes to from_clip 
     real_length = length + 1 # first frame is full from clip frame so we are going to have to drop that
     to_part = real_length / 2
     from_part = real_length - to_part
@@ -522,8 +522,78 @@ def _do_rendered_fade(track):
     dialogs.fade_edit_dialog(_add_fade_dialog_callback, transition_data)
 
 def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition_data):
+    if response_id != gtk.RESPONSE_ACCEPT:
+        dialog.destroy()
+        return
+
+    # Get input data
+    type_combo, length_entry, enc_combo, quality_combo, color_button = selection_widgets
+    encoding_option_index = enc_combo.get_active()
+    quality_option_index = quality_combo.get_active()
+    extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
+    color_str = color_button.get_color().to_string()
+
+    try:
+        length = int(length_entry.get_text())
+    except Exception, e:
+        # INFOWINDOW, bad input
+        print str(e)
+        print "entry"
+        return
+
     dialog.destroy()
 
+    if length == 0:
+        return
+
+    clip = transition_data["clip"]
+    
+    if length > clip.clip_length():
+        print "no_length"
+        return
+
+    # Edit clears selection, get track index before selection is cleared
+    clip_index = movemodes.selected_range_in
+    movemodes.clear_selected_clips()
+    transition_type_selection_index = type_combo.get_active() + 3 # +3 because RENDERED_FADE_IN = 3 and RENDERED_FADE_OUT = 4
+    producer_tractor = mlttransitions.get_rendered_transition_tractor(  editorstate.current_sequence(),
+                                                                        clip,
+                                                                        None,
+                                                                        length,
+                                                                        None,
+                                                                        None,
+                                                                        None,
+                                                                        transition_type_selection_index,
+                                                                        None,
+                                                                        color_str)
+
+    # Save transition data into global variable to be available at render complete callback
+    global transition_render_data
+    transition_render_data = (clip_index, transition_type_selection_index, clip, transition_data["track"], length)
+    
+    render.render_single_track_transition_clip(producer_tractor,
+                                        encoding_option_index,
+                                        quality_option_index, 
+                                        str(extension_text), 
+                                        _fade_render_complete)
+
+def _fade_render_complete(clip_path):
+    print "fade render complete"
+    
+    fade_clip = current_sequence().create_rendered_transition_clip(clip_path)
+    
+    global transition_render_data
+    clip_index, fade_type, clip, track, length = transition_render_data
+
+    data = {"fade_clip":fade_clip,
+            "clip_index":clip_index,
+            "track":track,
+            "length":length}
+    
+    print "fugabda fuu"
+    #action = edit.add_centered_transition_action(data)
+    #action.do_edit()
+    
 # --------------------------------------------------------- view move setting
 def view_mode_menu_lauched(launcher, event):
     guicomponents.get_monitor_view_popupmenu(launcher, event, _view_mode_menu_item_item_activated)
