@@ -991,6 +991,10 @@ def _marker_menu_item_activated(widget, msg):
         name, frame = current_sequence().markers[int(msg)]
         PLAYER().seek_frame(frame)
 
+def add_marker():
+    current_frame = PLAYER().current_frame()
+    dialogs.marker_name_dialog(utils.get_tc_string(current_frame), _marker_add_dialog_callback)
+
 def _marker_add_dialog_callback(dialog, response_id, name_entry):
     name = name_entry.get_text()
     dialog.destroy()

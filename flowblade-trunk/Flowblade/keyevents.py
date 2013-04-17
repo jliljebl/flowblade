@@ -189,6 +189,11 @@ def _handle_tline_key_event(event):
         updater.switch_monitor_display()
         return True
 
+    # M
+    if event.keyval == gtk.keysyms.m:
+        editevent.add_marker()
+        return True
+
     # Number edit mode changes
     if event.keyval == gtk.keysyms._1:
         gui.editor_window.handle_insert_move_mode_button_press()
@@ -288,6 +293,7 @@ def _handle_tline_key_event(event):
 
 
 def _handle_extended_tline_focus_events(event):
+    # This was added to fix a bug long time ago but the ratinale for "extended_tline_focus_events" has been forgotten, but probably still exists
     if not(_timeline_has_focus() or
             gui.pos_bar.widget.is_focus() or
             gui.sequence_editor_b.has_focus() or
@@ -328,6 +334,7 @@ def _handle_extended_tline_focus_events(event):
     if event.keyval == gtk.keysyms.Tab:
         updater.switch_monitor_display()
         return True
+
 
     # Number edit mode changes
     if event.keyval == gtk.keysyms._1:
