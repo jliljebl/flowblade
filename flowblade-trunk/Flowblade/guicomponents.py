@@ -1027,9 +1027,6 @@ class MediaObjectWidget:
         self.img.press_func = self._press
         self.img.dnd_media_widget_attr = True # this is used to identify widget at dnd drop
 
-        # Return these if there id problem with CairoDrawableArea icons, these get a lot of draw callbacks 
-        #img = gtk.Image() 
-        #img.set_from_pixbuf(media_file.icon)
         txt = gtk.Label(media_file.name)
         txt.modify_font(pango.FontDescription("sans 9"))
         txt.set_ellipsize(pango.ELLIPSIZE_END)
@@ -1051,7 +1048,15 @@ class MediaObjectWidget:
         if self.media_file == editorstate.MONITOR_MEDIA_FILE():
             cr.set_source_pixbuf(self.indicator_icon, 29, 22)
             cr.paint()     
-
+        if self.media_file.mark_in != -1 and self.media_file.mark_out != -1:
+            cr.set_source_rgb(1, 1, 1)
+            cr.select_font_face ("sans-serif",
+                     cairo.FONT_SLANT_NORMAL,
+                     cairo.FONT_WEIGHT_NORMAL)
+            cr.set_font_size(9)
+            cr.move_to(23, 80)
+            clip_length = utils.get_tc_string(self.media_file.mark_out - self.media_file.mark_in + 1) #+1 out incl.
+            cr.show_text("][ " + str(clip_length))
 
 # -------------------------------------------- context menus
 class EditorSeparator:

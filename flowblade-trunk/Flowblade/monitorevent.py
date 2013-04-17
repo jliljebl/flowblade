@@ -218,7 +218,8 @@ def _do_marks_update():
         producer = current_sequence().monitor_clip
         MONITOR_MEDIA_FILE().mark_in = producer.mark_in
         MONITOR_MEDIA_FILE().mark_out = producer.mark_out
-        
+        gui.media_list_view.widget.queue_draw()
+
     gui.pos_bar.update_display_from_producer(producer)
     gui.tline_scale.widget.queue_draw()
     

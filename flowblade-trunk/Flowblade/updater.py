@@ -21,6 +21,7 @@
 """
 Module contains GUI update routines.
 """
+
 import gtk
 import threading
 
