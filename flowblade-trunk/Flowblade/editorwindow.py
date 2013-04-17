@@ -619,10 +619,13 @@ class EditorWindow:
 
         # Maximize if it seems that we exited maximized, else set size
         w, h = editorpersistance.prefs.exit_allocation
-        if (float(w) / editorstate.SCREEN_WIDTH > 0.95) and (float(h) / editorstate.SCREEN_HEIGHT > 0.95):
-            self.window.maximize() 
+        if w != 0: # non-existing prefs file causes w and h to be 0 so they can't be used to set window size then
+            if (float(w) / editorstate.SCREEN_WIDTH > 0.95) and (float(h) / editorstate.SCREEN_HEIGHT > 0.95):
+                self.window.maximize() 
+            else:
+                self.window.set_size_request(w, h)
+                self.window.set_position(gtk.WIN_POS_CENTER)
         else:
-            self.window.set_size_request(w, h)
             self.window.set_position(gtk.WIN_POS_CENTER)
 
         # Show window and all of its components
