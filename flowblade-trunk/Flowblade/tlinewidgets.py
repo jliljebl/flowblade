@@ -185,7 +185,10 @@ SYNC_GONE_COLOR = (0.4, 0.4, 0.4)
 MARK_COLOR = (0.1, 0.1, 0.1)
 
 FRAME_SCALE_COLOR_GRAD = (1, 0.8, 0.8, 0.8, 1)
-FRAME_SCALE_COLOR_GRAD_L = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, GRAD_MULTIPLIER) 
+FRAME_SCALE_COLOR_GRAD_L = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, GRAD_MULTIPLIER)
+
+FRAME_SCALE_SELECTED_COLOR_GRAD = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, 0.92)
+FRAME_SCALE_SELECTED_COLOR_GRAD_L = get_multiplied_grad(1, 1, FRAME_SCALE_SELECTED_COLOR_GRAD, GRAD_MULTIPLIER) 
 
 BG_COLOR = (0.5, 0.5, 0.55)#(0.6, 0.6, 0.65)
 TRACK_BG_COLOR = (0.25, 0.25, 0.27)#(0.6, 0.6, 0.65)
@@ -973,7 +976,6 @@ class TimeLineCanvas:
                 cr.select_font_face ("sans-serif",
                                      cairo.FONT_SLANT_NORMAL,
                                      cairo.FONT_WEIGHT_NORMAL)
-
                 cr.set_font_size(11)
                 cr.move_to(scale_in + TEXT_X, y + text_y)
                 cr.show_text(clip.name.upper())
@@ -1319,6 +1321,19 @@ class TimeLineFrameScale:
         cr.rectangle(0,0,w,h)
         cr.fill()
 
+        # Selected range
+        if seq.tractor.mark_in != -1 and seq.tractor.mark_out != -1:
+            in_x = (seq.tractor.mark_in - pos) * pix_per_frame
+            out_x = (seq.tractor.mark_out + 1 - pos) * pix_per_frame
+            grad = cairo.LinearGradient (0, 0, 0, h)
+            grad.add_color_stop_rgba(*FRAME_SCALE_SELECTED_COLOR_GRAD)
+            #grad.add_color_stop_rgba(*FRAME_SCALE_SELECTED_COLOR_GRAD_L)
+            cr.set_source(grad)
+            #FRAME_SCALE_SELECTED_COLOR_GRAD = get_multiplied_grad(1, 1, FRAME_SCALE_COLOR_GRAD, 0.6) FRAME_SCALE_SELECTED_COLOR_GRAD_L
+            #cr.set_source_rgb(0.2, 0.2, 0.2)
+            cr.rectangle(in_x,0,out_x-in_x,h)
+            cr.fill()
+            
         # Set line attr for frames lines
         cr.set_source_rgb(0,0,0)
         cr.set_line_width(1.0)
