@@ -406,7 +406,9 @@ class EditorWindow:
 
         # Media log events List
         self.media_log_events_list_view = guicomponents.MediaLogListView()
-        events_panel = panels.get_media_log_events_panel(self.media_log_events_list_view)
+        events_panel, media_log_filtering_widgets = panels.get_media_log_events_panel(self.media_log_events_list_view, 
+                                                                                      useraction.media_log_filtering_changed)
+        self.media_log_filtering_widgets = media_log_filtering_widgets
         
         # Project vbox and panel
         project_vbox = gtk.HBox()

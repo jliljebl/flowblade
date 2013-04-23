@@ -56,7 +56,8 @@ EVENT_SAVED_AS = 3
 EVENT_RENDERED = 4
 EVENT_OPENED = 5
 
-# Media log evnts
+# Media log event types
+MEDIA_LOG_ALL = -1 # no MediaLogEvent has this type, this used when filtering events for display
 MEDIA_LOG_INSERT = 0
 MEDIA_LOG_MARKS_SET = 1
 
@@ -186,7 +187,22 @@ class Project:
         seq.create_default_tracks()
         self.sequences.append(seq)
         self.next_seq_number += 1
-        
+
+    def get_filtered_media_log_events(self, event_type, incl_starred, incl_not_starred):
+        filtered_events = []
+        for media_log_event in self.media_log:
+            if (media_log_event.event_type == MEDIA_LOG_ALL) or (media_log_event.event_type == event_type):
+                if _media_log_included_by_starred(media_log_event.starred, incl_starred, incl_not_starred):
+                    filtered_events.append(media_log_event)
+        return filtered_events
+
+    def _media_log_included_by_starred(self, starred, incl_starred, incl_not_starred):
+        if starred and incl_starred:
+            return True
+        if (not starred) and incl_not_starred:
+            return True
+        return False
+
     def exit_clip_renderer_process(self):
         pass
 

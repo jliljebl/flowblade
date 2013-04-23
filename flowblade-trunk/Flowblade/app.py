@@ -21,7 +21,7 @@
 """
 Application module.
 
-Handles application initialization, shutdown, opening projects and changing
+Handles application initialization, shutdown, opening projects, autosave and changing
 sequences.
 """
 import glib
@@ -114,6 +114,8 @@ def main(root_path):
                                     
     # Set paths.
     respaths.set_paths(root_path)
+
+    print "Python", sys.version
 
     print "GTK+ version:", gtk.gtk_version
     editorstate.gtk_version = gtk.gtk_version
@@ -567,6 +569,7 @@ def init_logger():
         print "logging failed"
 
 def log_msg(msg):
+    # dev utils
     global logger
     logger.info(msg)
 

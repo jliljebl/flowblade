@@ -806,6 +806,17 @@ def _change_track_count_dialog_callback(dialog, response_id, tracks_combo):
     app.change_current_sequence(cur_seq_index)
     
 
+# ----------------------------------------------------------- media log
+def media_log_filtering_changed(w):
+    print "wwewewewe"
+
+    auto_log_mode_combo, star_check, star_not_active_check = gui.editor_window.media_log_filtering_widgets
+    val = star_check.get_active()
+    print star_check.get_active()
+    print star_not_active_check.get_active()
+    print auto_log_mode_combo.get_active()
+
+
 # --------------------------------------------------------- pop-up menus
 """
 def media_list_button_press(widget, event):

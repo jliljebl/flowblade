@@ -143,12 +143,13 @@ def get_profile_info_panel(profile):
     panel.pack_start(info, False, True, 0)
     return get_named_frame(_("Profile"), panel)
     
-def get_media_log_events_panel(events_list_view):
+def get_media_log_events_panel(events_list_view, filtering_change_cb):
     auto_log_mode_combo = gtk.combo_box_new_text()
     auto_log_mode_combo.append_text(_("All Events"))
     auto_log_mode_combo.append_text(_("Insert Events"))
     auto_log_mode_combo.append_text(_("Range Events"))
     auto_log_mode_combo.set_active(0)
+
     star_check = gtk.CheckButton()
     star_check.set_active(True)
     star_label = gtk.Image()
@@ -157,7 +158,12 @@ def get_media_log_events_panel(events_list_view):
     star_not_active_check.set_active(True)
     star_not_active_label = gtk.Image()
     star_not_active_label.set_from_file(respaths.IMAGE_PATH + "star_not_active.png")
-    
+
+    filtering_widgets = (auto_log_mode_combo, star_check, star_not_active_check)
+    auto_log_mode_combo.connect("changed", filtering_change_cb)
+    star_check.connect("clicked", filtering_change_cb)
+    star_not_active_check.connect("clicked", filtering_change_cb)
+
     row1 =  gtk.HBox()
     row1.pack_start(auto_log_mode_combo, False, True, 0)
     row1.pack_start(guiutils.get_pad_label(12, 12), False, True, 0)
@@ -193,7 +199,7 @@ def get_media_log_events_panel(events_list_view):
     panel.pack_start(row2, False, True, 0)
     panel.set_size_request(400, 200)
 
-    return get_named_frame(_("Media Log"), panel, 0, 0, 0)
+    return (get_named_frame(_("Media Log"), panel, 0, 0, 0), filtering_widgets)
 
 def get_project_name_panel(project_name):
     name_row = get_left_justified_box([gtk.Label(project_name)])
@@ -458,10 +464,8 @@ def get_timecode_panel(editor_window):
 
     
     row = gtk.HBox(False, 1)
-    #row.pack_start(guicomponents.get_monitor_view_select_combo(), False, False, 0)
     row.pack_start(editor_window.tc.widget, False, False, 0)
     row.pack_start(guiutils.get_pad_label(20, 20), False, False, 0)
-    #row.pack_start(editor_window.monitor_source, True, True, 0)
     row.pack_start(gtk.Label(), False, False, 0)
     in_icon = gtk.image_new_from_file(respaths.IMAGE_PATH  + "mark_in_label.png") 
     row.pack_start(in_icon, False, False, 0)
