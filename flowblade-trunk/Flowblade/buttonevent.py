@@ -39,11 +39,11 @@ from editorstate import current_sequence
 from editorstate import PLAYER
 from editorstate import timeline_visible
 from editorstate import MONITOR_MEDIA_FILE
+import medialog
 import movemodes
 import mlttransitions
 import render
 import renderconsumer
-import projectdata
 import syncsplitevent
 import tlinewidgets
 import updater
@@ -209,7 +209,7 @@ def insert_button_pressed():
 
     editevent.do_clip_insert(track, new_clip, tline_pos)
     
-    projectdata.register_media_insert_event()
+    medialog.register_media_insert_event()
     gui.editor_window.media_log_events_list_view.fill_data_model()
 
 def append_button_pressed():
@@ -227,7 +227,7 @@ def append_button_pressed():
 
     editevent.do_clip_insert(track, new_clip, tline_pos)
 
-    projectdata.register_media_insert_event()
+    medialog.register_media_insert_event()
     gui.editor_window.media_log_events_list_view.fill_data_model()
 
 def three_point_overwrite_pressed():
@@ -277,7 +277,7 @@ def three_point_overwrite_pressed():
 
     updater.display_tline_cut_frame(track, range_in)
 
-    projectdata.register_media_insert_event()
+    medialog.register_media_insert_event()
     gui.editor_window.media_log_events_list_view.fill_data_model()
 
 def range_overwrite_pressed():
@@ -324,7 +324,7 @@ def range_overwrite_pressed():
 
     updater.display_tline_cut_frame(track, track.get_clip_index_at(mark_in_frame))
 
-    projectdata.register_media_insert_event()
+    medialog.register_media_insert_event()
     gui.editor_window.media_log_events_list_view.fill_data_model()
 
 def resync_button_pressed():

@@ -101,3 +101,8 @@ SAVEFILE_VERSION = -1
 
 # This color is used in two modules
 MIDBAR_COLOR = "#bdbdbd"
+
+# Media log event types
+MEDIA_LOG_ALL = -1 # no MediaLogEvent has this type, this used when filtering events for display
+MEDIA_LOG_INSERT = 0
+MEDIA_LOG_MARKS_SET = 1

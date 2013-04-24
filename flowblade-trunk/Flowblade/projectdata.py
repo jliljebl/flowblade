@@ -35,6 +35,7 @@ import appconsts
 import datetime
 import editorpersistance
 import editorstate
+import medialog
 import mltprofiles
 import patternproducer
 import respaths
@@ -55,11 +56,6 @@ EVENT_SAVED = 2
 EVENT_SAVED_AS = 3
 EVENT_RENDERED = 4
 EVENT_OPENED = 5
-
-# Media log event types
-MEDIA_LOG_ALL = -1 # no MediaLogEvent has this type, this used when filtering events for display
-MEDIA_LOG_INSERT = 0
-MEDIA_LOG_MARKS_SET = 1
 
 # Singleton
 thumbnail_thread = None
@@ -191,7 +187,7 @@ class Project:
     def get_filtered_media_log_events(self, event_type, incl_starred, incl_not_starred):
         filtered_events = []
         for media_log_event in self.media_log:
-            if ((event_type == MEDIA_LOG_ALL) or (media_log_event.event_type == event_type)):
+            if ((event_type == appconsts.MEDIA_LOG_ALL) or (media_log_event.event_type == event_type)):
                 if self._media_log_included_by_starred(media_log_event.starred, incl_starred, incl_not_starred):
                     filtered_events.append(media_log_event)
         return filtered_events
@@ -383,56 +379,7 @@ class ProjectEvent:
         else:
             return ("Unknown project event, bug or data corruption", None)
 
-class MediaLogEvent:
-    def __init__(self, event_type, mark_in, mark_out, name, path):
-        self.event_type = event_type
-        self.timestamp = datetime.datetime.now()
-        self.mark_in = mark_in
-        self.mark_out = mark_out
-        self.name = name
-        self.path = path
-        self.comment = ""
-        self.starred = False
 
-    def get_event_name(self):
-        if self.event_type == MEDIA_LOG_INSERT:
-            return "Insert"
-        elif self.event_type == MEDIA_LOG_MARKS_SET:
-            return "Marks"
-
-    def get_mark_in_str(self):
-        return utils.get_tc_string(self.mark_in)
-
-    def get_mark_out_str(self):
-        return utils.get_tc_string(self.mark_out)
-        
-    def get_date_str(self):
-        date_str = self.timestamp.strftime('%d %B, %Y - %H:%M')
-        date_str = date_str.lstrip('0')
-        return date_str
-
-def register_media_insert_event():
-    project = editorstate.PROJECT()
-    media_file = editorstate.MONITOR_MEDIA_FILE()
-    log_event = MediaLogEvent(  MEDIA_LOG_INSERT,
-                                media_file.mark_in,
-                                media_file.mark_out,
-                                media_file.name,
-                                media_file.path)
-    project.media_log.append(log_event)
-
-def register_media_marks_set_event():
-    project = editorstate.PROJECT()
-    media_file = editorstate.MONITOR_MEDIA_FILE()
-    if media_file.mark_in == -1 or media_file.mark_out == -1:
-        return False
-    log_event = MediaLogEvent(  MEDIA_LOG_MARKS_SET,
-                                media_file.mark_in,
-                                media_file.mark_out,
-                                media_file.name,
-                                media_file.path)
-    project.media_log.append(log_event)
-    return True
 
 # ------------------------------- MODULE FUNCTIONS
 def get_default_project():

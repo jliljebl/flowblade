@@ -168,6 +168,7 @@ def export_xml_dialog(callback, project_name):
     dialog.connect('response', callback)
     dialog.show()
 
+"""
 def project_info_dialog(parent_window, callback):    
     dialog = gtk.Dialog(_("Project Info"),
                         parent_window,
@@ -178,7 +179,8 @@ def project_info_dialog(parent_window, callback):
     _default_behaviour(dialog)
     dialog.connect('response', callback)
     dialog.show_all()
-    
+"""
+
 def save_titler_graphic_as_dialog(callback, current_name, open_dir):    
     dialog = gtk.FileChooserDialog(_("Save Titler Graphic As"), None, 
                                    gtk.FILE_CHOOSER_ACTION_SAVE, 

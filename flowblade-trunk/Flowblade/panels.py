@@ -127,7 +127,7 @@ def get_sequences_panel(sequence_list_view, edit_seq_cb, add_seq_cb, del_seq_cb)
     panel.pack_start(buttons_box, False, True, 0)
     panel.pack_start(sequence_list_view, True, True, 0)
 
-    return get_named_frame(_("Sequences"), panel)
+    return get_named_frame(_("Sequences"), panel, 4)
 
 def get_profile_info_panel(profile):
     desc_label = gtk.Label(profile.description())
@@ -135,74 +135,11 @@ def get_profile_info_panel(profile):
     panel = gtk.VBox()
     panel.pack_start(guiutils.get_left_justified_box([desc_label]), False, True, 0)
     panel.pack_start(info, False, True, 0)
-    return get_named_frame(_("Profile"), panel)
-    
-def get_media_log_events_panel(events_list_view, filtering_change_cb, star_button_cb):
-    auto_log_mode_combo = gtk.combo_box_new_text()
-    auto_log_mode_combo.append_text(_("All Events"))
-    auto_log_mode_combo.append_text(_("Insert Events"))
-    auto_log_mode_combo.append_text(_("Range Events"))
-    auto_log_mode_combo.set_active(0)
-
-    star_check = gtk.CheckButton()
-    star_check.set_active(True)
-    star_label = gtk.Image()
-    star_label.set_from_file(respaths.IMAGE_PATH + "star.png")
-    star_not_active_check = gtk.CheckButton()
-    star_not_active_check.set_active(True)
-    star_not_active_label = gtk.Image()
-    star_not_active_label.set_from_file(respaths.IMAGE_PATH + "star_not_active.png")
-
-    star_button = gtk.Button()
-    star_button.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "star.png"))
-    star_button.connect("clicked", lambda w: star_button_cb())
-                
-    filtering_widgets = (auto_log_mode_combo, star_check, star_not_active_check)
-    auto_log_mode_combo.connect("changed", lambda w:filtering_change_cb())
-    star_check.connect("clicked", lambda w:filtering_change_cb())
-    star_not_active_check.connect("clicked", lambda w:filtering_change_cb())
-
-    row1 = gtk.HBox()
-    row1.pack_start(auto_log_mode_combo, False, True, 0)
-    row1.pack_start(guiutils.get_pad_label(6, 12), False, True, 0)
-    row1.pack_start(star_check, False, True, 0)
-    row1.pack_start(star_label, False, True, 0)
-    row1.pack_start(guiutils.get_pad_label(6, 12), False, True, 0)
-    row1.pack_start(star_not_active_check, False, True, 0)
-    row1.pack_start(star_not_active_label, False, True, 0)
-    row1.pack_start(gtk.Label(), True, True, 0)
-    row1.pack_start(star_button, False, True, 0)
-
-    logging_type_combo = gtk.combo_box_new_text()
-    logging_type_combo.append_text(_("Auto Log All"))
-    logging_type_combo.append_text(_("Auto Log Inserts"))
-    logging_type_combo.append_text(_("Auto Log Ranges"))
-    logging_type_combo.append_text(_("Manual Logging"))
-    logging_type_combo.set_active(0)
-
-    log_range = gtk.Button()
-    log_range.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "log_range.png"))
-
-    append_displayed = gtk.Button()
-    append_displayed.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "append_media_log.png"))
-
-    row2 =  gtk.HBox()
-    row2.pack_start(logging_type_combo, False, True, 0)
-    row2.pack_start(log_range, False, True, 0)
-    row2.pack_start(gtk.Label(), True, True, 0)
-    row2.pack_start(append_displayed, False, True, 0)
-
-    panel = gtk.VBox()
-    panel.pack_start(row1, False, True, 0)
-    panel.pack_start(events_list_view, True, True, 0)
-    panel.pack_start(row2, False, True, 0)
-    panel.set_size_request(400, 200)
-
-    return (get_named_frame(_("Media Log"), panel, 0, 0, 0), filtering_widgets)
+    return get_named_frame(_("Profile"), panel, 4)
 
 def get_project_name_panel(project_name):
     name_row = get_left_justified_box([gtk.Label(project_name)])
-    return get_named_frame(_("Name"), name_row)
+    return get_named_frame(_("Name"), name_row, 4)
 
 def get_render_panel_left(editor_window, add_audio_panel):
     try:
@@ -222,7 +159,7 @@ def get_render_panel_left(editor_window, add_audio_panel):
     options_vbox.pack_start(out_folder_row, False, False, 0)
     options_vbox.pack_start(movie_name_row, False, False, 0)
 
-    file_opts_panel = get_named_frame(_("File"), options_vbox)
+    file_opts_panel = get_named_frame(_("File"), options_vbox, 4)
     
     quality_row = get_two_column_box(render.widgets.quality_label,
                                      render.widgets.quality_cb, 
@@ -237,7 +174,7 @@ def get_render_panel_left(editor_window, add_audio_panel):
                                                    render.widgets.preset_encodings_cb,
                                                    80),
                                 False, False, 0)
-    render_type_panel = get_named_frame(_("Render Type"), render_type_vbox)
+    render_type_panel = get_named_frame(_("Render Type"), render_type_vbox, 4)
 
     use_project_profile_row = gtk.HBox()
     use_project_profile_row.pack_start(render.widgets.use_project_label,  False, False, 0)
@@ -248,7 +185,7 @@ def get_render_panel_left(editor_window, add_audio_panel):
     profile_vbox.pack_start(use_project_profile_row, False, False, 0)
     profile_vbox.pack_start(render.widgets.out_profile_combo, False, False, 0)
     profile_vbox.pack_start(render.widgets.out_profile_info_box, False, False, 0)
-    profile_panel = get_named_frame(_("Render Profile"), profile_vbox)
+    profile_panel = get_named_frame(_("Render Profile"), profile_vbox, 4)
 
     if add_audio_panel:
         audio_panel = gtk.HBox()
@@ -262,7 +199,7 @@ def get_render_panel_left(editor_window, add_audio_panel):
     if add_audio_panel:
         encoding_vbox.pack_start(guiutils.get_pad_label(10, 2), False, False, 0)
         encoding_vbox.pack_start(audio_panel, False, False, 0)
-    encoding_panel = get_named_frame(_("Encoding Format"), encoding_vbox)
+    encoding_panel = get_named_frame(_("Encoding Format"), encoding_vbox, 4)
 
     render_panel = gtk.VBox()
     render_panel.pack_start(file_opts_panel, False, False, 0)
@@ -301,7 +238,7 @@ def get_render_panel_right(render_clicked_cb, normal_height):
     opts_vbox.pack_start(use_opts_row , False, False, 0)
     opts_vbox.pack_start(scroll_frame, True, True, 0)
     opts_vbox.pack_start(opts_buttons_row, False, False, 0)
-    opts_panel = get_named_frame(_("Render Args"), opts_vbox)
+    opts_panel = get_named_frame(_("Render Args"), opts_vbox, 4)
 
     bin_row = gtk.HBox()
     bin_row.pack_start(guiutils.get_pad_label(10, 8),  False, False, 0)
@@ -920,19 +857,19 @@ def get_project_info_panel():
     project_info_vbox = gtk.VBox()
     project_info_vbox.pack_start(name_panel, False, True, 0)
     project_info_vbox.pack_start(profile_info, False, True, 0)
-    project_info_vbox.pack_start(events_panel, False, True, 0)
+    project_info_vbox.pack_start(events_panel, True, True, 0)
 
     align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(0, 24, 12, 12)
+    align.set_padding(0, 0, 0, 0)
     align.add(project_info_vbox)
     
     return align
 
 def get_project_events_panel():
     events_list = guicomponents.ProjectEventListView()
-    events_list.set_size_request(550, 300)
+    events_list.set_size_request(270, 300)
     events_list.fill_data_model()
-    return guiutils.get_named_frame(_("Project Events"), events_list)
+    return guiutils.get_named_frame(_("Project Events"), events_list, 4)
     
 def get_transition_panel(trans_data):
     type_combo_box = gtk.combo_box_new_text()

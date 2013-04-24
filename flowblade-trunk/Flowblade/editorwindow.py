@@ -45,6 +45,7 @@ import glassbuttons
 import gui
 import guicomponents
 import guiutils
+import medialog
 import menuactions
 import mltplayer
 import monitorevent
@@ -242,8 +243,6 @@ class EditorWindow:
                     <separator/>
                     <menuitem action='RecreateMediaIcons'/>
                     <menuitem action='RemoveUnusedMedia'/>
-                    <separator/>
-                    <menuitem action='ProjectInfo'/>
                 </menu>
                 <menu action='ToolsMenu'>
                     <menuitem action='Titler'/>
@@ -394,7 +393,18 @@ class EditorWindow:
         render_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
         render_panel.set_padding(2, 6, 8, 6)
         render_panel.add(render_hbox)
+
+        # Media log events List
+        media_log_events_list_view = medialog.get_media_log_list_view()
+        events_panel = medialog.get_media_log_events_panel(media_log_events_list_view)
+
+        media_log_vbox = gtk.HBox()
+        media_log_vbox.pack_start(events_panel, True, True, 0)
         
+        media_log_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+        media_log_panel.set_padding(6, 0, 6, 6)
+        media_log_panel.add(media_log_vbox)
+
         # Sequence list
         self.sequence_list_view = guicomponents.SequenceListView(
                                         useraction.sequence_name_edited)
@@ -404,29 +414,23 @@ class EditorWindow:
                              lambda w,e: useraction.add_new_sequence(), 
                              lambda w,e: useraction.delete_selected_sequence())
 
-        # Media log events List
-        self.media_log_events_list_view = guicomponents.MediaLogListView()
-        events_panel, media_log_filtering_widgets = panels.get_media_log_events_panel(self.media_log_events_list_view, 
-                                                                                      useraction.media_log_filtering_changed,
-                                                                                      useraction.media_log_star_button_pressed)
-        self.media_log_filtering_widgets = media_log_filtering_widgets
-        
+        # Project info
+        project_info_panel = panels.get_project_info_panel()
+    
         # Project vbox and panel
         project_vbox = gtk.HBox()
-        project_vbox.pack_start(seq_panel, False, True, 0)
-        project_vbox.pack_start(events_panel, True, True, 0)
-
-
-        #project_hbox.pack_start(events_panel, True, True, 0)
+        project_vbox.pack_start(project_info_panel, False, True, 0)
+        project_vbox.pack_start(seq_panel, True, True, 0)
         
         project_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-        project_panel.set_padding(6, 0, 6, 6)
+        project_panel.set_padding(0, 0, 6, 0)
         project_panel.add(project_vbox)
         
         # Notebook
         self.notebook = gtk.Notebook()
         self.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH, appconsts.TOP_ROW_HEIGHT)
         self.notebook.append_page(mm_panel, gtk.Label(_("Media")))
+        self.notebook.append_page(media_log_panel, gtk.Label(_("Media Log")))
         self.notebook.append_page(self.effects_panel, gtk.Label(_("Filters")))
         self.notebook.append_page(self.compositors_panel, gtk.Label(_("Compositors")))
         self.notebook.append_page(project_panel, gtk.Label(_("Project")))

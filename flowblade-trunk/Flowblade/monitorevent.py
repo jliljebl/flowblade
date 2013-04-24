@@ -30,10 +30,11 @@ from editorstate import EDIT_MODE
 from editorstate import current_is_move_mode
 from editorstate import MONITOR_MEDIA_FILE
 import gui
+import medialog
 import movemodes
-import projectdata
 import trimmodes
 import updater
+
 
 FF_REW_SPEED = 3.0
 
@@ -144,9 +145,9 @@ def mark_in_pressed():
     updater.display_marks_tc()
     
     if not timeline_visible():
-        event_added = projectdata.register_media_marks_set_event()
+        event_added = medialog.register_media_marks_set_event()
         if event_added:
-            gui.editor_window.media_log_events_list_view.fill_data_model()
+            medialog.update_media_log_view()
         
 def mark_out_pressed():
     mark_out = PLAYER().producer.frame()
@@ -169,9 +170,9 @@ def mark_out_pressed():
     updater.display_marks_tc()
 
     if not timeline_visible():
-        event_added = projectdata.register_media_marks_set_event()
+        event_added = medialog.register_media_marks_set_event()
         if event_added:
-            gui.editor_window.media_log_events_list_view.fill_data_model()
+            medialog.update_media_log_view()
     
 def marks_clear_pressed():
     if timeline_visible():

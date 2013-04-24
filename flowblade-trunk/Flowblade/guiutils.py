@@ -133,7 +133,10 @@ def get_two_column_editor_row(name, editor_widget):
     hbox.pack_start(editor_widget, True, True, 0)
     return hbox
 
-def get_named_frame(name, widget):
+def get_no_pad_named_frame(name, panel):
+    return get_named_frame(name, panel, 0, 0, 0)
+
+def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_padding=4):
     """
     Gnome style named panel
     """
@@ -146,7 +149,7 @@ def get_named_frame(name, widget):
         label_box.pack_start(gtk.Label(), True, True, 0)
 
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(6, 0, 12, 0)
+    alignment.set_padding(right_padding, 0, left_padding, 0)
     alignment.add(widget)
     
     frame = gtk.VBox()
@@ -155,7 +158,7 @@ def get_named_frame(name, widget):
     frame.pack_start(alignment, True, True, 0)
     
     out_align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    out_align.set_padding(4, 4, 0, 4)
+    out_align.set_padding(4, 4, 0, right_out_padding)
     out_align.add(frame)
     
     return out_align
