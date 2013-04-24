@@ -75,19 +75,7 @@ def prev_pressed():
         trimmodes.oneroll_prev_pressed()
     else:
         trimmodes.tworoll_prev_pressed()
-"""
-def ff_pressed():
-    PLAYER().start_variable_speed_playback(FF_REW_SPEED)
-        
-def ff_released():
-    PLAYER().stop_playback()
-    
-def rew_pressed():
-    PLAYER().start_variable_speed_playback(-FF_REW_SPEED)
-    
-def rew_released():
-    PLAYER().stop_playback()
-"""
+
 def j_pressed():
     jkl_index = _get_jkl_speed_index()
     print jkl_index
@@ -156,8 +144,9 @@ def mark_in_pressed():
     updater.display_marks_tc()
     
     if not timeline_visible():
-        projectdata.register_media_marks_set_event()
-        gui.editor_window.media_log_events_list_view.fill_data_model()
+        event_added = projectdata.register_media_marks_set_event()
+        if event_added:
+            gui.editor_window.media_log_events_list_view.fill_data_model()
         
 def mark_out_pressed():
     mark_out = PLAYER().producer.frame()
@@ -180,8 +169,9 @@ def mark_out_pressed():
     updater.display_marks_tc()
 
     if not timeline_visible():
-        projectdata.register_media_marks_set_event()
-        gui.editor_window.media_log_events_list_view.fill_data_model()
+        event_added = projectdata.register_media_marks_set_event()
+        if event_added:
+            gui.editor_window.media_log_events_list_view.fill_data_model()
     
 def marks_clear_pressed():
     if timeline_visible():

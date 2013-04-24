@@ -191,15 +191,15 @@ class Project:
     def get_filtered_media_log_events(self, event_type, incl_starred, incl_not_starred):
         filtered_events = []
         for media_log_event in self.media_log:
-            if (media_log_event.event_type == MEDIA_LOG_ALL) or (media_log_event.event_type == event_type):
-                if _media_log_included_by_starred(media_log_event.starred, incl_starred, incl_not_starred):
+            if ((event_type == MEDIA_LOG_ALL) or (media_log_event.event_type == event_type)):
+                if self._media_log_included_by_starred(media_log_event.starred, incl_starred, incl_not_starred):
                     filtered_events.append(media_log_event)
         return filtered_events
 
     def _media_log_included_by_starred(self, starred, incl_starred, incl_not_starred):
-        if starred and incl_starred:
+        if starred == True and incl_starred == True:
             return True
-        if (not starred) and incl_not_starred:
+        if starred == False and incl_not_starred == True:
             return True
         return False
 
@@ -425,14 +425,14 @@ def register_media_marks_set_event():
     project = editorstate.PROJECT()
     media_file = editorstate.MONITOR_MEDIA_FILE()
     if media_file.mark_in == -1 or media_file.mark_out == -1:
-        return
+        return False
     log_event = MediaLogEvent(  MEDIA_LOG_MARKS_SET,
                                 media_file.mark_in,
                                 media_file.mark_out,
                                 media_file.name,
                                 media_file.path)
     project.media_log.append(log_event)
-
+    return True
 
 # ------------------------------- MODULE FUNCTIONS
 def get_default_project():

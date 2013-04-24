@@ -129,12 +129,6 @@ def get_sequences_panel(sequence_list_view, edit_seq_cb, add_seq_cb, del_seq_cb)
 
     return get_named_frame(_("Sequences"), panel)
 
-"""
-def get_profile_info_panel(profile):
-    hbox = guicomponents.get_profile_info_box(profile, True)
-    return get_named_frame(_("Profile"), hbox)
-"""
-
 def get_profile_info_panel(profile):
     desc_label = gtk.Label(profile.description())
     info = guicomponents.get_profile_info_small_box(profile)
@@ -143,7 +137,7 @@ def get_profile_info_panel(profile):
     panel.pack_start(info, False, True, 0)
     return get_named_frame(_("Profile"), panel)
     
-def get_media_log_events_panel(events_list_view, filtering_change_cb):
+def get_media_log_events_panel(events_list_view, filtering_change_cb, star_button_cb):
     auto_log_mode_combo = gtk.combo_box_new_text()
     auto_log_mode_combo.append_text(_("All Events"))
     auto_log_mode_combo.append_text(_("Insert Events"))
@@ -159,20 +153,25 @@ def get_media_log_events_panel(events_list_view, filtering_change_cb):
     star_not_active_label = gtk.Image()
     star_not_active_label.set_from_file(respaths.IMAGE_PATH + "star_not_active.png")
 
+    star_button = gtk.Button()
+    star_button.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "star.png"))
+    star_button.connect("clicked", lambda w: star_button_cb())
+                
     filtering_widgets = (auto_log_mode_combo, star_check, star_not_active_check)
-    auto_log_mode_combo.connect("changed", filtering_change_cb)
-    star_check.connect("clicked", filtering_change_cb)
-    star_not_active_check.connect("clicked", filtering_change_cb)
+    auto_log_mode_combo.connect("changed", lambda w:filtering_change_cb())
+    star_check.connect("clicked", lambda w:filtering_change_cb())
+    star_not_active_check.connect("clicked", lambda w:filtering_change_cb())
 
-    row1 =  gtk.HBox()
+    row1 = gtk.HBox()
     row1.pack_start(auto_log_mode_combo, False, True, 0)
-    row1.pack_start(guiutils.get_pad_label(12, 12), False, True, 0)
+    row1.pack_start(guiutils.get_pad_label(6, 12), False, True, 0)
     row1.pack_start(star_check, False, True, 0)
     row1.pack_start(star_label, False, True, 0)
-    row1.pack_start(guiutils.get_pad_label(12, 12), False, True, 0)
+    row1.pack_start(guiutils.get_pad_label(6, 12), False, True, 0)
     row1.pack_start(star_not_active_check, False, True, 0)
     row1.pack_start(star_not_active_label, False, True, 0)
     row1.pack_start(gtk.Label(), True, True, 0)
+    row1.pack_start(star_button, False, True, 0)
 
     logging_type_combo = gtk.combo_box_new_text()
     logging_type_combo.append_text(_("Auto Log All"))
@@ -462,7 +461,6 @@ def get_timecode_panel(editor_window):
     editor_window.length_entry.set_text("--:--:--:--")
     editor_window.length_entry.set_size_request(TC_LABEL_WIDTH, 20)
 
-    
     row = gtk.HBox(False, 1)
     row.pack_start(editor_window.tc.widget, False, False, 0)
     row.pack_start(guiutils.get_pad_label(20, 20), False, False, 0)

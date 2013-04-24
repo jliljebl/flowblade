@@ -804,17 +804,23 @@ def _change_track_count_dialog_callback(dialog, response_id, tracks_combo):
     PROJECT().sequences.insert(cur_seq_index, new_seq)
     PROJECT().sequences.pop(cur_seq_index + 1)
     app.change_current_sequence(cur_seq_index)
-    
 
 # ----------------------------------------------------------- media log
-def media_log_filtering_changed(w):
-    print "wwewewewe"
+def media_log_filtering_changed():
+    gui.editor_window.media_log_events_list_view.fill_data_model()
 
+def media_log_star_button_pressed():
+    selected = gui.editor_window.media_log_events_list_view.get_selected_rows_list()
     auto_log_mode_combo, star_check, star_not_active_check = gui.editor_window.media_log_filtering_widgets
-    val = star_check.get_active()
-    print star_check.get_active()
-    print star_not_active_check.get_active()
-    print auto_log_mode_combo.get_active()
+    event_type = auto_log_mode_combo.get_active() - 1 # -1 produces values corresponding to media log event types in projectdata.py
+    log_events = PROJECT().get_filtered_media_log_events(event_type, 
+                                                         star_check.get_active(),
+                                                         star_not_active_check.get_active())
+    for row in selected:
+        index = max(row) # these are tuple, max to extract only value
+        log_events[index].starred = not log_events[index].starred
+
+    gui.editor_window.media_log_events_list_view.fill_data_model()
 
 
 # --------------------------------------------------------- pop-up menus

@@ -407,7 +407,8 @@ class EditorWindow:
         # Media log events List
         self.media_log_events_list_view = guicomponents.MediaLogListView()
         events_panel, media_log_filtering_widgets = panels.get_media_log_events_panel(self.media_log_events_list_view, 
-                                                                                      useraction.media_log_filtering_changed)
+                                                                                      useraction.media_log_filtering_changed,
+                                                                                      useraction.media_log_star_button_pressed)
         self.media_log_filtering_widgets = media_log_filtering_widgets
         
         # Project vbox and panel
@@ -621,7 +622,7 @@ class EditorWindow:
 
         # Maximize if it seems that we exited maximized, else set size
         w, h = editorpersistance.prefs.exit_allocation
-        if w != 0: # non-existing prefs file causes w and h to be 0 so they can't be used to set window size then
+        if w != 0: # non-existing prefs file causes w and h to be 0
             if (float(w) / editorstate.SCREEN_WIDTH > 0.95) and (float(h) / editorstate.SCREEN_HEIGHT > 0.95):
                 self.window.maximize() 
             else:

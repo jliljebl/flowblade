@@ -340,7 +340,6 @@ class ProjectEventListView(gtk.VBox):
         
         self.scroll.queue_draw()
 
-
 class MediaLogListView(ImageTextTextListView):
 
     def __init__(self):
@@ -362,7 +361,7 @@ class MediaLogListView(ImageTextTextListView):
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(True)
         tree_sel = self.treeview.get_selection()
-        tree_sel.set_mode(gtk.SELECTION_SINGLE)
+        tree_sel.set_mode(gtk.SELECTION_MULTIPLE)
 
         # Column views
         self.icon_col_1 = gtk.TreeViewColumn("icon1")
@@ -383,6 +382,7 @@ class MediaLogListView(ImageTextTextListView):
         # Cell renderers
         self.icon_rend_1 = gtk.CellRendererPixbuf()
         self.icon_rend_1.props.xpad = 6
+        #self.icon_rend_1.set_property('activatable', True)
 
         self.text_rend_1 = gtk.CellRendererText()
         self.text_rend_1.set_property("ellipsize", pango.ELLIPSIZE_END)
@@ -461,8 +461,14 @@ class MediaLogListView(ImageTextTextListView):
         """
         self.storemodel.clear()
         star_icon_path = respaths.ROOT_PATH + STAR_IMG_PATH
-        for log_event in PROJECT().media_log:
-            if log_event.starred == False:
+     
+        auto_log_mode_combo, star_check, star_not_active_check = gui.editor_window.media_log_filtering_widgets
+        event_type = auto_log_mode_combo.get_active() - 1 # -1 produces values corresponding to media log event types in projectdata.py
+        log_events = PROJECT().get_filtered_media_log_events(event_type, 
+                                                             star_check.get_active(),
+                                                             star_not_active_check.get_active())
+        for log_event in log_events:
+            if log_event.starred == True:
                 icon = gtk.gdk.pixbuf_new_from_file(star_icon_path)
             else:
                 icon = None
