@@ -401,7 +401,6 @@ def _add_transition_render_folder_select_callback(dialog, response_id, file_sele
         else:
             editorpersistance.prefs.render_folder = folder
             editorpersistance.save()
-            print "render folder set"
             add_transition_pressed(True)
 
 def _add_transition_dialog_callback(dialog, response_id, selection_widgets, transition_data):
@@ -461,7 +460,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
     # Edit clears selection, get track index before selection is cleared
     trans_index = movemodes.selected_range_out
     movemodes.clear_selected_clips()
-    transition_type_selection_index = type_combo.get_active()
+    transition_type_selection_index = type_combo.get_active() # these corespond with ...
     producer_tractor = mlttransitions.get_rendered_transition_tractor(  editorstate.current_sequence(),
                                                                         from_clip,
                                                                         to_clip,
@@ -475,7 +474,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
 
     # Save transition data into global variable to be available at render complete callback
     global transition_render_data
-    transition_render_data = (trans_index, from_clip, to_clip,  transition_data["track"], from_in, to_out)
+    transition_render_data = (trans_index, from_clip, to_clip,  transition_data["track"], from_in, to_out, transition_type_selection_index)
     
     render.render_single_track_transition_clip(producer_tractor,
                                         encoding_option_index,
@@ -485,12 +484,12 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
 
 def _transition_render_complete(clip_path):
     print "render complete"
-    
-    transition_clip = current_sequence().create_rendered_transition_clip(clip_path)
-    
-    global transition_render_data
-    transition_index, from_clip, to_clip, track, from_in, to_out = transition_render_data
 
+    global transition_render_data
+    transition_index, from_clip, to_clip, track, from_in, to_out, transition_type = transition_render_data
+
+    transition_clip = current_sequence().create_rendered_transition_clip(clip_path, transition_type)
+    
     data = {"transition_clip":transition_clip,
             "transition_index":transition_index,
             "from_clip":from_clip,
@@ -580,18 +579,17 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
 
 def _fade_render_complete(clip_path):
     print "fade render complete"
-    
-    fade_clip = current_sequence().create_rendered_transition_clip(clip_path)
-    
+
     global transition_render_data
     clip_index, fade_type, clip, track, length = transition_render_data
 
+    fade_clip = current_sequence().create_rendered_transition_clip(clip_path, fade_type)
+    
     data = {"fade_clip":fade_clip,
             "index":clip_index,
             "track":track,
             "length":length}
 
-    print fade_type
     if fade_type == mlttransitions.RENDERED_FADE_IN:
         action = edit.add_rendered_fade_in_action(data)
         action.do_edit()

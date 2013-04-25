@@ -421,8 +421,10 @@ class Sequence:
         self.add_clip_attr(clip)
         return clip
 
-    def create_rendered_transition_clip(self, path):
-        return self.create_file_producer_clip(path)
+    def create_rendered_transition_clip(self, path, rendered_type):
+        clip = self.create_file_producer_clip(path)
+        clip.rendered_type = rendered_type
+        return clip
     
     def add_clip_attr(self, clip):
         """

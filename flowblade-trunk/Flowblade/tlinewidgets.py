@@ -358,8 +358,11 @@ def compositor_hit(frame, y, sorted_compositors):
     Returns compositor hit with mouse press x,y or None if nothing hit.
     """
     track = get_track(y)
-    track_top = _get_track_y(track.id)
-    
+    try:
+        track_top = _get_track_y(track.id)
+    except AttributeError: # we didn't press on a editable track
+        return None
+        
     # Test if compositor hit on track top, so compositor hit on dest track side
     if y >= track_top and y < track_top + (COMPOSITOR_HEIGHT - COMPOSITOR_HEIGHT_OFF):
        return _comp_hit_on_below_track(frame, track, sorted_compositors)
@@ -922,6 +925,65 @@ class TimeLineCanvas:
                 cr.line_to(left, down)
                 cr.stroke()
 
+            # Draw transition clip image 
+            if ((scale_length > FILL_MIN) and hasattr(clip, "rendered_type")):
+                cr.set_source_rgb(1.0, 1.0, 1.0)
+                cr.rectangle(scale_in + 2.5,
+                         y + 2.5, scale_length - 4.0, 
+                         track_height - 4.0)
+                cr.fill()
+
+                right = scale_in + 2.5 + scale_length - 6.0
+                right_half = scale_in + 2.5 + ((scale_length - 6.0) / 2.0)
+                down = y + 2.5 + track_height - 6.0
+                down_half = y + 2.5 + ((track_height - 6.0) / 2.0)
+                cr.set_source_rgb(0, 0, 0)
+                
+                if clip.rendered_type == appconsts.RENDERED_DISSOLVE:
+                    cr.move_to(right, y + 4.5)
+                    cr.line_to(right, down)
+                    cr.line_to(scale_in + 4.5, down)
+                    cr.close_path()
+                    cr.fill()
+                elif clip.rendered_type == appconsts.RENDERED_WIPE:
+                    cr.rectangle(scale_in + 2.0, y + 2.0, scale_length - 4.0, track_height - 4.0)
+                    cr.fill()
+                    cr.set_source_rgb(1, 1, 1)
+                    cr.move_to(right_half, y + 3.0 + 2.0)
+                    cr.line_to(right - 2.0, down_half)
+                    cr.line_to(right_half, down - 2.0)
+                    cr.line_to(scale_in + 2.0 + 4.0, down_half)
+                    cr.close_path()
+                    cr.fill()
+                elif clip.rendered_type == appconsts.RENDERED_COLOR_DIP:
+                    cr.move_to(scale_in + 4.5, y + 4.5)
+                    cr.line_to(right, y + 4.5)
+                    cr.line_to(right_half, down)
+                    cr.close_path()
+                    cr.fill()       
+                elif clip.rendered_type == appconsts.RENDERED_FADE_IN:
+                    cr.move_to(scale_in + 4.5, y + 4.5)
+                    cr.line_to(right, y + 4.5)
+                    cr.line_to(scale_in + 4.5, down_half)
+                    cr.close_path()
+                    cr.fill()
+                    cr.move_to(scale_in + 4.5, down_half)
+                    cr.line_to(right, down)
+                    cr.line_to(scale_in + 4.5, down)
+                    cr.close_path()
+                    cr.fill()
+                else: # clip.rendered_type == appconsts.RENDERED_FADE_OUT:
+                    cr.move_to(scale_in + 4.5, y + 4.5)
+                    cr.line_to(right, y + 4.5)
+                    cr.line_to(right, down_half)
+                    cr.close_path()
+                    cr.fill()
+                    cr.move_to(right, down_half)
+                    cr.line_to(right, down)
+                    cr.line_to(scale_in + 4.5, down)
+                    cr.close_path()
+                    cr.fill()
+
             # Sync stripe
             if scale_length > FILL_MIN: 
                 if clip.sync_data != None:
@@ -971,14 +1033,15 @@ class TimeLineCanvas:
 
             # Draw text and filter, sync icons
             if scale_length > TEXT_MIN:
-                # Text
-                cr.set_source_rgb(0, 0, 0)
-                cr.select_font_face ("sans-serif",
-                                     cairo.FONT_SLANT_NORMAL,
-                                     cairo.FONT_WEIGHT_NORMAL)
-                cr.set_font_size(11)
-                cr.move_to(scale_in + TEXT_X, y + text_y)
-                cr.show_text(clip.name.upper())
+                if not hasattr(clip, "rendered_type"):
+                    # Text
+                    cr.set_source_rgb(0, 0, 0)
+                    cr.select_font_face ("sans-serif",
+                                         cairo.FONT_SLANT_NORMAL,
+                                         cairo.FONT_WEIGHT_NORMAL)
+                    cr.set_font_size(11)
+                    cr.move_to(scale_in + TEXT_X, y + text_y)
+                    cr.show_text(clip.name.upper())
                 
                 icon_slot = 0
                 # Filter icon

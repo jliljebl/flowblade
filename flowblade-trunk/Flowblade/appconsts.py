@@ -106,3 +106,10 @@ MIDBAR_COLOR = "#bdbdbd"
 MEDIA_LOG_ALL = -1 # no MediaLogEvent has this type, this used when filtering events for display
 MEDIA_LOG_INSERT = 0
 MEDIA_LOG_MARKS_SET = 1
+
+# Rendered clip types
+RENDERED_DISSOLVE = 0
+RENDERED_WIPE = 1
+RENDERED_COLOR_DIP = 2
+RENDERED_FADE_IN = 3
+RENDERED_FADE_OUT = 4

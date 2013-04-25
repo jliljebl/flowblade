@@ -50,11 +50,11 @@ PROP_FLOAT = appconsts.PROP_FLOAT
 PROP_EXPRESSION = appconsts.PROP_EXPRESSION
 
 # Renderered transitions
-RENDERED_DISSOLVE = 0
-RENDERED_WIPE = 1
-RENDERED_COLOR_DIP = 2
-RENDERED_FADE_IN = 3
-RENDERED_FADE_OUT = 4
+RENDERED_DISSOLVE = appconsts.RENDERED_DISSOLVE
+RENDERED_WIPE = appconsts.RENDERED_WIPE
+RENDERED_COLOR_DIP = appconsts.RENDERED_COLOR_DIP
+RENDERED_FADE_IN = appconsts.RENDERED_FADE_IN
+RENDERED_FADE_OUT = appconsts.RENDERED_FADE_OUT
 
 rendered_transitions = None # list is set her at init_module() because otherwise translations can't be done (module load issue)
 
