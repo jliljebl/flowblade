@@ -1675,7 +1675,40 @@ def _add_centered_transition_redo(self):
     #transition_clip.save_data.clip_in = transition.clip_in
     #transition_clip.save_data.clip_out = transition.clip_out      
 
+# -------------------------------------------------------- RENDERED FADE IN
+# "fade_clip", "clip_index", "track", "length"
+def add_rendered_fade_in_action(data):
+    action = EditAction(_add_rendered_fade_in_undo, _add_rendered_fade_in_redo, data)
+    return action
 
+def _add_rendered_fade_in_undo(self):
+    _remove_clip(self.track, self.index)
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track,  self.orig_clip, self.index, self.orig_clip_in, self.orig_clip.clip_out)
+
+def _add_rendered_fade_in_redo(self):
+    self.orig_clip = _remove_clip(self.track, self.index)
+    self.orig_clip_in = self.orig_clip.clip_in 
+    _insert_clip(self.track, self.fade_clip, self.index, 0, self.length - 1)
+    _insert_clip(self.track,  self.orig_clip, self.index + 1, self.orig_clip.clip_in + self.length, self.orig_clip.clip_out)
+
+# -------------------------------------------------------- RENDERED FADE OUT
+# "fade_clip", "clip_index", "track", "length"
+def add_rendered_fade_out_action(data):
+    action = EditAction(_add_rendered_fade_out_undo, _add_rendered_fade_out_redo, data)
+    return action
+
+def _add_rendered_fade_out_undo(self):
+    _remove_clip(self.track, self.index)
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track,  self.orig_clip, self.index, self.orig_clip.clip_in, self.orig_clip_out)
+
+def _add_rendered_fade_out_redo(self):
+    self.orig_clip = _remove_clip(self.track, self.index)
+    self.orig_clip_out = self.orig_clip.clip_out 
+    _insert_clip(self.track,  self.orig_clip, self.index, self.orig_clip.clip_in, self.orig_clip.clip_out - self.length)
+    _insert_clip(self.track, self.fade_clip, self.index + 1, 0, self.length - 1)
+    
 # --------------------------------------------- help funcs for "range over" and "range splice out" edits
 # NOTE: RANGE SPLICE OUT NOT IMPLEMENTED YET; SO THIS IS CURRENTLY DEAD CODE
 def _track_put_back_range(over_in, track, track_extract_data):

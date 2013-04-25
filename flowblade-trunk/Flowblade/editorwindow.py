@@ -602,7 +602,6 @@ class EditorWindow:
         # Timeline pane
         tline_pane = gtk.VBox(False, 1)
         tline_pane.pack_start(self.edit_buttons_frame, False, True, 0)
-        #tline_pane.pack_start(guiutils.get_pad_label(5, 4), False, True, 0)
         tline_pane.pack_start(self.tline_box, True, True, 0)
 
         # VPaned top row / timeline

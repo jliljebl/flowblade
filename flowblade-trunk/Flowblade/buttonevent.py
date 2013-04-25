@@ -333,7 +333,7 @@ def resync_button_pressed():
 def add_transition_pressed(retry_from_render_folder_select=False):
     print "add_transition_pressed"
     if movemodes.selected_track == -1:
-        print "selected track"
+        print "so selection track"
         # INFOWINDOW
         return
         
@@ -555,7 +555,8 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
     # Edit clears selection, get track index before selection is cleared
     clip_index = movemodes.selected_range_in
     movemodes.clear_selected_clips()
-    transition_type_selection_index = type_combo.get_active() + 3 # +3 because RENDERED_FADE_IN = 3 and RENDERED_FADE_OUT = 4
+    transition_type_selection_index = type_combo.get_active() + 3 # +3 because mlttransitions.RENDERED_FADE_IN = 3 and mlttransitions.RENDERED_FADE_OUT = 4
+                                                                  # and fade in/out selection indexes are 0 and 1
     producer_tractor = mlttransitions.get_rendered_transition_tractor(  editorstate.current_sequence(),
                                                                         clip,
                                                                         None,
@@ -586,14 +587,18 @@ def _fade_render_complete(clip_path):
     clip_index, fade_type, clip, track, length = transition_render_data
 
     data = {"fade_clip":fade_clip,
-            "clip_index":clip_index,
+            "index":clip_index,
             "track":track,
             "length":length}
-    
-    print "fugabda fuu"
-    #action = edit.add_centered_transition_action(data)
-    #action.do_edit()
-    
+
+    print fade_type
+    if fade_type == mlttransitions.RENDERED_FADE_IN:
+        action = edit.add_rendered_fade_in_action(data)
+        action.do_edit()
+    else: # mlttransitions.RENDERED_FADE_OUT
+        action = edit.add_rendered_fade_out_action(data)
+        action.do_edit()
+        
 # --------------------------------------------------------- view move setting
 def view_mode_menu_lauched(launcher, event):
     guicomponents.get_monitor_view_popupmenu(launcher, event, _view_mode_menu_item_item_activated)

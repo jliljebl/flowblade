@@ -423,7 +423,6 @@ def get_rendered_transition_tractor(current_sequence,
             to_clip.clip_in = 0
             to_clip.clip_out = length
     else:
-        print "wedefffeeffe"
         length = action_from_out
         if from_clip.media_type == appconsts.IMAGE or from_clip.media_type == appconsts.PATTERN_PRODUCER:
             from_clip.clip_in = 0
@@ -454,9 +453,12 @@ def get_rendered_transition_tractor(current_sequence,
     elif (transition_type == RENDERED_FADE_IN or transition_type == RENDERED_FADE_OUT):
         color_clip = patternproducer.create_color_producer(current_sequence.profile, gdk_color_str)
         track0.insert(color_clip, 0, 0, length)
-        track1.insert(from_clip, 0, 0, length)
         if transition_type ==  RENDERED_FADE_IN:
+            track1.insert(from_clip, 0, orig_from.clip_in, orig_from.clip_in + length)
             kf_str = "0=0/0:100%x100%:0.0;"+ str(length) + "=0/0:100%x100%:100.0"
+        else: # transition_type ==  RENDERED_FADE_OUT
+            track1.insert(from_clip, 0, orig_from.clip_out - length, orig_from.clip_out)
+            kf_str = "0=0/0:100%x100%:100.0;"+ str(length) + "=0/0:100%x100%:0.0"
 
     # Create transition
     transition = mlt.Transition(current_sequence.profile, "region")
