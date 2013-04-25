@@ -317,7 +317,7 @@ class EditorWindow:
         self.mm_paned.pack2(media_panel, resize=True, shrink=False)
         
         mm_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-        mm_panel.set_padding(0, 0, 4, 0)
+        mm_panel.set_padding(2, 2, 6, 2)
         mm_panel.add(self.mm_paned)
 
         # Effects
@@ -343,7 +343,7 @@ class EditorWindow:
         effects_hbox.pack_start(effects_editor_panel, True, True, 0)
 
         self.effects_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-        self.effects_panel.set_padding(0, 0, 0, 0)
+        self.effects_panel.set_padding(2, 2, 2, 2)
         self.effects_panel.add(effects_hbox)
         
         # Compositors
@@ -402,7 +402,7 @@ class EditorWindow:
         media_log_vbox.pack_start(events_panel, True, True, 0)
         
         media_log_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-        media_log_panel.set_padding(6, 0, 6, 6)
+        media_log_panel.set_padding(6, 6, 6, 6)
         media_log_panel.add(media_log_vbox)
 
         # Sequence list
@@ -423,7 +423,7 @@ class EditorWindow:
         project_vbox.pack_start(seq_panel, True, True, 0)
         
         project_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-        project_panel.set_padding(0, 0, 6, 0)
+        project_panel.set_padding(0, 2, 6, 2)
         project_panel.add(project_vbox)
         
         # Notebook
