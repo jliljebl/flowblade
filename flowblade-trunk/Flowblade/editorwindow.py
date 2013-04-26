@@ -395,7 +395,7 @@ class EditorWindow:
         render_panel.add(render_hbox)
 
         # Media log events List
-        media_log_events_list_view = medialog.get_media_log_list_view()
+        media_log_events_list_view = medialog.get_media_log_list_view()   
         events_panel = medialog.get_media_log_events_panel(media_log_events_list_view)
 
         media_log_vbox = gtk.HBox()
