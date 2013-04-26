@@ -199,6 +199,10 @@ class Project:
             return True
         return False
 
+    def delete_media_log_events(self, delete_events):
+        for e in delete_events:
+            self.media_log.remove(e)
+
     def exit_clip_renderer_process(self):
         pass
 
