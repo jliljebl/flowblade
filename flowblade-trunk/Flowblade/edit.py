@@ -1708,7 +1708,24 @@ def _add_rendered_fade_out_redo(self):
     self.orig_clip_out = self.orig_clip.clip_out 
     _insert_clip(self.track,  self.orig_clip, self.index, self.orig_clip.clip_in, self.orig_clip.clip_out - self.length)
     _insert_clip(self.track, self.fade_clip, self.index + 1, 0, self.length - 1)
+
+#-------------------- APPEND MEDIA LOG
+# "track","clips"
+def append_media_log_action(data):
+    action = EditAction(_append_media_log_undo,_append_media_log_redo, data)
+    return action
+
+def _append_media_log_undo(self):
+    for i in range(0, len(self.clips)):
+        _remove_clip(self.track, len(self.track.clips) - 1)
     
+def _append_media_log_redo(self):
+    for i in range(0, len(self.clips)):
+        clip = self.clips[i]
+        append_clip(self.track, clip, clip.clip_in, clip.clip_out)
+
+
+
 # --------------------------------------------- help funcs for "range over" and "range splice out" edits
 # NOTE: RANGE SPLICE OUT NOT IMPLEMENTED YET; SO THIS IS CURRENTLY DEAD CODE
 def _track_put_back_range(over_in, track, track_extract_data):

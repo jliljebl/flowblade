@@ -23,13 +23,15 @@ import datetime
 import pango
 
 import appconsts
-import utils
+import edit
 import guicomponents
 import guiutils
 import editorstate
 from editorstate import PROJECT
 import respaths
 import updater
+import utils
+
 
 LOGGING_MODE_MANUAL = 0
 LOGGING_MODE_AUTO_RANGES = 1
@@ -39,6 +41,7 @@ LOGGING_MODE_AUTO_ALL = 3
 log_mode = LOGGING_MODE_MANUAL
 
 widgets = utils.EmptyClass()
+
 
 class MediaLogEvent:
     def __init__(self, event_type, mark_in, mark_out, name, path):
@@ -96,20 +99,25 @@ def register_media_insert_event():
     if (log_mode == LOGGING_MODE_MANUAL) or (log_mode == LOGGING_MODE_AUTO_RANGES):
         return
 
-    project = editorstate.PROJECT()
     media_file = editorstate.MONITOR_MEDIA_FILE()
+    if media_file.type == appconsts.PATTERN_PRODUCER:
+        # INFOWINDOW ???
+       return False 
+
     log_event = MediaLogEvent(  appconsts.MEDIA_LOG_INSERT,
                                 media_file.mark_in,
                                 media_file.mark_out,
                                 media_file.name,
                                 media_file.path)
-    project.media_log.append(log_event)
+    editorstate.PROJECT().media_log.append(log_event)
 
 def register_media_marks_set_event(manual_event=False):
-    project = editorstate.PROJECT()
     media_file = editorstate.MONITOR_MEDIA_FILE()
     if media_file == None:
         return False
+    if media_file.type == appconsts.PATTERN_PRODUCER:
+        # INFOWINDOW ???
+       return False 
     if media_file.mark_in == -1 or media_file.mark_out == -1:
         return False
     log_mode = widgets.logging_mode_combo.get_active() # selection index is the global variable for active log mode too
@@ -122,7 +130,7 @@ def register_media_marks_set_event(manual_event=False):
                                 media_file.mark_out,
                                 media_file.name,
                                 media_file.path)
-    project.media_log.append(log_event)
+    editorstate.PROJECT().media_log.append(log_event)
     return True
 
 def log_range_clicked():
@@ -206,6 +214,37 @@ def get_current_filtered_events():
                                                          widgets.star_not_active_check.get_active())
     return log_events
 
+def append_log_events():
+    clips = []
+    log_events = get_current_filtered_events()
+    for le in log_events:
+        clips.append(get_log_event_clip(le))
+    
+    track = editorstate.current_sequence().get_first_active_track() # audio tracks??!!??
+    
+    data = {"track":track,
+            "clips":clips}
+    action = edit.append_media_log_action(data)
+    action.do_edit()
+
+def get_log_event_clip(log_event):
+    # currently quarateed n ot to be a pattern producer
+    new_clip = editorstate.current_sequence().create_file_producer_clip(log_event.path)
+        
+    # Set clip in and out points
+    new_clip.clip_in = log_event.mark_in
+    new_clip.clip_out = log_event.mark_out
+    #new_clip.mark_in = log_event.mark_in uncomment if some bug comes along that needs these to be here
+    #new_clip.mark_out = log_event.mark_out
+    new_clip.name = log_event.name
+
+    """
+    if new_clip.mark_in == -1:
+         new_clip.mark_in = 0
+    if new_clip.mark_out == -1:
+        new_clip.mark_out = new_clip.get_length() - 1 #-1 == out inclusive
+    """
+    return new_clip
 
 # ------------------------------------------------------------ gui
 def get_media_log_list_view():
@@ -435,6 +474,7 @@ def get_media_log_events_panel(events_list_view):
     append_displayed = gtk.Button()
     append_displayed.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "append_media_log.png"))
     append_displayed.set_size_request(80, 22)
+    append_displayed.connect("clicked", lambda w:append_log_events())
 
     row2 =  gtk.HBox()
     row2.pack_start(logging_mode_combo, False, True, 0)
