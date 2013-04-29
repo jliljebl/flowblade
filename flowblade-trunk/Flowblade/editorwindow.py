@@ -54,6 +54,7 @@ import respaths
 import panels
 import patternproducer
 from positionbar import PositionBar
+import projectinfogui
 import syncsplitevent
 import test
 import titler
@@ -415,7 +416,7 @@ class EditorWindow:
                              lambda w,e: useraction.delete_selected_sequence())
 
         # Project info
-        project_info_panel = panels.get_project_info_panel()
+        project_info_panel = projectinfogui.get_project_info_panel()
     
         # Project vbox and panel
         project_vbox = gtk.HBox()

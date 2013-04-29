@@ -49,6 +49,7 @@ import movemodes
 import panels
 import persistance
 import projectdata
+import projectinfogui
 import render
 import respaths
 import sequence
@@ -250,6 +251,8 @@ def save_project():
         global save_time
         save_time = time.clock()
         
+        projectinfogui.update_project_info()
+        
 def save_project_as():
     if  PROJECT().last_save_path != None:
         open_dir = os.path.dirname(PROJECT().last_save_path)
@@ -290,7 +293,7 @@ def _save_as_dialog_callback(dialog, response_id):
         editorpersistance.add_recent_project_path(PROJECT().last_save_path)
         editorpersistance.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
         
-        updater.update_project_info(PROJECT())
+        projectinfogui.update_project_info()
         
         dialog.destroy()
     else:

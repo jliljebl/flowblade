@@ -841,7 +841,7 @@ def get_manage_profiles_panel(delete_user_profiles, hide_selected, unhide_select
     vbox.pack_start(get_named_frame(_("Factory Profiles"), factory_vbox), True, True, 0)
     
     return (vbox, user_profiles_list)
-
+"""
 def get_project_info_panel():
     name_panel = get_project_name_panel(editorstate.project.name)
     profile_info = get_profile_info_panel(editorstate.project.profile)
@@ -858,12 +858,14 @@ def get_project_info_panel():
     
     return align
 
+
 def get_project_events_panel():
     events_list = guicomponents.ProjectEventListView()
     events_list.set_size_request(270, 300)
     events_list.fill_data_model()
     return guiutils.get_named_frame(_("Project Events"), events_list, 4)
-    
+"""
+
 def get_transition_panel(trans_data):
     type_combo_box = gtk.combo_box_new_text()
     name, t_service_id = mlttransitions.rendered_transitions[0]

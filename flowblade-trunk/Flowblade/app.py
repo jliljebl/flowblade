@@ -61,6 +61,7 @@ import monitorevent
 import movemodes
 import persistance
 import projectdata
+import projectinfogui
 import propertyedit
 import render
 import renderconsumer
@@ -327,6 +328,8 @@ def init_project_gui():
 
     render.set_default_values_for_widgets()
 
+    projectinfogui.update_project_info()
+
 def init_sequence_gui():
     """
     Called after project load or changing current sequence 
@@ -351,9 +354,6 @@ def init_editor_state():
     """
     render.fill_out_profile_widgets()
     
-    # Display project data in 'Project' panel
-    updater.update_project_info(editorstate.project)
-
     # Set initial edit mode and set initial gui state
     updater.set_mode_button_active(editorstate.INSERT_MOVE)
     

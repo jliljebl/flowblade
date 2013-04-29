@@ -258,7 +258,7 @@ class SequenceListView(ImageTextTextListView):
             self.storemodel.append(row_data)
             self.scroll.queue_draw()
 
-
+"""
 class ProjectEventListView(gtk.VBox):
 
     def __init__(self):
@@ -327,10 +327,7 @@ class ProjectEventListView(gtk.VBox):
         self.scroll.show_all()
 
     def fill_data_model(self):
-        """
-        Creates displayed data.
-        Displays icon, sequence name and sequence length
-        """
+
         self.storemodel.clear()
         for e in PROJECT().events:
             t = e.get_date_str()
@@ -339,7 +336,7 @@ class ProjectEventListView(gtk.VBox):
             self.storemodel.append(row_data)
         
         self.scroll.queue_draw()
-
+"""
        
 class MediaListView(ImageTextTextListView):
     """
@@ -1399,7 +1396,15 @@ def get_profile_info_box(profile, show_description=True):
     return hbox
 
 def get_profile_info_small_box(profile):
-    # Info text 
+    text = get_profile_info_text(profile)
+    label = gtk.Label(text)
+
+    hbox = gtk.HBox()
+    hbox.pack_start(label, False, False, 0)
+    
+    return hbox
+
+def get_profile_info_text(profile):
     str_list = []
     str_list.append(str(profile.width()))
     str_list.append(" x ")    
@@ -1419,14 +1424,8 @@ def get_profile_info_small_box(profile):
     pa_str =  "%.2f" % pix_asp
     str_list.append(", " + _("Pixel Aspect: ") + pa_str)
 
-    label_label_text = ''.join(str_list)
-    label_label = gtk.Label(label_label_text)
-
-    hbox = gtk.HBox()
-    hbox.pack_start(label_label, False, False, 0)
+    return ''.join(str_list)
     
-    return hbox
-
 def set_profile_info_labels_text(label, show_description):
     str_list = []
     if show_description:
