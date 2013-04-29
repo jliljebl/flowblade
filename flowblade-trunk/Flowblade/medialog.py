@@ -29,6 +29,7 @@ import guiutils
 import editorstate
 from editorstate import PROJECT
 import respaths
+import updater
 
 LOGGING_MODE_MANUAL = 0
 LOGGING_MODE_AUTO_RANGES = 1
@@ -107,6 +108,8 @@ def register_media_insert_event():
 def register_media_marks_set_event(manual_event=False):
     project = editorstate.PROJECT()
     media_file = editorstate.MONITOR_MEDIA_FILE()
+    if media_file == None:
+        return False
     if media_file.mark_in == -1 or media_file.mark_out == -1:
         return False
     log_mode = widgets.logging_mode_combo.get_active() # selection index is the global variable for active log mode too
@@ -121,6 +124,10 @@ def register_media_marks_set_event(manual_event=False):
                                 media_file.path)
     project.media_log.append(log_event)
     return True
+
+def log_range_clicked():
+    register_media_marks_set_event(True)
+    widgets.media_log_view.fill_data_model()
 
 def logging_mode_changed(combo):
     new_log_mode = combo.get_active() # selection index is the global variable for active log mode too
@@ -145,7 +152,7 @@ def log_item_name_edited(cell, path, new_text, user_data):
 
     widgets.media_log_view.queue_draw()
     
-def delete_clicked():
+def delete_selected():
     selected = widgets.media_log_view.get_selected_rows_list()
     log_events = get_current_filtered_events()
     delete_events = []
@@ -156,6 +163,14 @@ def delete_clicked():
 
     widgets.media_log_view.fill_data_model()
 
+def display_item(row):
+    log_events = get_current_filtered_events()
+    event_item = log_events[row]
+    media_file = PROJECT().get_media_file_for_path(event_item.path)
+    media_file.mark_in = event_item.mark_in
+    media_file.mark_out = event_item.mark_out
+    updater.set_and_display_monitor_media_file(media_file)
+    
 def log_list_view_button_press(treeview, event):
     path_pos_tuple = treeview.get_path_at_pos(int(event.x), int(event.y))
     if path_pos_tuple == None:
@@ -168,14 +183,21 @@ def log_list_view_button_press(treeview, event):
     selection.unselect_all()
     selection.select_path(path)
     row = int(max(path))
-    print path
 
     guicomponents.display_media_log_event_popup_menu(row, treeview, _log_event_menu_item_selected, event)                                    
     return True
 
 def _log_event_menu_item_selected(widget, data):
     item_id, row, treeview = data
-    print item_id, row
+    
+    if item_id == "delete":
+        delete_selected()
+    elif item_id == "toggle":
+        log_events = get_current_filtered_events()
+        log_events[row].starred = not log_events[row].starred 
+        widgets.media_log_view.fill_data_model()
+    elif item_id == "display":
+        display_item(row)
 
 def get_current_filtered_events():
     event_type = widgets.view_type_combo.get_active() - 1 # -1 produces values corresponding to media log event types in projectdata.py
@@ -320,7 +342,6 @@ class MediaLogListView(gtk.VBox):
                                                              widgets.star_check.get_active(),
                                                              widgets.star_not_active_check.get_active())
         for log_event in log_events:
-            print "jooooo"
             if log_event.starred == True:
                 icon = gtk.gdk.pixbuf_new_from_file(star_icon_path)
             else:
@@ -377,7 +398,7 @@ def get_media_log_events_panel(events_list_view):
     
     delete_button = gtk.Button(_("Delete"))
     delete_button.set_size_request(80, 22)
-    delete_button.connect("clicked", lambda w:delete_clicked())
+    delete_button.connect("clicked", lambda w:delete_selected())
 
     row1 = gtk.HBox()
     row1.pack_start(view_type_combo, False, True, 0)
@@ -405,8 +426,9 @@ def get_media_log_events_panel(events_list_view):
 
     widgets.log_range = gtk.Button()
     widgets.log_range.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "log_range.png"))
-    widgets.log_range.set_sensitive(False)
-
+    #widgets.log_range.set_sensitive(False)
+    widgets.log_range.connect("clicked", lambda w:log_range_clicked())
+    
     to_monitor = gtk.Button()
     to_monitor.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "open_log_item_in_monitor.png"))
     
@@ -417,8 +439,8 @@ def get_media_log_events_panel(events_list_view):
     row2 =  gtk.HBox()
     row2.pack_start(logging_mode_combo, False, True, 0)
     row2.pack_start(widgets.log_range, False, True, 0)
-    row2.pack_start(gtk.Label(), True, True, 0)
-    row2.pack_start(to_monitor, False, True, 0)
+    #row2.pack_start(gtk.Label(), True, True, 0)
+    #row2.pack_start(to_monitor, False, True, 0)
     row2.pack_start(gtk.Label(), True, True, 0)
     row2.pack_start(append_displayed, False, True, 0)
 

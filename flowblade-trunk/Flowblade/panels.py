@@ -161,10 +161,6 @@ def get_render_panel_left(editor_window, add_audio_panel):
 
     file_opts_panel = get_named_frame(_("File"), options_vbox, 4)
     
-    quality_row = get_two_column_box(render.widgets.quality_label,
-                                     render.widgets.quality_cb, 
-                                     80)
-
     render_type_vbox = gtk.VBox(False, 2)
     render_type_vbox.pack_start(get_two_column_box(render.widgets.type_label,
                                                    render.widgets.type_combo,
@@ -186,19 +182,16 @@ def get_render_panel_left(editor_window, add_audio_panel):
     profile_vbox.pack_start(render.widgets.out_profile_combo, False, False, 0)
     profile_vbox.pack_start(render.widgets.out_profile_info_box, False, False, 0)
     profile_panel = get_named_frame(_("Render Profile"), profile_vbox, 4)
+                           
+    render.widgets.quality_cb.set_size_request(110, 34)
+    quality_row  = gtk.HBox()
+    quality_row.pack_start(render.widgets.quality_cb, False, False, 0)
+    quality_row.pack_start(render.widgets.audio_desc, True, False, 0)
 
-    if add_audio_panel:
-        audio_panel = gtk.HBox()
-        audio_panel.pack_start(render.widgets.audio_label, False, False, 0)
-        audio_panel.pack_start(render.widgets.audio_desc, True, True, 0)
-    
     encoding_vbox = gtk.VBox(False, 2)
     encoding_vbox.pack_start(render.widgets.encodings_cb, False, False, 0)
     encoding_vbox.pack_start(quality_row, False, False, 0)
 
-    if add_audio_panel:
-        encoding_vbox.pack_start(guiutils.get_pad_label(10, 2), False, False, 0)
-        encoding_vbox.pack_start(audio_panel, False, False, 0)
     encoding_panel = get_named_frame(_("Encoding Format"), encoding_vbox, 4)
 
     render_panel = gtk.VBox()
