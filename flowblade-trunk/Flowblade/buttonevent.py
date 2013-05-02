@@ -48,8 +48,10 @@ import syncsplitevent
 import tlinewidgets
 import updater
 
+
 # Used to store transition render data to be used at render complete callback
 transition_render_data = None
+
 
 # --------------------------- module funcs
 def _get_new_clip_from_clip_monitor():
@@ -330,6 +332,32 @@ def range_overwrite_pressed():
 def resync_button_pressed():
     syncsplitevent.resync_selected()
 
+def add_transition_menu_item_selected():
+    if movemodes.selected_track == -1:
+        print "so selection track"
+        # INFOWINDOW
+        return
+        
+    track = get_track(movemodes.selected_track)
+    clip_count = movemodes.selected_range_out - movemodes.selected_range_in + 1 # +1 out incl.
+    if not (clip_count == 2):
+        # INFOWINDOW
+        return
+    add_transition_pressed()
+    
+def add_fade_menu_item_selected():
+    if movemodes.selected_track == -1:
+        print "so selection track"
+        # INFOWINDOW
+        return
+        
+    track = get_track(movemodes.selected_track)
+    clip_count = movemodes.selected_range_out - movemodes.selected_range_in + 1 # +1 out incl.
+    if not (clip_count == 1):
+        # INFOWINDOW
+        return
+    add_transition_pressed()
+
 def add_transition_pressed(retry_from_render_folder_select=False):
     print "add_transition_pressed"
     if movemodes.selected_track == -1:
@@ -475,12 +503,15 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
     # Save transition data into global variable to be available at render complete callback
     global transition_render_data
     transition_render_data = (trans_index, from_clip, to_clip,  transition_data["track"], from_in, to_out, transition_type_selection_index)
-    
+    window_text, type_id = mlttransitions.rendered_transitions[transition_type_selection_index]
+    window_text = _("Rendering ") + window_text
+
     render.render_single_track_transition_clip(producer_tractor,
                                         encoding_option_index,
                                         quality_option_index, 
                                         str(extension_text), 
-                                        _transition_render_complete)
+                                        _transition_render_complete,
+                                        window_text)
 
 def _transition_render_complete(clip_path):
     print "render complete"
@@ -570,12 +601,14 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
     # Save transition data into global variable to be available at render complete callback
     global transition_render_data
     transition_render_data = (clip_index, transition_type_selection_index, clip, transition_data["track"], length)
-    
+    window_text, type_id = mlttransitions.rendered_transitions[transition_type_selection_index]
+    window_text = _("Rendering ") + window_text
     render.render_single_track_transition_clip(producer_tractor,
                                         encoding_option_index,
                                         quality_option_index, 
                                         str(extension_text), 
-                                        _fade_render_complete)
+                                        _fade_render_complete,
+                                        window_text)
 
 def _fade_render_complete(clip_path):
     print "fade render complete"

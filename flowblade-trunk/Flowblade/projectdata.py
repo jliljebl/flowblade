@@ -46,7 +46,6 @@ import utils
 SAVEFILE_VERSION = 3 # this changed when backwards incompatible changes 
                      # are introduced to allow for detecting and fixing them
 
-
 FALLBACK_THUMB = "fallback_thumb.png"
 
 # Project events
@@ -55,10 +54,10 @@ EVENT_CREATED_BY_SAVING = 1
 EVENT_SAVED = 2
 EVENT_SAVED_AS = 3
 EVENT_RENDERED = 4
-EVENT_OPENED = 5
 
 # Singleton
 thumbnail_thread = None
+
 
 class Project:
     """

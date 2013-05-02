@@ -797,7 +797,7 @@ def _fill_FB_extension_label(fb_widgets):
 
 
 # ----------------------------------------------------------------------- single track transition render 
-def render_single_track_transition_clip(transition_producer, encoding_option_index, quality_option_index, file_ext, transition_render_complete_cb):
+def render_single_track_transition_clip(transition_producer, encoding_option_index, quality_option_index, file_ext, transition_render_complete_cb, window_text):
     # Set render complete callback to availble render stop callback using global variable
     global transition_render_done_callback
     transition_render_done_callback = transition_render_complete_cb
@@ -825,19 +825,17 @@ def render_single_track_transition_clip(transition_producer, encoding_option_ind
     title = _("Rendering Transition Clip")
     
     progress_bar = gtk.ProgressBar()
-    dialog = dialogs.clip_render_progress_dialog(_transition_render_stop, title, write_file, progress_bar, gui.editor_window.window)
+    dialog = dialogs.clip_render_progress_dialog(_transition_render_stop, title, window_text, progress_bar, gui.editor_window.window)
     
     motion_progress_update = renderconsumer.ProgressWindowThread(dialog, progress_bar, motion_renderer, _transition_render_stop)
     motion_progress_update.start()
 
 def _transition_render_stop(dialog, response_id):
-    print "joooooooo"
     dialog.destroy()
 
     global motion_renderer, motion_progress_update
     motion_renderer.running = False
     motion_progress_update.running = False
-    #open_media_file_callback(motion_renderer.file_name)
     motion_renderer.running = None
     motion_progress_update.running = None
     

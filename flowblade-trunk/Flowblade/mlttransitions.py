@@ -77,7 +77,7 @@ blenders = None
 def init_module():
 
     # translations and module load order make us do this in method instead of at module load
-    global wipe_lumas, compositors, blenders, name_for_type, rendered_transitions
+    global wipe_lumas, compositors, blenders, name_for_type, rendered_transitions, single_track_render_type_names
     wipe_lumas = { \
                 _("Vertical From Center"):"bi-linear_x.pgm",
                 _("Vertical Top to Bottom"):"wipe_top_to_bottom.svg",
