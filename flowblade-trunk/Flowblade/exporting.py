@@ -17,6 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
+
 import gtk
 import xml.dom.minidom
 
@@ -159,6 +160,14 @@ def _export_melt_xml_dialog_callback(dialog, response_id):
     if response_id == gtk.RESPONSE_ACCEPT:
         filenames = dialog.get_filenames()
         save_path = filenames[0]
+        
+        callbacks = utils.EmptyClass()
+        callbacks.set_render_progress_gui = set_render_progress_gui
+        callbacks.save_render_start_time = save_render_start_time
+        callbacks.exit_render_gui = exit_render_gui
+        callbacks.maybe_open_rendered_file_in_bin = maybe_open_rendered_file_in_bin
+        PLAYER().set_render_callbacks(callbacks)
+
         PLAYER().start_xml_rendering(save_path)
         dialog.destroy()
     else:

@@ -326,6 +326,14 @@ class Player(threading.Thread):
         self.start_rendering(xml_consumer)
 
     def set_render_callbacks(self, callbacks):
+        # Callbacks object interface:
+        #
+        # callbacks = utils.EmptyClass()
+        # callbacks.set_render_progress_gui(fraction)
+        # callbacks.save_render_start_time()
+        # callbacks.exit_render_gui()
+        # callbacks.maybe_open_rendered_file_in_bin()
+        
         self.render_callbacks = callbacks
 
     def start_rendering(self, render_consumer, start_frame=0, stop_frame=-1):
@@ -352,9 +360,7 @@ class Player(threading.Thread):
         self.seek_frame(0)
         if self.xml_render == False:
             self.render_callbacks.exit_render_gui()
-            #render.exit_render_gui()
             self.render_callbacks.maybe_open_rendered_file_in_bin()
-            #render.maybe_open_rendered_file_in_bin()
         else:
             self.xml_render == False
 
