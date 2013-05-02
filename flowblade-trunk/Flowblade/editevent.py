@@ -59,6 +59,7 @@ import undo
 import updater
 import utils
 
+
 # module state
 mouse_disabled = False # Used to ignore drag and release events when press doesn't start an action that can handle those events.
 repeat_event = None

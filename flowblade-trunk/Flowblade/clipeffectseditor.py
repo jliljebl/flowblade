@@ -62,10 +62,7 @@ def set_clip(new_clip, new_track, new_index):
     set_enabled(True)
     update_stack_view()
     effect_selection_changed() # This may get called twice
-    if editorpersistance.prefs.default_layout == True:
-        gui.middle_notebook.set_current_page(1)
-    else:
-        gui.editor_window.right_notebook.set_current_page(0)
+    gui.middle_notebook.set_current_page(2) # 2 == index of clipeditor page in notebook
 
 def clip_removed_during_edit(removed_clip):
     """
