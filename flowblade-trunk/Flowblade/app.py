@@ -183,14 +183,12 @@ def main(root_path):
             editorstate.project = persistance.load_project(launch_file_path)
             persistance.show_messages = True
             check_crash = False
-            #project_event = projectdata.ProjectEvent(projectdata.EVENT_OPENED, launch_file_path)
-            #editorstate.project.events.append(project_event)
         except:
             editorstate.project = projectdata.get_default_project()
             persistance.show_messages = True
             check_crash = True
     else:
-        # There is always a project open so at startup we create a default project.
+        # There is always a project open, so at startup we create a default project.
         # Set default project as the project being edited.
         editorstate.project = projectdata.get_default_project()
         check_crash = True

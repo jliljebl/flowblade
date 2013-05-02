@@ -119,7 +119,7 @@ def fill_recents_menu_widget(menu_item, callback):
     # Add new menu items
     recent_proj_names = get_recent_projects()
     if len(recent_proj_names) != 0:
-        for i in range (0, len(recent_proj_names) - 1):
+        for i in range (0, len(recent_proj_names)):
             proj_name = recent_proj_names[i]
             new_item = gtk.MenuItem(proj_name)
             new_item.connect("activate", callback, i)
