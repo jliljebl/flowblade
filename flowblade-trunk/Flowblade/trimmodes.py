@@ -49,7 +49,7 @@ exiting_mode = False
 mouse_disabled = False
 
 # Flag for temporary blank needed for one roll trim editing track's last clip's out
-temp_blank_added = False
+last_from_trimmed = False
 
 # Function that sets edit mode when exiting with click on empty
 set_exit_mode_func = None
@@ -72,7 +72,8 @@ def _get_trim_edit(track, frame):
         return(cut_frame, edit_to_side)
 
     # Get cut frame for trim
-    cut_frame = current_sequence().get_closest_cut_frame(track.id, frame)  
+    cut_frame = current_sequence().get_closest_cut_frame(track.id, frame)
+
     if cut_frame == -1:
         return(-1, None)
     edit_to_side = False
@@ -114,15 +115,6 @@ def _set_edit_data(track, edit_frame):
     """
     Sets edit mode data used by both trim modes
     """
-
-    # If we're editing out edit of last clip of track we'll add a temp blank that is 
-    # needs to be removed after edit is complete, hence this global flag.
-    global temp_blank_added
-    temp_blank_added = False
-    if edit_frame == track.get_length():
-        current_sequence().append_blank(5000, track)
-        temp_blank_added = True
-    
     # Find index of to-clip of edit
     index = current_sequence().get_clip_index(track, edit_frame)
     
@@ -131,6 +123,20 @@ def _set_edit_data(track, edit_frame):
         from_clip = track.clips[index -1]
     else:
         from_clip = None
+
+    # Trimming last clip on track can only be edited from side
+    # but code so farproduces to_clip == last clip, from_clip == None,
+    # fix this by setting new values for from_clip and_to clip.
+    #
+    # we're also getting wrong index from mlt as edit frame == track.get_length()
+    if edit_frame == track.get_length():
+        global last_from_trimmed
+        index = current_sequence().get_clip_index(track, edit_frame - 1)
+        last_from_trimmed = True
+        from_clip = to_clip
+        to_clip = None
+    else:
+        last_from_trimmed = False
 
     # Get trimlimits
     trim_limits = _get_trim_limits(edit_frame, from_clip, to_clip)
@@ -185,19 +191,20 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         current_frame = PLAYER().producer.frame() + 1 # +1 because cut frame selects previous clip
 
     edit_frame, to_side_being_edited = _get_trim_edit(track, current_frame)
-    # more hack fixes for last clip out trim, if frame pointer not at very end of clip
-    # the other functions for getting trin frame given +1 too much 
+
+    if edit_frame == -1:
+        print "set_oneroll_mode(), edit_frame == -1"
+        return False
+
+    # hack fix for last clip out trim. If frame pointer not at very end of clip
+    # the other functions for getting trim frame given +1 too much 
     if edit_frame > track.get_length():
         edit_frame = track.get_length()
 
     if editing_to_clip != None: # This is set when mode reset after edit or after undo or redo
                                 # _get_trim_edit() might give different(wrong) clip being edited
-                                # because cut is now at a different place.
+                                # because cut is now at a different place. (??!!!??)
         to_side_being_edited = editing_to_clip
-    if edit_frame == -1:
-        print "set_oneroll_mode(), edit_frame == -1"
-        #set_exit_mode_func()
-        return False
 
     _set_edit_data(track, edit_frame)
 
@@ -208,8 +215,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     current_sequence().clear_hidden_track()
 
     # Cant't trim a blank clip. Blank clips are special in MLT and can't be
-    # made to do things that are needed in trim. User is advised to add black clip
-    # even if temporary.
+    # made to do things that are needed in trim.
     if _trimmed_clip_is_blank():
         set_exit_mode_func()
         primary_txt = _("Cant ONE ROLL TRIM blank clips.")
@@ -226,11 +232,9 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     trim_limits = edit_data["trim_limits"]
     if edit_data["to_side_being_edited"]:
         clip = edit_data["to_clip"]
-        #clip_frame = edit_frame - trim_limits["to_start"]
         clip_start = trim_limits["to_start"]
     else:
         clip = edit_data["from_clip"]
-        #clip_frame = edit_frame - trim_limits["from_start"]
         clip_start = trim_limits["from_start"]
 
     # Display trim clip
@@ -258,7 +262,6 @@ def oneroll_trim_press(event, frame):
             mouse_disabled = True
         return
     
-    # 
     if not _pressed_on_one_roll_active_area(frame):
         track = tlinewidgets.get_track(event.y)
         success = set_oneroll_mode(track, frame)
@@ -334,9 +337,21 @@ def _do_one_roll_trim_edit(frame):
     # Remove temp blank
     clear_temp_clip()
 
-    # Do edit
+    # case: editing from-side of last clip
+    global last_from_trimmed
+    if last_from_trimmed:
+        data = {"track":edit_data["track_object"],
+                "index":edit_data["index"],
+                "clip":edit_data["from_clip"],
+                "delta":delta,
+                "undo_done_callback":clip_end_first_do_done,
+                "first_do":True}
+        action = edit.trim_last_clip_end_action(data)
+        last_from_trimmed = False
+        action.do_edit()
+        # Edit is reinitialized in callback from edit action one_roll_trim_undo_done
     # case: editing to-side of cut
-    if edit_data["to_side_being_edited"]:
+    elif edit_data["to_side_being_edited"]:
         data = {"track":edit_data["track_object"],
                 "index":edit_data["index"],
                 "clip":edit_data["to_clip"],
@@ -361,9 +376,12 @@ def _do_one_roll_trim_edit(frame):
 def clear_temp_clip():
     # If we're editing out edit of last clip of track we'll add a temp blank that is 
     # removed here after edit is complete.
+    pass
+    """
     if temp_blank_added == True:
         track = edit_data["track_object"]
         current_sequence().remove_last_clip(track)
+    """
 
 def oneroll_play_pressed():
     # Start trim preview playback loop
@@ -400,6 +418,11 @@ def one_roll_trim_undo_done(track, index, is_to_side_edit):
     frame = track.clip_start(index) + 1 # +1 because cut frame selects previous clip
     set_oneroll_mode(track, frame, is_to_side_edit)
 
+def clip_end_first_do_done(track):
+    frame = track.get_length()
+    print "frame", frame
+    set_oneroll_mode(track, frame, False)
+
 def _legalize_one_roll_trim(frame, trim_limits):
     """
     Keeps one roll trim selection in legal edit area.
@@ -414,8 +437,10 @@ def _legalize_one_roll_trim(frame, trim_limits):
         last = trim_limits["from_end"] 
         
     if frame < first:
+        print "legalized 1"
         frame = first
     if frame > last:
+        print "legalized 2"
         frame = last
     
     return frame
@@ -463,20 +488,17 @@ def set_tworoll_mode(track, current_frame = -1):
     try:
         _set_edit_data(track, edit_frame)
     except:
-        print "lalalallalal"
         #_tworoll_init_failed_window()
         #set_no_edit_mode_func()
         return False
 
     if edit_frame == 0:
         _tworoll_init_failed_window()
-        print "hghghgh"
         #set_no_edit_mode_func()
         return False
 
     global edit_data
     if edit_data["from_clip"] == None:
-        print "zumbada"
         _tworoll_init_failed_window()
         #set_no_edit_mode_func()
         return False

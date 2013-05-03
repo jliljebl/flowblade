@@ -774,7 +774,6 @@ def _overwrite_move_undo(self):
         clip = self.moved_clips[i];
         _insert_clip(track, clip, self.selected_range_in + i, clip.clip_in,
                      clip.clip_out)
-    #_remove_trailing_blanks(track)
 
 def _overwrite_move_redo(self):
     self.moved_clips = []
@@ -816,8 +815,6 @@ def _overwrite_move_redo(self):
     for i in range(0, len(self.moved_clips)):
         clip = self.moved_clips[i]
         _insert_clip(track, clip, in_index + i, clip.clip_in, clip.clip_out)
-
-    #_remove_trailing_blanks(track)
 
     # HACK, see EditAction for details
     self.turn_on_stop_for_edit = True
@@ -868,9 +865,6 @@ def _multitrack_overwrite_move_undo(self):
         clip = self.moved_clips[i];
         _insert_clip(track, clip, self.selected_range_in + i, clip.clip_in,
                      clip.clip_out)
-                     
-    #_remove_trailing_blanks(track)
-    #_remove_trailing_blanks(to_track)
 
 def _multitrack_overwrite_move_redo(self):
     self.moved_clips = []
@@ -925,7 +919,8 @@ def _multitrack_overwrite_move_redo(self):
 
     
 #------------------ TRIM CLIP START
-# "track","clip","index","delta","undo_done_callback"
+# "track","clip","index","delta","first_do"
+# "undo_done_callback" <- THIS IS REALLY BADLY NAMED, IT SHOULD BE FIRST DO CALLBACK
 # Trims start of clip
 def trim_start_action(data): 
     action = EditAction(_trim_start_undo,_trim_start_redo, data)
@@ -935,10 +930,6 @@ def _trim_start_undo(self):
     _remove_clip(self.track, self.index)
     _insert_clip(self.track, self.clip, self.index,
                  self.clip.clip_in - self.delta, self.clip.clip_out)
-    
-    # Reinit one roll trim
-    #self.undo_done_callback(self.track, self.index, True)
-
 
 def _trim_start_redo(self):
     _remove_clip(self.track, self.index)
@@ -951,9 +942,9 @@ def _trim_start_redo(self):
         self.undo_done_callback(self.track, self.index, True)
 
 #------------------ TRIM CLIP END
-# "track","clip","index","delta"
-# "undo_done_callback"
-# Trims start of clip
+# "track","clip","index","delta", "first_do"
+# "undo_done_callback" <- THIS IS REALLY BADLY NAMED, IT SHOULD BE FIRST DO CALLBACK
+# Trims end of clip
 def trim_end_action(data): 
     action = EditAction(_trim_end_undo,_trim_end_redo, data)
     return action
@@ -963,9 +954,6 @@ def _trim_end_undo(self):
     _insert_clip(self.track, self.clip, self.index,
                  self.clip.clip_in, self.clip.clip_out - self.delta)
     
-    # Reinit one roll trim
-    # self.undo_done_callback(self.track, self.index + 1, False)
-
 def _trim_end_redo(self):
     _remove_clip(self.track, self.index)
     _insert_clip(self.track, self.clip, self.index,
@@ -975,7 +963,29 @@ def _trim_end_redo(self):
     if self.first_do == True:
         self.first_do = False
         self.undo_done_callback(self.track, self.index + 1, False)
-    
+
+#------------------ TRIM LAST CLIP END
+# "track","clip","index","delta", "first_do"
+# "undo_done_callback" <- THIS IS REALLY BADLY NAMED, IT SHOULD BE FIRST DO CALLBACK
+def trim_last_clip_end_action(data): 
+    action = EditAction(_trim_last_clip_end_undo,_trim_last_clip_end_redo, data)
+    return action
+
+def _trim_last_clip_end_undo(self):
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.clip, self.index,
+                 self.clip.clip_in, self.clip.clip_out - self.delta)
+
+def _trim_last_clip_end_redo(self):
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.clip, self.index,
+                 self.clip.clip_in, self.clip.clip_out + self.delta)
+
+    # Reinit one roll trim for 
+    if self.first_do == True:
+        self.first_do = False
+        self.undo_done_callback(self.track)
+
 #------------------- ADD FILTER
 # "clip","filter_info","filter_edit_done_func"
 # Adds filter to clip.

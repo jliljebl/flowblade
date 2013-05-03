@@ -523,7 +523,7 @@ def set_trim_mode_gui():
     _set_move_mode_buttons_enabled(False)
     gui.pos_bar.disabled = True
     
-    gui.editmenu.set_sensitive(False)
+    menu_edit_items_sensitive(False)
 
 def set_move_mode_gui():
     """
@@ -534,8 +534,40 @@ def set_move_mode_gui():
     _set_move_mode_buttons_enabled(True)
     gui.pos_bar.disabled = False
 
-    gui.editmenu.set_sensitive(True)
-    
+    menu_edit_items_sensitive(True)
+
+def set_transition_render_edit_menu_items_sensitive(range_start, range_end):
+    if not editorstate.current_is_move_mode():
+        return
+
+    ui = gui.editor_window.uimanager
+    render_transition = ui.get_widget('/MenuBar/EditMenu/AddTransition')
+    render_fade = ui.get_widget('/MenuBar/EditMenu/AddFade')
+    if range_start == -1:
+        render_transition.set_sensitive(False)
+        render_fade.set_sensitive(False)
+    elif range_start == range_end:
+        render_transition.set_sensitive(False)
+        render_fade.set_sensitive(True)
+    elif range_start == range_end - 1:
+        render_transition.set_sensitive(True)
+        render_fade.set_sensitive(False)
+    else:
+        render_transition.set_sensitive(False)
+        render_fade.set_sensitive(False)
+
+def menu_edit_items_sensitive(sensitive):
+    ui = gui.editor_window.uimanager
+    ui.get_widget('/MenuBar/EditMenu/AddFromMonitor').set_sensitive(sensitive)
+    ui.get_widget('/MenuBar/EditMenu/CutClip').set_sensitive(sensitive)
+    ui.get_widget('/MenuBar/EditMenu/SpliceOutClip').set_sensitive(sensitive)
+    ui.get_widget('/MenuBar/EditMenu/DeleteClip').set_sensitive(sensitive)
+    ui.get_widget('/MenuBar/EditMenu/ResyncSelected').set_sensitive(sensitive)
+    ui.get_widget('/MenuBar/EditMenu/ClearFilters').set_sensitive(sensitive)
+    ui.get_widget('/MenuBar/EditMenu/AddTransition').set_sensitive(sensitive)
+    ui.get_widget('/MenuBar/EditMenu/AddFade').set_sensitive(sensitive)
+    ui.get_widget('/MenuBar/EditMenu/ChangeSequenceTracks').set_sensitive(sensitive)
+
 def _set_move_mode_buttons_enabled(enabled):
     """
     Sets buttons that are only used in move modes enabled/disabled

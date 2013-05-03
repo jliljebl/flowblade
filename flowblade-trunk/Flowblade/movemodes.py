@@ -92,6 +92,8 @@ def clear_selection_values():
     selected_track = -1
     selected_range_in = -1
     selected_range_out = -1
+    
+    updater.set_transition_render_edit_menu_items_sensitive(selected_range_in, selected_range_out)
 
 def set_range_selection(track_index, range_in, range_out, is_selected):
     """
@@ -100,6 +102,7 @@ def set_range_selection(track_index, range_in, range_out, is_selected):
     track = get_track(track_index)
     for i in range(range_in, range_out + 1): #+1, range_out is inclusive
         track.clips[i].selected = is_selected
+    
 
 def select_clip(track_index, clip_index):
     """
@@ -107,6 +110,7 @@ def select_clip(track_index, clip_index):
     """
     clear_selected_clips()
     set_range_selection(track_index, clip_index, clip_index, True)
+    updater.set_transition_render_edit_menu_items_sensitive(clip_index, clip_index)
     
     global selected_track, selected_range_in, selected_range_out
     selected_track = track_index
@@ -119,7 +123,8 @@ def _select_multiple_clips(track_index, range_start, range_end):
     """
     clear_selected_clips()
     set_range_selection(track_index, range_start, range_end, True)
-        
+    updater.set_transition_render_edit_menu_items_sensitive(range_start, range_end)
+
     global selected_track, selected_range_in, selected_range_out
     selected_track = track_index
     selected_range_in = range_start

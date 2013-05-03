@@ -44,6 +44,7 @@ import guiutils
 import mltenv
 import mltprofiles
 import projectdata
+import projectinfogui
 import renderconsumer
 import respaths
 import sequence
@@ -142,6 +143,7 @@ def _do_rendering():
     file_path = get_file_path()
     project_event = projectdata.ProjectEvent(projectdata.EVENT_RENDERED, file_path)
     PROJECT().events.append(project_event)
+    projectinfogui.update_project_info()
     
     set_render_gui()
     widgets.progress_window = dialogs.render_progress_dialog(

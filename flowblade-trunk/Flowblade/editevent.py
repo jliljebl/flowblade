@@ -262,6 +262,7 @@ def tworoll_trim_mode_init(x, y):
 
 def _set_move_mode():
     updater.set_move_mode_gui()
+    updater.set_transition_render_edit_menu_items_sensitive(movemodes.selected_range_in, movemodes.selected_range_out)
     updater.repaint_tline()
 
 

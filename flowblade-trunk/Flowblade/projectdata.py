@@ -377,8 +377,6 @@ class ProjectEvent:
             return ("Saved as " + name, path)
         elif self.event_type == EVENT_RENDERED:
             return ("Rendered ", self.data)
-        elif self.event_type == EVENT_OPENED:
-            return ("Opened", self.data)
         else:
             return ("Unknown project event, bug or data corruption", None)
 
