@@ -433,17 +433,24 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     clipeffectseditor.widgets.effect_list_view = effects_list_view
     clipeffectseditor.set_enabled(False)
     
+    exit_button_vbox = gtk.VBox(False, 2)
+    exit_button_vbox.pack_start(clipeffectseditor.widgets.exit_button, False, False, 0)
+    exit_button_vbox.pack_start(gtk.Label(), True, True, 0)
+
+    info_row = gtk.HBox(False, 2)
+    info_row.pack_start(clipeffectseditor.widgets.clip_info, False, False, 0)
+    info_row.pack_start(exit_button_vbox, True, True, 0)
+    
     combo_row = gtk.HBox(False, 2)
     combo_row.pack_start(group_combo_box, True, True, 0)
     combo_row.pack_start(guiutils.get_pad_label(8, 2), False, False, 0)
-    combo_row.pack_start(clipeffectseditor.widgets.exit_button, False, False, 0)
-   
+
     group_name, filters_array = mltfilters.groups[0]
     effects_list_view.fill_data_model(filters_array)
     effects_list_view.treeview.get_selection().select_path("0")
     
     effects_vbox = gtk.VBox(False, 2)
-    effects_vbox.pack_start(clipeffectseditor.widgets.clip_info, False, False, 0)
+    effects_vbox.pack_start(info_row, False, False, 0)
     effects_vbox.pack_start(guiutils.get_pad_label(2, 2), False, False, 0)
     effects_vbox.pack_start(combo_row, False, False, 0)
     effects_vbox.pack_start(effects_list_view, True, True, 0)
