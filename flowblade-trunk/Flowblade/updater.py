@@ -582,14 +582,15 @@ def _set_move_mode_buttons_enabled(enabled):
     gui.editor_window.zoom_buttons.widget.queue_draw()
     if enabled == False:
         gui.editor_window.player_buttons.set_trim_sensitive_pattern()
+        set_next_prev_enabled(True, False)
     else:
         gui.editor_window.player_buttons.set_normal_sensitive_pattern()
 
-def set_next_prev_enabled(enabled):
+def set_next_prev_enabled(next_enabled, prev_enabled):
     """
     Sets buttons enbled when doing trim playback.
     """
-    gui.editor_window.player_buttons.set_trim_buttons_sensitive(enabled)
+    gui.editor_window.player_buttons.set_trim_playback_buttons_sensitive(next_enabled, prev_enabled)
 
 
 # ------------------------------------------------ notebook

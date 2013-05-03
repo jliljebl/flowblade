@@ -1,3 +1,22 @@
+"""
+    Flowblade Movie Editor is a nonlinear video editor.
+    Copyright 2012 Janne Liljeblad.
+
+    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+
+    Flowblade Movie Editor is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Flowblade Movie Editor is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
+"""
 
 import cairo
 import gtk
@@ -228,9 +247,10 @@ class PlayerButtons(AbstractGlassButtons):
         self.set_sensitive(True)
         self.widget.queue_draw()
 
-    def set_trim_buttons_sensitive(self, value):
-        self.sensitive[2] = value
-        self.sensitive[3] = value
+    def set_trim_playback_buttons_sensitive(self, next_enabled, prev_enabled):
+        self.sensitive[2] = next_enabled
+        self.sensitive[3] = prev_enabled
+        self.widget.queue_draw()
 
     # ------------------------------------------------------------- mouse events
     def _press_event(self, event):

@@ -27,6 +27,7 @@ Handles edit mode setting.
 
 Module passes mouse edit events to other modules, depending on current edit mode.
 """
+
 import gtk
 from operator import itemgetter
 import os

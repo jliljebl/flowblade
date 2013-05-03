@@ -50,9 +50,13 @@ def play_pressed():
         movemodes.play_pressed()
     elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
         trimmodes.oneroll_play_pressed()
-    else:
+    elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM_NO_EDIT:
+        trimmodes.cant_loop_info()
+    elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
         trimmodes.tworoll_play_pressed()
-
+    elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM_NO_EDIT:
+        trimmodes.cant_loop_info()
+    
 def stop_pressed():
     if current_is_move_mode():
         movemodes.stop_pressed()
