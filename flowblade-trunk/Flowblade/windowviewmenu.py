@@ -25,6 +25,8 @@ w = None
 
 m_pixbufs = None
 
+MIDDLE_ROW_HEIGHT = 30 # height of middle row gets set here
+
 BUTTON_HEIGHT = 28 # middle edit buttons row
 BUTTON_WIDTH = 48 # middle edit buttons row
 
@@ -247,48 +249,41 @@ def _create_buttons(editor_window):
     editor_window.zoom_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "zoom_in.png"), updater.zoom_in)
     editor_window.zoom_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "zoom_out.png"), updater.zoom_out)
     editor_window.zoom_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "zoom_length.png"), updater.zoom_project_length)
-    editor_window.zoom_buttons.widget.set_tooltip_text(_("Zoom In, Zoom Out, Zoom Length"))
+    editor_window.zoom_buttons.widget.set_tooltip_text(_("Zoom In - Mouse Middle Scroll\n Zoom Out - Mouse Middle Scroll\n Zoom Length"))
 
     editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
     editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "cut.png"), buttonevent.cut_pressed)
     editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "splice_out.png"), buttonevent.splice_out_button_pressed)
     editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "lift.png"), buttonevent.lift_button_pressed)
     editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "resync.png"), buttonevent.resync_button_pressed)
-    editor_window.edit_buttons.widget.set_tooltip_text(_("Cut, Splice Out, Lift, Resync Selected"))
+    editor_window.edit_buttons.widget.set_tooltip_text(_("Cut - X\nSplice Out - Delete\nLift\nResync Selected"))
 
     editor_window.monitor_insert_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
     editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "overwrite_range.png"), buttonevent.range_overwrite_pressed)
     editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "overwrite_clip.png"), buttonevent.three_point_overwrite_pressed)
     editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "insert_clip.png"), buttonevent.insert_button_pressed)
     editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "append_clip.png"), buttonevent.append_button_pressed)
-    editor_window.monitor_insert_buttons.widget.set_tooltip_text(_("Overwrite Range, Overwrite Clip, Insert Clip, Append Clip"))
-    
-    editor_window.mode_buttons_group = glassbuttons.GlassButtonsToggleGroup(46, 23, 2, 4, 5)
-    editor_window.mode_buttons_group.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "over_move.png"), editor_window.handle_over_move_mode_button_press)
-    editor_window.mode_buttons_group.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "insert_move.png"), editor_window.handle_insert_move_mode_button_press)
-    editor_window.mode_buttons_group.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "one_roll_trim.png"), editor_window.handle_one_roll_mode_button_press)
-    editor_window.mode_buttons_group.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "two_roll_trim.png"), editor_window.handle_two_roll_mode_button_press)
-    editor_window.mode_buttons_group.set_pressed_button(1)
-    editor_window.mode_buttons_group.widget.set_tooltip_text(_("Over Move, Insert Move, One Roll Trim, Two Roll Trim"))
-    
+    editor_window.monitor_insert_buttons.widget.set_tooltip_text(_("Overwrite Range\nOverwrite Clip - T\nInsert Clip - Y\nAppend Clip - U"))
+
     editor_window.undo_redo = glassbuttons.GlassButtonsGroup(46, 23, 2, 2, 7)
     editor_window.undo_redo.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "undo.png"), editevent.do_undo)
     editor_window.undo_redo.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "redo.png"), editevent.do_redo)
-    editor_window.undo_redo.widget.set_tooltip_text(_("Undo, Redo"))
+    editor_window.undo_redo.widget.set_tooltip_text(_("Undo - Ctrl + X\nRedo - Ctrl + Y"))
 
     editor_window.tools_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 14, 7)
     editor_window.tools_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "open_mixer.png"), audiomonitoring.show_audio_monitor)
     editor_window.tools_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "open_titler.png"), titler.show_titler)
-    editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer, Titler"))
+    editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer\nTitler"))
 
     editor_window.transition_button = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
     editor_window.transition_button.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "dissolve.png"), buttonevent.add_transition_pressed)
-    
+    editor_window.transition_button.widget.set_tooltip_text(_("Add Rendered Transition - 2 clips selected\nAdd Rendered Fade - 1 clip selected"))
+
 def fill_with_TC_LEFT_pattern(buttons_row, window):
     global w
     w = window
     buttons_row.pack_start(w.big_TC.widget, False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(7, 30), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
+    buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     buttons_row.pack_start(w.modes_selector.widget, False, True, 0)
     buttons_row.pack_start(gtk.Label(), True, True, 0)
     if editorstate.SCREEN_WIDTH > 1279:
@@ -309,7 +304,7 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     w = window
     left_panel = gtk.HBox(False, 0)    
     left_panel.pack_start(_get_undo_buttons_panel(), False, True, 0)
-    left_panel.pack_start(guiutils.get_pad_label(10, 30), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
+    left_panel.pack_start(guiutils.get_pad_label(10, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     left_panel.pack_start(_get_zoom_buttons_panel(), False, True, 0)
     if editorstate.SCREEN_WIDTH > 1279:
         left_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)

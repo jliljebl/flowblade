@@ -136,6 +136,7 @@ def key_down(widget, event):
 def _timeline_has_focus():
     if(gui.tline_canvas.widget.is_focus()
        or gui.tline_column.widget.is_focus()
+       or gui.editor_window.modes_selector.widget.is_focus()
        or (gui.pos_bar.widget.is_focus() and timeline_visible())
        or gui.tline_scale.widget.is_focus()):
         return True

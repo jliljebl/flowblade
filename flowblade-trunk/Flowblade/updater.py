@@ -503,17 +503,6 @@ def clear_clip_from_editors(clip):
         clipeffectseditor.clear_clip()
 
 # ----------------------------------------- edit modes
-def set_mode_button_active(mode):
-    if mode == editorstate.INSERT_MOVE:
-        gui.editor_window.mode_buttons_group.set_pressed_button(1, True)
-    elif mode == editorstate.OVERWRITE_MOVE:
-        gui.editor_window.mode_buttons_group.set_pressed_button(0, True)
-    elif mode == editorstate.ONE_ROLL_TRIM:
-        gui.editor_window.mode_buttons_group.set_pressed_button(2, True)
-    elif mode == editorstate.TWO_ROLL_TRIM:
-        gui.editor_window.mode_buttons_group.set_pressed_button(3, True)
-
-
 def set_trim_mode_gui():
     """
     Called when user selects trim mode

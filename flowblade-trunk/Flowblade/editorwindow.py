@@ -465,7 +465,7 @@ class EditorWindow:
 
         # Play buttons row
         self.player_buttons = glassbuttons.PlayerButtons()
-        self.player_buttons.widget.set_tooltip_text(_("Rew, FF, Next, Prev, Play, Stop, Mark In, Mark Out, Clear Marks, To Mark In, To Mark Out"))
+        self.player_buttons.widget.set_tooltip_text(_("Prev Frame - Arrow Left\nNext Frame - Arrow Right\nPlay - Space\nStop - Space\nMark In\nMark Out\nClear Marks\nTo Mark In\nTo Mark Out"))
         self.monitor_source.modify_font(pango.FontDescription("sans bold 8"))
         player_buttons_row = gtk.HBox(False, 0)
 
