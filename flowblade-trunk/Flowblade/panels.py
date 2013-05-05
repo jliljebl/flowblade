@@ -452,11 +452,11 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     effects_vbox = gtk.VBox(False, 2)
     effects_vbox.pack_start(info_row, False, False, 0)
     effects_vbox.pack_start(guiutils.get_pad_label(2, 2), False, False, 0)
-    effects_vbox.pack_start(combo_row, False, False, 0)
-    effects_vbox.pack_start(effects_list_view, True, True, 0)
     effects_vbox.pack_start(stack_buttons_box, False, False, 0)
     effects_vbox.pack_start(effect_stack, True, True, 0)
-
+    effects_vbox.pack_start(combo_row, False, False, 0)
+    effects_vbox.pack_start(effects_list_view, True, True, 0)
+    
     clipeffectseditor.widgets.group_combo.set_tooltip_text(_("Select Filter Group"))
     clipeffectseditor.widgets.effect_list_view.set_tooltip_text(_("Current group Filters"))
 

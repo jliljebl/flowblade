@@ -159,6 +159,7 @@ def set_enabled(value):
     widgets.del_effect_b.set_sensitive(value)
     widgets.effect_stack_view.treeview.set_sensitive(value)
     widgets.exit_button.set_sensitive(value)
+    """
     if widgets.group_combo != None:
         widgets.group_combo.set_sensitive(value)
     if widgets.effect_list_view != None:
@@ -167,7 +168,8 @@ def set_enabled(value):
             widgets.effect_list_view.treeview.get_selection().unselect_all()
         else:
             widgets.effect_list_view.treeview.get_selection().select_path("0")
-    
+    """
+
 def update_stack_view():
     if clip != None:
         filter_infos = []

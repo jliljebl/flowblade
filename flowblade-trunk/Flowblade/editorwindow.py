@@ -765,12 +765,6 @@ class EditorWindow:
                 cursor = gtk.gdk.Cursor(display, ONEROLL_CURSOR, 9, 9)
             elif editorstate.EDIT_MODE() == editorstate.ONE_ROLL_TRIM_NO_EDIT:
                 cursor = gtk.gdk.Cursor(display, ONEROLL_CURSOR, 9, 9)
-                """
-                if trimmodes.edit_data["to_side_being_edited"] == False:
-                    cursor = gtk.gdk.Cursor(display, ONEROLL_LEFT_CURSOR, 9, 9)
-                else:
-                    cursor = gtk.gdk.Cursor(display, ONEROLL_RIGHT_CURSOR, 1, 9)
-                """
             else:
                 cursor = gtk.gdk.Cursor(gtk.gdk.LEFT_PTR)
             gdk_window.set_cursor(cursor)   
