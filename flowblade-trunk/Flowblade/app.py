@@ -27,6 +27,7 @@ sequences.
 import glib
 import gobject
 import gtk
+import locale
 import mlt
 import multiprocessing
 import os
@@ -162,7 +163,10 @@ def main(root_path):
 
     # Init MLT framework
     repo = mlt.Factory().init()
-    
+
+    # Set numeric locale to use "." as radix
+    locale.setlocale(locale.LC_NUMERIC, 'C')
+
     # Check for codecs and formats on the system
     mltenv.check_available_features(repo)
     renderconsumer.load_render_profiles()

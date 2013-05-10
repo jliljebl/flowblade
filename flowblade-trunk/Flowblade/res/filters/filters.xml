@@ -539,9 +539,9 @@
    <filter id="frei0r.colorize">
         <name>Colorize</name>
         <group>Color</group>
-        <property name="hue" args="range_in=0,360 displayname=Hue">0.5</property>
-        <property name="saturation" args="range_in=0,100 displayname=Saturation">0.5</property>
-        <property name="lightness" args="range_in=-100,100 displayname=Lightness">0.5</property>
+        <property name="hue" args="range_in=0,360 range_out=0,1 displayname=Hue">0.5</property>
+        <property name="saturation" args="range_in=0,100 range_out=0,1 displayname=Saturation">0.5</property>
+        <property name="lightness" args="range_in=-100,100 range_out=0,1 displayname=Lightness">0.5</property>
    </filter>
     <filter id="frei0r.colgate">
         <name>Colgate White Balance</name>
