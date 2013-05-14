@@ -359,7 +359,7 @@ class TransitionEditableProperty(AbstractProperty):
     property values.
 
     This class is used for properties of type PROP_INT and PROP_FLOAT.
-    
+
     If property type is PROP_EXPRESSION an extending class is used
     to parse value expression from input.
     """

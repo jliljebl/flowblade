@@ -102,7 +102,7 @@ class LoadThread(threading.Thread):
         gtk.gdk.threads_leave()
 
         time.sleep(0.3)
-        
+
         gtk.gdk.threads_enter()
         app.open_project(project)
 
@@ -116,9 +116,6 @@ class LoadThread(threading.Thread):
         updater.set_info_icon(None)
         dialog.destroy()
         gtk.gdk.threads_leave()
-
-        project_event = projectdata.ProjectEvent(projectdata.EVENT_OPENED, self.filename)
-        project.events.append(project_event)
         
         ticker.stop_ticker()
 

@@ -300,7 +300,6 @@ class MediaLogListView(gtk.VBox):
         # Cell renderers
         self.icon_rend_1 = gtk.CellRendererPixbuf()
         self.icon_rend_1.props.xpad = 6
-        #self.icon_rend_1.set_property('activatable', True)
 
         self.text_rend_1 = gtk.CellRendererText()
         self.text_rend_1.set_property("ellipsize", pango.ELLIPSIZE_END)

@@ -52,6 +52,7 @@ import gui
 import guicomponents
 import keyevents
 import keyframeeditor
+import medialog
 import mlt
 import mltenv
 import mltfilters
@@ -164,7 +165,7 @@ def main(root_path):
     # Init MLT framework
     repo = mlt.Factory().init()
 
-    # Set numeric locale to use "." as radix
+    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
     locale.setlocale(locale.LC_NUMERIC, 'C')
 
     # Check for codecs and formats on the system
@@ -328,6 +329,9 @@ def init_project_gui():
     selected_index = editorstate.project.sequences.index(editorstate.current_sequence())
     selection.select_path(str(selected_index))
 
+    # Display media events
+    medialog.update_media_log_view()
+
     render.set_default_values_for_widgets()
 
     projectinfogui.update_project_info()
@@ -337,12 +341,6 @@ def init_sequence_gui():
     Called after project load or changing current sequence 
     to initialize interface.
     """
-    # A media file always needs to be selected to make pop-ups work
-    # to user expectations
-    #selection = gui.media_list_view.treeview.get_selection()
-    #selection.select_path("0")
-    
-
     # Set initial timeline scale draw params
     editorstate.current_sequence().update_length()
     updater.update_pix_per_frame_full_view()
@@ -650,13 +648,13 @@ def _shutdown_dialog_callback(dialog, response_id):
     try:
         os.remove(utils.get_hidden_user_dir_path() + AUTOSAVE_FILE)
     except:
-        pass
+        print "Delete autosave file FAILED"
 
     # Delete pid file
     try:
          os.remove(utils.get_hidden_user_dir_path() + PID_FILE)
     except:
-        pass
+        print "Delete pid file FAILED"
 
     # Exit gtk main loop.
     gtk.main_quit()
