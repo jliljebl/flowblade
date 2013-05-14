@@ -317,12 +317,12 @@ def display_clip_in_monitor(reset_saved_frames=True):
     clip_producer.mark_in = MONITOR_MEDIA_FILE().mark_in
     clip_producer.mark_out = MONITOR_MEDIA_FILE().mark_out
     
-    # Give IMAGE and PATTERN_PRODUCER media types defalt mark in and mark out if not already set.
-    # This makes them reasonably short and trimmable in both directions by default
+    # Give IMAGE and PATTERN_PRODUCER media types default mark in and mark out if not already set.
+    # This makes them reasonably short and trimmable in both directions.
     if clip_producer.media_type == appconsts.IMAGE or clip_producer.media_type == appconsts.PATTERN_PRODUCER:
         if  clip_producer.mark_in == -1 and clip_producer.mark_out == -1:
             center_frame = clip_producer.get_length() / 2
-            default_length_half = 75 # TODO: we configurable and always equaling 6s
+            default_length_half = 75
             mark_in = center_frame - default_length_half
             mark_out = center_frame + default_length_half - 1
             clip_producer.mark_in = mark_in
@@ -330,8 +330,7 @@ def display_clip_in_monitor(reset_saved_frames=True):
             MONITOR_MEDIA_FILE().mark_in = mark_in
             MONITOR_MEDIA_FILE().mark_out = mark_out
 
-    # Display clip name
-    gui.editor_window.monitor_source.set_text(MONITOR_MEDIA_FILE().name)
+    display_monitor_clip_name()
 
     # Display frame, marks and pos
     gui.pos_bar.update_display_from_producer(clip_producer)
@@ -346,6 +345,17 @@ def display_clip_in_monitor(reset_saved_frames=True):
         set_playing_configuration()
     
     repaint_tline()
+
+def display_monitor_clip_name():
+    # Display clip name
+    if  MONITOR_MEDIA_FILE().mark_in != -1 and MONITOR_MEDIA_FILE().mark_out != -1:
+        clip_length = utils.get_tc_string(MONITOR_MEDIA_FILE().mark_out - MONITOR_MEDIA_FILE().mark_in + 1) #+1 out incl.
+        range_text = " / ][ " + str(clip_length)
+    else:
+        range_text = ""
+
+    gui.editor_window.monitor_source.set_text(MONITOR_MEDIA_FILE().name + range_text)
+    
 
 def display_sequence_in_monitor():
     """
@@ -458,41 +468,9 @@ def update_kf_editor():
 
 # ----------------------------------------- marks
 def display_marks_tc():
-    if timeline_visible():
-        mark_in = PLAYER().producer.mark_in
-        mark_out = PLAYER().producer.mark_out
-    else:
-        mark_in = current_sequence().monitor_clip.mark_in
-        mark_out = current_sequence().monitor_clip.mark_out
-        
-    if mark_in != -1:
-        mark_in_tc = utils.get_tc_string(mark_in) 
-        gui.mark_in_display.set_text(mark_in_tc)
-    else:
-        gui.mark_in_display.set_text("--:--:--:--")
-    
-    if mark_out != -1:
-        mark_out_tc = utils.get_tc_string(mark_out) 
-        gui.mark_out_display.set_text(mark_out_tc)
-    else:
-        gui.mark_out_display.set_text("--:--:--:--")
-        
-    if ((mark_out != -1) and (mark_in != -1)):
-        length = mark_out - mark_in + 1 # + 1 == out inclusive
-        l_tc = utils.get_tc_string(length)
-        gui.length_display.set_text(l_tc)
-    else:
-        if timeline_visible():
-            gui.length_display.set_text("--:--:--:--")
-        else: # length for a clip is always displayed
-            if mark_out == -1 and mark_in == -1:
-                l = current_sequence().monitor_clip.get_length()
-            elif mark_out == -1:
-                l = current_sequence().monitor_clip.get_length() - mark_in
-            else:
-                l = mark_out
-            l_tc = utils.get_tc_string(l)
-            gui.length_display.set_text(l_tc)
+    if not timeline_visible():
+        display_monitor_clip_name()
+
 
 # ----------------------------------------------- clip editors
 def clip_removed_during_edit(clip):
