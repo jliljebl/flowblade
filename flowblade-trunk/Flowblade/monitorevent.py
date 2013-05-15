@@ -83,7 +83,6 @@ def prev_pressed():
 
 def j_pressed():
     jkl_index = _get_jkl_speed_index()
-    print jkl_index
     if jkl_index > 3: # 3 is first backwards speed, any bigger is forward, j starts backwards slow from any forward speed 
         jkl_index = 3
     else:
@@ -92,7 +91,6 @@ def j_pressed():
     if jkl_index < 0:
         jkl_index = 0
     new_speed = JKL_SPEEDS[jkl_index]
-    print new_speed
     PLAYER().start_variable_speed_playback(new_speed)
 
 def k_pressed():
@@ -110,13 +108,11 @@ def l_pressed():
     if jkl_index == len(JKL_SPEEDS):
         jkl_index = len(JKL_SPEEDS) - 1
     new_speed = JKL_SPEEDS[jkl_index]
-    print new_speed
     PLAYER().start_variable_speed_playback(new_speed)
     
 
 def _get_jkl_speed_index():
     speed = PLAYER().producer.get_speed()
-    print speed
     if speed  < -8.0:
         return 0
 
