@@ -172,6 +172,7 @@ def overwrite_move_mode_pressed():
 def oneroll_trim_no_edit_init():
     stop_looping()
     editorstate.edit_mode = editorstate.ONE_ROLL_TRIM_NO_EDIT
+    gui.editor_window.set_cursor_to_mode()
     tlinewidgets.set_edit_mode(None, None) # No overlays are drwn in this edit mode
     movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
     updater.set_trim_mode_gui()
@@ -180,6 +181,7 @@ def oneroll_trim_no_edit_press(event, frame):
     success = oneroll_trim_mode_init(event.x, event.y)
     if success:
         global mouse_disabled
+        tlinewidgets.trim_mode_in_non_active_state = True
         mouse_disabled = True
     else:
         editorstate.edit_mode = editorstate.ONE_ROLL_TRIM_NO_EDIT
@@ -287,15 +289,10 @@ def tline_canvas_mouse_pressed(event, frame):
     if EDIT_MODE() == editorstate.SELECT_PARENT_CLIP:
         syncsplitevent.select_sync_parent_mouse_pressed(event, frame)
         mouse_disabled = True
-        # FIX THIS FOR SYNCH SHIT
-        # Set INSERT_MODE with programmed click if insert mode button not down
-        # and just calling the mode intilizing  method if button is already pressed
-        if  gui.editor_window.mode_buttons_group.pressed_button != 1:
-            set_default_edit_mode()  
-        else:
-            insert_move_mode_pressed() 
+        # Set INSERT_MODE
+        set_default_edit_mode()  
         return
-        
+
     # Hitting timeline in clip display mode displays timeline in
     # default mode.
     if not timeline_visible():
@@ -412,8 +409,13 @@ def tline_canvas_mouse_released(x, y, frame, button, state):
     """
     Mouse event callback from timeline canvas widget
     """
+    gui.editor_window.set_cursor_to_mode()
+     
     global mouse_disabled
     if mouse_disabled == True:
+        gui.editor_window.set_cursor_to_mode() # we only need this update when mode change (to active trim mode) disables mouse, so we'll only do this then
+        tlinewidgets.trim_mode_in_non_active_state = False # we only need this update when mode change (to active trim mode) disables mouse, so we'll only do this then
+        gui.tline_canvas.widget.queue_draw()
         mouse_disabled = False
         return
 

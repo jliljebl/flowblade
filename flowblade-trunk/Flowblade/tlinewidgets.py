@@ -219,8 +219,9 @@ TRACK_GRAD_ORANGE_STOP3 = (0,  0.68, 0.68, 0.68, 1)
 LIGHT_MULTILPLIER = 1.14
 DARK_MULTIPLIER = 0.74
 
-POINTER_COLOR = (1, 0.3, 0.3) # red frame pointer
+POINTER_COLOR = (1, 0.3, 0.3) # red frame pointer for position bar
 
+# ------------------------------------------------------------------ MODULE STATE
 # debug purposes
 draw_blank_borders = True
 
@@ -235,6 +236,10 @@ canvas_widget = None
 # Value used to display shadow frame when in clip edit mode 
 shadow_frame = -1
 
+# Used to draw trim modes differently when moving from <X>_NO_EDIT mode to active edit
+trim_mode_in_non_active_state = False
+
+# ------------------------------------------------------------------- module functions
 def load_icons():
     global FULL_LOCK_ICON, FILTER_CLIP_ICON, VIEW_SIDE_ICON,\
     COMPOSITOR_CLIP_ICON, INSERT_ARROW_ICON, AUDIO_MUTE_ICON, MARKER_ICON, \
@@ -540,7 +545,10 @@ def draw_one_roll_overlay(cr, data):
     radius = 5.0
     degrees = M_PI/ 180.0
     bit = 3
-    cr.set_source_rgb(0.9, 0.9, 0.2)#*OVERLAY_SELECTION_COLOR)
+    if not trim_mode_in_non_active_state:
+        cr.set_source_rgb(0.9, 0.9, 0.2)#*OVERLAY_SELECTION_COLOR)
+    else:
+        cr.set_source_rgb(0.75, 0.75, 0.75)#*OVERLAY_SELECTION_COLOR)
     cr.set_line_width(2.0)
     if data["to_side_being_edited"]:
         cr.move_to(selection_frame_x + radius + bit, track_y + track_height)

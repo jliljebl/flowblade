@@ -180,7 +180,8 @@ def trim_looping_stopped():
         set_tworoll_mode(edit_data["track_object"], 
                          edit_data["edit_frame"])
 
-
+def update_cursor_to_mode():
+    gui.editor_window.set_cursor_to_mode()
 
 # ------------------------------------- ONE ROLL TRIM EVENTS
 def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
@@ -258,7 +259,11 @@ def oneroll_trim_press(event, frame):
         if not success:
             set_no_edit_mode_func()
         else:
+            # new trim inited, editing non-active until release
             global mouse_disabled
+            tlinewidgets.trim_mode_in_non_active_state = True
+            gui.tline_canvas.widget.queue_draw()
+            gui.editor_window.set_tline_cursor(editorstate.ONE_ROLL_TRIM_NO_EDIT)
             mouse_disabled = True
         return
     
@@ -268,7 +273,11 @@ def oneroll_trim_press(event, frame):
         if not success:
             set_no_edit_mode_func() # no furter mouse events will come here
         else:
+            # new trim inited, editing non-active until release
             global mouse_disabled
+            tlinewidgets.trim_mode_in_non_active_state = True
+            gui.tline_canvas.widget.queue_draw()
+            gui.editor_window.set_tline_cursor(editorstate.ONE_ROLL_TRIM_NO_EDIT)
             mouse_disabled = True
         return
 
@@ -317,6 +326,10 @@ def oneroll_trim_release(x, y, frame, state):
     global mouse_disabled
     if mouse_disabled:
         mouse_disabled = False
+        # we may have been in non active state because the clip being edited was changed
+        gui.editor_window.set_cursor_to_mode()
+        tlinewidgets.trim_mode_in_non_active_state = False 
+        gui.tline_canvas.widget.queue_draw()
         return
         
     global exiting_mode
@@ -437,10 +450,8 @@ def _legalize_one_roll_trim(frame, trim_limits):
         last = trim_limits["from_end"] 
         
     if frame < first:
-        print "legalized 1"
         frame = first
     if frame > last:
-        print "legalized 2"
         frame = last
     
     return frame
