@@ -359,7 +359,6 @@ def tline_canvas_mouse_pressed(event, frame):
         track = tlinewidgets.get_track(event.y)
         if track == None:
             return
-        trimmodes.clear_temp_clip()
         trimmodes.set_oneroll_mode(track, frame)
         mouse_disabled = True
         gui.editor_window.set_cursor_to_mode()
@@ -371,7 +370,6 @@ def tline_canvas_mouse_pressed(event, frame):
         track = tlinewidgets.get_track(event.y)
         if track == None:
             return
-        trimmodes.clear_temp_clip()
         trimmodes.set_tworoll_mode(track, frame)
         mouse_disabled = True
     # LEFT BUTTON: Handle left mouse button edits by passing event to current edit mode

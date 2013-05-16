@@ -42,10 +42,7 @@ loop_half_length = DEFAULT_LOOP_HALF_LEGTH
 # Data/state for ongoing edit.
 edit_data = None
 
-# Flag for leaving trim mode
-#exiting_mode = False
-
-# Flag for disbling mose event
+# Flag for disbling mouse event
 mouse_disabled = False
 
 # Flag for temporary blank needed for one roll trim editing track's last clip's out
@@ -299,9 +296,6 @@ def oneroll_trim_move(x, y, frame, state):
     """
     User moves mouse when in one roll mode.
     """
-    #if exiting_mode:
-    #    return
-
     if mouse_disabled:
         return
 
@@ -331,15 +325,6 @@ def oneroll_trim_release(x, y, frame, state):
         tlinewidgets.trim_mode_in_non_active_state = False 
         gui.tline_canvas.widget.queue_draw()
         return
-        
-    """
-    global exiting_mode
-    if exiting_mode:
-        exiting_mode = False
-        clear_temp_clip()
-        set_exit_mode_func()
-        return
-    """
 
     _do_one_roll_trim_edit(frame)
 
@@ -348,9 +333,6 @@ def _do_one_roll_trim_edit(frame):
     global edit_data
     frame = _legalize_one_roll_trim(frame, edit_data["trim_limits"])
     delta = frame - edit_data["edit_frame"]
-    
-    # Remove temp blank
-    clear_temp_clip()
 
     # case: editing from-side of last clip
     global last_from_trimmed
@@ -387,16 +369,6 @@ def _do_one_roll_trim_edit(frame):
         action = edit.trim_end_action(data)
         action.do_edit()
         # Edit is reinitialized in callback from edit action one_roll_trim_undo_done
-
-def clear_temp_clip():
-    # If we're editing out edit of last clip of track we'll add a temp blank that is 
-    # removed here after edit is complete.
-    pass
-    """
-    if temp_blank_added == True:
-        track = edit_data["track_object"]
-        current_sequence().remove_last_clip(track)
-    """
 
 def oneroll_play_pressed():
     # Start trim preview playback loop
@@ -495,25 +467,20 @@ def set_tworoll_mode(track, current_frame = -1):
     # Trying to two roll edit last clip's out frame inits one roll trim mode
     # via programmed click.
     if edit_frame >= track.get_length():
-        #updater.set_mode_button_active(ONE_ROLL_TRIM)
         return False
 
     try:
         _set_edit_data(track, edit_frame)
     except:
-        #_tworoll_init_failed_window()
-        #set_no_edit_mode_func()
         return False
 
     if edit_frame == 0:
         _tworoll_init_failed_window()
-        #set_no_edit_mode_func()
         return False
 
     global edit_data
     if edit_data["from_clip"] == None:
         _tworoll_init_failed_window()
-        #set_no_edit_mode_func()
         return False
     
     # Force edit side to be on non-blanck side
@@ -594,8 +561,6 @@ def tworoll_trim_move(x, y, frame, state):
     """
     User moves mouse when in two roll mode.
     """
-    #if exiting_mode:
-    #    return
     if mouse_disabled:
         return
 
@@ -617,14 +582,6 @@ def tworoll_trim_release(x, y, frame, state):
         gui.tline_canvas.widget.queue_draw()
         mouse_disabled = False
         return
-
-    """
-    global exiting_mode
-    if exiting_mode:
-        exiting_mode = False
-        set_exit_mode_func()
-        return
-    """
 
     global edit_data
     frame = _legalize_two_roll_trim(frame, edit_data["trim_limits"])
@@ -719,16 +676,7 @@ def _legalize_two_roll_trim(frame, trim_limits):
     """
     Keeps two roll trim selection in legal edit area.
     """
-    first = -1
-    last = -1
-    
-    # Case: edit in middle of sequence
-    if ((trim_limits["to_start"] != -1) 
-        and (trim_limits["from_start"] != -1)):
-        first = max(trim_limits["to_start"], trim_limits["from_start"],
-                    trim_limits["both_start"] )
-        last = min(trim_limits["to_end"], trim_limits["from_end"],
-                   trim_limits["both_end"] )
+    first, last = _get_two_roll_first_and_last()
         
     if frame < first:
         frame = first
@@ -738,6 +686,16 @@ def _legalize_two_roll_trim(frame, trim_limits):
     return frame
 
 def _pressed_on_two_roll_active_area(frame):
+    first, last = _get_two_roll_first_and_last()
+                   
+    if frame < first:
+        return False
+    if frame > last:
+        return False
+    
+    return True
+
+def _get_two_roll_first_and_last():
     first = -1
     last = -1
     
@@ -748,13 +706,5 @@ def _pressed_on_two_roll_active_area(frame):
                     trim_limits["both_start"] )
         last = min(trim_limits["to_end"], trim_limits["from_end"],
                    trim_limits["both_end"] )
-                   
-    if frame < first:
-        return False
-    if frame > last:
-        return False
     
-    return True
-    
-def cant_loop_info():
-    pass # 
+    return (first, last)
