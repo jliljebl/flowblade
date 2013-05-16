@@ -43,7 +43,7 @@ loop_half_length = DEFAULT_LOOP_HALF_LEGTH
 edit_data = None
 
 # Flag for leaving trim mode
-exiting_mode = False
+#exiting_mode = False
 
 # Flag for disbling mose event
 mouse_disabled = False
@@ -257,7 +257,7 @@ def oneroll_trim_press(event, frame):
         track = tlinewidgets.get_track(event.y)
         success = set_oneroll_mode(track, frame)
         if not success:
-            set_no_edit_mode_func()
+            set_no_edit_mode_func() # further mouse events are handled at editevent.py
         else:
             # new trim inited, editing non-active until release
             global mouse_disabled
@@ -299,8 +299,8 @@ def oneroll_trim_move(x, y, frame, state):
     """
     User moves mouse when in one roll mode.
     """
-    if exiting_mode:
-        return
+    #if exiting_mode:
+    #    return
 
     if mouse_disabled:
         return
@@ -332,13 +332,15 @@ def oneroll_trim_release(x, y, frame, state):
         gui.tline_canvas.widget.queue_draw()
         return
         
+    """
     global exiting_mode
     if exiting_mode:
         exiting_mode = False
         clear_temp_clip()
         set_exit_mode_func()
         return
-    
+    """
+
     _do_one_roll_trim_edit(frame)
 
 def _do_one_roll_trim_edit(frame):
@@ -563,23 +565,38 @@ def tworoll_trim_press(event, frame):
     """
     User presses mouse when in two roll mode.
     """
-    global exiting_mode
     if not _pressed_on_edited_track(event.y):
-        set_no_edit_mode_func()
-        global mouse_disabled
-        mouse_disabled = True
+        _attempt_reinit_tworoll(event, frame)
         return
-        
+
+    if not _pressed_on_two_roll_active_area(frame):
+        _attempt_reinit_tworoll(event, frame)
+        return
+
     global edit_data
     frame = _legalize_two_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
     PLAYER().seek_frame(frame)
- 
+
+def _attempt_reinit_tworoll(event, frame):
+        track = tlinewidgets.get_track(event.y)
+        success = set_tworoll_mode(track, frame)
+        if not success:
+            set_no_edit_mode_func()
+        else:
+            global mouse_disabled
+            tlinewidgets.trim_mode_in_non_active_state = True
+            gui.tline_canvas.widget.queue_draw()
+            gui.editor_window.set_tline_cursor(editorstate.TWO_ROLL_TRIM_NO_EDIT)
+            mouse_disabled = True
+
 def tworoll_trim_move(x, y, frame, state):
     """
     User moves mouse when in two roll mode.
     """
-    if exiting_mode:
+    #if exiting_mode:
+    #    return
+    if mouse_disabled:
         return
 
     global edit_data
@@ -592,11 +609,22 @@ def tworoll_trim_release(x, y, frame, state):
     """
     User releases mouse when in two roll mode.
     """
+    global mouse_disabled
+    if mouse_disabled == True:
+        # we may have been in non active state because the clip being edited was changed
+        gui.editor_window.set_cursor_to_mode()
+        tlinewidgets.trim_mode_in_non_active_state = False 
+        gui.tline_canvas.widget.queue_draw()
+        mouse_disabled = False
+        return
+
+    """
     global exiting_mode
     if exiting_mode:
         exiting_mode = False
         set_exit_mode_func()
         return
+    """
 
     global edit_data
     frame = _legalize_two_roll_trim(frame, edit_data["trim_limits"])
@@ -708,6 +736,25 @@ def _legalize_two_roll_trim(frame, trim_limits):
         frame = last
     
     return frame
+
+def _pressed_on_two_roll_active_area(frame):
+    first = -1
+    last = -1
+    
+    trim_limits = edit_data["trim_limits"]
+    if ((trim_limits["to_start"] != -1) 
+        and (trim_limits["from_start"] != -1)):
+        first = max(trim_limits["to_start"], trim_limits["from_start"],
+                    trim_limits["both_start"] )
+        last = min(trim_limits["to_end"], trim_limits["from_end"],
+                   trim_limits["both_end"] )
+                   
+    if frame < first:
+        return False
+    if frame > last:
+        return False
+    
+    return True
     
 def cant_loop_info():
     pass # 

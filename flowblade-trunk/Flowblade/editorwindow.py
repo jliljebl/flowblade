@@ -92,7 +92,7 @@ INSERTMOVE_CURSOR = None
 ONEROLL_CURSOR = None
 ONEROLL_NO_EDIT_CURSOR = None
 TWOROLL_CURSOR = None
-
+TWOROLL_NO_EDIT_CURSOR = None
 
 def _b(button, icon, remove_relief=False):
     button.set_image(icon)
@@ -115,13 +115,14 @@ class EditorWindow:
         IMG_PATH = respaths.IMAGE_PATH 
 
         # Read cursors
-        global INSERTMOVE_CURSOR, OVERWRITE_CURSOR, TWOROLL_CURSOR, ONEROLL_CURSOR, ONEROLL_NO_EDIT_CURSOR
+        global INSERTMOVE_CURSOR, OVERWRITE_CURSOR, TWOROLL_CURSOR, ONEROLL_CURSOR, ONEROLL_NO_EDIT_CURSOR, TWOROLL_NO_EDIT_CURSOR
         INSERTMOVE_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "insertmove_cursor.png")
         OVERWRITE_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "overwrite_cursor.png")
         TWOROLL_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "tworoll_cursor.png")
         ONEROLL_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "oneroll_cursor.png")
         ONEROLL_NO_EDIT_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "oneroll_noedit_cursor.png")
-        
+        TWOROLL_NO_EDIT_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "tworoll_noedit_cursor.png")
+
         # Window
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.set_icon_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
@@ -755,25 +756,6 @@ class EditorWindow:
     def set_cursor_to_mode(self):
         if editorstate.cursor_on_tline == True:
             self.set_tline_cursor(editorstate.EDIT_MODE())
-            """
-            display = gtk.gdk.display_get_default()
-            gdk_window = gui.tline_display.get_parent_window()
-            if editorstate.EDIT_MODE() == editorstate.INSERT_MOVE:
-                cursor = gtk.gdk.Cursor(display, INSERTMOVE_CURSOR, 0, 0)
-            elif editorstate.EDIT_MODE() == editorstate.OVERWRITE_MOVE:
-                cursor = gtk.gdk.Cursor(display, OVERWRITE_CURSOR, 6, 15)
-            elif editorstate.EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
-                cursor = gtk.gdk.Cursor(display, TWOROLL_CURSOR, 11, 9)
-            elif editorstate.EDIT_MODE() == editorstate.TWO_ROLL_TRIM_NO_EDIT:
-                cursor = gtk.gdk.Cursor(display, TWOROLL_CURSOR, 11, 9)
-            elif editorstate.EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
-                cursor = gtk.gdk.Cursor(display, ONEROLL_CURSOR, 9, 9)
-            elif editorstate.EDIT_MODE() == editorstate.ONE_ROLL_TRIM_NO_EDIT:
-                cursor = gtk.gdk.Cursor(display, ONEROLL_NO_EDIT_CURSOR, 9, 9)
-            else:
-                cursor = gtk.gdk.Cursor(gtk.gdk.LEFT_PTR)
-            gdk_window.set_cursor(cursor)
-            """
         else:
             gdk_window = gui.tline_display.get_parent_window();
             gdk_window.set_cursor(gtk.gdk.Cursor(gtk.gdk.LEFT_PTR))
@@ -789,7 +771,7 @@ class EditorWindow:
         elif mode == editorstate.TWO_ROLL_TRIM:
             cursor = gtk.gdk.Cursor(display, TWOROLL_CURSOR, 11, 9)
         elif mode == editorstate.TWO_ROLL_TRIM_NO_EDIT:
-            cursor = gtk.gdk.Cursor(display, TWOROLL_CURSOR, 11, 9)
+            cursor = gtk.gdk.Cursor(display, TWOROLL_NO_EDIT_CURSOR, 11, 9)
         elif mode == editorstate.ONE_ROLL_TRIM:
             cursor = gtk.gdk.Cursor(display, ONEROLL_CURSOR, 9, 9)
         elif mode == editorstate.ONE_ROLL_TRIM_NO_EDIT:

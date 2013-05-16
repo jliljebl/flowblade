@@ -225,10 +225,11 @@ def tworoll_trim_no_edit_init():
     updater.set_trim_mode_gui()
 
 def tworoll_trim_no_edit_press(event, frame):
-    print "press"
+
     success = tworoll_trim_mode_init(event.x, event.y)
     if success:
         global mouse_disabled
+        tlinewidgets.trim_mode_in_non_active_state = True
         mouse_disabled = True
     else:
         editorstate.edit_mode = editorstate.TWO_ROLL_TRIM_NO_EDIT

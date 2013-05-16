@@ -484,14 +484,14 @@ def draw_two_roll_overlay(cr, data):
     cr.move_to(frame_x, track_y - 3)
     cr.line_to(frame_x, track_y + track_height + 3)
     cr.stroke()
-    
+
     selection_frame_x = _get_frame_x(data["selected_frame"])
 
     cr.set_source_rgb(*OVERLAY_SELECTION_COLOR)
     cr.move_to(selection_frame_x - 0.5, track_y - 6.5)
     cr.line_to(selection_frame_x - 0.5, track_y + track_height + 6.5)
     cr.stroke()
-    
+
     if data["to_side_being_edited"]:
         _draw_view_icon(cr, frame_x + 6, track_y + 1)
     else:
@@ -505,7 +505,10 @@ def draw_two_roll_overlay(cr, data):
     radius = 5.0
     degrees = M_PI/ 180.0
     bit = 3
-    cr.set_source_rgb(0.9, 0.9, 0.2)#*OVERLAY_SELECTION_COLOR)
+    if not trim_mode_in_non_active_state:
+        cr.set_source_rgb(0.9, 0.9, 0.2)
+    else:
+        cr.set_source_rgb(0.2, 0.2, 0.2)
     cr.set_line_width(2.0)
     cr.move_to(selection_frame_x + radius + bit, track_y + track_height)
     cr.arc (selection_frame_x + radius, track_y + track_height - radius, radius, 90 * degrees, 180.0 * degrees) 
@@ -546,9 +549,9 @@ def draw_one_roll_overlay(cr, data):
     degrees = M_PI/ 180.0
     bit = 3
     if not trim_mode_in_non_active_state:
-        cr.set_source_rgb(0.9, 0.9, 0.2)#*OVERLAY_SELECTION_COLOR)
+        cr.set_source_rgb(0.9, 0.9, 0.2)
     else:
-        cr.set_source_rgb(0.75, 0.75, 0.75)#*OVERLAY_SELECTION_COLOR)
+        cr.set_source_rgb(0.2, 0.2, 0.2)
     cr.set_line_width(2.0)
     if data["to_side_being_edited"]:
         cr.move_to(selection_frame_x + radius + bit, track_y + track_height)
