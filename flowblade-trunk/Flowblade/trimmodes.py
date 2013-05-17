@@ -677,7 +677,7 @@ def _legalize_two_roll_trim(frame, trim_limits):
     Keeps two roll trim selection in legal edit area.
     """
     first, last = _get_two_roll_first_and_last()
-        
+
     if frame < first:
         frame = first
     if frame > last:
@@ -687,7 +687,7 @@ def _legalize_two_roll_trim(frame, trim_limits):
 
 def _pressed_on_two_roll_active_area(frame):
     first, last = _get_two_roll_first_and_last()
-                   
+
     if frame < first:
         return False
     if frame > last:
@@ -707,4 +707,9 @@ def _get_two_roll_first_and_last():
         last = min(trim_limits["to_end"], trim_limits["from_end"],
                    trim_limits["both_end"] )
     
+    if edit_data["to_clip"].is_blanck_clip == True:
+        first = trim_limits["from_start"]
+    if edit_data["from_clip"].is_blanck_clip == True:
+        last = trim_limits["to_end"]
+                 
     return (first, last)

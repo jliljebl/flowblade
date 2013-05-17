@@ -225,7 +225,6 @@ def tworoll_trim_no_edit_init():
     updater.set_trim_mode_gui()
 
 def tworoll_trim_no_edit_press(event, frame):
-
     success = tworoll_trim_mode_init(event.x, event.y)
     if success:
         global mouse_disabled
