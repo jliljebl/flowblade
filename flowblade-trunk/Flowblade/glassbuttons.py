@@ -247,10 +247,12 @@ class PlayerButtons(AbstractGlassButtons):
         self.set_sensitive(True)
         self.widget.queue_draw()
 
+    """
     def set_trim_playback_buttons_sensitive(self, next_enabled, prev_enabled):
         self.sensitive[2] = next_enabled
         self.sensitive[3] = prev_enabled
         self.widget.queue_draw()
+    """
 
     # ------------------------------------------------------------- mouse events
     def _press_event(self, event):

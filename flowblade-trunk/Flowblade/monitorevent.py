@@ -51,14 +51,18 @@ def play_pressed():
     elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
         trimmodes.oneroll_play_pressed()
     elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM_NO_EDIT:
-        pass
+        movemodes.play_pressed()
     elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
         trimmodes.tworoll_play_pressed()
     elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM_NO_EDIT:
-        pass
+        movemodes.play_pressed()
     
 def stop_pressed():
     if current_is_move_mode():
+        movemodes.stop_pressed()
+    elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM_NO_EDIT:
+        movemodes.stop_pressed()
+    elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM_NO_EDIT:
         movemodes.stop_pressed()
     elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
         trimmodes.oneroll_stop_pressed()
@@ -82,6 +86,8 @@ def prev_pressed():
         trimmodes.tworoll_prev_pressed()
 
 def j_pressed():
+    if timeline_visible():
+        trimmodes.set_no_edit_trim_mode()
     jkl_index = _get_jkl_speed_index()
     if jkl_index > 3: # 3 is first backwards speed, any bigger is forward, j starts backwards slow from any forward speed 
         jkl_index = 3
@@ -94,10 +100,13 @@ def j_pressed():
     PLAYER().start_variable_speed_playback(new_speed)
 
 def k_pressed():
-    if current_is_move_mode():
-        PLAYER().stop_playback()
+    if timeline_visible():
+        trimmodes.set_no_edit_trim_mode()
+    PLAYER().stop_playback()
 
 def l_pressed():
+    if timeline_visible():
+        trimmodes.set_no_edit_trim_mode()
     jkl_index = _get_jkl_speed_index()
     if jkl_index < 5:# 5 is first forward speed, any smaller is backward, l starts forward slow from any backwards speed 
         jkl_index = 5

@@ -165,7 +165,7 @@ def _trimmed_clip_is_blank():
     return False
 
 def trim_looping_stopped():
-    updater.set_next_prev_enabled(True, False)
+    #updater.set_next_prev_enabled(True, False)
     updater.set_stopped_configuration()
 
     # Reinits current trim mode
@@ -378,7 +378,7 @@ def _do_one_roll_trim_edit(frame):
 def oneroll_play_pressed():
     # Start trim preview playback loop
     current_sequence().hide_hidden_clips()
-    updater.set_next_prev_enabled(False, True)
+    #updater.set_next_prev_enabled(False, True)
     PLAYER().start_loop_playback(edit_data["edit_frame"], loop_half_length, edit_data["track_object"].get_length())
     updater.set_playing_configuration()
 
@@ -597,7 +597,7 @@ def tworoll_play_pressed():
     current_sequence().hide_hidden_clips()
     PLAYER().start_loop_playback(edit_data["edit_frame"], loop_half_length, edit_data["track_object"].get_length())
     updater.set_playing_configuration()
-    updater.set_next_prev_enabled(False, True)
+    #updater.set_next_prev_enabled(False, True)
 
 def tworoll_stop_pressed():
     PLAYER().stop_loop_playback(trim_looping_stopped)
