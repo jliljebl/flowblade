@@ -38,6 +38,7 @@ from editorstate import PLAYER
 import respaths
 import resync
 import sequence
+import trimmodes
 import utils
 import updater
 
@@ -1360,6 +1361,7 @@ class TimeLineFrameScale:
             if not timeline_visible():
                 updater.display_sequence_in_monitor()
                 return
+            trimmodes.set_no_edit_trim_mode()
             PLAYER().seek_frame(get_frame(event.x))
             self.drag_on = True
 

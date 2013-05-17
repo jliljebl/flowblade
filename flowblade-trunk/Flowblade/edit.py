@@ -42,6 +42,7 @@ import mltfilters
 import movemodes
 import projectdata
 import resync
+import trimmodes
 import undo
 import updater
 import utils
@@ -305,6 +306,9 @@ class EditAction:
         # Grabs data as object members.
         self.__dict__.update(data)
         
+        # Other then actual trim edits, attempting all edits exits active trimodes and enters <X>_NO_EDIT trim mode.
+        self.exit_active_trimmode_on_edit = True
+        
         # HACK!!!! Overwrite edits crash at redo(sometimes undo) when current frame inside 
         # affected area if consumer running.
         # Remove when fixed upstream.
@@ -312,6 +316,9 @@ class EditAction:
         self.turn_on_stop_for_edit = False # set true in redo_func for edits that need it
         
     def do_edit(self):
+        if self.exit_active_trimmode_on_edit:
+            trimmodes.set_no_edit_trim_mode()
+        
         self.redo()
         undo.register_edit(self)
         if self.turn_on_stop_for_edit:
@@ -363,7 +370,6 @@ class EditAction:
         if do_gui_update:
             self._update_gui()
 
-        
     def _update_gui(self):
         updater.update_tline_scrollbar() # Slider needs to adjust to possily new program length.
                                          # This REPAINTS TIMELINE as a side effect.
@@ -591,6 +597,7 @@ def _gap_append_redo(self):
 # "cut_frame"
 def tworoll_trim_action(data):
     action = EditAction(_tworoll_trim_undo,_tworoll_trim_redo, data)
+    action.exit_active_trimmode_on_edit = False
     return action
 
 def _tworoll_trim_undo(self):
@@ -924,6 +931,7 @@ def _multitrack_overwrite_move_redo(self):
 # Trims start of clip
 def trim_start_action(data): 
     action = EditAction(_trim_start_undo,_trim_start_redo, data)
+    action.exit_active_trimmode_on_edit = False
     return action
 
 def _trim_start_undo(self):
@@ -947,6 +955,7 @@ def _trim_start_redo(self):
 # Trims end of clip
 def trim_end_action(data): 
     action = EditAction(_trim_end_undo,_trim_end_redo, data)
+    action.exit_active_trimmode_on_edit = False
     return action
 
 def _trim_end_undo(self):
@@ -969,6 +978,7 @@ def _trim_end_redo(self):
 # "undo_done_callback" <- THIS IS REALLY BADLY NAMED, IT SHOULD BE FIRST DO CALLBACK
 def trim_last_clip_end_action(data): 
     action = EditAction(_trim_last_clip_end_undo,_trim_last_clip_end_redo, data)
+    action.exit_active_trimmode_on_edit = False
     return action
 
 def _trim_last_clip_end_undo(self):
@@ -1486,6 +1496,7 @@ def _unmute_clip_redo(self):
 #"track","clip","clip_index"
 def trim_end_over_blanks(data):
     action = EditAction(_trim_end_over_blanks_undo, _trim_end_over_blanks_redo, data)
+    action.exit_active_trimmode_on_edit = False
     return action 
 
 def _trim_end_over_blanks_undo(self):
@@ -1516,6 +1527,7 @@ def _trim_end_over_blanks_redo(self):
 # "track","clip","blank_index"
 def trim_start_over_blanks(data):
     action = EditAction(_trim_start_over_blanks_undo, _trim_start_over_blanks_redo, data)
+    action.exit_active_trimmode_on_edit = False
     return action
 
 def _trim_start_over_blanks_undo(self):

@@ -99,7 +99,6 @@ def k_pressed():
 
 def l_pressed():
     jkl_index = _get_jkl_speed_index()
-    print jkl_index
     if jkl_index < 5:# 5 is first forward speed, any smaller is backward, l starts forward slow from any backwards speed 
         jkl_index = 5
     else:
@@ -127,6 +126,7 @@ def mark_in_pressed():
     mark_in = PLAYER().producer.frame()
     
     if timeline_visible():
+        trimmodes.set_no_edit_trim_mode()
         mark_out_old = PLAYER().producer.mark_out
         PLAYER().producer.mark_in = mark_in
     else:
@@ -153,6 +153,7 @@ def mark_out_pressed():
     mark_out = PLAYER().producer.frame()
 
     if timeline_visible():
+        trimmodes.set_no_edit_trim_mode()
         mark_in_old = PLAYER().producer.mark_in
         PLAYER().producer.mark_out = mark_out
     else:
@@ -176,6 +177,7 @@ def mark_out_pressed():
     
 def marks_clear_pressed():
     if timeline_visible():
+        trimmodes.set_no_edit_trim_mode()
         PLAYER().producer.mark_in = -1
         PLAYER().producer.mark_out = -1
     else:
@@ -186,6 +188,8 @@ def marks_clear_pressed():
     updater.display_marks_tc()
 
 def to_mark_in_pressed():
+    if timeline_visible():
+        trimmodes.set_no_edit_trim_mode()
     mark_in = PLAYER().producer.mark_in
     if not timeline_visible():
         mark_in = current_sequence().monitor_clip.mark_in
@@ -194,6 +198,8 @@ def to_mark_in_pressed():
     PLAYER().seek_frame(mark_in)
 
 def to_mark_out_pressed():
+    if timeline_visible():
+        trimmodes.set_no_edit_trim_mode()
     mark_out = PLAYER().producer.mark_out
     if not timeline_visible():
         mark_out = current_sequence().monitor_clip.mark_out

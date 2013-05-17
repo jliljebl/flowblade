@@ -488,7 +488,7 @@ def set_trim_mode_gui():
     display_sequence_in_monitor()
 
     _set_move_mode_buttons_enabled(False)
-    gui.pos_bar.disabled = True
+    #gui.pos_bar.disabled = True
     
     menu_edit_items_sensitive(False)
 
@@ -499,7 +499,7 @@ def set_move_mode_gui():
     display_sequence_in_monitor()
     
     _set_move_mode_buttons_enabled(True)
-    gui.pos_bar.disabled = False
+    #gui.pos_bar.disabled = False
 
     menu_edit_items_sensitive(True)
 
@@ -524,6 +524,8 @@ def set_transition_render_edit_menu_items_sensitive(range_start, range_end):
         render_fade.set_sensitive(False)
 
 def menu_edit_items_sensitive(sensitive):
+    pass
+    """
     ui = gui.editor_window.uimanager
     ui.get_widget('/MenuBar/EditMenu/AddFromMonitor').set_sensitive(sensitive)
     ui.get_widget('/MenuBar/EditMenu/CutClip').set_sensitive(sensitive)
@@ -534,10 +536,13 @@ def menu_edit_items_sensitive(sensitive):
     ui.get_widget('/MenuBar/EditMenu/AddTransition').set_sensitive(sensitive)
     ui.get_widget('/MenuBar/EditMenu/AddFade').set_sensitive(sensitive)
     ui.get_widget('/MenuBar/EditMenu/ChangeSequenceTracks').set_sensitive(sensitive)
-
+    """
+    
 def _set_move_mode_buttons_enabled(enabled):
     """
     Sets buttons that are only used in move modes enabled/disabled
+    """
+    pass
     """
     gui.editor_window.undo_redo.set_sensitive(enabled)
     gui.editor_window.undo_redo.widget.queue_draw()
@@ -552,6 +557,7 @@ def _set_move_mode_buttons_enabled(enabled):
         set_next_prev_enabled(True, False)
     else:
         gui.editor_window.player_buttons.set_normal_sensitive_pattern()
+    """
 
 def set_next_prev_enabled(next_enabled, prev_enabled):
     """

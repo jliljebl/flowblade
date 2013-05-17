@@ -180,6 +180,11 @@ def trim_looping_stopped():
 def update_cursor_to_mode():
     gui.editor_window.set_cursor_to_mode()
 
+def set_no_edit_trim_mode():
+    if editorstate.edit_mode == editorstate.ONE_ROLL_TRIM or editorstate.edit_mode == editorstate.TWO_ROLL_TRIM:
+        set_no_edit_mode_func()
+
+
 # ------------------------------------- ONE ROLL TRIM EVENTS
 def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     """

@@ -346,9 +346,10 @@ def tline_canvas_mouse_pressed(event, frame):
             else:
                 PLAYER().seek_frame(frame) 
         else:
-            # Display default editorstate and seek frame
-            mouse_disabled == True
-            set_default_edit_mode()
+            # For trim modes set <X>_NO_EDIT edit mode and seek frame. and seek frame
+            #mouse_disabled == True
+            trimmodes.set_no_edit_trim_mode()
+            #set_default_edit_mode()
             PLAYER().seek_frame(frame)
         return
     # LEFT BUTTON + CTRL: Select new trimmed clip in one roll trim mode
@@ -392,8 +393,8 @@ def tline_canvas_mouse_moved(x, y, frame, button, state):
 
     #Handle timeline position setting with right mouse button
     if button == 3:
-        if not editorstate.current_is_move_mode():
-            return
+        #if not editorstate.current_is_move_mode():
+        #    return
         if not timeline_visible():
             return
         PLAYER().seek_frame(frame) 
@@ -426,8 +427,8 @@ def tline_canvas_mouse_released(x, y, frame, button, state):
 
     # Handle timeline position setting with right mouse button
     if button == 3:
-        if not editorstate.current_is_move_mode():
-            return
+        #if not editorstate.current_is_move_mode():
+        #    return
         if not timeline_visible():
             return
         PLAYER().seek_frame(frame) 

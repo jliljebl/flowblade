@@ -28,7 +28,9 @@ import gtk
 import math
 
 from cairoarea import CairoDrawableArea
+import editorstate
 import gui
+import trimmodes
 import updater
 
 # Draw params
@@ -201,6 +203,8 @@ class PositionBar:
         """
         if self.disabled:
             return
+        if editorstate.timeline_visible():
+            trimmodes.set_no_edit_trim_mode()
 
         if((event.button == 1)
             or(event.button == 3)):
