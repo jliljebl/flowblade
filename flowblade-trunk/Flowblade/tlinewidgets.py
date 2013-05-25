@@ -127,7 +127,7 @@ DRAW_THRESHOLD_2 = 4
 DRAW_THRESHOLD_3 = 2
 DRAW_THRESHOLD_4 = 1
 # Height of sync state stripe indicating if clip is in sync or not
-SYNC_STRIPE_HEIGHT = 6
+SYNC_STRIPE_HEIGHT = 12
 # number on lines and tc codes displayed with small pix_per_frame values
 NUMBER_OF_LINES = 7
 # Positions for 1-2 icons on clips.
@@ -425,9 +425,6 @@ def draw_insert_overlay(cr, data):
     _draw_mode_arrow(cr, insert_frame_x, y, INSERT_MODE_COLOR)
 
 def draw_overwrite_overlay(cr, data):
-    """
-    Overlay for overwrite move edit mode
-    """
     # Only draw if were moving
     if data == None:
         return
@@ -474,9 +471,6 @@ def _draw_move_overlay(cr, data, y):
         clip_start_frame += clip_length
 
 def draw_two_roll_overlay(cr, data):
-    """
-    Overlay for two roll trim edit mode
-    """
     edit_frame = data["edit_frame"]
     frame_x = _get_frame_x(edit_frame)
     track_height = current_sequence().tracks[data["track"]].height
@@ -523,9 +517,6 @@ def draw_two_roll_overlay(cr, data):
     cr.stroke()
     
 def draw_one_roll_overlay(cr, data):
-    """
-    Overlay for one roll trim edit mode
-    """
     edit_frame = data["edit_frame"]
     frame_x = _get_frame_x(edit_frame)
     track_height = current_sequence().tracks[data["track"]].height
@@ -632,7 +623,7 @@ def _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y):
 def _draw_two_arrows(cr, x, y, distance):
     """
     Draws two arrows indicating that user can drag in 
-    both directions in trim mode
+    both directions in a trim mode
     """
     cr.set_source_rgb(*OVERLAY_COLOR)
     cr.move_to(x + 10, y)
@@ -908,7 +899,7 @@ class TimeLineCanvas:
 
             # Save sync children data
             if clip.sync_data != None:
-                self.sync_children.append((clip, track,scale_in)) 
+                self.sync_children.append((clip, track, scale_in))
 
             # Emboss
             if scale_length > EMBOSS_MIN:
@@ -1006,11 +997,35 @@ class TimeLineCanvas:
                         stripe_color = SYNC_OFF_COLOR
                     else:
                         stripe_color = SYNC_GONE_COLOR
-                    cr.rectangle(scale_in + 1, y + track_height - SYNC_STRIPE_HEIGHT, 
-                                    scale_length - 2, SYNC_STRIPE_HEIGHT)
-                    cr.set_source_rgb(*stripe_color)
-                    cr.fill()
+                        
+                    #cr.rectangle(scale_in + 1, y + track_height - SYNC_STRIPE_HEIGHT, 
+                    #                scale_length - 2, SYNC_STRIPE_HEIGHT)
+                    SYNC_SAW_WIDTH = 5
+                    SYNC_SAW_HEIGHT = 5
+                    dx = scale_in + 1
+                    dy = y + track_height - SYNC_STRIPE_HEIGHT
+                    saw_points = []
+                    saw_points.append((dx, dy))
+                    for i in range(0, int((scale_length - 2) / SYNC_SAW_WIDTH) + 1):
+                        dx += SYNC_SAW_WIDTH
+                        dy += SYNC_SAW_HEIGHT
+                        saw_points.append((dx, dy))
+                        SYNC_SAW_HEIGHT = -(SYNC_SAW_HEIGHT)
 
+                    px = scale_in + 1 + scale_length - 2
+                    py = y + track_height
+                    cr.move_to(px, py)
+                    for p in reversed(saw_points):
+                        cr.line_to(*p)
+                    cr.line_to(scale_in + 1, y + track_height)
+                    #cr.move_to(dx, y + track_height)
+                    #cr.move_to(scale_in + 1, y + track_height)
+                    cr.close_path()
+                    cr.set_source_rgb(*stripe_color)
+                    cr.fill_preserve()
+                    cr.set_source_rgb(0.3, 0.3, 0.3)
+                    cr.stroke()
+                    
             # Draw audio level data
             if clip.waveform_data != None and scale_length > FILL_MIN:
                 if not clip.selected:
