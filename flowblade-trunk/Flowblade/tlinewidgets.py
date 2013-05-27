@@ -128,6 +128,8 @@ DRAW_THRESHOLD_3 = 2
 DRAW_THRESHOLD_4 = 1
 # Height of sync state stripe indicating if clip is in sync or not
 SYNC_STRIPE_HEIGHT = 12
+SYNC_SAW_WIDTH = 5
+SYNC_SAW_HEIGHT = 5
 # number on lines and tc codes displayed with small pix_per_frame values
 NUMBER_OF_LINES = 7
 # Positions for 1-2 icons on clips.
@@ -881,53 +883,6 @@ class TimeLineCanvas:
                 cr.rectangle(scale_in, y, scale_length, track_height)
                 cr.fill()
 
-            # Draw clip frame 
-            cr.set_line_width(1.0)
-            if scale_length > FILL_MIN:
-                cr.set_source_rgb(0, 0, 0)
-            else:    
-                cr.set_source_rgb(0.3, 0.3, 0.3)
-            cr.rectangle(scale_in + 0.5,
-                         y + 0.5, scale_length, 
-                         track_height)
-            cr.stroke()
-        
-            # No further drawing for blank clip 
-            if clip.is_blanck_clip:
-                clip_start_frame += clip_length
-                continue
-
-            # Save sync children data
-            if clip.sync_data != None:
-                self.sync_children.append((clip, track, scale_in))
-
-            # Emboss
-            if scale_length > EMBOSS_MIN:
-                # Corner points
-                left = scale_in + 1.5
-                up = y + 1.5
-                right = left + scale_length - 2.0
-                down = up + track_height - 2.0
-                
-                # Draw lines
-                cr.set_source_rgb(0.75, 0.43, 0.79)
-                cr.move_to(left, down)
-                cr.line_to(left, up)
-                cr.stroke()
-                
-                cr.move_to(left, up)
-                cr.line_to(right, up)
-                cr.stroke()
-                
-                cr.set_source_rgb(0.47, 0.28, 0.51)
-                cr.move_to(right, up)
-                cr.line_to(right, down)
-                cr.stroke()
-                
-                cr.move_to(right, down)
-                cr.line_to(left, down)
-                cr.stroke()
-
             # Draw transition clip image 
             if ((scale_length > FILL_MIN) and hasattr(clip, "rendered_type")):
                 cr.set_source_rgb(1.0, 1.0, 1.0)
@@ -987,7 +942,7 @@ class TimeLineCanvas:
                     cr.close_path()
                     cr.fill()
 
-            # Sync stripe
+            # Draw sync stripe
             if scale_length > FILL_MIN: 
                 if clip.sync_data != None:
                     stripe_color = SYNC_OK_COLOR
@@ -997,20 +952,17 @@ class TimeLineCanvas:
                         stripe_color = SYNC_OFF_COLOR
                     else:
                         stripe_color = SYNC_GONE_COLOR
-                        
-                    #cr.rectangle(scale_in + 1, y + track_height - SYNC_STRIPE_HEIGHT, 
-                    #                scale_length - 2, SYNC_STRIPE_HEIGHT)
-                    SYNC_SAW_WIDTH = 5
-                    SYNC_SAW_HEIGHT = 5
+
                     dx = scale_in + 1
                     dy = y + track_height - SYNC_STRIPE_HEIGHT
                     saw_points = []
                     saw_points.append((dx, dy))
+                    saw_delta = SYNC_SAW_HEIGHT
                     for i in range(0, int((scale_length - 2) / SYNC_SAW_WIDTH) + 1):
                         dx += SYNC_SAW_WIDTH
-                        dy += SYNC_SAW_HEIGHT
+                        dy += saw_delta
                         saw_points.append((dx, dy))
-                        SYNC_SAW_HEIGHT = -(SYNC_SAW_HEIGHT)
+                        saw_delta = -(saw_delta)
 
                     px = scale_in + 1 + scale_length - 2
                     py = y + track_height
@@ -1018,13 +970,64 @@ class TimeLineCanvas:
                     for p in reversed(saw_points):
                         cr.line_to(*p)
                     cr.line_to(scale_in + 1, y + track_height)
-                    #cr.move_to(dx, y + track_height)
-                    #cr.move_to(scale_in + 1, y + track_height)
                     cr.close_path()
+
                     cr.set_source_rgb(*stripe_color)
                     cr.fill_preserve()
                     cr.set_source_rgb(0.3, 0.3, 0.3)
                     cr.stroke()
+    
+            # Draw clip frame 
+            cr.set_line_width(1.0)
+            if scale_length > FILL_MIN:
+                cr.set_source_rgb(0, 0, 0)
+            else:    
+                cr.set_source_rgb(0.3, 0.3, 0.3)
+            cr.rectangle(scale_in + 0.5,
+                         y + 0.5, scale_length, 
+                         track_height)
+            cr.stroke()
+        
+            # No further drawing for blank clip 
+            if clip.is_blanck_clip:
+                clip_start_frame += clip_length
+                continue
+
+
+            # Save sync children data
+            if clip.sync_data != None:
+                self.sync_children.append((clip, track, scale_in))
+
+            
+            # Emboss
+            if scale_length > EMBOSS_MIN:
+                # Corner points
+                left = scale_in + 1.5
+                up = y + 1.5
+                right = left + scale_length - 2.0
+                down = up + track_height - 2.0
+                
+                # Draw lines
+                cr.set_source_rgb(0.75, 0.43, 0.79)
+                cr.move_to(left, down)
+                cr.line_to(left, up)
+                cr.stroke()
+                
+                cr.move_to(left, up)
+                cr.line_to(right, up)
+                cr.stroke()
+                
+                cr.set_source_rgb(0.47, 0.28, 0.51)
+                cr.move_to(right, up)
+                cr.line_to(right, down)
+                cr.stroke()
+                
+                cr.move_to(right, down)
+                cr.line_to(left, down)
+                cr.stroke()
+            
+
+
                     
             # Draw audio level data
             if clip.waveform_data != None and scale_length > FILL_MIN:
