@@ -1406,6 +1406,44 @@ def _create_and_do_sync_actions_list(resync_data_list):
 
     return actions
 
+# ------------------------------------------------- RESYNC CLIP SEQUENCE
+# "clips"
+def resync_clips_sequence_action(data):
+    action = EditAction(_resync_clips_sequence_undo, _resync_clips_sequence_redo, data)
+    return action
+
+def _resync_clips_sequence_undo(self):
+     if self.sync_action != None:
+        self.sync_action.undo_func(self.sync_action)
+        
+def _resync_clips_sequence_redo(self):
+    resync_data = resync.get_resync_data_list_for_clip_list(self.clips)
+    clip, track, index, pos_offset = resync_data[0]
+
+    # If we're in sync, do nothing
+    if pos_offset == clip.sync_data.pos_offset:
+        self.sync_action = None
+    else:
+        # Get new in and out frames for clips 
+        diff = pos_offset - clip.sync_data.pos_offset
+        over_in = track.clip_start(index) - diff
+
+        clip_last, track, index_last, pos_offset = resync_data[-1]
+        last_over_in = track.clip_start(index_last) - diff
+        over_out = last_over_in + (clip_last.clip_out - clip_last.clip_in + 1)
+
+        # Create, do and sacve edit action.
+        data = {"track":track,
+                "over_in":over_in,
+                "over_out":over_out,
+                "selected_range_in":index,
+                "selected_range_out":index_last,
+                "move_edit_done_func":None}
+
+        action = overwrite_move_action(data)
+        action.redo_func(action)
+        self.sync_action = action
+
 # ------------------------------------------------- SET SYNC
 # "child_index","child_track","parent_index","parent_track"
 def set_sync_action(data):

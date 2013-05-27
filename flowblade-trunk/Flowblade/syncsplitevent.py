@@ -189,11 +189,43 @@ def resync_selected():
 
     # Selection not valid after resync action
     movemodes.clear_selected_clips()
-    
-    data = {"clips":clip_list}
-    action = edit.resync_some_clips_action(data)
-    action.do_edit()
-    
+
+    # Chack if synced clips have same or consecutive parent clips
+    all_same_or_consecutive = True
+    master_id = -1
+    current_master_clip = -1
+    current_master_index = -1
+    master_track = current_sequence().first_video_track()
+    for t in clip_list:
+        clip, track = t
+        try:
+            if master_id == -1:
+                master_id = clip.sync_data.master_clip.id
+                current_master_clip = clip.sync_data.master_clip
+                current_master_index = master_track.clips.index(current_master_clip)
+            else:
+                if clip.sync_data.master_clip.id != master_id:
+                    next_master_index = master_track.clips.index(clip.sync_data.master_clip)
+                    if current_master_index + 1 == next_master_index:
+                        # Masters are consecutive, save data to test next
+                        master_id = clip.sync_data.master_clip.id
+                        current_master = clip.sync_data.master_clip
+                        current_master_index = master_track.clips.index(current_master_clip)
+                    else:
+                        all_same_or_consecutive = False
+        except:
+            all_same_or_consecutive = False
+
+    # If clips are all for same or consecutive sync parent clips, sync them as a unit.
+    if len(clip_list) > 1 and all_same_or_consecutive == True:
+        data = {"clips":clip_list}
+        action = edit.resync_clips_sequence_action(data)
+        action.do_edit()
+    else: # Single or non-consecutive clips are synched separately
+        data = {"clips":clip_list}
+        action = edit.resync_some_clips_action(data)
+        action.do_edit()
+
     updater.repaint_tline()
 
 def clear_sync_relation(popup_data):
