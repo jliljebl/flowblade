@@ -1087,11 +1087,11 @@ class TimeLineCanvas:
 
             # Get next draw position
             clip_start_frame += clip_length
-            
+
         # Fill rest of track with bg color, if needed
         scale_in = clip_start_frame  * pix_per_frame
         if scale_in < width:
-            cr.rectangle(scale_in + 0.5, y + 1, width - scale_in, track_height - 2)
+            cr.rectangle(scale_in + 0.5, y, width - scale_in, track_height + 1)
             cr.set_source_rgb(*BG_COLOR)  
             cr.fill()
 

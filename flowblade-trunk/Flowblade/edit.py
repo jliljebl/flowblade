@@ -1495,10 +1495,10 @@ def _clear_sync_undo(self):
 def _clear_sync_redo(self):
     # Save sync data
     self.sync_data = self.child_clip.sync_data
-    
+
     # Clear child sync data
     self.child_clip.sync_data = None
-    
+
     # Claer resync data
     resync.clip_sync_cleared(self.child_clip)
     
