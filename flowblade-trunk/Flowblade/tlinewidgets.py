@@ -811,6 +811,7 @@ class TimeLineCanvas:
             
         # Get frame of clip.clip_in_in on timeline.
         clip_start_in_tline = track.clip_start(start)
+
         # Pos is the first drawn frame.
         # clip_start_frame is always less or equal to zero as this is
         # the first maybe partially displayed clip.
@@ -976,7 +977,7 @@ class TimeLineCanvas:
                     cr.fill_preserve()
                     cr.set_source_rgb(0.3, 0.3, 0.3)
                     cr.stroke()
-    
+
             # Draw clip frame 
             cr.set_line_width(1.0)
             if scale_length > FILL_MIN:
@@ -988,17 +989,15 @@ class TimeLineCanvas:
                          track_height)
             cr.stroke()
         
-            # No further drawing for blank clip 
+            # No further drawing for blank clips
             if clip.is_blanck_clip:
                 clip_start_frame += clip_length
                 continue
-
 
             # Save sync children data
             if clip.sync_data != None:
                 self.sync_children.append((clip, track, scale_in))
 
-            
             # Emboss
             if scale_length > EMBOSS_MIN:
                 # Corner points
@@ -1025,10 +1024,7 @@ class TimeLineCanvas:
                 cr.move_to(right, down)
                 cr.line_to(left, down)
                 cr.stroke()
-            
 
-
-                    
             # Draw audio level data
             if clip.waveform_data != None and scale_length > FILL_MIN:
                 if not clip.selected:

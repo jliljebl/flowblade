@@ -776,6 +776,8 @@ class EditorWindow:
             cursor = gtk.gdk.Cursor(display, ONEROLL_CURSOR, 9, 9)
         elif mode == editorstate.ONE_ROLL_TRIM_NO_EDIT:
             cursor = gtk.gdk.Cursor(display, ONEROLL_NO_EDIT_CURSOR, 9, 9)
+        elif mode == editorstate.SELECT_PARENT_CLIP:
+            cursor =  gtk.gdk.Cursor(gtk.gdk.TCROSS)
         else:
             cursor = gtk.gdk.Cursor(gtk.gdk.LEFT_PTR)
         
