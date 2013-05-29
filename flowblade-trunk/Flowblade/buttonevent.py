@@ -364,15 +364,15 @@ def add_transition_pressed(retry_from_render_folder_select=False):
         print "so selection track"
         # INFOWINDOW
         return
-        
+
     track = get_track(movemodes.selected_track)
     clip_count = movemodes.selected_range_out - movemodes.selected_range_in + 1 # +1 out incl.
-    
+
     if not ((clip_count == 2) or (clip_count == 1)):
         # INFOWINDOW
         print "clip count"
         return
-    
+
     if track.id < current_sequence().first_video_index and clip_count == 1:
         _no_audio_tracks_mixing_info()
         return
@@ -387,7 +387,7 @@ def add_transition_pressed(retry_from_render_folder_select=False):
         _do_rendered_transition(track)
     else:
         _do_rendered_fade(track)
-        
+
 def _do_rendered_transition(track):
     from_clip = track.clips[movemodes.selected_range_in]
     to_clip = track.clips[movemodes.selected_range_out]
