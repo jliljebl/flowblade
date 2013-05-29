@@ -21,6 +21,7 @@
 """
 Module contains main editor window object.
 """
+
 import cairo
 import gtk
 import pango

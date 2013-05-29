@@ -372,6 +372,10 @@ def add_transition_pressed(retry_from_render_folder_select=False):
         # INFOWINDOW
         print "clip count"
         return
+    
+    if track.id < current_sequence().first_video_index and clip_count == 1:
+        _no_audio_tracks_mixing_info()
+        return
 
     if editorpersistance.prefs.render_folder == None:
         if retry_from_render_folder_select == True:
@@ -418,8 +422,12 @@ def _do_rendered_transition(track):
                        "from_handle":from_handle,
                        "to_handle":to_handle,
                        "max_length":max_length}
-    dialogs.transition_edit_dialog(_add_transition_dialog_callback, transition_data)
 
+    if track.id >= current_sequence().first_video_index:
+        dialogs.transition_edit_dialog(_add_transition_dialog_callback, transition_data)
+    else:
+        _no_audio_tracks_mixing_info()
+        
 def _add_transition_render_folder_select_callback(dialog, response_id, file_select):
     folder = file_select.get_filenames()[0]
     dialog.destroy()
@@ -548,8 +556,16 @@ def _do_rendered_fade(track):
 
     transition_data = {"track":track,
                        "clip":clip}
-    
-    dialogs.fade_edit_dialog(_add_fade_dialog_callback, transition_data)
+
+    if track.id >= current_sequence().first_video_index:
+        dialogs.fade_edit_dialog(_add_fade_dialog_callback, transition_data)
+    else:
+        _no_audio_tracks_mixing_info()
+
+def _no_audio_tracks_mixing_info():
+    primary_txt = _("Only Video Track mix / fades available")
+    secondary_txt = _("Unfortunately rendered mixes and fades can currently\nonly be applied on clips on Video Tracks.")
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
 
 def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition_data):
     if response_id != gtk.RESPONSE_ACCEPT:
