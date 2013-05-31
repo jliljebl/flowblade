@@ -36,6 +36,7 @@ from editorstate import current_sequence
 from editorstate import PLAYER
 from editorstate import timeline_visible
 import keyframeeditor
+import medialog
 import monitorevent
 import titler
 import updater
@@ -275,9 +276,12 @@ def _handle_tline_key_event(event):
 
         # L
         if event.keyval == gtk.keysyms.l:
-            monitorevent.l_pressed()
+            if (event.state & gtk.gdk.CONTROL_MASK):
+                medialog.log_range_clicked()
+            else:
+                monitorevent.l_pressed()
             return True
-        
+
         # DELETE
         if event.keyval == gtk.keysyms.Delete:
             # Clip selection and compositor selection are mutually exclusive, 
@@ -328,7 +332,10 @@ def _handle_extended_tline_focus_events(event):
 
     # L
     if event.keyval == gtk.keysyms.l:
-        monitorevent.l_pressed()
+        if (event.state & gtk.gdk.CONTROL_MASK):
+            medialog.log_range_clicked()
+        else:
+            monitorevent.l_pressed()
         return True
 
     # TAB

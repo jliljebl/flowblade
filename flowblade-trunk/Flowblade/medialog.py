@@ -234,16 +234,7 @@ def get_log_event_clip(log_event):
     # Set clip in and out points
     new_clip.clip_in = log_event.mark_in
     new_clip.clip_out = log_event.mark_out
-    #new_clip.mark_in = log_event.mark_in uncomment if some bug comes along that needs these to be here
-    #new_clip.mark_out = log_event.mark_out
     new_clip.name = log_event.name
-
-    """
-    if new_clip.mark_in == -1:
-         new_clip.mark_in = 0
-    if new_clip.mark_out == -1:
-        new_clip.mark_out = new_clip.get_length() - 1 #-1 == out inclusive
-    """
     return new_clip
 
 # ------------------------------------------------------------ gui
