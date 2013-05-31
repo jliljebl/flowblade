@@ -21,6 +21,7 @@
 """
 Module handles keyevents.
 """
+
 import gtk
 import threading
 

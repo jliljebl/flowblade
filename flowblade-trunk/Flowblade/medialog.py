@@ -24,10 +24,12 @@ import pango
 
 import appconsts
 import edit
+import gui
 import guicomponents
 import guiutils
 import editorstate
 from editorstate import PROJECT
+import monitorevent
 import respaths
 import updater
 import utils
@@ -131,12 +133,17 @@ def register_media_marks_set_event(manual_event=False):
                                 media_file.name,
                                 media_file.path)
     editorstate.PROJECT().media_log.append(log_event)
+
     return True
 
 def log_range_clicked():
     register_media_marks_set_event(True)
     widgets.media_log_view.fill_data_model()
-
+    max_val = widgets.media_log_view.treeview.get_vadjustment().get_upper()
+    gui.middle_notebook.set_current_page(1)
+    widgets.media_log_view.treeview.get_selection().select_path(str(len(get_current_log_events())-1))
+    widgets.media_log_view.treeview.get_vadjustment().set_value(max_val)
+    
 def logging_mode_changed(combo):
     new_log_mode = combo.get_active() # selection index is the global variable for active log mode too
     if (new_log_mode == LOGGING_MODE_AUTO_ALL) or (new_log_mode == LOGGING_MODE_AUTO_INSERTS):
@@ -178,7 +185,8 @@ def display_item(row):
     media_file.mark_in = event_item.mark_in
     media_file.mark_out = event_item.mark_out
     updater.set_and_display_monitor_media_file(media_file)
-    
+    monitorevent.to_mark_in_pressed()
+
 def log_list_view_button_press(treeview, event):
     path_pos_tuple = treeview.get_path_at_pos(int(event.x), int(event.y))
     if path_pos_tuple == None:
@@ -224,6 +232,7 @@ def append_log_events():
     
     data = {"track":track,
             "clips":clips}
+
     action = edit.append_media_log_action(data)
     action.do_edit()
 
@@ -237,6 +246,12 @@ def get_log_event_clip(log_event):
     new_clip.name = log_event.name
     return new_clip
 
+def display_log_clip_double_click_listener(treeview, path, view_column):
+    row = int(max(path))
+    data = ("display", row, treeview)
+    _log_event_menu_item_selected(treeview, data)
+
+
 # ------------------------------------------------------------ gui
 def get_media_log_list_view():
     media_log_view = MediaLogListView()
@@ -246,7 +261,10 @@ def get_media_log_list_view():
 
 def update_media_log_view():
     widgets.media_log_view.fill_data_model()
-    
+    # Does not show last line, do we need timer?
+    max_val = widgets.media_log_view.treeview.get_vadjustment().get_upper()
+    widgets.media_log_view.treeview.get_vadjustment().set_value(max_val)
+
     
 class MediaLogListView(gtk.VBox):
 
@@ -271,7 +289,8 @@ class MediaLogListView(gtk.VBox):
         tree_sel = self.treeview.get_selection()
         tree_sel.set_mode(gtk.SELECTION_MULTIPLE)
         self.treeview.connect("button-press-event", log_list_view_button_press)
-
+        self.treeview.connect("row-activated", display_log_clip_double_click_listener)
+                              
         # Column views
         self.icon_col_1 = gtk.TreeViewColumn("icon1")
         self.icon_col_1.set_title(_("Star"))
@@ -365,11 +384,8 @@ class MediaLogListView(gtk.VBox):
     def fill_data_model(self):
         self.storemodel.clear()
         star_icon_path = respaths.IMAGE_PATH + "star.png"
-    
-        event_type = widgets.view_type_combo.get_active() - 1 # -1 produces values corresponding to media log event types in appconsts.py
-        log_events = PROJECT().get_filtered_media_log_events(event_type, 
-                                                             widgets.star_check.get_active(),
-                                                             widgets.star_not_active_check.get_active())
+
+        log_events = get_current_log_events()
         for log_event in log_events:
             if log_event.starred == True:
                 icon = gtk.gdk.pixbuf_new_from_file(star_icon_path)
@@ -390,6 +406,12 @@ class MediaLogListView(gtk.VBox):
         model, rows = self.treeview.get_selection().get_selected_rows()
         return rows
 
+def get_current_log_events():
+    event_type = widgets.view_type_combo.get_active() - 1 # -1 produces values corresponding to media log event types in appconsts.py
+    return PROJECT().get_filtered_media_log_events(event_type, 
+                                                   widgets.star_check.get_active(),
+                                                   widgets.star_not_active_check.get_active())
+                                                             
 def get_media_log_events_panel(events_list_view):
     global widgets
 
@@ -469,8 +491,6 @@ def get_media_log_events_panel(events_list_view):
     row2 =  gtk.HBox()
     row2.pack_start(logging_mode_combo, False, True, 0)
     row2.pack_start(widgets.log_range, False, True, 0)
-    #row2.pack_start(gtk.Label(), True, True, 0)
-    #row2.pack_start(to_monitor, False, True, 0)
     row2.pack_start(gtk.Label(), True, True, 0)
     row2.pack_start(append_displayed, False, True, 0)
 
