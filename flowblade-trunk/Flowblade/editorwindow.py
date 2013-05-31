@@ -416,6 +416,7 @@ class EditorWindow:
         media_log_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
         media_log_panel.set_padding(6, 6, 6, 6)
         media_log_panel.add(media_log_vbox)
+        self.media_log_events_list_view = media_log_events_list_view
 
         # Sequence list
         self.sequence_list_view = guicomponents.SequenceListView(

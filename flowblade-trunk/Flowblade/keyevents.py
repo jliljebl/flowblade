@@ -449,6 +449,11 @@ def _handle_delete():
         clipeffectseditor.delete_effect_pressed()
         return True
 
+    # Delete media log event
+    if gui.editor_window.media_log_events_list_view.get_focus_child() != None:
+        medialog.delete_selected()
+        return True
+
     focus_editor = _get_focus_keyframe_editor(compositeeditor.keyframe_editor_widgets)
     if focus_editor != None:
         focus_editor.delete_pressed()
