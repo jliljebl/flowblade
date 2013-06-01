@@ -58,6 +58,10 @@ M_PI = math.pi
 
 NO_HIT = -1
 
+# Focus groups are used to test if one widget in the group of buttons widgets has keyboard focus
+DEFAULT_FOCUS_GROUP = "default_focus_group"
+focus_groups = {DEFAULT_FOCUS_GROUP:[]}
+
 
 class AbstractGlassButtons:
 
@@ -69,7 +73,7 @@ class AbstractGlassButtons:
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
-        self.widget.grab_focus_on_press = False
+        #self.widget.grab_focus_on_press = False
 
         self.pressed_callback_funcs = None # set later
         self.released_callback_funcs = None # set later
@@ -238,6 +242,8 @@ class PlayerButtons(AbstractGlassButtons):
         self.pressed_callback_funcs = None # set using set_callbacks()
 
         self.set_sensitive(True)
+        
+        focus_groups[DEFAULT_FOCUS_GROUP].append(self.widget)
 
     def set_trim_sensitive_pattern(self):
         self.sensitive = [True, True, True, True, False, False, False, False, False]
@@ -246,13 +252,6 @@ class PlayerButtons(AbstractGlassButtons):
     def set_normal_sensitive_pattern(self):
         self.set_sensitive(True)
         self.widget.queue_draw()
-
-    """
-    def set_trim_playback_buttons_sensitive(self, next_enabled, prev_enabled):
-        self.sensitive[2] = next_enabled
-        self.sensitive[3] = prev_enabled
-        self.widget.queue_draw()
-    """
 
     # ------------------------------------------------------------- mouse events
     def _press_event(self, event):
@@ -297,11 +296,12 @@ class PlayerButtons(AbstractGlassButtons):
 
 class GlassButtonsGroup(AbstractGlassButtons):
 
-    def __init__(self, button_width, button_height, button_y, image_x_default, image_y_default):
+    def __init__(self, button_width, button_height, button_y, image_x_default, image_y_default, focus_group=DEFAULT_FOCUS_GROUP):
         AbstractGlassButtons.__init__(self, button_width, button_height, button_y, button_width, button_height)
         self.released_callback_funcs = []
         self.image_x_default = image_x_default
         self.image_y_default = image_y_default
+        focus_groups[focus_group].append(self.widget)
 
     def add_button(self, pix_buf, release_callback):
         self.icons.append(pix_buf)
@@ -361,4 +361,11 @@ class GlassButtonsToggleGroup(GlassButtonsGroup):
 
     def _release_event(self, event):
         pass
-        
+
+def focus_group_has_focus(focus_group):
+    group = focus_groups[focus_group]
+    for widget in group:
+        if widget.is_focus():
+            return True
+    
+    return False
