@@ -21,6 +21,7 @@
 """
 Module handles button edit events from buttons in the middle bar.
 """
+
 import gtk
 import os
 import time #added for testing

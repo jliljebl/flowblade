@@ -460,20 +460,26 @@ def _move_mode_pressed(event, frame):
             pressed_on_selected = True
     # case: new single clip pressed
     else:
-        if not pressed_clip.is_blanck_clip:
-            # Pressing on selected clip keeps selection unchanged
-            if clip_index < selected_range_in or clip_index > selected_range_out:
-                select_clip(track.id, clip_index)
-                pressed_on_selected = False
-            # Pressing on non-selected clip clears current selection and selects newly selected clip
-            else:
-                pressed_on_selected = True
-        else:
-            # Black clip, see comment above
-            range_in, range_out = _get_blanck_range(track, clip_index)
-            _select_multiple_clips(track.id, range_in, range_out)
+        if selected_track != track.id:
+            clear_selected_clips()
+            select_clip(track.id, clip_index)
             pressed_on_selected = False
-            drag_disabled = True
+        else:
+            if not pressed_clip.is_blanck_clip:
+                # Pressing on selected clip keeps selection unchanged
+                if clip_index < selected_range_in or clip_index > selected_range_out:
+                    select_clip(track.id, clip_index)
+                    pressed_on_selected = False
+                    print "same"
+                # Pressing on non-selected clip clears current selection and selects newly selected clip
+                else:
+                    pressed_on_selected = True
+            else:
+                # Black clip, see comment above
+                range_in, range_out = _get_blanck_range(track, clip_index)
+                _select_multiple_clips(track.id, range_in, range_out)
+                pressed_on_selected = False
+                drag_disabled = True
 
     # Get length info on selected clips
     clip_lengths = []
