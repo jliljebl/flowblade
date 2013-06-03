@@ -318,7 +318,7 @@ class EditAction:
     def do_edit(self):
         if self.exit_active_trimmode_on_edit:
             trimmodes.set_no_edit_trim_mode()
-        
+
         self.redo()
         undo.register_edit(self)
         if self.turn_on_stop_for_edit:

@@ -189,7 +189,12 @@ def _handle_tline_key_event(event):
         gui.editor_window.handle_two_roll_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
-    
+
+    # X 
+    if event.keyval == gtk.keysyms.x:
+        buttonevent.cut_pressed()
+        return True
+
     # Key bindings for MOVE MODES
     if editorstate.current_is_move_mode():
          # UP ARROW, next cut
@@ -264,11 +269,6 @@ def _handle_tline_key_event(event):
             # so max one one these will actually delete something
             buttonevent.splice_out_button_pressed()
             compositormodes.delete_current_selection()
-
-        # X 
-        if event.keyval == gtk.keysyms.x:
-            buttonevent.cut_pressed()
-            return True
 
     return False
 

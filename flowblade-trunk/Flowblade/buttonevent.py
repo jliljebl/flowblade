@@ -40,6 +40,7 @@ from editorstate import current_sequence
 from editorstate import PLAYER
 from editorstate import timeline_visible
 from editorstate import MONITOR_MEDIA_FILE
+from editorstate import EDIT_MODE
 import medialog
 import movemodes
 import mlttransitions
@@ -93,6 +94,14 @@ def cut_pressed():
     if not timeline_visible():
         updater.display_sequence_in_monitor()
 
+    if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
+        editevent.oneroll_trim_no_edit_init()
+        return
+
+    if EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
+        editevent.tworoll_trim_no_edit_init()
+        return
+        
     tline_frame = PLAYER().current_frame()
 
     movemodes.clear_selected_clips()

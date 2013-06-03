@@ -486,21 +486,11 @@ def set_trim_mode_gui():
     """
     display_sequence_in_monitor()
 
-    _set_move_mode_buttons_enabled(False)
-    #gui.pos_bar.disabled = True
-    
-    menu_edit_items_sensitive(False)
-
 def set_move_mode_gui():
     """
     Called when user selects move mode
     """
     display_sequence_in_monitor()
-    
-    _set_move_mode_buttons_enabled(True)
-    #gui.pos_bar.disabled = False
-
-    menu_edit_items_sensitive(True)
 
 def set_transition_render_edit_menu_items_sensitive(range_start, range_end):
     if not editorstate.current_is_move_mode():
@@ -521,46 +511,6 @@ def set_transition_render_edit_menu_items_sensitive(range_start, range_end):
     else:
         render_transition.set_sensitive(False)
         render_fade.set_sensitive(False)
-
-def menu_edit_items_sensitive(sensitive):
-    pass
-    """
-    ui = gui.editor_window.uimanager
-    ui.get_widget('/MenuBar/EditMenu/AddFromMonitor').set_sensitive(sensitive)
-    ui.get_widget('/MenuBar/EditMenu/CutClip').set_sensitive(sensitive)
-    ui.get_widget('/MenuBar/EditMenu/SpliceOutClip').set_sensitive(sensitive)
-    ui.get_widget('/MenuBar/EditMenu/DeleteClip').set_sensitive(sensitive)
-    ui.get_widget('/MenuBar/EditMenu/ResyncSelected').set_sensitive(sensitive)
-    ui.get_widget('/MenuBar/EditMenu/ClearFilters').set_sensitive(sensitive)
-    ui.get_widget('/MenuBar/EditMenu/AddTransition').set_sensitive(sensitive)
-    ui.get_widget('/MenuBar/EditMenu/AddFade').set_sensitive(sensitive)
-    ui.get_widget('/MenuBar/EditMenu/ChangeSequenceTracks').set_sensitive(sensitive)
-    """
-    
-def _set_move_mode_buttons_enabled(enabled):
-    """
-    Sets buttons that are only used in move modes enabled/disabled
-    """
-    pass
-    """
-    gui.editor_window.undo_redo.set_sensitive(enabled)
-    gui.editor_window.undo_redo.widget.queue_draw()
-    gui.editor_window.monitor_insert_buttons.set_sensitive(enabled)
-    gui.editor_window.monitor_insert_buttons.widget.queue_draw()
-    gui.editor_window.edit_buttons.set_sensitive(enabled)
-    gui.editor_window.edit_buttons.widget.queue_draw()
-    gui.editor_window.zoom_buttons.set_sensitive(enabled)
-    gui.editor_window.zoom_buttons.widget.queue_draw()
-    if enabled == False:
-        gui.editor_window.player_buttons.set_trim_sensitive_pattern()
-        set_next_prev_enabled(True, False)
-    else:
-        gui.editor_window.player_buttons.set_normal_sensitive_pattern()
-    """
-"""
-def set_next_prev_enabled(next_enabled, prev_enabled):
-    gui.editor_window.player_buttons.set_trim_playback_buttons_sensitive(next_enabled, prev_enabled)
-"""
 
 # ------------------------------------------------ notebook
 def switch_notebook_panel(index):

@@ -237,6 +237,7 @@ def oneroll_trim_mode_init(x, y):
 def tworoll_trim_no_edit_init():
     stop_looping() # Stops looping 
     editorstate.edit_mode = editorstate.TWO_ROLL_TRIM_NO_EDIT
+    gui.editor_window.set_cursor_to_mode()
     tlinewidgets.set_edit_mode(None, None) # No overlays are drwn in this edit mode
     movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
     updater.set_trim_mode_gui()
