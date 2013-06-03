@@ -314,7 +314,7 @@ class EditAction:
         # Remove when fixed upstream.
         self.stop_for_edit = False 
         self.turn_on_stop_for_edit = False # set true in redo_func for edits that need it
-        
+
     def do_edit(self):
         if self.exit_active_trimmode_on_edit:
             trimmodes.set_no_edit_trim_mode()

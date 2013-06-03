@@ -1030,7 +1030,7 @@ class TimeLineCanvas:
                 if not clip.selected:
                     cr.set_source_rgb(0, 0, 0)
                 else:
-                    cr.set_source_rgb(0.4, 0.4, 0.4)
+                    cr.set_source_rgb(0.2, 0.2, 0.2)
                 if track.height == sequence.TRACK_HEIGHT_NORMAL:
                     y_pad = WAVEFORM_PAD_LARGE
                     bar_height = 40.0
