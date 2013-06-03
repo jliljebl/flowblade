@@ -470,7 +470,6 @@ def _move_mode_pressed(event, frame):
                 if clip_index < selected_range_in or clip_index > selected_range_out:
                     select_clip(track.id, clip_index)
                     pressed_on_selected = False
-                    print "same"
                 # Pressing on non-selected clip clears current selection and selects newly selected clip
                 else:
                     pressed_on_selected = True

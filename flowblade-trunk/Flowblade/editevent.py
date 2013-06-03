@@ -130,6 +130,23 @@ def set_default_edit_mode():
     gui.editor_window.handle_insert_move_mode_button_press()
     gui.editor_window.set_mode_selector_to_mode()
 
+def set_clip_monitor_edit_mode():
+    """
+    Going to clip monitor exits active trimodes into non active trimmodes
+    """
+    if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
+        oneroll_trim_no_edit_init()
+    elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM_NO_EDIT:
+        pass
+    elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
+        tworoll_trim_no_edit_init()
+    elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM_NO_EDIT:
+        pass
+    else:
+        gui.editor_window.handle_insert_move_mode_button_press()
+        
+    gui.editor_window.set_mode_selector_to_mode()
+
 def set_post_undo_redo_edit_mode():
     if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
         oneroll_trim_no_edit_init()
@@ -968,7 +985,7 @@ def track_lock_check_and_user_info(track, calling_function="this ain't used anym
         secondary_txt = _("Track ") + track_name + _(" is locked. Unlock track to edit it.")
         dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
         return True
-    
+
     return False
 
 #------------------------------------------- tline markers

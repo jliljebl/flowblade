@@ -266,7 +266,7 @@ def create_gui():
     """
     tlinewidgets.load_icons()
 
-    updater.set_default_edit_mode_callback = editevent.set_default_edit_mode
+    updater.set_clip_edit_mode_callback = editevent.set_clip_monitor_edit_mode
     updater.load_icons()
 
     # Create window and all child components
