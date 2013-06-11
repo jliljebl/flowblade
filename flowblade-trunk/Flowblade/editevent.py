@@ -355,8 +355,7 @@ def tline_canvas_mouse_pressed(event, frame):
     # editor state.
     # RIGHT BUTTON: seek frame or display clip menu
     if (event.button == 3):
-        if (editorstate.current_is_move_mode()
-            and timeline_visible()):
+        if ((not editorstate.current_is_active_trim_mode()) and timeline_visible()):
             if not(event.state & gtk.gdk.CONTROL_MASK):
                 success = _display_clip_menu(event.y, event, frame)
                 if not success:

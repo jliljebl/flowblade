@@ -71,6 +71,11 @@ def current_is_move_mode():
         return True
     return False
 
+def current_is_active_trim_mode():
+    if ((edit_mode == ONE_ROLL_TRIM) or (edit_mode == TWO_ROLL_TRIM)):
+        return True
+    return False
+    
 def current_sequence():
     return project.c_seq
 
