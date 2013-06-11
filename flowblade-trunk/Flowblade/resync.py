@@ -83,6 +83,8 @@ def calculate_and_set_child_clip_sync_states():
             child_clip.sync_data.sync_state = appconsts.SYNC_CORRECT
         else:
             child_clip.sync_data.sync_state = appconsts.SYNC_OFF
+        
+        child_clip.sync_diff = pos_offset - child_clip.sync_data.pos_offset
 
 def get_resync_data_list():
     # Returns list of tuples with data needed to do resync

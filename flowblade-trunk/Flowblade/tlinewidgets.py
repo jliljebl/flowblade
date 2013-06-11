@@ -977,6 +977,15 @@ class TimeLineCanvas:
                     cr.fill_preserve()
                     cr.set_source_rgb(0.3, 0.3, 0.3)
                     cr.stroke()
+                    
+                    if clip.sync_data.sync_state != appconsts.SYNC_CORRECT:
+                        cr.set_source_rgb(1, 1, 1)
+                        cr.select_font_face ("sans-serif",
+                                             cairo.FONT_SLANT_NORMAL,
+                                             cairo.FONT_WEIGHT_NORMAL)
+                        cr.set_font_size(9)
+                        cr.move_to(scale_in + TEXT_X, y + track_height - 2)
+                        cr.show_text(str(clip.sync_diff))
 
             # Draw clip frame 
             cr.set_line_width(1.0)
@@ -1083,7 +1092,19 @@ class TimeLineCanvas:
                     cr.set_source_pixbuf(icon, int(scale_in) + int(scale_length) - ix, y + iy)
                     cr.paint()
                     icon_slot = icon_slot + 1
-
+            
+            # Draw sync offset value
+            if scale_length > FILL_MIN: 
+                if clip.sync_data != None:
+                    if clip.sync_data.sync_state != appconsts.SYNC_CORRECT:
+                        cr.set_source_rgb(1, 1, 1)
+                        cr.select_font_face ("sans-serif",
+                                             cairo.FONT_SLANT_NORMAL,
+                                             cairo.FONT_WEIGHT_NORMAL)
+                        cr.set_font_size(9)
+                        cr.move_to(scale_in + TEXT_X, y + track_height - 2)
+                        cr.show_text(str(clip.sync_diff))
+                        
             # Get next draw position
             clip_start_frame += clip_length
 
