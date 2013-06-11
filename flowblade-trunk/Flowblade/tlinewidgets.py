@@ -181,7 +181,7 @@ BLANK_CLIP_COLOR_GRAD_L = (0, 0.6, 0.6, 0.65, 1)
 BLANK_CLIP_COLOR_SELECTED_GRAD = (1, 0.7, 0.7, 0.75, 1)
 BLANK_CLIP_COLOR_SELECTED_GRAD_L = (0, 0.7, 0.7, 0.75, 1)
 
-SYNC_OK_COLOR = (0.28, 0.65, 0.28)
+SYNC_OK_COLOR = (0.18, 0.55, 0.18)
 SYNC_OFF_COLOR = (0.77, 0.20, 0.3)
 SYNC_GONE_COLOR = (0.4, 0.4, 0.4)
 
@@ -1530,20 +1530,6 @@ class TimeLineFrameScale:
         # Draw pos triangle
         cr.set_source_pixbuf(TC_POINTER_HEAD, frame_x - 7.5, 0)
         cr.paint()
-        #TC_POINTER_HEAD
-        
-        """
-        cr.move_to(frame_x - 6, 0.5)
-        cr.line_to(frame_x + 6, 0.5)
-        cr.line_to(frame_x, 8.5)
-        cr.close_path()
-        cr.set_source_rgba(*triangle_color)
-        cr.fill_preserve()
-        cr.set_source_rgb(*triangle_stroke)
-        cr.set_line_width(2.0)
-        cr.set_line_join(cairo.LINE_JOIN_ROUND)
-        cr.stroke()
-        """
 
     def draw_mark_in(self, cr, h):
         """

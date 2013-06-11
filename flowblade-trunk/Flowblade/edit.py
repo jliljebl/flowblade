@@ -63,7 +63,7 @@ def append_clip(track, clip, clip_in, clip_out):
     track.clips.append(clip) # py
     track.append(clip, clip_in, clip_out) # mlt
     resync.clip_added_to_timeline(clip, track)
-    
+
 def _insert_clip(track, clip, index, clip_in, clip_out):
     """
     Affects MLT c-struct and python obj values.
@@ -285,6 +285,7 @@ def _overwrite_restore_out(track, moved_index, self):
         #print 'print_exc():'
         #traceback.print_exc(file=sys.stdout)
         pass
+
 
 #---------------------------------------------- EDIT ACTION
 class EditAction:
