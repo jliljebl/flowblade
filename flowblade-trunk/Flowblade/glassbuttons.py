@@ -36,7 +36,9 @@ BUTTONS_GRAD_STOPS = [   (1, 1, 1, 1, 0.2),
 
 BUTTONS_PRESSED_GRAD_STOPS = [(1, 0.7, 0.7, 0.7, 1),
                              (0, 0.5, 0.5, 0.5, 1)]
-                        
+BUTTONS_PRESSED_GRAD_STOPS_NON_GLASS = [(1, 0.5, 0.5, 0.5, 1),
+                                        (0, 0.5, 0.5, 0.5, 1)]
+                             
 LINE_GRAD_STOPS = [ (1, 0.66, 0.66, 0.66, 1),
                             (0.95, 0.7, 0.7, 0.7, 1),
                             (0.65, 0.3, 0.3, 0.3, 1),
@@ -73,7 +75,6 @@ class AbstractGlassButtons:
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
-        #self.widget.grab_focus_on_press = False
 
         self.pressed_callback_funcs = None # set later
         self.released_callback_funcs = None # set later
@@ -91,6 +92,8 @@ class AbstractGlassButtons:
         self.image_x = []
         self.image_y = []
         self.sensitive = []
+        
+        self.glass_style = True
 
     def _set_button_draw_consts(self, x, y, width, height):
         aspect = 1.0
@@ -153,14 +156,28 @@ class AbstractGlassButtons:
         # bg 
         self._set_button_draw_consts(self.button_x + 0.5, self.button_y + 0.5, buttons_width, self.button_height + 1.0)
         self._round_rect_path(cr)
-        cr.set_source_rgb(0.75, 0.75, 0.75)#*gui.bg_color_tuple)#0.75, 0.75, 0.75)
-        cr.fill_preserve()
-    
+        if self.glass_style == True:
+            cr.set_source_rgb(0.75, 0.75, 0.75)#*gui.bg_color_tuple)#0.75, 0.75, 0.75)
+            cr.fill_preserve()
+        else:
+            grad = cairo.LinearGradient (self.button_x, self.button_y, self.button_x, self.button_y + self.button_height)
+            r, g, b = gui.bg_color_tuple
+            grad.add_color_stop_rgba(1, r - 0.1, g - 0.1, b - 0.1, 1)
+            grad.add_color_stop_rgba(0, r + 0.1, g + 0.1, b + 0.1, 1)
+            cr.set_source(grad)
+            cr.fill_preserve()
+
         # Pressed button gradient
         if self.pressed_button > -1:
             grad = cairo.LinearGradient (self.button_x, self.button_y, self.button_x, self.button_y + self.button_height)
-            for stop in BUTTONS_PRESSED_GRAD_STOPS:
-                grad.add_color_stop_rgba(*stop)
+            if self.glass_style == True:
+                for stop in BUTTONS_PRESSED_GRAD_STOPS:
+                    grad.add_color_stop_rgba(*stop)
+            else:
+                grad = cairo.LinearGradient (self.button_x, self.button_y, self.button_x, self.button_y + self.button_height)
+                grad.add_color_stop_rgba(1, r - 0.3, g - 0.3, b - 0.3, 1)
+                grad.add_color_stop_rgba(0, r - 0.1, g - 0.1, b - 0.1, 1)
+
             cr.save()
             cr.set_source(grad)
             cr.clip()
@@ -187,13 +204,16 @@ class AbstractGlassButtons:
                 cr.restore()
             x += self.button_width
 
-        # Glass gradient
-        self._round_rect_path(cr)
-        grad = cairo.LinearGradient (self.button_x, self.button_y, self.button_x, self.button_y + self.button_height)
-        for stop in BUTTONS_GRAD_STOPS:
-            grad.add_color_stop_rgba(*stop)
-        cr.set_source(grad)
-        cr.fill()
+        if self.glass_style == True:
+            # Glass gradient
+            self._round_rect_path(cr)
+            grad = cairo.LinearGradient (self.button_x, self.button_y, self.button_x, self.button_y + self.button_height)
+            for stop in BUTTONS_GRAD_STOPS:
+                grad.add_color_stop_rgba(*stop)
+            cr.set_source(grad)
+            cr.fill()
+        else:
+            pass
 
         # Round line
         grad = cairo.LinearGradient (self.button_x, self.button_y, self.button_x, self.button_y + self.button_height)
