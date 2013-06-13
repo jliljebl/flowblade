@@ -562,9 +562,6 @@ def get_general_options_panel(folder_select_clicked_cb, render_folder_select_cli
     render_folder_select = gtk.Button(_("Select Folder"))
     render_folder_select.connect("clicked" , render_folder_select_clicked_cb)
 
-    display_splash_check = gtk.CheckButton()
-    display_splash_check.set_active(prefs.display_splash_screen)
-
     autosave_combo = gtk.combo_box_new_text()
     for i in range(0, len(editorpersistance.prefs.AUTO_SAVE_OPTS)):
         time, desc = editorpersistance.prefs.AUTO_SAVE_OPTS[i]
@@ -576,7 +573,6 @@ def get_general_options_panel(folder_select_clicked_cb, render_folder_select_cli
     row2 = get_two_column_box(gtk.Label(_("Remember last media directory")), open_in_last_opened_check, PREFERENCES_LEFT)
     row3 = get_two_column_box(gtk.Label(_("Undo stack size")), undo_max_spin, PREFERENCES_LEFT)
     row4 = get_two_column_box(gtk.Label(_("Thumbnail folder")), folder_select, PREFERENCES_LEFT)
-    row5 = get_two_column_box(gtk.Label(_("Display splash screen")), display_splash_check, PREFERENCES_LEFT)
     row6 = get_two_column_box(gtk.Label(_("Autosave for crash recovery every")), autosave_combo, PREFERENCES_LEFT)
     row8 = get_two_column_box(gtk.Label(_("Rendered Clips folder")), render_folder_select, PREFERENCES_LEFT)
 
@@ -586,7 +582,6 @@ def get_general_options_panel(folder_select_clicked_cb, render_folder_select_cli
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row3, False, False, 0)
     vbox.pack_start(row4, False, False, 0)
-    vbox.pack_start(row5, False, False, 0)
     vbox.pack_start(row8, False, False, 0)
     vbox.pack_start(gtk.Label(), True, True, 0)
     
@@ -594,7 +589,7 @@ def get_general_options_panel(folder_select_clicked_cb, render_folder_select_cli
     align.set_padding(12, 0, 12, 12)
     align.add(vbox)
 
-    return align, (default_profile_combo, open_in_last_opened_check, undo_max_spin, display_splash_check)
+    return align, (default_profile_combo, open_in_last_opened_check, undo_max_spin)
 
 def get_edit_prefs_panel():
     prefs = editorpersistance.prefs
@@ -632,6 +627,37 @@ def get_edit_prefs_panel():
 
     return align, (auto_play_in_clip_monitor, auto_center_on_stop, auto_move_on_edit, gfx_length_spin)
 
+def get_view_prefs_panel():
+    prefs = editorpersistance.prefs
+
+    # Widgets
+    display_splash_check = gtk.CheckButton()
+    display_splash_check.set_active(prefs.display_splash_screen)
+
+    buttons_combo = gtk.combo_box_new_text()
+    buttons_combo.append_text(_("Glass"))
+    buttons_combo.append_text(_("Simple"))
+    if prefs.buttons_style == editorpersistance.GLASS_STYLE:
+        buttons_combo.set_active(0)
+    else:
+        buttons_combo.set_active(1)
+
+    # Layout
+    row1 = get_two_column_box(gtk.Label(_("Display splash screen")), display_splash_check, PREFERENCES_LEFT)
+    row2 = get_two_column_box(gtk.Label(_("Buttons style")), buttons_combo, PREFERENCES_LEFT)
+    
+    vbox = gtk.VBox(False, 2)
+    vbox.pack_start(row1, False, False, 0)
+    vbox.pack_start(row2, False, False, 0)
+
+    vbox.pack_start(gtk.Label(), True, True, 0)
+    
+    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    align.set_padding(12, 0, 12, 12)
+    align.add(vbox)
+
+    return align, (display_splash_check, buttons_combo)
+    
 def get_file_properties_panel(data):
     media_file, img, size, length, vcodec, acodec, channels, frequency, fps = data
     

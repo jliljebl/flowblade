@@ -588,15 +588,16 @@ def preferences_dialog(callback, thumbs_clicked_callback, render_clicked_callbac
     
     gen_opts_panel, gen_opts_widgets = panels.get_general_options_panel(thumbs_clicked_callback, render_clicked_callback)
     edit_prefs_panel, edit_prefs_widgets = panels.get_edit_prefs_panel()
+    view_pres_panel, view_pref_widgets = panels.get_view_prefs_panel()
 
     notebook = gtk.Notebook()
     notebook.set_size_request(PREFERENCES_WIDTH, PREFERENCES_HEIGHT)
 
     notebook.append_page(gen_opts_panel, gtk.Label(_("General")))
     notebook.append_page(edit_prefs_panel, gtk.Label(_("Editing")))
-    notebook.append_page(gtk.Label(), gtk.Label(_("View")))
+    notebook.append_page(view_pres_panel, gtk.Label(_("View")))
 
-    dialog.connect('response', callback, (gen_opts_widgets, edit_prefs_widgets))
+    dialog.connect('response', callback, (gen_opts_widgets, edit_prefs_widgets, view_pref_widgets))
     dialog.vbox.pack_start(notebook, True, True, 0)
     _default_behaviour(dialog)
     dialog.show_all()

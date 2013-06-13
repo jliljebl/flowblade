@@ -25,6 +25,7 @@ import pango
 import pangocairo
 
 from cairoarea import CairoDrawableArea
+import editorpersistance
 import gui
 import respaths
 
@@ -91,7 +92,10 @@ class AbstractGlassButtons:
         self.image_y = []
         self.sensitive = []
         
-        self.glass_style = True
+        if editorpersistance.prefs.buttons_style == editorpersistance.GLASS_STYLE:
+            self.glass_style = True
+        else:
+            self.glass_style = False
 
     def _set_button_draw_consts(self, x, y, width, height):
         aspect = 1.0

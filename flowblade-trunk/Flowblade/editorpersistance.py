@@ -37,6 +37,9 @@ UNDO_STACK_DEFAULT = 30
 UNDO_STACK_MIN = 10
 UNDO_STACK_MAX = 100
 
+GLASS_STYLE = 0
+SIMPLE_STYLE = 1
+
 prefs = None
 recent_projects = None
 
@@ -144,22 +147,22 @@ def get_recent_projects():
         
 def update_prefs_from_widgets(widgets_tuples_tuple):
     # Unpack widgets
-    gen_opts_widgets, edit_prefs_widgets = widgets_tuples_tuple
-    default_profile_combo, open_in_last_opened_check, undo_max_spin, disp_splash = gen_opts_widgets
+    gen_opts_widgets, edit_prefs_widgets, view_prefs_widgets = widgets_tuples_tuple
+    default_profile_combo, open_in_last_opened_check, undo_max_spin = gen_opts_widgets
     auto_play_in_clip_monitor_check, auto_center_check, auto_move_on_edit, grfx_insert_length_spin = edit_prefs_widgets
-
+    disp_splash, buttons_style = view_prefs_widgets
     global prefs
     prefs.open_in_last_opended_media_dir = open_in_last_opened_check.get_active()
-    prefs.display_splash_screen = disp_splash.get_active()
-
     prefs.default_profile_name = mltprofiles.get_profile_name_for_index(default_profile_combo.get_active())
     prefs.undos_max = undo_max_spin.get_adjustment().get_value()
 
     prefs.auto_play_in_clip_monitor = auto_play_in_clip_monitor_check.get_active()
     prefs.auto_center_on_play_stop = auto_center_check.get_active()
     prefs.auto_move_after_edit = auto_move_on_edit.get_active()
-
     prefs.default_grfx_length = int(grfx_insert_length_spin.get_adjustment().get_value())
+    
+    prefs.display_splash_screen = disp_splash.get_active()
+    prefs.buttons_style = buttons_style.get_active() # styles enum values and widget indexes correspond
 
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
@@ -199,3 +202,4 @@ class EditorPreferences:
         self.mm_paned_position = 260 # Paned get/set position value
         self.render_folder = None
         self.show_sequence_profile = True
+        self.buttons_style = GLASS_STYLE

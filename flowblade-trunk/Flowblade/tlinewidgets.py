@@ -985,8 +985,8 @@ class TimeLineCanvas:
                                              cairo.FONT_WEIGHT_NORMAL)
                         cr.set_font_size(9)
                         cr.move_to(scale_in + TEXT_X, y + track_height - 2)
-                        try: # This is need for backwards compability.
-                             # projects saved before adding this feature do not have sync_diff attribute
+                        try: # This is needed for backwards compability
+                             # Projects saved before adding this feature do not have sync_diff attribute
                             cr.show_text(str(clip.sync_diff))
                         except:
                             clip.sync_diff = "n/a"
@@ -1113,7 +1113,7 @@ class TimeLineCanvas:
             # Get next draw position
             clip_start_frame += clip_length
 
-        # Fill rest of track with bg color, if needed
+        # Fill rest of track with bg color if needed
         scale_in = clip_start_frame  * pix_per_frame
         if scale_in < width:
             cr.rectangle(scale_in + 0.5, y, width - scale_in, track_height + 1)
