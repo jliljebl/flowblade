@@ -594,7 +594,8 @@ def preferences_dialog(callback, thumbs_clicked_callback, render_clicked_callbac
 
     notebook.append_page(gen_opts_panel, gtk.Label(_("General")))
     notebook.append_page(edit_prefs_panel, gtk.Label(_("Editing")))
-    
+    notebook.append_page(gtk.Label(), gtk.Label(_("View")))
+
     dialog.connect('response', callback, (gen_opts_widgets, edit_prefs_widgets))
     dialog.vbox.pack_start(notebook, True, True, 0)
     _default_behaviour(dialog)

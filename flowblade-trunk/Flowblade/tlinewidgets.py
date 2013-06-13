@@ -985,8 +985,13 @@ class TimeLineCanvas:
                                              cairo.FONT_WEIGHT_NORMAL)
                         cr.set_font_size(9)
                         cr.move_to(scale_in + TEXT_X, y + track_height - 2)
-                        cr.show_text(str(clip.sync_diff))
-
+                        try: # This is need for backwards compability.
+                             # projects saved before adding this feature do not have sync_diff attribute
+                            cr.show_text(str(clip.sync_diff))
+                        except:
+                            clip.sync_diff = "n/a"
+                            cr.show_text(str(clip.sync_diff))
+                            
             # Draw clip frame 
             cr.set_line_width(1.0)
             if scale_length > FILL_MIN:
