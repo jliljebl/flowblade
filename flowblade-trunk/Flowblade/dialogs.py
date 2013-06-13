@@ -655,7 +655,7 @@ def _default_behaviour(dialog):
     dialog.set_has_separator(False)
     dialog.set_resizable(False)
 
-def get_load_dialog():
+def load_dialog():
     dialog = gtk.Window(gtk.WINDOW_TOPLEVEL)
     dialog.set_title(_("Loading project"))
 
@@ -692,6 +692,7 @@ def get_load_dialog():
 
     return dialog
 
+"""
 def get_media_load_progress_dialog():
     dialog = gtk.Window(gtk.WINDOW_TOPLEVEL)
     dialog.set_title(_("Loading Media Files"))
@@ -727,8 +728,9 @@ def get_media_load_progress_dialog():
     dialog.info = info_label
 
     return dialog
-    
-def get_recreate_icons_progress_dialog():
+"""
+
+def recreate_icons_progress_dialog():
     dialog = gtk.Window(gtk.WINDOW_TOPLEVEL)
     dialog.set_title(_("Recreating icons"))
 
@@ -817,7 +819,7 @@ def autosave_recovery_dialog(callback, parent_window):
     dialog.connect('response', callback)
     dialog.show_all()
 
-def get_tracks_count_change_dialog(callback):
+def tracks_count_change_dialog(callback):
     default_profile_index = mltprofiles.get_default_profile_index()
     default_profile = mltprofiles.get_default_profile()
 
@@ -856,7 +858,7 @@ def get_tracks_count_change_dialog(callback):
     dialog.show_all()
 
 
-def get_new_sequence_dialog(callback, default_name):
+def new_sequence_dialog(callback, default_name):
     dialog = gtk.Dialog(_("Create New Sequence"), None,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                         (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
@@ -900,7 +902,7 @@ def get_new_sequence_dialog(callback, default_name):
     dialog.connect('response', callback, (name_entry, tracks_combo, open_check))
     dialog.show_all()
 
-def get_new_media_name_dialog(callback, media_file):
+def new_media_name_dialog(callback, media_file):
     dialog = gtk.Dialog(_("Rename New Media Object"), None,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                         (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
@@ -929,7 +931,7 @@ def get_new_media_name_dialog(callback, media_file):
     dialog.connect('response', callback, (name_entry, media_file))
     dialog.show_all()
 
-def get_new_clip_name_dialog(callback, clip):
+def new_clip_name_dialog(callback, clip):
     dialog = gtk.Dialog(_("Rename Clip"), None,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                         (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,

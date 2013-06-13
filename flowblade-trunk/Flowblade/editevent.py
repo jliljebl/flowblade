@@ -627,7 +627,7 @@ def _show_clip_info(data):
 
 def _rename_clip(data):
     clip, track, item_id, x = data
-    dialogs.get_new_clip_name_dialog(_rename_clip_edited, clip)
+    dialogs.new_clip_name_dialog(_rename_clip_edited, clip)
 
 def _rename_clip_edited(dialog, response_id, data):
     """
@@ -636,12 +636,12 @@ def _rename_clip_edited(dialog, response_id, data):
     name_entry, clip = data
     new_text = name_entry.get_text()
     dialog.destroy()
-            
+
     if response_id != gtk.RESPONSE_ACCEPT:
         return      
     if len(new_text) == 0:
         return
-    
+
     clip.name = new_text
     updater.repaint_tline()
 

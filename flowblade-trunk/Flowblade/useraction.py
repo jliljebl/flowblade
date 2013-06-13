@@ -74,7 +74,7 @@ class LoadThread(threading.Thread):
         gtk.gdk.threads_enter()
         updater.set_info_icon(gtk.STOCK_OPEN)
 
-        dialog = dialogs.get_load_dialog()
+        dialog = dialogs.load_dialog()
         persistance.load_dialog = dialog
         gtk.gdk.threads_leave()
 
@@ -500,7 +500,7 @@ def delete_media_files():
     _enable_save()
 
 def display_media_file_rename_dialog(media_file):
-    dialogs.get_new_media_name_dialog(media_file_name_edited, media_file)
+    dialogs.new_media_name_dialog(media_file_name_edited, media_file)
 
 def media_file_name_edited(dialog, response_id, data):
     """
@@ -687,11 +687,11 @@ def change_edit_sequence():
     movemodes.clear_selected_clips()
     
     app.change_current_sequence(row)
-    
+
 def add_new_sequence():
     default_name = _("sequence_") + str(PROJECT().next_seq_number)
-    dialogs.get_new_sequence_dialog(_add_new_sequence_dialog_callback, default_name)
-    
+    dialogs.new_sequence_dialog(_add_new_sequence_dialog_callback, default_name)
+
 def _add_new_sequence_dialog_callback(dialog, response_id, widgets):    
     """
     Adds new unnamed sequence and sets it selected 
@@ -789,7 +789,7 @@ def sequence_name_edited(cell, path, new_text, user_data):
     _enable_save()
 
 def change_sequence_track_count():
-    dialogs.get_tracks_count_change_dialog(_change_track_count_dialog_callback)
+    dialogs.tracks_count_change_dialog(_change_track_count_dialog_callback)
 
 def _change_track_count_dialog_callback(dialog, response_id, tracks_combo):
     if response_id != gtk.RESPONSE_ACCEPT:

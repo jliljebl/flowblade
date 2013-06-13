@@ -60,7 +60,7 @@ class RecreateIconsThread(threading.Thread):
     def run(self):
 
         gtk.gdk.threads_enter()
-        recreate_progress_window = dialogs.get_recreate_icons_progress_dialog()
+        recreate_progress_window = dialogs.recreate_icons_progress_dialog()
         time.sleep(0.1)
         gtk.gdk.threads_leave()
 

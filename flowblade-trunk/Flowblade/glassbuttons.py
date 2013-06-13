@@ -36,8 +36,6 @@ BUTTONS_GRAD_STOPS = [   (1, 1, 1, 1, 0.2),
 
 BUTTONS_PRESSED_GRAD_STOPS = [(1, 0.7, 0.7, 0.7, 1),
                              (0, 0.5, 0.5, 0.5, 1)]
-BUTTONS_PRESSED_GRAD_STOPS_NON_GLASS = [(1, 0.5, 0.5, 0.5, 1),
-                                        (0, 0.5, 0.5, 0.5, 1)]
                              
 LINE_GRAD_STOPS = [ (1, 0.66, 0.66, 0.66, 1),
                             (0.95, 0.7, 0.7, 0.7, 1),
