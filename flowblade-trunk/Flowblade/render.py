@@ -136,7 +136,7 @@ def _do_rendering():
     if start_frame == -1 or end_frame == -1:
         if widgets.range_cb.get_active() == 1:
             primary_txt = _("Render range not defined")
-            secondary_txt = _("Define render range using Mark In and Mark Out points\nor select range option 'Program length' to start rendering.")
+            secondary_txt = _("Define render range using Mark In and Mark Out points\nor select range option 'Sequence length' to start rendering.")
             dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
             return
 

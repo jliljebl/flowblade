@@ -716,12 +716,12 @@ class EditorWindow:
     def _add_tool_tips(self):
         self.big_TC.widget.set_tooltip_text(_("Timeline current frame timecode"))
 
-        self.view_mode_select.widget.set_tooltip_text(_("Select view mode: Program Video/Vectorscope/RGBParade"))
+        self.view_mode_select.widget.set_tooltip_text(_("Select view mode: Video/Vectorscope/RGBParade"))
         
-        self.tc.widget.set_tooltip_text(_("Monitor program current frame timecode"))
-        self.monitor_source.set_tooltip_text(_("Current Monitor program name"))
+        self.tc.widget.set_tooltip_text(_("Monitor Sequence/Media current frame timecode"))
+        self.monitor_source.set_tooltip_text(_("Current Monitor Sequence/Media name"))
     
-        self.pos_bar.widget.set_tooltip_text(_("Monitor program current position"))
+        self.pos_bar.widget.set_tooltip_text(_("Monitor Sequence/Media current position"))
         
         self.sequence_editor_b.set_tooltip_text(_("Display Current Sequence on Timeline"))
         self.clip_editor_b.set_tooltip_text(_("Display Monitor Clip"))
