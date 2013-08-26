@@ -183,12 +183,11 @@ class Project:
         self.sequences.append(seq)
         self.next_seq_number += 1
 
-    def get_filtered_media_log_events(self, event_type, incl_starred, incl_not_starred):
+    def get_filtered_media_log_events(self, incl_starred, incl_not_starred):
         filtered_events = []
         for media_log_event in self.media_log:
-            if ((event_type == appconsts.MEDIA_LOG_ALL) or (media_log_event.event_type == event_type)):
-                if self._media_log_included_by_starred(media_log_event.starred, incl_starred, incl_not_starred):
-                    filtered_events.append(media_log_event)
+            if self._media_log_included_by_starred(media_log_event.starred, incl_starred, incl_not_starred):
+                filtered_events.append(media_log_event)
         return filtered_events
 
     def _media_log_included_by_starred(self, starred, incl_starred, incl_not_starred):

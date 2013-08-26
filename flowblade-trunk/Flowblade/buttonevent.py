@@ -41,7 +41,6 @@ from editorstate import PLAYER
 from editorstate import timeline_visible
 from editorstate import MONITOR_MEDIA_FILE
 from editorstate import EDIT_MODE
-import medialog
 import movemodes
 import mlttransitions
 import render
@@ -221,9 +220,6 @@ def insert_button_pressed():
 
     editevent.do_clip_insert(track, new_clip, tline_pos)
     
-    medialog.register_media_insert_event()
-    medialog.update_media_log_view()
-    
 def append_button_pressed():
     track = current_sequence().get_first_active_track()
 
@@ -238,9 +234,6 @@ def append_button_pressed():
         return
 
     editevent.do_clip_insert(track, new_clip, tline_pos)
-
-    medialog.register_media_insert_event()
-    medialog.update_media_log_view()
 
 def three_point_overwrite_pressed():
     # Check that state is good for edit
@@ -289,9 +282,6 @@ def three_point_overwrite_pressed():
 
     updater.display_tline_cut_frame(track, range_in)
 
-    medialog.register_media_insert_event()
-    medialog.update_media_log_view()
-
 def range_overwrite_pressed():
     # Get data
     track = current_sequence().get_first_active_track()
@@ -335,9 +325,6 @@ def range_overwrite_pressed():
     action.do_edit()
 
     updater.display_tline_cut_frame(track, track.get_clip_index_at(mark_in_frame))
-
-    medialog.register_media_insert_event()
-    medialog.update_media_log_view()
 
 def resync_button_pressed():
     syncsplitevent.resync_selected()

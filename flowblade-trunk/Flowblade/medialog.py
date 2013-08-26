@@ -35,13 +35,6 @@ import updater
 import utils
 
 
-LOGGING_MODE_MANUAL = 0
-LOGGING_MODE_AUTO_RANGES = 1
-LOGGING_MODE_AUTO_INSERTS = 2
-LOGGING_MODE_AUTO_ALL = 3
-
-log_mode = LOGGING_MODE_MANUAL
-
 widgets = utils.EmptyClass()
 
 
@@ -96,24 +89,7 @@ def media_log_no_star_button_pressed():
 
     widgets.media_log_view.fill_data_model()
 
-def register_media_insert_event():
-    log_mode = widgets.logging_mode_combo.get_active() # selection index is the global variable for active log mode too
-    if (log_mode == LOGGING_MODE_MANUAL) or (log_mode == LOGGING_MODE_AUTO_RANGES):
-        return
-
-    media_file = editorstate.MONITOR_MEDIA_FILE()
-    if media_file.type == appconsts.PATTERN_PRODUCER:
-        # INFOWINDOW ???
-       return False 
-
-    log_event = MediaLogEvent(  appconsts.MEDIA_LOG_INSERT,
-                                media_file.mark_in,
-                                media_file.mark_out,
-                                media_file.name,
-                                media_file.path)
-    editorstate.PROJECT().media_log.append(log_event)
-
-def register_media_marks_set_event(manual_event=False):
+def log_range_clicked():
     media_file = editorstate.MONITOR_MEDIA_FILE()
     if media_file == None:
         return False
@@ -122,10 +98,6 @@ def register_media_marks_set_event(manual_event=False):
        return False 
     if media_file.mark_in == -1 or media_file.mark_out == -1:
         return False
-    log_mode = widgets.logging_mode_combo.get_active() # selection index is the global variable for active log mode too
-    if not manual_event:
-        if (log_mode == LOGGING_MODE_MANUAL) or (log_mode == LOGGING_MODE_AUTO_INSERTS):
-            return False
 
     log_event = MediaLogEvent(  appconsts.MEDIA_LOG_MARKS_SET,
                                 media_file.mark_in,
@@ -133,26 +105,12 @@ def register_media_marks_set_event(manual_event=False):
                                 media_file.name,
                                 media_file.path)
     editorstate.PROJECT().media_log.append(log_event)
-
-    return True
-
-def log_range_clicked():
-    register_media_marks_set_event(True)
+    
     widgets.media_log_view.fill_data_model()
     max_val = widgets.media_log_view.treeview.get_vadjustment().get_upper()
     gui.middle_notebook.set_current_page(1)
     widgets.media_log_view.treeview.get_selection().select_path(str(len(get_current_log_events())-1))
     widgets.media_log_view.treeview.get_vadjustment().set_value(max_val)
-    
-def logging_mode_changed(combo):
-    new_log_mode = combo.get_active() # selection index is the global variable for active log mode too
-    if (new_log_mode == LOGGING_MODE_AUTO_ALL) or (new_log_mode == LOGGING_MODE_AUTO_INSERTS):
-        widgets.log_range.set_sensitive(False)
-    else:
-        widgets.log_range.set_sensitive(True)
-
-    global log_mode
-    log_mode = new_log_mode
 
 def log_item_name_edited(cell, path, new_text, user_data):
     if len(new_text) == 0:
@@ -216,9 +174,7 @@ def _log_event_menu_item_selected(widget, data):
         display_item(row)
 
 def get_current_filtered_events():
-    event_type = widgets.view_type_combo.get_active() - 1 # -1 produces values corresponding to media log event types in projectdata.py
-    log_events = PROJECT().get_filtered_media_log_events(event_type, 
-                                                         widgets.star_check.get_active(),
+    log_events = PROJECT().get_filtered_media_log_events(widgets.star_check.get_active(),
                                                          widgets.star_not_active_check.get_active())
     return log_events
 
@@ -406,23 +362,15 @@ class MediaLogListView(gtk.VBox):
         model, rows = self.treeview.get_selection().get_selected_rows()
         return rows
 
+
 def get_current_log_events():
-    event_type = widgets.view_type_combo.get_active() - 1 # -1 produces values corresponding to media log event types in appconsts.py
-    return PROJECT().get_filtered_media_log_events(event_type, 
-                                                   widgets.star_check.get_active(),
+    return PROJECT().get_filtered_media_log_events(widgets.star_check.get_active(),
                                                    widgets.star_not_active_check.get_active())
-                                                             
+
+
 def get_media_log_events_panel(events_list_view):
     global widgets
-
-    view_type_combo = gtk.combo_box_new_text()
-    view_type_combo.append_text(_("All Events"))
-    view_type_combo.append_text(_("Insert Events"))
-    view_type_combo.append_text(_("Range Events"))
-    view_type_combo.set_active(0)
-    view_type_combo.connect("changed", lambda w:media_log_filtering_changed())
-    widgets.view_type_combo = view_type_combo
-    
+ 
     star_check = gtk.CheckButton()
     star_check.set_active(True)
     star_check.connect("clicked", lambda w:media_log_filtering_changed())
@@ -447,12 +395,7 @@ def get_media_log_events_panel(events_list_view):
     no_star_button.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "star_not_active.png"))
     no_star_button.connect("clicked", lambda w: media_log_no_star_button_pressed())
     
-    delete_button = gtk.Button(_("Delete"))
-    delete_button.set_size_request(80, 22)
-    delete_button.connect("clicked", lambda w:delete_selected())
-
     row1 = gtk.HBox()
-    row1.pack_start(view_type_combo, False, True, 0)
     row1.pack_start(guiutils.get_pad_label(6, 12), False, True, 0)
     row1.pack_start(star_check, False, True, 0)
     row1.pack_start(star_label, False, True, 0)
@@ -463,23 +406,16 @@ def get_media_log_events_panel(events_list_view):
     row1.pack_start(star_button, False, True, 0)
     row1.pack_start(no_star_button, False, True, 0)
     row1.pack_start(gtk.Label(), True, True, 0)
-    row1.pack_start(delete_button, False, True, 0)
-
-    logging_mode_combo = gtk.combo_box_new_text()
-    logging_mode_combo.append_text(_("Manual Logging"))
-    logging_mode_combo.append_text(_("Auto Log Marked Ranges"))
-    logging_mode_combo.append_text(_("Auto Log Inserts"))
-    logging_mode_combo.append_text(_("Auto Log All"))
-    logging_mode_combo.set_active(log_mode)
-    
-    logging_mode_combo.connect("changed", logging_mode_changed)
-    widgets.logging_mode_combo = logging_mode_combo 
 
     widgets.log_range = gtk.Button()
     widgets.log_range.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "log_range.png"))
-    #widgets.log_range.set_sensitive(False)
+    widgets.log_range.set_size_request(80, 30)
     widgets.log_range.connect("clicked", lambda w:log_range_clicked())
-    
+
+    delete_button = gtk.Button(_("Delete"))
+    delete_button.set_size_request(80, 30)
+    delete_button.connect("clicked", lambda w:delete_selected())
+
     to_monitor = gtk.Button()
     to_monitor.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "open_log_item_in_monitor.png"))
     
@@ -489,8 +425,8 @@ def get_media_log_events_panel(events_list_view):
     append_displayed.connect("clicked", lambda w:append_log_events())
 
     row2 =  gtk.HBox()
-    row2.pack_start(logging_mode_combo, False, True, 0)
     row2.pack_start(widgets.log_range, False, True, 0)
+    row2.pack_start(delete_button, False, True, 0)
     row2.pack_start(gtk.Label(), True, True, 0)
     row2.pack_start(append_displayed, False, True, 0)
 

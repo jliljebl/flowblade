@@ -152,12 +152,8 @@ def mark_in_pressed():
 
     _do_marks_update()
     updater.display_marks_tc()
-    
-    if not timeline_visible():
-        event_added = medialog.register_media_marks_set_event()
-        if event_added:
-            medialog.update_media_log_view()
-        
+
+
 def mark_out_pressed():
     mark_out = PLAYER().producer.frame()
 
@@ -178,11 +174,6 @@ def mark_out_pressed():
             
     _do_marks_update()
     updater.display_marks_tc()
-
-    if not timeline_visible():
-        event_added = medialog.register_media_marks_set_event()
-        if event_added:
-            medialog.update_media_log_view()
     
 def marks_clear_pressed():
     if timeline_visible():
