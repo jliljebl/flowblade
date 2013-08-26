@@ -231,7 +231,7 @@ class MediaLogListView(gtk.VBox):
         bg_col = style.bg[gtk.STATE_NORMAL]
         
        # Datamodel: icon, text, text
-        self.storemodel = gtk.ListStore(gtk.gdk.Pixbuf, str, str, str, str, str, str)
+        self.storemodel = gtk.ListStore(gtk.gdk.Pixbuf, str, str, str, str, str)
  
         # Scroll container
         self.scroll = gtk.ScrolledWindow()
@@ -293,39 +293,31 @@ class MediaLogListView(gtk.VBox):
         self.text_col_1.set_min_width(20)
         self.icon_col_1.pack_start(self.icon_rend_1)
         self.icon_col_1.add_attribute(self.icon_rend_1, 'pixbuf', 0)
-    
-        self.text_col_1.set_expand(True)
-        self.text_col_1.set_spacing(5)
-        self.text_col_1.set_sizing(gtk.TREE_VIEW_COLUMN_GROW_ONLY)
-        self.text_col_1.set_min_width(50)
-        self.text_col_1.pack_start(self.text_rend_1)
-        self.text_col_1.add_attribute(self.text_rend_1, "text", 1)
 
         self.text_col_2.set_expand(True)
         self.text_col_2.set_sizing(gtk.TREE_VIEW_COLUMN_GROW_ONLY)
         self.text_col_2.set_min_width(150)
         self.text_col_2.pack_start(self.text_rend_2)
-        self.text_col_2.add_attribute(self.text_rend_2, "text", 2)
+        self.text_col_2.add_attribute(self.text_rend_2, "text", 1)
 
         self.text_col_3.set_expand(True)
         self.text_col_3.pack_start(self.text_rend_3)
-        self.text_col_3.add_attribute(self.text_rend_3, "text", 3)
+        self.text_col_3.add_attribute(self.text_rend_3, "text", 2)
 
         self.text_col_4.set_expand(True)
         self.text_col_4.pack_start(self.text_rend_4)
-        self.text_col_4.add_attribute(self.text_rend_4, "text", 4)
+        self.text_col_4.add_attribute(self.text_rend_4, "text", 3)
 
         self.text_col_5.set_expand(True)
         self.text_col_5.pack_start(self.text_rend_5)
-        self.text_col_5.add_attribute(self.text_rend_5, "text", 5)
+        self.text_col_5.add_attribute(self.text_rend_5, "text", 4)
 
         self.text_col_6.set_expand(True)
         self.text_col_6.pack_start(self.text_rend_6)
-        self.text_col_6.add_attribute(self.text_rend_6, "text", 6)
+        self.text_col_6.add_attribute(self.text_rend_6, "text", 5)
         
         # Add column views to view
         self.treeview.append_column(self.icon_col_1)
-        self.treeview.append_column(self.text_col_1)
         self.treeview.append_column(self.text_col_2)
         self.treeview.append_column(self.text_col_3)
         self.treeview.append_column(self.text_col_4)
@@ -340,15 +332,15 @@ class MediaLogListView(gtk.VBox):
     def fill_data_model(self):
         self.storemodel.clear()
         star_icon_path = respaths.IMAGE_PATH + "star.png"
+        no_star_icon_path = respaths.IMAGE_PATH + "star_not_active.png"
 
         log_events = get_current_log_events()
         for log_event in log_events:
             if log_event.starred == True:
                 icon = gtk.gdk.pixbuf_new_from_file(star_icon_path)
             else:
-                icon = None
+                icon =  gtk.gdk.pixbuf_new_from_file(no_star_icon_path)
             row_data = [icon, 
-                        log_event.get_event_name(),
                         log_event.comment,
                         log_event.name,
                         log_event.get_mark_in_str(),
@@ -412,7 +404,8 @@ def get_media_log_events_panel(events_list_view):
     widgets.log_range.set_size_request(80, 30)
     widgets.log_range.connect("clicked", lambda w:log_range_clicked())
 
-    delete_button = gtk.Button(_("Delete"))
+    delete_button = gtk.Button()
+    delete_button.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "delete_log_range.png"))
     delete_button.set_size_request(80, 30)
     delete_button.connect("clicked", lambda w:delete_selected())
 

@@ -92,7 +92,6 @@ exit_timeout_id = -1
 
 logger = None
 
-#fp = None
 
 def main(root_path):
     """
