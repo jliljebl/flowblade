@@ -23,8 +23,8 @@
 import os
 import sys
 
-print "FLOWBLADE MOVIE EDITOR repository"
-print "---------------------------------"
+print "FLOWBLADE MOVIE EDITOR 0.10 beta (repository)"
+print "---------------------------------------------"
 
 # Get launch script dir
 launch_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
