@@ -409,8 +409,8 @@ def get_media_log_events_panel(events_list_view):
     delete_button.set_size_request(80, 30)
     delete_button.connect("clicked", lambda w:delete_selected())
 
-    to_monitor = gtk.Button()
-    to_monitor.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "open_log_item_in_monitor.png"))
+    #to_monitor = gtk.Button()
+    #to_monitor.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "open_log_item_in_monitor.png"))
     
     append_displayed = gtk.Button()
     append_displayed.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "append_media_log.png"))
@@ -428,5 +428,13 @@ def get_media_log_events_panel(events_list_view):
     panel.pack_start(events_list_view, True, True, 0)
     panel.pack_start(row2, False, True, 0)
     panel.set_size_request(400, 200)
+
+    star_check.set_tooltip_text(_("Displey starred ranges"))    
+    star_not_active_check.set_tooltip_text(_("Display non-starred ranges"))
+    star_button.set_tooltip_text(_("Set selected ranges starred"))
+    no_star_button.set_tooltip_text(_("Set selected ranges non-starred"))
+    widgets.log_range.set_tooltip_text(_("Log current marked range"))
+    delete_button.set_tooltip_text(_("Delete selected ranges"))
+    append_displayed.set_tooltip_text(_("Append displayed ranges on Timeline"))
 
     return panel

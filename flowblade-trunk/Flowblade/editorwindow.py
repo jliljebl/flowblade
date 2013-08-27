@@ -443,7 +443,7 @@ class EditorWindow:
         self.notebook = gtk.Notebook()
         self.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH, appconsts.TOP_ROW_HEIGHT)
         self.notebook.append_page(mm_panel, gtk.Label(_("Media")))
-        self.notebook.append_page(media_log_panel, gtk.Label(_("Media Log")))
+        self.notebook.append_page(media_log_panel, gtk.Label(_("Range Log")))
         self.notebook.append_page(self.effects_panel, gtk.Label(_("Filters")))
         self.notebook.append_page(self.compositors_panel, gtk.Label(_("Compositors")))
         self.notebook.append_page(project_panel, gtk.Label(_("Project")))
