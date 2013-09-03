@@ -379,14 +379,14 @@ def _add_image_sequence_callback(dialog, response_id, data):
     dialog.destroy()
     
     if frame_file == None:
-        dialogutils.info_message("No file was selected", "Selected file a numbered file to add an Image Sequence to Project.", gui.editor_window.window)
+        dialogutils.info_message(_("No file was selected"), _("Select a numbered file to add an Image Sequence to Project."), gui.editor_window.window)
         return
     
     (folder, file_name) = os.path.split(frame_file)
     try:
         number_part = re.findall("[0-9]+", file_name)[0]
     except:
-        dialogutils.info_message("Not a sequence file!", "Selected file does not have a number part in it,\nso it can't be an image sequence file.", gui.editor_window.window)
+        dialogutils.info_message(_("Not a sequence file!"), _("Selected file does not have a number part in it,\nso it can't be an image sequence file."), gui.editor_window.window)
         return
 
     # Create resource name with MLT syntax for MLT producer

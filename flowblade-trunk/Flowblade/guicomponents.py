@@ -1307,7 +1307,7 @@ def _get_track_mute_menu_item(event, track, callback):
     return menu_item
 
 def _get_color_menu_item(clip, track, callback):
-    color_menu_item = gtk.MenuItem("Clip Color")
+    color_menu_item = gtk.MenuItem(_("Clip Color"))
     color_menu =  gtk.Menu()
     color_menu.add(_get_menu_item(_("Default"), callback, (clip, track, "clip_color", "default")))
     color_menu.add(_get_menu_item(_("Red"), callback, (clip, track, "clip_color", "red")))

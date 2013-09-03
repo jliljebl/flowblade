@@ -2,7 +2,7 @@
 
 # Get language
 LANG=$1
-echo "Compiling .mo file for ISO 639-1 language code: $LANG"
+echo "Create .po file for ISO 639-1 language code: $LANG"
 
 # Move to Flowblade root directory
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

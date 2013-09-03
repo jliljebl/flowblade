@@ -469,7 +469,7 @@ def environment_dialog(parent_window, write_data_cb):
         run_type = _("DEVELOPER VERSION")
         
     r4 = guiutils.get_left_justified_box([gtk.Label(_("Running from: ")), gtk.Label(run_type)])
-    write_button = gtk.Button("Write Environment Data to File")
+    write_button = gtk.Button(_("Write Environment Data to File"))
     write_button.connect("clicked", lambda w,e: write_data_cb(), None)
     r5 = guiutils.get_left_justified_box([write_button])
     
@@ -1130,10 +1130,10 @@ def _markers_chapters_check_toggled(widget, data):
         text_buffer.set_text("")
 
 def transition_edit_dialog(callback, transition_data):
-    dialog = gtk.Dialog("Add Transition", None,
+    dialog = gtk.Dialog(_("Add Transition").encode('utf-8'), None,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
-                        "Apply", gtk.RESPONSE_ACCEPT))
+                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                        _("Apply").encode('utf-8'), gtk.RESPONSE_ACCEPT))
 
     alignment, type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button = panels.get_transition_panel(transition_data)
     widgets = (type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button)
@@ -1143,10 +1143,10 @@ def transition_edit_dialog(callback, transition_data):
     dialog.show_all()
 
 def fade_edit_dialog(callback, transition_data):
-    dialog = gtk.Dialog("Add Fade", None,
+    dialog = gtk.Dialog(_("Add Fade"), None,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
-                        "Apply", gtk.RESPONSE_ACCEPT))
+                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                        _("Apply").encode('utf-8'), gtk.RESPONSE_ACCEPT))
 
     alignment, type_combo, length_entry, encodings_cb, quality_cb, color_button = panels.get_fade_panel(transition_data)
     widgets = (type_combo, length_entry, encodings_cb, quality_cb, color_button)
@@ -1162,54 +1162,54 @@ def keyboard_shortcuts_dialog(parent_window):
                         (_("Close").encode('utf-8'), gtk.RESPONSE_CLOSE))
     
     general_vbox = gtk.VBox()
-    general_vbox.pack_start(_get_kb_row("Control + n", _("Create New Project")), False, False, 0)
-    general_vbox.pack_start(_get_kb_row("Control + s", _("Save Project")), False, False, 0)
-    general_vbox.pack_start(_get_kb_row("Delete", _("Delete Selected Item")), False, False, 0)
-    general_vbox.pack_start(_get_kb_row("Escape", _("Stop Rendering Audio Levels")), False, False, 0)
-    general_vbox.pack_start(_get_kb_row("Control + z", _("Quit")), False, False, 0)
-    general_vbox.pack_start(_get_kb_row("Control + y", _("Undo")), False, False, 0)
-    general_vbox.pack_start(_get_kb_row("Control + s", _("Redo")), False, False, 0)
-    general_vbox.pack_start(_get_kb_row("Control + o", _("Open Project")), False, False, 0)
-    general_vbox.pack_start(_get_kb_row("TAB", _("Switch Monitor Source")), False, False, 0)
-    general = guiutils.get_named_frame("General", general_vbox)
+    general_vbox.pack_start(_get_kb_row(_("Control + n"), _("Create New Project")), False, False, 0)
+    general_vbox.pack_start(_get_kb_row(_("Control + s"), _("Save Project")), False, False, 0)
+    general_vbox.pack_start(_get_kb_row(_("Delete"), _("Delete Selected Item")), False, False, 0)
+    general_vbox.pack_start(_get_kb_row(_("Escape"), _("Stop Rendering Audio Levels")), False, False, 0)
+    general_vbox.pack_start(_get_kb_row(_("Control + z"), _("Quit")), False, False, 0)
+    general_vbox.pack_start(_get_kb_row(_("Control + y"), _("Undo")), False, False, 0)
+    general_vbox.pack_start(_get_kb_row(_("Control + s"), _("Redo")), False, False, 0)
+    general_vbox.pack_start(_get_kb_row(_("Control + o"), _("Open Project")), False, False, 0)
+    general_vbox.pack_start(_get_kb_row(_("TAB"), _("Switch Monitor Source")), False, False, 0)
+    general = guiutils.get_named_frame(_("General"), general_vbox)
 
     tline_vbox = gtk.VBox()
     tline_vbox.pack_start(_get_kb_row("I", _("Mark In")))
     tline_vbox.pack_start(_get_kb_row("O", _("Mark Out")))
     tline_vbox.pack_start(_get_kb_row("X", _("Cut Clip")))
-    tline_vbox.pack_start(_get_kb_row("Delete",  _("Splice Out")))
+    tline_vbox.pack_start(_get_kb_row(_("Delete"),  _("Splice Out")))
     tline_vbox.pack_start(_get_kb_row("Y", _("Insert")))
     tline_vbox.pack_start(_get_kb_row("U", _("Append")))
     tline_vbox.pack_start(_get_kb_row("T", _("3 Point Overwrite Insert")))
-    tline = guiutils.get_named_frame("Timeline", tline_vbox)
+    tline = guiutils.get_named_frame(_("Timeline"), tline_vbox)
     
     play_vbox = gtk.VBox()
-    play_vbox.pack_start(_get_kb_row("Space", _("Start / Stop Playback")))
+    play_vbox.pack_start(_get_kb_row(_("Space"), _("Start / Stop Playback")))
     play_vbox.pack_start(_get_kb_row("J", _("Backwards Faster")))
     play_vbox.pack_start(_get_kb_row("K", _("Stop")))
     play_vbox.pack_start(_get_kb_row("L", _("Forward Faster")))
-    play_vbox.pack_start(_get_kb_row("Left Arrow ", _("Prev Frame")))
-    play_vbox.pack_start(_get_kb_row("Right Arrow", _("Next Frame")))
-    play_vbox.pack_start(_get_kb_row("Up Arrow", _("Next Edit")))
-    play_vbox.pack_start(_get_kb_row("Down Arrow", _("Prev Edit"))) 
-    play_vbox.pack_start(_get_kb_row("Home", _("Go To Start")))
-    play_vbox.pack_start(_get_kb_row("Shit + I", _("To Mark In")))
-    play_vbox.pack_start(_get_kb_row("Shift + O", _("To Mark Out")))
-    play = guiutils.get_named_frame("Playback", play_vbox)
+    play_vbox.pack_start(_get_kb_row(_("Left Arrow "), _("Prev Frame")))
+    play_vbox.pack_start(_get_kb_row(_("Right Arrow"), _("Next Frame")))
+    play_vbox.pack_start(_get_kb_row(_("Up Arrow"), _("Next Edit")))
+    play_vbox.pack_start(_get_kb_row(_("Down Arrow"), _("Prev Edit"))) 
+    play_vbox.pack_start(_get_kb_row(_("Home"), _("Go To Start")))
+    play_vbox.pack_start(_get_kb_row(_("Shift + I"), _("To Mark In")))
+    play_vbox.pack_start(_get_kb_row(_("Shift + O"), _("To Mark Out")))
+    play = guiutils.get_named_frame(_("Playback"), play_vbox)
 
     tools_vbox = gtk.VBox()
     tools_vbox.pack_start(_get_kb_row("1", _("Insert Move")))
     tools_vbox.pack_start(_get_kb_row("2", _("Overwrite Move")))
     tools_vbox.pack_start(_get_kb_row("3", _("One Roll Trim")))
     tools_vbox.pack_start(_get_kb_row("4", _("Two Roll Trim")))
-    tools = guiutils.get_named_frame("Tools", tools_vbox)
+    tools = guiutils.get_named_frame(_("Tools"), tools_vbox)
 
     geom_vbox = gtk.VBox()
-    geom_vbox.pack_start(_get_kb_row("Left Arrow ", _("Move Source Video Left")))
-    geom_vbox.pack_start(_get_kb_row("Right Arrow", _("Move Source Video Right")))
-    geom_vbox.pack_start(_get_kb_row("Up Arrow", _("Move Source Video Up")))
-    geom_vbox.pack_start(_get_kb_row("Down Arrow", _("Move Source Video Down"))) 
-    geom = guiutils.get_named_frame("Geometry Editor", geom_vbox)
+    geom_vbox.pack_start(_get_kb_row(_("Left Arrow "), _("Move Source Video Left")))
+    geom_vbox.pack_start(_get_kb_row(_("Right Arrow"), _("Move Source Video Right")))
+    geom_vbox.pack_start(_get_kb_row(_("Up Arrow"), _("Move Source Video Up")))
+    geom_vbox.pack_start(_get_kb_row(_("Down Arrow"), _("Move Source Video Down"))) 
+    geom = guiutils.get_named_frame(_("Geometry Editor"), geom_vbox)
     
     panel = gtk.VBox()
     panel.pack_start(tools, False, False, 0)

@@ -78,11 +78,11 @@ def init_view_menu(menu_item):
 
     tabs_menu_item = gtk.MenuItem(_("Tabs Position").encode('utf-8'))
     tabs_menu =  gtk.Menu()
-    tabs_up = gtk.RadioMenuItem(None, "Up")
+    tabs_up = gtk.RadioMenuItem(None, _("Up").encode('utf-8'))
     tabs_up.connect("activate", lambda w: _show_tabs_up(w))
     tabs_menu.append(tabs_up)
     
-    tabs_down = gtk.RadioMenuItem(tabs_up, "Down")
+    tabs_down = gtk.RadioMenuItem(tabs_up, _("Down").encode('utf-8'))
     tabs_down.connect("activate", lambda w: _show_tabs_down(w))
 
     if editorpersistance.prefs.tabs_on_top == True:

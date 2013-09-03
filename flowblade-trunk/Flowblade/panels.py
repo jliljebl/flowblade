@@ -909,7 +909,7 @@ def get_transition_panel(trans_data):
     type_combo_box.append_text(name)
     type_combo_box.set_active(0)
 
-    type_row = get_two_column_box(gtk.Label("Type:"), 
+    type_row = get_two_column_box(gtk.Label(_("Type:")), 
                                  type_combo_box)
 
     wipe_luma_combo_box = gtk.combo_box_new_text()
@@ -918,13 +918,13 @@ def get_transition_panel(trans_data):
     for k in keys:
         wipe_luma_combo_box.append_text(k)
     wipe_luma_combo_box.set_active(0)
-    wipe_label = gtk.Label("Wipe Pattern:")
+    wipe_label = gtk.Label(_("Wipe Pattern:"))
     wipe_row = get_two_column_box(wipe_label, 
                                  wipe_luma_combo_box)
 
     color_button = gtk.ColorButton(gtk.gdk.Color(0.0, 0.0, 0.0))
     color_button_box = guiutils.get_left_justified_box([color_button])
-    color_label = gtk.Label("Dip Color:")
+    color_label = gtk.Label(_("Dip Color:"))
     color_row = get_two_column_box(color_label, color_button_box)
 
     wipe_luma_combo_box.set_sensitive(False)
@@ -939,16 +939,16 @@ def get_transition_panel(trans_data):
                               
     length_entry = gtk.Entry()
     length_entry.set_text(str(30))    
-    length_row = get_two_column_box(gtk.Label("Length:"), 
+    length_row = get_two_column_box(gtk.Label(_("Length:")), 
                                     length_entry)
 
     filler = gtk.Label()
     filler.set_size_request(10,10)
 
-    out_clip_label = gtk.Label("From Clip Handle:")
+    out_clip_label = gtk.Label(_("From Clip Handle:"))
     out_clip_value = gtk.Label(trans_data["from_handle"])
     
-    in_clip_label = gtk.Label("To Clip Handle:")
+    in_clip_label = gtk.Label(_("To Clip Handle:"))
     in_clip_value = gtk.Label(trans_data["to_handle"])
 
 
@@ -986,9 +986,9 @@ def get_transition_panel(trans_data):
     enconding_vbox.pack_start(quality_cb, False, False, 0)
     
     vbox = gtk.VBox(False, 2)
-    vbox.pack_start(get_named_frame("Transition Options",  edit_vbox))
-    vbox.pack_start(get_named_frame("Clips info",  data_vbox))
-    vbox.pack_start(get_named_frame("Encoding",  enconding_vbox))
+    vbox.pack_start(get_named_frame(_("Transition Options"),  edit_vbox))
+    vbox.pack_start(get_named_frame(_("Clips info"),  data_vbox))
+    vbox.pack_start(get_named_frame(_("Encoding"),  enconding_vbox))
 
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(12, 24, 12, 12)
@@ -1006,12 +1006,12 @@ def get_fade_panel(fade_data):
 
     color_button = gtk.ColorButton(gtk.gdk.Color(0.0, 0.0, 0.0))
     color_button_box = guiutils.get_left_justified_box([color_button])
-    color_label = gtk.Label("Color:")
+    color_label = gtk.Label(_("Color:"))
     color_row = get_two_column_box(color_label, color_button_box)
                               
     length_entry = gtk.Entry()
     length_entry.set_text(str(30))    
-    length_row = get_two_column_box(gtk.Label("Length:"), 
+    length_row = get_two_column_box(gtk.Label(_("Length:")), 
                                     length_entry)
 
     # Encoding widgets
@@ -1032,14 +1032,14 @@ def get_fade_panel(fade_data):
     edit_vbox.pack_start(type_row, False, False, 0)
     edit_vbox.pack_start(length_row, False, False, 0)
     edit_vbox.pack_start(color_row, False, False, 0)
-    
+
     enconding_vbox = gtk.VBox(False, 2)
     enconding_vbox.pack_start(encodings_cb, False, False, 0)
     enconding_vbox.pack_start(quality_cb, False, False, 0)
-    
+
     vbox = gtk.VBox(False, 2)
-    vbox.pack_start(get_named_frame("Transition Options",  edit_vbox))
-    vbox.pack_start(get_named_frame("Encoding",  enconding_vbox))
+    vbox.pack_start(get_named_frame(_("Transition Options"),  edit_vbox))
+    vbox.pack_start(get_named_frame(_("Encoding"),  enconding_vbox))
 
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(12, 24, 12, 12)

@@ -366,16 +366,16 @@ class ProjectEvent:
 
     def get_desc_and_path(self):
         if self.event_type == EVENT_CREATED_BY_NEW_DIALOG:
-            return ("Created using dialog", None)
+            return (_("Created using dialog"), None)
         elif self.event_type == EVENT_CREATED_BY_SAVING:
-            return ("Created using Save As... ", self.data)
+            return (_("Created using Save As... "), self.data)
         elif self.event_type == EVENT_SAVED:
-            return ("Saved ", self.data)
+            return (_("Saved "), self.data)
         elif self.event_type == EVENT_SAVED_AS:
             name, path = self.data
-            return ("Saved as " + name, path)
+            return (_("Saved as ") + name, path)
         elif self.event_type == EVENT_RENDERED:
-            return ("Rendered ", self.data)
+            return (_("Rendered "), self.data)
         else:
             return ("Unknown project event, bug or data corruption", None)
 
