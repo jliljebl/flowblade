@@ -140,10 +140,10 @@ def main(root_path):
     # Init gtk threads
     gtk.gdk.threads_init()
 
-    # Accept only 1 running instance
-    if can_run == False:
-        _not_first_instance_exit()
-        return
+    # Accept only 1 running instance because only one
+    #if can_run == False:
+    #    _not_first_instance_exit()
+    #    return
 
     # Adjust gui parameters for smaller screens
     scr_w = gtk.gdk.screen_width()
