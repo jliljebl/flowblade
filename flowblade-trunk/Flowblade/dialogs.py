@@ -1000,7 +1000,7 @@ def open_image_sequence_dialog(callback, parent_window):
                         (cancel_str, gtk.RESPONSE_CANCEL,
                         ok_str, gtk.RESPONSE_YES))
 
-    file_chooser = gtk.FileChooserButton("Select First Frame")
+    file_chooser = gtk.FileChooserButton(_("Select First Frame"))
     file_chooser.set_size_request(250, 25)
     filt = utils.get_image_sequence_file_filter()
     file_chooser.add_filter(filt)

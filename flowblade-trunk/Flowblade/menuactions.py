@@ -231,7 +231,7 @@ def quick_reference():
     try:
         webbrowser.open('http://code.google.com/p/flowblade/wiki/FlowbladeReference')
     except:
-        dialogutils.info_message("Help page not found!", "Unfortunately the webresource containing help information\nfor this application was not found.", None)
+        dialogutils.info_message(_("Help page not found!"), _("Unfortunately the webresource containing help information\nfor this application was not found."), None)
 
 
 # --------------------------------------------------- profiles manager
@@ -274,16 +274,16 @@ def _profiles_manager_save_profile_clicked(widgets, user_profiles_view):
     profile_path = utils.get_hidden_user_dir_path() + mltprofiles.USER_PROFILES_DIR + profile_file_name
 
     if os.path.exists(profile_path):
-        dialogutils.warning_message("Profile '" +  description.get_text() + "' already exists!", \
-                                "Delete profile and save again.",  gui.editor_window.window)
+        dialogutils.warning_message(_("Profile '") +  description.get_text() + _("' already exists!"), \
+                                _("Delete profile and save again."),  gui.editor_window.window)
         return
 
     profile_file = open(profile_path, "w")
     profile_file.write(file_contents)
     profile_file.close()
 
-    dialogutils.info_message("Profile '" +  description.get_text() + "' saved.", \
-                 "You can now create a new project using the new profile.", gui.editor_window.window)
+    dialogutils.info_message(_("Profile '") +  description.get_text() + _("' saved."), \
+                 _("You can now create a new project using the new profile."), gui.editor_window.window)
     
     mltprofiles.load_profile_list()
     render.reload_profiles()

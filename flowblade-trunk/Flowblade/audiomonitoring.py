@@ -187,7 +187,7 @@ class AudioMonitorWindow(gtk.Window):
         seq = editorstate.current_sequence()
         for i in range(0, meters_count):
             if i == 0:
-                name = "Master"
+                name = _("Master")
                 gain = GainControl(name, seq, seq.tractor, True)
             else:
                 name = utils.get_track_name(seq.tracks[i], seq)
@@ -397,7 +397,7 @@ class GainControl(gtk.Frame):
         self.pan_slider.set_adjustment(self.pan_adjustment)
         self.pan_slider.connect("value-changed", self.pan_changed)
 
-        self.pan_button = gtk.ToggleButton("Pan")
+        self.pan_button = gtk.ToggleButton(_("Pan"))
         self.pan_button.connect("toggled", self.pan_active_toggled)
         
         if pan_value == 0.0:
