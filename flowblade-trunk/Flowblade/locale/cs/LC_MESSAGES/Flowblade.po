@@ -1,33 +1,35 @@
-# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
+# Pavel Fric <pavelfric@seznam.cz>, 2013.
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-09 12:08+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2013-09-09 12:06+0300\n"
+"PO-Revision-Date: 2013-07-05 10:55+0200\n"
+"Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
+"Language-Team: Czech <kde-i18n-doc@kde.org>\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
+"X-Generator: Lokalize 1.5\n"
+"X-Language: cs_CZ\n"
+"X-Source-Language: C\n"
 
 #: app.py:531
 msgid "Too small screen for this application."
-msgstr ""
+msgstr "Příliš malá obrazovka pro tento program."
 
 #: app.py:534
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
-msgstr ""
+msgstr "Nejmenší rozměry obrazovky pro tento program jsou 1152 x 768.\n"
 
 #: app.py:535
 msgid "Your screen dimensions are "
-msgstr ""
+msgstr "Rozměry vaší obrazovky jsou "
 
 #: app.py:552
 msgid "Another instance of Flowblade already running."
@@ -39,87 +41,89 @@ msgstr ""
 
 #: app.py:583
 msgid "Project has not been saved since it was opened."
-msgstr ""
+msgstr "Projekt nebyl od té doby, co byl otevřen, uložen."
 
 #: app.py:588
 msgid "Project was saved less than a minute ago."
-msgstr ""
+msgstr "Projekt byl uložen před méně než minutou."
 
 #: app.py:591
 msgid "Project was saved one minute ago."
-msgstr ""
+msgstr "Projekt byl uložen před jednou minutou."
 
 #: app.py:593
 msgid "Project was saved "
-msgstr ""
+msgstr "Projekt byl uložen před "
 
 #: app.py:593
 msgid " minutes ago."
-msgstr ""
+msgstr " minutami"
 
 #: app.py:603 useraction.py:217
 msgid "Project has not been saved previously"
-msgstr ""
+msgstr "Projekt předtím byl uložen"
 
 #: app.py:604 useraction.py:218
 msgid "Save project with File -> Save As before closing."
-msgstr ""
+msgstr "Uložte projekt před zavření pomocí Soubor -> Uložit."
 
 #: useraction.py:94 dialogs.py:967 render.py:108
 msgid "File: "
-msgstr ""
+msgstr "Soubor: "
 
 #: useraction.py:94
 msgid " was not found on load!"
-msgstr ""
+msgstr " nebyl při nahrávání nalezen!"
 
 #: useraction.py:95
 msgid "Place dummy file with same name and similar content to enable"
-msgstr ""
+msgstr "Umístěte falešný soubor se stejným názvem a podobným obsahem"
 
 #: useraction.py:95
 msgid "project load. "
-msgstr ""
+msgstr "pro umožnění nahrání projektu. "
 
 #: useraction.py:96
 msgid "Doing so does not quarantee succesful load"
-msgstr ""
+msgstr "Ani to však nezaručuje úspěšné nahrání,"
 
 #: useraction.py:96
 msgid "if files have different properties."
-msgstr ""
+msgstr "pokud mají soubory odlišné vlastnosti."
 
 #: useraction.py:101
 msgid "Opening"
-msgstr ""
+msgstr "Otevírá se"
 
 #: useraction.py:308
 msgid "Project not found on disk"
-msgstr ""
+msgstr "Projekt nebyl na disku nalezen"
 
 #: useraction.py:309
 msgid "Project can't be loaded."
-msgstr ""
+msgstr "Projekt nelze nahrát."
 
 #: useraction.py:333
 msgid "Open.."
-msgstr ""
+msgstr "Otevřít..."
 
 #: useraction.py:343
 msgid "All files"
-msgstr ""
+msgstr "Všechny soubory"
 
 #: useraction.py:382
+#, fuzzy
 msgid "No file was selected"
-msgstr ""
+msgstr "Skrýt vybrané"
 
 #: useraction.py:382
 msgid "Select a numbered file to add an Image Sequence to Project."
 msgstr ""
 
 #: useraction.py:389
+#, fuzzy
 msgid "Not a sequence file!"
-msgstr ""
+msgstr "Přiblížit na délku sekvence"
 
 #: useraction.py:389
 msgid ""
@@ -129,95 +133,99 @@ msgstr ""
 
 #: useraction.py:443
 msgid "Can't make home folder thumbnails folder"
-msgstr ""
+msgstr "Nelze udělat složku pro náhledy z domovské složky"
 
 #: useraction.py:444 dialogs.py:292
 msgid "Please create and select some other folder then '"
-msgstr ""
+msgstr "Vytvořte a vyberte, prosím, nějakou jinou složku než '"
 
 #: useraction.py:445
 msgid "' as thumbnails folder"
-msgstr ""
+msgstr "' jako složku pro náhledy"
 
 #: useraction.py:600
 msgid "Can't remove a non-empty bin"
-msgstr ""
+msgstr "Nelze odstranit zásobník, který není prázdný"
 
 #: useraction.py:601
 msgid "You must remove all files from the bin before deleting it."
-msgstr ""
+msgstr "Před smazáním zásobníku z něj musíte odstranit všechny soubory"
 
 #: useraction.py:609
 msgid "Can't remove last bin"
-msgstr ""
+msgstr "Poslední zásobník nelze odstranit"
 
 #: useraction.py:610
 msgid "There must always exist at least one bin."
-msgstr ""
+msgstr "Musí být alespoň jeden zásobník."
 
 #: useraction.py:681
 msgid "Selected sequence is already being edited"
-msgstr ""
+msgstr "Vybraná sekvence je již upravována"
 
 #: useraction.py:682
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
 msgstr ""
+"Vyberte jinou sekvenci. V případě potřeby tiskněte tlačítko Přidat\n"
+"pro vytvoření nové sekvence."
 
 #: useraction.py:692 useraction.py:709 projectdata.py:177
 msgid "sequence_"
-msgstr ""
+msgstr "sekvence_"
 
 #: useraction.py:742
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
 msgstr ""
+"Opravdu chcete smazat\n"
+"sekvenci '"
 
 #: useraction.py:742
 msgid "'?"
-msgstr ""
+msgstr "'?"
 
 #: useraction.py:743
 msgid "This operation can not be undone. Sequence will be permanently lost."
-msgstr ""
+msgstr "Tuto operaci nelze vrátit zpět. Sekvence bude navždy ztracena."
 
 #: useraction.py:758
 msgid "Can't remove last sequence"
-msgstr ""
+msgstr "Nelze odstranit poslední sekvenci"
 
 #: useraction.py:759
 msgid "There must always exist at least one sequence."
-msgstr ""
+msgstr "Vždy musí být alespoň jedna sekvence."
 
 #: editorwindow.py:141
 msgid "_File"
-msgstr ""
+msgstr "_Soubor"
 
 #: editorwindow.py:142
 msgid "_New..."
-msgstr ""
+msgstr "_Nový..."
 
 #: editorwindow.py:143
 msgid "_Open..."
-msgstr ""
+msgstr "_Otevřít..."
 
 #: editorwindow.py:144
 msgid "Open Recent"
-msgstr ""
+msgstr "Otevřít poslední"
 
 #: editorwindow.py:145
 msgid "_Save"
-msgstr ""
+msgstr "_Uložit"
 
 #: editorwindow.py:146
 msgid "_Save As..."
-msgstr ""
+msgstr "Uložit _jako..."
 
 #: editorwindow.py:147 dialogs.py:161
 msgid "Export"
-msgstr ""
+msgstr "Vyvést"
 
 #: editorwindow.py:148
 msgid "melt XML"
@@ -229,63 +237,71 @@ msgstr ""
 
 #: editorwindow.py:150
 msgid "_Close"
-msgstr ""
+msgstr "_Zavřít"
 
 #: editorwindow.py:151
 msgid "_Quit"
-msgstr ""
+msgstr "U_končit"
 
 #: editorwindow.py:152
 msgid "_Edit"
-msgstr ""
+msgstr "Úp_ravy"
 
 #: editorwindow.py:153
 msgid "_Undo"
-msgstr ""
+msgstr "_Zpět"
 
 #: editorwindow.py:154
 msgid "_Redo"
-msgstr ""
+msgstr "_Znovu"
 
 #: editorwindow.py:155
+#, fuzzy
 msgid "Add Monitor Clip"
-msgstr ""
+msgstr "Přidat rozsah záběru vyznačený v okně pro sledování"
 
 #: editorwindow.py:156 dialogs.py:1182
 msgid "Append"
 msgstr ""
 
 #: editorwindow.py:157 dialogs.py:1181
+#, fuzzy
 msgid "Insert"
-msgstr ""
+msgstr "Režim vkládání přesunu"
 
 #: editorwindow.py:158
+#, fuzzy
 msgid "Three Point Overwrite"
-msgstr ""
+msgstr "Přepsat"
 
 #: editorwindow.py:159
+#, fuzzy
 msgid "Range Overwrite"
-msgstr ""
+msgstr "Přepsat"
 
 #: editorwindow.py:160 dialogs.py:1179
+#, fuzzy
 msgid "Cut Clip"
-msgstr ""
+msgstr "Vyzvednout záběr"
 
 #: editorwindow.py:161
+#, fuzzy
 msgid "Lift"
-msgstr ""
+msgstr "Vyzvednout záběr"
 
 #: editorwindow.py:162 dialogs.py:1180
+#, fuzzy
 msgid "Splice Out"
-msgstr ""
+msgstr "Odpojit záběr"
 
 #: editorwindow.py:163 guicomponents.py:1053 guicomponents.py:1111
 msgid "Resync"
-msgstr ""
+msgstr "Seřídit znovu"
 
 #: editorwindow.py:164
+#, fuzzy
 msgid "Set Sync Parent"
-msgstr ""
+msgstr "Vybrat seřizovací rodičovský záběr..."
 
 #: editorwindow.py:165
 msgid "Add Single Track Transition"
@@ -296,104 +312,113 @@ msgid "Add Single Track Fade"
 msgstr ""
 
 #: editorwindow.py:167
+#, fuzzy
 msgid "Clear Filters"
-msgstr ""
+msgstr "Klonovat filtry"
 
 #: editorwindow.py:168
 msgid "Consolidate Selected Blanks"
-msgstr ""
+msgstr "Sjednotit vybrané prázdné"
 
 #: editorwindow.py:169
 msgid "Consolidate All Blanks"
-msgstr ""
+msgstr "Sjednotit všechny prázdné"
 
 #: editorwindow.py:170
 msgid "Change Sequence Tracks Count..."
-msgstr ""
+msgstr "Změnit počet stop sekvence..."
 
 #: editorwindow.py:171 dialogs.py:772
 msgid "Profiles Manager"
-msgstr ""
+msgstr "Správce profilů"
 
 #: editorwindow.py:172
 msgid "Preferences"
-msgstr ""
+msgstr "Nastavení"
 
 #: editorwindow.py:173 dialogs.py:598
+#, fuzzy
 msgid "View"
-msgstr ""
+msgstr "Pohled:"
 
 #: editorwindow.py:174 editorwindow.py:449
 msgid "Project"
-msgstr ""
+msgstr "Projekt"
 
 #: editorwindow.py:175
+#, fuzzy
 msgid "Add Media Clip..."
-msgstr ""
+msgstr "Přidat multimediální soubor do zásobníku"
 
 #: editorwindow.py:176
+#, fuzzy
 msgid "Add Image Sequence..."
-msgstr ""
+msgstr "Vytvořit sekvenci"
 
 #: editorwindow.py:177
 msgid "Create Color Clip..."
-msgstr ""
+msgstr "Vytvořit záběr s barvou..."
 
 #: editorwindow.py:178
+#, fuzzy
 msgid "Create Pattern Producer"
-msgstr ""
+msgstr "Vytvořit nový profil"
 
 #: editorwindow.py:179 translations.py:356
 msgid "Noise"
-msgstr ""
+msgstr "Šum"
 
 #: editorwindow.py:180
 msgid "EBU Bars"
 msgstr ""
 
 #: editorwindow.py:181
+#, fuzzy
 msgid "Log Marked Clip Range"
-msgstr ""
+msgstr "Označený rozsah"
 
 #: editorwindow.py:182
 msgid "Recreate Media Icons..."
-msgstr ""
+msgstr "Vytvořit znovu multimediální ikony..."
 
 #: editorwindow.py:183
 msgid "Remove Unused Media..."
 msgstr ""
 
 #: editorwindow.py:184
+#, fuzzy
 msgid "Project Info"
-msgstr ""
+msgstr "Projekt"
 
 #: editorwindow.py:185 dialogs.py:1206
 msgid "Tools"
-msgstr ""
+msgstr "Nástroje"
 
 #: editorwindow.py:186 tools/titler.py:152
 msgid "Titler"
-msgstr ""
+msgstr "Popisovač"
 
 #: editorwindow.py:187
+#, fuzzy
 msgid "Audio Mixer"
-msgstr ""
+msgstr "Zvukový filtr"
 
 #: editorwindow.py:188
+#, fuzzy
 msgid "Render Queue"
-msgstr ""
+msgstr "Zpracování"
 
 #: editorwindow.py:189
 msgid "_Help"
-msgstr ""
+msgstr "_Nápověda"
 
 #: editorwindow.py:190
 msgid "Contents"
-msgstr ""
+msgstr "Obsah"
 
 #: editorwindow.py:191 dialogs.py:450
 msgid "Runtime Environment"
-msgstr ""
+msgstr "Běhové prostředí"
 
 #: editorwindow.py:192 dialogs.py:1159
 msgid "Keyboard Shortcuts"
@@ -401,11 +426,11 @@ msgstr ""
 
 #: editorwindow.py:193 dialogs.py:380
 msgid "About"
-msgstr ""
+msgstr "O programu"
 
 #: editorwindow.py:445
 msgid "Media"
-msgstr ""
+msgstr "Záznamy"
 
 #: editorwindow.py:446
 msgid "Range Log"
@@ -413,15 +438,15 @@ msgstr ""
 
 #: editorwindow.py:447
 msgid "Filters"
-msgstr ""
+msgstr "Filtry"
 
 #: editorwindow.py:448
 msgid "Compositors"
-msgstr ""
+msgstr "Směšovače"
 
 #: editorwindow.py:450 render.py:583
 msgid "Render"
-msgstr ""
+msgstr "Zpracování"
 
 #: editorwindow.py:477
 msgid ""
@@ -438,83 +463,87 @@ msgstr ""
 
 #: editorwindow.py:717
 msgid "Timeline current frame timecode"
-msgstr ""
+msgstr "Časový kód nynějšího snímku na časové ose"
 
 #: editorwindow.py:719
+#, fuzzy
 msgid "Select view mode: Video/Vectorscope/RGBParade"
-msgstr ""
+msgstr "Vybrat režim zobrazení: Program Video/Vectorscope/RGBParade"
 
 #: editorwindow.py:721
+#, fuzzy
 msgid "Monitor Sequence/Media current frame timecode"
-msgstr ""
+msgstr "Časový kód nynějšího snímku v okně pro sledování"
 
 #: editorwindow.py:722
+#, fuzzy
 msgid "Current Monitor Sequence/Media name"
-msgstr ""
+msgstr "Název nynějšího okna pro sledování"
 
 #: editorwindow.py:724
+#, fuzzy
 msgid "Monitor Sequence/Media current position"
-msgstr ""
+msgstr "Nynější poloha v okně pro sledování obrazového záznamu"
 
 #: editorwindow.py:726
 msgid "Display Current Sequence on Timeline"
-msgstr ""
+msgstr "Zobrazit nynější sekvenci na časové ose"
 
 #: editorwindow.py:727
 msgid "Display Monitor Clip"
-msgstr ""
+msgstr "Zobrazit záběr v okně pro sledování"
 
 #: clipeffectseditor.py:131
 msgid "Quit editing Clip in editor"
-msgstr ""
+msgstr "Ukončit upravování záběru v editoru"
 
 #: clipeffectseditor.py:141 panels.py:61 panels.py:93 panels.py:111
 #: translations.py:505 mlttransitions.py:139 tools/titler.py:165
 msgid "Add"
-msgstr ""
+msgstr "Přidat"
 
 #: clipeffectseditor.py:142 compositeeditor.py:55 dialogs.py:1167
 #: dialogs.py:1180 guicomponents.py:1094 guicomponents.py:1149
 #: guicomponents.py:1332 guicomponents.py:1351 panels.py:62 panels.py:94
 #: panels.py:112 tools/titler.py:166
 msgid "Delete"
-msgstr ""
+msgstr "Smazat"
 
 #: clipeffectseditor.py:151
 msgid "Clip being edited"
-msgstr ""
+msgstr "Záběr je upravován"
 
 #: clipeffectseditor.py:152
 msgid "Clip Filter Stack"
-msgstr ""
+msgstr "Zásobník filtrů záběru"
 
 #: clipeffectseditor.py:153
 msgid "Add Filter to Clip Filter Stack"
-msgstr ""
+msgstr "Přidat filtr do zásobníku filtrů záběru"
 
 #: clipeffectseditor.py:154
 msgid "Delete Filter from Clip Filter Stack"
-msgstr ""
+msgstr "Smazat filtr ze zásobníku filtrů záběru"
 
 #: clipeffectseditor.py:357
 msgid "No editable parameters"
-msgstr ""
+msgstr "Žádné upravitelné parametry"
 
 #: compositeeditor.py:57 render.py:304
 msgid "Reset"
-msgstr ""
+msgstr "Nastavit znovu"
 
 #: compositeeditor.py:61 compositeeditor.py:131
 msgid "No Compositor"
-msgstr ""
+msgstr "Žádný směšovač"
 
 #: compositeeditor.py:153
 msgid "Destination track:"
-msgstr ""
+msgstr "Cílová stopa:"
 
 #: dialogs.py:58
 msgid "New Project"
-msgstr ""
+msgstr "Nový projekt"
 
 #: dialogs.py:60 dialogs.py:119 dialogs.py:132 dialogs.py:142 dialogs.py:160
 #: dialogs.py:187 dialogs.py:205 dialogs.py:221 dialogs.py:237 dialogs.py:249
@@ -523,141 +552,144 @@ msgstr ""
 #: dialogs.py:866 dialogs.py:910 dialogs.py:939 dialogs.py:995 dialogs.py:1028
 #: dialogs.py:1135 dialogs.py:1148
 msgid "Cancel"
-msgstr ""
+msgstr "Zrušit"
 
 #: dialogs.py:61 dialogs.py:120 dialogs.py:133 dialogs.py:250 dialogs.py:382
 #: dialogs.py:452 dialogs.py:587 dialogs.py:608 dialogs.py:624
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: dialogs.py:69
 msgid "Project profile:"
-msgstr ""
+msgstr "Profil projektu:"
 
 #: dialogs.py:79 panels.py:138 projectinfogui.py:25
 msgid "Profile"
-msgstr ""
+msgstr "Profil"
 
 #: dialogs.py:82
 msgid "Number of tracks:"
-msgstr ""
+msgstr "Počet stop:"
 
 #: dialogs.py:88
 msgid "Tracks"
-msgstr ""
+msgstr "Skladby"
 
 #: dialogs.py:117
 msgid "Select Project File"
-msgstr ""
+msgstr "Vybrat soubor s projektem"
 
 #: dialogs.py:130
 msgid "Select Titler Data File"
-msgstr ""
+msgstr "Vybrat soubor s daty popisovače"
 
 #: dialogs.py:140
 msgid "Save Project As"
-msgstr ""
+msgstr "Projekt uložit jako"
 
 #: dialogs.py:143 dialogs.py:188 dialogs.py:206 dialogs.py:222 dialogs.py:238
 #: dialogs.py:353 dialogs.py:372
 msgid "Save"
-msgstr ""
+msgstr "Uložit"
 
 #: dialogs.py:158
 msgid "Export Project as XML to"
-msgstr ""
+msgstr "Vyvést projekt jako XML do"
 
 #: dialogs.py:185
 msgid "Save Titler Graphic As"
-msgstr ""
+msgstr "Uložit grafiku popisovače jako"
 
 #: dialogs.py:203
 msgid "Save Titler Layers As"
-msgstr ""
+msgstr "Uložit vrstvy popisovače jako"
 
 #: dialogs.py:219
 msgid "Save Render Args As"
-msgstr ""
+msgstr "Uložit argumenty pro zpracování jako"
 
 #: dialogs.py:235
+#, fuzzy
 msgid "Save Runtime Environment Data"
-msgstr ""
+msgstr "Běhové prostředí"
 
 #: dialogs.py:247
 msgid "Load Render Args File"
-msgstr ""
+msgstr "Nahrát soubor s argumenty pro zpracování"
 
 #: dialogs.py:263 dialogs.py:278 dialogs.py:996
 msgid "Ok"
-msgstr ""
+msgstr "OK"
 
 #: dialogs.py:264 dialogs.py:279
 msgid "Select Thumbnail Folder"
-msgstr ""
+msgstr "Vybrat složku pro náhledy"
 
 #: dialogs.py:291
+#, fuzzy
 msgid "Can't make home folder render clips folder"
-msgstr ""
+msgstr "Nelze udělat složku pro náhledy z domovské složky"
 
 #: dialogs.py:293
+#, fuzzy
 msgid "' as render clips folder"
-msgstr ""
+msgstr "' jako složku pro náhledy"
 
 #: dialogs.py:297
 msgid "Render Progress"
-msgstr ""
+msgstr "Postup zpracování"
 
 #: dialogs.py:342 dialogs.py:361
 msgid "Save project '"
-msgstr ""
+msgstr "Uložit projekt '"
 
 #: dialogs.py:342
 msgid "' before exiting?"
-msgstr ""
+msgstr "' před ukončením?"
 
 #: dialogs.py:351 dialogs.py:370
 msgid "Don't Save"
-msgstr ""
+msgstr "Neukládat"
 
 #: dialogs.py:361
 msgid "' before closing project?"
-msgstr ""
+msgstr "' před zavřením projektu?"
 
 #: dialogs.py:441
 msgid "Application"
-msgstr ""
+msgstr "Program"
 
 #: dialogs.py:442
 msgid "Thanks"
-msgstr ""
+msgstr "Poděkování"
 
 #: dialogs.py:443
 msgid "License"
-msgstr ""
+msgstr "Povolení"
 
 #: dialogs.py:456
 msgid "MLT version: "
-msgstr ""
+msgstr "Verze MLT: "
 
 #: dialogs.py:462
 msgid "GTK version: "
-msgstr ""
+msgstr "Verze GTK: "
 
 #: dialogs.py:464
 msgid "Locale: "
-msgstr ""
+msgstr "Jazyk: "
 
 #: dialogs.py:467
 msgid "INSTALLATION"
-msgstr ""
+msgstr "Instalace"
 
 #: dialogs.py:469
 msgid "DEVELOPER VERSION"
-msgstr ""
+msgstr "Vývojářská verze"
 
 #: dialogs.py:471
 msgid "Running from: "
-msgstr ""
+msgstr "Běží z: "
 
 #: dialogs.py:472
 msgid "Write Environment Data to File"
@@ -665,187 +697,189 @@ msgstr ""
 
 #: dialogs.py:502
 msgid " AVAILABLE"
-msgstr ""
+msgstr " Dostupné"
 
 #: dialogs.py:504
 msgid " NOT AVAILABLE, "
-msgstr ""
+msgstr " Nedostupné, "
 
 #: dialogs.py:504
 msgid " MISSING"
-msgstr ""
+msgstr " Chybí"
 
 #: dialogs.py:510
 msgid " FOR FILTER "
-msgstr ""
+msgstr " Pro filtr "
 
 #: dialogs.py:510 dialogs.py:513
 msgid " NOT FOUND"
-msgstr ""
+msgstr " Nenalezeno"
 
 #: dialogs.py:513
 msgid " FOR TRANSITION "
-msgstr ""
+msgstr " Pro přechod "
 
 #: dialogs.py:517 dialogs.py:596 dialogs.py:1174
 msgid "General"
-msgstr ""
+msgstr "Obecné"
 
 #: dialogs.py:518
 msgid "MLT Filters"
-msgstr ""
+msgstr "Filtry MLT"
 
 #: dialogs.py:519
 msgid "MLT Transitions"
-msgstr ""
+msgstr "Přechody MLT"
 
 #: dialogs.py:520
 msgid "Missing MLT Services"
-msgstr ""
+msgstr "Chybí služba MLT"
 
 #: dialogs.py:523
 msgid "Video Codecs"
-msgstr ""
+msgstr "Obrazové kodeky"
 
 #: dialogs.py:524
 msgid "Audio Codecs"
-msgstr ""
+msgstr "Zvukové kodeky"
 
 #: dialogs.py:525
 msgid "Formats"
-msgstr ""
+msgstr "Formáty"
 
 #: dialogs.py:526
 msgid "Render Options"
-msgstr ""
+msgstr "Volby pro zpracování"
 
 #: dialogs.py:573
 msgid "Create Color Clip"
-msgstr ""
+msgstr "Vytvořit záběr s barvou"
 
 #: dialogs.py:576
 msgid "Create"
-msgstr ""
+msgstr "Vytvořit"
 
 #: dialogs.py:584
 msgid "Editor Preferences"
-msgstr ""
+msgstr "Nastavení editoru"
 
 #: dialogs.py:597
 msgid "Editing"
-msgstr ""
+msgstr "Upravit"
 
 #: dialogs.py:606 guicomponents.py:1335
 msgid "File Properties"
-msgstr ""
+msgstr "Vlastnosti souboru"
 
 #: dialogs.py:622
 msgid "Clip Properties"
-msgstr ""
+msgstr "Vlastnosti záběru"
 
 #: dialogs.py:638
 msgid "Composite Target Track"
-msgstr ""
+msgstr "Smíchaná cílová stopa"
 
 #: dialogs.py:641 guicomponents.py:1204
 msgid "Add Compositor"
-msgstr ""
+msgstr "Přidat směšovač"
 
 #: dialogs.py:662
 msgid "Loading project"
-msgstr ""
+msgstr "Načítání projektu"
 
 #: dialogs.py:737
 msgid "Recreating icons"
-msgstr ""
+msgstr "Znovu se vytvářejí ikony"
 
 #: dialogs.py:774
 msgid "Close Manager"
-msgstr ""
+msgstr "Zavřít správce"
 
 #: dialogs.py:793
 msgid "Create New Profile"
-msgstr ""
+msgstr "Vytvořit nový profil"
 
 #: dialogs.py:794
 msgid "Manage Profiles"
-msgstr ""
+msgstr "Spravovat profily"
 
 #: dialogs.py:804
 msgid "Open last autosave?"
-msgstr ""
+msgstr "Otevřít poslední automaticky uloženou zálohu?"
 
 #: dialogs.py:805
 msgid ""
 "It seems that Flowblade exited abnormally last time.\n"
 "\n"
 msgstr ""
+"Zdá se, že Flowblade byl naposledy ukončen neobvyklým způsobem.\n"
+"\n"
 
 #: dialogs.py:806
 msgid "It is NOT possible to open this autosaved version later."
-msgstr ""
+msgstr "NENÍ možné, aby byla tato automaticky uložená verze později otevřena."
 
 #: dialogs.py:816
 msgid "Continue with default 'untitled' project"
-msgstr ""
+msgstr "Pokračovat s výchozím nepojmenovaným projektem"
 
 #: dialogs.py:817
 msgid "Open Autosaved Project"
-msgstr ""
+msgstr "Otevřít automaticky uložený projekt"
 
 #: dialogs.py:828
 msgid "Change Sequence Tracks Count"
-msgstr ""
+msgstr "Změnit počet stop sekvence"
 
 #: dialogs.py:831
 msgid "Change Tracks"
-msgstr ""
+msgstr "Změnit stopy"
 
 #: dialogs.py:834
 msgid "New Number of Tracks:"
-msgstr ""
+msgstr "Nový počet stop:"
 
 #: dialogs.py:837
 msgid "Please note:\n"
-msgstr ""
+msgstr "Všimněte si, prosím:\n"
 
 #: dialogs.py:838
 msgid ""
 "* It is recommended that you save Project before completing this operation\n"
-msgstr ""
+msgstr "* Doporučuje se projekt před dokončením této operace uložit\n"
 
 #: dialogs.py:839
 msgid "* There is no Undo for this operation\n"
-msgstr ""
+msgstr "* Tuto operaci nelze vrátit zpět\n"
 
 #: dialogs.py:840
 msgid "* Current Undo Stack will be destroyed\n"
-msgstr ""
+msgstr "* Nynější zásobníku kroků pro návrat zpět bude zničen\n"
 
 #: dialogs.py:841
 msgid ""
 "* All Clips and Compositors on deleted Tracks will be permanently destroyed"
-msgstr ""
+msgstr "* Všechny záběry a směšovače na smazaných stopách budou trvale zničeny"
 
 #: dialogs.py:864
 msgid "Create New Sequence"
-msgstr ""
+msgstr "Vytvořit novou sekvenci"
 
 #: dialogs.py:867
 msgid "Create Sequence"
-msgstr ""
+msgstr "Vytvořit sekvenci"
 
 #: dialogs.py:874
 msgid "Sequence Name:"
-msgstr ""
+msgstr "Název sekvence:"
 
 #: dialogs.py:879
 msgid "Number of Tracks:"
-msgstr ""
+msgstr "Počet stop:"
 
 #: dialogs.py:885
 msgid "Open For Editing:"
-msgstr ""
+msgstr "Otevřít pro úpravy:"
 
 #: dialogs.py:908
 msgid "Rename New Media Object"
@@ -856,8 +890,9 @@ msgid "Rename"
 msgstr ""
 
 #: dialogs.py:918 dialogs.py:947
+#, fuzzy
 msgid "New Name:"
-msgstr ""
+msgstr "Název:"
 
 #: dialogs.py:937 guicomponents.py:1081 guicomponents.py:1135
 msgid "Rename Clip"
@@ -865,45 +900,53 @@ msgstr ""
 
 #: dialogs.py:966
 msgid "Can't open non-valid media"
-msgstr ""
+msgstr "Nelze otevřít neplatná multimédia"
 
 #: dialogs.py:967
 msgid ""
 "\n"
 "is not a valid media file."
 msgstr ""
+"\n"
+"Není platný multimediální soubor."
 
 #: dialogs.py:971
 msgid "New Marker"
 msgstr ""
 
 #: dialogs.py:973 guicomponents.py:1694
+#, fuzzy
 msgid "Add Marker"
-msgstr ""
+msgstr "Přidat filtr"
 
 #: dialogs.py:980
 msgid "Name for marker at "
 msgstr ""
 
 #: dialogs.py:997
+#, fuzzy
 msgid "Add Image Sequence Clip"
-msgstr ""
+msgstr "Přidat novou sekvenci do projektu"
 
 #: dialogs.py:1003
+#, fuzzy
 msgid "Select First Frame"
-msgstr ""
+msgstr "Vybrat soubor s projektem"
 
 #: dialogs.py:1007
+#, fuzzy
 msgid "First frame:"
-msgstr ""
+msgstr "Další snímek"
 
 #: dialogs.py:1011
+#, fuzzy
 msgid "Frames per Source Image:"
-msgstr ""
+msgstr "Snímků za vteřinu:"
 
 #: dialogs.py:1029
+#, fuzzy
 msgid "Export Files"
-msgstr ""
+msgstr "Vyvést"
 
 #: dialogs.py:1030
 msgid "Export DVDAuthor Files"
@@ -914,16 +957,18 @@ msgid "Use Markers as Chapter Starts:"
 msgstr ""
 
 #: dialogs.py:1070
+#, fuzzy
 msgid "Select Work Folder:"
-msgstr ""
+msgstr "Vybrat složku"
 
 #: dialogs.py:1076
 msgid "XML File Name:"
 msgstr ""
 
 #: dialogs.py:1080
+#, fuzzy
 msgid "Render MPEG File:"
-msgstr ""
+msgstr "Profil zpracování"
 
 #: dialogs.py:1088
 msgid "MPEG File for DVD Type:"
@@ -934,40 +979,45 @@ msgid "MPEG File Name:"
 msgstr ""
 
 #: dialogs.py:1133
+#, fuzzy
 msgid "Add Transition"
-msgstr ""
+msgstr "Přechody MLT"
 
 #: dialogs.py:1136 dialogs.py:1149
 msgid "Apply"
 msgstr ""
 
 #: dialogs.py:1146
+#, fuzzy
 msgid "Add Fade"
-msgstr ""
+msgstr "Přidat filtr"
 
 #: dialogs.py:1162 tools/titler.py:371
 msgid "Close"
-msgstr ""
+msgstr "Zavřít"
 
 #: dialogs.py:1165
 msgid "Control + N"
 msgstr ""
 
 #: dialogs.py:1165
+#, fuzzy
 msgid "Create New Project"
-msgstr ""
+msgstr "Vytvořit nový profil"
 
 #: dialogs.py:1166 dialogs.py:1171
 msgid "Control + S"
 msgstr ""
 
 #: dialogs.py:1166
+#, fuzzy
 msgid "Save Project"
-msgstr ""
+msgstr "Projekt uložit jako"
 
 #: dialogs.py:1167
+#, fuzzy
 msgid "Delete Selected Item"
-msgstr ""
+msgstr "Smazat vybrané"
 
 #: dialogs.py:1168
 msgid "Escape"
@@ -982,8 +1032,9 @@ msgid "Control + Z"
 msgstr ""
 
 #: dialogs.py:1169
+#, fuzzy
 msgid "Quit"
-msgstr ""
+msgstr "U_končit"
 
 #: dialogs.py:1170
 msgid "Control + Y"
@@ -991,23 +1042,25 @@ msgstr ""
 
 #: dialogs.py:1170
 msgid "Undo"
-msgstr ""
+msgstr "Zpět"
 
 #: dialogs.py:1171
 msgid "Redo"
-msgstr ""
+msgstr "Znovu"
 
 #: dialogs.py:1172
 msgid "Control + O"
 msgstr ""
 
 #: dialogs.py:1172
+#, fuzzy
 msgid "Open Project"
-msgstr ""
+msgstr "Otevřít nový projekt"
 
 #: dialogs.py:1173
+#, fuzzy
 msgid "TAB"
-msgstr ""
+msgstr "ABI"
 
 #: dialogs.py:1173
 msgid "Switch Monitor Source"
@@ -1015,11 +1068,11 @@ msgstr ""
 
 #: dialogs.py:1177
 msgid "Set Mark In"
-msgstr ""
+msgstr "Nastavit značku pro začátek záběru"
 
 #: dialogs.py:1178
 msgid "Set Mark Out"
-msgstr ""
+msgstr "Nastavit značku pro konec záběru"
 
 #: dialogs.py:1183
 msgid "3 Point Overwrite Insert"
@@ -1031,7 +1084,7 @@ msgstr ""
 
 #: dialogs.py:1185
 msgid "Timeline"
-msgstr ""
+msgstr "Časová osa"
 
 #: dialogs.py:1188
 msgid "Space"
@@ -1047,7 +1100,7 @@ msgstr ""
 
 #: dialogs.py:1190
 msgid "Stop"
-msgstr ""
+msgstr "Zastavit"
 
 #: dialogs.py:1191
 msgid "Forward Faster"
@@ -1058,16 +1111,19 @@ msgid "Left Arrow "
 msgstr ""
 
 #: dialogs.py:1192
+#, fuzzy
 msgid "Prev Frame"
-msgstr ""
+msgstr "Předchozí snímek"
 
 #: dialogs.py:1193 dialogs.py:1210
+#, fuzzy
 msgid "Right Arrow"
-msgstr ""
+msgstr "Vpravo"
 
 #: dialogs.py:1193
+#, fuzzy
 msgid "Next Frame"
-msgstr ""
+msgstr "Další snímek"
 
 #: dialogs.py:1194 dialogs.py:1211
 msgid "Up Arrow"
@@ -1098,36 +1154,39 @@ msgid "Shift + I"
 msgstr ""
 
 #: dialogs.py:1197
+#, fuzzy
 msgid "To Mark In"
-msgstr ""
+msgstr "Jít na značku pro začátek záběru"
 
 #: dialogs.py:1198
 msgid "Shift + O"
 msgstr ""
 
 #: dialogs.py:1198
+#, fuzzy
 msgid "To Mark Out"
-msgstr ""
+msgstr "Jít na značku pro konec záběru"
 
 #: dialogs.py:1199
+#, fuzzy
 msgid "Playback"
-msgstr ""
+msgstr "Přehrát"
 
 #: dialogs.py:1202 guicomponents.py:1725
 msgid "Insert Move"
-msgstr ""
+msgstr "Režim vkládání přesunu"
 
 #: dialogs.py:1203 guicomponents.py:1730
 msgid "Overwrite Move"
-msgstr ""
+msgstr "Režim přepisu přesunu"
 
 #: dialogs.py:1204 guicomponents.py:1735
 msgid "One Roll Trim"
-msgstr ""
+msgstr "Režim oříznutí z jedné strany"
 
 #: dialogs.py:1205 guicomponents.py:1740
 msgid "Two Roll Trim"
-msgstr ""
+msgstr "Režim oříznutí ze dvou stran"
 
 #: dialogs.py:1209
 msgid "Move Source Video Left"
@@ -1138,270 +1197,280 @@ msgid "Move Source Video Right"
 msgstr ""
 
 #: dialogs.py:1211
+#, fuzzy
 msgid "Move Source Video Up"
-msgstr ""
+msgstr "Ztlumit obraz"
 
 #: dialogs.py:1212
 msgid "Move Source Video Down"
 msgstr ""
 
 #: dialogs.py:1213
+#, fuzzy
 msgid "Geometry Editor"
-msgstr ""
+msgstr "Otevřít v editoru směšovače"
 
 #: editevent.py:93
 msgid "Can't put an audio clip on a video track."
-msgstr ""
+msgstr "Nelze dát zvukový záběr do stopy s obrazovým záznamem."
 
 #: editevent.py:94 editevent.py:985 movemodes.py:582
 msgid "Track "
-msgstr ""
+msgstr "Stopa"
 
 #: editevent.py:94
 msgid " is a video track and can't display audio only material."
-msgstr ""
+msgstr " je obrazová stopa a nemůže zobrazit materiál, který je pouze zvukový."
 
 #: editevent.py:590
 msgid "Origin clip not found!"
-msgstr ""
+msgstr "Původní záběr nenalezen!"
 
 #: editevent.py:591
 msgid ""
 "Clip used to create this Compositor has been removed\n"
 "or moved to different track."
 msgstr ""
+"Záběr použitý na vytvoření tohoto směšovače byl odstraněn\n"
+"nebo přesunut do jiné stopy."
 
 #: editevent.py:801
 msgid "Not enough vertical space on Timeline to expand track"
-msgstr ""
+msgstr "Na časové ose není na výšku dostatek místa pro rozšíření stopy"
 
 #: editevent.py:802
 msgid ""
 "Maximize or resize application window to get more\n"
 "space for tracks if possible."
 msgstr ""
+"Zvětšete nebo změňte velikost okna programu, abyste,\n"
+"pokud to půjde, získali více prostoru pro stopy."
 
 #: editevent.py:858
 msgid "Previous clip does not have enough material to cover blank area"
-msgstr ""
+msgstr "Předchozí záběr nemá dostatek materiálu na pokrytí prázdné oblasti"
 
 #: editevent.py:859 editevent.py:883
 msgid "Requested edit can't be done."
-msgstr ""
+msgstr "Požadované úpravy nelze udělat."
 
 #: editevent.py:882
 msgid "Next clip does not have enough material to cover blank area"
-msgstr ""
+msgstr "Další záběr nemá dostatek materiálu na pokrytí prázdné oblasti"
 
 #: editevent.py:984
 msgid "Can't edit a locked track"
-msgstr ""
+msgstr "Nelze provádět úpravy na uzamknuté stopě"
 
 #: editevent.py:985
 msgid " is locked. Unlock track to edit it."
-msgstr ""
+msgstr " je zamknuta. Odemkněte stopu, aby mohla být upravována."
 
 #: editorpersistance.py:133
 msgid "Empty"
-msgstr ""
+msgstr "Prázdný"
 
 #: editorpersistance.py:194
 msgid "No Autosave"
-msgstr ""
+msgstr "Žádné automatické ukládání"
 
 #: editorpersistance.py:194
 msgid "1 min"
-msgstr ""
+msgstr "1 min"
 
 #: editorpersistance.py:194
 msgid "2 min"
-msgstr ""
+msgstr "2 min"
 
 #: editorpersistance.py:194
 msgid "5 min"
-msgstr ""
+msgstr "5 min"
 
 #: guicomponents.py:604
 msgid "default"
-msgstr ""
+msgstr "Výchozí"
 
 #: guicomponents.py:615
 msgid "Clip:"
-msgstr ""
+msgstr "Záběr:"
 
 #: guicomponents.py:619
 msgid "Track:"
-msgstr ""
+msgstr "Stopa:"
 
 #: guicomponents.py:622
 msgid "Pos:"
-msgstr ""
+msgstr "Pol.:"
 
 #: guicomponents.py:644
 msgid "<b>Clip: </b>"
-msgstr ""
+msgstr "<b>Záběr: </b>"
 
 #: guicomponents.py:646
 msgid "<b>Track: </b>"
-msgstr ""
+msgstr "<b>Stopa: </b>"
 
 #: guicomponents.py:648 guicomponents.py:659 guicomponents.py:738
 msgid "<b>Position:</b>"
-msgstr ""
+msgstr "<b>Poloha: </b>"
 
 #: guicomponents.py:655
 msgid "<b>Clip:</b>"
-msgstr ""
+msgstr "<b>Záběr: </b>"
 
 #: guicomponents.py:657
 msgid "<b>Track:</b>"
-msgstr ""
+msgstr "<b>Stopa: </b>"
 
 #: guicomponents.py:732
 msgid "<b>Source Track:</b>"
-msgstr ""
+msgstr "<b>Zdrojová stopa: </b>"
 
 #: guicomponents.py:735
 msgid "<b>Destination Track:</b>"
-msgstr ""
+msgstr "<b>Cílová stopa: </b>"
 
 #: guicomponents.py:741
 msgid "<b>Length:</b>"
-msgstr ""
+msgstr "<b>Délka: </b>"
 
 #: guicomponents.py:987 guicomponents.py:991
 msgid "Lock Track"
-msgstr ""
+msgstr "Uzamknout stopu"
 
 #: guicomponents.py:988 guicomponents.py:992
 msgid "Unlock Track"
-msgstr ""
+msgstr "Odemknout stopu"
 
 #: guicomponents.py:996
 msgid "Large Height"
-msgstr ""
+msgstr "Velká výška"
 
 #: guicomponents.py:1000
 msgid "Normal Height"
-msgstr ""
+msgstr "Normální výška"
 
 #: guicomponents.py:1017 guicomponents.py:1103
 msgid "Open in Filters Editor"
-msgstr ""
+msgstr "Otevřít v editoru filtrů"
 
 #: guicomponents.py:1024 guicomponents.py:1105 guicomponents.py:1334
 msgid "Open in Clip Monitor"
-msgstr ""
+msgstr "Otevřít v okně pro sledování záběrů"
 
 #: guicomponents.py:1031
 msgid "Split Audio"
-msgstr ""
+msgstr "Rozdělit zvuk"
 
 #: guicomponents.py:1037
 msgid "Split Audio Synched"
-msgstr ""
+msgstr "Rozdělit zvuk seřízeně"
 
 #: guicomponents.py:1043 guicomponents.py:1119
+#, fuzzy
 msgid "Display Audio Level"
-msgstr ""
+msgstr "Zobrazit záběr v okně pro sledování"
 
 #: guicomponents.py:1046 guicomponents.py:1122
 msgid "Clear Waveform"
-msgstr ""
+msgstr "Smazat časový průběh zvukového signálu"
 
 #: guicomponents.py:1054 guicomponents.py:1112
 msgid "Clear Sync Relation"
-msgstr ""
+msgstr "Smazat seřizovací vztah"
 
 #: guicomponents.py:1056 guicomponents.py:1114
 msgid "Select Sync Parent Clip..."
-msgstr ""
+msgstr "Vybrat seřizovací rodičovský záběr..."
 
 #: guicomponents.py:1084 guicomponents.py:1138
 msgid "Clip Info"
-msgstr ""
+msgstr "Informace o záběru"
 
 #: guicomponents.py:1089
 msgid "Strech Prev Clip to Cover"
-msgstr ""
+msgstr "Protáhnout předchozí záběr pro pokrytí"
 
 #: guicomponents.py:1090
 msgid "Strech Next Clip to Cover"
-msgstr ""
+msgstr "Protáhnout další záběr pro pokrytí"
 
 #: guicomponents.py:1092
 msgid "Consolidate"
-msgstr ""
+msgstr "Sjednotit"
 
 #: guicomponents.py:1145
 msgid "Open In Compositor Editor"
-msgstr ""
+msgstr "Otevřít v editoru směšovače"
 
 #: guicomponents.py:1147
 msgid "Sync with Origin Clip"
-msgstr ""
+msgstr "Seřídit s původním záběrem"
 
 #: guicomponents.py:1153 guicomponents.py:1174
 msgid "Add Filter"
-msgstr ""
+msgstr "Přidat filtr"
 
 #: guicomponents.py:1220
 msgid "Add Blend"
-msgstr ""
+msgstr "Přidat prolínání"
 
 #: guicomponents.py:1236
 msgid "Clone Filters"
-msgstr ""
+msgstr "Klonovat filtry"
 
 #: guicomponents.py:1240
 msgid "From Next Clip"
-msgstr ""
+msgstr "Z dalšího záběru"
 
 #: guicomponents.py:1245
 msgid "From Previous Clip"
-msgstr ""
+msgstr "Z předchozího záběru"
 
 #: guicomponents.py:1254 guicomponents.py:1274
 msgid "Mute"
-msgstr ""
+msgstr "Ztlumit"
 
 #: guicomponents.py:1258 guicomponents.py:1278
 msgid "Unmute"
-msgstr ""
+msgstr "Zrušit ztišení"
 
 #: guicomponents.py:1264 guicomponents.py:1293
 msgid "Mute Audio"
-msgstr ""
+msgstr "Ztlumit zvuk"
 
 #: guicomponents.py:1287
 msgid "Mute Video"
-msgstr ""
+msgstr "Ztlumit obraz"
 
 #: guicomponents.py:1300
 msgid "Mute All"
-msgstr ""
+msgstr "Ztlumit vše"
 
 #: guicomponents.py:1310
+#, fuzzy
 msgid "Clip Color"
-msgstr ""
+msgstr "Barva"
 
 #: guicomponents.py:1312
+#, fuzzy
 msgid "Default"
-msgstr ""
+msgstr "Výchozí"
 
 #: guicomponents.py:1313 translations.py:457 translations.py:512
 msgid "Red"
-msgstr ""
+msgstr "Červená"
 
 #: guicomponents.py:1314 translations.py:458 translations.py:507
 #: translations.py:513
 msgid "Green"
-msgstr ""
+msgstr "Zelená"
 
 #: guicomponents.py:1315 translations.py:459 translations.py:508
 #: translations.py:514
+#, fuzzy
 msgid "Blue"
-msgstr ""
+msgstr "Modrá"
 
 #: guicomponents.py:1316
 msgid "Orange"
@@ -1417,112 +1486,120 @@ msgstr ""
 
 #: guicomponents.py:1337
 msgid "Render Slow/Fast Motion File"
-msgstr ""
+msgstr "Udělat zpomalený/zrychlený soubor"
 
 #: guicomponents.py:1343
 msgid "Toggle Active"
-msgstr ""
+msgstr "Přepnout činný"
 
 #: guicomponents.py:1344
 msgid "Reset Values"
-msgstr ""
+msgstr "Nastavit hodnoty znovu"
 
 #: guicomponents.py:1349
+#, fuzzy
 msgid "Display In Clip Monitor"
-msgstr ""
+msgstr "Otevřít v okně pro sledování záběrů"
 
 #: guicomponents.py:1350
+#, fuzzy
 msgid "Toggle Star"
-msgstr ""
+msgstr "Přepnout činný"
 
 #: guicomponents.py:1417 propertyeditorbuilder.py:326
 #: propertyeditorbuilder.py:421
 msgid "Progressive"
-msgstr ""
+msgstr "Vzrůstající"
 
 #: guicomponents.py:1419
+#, fuzzy
 msgid "Interlaced"
-msgstr ""
+msgstr "Odstranit prokládání"
 
 #: guicomponents.py:1422
 msgid "Fps: "
 msgstr ""
 
 #: guicomponents.py:1425
+#, fuzzy
 msgid "Pixel Aspect: "
-msgstr ""
+msgstr "Poměr stran pixelu: "
 
 #: guicomponents.py:1432
 msgid "Description:"
-msgstr ""
+msgstr "Popis:"
 
 #: guicomponents.py:1434
 msgid "Dimensions:"
-msgstr ""
+msgstr "Rozměry:"
 
 #: guicomponents.py:1436
 msgid "Frames per second:"
-msgstr ""
+msgstr "Snímků za vteřinu:"
 
 #: guicomponents.py:1438
 msgid "Size:"
-msgstr ""
+msgstr "Velikost:"
 
 #: guicomponents.py:1440
 msgid "Pixel aspect ratio: "
-msgstr ""
+msgstr "Poměr stran pixelu: "
 
 #: guicomponents.py:1442 panels.py:786
 msgid "Progressive:"
-msgstr ""
+msgstr "Progresivní"
 
 #: guicomponents.py:1468
 msgid "Yes"
-msgstr ""
+msgstr "Ano"
 
 #: guicomponents.py:1470
 msgid "No"
-msgstr ""
+msgstr "Ne"
 
 #: guicomponents.py:1665
 msgid "5 video, 4 audio"
-msgstr ""
+msgstr "5 obrazových, 4 zvukové"
 
 #: guicomponents.py:1666
 msgid "4 video, 3 audio"
-msgstr ""
+msgstr "4 obrazové, 3 zvukové"
 
 #: guicomponents.py:1667
 msgid "3 video, 2 audio"
-msgstr ""
+msgstr "3 obrazové, 2 zvukové"
 
 #: guicomponents.py:1668
 msgid "2 video, 1 audio"
-msgstr ""
+msgstr "2 obrazové, 1 zvuková"
 
 #: guicomponents.py:1669
+#, fuzzy
 msgid "8 video, 1 audio"
-msgstr ""
+msgstr "2 obrazové, 1 zvuková"
 
 #: guicomponents.py:1670
+#, fuzzy
 msgid "1 video, 8 audio"
-msgstr ""
+msgstr "5 obrazových, 4 zvukové"
 
 #: guicomponents.py:1691
 msgid "No Markers"
 msgstr ""
 
 #: guicomponents.py:1695
+#, fuzzy
 msgid "Delete Marker"
-msgstr ""
+msgstr "Smazat"
 
 #: guicomponents.py:1697
 msgid "Delete All Markers"
 msgstr ""
 
 #: guicomponents.py:1703
+#, fuzzy
 msgid "Maximize Tracks"
-msgstr ""
+msgstr "Změnit stopy"
 
 #: guicomponents.py:1704
 msgid "Maximize Video Tracks"
@@ -1533,12 +1610,14 @@ msgid "Maximize Audio Tracks"
 msgstr ""
 
 #: guicomponents.py:1707
+#, fuzzy
 msgid "Minimize Tracks"
-msgstr ""
+msgstr "Změnit stopy"
 
 #: guicomponents.py:1713
+#, fuzzy
 msgid "Image"
-msgstr ""
+msgstr "Velikost obrázku:"
 
 #: guicomponents.py:1715
 msgid "Vectorscope"
@@ -1550,175 +1629,189 @@ msgstr ""
 
 #: movemodes.py:581
 msgid "Can't do edit on a locked track"
-msgstr ""
+msgstr "Nelze provádět úpravy na uzamknuté stopě"
 
 #: movemodes.py:582
 msgid " is locked. Unlock track to edit it.\n"
-msgstr ""
+msgstr " je zamknuta. Odemkněte stopu, aby mohla být upravována.\n"
 
 #: panels.py:65
 msgid "Add Media File to Bin"
-msgstr ""
+msgstr "Přidat multimediální soubor do zásobníku"
 
 #: panels.py:66
 msgid "Delete Media File from Bin"
-msgstr ""
+msgstr "Smazat multimediální soubor ze zásobníku"
 
 #: panels.py:97
 msgid "Add Bin to Project"
-msgstr ""
+msgstr "Přidat zásobník do projektu"
 
 #: panels.py:98
 msgid "Delete Bin from Project"
-msgstr ""
+msgstr "Smazat zásobník z projektu"
 
 #: panels.py:107
 msgid "Bins"
-msgstr ""
+msgstr "Zásobníky"
 
 #: panels.py:113
 msgid "Edit"
-msgstr ""
+msgstr "Upravit"
 
 #: panels.py:114
 msgid "Add new Sequence to Project"
-msgstr ""
+msgstr "Přidat novou sekvenci do projektu"
 
 #: panels.py:115
 msgid "Delete Sequence from Project"
-msgstr ""
+msgstr "Smazat sekvenci z projektu"
 
 #: panels.py:116
 msgid "Start editing Sequence"
-msgstr ""
+msgstr "Začít upravování sekvence"
 
 #: panels.py:130
 msgid "Sequences"
-msgstr ""
+msgstr "Sekvence "
 
 #: panels.py:142 projectinfogui.py:17
 msgid "Name"
-msgstr ""
+msgstr "Název"
 
 #: panels.py:151
 msgid "Folder:"
-msgstr ""
+msgstr "Složka:"
 
 #: panels.py:156 panels.py:664
 msgid "Name:"
-msgstr ""
+msgstr "Název:"
 
 #: panels.py:162
 msgid "File"
-msgstr ""
+msgstr "Soubor"
 
 #: panels.py:173
+#, fuzzy
 msgid "Render Type"
-msgstr ""
+msgstr "Boolean operace"
 
 #: panels.py:184
 msgid "Render Profile"
-msgstr ""
+msgstr "Profil zpracování"
 
 #: panels.py:195
 msgid "Encoding Format"
-msgstr ""
+msgstr "Formát kódování"
 
 #: panels.py:234
 msgid "Render Args"
-msgstr ""
+msgstr "Argumenty pro zpracování"
 
 #: panels.py:238
+#, fuzzy
 msgid "Open File in Bin:"
-msgstr ""
+msgstr "Otevřít uložený název v zásobníku"
 
 #: panels.py:245 render.py:685
 msgid "Render Range:"
-msgstr ""
+msgstr "Rozsah zpracování:"
 
 #: panels.py:270
 msgid "Select folder for new thumbnails."
-msgstr ""
+msgstr "Vybrat složku pro nové náhledy."
 
 #: panels.py:271
 msgid "Old thumbnails in this or other projects will"
-msgstr ""
+msgstr "Staré náhledy v tomto nebo jiných projektech budou"
 
 #: panels.py:272
 msgid ""
 " still be available,\n"
 "this only affects thumnails that are created for new media.\n"
 msgstr ""
+" stále dostupné.\n"
+"Toto ovlivní pouze náhledy, jež jsou vytvořeny pro nové záznamy.\n"
 
 #: panels.py:273
 msgid ""
 "\n"
 "Setting your home folder as thumbnails folder is not allowed."
 msgstr ""
+"\n"
+"Nastavení vaší domovské složky jako složky pro náhledy není dovoleno."
 
 #: panels.py:291
+#, fuzzy
 msgid "Select folder for rendered clips."
-msgstr ""
+msgstr "Vybrat složku, do níž se má umístit udělaný soubor"
 
 #: panels.py:292
+#, fuzzy
 msgid "Old rendered clips in this or other projects will"
-msgstr ""
+msgstr "Staré náhledy v tomto nebo jiných projektech budou"
 
 #: panels.py:293
+#, fuzzy
 msgid ""
 " still be available,\n"
 "this only affects rendered files that are created from now on.\n"
 msgstr ""
+" stále dostupné.\n"
+"Toto ovlivní pouze náhledy, jež jsou vytvořeny pro nové záznamy.\n"
 
 #: panels.py:294
+#, fuzzy
 msgid ""
 "\n"
 "Setting your home folder as folder for rendered clips is not allowed."
 msgstr ""
+"\n"
+"Nastavení vaší domovské složky jako složky pro náhledy není dovoleno."
 
 #: panels.py:460
 msgid "Select Filter Group"
-msgstr ""
+msgstr "Vybrat skupinu filtru"
 
 #: panels.py:461
 msgid "Current group Filters"
-msgstr ""
+msgstr "Filtry nynější skupiny"
 
 #: panels.py:520
 msgid "Color Clip"
-msgstr ""
+msgstr "Záběr s barvou"
 
 #: panels.py:528
 msgid "Clip Name"
-msgstr ""
+msgstr "Název záběru"
 
 #: panels.py:529
 msgid "Select Color"
-msgstr ""
+msgstr "Vybrat barvu"
 
 #: panels.py:559 panels.py:562 render.py:207
 msgid "Select Folder"
-msgstr ""
+msgstr "Vybrat složku"
 
 #: panels.py:572
 msgid "Default Profile"
-msgstr ""
+msgstr "Výchozí profil"
 
 #: panels.py:573
 msgid "Remember last media directory"
-msgstr ""
+msgstr "Pamatovat si poslední adresář se soubory"
 
 #: panels.py:574
 msgid "Undo stack size"
-msgstr ""
+msgstr "Velikost zásobníku pro návrat zpět"
 
 #: panels.py:575
 msgid "Thumbnail folder"
-msgstr ""
+msgstr "Složka pro náhledy"
 
 #: panels.py:576
 msgid "Autosave for crash recovery every"
-msgstr ""
+msgstr "Automaticky uložit pro obnovení po pádu každých"
 
 #: panels.py:577
 msgid "Rendered Clips folder"
@@ -1726,19 +1819,19 @@ msgstr ""
 
 #: panels.py:612
 msgid "Autoplay new Clips in Clip Monitor"
-msgstr ""
+msgstr "Nové záběry přehrát automaticky ve sledování záběrů"
 
 #: panels.py:613
 msgid "Center Current Frame on Playback Stop"
-msgstr ""
+msgstr "Vystředit nynější snímek při zastavení přehrávání"
 
 #: panels.py:614
 msgid "Move Current Frame to Clip start after edit"
-msgstr ""
+msgstr "Přesunout po skončení úprav nynější snímek na začátek záběru"
 
 #: panels.py:615
 msgid "Graphics default length"
-msgstr ""
+msgstr "Výchozí délka grafiky"
 
 #: panels.py:638
 msgid "Glass"
@@ -1750,7 +1843,7 @@ msgstr ""
 
 #: panels.py:646
 msgid "Display splash screen"
-msgstr ""
+msgstr "Zobrazit uvítací obrazovku"
 
 #: panels.py:647
 msgid "Buttons style"
@@ -1758,63 +1851,64 @@ msgstr ""
 
 #: panels.py:665
 msgid "Path:"
-msgstr ""
+msgstr "Cesta:"
 
 #: panels.py:666 panels.py:694
 msgid "Image Size:"
-msgstr ""
+msgstr "Velikost obrázku:"
 
 #: panels.py:667
+#, fuzzy
 msgid "Frames Per Second:"
-msgstr ""
+msgstr "Snímků za vteřinu:"
 
 #: panels.py:668
 msgid "Playtime:"
-msgstr ""
+msgstr "Čas na hraní:"
 
 #: panels.py:669
 msgid "Video Codec:"
-msgstr ""
+msgstr "Kodek obrazu:"
 
 #: panels.py:670
 msgid "Audio Codec:"
-msgstr ""
+msgstr "Kodek zvuku:"
 
 #: panels.py:671
 msgid "Audio Channels:"
-msgstr ""
+msgstr "Zvukové kanály:"
 
 #: panels.py:672
 msgid "Audio Sample Rate:"
-msgstr ""
+msgstr "Vzorkovací kmitočet zvuku:"
 
 #: panels.py:693
 msgid "Clip Length:"
-msgstr ""
+msgstr "Délka záběru:"
 
 #: panels.py:695
 msgid "Media Path:"
-msgstr ""
+msgstr "Cesta k multimédiím:"
 
 #: panels.py:719
 msgid "Composite clip on:"
-msgstr ""
+msgstr "Smíchaný záběr:"
 
 #: panels.py:726
 msgid "Load values"
-msgstr ""
+msgstr "Nahrát hodnoty"
 
 #: panels.py:761
 msgid "Save New Profile"
-msgstr ""
+msgstr "Uložit nový profil"
 
 #: panels.py:777
 msgid "Description.:"
-msgstr ""
+msgstr "Popis:"
 
 #: panels.py:778
 msgid "Frame rate num.:"
-msgstr ""
+msgstr "Rychlost snímkování:"
 
 #: panels.py:779
 msgid "Frame rate den.:"
@@ -1822,11 +1916,11 @@ msgstr ""
 
 #: panels.py:780
 msgid "Width:"
-msgstr ""
+msgstr "Šířka:"
 
 #: panels.py:781
 msgid "Height:"
-msgstr ""
+msgstr "Výška:"
 
 #: panels.py:782
 msgid "Sample aspect num.:"
@@ -1846,51 +1940,54 @@ msgstr ""
 
 #: panels.py:813
 msgid "User "
-msgstr ""
+msgstr "Uživatel "
 
 #: panels.py:829
 msgid "Delete Selected"
-msgstr ""
+msgstr "Smazat vybrané"
 
 #: panels.py:836
 msgid "Visible"
-msgstr ""
+msgstr "Viditelná"
 
 #: panels.py:838
 msgid "Hide Selected"
-msgstr ""
+msgstr "Skrýt vybrané"
 
 #: panels.py:840
 msgid "Hidden"
-msgstr ""
+msgstr "Skryto"
 
 #: panels.py:842
 msgid "Unhide Selected"
-msgstr ""
+msgstr "Odkrýt vybrané"
 
 #: panels.py:873
 msgid "User Profiles"
-msgstr ""
+msgstr "Uživatelské profily"
 
 #: panels.py:874
 msgid "Factory Profiles"
-msgstr ""
+msgstr "Tovární profily"
 
 #: panels.py:912 panels.py:1004 render.py:218
+#, fuzzy
 msgid "Type:"
-msgstr ""
+msgstr "Typ"
 
 #: panels.py:921
 msgid "Wipe Pattern:"
 msgstr ""
 
 #: panels.py:927
+#, fuzzy
 msgid "Dip Color:"
-msgstr ""
+msgstr "Barva"
 
 #: panels.py:942 panels.py:1014
+#, fuzzy
 msgid "Length:"
-msgstr ""
+msgstr "Délka záběru:"
 
 #: panels.py:948
 msgid "From Clip Handle:"
@@ -1901,16 +1998,19 @@ msgid "To Clip Handle:"
 msgstr ""
 
 #: panels.py:989 panels.py:1041
+#, fuzzy
 msgid "Transition Options"
-msgstr ""
+msgstr "Přechody MLT"
 
 #: panels.py:990
+#, fuzzy
 msgid "Clips info"
-msgstr ""
+msgstr "Informace o záběru"
 
 #: panels.py:991 panels.py:1042
+#, fuzzy
 msgid "Encoding"
-msgstr ""
+msgstr "Formát kódování"
 
 #: panels.py:1000 mlttransitions.py:171
 msgid "Fade In"
@@ -1921,24 +2021,25 @@ msgid "Fade Out"
 msgstr ""
 
 #: panels.py:1009
+#, fuzzy
 msgid "Color:"
-msgstr ""
+msgstr "Barva"
 
 #: persistance.py:283
 msgid "Building sequence "
-msgstr ""
+msgstr "Sestavovací sekvence "
 
 #: persistance.py:294
 msgid "Loading icons"
-msgstr ""
+msgstr "Nahrávají se ikony"
 
 #: projectdata.py:70
 msgid "untitled"
-msgstr ""
+msgstr "Bez názvu"
 
 #: projectdata.py:169
 msgid "bin_"
-msgstr ""
+msgstr "zásobník_"
 
 #: projectdata.py:369
 msgid "Created using dialog"
@@ -1949,58 +2050,67 @@ msgid "Created using Save As... "
 msgstr ""
 
 #: projectdata.py:373
+#, fuzzy
 msgid "Saved "
-msgstr ""
+msgstr "Uložit"
 
 #: projectdata.py:376
+#, fuzzy
 msgid "Saved as "
-msgstr ""
+msgstr "Uložit vrstvy"
 
 #: projectdata.py:378
+#, fuzzy
 msgid "Rendered "
-msgstr ""
+msgstr "Zpracování"
 
 #: render.py:102
 msgid "Render file name entry is empty"
-msgstr ""
+msgstr "Údaj o názvu souboru k udělání je prázdný"
 
 #: render.py:103
 msgid "You have to provide a name for the file to be rendered."
-msgstr ""
+msgstr "Musíte poskytnout název pro soubor, který se má udělat."
 
 #: render.py:108
 msgid " already exists!"
-msgstr ""
+msgstr " již existuje!"
 
 #: render.py:109
 msgid "Do you want to overwrite existing file?"
-msgstr ""
+msgstr "Chcete přepsat stávající soubor?"
 
 #: render.py:138
 msgid "Render range not defined"
-msgstr ""
+msgstr "Rozsah zpracování nestanoven"
 
 #: render.py:139
+#, fuzzy
 msgid ""
 "Define render range using Mark In and Mark Out points\n"
 "or select range option 'Sequence length' to start rendering."
 msgstr ""
+"Stanovte rozsah zpracování pomocí bodů značek pro začátek a pro konec "
+"záběru,\n"
+"nebo zvolte volbu pro rozsah Délka programu pro započetí se zpracováním."
 
 #: render.py:214
 msgid "Use Project Profile:"
-msgstr ""
+msgstr "Použít profil projektu:"
 
 #: render.py:215
 msgid "Render using args:"
-msgstr ""
+msgstr "Zpracovat pomocí argumentů:"
 
 #: render.py:219
+#, fuzzy
 msgid "Presets:"
-msgstr ""
+msgstr "Nastavit znovu"
 
 #: render.py:221
+#, fuzzy
 msgid "User Defined"
-msgstr ""
+msgstr "Uživatelské profily"
 
 #: render.py:222
 msgid "Preset File type"
@@ -2008,248 +2118,254 @@ msgstr ""
 
 #: render.py:259
 msgid "Quality:"
-msgstr ""
+msgstr "Jakost:"
 
 #: render.py:264
 msgid "Audio:"
-msgstr ""
+msgstr "Zvuk:"
 
 #: render.py:284
 msgid "Load Selection"
-msgstr ""
+msgstr "Nahrát výběr"
 
 #: render.py:297
+#, fuzzy
 msgid "Full length"
-msgstr ""
+msgstr "Délka celého zdroje"
 
 #: render.py:298
 msgid "Marked range"
-msgstr ""
+msgstr "Označený rozsah"
 
 #: render.py:318
 msgid "Select folder to place rendered file in"
-msgstr ""
+msgstr "Vybrat složku, do níž se má umístit udělaný soubor"
 
 #: render.py:319
 msgid "Give name for rendered file"
-msgstr ""
+msgstr "Zadat název pro udělaný soubor"
 
 #: render.py:320
 msgid "Select used project profile for rendering"
-msgstr ""
+msgstr "Vybrat používaný profil projektu pro zpracování"
 
 #: render.py:321
 msgid "Select render profile"
-msgstr ""
+msgstr "Vybrat profil zpracování"
 
 #: render.py:322
 msgid "Select Render encoding"
-msgstr ""
+msgstr "Vybrat kódování zpracování"
 
 #: render.py:323
 msgid "Select Render quality"
-msgstr ""
+msgstr "Vybrat jakost zpracování"
 
 #: render.py:324
 msgid "Render using key=value rendering options"
-msgstr ""
+msgstr "Udělat pomocí voleb pro zpracování key=value"
 
 #: render.py:325
 msgid "Load render options from currently selected encoding"
-msgstr ""
+msgstr "nahrát volby pro zpracování z nyní vybraného kódování"
 
 #: render.py:326
 msgid "Edit render options"
-msgstr ""
+msgstr "Upravit volby pro zpracování"
 
 #: render.py:327
 msgid "Select render range"
-msgstr ""
+msgstr "Vybrat rozsah zpracování"
 
 #: render.py:328
 msgid "Reset all render options to defaults"
-msgstr ""
+msgstr "Nastavit všechny volby pro zpracování na výchozí"
 
 #: render.py:329
 msgid "Begin Rendering"
-msgstr ""
+msgstr "Začít zpracování"
 
 #: render.py:330
 msgid "Render profile info"
-msgstr ""
+msgstr "Informace o profilu zpracování"
 
 #: render.py:331
 msgid "Save Render Args into a text file"
-msgstr ""
+msgstr "Uložit argumenty pro zpracování jako textový soubor"
 
 #: render.py:332
 msgid "Load Render Args from a text file"
-msgstr ""
+msgstr "Nahrát argumenty pro zpracování z textového souboru"
 
 #: render.py:359
 msgid "<b>Output File: </b>"
-msgstr ""
+msgstr "<b>Výstupní soubor: </b>"
 
 #: render.py:361 render.py:384 render.py:399
 msgid "<b>Estimated time left: </b>"
-msgstr ""
+msgstr "<b>Odhadovaný zbývající čas: </b>"
 
 #: render.py:363 render.py:386 render.py:401
 msgid "<b>Render time: </b>"
-msgstr ""
+msgstr "<b>Čas zpracování: </b>"
 
 #: render.py:403
 msgid "Render Complete!"
-msgstr ""
+msgstr "Zpracování dokončeno"
 
 #: render.py:580
 msgid "Render Slow/Fast Motion Video File"
-msgstr ""
+msgstr "Udělat zpomalený/zrychlený videosoubor"
 
 #: render.py:585
 msgid "Source Media File: "
-msgstr ""
+msgstr "Zdrojový multimediální soubor: "
 
 #: render.py:592 render.py:593
 msgid "<b>not set</b>"
-msgstr ""
+msgstr "<b>Není nastaveno</b>"
 
 #: render.py:613
 msgid "Select Target Folder"
-msgstr ""
+msgstr "Vybrat cílovou složku"
 
 #: render.py:617
 msgid "Speed %:"
-msgstr ""
+msgstr "Rychlost %:"
 
 #: render.py:657
 msgid "Full Source Length"
-msgstr ""
+msgstr "Délka celého zdroje"
 
 #: render.py:662
 msgid "Source Mark In to Mark Out"
-msgstr ""
+msgstr "Značka začátku zdroje ke značce konce"
 
 #: render.py:674
 msgid "Source Mark In: "
-msgstr ""
+msgstr "Značka začátku zdroje: "
 
 #: render.py:675
 msgid "Source_Mark Out: "
-msgstr ""
+msgstr "_Značka konce zdroje: "
 
 #: render.py:679
 msgid "Target File:"
-msgstr ""
+msgstr "Cílový soubor:"
 
 #: render.py:680
 msgid "Target Folder:"
-msgstr ""
+msgstr "Cílová složka:"
 
 #: render.py:681
 msgid "Target Profile:"
-msgstr ""
+msgstr "Cílový profil:"
 
 #: render.py:682
 msgid "Target Encoding:"
-msgstr ""
+msgstr "Cílové kódování:"
 
 #: render.py:683
 msgid "Target Quality:"
-msgstr ""
+msgstr "Cílová jakost:"
 
 #: render.py:746
 msgid "Rendering Motion Clip"
-msgstr ""
+msgstr "Dělá se záběr"
 
 #: render.py:827
+#, fuzzy
 msgid "Rendering Transition Clip"
-msgstr ""
+msgstr "Dělá se záběr"
 
 #: syncsplitevent.py:124
 msgid "Sync parent clips must be on track V1"
-msgstr ""
+msgstr "Seřizovací rodičovské záběry musí být na stopě V1"
 
 #: syncsplitevent.py:125
+#, fuzzy
 msgid "Selected sync parent clip is on track "
-msgstr ""
+msgstr "Vybraný seřizovací rodičovský záběr je na stopě "
 
 #: syncsplitevent.py:125
+#, fuzzy
 msgid ""
 ".\n"
 "You can only sync to clips that are on track V1."
 msgstr ""
+".\n"
+"Můžete provést seřízení jen se záběry, které jsou na stopě V1."
 
 #: translations.py:83 translations.py:377
 msgid "Color"
-msgstr ""
+msgstr "Barva"
 
 #: translations.py:84
 msgid "Color Effect"
-msgstr ""
+msgstr "Barevný efekt"
 
 #: translations.py:85
 msgid "Audio"
-msgstr ""
+msgstr "Zvuk"
 
 #: translations.py:86
 msgid "Audio Filter"
-msgstr ""
+msgstr "Zvukový filtr"
 
 #: translations.py:87 translations.py:140 translations.py:342
 #: translations.py:419
 msgid "Blur"
-msgstr ""
+msgstr "Rozostření"
 
 #: translations.py:88 translations.py:471 propertyeditorbuilder.py:342
 #: propertyeditorbuilder.py:437
 msgid "Distort"
-msgstr ""
+msgstr "Zkroucení"
 
 #: translations.py:89 propertyeditorbuilder.py:344
 #: propertyeditorbuilder.py:439
 msgid "Alpha"
-msgstr ""
+msgstr "Alfa"
 
 #: translations.py:90
 msgid "Movement"
-msgstr ""
+msgstr "Pohyb"
 
 #: translations.py:91
 msgid "Transform"
-msgstr ""
+msgstr "Proměna"
 
 #: translations.py:92 translations.py:437
 msgid "Edge"
-msgstr ""
+msgstr "Hrana"
 
 #: translations.py:93
 msgid "Fix"
-msgstr ""
+msgstr "Oprava"
 
 #: translations.py:94
 msgid "Artistic"
-msgstr ""
+msgstr "Umělecký"
 
 #: translations.py:98
 msgid "Alpha Gradient"
-msgstr ""
+msgstr "Přechod v alfa kanálu"
 
 #: translations.py:99
 msgid "Crop"
-msgstr ""
+msgstr "Ořez"
 
 #: translations.py:100
 msgid "Alpha Shape"
-msgstr ""
+msgstr "Tvar alfy"
 
 #: translations.py:102 translations.py:227
 msgid "Volume"
-msgstr ""
+msgstr "Hlasitost"
 
 #: translations.py:103
 msgid "Pan"
-msgstr ""
+msgstr "Vyvážení"
 
 #: translations.py:104
 msgid "Pan Keyframed"
@@ -2257,15 +2373,15 @@ msgstr ""
 
 #: translations.py:105
 msgid "Mono to Stereo"
-msgstr ""
+msgstr "Mono na stereo"
 
 #: translations.py:106
 msgid "Swap Channels"
-msgstr ""
+msgstr "Prohodit kanály"
 
 #: translations.py:108
 msgid "Pitchshifter"
-msgstr ""
+msgstr "Posunovač výšky tónu"
 
 #: translations.py:109
 msgid "Distort - Barry's Satan"
@@ -2285,7 +2401,7 @@ msgstr ""
 
 #: translations.py:113
 msgid "Declipper"
-msgstr ""
+msgstr "Odřezávač"
 
 #: translations.py:114
 msgid "Delayorama"
@@ -2316,12 +2432,14 @@ msgid "Reverb - GVerb"
 msgstr ""
 
 #: translations.py:121
+#, fuzzy
 msgid "Noise Gate"
-msgstr ""
+msgstr "Noise Gate"
 
 #: translations.py:122
+#, fuzzy
 msgid "Bandpass"
-msgstr ""
+msgstr "Pásmo propustnosti"
 
 #: translations.py:123
 msgid "Pitchscaler - High Quality"
@@ -2357,19 +2475,19 @@ msgstr ""
 
 #: translations.py:131
 msgid "Chorus - Multivoice"
-msgstr ""
+msgstr "Sbor - Vícehlas"
 
 #: translations.py:133
 msgid "Charcoal"
-msgstr ""
+msgstr "Uhel"
 
 #: translations.py:134
 msgid "Glow"
-msgstr ""
+msgstr "Záře"
 
 #: translations.py:135
 msgid "Old Film"
-msgstr ""
+msgstr "Starý film"
 
 #: translations.py:136
 msgid "Scanlines"
@@ -2377,57 +2495,57 @@ msgstr ""
 
 #: translations.py:137
 msgid "Cartoon"
-msgstr ""
+msgstr "Kresba"
 
 #: translations.py:139
 msgid "Pixelize"
-msgstr ""
+msgstr "Rozostřit obraz do čtverečků"
 
 #: translations.py:141
 msgid "Grain"
-msgstr ""
+msgstr "Zrnitost"
 
 #: translations.py:143
 msgid "Grayscale"
-msgstr ""
+msgstr "Odstíny šedi"
 
 #: translations.py:144 translations.py:357 translations.py:359
 msgid "Contrast"
-msgstr ""
+msgstr "Kontrast"
 
 #: translations.py:145 translations.py:360 mlttransitions.py:153
 msgid "Saturation"
-msgstr ""
+msgstr "Sytost"
 
 #: translations.py:146 translations.py:341 translations.py:393
 #: translations.py:418 translations.py:474 translations.py:478
 msgid "Invert"
-msgstr ""
+msgstr "Obrátit"
 
 #: translations.py:147 translations.py:361 mlttransitions.py:149
 msgid "Hue"
-msgstr ""
+msgstr "Odstín"
 
 #: translations.py:148 translations.py:358 translations.py:362
 #: translations.py:363
 msgid "Brightness"
-msgstr ""
+msgstr "Jas"
 
 #: translations.py:149 translations.py:520
 msgid "Sepia"
-msgstr ""
+msgstr "Sépie"
 
 #: translations.py:150
 msgid "Tint"
-msgstr ""
+msgstr "Tónování"
 
 #: translations.py:151
 msgid "White Balance"
-msgstr ""
+msgstr "Vyvážení bílé"
 
 #: translations.py:152 translations.py:442
 msgid "Levels"
-msgstr ""
+msgstr "Úrovně"
 
 #: translations.py:154
 msgid "Color Clustering"
@@ -2439,43 +2557,43 @@ msgstr ""
 
 #: translations.py:156
 msgid "Three Layer"
-msgstr ""
+msgstr "Tři úrovně"
 
 #: translations.py:157
 msgid "Threshold0r"
-msgstr ""
+msgstr "Práh (frei0r)"
 
 #: translations.py:158
 msgid "Technicolor"
-msgstr ""
+msgstr "Technicolor"
 
 #: translations.py:159
 msgid "Primaries"
-msgstr ""
+msgstr "Základní barvy"
 
 #: translations.py:160
 msgid "Color Distance"
-msgstr ""
+msgstr "Barevná odchylka"
 
 #: translations.py:161 translations.py:379 translations.py:384
 msgid "Threshold"
-msgstr ""
+msgstr "Prahová hodnota"
 
 #: translations.py:163
 msgid "Waves"
-msgstr ""
+msgstr "Vlnění"
 
 #: translations.py:164
 msgid "Lens Correction"
-msgstr ""
+msgstr "Oprava čoček"
 
 #: translations.py:165 translations.py:391
 msgid "Flip"
-msgstr ""
+msgstr "Obrátit"
 
 #: translations.py:166
 msgid "Mirror"
-msgstr ""
+msgstr "Zrcadlit"
 
 #: translations.py:167
 msgid "V Sync"
@@ -2483,23 +2601,24 @@ msgstr ""
 
 #: translations.py:169
 msgid "Edge Glow"
-msgstr ""
+msgstr "Záře hran"
 
 #: translations.py:170
 msgid "Sobel"
-msgstr ""
+msgstr "Sobel"
 
 #: translations.py:172
+#, fuzzy
 msgid "Denoise"
-msgstr ""
+msgstr "Animační okna"
 
 #: translations.py:173 translations.py:464
 msgid "Sharpness"
-msgstr ""
+msgstr "Ostrost"
 
 #: translations.py:174
 msgid "Letterbox"
-msgstr ""
+msgstr "Širokoúhlý formát"
 
 #: translations.py:176
 msgid "Baltan"
@@ -2507,27 +2626,27 @@ msgstr ""
 
 #: translations.py:177
 msgid "Vertigo"
-msgstr ""
+msgstr "Závrať"
 
 #: translations.py:178
 msgid "Nervous"
-msgstr ""
+msgstr "Nervozita"
 
 #: translations.py:179
 msgid "Freeze"
-msgstr ""
+msgstr "Znehybnit"
 
 #: translations.py:181 translations.py:387
 msgid "Rotate"
-msgstr ""
+msgstr "Otočit"
 
 #: translations.py:182
 msgid "Shear"
-msgstr ""
+msgstr "Naklonit"
 
 #: translations.py:183
 msgid "Translate"
-msgstr ""
+msgstr "Přeložit"
 
 #: translations.py:186
 msgid "Color Select"
@@ -2543,11 +2662,11 @@ msgstr ""
 
 #: translations.py:189
 msgid "RGB Noise"
-msgstr ""
+msgstr "Šum RGB"
 
 #: translations.py:190
 msgid "Box Blur"
-msgstr ""
+msgstr "Rozmazání"
 
 #: translations.py:191
 msgid "IRR Blur"
@@ -2559,23 +2678,23 @@ msgstr ""
 
 #: translations.py:193
 msgid "Dither"
-msgstr ""
+msgstr "Náhodný šum"
 
 #: translations.py:194
 msgid "Vignette"
-msgstr ""
+msgstr "Neostré okraje"
 
 #: translations.py:195
 msgid "Emboss"
-msgstr ""
+msgstr "Vyrýt reliéf"
 
 #: translations.py:196
 msgid "3 Point Balance"
-msgstr ""
+msgstr "Tříbodová rovnováha"
 
 #: translations.py:197
 msgid "Colorize"
-msgstr ""
+msgstr "Obarvit"
 
 #: translations.py:198
 msgid "Brightness Keyframed"
@@ -2583,7 +2702,7 @@ msgstr ""
 
 #: translations.py:199
 msgid "RGB Adjustment"
-msgstr ""
+msgstr "Přizpůsobení RGB"
 
 #: translations.py:200
 msgid "Color Tap"
@@ -2591,7 +2710,7 @@ msgstr ""
 
 #: translations.py:201
 msgid "Posterize"
-msgstr ""
+msgstr "Posterizace"
 
 #: translations.py:202
 msgid "Soft Glow"
@@ -2599,11 +2718,11 @@ msgstr ""
 
 #: translations.py:203
 msgid "Newspaper"
-msgstr ""
+msgstr "Noviny"
 
 #: translations.py:211 translations.py:394
 msgid "Position"
-msgstr ""
+msgstr "Poloha"
 
 #: translations.py:212
 msgid "Grad width"
@@ -2611,51 +2730,51 @@ msgstr ""
 
 #: translations.py:213 translations.py:225 translations.py:388
 msgid "Tilt"
-msgstr ""
+msgstr "Naklonění"
 
 #: translations.py:214 translations.py:504
 msgid "Min"
-msgstr ""
+msgstr "Nejméně"
 
 #: translations.py:215 translations.py:503
 msgid "Max"
-msgstr ""
+msgstr "Nejvíce"
 
 #: translations.py:216 translations.py:414
 msgid "Left"
-msgstr ""
+msgstr "Vlevo"
 
 #: translations.py:217 translations.py:415
 msgid "Right"
-msgstr ""
+msgstr "Vpravo"
 
 #: translations.py:218 translations.py:416
 msgid "Top"
-msgstr ""
+msgstr "Nahoře"
 
 #: translations.py:219 translations.py:417
 msgid "Bottom"
-msgstr ""
+msgstr "Dole"
 
 #: translations.py:220
 msgid "Shape"
-msgstr ""
+msgstr "Tvar"
 
 #: translations.py:221
 msgid "Pos X"
-msgstr ""
+msgstr "Poloha X"
 
 #: translations.py:222
 msgid "Pos Y"
-msgstr ""
+msgstr "Poloha Y"
 
 #: translations.py:223
 msgid "Size X"
-msgstr ""
+msgstr "Velikost X"
 
 #: translations.py:224
 msgid "Size Y"
-msgstr ""
+msgstr "Velikost Y"
 
 #: translations.py:226
 msgid "Trans. Width"
@@ -2663,7 +2782,7 @@ msgstr ""
 
 #: translations.py:228 translations.py:229
 msgid "Left/Right"
-msgstr ""
+msgstr "Zleva/Zprava"
 
 #: translations.py:230 translations.py:233 translations.py:236
 #: translations.py:238 translations.py:242 translations.py:246
@@ -2675,19 +2794,19 @@ msgstr ""
 #: translations.py:321 translations.py:323 translations.py:329
 #: translations.py:336
 msgid "Dry/Wet"
-msgstr ""
+msgstr "Poměr původní/přidaný zvuk"
 
 #: translations.py:231
 msgid "Pitch Shift"
-msgstr ""
+msgstr "Posun výšky tónu"
 
 #: translations.py:232
 msgid "Buffer Size"
-msgstr ""
+msgstr "Velikost vyrovnávací paměti"
 
 #: translations.py:234
 msgid "Decay Time(samples)"
-msgstr ""
+msgstr "Čas doběhu impulsu (vzorky)"
 
 #: translations.py:235
 msgid "Knee Point(dB)"
@@ -2695,19 +2814,19 @@ msgstr ""
 
 #: translations.py:237
 msgid "Frequency shift"
-msgstr ""
+msgstr "Posun kmitočtu"
 
 #: translations.py:239
 msgid "Low Gain(dB)"
-msgstr ""
+msgstr "Nízké zesílení (dB)"
 
 #: translations.py:240
 msgid "Mid Gain(dB)"
-msgstr ""
+msgstr "Střední zesílení (dB)"
 
 #: translations.py:241
 msgid "High Gain(dB)"
-msgstr ""
+msgstr "Vysoké zesílení (dB)"
 
 #: translations.py:243
 msgid "Oscillation period(s)"
@@ -2719,19 +2838,19 @@ msgstr ""
 
 #: translations.py:245
 msgid "Feedback%"
-msgstr ""
+msgstr "Zpětná vazba %"
 
 #: translations.py:248
 msgid "Random seed"
-msgstr ""
+msgstr "Náhodné zrnko"
 
 #: translations.py:249
 msgid "Input Gain(dB)"
-msgstr ""
+msgstr "Vstupní zesílení (dB)"
 
 #: translations.py:250
 msgid "Feedback(%)"
-msgstr ""
+msgstr "Zpětná vazba (%)"
 
 #: translations.py:251
 msgid "Number of taps"
@@ -2764,15 +2883,15 @@ msgstr ""
 #: translations.py:259 translations.py:322 translations.py:368
 #: translations.py:400
 msgid "Amount"
-msgstr ""
+msgstr "Kužel"
 
 #: translations.py:261
 msgid "Drive"
-msgstr ""
+msgstr "Odpálení"
 
 #: translations.py:262
 msgid "Skew"
-msgstr ""
+msgstr "Vychýlení z přímého směru"
 
 #: translations.py:264 translations.py:267
 msgid "Cutoff Frequency(Hz)"
@@ -2780,11 +2899,11 @@ msgstr ""
 
 #: translations.py:265 translations.py:268
 msgid "Resonance"
-msgstr ""
+msgstr "Rezonance"
 
 #: translations.py:270
 msgid "Passes"
-msgstr ""
+msgstr "Průchody"
 
 #: translations.py:271
 msgid "Error Rate"
@@ -2792,7 +2911,7 @@ msgstr ""
 
 #: translations.py:273
 msgid "Roomsize"
-msgstr ""
+msgstr "Velikost prostoru"
 
 #: translations.py:274
 msgid "Reverb time(s)"
@@ -2800,7 +2919,7 @@ msgstr ""
 
 #: translations.py:275 translations.py:312
 msgid "Damping"
-msgstr ""
+msgstr "Tlumení"
 
 #: translations.py:276
 msgid "Input bandwith"
@@ -2832,19 +2951,19 @@ msgstr ""
 
 #: translations.py:284
 msgid "Attack(ms)"
-msgstr ""
+msgstr "Náběh (ms)"
 
 #: translations.py:285
 msgid "Hold(ms)"
-msgstr ""
+msgstr "Držení (ms)"
 
 #: translations.py:286
 msgid "Decay(ms)"
-msgstr ""
+msgstr "Doběh impulsu (ms)"
 
 #: translations.py:287
 msgid "Range(dB)"
-msgstr ""
+msgstr "Rozsah (dB)"
 
 #: translations.py:289
 msgid "Center Frequency(Hz)"
@@ -2852,83 +2971,84 @@ msgstr ""
 
 #: translations.py:290
 msgid "Bandwidth(Hz)"
-msgstr ""
+msgstr "Šířka pásma (Hz)"
 
 #: translations.py:291
+#, fuzzy
 msgid "Stages"
-msgstr ""
+msgstr "Stupně"
 
 #: translations.py:293
 msgid "Pitch-coefficient"
-msgstr ""
+msgstr "Koeficient výšky tónu"
 
 #: translations.py:295
 msgid "50Hz gain"
-msgstr ""
+msgstr "Zesílení 50 Hz"
 
 #: translations.py:296
 msgid "100Hz gain"
-msgstr ""
+msgstr "Zesílení 100 Hz"
 
 #: translations.py:297
 msgid "156Hz gain"
-msgstr ""
+msgstr "Zesílení 156 Hz"
 
 #: translations.py:298
 msgid "220Hz gain"
-msgstr ""
+msgstr "Zesílení 220 Hz"
 
 #: translations.py:299
 msgid "311Hz gain"
-msgstr ""
+msgstr "Zesílení 311 Hz"
 
 #: translations.py:300
 msgid "440Hz gain"
-msgstr ""
+msgstr "Zesílení 440 Hz"
 
 #: translations.py:301
 msgid "622Hz gain"
-msgstr ""
+msgstr "Zesílení 622 Hz"
 
 #: translations.py:302
 msgid "880Hz gain"
-msgstr ""
+msgstr "Zesílení 880 Hz"
 
 #: translations.py:303
 msgid "1250Hz gain"
-msgstr ""
+msgstr "Zesílení 1250 Hz"
 
 #: translations.py:304
 msgid "1750Hz gain"
-msgstr ""
+msgstr "Zesílení 1750 Hz"
 
 #: translations.py:305
 msgid "2500Hz gain"
-msgstr ""
+msgstr "Zesílení 2500 Hz"
 
 #: translations.py:306
 msgid "3500Hz gain"
-msgstr ""
+msgstr "Zesílení 3500 Hz"
 
 #: translations.py:307
 msgid "5000Hz gain"
-msgstr ""
+msgstr "Zesílení 5000 Hz"
 
 #: translations.py:308
 msgid "100000Hz gain"
-msgstr ""
+msgstr "Zesílení 100000 Hz"
 
 #: translations.py:309
 msgid "200000Hz gain"
-msgstr ""
+msgstr "Zesílení 200000 Hz"
 
 #: translations.py:311
 msgid "Reverb time"
-msgstr ""
+msgstr "Délka dozvuku"
 
 #: translations.py:313 translations.py:316
 msgid "Dry/Wet mix"
-msgstr ""
+msgstr "Poměr původní/přidaný zvuk"
 
 #: translations.py:315
 msgid "Effect cutoff(Hz)"
@@ -2936,7 +3056,7 @@ msgstr ""
 
 #: translations.py:318
 msgid "Rate"
-msgstr ""
+msgstr "Míra"
 
 #: translations.py:320
 msgid "Sift"
@@ -2944,11 +3064,11 @@ msgstr ""
 
 #: translations.py:324
 msgid "Year"
-msgstr ""
+msgstr "Rok"
 
 #: translations.py:325
 msgid "RPM"
-msgstr ""
+msgstr "RPM"
 
 #: translations.py:326
 msgid "Surface warping"
@@ -2960,7 +3080,7 @@ msgstr ""
 
 #: translations.py:328
 msgid "Wear"
-msgstr ""
+msgstr "Opotřebení"
 
 #: translations.py:330
 msgid "Number of voices"
@@ -2988,27 +3108,27 @@ msgstr ""
 
 #: translations.py:337
 msgid "X Scatter"
-msgstr ""
+msgstr "Vodorovný rozptyl"
 
 #: translations.py:338
 msgid "Y Scatter"
-msgstr ""
+msgstr "Svislý rozptyl"
 
 #: translations.py:339
 msgid "Scale"
-msgstr ""
+msgstr "Měřítko"
 
 #: translations.py:340
 msgid "Mix"
-msgstr ""
+msgstr "Směs"
 
 #: translations.py:343
 msgid "Delta"
-msgstr ""
+msgstr "Delta"
 
 #: translations.py:344
 msgid "Duration"
-msgstr ""
+msgstr "Doba trvání"
 
 #: translations.py:345
 msgid "Bright. up"
@@ -3039,8 +3159,9 @@ msgid "Triplevel"
 msgstr ""
 
 #: translations.py:352
+#, fuzzy
 msgid "Difference Space"
-msgstr ""
+msgstr "Místo odlišnosti"
 
 #: translations.py:353
 msgid "Block width"
@@ -3052,39 +3173,42 @@ msgstr ""
 
 #: translations.py:355 translations.py:401
 msgid "Size"
-msgstr ""
+msgstr "Velikost"
 
 #: translations.py:364
+#, fuzzy
 msgid "U"
-msgstr ""
+msgstr "U"
 
 #: translations.py:365
+#, fuzzy
 msgid "V"
-msgstr ""
+msgstr "V"
 
 #: translations.py:366 translations.py:373
 msgid "Black"
-msgstr ""
+msgstr "Černé"
 
 #: translations.py:367 translations.py:374
 msgid "White"
-msgstr ""
+msgstr "Bílá"
 
 #: translations.py:369
 msgid "Neutral Color"
-msgstr ""
+msgstr "Neutrální barva"
 
 #: translations.py:370 translations.py:371
 msgid "Input"
-msgstr ""
+msgstr "Vstup"
 
 #: translations.py:372
 msgid "Gamma"
-msgstr ""
+msgstr "Gama"
 
 #: translations.py:375
+#, fuzzy
 msgid "Num"
-msgstr ""
+msgstr "Počet"
 
 #: translations.py:376
 msgid "Dist. weight"
@@ -3092,7 +3216,7 @@ msgstr ""
 
 #: translations.py:378
 msgid "Variance"
-msgstr ""
+msgstr "Rozptyl"
 
 #: translations.py:380
 msgid "Red Saturation"
@@ -3104,19 +3228,19 @@ msgstr ""
 
 #: translations.py:382
 msgid "Factor"
-msgstr ""
+msgstr "Faktor"
 
 #: translations.py:383
 msgid "Source color"
-msgstr ""
+msgstr "Výchozí barva"
 
 #: translations.py:385
 msgid "Amplitude"
-msgstr ""
+msgstr "Rozkmit"
 
 #: translations.py:386
 msgid "Frequency"
-msgstr ""
+msgstr "Kmitočet"
 
 #: translations.py:389
 msgid "Center Correct"
@@ -3128,7 +3252,7 @@ msgstr ""
 
 #: translations.py:392
 msgid "Axis"
-msgstr ""
+msgstr "Osa"
 
 #: translations.py:395
 msgid "Edge Lightning"
@@ -3144,15 +3268,15 @@ msgstr ""
 
 #: translations.py:398
 msgid "Spatial"
-msgstr ""
+msgstr "Prostorový"
 
 #: translations.py:399
 msgid "Temporal"
-msgstr ""
+msgstr "Časový"
 
 #: translations.py:402
 msgid "Border width"
-msgstr ""
+msgstr "Šířka čáry"
 
 #: translations.py:403
 msgid "Phase Incr."
@@ -3160,7 +3284,7 @@ msgstr ""
 
 #: translations.py:404
 msgid "Zoom"
-msgstr ""
+msgstr "Zvětšení"
 
 #: translations.py:405
 msgid "Freeze Frame"
@@ -3168,15 +3292,15 @@ msgstr ""
 
 #: translations.py:406
 msgid "Freeze After"
-msgstr ""
+msgstr "Zmrazit po"
 
 #: translations.py:407
 msgid "Freeze Before"
-msgstr ""
+msgstr "Zmrazit před"
 
 #: translations.py:408
 msgid "Angle"
-msgstr ""
+msgstr "Úhel"
 
 #: translations.py:409 translations.py:412 translations.py:413
 msgid "transition.geometry"
@@ -3184,32 +3308,32 @@ msgstr ""
 
 #: translations.py:410 translations.py:469
 msgid "Shear X"
-msgstr ""
+msgstr "Zkosení X"
 
 #: translations.py:411 translations.py:470
 msgid "Shear Y"
-msgstr ""
+msgstr "Zkosení Y"
 
 #: translations.py:420 translations.py:421 translations.py:468
 #: translations.py:472
 msgid "Opacity"
-msgstr ""
+msgstr "Neprůhlednost"
 
 #: translations.py:422
 msgid "Rotate X"
-msgstr ""
+msgstr "Otočení X"
 
 #: translations.py:423
 msgid "Rotate Y"
-msgstr ""
+msgstr "Otočení Y"
 
 #: translations.py:424
 msgid "Rotate Z"
-msgstr ""
+msgstr "Rotovat přes Z"
 
 #: translations.py:426
 msgid "Edge Mode"
-msgstr ""
+msgstr "Režim okraje"
 
 #: translations.py:427
 msgid "Sel. Space"
@@ -3217,11 +3341,11 @@ msgstr ""
 
 #: translations.py:428
 msgid "Operation"
-msgstr ""
+msgstr "Operace"
 
 #: translations.py:429 translations.py:496
 msgid "Hard"
-msgstr ""
+msgstr "Tvrdý"
 
 #: translations.py:430
 msgid "R/A/Hue"
@@ -3241,15 +3365,15 @@ msgstr ""
 
 #: translations.py:434 translations.py:526
 msgid "Horizontal"
-msgstr ""
+msgstr "Vodorovný"
 
 #: translations.py:435 translations.py:527
 msgid "Vertical"
-msgstr ""
+msgstr "Svislý"
 
 #: translations.py:436
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #: translations.py:438
 msgid "Dot Radius"
@@ -3281,11 +3405,12 @@ msgstr ""
 
 #: translations.py:446
 msgid "Azimuth"
-msgstr ""
+msgstr "Azimut"
 
 #: translations.py:447 translations.py:452
+#, fuzzy
 msgid "Lightness"
-msgstr ""
+msgstr "Světlost"
 
 #: translations.py:448
 msgid "Bump Height"
@@ -3293,7 +3418,7 @@ msgstr ""
 
 #: translations.py:449
 msgid "Gray"
-msgstr ""
+msgstr "Šedá"
 
 #: translations.py:450
 msgid "Split Preview"
@@ -3305,39 +3430,40 @@ msgstr ""
 
 #: translations.py:453
 msgid "Input black level"
-msgstr ""
+msgstr "Vstupní úroveň černé"
 
 #: translations.py:454
 msgid "Input white level"
-msgstr ""
+msgstr "Vstupní úroveň bílé"
 
 #: translations.py:455
 msgid "Black output"
-msgstr ""
+msgstr "Černá na výstupu"
 
 #: translations.py:456
 msgid "White output"
-msgstr ""
+msgstr "Bílá na výstupu"
 
 #: translations.py:460
 msgid "Action"
-msgstr ""
+msgstr "Činnost"
 
 #: translations.py:461
 msgid "Keep Luma"
-msgstr ""
+msgstr "Zachovat svítivost"
 
 #: translations.py:462
+#, fuzzy
 msgid "Luma Formula"
-msgstr ""
+msgstr "Vzorec luma"
 
 #: translations.py:463
 msgid "Effect"
-msgstr ""
+msgstr "Efekt"
 
 #: translations.py:465
 msgid "Blend Type"
-msgstr ""
+msgstr "Boolean operace"
 
 #: translations.py:473 translations.py:477
 msgid "Wipe Type"
@@ -3345,7 +3471,7 @@ msgstr ""
 
 #: translations.py:475 translations.py:479
 msgid "Softness"
-msgstr ""
+msgstr "Jemnost"
 
 #: translations.py:476
 msgid "Wipe Amount"
@@ -3357,19 +3483,19 @@ msgstr ""
 
 #: translations.py:484
 msgid "Rectangle"
-msgstr ""
+msgstr "Obdélník"
 
 #: translations.py:485
 msgid "Ellipse"
-msgstr ""
+msgstr "Elipsa"
 
 #: translations.py:486
 msgid "Triangle"
-msgstr ""
+msgstr "Trojúhelník"
 
 #: translations.py:487 translations.py:501
 msgid "Diamond"
-msgstr ""
+msgstr "Kosočtverec"
 
 #: translations.py:489
 msgid "Shrink Hard"
@@ -3389,23 +3515,24 @@ msgstr ""
 
 #: translations.py:493
 msgid "RGB"
-msgstr ""
+msgstr "RGB"
 
 #: translations.py:494
 msgid "ABI"
-msgstr ""
+msgstr "ABI"
 
 #: translations.py:495
 msgid "HCI"
-msgstr ""
+msgstr "HCI"
 
 #: translations.py:497
+#, fuzzy
 msgid "Fat"
-msgstr ""
+msgstr "fat32:"
 
 #: translations.py:498
 msgid "Normal"
-msgstr ""
+msgstr "Obvyklá"
 
 #: translations.py:499
 msgid "Skinny"
@@ -3413,19 +3540,19 @@ msgstr ""
 
 #: translations.py:500
 msgid "Ellipsoid"
-msgstr ""
+msgstr "Elipsoid"
 
 #: translations.py:502
 msgid "Overwrite"
-msgstr ""
+msgstr "Přepsat"
 
 #: translations.py:506 mlttransitions.py:156
 msgid "Subtract"
-msgstr ""
+msgstr "Odečíst"
 
 #: translations.py:509
 msgid "Sharper"
-msgstr ""
+msgstr "Ostré"
 
 #: translations.py:510
 msgid "Fuzzier"
@@ -3433,7 +3560,7 @@ msgstr ""
 
 #: translations.py:511
 msgid "Luma"
-msgstr ""
+msgstr "Svítivost"
 
 #: translations.py:515
 msgid "Add Constant"
@@ -3441,11 +3568,11 @@ msgstr ""
 
 #: translations.py:516
 msgid "Change Gamma"
-msgstr ""
+msgstr "Změnit gamu"
 
 #: translations.py:517 mlttransitions.py:151
 msgid "Multiply"
-msgstr ""
+msgstr "Multivrstva"
 
 #: translations.py:518
 msgid "XPro"
@@ -3457,7 +3584,7 @@ msgstr ""
 
 #: translations.py:521
 msgid "Heat"
-msgstr ""
+msgstr "Záhlaví"
 
 #: translations.py:522
 msgid "XRay"
@@ -3545,15 +3672,15 @@ msgstr ""
 
 #: mlttransitions.py:99
 msgid "Cloud"
-msgstr ""
+msgstr "Oblak"
 
 #: mlttransitions.py:100
 msgid "Hatched 1"
-msgstr ""
+msgstr "Šrafovaně 1"
 
 #: mlttransitions.py:101
 msgid "Hatched 2"
-msgstr ""
+msgstr "Šrafovaně 2"
 
 #: mlttransitions.py:102
 msgid "Hourglass"
@@ -3565,7 +3692,7 @@ msgstr ""
 
 #: mlttransitions.py:104
 msgid "Rings"
-msgstr ""
+msgstr "Prstence:"
 
 #: mlttransitions.py:105
 msgid "Rectangle From In"
@@ -3581,19 +3708,20 @@ msgstr ""
 
 #: mlttransitions.py:108
 msgid "Sand"
-msgstr ""
+msgstr "Písek"
 
 #: mlttransitions.py:109
 msgid "Sphere"
-msgstr ""
+msgstr "Kulové"
 
 #: mlttransitions.py:110
 msgid "Spiral Abstract"
 msgstr ""
 
 #: mlttransitions.py:111
+#, fuzzy
 msgid "Spiral"
-msgstr ""
+msgstr "Spirála"
 
 #: mlttransitions.py:112
 msgid "Spiral Galaxy"
@@ -3609,19 +3737,19 @@ msgstr ""
 
 #: mlttransitions.py:115
 msgid "Spots"
-msgstr ""
+msgstr "Tečky"
 
 #: mlttransitions.py:116 medialog.py:252
 msgid "Star"
-msgstr ""
+msgstr "Hvězda"
 
 #: mlttransitions.py:117
 msgid "Arch"
-msgstr ""
+msgstr "Architektura"
 
 #: mlttransitions.py:118
 msgid "Patches"
-msgstr ""
+msgstr "Záplaty"
 
 #: mlttransitions.py:119
 msgid "Free Stripes"
@@ -3633,31 +3761,32 @@ msgstr ""
 
 #: mlttransitions.py:121
 msgid "Diagonal 1"
-msgstr ""
+msgstr "Úhlopříčný 1"
 
 #: mlttransitions.py:122
 msgid "Diagonal 2"
-msgstr ""
+msgstr "Úhlopříčný 2"
 
 #: mlttransitions.py:123
 msgid "Diagonal 3"
-msgstr ""
+msgstr "Úhlopříčný 3"
 
 #: mlttransitions.py:124
 msgid "Diagonal 4"
-msgstr ""
+msgstr "Úhlopříčný 4"
 
 #: mlttransitions.py:125
 msgid "Checkerboard"
-msgstr ""
+msgstr "Inspektor plochy"
 
 #: mlttransitions.py:128
 msgid "Affine"
-msgstr ""
+msgstr "Afinní"
 
 #: mlttransitions.py:129 mlttransitions.py:168
+#, fuzzy
 msgid "Dissolve"
-msgstr ""
+msgstr "Rozpustit"
 
 #: mlttransitions.py:130
 msgid "Picture in Picture"
@@ -3665,15 +3794,16 @@ msgstr ""
 
 #: mlttransitions.py:131
 msgid "Region"
-msgstr ""
+msgstr "Oblast"
 
 #: mlttransitions.py:132
+#, fuzzy
 msgid "Affine Blend"
-msgstr ""
+msgstr "Přidat prolínání"
 
 #: mlttransitions.py:133
 msgid "Blend"
-msgstr ""
+msgstr "Přechod"
 
 #: mlttransitions.py:134
 msgid "Wipe Clip Length"
@@ -3681,35 +3811,35 @@ msgstr ""
 
 #: mlttransitions.py:140
 msgid "Burn"
-msgstr ""
+msgstr "Nasvítit"
 
 #: mlttransitions.py:141
 msgid "Color only"
-msgstr ""
+msgstr "Pouze barva"
 
 #: mlttransitions.py:142
 msgid "Darken"
-msgstr ""
+msgstr "Ztmavení"
 
 #: mlttransitions.py:143
 msgid "Difference"
-msgstr ""
+msgstr "Rozdíl"
 
 #: mlttransitions.py:144
 msgid "Divide"
-msgstr ""
+msgstr "Dělit "
 
 #: mlttransitions.py:145
 msgid "Dodge"
-msgstr ""
+msgstr "Pozměnit světlost"
 
 #: mlttransitions.py:146
 msgid "Grain extract"
-msgstr ""
+msgstr "Vytažení zrna"
 
 #: mlttransitions.py:147
 msgid "Grain merge"
-msgstr ""
+msgstr "Sloučení zrna"
 
 #: mlttransitions.py:148
 msgid "Hardlight"
@@ -3717,71 +3847,72 @@ msgstr ""
 
 #: mlttransitions.py:150
 msgid "Lighten"
-msgstr ""
+msgstr "Zesvětlit "
 
 #: mlttransitions.py:152
 msgid "Overlay"
-msgstr ""
+msgstr "Překrýt "
 
 #: mlttransitions.py:154
 msgid "Screen"
-msgstr ""
+msgstr "Obrazovka"
 
 #: mlttransitions.py:155
 msgid "Softlight"
-msgstr ""
+msgstr "Jemné světlo"
 
 #: mlttransitions.py:157
 msgid "Value"
-msgstr ""
+msgstr "Hodnota"
 
 #: mlttransitions.py:169
 msgid "Wipe"
 msgstr ""
 
 #: mlttransitions.py:170
+#, fuzzy
 msgid "Color Dip"
-msgstr ""
+msgstr "Záběr s barvou"
 
 #: propertyeditorbuilder.py:211
 msgid "Height"
-msgstr ""
+msgstr "Výška"
 
 #: propertyeditorbuilder.py:326 propertyeditorbuilder.py:421
 msgid "Nothing"
-msgstr ""
+msgstr "Nic"
 
 #: propertyeditorbuilder.py:326 propertyeditorbuilder.py:421
 msgid "Deinterlace"
-msgstr ""
+msgstr "Odstranit prokládání"
 
 #: propertyeditorbuilder.py:326 propertyeditorbuilder.py:421
 msgid "Both"
-msgstr ""
+msgstr "Oba"
 
 #: propertyeditorbuilder.py:336 propertyeditorbuilder.py:431
 msgid "Force"
-msgstr ""
+msgstr "Síla"
 
 #: propertyeditorbuilder.py:341 propertyeditorbuilder.py:436
 msgid "Align"
-msgstr ""
+msgstr "Zarovnání"
 
 #: keyframeeditor.py:1482
 msgid "View:"
-msgstr ""
+msgstr "Pohled:"
 
 #: keyframeeditor.py:1488
 msgid "Large"
-msgstr ""
+msgstr "Velká"
 
 #: keyframeeditor.py:1489
 msgid "Medium"
-msgstr ""
+msgstr "Středně rychle"
 
 #: keyframeeditor.py:1490
 msgid "Small"
-msgstr ""
+msgstr "Malá"
 
 #: keyframeeditor.py:1507
 msgid "Reset Geometry"
@@ -3792,12 +3923,14 @@ msgid "Geometry to Original Aspect Ratio"
 msgstr ""
 
 #: keyframeeditor.py:1509
+#, fuzzy
 msgid "Center Horizontal"
-msgstr ""
+msgstr "Vodorovný"
 
 #: keyframeeditor.py:1510
+#, fuzzy
 msgid "Center Vertical"
-msgstr ""
+msgstr "Svislý"
 
 #: windowviewmenu.py:60
 msgid "Middlebar Layout"
@@ -3812,32 +3945,36 @@ msgid "Timecode Center"
 msgstr ""
 
 #: windowviewmenu.py:79
+#, fuzzy
 msgid "Tabs Position"
-msgstr ""
+msgstr "Poloha"
 
 #: windowviewmenu.py:81
+#, fuzzy
 msgid "Up"
-msgstr ""
+msgstr "U"
 
 #: windowviewmenu.py:85
 msgid "Down"
 msgstr ""
 
 #: windowviewmenu.py:100
+#, fuzzy
 msgid "Show Monitor Sequence Profile"
-msgstr ""
+msgstr "Přiblížit na délku sekvence"
 
 #: windowviewmenu.py:118
 msgid "Zoom In"
-msgstr ""
+msgstr "Přiblížit"
 
 #: windowviewmenu.py:121
 msgid "Zoom Out"
-msgstr ""
+msgstr "Oddálit"
 
 #: windowviewmenu.py:124
+#, fuzzy
 msgid "Zoom Fit"
-msgstr ""
+msgstr "Oddálit"
 
 #: windowviewmenu.py:252
 msgid ""
@@ -3869,10 +4006,11 @@ msgid ""
 msgstr ""
 
 #: windowviewmenu.py:276
+#, fuzzy
 msgid ""
 "Audio Mixer\n"
 "Titler"
-msgstr ""
+msgstr "Zvukový filtr"
 
 #: windowviewmenu.py:280
 msgid ""
@@ -3885,89 +4023,261 @@ msgid "Event"
 msgstr ""
 
 #: medialog.py:256
+#, fuzzy
 msgid "Comment"
-msgstr ""
+msgstr "Pohyb"
 
 #: medialog.py:258
+#, fuzzy
 msgid "File Name"
-msgstr ""
+msgstr "Název záběru"
 
 #: medialog.py:260
+#, fuzzy
 msgid "Mark In"
-msgstr ""
+msgstr "Nastavit značku pro začátek záběru"
 
 #: medialog.py:262
+#, fuzzy
 msgid "Mark Out"
-msgstr ""
+msgstr "Nastavit značku pro konec záběru"
 
 #: medialog.py:264 projectinfogui.py:81
 msgid "Date"
 msgstr ""
 
 #: medialog.py:432
+#, fuzzy
 msgid "Display starred ranges"
-msgstr ""
+msgstr "Zobrazit uvítací obrazovku"
 
 #: medialog.py:433
 msgid "Display non-starred ranges"
 msgstr ""
 
 #: medialog.py:434
+#, fuzzy
 msgid "Set selected ranges starred"
-msgstr ""
+msgstr "Vybrat rozsah zpracování"
 
 #: medialog.py:435
 msgid "Set selected ranges non-starred"
 msgstr ""
 
 #: medialog.py:436
+#, fuzzy
 msgid "Log current marked range"
-msgstr ""
+msgstr "Označený rozsah"
 
 #: medialog.py:437
+#, fuzzy
 msgid "Delete selected ranges"
-msgstr ""
+msgstr "Smazat vybrané"
 
 #: medialog.py:438
+#, fuzzy
 msgid "Append displayed ranges on Timeline"
-msgstr ""
+msgstr "Zobrazit nynější sekvenci na časové ose"
 
 #: projectinfogui.py:30
+#, fuzzy
 msgid "Project Events"
-msgstr ""
+msgstr "Projekt"
 
 #: projectinfogui.py:85
+#, fuzzy
 msgid "Path"
-msgstr ""
+msgstr "Cesta:"
 
 #: tools/titler.py:281
 msgid "Load Layers"
-msgstr ""
+msgstr "Nahrát vrstvy"
 
 #: tools/titler.py:283
 msgid "Save Layers"
-msgstr ""
+msgstr "Uložit vrstvy"
 
 #: tools/titler.py:285
 msgid "Clear All"
-msgstr ""
+msgstr "Vyprázdnit vše"
 
 #: tools/titler.py:354
 msgid "Active Layer"
-msgstr ""
+msgstr "Činná vrstva"
 
 #: tools/titler.py:355
 msgid "Layers"
-msgstr ""
+msgstr "Vrstvy"
 
 #: tools/titler.py:361
 msgid "Keep Layers When Closed"
-msgstr ""
+msgstr "Zachovat vrstvy při zavření"
 
 #: tools/titler.py:366
 msgid "Open Saved Title In Bin"
-msgstr ""
+msgstr "Otevřít uložený název v zásobníku"
 
 #: tools/titler.py:373
 msgid "Save Title Graphic"
 msgstr ""
+
+#~ msgid "Confirm user profile delete!"
+#~ msgstr "Potvrďte smazání uživatelského profilu!"
+
+#~ msgid "This operation cannot be undone."
+#~ msgstr "Tuto operaci nelze vrátit zpět."
+
+#~ msgid "Restart required for some setting changes to take effect."
+#~ msgstr ""
+#~ "Aby se projevily některé změny v nastavení, musí se program spustit znovu."
+
+#~ msgid "If requested change is not in effect, restart application."
+#~ msgstr "Pokud se požadovaná změna neprojevuje, spusťte program znovu."
+
+#~ msgid "_Export XML..."
+#~ msgstr "_Vyvést XML..."
+
+#~ msgid "Clear Filters From Selected"
+#~ msgstr "Odstranit filtry z vybraného"
+
+#~ msgid "Environment"
+#~ msgstr "Prostředí"
+
+#~ msgid "Open"
+#~ msgstr "Otevřít"
+
+#~ msgid "New"
+#~ msgstr "Nový"
+
+#~ msgid "Clip"
+#~ msgstr "Záběr"
+
+#~ msgid "Cut"
+#~ msgstr "Stříhat"
+
+#~ msgid "Resync Selected Clips"
+#~ msgstr "Seřídit znovu vybrané záběry"
+
+#~ msgid "Insert Monitor Clip Range"
+#~ msgstr "Vložit rozsah záběru vyznačený v okně pro sledování"
+
+#~ msgid "Overwrite Selected Clips with Monitor Clip Range"
+#~ msgstr ""
+#~ "Přepsat vybrané záběry rozsahem záběru vyznačeným v okně pro sledování"
+
+#~ msgid "Overwrite Mark In/Mark Out Range with Monitor Clip Range"
+#~ msgstr ""
+#~ "Přepsat rozsah začátek záběru/konec záběru rozsahem záběru vyznačeným v "
+#~ "okně pro sledování"
+
+#~ msgid "Fast Forward"
+#~ msgstr "Rychle vpřed"
+
+#~ msgid "Rewind"
+#~ msgstr "Přetočit zpět"
+
+#~ msgid "Clear Marks"
+#~ msgstr "Smazat značky"
+
+#~ msgid "Monitor program Mark In timecode"
+#~ msgstr ""
+#~ "Časový kód značky pro začátek záběru v okně pro sledování obrazového "
+#~ "záznamu"
+
+#~ msgid "Monitor program Mark Out timecode"
+#~ msgstr ""
+#~ "Časový kód značky pro konec záběru v okně pro sledování pro sledování "
+#~ "obrazového záznamu"
+
+#~ msgid "Monitor program selected range length"
+#~ msgstr "Délka vybraného rozsahu v okně pro sledování obrazového záznamu"
+
+#~ msgid "Open Project File"
+#~ msgstr "Otevřít soubor s projektem"
+
+#~ msgid "Loading Media Files"
+#~ msgstr "Nahrávají se multimediální soubory"
+
+#~ msgid "No Clip loaded into Monitor"
+#~ msgstr "V okně pro sledování obrazového záznamu není nahrán žádný záběr"
+
+#~ msgid "Can't do the requested edit because there is no Clip in Monitor."
+#~ msgstr ""
+#~ "Nelze provést požadovanou úpravu, protože v okně pro sledování obrazového "
+#~ "záznamu není žádný záběr."
+
+#~ msgid "Defined range in Monitor Clip is too short"
+#~ msgstr ""
+#~ "Stanovený rozsah záběru v okně pro sledování obrazového záznamu je příliš "
+#~ "krátký"
+
+#~ msgid ""
+#~ "Can't do the requested edit because Mark In -> Mark Out Range or Clip is "
+#~ "too short."
+#~ msgstr ""
+#~ "Nelze provést požadovanou úpravu, protože rozsah od značky pro začátek "
+#~ "záběru po značku pro konec záběru nebo záběr je příliš krátký."
+
+#~ msgid "Compositor"
+#~ msgstr "Směšovač"
+
+#~ msgid "<b>Type:</b>"
+#~ msgstr "<b>Typ: </b>"
+
+#~ msgid "Display Waveform"
+#~ msgstr "Zobrazit časový průběh zvukového signálu"
+
+#~ msgid "Add Audio Filter"
+#~ msgstr "Přidat zvukový filtr"
+
+#~ msgid "Deactive track "
+#~ msgstr "Vypněte stopu, "
+
+#~ msgid " if you wish to edit tracks below it."
+#~ msgstr " pokud chcete upravit stopy pod ní."
+
+#~ msgid "Open Rendered File in Selected Bin:"
+#~ msgstr "Udělaný soubor otevřít ve vybraném zásobníku:"
+
+#~ msgid "Default tracks count"
+#~ msgstr "Výchozí počet stop"
+
+#~ msgid "Program length"
+#~ msgstr "Délka programu"
+
+#~ msgid "Error on line "
+#~ msgstr "Chyba na řádku "
+
+#~ msgid ""
+#~ "\n"
+#~ "Line contents: "
+#~ msgstr ""
+#~ "\n"
+#~ "Obsah řádků: "
+
+#~ msgid "No '=' found."
+#~ msgstr "Nenalezeno žádné '='"
+
+#~ msgid "Number of tokens on line is "
+#~ msgstr "Počet symbolů v řádku je "
+
+#~ msgid ", should be 2 (key, value)."
+#~ msgstr ", měl by být 2 (klíč, hodnota)"
+
+#~ msgid "Arg name token is empty."
+#~ msgstr "Symbol názvu argumentu je prázdný."
+
+#~ msgid "Arg value token is empty."
+#~ msgstr "Symbol hodnoty argumentu je prázdný."
+
+#~ msgid "Non-ascii char in Arg name."
+#~ msgstr "Ne ASCII znak v názvu argumentu."
+
+#~ msgid "Non-ascii char in Arg value."
+#~ msgstr "Ne ASCII znak v hodnotě argumentu."
+
+#~ msgid "Whitespace in Arg name."
+#~ msgstr "Mezera v názvu argumentu."
+
+#~ msgid "Whitespace in Arg value."
+#~ msgstr "Mezera v hodnotě argumentu."

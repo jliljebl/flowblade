@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-04 00:43+0300\n"
+"POT-Creation-Date: 2013-09-09 12:08+0300\n"
 "PO-Revision-Date: 2011-12-13 23:55+0200\n"
 "Last-Translator: Janne Liljeblad <janne@janne-kx557aa-uuw-a6521-sc>\n"
 "Language-Team: Finnish\n"
@@ -376,7 +376,7 @@ msgstr "Poista käyttämätön media"
 msgid "Project Info"
 msgstr "Projekti Info"
 
-#: editorwindow.py:185 dialogs.py:1205
+#: editorwindow.py:185 dialogs.py:1206
 msgid "Tools"
 msgstr "Työkalut"
 
@@ -909,6 +909,11 @@ msgstr "Anna merkille nimi kohdassa "
 msgid "Add Image Sequence Clip"
 msgstr "Lisää kuva sarja projektiin"
 
+#: dialogs.py:1003
+#, fuzzy
+msgid "Select First Frame"
+msgstr "Ensimmäinen ruutu"
+
 #: dialogs.py:1007
 msgid "First frame:"
 msgstr "Ensimmäinen ruutu"
@@ -967,15 +972,17 @@ msgid "Close"
 msgstr "Sulje"
 
 #: dialogs.py:1165
-msgid "Control + n"
-msgstr ""
+#, fuzzy
+msgid "Control + N"
+msgstr "Control + s"
 
 #: dialogs.py:1165
 msgid "Create New Project"
 msgstr "Luo uusi projekti"
 
 #: dialogs.py:1166 dialogs.py:1171
-msgid "Control + s"
+#, fuzzy
+msgid "Control + S"
 msgstr "Control + s"
 
 #: dialogs.py:1166
@@ -995,16 +1002,18 @@ msgid "Stop Rendering Audio Levels"
 msgstr "Lopeta Audio tasojen rendaaminen"
 
 #: dialogs.py:1169
-msgid "Control + z"
-msgstr "Control + z"
+#, fuzzy
+msgid "Control + Z"
+msgstr "Control + s"
 
 #: dialogs.py:1169
 msgid "Quit"
 msgstr "Lopeta"
 
 #: dialogs.py:1170
-msgid "Control + y"
-msgstr ""
+#, fuzzy
+msgid "Control + Y"
+msgstr "Control + s"
 
 #: dialogs.py:1170
 msgid "Undo"
@@ -1015,8 +1024,9 @@ msgid "Redo"
 msgstr "Uudelleen"
 
 #: dialogs.py:1172
-msgid "Control + o"
-msgstr "Control + o"
+#, fuzzy
+msgid "Control + O"
+msgstr "Control + s"
 
 #: dialogs.py:1172
 msgid "Open Project"
@@ -1030,12 +1040,14 @@ msgstr "TAB"
 msgid "Switch Monitor Source"
 msgstr "VAihda monitori lähdettä"
 
-#: dialogs.py:1177 medialog.py:260
-msgid "Mark In"
+#: dialogs.py:1177
+#, fuzzy
+msgid "Set Mark In"
 msgstr "Alku merkki"
 
-#: dialogs.py:1178 medialog.py:262
-msgid "Mark Out"
+#: dialogs.py:1178
+#, fuzzy
+msgid "Set Mark Out"
 msgstr "Loppu merkki"
 
 #: dialogs.py:1183
@@ -1043,123 +1055,130 @@ msgid "3 Point Overwrite Insert"
 msgstr "3 Piste Ylikirjoitus Insertointi"
 
 #: dialogs.py:1184
+#, fuzzy
+msgid "Add Mark"
+msgstr "Lisää merkki"
+
+#: dialogs.py:1185
 msgid "Timeline"
 msgstr "Aikajana"
 
-#: dialogs.py:1187
+#: dialogs.py:1188
 msgid "Space"
 msgstr "Välilyönti"
 
-#: dialogs.py:1187
+#: dialogs.py:1188
 msgid "Start / Stop Playback"
 msgstr "Aloita/lopeta toisto"
 
-#: dialogs.py:1188
+#: dialogs.py:1189
 msgid "Backwards Faster"
 msgstr "Takaisisn nopeammin"
 
-#: dialogs.py:1189
+#: dialogs.py:1190
 msgid "Stop"
 msgstr "Pysäytä"
 
-#: dialogs.py:1190
+#: dialogs.py:1191
 msgid "Forward Faster"
 msgstr "Eteenpäin nopeammin"
 
-#: dialogs.py:1191 dialogs.py:1208
+#: dialogs.py:1192 dialogs.py:1209
 msgid "Left Arrow "
 msgstr "Nuoli vasen"
 
-#: dialogs.py:1191
+#: dialogs.py:1192
 msgid "Prev Frame"
 msgstr "Edellinen ruutu"
 
-#: dialogs.py:1192 dialogs.py:1209
+#: dialogs.py:1193 dialogs.py:1210
 msgid "Right Arrow"
 msgstr "Nuoli oikea"
 
-#: dialogs.py:1192
+#: dialogs.py:1193
 msgid "Next Frame"
 msgstr "Seuraava ruutu"
 
-#: dialogs.py:1193 dialogs.py:1210
+#: dialogs.py:1194 dialogs.py:1211
 msgid "Up Arrow"
 msgstr "Nuoli ylös"
 
-#: dialogs.py:1193
-msgid "Next Edit"
+#: dialogs.py:1194
+#, fuzzy
+msgid "Next Edit/Mark"
 msgstr "Seuraava leikkaus"
 
-#: dialogs.py:1194 dialogs.py:1211
+#: dialogs.py:1195 dialogs.py:1212
 msgid "Down Arrow"
 msgstr "Nuoli alas"
 
-#: dialogs.py:1194
-msgid "Prev Edit"
+#: dialogs.py:1195
+#, fuzzy
+msgid "Prev Edit/Mark"
 msgstr "Eddellinen leikkaus"
 
-#: dialogs.py:1195
+#: dialogs.py:1196
 msgid "Home"
 msgstr "Home"
 
-#: dialogs.py:1195
+#: dialogs.py:1196
 msgid "Go To Start"
 msgstr "Mene alkuun"
 
-#: dialogs.py:1196
+#: dialogs.py:1197
 #, fuzzy
 msgid "Shift + I"
 msgstr "Shit + I"
 
-#: dialogs.py:1196
+#: dialogs.py:1197
 msgid "To Mark In"
 msgstr "Siirry alku merkkiin"
 
-#: dialogs.py:1197
+#: dialogs.py:1198
 msgid "Shift + O"
 msgstr "Shift + O"
 
-#: dialogs.py:1197
+#: dialogs.py:1198
 msgid "To Mark Out"
 msgstr "Siirry loppu merkkiin"
 
-#: dialogs.py:1198
+#: dialogs.py:1199
 msgid "Playback"
 msgstr "Toista"
 
-#: dialogs.py:1201 guicomponents.py:1725
+#: dialogs.py:1202 guicomponents.py:1725
 msgid "Insert Move"
 msgstr "Väliinsijoitus siirto"
 
-#: dialogs.py:1202 guicomponents.py:1730
+#: dialogs.py:1203 guicomponents.py:1730
 msgid "Overwrite Move"
 msgstr "Ylikirjoitus siirto"
 
-#: dialogs.py:1203 guicomponents.py:1735
+#: dialogs.py:1204 guicomponents.py:1735
 msgid "One Roll Trim"
 msgstr "Toispuoleinen trimmi"
 
-#: dialogs.py:1204 guicomponents.py:1740
+#: dialogs.py:1205 guicomponents.py:1740
 msgid "Two Roll Trim"
 msgstr "Kaksipuoleinen trimmi"
 
-#: dialogs.py:1208
+#: dialogs.py:1209
 msgid "Move Source Video Left"
 msgstr "Siirrä lähde video vasemmalle"
 
-#: dialogs.py:1209
+#: dialogs.py:1210
 msgid "Move Source Video Right"
 msgstr "Siirrä lähde video oikealle"
 
-#: dialogs.py:1210
+#: dialogs.py:1211
 msgid "Move Source Video Up"
 msgstr "Siirrä lähde video ylös"
 
-#: dialogs.py:1211
+#: dialogs.py:1212
 msgid "Move Source Video Down"
 msgstr "Siirrä lähde video alas"
 
-#: dialogs.py:1212
+#: dialogs.py:1213
 msgid "Geometry Editor"
 msgstr "Yhdistäjäeditori"
 
@@ -3944,6 +3963,14 @@ msgstr "Kommentti"
 msgid "File Name"
 msgstr "Tiedoston nimi"
 
+#: medialog.py:260
+msgid "Mark In"
+msgstr "Alku merkki"
+
+#: medialog.py:262
+msgid "Mark Out"
+msgstr "Loppu merkki"
+
 #: medialog.py:264 projectinfogui.py:81
 msgid "Date"
 msgstr "Päivämäärä"
@@ -4015,6 +4042,12 @@ msgstr "Avaa tallennettu grafiikka laatikossa"
 #: tools/titler.py:373
 msgid "Save Title Graphic"
 msgstr "Tallenna grafiikka"
+
+#~ msgid "Control + z"
+#~ msgstr "Control + z"
+
+#~ msgid "Control + o"
+#~ msgstr "Control + o"
 
 #~ msgid "Confirm user profile delete!"
 #~ msgstr "Vahvista käyttäjän luoman profiilin poisto!"

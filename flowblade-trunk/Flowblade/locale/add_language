@@ -4,27 +4,6 @@
 LANG=$1
 echo "Adding Flowblade translation files for ISO 639-1 language code: $1"
 
-# Check that language abbreviation is a ISO standard language
-FOUND=0
-while read -r -a myArray
-do
-  ISO_LANG=${myArray[0]}
-  ISO_LANG_NAME=${myArray[1]}
-  
-  if [ "$LANG" == "$ISO_LANG" ]; then
-      FOUND=1
-      LANG_NAME=$ISO_LANG_NAME
-      echo "Creating translation files for $ISO_LANG_NAME";
-  fi
-done < iso_locales
-
-# Exit if language code is not valid
-if [ $FOUND == 0 ]; then
-  echo "$LANG is not a valid ISO 639-1 language code."
-  echo "No translation files were created."
-  exit 1
-fi
-
 # Move to Flowblade root directory
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $SCRIPT_DIR
