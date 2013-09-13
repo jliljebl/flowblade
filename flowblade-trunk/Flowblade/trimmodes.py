@@ -255,6 +255,8 @@ def oneroll_trim_press(event, frame):
     """
     User presses mouse when in one roll mode.
     """
+    global mouse_disabled
+
     if not _pressed_on_edited_track(event.y):
         track = tlinewidgets.get_track(event.y)
         success = set_oneroll_mode(track, frame)
@@ -262,7 +264,6 @@ def oneroll_trim_press(event, frame):
             set_no_edit_mode_func() # further mouse events are handled at editevent.py
         else:
             # new trim inited, editing non-active until release
-            global mouse_disabled
             tlinewidgets.trim_mode_in_non_active_state = True
             gui.tline_canvas.widget.queue_draw()
             gui.editor_window.set_tline_cursor(editorstate.ONE_ROLL_TRIM_NO_EDIT)
@@ -276,7 +277,6 @@ def oneroll_trim_press(event, frame):
             set_no_edit_mode_func() # no furter mouse events will come here
         else:
             # new trim inited, editing non-active until release
-            global mouse_disabled
             tlinewidgets.trim_mode_in_non_active_state = True
             gui.tline_canvas.widget.queue_draw()
             gui.editor_window.set_tline_cursor(editorstate.ONE_ROLL_TRIM_NO_EDIT)
