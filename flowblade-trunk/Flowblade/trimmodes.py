@@ -294,7 +294,7 @@ def oneroll_trim_press(event, frame):
         clip_frame = frame - trim_limits["to_start"]
     else:
         clip_frame = frame - trim_limits["from_start"]
-    
+
     PLAYER().seek_frame(frame)
 
 def oneroll_trim_move(x, y, frame, state):
