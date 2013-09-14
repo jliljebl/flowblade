@@ -383,8 +383,8 @@ def about_dialog(parent_window):
 
     img = gtk.image_new_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
     flow_label = gtk.Label("Flowblade Movie Editor")
-    ver_label = gtk.Label("0.8.0")
-    janne_label = gtk.Label("Copyright 2012 Janne Liljeblad")
+    ver_label = gtk.Label("0.10.0")
+    janne_label = gtk.Label("Copyright 2013 Janne Liljeblad")
     licence_label = gtk.Label("Licensed under GPL 3")
 
     flow_label.modify_font(pango.FontDescription("sans bold 14"))
