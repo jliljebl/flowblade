@@ -1188,14 +1188,6 @@ def _get_audio_filters_add_menu_item(event, clip, track, callback):
             filter_item.connect("activate", callback, (clip, track, "add_filter", (event.x, filter_info)))
             filter_item.show()
         group_item.show()
-        
-    """
-    for filter_info in filters_array:
-        filter_item = gtk.MenuItem(translations.get_filter_name(filter_info.name))
-        sub_menu.append(filter_item)
-        filter_item.connect("activate", callback, (clip, track, "add_filter", (event.x, filter_info)))
-        filter_item.show()
-    """
 
     menu_item.show()
     return menu_item
@@ -1204,10 +1196,17 @@ def _get_compositors_add_menu_item(event, clip, track, callback, sensitive):
     menu_item = gtk.MenuItem(_("Add Compositor"))
     sub_menu = gtk.Menu()
     menu_item.set_submenu(sub_menu)
-    
+    for info in mlttransitions.mlt_compositor_transition_infos:
+        print info
+       
     for i in range(0, len(mlttransitions.compositors)):
         compositor = mlttransitions.compositors[i]
         name, compositor_type = compositor
+        # Continue if compositor_type not present in system
+        try:
+            info = mlttransitions.mlt_compositor_transition_infos[compositor_type]
+        except:
+            continue
         compositor_item = gtk.MenuItem(name)
         sub_menu.append(compositor_item)
         compositor_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type)))

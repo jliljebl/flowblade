@@ -56,7 +56,7 @@ RENDERED_COLOR_DIP = appconsts.RENDERED_COLOR_DIP
 RENDERED_FADE_IN = appconsts.RENDERED_FADE_IN
 RENDERED_FADE_OUT = appconsts.RENDERED_FADE_OUT
 
-rendered_transitions = None # list is set her at init_module() because otherwise translations can't be done (module load issue)
+rendered_transitions = None # list is set here at init_module() because otherwise translations can't be done (module load issue)
 
 # Info objects used to create mlt.Transitions for CompositorObject objects.
 # dict name : MLTCompositorInfo
@@ -68,9 +68,7 @@ name_for_type = {}
 # Transitions not found in the system
 not_found_transitions = [] 
 
-# Wipes
-# User displayed name -> resource image
-wipe_lumas = None
+wipe_lumas = None # User displayed name -> resource image
 compositors = None
 blenders = None
 
