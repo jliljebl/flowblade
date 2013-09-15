@@ -280,6 +280,7 @@ def load_project(file_path):
     # Add MLT objects to sequences.
     global all_clips, sync_clips
     for seq in project.sequences:
+        FIX_N_TO_3_SEQUENCE_COMPATIBILITY(seq)
         _show_msg(_("Building sequence ") + seq.name)
         all_clips = {}
         sync_clips = []
@@ -467,7 +468,6 @@ def FIX_1_TO_2_BACKWARDS_COMPOSITOR_COMPABILITY(compositor):
 
 def FIX_2_TO_N_BACKWARDS_COMPOSITOR_COMPABILITY(compositor):
     compositor.type_id = compositors_index_to_type_id[compositor.compositor_index]
-    print compositor.type_id
 
 def FIX_1_TO_N_BACKWARDS_FILTER_COMPABILITY(py_filter):
     # This is only called on "affine" filters
@@ -479,8 +479,10 @@ def FIX_1_TO_N_BACKWARDS_FILTER_COMPABILITY(py_filter):
         new_properties.append((name, value, prop_type))
     py_filter.properties = new_properties
 
-
-
+def FIX_N_TO_3_SEQUENCE_COMPATIBILITY(seq):
+    if not hasattr(seq, "master_audio_pan"):
+        seq.master_audio_pan = appconsts.NO_PAN
+        seq.master_audio_gain = 1.0
 
 # List is used to convert SAVEFILE_VERSIONs 1 and 2 to SAVEFILE_VERSIONs 3 -> n by getting type_id string for compositor index 
 compositors_index_to_type_id = ["##affine","##opacity_kf","##pict_in_pict", "##region","##wipe", "##add",
