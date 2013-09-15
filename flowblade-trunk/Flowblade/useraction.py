@@ -282,7 +282,7 @@ def _save_as_dialog_callback(dialog, response_id):
         global save_time
         save_time = time.clock()
 
-        gui.editor_window.window.set_title(PROJECT().name + " - pyedit")        
+        gui.editor_window.window.set_title(PROJECT().name + " - Flowblade")        
         gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(False)
         gui.editor_window.uimanager.get_widget("/MenuBar/EditMenu/Undo").set_sensitive(False)
         gui.editor_window.uimanager.get_widget("/MenuBar/EditMenu/Redo").set_sensitive(False)
