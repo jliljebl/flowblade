@@ -42,6 +42,7 @@ import mltfilters
 import mlttransitions
 import panels
 import patternproducer
+import preferenceswindow
 import profilesmanager
 import projectdata
 import render
@@ -234,34 +235,10 @@ def quick_reference():
     except:
         dialogutils.info_message(_("Help page not found!"), _("Unfortunately the webresource containing help information\nfor this application was not found."), None)
 
-
-# --------------------------------------------------- profiles manager
 def profiles_manager():
-
-
     global profile_manager_dialog
     profile_manager_dialog = profilesmanager.profiles_manager_dialog()
 
-
-
-# ------------------------------------------------------- preferences
 def display_preferences():
-    dialogs.preferences_dialog(_preferences_dialog_callback, _thumbs_select_clicked, _renders_select_clicked)
-
-def _thumbs_select_clicked(widget):
-    dialogs.select_thumbnail_dir(useraction.select_thumbnail_dir_callback, gui.editor_window.window, editorpersistance.prefs.thumbnail_folder, False)
-
-def _renders_select_clicked(widget):
-    dialogs.select_rendred_clips_dir(useraction.select_render_clips_dir_callback, gui.editor_window.window, editorpersistance.prefs.render_folder)
-
-def _preferences_dialog_callback(dialog, response_id, all_widgets):
-    if response_id == gtk.RESPONSE_ACCEPT:
-        editorpersistance.update_prefs_from_widgets(all_widgets)
-        editorpersistance.save()
-        dialog.destroy()
-        primary_txt = _("Restart required for some setting changes to take effect.")
-        secondary_txt = _("If requested change is not in effect, restart application.")
-        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
-        return
-
-    dialog.destroy()
+    preferenceswindow.preferences_dialog(useraction.select_thumbnail_dir_callback, 
+                                         useraction.select_render_clips_dir_callback)

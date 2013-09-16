@@ -42,10 +42,8 @@ import renderconsumer
 import respaths
 import utils
 
-
 HALF_ROW_WIDTH = 160 # Size of half row when using two column row components created here
 EFFECT_PANEL_WIDTH_PAD = 20 # This is subtracted from notebgtk.Calendar ook width to get some component widths
-PREFERENCES_LEFT = 290 # label column of preferences panel
 FFMPEG_VIEW_SIZE = (200, 210) # Text edit area size for render opts, width 200 seems to be ignored in current layout
 TC_LABEL_WIDTH = 80 # in, out and length timecodes in monitor area top row 
 COMPOSITOR_PANEL_LEFT_WIDTH = 160
@@ -537,125 +535,6 @@ def get_color_clip_panel():
     align.add(vbox)
 
     return align, (name_entry, color_button)
-
-def get_general_options_panel(folder_select_clicked_cb, render_folder_select_clicked_cb):
-    prefs = editorpersistance.prefs
-
-    # Widgets
-    open_in_last_opened_check = gtk.CheckButton()
-    open_in_last_opened_check.set_active(prefs.open_in_last_opended_media_dir)
-    
-    default_profile_combo = gtk.combo_box_new_text()
-    profiles = mltprofiles.get_profiles()
-    for profile in profiles:
-        default_profile_combo.append_text(profile[0])
-    default_profile_combo.set_active( mltprofiles.get_default_profile_index())
-
-    spin_adj = gtk.Adjustment(prefs.undos_max, editorpersistance.UNDO_STACK_MIN, editorpersistance.UNDO_STACK_MAX, 1)
-    undo_max_spin = gtk.SpinButton(spin_adj)
-    undo_max_spin.set_numeric(True)
-
-    folder_select = gtk.Button(_("Select Folder")) # thumbnails
-    folder_select.connect("clicked" , folder_select_clicked_cb)
-
-    render_folder_select = gtk.Button(_("Select Folder"))
-    render_folder_select.connect("clicked" , render_folder_select_clicked_cb)
-
-    autosave_combo = gtk.combo_box_new_text()
-    for i in range(0, len(editorpersistance.prefs.AUTO_SAVE_OPTS)):
-        time, desc = editorpersistance.prefs.AUTO_SAVE_OPTS[i]
-        autosave_combo.append_text(desc)
-    autosave_combo.set_active(prefs.auto_save_delay_value_index)
-
-    # Layout
-    row1 = get_two_column_box(gtk.Label(_("Default Profile")), default_profile_combo, PREFERENCES_LEFT)
-    row2 = get_two_column_box(gtk.Label(_("Remember last media directory")), open_in_last_opened_check, PREFERENCES_LEFT)
-    row3 = get_two_column_box(gtk.Label(_("Undo stack size")), undo_max_spin, PREFERENCES_LEFT)
-    row4 = get_two_column_box(gtk.Label(_("Thumbnail folder")), folder_select, PREFERENCES_LEFT)
-    row6 = get_two_column_box(gtk.Label(_("Autosave for crash recovery every")), autosave_combo, PREFERENCES_LEFT)
-    row8 = get_two_column_box(gtk.Label(_("Rendered Clips folder")), render_folder_select, PREFERENCES_LEFT)
-
-    vbox = gtk.VBox(False, 2)
-    vbox.pack_start(row1, False, False, 0)
-    vbox.pack_start(row6, False, False, 0)
-    vbox.pack_start(row2, False, False, 0)
-    vbox.pack_start(row3, False, False, 0)
-    vbox.pack_start(row4, False, False, 0)
-    vbox.pack_start(row8, False, False, 0)
-    vbox.pack_start(gtk.Label(), True, True, 0)
-    
-    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(12, 0, 12, 12)
-    align.add(vbox)
-
-    return align, (default_profile_combo, open_in_last_opened_check, undo_max_spin)
-
-def get_edit_prefs_panel():
-    prefs = editorpersistance.prefs
-
-    # Widgets
-    auto_play_in_clip_monitor = gtk.CheckButton()
-    auto_play_in_clip_monitor.set_active(prefs.auto_play_in_clip_monitor)
-
-    auto_center_on_stop = gtk.CheckButton()
-    auto_center_on_stop.set_active(prefs.auto_center_on_play_stop)
-
-    auto_move_on_edit = gtk.CheckButton()
-    auto_move_on_edit.set_active(prefs.auto_move_after_edit)
-
-    spin_adj = gtk.Adjustment(prefs.default_grfx_length, 1, 15000, 1)
-    gfx_length_spin = gtk.SpinButton(spin_adj)
-    gfx_length_spin.set_numeric(True)
-    
-    # Layout
-    row1 = get_two_column_box(gtk.Label(_("Autoplay new Clips in Clip Monitor")), auto_play_in_clip_monitor, PREFERENCES_LEFT)
-    row2 = get_two_column_box(gtk.Label(_("Center Current Frame on Playback Stop")), auto_center_on_stop, PREFERENCES_LEFT)
-    row3 = get_two_column_box(gtk.Label(_("Move Current Frame to Clip start after edit")), auto_move_on_edit, PREFERENCES_LEFT)
-    row4 = get_two_column_box(gtk.Label(_("Graphics default length")), gfx_length_spin, PREFERENCES_LEFT)
-    
-    vbox = gtk.VBox(False, 2)
-    vbox.pack_start(row1, False, False, 0)
-    vbox.pack_start(row2, False, False, 0)
-    #vbox.pack_start(row3, False, False, 0) feature disabled
-    vbox.pack_start(row4, False, False, 0)
-    vbox.pack_start(gtk.Label(), True, True, 0)
-    
-    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(12, 0, 12, 12)
-    align.add(vbox)
-
-    return align, (auto_play_in_clip_monitor, auto_center_on_stop, auto_move_on_edit, gfx_length_spin)
-
-def get_view_prefs_panel():
-    prefs = editorpersistance.prefs
-
-    # Widgets
-    display_splash_check = gtk.CheckButton()
-    display_splash_check.set_active(prefs.display_splash_screen)
-
-    buttons_combo = gtk.combo_box_new_text()
-    buttons_combo.append_text(_("Glass"))
-    buttons_combo.append_text(_("Simple"))
-    if prefs.buttons_style == editorpersistance.GLASS_STYLE:
-        buttons_combo.set_active(0)
-    else:
-        buttons_combo.set_active(1)
-
-    # Layout
-    row1 = get_two_column_box(gtk.Label(_("Display splash screen")), display_splash_check, PREFERENCES_LEFT)
-    row2 = get_two_column_box(gtk.Label(_("Buttons style")), buttons_combo, PREFERENCES_LEFT)
-    
-    vbox = gtk.VBox(False, 2)
-    vbox.pack_start(row1, False, False, 0)
-    vbox.pack_start(row2, False, False, 0)
-
-    vbox.pack_start(gtk.Label(), True, True, 0)
-    
-    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(12, 0, 12, 12)
-    align.add(vbox)
-
-    return align, (display_splash_check, buttons_combo)
     
 def get_file_properties_panel(data):
     media_file, img, size, length, vcodec, acodec, channels, frequency, fps = data
@@ -717,33 +596,6 @@ def get_add_compositor_panel(current_sequence, data):
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(get_two_column_box(gtk.Label(_("Composite clip on:")), track_combo), False, False, 0)
     return (vbox, track_combo)
-
-
-
-"""
-def get_project_info_panel():
-    name_panel = get_project_name_panel(editorstate.project.name)
-    profile_info = get_profile_info_panel(editorstate.project.profile)
-    events_panel = get_project_events_panel()
-    
-    project_info_vbox = gtk.VBox()
-    project_info_vbox.pack_start(name_panel, False, True, 0)
-    project_info_vbox.pack_start(profile_info, False, True, 0)
-    project_info_vbox.pack_start(events_panel, True, True, 0)
-
-    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(0, 0, 0, 0)
-    align.add(project_info_vbox)
-    
-    return align
-
-
-def get_project_events_panel():
-    events_list = guicomponents.ProjectEventListView()
-    events_list.set_size_request(270, 300)
-    events_list.fill_data_model()
-    return guiutils.get_named_frame(_("Project Events"), events_list, 4)
-"""
 
 def get_transition_panel(trans_data):
     type_combo_box = gtk.combo_box_new_text()
