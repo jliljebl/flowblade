@@ -350,6 +350,17 @@
         <name>Scanlines</name>
         <group>Artistic</group>
     </filter>
+    <!--
+    <filter id="frei0r.keyspillm0pup">
+        <name>KeySpill</name>
+        <group>Artistic</group>
+    </filter>
+    <filter id="frei0r.medians">
+        <name>medians</name>
+        <group>Artistic</group>
+        <property name="Type" args="editor=combobox cbopts=Cross5:Cross5, Square3x3:Square3x3">Cross5</property>
+    </filter>
+    -->
     <filter id="frei0r.cartoon">
         <name>Cartoon</name>
         <group>Artistic</group>

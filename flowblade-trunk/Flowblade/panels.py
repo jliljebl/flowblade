@@ -811,8 +811,8 @@ def get_create_profiles_panel(load_values_clicked, save_profile_clicked, user_pr
 def fill_new_profile_panel_widgets(profile, widgets):
     load_profile_combo, description, f_rate_num, f_rate_dem, width, height, s_rate_num, s_rate_dem, d_rate_num, d_rate_dem, progressive = widgets
     description.set_text(_("User ") + profile.description())
-    f_rate_num.set_text(str(25))
-    f_rate_dem.set_text(str(1))
+    f_rate_num.set_text(str(profile.frame_rate_num()))
+    f_rate_dem.set_text(str(profile.frame_rate_den()))
     width.set_text(str(profile.width()))
     height.set_text(str(profile.height()))
     s_rate_num.set_text(str(profile.sample_aspect_num()))
