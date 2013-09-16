@@ -24,14 +24,19 @@ import gtk
 
 import guiutils
 
-def _dialog_destroy(dialog, response):
+def dialog_destroy(dialog, response):
     dialog.destroy()
+
+def default_behaviour(dialog):
+    dialog.set_default_response(gtk.RESPONSE_OK)
+    dialog.set_has_separator(False)
+    dialog.set_resizable(False)
 
 def info_message(primary_txt, secondary_txt, parent_window):
     warning_message(primary_txt, secondary_txt, parent_window, is_info=True)
 
 def warning_message(primary_txt, secondary_txt, parent_window, is_info=False):
-    warning_message_with_callback(primary_txt, secondary_txt, parent_window, is_info,_dialog_destroy)
+    warning_message_with_callback(primary_txt, secondary_txt, parent_window, is_info, dialog_destroy)
 
 def warning_message_with_callback(primary_txt, secondary_txt, parent_window, is_info, callback):
     content = get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info)

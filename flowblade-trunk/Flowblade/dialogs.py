@@ -48,9 +48,6 @@ import utils
 PREFERENCES_WIDTH = 550
 PREFERENCES_HEIGHT = 300
 
-PROFILES_WIDTH = 480
-PROFILES_HEIGHT = 520
-
 def new_project_dialog(callback):
     default_profile_index = mltprofiles.get_default_profile_index()
     default_profile = mltprofiles.get_default_profile()
@@ -766,38 +763,6 @@ def recreate_icons_progress_dialog():
     dialog.progress_bar = progress_bar
     dialog.info = info_label
 
-    return dialog
-
-def profiles_manager_dialog(callbacks):
-    dialog = gtk.Dialog(_("Profiles Manager"), None,
-                    gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                    (_("Close Manager").encode('utf-8'), gtk.RESPONSE_CLOSE))
-    
-    load_values_clicked, save_profile_clicked, delete_user_profiles_clicked, hide_profiles_clicked, unhide_profiles_clicked = callbacks
-    
-
-
-    panel2, user_profiles_view = panels.get_manage_profiles_panel(delete_user_profiles_clicked, hide_profiles_clicked, unhide_profiles_clicked)
-    alignment2 = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment2.set_padding(12, 12, 12, 12)
-    alignment2.add(panel2)
-
-    panel1 = panels.get_create_profiles_panel(load_values_clicked, save_profile_clicked, user_profiles_view)
-    alignment1 = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment1.set_padding(12, 12, 12, 12)
-    alignment1.add(panel1)
-
-    notebook = gtk.Notebook()
-    notebook.set_size_request(PROFILES_WIDTH, PROFILES_HEIGHT)
-
-    notebook.append_page(alignment1, gtk.Label(_("Create New Profile")))
-    notebook.append_page(alignment2, gtk.Label(_("Manage Profiles")))
-
-    dialog.connect('response', _dialog_destroy)
-    
-    dialog.vbox.pack_start(notebook, True, True, 0)
-    _default_behaviour(dialog)
-    dialog.show_all()
     return dialog
 
 def autosave_recovery_dialog(callback, parent_window):

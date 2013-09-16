@@ -42,6 +42,7 @@ import mltfilters
 import mlttransitions
 import panels
 import patternproducer
+import profilesmanager
 import projectdata
 import render
 import renderconsumer
@@ -236,127 +237,11 @@ def quick_reference():
 
 # --------------------------------------------------- profiles manager
 def profiles_manager():
-    callbacks = (_profiles_manager_load_values_clicked, _profiles_manager_save_profile_clicked,
-                 _profiles_manager_delete_user_profiles_clicked, _profiles_manager_hide_profiles_clicked,
-                 _profiles_manager_unhide_profiles_clicked)
+
 
     global profile_manager_dialog
-    profile_manager_dialog = dialogs.profiles_manager_dialog(callbacks)
+    profile_manager_dialog = profilesmanager.profiles_manager_dialog()
 
-def _profiles_manager_load_values_clicked(widgets):
-    load_profile_combo, description, f_rate_num, f_rate_dem, width, height, \
-    s_rate_num, s_rate_dem, d_rate_num, d_rate_dem, progressive = widgets
-    
-    profile = mltprofiles.get_profile_for_index(load_profile_combo.get_active())
-    panels.fill_new_profile_panel_widgets(profile, widgets)
-
-def _profiles_manager_save_profile_clicked(widgets, user_profiles_view):
-    load_profile_combo, description, f_rate_num, f_rate_dem, width, height, \
-    s_rate_num, s_rate_dem, d_rate_num, d_rate_dem, progressive = widgets
-
-    profile_file_name = description.get_text().lower().replace(os.sep, "_").replace(" ","_")
-    
-    file_contents = "description=" + description.get_text() + "\n"
-    file_contents += "frame_rate_num=" + f_rate_num.get_text() + "\n"
-    file_contents += "frame_rate_den=" + f_rate_dem.get_text() + "\n"
-    file_contents += "width=" + width.get_text() + "\n"
-    file_contents += "height=" + height.get_text() + "\n"
-    if progressive.get_active() == True:
-        prog_val = "1"
-    else:
-        prog_val = "0"
-    file_contents += "progressive=" + prog_val + "\n"
-    file_contents += "sample_aspect_num=" + s_rate_num.get_text() + "\n"
-    file_contents += "sample_aspect_den=" + s_rate_dem.get_text() + "\n"
-    file_contents += "display_aspect_num=" + d_rate_num.get_text() + "\n"
-    file_contents += "display_aspect_den=" + d_rate_dem.get_text() + "\n"
-
-    profile_path = utils.get_hidden_user_dir_path() + mltprofiles.USER_PROFILES_DIR + profile_file_name
-
-    if os.path.exists(profile_path):
-        dialogutils.warning_message(_("Profile '") +  description.get_text() + _("' already exists!"), \
-                                _("Delete profile and save again."),  gui.editor_window.window)
-        return
-
-    profile_file = open(profile_path, "w")
-    profile_file.write(file_contents)
-    profile_file.close()
-
-    dialogutils.info_message(_("Profile '") +  description.get_text() + _("' saved."), \
-                 _("You can now create a new project using the new profile."), gui.editor_window.window)
-    
-    mltprofiles.load_profile_list()
-    render.reload_profiles()
-    user_profiles_view.fill_data_model(mltprofiles.get_user_profiles())
-
-
-def _profiles_manager_delete_user_profiles_clicked(user_profiles_view):
-    delete_indexes = user_profiles_view.get_selected_indexes_list()
-    if len(delete_indexes) == 0:
-        return
-
-    primary_txt = _("Confirm user profile delete")
-    secondary_txt = _("This operation cannot be undone.") 
-    
-    dialogutils.warning_confirmation(_profiles_delete_confirm_callback, primary_txt, \
-                                 secondary_txt, gui.editor_window.window, \
-                                (user_profiles_view, delete_indexes))
-
-def _profiles_delete_confirm_callback(dialog, response_id, data):
-    if response_id != gtk.RESPONSE_ACCEPT:
-        dialog.destroy()
-        return
-
-    user_profiles_view, delete_indexes = data
-    for i in delete_indexes:
-        pname, profile = mltprofiles.get_user_profiles()[i]
-        profile_file_name = pname.lower().replace(os.sep, "_").replace(" ","_")
-        profile_path = utils.get_hidden_user_dir_path() + mltprofiles.USER_PROFILES_DIR + profile_file_name
-        print profile_path
-        try:
-            os.remove(profile_path)
-        except:
-            # This really should not happen
-            print "removed user profile already gone ???"
-
-    mltprofiles.load_profile_list()
-    user_profiles_view.fill_data_model(mltprofiles.get_user_profiles())
-    dialog.destroy()
-
-def _profiles_manager_hide_profiles_clicked(visible_view, hidden_view):
-    visible_indexes = visible_view.get_selected_indexes_list()
-    prof_names = []
-    default_profile = mltprofiles.get_default_profile()
-    for i in visible_indexes:
-        pname, profile = mltprofiles.get_factory_profiles()[i]
-        if profile == default_profile:
-            dialogutils.warning_message("Can't hide default Profile", 
-                                    "Profile '"+ profile.description() + "' is default profile and can't be hidden.", 
-                                    profile_manager_dialog)
-            return
-        prof_names.append(pname)
-
-    editorpersistance.prefs.hidden_profile_names += prof_names
-    editorpersistance.save()
-
-    mltprofiles.load_profile_list()
-    visible_view.fill_data_model(mltprofiles.get_factory_profiles())
-    hidden_view.fill_data_model(mltprofiles.get_hidden_profiles())
-
-def _profiles_manager_unhide_profiles_clicked(visible_view, hidden_view):
-    hidden_indexes = hidden_view.get_selected_indexes_list()
-    prof_names = []
-    default_profile = mltprofiles.get_default_profile()
-    for i in hidden_indexes:
-        pname, profile = mltprofiles.get_hidden_profiles()[i]
-        prof_names.append(pname)
-    
-    editorpersistance.prefs.hidden_profile_names = list(set(editorpersistance.prefs.hidden_profile_names) - set(prof_names))
-    editorpersistance.save()
-    
-    mltprofiles.load_profile_list()
-    visible_view.fill_data_model(mltprofiles.get_factory_profiles())
-    hidden_view.fill_data_model(mltprofiles.get_hidden_profiles())
 
 
 # ------------------------------------------------------- preferences
