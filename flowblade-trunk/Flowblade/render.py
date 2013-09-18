@@ -46,11 +46,10 @@ import mltprofiles
 import projectdata
 import projectinfogui
 import renderconsumer
+import rendergui
 import respaths
 import sequence
 import utils
-
-DEFAULT_ENCODING_INDEX = 0
 
 # User defined Ffmpeg opts file extension
 FFMPEG_OPTS_SAVE_FILE_EXTENSION = ".rargs"
@@ -198,99 +197,41 @@ def get_file_path():
     return folder + "/" + filename + widgets.extension_label.get_text()
 
 # --------------------------------------------------- gui
-def create_widgets():
+def create_widgets(normal_height):
     """
     Widgets for editing render properties and viewing render progress.
     """
-    # Render panel widgets
-    # File
-    widgets.out_folder = gtk.FileChooserButton(_("Select Folder"))
-    widgets.out_folder.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
-    widgets.out_folder.set_current_folder(os.path.expanduser("~"))
+    widgets.file_panel = rendergui.RenderFilePanel()
+    widgets.out_folder = widgets.file_panel.out_folder
+    widgets.movie_name = widgets.file_panel.movie_name
+    widgets.extension_label = widgets.file_panel.extension_label
     
-    widgets.movie_name = gtk.Entry()
-    widgets.movie_name.set_text("movie")
-
-    widgets.use_project_label = gtk.Label(_("Use Project Profile:"))
-    widgets.use_args_label = gtk.Label(_("Render using args:"))
-
-    # Render type
-    widgets.type_label = gtk.Label(_("Type:"))
-    widgets.presets_label = gtk.Label(_("Presets:")) 
-    widgets.type_combo = gtk.combo_box_new_text() # filled later when current sequence known
-    widgets.type_combo.append_text(_("User Defined"))
-    widgets.type_combo.append_text(_("Preset File type"))
-    widgets.type_combo.set_active(0)
-    widgets.type_combo.connect('changed', lambda w: _render_type_changed())
+    widgets.render_type_panel = rendergui.RenderTypePanel(_render_type_changed, _preset_selection_changed)
+    widgets.preset_encodings_cb = widgets.render_type_panel.presets_selector.widget
+    widgets.type_combo = widgets.render_type_panel.type_combo
     
-    widgets.preset_encodings_cb = gtk.combo_box_new_text()
-    for encoding in renderconsumer.non_user_encodings:
-        widgets.preset_encodings_cb.append_text(encoding.name)
-    widgets.preset_encodings_cb.set_active(0)
-    widgets.preset_encodings_cb.set_sensitive(False)
-    widgets.preset_encodings_cb.connect("changed", 
-                              lambda w,e: _preset_selection_changed(), 
-                              None)
-
-    # Render Profile
-    widgets.use_project_profile_check = gtk.CheckButton()
-    widgets.use_project_profile_check.set_active(True)
-    widgets.use_project_profile_check.connect("toggled", _use_project_check_toggled)
-
-    widgets.out_profile_combo = gtk.combo_box_new_text() # filled later when current sequence known
-    widgets.out_profile_combo.connect('changed', lambda w:  _out_profile_changed())
-    widgets.out_profile_combo.set_sensitive(False)
+    widgets.profile_panel = rendergui.RenderProfilePanel(_out_profile_changed)
+    widgets.use_project_label = widgets.profile_panel.use_project_label
+    widgets.use_args_label = widgets.profile_panel.use_args_label
+    widgets.use_project_profile_check = widgets.profile_panel.use_project_profile_check
+    widgets.out_profile_combo = widgets.profile_panel.out_profile_combo
+    widgets.out_profile_info_box = widgets.profile_panel.out_profile_info_box
     
-    widgets.out_profile_info_box = gtk.VBox() # filled later when current sequence known
-    widgets.out_profile_info_box.add(gtk.Label()) # This is removed when we have data to fill this
-    
-    # Encoding
-    widgets.encodings_cb = gtk.combo_box_new_text()
-    for encoding in renderconsumer.encoding_options:
-        widgets.encodings_cb.append_text(encoding.name)
-    widgets.encodings_cb.set_active(DEFAULT_ENCODING_INDEX)
-    widgets.encodings_cb.connect("changed", 
-                              lambda w,e: _encoding_selection_changed(), 
-                              None)
+    widgets.encoding_panel = rendergui.RenderEncodingPanel(widgets.file_panel.extension_label)
+    widgets.quality_label =  widgets.encoding_panel.quality_label
+    widgets.quality_cb =  widgets.encoding_panel.quality_selector.widget
+    widgets.audio_desc =  widgets.encoding_panel.audio_desc
+    widgets.encodings_cb =  widgets.encoding_panel.encoding_selector.widget
 
-    widgets.extension_label = gtk.Label()
-    _fill_extension_label()
-
-    widgets.quality_label = gtk.Label(_("Quality:"))
-
-    widgets.quality_cb = gtk.combo_box_new_text()
-    _fill_quality_combo_box()
-    
-    widgets.audio_label = gtk.Label(_("Audio:"))        
-    widgets.audio_desc = gtk.Label()
-
-    # FFMpeg opts
-    widgets.use_opts_check = gtk.CheckButton()
-    widgets.use_opts_check.connect("toggled", _use_ffmpg_opts_check_toggled)
-    
-    widgets.opts_save_button = gtk.Button()
-    icon = gtk.image_new_from_stock(gtk.STOCK_SAVE, gtk.ICON_SIZE_MENU)
-    widgets.opts_save_button.set_image(icon)
-    widgets.opts_save_button.connect("clicked", lambda w: _save_opts_pressed())
-
-    widgets.opts_load_button = gtk.Button()
-    icon = gtk.image_new_from_stock(gtk.STOCK_OPEN, gtk.ICON_SIZE_MENU)
-    widgets.opts_load_button.set_image(icon)
-    widgets.opts_load_button.connect("clicked", lambda w: _load_opts_pressed())
-    
-    widgets.opts_save_button.set_sensitive(False)
-    widgets.opts_load_button.set_sensitive(False)
-    
-    widgets.load_selection_button = gtk.Button(_("Load Selection"))
-    widgets.load_selection_button.set_sensitive(False)
-    widgets.load_selection_button.connect("clicked", lambda w: _display_selection_in_opts_view())
-    
-    widgets.opts_view = gtk.TextView()
-    widgets.opts_view.set_sensitive(False)
-    widgets.opts_view.set_pixels_above_lines(2)
-    widgets.opts_view.set_left_margin(2)
-
-    widgets.open_in_bin = gtk.CheckButton()
+    widgets.args_panel = rendergui.RenderArgsPanel(normal_height , _use_ffmpg_opts_check_toggled,
+                                                   _save_opts_pressed, _load_opts_pressed,
+                                                   _display_selection_in_opts_view)
+    widgets.use_opts_check = widgets.args_panel.use_opts_check
+    widgets.opts_save_button = widgets.args_panel.opts_save_button
+    widgets.opts_load_button = widgets.args_panel.opts_load_button
+    widgets.load_selection_button = widgets.args_panel.load_selection_button
+    widgets.opts_view = widgets.args_panel.opts_view
+    widgets.open_in_bin = widgets.args_panel.open_in_bin
 
     # Range
     widgets.range_cb = gtk.combo_box_new_text()
@@ -315,12 +256,6 @@ def create_widgets():
     widgets.estimation_label = gtk.Label()
 
     # Tooltips
-    widgets.out_folder.set_tooltip_text(_("Select folder to place rendered file in"))
-    widgets.movie_name.set_tooltip_text(_("Give name for rendered file"))
-    widgets.use_project_profile_check.set_tooltip_text(_("Select used project profile for rendering"))
-    widgets.out_profile_combo.set_tooltip_text(_("Select render profile"))
-    widgets.encodings_cb.set_tooltip_text(_("Select Render encoding"))
-    widgets.quality_cb.set_tooltip_text(_("Select Render quality"))
     widgets.use_opts_check.set_tooltip_text(_("Render using key=value rendering options"))
     widgets.load_selection_button.set_tooltip_text(_("Load render options from currently selected encoding"))
     widgets.opts_view.set_tooltip_text(_("Edit render options"))
@@ -330,14 +265,11 @@ def create_widgets():
     widgets.out_profile_info_box.set_tooltip_text(_("Render profile info"))
     widgets.opts_save_button.set_tooltip_text(_("Save Render Args into a text file"))
     widgets.opts_load_button.set_tooltip_text(_("Load Render Args from a text file"))
-    
-    # Put in current audio description
-    _fill_audio_desc()
 
 def set_default_values_for_widgets():
     if len(renderconsumer.encoding_options) == 0:# this won't work if no encoding options available
         return                   # but we don't want crash, so that we can inform user
-    widgets.encodings_cb.set_active(DEFAULT_ENCODING_INDEX)
+    widgets.encodings_cb.set_active(0)
     widgets.movie_name.set_text("movie")
     widgets.out_folder.set_current_folder(os.path.expanduser("~"))
     widgets.use_opts_check.set_active(False)
@@ -349,7 +281,6 @@ def enable_user_rendering(value):
     widgets.use_project_profile_check.set_sensitive(value)
     widgets.quality_cb.set_sensitive(value)
     widgets.quality_label.set_sensitive(value)
-    widgets.audio_label.set_sensitive(value)   
     widgets.audio_desc.set_sensitive(value)
     widgets.info_panel.set_sensitive(value)
     widgets.use_project_label.set_sensitive(value)
@@ -453,11 +384,13 @@ def _render_type_changed():
         widgets.load_selection_button.set_sensitive(False)
         widgets.opts_view.set_sensitive(False)
         widgets.opts_view.get_buffer().set_text("")
-    
+
+"""
 def _use_project_check_toggled(checkbutton):
     widgets.out_profile_combo.set_sensitive(checkbutton.get_active() == False)
     if checkbutton.get_active() == True:
         widgets.out_profile_combo.set_active(0)
+"""
 
 def _use_ffmpg_opts_check_toggled(checkbutton):
     active = checkbutton.get_active()
@@ -494,12 +427,14 @@ def _preset_selection_changed():
     enc_index = widgets.preset_encodings_cb.get_active()
     ext = renderconsumer.non_user_encodings[enc_index].extension
     widgets.extension_label.set_text("." + ext)
-    
+
+"""
 def _encoding_selection_changed():
     _fill_quality_combo_box()
     _fill_extension_label()
     _fill_audio_desc()
-
+"""
+"""
 def _fill_quality_combo_box():
     enc_index = widgets.encodings_cb.get_active()
     encoding = renderconsumer.encoding_options[enc_index]
@@ -512,7 +447,8 @@ def _fill_quality_combo_box():
         widgets.quality_cb.set_active(encoding.quality_default_index)
     else:
         widgets.quality_cb.set_active(0)
-
+"""
+"""
 def _fill_extension_label():
     enc_index = widgets.encodings_cb.get_active()
     ext = renderconsumer.encoding_options[enc_index].extension
@@ -522,14 +458,14 @@ def _fill_audio_desc():
     enc_index = widgets.encodings_cb.get_active()
     encoding = renderconsumer.encoding_options[enc_index]
     widgets.audio_desc.set_markup(encoding.get_audio_description())
+"""
    
 def _display_selection_in_opts_view():
     profile = _get_current_profile()
+    widgets.args_panel.display_profile_args(profile, widgets.encodings_cb.get_active(), widgets.quality_cb.get_active())
+    """
     encoding_option = renderconsumer.encoding_options[widgets.encodings_cb.get_active()]
     quality_option = encoding_option.quality_options[widgets.quality_cb.get_active()]
-    _fill_opts_view(encoding_option, quality_option, profile)
-
-def _fill_opts_view(encoding_option, quality_option, profile):
     args_vals_list = encoding_option.get_args_vals_tuples_list(profile, quality_option)
     text = ""
     for arg_val in args_vals_list:
@@ -540,7 +476,8 @@ def _fill_opts_view(encoding_option, quality_option, profile):
     text_buffer = gtk.TextBuffer()
     text_buffer.set_text(text)
     widgets.opts_view.set_buffer(text_buffer)
-
+    """
+    
 def _save_opts_pressed():
     dialogs.save_ffmpep_optsdialog(_save_opts_dialog_callback, FFMPEG_OPTS_SAVE_FILE_EXTENSION)
 

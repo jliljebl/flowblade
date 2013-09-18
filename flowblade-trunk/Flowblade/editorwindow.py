@@ -384,7 +384,8 @@ class EditorWindow:
             add_audio_desc = False
         render_panel_left = panels.get_render_panel_left(
                                 self,
-                                add_audio_desc)
+                                add_audio_desc,
+                                normal_height)
 
         # 'None' here means that no possible rendering options were available
         # and creating panel failed. Inform user of this and hide render GUI 
@@ -396,7 +397,7 @@ class EditorWindow:
             render_hbox.pack_start(gtk.Label("Install codecs to make rendering available."), False, False, 0)
             render_hbox.pack_start(gtk.Label(" "), True, True, 0)
         else: # all is good
-            render_panel_right = panels.get_render_panel_right(lambda w,e: useraction.do_rendering(), normal_height)
+            render_panel_right = panels.get_render_panel_right(lambda w,e: useraction.do_rendering())
 
             render_hbox = gtk.HBox(True, 5)
             render_hbox.pack_start(render_panel_left, True, True, 0)

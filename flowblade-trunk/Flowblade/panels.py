@@ -44,7 +44,6 @@ import utils
 
 HALF_ROW_WIDTH = 160 # Size of half row when using two column row components created here
 EFFECT_PANEL_WIDTH_PAD = 20 # This is subtracted from notebgtk.Calendar ook width to get some component widths
-FFMPEG_VIEW_SIZE = (200, 210) # Text edit area size for render opts, width 200 seems to be ignored in current layout
 TC_LABEL_WIDTH = 80 # in, out and length timecodes in monitor area top row 
 COMPOSITOR_PANEL_LEFT_WIDTH = 160
 
@@ -138,58 +137,17 @@ def get_project_name_panel(project_name):
     name_row = get_left_justified_box([gtk.Label(project_name)])
     return get_named_frame(_("Name"), name_row, 4)
 
-def get_render_panel_left(editor_window, add_audio_panel):
+def get_render_panel_left(editor_window, add_audio_panel, normal_height):
     try:
-        render.create_widgets()
+        render.create_widgets(normal_height)
     except IndexError:
         print "No rendering options found"
         return None
-        
-    out_folder_row = get_two_column_box(gtk.Label(_("Folder:")),
-                              render.widgets.out_folder, 60)
-    name_box = gtk.HBox(False, 8)
-    name_box.pack_start(render.widgets.movie_name, True, True, 0)
-    name_box.pack_start(render.widgets.extension_label, False, False, 0)    
-    movie_name_row = get_two_column_box(gtk.Label(_("Name:")), name_box, 60)
 
-    options_vbox = gtk.VBox(False, 2)
-    options_vbox.pack_start(out_folder_row, False, False, 0)
-    options_vbox.pack_start(movie_name_row, False, False, 0)
-
-    file_opts_panel = get_named_frame(_("File"), options_vbox, 4)
-    
-    render_type_vbox = gtk.VBox(False, 2)
-    render_type_vbox.pack_start(get_two_column_box(render.widgets.type_label,
-                                                   render.widgets.type_combo,
-                                                   80), 
-                                False, False, 0)
-    render_type_vbox.pack_start(get_two_column_box(render.widgets.presets_label,
-                                                   render.widgets.preset_encodings_cb,
-                                                   80),
-                                False, False, 0)
-    render_type_panel = get_named_frame(_("Render Type"), render_type_vbox, 4)
-
-    use_project_profile_row = gtk.HBox()
-    use_project_profile_row.pack_start(render.widgets.use_project_label,  False, False, 0)
-    use_project_profile_row.pack_start(render.widgets.use_project_profile_check,  False, False, 0)
-    use_project_profile_row.pack_start(gtk.Label(), True, True, 0)
-
-    profile_vbox = gtk.VBox(False, 2)
-    profile_vbox.pack_start(use_project_profile_row, False, False, 0)
-    profile_vbox.pack_start(render.widgets.out_profile_combo, False, False, 0)
-    profile_vbox.pack_start(render.widgets.out_profile_info_box, False, False, 0)
-    profile_panel = get_named_frame(_("Render Profile"), profile_vbox, 4)
-                           
-    render.widgets.quality_cb.set_size_request(110, 34)
-    quality_row  = gtk.HBox()
-    quality_row.pack_start(render.widgets.quality_cb, False, False, 0)
-    quality_row.pack_start(render.widgets.audio_desc, True, False, 0)
-
-    encoding_vbox = gtk.VBox(False, 2)
-    encoding_vbox.pack_start(render.widgets.encodings_cb, False, False, 0)
-    encoding_vbox.pack_start(quality_row, False, False, 0)
-
-    encoding_panel = get_named_frame(_("Encoding Format"), encoding_vbox, 4)
+    file_opts_panel = get_named_frame(_("File"), render.widgets.file_panel.vbox, 4)
+    render_type_panel = get_named_frame(_("Render Type"), render.widgets.render_type_panel.vbox, 4)
+    profile_panel = get_named_frame(_("Render Profile"), render.widgets.profile_panel.vbox, 4)
+    encoding_panel = get_named_frame(_("Encoding Format"), render.widgets.encoding_panel.vbox, 4)
 
     render_panel = gtk.VBox()
     render_panel.pack_start(file_opts_panel, False, False, 0)
@@ -199,37 +157,9 @@ def get_render_panel_left(editor_window, add_audio_panel):
     render_panel.pack_start(gtk.Label(), True, True, 0)
     return render_panel
 
-def get_render_panel_right(render_clicked_cb, normal_height):
-    use_opts_row = gtk.HBox()
-    use_opts_row.pack_start(render.widgets.use_args_label,  False, False, 0)
-    use_opts_row.pack_start(render.widgets.use_opts_check,  False, False, 0)
-    use_opts_row.pack_start(gtk.Label(), True, True, 0)
-    use_opts_row.pack_start(render.widgets.opts_load_button,  False, False, 0)
-    use_opts_row.pack_start(render.widgets.opts_save_button,  False, False, 0)
-
-    sw = gtk.ScrolledWindow()
-    sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-    sw.add(render.widgets.opts_view)
-    if normal_height:
-        sw.set_size_request(*FFMPEG_VIEW_SIZE)
-    else:
-        w, h = FFMPEG_VIEW_SIZE
-        h = h - 30
-        sw.set_size_request(w, h)
-        
-    scroll_frame = gtk.Frame()
-    scroll_frame.add(sw)
+def get_render_panel_right(render_clicked_cb):
+    opts_panel = get_named_frame(_("Render Args"), render.widgets.args_panel.vbox, 4)
     
-    opts_buttons_row = gtk.HBox(False)
-    opts_buttons_row.pack_start(render.widgets.load_selection_button, False, False, 0)
-    opts_buttons_row.pack_start(gtk.Label(), True, True, 0)
-
-    opts_vbox = gtk.VBox(False, 2)
-    opts_vbox.pack_start(use_opts_row , False, False, 0)
-    opts_vbox.pack_start(scroll_frame, True, True, 0)
-    opts_vbox.pack_start(opts_buttons_row, False, False, 0)
-    opts_panel = get_named_frame(_("Render Args"), opts_vbox, 4)
-
     bin_row = gtk.HBox()
     bin_row.pack_start(guiutils.get_pad_label(10, 8),  False, False, 0)
     bin_row.pack_start(gtk.Label(_("Open File in Bin:")),  False, False, 0)

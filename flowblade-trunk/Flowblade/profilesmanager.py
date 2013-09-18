@@ -55,12 +55,6 @@ def profiles_manager_dialog():
     alignment1.set_padding(12, 12, 12, 12)
     alignment1.add(panel1)
 
-    #notebook = gtk.Notebook()
-    #notebook.set_size_request(PROFILES_WIDTH, PROFILES_HEIGHT)
-
-    #notebook.append_page(alignment1, gtk.Label(_("Create New Profile")))
-    #notebook.append_page(alignment2, gtk.Label(_("Manage Profiles")))
-
     pane = gtk.HBox(True, 2)
     pane.pack_start(alignment1, True, True, 0)
     pane.pack_start(alignment2, True, True, 0)
