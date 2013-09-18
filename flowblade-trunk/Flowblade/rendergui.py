@@ -52,11 +52,11 @@ class RenderEncodingSelector():
         
         self.quality_selector.update_quality_selection(enc_index)
         
-        ext = renderconsumer.encoding_options[enc_index].extension
-        self.extension_label.set_text("." + ext)
-
         encoding = renderconsumer.encoding_options[enc_index]
-        self.audio_desc_label.set_markup(encoding.get_audio_description())
+        self.extension_label.set_text("." + encoding.extension)
+
+        if self.audio_desc_label != None:
+            self.audio_desc_label.set_markup(encoding.get_audio_description())
 
 
 class PresetEncodingsSelector():
@@ -73,9 +73,10 @@ class PresetEncodingsSelector():
                              None)
 
 class ProfileSelector():
-    def __init__(self, out_profile_changed_callback):
+    def __init__(self, out_profile_changed_callback=None):
         self.widget = gtk.combo_box_new_text() # filled later when current sequence known
-        self.widget.connect('changed', lambda w:  out_profile_changed_callback())
+        if out_profile_changed_callback != None:
+            self.widget.connect('changed', lambda w:  out_profile_changed_callback())
         self.widget.set_sensitive(False)
         self.widget.set_tooltip_text(_("Select render profile"))
         
@@ -88,6 +89,20 @@ class ProfileSelector():
         self.widget.set_active(0)
 
 
+class ProfileInfoBox(gtk.VBox):
+    def __init__(self):
+        gtk.VBox.__init__(self, False, 2)
+        self.add(gtk.Label()) # This is removed when we have data to fill this
+        
+    def display_info(self, info_panel):
+        info_box_children = self.get_children()
+        for child in info_box_children:
+            self.remove(child)
+    
+        self.add(info_panel)
+        self.show_all()
+
+    
 # --------------------------------------------------------------- panel
 class RenderFilePanel():
 
@@ -151,8 +166,7 @@ class RenderProfilePanel():
 
         self.out_profile_combo = ProfileSelector(out_profile_changed_callback)
         
-        self.out_profile_info_box = gtk.VBox() # filled later when current sequence known
-        self.out_profile_info_box.add(gtk.Label()) # This is removed when we have data to fill this
+        self.out_profile_info_box = ProfileInfoBox() # filled later when current sequence known
         
         use_project_profile_row = gtk.HBox()
         use_project_profile_row.pack_start(self.use_project_label,  False, False, 0)

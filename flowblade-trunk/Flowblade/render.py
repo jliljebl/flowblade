@@ -234,8 +234,8 @@ def create_widgets(normal_height):
 
     # Range
     widgets.range_cb = gtk.combo_box_new_text()
-    widgets.range_cb.append_text(_("Full length"))
-    widgets.range_cb.append_text(_("Marked range"))
+    widgets.range_cb.append_text(_("Full Length"))
+    widgets.range_cb.append_text(_("Marked Range"))
     widgets.range_cb.set_active(0) 
 
     # Render, Reset buttons
@@ -376,15 +376,9 @@ def _out_profile_changed():
         _fill_info_box(profile)
 
 def _fill_info_box(profile):
-    info_box_children = widgets.out_profile_info_box.get_children()
-    for child in info_box_children:
-        widgets.out_profile_info_box.remove(child)
-    
     info_panel = guicomponents.get_profile_info_small_box(profile)
     widgets.info_panel = info_panel
-    widgets.out_profile_info_box.add(info_panel)
-    widgets.out_profile_info_box.show_all()
-    info_panel.show()
+    widgets.out_profile_info_box.display_info(info_panel)
 
 def _preset_selection_changed():
     enc_index = widgets.preset_encodings_cb.get_active()
@@ -491,22 +485,19 @@ def render_frame_buffer_clip(media_file):
     hbox.pack_start(label, False, False, 0)
     hbox.pack_start(slider_hbox, False, False, 0)
 
-    fb_widgets.out_profile_combo = gtk.combo_box_new_text()
-    _fill_FB_out_profile_widgets(fb_widgets)
+    profile_selector = rendergui.ProfileSelector()
+    profile_selector.fill_options()
+    profile_selector.widget.set_sensitive(True)
+    fb_widgets.out_profile_combo = profile_selector.widget
+
+    quality_selector = rendergui.RenderQualitySelector()
+    fb_widgets.quality_cb = quality_selector.widget
     
     # Encoding
-    fb_widgets.encodings_cb = gtk.combo_box_new_text()
-    for encoding in renderconsumer.encoding_options:
-        fb_widgets.encodings_cb.append_text(encoding.name)
-    fb_widgets.encodings_cb.set_active(DEFAULT_ENCODING_INDEX)
-    fb_widgets.encodings_cb.connect("changed", 
-                              lambda w,e: _FB_encoding_changed(fb_widgets), 
-                              None)
-
-    fb_widgets.quality_cb = gtk.combo_box_new_text()
-    _fill_FB_quality_combo_box(fb_widgets)
-    _fill_FB_extension_label(fb_widgets) # we now have info to do this, label created earlier
-
+    encoding_selector = rendergui.RenderEncodingSelector(quality_selector, fb_widgets.extension_label, None)
+    encoding_selector.encoding_selection_changed()
+    fb_widgets.encodings_cb = encoding_selector.widget
+    
     objects_list = gtk.TreeStore(str, bool)
     objects_list.append(None, [_("Full Source Length"), True])
     if media_file.mark_in != -1 and media_file.mark_out != -1:
@@ -617,39 +608,6 @@ def _FB_render_stop(dialog, response_id):
     open_media_file_callback(motion_renderer.file_name)
     motion_renderer.running = None
     motion_progress_update.running = None
-    
-def _fill_FB_out_profile_widgets(fb_widgets):
-    """
-    Called some time after widget creation when current_sequence is known and these can be filled.
-    """
-    fb_widgets.out_profile_combo.get_model().clear()
-    fb_widgets.out_profile_combo.append_text(current_sequence().profile.description())
-    profiles = mltprofiles.get_profiles()
-    for profile in profiles:
-        fb_widgets.out_profile_combo.append_text(profile[0])
-    fb_widgets.out_profile_combo.set_active(0)
-
-def _FB_encoding_changed(fb_widgets):
-    _fill_FB_quality_combo_box(fb_widgets)
-    _fill_FB_extension_label(fb_widgets)
- 
-def _fill_FB_quality_combo_box(fb_widgets):
-    enc_index = fb_widgets.encodings_cb.get_active()
-    encoding = renderconsumer.encoding_options[enc_index]
-
-    fb_widgets.quality_cb.get_model().clear()
-    for quality_option in encoding.quality_options:
-        fb_widgets.quality_cb.append_text(quality_option.name)
-
-    if encoding.quality_default_index != None:
-        fb_widgets.quality_cb.set_active(encoding.quality_default_index)
-    else:
-        fb_widgets.quality_cb.set_active(0)
-
-def _fill_FB_extension_label(fb_widgets):
-    enc_index = fb_widgets.encodings_cb.get_active()
-    ext = renderconsumer.encoding_options[enc_index].extension
-    fb_widgets.extension_label.set_text("." + ext)
 
 
 # ----------------------------------------------------------------------- single track transition render 
