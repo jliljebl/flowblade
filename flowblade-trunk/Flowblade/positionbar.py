@@ -28,6 +28,7 @@ import gtk
 import math
 
 from cairoarea import CairoDrawableArea
+import editorpersistance
 import editorstate
 import gui
 import trimmodes
@@ -43,6 +44,11 @@ LINE_COUNT = 11 # Number of range lines
 BG_COLOR = (1, 1, 1)
 DISABLED_BG_COLOR = (0.7, 0.7, 0.7)
 SELECTED_RANGE_COLOR = (0.85, 0.85, 0.85)
+DARK_LINE_COLOR = (0.9, 0.9, 0.9)
+DARK_BG_COLOR = (0.3, 0.3, 0.3)
+DARK_DISABLED_BG_COLOR = (0.1, 0.1, 0.1)
+DARK_SELECTED_RANGE_COLOR = (0.5, 0.5, 0.5)
+
 POINTER_COLOR = (1, 0.3, 0.3)
 END_PAD = 6 # empty area at both ends in pixels
 MARK_CURVE = 5
@@ -66,8 +72,15 @@ class PositionBar:
         self.mark_in_norm = -1.0 # program length normalized
         self.mark_out_norm = -1.0
         self.disabled = False
-        self.mouse_release_listener = None # when used in tools (Tiler ate.) this used to update bg image 
-        
+        self.mouse_release_listener = None # when used in tools (Tiler ate.) this used to update bg image
+
+        if editorpersistance.prefs.dark_theme == True:
+            global LINE_COLOR, BG_COLOR, DISABLED_BG_COLOR, SELECTED_RANGE_COLOR
+            LINE_COLOR = DARK_LINE_COLOR
+            BG_COLOR = DARK_BG_COLOR
+            DISABLED_BG_COLOR = DARK_DISABLED_BG_COLOR
+            SELECTED_RANGE_COLOR = DARK_SELECTED_RANGE_COLOR
+
     def set_listener(self, listener):
         self.position_listener = listener
 

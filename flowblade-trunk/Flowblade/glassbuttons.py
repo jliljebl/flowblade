@@ -170,8 +170,12 @@ class AbstractGlassButtons:
         else:
             grad = cairo.LinearGradient (self.button_x, self.button_y, self.button_x, self.button_y + self.button_height)
             r, g, b = gui.bg_color_tuple
-            grad.add_color_stop_rgba(1, r - 0.1, g - 0.1, b - 0.1, 1)
+            if self.dark_theme == False:
+                grad.add_color_stop_rgba(1, r - 0.1, g - 0.1, b - 0.1, 1)
+            else:
+                grad.add_color_stop_rgba(1, r + 0.05, g + 0.05, b + 0.05, 1)
             grad.add_color_stop_rgba(0, r + 0.1, g + 0.1, b + 0.1, 1)
+
             cr.set_source(grad)
             cr.fill_preserve()
 
@@ -223,7 +227,6 @@ class AbstractGlassButtons:
         else:
             pass
 
-       
         if self.dark_theme != True:
             # Round line
             grad = cairo.LinearGradient (self.button_x, self.button_y, self.button_x, self.button_y + self.button_height)

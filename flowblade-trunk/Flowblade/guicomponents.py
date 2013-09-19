@@ -46,8 +46,6 @@ import respaths
 import translations
 import utils
 
-STAR_IMG_PATH = "/res/img/star.png" 
-SEQUENCE_IMG_PATH = "/res/img/sequence.png" 
 SEPARATOR_HEIGHT = 5
 SEPARATOR_WIDTH = 250
 
@@ -233,7 +231,7 @@ class SequenceListView(ImageTextTextListView):
         ImageTextTextListView.__init__(self)
         
         # Icon path
-        self.icon_path = respaths.ROOT_PATH + SEQUENCE_IMG_PATH
+        self.icon_path = respaths.IMAGE_PATH + "sequence.png" 
         
         # Set sequence name editable and connect 'edited' signal
         self.text_rend_1.set_property("editable", True)

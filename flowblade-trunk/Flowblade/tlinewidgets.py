@@ -31,6 +31,7 @@ import time
 
 import appconsts
 from cairoarea import CairoDrawableArea
+import editorpersistance
 from editorstate import current_sequence
 from editorstate import current_is_move_mode
 from editorstate import timeline_visible
@@ -193,6 +194,8 @@ FRAME_SCALE_COLOR_GRAD_L = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, GRA
 FRAME_SCALE_SELECTED_COLOR_GRAD = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, 0.92)
 FRAME_SCALE_SELECTED_COLOR_GRAD_L = get_multiplied_grad(1, 1, FRAME_SCALE_SELECTED_COLOR_GRAD, GRAD_MULTIPLIER) 
 
+FRAME_SCALE_LINES = (0, 0, 0)
+
 BG_COLOR = (0.5, 0.5, 0.55)#(0.6, 0.6, 0.65)
 TRACK_BG_COLOR = (0.25, 0.25, 0.27)#(0.6, 0.6, 0.65)
 
@@ -266,6 +269,13 @@ def load_icons():
     TRACK_ALL_ON_A_ICON = _load_pixbuf("track_all_on_A.png")
     MUTE_AUDIO_A_ICON = _load_pixbuf("track_audio_mute_A.png") 
     TC_POINTER_HEAD = _load_pixbuf("tc_pointer_head.png")
+
+    if editorpersistance.prefs.dark_theme == True:
+        global FRAME_SCALE_COLOR_GRAD, FRAME_SCALE_COLOR_GRAD_L, BG_COLOR, FRAME_SCALE_LINES
+        FRAME_SCALE_COLOR_GRAD = (1, 0.3, 0.3, 0.3, 1)
+        FRAME_SCALE_COLOR_GRAD_L = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, GRAD_MULTIPLIER)
+        BG_COLOR = (0.44, 0.44, 0.46)
+        FRAME_SCALE_LINES = (0.8, 0.8, 0.8)
 
 def _load_pixbuf(icon_file):
     return gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + icon_file)
@@ -1443,15 +1453,12 @@ class TimeLineFrameScale:
             out_x = (seq.tractor.mark_out + 1 - pos) * pix_per_frame
             grad = cairo.LinearGradient (0, 0, 0, h)
             grad.add_color_stop_rgba(*FRAME_SCALE_SELECTED_COLOR_GRAD)
-            #grad.add_color_stop_rgba(*FRAME_SCALE_SELECTED_COLOR_GRAD_L)
             cr.set_source(grad)
-            #FRAME_SCALE_SELECTED_COLOR_GRAD = get_multiplied_grad(1, 1, FRAME_SCALE_COLOR_GRAD, 0.6) FRAME_SCALE_SELECTED_COLOR_GRAD_L
-            #cr.set_source_rgb(0.2, 0.2, 0.2)
             cr.rectangle(in_x,0,out_x-in_x,h)
             cr.fill()
             
         # Set line attr for frames lines
-        cr.set_source_rgb(0,0,0)
+        cr.set_source_rgb(*FRAME_SCALE_LINES)
         cr.set_line_width(1.0)
         
         big_tick_step = -1 # this isn't rendered most ranges, -1 is flag
