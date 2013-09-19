@@ -172,9 +172,10 @@ class AbstractGlassButtons:
             r, g, b = gui.bg_color_tuple
             if self.dark_theme == False:
                 grad.add_color_stop_rgba(1, r - 0.1, g - 0.1, b - 0.1, 1)
+                grad.add_color_stop_rgba(0, r + 0.1, g + 0.1, b + 0.1, 1)
             else:
-                grad.add_color_stop_rgba(1, r + 0.05, g + 0.05, b + 0.05, 1)
-            grad.add_color_stop_rgba(0, r + 0.1, g + 0.1, b + 0.1, 1)
+                grad.add_color_stop_rgba(1, r + 0.04, g + 0.04, b + 0.04, 1)
+                grad.add_color_stop_rgba(0, r + 0.07, g + 0.07, b + 0.07, 1)
 
             cr.set_source(grad)
             cr.fill_preserve()
@@ -237,14 +238,17 @@ class AbstractGlassButtons:
             self._round_rect_path(cr)
             cr.stroke()
 
-            # Vert lines
-            x = self.button_x
-            for i in range(0, len(self.icons)):
-                if (i > 0) and (i < len(self.icons)):
-                    cr.move_to(x + 0.5, self.button_y)
-                    cr.line_to(x + 0.5, self.button_y + self.button_height)
-                    cr.stroke()
-                x += self.button_width
+        if self.dark_theme == True:
+            cr.set_source_rgb(*gui.bg_color_tuple)
+
+        # Vert lines
+        x = self.button_x
+        for i in range(0, len(self.icons)):
+            if (i > 0) and (i < len(self.icons)):
+                cr.move_to(x + 0.5, self.button_y)
+                cr.line_to(x + 0.5, self.button_y + self.button_height)
+                cr.stroke()
+            x += self.button_width
 
         
 class PlayerButtons(AbstractGlassButtons):
