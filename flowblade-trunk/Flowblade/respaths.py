@@ -56,3 +56,7 @@ def set_paths(root_path):
     GPL_3_DOC = root_path + "/res/help/gpl3"
     ROOT_PARENT = ROOT_PATH.strip("Flowblade")
     PATTERN_PRODUCER_PATH = root_path + "/res/patternproducer/"
+
+def apply_dark_theme():
+    global IMAGE_PATH
+    IMAGE_PATH = ROOT_PATH + "/res/darktheme/"

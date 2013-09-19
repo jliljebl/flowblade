@@ -98,6 +98,15 @@ def main(root_path):
     Called at application start.
     Initializes application with a default project.
     """
+    print "Python", sys.version
+
+    print "GTK+ version:", gtk.gtk_version
+    editorstate.gtk_version = gtk.gtk_version
+    try:
+        editorstate.mlt_version = mlt.LIBMLT_VERSION
+    except:
+        editorstate.mlt_version = "0.0.99" # magic string for "not found"
+
     # Create hidden folders if not present
     user_dir = utils.get_hidden_user_dir_path()
     if not os.path.exists(user_dir):
@@ -117,25 +126,18 @@ def main(root_path):
     # Set paths.
     respaths.set_paths(root_path)
 
-    print "Python", sys.version
-
-    print "GTK+ version:", gtk.gtk_version
-    editorstate.gtk_version = gtk.gtk_version
-    try:
-        editorstate.mlt_version = mlt.LIBMLT_VERSION
-    except:
-        editorstate.mlt_version = "0.0.99" # magic string for "not found"
-
     # Init translations module with translations data
     translations.init_languages()
     translations.load_filters_translations()
     mlttransitions.init_module()
 
-    # Load drag'n'drop images
-    dnd.init()
-
     # Load editor prefs and list of recent projects
     editorpersistance.load()
+    if editorpersistance.prefs.dark_theme == True:
+        respaths.apply_dark_theme()
+        
+    # Load drag'n'drop images
+    dnd.init()
 
     # Init gtk threads
     gtk.gdk.threads_init()

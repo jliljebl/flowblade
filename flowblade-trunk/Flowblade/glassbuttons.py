@@ -96,6 +96,12 @@ class AbstractGlassButtons:
             self.glass_style = True
         else:
             self.glass_style = False
+        
+        # Dark theme comes with flat buttons
+        self.dark_theme = False
+        if editorpersistance.prefs.dark_theme == True:
+            self.glass_style = False
+            self.dark_theme = True
 
     def _set_button_draw_consts(self, x, y, width, height):
         aspect = 1.0
@@ -217,23 +223,25 @@ class AbstractGlassButtons:
         else:
             pass
 
-        # Round line
-        grad = cairo.LinearGradient (self.button_x, self.button_y, self.button_x, self.button_y + self.button_height)
-        for stop in LINE_GRAD_STOPS:
-            grad.add_color_stop_rgba(*stop)
-        cr.set_source(grad)
-        self._set_button_draw_consts(self.button_x + 0.5, self.button_y + 0.5, buttons_width, self.button_height)
-        self._round_rect_path(cr)
-        cr.stroke()
+       
+        if self.dark_theme != True:
+            # Round line
+            grad = cairo.LinearGradient (self.button_x, self.button_y, self.button_x, self.button_y + self.button_height)
+            for stop in LINE_GRAD_STOPS:
+                grad.add_color_stop_rgba(*stop)
+            cr.set_source(grad)
+            self._set_button_draw_consts(self.button_x + 0.5, self.button_y + 0.5, buttons_width, self.button_height)
+            self._round_rect_path(cr)
+            cr.stroke()
 
-        # Vert lines
-        x = self.button_x
-        for i in range(0, len(self.icons)):
-            if (i > 0) and (i < len(self.icons)):
-                cr.move_to(x + 0.5, self.button_y)
-                cr.line_to(x + 0.5, self.button_y + self.button_height)
-                cr.stroke()
-            x += self.button_width
+            # Vert lines
+            x = self.button_x
+            for i in range(0, len(self.icons)):
+                if (i > 0) and (i < len(self.icons)):
+                    cr.move_to(x + 0.5, self.button_y)
+                    cr.line_to(x + 0.5, self.button_y + self.button_height)
+                    cr.stroke()
+                x += self.button_width
 
         
 class PlayerButtons(AbstractGlassButtons):

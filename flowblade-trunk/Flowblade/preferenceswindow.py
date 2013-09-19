@@ -123,9 +123,6 @@ def _edit_prefs_panel():
     auto_center_on_stop = gtk.CheckButton()
     auto_center_on_stop.set_active(prefs.auto_center_on_play_stop)
 
-    auto_move_on_edit = gtk.CheckButton()
-    auto_move_on_edit.set_active(prefs.auto_move_after_edit)
-
     spin_adj = gtk.Adjustment(prefs.default_grfx_length, 1, 15000, 1)
     gfx_length_spin = gtk.SpinButton(spin_adj)
     gfx_length_spin.set_numeric(True)
@@ -133,13 +130,11 @@ def _edit_prefs_panel():
     # Layout
     row1 = guiutils.get_two_column_box(gtk.Label(_("Autoplay new Clips in Clip Monitor")), auto_play_in_clip_monitor, PREFERENCES_LEFT)
     row2 = guiutils.get_two_column_box(gtk.Label(_("Center Current Frame on Playback Stop")), auto_center_on_stop, PREFERENCES_LEFT)
-    row3 = guiutils.get_two_column_box(gtk.Label(_("Move Current Frame to Clip start after edit")), auto_move_on_edit, PREFERENCES_LEFT)
     row4 = guiutils.get_two_column_box(gtk.Label(_("Graphics default length")), gfx_length_spin, PREFERENCES_LEFT)
     
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
-    #vbox.pack_start(row3, False, False, 0) feature disabled
     vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(gtk.Label(), True, True, 0)
     
@@ -147,7 +142,7 @@ def _edit_prefs_panel():
     align.set_padding(12, 0, 12, 12)
     align.add(vbox)
 
-    return align, (auto_play_in_clip_monitor, auto_center_on_stop, auto_move_on_edit, gfx_length_spin)
+    return align, (auto_play_in_clip_monitor, auto_center_on_stop, gfx_length_spin)
     
 def _view_prefs_panel():
     prefs = editorpersistance.prefs
@@ -164,13 +159,23 @@ def _view_prefs_panel():
     else:
         buttons_combo.set_active(1)
 
+    dark_combo = gtk.combo_box_new_text()
+    dark_combo.append_text(_("Light Theme"))
+    dark_combo.append_text(_("Dark Theme"))
+    if prefs.dark_theme == True:
+        dark_combo.set_active(1)
+    else:
+        dark_combo.set_active(0)
+        
     # Layout
     row1 = guiutils.get_two_column_box(gtk.Label(_("Display splash screen")), display_splash_check, PREFERENCES_LEFT)
     row2 = guiutils.get_two_column_box(gtk.Label(_("Buttons style")), buttons_combo, PREFERENCES_LEFT)
+    row3 = guiutils.get_two_column_box(gtk.Label(_("Icons and color optimized for:")), dark_combo, PREFERENCES_LEFT)
     
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
+    vbox.pack_start(row3, False, False, 0)
 
     vbox.pack_start(gtk.Label(), True, True, 0)
     
@@ -178,5 +183,5 @@ def _view_prefs_panel():
     align.set_padding(12, 0, 12, 12)
     align.add(vbox)
 
-    return align, (display_splash_check, buttons_combo)
+    return align, (display_splash_check, buttons_combo, dark_combo)
     
