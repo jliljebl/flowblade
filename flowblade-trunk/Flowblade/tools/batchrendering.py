@@ -4,6 +4,8 @@ import gtk
 import mlt
 import md5
 import os
+from os import listdir
+from os.path import isfile, join
 import pango
 import pickle
 import subprocess
@@ -53,23 +55,23 @@ def add_render_item(flowblade_project, render_path, args_vals_list):
     project_name = flowblade_project.name
     sequence_name = flowblade_project.c_seq.name
     sequence_index = flowblade_project.sequences.index(flowblade_project.c_seq)
-    render_item = BatchRenderItemData(project_name, sequence_name, render_path, sequence_index, args_vals_list, timestamp)
+    length = flowblade_project.c_seq.get_length()
+    print length
+    render_item = BatchRenderItemData(project_name, sequence_name, render_path, sequence_index, args_vals_list, timestamp, length)
     
     # Get identifier
     identifier = render_item.generate_identifier()
 
     # Write project 
     project_path = user_dir + PROJECTS_DIR + identifier + ".flb"
-    print project_path
     persistance.save_project(flowblade_project, project_path)
     
     # Write render item file
     item_path = user_dir + DATAFILES_DIR + identifier + ".renderitem"
-    print item_path
     item_write_file = file(item_path, "wb")
     pickle.dump(render_item, item_write_file)
     
-    print "Render item for rendering file into " + render_path + " with identifier " + identifier + " added."
+    print "Render queue item for rendering file into " + render_path + " with identifier " + identifier + " added."
 
 def init_dirs_if_needed():
     user_dir = utils.get_hidden_user_dir_path()
@@ -120,9 +122,14 @@ def main(root_path):
     mltprofiles.load_profile_list()
     
     global render_queue
+    render_queue = RenderQueue()
+    render_queue.load_render_items()
+
+    """
     render_queue.append(RenderQueueItem("lontoonmatka.flb  sequence_1", "/home/janne/testrender.mpg", 1500))
     render_queue.append(RenderQueueItem("titler_preview.flb  sequence_1", "/home/janne/ttitler.ogg", 750))
     render_queue.append(RenderQueueItem("mainos spotti.flb   sequence_1", "/home/janne/mainons.avi", 325))
+    """
 
     global window
     batch_window = BatchRenderWindow()
@@ -139,31 +146,43 @@ def shutdown():
     gtk.main_quit()
 
 
+class RenderQueue:
+    def __init__(self):
+        self.queue = []
+        self.error_status = None
+        
+    def load_render_items(self):
+        user_dir = utils.get_hidden_user_dir_path()
+        data_files_dir = user_dir + DATAFILES_DIR
+        data_files = [ f for f in listdir(data_files_dir) if isfile(join(data_files_dir,f)) ]
+        for data_file_name in data_files:
+            data_file_path = data_files_dir + data_file_name
+            data_file = open(data_file_path)
+            render_item_data = pickle.load(data_file)
+            queue_item = RenderQueueItem(render_item_data)
+            self.queue.append(queue_item)
+
 class BatchRenderItemData:
-    def __init__(self, project_name, sequence_name, render_path, sequence_index, args_vals_list, timestamp):
+    def __init__(self, project_name, sequence_name, render_path, sequence_index, args_vals_list, timestamp, length):
         self.project_name = project_name
         self.sequence_name = sequence_name
+        self.render_path = render_path
         self.sequence_index = sequence_index
         self.args_vals_list = args_vals_list
         self.timestamp = timestamp
+        self.length = length
 
     def generate_identifier(self):
         id_str = self.project_name + self.timestamp.ctime()
         return md5.new(id_str).hexdigest()
     
-
 class RenderQueueItem:
-    def __init__(self, sequence_name, path, length):
+    def __init__(self, item_data):
+        self.item_data = item_data
         self.render_this_item = True
         self.status = IN_QUEUE
-        self.sequence_name = sequence_name
-        self.target_file = path
-        self.length = length
         self.start_time = -1
         self.render_time = -1
-        self.custom_args = None
-        self.enc_opt_index = -1
-        self.qual_opt_index = -1
     
     def get_status_string(self):
         if self.status == IN_QUEUE:
@@ -345,12 +364,13 @@ class RenderQueueView(gtk.VBox):
         Creates displayed data.
         Displays thumbnail icon, file name and length
         """
-        self.storemodel.clear()
-        for render_item in render_queue:
+        self.storemodel.clear()        
+        
+        for render_item in render_queue.queue:
             row_data = [render_item.render_this_item,
-                        render_item.sequence_name,
+                        render_item.item_data.sequence_name,
                         render_item.get_status_string(),
-                        render_item.target_file, 
+                        render_item.item_data.render_path, 
                         render_item.get_start_time(),
                         render_item.get_render_time()]
             print row_data
