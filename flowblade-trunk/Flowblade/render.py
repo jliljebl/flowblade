@@ -168,7 +168,9 @@ def get_render_consumer():
 
     if widgets.type_combo.get_active() == 1: # Preset encodings
         encoding_option = renderconsumer.non_user_encodings[widgets.preset_encodings_cb.get_active()]
-        consumer = renderconsumer.get_render_condumer_for_encoding(file_path, profile, encoding_option)
+        consumer = renderconsumer.get_render_consumer_for_encoding(file_path,
+                                                                   profile,
+                                                                   encoding_option)
         return consumer
 
     if widgets.use_args_check.get_active() == False:
@@ -189,7 +191,30 @@ def get_render_consumer():
             return None
         
     return consumer
+
+def get_args_vals_list_for_current_selections():
+    profile = _get_current_profile()
+    encoding_option_index = widgets.encodings_cb.get_active()
+    quality_option_index = widgets.quality_cb.get_active()
+        
+    if widgets.type_combo.get_active() == 1: # Preset encodings
+        args_vals_list = renderconsumer.get_args_vals_tuples_list_for_encoding_and_quality( profile, 
+                                                                                            encoding_option_index, 
+                                                                                            -1)
+    elif widgets.use_args_check.get_active() == False: # User encodings
+        args_vals_list = renderconsumer.get_args_vals_tuples_list_for_encoding_and_quality( profile, 
+                                                                                            encoding_option_index, 
+                                                                                            quality_option_index)
+    else: # Manual args encodings
+        buf = widgets.opts_view.get_buffer()
+        args_vals_list, error = renderconsumer.get_ffmpeg_opts_args_vals_tuples_list(buf)
     
+        if error != None:
+            dialogutils.warning_message("FFMPeg Args Error", error, gui.editor_window.window)
+            return None
+    
+    return args_vals_list
+
 def get_file_path():
     folder = widgets.out_folder.get_filenames()[0]        
     filename = widgets.movie_name.get_text()
@@ -238,12 +263,13 @@ def create_widgets(normal_height):
     widgets.range_cb.append_text(_("Marked Range"))
     widgets.range_cb.set_active(0) 
 
-    # Render, Reset buttons
+    # Render, Reset, Render Queue buttons
     widgets.render_button = guiutils.get_render_button()
 
     widgets.reset_button = gtk.Button(_("Reset"))
     widgets.reset_button.connect("clicked", lambda w: set_default_values_for_widgets())
-
+    widgets.queue_button = gtk.Button(_("To Queue"))
+    
     # Render progress window
     widgets.progress_window = None #created in dialogs.py, destroyed here
     

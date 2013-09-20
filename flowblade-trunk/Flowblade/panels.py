@@ -157,7 +157,7 @@ def get_render_panel_left(editor_window, add_audio_panel, normal_height):
     render_panel.pack_start(gtk.Label(), True, True, 0)
     return render_panel
 
-def get_render_panel_right(render_clicked_cb):
+def get_render_panel_right(render_clicked_cb, to_queue_clicked_cb):
     opts_panel = get_named_frame(_("Render Args"), render.widgets.args_panel.vbox, 4)
     
     bin_row = gtk.HBox()
@@ -177,8 +177,14 @@ def get_render_panel_right(render_clicked_cb):
     buttons_panel.pack_start(guiutils.get_pad_label(10, 8), False, False, 0)
     buttons_panel.pack_start(render.widgets.reset_button, False, False, 0)
     buttons_panel.pack_start(gtk.Label(), True, True, 0)
+    buttons_panel.pack_start(render.widgets.queue_button, False, False, 0)
+    buttons_panel.pack_start(gtk.Label(), True, True, 0)
     buttons_panel.pack_start(render.widgets.render_button, False, False, 0)
 
+    render.widgets.queue_button.connect("clicked", 
+                                         to_queue_clicked_cb, 
+                                         None)
+                                         
     render.widgets.render_button.connect("clicked", 
                                          render_clicked_cb, 
                                          None)
@@ -198,7 +204,7 @@ def get_thumbnail_select_panel(current_folder_path):
                                      _("Old thumbnails in this or other projects will") + 
                                      _(" still be available,\nthis only affects thumnails that are created for new media.\n") + 
                                      _("\nSetting your home folder as thumbnails folder is not allowed."))
-        
+
     out_folder = gtk.FileChooserButton("Select Folder")
     out_folder.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
     if current_folder_path != None:

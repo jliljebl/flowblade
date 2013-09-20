@@ -63,6 +63,7 @@ sync_clips = []
 
 show_messages = True
 
+
 class FileProducerNotFoundError(Exception):
     """
     We're only catching this, other errors we'll just crash on load

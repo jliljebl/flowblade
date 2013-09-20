@@ -259,6 +259,7 @@ class EditorWindow:
                 <menu action='ToolsMenu'>
                     <menuitem action='Titler'/>
                     <menuitem action='AudioMix'/>
+                    <menuitem action='RenderQueue'/>
                 </menu>
                 <menu action='HelpMenu'>
                     <menuitem action='QuickReference'/>
@@ -397,7 +398,8 @@ class EditorWindow:
             render_hbox.pack_start(gtk.Label("Install codecs to make rendering available."), False, False, 0)
             render_hbox.pack_start(gtk.Label(" "), True, True, 0)
         else: # all is good
-            render_panel_right = panels.get_render_panel_right(lambda w,e: useraction.do_rendering())
+            render_panel_right = panels.get_render_panel_right(lambda w,e: useraction.do_rendering(),
+                                                               lambda w,e: useraction.add_to_render_queue())
 
             render_hbox = gtk.HBox(True, 5)
             render_hbox.pack_start(render_panel_left, True, True, 0)

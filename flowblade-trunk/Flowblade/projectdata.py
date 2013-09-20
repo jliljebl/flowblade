@@ -22,6 +22,7 @@
 Module contains objects used to capture project data.
 """
 
+import datetime
 import gtk
 import multiprocessing
 import mlt
@@ -32,7 +33,6 @@ import thread
 import threading
 
 import appconsts
-import datetime
 import editorpersistance
 import editorstate
 import medialog
@@ -44,7 +44,7 @@ import utils
 
 
 SAVEFILE_VERSION = 3 # this is changed when backwards incompatible changes 
-                     # are introduced to allow for detecting and fixing them
+                     # are introduced to project files to allow for fixing them at load time
 
 FALLBACK_THUMB = "fallback_thumb.png"
 

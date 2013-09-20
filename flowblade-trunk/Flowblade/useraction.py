@@ -34,6 +34,7 @@ import threading
 
 import app
 import appconsts
+import batchrendering
 import dialogs
 import dialogutils
 import gui
@@ -316,6 +317,12 @@ def open_recent_project(widget, index):
 def do_rendering():
     render.render_timeline()
 
+def add_to_render_queue():
+    args_vals_list = render.get_args_vals_list_for_current_selections()
+    render_path = render.get_file_path()
+    batchrendering.add_render_item(PROJECT(), 
+                                   render_path,
+                                   args_vals_list)
      
 # ----------------------------------- media files
 def add_media_files(this_call_is_retry=False):

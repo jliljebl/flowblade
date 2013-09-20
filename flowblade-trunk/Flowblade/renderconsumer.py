@@ -220,19 +220,13 @@ def load_render_profiles():
         print encoding_option.name + msg
     
 def get_render_consumer_for_encoding_and_quality(file_path, profile, enc_opt_index, quality_opt_index):
-    encoding_option = encoding_options[enc_opt_index]
-    quality_option = encoding_option.quality_options[quality_opt_index]
-
-    # Encoding options key, value list
-    args_vals_list = encoding_option.get_args_vals_tuples_list(profile, quality_option)
-
-    # Quality options  key, value list
-    for k, v in quality_option.add_map.iteritems():
-        args_vals_list.append((str(k), str(v)))
+    args_vals_list = get_args_vals_tuples_list_for_encoding_and_quality(profile,
+                                                                       enc_opt_index,
+                                                                       quality_opt_index)
         
     return get_mlt_render_consumer(file_path, profile, args_vals_list)
 
-def get_render_condumer_for_encoding(file_path, profile, encoding_option):
+def get_render_consumer_for_encoding(file_path, profile, encoding_option):
     # Encoding options key, value list
     args_vals_list = encoding_option.get_args_vals_tuples_list(profile)
         
@@ -255,7 +249,23 @@ def get_mlt_render_consumer(file_path, profile, args_vals_list):
         consumer.set(str(k), str(v))
     
     return consumer
-            
+
+def get_args_vals_tuples_list_for_encoding_and_quality(profile, enc_opt_index, quality_opt_index):
+    encoding_option = encoding_options[enc_opt_index]
+    if quality_opt_index >= 0:
+        quality_option = encoding_option.quality_options[quality_opt_index]
+    else:
+        quality_option = None
+
+    args_vals_list = encoding_option.get_args_vals_tuples_list(profile, quality_option)
+
+    # Quality options  key, value list
+    if quality_option != None:
+        for k, v in quality_option.add_map.iteritems():
+            args_vals_list.append((str(k), str(v)))
+    
+    return args_vals_list
+
 def get_ffmpeg_opts_args_vals_tuples_list(buf):
     end = buf.get_end_iter()
     arg_vals = []

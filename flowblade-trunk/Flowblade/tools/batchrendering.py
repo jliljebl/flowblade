@@ -1,7 +1,11 @@
+import datetime
 import gobject
 import gtk
 import mlt
+import md5
+import os
 import pango
+import pickle
 import subprocess
 import sys
 
@@ -17,6 +21,11 @@ import renderconsumer
 import translations
 import utils    
 
+
+BATCH_DIR = "batchrender/"
+DATAFILES_DIR = "batchrender/datafiles/"
+PROJECTS_DIR = "batchrender/projects/"
+
 PID_FILE = "batchrenderingpid"
 
 WINDOW_WIDTH = 800
@@ -29,11 +38,49 @@ RENDERED = 2
 render_queue = []
 batch_window = None
 
+
 def lauch_batch_rendering():
-    subprocess.Popen([sys.executable, respaths.ROOT_PARENT + "flowbladebatch"], 
-                                    stdout=subprocess.PIPE, 
-                                    stderr=subprocess.STDOUT)
-                                    
+    subprocess.Popen([sys.executable, respaths.ROOT_PARENT + "flowbladebatch"])
+
+def add_render_item(flowblade_project, render_path, args_vals_list):
+    init_dirs_if_needed()
+        
+    # Get time and user dir
+    timestamp = datetime.datetime.now()
+    user_dir = utils.get_hidden_user_dir_path()
+
+    # Create item data file
+    project_name = flowblade_project.name
+    sequence_name = flowblade_project.c_seq.name
+    sequence_index = flowblade_project.sequences.index(flowblade_project.c_seq)
+    render_item = BatchRenderItemData(project_name, sequence_name, render_path, sequence_index, args_vals_list, timestamp)
+    
+    # Get identifier
+    identifier = render_item.generate_identifier()
+
+    # Write project 
+    project_path = user_dir + PROJECTS_DIR + identifier + ".flb"
+    print project_path
+    persistance.save_project(flowblade_project, project_path)
+    
+    # Write render item file
+    item_path = user_dir + DATAFILES_DIR + identifier + ".renderitem"
+    print item_path
+    item_write_file = file(item_path, "wb")
+    pickle.dump(render_item, item_write_file)
+    
+    print "Render item for rendering file into " + render_path + " with identifier " + identifier + " added."
+
+def init_dirs_if_needed():
+    user_dir = utils.get_hidden_user_dir_path()
+
+    if not os.path.exists(user_dir + BATCH_DIR):
+        os.mkdir(user_dir + BATCH_DIR)
+    if not os.path.exists(user_dir + DATAFILES_DIR):
+        os.mkdir(user_dir + DATAFILES_DIR)
+    if not os.path.exists(user_dir + PROJECTS_DIR):
+        os.mkdir(user_dir + PROJECTS_DIR)
+        
 def main(root_path):
     # Allow only on instance to run
     user_dir = utils.get_hidden_user_dir_path()
@@ -41,6 +88,9 @@ def main(root_path):
     can_run = utils.single_instance_pid_file_test_and_write(pid_file_path)
     if can_run == False:
         return
+
+    init_dirs_if_needed()
+
 
     # Set paths.
     respaths.set_paths(root_path)
@@ -87,6 +137,20 @@ def shutdown():
         gtk.main_iteration()
     
     gtk.main_quit()
+
+
+class BatchRenderItemData:
+    def __init__(self, project_name, sequence_name, render_path, sequence_index, args_vals_list, timestamp):
+        self.project_name = project_name
+        self.sequence_name = sequence_name
+        self.sequence_index = sequence_index
+        self.args_vals_list = args_vals_list
+        self.timestamp = timestamp
+
+    def generate_identifier(self):
+        id_str = self.project_name + self.timestamp.ctime()
+        return md5.new(id_str).hexdigest()
+    
 
 class RenderQueueItem:
     def __init__(self, sequence_name, path, length):

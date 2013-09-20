@@ -119,7 +119,7 @@ def _export_dvd_author_dialog_callback(dialog, response_id, data):
     else:
         profile = mltprofiles.get_profile("DV/DVD Widescreen NTSC")
     
-    consumer = renderconsumer.get_render_condumer_for_encoding(render_file_path, profile, enc_opt)
+    consumer = renderconsumer.get_render_consumer_for_encoding(render_file_path, profile, enc_opt)
         
     # start and end frames
     start_frame = 0
