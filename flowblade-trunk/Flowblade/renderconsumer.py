@@ -129,8 +129,6 @@ class EncodingOption:
         self.vcodec = None
         self.format = None
 
-        print self.name
-
         tokens = self.attr_string.split(" ")
         for token in tokens:
             token_sides = token.split("=")
@@ -140,7 +138,6 @@ class EncodingOption:
                 self.vcodec = token_sides[1]
             elif token_sides[0] == "f":
                 self.format = token_sides[1]
-
 
         self.supported, self.err_msg = mltenv.render_profile_supported(self.format, 
                                                          self.vcodec,
@@ -202,7 +199,7 @@ def load_render_profiles():
         quality_option_groups[group_key] = quality_qroup
 
     # Create encoding options
-    print "Render profiles:"
+    #print "Render profiles:"
     global encoding_options, not_supported_encoding_options, non_user_encodings
     encoding_option_nodes = render_encoding_doc.getElementsByTagName(ENCODING_OPTION)
     for eo_node in encoding_option_nodes:
@@ -217,7 +214,7 @@ def load_render_profiles():
         else:
             msg = "...NOT available, " + encoding_option.err_msg + " missing"
             not_supported_encoding_options.append(encoding_option)
-        print encoding_option.name + msg
+        #print encoding_option.name + msg
     
 def get_render_consumer_for_encoding_and_quality(file_path, profile, enc_opt_index, quality_opt_index):
     args_vals_list = get_args_vals_tuples_list_for_encoding_and_quality(profile,

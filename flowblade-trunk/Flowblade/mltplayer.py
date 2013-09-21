@@ -349,7 +349,6 @@ class Player(threading.Thread):
         self.consumer.start()
         self.is_rendering = True
         self.render_callbacks.save_render_start_time()
-        #render.save_render_start_time()
         self.ticker.start_ticker()
 
     def stop_rendering(self):

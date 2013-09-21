@@ -10,6 +10,8 @@ import pango
 import pickle
 import subprocess
 import sys
+import threading
+import time
 
 import editorpersistance
 import guiutils
@@ -40,16 +42,59 @@ RENDERED = 2
 render_queue = []
 batch_window = None
 render_thread = None
+queue_runner_thread = None
 
-def lauch_batch_rendering():
+
+class QueueRunnerThread(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+    
+    def run(self):        
+        self.running = True
+
+        global render_queue, batch_window, render_thread
+        for render_item in render_queue.queue:
+            if self.running == False:
+                break
+            
+            identifier = render_item.generate_identifier()
+            project_file_path = get_projects_dir() + identifier + ".flb"
+            persistance.show_messages = False
+            project = persistance.load_project(project_file_path, False)
+            producer = project.c_seq.tractor
+            consumer = renderconsumer.get_mlt_render_consumer(render_item.render_path, 
+                                                              project.profile, 
+                                                              render_item.args_vals_list)
+            global render_thread 
+            render_thread = renderconsumer.FileRenderPlayer(None, producer, consumer, 0, render_item.length) # None == file name not needed this time when using FileRenderPlayer because callsite keeps track of things
+            render_thread.start()
+            
+            render_item.render_started()
+            batch_window.queue_view.fill_data_model(render_queue)
+            
+            self.thread_running = True
+            while self.thread_running:         
+                render_fraction = render_thread.get_render_fraction()
+                batch_window.render_progress_bar.set_fraction(render_fraction)
+                if render_thread.producer.get_speed() == 0: # Rendering has reached end
+                    self.thread_running = False
+                    
+                    batch_window.render_progress_bar.set_fraction(1.0)
+                    render_item.render_completed()
+                    batch_window.queue_view.fill_data_model(render_queue)
+                else:
+                    time.sleep(1)
+
+        batch_window.render_queue_stopped()
+
+        
+def launch_batch_rendering():
     subprocess.Popen([sys.executable, respaths.ROOT_PARENT + "flowbladebatch"])
 
 def add_render_item(flowblade_project, render_path, args_vals_list):
     init_dirs_if_needed()
         
-    # Get time and user dir
     timestamp = datetime.datetime.now()
-    user_dir = utils.get_hidden_user_dir_path()
 
     # Create item data file
     project_name = flowblade_project.name
@@ -66,9 +111,7 @@ def add_render_item(flowblade_project, render_path, args_vals_list):
     persistance.save_project(flowblade_project, project_path)
     
     # Write render item file
-    item_path = user_dir + DATAFILES_DIR + identifier + ".renderitem"
-    item_write_file = file(item_path, "wb")
-    pickle.dump(render_item, item_write_file)
+    render_item.save()
     
     print "Render queue item for rendering file into " + render_path + " with identifier " + identifier + " added."
 
@@ -77,25 +120,28 @@ def init_dirs_if_needed():
 
     if not os.path.exists(user_dir + BATCH_DIR):
         os.mkdir(user_dir + BATCH_DIR)
-    if not os.path.exists(user_dir + DATAFILES_DIR):
-        os.mkdir(user_dir + DATAFILES_DIR)
+    if not os.path.exists(get_datafiles_dir()):
+        os.mkdir(get_datafiles_dir())
     if not os.path.exists(get_projects_dir()):
         os.mkdir(get_projects_dir())
 
 def get_projects_dir():
-    user_dir = utils.get_hidden_user_dir_path()
-    return user_dir + PROJECTS_DIR
+    return utils.get_hidden_user_dir_path() + PROJECTS_DIR
+
+def get_datafiles_dir():
+    return utils.get_hidden_user_dir_path() + DATAFILES_DIR
 
 def main(root_path):
     # Allow only on instance to run
+    """
     user_dir = utils.get_hidden_user_dir_path()
     pid_file_path = user_dir + PID_FILE
     can_run = utils.single_instance_pid_file_test_and_write(pid_file_path)
     if can_run == False:
         return
+    """
 
     init_dirs_if_needed()
-
 
     # Set paths.
     respaths.set_paths(root_path)
@@ -123,7 +169,7 @@ def main(root_path):
 
     # Create list of available mlt profiles
     mltprofiles.load_profile_list()
-    
+
     global render_queue
     render_queue = RenderQueue()
     render_queue.load_render_items()
@@ -134,7 +180,7 @@ def main(root_path):
     render_queue.append(RenderQueueItem("mainos spotti.flb   sequence_1", "/home/janne/mainons.avi", 325))
     """
 
-    global window
+    global batch_window
     batch_window = BatchRenderWindow()
 
     # Launch gtk+ main loop
@@ -161,9 +207,9 @@ class RenderQueue:
         for data_file_name in data_files:
             data_file_path = data_files_dir + data_file_name
             data_file = open(data_file_path)
-            render_item_data = pickle.load(data_file)
-            queue_item = RenderQueueItem(render_item_data)
-            self.queue.append(queue_item)
+            render_item = pickle.load(data_file)
+            self.queue.append(render_item)
+
 
 class BatchRenderItemData:
     def __init__(self, project_name, sequence_name, render_path, sequence_index, args_vals_list, timestamp, length):
@@ -174,19 +220,30 @@ class BatchRenderItemData:
         self.args_vals_list = args_vals_list
         self.timestamp = timestamp
         self.length = length
-
-    def generate_identifier(self):
-        id_str = self.project_name + self.timestamp.ctime()
-        return md5.new(id_str).hexdigest()
-    
-class RenderQueueItem:
-    def __init__(self, item_data):
-        self.item_data = item_data
         self.render_this_item = True
         self.status = IN_QUEUE
         self.start_time = -1
         self.render_time = -1
-    
+
+    def generate_identifier(self):
+        id_str = self.project_name + self.timestamp.ctime()
+        return md5.new(id_str).hexdigest()
+
+    def save(self):
+        item_path = get_datafiles_dir() + self.generate_identifier() + ".renderitem"
+        item_write_file = file(item_path, "wb")
+        pickle.dump(self, item_write_file)
+
+    def render_started(self):
+        self.status = RENDERING 
+        self.start_time = time.time() 
+        
+    def render_completed(self):
+        self.status = RENDERED
+        self.render_this_item = False
+        self.render_time = time.time() - self.start_time
+        self.save()
+
     def get_status_string(self):
         if self.status == IN_QUEUE:
             return _("Queued")
@@ -196,19 +253,23 @@ class RenderQueueItem:
             return _("Finished")
 
     def get_start_time(self):
+        #passed_str = utils.get_time_str_for_sec_float(passed_time)
         return "-"
     
     def get_render_time(self):
-        return "-"
-    
+        if self.render_time != -1:
+            return utils.get_time_str_for_sec_float(self.render_time)
+        else:
+            return "-"
+
+
 class BatchRenderWindow:
 
     def __init__(self):
         # Window
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.connect("delete-event", lambda w, e:shutdown())
-        
-        
+
         self.total_render_time = gtk.Label()
         self.items_rendered = gtk.Label()
         tot_r = guiutils.get_right_justified_box([gtk.Label("Total Render Time:")])
@@ -266,26 +327,13 @@ class BatchRenderWindow:
         self.window.show_all()
 
     def launch_render(self):
-        render_item = render_queue.queue[0]
-        identifier = render_item.item_data.generate_identifier()
-        print "1"
-        project_file_path = get_projects_dir() + identifier + ".flb"
-        print "2"
-        print project_file_path
-        persistance.show_messages = False
-        project = persistance.load_project(project_file_path, False)
-        print "3"
-        producer = project.c_seq.tractor
-        consumer = renderconsumer.get_mlt_render_consumer(render_item.item_data.render_path, 
-                                                          project.profile, 
-                                                          render_item.item_data.args_vals_list)
-        print type(producer)
-        print type(consumer)
-        print "4"
-        global render_thread 
-        render_thread = renderconsumer.FileRenderPlayer(None, producer, consumer, 0, render_item.item_data.length) # None == file name not needed this time when using FileRenderPlayer because callsite keeps track of things
-        render_thread.start()
-        print "5"
+        global queue_runner_thread
+        queue_runner_thread = QueueRunnerThread()
+        queue_runner_thread.start()
+
+    def render_queue_stopped(self):
+        print "ready!!!!!!!"
+        self.render_progress_bar.set_fraction(0.0)
 
 class RenderQueueView(gtk.VBox):
     """
@@ -394,9 +442,9 @@ class RenderQueueView(gtk.VBox):
         
         for render_item in render_queue.queue:
             row_data = [render_item.render_this_item,
-                        render_item.item_data.sequence_name,
+                        render_item.sequence_name,
                         render_item.get_status_string(),
-                        render_item.item_data.render_path, 
+                        render_item.render_path, 
                         render_item.get_start_time(),
                         render_item.get_render_time()]
             print row_data

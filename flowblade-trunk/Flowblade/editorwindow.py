@@ -185,7 +185,7 @@ class EditorWindow:
             ('ToolsMenu', None, _('Tools')),
             ('Titler', None, _('Titler'), None, None, lambda a:titler.show_titler()),
             ('AudioMix', None, _('Audio Mixer'), None, None, lambda a:audiomonitoring.show_audio_monitor()),
-            ('RenderQueue', None, _('Render Queue'), None, None, lambda a:batchrendering.lauch_batch_rendering()),
+            ('RenderQueue', None, _('Render Queue'), None, None, lambda a:batchrendering.launch_batch_rendering()),
             ('HelpMenu', None, _('_Help')),
             ('QuickReference', None, _('Contents'), None, None, lambda a:menuactions.quick_reference()),
             ('Environment', None, _('Runtime Environment'), None, None, lambda a:menuactions.environment()),

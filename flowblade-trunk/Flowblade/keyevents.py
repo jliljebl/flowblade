@@ -109,7 +109,7 @@ def key_down(widget, event):
     """
     #debug
     if event.keyval == gtk.keysyms.F12:
-        useraction.lauch_batch_rendering()
+        useraction.launch_batch_rendering()
         return True
 
     #debug
