@@ -259,7 +259,7 @@ def remove_attrs(obj, remove_attrs):
 
 
 # -------------------------------------------------- LOAD
-def load_project(file_path):
+def load_project(file_path, icons_and_thumnails=True):
     _show_msg("Unpickling")
 
     # Load project object
@@ -293,12 +293,14 @@ def load_project(file_path):
     sync_clips = []
 
     # Add icons to media files
-    _show_msg(_("Loading icons"))
-    for k, media_file in project.media_files.iteritems():
-        media_file.create_icon()
+    if icons_and_thumnails == True:
+        _show_msg(_("Loading icons"))
+        for k, media_file in project.media_files.iteritems():
+            media_file.create_icon()
     
     project.c_seq = project.sequences[project.c_seq_index]
-    project.start_thumbnail_thread()
+    if icons_and_thumnails == True:
+        project.start_thumbnail_thread()
 
     return project
 

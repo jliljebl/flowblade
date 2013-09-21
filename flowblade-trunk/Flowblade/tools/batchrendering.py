@@ -39,7 +39,7 @@ RENDERED = 2
 
 render_queue = []
 batch_window = None
-
+render_thread = None
 
 def lauch_batch_rendering():
     subprocess.Popen([sys.executable, respaths.ROOT_PARENT + "flowbladebatch"])
@@ -56,14 +56,13 @@ def add_render_item(flowblade_project, render_path, args_vals_list):
     sequence_name = flowblade_project.c_seq.name
     sequence_index = flowblade_project.sequences.index(flowblade_project.c_seq)
     length = flowblade_project.c_seq.get_length()
-    print length
     render_item = BatchRenderItemData(project_name, sequence_name, render_path, sequence_index, args_vals_list, timestamp, length)
     
     # Get identifier
     identifier = render_item.generate_identifier()
 
     # Write project 
-    project_path = user_dir + PROJECTS_DIR + identifier + ".flb"
+    project_path = get_projects_dir() + identifier + ".flb"
     persistance.save_project(flowblade_project, project_path)
     
     # Write render item file
@@ -80,9 +79,13 @@ def init_dirs_if_needed():
         os.mkdir(user_dir + BATCH_DIR)
     if not os.path.exists(user_dir + DATAFILES_DIR):
         os.mkdir(user_dir + DATAFILES_DIR)
-    if not os.path.exists(user_dir + PROJECTS_DIR):
-        os.mkdir(user_dir + PROJECTS_DIR)
-        
+    if not os.path.exists(get_projects_dir()):
+        os.mkdir(get_projects_dir())
+
+def get_projects_dir():
+    user_dir = utils.get_hidden_user_dir_path()
+    return user_dir + PROJECTS_DIR
+
 def main(root_path):
     # Allow only on instance to run
     user_dir = utils.get_hidden_user_dir_path()
@@ -222,6 +225,10 @@ class BatchRenderWindow:
         self.remove_selected = gtk.Button("Remove Selected")
         self.remove_finished = gtk.Button("Remove Finished")
         self.render_button = guiutils.get_render_button()
+        self.render_button.connect("clicked", 
+                                         lambda w, e: self.launch_render(), 
+                                         None)
+                                         
         self.stop_render_button = gtk.Button("Stop Render")
         self.stop_render_button.set_sensitive(False)
 
@@ -258,8 +265,27 @@ class BatchRenderWindow:
         self.window.set_position(gtk.WIN_POS_CENTER)  
         self.window.show_all()
 
-
-
+    def launch_render(self):
+        render_item = render_queue.queue[0]
+        identifier = render_item.item_data.generate_identifier()
+        print "1"
+        project_file_path = get_projects_dir() + identifier + ".flb"
+        print "2"
+        print project_file_path
+        persistance.show_messages = False
+        project = persistance.load_project(project_file_path, False)
+        print "3"
+        producer = project.c_seq.tractor
+        consumer = renderconsumer.get_mlt_render_consumer(render_item.item_data.render_path, 
+                                                          project.profile, 
+                                                          render_item.item_data.args_vals_list)
+        print type(producer)
+        print type(consumer)
+        print "4"
+        global render_thread 
+        render_thread = renderconsumer.FileRenderPlayer(None, producer, consumer, 0, render_item.item_data.length) # None == file name not needed this time when using FileRenderPlayer because callsite keeps track of things
+        render_thread.start()
+        print "5"
 
 class RenderQueueView(gtk.VBox):
     """

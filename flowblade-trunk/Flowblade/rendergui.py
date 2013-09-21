@@ -202,6 +202,7 @@ class RenderEncodingPanel():
         self.encoding_selector = RenderEncodingSelector(self.quality_selector,
                                                         extension_label,
                                                         self.audio_desc)
+        self.encoding_selector.encoding_selection_changed()
         quality_row  = gtk.HBox()
         quality_row.pack_start(self.quality_selector.widget, False, False, 0)
         quality_row.pack_start(self.audio_desc, True, False, 0)

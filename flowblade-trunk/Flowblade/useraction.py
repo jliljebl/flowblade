@@ -320,6 +320,7 @@ def do_rendering():
 def add_to_render_queue():
     args_vals_list = render.get_args_vals_list_for_current_selections()
     render_path = render.get_file_path()
+    print render_path
     batchrendering.add_render_item(PROJECT(), 
                                    render_path,
                                    args_vals_list)
