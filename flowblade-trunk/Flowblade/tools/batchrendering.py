@@ -53,7 +53,7 @@ class QueueRunnerThread(threading.Thread):
     def run(self):        
         self.running = True
         items = 0
-        global render_queue, batch_window, render_thread
+        global render_queue, batch_window
         for render_item in render_queue.queue:
             if self.running == False:
                 break
@@ -72,7 +72,7 @@ class QueueRunnerThread(threading.Thread):
             render_thread.start()
             
             render_item.render_started()
-            batch_window.queue_view.fill_data_model(render_queue)
+            batch_window.update_queue_view()
             batch_window.current_render.set_text("  " + render_item.get_display_name())
             
             self.thread_running = True
@@ -90,6 +90,7 @@ class QueueRunnerThread(threading.Thread):
             items = items + 1
             batch_window.update_render_progress(0, items, render_item.get_display_name(), 0)
 
+        batch_window.update_queue_view()
         batch_window.render_queue_stopped()
 
 def launch_batch_rendering():
@@ -186,6 +187,11 @@ def main(root_path):
 
 def shutdown():
     #batch_window.window.set_visible(False)
+    if queue_runner_thread != None:
+        primary_txt = "Application is rendering and cannot be closed!"
+        secondary_txt = "Stop rendering before closing the application."
+        dialogutils.info_message(primary_txt, secondary_txt, batch_window.window)
+        return True # Tall callsite (inside toolkit) that event is handled, otherwise it'll destroy window anyway.
 
     while(gtk.events_pending()):
         gtk.main_iteration()
@@ -394,7 +400,7 @@ class BatchRenderWindow:
         self.queue_view.fill_data_model(render_queue)
 
     def launch_render(self):
-        global queue_runner_thread
+        # GUI pattern for rendering
         self.render_button.set_sensitive(False)
         self.stop_render_button.set_sensitive(True)
         self.est_time_left.set_text("")
@@ -404,6 +410,8 @@ class BatchRenderWindow:
         self.render_started.set_text(start_str)
         self.remove_selected.set_sensitive(False)
         self.remove_finished.set_sensitive(False)
+
+        global queue_runner_thread
         queue_runner_thread = QueueRunnerThread()
         queue_runner_thread.start()
 
@@ -420,7 +428,7 @@ class BatchRenderWindow:
         else:
             est_str = ""
         self.est_time_left.set_text(est_str)
-        
+
         if current_render_time_passed != 0:
             current_str= "  " + utils.get_time_str_for_sec_float(current_render_time_passed)
         else:
@@ -430,6 +438,7 @@ class BatchRenderWindow:
         self.items_rendered.set_text("  " + str(items))
 
     def render_queue_stopped(self):
+        # not renderoing GUI pattern
         self.render_progress_bar.set_fraction(0.0)
         self.render_button.set_sensitive(True)
         self.stop_render_button.set_sensitive(False)
@@ -437,6 +446,10 @@ class BatchRenderWindow:
         self.current_render.set_text("")
         self.remove_selected.set_sensitive(True)
         self.remove_finished.set_sensitive(True)
+
+        global queue_runner_thread, render_thread
+        render_thread = None
+        queue_runner_thread = None        
 
 class RenderQueueView(gtk.VBox):
     """
@@ -554,14 +567,3 @@ class RenderQueueView(gtk.VBox):
             self.storemodel.append(row_data)
             self.scroll.queue_draw()
 
-
-"""
-  def foreach_cb(model, path, iter, pathlist):
-      list.append(path)
-
-  def my_get_selected_rows(treeselection):
-      pathlist = []
-      treeselection.selected_foreach(foreach_cb, pathlist)
-      model = sel.get_treeview().get_model()
-      return (model, pathlist)
-"""
