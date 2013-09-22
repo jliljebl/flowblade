@@ -51,12 +51,13 @@ class QueueRunnerThread(threading.Thread):
     
     def run(self):        
         self.running = True
-
+        items = 0
         global render_queue, batch_window, render_thread
         for render_item in render_queue.queue:
             if self.running == False:
                 break
-            
+            current_render_time = 0
+
             identifier = render_item.generate_identifier()
             project_file_path = get_projects_dir() + identifier + ".flb"
             persistance.show_messages = False
@@ -71,23 +72,25 @@ class QueueRunnerThread(threading.Thread):
             
             render_item.render_started()
             batch_window.queue_view.fill_data_model(render_queue)
+            batch_window.current_render.set_text(" " + render_item.get_display_name())
             
             self.thread_running = True
             while self.thread_running:         
                 render_fraction = render_thread.get_render_fraction()
-                batch_window.render_progress_bar.set_fraction(render_fraction)
+                now = time.time()
+                current_render_time = now - render_item.start_time
+                batch_window.update_render_progress(render_fraction, items, render_item.get_display_name(), current_render_time)
                 if render_thread.producer.get_speed() == 0: # Rendering has reached end
                     self.thread_running = False
-                    
                     batch_window.render_progress_bar.set_fraction(1.0)
                     render_item.render_completed()
-                    batch_window.queue_view.fill_data_model(render_queue)
                 else:
                     time.sleep(1)
+            items = items + 1
+            batch_window.update_render_progress(0, items, render_item.get_display_name(), 0)
 
         batch_window.render_queue_stopped()
 
-        
 def launch_batch_rendering():
     subprocess.Popen([sys.executable, respaths.ROOT_PARENT + "flowbladebatch"])
 
@@ -99,6 +102,7 @@ def add_render_item(flowblade_project, render_path, args_vals_list):
     # Create item data file
     project_name = flowblade_project.name
     sequence_name = flowblade_project.c_seq.name
+    print project_name, sequence_name
     sequence_index = flowblade_project.sequences.index(flowblade_project.c_seq)
     length = flowblade_project.c_seq.get_length()
     render_item = BatchRenderItemData(project_name, sequence_name, render_path, sequence_index, args_vals_list, timestamp, length)
@@ -174,12 +178,6 @@ def main(root_path):
     render_queue = RenderQueue()
     render_queue.load_render_items()
 
-    """
-    render_queue.append(RenderQueueItem("lontoonmatka.flb  sequence_1", "/home/janne/testrender.mpg", 1500))
-    render_queue.append(RenderQueueItem("titler_preview.flb  sequence_1", "/home/janne/ttitler.ogg", 750))
-    render_queue.append(RenderQueueItem("mainos spotti.flb   sequence_1", "/home/janne/mainons.avi", 325))
-    """
-
     global batch_window
     batch_window = BatchRenderWindow()
 
@@ -252,6 +250,9 @@ class BatchRenderItemData:
         else:
             return _("Finished")
 
+    def get_display_name(self):
+        return self.project_name + "/" + self.sequence_name
+
     def get_start_time(self):
         #passed_str = utils.get_time_str_for_sec_float(passed_time)
         return "-"
@@ -270,18 +271,33 @@ class BatchRenderWindow:
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.connect("delete-event", lambda w, e:shutdown())
 
-        self.total_render_time = gtk.Label()
-        self.items_rendered = gtk.Label()
-        tot_r = guiutils.get_right_justified_box([gtk.Label("Total Render Time:")])
-        items_r = guiutils.get_right_justified_box([gtk.Label("Items Rendered:")])
-        tot_r.set_size_request(250, 20)
-        items_r.set_size_request(250, 20)
+        self.est_time_left = gtk.Label()
+        self.current_render = gtk.Label()
+        self.current_render_time = gtk.Label()
+        est_r = guiutils.get_right_justified_box([guiutils.bold_label("Estimated Left:")])
+        current_r = guiutils.get_right_justified_box([guiutils.bold_label("Current Render:")])
+        current_r_t = guiutils.get_right_justified_box([guiutils.bold_label("Elapsed:")])
+        est_r.set_size_request(250, 20)
+        current_r.set_size_request(250, 20)
+        current_r_t.set_size_request(250, 20)
         
         info_vbox = gtk.VBox(False, 0)
-        info_vbox.pack_start(guiutils.get_left_justified_box([tot_r, self.total_render_time]), False, False, 0)
-        info_vbox.pack_start(guiutils.get_left_justified_box([items_r, self.items_rendered]), False, False, 0)
-
+        info_vbox.pack_start(guiutils.get_left_justified_box([current_r, self.current_render]), False, False, 0)
+        info_vbox.pack_start(guiutils.get_left_justified_box([current_r_t, self.current_render_time]), False, False, 0)
+        info_vbox.pack_start(guiutils.get_left_justified_box([est_r, self.est_time_left]), False, False, 0)
+        
+        self.items_rendered = gtk.Label()
+        items_r = gtk.Label("Items Rendered:")
+        self.render_started = gtk.Label()
+        started_r = gtk.Label("Render Started:")
+    
+        bottom_info_vbox = gtk.HBox(True, 0)
+        bottom_info_vbox.pack_start(guiutils.get_left_justified_box([items_r, self.items_rendered]), True, True, 0)
+        bottom_info_vbox.pack_start(guiutils.get_left_justified_box([started_r, self.render_started]), True, True, 0)
+        
+        self.not_rendering_txt = "Not Rendering"
         self.render_progress_bar = gtk.ProgressBar()
+        self.render_progress_bar.set_text(self.not_rendering_txt)
 
         self.remove_selected = gtk.Button("Remove Selected")
         self.remove_finished = gtk.Button("Remove Finished")
@@ -315,10 +331,15 @@ class BatchRenderWindow:
         self.queue_view.fill_data_model(render_queue)
         self.queue_view.set_size_request(WINDOW_WIDTH, QUEUE_HEIGHT)
 
+        bottom_align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+        bottom_align.set_padding(0, 2, 8, 8)
+        bottom_align.add(bottom_info_vbox)
+
         # Content pane
         pane = gtk.VBox(False, 1)
         pane.pack_start(top_align, False, True, 0)
         pane.pack_start(self.queue_view, False, True, 0)
+        pane.pack_start(bottom_align, False, False, 0)
 
         # Set pane and show window
         self.window.add(pane)
@@ -328,12 +349,42 @@ class BatchRenderWindow:
 
     def launch_render(self):
         global queue_runner_thread
+        self.render_button.set_sensitive(False)
+        self.stop_render_button.set_sensitive(True)
+        self.est_time_left.set_text("")
+        self.items_rendered.set_text("")
+        start_time = datetime.datetime.now()
+        start_str = start_time.strftime('  %H:%M, %d %B, %Y')
+        self.render_started.set_text(start_str)
         queue_runner_thread = QueueRunnerThread()
         queue_runner_thread.start()
 
+    def update_render_progress(self, fraction, items, current_name, current_render_time_passed):
+        self.render_progress_bar.set_fraction(fraction)
+
+        progress_str = str(int(fraction * 100)) + " %"
+        self.render_progress_bar.set_text(progress_str)
+
+        if fraction != 0:
+            full_time_est = (1.0 / fraction) * current_render_time_passed
+            left_est = full_time_est - current_render_time_passed
+            est_str = "  " + utils.get_time_str_for_sec_float(left_est)
+        else:
+            est_str = ""
+        self.est_time_left.set_text(est_str)
+        
+        current_str= "  " + utils.get_time_str_for_sec_float(current_render_time_passed)
+        self.current_render_time.set_text(current_str)
+        
+        self.items_rendered.set_text("  " + str(items))
+
     def render_queue_stopped(self):
-        print "ready!!!!!!!"
         self.render_progress_bar.set_fraction(0.0)
+        self.render_button.set_sensitive(True)
+        self.stop_render_button.set_sensitive(False)
+        self.render_progress_bar.set_text(self.not_rendering_txt)
+        self.current_render.set_text("")
+
 
 class RenderQueueView(gtk.VBox):
     """
@@ -442,7 +493,7 @@ class RenderQueueView(gtk.VBox):
         
         for render_item in render_queue.queue:
             row_data = [render_item.render_this_item,
-                        render_item.sequence_name,
+                        render_item.get_display_name(),
                         render_item.get_status_string(),
                         render_item.render_path, 
                         render_item.get_start_time(),
