@@ -50,8 +50,8 @@ def warning_message_with_callback(primary_txt, secondary_txt, parent_window, is_
     dialog.connect('response', callback)
     dialog.show_all()
     
-def warning_confirmation(callback, primary_txt, secondary_txt, parent_window, data=None):
-    content = get_warning_message_dialog_panel(primary_txt, secondary_txt)
+def warning_confirmation(callback, primary_txt, secondary_txt, parent_window, data=None, is_info=False):
+    content = get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info)
     align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     align.set_padding(0, 12, 0, 0)
     align.add(content)

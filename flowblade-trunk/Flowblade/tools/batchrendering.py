@@ -13,6 +13,7 @@ import sys
 import threading
 import time
 
+import dialogutils
 import editorpersistance
 import guiutils
 import mltenv
@@ -64,7 +65,7 @@ class QueueRunnerThread(threading.Thread):
             project = persistance.load_project(project_file_path, False)
             producer = project.c_seq.tractor
             consumer = renderconsumer.get_mlt_render_consumer(render_item.render_path, 
-                                                              project.profile, 
+                                                              project.profile,
                                                               render_item.args_vals_list)
             global render_thread 
             render_thread = renderconsumer.FileRenderPlayer(None, producer, consumer, 0, render_item.length) # None == file name not needed this time when using FileRenderPlayer because callsite keeps track of things
@@ -72,7 +73,7 @@ class QueueRunnerThread(threading.Thread):
             
             render_item.render_started()
             batch_window.queue_view.fill_data_model(render_queue)
-            batch_window.current_render.set_text(" " + render_item.get_display_name())
+            batch_window.current_render.set_text("  " + render_item.get_display_name())
             
             self.thread_running = True
             while self.thread_running:         
@@ -102,7 +103,6 @@ def add_render_item(flowblade_project, render_path, args_vals_list):
     # Create item data file
     project_name = flowblade_project.name
     sequence_name = flowblade_project.c_seq.name
-    print project_name, sequence_name
     sequence_index = flowblade_project.sequences.index(flowblade_project.c_seq)
     length = flowblade_project.c_seq.get_length()
     render_item = BatchRenderItemData(project_name, sequence_name, render_path, sequence_index, args_vals_list, timestamp, length)
@@ -196,7 +196,6 @@ def shutdown():
 class RenderQueue:
     def __init__(self):
         self.queue = []
-        self.error_status = None
         
     def load_render_items(self):
         user_dir = utils.get_hidden_user_dir_path()
@@ -231,6 +230,14 @@ class BatchRenderItemData:
         item_path = get_datafiles_dir() + self.generate_identifier() + ".renderitem"
         item_write_file = file(item_path, "wb")
         pickle.dump(self, item_write_file)
+
+    def delete_from_queue(self):
+        identifier = self.generate_identifier()
+        item_path = get_datafiles_dir() + identifier + ".renderitem"
+        os.remove(item_path)
+        project_path = get_projects_dir() + identifier + ".flb"
+        os.remove(project_path)
+        render_queue.queue.remove(self)
 
     def render_started(self):
         self.status = RENDERING 
@@ -299,12 +306,19 @@ class BatchRenderWindow:
         self.render_progress_bar = gtk.ProgressBar()
         self.render_progress_bar.set_text(self.not_rendering_txt)
 
-        self.remove_selected = gtk.Button("Remove Selected")
-        self.remove_finished = gtk.Button("Remove Finished")
+        self.remove_selected = gtk.Button("Delete Selected")
+        self.remove_selected.connect("clicked", 
+                                     lambda w, e: self.remove_selected_clicked(), 
+                                     None)
+        self.remove_finished = gtk.Button("Delete Finished")
+        self.remove_finished.connect("clicked", 
+                                     lambda w, e: self.remove_finished_clicked(), 
+                                     None)
+
         self.render_button = guiutils.get_render_button()
         self.render_button.connect("clicked", 
-                                         lambda w, e: self.launch_render(), 
-                                         None)
+                                   lambda w, e: self.launch_render(), 
+                                   None)
                                          
         self.stop_render_button = gtk.Button("Stop Render")
         self.stop_render_button.set_sensitive(False)
@@ -347,6 +361,38 @@ class BatchRenderWindow:
         self.window.set_position(gtk.WIN_POS_CENTER)  
         self.window.show_all()
 
+    def remove_finished_clicked(self):
+        delete_list = []
+        for render_item in render_queue.queue:
+            if render_item.status == RENDERED:
+                delete_list.append(render_item)
+        if len(delete_list) > 0:
+            self.display_delete_confirm(delete_list)
+
+    def remove_selected_clicked(self):
+        model, rows = self.queue_view.treeview.get_selection().get_selected_rows()
+        delete_list = []
+        for row in rows:
+            delete_list.append(render_queue.queue[max(row)])
+        if len(delete_list) > 0:
+            self.display_delete_confirm(delete_list)
+
+    def display_delete_confirm(self, delete_list):
+        primary_txt = "Delete " + str(len(delete_list)) + " item(s) from render queue?"
+        secondary_txt = "This operation cannot be undone."
+        dialogutils.warning_confirmation(self._confirm_items_delete_callback, primary_txt, secondary_txt, self.window , data=delete_list, is_info=False)
+        
+    def _confirm_items_delete_callback(self, dialog, response_id, delete_list):
+        if response_id == gtk.RESPONSE_ACCEPT:
+            for delete_item in delete_list:
+                delete_item.delete_from_queue()
+            self.update_queue_view()
+        
+        dialog.destroy()
+
+    def update_queue_view(self):
+        self.queue_view.fill_data_model(render_queue)
+
     def launch_render(self):
         global queue_runner_thread
         self.render_button.set_sensitive(False)
@@ -356,6 +402,8 @@ class BatchRenderWindow:
         start_time = datetime.datetime.now()
         start_str = start_time.strftime('  %H:%M, %d %B, %Y')
         self.render_started.set_text(start_str)
+        self.remove_selected.set_sensitive(False)
+        self.remove_finished.set_sensitive(False)
         queue_runner_thread = QueueRunnerThread()
         queue_runner_thread.start()
 
@@ -373,7 +421,10 @@ class BatchRenderWindow:
             est_str = ""
         self.est_time_left.set_text(est_str)
         
-        current_str= "  " + utils.get_time_str_for_sec_float(current_render_time_passed)
+        if current_render_time_passed != 0:
+            current_str= "  " + utils.get_time_str_for_sec_float(current_render_time_passed)
+        else:
+            current_str = ""
         self.current_render_time.set_text(current_str)
         
         self.items_rendered.set_text("  " + str(items))
@@ -384,7 +435,8 @@ class BatchRenderWindow:
         self.stop_render_button.set_sensitive(False)
         self.render_progress_bar.set_text(self.not_rendering_txt)
         self.current_render.set_text("")
-
+        self.remove_selected.set_sensitive(True)
+        self.remove_finished.set_sensitive(True)
 
 class RenderQueueView(gtk.VBox):
     """
@@ -408,7 +460,7 @@ class RenderQueueView(gtk.VBox):
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(True)
         tree_sel = self.treeview.get_selection()
-        tree_sel.set_mode(gtk.SELECTION_SINGLE)
+        tree_sel.set_mode(gtk.SELECTION_MULTIPLE)
 
         # Cell renderers
         self.toggle_rend = gtk.CellRendererToggle()
@@ -502,3 +554,14 @@ class RenderQueueView(gtk.VBox):
             self.storemodel.append(row_data)
             self.scroll.queue_draw()
 
+
+"""
+  def foreach_cb(model, path, iter, pathlist):
+      list.append(path)
+
+  def my_get_selected_rows(treeselection):
+      pathlist = []
+      treeselection.selected_foreach(foreach_cb, pathlist)
+      model = sel.get_treeview().get_model()
+      return (model, pathlist)
+"""
