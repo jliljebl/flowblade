@@ -116,15 +116,12 @@ def log_item_name_edited(cell, path, new_text, user_data):
     if len(new_text) == 0:
         return
 
-    liststore, column = user_data
-    liststore[path][column] = new_text
-
     item_index = int(path)
     current_view_events = get_current_filtered_events()
     current_view_events[item_index].comment = new_text
 
-    widgets.media_log_view.queue_draw()
-    
+    widgets.media_log_view.fill_data_model()
+
 def delete_selected():
     selected = widgets.media_log_view.get_selected_rows_list()
     log_events = get_current_filtered_events()
