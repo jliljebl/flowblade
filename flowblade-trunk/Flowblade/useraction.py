@@ -320,13 +320,30 @@ def do_rendering():
 def add_to_render_queue():
     args_vals_list = render.get_args_vals_list_for_current_selections()
     render_path = render.get_file_path()
+
+    # Get render start and end points
+    if render.widgets.range_cb.get_active() == 0:
+        start_frame = 0
+        end_frame = -1 # renders till finish
+    else:
+        start_frame = current_sequence().tractor.mark_in
+        end_frame = current_sequence().tractor.mark_out
+    
+    # Only do if range defined.
+    if start_frame == -1 or end_frame == -1:
+        if render.widgets.range_cb.get_active() == 1:
+            dialogs.no_good_rander_range_info()
+            return
+            
     try:
         batchrendering.add_render_item(PROJECT(), 
                                        render_path,
-                                       args_vals_list)
+                                       args_vals_list,
+                                       start_frame,
+                                       end_frame)
     except Exception as e:
-        primary_txt = "Adding item to render queue failed!"
-        secondary_txt = "Error message: "+ str(e)
+        primary_txt = _("Adding item to render queue failed!")
+        secondary_txt = _("Error message: ") + str(e)
         dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window, is_info=False)
 
     batchrendering.launch_batch_rendering()

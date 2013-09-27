@@ -40,6 +40,7 @@ QUEUE_HEIGHT = 400
 IN_QUEUE = 0
 RENDERING = 1
 RENDERED = 2
+UNQUEUED = 3
 
 render_queue = []
 batch_window = None
@@ -47,6 +48,7 @@ render_thread = None
 queue_runner_thread = None
 
 
+# -------------------------------------------------------- render thread
 class QueueRunnerThread(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
@@ -58,8 +60,12 @@ class QueueRunnerThread(threading.Thread):
         for render_item in render_queue.queue:
             if self.running == False:
                 break
+            if render_item.render_this_item == False:
+                continue
+            
             current_render_time = 0
 
+            # Create render objects
             identifier = render_item.generate_identifier()
             project_file_path = get_projects_dir() + identifier + ".flb"
             persistance.show_messages = False
@@ -68,10 +74,24 @@ class QueueRunnerThread(threading.Thread):
             consumer = renderconsumer.get_mlt_render_consumer(render_item.render_path, 
                                                               project.profile,
                                                               render_item.args_vals_list)
+
+            # Get render range
+            if render_item.mark_in < 0: # no range defined
+                start_frame = 0
+                end_frame = render_item.length
+            elif render_item.mark_out < 0: # only start defined
+                start_frame = render_item.mark_in
+                end_frame = render_item.length
+            else: # start and end defined
+                start_frame = render_item.mark_in
+                end_frame = render_item.mark_out
+            
+            # Create and launch render thread
             global render_thread 
-            render_thread = renderconsumer.FileRenderPlayer(None, producer, consumer, 0, render_item.length) # None == file name not needed this time when using FileRenderPlayer because callsite keeps track of things
+            render_thread = renderconsumer.FileRenderPlayer(None, producer, consumer, start_frame, end_frame) # None == file name not needed this time when using FileRenderPlayer because callsite keeps track of things
             render_thread.start()
             
+            # Update view during render process
             render_item.render_started()
             batch_window.update_queue_view()
             batch_window.current_render.set_text("  " + render_item.get_display_name())
@@ -91,26 +111,26 @@ class QueueRunnerThread(threading.Thread):
             items = items + 1
             batch_window.update_render_progress(0, items, render_item.get_display_name(), 0)
 
+        # Update view for render end
         batch_window.update_queue_view()
         batch_window.render_queue_stopped()
 
-def launch_batch_rendering():
-    subprocess.Popen([sys.executable, respaths.ROOT_PARENT + "flowbladebatch"])
 
-def add_render_item(flowblade_project, render_path, args_vals_list):
+# --------------------------------------------------- adding item, always called from main app
+def add_render_item(flowblade_project, render_path, args_vals_list, mark_in, mark_out):
     init_dirs_if_needed()
         
     timestamp = datetime.datetime.now()
-    print timestamp, type(timestamp)
-    print timestamp.year, timestamp.month, timestamp.day, timestamp.hour, timestamp.minute, timestamp.second, type(timestamp.second), type(timestamp.microsecond)
 
     # Create item data file
     project_name = flowblade_project.name
     sequence_name = flowblade_project.c_seq.name
     sequence_index = flowblade_project.sequences.index(flowblade_project.c_seq)
     length = flowblade_project.c_seq.get_length()
-    render_item = BatchRenderItemData(project_name, sequence_name, render_path, sequence_index, args_vals_list, timestamp, length)
-    
+    render_item = BatchRenderItemData(project_name, sequence_name, render_path, \
+                                      sequence_index, args_vals_list, timestamp, length, \
+                                      mark_in, mark_out)
+    print mark_in, mark_out
     # Get identifier
     identifier = render_item.generate_identifier()
 
@@ -160,6 +180,9 @@ def destroy_for_identifier(identifier):
 
 
 # --------------------------------------------------------------- app thread and data
+def launch_batch_rendering():
+    subprocess.Popen([sys.executable, respaths.ROOT_PARENT + "flowbladebatch"])
+
 def main(root_path):
     # Allow only on instance to run
     """
@@ -276,7 +299,8 @@ class RenderQueue:
         return msg
 
 class BatchRenderItemData:
-    def __init__(self, project_name, sequence_name, render_path, sequence_index, args_vals_list, timestamp, length):
+    def __init__(self, project_name, sequence_name, render_path, sequence_index, \
+                 args_vals_list, timestamp, length, mark_in, mark_out):
         self.project_name = project_name
         self.sequence_name = sequence_name
         self.render_path = render_path
@@ -284,6 +308,8 @@ class BatchRenderItemData:
         self.args_vals_list = args_vals_list
         self.timestamp = timestamp
         self.length = length
+        self.mark_in = mark_in
+        self.mark_out = mark_out
         self.render_this_item = True
         self.status = IN_QUEUE
         self.start_time = -1
@@ -327,15 +353,13 @@ class BatchRenderItemData:
             return _("Queued")
         elif self.status == RENDERING:
             return _("Rendering")
-        else:
+        elif self.status == RENDERED:
             return _("Finished")
+        else:
+            return _("Unqueued")
 
     def get_display_name(self):
         return self.project_name + "/" + self.sequence_name
-
-    def get_start_time(self):
-        #passed_str = utils.get_time_str_for_sec_float(passed_time)
-        return "-"
     
     def get_render_time(self):
         if self.render_time != -1:
@@ -461,6 +485,8 @@ class BatchRenderWindow:
         
     def _confirm_items_delete_callback(self, dialog, response_id, delete_list):
         if response_id == gtk.RESPONSE_ACCEPT:
+            global render_queue
+            render_queue.delete_was_done = True # dnd HACK, see RenderQueueView.row_deleted 
             for delete_item in delete_list:
                 delete_item.delete_from_queue()
             self.update_queue_view()
@@ -531,9 +557,10 @@ class RenderQueueView(gtk.VBox):
     def __init__(self):
         gtk.VBox.__init__(self)
         
-       # Datamodel: icon, text, text
-        self.storemodel = gtk.ListStore(bool, str, str, str, str, str)
- 
+        self.storemodel = gtk.ListStore(bool, str, str, str, str)
+        #self.storemodel.connect("row-deleted", self.row_deleted) 
+        #self.storemodel.connect("row-inserted", self.row_inserted) 
+        
         # Scroll container
         self.scroll = gtk.ScrolledWindow()
         self.scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
@@ -563,17 +590,12 @@ class RenderQueueView(gtk.VBox):
         self.text_rend_4 = gtk.CellRendererText()
         self.text_rend_4.set_property("yalign", 0.0)
 
-        self.text_rend_5 = gtk.CellRendererText()
-        self.text_rend_5.set_property("yalign", 0.0)
-        
-
         # Column views
         self.toggle_col = gtk.TreeViewColumn("Render", self.toggle_rend)
         self.text_col_1 = gtk.TreeViewColumn("Project/Sequence")
         self.text_col_2 = gtk.TreeViewColumn("Status")
         self.text_col_3 = gtk.TreeViewColumn("Render File")
-        self.text_col_4 = gtk.TreeViewColumn("Start Time")
-        self.text_col_5 = gtk.TreeViewColumn("Render Time")
+        self.text_col_4 = gtk.TreeViewColumn("Render Time")
 
         # Build column views
         self.toggle_col.set_expand(False)
@@ -598,18 +620,19 @@ class RenderQueueView(gtk.VBox):
         self.text_col_4.pack_start(self.text_rend_4)
         self.text_col_4.add_attribute(self.text_rend_4, "text", 4)
 
-        self.text_col_5.set_expand(False)
-        self.text_col_5.pack_start(self.text_rend_5)
-        self.text_col_5.add_attribute(self.text_rend_5, "text", 5)
-        
         # Add column views to view
         self.treeview.append_column(self.toggle_col)
         self.treeview.append_column(self.text_col_1)
         self.treeview.append_column(self.text_col_2)
         self.treeview.append_column(self.text_col_3)
         self.treeview.append_column(self.text_col_4)
-        self.treeview.append_column(self.text_col_5)
-        
+
+        #self.treeview.set_reorderable(True)
+        #self.last_signal_was_inserted = False
+        #self.delete_was_done = False
+
+        self.treeview.connect("button-press-event", self.on_treeview_button_press_event)
+
         # Build widget graph and display
         self.scroll.add(self.treeview)
         self.pack_start(self.scroll)
@@ -617,8 +640,51 @@ class RenderQueueView(gtk.VBox):
         self.show_all()
 
     def toggled(self, cell, path):
-        self.storemodel[path][0] = not self.storemodel[path][0]
-        self.scroll.queue_draw()
+        item_index = int(path)
+        global render_queue
+        render_queue.queue[item_index].render_this_item = not render_queue.queue[item_index].render_this_item
+        if render_queue.queue[item_index].render_this_item == True:
+            render_queue.queue[item_index].status = IN_QUEUE
+        else:
+            render_queue.queue[item_index].status = UNQUEUED
+        self.fill_data_model(render_queue)
+
+    def on_treeview_button_press_event(self, treeview, event):
+        if event.button == 3:
+            x = int(event.x)
+            y = int(event.y)
+            time = event.time
+            pthinfo = treeview.get_path_at_pos(x, y)
+            if pthinfo is not None:
+                path, col, cellx, celly = pthinfo
+                treeview.grab_focus()
+                treeview.set_cursor(path, col, 0)
+                display_render_item_popup_menu(self.item_menu_item_selected, event)
+    
+            return True
+        else:
+            return False
+
+    def item_menu_item_selected(self, widget, data):
+        print data
+
+    """
+    def row_deleted(self, treemodel, path):
+        print "deleted", path, type(path)
+        if self.last_signal_was_inserted == True and self.delete_was_done == False:
+            # This is a HACK to detect drag and drops based on observed order of calling
+            # "row-deleted" and "row-inserted" callbacks when handling events 
+            # caused by filing, deleting and dnd reordering rows in gtk.ListStore
+            # Will break i
+            print "D-N-D"
+        self.last_signal_was_inserted = False
+        self.delete_was_done = False
+
+    def row_inserted(self, treemodel, path, treeview_iter):
+        self.last_signal_was_inserted = True
+        self.inserted_row = max(path)
+        print "inserted", path, type(path)
+    """
 
     def fill_data_model(self, render_queue):
         """
@@ -632,9 +698,30 @@ class RenderQueueView(gtk.VBox):
                         render_item.get_display_name(),
                         render_item.get_status_string(),
                         render_item.render_path, 
-                        render_item.get_start_time(),
                         render_item.get_render_time()]
             print row_data
             self.storemodel.append(row_data)
             self.scroll.queue_draw()
 
+
+def display_render_item_popup_menu(callback, event):
+    menu = gtk.Menu()
+    # "Open in Clip Monitor" is sent as event id, same for all below
+    # See useraction._media_file_menu_item_selected(...)
+    menu.add(_get_menu_item(_("Save Item Project As..."), callback,"saveas"))
+    menu.add(_get_menu_item(_("Item Info"), callback,"iteminfo")) 
+    _add_separetor(menu)
+    menu.add(_get_menu_item(_("Delete"), callback,"delete"))
+    menu.popup(None, None, None, event.button, event.time)
+    
+def _add_separetor(menu):
+    sep = gtk.SeparatorMenuItem()
+    sep.show()
+    menu.add(sep)
+
+def _get_menu_item(text, callback, data, sensitive=True):
+    item = gtk.MenuItem(text)
+    item.connect("activate", callback, data)
+    item.show()
+    item.set_sensitive(sensitive)
+    return item

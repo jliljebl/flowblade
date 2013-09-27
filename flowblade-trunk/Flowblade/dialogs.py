@@ -1057,6 +1057,11 @@ def export_dvd_author_dialog(callback, seq, parent_window):
     dialog.connect('response', callback, (markers_check, file_chooser, name_entry, render_check, dvd_type_combo, mpg_name_entry))
     dialog.show_all()
 
+def no_good_rander_range_info():
+    primary_txt = _("Render range not defined!")
+    secondary_txt = _("Define render range using Mark In and Mark Out points\nor select range option 'Sequence length' to start rendering.")
+    dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
+            
 def _mpeg_render_check_toggled(widget, data):
     mpg_name_entry, dvd_type_combo = data
 
