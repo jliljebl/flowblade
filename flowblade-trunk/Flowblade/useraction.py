@@ -320,11 +320,17 @@ def do_rendering():
 def add_to_render_queue():
     args_vals_list = render.get_args_vals_list_for_current_selections()
     render_path = render.get_file_path()
-    print render_path
-    batchrendering.add_render_item(PROJECT(), 
-                                   render_path,
-                                   args_vals_list)
-     
+    try:
+        batchrendering.add_render_item(PROJECT(), 
+                                       render_path,
+                                       args_vals_list)
+    except Exception as e:
+        primary_txt = "Adding item to render queue failed!"
+        secondary_txt = "Error message: "+ str(e)
+        dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window, is_info=False)
+
+    batchrendering.launch_batch_rendering()
+
 # ----------------------------------- media files
 def add_media_files(this_call_is_retry=False):
     """

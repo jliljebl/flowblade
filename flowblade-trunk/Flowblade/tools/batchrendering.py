@@ -10,8 +10,9 @@ import pango
 import pickle
 import subprocess
 import sys
-import threading
+import textwrap
 import time
+import threading
 
 import dialogutils
 import editorpersistance
@@ -100,6 +101,8 @@ def add_render_item(flowblade_project, render_path, args_vals_list):
     init_dirs_if_needed()
         
     timestamp = datetime.datetime.now()
+    print timestamp, type(timestamp)
+    print timestamp.year, timestamp.month, timestamp.day, timestamp.hour, timestamp.minute, timestamp.second, type(timestamp.second), type(timestamp.microsecond)
 
     # Create item data file
     project_name = flowblade_project.name
@@ -120,6 +123,7 @@ def add_render_item(flowblade_project, render_path, args_vals_list):
     
     print "Render queue item for rendering file into " + render_path + " with identifier " + identifier + " added."
 
+# ------------------------------------------------------- file utils
 def init_dirs_if_needed():
     user_dir = utils.get_hidden_user_dir_path()
 
@@ -136,6 +140,26 @@ def get_projects_dir():
 def get_datafiles_dir():
     return utils.get_hidden_user_dir_path() + DATAFILES_DIR
 
+def get_identifier_from_path(file_path):
+    start = file_path.rfind("/")
+    end = file_path.rfind(".")
+    return file_path[start + 1:end]
+
+def destroy_for_identifier(identifier):
+    try:
+        item_path = get_datafiles_dir() + identifier + ".renderitem"
+        os.remove(item_path)
+    except:
+        pass
+    
+    try:
+        project_path = get_projects_dir() + identifier + ".flb"
+        os.remove(project_path)
+    except:
+        pass    
+
+
+# --------------------------------------------------------------- app thread and data
 def main(root_path):
     # Allow only on instance to run
     """
@@ -182,11 +206,14 @@ def main(root_path):
     global batch_window
     batch_window = BatchRenderWindow()
 
-    # Launch gtk+ main loop
+    if render_queue.error_status != None:
+        primary_txt = "Error loading render queue items!"
+        secondary_txt = "Message:\n" + render_queue.get_error_status_message()
+        dialogutils.warning_message(primary_txt, secondary_txt, batch_window.window)
+        # Launch gtk+ main loop
     gtk.main()
 
 def shutdown():
-    #batch_window.window.set_visible(False)
     if queue_runner_thread != None:
         primary_txt = "Application is rendering and cannot be closed!"
         secondary_txt = "Stop rendering before closing the application."
@@ -202,17 +229,51 @@ def shutdown():
 class RenderQueue:
     def __init__(self):
         self.queue = []
+        self.error_status = None
         
     def load_render_items(self):
         user_dir = utils.get_hidden_user_dir_path()
         data_files_dir = user_dir + DATAFILES_DIR
         data_files = [ f for f in listdir(data_files_dir) if isfile(join(data_files_dir,f)) ]
         for data_file_name in data_files:
-            data_file_path = data_files_dir + data_file_name
-            data_file = open(data_file_path)
-            render_item = pickle.load(data_file)
-            self.queue.append(render_item)
+            try:
+                data_file_path = data_files_dir + data_file_name
+                data_file = open(data_file_path)
+                render_item = pickle.load(data_file)
+                self.queue.append(render_item)
+            except Exception as e:
+                if self.error_status == None:
+                    self.error_status = []
+                self.error_status.append((data_file_name,  " datafile load failed with " + str(e)))
+            try:
+                render_file = open(render_item.get_project_filepath())
+            except Exception as e:
+                if self.error_status == None:
+                    self.error_status = []
+                self.error_status.append((render_item.get_project_filepath(), " project file load failed with " + str(e)))
 
+        if self.error_status != None:
+            for file_path, error_str in self.error_status:
+                identifier = get_identifier_from_path(file_path)
+                destroy_for_identifier(identifier)
+                for render_item in self.queue:
+                    if render_item.matches_identifier(identifier):
+                        self.queue.remove(render_item)
+                        break
+
+        # Latest added items displayed on top
+        self.queue.sort(key=lambda item: item.timestamp)
+        self.queue.reverse()
+
+    def get_error_status_message(self):
+        msg = ""
+        for file_path, error_str in self.error_status:
+            err_str_item = file_path + error_str
+            lines = textwrap.wrap(err_str_item, 80)
+            for line in lines:
+                msg = msg + line + "\n"
+
+        return msg
 
 class BatchRenderItemData:
     def __init__(self, project_name, sequence_name, render_path, sequence_index, args_vals_list, timestamp, length):
@@ -231,6 +292,12 @@ class BatchRenderItemData:
     def generate_identifier(self):
         id_str = self.project_name + self.timestamp.ctime()
         return md5.new(id_str).hexdigest()
+
+    def matches_identifier(self, identifier):
+        if self.generate_identifier() == identifier:
+            return True
+        else:
+            return False
 
     def save(self):
         item_path = get_datafiles_dir() + self.generate_identifier() + ".renderitem"
@@ -275,8 +342,12 @@ class BatchRenderItemData:
             return utils.get_time_str_for_sec_float(self.render_time)
         else:
             return "-"
+    
+    def get_project_filepath(self):
+        return get_projects_dir() + self.generate_identifier() + ".flb"
 
-
+    
+# -------------------------------------------------------------------- gui
 class BatchRenderWindow:
 
     def __init__(self):
