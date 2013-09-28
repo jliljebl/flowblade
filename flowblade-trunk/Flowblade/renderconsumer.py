@@ -334,6 +334,11 @@ class FileRenderPlayer(threading.Thread):
                 self.producer.set_speed(0)
             time.sleep(0.1)
 
+    def abort(self):
+        self.consumer.stop()
+        self.producer.set_speed(0)
+        self.running = False
+
     def connect_and_start(self):
         self.consumer.purge()
         self.consumer.connect(self.producer)

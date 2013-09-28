@@ -630,7 +630,7 @@ def _FB_render_stop(dialog, response_id):
     motion_renderer.running = False
     motion_progress_update.running = False
     open_media_file_callback(motion_renderer.file_name)
-    motion_renderer.running = None
+    motion_renderer.running = None # wut? ...below too
     motion_progress_update.running = None
 
 

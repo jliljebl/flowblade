@@ -42,6 +42,7 @@ IN_QUEUE = 0
 RENDERING = 1
 RENDERED = 2
 UNQUEUED = 3
+ABORTED = 4
 
 render_queue = []
 batch_window = None
@@ -90,24 +91,38 @@ class QueueRunnerThread(threading.Thread):
             batch_window.current_render.set_text("  " + render_item.get_display_name())
             
             self.thread_running = True
-            while self.thread_running:         
+            self.aborted = False
+            while self.thread_running:
+                if self.aborted == True:
+                    break        
                 render_fraction = render_thread.get_render_fraction()
                 now = time.time()
                 current_render_time = now - render_item.start_time
                 batch_window.update_render_progress(render_fraction, items, render_item.get_display_name(), current_render_time)
-                if render_thread.producer.get_speed() == 0: # Rendering has reached end
+                if render_thread.producer.get_speed() == 0: # Rendering has reached end or been aborted
                     self.thread_running = False
                     batch_window.render_progress_bar.set_fraction(1.0)
                     render_item.render_completed()
                 else:
                     time.sleep(1)
-            items = items + 1
-            batch_window.update_render_progress(0, items, render_item.get_display_name(), 0)
-
+            if not self.aborted:
+                items = items + 1
+                batch_window.update_render_progress(0, items, render_item.get_display_name(), 0)
+            else:
+                if render_item != None:
+                    render_item.render_aborted()
+                    break
+    
         # Update view for render end
         batch_window.update_queue_view()
         batch_window.render_queue_stopped()
 
+    def abort(self):
+        render_thread.abort()
+        # It may be that 'aborted' and 'running' could combined into one flag, but whatevaar
+        self.aborted = True
+        self.running = False
+        self.thread_running = False
 
 # --------------------------------------------------- adding item, always called from main app
 def add_render_item(flowblade_project, render_path, args_vals_list, mark_in, mark_out, render_data):
@@ -123,7 +138,7 @@ def add_render_item(flowblade_project, render_path, args_vals_list, mark_in, mar
     render_item = BatchRenderItemData(project_name, sequence_name, render_path, \
                                       sequence_index, args_vals_list, timestamp, length, \
                                       mark_in, mark_out, render_data)
-    print mark_in, mark_out
+
     # Get identifier
     identifier = render_item.generate_identifier()
 
@@ -348,6 +363,12 @@ class BatchRenderItemData:
         self.render_this_item = False
         self.render_time = time.time() - self.start_time
         self.save()
+    
+    def render_aborted(self):
+        self.status = ABORTED
+        self.render_this_item = False
+        self.render_time = -1
+        self.save()
 
     def get_status_string(self):
         if self.status == IN_QUEUE:
@@ -356,8 +377,10 @@ class BatchRenderItemData:
             return _("Rendering")
         elif self.status == RENDERED:
             return _("Finished")
-        else:
+        elif self.status == UNQUEUED:
             return _("Unqueued")
+        else:
+            return _("Aborted")
 
     def get_display_name(self):
         return self.project_name + "/" + self.sequence_name
@@ -448,6 +471,9 @@ class BatchRenderWindow:
                                          
         self.stop_render_button = gtk.Button("Stop Render")
         self.stop_render_button.set_sensitive(False)
+        self.stop_render_button.connect("clicked", 
+                                   lambda w, e: self.abort_render(), 
+                                   None)
 
         button_row =  gtk.HBox(False, 0)
         button_row.pack_start(self.remove_selected, False, False, 0)
@@ -564,6 +590,11 @@ class BatchRenderWindow:
         
         self.items_rendered.set_text("  " + str(items))
 
+    def abort_render(self):
+        print "jooo"
+        global queue_runner_thread
+        queue_runner_thread.abort()
+    
     def render_queue_stopped(self):
         # not renderoing GUI pattern
         self.render_progress_bar.set_fraction(0.0)
@@ -802,7 +833,7 @@ def show_render_properties_panel(render_item):
     vbox.pack_start(row7, False, False, 0)
     vbox.pack_start(row8, False, False, 0)
     vbox.pack_start(gtk.Label(), True, True, 0)
-    #title = render_item.get_display_name() + " itm data"
+
     title = _("Render Properties")
     dialogutils.panel_ok_dialog(title, vbox)
     
