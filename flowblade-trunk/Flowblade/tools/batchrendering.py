@@ -8,6 +8,7 @@ from os import listdir
 from os.path import isfile, join
 import pango
 import pickle
+import shutil
 import subprocess
 import sys
 import textwrap
@@ -76,15 +77,7 @@ class QueueRunnerThread(threading.Thread):
                                                               render_item.args_vals_list)
 
             # Get render range
-            if render_item.mark_in < 0: # no range defined
-                start_frame = 0
-                end_frame = render_item.length
-            elif render_item.mark_out < 0: # only start defined
-                start_frame = render_item.mark_in
-                end_frame = render_item.length
-            else: # start and end defined
-                start_frame = render_item.mark_in
-                end_frame = render_item.mark_out
+            start_frame, end_frame = get_render_range(render_item)
             
             # Create and launch render thread
             global render_thread 
@@ -117,7 +110,7 @@ class QueueRunnerThread(threading.Thread):
 
 
 # --------------------------------------------------- adding item, always called from main app
-def add_render_item(flowblade_project, render_path, args_vals_list, mark_in, mark_out):
+def add_render_item(flowblade_project, render_path, args_vals_list, mark_in, mark_out, render_data):
     init_dirs_if_needed()
         
     timestamp = datetime.datetime.now()
@@ -129,7 +122,7 @@ def add_render_item(flowblade_project, render_path, args_vals_list, mark_in, mar
     length = flowblade_project.c_seq.get_length()
     render_item = BatchRenderItemData(project_name, sequence_name, render_path, \
                                       sequence_index, args_vals_list, timestamp, length, \
-                                      mark_in, mark_out)
+                                      mark_in, mark_out, render_data)
     print mark_in, mark_out
     # Get identifier
     identifier = render_item.generate_identifier()
@@ -178,8 +171,15 @@ def destroy_for_identifier(identifier):
     except:
         pass    
 
-
-# --------------------------------------------------------------- app thread and data
+def copy_project(render_item, file_name):
+    try:
+        shutil.copyfile(render_item.get_project_filepath(), file_name)
+    except Exception as e:
+        primary_txt = "Render Item Project File Copy failed!"
+        secondary_txt = "Error message: " + str(e)
+        dialogutils.warning_message(primary_txt, secondary_txt, batch_window.window)
+        
+# --------------------------------------------------------------- app thread and data objects
 def launch_batch_rendering():
     subprocess.Popen([sys.executable, respaths.ROOT_PARENT + "flowbladebatch"])
 
@@ -300,7 +300,7 @@ class RenderQueue:
 
 class BatchRenderItemData:
     def __init__(self, project_name, sequence_name, render_path, sequence_index, \
-                 args_vals_list, timestamp, length, mark_in, mark_out):
+                 args_vals_list, timestamp, length, mark_in, mark_out, render_data):
         self.project_name = project_name
         self.sequence_name = sequence_name
         self.render_path = render_path
@@ -310,6 +310,7 @@ class BatchRenderItemData:
         self.length = length
         self.mark_in = mark_in
         self.mark_out = mark_out
+        self.render_data = render_data
         self.render_this_item = True
         self.status = IN_QUEUE
         self.start_time = -1
@@ -370,7 +371,31 @@ class BatchRenderItemData:
     def get_project_filepath(self):
         return get_projects_dir() + self.generate_identifier() + ".flb"
 
+
+class RenderData:
+
+    def __init__(self, enc_index, quality_index, user_args, profile_desc, profile_name, fps):
+        self.enc_index = enc_index
+        self.quality_index = quality_index
+        self.user_args = user_args
+        self.profile_desc = profile_desc
+        self.profile_name = profile_name
+        self.fps = fps
+
+def get_render_range(render_item):
+    if render_item.mark_in < 0: # no range defined
+        start_frame = 0
+        end_frame = render_item.length
+    elif render_item.mark_out < 0: # only start defined
+        start_frame = render_item.mark_in
+        end_frame = render_item.length
+    else: # start and end defined
+        start_frame = render_item.mark_in
+        end_frame = render_item.mark_out
     
+    return (start_frame, end_frame)
+
+
 # -------------------------------------------------------------------- gui
 class BatchRenderWindow:
 
@@ -478,6 +503,11 @@ class BatchRenderWindow:
         if len(delete_list) > 0:
             self.display_delete_confirm(delete_list)
 
+    def remove_item(self, render_item):
+        delete_list = []
+        delete_list.append(render_item)
+        self.display_delete_confirm(delete_list)
+
     def display_delete_confirm(self, delete_list):
         primary_txt = "Delete " + str(len(delete_list)) + " item(s) from render queue?"
         secondary_txt = "This operation cannot be undone."
@@ -547,6 +577,7 @@ class BatchRenderWindow:
         global queue_runner_thread, render_thread
         render_thread = None
         queue_runner_thread = None        
+
 
 class RenderQueueView(gtk.VBox):
     """
@@ -660,13 +691,21 @@ class RenderQueueView(gtk.VBox):
                 treeview.grab_focus()
                 treeview.set_cursor(path, col, 0)
                 display_render_item_popup_menu(self.item_menu_item_selected, event)
-    
             return True
         else:
             return False
 
-    def item_menu_item_selected(self, widget, data):
-        print data
+    def item_menu_item_selected(self, widget, msg):
+        model, rows = self.treeview.get_selection().get_selected_rows()
+        render_item = render_queue.queue[max(rows[0])]
+        if msg == "renderinfo":
+            show_render_properties_panel(render_item)
+        elif msg == "delete":
+            batch_window.remove_item(render_item)
+        elif msg == "saveas":
+            file_name = run_save_project_as_dialog(render_item.project_name)
+            if file_name != None:
+                copy_project(render_item, file_name)
 
     """
     def row_deleted(self, treemodel, path):
@@ -703,13 +742,76 @@ class RenderQueueView(gtk.VBox):
             self.storemodel.append(row_data)
             self.scroll.queue_draw()
 
+def run_save_project_as_dialog(project_name):
+    dialog = gtk.FileChooserDialog(_("Save Render Item Project As"), None, 
+                                   gtk.FILE_CHOOSER_ACTION_SAVE, 
+                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                                    _("Save").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
+    dialog.set_action(gtk.FILE_CHOOSER_ACTION_SAVE)
+    project_name = project_name.rstrip(".flb")
+    dialog.set_current_name(project_name + "_FROM_BATCH.flb")
+    dialog.set_do_overwrite_confirmation(True)
+    response_id = dialog.run()
+    if response_id == gtk.RESPONSE_NONE:
+        dialog.destroy()
+        return None
+    file_name = dialog.get_filename()
+    dialog.destroy()
+    return file_name
 
+def show_render_properties_panel(render_item):
+    if render_item.render_data.user_args == False:
+        enc_opt = renderconsumer.encoding_options[render_item.render_data.enc_index]
+        enc_desc = enc_opt.name
+        audio_desc = enc_opt.audio_desc
+        quality_opt = enc_opt.quality_options[render_item.render_data.quality_index]
+        quality_desc = quality_opt.name
+    else:
+        enc_desc = " -" 
+        quality_desc = " -"
+        audio_desc = " -"
+
+    user_args = str(render_item.render_data.user_args)
+
+    start_frame, end_frame = get_render_range(render_item)
+    start_str = utils.get_tc_string_with_fps(start_frame, render_item.render_data.fps)
+    end_str = utils.get_tc_string_with_fps(end_frame, render_item.render_data.fps)
+    
+    LEFT_WIDTH = 200
+    render_item.get_display_name()
+    row0 = guiutils.get_two_column_box(guiutils.bold_label(_("Encoding:")), gtk.Label(enc_desc), LEFT_WIDTH)
+    row1 = guiutils.get_two_column_box(guiutils.bold_label(_("Quality:")), gtk.Label(quality_desc), LEFT_WIDTH)
+    row2 = guiutils.get_two_column_box(guiutils.bold_label(_("Audio Encoding:")), gtk.Label(audio_desc), LEFT_WIDTH)
+    row3 = guiutils.get_two_column_box(guiutils.bold_label(_("Use User Args:")), gtk.Label(user_args), LEFT_WIDTH)
+    row4 = guiutils.get_two_column_box(guiutils.bold_label(_("Start:")), gtk.Label(start_str), LEFT_WIDTH)
+    row5 = guiutils.get_two_column_box(guiutils.bold_label(_("End:")), gtk.Label(end_str), LEFT_WIDTH)
+    row6 = guiutils.get_two_column_box(guiutils.bold_label(_("Frames Per Second:")), gtk.Label(str(render_item.render_data.fps)), LEFT_WIDTH)
+    row7 = guiutils.get_two_column_box(guiutils.bold_label(_("Render Profile Name:")), gtk.Label(str(render_item.render_data.profile_name)), LEFT_WIDTH)
+    row8 = guiutils.get_two_column_box(guiutils.bold_label(_("Render Profile:")), gtk.Label(render_item.render_data.profile_desc), LEFT_WIDTH)
+
+    vbox = gtk.VBox(False, 2)
+    vbox.pack_start(gtk.Label(render_item.get_display_name()), False, False, 0)
+    vbox.pack_start(guiutils.get_pad_label(12, 16), False, False, 0)
+    vbox.pack_start(row0, False, False, 0)
+    vbox.pack_start(row1, False, False, 0)
+    vbox.pack_start(row2, False, False, 0)
+    vbox.pack_start(row3, False, False, 0)
+    vbox.pack_start(row4, False, False, 0)
+    vbox.pack_start(row5, False, False, 0)
+    vbox.pack_start(row6, False, False, 0)
+    vbox.pack_start(row7, False, False, 0)
+    vbox.pack_start(row8, False, False, 0)
+    vbox.pack_start(gtk.Label(), True, True, 0)
+    #title = render_item.get_display_name() + " itm data"
+    title = _("Render Properties")
+    dialogutils.panel_ok_dialog(title, vbox)
+    
 def display_render_item_popup_menu(callback, event):
     menu = gtk.Menu()
     # "Open in Clip Monitor" is sent as event id, same for all below
     # See useraction._media_file_menu_item_selected(...)
     menu.add(_get_menu_item(_("Save Item Project As..."), callback,"saveas"))
-    menu.add(_get_menu_item(_("Item Info"), callback,"iteminfo")) 
+    menu.add(_get_menu_item(_("Render Properties"), callback,"renderinfo")) 
     _add_separetor(menu)
     menu.add(_get_menu_item(_("Delete"), callback,"delete"))
     menu.popup(None, None, None, event.button, event.time)
@@ -725,3 +827,6 @@ def _get_menu_item(text, callback, data, sensitive=True):
     item.show()
     item.set_sensitive(sensitive)
     return item
+
+
+

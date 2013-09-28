@@ -64,7 +64,7 @@ class PresetEncodingsSelector():
      def __init__(self, selection_changed_callback):
         self.widget = gtk.combo_box_new_text()
         for encoding in renderconsumer.non_user_encodings:
-            self.widget .append_text(encoding.name)
+            self.widget.append_text(encoding.name)
         
         self.widget.set_active(0)
         self.widget.set_sensitive(False)

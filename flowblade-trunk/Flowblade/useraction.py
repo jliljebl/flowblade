@@ -176,7 +176,8 @@ def _load_pulse_bar():
 
 def _enable_save():
     gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)
- 
+
+
 # ---------------------------------- project: new, load, save
 def new_project():
     dialogs.new_project_dialog(_new_project_dialog_callback)
@@ -334,13 +335,29 @@ def add_to_render_queue():
         if render.widgets.range_cb.get_active() == 1:
             dialogs.no_good_rander_range_info()
             return
-            
+
+    if render.widgets.use_args_check.get_active() == False:
+        enc_index = render.widgets.encodings_cb.get_active()
+        quality_index = render.widgets.quality_cb.get_active()
+        user_args = False
+    else:
+        enc_index = render.widgets.encodings_cb.get_active()
+        quality_index = widgets.quality_cb.get_active()
+        user_args = False
+
+    profile = render.get_current_profile()
+    profile_text = guicomponents.get_profile_info_text(profile)
+    fps = profile.fps()
+    profile_name = profile.description()
+    r_data = batchrendering.RenderData(enc_index, quality_index, user_args, profile_text, profile_name, fps) 
+
     try:
         batchrendering.add_render_item(PROJECT(), 
                                        render_path,
                                        args_vals_list,
                                        start_frame,
-                                       end_frame)
+                                       end_frame,
+                                       r_data)
     except Exception as e:
         primary_txt = _("Adding item to render queue failed!")
         secondary_txt = _("Error message: ") + str(e)

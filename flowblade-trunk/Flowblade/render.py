@@ -162,7 +162,7 @@ def get_render_consumer():
     if file_path == None:
         return None
 
-    profile = _get_current_profile()
+    profile = get_current_profile()
 
     if widgets.type_combo.get_active() == 1: # Preset encodings
         encoding_option = renderconsumer.non_user_encodings[widgets.preset_encodings_cb.get_active()]
@@ -191,7 +191,7 @@ def get_render_consumer():
     return consumer
 
 def get_args_vals_list_for_current_selections():
-    profile = _get_current_profile()
+    profile = get_current_profile()
     encoding_option_index = widgets.encodings_cb.get_active()
     quality_option_index = widgets.quality_cb.get_active()
         
@@ -241,9 +241,9 @@ def create_widgets(normal_height):
     widgets.out_profile_info_box = widgets.profile_panel.out_profile_info_box
     
     widgets.encoding_panel = rendergui.RenderEncodingPanel(widgets.file_panel.extension_label)
-    widgets.quality_cb =  widgets.encoding_panel.quality_selector.widget
-    widgets.audio_desc =  widgets.encoding_panel.audio_desc
-    widgets.encodings_cb =  widgets.encoding_panel.encoding_selector.widget
+    widgets.quality_cb = widgets.encoding_panel.quality_selector.widget
+    widgets.audio_desc = widgets.encoding_panel.audio_desc
+    widgets.encodings_cb = widgets.encoding_panel.encoding_selector.widget
 
     widgets.args_panel = rendergui.RenderArgsPanel(normal_height,
                                                    _save_opts_pressed, _load_opts_pressed,
@@ -355,7 +355,7 @@ def maybe_open_rendered_file_in_bin():
     file_path = get_file_path()
     open_media_file_callback(file_path)
 
-def _get_current_profile():
+def get_current_profile():
     profile_index = widgets.out_profile_combo.widget.get_active()
     if profile_index == 0:
         # project_profile is first selection in combo box
@@ -410,7 +410,7 @@ def _preset_selection_changed():
     widgets.extension_label.set_text("." + ext)
    
 def _display_selection_in_opts_view():
-    profile = _get_current_profile()
+    profile = get_current_profile()
     widgets.args_panel.display_profile_args(profile, widgets.encodings_cb.get_active(), widgets.quality_cb.get_active())
     
 def _save_opts_pressed():

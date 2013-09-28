@@ -32,6 +32,20 @@ def default_behaviour(dialog):
     dialog.set_has_separator(False)
     dialog.set_resizable(False)
 
+def panel_ok_dialog(title, panel):
+    dialog = gtk.Dialog(title, None,
+                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                        ( _("OK").encode('utf-8'), gtk.RESPONSE_OK))
+                        
+    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment.set_padding(6, 24, 12, 12)
+    alignment.add(panel)
+    
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    default_behaviour(dialog)
+    dialog.connect('response', dialog_destroy)
+    dialog.show_all()
+    
 def info_message(primary_txt, secondary_txt, parent_window):
     warning_message(primary_txt, secondary_txt, parent_window, is_info=True)
 

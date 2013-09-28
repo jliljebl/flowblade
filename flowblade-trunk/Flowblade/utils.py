@@ -104,8 +104,11 @@ def get_tc_string(frame):
     """ 
     Returns timecode string for frame
     """
-    fr = frame % fps()
-    sec = frame / fps()
+    return get_tc_string_with_fps(frame, fps())
+
+def get_tc_string_with_fps(frame, frames_per_sec):
+    fr = frame % frames_per_sec
+    sec = frame / frames_per_sec
     mins = sec / 60
     sec = sec % 60
     hours = mins / 60
