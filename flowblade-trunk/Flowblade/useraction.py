@@ -336,6 +336,7 @@ def add_to_render_queue():
             dialogs.no_good_rander_range_info()
             return
 
+    # Create render data object
     if render.widgets.use_args_check.get_active() == False:
         enc_index = render.widgets.encodings_cb.get_active()
         quality_index = render.widgets.quality_cb.get_active()
@@ -351,6 +352,7 @@ def add_to_render_queue():
     profile_name = profile.description()
     r_data = batchrendering.RenderData(enc_index, quality_index, user_args, profile_text, profile_name, fps) 
 
+    # Add item
     try:
         batchrendering.add_render_item(PROJECT(), 
                                        render_path,
@@ -362,8 +364,16 @@ def add_to_render_queue():
         primary_txt = _("Adding item to render queue failed!")
         secondary_txt = _("Error message: ") + str(e)
         dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window, is_info=False)
+        return
 
-    batchrendering.launch_batch_rendering()
+    # Launch Render Queue application
+    can_run = batchrendering.test_and_write_pid(write_pid=False)
+    if can_run:
+        batchrendering.launch_batch_rendering()
+    else:
+        primary_txt = "New Render Added to Queue"
+        secondary_txt = "Flowblade Batch Render application <b>already running</b>.\nPress <b>'Reload Queue' button</b> to load new item into queue."
+        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
 
 # ----------------------------------- media files
 def add_media_files(this_call_is_retry=False):

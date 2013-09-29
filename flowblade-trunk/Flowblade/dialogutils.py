@@ -101,6 +101,7 @@ def get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=False, 
     
     p_label = guiutils.bold_label(primary_txt)
     s_label = gtk.Label(secondary_txt)
+    s_label.set_use_markup(True)
     texts_pad = gtk.Label()
     texts_pad.set_size_request(12,12)
 

@@ -119,7 +119,7 @@ class QueueRunnerThread(threading.Thread):
 
     def abort(self):
         render_thread.abort()
-        # It may be that 'aborted' and 'running' could combined into one flag, but whatevaar
+        # It may be that 'aborted' and 'running' could combined into single flag, but whatevaar
         self.aborted = True
         self.running = False
         self.thread_running = False
@@ -198,15 +198,17 @@ def copy_project(render_item, file_name):
 def launch_batch_rendering():
     subprocess.Popen([sys.executable, respaths.ROOT_PARENT + "flowbladebatch"])
 
-def main(root_path):
-    # Allow only on instance to run
-    """
+def test_and_write_pid(write_pid=True):
     user_dir = utils.get_hidden_user_dir_path()
     pid_file_path = user_dir + PID_FILE
-    can_run = utils.single_instance_pid_file_test_and_write(pid_file_path)
+    return utils.single_instance_pid_file_test_and_write(pid_file_path, write_pid)
+
+def main(root_path):
+    # Allow only on instance to run
+    can_run = test_and_write_pid()
     if can_run == False:
+        #
         return
-    """
 
     init_dirs_if_needed()
 
@@ -370,6 +372,10 @@ class BatchRenderItemData:
         self.render_time = -1
         self.save()
 
+        global queue_runner_thread, render_thread
+        render_thread = None
+        queue_runner_thread = None      
+
     def get_status_string(self):
         if self.status == IN_QUEUE:
             return _("Queued")
@@ -464,6 +470,13 @@ class BatchRenderWindow:
                                      lambda w, e: self.remove_finished_clicked(), 
                                      None)
 
+        self.reload_button = gtk.Button("Reload Queue")
+        """
+        self.reload_button.connect("clicked", 
+                                     lambda w, e: self.remove_finished_clicked(), 
+                                     None)
+        """
+
         self.render_button = guiutils.get_render_button()
         self.render_button.connect("clicked", 
                                    lambda w, e: self.launch_render(), 
@@ -478,6 +491,8 @@ class BatchRenderWindow:
         button_row =  gtk.HBox(False, 0)
         button_row.pack_start(self.remove_selected, False, False, 0)
         button_row.pack_start(self.remove_finished, False, False, 0)
+        button_row.pack_start(gtk.Label(), True, True, 0)
+        button_row.pack_start(self.reload_button, True, True, 0)
         button_row.pack_start(gtk.Label(), True, True, 0)
         button_row.pack_start(self.stop_render_button, False, False, 0)
         button_row.pack_start(self.render_button, False, False, 0)
@@ -541,8 +556,6 @@ class BatchRenderWindow:
         
     def _confirm_items_delete_callback(self, dialog, response_id, delete_list):
         if response_id == gtk.RESPONSE_ACCEPT:
-            global render_queue
-            render_queue.delete_was_done = True # dnd HACK, see RenderQueueView.row_deleted 
             for delete_item in delete_list:
                 delete_item.delete_from_queue()
             self.update_queue_view()
@@ -591,12 +604,10 @@ class BatchRenderWindow:
         self.items_rendered.set_text("  " + str(items))
 
     def abort_render(self):
-        print "jooo"
         global queue_runner_thread
         queue_runner_thread.abort()
     
     def render_queue_stopped(self):
-        # not renderoing GUI pattern
         self.render_progress_bar.set_fraction(0.0)
         self.render_button.set_sensitive(True)
         self.stop_render_button.set_sensitive(False)
@@ -611,17 +622,11 @@ class BatchRenderWindow:
 
 
 class RenderQueueView(gtk.VBox):
-    """
-    GUI component displaying list with columns: img, text, text
-    Middle column expands.
-    """
 
     def __init__(self):
         gtk.VBox.__init__(self)
         
         self.storemodel = gtk.ListStore(bool, str, str, str, str)
-        #self.storemodel.connect("row-deleted", self.row_deleted) 
-        #self.storemodel.connect("row-inserted", self.row_inserted) 
         
         # Scroll container
         self.scroll = gtk.ScrolledWindow()
@@ -689,10 +694,7 @@ class RenderQueueView(gtk.VBox):
         self.treeview.append_column(self.text_col_3)
         self.treeview.append_column(self.text_col_4)
 
-        #self.treeview.set_reorderable(True)
-        #self.last_signal_was_inserted = False
-        #self.delete_was_done = False
-
+        # popup menu
         self.treeview.connect("button-press-event", self.on_treeview_button_press_event)
 
         # Build widget graph and display
@@ -738,29 +740,7 @@ class RenderQueueView(gtk.VBox):
             if file_name != None:
                 copy_project(render_item, file_name)
 
-    """
-    def row_deleted(self, treemodel, path):
-        print "deleted", path, type(path)
-        if self.last_signal_was_inserted == True and self.delete_was_done == False:
-            # This is a HACK to detect drag and drops based on observed order of calling
-            # "row-deleted" and "row-inserted" callbacks when handling events 
-            # caused by filing, deleting and dnd reordering rows in gtk.ListStore
-            # Will break i
-            print "D-N-D"
-        self.last_signal_was_inserted = False
-        self.delete_was_done = False
-
-    def row_inserted(self, treemodel, path, treeview_iter):
-        self.last_signal_was_inserted = True
-        self.inserted_row = max(path)
-        print "inserted", path, type(path)
-    """
-
     def fill_data_model(self, render_queue):
-        """
-        Creates displayed data.
-        Displays thumbnail icon, file name and length
-        """
         self.storemodel.clear()        
         
         for render_item in render_queue.queue:
@@ -769,9 +749,9 @@ class RenderQueueView(gtk.VBox):
                         render_item.get_status_string(),
                         render_item.render_path, 
                         render_item.get_render_time()]
-            print row_data
             self.storemodel.append(row_data)
             self.scroll.queue_draw()
+
 
 def run_save_project_as_dialog(project_name):
     dialog = gtk.FileChooserDialog(_("Save Render Item Project As"), None, 
@@ -839,8 +819,6 @@ def show_render_properties_panel(render_item):
     
 def display_render_item_popup_menu(callback, event):
     menu = gtk.Menu()
-    # "Open in Clip Monitor" is sent as event id, same for all below
-    # See useraction._media_file_menu_item_selected(...)
     menu.add(_get_menu_item(_("Save Item Project As..."), callback,"saveas"))
     menu.add(_get_menu_item(_("Render Properties"), callback,"renderinfo")) 
     _add_separetor(menu)
