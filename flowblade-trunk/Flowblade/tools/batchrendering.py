@@ -49,6 +49,8 @@ batch_window = None
 render_thread = None
 queue_runner_thread = None
 
+timeout_id = None
+
 
 # -------------------------------------------------------- render thread
 class QueueRunnerThread(threading.Thread):
@@ -206,9 +208,6 @@ def test_and_write_pid(write_pid=True):
 def main(root_path):
     # Allow only on instance to run
     can_run = test_and_write_pid()
-    if can_run == False:
-        #
-        return
 
     init_dirs_if_needed()
 
@@ -226,6 +225,11 @@ def main(root_path):
     # Init gtk threads
     gtk.gdk.threads_init()
 
+    # Exit with 
+    if can_run == False:
+        _show_single_instance_info()
+        return
+        
     repo = mlt.Factory().init()
     
     # Check for codecs and formats on the system
@@ -250,9 +254,25 @@ def main(root_path):
         primary_txt = "Error loading render queue items!"
         secondary_txt = "Message:\n" + render_queue.get_error_status_message()
         dialogutils.warning_message(primary_txt, secondary_txt, batch_window.window)
-        # Launch gtk+ main loop
+
     gtk.main()
 
+def _show_single_instance_info():
+    global timeout_id
+    timeout_id = gobject.timeout_add(200, _display_refuse_window)
+    # Launch gtk+ main loop
+    gtk.main()
+    
+def _display_refuse_window():
+    gobject.source_remove(timeout_id)
+    primary_txt = _("Flowblade Batch Render application already running.")
+    secondary_txt = _("Only one instance of Flowblade Batch Render is allowed to run at a time.")
+    dialogutils.warning_message_with_callback(primary_txt, secondary_txt, None, False, _early_exit)
+
+def _early_exit(dialog, response):
+    dialog.destroy()
+    gtk.main_quit() 
+    
 def shutdown():
     if queue_runner_thread != None:
         primary_txt = "Application is rendering and cannot be closed!"
@@ -272,6 +292,8 @@ class RenderQueue:
         self.error_status = None
         
     def load_render_items(self):
+        self.queue = []
+        self.error_status = None
         user_dir = utils.get_hidden_user_dir_path()
         data_files_dir = user_dir + DATAFILES_DIR
         data_files = [ f for f in listdir(data_files_dir) if isfile(join(data_files_dir,f)) ]
@@ -315,6 +337,28 @@ class RenderQueue:
 
         return msg
 
+    def check_for_same_paths(self):
+        same_paths = {}
+        path_counts = {}
+        queued = []
+        for render_item in self.queue:
+            if render_item.status == IN_QUEUE:
+                queued.append(render_item)
+        for render_item in queued:
+            try:
+                count = path_counts[render_item.render_path]
+                count = count + 1
+                path_counts[render_item.render_path] = count
+            except:
+                path_counts[render_item.render_path] = 1
+        
+        for k,v in path_counts.iteritems():
+            if v > 1:
+                same_paths[k] = v
+        
+        return same_paths
+
+        
 class BatchRenderItemData:
     def __init__(self, project_name, sequence_name, render_path, sequence_index, \
                  args_vals_list, timestamp, length, mark_in, mark_out, render_data):
@@ -471,11 +515,10 @@ class BatchRenderWindow:
                                      None)
 
         self.reload_button = gtk.Button("Reload Queue")
-        """
         self.reload_button.connect("clicked", 
-                                     lambda w, e: self.remove_finished_clicked(), 
+                                     lambda w, e: self.reload_queue(), 
                                      None)
-        """
+
 
         self.render_button = guiutils.get_render_button()
         self.render_button.connect("clicked", 
@@ -562,12 +605,37 @@ class BatchRenderWindow:
         
         dialog.destroy()
 
+    def reload_queue(self):
+        global render_queue
+        render_queue = RenderQueue()
+        render_queue.load_render_items()
+
+        if render_queue.error_status != None:
+            primary_txt = "Error loading render queue items!"
+            secondary_txt = "Message:\n" + render_queue.get_error_status_message()
+            dialogutils.warning_message(primary_txt, secondary_txt, batch_window.window)
+            return
+    
+        self.queue_view.fill_data_model(render_queue)
+
     def update_queue_view(self):
         self.queue_view.fill_data_model(render_queue)
 
     def launch_render(self):
+        same_paths = render_queue.check_for_same_paths()
+        if len(same_paths) > 0:
+            primary_txt = "Multiple items with same render target file!"
+            
+            secondary_txt = "Later items will render on top of earlier items if this queue is rendered.\n" + \
+                            "Delete or unqueue some items with same paths:\n\n"
+            for k,v in same_paths.iteritems():
+                secondary_txt = secondary_txt + str(v) + " items with path: " + str(k)
+            dialogutils.warning_message(primary_txt, secondary_txt, batch_window.window)
+            return
+
         # GUI pattern for rendering
         self.render_button.set_sensitive(False)
+        self.reload_button.set_sensitive(False)
         self.stop_render_button.set_sensitive(True)
         self.est_time_left.set_text("")
         self.items_rendered.set_text("")
@@ -610,6 +678,7 @@ class BatchRenderWindow:
     def render_queue_stopped(self):
         self.render_progress_bar.set_fraction(0.0)
         self.render_button.set_sensitive(True)
+        self.reload_button.set_sensitive(True)
         self.stop_render_button.set_sensitive(False)
         self.render_progress_bar.set_text(self.not_rendering_txt)
         self.current_render.set_text("")
