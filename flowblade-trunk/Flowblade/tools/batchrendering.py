@@ -114,13 +114,14 @@ class QueueRunnerThread(threading.Thread):
                 if render_item != None:
                     render_item.render_aborted()
                     break
-    
+            render_thread.shutdown()
+        
         # Update view for render end
         batch_window.update_queue_view()
         batch_window.render_queue_stopped()
 
     def abort(self):
-        render_thread.abort()
+        render_thread.shutdown()
         # It may be that 'aborted' and 'running' could combined into single flag, but whatevaar
         self.aborted = True
         self.running = False

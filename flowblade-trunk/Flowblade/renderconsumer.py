@@ -334,7 +334,7 @@ class FileRenderPlayer(threading.Thread):
                 self.producer.set_speed(0)
             time.sleep(0.1)
 
-    def abort(self):
+    def shutdown(self):
         self.consumer.stop()
         self.producer.set_speed(0)
         self.running = False
