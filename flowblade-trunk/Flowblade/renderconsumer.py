@@ -58,9 +58,6 @@ VARIABLE_VAL = "%VARIABLE%"
 SCREEN_SIZE_RPL = "%SCREENSIZE%"
 ASPECT_RPL = "%ASPECT%"
 
-# Option strings
-#SIZE_OPTION = "s"
-
 render_encoding_doc = None
 encoding_options = []
 not_supported_encoding_options = []

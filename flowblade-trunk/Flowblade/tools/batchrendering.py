@@ -26,7 +26,7 @@ import persistance
 import respaths
 import renderconsumer
 import translations
-import utils    
+import utils
 
 
 BATCH_DIR = "batchrender/"
@@ -630,7 +630,7 @@ class BatchRenderWindow:
             secondary_txt = "Later items will render on top of earlier items if this queue is rendered.\n" + \
                             "Delete or unqueue some items with same paths:\n\n"
             for k,v in same_paths.iteritems():
-                secondary_txt = secondary_txt + str(v) + " items with path: " + str(k)
+                secondary_txt = secondary_txt + str(v) + " items with path: " + str(k) + "\n"
             dialogutils.warning_message(primary_txt, secondary_txt, batch_window.window)
             return
 

@@ -228,18 +228,18 @@ def create_widgets(normal_height):
     widgets.out_folder = widgets.file_panel.out_folder
     widgets.movie_name = widgets.file_panel.movie_name
     widgets.extension_label = widgets.file_panel.extension_label
-    
+
     widgets.render_type_panel = rendergui.RenderTypePanel(_render_type_changed, _preset_selection_changed)
     widgets.preset_encodings_cb = widgets.render_type_panel.presets_selector.widget
     widgets.type_combo = widgets.render_type_panel.type_combo
-    
+
     widgets.profile_panel = rendergui.RenderProfilePanel(_out_profile_changed)
     widgets.use_project_label = widgets.profile_panel.use_project_label
     widgets.use_args_label = widgets.profile_panel.use_args_label
     widgets.use_project_profile_check = widgets.profile_panel.use_project_profile_check
     widgets.out_profile_combo = widgets.profile_panel.out_profile_combo
     widgets.out_profile_info_box = widgets.profile_panel.out_profile_info_box
-    
+
     widgets.encoding_panel = rendergui.RenderEncodingPanel(widgets.file_panel.extension_label)
     widgets.quality_cb = widgets.encoding_panel.quality_selector.widget
     widgets.audio_desc = widgets.encoding_panel.audio_desc

@@ -182,10 +182,13 @@ class EditorWindow:
             ('RecreateMediaIcons', None, _('Recreate Media Icons...'), None, None, lambda a:menuactions.recreate_media_file_icons()),
             ('RemoveUnusedMedia', None, _('Remove Unused Media...'), None, None, lambda a:useraction.remove_unused_media()),
             ('ProjectInfo', None, _('Project Info'), None, None, lambda a:menuactions.show_project_info()),
+            ('RenderMenu', None, _('Render')),
+            ('AddToQueue', None, _('Add To Batch Render Queue...'), None, None, lambda a:useraction.add_to_render_queue()),
+            ('BatchRender', None, _('Batch Render Queue'), None, None, lambda a:batchrendering.launch_batch_rendering()),
+            ('Render', None, _('Render Timeline'), None, None, lambda a:useraction.do_rendering()()),
             ('ToolsMenu', None, _('Tools')),
             ('Titler', None, _('Titler'), None, None, lambda a:titler.show_titler()),
             ('AudioMix', None, _('Audio Mixer'), None, None, lambda a:audiomonitoring.show_audio_monitor()),
-            ('RenderQueue', None, _('Render Queue'), None, None, lambda a:batchrendering.launch_batch_rendering()),
             ('HelpMenu', None, _('_Help')),
             ('QuickReference', None, _('Contents'), None, None, lambda a:menuactions.quick_reference()),
             ('Environment', None, _('Runtime Environment'), None, None, lambda a:menuactions.environment()),
@@ -256,10 +259,15 @@ class EditorWindow:
                     <menuitem action='RecreateMediaIcons'/>
                     <menuitem action='RemoveUnusedMedia'/>
                 </menu>
+                <menu action='RenderMenu'>
+                    <menuitem action='AddToQueue'/>
+                    <menuitem action='BatchRender'/>
+                    <separator/>
+                    <menuitem action='Render'/>
+                </menu>
                 <menu action='ToolsMenu'>
                     <menuitem action='Titler'/>
                     <menuitem action='AudioMix'/>
-                    <menuitem action='RenderQueue'/>
                 </menu>
                 <menu action='HelpMenu'>
                     <menuitem action='QuickReference'/>
