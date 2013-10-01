@@ -227,9 +227,6 @@ class PositionBar:
             # _pos gets actually set twice
             # Listener also updates other frame displayers
             self.position_listener(self.normalized_pos(), self.producer.get_length())
-            # If we're playing listener stops playing and seeks
-            # but does not update icon
-            #gui.editor_window.play_b.set_image(updater.play_icon)
 
     def _motion_notify_event(self, x, y, state):
         """

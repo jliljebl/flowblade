@@ -56,9 +56,6 @@ def load_profile_list():
     _hidden_factory_profiles.sort(_sort_profiles)
     _user_profiles.sort(_sort_profiles)
 
-    #for i in range(0, len(_profile_list)):
-    #    prof = _profile_list[i]
-
 def _load_profiles_list(dir_path):
     load_profiles = []
     file_list = os.listdir(dir_path)

@@ -1,3 +1,22 @@
+"""
+    Flowblade Movie Editor is a nonlinear video editor.
+    Copyright 2012 Janne Liljeblad.
+
+    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+
+    Flowblade Movie Editor is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Flowblade Movie Editor is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
+"""
 
 """
 Module handles initializing and changing window contents acoording to user preferences.
@@ -35,27 +54,6 @@ def init_view_menu(menu_item):
     Fills menu item with menuitems to open recent projects.
     """
     menu = menu_item.get_submenu()
-
-    """
-    if editorstate.SCREEN_WIDTH > 1678:
-        layout_menu_item = gtk.MenuItem("Window Layout")
-        layout_menu =  gtk.Menu()
-        default = gtk.RadioMenuItem(None, "Default")
-
-        default.connect("activate", lambda w: _show_default_layout(w))
-        layout_menu.append(default)
-
-        widescreen = gtk.RadioMenuItem(default, "Widescreen")
-        widescreen.connect("activate", lambda w: _show_widescreen_layout(w))
-        layout_menu.append(widescreen)
-
-        if editorpersistance.prefs.default_layout == True:
-            default.set_active(True)
-        else:
-            widescreen.set_active(True)
-        layout_menu_item.set_submenu(layout_menu)
-        menu.append(layout_menu_item)
-    """
 
     mb_menu_item = gtk.MenuItem(_("Middlebar Layout").encode('utf-8'))
     mb_menu =  gtk.Menu()
@@ -102,16 +100,6 @@ def init_view_menu(menu_item):
     show_monitor_info_item.connect("toggled", lambda w: _show_monitor_info_toggled(w))
     menu.append(show_monitor_info_item)
 
-    """
-    autoplay_item = gtk.CheckMenuItem(_("Autoplay Monitor Clips").encode('utf-8'))
-    autoplay_item.set_active(True)
-    menu.append(autoplay_item)
-
-    center_item = gtk.CheckMenuItem(_("Center on Playback Stop").encode('utf-8'))
-    center_item.set_active(True)
-    menu.append(center_item)
-    """
-
     sep = gtk.SeparatorMenuItem()
     menu.append(sep)
     
@@ -135,61 +123,6 @@ def init_gui_to_prefs(window):
     else:
         w.notebook.set_tab_pos(gtk.POS_BOTTOM)
         w.right_notebook.set_tab_pos(gtk.POS_BOTTOM)
-
-    #if editorpersistance.prefs.default_layout == False:
-    #    _execute_widescreen_layout(window)
-"""
-def _show_default_layout(widget):
-    global w
-    w = gui.editor_window
-    if w == None:
-        return # this may get called on start up before refs are available 
-    if widget.get_active() == False: # setting radiobutton active called listener on all of groups items
-        return
-    if editorpersistance.prefs.default_layout == True:
-        return
-    
-    w.right_notebook.remove_page(0)
-    w.notebook.insert_page(w.effects_panel, gtk.Label(_("Filters")), 1)
-    w.right_notebook.remove_page(0)
-    w.notebook.insert_page(w.compositors_panel,  gtk.Label(_("Compositors")), 2)
-
-    w.top_row_hbox.remove(w.right_notebook)
-    w.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH, appconsts.TOP_ROW_HEIGHT)
-    w.top_row_hbox.resize_children()
-
-    w.window.show_all()
-
-    editorpersistance.prefs.default_layout = True
-    editorpersistance.save()
-
-def _show_widescreen_layout(widget):
-    global w
-    w = gui.editor_window
-    if w == None:
-        return # this may get called on start up before refs are available
-    if widget.get_active() == False:
-        return
-    if editorpersistance.prefs.default_layout == False:
-        return
-    _execute_widescreen_layout(w)
-    
-def _execute_widescreen_layout(window):
-    window.notebook.remove_page(1)
-    window.right_notebook.append_page(w.effects_panel, gtk.Label(_("Filters")))    
-    window.notebook.remove_page(1)
-    window.right_notebook.append_page(w.compositors_panel,  gtk.Label(_("Compositors")))
-
-    window.top_row_hbox.pack_start(w.right_notebook, False, False, 0)
-
-    window.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH_WIDESCREEN, appconsts.TOP_ROW_HEIGHT)
-    window.right_notebook.set_size_request(appconsts.NOTEBOOK_WIDTH_WIDESCREEN, appconsts.TOP_ROW_HEIGHT)
-    
-    window.window.show_all()
-
-    editorpersistance.prefs.default_layout = False
-    editorpersistance.save()
-"""
 
 def _show_buttons_TC_LEFT_layout(widget):
     global w

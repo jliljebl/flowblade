@@ -281,6 +281,15 @@ def tworoll_trim_mode_init(x, y):
     success = trimmodes.set_tworoll_mode(track, press_frame)
     return success
 
+def slide_trim_no_edit_init():
+    stop_looping() # Stops looping 
+    editorstate.edit_mode = editorstate.SLIDE_TRIM_NO_EDIT
+    gui.editor_window.set_cursor_to_mode()
+    tlinewidgets.set_edit_mode(None, None) # No overlays are drawn in this edit mode
+    movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
+    updater.set_trim_mode_gui()
+
+
 def _set_move_mode():
     updater.set_move_mode_gui()
     updater.set_transition_render_edit_menu_items_sensitive(movemodes.selected_range_in, movemodes.selected_range_out)

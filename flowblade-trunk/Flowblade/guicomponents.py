@@ -1734,8 +1734,14 @@ def get_mode_selector_popup_menu(launcher, event, callback):
     menu.add(menu_item)
 
     menu_item = _get_image_menu_item(gtk.image_new_from_file(
-        respaths.IMAGE_PATH + "tworoll_cursor.png"),      _("Two Roll Trim"), callback, 3)
+        respaths.IMAGE_PATH + "tworoll_cursor.png"), _("Two Roll Trim"), callback, 3)
     menu_item.set_accel_path("<Actions>/WindowActions/TwoRollMode") 
+    menu.add(menu_item)
+
+    menu_item = _get_image_menu_item(gtk.image_new_from_file(
+        respaths.IMAGE_PATH + "slide_cursor.png"), _("Slide Trim"), callback, 4)
+
+    menu_item.set_accel_path("<Actions>/WindowActions/SlideMode") 
     menu.add(menu_item)
 
     menu.popup(None, None, None, event.button, event.time)
