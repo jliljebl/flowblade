@@ -568,7 +568,11 @@ def draw_one_roll_overlay(cr, data):
         cr.arc (selection_frame_x - radius, track_y + track_height - radius, radius, 0 * degrees, 90.0 * degrees)
         cr.line_to(selection_frame_x - radius - bit, track_y + track_height)
     cr.stroke()
-    
+
+
+def draw_slide_overlay(ccr, data):
+    print "haa"
+
 def draw_compositor_move_overlay(cr, data):
     # Get data
     press_frame = data["press_frame"]

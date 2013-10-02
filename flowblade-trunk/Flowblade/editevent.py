@@ -162,6 +162,7 @@ def stop_looping():
         if EDIT_MODE() == editorstate.TWO_ROLL_TRIM: 
             trimmodes.tworoll_stop_pressed()
 
+# -------------------------------------------------------------- move modes
 def insert_move_mode_pressed():
     """
     User selects insert move mode.
@@ -186,6 +187,12 @@ def overwrite_move_mode_pressed():
 
     _set_move_mode()
 
+def _set_move_mode():
+    updater.set_move_mode_gui()
+    updater.set_transition_render_edit_menu_items_sensitive(movemodes.selected_range_in, movemodes.selected_range_out)
+    updater.repaint_tline()
+
+# -------------------------------------------------------------- one roll trim
 def oneroll_trim_no_edit_init():
     stop_looping()
     editorstate.edit_mode = editorstate.ONE_ROLL_TRIM_NO_EDIT
@@ -234,6 +241,7 @@ def oneroll_trim_mode_init(x, y):
     success = trimmodes.set_oneroll_mode(track, press_frame)
     return success
 
+# --------------------------------------------------------- two roll trim
 def tworoll_trim_no_edit_init():
     stop_looping() # Stops looping 
     editorstate.edit_mode = editorstate.TWO_ROLL_TRIM_NO_EDIT
@@ -281,6 +289,7 @@ def tworoll_trim_mode_init(x, y):
     success = trimmodes.set_tworoll_mode(track, press_frame)
     return success
 
+# ----------------------------------------------------- slide trim
 def slide_trim_no_edit_init():
     stop_looping() # Stops looping 
     editorstate.edit_mode = editorstate.SLIDE_TRIM_NO_EDIT
@@ -289,11 +298,44 @@ def slide_trim_no_edit_init():
     movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
     updater.set_trim_mode_gui()
 
+def slide_trim_no_edit_press(event, frame):
+    success = slide_trim_mode_init(event.x, event.y)
+    if success:
+        global mouse_disabled
+        tlinewidgets.trim_mode_in_non_active_state = True
+        mouse_disabled = True
+    else:
+        editorstate.edit_mode = editorstate.TWO_ROLL_TRIM_NO_EDIT
+    
+def slide_trim_no_edit_move(x, y, frame, state):
+    pass
+    
+def slide_trim_no_edit_release(x, y, frame, state):
+    pass
 
-def _set_move_mode():
-    updater.set_move_mode_gui()
-    updater.set_transition_render_edit_menu_items_sensitive(movemodes.selected_range_in, movemodes.selected_range_out)
-    updater.repaint_tline()
+def slide_trim_mode_init(x, y):
+    """
+    User selects two roll mode
+    """
+    track = tlinewidgets.get_track(y)
+    if track == None:
+        return False
+    
+    if track_lock_check_and_user_info(track, tworoll_trim_mode_init, "two roll trim mode"):
+        set_default_edit_mode()
+        return False
+
+    stop_looping()
+    editorstate.edit_mode = editorstate.SLIDE_TRIM
+
+    movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
+    updater.set_trim_mode_gui()
+
+    press_frame = tlinewidgets.get_frame(x)
+    trimmodes.set_exit_mode_func = set_default_edit_mode
+    trimmodes.set_no_edit_mode_func = slide_trim_no_edit_init
+    success = trimmodes.set_slide_mode(track, press_frame)
+    return success
 
 
 # ------------------------------------ timeline mouse events
@@ -1098,7 +1140,13 @@ TWO_ROLL_TRIM_NO_EDIT_FUNCS = [tworoll_trim_no_edit_press,
 COMPOSITOR_EDIT_FUNCS = [compositormodes.mouse_press,
                          compositormodes.mouse_move,
                          compositormodes.mouse_release]
-                    
+SLIDE_TRIM_FUNCS = [trimmodes.slide_trim_press,
+                    trimmodes.slide_trim_move,
+                    trimmodes.slide_trim_release]
+SLIDE_TRIM_NO_EDIT_FUNCS = [slide_trim_no_edit_press,
+                            slide_trim_no_edit_move,
+                            slide_trim_no_edit_release]
+
 # (mode - mouse handler function list) table
 EDIT_MODE_FUNCS = {editorstate.INSERT_MOVE:INSERT_MOVE_FUNCS,
                    editorstate.OVERWRITE_MOVE:OVERWRITE_MOVE_FUNCS,
@@ -1106,8 +1154,10 @@ EDIT_MODE_FUNCS = {editorstate.INSERT_MOVE:INSERT_MOVE_FUNCS,
                    editorstate.TWO_ROLL_TRIM:TWO_ROLL_TRIM_FUNCS,
                    editorstate.COMPOSITOR_EDIT:COMPOSITOR_EDIT_FUNCS,
                    editorstate.ONE_ROLL_TRIM_NO_EDIT:ONE_ROLL_TRIM_NO_EDIT_FUNCS,
-                   editorstate.TWO_ROLL_TRIM_NO_EDIT:TWO_ROLL_TRIM_NO_EDIT_FUNCS}
-
+                   editorstate.TWO_ROLL_TRIM_NO_EDIT:TWO_ROLL_TRIM_NO_EDIT_FUNCS,
+                   editorstate.SLIDE_TRIM:SLIDE_TRIM_FUNCS,
+                   editorstate.SLIDE_TRIM_NO_EDIT:SLIDE_TRIM_NO_EDIT_FUNCS}
+                    
 # Functions to handle popup menu selections for strings 
 # set as activation messages in guicomponents.py
 # activation_message -> _handler_func

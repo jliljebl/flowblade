@@ -832,7 +832,7 @@ class EditorWindow:
             self.modes_selector.set_pixbuf(4)
         elif editorstate.EDIT_MODE() == editorstate.SLIDE_TRIM_NO_EDIT:
             self.modes_selector.set_pixbuf(4)
-            
+
     def tline_cursor_leave(self, event):
         editorstate.cursor_on_tline = False
         self.set_cursor_to_mode()

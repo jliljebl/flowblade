@@ -665,7 +665,7 @@ def two_roll_audio_sync_edit_done(cut_frame, delta, track, to_side_being_edited)
     Callback from edit action.
     """
     frame = cut_frame + delta
-    
+
     # Calculated frame always reinits on to side, so we need to 
     # step one back to reinit on from side if we did the edit from that side
     if to_side_being_edited != True:
@@ -718,3 +718,108 @@ def _get_two_roll_first_and_last():
         last = trim_limits["to_end"]
                  
     return (first, last)
+
+#---------------------------------------- SLIDE ROLL TRIM EVENTS
+def set_slide_mode(track, current_frame):# = -1):
+    """
+    Sets two roll mode
+    """
+    if track == None:
+        return None
+    
+    #if current_frame == -1:
+    #    current_frame = PLAYER().producer.frame() + 1 # +1 because cut frame selects previous clip
+
+    current_sequence().clear_hidden_track()
+    
+    view_frame, start_frame_being_viewed = _get_trim_edit(track, current_frame)
+    # _get_trim_edit() gives first frame belonging to next clip if press closer to end frame of clip
+    if not start_frame_being_viewed:
+        view_frame = view_frame -1
+
+    try:
+        _set_slide_mode_edit_data(track, view_frame)
+    except:
+        return False
+
+    if edit_data["clip"].is_blanck_clip:
+        return False
+
+    print view_frame, start_frame_being_viewed
+
+    edit_data["start_frame_being_viewed"] = start_frame_being_viewed
+    
+    # Give timeline widget needed data
+    tlinewidgets.set_edit_mode(edit_data, tlinewidgets.draw_slide_overlay)
+
+    # Set clip as producer on hidden track and display current frame 
+    # from it.
+    clip = edit_data["clip"]
+    clip_start = 0 # we'll calculate the offset from actual position of clip on timeline to display the frame displayed after sliding
+
+    if clip.media_type != appconsts.PATTERN_PRODUCER:
+        current_sequence().display_trim_clip(clip.path, clip_start) # File producer
+    else:
+        current_sequence().display_trim_clip(None, clip_start, clip.create_data) # pattern producer
+    if start_frame_being_viewed:
+        PLAYER().seek_frame(clip.clip_in)
+    else:
+        PLAYER().seek_frame(clip.clip_out)
+
+    updater.repaint_tline()
+    updater.set_stopped_configuration()
+
+    return True
+
+def _set_slide_mode_edit_data(track, edit_frame):
+    """
+    Sets edit mode data used by both trim modes
+    """
+    index = current_sequence().get_clip_index(track, edit_frame)
+    clip = track.clips[index]
+
+    trim_limits = {}
+    trim_limits["start_handle"] = clip.clip_in
+    trim_limits["end_handle"] = clip.get_length() - clip.clip_out
+    trim_limits["clip_start"] = track.clip_start(index) - clip.clip_in
+
+    global edit_data
+    edit_data = {"track":track.id,
+                 "track_object":track,
+                 "index":index,
+                 "edit_frame":edit_frame,
+                 "selected_frame":edit_frame,
+                 "trim_limits":trim_limits,
+                 "clip":clip}
+
+def slide_trim_press(event, frame):
+    global edit_data
+    edit_data["press_start"] = frame
+    display_frame = _get_slide_trim_get_trim_display_frame(frame)
+
+    PLAYER().seek_frame(frame)
+
+def slide_trim_move(x, y, frame, state):
+    display_frame = _get_slide_trim_get_trim_display_frame(frame)
+    PLAYER().seek_frame(display_frame)
+
+def slide_trim_release(x, y, frame, state):
+    display_frame = _get_slide_trim_get_trim_display_frame(frame)
+    PLAYER().seek_frame(display_frame)
+
+def _get_slide_trim_get_trim_display_frame(frame):
+    clip = edit_data["clip"]
+    mouse_delta = edit_data["press_start"] - frame
+
+    if edit_data["start_frame_being_viewed"]:
+        display_frame = _legalize_slide(clip.clip_in + mouse_delta, clip)
+    else:
+        display_frame = _legalize_slide(clip.clip_out + mouse_delta, clip)
+    return display_frame
+
+def _legalize_slide(disp_frame, clip):
+    if disp_frame < 0:
+        return 0
+    if disp_frame > clip.get_length():
+        return clip.get_length()
+    return disp_frame
