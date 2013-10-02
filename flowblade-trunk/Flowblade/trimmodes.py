@@ -181,7 +181,9 @@ def update_cursor_to_mode():
     gui.editor_window.set_cursor_to_mode()
 
 def set_no_edit_trim_mode():
-    if editorstate.edit_mode == editorstate.ONE_ROLL_TRIM or editorstate.edit_mode == editorstate.TWO_ROLL_TRIM:
+    if editorstate.edit_mode == editorstate.ONE_ROLL_TRIM or \
+    editorstate.edit_mode == editorstate.TWO_ROLL_TRIM or \
+    editorstate.edit_mode == editorstate.SLIDE_TRIM:
         set_no_edit_mode_func()
 
 
@@ -394,7 +396,8 @@ def oneroll_next_pressed():
 
 def one_roll_trim_undo_done(track, index, is_to_side_edit):
     """
-    Callback if initial edit or undo/redo done
+    WRONG NAME FOR FUNCTION
+    Callback if initial edit done. Undo and redo do not cause this to be called
     """
     # If in move modes do nothing
     if editorstate.edit_mode < editorstate.ONE_ROLL_TRIM:
@@ -745,8 +748,6 @@ def set_slide_mode(track, current_frame):# = -1):
     if edit_data["clip"].is_blanck_clip:
         return False
 
-    print view_frame, start_frame_being_viewed
-
     edit_data["start_frame_being_viewed"] = start_frame_being_viewed
     
     # Give timeline widget needed data
@@ -785,32 +786,70 @@ def _set_slide_mode_edit_data(track, edit_frame):
     trim_limits["media_length"] = clip.get_length()
 
     global edit_data
-    edit_data = {"track":track.id,
+    edit_data = {"track":track.id, # tlinewidgets.py uses this to get draw y  
                  "track_object":track,
                  "index":index,
-                 "edit_frame":edit_frame,
-                 "selected_frame":edit_frame,
                  "trim_limits":trim_limits,
                  "mouse_delta":0,
                  "clip":clip}
 
+
+def _attempt_reinit_slide(event, frame):
+    track = tlinewidgets.get_track(event.y)
+    success = set_slide_mode(track, frame)
+    if not success:
+        set_no_edit_mode_func()
+    else:
+        global mouse_disabled
+        tlinewidgets.trim_mode_in_non_active_state = True
+        gui.tline_canvas.widget.queue_draw()
+        gui.editor_window.set_tline_cursor(editorstate.SLIDE_TRIM_NO_EDIT)
+        mouse_disabled = True
+    
 def slide_trim_press(event, frame):
+    if not _pressed_on_edited_track(event.y):
+        _attempt_reinit_slide(event, frame)
+        return
+
+    if not _pressed_on_slide_active_area(frame):
+        _attempt_reinit_slide(event, frame)
+        return
+
     global edit_data
     edit_data["press_start"] = frame
     display_frame = _update_slide_trim_for_mouse_frame(frame)
     PLAYER().seek_frame(display_frame)
     trim_limits = edit_data["trim_limits"]
 
-    
 def slide_trim_move(x, y, frame, state):
+    if mouse_disabled:
+        return
+
     display_frame = _update_slide_trim_for_mouse_frame(frame)
     PLAYER().seek_frame(display_frame)
 
 def slide_trim_release(x, y, frame, state):
+    global mouse_disabled
+    if mouse_disabled == True:
+        # we may have been in non active state because the clip being edited was changed
+        gui.editor_window.set_cursor_to_mode()
+        tlinewidgets.trim_mode_in_non_active_state = False 
+        gui.tline_canvas.widget.queue_draw()
+        mouse_disabled = False
+        return
+    
     display_frame = _update_slide_trim_for_mouse_frame(frame)
     PLAYER().seek_frame(display_frame)
 
+
+
+    global edit_data
+    display_frame = _update_slide_trim_for_mouse_frame(frame)
+    PLAYER().seek_frame(display_frame)
+    _do_slide_edit()
+    
 def _update_slide_trim_for_mouse_frame(frame):
+    global edit_data
     clip = edit_data["clip"]
     mouse_delta = edit_data["press_start"] - frame
 
@@ -818,6 +857,7 @@ def _update_slide_trim_for_mouse_frame(frame):
     # fix_diff, herp, derp ... jeessus
     fix_diff_in = _legalize_slide(clip.clip_in + mouse_delta, clip)
     fix_diff_out = _legalize_slide(clip.clip_out + mouse_delta, clip)
+
     if fix_diff_in == 0 and fix_diff_out != 0:
         fix_diff = fix_diff_out
     elif  fix_diff_in != 0 and fix_diff_out == 0:
@@ -832,7 +872,7 @@ def _update_slide_trim_for_mouse_frame(frame):
 
     edit_data["mouse_delta"] = mouse_delta - fix_diff
     
-    # Get display frame for user
+    # Get display frame on hidden track
     if edit_data["start_frame_being_viewed"]:
         display_frame = clip.clip_in + mouse_delta - fix_diff
     else:
@@ -840,11 +880,45 @@ def _update_slide_trim_for_mouse_frame(frame):
 
     return display_frame
 
+def _pressed_on_slide_active_area(frame):
+    trim_limits = edit_data["trim_limits"]
+    clip_start = trim_limits["clip_start"]
+    clip = edit_data["clip"]
+    clip_end = clip_start + clip.clip_out - clip.clip_in
+    
+    if frame >= clip_start and frame < clip_end:
+        return True
+    else:
+        return False
 
-def _legalize_slide(disp_frame, clip):
-    if disp_frame < 0:
-        return disp_frame
-    if disp_frame >= clip.get_length():
-        return disp_frame - clip.get_length() - 1 # -1 out inclusive.
+def _legalize_slide(media_frame, clip):
+    if media_frame < 0:
+        return media_frame
+    if media_frame >= clip.get_length():
+        return media_frame - clip.get_length() - 1 # -1 out inclusive.
     return 0
 
+def _do_slide_edit():
+    """
+    Called from drag-release and next, prev button presses.
+    """
+    # "track","clip","delta","index","first_do","first_do_callback"
+    data = {"track":edit_data["track_object"],
+            "index":edit_data["index"],
+            "clip":edit_data["clip"],
+            "delta":edit_data["mouse_delta"],
+            "first_do_callback":_slide_trim_first_do_callback,
+            "start_frame_being_viewed":edit_data["start_frame_being_viewed"],
+            "first_do":True}
+
+    action = edit.slide_trim_action(data)
+    edit.do_gui_update = True
+    action.do_edit()
+
+def _slide_trim_first_do_callback(track, clip, index, start_frame_being_viewed):
+    # If in one roll mode, reinit edit mode to correct side
+    if start_frame_being_viewed:
+        frame = track.clip_start(index) + 1 # +1 because cut frame selects previous clip
+    else:
+        frame = track.clip_start(index) + clip.clip_out - clip.clip_in - 1
+    set_slide_mode(track, frame)

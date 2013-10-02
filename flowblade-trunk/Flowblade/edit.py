@@ -651,6 +651,29 @@ def _tworoll_trim_redo(self):
         self.first_do = False
         self.edit_done_callback(True, self.cut_frame, self.delta, self.track, self.to_side_being_edited)
 
+#----------------- SLIDE_TRIM
+# "track","clip","delta","index","first_do","first_do_callback","start_frame_being_viewed"
+def slide_trim_action(data):
+
+    action = EditAction(_slide_trim_undo,_slide_trim_redo, data)
+    action.exit_active_trimmode_on_edit = False
+    return action
+
+def _slide_trim_undo(self):
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.clip, self.index,
+                 self.clip.clip_in - self.delta, self.clip.clip_out - self.delta)
+
+def _slide_trim_redo(self):
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.clip, self.index,
+                 self.clip.clip_in + self.delta, self.clip.clip_out + self.delta)
+
+    # Reinit one roll trim 
+    if self.first_do == True:
+        self.first_do = False
+        self.first_do_callback(self.track, self.clip, self.index, self.start_frame_being_viewed)
+
 #-------------------- INSERT MOVE
 # "track","insert_index","selected_range_in","selected_range_out"
 # "move_edit_done_func"
