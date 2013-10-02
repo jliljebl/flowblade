@@ -814,11 +814,10 @@ def _update_slide_trim_for_mouse_frame(frame):
     clip = edit_data["clip"]
     mouse_delta = edit_data["press_start"] - frame
 
-    #print "mouse_delta:", mouse_delta, clip.clip_in, clip.clip_out, clip.get_length()
-
     # make sure slided clip area stays inside available media
-    display_frame_in, fix_diff_in = _legalize_slide(clip.clip_in + mouse_delta, clip)
-    display_frame_out, fix_diff_out = _legalize_slide(clip.clip_out + mouse_delta, clip)
+    # fix_diff, herp, derp ... jeessus
+    fix_diff_in = _legalize_slide(clip.clip_in + mouse_delta, clip)
+    fix_diff_out = _legalize_slide(clip.clip_out + mouse_delta, clip)
     if fix_diff_in == 0 and fix_diff_out != 0:
         fix_diff = fix_diff_out
     elif  fix_diff_in != 0 and fix_diff_out == 0:
@@ -831,31 +830,21 @@ def _update_slide_trim_for_mouse_frame(frame):
     else:
         fix_diff = 0
 
-    print fix_diff_in, fix_diff_out
-
+    edit_data["mouse_delta"] = mouse_delta - fix_diff
+    
     # Get display frame for user
     if edit_data["start_frame_being_viewed"]:
-        display_frame = display_frame_in
+        display_frame = clip.clip_in + mouse_delta - fix_diff
     else:
-        display_frame = display_frame_out
-        
-    print fix_diff
-    
-    edit_data["mouse_delta"] = mouse_delta - fix_diff
-        
+        display_frame = clip.clip_out + mouse_delta - fix_diff
+
     return display_frame
+
 
 def _legalize_slide(disp_frame, clip):
     if disp_frame < 0:
-        return (0, disp_frame)
-    if disp_frame > clip.get_length():
-        return (clip.get_length(), disp_frame - clip.get_length())
-    return (disp_frame, 0)
+        return disp_frame
+    if disp_frame >= clip.get_length():
+        return disp_frame - clip.get_length() - 1 # -1 out inclusive.
+    return 0
 
-def _legalize_mouse(frame, clip):
-    if disp_frame < 0:
-        return 0
-    if disp_frame > clip.get_length():
-        return clip.get_length()
-    return disp_frame
-    

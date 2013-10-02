@@ -570,8 +570,6 @@ def draw_one_roll_overlay(cr, data):
     cr.stroke()
 
 def draw_slide_overlay(cr, data):
-    #edit_frame = data["edit_frame"]
-    #frame_x = _get_frame_x(edit_frame)
     track_height = current_sequence().tracks[data["track"]].height
     track_y = _get_track_y(data["track"])
     trim_limits = data["trim_limits"]
@@ -582,24 +580,25 @@ def draw_slide_overlay(cr, data):
     clip_start_frame_x = _get_frame_x(clip_start_frame)
     clip_end_frame_x = _get_frame_x(clip_end_frame)
 
-    #selection_frame_x = _get_frame_x(data["selected_frame"])
-
-    cr.set_source_rgb(0,1,0)
+    cr.set_line_width(2.0)
     media_start = clip_start_frame - data["mouse_delta"] - clip.clip_in
     orig_media_start_frame_x = _get_frame_x(media_start)
     orig_media_end_frame_x = _get_frame_x(media_start + trim_limits["media_length"])
-    _draw_trim_clip_overlay(cr, orig_media_start_frame_x, orig_media_end_frame_x, track_y, track_height)
+    _draw_trim_clip_overlay(cr, orig_media_start_frame_x, orig_media_end_frame_x, track_y, track_height, (0.65,0.65,0.65))
     
+    cr.set_line_width(2.0)
     cr.set_source_rgb(*OVERLAY_SELECTION_COLOR)
     orig_clip_start_frame_x = _get_frame_x(clip_start_frame - data["mouse_delta"])
     orig_clip_end_frame_x = _get_frame_x(clip_end_frame - data["mouse_delta"])
     _draw_trim_clip_overlay(cr, orig_clip_start_frame_x, orig_clip_end_frame_x, track_y, track_height)
         
-    #cr.move_to(selection_frame_x - 0.5, track_y - 6.5)
-    #cr.line_to(selection_frame_x - 0.5, track_y + track_height + 6.5)
-    #cr.stroke()
+    cr.move_to(clip_start_frame_x - 0.5, track_y - 6.5)
+    cr.line_to(clip_start_frame_x - 0.5, track_y + track_height + 6.5)
+    cr.stroke()
 
-    #_draw_trim_clip_overlay(cr, start_x, end_x, y, track_height)
+    cr.move_to(clip_end_frame_x - 0.5, track_y - 6.5)
+    cr.line_to(clip_end_frame_x - 0.5, track_y + track_height + 6.5)
+    cr.stroke()
     
     radius = 5.0
     degrees = M_PI/ 180.0
@@ -618,6 +617,15 @@ def draw_slide_overlay(cr, data):
     cr.arc (clip_end_frame_x + radius, track_y + radius, radius,  180.0 * degrees, 270.0 * degrees)
     cr.line_to(clip_end_frame_x + radius + bit, track_y)
     cr.stroke()
+
+    if data["start_frame_being_viewed"]:
+        x = clip_start_frame_x + 4
+    else:
+        x = clip_end_frame_x - 16
+
+    cr.set_source_pixbuf(VIEW_SIDE_ICON, x, track_y + 4)
+    cr.paint()
+
 
 def draw_compositor_move_overlay(cr, data):
     # Get data
@@ -721,8 +729,8 @@ def _draw_mode_arrow(cr, x, y, color):
     cr.set_line_width(2.0)
     cr.stroke()
     
-def _draw_trim_clip_overlay(cr, start_x, end_x, y, track_height):
-    cr.set_source_rgb(1, 1, 1)
+def _draw_trim_clip_overlay(cr, start_x, end_x, y, track_height, color=(1,1,1)):
+    cr.set_source_rgb(*color)
     cr.rectangle(start_x, y, end_x - start_x, track_height)
     cr.stroke()
 
