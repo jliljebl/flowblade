@@ -647,7 +647,7 @@ def two_rolledit_done(was_redo, cut_frame, delta, track, to_side_being_edited):
         frame = cut_frame + delta
     else:
         frame = cut_frame
-    
+
     # Calculated frame always reinits in to side, so we need to 
     # step one back to reinit on from side if we did the edit from that side
     if to_side_being_edited != True:
@@ -781,7 +781,8 @@ def _set_slide_mode_edit_data(track, edit_frame):
     trim_limits = {}
     trim_limits["start_handle"] = clip.clip_in
     trim_limits["end_handle"] = clip.get_length() - clip.clip_out
-    trim_limits["clip_start"] = track.clip_start(index) - clip.clip_in
+    trim_limits["clip_start"] = track.clip_start(index)
+    trim_limits["media_length"] = clip.get_length()
 
     global edit_data
     edit_data = {"track":track.id,
@@ -790,36 +791,71 @@ def _set_slide_mode_edit_data(track, edit_frame):
                  "edit_frame":edit_frame,
                  "selected_frame":edit_frame,
                  "trim_limits":trim_limits,
+                 "mouse_delta":0,
                  "clip":clip}
 
 def slide_trim_press(event, frame):
     global edit_data
     edit_data["press_start"] = frame
-    display_frame = _get_slide_trim_get_trim_display_frame(frame)
+    display_frame = _update_slide_trim_for_mouse_frame(frame)
+    PLAYER().seek_frame(display_frame)
+    trim_limits = edit_data["trim_limits"]
 
-    PLAYER().seek_frame(frame)
-
+    
 def slide_trim_move(x, y, frame, state):
-    display_frame = _get_slide_trim_get_trim_display_frame(frame)
+    display_frame = _update_slide_trim_for_mouse_frame(frame)
     PLAYER().seek_frame(display_frame)
 
 def slide_trim_release(x, y, frame, state):
-    display_frame = _get_slide_trim_get_trim_display_frame(frame)
+    display_frame = _update_slide_trim_for_mouse_frame(frame)
     PLAYER().seek_frame(display_frame)
 
-def _get_slide_trim_get_trim_display_frame(frame):
+def _update_slide_trim_for_mouse_frame(frame):
     clip = edit_data["clip"]
     mouse_delta = edit_data["press_start"] - frame
 
-    if edit_data["start_frame_being_viewed"]:
-        display_frame = _legalize_slide(clip.clip_in + mouse_delta, clip)
+    #print "mouse_delta:", mouse_delta, clip.clip_in, clip.clip_out, clip.get_length()
+
+    # make sure slided clip area stays inside available media
+    display_frame_in, fix_diff_in = _legalize_slide(clip.clip_in + mouse_delta, clip)
+    display_frame_out, fix_diff_out = _legalize_slide(clip.clip_out + mouse_delta, clip)
+    if fix_diff_in == 0 and fix_diff_out != 0:
+        fix_diff = fix_diff_out
+    elif  fix_diff_in != 0 and fix_diff_out == 0:
+        fix_diff = fix_diff_in
+    elif  fix_diff_in != 0 and fix_diff_out != 0:
+        if abs(fix_diff_in) > abs(fix_diff_out):
+            fix_diff = fix_diff_in
+        else:
+            fix_diff = fix_diff_out
     else:
-        display_frame = _legalize_slide(clip.clip_out + mouse_delta, clip)
+        fix_diff = 0
+
+    print fix_diff_in, fix_diff_out
+
+    # Get display frame for user
+    if edit_data["start_frame_being_viewed"]:
+        display_frame = display_frame_in
+    else:
+        display_frame = display_frame_out
+        
+    print fix_diff
+    
+    edit_data["mouse_delta"] = mouse_delta - fix_diff
+        
     return display_frame
 
 def _legalize_slide(disp_frame, clip):
+    if disp_frame < 0:
+        return (0, disp_frame)
+    if disp_frame > clip.get_length():
+        return (clip.get_length(), disp_frame - clip.get_length())
+    return (disp_frame, 0)
+
+def _legalize_mouse(frame, clip):
     if disp_frame < 0:
         return 0
     if disp_frame > clip.get_length():
         return clip.get_length()
     return disp_frame
+    
