@@ -843,8 +843,6 @@ def slide_trim_release(x, y, frame, state):
     display_frame = _update_slide_trim_for_mouse_frame(frame)
     PLAYER().seek_frame(display_frame)
 
-
-
     global edit_data
     display_frame = _update_slide_trim_for_mouse_frame(frame)
     PLAYER().seek_frame(display_frame)

@@ -305,7 +305,7 @@ def slide_trim_no_edit_press(event, frame):
         tlinewidgets.trim_mode_in_non_active_state = True
         mouse_disabled = True
     else:
-        editorstate.edit_mode = editorstate.TWO_ROLL_TRIM_NO_EDIT
+        editorstate.edit_mode = editorstate.SLIDE_TRIM_NO_EDIT
     
 def slide_trim_no_edit_move(x, y, frame, state):
     pass
