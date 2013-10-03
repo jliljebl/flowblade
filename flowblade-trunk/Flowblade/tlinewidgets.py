@@ -844,7 +844,7 @@ class TimeLineCanvas:
         self.draw_compositors(cr)
         self.draw_sync_relations(cr)
 
-        # Exit displaying fake_current_pointer for SLIDE_TRIM mode if last displayed 
+        # Exit displaying from fake_current_pointer for SLIDE_TRIM mode if last displayed 
         # was from fake_pointer but this is not anymore
         global fake_current_frame
         if EDIT_MODE() != editorstate.SLIDE_TRIM and fake_current_frame != None:

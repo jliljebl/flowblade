@@ -189,8 +189,12 @@ def _handle_tline_key_event(event):
         gui.editor_window.handle_two_roll_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
+    if event.keyval == gtk.keysyms._5:
+        gui.editor_window.handle_slide_mode_button_press()
+        gui.editor_window.set_mode_selector_to_mode()
+        return True
 
-    # X 
+    # X
     if event.keyval == gtk.keysyms.x:
         buttonevent.cut_pressed()
         return True
@@ -335,6 +339,10 @@ def _handle_extended_tline_focus_events(event):
         return True
     if event.keyval == gtk.keysyms._4:
         gui.editor_window.handle_two_roll_mode_button_press()
+        gui.editor_window.set_mode_selector_to_mode()
+        return True
+    if event.keyval == gtk.keysyms._5:
+        gui.editor_window.handle_slide_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
 
