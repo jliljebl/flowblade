@@ -165,7 +165,6 @@ def _trimmed_clip_is_blank():
     return False
 
 def trim_looping_stopped():
-    #updater.set_next_prev_enabled(True, False)
     updater.set_stopped_configuration()
 
     # Reinits current trim mode
@@ -176,6 +175,9 @@ def trim_looping_stopped():
     if editorstate.edit_mode == editorstate.TWO_ROLL_TRIM:
         set_tworoll_mode(edit_data["track_object"], 
                          edit_data["edit_frame"])
+    if editorstate.edit_mode == editorstate.SLIDE_TRIM:
+        set_slide_mode(edit_data["track_object"], 
+                         edit_data["reinit_frame"])
 
 def update_cursor_to_mode():
     gui.editor_window.set_cursor_to_mode()
@@ -922,3 +924,31 @@ def _slide_trim_first_do_callback(track, clip, index, start_frame_being_viewed):
     else:
         frame = track.clip_start(index) + clip.clip_out - clip.clip_in - 1
     set_slide_mode(track, frame)
+
+def slide_play_pressed():
+    current_sequence().hide_hidden_clips()
+
+    clip_start = edit_data["trim_limits"]["clip_start"]
+    track = edit_data["track_object"]
+    clip = edit_data["clip"]
+            
+    if edit_data["start_frame_being_viewed"]:
+        frame = clip_start + 1 # +1 because cut frame selects previous clip
+    else:
+        frame = clip_start + clip.clip_out - clip.clip_in - 1
+    edit_data["reinit_frame"] = frame
+    PLAYER().start_loop_playback(frame, loop_half_length, edit_data["track_object"].get_length())
+    updater.set_playing_configuration()
+
+def slide_stop_pressed():
+    PLAYER().stop_loop_playback(trim_looping_stopped)
+
+def slide_prev_pressed():    
+    global edit_data
+    edit_data["mouse_delta"] = -1
+    _do_slide_edit()
+    
+def slide_next_pressed():
+    global edit_data
+    edit_data["mouse_delta"] = 1
+    _do_slide_edit()

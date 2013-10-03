@@ -56,6 +56,10 @@ def play_pressed():
         trimmodes.tworoll_play_pressed()
     elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM_NO_EDIT:
         movemodes.play_pressed()
+    elif EDIT_MODE() == editorstate.SLIDE_TRIM:
+        trimmodes.slide_play_pressed()
+    elif EDIT_MODE() == editorstate.SLIDE_TRIM_NO_EDIT:
+        movemodes.play_pressed()
     
 def stop_pressed():
     if current_is_move_mode():
@@ -66,24 +70,32 @@ def stop_pressed():
         movemodes.stop_pressed()
     elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
         trimmodes.oneroll_stop_pressed()
-    else:
+    elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
         trimmodes.tworoll_stop_pressed()
-        
+    elif EDIT_MODE() == editorstate.SLIDE_TRIM:
+        trimmodes.slide_stop_pressed()
+    elif EDIT_MODE() == editorstate.SLIDE_TRIM_NO_EDIT:
+        movemodes.stop_pressed()
+
 def next_pressed():
     if current_is_move_mode():
         movemodes.next_pressed()
     elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
         trimmodes.oneroll_next_pressed()
-    else:
+    elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
         trimmodes.tworoll_next_pressed()
+    elif EDIT_MODE() == editorstate.SLIDE_TRIM:
+        trimmodes.slide_next_pressed()
 
 def prev_pressed():
     if current_is_move_mode():
         movemodes.prev_pressed()
     elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
         trimmodes.oneroll_prev_pressed()
-    else:
+    elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
         trimmodes.tworoll_prev_pressed()
+    elif EDIT_MODE() == editorstate.SLIDE_TRIM:
+        trimmodes.slide_prev_pressed()
 
 def j_pressed():
     if timeline_visible():

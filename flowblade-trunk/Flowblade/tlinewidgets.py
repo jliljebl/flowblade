@@ -852,7 +852,7 @@ class TimeLineCanvas:
             fake_current_frame = None
             
         # Draw frame pointer
-        if EDIT_MODE() != editorstate.SLIDE_TRIM:
+        if EDIT_MODE() != editorstate.SLIDE_TRIM or PLAYER().looping():
             current_frame = PLAYER().tracktor_producer.frame()
         else:
             current_frame = fake_current_frame
@@ -1616,7 +1616,7 @@ class TimeLineFrameScale:
             cr.paint()
 
         # Select draw colors and frame based on mode
-        if EDIT_MODE() != editorstate.SLIDE_TRIM:
+        if EDIT_MODE() != editorstate.SLIDE_TRIM or PLAYER().looping():
             current_frame = PLAYER().tracktor_producer.frame()
         else:
             current_frame = fake_current_frame
