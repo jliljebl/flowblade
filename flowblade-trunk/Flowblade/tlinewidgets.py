@@ -36,6 +36,8 @@ from editorstate import current_sequence
 from editorstate import current_is_move_mode
 from editorstate import timeline_visible
 from editorstate import PLAYER
+from editorstate import EDIT_MODE
+import editorstate
 import respaths
 import resync
 import sequence
@@ -244,6 +246,11 @@ shadow_frame = -1
 
 # Used to draw trim modes differently when moving from <X>_NO_EDIT mode to active edit
 trim_mode_in_non_active_state = False
+
+# Used ahen editing with SLIDE_TRIM mode to make user believe that the frame being displayed 
+# is the view frame user selected while in reality user is displayed images from hidden track and the
+# current frame is moving in opposite directiontion users mouse movement
+fake_current_frame = None
 
 # ------------------------------------------------------------------- module functions
 def load_icons():
@@ -837,9 +844,19 @@ class TimeLineCanvas:
         self.draw_compositors(cr)
         self.draw_sync_relations(cr)
 
+        # Exit displaying fake_current_pointer for SLIDE_TRIM mode if last displayed 
+        # was from fake_pointer but this is not anymore
+        global fake_current_frame
+        if EDIT_MODE() != editorstate.SLIDE_TRIM and fake_current_frame != None:
+            PLAYER().seek_frame(fake_current_frame)
+            fake_current_frame = None
+            
         # Draw frame pointer
-        cr.set_line_width(1.0)
-        current_frame = PLAYER().tracktor_producer.frame()
+        if EDIT_MODE() != editorstate.SLIDE_TRIM:
+            current_frame = PLAYER().tracktor_producer.frame()
+        else:
+            current_frame = fake_current_frame
+
         if timeline_visible():
             pointer_frame = current_frame
             cr.set_source_rgb(0, 0, 0)
@@ -850,6 +867,7 @@ class TimeLineCanvas:
         frame_x = math.floor(disp_frame * pix_per_frame) + 0.5
         cr.move_to(frame_x, 0)
         cr.line_to(frame_x, h)
+        cr.set_line_width(1.0)
         cr.stroke()
 
         # Draw edit mode overlay
@@ -1598,7 +1616,11 @@ class TimeLineFrameScale:
             cr.paint()
 
         # Select draw colors and frame based on mode
-        current_frame = PLAYER().tracktor_producer.frame()
+        if EDIT_MODE() != editorstate.SLIDE_TRIM:
+            current_frame = PLAYER().tracktor_producer.frame()
+        else:
+            current_frame = fake_current_frame
+
         if timeline_visible():
             cr.set_source_rgb(0, 0, 0)
             line_color = (0, 0, 0)
@@ -1609,8 +1631,7 @@ class TimeLineFrameScale:
             line_color = (0.8, 0.8, 0.8)
             triangle_color = (0.8, 0.8, 0.8)
             triangle_stroke = (0.8, 0.8, 0.8)
-            
-        # Draw position pointer
+
         disp_frame = current_frame - pos
         frame_x = math.floor(disp_frame * pix_per_frame) + 0.5
         cr.set_source_rgb(*line_color)

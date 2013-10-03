@@ -729,9 +729,6 @@ def set_slide_mode(track, current_frame):# = -1):
     """
     if track == None:
         return None
-    
-    #if current_frame == -1:
-    #    current_frame = PLAYER().producer.frame() + 1 # +1 because cut frame selects previous clip
 
     current_sequence().clear_hidden_track()
     
@@ -748,13 +745,18 @@ def set_slide_mode(track, current_frame):# = -1):
     if edit_data["clip"].is_blanck_clip:
         return False
 
+    clip = edit_data["clip"]
+    clip_start = edit_data["trim_limits"]["clip_start"]
     edit_data["start_frame_being_viewed"] = start_frame_being_viewed
-    
+    fake_current_frame = clip_start
+    if not start_frame_being_viewed:
+        fake_current_frame = clip_start + clip.clip_out - clip.clip_in
+        
     # Give timeline widget needed data
     tlinewidgets.set_edit_mode(edit_data, tlinewidgets.draw_slide_overlay)
+    tlinewidgets.fake_current_frame = fake_current_frame
 
-    # Set clip as producer on hidden track and display current frame 
-    # from it.
+    # Set clip as producer on hidden track and display current frame from it.
     clip = edit_data["clip"]
     clip_start = 0 # we'll calculate the offset from actual position of clip on timeline to display the frame displayed after sliding
 
