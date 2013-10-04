@@ -199,8 +199,8 @@ def _handle_tline_key_event(event):
         buttonevent.cut_pressed()
         return True
 
-    # Key bindings for MOVE MODES
-    if editorstate.current_is_move_mode():
+    # Key bindings for MOVE MODES and _NO_EDIT modes
+    if editorstate.current_is_move_mode() or editorstate.current_is_active_trim_mode() == False:
          # UP ARROW, next cut
         if event.keyval == gtk.keysyms.Up:
             if editorstate.timeline_visible():

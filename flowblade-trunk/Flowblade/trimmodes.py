@@ -34,10 +34,10 @@ import tlinewidgets
 import updater
 
 # Default value for pre- and post roll in loop playback
-DEFAULT_LOOP_HALF_LEGTH = 25
+DEFAULT_LOOP_HALF_LENGTH = 25
 
 # Pre- and post roll in loop playback
-loop_half_length = DEFAULT_LOOP_HALF_LEGTH
+loop_half_length = DEFAULT_LOOP_HALF_LENGTH
 
 # Data/state for ongoing edit.
 edit_data = None

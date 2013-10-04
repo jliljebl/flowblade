@@ -74,7 +74,7 @@ def current_is_move_mode():
     return False
 
 def current_is_active_trim_mode():
-    if ((edit_mode == ONE_ROLL_TRIM) or (edit_mode == TWO_ROLL_TRIM)):
+    if ((edit_mode == ONE_ROLL_TRIM) or (edit_mode == TWO_ROLL_TRIM) or (edit_mode == SLIDE_TRIM)):
         return True
     return False
     
