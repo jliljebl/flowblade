@@ -281,7 +281,7 @@ def single_instance_pid_file_test_and_write(pid_file_path, write_pid=True):
     # Returns true if this instance can be run
     # Users of this method should delete pid_file on exit
     this_pid = os.getpid()
-    print "pid check for pid:", this_pid
+    #print "pid check for pid:", this_pid
 
     # If pid_file exists we may have
     if os.path.exists(pid_file_path):
@@ -299,11 +299,11 @@ def single_instance_pid_file_test_and_write(pid_file_path, write_pid=True):
         
         if pid_file_instance_running == True:
             # Instance with pid in the pid file is running.
-            print "pid file exists with process running with same pid"
+            #print "pid file exists with process running with same pid"
             return False
         else:
             # No process with same pid as pid file, we probably crashed last time
-            print "pid file exists, but no process running"
+            #print "pid file exists, but no process running"
             if write_pid:
                 pid_file = open(pid_file_path,"wb")
                 pid_file.write(str(this_pid))
@@ -311,7 +311,7 @@ def single_instance_pid_file_test_and_write(pid_file_path, write_pid=True):
             return True
     else:
         # This is the first instance running
-        print "pid file does not exist"
+        #print "pid file does not exist"
         if write_pid:
             pid_file = open(pid_file_path,"w+")
             pid_file.write(str(this_pid))

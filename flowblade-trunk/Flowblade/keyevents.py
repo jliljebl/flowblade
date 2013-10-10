@@ -278,7 +278,7 @@ def _handle_tline_key_event(event):
 
 
 def _handle_extended_tline_focus_events(event):
-    # This was added to fix a bug long time ago but the ratinale for "extended_tline_focus_events" has been forgotten, but probably still exists
+    # This was added to fix a bug long time ago but the rationale for "extended_tline_focus_events" has been forgotten, but probably still exists
     if not(_timeline_has_focus() or
             gui.pos_bar.widget.is_focus() or
             gui.sequence_editor_b.has_focus() or

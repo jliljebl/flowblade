@@ -351,6 +351,7 @@ def load_compositors_xml(transitions):
             not_found_transitions.append(compositor_info)
             continue
         mlt_compositor_transition_infos[compositor_info.name] = compositor_info
+        print "MLT transition " + compositor_info.mlt_service_id + " available."
 
 def get_wipe_resource_path_for_sorted_keys_index(sorted_keys_index):
     # This exists to avoid sending a list of sorted keys around or having to use global variables

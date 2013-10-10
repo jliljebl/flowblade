@@ -412,3 +412,12 @@ def get_all_found_filters():
         gkey, group = group_tuple
         all_filters = all_filters + group
     return all_filters
+
+def print_found_filters():
+    all_filters = get_all_found_filters()
+    for f in all_filters:
+        print f.mlt_service_id + " for filter " + f.name  + " available"
+
+def print_not_found_filters():
+    for f in not_found_filters:
+        print f.mlt_service_id + " for filter " + f.name + " not found"

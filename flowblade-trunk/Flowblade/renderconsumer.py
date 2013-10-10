@@ -176,6 +176,7 @@ def load_render_profiles():
     Load render profiles from xml into DOM at start-up and build
     object tree.
     """
+    print "Loading render profiles..."
     file_path = respaths.ROOT_PATH + RENDER_ENCODING_FILE
     global render_encoding_doc
     render_encoding_doc = xml.dom.minidom.parse(file_path)
@@ -196,7 +197,6 @@ def load_render_profiles():
         quality_option_groups[group_key] = quality_qroup
 
     # Create encoding options
-    #print "Render profiles:"
     global encoding_options, not_supported_encoding_options, non_user_encodings
     encoding_option_nodes = render_encoding_doc.getElementsByTagName(ENCODING_OPTION)
     for eo_node in encoding_option_nodes:
@@ -211,7 +211,7 @@ def load_render_profiles():
         else:
             msg = "...NOT available, " + encoding_option.err_msg + " missing"
             not_supported_encoding_options.append(encoding_option)
-        #print encoding_option.name + msg
+        print encoding_option.name + msg
     
 def get_render_consumer_for_encoding_and_quality(file_path, profile, enc_opt_index, quality_opt_index):
     args_vals_list = get_args_vals_tuples_list_for_encoding_and_quality(profile,

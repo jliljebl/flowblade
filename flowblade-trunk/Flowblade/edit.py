@@ -621,8 +621,6 @@ def _tworoll_trim_undo(self):
         _insert_clip(self.track, self.to_clip, self.index, \
                      self.to_clip.clip_in - self.delta, \
                      self.to_clip.clip_out )
-
-    #self.edit_done_callback(False, self.cut_frame, self.delta, self.track, self.to_side_being_edited)
     
 def _tworoll_trim_redo(self):
     _remove_clip(self.track, self.index)
