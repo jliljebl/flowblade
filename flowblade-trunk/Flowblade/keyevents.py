@@ -241,8 +241,9 @@ def _handle_tline_key_event(event):
 
         # Y
         if event.keyval == gtk.keysyms.y:
-            buttonevent.insert_button_pressed()
-            return True
+            if not (event.state & gtk.gdk.CONTROL_MASK):
+                buttonevent.insert_button_pressed()
+                return True
 
         # U
         if event.keyval == gtk.keysyms.u:
@@ -292,8 +293,9 @@ def _handle_extended_tline_focus_events(event):
 
     # Y
     if event.keyval == gtk.keysyms.y:
-        buttonevent.insert_button_pressed()
-        return True
+        if not (event.state & gtk.gdk.CONTROL_MASK):
+            buttonevent.insert_button_pressed()
+            return True
 
     # U
     if event.keyval == gtk.keysyms.u:
