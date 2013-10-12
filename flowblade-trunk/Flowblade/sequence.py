@@ -709,7 +709,7 @@ class Sequence:
         Set black to track length of sequence.
         """
         global black_track_clip
-        if black_track_clip == None: # This fails for launch with asssoc Gnome file because this has not been made yet.
+        if black_track_clip == None: # This fails for launch with assoc Gnome file because this has not been made yet.
                                       # This global black_track_clip is brain dead.  
             self._create_black_track_clip()
         c_in = 0
@@ -830,8 +830,8 @@ class Sequence:
         This is done in a way that the user sees the track displayed as top most
         on screen being the first active when doing for e.g. a monitor insert.
         track: 0, black bg video
-        tracks: 1 - (self.first_video_index - 1), audio, numbred to user in oppposite direction as 1 - n (user_index = self.first_video_index - index)
-        tracks: self.first_video_index - (len - 2), video, numbred to user as 1 - n (user_index = index - self.first_video_index + 1)
+        tracks: 1 - (self.first_video_index - 1), audio, numbered to user in opposite direction as 1 - n (user_index = self.first_video_index - index)
+        tracks: self.first_video_index - (len - 2), video, numbered to user as 1 - n (user_index = index - self.first_video_index + 1)
         track: (len - 1). hidden video track for trim and clip display
         """
         # Video

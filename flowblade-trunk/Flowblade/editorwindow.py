@@ -190,7 +190,7 @@ class EditorWindow:
             ('RenderMenu', None, _('Render')),
             ('AddToQueue', None, _('Add To Batch Render Queue...'), None, None, lambda a:useraction.add_to_render_queue()),
             ('BatchRender', None, _('Batch Render Queue'), None, None, lambda a:batchrendering.launch_batch_rendering()),
-            ('Render', None, _('Render Timeline'), None, None, lambda a:useraction.do_rendering()()),
+            ('Render', None, _('Render Timeline'), None, None, lambda a:useraction.do_rendering()),
             ('ToolsMenu', None, _('Tools')),
             ('Titler', None, _('Titler'), None, None, lambda a:titler.show_titler()),
             ('AudioMix', None, _('Audio Mixer'), None, None, lambda a:audiomonitoring.show_audio_monitor()),
