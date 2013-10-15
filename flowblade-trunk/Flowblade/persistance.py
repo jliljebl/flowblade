@@ -48,11 +48,12 @@ TRANSITION_REMOVE = ['this']
 FILTER_REMOVE = ['mlt_filter','mlt_filters']
 MEDIA_FILE_REMOVE = ['icon']
 
-
+"""
 MLT_TYPES = ('Mlt__Producer','Mlt__Filter','Mlt__Playlist','MLT_Field'
              ,'Mlt__Tractor','Mlt_Multitrack')
 
 TRANSITION_TYPE = "##transition##"
+"""
 
 # Used to send messages when loading project
 load_dialog = None
@@ -176,11 +177,13 @@ def get_p_clip(clip):
     """
     s_clip = copy.copy(clip)
     print "mlt clip:"
-    print clip.__dict__, str(getattr(clip,'this'))
+    swig_this = getattr(clip,'this')
+    print clip.__dict__, str(swig_this), swig_this.__class__
      
-    # Remove 'this', set 'type' attribute for MLT object type
-    set_pickled_type(s_clip, str(getattr(clip,'this')))
-    
+    # Set 'type' attribute for MLT object type
+    #set_pickled_type(s_clip, str(getattr(clip,'this')))
+    s_clip.type = 'Mlt__Producer'
+
     # Get replace filters
     filters = []
     try: # This fails for blank clips
@@ -241,16 +244,15 @@ def get_p_sync_data(sync_data):
     s_sync_data = copy.copy(sync_data)
     s_sync_data.master_clip = sync_data.master_clip.id
     return s_sync_data
-    
+
+"""    
 def set_pickled_type(obj, this):
-    """
-    Gets MLT type and saves it in pickleable format.
-    """
     obj.type = "UNDEFINED"
     for mlt_type in MLT_TYPES:
         if this.find(mlt_type) > -1:
             obj.type = mlt_type
             return
+"""
             
 def remove_attrs(obj, remove_attrs):
     """
@@ -407,11 +409,13 @@ def fill_track_mlt(mlt_track, py_track):
             mlt_clip = sequence.create_and_insert_blank(mlt_track, i, length)
             mlt_clip.__dict__.update(clip.__dict__)
             append_created = False
-        # quick transition clip
-        # Clip is saved_as data object created in mlttransitions.py
-        elif clip.type == TRANSITION_TYPE:
-            action = mlttransitions.get_create_action(clip, sequence) 
-            mlt_clip = sequence.create_transition(action) 
+            """
+            # quick transition clip
+            # Clip is saved_as data object created in mlttransitions.py
+            elif clip.type == TRANSITION_TYPE:
+                action = mlttransitions.get_create_action(clip, sequence) 
+                mlt_clip = sequence.create_transition(action)
+            """
         else:
             print "Could not recognize clip, dict:"
             print clip.__dict__
