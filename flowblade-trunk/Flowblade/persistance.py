@@ -175,9 +175,11 @@ def get_p_clip(clip):
     Creates pickleable version of MLT Producer object
     """
     s_clip = copy.copy(clip)
-    
+    print "mlt clip:"
+    print clip.__dict__, str(getattr(clip,'this'))
+     
     # Remove 'this', set 'type' attribute for MLT object type
-    set_pickled_type(s_clip, str(getattr( clip,'this')))
+    set_pickled_type(s_clip, str(getattr(clip,'this')))
     
     # Get replace filters
     filters = []
@@ -207,6 +209,7 @@ def get_p_clip(clip):
     # Add pickleable filters
     s_clip.filters = filters
 
+    print "python clip:"
     print s_clip.__dict__
 
     return s_clip
