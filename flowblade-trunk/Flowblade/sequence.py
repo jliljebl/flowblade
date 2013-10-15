@@ -153,7 +153,9 @@ class Sequence:
         self.rgbparade.set("mix", "0.4")
         self.rgbparade.set("overlay sides", "0.0") 
         self.outputfilter = None
-    
+  
+
+
     # ---------------------------------------- tracks
     def create_default_tracks(self):
         """
@@ -200,7 +202,7 @@ class Sequence:
         self.add_track(VIDEO, True) 
 
         self._create_black_track_clip()
-
+        
         # Add black clip to black bg track
         self.tracks[0].clips.append(black_track_clip) # py
         self.tracks[0].append(black_track_clip, 0, 0) # mlt
@@ -702,6 +704,12 @@ class Sequence:
         elif mode == RGB_PARADE_MODE:
             self.tractor.attach(self.rgbparade)
             self.outputfilter = self.rgbparade
+
+    # ---------------------------------------------------- def add watermark
+    def add_watermark(self):
+        watermark = mlt.Filter(self.profile, "watermark")
+        watermark.set("resource","/home/janne/watermark.png")
+        self.tractor.attach(watermark)
 
     # ------------------------------------------------ length, seek, misc
     def update_length(self):

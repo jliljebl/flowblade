@@ -31,6 +31,7 @@ Module passes mouse edit events to other modules, depending on current edit mode
 import gtk
 from operator import itemgetter
 import os
+import time
 
 import appconsts
 import audiowaveform
@@ -117,6 +118,23 @@ def do_redo(widget=None, data=None):
     undo.do_redo()
     updater.repaint_tline()
 
+def undo_redo_stress_test():
+    times = 10
+    delay = 0.100
+    
+    for r in range(0, times):
+        while undo.index > 0:
+            print "undo:", undo.index
+            do_undo()
+
+            time.sleep(delay)
+    
+        while undo.index < len(undo.undo_stack):
+            print "redo:", undo.index
+            do_redo()
+
+            time.sleep(delay)
+    
 # ------------------------------------- edit mode setting
 def set_default_edit_mode():
     """

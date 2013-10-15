@@ -346,12 +346,12 @@ def load_compositors_xml(transitions):
     for c_node in compositor_nodes:
         compositor_info = CompositorTransitionInfo(c_node)
         if (not compositor_info.mlt_service_id in transitions) and len(transitions) > 0:
-            print "MLT transition " + compositor_info.mlt_service_id + " not found."
+            #print "MLT transition " + compositor_info.mlt_service_id + " not found."
             global not_found_transitions
             not_found_transitions.append(compositor_info)
             continue
         mlt_compositor_transition_infos[compositor_info.name] = compositor_info
-        print "MLT transition " + compositor_info.mlt_service_id + " available."
+        #print "MLT transition " + compositor_info.mlt_service_id + " available."
 
 def get_wipe_resource_path_for_sorted_keys_index(sorted_keys_index):
     # This exists to avoid sending a list of sorted keys around or having to use global variables

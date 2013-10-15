@@ -111,13 +111,14 @@ def key_down(widget, event):
     if event.keyval == gtk.keysyms.F12:
         useraction.launch_batch_rendering()
         return True
-
-    #debug
-    if event.keyval == gtk.keysyms.F11:
-        titler.show_titler()
-         return True
     """
     
+    #debug
+    if event.keyval == gtk.keysyms.F11:
+        print "watermark"
+        editevent.undo_redo_stress_test()
+        return True
+
     # Key event was not handled here.
     return False
     

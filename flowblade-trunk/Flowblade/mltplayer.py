@@ -42,7 +42,7 @@ class Player(threading.Thread):
     def __init__(self, profile):
     
         self.init_for_profile(profile)
-
+        
         self.ticker = utils.Ticker(self._ticker_event, TICKER_DELAY)
 
         threading.Thread.__init__(self)
@@ -50,6 +50,7 @@ class Player(threading.Thread):
     def init_for_profile(self, profile):
         # Get profile and create ticker for playback GUI updates
         self.profile = profile
+        print "Player initialized with profile: ", self.profile.description()
         
         # Create black clip to display in the beginning 
         black_path = respaths.BLACK_IMAGE_PATH
@@ -82,7 +83,6 @@ class Player(threading.Thread):
         self.consumer.set("resize", 1)
         self.consumer.set("progressive", 1)
 
-        print "description", self.profile.description()
         # Hold ref to switch back from rendering
         self.sdl_consumer = self.consumer 
 
@@ -340,7 +340,7 @@ class Player(threading.Thread):
         self.ticker.stop_ticker()
         self.consumer.stop()
         self.producer.set_speed(0)
-        self.producer.seek(start_frame) #self.producer.seek(start_frame)
+        self.producer.seek(start_frame)
         self.render_start_frame = start_frame
         self.render_stop_frame = stop_frame
         self.consumer = render_consumer

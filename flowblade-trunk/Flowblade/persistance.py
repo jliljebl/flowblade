@@ -207,6 +207,8 @@ def get_p_clip(clip):
     # Add pickleable filters
     s_clip.filters = filters
 
+    print s_clip.__dict__
+
     return s_clip
 
 def get_p_filter(filter):
@@ -268,7 +270,7 @@ def load_project(file_path, icons_and_thumnails=True):
 
     if(not hasattr(project, "SAVEFILE_VERSION")):
         project.SAVEFILE_VERSION = 1 # first save files did not have this
-    print "SAVEFILE_VERSION:", project.SAVEFILE_VERSION
+    print "Loading, SAVEFILE_VERSION:", project.SAVEFILE_VERSION
 
     # Set MLT profile
     project.profile = mltprofiles.get_profile(project.profile_desc)
@@ -331,7 +333,7 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
     for py_compositor in seq.compositors:
             # Keeping backwards compability
             if SAVEFILE_VERSION < 3:
-                FIX_BACKWARDS_COMPOSITOR_COMPABILITY(py_compositor, SAVEFILE_VERSION)
+                FIX_N_TO_3_COMPOSITOR_COMPABILITY(py_compositor, SAVEFILE_VERSION)
         
             # Create new compositor object
             compositor = mlttransitions.create_compositor(py_compositor.type_id)                                        
@@ -407,7 +409,10 @@ def fill_track_mlt(mlt_track, py_track):
         elif clip.type == TRANSITION_TYPE:
             action = mlttransitions.get_create_action(clip, sequence) 
             mlt_clip = sequence.create_transition(action) 
-            
+        else:
+            print "Could not recognize clip, dict:"
+            print clip.__dict__
+
         mlt_clip.selected = False # This transient state gets saved and 
                                   # we want everything unselected to begin with
         # Mute 
@@ -454,7 +459,7 @@ def fill_filters_mlt(mlt_clip, sequence):
     
 
 # ------------------------------------------------------- backwards compability
-def FIX_BACKWARDS_COMPOSITOR_COMPABILITY(compositor, SAVEFILE_VERSION):
+def FIX_N_TO_3_COMPOSITOR_COMPABILITY(compositor, SAVEFILE_VERSION):
     if SAVEFILE_VERSION == 1:
         FIX_1_TO_2_BACKWARDS_COMPOSITOR_COMPABILITY(compositor)
     
