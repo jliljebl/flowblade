@@ -97,7 +97,6 @@ def main(root_path):
     """
     Called at application start.
     Initializes application with a default project.
-    asas
     """
     try:
 		os_release_file = open("/etc/os-release","r")
