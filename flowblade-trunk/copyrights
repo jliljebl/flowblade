@@ -1,0 +1,60 @@
+Format: http://dep.debian.net/deps/dep5
+Upstream-Name: flowblade
+Source: http://code.google.com/p/flowblade/
+
+Files: all, except ones separately listed below
+Copyright: 2012 Janne Liljeblad <janne.liljeblad@gmail.com>
+License: GPL-3.0+
+
+Files: bi-linear_x.pgm bi-linear_y.pgm burtst.pgm checkerboard_small.pgm cloud.pgm radial-bars.pgm spiral.pgm spiral2.pgm square.pgm square2.pgm square2-bars.pgm symmetric_clock.pgm
+Copyright: 2012 (files are from Kdenlive http://www.kdenlive.org. Project AUTHORS file contents are prosumed to be copyright holders)
+    Jean-Baptiste Mardelle
+    Marco Gittler
+    Dan Dennedy
+    Simon A. Eugster
+    Till Theato 
+    Alberto Villa  
+    Jean-Michel Poure
+    Ray Lehtiniemi
+    Jason Wood
+License: GPL-2.0+
+
+Files: blinds_in_to_out.pgm blins_in_to_out_big.pgm blinds_sliding.pgm circle_in_to_out.svg circle_out_to_in.svg clock_left_to_right.pgm clock_right_to_left.pgm fractal1.pgm fractal4.pgm fractal5.pgm fractal7.pgm hatched_1.png hatched_2.png mountains.png rectangle_in_to_out.pgm rectangle_out_to_in.pgm sand.svg sphere.png spiral_abstract_1.png spiral_big.png spiral_medium.pgm spiral_small.pgm spots.png vertical_blinds_in_to_out.pgm vertical_blinds_in_to_out_big.pgm wipe_bottom_to_top.svg wipe_diagonal_1.png wipe_diagonal_2.png wipe_diagonal_3.png wipe_diagonal_4.png wipe_left_toright.svg wipe_right_to_left.svg wipe_top_to_bottom.svg
+Copyright:  (files are from Openshot http://www.openshot.org copyright holders from .deb package copyright file)
+           2010, Jonathan Thomas <jonathan.oomph@gmail.com>
+           2010, Andy Finch <we.rocked.in79@gmail.com>
+           2010, TJ <ubuntu@tjworld.net>
+           2010, Olivier Girard <eolinwen@gmail.com>
+           2010, Helen McCall <wildnfree@blueyonder.co.uk>
+           2010, Mael Lavault <moimael@neuf.fr>
+           2010, itomailg <itomailg@gmail.com>
+           2011, Francesco Fantoni <francesco@hv-a.com>
+           2011, Emil Berg <emil_berg91@hotmail.com>
+License: GPL-3.0+
+
+Files: flowblade_splash_black_small.png
+Copyright: 2012 Janne Liljeblad <janne.liljeblad@gmail.com>
+License: Creative Commons Attribution-NoDerivs 3.0
+
+Files: flowblade_splash_black_small.png is derivative work of image "The Blade", derivative use by permission
+Copyright:  Marcus Vegas 
+License: Creative Commons Attribution-NoDerivs 3.0
+
+License: GPL-3.0+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ .
+ This package is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the GNU General
+ Public License version 3 can be found in "/usr/share/common-licenses/GPL-3".
+
+

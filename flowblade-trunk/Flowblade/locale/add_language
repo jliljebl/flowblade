@@ -1,0 +1,38 @@
+#/usr/bin/bash
+
+# Get language
+LANG=$1
+echo "Adding Flowblade translation files for ISO 639-1 language code: $1"
+
+# Move to Flowblade root directory
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $SCRIPT_DIR
+cd ..
+ROOT_DIR=$(pwd)
+
+# Check if directory for translation already exists
+TRANS_FILE=$ROOT_DIR"/locale/"$LANG"/LC_MESSAGES/Flowblade.po"
+if [ -f $TRANS_FILE ]; then
+  echo "Translation files for $LANG_NAME already exist."
+  echo "No new translation files were created."
+  exit 1
+fi
+
+# Create directory for translation files
+NEW_DIR=$ROOT_DIR"/locale/"$LANG
+NEW_DIR_TWO=$NEW_DIR"/LC_MESSAGES"
+mkdir $NEW_DIR
+mkdir $NEW_DIR_TWO
+
+# Create .pot file
+./locale/create_pot
+
+# Create language .po file
+SOURCE_POT=$ROOT_DIR"/locale/Flowblade/Flowblade.pot"
+msginit --output-file=$TRANS_FILE --input=$SOURCE_POT --locale=$LANG
+
+# Give info
+echo "New translation file for $LANG_NAME was created."
+echo "Edit it and run 'compile_language $LANG' to compile binary file and test it."
+
+

@@ -1,0 +1,34 @@
+#/usr/bin/bash
+
+# Get language
+LANG=$1
+echo "Create .po file for ISO 639-1 language code: $LANG"
+
+# Move to Flowblade root directory
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $SCRIPT_DIR
+cd ..
+ROOT_DIR=$(pwd)
+
+# Check if directory for translation already exists
+PO_FILE=$ROOT_DIR"/locale/"$LANG"/LC_MESSAGES/Flowblade.po"
+if [ ! -f $PO_FILE ]; then
+  echo "Translation file $PO_FILE does not exist."
+  echo "Can't update .po file for language code: $LANG."
+  exit 1
+fi
+
+# Create up-to-date .pot file
+./locale/create_pot
+
+# Create new merge .po file
+LANG_DIR=$ROOT_DIR"/locale/"$LANG"/LC_MESSAGES/"
+MERGE_FILE=$LANG_DIR"Flowblade_merge.po"
+REF_FILE=$ROOT_DIR"/locale/Flowblade/Flowblade.pot"
+EXISTING_TRANSLATION=$LANG_DIR"Flowblade.po"
+msgmerge -o $MERGE_FILE $EXISTING_TRANSLATION $REF_FILE
+
+# Remove old and copy new
+rm $EXISTING_TRANSLATION
+cp $MERGE_FILE $EXISTING_TRANSLATION
+rm $MERGE_FILE
