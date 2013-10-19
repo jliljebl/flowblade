@@ -112,12 +112,13 @@ def key_down(widget, event):
         useraction.launch_batch_rendering()
         return True
     """
-
+    
     #debug
     if event.keyval == gtk.keysyms.F11:
         print "watermark"
         current_sequence().add_watermark()
         return True
+
 
     # Key event was not handled here.
     return False

@@ -709,6 +709,7 @@ class Sequence:
     def add_watermark(self):
         watermark = mlt.Filter(self.profile, "watermark")
         watermark.set("resource","/home/janne/watermark.png")
+        watermark.set("composite.always_active", 1)
         self.tractor.attach(watermark)
 
     # ------------------------------------------------ length, seek, misc
