@@ -173,6 +173,7 @@ class EditorWindow:
             ('ConsolidateSelectedBlanks', None, _('Consolidate Selected Blanks'), None, None, lambda a:editevent.consolidate_selected_blanks()),
             ('ConsolidateAllBlanks', None, _('Consolidate All Blanks'), None, None, lambda a:editevent.consolidate_all_blanks()),
             ('ChangeSequenceTracks', None, _('Change Sequence Tracks Count...'), None, None, lambda a:useraction.change_sequence_track_count()),
+            ('Watermark', None, _('Watermark...'), None, None, lambda a:menuactions.edit_watermark()),
             ('ProfilesManager', None, _('Profiles Manager'), None, None, lambda a:menuactions.profiles_manager()),
             ('Preferences', None, _('Preferences'), None, None, lambda a:menuactions.display_preferences()),
             ('ViewMenu', None, _('View')),
@@ -244,6 +245,7 @@ class EditorWindow:
                     <menuitem action='AddFade'/>
                     <separator/>
                     <menuitem action='ChangeSequenceTracks'/>
+                    <menuitem action='Watermark'/>
                     <separator/>
                     <menuitem action='ProfilesManager'/>
                     <menuitem action='Preferences'/>

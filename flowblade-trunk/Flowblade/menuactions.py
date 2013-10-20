@@ -242,3 +242,12 @@ def profiles_manager():
 def display_preferences():
     preferenceswindow.preferences_dialog(useraction.select_thumbnail_dir_callback, 
                                          useraction.select_render_clips_dir_callback)
+
+
+def edit_watermark():
+	print "watermark"
+	dialogs.watermark_dialog(_watermark_dialog_callback)
+	
+def _watermark_dialog_callback(dialog, response_id):
+	dialog.destroy()
+

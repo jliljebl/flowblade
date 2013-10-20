@@ -99,13 +99,13 @@ def main(root_path):
     Initializes application with a default project.
     """
     try:
-		os_release_file = open("/etc/os-release","r")
-		os_text = os_release_file.read()
-		s_index = os_text.find("PRETTY_NAME=")
-		e_index = os_text.find("\n", s_index)
-		print "OS: " + os_text[s_index + 13:e_index - 1]
+        os_release_file = open("/etc/os-release","r")
+        os_text = os_release_file.read()
+        s_index = os_text.find("PRETTY_NAME=")
+        e_index = os_text.find("\n", s_index)
+        print "OS: " + os_text[s_index + 13:e_index - 1]
     except Exception as e:
-		pass
+        pass
     
     print "Python", sys.version
 
