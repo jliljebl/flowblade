@@ -1187,23 +1187,36 @@ def _get_kb_row(msg1, msg2):
     row.set_size_request(KB_SHORTCUT_ROW_WIDTH, KB_SHORTCUT_ROW_HEIGHT)
     return row
 
-def watermark_dialog(callback):
+def watermark_dialog(add_callback, remove_callback):
     dialog = gtk.Dialog(_("Sequence Watermark"), None,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                         (_("Close").encode('utf-8'), gtk.RESPONSE_CLOSE))
 
-    seq_label = guiutils.bold_label("Sequence: ")
+    seq_label = guiutils.bold_label(_("Sequence:") + " ")
     seq_name = gtk.Label(editorstate.current_sequence().name)
-    row1 = guiutils.get_left_justified_box([seq_label, seq_name])
- 
-    file_path_label = guiutils.bold_label("Watermark: ")
-    file_path_value_label = gtk.Label("/home/janne/ghjtjt/dasdasdasd/werwerwer/vbnvbvbn7hjkhjkhjk/fghfghfght/jkljkljkltyu/wateermark.png")
-    row2 = guiutils.get_left_justified_box([file_path_label, file_path_value_label])
 
-    remove_button = gtk.Button("Remove Watermark")
-    add_button = gtk.Button("Set Watermark File")
+ 
+    file_path_label = guiutils.bold_label(_("Watermark:") + " ")
+
+    add_button = gtk.Button(_("Set Watermark File"))
+    remove_button = gtk.Button(_("Remove Watermark"))
+    if editorstate.current_sequence().watermark_file_path == None:
+        file_path_value_label = gtk.Label("Not Set")
+        add_button.set_sensitive(True)
+        remove_button.set_sensitive(False)
+    else:
+        file_path_value_label = gtk.Label(editorstate.current_sequence().watermark_file_path)
+        add_button.set_sensitive(False)
+        remove_button.set_sensitive(True)    
+
+    row1 = guiutils.get_left_justified_box([seq_label, seq_name])
+    row2 = guiutils.get_left_justified_box([file_path_label, file_path_value_label])
     row3 = guiutils.get_left_justified_box([gtk.Label(), remove_button, guiutils.pad_label(8, 8), add_button])
     row3.set_size_request(470, 30)
+
+    widgets = (add_button, remove_button, file_path_value_label)
+    add_button.connect("clicked", add_callback, widgets)
+    remove_button.connect("clicked", remove_callback, widgets)
 
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)
@@ -1217,6 +1230,23 @@ def watermark_dialog(callback):
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
-    dialog.connect('response', callback)
+    dialog.connect('response', _dialog_destroy)
     dialog.show_all()
+
+def watermark_file_dialog(callback, widgets):
+    dialog = gtk.FileChooserDialog(_("Select Watermark File"), None, 
+                                   gtk.FILE_CHOOSER_ACTION_OPEN, 
+                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                                    _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
+    dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
+    dialog.set_select_multiple(False)
+    file_filter = gtk.FileFilter()
+    file_filter.set_name("Accepted Watermark Files")
+    file_filter.add_pattern("*" + ".png")
+    file_filter.add_pattern("*" + ".jpeg")
+    file_filter.add_pattern("*" + ".jpg")
+    file_filter.add_pattern("*" + ".tga")
+    dialog.add_filter(file_filter)
+    dialog.connect('response', callback, widgets)
+    dialog.show()
     

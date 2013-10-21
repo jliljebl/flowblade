@@ -26,7 +26,7 @@ by the application. A project has 1-n of these.
 import copy
 import gnomevfs
 import mlt
-import time #added when testing 
+import time #added for testing 
 import types
 import os
 
@@ -74,7 +74,7 @@ MLT_FILTER = 2
 # Number of tracks available
 # NOTE: These are set from other modules (and this one when cloning) when creating or loading projects
 # and used in Sequence.__init__(...) when creating sequences.
-# Hacky design, tracks count should be provided via constructor at creation time.
+# Weak design, tracks count should be provided via constructor at creation time.
 AUDIO_TRACKS_COUNT = 4
 VIDEO_TRACKS_COUNT = 5
 
@@ -118,6 +118,8 @@ class Sequence:
         self.markers = [] # markers are tuples (name_str, frame_int)
         self.proxyclips = {} #future feature, not used currently
         self.rendered_versions = {} #future feature, not used currently
+        self.watermark_filter = None
+        self.watermark_file_path = None
 
         # MLT objects for a multitrack sequence
         self.init_mlt_objects()
@@ -184,7 +186,7 @@ class Sequence:
         
         # Video tracks
         self.first_video_index = AUDIO_TRACKS_COUNT + 1 # index of first editable video track
-        #video_tracks = VIDEO_TRACKS_COUNT
+
         for i in range(0, VIDEO_TRACKS_COUNT):
             self.add_track(VIDEO) # editable
             if i > 0:
@@ -706,11 +708,18 @@ class Sequence:
             self.outputfilter = self.rgbparade
 
     # ---------------------------------------------------- def add watermark
-    def add_watermark(self):
+    def add_watermark(self, watermark_file_path):
         watermark = mlt.Filter(self.profile, "watermark")
-        watermark.set("resource","/home/janne/watermark.png")
+        watermark.set("resource",str(watermark_file_path))
         watermark.set("composite.always_active", 1)
         self.tractor.attach(watermark)
+        self.watermark_filter = watermark
+        self.watermark_file_path = watermark_file_path
+
+    def remove_watermark(self):
+        self.tractor.detach(self.watermark_filter)
+        self.watermark_filter = None
+        self.watermark_file_path = None
 
     # ------------------------------------------------ length, seek, misc
     def update_length(self):
@@ -719,7 +728,7 @@ class Sequence:
         """
         global black_track_clip
         if black_track_clip == None: # This fails for launch with assoc Gnome file because this has not been made yet.
-                                      # This global black_track_clip is brain dead.  
+                                     # This global black_track_clip is brain dead.  
             self._create_black_track_clip()
         c_in = 0
         c_out = self.get_length()
