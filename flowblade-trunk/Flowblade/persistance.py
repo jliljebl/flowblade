@@ -41,7 +41,7 @@ import resync
 # Unpickleable attributes for all objects
 # These are removed at save and recreated at load.
 PROJECT_REMOVE = ['profile','c_seq', 'thumbnail_thread']
-SEQUENCE_REMOVE = ['profile','field','multitrack','tractor','monitor_clip','vectorscope','audiowave','rgbparade','outputfilter']
+SEQUENCE_REMOVE = ['profile','field','multitrack','tractor','monitor_clip','vectorscope','audiowave','rgbparade','outputfilter','watermark_filter']
 PLAY_LIST_REMOVE = ['this','sequence','get_name','gain_filter','pan_filter']
 CLIP_REMOVE = ['this','clip_length']
 TRANSITION_REMOVE = ['this']
@@ -272,7 +272,16 @@ def load_project(file_path, icons_and_thumnails=True):
                 
         seq.profile = project.profile
         fill_sequence_mlt(seq, project.SAVEFILE_VERSION)
-        
+
+        if hasattr(seq, "watermark_file_path"):
+            if seq.watermark_file_path != None:
+                seq.add_watermark(seq.watermark_file_path)
+            else:
+                seq.watermark_filter = None
+        else:
+            seq.watermark_filter = None
+            seq.watermark_file_path = None
+
     all_clips = {}
     sync_clips = []
 

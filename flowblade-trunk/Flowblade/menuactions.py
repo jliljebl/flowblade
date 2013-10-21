@@ -34,6 +34,7 @@ import editorpersistance
 import dialogs
 import dialogutils
 from editorstate import PROJECT
+from editorstate import current_sequence
 import editorstate
 import gui
 import mltprofiles
@@ -243,11 +244,27 @@ def display_preferences():
     preferenceswindow.preferences_dialog(useraction.select_thumbnail_dir_callback, 
                                          useraction.select_render_clips_dir_callback)
 
-
 def edit_watermark():
-	print "watermark"
-	dialogs.watermark_dialog(_watermark_dialog_callback)
-	
-def _watermark_dialog_callback(dialog, response_id):
-	dialog.destroy()
+    dialogs.watermark_dialog(_watermark_add_callback, _watermark_remove_callback)
 
+def _watermark_add_callback(button, widgets):
+    dialogs.watermark_file_dialog(_watermark_file_select_callback, widgets)
+
+def _watermark_file_select_callback(dialog, response_id, widgets):
+    add_button, remove_button, file_path_value_label = widgets
+    if response_id == gtk.RESPONSE_ACCEPT:
+        filenames = dialog.get_filenames()
+        current_sequence().add_watermark(filenames[0])
+        add_button.set_sensitive(False)
+        remove_button.set_sensitive(True)
+        file_path_value_label.set_text(filenames[0])
+    
+    dialog.destroy()
+
+def _watermark_remove_callback(button, widgets):
+    add_button, remove_button, file_path_value_label = widgets
+    add_button.set_sensitive(True)
+    remove_button.set_sensitive(False)
+    file_path_value_label.set_text("Not Set")
+    current_sequence().remove_watermark()
+      
