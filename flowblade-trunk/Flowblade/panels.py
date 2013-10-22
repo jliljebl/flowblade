@@ -61,6 +61,9 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb):
     add_media_b.set_tooltip_text(_("Add Media File to Bin"))
     del_media_b.set_tooltip_text(_("Delete Media File from Bin"))
 
+    proxy_b = gtk.Button() #, _("Timeline"))
+    proxy_b.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "proxy_button.png"))
+    #proxy_b.set_size_request(80, 30)
     columns_img = gtk.image_new_from_file(respaths.IMAGE_PATH + "columns.png")
         
     adj = gtk.Adjustment(value=editorpersistance.prefs.media_columns, lower=MEDIA_PANEL_MIN_ROWS, upper=MEDIA_PANEL_MAX_ROWS, step_incr=1)
@@ -70,6 +73,7 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb):
     buttons_box = gtk.HBox(False,1)
     buttons_box.pack_start(add_media_b, True, True, 0)
     buttons_box.pack_start(del_media_b, True, True, 0)
+    buttons_box.pack_start(proxy_b, False, False, 0)
     buttons_box.pack_start(guiutils.get_pad_label(4, 4), False, False, 0)
     buttons_box.pack_start(columns_img, False, False, 0)
     buttons_box.pack_start(spin, False, False, 0)
