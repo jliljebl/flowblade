@@ -56,6 +56,7 @@ import panels
 import patternproducer
 from positionbar import PositionBar
 import projectinfogui
+import proxyediting
 import syncsplitevent
 import test
 import titler
@@ -187,6 +188,7 @@ class EditorWindow:
             ('LogClipRange', None, _('Log Marked Clip Range'), '<control>L', None, lambda a:medialog.log_range_clicked()),
             ('RecreateMediaIcons', None, _('Recreate Media Icons...'), None, None, lambda a:menuactions.recreate_media_file_icons()),
             ('RemoveUnusedMedia', None, _('Remove Unused Media...'), None, None, lambda a:useraction.remove_unused_media()),
+            ('ProxyManager', None, _('Proxy Manager'), None, None, lambda a:proxyediting.show_proxy_manager_dialog()),
             ('ProjectInfo', None, _('Project Info'), None, None, lambda a:menuactions.show_project_info()),
             ('RenderMenu', None, _('Render')),
             ('AddToQueue', None, _('Add To Batch Render Queue...'), None, None, lambda a:useraction.add_to_render_queue()),
@@ -266,6 +268,8 @@ class EditorWindow:
                     <separator/>
                     <menuitem action='RecreateMediaIcons'/>
                     <menuitem action='RemoveUnusedMedia'/>
+                    <separator/>
+                    <menuitem action='ProxyManager'/>
                 </menu>
                 <menu action='RenderMenu'>
                     <menuitem action='AddToQueue'/>
