@@ -79,6 +79,7 @@ import updater
 import useraction
 import utils
 
+
 AUTOSAVE_DIR = "autosave/"
 AUTOSAVE_FILE = "autosave/autosave"
 PID_FILE = "flowbladepidfile"
@@ -582,7 +583,6 @@ def init_logger():
         print "logging failed"
 
 def log_msg(msg):
-    # dev utils
     global logger
     logger.info(msg)
 
