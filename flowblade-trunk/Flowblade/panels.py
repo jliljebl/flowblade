@@ -52,7 +52,7 @@ MEDIA_PANEL_MAX_ROWS = 8
 MEDIA_PANEL_DEFAULT_ROWS = 2
 
 
-def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb):
+def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, proxy_cb):
     # Create buttons and connect signals
     add_media_b = gtk.Button(_("Add"))
     del_media_b = gtk.Button(_("Delete"))    
@@ -63,7 +63,8 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb):
 
     proxy_b = gtk.Button() #, _("Timeline"))
     proxy_b.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "proxy_button.png"))
-    #proxy_b.set_size_request(80, 30)
+    proxy_b.connect("clicked", proxy_cb, None)
+
     columns_img = gtk.image_new_from_file(respaths.IMAGE_PATH + "columns.png")
         
     adj = gtk.Adjustment(value=editorpersistance.prefs.media_columns, lower=MEDIA_PANEL_MIN_ROWS, upper=MEDIA_PANEL_MAX_ROWS, step_incr=1)

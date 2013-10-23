@@ -356,7 +356,6 @@ def add_fade_menu_item_selected():
     add_transition_pressed()
 
 def add_transition_pressed(retry_from_render_folder_select=False):
-    print "add_transition_pressed"
     if movemodes.selected_track == -1:
         print "so selection track"
         # INFOWINDOW
@@ -426,7 +425,12 @@ def _do_rendered_transition(track):
         _no_audio_tracks_mixing_info()
         
 def _add_transition_render_folder_select_callback(dialog, response_id, file_select):
-    folder = file_select.get_filenames()[0]
+    try:
+        folder = file_select.get_filenames()[0]
+    except:
+        dialog.destroy()
+        return
+
     dialog.destroy()
     if response_id == gtk.RESPONSE_YES:
         if folder ==  os.path.expanduser("~"):

@@ -343,7 +343,8 @@ class EditorWindow:
                                 #self.media_list_view,
                                 lambda w,e: useraction.add_media_files(), 
                                 lambda w,e: useraction.delete_media_files(),
-                                lambda a: self.media_list_view.columns_changed(a))
+                                lambda a: self.media_list_view.columns_changed(a),
+                                lambda w,e: proxyediting.create_proxy_files_pressed())
 
         self.mm_paned = gtk.HPaned()
         self.mm_paned.pack1(bins_panel, resize=True, shrink=True)

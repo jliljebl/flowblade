@@ -37,13 +37,14 @@ _profile_list = []
 _factory_profiles = []
 _hidden_factory_profiles = []
 _user_profiles = []
+_proxy_profiles = []
 
 def load_profile_list():
     """ 
     Creates a list of MLT profile objects.
     Called at app start.
     """
-    global _profile_list,_factory_profiles, _hidden_factory_profiles, _user_profiles
+    global _profile_list,_factory_profiles, _hidden_factory_profiles, _user_profiles, _proxy_profiles
 
     user_profiles_dir = utils.get_hidden_user_dir_path() + USER_PROFILES_DIR
     _user_profiles = _load_profiles_list(user_profiles_dir)
@@ -55,6 +56,8 @@ def load_profile_list():
     _factory_profiles.sort(_sort_profiles)
     _hidden_factory_profiles.sort(_sort_profiles)
     _user_profiles.sort(_sort_profiles)
+
+    _proxy_profiles = _load_profiles_list(respaths.PROXY_PROFILE_PATH)
 
 def _load_profiles_list(dir_path):
     load_profiles = []
@@ -95,6 +98,9 @@ def get_hidden_profiles():
 
 def get_user_profiles():
     return _user_profiles
+
+def get_proxy_profiles():
+    return _proxy_profiles
 
 def get_profile(profile_name):
     for fname, profile in _profile_list:

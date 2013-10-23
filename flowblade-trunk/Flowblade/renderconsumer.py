@@ -44,6 +44,7 @@ ADDED_ATTRIBUTES = "addargs"
 BITRATE_OPTION = "boption"
 QUALITY_GROUP = "qualityqroup"
 ENCODING_OPTION = "encodingoption"
+PROXY_ENCODING_OPTION = "proxyencodingoption"
 QGROUP = "qgroup"
 DEFAULT_INDEX = "defaultindex"
 PROFILE = "profile"
@@ -64,6 +65,7 @@ not_supported_encoding_options = []
 quality_option_groups = {}
 quality_option_groups_default_index = {}
 non_user_encodings = []
+_proxy_encoding = None
 
 # replace empty strings with None values
 def _get_attribute(node, attr_name):
@@ -212,6 +214,18 @@ def load_render_profiles():
             msg = "...NOT available, " + encoding_option.err_msg + " missing"
             not_supported_encoding_options.append(encoding_option)
         print encoding_option.name + msg
+    
+    # Proxy encoding
+    proxy_encoding_nodes = render_encoding_doc.getElementsByTagName(PROXY_ENCODING_OPTION)
+    proxy_node = proxy_encoding_nodes[0]
+    proxy_encoding_option = EncodingOption(proxy_node)
+    if proxy_encoding_option.supported:
+        msg = "...available"
+        global _proxy_encoding
+        _proxy_encoding = proxy_encoding_option
+    else:
+        msg = "...NOT available, " + encoding_option.err_msg + " missing"
+    print "Proxy editing" + msg 
     
 def get_render_consumer_for_encoding_and_quality(file_path, profile, enc_opt_index, quality_opt_index):
     args_vals_list = get_args_vals_tuples_list_for_encoding_and_quality(profile,

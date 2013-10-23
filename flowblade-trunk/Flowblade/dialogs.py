@@ -293,14 +293,16 @@ def render_progress_dialog(callback, parent_window):
     dialog.show()
     return dialog
     
-def clip_render_progress_dialog(callback, title, file_name, progress_bar, parent_window):
+def clip_render_progress_dialog(callback, title, text, progress_bar, parent_window):
     dialog = gtk.Dialog(title,
                          parent_window,
                          gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                          (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT))
-
+    
+    dialog.text_label = gtk.Label(text)
+    
     status_box = gtk.HBox(False, 2)
-    status_box.pack_start(gtk.Label(file_name),False, False, 0)
+    status_box.pack_start(dialog.text_label, False, False, 0)
     status_box.pack_start(gtk.Label(), True, True, 0)
     
     progress_vbox = gtk.VBox(False, 2)
