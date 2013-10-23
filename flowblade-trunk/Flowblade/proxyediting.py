@@ -13,7 +13,7 @@ proxy_create_texts = None
 def show_proxy_manager_dialog():
     global proxy_create_texts
     proxy_create_texts = [_("Manually Only"),_("All Video On Open")]
-    dialog = gtk.Dialog(_("Sequence Watermark"), None,
+    dialog = gtk.Dialog(_("Proxy Manager"), None,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                         (_("Close Manager").encode('utf-8'), gtk.RESPONSE_CLOSE))
 
@@ -69,20 +69,13 @@ def show_proxy_manager_dialog():
     row2_onoff.set_size_request(470, 30)
 
     vbox_onoff = gtk.VBox(False, 2)
-    #vbox_onoff.pack_start(row1_onoff, False, False, 0)
     vbox_onoff.pack_start(guiutils.pad_label(12, 4), False, False, 0)
     vbox_onoff.pack_start(row2_onoff, False, False, 0)
     
     panel_onoff = guiutils.get_named_frame("Project Proxy Mode", vbox_onoff)
 
-    #widgets = (add_button, remove_button, file_path_value_label)
-    #add_button.connect("clicked", add_callback, widget s)
-    #remove_button.connect("clicked", remove_callback, widgets)
-
     # Pane
     vbox = gtk.VBox(False, 2)
-    #vbox.pack_start(row2, False, False, 0)
-    #vbox.pack_start(guiutils.pad_label(12, 8), False, False, 0)
     vbox.pack_start(panel_create, False, False, 0)
     vbox.pack_start(panel_onoff, False, False, 0)
 
