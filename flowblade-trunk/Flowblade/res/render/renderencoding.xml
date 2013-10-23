@@ -20,6 +20,13 @@
         <quality name="18000 kb/s" replvalues="%BITRATE% 18000k" />
         <quality name="20000 kb/s" replvalues="%BITRATE% 20000k" />
         <quality name="25000 kb/s" replvalues="%BITRATE% 25000k" />
+    </qualityqroup>
+    <qualityqroup id="proxyqgroup" defaultindex="1">
+        <quality name="400 kb/s" replvalues="%BITRATE% 400k" />
+        <quality name="600 kb/s" replvalues="%BITRATE% 600k" />
+        <quality name="800 kb/s" replvalues="%BITRATE% 800k" />
+        <quality name="1000 kb/s" replvalues="%BITRATE% 1000k" />
+        <quality name="2000 kb/s" replvalues="%BITRATE% 2000k" />
     </qualityqroup>    
     <qualityqroup id="lossless">
         <quality name="lossless"/>
@@ -189,5 +196,10 @@
     <encodingoption name="AVI DVCPRO50 NTSC 16:9" extension="avi" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
         <profile args="f=avi vcodec=dvvideo pix_fmt=yuv422p acodec=pcm_s16le s=720x480 mlt_profile=dv_ntsc_wide" />
     </encodingoption>
-  
+
+    <!-- Proxy encoding -->
+    <proxyencodingoption name="PROXY MPEG-2 INTRA" audiodesc="mp2, 384kb/s, 48000Hz"  extension="mpg" type="av" resize="True" qgroup="proxyqgroup">
+       <profile args="f=mpeg acodec=mp2 ab=128k ar=48000 vcodec=mpeg2video minrate=0 vb=%BITRATE% bf=2 b_strategy=1 trellis=1 intra=1" />
+   </proxyencodingoption>
+
 </renderencoding>

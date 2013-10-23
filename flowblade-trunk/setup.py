@@ -32,7 +32,8 @@ install_data = [('share/applications', ['installdata/flowblade.desktop']),
 
 flowblade_package_data = ['res/filters/*.xml','res/filters/wipes/*','res/img/*',
                           'res/profiles/*','res/render/renderencoding.xml',
-                          'res/patternproducer/*','res/help/*','locale/Flowblade/*']
+                          'res/patternproducer/*','res/help/*','locale/Flowblade/*',
+                          'res/proxyprofiles/*']
 
 locale_files = []
 for filepath in glob.glob("Flowblade/locale/*/LC_MESSAGES/*"):
