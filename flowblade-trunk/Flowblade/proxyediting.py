@@ -25,7 +25,6 @@ PROXY_CREATE_MANUAL = 0
 PROXY_CREATE_ALL_VIDEO_ON_OPEN = 1
 
 progress_window = None
-#render_queue = None
 runner_thread = None
 
 class ProjectProxyEditingData:
@@ -47,10 +46,10 @@ class ProxyRenderRunnerThread(threading.Thread):
         self.aborted = False
 
     def run(self):        
-        print "ee"
-        print len(self.files_to_render)
         items = 1
         global progress_window
+        start = time.time()
+        elapsed = 0
         for media_file in self.files_to_render:
             if self.aborted == True:
                 break
@@ -61,6 +60,7 @@ class ProxyRenderRunnerThread(threading.Thread):
                                                         proxy_file_path,
                                                         self.proxy_profile, 
                                                         renderconsumer.get_proxy_encoding())
+            consumer.set("vb", "500k")
 
             file_producer = mlt.Producer(self.proxy_profile, str(media_file.path))
             seq = sequence.Sequence(self.proxy_profile)
@@ -80,7 +80,9 @@ class ProxyRenderRunnerThread(threading.Thread):
                 if self.aborted == True:
                     break        
                 render_fraction = render_thread.get_render_fraction()
-                progress_window.update_render_progress(render_fraction, media_file.name, items, len(self.files_to_render))
+                now = time.time()
+                elapsed = now - start
+                progress_window.update_render_progress(render_fraction, media_file.name, items, len(self.files_to_render), elapsed)
                 
                 if render_thread.producer.get_speed() == 0: # Rendering has reached end or been aborted
                     self.thread_running = False
@@ -91,15 +93,13 @@ class ProxyRenderRunnerThread(threading.Thread):
     
             if not self.aborted:
                 items = items + 1
-                progress_window.update_render_progress(0, media_file.name, items, len(self.files_to_render))
+                progress_window.update_render_progress(0, media_file.name, items, len(self.files_to_render), elapsed)
             else:
-                if render_item != None:
-                    render_item.render_aborted()
-                    break
+                render_thread.shutdown()
+                break
             render_thread.shutdown()
         
-
-        progress_window.render_queue_stopped()
+        _proxy_render_stopped()
 
     def abort(self):
         render_thread.shutdown()
@@ -108,7 +108,7 @@ class ProxyRenderRunnerThread(threading.Thread):
 
 class ProxyRenderProgressDialog:
     def __init__(self):
-        self.dialog = gtk.Dialog(_("Proxy Render"),
+        self.dialog = gtk.Dialog(_("Creating Proxy Files"),
                                  gui.editor_window.window,
                                  gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                                  (_("Stop").encode('utf-8'), gtk.RESPONSE_REJECT))
@@ -131,7 +131,7 @@ class ProxyRenderProgressDialog:
         est_label.set_size_request(250, 20)
         current_label.set_size_request(250, 20)
         items_label.set_size_request(250, 20)
-        
+
         info_vbox = gtk.VBox(False, 0)
         info_vbox.pack_start(guiutils.get_left_justified_box([est_label, self.elapsed_value]), False, False, 0)
         info_vbox.pack_start(guiutils.get_left_justified_box([current_label, self.current_render_value]), False, False, 0)
@@ -141,33 +141,43 @@ class ProxyRenderProgressDialog:
         progress_vbox.pack_start(info_vbox, False, False, 0)
         progress_vbox.pack_start(guiutils.get_pad_label(10, 8), False, False, 0)
         progress_vbox.pack_start(prog_align, False, False, 0)
-        
+
         alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
         alignment.set_padding(12, 12, 12, 12)
         alignment.add(progress_vbox)
         alignment.show_all()
-    
+
         self.dialog.vbox.pack_start(alignment, True, True, 0)
         self.dialog.set_has_separator(False)
-        #self.dialog.connect('response', callback)
+        self.dialog.connect('response', self.stop_pressed)
         self.dialog.show()
 
-    def update_render_progress(self, fraction, media_file_name, current_item, items):
+    def update_render_progress(self, fraction, media_file_name, current_item, items, elapsed):
+        elapsed_str= "  " + utils.get_time_str_for_sec_float(elapsed)
+        self.elapsed_value .set_text(elapsed_str)
         self.current_render_value.set_text(" " + media_file_name)
         self.items_value.set_text( " " + str(current_item) + "/" + str(items))
         self.render_progress_bar.set_fraction(fraction)
         self.render_progress_bar.set_text(str(int(fraction * 100)) + " %")
-        
+
+    def stop_pressed(self, dialog, response_id):
+        global runner_thread
+        runner_thread.abort()
+
+
 def _get_proxies_dir():
     return editorpersistance.prefs.render_folder + "/proxies"
-    
-def _get_proxy_profile(project_profile):
+
+def _get_proxy_dimensions(project_profile):
     # Get new dimension that are about half of previous and diviseble by eight
     old_width_half = int(project_profile.width() / 2)
     old_height_half = int(project_profile.height() / 2)
     new_width = old_width_half - old_width_half % 8
     new_height = old_height_half - old_height_half % 8
-    print "proxy dim:", new_width, new_height
+    return (new_width, new_height)
+
+def _get_proxy_profile(project_profile):
+    new_width, new_height = _get_proxy_dimensions(project_profile)
     
     file_contents = "description=" + "proxy render profile" + "\n"
     file_contents += "frame_rate_num=" + str(project_profile.frame_rate_num()) + "\n"
@@ -281,9 +291,9 @@ def create_proxy_files_pressed(retry_from_render_folder_select=False):
     files_to_render = []
     for w in media_file_widgets:
         f = w.media_file
-        #if f.has_proxy_file == True:
-        #    if os.path.exists(f.proxy_file_path):
-        #        continue
+        if f.has_proxy_file == True:
+            if os.path.exists(f.proxy_file_path):
+                continue
         files_to_render.append(f)
 
     proxy_profile = _get_proxy_profile(editorstate.PROJECT().profile)
@@ -292,6 +302,12 @@ def create_proxy_files_pressed(retry_from_render_folder_select=False):
     progress_window = ProxyRenderProgressDialog()
     runner_thread = ProxyRenderRunnerThread(proxy_profile, files_to_render)
     runner_thread.start()
+
+def _proxy_render_stopped():
+    global progress_window, runner_thread
+    progress_window.dialog.destroy()
+    progress_window = None
+    runner_thread = None
 
 def _create_proxy_render_folder_select_callback(dialog, response_id, file_select):
     try:
