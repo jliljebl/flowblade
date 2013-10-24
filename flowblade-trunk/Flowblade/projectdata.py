@@ -43,7 +43,7 @@ import sequence
 import utils
 
 
-SAVEFILE_VERSION = 3 # this is changed when backwards incompatible changes 
+SAVEFILE_VERSION = 4 # this is changed when backwards incompatible changes 
                      # are introduced to project files to allow for fixing them at load time
 
 FALLBACK_THUMB = "fallback_thumb.png"
@@ -221,7 +221,11 @@ class MediaFile:
 
         self.mark_in = -1
         self.mark_out = -1
-        
+
+        self.has_proxy_file = False
+        self.is_proxy_file = False
+        self.proxy_file_path = None
+
         # Set default length for graphics files
         (f_name, ext) = os.path.splitext(self.name)
         if utils.file_extension_is_graphics_file(ext):
@@ -242,12 +246,16 @@ class MediaFile:
             self.icon = icon.scale_simple(appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT, \
                                           gtk.gdk.INTERP_BILINEAR)
 
+    def create_proxy_path(self):
+        md_str = md5.new(self.path + str(datetime.datetime)).hexdigest()
+        print str(datetime.datetime)
+        return editorpersistance.prefs.render_folder + "/proxies/"+ md_str + ".mpg"
 
 class BinColorClip:
     # DECPRECATED, this is replaced by patternproducer.BinColorClip.
     # This is kept for project file backwards compatiblity,
     # unpickle fails for color clips if this isn't here.
-    # kill 2014-ish
+    # kill 2016-ish
     def __init__(self, id, name, gdk_color_str):
         self.id = id
         self.name = name
