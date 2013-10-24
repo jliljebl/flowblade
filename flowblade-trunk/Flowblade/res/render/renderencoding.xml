@@ -198,8 +198,14 @@
     </encodingoption>
 
     <!-- Proxy encoding -->
-    <proxyencodingoption name="PROXY MPEG-2 INTRA" audiodesc="mp2, 384kb/s, 48000Hz"  extension="mpg" type="av" resize="True" qgroup="proxyqgroup">
-       <profile args="f=mpeg acodec=mp2 ab=128k ar=48000 vcodec=mpeg2video minrate=0 vb=%BITRATE% bf=2 b_strategy=1 trellis=1 intra=1" />
+
+    <proxyencodingoption name="PROXY MPEG-2 INTRA" audiodesc="mp2, 128/s, 48000Hz"  extension="mpg" type="av" resize="True" qgroup="proxyqgroup">
+       <profile args="f=mpeg acodec=mp2 ab=128k ar=48000 vcodec=mpeg2video minrate=0 bf=2 b_strategy=1 trellis=1 intra=1" />
    </proxyencodingoption>
+    <!--
+    <proxyencodingoption name="PROXY MPEG-2 TRANSPORT" audiodesc="mp2, 384kb/s, 48000Hz"  extension="m2t" type="av" resize="True" qgroup="proxyqgroup">
+       <profile args="f=mpegts acodec=libmp3lame ac=2 ab=128k ar=48000 vcodec=mpeg2video g=5" />
+   </proxyencodingoption>
+    -->
 
 </renderencoding>
