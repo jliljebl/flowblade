@@ -37,7 +37,7 @@ _profile_list = []
 _factory_profiles = []
 _hidden_factory_profiles = []
 _user_profiles = []
-_proxy_profiles = []
+#_proxy_profiles = []
 
 def load_profile_list():
     """ 
@@ -57,7 +57,7 @@ def load_profile_list():
     _hidden_factory_profiles.sort(_sort_profiles)
     _user_profiles.sort(_sort_profiles)
 
-    _proxy_profiles = _load_profiles_list(respaths.PROXY_PROFILE_PATH)
+    #_proxy_profiles = _load_profiles_list(respaths.PROXY_PROFILE_PATH)
 
 def _load_profiles_list(dir_path):
     load_profiles = []
@@ -99,8 +99,8 @@ def get_hidden_profiles():
 def get_user_profiles():
     return _user_profiles
 
-def get_proxy_profiles():
-    return _proxy_profiles
+#def get_proxy_profiles():
+#    return _proxy_profiles
 
 def get_profile(profile_name):
     for fname, profile in _profile_list:

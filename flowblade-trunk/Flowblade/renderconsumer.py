@@ -323,6 +323,8 @@ def _parse_line(line_start, line_end, buf):
         
     return ((k,v), None)
 
+def get_proxy_encoding():
+    return _proxy_encoding
 
 class FileRenderPlayer(threading.Thread):
     

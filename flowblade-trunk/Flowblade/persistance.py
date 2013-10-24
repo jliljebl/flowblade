@@ -252,9 +252,9 @@ def load_project(file_path, icons_and_thumnails=True):
 
     if(not hasattr(project, "SAVEFILE_VERSION")):
         project.SAVEFILE_VERSION = 1 # first save files did not have this
-    print "Loading, SAVEFILE_VERSION:", project.SAVEFILE_VERSION
+    print "Loading " + project.name + ", SAVEFILE_VERSION:", project.SAVEFILE_VERSION
 
-    # Set MLT profile
+    # Set MLT profile. NEEDS INFO USER ON MISSING PROFILE!!!!!
     project.profile = mltprofiles.get_profile(project.profile_desc)
     
     # Some profiles may not be available in system
@@ -285,6 +285,10 @@ def load_project(file_path, icons_and_thumnails=True):
     all_clips = {}
     sync_clips = []
 
+    if SAVEFILE_VERSION < 4:
+        for k, media_file in project.media_files.iteritems():
+            FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
+            
     # Add icons to media files
     if icons_and_thumnails == True:
         _show_msg(_("Loading icons"))
@@ -477,6 +481,11 @@ def FIX_N_TO_3_SEQUENCE_COMPATIBILITY(seq):
     if not hasattr(seq, "master_audio_pan"):
         seq.master_audio_pan = appconsts.NO_PAN
         seq.master_audio_gain = 1.0
+
+def FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file):
+    media_file.has_proxy_file = False
+    media_file.is_proxy_file = False
+    media_file.proxy_file_path = None
 
 # List is used to convert SAVEFILE_VERSIONs 1 and 2 to SAVEFILE_VERSIONs 3 -> n by getting type_id string for compositor index 
 compositors_index_to_type_id = ["##affine","##opacity_kf","##pict_in_pict", "##region","##wipe", "##add",
