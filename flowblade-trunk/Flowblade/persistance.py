@@ -218,16 +218,14 @@ def get_p_clip(clip):
     # Add pickleable filters
     s_clip.filters = filters
     
-    print proxy_path_dict
     # Do proxy mode convert if needed
     if (project_proxy_mode == appconsts.CONVERTING_TO_USE_PROXY_MEDIA or 
         project_proxy_mode == appconsts.CONVERTING_TO_USE_ORIGINAL_MEDIA):
-        
         try: # This fails whan it is supposed to fail, for pattern procurs and blanks
-            print s_clip.path
             s_clip.path = proxy_path_dict[s_clip.path] 
         except:
             pass
+            
     return s_clip
 
 def get_p_filter(f):
