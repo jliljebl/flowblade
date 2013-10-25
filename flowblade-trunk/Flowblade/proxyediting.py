@@ -6,6 +6,7 @@ import os
 import threading
 import time
 
+import app
 import appconsts
 import dialogs
 import dialogutils
@@ -24,6 +25,7 @@ PROXY_CREATE_ALL_VIDEO_ON_OPEN = 1
 
 progress_window = None
 runner_thread = None
+load_thread = None
 
 class ProjectProxyEditingData:
     
@@ -241,7 +243,7 @@ def show_proxy_manager_dialog():
     use_button = gtk.Button(_("Use Proxy Media"))
     dont_use_button = gtk.Button(_("Use Original Media"))
 
-    use_button.connect("clicked", lambda w: _convert_to_proxy_project())
+    use_button.connect("clicked", lambda w: _convert_to_proxy_project(dialog))
 
     c_box_2 = gtk.HBox(True, 8)
     c_box_2.pack_start(use_button, True, True, 0)
@@ -326,10 +328,40 @@ def _create_proxy_render_folder_select_callback(dialog, response_id, file_select
         
 
 # --------------------------------------------------------- coverting to and from proxy projects
-def _convert_to_proxy_project():
+def _convert_to_proxy_project(dialog):
+    dialog.destroy()
     editorstate.PROJECT().proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_PROXY_MEDIA
     conv_temp_project_path = utils.get_hidden_user_dir_path() + "proxy_conv.flb"
     print conv_temp_project_path
     persistance.save_project(editorstate.PROJECT(), conv_temp_project_path)
-        
+    global load_thread
+    load_thread = ProxyProjectLoadThread(conv_temp_project_path)
+    load_thread.start()
 
+
+
+class ProxyProjectLoadThread(threading.Thread):
+
+    def __init__(self, proxy_project_path):
+        threading.Thread.__init__(self)
+        self.proxy_project_path = proxy_project_path
+
+    def run(self): 
+        persistance.show_messages = False
+        try:
+            print "2"
+            project = persistance.load_project(self.proxy_project_path, False)
+            print "3"
+            sequence.set_track_counts(project)
+            print "4"
+        except persistance.FileProducerNotFoundError as e:
+            print "did not find file:", e
+            
+        print "5"
+        app.stop_autosave()
+        app.open_project(project)
+        app.start_autosave()
+        print "6"
+        global load_thread
+        load_thread = None
+        persistance.show_messages = True

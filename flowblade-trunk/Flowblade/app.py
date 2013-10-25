@@ -185,8 +185,6 @@ def main(root_path):
 
     # Load filter and compositor descriptions from xml files.
     mltfilters.load_filters_xml(mltenv.services)
-    #mltfilters.print_found_filters()
-    #mltfilters.print_not_found_filters()
 
     mlttransitions.load_compositors_xml(mltenv.transitions)
 
@@ -504,10 +502,14 @@ def show_splash_screen():
     splash_screen.set_border_width(0)
     splash_screen.set_decorated(False)
     splash_screen.set_position(gtk.WIN_POS_CENTER)
-    splash_screen.set_resizable(False)
     img = gtk.image_new_from_file(respaths.IMAGE_PATH + "flowblade_splash_black_small.png")
+    #img.set_size_request(498, 300)
     splash_screen.add(img)
     splash_screen.set_keep_above(True)
+    splash_screen.set_size_request(498, 320)
+    #splash_screen.set_size_request(500, 350)
+    splash_screen.set_resizable(False)
+
     while(gtk.events_pending()):
         gtk.main_iteration()
 
