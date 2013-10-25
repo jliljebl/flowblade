@@ -203,7 +203,17 @@ def show_proxy_manager_dialog():
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                         (_("Close Manager").encode('utf-8'), gtk.RESPONSE_CLOSE))
 
-    proxy_status_value = gtk.Label("There are 12 proxy file(s) for 32 video file(s)")
+
+    media_files = editorstate.PROJECT().media_files
+    video_files = 0
+    proxy_files = 0
+    for k, media_file in media_files.iteritems():
+        if media_file.type == appconsts.VIDEO:
+            video_files = video_files + 1
+            if media_file.has_proxy_file == True or media_file.is_proxy_file == True:
+                proxy_files = proxy_files + 1
+    
+    proxy_status_value = gtk.Label("There are " + str(proxy_files) + " proxy file(s) for " + str(video_files) + " video file(s)")
     row_proxy_status = guiutils.get_left_justified_box([proxy_status_value, gtk.Label()])
     
     # Create
@@ -307,6 +317,7 @@ def create_proxy_files_pressed(retry_from_render_folder_select=False):
 def _proxy_render_stopped():
     global progress_window, runner_thread
     progress_window.dialog.destroy()
+    gui.media_list_view.widget.queue_draw()
     progress_window = None
     runner_thread = None
 
@@ -360,6 +371,7 @@ class ProxyProjectLoadThread(threading.Thread):
         print "5"
         app.stop_autosave()
         app.open_project(project)
+        project.proxy_data.proxy_mode = appconsts.USE_PROXY_MEDIA
         app.start_autosave()
         print "6"
         global load_thread
