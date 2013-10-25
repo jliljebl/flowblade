@@ -6,19 +6,17 @@ import os
 import threading
 import time
 
+import appconsts
 import dialogs
 import dialogutils
 import editorpersistance
 import editorstate
 import gui
 import guiutils
+import persistance
 import renderconsumer
 import sequence
 import utils
-
-# proxy mode
-USE_ORIGINAL_MEDIA = 0
-USE_PROXY_MEDIA = 1
 
 # create mode
 PROXY_CREATE_MANUAL = 0
@@ -30,13 +28,12 @@ runner_thread = None
 class ProjectProxyEditingData:
     
     def __init__(self):
-        self.proxy_mode = USE_ORIGINAL_MEDIA
+        self.proxy_mode = appconsts.USE_ORIGINAL_MEDIA
         self.create_mode = PROXY_CREATE_MANUAL
         self.create_rules = None # not impl.
         self.encoding = 0 # not impl.
+        self.quality = 0 # not impl
 
-        # List of (media file id,original media path,proxy file path) tuples 
-        self.proxy_files = []
 
 class ProxyRenderRunnerThread(threading.Thread):
     def __init__(self, proxy_profile, files_to_render):
@@ -78,7 +75,7 @@ class ProxyRenderRunnerThread(threading.Thread):
             self.aborted = False
             while self.thread_running:
                 if self.aborted == True:
-                    break        
+                    break
                 render_fraction = render_thread.get_render_fraction()
                 now = time.time()
                 elapsed = now - start
@@ -87,7 +84,7 @@ class ProxyRenderRunnerThread(threading.Thread):
                 if render_thread.producer.get_speed() == 0: # Rendering has reached end or been aborted
                     self.thread_running = False
                     progress_window.render_progress_bar.set_fraction(1.0)
-                    #render_item.render_completed()
+                    media_file.add_proxy_file(proxy_file_path)
                 else:
                     time.sleep(0.1)
     
@@ -244,6 +241,8 @@ def show_proxy_manager_dialog():
     use_button = gtk.Button(_("Use Proxy Media"))
     dont_use_button = gtk.Button(_("Use Original Media"))
 
+    use_button.connect("clicked", lambda w: _convert_to_proxy_project())
+
     c_box_2 = gtk.HBox(True, 8)
     c_box_2.pack_start(use_button, True, True, 0)
     c_box_2.pack_start(dont_use_button, True, True, 0)
@@ -326,4 +325,11 @@ def _create_proxy_render_folder_select_callback(dialog, response_id, file_select
             create_proxy_files_pressed(True)
         
 
+# --------------------------------------------------------- coverting to and from proxy projects
+def _convert_to_proxy_project():
+    editorstate.PROJECT().proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_PROXY_MEDIA
+    conv_temp_project_path = utils.get_hidden_user_dir_path() + "proxy_conv.flb"
+    print conv_temp_project_path
+    persistance.save_project(editorstate.PROJECT(), conv_temp_project_path)
         
+

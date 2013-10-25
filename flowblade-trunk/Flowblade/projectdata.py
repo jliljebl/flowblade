@@ -38,6 +38,7 @@ import editorstate
 import medialog
 import mltprofiles
 import patternproducer
+import proxyediting
 import respaths
 import sequence
 import utils
@@ -75,10 +76,11 @@ class Project:
         self.sequences = []
         self.next_media_file_id = 0 
         self.next_bin_number = 1 # This is for creating name for new bin 
-        self.next_seq_number = 1 # This is for creating name for new bin
+        self.next_seq_number = 1 # This is for creating name for new sequence
         self.last_save_path = None
-        self.events = []  # new
-        self.media_log = [] # new 
+        self.events = []
+        self.media_log = []
+        self.proxy_data = proxyediting.ProjectProxyEditingData()
         self.SAVEFILE_VERSION = SAVEFILE_VERSION
         
         # c_seq is the currently edited Sequence
@@ -224,7 +226,7 @@ class MediaFile:
 
         self.has_proxy_file = False
         self.is_proxy_file = False
-        self.proxy_file_path = None
+        self.second_file_path = None # to proxy when original, to original when proxy
 
         # Set default length for graphics files
         (f_name, ext) = os.path.splitext(self.name)
@@ -248,9 +250,20 @@ class MediaFile:
 
     def create_proxy_path(self):
         md_str = md5.new(self.path + str(datetime.datetime)).hexdigest()
-        print str(datetime.datetime)
         return editorpersistance.prefs.render_folder + "/proxies/"+ md_str + ".mpg"
 
+    def add_proxy_file(self, proxy_path):
+        self.has_proxy_file = True
+        self.second_file_path = proxy_path
+
+    def set_as_proxy_media_file(self):
+        self.path, self.second_file_path = self.second_file_path, self.path
+        self.is_proxy_file = True
+        
+    def set_as_original_media_file(self):
+        self.path, self.second_file_path = self.second_file_path, self.path
+        self.is_proxy_file = False
+        
 class BinColorClip:
     # DECPRECATED, this is replaced by patternproducer.BinColorClip.
     # This is kept for project file backwards compatiblity,

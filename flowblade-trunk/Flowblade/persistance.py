@@ -36,6 +36,7 @@ import edit
 import mltprofiles
 import mltfilters
 import mlttransitions
+import proxyediting
 import resync
 
 # Unpickleable attributes for all objects
@@ -55,6 +56,11 @@ load_dialog = None
 all_clips = {}
 sync_clips = []
 
+# Used for for convrtting to and from proxy media using projects
+project_proxy_mode = -1
+proxy_path_dict = None
+
+# Flag for showing progress messages on GUI when loading
 show_messages = True
 
 
@@ -100,15 +106,26 @@ def save_project(project, file_path):
     # Set project SAVEFILE_VERSION to current in case this is a resave of older file type.
     # Older file type has been converted to newer file type on load.
     s_proj.SAVEFILE_VERSION = appconsts.SAVEFILE_VERSION
- 
+
+    # Init proxy convert data
+    global project_proxy_mode, proxy_path_dict
+    project_proxy_mode = s_proj.proxy_data.proxy_mode
+    proxy_path_dict = {}
+
     # Replace media file objects with pickleable copys
     media_files = {}
     for k, v in s_proj.media_files.iteritems():
         s_media_file = copy.copy(v)
         remove_attrs(s_media_file, MEDIA_FILE_REMOVE)
+        if project_proxy_mode == appconsts.CONVERTING_TO_USE_PROXY_MEDIA:
+            proxy_path_dict[s_media_file.path] = s_media_file.second_file_path
+            s_media_file.set_as_proxy_media_file()
+        elif project_proxy_mode == appconsts.CONVERTING_TO_USE_ORIGINAL_MEDIA:
+            proxy_path_dict[s_media_file.path] = s_media_file.second_file_path
+            s_media_file.set_as_original_media_file()
         media_files[s_media_file.id] = s_media_file
     s_proj.media_files = media_files
-    
+
     # Replace sequences with pickleable objects
     sequences = []
     for i in range(0, len(project.sequences)):
@@ -200,16 +217,26 @@ def get_p_clip(clip):
 
     # Add pickleable filters
     s_clip.filters = filters
-
+    
+    print proxy_path_dict
+    # Do proxy mode convert if needed
+    if (project_proxy_mode == appconsts.CONVERTING_TO_USE_PROXY_MEDIA or 
+        project_proxy_mode == appconsts.CONVERTING_TO_USE_ORIGINAL_MEDIA):
+        
+        try: # This fails whan it is supposed to fail, for pattern procurs and blanks
+            print s_clip.path
+            s_clip.path = proxy_path_dict[s_clip.path] 
+        except:
+            pass
     return s_clip
 
-def get_p_filter(filter):
+def get_p_filter(f):
     """
     Creates pickleable version MLT Filter object.
     """
-    s_filter = copy.copy(filter)
+    s_filter = copy.copy(f)
     remove_attrs(s_filter, FILTER_REMOVE)
-    if hasattr(filter, "mlt_filter"):
+    if hasattr(f, "mlt_filter"):
         s_filter.is_multi_filter = False
     else:
         s_filter.is_multi_filter = True
@@ -230,7 +257,7 @@ def get_p_sync_data(sync_data):
     s_sync_data = copy.copy(sync_data)
     s_sync_data.master_clip = sync_data.master_clip.id
     return s_sync_data
-            
+
 def remove_attrs(obj, remove_attrs):
     """
     Removes unpickleable attributes
@@ -256,7 +283,11 @@ def load_project(file_path, icons_and_thumnails=True):
 
     # Set MLT profile. NEEDS INFO USER ON MISSING PROFILE!!!!!
     project.profile = mltprofiles.get_profile(project.profile_desc)
-    
+
+    # Create proxy editing data object if not found
+    if (not(hasattr(project, "proxy_data"))):
+        project.proxy_data = proxyediting.ProjectProxyEditingData()
+
     # Some profiles may not be available in system
     # inform user on fix
     if project.profile == None:
@@ -285,7 +316,7 @@ def load_project(file_path, icons_and_thumnails=True):
     all_clips = {}
     sync_clips = []
 
-    if SAVEFILE_VERSION < 4:
+    if project.SAVEFILE_VERSION < 4:
         for k, media_file in project.media_files.iteritems():
             FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
             
@@ -388,7 +419,7 @@ def fill_track_mlt(mlt_track, py_track):
                 raise FileProducerNotFoundError(clip.path)
             mlt_clip.__dict__.update(clip.__dict__)
             fill_filters_mlt(mlt_clip, sequence)
-        # pattern producer    
+        # pattern producer
         elif ((clip.type == "Mlt__Producer") and clip.is_blanck_clip == False and 
             (clip.media_type == appconsts.PATTERN_PRODUCER)):
             mlt_clip = sequence.create_pattern_producer(clip.create_data)
@@ -485,7 +516,7 @@ def FIX_N_TO_3_SEQUENCE_COMPATIBILITY(seq):
 def FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file):
     media_file.has_proxy_file = False
     media_file.is_proxy_file = False
-    media_file.proxy_file_path = None
+    media_file.second_file_path = None
 
 # List is used to convert SAVEFILE_VERSIONs 1 and 2 to SAVEFILE_VERSIONs 3 -> n by getting type_id string for compositor index 
 compositors_index_to_type_id = ["##affine","##opacity_kf","##pict_in_pict", "##region","##wipe", "##add",
