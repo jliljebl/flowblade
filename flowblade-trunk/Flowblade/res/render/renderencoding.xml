@@ -198,14 +198,30 @@
     </encodingoption>
 
     <!-- Proxy encoding -->
+    <proxyencodingoption name="MPEG-4 Preset Ultrafast" extension="mp4" type="av" audiodesc="mp2, 192kb/s, 48000Hz" resize="True" qgroup="qgroup1">
+        <profile args="f=mp4 acodec=mp2 ab=192k ar=48000 vcodec=mpeg4 preset=ultrafast"/>
+    </proxyencodingoption>
+    <proxyencodingoption name="MPEG-2 Transport Stream" audiodesc="mp2, 384kb/s, 48000Hz"  extension="m2t" type="av" resize="True" qgroup="proxyqgroup">
+       <profile args="f=mpegts acodec=libmp3lame ac=2 ab=128k ar=48000 vcodec=mpeg2video g=5" />
+   </proxyencodingoption>
+    <!--
+    <proxyencodingoption name="Proxy Theora / .ogg" extension="ogg" audiodesc="flac lossless" type="av" resize="True" qgroup="proxyqgroup">
+        <profile args="f=ogg acodec=flac ac=2 vcodec=libtheora qscale=1 minrate=0" />
+    </proxyencodingoption>
+
+    <proxyencodingoption name="MPEG-4 / .mp4" extension="mov" type="av" audiodesc="mp2, 192kb/s, 48000Hz" resize="True" qgroup="qgroup1">
+        <profile args="f=mp4 acodec=mp2 ab=192k ar=48000 vcodec=mpeg4 preset=ultrafast"/>
+    </proxyencodingoption>
 
     <proxyencodingoption name="PROXY MPEG-2 INTRA" audiodesc="mp2, 128/s, 48000Hz"  extension="mpg" type="av" resize="True" qgroup="proxyqgroup">
        <profile args="f=mpeg acodec=mp2 ab=128k ar=48000 vcodec=mpeg2video minrate=0 bf=2 b_strategy=1 trellis=1 intra=1" />
    </proxyencodingoption>
+    <proxyencodingoption name="Lossless HuffYUV / .avi" extension="avi" audiodesc="pcm lossless"  type="av" resize="True" qgroup="lossless">
+        <profile args="f=avi acodec=pcm_s16le ac=2 vcodec=huffyuv" />
+    </proxyencodingoption>
+       -->
     <!--
-    <proxyencodingoption name="PROXY MPEG-2 TRANSPORT" audiodesc="mp2, 384kb/s, 48000Hz"  extension="m2t" type="av" resize="True" qgroup="proxyqgroup">
-       <profile args="f=mpegts acodec=libmp3lame ac=2 ab=128k ar=48000 vcodec=mpeg2video g=5" />
-   </proxyencodingoption>
+
     -->
 
 </renderencoding>

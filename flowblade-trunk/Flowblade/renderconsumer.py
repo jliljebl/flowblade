@@ -65,7 +65,7 @@ not_supported_encoding_options = []
 quality_option_groups = {}
 quality_option_groups_default_index = {}
 non_user_encodings = []
-_proxy_encoding = None
+_proxy_encodings = None
 
 # replace empty strings with None values
 def _get_attribute(node, attr_name):
@@ -217,16 +217,18 @@ def load_render_profiles():
     
     # Proxy encoding
     proxy_encoding_nodes = render_encoding_doc.getElementsByTagName(PROXY_ENCODING_OPTION)
-    proxy_node = proxy_encoding_nodes[0]
-    proxy_encoding_option = EncodingOption(proxy_node)
-    if proxy_encoding_option.supported:
-        msg = "...available"
-        global _proxy_encoding
-        _proxy_encoding = proxy_encoding_option
-    else:
-        msg = "...NOT available, " + encoding_option.err_msg + " missing"
-    print "Proxy editing" + msg 
-    
+    proxy_encodings = []
+    for proxy_node in proxy_encoding_nodes:
+        proxy_encoding_option = EncodingOption(proxy_node)
+        if proxy_encoding_option.supported:
+            msg = " ...available"
+            proxy_encodings.append(proxy_encoding_option)
+        else:
+            msg = " ...NOT available, " + encoding_option.err_msg + " missing"
+        print "Proxy encoding " + proxy_encoding_option.name + msg
+    global _proxy_encodings
+    _proxy_encodings = proxy_encodings
+
 def get_render_consumer_for_encoding_and_quality(file_path, profile, enc_opt_index, quality_opt_index):
     args_vals_list = get_args_vals_tuples_list_for_encoding_and_quality(profile,
                                                                        enc_opt_index,
@@ -323,8 +325,8 @@ def _parse_line(line_start, line_end, buf):
         
     return ((k,v), None)
 
-def get_proxy_encoding():
-    return _proxy_encoding
+def get_proxy_encodings():
+    return _proxy_encodings
 
 class FileRenderPlayer(threading.Thread):
     
