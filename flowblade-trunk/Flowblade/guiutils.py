@@ -69,6 +69,21 @@ def get_two_column_box(widget1, widget2, left_width):
     hbox.pack_start(widget2, True, True, 0)
     return hbox
 
+def get_two_column_box_right_pad(widget1, widget2, left_width, right_pad):
+    left_box = get_left_justified_box([widget1])
+    left_box.set_size_request(left_width, TWO_COLUMN_BOX_HEIGHT)
+    
+    right_widget_box = get_left_justified_box([widget2])
+    pad_label = get_pad_label(right_pad, 5)
+    right_box = gtk.HBox()
+    right_box.pack_start(right_widget_box, True, True, 0)
+    right_box.pack_start(pad_label, False, False, 0)
+    
+    hbox = gtk.HBox()
+    hbox.pack_start(left_box, False, True, 0)
+    hbox.pack_start(right_box, True, True, 0)
+    return hbox
+
 def get_two_row_box(widget1, widget2):
     # widget 1 is left justified
     top = get_left_justified_box([widget1])

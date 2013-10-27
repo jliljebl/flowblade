@@ -23,6 +23,7 @@ import utils
 PROXY_CREATE_MANUAL = 0
 PROXY_CREATE_ALL_VIDEO_ON_OPEN = 1
 
+manager_window = None
 progress_window = None
 runner_thread = None
 load_thread = None
@@ -34,7 +35,7 @@ class ProjectProxyEditingData:
         self.create_mode = PROXY_CREATE_MANUAL
         self.create_rules = None # not impl.
         self.encoding = 0 # not impl.
-        self.quality = 0 # not impl
+        self.size = 0 # not impl
 
 
 class ProxyRenderRunnerThread(threading.Thread):
@@ -58,18 +59,19 @@ class ProxyRenderRunnerThread(threading.Thread):
             consumer = renderconsumer.get_render_consumer_for_encoding(
                                                         proxy_file_path,
                                                         self.proxy_profile, 
-                                                        renderconsumer.get_proxy_encoding())
-            consumer.set("vb", "500k")
+                                                        get_proxy_encoding())
+            #consumer.set("vb", "1000k")
+            consumer.set("rescale", "nearest")
 
             file_producer = mlt.Producer(self.proxy_profile, str(media_file.path))
-            seq = sequence.Sequence(self.proxy_profile)
-            seq.create_default_tracks()
-            track = seq.tracks[seq.first_video_index]
-            track.append(file_producer, 0, file_producer.get_length() - 1)
+            #seq = sequence.Sequence(self.proxy_profile)
+            #seq.create_default_tracks()
+            #track = seq.tracks[seq.first_video_index]
+            #track.append(file_producer, 0, file_producer.get_length() - 1)
             
             # Create and launch render thread
             global render_thread 
-            render_thread = renderconsumer.FileRenderPlayer(None, seq.tractor, consumer, 0, file_producer.get_length() - 1)
+            render_thread = renderconsumer.FileRenderPlayer(None, file_producer, consumer, 0, file_producer.get_length() - 1)
             render_thread.start()
 
             # Render view update loop
@@ -104,6 +106,141 @@ class ProxyRenderRunnerThread(threading.Thread):
         render_thread.shutdown()
         self.aborted = True
         self.thread_running = False
+
+
+class ProxyManagerDialog:
+    def __init__(self):
+        self.dialog = gtk.Dialog(_("Proxy Manager"), None,
+                            gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                            (_("Close Manager").encode('utf-8'), gtk.RESPONSE_CLOSE))
+
+        # Media
+        media_files = editorstate.PROJECT().media_files
+        video_files = 0
+        proxy_files = 0
+        for k, media_file in media_files.iteritems():
+            if media_file.type == appconsts.VIDEO:
+                video_files = video_files + 1
+                if media_file.has_proxy_file == True or media_file.is_proxy_file == True:
+                    proxy_files = proxy_files + 1
+
+        create_label = gtk.Label(_("Proxy Creation:") + " ")
+        proxy_create_texts = [_("Manually Only"),_("All Video On Open")]
+        create_select = gtk.combo_box_new_text()
+        create_select.append_text(proxy_create_texts[PROXY_CREATE_MANUAL])
+        create_select.append_text(proxy_create_texts[PROXY_CREATE_ALL_VIDEO_ON_OPEN])
+        create_select.set_active(0)
+
+        row_create1 = guiutils.get_two_column_box_right_pad(create_label, create_select, 150, 150)
+
+        create_all_button = gtk.Button(_("Create Proxy Media For All Video"))
+        delete_all_button = gtk.Button(_("Delete All Proxy Media For Project"))
+
+        c_box = gtk.HBox(True, 8)
+        c_box.pack_start(create_all_button, True, True, 0)
+        c_box.pack_start(delete_all_button, True, True, 0)
+
+        row_create2 = gtk.HBox(False, 2)
+        row_create2.pack_start(gtk.Label(), True, True, 0)
+        row_create2.pack_start(c_box, False, False, 0)
+        row_create2.pack_start(gtk.Label(), True, True, 0)
+
+        vbox_create = gtk.VBox(False, 2)
+        vbox_create.pack_start(row_create1, False, False, 0)
+        vbox_create.pack_start(guiutils.pad_label(8, 4), False, False, 0)
+        vbox_create.pack_start(row_create2, False, False, 0)
+        vbox_create.pack_start(guiutils.pad_label(8, 12), False, False, 0)
+
+        panel_create = guiutils.get_named_frame(_("Proxy Media"), vbox_create)
+        
+        # Encoding
+        enc_select = gtk.combo_box_new_text()
+        encodings = renderconsumer.get_proxy_encodings()
+        for encoption in encodings:
+            enc_select.append_text(encoption.name)
+        enc_select.set_active(0)
+        
+        size_select = gtk.combo_box_new_text()
+        size_select.append_text("Dimensions Project Size")
+        size_select.append_text("Dimensions Half Project Size")
+        size_select.append_text("Dimensions Quarter Project Size")
+        size_select.set_active(1)
+
+        row_enc = gtk.HBox(False, 2)
+        row_enc.pack_start(gtk.Label(), True, True, 0)
+        row_enc.pack_start(enc_select, False, False, 0)
+        row_enc.pack_start(size_select, False, False, 0)
+        row_enc.pack_start(gtk.Label(), True, True, 0)
+        
+        vbox_enc = gtk.VBox(False, 2)
+        vbox_enc.pack_start(row_enc, False, False, 0)
+        vbox_enc.pack_start(guiutils.pad_label(8, 12), False, False, 0)
+        
+        panel_encoding = guiutils.get_named_frame("Proxy Encoding", vbox_enc)
+
+        # Mode
+        proxy_status_label = gtk.Label("Proxy Stats:")
+        proxy_status_value = gtk.Label(str(proxy_files) + " proxy file(s) for " + str(video_files) + " video file(s)")
+        row_proxy_status = guiutils.get_two_column_box_right_pad(proxy_status_label, proxy_status_value, 150, 150)
+
+        proxy_mode_label = gtk.Label("Current Proxy Mode:")
+        if editorstate.PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA:
+            mode_str = "Using Proxy Media"
+        else:
+            mode_str = "Using Original Media"
+        proxy_mode_value = gtk.Label(mode_str)
+        row_proxy_mode = guiutils.get_two_column_box_right_pad(proxy_mode_label, proxy_mode_value, 150, 150)
+
+        convert_progress_bar = gtk.ProgressBar()
+        convert_progress_bar.set_text("Press Button to Change Mode")
+            
+        self.use_button = gtk.Button(_("Use Proxy Media"))
+        self.dont_use_button = gtk.Button(_("Use Original Media"))
+        self.set_convert_buttons_state()
+        self.use_button.connect("clicked", lambda w: _convert_to_proxy_project(dialog))
+
+        c_box_2 = gtk.HBox(True, 8)
+        c_box_2.pack_start(self.use_button, True, True, 0)
+        c_box_2.pack_start(self.dont_use_button, True, True, 0)
+
+        row2_onoff = gtk.HBox(False, 2)
+        row2_onoff.pack_start(gtk.Label(), True, True, 0)
+        row2_onoff.pack_start(c_box_2, False, False, 0)
+        row2_onoff.pack_start(gtk.Label(), True, True, 0)
+
+        vbox_onoff = gtk.VBox(False, 2)
+        vbox_onoff.pack_start(row_proxy_status, False, False, 0)
+        vbox_onoff.pack_start(row_proxy_mode, False, False, 0)
+        vbox_onoff.pack_start(guiutils.pad_label(12, 12), False, False, 0)
+        vbox_onoff.pack_start(convert_progress_bar, False, False, 0)
+        vbox_onoff.pack_start(row2_onoff, False, False, 0)
+        
+        panel_onoff = guiutils.get_named_frame("Project Proxy Mode", vbox_onoff)
+
+        # Pane
+        vbox = gtk.VBox(False, 2)
+        vbox.pack_start(panel_create, False, False, 0)
+        vbox.pack_start(panel_encoding, False, False, 0)
+        vbox.pack_start(panel_onoff, False, False, 0)
+
+        alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+        alignment.set_padding(12, 12, 12, 12)
+        alignment.add(vbox)
+
+        self.dialog.vbox.pack_start(alignment, True, True, 0)
+        dialogutils.default_behaviour(self.dialog)
+        self.dialog.connect('response', dialogutils.dialog_destroy)
+        self.dialog.show_all()
+
+    def set_convert_buttons_state(self):
+        proxy_mode = editorstate.PROJECT().proxy_data.proxy_mode
+        if proxy_mode == appconsts.USE_PROXY_MEDIA:
+            self.use_button.set_sensitive(False)
+            self.dont_use_button.set_sensitive(True)
+        else:
+            self.use_button.set_sensitive(True)
+            self.dont_use_button.set_sensitive(False)
+        
 
 class ProxyRenderProgressDialog:
     def __init__(self):
@@ -167,6 +304,9 @@ class ProxyRenderProgressDialog:
 def _get_proxies_dir():
     return editorpersistance.prefs.render_folder + "/proxies"
 
+def _get_proxy_encoding():
+    return renderconsumer.get_proxy_encodings()[0]
+
 def _get_proxy_dimensions(project_profile):
     # Get new dimension that are about half of previous and diviseble by eight
     old_width_half = int(project_profile.width() / 2)
@@ -198,92 +338,8 @@ def _get_proxy_profile(project_profile):
     return proxy_profile
 
 def show_proxy_manager_dialog():
-    proxy_create_texts = [_("Manually Only"),_("All Video On Open")]
-    dialog = gtk.Dialog(_("Proxy Manager"), None,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (_("Close Manager").encode('utf-8'), gtk.RESPONSE_CLOSE))
-
-
-    media_files = editorstate.PROJECT().media_files
-    video_files = 0
-    proxy_files = 0
-    for k, media_file in media_files.iteritems():
-        if media_file.type == appconsts.VIDEO:
-            video_files = video_files + 1
-            if media_file.has_proxy_file == True or media_file.is_proxy_file == True:
-                proxy_files = proxy_files + 1
-    
-    proxy_status_value = gtk.Label("There are " + str(proxy_files) + " proxy file(s) for " + str(video_files) + " video file(s)")
-    row_proxy_status = guiutils.get_left_justified_box([proxy_status_value, gtk.Label()])
-    
-    # Create
-    create_label = gtk.Label(_("Proxy Creation:") + " ")
-    create_select = gtk.combo_box_new_text()
-    create_select.append_text(proxy_create_texts[PROXY_CREATE_MANUAL])
-    create_select.append_text(proxy_create_texts[PROXY_CREATE_ALL_VIDEO_ON_OPEN])
-    create_select.set_active(0) 
-
-    row_create1 = guiutils.get_left_justified_box([create_label, create_select])
-
-    create_all_button = gtk.Button(_("Create Proxy Media For All Video"))
-    delete_all_button = gtk.Button(_("Delete All Proxy Media For Project"))
-
-    c_box = gtk.HBox(True, 8)
-    c_box.pack_start(create_all_button, True, True, 0)
-    c_box.pack_start(delete_all_button, True, True, 0)
-
-    row_create2 = gtk.HBox(False, 2)
-    row_create2.pack_start(gtk.Label(), True, True, 0)
-    row_create2.pack_start(c_box, False, False, 0)
-    row_create2.pack_start(gtk.Label(), True, True, 0)
-
-    vbox_create = gtk.VBox(False, 2)
-    vbox_create.pack_start(row_proxy_status, False, False, 0)
-    vbox_create.pack_start(guiutils.pad_label(8, 4), False, False, 0)
-    vbox_create.pack_start(row_create1, False, False, 0)
-    vbox_create.pack_start(guiutils.pad_label(8, 12), False, False, 0)
-    vbox_create.pack_start(row_create2, False, False, 0)
-    vbox_create.pack_start(guiutils.pad_label(8, 12), False, False, 0)
-
-    panel_create = guiutils.get_named_frame(_("Proxy Media"), vbox_create)
-
-    # Use
-    proxy_status_label = gtk.Label("Proxy Media Status:")
-
-    use_button = gtk.Button(_("Use Proxy Media"))
-    dont_use_button = gtk.Button(_("Use Original Media"))
-
-    use_button.connect("clicked", lambda w: _convert_to_proxy_project(dialog))
-
-    c_box_2 = gtk.HBox(True, 8)
-    c_box_2.pack_start(use_button, True, True, 0)
-    c_box_2.pack_start(dont_use_button, True, True, 0)
-
-    row2_onoff = gtk.HBox(False, 2)
-    row2_onoff.pack_start(gtk.Label(), True, True, 0)
-    row2_onoff.pack_start(c_box_2, False, False, 0)
-    row2_onoff.pack_start(gtk.Label(), True, True, 0)
-    row2_onoff.set_size_request(470, 30)
-
-    vbox_onoff = gtk.VBox(False, 2)
-    vbox_onoff.pack_start(guiutils.pad_label(12, 4), False, False, 0)
-    vbox_onoff.pack_start(row2_onoff, False, False, 0)
-    
-    panel_onoff = guiutils.get_named_frame("Project Proxy Mode", vbox_onoff)
-
-    # Pane
-    vbox = gtk.VBox(False, 2)
-    vbox.pack_start(panel_create, False, False, 0)
-    vbox.pack_start(panel_onoff, False, False, 0)
-
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(12, 12, 12, 12)
-    alignment.add(vbox)
-
-    dialog.vbox.pack_start(alignment, True, True, 0)
-    dialogutils.default_behaviour(dialog)
-    dialog.connect('response', dialogutils.dialog_destroy)
-    dialog.show_all()
+    global manager_window
+    manager_window = ProxyManagerDialog()
 
 def create_proxy_files_pressed(retry_from_render_folder_select=False):
     if editorpersistance.prefs.render_folder == None:
