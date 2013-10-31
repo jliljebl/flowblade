@@ -19,23 +19,25 @@ import renderconsumer
 import sequence
 import utils
 
-# create mode
-PROXY_CREATE_MANUAL = 0
-PROXY_CREATE_ALL_VIDEO_ON_OPEN = 1
 
 manager_window = None
 progress_window = None
 runner_thread = None
 load_thread = None
 
+# These correspond with size selector on manager window
+PROXY_SIZE_FULL = 0
+PROXY_SIZE_HALF = 1
+PROXY_SIZE_QUARTER = 2
+
+
 class ProjectProxyEditingData:
     
     def __init__(self):
         self.proxy_mode = appconsts.USE_ORIGINAL_MEDIA
-        self.create_mode = PROXY_CREATE_MANUAL
         self.create_rules = None # not impl.
-        self.encoding = 0 # not impl.
-        self.size = 0 # not impl
+        self.encoding = 0 # default is first found encoding
+        self.size = 1 # default is half project size
 
 
 class ProxyRenderRunnerThread(threading.Thread):
@@ -114,54 +116,37 @@ class ProxyManagerDialog:
                             gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                             (_("Close Manager").encode('utf-8'), gtk.RESPONSE_CLOSE))
 
-
-
-        #create_label = gtk.Label(_("Proxy Creation:") + " ")
-        #proxy_create_texts = [_("Manually Only"),_("All Video On Open")]
-        #create_select = gtk.combo_box_new_text()
-        #create_select.append_text(proxy_create_texts[PROXY_CREATE_MANUAL])
-        #create_select.append_text(proxy_create_texts[PROXY_CREATE_ALL_VIDEO_ON_OPEN])
-        #create_select.set_active(0)
-
-        #row_create1 = guiutils.get_two_column_box_right_pad(create_label, create_select, 150, 150)
-
-        #create_all_button = gtk.Button(_("Create Proxy Media For All Video"))
-        #delete_all_button = gtk.Button(_("Delete All Proxy Media For Project"))
-
-        #c_box = gtk.HBox(True, 8)
-        #c_box.pack_start(create_all_button, True, True, 0)
-        #c_box.pack_start(delete_all_button, True, True, 0)
-
-        #row_create2 = gtk.HBox(False, 2)
-        #row_create2.pack_start(gtk.Label(), True, True, 0)
-        #row_create2.pack_start(c_box, False, False, 0)
-        #row_create2.pack_start(gtk.Label(), True, True, 0)
-
-        #vbox_create = gtk.VBox(False, 2)
-        #vbox_create.pack_start(row_create1, False, False, 0)
-        #vbox_create.pack_start(guiutils.pad_label(8, 4), False, False, 0)
-        #vbox_create.pack_start(row_create2, False, False, 0)
-        #vbox_create.pack_start(guiutils.pad_label(8, 12), False, False, 0)
-
-        #panel_create = guiutils.get_named_frame(_("Proxy Media"), vbox_create)
-        
         # Encoding
-        enc_select = gtk.combo_box_new_text()
+        self.enc_select = gtk.combo_box_new_text()
         encodings = renderconsumer.get_proxy_encodings()
+        if len(encodings) < 1: # no encoding options available, system does not have right codecs
+            # display info
+            pass
         for encoption in encodings:
-            enc_select.append_text(encoption.name)
-        enc_select.set_active(0)
-        
-        size_select = gtk.combo_box_new_text()
-        size_select.append_text("Dimensions Project Size")
-        size_select.append_text("Dimensions Half Project Size")
-        size_select.append_text("Dimensions Quarter Project Size")
-        size_select.set_active(1)
-
+            self.enc_select.append_text(encoption.name)
+            
+        current_enc = editorstate.PROJECT().proxy_data.encoding
+        if current_enc >= len(encodings): # current encoding selection not available
+            current_enc = 0
+            editorstate.PROJECT().proxy_data.encoding = 0
+        self.enc_select.set_active(current_enc)
+        self.enc_select.connect("changed", 
+                                lambda w,e: self.encoding_changed(w.get_active()), 
+                                None)
+                            
+        self.size_select = gtk.combo_box_new_text()
+        self.size_select.append_text("Project Size")
+        self.size_select.append_text("Half Project Size")
+        self.size_select.append_text("Quarter Project Size")
+        self.size_select.set_active(editorstate.PROJECT().proxy_data.size)
+        self.size_select.connect("changed", 
+                                lambda w,e: self.size_changed(w.get_active()), 
+                                None)
+                                
         row_enc = gtk.HBox(False, 2)
         row_enc.pack_start(gtk.Label(), True, True, 0)
-        row_enc.pack_start(enc_select, False, False, 0)
-        row_enc.pack_start(size_select, False, False, 0)
+        row_enc.pack_start(self.enc_select, False, False, 0)
+        row_enc.pack_start(self.size_select, False, False, 0)
         row_enc.pack_start(gtk.Label(), True, True, 0)
         
         vbox_enc = gtk.VBox(False, 2)
@@ -220,7 +205,6 @@ class ProxyManagerDialog:
 
         # Pane
         vbox = gtk.VBox(False, 2)
-        #vbox.pack_start(panel_create, False, False, 0)
         vbox.pack_start(panel_encoding, False, False, 0)
         vbox.pack_start(panel_onoff, False, False, 0)
 
@@ -241,7 +225,12 @@ class ProxyManagerDialog:
         else:
             self.use_button.set_sensitive(True)
             self.dont_use_button.set_sensitive(False)
-        
+
+    def encoding_changed(self, enc_index):
+        editorstate.PROJECT().proxy_data.encoding = enc_index
+
+    def size_changed(self, size_index):
+        editorstate.PROJECT().proxy_data.size = size_index
 
 class ProxyRenderProgressDialog:
     def __init__(self):
