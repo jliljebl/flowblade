@@ -114,44 +114,36 @@ class ProxyManagerDialog:
                             gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                             (_("Close Manager").encode('utf-8'), gtk.RESPONSE_CLOSE))
 
-        # Media
-        media_files = editorstate.PROJECT().media_files
-        video_files = 0
-        proxy_files = 0
-        for k, media_file in media_files.iteritems():
-            if media_file.type == appconsts.VIDEO:
-                video_files = video_files + 1
-                if media_file.has_proxy_file == True or media_file.is_proxy_file == True:
-                    proxy_files = proxy_files + 1
 
-        create_label = gtk.Label(_("Proxy Creation:") + " ")
-        proxy_create_texts = [_("Manually Only"),_("All Video On Open")]
-        create_select = gtk.combo_box_new_text()
-        create_select.append_text(proxy_create_texts[PROXY_CREATE_MANUAL])
-        create_select.append_text(proxy_create_texts[PROXY_CREATE_ALL_VIDEO_ON_OPEN])
-        create_select.set_active(0)
 
-        row_create1 = guiutils.get_two_column_box_right_pad(create_label, create_select, 150, 150)
+        #create_label = gtk.Label(_("Proxy Creation:") + " ")
+        #proxy_create_texts = [_("Manually Only"),_("All Video On Open")]
+        #create_select = gtk.combo_box_new_text()
+        #create_select.append_text(proxy_create_texts[PROXY_CREATE_MANUAL])
+        #create_select.append_text(proxy_create_texts[PROXY_CREATE_ALL_VIDEO_ON_OPEN])
+        #create_select.set_active(0)
 
-        create_all_button = gtk.Button(_("Create Proxy Media For All Video"))
-        delete_all_button = gtk.Button(_("Delete All Proxy Media For Project"))
+        #row_create1 = guiutils.get_two_column_box_right_pad(create_label, create_select, 150, 150)
 
-        c_box = gtk.HBox(True, 8)
-        c_box.pack_start(create_all_button, True, True, 0)
-        c_box.pack_start(delete_all_button, True, True, 0)
+        #create_all_button = gtk.Button(_("Create Proxy Media For All Video"))
+        #delete_all_button = gtk.Button(_("Delete All Proxy Media For Project"))
 
-        row_create2 = gtk.HBox(False, 2)
-        row_create2.pack_start(gtk.Label(), True, True, 0)
-        row_create2.pack_start(c_box, False, False, 0)
-        row_create2.pack_start(gtk.Label(), True, True, 0)
+        #c_box = gtk.HBox(True, 8)
+        #c_box.pack_start(create_all_button, True, True, 0)
+        #c_box.pack_start(delete_all_button, True, True, 0)
 
-        vbox_create = gtk.VBox(False, 2)
-        vbox_create.pack_start(row_create1, False, False, 0)
-        vbox_create.pack_start(guiutils.pad_label(8, 4), False, False, 0)
-        vbox_create.pack_start(row_create2, False, False, 0)
-        vbox_create.pack_start(guiutils.pad_label(8, 12), False, False, 0)
+        #row_create2 = gtk.HBox(False, 2)
+        #row_create2.pack_start(gtk.Label(), True, True, 0)
+        #row_create2.pack_start(c_box, False, False, 0)
+        #row_create2.pack_start(gtk.Label(), True, True, 0)
 
-        panel_create = guiutils.get_named_frame(_("Proxy Media"), vbox_create)
+        #vbox_create = gtk.VBox(False, 2)
+        #vbox_create.pack_start(row_create1, False, False, 0)
+        #vbox_create.pack_start(guiutils.pad_label(8, 4), False, False, 0)
+        #vbox_create.pack_start(row_create2, False, False, 0)
+        #vbox_create.pack_start(guiutils.pad_label(8, 12), False, False, 0)
+
+        #panel_create = guiutils.get_named_frame(_("Proxy Media"), vbox_create)
         
         # Encoding
         enc_select = gtk.combo_box_new_text()
@@ -179,6 +171,15 @@ class ProxyManagerDialog:
         panel_encoding = guiutils.get_named_frame("Proxy Encoding", vbox_enc)
 
         # Mode
+        media_files = editorstate.PROJECT().media_files
+        video_files = 0
+        proxy_files = 0
+        for k, media_file in media_files.iteritems():
+            if media_file.type == appconsts.VIDEO:
+                video_files = video_files + 1
+                if media_file.has_proxy_file == True or media_file.is_proxy_file == True:
+                    proxy_files = proxy_files + 1
+                    
         proxy_status_label = gtk.Label("Proxy Stats:")
         proxy_status_value = gtk.Label(str(proxy_files) + " proxy file(s) for " + str(video_files) + " video file(s)")
         row_proxy_status = guiutils.get_two_column_box_right_pad(proxy_status_label, proxy_status_value, 150, 150)
@@ -219,7 +220,7 @@ class ProxyManagerDialog:
 
         # Pane
         vbox = gtk.VBox(False, 2)
-        vbox.pack_start(panel_create, False, False, 0)
+        #vbox.pack_start(panel_create, False, False, 0)
         vbox.pack_start(panel_encoding, False, False, 0)
         vbox.pack_start(panel_onoff, False, False, 0)
 
@@ -394,7 +395,7 @@ def _create_proxy_render_folder_select_callback(dialog, response_id, file_select
             create_proxy_files_pressed(True)
         
 
-# --------------------------------------------------------- coverting to and from proxy projects
+# --------------------------------------------------------- converting to and from proxy projects
 def _convert_to_proxy_project(dialog):
     dialog.destroy()
     editorstate.PROJECT().proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_PROXY_MEDIA
