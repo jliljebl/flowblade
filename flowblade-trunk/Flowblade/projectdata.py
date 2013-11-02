@@ -248,9 +248,9 @@ class MediaFile:
             self.icon = icon.scale_simple(appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT, \
                                           gtk.gdk.INTERP_BILINEAR)
 
-    def create_proxy_path(self):
-        md_str = md5.new(self.path + str(datetime.datetime)).hexdigest()
-        return editorpersistance.prefs.render_folder + "/proxies/"+ md_str + ".mpg"
+    def create_proxy_path(self, proxy_width, proxy_height, file_extesion):
+        md_str = md5.new(self.path + str(proxy_width) + str(proxy_height)).hexdigest()
+        return editorpersistance.prefs.render_folder + "/proxies/"+ md_str + "." + file_extesion
 
     def add_proxy_file(self, proxy_path):
         self.has_proxy_file = True
