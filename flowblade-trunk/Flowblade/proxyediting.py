@@ -298,33 +298,44 @@ class ProxyRenderProgressDialog:
 
 
 class ProxyRenderIssuesWindow:
-    def __init__(self, files_to_render, already_have_proxies, not_video_files, is_proxy_file, other_project_proxies):
+    def __init__(self, files_to_render, already_have_proxies, not_video_files, is_proxy_file, 
+                 other_project_proxies, proxy_w, proxy_h, proxy_file_extension):
         dialog_title =_("Proxy Render Info")
+        
+        self.files_to_render = files_to_render
+        self.other_project_proxies = other_project_proxies
+        self.already_have_proxies = already_have_proxies
+        self.proxy_w = proxy_w
+        self.proxy_h = proxy_h
+        self.proxy_file_extension = proxy_file_extension
+
         self.issues = 1
-        if (len(files_to_render) + len(already_have_proxies)) == 0 and not_video_files > 0:
+        if (len(files_to_render) + len(already_have_proxies) + len(other_project_proxies)) == 0 and not_video_files > 0:
             self.dialog = gtk.Dialog(dialog_title,
                                      gui.editor_window.window,
                                      gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                                      (_("Close").encode('utf-8'), gtk.RESPONSE_CLOSE))
             info_box = dialogutils.get_warning_message_dialog_panel("Nothing will be rendered", 
-                                                                      "No Video Media Files were selected.\nOnly Video Media Files can have proxy files.",
+                                                                      "No video files were selected.\nOnly video files can have proxy files.",
                                                                       True)
+            self.dialog.connect('response', dialogutils.dialog_destroy)
         else:
             self.dialog = gtk.Dialog(dialog_title,
                                      gui.editor_window.window,
                                      gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                                      (_("Cancel").encode('utf-8'), gtk.RESPONSE_CANCEL,
                                       _("Do Render Action" ).encode('utf-8'), gtk.RESPONSE_OK))
+            self.dialog.connect('response', self.response)
                                       
             rows = ""
-            if other_project_proxies > 0:
-                text = _("Proxies exist that were created by other projects for ") + str( other_project_proxies) + _(" file(s).\n")
+            if len(already_have_proxies) > 0 and len(other_project_proxies) > 0:
+                text = _("Proxies exist that were created by this and other projects for ") + str(len(already_have_proxies) + len(other_project_proxies)) + _(" file(s).\n")
                 rows = rows + self.issues_str() + text
-            elif len(already_have_proxies) > 0 and other_project_proxies == 0:
-                text = _("Proxies have already been created for ") + str( other_project_proxies) + _(" file(s).\n")
+            elif len(already_have_proxies) > 0 and len(other_project_proxies) == 0:
+                text = _("Proxies have already been created for ") + str(len(already_have_proxies)) + _(" file(s).\n")
                 rows = rows + self.issues_str() + text
-            elif len(already_have_proxies) > 0 and other_project_proxies > 0:
-                text = _("Proxies exist that were created by this and other projects for ") + str( other_project_proxies) + _(" file(s).\n")
+            elif  len(other_project_proxies) > 0:
+                text = _("Proxies exist that were created by other projects for ") + str(len(other_project_proxies)) + _(" file(s).\n")
                 rows = rows + self.issues_str() + text
             if not_video_files > 0:
                 text = _("You are trying to create proxies for ") + str(not_video_files) + _(" non-video file(s).\n")
@@ -352,7 +363,6 @@ class ProxyRenderIssuesWindow:
 
         self.dialog.vbox.pack_start(alignment, True, True, 0)
         self.dialog.set_has_separator(False)
-        self.dialog.connect('response', self.response)
         self.dialog.show()
 
     def issues_str(self):
@@ -361,7 +371,16 @@ class ProxyRenderIssuesWindow:
         return issue_str
 
     def response(self, dialog, response_id):
-        dialog.destroy()
+        if response_id == gtk.RESPONSE_CANCEL:
+            dialog.destroy()
+        else:
+            if self.action_select.get_active() == 0: # Render Unrendered Possible & Use existing
+                for f in self.other_project_proxies:
+                    f.add_existing_proxy_file(self.proxy_w, self.proxy_h, self.proxy_file_extension)
+            else: # Rerender All Possible
+                self.files_to_render.extend(self.other_project_proxies)
+                self.files_to_render.extend(self.already_have_proxies)
+
         global proxy_render_issues_window
         proxy_render_issues_window = None
         
@@ -394,7 +413,7 @@ def create_proxy_files_pressed(retry_from_render_folder_select=False):
     not_video_files = 0
     already_have_proxies = []
     is_proxy_file = 0
-    other_project_proxies = 0
+    other_project_proxies = []
     for w in media_file_widgets:
         f = w.media_file
         if f.is_proxy_file == True: # Can't create a proxy file for a proxy file
@@ -409,15 +428,16 @@ def create_proxy_files_pressed(retry_from_render_folder_select=False):
                 continue
         path_for_size_and_encoding = f.create_proxy_path(proxy_w, proxy_h, proxy_file_extension)
         if os.path.exists(path_for_size_and_encoding): # A proxy for media file has been created by other projects. Get user to confirm overwrite
-            other_project_proxies = other_project_proxies + 1
-            already_have_proxies.append(f)
+            other_project_proxies.append(f)
             continue
 
         files_to_render.append(f)
 
-    if  len(already_have_proxies) > 0 or not_video_files > 0 or is_proxy_file > 0 or len(files_to_render) == 0:
+    if  len(already_have_proxies) > 0 or len(other_project_proxies) > 0 or not_video_files > 0 or is_proxy_file > 0 or len(files_to_render) == 0:
         global proxy_render_issues_window
-        proxy_render_issues_window = ProxyRenderIssuesWindow(files_to_render, already_have_proxies, not_video_files, is_proxy_file, other_project_proxies)
+        proxy_render_issues_window = ProxyRenderIssuesWindow(files_to_render, already_have_proxies, 
+                                                             not_video_files, is_proxy_file, other_project_proxies,
+                                                             proxy_w, proxy_h, proxy_file_extension)
         return
 
     _create_proxy_files(files_to_render)

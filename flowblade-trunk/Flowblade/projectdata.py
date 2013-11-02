@@ -256,6 +256,10 @@ class MediaFile:
         self.has_proxy_file = True
         self.second_file_path = proxy_path
 
+    def add_existing_proxy_file(self, proxy_width, proxy_height, file_extesion):
+        proxy_path = self.create_proxy_path(proxy_width, proxy_height, file_extesion)
+        self.add_proxy_file(proxy_path)
+
     def set_as_proxy_media_file(self):
         self.path, self.second_file_path = self.second_file_path, self.path
         self.is_proxy_file = True
