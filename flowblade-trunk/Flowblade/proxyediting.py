@@ -22,10 +22,13 @@ import utils
 
 manager_window = None
 progress_window = None
+proxy_render_issues_window = None
+
+render_thread = None
 runner_thread = None
 load_thread = None
 
-# These correspond with size selector on manager window
+# These are made to correspond with size selector combobox indexes on manager window
 PROXY_SIZE_FULL = 0
 PROXY_SIZE_HALF = 1
 PROXY_SIZE_QUARTER = 2
@@ -38,7 +41,7 @@ class ProjectProxyEditingData:
         self.create_rules = None # not impl.
         self.encoding = 0 # default is first found encoding
         self.size = 1 # default is half project size
-
+        
 
 class ProxyRenderRunnerThread(threading.Thread):
     def __init__(self, proxy_profile, files_to_render):
@@ -52,16 +55,18 @@ class ProxyRenderRunnerThread(threading.Thread):
         global progress_window
         start = time.time()
         elapsed = 0
+        proxy_w, proxy_h =  _get_proxy_dimensions(self.proxy_profile, editorstate.PROJECT().proxy_data.size)
+        proxy_encoding = _get_proxy_encoding()
         for media_file in self.files_to_render:
             if self.aborted == True:
                 break
 
             # Create render objects
-            proxy_file_path = media_file.create_proxy_path()
+            proxy_file_path = media_file.create_proxy_path(proxy_w, proxy_h, proxy_encoding.extension)
             consumer = renderconsumer.get_render_consumer_for_encoding(
                                                         proxy_file_path,
                                                         self.proxy_profile, 
-                                                        get_proxy_encoding())
+                                                        proxy_encoding)
             #consumer.set("vb", "1000k")
             consumer.set("rescale", "nearest")
 
@@ -118,7 +123,7 @@ class ProxyManagerDialog:
 
         # Encoding
         self.enc_select = gtk.combo_box_new_text()
-        encodings = renderconsumer.get_proxy_encodings()
+        encodings = renderconsumer.proxy_encodings
         if len(encodings) < 1: # no encoding options available, system does not have right codecs
             # display info
             pass
@@ -232,6 +237,7 @@ class ProxyManagerDialog:
     def size_changed(self, size_index):
         editorstate.PROJECT().proxy_data.size = size_index
 
+
 class ProxyRenderProgressDialog:
     def __init__(self):
         self.dialog = gtk.Dialog(_("Creating Proxy Files"),
@@ -291,22 +297,165 @@ class ProxyRenderProgressDialog:
         runner_thread.abort()
 
 
+class ProxyRenderIssuesWindow:
+    def __init__(self, files_to_render, already_have_proxies, not_video_files, is_proxy_file, other_project_proxies):
+        dialog_title =_("Proxy Render Info")
+        self.issues = 1
+        if (len(files_to_render) + len(already_have_proxies)) == 0 and not_video_files > 0:
+            self.dialog = gtk.Dialog(dialog_title,
+                                     gui.editor_window.window,
+                                     gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                                     (_("Close").encode('utf-8'), gtk.RESPONSE_CLOSE))
+            info_box = dialogutils.get_warning_message_dialog_panel("Nothing will be rendered", 
+                                                                      "No Video Media Files were selected.\nOnly Video Media Files can have proxy files.",
+                                                                      True)
+        else:
+            self.dialog = gtk.Dialog(dialog_title,
+                                     gui.editor_window.window,
+                                     gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                                     (_("Cancel").encode('utf-8'), gtk.RESPONSE_CANCEL,
+                                      _("Do Render Action" ).encode('utf-8'), gtk.RESPONSE_OK))
+                                      
+            rows = ""
+            if other_project_proxies > 0:
+                text = _("Proxies exist that were created by other projects for ") + str( other_project_proxies) + _(" file(s).\n")
+                rows = rows + self.issues_str() + text
+            elif len(already_have_proxies) > 0 and other_project_proxies == 0:
+                text = _("Proxies have already been created for ") + str( other_project_proxies) + _(" file(s).\n")
+                rows = rows + self.issues_str() + text
+            elif len(already_have_proxies) > 0 and other_project_proxies > 0:
+                text = _("Proxies exist that were created by this and other projects for ") + str( other_project_proxies) + _(" file(s).\n")
+                rows = rows + self.issues_str() + text
+            if not_video_files > 0:
+                text = _("You are trying to create proxies for ") + str(not_video_files) + _(" non-video file(s).\n")
+                rows = rows + self.issues_str() + text
+            if is_proxy_file > 0:
+                text = _("You are trying to create proxies for ") + str(not_video_files) + _(" proxy file(s).\n")
+                rows = rows + self.issues_str() + text
+            issues_box = dialogutils.get_warning_message_dialog_panel("There are some issues with proxy render request", 
+                                                                    rows,
+                                                                    True)
+            self.action_select = gtk.combo_box_new_text()
+            self.action_select.append_text(_("Render Unrendered Possible & Use existing"))
+            self.action_select.append_text(_("Rerender All Possible" ))
+            self.action_select.set_active(0)
+            action_row = guiutils.get_left_justified_box([guiutils.get_pad_label(24, 10), gtk.Label("Select Render Action: "), self.action_select])
+
+            info_box = gtk.VBox()
+            info_box.pack_start(issues_box, False, False, 0)
+            info_box.pack_start(action_row, False, False, 0)
+            
+        alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+        alignment.set_padding(0, 0, 0, 0)
+        alignment.add(info_box)
+        alignment.show_all()
+
+        self.dialog.vbox.pack_start(alignment, True, True, 0)
+        self.dialog.set_has_separator(False)
+        self.dialog.connect('response', self.response)
+        self.dialog.show()
+
+    def issues_str(self):
+        issue_str = str(self.issues) + ") "
+        self.issues = self.issues + 1
+        return issue_str
+
+    def response(self, dialog, response_id):
+        dialog.destroy()
+        global proxy_render_issues_window
+        proxy_render_issues_window = None
+        
+# ------------------------------------------------------------- event interface
+def show_proxy_manager_dialog():
+    global manager_window
+    manager_window = ProxyManagerDialog()
+
+def create_proxy_files_pressed(retry_from_render_folder_select=False):
+    if editorpersistance.prefs.render_folder == None:
+        if retry_from_render_folder_select == True:
+            return
+        dialogs.select_rendred_clips_dir(_create_proxy_render_folder_select_callback, gui.editor_window.window, editorpersistance.prefs.render_folder)
+        return
+    
+    # Create proxies dir if does not exist
+    proxies_dir = _get_proxies_dir()
+    if not os.path.exists(proxies_dir):
+        os.mkdir(proxies_dir)
+
+    media_file_widgets = gui.media_list_view.get_selected_media_objects()
+    if len(media_file_widgets) == 0:
+        return
+
+    proxy_profile = _get_proxy_profile(editorstate.PROJECT())
+    proxy_w, proxy_h =  _get_proxy_dimensions(proxy_profile, editorstate.PROJECT().proxy_data.size)
+    proxy_file_extension = _get_proxy_encoding().extension
+     
+    files_to_render = []
+    not_video_files = 0
+    already_have_proxies = []
+    is_proxy_file = 0
+    other_project_proxies = 0
+    for w in media_file_widgets:
+        f = w.media_file
+        if f.is_proxy_file == True: # Can't create a proxy file for a proxy file
+            is_proxy_file = is_proxy_file + 1
+            continue
+        if f.type != appconsts.VIDEO: # only video files can have proxy files
+            not_video_files = not_video_files + 1
+            continue
+        if f.has_proxy_file == True: # no need to to create proxy files again, unless forced by user
+            if os.path.exists(f.second_file_path):
+                already_have_proxies.append(f)
+                continue
+        path_for_size_and_encoding = f.create_proxy_path(proxy_w, proxy_h, proxy_file_extension)
+        if os.path.exists(path_for_size_and_encoding): # A proxy for media file has been created by other projects. Get user to confirm overwrite
+            other_project_proxies = other_project_proxies + 1
+            already_have_proxies.append(f)
+            continue
+
+        files_to_render.append(f)
+
+    if  len(already_have_proxies) > 0 or not_video_files > 0 or is_proxy_file > 0 or len(files_to_render) == 0:
+        global proxy_render_issues_window
+        proxy_render_issues_window = ProxyRenderIssuesWindow(files_to_render, already_have_proxies, not_video_files, is_proxy_file, other_project_proxies)
+        return
+
+    _create_proxy_files(files_to_render)
+
+def _create_proxy_files(media_files_to_render):
+    proxy_profile = _get_proxy_profile(editorstate.PROJECT())
+
+    global progress_window, runner_thread
+    progress_window = ProxyRenderProgressDialog()
+    runner_thread = ProxyRenderRunnerThread(proxy_profile, media_files_to_render)
+    runner_thread.start()
+
+# ------------------------------------------------------------------ module functions
 def _get_proxies_dir():
     return editorpersistance.prefs.render_folder + "/proxies"
 
 def _get_proxy_encoding():
-    return renderconsumer.get_proxy_encodings()[0]
+    enc_index = editorstate.PROJECT().proxy_data.encoding
+    return renderconsumer.proxy_encodings[enc_index]
 
-def _get_proxy_dimensions(project_profile):
+def _get_proxy_dimensions(project_profile, proxy_size):
     # Get new dimension that are about half of previous and diviseble by eight
-    old_width_half = int(project_profile.width() / 2)
-    old_height_half = int(project_profile.height() / 2)
+    if proxy_size == PROXY_SIZE_FULL:
+        size_mult = 1.0
+    elif proxy_size == PROXY_SIZE_HALF:
+        size_mult = 0.5
+    else: # quarter size
+        size_mult = 0.25
+
+    old_width_half = int(project_profile.width() * size_mult)
+    old_height_half = int(project_profile.height() * size_mult)
     new_width = old_width_half - old_width_half % 8
     new_height = old_height_half - old_height_half % 8
     return (new_width, new_height)
 
-def _get_proxy_profile(project_profile):
-    new_width, new_height = _get_proxy_dimensions(project_profile)
+def _get_proxy_profile(project):
+    project_profile = project.profile
+    new_width, new_height = _get_proxy_dimensions(project_profile, project.proxy_data.size)
     
     file_contents = "description=" + "proxy render profile" + "\n"
     file_contents += "frame_rate_num=" + str(project_profile.frame_rate_num()) + "\n"
@@ -326,39 +475,6 @@ def _get_proxy_profile(project_profile):
     
     proxy_profile = mlt.Profile(proxy_profile_path)
     return proxy_profile
-
-def show_proxy_manager_dialog():
-    global manager_window
-    manager_window = ProxyManagerDialog()
-
-def create_proxy_files_pressed(retry_from_render_folder_select=False):
-    if editorpersistance.prefs.render_folder == None:
-        if retry_from_render_folder_select == True:
-            return
-        dialogs.select_rendred_clips_dir(_create_proxy_render_folder_select_callback, gui.editor_window.window, editorpersistance.prefs.render_folder)
-        return
-
-    proxies_dir = _get_proxies_dir()
-    if not os.path.exists(proxies_dir):
-        os.mkdir(proxies_dir)
-
-    media_file_widgets = gui.media_list_view.get_selected_media_objects()
- 
-    # render only files that dont have proxy files already
-    files_to_render = []
-    for w in media_file_widgets:
-        f = w.media_file
-        if f.has_proxy_file == True:
-            if os.path.exists(f.proxy_file_path):
-                continue
-        files_to_render.append(f)
-
-    proxy_profile = _get_proxy_profile(editorstate.PROJECT().profile)
-    
-    global progress_window, runner_thread
-    progress_window = ProxyRenderProgressDialog()
-    runner_thread = ProxyRenderRunnerThread(proxy_profile, files_to_render)
-    runner_thread.start()
 
 def _proxy_render_stopped():
     global progress_window, runner_thread
@@ -382,14 +498,12 @@ def _create_proxy_render_folder_select_callback(dialog, response_id, file_select
             editorpersistance.prefs.render_folder = folder
             editorpersistance.save()
             create_proxy_files_pressed(True)
-        
 
-# --------------------------------------------------------- converting to and from proxy projects
 def _convert_to_proxy_project(dialog):
     dialog.destroy()
     editorstate.PROJECT().proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_PROXY_MEDIA
     conv_temp_project_path = utils.get_hidden_user_dir_path() + "proxy_conv.flb"
-    print conv_temp_project_path
+
     persistance.save_project(editorstate.PROJECT(), conv_temp_project_path)
     global load_thread
     load_thread = ProxyProjectLoadThread(conv_temp_project_path)
