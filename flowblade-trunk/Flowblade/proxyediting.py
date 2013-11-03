@@ -380,10 +380,14 @@ class ProxyRenderIssuesWindow:
             else: # Rerender All Possible
                 self.files_to_render.extend(self.other_project_proxies)
                 self.files_to_render.extend(self.already_have_proxies)
+            dialog.destroy()
 
-        global proxy_render_issues_window
-        proxy_render_issues_window = None
+            global proxy_render_issues_window
+            proxy_render_issues_window = None
         
+            _create_proxy_files(self.files_to_render)
+
+
 # ------------------------------------------------------------- event interface
 def show_proxy_manager_dialog():
     global manager_window
