@@ -250,7 +250,7 @@ class MediaFile:
 
     def create_proxy_path(self, proxy_width, proxy_height, file_extesion):
         md_str = md5.new(self.path + str(proxy_width) + str(proxy_height)).hexdigest()
-        return editorpersistance.prefs.render_folder + "/proxies/"+ md_str + "." + file_extesion
+        return str(editorpersistance.prefs.render_folder + "/proxies/" + md_str + "." + file_extesion) # str() because we get unicode here
 
     def add_proxy_file(self, proxy_path):
         self.has_proxy_file = True
@@ -267,7 +267,8 @@ class MediaFile:
     def set_as_original_media_file(self):
         self.path, self.second_file_path = self.second_file_path, self.path
         self.is_proxy_file = False
-        
+
+
 class BinColorClip:
     # DECPRECATED, this is replaced by patternproducer.BinColorClip.
     # This is kept for project file backwards compatiblity,

@@ -756,6 +756,7 @@ class CompositorInfoPanel(gtk.VBox):
         self.position.set_sensitive(value)
         self.length.set_sensitive(value)
 
+
 # -------------------------------------------- media select panel
 class MediaPanel():
     
@@ -923,13 +924,14 @@ class MediaObjectWidget:
             cr.move_to(23, 80)
             clip_length = utils.get_tc_string(self.media_file.mark_out - self.media_file.mark_in + 1) #+1 out incl.
             cr.show_text("][ " + str(clip_length))
-        
-        if self.media_file.has_proxy_file == True:
-            cr.set_source_pixbuf(has_proxy_icon, 96, 6)
-            cr.paint()
-        elif self.media_file.is_proxy_file == True:
+
+        if self.media_file.is_proxy_file == True:
             cr.set_source_pixbuf(is_proxy_icon, 96, 6)
             cr.paint()
+        elif self.media_file.has_proxy_file == True:
+            cr.set_source_pixbuf(has_proxy_icon, 96, 6)
+            cr.paint()
+
 
 
 # -------------------------------------------- context menus

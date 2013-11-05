@@ -26,7 +26,7 @@ by the application. A project has 1-n of these.
 import copy
 import gnomevfs
 import mlt
-import time #added for testing 
+import time
 import types
 import os
 
@@ -378,7 +378,7 @@ class Sequence:
         Creates MLT Producer and adds attributes to it, but does 
         not add it to track/playlist object.
         """
-        producer = mlt.Producer(self.profile, path) # this runs 0.5s+ on some clips
+        producer = mlt.Producer(self.profile, str(path)) # this runs 0.5s+ on some clips
         producer.path = path
         producer.filters = []
         
