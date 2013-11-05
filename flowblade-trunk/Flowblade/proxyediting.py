@@ -115,6 +115,9 @@ class ProxyRenderRunnerThread(threading.Thread):
         self.thread_running = False
 
 
+
+
+
 class ProxyManagerDialog:
     def __init__(self):
         self.dialog = gtk.Dialog(_("Proxy Manager"), None,
@@ -175,20 +178,18 @@ class ProxyManagerDialog:
         row_proxy_status = guiutils.get_two_column_box_right_pad(proxy_status_label, proxy_status_value, 150, 150)
 
         proxy_mode_label = gtk.Label("Current Proxy Mode:")
-        if editorstate.PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA:
-            mode_str = "Using Proxy Media"
-        else:
-            mode_str = "Using Original Media"
-        proxy_mode_value = gtk.Label(mode_str)
-        row_proxy_mode = guiutils.get_two_column_box_right_pad(proxy_mode_label, proxy_mode_value, 150, 150)
+        self.proxy_mode_value = gtk.Label()
+        self.set_mode_display_value()
+               
+        row_proxy_mode = guiutils.get_two_column_box_right_pad(proxy_mode_label, self.proxy_mode_value, 150, 150)
 
-        convert_progress_bar = gtk.ProgressBar()
-        convert_progress_bar.set_text("Press Button to Change Mode")
+        self.convert_progress_bar = gtk.ProgressBar()
+        self.convert_progress_bar.set_text("Press Button to Change Mode")
             
         self.use_button = gtk.Button(_("Use Proxy Media"))
         self.dont_use_button = gtk.Button(_("Use Original Media"))
         self.set_convert_buttons_state()
-        self.use_button.connect("clicked", lambda w: _convert_to_proxy_project(dialog))
+        self.use_button.connect("clicked", lambda w: _convert_to_proxy_project())
 
         c_box_2 = gtk.HBox(True, 8)
         c_box_2.pack_start(self.use_button, True, True, 0)
@@ -203,7 +204,7 @@ class ProxyManagerDialog:
         vbox_onoff.pack_start(row_proxy_status, False, False, 0)
         vbox_onoff.pack_start(row_proxy_mode, False, False, 0)
         vbox_onoff.pack_start(guiutils.pad_label(12, 12), False, False, 0)
-        vbox_onoff.pack_start(convert_progress_bar, False, False, 0)
+        vbox_onoff.pack_start(self.convert_progress_bar, False, False, 0)
         vbox_onoff.pack_start(row2_onoff, False, False, 0)
         
         panel_onoff = guiutils.get_named_frame("Project Proxy Mode", vbox_onoff)
@@ -231,11 +232,24 @@ class ProxyManagerDialog:
             self.use_button.set_sensitive(True)
             self.dont_use_button.set_sensitive(False)
 
+    def set_mode_display_value(self):
+        if editorstate.PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA:
+            mode_str = "Using Proxy Media"
+        else:
+            mode_str = "Using Original Media"
+        self.proxy_mode_value.set_text(mode_str)
+        
     def encoding_changed(self, enc_index):
         editorstate.PROJECT().proxy_data.encoding = enc_index
 
     def size_changed(self, size_index):
         editorstate.PROJECT().proxy_data.size = size_index
+
+    def update_proxy_mode_display(self):
+        self.set_convert_buttons_state()
+        self.set_mode_display_value()
+        self.convert_progress_bar.set_text("Press Button to Change Mode")
+        self.convert_progress_bar.set_fraction(0.0)
 
 
 class ProxyRenderProgressDialog:
@@ -523,25 +537,35 @@ def _create_proxy_render_folder_select_callback(dialog, response_id, file_select
             editorpersistance.save()
             create_proxy_files_pressed(True)
 
-def _convert_to_proxy_project(dialog):
-    dialog.destroy()
+# ----------------------------------------------------------- changing proxy modes
+def _convert_to_proxy_project():    
     editorstate.PROJECT().proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_PROXY_MEDIA
     conv_temp_project_path = utils.get_hidden_user_dir_path() + "proxy_conv.flb"
+    manager_window.convert_progress_bar.set_text("Converting to Using Proxy Media")
 
     persistance.save_project(editorstate.PROJECT(), conv_temp_project_path)
     global load_thread
-    load_thread = ProxyProjectLoadThread(conv_temp_project_path)
+    load_thread = ProxyProjectLoadThread(conv_temp_project_path, manager_window.convert_progress_bar)
     load_thread.start()
 
+def _converting_to_proxy_done():
+    global load_thread
+    load_thread = None
 
+    manager_window.update_proxy_mode_display()
+    
 
 class ProxyProjectLoadThread(threading.Thread):
 
-    def __init__(self, proxy_project_path):
+    def __init__(self, proxy_project_path, progressbar):
         threading.Thread.__init__(self)
         self.proxy_project_path = proxy_project_path
+        self.progressbar = progressbar
 
-    def run(self): 
+    def run(self):
+        pulse_runner = PulseThread(self.progressbar)
+        pulse_runner.start()
+        time.sleep(2.0)
         persistance.show_messages = False
         try:
             print "2"
@@ -553,11 +577,30 @@ class ProxyProjectLoadThread(threading.Thread):
             print "did not find file:", e
             
         print "5"
+        pulse_runner.running = False
+        time.sleep(0.3) # need to be sure pulse_runner has stopped
         app.stop_autosave()
+        gtk.gdk.threads_enter()
         app.open_project(project)
+        gtk.gdk.threads_leave()
         project.proxy_data.proxy_mode = appconsts.USE_PROXY_MEDIA
         app.start_autosave()
         print "6"
         global load_thread
         load_thread = None
         persistance.show_messages = True
+        
+        _converting_to_proxy_done()
+        
+
+class PulseThread(threading.Thread):
+    def __init__(self, proress_bar):
+        threading.Thread.__init__(self)
+        self.proress_bar = proress_bar
+
+    def run(self):   
+        self.running = True
+        while self.running:
+            self.proress_bar.pulse()
+            time.sleep(0.1)
+    
