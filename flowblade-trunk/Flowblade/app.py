@@ -254,7 +254,7 @@ def main(root_path):
     # Launch gtk+ main loop
     gtk.main()
 
-# ---------------------------------- program, sequence and preoject init
+# ---------------------------------- program, sequence and project init
 def get_assoc_file_path():
     """
     Check if were opening app with file association launch from Gnome
@@ -503,11 +503,11 @@ def show_splash_screen():
     splash_screen.set_decorated(False)
     splash_screen.set_position(gtk.WIN_POS_CENTER)
     img = gtk.image_new_from_file(respaths.IMAGE_PATH + "flowblade_splash_black_small.png")
-    #img.set_size_request(498, 300)
+
     splash_screen.add(img)
     splash_screen.set_keep_above(True)
-    splash_screen.set_size_request(498, 320)
-    #splash_screen.set_size_request(500, 350)
+    splash_screen.set_size_request(498, 320) # Splash screen is working funny since Ubuntu 13.10
+
     splash_screen.set_resizable(False)
 
     while(gtk.events_pending()):
@@ -516,7 +516,6 @@ def show_splash_screen():
 def destroy_splash_screen():
     splash_screen.destroy()
     gobject.source_remove(splash_timeout_id)
-
 
 # ------------------------------------------------------- small screens
 def _set_draw_params(scr_w, scr_h):

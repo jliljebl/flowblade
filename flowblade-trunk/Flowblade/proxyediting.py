@@ -63,6 +63,7 @@ class ProxyRenderRunnerThread(threading.Thread):
 
             # Create render objects
             proxy_file_path = media_file.create_proxy_path(proxy_w, proxy_h, proxy_encoding.extension)
+            print type(proxy_file_path), proxy_file_path
             consumer = renderconsumer.get_render_consumer_for_encoding(
                                                         proxy_file_path,
                                                         self.proxy_profile, 
@@ -113,9 +114,6 @@ class ProxyRenderRunnerThread(threading.Thread):
         render_thread.shutdown()
         self.aborted = True
         self.thread_running = False
-
-
-
 
 
 class ProxyManagerDialog:
@@ -190,6 +188,7 @@ class ProxyManagerDialog:
         self.dont_use_button = gtk.Button(_("Use Original Media"))
         self.set_convert_buttons_state()
         self.use_button.connect("clicked", lambda w: _convert_to_proxy_project())
+        self.dont_use_button.connect("clicked", lambda w: _convert_to_original_media_project())
 
         c_box_2 = gtk.HBox(True, 8)
         c_box_2.pack_start(self.use_button, True, True, 0)
@@ -541,19 +540,30 @@ def _create_proxy_render_folder_select_callback(dialog, response_id, file_select
 def _convert_to_proxy_project():    
     editorstate.PROJECT().proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_PROXY_MEDIA
     conv_temp_project_path = utils.get_hidden_user_dir_path() + "proxy_conv.flb"
-    manager_window.convert_progress_bar.set_text("Converting to Using Proxy Media")
+    manager_window.convert_progress_bar.set_text("Converting Project to Use Proxy Media")
 
     persistance.save_project(editorstate.PROJECT(), conv_temp_project_path)
     global load_thread
     load_thread = ProxyProjectLoadThread(conv_temp_project_path, manager_window.convert_progress_bar)
     load_thread.start()
 
-def _converting_to_proxy_done():
+def _convert_to_original_media_project():
+    editorstate.PROJECT().proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_ORIGINAL_MEDIA
+    conv_temp_project_path = utils.get_hidden_user_dir_path() + "proxy_conv.flb"
+    manager_window.convert_progress_bar.set_text("Converting to Use Original Media")
+
+    persistance.save_project(editorstate.PROJECT(), conv_temp_project_path)
+    global load_thread
+    load_thread = ProxyProjectLoadThread(conv_temp_project_path, manager_window.convert_progress_bar)
+    load_thread.start()
+
+def _converting_proxy_mode_done():
     global load_thread
     load_thread = None
 
     manager_window.update_proxy_mode_display()
-    
+    gui.media_list_view.widget.queue_draw()
+
 
 class ProxyProjectLoadThread(threading.Thread):
 
@@ -568,29 +578,35 @@ class ProxyProjectLoadThread(threading.Thread):
         time.sleep(2.0)
         persistance.show_messages = False
         try:
-            print "2"
-            project = persistance.load_project(self.proxy_project_path, False)
-            print "3"
+            gtk.gdk.threads_enter()
+            project = persistance.load_project(self.proxy_project_path)
             sequence.set_track_counts(project)
-            print "4"
+            gtk.gdk.threads_leave()
         except persistance.FileProducerNotFoundError as e:
             print "did not find file:", e
-            
-        print "5"
+
         pulse_runner.running = False
         time.sleep(0.3) # need to be sure pulse_runner has stopped
+        
         app.stop_autosave()
+
         gtk.gdk.threads_enter()
         app.open_project(project)
         gtk.gdk.threads_leave()
-        project.proxy_data.proxy_mode = appconsts.USE_PROXY_MEDIA
+
+        # Loaded project has been converted, set proxy mode to correct mode 
+        if project.proxy_data.proxy_mode == appconsts.CONVERTING_TO_USE_PROXY_MEDIA:
+            project.proxy_data.proxy_mode = appconsts.USE_PROXY_MEDIA
+        else:
+            project.proxy_data.proxy_mode = appconsts.USE_ORIGINAL_MEDIA
+
         app.start_autosave()
-        print "6"
+
         global load_thread
         load_thread = None
         persistance.show_messages = True
         
-        _converting_to_proxy_done()
+        _converting_proxy_mode_done()
         
 
 class PulseThread(threading.Thread):
@@ -598,9 +614,10 @@ class PulseThread(threading.Thread):
         threading.Thread.__init__(self)
         self.proress_bar = proress_bar
 
-    def run(self):   
+    def run(self):
+        self.exited = False
         self.running = True
         while self.running:
             self.proress_bar.pulse()
             time.sleep(0.1)
-    
+        self.exited = True
