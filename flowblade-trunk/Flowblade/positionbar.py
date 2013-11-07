@@ -55,6 +55,9 @@ MARK_CURVE = 5
 MARK_LINE_WIDTH = 4
 MARK_PAD = 4
 
+MARK_COLOR = (0.3, 0.3, 0.3)
+DARK_MARK_COLOR = (0.1, 0.1, 0.1)
+
 
 class PositionBar:
     """
@@ -75,11 +78,12 @@ class PositionBar:
         self.mouse_release_listener = None # when used in tools (Tiler ate.) this used to update bg image
 
         if editorpersistance.prefs.dark_theme == True:
-            global LINE_COLOR, BG_COLOR, DISABLED_BG_COLOR, SELECTED_RANGE_COLOR
+            global LINE_COLOR, BG_COLOR, DISABLED_BG_COLOR, SELECTED_RANGE_COLOR, MARK_COLOR
             LINE_COLOR = DARK_LINE_COLOR
             BG_COLOR = DARK_BG_COLOR
             DISABLED_BG_COLOR = DARK_DISABLED_BG_COLOR
             SELECTED_RANGE_COLOR = DARK_SELECTED_RANGE_COLOR
+            MARK_COLOR = DARK_MARK_COLOR
 
     def set_listener(self, listener):
         self.position_listener = listener
@@ -184,7 +188,7 @@ class PositionBar:
         cr.line_to (x - 2 * MARK_LINE_WIDTH, MARK_PAD)
         cr.close_path();
 
-        cr.set_source_rgb(0.3, 0.3, 0.3)
+        cr.set_source_rgb(*MARK_COLOR)
         cr.fill()
 
     def draw_mark_out(self, cr, h):
@@ -207,7 +211,7 @@ class PositionBar:
         cr.line_to (x + 2 * MARK_LINE_WIDTH, MARK_PAD)
         cr.close_path();
 
-        cr.set_source_rgb(0.3, 0.3, 0.3)
+        cr.set_source_rgb(*MARK_COLOR)
         cr.fill()
 
     def _press_event(self, event):
