@@ -114,11 +114,11 @@ class AbstractBinClip:
         self.length = 15000
         self.type = appconsts.PATTERN_PRODUCER
         self.icon = None
-        self.patter_producer_type = UNDEFINED # extending sets proper value
+        self.patter_producer_type = UNDEFINED # extending sets value
 
         self.mark_in = -1
         self.mark_out = -1
-        
+
         self.create_icon()
 
     def create_icon(self):
