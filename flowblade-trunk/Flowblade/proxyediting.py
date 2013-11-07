@@ -1,4 +1,22 @@
+"""
+    Flowblade Movie Editor is a nonlinear video editor.
+    Copyright 2012 Janne Liljeblad.
 
+    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+
+    Flowblade Movie Editor is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Flowblade Movie Editor is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
+"""
 
 import gtk
 import mlt
@@ -63,19 +81,14 @@ class ProxyRenderRunnerThread(threading.Thread):
 
             # Create render objects
             proxy_file_path = media_file.create_proxy_path(proxy_w, proxy_h, proxy_encoding.extension)
-            print type(proxy_file_path), proxy_file_path
             consumer = renderconsumer.get_render_consumer_for_encoding(
                                                         proxy_file_path,
                                                         self.proxy_profile, 
                                                         proxy_encoding)
-            #consumer.set("vb", "1000k")
+            #consumer.set("vb", "500k")
             consumer.set("rescale", "nearest")
 
             file_producer = mlt.Producer(self.proxy_profile, str(media_file.path))
-            #seq = sequence.Sequence(self.proxy_profile)
-            #seq.create_default_tracks()
-            #track = seq.tracks[seq.first_video_index]
-            #track.append(file_producer, 0, file_producer.get_length() - 1)
             
             # Create and launch render thread
             global render_thread 
