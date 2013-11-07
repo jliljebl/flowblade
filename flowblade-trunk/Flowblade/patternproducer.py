@@ -26,7 +26,8 @@ import gtk
 import mlt
 
 import appconsts
-import dialogs
+import dialogutils
+import guiutils
 from editorstate import PROJECT
 import gui
 import respaths
@@ -38,9 +39,9 @@ COLOR_CLIP = 1
 NOISE_CLIP = 2
 EBUBARS_CLIP = 3
 
-# ---------------------------------------------------- mene create callbacks
+# ---------------------------------------------------- create callbacks
 def create_color_clip():
-    dialogs.color_clip_dialog(_create_color_clip_callback)
+    _color_clip_dialog(_create_color_clip_callback)
 
 def _create_color_clip_callback(dialog, response_id, widgets):
     if response_id == gtk.RESPONSE_ACCEPT:
@@ -48,26 +49,61 @@ def _create_color_clip_callback(dialog, response_id, widgets):
         name = entry.get_text()
         color_str = color_button.get_color().to_string()
         media_object = BinColorClip(PROJECT().next_media_file_id, name, color_str)
-        PROJECT().add_patter_producer_media_object(media_object)
+        PROJECT().add_pattern_producer_media_object(media_object)
         _update_gui_for_patter_producer_media_object_add()
 
     dialog.destroy()
 
 def create_noise_clip():
     media_object = BinNoiseClip(PROJECT().next_media_file_id, _("Noise"))
-    PROJECT().add_patter_producer_media_object(media_object)
+    PROJECT().add_pattern_producer_media_object(media_object)
     _update_gui_for_patter_producer_media_object_add()
 
 def create_bars_clip():
     media_object = BinColorBarsClip(PROJECT().next_media_file_id, _("EBU Bars"))
-    PROJECT().add_patter_producer_media_object(media_object)
+    PROJECT().add_pattern_producer_media_object(media_object)
     _update_gui_for_patter_producer_media_object_add()
 
 def _update_gui_for_patter_producer_media_object_add():
     gui.media_list_view.fill_data_model()
     gui.bin_list_view.fill_data_model()
 
-# ---------------------------------------------------- interface
+# ----------------------------------------------------- dialogs
+def _color_clip_dialog(callback):
+    dialog = gtk.Dialog(_("Create Color Clip"), None,
+                    gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                    (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                    _("Create").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+
+    name_entry = gtk.Entry()
+    name_entry.set_text(_("Color Clip"))   
+
+    color_button = gtk.ColorButton()
+
+    cb_hbox = gtk.HBox(False, 0)
+    cb_hbox.pack_start(color_button, False, False, 4)
+    cb_hbox.pack_start(gtk.Label(), True, True, 0)
+
+    row1 = guiutils.get_two_column_box(gtk.Label(_("Clip Name")), name_entry, 200)
+    row2 = guiutils.get_two_column_box(gtk.Label(_("Select Color")), cb_hbox, 200)
+    
+    vbox = gtk.VBox(False, 2)
+    vbox.pack_start(row1, False, False, 0)
+    vbox.pack_start(row2, False, False, 0)
+    vbox.pack_start(gtk.Label(), True, True, 0)
+    
+    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    align.set_padding(12, 0, 12, 12)
+    align.add(vbox)
+
+    selection_widgets = (name_entry, color_button)
+
+    dialog.connect('response', callback, selection_widgets)
+    dialog.vbox.pack_start(align, True, True, 0)
+    dialogutils.default_behaviour(dialog)
+    dialog.show_all()
+
+# ---------------------------------------------------- 
 def create_pattern_producer(profile, pattern_producer_data):
     """
     pattern_producer_data is instance of projectdata.BinColorClip

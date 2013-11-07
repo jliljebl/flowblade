@@ -185,15 +185,11 @@ def _create_clip_clone(clip):
     new_clip.name = clip.name
     return new_clip
 
-def _create_mute_volume_filter(seq):    
-    mute_filter = seq.create_filter(mltfilters.get_volume_filters_info())
-    mute_filter.mlt_filter.set("gain","0")
-    mute_filter.mlt_filter.set("end","0")
-    return mute_filter
-
+def _create_mute_volume_filter(seq): 
+    return mltfilters.create_mute_volume_filter(seq)
+    
 def _do_clip_mute(clip, volume_filter):
-    clip.attach(volume_filter.mlt_filter)
-    clip.mute_filter = volume_filter
+    mltfilters.do_clip_mute(clip, volume_filter)
 
 def _do_clip_unmute(clip):
     clip.detach(clip.mute_filter.mlt_filter)

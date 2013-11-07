@@ -120,6 +120,7 @@ class LoadThread(threading.Thread):
         
         ticker.stop_ticker()
 
+
 class AddMediaFilesThread(threading.Thread):
     
     def __init__(self, filenames):

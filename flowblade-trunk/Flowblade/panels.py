@@ -30,22 +30,19 @@ import pango
 import appconsts
 import guicomponents
 import guiutils
-import clipeffectseditor
-import compositeeditor
 import editorstate
 import editorpersistance
 import mltfilters
 import mltprofiles
 import mlttransitions
-import render
 import renderconsumer
 import respaths
 import utils
 
+
 HALF_ROW_WIDTH = 160 # Size of half row when using two column row components created here
 EFFECT_PANEL_WIDTH_PAD = 20 # This is subtracted from notebgtk.Calendar ook width to get some component widths
 TC_LABEL_WIDTH = 80 # in, out and length timecodes in monitor area top row 
-COMPOSITOR_PANEL_LEFT_WIDTH = 160
 
 MEDIA_PANEL_MIN_ROWS = 2
 MEDIA_PANEL_MAX_ROWS = 8
@@ -142,68 +139,6 @@ def get_project_name_panel(project_name):
     name_row = get_left_justified_box([gtk.Label(project_name)])
     return get_named_frame(_("Name"), name_row, 4)
 
-def get_render_panel_left(editor_window, add_audio_panel, normal_height):
-    try:
-        render.create_widgets(normal_height)
-    except IndexError:
-        print "No rendering options found"
-        return None
-
-    file_opts_panel = get_named_frame(_("File"), render.widgets.file_panel.vbox, 4)
-    render_type_panel = get_named_frame(_("Render Type"), render.widgets.render_type_panel.vbox, 4)
-    profile_panel = get_named_frame(_("Render Profile"), render.widgets.profile_panel.vbox, 4)
-    encoding_panel = get_named_frame(_("Encoding Format"), render.widgets.encoding_panel.vbox, 4)
-
-    render_panel = gtk.VBox()
-    render_panel.pack_start(file_opts_panel, False, False, 0)
-    render_panel.pack_start(render_type_panel, False, False, 0)
-    render_panel.pack_start(profile_panel, False, False, 0)
-    render_panel.pack_start(encoding_panel, False, False, 0)
-    render_panel.pack_start(gtk.Label(), True, True, 0)
-    return render_panel
-
-def get_render_panel_right(render_clicked_cb, to_queue_clicked_cb):
-    opts_panel = get_named_frame(_("Render Args"), render.widgets.args_panel.vbox, 4)
-    
-    bin_row = gtk.HBox()
-    bin_row.pack_start(guiutils.get_pad_label(10, 8),  False, False, 0)
-    bin_row.pack_start(gtk.Label(_("Open File in Bin:")),  False, False, 0)
-    bin_row.pack_start(guiutils.get_pad_label(10, 2),  False, False, 0)
-    bin_row.pack_start(render.widgets.open_in_bin,  False, False, 0)
-    bin_row.pack_start(gtk.Label(), True, True, 0)
-
-    range_row = gtk.HBox()
-    range_row.pack_start(guiutils.get_pad_label(10, 8),  False, False, 0)
-    range_row.pack_start(gtk.Label(_("Render Range:")),  False, False, 0)
-    range_row.pack_start(guiutils.get_pad_label(10, 2),  False, False, 0)
-    range_row.pack_start(render.widgets.range_cb,  True, True, 0)
-
-    buttons_panel = gtk.HBox()
-    buttons_panel.pack_start(guiutils.get_pad_label(10, 8), False, False, 0)
-    buttons_panel.pack_start(render.widgets.reset_button, False, False, 0)
-    buttons_panel.pack_start(gtk.Label(), True, True, 0)
-    buttons_panel.pack_start(render.widgets.queue_button, False, False, 0)
-    buttons_panel.pack_start(gtk.Label(), True, True, 0)
-    buttons_panel.pack_start(render.widgets.render_button, False, False, 0)
-
-    render.widgets.queue_button.connect("clicked", 
-                                         to_queue_clicked_cb, 
-                                         None)
-                                         
-    render.widgets.render_button.connect("clicked", 
-                                         render_clicked_cb, 
-                                         None)
-
-    render_panel = gtk.VBox()
-    render_panel.pack_start(opts_panel, True, True, 0)
-    render_panel.pack_start(guiutils.get_pad_label(10, 22), False, False, 0)
-    render_panel.pack_start(bin_row, False, False, 0)
-    render_panel.pack_start(range_row, False, False, 0)
-    render_panel.pack_start(guiutils.get_pad_label(10, 12), False, False, 0)
-    render_panel.pack_start(buttons_panel, False, False, 0)
-
-    return render_panel
-
 def get_thumbnail_select_panel(current_folder_path):    
     texts_panel = get_two_text_panel(_("Select folder for new thumbnails."), 
                                      _("Old thumbnails in this or other projects will") + 
@@ -249,36 +184,6 @@ def get_render_folder_select_panel(current_folder_path):
 def _set_sensive_widgets(sensitive, list):
     for widget in list:
         widget.set_sensitive(sensitive)
-    
-def get_render_progress_panel():
-    status_box = gtk.HBox(False, 2)
-    status_box.pack_start(render.widgets.status_label,False, False, 0)
-    status_box.pack_start(gtk.Label(), True, True, 0)
-    
-    remaining_box = gtk.HBox(False, 2)
-    remaining_box.pack_start(render.widgets.remaining_time_label,False, False, 0)
-    remaining_box.pack_start(gtk.Label(), True, True, 0)
-
-    passed_box = gtk.HBox(False, 2)
-    passed_box.pack_start(render.widgets.passed_time_label,False, False, 0)
-    passed_box.pack_start(gtk.Label(), True, True, 0)
-
-    est_box = gtk.HBox(False, 2)
-    est_box.pack_start(render.widgets.estimation_label,False, False, 0)
-    est_box.pack_start(gtk.Label(), True, True, 0)
-
-    progress_vbox = gtk.VBox(False, 2)
-    progress_vbox.pack_start(status_box, False, False, 0)
-    progress_vbox.pack_start(remaining_box, False, False, 0)
-    progress_vbox.pack_start(passed_box, False, False, 0)
-    progress_vbox.pack_start(guiutils.get_pad_label(10, 10), False, False, 0)
-    progress_vbox.pack_start(render.widgets.progress_bar, False, False, 0)
-    progress_vbox.pack_start(est_box, False, False, 0)
-    
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(12, 12, 12, 12)
-    alignment.add(progress_vbox)
-    return alignment
 
 def get_motion_render_progress_panel(file_name, progress_bar):
     status_box = gtk.HBox(False, 2)
@@ -300,21 +205,6 @@ def _group_selection_changed(group_combo, filters_list_view):
     filters_list_view.fill_data_model(filters_array)
     filters_list_view.treeview.get_selection().select_path("0")
 
-def get_compositor_clip_panel():
-    compositeeditor.create_widgets()
-    
-    compositor_vbox = gtk.VBox(False, 2)
-    compositor_vbox.pack_start(compositeeditor.widgets.compositor_info, False, False, 0)
-    compositor_vbox.pack_start(gtk.Label(), True, True, 0)
-    compositor_vbox.pack_start(compositeeditor.widgets.reset_b, False, False, 0)
-    compositor_vbox.pack_start(compositeeditor.widgets.delete_b, False, False, 0)
-    compositor_vbox.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
-    compositor_vbox.set_size_request(COMPOSITOR_PANEL_LEFT_WIDTH, 200)
-
-    compositeeditor.set_enabled(False)
-    
-    return compositor_vbox
-                                    
 def get_timecode_panel(editor_window):
     editor_window.tc = guicomponents.MonitorTCDisplay()
     editor_window.monitor_source = gtk.Label("sequence1")
@@ -344,61 +234,6 @@ def get_timecode_panel(editor_window):
     row.pack_start(editor_window.length_entry, False, False, 0)
 
     return row
-
-def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
-    """
-    Use components created at clipeffectseditor.py.
-    """
-    clipeffectseditor.create_widgets()
-    
-    stack_buttons_box = gtk.HBox(True,1)
-    stack_buttons_box.pack_start(clipeffectseditor.widgets.add_effect_b)
-    stack_buttons_box.pack_start(clipeffectseditor.widgets.del_effect_b)
-    
-    effect_stack = clipeffectseditor.widgets.effect_stack_view    
-
-    for group in mltfilters.groups:
-        group_name, filters_array = group
-        group_combo_box.append_text(group_name)
-    group_combo_box.set_active(0)    
-
-    # Same callback function works for filter select window too
-    group_combo_box.connect("changed", 
-                            lambda w,e: _group_selection_changed(w,effects_list_view), 
-                            None)
-
-    clipeffectseditor.widgets.group_combo = group_combo_box
-    clipeffectseditor.widgets.effect_list_view = effects_list_view
-    clipeffectseditor.set_enabled(False)
-    
-    exit_button_vbox = gtk.VBox(False, 2)
-    exit_button_vbox.pack_start(clipeffectseditor.widgets.exit_button, False, False, 0)
-    exit_button_vbox.pack_start(gtk.Label(), True, True, 0)
-
-    info_row = gtk.HBox(False, 2)
-    info_row.pack_start(clipeffectseditor.widgets.clip_info, False, False, 0)
-    info_row.pack_start(exit_button_vbox, True, True, 0)
-    
-    combo_row = gtk.HBox(False, 2)
-    combo_row.pack_start(group_combo_box, True, True, 0)
-    combo_row.pack_start(guiutils.get_pad_label(8, 2), False, False, 0)
-
-    group_name, filters_array = mltfilters.groups[0]
-    effects_list_view.fill_data_model(filters_array)
-    effects_list_view.treeview.get_selection().select_path("0")
-    
-    effects_vbox = gtk.VBox(False, 2)
-    effects_vbox.pack_start(info_row, False, False, 0)
-    effects_vbox.pack_start(guiutils.get_pad_label(2, 2), False, False, 0)
-    effects_vbox.pack_start(stack_buttons_box, False, False, 0)
-    effects_vbox.pack_start(effect_stack, True, True, 0)
-    effects_vbox.pack_start(combo_row, False, False, 0)
-    effects_vbox.pack_start(effects_list_view, True, True, 0)
-    
-    clipeffectseditor.widgets.group_combo.set_tooltip_text(_("Select Filter Group"))
-    clipeffectseditor.widgets.effect_list_view.set_tooltip_text(_("Current group Filters"))
-
-    return effects_vbox
     
 def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_padding=4):
     """
@@ -453,30 +288,6 @@ def get_two_text_panel(primary_txt, secondary_txt):
     
     return align
 
-def get_color_clip_panel():
-    name_entry = gtk.Entry()
-    name_entry.set_text(_("Color Clip"))   
-
-    color_button = gtk.ColorButton()
-
-    cb_hbox = gtk.HBox(False, 0)
-    cb_hbox.pack_start(color_button, False, False, 4)
-    cb_hbox.pack_start(gtk.Label(), True, True, 0)
-
-    row1 = get_two_column_box(gtk.Label(_("Clip Name")), name_entry)
-    row2 = get_two_column_box(gtk.Label(_("Select Color")), cb_hbox)
-    
-    vbox = gtk.VBox(False, 2)
-    vbox.pack_start(row1, False, False, 0)
-    vbox.pack_start(row2, False, False, 0)
-    vbox.pack_start(gtk.Label(), True, True, 0)
-    
-    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(12, 0, 12, 12)
-    align.add(vbox)
-
-    return align, (name_entry, color_button)
-    
 def get_file_properties_panel(data):
     media_file, img, size, length, vcodec, acodec, channels, frequency, fps = data
     

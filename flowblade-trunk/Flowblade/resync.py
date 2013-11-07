@@ -48,8 +48,7 @@ def clip_removed_from_timeline(clip):
 
 def clip_sync_cleared(clip):
     # This and the method above are called for different purposes, so we'll 
-    # keep them separate even though they do the same thing
-    # wut????? fix this
+    # keep them separate even though they do the same thing. (???)
     try:
         sync_children.pop(clip)
     except KeyError:

@@ -39,7 +39,6 @@ import mltprofiles
 import mltfilters
 import mlttransitions
 import panels
-import render
 import renderconsumer
 import respaths
 import utils
@@ -276,23 +275,7 @@ def rendered_clips_no_home_folder_dialog():
                             _("Please create and select some other folder then \'") + 
                             os.path.expanduser("~") + _("\' as render clips folder"), 
                             gui.editor_window.window)
-                                    
-def render_progress_dialog(callback, parent_window):
-    dialog = gtk.Dialog(_("Render Progress"),
-                         parent_window,
-                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                         (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT))
 
-    panel = panels.get_render_progress_panel()
-    
-    dialog.vbox.pack_start(panel, True, True, 0)
-    dialog.set_default_size(500, 125)
-    panel.show_all()
-    dialog.set_has_separator(False)
-    dialog.connect('response', callback)
-    dialog.show()
-    return dialog
-    
 def clip_render_progress_dialog(callback, title, text, progress_bar, parent_window):
     dialog = gtk.Dialog(title,
                          parent_window,
@@ -554,17 +537,6 @@ def _get_item_columns_panel(items, rows):
             hbox.pack_start(vbox, False, False, 0)
             col_items = 0
     return hbox
-
-def color_clip_dialog(callback):
-    dialog = gtk.Dialog(_("Create Color Clip"), None,
-                    gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                    (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                    _("Create").encode('utf-8'), gtk.RESPONSE_ACCEPT))
-    alignment, selection_widgets = panels.get_color_clip_panel()
-    dialog.connect('response', callback, selection_widgets)
-    dialog.vbox.pack_start(alignment, True, True, 0)
-    _default_behaviour(dialog)
-    dialog.show_all()
 
 def file_properties_dialog(data):
     dialog = gtk.Dialog(_("File Properties"), None,

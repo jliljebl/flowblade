@@ -23,7 +23,8 @@ Module manages undo and redo stacks and executes edit actions from them
 on user requests.
 """
 import editorstate
-from editevent import set_post_undo_redo_edit_mode
+#from editevent import set_post_undo_redo_edit_mode
+set_post_undo_redo_edit_mode = None # This is set at startup to avoid circular imports
 
 # Max stack size
 MAX_UNDOS = 35
@@ -42,6 +43,10 @@ index = 0
 save_item = None
 undo_item = None 
 redo_item = None
+
+def set_post_undo_redo_callback(undo_redo_callback):
+    global set_post_undo_redo_edit_mode
+    set_post_undo_redo_edit_mode = undo_redo_callback
 
 def set_menu_items(uimanager):
     global save_item, undo_item, redo_item

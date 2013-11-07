@@ -38,6 +38,8 @@ import updater
 import utils
 import tlinewidgets
 
+COMPOSITOR_PANEL_LEFT_WIDTH = 160
+
 widgets = utils.EmptyClass()
 
 compositor = None # Compositor being edited.
@@ -64,6 +66,21 @@ def create_widgets():
     widgets.value_edit_frame = gtk.Frame()
     widgets.value_edit_frame.add(widgets.value_edit_box)
 
+def get_compositor_clip_panel():
+    create_widgets()
+    
+    compositor_vbox = gtk.VBox(False, 2)
+    compositor_vbox.pack_start(widgets.compositor_info, False, False, 0)
+    compositor_vbox.pack_start(gtk.Label(), True, True, 0)
+    compositor_vbox.pack_start(widgets.reset_b, False, False, 0)
+    compositor_vbox.pack_start(widgets.delete_b, False, False, 0)
+    compositor_vbox.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
+    compositor_vbox.set_size_request(COMPOSITOR_PANEL_LEFT_WIDTH, 200)
+
+    set_enabled(False)
+    
+    return compositor_vbox
+    
 def set_compositor(new_compositor):
     """
     Sets clip to be edited in compositor editor.

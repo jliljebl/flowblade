@@ -251,6 +251,9 @@ def main(root_path):
     else:
         start_autosave()
 
+    # Set callback for undo/redo ops, batcherrender app dosee not need this 
+    undo.set_post_undo_redo_callback(editevent.set_post_undo_redo_edit_mode)
+     
     # Launch gtk+ main loop
     gtk.main()
 

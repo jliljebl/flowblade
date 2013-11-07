@@ -52,15 +52,6 @@ PROXY_SIZE_HALF = 1
 PROXY_SIZE_QUARTER = 2
 
 
-class ProjectProxyEditingData:
-    
-    def __init__(self):
-        self.proxy_mode = appconsts.USE_ORIGINAL_MEDIA
-        self.create_rules = None # not impl.
-        self.encoding = 0 # default is first found encoding
-        self.size = 1 # default is half project size
-        
-
 class ProxyRenderRunnerThread(threading.Thread):
     def __init__(self, proxy_profile, files_to_render):
         threading.Thread.__init__(self)
