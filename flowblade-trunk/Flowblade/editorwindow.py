@@ -52,6 +52,8 @@ import mltplayer
 import monitorevent
 import movemodes
 import respaths
+import render
+import rendergui
 import panels
 import patternproducer
 from positionbar import PositionBar
@@ -360,7 +362,7 @@ class EditorWindow:
         self.effect_select_list_view.treeview.connect("row-activated", clipeffectseditor.effect_select_row_double_clicked)
         dnd.connect_effects_select_tree_view(self.effect_select_list_view.treeview)
 
-        clip_editor_panel = panels.get_clip_effects_editor_panel(
+        clip_editor_panel = clipeffectseditor.get_clip_effects_editor_panel(
                                     self.effect_select_combo_box,
                                     self.effect_select_list_view)
 
@@ -381,7 +383,7 @@ class EditorWindow:
         self.effects_panel.add(effects_hbox)
         
         # Compositors
-        compositor_clip_panel = panels.get_compositor_clip_panel()
+        compositor_clip_panel = compositeeditor.get_compositor_clip_panel()
 
         compositor_editor_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
         compositor_editor_panel.set_padding(0, 0, 4, 0)
@@ -404,10 +406,16 @@ class EditorWindow:
         add_audio_desc = True
         if editorstate.SCREEN_HEIGHT < 863:
             add_audio_desc = False
-        render_panel_left = panels.get_render_panel_left(
-                                self,
-                                add_audio_desc,
-                                normal_height)
+
+        try:
+            render.create_widgets(normal_height)
+            render_panel_left = rendergui.get_render_panel_left(
+                                    render.widgets,
+                                    add_audio_desc,
+                                    normal_height)
+        except IndexError:
+            print "No rendering options found"
+            render_panel_left = None
 
         # 'None' here means that no possible rendering options were available
         # and creating panel failed. Inform user of this and hide render GUI 
@@ -419,9 +427,9 @@ class EditorWindow:
             render_hbox.pack_start(gtk.Label("Install codecs to make rendering available."), False, False, 0)
             render_hbox.pack_start(gtk.Label(" "), True, True, 0)
         else: # all is good
-            render_panel_right = panels.get_render_panel_right(lambda w,e: useraction.do_rendering(),
-                                                               lambda w,e: useraction.add_to_render_queue())
-
+            render_panel_right = rendergui.get_render_panel_right(render.widgets,
+                                                                  lambda w,e: useraction.do_rendering(),
+                                                                  lambda w,e: useraction.add_to_render_queue())
             render_hbox = gtk.HBox(True, 5)
             render_hbox.pack_start(render_panel_left, True, True, 0)
             render_hbox.pack_start(render_panel_right, True, True, 0)

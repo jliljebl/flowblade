@@ -30,6 +30,7 @@ from editorstate import PROJECT
 import editorpersistance
 import gui
 import guicomponents
+import guiutils
 import mltfilters
 import propertyedit
 import propertyeditorbuilder
@@ -48,6 +49,62 @@ block_changed_update = False # Used to block unwanted callback update from "chan
 # This is updated when filter panel is displayed and cleared when removed.
 # Used to update kfeditors with external tline frame position changes
 keyframe_editor_widgets = []
+
+
+def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
+    """
+    Use components created at clipeffectseditor.py.
+    """
+    create_widgets()
+    
+    stack_buttons_box = gtk.HBox(True,1)
+    stack_buttons_box.pack_start(widgets.add_effect_b)
+    stack_buttons_box.pack_start(widgets.del_effect_b)
+    
+    effect_stack = widgets.effect_stack_view    
+
+    for group in mltfilters.groups:
+        group_name, filters_array = group
+        group_combo_box.append_text(group_name)
+    group_combo_box.set_active(0)    
+
+    # Same callback function works for filter select window too
+    group_combo_box.connect("changed", 
+                            lambda w,e: _group_selection_changed(w,effects_list_view), 
+                            None)
+
+    widgets.group_combo = group_combo_box
+    widgets.effect_list_view = effects_list_view
+    set_enabled(False)
+    
+    exit_button_vbox = gtk.VBox(False, 2)
+    exit_button_vbox.pack_start(widgets.exit_button, False, False, 0)
+    exit_button_vbox.pack_start(gtk.Label(), True, True, 0)
+
+    info_row = gtk.HBox(False, 2)
+    info_row.pack_start(widgets.clip_info, False, False, 0)
+    info_row.pack_start(exit_button_vbox, True, True, 0)
+    
+    combo_row = gtk.HBox(False, 2)
+    combo_row.pack_start(group_combo_box, True, True, 0)
+    combo_row.pack_start(guiutils.get_pad_label(8, 2), False, False, 0)
+
+    group_name, filters_array = mltfilters.groups[0]
+    effects_list_view.fill_data_model(filters_array)
+    effects_list_view.treeview.get_selection().select_path("0")
+    
+    effects_vbox = gtk.VBox(False, 2)
+    effects_vbox.pack_start(info_row, False, False, 0)
+    effects_vbox.pack_start(guiutils.get_pad_label(2, 2), False, False, 0)
+    effects_vbox.pack_start(stack_buttons_box, False, False, 0)
+    effects_vbox.pack_start(effect_stack, True, True, 0)
+    effects_vbox.pack_start(combo_row, False, False, 0)
+    effects_vbox.pack_start(effects_list_view, True, True, 0)
+    
+    widgets.group_combo.set_tooltip_text(_("Select Filter Group"))
+    widgets.effect_list_view.set_tooltip_text(_("Current group Filters"))
+
+    return effects_vbox
 
 def set_clip(new_clip, new_track, new_index):
     """
@@ -159,16 +216,6 @@ def set_enabled(value):
     widgets.del_effect_b.set_sensitive(value)
     widgets.effect_stack_view.treeview.set_sensitive(value)
     widgets.exit_button.set_sensitive(value)
-    """
-    if widgets.group_combo != None:
-        widgets.group_combo.set_sensitive(value)
-    if widgets.effect_list_view != None:
-        widgets.effect_list_view.treeview.set_sensitive(value)
-        if value == False:
-            widgets.effect_list_view.treeview.get_selection().unselect_all()
-        else:
-            widgets.effect_list_view.treeview.get_selection().select_path("0")
-    """
 
 def update_stack_view():
     if clip != None:

@@ -32,11 +32,10 @@ import pickle
 import time
 
 import appconsts
-import edit
 import mltprofiles
 import mltfilters
 import mlttransitions
-import proxyediting
+import miscdataobjects
 import resync
 
 # Unpickleable attributes for all objects
@@ -284,7 +283,7 @@ def load_project(file_path, icons_and_thumnails=True):
 
     # Create proxy editing data object if not found
     if (not(hasattr(project, "proxy_data"))):
-        project.proxy_data = proxyediting.ProjectProxyEditingData()
+        project.proxy_data = miscdataobjects.ProjectProxyEditingData()
 
     # Some profiles may not be available in system
     # inform user on fix
@@ -436,12 +435,12 @@ def fill_track_mlt(mlt_track, py_track):
                                   # we want everything unselected to begin with
         # Mute 
         if clip.mute_filter != None:
-            mute_filter = edit._create_mute_volume_filter(sequence) 
-            edit._do_clip_mute(mlt_clip, mute_filter)
+            mute_filter = mltfilters.create_mute_volume_filter(sequence) 
+            mltfilters.do_clip_mute(mlt_clip, mute_filter)
         
-        # Add to track is hasn't already been appended (blank clip has)
+        # Add to track if hasn't already been appended (blank clip has)
         if append_created == True:
-            edit.append_clip(mlt_track, mlt_clip, clip.clip_in, clip.clip_out)
+            append_clip(mlt_track, mlt_clip, clip.clip_in, clip.clip_out)
 
         # Save refences to recreate sync relations after all clips loaded
         global all_clips, sync_clips
@@ -476,7 +475,19 @@ def fill_filters_mlt(mlt_clip, sequence):
     
     mlt_clip.filters = filters
     
-
+#------------------------------------------------------------ track building
+# THIS IS COPYPASTED FROM edit.py TO NOT IMPORT IT.
+# IT BREAKS 'DRY' MASSIVELY,.
+def append_clip(track, clip, clip_in, clip_out):
+    """
+    Affects MLT c-struct and python obj values.
+    """
+    clip.clip_in = clip_in
+    clip.clip_out = clip_out
+    track.clips.append(clip) # py
+    track.append(clip, clip_in, clip_out) # mlt
+    resync.clip_added_to_timeline(clip, track)
+    
 # ------------------------------------------------------- backwards compability
 def FIX_N_TO_3_COMPOSITOR_COMPABILITY(compositor, SAVEFILE_VERSION):
     if SAVEFILE_VERSION == 1:

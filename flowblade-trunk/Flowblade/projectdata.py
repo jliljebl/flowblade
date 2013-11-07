@@ -38,7 +38,7 @@ import editorstate
 import medialog
 import mltprofiles
 import patternproducer
-import proxyediting
+import miscdataobjects
 import respaths
 import sequence
 import utils
@@ -80,7 +80,7 @@ class Project:
         self.last_save_path = None
         self.events = []
         self.media_log = []
-        self.proxy_data = proxyediting.ProjectProxyEditingData()
+        self.proxy_data = miscdataobjects.ProjectProxyEditingData()
         self.SAVEFILE_VERSION = SAVEFILE_VERSION
         
         # c_seq is the currently edited Sequence
@@ -132,7 +132,7 @@ class Project:
         
         return media_object
 
-    def add_patter_producer_media_object(self, media_object):
+    def add_pattern_producer_media_object(self, media_object):
         self._add_media_object(media_object)
 
     def _add_media_object(self, media_object):

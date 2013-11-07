@@ -327,7 +327,6 @@ def _parse_line(line_start, line_end, buf):
 
 
 class FileRenderPlayer(threading.Thread):
-    
     def __init__(self, file_name, producer, consumer, start_frame, stop_frame):
         self.file_name = file_name
         self.producer = producer

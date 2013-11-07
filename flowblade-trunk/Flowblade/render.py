@@ -143,7 +143,8 @@ def _do_rendering():
     projectinfogui.update_project_info()
     
     set_render_gui()
-    widgets.progress_window = dialogs.render_progress_dialog(
+    widgets.progress_window = rendergui.render_progress_dialog(
+                                        widgets,
                                         _render_cancel_callback,
                                         gui.editor_window.window)
     render_launch = RenderLauncher(render_consumer, start_frame, end_frame)

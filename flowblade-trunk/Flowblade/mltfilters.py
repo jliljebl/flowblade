@@ -421,3 +421,16 @@ def print_found_filters():
 def print_not_found_filters():
     for f in not_found_filters:
         print f.mlt_service_id + " for filter " + f.name + " not found"
+
+
+# ------------------------------------------------------------- mute filters
+def create_mute_volume_filter(seq):    
+    mute_filter = seq.create_filter(get_volume_filters_info())
+    mute_filter.mlt_filter.set("gain","0")
+    mute_filter.mlt_filter.set("end","0")
+    return mute_filter
+
+def do_clip_mute(clip, volume_filter):
+    clip.attach(volume_filter.mlt_filter)
+    clip.mute_filter = volume_filter
+    

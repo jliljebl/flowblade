@@ -89,9 +89,13 @@ class QueueRunnerThread(threading.Thread):
             
             # Update view during render process
             render_item.render_started()
+
+            gtk.gdk.threads_enter()
             batch_window.update_queue_view()
             batch_window.current_render.set_text("  " + render_item.get_display_name())
+            gtk.gdk.threads_leave()
             
+            # View update loop
             self.thread_running = True
             self.aborted = False
             while self.thread_running:
@@ -100,16 +104,27 @@ class QueueRunnerThread(threading.Thread):
                 render_fraction = render_thread.get_render_fraction()
                 now = time.time()
                 current_render_time = now - render_item.start_time
+                
+                gtk.gdk.threads_enter()
                 batch_window.update_render_progress(render_fraction, items, render_item.get_display_name(), current_render_time)
+                gtk.gdk.threads_leave()
+                
                 if render_thread.producer.get_speed() == 0: # Rendering has reached end or been aborted
                     self.thread_running = False
+                    
+                    gtk.gdk.threads_enter()
                     batch_window.render_progress_bar.set_fraction(1.0)
+                    gtk.gdk.threads_leave()
+                                    
                     render_item.render_completed()
                 else:
                     time.sleep(1)
+                    
             if not self.aborted:
                 items = items + 1
+                gtk.gdk.threads_enter()
                 batch_window.update_render_progress(0, items, render_item.get_display_name(), 0)
+                gtk.gdk.threads_leave()
             else:
                 if render_item != None:
                     render_item.render_aborted()
@@ -117,9 +132,11 @@ class QueueRunnerThread(threading.Thread):
             render_thread.shutdown()
         
         # Update view for render end
+        gtk.gdk.threads_enter()
         batch_window.update_queue_view()
         batch_window.render_queue_stopped()
-
+        gtk.gdk.threads_leave()
+                    
     def abort(self):
         render_thread.shutdown()
         # It may be that 'aborted' and 'running' could combined into single flag, but whatevaar
@@ -279,7 +296,7 @@ def shutdown():
         primary_txt = "Application is rendering and cannot be closed!"
         secondary_txt = "Stop rendering before closing the application."
         dialogutils.info_message(primary_txt, secondary_txt, batch_window.window)
-        return True # Tall callsite (inside toolkit) that event is handled, otherwise it'll destroy window anyway.
+        return True # Tell callsite (inside GTK toolkit) that event is handled, otherwise it'll destroy window anyway.
 
     while(gtk.events_pending()):
         gtk.main_iteration()

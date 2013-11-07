@@ -8,6 +8,107 @@ import renderconsumer
 
 FFMPEG_VIEW_SIZE = (200, 210) # Text edit area height for render opts. Width 200 seems to be ignored in current layout?
 
+# ------------------------------------------------------------ panels
+def get_render_panel_left(render_widgets, add_audio_panel, normal_height):
+    file_opts_panel = guiutils.get_named_frame(_("File"), render_widgets.file_panel.vbox, 4)
+    render_type_panel = guiutils.get_named_frame(_("Render Type"), render_widgets.render_type_panel.vbox, 4)
+    profile_panel = guiutils.get_named_frame(_("Render Profile"), render_widgets.profile_panel.vbox, 4)
+    encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
+
+    render_panel = gtk.VBox()
+    render_panel.pack_start(file_opts_panel, False, False, 0)
+    render_panel.pack_start(render_type_panel, False, False, 0)
+    render_panel.pack_start(profile_panel, False, False, 0)
+    render_panel.pack_start(encoding_panel, False, False, 0)
+    render_panel.pack_start(gtk.Label(), True, True, 0)
+    return render_panel
+
+def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_cb):
+    opts_panel = guiutils.get_named_frame(_("Render Args"), render_widgets.args_panel.vbox, 4)
+    
+    bin_row = gtk.HBox()
+    bin_row.pack_start(guiutils.get_pad_label(10, 8),  False, False, 0)
+    bin_row.pack_start(gtk.Label(_("Open File in Bin:")),  False, False, 0)
+    bin_row.pack_start(guiutils.get_pad_label(10, 2),  False, False, 0)
+    bin_row.pack_start(render_widgets.open_in_bin,  False, False, 0)
+    bin_row.pack_start(gtk.Label(), True, True, 0)
+
+    range_row = gtk.HBox()
+    range_row.pack_start(guiutils.get_pad_label(10, 8),  False, False, 0)
+    range_row.pack_start(gtk.Label(_("Render Range:")),  False, False, 0)
+    range_row.pack_start(guiutils.get_pad_label(10, 2),  False, False, 0)
+    range_row.pack_start(render_widgets.range_cb,  True, True, 0)
+
+    buttons_panel = gtk.HBox()
+    buttons_panel.pack_start(guiutils.get_pad_label(10, 8), False, False, 0)
+    buttons_panel.pack_start(render_widgets.reset_button, False, False, 0)
+    buttons_panel.pack_start(gtk.Label(), True, True, 0)
+    buttons_panel.pack_start(render_widgets.queue_button, False, False, 0)
+    buttons_panel.pack_start(gtk.Label(), True, True, 0)
+    buttons_panel.pack_start(render_widgets.render_button, False, False, 0)
+
+    render_widgets.queue_button.connect("clicked", 
+                                         to_queue_clicked_cb, 
+                                         None)
+                                         
+    render_widgets.render_button.connect("clicked", 
+                                         render_clicked_cb, 
+                                         None)
+
+    render_panel = gtk.VBox()
+    render_panel.pack_start(opts_panel, True, True, 0)
+    render_panel.pack_start(guiutils.get_pad_label(10, 22), False, False, 0)
+    render_panel.pack_start(bin_row, False, False, 0)
+    render_panel.pack_start(range_row, False, False, 0)
+    render_panel.pack_start(guiutils.get_pad_label(10, 12), False, False, 0)
+    render_panel.pack_start(buttons_panel, False, False, 0)
+
+    return render_panel
+
+def render_progress_dialog(render_widgets, callback, parent_window):
+    dialog = gtk.Dialog(_("Render Progress"),
+                         parent_window,
+                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                         (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT))
+
+    #panel = panels.get_render_progress_panel()
+
+    status_box = gtk.HBox(False, 2)
+    status_box.pack_start(render_widgets.status_label,False, False, 0)
+    status_box.pack_start(gtk.Label(), True, True, 0)
+    
+    remaining_box = gtk.HBox(False, 2)
+    remaining_box.pack_start(render_widgets.remaining_time_label,False, False, 0)
+    remaining_box.pack_start(gtk.Label(), True, True, 0)
+
+    passed_box = gtk.HBox(False, 2)
+    passed_box.pack_start(render_widgets.passed_time_label,False, False, 0)
+    passed_box.pack_start(gtk.Label(), True, True, 0)
+
+    est_box = gtk.HBox(False, 2)
+    est_box.pack_start(render_widgets.estimation_label,False, False, 0)
+    est_box.pack_start(gtk.Label(), True, True, 0)
+
+    progress_vbox = gtk.VBox(False, 2)
+    progress_vbox.pack_start(status_box, False, False, 0)
+    progress_vbox.pack_start(remaining_box, False, False, 0)
+    progress_vbox.pack_start(passed_box, False, False, 0)
+    progress_vbox.pack_start(guiutils.get_pad_label(10, 10), False, False, 0)
+    progress_vbox.pack_start(render_widgets.progress_bar, False, False, 0)
+    progress_vbox.pack_start(est_box, False, False, 0)
+    
+    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment.set_padding(12, 12, 12, 12)
+    alignment.add(progress_vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialog.set_default_size(500, 125)
+    alignment.show_all()
+    dialog.set_has_separator(False)
+    dialog.connect('response', callback)
+    dialog.show()
+    return dialog
+    
 # ----------------------------------------------------------- widgets
 class RenderQualitySelector():
     """
