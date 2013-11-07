@@ -217,6 +217,7 @@ def get_media_source_file_filter():
     f.add_mime_type("image/x-tga")
     f.add_mime_type("image/png")
     f.add_mime_type("image/jpeg")
+    f.add_mime_type("image/svg+xml")
 
     return f
 
