@@ -198,22 +198,6 @@ def save_titler_data_as_dialog(callback, current_name, open_dir):
     dialog.connect('response', callback)
     dialog.show()
 
-def save_ffmpep_optsdialog(callback, opts_extension):
-    dialog = gtk.FileChooserDialog(_("Save Render Args As"), None, 
-                                   gtk.FILE_CHOOSER_ACTION_SAVE, 
-                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                                   _("Save").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
-    dialog.set_action(gtk.FILE_CHOOSER_ACTION_SAVE)
-    dialog.set_current_name("untitled" + opts_extension)
-    dialog.set_do_overwrite_confirmation(True)
-    dialog.set_select_multiple(False)
-    file_filter = gtk.FileFilter()
-    file_filter.set_name(opts_extension + " files")
-    file_filter.add_pattern("*" + opts_extension)
-    dialog.add_filter(file_filter)
-    dialog.connect('response', callback)
-    dialog.show()
-
 def save_env_data_dialog(callback):    
     dialog = gtk.FileChooserDialog(_("Save Runtime Environment Data"), None, 
                                    gtk.FILE_CHOOSER_ACTION_SAVE, 
@@ -225,21 +209,7 @@ def save_env_data_dialog(callback):
     dialog.set_select_multiple(False)
     dialog.connect('response', callback)
     dialog.show()
-    
-def load_ffmpep_optsdialog(callback, opts_extension):
-    dialog = gtk.FileChooserDialog(_("Load Render Args File"), None, 
-                                   gtk.FILE_CHOOSER_ACTION_OPEN, 
-                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                                    _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
-    dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
-    dialog.set_select_multiple(False)
-    file_filter = gtk.FileFilter()
-    file_filter.set_name(opts_extension + " files")
-    file_filter.add_pattern("*" + opts_extension)
-    dialog.add_filter(file_filter)
-    dialog.connect('response', callback)
-    dialog.show()
-    
+
 def select_thumbnail_dir(callback, parent_window, current_dir_path, retry_open_media):
     panel, file_select = panels.get_thumbnail_select_panel(current_dir_path)
     cancel_str = _("Cancel").encode('utf-8')
@@ -275,37 +245,6 @@ def rendered_clips_no_home_folder_dialog():
                             _("Please create and select some other folder then \'") + 
                             os.path.expanduser("~") + _("\' as render clips folder"), 
                             gui.editor_window.window)
-
-def clip_render_progress_dialog(callback, title, text, progress_bar, parent_window):
-    dialog = gtk.Dialog(title,
-                         parent_window,
-                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                         (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT))
-    
-    dialog.text_label = gtk.Label(text)
-    
-    status_box = gtk.HBox(False, 2)
-    status_box.pack_start(dialog.text_label, False, False, 0)
-    status_box.pack_start(gtk.Label(), True, True, 0)
-    
-    progress_vbox = gtk.VBox(False, 2)
-    progress_vbox.pack_start(status_box, False, False, 0)
-    progress_vbox.pack_start(guiutils.get_pad_label(10, 10), False, False, 0)
-    progress_vbox.pack_start(progress_bar, False, False, 0)
-    
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(12, 12, 12, 12)
-    alignment.add(progress_vbox)
-    
-    panel = alignment
-    
-    dialog.vbox.pack_start(panel, True, True, 0)
-    dialog.set_default_size(500, 125)
-    panel.show_all()
-    dialog.set_has_separator(False)
-    dialog.connect('response', callback)
-    dialog.show()
-    return dialog
 
 def exit_confirm_dialog(callback, msg, parent_window, project_name):
     title = _("Save project '") + project_name + _("' before exiting?")
@@ -629,44 +568,6 @@ def load_dialog():
     dialog.info = info_label
 
     return dialog
-
-"""
-def get_media_load_progress_dialog():
-    dialog = gtk.Window(gtk.WINDOW_TOPLEVEL)
-    dialog.set_title(_("Loading Media Files"))
-
-    info_label = gtk.Label("")
-    status_box = gtk.HBox(False, 2)
-    status_box.pack_start(info_label, False, False, 0)
-    status_box.pack_start(gtk.Label(), True, True, 0)
-
-    progress_bar = gtk.ProgressBar()
-    progress_bar.set_fraction(0.0)
-
-    est_box = gtk.HBox(False, 2)
-    est_box.pack_start(gtk.Label(""),False, False, 0)
-    est_box.pack_start(gtk.Label(), True, True, 0)
-
-    progress_vbox = gtk.VBox(False, 2)
-    progress_vbox.pack_start(status_box, False, False, 0)
-    progress_vbox.pack_start(progress_bar, True, True, 0)
-    progress_vbox.pack_start(est_box, False, False, 0)
-
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(12, 12, 12, 12)
-    alignment.add(progress_vbox)
-
-    dialog.add(alignment)
-    dialog.set_default_size(400, 70)
-    dialog.set_position(gtk.WIN_POS_CENTER)
-    dialog.show_all()
-
-    # Make refs available for updates
-    dialog.progress_bar = progress_bar
-    dialog.info = info_label
-
-    return dialog
-"""
 
 def recreate_icons_progress_dialog():
     dialog = gtk.Window(gtk.WINDOW_TOPLEVEL)
@@ -1018,11 +919,6 @@ def export_dvd_author_dialog(callback, seq, parent_window):
     dialog.connect('response', callback, (markers_check, file_chooser, name_entry, render_check, dvd_type_combo, mpg_name_entry))
     dialog.show_all()
 
-def no_good_rander_range_info():
-    primary_txt = _("Render range not defined!")
-    secondary_txt = _("Define render range using Mark In and Mark Out points\nor select range option 'Sequence length' to start rendering.")
-    dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
-            
 def _mpeg_render_check_toggled(widget, data):
     mpg_name_entry, dvd_type_combo = data
 

@@ -1,6 +1,8 @@
 import gtk
 import os
-       
+
+import dialogutils
+import gui
 import guiutils
 from editorstate import current_sequence
 import mltprofiles
@@ -50,7 +52,7 @@ def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_c
     render_widgets.queue_button.connect("clicked", 
                                          to_queue_clicked_cb, 
                                          None)
-                                         
+
     render_widgets.render_button.connect("clicked", 
                                          render_clicked_cb, 
                                          None)
@@ -65,6 +67,7 @@ def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_c
 
     return render_panel
 
+# ----------------------------------------------------------- dialogs
 def render_progress_dialog(render_widgets, callback, parent_window):
     dialog = gtk.Dialog(_("Render Progress"),
                          parent_window,
@@ -108,7 +111,71 @@ def render_progress_dialog(render_widgets, callback, parent_window):
     dialog.connect('response', callback)
     dialog.show()
     return dialog
+
+def no_good_rander_range_info():
+    primary_txt = _("Render range not defined!")
+    secondary_txt = _("Define render range using Mark In and Mark Out points\nor select range option 'Sequence length' to start rendering.")
+    dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
+
+def load_ffmpeg_opts_dialog(callback, opts_extension):
+    dialog = gtk.FileChooserDialog(_("Load Render Args File"), None, 
+                                   gtk.FILE_CHOOSER_ACTION_OPEN, 
+                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                                    _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
+    dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
+    dialog.set_select_multiple(False)
+    file_filter = gtk.FileFilter()
+    file_filter.set_name(opts_extension + " files")
+    file_filter.add_pattern("*" + opts_extension)
+    dialog.add_filter(file_filter)
+    dialog.connect('response', callback)
+    dialog.show()
+
+def save_ffmpeg_opts_dialog(callback, opts_extension):
+    dialog = gtk.FileChooserDialog(_("Save Render Args As"), None, 
+                                   gtk.FILE_CHOOSER_ACTION_SAVE, 
+                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                                   _("Save").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
+    dialog.set_action(gtk.FILE_CHOOSER_ACTION_SAVE)
+    dialog.set_current_name("untitled" + opts_extension)
+    dialog.set_do_overwrite_confirmation(True)
+    dialog.set_select_multiple(False)
+    file_filter = gtk.FileFilter()
+    file_filter.set_name(opts_extension + " files")
+    file_filter.add_pattern("*" + opts_extension)
+    dialog.add_filter(file_filter)
+    dialog.connect('response', callback)
+    dialog.show()
+
+def clip_render_progress_dialog(callback, title, text, progress_bar, parent_window):
+    dialog = gtk.Dialog(title,
+                         parent_window,
+                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                         (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT))
     
+    dialog.text_label = gtk.Label(text)
+    
+    status_box = gtk.HBox(False, 2)
+    status_box.pack_start(dialog.text_label, False, False, 0)
+    status_box.pack_start(gtk.Label(), True, True, 0)
+    
+    progress_vbox = gtk.VBox(False, 2)
+    progress_vbox.pack_start(status_box, False, False, 0)
+    progress_vbox.pack_start(guiutils.get_pad_label(10, 10), False, False, 0)
+    progress_vbox.pack_start(progress_bar, False, False, 0)
+    
+    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment.set_padding(12, 12, 12, 12)
+    alignment.add(progress_vbox)
+    
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialog.set_default_size(500, 125)
+    alignment.show_all()
+    dialog.set_has_separator(False)
+    dialog.connect('response', callback)
+    dialog.show()
+    return dialog
+
 # ----------------------------------------------------------- widgets
 class RenderQualitySelector():
     """

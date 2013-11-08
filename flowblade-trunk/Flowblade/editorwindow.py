@@ -154,7 +154,6 @@ class EditorWindow:
             ('Save As', None, _('_Save As...'), None, None, lambda a:useraction.save_project_as()),
             ('ExportMenu', None, _('Export')),
             ('ExportMeltXML', None, _('melt XML'), None, None, lambda a:exporting.MELT_XML_export()),
-            ('ExportDvdAuthorXML', None, _('DVDAuthor files'), None, None, lambda a:exporting.DVD_AUTHOR_export()),
             ('Close', None, _('_Close'), None, None, lambda a:useraction.close_project()),
             ('Quit', None, _('_Quit'), '<control>Q', None, lambda a:app.shutdown()),
             ('EditMenu', None, _('_Edit')),

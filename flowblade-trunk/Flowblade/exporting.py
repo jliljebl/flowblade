@@ -33,6 +33,7 @@ import utils
 mpeg_renderer = None
 progress_update = None
 
+"""
 def DVD_AUTHOR_export():
     dialogs.export_dvd_author_dialog(_export_dvd_author_dialog_callback, 
                                      current_sequence(),
@@ -152,6 +153,7 @@ def _mpeg_render_stop(dialog, response_id):
     progress_update.running = False
     mpeg_renderer = None
     progress_update = None
+"""
     
 def MELT_XML_export():
     dialogs.export_xml_dialog(_export_melt_xml_dialog_callback, PROJECT().name)
