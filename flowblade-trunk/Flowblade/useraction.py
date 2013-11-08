@@ -52,6 +52,7 @@ import persistance
 import projectdata
 import projectinfogui
 import render
+import rendergui
 import respaths
 import sequence
 import test
@@ -157,8 +158,6 @@ class AddMediaFilesThread(threading.Thread):
         gui.bin_list_view.fill_data_model()
         _enable_save()
         
-        #selection = gui.media_list_view.treeview.get_selection()
-        #selection.select_path("0")
         normal_cursor = gtk.gdk.Cursor(gtk.gdk.LEFT_PTR) #RTL
         gui.editor_window.window.window.set_cursor(normal_cursor)
         gtk.gdk.threads_leave()
@@ -334,7 +333,7 @@ def add_to_render_queue():
     # Only do if range defined.
     if start_frame == -1 or end_frame == -1:
         if render.widgets.range_cb.get_active() == 1:
-            dialogs.no_good_rander_range_info()
+            rendergui.no_good_rander_range_info()
             return
 
     # Create render data object

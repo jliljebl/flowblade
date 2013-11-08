@@ -32,7 +32,6 @@ import time
 import threading
 import xml.dom.minidom
 
-import dialogs
 import dialogutils
 from editorstate import current_sequence
 from editorstate import PROJECT
@@ -51,7 +50,7 @@ import respaths
 import sequence
 import utils
 
-# User defined Ffmpeg opts file extension
+# User defined render agrs file extension
 FFMPEG_OPTS_SAVE_FILE_EXTENSION = ".rargs"
 
 open_media_file_callback = None # monkeypathced in by useraction to avoid circular imports
@@ -134,7 +133,7 @@ def _do_rendering():
     # Only render a range if it is defined.
     if start_frame == -1 or end_frame == -1:
         if widgets.range_cb.get_active() == 1:
-            dialogs.no_good_rander_range_info()
+            rendergui.no_good_rander_range_info()
             return
 
     file_path = get_file_path()
@@ -270,7 +269,7 @@ def create_widgets(normal_height):
     widgets.queue_button = gtk.Button(_("To Queue"))
     
     # Render progress window
-    widgets.progress_window = None #created in dialogs.py, destroyed here
+    widgets.progress_window = None
     
     # Render progress window widgets
     widgets.status_label = gtk.Label()
@@ -415,7 +414,7 @@ def _display_selection_in_opts_view():
     widgets.args_panel.display_profile_args(profile, widgets.encodings_cb.get_active(), widgets.quality_cb.get_active())
     
 def _save_opts_pressed():
-    dialogs.save_ffmpep_optsdialog(_save_opts_dialog_callback, FFMPEG_OPTS_SAVE_FILE_EXTENSION)
+    rendergui.save_ffmpeg_opts_dialog(_save_opts_dialog_callback, FFMPEG_OPTS_SAVE_FILE_EXTENSION)
 
 def _save_opts_dialog_callback(dialog, response_id):
     if response_id == gtk.RESPONSE_ACCEPT:
@@ -430,7 +429,7 @@ def _save_opts_dialog_callback(dialog, response_id):
         dialog.destroy()
 
 def _load_opts_pressed():
-    dialogs.load_ffmpep_optsdialog(_load_opts_dialog_callback, FFMPEG_OPTS_SAVE_FILE_EXTENSION)
+    rendergui.load_ffmpeg_opts_dialog(_load_opts_dialog_callback, FFMPEG_OPTS_SAVE_FILE_EXTENSION)
 
 def _load_opts_dialog_callback(dialog, response_id):
     if response_id == gtk.RESPONSE_ACCEPT:
@@ -559,7 +558,7 @@ def render_frame_buffer_clip(media_file):
     alignment.add(vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
-    dialogs._default_behaviour(dialog)
+    dialogutils.default_behaviour(dialog)
     dialog.connect('response', _render_frame_buffer_clip_callback, fb_widgets, media_file)
     dialog.show_all()
 
@@ -616,7 +615,7 @@ def _render_frame_buffer_clip_callback(dialog, response_id, fb_widgets, media_fi
         title = _("Rendering Motion Clip")
         
         progress_bar = gtk.ProgressBar()
-        dialog = dialogs.clip_render_progress_dialog(_FB_render_stop, title, write_file, progress_bar, gui.editor_window.window)
+        dialog = rendergui.clip_render_progress_dialog(_FB_render_stop, title, write_file, progress_bar, gui.editor_window.window)
         
         motion_progress_update = renderconsumer.ProgressWindowThread(dialog, progress_bar, motion_renderer, _FB_render_stop)
         motion_progress_update.start()
@@ -664,7 +663,7 @@ def render_single_track_transition_clip(transition_producer, encoding_option_ind
     title = _("Rendering Transition Clip")
     
     progress_bar = gtk.ProgressBar()
-    dialog = dialogs.clip_render_progress_dialog(_transition_render_stop, title, window_text, progress_bar, gui.editor_window.window)
+    dialog = rendergui.clip_render_progress_dialog(_transition_render_stop, title, window_text, progress_bar, gui.editor_window.window)
     
     motion_progress_update = renderconsumer.ProgressWindowThread(dialog, progress_bar, motion_renderer, _transition_render_stop)
     motion_progress_update.start()
