@@ -7,6 +7,7 @@ import guiutils
 from editorstate import current_sequence
 import mltprofiles
 import renderconsumer
+import respaths
 
 FFMPEG_VIEW_SIZE = (200, 210) # Text edit area height for render opts. Width 200 seems to be ignored in current layout?
 
@@ -371,10 +372,16 @@ class RenderEncodingPanel():
                                                         extension_label,
                                                         self.audio_desc)
         self.encoding_selector.encoding_selection_changed()
+        
+        speaker_image = gtk.image_new_from_file(respaths.IMAGE_PATH + "audio_desc_icon.png")
+
         quality_row  = gtk.HBox()
         quality_row.pack_start(self.quality_selector.widget, False, False, 0)
-        quality_row.pack_start(self.audio_desc, True, False, 0)
-
+        quality_row.pack_start(gtk.Label(), True, False, 0)
+        quality_row.pack_start(speaker_image, False, False, 0)
+        quality_row.pack_start(self.audio_desc, False, False, 0)
+        quality_row.pack_start(gtk.Label(), True, False, 0)
+        
         self.vbox = gtk.VBox(False, 2)
         self.vbox.pack_start(self.encoding_selector.widget, False, False, 0)
         self.vbox.pack_start(quality_row, False, False, 0)
