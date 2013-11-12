@@ -49,15 +49,6 @@ def init():
     clip_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "clip_dnd.png")
 
 # ----------------------------------------------- set gui components as drag sources and destinations
-"""
-def connect_media_files_tree_view(tree_view):
-    tree_view.enable_model_drag_source(gtk.gdk.BUTTON1_MASK,
-                                       [MEDIA_FILES_DND_TARGET], 
-                                       gtk.gdk.ACTION_COPY)
-    tree_view.connect_after('drag_begin', _media_files_drag_begin)
-    tree_view.connect("drag_data_get", _media_files_drag_data_get)
-"""
-
 def connect_media_files_object_widget(widget):
     widget.drag_source_set(gtk.gdk.BUTTON1_MASK,
                            [MEDIA_FILES_DND_TARGET], 
@@ -106,30 +97,16 @@ def connect_tline(widget, do_effect_drop_func, do_media_drop_func):
     
 
 # ------------------------------------------------- handlers for drag events
-"""
-def _media_files_drag_begin(treeview, context):
-    _save_treeview_selection(treeview)
-    media_file = _get_first_dragged_media_file()
-    context.set_icon_pixbuf(media_file.icon, MEDIA_ICON_WIDTH, MEDIA_ICON_HEIGHT)
-"""
 def _media_files_drag_begin(treeview, context):
     _save_media_panel_selection()
     media_object = drag_data[0]
     context.set_icon_pixbuf(clip_icon, 30, 15)
 
-"""
-def _media_files_drag_data_get(treeview, context, selection, target_id, timestamp):
-    _save_treeview_selection(treeview)
-"""
 def _media_files_drag_data_get(widget, context, selection, target_id, timestamp):
     _save_media_panel_selection()
 
 def _effects_drag_begin(widget, context):
     pass 
-    # uncomment to use filter icon for drag
-    #filter_info = clipeffectseditor.get_selected_filter_info()
-    #icon = filter_info.get_icon()
-    #context.set_icon_pixbuf(icon, icon.get_width() / 2, icon.get_height() / 2)
 
 def _effects_drag_data_get(treeview, context, selection, target_id, timestamp):
     _save_treeview_selection(treeview)
@@ -174,12 +151,3 @@ def _on_tline_drop(widget, context, x, y, timestamp, do_effect_drop_func, do_med
     
     context.finish(True, False, timestamp)
 
-# ----------------------------------------------- 
-"""
-def _get_first_dragged_media_file():
-    rows = drag_data
-    row = rows[0]
-    row_index = max(row)
-    file_id = current_bin().file_ids[row_index] 
-    return PROJECT().media_files[file_id]
-"""

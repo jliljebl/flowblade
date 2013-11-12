@@ -65,7 +65,7 @@ def _p(name):
     except KeyError:
         return name
 
-# ------------------------------------------------- gui components
+
 def get_editor_row(editable_property):
     """
     Returns GUI component to edit provided editable property.
@@ -94,6 +94,7 @@ def get_transition_extra_editor_rows(compositor, editable_properties):
 
     return rows
 
+# ------------------------------------------------- gui builders
 def _get_two_column_editor_row(name, editor_widget):
     name = _p(name)
     label = gtk.Label(name + ":")
@@ -406,7 +407,6 @@ def _create_rotion_geometry_editor(clip, editable_properties):
         value += frame_str + ";"
 
     ep.value = value.strip(";")
-    print ep.value
 
     kf_edit = keyframeeditor.RotatingGeometryEditor(ep, False)
     return kf_edit

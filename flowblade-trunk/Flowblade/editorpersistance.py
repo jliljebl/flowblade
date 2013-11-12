@@ -43,6 +43,7 @@ SIMPLE_STYLE = 1
 prefs = None
 recent_projects = None
 
+
 def load():
     """
     If docs fail to load, new ones are created and saved.

@@ -200,11 +200,6 @@ def get_motion_render_progress_panel(file_name, progress_bar):
     alignment.add(progress_vbox)
     return alignment
 
-def _group_selection_changed(group_combo, filters_list_view):
-    group_name, filters_array = mltfilters.groups[group_combo.get_active()]
-    filters_list_view.fill_data_model(filters_array)
-    filters_list_view.treeview.get_selection().select_path("0")
-
 def get_timecode_panel(editor_window):
     editor_window.tc = guicomponents.MonitorTCDisplay()
     editor_window.monitor_source = gtk.Label("sequence1")
