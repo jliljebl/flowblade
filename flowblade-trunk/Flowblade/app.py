@@ -347,7 +347,7 @@ def init_project_gui():
     # Display media events
     medialog.update_media_log_view()
 
-    render.set_default_values_for_widgets()
+    render.set_default_values_for_widgets(True)
 
     projectinfogui.update_project_info()
 
