@@ -217,8 +217,13 @@ def get_args_vals_list_for_current_selections():
 def get_file_path():
     folder = widgets.out_folder.get_filenames()[0]        
     filename = widgets.movie_name.get_text()
-    
-    return folder + "/" + filename + widgets.extension_label.get_text()
+
+    if  widgets.args_panel.use_args_check.get_active() == False:
+        extension = widgets.extension_label.get_text()
+    else:
+        extension = "." +  widgets.args_panel.ext_entry.get_text()
+
+    return folder + "/" + filename + extension
 
 # --------------------------------------------------- gui
 def create_widgets(normal_height):
@@ -412,7 +417,7 @@ def _preset_selection_changed():
    
 def _display_selection_in_opts_view():
     profile = get_current_profile()
-    widgets.args_panel.display_profile_args(profile, widgets.encodings_cb.get_active(), widgets.quality_cb.get_active())
+    widgets.args_panel.display_encoding_args(profile, widgets.encodings_cb.get_active(), widgets.quality_cb.get_active())
     
 def _save_opts_pressed():
     rendergui.save_ffmpeg_opts_dialog(_save_opts_dialog_callback, FFMPEG_OPTS_SAVE_FILE_EXTENSION)

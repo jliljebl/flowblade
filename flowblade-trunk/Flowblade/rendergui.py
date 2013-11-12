@@ -412,14 +412,21 @@ class RenderArgsPanel():
         self.load_selection_button.set_sensitive(False)
         self.load_selection_button.connect("clicked", lambda w: self.display_selection_callback())
         self.opts_load_button.set_sensitive(False)
-    
+
+        self.ext_label = gtk.Label(_("Ext.:"))
+        self.ext_label.set_sensitive(False)
+
+        self.ext_entry = gtk.Entry()
+        self.ext_entry.set_width_chars(5)    
+        self.ext_entry.set_sensitive(False)
+
         self.opts_view = gtk.TextView()
         self.opts_view.set_sensitive(False)
         self.opts_view.set_pixels_above_lines(2)
         self.opts_view.set_left_margin(2)
 
         self.open_in_bin = gtk.CheckButton()
-    
+
         use_opts_row = gtk.HBox()
         use_opts_row.pack_start(self.use_args_label,  False, False, 0)
         use_opts_row.pack_start(self.use_args_check,  False, False, 0)
@@ -443,6 +450,8 @@ class RenderArgsPanel():
         opts_buttons_row = gtk.HBox(False)
         opts_buttons_row.pack_start(self.load_selection_button, False, False, 0)
         opts_buttons_row.pack_start(gtk.Label(), True, True, 0)
+        opts_buttons_row.pack_start(self.ext_label, False, False, 0)
+        opts_buttons_row.pack_start(self.ext_entry, False, False, 0)
 
         self.use_args_check.set_tooltip_text(_("Render using key=value rendering options"))
         self.load_selection_button.set_tooltip_text(_("Load render options from currently selected encoding"))
@@ -459,7 +468,7 @@ class RenderArgsPanel():
         self.use_args_check.set_sensitive(value)
         self.use_args_label.set_sensitive(value)
     
-    def display_profile_args(self, profile, enc_index, qual_index):
+    def display_encoding_args(self, profile, enc_index, qual_index):
         encoding_option = renderconsumer.encoding_options[enc_index]
         quality_option = encoding_option.quality_options[qual_index]
         args_vals_list = encoding_option.get_args_vals_tuples_list(profile, quality_option)
@@ -473,6 +482,8 @@ class RenderArgsPanel():
         text_buffer.set_text(text)
         self.opts_view.set_buffer(text_buffer)
 
+        self.ext_entry.set_text(encoding_option.extension)
+
     def use_args_toggled(self, checkbutton):
         active = checkbutton.get_active()
         self.opts_view.set_sensitive(active)
@@ -480,8 +491,11 @@ class RenderArgsPanel():
         self.opts_save_button.set_sensitive(active)
         self.opts_load_button.set_sensitive(active)
 
+        self.ext_label.set_sensitive(active)
+        self.ext_entry.set_sensitive(active)
+        
         if active == True:
             self.display_selection_callback()
         else:
             self.opts_view.set_buffer(gtk.TextBuffer())
-        
+            self.ext_entry.set_text("")
