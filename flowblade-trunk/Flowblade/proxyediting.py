@@ -567,7 +567,7 @@ def _converting_proxy_mode_done():
 
     manager_window.update_proxy_mode_display()
     gui.media_list_view.widget.queue_draw()
-
+    gui.tline_left_corner.update_gui()
 
 class ProxyProjectLoadThread(threading.Thread):
 

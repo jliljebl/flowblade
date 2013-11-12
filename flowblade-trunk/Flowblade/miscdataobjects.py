@@ -6,9 +6,6 @@ import appconsts
 
 """
 Module for data objects used my multiple modules.
-
-This module is used when import structure gets worse if
-object is included in any of the modules that they are used in.
 """
 
 class ProjectProxyEditingData:

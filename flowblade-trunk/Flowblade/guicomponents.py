@@ -1578,6 +1578,24 @@ class MonitorTCDisplay:
         cr.arc (x + radius, y + radius, radius, 180 * degrees, 270 * degrees)
         cr.close_path ()
 
+
+class TimeLineLeftBottom:
+    def __init__(self):
+        self.widget = gtk.HBox()        
+        self.update_gui()
+
+    def update_gui(self):
+        for child in self.widget.get_children():
+            self.widget.remove(child)
+        self.widget.pack_start(gtk.Label(), True, True)
+        if PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA:
+            proxy_img =  gtk.image_new_from_file(respaths.IMAGE_PATH + "project_proxy.png")
+            self.widget.pack_start(proxy_img, False, False)
+
+        self.widget.show_all()
+        self.widget.queue_draw()
+
+        
 def get_gpl3_scroll_widget(size):
     license_file = open(respaths.GPL_3_DOC)
     license_text = license_file.read()
@@ -1684,6 +1702,7 @@ def get_mode_selector_popup_menu(launcher, event, callback):
     menu.add(menu_item)
 
     menu.popup(None, None, None, event.button, event.time)
+
 
 class PressLaunch:
     def __init__(self, callback, pixbuf, w=22, h=22):

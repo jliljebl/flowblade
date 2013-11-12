@@ -57,6 +57,7 @@ tline_canvas = None
 tline_scroll = None
 tline_info = None
 tline_column = None
+tline_left_corner = None
 big_tc = None
 
 # indexes match editmode values in editorstate.py
@@ -81,7 +82,7 @@ def capture_references(new_editor_window):
     tc, mark_in_display, mark_out_display, length_display, tline_display, \
     tline_scale, tline_canvas, tline_scroll, tline_v_scroll, tline_info, \
     tline_column, play_b, clip_editor_b, sequence_editor_b, note_bg_color, fg_color, fg_color_tuple, bg_color_tuple, selected_bg_color, \
-    effect_select_list_view, effect_select_combo_box, project_info_vbox, middle_notebook, big_tc, editmenu, notebook_buttons
+    effect_select_list_view, effect_select_combo_box, project_info_vbox, middle_notebook, big_tc, editmenu, notebook_buttons, tline_left_corner
 
     editor_window = new_editor_window
 
@@ -107,6 +108,7 @@ def capture_references(new_editor_window):
     tline_scroll = editor_window.tline_scroller
     tline_info = editor_window.tline_info
     tline_column = editor_window.tline_column
+    tline_left_corner = editor_window.left_corner
 
     clip_editor_b = editor_window.clip_editor_b
     sequence_editor_b = editor_window.sequence_editor_b

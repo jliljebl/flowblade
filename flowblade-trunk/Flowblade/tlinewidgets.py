@@ -636,7 +636,6 @@ def draw_slide_overlay(cr, data):
     cr.set_source_pixbuf(VIEW_SIDE_ICON, x, track_y + 4)
     cr.paint()
 
-
 def draw_compositor_move_overlay(cr, data):
     # Get data
     press_frame = data["press_frame"]
@@ -1293,6 +1292,7 @@ class TimeLineCanvas:
             cr.arc(parent_x + pad, parent_y + pad, small_radius,  0.0 * degrees, 360.0 * degrees)
             cr.fill()
 
+
 class TimeLineColumn:
     """
     GUI component for displaying and editing track parameters.
@@ -1455,11 +1455,9 @@ class TimeLineColumn:
     def _add_gradient_color_stops(self, grad, track):
         if track.id == current_sequence().first_video_index: 
             grad.add_color_stop_rgba(*TRACK_GRAD_ORANGE_STOP1)
-            #grad.add_color_stop_rgba(*TRACK_GRAD_ORANGE_STOP2)
             grad.add_color_stop_rgba(*TRACK_GRAD_ORANGE_STOP3)
         else:
             grad.add_color_stop_rgba(*TRACK_GRAD_STOP1)
-            #grad.add_color_stop_rgba(*TRACK_GRAD_STOP2)
             grad.add_color_stop_rgba(*TRACK_GRAD_STOP3)
 
     def draw_edge(self, cr, rect):
@@ -1695,54 +1693,7 @@ class TimeLineFrameScale:
         cr.close_path();
 
         cr.fill()
-
-class TimeLineColumnHead:
-    """
-    GUI component filler at timeline area top left.
-    """
-
-    def __init__(self):
-        self.widget = CairoDrawableArea(COLUMN_WIDTH, 
-                                        SCALE_HEIGHT, 
-                                        self._draw)
-
-    def _draw(self, event, cr, allocation):
-        """
-        Callback for repaint from CairoDrawableArea.
-        We get cairo contect and allocation.
-        """
-        x, y, w, h = allocation
-
-        # Draw bg
-        cr.set_source_rgb(0,0,0)
-        cr.rectangle(0,0,w,h)
-        cr.fill()
-        cr.stroke()
-
-# NOT USED CURRENTLY
-class TimeLineLeftBottom:
-    """
-    GUI 
-    """
-
-    def __init__(self):
-        self.widget = CairoDrawableArea(COLUMN_WIDTH, 
-                                        SCROLL_HEIGHT, 
-                                        self._draw)
-
-    def _draw(self, event, cr, allocation):
-        """
-        Callback for repaint from CairoDrawableArea.
-        We get cairo contect and allocation.
-        """
-        x, y, w, h = allocation
-
-        # Draw bg
-        cr.set_source_rgb(0,0,0)
-        cr.rectangle(0,0,w,h)
-        cr.fill()
-        cr.stroke()
-        
+   
 
 class TimeLineScroller(gtk.HScrollbar):
     """

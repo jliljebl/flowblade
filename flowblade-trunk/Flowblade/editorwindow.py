@@ -622,15 +622,15 @@ class EditorWindow:
         tline_hbox_2.pack_start(self.tline_canvas.widget, True, True, 0)
         
         # Bottom row filler
-        left_corner = gtk.Label()
-        left_corner.set_size_request(tlinewidgets.COLUMN_WIDTH, 20)
+        self.left_corner = guicomponents.TimeLineLeftBottom()
+        #self.left_corner.widget.set_size_request(tlinewidgets.COLUMN_WIDTH, 20)
 
         # Timeline scroller
         self.tline_scroller = tlinewidgets.TimeLineScroller(updater.tline_scrolled)
         
         # Timeline bottom row
         tline_hbox_3 = gtk.HBox()
-        tline_hbox_3.pack_start(left_corner, False, False, 0)
+        tline_hbox_3.pack_start(self.left_corner.widget, False, False, 0)
         tline_hbox_3.pack_start(self.tline_scroller, True, True, 0)
         
         # Timeline hbox 
