@@ -289,11 +289,12 @@ def create_widgets(normal_height):
     widgets.reset_button.set_tooltip_text(_("Reset all render options to defaults"))
     widgets.render_button.set_tooltip_text(_("Begin Rendering"))
 
-def set_default_values_for_widgets():
+def set_default_values_for_widgets(movie_name_too=False):
     if len(renderconsumer.encoding_options) == 0:# this won't work if no encoding options available
         return                   # but we don't want crash, so that we can inform user
     widgets.encodings_cb.set_active(0)
-    widgets.movie_name.set_text("movie")
+    if movie_name_too == True:
+        widgets.movie_name.set_text("movie")
     widgets.out_folder.set_current_folder(os.path.expanduser("~") + "/")
     widgets.use_args_check.set_active(False)
     widgets.use_project_profile_check.set_active(True)
@@ -382,12 +383,13 @@ def reload_profiles():
     fill_out_profile_widgets()
 
 def _render_type_changed():
-    if widgets.type_combo.get_active() == 0:
+    if widgets.type_combo.get_active() == 0: # User Defined
         enable_user_rendering(True)
         set_default_values_for_widgets()
         widgets.preset_encodings_cb.set_sensitive(False)
         _preset_selection_changed()
-    else:
+        widgets.encoding_panel.encoding_selector.encoding_selection_changed()
+    else: # Preset Encodings
         enable_user_rendering(False)
         widgets.preset_encodings_cb.set_sensitive(True)
         _preset_selection_changed()
