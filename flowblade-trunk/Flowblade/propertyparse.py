@@ -23,6 +23,7 @@ Modules provides functions that:
 - parses strings to property tuples or argument dicts
 - build value strings from property tuples.
 """
+
 import appconsts
 from editorstate import current_sequence
 import respaths
@@ -171,9 +172,7 @@ def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_
         frame = int(sides[0])
         # get values and convert "frei0r.cairoaffineblend" values to editor values
         # this because all frei0r plugins require values in range 0 - 1
-        print values[0]
         x = _get_pixel_pos_from_frei0r_cairo_pos(float(values[0]), screen_width)
-        print x
         y = _get_pixel_pos_from_frei0r_cairo_pos(float(values[1]), screen_height)
         x_scale = _get_scale_from_frei0r_cairo_scale(float(values[2]))
         y_scale = _get_scale_from_frei0r_cairo_scale(float(values[3]))
@@ -183,11 +182,6 @@ def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_
         add_kf = (frame, source_rect, float(opacity))
         new_keyframes.append(add_kf)
 
-    #add_kf = (0, source_rect, 100)
-    #new_keyframes.append(add_kf)
-    
-    print "new_keyframes:"
-    print new_keyframes
     return new_keyframes
 
 def _get_pixel_pos_from_frei0r_cairo_pos(value, screen_dim):

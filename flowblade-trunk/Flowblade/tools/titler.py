@@ -27,7 +27,7 @@ import pickle
 import time
 import threading
 
-import dialogs
+import toolsdialogs
 from editorstate import PLAYER
 from editorstate import PROJECT
 import editorstate
@@ -452,7 +452,7 @@ class Titler(gtk.Window):
         self.show_current_frame()
 
     def _save_title_pressed(self):
-        dialogs.save_titler_graphic_as_dialog(self._save_title_dialog_callback, "title.png", None)
+        toolsdialogs.save_titler_graphic_as_dialog(self._save_title_dialog_callback, "title.png", None)
 
     def _save_title_dialog_callback(self, dialog, response_id):
         if response_id == gtk.RESPONSE_ACCEPT:
@@ -478,7 +478,7 @@ class Titler(gtk.Window):
             dialog.destroy()
 
     def _save_layers_pressed(self):
-        dialogs.save_titler_data_as_dialog(self._save_layers_dialog_callback, "titler_layers", None)
+        toolsdialogs.save_titler_data_as_dialog(self._save_layers_dialog_callback, "titler_layers", None)
 
     def _save_layers_dialog_callback(self, dialog, response_id):
         if response_id == gtk.RESPONSE_ACCEPT:
@@ -490,7 +490,7 @@ class Titler(gtk.Window):
             dialog.destroy()
             
     def _load_layers_pressed(self):
-        dialogs.load_titler_data_dialog(self._load_layers_dialog_callback)
+        toolsdialogs.load_titler_data_dialog(self._load_layers_dialog_callback)
         
     def _load_layers_dialog_callback(self, dialog, response_id):
         if response_id == gtk.RESPONSE_ACCEPT:

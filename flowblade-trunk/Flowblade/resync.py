@@ -23,7 +23,7 @@ from editorstate import current_sequence
 
 # Syncing clips
 #
-# Sync is initiated by selecting a parent clip for the child clip. Parent clips
+# Sync is created by selecting a parent clip for the child clip. Parent clips
 # must be on track V1.
 #
 # Setting sync means calculating and saving the position difference between where first frames of clips

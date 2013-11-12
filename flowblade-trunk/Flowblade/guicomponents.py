@@ -57,7 +57,7 @@ MEDIA_OBJECT_WIDGET_HEIGHT = 105
 
 CLIP_EDITOR_LEFT_WIDTH = 200
 
-TC_COLOR = (0.7, 0.7, 0.7)#utils.get_cairo_color_tuple_255_rgb(225, 180, 0)#(67, 193, 234)#(216, 160, 0)#(225, 180, 0) #(0.7, 0.7, 0.7) #
+TC_COLOR = (0.7, 0.7, 0.7)
 
 BIG_TC_GRAD_STOPS = [   (1, 1, 1, 1, 0.2),
                         (0.8, 1, 1, 1, 0),
@@ -148,9 +148,8 @@ class ImageTextTextListView(gtk.VBox):
         model, rows = self.treeview.get_selection().get_selected_rows()
         return rows
 
-# ------------------------------------------------- item lists 
 
-        
+# ------------------------------------------------- item lists 
 class ImageTextImageListView(gtk.VBox):
     """
     GUI component displaying list with columns: img, text, img
@@ -224,6 +223,7 @@ class ImageTextImageListView(gtk.VBox):
     def get_selected_rows_list(self):
         model, rows = self.treeview.get_selection().get_selected_rows()
         return rows
+
 
 class SequenceListView(ImageTextTextListView):
     """
