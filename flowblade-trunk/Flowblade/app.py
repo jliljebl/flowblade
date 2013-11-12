@@ -348,7 +348,7 @@ def init_project_gui():
     medialog.update_media_log_view()
 
     render.set_default_values_for_widgets(True)
-
+    gui.tline_left_corner.update_gui()
     projectinfogui.update_project_info()
 
 def init_sequence_gui():

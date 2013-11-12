@@ -36,7 +36,7 @@ GPL_3_DOC = None
 LOCALE_PATH = None
 ROOT_PARENT = None
 PATTERN_PRODUCER_PATH = None
-#PROXY_PROFILE_PATH = None
+
 
 def set_paths(root_path):
     global ROOT_PATH, IMAGE_PATH, THUMBNAIL_PATH, PROFILE_PATH,\
@@ -57,7 +57,6 @@ def set_paths(root_path):
     GPL_3_DOC = root_path + "/res/help/gpl3"
     ROOT_PARENT = ROOT_PATH.strip("Flowblade")
     PATTERN_PRODUCER_PATH = root_path + "/res/patternproducer/"
-    #PROXY_PROFILE_PATH = root_path + "/res/proxyprofiles/"
 
 def apply_dark_theme():
     global IMAGE_PATH
