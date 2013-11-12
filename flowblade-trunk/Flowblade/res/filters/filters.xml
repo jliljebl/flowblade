@@ -25,8 +25,8 @@
         <property name="Right" args="range_in=0.0,100.0 editor=slider step=0.1 scale_digits=1">0</property>
         <property name="Top" args="range_in=0.0,100.0 editor=slider step=0.1 scale_digits=1">0</property>
         <property name="Bottom" args="range_in=0.0,100.0 editor=slider step=0.1 scale_digits=1">0</property>
-        <property name="Invert" args="editor=no_editor">1</property>
-        <property name="Blur" args="editor=no_editor">0</property>
+        <property name="Blur" args="range_in=0.0,100.0 editor=slider step=0.1 scale_digits=1">0</property>
+        <property name="Invert" args="editor=booleancheckbox displayname=Invert">1</property>
     </filter>
     <filter id="frei0r.alphaspot">
         <name>Alpha Shape</name>

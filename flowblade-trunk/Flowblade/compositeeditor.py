@@ -21,6 +21,7 @@
 """
 Module handles clips compositing gui.
 """
+
 import copy
 import gtk
 
