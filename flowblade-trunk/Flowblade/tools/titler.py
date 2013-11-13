@@ -318,12 +318,14 @@ class Titler(gtk.Window):
         next_frame.set_image(next_icon)
         next_frame.connect("clicked", lambda w:self._next_frame_pressed())
 
+        self.scale_selector = vieweditor.ScaleSelector(self)
+
         timeline_box = gtk.HBox()
         timeline_box.pack_start(guiutils.get_in_centering_alignment(self.tc_display.widget), False, False, 0)
         timeline_box.pack_start(guiutils.get_in_centering_alignment(pos_bar_frame, 1.0), True, True, 0)
         timeline_box.pack_start(prev_frame, False, False, 0)
         timeline_box.pack_start(next_frame, False, False, 0)
-        timeline_box.pack_start(vieweditor.ScaleSelector(self), False, False, 0)
+        timeline_box.pack_start(self.scale_selector, False, False, 0)
         
         positions_box = gtk.HBox()
         positions_box.pack_start(gtk.Label(), True, True, 0)
@@ -393,7 +395,7 @@ class Titler(gtk.Window):
 
         editor_row = gtk.HBox()
         editor_row.pack_start(controls_panel, False, False, 0)
-        editor_row.pack_start(editor_panel, False, False, 0)
+        editor_row.pack_start(editor_panel, True, True, 0)
 
         alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
         alignment.set_padding(8,8,8,8)
@@ -405,6 +407,9 @@ class Titler(gtk.Window):
         self._update_gui_with_active_layer_data()
         self.show_all()
 
+        self.connect("size-allocate", lambda w, e:self.window_resized())
+        self.connect("window-state-event", lambda w, e:self.window_resized())
+    
     def load_titler_data(self):
         # clear and then load layers, and set layer 0 active
         self.view_editor.clear_layers()
@@ -432,7 +437,11 @@ class Titler(gtk.Window):
         self.tc_display.set_frame(frame)
         self.pos_bar.widget.queue_draw()
         self._update_active_layout()
-        
+
+    def window_resized(self):
+        scale = self.scale_selector.get_current_scale()
+        self.scale_changed(scale)
+
     def scale_changed(self, new_scale):
         self.view_editor.set_scale_and_update(new_scale)
         self.view_editor.edit_area.queue_draw()
