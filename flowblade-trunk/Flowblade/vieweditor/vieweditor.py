@@ -269,7 +269,7 @@ class ScaleSelector(gtk.VBox):
     def __init__(self, listener):
         gtk.VBox.__init__(self)
         self.listener = listener
-        self.scales = [0.25, 0.5, 1.0, 1.5, 2.0, 4.0]
+        self.scales = [0.25, 0.33, 0.5, 0.75, 1.0, 1.5, 2.0, 4.0]
         combo = gtk.combo_box_new_text()
         for scale in self.scales:
             scale_str = str(int(100 * scale)) + "%"
