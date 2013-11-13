@@ -268,7 +268,7 @@ class ScaleSelector(gtk.VBox):
     
     def __init__(self, listener):
         gtk.VBox.__init__(self)
-        self.listener = listener
+        self.listener = listener # listerner needs to implement scale_changed(scale) interface
         self.scales = [0.25, 0.33, 0.5, 0.75, 1.0, 1.5, 2.0, 4.0]
         combo = gtk.combo_box_new_text()
         for scale in self.scales:
@@ -279,7 +279,11 @@ class ScaleSelector(gtk.VBox):
                               lambda w,e: self._scale_changed(w.get_active()), 
                               None)    
         self.add(combo)
-        
+        self.combo = combo
+    
+    def get_current_scale(self):
+        return self.scales[self.combo.get_active()]
+
     def _scale_changed(self, scale_index):
         self.listener.scale_changed(self.scales[scale_index])
         
