@@ -40,6 +40,7 @@ class AbstactEditorLayer:
         self.edit_point_shape = None
         self.name = "unnamed layer"
         self.active = False
+        self.visible = True
         self.last_pressed_edit_point = None
         self.mouse_start_point = None
         self.mouse_current_point = None
@@ -49,7 +50,7 @@ class AbstactEditorLayer:
         self.edit_type = None # is interpretation of purpose of mouse press, 
                                # not always used if mouse press in edit_mode can only interpreted in one way
         self.mouse_released_listener = None
-
+    
     # --------------------------------------------- state changes
     def frame_changed(self):
         pass # override to react to frame change

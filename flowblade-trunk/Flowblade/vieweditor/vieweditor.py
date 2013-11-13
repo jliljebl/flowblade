@@ -60,7 +60,6 @@ class ViewEditor(gtk.Frame):
         self.scroll_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self.scroll_window.show_all()
         self.scroll_window.set_size_request(scroll_width, scroll_height)  # +2 to not show scrollbars
-        #self.scroll_window.set_size_request(int(self.scaled_screen_width + MIN_PAD * 2 + 2), self.profile_h + MIN_PAD * 2 + 2) # +2 to not show scrollbars
         self.add(self.scroll_window)
 
         self.edit_layers = []
@@ -232,7 +231,8 @@ class ViewEditor(gtk.Frame):
             cr = cairo.Context(img_surface)
 
         for editorlayer in self.edit_layers:
-            editorlayer.draw(cr, self.write_out_layers, self.draw_overlays)
+            if editorlayer.visible:
+                editorlayer.draw(cr, self.write_out_layers, self.draw_overlays)
         
         if self.write_out_layers == True:
             img_surface.write_to_png(self.write_file_path)

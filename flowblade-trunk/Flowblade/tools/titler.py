@@ -107,6 +107,7 @@ class TextLayer:
         self.drop_shadow = None # future feature, here to keep file compat once added
         self.animation = None # future feature
         self.layer_attributes = None # future feature (kerning etc. go here, we're not using all pango features)
+        self.visible = True
 
     def get_font_desc_str(self):
         return self.font_family + " " + self.font_face + " " + str(self.font_size)
@@ -182,7 +183,7 @@ class Titler(gtk.Window):
         center_v.set_image(center_v_icon)
         center_v.connect("clicked", lambda w:self._center_v_pressed())
 
-        self.layer_list = TextLayerListView(self._layer_selection_changed)
+        self.layer_list = TextLayerListView(self._layer_selection_changed, self._layer_visibility_toggled)
         self.layer_list.set_size_request(TEXT_LAYER_LIST_WIDTH, TEXT_LAYER_LIST_HEIGHT)
     
         self.text_view = gtk.TextView()
@@ -586,6 +587,14 @@ class Titler(gtk.Window):
         self.layer_list.fill_data_model()
         self._activate_layer(0)
 
+    def _layer_visibility_toggled(self, layer_index):
+        toggled_visible = (self.view_editor.edit_layers[layer_index].visible == False)
+        self.view_editor.edit_layers[layer_index].visible = toggled_visible
+        _titler_data.layers[layer_index].visible = toggled_visible
+        self.layer_list.fill_data_model()
+
+        self.view_editor.edit_area.queue_draw()
+        
     def _center_h_pressed(self):
         # calculate top left x pos for centering
         w, h = _titler_data.active_layer.pango_layout.pixel_size
@@ -829,12 +838,15 @@ class PangoTextLayout:
 
 class TextLayerListView(gtk.VBox):
 
-    def __init__(self, selection_changed_cb):
+    def __init__(self, selection_changed_cb, layer_visible_toggled_cb):
         gtk.VBox.__init__(self)
         self.layer_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "text_layer.png")
-        
+        self.eye_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "eye.png")
+
+        self.layer_visible_toggled_cb = layer_visible_toggled_cb
+
        # Datamodel: str
-        self.storemodel = gtk.ListStore(gtk.gdk.Pixbuf, str)
+        self.storemodel = gtk.ListStore(gtk.gdk.Pixbuf, str, gtk.gdk.Pixbuf)
  
         # Scroll container
         self.scroll = gtk.ScrolledWindow()
@@ -845,22 +857,30 @@ class TextLayerListView(gtk.VBox):
         self.treeview = gtk.TreeView(self.storemodel)
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(False)
+        self.treeview.connect("button-press-event", self.button_press)
+        
         tree_sel = self.treeview.get_selection()
         tree_sel.set_mode(gtk.SELECTION_SINGLE)
         tree_sel.connect("changed", selection_changed_cb)
-            
-        # Column view
-        self.text_col_1 = gtk.TreeViewColumn("text1")
-        self.icon_col_1 = gtk.TreeViewColumn("Icon")
-        
+
         # Cell renderers
         self.text_rend_1 = gtk.CellRendererText()
         self.text_rend_1.set_property("ellipsize", pango.ELLIPSIZE_END)
         self.text_rend_1.set_property("font", "Sans Bold 10")
         self.text_rend_1.set_fixed_height_from_font(1)
+
         self.icon_rend_1 = gtk.CellRendererPixbuf()
         self.icon_rend_1.props.xpad = 6
         self.icon_rend_1.set_fixed_size(40, 40)
+
+        self.icon_rend_2 = gtk.CellRendererPixbuf()
+        self.icon_rend_2.props.xpad = 2
+        self.icon_rend_2.set_fixed_size(20, 40)
+
+        # Column view
+        self.icon_col_1 = gtk.TreeViewColumn("layer_icon")
+        self.text_col_1 = gtk.TreeViewColumn("layer_text")
+        self.icon_col_2 = gtk.TreeViewColumn("eye_icon")
         
         # Build column views
         self.icon_col_1.set_expand(False)
@@ -875,14 +895,26 @@ class TextLayerListView(gtk.VBox):
         self.text_col_1.pack_start(self.text_rend_1)
         self.text_col_1.add_attribute(self.text_rend_1, "text", 1)
 
+        self.icon_col_2.set_expand(False)
+        self.icon_col_2.set_spacing(5)
+        self.icon_col_2.pack_start(self.icon_rend_2)
+        self.icon_col_2.add_attribute(self.icon_rend_2, 'pixbuf', 2)
+
         # Add column views to view
         self.treeview.append_column(self.icon_col_1)
         self.treeview.append_column(self.text_col_1)
+        self.treeview.append_column(self.icon_col_2)
 
         # Build widget graph and display
         self.scroll.add(self.treeview)
         self.pack_start(self.scroll)
         self.scroll.show_all()
+
+    def button_press(self, tree_view, event):
+        if self.icon_col_1.get_width() + self.text_col_1.get_width() < event.x:
+            path = self.treeview.get_path_at_pos(int(event.x), int(event.y))
+            if path != None:
+                self.layer_visible_toggled_cb(max(path[0]))
 
     def get_selected_row(self):
         model, rows = self.treeview.get_selection().get_selected_rows()
@@ -901,7 +933,11 @@ class TextLayerListView(gtk.VBox):
         """
         self.storemodel.clear()
         for layer in _titler_data.layers:
-            row_data = [self.layer_icon, layer.text]
+            if layer.visible:
+                visible_icon = self.eye_icon
+            else:
+                visible_icon = None 
+            row_data = [self.layer_icon, layer.text, visible_icon]
             self.storemodel.append(row_data)
         
         self.scroll.queue_draw()
