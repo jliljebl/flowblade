@@ -162,6 +162,8 @@ class Titler(gtk.Window):
         self.view_editor = vieweditor.ViewEditor(PLAYER().profile, VIEW_EDITOR_WIDTH, VIEW_EDITOR_HEIGHT)
         self.view_editor.active_layer_changed_listener = self.active_layer_changed
         
+        self.guides_toggle = vieweditor.GuidesViewToggle(self.view_editor)
+        
         add_b = gtk.Button(_("Add"))
         del_b = gtk.Button(_("Delete"))
         add_b.connect("clicked", lambda w:self._add_layer_pressed())
@@ -179,7 +181,7 @@ class Titler(gtk.Window):
         center_v = gtk.Button()
         center_v.set_image(center_v_icon)
         center_v.connect("clicked", lambda w:self._center_v_pressed())
-            
+
         self.layer_list = TextLayerListView(self._layer_selection_changed)
         self.layer_list.set_size_request(TEXT_LAYER_LIST_WIDTH, TEXT_LAYER_LIST_HEIGHT)
     
@@ -325,6 +327,7 @@ class Titler(gtk.Window):
         timeline_box.pack_start(guiutils.get_in_centering_alignment(pos_bar_frame, 1.0), True, True, 0)
         timeline_box.pack_start(prev_frame, False, False, 0)
         timeline_box.pack_start(next_frame, False, False, 0)
+        timeline_box.pack_start(self.guides_toggle, False, False, 0)
         timeline_box.pack_start(self.scale_selector, False, False, 0)
         
         positions_box = gtk.HBox()

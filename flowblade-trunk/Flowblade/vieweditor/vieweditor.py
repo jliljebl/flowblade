@@ -26,6 +26,7 @@ from PIL import Image
 
 import cairoarea
 import cairo
+import respaths
 
 MIN_PAD = 20
 GUIDES_COLOR = (0.5, 0.5, 0.5, 1.0)
@@ -35,6 +36,9 @@ class ViewEditor(gtk.Frame):
     def __init__(self, profile, scroll_width, scroll_height):
         gtk.Frame.__init__(self)
         self.scale = 1.0
+        self.draw_overlays = True
+        self.draw_safe_area = True
+        self.has_safe_area = True
         self.profile_w = profile.width()
         self.profile_h = profile.height()
         self.aspect_ratio = float(profile.sample_aspect_num()) / profile.sample_aspect_den()
@@ -228,7 +232,7 @@ class ViewEditor(gtk.Frame):
             cr = cairo.Context(img_surface)
 
         for editorlayer in self.edit_layers:
-            editorlayer.draw(cr, self.write_out_layers)
+            editorlayer.draw(cr, self.write_out_layers, self.draw_overlays)
         
         if self.write_out_layers == True:
             img_surface.write_to_png(self.write_file_path)
@@ -254,16 +258,18 @@ class ViewEditor(gtk.Frame):
         cr.stroke()
 
         # Draw "safe" area, this is not based on any real specification
-        dimensions_safe_mult = 0.9
-        xin = ((w - ox) - ((w - ox) * dimensions_safe_mult)) / 2.0
-        yin = ((h - oy) - ((h - oy) * dimensions_safe_mult)) / 2.0
-        cr.move_to(ox + xin, oy + yin)
-        cr.line_to(w - xin, oy + yin)
-        cr.line_to(w - xin, h - yin)
-        cr.line_to(ox + xin, h - yin)
-        cr.close_path()
-        cr.stroke()
-        
+        if self.draw_safe_area == True and self.has_safe_area == True:
+            dimensions_safe_mult = 0.9
+            xin = ((w - ox) - ((w - ox) * dimensions_safe_mult)) / 2.0
+            yin = ((h - oy) - ((h - oy) * dimensions_safe_mult)) / 2.0
+            cr.move_to(ox + xin, oy + yin)
+            cr.line_to(w - xin, oy + yin)
+            cr.line_to(w - xin, h - yin)
+            cr.line_to(ox + xin, h - yin)
+            cr.close_path()
+            cr.stroke()
+
+
 class ScaleSelector(gtk.VBox):
     
     def __init__(self, listener):
@@ -276,8 +282,8 @@ class ScaleSelector(gtk.VBox):
             combo.append_text(scale_str)
         combo.set_active(2)
         combo.connect("changed", 
-                              lambda w,e: self._scale_changed(w.get_active()), 
-                              None)    
+                      lambda w,e: self._scale_changed(w.get_active()), 
+                      None)    
         self.add(combo)
         self.combo = combo
     
@@ -286,4 +292,20 @@ class ScaleSelector(gtk.VBox):
 
     def _scale_changed(self, scale_index):
         self.listener.scale_changed(self.scales[scale_index])
+
+
+class GuidesViewToggle(gtk.ToggleButton):
+    
+    def __init__(self, view_editor):
+        gtk.ToggleButton.__init__(self)
+        icon = gtk.image_new_from_file(respaths.IMAGE_PATH + "guides_view_switch.png")
+        self.set_image(icon)
+        self.view_editor = view_editor
         
+        self.set_active(True)
+        self.connect("clicked",  lambda w:self._clicked())
+ 
+    def _clicked(self):
+        self.view_editor.draw_overlays = self.get_active()
+        self.view_editor.draw_safe_area = self.get_active()
+        self.view_editor.edit_area.queue_draw()

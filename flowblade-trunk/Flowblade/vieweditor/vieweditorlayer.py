@@ -140,7 +140,7 @@ class AbstactEditorLayer:
         return (cx - sx, cy - sy)
 
     # -------------------------------------------- draw
-    def draw(self, cr, write_out_layers):
+    def draw(self, cr, write_out_layers, draw_overlays):
         print "AbstactEditorLayer.draw not overridden in" + self.__class__
         sys.exit(1)
 
@@ -212,16 +212,17 @@ class SimpleRectEditLayer(AbstactEditorLayer):
         self.edit_point_shape.edit_points[self.guide_1.point_index].set_pos(self.guide_1.end_point)
         self.edit_point_shape.edit_points[self.guide_2.point_index].set_pos(self.guide_2.end_point)
 
-    def draw(self, cr, write_out_layers):
+    def draw(self, cr, write_out_layers, draw_overlays):
         if write_out_layers:
             return # this layer is not drawn when writing out layers
 
-        if self.active:
-            cr.set_source_rgba(*self.ACTIVE_COLOR)
-        else:
-            cr.set_source_rgba(*self.NOT_ACTIVE_COLOR)
-        self.edit_point_shape.draw_line_shape(cr, self.view_editor)
-        self.edit_point_shape.draw_points(cr, self.view_editor)
+        if draw_overlays:
+            if self.active:
+                cr.set_source_rgba(*self.ACTIVE_COLOR)
+            else:
+                cr.set_source_rgba(*self.NOT_ACTIVE_COLOR)
+            self.edit_point_shape.draw_line_shape(cr, self.view_editor)
+            self.edit_point_shape.draw_points(cr, self.view_editor)
 
 
 class TextEditLayer(SimpleRectEditLayer):
@@ -233,7 +234,7 @@ class TextEditLayer(SimpleRectEditLayer):
         self.edit_point_shape.line_type = vieweditorshape.LINE_DASH
         self.resizing_allowed = False
 
-    def draw(self, cr, write_out_layers):
+    def draw(self, cr, write_out_layers, draw_overlays):
         x, y = self.edit_point_shape.get_panel_point(0, self.view_editor)
         rotation = self.edit_point_shape.get_first_two_points_rotation_angle()
         xscale = self.view_editor.scale * self.view_editor.aspect_ratio
@@ -247,4 +248,4 @@ class TextEditLayer(SimpleRectEditLayer):
             w, h = self.text_layout.pixel_size
             self.edit_point_shape.update_rect_size(w, h)
             self.update_rect = False
-        SimpleRectEditLayer.draw(self, cr, write_out_layers)
+        SimpleRectEditLayer.draw(self, cr, write_out_layers, draw_overlays)
