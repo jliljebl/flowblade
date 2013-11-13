@@ -623,7 +623,7 @@ class EditorWindow:
         
         # Bottom row filler
         self.left_corner = guicomponents.TimeLineLeftBottom()
-        #self.left_corner.widget.set_size_request(tlinewidgets.COLUMN_WIDTH, 20)
+        self.left_corner.widget.set_size_request(tlinewidgets.COLUMN_WIDTH, 20)
 
         # Timeline scroller
         self.tline_scroller = tlinewidgets.TimeLineScroller(updater.tline_scrolled)
