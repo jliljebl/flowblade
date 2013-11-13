@@ -332,12 +332,12 @@ def init_project_gui():
         selection.select_path("0")
     except Exception:
         pass
-        
+
     # Display bins
     gui.bin_list_view.fill_data_model()
     selection = gui.bin_list_view.treeview.get_selection()
     selection.select_path("0")
-    
+
     # Display sequences
     gui.sequence_list_view.fill_data_model()
     selection = gui.sequence_list_view.treeview.get_selection()
