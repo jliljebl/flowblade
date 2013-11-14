@@ -60,6 +60,7 @@ OPACITY_IN_GEOM_SINGLE_KF = "opacity_in_geom_kf_single"     # 0=0/0:SCREEN_WIDTH
 OPACITY_IN_GEOM_KF = "opacity_in_geom_kf"                   # frame=0/0:SCREEN_WIDTHxSCREEN_HEIGHT:opacity (kf_str;kf_str;kf_str;...;kf_str)
 GEOMETRY_OPACITY_KF ="geom_opac_kf"                         # frame=x/y:widthxheight:opacity
 GEOM_IN_AFFINE_FILTER = "geom_in_affine_filt"               # x/y:widthxheight:opacity
+AFFINE_SCALE = "affine_scale"                               # special property to get the 1/ x that the filter wants
 KEYFRAME_HCS = "keyframe_hcs"                               # frame=value(;frame=value) HCS = half comma separeted
 KEYFRAME_HCS_TRANSITION = "keyframe_hcs_transition"         # frame=value(;frame=value) HCS = half comma separeted, used to edit transitions
 MULTIPART_KEYFRAME_HCS = "multipart_keyframe"               # frame=value(;frame=value) series of mlt.Filter objects that get their properties set, HCS = half comma separeted
@@ -339,7 +340,7 @@ class EditableProperty(AbstractProperty):
         self.write_mlt_property_str_value(str_value)
         self.value = str_value
         self.write_filter_object_property(str_value)
-
+        
     def write_mlt_property_str_value(self, str_value):
         # mlt property value
         filter_object = self._get_filter_object()
@@ -425,9 +426,9 @@ class AffineFilterGeomProperty(EditableProperty):
         x = x_s.get_adjustment().get_value()
         y = y_s.get_adjustment().get_value()
         h = h_s.get_adjustment().get_value()
-        
-        # x/y:widthxheight:opacity
-        val_str = str(x) + "/" + str(y) + ":" + str(w) + "x" + str(h) + ":100"
+
+        # "0=x/y:widthxheight:opacity"
+        val_str = "0=" + str(x) + "/" + str(y) + ":" + str(w) + "x" + str(h) + ":100" # 100x MLT ignores width
         self.write_value(val_str)
 
 
@@ -656,6 +657,52 @@ class MultipartKeyFrameProperty(AbstractProperty):
         filter_object.update_value(val_str, self.clip, current_sequence().profile)
 
 
+class AffineScaleProperty(EditableProperty):
+    
+    def get_input_range_adjustment(self):
+        step = DEFAULT_STEP
+        lower = 0
+        upper = 500
+        val = self.value.strip('"')
+        epxr_sides = val.split("=")
+        in_value = self.get_in_value(float(epxr_sides[1]))
+        return gtk.Adjustment(float(in_value), float(lower), float(upper), float(step))
+
+    def adjustment_value_changed(self, adjustment):
+        value = adjustment.get_value()
+        out_value = self.get_out_value(value)
+        val_str = "0=" + str(out_value)
+        self.write_value(val_str)
+    
+    def get_out_value(self, in_value):
+        """
+        Converts input value to output value using ranges.
+        """
+        # in_range = 500 # hard coded special case
+        in_norm = in_value / 100.0 # to get 0 - 5, 1.0 no scaling
+        if in_norm < 0.001:
+            in_norm = 0.001
+        out =  1 / in_norm
+        return out
+
+    def get_in_value(self, out_value):
+        """
+        Converts output to input value
+        """
+        # out_value =  1 / in_norm, range 1 / 0.001 -> 1 / 5
+        if out_value < 0.001:
+            out_value = 0.001
+        in_value = (1 / (out_value)) * 100 # 0 - 500 range
+        return in_value  
+
+    def write_mlt_property_str_value(self, str_value):
+        val = str_value.strip('"')
+        epxr_sides = val.split("=")
+        # mlt property value
+        filter_object = self._get_filter_object()
+        filter_object.mlt_filter.set(str(self.name), str(epxr_sides[1]))
+        
+
 # ------------------------------------------ creator func dicts
 # dict EXPRESSION_TYPE args value -> class extending AbstractProperty
 # Note: HCS means half comma separated
@@ -675,5 +722,6 @@ EDITABLE_PROPERTY_CREATORS = { \
     GEOM_IN_AFFINE_FILTER: lambda params : AffineFilterGeomProperty(params),
     WIPE_RESOURCE : lambda(params) : WipeResourceProperty(params),
     NOT_PARSED : lambda(params) : EditableProperty(params), # This should only be used with params that have editor=NO_EDITOR
-    NOT_PARSED_TRANSITION : lambda(params) : TransitionEditableProperty(params)   } # This should only be used with params that have editor=NO_EDITOR
+    NOT_PARSED_TRANSITION : lambda(params) : TransitionEditableProperty(params), # This should only be used with params that have editor=NO_EDITOR
+    AFFINE_SCALE : lambda(params) : AffineScaleProperty(params) }
 

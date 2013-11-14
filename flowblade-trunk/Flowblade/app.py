@@ -28,6 +28,7 @@ import glib
 import gobject
 import gtk
 import locale
+import md5
 import mlt
 import multiprocessing
 import os
@@ -82,6 +83,7 @@ import utils
 
 AUTOSAVE_DIR = "autosave/"
 AUTOSAVE_FILE = "autosave/autosave"
+instance_autosave_id_str = None
 PID_FILE = "flowbladepidfile"
 BATCH_DIR = "batchrender/"
 autosave_timeout_id = -1
@@ -128,11 +130,13 @@ def main(root_path):
     if not os.path.exists(user_dir + BATCH_DIR):
         os.mkdir(user_dir + BATCH_DIR)
 
+    """
     # Allow only on instance to run
     pid_file_path = user_dir + PID_FILE
     # Exit and info dialog launched below if can_run is False
     can_run = utils.single_instance_pid_file_test_and_write(pid_file_path)
-                                    
+    """
+
     # Set paths.
     respaths.set_paths(root_path)
 
@@ -236,17 +240,22 @@ def main(root_path):
     gui.editor_window.window.connect("size-allocate", lambda w, e:updater.window_resized())
     gui.editor_window.window.connect("window-state-event", lambda w, e:updater.window_resized())
 
+    # Get existing autosave files
+    autosave_files = get_autosave_files()
+
     # Show splash
-    if ((editorpersistance.prefs.display_splash_screen == True) and
-        (not os.path.exists(user_dir + AUTOSAVE_FILE))):
+    if ((editorpersistance.prefs.display_splash_screen == True) and len(autosave_files) == 0):
         global splash_timeout_id
         splash_timeout_id = gobject.timeout_add(2600, destroy_splash_screen)
         splash_screen.show_all()
 
     appconsts.SAVEFILE_VERSION = projectdata.SAVEFILE_VERSION
 
+    # Every running instance has unique autosave file which is deleted at exit
+    set_instance_autosave_id()
+
     # Existance of autosave file hints that program was exited abnormally
-    if os.path.exists(user_dir + AUTOSAVE_FILE) and check_crash == True:
+    if check_crash == True and len(autosave_files) > 0:
         gobject.timeout_add(10, autosave_recovery_dialog)
     else:
         start_autosave()
@@ -473,18 +482,31 @@ def autosave_recovery_dialog():
 
 def autosave_dialog_callback(dialog, response):
     dialog.destroy()
+    autosave_file = utils.get_hidden_user_dir_path() + AUTOSAVE_DIR + get_autosave_files()[0]
+    print autosave_file
     if response == gtk.RESPONSE_OK:
-        useraction.actually_load_project(utils.get_hidden_user_dir_path() + AUTOSAVE_FILE, True)
-        
+        useraction.actually_load_project(autosave_file, True)
+
+def set_instance_autosave_id():
+    global instance_autosave_id_str
+    instance_autosave_id_str = "_" + md5.new(str(os.urandom(32))).hexdigest()
+
+def get_instance_autosave_file():
+    return AUTOSAVE_FILE + instance_autosave_id_str
+
 def start_autosave():
     global autosave_timeout_id
-    time_min = 1 # hard coded, there's code to make configurable later when project wizard etc. is added
+    time_min = 1 # hard coded, probably no need to make configurable
     autosave_delay_millis = time_min * 60 * 1000
 
     print "autosave started"
     autosave_timeout_id = gobject.timeout_add(autosave_delay_millis, do_autosave)
-    autosave_file = utils.get_hidden_user_dir_path() + AUTOSAVE_FILE
+    autosave_file = utils.get_hidden_user_dir_path() + get_instance_autosave_file()
     persistance.save_project(editorstate.PROJECT(), autosave_file)
+
+def get_autosave_files():
+    autosave_dir = utils.get_hidden_user_dir_path() + AUTOSAVE_DIR
+    return os.listdir(autosave_dir)
 
 def stop_autosave():
     global autosave_timeout_id
@@ -494,7 +516,7 @@ def stop_autosave():
     autosave_timeout_id = -1
 
 def do_autosave():
-    autosave_file = utils.get_hidden_user_dir_path() + AUTOSAVE_FILE
+    autosave_file = utils.get_hidden_user_dir_path() + get_instance_autosave_file()
     persistance.save_project(editorstate.PROJECT(), autosave_file)
     return True
 
@@ -663,15 +685,17 @@ def _shutdown_dialog_callback(dialog, response_id):
 
     # Delete autosave file
     try:
-        os.remove(utils.get_hidden_user_dir_path() + AUTOSAVE_FILE)
+        os.remove(utils.get_hidden_user_dir_path() + get_instance_autosave_file())
     except:
         print "Delete autosave file FAILED"
 
+    """
     # Delete pid file
     try:
          os.remove(utils.get_hidden_user_dir_path() + PID_FILE)
     except:
         print "Delete pid file FAILED"
+    """
 
     # Exit gtk main loop.
     gtk.main_quit()

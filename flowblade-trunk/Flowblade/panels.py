@@ -66,6 +66,7 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, proxy
         
     adj = gtk.Adjustment(value=editorpersistance.prefs.media_columns, lower=MEDIA_PANEL_MIN_ROWS, upper=MEDIA_PANEL_MAX_ROWS, step_incr=1)
     spin = gtk.SpinButton(adj)
+    spin.set_numeric(True)
     spin.connect("changed", col_changed_cb)
 
     buttons_box = gtk.HBox(False,1)

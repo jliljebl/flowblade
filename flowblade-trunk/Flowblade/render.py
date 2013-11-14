@@ -502,6 +502,7 @@ def render_frame_buffer_clip(media_file):
     fb_widgets.hslider.set_draw_value(False)
     
     spin = gtk.SpinButton()
+    spin.set_numeric(True)
     spin.set_adjustment(adjustment)
 
     fb_widgets.hslider.set_digits(0)
