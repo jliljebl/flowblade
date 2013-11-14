@@ -122,6 +122,7 @@ def get_slider_row(editable_property, listener, slider_name=None):
     hslider.set_draw_value(False)
     
     spin = gtk.SpinButton()
+    spin.set_numeric(True)
     spin.set_adjustment(adjustment)
 
     hbox = gtk.HBox(False, 4)

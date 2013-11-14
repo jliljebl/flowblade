@@ -118,6 +118,7 @@ def _get_slider_row(editable_property, slider_name=None):
     hslider.set_draw_value(False)
 
     spin = gtk.SpinButton()
+    spin.set_numeric(True)
     spin.set_adjustment(adjustment)
 
     _set_digits(editable_property, hslider, spin)
@@ -145,6 +146,7 @@ def _get_ladspa_slider_row(editable_property, slider_name=None):
     hslider.connect("button-release-event", lambda w, e: _ladspa_slider_update(editable_property, adjustment))
     
     spin = gtk.SpinButton()
+    spin.set_numeric(True)
     spin.set_adjustment(adjustment)
     spin.connect("button-release-event", lambda w, e: _ladspa_slider_update(editable_property, adjustment))
 
@@ -157,7 +159,7 @@ def _get_ladspa_slider_row(editable_property, slider_name=None):
         name = editable_property.get_display_name()
     else:
         name = slider_name
-    #return _get_two_column_editor_row(name, hbox)
+
     top_row = _get_two_column_editor_row(name, gtk.HBox())
     vbox = gtk.VBox(False)
     vbox.pack_start(top_row, True, True, 0)
@@ -181,6 +183,7 @@ def _get_clip_frame_slider(editable_property):
     hslider.connect("button-release-event", lambda w, e: _clip_frame_slider_update(editable_property, adjustment))
     
     spin = gtk.SpinButton()
+    spin.set_numeric(True)
     spin.set_adjustment(adjustment)
     spin.connect("button-release-event", lambda w, e: _clip_frame_slider_update(editable_property, adjustment))
 
@@ -197,19 +200,20 @@ def _get_clip_frame_slider(editable_property):
 def _get_affine_filt_geom_sliders(ep):
     scr_width = PROJECT().profile.width()
     scr_height = PROJECT().profile.width()
-    
-    #0,0:SCREENSIZE:100
-    tokens = ep.value.split(":")
+
+    # "0=0,0:SCREENSIZE:100"
+    frame_value = ep.value.split("=")
+    tokens = frame_value[1].split(":")
     pos_tokens = tokens[0].split("/")
     size_tokens = tokens[1].split("x")
 
     x_adj = gtk.Adjustment(float(pos_tokens[0]), float(-scr_width), float(scr_width), float(1))
     y_adj = gtk.Adjustment(float(pos_tokens[1]), float(-scr_height), float(scr_height), float(1))
-    h_adj = gtk.Adjustment(float(size_tokens[1]), float(0), float(scr_height * 2), float(1))
-
+    h_adj = gtk.Adjustment(float(size_tokens[1]), float(0), float(scr_height * 5), float(1))
+    
     x_slider, x_spin, x_row =  _get_affine_slider("X", x_adj)
     y_slider, y_spin, y_row =  _get_affine_slider("Y", y_adj)
-    h_slider, h_spin, h_row =  _get_affine_slider(_("Height"), h_adj)
+    h_slider, h_spin, h_row =  _get_affine_slider(_("Size/Height"), h_adj)
 
     all_sliders = (x_slider, y_slider, h_slider)
 
@@ -220,6 +224,7 @@ def _get_affine_filt_geom_sliders(ep):
     h_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
     h_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
 
+    
     vbox = gtk.VBox(False, 4)
     vbox.pack_start(x_row, True, True, 0)
     vbox.pack_start(y_row, True, True, 0)
@@ -233,6 +238,7 @@ def _get_affine_slider(name, adjustment):
     hslider.set_draw_value(False)
     
     spin = gtk.SpinButton()
+    spin.set_numeric(True)
     spin.set_adjustment(adjustment)
 
     hslider.set_digits(0)
