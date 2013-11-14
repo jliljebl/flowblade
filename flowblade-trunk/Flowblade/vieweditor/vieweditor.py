@@ -286,7 +286,7 @@ class ScaleSelector(gtk.VBox):
                       None)    
         self.add(combo)
         self.combo = combo
-    
+
     def get_current_scale(self):
         return self.scales[self.combo.get_active()]
 

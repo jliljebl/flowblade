@@ -125,6 +125,7 @@ def fill_recents_menu_widget(menu_item, callback):
     if len(recent_proj_names) != 0:
         for i in range (0, len(recent_proj_names)):
             proj_name = recent_proj_names[i]
+            proj_name = proj_name.replace("_","__") # to display names with underscored correctly
             new_item = gtk.MenuItem(proj_name)
             new_item.connect("activate", callback, i)
             menu.append(new_item)
@@ -145,7 +146,7 @@ def get_recent_projects():
         proj_list.append(os.path.basename(proj_path))
     
     return proj_list
-        
+
 def update_prefs_from_widgets(widgets_tuples_tuple):
     # Unpack widgets
     gen_opts_widgets, edit_prefs_widgets, view_prefs_widgets = widgets_tuples_tuple
