@@ -324,9 +324,9 @@ def set_render_progress_gui(fraction):
         left_str = utils.get_time_str_for_sec_float(left_est)
         passed_str = utils.get_time_str_for_sec_float(passed_time)
 
-        progress_window.remaining_time_label.set_text(_("<b>Estimated time left: </b>") + left_str)
+        progress_window.remaining_time_label.set_text(_("<b>Estimated Time Left: </b>") + left_str)
         progress_window.remaining_time_label.set_use_markup(True)
-        progress_window.passed_time_label.set_text(_("<b>Render time: </b>") + passed_str)
+        progress_window.passed_time_label.set_text(_("<b>Render Time: </b>") + passed_str)
         progress_window.passed_time_label.set_use_markup(True)
 
 def exit_render_gui():
@@ -339,9 +339,9 @@ def exit_render_gui():
     passed_time = time.time() - render_start_time
     passed_str = utils.get_time_str_for_sec_float(passed_time)
 
-    progress_window.remaining_time_label.set_text(_("<b>Estimated time left: </b>"))
+    progress_window.remaining_time_label.set_text(_("<b>Estimated Time Left: </b>"))
     progress_window.remaining_time_label.set_use_markup(True)
-    progress_window.passed_time_label.set_text(_("<b>Render time: </b>") + passed_str)
+    progress_window.passed_time_label.set_text(_("<b>Render Time: </b>") + passed_str)
     progress_window.passed_time_label.set_use_markup(True)
     progress_window.progress_bar.set_text(_("Render Complete!"))
     

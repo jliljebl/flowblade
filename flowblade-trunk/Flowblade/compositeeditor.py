@@ -168,7 +168,7 @@ def _display_compositor_edit_box():
 
     target_row = gtk.HBox()
     target_row.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
-    target_row.pack_start(gtk.Label(_("Destination track:")), False, False, 0)
+    target_row.pack_start(gtk.Label(_("Destination Track:")), False, False, 0)
     target_row.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
     target_row.pack_start(target_combo, False, False, 0)
     target_row.pack_start(gtk.Label(), True, True, 0)
