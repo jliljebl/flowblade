@@ -469,7 +469,7 @@
         <property name="start opacity" args="editor=slider range_in=0,100">0.5</property>
         <property name="end color" args="editor=color_select exptype=color displayname=End!Color">#000000</property>
         <property name="end opacity" args="editor=slider range_in=0,100">0.5</property>
-        <property name="blend mode" args="editor=combobox exptype=default cbopts=Normal:normal,Add:add,Saturate:saturate,Multiply:multiply,Screen:screen,Overlay:overlay,Darken:darken,Lighten:lighten,ColorDodge:colordodge,Colorburn:colorburn,Hardlight:hardlight,Softlight:softlight,Difference:difference,Exclusion:exclusion,HSLHue:hslhue,HSLSaturation:hslsaturation,HSLColor:hslcolor,HSLLuminosity:hslluminosity">normal</property>
+        <property name="blend mode" args="editor=combobox displayname=Blend!Mode exptype=default cbopts=Normal:normal,Add:add,Saturate:saturate,Multiply:multiply,Screen:screen,Overlay:overlay,Darken:darken,Lighten:lighten,ColorDodge:colordodge,Colorburn:colorburn,Hardlight:hardlight,Softlight:softlight,Difference:difference,Exclusion:exclusion,HSLHue:hslhue,HSLSaturation:hslsaturation,HSLColor:hslcolor,HSLLuminosity:hslluminosity">normal</property>
         <property name="offset" args="editor=slider range_in=0,100">0.0</property>
     </filter>
     -->

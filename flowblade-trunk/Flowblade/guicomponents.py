@@ -1133,8 +1133,6 @@ def _get_compositors_add_menu_item(event, clip, track, callback, sensitive):
     menu_item = gtk.MenuItem(_("Add Compositor"))
     sub_menu = gtk.Menu()
     menu_item.set_submenu(sub_menu)
-    for info in mlttransitions.mlt_compositor_transition_infos:
-        print info
        
     for i in range(0, len(mlttransitions.compositors)):
         compositor = mlttransitions.compositors[i]
