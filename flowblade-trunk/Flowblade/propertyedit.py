@@ -673,7 +673,7 @@ class AffineScaleProperty(EditableProperty):
         out_value = self.get_out_value(value)
         val_str = "0=" + str(out_value)
         self.write_value(val_str)
-    
+
     def get_out_value(self, in_value):
         """
         Converts input value to output value using ranges.

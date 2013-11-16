@@ -582,6 +582,28 @@ def autosave_recovery_dialog(callback, parent_window):
     dialog.connect('response', callback)
     dialog.show_all()
 
+def autosaves_many_recovery_dialog(callback, parent_window):
+    title = _("Open a autosave wile?")
+    msg1 = _("There are multiple autosave files from application crashes.\n\n")
+    msg3 = _("If you just experienced a crash, select the last created autosave file\nto continue working.\n\n")
+    msg4 = _("If you see this at application start without a recent crash,\nyou should probably delete all autosave files to stop seeing this dialog.")
+    msg = msg1 + msg3 + msg4
+    content = dialogutils.get_warning_message_dialog_panel(title, msg)
+    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    align.set_padding(0, 12, 0, 0)
+    align.add(content)
+
+    dialog = gtk.Dialog("",
+                        parent_window,
+                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                        (_("Continue with default 'untitled' project").encode('utf-8'), gtk.RESPONSE_CANCEL,
+                        _("Open Autosaved Project").encode('utf-8'), gtk.RESPONSE_OK))
+
+    dialog.vbox.pack_start(align, True, True, 0)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback)
+    dialog.show_all()
+    
 def tracks_count_change_dialog(callback):
     default_profile_index = mltprofiles.get_default_profile_index()
     default_profile = mltprofiles.get_default_profile()

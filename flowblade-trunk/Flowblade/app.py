@@ -256,7 +256,10 @@ def main(root_path):
 
     # Existance of autosave file hints that program was exited abnormally
     if check_crash == True and len(autosave_files) > 0:
-        gobject.timeout_add(10, autosave_recovery_dialog)
+        if len(autosave_files) == 1:
+            gobject.timeout_add(10, autosave_recovery_dialog)
+        else:
+            gobject.timeout_add(10, autosaves_many_recovery_dialog)
     else:
         start_autosave()
 
@@ -481,6 +484,17 @@ def autosave_recovery_dialog():
     return False
 
 def autosave_dialog_callback(dialog, response):
+    dialog.destroy()
+    autosave_file = utils.get_hidden_user_dir_path() + AUTOSAVE_DIR + get_autosave_files()[0]
+    print autosave_file
+    if response == gtk.RESPONSE_OK:
+        useraction.actually_load_project(autosave_file, True)
+
+def autosaves_many_recovery_dialog():
+    dialogs.autosaves_many_recovery_dialog(autosaves_many_dialog_callback, gui.editor_window.window)
+    return False
+
+def autosaves_many_dialog_callback(dialog, response):
     dialog.destroy()
     autosave_file = utils.get_hidden_user_dir_path() + AUTOSAVE_DIR + get_autosave_files()[0]
     print autosave_file

@@ -65,6 +65,8 @@ class Ticker:
 
     def runner(self, event, delay, action):
         while True:
+            if not self.running:
+                break
             action()
             if not self.running:
                 break
