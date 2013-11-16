@@ -69,37 +69,35 @@ def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_c
     return render_panel
 
 # ----------------------------------------------------------- dialogs
-def render_progress_dialog(render_widgets, callback, parent_window):
+def render_progress_dialog(callback, parent_window):
     dialog = gtk.Dialog(_("Render Progress"),
                          parent_window,
                          gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                          (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT))
 
-    #panel = panels.get_render_progress_panel()
+    dialog.status_label = gtk.Label()
+    dialog.remaining_time_label = gtk.Label()
+    dialog.passed_time_label = gtk.Label()
+    dialog.progress_bar = gtk.ProgressBar()
 
     status_box = gtk.HBox(False, 2)
-    status_box.pack_start(render_widgets.status_label,False, False, 0)
+    status_box.pack_start(dialog.status_label,False, False, 0)
     status_box.pack_start(gtk.Label(), True, True, 0)
     
     remaining_box = gtk.HBox(False, 2)
-    remaining_box.pack_start(render_widgets.remaining_time_label,False, False, 0)
+    remaining_box.pack_start(dialog.remaining_time_label,False, False, 0)
     remaining_box.pack_start(gtk.Label(), True, True, 0)
 
     passed_box = gtk.HBox(False, 2)
-    passed_box.pack_start(render_widgets.passed_time_label,False, False, 0)
+    passed_box.pack_start(dialog.passed_time_label,False, False, 0)
     passed_box.pack_start(gtk.Label(), True, True, 0)
-
-    est_box = gtk.HBox(False, 2)
-    est_box.pack_start(render_widgets.estimation_label,False, False, 0)
-    est_box.pack_start(gtk.Label(), True, True, 0)
 
     progress_vbox = gtk.VBox(False, 2)
     progress_vbox.pack_start(status_box, False, False, 0)
     progress_vbox.pack_start(remaining_box, False, False, 0)
     progress_vbox.pack_start(passed_box, False, False, 0)
     progress_vbox.pack_start(guiutils.get_pad_label(10, 10), False, False, 0)
-    progress_vbox.pack_start(render_widgets.progress_bar, False, False, 0)
-    progress_vbox.pack_start(est_box, False, False, 0)
+    progress_vbox.pack_start(dialog.progress_bar, False, False, 0)
     
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(12, 12, 12, 12)

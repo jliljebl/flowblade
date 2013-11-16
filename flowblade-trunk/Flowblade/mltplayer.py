@@ -46,7 +46,7 @@ class Player(threading.Thread):
         self.ticker = utils.Ticker(self._ticker_event, TICKER_DELAY)
 
         threading.Thread.__init__(self)
-    
+            
     def init_for_profile(self, profile):
         # Get profile and create ticker for playback GUI updates
         self.profile = profile
@@ -124,10 +124,10 @@ class Player(threading.Thread):
         Connects current procer and comsumer and
         """
         self.consumer.purge()
-        self.consumer.connect(self.producer)
         self.producer.set_speed(0)
+        self.consumer.connect(self.producer)
         self.consumer.start()
- 
+
     def run(self):
         """
         Player thread loop. Loop runs until stop requested 
@@ -254,9 +254,12 @@ class Player(threading.Thread):
         # If we reach the end of playable/renderable sequence or user has
         # stopped playback/rendering we'll stop ticker and possibly
         # leave render state
-        if (self.consumer.is_stopped() 
-            or self.producer.get_speed() == 0):
+        if (self.consumer.is_stopped() or self.producer.get_speed() == 0):
             self.ticker.stop_ticker()
+            if self.consumer.is_stopped() == False:
+                while self.consumer.is_stopped() == False:
+                    pass
+            self.producer.set_speed(0)
             updater.set_stopped_configuration()
             if self.is_rendering == True:
                 self.stop_rendering()
@@ -269,6 +272,10 @@ class Player(threading.Thread):
         if self.render_stop_frame != -1:
             if self.is_rendering == True and current_frame >= self.render_stop_frame:
                 self.consumer.stop()
+                if self.consumer.is_stopped() == False:
+                    while self.consumer.is_stopped() == False:
+                        pass
+                self.producer.set_speed(0)
                 self.stop_rendering()
                 updater.set_stopped_configuration()
                 return
@@ -289,7 +296,7 @@ class Player(threading.Thread):
                       (float(self.render_stop_frame - self.render_start_frame)))
             
             self.render_callbacks.set_render_progress_gui(render_fraction)
-            #render.set_render_progress_gui(render_fraction)
+
             return 
 
         # If we're out of active range, seek end and and stop play back
@@ -354,6 +361,7 @@ class Player(threading.Thread):
     def stop_rendering(self):
         self.is_rendering = False
         self.ticker.stop_ticker()
+        self.producer.set_speed(0)
         self.consumer = self.sdl_consumer
         self.connect_and_start()
         self.seek_frame(0)

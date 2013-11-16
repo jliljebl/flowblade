@@ -58,6 +58,7 @@ open_media_file_callback = None # monkeypatched in by useraction to avoid circul
 
 render_start_time = 0
 widgets = utils.EmptyClass()
+progress_window = None
 
 aborted = False
 
@@ -91,8 +92,8 @@ class RenderLauncher(threading.Thread):
         callbacks.save_render_start_time = save_render_start_time
         callbacks.exit_render_gui = exit_render_gui
         callbacks.maybe_open_rendered_file_in_bin = maybe_open_rendered_file_in_bin
+
         PLAYER().set_render_callbacks(callbacks)
-        
         PLAYER().start_rendering(self.render_consumer, self.start_frame, self.end_frame)
 
 
@@ -141,12 +142,14 @@ def _do_rendering():
     project_event = projectdata.ProjectEvent(projectdata.EVENT_RENDERED, file_path)
     PROJECT().events.append(project_event)
     projectinfogui.update_project_info()
+
     
+    global progress_window
+    progress_window = rendergui.render_progress_dialog(_render_cancel_callback,
+                                                       gui.editor_window.window)
+                                                       
     set_render_gui()
-    widgets.progress_window = rendergui.render_progress_dialog(
-                                        widgets,
-                                        _render_cancel_callback,
-                                        gui.editor_window.window)
+
     render_launch = RenderLauncher(render_consumer, start_frame, end_frame)
     render_launch.start()
 
@@ -274,16 +277,6 @@ def create_widgets(normal_height):
     widgets.reset_button.connect("clicked", lambda w: set_default_values_for_widgets())
     widgets.queue_button = gtk.Button(_("To Queue"))
     
-    # Render progress window
-    widgets.progress_window = None
-    
-    # Render progress window widgets
-    widgets.status_label = gtk.Label()
-    widgets.remaining_time_label = gtk.Label()
-    widgets.passed_time_label = gtk.Label()
-    widgets.progress_bar = gtk.ProgressBar()
-    widgets.estimation_label = gtk.Label()
-
     # Tooltips
     widgets.range_cb.set_tooltip_text(_("Select render range"))
     widgets.reset_button.set_tooltip_text(_("Reset all render options to defaults"))
@@ -306,22 +299,22 @@ def enable_user_rendering(value):
     widgets.args_panel.set_sensitive(value)
 
 def set_render_gui():
-    widgets.status_label.set_text(_("<b>Output File: </b>") + get_file_path())
-    widgets.status_label.set_use_markup(True)
-    widgets.remaining_time_label.set_text(_("<b>Estimated time left: </b>"))
-    widgets.remaining_time_label.set_use_markup(True)
-    widgets.passed_time_label.set_text(_("<b>Render time: </b>"))
-    widgets.passed_time_label.set_use_markup(True)
-    widgets.estimation_label.set_text("0%")
+    progress_window.status_label.set_text(_("<b>Output File: </b>") + get_file_path())
+    progress_window.status_label.set_use_markup(True)
+    progress_window.remaining_time_label.set_text(_("<b>Estimated time left: </b>"))
+    progress_window.remaining_time_label.set_use_markup(True)
+    progress_window.passed_time_label.set_text(_("<b>Render time: </b>"))
+    progress_window.passed_time_label.set_use_markup(True)
+    progress_window.progress_bar.set_text("0%")
 
 def save_render_start_time():
     global render_start_time
     render_start_time = time.time()
     
 def set_render_progress_gui(fraction):
-    widgets.progress_bar.set_fraction(fraction)
+    progress_window.progress_bar.set_fraction(fraction)
     pros = int(fraction * 100)
-    widgets.estimation_label.set_text(str(pros) + "%")
+    progress_window.progress_bar.set_text(str(pros) + "%")
 
     if pros > 0.99: # Only start giving estimations after rendering has gone on for a while.
         passed_time = time.time() - render_start_time
@@ -331,29 +324,30 @@ def set_render_progress_gui(fraction):
         left_str = utils.get_time_str_for_sec_float(left_est)
         passed_str = utils.get_time_str_for_sec_float(passed_time)
 
-        widgets.remaining_time_label.set_text(_("<b>Estimated time left: </b>") + left_str)
-        widgets.remaining_time_label.set_use_markup(True)
-        widgets.passed_time_label.set_text(_("<b>Render time: </b>") + passed_str)
-        widgets.passed_time_label.set_use_markup(True)
+        progress_window.remaining_time_label.set_text(_("<b>Estimated time left: </b>") + left_str)
+        progress_window.remaining_time_label.set_use_markup(True)
+        progress_window.passed_time_label.set_text(_("<b>Render time: </b>") + passed_str)
+        progress_window.passed_time_label.set_use_markup(True)
 
 def exit_render_gui():
-    # 'aborted' is set False at render start. If it is True now, rendering has been aborted and 
-    # widgets.progress_window has already been destroyed (in useraction._render_cancel_callback).
     if aborted == True:
         return
+
+    global progress_window
 
     set_render_progress_gui(1.0)
     passed_time = time.time() - render_start_time
     passed_str = utils.get_time_str_for_sec_float(passed_time)
 
-    widgets.remaining_time_label.set_text(_("<b>Estimated time left: </b>"))
-    widgets.remaining_time_label.set_use_markup(True)
-    widgets.passed_time_label.set_text(_("<b>Render time: </b>") + passed_str)
-    widgets.passed_time_label.set_use_markup(True)
-    widgets.estimation_label.set_text(_("Render Complete!"))
+    progress_window.remaining_time_label.set_text(_("<b>Estimated time left: </b>"))
+    progress_window.remaining_time_label.set_use_markup(True)
+    progress_window.passed_time_label.set_text(_("<b>Render time: </b>") + passed_str)
+    progress_window.passed_time_label.set_use_markup(True)
+    progress_window.progress_bar.set_text(_("Render Complete!"))
     
     time.sleep(2.0)
-    widgets.progress_window.destroy()
+    progress_window.destroy()
+    progress_window = None
 
 def maybe_open_rendered_file_in_bin():
     if widgets.open_in_bin.get_active() == False:
