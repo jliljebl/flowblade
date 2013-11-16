@@ -151,22 +151,26 @@ def clip_render_progress_dialog(callback, title, text, progress_bar, parent_wind
                          parent_window,
                          gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                          (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT))
-    
+
     dialog.text_label = gtk.Label(text)
-    
+    dialog.text_label.set_use_markup(True)
+    text_box = gtk.HBox(False, 2)
+    text_box.pack_start(dialog.text_label,False, False, 0)
+    text_box.pack_start(gtk.Label(), True, True, 0)
+
     status_box = gtk.HBox(False, 2)
-    status_box.pack_start(dialog.text_label, False, False, 0)
+    status_box.pack_start(text_box, False, False, 0)
     status_box.pack_start(gtk.Label(), True, True, 0)
-    
+
     progress_vbox = gtk.VBox(False, 2)
     progress_vbox.pack_start(status_box, False, False, 0)
     progress_vbox.pack_start(guiutils.get_pad_label(10, 10), False, False, 0)
     progress_vbox.pack_start(progress_bar, False, False, 0)
-    
+
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(12, 12, 12, 12)
     alignment.add(progress_vbox)
-    
+
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialog.set_default_size(500, 125)
     alignment.show_all()

@@ -1430,8 +1430,6 @@ class BigTCDisplay:
 
         self.TEXT_X = 18
         self.TEXT_Y = 1
-        
-        #self.bg_color = gui.bg_color_tuple
 
     def _draw(self, event, cr, allocation):
         """
