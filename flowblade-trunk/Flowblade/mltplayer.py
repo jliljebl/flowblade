@@ -256,17 +256,17 @@ class Player(threading.Thread):
         # leave render state
         if (self.consumer.is_stopped() or self.producer.get_speed() == 0):
             self.ticker.stop_ticker()
-            if self.consumer.is_stopped() == False:
-                while self.consumer.is_stopped() == False:
-                    pass
-            self.producer.set_speed(0)
             updater.set_stopped_configuration()
             if self.is_rendering == True:
+                if self.consumer.is_stopped() == False:
+                    while self.consumer.is_stopped() == False:
+                        pass
+                self.producer.set_speed(0)
                 self.stop_rendering()
                 return
 
         current_frame = self.producer.frame()
-        
+
         # Stop range rendring. This will not be frame perfect but feature isn't (probably)
         # used with need to get end perfect.
         if self.render_stop_frame != -1:
@@ -274,6 +274,7 @@ class Player(threading.Thread):
                 self.consumer.stop()
                 if self.consumer.is_stopped() == False:
                     while self.consumer.is_stopped() == False:
+                        print "assaasasasddooooo"
                         pass
                 self.producer.set_speed(0)
                 self.stop_rendering()

@@ -616,9 +616,9 @@ def _render_frame_buffer_clip_callback(dialog, response_id, fb_widgets, media_fi
         motion_renderer.start()
         
         title = _("Rendering Motion Clip")
-        
+        text = "<b>Motion Clip File: </b>" + write_file
         progress_bar = gtk.ProgressBar()
-        dialog = rendergui.clip_render_progress_dialog(_FB_render_stop, title, write_file, progress_bar, gui.editor_window.window)
+        dialog = rendergui.clip_render_progress_dialog(_FB_render_stop, title, text, progress_bar, gui.editor_window.window)
         
         motion_progress_update = renderconsumer.ProgressWindowThread(dialog, progress_bar, motion_renderer, _FB_render_stop)
         motion_progress_update.start()
@@ -633,7 +633,7 @@ def _FB_render_stop(dialog, response_id):
     motion_renderer.running = False
     motion_progress_update.running = False
     open_media_file_callback(motion_renderer.file_name)
-    motion_renderer.running = None # wut? ...below too
+    motion_renderer.running = None
     motion_progress_update.running = None
 
 
