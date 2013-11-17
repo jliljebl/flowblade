@@ -64,12 +64,10 @@ edit_data = None
 def play_pressed():
     # This handles only move modes, see trimmodes.py module for others.
     PLAYER().start_playback()  
-    updater.set_playing_configuration()
 
 def stop_pressed():
     # This handles only move modes, see trimmodes.py module for others.
     PLAYER().stop_playback() 
-    updater.set_stopped_configuration()
    
 def prev_pressed():
     # This handles only move modes, see trimmodes.py module for others.

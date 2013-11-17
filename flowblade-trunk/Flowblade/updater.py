@@ -99,16 +99,6 @@ def load_icons():
 
 
 # --------------------------------- player
-def set_playing_configuration():
-    pass
-    #gui.editor_window.play_b.set_sensitive(False)
-    #gui.editor_window.stop_b.set_sensitive(True)
-    
-def set_stopped_configuration():
-    pass
-    #gui.editor_window.play_b.set_sensitive(True)
-    #gui.editor_window.stop_b.set_sensitive(False)
-
 def refresh_player():
     # First event is initial window displayed event.
     # Last closing event needs to blocked by setting this flag
@@ -342,7 +332,6 @@ def display_clip_in_monitor(reset_saved_frames=True):
     
     if editorpersistance.prefs.auto_play_in_clip_monitor == True:
         PLAYER().start_playback()
-        set_playing_configuration()
     
     repaint_tline()
 

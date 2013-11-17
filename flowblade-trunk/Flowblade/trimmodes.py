@@ -165,8 +165,6 @@ def _trimmed_clip_is_blank():
     return False
 
 def trim_looping_stopped():
-    updater.set_stopped_configuration()
-
     # Reinits current trim mode
     if editorstate.edit_mode == editorstate.ONE_ROLL_TRIM: 
         set_oneroll_mode(edit_data["track_object"], 
@@ -251,8 +249,6 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         current_sequence().display_trim_clip(None, clip_start, clip.create_data) # pattern producer
         
     PLAYER().seek_frame(edit_frame)
-    updater.set_stopped_configuration()
-    
     return True
 
 def oneroll_trim_press(event, frame):
@@ -384,7 +380,6 @@ def oneroll_play_pressed():
     current_sequence().hide_hidden_clips()
     #updater.set_next_prev_enabled(False, True)
     PLAYER().start_loop_playback(edit_data["edit_frame"], loop_half_length, edit_data["track_object"].get_length())
-    updater.set_playing_configuration()
 
 def oneroll_stop_pressed():
     # Stop trim preview playback loop
@@ -529,8 +524,7 @@ def set_tworoll_mode(track, current_frame = -1):
         
     PLAYER().seek_frame(edit_frame)
     updater.repaint_tline()
-    updater.set_stopped_configuration()
-    
+
     return True
 
 def _tworoll_init_failed_window():
@@ -601,8 +595,6 @@ def tworoll_trim_release(x, y, frame, state):
 def tworoll_play_pressed():
     current_sequence().hide_hidden_clips()
     PLAYER().start_loop_playback(edit_data["edit_frame"], loop_half_length, edit_data["track_object"].get_length())
-    updater.set_playing_configuration()
-    #updater.set_next_prev_enabled(False, True)
 
 def tworoll_stop_pressed():
     PLAYER().stop_loop_playback(trim_looping_stopped)
@@ -772,7 +764,6 @@ def set_slide_mode(track, current_frame):# = -1):
         PLAYER().seek_frame(clip.clip_out)
 
     updater.repaint_tline()
-    updater.set_stopped_configuration()
 
     return True
 
@@ -938,7 +929,6 @@ def slide_play_pressed():
         frame = clip_start + clip.clip_out - clip.clip_in - 1
     edit_data["reinit_frame"] = frame
     PLAYER().start_loop_playback(frame, loop_half_length, edit_data["track_object"].get_length())
-    updater.set_playing_configuration()
 
 def slide_stop_pressed():
     PLAYER().stop_loop_playback(trim_looping_stopped)
