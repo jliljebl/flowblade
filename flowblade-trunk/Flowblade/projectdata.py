@@ -56,7 +56,6 @@ EVENT_SAVED = 2
 EVENT_SAVED_AS = 3
 EVENT_RENDERED = 4
 
-# Singleton
 thumbnail_thread = None
 
 

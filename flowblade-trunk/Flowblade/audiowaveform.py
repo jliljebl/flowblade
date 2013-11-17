@@ -111,13 +111,13 @@ class WaveformCreator(threading.Thread):
         global waveform_displayer_clip, frames_cache
 
         # Display wait/busy cursor
+        gtk.gdk.threads_enter()
         watch = gtk.gdk.Cursor(gtk.gdk.WATCH)
         gui.editor_window.window.window.set_cursor(watch)
         while(gtk.events_pending()):
             gtk.main_iteration()
-        
-        #s = time.time()
-        
+        gtk.gdk.threads_leave()
+
         # Get clip data
         clip = self.clip
         clip.waveform_data = None # attempted draws won't draw half done image array
@@ -164,19 +164,23 @@ class WaveformCreator(threading.Thread):
             
             if (frame - in_frame) > 0 and ((frame - in_frame) % RENDERING_FRAME_DISPLAY_STEP) == 0:
                 clip.waveform_data = values
+                gtk.gdk.threads_enter()
                 updater.repaint_tline()
                 while(gtk.events_pending()):
                     gtk.main_iteration()
+                gtk.gdk.threads_leave()
         
         # Set clip wavorm data and display
         clip.waveform_data = values
         self._update_displayed(clip)
         
         # Display normal cursor
+        gtk.gdk.threads_enter()
         normal_cursor = gtk.gdk.Cursor(gtk.gdk.LEFT_PTR)
         gui.editor_window.window.window.set_cursor(normal_cursor)
         updater.repaint_tline()
-        
+        gtk.gdk.threads_leave()
+                
         # Set thread ref to None to flag that no waveforms are being created
         global waveform_thread
         waveform_thread = None
