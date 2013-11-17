@@ -39,6 +39,7 @@ import dialogs
 import dialogutils
 import gui
 import guicomponents
+import editevent
 import editorstate
 from editorstate import current_sequence
 from editorstate import current_bin
@@ -316,6 +317,7 @@ def open_recent_project(widget, index):
 
 # ---------------------------------- rendering
 def do_rendering():
+    editevent.insert_move_mode_pressed()
     render.render_timeline()
 
 def add_to_render_queue():
