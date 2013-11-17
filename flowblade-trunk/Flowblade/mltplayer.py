@@ -261,7 +261,9 @@ class Player(threading.Thread):
                     while self.consumer.is_stopped() == False:
                         pass
                 self.producer.set_speed(0)
+                gtk.gdk.threads_enter()
                 self.stop_rendering()
+                gtk.gdk.threads_leave()
                 return
 
         current_frame = self.producer.frame()
@@ -275,7 +277,9 @@ class Player(threading.Thread):
                     while self.consumer.is_stopped() == False:
                         pass
                 self.producer.set_speed(0)
+                gtk.gdk.threads_enter()
                 self.stop_rendering()
+                gtk.gdk.threads_leave()
                 return
 
         # if rendering, set progress bar and exit
@@ -292,24 +296,28 @@ class Player(threading.Thread):
                 else:
                     render_fraction = ((float(current_frame - self.render_start_frame)) / 
                       (float(self.render_stop_frame - self.render_start_frame)))
-            
+            gtk.gdk.threads_enter()
             self.render_callbacks.set_render_progress_gui(render_fraction)
-
+            gtk.gdk.threads_leave()
             return 
 
-        # If we're out of active range, seek end and and stop play back
+        # If we're out of active range seek end.
         if current_frame >= self.get_active_length():
+            gtk.gdk.threads_enter()
             self.seek_frame(current_frame)
+            gtk.gdk.threads_leave()
             return
             
         # If trim looping and past loop end, start from loop start
         if ((not(self.loop_start == -1)) and 
             ((current_frame >= self.loop_end)
             or (current_frame >= self.get_active_length()))):
-            self.seek_frame(self.loop_start, False)
+            self.seek_frame(self.loop_start, False) #NOTE: False==GUI not updated
             self.producer.set_speed(1)
 
+        gtk.gdk.threads_enter()
         updater.update_frame_displayers(current_frame)
+        gtk.gdk.threads_leave()
         
     def get_active_length(self):
         # Displayed range is different
@@ -364,8 +372,10 @@ class Player(threading.Thread):
         self.connect_and_start()
         self.seek_frame(0)
         if self.xml_render == False:
+
             self.render_callbacks.exit_render_gui()
             self.render_callbacks.maybe_open_rendered_file_in_bin()
+            gtk.gdk.threads_leave()
         else:
             self.xml_render == False
 
