@@ -384,12 +384,16 @@ class ProgressWindowThread(threading.Thread):
         
         while self.running:         
             render_fraction = self.clip_renderer.get_render_fraction()
+            gtk.gdk.threads_enter()
             self.progress_bar.set_fraction(render_fraction)
             pros = int(render_fraction * 100)
             self.progress_bar.set_text(str(pros) + "%")
+            gtk.gdk.threads_leave()
             if self.clip_renderer.producer.get_speed() == 0:
+                gtk.gdk.threads_enter()
                 self.progress_bar.set_fraction(1.0)
                 time.sleep(0.5)
                 self.callback(self.dialog, 0)
-                
+                gtk.gdk.threads_leave()
+        
             time.sleep(0.33)

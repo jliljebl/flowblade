@@ -103,7 +103,6 @@ class RecreateIconsThread(threading.Thread):
         gui.media_list_view.fill_data_model()
         gui.bin_list_view.fill_data_model()
         useraction._enable_save()
-        
         gtk.gdk.threads_leave()
 
 def recreate_media_file_icons():

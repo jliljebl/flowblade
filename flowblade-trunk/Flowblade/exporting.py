@@ -169,7 +169,6 @@ def _export_melt_xml_dialog_callback(dialog, response_id):
         callbacks.exit_render_gui = exit_render_gui
         callbacks.maybe_open_rendered_file_in_bin = maybe_open_rendered_file_in_bin
         PLAYER().set_render_callbacks(callbacks)
-
         PLAYER().start_xml_rendering(save_path)
         dialog.destroy()
     else:

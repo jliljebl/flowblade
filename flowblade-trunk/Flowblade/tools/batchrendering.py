@@ -87,7 +87,7 @@ class QueueRunnerThread(threading.Thread):
             render_thread = renderconsumer.FileRenderPlayer(None, producer, consumer, start_frame, end_frame) # None == file name not needed this time when using FileRenderPlayer because callsite keeps track of things
             render_thread.start()
             
-            # Update view during render process
+            # Set render start time and item state
             render_item.render_started()
 
             gtk.gdk.threads_enter()
@@ -512,12 +512,12 @@ class BatchRenderWindow:
         
         self.items_rendered = gtk.Label()
         items_r = gtk.Label("Items Rendered:")
-        self.render_started = gtk.Label()
+        self.render_started_label = gtk.Label()
         started_r = gtk.Label("Render Started:")
     
         bottom_info_vbox = gtk.HBox(True, 0)
         bottom_info_vbox.pack_start(guiutils.get_left_justified_box([items_r, self.items_rendered]), True, True, 0)
-        bottom_info_vbox.pack_start(guiutils.get_left_justified_box([started_r, self.render_started]), True, True, 0)
+        bottom_info_vbox.pack_start(guiutils.get_left_justified_box([started_r, self.render_started_label]), True, True, 0)
         
         self.not_rendering_txt = "Not Rendering"
         self.render_progress_bar = gtk.ProgressBar()
@@ -659,7 +659,7 @@ class BatchRenderWindow:
         self.items_rendered.set_text("")
         start_time = datetime.datetime.now()
         start_str = start_time.strftime('  %H:%M, %d %B, %Y')
-        self.render_started.set_text(start_str)
+        self.render_started_label.set_text(start_str)
         self.remove_selected.set_sensitive(False)
         self.remove_finished.set_sensitive(False)
 

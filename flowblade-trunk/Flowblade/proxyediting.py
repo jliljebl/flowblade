@@ -95,25 +95,31 @@ class ProxyRenderRunnerThread(threading.Thread):
                 render_fraction = render_thread.get_render_fraction()
                 now = time.time()
                 elapsed = now - start
+                gtk.gdk.threads_enter()
                 progress_window.update_render_progress(render_fraction, media_file.name, items, len(self.files_to_render), elapsed)
-                
+                gtk.gdk.threads_leave()
                 if render_thread.producer.get_speed() == 0: # Rendering has reached end or been aborted
                     self.thread_running = False
+                    gtk.gdk.threads_enter()
                     progress_window.render_progress_bar.set_fraction(1.0)
+                    gtk.gdk.threads_leave()
                     media_file.add_proxy_file(proxy_file_path)
                 else:
                     time.sleep(0.1)
     
             if not self.aborted:
                 items = items + 1
+                gtk.gdk.threads_enter()
                 progress_window.update_render_progress(0, media_file.name, items, len(self.files_to_render), elapsed)
+                gtk.gdk.threads_leave()
             else:
                 render_thread.shutdown()
                 break
             render_thread.shutdown()
-        
+        gtk.gdk.threads_enter()
         _proxy_render_stopped()
-
+        gtk.gdk.threads_leave()
+                
     def abort(self):
         render_thread.shutdown()
         self.aborted = True
@@ -609,9 +615,11 @@ class ProxyProjectLoadThread(threading.Thread):
         global load_thread
         load_thread = None
         persistance.show_messages = True
-        
+
+        gtk.gdk.threads_enter()
         _converting_proxy_mode_done()
-        
+        gtk.gdk.threads_leave()
+
 
 class PulseThread(threading.Thread):
     def __init__(self, proress_bar):
@@ -622,6 +630,8 @@ class PulseThread(threading.Thread):
         self.exited = False
         self.running = True
         while self.running:
+            gtk.gdk.threads_enter()
             self.proress_bar.pulse()
+            gtk.gdk.threads_leave()
             time.sleep(0.1)
         self.exited = True
