@@ -195,10 +195,12 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     if current_frame == -1: # from button, ctrl + mouse calls with frame
         current_frame = PLAYER().producer.frame() + 1 # +1 because cut frame selects previous clip
 
+    if current_frame >= track.get_length():
+        return False
+
     edit_frame, to_side_being_edited = _get_trim_edit(track, current_frame)
 
     if edit_frame == -1:
-        print "set_oneroll_mode(), edit_frame == -1"
         return False
 
     # hack fix for last clip out trim. If frame pointer not at very end of clip
@@ -269,7 +271,7 @@ def oneroll_trim_press(event, frame):
             gui.editor_window.set_tline_cursor(editorstate.ONE_ROLL_TRIM_NO_EDIT)
             mouse_disabled = True
         return
-    
+        
     if not _pressed_on_one_roll_active_area(frame):
         track = tlinewidgets.get_track(event.y)
         success = set_oneroll_mode(track, frame)
