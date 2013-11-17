@@ -386,7 +386,6 @@ def init_editor_state():
     
     gui.clip_editor_b.set_sensitive(False)
     gui.editor_window.window.set_title(editorstate.project.name + " - Flowblade")
-    updater.set_stopped_configuration()
     gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(False)
     gui.editor_window.uimanager.get_widget("/MenuBar/EditMenu/Undo").set_sensitive(False)
     gui.editor_window.uimanager.get_widget("/MenuBar/EditMenu/Redo").set_sensitive(False)

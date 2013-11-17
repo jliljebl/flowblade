@@ -256,7 +256,6 @@ class Player(threading.Thread):
         # leave render state
         if (self.consumer.is_stopped() or self.producer.get_speed() == 0):
             self.ticker.stop_ticker()
-            updater.set_stopped_configuration()
             if self.is_rendering == True:
                 if self.consumer.is_stopped() == False:
                     while self.consumer.is_stopped() == False:
@@ -274,11 +273,9 @@ class Player(threading.Thread):
                 self.consumer.stop()
                 if self.consumer.is_stopped() == False:
                     while self.consumer.is_stopped() == False:
-                        print "assaasasasddooooo"
                         pass
                 self.producer.set_speed(0)
                 self.stop_rendering()
-                updater.set_stopped_configuration()
                 return
 
         # if rendering, set progress bar and exit
