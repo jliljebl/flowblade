@@ -25,8 +25,10 @@ import cairo
 import gobject
 import gtk
 import math
+import os
 import pango
 import pangocairo
+import time
 
 import appconsts
 from cairoarea import CairoDrawableArea
@@ -458,12 +460,11 @@ class FilterSwitchListView(gtk.VBox):
         self.toggle_callback(int(path))
         
 
-class ProfileListView(gtk.VBox):
+class TextListView(gtk.VBox):
     """
-    GUI component displaying list with columns: img, text, text
-    Middle column expands.
+    GUI component displaying list with  single column text column.
     """
-    def __init__(self, column_name=None):
+    def __init__(self, width, column_name=None):
         gtk.VBox.__init__(self)
 
         style = self.get_style()
@@ -494,7 +495,7 @@ class ProfileListView(gtk.VBox):
         self.text_col_1.set_expand(True)
         self.text_col_1.set_spacing(5)
         self.text_col_1.set_sizing(gtk.TREE_VIEW_COLUMN_GROW_ONLY)
-        self.text_col_1.set_min_width(100)
+        self.text_col_1.set_min_width(width)
         self.text_col_1.pack_start(self.text_rend_1)
         self.text_col_1.add_attribute(self.text_rend_1, "text", 0)
 
@@ -517,6 +518,15 @@ class ProfileListView(gtk.VBox):
             indexes.append(max(row))
         return indexes
 
+
+class ProfileListView(TextListView):
+    """
+    GUI component displaying list with columns: img, text, text
+    Middle column expands.
+    """
+    def __init__(self, column_name=None):
+        TextListView.__init__(self, 100, column_name)
+
     def fill_data_model(self, profiles):
         self.storemodel.clear()
         default_profile = mltprofiles.get_default_profile()
@@ -527,7 +537,26 @@ class ProfileListView(gtk.VBox):
             self.storemodel.append(row_data)
         
         self.scroll.queue_draw()
-            
+
+
+class AutoSavesListView(TextListView):
+    def __init__(self, column_name=None):
+        TextListView.__init__(self, 300, None)
+
+    def fill_data_model(self, autosaves):
+        self.storemodel.clear()
+        now = time.time()
+        for autosave_path in autosaves:
+            age = now - os.stat(autosave_path).st_mtime
+            since_time_str = utils.get_time_str_for_sec_float(age)
+            row_data = ["Autosave created " + since_time_str + " ago."]
+            self.storemodel.append(row_data)
+        
+        self.treeview.set_cursor("0") 
+        
+        self.scroll.queue_draw()
+
+
 # -------------------------------------------- clip info
 class ClipInfoPanel(gtk.VBox):
     
