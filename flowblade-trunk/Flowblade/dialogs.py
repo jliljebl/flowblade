@@ -582,22 +582,42 @@ def autosave_recovery_dialog(callback, parent_window):
     dialog.connect('response', callback)
     dialog.show_all()
 
-def autosaves_many_recovery_dialog(callback, parent_window):
-    title = _("Open a autosave wile?")
+def autosaves_many_recovery_dialog(callback, autosaves, parent_window):
+    title = _("Open a autosave file?")
     msg1 = _("There are multiple autosave files from application crashes.\n\n")
     msg3 = _("If you just experienced a crash, select the last created autosave file\nto continue working.\n\n")
     msg4 = _("If you see this at application start without a recent crash,\nyou should probably delete all autosave files to stop seeing this dialog.")
     msg = msg1 + msg3 + msg4
-    content = dialogutils.get_warning_message_dialog_panel(title, msg)
+    info_panel = dialogutils.get_warning_message_dialog_panel(title, msg)
+    
+    autosaves_view = guicomponents.AutoSavesListView()
+    autosaves_view.set_size_request(300, 300)
+    autosaves_view.fill_data_model(autosaves)
+
+    delete_all = gtk.Button("Delete all autosaves")
+    delete_all_but_selected = gtk.Button("Delete all but selected autosave")
+    
+    delete_buttons_vbox = gtk.HBox()
+    delete_buttons_vbox.pack_start(gtk.Label(), True, True, 0)
+    delete_buttons_vbox.pack_start(delete_all, False, False, 0)
+    delete_buttons_vbox.pack_start(delete_all_but_selected, False, False, 0)
+    delete_buttons_vbox.pack_start(gtk.Label(), True, True, 0)
+
+    pane = gtk.VBox()
+    pane.pack_start(info_panel, False, False, 0)
+    pane.pack_start(delete_buttons_vbox, False, False, 0)
+    pane.pack_start(guiutils.get_pad_label(12,12), False, False, 0)
+    pane.pack_start(autosaves_view, False, False, 0)
+    
     align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     align.set_padding(0, 12, 0, 0)
-    align.add(content)
+    align.add(pane)
 
     dialog = gtk.Dialog("",
                         parent_window,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                         (_("Continue with default 'untitled' project").encode('utf-8'), gtk.RESPONSE_CANCEL,
-                        _("Open Autosaved Project").encode('utf-8'), gtk.RESPONSE_OK))
+                        _("Open Selected Autosave").encode('utf-8'), gtk.RESPONSE_OK))
 
     dialog.vbox.pack_start(align, True, True, 0)
     _default_behaviour(dialog)

@@ -485,12 +485,17 @@ def autosave_recovery_dialog():
 def autosave_dialog_callback(dialog, response):
     dialog.destroy()
     autosave_file = utils.get_hidden_user_dir_path() + AUTOSAVE_DIR + get_autosave_files()[0]
-    print autosave_file
     if response == gtk.RESPONSE_OK:
         useraction.actually_load_project(autosave_file, True)
 
 def autosaves_many_recovery_dialog():
-    dialogs.autosaves_many_recovery_dialog(autosaves_many_dialog_callback, gui.editor_window.window)
+    autosaves_file_names = get_autosave_files()
+    autosaves = []
+    for a_file_name in autosaves_file_names:
+        autosaves.append(utils.get_hidden_user_dir_path() + AUTOSAVE_DIR + a_file_name)
+    autosaves = sorted(autosaves, key=lambda path : os.stat(path))
+    autosaves.reverse()
+    dialogs.autosaves_many_recovery_dialog(autosaves_many_dialog_callback, autosaves, gui.editor_window.window)
     return False
 
 def autosaves_many_dialog_callback(dialog, response):

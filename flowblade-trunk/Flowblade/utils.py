@@ -123,6 +123,10 @@ def get_time_str_for_sec_float(sec):
     hours = mins / 60
     mins = mins % 60
     
+    if hours >= 24.0:
+        days = hours / 24
+        hours = hours % 24
+        return str(int(days)) + " days " + str(int(hours)) + "h " + str(int(mins)) + "m " + str(int(sec)) + "s"
     if hours >= 1.0:
         return str(int(hours)) + "h " + str(int(mins)) + "m " + str(int(sec)) + "s"
     if mins >= 1.0:
