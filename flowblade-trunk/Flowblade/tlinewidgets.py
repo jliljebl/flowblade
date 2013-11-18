@@ -31,6 +31,7 @@ import time
 
 import appconsts
 from cairoarea import CairoDrawableArea
+import clipeffectseditor
 import editorpersistance
 from editorstate import current_sequence
 from editorstate import current_is_move_mode
@@ -260,7 +261,7 @@ def load_icons():
     global FULL_LOCK_ICON, FILTER_CLIP_ICON, VIEW_SIDE_ICON,\
     COMPOSITOR_CLIP_ICON, INSERT_ARROW_ICON, AUDIO_MUTE_ICON, MARKER_ICON, \
     VIDEO_MUTE_ICON, ALL_MUTE_ICON, TRACK_BG_ICON, MUTE_AUDIO_ICON, MUTE_VIDEO_ICON, MUTE_ALL_ICON, \
-    TRACK_ALL_ON_V_ICON, TRACK_ALL_ON_A_ICON, MUTE_AUDIO_A_ICON, TC_POINTER_HEAD
+    TRACK_ALL_ON_V_ICON, TRACK_ALL_ON_A_ICON, MUTE_AUDIO_A_ICON, TC_POINTER_HEAD, EDIT_INDICATOR
 
     FULL_LOCK_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "full_lock.png")
     FILTER_CLIP_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "filter_clip_icon_sharp.png")
@@ -279,6 +280,7 @@ def load_icons():
     TRACK_ALL_ON_A_ICON = _load_pixbuf("track_all_on_A.png")
     MUTE_AUDIO_A_ICON = _load_pixbuf("track_audio_mute_A.png") 
     TC_POINTER_HEAD = _load_pixbuf("tc_pointer_head.png")
+    EDIT_INDICATOR = _load_pixbuf("clip_edited.png")
 
     if editorpersistance.prefs.dark_theme == True:
         global FRAME_SCALE_COLOR_GRAD, FRAME_SCALE_COLOR_GRAD_L, BG_COLOR, FRAME_SCALE_LINES
@@ -1185,7 +1187,14 @@ class TimeLineCanvas:
                     cr.set_source_pixbuf(icon, int(scale_in) + int(scale_length) - ix, y + iy)
                     cr.paint()
                     icon_slot = icon_slot + 1
-            
+
+                if clip == clipeffectseditor.clip:
+                    icon = EDIT_INDICATOR
+                    ix =  int(scale_in) + int(scale_length) / 2 - 7
+                    iy = y + int(track_height) / 2 - 7
+                    cr.set_source_pixbuf(icon, ix, iy)
+                    cr.paint()
+                    
             # Draw sync offset value
             if scale_length > FILL_MIN: 
                 if clip.sync_data != None:
