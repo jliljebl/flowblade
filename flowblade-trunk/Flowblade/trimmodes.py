@@ -414,7 +414,6 @@ def one_roll_trim_undo_done(track, index, is_to_side_edit):
 
 def clip_end_first_do_done(track):
     frame = track.get_length()
-    print "frame", frame
     set_oneroll_mode(track, frame, False)
 
 def _legalize_one_roll_trim(frame, trim_limits):
@@ -462,11 +461,14 @@ def set_tworoll_mode(track, current_frame = -1):
     Sets two roll mode
     """
     if track == None:
-        return None
+        return False
     
     if current_frame == -1:
         current_frame = PLAYER().producer.frame() + 1 # +1 because cut frame selects previous clip
 
+    if current_frame >= track.get_length():
+        return False
+        
     current_sequence().clear_hidden_track()
     
     edit_frame, to_side_being_edited = _get_trim_edit(track, current_frame)
@@ -537,10 +539,12 @@ def _tworoll_init_failed_window():
 def tworoll_trim_press(event, frame):
     """
     User presses mouse when in two roll mode.
-    """
+    """   
     if not _pressed_on_edited_track(event.y):
         _attempt_reinit_tworoll(event, frame)
         return
+
+
 
     if not _pressed_on_two_roll_active_area(frame):
         _attempt_reinit_tworoll(event, frame)
@@ -690,31 +694,26 @@ def _legalize_two_roll_trim(frame, trim_limits):
     return frame
 
 def _pressed_on_two_roll_active_area(frame):
-    first, last = _get_two_roll_first_and_last()
+    #if frame >= tlinewidgets.get_track(y):
+    #    return False
 
+    first, last = _get_two_roll_first_and_last()
     if frame < first:
         return False
     if frame > last:
         return False
-    
+
     return True
 
 def _get_two_roll_first_and_last():
     first = -1
     last = -1
     
-    trim_limits = edit_data["trim_limits"]
-    if ((trim_limits["to_start"] != -1) 
-        and (trim_limits["from_start"] != -1)):
-        first = max(trim_limits["to_start"], trim_limits["from_start"],
-                    trim_limits["both_start"] )
-        last = min(trim_limits["to_end"], trim_limits["from_end"],
-                   trim_limits["both_end"] )
-    
-    if edit_data["to_clip"].is_blanck_clip == True:
-        first = trim_limits["from_start"]
-    if edit_data["from_clip"].is_blanck_clip == True:
-        last = trim_limits["to_end"]
+    index = edit_data["index"]
+    track = edit_data["track_object"]
+    first = track.clip_start(index - 1) + 1
+    end_clip = track.clips[index]
+    last = track.clip_start(index) + end_clip.clip_out - end_clip.clip_in
                  
     return (first, last)
 
