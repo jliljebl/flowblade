@@ -806,6 +806,10 @@ def slide_trim_press(event, frame):
     if not _pressed_on_edited_track(event.y):
         _attempt_reinit_slide(event, frame)
         return
+    
+    if frame > tlinewidgets.get_track(event.y).get_length():
+        set_no_edit_mode_func()
+        return
 
     if not _pressed_on_slide_active_area(frame):
         _attempt_reinit_slide(event, frame)
