@@ -81,7 +81,7 @@ import useraction
 import utils
 
 
-AUTOSAVE_DIR = "autosave/"
+AUTOSAVE_DIR = appconsts.AUTOSAVE_DIR
 AUTOSAVE_FILE = "autosave/autosave"
 instance_autosave_id_str = None
 PID_FILE = "flowbladepidfile"

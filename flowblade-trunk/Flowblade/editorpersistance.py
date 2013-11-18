@@ -25,9 +25,10 @@ import gtk
 import os
 import pickle
 
-import utils
+import appconsts
 import mltprofiles
 import respaths
+import utils
 
 PREFS_DOC = "prefs"
 RECENT_DOC = "recent"
@@ -100,6 +101,12 @@ def add_recent_project_path(path):
     if len(recent_projects.projects) == MAX_RECENT_PROJS:
         recent_projects.projects.pop(-1)
         
+    # Reject autosaves.
+    autosave_dir = utils.get_hidden_user_dir_path() + appconsts.AUTOSAVE_DIR
+    file_save_dir = os.path.dirname(path) + "/"        
+    if file_save_dir == autosave_dir:
+        return
+
     try:
         index = recent_projects.projects.index(path)
         recent_projects.projects.pop(index)
