@@ -112,7 +112,6 @@ class LoadThread(threading.Thread):
         if self.block_recent_files:
             editorpersistance.add_recent_project_path(self.filename)
             editorpersistance.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
-
         gtk.gdk.threads_leave()
         
         gtk.gdk.threads_enter()
@@ -517,7 +516,7 @@ def select_render_clips_dir_callback(dialog, response_id, file_select):
             editorpersistance.prefs.render_folder = folder
             editorpersistance.save()
 
-def delete_media_files():
+def delete_media_files(force_delete=False):
     """
     Deletes media file. Does not take into account if clips made from 
     media file are still in sequence.(maybe change this)
@@ -541,6 +540,19 @@ def delete_media_files():
             editorstate._monitor_media_file = None
             gui.clip_editor_b.set_sensitive(False)
     
+    # Check for proxy rendering issues if not forced delete
+    if not force_delete:
+        proxy_issues = False
+        for file_id in file_ids:
+            media_file = PROJECT().media_files[file_id]
+            if media_file.has_proxy_file == True:
+                proxy_issues = True
+            if media_file.is_proxy_file == True:
+                proxy_issues = True
+            if proxy_issues:
+                dialogs.proxy_delete_warning_dialog(gui.editor_window.window, _proxy_delete_warning_callback)
+                return
+
     # Delete from bin
     bin_indexes.sort()
     bin_indexes.reverse()
@@ -554,6 +566,12 @@ def delete_media_files():
     gui.media_list_view.fill_data_model()
 
     _enable_save()
+
+
+def _proxy_delete_warning_callback(dialog, response_id):
+    dialog.destroy()
+    if response_id == gtk.RESPONSE_OK:
+        delete_media_files(True)
 
 def display_media_file_rename_dialog(media_file):
     dialogs.new_media_name_dialog(media_file_name_edited, media_file)

@@ -561,6 +561,30 @@ def recreate_icons_progress_dialog():
 
     return dialog
 
+def proxy_delete_warning_dialog(parent_window, callback):
+    title = _("Are you sure you want to delete these media files?")
+    msg1 = _("One or more of the Media Files you are deleting from the project\neither <b>have proxy files or are proxy files.</b>\n\n")
+    msg2 = _("Deleting these files could <b>prevent converting</b> between\nusing proxy files and using original media.\n\n")
+
+    msg = msg1 + msg2 
+    content = dialogutils.get_warning_message_dialog_panel(title, msg)
+    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    align.set_padding(0, 12, 0, 0)
+    align.add(content)
+
+    dialog = gtk.Dialog("",
+                        parent_window,
+                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_CANCEL,
+                        _("Force Delete").encode('utf-8'), gtk.RESPONSE_OK))
+
+    dialog.vbox.pack_start(align, True, True, 0)
+    _default_behaviour(dialog)
+    dialog.set_default_response(gtk.RESPONSE_CANCEL)
+    dialog.connect('response', callback)
+
+    dialog.show_all()
+
 def autosave_recovery_dialog(callback, parent_window):
     title = _("Open last autosave?")
     msg1 = _("It seems that Flowblade exited abnormally last time.\n\n")
