@@ -725,14 +725,6 @@ def _shutdown_dialog_callback(dialog, response_id):
     except:
         print "Delete autosave file FAILED"
 
-    """
-    # Delete pid file
-    try:
-         os.remove(utils.get_hidden_user_dir_path() + PID_FILE)
-    except:
-        print "Delete pid file FAILED"
-    """
-
     # Exit gtk main loop.
     gtk.main_quit()
     

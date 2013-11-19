@@ -4,7 +4,7 @@ import sys
 import os
 
 modules_path = os.path.dirname(os.path.abspath(sys.argv[0])) + "/Flowblade"
-print modules_path
+
 sys.path.insert(0, modules_path)
 sys.path.insert(0, modules_path + "/vieweditor")
 sys.path.insert(0, modules_path + "/tools")

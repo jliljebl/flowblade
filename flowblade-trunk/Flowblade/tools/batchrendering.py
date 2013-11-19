@@ -193,6 +193,10 @@ def get_identifier_from_path(file_path):
     end = file_path.rfind(".")
     return file_path[start + 1:end]
 
+def _get_pid_file_path():
+    user_dir = utils.get_hidden_user_dir_path()
+    return user_dir + PID_FILE
+    
 def destroy_for_identifier(identifier):
     try:
         item_path = get_datafiles_dir() + identifier + ".renderitem"
@@ -219,9 +223,7 @@ def launch_batch_rendering():
     subprocess.Popen([sys.executable, respaths.ROOT_PARENT + "flowbladebatch"])
 
 def test_and_write_pid(write_pid=True):
-    user_dir = utils.get_hidden_user_dir_path()
-    pid_file_path = user_dir + PID_FILE
-    return utils.single_instance_pid_file_test_and_write(pid_file_path, write_pid)
+    return utils.single_instance_pid_file_test_and_write(_get_pid_file_path(), write_pid)
 
 def main(root_path):
     # Allow only on instance to run
@@ -301,6 +303,7 @@ def shutdown():
     while(gtk.events_pending()):
         gtk.main_iteration()
     
+    os.remove(_get_pid_file_path())
     gtk.main_quit()
 
 

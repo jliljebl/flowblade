@@ -369,13 +369,9 @@ def add_to_render_queue():
         return
 
     # Launch Render Queue application
-    can_run = batchrendering.test_and_write_pid(write_pid=False)
-    if can_run:
-        batchrendering.launch_batch_rendering()
-    else:
-        primary_txt = "New Render Added to Queue"
-        secondary_txt = "Flowblade Batch Render application <b>already running</b>.\nPress <b>'Reload Queue' button</b> to load new item into queue."
-        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+    primary_txt = "New Render Item File Added to Queue"
+    secondary_txt = "Select <b>'Render->Batch Render Queue'</b> from menu\nto launch render queue application.\n\nPress <b>'Reload Queue'</b> button to load new item\ninto queue if application already running."
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
 
 # ----------------------------------- media files
 def add_media_files(this_call_is_retry=False):
