@@ -564,8 +564,9 @@ def recreate_icons_progress_dialog():
 def autosave_recovery_dialog(callback, parent_window):
     title = _("Open last autosave?")
     msg1 = _("It seems that Flowblade exited abnormally last time.\n\n")
+    msg2 = _("If there is another instance of Flowblade running,\nthis dialog has probably detected its autosave file.\n\n")
     msg3 = _("It is NOT possible to open this autosaved version later.")
-    msg = msg1 + msg3
+    msg = msg1 + msg2 + msg3
     content = dialogutils.get_warning_message_dialog_panel(title, msg)
     align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     align.set_padding(0, 12, 0, 0)
@@ -582,7 +583,7 @@ def autosave_recovery_dialog(callback, parent_window):
     dialog.connect('response', callback)
     dialog.show_all()
 
-def autosaves_many_recovery_dialog(callback, autosaves, parent_window):
+def autosaves_many_recovery_dialog(response_callback, autosaves, parent_window):
     title = _("Open a autosave file?")
     msg1 = _("There are multiple autosave files from application crashes.\n\n")
     msg3 = _("If you just experienced a crash, select the last created autosave file\nto continue working.\n\n")
@@ -595,8 +596,10 @@ def autosaves_many_recovery_dialog(callback, autosaves, parent_window):
     autosaves_view.fill_data_model(autosaves)
 
     delete_all = gtk.Button("Delete all autosaves")
+    delete_all.connect("clicked", lambda w : _autosaves_delete_all_clicked(autosaves, autosaves_view, dialog))
     delete_all_but_selected = gtk.Button("Delete all but selected autosave")
-    
+    delete_all_but_selected.connect("clicked", lambda w : _autosaves_delete_unselected(autosaves, autosaves_view))
+
     delete_buttons_vbox = gtk.HBox()
     delete_buttons_vbox.pack_start(gtk.Label(), True, True, 0)
     delete_buttons_vbox.pack_start(delete_all, False, False, 0)
@@ -608,7 +611,7 @@ def autosaves_many_recovery_dialog(callback, autosaves, parent_window):
     pane.pack_start(delete_buttons_vbox, False, False, 0)
     pane.pack_start(guiutils.get_pad_label(12,12), False, False, 0)
     pane.pack_start(autosaves_view, False, False, 0)
-    
+
     align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     align.set_padding(0, 12, 0, 0)
     align.add(pane)
@@ -621,9 +624,24 @@ def autosaves_many_recovery_dialog(callback, autosaves, parent_window):
 
     dialog.vbox.pack_start(align, True, True, 0)
     _default_behaviour(dialog)
-    dialog.connect('response', callback)
+    dialog.connect('response', response_callback, autosaves_view)
     dialog.show_all()
-    
+
+def _autosaves_delete_all_clicked(autosaves, autosaves_view, dialog):
+    for autosave_path in autosaves:
+        os.remove(autosave_path)
+    dialog.set_response_sensitive(gtk.RESPONSE_OK, False)
+    del autosaves[:]
+    autosaves_view.fill_data_model(autosaves)
+
+def _autosaves_delete_unselected(autosaves, autosaves_view):
+    selected_autosave = autosaves.pop(autosaves_view.get_selected_indexes_list()[0])
+    for autosave_path in autosaves:
+        os.remove(autosave_path)
+    del autosaves[:]
+    autosaves.append(selected_autosave)
+    autosaves_view.fill_data_model(autosaves)
+
 def tracks_count_change_dialog(callback):
     default_profile_index = mltprofiles.get_default_profile_index()
     default_profile = mltprofiles.get_default_profile()

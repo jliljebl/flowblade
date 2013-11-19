@@ -88,6 +88,7 @@ PID_FILE = "flowbladepidfile"
 BATCH_DIR = "batchrender/"
 autosave_timeout_id = -1
 recovery_dialog_id = -1
+loaded_autosave_file = None
 
 splash_screen = None
 splash_timeout_id = -1
@@ -439,6 +440,14 @@ def open_project(new_project):
     
     # For save time message on close
     useraction.save_time = None
+    
+    # Delete autosave file after it has been loaded
+    global loaded_autosave_file
+    if loaded_autosave_file != None:
+        print "Deleting", loaded_autosave_file
+        os.remove(loaded_autosave_file)
+        loaded_autosave_file = None
+
     start_autosave()
 
 def change_current_sequence(index):
@@ -486,7 +495,12 @@ def autosave_dialog_callback(dialog, response):
     dialog.destroy()
     autosave_file = utils.get_hidden_user_dir_path() + AUTOSAVE_DIR + get_autosave_files()[0]
     if response == gtk.RESPONSE_OK:
+        global loaded_autosave_file
+        loaded_autosave_file = autosave_file
         useraction.actually_load_project(autosave_file, True)
+    else:
+        os.remove(autosave_file)
+        start_autosave()
 
 def autosaves_many_recovery_dialog():
     autosaves_file_names = get_autosave_files()
@@ -498,12 +512,16 @@ def autosaves_many_recovery_dialog():
     dialogs.autosaves_many_recovery_dialog(autosaves_many_dialog_callback, autosaves, gui.editor_window.window)
     return False
 
-def autosaves_many_dialog_callback(dialog, response):
-    dialog.destroy()
-    autosave_file = utils.get_hidden_user_dir_path() + AUTOSAVE_DIR + get_autosave_files()[0]
-    print autosave_file
+def autosaves_many_dialog_callback(dialog, response, autosaves_view):
     if response == gtk.RESPONSE_OK:
+        autosave_file = autosaves_view.get_selected_indexes_list()[0] # Single selection, 1 quaranteed to exist
+        global loaded_autosave_file
+        loaded_autosave_file = autosave_file
+        dialog.destroy()
         useraction.actually_load_project(autosave_file, True)
+    else:
+        dialog.destroy()
+        start_autosave()
 
 def set_instance_autosave_id():
     global instance_autosave_id_str

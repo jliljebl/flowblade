@@ -542,6 +542,7 @@ class ProfileListView(TextListView):
 class AutoSavesListView(TextListView):
     def __init__(self, column_name=None):
         TextListView.__init__(self, 300, None)
+        self.treeview.get_selection().set_mode(gtk.SELECTION_SINGLE)
 
     def fill_data_model(self, autosaves):
         self.storemodel.clear()
