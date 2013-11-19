@@ -225,7 +225,7 @@ def launch_batch_rendering():
 def test_and_write_pid(write_pid=True):
     return utils.single_instance_pid_file_test_and_write(_get_pid_file_path(), write_pid)
 
-def main(root_path):
+def main(root_path, force_launch=False):
     # Allow only on instance to run
     can_run = test_and_write_pid()
 
@@ -279,15 +279,31 @@ def main(root_path):
 
 def _show_single_instance_info():
     global timeout_id
-    timeout_id = gobject.timeout_add(200, _display_refuse_window)
+    timeout_id = gobject.timeout_add(200, _display_single_instance_window)
     # Launch gtk+ main loop
     gtk.main()
     
-def _display_refuse_window():
+def _display_single_instance_window():
     gobject.source_remove(timeout_id)
-    primary_txt = _("Flowblade Batch Render application already running.")
-    secondary_txt = _("Only one instance of Flowblade Batch Render is allowed to run at a time.")
-    dialogutils.warning_message_with_callback(primary_txt, secondary_txt, None, False, _early_exit)
+    primary_txt = _("Flowblade Batch Render PID file found!")
+    msg1 = _("Either Render Queue application is already running\nor it has crashed.\n\n")
+    msg2 = _("Only select <b>'Force Launch'</b> if Render Queue not already running!")
+    msg = msg1 + msg2
+    content = dialogutils.get_warning_message_dialog_panel(primary_txt, msg)
+    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    align.set_padding(0, 12, 0, 0)
+    align.add(content)
+
+    dialog = gtk.Dialog("",
+                        None,
+                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_CANCEL,
+                        _("Force Launch").encode('utf-8'), gtk.RESPONSE_OK))
+
+    dialog.vbox.pack_start(align, True, True, 0)
+    dialogutils.default_behaviour(dialog)
+    dialog.connect('response', _early_exit)
+    dialog.show_all()
 
 def _early_exit(dialog, response):
     dialog.destroy()
