@@ -116,12 +116,15 @@ def save_project(project, file_path):
     for k, v in s_proj.media_files.iteritems():
         s_media_file = copy.copy(v)
         remove_attrs(s_media_file, MEDIA_FILE_REMOVE)
+        
+        # Convert media files between original and proxy files
         if project_proxy_mode == appconsts.CONVERTING_TO_USE_PROXY_MEDIA:
             proxy_path_dict[s_media_file.path] = s_media_file.second_file_path
             s_media_file.set_as_proxy_media_file()
         elif project_proxy_mode == appconsts.CONVERTING_TO_USE_ORIGINAL_MEDIA:
             proxy_path_dict[s_media_file.path] = s_media_file.second_file_path
             s_media_file.set_as_original_media_file()
+
         media_files[s_media_file.id] = s_media_file
     s_proj.media_files = media_files
 
