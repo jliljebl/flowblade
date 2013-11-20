@@ -53,10 +53,11 @@ PROXY_SIZE_QUARTER = 2
 
 
 class ProxyRenderRunnerThread(threading.Thread):
-    def __init__(self, proxy_profile, files_to_render):
+    def __init__(self, proxy_profile, files_to_render, set_as_proxy_immediately):
         threading.Thread.__init__(self)
         self.proxy_profile = proxy_profile
         self.files_to_render = files_to_render
+        self.set_as_proxy_immediately = set_as_proxy_immediately
         self.aborted = False
 
     def run(self):        
@@ -80,7 +81,7 @@ class ProxyRenderRunnerThread(threading.Thread):
             consumer.set("rescale", "nearest")
 
             file_producer = mlt.Producer(self.proxy_profile, str(media_file.path))
-            
+            file_length = file_producer.get_length()
             # Create and launch render thread
             global render_thread 
             render_thread = renderconsumer.FileRenderPlayer(None, file_producer, consumer, 0, file_producer.get_length() - 1)
@@ -98,12 +99,17 @@ class ProxyRenderRunnerThread(threading.Thread):
                 gtk.gdk.threads_enter()
                 progress_window.update_render_progress(render_fraction, media_file.name, items, len(self.files_to_render), elapsed)
                 gtk.gdk.threads_leave()
-                if render_thread.producer.get_speed() == 0: # Rendering has reached end or been aborted
+                render_thread.producer.get_length()
+                if render_thread.producer.get_speed() == 0 and render_thread.producer.get_length() == file_length : # Rendering has reached end or been aborted
+                    print "speed 0"
+                    print "reached", render_thread.producer.get_length()
                     self.thread_running = False
                     gtk.gdk.threads_enter()
                     progress_window.render_progress_bar.set_fraction(1.0)
                     gtk.gdk.threads_leave()
                     media_file.add_proxy_file(proxy_file_path)
+                    if self.set_as_proxy_immediately:
+                        media_file.set_as_proxy_media_file()
                 else:
                     time.sleep(0.1)
     
@@ -400,6 +406,9 @@ class ProxyRenderIssuesWindow:
             if self.action_select.get_active() == 0: # Render Unrendered Possible & Use existing
                 for f in self.other_project_proxies:
                     f.add_existing_proxy_file(self.proxy_w, self.proxy_h, self.proxy_file_extension)
+                    if editorstate.PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA:
+                        f.set_as_proxy_media_file()
+        
             else: # Rerender All Possible
                 self.files_to_render.extend(self.other_project_proxies)
                 self.files_to_render.extend(self.already_have_proxies)
@@ -472,9 +481,14 @@ def create_proxy_files_pressed(retry_from_render_folder_select=False):
 def _create_proxy_files(media_files_to_render):
     proxy_profile = _get_proxy_profile(editorstate.PROJECT())
 
+    if editorstate.PROJECT().proxy_data.proxy_mode == appconsts.USE_ORIGINAL_MEDIA:
+        set_as_proxy_immediately = False
+    else:
+        set_as_proxy_immediately = True
+
     global progress_window, runner_thread
     progress_window = ProxyRenderProgressDialog()
-    runner_thread = ProxyRenderRunnerThread(proxy_profile, media_files_to_render)
+    runner_thread = ProxyRenderRunnerThread(proxy_profile, media_files_to_render, set_as_proxy_immediately)
     runner_thread.start()
 
 # ------------------------------------------------------------------ module functions
