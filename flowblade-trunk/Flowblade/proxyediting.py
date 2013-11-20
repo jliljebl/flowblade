@@ -67,12 +67,14 @@ class ProxyRenderRunnerThread(threading.Thread):
         elapsed = 0
         proxy_w, proxy_h =  _get_proxy_dimensions(self.proxy_profile, editorstate.PROJECT().proxy_data.size)
         proxy_encoding = _get_proxy_encoding()
+        self.current_render_file_path = None
         for media_file in self.files_to_render:
             if self.aborted == True:
                 break
 
             # Create render objects
             proxy_file_path = media_file.create_proxy_path(proxy_w, proxy_h, proxy_encoding.extension)
+            self.current_render_file_path = proxy_file_path
             consumer = renderconsumer.get_render_consumer_for_encoding(
                                                         proxy_file_path,
                                                         self.proxy_profile, 
@@ -110,6 +112,7 @@ class ProxyRenderRunnerThread(threading.Thread):
                     media_file.add_proxy_file(proxy_file_path)
                     if self.set_as_proxy_immediately:
                         media_file.set_as_proxy_media_file()
+                    self.current_render_file_path = None
                 else:
                     time.sleep(0.1)
     
@@ -125,6 +128,9 @@ class ProxyRenderRunnerThread(threading.Thread):
         gtk.gdk.threads_enter()
         _proxy_render_stopped()
         gtk.gdk.threads_leave()
+
+        if self.current_render_file_path != None:
+            os.remove(self.current_render_file_path)
                 
     def abort(self):
         render_thread.shutdown()
@@ -410,6 +416,10 @@ class ProxyRenderIssuesWindow:
                         f.set_as_proxy_media_file()
         
             else: # Rerender All Possible
+                # We can't mess existing proxy files that are used by other projects
+                _set_media_files_to_use_unique_proxies(self.other_project_proxies)
+                _set_media_files_to_use_unique_proxies(self.already_have_proxies)
+                # Add to files being rendered
                 self.files_to_render.extend(self.other_project_proxies)
                 self.files_to_render.extend(self.already_have_proxies)
             dialog.destroy()
@@ -478,6 +488,10 @@ def create_proxy_files_pressed(retry_from_render_folder_select=False):
 
     _create_proxy_files(files_to_render)
 
+def _set_media_files_to_use_unique_proxies(media_files_list):
+    for media_file in media_files_list:
+        media_file.use_unique_proxy = True
+    
 def _create_proxy_files(media_files_to_render):
     proxy_profile = _get_proxy_profile(editorstate.PROJECT())
 
