@@ -598,8 +598,8 @@ class BatchRenderWindow:
 
         # Content pane
         pane = gtk.VBox(False, 1)
-        pane.pack_start(top_align, False, True, 0)
-        pane.pack_start(self.queue_view, False, True, 0)
+        pane.pack_start(top_align, False, False, 0)
+        pane.pack_start(self.queue_view, True, True, 0)
         pane.pack_start(bottom_align, False, False, 0)
 
         # Set pane and show window
