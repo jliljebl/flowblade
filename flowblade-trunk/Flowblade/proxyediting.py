@@ -103,8 +103,6 @@ class ProxyRenderRunnerThread(threading.Thread):
                 gtk.gdk.threads_leave()
                 render_thread.producer.get_length()
                 if render_thread.producer.get_speed() == 0 and render_thread.producer.get_length() == file_length : # Rendering has reached end or been aborted
-                    print "speed 0"
-                    print "reached", render_thread.producer.get_length()
                     self.thread_running = False
                     gtk.gdk.threads_enter()
                     progress_window.render_progress_bar.set_fraction(1.0)
@@ -131,7 +129,9 @@ class ProxyRenderRunnerThread(threading.Thread):
 
         if self.current_render_file_path != None:
             os.remove(self.current_render_file_path)
-                
+        if editorstate.PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA:
+            _auto_renconvert_after_proxy_render_in_proxy_mode()
+        
     def abort(self):
         render_thread.shutdown()
         self.aborted = True
@@ -594,6 +594,37 @@ def _convert_to_original_media_project():
     global load_thread
     load_thread = ProxyProjectLoadThread(conv_temp_project_path, manager_window.convert_progress_bar)
     load_thread.start()
+
+def _auto_renconvert_after_proxy_render_in_proxy_mode():
+    # Save to temp to convert to using original media
+    project = editorstate.PROJECT()
+    project.proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_ORIGINAL_MEDIA
+    conv_temp_project_path = utils.get_hidden_user_dir_path() + "proxy_conv.flb"
+    persistance.save_project(editorstate.PROJECT(), conv_temp_project_path)
+    project.proxy_data.proxy_mode = appconsts.USE_ORIGINAL_MEDIA
+
+    # Load saved temp original media project
+    persistance.show_messages = False
+    project = persistance.load_project(conv_temp_project_path)
+    
+    # Save to temp to convert back to using proxy media
+    project.proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_PROXY_MEDIA
+    persistance.save_project(project, conv_temp_project_path)
+    project.proxy_data.proxy_mode = appconsts.USE_PROXY_MEDIA
+
+    # Load saved temp proxy project
+    project = persistance.load_project(conv_temp_project_path)
+
+    # Open saved temp project
+    app.stop_autosave()
+
+    gtk.gdk.threads_enter()
+    app.open_project(project)
+    gtk.gdk.threads_leave()
+
+    app.start_autosave()
+
+    persistance.show_messages = True
 
 def _converting_proxy_mode_done():
     global load_thread

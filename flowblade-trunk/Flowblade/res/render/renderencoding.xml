@@ -50,11 +50,11 @@
     <encodingoption name="H.264 / .mp4" extension="mp4" audiodesc="mp3, 348kb/s, 48000Hz" type="av" resize="True" qgroup="qgroup1">
         <profile args="f=mp4 s=%SCREENSIZE% hq=1 acodec=libmp3lame ab=384k ar=48000 pix_fmt=yuv420p vcodec=libx264 minrate=0 b=%BITRATE% b_strategy=1 subcmp=2 cmp=2 coder=1 flags=+loop flags2=dct8x8 qmax=51 subq=7 qmin=10 qcomp=0.6 qdiff=4 trellis=1 aspect=%ASPECT%"/>
     </encodingoption>
-    <encodingoption name="MPEG-4 / .mp4" extension="mov" type="av" audiodesc="mp2, 192kb/s, 48000Hz" resize="True" qgroup="qgroup1">
-        <profile args="f=mp4 s=%SCREENSIZE% hq=1 acodec=mp2 ab=192k ar=48000 vcodec=mpeg4 minrate=0 b=%BITRATE%"/>
+    <encodingoption name="MPEG-4 / .mp4" extension="mp4" type="av" audiodesc="mp2, 192kb/s, 48000Hz" resize="True" qgroup="qgroup1">
+        <profile args="f=mp4 s=%SCREENSIZE% hq=1 acodec=mp2 ab=192k ar=48000 vcodec=mpeg4 minrate=0 vb=%BITRATE%"/>
     </encodingoption>
     <encodingoption name="Theora / .ogg" extension="ogg" audiodesc="flac lossless" type="av" resize="True" qgroup="qgroup1">
-        <profile args="f=ogg acodec=flac ac=2 vcodec=libtheora minrate=0 b=%BITRATE%" />
+        <profile args="f=ogg acodec=flac ac=2 vcodec=libtheora minrate=0 vb=%BITRATE%" />
     </encodingoption>
     <encodingoption name="Lossless HuffYUV / .avi" extension="avi" audiodesc="pcm lossless"  type="av" resize="True" qgroup="lossless">
         <profile args="f=avi acodec=pcm_s16le ac=2 vcodec=huffyuv" />
