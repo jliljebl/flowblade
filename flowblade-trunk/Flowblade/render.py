@@ -98,7 +98,7 @@ class RenderLauncher(threading.Thread):
 
 
 def render_timeline():
-    if len(widgets.movie_name.get_text()) == 0:
+    if len(widgets.file_panel.movie_name.get_text()) == 0:
         primary_txt = _("Render file name entry is empty")
         secondary_txt = _("You have to provide a name for the file to be rendered.")
         dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
@@ -143,7 +143,6 @@ def _do_rendering():
     PROJECT().events.append(project_event)
     projectinfogui.update_project_info()
 
-    
     global progress_window
     progress_window = rendergui.render_progress_dialog(_render_cancel_callback,
                                                        gui.editor_window.window)
@@ -168,23 +167,23 @@ def get_render_consumer():
 
     profile = get_current_profile()
 
-    if widgets.type_combo.get_active() == 1: # Preset encodings
-        encoding_option = renderconsumer.non_user_encodings[widgets.preset_encodings_cb.get_active()]
+    if widgets.render_type_panel.type_combo.get_active() == 1: # Preset encodings
+        encoding_option = renderconsumer.non_user_encodings[widgets.render_type_panel.presets_selector.widget.get_active()]
         consumer = renderconsumer.get_render_consumer_for_encoding(file_path,
                                                                    profile,
                                                                    encoding_option)
         return consumer
 
-    if widgets.use_args_check.get_active() == False:
+    if widgets.args_panel.use_args_check.get_active() == False:
         # Using options comboboxes
-        encoding_option_index = widgets.encodings_cb.get_active()
-        quality_option_index = widgets.quality_cb.get_active()
+        encoding_option_index = widgets.encoding_panel.encoding_selector.widget.get_active()
+        quality_option_index = widgets.encoding_panel.quality_selector.widget.get_active()
         consumer = renderconsumer.get_render_consumer_for_encoding_and_quality( file_path,
                                                                                 profile,
                                                                                 encoding_option_index,
                                                                                 quality_option_index)
     else:
-        buf = widgets.opts_view.get_buffer()
+        buf = widgets.args_panel.opts_view.get_buffer()
         consumer, error = renderconsumer.get_render_consumer_for_text_buffer(file_path,
                                                                              profile,
                                                                              buf)
@@ -196,19 +195,19 @@ def get_render_consumer():
 
 def get_args_vals_list_for_current_selections():
     profile = get_current_profile()
-    encoding_option_index = widgets.encodings_cb.get_active()
-    quality_option_index = widgets.quality_cb.get_active()
+    encoding_option_index = widgets.encoding_panel.encoding_selector.widget.get_active()
+    quality_option_index = widgets.encoding_panel.quality_selector.widget.get_active()
         
-    if widgets.type_combo.get_active() == 1: # Preset encodings
+    if widgets.render_type_panel.type_combo.get_active() == 1: # Preset encodings
         args_vals_list = renderconsumer.get_args_vals_tuples_list_for_encoding_and_quality( profile, 
                                                                                             encoding_option_index, 
                                                                                             -1)
-    elif widgets.use_args_check.get_active() == False: # User encodings
+    elif widgets.args_panel.use_args_check.get_active() == False: # User encodings
         args_vals_list = renderconsumer.get_args_vals_tuples_list_for_encoding_and_quality( profile, 
                                                                                             encoding_option_index, 
                                                                                             quality_option_index)
     else: # Manual args encodings
-        buf = widgets.opts_view.get_buffer()
+        buf = widgets.args_panel.opts_view.get_buffer()
         args_vals_list, error = renderconsumer.get_ffmpeg_opts_args_vals_tuples_list(buf)
     
         if error != None:
@@ -218,11 +217,11 @@ def get_args_vals_list_for_current_selections():
     return args_vals_list
 
 def get_file_path():
-    folder = widgets.out_folder.get_filenames()[0]        
-    filename = widgets.movie_name.get_text()
+    folder = widgets.file_panel.out_folder.get_filenames()[0]        
+    filename = widgets.file_panel.movie_name.get_text()
 
     if  widgets.args_panel.use_args_check.get_active() == False:
-        extension = widgets.extension_label.get_text()
+        extension = widgets.file_panel.extension_label.get_text()
     else:
         extension = "." +  widgets.args_panel.ext_entry.get_text()
 
@@ -234,45 +233,16 @@ def create_widgets(normal_height):
     Widgets for editing render properties and viewing render progress.
     """
     widgets.file_panel = rendergui.RenderFilePanel()
-    widgets.out_folder = widgets.file_panel.out_folder
-    widgets.movie_name = widgets.file_panel.movie_name
-    widgets.extension_label = widgets.file_panel.extension_label
-
     widgets.render_type_panel = rendergui.RenderTypePanel(_render_type_changed, _preset_selection_changed)
-    widgets.preset_encodings_cb = widgets.render_type_panel.presets_selector.widget
-    widgets.type_combo = widgets.render_type_panel.type_combo
-
     widgets.profile_panel = rendergui.RenderProfilePanel(_out_profile_changed)
-    widgets.use_project_label = widgets.profile_panel.use_project_label
-    widgets.use_args_label = widgets.profile_panel.use_args_label
-    widgets.use_project_profile_check = widgets.profile_panel.use_project_profile_check
-    widgets.out_profile_combo = widgets.profile_panel.out_profile_combo
-    widgets.out_profile_info_box = widgets.profile_panel.out_profile_info_box
-
     widgets.encoding_panel = rendergui.RenderEncodingPanel(widgets.file_panel.extension_label)
-    widgets.quality_cb = widgets.encoding_panel.quality_selector.widget
-    widgets.audio_desc = widgets.encoding_panel.audio_desc
-    widgets.encodings_cb = widgets.encoding_panel.encoding_selector.widget
-
     widgets.args_panel = rendergui.RenderArgsPanel(normal_height,
                                                    _save_opts_pressed, _load_opts_pressed,
                                                    _display_selection_in_opts_view)
-    widgets.use_args_check = widgets.args_panel.use_args_check
-    widgets.opts_save_button = widgets.args_panel.opts_save_button
-    widgets.opts_load_button = widgets.args_panel.opts_load_button
-    widgets.load_selection_button = widgets.args_panel.load_selection_button
-    widgets.opts_view = widgets.args_panel.opts_view
-    widgets.open_in_bin = widgets.args_panel.open_in_bin
-
-    # Range
-    widgets.range_cb = gtk.combo_box_new_text()
-    widgets.range_cb.append_text(_("Full Length"))
-    widgets.range_cb.append_text(_("Marked Range"))
-    widgets.range_cb.set_active(0) 
-
-    # Render, Reset, Render Queue buttons
+    
+    # Range, Render, Reset, Render Queue
     widgets.render_button = guiutils.get_render_button()
-
+    widgets.range_cb = rendergui.get_range_selection_combo()
     widgets.reset_button = gtk.Button(_("Reset"))
     widgets.reset_button.connect("clicked", lambda w: set_default_values_for_widgets())
     widgets.queue_button = gtk.Button(_("To Queue"))
@@ -285,12 +255,12 @@ def create_widgets(normal_height):
 def set_default_values_for_widgets(movie_name_too=False):
     if len(renderconsumer.encoding_options) == 0:# this won't work if no encoding options available
         return                   # but we don't want crash, so that we can inform user
-    widgets.encodings_cb.set_active(0)
+    widgets.encoding_panel.encoding_selector.widget.set_active(0)
     if movie_name_too == True:
-        widgets.movie_name.set_text("movie")
-    widgets.out_folder.set_current_folder(os.path.expanduser("~") + "/")
-    widgets.use_args_check.set_active(False)
-    widgets.use_project_profile_check.set_active(True)
+        widgets.file_panel.movie_name.set_text("movie")
+    widgets.file_panel.out_folder.set_current_folder(os.path.expanduser("~") + "/")
+    widgets.args_panel.use_args_check.set_active(False)
+    widgets.profile_panel.use_project_profile_check.set_active(True)
 
 def enable_user_rendering(value):
     widgets.encoding_panel.set_sensitive(value)
@@ -345,19 +315,18 @@ def exit_render_gui():
     progress_window.passed_time_label.set_use_markup(True)
     progress_window.progress_bar.set_text(_("Render Complete!"))
     
-    
     dialogutils.delay_destroy_window(progress_window, 2.0)
     progress_window = None
 
 def maybe_open_rendered_file_in_bin():
-    if widgets.open_in_bin.get_active() == False:
+    if widgets.args_panel.open_in_bin.get_active() == False:
         return
         
     file_path = get_file_path()
     open_media_file_callback(file_path)
 
 def get_current_profile():
-    profile_index = widgets.out_profile_combo.widget.get_active()
+    profile_index = widgets.profile_panel.out_profile_combo.widget.get_active()
     if profile_index == 0:
         # project_profile is first selection in combo box
         profile = PROJECT().profile
@@ -369,7 +338,7 @@ def fill_out_profile_widgets():
     """
     Called some time after widget creation when current_sequence is known and these can be filled.
     """
-    widgets.out_profile_combo.fill_options()
+    widgets.profile_panel.out_profile_combo.fill_options()
     _fill_info_box(current_sequence().profile)
 
 def reload_profiles():
@@ -377,24 +346,24 @@ def reload_profiles():
     fill_out_profile_widgets()
 
 def _render_type_changed():
-    if widgets.type_combo.get_active() == 0: # User Defined
+    if widgets.render_type_panel.type_combo.get_active() == 0: # User Defined
         enable_user_rendering(True)
         set_default_values_for_widgets()
-        widgets.preset_encodings_cb.set_sensitive(False)
+        widgets.render_type_panel.presets_selector.widget.set_sensitive(False)
         _preset_selection_changed()
         widgets.encoding_panel.encoding_selector.encoding_selection_changed()
     else: # Preset Encodings
         enable_user_rendering(False)
-        widgets.preset_encodings_cb.set_sensitive(True)
+        widgets.render_type_panel.presets_selector.widget.set_sensitive(True)
         _preset_selection_changed()
-        widgets.opts_save_button.set_sensitive(False)
-        widgets.opts_load_button.set_sensitive(False)
-        widgets.load_selection_button.set_sensitive(False)
-        widgets.opts_view.set_sensitive(False)
-        widgets.opts_view.get_buffer().set_text("")
+        widgets.args_panel.opts_save_button.set_sensitive(False)
+        widgets.args_panel.opts_load_button.set_sensitive(False)
+        widgets.args_panel.load_selection_button.set_sensitive(False)
+        widgets.args_panel.opts_view.set_sensitive(False)
+        widgets.args_panel.opts_view.get_buffer().set_text("")
 
 def _out_profile_changed():
-    selected_index = widgets.out_profile_combo.widget.get_active()
+    selected_index = widgets.profile_panel.out_profile_combo.widget.get_active()
     if selected_index == 0:
         _fill_info_box(current_sequence().profile)
     else:
@@ -404,16 +373,18 @@ def _out_profile_changed():
 def _fill_info_box(profile):
     info_panel = guicomponents.get_profile_info_small_box(profile)
     widgets.info_panel = info_panel
-    widgets.out_profile_info_box.display_info(info_panel)
+    widgets.profile_panel.out_profile_info_box.display_info(info_panel)
 
 def _preset_selection_changed():
-    enc_index = widgets.preset_encodings_cb.get_active()
+    enc_index = widgets.render_type_panel.presets_selector.widget.get_active()
     ext = renderconsumer.non_user_encodings[enc_index].extension
-    widgets.extension_label.set_text("." + ext)
+    widgets.file_panel.extension_label.set_text("." + ext)
    
 def _display_selection_in_opts_view():
     profile = get_current_profile()
-    widgets.args_panel.display_encoding_args(profile, widgets.encodings_cb.get_active(), widgets.quality_cb.get_active())
+    widgets.args_panel.display_encoding_args(profile,
+                                             widgets.encoding_panel.encoding_selector.widget.get_active(), 
+                                             widgets.encoding_panel.quality_selector.widget.get_active())
     
 def _save_opts_pressed():
     rendergui.save_ffmpeg_opts_dialog(_save_opts_dialog_callback, FFMPEG_OPTS_SAVE_FILE_EXTENSION)
@@ -422,7 +393,7 @@ def _save_opts_dialog_callback(dialog, response_id):
     if response_id == gtk.RESPONSE_ACCEPT:
         file_path = dialog.get_filenames()[0]
         opts_file = open(file_path, "w")
-        buf = widgets.opts_view.get_buffer()
+        buf = widgets.args_panel.opts_view.get_buffer()
         opts_text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), include_hidden_chars=True)
         opts_file.write(opts_text)
         opts_file.close()
@@ -438,7 +409,7 @@ def _load_opts_dialog_callback(dialog, response_id):
         filename = dialog.get_filenames()[0]
         args_file = open(filename)
         args_text = args_file.read()
-        widgets.opts_view.get_buffer().set_text(args_text)
+        widgets.args_panel.opts_view.get_buffer().set_text(args_text)
         dialog.destroy()
     else:
         dialog.destroy()

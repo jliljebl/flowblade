@@ -13,62 +13,7 @@ destroy_window_event_id = -1
 
 FFMPEG_VIEW_SIZE = (200, 210) # Text edit area height for render opts. Width 200 seems to be ignored in current layout?
 
-# ------------------------------------------------------------ panels
-def get_render_panel_left(render_widgets, add_audio_panel, normal_height):
-    file_opts_panel = guiutils.get_named_frame(_("File"), render_widgets.file_panel.vbox, 4)
-    render_type_panel = guiutils.get_named_frame(_("Render Type"), render_widgets.render_type_panel.vbox, 4)
-    profile_panel = guiutils.get_named_frame(_("Render Profile"), render_widgets.profile_panel.vbox, 4)
-    encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
 
-    render_panel = gtk.VBox()
-    render_panel.pack_start(file_opts_panel, False, False, 0)
-    render_panel.pack_start(render_type_panel, False, False, 0)
-    render_panel.pack_start(profile_panel, False, False, 0)
-    render_panel.pack_start(encoding_panel, False, False, 0)
-    render_panel.pack_start(gtk.Label(), True, True, 0)
-    return render_panel
-
-def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_cb):
-    opts_panel = guiutils.get_named_frame(_("Render Args"), render_widgets.args_panel.vbox, 4)
-    
-    bin_row = gtk.HBox()
-    bin_row.pack_start(guiutils.get_pad_label(10, 8),  False, False, 0)
-    bin_row.pack_start(gtk.Label(_("Open File in Bin:")),  False, False, 0)
-    bin_row.pack_start(guiutils.get_pad_label(10, 2),  False, False, 0)
-    bin_row.pack_start(render_widgets.open_in_bin,  False, False, 0)
-    bin_row.pack_start(gtk.Label(), True, True, 0)
-
-    range_row = gtk.HBox()
-    range_row.pack_start(guiutils.get_pad_label(10, 8),  False, False, 0)
-    range_row.pack_start(gtk.Label(_("Render Range:")),  False, False, 0)
-    range_row.pack_start(guiutils.get_pad_label(10, 2),  False, False, 0)
-    range_row.pack_start(render_widgets.range_cb,  True, True, 0)
-
-    buttons_panel = gtk.HBox()
-    buttons_panel.pack_start(guiutils.get_pad_label(10, 8), False, False, 0)
-    buttons_panel.pack_start(render_widgets.reset_button, False, False, 0)
-    buttons_panel.pack_start(gtk.Label(), True, True, 0)
-    buttons_panel.pack_start(render_widgets.queue_button, False, False, 0)
-    buttons_panel.pack_start(gtk.Label(), True, True, 0)
-    buttons_panel.pack_start(render_widgets.render_button, False, False, 0)
-
-    render_widgets.queue_button.connect("clicked", 
-                                         to_queue_clicked_cb, 
-                                         None)
-
-    render_widgets.render_button.connect("clicked", 
-                                         render_clicked_cb, 
-                                         None)
-
-    render_panel = gtk.VBox()
-    render_panel.pack_start(opts_panel, True, True, 0)
-    render_panel.pack_start(guiutils.get_pad_label(10, 22), False, False, 0)
-    render_panel.pack_start(bin_row, False, False, 0)
-    render_panel.pack_start(range_row, False, False, 0)
-    render_panel.pack_start(guiutils.get_pad_label(10, 12), False, False, 0)
-    render_panel.pack_start(buttons_panel, False, False, 0)
-
-    return render_panel
 
 # ----------------------------------------------------------- dialogs
 def render_progress_dialog(callback, parent_window):
@@ -181,6 +126,7 @@ def clip_render_progress_dialog(callback, title, text, progress_bar, parent_wind
     dialog.show()
     return dialog
 
+
 # ----------------------------------------------------------- widgets
 class RenderQualitySelector():
     """
@@ -275,8 +221,72 @@ class ProfileInfoBox(gtk.VBox):
         self.add(info_panel)
         self.show_all()
 
+
+def get_range_selection_combo():
+    range_cb = gtk.combo_box_new_text()
+    range_cb.append_text(_("Full Length"))
+    range_cb.append_text(_("Marked Range"))
+    range_cb.set_active(0) 
+    return range_cb
+
+# ------------------------------------------------------------ panels
+def get_render_panel_left(render_widgets, add_audio_panel, normal_height):
+    file_opts_panel = guiutils.get_named_frame(_("File"), render_widgets.file_panel.vbox, 4)
+    render_type_panel = guiutils.get_named_frame(_("Render Type"), render_widgets.render_type_panel.vbox, 4)
+    profile_panel = guiutils.get_named_frame(_("Render Profile"), render_widgets.profile_panel.vbox, 4)
+    encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
+
+    render_panel = gtk.VBox()
+    render_panel.pack_start(file_opts_panel, False, False, 0)
+    render_panel.pack_start(render_type_panel, False, False, 0)
+    render_panel.pack_start(profile_panel, False, False, 0)
+    render_panel.pack_start(encoding_panel, False, False, 0)
+    render_panel.pack_start(gtk.Label(), True, True, 0)
+    return render_panel
+
+def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_cb):
+    opts_panel = guiutils.get_named_frame(_("Render Args"), render_widgets.args_panel.vbox, 4)
     
-# --------------------------------------------------------------- panel
+    bin_row = gtk.HBox()
+    bin_row.pack_start(guiutils.get_pad_label(10, 8),  False, False, 0)
+    bin_row.pack_start(gtk.Label(_("Open File in Bin:")),  False, False, 0)
+    bin_row.pack_start(guiutils.get_pad_label(10, 2),  False, False, 0)
+    bin_row.pack_start(render_widgets.args_panel.open_in_bin,  False, False, 0)
+    bin_row.pack_start(gtk.Label(), True, True, 0)
+
+    range_row = gtk.HBox()
+    range_row.pack_start(guiutils.get_pad_label(10, 8),  False, False, 0)
+    range_row.pack_start(gtk.Label(_("Render Range:")),  False, False, 0)
+    range_row.pack_start(guiutils.get_pad_label(10, 2),  False, False, 0)
+    range_row.pack_start(render_widgets.range_cb,  True, True, 0)
+
+    buttons_panel = gtk.HBox()
+    buttons_panel.pack_start(guiutils.get_pad_label(10, 8), False, False, 0)
+    buttons_panel.pack_start(render_widgets.reset_button, False, False, 0)
+    buttons_panel.pack_start(gtk.Label(), True, True, 0)
+    buttons_panel.pack_start(render_widgets.queue_button, False, False, 0)
+    buttons_panel.pack_start(gtk.Label(), True, True, 0)
+    buttons_panel.pack_start(render_widgets.render_button, False, False, 0)
+
+    render_widgets.queue_button.connect("clicked", 
+                                         to_queue_clicked_cb, 
+                                         None)
+
+    render_widgets.render_button.connect("clicked", 
+                                         render_clicked_cb, 
+                                         None)
+
+    render_panel = gtk.VBox()
+    render_panel.pack_start(opts_panel, True, True, 0)
+    render_panel.pack_start(guiutils.get_pad_label(10, 22), False, False, 0)
+    render_panel.pack_start(bin_row, False, False, 0)
+    render_panel.pack_start(range_row, False, False, 0)
+    render_panel.pack_start(guiutils.get_pad_label(10, 12), False, False, 0)
+    render_panel.pack_start(buttons_panel, False, False, 0)
+
+    return render_panel
+
+
 class RenderFilePanel():
 
     def __init__(self):
