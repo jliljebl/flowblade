@@ -22,7 +22,6 @@ import ctypes
 import gtk
 import numpy as np
 import struct
-from PIL import Image
 
 import cairoarea
 import cairo
@@ -30,6 +29,7 @@ import respaths
 
 MIN_PAD = 20
 GUIDES_COLOR = (0.5, 0.5, 0.5, 1.0)
+
 
 class ViewEditor(gtk.Frame):
 
