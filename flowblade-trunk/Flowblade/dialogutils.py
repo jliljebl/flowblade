@@ -20,6 +20,7 @@
 """
 Module contains functions to build generic dialogs.
 """
+import gobject
 import gtk
 
 import guiutils
@@ -128,3 +129,11 @@ def get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=False, 
     align.add(hbox)
     
     return align
+
+# ------------------------------------------------------------------ delayed window destroying 
+def delay_destroy_window(window, delay):
+    gobject.timeout_add(int(delay * 1000), _window_destroy_event, window)
+
+def _window_destroy_event(window):
+    window.destroy()
+    

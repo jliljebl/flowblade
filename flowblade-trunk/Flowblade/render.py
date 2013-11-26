@@ -345,8 +345,8 @@ def exit_render_gui():
     progress_window.passed_time_label.set_use_markup(True)
     progress_window.progress_bar.set_text(_("Render Complete!"))
     
-    time.sleep(2.0)
-    progress_window.destroy()
+    
+    dialogutils.delay_destroy_window(progress_window, 2.0)
     progress_window = None
 
 def maybe_open_rendered_file_in_bin():
