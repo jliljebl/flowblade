@@ -21,6 +21,7 @@
 """
 Module contains objects and methods needed to create render consumers.
 """
+import gtk
 import mlt
 import time
 import threading
