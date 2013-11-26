@@ -9,6 +9,8 @@ import mltprofiles
 import renderconsumer
 import respaths
 
+destroy_window_event_id = -1
+
 FFMPEG_VIEW_SIZE = (200, 210) # Text edit area height for render opts. Width 200 seems to be ignored in current layout?
 
 # ------------------------------------------------------------ panels
@@ -508,3 +510,5 @@ class RenderArgsPanel():
         else:
             self.opts_view.set_buffer(gtk.TextBuffer())
             self.ext_entry.set_text("")
+
+

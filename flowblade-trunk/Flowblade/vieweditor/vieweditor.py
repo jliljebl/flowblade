@@ -68,9 +68,9 @@ class ViewEditor(gtk.Frame):
         
         self.change_active_layer_for_hit = True
         self.active_layer_changed_listener = None # interface: listener(new_active_index)
-                                                   # note: vieweditor calls activate_layer( ) when non-active layer hit
-                                                   # here so listener needs only to change its active layer, not call activate_layer(  ) here
-        
+                                                  # note: vieweditor calls activate_layer( ) when non-active layer hit
+                                                  # here so listener needs only to change its active layer, not call activate_layer(  ) here
+
         self.set_scale_and_update(1.0)
 
     def write_layers_to_png(self, save_path):
