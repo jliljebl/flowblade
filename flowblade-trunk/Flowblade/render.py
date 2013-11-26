@@ -227,6 +227,7 @@ def get_file_path():
 
     return folder + "/" + filename + extension
 
+
 # --------------------------------------------------- gui
 def create_widgets(normal_height):
     """
@@ -416,127 +417,10 @@ def _load_opts_dialog_callback(dialog, response_id):
 
 # ------------------------------------------------------------- framebuffer clip rendering
 # Rendering a slow/fast motion version of media file.
-# We're using 300 lines worth of copy/paste from above, because lazy
 def render_frame_buffer_clip(media_file):
-    
-    folder, file_name = os.path.split(media_file.path)
-    name, ext = os.path.splitext(file_name)
-        
-    dialog = gtk.Dialog(_("Render Slow/Fast Motion Video File"), None,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
-                        _("Render").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+    rendergui.show_slowmo_dialog(media_file, _render_frame_buffer_clip_dialog_callback)
 
-    media_file_label = gtk.Label(_("Source Media File: "))
-    media_name = gtk.Label("<b>" + media_file.name + "</b>")
-    media_name.set_use_markup(True)
-    SOURCE_PAD = 8
-    SOURCE_HEIGHT = 20
-    mf_row = guiutils.get_left_justified_box([media_file_label,  guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), media_name])
-    
-    mark_in = gtk.Label(_("<b>not set</b>"))
-    mark_out = gtk.Label(_("<b>not set</b>"))
-    if media_file.mark_in != -1:
-        mark_in = gtk.Label("<b>" + utils.get_tc_string(media_file.mark_in) + "</b>")
-    if media_file.mark_out != -1:
-        mark_out = gtk.Label("<b>" + utils.get_tc_string(media_file.mark_out) + "</b>")
-    mark_in.set_use_markup(True)
-    mark_out.set_use_markup(True)
-    
-    fb_widgets = utils.EmptyClass()
-
-    fb_widgets.file_name = gtk.Entry()
-    fb_widgets.file_name.set_text(name + "_MOTION")
-    
-    fb_widgets.extension_label = gtk.Label()
-    fb_widgets.extension_label.set_size_request(45, 20)
-
-    name_row = gtk.HBox(False, 4)
-    name_row.pack_start(fb_widgets.file_name, True, True, 0)
-    name_row.pack_start(fb_widgets.extension_label, False, False, 4)
-    
-    fb_widgets.out_folder = gtk.FileChooserButton(_("Select Target Folder"))
-    fb_widgets.out_folder.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
-    fb_widgets.out_folder.set_current_folder(folder)
-    
-    label = gtk.Label(_("Speed %:"))
-
-    adjustment = gtk.Adjustment(float(100), float(1), float(600), float(1))
-    fb_widgets.hslider = gtk.HScale()
-    fb_widgets.hslider.set_adjustment(adjustment)
-    fb_widgets.hslider.set_draw_value(False)
-    
-    spin = gtk.SpinButton()
-    spin.set_numeric(True)
-    spin.set_adjustment(adjustment)
-
-    fb_widgets.hslider.set_digits(0)
-    spin.set_digits(0)
-
-    slider_hbox = gtk.HBox(False, 4)
-    slider_hbox.pack_start(fb_widgets.hslider, True, True, 0)
-    slider_hbox.pack_start(spin, False, False, 4)
-    slider_hbox.set_size_request(350,35)
-
-    hbox = gtk.HBox(False, 2)
-    hbox.pack_start(guiutils.pad_label(8, 8), False, False, 0)
-    hbox.pack_start(label, False, False, 0)
-    hbox.pack_start(slider_hbox, False, False, 0)
-
-    profile_selector = rendergui.ProfileSelector()
-    profile_selector.fill_options()
-    profile_selector.widget.set_sensitive(True)
-    fb_widgets.out_profile_combo = profile_selector.widget
-
-    quality_selector = rendergui.RenderQualitySelector()
-    fb_widgets.quality_cb = quality_selector.widget
-    
-    # Encoding
-    encoding_selector = rendergui.RenderEncodingSelector(quality_selector, fb_widgets.extension_label, None)
-    encoding_selector.encoding_selection_changed()
-    fb_widgets.encodings_cb = encoding_selector.widget
-    
-    objects_list = gtk.TreeStore(str, bool)
-    objects_list.append(None, [_("Full Source Length"), True])
-    if media_file.mark_in != -1 and media_file.mark_out != -1:
-        range_available = True
-    else:
-        range_available = False
-    objects_list.append(None, [_("Source Mark In to Mark Out"), range_available])
-    
-    fb_widgets.render_range = gtk.ComboBox(objects_list)
-    renderer_text = gtk.CellRendererText()
-    fb_widgets.render_range.pack_start(renderer_text, True)
-    fb_widgets.render_range.add_attribute(renderer_text, "text", 0)
-    fb_widgets.render_range.add_attribute(renderer_text, 'sensitive', 1)
-    fb_widgets.render_range.set_active(0)
-    fb_widgets.render_range.show()
-
-    vbox = gtk.VBox(False, 2)
-    vbox.pack_start(mf_row, False, False, 0)
-    vbox.pack_start(guiutils.get_left_justified_box([gtk.Label(_("Source Mark In: ")), guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), mark_in]), False, False, 0)
-    vbox.pack_start(guiutils.get_left_justified_box([gtk.Label(_("Source_Mark Out: ")), guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), mark_out]), False, False, 0)
-    vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
-    vbox.pack_start(hbox, False, False, 0)
-    vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
-    vbox.pack_start(guiutils.get_two_column_box(gtk.Label(_("Target File:")), name_row, 120), False, False, 0)
-    vbox.pack_start(guiutils.get_two_column_box(gtk.Label(_("Target Folder:")), fb_widgets.out_folder, 120), False, False, 0)
-    vbox.pack_start(guiutils.get_two_column_box(gtk.Label(_("Target Profile:")), fb_widgets.out_profile_combo, 200), False, False, 0)
-    vbox.pack_start(guiutils.get_two_column_box(gtk.Label(_("Target Encoding:")), fb_widgets.encodings_cb, 200), False, False, 0)
-    vbox.pack_start(guiutils.get_two_column_box(gtk.Label(_("Target Quality:")), fb_widgets.quality_cb, 200), False, False, 0)
-    vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
-    vbox.pack_start(guiutils.get_two_column_box(gtk.Label(_("Render Range:")), fb_widgets.render_range, 180), False, False, 0)
-    
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(6, 24, 24, 24)
-    alignment.add(vbox)
-
-    dialog.vbox.pack_start(alignment, True, True, 0)
-    dialogutils.default_behaviour(dialog)
-    dialog.connect('response', _render_frame_buffer_clip_callback, fb_widgets, media_file)
-    dialog.show_all()
-
-def _render_frame_buffer_clip_callback(dialog, response_id, fb_widgets, media_file):
+def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, media_file):
     if response_id == gtk.RESPONSE_ACCEPT:
         # speed, filename folder
         speed = float(int(fb_widgets.hslider.get_value())) / 100.0
