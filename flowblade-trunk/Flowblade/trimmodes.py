@@ -199,7 +199,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         return False
 
     edit_frame, to_side_being_edited = _get_trim_edit(track, current_frame)
-
+    
     if edit_frame == -1:
         return False
 
@@ -210,7 +210,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
 
     if editing_to_clip != None: # This is set when mode reset after edit or after undo or redo
                                 # _get_trim_edit() might give different(wrong) clip being edited
-                                # because cut is now at a different place. (??!!!??)
+                                # because cut is now at a different place.
         to_side_being_edited = editing_to_clip
 
     _set_edit_data(track, edit_frame)
@@ -218,7 +218,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     global edit_data
     # Set side being edited to default to-side
     edit_data["to_side_being_edited"] = to_side_being_edited
-    
+
     current_sequence().clear_hidden_track()
 
     # Cant't trim a blank clip. Blank clips are special in MLT and can't be
@@ -406,7 +406,7 @@ def one_roll_trim_undo_done(track, index, is_to_side_edit):
     if editorstate.edit_mode == editorstate.TWO_ROLL_TRIM:
         set_insert_move_mode(True)
         return
-        
+
     # If in one roll mode, reinit edit mode to correct side
     frame = track.clip_start(index)
     success = set_oneroll_mode(track, frame, is_to_side_edit)
@@ -414,7 +414,7 @@ def one_roll_trim_undo_done(track, index, is_to_side_edit):
         set_no_edit_mode_func()
 
 def clip_end_first_do_done(track):
-    frame = track.get_length()
+    frame = track.get_length() - 1
     set_oneroll_mode(track, frame, False)
 
 def _legalize_one_roll_trim(frame, trim_limits):
