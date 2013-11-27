@@ -397,7 +397,7 @@ def init_editor_state():
     # Clear editors 
     clipeffectseditor.clear_clip()
     compositeeditor.clear_compositor()
-    
+
     # Show first pages on notebooks
     gui.middle_notebook.set_current_page(0)
     
