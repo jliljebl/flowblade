@@ -382,9 +382,6 @@ def init_editor_state():
     """
     render.fill_out_profile_widgets()
     
-    # Set initial edit mode and set initial gui state
-    # updater.set_mode_button_active(editorstate.INSERT_MOVE)
-    
     gui.clip_editor_b.set_sensitive(False)
     gui.editor_window.window.set_title(editorstate.project.name + " - Flowblade")
     gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(False)
@@ -407,12 +404,14 @@ def init_editor_state():
     # Clear clip selection.
     movemodes.clear_selection_values()
 
+    # Set initial edit mode
+    gui.editor_window.modes_selector.set_pixbuf(0)
+    editevent.insert_move_mode_pressed()
+
     # Create array needed to update compositors after all edits
     editorstate.current_sequence().restack_compositors()
 
     # Enable edit action GUI updates
-    # These are turned off initially so we can build test projects 
-    # with code by using edit.py module which causes gui updates to happen.
     edit.do_gui_update = True
     
 def new_project(profile_index, v_tracks, a_tracks):
