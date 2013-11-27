@@ -719,12 +719,15 @@ def _get_two_roll_first_and_last():
     return (first, last)
 
 #---------------------------------------- SLIDE ROLL TRIM EVENTS
-def set_slide_mode(track, current_frame):# = -1):
+def set_slide_mode(track, current_frame):
     """
     Sets two roll mode
     """
     if track == None:
         return None
+
+    if current_frame > track.get_length():
+        return False
 
     current_sequence().clear_hidden_track()
     
