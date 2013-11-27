@@ -70,8 +70,6 @@ def _get_trim_edit(track, frame):
 
     # Get cut frame for trim
     cut_frame = current_sequence().get_closest_cut_frame(track.id, frame)
-    print "frame", frame
-    print "cut_frame:", cut_frame
     if cut_frame == -1:
         return(-1, None)
     edit_to_side = False
@@ -202,10 +200,6 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
 
     edit_frame, to_side_being_edited = _get_trim_edit(track, current_frame)
 
-    print "::1"
-    print edit_frame
-    print to_side_being_edited
-
     if edit_frame == -1:
         return False
 
@@ -217,9 +211,6 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     if editing_to_clip != None: # This is set when mode reset after edit or after undo or redo
                                 # _get_trim_edit() might give different(wrong) clip being edited
                                 # because cut is now at a different place. (??!!!??)
-        print "::2"
-        print to_side_being_edited
-        print editing_to_clip
         to_side_being_edited = editing_to_clip
 
     _set_edit_data(track, edit_frame)
@@ -230,31 +221,15 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     
     current_sequence().clear_hidden_track()
 
-    print "::3"
-    print edit_data
-    print edit_frame
-    print current_frame
-    print editing_to_clip
-    print to_side_being_edited
-        
     # Cant't trim a blank clip. Blank clips are special in MLT and can't be
     # made to do things that are needed in trim.
-    try:
-        if _trimmed_clip_is_blank():
-            set_exit_mode_func()
-            primary_txt = _("Cant ONE ROLL TRIM blank clips.")
-            secondary_txt = _("You can use MOVE OVERWRITE or TWO ROLL TRIM edits instead\nto get the desired change.")
-            dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
-            return False
-
-    except:
-        print "NONE_ERROR_IN_TRIM_CLIP"
-        print edit_data
-        print edit_frame
-        print current_frame
-        print editing_to_clip
-        set_no_edit_mode_func()
-            
+    if _trimmed_clip_is_blank():
+        set_exit_mode_func()
+        primary_txt = _("Cant ONE ROLL TRIM blank clips.")
+        secondary_txt = _("You can use MOVE OVERWRITE or TWO ROLL TRIM edits instead\nto get the desired change.")
+        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        return False
+        
     # Give timeline widget needed data
     tlinewidgets.set_edit_mode(edit_data,
                                tlinewidgets.draw_one_roll_overlay)
@@ -433,8 +408,10 @@ def one_roll_trim_undo_done(track, index, is_to_side_edit):
         return
         
     # If in one roll mode, reinit edit mode to correct side
-    frame = track.clip_start(index) + 1 # +1 because cut frame selects previous clip
-    set_oneroll_mode(track, frame, is_to_side_edit)
+    frame = track.clip_start(index)
+    success = set_oneroll_mode(track, frame, is_to_side_edit)
+    if not success:
+        set_no_edit_mode_func()
 
 def clip_end_first_do_done(track):
     frame = track.get_length()
