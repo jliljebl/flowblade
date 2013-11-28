@@ -586,6 +586,7 @@ def tline_media_drop(media_file, x, y):
     
     # Create new clip.
     if media_file.type != appconsts.PATTERN_PRODUCER:
+        print media_file.path,  media_file.name
         new_clip = current_sequence().create_file_producer_clip(media_file.path, media_file.name)
     else:
         new_clip = current_sequence().create_pattern_producer(media_file)
