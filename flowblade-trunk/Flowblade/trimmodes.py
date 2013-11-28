@@ -732,6 +732,7 @@ def set_slide_mode(track, current_frame):
     current_sequence().clear_hidden_track()
     
     view_frame, start_frame_being_viewed = _get_trim_edit(track, current_frame)
+
     # _get_trim_edit() gives first frame belonging to next clip if press closer to end frame of clip
     if not start_frame_being_viewed:
         view_frame = view_frame -1
