@@ -38,6 +38,7 @@ from editorstate import current_is_move_mode
 from editorstate import timeline_visible
 from editorstate import PLAYER
 from editorstate import EDIT_MODE
+from editorstate import current_proxy_media_paths
 import editorstate
 import respaths
 import resync
@@ -211,7 +212,7 @@ COLUMN_NOT_ACTIVE_COLOR = (0.65, 0.65, 0.65)
 OVERLAY_COLOR = (0.9,0.9,0.9)
 OVERLAY_SELECTION_COLOR = (0.9,0.9,0.0)
 CLIP_OVERLAY_COLOR = (0.2, 0.2, 0.9, 0.5)
-OWERWRITE_OVERLAY_COLOR = (0.9, 0.2, 0.2, 0.5)
+OVERWRITE_OVERLAY_COLOR = (0.9, 0.2, 0.2, 0.5)
 INSERT_MODE_COLOR = (0.9,0.9,0.0)
 OVERWRITE_MODE_COLOR = (0.9,0.0,0.0)
 
@@ -519,7 +520,7 @@ def draw_two_roll_overlay(cr, data):
     #trim_limits = data["trim_limits"]
     #clip_over_start_x = _get_frame_x(trim_limits["both_start"] - 1) # trim limits leave 1 frame non-trimmable
     #clip_over_end_x = _get_frame_x(trim_limits["both_end"] + 1) # trim limits leave 1 frame non-trimmable  
-    #_draw_trim_clip_overlay(cr, clip_over_start_x, clip_over_end_x, track_y, track_height)
+    #_draw_trim_clip_overlay(cr, clip_over_start_x, clip_over_end_x, track_y, track_height, True)
 
     radius = 5.0
     degrees = M_PI/ 180.0
@@ -551,10 +552,10 @@ def draw_one_roll_overlay(cr, data):
     #trim_limits = data["trim_limits"]
     #if data["to_side_being_edited"]:
         #clip_over_end_x = _get_frame_x(trim_limits["both_end"] + 1) # trim limits leave 1 frame non-trimmable
-        #_draw_trim_clip_overlay(cr, selection_frame_x, clip_over_end_x, track_y, track_height)
+        #_draw_trim_clip_overlay(cr, selection_frame_x, clip_over_end_x, track_y, track_height, True)
     #else:
         #clip_over_start_x = _get_frame_x(trim_limits["both_start"] - 1) # trim limits leave 1 frame non-trimmable 
-        #_draw_trim_clip_overlay(cr, clip_over_start_x, selection_frame_x, track_y, track_height)
+        #_draw_trim_clip_overlay(cr, clip_over_start_x, selection_frame_x, track_y, track_height, True)
 
     cr.set_source_rgb(*OVERLAY_SELECTION_COLOR)
     cr.move_to(selection_frame_x - 0.5, track_y - 6.5)
@@ -596,13 +597,13 @@ def draw_slide_overlay(cr, data):
     media_start = clip_start_frame - data["mouse_delta"] - clip.clip_in
     orig_media_start_frame_x = _get_frame_x(media_start)
     orig_media_end_frame_x = _get_frame_x(media_start + trim_limits["media_length"])
-    _draw_trim_clip_overlay(cr, orig_media_start_frame_x, orig_media_end_frame_x, track_y, track_height, (0.65,0.65,0.65, 0.65))
+    _draw_trim_clip_overlay(cr, orig_media_start_frame_x, orig_media_end_frame_x, track_y, track_height, False, (0.65,0.65,0.65, 0.65))
     
     cr.set_line_width(2.0)
     cr.set_source_rgb(*OVERLAY_SELECTION_COLOR)
     orig_clip_start_frame_x = _get_frame_x(clip_start_frame - data["mouse_delta"])
     orig_clip_end_frame_x = _get_frame_x(clip_end_frame - data["mouse_delta"])
-    _draw_trim_clip_overlay(cr, orig_clip_start_frame_x, orig_clip_end_frame_x, track_y, track_height, (1,1,1,0.3))
+    _draw_trim_clip_overlay(cr, orig_clip_start_frame_x, orig_clip_end_frame_x, track_y, track_height, False, (1,1,1,0.3))
         
     cr.move_to(clip_start_frame_x - 0.5, track_y - 6.5)
     cr.line_to(clip_start_frame_x - 0.5, track_y + track_height + 6.5)
@@ -740,13 +741,18 @@ def _draw_mode_arrow(cr, x, y, color):
     cr.set_line_width(2.0)
     cr.stroke()
     
-def _draw_trim_clip_overlay(cr, start_x, end_x, y, track_height, color=(1,1,1,1)):
+def _draw_trim_clip_overlay(cr, start_x, end_x, y, track_height, draw_stroke, color=(1,1,1,1)):
     cr.set_source_rgba(*color)
     cr.rectangle(start_x, y, end_x - start_x, track_height)
-    cr.fill()
+    if draw_stroke:
+        #cr.set_operator(cairo.OPERATOR_MULTIPLY)
+        cr.stroke()
+        #cr.set_operator(cairo.OPERATOR_OVER)
+    else:
+        cr.fill()
 
 def _draw_overwrite_clips_overlay(cr, start_x, end_x, y, track_height):
-    cr.set_source_rgba(*OWERWRITE_OVERLAY_COLOR)
+    cr.set_source_rgba(*OVERWRITE_OVERLAY_COLOR)
     cr.rectangle(start_x, y, end_x - start_x, track_height)
     cr.fill()
 
@@ -911,7 +917,9 @@ class TimeLineCanvas:
         collect_positions = False
         if track.id == current_sequence().first_video_index:
             collect_positions = True
-        
+
+        proxy_paths = current_proxy_media_paths()
+
         # Draw clips in draw range
         for i in range(start, end):
 
@@ -1081,7 +1089,15 @@ class TimeLineCanvas:
                         except:
                             clip.sync_diff = "n/a"
                             cr.show_text(str(clip.sync_diff))
-                            
+    
+                
+            # Draw proxy indicator
+            if scale_length > FILL_MIN:
+                if (not clip.is_blanck_clip) and proxy_paths.get(clip.path) != None:
+                    cr.set_source_rgb(0.45, 0.77, 0.83)
+                    cr.rectangle(scale_in, y, scale_length, 8)
+                    cr.fill()
+
             # Draw clip frame 
             cr.set_line_width(1.0)
             if scale_length > FILL_MIN:

@@ -447,6 +447,9 @@ def open_project(new_project):
         os.remove(loaded_autosave_file)
         loaded_autosave_file = None
 
+
+    editorstate.update_current_proxy_paths()
+
     start_autosave()
 
 def change_current_sequence(index):

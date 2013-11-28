@@ -163,6 +163,13 @@ class Project:
     def delete_media_file_from_current_bin(self, media_file):
         self.c_bin.file_ids.pop(media_file.id)
 
+    def get_current_proxy_paths(self):
+        paths_dict = {}
+        for idkey, media_file in self.media_files.items():
+            if media_file.is_proxy_file:
+                paths_dict[media_file.path] = media_file
+        return paths_dict
+
     def add_unnamed_bin(self):
         """
         Adds bin with default name.

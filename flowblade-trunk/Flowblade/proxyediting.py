@@ -623,13 +623,17 @@ def _auto_renconvert_after_proxy_render_in_proxy_mode():
     gtk.gdk.threads_leave()
 
     app.start_autosave()
-
+    
+    editorstate.update_current_proxy_paths()
+    
     persistance.show_messages = True
 
 def _converting_proxy_mode_done():
     global load_thread
     load_thread = None
 
+    editorstate.update_current_proxy_paths()
+    
     manager_window.update_proxy_mode_display()
     gui.media_list_view.widget.queue_draw()
     gui.tline_left_corner.update_gui()

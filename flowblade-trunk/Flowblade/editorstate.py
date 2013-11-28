@@ -53,6 +53,9 @@ _monitor_media_file = None
 # Flag for timeline/clip display in monitor
 _timeline_displayed = True
 
+# Dict of curren proxy media paths
+_current_proxy_paths = {}
+
 # Used to alter gui layout and tracks configuration, set at startup
 SCREEN_HEIGHT = -1
 SCREEN_WIDTH = -1
@@ -83,7 +86,14 @@ def current_sequence():
 
 def current_bin():
     return project.c_bin
-    
+
+def current_proxy_media_paths():
+    return _current_proxy_paths
+
+def update_current_proxy_paths():
+    global _current_proxy_paths
+    _current_proxy_paths = project.get_current_proxy_paths()
+
 def PROJECT():
     return project
     
