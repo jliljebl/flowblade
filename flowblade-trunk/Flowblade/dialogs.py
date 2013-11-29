@@ -609,8 +609,8 @@ def autosave_recovery_dialog(callback, parent_window):
 
 def autosaves_many_recovery_dialog(response_callback, autosaves, parent_window):
     title = _("Open a autosave file?")
-    msg1 = _("There are multiple autosave files from application crashes.\n\n")
-    msg3 = _("If you just experienced a crash, select the last created autosave file\nto continue working.\n\n")
+    msg1 = _("There are <b>multiple autosave files</b> from application crashes.\n\n")
+    msg3 = _("If you just <b>experienced a crash, select the last created autosave</b> file\nto continue working.\n\n")
     msg4 = _("If you see this at application start without a recent crash,\nyou should probably delete all autosave files to stop seeing this dialog.")
     msg = msg1 + msg3 + msg4
     info_panel = dialogutils.get_warning_message_dialog_panel(title, msg)
@@ -648,20 +648,20 @@ def autosaves_many_recovery_dialog(response_callback, autosaves, parent_window):
 
     dialog.vbox.pack_start(align, True, True, 0)
     _default_behaviour(dialog)
-    dialog.connect('response', response_callback, autosaves_view)
+    dialog.connect('response', response_callback, autosaves_view, autosaves)
     dialog.show_all()
 
 def _autosaves_delete_all_clicked(autosaves, autosaves_view, dialog):
-    for autosave_path in autosaves:
-        os.remove(autosave_path)
+    for autosave in autosaves:
+        os.remove(autosave.path)
     dialog.set_response_sensitive(gtk.RESPONSE_OK, False)
     del autosaves[:]
     autosaves_view.fill_data_model(autosaves)
 
 def _autosaves_delete_unselected(autosaves, autosaves_view):
     selected_autosave = autosaves.pop(autosaves_view.get_selected_indexes_list()[0])
-    for autosave_path in autosaves:
-        os.remove(autosave_path)
+    for autosave in autosaves:
+        os.remove(autosave.path)
     del autosaves[:]
     autosaves.append(selected_autosave)
     autosaves_view.fill_data_model(autosaves)

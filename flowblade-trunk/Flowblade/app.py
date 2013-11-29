@@ -506,17 +506,23 @@ def autosave_dialog_callback(dialog, response):
 
 def autosaves_many_recovery_dialog():
     autosaves_file_names = get_autosave_files()
+    now = time.time()
     autosaves = []
     for a_file_name in autosaves_file_names:
-        autosaves.append(utils.get_hidden_user_dir_path() + AUTOSAVE_DIR + a_file_name)
-    autosaves = sorted(autosaves, key=lambda path : os.stat(path))
-    autosaves.reverse()
+        autosave_path = utils.get_hidden_user_dir_path() + AUTOSAVE_DIR + a_file_name
+        autosave_object = utils.EmptyClass()
+        autosave_object.age = now - os.stat(autosave_path).st_mtime
+        autosave_object.path = autosave_path
+        autosaves.append(autosave_object)
+    autosaves = sorted(autosaves, key=lambda autosave_object: autosave_object.age)
+
     dialogs.autosaves_many_recovery_dialog(autosaves_many_dialog_callback, autosaves, gui.editor_window.window)
     return False
 
-def autosaves_many_dialog_callback(dialog, response, autosaves_view):
+def autosaves_many_dialog_callback(dialog, response, autosaves_view, autosaves):
     if response == gtk.RESPONSE_OK:
-        autosave_file = autosaves_view.get_selected_indexes_list()[0] # Single selection, 1 quaranteed to exist
+        autosave_file = autosaves[autosaves_view.get_selected_indexes_list()[0]].path # Single selection, 1 quaranteed to exist
+        print "autosave_file", autosave_file
         global loaded_autosave_file
         loaded_autosave_file = autosave_file
         dialog.destroy()

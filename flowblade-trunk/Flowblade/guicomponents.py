@@ -546,10 +546,8 @@ class AutoSavesListView(TextListView):
 
     def fill_data_model(self, autosaves):
         self.storemodel.clear()
-        now = time.time()
-        for autosave_path in autosaves:
-            age = now - os.stat(autosave_path).st_mtime
-            since_time_str = utils.get_time_str_for_sec_float(age)
+        for autosave_object in autosaves:
+            since_time_str = utils.get_time_str_for_sec_float(autosave_object.age)
             row_data = ["Autosave created " + since_time_str + " ago."]
             self.storemodel.append(row_data)
         

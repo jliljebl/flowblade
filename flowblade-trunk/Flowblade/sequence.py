@@ -937,7 +937,6 @@ def get_media_type(file_path):
     except Exception, err:
         if not os.path.exists(file_path):
             # We're doing a heuristic here to identify image sequence file_paths.
-            # This may be a source of some bugs.
             pros_index = file_path.find("%0")
             d_index = file_path.find("d.")
             if pros_index != -1 and d_index != -1:
@@ -960,7 +959,7 @@ def get_media_type(file_path):
         return IMAGE
     
     return UNKNOWN
-    
+
 def _clip_length(clip):
     return clip.clip_out - clip.clip_in + 1
 
