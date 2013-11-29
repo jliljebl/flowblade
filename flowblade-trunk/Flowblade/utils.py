@@ -189,6 +189,7 @@ def get_media_source_file_filter():
     f.add_mime_type("audio/ogg")
     f.add_mime_type("audio/midi")
     f.add_mime_type("audio/mp2")
+    f.add_mime_type("audio/mp3")
     f.add_mime_type("audio/mp4")
     f.add_mime_type("audio/mpeg")
     f.add_mime_type("audio/ogg")
@@ -239,8 +240,12 @@ def get_image_sequence_file_filter():
 
     return f
 
+"""
+    grphics_exts = [".bmp",".tiff",".tif",".gif",".tga",".png",".jpeg",".jpg",".svg"]
+"""
+
 def file_extension_is_graphics_file(ext):
-    grphics_exts = [".bmp",".tiff",".gif",".tga",".png",".jpeg",".jpg",".svg"]
+    grphics_exts = [".bmp",".tiff",".tif",".gif",".tga",".png",".jpeg",".jpg",".svg"]
     ext = ext.lower()
     if ext in grphics_exts:
         return True
@@ -288,7 +293,6 @@ def single_instance_pid_file_test_and_write(pid_file_path, write_pid=True):
     # Returns true if this instance can be run
     # Users of this method should delete pid_file on exit
     this_pid = os.getpid()
-    #print "pid check for pid:", this_pid
 
     # If pid_file exists we may have
     if os.path.exists(pid_file_path):
@@ -306,11 +310,9 @@ def single_instance_pid_file_test_and_write(pid_file_path, write_pid=True):
         
         if pid_file_instance_running == True:
             # Instance with pid in the pid file is running.
-            #print "pid file exists with process running with same pid"
             return False
         else:
             # No process with same pid as pid file, we probably crashed last time
-            #print "pid file exists, but no process running"
             if write_pid:
                 pid_file = open(pid_file_path,"wb")
                 pid_file.write(str(this_pid))
@@ -318,10 +320,117 @@ def single_instance_pid_file_test_and_write(pid_file_path, write_pid=True):
             return True
     else:
         # This is the first instance running
-        #print "pid file does not exist"
         if write_pid:
             pid_file = open(pid_file_path,"w+")
             pid_file.write(str(this_pid))
             pid_file.close()
         return True
 
+
+# File exntension lists
+_audio_file_extensions = [  "act",
+                            "aif",
+                            "aiff",
+                            "alfc",
+                            "aac",
+                            "alac",
+                            "amr",
+                            "atrac",
+                            "awb",
+                            "dct",
+                            "dss",
+                            "dvf",
+                            "flac",
+                            "gsm",
+                            "iklax",
+                            "m4a",
+                            "m4p",
+                            "mmf",
+                            "mp2",
+                            "mp3",
+                            "mpc",
+                            "msv",
+                            "ogg",
+                            "oga",
+                            "opus",
+                            "pcm",
+                            "u16be",
+                            "u16le",
+                            "u24be",
+                            "u24le",
+                            "u32be",
+                            "u32le",
+                            "u8",
+                            "ra",
+                            "rm",
+                            "raw",
+                            "tta",
+                            "vox",
+                            "wav",
+                            "wma",
+                            "wavpack"]
+
+_graphics_file_extensions = [   "bmp",
+                                "tiff",
+                                "tif",
+                                "gif",
+                                "tga",
+                                "png",
+                                "pgm",
+                                "jpeg",
+                                "jpg",
+                                "svg"]
+
+_video_file_extensions = [  "avi",
+                            "dv",
+                            "flv",
+                            "mkv",
+                            "mpg",
+                            "mpeg",
+                            "m2t",
+                            "mov",
+                            "mp4",
+                            "qt",
+                            "vob",
+                            "webm",
+                            "3gp",
+                            "3g2",
+                            "asf",
+                            "divx",
+                            "dirac",
+                            "f4v",
+                            "h264",
+                            "hdmov",
+                            "hdv",
+                            "m2p",
+                            "m2ts",
+                            "m2v",
+                            "m4e",
+                            "mjpg",
+                            "mp4v",
+                            "mts",
+                            "m21",
+                            "m2p",
+                            "m4v",
+                            "mj2",
+                            "m1v",
+                            "mpv",
+                            "m4v",
+                            "mxf",
+                            "mpegts",
+                            "mpegtsraw",
+                            "mpegvideo", 
+                            "nsv",
+                            "ogv",
+                            "ogx",
+                            "ps",
+                            "ts",
+                            "tsv",
+                            "tsa",
+                            "vfw",
+                            "wtv",
+                            "wm",
+                            "wmv",
+                            "xvid",
+                            "y4m",
+                            "yuv"]
