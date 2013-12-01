@@ -201,7 +201,7 @@
     <proxyencodingoption name="MPEG-4 Preset Ultrafast" extension="mp4" type="av" audiodesc="mp2, 192kb/s, 48000Hz" resize="True" qgroup="qgroup1">
         <profile args="f=mp4 acodec=mp2 ab=192k ar=48000 vcodec=mpeg4 preset=ultrafast"/>
     </proxyencodingoption>
-    <proxyencodingoption name="MPEG-2 Transport Stream" audiodesc="mp2, 384kb/s, 48000Hz"  extension="m2t" type="av" resize="True" qgroup="proxyqgroup">
+    <proxyencodingoption name="MPEG-2 Transport Stream" audiodesc="mp2, 384kb/s, 48000Hz"  extension="m2t" type="av" resize="True" qgroup="qgroup1">
        <profile args="f=mpegts acodec=libmp3lame ac=2 ab=128k ar=48000 vcodec=mpeg2video g=5" />
    </proxyencodingoption>
 
