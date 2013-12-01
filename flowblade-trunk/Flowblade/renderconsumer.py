@@ -115,10 +115,10 @@ class EncodingOption:
         self.resizable = (_get_attribute(option_node, RESIZABLE) == "True")
         self.extension = _get_attribute(option_node, EXTENSION)
         self.nonuser = _get_attribute(option_node, NON_USER)
-        quality_qroup_id = _get_attribute(option_node, QGROUP)
-        self.quality_options = quality_option_groups[quality_qroup_id]
+        self.quality_qroup_id = _get_attribute(option_node, QGROUP)
+        self.quality_options = quality_option_groups[self.quality_qroup_id]
         try:
-            quality_default_index = int(quality_option_groups_default_index[quality_qroup_id])
+            quality_default_index = int(quality_option_groups_default_index[self.quality_qroup_id])
         except KeyError:
             quality_default_index = None
         self.quality_default_index = quality_default_index

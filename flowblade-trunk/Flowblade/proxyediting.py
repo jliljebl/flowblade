@@ -67,6 +67,7 @@ class ProxyRenderRunnerThread(threading.Thread):
         elapsed = 0
         proxy_w, proxy_h =  _get_proxy_dimensions(self.proxy_profile, editorstate.PROJECT().proxy_data.size)
         proxy_encoding = _get_proxy_encoding()
+        print proxy_encoding.name, proxy_w, proxy_h
         self.current_render_file_path = None
         for media_file in self.files_to_render:
             if self.aborted == True:
@@ -79,11 +80,24 @@ class ProxyRenderRunnerThread(threading.Thread):
                                                         proxy_file_path,
                                                         self.proxy_profile, 
                                                         proxy_encoding)
-            #consumer.set("vb", "500k")
+
+            # Bit rates for proxy files are counted using 2500kbs for 
+            # PAL size image as starting point.
+            pal_pix_count = 720.0 * 576.0
+            pal_proxy_rate = 2500.0
+            proxy_pix_count = float(proxy_w * proxy_h)
+            proxy_rate = pal_proxy_rate * (proxy_pix_count / pal_pix_count)
+            proxy_rate = int(proxy_rate / 100) * 100 # Make proxy rate even hundred
+            # There are no practical reasons to have bitrates lower than 500kbs.
+            if proxy_rate < 500:
+                proxy_rate = 500
+            consumer.set("vb", str(int(proxy_rate)) + "k")
+
             consumer.set("rescale", "nearest")
 
             file_producer = mlt.Producer(self.proxy_profile, str(media_file.path))
             file_length = file_producer.get_length()
+
             # Create and launch render thread
             global render_thread 
             render_thread = renderconsumer.FileRenderPlayer(None, file_producer, consumer, 0, file_producer.get_length() - 1)
@@ -127,8 +141,11 @@ class ProxyRenderRunnerThread(threading.Thread):
         _proxy_render_stopped()
         gtk.gdk.threads_leave()
 
+        # Remove unfinished proxy files
         if self.current_render_file_path != None:
             os.remove(self.current_render_file_path)
+        # If we're currently proxy editing, we need to update 
+        # all the clips on the timeline to use proxy media.
         if editorstate.PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA:
             _auto_renconvert_after_proxy_render_in_proxy_mode()
         
