@@ -433,6 +433,13 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
         folder = filenames[0]
         write_file = folder + "/"+ file_name + fb_widgets.extension_label.get_text()
 
+        if os.path.exists(write_file):
+            #dialog.destroy()
+            primary_txt = _("A File with given path exists!")
+            secondary_txt = _("It is not allowed to render Motion Files with same paths as existing files.\nSelect another name for file.") 
+            dialogutils.warning_message(primary_txt, secondary_txt, dialog)
+            return
+
          # Profile
         profile_index = fb_widgets.out_profile_combo.get_active()
         if profile_index == 0:
@@ -466,11 +473,14 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
         
         # start and end frames
         start_frame = 0
-        end_frame = seq.get_length() - 1
+        end_frame = motion_producer.get_length() - 1
         if range_selection == 1:
-            start_frame = media_file.mark_in
-            end_frame = media_file.mark_out
-            
+            start_frame = int(float(media_file.mark_in) * (1.0 / speed))
+            end_frame = int(float(media_file.mark_out + 1) * (1.0 / speed)) + int(1.0 / speed) + 40 # I'm unable to get this frame perfect.
+                                                                                                    # +40 is to make sure rendering stops after mark out.
+            if end_frame > motion_producer.get_length() - 1:
+                end_frame = motion_producer.get_length() - 1
+
         # Launch render
         global motion_renderer, motion_progress_update
         motion_renderer = renderconsumer.FileRenderPlayer(write_file, seq.tractor, consumer, start_frame, end_frame)

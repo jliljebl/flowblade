@@ -240,10 +240,6 @@ def get_image_sequence_file_filter():
 
     return f
 
-"""
-    grphics_exts = [".bmp",".tiff",".tif",".gif",".tga",".png",".jpeg",".jpg",".svg"]
-"""
-
 def file_extension_is_graphics_file(ext):
     grphics_exts = [".bmp",".tiff",".tif",".gif",".tga",".png",".jpeg",".jpg",".svg"]
     ext = ext.lower()
