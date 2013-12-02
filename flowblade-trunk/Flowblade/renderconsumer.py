@@ -354,6 +354,7 @@ class FileRenderPlayer(threading.Thread):
                 self.consumer.stop()
                 self.producer.set_speed(0)
                 self.running = False
+            print self.producer.frame()
             time.sleep(0.1)
             
         print "FileRenderPlayer stopped, producer frame: " + str(self.producer.frame())
@@ -366,13 +367,13 @@ class FileRenderPlayer(threading.Thread):
         self.running = False
 
     def connect_and_start(self):
-        self.consumer.purge()
+        #self.consumer.purge()
         self.consumer.connect(self.producer)
         self.producer.set_speed(0)
         self.producer.seek(self.start_frame)
-        self.consumer.start()
         self.producer.set_speed(1)
-    
+        self.consumer.start()
+
     def get_render_fraction(self):
         render_length = self.stop_frame - self.start_frame + 1
         if (self.producer.get_length() - 1) < 1:
