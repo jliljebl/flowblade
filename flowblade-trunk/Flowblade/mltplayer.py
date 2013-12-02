@@ -251,51 +251,31 @@ class Player(threading.Thread):
         return (self.producer.get_speed() != 0)
 
     def _ticker_event(self):
-        # If we reach the end of playable/renderable sequence or user has
-        # stopped playback/rendering we'll stop ticker and possibly
-        # leave render state
+        # Stop ticker if playback has stoppped.
         if (self.consumer.is_stopped() or self.producer.get_speed() == 0):
             self.ticker.stop_ticker()
-            if self.is_rendering == True:
-                if self.consumer.is_stopped() == False:
-                    while self.consumer.is_stopped() == False:
-                        pass
-                self.producer.set_speed(0)
-                gtk.gdk.threads_enter()
-                self.stop_rendering()
-                gtk.gdk.threads_leave()
-                return
 
         current_frame = self.producer.frame()
 
-        # Stop range rendring. This will not be frame perfect but feature isn't (probably)
-        # used with need to get end perfect.
-        if self.render_stop_frame != -1:
-            if self.is_rendering == True and current_frame >= self.render_stop_frame:
-                self.consumer.stop()
-                if self.consumer.is_stopped() == False:
-                    while self.consumer.is_stopped() == False:
-                        pass
-                self.producer.set_speed(0)
-                gtk.gdk.threads_enter()
-                self.stop_rendering()
-                gtk.gdk.threads_leave()
-                return
+        # Stop rendering if last frame reached.
+        if self.is_rendering == True and current_frame >= self.render_stop_frame:
+            self.consumer.stop()
+            if self.consumer.is_stopped() == False:
+                while self.consumer.is_stopped() == False:
+                    pass
+            self.producer.set_speed(0)
+            gtk.gdk.threads_enter()
+            self.stop_rendering()
+            gtk.gdk.threads_leave()
+            return
 
-        # if rendering, set progress bar and exit
+        # If we're currently rendering, set progress bar and exit event handler.
         if self.is_rendering:
-            if self.render_stop_frame == -1:
-                if (self.producer.get_length() - 1) < 1:
-                    render_fraction = 1.0
-                else:
-                    render_fraction = ((float(current_frame)) / 
-                                      (float(self.producer.get_length() - 1)))
+            if (self.producer.get_length() - 1) < 1:
+                render_fraction = 1.0
             else:
-                if (self.producer.get_length() - 1) < 1:
-                    render_fraction = 1.0
-                else:
-                    render_fraction = ((float(current_frame - self.render_start_frame)) / 
-                      (float(self.render_stop_frame - self.render_start_frame)))
+                render_fraction = ((float(current_frame - self.render_start_frame)) / 
+                  (float(self.render_stop_frame - self.render_start_frame)))
             gtk.gdk.threads_enter()
             self.render_callbacks.set_render_progress_gui(render_fraction)
             gtk.gdk.threads_leave()
@@ -350,6 +330,8 @@ class Player(threading.Thread):
         self.render_callbacks = callbacks
 
     def start_rendering(self, render_consumer, start_frame=0, stop_frame=-1):
+        if stop_frame == -1:
+            stop_frame = self.producer.get_length() - 1
         print "start_rendering(), start frame :" + str(start_frame) + ", stop_frame: " + str(stop_frame)
         self.ticker.stop_ticker()
         self.consumer.stop()
@@ -366,6 +348,7 @@ class Player(threading.Thread):
         self.ticker.start_ticker()
 
     def stop_rendering(self):
+        print "stop_rendering, producer frame: " + str(self.producer.frame())
         self.is_rendering = False
         self.ticker.stop_ticker()
         self.producer.set_speed(0)
@@ -373,7 +356,6 @@ class Player(threading.Thread):
         self.connect_and_start()
         self.seek_frame(0)
         if self.xml_render == False:
-
             self.render_callbacks.exit_render_gui()
             self.render_callbacks.maybe_open_rendered_file_in_bin()
             gtk.gdk.threads_leave()
