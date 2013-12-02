@@ -173,6 +173,7 @@ class EncodingOption:
         else:
             desc = self.audio_desc 
         return "<small>" + desc + "</small>"
+
     
 def load_render_profiles():
     """
@@ -240,7 +241,7 @@ def get_render_consumer_for_encoding_and_quality(file_path, profile, enc_opt_ind
 def get_render_consumer_for_encoding(file_path, profile, encoding_option):
     # Encoding options key, value list
     args_vals_list = encoding_option.get_args_vals_tuples_list(profile)
-        
+
     return get_mlt_render_consumer(file_path, profile, args_vals_list)
 
 def get_render_consumer_for_text_buffer(file_path, profile, buf):
@@ -255,10 +256,14 @@ def get_mlt_render_consumer(file_path, profile, args_vals_list):
     consumer = mlt.Consumer(profile, "avformat", str(file_path))
     consumer.set("real_time", -1)
 
+    args_msg = ""
     for arg_val in args_vals_list:
         k, v = arg_val
         consumer.set(str(k), str(v))
-    
+        args_msg = args_msg + str(k) + "="+ str(v) + ", "
+        
+    args_msg = args_msg.strip(", ")
+    print "render consumer, args: " + args_msg
     return consumer
 
 def get_args_vals_tuples_list_for_encoding_and_quality(profile, enc_opt_index, quality_opt_index):
@@ -334,6 +339,9 @@ class FileRenderPlayer(threading.Thread):
         self.consumer = consumer
         self.start_frame = start_frame
         self.stop_frame = stop_frame
+        self.stopped = False
+
+        print "FileRenderPlayer started, start frame: " + str(self.start_frame) + ", stop frame: " + str(self.stop_frame)
 
         threading.Thread.__init__(self)
 
@@ -341,12 +349,17 @@ class FileRenderPlayer(threading.Thread):
         self.running = True
         self.connect_and_start()
     
-        while self.running: #set false at user site
-            if self.producer.frame() > self.stop_frame:
+        while self.running: # set false at shutdown() for abort
+            if self.producer.frame() >= self.stop_frame:
                 self.consumer.stop()
                 self.producer.set_speed(0)
+                self.running = False
             time.sleep(0.1)
+            
+        print "FileRenderPlayer stopped, producer frame: " + str(self.producer.frame())
 
+        self.stopped = True
+                
     def shutdown(self):
         self.consumer.stop()
         self.producer.set_speed(0)
@@ -390,11 +403,12 @@ class ProgressWindowThread(threading.Thread):
             pros = int(render_fraction * 100)
             self.progress_bar.set_text(str(pros) + "%")
             gtk.gdk.threads_leave()
-            if self.clip_renderer.producer.get_speed() == 0:
+            if self.clip_renderer.stopped == True:
                 gtk.gdk.threads_enter()
                 self.progress_bar.set_fraction(1.0)
-                time.sleep(0.5)
+                self.progress_bar.set_text("Render Complete!")
                 self.callback(self.dialog, 0)
                 gtk.gdk.threads_leave()
-        
+                self.running = False
+
             time.sleep(0.33)

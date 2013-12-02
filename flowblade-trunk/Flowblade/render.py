@@ -118,6 +118,8 @@ def _render_overwrite_confirm_callback(dialog, response_id):
         _do_rendering()
 
 def _do_rendering():
+    print "timeline render..."
+    
     global aborted
     aborted = False
     render_consumer = get_render_consumer()
@@ -131,7 +133,7 @@ def _do_rendering():
     else:
         start_frame = current_sequence().tractor.mark_in
         end_frame = current_sequence().tractor.mark_out
-    
+
     # Only render a range if it is defined.
     if start_frame == -1 or end_frame == -1:
         if widgets.range_cb.get_active() == 1:
@@ -302,6 +304,7 @@ def set_render_progress_gui(fraction):
 
 def exit_render_gui():
     if aborted == True:
+        print "render aborted"
         return
 
     global progress_window
@@ -309,7 +312,8 @@ def exit_render_gui():
     set_render_progress_gui(1.0)
     passed_time = time.time() - render_start_time
     passed_str = utils.get_time_str_for_sec_float(passed_time)
-
+    print "render done, time: " + passed_str
+    
     progress_window.remaining_time_label.set_text(_("<b>Estimated Time Left: </b>"))
     progress_window.remaining_time_label.set_use_markup(True)
     progress_window.passed_time_label.set_text(_("<b>Render Time: </b>") + passed_str)
@@ -456,11 +460,13 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
         track = seq.tracks[seq.first_video_index]
         track.append(motion_producer, 0, motion_producer.get_length() - 1)
 
+        print "motion clip render starting..."
+
         consumer = renderconsumer.get_render_consumer_for_encoding_and_quality(write_file, profile, encoding_option_index, quality_option_index)
         
         # start and end frames
         start_frame = 0
-        end_frame = seq.get_length()
+        end_frame = seq.get_length() - 1
         if range_selection == 1:
             start_frame = media_file.mark_in
             end_frame = media_file.mark_out
@@ -474,7 +480,7 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
         text = "<b>Motion Clip File: </b>" + write_file
         progress_bar = gtk.ProgressBar()
         dialog = rendergui.clip_render_progress_dialog(_FB_render_stop, title, text, progress_bar, gui.editor_window.window)
-        
+
         motion_progress_update = renderconsumer.ProgressWindowThread(dialog, progress_bar, motion_renderer, _FB_render_stop)
         motion_progress_update.start()
         
@@ -482,7 +488,7 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
         dialog.destroy()
 
 def _FB_render_stop(dialog, response_id):
-    dialog.destroy()
+    print "motion clip render done"
 
     global motion_renderer, motion_progress_update
     motion_renderer.running = False
@@ -491,6 +497,7 @@ def _FB_render_stop(dialog, response_id):
     motion_renderer.running = None
     motion_progress_update.running = None
 
+    dialogutils.delay_destroy_window(dialog, 1.6)
 
 # ----------------------------------------------------------------------- single track transition render 
 def render_single_track_transition_clip(transition_producer, encoding_option_index, quality_option_index, file_ext, transition_render_complete_cb, window_text):
@@ -511,7 +518,7 @@ def render_single_track_transition_clip(transition_producer, encoding_option_ind
     
     # start and end frames
     start_frame = 0
-    end_frame = transition_producer.get_length()
+    end_frame = transition_producer.get_length() - 1
         
     # Launch render
     global motion_renderer, motion_progress_update
@@ -536,3 +543,4 @@ def _transition_render_stop(dialog, response_id):
     motion_progress_update.running = None
     
     transition_render_done_callback(motion_renderer.file_name)
+

@@ -476,10 +476,6 @@ def _add_image_sequence_callback(dialog, response_id, data):
     resource_path = folder + "/" + resource_name_str
     length = highest_number_part - int(number_part)
 
-    #if PROJECT().media_file_exists(frame_file):
-    #    print "file exists"
-    #    return
-
     PROJECT().add_image_sequence_media_object(resource_path, file_name + "(img_seq)", length)
 
     gui.media_list_view.fill_data_model()
@@ -640,7 +636,7 @@ def remove_unused_media():
             for clip in track.clips:
                 try:
                     removed = path_to_media_object.pop(clip.path)
-                    print removed.path
+                    print "Removed: " + removed.path
                 except:
                     pass
     

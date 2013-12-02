@@ -28,6 +28,7 @@ and then create MLT objects from pickled objects when project is loaded.
 
 import copy
 import gtk
+import os
 import pickle
 import time
 
@@ -94,7 +95,7 @@ def save_project(project, file_path):
     """
     Creates pickleable project object
     """
-    print "Save project " + file_path
+    print "Save project " + os.path.basename(file_path)
     
     # Get shallow copy
     s_proj = copy.copy(project)
