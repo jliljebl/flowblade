@@ -67,8 +67,10 @@ class ProxyRenderRunnerThread(threading.Thread):
         elapsed = 0
         proxy_w, proxy_h =  _get_proxy_dimensions(self.proxy_profile, editorstate.PROJECT().proxy_data.size)
         proxy_encoding = _get_proxy_encoding()
-        print proxy_encoding.name, proxy_w, proxy_h
         self.current_render_file_path = None
+        
+        print "proxy render started, items: " + str(len(self.files_to_render)) + ", dim: " + str(proxy_w) + "x" + str(proxy_h)
+        
         for media_file in self.files_to_render:
             if self.aborted == True:
                 break
@@ -96,11 +98,11 @@ class ProxyRenderRunnerThread(threading.Thread):
             consumer.set("rescale", "nearest")
 
             file_producer = mlt.Producer(self.proxy_profile, str(media_file.path))
-            file_length = file_producer.get_length()
+            stop_frame = file_producer.get_length() - 1
 
             # Create and launch render thread
             global render_thread 
-            render_thread = renderconsumer.FileRenderPlayer(None, file_producer, consumer, 0, file_producer.get_length() - 1)
+            render_thread = renderconsumer.FileRenderPlayer(None, file_producer, consumer, 0, stop_frame)
             render_thread.start()
 
             # Render view update loop
@@ -116,27 +118,27 @@ class ProxyRenderRunnerThread(threading.Thread):
                 progress_window.update_render_progress(render_fraction, media_file.name, items, len(self.files_to_render), elapsed)
                 gtk.gdk.threads_leave()
                 render_thread.producer.get_length()
-                if render_thread.producer.get_speed() == 0 and render_thread.producer.get_length() == file_length : # Rendering has reached end or been aborted
+                if render_thread.producer.frame() >= stop_frame:
                     self.thread_running = False
-                    gtk.gdk.threads_enter()
-                    progress_window.render_progress_bar.set_fraction(1.0)
-                    gtk.gdk.threads_leave()
                     media_file.add_proxy_file(proxy_file_path)
-                    if self.set_as_proxy_immediately:
+                    if self.set_as_proxy_immediately: # When proxy mode is USE_PROXY_MEDIA all proxy files are used all the time
                         media_file.set_as_proxy_media_file()
                     self.current_render_file_path = None
                 else:
                     time.sleep(0.1)
-    
+
             if not self.aborted:
                 items = items + 1
                 gtk.gdk.threads_enter()
                 progress_window.update_render_progress(0, media_file.name, items, len(self.files_to_render), elapsed)
                 gtk.gdk.threads_leave()
             else:
+                print "proxy render aborted"
                 render_thread.shutdown()
                 break
+
             render_thread.shutdown()
+
         gtk.gdk.threads_enter()
         _proxy_render_stopped()
         gtk.gdk.threads_leave()
@@ -148,6 +150,8 @@ class ProxyRenderRunnerThread(threading.Thread):
         # all the clips on the timeline to use proxy media.
         if editorstate.PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA:
             _auto_renconvert_after_proxy_render_in_proxy_mode()
+        
+        print "proxy render done"
         
     def abort(self):
         render_thread.shutdown()

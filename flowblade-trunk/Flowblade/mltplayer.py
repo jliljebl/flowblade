@@ -350,6 +350,7 @@ class Player(threading.Thread):
         self.render_callbacks = callbacks
 
     def start_rendering(self, render_consumer, start_frame=0, stop_frame=-1):
+        print "start_rendering(), start frame :" + str(start_frame) + ", stop_frame: " + str(stop_frame)
         self.ticker.stop_ticker()
         self.consumer.stop()
         self.producer.set_speed(0)

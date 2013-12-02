@@ -586,7 +586,6 @@ def tline_media_drop(media_file, x, y):
     
     # Create new clip.
     if media_file.type != appconsts.PATTERN_PRODUCER:
-        print media_file.path,  media_file.name
         new_clip = current_sequence().create_file_producer_clip(media_file.path, media_file.name)
     else:
         new_clip = current_sequence().create_pattern_producer(media_file)
@@ -1022,29 +1021,6 @@ def _do_filter_clone(clip, clone_clip):
     action.do_edit()
 
 
-def splice_range():
-    # NOT WORKING CURRENTLY, FEATURE MAY BE ADDED LATER
-    
-    # LOCKED TRAKS ??????????????
-    # EMPTY TRACKS ???????????
-    
-    # tractor is has mark in and mark
-    mark_in_frame = current_sequence().tractor.mark_in
-    mark_out_frame = current_sequence().tractor.mark_out
-    range_length = mark_out_frame - mark_in_frame + 1 # end is incl.
-    if mark_in_frame == -1 or mark_out_frame == -1:
-        return
-
-    movemodes.clear_selected_clips() # edit consumes selection
-    
-    data = {"mark_in_frame":mark_in_frame,
-            "mark_out_frame":mark_out_frame + 1} # +1 because mark is displayed and end of frame end this 
-                                                 # confirms to user expectation of
-                                                 # of how this should work
-    action = edit.range_splice_out_action(data)
-    action.do_edit()
-
-
 # ------------------------------------ track locks handling
 def track_lock_check_and_user_info(track, calling_function="this ain't used anymore", actionname="this ain't used anymore"):
     if track.edit_freedom == appconsts.LOCKED:
@@ -1128,8 +1104,6 @@ def _tracks_resize_update():
     updater.repaint_tline()
     gui.tline_column.widget.queue_draw()
 
-def tline_colors_launch_pressed(widget, event):
-    print "gfggfgf"
 
 # ------------------------------------ function tables
 # mouse event indexes
