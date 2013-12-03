@@ -439,7 +439,8 @@ def _add_image_sequence_callback(dialog, response_id, data):
     
     (folder, file_name) = os.path.split(frame_file)
     try:
-        number_part = re.findall("[0-9]+", file_name)[0]
+        number_parts = re.findall("[0-9]+", file_name)
+        number_part = number_parts[-1] # we want the last number part 
     except:
         dialogutils.info_message(_("Not a sequence file!"), _("Selected file does not have a number part in it,\nso it can't be an image sequence file."), gui.editor_window.window)
         return
@@ -462,7 +463,7 @@ def _add_image_sequence_callback(dialog, response_id, data):
     highest_number_part = int(number_part)
     for f in onlyfiles:
         try:
-            file_number_part = int(re.findall("[0-9]+", f)[0])
+            file_number_part = int(re.findall("[0-9]+", f)[-1]) # -1, we want the last number part 
         except:
             continue
         if f.find(path_name_part) == -1:
