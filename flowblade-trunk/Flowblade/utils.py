@@ -241,12 +241,27 @@ def get_image_sequence_file_filter():
     return f
 
 def file_extension_is_graphics_file(ext):
-    grphics_exts = [".bmp",".tiff",".tif",".gif",".tga",".png",".jpeg",".jpg",".svg"]
+    ext = ext.lstrip(".")
     ext = ext.lower()
-    if ext in grphics_exts:
+    if ext in _graphics_file_extensions:
         return True
     else:
         return False
+
+def get_file_type(file_path):
+    name, ext = os.path.splitext(file_path)
+    ext = ext.lstrip(".")
+    ext = ext.lower()
+    if ext in _video_file_extensions:
+        return "video"
+    
+    if ext in _audio_file_extensions:
+        return "audio"
+    
+    if ext in _graphics_file_extensions:
+        return "image"
+    
+    return "unknown"
 
 def hex_to_rgb(value):
     value = value.lstrip('#')
