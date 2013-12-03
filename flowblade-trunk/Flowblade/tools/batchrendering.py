@@ -513,7 +513,7 @@ class BatchRenderWindow:
         # Window
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.connect("delete-event", lambda w, e:shutdown())
-        app_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
+        app_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "flowbladebatchappicon.png")
         self.window.set_icon_list(app_icon)
 
         self.est_time_left = gtk.Label()
