@@ -208,14 +208,12 @@ def load_render_profiles():
         if encoding_option.supported:
             if encoding_option.nonuser == None:
                 encoding_options.append(encoding_option)
-                msg = "...available"
             else:
                 non_user_encodings.append(encoding_option) 
-                msg = "...available as non-user encoding"
         else:
             msg = "...NOT available, " + encoding_option.err_msg + " missing"
             not_supported_encoding_options.append(encoding_option)
-        print encoding_option.name + msg
+            print encoding_option.name + msg
     
     # Proxy encoding
     proxy_encoding_nodes = render_encoding_doc.getElementsByTagName(PROXY_ENCODING_OPTION)
