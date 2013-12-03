@@ -24,7 +24,6 @@ by the application. A project has 1-n of these.
 """
 
 import copy
-import gnomevfs
 import mlt
 import time
 import types
@@ -931,23 +930,22 @@ class Sequence:
 def get_media_type(file_path):
     """
     Returns media type of file.
-    """ 
-    try:
-        mime_type = gnomevfs.get_mime_type(file_path)
-    except Exception, err:
-        if not os.path.exists(file_path):
-            # We're doing a heuristic here to identify image sequence file_paths.
-            pros_index = file_path.find("%0")
-            d_index = file_path.find("d.")
-            if pros_index != -1 and d_index != -1:
-                return IMAGE_SEQUENCE
-            all_index = file_path.find(".all")
-            if all_index != -1:
-                return IMAGE_SEQUENCE
+    """
+    if os.path.exists(file_path):
+        mime_type = utils.get_file_type(file_path)
+    else:
+        # IMAGE_SEQUENCE media objects have a MLT formatted resource path that does not
+        # point to an existing file in the file system. 
+        # We're doing a heuristic here to identify those.
+        pros_index = file_path.find("%0")
+        d_index = file_path.find("d.")
+        if pros_index != -1 and d_index != -1:
+            return IMAGE_SEQUENCE
+        all_index = file_path.find(".all")
+        if all_index != -1:
+            return IMAGE_SEQUENCE
             
-            return FILE_DOES_NOT_EXIST
-        else:
-            return UNKNOWN
+        return FILE_DOES_NOT_EXIST
         
     if mime_type.startswith("video"):
         return VIDEO
