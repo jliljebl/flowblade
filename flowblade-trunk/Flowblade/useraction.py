@@ -338,13 +338,13 @@ def add_to_render_queue():
             return
 
     # Create render data object
-    if render.widgets.use_args_check.get_active() == False:
-        enc_index = render.widgets.encodings_cb.get_active()
-        quality_index = render.widgets.quality_cb.get_active()
+    if render.widgets.args_panel.use_args_check.get_active() == False:
+        enc_index = render.widgets.encoding_panel.encoding_selector.widget.get_active()
+        quality_index = render.widgets.encoding_panel.quality_selector.widget.get_active()
         user_args = False
-    else:
-        enc_index = render.widgets.encodings_cb.get_active()
-        quality_index = widgets.quality_cb.get_active()
+    else: # This is not implemented
+        enc_index = render.widgets.encoding_panel.encoding_selector.widget.get_active()
+        quality_index = widgets.encoding_panel.quality_selector.widget.get_active()
         user_args = False
 
     profile = render.get_current_profile()

@@ -109,7 +109,7 @@ class QueueRunnerThread(threading.Thread):
                 batch_window.update_render_progress(render_fraction, items, render_item.get_display_name(), current_render_time)
                 gtk.gdk.threads_leave()
                 
-                if render_thread.producer.get_speed() == 0: # Rendering has reached end or been aborted
+                if render_thread.producer.frame() >= end_frame: # Rendering has reached end
                     self.thread_running = False
                     
                     gtk.gdk.threads_enter()
@@ -118,7 +118,7 @@ class QueueRunnerThread(threading.Thread):
                                     
                     render_item.render_completed()
                 else:
-                    time.sleep(1)
+                    time.sleep(0.33)
                     
             if not self.aborted:
                 items = items + 1
@@ -495,11 +495,11 @@ class RenderData:
 def get_render_range(render_item):
     if render_item.mark_in < 0: # no range defined
         start_frame = 0
-        end_frame = render_item.length
+        end_frame = render_item.length - 1 # -1 = first frame 0
     elif render_item.mark_out < 0: # only start defined
         start_frame = render_item.mark_in
-        end_frame = render_item.length
-    else: # start and end defined
+        end_frame = render_item.length - 1 # -1 = first frame 0
+    else: # both start and end defined
         start_frame = render_item.mark_in
         end_frame = render_item.mark_out
     

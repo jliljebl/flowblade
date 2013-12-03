@@ -354,7 +354,7 @@ class FileRenderPlayer(threading.Thread):
                 self.consumer.stop()
                 self.producer.set_speed(0)
                 self.running = False
-            print self.producer.frame()
+
             time.sleep(0.1)
             
         print "FileRenderPlayer stopped, producer frame: " + str(self.producer.frame())
