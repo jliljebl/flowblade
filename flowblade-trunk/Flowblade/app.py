@@ -190,7 +190,6 @@ def main(root_path):
 
     # Load filter and compositor descriptions from xml files.
     mltfilters.load_filters_xml(mltenv.services)
-
     mlttransitions.load_compositors_xml(mltenv.transitions)
 
     # Create list of available mlt profiles
@@ -543,7 +542,7 @@ def start_autosave():
     time_min = 1 # hard coded, probably no need to make configurable
     autosave_delay_millis = time_min * 60 * 1000
 
-    print "autosave started"
+    print "Autosave started..."
     autosave_timeout_id = gobject.timeout_add(autosave_delay_millis, do_autosave)
     autosave_file = utils.get_hidden_user_dir_path() + get_instance_autosave_file()
     persistance.save_project(editorstate.PROJECT(), autosave_file)
@@ -692,7 +691,7 @@ def _shutdown_dialog_callback(dialog, response_id):
         return
 
     # --- APP SHUT DOWN --- #
-    print "exiting app..."
+    print "Exiting app..."
 
     # No more auto saving
     stop_autosave()
