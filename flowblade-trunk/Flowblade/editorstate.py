@@ -54,7 +54,7 @@ _monitor_media_file = None
 _timeline_displayed = True
 
 
-# Timeline current frame is saevd here while clip is being displayed in monitor
+# Timeline current frame is saved here while clip is being displayed in monitor
 # and PLAYER() current frame is not timeline frame 
 tline_shadow_frame = -1
 

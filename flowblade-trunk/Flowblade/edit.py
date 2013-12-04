@@ -1719,7 +1719,6 @@ def _range_over_redo(self):
 
 #------------------- ADD CENTERED TRANSITION
 # "transition_clip","transition_index", "from_clip","to_clip","track","from_in","to_out"
-
 def add_centered_transition_action(data):
     action = EditAction(_add_centered_transition_undo, _add_centered_transition_redo, data)
     return action
