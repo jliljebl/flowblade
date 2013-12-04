@@ -96,7 +96,6 @@ def do_clip_insert(track, new_clip, tline_pos):
 
 def do_multiple_clip_insert(track, clips, tline_pos):
     index = _get_insert_index(track, tline_pos)
-    print "index:", index
     
     # Can't put audio media on video track
     for new_clip in clips:
@@ -118,14 +117,11 @@ def do_multiple_clip_insert(track, clips, tline_pos):
 
 def _get_insert_index(track, tline_pos):
     cut_frame = current_sequence().get_closest_cut_frame(track.id, tline_pos)
-    print "cut_frame", cut_frame
     index = current_sequence().get_clip_index(track, cut_frame)
-    print "clip index", index
     if index == -1:
         # Fix for case when inserting on empty track, which causes exception in
         # editorstate.current_sequence().get_clip_index(...) which returns -1
         index = track.count()
-        print "ww"
     elif ((cut_frame == -1) and (index == 0)
         and (tline_pos > 0) and (tline_pos >= track.get_length())):
         # Fix for case in which we get -1 for cut_frame because
@@ -133,7 +129,6 @@ def _get_insert_index(track, tline_pos):
         # then get 0 for index which places clip in beginning, but we 
         # want it appended in the end of sequence.
         index = track.count()
-        print "jj"
     return index
 
 def _display_no_audio_on_video_msg(track):
