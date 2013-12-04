@@ -53,7 +53,7 @@
     <encodingoption name="MPEG-4 / .mp4" extension="mp4" type="av" audiodesc="mp2, 192kb/s, 48000Hz" resize="True" qgroup="qgroup1">
         <profile args="f=mp4 s=%SCREENSIZE% hq=1 acodec=mp2 ab=192k ar=48000 vcodec=mpeg4 minrate=0 vb=%BITRATE%"/>
     </encodingoption>
-    <encodingoption name="Theora / .ogg" extension="ogg" audiodesc="flac lossless" type="av" resize="True" qgroup="qgroup1">
+    <encodingoption name="Theora / .ogv" extension="ogv" audiodesc="flac lossless" type="av" resize="True" qgroup="qgroup1">
         <profile args="f=ogg acodec=flac ac=2 vcodec=libtheora minrate=0 vb=%BITRATE%" />
     </encodingoption>
     <encodingoption name="Lossless HuffYUV / .avi" extension="avi" audiodesc="pcm lossless"  type="av" resize="True" qgroup="lossless">

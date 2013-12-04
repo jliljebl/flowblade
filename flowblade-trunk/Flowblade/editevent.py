@@ -545,7 +545,6 @@ def tline_canvas_mouse_released(x, y, frame, button, state):
         if not timeline_visible():
             return
         PLAYER().seek_frame(frame) 
-
     # Handle left mouse button edits
     elif button == 1:
         mode_funcs = EDIT_MODE_FUNCS[EDIT_MODE()]
@@ -1134,13 +1133,13 @@ def _tracks_resize_update():
 # --------------------------------------------------- copy/paste
 def do_timeline_objects_copy():
     if movemodes.selected_track != -1:
+        # copying clips
         track = current_sequence().tracks[movemodes.selected_track]
         clone_clips = []
         for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
             clone_clip = current_sequence().clone_track_clip(track, i)
             clone_clips.append(clone_clip)
         editorstate.set_copy_paste_objects(clone_clips)
-        print len(clone_clips)
 
 def do_timeline_objects_paste():
     track = current_sequence().get_first_active_track()
@@ -1150,8 +1149,9 @@ def do_timeline_objects_paste():
     paste_objs = editorstate.get_copy_paste_objects()
     if paste_objs == None:
         return
-    
-    # Leave new clones behind for next paste for multiple pastes of same clips
+
+    tline_pos = editorstate.current_tline_frame()
+
     new_clips = []
     for clip in paste_objs:
         new_clip = current_sequence().create_clone_clip(clip)
@@ -1159,8 +1159,8 @@ def do_timeline_objects_paste():
     editorstate.set_copy_paste_objects(new_clips)
 
     # Paste clips
-    tline_pos = editorstate.current_tline_frame()
     do_multiple_clip_insert(track, paste_objs, tline_pos)
+
 
 # ------------------------------------ function tables
 # mouse event indexes
