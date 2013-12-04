@@ -83,10 +83,7 @@ def _get_new_clip_from_clip_monitor():
 
 # How to get this depends on what is displayed on monitor
 def _current_tline_frame():
-    if timeline_visible():
-        return PLAYER().current_frame()
-    else:
-        return tlinewidgets.shadow_frame
+    return editorstate.current_tline_frame()
 
 # ---------------------------------- edit button events
 def cut_pressed():

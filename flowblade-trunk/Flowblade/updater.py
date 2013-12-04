@@ -287,7 +287,7 @@ def display_clip_in_monitor(reset_saved_frames=True):
     if reset_saved_frames == True:
         global saved_timeline_pos
         saved_timeline_pos = PLAYER().current_frame()
-        tlinewidgets.shadow_frame = saved_timeline_pos
+        editorstate.tline_shadow_frame = saved_timeline_pos
 
     # Clear old clip
     current_sequence().clear_hidden_track()

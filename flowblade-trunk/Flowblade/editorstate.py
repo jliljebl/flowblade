@@ -53,8 +53,16 @@ _monitor_media_file = None
 # Flag for timeline/clip display in monitor
 _timeline_displayed = True
 
+
+# Timeline current frame is saevd here while clip is being displayed in monitor
+# and PLAYER() current frame is not timeline frame 
+tline_shadow_frame = -1
+
 # Dict of curren proxy media paths
 _current_proxy_paths = {}
+
+# Clips or compositor that era copy/pasted with CTRL+C, CTRL+V 
+_copy_paste_objects = None
 
 # Used to alter gui layout and tracks configuration, set at startup
 SCREEN_HEIGHT = -1
@@ -94,6 +102,12 @@ def update_current_proxy_paths():
     global _current_proxy_paths
     _current_proxy_paths = project.get_current_proxy_paths()
 
+def current_tline_frame():
+    if timeline_visible():
+        return PLAYER().current_frame()
+    else:
+        return tline_shadow_frame
+
 def PROJECT():
     return project
     
@@ -119,4 +133,10 @@ def mlt_version_is_equal_or_greater(test_version):
         return True
     
     return False
-    
+
+def set_copy_paste_objects(objs):
+    global _copy_paste_objects
+    _copy_paste_objects = objs
+
+def get_copy_paste_objects():
+    return _copy_paste_objects

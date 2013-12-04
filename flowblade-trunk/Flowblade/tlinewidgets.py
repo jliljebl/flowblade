@@ -247,7 +247,7 @@ pos = 0 # Current left most frame in timeline display
 canvas_widget = None
 
 # Value used to display shadow frame when in clip edit mode 
-shadow_frame = -1
+#shadow_frame = -1
 
 # Used to draw trim modes differently when moving from <X>_NO_EDIT mode to active edit
 trim_mode_in_non_active_state = False
@@ -871,7 +871,7 @@ class TimeLineCanvas:
             pointer_frame = current_frame
             cr.set_source_rgb(0, 0, 0)
         else:
-            pointer_frame = shadow_frame
+            pointer_frame = editorstate.tline_shadow_frame
             cr.set_source_rgb(*SHADOW_POINTER_COLOR)
         disp_frame = pointer_frame - pos
         frame_x = math.floor(disp_frame * pix_per_frame) + 0.5
@@ -1658,7 +1658,7 @@ class TimeLineFrameScale:
             triangle_color = POINTER_TRIANGLE_COLOR
             triangle_stroke = (0, 0, 0)
         else:
-            current_frame = shadow_frame
+            current_frame = editorstate.tline_shadow_frame
             line_color = (0.8, 0.8, 0.8)
             triangle_color = (0.8, 0.8, 0.8)
             triangle_stroke = (0.8, 0.8, 0.8)

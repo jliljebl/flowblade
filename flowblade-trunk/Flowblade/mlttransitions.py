@@ -391,7 +391,7 @@ def get_rendered_transition_tractor(current_sequence,
         from_clip = current_sequence.create_file_producer_clip(orig_from.path)# File producer
     else:
         from_clip = current_sequence.create_pattern_producer(orig_from.create_data) # pattern producer
-    current_sequence.clone_clip_range_and_filters(orig_from, from_clip)
+    current_sequence.clone_clip_and_filters(orig_from, from_clip)
 
     # New to clip
     if not(transition_type == RENDERED_FADE_IN or transition_type == RENDERED_FADE_OUT): # fades to not use to_clip
@@ -399,7 +399,7 @@ def get_rendered_transition_tractor(current_sequence,
             to_clip = current_sequence.create_file_producer_clip(orig_to.path)# File producer
         else:
             to_clip = current_sequence.create_pattern_producer(orig_to.create_data) # pattern producer
-        current_sequence.clone_clip_range_and_filters(orig_to, to_clip)
+        current_sequence.clone_clip_and_filters(orig_to, to_clip)
 
     # Create tractor and tracks
     tractor = mlt.Tractor()

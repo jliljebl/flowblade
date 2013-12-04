@@ -270,6 +270,18 @@ def _handle_tline_key_event(event):
                 monitorevent.l_pressed()
             return True
 
+        # CTRL+C
+        if event.keyval == gtk.keysyms.c:
+            if (event.state & gtk.gdk.CONTROL_MASK):
+                editevent.do_timeline_objects_copy()
+                return True
+
+        # CTRL+V
+        if event.keyval == gtk.keysyms.v:
+            if (event.state & gtk.gdk.CONTROL_MASK):
+                editevent.do_timeline_objects_paste()
+                return True
+
         # DELETE
         if event.keyval == gtk.keysyms.Delete:
             # Clip selection and compositor selection are mutually exclusive, 

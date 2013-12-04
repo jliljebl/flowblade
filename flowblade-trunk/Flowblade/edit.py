@@ -487,8 +487,7 @@ def _insert_undo(self):
     _remove_clip(self.track, self.index)
 
 def _insert_redo(self):
-    _insert_clip(self.track, self.clip, self.index, self.clip_in, \
-                 self.clip_out)
+    _insert_clip(self.track, self.clip, self.index, self.clip_in, self.clip_out)
 
 
 #----------------- 3 POINT OVERWRITE
@@ -504,8 +503,7 @@ def _three_over_undo(self):
     for i in range(0, clips_count):
         add_clip = self.clips[i]
         index = self.in_index + i
-        _insert_clip(self.track, add_clip, index, add_clip.clip_in, \
-                     add_clip.clip_out)
+        _insert_clip(self.track, add_clip, index, add_clip.clip_in, add_clip.clip_out)
 
 def _three_over_redo(self):
     # Remove and replace
@@ -711,6 +709,23 @@ def _insert_move_redo(self):
                      clip.clip_in, clip.clip_out )
 
     self.move_edit_done_func(self.clips)
+
+# --------------------------------------- INSERT MULTIPLE
+# "track","clips","index"
+def insert_multiple_action(data):
+    action = EditAction(_insert_multiple_undo, _insert_multiple_redo, data)
+    return action
+
+def _insert_multiple_undo(self):
+    for i in range(0, len(self.clips)):
+        _remove_clip(self.track, self.index)
+
+def _insert_multiple_redo(self):
+    for i in range(0, len(self.clips)):
+        add_clip = self.clips[i]
+        index = self.index + i
+        _insert_clip(self.track, add_clip, index, add_clip.clip_in, add_clip.clip_out)
+
 
 #-------------------- MULTITRACK INSERT MOVE
 # "track","to_track","insert_index","selected_range_in","selected_range_out"
@@ -1902,7 +1917,7 @@ def _replace_with_speed_changed_clip_redo(self):
     # Create slowmo clip if it does not exists
     if not hasattr(self, "new_clip"):
         self.new_clip = current_sequence().create_slowmotion_producer(self.clip.path, self.speed)
-    current_sequence().clone_clip_range_and_filters(self.clip, self.new_clip)
+    current_sequence().clone_clip_and_filters(self.clip, self.new_clip)
     
     _remove_clip(self.track, self.clip_index)
     _insert_clip(self.track, self.new_clip, self.clip_index, self.clip.clip_in, self.clip.clip_out)

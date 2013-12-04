@@ -446,8 +446,20 @@ class Sequence:
         clip.clip_length = lambda: _clip_length(clip)
         clip.waveform_data = None
         clip.color = None # None means that clip type default color is displayed
-    
-    def clone_clip_range_and_filters(self, clip, clone_clip):
+
+    def clone_track_clip(self, track, index):
+        orig_clip = track.clips[index]
+        return self.create_clone_clip(orig_clip)
+
+    def create_clone_clip(self, clip):
+        if clip.media_type != appconsts.PATTERN_PRODUCER:
+            clone_clip = self.create_file_producer_clip(clip.path) # file producer
+        else:
+            clone_clip = self.create_pattern_producer(clip.create_data) # pattern producer
+        self.clone_clip_and_filters(clip, clone_clip)
+        return clone_clip
+        
+    def clone_clip_and_filters(self, clip, clone_clip):
         """
         Clones clip range properties and filters that are needed for clip to be
         used in another clip's place, but not id, master_clip and selection

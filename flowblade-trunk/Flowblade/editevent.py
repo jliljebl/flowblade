@@ -73,27 +73,12 @@ def do_clip_insert(track, new_clip, tline_pos):
     """
     Called from buttonevent.insert_button_pressed() and tline_media_drop()
     """
-    cut_frame = current_sequence().get_closest_cut_frame(track.id, tline_pos)
-    index = current_sequence().get_clip_index(track, cut_frame)
-
-    if index == -1:
-        # Fix for case when inserting on empty track, which causes exception in
-        # editorstate.current_sequence().get_clip_index(...) which returns -1
-        index = track.count()
-    elif ((cut_frame == -1) and (index == 0)
-        and (tline_pos > 0) and (tline_pos >= track.get_length())):
-        # Fix for case in which we get -1 for cut_frame because
-        # tline_pos after last frame of the sequence, and
-        # then get 0 for index which places clip in beginning, but we 
-        # want it appended in the end of sequence.
-        index = track.count()
+    index = _get_insert_index(track, tline_pos)
 
     # Can't put audio media on video track 
     if ((new_clip.media_type == appconsts.AUDIO)
        and (track.type == appconsts.VIDEO)):        
-        dialogutils.warning_message(_("Can't put an audio clip on a video track."), 
-                                _("Track ")+ utils.get_track_name(track, current_sequence()) + _(" is a video track and can't display audio only material."),
-                                gui.editor_window.window)
+        _display_no_audio_on_video_msg(track)
         return
 
     movemodes.clear_selected_clips()
@@ -109,6 +94,53 @@ def do_clip_insert(track, new_clip, tline_pos):
 
     updater.display_tline_cut_frame(track, index)
 
+def do_multiple_clip_insert(track, clips, tline_pos):
+    index = _get_insert_index(track, tline_pos)
+    print "index:", index
+    
+    # Can't put audio media on video track
+    for new_clip in clips:
+        if ((new_clip.media_type == appconsts.AUDIO)
+           and (track.type == appconsts.VIDEO)):        
+            _display_no_audio_on_video_msg(track)
+            return
+
+    movemodes.clear_selected_clips()
+
+    # Do edit
+    data = {"track":track,
+            "clips":clips,
+            "index":index}
+    action = edit.insert_multiple_action(data)
+    action.do_edit()
+
+    updater.display_tline_cut_frame(track, index)
+
+def _get_insert_index(track, tline_pos):
+    cut_frame = current_sequence().get_closest_cut_frame(track.id, tline_pos)
+    print "cut_frame", cut_frame
+    index = current_sequence().get_clip_index(track, cut_frame)
+    print "clip index", index
+    if index == -1:
+        # Fix for case when inserting on empty track, which causes exception in
+        # editorstate.current_sequence().get_clip_index(...) which returns -1
+        index = track.count()
+        print "ww"
+    elif ((cut_frame == -1) and (index == 0)
+        and (tline_pos > 0) and (tline_pos >= track.get_length())):
+        # Fix for case in which we get -1 for cut_frame because
+        # tline_pos after last frame of the sequence, and
+        # then get 0 for index which places clip in beginning, but we 
+        # want it appended in the end of sequence.
+        index = track.count()
+        print "jj"
+    return index
+
+def _display_no_audio_on_video_msg(track):
+    dialogutils.warning_message(_("Can't put an audio clip on a video track."), 
+                            _("Track ")+ utils.get_track_name(track, current_sequence()) + _(" is a video track and can't display audio only material."),
+                            gui.editor_window.window)
+                                    
 # --------------------------------- undo, redo
 def do_undo(widget=None, data=None):
     undo.do_undo()
@@ -1104,6 +1136,36 @@ def _tracks_resize_update():
     updater.repaint_tline()
     gui.tline_column.widget.queue_draw()
 
+# --------------------------------------------------- copy/paste
+def do_timeline_objects_copy():
+    if movemodes.selected_track != -1:
+        track = current_sequence().tracks[movemodes.selected_track]
+        clone_clips = []
+        for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
+            clone_clip = current_sequence().clone_track_clip(track, i)
+            clone_clips.append(clone_clip)
+        editorstate.set_copy_paste_objects(clone_clips)
+        print len(clone_clips)
+
+def do_timeline_objects_paste():
+    track = current_sequence().get_first_active_track()
+    if track == None:
+        return
+
+    paste_objs = editorstate.get_copy_paste_objects()
+    if paste_objs == None:
+        return
+    
+    # Leave new clones behind for next paste for multiple pastes of same clips
+    new_clips = []
+    for clip in paste_objs:
+        new_clip = current_sequence().create_clone_clip(clip)
+        new_clips.append(new_clip)
+    editorstate.set_copy_paste_objects(new_clips)
+
+    # Paste clips
+    tline_pos = editorstate.current_tline_frame()
+    do_multiple_clip_insert(track, paste_objs, tline_pos)
 
 # ------------------------------------ function tables
 # mouse event indexes
