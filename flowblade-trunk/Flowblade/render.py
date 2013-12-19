@@ -242,13 +242,14 @@ def create_widgets(normal_height):
     widgets.args_panel = rendergui.RenderArgsPanel(normal_height,
                                                    _save_opts_pressed, _load_opts_pressed,
                                                    _display_selection_in_opts_view)
-    
+
     # Range, Render, Reset, Render Queue
     widgets.render_button = guiutils.get_render_button()
     widgets.range_cb = rendergui.get_range_selection_combo()
     widgets.reset_button = gtk.Button(_("Reset"))
     widgets.reset_button.connect("clicked", lambda w: set_default_values_for_widgets())
     widgets.queue_button = gtk.Button(_("To Queue"))
+    widgets.queue_button.set_tooltip_text(_("Save Project in Render Queue"))
     
     # Tooltips
     widgets.range_cb.set_tooltip_text(_("Select render range"))

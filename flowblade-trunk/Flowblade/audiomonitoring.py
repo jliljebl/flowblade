@@ -131,7 +131,7 @@ def _init_level_filters():
     # Filters are not part of sequence.Sequence object because they just used for monitoring,
     #
     # Track/master gain values are persistant, they're also editing desitions 
-    # and are therefore part of Sequence objects.
+    # and are therefore part of sequence.Sequence objects.
     global _level_filters
     _level_filters = []
     seq = editorstate.current_sequence()
@@ -218,6 +218,7 @@ class AudioMonitorWindow(gtk.Window):
         self.set_resizable(False)
         self.set_keep_above(True) # Perhaps configurable later
 
+
 class MetersArea:
     def __init__(self, meters_count):
         w = SLOT_W * meters_count
@@ -255,6 +256,7 @@ class MetersArea:
             x = i * SLOT_W
             meter.display_value(cr, x, l_value, r_value, grad)
 
+
 class AudioMeter:
     def __init__(self, height):
         self.left_channel = ChannelMeter(height, "L")
@@ -270,6 +272,7 @@ class AudioMeter:
         cr.set_dash(DASHES, 0) 
         cr.set_line_width(METER_WIDTH)
         self.right_channel.display_value(cr, x + SLOT_W / 2 + 6, value_right)
+
         
 class ChannelMeter:
     def __init__(self, height, channel_text):

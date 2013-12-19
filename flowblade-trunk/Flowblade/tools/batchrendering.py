@@ -214,8 +214,8 @@ def copy_project(render_item, file_name):
     try:
         shutil.copyfile(render_item.get_project_filepath(), file_name)
     except Exception as e:
-        primary_txt = "Render Item Project File Copy failed!"
-        secondary_txt = "Error message: " + str(e)
+        primary_txt = _("Render Item Project File Copy failed!")
+        secondary_txt = _("Error message: ") + str(e)
         dialogutils.warning_message(primary_txt, secondary_txt, batch_window.window)
         
 # --------------------------------------------------------------- app thread and data objects
@@ -271,8 +271,8 @@ def main(root_path, force_launch=False):
     batch_window = BatchRenderWindow()
 
     if render_queue.error_status != None:
-        primary_txt = "Error loading render queue items!"
-        secondary_txt = "Message:\n" + render_queue.get_error_status_message()
+        primary_txt = _("Error loading render queue items!")
+        secondary_txt = _("Message:\n") + render_queue.get_error_status_message()
         dialogutils.warning_message(primary_txt, secondary_txt, batch_window.window)
 
     gtk.main()
@@ -311,8 +311,8 @@ def _early_exit(dialog, response):
     
 def shutdown():
     if queue_runner_thread != None:
-        primary_txt = "Application is rendering and cannot be closed!"
-        secondary_txt = "Stop rendering before closing the application."
+        primary_txt = _("Application is rendering and cannot be closed!")
+        secondary_txt = _("Stop rendering before closing the application.")
         dialogutils.info_message(primary_txt, secondary_txt, batch_window.window)
         return True # Tell callsite (inside GTK toolkit) that event is handled, otherwise it'll destroy window anyway.
 
@@ -343,13 +343,13 @@ class RenderQueue:
             except Exception as e:
                 if self.error_status == None:
                     self.error_status = []
-                self.error_status.append((data_file_name,  " datafile load failed with " + str(e)))
+                self.error_status.append((data_file_name,  _(" datafile load failed with ") + str(e)))
             try:
                 render_file = open(render_item.get_project_filepath())
             except Exception as e:
                 if self.error_status == None:
                     self.error_status = []
-                self.error_status.append((render_item.get_project_filepath(), " project file load failed with " + str(e)))
+                self.error_status.append((render_item.get_project_filepath(), _(" project file load failed with ") + str(e)))
 
         if self.error_status != None:
             for file_path, error_str in self.error_status:
@@ -519,9 +519,9 @@ class BatchRenderWindow:
         self.est_time_left = gtk.Label()
         self.current_render = gtk.Label()
         self.current_render_time = gtk.Label()
-        est_r = guiutils.get_right_justified_box([guiutils.bold_label("Estimated Left:")])
-        current_r = guiutils.get_right_justified_box([guiutils.bold_label("Current Render:")])
-        current_r_t = guiutils.get_right_justified_box([guiutils.bold_label("Elapsed:")])
+        est_r = guiutils.get_right_justified_box([guiutils.bold_label(_("Estimated Left:"))])
+        current_r = guiutils.get_right_justified_box([guiutils.bold_label(_("Current Render:"))])
+        current_r_t = guiutils.get_right_justified_box([guiutils.bold_label(_("Elapsed:"))])
         est_r.set_size_request(250, 20)
         current_r.set_size_request(250, 20)
         current_r_t.set_size_request(250, 20)
@@ -532,28 +532,28 @@ class BatchRenderWindow:
         info_vbox.pack_start(guiutils.get_left_justified_box([est_r, self.est_time_left]), False, False, 0)
         
         self.items_rendered = gtk.Label()
-        items_r = gtk.Label("Items Rendered:")
+        items_r = gtk.Label(_("Items Rendered:"))
         self.render_started_label = gtk.Label()
-        started_r = gtk.Label("Render Started:")
+        started_r = gtk.Label(_("Render Started:"))
     
         bottom_info_vbox = gtk.HBox(True, 0)
         bottom_info_vbox.pack_start(guiutils.get_left_justified_box([items_r, self.items_rendered]), True, True, 0)
         bottom_info_vbox.pack_start(guiutils.get_left_justified_box([started_r, self.render_started_label]), True, True, 0)
         
-        self.not_rendering_txt = "Not Rendering"
+        self.not_rendering_txt = _("Not Rendering")
         self.render_progress_bar = gtk.ProgressBar()
         self.render_progress_bar.set_text(self.not_rendering_txt)
 
-        self.remove_selected = gtk.Button("Delete Selected")
+        self.remove_selected = gtk.Button(_("Delete Selected"))
         self.remove_selected.connect("clicked", 
                                      lambda w, e: self.remove_selected_clicked(), 
                                      None)
-        self.remove_finished = gtk.Button("Delete Finished")
+        self.remove_finished = gtk.Button(_("Delete Finished"))
         self.remove_finished.connect("clicked", 
                                      lambda w, e: self.remove_finished_clicked(), 
                                      None)
 
-        self.reload_button = gtk.Button("Reload Queue")
+        self.reload_button = gtk.Button(_("Reload Queue"))
         self.reload_button.connect("clicked", 
                                      lambda w, e: self.reload_queue(), 
                                      None)
@@ -564,7 +564,7 @@ class BatchRenderWindow:
                                    lambda w, e: self.launch_render(), 
                                    None)
                                          
-        self.stop_render_button = gtk.Button("Stop Render")
+        self.stop_render_button = gtk.Button(_("Stop Render"))
         self.stop_render_button.set_sensitive(False)
         self.stop_render_button.connect("clicked", 
                                    lambda w, e: self.abort_render(), 
@@ -606,7 +606,7 @@ class BatchRenderWindow:
 
         # Set pane and show window
         self.window.add(pane)
-        self.window.set_title("Flowblade Batch Render")
+        self.window.set_title(_("Flowblade Batch Render"))
         self.window.set_position(gtk.WIN_POS_CENTER)  
         self.window.show_all()
 
@@ -632,8 +632,8 @@ class BatchRenderWindow:
         self.display_delete_confirm(delete_list)
 
     def display_delete_confirm(self, delete_list):
-        primary_txt = "Delete " + str(len(delete_list)) + " item(s) from render queue?"
-        secondary_txt = "This operation cannot be undone."
+        primary_txt = _("Delete ") + str(len(delete_list)) + _(" item(s) from render queue?")
+        secondary_txt = _("This operation cannot be undone.")
         dialogutils.warning_confirmation(self._confirm_items_delete_callback, primary_txt, secondary_txt, self.window , data=delete_list, is_info=False)
         
     def _confirm_items_delete_callback(self, dialog, response_id, delete_list):
@@ -650,8 +650,8 @@ class BatchRenderWindow:
         render_queue.load_render_items()
 
         if render_queue.error_status != None:
-            primary_txt = "Error loading render queue items!"
-            secondary_txt = "Message:\n" + render_queue.get_error_status_message()
+            primary_txt = _("Error loading render queue items!")
+            secondary_txt = _("Message:\n") + render_queue.get_error_status_message()
             dialogutils.warning_message(primary_txt, secondary_txt, batch_window.window)
             return
     
@@ -663,12 +663,12 @@ class BatchRenderWindow:
     def launch_render(self):
         same_paths = render_queue.check_for_same_paths()
         if len(same_paths) > 0:
-            primary_txt = "Multiple items with same render target file!"
+            primary_txt = _("Multiple items with same render target file!")
             
-            secondary_txt = "Later items will render on top of earlier items if this queue is rendered.\n" + \
-                            "Delete or unqueue some items with same paths:\n\n"
+            secondary_txt = _("Later items will render on top of earlier items if this queue is rendered.\n") + \
+                            _("Delete or unqueue some items with same paths:\n\n")
             for k,v in same_paths.iteritems():
-                secondary_txt = secondary_txt + str(v) + " items with path: " + str(k) + "\n"
+                secondary_txt = secondary_txt + str(v) + _(" items with path: ") + str(k) + "\n"
             dialogutils.warning_message(primary_txt, secondary_txt, batch_window.window)
             return
 
@@ -766,11 +766,11 @@ class RenderQueueView(gtk.VBox):
         self.text_rend_4.set_property("yalign", 0.0)
 
         # Column views
-        self.toggle_col = gtk.TreeViewColumn("Render", self.toggle_rend)
-        self.text_col_1 = gtk.TreeViewColumn("Project/Sequence")
-        self.text_col_2 = gtk.TreeViewColumn("Status")
-        self.text_col_3 = gtk.TreeViewColumn("Render File")
-        self.text_col_4 = gtk.TreeViewColumn("Render Time")
+        self.toggle_col = gtk.TreeViewColumn(_("Render"), self.toggle_rend)
+        self.text_col_1 = gtk.TreeViewColumn(_("Project/Sequence"))
+        self.text_col_2 = gtk.TreeViewColumn(_("Status"))
+        self.text_col_3 = gtk.TreeViewColumn(_("Render File"))
+        self.text_col_4 = gtk.TreeViewColumn(_("Render Time"))
 
         # Build column views
         self.toggle_col.set_expand(False)
