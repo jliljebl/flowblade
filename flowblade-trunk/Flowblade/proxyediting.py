@@ -184,9 +184,9 @@ class ProxyManagerDialog:
                                 None)
                             
         self.size_select = gtk.combo_box_new_text()
-        self.size_select.append_text("Project Size")
-        self.size_select.append_text("Half Project Size")
-        self.size_select.append_text("Quarter Project Size")
+        self.size_select.append_text(_("Project Image Size"))
+        self.size_select.append_text(_("Half Project Image Size"))
+        self.size_select.append_text(_("Quarter Project Image Size"))
         self.size_select.set_active(editorstate.PROJECT().proxy_data.size)
         self.size_select.connect("changed", 
                                 lambda w,e: self.size_changed(w.get_active()), 
@@ -202,7 +202,7 @@ class ProxyManagerDialog:
         vbox_enc.pack_start(row_enc, False, False, 0)
         vbox_enc.pack_start(guiutils.pad_label(8, 12), False, False, 0)
         
-        panel_encoding = guiutils.get_named_frame("Proxy Encoding", vbox_enc)
+        panel_encoding = guiutils.get_named_frame(_("Proxy Encoding"), vbox_enc)
 
         # Mode
         media_files = editorstate.PROJECT().media_files
@@ -214,18 +214,18 @@ class ProxyManagerDialog:
                 if media_file.has_proxy_file == True or media_file.is_proxy_file == True:
                     proxy_files = proxy_files + 1
                     
-        proxy_status_label = gtk.Label("Proxy Stats:")
-        proxy_status_value = gtk.Label(str(proxy_files) + " proxy file(s) for " + str(video_files) + " video file(s)")
+        proxy_status_label = gtk.Label(_("Proxy Stats:"))
+        proxy_status_value = gtk.Label(str(proxy_files) + _(" proxy file(s) for ") + str(video_files) + _(" video file(s)"))
         row_proxy_status = guiutils.get_two_column_box_right_pad(proxy_status_label, proxy_status_value, 150, 150)
 
-        proxy_mode_label = gtk.Label("Current Proxy Mode:")
+        proxy_mode_label = gtk.Label(_("Current Proxy Mode:"))
         self.proxy_mode_value = gtk.Label()
         self.set_mode_display_value()
                
         row_proxy_mode = guiutils.get_two_column_box_right_pad(proxy_mode_label, self.proxy_mode_value, 150, 150)
 
         self.convert_progress_bar = gtk.ProgressBar()
-        self.convert_progress_bar.set_text("Press Button to Change Mode")
+        self.convert_progress_bar.set_text(_("Press Button to Change Mode"))
             
         self.use_button = gtk.Button(_("Use Proxy Media"))
         self.dont_use_button = gtk.Button(_("Use Original Media"))
@@ -249,7 +249,7 @@ class ProxyManagerDialog:
         vbox_onoff.pack_start(self.convert_progress_bar, False, False, 0)
         vbox_onoff.pack_start(row2_onoff, False, False, 0)
         
-        panel_onoff = guiutils.get_named_frame("Project Proxy Mode", vbox_onoff)
+        panel_onoff = guiutils.get_named_frame(_("Project Proxy Mode"), vbox_onoff)
 
         # Pane
         vbox = gtk.VBox(False, 2)
@@ -276,9 +276,9 @@ class ProxyManagerDialog:
 
     def set_mode_display_value(self):
         if editorstate.PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA:
-            mode_str = "Using Proxy Media"
+            mode_str = _("Using Proxy Media")
         else:
-            mode_str = "Using Original Media"
+            mode_str = _("Using Original Media")
         self.proxy_mode_value.set_text(mode_str)
         
     def encoding_changed(self, enc_index):
@@ -290,7 +290,7 @@ class ProxyManagerDialog:
     def update_proxy_mode_display(self):
         self.set_convert_buttons_state()
         self.set_mode_display_value()
-        self.convert_progress_bar.set_text("Press Button to Change Mode")
+        self.convert_progress_bar.set_text(_("Press Button to Change Mode"))
         self.convert_progress_bar.set_fraction(0.0)
 
 
@@ -312,9 +312,9 @@ class ProxyRenderProgressDialog:
         self.current_render_value = gtk.Label()
         self.items_value = gtk.Label()
         
-        est_label = guiutils.get_right_justified_box([guiutils.bold_label("Elapsed:")])
-        current_label = guiutils.get_right_justified_box([guiutils.bold_label("Current Media File:")])
-        items_label = guiutils.get_right_justified_box([guiutils.bold_label("Rendering Item:")])
+        est_label = guiutils.get_right_justified_box([guiutils.bold_label(_("Elapsed:"))])
+        current_label = guiutils.get_right_justified_box([guiutils.bold_label(_("Current Media File:"))])
+        items_label = guiutils.get_right_justified_box([guiutils.bold_label(_("Rendering Item:"))])
         
         est_label.set_size_request(250, 20)
         current_label.set_size_request(250, 20)
@@ -371,8 +371,8 @@ class ProxyRenderIssuesWindow:
                                      gui.editor_window.window,
                                      gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                                      (_("Close").encode('utf-8'), gtk.RESPONSE_CLOSE))
-            info_box = dialogutils.get_warning_message_dialog_panel("Nothing will be rendered", 
-                                                                      "No video files were selected.\nOnly video files can have proxy files.",
+            info_box = dialogutils.get_warning_message_dialog_panel(_("Nothing will be rendered"), 
+                                                                      _("No video files were selected.\nOnly video files can have proxy files."),
                                                                       True)
             self.dialog.connect('response', dialogutils.dialog_destroy)
         else:
@@ -406,7 +406,7 @@ class ProxyRenderIssuesWindow:
             self.action_select.append_text(_("Render Unrendered Possible & Use existing"))
             self.action_select.append_text(_("Rerender All Possible" ))
             self.action_select.set_active(0)
-            action_row = guiutils.get_left_justified_box([guiutils.get_pad_label(24, 10), gtk.Label("Select Render Action: "), self.action_select])
+            action_row = guiutils.get_left_justified_box([guiutils.get_pad_label(24, 10), gtk.Label(_("Select Render Action: ")), self.action_select])
 
             info_box = gtk.VBox()
             info_box.pack_start(issues_box, False, False, 0)
@@ -599,7 +599,7 @@ def _create_proxy_render_folder_select_callback(dialog, response_id, file_select
 def _convert_to_proxy_project():    
     editorstate.PROJECT().proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_PROXY_MEDIA
     conv_temp_project_path = utils.get_hidden_user_dir_path() + "proxy_conv.flb"
-    manager_window.convert_progress_bar.set_text("Converting Project to Use Proxy Media")
+    manager_window.convert_progress_bar.set_text(_("Converting Project to Use Proxy Media"))
 
     persistance.save_project(editorstate.PROJECT(), conv_temp_project_path)
     global load_thread
@@ -609,7 +609,7 @@ def _convert_to_proxy_project():
 def _convert_to_original_media_project():
     editorstate.PROJECT().proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_ORIGINAL_MEDIA
     conv_temp_project_path = utils.get_hidden_user_dir_path() + "proxy_conv.flb"
-    manager_window.convert_progress_bar.set_text("Converting to Use Original Media")
+    manager_window.convert_progress_bar.set_text(_("Converting to Use Original Media"))
 
     persistance.save_project(editorstate.PROJECT(), conv_temp_project_path)
     global load_thread

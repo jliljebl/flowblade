@@ -681,7 +681,7 @@ class EditorWindow:
         # Show window and all of its components
         self.window.show_all()
         
-        # Set Paned positions
+        # Set paned positions
         self.mm_paned.set_position(editorpersistance.prefs.mm_paned_position)
         self.top_paned.set_position(editorpersistance.prefs.top_paned_position)
         self.app_v_paned.set_position(editorpersistance.prefs.app_v_paned_position)
