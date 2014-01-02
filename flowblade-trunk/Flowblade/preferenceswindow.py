@@ -9,9 +9,9 @@ import gui
 import guiutils
 import mltprofiles
 
-PREFERENCES_WIDTH = 550
+PREFERENCES_WIDTH = 630
 PREFERENCES_HEIGHT = 300
-PREFERENCES_LEFT = 290
+PREFERENCES_LEFT = 410
 
 select_thumbnail_dir_callback = None
 select_render_clips_dir_callback = None
@@ -170,7 +170,7 @@ def _view_prefs_panel():
     # Layout
     row1 = guiutils.get_two_column_box(gtk.Label(_("Display splash screen")), display_splash_check, PREFERENCES_LEFT)
     row2 = guiutils.get_two_column_box(gtk.Label(_("Buttons style")), buttons_combo, PREFERENCES_LEFT)
-    row3 = guiutils.get_two_column_box(gtk.Label(_("Icons and color optimized for:")), dark_combo, PREFERENCES_LEFT)
+    row3 = guiutils.get_two_column_box(gtk.Label(_("Icons and color optimized for")), dark_combo, PREFERENCES_LEFT)
     
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)
