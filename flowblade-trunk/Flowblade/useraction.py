@@ -620,8 +620,13 @@ def _display_file_info(media_file):
     frame = clip.get_frame()
     channels = str(frame.get_int("channels"))
     frequency = str(frame.get_int("frequency")) + "Hz"
-    fps = str(clip.get_fps())
-
+    try:
+        num = float(clip.get("meta.media.frame_rate_num")) # from producer_avformat.c
+        den = float(clip.get("meta.media.frame_rate_den")) # from producer_avformat.c
+        fps = str(num/den)
+    except:
+        fps ="N/A"
+    
     dialogs.file_properties_dialog((media_file, img, size, length, vcodec, acodec, channels, frequency, fps))
 
 def remove_unused_media():
