@@ -190,6 +190,8 @@ SYNC_OK_COLOR = (0.18, 0.55, 0.18)
 SYNC_OFF_COLOR = (0.77, 0.20, 0.3)
 SYNC_GONE_COLOR = (0.4, 0.4, 0.4)
 
+PROXY_STRIP_COLOR = (0.40, 0.60, 0.82)
+
 MARK_COLOR = (0.1, 0.1, 0.1)
 
 FRAME_SCALE_COLOR_GRAD = (1, 0.8, 0.8, 0.8, 1)
@@ -1094,7 +1096,7 @@ class TimeLineCanvas:
             # Draw proxy indicator
             if scale_length > FILL_MIN:
                 if (not clip.is_blanck_clip) and proxy_paths.get(clip.path) != None:
-                    cr.set_source_rgb(0.45, 0.77, 0.83)
+                    cr.set_source_rgb(*PROXY_STRIP_COLOR)
                     cr.rectangle(scale_in, y, scale_length, 8)
                     cr.fill()
 
