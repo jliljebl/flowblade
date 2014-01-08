@@ -294,17 +294,23 @@ def about_dialog(parent_window):
     alignment2.set_size_request(450, 370)
 
     license_view = guicomponents.get_gpl3_scroll_widget((450, 370))
-
     alignment3 = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     alignment3.set_padding(6, 24, 12, 12)
     alignment3.add(license_view)
     alignment3.set_size_request(450, 370)
+
+    translations_view = guicomponents.get_translations_scroll_widget((450, 370))
+    alignment4 = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment4.set_padding(6, 24, 12, 12)
+    alignment4.add(translations_view)
+    alignment4.set_size_request(450, 370)
     
     notebook = gtk.Notebook()
     notebook.set_size_request(450 + 10, 370 + 10)
     notebook.append_page(alignment, gtk.Label(_("Application")))
     notebook.append_page(alignment2, gtk.Label(_("Thanks")))
     notebook.append_page(alignment3, gtk.Label(_("License")))
+    notebook.append_page(alignment4, gtk.Label(_("Translations")))
     
     dialog.vbox.pack_start(notebook, True, True, 0)
     dialog.connect('response', _dialog_destroy)
