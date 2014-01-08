@@ -1638,6 +1638,24 @@ def get_gpl3_scroll_widget(size):
     
     return sw
 
+def get_translations_scroll_widget(size):
+    trans_file = open(respaths.TRANSLATIONS_DOC)
+    trans_text = trans_file.read()
+    
+    view = gtk.TextView()
+    view.set_sensitive(False)
+    view.set_pixels_above_lines(2)
+    view.set_left_margin(2)
+    view.set_wrap_mode(gtk.WRAP_WORD)
+    view.get_buffer().set_text(trans_text)
+
+    sw = gtk.ScrolledWindow()
+    sw.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+    sw.add(view)
+    sw.set_size_request(*size)
+    
+    return sw
+    
 def get_track_counts_combo_and_values_list():
     tracks_combo = gtk.combo_box_new_text()
     tracks_combo.append_text(_("5 video, 4 audio"))

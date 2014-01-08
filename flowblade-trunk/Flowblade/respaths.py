@@ -33,6 +33,7 @@ FILTERS_XML_DOC = None
 COMPOSITORS_XML_DOC = None
 HELP_DOC = None
 GPL_3_DOC = None
+TRANSLATIONS_DOC = None
 LOCALE_PATH = None
 ROOT_PARENT = None
 PATTERN_PRODUCER_PATH = None
@@ -42,7 +43,7 @@ def set_paths(root_path):
     global ROOT_PATH, IMAGE_PATH, THUMBNAIL_PATH, PROFILE_PATH,\
     BLACK_IMAGE_PATH, FILTERS_XML_DOC, COMPOSITORS_XML_DOC, \
     WIPE_RESOURCES_PATH, PREFS_PATH, HELP_DOC, LOCALE_PATH, \
-    GPL_3_DOC, ROOT_PARENT, PATTERN_PRODUCER_PATH#, PROXY_PROFILE_PATH
+    GPL_3_DOC, ROOT_PARENT, PATTERN_PRODUCER_PATH, TRANSLATIONS_DOC #, PROXY_PROFILE_PATH
     
     ROOT_PATH = root_path
     IMAGE_PATH = root_path + "/res/img/"
@@ -55,6 +56,7 @@ def set_paths(root_path):
     HELP_DOC = root_path + "/res/help/help.xml"
     LOCALE_PATH = root_path + "/locale/"
     GPL_3_DOC = root_path + "/res/help/gpl3"
+    TRANSLATIONS_DOC = root_path + "/res/help/translations"
     ROOT_PARENT = ROOT_PATH.strip("Flowblade")
     PATTERN_PRODUCER_PATH = root_path + "/res/patternproducer/"
 
