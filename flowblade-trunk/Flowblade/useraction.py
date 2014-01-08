@@ -369,7 +369,7 @@ def add_to_render_queue():
 
     # Launch Render Queue application
     primary_txt = "New Render Item File Added to Queue"
-    secondary_txt = "Select <b>'Render->Batch Render Queue'</b> from menu\nto launch render queue application.\n\nPress <b>'Reload Queue'</b> button to load new item\ninto queue if application already running."
+    secondary_txt = "Select <b>'Render->Batch Render Queue'</b> from menu\nto launch render queue application.\n" #Press <b>'Reload Queue'</b> button to load new item\ninto queue if application already running."
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
 
 # ----------------------------------- media files
