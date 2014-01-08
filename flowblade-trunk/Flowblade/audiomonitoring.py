@@ -28,6 +28,7 @@ import pangocairo
 
 import appconsts
 from cairoarea import CairoDrawableArea
+import editorpersistance
 import editorstate
 import guiutils
 import utils
@@ -196,7 +197,10 @@ class AudioMonitorWindow(gtk.Window):
                 tmp = gain
                 gain = gtk.EventBox()
                 gain.add(tmp)
-                gain.modify_bg(gtk.STATE_NORMAL, gtk.gdk.Color(red=0.8, green=0.8, blue=0.8))
+                bg_color = gtk.gdk.Color(red=0.8, green=0.8, blue=0.8)
+                if editorpersistance.prefs.dark_theme == True:
+                    bg_color = gtk.gdk.Color(red=0.4, green=0.4, blue=0.4)
+                gain.modify_bg(gtk.STATE_NORMAL, bg_color)
             self.gain_controls.append(gain)
             gain_control_area.pack_start(gain, False, False, 0)
 
