@@ -611,6 +611,7 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
                                                                         transition_type_selection_index,
                                                                         None,
                                                                         color_str)
+    print "producer_tractor length:" + str(producer_tractor.get_length())
 
     # Save transition data into global variable to be available at render complete callback
     global transition_render_data
