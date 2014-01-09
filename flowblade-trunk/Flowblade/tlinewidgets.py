@@ -986,7 +986,11 @@ class TimeLineCanvas:
 
             # Draw transition clip image 
             if ((scale_length > FILL_MIN) and hasattr(clip, "rendered_type")):
-                cr.set_source_rgb(1.0, 1.0, 1.0)
+                if not clip.selected:
+                    cr.set_source_rgb(1.0, 1.0, 1.0)
+                else:
+                    cr.set_source_rgb(0.8, 0.8, 1.0)
+
                 cr.rectangle(scale_in + 2.5,
                          y + 2.5, scale_length - 4.0, 
                          track_height - 4.0)
