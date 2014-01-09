@@ -79,7 +79,7 @@ class Player(threading.Thread):
         # Create consumer and set params
         self.consumer = mlt.Consumer(self.profile, "sdl")
         self.consumer.set("real_time", 1)
-        self.consumer.set("rescale", "nearest")
+        self.consumer.set("rescale", "bicubic") # MLT options "nearest", "bilinear", "bicubic", "hyper"
         self.consumer.set("resize", 1)
         self.consumer.set("progressive", 1)
 
