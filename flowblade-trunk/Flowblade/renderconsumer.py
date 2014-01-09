@@ -253,6 +253,7 @@ def get_render_consumer_for_text_buffer(file_path, profile, buf):
 def get_mlt_render_consumer(file_path, profile, args_vals_list):
     consumer = mlt.Consumer(profile, "avformat", str(file_path))
     consumer.set("real_time", -1)
+    consumer.set("rescale", "bicubic")
 
     args_msg = ""
     for arg_val in args_vals_list:
