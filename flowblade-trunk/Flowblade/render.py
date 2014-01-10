@@ -435,7 +435,6 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
         write_file = folder + "/"+ file_name + fb_widgets.extension_label.get_text()
 
         if os.path.exists(write_file):
-            #dialog.destroy()
             primary_txt = _("A File with given path exists!")
             secondary_txt = _("It is not allowed to render Motion Files with same paths as existing files.\nSelect another name for file.") 
             dialogutils.warning_message(primary_txt, secondary_txt, dialog)
@@ -475,18 +474,22 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
         # start and end frames
         start_frame = 0
         end_frame = motion_producer.get_length() - 1
+        wait_for_producer_stop = True
         if range_selection == 1:
             start_frame = int(float(media_file.mark_in) * (1.0 / speed))
-            end_frame = int(float(media_file.mark_out + 1) * (1.0 / speed)) + int(1.0 / speed) + 40 # I'm unable to get this frame perfect.
+            end_frame = int(float(media_file.mark_out + 1) * (1.0 / speed)) + int(1.0 / speed) #+ 40 # I'm unable to get this frame perfect.
                                                                                                     # +40 is to make sure rendering stops after mark out.
             if end_frame > motion_producer.get_length() - 1:
                 end_frame = motion_producer.get_length() - 1
+            
+            wait_for_producer_stop = False # consumer wont stop automatically and needs to stopped explicitly
 
         # Launch render
         global motion_renderer, motion_progress_update
         motion_renderer = renderconsumer.FileRenderPlayer(write_file, seq.tractor, consumer, start_frame, end_frame)
+        motion_renderer.wait_for_producer_end_stop = wait_for_producer_stop
         motion_renderer.start()
-        
+
         title = _("Rendering Motion Clip")
         text = "<b>Motion Clip File: </b>" + write_file
         progress_bar = gtk.ProgressBar()
@@ -532,6 +535,7 @@ def render_single_track_transition_clip(transition_producer, encoding_option_ind
     end_frame = transition_producer.get_length() - 1
         
     # Launch render
+    # TODO: fix naming this isn't motion renderer
     global motion_renderer, motion_progress_update
     motion_renderer = renderconsumer.FileRenderPlayer(write_file, transition_producer, consumer, start_frame, end_frame)
     motion_renderer.start()

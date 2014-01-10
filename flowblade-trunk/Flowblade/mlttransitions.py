@@ -411,6 +411,7 @@ def get_rendered_transition_tractor(current_sequence,
 
     # we'll set in and out points for images and pattern producers.
     if not(transition_type == RENDERED_FADE_IN or transition_type == RENDERED_FADE_OUT): # fades to not use to_clip or some other data used here
+        print "wwwwww"
         if from_clip.media_type == appconsts.IMAGE or from_clip.media_type == appconsts.PATTERN_PRODUCER:
             length = action_from_out - action_from_in
             from_clip.clip_in = 0
@@ -425,6 +426,10 @@ def get_rendered_transition_tractor(current_sequence,
         if from_clip.media_type == appconsts.IMAGE or from_clip.media_type == appconsts.PATTERN_PRODUCER:
             from_clip.clip_in = 0
             from_clip.clip_out = length
+            
+        print from_clip.clip_in
+        print from_clip.clip_out
+        print "length:", length
 
     # Add clips to tracks and create keyframe string to contron mixing
     if transition_type == RENDERED_DISSOLVE or transition_type == RENDERED_WIPE:
@@ -457,6 +462,8 @@ def get_rendered_transition_tractor(current_sequence,
         else: # transition_type ==  RENDERED_FADE_OUT
             track1.insert(from_clip, 0, orig_from.clip_out - length, orig_from.clip_out)
             kf_str = "0=0/0:100%x100%:100.0;"+ str(length) + "=0/0:100%x100%:0.0"
+        print kf_str
+        print (tractor.get_length() - 1)
 
     # Create transition
     transition = mlt.Transition(current_sequence.profile, "region")
