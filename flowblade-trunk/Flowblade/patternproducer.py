@@ -155,6 +155,10 @@ class AbstractBinClip:
         self.mark_in = -1
         self.mark_out = -1
 
+        self.has_proxy_file = False
+        self.is_proxy_file = False
+        self.second_file_path = None
+        
         self.create_icon()
 
     def create_icon(self):

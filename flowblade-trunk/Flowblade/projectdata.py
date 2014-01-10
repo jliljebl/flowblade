@@ -166,8 +166,14 @@ class Project:
     def get_current_proxy_paths(self):
         paths_dict = {}
         for idkey, media_file in self.media_files.items():
-            if media_file.is_proxy_file:
-                paths_dict[media_file.path] = media_file
+            try:
+                if media_file.is_proxy_file:
+                    paths_dict[media_file.path] = media_file
+            except AttributeError: # Pattern producers or old media files do not have these, add values
+                self.has_proxy_file = False
+                self.is_proxy_file = False
+                self.second_file_path = None
+
         return paths_dict
 
     def add_unnamed_bin(self):

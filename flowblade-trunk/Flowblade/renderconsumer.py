@@ -339,6 +339,7 @@ class FileRenderPlayer(threading.Thread):
         self.start_frame = start_frame
         self.stop_frame = stop_frame
         self.stopped = False
+        self.wait_for_producer_end_stop = True
 
         print "FileRenderPlayer started, start frame: " + str(self.start_frame) + ", stop frame: " + str(self.stop_frame)
 
@@ -347,15 +348,36 @@ class FileRenderPlayer(threading.Thread):
     def run(self):
         self.running = True
         self.connect_and_start()
-    
+
         while self.running: # set false at shutdown() for abort
             if self.producer.frame() >= self.stop_frame:
-                self.consumer.stop()
-                self.producer.set_speed(0)
+                print "1"
+                # This method of stopping makes sure that whole producer is rendered and written to disk
+                if self.wait_for_producer_end_stop:
+                    print "kkk"
+                    while self.producer.get_speed() > 0:
+                        time.sleep(0.2)
+                    while not self.consumer.is_stopped():
+                        time.sleep(0.2)
+                # This method of stopping forces producer stop after some frame
+                # and waits for consumer to reach frame calling consumer stop so that file has time
+                # encode all 
+                else:
+                    print "ee"
+                    print self.consumer.position()
+                    self.producer.set_speed(0)
+                    last_frame = self.producer.frame()
+                    print last_frame
+                    while self.consumer.position() + 1 < last_frame:
+                        print self.consumer.position(), last_frame
+                        time.sleep(0.2)
+                    #time.sleep(4.0)
+                    self.consumer.stop()
+                                        
                 self.running = False
 
             time.sleep(0.1)
-            
+
         print "FileRenderPlayer stopped, producer frame: " + str(self.producer.frame())
 
         self.stopped = True
