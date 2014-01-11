@@ -351,27 +351,20 @@ class FileRenderPlayer(threading.Thread):
 
         while self.running: # set false at shutdown() for abort
             if self.producer.frame() >= self.stop_frame:
-                print "1"
                 # This method of stopping makes sure that whole producer is rendered and written to disk
                 if self.wait_for_producer_end_stop:
-                    print "kkk"
                     while self.producer.get_speed() > 0:
                         time.sleep(0.2)
                     while not self.consumer.is_stopped():
                         time.sleep(0.2)
-                # This method of stopping forces producer stop after some frame
-                # and waits for consumer to reach frame calling consumer stop so that file has time
-                # encode all 
+                # This method of stopping stops producer
+                # and waits for consumer to reach that frame.
                 else:
-                    print "ee"
-                    print self.consumer.position()
                     self.producer.set_speed(0)
                     last_frame = self.producer.frame()
-                    print last_frame
                     while self.consumer.position() + 1 < last_frame:
-                        print self.consumer.position(), last_frame
                         time.sleep(0.2)
-                    #time.sleep(4.0)
+
                     self.consumer.stop()
                                         
                 self.running = False
@@ -388,7 +381,6 @@ class FileRenderPlayer(threading.Thread):
         self.running = False
 
     def connect_and_start(self):
-        #self.consumer.purge()
         self.consumer.connect(self.producer)
         self.producer.set_speed(0)
         self.producer.seek(self.start_frame)
