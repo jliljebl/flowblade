@@ -80,11 +80,12 @@ class QueueRunnerThread(threading.Thread):
                                                               render_item.args_vals_list)
 
             # Get render range
-            start_frame, end_frame = get_render_range(render_item)
+            start_frame, end_frame, wait_for_stop_render = get_render_range(render_item)
             
             # Create and launch render thread
             global render_thread 
             render_thread = renderconsumer.FileRenderPlayer(None, producer, consumer, start_frame, end_frame) # None == file name not needed this time when using FileRenderPlayer because callsite keeps track of things
+            render_thread.wait_for_producer_end_stop = wait_for_stop_render
             render_thread.start()
             
             # Set render start time and item state
@@ -109,7 +110,7 @@ class QueueRunnerThread(threading.Thread):
                 batch_window.update_render_progress(render_fraction, items, render_item.get_display_name(), current_render_time)
                 gtk.gdk.threads_leave()
                 
-                if render_thread.producer.frame() >= end_frame: # Rendering has reached end
+                if render_thread.running == False: # Rendering has reached end
                     self.thread_running = False
                     
                     gtk.gdk.threads_enter()
@@ -495,15 +496,18 @@ class RenderData:
 def get_render_range(render_item):
     if render_item.mark_in < 0: # no range defined
         start_frame = 0
-        end_frame = render_item.length - 1 # -1 = first frame 0
+        end_frame = render_item.length - 1 #
+        wait_for_stop_render = True
     elif render_item.mark_out < 0: # only start defined
         start_frame = render_item.mark_in
-        end_frame = render_item.length - 1 # -1 = first frame 0
+        end_frame = render_item.length - 1 #
+        wait_for_stop_render = True
     else: # both start and end defined
         start_frame = render_item.mark_in
         end_frame = render_item.mark_out
+        wait_for_stop_render = False
     
-    return (start_frame, end_frame)
+    return (start_frame, end_frame, wait_for_stop_render)
 
 
 # -------------------------------------------------------------------- gui
@@ -892,7 +896,7 @@ def show_render_properties_panel(render_item):
 
     user_args = str(render_item.render_data.user_args)
 
-    start_frame, end_frame = get_render_range(render_item)
+    start_frame, end_frame, wait_for_stop_render = get_render_range(render_item)
     start_str = utils.get_tc_string_with_fps(start_frame, render_item.render_data.fps)
     end_str = utils.get_tc_string_with_fps(end_frame, render_item.render_data.fps)
     

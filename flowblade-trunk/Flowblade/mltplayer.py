@@ -36,6 +36,7 @@ import utils
 import updater
 
 TICKER_DELAY = 0.25
+RENDER_TICKER_DELAY = 0.05
 
 class Player(threading.Thread):
     
@@ -53,12 +54,12 @@ class Player(threading.Thread):
         print "Player initialized with profile: ", self.profile.description()
         
         # Create black clip to display in the beginning 
-        black_path = respaths.BLACK_IMAGE_PATH
-        self.black_clip = mlt.Producer(self.profile, black_path)
+        #black_path = respaths.BLACK_IMAGE_PATH
+        #self.black_clip = mlt.Producer(self.profile, black_path)
         
         # black_clip is displayed in clip monitor which needs in and out
-        self.black_clip.mark_in = -1
-        self.black_clip.mark_out = -1
+        #self.black_clip.mark_in = -1
+        #self.black_clip.mark_out = -1
         
         # Trim loop preview
         self.loop_start = -1
@@ -71,7 +72,8 @@ class Player(threading.Thread):
         self.render_start_frame = -1
         self.xml_render = False
         self.render_callbacks = None
-    
+        self.wait_for_producer_end_stop = True
+
     def create_sdl_consumer(self):
         """
         Creates consumer with sdl output to a gtk+ widget.
@@ -259,14 +261,7 @@ class Player(threading.Thread):
 
         # Stop rendering if last frame reached.
         if self.is_rendering == True and current_frame >= self.render_stop_frame:
-            self.consumer.stop()
-            if self.consumer.is_stopped() == False:
-                while self.consumer.is_stopped() == False:
-                    pass
-            self.producer.set_speed(0)
-            gtk.gdk.threads_enter()
             self.stop_rendering()
-            gtk.gdk.threads_leave()
             return
 
         # If we're currently rendering, set progress bar and exit event handler.
@@ -326,36 +321,67 @@ class Player(threading.Thread):
         # callbacks.save_render_start_time()
         # callbacks.exit_render_gui()
         # callbacks.maybe_open_rendered_file_in_bin()
-        
         self.render_callbacks = callbacks
 
     def start_rendering(self, render_consumer, start_frame=0, stop_frame=-1):
         if stop_frame == -1:
             stop_frame = self.producer.get_length() - 1
+        
+        if stop_frame >= self.producer.get_length() - 1:
+            self.wait_for_producer_end_stop = True
+        else:
+            self.wait_for_producer_end_stop = False
+                
         print "start_rendering(), start frame :" + str(start_frame) + ", stop_frame: " + str(stop_frame)
         self.ticker.stop_ticker()
         self.consumer.stop()
         self.producer.set_speed(0)
         self.producer.seek(start_frame)
+        time.sleep(0.5) # We need to be at correct frame before starting rendering or firts frame may get dropped
         self.render_start_frame = start_frame
         self.render_stop_frame = stop_frame
         self.consumer = render_consumer
         self.consumer.connect(self.producer)
-        self.producer.set_speed(1)
         self.consumer.start()
+        self.producer.set_speed(1)
         self.is_rendering = True
         self.render_callbacks.save_render_start_time()
-        self.ticker.start_ticker()
+        self.ticker.start_ticker(RENDER_TICKER_DELAY)
 
     def stop_rendering(self):
         print "stop_rendering, producer frame: " + str(self.producer.frame())
+        # Stop render
+        # This method of stopping makes sure that whole producer is rendered and written to disk
+        if self.wait_for_producer_end_stop:
+            while self.producer.get_speed() > 0:
+                time.sleep(0.2)
+            while not self.consumer.is_stopped():
+                time.sleep(0.2)
+        # This method of stopping stops producer
+        # and waits for consumer to reach that frame.
+        else:
+            self.producer.set_speed(0)
+            last_frame = self.producer.frame()
+            # Make sure consumer renders all frames before exiting
+            while self.consumer.position() + 1 < last_frame:
+                time.sleep(0.2)
+            self.consumer.stop()
+        
+        # Exit render state
         self.is_rendering = False
         self.ticker.stop_ticker()
         self.producer.set_speed(0)
+
+        # Reconnect monitor consumer
         self.consumer = self.sdl_consumer
+        gtk.gdk.threads_enter()
         self.connect_and_start()
+        gtk.gdk.threads_leave()
         self.seek_frame(0)
+        
         if self.xml_render == False:
+            # Do GUI updates
+            gtk.gdk.threads_enter()
             self.render_callbacks.exit_render_gui()
             self.render_callbacks.maybe_open_rendered_file_in_bin()
             gtk.gdk.threads_leave()

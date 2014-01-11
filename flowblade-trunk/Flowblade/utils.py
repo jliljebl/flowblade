@@ -47,11 +47,13 @@ class Ticker:
         self.running = False
         self.exited = False
     
-    def start_ticker(self):
+    def start_ticker(self, delay=None):
         self.ev = threading.Event()
+        if delay == None: # If no delay specified, use default delay set at creation time
+            delay = self.delay
         self.thread = threading.Thread(target=self.runner,  
                                        args=(self.ev, 
-                                       self.delay, 
+                                       delay, 
                                        self.action))
         self.running = True
         self.thread.start()

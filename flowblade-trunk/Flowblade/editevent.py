@@ -752,7 +752,7 @@ def _clip_color(data):
          clip.color = (0.2, 0.2, 0.9)
     elif clip_color == "orange":
         clip.color =(0.929, 0.545, 0.376)
-    elif clip_color == "brown":        
+    elif clip_color == "brown":
         clip.color = (0.521, 0.352, 0.317)
     elif clip_color == "olive":
         clip.color = (0.5, 0.55, 0.5)
