@@ -186,6 +186,8 @@ BLANK_CLIP_COLOR_GRAD_L = (0, 0.6, 0.6, 0.65, 1)
 BLANK_CLIP_COLOR_SELECTED_GRAD = (1, 0.7, 0.7, 0.75, 1)
 BLANK_CLIP_COLOR_SELECTED_GRAD_L = (0, 0.7, 0.7, 0.75, 1)
 
+SINGLE_TRACK_TRANSITION_SELECTED = (0.8, 0.8, 1.0)
+
 SYNC_OK_COLOR = (0.18, 0.55, 0.18)
 SYNC_OFF_COLOR = (0.77, 0.20, 0.3)
 SYNC_GONE_COLOR = (0.4, 0.4, 0.4)
@@ -989,7 +991,7 @@ class TimeLineCanvas:
                 if not clip.selected:
                     cr.set_source_rgb(1.0, 1.0, 1.0)
                 else:
-                    cr.set_source_rgb(0.8, 0.8, 1.0)
+                    cr.set_source_rgb(*SINGLE_TRACK_TRANSITION_SELECTED)
 
                 cr.rectangle(scale_in + 2.5,
                          y + 2.5, scale_length - 4.0, 
@@ -1011,7 +1013,10 @@ class TimeLineCanvas:
                 elif clip.rendered_type == appconsts.RENDERED_WIPE:
                     cr.rectangle(scale_in + 2.0, y + 2.0, scale_length - 4.0, track_height - 4.0)
                     cr.fill()
-                    cr.set_source_rgb(1, 1, 1)
+                    if not clip.selected:
+                        cr.set_source_rgb(1.0, 1.0, 1.0)
+                    else:
+                        cr.set_source_rgb(*SINGLE_TRACK_TRANSITION_SELECTED)
                     cr.move_to(right_half, y + 3.0 + 2.0)
                     cr.line_to(right - 2.0, down_half)
                     cr.line_to(right_half, down - 2.0)

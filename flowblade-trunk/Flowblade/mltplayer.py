@@ -372,7 +372,7 @@ class Player(threading.Thread):
         self.ticker.stop_ticker()
         self.producer.set_speed(0)
 
-        # Reconnect monitor consumer
+        # Enter monitor playback state
         self.consumer = self.sdl_consumer
         gtk.gdk.threads_enter()
         self.connect_and_start()
