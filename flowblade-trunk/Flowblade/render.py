@@ -549,8 +549,6 @@ def render_single_track_transition_clip(transition_producer, encoding_option_ind
     motion_progress_update.start()
 
 def _transition_render_stop(dialog, response_id):
-    dialog.destroy()
-
     global motion_renderer, motion_progress_update
     motion_renderer.running = False
     motion_progress_update.running = False
@@ -559,3 +557,4 @@ def _transition_render_stop(dialog, response_id):
     
     transition_render_done_callback(motion_renderer.file_name)
 
+    dialogutils.delay_destroy_window(dialog, 1.0)
