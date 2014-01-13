@@ -221,7 +221,7 @@ def copy_project(render_item, file_name):
         
 # --------------------------------------------------------------- app thread and data objects
 def launch_batch_rendering():
-    subprocess.Popen([sys.executable, respaths.ROOT_PARENT + "flowbladebatch"])
+    subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladebatch"])
 
 def test_and_write_pid(write_pid=True):
     return utils.single_instance_pid_file_test_and_write(_get_pid_file_path(), write_pid)
@@ -229,7 +229,6 @@ def test_and_write_pid(write_pid=True):
 def main(root_path, force_launch=False):
     # Allow only on instance to run
     can_run = test_and_write_pid()
-
     init_dirs_if_needed()
 
     # Set paths.
@@ -250,7 +249,7 @@ def main(root_path, force_launch=False):
     if can_run == False:
         _show_single_instance_info()
         return
-        
+    
     repo = mlt.Factory().init()
     
     # Check for codecs and formats on the system
