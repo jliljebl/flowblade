@@ -131,13 +131,6 @@ def main(root_path):
     if not os.path.exists(user_dir + BATCH_DIR):
         os.mkdir(user_dir + BATCH_DIR)
 
-    """
-    # Allow only on instance to run
-    pid_file_path = user_dir + PID_FILE
-    # Exit and info dialog launched below if can_run is False
-    can_run = utils.single_instance_pid_file_test_and_write(pid_file_path)
-    """
-
     # Set paths.
     respaths.set_paths(root_path)
 
@@ -156,11 +149,6 @@ def main(root_path):
 
     # Init gtk threads
     gtk.gdk.threads_init()
-
-    # Accept only 1 running instance
-    #if can_run == False:
-    #    _not_first_instance_exit()
-    #    return
 
     # Adjust gui parameters for smaller screens
     scr_w = gtk.gdk.screen_width()

@@ -517,7 +517,6 @@ class EditRect:
     position, width and height of rectangle geometry.
     """
     def __init__(self, x, y, w, h):
-        #self.editable = True
         self.edit_points = {}
         self.x = x
         self.y = y
