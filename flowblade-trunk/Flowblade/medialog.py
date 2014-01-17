@@ -67,7 +67,7 @@ class MediaLogEvent:
         return date_str
 
     
-# ----------------------------------------------------------- 
+# ----------------------------------------------------------- gui events
 def media_log_filtering_changed():
     widgets.media_log_view.fill_data_model()
 
