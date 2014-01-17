@@ -146,8 +146,9 @@ class AddMediaFilesThread(threading.Thread):
                     PROJECT().add_media_file(new_file)
                     succes_new_file = new_file
                 except projectdata.ProducerNotValidError as err:
+                    print err.__str__()
                     dialogs.not_valid_producer_dialog(err.value, gui.editor_window.window)
-                    
+
         if succes_new_file != None:
             editorpersistance.prefs.last_opened_media_dir = os.path.dirname(succes_new_file)
             editorpersistance.save()
@@ -881,40 +882,7 @@ def _change_track_count_dialog_callback(dialog, response_id, tracks_combo):
     PROJECT().sequences.pop(cur_seq_index + 1)
     app.change_current_sequence(cur_seq_index)
 
-# ----------------------------------------------------------- media log
-def media_log_filtering_changed():
-    gui.editor_window.media_log_events_list_view.fill_data_model()
-
-def media_log_star_button_pressed():
-    selected = gui.editor_window.media_log_events_list_view.get_selected_rows_list()
-    auto_log_mode_combo, star_check, star_not_active_check = gui.editor_window.media_log_filtering_widgets
-    event_type = auto_log_mode_combo.get_active() - 1 # -1 produces values corresponding to media log event types in projectdata.py
-    log_events = PROJECT().get_filtered_media_log_events(event_type, 
-                                                         star_check.get_active(),
-                                                         star_not_active_check.get_active())
-    for row in selected:
-        index = max(row) # these are tuple, max to extract only value
-        log_events[index].starred = not log_events[index].starred
-
-    gui.editor_window.media_log_events_list_view.fill_data_model()
-
-
 # --------------------------------------------------------- pop-up menus
-"""
-def media_list_button_press(widget, event):
-    if event.button == 3:
-        row, column_title = _select_treeview_on_pos_and_return_row_and_column_title(event, gui.media_list_view.treeview)
-        try:
-            media_file_id = current_bin().file_ids[row]
-        except:# right clicking on empty bin fails on previous line
-            return False
-        guicomponents.diplay_media_file_popup_menu(PROJECT().media_files[media_file_id],
-                                                   _media_file_menu_item_selected,
-                                                   event)
-        return True
-            
-    return False
-"""    
 def media_file_menu_item_selected(widget, data):
     item_id, media_file, event = data
     if item_id == "File Properties":
