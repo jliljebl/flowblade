@@ -44,9 +44,6 @@ import respaths
 import utils
 
 
-import preferenceswindow
-
-
 def new_project_dialog(callback):
     default_profile_index = mltprofiles.get_default_profile_index()
     default_profile = mltprofiles.get_default_profile()

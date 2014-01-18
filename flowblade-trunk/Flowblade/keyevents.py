@@ -42,7 +42,7 @@ import medialog
 import monitorevent
 import titler
 import updater
-import useraction
+import projectaction
 
 # ------------------------------------- keyboard events
 def key_down(widget, event):
@@ -109,7 +109,6 @@ def key_down(widget, event):
     """
     #debug
     if event.keyval == gtk.keysyms.F12:
-        useraction.launch_batch_rendering()
         return True
     """
     
@@ -427,21 +426,21 @@ def _handle_clip_key_event(event):
 def _handle_delete():
     # Delete media file
     if gui.media_list_view.widget.get_focus_child() != None:
-        useraction.delete_media_files()
+        projectaction.delete_media_files()
         return True
 
     # Delete bin
     if gui.bin_list_view.get_focus_child() != None:
         if gui.bin_list_view.text_rend_1.get_property("editing") == True:
             return False
-        useraction.delete_selected_bin()
+        projectaction.delete_selected_bin()
         return True
 
     # Delete sequence
     if gui.sequence_list_view.get_focus_child() != None:
         if gui.sequence_list_view.text_rend_1.get_property("editing") == True:
             return False
-        useraction.delete_selected_sequence()
+        projectaction.delete_selected_sequence()
         return True
 
     # Delete effect

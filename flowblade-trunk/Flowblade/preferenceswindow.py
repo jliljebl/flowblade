@@ -31,14 +31,14 @@ PREFERENCES_WIDTH = 630
 PREFERENCES_HEIGHT = 300
 PREFERENCES_LEFT = 410
 
-select_thumbnail_dir_callback = None
-select_render_clips_dir_callback = None
+select_thumbnail_dir_callback = None # app.py sets at start up
+select_render_clips_dir_callback = None # app.py sets at start up
 
-def preferences_dialog(select_thumbnail_cb, select_render_clips_cb):
+def preferences_dialog():
 
-    global select_thumbnail_dir_callback, select_render_clips_dir_callback
-    select_thumbnail_dir_callback = select_thumbnail_cb
-    select_render_clips_dir_callback = select_render_clips_cb
+    #global select_thumbnail_dir_callback, select_render_clips_dir_callback
+    #select_thumbnail_dir_callback = select_thumbnail_cb
+    #select_render_clips_dir_callback = select_render_clips_cb
 
     dialog = gtk.Dialog(_("Editor Preferences"), None,
                     gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,

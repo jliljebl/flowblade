@@ -373,6 +373,7 @@ def add_to_render_queue():
     secondary_txt = "Select <b>'Render->Batch Render Queue'</b> from menu\nto launch render queue application.\n" #Press <b>'Reload Queue'</b> button to load new item\ninto queue if application already running."
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
 
+
 # ----------------------------------- media files
 def add_media_files(this_call_is_retry=False):
     """
@@ -564,7 +565,6 @@ def delete_media_files(force_delete=False):
     gui.media_list_view.fill_data_model()
 
     _enable_save()
-
 
 def _proxy_delete_warning_callback(dialog, response_id):
     dialog.destroy()
@@ -912,7 +912,3 @@ def _select_treeview_on_pos_and_return_row_and_column_title(event, treeview):
 
 
 
-# We need to do this on app start-up
-# we'll get circular imports with useraction->mltplayer->render->useraction
-# if just try to import so we'll just put this callback func in
-render.open_media_file_callback = open_rendered_file

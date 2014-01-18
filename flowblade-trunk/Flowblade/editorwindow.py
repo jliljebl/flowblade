@@ -57,6 +57,8 @@ import rendergui
 import panels
 import patternproducer
 from positionbar import PositionBar
+import preferenceswindow
+import projectaction
 import projectinfogui
 import proxyediting
 import syncsplitevent
@@ -64,7 +66,6 @@ import test
 import titler
 import tlinewidgets
 import trimmodes
-import useraction
 import updater
 import utils
 import vieweditor
@@ -147,14 +148,14 @@ class EditorWindow:
         # Menubar build resources
         menu_actions = [
             ('FileMenu', None, _('_File')),
-            ('New', None, _('_New...'), '<control>N', None, lambda a:useraction.new_project()),
-            ('Open', None, _('_Open...'), '<control>O', None, lambda a:useraction.load_project()),
+            ('New', None, _('_New...'), '<control>N', None, lambda a:projectaction.new_project()),
+            ('Open', None, _('_Open...'), '<control>O', None, lambda a:projectaction.load_project()),
             ('OpenRecent', None, _('Open Recent')),
-            ('Save', None, _('_Save'), '<control>S', None, lambda a:useraction.save_project()),
-            ('Save As', None, _('_Save As...'), None, None, lambda a:useraction.save_project_as()),
+            ('Save', None, _('_Save'), '<control>S', None, lambda a:projectaction.save_project()),
+            ('Save As', None, _('_Save As...'), None, None, lambda a:projectaction.save_project_as()),
             ('ExportMenu', None, _('Export')),
             ('ExportMeltXML', None, _('melt XML'), None, None, lambda a:exporting.MELT_XML_export()),
-            ('Close', None, _('_Close'), None, None, lambda a:useraction.close_project()),
+            ('Close', None, _('_Close'), None, None, lambda a:projectaction.close_project()),
             ('Quit', None, _('_Quit'), '<control>Q', None, lambda a:app.shutdown()),
             ('EditMenu', None, _('_Edit')),
             ('Undo', None, _('_Undo'), '<control>Z', None, editevent.do_undo),
@@ -174,27 +175,27 @@ class EditorWindow:
             ('ClearFilters', None, _('Clear Filters'), None, None, lambda a:editevent.clear_filters()),
             ('ConsolidateSelectedBlanks', None, _('Consolidate Selected Blanks'), None, None, lambda a:editevent.consolidate_selected_blanks()),
             ('ConsolidateAllBlanks', None, _('Consolidate All Blanks'), None, None, lambda a:editevent.consolidate_all_blanks()),
-            ('ChangeSequenceTracks', None, _('Change Sequence Tracks Count...'), None, None, lambda a:useraction.change_sequence_track_count()),
+            ('ChangeSequenceTracks', None, _('Change Sequence Tracks Count...'), None, None, lambda a:projectaction.change_sequence_track_count()),
             ('Watermark', None, _('Watermark...'), None, None, lambda a:menuactions.edit_watermark()),
             ('ProfilesManager', None, _('Profiles Manager'), None, None, lambda a:menuactions.profiles_manager()),
-            ('Preferences', None, _('Preferences'), None, None, lambda a:menuactions.display_preferences()),
+            ('Preferences', None, _('Preferences'), None, None, lambda a:preferenceswindow.preferences_dialog()),
             ('ViewMenu', None, _('View')),
             ('ProjectMenu', None, _('Project')),
-            ('AddMediaClip', None, _('Add Media Clip...'), None, None, lambda a: useraction.add_media_files()),
-            ('AddImageSequence', None, _('Add Image Sequence...'), None, None, lambda a:useraction.add_image_sequence()),
+            ('AddMediaClip', None, _('Add Media Clip...'), None, None, lambda a: projectaction.add_media_files()),
+            ('AddImageSequence', None, _('Add Image Sequence...'), None, None, lambda a:projectaction.add_image_sequence()),
             ('CreateColorClip', None, _('Create Color Clip...'), None, None, lambda a:patternproducer.create_color_clip()),
             ('PatternProducersMenu', None, _('Create Pattern Producer')),
             ('CreateNoiseClip', None, _('Noise'), None, None, lambda a:patternproducer.create_noise_clip()),
             ('CreateBarsClip', None, _('EBU Bars'), None, None, lambda a:patternproducer.create_bars_clip()),
             ('LogClipRange', None, _('Log Marked Clip Range'), '<control>L', None, lambda a:medialog.log_range_clicked()),
             ('RecreateMediaIcons', None, _('Recreate Media Icons...'), None, None, lambda a:menuactions.recreate_media_file_icons()),
-            ('RemoveUnusedMedia', None, _('Remove Unused Media...'), None, None, lambda a:useraction.remove_unused_media()),
+            ('RemoveUnusedMedia', None, _('Remove Unused Media...'), None, None, lambda a:projectaction.remove_unused_media()),
             ('ProxyManager', None, _('Proxy Manager'), None, None, lambda a:proxyediting.show_proxy_manager_dialog()),
             ('ProjectInfo', None, _('Project Info'), None, None, lambda a:menuactions.show_project_info()),
             ('RenderMenu', None, _('Render')),
-            ('AddToQueue', None, _('Add To Batch Render Queue...'), None, None, lambda a:useraction.add_to_render_queue()),
+            ('AddToQueue', None, _('Add To Batch Render Queue...'), None, None, lambda a:projectaction.add_to_render_queue()),
             ('BatchRender', None, _('Batch Render Queue'), None, None, lambda a:batchrendering.launch_batch_rendering()),
-            ('Render', None, _('Render Timeline'), None, None, lambda a:useraction.do_rendering()),
+            ('Render', None, _('Render Timeline'), None, None, lambda a:projectaction.do_rendering()),
             ('ToolsMenu', None, _('Tools')),
             ('Titler', None, _('Titler'), None, None, lambda a:titler.show_titler()),
             ('AudioMix', None, _('Audio Mixer'), None, None, lambda a:audiomonitoring.show_audio_monitor()),
@@ -311,7 +312,7 @@ class EditorWindow:
         self.accel_group = accel_group
 
         # Add recent projects to menu
-        editorpersistance.fill_recents_menu_widget(ui.get_widget('/MenuBar/FileMenu/OpenRecent'), useraction.open_recent_project)
+        editorpersistance.fill_recents_menu_widget(ui.get_widget('/MenuBar/FileMenu/OpenRecent'), projectaction.open_recent_project)
 
         windowviewmenu.init_view_menu(ui.get_widget('/MenuBar/ViewMenu'))
 
@@ -321,17 +322,17 @@ class EditorWindow:
 
         # Media manager
         self.bin_list_view = guicomponents.BinListView(
-                                        useraction.bin_selection_changed, 
-                                        useraction.bin_name_edited)
-        dnd.connect_bin_tree_view(self.bin_list_view.treeview, useraction.move_files_to_bin)
+                                        projectaction.bin_selection_changed, 
+                                        projectaction.bin_name_edited)
+        dnd.connect_bin_tree_view(self.bin_list_view.treeview, projectaction.move_files_to_bin)
         self.bin_list_view.set_property("can-focus",  True)
         bins_panel = panels.get_bins_panel(self.bin_list_view,
-                                           lambda w,e: useraction.add_new_bin(),
-                                           lambda w,e: useraction.delete_selected_bin())
+                                           lambda w,e: projectaction.add_new_bin(),
+                                           lambda w,e: projectaction.delete_selected_bin())
         bins_panel.set_size_request(MEDIA_MANAGER_WIDTH, BINS_HEIGHT)
 
 
-        self.media_list_view = guicomponents.MediaPanel(useraction.media_file_menu_item_selected,
+        self.media_list_view = guicomponents.MediaPanel(projectaction.media_file_menu_item_selected,
                                                         updater.set_and_display_monitor_media_file)
         media_scroll_window = gtk.ScrolledWindow()
         media_scroll_window.add_with_viewport(self.media_list_view.widget)
@@ -342,8 +343,8 @@ class EditorWindow:
         media_panel = panels.get_media_files_panel(
                                 media_scroll_window,
                                 #self.media_list_view,
-                                lambda w,e: useraction.add_media_files(), 
-                                lambda w,e: useraction.delete_media_files(),
+                                lambda w,e: projectaction.add_media_files(), 
+                                lambda w,e: projectaction.delete_media_files(),
                                 lambda a: self.media_list_view.columns_changed(a),
                                 lambda w,e: proxyediting.create_proxy_files_pressed())
 
@@ -427,8 +428,8 @@ class EditorWindow:
             render_hbox.pack_start(gtk.Label(" "), True, True, 0)
         else: # all is good
             render_panel_right = rendergui.get_render_panel_right(render.widgets,
-                                                                  lambda w,e: useraction.do_rendering(),
-                                                                  lambda w,e: useraction.add_to_render_queue())
+                                                                  lambda w,e: projectaction.do_rendering(),
+                                                                  lambda w,e: projectaction.add_to_render_queue())
             render_hbox = gtk.HBox(True, 5)
             render_hbox.pack_start(render_panel_left, True, True, 0)
             render_hbox.pack_start(render_panel_right, True, True, 0)
@@ -451,12 +452,12 @@ class EditorWindow:
 
         # Sequence list
         self.sequence_list_view = guicomponents.SequenceListView(
-                                        useraction.sequence_name_edited)
+                                        projectaction.sequence_name_edited)
         seq_panel = panels.get_sequences_panel(
                              self.sequence_list_view,
-                             lambda w,e: useraction.change_edit_sequence(),
-                             lambda w,e: useraction.add_new_sequence(), 
-                             lambda w,e: useraction.delete_selected_sequence())
+                             lambda w,e: projectaction.change_edit_sequence(),
+                             lambda w,e: projectaction.add_new_sequence(), 
+                             lambda w,e: projectaction.delete_selected_sequence())
 
         # Project info
         project_info_panel = projectinfogui.get_project_info_panel()

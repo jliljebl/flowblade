@@ -43,13 +43,10 @@ import mltfilters
 import mlttransitions
 import panels
 import patternproducer
-import preferenceswindow
 import profilesmanager
-import projectdata
 import render
 import renderconsumer
 import respaths
-import useraction
 import utils
 
 profile_manager_dialog = None
@@ -102,7 +99,7 @@ class RecreateIconsThread(threading.Thread):
         gtk.gdk.threads_enter()
         gui.media_list_view.fill_data_model()
         gui.bin_list_view.fill_data_model()
-        useraction._enable_save()
+        gui.enable_save()
         gtk.gdk.threads_leave()
 
 def recreate_media_file_icons():
@@ -240,8 +237,7 @@ def profiles_manager():
     profile_manager_dialog = profilesmanager.profiles_manager_dialog()
 
 def display_preferences():
-    preferenceswindow.preferences_dialog(useraction.select_thumbnail_dir_callback, 
-                                         useraction.select_render_clips_dir_callback)
+    preferenceswindow.preferences_dialog()
 
 def edit_watermark():
     dialogs.watermark_dialog(_watermark_add_callback, _watermark_remove_callback)
