@@ -26,7 +26,6 @@ import gtk
 import threading
 
 import audiowaveform
-import buttonevent
 import clipeffectseditor
 import compositeeditor
 import compositormodes
@@ -40,6 +39,7 @@ from editorstate import timeline_visible
 import keyframeeditor
 import medialog
 import monitorevent
+import tlineaction
 import titler
 import updater
 import projectaction
@@ -197,7 +197,7 @@ def _handle_tline_key_event(event):
 
     # X
     if event.keyval == gtk.keysyms.x:
-        buttonevent.cut_pressed()
+        tlineaction.cut_pressed()
         return True
 
     # Key bindings for MOVE MODES and _NO_EDIT modes
@@ -237,18 +237,18 @@ def _handle_tline_key_event(event):
 
         # T
         if event.keyval == gtk.keysyms.t:
-            buttonevent.three_point_overwrite_pressed()
+            tlineaction.three_point_overwrite_pressed()
             return True
 
         # Y
         if event.keyval == gtk.keysyms.y:
             if not (event.state & gtk.gdk.CONTROL_MASK):
-                buttonevent.insert_button_pressed()
+                tlineaction.insert_button_pressed()
                 return True
 
         # U
         if event.keyval == gtk.keysyms.u:
-            buttonevent.append_button_pressed()
+            tlineaction.append_button_pressed()
             return True
 
         # J
@@ -285,7 +285,7 @@ def _handle_tline_key_event(event):
         if event.keyval == gtk.keysyms.Delete:
             # Clip selection and compositor selection are mutually exclusive, 
             # so max one one these will actually delete something
-            buttonevent.splice_out_button_pressed()
+            tlineaction.splice_out_button_pressed()
             compositormodes.delete_current_selection()
 
     return False
@@ -301,18 +301,18 @@ def _handle_extended_tline_focus_events(event):
 
     # T
     if event.keyval == gtk.keysyms.t:
-        buttonevent.three_point_overwrite_pressed()
+        tlineaction.three_point_overwrite_pressed()
         return True
 
     # Y
     if event.keyval == gtk.keysyms.y:
         if not (event.state & gtk.gdk.CONTROL_MASK):
-            buttonevent.insert_button_pressed()
+            tlineaction.insert_button_pressed()
             return True
 
     # U
     if event.keyval == gtk.keysyms.u:
-        buttonevent.append_button_pressed()
+        tlineaction.append_button_pressed()
         return True
 
     # J

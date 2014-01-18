@@ -26,7 +26,6 @@ import gtk
 
 import appconsts
 import audiomonitoring
-import buttonevent
 import editevent
 import editorpersistance
 import editorstate
@@ -36,6 +35,7 @@ import guicomponents
 import guiutils
 import respaths
 import titler
+import tlineaction
 import updater
 
 # editor window object
@@ -110,17 +110,17 @@ def _create_buttons(editor_window):
     editor_window.zoom_buttons.widget.set_tooltip_text(_("Zoom In - Mouse Middle Scroll\n Zoom Out - Mouse Middle Scroll\n Zoom Length"))
 
     editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
-    editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "cut.png"), buttonevent.cut_pressed)
-    editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "splice_out.png"), buttonevent.splice_out_button_pressed)
-    editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "lift.png"), buttonevent.lift_button_pressed)
-    editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "resync.png"), buttonevent.resync_button_pressed)
+    editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "cut.png"), tlineaction.cut_pressed)
+    editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "splice_out.png"), tlineaction.splice_out_button_pressed)
+    editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "lift.png"), tlineaction.lift_button_pressed)
+    editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "resync.png"), tlineaction.resync_button_pressed)
     editor_window.edit_buttons.widget.set_tooltip_text(_("Cut - X\nSplice Out - Delete\nLift\nResync Selected"))
 
     editor_window.monitor_insert_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
-    editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "overwrite_range.png"), buttonevent.range_overwrite_pressed)
-    editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "overwrite_clip.png"), buttonevent.three_point_overwrite_pressed)
-    editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "insert_clip.png"), buttonevent.insert_button_pressed)
-    editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "append_clip.png"), buttonevent.append_button_pressed)
+    editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "overwrite_range.png"), tlineaction.range_overwrite_pressed)
+    editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "overwrite_clip.png"), tlineaction.three_point_overwrite_pressed)
+    editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "insert_clip.png"), tlineaction.insert_button_pressed)
+    editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "append_clip.png"), tlineaction.append_button_pressed)
     editor_window.monitor_insert_buttons.widget.set_tooltip_text(_("Overwrite Range\nOverwrite Clip - T\nInsert Clip - Y\nAppend Clip - U"))
 
     editor_window.undo_redo = glassbuttons.GlassButtonsGroup(46, 23, 2, 2, 7)
@@ -134,7 +134,7 @@ def _create_buttons(editor_window):
     editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer\nTitler"))
 
     editor_window.transition_button = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
-    editor_window.transition_button.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "dissolve.png"), buttonevent.add_transition_pressed)
+    editor_window.transition_button.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "dissolve.png"), tlineaction.add_transition_pressed)
     editor_window.transition_button.widget.set_tooltip_text(_("Add Rendered Transition - 2 clips selected\nAdd Rendered Fade - 1 clip selected"))
 
 def fill_with_TC_LEFT_pattern(buttons_row, window):

@@ -70,9 +70,6 @@ parent_selection_data = None # Held here until user presses tline again
 
 # ----------------------------- module funcs
 def do_clip_insert(track, new_clip, tline_pos):
-    """
-    Called from buttonevent.insert_button_pressed() and tline_media_drop()
-    """
     index = _get_insert_index(track, tline_pos)
 
     # Can't put audio media on video track 
