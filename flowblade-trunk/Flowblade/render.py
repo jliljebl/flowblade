@@ -54,7 +54,7 @@ import utils
 # User defined render agrs file extension
 FFMPEG_OPTS_SAVE_FILE_EXTENSION = ".rargs"
 
-open_media_file_callback = None # monkeypatched in by useraction to avoid circular imports
+open_media_file_callback = None # monkeypatched in by app.py to avoid circular imports
 
 render_start_time = 0
 widgets = utils.EmptyClass()

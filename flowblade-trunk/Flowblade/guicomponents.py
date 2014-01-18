@@ -1289,7 +1289,6 @@ def _set_non_sensite_if_state_matches(mutable, item, state):
 def display_media_file_popup_menu(media_file, callback, event):
     media_file_menu = gtk.Menu()
     # "Open in Clip Monitor" is sent as event id, same for all below
-    # See useraction._media_file_menu_item_selected(...)
     media_file_menu.add(_get_menu_item(_("Rename"), callback,("Rename", media_file, event)))
     media_file_menu.add(_get_menu_item(_("Delete"), callback,("Delete", media_file, event))) 
     _add_separetor(media_file_menu)

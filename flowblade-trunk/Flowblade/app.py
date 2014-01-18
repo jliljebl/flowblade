@@ -63,6 +63,8 @@ import mlttransitions
 import monitorevent
 import movemodes
 import persistance
+import preferenceswindow
+import projectaction
 import projectdata
 import projectinfogui
 import propertyedit
@@ -77,7 +79,6 @@ import translations
 import trimmodes
 import undo
 import updater
-import useraction
 import utils
 
 
@@ -251,11 +252,27 @@ def main(root_path):
     else:
         start_autosave()
 
-    # Set callback for undo/redo ops, batcherrender app dosee not need this 
-    undo.set_post_undo_redo_callback(editevent.set_post_undo_redo_edit_mode)
+    # We're prefer to monkeypatch some callbacks into some modules, usually to
+    # maintain a simpler and non-circuler import structure
+    monkeypatch_callbacks()
      
     # Launch gtk+ main loop
     gtk.main()
+
+# ----------------------------------- callback setting
+def monkeypatch_callbacks():
+    # Prefences setting
+    preferenceswindow.select_thumbnail_dir_callback = projectaction.select_thumbnail_dir_callback, 
+    preferenceswindow.select_render_clips_dir_callback = projectaction.select_render_clips_dir_callback
+
+    # We need to do this on app start-up or
+    # we'll get circular imports with projectaction->mltplayer->render->projectaction
+    render.open_media_file_callback = projectaction.open_rendered_file
+
+    # Set callback for undo/redo ops, batcherrender app does not need this 
+    undo.set_post_undo_redo_callback(editevent.set_post_undo_redo_edit_mode)
+    
+    # These provide clues for further module refactoring 
 
 # ---------------------------------- program, sequence and project init
 def get_assoc_file_path():
@@ -425,7 +442,7 @@ def open_project(new_project):
     init_editor_state()
     
     # For save time message on close
-    useraction.save_time = None
+    projectaction.save_time = None
     
     # Delete autosave file after it has been loaded
     global loaded_autosave_file
@@ -486,7 +503,7 @@ def autosave_dialog_callback(dialog, response):
     if response == gtk.RESPONSE_OK:
         global loaded_autosave_file
         loaded_autosave_file = autosave_file
-        useraction.actually_load_project(autosave_file, True)
+        projectaction.actually_load_project(autosave_file, True)
     else:
         os.remove(autosave_file)
         start_autosave()
@@ -513,7 +530,7 @@ def autosaves_many_dialog_callback(dialog, response, autosaves_view, autosaves):
         global loaded_autosave_file
         loaded_autosave_file = autosave_file
         dialog.destroy()
-        useraction.actually_load_project(autosave_file, True)
+        projectaction.actually_load_project(autosave_file, True)
     else:
         dialog.destroy()
         start_autosave()
@@ -650,10 +667,10 @@ def shutdown():
 
 
 def get_save_time_msg():
-    if useraction.save_time == None:
+    if projectaction.save_time == None:
         return _("Project has not been saved since it was opened.")
     
-    save_ago = (time.clock() - useraction.save_time) / 60.0
+    save_ago = (time.clock() - projectaction.save_time) / 60.0
 
     if save_ago < 1:
         return _("Project was saved less than a minute ago.")

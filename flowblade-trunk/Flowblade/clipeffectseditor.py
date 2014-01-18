@@ -316,9 +316,6 @@ def reset_filter_values():
     clip.filters[row_index].reset_values(PROJECT().profile, clip)
     effect_selection_changed()
 
-# NOTE: Filter active state toggled from:
-#       guicomponents.FilterSwitchListView callback
-#       useraction._filter_stack_menu_item_selected()
 def toggle_filter_active(row, update_stack_view=True):
     filter_object = clip.filters[row]
     filter_object.active = (filter_object.active == False)
