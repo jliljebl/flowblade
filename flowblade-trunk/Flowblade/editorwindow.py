@@ -48,6 +48,7 @@ import guicomponents
 import guiutils
 import medialog
 import menuactions
+import middlebar
 import mltplayer
 import monitorevent
 import movemodes
@@ -69,7 +70,6 @@ import trimmodes
 import updater
 import utils
 import vieweditor
-import windowviewmenu
 
 # GUI size params
 """
@@ -821,13 +821,13 @@ class EditorWindow:
 
     def _get_edit_buttons_row(self):
         modes_pixbufs = [INSERTMOVE_CURSOR, OVERWRITE_CURSOR, ONEROLL_CURSOR, TWOROLL_CURSOR, SLIDE_CURSOR]
-        windowviewmenu.create_edit_buttons_row_buttons(self, modes_pixbufs)
+        middlebar.create_edit_buttons_row_buttons(self, modes_pixbufs)
     
         buttons_row = gtk.HBox(False, 1)
         if editorpersistance.prefs.midbar_tc_left == True:
-            windowviewmenu.fill_with_TC_LEFT_pattern(buttons_row, self)
+            middlebar.fill_with_TC_LEFT_pattern(buttons_row, self)
         else:
-            windowviewmenu.fill_with_TC_MIDDLE_pattern(buttons_row, self)
+            middlebar.fill_with_TC_MIDDLE_pattern(buttons_row, self)
 
         return buttons_row
 

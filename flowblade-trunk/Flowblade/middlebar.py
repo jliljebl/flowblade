@@ -181,8 +181,6 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     right_panel.pack_start(gtk.Label(), True, True, 0)
     right_panel.pack_start(_get_edit_buttons_panel(), False, True, 0)
     right_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
-    #right_panel.pack_start(_get_transition_button(), False, True, 0)
-    #right_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
     right_panel.pack_start(_get_monitor_insert_buttons(), False, True, 0)
 
     buttons_row.pack_start(left_panel, True, True, 0)

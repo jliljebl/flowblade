@@ -1,0 +1,14 @@
+#/usr/bin/bash
+
+LANGUAGES=("fi" "cs" "fr")
+
+echo "Upgading all languages"
+
+"./"create_pot
+
+for LANG in "${LANGUAGES[@]}"
+do
+   :
+   "./"update_language "${LANG}"
+   "./"compile_language "${LANG}"
+done
