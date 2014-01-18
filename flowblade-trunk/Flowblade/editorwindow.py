@@ -534,17 +534,17 @@ class EditorWindow:
         # Display wrapper alignment for better filling behaviour when resizing
         disp_align = gtk.Alignment(xalign=0.0, yalign=0.0, xscale=1.0, yscale=1.0)
         disp_align.add(self.tline_display)
-        
+
         # Monitor
         monitor_vbox = gtk.VBox(False, 1)
         monitor_vbox.pack_start(disp_align, True, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
         monitor_vbox.pack_start(player_buttons_row, False, True, 0)
-        
+
         monitor_align = gtk.Alignment(xalign=0.0, yalign=0.0, xscale=1.0, yscale=1.0) 
         monitor_align.add(monitor_vbox)
         monitor_align.set_padding(3, 0, 3, 3)
-        
+
         monitor_frame = gtk.Frame()
         monitor_frame.add(monitor_align)
         monitor_frame.set_shadow_type(gtk.SHADOW_ETCHED_OUT)
