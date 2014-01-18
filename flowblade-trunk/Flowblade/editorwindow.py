@@ -31,7 +31,6 @@ import app
 import appconsts
 import audiomonitoring
 import batchrendering
-import buttonevent
 from cairoarea import CairoDrawableArea
 from cairoarea import CairoEventBox
 import clipeffectseditor
@@ -65,6 +64,7 @@ import proxyediting
 import syncsplitevent
 import test
 import titler
+import tlineaction
 import tlinewidgets
 import trimmodes
 import updater
@@ -161,17 +161,17 @@ class EditorWindow:
             ('Undo', None, _('_Undo'), '<control>Z', None, editevent.do_undo),
             ('Redo', None, _('_Redo'), '<control>Y', None, editevent.do_redo),
             ('AddFromMonitor', None, _('Add Monitor Clip')),
-            ('AppendClip', None, _('Append'), None, None, lambda a:buttonevent.append_button_pressed()),
-            ('InsertClip', None, _('Insert'), None, None, lambda a:buttonevent.insert_button_pressed()),
-            ('ThreepointOverWriteClip', None, _('Three Point Overwrite'), None, None, lambda a:buttonevent.three_point_overwrite_pressed()),
-            ('RangeOverWriteClip', None, _('Range Overwrite'), None, None, lambda a:buttonevent.range_overwrite_pressed()),
-            ('CutClip', None, _('Cut Clip'), None, None, lambda a:buttonevent.cut_pressed()),
-            ('DeleteClip', None, _('Lift'), None, None, lambda a:buttonevent.lift_button_pressed()),
-            ('SpliceOutClip', None, _('Splice Out'), None, None, lambda a:buttonevent.splice_out_button_pressed()),
-            ('ResyncSelected', None, _('Resync'), None, None, lambda a:buttonevent.resync_button_pressed()),
+            ('AppendClip', None, _('Append'), None, None, lambda a:tlineaction.append_button_pressed()),
+            ('InsertClip', None, _('Insert'), None, None, lambda a:tlineaction.insert_button_pressed()),
+            ('ThreepointOverWriteClip', None, _('Three Point Overwrite'), None, None, lambda a:tlineaction.three_point_overwrite_pressed()),
+            ('RangeOverWriteClip', None, _('Range Overwrite'), None, None, lambda a:tlineaction.range_overwrite_pressed()),
+            ('CutClip', None, _('Cut Clip'), None, None, lambda a:tlineaction.cut_pressed()),
+            ('DeleteClip', None, _('Lift'), None, None, lambda a:tlineaction.lift_button_pressed()),
+            ('SpliceOutClip', None, _('Splice Out'), None, None, lambda a:tlineaction.splice_out_button_pressed()),
+            ('ResyncSelected', None, _('Resync'), None, None, lambda a:tlineaction.resync_button_pressed()),
             ('SetSyncParent', None, _('Set Sync Parent'), None, None, lambda a:_this_is_not_used()),
-            ('AddTransition', None, _('Add Single Track Transition'), None, None, lambda a:buttonevent.add_transition_menu_item_selected()),
-            ('AddFade', None, _('Add Single Track Fade'), None, None, lambda a:buttonevent.add_fade_menu_item_selected()),
+            ('AddTransition', None, _('Add Single Track Transition'), None, None, lambda a:tlineaction.add_transition_menu_item_selected()),
+            ('AddFade', None, _('Add Single Track Fade'), None, None, lambda a:tlineaction.add_fade_menu_item_selected()),
             ('ClearFilters', None, _('Clear Filters'), None, None, lambda a:editevent.clear_filters()),
             ('ConsolidateSelectedBlanks', None, _('Consolidate Selected Blanks'), None, None, lambda a:editevent.consolidate_selected_blanks()),
             ('ConsolidateAllBlanks', None, _('Consolidate All Blanks'), None, None, lambda a:editevent.consolidate_all_blanks()),
@@ -525,7 +525,7 @@ class EditorWindow:
         switch_vbox.pack_start(switch_hbox, False, True, 0)
 
         # Switch / pos bar row
-        self.view_mode_select = guicomponents.get_monitor_view_select_combo(lambda w, e: buttonevent.view_mode_menu_lauched(w, e))
+        self.view_mode_select = guicomponents.get_monitor_view_select_combo(lambda w, e: tlineaction.view_mode_menu_lauched(w, e))
         sw_pos_hbox = gtk.HBox(False, 1)
         sw_pos_hbox.pack_start(switch_vbox, False, True, 0)
         sw_pos_hbox.pack_start(pos_bar_vbox, True, True, 0)
