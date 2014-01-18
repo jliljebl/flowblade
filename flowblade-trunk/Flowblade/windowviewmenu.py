@@ -49,81 +49,6 @@ MIDDLE_ROW_HEIGHT = 30 # height of middle row gets set here
 BUTTON_HEIGHT = 28 # middle edit buttons row
 BUTTON_WIDTH = 48 # middle edit buttons row
 
-def init_view_menu(menu_item):
-    """
-    Fills menu item with menuitems to open recent projects.
-    """
-    menu = menu_item.get_submenu()
-
-    mb_menu_item = gtk.MenuItem(_("Middlebar Layout").encode('utf-8'))
-    mb_menu =  gtk.Menu()
-    tc_left = gtk.RadioMenuItem(None, _("Timecode Left").encode('utf-8'))
-    tc_left.set_active(True)
-    tc_left.connect("activate", lambda w: _show_buttons_TC_LEFT_layout(w))
-    mb_menu.append(tc_left)
-
-    tc_middle = gtk.RadioMenuItem(tc_left, _("Timecode Center").encode('utf-8'))
-    tc_middle.connect("activate", lambda w: _show_buttons_TC_MIDDLE_layout(w))
-    mb_menu.append(tc_middle)
-
-    if editorpersistance.prefs.midbar_tc_left == True:
-        tc_left.set_active(True)
-    else:
-        tc_middle.set_active(True)
-
-    mb_menu_item.set_submenu(mb_menu)
-    menu.append(mb_menu_item)
-
-    tabs_menu_item = gtk.MenuItem(_("Tabs Position").encode('utf-8'))
-    tabs_menu =  gtk.Menu()
-    tabs_up = gtk.RadioMenuItem(None, _("Up").encode('utf-8'))
-    tabs_up.connect("activate", lambda w: _show_tabs_up(w))
-    tabs_menu.append(tabs_up)
-    
-    tabs_down = gtk.RadioMenuItem(tabs_up, _("Down").encode('utf-8'))
-    tabs_down.connect("activate", lambda w: _show_tabs_down(w))
-
-    if editorpersistance.prefs.tabs_on_top == True:
-        tabs_up.set_active(True)
-    else:
-        tabs_down.set_active(True)
-
-    tabs_menu.append(tabs_down)
-    tabs_menu_item.set_submenu(tabs_menu)
-    menu.append(tabs_menu_item)
-
-    sep = gtk.SeparatorMenuItem()
-    menu.append(sep)
-    
-    show_monitor_info_item = gtk.CheckMenuItem(_("Show Monitor Sequence Profile").encode('utf-8'))
-    show_monitor_info_item.set_active(editorpersistance.prefs.show_sequence_profile)
-    show_monitor_info_item.connect("toggled", lambda w: _show_monitor_info_toggled(w))
-    menu.append(show_monitor_info_item)
-
-    sep = gtk.SeparatorMenuItem()
-    menu.append(sep)
-    
-    zoom_in_menu_item = gtk.MenuItem(_("Zoom In").encode('utf-8'))
-    zoom_in_menu_item.connect("activate", lambda w: updater.zoom_in())
-    menu.append(zoom_in_menu_item)
-    zoom_out_menu_item = gtk.MenuItem(_("Zoom Out").encode('utf-8'))
-    zoom_out_menu_item.connect("activate", lambda w: updater.zoom_out())
-    menu.append(zoom_out_menu_item)
-    zoom_fit_menu_item = gtk.MenuItem(_("Zoom Fit").encode('utf-8'))
-    zoom_fit_menu_item.connect("activate", lambda w: updater.zoom_project_length())
-    menu.append(zoom_fit_menu_item)
-            
-def init_gui_to_prefs(window):
-    global w
-    w = window
-
-    if editorpersistance.prefs.tabs_on_top == True:
-        w.notebook.set_tab_pos(gtk.POS_TOP)
-        w.right_notebook.set_tab_pos(gtk.POS_TOP)
-    else:
-        w.notebook.set_tab_pos(gtk.POS_BOTTOM)
-        w.right_notebook.set_tab_pos(gtk.POS_BOTTOM)
-
 def _show_buttons_TC_LEFT_layout(widget):
     global w
     w = gui.editor_window
@@ -285,30 +210,6 @@ def _get_tools_buttons():
 
 def _get_transition_button():
     return w.transition_button.widget
-    
-def _show_tabs_up(widget):
-    global w
-    w = gui.editor_window
-    if w == None:
-        return
-    if widget.get_active() == False:
-        return
-    w.notebook.set_tab_pos(gtk.POS_TOP)
-    w.right_notebook.set_tab_pos(gtk.POS_TOP)
-    editorpersistance.prefs.tabs_on_top = True
-    editorpersistance.save()
-
-def _show_tabs_down(widget):
-    global w
-    w = gui.editor_window
-    if w == None:
-        return
-    if widget.get_active() == False:
-        return
-    w.notebook.set_tab_pos(gtk.POS_BOTTOM)
-    w.right_notebook.set_tab_pos(gtk.POS_BOTTOM)
-    editorpersistance.prefs.tabs_on_top = False
-    editorpersistance.save()
 
 def _get_buttons_panel(btns_count, btn_width=BUTTON_WIDTH):
     panel = gtk.HBox(True, 0)
