@@ -31,7 +31,6 @@ import dialogutils
 import gui
 import guicomponents
 import guiutils
-import editorpersistance
 import editorstate
 import locale
 import mltenv
@@ -246,7 +245,6 @@ def about_dialog(parent_window):
     flow_label = gtk.Label("Flowblade Movie Editor")
     ver_label = gtk.Label("0.12.0")
     janne_label = gtk.Label("Copyright 2014 Janne Liljeblad")
-    licence_label = gtk.Label("Licensed under GPL 3")
 
     flow_label.modify_font(pango.FontDescription("sans bold 14"))
 
@@ -670,9 +668,6 @@ def _autosaves_delete_unselected(autosaves, autosaves_view):
     autosaves_view.fill_data_model(autosaves)
 
 def tracks_count_change_dialog(callback):
-    default_profile_index = mltprofiles.get_default_profile_index()
-    default_profile = mltprofiles.get_default_profile()
-
     dialog = gtk.Dialog(_("Change Sequence Tracks Count"), None,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                         (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,

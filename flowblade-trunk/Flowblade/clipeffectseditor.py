@@ -27,14 +27,12 @@ import gtk
 import dnd
 import edit
 from editorstate import PROJECT
-import editorpersistance
 import gui
 import guicomponents
 import guiutils
 import mltfilters
 import propertyedit
 import propertyeditorbuilder
-import tlinewidgets
 import translations
 import updater
 import utils

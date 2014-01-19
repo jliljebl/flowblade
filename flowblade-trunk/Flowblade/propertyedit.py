@@ -32,11 +32,9 @@ import gtk
 
 import appconsts
 from editorstate import current_sequence
-import keyframeeditor
 import mlttransitions
 import mltfilters
 import propertyparse
-import respaths
 import utils
 
 # keys                                                      meaning of values for this key

@@ -27,21 +27,18 @@ import gtk
 import math
 import pango
 import pangocairo
-import time
 
 import appconsts
 from cairoarea import CairoDrawableArea
 import clipeffectseditor
 import editorpersistance
 from editorstate import current_sequence
-from editorstate import current_is_move_mode
 from editorstate import timeline_visible
 from editorstate import PLAYER
 from editorstate import EDIT_MODE
 from editorstate import current_proxy_media_paths
 import editorstate
 import respaths
-import resync
 import sequence
 import trimmodes
 import utils
@@ -317,7 +314,6 @@ def get_pos_for_tline_centered_to_current_frame():
     current_frame = PLAYER().current_frame()
     x, y, w, h = canvas_widget.widget.allocation
     frames_in_panel = w / pix_per_frame
-    last_pos = current_sequence().get_length() - frames_in_panel
 
     # current in first half on first screen width of tline display
     if current_frame < (frames_in_panel / 2.0):
@@ -546,20 +542,10 @@ def draw_two_roll_overlay(cr, data):
     cr.stroke()
     
 def draw_one_roll_overlay(cr, data):
-    edit_frame = data["edit_frame"]
-    frame_x = _get_frame_x(edit_frame)
     track_height = current_sequence().tracks[data["track"]].height
     track_y = _get_track_y(data["track"])
     
     selection_frame_x = _get_frame_x(data["selected_frame"])
-        
-    #trim_limits = data["trim_limits"]
-    #if data["to_side_being_edited"]:
-        #clip_over_end_x = _get_frame_x(trim_limits["both_end"] + 1) # trim limits leave 1 frame non-trimmable
-        #_draw_trim_clip_overlay(cr, selection_frame_x, clip_over_end_x, track_y, track_height, True)
-    #else:
-        #clip_over_start_x = _get_frame_x(trim_limits["both_start"] - 1) # trim limits leave 1 frame non-trimmable 
-        #_draw_trim_clip_overlay(cr, clip_over_start_x, selection_frame_x, track_y, track_height, True)
 
     cr.set_source_rgb(*OVERLAY_SELECTION_COLOR)
     cr.move_to(selection_frame_x - 0.5, track_y - 6.5)
@@ -1666,13 +1652,9 @@ class TimeLineFrameScale:
         if timeline_visible():
             cr.set_source_rgb(0, 0, 0)
             line_color = (0, 0, 0)
-            triangle_color = POINTER_TRIANGLE_COLOR
-            triangle_stroke = (0, 0, 0)
         else:
             current_frame = editorstate.tline_shadow_frame
             line_color = (0.8, 0.8, 0.8)
-            triangle_color = (0.8, 0.8, 0.8)
-            triangle_stroke = (0.8, 0.8, 0.8)
 
         disp_frame = current_frame - pos
         frame_x = math.floor(disp_frame * pix_per_frame) + 0.5
@@ -1755,17 +1737,3 @@ class ValueTester:
     def call_listener_if_hit(self, value):
         if value >= self.start and value <= self.end:
             self.listener(self.data)
-         
-
-def draw_bitmap(cr, data):
-    array, w, h = data
-    struct.unpack("B", array[0])
-
-    for x in range(0, w):
-        for y in range(0, h):
-            i = x + w * y
-            cr.rectangle (x, y, 1, 1)
-            val = max(struct.unpack("B", array[i]))
-            cr.set_source_rgb(float(val)/255.0, float(val)/255.0, float(val)/255.0)
-            cr.fill()
-

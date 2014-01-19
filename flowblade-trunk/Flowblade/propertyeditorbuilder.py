@@ -22,7 +22,6 @@
 Module creates GUI editors for editable mlt properties.
 """
 import gtk
-import sys
 
 import appconsts
 from editorstate import PROJECT
@@ -325,13 +324,11 @@ def _get_wipe_selector(editable_property):
 def _create_composite_editor(clip, editable_properties):
     aligned = filter(lambda ep: ep.name == "aligned", editable_properties)[0]
     distort = filter(lambda ep: ep.name == "distort", editable_properties)[0]
-    fill = filter(lambda ep: ep.name == "fill", editable_properties)[0]
     operator = filter(lambda ep: ep.name == "operator", editable_properties)[0]
     values = ["over","and","or","xor"]
     deinterlace = filter(lambda ep: ep.name == "deinterlace", editable_properties)[0]
     progressive = filter(lambda ep: ep.name == "progressive", editable_properties)[0]
     force_values = [_("Nothing"),_("Progressive"),_("Deinterlace"),_("Both")]
-    force_data = (deinterlace, progressive)
 
     combo_box = gtk.combo_box_new_text()
     for val in force_values:
@@ -425,7 +422,6 @@ def _create_region_editor(clip, editable_properties):
     deinterlace = filter(lambda ep: ep.name == "composite.deinterlace", editable_properties)[0]
     progressive = filter(lambda ep: ep.name == "composite.progressive", editable_properties)[0]
     force_values = [_("Nothing"),_("Progressive"),_("Deinterlace"),_("Both")]
-    force_data = (deinterlace, progressive)
 
     combo_box = gtk.combo_box_new_text()
     for val in force_values:

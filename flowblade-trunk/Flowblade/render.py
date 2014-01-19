@@ -31,7 +31,6 @@ import md5
 import os
 import time
 import threading
-import xml.dom.minidom
 
 import dialogutils
 from editorstate import current_sequence
@@ -41,13 +40,11 @@ import editorpersistance
 import gui
 import guicomponents
 import guiutils
-import mltenv
 import mltprofiles
 import projectdata
 import projectinfogui
 import renderconsumer
 import rendergui
-import respaths
 import sequence
 import utils
 

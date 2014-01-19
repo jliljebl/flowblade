@@ -27,7 +27,6 @@ import pickle
 
 import appconsts
 import mltprofiles
-import respaths
 import utils
 
 PREFS_DOC = "prefs"

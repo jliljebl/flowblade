@@ -24,7 +24,6 @@ Module handles initializing and changing window contents acoording to user prefe
 
 import gtk
 
-import appconsts
 import audiomonitoring
 import editevent
 import editorpersistance

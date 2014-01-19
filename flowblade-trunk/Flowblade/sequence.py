@@ -23,22 +23,15 @@ Module contains class Sequence that is the multitrack media object being edited
 by the application. A project has 1-n of these.
 """
 
-import copy
 import mlt
-import time
-import types
 import os
 
 import appconsts
 import edit
 import editorstate
-import editorpersistance
-import memoryleak
 import mltfilters
 import mlttransitions
 import patternproducer
-import respaths
-import resync
 import utils
 
 # Media types for tracks or clips
@@ -507,7 +500,7 @@ class Sequence:
         """
         Used in hack for trim editing last clip of a track.
         """
-        clip = edit._remove_clip(track, len(track.clips) - 1)
+        edit._remove_clip(track, len(track.clips) - 1)
 
     # ------------------------------------------ filters
     def create_filter(self, filter_info):
@@ -817,7 +810,7 @@ class Sequence:
             if clip_start_frame == tline_frame:
                 index = index - 1
             
-            # Check index
+            # Check index is good
             try:
                 clip = track.clips[index]            
             except Exception:

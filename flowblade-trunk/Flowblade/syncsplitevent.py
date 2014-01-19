@@ -209,7 +209,6 @@ def resync_selected():
                     if current_master_index + 1 == next_master_index:
                         # Masters are consecutive, save data to test next
                         master_id = clip.sync_data.master_clip.id
-                        current_master = clip.sync_data.master_clip
                         current_master_index = master_track.clips.index(current_master_clip)
                     else:
                         all_same_or_consecutive = False

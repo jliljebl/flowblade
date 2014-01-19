@@ -26,7 +26,6 @@ import gtk
 import appconsts
 import dialogutils
 import edit
-import editorstate
 from editorstate import current_sequence
 from editorstate import get_track
 from editorstate import PLAYER
@@ -350,8 +349,7 @@ def overwrite_move_release(x, y, frame, state):
     # clip is moved to a differrent track
     if track == to_track:
         # Do edit if were moving and clips have moved
-        if (edit_data["move_on"] == True
-            and(press_frame != frame)):
+        if (edit_data["move_on"] == True and (press_frame != frame)):
             clear_selected_clips()
             action = edit.overwrite_move_action(data)
             action.do_edit()
@@ -382,7 +380,6 @@ def _move_mode_pressed(event, frame):
     """
     x = event.x
     y = event.y
-    state = event.state
 
     global edit_data, pressed_on_selected, drag_disabled
 
@@ -518,7 +515,6 @@ def _move_mode_move(frame, x, y):
     first_clip_start = edit_data["first_clip_start"]
     attempt_insert_frame = first_clip_start + (frame - press_frame)
     edit_data["attempt_insert_frame"] = attempt_insert_frame    
-    track = edit_data["track_object"]
     
     # Get track where insert is attempted. Track selection forced into range of editable tracks.
     to_track = tlinewidgets.get_track(y)

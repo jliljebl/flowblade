@@ -51,8 +51,6 @@ from editorstate import EDIT_MODE
 import editorpersistance
 import gui
 import guicomponents
-import mltfilters
-import mlttransitions
 import movemodes
 import syncsplitevent
 import tlinewidgets
@@ -866,8 +864,6 @@ def _track_menu_item_activated(widget, data):
 
 def _lock_track(track_index):
     track = get_track(track_index)
-    if track.edit_freedom == appconsts.SYNC_LOCKED:
-        _handle_sync_leave()
     track.edit_freedom = appconsts.LOCKED
     updater.repaint_tline()
     

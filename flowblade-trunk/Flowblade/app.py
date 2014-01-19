@@ -24,17 +24,14 @@ Application module.
 Handles application initialization, shutdown, opening projects, autosave and changing
 sequences.
 """
-import glib
 import gobject
 import gtk
 import locale
 import md5
 import mlt
-import multiprocessing
 import os
 import sys
 import time
-import threading
 
 import appconsts
 import audiomonitoring
@@ -50,9 +47,7 @@ import editorpersistance
 import editorstate
 import editorwindow
 import gui
-import guicomponents
 import keyevents
-import keyframeeditor
 import medialog
 import mlt
 import mltenv
@@ -60,23 +55,19 @@ import mltfilters
 import mltplayer
 import mltprofiles
 import mlttransitions
-import monitorevent
 import movemodes
 import persistance
 import preferenceswindow
 import projectaction
 import projectdata
 import projectinfogui
-import propertyedit
 import render
 import renderconsumer
 import respaths
 import resync
 import sequence
-import test
 import tlinewidgets
 import translations
-import trimmodes
 import undo
 import updater
 import utils
@@ -109,7 +100,7 @@ def main(root_path):
         s_index = os_text.find("PRETTY_NAME=")
         e_index = os_text.find("\n", s_index)
         print "OS: " + os_text[s_index + 13:e_index - 1]
-    except Exception as e:
+    except:
         pass
     
     print "Python", sys.version
@@ -272,6 +263,10 @@ def monkeypatch_callbacks():
     # Set callback for undo/redo ops, batcherrender app does not need this 
     undo.set_post_undo_redo_callback(editevent.set_post_undo_redo_edit_mode)
     
+    # # Drag'n'drop callbacks
+    dnd.add_currently_effect = clipeffectseditor.add_currently_selected_effect
+    dnd.display_monitor_media_file = updater.set_and_display_monitor_media_file
+
     # These provide clues for further module refactoring 
 
 # ---------------------------------- program, sequence and project init

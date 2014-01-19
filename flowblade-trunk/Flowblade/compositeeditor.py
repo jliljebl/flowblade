@@ -31,13 +31,10 @@ import guiutils
 import edit
 from editorstate import current_sequence
 import editorpersistance
-import mlttransitions
 import propertyeditorbuilder
 import propertyedit
 import propertyparse
-import updater
 import utils
-import tlinewidgets
 
 COMPOSITOR_PANEL_LEFT_WIDTH = 160
 

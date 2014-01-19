@@ -22,17 +22,13 @@
 Module contains main editor window object.
 """
 
-import cairo
 import gtk
 import pango
-import pygtk
 
 import app
 import appconsts
 import audiomonitoring
 import batchrendering
-from cairoarea import CairoDrawableArea
-from cairoarea import CairoEventBox
 import clipeffectseditor
 import compositeeditor
 import dialogs
@@ -48,9 +44,7 @@ import guiutils
 import medialog
 import menuactions
 import middlebar
-import mltplayer
 import monitorevent
-import movemodes
 import respaths
 import render
 import rendergui
@@ -61,15 +55,11 @@ import preferenceswindow
 import projectaction
 import projectinfogui
 import proxyediting
-import syncsplitevent
-import test
 import titler
 import tlineaction
 import tlinewidgets
-import trimmodes
 import updater
-import utils
-import vieweditor
+
 
 # GUI size params
 """
@@ -483,9 +473,6 @@ class EditorWindow:
         # Right notebook, used for Widescreen and Two row layouts
         self.right_notebook = gtk.Notebook()
         self.right_notebook.set_tab_pos(gtk.POS_BOTTOM)
-
-        # Timecode panel
-        tc_panel = panels.get_timecode_panel(self)
    
         # Video display
         self.tline_display = gtk.DrawingArea() 
@@ -503,6 +490,7 @@ class EditorWindow:
         pos_bar_vbox.pack_start(pos_bar_frame, False, True, 0)
 
         # Play buttons row
+        self._create_monitor_row_widgets()
         self.player_buttons = glassbuttons.PlayerButtons()
         self.player_buttons.widget.set_tooltip_text(_("Prev Frame - Arrow Left\nNext Frame - Arrow Right\nPlay - Space\nStop - Space\nMark In\nMark Out\nClear Marks\nTo Mark In\nTo Mark Out"))
         self.monitor_source.modify_font(pango.FontDescription("sans bold 8"))
@@ -696,11 +684,11 @@ class EditorWindow:
         mb_menu =  gtk.Menu()
         tc_left = gtk.RadioMenuItem(None, _("Timecode Left").encode('utf-8'))
         tc_left.set_active(True)
-        tc_left.connect("activate", lambda w: _show_buttons_TC_LEFT_layout(w))
+        tc_left.connect("activate", lambda w: middlebar._show_buttons_TC_LEFT_layout(w))
         mb_menu.append(tc_left)
 
         tc_middle = gtk.RadioMenuItem(tc_left, _("Timecode Center").encode('utf-8'))
-        tc_middle.connect("activate", lambda w: _show_buttons_TC_MIDDLE_layout(w))
+        tc_middle.connect("activate", lambda w: middlebar._show_buttons_TC_MIDDLE_layout(w))
         mb_menu.append(tc_middle)
 
         if editorpersistance.prefs.midbar_tc_left == True:
@@ -734,7 +722,7 @@ class EditorWindow:
         
         show_monitor_info_item = gtk.CheckMenuItem(_("Show Monitor Sequence Profile").encode('utf-8'))
         show_monitor_info_item.set_active(editorpersistance.prefs.show_sequence_profile)
-        show_monitor_info_item.connect("toggled", lambda w: _show_monitor_info_toggled(w))
+        show_monitor_info_item.connect("toggled", lambda w: middlebar._show_monitor_info_toggled(w))
         menu.append(show_monitor_info_item)
 
         sep = gtk.SeparatorMenuItem()
@@ -947,6 +935,11 @@ class EditorWindow:
         print self.top_paned.get_position()
         print self.mm_paned.get_position()
 
+    def _create_monitor_row_widgets(self):
+        self.tc = guicomponents.MonitorTCDisplay()
+        self.monitor_source = gtk.Label("sequence1")
+        self.monitor_source.set_ellipsize(pango.ELLIPSIZE_END)
+   
 
 
 def _this_is_not_used():

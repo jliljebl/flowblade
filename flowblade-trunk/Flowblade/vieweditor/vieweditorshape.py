@@ -143,7 +143,7 @@ class EditPointShape:
             points.append((ep.x, ep.y))
         return points
 
-    def get_bounding_box(p):
+    def get_bounding_box(self, p):
         if len(self.edit_points) == 0:
             return None
 

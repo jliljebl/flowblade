@@ -43,7 +43,6 @@ def save_titler_data_as_dialog(callback, current_name, open_dir):
         dialog.set_current_folder(open_dir)
     
     dialog.set_select_multiple(False)
-    file_filter = gtk.FileFilter()
     dialog.connect('response', callback)
     dialog.show()
 

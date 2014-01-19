@@ -24,16 +24,10 @@ are used to build gui at callsites.
 """
 
 import gtk
-import os
-import pango
 
-import appconsts
 import guicomponents
 import guiutils
-import editorstate
 import editorpersistance
-import mltfilters
-import mltprofiles
 import mlttransitions
 import renderconsumer
 import respaths
@@ -201,36 +195,6 @@ def get_motion_render_progress_panel(file_name, progress_bar):
     alignment.set_padding(12, 12, 12, 12)
     alignment.add(progress_vbox)
     return alignment
-
-def get_timecode_panel(editor_window):
-    editor_window.tc = guicomponents.MonitorTCDisplay()
-    editor_window.monitor_source = gtk.Label("sequence1")
-    editor_window.monitor_source.set_ellipsize(pango.ELLIPSIZE_END)
-    editor_window.mark_in_entry = gtk.Label()
-    editor_window.mark_in_entry.set_text("--:--:--:--")
-    editor_window.mark_in_entry.set_size_request(TC_LABEL_WIDTH, 20)
-    editor_window.mark_out_entry = gtk.Label()
-    editor_window.mark_out_entry.set_text("--:--:--:--")
-    editor_window.mark_out_entry.set_size_request(TC_LABEL_WIDTH, 20)
-    editor_window.length_entry = gtk.Label()
-    editor_window.length_entry.set_text("--:--:--:--")
-    editor_window.length_entry.set_size_request(TC_LABEL_WIDTH, 20)
-
-    row = gtk.HBox(False, 1)
-    row.pack_start(editor_window.tc.widget, False, False, 0)
-    row.pack_start(guiutils.get_pad_label(20, 20), False, False, 0)
-    row.pack_start(gtk.Label(), False, False, 0)
-    in_icon = gtk.image_new_from_file(respaths.IMAGE_PATH  + "mark_in_label.png") 
-    row.pack_start(in_icon, False, False, 0)
-    row.pack_start(editor_window.mark_in_entry, False, False, 0)
-    out_icon = gtk.image_new_from_file(respaths.IMAGE_PATH  + "mark_out_label.png") 
-    row.pack_start(out_icon, False, False, 0)
-    row.pack_start(editor_window.mark_out_entry, False, False, 0)
-    lengtht_icon = gtk.image_new_from_file(respaths.IMAGE_PATH  + "marks_length_label.png") 
-    row.pack_start(lengtht_icon, False, False, 0)
-    row.pack_start(editor_window.length_entry, False, False, 0)
-
-    return row
     
 def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_padding=4):
     """

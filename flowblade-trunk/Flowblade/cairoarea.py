@@ -25,7 +25,6 @@ Cairo, and listen to its mouse and key events.
 
 import gtk
 from gtk import gdk
-import cairo
 
 class CairoDrawableArea(gtk.Widget):
     """

@@ -21,8 +21,6 @@
 import cairo
 import gtk
 import math
-import pango
-import pangocairo
 
 from cairoarea import CairoDrawableArea
 import editorpersistance

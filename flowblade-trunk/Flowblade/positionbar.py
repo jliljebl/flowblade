@@ -23,16 +23,12 @@ Module contents:
 class PositionBar - Displays position on a clip or a sequence
 """
 
-import cairo
 import gtk
-import math
 
 from cairoarea import CairoDrawableArea
 import editorpersistance
 import editorstate
-import gui
 import trimmodes
-import updater
 
 # Draw params
 BAR_WIDTH = 200 # NOTE: DOES NOT HAVE ANY EFFECT IF OTHER WIDTHS MAKE MONITOR AREA MIN WIDTH BIGGER, AS THIS EXPANDS TO FILL

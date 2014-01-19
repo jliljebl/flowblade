@@ -25,13 +25,6 @@ and sequence state changes as output.
 Edits, undos and redos are done by creating and calling methods on these 
 EditAction objects and placing them on the undo/redo stack.
 """
-
-import copy
-import time
-import thread
-import sys
-import traceback
-
 import audiowaveform
 import appconsts
 import compositeeditor
@@ -40,7 +33,6 @@ from editorstate import get_track
 from editorstate import PLAYER
 import mltfilters
 import movemodes
-import projectdata
 import resync
 import trimmodes
 import undo
@@ -214,12 +206,11 @@ def _overwrite_cut_track(track, frame, add_cloned_filters=False):
     and returns tuple of in and out frames of the clip that was cut as they
     were before the cut, for the purpose of having information to do undo later.
     
-    If cut was made it also clones fliters to new clip created by cut.
+    If cut was made it also clones fliters to new clip created by cut if requested.
     """
     index = track.get_clip_index_at(frame)
     clip = track.clips[index]
     orig_in_out = (clip.clip_in, clip.clip_out)
-    clip_out = clip.clip_out        
     clip_start_in_tline = track.clip_start(index)
     clip_frame = frame - clip_start_in_tline + clip.clip_in
     
@@ -277,10 +268,8 @@ def _overwrite_restore_out(track, moved_index, self):
             else: # blanks can't be resized, so put in new blank
                 _insert_blank(track, moved_index, self.out_clip_length)
             self.removed_clips.pop(-1) 
-    except Exception, err:
-        #print 'print_exc():'
-        #traceback.print_exc(file=sys.stdout)
-        pass
+    except:
+        pass # why?
 
 
 #---------------------------------------------- EDIT ACTION
@@ -948,9 +937,6 @@ def _multitrack_overwrite_move_redo(self):
         clip = self.moved_clips[i]
         _insert_clip(to_track, clip, in_index + i, clip.clip_in, clip.clip_out)
 
-    #_remove_trailing_blanks(track)
-    #_remove_trailing_blanks(to_track)
-
     # Remove wrong sized waveforms
     audiowaveform.maybe_delete_waveforms(self.moved_clips, to_track)
     
@@ -1333,33 +1319,8 @@ def _audio_splice_redo(self):
 
     filter = _create_mute_volume_filter(current_sequence())
     _do_clip_mute(self.parent_clip, filter)
-    
-    #_remove_trailing_blanks(to_track)
 
-# ------------------------------------------------- SPLIT TO SYNC
-# "parent_clip","audio_clip", "over_in","over_out","to_track","from_track","parent_index"
-# "to_track" == audio sync track
-# "from_track" == video master track
-def audio_sync_splice_action(data):
-    action = EditAction(_audio_sync_splice_undo, _audio_sync_splice_redo, data)
-    return action
 
-def _audio_sync_splice_undo(self):
-    _unmute_splice_parent_audio(self, self.parent_clip)
-
-def _audio_sync_splice_redo(self):
-    # Set sync data for audio clip
-    sync_data = SyncData()
-    sync_data.pos_offset = 0
-    sync_data.clip_in = self.parent_clip.clip_in
-    sync_data.clip_out = self.parent_clip.clip_out
-    sync_data.master_clip = self.parent_clip
-
-    _mute_splice_parent_audio(self, self.parent_clip)
-    sync_data.master_audio_index = self.parent_audio_index
-
-    self.audio_clip.sync_data = sync_data
-    #self.to_track.sync_clips.append(self.audio_clip)
 
    
 # ------------------------------------------------- RESYNC ALL
@@ -1486,7 +1447,6 @@ def set_sync_action(data):
 def _set_sync_undo(self):
     # Get clips
     child_clip = self.child_track.clips[self.child_index]
-    parent_clip = self.parent_track.clips[self.parent_index]
      
     # Clear child sync data
     child_clip.sync_data = None

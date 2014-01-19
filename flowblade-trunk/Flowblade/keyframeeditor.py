@@ -27,15 +27,12 @@ but slighly different editors can be made in the future). There are a lots
 of callbacks to parent objects, this makes the design difficult to follow.
 """
 
-import cairo
 import copy
 import gtk
 import math
 import pango
-from itertools import izip
 
 from cairoarea import CairoDrawableArea
-import appconsts
 from editorstate import PLAYER
 from editorstate import current_sequence
 import gui
@@ -44,7 +41,6 @@ import guiutils
 import propertyedit
 import propertyparse
 import respaths
-import updater
 import utils
 import viewgeom
 

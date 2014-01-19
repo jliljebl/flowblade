@@ -23,31 +23,26 @@ This module handles the less central actions inited by user from menu.
 """
 
 import gtk
-import os
 import platform
 import threading
 import webbrowser
 import time
 
 import appconsts
-import editorpersistance
 import dialogs
 import dialogutils
 from editorstate import PROJECT
 from editorstate import current_sequence
 import editorstate
 import gui
-import mltprofiles
 import mltenv
 import mltfilters
 import mlttransitions
-import panels
+import projectdata
 import patternproducer
 import profilesmanager
-import render
 import renderconsumer
 import respaths
-import utils
 
 profile_manager_dialog = None
 
@@ -194,7 +189,6 @@ def write_out_env_data_cb(dialog, response_id):
         str_list.append("ENCODING OPTIONS\n")
         str_list.append("----------------\n")
         enc_ops = renderconsumer.encoding_options + renderconsumer.not_supported_encoding_options
-        enc_msgs = []
         for e_opt in enc_ops:
             if e_opt.supported:
                 msg = e_opt.name + " AVAILABLE\n"
@@ -235,9 +229,6 @@ def quick_reference():
 def profiles_manager():
     global profile_manager_dialog
     profile_manager_dialog = profilesmanager.profiles_manager_dialog()
-
-def display_preferences():
-    preferenceswindow.preferences_dialog()
 
 def edit_watermark():
     dialogs.watermark_dialog(_watermark_add_callback, _watermark_remove_callback)
