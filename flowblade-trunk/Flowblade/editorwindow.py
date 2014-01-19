@@ -719,7 +719,7 @@ class EditorWindow:
 
         sep = gtk.SeparatorMenuItem()
         menu.append(sep)
-        
+
         show_monitor_info_item = gtk.CheckMenuItem(_("Show Monitor Sequence Profile").encode('utf-8'))
         show_monitor_info_item.set_active(editorpersistance.prefs.show_sequence_profile)
         show_monitor_info_item.connect("toggled", lambda w: middlebar._show_monitor_info_toggled(w))
@@ -727,7 +727,33 @@ class EditorWindow:
 
         sep = gtk.SeparatorMenuItem()
         menu.append(sep)
+
+        interp_menu_item = gtk.MenuItem(_("Monitor Playback Interpolation").encode('utf-8'))
+        interp_menu =  gtk.Menu()
+        interp_nearest = gtk.RadioMenuItem(None, _("Nearest Neighbour").encode('utf-8'))
+        #interp_nearest.connect("activate", lambda w: self._show_tabs_up(w))
+        interp_menu.append(interp_nearest)
         
+        interp_bilinear = gtk.RadioMenuItem(None, _("Bilinear").encode('utf-8'))
+        #interp_bilinear.connect("activate", lambda w: self._show_tabs_up(w))
+        interp_menu.append(interp_bilinear)
+
+        interp_bicubic = gtk.RadioMenuItem(None, _("Bicubic").encode('utf-8'))
+        #interp_bicubic.connect("activate", lambda w: self._show_tabs_up(w))
+
+        interp_menu.append(interp_bicubic)
+
+        interp_hyper = gtk.RadioMenuItem(None, _("Hyper/Lanczos").encode('utf-8'))
+        #interp_hyper.connect("activate", lambda w: self._show_tabs_up(w))
+        interp_menu.append(interp_hyper)
+
+        interp_bicubic.set_active(True)
+        interp_menu_item.set_submenu(interp_menu)
+        menu.append(interp_menu_item)
+
+        sep = gtk.SeparatorMenuItem()
+        menu.append(sep)
+
         zoom_in_menu_item = gtk.MenuItem(_("Zoom In").encode('utf-8'))
         zoom_in_menu_item.connect("activate", lambda w: updater.zoom_in())
         menu.append(zoom_in_menu_item)
