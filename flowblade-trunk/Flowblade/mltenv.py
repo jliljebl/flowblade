@@ -23,20 +23,10 @@ Module checks environment for available codecs and formats.
 """
 import gobject
 import mlt
-import subprocess
-import os
-import stat
-import sys
 
 import dialogutils
 import editorstate
 import gui
-import utils
-
-TEST_SCRIPT_FILE = "testscript.sh"
-ACODECS_FILE = "acodecs"
-VCODECS_FILE = "vcodecs"
-FORMATS_FILE = "formats"
 
 acodecs = None
 vcodecs = None

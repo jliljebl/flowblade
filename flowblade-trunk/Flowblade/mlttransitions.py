@@ -23,18 +23,14 @@ Module contains objects that wrap mlt.Transition objects used to mix video betwe
 two tracks.
 """
 import copy
-import gtk
 import mlt
 import os
 import xml.dom.minidom
 
 import appconsts
-import mltfilters
 import patternproducer
-import persistance
 import propertyparse
 import respaths
-import utils
 
 # Attr and node names in compositors.xml
 NAME = appconsts.NAME

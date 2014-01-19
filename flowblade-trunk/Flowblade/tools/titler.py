@@ -24,7 +24,6 @@ import os
 import pango
 import pangocairo
 import pickle
-import time
 import threading
 
 import toolsdialogs

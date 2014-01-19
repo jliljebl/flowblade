@@ -30,7 +30,6 @@ import gui
 import guicomponents
 import guiutils
 import mltprofiles
-import panels
 import render
 import respaths
 import utils
@@ -315,7 +314,7 @@ def _hide_selected_clicked(visible_view, hidden_view):
         if profile == default_profile:
             dialogutils.warning_message("Can't hide default Profile", 
                                     "Profile '"+ profile.description() + "' is default profile and can't be hidden.", 
-                                    profile_manager_dialog)
+                                    None)
             return
         prof_names.append(pname)
 
@@ -329,7 +328,6 @@ def _hide_selected_clicked(visible_view, hidden_view):
 def _unhide_selected_clicked(visible_view, hidden_view):
     hidden_indexes = hidden_view.get_selected_indexes_list()
     prof_names = []
-    default_profile = mltprofiles.get_default_profile()
     for i in hidden_indexes:
         pname, profile = mltprofiles.get_hidden_profiles()[i]
         prof_names.append(pname)

@@ -46,9 +46,6 @@ effect_select_combo_box = None
 # Monitor
 pos_bar = None
 tc = None
-mark_in_display = None
-mark_out_display = None
-length_display = None
 
 # Timeline
 tline_display = None
@@ -79,8 +76,7 @@ def capture_references(new_editor_window):
     Create shorter names for some of the frequently used GUI objects.
     """
     global editor_window, media_list_view, bin_list_view, sequence_list_view, pos_bar, \
-    tc, mark_in_display, mark_out_display, length_display, tline_display, \
-    tline_scale, tline_canvas, tline_scroll, tline_v_scroll, tline_info, \
+    tc, tline_display, tline_scale, tline_canvas, tline_scroll, tline_v_scroll, tline_info, \
     tline_column, play_b, clip_editor_b, sequence_editor_b, note_bg_color, fg_color, fg_color_tuple, bg_color_tuple, selected_bg_color, \
     effect_select_list_view, effect_select_combo_box, project_info_vbox, middle_notebook, big_tc, editmenu, notebook_buttons, tline_left_corner
 
@@ -89,8 +85,7 @@ def capture_references(new_editor_window):
     media_list_view = editor_window.media_list_view
     bin_list_view = editor_window.bin_list_view
     sequence_list_view = editor_window.sequence_list_view
-    
-    #project_info_vbox = editor_window.project_info_vbox
+
     middle_notebook = editor_window.notebook
     
     effect_select_list_view = editor_window.effect_select_list_view
@@ -98,9 +93,6 @@ def capture_references(new_editor_window):
 
     pos_bar = editor_window.pos_bar
     tc = editor_window.tc
-    mark_in_display = editor_window.mark_in_entry
-    mark_out_display = editor_window.mark_out_entry
-    length_display = editor_window.length_entry
 
     tline_display = editor_window.tline_display
     tline_scale = editor_window.tline_scale

@@ -31,7 +31,6 @@ import threading
 
 import gui
 from editorstate import timeline_visible
-import respaths
 import utils
 import updater
 
@@ -52,14 +51,6 @@ class Player(threading.Thread):
         # Get profile and create ticker for playback GUI updates
         self.profile = profile
         print "Player initialized with profile: ", self.profile.description()
-        
-        # Create black clip to display in the beginning 
-        #black_path = respaths.BLACK_IMAGE_PATH
-        #self.black_clip = mlt.Producer(self.profile, black_path)
-        
-        # black_clip is displayed in clip monitor which needs in and out
-        #self.black_clip.mark_in = -1
-        #self.black_clip.mark_out = -1
         
         # Trim loop preview
         self.loop_start = -1
@@ -87,10 +78,6 @@ class Player(threading.Thread):
 
         # Hold ref to switch back from rendering
         self.sdl_consumer = self.consumer 
-
-    def create_xml_consumer(self):
-        self.consumer = mlt.Consumer(self.profile, "xml", path)
-        self.xml_render = False
         
     def set_sdl_xwindow(self, widget):
         """

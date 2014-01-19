@@ -28,7 +28,6 @@ import edit
 import editorstate
 from editorstate import current_sequence
 from editorstate import PLAYER
-from editorstate import ONE_ROLL_TRIM
 import gui
 import tlinewidgets
 import updater
@@ -290,13 +289,6 @@ def oneroll_trim_press(event, frame):
     frame = _legalize_one_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
 
-    # Get clip and correct frame to display from it 
-    trim_limits = edit_data["trim_limits"]
-    if edit_data["to_side_being_edited"]:
-        clip_frame = frame - trim_limits["to_start"]
-    else:
-        clip_frame = frame - trim_limits["from_start"]
-
     PLAYER().seek_frame(frame)
 
 def oneroll_trim_move(x, y, frame, state):
@@ -310,13 +302,6 @@ def oneroll_trim_move(x, y, frame, state):
     global edit_data
     frame = _legalize_one_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
-
-    # Get clip frame to display
-    trim_limits = edit_data["trim_limits"]
-    if edit_data["to_side_being_edited"]:
-        clip_frame = frame - trim_limits["to_start"]
-    else:
-        clip_frame = frame - trim_limits["from_start"]
     
     PLAYER().seek_frame(frame)
     
@@ -399,12 +384,6 @@ def one_roll_trim_undo_done(track, index, is_to_side_edit):
     """
     # If in move modes do nothing
     if editorstate.edit_mode < editorstate.ONE_ROLL_TRIM:
-        return
-
-    # If in two roll mode, switch to move mode as we can't continue 
-    # editing one roll trim in two roll trim mode
-    if editorstate.edit_mode == editorstate.TWO_ROLL_TRIM:
-        set_insert_move_mode(True)
         return
 
     # If in one roll mode, reinit edit mode to correct side
@@ -824,7 +803,6 @@ def slide_trim_press(event, frame):
     edit_data["press_start"] = frame
     display_frame = _update_slide_trim_for_mouse_frame(frame)
     PLAYER().seek_frame(display_frame)
-    trim_limits = edit_data["trim_limits"]
 
 def slide_trim_move(x, y, frame, state):
     if mouse_disabled:
@@ -930,7 +908,6 @@ def slide_play_pressed():
     current_sequence().hide_hidden_clips()
 
     clip_start = edit_data["trim_limits"]["clip_start"]
-    track = edit_data["track_object"]
     clip = edit_data["clip"]
             
     if edit_data["start_frame_being_viewed"]:

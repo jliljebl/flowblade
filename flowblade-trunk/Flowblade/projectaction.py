@@ -27,7 +27,6 @@ import gtk
 import os
 from os import listdir
 from os.path import isfile, join
-import sys
 import re
 import time
 import threading
@@ -43,20 +42,16 @@ import editevent
 import editorstate
 from editorstate import current_sequence
 from editorstate import current_bin
-from editorstate import PLAYER
 from editorstate import PROJECT
 from editorstate import MONITOR_MEDIA_FILE
 import editorpersistance
 import movemodes
-import panels
 import persistance
 import projectdata
 import projectinfogui
 import render
 import rendergui
-import respaths
 import sequence
-import test
 import updater
 import utils
 
@@ -345,7 +340,7 @@ def add_to_render_queue():
         user_args = False
     else: # This is not implemented
         enc_index = render.widgets.encoding_panel.encoding_selector.widget.get_active()
-        quality_index = widgets.encoding_panel.quality_selector.widget.get_active()
+        quality_index = render.widgets.encoding_panel.quality_selector.widget.get_active()
         user_args = False
 
     profile = render.get_current_profile()
@@ -431,7 +426,6 @@ def _add_image_sequence_callback(dialog, response_id, data):
         return
 
     file_chooser, spin = data
-    frames_per_image = int(spin.get_value())
     frame_file = file_chooser.get_filename()
     dialog.destroy()
     
@@ -461,7 +455,6 @@ def _add_image_sequence_callback(dialog, response_id, data):
     # detect highest file
     # FIX: this fails if two similarily numbered sequences in same dir and both have same substring in frame name
     onlyfiles = [ f for f in listdir(folder) if isfile(join(folder,f)) ]
-    highest_file = frame_file
     highest_number_part = int(number_part)
     for f in onlyfiles:
         try:
@@ -471,7 +464,6 @@ def _add_image_sequence_callback(dialog, response_id, data):
         if f.find(path_name_part) == -1:
             continue
         if file_number_part > highest_number_part:
-            highest_file = f
             highest_number_part = file_number_part
     
     dialog.destroy()

@@ -23,7 +23,6 @@ Module contains GUI update routines.
 """
 
 import gtk
-import threading
 
 import appconsts
 import clipeffectseditor
@@ -36,9 +35,7 @@ from editorstate import PLAYER
 from editorstate import PROJECT
 from editorstate import timeline_visible
 import editorpersistance
-import mlt
 import monitorevent
-import panels
 import utils
 import respaths
 import tlinewidgets

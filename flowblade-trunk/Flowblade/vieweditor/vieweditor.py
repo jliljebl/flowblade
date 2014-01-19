@@ -18,10 +18,8 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import ctypes
 import gtk
 import numpy as np
-import struct
 
 import cairoarea
 import cairo
@@ -45,7 +43,7 @@ class ViewEditor(gtk.Frame):
         self.scaled_screen_width = self.profile_w * self.aspect_ratio # scale is gonna be 1.0 here
         self.scaled_screen_height = self.profile_h
         self.origo = (MIN_PAD, MIN_PAD)
-        
+
         self.bg_buf = None
         self.write_out_layers = False
         self.write_file_path = None
@@ -178,8 +176,6 @@ class ViewEditor(gtk.Frame):
         
         panel_o_x = panel_x - origo_x
         panel_o_y = panel_y - origo_y
-        
-        conv_mult = 1.0 / self.scale
 
         movie_x =  (1.0 / (self.scale * self.aspect_ratio)) * panel_o_x
         movie_y =  (1.0 / self.scale) * panel_o_y

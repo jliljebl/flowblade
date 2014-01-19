@@ -24,7 +24,6 @@ Module handles button edit events from buttons in the middle bar.
 
 import gtk
 import os
-import time #added for testing
 
 import appconsts
 import dialogs
@@ -46,7 +45,6 @@ import mlttransitions
 import render
 import renderconsumer
 import syncsplitevent
-import tlinewidgets
 import updater
 
 
@@ -328,11 +326,9 @@ def resync_button_pressed():
 
 def add_transition_menu_item_selected():
     if movemodes.selected_track == -1:
-        print "so selection track"
         # INFOWINDOW
         return
-        
-    track = get_track(movemodes.selected_track)
+
     clip_count = movemodes.selected_range_out - movemodes.selected_range_in + 1 # +1 out incl.
     if not (clip_count == 2):
         # INFOWINDOW
@@ -344,8 +340,7 @@ def add_fade_menu_item_selected():
         print "so selection track"
         # INFOWINDOW
         return
-        
-    track = get_track(movemodes.selected_track)
+
     clip_count = movemodes.selected_range_out - movemodes.selected_range_in + 1 # +1 out incl.
     if not (clip_count == 1):
         # INFOWINDOW

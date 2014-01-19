@@ -21,7 +21,7 @@
 """
 Module handles button presses from monitor control buttons row.
 """
-import appconsts
+
 import editorstate
 from editorstate import PLAYER
 from editorstate import current_sequence
@@ -30,7 +30,6 @@ from editorstate import EDIT_MODE
 from editorstate import current_is_move_mode
 from editorstate import MONITOR_MEDIA_FILE
 import gui
-import medialog
 import movemodes
 import trimmodes
 import updater

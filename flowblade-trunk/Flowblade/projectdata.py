@@ -24,18 +24,14 @@ Module contains objects used to capture project data.
 
 import datetime
 import gtk
-import multiprocessing
 import mlt
 import md5
 import os
 import time
-import thread
 import threading
 
 import appconsts
 import editorpersistance
-import editorstate
-import medialog
 import mltprofiles
 import patternproducer
 import miscdataobjects

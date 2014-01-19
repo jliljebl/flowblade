@@ -23,7 +23,6 @@ Module handles keyevents.
 """
 
 import gtk
-import threading
 
 import audiowaveform
 import clipeffectseditor
@@ -40,7 +39,6 @@ import keyframeeditor
 import medialog
 import monitorevent
 import tlineaction
-import titler
 import updater
 import projectaction
 

@@ -25,15 +25,11 @@ Modules handles creating and caching audio waveform images for clips.
 import gtk
 import math
 import mlt
-import numpy
 import struct
-import time
 import threading
 
-import appconsts
 from editorstate import PROJECT
 import gui
-import tlinewidgets
 import updater
 
 RENDERING_FRAME_DISPLAY_STEP = 100
@@ -137,8 +133,6 @@ class WaveformCreator(threading.Thread):
         # Calculate missing frame levels for current displayed clip area
         # Update cache values of media object and create waveform data for clip object 
         values = []
-        WAVE_IMG_HEIGHT = 50
-        WAVE_IMG_WIDTH = 10
         VAL_MIN = 5100.0
         VAL_MAX = 15000.0
         VAL_RANGE = VAL_MAX - VAL_MIN

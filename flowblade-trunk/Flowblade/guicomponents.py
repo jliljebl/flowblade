@@ -25,10 +25,8 @@ import cairo
 import gobject
 import gtk
 import math
-import os
 import pango
 import pangocairo
-import time
 
 import appconsts
 from cairoarea import CairoDrawableArea
@@ -85,10 +83,7 @@ class ImageTextTextListView(gtk.VBox):
 
     def __init__(self):
         gtk.VBox.__init__(self)
-
-        style = self.get_style()
-        bg_col = style.bg[gtk.STATE_NORMAL]
-        
+       
        # Datamodel: icon, text, text
         self.storemodel = gtk.ListStore(gtk.gdk.Pixbuf, str, str)
  
@@ -160,9 +155,6 @@ class ImageTextImageListView(gtk.VBox):
 
     def __init__(self):
         gtk.VBox.__init__(self)
-
-        style = self.get_style()
-        bg_col = style.bg[gtk.STATE_NORMAL]
         
        # Datamodel: icon, text, icon
         self.storemodel = gtk.ListStore(gtk.gdk.Pixbuf, str, gtk.gdk.Pixbuf)
@@ -323,7 +315,6 @@ class BinListView(ImageTextTextListView):
     def fill_data_model(self):
         self.storemodel.clear()
 
-        icon_theme = gtk.icon_theme_get_default()
         for bin in PROJECT().bins:
             try:
                 pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "bin_5.png")
@@ -366,9 +357,6 @@ class FilterSwitchListView(gtk.VBox):
 
     def __init__(self, selection_cb, toggle_cb):
         gtk.VBox.__init__(self)
-
-        style = self.get_style()
-        bg_col = style.bg[gtk.STATE_NORMAL]
         
        # Datamodel: icon, text, icon
         self.storemodel = gtk.ListStore(gtk.gdk.Pixbuf, str, bool)
@@ -466,9 +454,6 @@ class TextListView(gtk.VBox):
     """
     def __init__(self, width, column_name=None):
         gtk.VBox.__init__(self)
-
-        style = self.get_style()
-        bg_col = style.bg[gtk.STATE_NORMAL]
         
        # Datamodel: icon, text, text
         self.storemodel = gtk.ListStore(str)

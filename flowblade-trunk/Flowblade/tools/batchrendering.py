@@ -828,7 +828,6 @@ class RenderQueueView(gtk.VBox):
         if event.button == 3:
             x = int(event.x)
             y = int(event.y)
-            time = event.time
             pthinfo = treeview.get_path_at_pos(x, y)
             if pthinfo is not None:
                 path, col, cellx, celly = pthinfo

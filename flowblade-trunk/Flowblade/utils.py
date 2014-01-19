@@ -23,14 +23,11 @@ Helper functions and data
 """
 import gtk
 import math
-import mlt
 import os
 import threading
-import time
 
 import appconsts
 from editorstate import PROJECT
-import respaths
 
 # ---------------------------------- CLASSES
 class EmptyClass:
@@ -135,14 +132,6 @@ def get_time_str_for_sec_float(sec):
         return str(int(mins)) + "m " + str(int(sec)) + "s"
     return str(int(sec)) + "s"
         
-def get_file_thumbnail(icon_file):
-    try:
-        pixbuf = gtk.gdk.pixbuf_new_from_file(source_file)
-    except:
-        return None
-    else:
-        return pixbuf.scale_simple(64, 100, gtk.gdk.INTERP_BILINEAR)
-
 def get_track_name(track, sequence):
     if track.type == appconsts.VIDEO:
         # Video tracks are numbered to USER as 'V1' ,'V2' with 'V1' being
