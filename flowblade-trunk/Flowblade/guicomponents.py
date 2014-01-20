@@ -747,6 +747,12 @@ class MediaPanel():
     def empty_pressed(self, widget, event):
         self.clear_selection()
 
+    def select_all(self):
+        self.clear_selection()
+        for media_file, media_object in self.widget_for_mediafile.iteritems():
+            media_object.widget.modify_bg(gtk.STATE_NORMAL, gui.selected_bg_color)
+            self.selected_objects.append(media_object)
+
     def clear_selection(self):
         for m_obj in self.selected_objects:
             m_obj.widget.modify_bg(gtk.STATE_NORMAL, gui.note_bg_color)
