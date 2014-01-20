@@ -73,6 +73,7 @@ M_PI = math.pi
 
 has_proxy_icon = None
 is_proxy_icon = None
+graphics_icon = None
 
 # ------------------------------------------------- item lists 
 class ImageTextTextListView(gtk.VBox):
@@ -703,10 +704,11 @@ class MediaPanel():
         self.double_click_cb = double_click_cb
         self.monitor_indicator = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "monitor_indicator.png")
         
-        global has_proxy_icon, is_proxy_icon
+        global has_proxy_icon, is_proxy_icon, graphics_icon
         has_proxy_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "has_proxy_indicator.png")
         is_proxy_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "is_proxy_indicator.png")
-        
+        graphics_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "graphics_indicator.png")
+    
     def get_selected_media_objects(self):
         return self.selected_objects
         
@@ -873,6 +875,9 @@ class MediaObjectWidget:
                 cr.set_source_pixbuf(has_proxy_icon, 96, 6)
                 cr.paint()
 
+        if self.media_file.type == appconsts.IMAGE:
+            cr.set_source_pixbuf(graphics_icon, 6, 6)
+            cr.paint()
 
 
 # -------------------------------------------- context menus
