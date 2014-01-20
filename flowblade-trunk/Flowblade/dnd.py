@@ -24,6 +24,7 @@ Module handles drag and drop.
 
 import gtk
 
+import editorstate
 import gui
 import respaths
 
@@ -38,13 +39,15 @@ STRING_DATA_BITS = 8
 
 drag_data = None # Temp. holding for data during drag.
 clip_icon = None
+empty_icon = None
 
 add_current_effect = None
 display_monitor_media_file = None
 
 def init():
-    global clip_icon
+    global clip_icon, empty_icon
     clip_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "clip_dnd.png")
+    empty_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "empty.png")
 
 # ----------------------------------------------- set gui components as drag sources and destinations
 def connect_media_files_object_widget(widget):
@@ -79,8 +82,15 @@ def connect_video_monitor(widget):
     widget.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP,
                          [MEDIA_FILES_DND_TARGET], 
                          gtk.gdk.ACTION_COPY)
+
     widget.connect("drag_drop", _on_monitor_drop)
 
+    widget.drag_source_set(gtk.gdk.BUTTON1_MASK,
+                           [MEDIA_FILES_DND_TARGET], 
+                           gtk.gdk.ACTION_COPY)
+    widget.connect_after('drag_begin', _monitor_media_drag_begin)
+    widget.connect("drag_data_get", _monitor_media_drag_data_get)
+    
 def connect_stack_treeview(widget):
     widget.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP,
                          [EFFECTS_DND_TARGET], 
@@ -102,6 +112,17 @@ def _media_files_drag_begin(treeview, context):
 def _media_files_drag_data_get(widget, context, selection, target_id, timestamp):
     _save_media_panel_selection()
 
+def  _monitor_media_drag_begin(widget, context):
+    success = _save_monitor_media()
+    if success:
+        context.set_icon_pixbuf(clip_icon, 30, 15)
+    else:
+        context.set_icon_pixbuf(empty_icon, 30, 15)
+
+def _monitor_media_drag_data_get(widget, context, selection, target_id, timestamp):
+    print "mm drag get"
+    #context.set_icon_pixbuf(clip_icon, 30, 15)
+    
 def _effects_drag_begin(widget, context):
     pass 
 
@@ -135,6 +156,16 @@ def _save_media_panel_selection():
     global drag_data
     drag_data = gui.media_list_view.get_selected_media_objects()
 
+def _save_monitor_media():
+    media_file = editorstate.MONITOR_MEDIA_FILE()
+    global drag_data
+    drag_data = media_file
+
+    if media_file == None:
+        return False
+
+    return True
+    
 def _on_tline_drop(widget, context, x, y, timestamp, do_effect_drop_func, do_media_drop_func):
     if context.get_source_widget() == gui.effect_select_list_view.treeview:
         do_effect_drop_func(x, y)
@@ -143,6 +174,12 @@ def _on_tline_drop(widget, context, x, y, timestamp, do_effect_drop_func, do_med
         media_file = drag_data[0].media_file
         do_media_drop_func(media_file, x, y)
         gui.tline_canvas.widget.grab_focus()
+    elif context.get_source_widget() == gui.tline_display:
+        if drag_data != None:
+            do_media_drop_func(drag_data, x, y, True)
+            gui.tline_canvas.widget.grab_focus()
+        else:
+            print "monitor_drop fail"
     else:
         print "_on_tline_drop failed to do anything"
     

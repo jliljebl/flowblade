@@ -595,7 +595,7 @@ def tline_effect_drop(x, y):
     
     clipeffectseditor.add_currently_selected_effect() # drag start selects the dragged effect
 
-def tline_media_drop(media_file, x, y):
+def tline_media_drop(media_file, x, y, use_marks=False):
     track = tlinewidgets.get_track(y)
     if track == None:
         return
@@ -614,12 +614,25 @@ def tline_media_drop(media_file, x, y):
         new_clip = current_sequence().create_file_producer_clip(media_file.path, media_file.name)
     else:
         new_clip = current_sequence().create_pattern_producer(media_file)
-    new_clip.mark_in = 0
-    new_clip.mark_out = new_clip.get_length() - 1 # - 1 because out is mark_out inclusive
 
-    if media_file.type == appconsts.IMAGE_SEQUENCE:
-        new_clip.mark_out = media_file.length # so we're not using this for other files?
-        
+    # Set clip in and out
+    if use_marks == False:
+        new_clip.mark_in = 0
+        new_clip.mark_out = new_clip.get_length() - 1 # - 1 because out is mark_out inclusive
+
+        if media_file.type == appconsts.IMAGE_SEQUENCE:
+            new_clip.mark_out = media_file.length
+    else:
+        new_clip.mark_in = media_file.mark_in
+        new_clip.mark_out =  media_file.mark_out
+
+        if new_clip.mark_in == -1:
+            new_clip.mark_in = 0
+        if new_clip.mark_out == -1:
+            new_clip.mark_out = new_clip.get_length() - 1 # - 1 because out is mark_out inclusive
+            if media_file.type == appconsts.IMAGE_SEQUENCE:
+                new_clip.mark_out = media_file.length
+
     # Graphics files get added with their default lengths
     f_name, ext = os.path.splitext(media_file.name)
     if utils.file_extension_is_graphics_file(ext) and media_file.type != appconsts.IMAGE_SEQUENCE: # image sequneces are graphics files but have own length
