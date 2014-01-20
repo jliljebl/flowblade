@@ -104,6 +104,13 @@ def key_down(widget, event):
         PLAYER().seek_frame(0)
         return True
 
+    # Home
+    if event.keyval == gtk.keysyms.a:
+        if (event.state & gtk.gdk.CONTROL_MASK):
+            if gui.media_list_view.widget.has_focus() or gui.media_list_view.widget.get_focus_child() != None:
+                gui.media_list_view.select_all()
+                return True
+        
     """
     #debug
     if event.keyval == gtk.keysyms.F12:
