@@ -438,6 +438,8 @@ def tline_canvas_mouse_pressed(event, frame):
                 compositormodes.set_compositor_selected(hit_compositor)
                 guicomponents.display_compositor_popup_menu(event, hit_compositor,
                                                             _compositor_menu_item_activated)
+            elif event.button == 2:
+                updater.zoom_project_length()
             return
 
     compositormodes.clear_compositor_selection()
@@ -486,6 +488,8 @@ def tline_canvas_mouse_pressed(event, frame):
         mode_funcs = EDIT_MODE_FUNCS[EDIT_MODE()]
         press_func = mode_funcs[TL_MOUSE_PRESS]
         press_func(event, frame)
+    elif event.button == 2:
+        updater.zoom_project_length()
 
 def tline_canvas_mouse_moved(x, y, frame, button, state):
     """
