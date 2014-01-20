@@ -730,24 +730,25 @@ class EditorWindow:
 
         interp_menu_item = gtk.MenuItem(_("Monitor Playback Interpolation").encode('utf-8'))
         interp_menu =  gtk.Menu()
+        
         interp_nearest = gtk.RadioMenuItem(None, _("Nearest Neighbour").encode('utf-8'))
-        #interp_nearest.connect("activate", lambda w: self._show_tabs_up(w))
+        interp_nearest.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("nearest"))
         interp_menu.append(interp_nearest)
         
-        interp_bilinear = gtk.RadioMenuItem(None, _("Bilinear").encode('utf-8'))
-        #interp_bilinear.connect("activate", lambda w: self._show_tabs_up(w))
+        interp_bilinear = gtk.RadioMenuItem(interp_nearest, _("Bilinear").encode('utf-8'))
+        interp_bilinear.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("bilinear"))
         interp_menu.append(interp_bilinear)
 
-        interp_bicubic = gtk.RadioMenuItem(None, _("Bicubic").encode('utf-8'))
-        #interp_bicubic.connect("activate", lambda w: self._show_tabs_up(w))
+        interp_bicubic = gtk.RadioMenuItem(interp_nearest, _("Bicubic").encode('utf-8'))
+        interp_bicubic.set_active(True)
+        interp_bicubic.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("bicubic"))
 
         interp_menu.append(interp_bicubic)
 
-        interp_hyper = gtk.RadioMenuItem(None, _("Hyper/Lanczos").encode('utf-8'))
-        #interp_hyper.connect("activate", lambda w: self._show_tabs_up(w))
+        interp_hyper = gtk.RadioMenuItem(interp_nearest, _("Hyper/Lanczos").encode('utf-8'))
+        interp_hyper.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("hyper"))
         interp_menu.append(interp_hyper)
 
-        interp_bicubic.set_active(True)
         interp_menu_item.set_submenu(interp_menu)
         menu.append(interp_menu_item)
 

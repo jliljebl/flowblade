@@ -259,4 +259,8 @@ def down_arrow_seek_on_monitor_clip():
         return 
 
     PLAYER().seek_frame(0)
+
+def set_monitor_playback_interpolation(new_interpolation):
+    PLAYER().consumer.set("rescale", str(new_interpolation)) # MLT options "nearest", "bilinear", "bicubic", "hyper" hardcoded into menu items
+    
     
