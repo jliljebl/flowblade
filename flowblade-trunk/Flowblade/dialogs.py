@@ -177,7 +177,7 @@ def select_thumbnail_dir(callback, parent_window, current_dir_path, retry_open_m
     dialog.connect('response', callback, (file_select, retry_open_media))
     dialog.show_all()
 
-def select_rendred_clips_dir(callback, parent_window, current_dir_path):
+def select_rendred_clips_dir(callback, parent_window, current_dir_path, context_data=None):
     panel, file_select = panels.get_render_folder_select_panel(current_dir_path)
     cancel_str = _("Cancel").encode('utf-8')
     ok_str = _("Ok").encode('utf-8')
@@ -189,7 +189,10 @@ def select_rendred_clips_dir(callback, parent_window, current_dir_path):
 
     dialog.vbox.pack_start(panel, True, True, 0)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, file_select)
+    if context_data == None:
+        dialog.connect('response', callback, file_select)
+    else:
+        dialog.connect('response', callback, file_select, context_data)
     dialog.show_all()
 
 def rendered_clips_no_home_folder_dialog():
