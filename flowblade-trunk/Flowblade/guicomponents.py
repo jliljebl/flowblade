@@ -1292,7 +1292,8 @@ def display_media_file_popup_menu(media_file, callback, event):
     media_file_menu.add(_get_menu_item(_("File Properties"), callback, ("File Properties", media_file, event)))
     _add_separetor(media_file_menu)
     media_file_menu.add(_get_menu_item(_("Render Slow/Fast Motion File"), callback, ("Render Slow/Fast Motion File", media_file, event)))
-
+    media_file_menu.add(_get_menu_item(_("Render Proxy File"), callback, ("Render Proxy File", media_file, event)))
+    
     media_file_menu.popup(None, None, None, event.button, event.time)
 
 def display_filter_stack_popup_menu(row, treeview, callback, event):

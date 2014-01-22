@@ -49,6 +49,7 @@ import movemodes
 import persistance
 import projectdata
 import projectinfogui
+import proxyediting
 import render
 import rendergui
 import sequence
@@ -888,6 +889,8 @@ def media_file_menu_item_selected(widget, data):
     if item_id == "Delete":
         gui.media_list_view.select_media_file(media_file)
         delete_media_files()
+    if item_id == "Render Proxy File":
+        proxyediting.create_proxy_menu_item_selected(media_file)
 
 def _select_treeview_on_pos_and_return_row_and_column_title(event, treeview):
     selection = treeview.get_selection()

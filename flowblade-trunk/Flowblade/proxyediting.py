@@ -456,11 +456,30 @@ def show_proxy_manager_dialog():
     global manager_window
     manager_window = ProxyManagerDialog()
 
-def create_proxy_files_pressed(retry_from_render_folder_select=False):
+def create_proxy_files_pressed():
+    media_file_widgets = gui.media_list_view.get_selected_media_objects()
+    if len(media_file_widgets) == 0:
+        return
+
+    media_files = []
+    for w in media_file_widgets:
+        media_files.append(w.media_file)
+    
+    _do_create_proxy_files(media_files)
+
+def create_proxy_menu_item_selected(media_file):
+    media_files = []
+    media_files.append(media_file)
+
+    _do_create_proxy_files(media_files)
+
+def _do_create_proxy_files(media_files, retry_from_render_folder_select=False):
     if editorpersistance.prefs.render_folder == None:
         if retry_from_render_folder_select == True:
             return
-        dialogs.select_rendred_clips_dir(_create_proxy_render_folder_select_callback, gui.editor_window.window, editorpersistance.prefs.render_folder)
+        dialogs.select_rendred_clips_dir(_create_proxy_render_folder_select_callback, 
+                                         gui.editor_window.window, editorpersistance.prefs.render_folder,
+                                         media_files)
         return
     
     # Create proxies dir if does not exist
@@ -468,21 +487,17 @@ def create_proxy_files_pressed(retry_from_render_folder_select=False):
     if not os.path.exists(proxies_dir):
         os.mkdir(proxies_dir)
 
-    media_file_widgets = gui.media_list_view.get_selected_media_objects()
-    if len(media_file_widgets) == 0:
-        return
-
     proxy_profile = _get_proxy_profile(editorstate.PROJECT())
     proxy_w, proxy_h =  _get_proxy_dimensions(proxy_profile, editorstate.PROJECT().proxy_data.size)
     proxy_file_extension = _get_proxy_encoding().extension
-     
+
     files_to_render = []
     not_video_files = 0
     already_have_proxies = []
     is_proxy_file = 0
     other_project_proxies = []
-    for w in media_file_widgets:
-        f = w.media_file
+    for f in media_files:
+        #f = w.media_file
         if f.is_proxy_file == True: # Can't create a proxy file for a proxy file
             is_proxy_file = is_proxy_file + 1
             continue
@@ -579,7 +594,7 @@ def _proxy_render_stopped():
     progress_window = None
     runner_thread = None
 
-def _create_proxy_render_folder_select_callback(dialog, response_id, file_select):
+def _create_proxy_render_folder_select_callback(dialog, response_id, file_select, media_files):
     try:
         folder = file_select.get_filenames()[0]
     except:
@@ -593,7 +608,7 @@ def _create_proxy_render_folder_select_callback(dialog, response_id, file_select
         else:
             editorpersistance.prefs.render_folder = folder
             editorpersistance.save()
-            create_proxy_files_pressed(True)
+            _do_create_proxy_files(media_files, True)
 
 # ----------------------------------------------------------- changing proxy modes
 def _convert_to_proxy_project():    
