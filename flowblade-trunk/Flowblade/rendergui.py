@@ -17,7 +17,7 @@ FFMPEG_VIEW_SIZE = (200, 210) # Text edit area height for render opts. Width 200
 
 
 # ----------------------------------------------------------- dialogs
-def render_progress_dialog(callback, parent_window):
+def render_progress_dialog(callback, parent_window, frame_rates_match=True):
     dialog = gtk.Dialog(_("Render Progress"),
                          parent_window,
                          gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
@@ -40,10 +40,21 @@ def render_progress_dialog(callback, parent_window):
     passed_box.pack_start(dialog.passed_time_label,False, False, 0)
     passed_box.pack_start(gtk.Label(), True, True, 0)
 
+    if frame_rates_match == False:
+        warning_icon = gtk.image_new_from_stock(gtk.STOCK_DIALOG_WARNING, gtk.ICON_SIZE_MENU)
+        warning_text = gtk.Label(_("Project and Render Profile FPS values are not same. Rendered file may have A/V sync issues."))
+        warning_box = gtk.HBox(False, 2)
+        warning_box.pack_start(warning_icon,False, False, 0)
+        warning_box.pack_start(warning_text,False, False, 0)
+        warning_box.pack_start(gtk.Label(), True, True, 0)
+        
     progress_vbox = gtk.VBox(False, 2)
     progress_vbox.pack_start(status_box, False, False, 0)
     progress_vbox.pack_start(remaining_box, False, False, 0)
     progress_vbox.pack_start(passed_box, False, False, 0)
+    if frame_rates_match == False:
+        progress_vbox.pack_start(guiutils.get_pad_label(10, 10), False, False, 0)
+        progress_vbox.pack_start(warning_box, False, False, 0)
     progress_vbox.pack_start(guiutils.get_pad_label(10, 10), False, False, 0)
     progress_vbox.pack_start(dialog.progress_bar, False, False, 0)
     

@@ -142,9 +142,21 @@ def _do_rendering():
     PROJECT().events.append(project_event)
     projectinfogui.update_project_info()
 
+    # See if project and render fps match
+    cnum = render_consumer.profile().frame_rate_num()
+    cden = render_consumer.profile().frame_rate_den()
+    pnum = PROJECT().profile.frame_rate_num()
+    pden = PROJECT().profile.frame_rate_den()
+    
+    if (cnum == pnum) and (cden == pden):
+        frames_rates_match = True
+    else:
+        frames_rates_match = False
+
     global progress_window
     progress_window = rendergui.render_progress_dialog(_render_cancel_callback,
-                                                       gui.editor_window.window)
+                                                       gui.editor_window.window,
+                                                       frames_rates_match)
                                                        
     set_render_gui()
 
