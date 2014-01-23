@@ -880,9 +880,9 @@ class EditorWindow:
         self.set_cursor_to_mode()
 
     def mode_selector_pressed(self, selector, event):
-        guicomponents.get_mode_selector_popup_menu(selector, event, self._mode_selector_item_activated)
+        guicomponents.get_mode_selector_popup_menu(selector, event, self.mode_selector_item_activated)
     
-    def _mode_selector_item_activated(self, selector, mode):
+    def mode_selector_item_activated(self, selector, mode):
         if mode == 0:
             self.handle_insert_move_mode_button_press()
         if mode == 1:

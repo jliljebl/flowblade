@@ -140,3 +140,5 @@ def set_copy_paste_objects(objs):
 
 def get_copy_paste_objects():
     return _copy_paste_objects
+
+   

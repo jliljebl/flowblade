@@ -257,7 +257,7 @@ def mouse_scroll_zoom(event):
             zoom_in()
         else:
             zoom_out()
-        
+
 def maybe_autocenter():
     if timeline_visible():
         if editorpersistance.prefs.auto_center_on_play_stop == True:
