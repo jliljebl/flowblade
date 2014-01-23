@@ -524,8 +524,6 @@ def tworoll_trim_press(event, frame):
         _attempt_reinit_tworoll(event, frame)
         return
 
-
-
     if not _pressed_on_two_roll_active_area(frame):
         _attempt_reinit_tworoll(event, frame)
         return
@@ -674,9 +672,6 @@ def _legalize_two_roll_trim(frame, trim_limits):
     return frame
 
 def _pressed_on_two_roll_active_area(frame):
-    #if frame >= tlinewidgets.get_track(y):
-    #    return False
-
     first, last = _get_two_roll_first_and_last()
     if frame < first:
         return False

@@ -299,19 +299,22 @@ def set_render_progress_gui(fraction):
     pros = int(fraction * 100)
     progress_window.progress_bar.set_text(str(pros) + "%")
 
-    if pros > 0.99: # Only start giving estimations after rendering has gone on for a while.
+    try:
         passed_time = time.time() - render_start_time
         full_time_est = (1.0 / fraction) * passed_time
-        left_est = full_time_est - passed_time
-
-        left_str = utils.get_time_str_for_sec_float(left_est)
         passed_str = utils.get_time_str_for_sec_float(passed_time)
-
-        progress_window.remaining_time_label.set_text(_("<b>Estimated Time Left: </b>") + left_str)
-        progress_window.remaining_time_label.set_use_markup(True)
         progress_window.passed_time_label.set_text(_("<b>Render Time: </b>") + passed_str)
         progress_window.passed_time_label.set_use_markup(True)
 
+        if pros > 0.99: # Only start giving estimations after rendering has gone on for a while.
+            left_est = full_time_est - passed_time
+            left_str = utils.get_time_str_for_sec_float(left_est)
+            progress_window.remaining_time_label.set_text(_("<b>Estimated Time Left: </b>") + left_str)
+            progress_window.remaining_time_label.set_use_markup(True)
+
+    except: # A fraction of 0 usually gets sent here at beginning of rendering
+        pass
+        
 def exit_render_gui():
     if aborted == True:
         print "render aborted"
