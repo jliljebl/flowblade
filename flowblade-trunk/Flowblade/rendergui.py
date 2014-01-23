@@ -517,12 +517,12 @@ class RenderEncodingPanel():
                                                         self.audio_desc)
         self.encoding_selector.encoding_selection_changed()
         
-        speaker_image = gtk.image_new_from_file(respaths.IMAGE_PATH + "audio_desc_icon.png")
+        self.speaker_image = gtk.image_new_from_file(respaths.IMAGE_PATH + "audio_desc_icon.png")
 
         quality_row  = gtk.HBox()
         quality_row.pack_start(self.quality_selector.widget, False, False, 0)
         quality_row.pack_start(gtk.Label(), True, False, 0)
-        quality_row.pack_start(speaker_image, False, False, 0)
+        quality_row.pack_start(self.speaker_image, False, False, 0)
         quality_row.pack_start(self.audio_desc, False, False, 0)
         quality_row.pack_start(gtk.Label(), True, False, 0)
         
@@ -533,6 +533,7 @@ class RenderEncodingPanel():
     def set_sensitive(self, value):
         self.quality_selector.widget.set_sensitive(value)
         self.audio_desc.set_sensitive(value)
+        self.speaker_image.set_sensitive(value)
         self.encoding_selector.widget.set_sensitive(value)
 
 
