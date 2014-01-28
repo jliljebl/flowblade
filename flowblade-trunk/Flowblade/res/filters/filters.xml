@@ -452,12 +452,6 @@
         <name>Grayscale</name>
         <group>Color</group>
     </filter>
-    
-    <filter id="movit.saturation">
-        <name>Saturation</name>
-        <group>Color</group>
-        <property name="Saturation" args="range_in=0,100">"0.5"</property>
-    </filter>
     <!--
     <filter id="frei0r.cairogradient">
         <name>Cairogradient</name>
@@ -485,6 +479,10 @@
     </filter>
     <filter id="invert">
         <name>Invert</name>
+        <group>Color</group>
+    </filter>
+    <filter id="liftgaingamma">
+        <name>LiftGainGamma</name>
         <group>Color</group>
     </filter>
     <filter id="frei0r.hueshift0r">

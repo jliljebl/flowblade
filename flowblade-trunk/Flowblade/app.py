@@ -264,7 +264,7 @@ def monkeypatch_callbacks():
     undo.set_post_undo_redo_callback(editevent.set_post_undo_redo_edit_mode)
     
     # # Drag'n'drop callbacks
-    dnd.add_currently_effect = clipeffectseditor.add_currently_selected_effect
+    dnd.add_current_effect = clipeffectseditor.add_currently_selected_effect
     dnd.display_monitor_media_file = updater.set_and_display_monitor_media_file
 
     # These provide clues for further module refactoring 
