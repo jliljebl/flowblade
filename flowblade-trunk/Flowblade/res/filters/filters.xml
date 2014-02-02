@@ -482,8 +482,11 @@
         <group>Color</group>
     </filter>
     <filter id="liftgaingamma">
-        <name>LiftGainGamma</name>
+        <name>Lift Gain Gamma</name>
         <group>Color</group>
+        <property name="lift" args="range_in=-100,100 range_out=-0.5,0.5 displayname=Lift">0.0</property>
+        <property name="gain" args="range_in=-100,100 range_out=-0.5,0.5 displayname=Gain">0.0</property>
+        <property name="gamma" args="range_in=-100,100 range_out=-1.0,1.0 displayname=Gamma">0.0</property>
     </filter>
     <filter id="frei0r.hueshift0r">
         <name>Hue</name>
@@ -609,12 +612,6 @@
         <group>Color Effect</group>
         <property name="midpoint" args="range_in=0,255 range_out=0,255 displayname=Threshold">125.0</property>
     </filter>
-    <!--
-    <filter id="frei0r.jannetest3">
-        <name>JanneTest</name>
-        <group>Color Effect</group>
-    </filter>
-    -->
     <filter id="frei0r.posterize">
         <name>Posterize</name>
         <group>Color Effect</group>

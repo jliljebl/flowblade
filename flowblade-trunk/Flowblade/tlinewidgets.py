@@ -69,7 +69,7 @@ MARK_LINE_WIDTH = 4
 COLUMN_WIDTH = 96 # column area width
 SCALE_HEIGHT = 25
 SCROLL_HEIGHT = 20
-MUTE_SWITCH_WIDTH = 4 # as mute switch no longer exists this is now essentially left pad width 
+COLUMN_LEFT_PAD = 4 # as mute switch no longer exists this is now essentially left pad width 
 ACTIVE_SWITCH_WIDTH = 18
 COMPOSITOR_HEIGHT_OFF = 10
 COMPOSITOR_HEIGHT = 20
@@ -1349,13 +1349,13 @@ class TimeLineColumn:
         self.switch_testers = []
 
         # Active area tester
-        center_width = COLUMN_WIDTH - MUTE_SWITCH_WIDTH - ACTIVE_SWITCH_WIDTH
-        tester = ValueTester(MUTE_SWITCH_WIDTH + center_width, COLUMN_WIDTH, 
+        center_width = COLUMN_WIDTH - COLUMN_LEFT_PAD - ACTIVE_SWITCH_WIDTH
+        tester = ValueTester(COLUMN_LEFT_PAD + center_width, COLUMN_WIDTH, 
                              self.active_listener)
         self.switch_testers.append(tester)
 
         # Center area tester
-        tester = ValueTester(MUTE_SWITCH_WIDTH, COLUMN_WIDTH - ACTIVE_SWITCH_WIDTH, 
+        tester = ValueTester(COLUMN_LEFT_PAD, COLUMN_WIDTH - ACTIVE_SWITCH_WIDTH, 
                              self.center_listener)
         self.switch_testers.append(tester)
 
@@ -1399,9 +1399,9 @@ class TimeLineColumn:
  
     def draw_track(self, cr, track, y, is_insert_track):
         # Draw center area
-        center_width = COLUMN_WIDTH - MUTE_SWITCH_WIDTH - ACTIVE_SWITCH_WIDTH
-        rect = (MUTE_SWITCH_WIDTH, y, center_width, track.height)
-        grad = cairo.LinearGradient (MUTE_SWITCH_WIDTH, y, MUTE_SWITCH_WIDTH, y + track.height)
+        center_width = COLUMN_WIDTH - COLUMN_LEFT_PAD - ACTIVE_SWITCH_WIDTH
+        rect = (COLUMN_LEFT_PAD, y, center_width, track.height)
+        grad = cairo.LinearGradient (COLUMN_LEFT_PAD, y, COLUMN_LEFT_PAD, y + track.height)
         self._add_gradient_color_stops(grad, track)
         cr.rectangle(*rect)
         cr.set_source(grad)
@@ -1409,11 +1409,11 @@ class TimeLineColumn:
         self.draw_edge(cr, rect)
         
         # Draw active switch bg end edge
-        rect = (MUTE_SWITCH_WIDTH + center_width -1, y, ACTIVE_SWITCH_WIDTH + 1, track.height)
+        rect = (COLUMN_LEFT_PAD + center_width - 1, y, ACTIVE_SWITCH_WIDTH + 1, track.height)
         cr.rectangle(*rect)
         if track.active:
-            grad = cairo.LinearGradient(MUTE_SWITCH_WIDTH + center_width, y,
-                                        MUTE_SWITCH_WIDTH + center_width, y + track.height)
+            grad = cairo.LinearGradient(COLUMN_LEFT_PAD + center_width, y,
+                                        COLUMN_LEFT_PAD + center_width, y + track.height)
             self._add_gradient_color_stops(grad, track)
             cr.set_source(grad)
         else:
@@ -1434,7 +1434,7 @@ class TimeLineColumn:
             text_y = ID_PAD_Y
         else:
             text_y = ID_PAD_Y_SMALL
-        pango_context.move_to(MUTE_SWITCH_WIDTH + ID_PAD_X, y + text_y)
+        pango_context.move_to(COLUMN_LEFT_PAD + ID_PAD_X, y + text_y)
         pango_context.update_layout(layout)
         pango_context.show_layout(layout)
         

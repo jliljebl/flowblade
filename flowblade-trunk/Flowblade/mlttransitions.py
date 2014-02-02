@@ -423,10 +423,6 @@ def get_rendered_transition_tractor(current_sequence,
             from_clip.clip_in = 0
             from_clip.clip_out = length
             
-        print from_clip.clip_in
-        print from_clip.clip_out
-        print "length:", length
-
     # Add clips to tracks and create keyframe string to contron mixing
     if transition_type == RENDERED_DISSOLVE or transition_type == RENDERED_WIPE:
         # Add clips. Images and pattern producers always fill full track.
@@ -458,8 +454,6 @@ def get_rendered_transition_tractor(current_sequence,
         else: # transition_type ==  RENDERED_FADE_OUT
             track1.insert(from_clip, 0, orig_from.clip_out - length, orig_from.clip_out)
             kf_str = "0=0/0:100%x100%:100.0;"+ str(length) + "=0/0:100%x100%:0.0"
-        print kf_str
-        print (tractor.get_length() - 1)
 
     # Create transition
     transition = mlt.Transition(current_sequence.profile, "region")
