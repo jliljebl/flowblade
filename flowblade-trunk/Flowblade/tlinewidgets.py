@@ -1444,7 +1444,7 @@ class TimeLineColumn:
             mute_icon = MUTE_VIDEO_ICON
         elif track.mute_state == appconsts.TRACK_MUTE_AUDIO and track.type == appconsts.VIDEO:
             mute_icon = MUTE_AUDIO_ICON
-        elif track.mute_state == appconsts.TRACK_MUTE_AUDIO and track.type == appconsts.AUDIO:
+        elif track.mute_state == appconsts.TRACK_MUTE_ALL and track.type == appconsts.AUDIO:
             mute_icon = MUTE_AUDIO_A_ICON
         elif track.mute_state == appconsts.TRACK_MUTE_ALL:
             mute_icon = MUTE_ALL_ICON

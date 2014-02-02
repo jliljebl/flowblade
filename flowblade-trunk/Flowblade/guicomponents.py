@@ -1239,9 +1239,11 @@ def _get_track_mute_menu_item(event, track, callback):
 
     item = gtk.MenuItem(_("Unmute"))
     sub_menu.append(item)
-    item.connect("activate", callback, (track, "mute_track", appconsts.TRACK_MUTE_NOTHING))
-    _set_non_sensitive_if_state_matches(track, item, appconsts.TRACK_MUTE_NOTHING)
-    if track.type == appconsts.AUDIO:
+    if track.type == appconsts.VIDEO:
+        item.connect("activate", callback, (track, "mute_track", appconsts.TRACK_MUTE_NOTHING))
+        _set_non_sensitive_if_state_matches(track, item, appconsts.TRACK_MUTE_NOTHING)
+    else:
+        item.connect("activate", callback, (track, "mute_track", appconsts.TRACK_MUTE_VIDEO))
         _set_non_sensitive_if_state_matches(track, item, appconsts.TRACK_MUTE_VIDEO)
     item.show()
     
@@ -1254,8 +1256,12 @@ def _get_track_mute_menu_item(event, track, callback):
 
     item = gtk.MenuItem(_("Mute Audio"))
     sub_menu.append(item)
-    item.connect("activate", callback, (track, "mute_track", appconsts.TRACK_MUTE_AUDIO))
-    _set_non_sensitive_if_state_matches(track, item, appconsts.TRACK_MUTE_AUDIO)
+    if track.type == appconsts.VIDEO:
+        item.connect("activate", callback, (track, "mute_track", appconsts.TRACK_MUTE_AUDIO))
+        _set_non_sensitive_if_state_matches(track, item, appconsts.TRACK_MUTE_AUDIO)
+    else:
+        item.connect("activate", callback, (track, "mute_track", appconsts.TRACK_MUTE_ALL))
+        _set_non_sensitive_if_state_matches(track, item, appconsts.TRACK_MUTE_ALL)
     item.show()
 
     if track.type == appconsts.VIDEO:

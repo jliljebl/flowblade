@@ -882,29 +882,40 @@ def track_center_pressed(data):
             if track.height > appconsts.TRACK_HEIGHT_SMALL:
                 ix, iy = tlinewidgets.MUTE_ICON_POS_NORMAL
             ICON_HEIGHT = 10
-            if y_off > iy and y_off < iy + ICON_HEIGHT:
-                # Video mute icon hit
-                if track.mute_state == appconsts.TRACK_MUTE_NOTHING:
-                    new_mute_state = appconsts.TRACK_MUTE_VIDEO
-                elif track.mute_state == appconsts.TRACK_MUTE_VIDEO:
-                    new_mute_state = appconsts.TRACK_MUTE_NOTHING
-                elif track.mute_state == appconsts.TRACK_MUTE_AUDIO:
-                    new_mute_state = appconsts.TRACK_MUTE_ALL
-                elif track.mute_state == appconsts.TRACK_MUTE_ALL:
-                    new_mute_state = appconsts.TRACK_MUTE_AUDIO
-            elif y_off > iy + ICON_HEIGHT and y_off < iy + ICON_HEIGHT * 2:
-                # Audio mute icon hit
-                if track.mute_state == appconsts.TRACK_MUTE_NOTHING:
-                    new_mute_state = appconsts.TRACK_MUTE_AUDIO
-                elif track.mute_state == appconsts.TRACK_MUTE_VIDEO:
-                    new_mute_state = appconsts.TRACK_MUTE_ALL
-                elif track.mute_state == appconsts.TRACK_MUTE_AUDIO:
-                    new_mute_state = appconsts.TRACK_MUTE_NOTHING
-                elif track.mute_state == appconsts.TRACK_MUTE_ALL:
-                    new_mute_state = appconsts.TRACK_MUTE_VIDEO
+            if track.id >= current_sequence().first_video_index:
+                # Video tracks
+                if y_off > iy and y_off < iy + ICON_HEIGHT:
+                    # Video mute icon hit
+                    if track.mute_state == appconsts.TRACK_MUTE_NOTHING:
+                        new_mute_state = appconsts.TRACK_MUTE_VIDEO
+                    elif track.mute_state == appconsts.TRACK_MUTE_VIDEO:
+                        new_mute_state = appconsts.TRACK_MUTE_NOTHING
+                    elif track.mute_state == appconsts.TRACK_MUTE_AUDIO:
+                        new_mute_state = appconsts.TRACK_MUTE_ALL
+                    elif track.mute_state == appconsts.TRACK_MUTE_ALL:
+                        new_mute_state = appconsts.TRACK_MUTE_AUDIO
+                elif y_off > iy + ICON_HEIGHT and y_off < iy + ICON_HEIGHT * 2:
+                    # Audio mute icon hit
+                    if track.mute_state == appconsts.TRACK_MUTE_NOTHING:
+                        new_mute_state = appconsts.TRACK_MUTE_AUDIO
+                    elif track.mute_state == appconsts.TRACK_MUTE_VIDEO:
+                        new_mute_state = appconsts.TRACK_MUTE_ALL
+                    elif track.mute_state == appconsts.TRACK_MUTE_AUDIO:
+                        new_mute_state = appconsts.TRACK_MUTE_NOTHING
+                    elif track.mute_state == appconsts.TRACK_MUTE_ALL:
+                        new_mute_state = appconsts.TRACK_MUTE_VIDEO
+                else:
+                    return
             else:
-                return
-
+                # Audio tracks
+                iy = iy + 6 # Mute icon is lower on audio tracks
+                if y_off > iy and y_off < iy + ICON_HEIGHT:
+                    if track.mute_state == appconsts.TRACK_MUTE_VIDEO:
+                        new_mute_state = appconsts.TRACK_MUTE_ALL
+                    else:
+                        new_mute_state = appconsts.TRACK_MUTE_VIDEO
+                else:
+                    return 
             # Update track mute state
             current_sequence().set_track_mute_state(track.id, new_mute_state)
             gui.tline_column.widget.queue_draw()
