@@ -867,6 +867,48 @@ def track_mute_switch_pressed(data):
                                                 _track_menu_item_activated)
 
 def track_center_pressed(data):
+    if data.event.button == 1:
+        # handle possible mute icon presses
+        press_x = data.event.x
+        press_y = data.event.y
+        track = tlinewidgets.get_track(press_y)
+        if track == None:
+            return
+        y_off = press_y - tlinewidgets._get_track_y(track.id)
+        ICON_WIDTH = 12
+        if press_x > tlinewidgets.COLUMN_LEFT_PAD and press_x < tlinewidgets.COLUMN_LEFT_PAD + ICON_WIDTH:
+            # Mute icon x area hit
+            ix, iy = tlinewidgets.MUTE_ICON_POS
+            if track.height > appconsts.TRACK_HEIGHT_SMALL:
+                ix, iy = tlinewidgets.MUTE_ICON_POS_NORMAL
+            ICON_HEIGHT = 10
+            if y_off > iy and y_off < iy + ICON_HEIGHT:
+                # Video mute icon hit
+                if track.mute_state == appconsts.TRACK_MUTE_NOTHING:
+                    new_mute_state = appconsts.TRACK_MUTE_VIDEO
+                elif track.mute_state == appconsts.TRACK_MUTE_VIDEO:
+                    new_mute_state = appconsts.TRACK_MUTE_NOTHING
+                elif track.mute_state == appconsts.TRACK_MUTE_AUDIO:
+                    new_mute_state = appconsts.TRACK_MUTE_ALL
+                elif track.mute_state == appconsts.TRACK_MUTE_ALL:
+                    new_mute_state = appconsts.TRACK_MUTE_AUDIO
+            elif y_off > iy + ICON_HEIGHT and y_off < iy + ICON_HEIGHT * 2:
+                # Audio mute icon hit
+                if track.mute_state == appconsts.TRACK_MUTE_NOTHING:
+                    new_mute_state = appconsts.TRACK_MUTE_AUDIO
+                elif track.mute_state == appconsts.TRACK_MUTE_VIDEO:
+                    new_mute_state = appconsts.TRACK_MUTE_ALL
+                elif track.mute_state == appconsts.TRACK_MUTE_AUDIO:
+                    new_mute_state = appconsts.TRACK_MUTE_NOTHING
+                elif track.mute_state == appconsts.TRACK_MUTE_ALL:
+                    new_mute_state = appconsts.TRACK_MUTE_VIDEO
+            else:
+                return
+
+            # Update track mute state
+            current_sequence().set_track_mute_state(track.id, new_mute_state)
+            gui.tline_column.widget.queue_draw()
+    
     if data.event.button == 3:
         guicomponents.display_tracks_popup_menu(data.event, data.track, \
                                                 _track_menu_item_activated)
