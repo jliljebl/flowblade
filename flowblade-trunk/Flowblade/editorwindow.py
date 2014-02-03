@@ -777,7 +777,6 @@ class EditorWindow:
             self.notebook.set_tab_pos(gtk.POS_BOTTOM)
             self.right_notebook.set_tab_pos(gtk.POS_BOTTOM)
 
-    
     def _show_tabs_up(self, widget):
         if widget.get_active() == False:
             return
