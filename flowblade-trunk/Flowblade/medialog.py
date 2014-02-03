@@ -204,6 +204,25 @@ def display_log_clip_double_click_listener(treeview, path, view_column):
     data = ("display", row, treeview)
     _log_event_menu_item_selected(treeview, data)
 
+def _group_action_pressed(widget, event):
+    actions_menu = gtk.Menu()        
+    actions_menu.add(guiutils.get_menu_item(_("New Group..."), _actions_callback, "new"))
+    actions_menu.add(guiutils.get_menu_item(_("New Group From Selected..."), _actions_callback, "newfromselected"))
+    guiutils.add_separetor(actions_menu)
+    actions_menu.add(guiutils.get_menu_item(_("Move Selected To Group"), _actions_callback, "delete"))
+    guiutils.add_separetor(actions_menu)
+    actions_menu.add(guiutils.get_menu_item(_("Delete Group"), _actions_callback, "delete"))
+    actions_menu.add(guiutils.get_menu_item(_("Delete Group and Items"), _actions_callback, "delete"))
+    actions_menu.popup(None, None, None, event.button, event.time)
+
+def _actions_callback(widget, data):
+    print data
+
+def _viewed_group_changed(widget):
+    print widget.get_active()
+
+def _use_comments_toggled(widget):
+    print "check"
 
 # ------------------------------------------------------------ gui
 def get_media_log_list_view():
@@ -356,7 +375,16 @@ def get_current_log_events():
 
 def get_media_log_events_panel(events_list_view):
     global widgets
- 
+    actions_pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "media_log_action.png")
+    group_actions_menu = guicomponents.PressLaunch(_group_action_pressed, actions_pixbuf, 38, 22)
+
+    group_view_select = gtk.combo_box_new_text() # filled later when current sequence known
+    group_view_select.append_text(_("All"))
+    group_view_select.set_active(0)
+    group_view_select.set_size_request(250, 30)
+    group_view_select.connect('changed', _viewed_group_changed)
+    group_view_select.set_tooltip_text(_("Select viewed Range Log Items Group"))
+
     star_check = gtk.CheckButton()
     star_check.set_active(True)
     star_check.connect("clicked", lambda w:media_log_filtering_changed())
@@ -383,6 +411,10 @@ def get_media_log_events_panel(events_list_view):
     
     row1 = gtk.HBox()
     row1.pack_start(guiutils.get_pad_label(6, 12), False, True, 0)
+    row1.pack_start(group_actions_menu.widget, False, True, 0)
+    row1.pack_start(guiutils.get_pad_label(6, 12), False, True, 0)
+    row1.pack_start(group_view_select, False, True, 0)
+    row1.pack_start(guiutils.get_pad_label(6, 12), False, True, 0)
     row1.pack_start(star_check, False, True, 0)
     row1.pack_start(star_label, False, True, 0)
     row1.pack_start(guiutils.get_pad_label(6, 12), False, True, 0)
@@ -403,9 +435,11 @@ def get_media_log_events_panel(events_list_view):
     delete_button.set_size_request(80, 30)
     delete_button.connect("clicked", lambda w:delete_selected())
 
-    #to_monitor = gtk.Button()
-    #to_monitor.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "open_log_item_in_monitor.png"))
-    
+    use_comments_label = gtk.Label(_("Use Comments as Clip Names"))
+    use_comments_check =  gtk.CheckButton()
+    use_comments_check.set_active(False)
+    use_comments_check.connect("toggled", _use_comments_toggled)
+
     append_displayed = gtk.Button()
     append_displayed.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "append_media_log.png"))
     append_displayed.set_size_request(80, 22)
@@ -414,6 +448,9 @@ def get_media_log_events_panel(events_list_view):
     row2 =  gtk.HBox()
     row2.pack_start(widgets.log_range, False, True, 0)
     row2.pack_start(delete_button, False, True, 0)
+    row2.pack_start(gtk.Label(), True, True, 0)
+    row2.pack_start(use_comments_label, False, True, 0)
+    row2.pack_start(use_comments_check, False, True, 0)
     row2.pack_start(gtk.Label(), True, True, 0)
     row2.pack_start(append_displayed, False, True, 0)
 

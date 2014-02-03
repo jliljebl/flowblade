@@ -208,3 +208,16 @@ def get_render_button():
     render_button_box.pack_start(get_pad_label(10, 10), False, False, 0)
     render_button.add(render_button_box)
     return render_button
+
+def get_menu_item(text, callback, data, sensitive=True):
+    item = gtk.MenuItem(text)
+    item.connect("activate", callback, data)
+    item.show()
+    item.set_sensitive(sensitive)
+    return item
+
+def add_separetor(menu):
+    sep = gtk.SeparatorMenuItem()
+    sep.show()
+    menu.add(sep)
+
