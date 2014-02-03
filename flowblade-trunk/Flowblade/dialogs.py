@@ -807,6 +807,35 @@ def new_clip_name_dialog(callback, clip):
     dialog.set_default_response(gtk.RESPONSE_ACCEPT)
     dialog.connect('response', callback, (name_entry, clip))
     dialog.show_all()
+
+def new_media_log_group_name_dialog(callback, next_index, add_selected):
+    dialog = gtk.Dialog(_("New Range Item Group"), None,
+                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                        _("Create").encode('utf-8'), gtk.RESPONSE_OK))
+
+    name_entry = gtk.Entry(30)
+    name_entry.set_width_chars(30)
+    name_entry.set_text(_("User Group ") + str(next_index))
+    name_entry.set_activates_default(True)
+
+    name_select = panels.get_two_column_box(gtk.Label(_("New Group Name:")),
+                                               name_entry,
+                                               180)
+
+    tracks_vbox = gtk.VBox(False, 2)
+    tracks_vbox.pack_start(name_select, False, False, 0)
+    tracks_vbox.pack_start(guiutils.get_pad_label(12, 12), False, False, 0)
+
+    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment.set_padding(6, 24, 24, 24)
+    alignment.add(tracks_vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    _default_behaviour(dialog)
+    dialog.set_default_response(gtk.RESPONSE_ACCEPT)
+    dialog.connect('response', callback, (name_entry, add_selected))
+    dialog.show_all()
     
 def not_valid_producer_dialog(file_path, parent_window):
     primary_txt = _("Can't open non-valid media")

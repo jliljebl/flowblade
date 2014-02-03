@@ -23,6 +23,7 @@ import datetime
 import pango
 
 import appconsts
+import dialogs
 import edit
 import gui
 import guicomponents
@@ -109,7 +110,7 @@ def log_range_clicked():
     widgets.media_log_view.fill_data_model()
     max_val = widgets.media_log_view.treeview.get_vadjustment().get_upper()
     gui.middle_notebook.set_current_page(1)
-    widgets.media_log_view.treeview.get_selection().select_path(str(len(get_current_log_events())-1))
+    widgets.media_log_view.treeview.get_selection().select_path(str(len(get_current_filtered_events())-1))
     widgets.media_log_view.treeview.get_vadjustment().set_value(max_val)
 
 def log_item_name_edited(cell, path, new_text, user_data):
@@ -171,7 +172,8 @@ def _log_event_menu_item_selected(widget, data):
         display_item(row)
 
 def get_current_filtered_events():
-    log_events = PROJECT().get_filtered_media_log_events(widgets.star_check.get_active(),
+    log_events = PROJECT().get_filtered_media_log_events(widgets.group_view_select.get_active() - 1,
+                                                         widgets.star_check.get_active(),
                                                          widgets.star_not_active_check.get_active())
     return log_events
 
@@ -209,21 +211,69 @@ def _group_action_pressed(widget, event):
     actions_menu.add(guiutils.get_menu_item(_("New Group..."), _actions_callback, "new"))
     actions_menu.add(guiutils.get_menu_item(_("New Group From Selected..."), _actions_callback, "newfromselected"))
     guiutils.add_separetor(actions_menu)
-    actions_menu.add(guiutils.get_menu_item(_("Move Selected To Group"), _actions_callback, "delete"))
+
+    move_menu_item = gtk.MenuItem(_("Move Selected To Group").encode('utf-8'))
+    move_menu = gtk.Menu()
+    if len(PROJECT().media_log_groups) == 0:
+        move_menu.add(guiutils.get_menu_item(_("No Groups").encode('utf-8'), _actions_callback, "dummy", False))
+    else:
+        index = 0
+        for group in PROJECT().media_log_groups:
+            name, items = group
+            move_menu.add(guiutils.get_menu_item(name, _actions_callback, str(index)))
+            index = index + 1
+    move_menu_item.set_submenu(move_menu)
+    actions_menu.add(move_menu_item)
+    move_menu_item.show()
+
     guiutils.add_separetor(actions_menu)
     actions_menu.add(guiutils.get_menu_item(_("Delete Group"), _actions_callback, "delete"))
     actions_menu.add(guiutils.get_menu_item(_("Delete Group and Items"), _actions_callback, "delete"))
     actions_menu.popup(None, None, None, event.button, event.time)
 
 def _actions_callback(widget, data):
-    print data
-
+    if data == "newfromselected":
+        next_index = len(PROJECT().media_log_groups)
+        dialogs.new_media_log_group_name_dialog(_new_group_name_callback, next_index, True)
+    elif data == "new":
+        next_index = len(PROJECT().media_log_groups)
+        dialogs.new_media_log_group_name_dialog(_new_group_name_callback, next_index, False)
+        
 def _viewed_group_changed(widget):
-    print widget.get_active()
+    update_media_log_view()
 
-def _use_comments_toggled(widget):
-    print "check"
+def _new_group_name_callback(dialog, response_id, data):
+    if response_id == gtk.RESPONSE_CANCEL:
+        dialog.destroy()
+        return
+    
+    # Get group name and create type
+    name_entry, add_selected = data
+    new_name = name_entry.get_text()
+    dialog.destroy()
+    if len(new_name) == 0:
+        new_name = _("Group ") + str(len(PROJECT().media_log_groups))
 
+    # Add items to new group if requested
+    items = []
+    if add_selected:
+        selected = widgets.media_log_view.get_selected_rows_list()
+        log_events = get_current_filtered_events()
+        for row in selected:
+            index = max(row) # these are tuples, max to extract only value
+            items.append(log_events[index])
+
+        current_group_index = widgets.group_view_select.get_active() - 1
+        if current_group_index >= 0:
+            PROJECT().remove_from_group(current_group_index, items)
+
+    # Update view
+    PROJECT().add_media_log_group(new_name, items)
+    _create_group_select()
+    widgets.group_view_select.set_active(len(PROJECT().media_log_groups))
+    update_media_log_view()
+
+    
 # ------------------------------------------------------------ gui
 def get_media_log_list_view():
     media_log_view = MediaLogListView()
@@ -347,7 +397,7 @@ class MediaLogListView(gtk.VBox):
         star_icon_path = respaths.IMAGE_PATH + "star.png"
         no_star_icon_path = respaths.IMAGE_PATH + "star_not_active.png"
 
-        log_events = get_current_log_events()
+        log_events = get_current_filtered_events()
         for log_event in log_events:
             if log_event.starred == True:
                 icon = gtk.gdk.pixbuf_new_from_file(star_icon_path)
@@ -367,23 +417,10 @@ class MediaLogListView(gtk.VBox):
         model, rows = self.treeview.get_selection().get_selected_rows()
         return rows
 
-
-def get_current_log_events():
-    return PROJECT().get_filtered_media_log_events(widgets.star_check.get_active(),
-                                                   widgets.star_not_active_check.get_active())
-
-
 def get_media_log_events_panel(events_list_view):
     global widgets
     actions_pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "media_log_action.png")
     group_actions_menu = guicomponents.PressLaunch(_group_action_pressed, actions_pixbuf, 38, 22)
-
-    group_view_select = gtk.combo_box_new_text() # filled later when current sequence known
-    group_view_select.append_text(_("All"))
-    group_view_select.set_active(0)
-    group_view_select.set_size_request(250, 30)
-    group_view_select.connect('changed', _viewed_group_changed)
-    group_view_select.set_tooltip_text(_("Select viewed Range Log Items Group"))
 
     star_check = gtk.CheckButton()
     star_check.set_active(True)
@@ -408,12 +445,16 @@ def get_media_log_events_panel(events_list_view):
     no_star_button = gtk.Button()
     no_star_button.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "star_not_active.png"))
     no_star_button.connect("clicked", lambda w: media_log_no_star_button_pressed())
+
+    widgets.group_box = gtk.HBox()
+    _create_group_select()
+    widgets.group_view_select.set_active(0)
     
     row1 = gtk.HBox()
     row1.pack_start(guiutils.get_pad_label(6, 12), False, True, 0)
     row1.pack_start(group_actions_menu.widget, False, True, 0)
     row1.pack_start(guiutils.get_pad_label(6, 12), False, True, 0)
-    row1.pack_start(group_view_select, False, True, 0)
+    row1.pack_start(widgets.group_box, False, True, 0)
     row1.pack_start(guiutils.get_pad_label(6, 12), False, True, 0)
     row1.pack_start(star_check, False, True, 0)
     row1.pack_start(star_label, False, True, 0)
@@ -438,7 +479,7 @@ def get_media_log_events_panel(events_list_view):
     use_comments_label = gtk.Label(_("Use Comments as Clip Names"))
     use_comments_check =  gtk.CheckButton()
     use_comments_check.set_active(False)
-    use_comments_check.connect("toggled", _use_comments_toggled)
+    widgets.use_comments_check = use_comments_check
 
     append_displayed = gtk.Button()
     append_displayed.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "append_media_log.png"))
@@ -469,3 +510,23 @@ def get_media_log_events_panel(events_list_view):
     append_displayed.set_tooltip_text(_("Append displayed ranges on Timeline"))
 
     return panel
+
+def _create_group_select():
+    try:
+        widgets.group_box.remove(widgets.group_view_select)
+    except:
+        pass
+        
+    group_view_select = gtk.combo_box_new_text() # filled later when current sequence known
+    group_view_select.append_text(_("All"))
+    for group_data in PROJECT().media_log_groups:
+        name, items = group_data
+        group_view_select.append_text(name)
+
+    group_view_select.set_size_request(250, 30)
+    group_view_select.connect('changed', _viewed_group_changed)
+    group_view_select.set_tooltip_text(_("Select viewed Range Log Items Group"))
+
+    widgets.group_view_select = group_view_select
+    widgets.group_box.add(widgets.group_view_select)
+    widgets.group_view_select.show()

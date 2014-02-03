@@ -731,7 +731,7 @@ class EditorWindow:
         menu.append(sep)
 
         interp_menu_item = gtk.MenuItem(_("Monitor Playback Interpolation").encode('utf-8'))
-        interp_menu =  gtk.Menu()
+        interp_menu = gtk.Menu()
         
         interp_nearest = gtk.RadioMenuItem(None, _("Nearest Neighbour").encode('utf-8'))
         interp_nearest.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("nearest"))
