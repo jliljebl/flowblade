@@ -75,6 +75,7 @@ class Project:
         self.last_save_path = None
         self.events = []
         self.media_log = []
+        self.media_log_groups = []
         self.proxy_data = miscdataobjects.ProjectProxyEditingData()
         self.SAVEFILE_VERSION = SAVEFILE_VERSION
         
@@ -193,9 +194,14 @@ class Project:
         self.sequences.append(seq)
         self.next_seq_number += 1
 
-    def get_filtered_media_log_events(self, incl_starred, incl_not_starred):
+    def get_filtered_media_log_events(self, group_index, incl_starred, incl_not_starred):
         filtered_events = []
-        for media_log_event in self.media_log:
+        if group_index < 0:
+            view_items = self.media_log
+        else:
+            name, items = self.media_log_groups[group_index]
+            view_items = items
+        for media_log_event in view_items:
             if self._media_log_included_by_starred(media_log_event.starred, incl_starred, incl_not_starred):
                 filtered_events.append(media_log_event)
         return filtered_events
@@ -207,9 +213,16 @@ class Project:
             return True
         return False
 
-    def delete_media_log_events(self, delete_events):
-        for e in delete_events:
-            self.media_log.remove(e)
+    def delete_media_log_events(self, items):
+        for i in items:
+            self.media_log.remove(i)
+
+    def remove_from_group(self, group_index, items):
+        for i in items:
+            self.media_log_groups[group_index].remove(i)
+
+    def add_media_log_group(self, name, items):
+        self.media_log_groups.append((name, items))
 
     def exit_clip_renderer_process(self):
         pass
