@@ -90,12 +90,12 @@ def init_select_master_clip(popup_data):
     clip, track, item_id, x = popup_data
     frame = tlinewidgets.get_frame(x)
     child_index = current_sequence().get_clip_index(track, frame)
-    
+
     if not (track.clips[child_index] == clip):
         # This should never happen 
         print "big fu at _init_select_master_clip(...)"
         return
-        
+
     gdk_window = gui.tline_display.get_parent_window();
     gdk_window.set_cursor(gtk.gdk.Cursor(gtk.gdk.TCROSS))
     editorstate.edit_mode = editorstate.SELECT_PARENT_CLIP

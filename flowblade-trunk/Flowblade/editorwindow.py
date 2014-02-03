@@ -547,7 +547,7 @@ class EditorWindow:
         self.top_paned.pack1(notebook_vbox, resize=False, shrink=False)
         self.top_paned.pack2(monitor_frame, resize=True, shrink=False)
 
-        # top row
+        # Top row
         self.top_row_hbox = gtk.HBox(False, 0)
         self.top_row_hbox.pack_start(self.top_paned, True, True, 0)
 
@@ -678,10 +678,12 @@ class EditorWindow:
         self.app_v_paned.set_position(editorpersistance.prefs.app_v_paned_position)
 
     def _init_view_menu(self, menu_item):
-        menu = menu_item.get_submenu()
+        #menu = menu_item.get_submenu()
+        menu_item.remove_submenu()
+        menu = gtk.Menu()
 
         mb_menu_item = gtk.MenuItem(_("Middlebar Layout").encode('utf-8'))
-        mb_menu =  gtk.Menu()
+        mb_menu = gtk.Menu()
         tc_left = gtk.RadioMenuItem(None, _("Timecode Left").encode('utf-8'))
         tc_left.set_active(True)
         tc_left.connect("activate", lambda w: middlebar._show_buttons_TC_LEFT_layout(w))
@@ -764,6 +766,8 @@ class EditorWindow:
         zoom_fit_menu_item = gtk.MenuItem(_("Zoom Fit").encode('utf-8'))
         zoom_fit_menu_item.connect("activate", lambda w: updater.zoom_project_length())
         menu.append(zoom_fit_menu_item)
+        
+        menu_item.set_submenu(menu)
                 
     def _init_gui_to_prefs(self):
         if editorpersistance.prefs.tabs_on_top == True:
