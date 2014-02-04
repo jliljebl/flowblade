@@ -24,6 +24,7 @@ import pango
 
 import appconsts
 import dialogs
+import dialogutils
 import edit
 import gui
 import guicomponents
@@ -198,7 +199,10 @@ def get_log_event_clip(log_event):
     # Set clip in and out points
     new_clip.clip_in = log_event.mark_in
     new_clip.clip_out = log_event.mark_out
-    new_clip.name = log_event.name
+    if widgets.use_comments_check.get_active() == True:
+        new_clip.name = log_event.comment
+    else:
+        new_clip.name = log_event.name
     return new_clip
 
 def display_log_clip_double_click_listener(treeview, path, view_column):
@@ -210,9 +214,14 @@ def _group_action_pressed(widget, event):
     actions_menu = gtk.Menu()        
     actions_menu.add(guiutils.get_menu_item(_("New Group..."), _actions_callback, "new"))
     actions_menu.add(guiutils.get_menu_item(_("New Group From Selected..."), _actions_callback, "newfromselected"))
+    
     guiutils.add_separetor(actions_menu)
 
-    move_menu_item = gtk.MenuItem(_("Move Selected To Group").encode('utf-8'))
+    actions_menu.add(guiutils.get_menu_item(_("Rename Current Group..."), _actions_callback, "rename"))
+
+    guiutils.add_separetor(actions_menu)
+    
+    move_menu_item = gtk.MenuItem(_("Move Selected Items To Group").encode('utf-8'))
     move_menu = gtk.Menu()
     if len(PROJECT().media_log_groups) == 0:
         move_menu.add(guiutils.get_menu_item(_("No Groups").encode('utf-8'), _actions_callback, "dummy", False))
@@ -227,8 +236,9 @@ def _group_action_pressed(widget, event):
     move_menu_item.show()
 
     guiutils.add_separetor(actions_menu)
-    actions_menu.add(guiutils.get_menu_item(_("Delete Group"), _actions_callback, "delete"))
-    actions_menu.add(guiutils.get_menu_item(_("Delete Group and Items"), _actions_callback, "delete"))
+    
+    actions_menu.add(guiutils.get_menu_item(_("Delete Current Group"), _actions_callback, "delete"))
+    actions_menu.add(guiutils.get_menu_item(_("Delete Current Group and Items"), _actions_callback, "deletewithitems"))
     actions_menu.popup(None, None, None, event.button, event.time)
 
 def _actions_callback(widget, data):
@@ -238,6 +248,23 @@ def _actions_callback(widget, data):
     elif data == "new":
         next_index = len(PROJECT().media_log_groups)
         dialogs.new_media_log_group_name_dialog(_new_group_name_callback, next_index, False)
+    elif data == "delete":
+        current_group_index = widgets.group_view_select.get_active() - 1
+        if current_group_index < 0:
+            return
+        PROJECT().media_log_groups.pop(current_group_index)
+        _create_group_select()
+        widgets.group_view_select.set_active(0)
+    elif data == "deletewithitems":
+        current_group_index = widgets.group_view_select.get_active() - 1
+        if current_group_index < 0:
+            return
+        name, items = PROJECT().media_log_groups[current_group_index]
+        primary_txt = _("Delete Group and Items?")
+        secondary_txt = _("Are you sure you want to delete group ") + name + _(" and ") + str(len(items)) + _(" items it contains?\n") + \
+                        _("This operation cannot be undone.")
+        dialogutils.warning_confirmation(_delete_with_items_dialog_callback,
+                            primary_txt, secondary_txt, gui.editor_window.window, None, True)
     else:
         try:
             to_group_index = int(data)
@@ -260,7 +287,19 @@ def _actions_callback(widget, data):
         PROJECT().remove_from_group(current_group_index, move_items)
         PROJECT().add_to_group(to_group_index, move_items)
         widgets.group_view_select.set_active(to_group_index + 1) # 0 index items is "All" items group not a user created group
-        
+
+def _delete_with_items_dialog_callback(dialog, response_id):
+    dialog.destroy()
+    if response_id != gtk.RESPONSE_ACCEPT:
+        return
+    
+    current_group_index = widgets.group_view_select.get_active() - 1
+    name, items = PROJECT().media_log_groups[current_group_index]
+    PROJECT().delete_media_log_events(items)
+    PROJECT().media_log_groups.pop(current_group_index)
+    _create_group_select()
+    widgets.group_view_select.set_active(0)
+
 def _viewed_group_changed(widget):
     update_media_log_view()
 
