@@ -238,6 +238,28 @@ def _actions_callback(widget, data):
     elif data == "new":
         next_index = len(PROJECT().media_log_groups)
         dialogs.new_media_log_group_name_dialog(_new_group_name_callback, next_index, False)
+    else:
+        try:
+            to_group_index = int(data)
+        except:
+            return
+
+        current_group_index = widgets.group_view_select.get_active() - 1
+        if to_group_index == current_group_index:
+            return
+
+        # Get items to move
+        selected = widgets.media_log_view.get_selected_rows_list()
+        log_events = get_current_filtered_events()
+        move_items = []
+        for row in selected:
+            index = max(row) # these are tuples, max to extract only value
+            move_items.append(log_events[index])
+
+        # Move items and update
+        PROJECT().remove_from_group(current_group_index, move_items)
+        PROJECT().add_to_group(to_group_index, move_items)
+        widgets.group_view_select.set_active(to_group_index + 1) # 0 index items is "All" items group not a user created group
         
 def _viewed_group_changed(widget):
     update_media_log_view()

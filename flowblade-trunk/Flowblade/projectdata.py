@@ -218,8 +218,22 @@ class Project:
             self.media_log.remove(i)
 
     def remove_from_group(self, group_index, items):
+        if group_index < 0: # -1 is used as "All" group index in medialog.py, but it isn't group, it is contents of self.media_log
+            return
+        name, group_items = self.media_log_groups[group_index]
         for i in items:
-            self.media_log_groups[group_index].remove(i)
+            group_items.remove(i)
+
+    def add_to_group(self, group_index, items):
+        if group_index < 0: # -1 is used as "All" group index in medialog.py, but it isn't group, it is contents of self.media_log
+            return
+        name, group_items = self.media_log_groups[group_index]
+        for i in items:
+            try:
+                group_items.remove(i) # single ref to item in list allowed
+            except:
+                pass
+            group_items.append(i)
 
     def add_media_log_group(self, name, items):
         self.media_log_groups.append((name, items))
