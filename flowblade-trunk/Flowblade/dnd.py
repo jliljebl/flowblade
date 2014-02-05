@@ -35,14 +35,20 @@ MEDIA_ICON_HEIGHT = 15
 
 MEDIA_FILES_DND_TARGET = ('media_file', gtk.TARGET_SAME_APP, 0)
 EFFECTS_DND_TARGET = ('effect', gtk.TARGET_SAME_APP, 0)
+CLIPS_DND_TARGET = ('clip', gtk.TARGET_SAME_APP, 0)
 STRING_DATA_BITS = 8
 
-drag_data = None # Temp. holding for data during drag.
+# Holds data during drag
+drag_data = None 
+
+# Drap icons
 clip_icon = None
 empty_icon = None
 
+# Callback functions
 add_current_effect = None
 display_monitor_media_file = None
+range_log_items_tline_drop = None
 
 def init():
     global clip_icon, empty_icon
@@ -99,10 +105,16 @@ def connect_stack_treeview(widget):
 
 def connect_tline(widget, do_effect_drop_func, do_media_drop_func):
     widget.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP,
-                         [MEDIA_FILES_DND_TARGET, EFFECTS_DND_TARGET], 
+                         [MEDIA_FILES_DND_TARGET, EFFECTS_DND_TARGET, CLIPS_DND_TARGET], 
                          gtk.gdk.ACTION_COPY)
     widget.connect("drag_drop", _on_tline_drop, do_effect_drop_func, do_media_drop_func)
     
+def connect_range_log(treeview):
+    treeview.drag_source_set(gtk.gdk.BUTTON1_MASK,
+                           [CLIPS_DND_TARGET], 
+                           gtk.gdk.ACTION_COPY)
+    treeview.connect_after('drag_begin', _range_log_drag_begin)
+    treeview.connect("drag_data_get", _range_log_drag_data_get)
 
 # ------------------------------------------------- handlers for drag events
 def _media_files_drag_begin(treeview, context):
@@ -122,7 +134,13 @@ def  _monitor_media_drag_begin(widget, context):
 def _monitor_media_drag_data_get(widget, context, selection, target_id, timestamp):
     print "mm drag get"
     #context.set_icon_pixbuf(clip_icon, 30, 15)
-    
+
+def _range_log_drag_begin(widget, context):
+    context.set_icon_pixbuf(clip_icon, 30, 15)
+
+def _range_log_drag_data_get(treeview, context, selection, target_id, timestamp):
+    _save_treeview_selection(treeview)
+        
 def _effects_drag_begin(widget, context):
     pass 
 
@@ -180,6 +198,8 @@ def _on_tline_drop(widget, context, x, y, timestamp, do_effect_drop_func, do_med
             gui.tline_canvas.widget.grab_focus()
         else:
             print "monitor_drop fail"
+    elif context.get_source_widget() == gui.editor_window.media_log_events_list_view.treeview:
+        range_log_items_tline_drop(drag_data, x, y)
     else:
         print "_on_tline_drop failed to do anything"
     

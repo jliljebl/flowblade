@@ -836,7 +836,16 @@ def new_media_log_group_name_dialog(callback, next_index, add_selected):
     dialog.set_default_response(gtk.RESPONSE_ACCEPT)
     dialog.connect('response', callback, (name_entry, add_selected))
     dialog.show_all()
-    
+
+def group_rename_dialog(callback, group_name):
+    dialog, entry = dialogutils.get_single_line_text_input_dialog(30, 130,
+                                                _("Rename Range Log Item Group"), 
+                                                _("Rename").encode('utf-8'),
+                                                _("New Group Name:"),
+                                                group_name)
+    dialog.connect('response', callback, entry)
+    dialog.show_all()
+
 def not_valid_producer_dialog(file_path, parent_window):
     primary_txt = _("Can't open non-valid media")
     secondary_txt = _("File: ") + file_path + _("\nis not a valid media file.")

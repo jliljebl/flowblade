@@ -131,6 +131,36 @@ def get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=False, 
     
     return align
 
+def get_single_line_text_input_dialog(chars, label_width,title, ok_button_text,
+                                      label, default_text):
+    dialog = gtk.Dialog(title, None,
+                            gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                            (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                            ok_button_text, gtk.RESPONSE_OK))
+
+    entry = gtk.Entry(30)
+    entry.set_width_chars(30)
+    entry.set_text(default_text)
+    entry.set_activates_default(True)
+
+    entry_row = guiutils.get_two_column_box(gtk.Label(label),
+                                               entry,
+                                               180)
+
+    vbox = gtk.VBox(False, 2)
+    vbox.pack_start(entry_row, False, False, 0)
+    vbox.pack_start(guiutils.get_pad_label(12, 12), False, False, 0)
+
+    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment.set_padding(6, 24, 24, 24)
+    alignment.add(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    default_behaviour(dialog)
+    dialog.set_default_response(gtk.RESPONSE_ACCEPT)
+    
+    return (dialog, entry)
+
 # ------------------------------------------------------------------ delayed window destroying 
 def delay_destroy_window(window, delay):
     gobject.timeout_add(int(delay * 1000), _window_destroy_event, window)

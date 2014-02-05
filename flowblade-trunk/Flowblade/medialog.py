@@ -25,6 +25,7 @@ import pango
 import appconsts
 import dialogs
 import dialogutils
+import dnd
 import edit
 import gui
 import guicomponents
@@ -205,6 +206,10 @@ def get_log_event_clip(log_event):
         new_clip.name = log_event.name
     return new_clip
 
+
+def get_clips_for_rows(rows):
+    return []
+
 def display_log_clip_double_click_listener(treeview, path, view_column):
     row = int(max(path))
     data = ("display", row, treeview)
@@ -217,7 +222,9 @@ def _group_action_pressed(widget, event):
     
     guiutils.add_separetor(actions_menu)
 
-    actions_menu.add(guiutils.get_menu_item(_("Rename Current Group..."), _actions_callback, "rename"))
+    item = guiutils.get_menu_item(_("Rename Current Group..."), _actions_callback, "rename")
+    _unsensitive_for_all_view(item)
+    actions_menu.add(item)
 
     guiutils.add_separetor(actions_menu)
     
@@ -236,10 +243,20 @@ def _group_action_pressed(widget, event):
     move_menu_item.show()
 
     guiutils.add_separetor(actions_menu)
-    
-    actions_menu.add(guiutils.get_menu_item(_("Delete Current Group"), _actions_callback, "delete"))
-    actions_menu.add(guiutils.get_menu_item(_("Delete Current Group and Items"), _actions_callback, "deletewithitems"))
+
+    item = guiutils.get_menu_item(_("Delete Current Group"), _actions_callback, "delete")
+    _unsensitive_for_all_view(item)
+    actions_menu.add(item)
+
+    item = guiutils.get_menu_item(_("Delete Current Group and Items"), _actions_callback, "deletewithitems")
+    _unsensitive_for_all_view(item)
+    actions_menu.add(item)
+
     actions_menu.popup(None, None, None, event.button, event.time)
+
+def _unsensitive_for_all_view(item):
+    if widgets.group_view_select.get_active() == 0:
+        item.set_sensitive(False)
 
 def _actions_callback(widget, data):
     if data == "newfromselected":
@@ -265,6 +282,10 @@ def _actions_callback(widget, data):
                         _("This operation cannot be undone.")
         dialogutils.warning_confirmation(_delete_with_items_dialog_callback,
                             primary_txt, secondary_txt, gui.editor_window.window, None, True)
+    elif data == "rename":
+        current_group_index = widgets.group_view_select.get_active() - 1
+        name, items = PROJECT().media_log_groups[current_group_index]
+        dialogs.group_rename_dialog(_rename_callback, name)
     else:
         try:
             to_group_index = int(data)
@@ -299,6 +320,22 @@ def _delete_with_items_dialog_callback(dialog, response_id):
     PROJECT().media_log_groups.pop(current_group_index)
     _create_group_select()
     widgets.group_view_select.set_active(0)
+    
+def _rename_callback(dialog, response_id, entry):
+    new_name = entry.get_text()
+    dialog.destroy()
+    if response_id == gtk.RESPONSE_CANCEL:
+        return
+    if len(new_name) == 0:
+        return
+        
+    current_group_index = widgets.group_view_select.get_active() - 1
+    old_name, items = PROJECT().media_log_groups[current_group_index]
+
+    PROJECT().media_log_groups.pop(current_group_index)
+    PROJECT().media_log_groups.insert(current_group_index, (new_name, items))
+    _create_group_select()
+    widgets.group_view_select.set_active(current_group_index + 1)
 
 def _viewed_group_changed(widget):
     update_media_log_view()
@@ -570,6 +607,8 @@ def get_media_log_events_panel(events_list_view):
     delete_button.set_tooltip_text(_("Delete selected ranges"))
     append_displayed.set_tooltip_text(_("Append displayed ranges on Timeline"))
 
+    dnd.connect_range_log(events_list_view.treeview)
+        
     return panel
 
 def _create_group_select():

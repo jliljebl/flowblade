@@ -51,6 +51,7 @@ from editorstate import EDIT_MODE
 import editorpersistance
 import gui
 import guicomponents
+import medialog
 import movemodes
 import syncsplitevent
 import tlinewidgets
@@ -642,7 +643,25 @@ def tline_media_drop(media_file, x, y, use_marks=False):
             
     do_clip_insert(track, new_clip, frame)
 
+def tline_range_item_drop(rows, x, y):
+    track = tlinewidgets.get_track(y)
+    if track == None:
+        return
+    if track.id < 1 or track.id >= (len(current_sequence().tracks) - 1):
+        return 
+    if track_lock_check_and_user_info(track):
+        set_default_edit_mode()
+        return
+    frame = tlinewidgets.get_frame(x)
 
+    print rows, track.id, frame
+
+    #clips = medialog.get_clips_for_rows(rows)
+
+    #set_default_edit_mode()
+    
+    #do_multiple_clip_insert(track, clips, frame)
+        
 # ---------------------------------- clip menu
 def _display_clip_menu(y, event, frame):
     # See if we actually hit a clip
