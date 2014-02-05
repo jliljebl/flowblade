@@ -636,7 +636,7 @@ def tline_media_drop(media_file, x, y, use_marks=False):
 
     # Graphics files get added with their default lengths
     f_name, ext = os.path.splitext(media_file.name)
-    if utils.file_extension_is_graphics_file(ext) and media_file.type != appconsts.IMAGE_SEQUENCE: # image sequneces are graphics files but have own length
+    if utils.file_extension_is_graphics_file(ext) and media_file.type != appconsts.IMAGE_SEQUENCE: # image sequences are graphics files but have own length
         in_fr, out_fr, l = editorpersistance.get_graphics_default_in_out_length()
         new_clip.mark_in = in_fr
         new_clip.mark_out = out_fr
@@ -652,16 +652,12 @@ def tline_range_item_drop(rows, x, y):
     if track_lock_check_and_user_info(track):
         set_default_edit_mode()
         return
-    frame = tlinewidgets.get_frame(x)
-
-    print rows, track.id, frame
-
-    #clips = medialog.get_clips_for_rows(rows)
-
-    #set_default_edit_mode()
-    
-    #do_multiple_clip_insert(track, clips, frame)
         
+    frame = tlinewidgets.get_frame(x)
+    clips = medialog.get_clips_for_rows(rows)
+    set_default_edit_mode()
+    do_multiple_clip_insert(track, clips, frame)
+
 # ---------------------------------- clip menu
 def _display_clip_menu(y, event, frame):
     # See if we actually hit a clip
