@@ -194,7 +194,7 @@ def append_log_events():
     action.do_edit()
 
 def get_log_event_clip(log_event):
-    # currently quarateed n ot to be a pattern producer
+    # currently quarateed not to be a pattern producer
     new_clip = editorstate.current_sequence().create_file_producer_clip(log_event.path)
         
     # Set clip in and out points
@@ -202,13 +202,20 @@ def get_log_event_clip(log_event):
     new_clip.clip_out = log_event.mark_out
     if widgets.use_comments_check.get_active() == True:
         new_clip.name = log_event.comment
+        if len(new_clip.name) == 0:
+            new_clip.name = log_event.name
     else:
         new_clip.name = log_event.name
     return new_clip
 
-
 def get_clips_for_rows(rows):
-    return []
+    clips = []
+    log_events = get_current_filtered_events()
+    for row in rows:
+        log_event = log_events[max(row)]
+        clips.append(get_log_event_clip(log_event))      
+        
+    return clips
 
 def display_log_clip_double_click_listener(treeview, path, view_column):
     row = int(max(path))
