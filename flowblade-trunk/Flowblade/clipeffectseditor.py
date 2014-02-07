@@ -382,6 +382,7 @@ def effect_selection_changed():
     vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
 
     if len(editable_properties) > 0:
+        # Create editor row for each editable property
         for ep in editable_properties:
             editor_row = propertyeditorbuilder.get_editor_row(ep)
             if editor_row == None:
@@ -399,6 +400,14 @@ def effect_selection_changed():
                     
             vbox.pack_start(editor_row, False, False, 0)
             vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
+        
+        # Extra editors. Editable properties may have already been created 
+        # with "editor=no_editor" and now extra editors may be created to edit those
+        editor_rows = propertyeditorbuilder.get_filter_extra_editor_rows(filter_object, editable_properties)
+        for editor_row in editor_rows:
+            vbox.pack_start(editor_row, False, False, 0)
+            vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
+        
         vbox.pack_start(gtk.Label(), True, True, 0)
     else:
         vbox.pack_start(gtk.Label(_("No editable parameters")), True, True, 0)

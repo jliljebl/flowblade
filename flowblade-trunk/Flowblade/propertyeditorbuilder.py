@@ -27,6 +27,7 @@ import appconsts
 from editorstate import PROJECT
 from editorstate import PLAYER
 from editorstate import current_sequence
+import extraeditors
 import guiutils
 import keyframeeditor
 import mltfilters
@@ -50,6 +51,8 @@ COMBO_BOX_OPTIONS = "cbopts"                                # List of options fo
 LADSPA_SLIDER = "ladspa_slider"                             # gtk.HScale, does ladspa update for release changes(disconnect, reconnect)
 CLIP_FRAME_SLIDER = "clip_frame_slider"                     # gtk.HScale, range 0 - clip length in frames
 AFFINE_GEOM_4_SLIDER = "affine_filt_geom_slider"            # 4 rows of gtk.HScales to set the position and size
+COLOR_CORRECTOR = "color_corrector"                         # 3 band color corrector color circle and Lift Gain Gamma sliders
+CR_CURVES = "crcurves"                                      # Curves color editor with Catmull-Rom curve
 NO_EDITOR = "no_editor"                                     # No editor displayed for property
 
 COMPOSITE_EDITOR_BUILDER = "composite_properties"           # Creates a single row editor for multiple properties of composite transition
@@ -93,6 +96,22 @@ def get_transition_extra_editor_rows(compositor, editable_properties):
 
     return rows
 
+def get_filter_extra_editor_rows(filt, editable_properties):
+    """
+    Returns list of extraeditors GUI components.
+    """
+    extra_editors = filt.info.extra_editors
+    rows = []
+    for editor_name in extra_editors:
+        try:
+            create_func = EDITOR_ROW_CREATORS[editor_name]
+            editor_row = create_func(filt, editable_properties)
+            rows.append(editor_row)
+        except KeyError:
+            print "get_transition_extra_editor_rows fail with:" + editor_name
+
+    return rows
+    
 # ------------------------------------------------- gui builders
 def _get_two_column_editor_row(name, editor_widget):
     name = _p(name)
@@ -108,7 +127,7 @@ def _get_two_column_editor_row(name, editor_widget):
     hbox.pack_start(editor_widget, True, True, 0)
     return hbox
     
-def _get_slider_row(editable_property, slider_name=None):
+def _get_slider_row(editable_property, slider_name=None, compact=False):
     adjustment = editable_property.get_input_range_adjustment()
     adjustment.connect("value-changed", editable_property.adjustment_value_changed)
 
@@ -122,18 +141,26 @@ def _get_slider_row(editable_property, slider_name=None):
 
     _set_digits(editable_property, hslider, spin)
 
-    hbox = gtk.HBox(False, 4)
-    hbox.pack_start(hslider, True, True, 0)
-    hbox.pack_start(spin, False, False, 4)
     if slider_name == None:
         name = editable_property.get_display_name()
     else:
         name = slider_name
     name = _p(name)
-    top_row = _get_two_column_editor_row(name, gtk.HBox())
+    
+    hbox = gtk.HBox(False, 4)
+    if compact:
+        name_label = gtk.Label(name + ":")
+        hbox.pack_start(name_label, False, False, 4)
+    hbox.pack_start(hslider, True, True, 0)
+    hbox.pack_start(spin, False, False, 4)
+
     vbox = gtk.VBox(False)
-    vbox.pack_start(top_row, True, True, 0)
-    vbox.pack_start(hbox, False, False, 0)
+    if compact:
+        vbox.pack_start(hbox, False, False, 0)
+    else:
+        top_row = _get_two_column_editor_row(name, gtk.HBox())
+        vbox.pack_start(top_row, True, True, 0)
+        vbox.pack_start(hbox, False, False, 0)
     return vbox
 
 def _get_ladspa_slider_row(editable_property, slider_name=None):
@@ -443,9 +470,34 @@ def _create_region_editor(clip, editable_properties):
     hbox.pack_start(force_vbox, False, False, 0)
     hbox.pack_start(guiutils.get_pad_label(3, 5), False, False, 0)
     return hbox
+
+def _create_color_corrector(filt, editable_properties):
+    lift = filter(lambda ep: ep.name == "lift", editable_properties)[0]
+    lift_slider_row = _get_slider_row(lift, None, True)
+    gain = filter(lambda ep: ep.name == "gain", editable_properties)[0]
+    gain_slider_row = _get_slider_row(gain, None, True)
+    gamma = filter(lambda ep: ep.name == "gamma", editable_properties)[0]
+    gamma_slider_row = _get_slider_row(gamma, None, True)
+
+    color_corrector = extraeditors.ColorCorrector([lift_slider_row, gain_slider_row, gamma_slider_row])
+
+    vbox = gtk.VBox(False, 4)
+    vbox.pack_start(gtk.Label(), True, True, 0)
+    vbox.pack_start(color_corrector.widget, False, False, 0)
+    vbox.pack_start(gtk.Label(), True, True, 0)
+    return vbox
+
+def _create_crcurves_editor(filt, editable_properties):
+    curves_editor = extraeditors.CurvesEditor()
+
+    vbox = gtk.VBox(False, 4)
+    vbox.pack_start(gtk.Label(), True, True, 0)
+    vbox.pack_start(curves_editor.widget, False, False, 0)
+    vbox.pack_start(gtk.Label(), True, True, 0)
+    return vbox
     
 def _get_force_combo_index(deinterlace, progressive):
-    # these must correspond to hardcoded values ["Nothing","Progressive","Deinterlace","Both"] above
+    # These correspond to hardcoded values ["Nothing","Progressive","Deinterlace","Both"] above
     if int(deinterlace.value) == 0:
         if int(progressive.value) == 0:
             return 0
@@ -553,5 +605,7 @@ EDITOR_ROW_CREATORS = { \
     NO_EDITOR: lambda ep: _get_no_editor(),
     COMPOSITE_EDITOR_BUILDER: lambda comp, editable_properties: _create_composite_editor(comp, editable_properties),
     REGION_EDITOR_BUILDER: lambda comp, editable_properties: _create_region_editor(comp, editable_properties),
-    ROTATION_GEOMETRY_EDITOR_BUILDER: lambda comp, editable_properties: _create_rotion_geometry_editor(comp, editable_properties)
+    ROTATION_GEOMETRY_EDITOR_BUILDER: lambda comp, editable_properties: _create_rotion_geometry_editor(comp, editable_properties),
+    COLOR_CORRECTOR: lambda filt, editable_properties: _create_color_corrector(filt, editable_properties),
+    CR_CURVES: lambda filt, editable_properties:_create_crcurves_editor(filt, editable_properties)
     }

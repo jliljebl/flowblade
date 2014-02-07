@@ -518,6 +518,21 @@
         <property name="Green Tint" args="editor=no_editor exptype=singlekeyframe">0=1.2</property>
     </filter>
     -->
+    <filter id="invert">
+        <name>Color Corrector</name>
+        <group>Color</group>
+        <property name="lift" args="editor=no_editor range_in=-100,100 range_out=-0.5,0.5 displayname=Lift">0.0</property>
+        <property name="gain" args="editor=no_editor range_in=-100,100 range_out=-0.5,0.5 displayname=Gain">0.0</property>
+        <property name="gamma" args="editor=no_editor range_in=-100,100 range_out=-1.0,1.0 displayname=Gamma">0.0</property>
+        <property name="hue" args="editor=no_editor">0.0</property>
+        <extraeditor name="color_corrector"></extraeditor>
+    </filter>
+    <filter id="invert">
+        <name>Curves</name>
+        <group>Color</group>
+        <property name="dummy" args="editor=no_editor">0.0</property>
+        <extraeditor name="crcurves"></extraeditor>
+    </filter>
     <filter id="frei0r.levels">
         <name>Levels</name>
         <group>Color</group>
