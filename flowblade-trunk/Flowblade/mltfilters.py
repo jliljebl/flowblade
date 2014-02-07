@@ -38,6 +38,7 @@ PROPERTY = appconsts.PROPERTY
 NAME = appconsts.NAME
 ARGS = appconsts.ARGS
 MLT_SERVICE = appconsts.MLT_SERVICE
+EXTRA_EDITOR = appconsts.EXTRA_EDITOR
 FILTER = "filter"
 GROUP = "group"
 ID = "id"
@@ -157,7 +158,11 @@ class FilterInfo:
             end_property = mp.getAttribute(MULTIPART_END)
             self.multipart_desc = (args, start_property, end_property)
             self.multipart_value = value
-    
+
+        #  Extra editors that handle properties that have been set "no_editor"
+        e_node_list = filter_node.getElementsByTagName(EXTRA_EDITOR)
+        self.extra_editors = propertyparse.node_list_to_extraeditors_array(e_node_list)  
+        
     def get_icon(self):
         return _get_group_icon(self.group)
 

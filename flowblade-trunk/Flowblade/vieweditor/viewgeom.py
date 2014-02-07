@@ -210,7 +210,7 @@ class Vec(Line):
             return (sx - ex ) / abs(sx - ex)
 
     def get_length(self):
-        # Returns legtnh as positive if direction same as original and as negative if reversed
+        # Returns length as positive if direction same as original and as negative if reversed
         # and as zero is length is 0
         if self.is_zero_length():
             return 0;
@@ -218,6 +218,27 @@ class Vec(Line):
         current_direction = self.get_direction() / self.orig_direction
         d = distance( self.start_point, self.end_point );
         return current_direction * d
+
+    def get_multiplied_vec(self, multiplier):
+        start_x, start_y = self.start_point
+        end_x, end_y = self.end_point
+        
+        if (end_x - start_x) == 0:
+            x_dist = 0
+        else:
+            x_dist = abs(end_x - start_x) * abs( end_x - start_x ) / (end_x - start_x)
+        
+        if (end_y - start_y ) == 0:
+             y_dist = 0
+        else:
+            y_dist = abs(end_y - start_y) * abs(end_y - start_y) / (end_y - start_y)
+
+        xm_dist = x_dist * multiplier
+        ym_dist = y_dist * multiplier
+        new_end_x = start_x + xm_dist
+        new_end_y = start_y + ym_dist
+
+        return get_vec_for_points(self.start_point, (new_end_x, new_end_y))
 
     def is_zero_length(self):
         if self.start_point == self.end_point:

@@ -127,8 +127,6 @@ def _reset_compositor_pressed():
     _display_compositor_edit_box()
 
 def _display_compositor_edit_box():
-    # Clears edit box or displays clips callback
-
     # This gets called on startup before edit_frame is filled
     try:
         widgets.value_edit_frame.remove(widgets.value_edit_box)

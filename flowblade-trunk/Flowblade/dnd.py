@@ -41,7 +41,7 @@ STRING_DATA_BITS = 8
 # Holds data during drag
 drag_data = None 
 
-# Drap icons
+# Drag icons
 clip_icon = None
 empty_icon = None
 
@@ -49,6 +49,7 @@ empty_icon = None
 add_current_effect = None
 display_monitor_media_file = None
 range_log_items_tline_drop = None
+
 
 def init():
     global clip_icon, empty_icon
@@ -132,7 +133,7 @@ def  _monitor_media_drag_begin(widget, context):
         context.set_icon_pixbuf(empty_icon, 30, 15)
 
 def _monitor_media_drag_data_get(widget, context, selection, target_id, timestamp):
-    print "mm drag get"
+    pass
     #context.set_icon_pixbuf(clip_icon, 30, 15)
 
 def _range_log_drag_begin(widget, context):
