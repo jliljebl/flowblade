@@ -27,10 +27,7 @@ DEACTIVE_HI_COLOR = (0.85, 0.85, 0.85)
 BOX_BG_COLOR = (1, 1, 1)
 LINE_COLOR = (0, 0, 0)
 
-def _draw_band_select_circle(cr, x, y, band_color, ring_color):
-    radius = 6
-    small_radius = 4
-    pad = 6
+def _draw_select_circle(cr, x, y, band_color, ring_color, radius = 6, small_radius = 4, pad = 6):
     degrees = math.pi / 180.0
 
     cr.set_source_rgb(*ring_color)
@@ -139,11 +136,11 @@ class ColorWheel:
         cr.set_source_pixbuf(self.WHEEL_IMG, self.X_PAD, self.Y_PAD)
         cr.paint()
 
-        _draw_band_select_circle(cr, self.shadow_x - self.CIRCLE_HALF, self.shadow_y - self.CIRCLE_HALF, 
+        _draw_select_circle(cr, self.shadow_x - self.CIRCLE_HALF, self.shadow_y - self.CIRCLE_HALF, 
                                  DEACTIVE_SHADOW_COLOR, DEACTIVE_RING_COLOR)
-        _draw_band_select_circle(cr, self.mid_x - self.CIRCLE_HALF, self.mid_y - self.CIRCLE_HALF,
+        _draw_select_circle(cr, self.mid_x - self.CIRCLE_HALF, self.mid_y - self.CIRCLE_HALF,
                                  DEACTIVE_MID_COLOR, DEACTIVE_RING_COLOR)
-        _draw_band_select_circle(cr, self.hi_x - self.CIRCLE_HALF, self.hi_y - self.CIRCLE_HALF,
+        _draw_select_circle(cr, self.hi_x - self.CIRCLE_HALF, self.hi_y - self.CIRCLE_HALF,
                                  DEACTIVE_HI_COLOR, DEACTIVE_RING_COLOR)
         
         if self.band == SHADOW:
@@ -153,7 +150,7 @@ class ColorWheel:
         else:
             band_color = ACTIVE_HI_COLOR
         
-        _draw_band_select_circle(cr, self.cursor_x - self.CIRCLE_HALF, self.cursor_y - self.CIRCLE_HALF, band_color, ACTIVE_RING_COLOR)
+        _draw_select_circle(cr, self.cursor_x - self.CIRCLE_HALF, self.cursor_y - self.CIRCLE_HALF, band_color, ACTIVE_RING_COLOR)
 
 
 class ColorBandSelector:
@@ -202,9 +199,9 @@ class ColorBandSelector:
         cr.fill()
         
         ring_color = (0.0, 0.0, 0.0)
-        _draw_band_select_circle(cr, self.SHADOW_X, 0, (0.1, 0.1, 0.1), ring_color)
-        _draw_band_select_circle(cr, self.MID_X, 0, (0.5, 0.5, 0.5), ring_color)
-        _draw_band_select_circle(cr, self.HI_X, 0, (1.0, 1.0, 1.0), ring_color)
+        _draw_select_circle(cr, self.SHADOW_X, 0, (0.1, 0.1, 0.1), ring_color)
+        _draw_select_circle(cr, self.MID_X, 0, (0.5, 0.5, 0.5), ring_color)
+        _draw_select_circle(cr, self.HI_X, 0, (1.0, 1.0, 1.0), ring_color)
 
         self._draw_active_indicator(cr)
     
@@ -271,59 +268,37 @@ class ColorCorrector:
 
 class BoxEditor:
     
-    def __init__(self, pix_size, value_size, listener):
-
+    def __init__(self, pix_size):
+        self.value_size = 1.0 # Box editor works in 0-1 normalized space
+        
         self.pix_size = pix_size;
-        self.value_size = value_size;
-        self.pix_per_val = value_size / pix_size
-        self.off_x = 1
-        self.off_y = 1
-        self.listener = listener;
-
-        self.widget = CairoDrawableArea(self.pix_size + 2, 
-                                        self.pix_size + 2, 
-                                        self._draw)
-        self.widget.press_func = self._press_event
-        self.widget.motion_notify_func = self._motion_notify_event
-        self.widget.release_func = self._release_event
+        self.pix_per_val = self.value_size / pix_size
+        self.off_x = 0.5
+        self.off_y = 0.5
 
     def get_box_val_point(self, x, y):
         # calculate value
-        px = int((x - self.off_x) * self.pix_per_val)
-        py = int((self.pix_size - (y - self.off_y)) * self.pix_per_val)
+        px = (x - self.off_x) * self.pix_per_val
+        py = (self.pix_size - (y - self.off_y)) * self.pix_per_val
 
         # force range
         if px < 0:
-            px = 0
+            px = 0.0
         if py < 0:
-            py = 0
+            py = 0.0
         if px >= self.value_size:
-            px = self.value_size - 1
+            px = self.value_size
         if py >= self.value_size:
-            py = self.value_size - 1
+            py = self.value_size
 
+        return px, py
+
+    def get_box_panel_point(self, x, y, max_value):
+        px = x/max_value * self.pix_size + self.off_x
+        py = self.off_y + self.pix_size - (y/max_value * self.pix_size) # higher values are up
         return (px, py)
 
-    """
-    def get_box_panel_point(p, x, y):
-
-        p.x = (int) (x / pixPerVal) + offX;
-        p.y = pixSize - (int) (y / pixPerVal) + offY;
-
-    """       
-    def _press_event(self, event):
-        p = self.get_box_val_point(event.x, event.y)
-        self.listener.box_mouse_value_update(p)
-
-    def _motion_notify_event(self, x, y, state):
-        p = self.get_box_val_point(x, y)
-        self.listener.box_mouse_value_update(p)
-        
-    def _release_event(self, event):
-        p = self.get_box_val_point(event.x, event.y)
-        self.listener.box_mouse_value_update(p)
-
-    def _draw(self, event, cr, allocation):
+    def draw_box(self, cr, allocation):
         x, y, w, h = allocation
        
         # Draw bg
@@ -356,7 +331,8 @@ class CurvesEditor:
     
     def __init__(self):
         self.widget = gtk.VBox()
-        self.box_exitor = BoxEditor(256, 1.0, self)
+        curve = viewgeom.CRCurve()
+        self.box_exitor = CurvesBoxEditor(curve, 256.0)
 
         box_row = gtk.HBox()
         box_row.pack_start(gtk.Label(), True, True, 0)
@@ -365,5 +341,78 @@ class CurvesEditor:
 
         self.widget.pack_start(box_row, True, True, 0)
 
-    def box_mouse_value_update(self, p):
-        print p
+
+
+class CurvesBoxEditor(BoxEditor):
+
+    def __init__(self, curve, pix_size):
+        BoxEditor.__init__(self, pix_size)
+        self.curve = curve
+        self.curve_color = (0, 0, 0) 
+
+        self.widget = CairoDrawableArea(self.pix_size + 2, 
+                                        self.pix_size + 2, 
+                                        self._draw)
+        self.widget.press_func = self._press_event
+        self.widget.motion_notify_func = self._motion_notify_event
+        self.widget.release_func = self._release_event
+
+        self.last_point = None
+        self.edit_on = False
+        
+    def set_curve(curve, curve_color=(0,0,0)):
+        self.curve = curve
+        self.curve_color = curveColor
+
+    def _press_event(self, event):
+        vx, vy = BoxEditor.get_box_val_point(self, event.x, event.y)
+        p = viewgeom.CurvePoint(int(round(vx * 255)),int(round(vy * 255)))
+        self.last_point = p
+        self.edit_on = True
+        self.curve.remove_range(self.last_point.x - 3, self.last_point.x + 3 )
+        self.curve.set_curve_point(p)
+        self.widget.queue_draw()
+
+    def _motion_notify_event(self, x, y, state):
+        if self.edit_on == False:
+            return
+        vx, vy = BoxEditor.get_box_val_point(self, x, y)
+        p = viewgeom.CurvePoint(int(round(vx * 255)),int(round(vy * 255)))
+        self.curve.remove_range(self.last_point.x, p.x)
+        self.curve.set_curve_point(p)
+        self.last_point = p
+        self.widget.queue_draw()
+
+    def _release_event(self, event):
+        if self.edit_on == False:
+            return
+        vx, vy = BoxEditor.get_box_val_point(self, event.x, event.y)
+        p = viewgeom.CurvePoint(int(round(vx * 255)),int(round(vy * 255)))
+        self.curve.remove_range(self.last_point.x, p.x)
+        self.curve.set_curve_point(p)
+        #self.last_point = p
+        self.edit_on = False
+        self.widget.queue_draw()
+
+    def _draw(self, event, cr, allocation):
+        BoxEditor.draw_box(self, cr, allocation)
+
+        # curve
+        cr.set_source_rgb(*self.curve_color)#  seg.setColor( CURVE_COLOR );
+        cp = self.curve.get_curve(True) #we get 256 values
+        px, py = BoxEditor.get_box_panel_point(self, 0, cp[0], 255)
+        cr.move_to(px, py)
+        print "0", px, py
+        for i in range(1, len(cp)): #int i = 0; i < cp.length - 1; i++ )
+            px, py = BoxEditor.get_box_panel_point(self, i, cp[i], 255.0)
+            if i == 255:
+                print "255", px, py
+            cr.line_to(px, py)
+        cr.stroke()
+
+        # edit points
+        for p in self.curve.points:
+            px, py = BoxEditor.get_box_panel_point(self, p.x, p.y, 255.0)
+            _draw_select_circle(cr, px, py, (1,1,1), (0,0,0), radius = 4, small_radius = 2, pad = 0)
+    
+

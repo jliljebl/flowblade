@@ -35,6 +35,7 @@ import translations
 
 # Attr and node names in xml describing available filters.
 PROPERTY = appconsts.PROPERTY
+NON_MLT_PROPERTY = appconsts.NON_MLT_PROPERTY
 NAME = appconsts.NAME
 ARGS = appconsts.ARGS
 MLT_SERVICE = appconsts.MLT_SERVICE
@@ -162,6 +163,10 @@ class FilterInfo:
         #  Extra editors that handle properties that have been set "no_editor"
         e_node_list = filter_node.getElementsByTagName(EXTRA_EDITOR)
         self.extra_editors = propertyparse.node_list_to_extraeditors_array(e_node_list)  
+
+        # Non-MLT properties are persistent values like properties that values are not directly written out as MLT properties
+        p_node_list = filter_node.getElementsByTagName(NON_MLT_PROPERTY)
+        self.non_mlt_properties = propertyparse.node_list_to_non_mlt_properties_array(p_node_list)
         
     def get_icon(self):
         return _get_group_icon(self.group)
@@ -178,6 +183,7 @@ class FilterObject:
         self.info = filter_info
         # Values of these are edited by the user.
         self.properties = copy.deepcopy(filter_info.properties)
+        self.non_mlt_properties = copy.deepcopy(filter_info.non_mlt_properties) 
         self.mlt_filter = None # reference to MLT C-object
         self.active = True 
 
@@ -206,7 +212,7 @@ class FilterObject:
         else:
              self.mlt_filter.set("disable", str(1))
     
-    def reset_values(self,  mlt_profile=None, clip=None): #multipartfilters need profile and clip and caller doesn't know difference
+    def reset_values(self,  mlt_profile=None, clip=None): #multipartfilters need profile and clip
         for i in range(0, len(self.properties)):
             name, o_value, prop_type = self.info.properties[i]
             name, value, prop_type = self.properties[i]
