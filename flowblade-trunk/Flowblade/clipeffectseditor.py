@@ -400,9 +400,16 @@ def effect_selection_changed():
                     
             vbox.pack_start(editor_row, False, False, 0)
             vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
-        
+            
+        # Create NonMltEditableProperty wrappers for properties
+        non_mlteditable_properties = propertyedit.get_non_mlt_editable_properties( clip, 
+                                                                                   filter_object,
+                                                                                   filter_index)
+
         # Extra editors. Editable properties may have already been created 
         # with "editor=no_editor" and now extra editors may be created to edit those
+        # Non mlt properties are added as these are only need with extraeditors
+        editable_properties.extend(non_mlteditable_properties)
         editor_rows = propertyeditorbuilder.get_filter_extra_editor_rows(filter_object, editable_properties)
         for editor_row in editor_rows:
             vbox.pack_start(editor_row, False, False, 0)

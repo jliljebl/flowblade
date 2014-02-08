@@ -82,6 +82,7 @@ TRACK_MUTE_ALL = 3
 NAME = "name"
 ARGS = "args"
 PROPERTY = "property"
+NON_MLT_PROPERTY = "propertynonmlt"
 MLT_SERVICE = "mlt_service"
 EXTRA_EDITOR = "extraeditor"
 

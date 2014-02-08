@@ -530,7 +530,10 @@
     <filter id="invert">
         <name>Curves</name>
         <group>Color</group>
-        <property name="dummy" args="editor=no_editor">0.0</property>
+        <propertynonmlt name="value_curve" args="">0.0/0.0;1.0/1.0</propertynonmlt>
+        <property name="r_table" args="editor=no_editor exptype=lut_table">LINEAR</property>
+        <property name="g_table" args="editor=no_editor exptype=lut_table">LINEAR</property>
+        <property name="b_table" args="editor=no_editor exptype=lut_table">LINEAR</property>
         <extraeditor name="crcurves"></extraeditor>
     </filter>
     <filter id="frei0r.levels">

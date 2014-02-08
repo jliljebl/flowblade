@@ -65,6 +65,8 @@ MULTIPART_KEYFRAME_HCS = "multipart_keyframe"               # frame=value(;frame
 FREI_POSITION_HCS = "frei_pos_hcs"                          # frame=x:y
 FREI_GEOM_HCS_TRANSITION = "frei_geom_hcs";                 # time=x:y:x_scale:y_scale:rotation:mix
 COLOR = "color"                                             # #rrggbb
+LUT_TABLE = "lut_table"                                     # val;val;val;val;...;val 
+#POINTS_LIST = "points_list"                                 # x/y;x/y;x/y...;x/y
 WIPE_RESOURCE = "wipe_resource"                             # /path/to/resource.pgm
 NOT_PARSED = "not_parsed"                                   # A write out value is not parsed from value
 NOT_PARSED_TRANSITION = "not_parsed_transition"             # A write out value is not parsed from value in transition object
@@ -155,7 +157,15 @@ def get_transition_editable_properties(compositor):
     
     return editable_properties
 
-
+def get_non_mlt_editable_properties(clip, filter_object, filter_index):
+    editable_properties = []
+    for i in range(0, len(filter_object.non_mlt_properties)):
+        prop = filter_object.non_mlt_properties[i]
+        ep = NonMltEditableProperty(prop, clip, filter_index, i)
+        editable_properties.append(ep)
+    
+    return editable_properties
+        
 # -------------------------------------------- property wrappers objs
 class AbstractProperty:
     """
@@ -350,7 +360,7 @@ class EditableProperty(AbstractProperty):
         prop = (str(self.name), str(str_value), self.type)
         filter_object.properties[self.property_index] = prop
 
-      
+
 class TransitionEditableProperty(AbstractProperty):
     """
     A wrapper for mlttransitions.CompositorObject.transition.properties 
@@ -389,6 +399,26 @@ class TransitionEditableProperty(AbstractProperty):
         prop = (str(self.name), str(str_value), self.type)
         self.transition.properties[self.property_index] = prop
 
+
+class NonMltEditableProperty:
+    """
+    A wrapper for editable persistent properties that do not write out values to mlt objects
+    """
+    def __init__(self, prop, clip, filter_index, non_mlt_property_index):
+        self.name, self.value, self.type = prop
+        self.clip = clip
+        self.filter_index = filter_index
+        self.non_mlt_property_index = non_mlt_property_index
+
+    def _get_filter_object(self):
+        return self.clip.filters[self.filter_index]
+
+    def write_property_value(self, str_value):
+        # Persistant python object
+        filter_object = self._get_filter_object()
+        prop = (str(self.name), str(str_value), self.type)
+        filter_object.non_mlt_properties[self.non_mlt_property_index] = prop
+        
 
 # ----------------------------------------- PROP_EXPRESSION types extending classes
 class SingleKeyFrameProperty(EditableProperty):
@@ -436,7 +466,6 @@ class FreiPosHCSFilterProperty(EditableProperty):
         out_value = self.get_out_value(value)
         val_str = "0=" + str(out_value)
         self.write_value(val_str)
-
 
 class OpacityInGeomSKFProperty(TransitionEditableProperty):
     """
@@ -500,6 +529,23 @@ class OpacityInGeomKeyframeProperty(TransitionEditableProperty):
             val_str += str(self.get_out_value(opac)) + ";" # opac with converted range from slider
         
         val_str = val_str.strip(";")
+        self.write_value(val_str)
+
+
+class LUTTableProperty(EditableProperty):
+    def reset_to_linear(self):
+        self.write_value("LINEAR")
+
+
+class PointsListProperty(EditableProperty):
+    
+    def set_value_from_cr_points(self, crpoints):
+        val_str = ""
+        for i in range(0, len(crpoints)):
+            p = crpoints[i]
+            val_str = val_str + str(p.x) + "/"  + str(p.y)
+            if i < len(crpoints) - 1:
+                val_str = val_str + ";"
         self.write_value(val_str)
 
 
@@ -718,8 +764,10 @@ EDITABLE_PROPERTY_CREATORS = { \
     COLOR: lambda params : ColorProperty(params),
     GEOMETRY_OPACITY_KF: lambda params : KeyFrameGeometryOpacityProperty(params),
     GEOM_IN_AFFINE_FILTER: lambda params : AffineFilterGeomProperty(params),
-    WIPE_RESOURCE : lambda(params) : WipeResourceProperty(params),
-    NOT_PARSED : lambda(params) : EditableProperty(params), # This should only be used with params that have editor=NO_EDITOR
-    NOT_PARSED_TRANSITION : lambda(params) : TransitionEditableProperty(params), # This should only be used with params that have editor=NO_EDITOR
-    AFFINE_SCALE : lambda(params) : AffineScaleProperty(params) }
+    WIPE_RESOURCE : lambda params : WipeResourceProperty(params),
+    LUT_TABLE : lambda params  : LUTTableProperty(params),
+    #POINTS_LIST : lambda(param) : PointsListProperty(params),
+    NOT_PARSED : lambda params : EditableProperty(params), # This should only be used with params that have editor=NO_EDITOR
+    NOT_PARSED_TRANSITION : lambda params : TransitionEditableProperty(params), # This should only be used with params that have editor=NO_EDITOR
+    AFFINE_SCALE : lambda params : AffineScaleProperty(params) }
 
