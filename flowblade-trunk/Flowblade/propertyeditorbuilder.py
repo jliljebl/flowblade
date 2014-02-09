@@ -100,7 +100,7 @@ def get_filter_extra_editor_rows(filt, editable_properties):
     """
     Returns list of extraeditors GUI components.
     """
-    print editable_properties
+    #print editable_properties
     extra_editors = filt.info.extra_editors
     rows = []
     for editor_name in extra_editors:
@@ -489,7 +489,7 @@ def _create_color_corrector(filt, editable_properties):
     return vbox
 
 def _create_crcurves_editor(filt, editable_properties):
-    curves_editor = extraeditors.CurvesEditor(editable_properties)
+    curves_editor = extraeditors.CatmullRomFilterEditor(editable_properties)
 
     vbox = gtk.VBox(False, 4)
     vbox.pack_start(gtk.Label(), True, True, 0)
