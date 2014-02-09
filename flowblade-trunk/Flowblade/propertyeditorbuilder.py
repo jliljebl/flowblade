@@ -489,7 +489,7 @@ def _create_color_corrector(filt, editable_properties):
     return vbox
 
 def _create_crcurves_editor(filt, editable_properties):
-    curves_editor = extraeditors.CurvesEditor()
+    curves_editor = extraeditors.CurvesEditor(editable_properties)
 
     vbox = gtk.VBox(False, 4)
     vbox.pack_start(gtk.Label(), True, True, 0)

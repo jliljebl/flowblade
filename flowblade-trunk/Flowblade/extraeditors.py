@@ -6,6 +6,7 @@ import math
 
 from cairoarea import CairoDrawableArea
 import gui
+import lutfilter
 import respaths
 import viewgeom
 
@@ -329,26 +330,26 @@ class BoxEditor:
 
 class CurvesEditor:
     
-    def __init__(self):
+    def __init__(self, editable_properties):
         self.widget = gtk.VBox()
-        curve = viewgeom.CRCurve()
-        self.box_exitor = CurvesBoxEditor(curve, 256.0)
 
+        self.box_exitor = CurvesBoxEditor(256.0)
+        self.cr_filter = lutfilter.CatmullRomFilterEditor(editable_properties, self.box_exitor)
         box_row = gtk.HBox()
         box_row.pack_start(gtk.Label(), True, True, 0)
-        box_row.pack_start(self.box_exitor.widget, False, False, 0)
+        box_row.pack_start(self.cr_filter.box_editor.widget, False, False, 0)
         box_row.pack_start(gtk.Label(), True, True, 0)
 
         self.widget.pack_start(box_row, True, True, 0)
 
 
-
 class CurvesBoxEditor(BoxEditor):
 
-    def __init__(self, curve, pix_size):
+    def __init__(self, pix_size):
         BoxEditor.__init__(self, pix_size)
-        self.curve = curve
+        self.curve = None # lutfilter.CRCurve, is set later
         self.curve_color = (0, 0, 0) 
+        self.edit_listener = None # Needs to implement curve_edit_done() method, is set later
 
         self.widget = CairoDrawableArea(self.pix_size + 2, 
                                         self.pix_size + 2, 
@@ -359,14 +360,19 @@ class CurvesBoxEditor(BoxEditor):
 
         self.last_point = None
         self.edit_on = False
-        
+    
+    """
     def set_curve(curve, curve_color=(0,0,0)):
         self.curve = curve
         self.curve_color = curveColor
 
+    def set_edit_listener(self, edit_listener):
+        self.edit_listener = edit_listener
+    """
+    
     def _press_event(self, event):
         vx, vy = BoxEditor.get_box_val_point(self, event.x, event.y)
-        p = viewgeom.CurvePoint(int(round(vx * 255)),int(round(vy * 255)))
+        p = lutfilter.CurvePoint(int(round(vx * 255)),int(round(vy * 255)))
         self.last_point = p
         self.edit_on = True
         self.curve.remove_range(self.last_point.x - 3, self.last_point.x + 3 )
@@ -377,7 +383,7 @@ class CurvesBoxEditor(BoxEditor):
         if self.edit_on == False:
             return
         vx, vy = BoxEditor.get_box_val_point(self, x, y)
-        p = viewgeom.CurvePoint(int(round(vx * 255)),int(round(vy * 255)))
+        p = lutfilter.CurvePoint(int(round(vx * 255)),int(round(vy * 255)))
         self.curve.remove_range(self.last_point.x, p.x)
         self.curve.set_curve_point(p)
         self.last_point = p
@@ -387,11 +393,12 @@ class CurvesBoxEditor(BoxEditor):
         if self.edit_on == False:
             return
         vx, vy = BoxEditor.get_box_val_point(self, event.x, event.y)
-        p = viewgeom.CurvePoint(int(round(vx * 255)),int(round(vy * 255)))
+        p = lutfilter.CurvePoint(int(round(vx * 255)),int(round(vy * 255)))
         self.curve.remove_range(self.last_point.x, p.x)
         self.curve.set_curve_point(p)
         #self.last_point = p
         self.edit_on = False
+        self.edit_listener.curve_edit_done()
         self.widget.queue_draw()
 
     def _draw(self, event, cr, allocation):
@@ -402,11 +409,12 @@ class CurvesBoxEditor(BoxEditor):
         cp = self.curve.get_curve(True) #we get 256 values
         px, py = BoxEditor.get_box_panel_point(self, 0, cp[0], 255)
         cr.move_to(px, py)
-        print "0", px, py
+        #print "0", px, py
         for i in range(1, len(cp)): #int i = 0; i < cp.length - 1; i++ )
             px, py = BoxEditor.get_box_panel_point(self, i, cp[i], 255.0)
             if i == 255:
-                print "255", px, py
+                pass
+                #print "255", px, py
             cr.line_to(px, py)
         cr.stroke()
 
