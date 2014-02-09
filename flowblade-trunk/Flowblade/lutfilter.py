@@ -5,7 +5,9 @@ CR_BASIS = [[-0.5,  1.5, -1.5,  0.5],
             [-0.5,  0.0,  0.5,  0.0],
             [ 0.0,  1.0,  0.0,  0.0]]
 
-
+LINEAR_LUT_256 = []
+for i in range(0, 256):
+    LINEAR_LUT_256.append(i)
 
 class CurvePoint:
     
@@ -217,20 +219,20 @@ class CRCurve:
                 a[i][3] * b[3][j])
 
 
-class CatmullRomFilterEditor:
+class CatmullRomFilter:
     
-    def __init__(self, editable_properties, box_editor):
+    def __init__(self, editable_properties):
         # These properties hold the values that are writtenout to MLT to do the filtering
-        self.r_table = filter(lambda ep: ep.name == "R_table", editable_properties)[0]
-        self.g_table = filter(lambda ep: ep.name == "G_table", editable_properties)[0]
-        self.b_table = filter(lambda ep: ep.name == "B_table", editable_properties)[0]
+        self.r_table_prop = filter(lambda ep: ep.name == "R_table", editable_properties)[0]
+        self.g_table_prop = filter(lambda ep: ep.name == "G_table", editable_properties)[0]
+        self.b_table_prop = filter(lambda ep: ep.name == "B_table", editable_properties)[0]
         
         # These properties hold points lists which define cr curves. They are persistent but are not 
         # written oput to MLT
-        self.r_points = filter(lambda ep: ep.name == "r_curve", editable_properties)[0]
-        self.g_points = filter(lambda ep: ep.name == "g_curve", editable_properties)[0]
-        self.b_points = filter(lambda ep: ep.name == "b_curve", editable_properties)[0]
-        self.value_points = filter(lambda ep: ep.name == "value_curve", editable_properties)[0]
+        self.r_points_prop = filter(lambda ep: ep.name == "r_curve", editable_properties)[0]
+        self.g_points_prop = filter(lambda ep: ep.name == "g_curve", editable_properties)[0]
+        self.b_points_prop = filter(lambda ep: ep.name == "b_curve", editable_properties)[0]
+        self.value_points_prop = filter(lambda ep: ep.name == "value_curve", editable_properties)[0]
 
         # These are objects that generate lut tables from points lists
         self.r_cr_curve = CRCurve()
@@ -238,16 +240,35 @@ class CatmullRomFilterEditor:
         self.b_cr_curve = CRCurve()
         self.value_cr_curve = CRCurve()
 
-        # This is used to edit points of currently active curve
-        self.box_editor = box_editor
-        self.box_editor.curve = self.value_cr_curve
-        self.box_editor.edit_listener = self
+    def update_table_property_values(self):
+        gamma = self.value_cr_curve.curve
+
+        r_table = self.apply_gamma_to_channel(gamma, self.r_cr_curve.curve)
+        g_table = self.apply_gamma_to_channel(gamma, self.g_cr_curve.curve)
+        b_table = self.apply_gamma_to_channel(gamma, self.b_cr_curve.curve)
         
-        # This is used to change currently active curve
+        self.r_table_prop.write_out_table(r_table)
+        #self.g_table_prop.write_out_table(g_table)
+        #self.b_table_prop.write_out_table(b_table)
+        
+    def apply_gamma_to_channel(self, gamma, channel_pregamma):
+        lut = []
+        # Value for table index 0
+        try:
+            val = gamma[0] * (gamma[0] / channel_pregamma[0])
+        except:
+            val = gamma[0]
+        lut.append(clamp(round(val)))
 
-    def curve_edit_done(self):
-        pass
+        # Value for table index 1 - 255
+        for i in range(1, 256):
+            gmul = float(gamma[i]) / float(LINEAR_LUT_256[i])
+            val = gmul * float(channel_pregamma[i])
+            lut.append(clamp(round(val)))
+        
+        return lut
 
+    
 def clamp(val):
     if val > 255:
         return 255

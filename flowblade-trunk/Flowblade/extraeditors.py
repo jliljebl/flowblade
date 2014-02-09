@@ -328,28 +328,39 @@ class BoxEditor:
             cr.stroke()
 
 
-class CurvesEditor:
+
+class CatmullRomFilterEditor:
     
     def __init__(self, editable_properties):
         self.widget = gtk.VBox()
-
-        self.box_exitor = CurvesBoxEditor(256.0)
-        self.cr_filter = lutfilter.CatmullRomFilterEditor(editable_properties, self.box_exitor)
+                
+        # These properties hold the values that are writtenout to MLT to do the filtering
+        self.cr_filter = lutfilter.CatmullRomFilter(editable_properties)
+        default_curve = self.cr_filter.value_cr_curve
+        
+        # This is used to edit points of currently active curve
+        self.box_editor = CurvesBoxEditor(256.0, default_curve, self)
+        
+        # This is used to change currently active curve
+        
         box_row = gtk.HBox()
         box_row.pack_start(gtk.Label(), True, True, 0)
-        box_row.pack_start(self.cr_filter.box_editor.widget, False, False, 0)
+        box_row.pack_start(self.box_editor.widget, False, False, 0)
         box_row.pack_start(gtk.Label(), True, True, 0)
 
         self.widget.pack_start(box_row, True, True, 0)
 
+    def curve_edit_done(self):
+        self.cr_filter.update_table_property_values()
+
 
 class CurvesBoxEditor(BoxEditor):
 
-    def __init__(self, pix_size):
+    def __init__(self, pix_size, curve, edit_listener):
         BoxEditor.__init__(self, pix_size)
-        self.curve = None # lutfilter.CRCurve, is set later
+        self.curve = curve # lutfilter.CRCurve
         self.curve_color = (0, 0, 0) 
-        self.edit_listener = None # Needs to implement curve_edit_done() method, is set later
+        self.edit_listener = edit_listener # Needs to implement "curve_edit_done()"
 
         self.widget = CairoDrawableArea(self.pix_size + 2, 
                                         self.pix_size + 2, 
@@ -360,15 +371,6 @@ class CurvesBoxEditor(BoxEditor):
 
         self.last_point = None
         self.edit_on = False
-    
-    """
-    def set_curve(curve, curve_color=(0,0,0)):
-        self.curve = curve
-        self.curve_color = curveColor
-
-    def set_edit_listener(self, edit_listener):
-        self.edit_listener = edit_listener
-    """
     
     def _press_event(self, event):
         vx, vy = BoxEditor.get_box_val_point(self, event.x, event.y)

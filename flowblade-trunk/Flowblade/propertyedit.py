@@ -536,7 +536,16 @@ class LUTTableProperty(EditableProperty):
     def reset_to_linear(self):
         self.write_value("LINEAR")
 
+    def write_out_table(self, table):
+        l = []
+        for i in range(0, len(table)):
 
+            l.append(str(table[i]))
+            l.append(";")
+        val_str = ''.join(l).rstrip(";")
+        print val_str
+
+        
 class PointsListProperty(EditableProperty):
     
     def set_value_from_cr_points(self, crpoints):
