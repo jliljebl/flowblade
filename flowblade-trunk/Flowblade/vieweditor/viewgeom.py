@@ -23,10 +23,7 @@ import math
 CLOCKWISE = 1
 COUNTER_CLOCKWISE = 2
 
-CR_BASIS = [[-0.5,  1.5, -1.5,  0.5],
-            [ 1.0, -2.5,  2.0, -0.5],
-            [-0.5,  0.0,  0.5,  0.0],
-            [ 0.0,  1.0,  0.0,  0.0]]
+
  
  
 def point_in_convex_polygon(test_point, points, first_point_index):
@@ -259,6 +256,7 @@ def get_isp_for_vert_and_non_vert(vertical, non_vertical):
     is_y = non_vertical.m * vertical.x_icept + non_vertical.b
     return (vertical.x_icept, is_y)
 
+"""
 class CurvePoint:
     
     def __init__(self, x, y):
@@ -470,7 +468,7 @@ def clamp(val):
         return 0
 
     return int(val)
-
+"""
 
 
 
