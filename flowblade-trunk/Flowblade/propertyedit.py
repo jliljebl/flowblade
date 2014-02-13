@@ -65,8 +65,7 @@ MULTIPART_KEYFRAME_HCS = "multipart_keyframe"               # frame=value(;frame
 FREI_POSITION_HCS = "frei_pos_hcs"                          # frame=x:y
 FREI_GEOM_HCS_TRANSITION = "frei_geom_hcs";                 # time=x:y:x_scale:y_scale:rotation:mix
 COLOR = "color"                                             # #rrggbb
-LUT_TABLE = "lut_table"                                     # val;val;val;val;...;val 
-#POINTS_LIST = "points_list"                                 # x/y;x/y;x/y...;x/y
+LUT_TABLE = "lut_table"                                     # val;val;val;val;...;val
 WIPE_RESOURCE = "wipe_resource"                             # /path/to/resource.pgm
 NOT_PARSED = "not_parsed"                                   # A write out value is not parsed from value
 NOT_PARSED_TRANSITION = "not_parsed_transition"             # A write out value is not parsed from value in transition object
@@ -543,7 +542,7 @@ class LUTTableProperty(EditableProperty):
             l.append(str(table[i]))
             l.append(";")
         val_str = ''.join(l).rstrip(";")
-        print val_str
+        self.write_value(val_str)
 
         
 class PointsListProperty(EditableProperty):
@@ -631,13 +630,13 @@ class KeyFrameHCSTransitionProperty(TransitionEditableProperty):
             step = DEFAULT_STEP
         lower, upper = self.input_range
         return gtk.Adjustment(float(0.1), float(lower), float(upper), float(step)) # Value set later to first kf value
-        
+
     def write_out_keyframes(self, keyframes):
         val_str = ""
         for kf in keyframes:
             frame, val = kf
             val_str += str(frame) + "=" + str(self.get_out_value(val)) + ";"
-        
+
         val_str = val_str.strip(";")
         self.write_value(val_str)
 
@@ -775,7 +774,6 @@ EDITABLE_PROPERTY_CREATORS = { \
     GEOM_IN_AFFINE_FILTER: lambda params : AffineFilterGeomProperty(params),
     WIPE_RESOURCE : lambda params : WipeResourceProperty(params),
     LUT_TABLE : lambda params  : LUTTableProperty(params),
-    #POINTS_LIST : lambda(param) : PointsListProperty(params),
     NOT_PARSED : lambda params : EditableProperty(params), # This should only be used with params that have editor=NO_EDITOR
     NOT_PARSED_TRANSITION : lambda params : TransitionEditableProperty(params), # This should only be used with params that have editor=NO_EDITOR
     AFFINE_SCALE : lambda params : AffineScaleProperty(params) }

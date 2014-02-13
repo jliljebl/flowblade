@@ -527,17 +527,16 @@
         <property name="hue" args="editor=no_editor">0.0</property>
         <extraeditor name="color_corrector"></extraeditor>
     </filter>
-    <filter id="invert">
+    <filter id="rgblut">
         <name>Curves</name>
         <group>Color</group>
-
         <property name="R_table" args="editor=no_editor exptype=lut_table">LINEAR</property>
         <property name="G_table" args="editor=no_editor exptype=lut_table">LINEAR</property>
         <property name="B_table" args="editor=no_editor exptype=lut_table">LINEAR</property>
-        <propertynonmlt name="r_curve" args="">0.0/0.0;1.0/1.0</propertynonmlt>
-        <propertynonmlt name="g_curve" args="">0.0/0.0;1.0/1.0</propertynonmlt>
-        <propertynonmlt name="b_curve" args="">0.0/0.0;1.0/1.0</propertynonmlt>
-        <propertynonmlt name="value_curve" args="">0.0/0.0;1.0/1.0</propertynonmlt>
+        <propertynonmlt name="r_curve" args="">0/0;255/255</propertynonmlt>
+        <propertynonmlt name="g_curve" args="">0/0;255/255</propertynonmlt>
+        <propertynonmlt name="b_curve" args="">0/0;255/255</propertynonmlt>
+        <propertynonmlt name="value_curve" args="">0/0;255/255</propertynonmlt>
         <extraeditor name="crcurves"></extraeditor>
     </filter>
     <filter id="frei0r.levels">
