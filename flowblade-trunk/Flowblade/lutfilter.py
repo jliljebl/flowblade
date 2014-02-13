@@ -48,9 +48,24 @@ class CRCurve:
 
     def set_points_from_str(self, points_str):
         points = []
-        self.points = points
+        tokens = points_str.split(";")
+        for t in tokens:
+            x, y = t.split("/")
+            point = CurvePoint(int(x), int(y))
+            points.append(point)
+        self.points = sorted(points, key=lambda point: point.x)
         self.calculate_curve()
 
+    def get_points_string(self):
+        l = []
+        for i in range(0, len(self.points)):
+            p = self.points[i]
+            l.append(str(p.x))
+            l.append("/")
+            l.append(str(p.y))
+            l.append(";")
+        return ''.join(l).rstrip(";")
+        
     def get_curve(self, calculate_first):
         if calculate_first:
             self.calculate_curve()
@@ -228,7 +243,7 @@ class CatmullRomFilter:
         self.b_table_prop = filter(lambda ep: ep.name == "B_table", editable_properties)[0]
         
         # These properties hold points lists which define cr curves. They are persistent but are not 
-        # written oput to MLT
+        # written out to MLT
         self.r_points_prop = filter(lambda ep: ep.name == "r_curve", editable_properties)[0]
         self.g_points_prop = filter(lambda ep: ep.name == "g_curve", editable_properties)[0]
         self.b_points_prop = filter(lambda ep: ep.name == "b_curve", editable_properties)[0]
@@ -236,11 +251,16 @@ class CatmullRomFilter:
 
         # These are objects that generate lut tables from points lists
         self.r_cr_curve = CRCurve()
+        self.r_cr_curve.set_points_from_str(self.r_points_prop.value)
         self.g_cr_curve = CRCurve()
+        self.g_cr_curve.set_points_from_str(self.g_points_prop.value)
         self.b_cr_curve = CRCurve()
+        self.b_cr_curve.set_points_from_str(self.b_points_prop.value)
         self.value_cr_curve = CRCurve()
+        self.value_cr_curve.set_points_from_str(self.value_points_prop.value)
 
     def update_table_property_values(self):
+        # R, G, B LUT table are created with input from value gamma curve to all of them
         gamma = self.value_cr_curve.curve
 
         r_table = self.apply_gamma_to_channel(gamma, self.r_cr_curve.curve)
@@ -248,9 +268,9 @@ class CatmullRomFilter:
         b_table = self.apply_gamma_to_channel(gamma, self.b_cr_curve.curve)
         
         self.r_table_prop.write_out_table(r_table)
-        #self.g_table_prop.write_out_table(g_table)
-        #self.b_table_prop.write_out_table(b_table)
-        
+        self.g_table_prop.write_out_table(g_table)
+        self.b_table_prop.write_out_table(b_table)
+
     def apply_gamma_to_channel(self, gamma, channel_pregamma):
         lut = []
         # Value for table index 0

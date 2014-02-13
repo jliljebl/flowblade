@@ -101,6 +101,8 @@ class AbstractGlassButtons:
             self.glass_style = False
             self.dark_theme = True
 
+        self.draw_button_gradients = True # set False at object creation site to kill all gradients
+
     def _set_button_draw_consts(self, x, y, width, height):
         aspect = 1.0
         corner_radius = height / CORNER_DIVIDER
@@ -162,33 +164,38 @@ class AbstractGlassButtons:
         # bg 
         self._set_button_draw_consts(self.button_x + 0.5, self.button_y + 0.5, buttons_width, self.button_height + 1.0)
         self._round_rect_path(cr)
-        if self.glass_style == True:
-            cr.set_source_rgb(0.75, 0.75, 0.75)#*gui.bg_color_tuple)#0.75, 0.75, 0.75)
-            cr.fill_preserve()
-        else:
-            grad = cairo.LinearGradient (self.button_x, self.button_y, self.button_x, self.button_y + self.button_height)
-            r, g, b = gui.bg_color_tuple
-            if self.dark_theme == False:
-                grad.add_color_stop_rgba(1, r - 0.1, g - 0.1, b - 0.1, 1)
-                grad.add_color_stop_rgba(0, r + 0.1, g + 0.1, b + 0.1, 1)
+        r, g, b = gui.bg_color_tuple
+        if self.draw_button_gradients:
+            if self.glass_style == True:
+                cr.set_source_rgb(0.75, 0.75, 0.75)#*gui.bg_color_tuple)#0.75, 0.75, 0.75)
+                cr.fill_preserve()
             else:
-                grad.add_color_stop_rgba(1, r + 0.04, g + 0.04, b + 0.04, 1)
-                grad.add_color_stop_rgba(0, r + 0.07, g + 0.07, b + 0.07, 1)
+                grad = cairo.LinearGradient (self.button_x, self.button_y, self.button_x, self.button_y + self.button_height)
+                if self.dark_theme == False:
+                    grad.add_color_stop_rgba(1, r - 0.1, g - 0.1, b - 0.1, 1)
+                    grad.add_color_stop_rgba(0, r + 0.1, g + 0.1, b + 0.1, 1)
+                else:
+                    grad.add_color_stop_rgba(1, r + 0.04, g + 0.04, b + 0.04, 1)
+                    grad.add_color_stop_rgba(0, r + 0.07, g + 0.07, b + 0.07, 1)
 
-            cr.set_source(grad)
-            cr.fill_preserve()
+                cr.set_source(grad)
+                cr.fill_preserve()
 
         # Pressed button gradient
         if self.pressed_button > -1:
-            grad = cairo.LinearGradient (self.button_x, self.button_y, self.button_x, self.button_y + self.button_height)
-            if self.glass_style == True:
-                for stop in BUTTONS_PRESSED_GRAD_STOPS:
-                    grad.add_color_stop_rgba(*stop)
-            else:
+            if self.draw_button_gradients:
                 grad = cairo.LinearGradient (self.button_x, self.button_y, self.button_x, self.button_y + self.button_height)
-                grad.add_color_stop_rgba(1, r - 0.3, g - 0.3, b - 0.3, 1)
-                grad.add_color_stop_rgba(0, r - 0.1, g - 0.1, b - 0.1, 1)
-
+                if self.glass_style == True:
+                    for stop in BUTTONS_PRESSED_GRAD_STOPS:
+                        grad.add_color_stop_rgba(*stop)
+                else:
+                    grad = cairo.LinearGradient (self.button_x, self.button_y, self.button_x, self.button_y + self.button_height)
+                    grad.add_color_stop_rgba(1, r - 0.3, g - 0.3, b - 0.3, 1)
+                    grad.add_color_stop_rgba(0, r - 0.1, g - 0.1, b - 0.1, 1)
+            else:
+                    grad = cairo.LinearGradient (self.button_x, self.button_y, self.button_x, self.button_y + self.button_height)
+                    grad.add_color_stop_rgba(1, r - 0.3, g - 0.3, b - 0.3, 1)
+                    grad.add_color_stop_rgba(0, r - 0.3, g - 0.3, b - 0.3, 1)
             cr.save()
             cr.set_source(grad)
             cr.clip()
@@ -215,7 +222,7 @@ class AbstractGlassButtons:
                 cr.restore()
             x += self.button_width
 
-        if self.glass_style == True:
+        if self.glass_style == True and self.draw_button_gradients:
             # Glass gradient
             self._round_rect_path(cr)
             grad = cairo.LinearGradient (self.button_x, self.button_y, self.button_x, self.button_y + self.button_height)
@@ -396,6 +403,7 @@ class GlassButtonsToggleGroup(GlassButtonsGroup):
 
     def _release_event(self, event):
         pass
+
 
 def focus_group_has_focus(focus_group):
     group = focus_groups[focus_group]
