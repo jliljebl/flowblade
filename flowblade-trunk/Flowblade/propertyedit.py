@@ -412,12 +412,15 @@ class NonMltEditableProperty:
     def _get_filter_object(self):
         return self.clip.filters[self.filter_index]
 
+    def write_number_value(self, numb):
+        self.write_property_value(str(numb))
+
     def write_property_value(self, str_value):
         # Persistant python object
         filter_object = self._get_filter_object()
         prop = (str(self.name), str(str_value), self.type)
         filter_object.non_mlt_properties[self.non_mlt_property_index] = prop
-        
+
 
 # ----------------------------------------- PROP_EXPRESSION types extending classes
 class SingleKeyFrameProperty(EditableProperty):

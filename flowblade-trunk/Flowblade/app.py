@@ -94,6 +94,7 @@ def main(root_path):
     Called at application start.
     Initializes application with a default project.
     """
+    # Print OS, Python version and GTK+ version
     try:
         os_release_file = open("/etc/os-release","r")
         os_text = os_release_file.read()
