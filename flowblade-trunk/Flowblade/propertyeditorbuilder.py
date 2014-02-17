@@ -480,7 +480,7 @@ def _create_color_corrector(filt, editable_properties):
     gamma = filter(lambda ep: ep.name == "gamma", editable_properties)[0]
     gamma_slider_row = _get_slider_row(gamma, None, True)
 
-    color_corrector = extraeditors.ColorCorrector([lift_slider_row, gain_slider_row, gamma_slider_row])
+    color_corrector = extraeditors.ColorCorrector(editable_properties, [lift_slider_row, gain_slider_row, gamma_slider_row])
 
     vbox = gtk.VBox(False, 4)
     vbox.pack_start(gtk.Label(), True, True, 0)

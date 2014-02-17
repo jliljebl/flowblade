@@ -51,7 +51,7 @@ def _draw_select_circle(cr, x, y, band_color, ring_color, radius = 6, small_radi
 
 class ColorWheel:
 
-    def __init__(self):
+    def __init__(self, edit_listener):
         self.band = SHADOW
         
         self.widget = CairoDrawableArea(260, 
@@ -64,17 +64,21 @@ class ColorWheel:
         self.Y_PAD = 3
         self.CENTER_X = 130
         self.CENTER_Y = 130
+        self.MAX_DIST = 123
+        self.twelwe_p = (self.CENTER_X , self.CENTER_Y - self.MAX_DIST)
         self.CIRCLE_HALF = 6
         self.cursor_x = self.CENTER_X
         self.cursor_y = self.CENTER_Y
         self.WHEEL_IMG = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "color_wheel.png")
-        self.MAX_DIST = 123
-        self.shadow_x = self.CENTER_X
-        self.shadow_y = self.CENTER_Y
-        self.mid_x = self.CENTER_X
-        self.mid_y = self.CENTER_Y
-        self.hi_x = self.CENTER_X
-        self.hi_y = self.CENTER_Y
+        self.edit_listener = edit_listener
+        self.shadow_x = self.cursor_x 
+        self.shadow_y = self.cursor_y
+        self.mid_x = self.cursor_x 
+        self.mid_y = self.cursor_y
+        self.hi_x = self.cursor_x
+        self.hi_y = self.cursor_y
+        self.angle = 0.0
+        self.distance = 0.0
 
     def set_band(self, band):
         self.band = band
@@ -107,6 +111,7 @@ class ColorWheel:
     def _release_event(self, event):
         self.cursor_x, self.cursor_y = self._get_legal_point(event.x, event.y)
         self._save_point()
+        self.edit_listener()
         self.widget.queue_draw()
         
     def _get_legal_point(self, x, y):
@@ -117,7 +122,26 @@ class ColorWheel:
 
         new_vec = vec.get_multiplied_vec(self.MAX_DIST / dist )
         return new_vec.end_point
-    
+
+    def _get_angle(self, p):
+        angle = viewgeom.get_angle_in_deg(self.twelwe_p, (self.CENTER_X, self.CENTER_Y), p)
+        clockwise = viewgeom.points_clockwise(self.twelwe_p, (self.CENTER_X, self.CENTER_Y), p)
+
+        if clockwise:
+             angle = 360.0 - angle;
+        
+        # Color circle starts from 11 o'clock
+        angle = angle - 30.0
+        if angle  < 0.0:
+            angle = angle + 360.0
+
+        return angle
+
+    def _get_distance(self, p):
+        vec = viewgeom.get_vec_for_points((self.CENTER_X, self.CENTER_Y), p)
+        dist = vec.get_length()
+        return dist/self.MAX_DIST
+
     def _save_point(self):
         if self.band == SHADOW:
             self.shadow_x = self.cursor_x 
@@ -128,7 +152,22 @@ class ColorWheel:
         else:
             self.hi_x = self.cursor_x
             self.hi_y = self.cursor_y
-        
+
+    def get_angle_and_distance(self):
+        if self.band == SHADOW:
+            x = self.shadow_x
+            y = self.shadow_y
+        elif self.band == MID:
+            x = self.mid_x
+            y = self.mid_y
+        else:
+            x = self.hi_x
+            y = self.hi_y
+        p = (x, y)
+        angle = self._get_angle(p)
+        distance = self._get_distance(p)
+        return (angle, distance)
+
     def _draw(self, event, cr, allocation):
         """
         Callback for repaint from CairoDrawableArea.
@@ -235,12 +274,12 @@ class ColorBandSelector:
 
 
 class ColorCorrector:
-    def __init__(self, slider_rows):
+    def __init__(self, editable_properties, slider_rows):
         self.band = SHADOW
-        
+        self.filt = lutfilter.ColorCorrectorFilter(editable_properties)
         self.widget = gtk.VBox()
 
-        self.color_wheel = ColorWheel()
+        self.color_wheel = ColorWheel(self.color_wheel_edit_done)
         self.band_selector = ColorBandSelector()
         self.band_selector.band_change_listener = self._band_changed
 
@@ -272,7 +311,17 @@ class ColorCorrector:
         self.band_selector.widget.queue_draw()
         self.color_wheel.widget.queue_draw()
 
-
+    def color_wheel_edit_done(self):
+        angle, distance = self.color_wheel.get_angle_and_distance()
+        if self.band == SHADOW:
+            self.filt.set_shadows_correction(angle, distance)
+        elif self.band == MID:
+            self.filt.set_midtone_correction(angle, distance)
+        else:
+            self.filt.set_high_ligh_correction(angle, distance)
+        
+        self.filt.create_lookup_tables()
+        self.filt.write_out_tables()
 
 class BoxEditor:
     
@@ -410,6 +459,7 @@ class CurvesBoxEditor(BoxEditor):
     def __init__(self, pix_size, curve, edit_listener):
         BoxEditor.__init__(self, pix_size)
         self.curve = curve # lutfilter.CRCurve
+        global LINE_COLOR, CURVE_COLOR
         self.curve_color = CURVE_COLOR
         self.edit_listener = edit_listener # Needs to implement "curve_edit_done()"
 
@@ -424,7 +474,6 @@ class CurvesBoxEditor(BoxEditor):
         self.edit_on = False
 
         if editorpersistance.prefs.dark_theme == True:
-            global LINE_COLOR, CURVE_COLOR
             LINE_COLOR = (0.8, 0.8, 0.8)
             CURVE_COLOR = (0.8, 0.8, 0.8)
             self.curve_color = CURVE_COLOR

@@ -123,3 +123,8 @@ CONVERTING_TO_USE_ORIGINAL_MEDIA = 3
 
 # Autosave directory relative path
 AUTOSAVE_DIR = "autosave/"
+
+# Luma bands
+SHADOWS = 0
+MIDTONES = 1
+HIGHLIGHTS = 2

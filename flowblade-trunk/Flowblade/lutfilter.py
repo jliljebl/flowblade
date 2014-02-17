@@ -5,15 +5,25 @@ CR_BASIS = [[-0.5,  1.5, -1.5,  0.5],
             [-0.5,  0.0,  0.5,  0.0],
             [ 0.0,  1.0,  0.0,  0.0]]
 
+RED = 0
+GREEN = 1
+BLUE = 2
+
+SHADOWS = 0
+MIDTONES = 1
+HIGHLIGHTS = 2
+    
 LINEAR_LUT_256 = []
 for i in range(0, 256):
     LINEAR_LUT_256.append(i)
+
 
 class CurvePoint:
     
     def __init__(self, x, y):
         self.x = x
         self.y = y
+
 
 class CRCurve:
 
@@ -23,7 +33,7 @@ class CRCurve:
         self.Y = 1
         self.points = []
         self.curve = []
-        
+
         self.curve_reset()
 
     def curve_reset(self):
@@ -288,6 +298,290 @@ class CatmullRomFilter:
         
         return lut
 
+
+class ColorCorrectorFilter:
+
+    SHADOWS_DIST_MULT = 0.75
+    MID_DIST_MULT = 125.0
+    HI_DIST_MULT = 0.5
+
+    LIFT_CONV = 0.5 / 127.0
+    GAIN_CONV = 0.5 / 127.0 
+    GAMMA_CONV = 0.5 / 127.0 
+
+    def __init__(self, editable_properties):
+        self.r_table_prop = filter(lambda ep: ep.name == "R_table", editable_properties)[0]
+        self.g_table_prop = filter(lambda ep: ep.name == "G_table", editable_properties)[0]
+        self.b_table_prop = filter(lambda ep: ep.name == "B_table", editable_properties)[0]
+
+        self.r_lookup = [0] * 256 
+        self.g_lookup = [0] * 256
+        self.b_lookup = [0] * 256 
+
+        self.cyan_red = [0] * 3
+        self.magenta_green = [0] * 3
+        self.yellow_blue = [0] * 3
+
+        """
+        self.mid_Cy_Re = 0.0
+        self.mid_Ma_Gr = 0.0
+        self.mid_Ye_Bl = 0.0
+
+        self.hi_Cy_Re = 0.0
+        self.hi_Ma_Gr = 0.0
+        self.hi_Ye_Bl = 0.0
+
+        self.shadow_Cy_Re = 0.0
+        self.shadow_Ma_Gr = 0.0
+        self.shadow_Ye_Bl = 0.0
+        """
+        
+        self.highlights_add = [0] * 256
+        self.shadows_sub = [0] * 256
+
+        self.midtones_add = [0] * 256
+        self.midtones_sub = [0] * 256
+
+        self.shadows_add = [0] * 256
+        self.highlights_sub = [0] * 256
+
+        self._fill_add_sub_tables()
+        self.create_lookup_tables()
+
+    def _fill_add_sub_tables(self):
+        for i in range(0, 256):
+            self.highlights_add[i] = 1.075 - 1.0 / (float(i) / 16.0 + 1.0)
+            self.shadows_sub[255 - i] = 1.075 - 1.0 / (float(i) / 16.0 + 1.0)
+
+            self.midtones_add[i] = 0.667 * (1.0 - SQR((float(i) - 127.0) / 127.0))
+            self.midtones_sub[i] = 0.667 * (1.0 - SQR((float(i) - 127.0) / 127.0))
+
+            self.shadows_add[i] = 0.667 * (1.0 - SQR((float(i) - 127.0) / 127.0))
+            self.highlights_sub[i] = 0.667 * (1.0 - SQR((float(i) - 127.0) / 127.0))
+
+    def set_shadows_correction(self, angle, distance):
+        r, g, b = get_RGB_for_angle(angle)
+        distance = distance * ColorCorrectorFilter.SHADOWS_DIST_MULT
+
+        max_color = RED
+        if g >= r and g >= b:
+            max_color = GREEN
+        if b >= r and b >= g:
+            maxColor = BLUE
+
+        val_R = 0.0
+        val_G = 0.0
+        val_B = 0.0
+
+        dR = 0.0
+        dG = 0.0
+        dB = 0.0
+
+        if max_color == RED:
+            dG = r - g
+            dB = r - b
+
+            val_G = -100.0 * distance * dG
+            val_B = -100.0 * distance * dB
+
+        if max_color == GREEN:
+            dR = g - r
+            dB = g - b
+
+            val_B = -100.0 * distance * dB
+            val_R = -100.0 * distance * dR
+
+        if max_color == BLUE:
+            dR = b - r
+            dG = b - g
+
+            val_G = -100.0 * distance * dG;
+            val_R = -100.0 * distance * dR;
+
+        """
+        self.shadow_Cy_Re = val_r
+        self.shadow_Ma_Gr = val_g
+        self.shadow_Ye_Bl = val_b
+        """
+        
+        self.cyan_red[SHADOWS] = val_R
+        self.magenta_green[SHADOWS] = val_G
+        self.yellow_blue[SHADOWS] = val_B
+
+    def set_midtone_correction(self, angle, distance):
+        rng = distance * ColorCorrectorFilter.MID_DIST_MULT #float range = distance * MID_DIST_MULT;
+        floor = -(rng / 2)
+
+        r, g, b = get_RGB_for_angle(angle) #GiottoRGB rgb = getRGB( angle );
+        val_R = floor + rng * r
+        val_G = floor + rng * g
+        val_B = floor + rng * b
+
+        self.cyan_red[MIDTONES] = val_R
+        self.magenta_green[MIDTONES] = val_G
+        self.yellow_blue[MIDTONES] = val_B
+        
+        """
+        self.mid_Cy_Re = val_R
+        self.mid_Ma_Gr = val_G
+        self.mid_Ye_Bl = val_B
+        """
+        
+    def set_high_ligh_correction(self, angle, distance):
+        r, g, b = get_RGB_for_angle(angle)
+        distance = distance * ColorCorrectorFilter.HI_DIST_MULT
+
+        min_color = RED
+        if g <= r and g <= b:
+            min_color = GREEN
+        if b <= r and b <= g:
+            minColor = BLUE
+
+        val_R = 0.0
+        val_G = 0.0
+        val_B = 0.0
+
+        dR = 0.0
+        dG = 0.0
+        dB = 0.0
+
+        if min_color == RED:
+            dG = g - r
+            dB = b - r
+
+            val_G = 100.0 * distance * dG
+            val_B = 100.0 * distance * dB
+            val_R = 0.0
+
+        if min_color == GREEN:
+            dR = r - g
+            dB = b - g
+
+            val_G = 0.0
+            val_B = 100.0 * distance * dB
+            val_R = 100.0 * distance * dR
+
+        if min_color == BLUE:
+            dR = r - b
+            dG = b - b
+
+            val_G = 100.0 * distance * dG
+            val_B = 0
+            val_R = 100.0 * distance * dR
+
+        self.cyan_red[HIGHLIGHTS] = val_R
+        self.magenta_green[HIGHLIGHTS] = val_G
+        self.yellow_blue[HIGHLIGHTS] = val_B
+        
+        """
+        self.hi_Cy_Re = val_R
+        self.hi_Ma_Gr = val_G
+        self.hi_Ye_Bl = val_B
+        """
+
+    def create_lookup_tables(self):
+        cyan_red_transfer = [[0] * 3 for i in range(256)] # float[3][256];
+        magenta_green_transfer = [[0] * 3 for i in range(256)]
+        yellow_blue_transfer =  [[0] * 3 for i in range(256)]
+
+        cyan_red_transfer[SHADOWS] = self.shadows_add if self.cyan_red[ SHADOWS ] > 0 else self.shadows_sub           
+        cyan_red_transfer[MIDTONES] = self.midtones_add if self.cyan_red[ MIDTONES ] > 0 else self.midtones_sub
+        cyan_red_transfer[HIGHLIGHTS] = self.highlights_add if self.cyan_red[ HIGHLIGHTS ] > 0 else self.highlights_sub
+
+        magenta_green_transfer[SHADOWS] = self.shadows_add if self.magenta_green[SHADOWS] > 0 else self.shadows_sub
+        magenta_green_transfer[MIDTONES] = self.midtones_add if self.magenta_green[MIDTONES] > 0 else self.midtones_sub
+        magenta_green_transfer[HIGHLIGHTS] = self.highlights_add if self.magenta_green[HIGHLIGHTS] > 0 else self.highlights_sub
+
+        yellow_blue_transfer[SHADOWS] = self.shadows_add if self.yellow_blue[SHADOWS] > 0 else self.shadows_sub
+        yellow_blue_transfer[MIDTONES] = self.midtones_add if self.yellow_blue[MIDTONES] > 0 else self.midtones_sub
+        yellow_blue_transfer[HIGHLIGHTS] = self.highlights_add if self.yellow_blue[HIGHLIGHTS] > 0 else self.highlights_sub
+
+        for i in range(0, 256):
+            r_n = i
+            g_n = i
+            b_n = i
+
+            r_n +=int(self.cyan_red[SHADOWS] * cyan_red_transfer[SHADOWS][r_n])
+            r_n = clamp(r_n)
+            r_n += int(self.cyan_red[MIDTONES] * cyan_red_transfer[MIDTONES][r_n])
+            r_n = clamp(r_n)
+            r_n += int(self.cyan_red[HIGHLIGHTS] * cyan_red_transfer[HIGHLIGHTS][r_n])
+            r_n = clamp(r_n)
+
+            g_n += int(self.magenta_green[SHADOWS] * magenta_green_transfer[SHADOWS][g_n])
+            g_n = clamp(g_n)
+            g_n += int(self.magenta_green[MIDTONES] * magenta_green_transfer[MIDTONES][g_n])
+            g_n = clamp(g_n)
+            g_n += int(self.magenta_green[HIGHLIGHTS] * magenta_green_transfer[HIGHLIGHTS][g_n])
+            g_n = clamp(g_n)
+
+            b_n += int(self.yellow_blue[SHADOWS] * yellow_blue_transfer[SHADOWS][b_n])
+            b_n = clamp(b_n)
+            b_n += int(self.yellow_blue[MIDTONES] * yellow_blue_transfer[MIDTONES][b_n])
+            b_n = clamp(b_n)
+            b_n += int(self.yellow_blue[HIGHLIGHTS] * yellow_blue_transfer[HIGHLIGHTS][b_n])
+            b_n = clamp(b_n)
+
+            self.r_lookup[i] = r_n
+            self.g_lookup[i] = g_n
+            self.b_lookup[i] = b_n
+
+    def write_out_tables(self):
+        self.r_table_prop.write_out_table(self.r_lookup)
+        self.g_table_prop.write_out_table(self.g_lookup)
+        self.b_table_prop.write_out_table(self.b_lookup)
+        
+def get_RGB_for_angle(angle):
+    hsl = get_HSL(angle, 1.0, 0.5)
+    return hsl_to_rgb(hsl)
+
+def get_HSL(h, s, l):
+    h  = h / 360.0
+    return (h, s, l)
+
+def hsl_to_rgb(hsl):
+    h, s, l = hsl
+    
+    if s == 0.0:
+        #  achromatic case
+        r = l
+        g = l
+        b = l
+
+    else:
+    
+        if l <= 0.5:
+            m2 = l * (1.0 + s)
+        else:
+            m2 = l + s - l * s
+
+        m1 = 2.0 * l - m2
+
+        r = hsl_value( m1, m2, h * 6.0 + 2.0 )
+        g = hsl_value( m1, m2, h * 6.0 )
+        b = hsl_value( m1, m2, h * 6.0 - 2.0 )
+    
+    return (r, g, b)
+
+def hsl_value(n1, n2, hue):
+    if hue > 6.0:
+        hue -= 6.0
+    elif hue < 0.0:
+        hue += 6.0
+
+    if hue < 1.0:
+        val = n1 + (n2 - n1) * hue
+    elif hue < 3.0:
+        val = n2
+    elif hue < 4.0:
+        val = n1 + (n2 - n1) * (4.0 - hue)
+    else:
+        val = n1
+
+    return val
+    
+def SQR(v):
+    return v * v
     
 def clamp(val):
     if val > 255:
