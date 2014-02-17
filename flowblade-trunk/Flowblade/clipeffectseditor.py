@@ -399,7 +399,8 @@ def effect_selection_changed():
                     keyframe_editor_widgets.append(editor_row)
                     
             vbox.pack_start(editor_row, False, False, 0)
-            vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
+            if not hasattr(editor_row, "no_separator"):
+                vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
             
         # Create NonMltEditableProperty wrappers for properties
         non_mlteditable_properties = propertyedit.get_non_mlt_editable_properties( clip, 
@@ -413,7 +414,8 @@ def effect_selection_changed():
         editor_rows = propertyeditorbuilder.get_filter_extra_editor_rows(filter_object, editable_properties)
         for editor_row in editor_rows:
             vbox.pack_start(editor_row, False, False, 0)
-            vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
+            if not hasattr(editor_row, "no_separator"):
+                vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
         
         vbox.pack_start(gtk.Label(), True, True, 0)
     else:

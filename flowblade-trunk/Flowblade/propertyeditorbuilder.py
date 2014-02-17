@@ -495,6 +495,7 @@ def _create_crcurves_editor(filt, editable_properties):
     vbox.pack_start(gtk.Label(), True, True, 0)
     vbox.pack_start(curves_editor.widget, False, False, 0)
     vbox.pack_start(gtk.Label(), True, True, 0)
+    vbox.no_separator = True
     return vbox
     
 def _get_force_combo_index(deinterlace, progressive):
