@@ -402,24 +402,39 @@ class CatmullRomFilterEditor:
         self.curve_editor = CurvesBoxEditor(256.0, default_curve, self)
         
         # This is used to change currently active curve
-        self.channel_buttons = glassbuttons.GlassButtonsToggleGroup(36, 23, 2, 4, 5)
+        self.channel_buttons = glassbuttons.GlassButtonsToggleGroup(32, 19, 2, 2, 5)
         self.channel_buttons.add_button(gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "rgb_channel.png"), self.channel_changed)
         self.channel_buttons.add_button(gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "red_channel.png"), self.channel_changed)
         self.channel_buttons.add_button(gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "green_channel.png"), self.channel_changed)
         self.channel_buttons.add_button(gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "blue_channel.png"), self.channel_changed)
-        self.channel_buttons.widget.set_pref_size(150, 28)
+        self.channel_buttons.widget.set_pref_size(132, 28)
         self.channel_buttons.set_pressed_button(0)
 
-        buttons_row = guiutils.get_in_centering_alignment(self.channel_buttons.widget)
+        self.curve_buttons = glassbuttons.GlassButtonsGroup(32, 19, 2, 2, 5)
+        self.curve_buttons.add_button(gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "linear_curve.png"), self.channel_changed)
+        self.curve_buttons.add_button(gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "curve_s.png"), self.channel_changed)
+        self.curve_buttons.add_button(gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "curve_flipped_s.png"), self.channel_changed)
+        self.curve_buttons.widget.set_pref_size(97, 28)
+
+
+        button_hbox = gtk.HBox()
+        button_hbox.pack_start(self.channel_buttons.widget, False, False, 0)
+        button_hbox.pack_start(guiutils.get_pad_label(4, 4), False, False, 0)
+        button_hbox.pack_start(self.curve_buttons.widget, False, False, 0)
+        
+        buttons_row = guiutils.get_in_centering_alignment(button_hbox)
+        
         box_row = gtk.HBox()
         box_row.pack_start(gtk.Label(), True, True, 0)
         box_row.pack_start(self.curve_editor.widget, False, False, 0)
         box_row.pack_start(gtk.Label(), True, True, 0)
 
-        self.widget.pack_start(buttons_row, True, True, 0)
+        self.widget.pack_start(gtk.Label(), True, True, 0)
+        self.widget.pack_start(box_row, False, False, 0)
         self.widget.pack_start(guiutils.get_pad_label(12, 8), False, False, 0)
-        self.widget.pack_start(box_row, True, True, 0)
-
+        self.widget.pack_start(buttons_row, False, False, 0)
+        self.widget.pack_start(gtk.Label(), True, True, 0)
+        
     def channel_changed(self):
         pressed_button = self.channel_buttons.pressed_button
         # Channel values and button indexes match

@@ -321,20 +321,6 @@ class ColorCorrectorFilter:
         self.cyan_red = [0] * 3
         self.magenta_green = [0] * 3
         self.yellow_blue = [0] * 3
-
-        """
-        self.mid_Cy_Re = 0.0
-        self.mid_Ma_Gr = 0.0
-        self.mid_Ye_Bl = 0.0
-
-        self.hi_Cy_Re = 0.0
-        self.hi_Ma_Gr = 0.0
-        self.hi_Ye_Bl = 0.0
-
-        self.shadow_Cy_Re = 0.0
-        self.shadow_Ma_Gr = 0.0
-        self.shadow_Ye_Bl = 0.0
-        """
         
         self.highlights_add = [0] * 256
         self.shadows_sub = [0] * 256
@@ -397,12 +383,6 @@ class ColorCorrectorFilter:
 
             val_G = -100.0 * distance * dG;
             val_R = -100.0 * distance * dR;
-
-        """
-        self.shadow_Cy_Re = val_r
-        self.shadow_Ma_Gr = val_g
-        self.shadow_Ye_Bl = val_b
-        """
         
         self.cyan_red[SHADOWS] = val_R
         self.magenta_green[SHADOWS] = val_G
@@ -420,12 +400,6 @@ class ColorCorrectorFilter:
         self.cyan_red[MIDTONES] = val_R
         self.magenta_green[MIDTONES] = val_G
         self.yellow_blue[MIDTONES] = val_B
-        
-        """
-        self.mid_Cy_Re = val_R
-        self.mid_Ma_Gr = val_G
-        self.mid_Ye_Bl = val_B
-        """
         
     def set_high_ligh_correction(self, angle, distance):
         r, g, b = get_RGB_for_angle(angle)
@@ -472,12 +446,6 @@ class ColorCorrectorFilter:
         self.cyan_red[HIGHLIGHTS] = val_R
         self.magenta_green[HIGHLIGHTS] = val_G
         self.yellow_blue[HIGHLIGHTS] = val_B
-        
-        """
-        self.hi_Cy_Re = val_R
-        self.hi_Ma_Gr = val_G
-        self.hi_Ye_Bl = val_B
-        """
 
     def create_lookup_tables(self):
         cyan_red_transfer = [[0] * 3 for i in range(256)] # float[3][256];
