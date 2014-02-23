@@ -35,6 +35,7 @@ R_CURVE_COLOR = (0.8, 0, 0)
 G_CURVE_COLOR = (0, 0.8, 0)
 B_CURVE_COLOR = (0, 0, 0.8)
 
+
 def _draw_select_circle(cr, x, y, band_color, ring_color, radius = 6, small_radius = 4, pad = 6):
     degrees = math.pi / 180.0
 
@@ -323,6 +324,7 @@ class ColorCorrector:
         self.filt.create_lookup_tables()
         self.filt.write_out_tables()
 
+
 class BoxEditor:
     
     def __init__(self, pix_size):
@@ -411,11 +413,10 @@ class CatmullRomFilterEditor:
         self.channel_buttons.set_pressed_button(0)
 
         self.curve_buttons = glassbuttons.GlassButtonsGroup(32, 19, 2, 2, 5)
-        self.curve_buttons.add_button(gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "linear_curve.png"), self.channel_changed)
-        self.curve_buttons.add_button(gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "curve_s.png"), self.channel_changed)
-        self.curve_buttons.add_button(gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "curve_flipped_s.png"), self.channel_changed)
+        self.curve_buttons.add_button(gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "linear_curve.png"), self.do_curve_reset_pressed)
+        self.curve_buttons.add_button(gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "curve_s.png"), self.do_curve_reset_pressed)
+        self.curve_buttons.add_button(gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "curve_flipped_s.png"), self.do_curve_reset_pressed)
         self.curve_buttons.widget.set_pref_size(97, 28)
-
 
         button_hbox = gtk.HBox()
         button_hbox.pack_start(self.channel_buttons.widget, False, False, 0)
@@ -436,38 +437,72 @@ class CatmullRomFilterEditor:
         self.widget.pack_start(gtk.Label(), True, True, 0)
         
     def channel_changed(self):
-        pressed_button = self.channel_buttons.pressed_button
+        channel = self.channel_buttons.pressed_button # indexes match
+        self.update_editors_to_channel(channel)
+
+    def update_editors_to_channel(self, channel):
         # Channel values and button indexes match
-        if pressed_button == CatmullRomFilterEditor.RGB:
+        if channel == CatmullRomFilterEditor.RGB:
             self.current_edit_curve = CatmullRomFilterEditor.RGB
             self.curve_editor.set_curve(self.cr_filter.value_cr_curve, CURVE_COLOR)
             
-        elif pressed_button == CatmullRomFilterEditor.R:
+        elif channel == CatmullRomFilterEditor.R:
             self.current_edit_curve = CatmullRomFilterEditor.R
             self.curve_editor.set_curve(self.cr_filter.r_cr_curve, R_CURVE_COLOR)
             
-        elif pressed_button == CatmullRomFilterEditor.G:
+        elif channel == CatmullRomFilterEditor.G:
             self.current_edit_curve = CatmullRomFilterEditor.G
             self.curve_editor.set_curve(self.cr_filter.g_cr_curve, G_CURVE_COLOR)
             
         else:
             self.current_edit_curve = CatmullRomFilterEditor.B
             self.curve_editor.set_curve(self.cr_filter.b_cr_curve, B_CURVE_COLOR)
+
+    def do_curve_reset_pressed(self):
+        button_index = self.curve_buttons.pressed_button
+        channel = self.current_edit_curve
+        
+        if button_index == 0: # Linear
+            new_points_str = "0/0;255/255"
+        elif button_index == 1: # Default add gamma
+            new_points_str = "0/0;64/48;192/208;255/255"
+        elif button_index == 2: # Default remove gamma 
+            new_points_str = "0/0;64/80;192/176;255/255"
+   
+        if channel == CatmullRomFilterEditor.RGB:
+            self.cr_filter.value_cr_curve.set_points_from_str(new_points_str)
             
-    def curve_edit_done(self):
-        if self.current_edit_curve == CatmullRomFilterEditor.RGB:
-            self.cr_filter.value_points_prop.write_property_value(self.curve_editor.curve.get_points_string())
+        elif channel == CatmullRomFilterEditor.R:
+            self.cr_filter.r_cr_curve.set_points_from_str(new_points_str)
             
-        elif self.current_edit_curve == CatmullRomFilterEditor.R:
-            self.cr_filter.r_points_prop.write_property_value(self.curve_editor.curve.get_points_string())
-            
-        elif self.current_edit_curve == CatmullRomFilterEditor.G:
-            self.cr_filter.g_points_prop.write_property_value(self.curve_editor.curve.get_points_string())
+        elif channel== CatmullRomFilterEditor.G:
+            self.cr_filter.g_cr_curve.set_points_from_str(new_points_str)
             
         else:
-            self.cr_filter.b_points_prop.write_property_value(self.curve_editor.curve.get_points_string())
-        
+            self.cr_filter.b_cr_curve.set_points_from_str(new_points_str)
+
+        self.write_points_to_current_curve(new_points_str)
+        self.update_editors_to_channel(channel)
+
+    def curve_edit_done(self):
+        points_str = self.curve_editor.curve.get_points_string()
+        self.write_points_to_current_curve(points_str)
+
+    def write_points_to_current_curve(self, points_str):
+        if self.current_edit_curve == CatmullRomFilterEditor.RGB:
+            self.cr_filter.value_points_prop.write_property_value(points_str)
+            
+        elif self.current_edit_curve == CatmullRomFilterEditor.R:
+            self.cr_filter.r_points_prop.write_property_value(points_str)
+            
+        elif self.current_edit_curve == CatmullRomFilterEditor.G:
+            self.cr_filter.g_points_prop.write_property_value(points_str)
+            
+        else:
+            self.cr_filter.b_points_prop.write_property_value(points_str)
+
         self.cr_filter.update_table_property_values()
+
 
 class CurvesBoxEditor(BoxEditor):
 
