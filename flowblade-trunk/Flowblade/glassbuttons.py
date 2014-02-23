@@ -393,6 +393,8 @@ class GlassButtonsToggleGroup(GlassButtonsGroup):
 
     def _press_event(self, event):
         new_pressed_button = self._get_hit_code(event.x, event.y)
+        if new_pressed_button == NO_HIT:
+            return
         if new_pressed_button != self.pressed_button:
             self.pressed_button = new_pressed_button
             self._fire_pressed_button()
