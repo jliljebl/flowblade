@@ -53,6 +53,7 @@ CLIP_FRAME_SLIDER = "clip_frame_slider"                     # gtk.HScale, range 
 AFFINE_GEOM_4_SLIDER = "affine_filt_geom_slider"            # 4 rows of gtk.HScales to set the position and size
 COLOR_CORRECTOR = "color_corrector"                         # 3 band color corrector color circle and Lift Gain Gamma sliders
 CR_CURVES = "crcurves"                                      # Curves color editor with Catmull-Rom curve
+COLOR_BOX = "colorbox"                                      # One band color editor with color box interface
 NO_EDITOR = "no_editor"                                     # No editor displayed for property
 
 COMPOSITE_EDITOR_BUILDER = "composite_properties"           # Creates a single row editor for multiple properties of composite transition
@@ -492,12 +493,20 @@ def _create_crcurves_editor(filt, editable_properties):
     curves_editor = extraeditors.CatmullRomFilterEditor(editable_properties)
 
     vbox = gtk.VBox(False, 4)
-    vbox.pack_start(gtk.Label(), True, True, 0)
     vbox.pack_start(curves_editor.widget, False, False, 0)
     vbox.pack_start(gtk.Label(), True, True, 0)
     vbox.no_separator = True
     return vbox
+
+def _create_colorbox_editor(filt, editable_properties):
+    colorbox_editor = extraeditors.ColorBoxFilterEditor(editable_properties)
     
+    vbox = gtk.VBox(False, 4)
+    vbox.pack_start(colorbox_editor.widget, False, False, 0)
+    vbox.pack_start(gtk.Label(), True, True, 0)
+    vbox.no_separator = True
+    return vbox
+
 def _get_force_combo_index(deinterlace, progressive):
     # These correspond to hardcoded values ["Nothing","Progressive","Deinterlace","Both"] above
     if int(deinterlace.value) == 0:
@@ -609,5 +618,20 @@ EDITOR_ROW_CREATORS = { \
     REGION_EDITOR_BUILDER: lambda comp, editable_properties: _create_region_editor(comp, editable_properties),
     ROTATION_GEOMETRY_EDITOR_BUILDER: lambda comp, editable_properties: _create_rotion_geometry_editor(comp, editable_properties),
     COLOR_CORRECTOR: lambda filt, editable_properties: _create_color_corrector(filt, editable_properties),
-    CR_CURVES: lambda filt, editable_properties:_create_crcurves_editor(filt, editable_properties)
+    CR_CURVES: lambda filt, editable_properties:_create_crcurves_editor(filt, editable_properties),
+    COLOR_BOX: lambda filt, editable_properties:_create_colorbox_editor(filt, editable_properties)
     }
+
+"""
+    # example code for using slider editor with NON-MLT property
+    #hue = filter(lambda ep: ep.name == "hue", editable_properties)[0]
+    #hue_row = _get_slider_row(hue, None, True)
+    #saturation = filter(lambda ep: ep.name == "saturation", editable_properties)[0]
+    #saturation_row = _get_slider_row(saturation, None, True)
+    #value = filter(lambda ep: ep.name == "value", editable_properties)[0]
+    #value_row = _get_slider_row(value, None, True)
+    #colorbox_editor = extraeditors.ColorBoxFilterEditor(editable_properties, [hue_row, saturation_row, value_row])
+    #hue.adjustment_listener = colorwheel_editor.hue_changed
+    #saturation.adjustment_listener = colorwheel_editor.saturation_changed
+    #value.adjustment_listener = colorwheel_editor.value_changed
+"""
