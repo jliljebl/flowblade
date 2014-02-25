@@ -582,20 +582,11 @@
         <property name="Source image on left side" args="editor=booleancheckbox displayname=Source!on!Left">1</property>
    </filter>
     -->
-   <!--
     <filter id="gamma">
         <name>Gamma</name>
         <group>Color</group>
         <property name="gamma" args="range_in=0,300 range_out=0.0,3.0 displayname=Gamma">1.00</property>
     </filter>
-    -->
-   <filter id="frei0r.colorize">
-        <name>Colorize</name>
-        <group>Color</group>
-        <property name="hue" args="range_in=0,360 range_out=0,1 displayname=Hue">0.5</property>
-        <property name="saturation" args="range_in=0,100 range_out=0,1 displayname=Saturation">0.5</property>
-        <property name="lightness" args="range_in=-100,100 range_out=0,1 displayname=Lightness">0.5</property>
-   </filter>
     <filter id="frei0r.colgate">
         <name>Colgate White Balance</name>
         <group>Color</group>
@@ -676,7 +667,15 @@
         <property name="Map white to" args="editor=color_select exptype=color displayname=White">#ff8080</property>
         <property name="Tint amount" args="exptype=singlekeyframe range_in=0,100 displayname=Amount">0=0.25</property>
     </filter>
-
+   <filter id="frei0r.colorize">
+        <name>Colorize</name>
+        <group>Color Effect</group>
+        <property name="hue" args="range_in=0,360 range_out=0,1 displayname=Hue">0.5</property>
+        <property name="saturation" args="range_in=0,100 range_out=0,1 displayname=Saturation">0.5</property>
+        <property name="lightness" args="range_in=-100,100 range_out=0,1 displayname=Lightness">0.5</property>
+   </filter>
+   
+   
     <!-- DISTORT -->
     <filter id="frei0r.distort0r">
         <name>Waves</name>
