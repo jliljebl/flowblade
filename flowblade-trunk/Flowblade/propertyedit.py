@@ -160,7 +160,9 @@ def get_non_mlt_editable_properties(clip, filter_object, filter_index):
     editable_properties = []
     for i in range(0, len(filter_object.non_mlt_properties)):
         prop = filter_object.non_mlt_properties[i]
-        ep = NonMltEditableProperty(prop, clip, filter_index, i)
+        p_name, p_value, p_type = prop
+        args_str = filter_object.info.property_args[p_name]
+        ep = NonMltEditableProperty(prop, args_str, clip, filter_index, i)
         editable_properties.append(ep)
     
     return editable_properties
@@ -399,16 +401,24 @@ class TransitionEditableProperty(AbstractProperty):
         self.transition.properties[self.property_index] = prop
 
 
-class NonMltEditableProperty:
+class NonMltEditableProperty(AbstractProperty):
     """
     A wrapper for editable persistent properties that do not write out values to mlt objects
     """
-    def __init__(self, prop, clip, filter_index, non_mlt_property_index):
+    def __init__(self, prop, args_str, clip, filter_index, non_mlt_property_index):
+        AbstractProperty.__init__(self, args_str)
         self.name, self.value, self.type = prop
         self.clip = clip
         self.filter_index = filter_index
         self.non_mlt_property_index = non_mlt_property_index
+        self.adjustment_listener = None # External listener that may be monkeypathched here
 
+    def adjustment_value_changed(self, adjustment):
+        if self.adjustment_listener != None:
+            value = adjustment.get_value()
+            out_value = self.get_out_value(value)
+            self.adjustment_listener(self, out_value)
+        
     def _get_filter_object(self):
         return self.clip.filters[self.filter_index]
 
@@ -420,7 +430,11 @@ class NonMltEditableProperty:
         filter_object = self._get_filter_object()
         prop = (str(self.name), str(str_value), self.type)
         filter_object.non_mlt_properties[self.non_mlt_property_index] = prop
+        self.value = str_value
+        #print self.value
 
+    def get_float_value(self):
+        return float(self.value)
 
 # ----------------------------------------- PROP_EXPRESSION types extending classes
 class SingleKeyFrameProperty(EditableProperty):

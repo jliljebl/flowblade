@@ -167,9 +167,12 @@ class FilterInfo:
         # Non-MLT properties are persistent values like properties that values are not directly written out as MLT properties
         p_node_list = filter_node.getElementsByTagName(NON_MLT_PROPERTY)
         self.non_mlt_properties = propertyparse.node_list_to_non_mlt_properties_array(p_node_list)
+        # Property args for Non-MLT properties saved in propertyname -> propertyargs_string dict
+        self.property_args.update(propertyparse.node_list_to_args_dict(p_node_list))
         
     def get_icon(self):
         return _get_group_icon(self.group)
+
 
 class FilterObject:
     """
@@ -229,6 +232,7 @@ class MultipartFilterObject:
         self.info = filter_info
         # Values of these are edited by the user.
         self.properties = copy.deepcopy(filter_info.properties)
+        self.non_mlt_properties = copy.deepcopy(filter_info.non_mlt_properties) 
         self.value = copy.deepcopy(filter_info.multipart_value)
         self.active = True
         

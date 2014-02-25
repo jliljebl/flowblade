@@ -21,9 +21,10 @@
 import gtk
 import math
 
-
+import cairo
 from cairoarea import CairoDrawableArea
 import editorpersistance
+from editorstate import PLAYER
 import gui
 import guiutils
 import glassbuttons
@@ -47,11 +48,23 @@ DEACTIVE_MID_COLOR = (0.7, 0.7, 0.7)
 DEACTIVE_HI_COLOR = (0.85, 0.85, 0.85)
 
 BOX_BG_COLOR = (0.8, 0.8, 0.8)
-LINE_COLOR = (0.4, 0.4, 0.4)
+BOX_LINE_COLOR = (0.4, 0.4, 0.4)
+
 CURVE_COLOR = (0, 0, 0)
 R_CURVE_COLOR = (0.78, 0, 0)
 G_CURVE_COLOR = (0, 0.75, 0)
 B_CURVE_COLOR = (0, 0, 0.8)
+
+RED_STOP = (0, 1, 0, 0, 1)
+YELLOW_STOP = (1.0/6.0, 1, 1, 0, 1)
+GREEN_STOP = (2.0/6.0, 0, 1, 0, 1)
+CYAN_STOP = (3.0/6.0, 0, 1, 1, 1)
+BLUE_STOP = (4.0/6.0, 0, 0, 1, 1)
+MAGENTA_STOP = (5.0/6.0, 1, 0, 1, 1)
+RED_STOP_END = (1, 1, 0, 0, 1)
+
+GREY_GRAD_1 = (1, 0.5, 0.5, 0.5, 1)
+GREY_GRAD_2 = (0, 0.5, 0.5, 0.5, 0)
 
 
 def _draw_select_circle(cr, x, y, band_color, ring_color, radius = 6, small_radius = 4, pad = 6):
@@ -68,125 +81,69 @@ def _draw_select_circle(cr, x, y, band_color, ring_color, radius = 6, small_radi
     cr.fill()
 
 
-class ColorWheel:
+class ColorBox:
 
-    def __init__(self, edit_listener):
-        self.band = SHADOW
-        
-        self.widget = CairoDrawableArea(260, 
-                                        260, 
+    def __init__(self, edit_listener, width=260, height=260):
+        self.W = width
+        self.H = height
+        self.widget = CairoDrawableArea(self.W, 
+                                        self.H, 
                                         self._draw)
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
-        self.X_PAD = 3
-        self.Y_PAD = 3
-        self.CENTER_X = 130
-        self.CENTER_Y = 130
-        self.MAX_DIST = 123
-        self.twelwe_p = (self.CENTER_X , self.CENTER_Y - self.MAX_DIST)
+        self.X_PAD = 6
+        self.Y_PAD = 6
         self.CIRCLE_HALF = 6
-        self.cursor_x = self.CENTER_X
-        self.cursor_y = self.CENTER_Y
-        self.WHEEL_IMG = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "color_wheel.png")
+        self.cursor_x = self.X_PAD
+        self.cursor_y = self.H - self.Y_PAD
         self.edit_listener = edit_listener
-        self.shadow_x = self.cursor_x 
-        self.shadow_y = self.cursor_y
-        self.mid_x = self.cursor_x 
-        self.mid_y = self.cursor_y
-        self.hi_x = self.cursor_x
-        self.hi_y = self.cursor_y
-        self.angle = 0.0
-        self.distance = 0.0
+        self.hue = 0.0
+        self.saturation = 0.0
 
-    def set_band(self, band):
-        self.band = band
-        if self.band == SHADOW:
-            self.cursor_x = self.shadow_x
-            self.cursor_y = self.shadow_y
-        elif self.band == MID:
-            self.cursor_x = self.mid_x
-            self.cursor_y = self.mid_y
-        else:
-            self.cursor_x = self.hi_x
-            self.cursor_y = self.hi_y 
+    def get_hue_saturation(self):
+        return (self.hue, self.saturation)
+
+    def _save_values(self):
+        self.hue = float((self.cursor_x - self.X_PAD)) / float((self.W - 2 * self.X_PAD))
+        self.saturation = float(abs(self.cursor_y - self.H + self.Y_PAD)) / float((self.H - 2 * self.Y_PAD))
+
+    def set_cursor(self, hue, saturation):
+        self.cursor_x = self.X_PAD + hue * (self.W - self.X_PAD * 2)
+        self.cursor_y = self.Y_PAD + (1.0 - saturation) * (self.H - self.Y_PAD *2)
+        self._save_values()
 
     def _press_event(self, event):
-        """
-        Mouse button callback
-        """
         self.cursor_x, self.cursor_y = self._get_legal_point(event.x, event.y)
-        self._save_point()
+        self._save_values()
+        self.edit_listener()
         self.widget.queue_draw()
 
     def _motion_notify_event(self, x, y, state):
-        """
-        Mouse move callback
-        """
         self.cursor_x, self.cursor_y = self._get_legal_point(x, y)
-        self._save_point()
+        self._save_values()
+        self.edit_listener()
         self.widget.queue_draw()
         
     def _release_event(self, event):
         self.cursor_x, self.cursor_y = self._get_legal_point(event.x, event.y)
-        self._save_point()
+        self._save_values()
         self.edit_listener()
         self.widget.queue_draw()
         
     def _get_legal_point(self, x, y):
-        vec = viewgeom.get_vec_for_points((self.CENTER_X, self.CENTER_Y), (x, y))
-        dist = vec.get_length()
-        if dist < self.MAX_DIST:
-            return (x, y)
+        if x < self.X_PAD:
+            x = self.X_PAD
+        elif x > self.W - self.X_PAD:
+            x = self.W - self.X_PAD
 
-        new_vec = vec.get_multiplied_vec(self.MAX_DIST / dist )
-        return new_vec.end_point
-
-    def _get_angle(self, p):
-        angle = viewgeom.get_angle_in_deg(self.twelwe_p, (self.CENTER_X, self.CENTER_Y), p)
-        clockwise = viewgeom.points_clockwise(self.twelwe_p, (self.CENTER_X, self.CENTER_Y), p)
-
-        if clockwise:
-             angle = 360.0 - angle;
+        if y < self.Y_PAD:
+            y = self.Y_PAD
+        elif y > self.H - self.Y_PAD:
+            y = self.H - self.Y_PAD
         
-        # Color circle starts from 11 o'clock
-        angle = angle - 30.0
-        if angle  < 0.0:
-            angle = angle + 360.0
-
-        return angle
-
-    def _get_distance(self, p):
-        vec = viewgeom.get_vec_for_points((self.CENTER_X, self.CENTER_Y), p)
-        dist = vec.get_length()
-        return dist/self.MAX_DIST
-
-    def _save_point(self):
-        if self.band == SHADOW:
-            self.shadow_x = self.cursor_x 
-            self.shadow_y = self.cursor_y
-        elif self.band == MID:
-            self.mid_x = self.cursor_x 
-            self.mid_y = self.cursor_y
-        else:
-            self.hi_x = self.cursor_x
-            self.hi_y = self.cursor_y
-
-    def get_angle_and_distance(self):
-        if self.band == SHADOW:
-            x = self.shadow_x
-            y = self.shadow_y
-        elif self.band == MID:
-            x = self.mid_x
-            y = self.mid_y
-        else:
-            x = self.hi_x
-            y = self.hi_y
-        p = (x, y)
-        angle = self._get_angle(p)
-        distance = self._get_distance(p)
-        return (angle, distance)
-
+        return (x, y)
+        
     def _draw(self, event, cr, allocation):
         """
         Callback for repaint from CairoDrawableArea.
@@ -199,148 +156,65 @@ class ColorWheel:
         cr.rectangle(0, 0, w, h)
         cr.fill()
 
-        cr.set_source_pixbuf(self.WHEEL_IMG, self.X_PAD, self.Y_PAD)
-        cr.paint()
+        x_in = self.X_PAD
+        x_out = self.W - self.X_PAD
+        y_in = self.Y_PAD
+        y_out = self.H - self.Y_PAD
 
-        _draw_select_circle(cr, self.shadow_x - self.CIRCLE_HALF, self.shadow_y - self.CIRCLE_HALF, 
-                                 DEACTIVE_SHADOW_COLOR, DEACTIVE_RING_COLOR)
-        _draw_select_circle(cr, self.mid_x - self.CIRCLE_HALF, self.mid_y - self.CIRCLE_HALF,
-                                 DEACTIVE_MID_COLOR, DEACTIVE_RING_COLOR)
-        _draw_select_circle(cr, self.hi_x - self.CIRCLE_HALF, self.hi_y - self.CIRCLE_HALF,
-                                 DEACTIVE_HI_COLOR, DEACTIVE_RING_COLOR)
-        
-        if self.band == SHADOW:
-            band_color = ACTIVE_SHADOW_COLOR
-        elif self.band == MID:
-            band_color = ACTIVE_MID_COLOR
-        else:
-            band_color = ACTIVE_HI_COLOR
-        
-        _draw_select_circle(cr, self.cursor_x - self.CIRCLE_HALF, self.cursor_y - self.CIRCLE_HALF, band_color, ACTIVE_RING_COLOR)
+        grad = cairo.LinearGradient (x_in, 0, x_out, 0)
+        grad.add_color_stop_rgba(*RED_STOP)
+        grad.add_color_stop_rgba(*YELLOW_STOP)
+        grad.add_color_stop_rgba(*GREEN_STOP)
+        grad.add_color_stop_rgba(*CYAN_STOP)
+        grad.add_color_stop_rgba(*MAGENTA_STOP)
+        grad.add_color_stop_rgba(*RED_STOP_END)
 
-
-class ColorBandSelector:
-    def __init__(self):
-        self.band = SHADOW
-
-        self.widget = CairoDrawableArea(42, 
-                                        18, 
-                                        self._draw)
-
-        self.widget.press_func = self._press_event
-        self.SHADOW_X = 0
-        self.MID_X = 15
-        self.HI_X = 30
-        
-        self.band_change_listener = None # monkey patched in at creation site
-    
-    def _press_event(self, event):
-        x = event.x
-        y = event.y
-        
-        if self._circle_hit(self.SHADOW_X, x, y):
-            self.band_change_listener(SHADOW)
-        elif self._circle_hit(self.MID_X, x, y):
-            self.band_change_listener(MID)
-        elif self._circle_hit(self.HI_X, x, y):
-             self.band_change_listener(HI)
-
-    def _circle_hit(self, band_x, x, y):
-        if x >= band_x and x < band_x + 12:
-            if y > 0 and y < 12:
-                return True
-        
-        return False
-
-    def _draw(self, event, cr, allocation):
-        """
-        Callback for repaint from CairoDrawableArea.
-        We get cairo context and allocation.
-        """
-        x, y, w, h = allocation
-       
-        # Draw bg
-        cr.set_source_rgb(*(gui.bg_color_tuple))
-        cr.rectangle(0, 0, w, h)
-        cr.fill()
-        
-        ring_color = (0.0, 0.0, 0.0)
-        _draw_select_circle(cr, self.SHADOW_X, 0, (0.1, 0.1, 0.1), ring_color)
-        _draw_select_circle(cr, self.MID_X, 0, (0.5, 0.5, 0.5), ring_color)
-        _draw_select_circle(cr, self.HI_X, 0, (1.0, 1.0, 1.0), ring_color)
-
-        self._draw_active_indicator(cr)
-    
-    def _draw_active_indicator(self, cr):
-        y = 14.5
-        HALF = 4.5
-        HEIGHT = 2
-
-        if self.band == SHADOW:
-            x = self.SHADOW_X + 1.5
-        elif self.band == MID:
-            x = self.MID_X + 1.5
-        else:
-            x = self.HI_X + 1.5
-
-        cr.set_source_rgb(0, 0, 0)
-        cr.move_to(x, y)
-        cr.line_to(x + 2 * HALF, y)
-        cr.line_to(x + 2 * HALF, y + HEIGHT)
-        cr.line_to(x, y + HEIGHT)
-        cr.close_path()
+        cr.set_source(grad)
+        cr.rectangle(self.X_PAD, self.Y_PAD, x_out - x_in, y_out - y_in)
         cr.fill()
 
+        grey_grad = cairo.LinearGradient (0, y_in, 0, y_out)
+        grey_grad.add_color_stop_rgba(*GREY_GRAD_1)
+        grey_grad.add_color_stop_rgba(*GREY_GRAD_2)
 
-class ColorCorrector:
-    def __init__(self, editable_properties, slider_rows):
-        self.band = SHADOW
-        self.filt = lutfilter.ColorCorrectorFilter(editable_properties)
+        cr.set_source(grey_grad)
+        cr.rectangle(self.X_PAD, self.Y_PAD, x_out - x_in, y_out - y_in)
+        cr.fill()
+
+        _draw_select_circle(cr, self.cursor_x - self.CIRCLE_HALF, self.cursor_y - self.CIRCLE_HALF, (1, 1, 1), (0, 0, 0))
+
+
+class ColorBoxFilterEditor:
+    
+    def __init__(self, editable_properties):
+        self.SAT_MAX = 0.5
         self.widget = gtk.VBox()
 
-        self.color_wheel = ColorWheel(self.color_wheel_edit_done)
-        self.band_selector = ColorBandSelector()
-        self.band_selector.band_change_listener = self._band_changed
+        self.hue = filter(lambda ep: ep.name == "hue", editable_properties)[0]
+        self.saturation = filter(lambda ep: ep.name == "saturation", editable_properties)[0]
 
-        lift_slider_row = slider_rows[0]
-        gain_slider_row = slider_rows[1]
-        gamma_slider_row = slider_rows[2]
-
-        band_row = gtk.HBox()
-        band_row.pack_start(gtk.Label(), True, True, 0)
-        band_row.pack_start(self.band_selector.widget, False, False, 0)
-        band_row.pack_start(gtk.Label(), True, True, 0)
-
+        self.R = filter(lambda ep: ep.name == "R", editable_properties)[0]
+        self.G = filter(lambda ep: ep.name == "G", editable_properties)[0]
+        self.B = filter(lambda ep: ep.name == "B", editable_properties)[0]
+            
+        self.color_box = ColorBox(self.color_box_values_changed)
+        self.color_box.set_cursor(self.hue.get_float_value(), self.saturation.get_float_value())
+    
         wheel_row = gtk.HBox()
         wheel_row.pack_start(gtk.Label(), True, True, 0)
-        wheel_row.pack_start(self.color_wheel.widget, False, False, 0)
+        wheel_row.pack_start(self.color_box.widget, False, False, 0)
         wheel_row.pack_start(gtk.Label(), True, True, 0)
 
-        self.widget.pack_start(band_row, True, True, 0)
         self.widget.pack_start(wheel_row, False, False, 0)
-        self.widget.pack_start(lift_slider_row, False, False, 0)
-        self.widget.pack_start(gain_slider_row, False, False, 0)
-        self.widget.pack_start(gamma_slider_row, False, False, 0)
 
-    def _band_changed(self, band):
-        self.band = band
-        self.color_wheel.set_band(band)
-        self.band_selector.band = band
-    
-        self.band_selector.widget.queue_draw()
-        self.color_wheel.widget.queue_draw()
-
-    def color_wheel_edit_done(self):
-        angle, distance = self.color_wheel.get_angle_and_distance()
-        if self.band == SHADOW:
-            self.filt.set_shadows_correction(angle, distance)
-        elif self.band == MID:
-            self.filt.set_midtone_correction(angle, distance)
-        else:
-            self.filt.set_high_ligh_correction(angle, distance)
-        
-        self.filt.create_lookup_tables()
-        self.filt.write_out_tables()
+    def color_box_values_changed(self):
+        hue_val, sat_val = self.color_box.get_hue_saturation()
+        self.hue.write_property_value(str(hue_val))
+        self.saturation.write_property_value(str(sat_val))
+        r, g, b = lutfilter.get_RGB_for_angle_saturation_and_value(hue_val * 360, sat_val * self.SAT_MAX, 0.5)       
+        self.R.write_value("0=" + str(r))
+        self.G.write_value("0=" + str(g))
+        self.B.write_value("0=" + str(b))
 
 
 class BoxEditor:
@@ -389,7 +263,7 @@ class BoxEditor:
             cr.fill()
 
         # value lines
-        cr.set_source_rgb(*LINE_COLOR)
+        cr.set_source_rgb(*BOX_LINE_COLOR)
         step = self.pix_size / 8
         cr.set_line_width(1.0)
         for i in range(0, 9):
@@ -527,7 +401,7 @@ class CurvesBoxEditor(BoxEditor):
     def __init__(self, pix_size, curve, edit_listener):
         BoxEditor.__init__(self, pix_size)
         self.curve = curve # lutfilter.CRCurve
-        global LINE_COLOR, CURVE_COLOR
+        global BOX_LINE_COLOR, CURVE_COLOR
         self.curve_color = CURVE_COLOR
         self.edit_listener = edit_listener # Needs to implement "curve_edit_done()"
 
@@ -542,7 +416,7 @@ class CurvesBoxEditor(BoxEditor):
         self.edit_on = False
 
         if editorpersistance.prefs.dark_theme == True:
-            LINE_COLOR = (0.8, 0.8, 0.8)
+            BOX_LINE_COLOR = (0.8, 0.8, 0.8)
             CURVE_COLOR = (0.8, 0.8, 0.8)
             self.curve_color = CURVE_COLOR
 
@@ -590,7 +464,7 @@ class CurvesBoxEditor(BoxEditor):
         BoxEditor.draw_box(self, cr, allocation)
 
         x, y, w, h = allocation
-        
+
         # curve
         cr.set_source_rgb(*self.curve_color)#  seg.setColor( CURVE_COLOR );
         cr.set_line_width(1.5)
@@ -610,5 +484,345 @@ class CurvesBoxEditor(BoxEditor):
         for p in self.curve.points:
             px, py = BoxEditor.get_box_panel_point(self, p.x, p.y, 255.0)
             _draw_select_circle(cr, px, py, (1,1,1), (0,0,0), radius = 4, small_radius = 2, pad = 0)
-    
 
+
+"""
+# NON_ MLT PROPERTY SLIDER DEMO CODE
+def hue_changed(self, ep, value):
+    ep.write_property_value(str(value))
+    self.update_properties()
+
+def saturation_changed(self, ep, value):
+    ep.write_property_value(str(value))
+    self.update_properties()
+
+def value_changed(self, ep, value):
+    ep.write_property_value(str(value))
+    self.update_properties()
+"""
+
+class AbstractColorWheel:
+
+    def __init__(self, edit_listener):
+        self.widget = CairoDrawableArea(260, 
+                                        260, 
+                                        self._draw)
+        self.widget.press_func = self._press_event
+        self.widget.motion_notify_func = self._motion_notify_event
+        self.widget.release_func = self._release_event
+        self.X_PAD = 3
+        self.Y_PAD = 3
+        self.CENTER_X = 130
+        self.CENTER_Y = 130
+        self.MAX_DIST = 123
+        self.twelwe_p = (self.CENTER_X , self.CENTER_Y - self.MAX_DIST)
+        self.CIRCLE_HALF = 6
+        self.cursor_x = self.CENTER_X
+        self.cursor_y = self.CENTER_Y
+        self.WHEEL_IMG = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "color_wheel.png")
+        self.edit_listener = edit_listener
+        self.angle = 0.0
+        self.distance = 0.0
+
+    def _press_event(self, event):
+        """
+        Mouse button callback
+        """
+        self.cursor_x, self.cursor_y = self._get_legal_point(event.x, event.y)
+        self._save_point()
+        self.widget.queue_draw()
+
+    def _motion_notify_event(self, x, y, state):
+        """
+        Mouse move callback
+        """
+        self.cursor_x, self.cursor_y = self._get_legal_point(x, y)
+        self._save_point()
+        self.widget.queue_draw()
+        
+    def _release_event(self, event):
+        self.cursor_x, self.cursor_y = self._get_legal_point(event.x, event.y)
+        self._save_point()
+        self.edit_listener()
+        self.widget.queue_draw()
+        
+    def _get_legal_point(self, x, y):
+        vec = viewgeom.get_vec_for_points((self.CENTER_X, self.CENTER_Y), (x, y))
+        dist = vec.get_length()
+        if dist < self.MAX_DIST:
+            return (x, y)
+
+        new_vec = vec.get_multiplied_vec(self.MAX_DIST / dist )
+        return new_vec.end_point
+
+    def get_angle(self, p):
+        angle = viewgeom.get_angle_in_deg(self.twelwe_p, (self.CENTER_X, self.CENTER_Y), p)
+        clockwise = viewgeom.points_clockwise(self.twelwe_p, (self.CENTER_X, self.CENTER_Y), p)
+
+        if clockwise:
+             angle = 360.0 - angle;
+        
+        # Color circle starts from 11 o'clock
+        angle = angle - 30.0
+        if angle  < 0.0:
+            angle = angle + 360.0
+
+        return angle
+
+    def get_distance(self, p):
+        vec = viewgeom.get_vec_for_points((self.CENTER_X, self.CENTER_Y), p)
+        dist = vec.get_length()
+        return dist/self.MAX_DIST
+
+    def _save_point(self):
+        print "_save_point not implemented"
+        pass
+
+    def get_angle_and_distance(self):
+        if self.band == SHADOW:
+            x = self.shadow_x
+            y = self.shadow_y
+        elif self.band == MID:
+            x = self.mid_x
+            y = self.mid_y
+        else:
+            x = self.hi_x
+            y = self.hi_y
+        p = (x, y)
+        angle = self._get_angle(p)
+        distance = self._get_distance(p)
+        return (angle, distance)
+
+    def _draw(self, event, cr, allocation):
+        """
+        Callback for repaint from CairoDrawableArea.
+        We get cairo context and allocation.
+        """
+        x, y, w, h = allocation
+
+        # Draw bg
+        cr.set_source_rgb(*(gui.bg_color_tuple))
+        cr.rectangle(0, 0, w, h)
+        cr.fill()
+
+        cr.set_source_pixbuf(self.WHEEL_IMG, self.X_PAD, self.Y_PAD)
+        cr.paint()
+
+
+class SimpleColorWheel(AbstractColorWheel):
+
+    def __init__(self, edit_listener):
+        AbstractColorWheel.__init__(self, edit_listener)
+        print type(edit_listener)
+        self.value_x = self.cursor_x 
+        self.value_y = self.cursor_y
+
+    def _save_point(self):
+        self.value_x = self.cursor_x 
+        self.value_y = self.cursor_y
+
+    def get_angle_and_distance(self):
+        p = (self.value_x, self.value_y)
+        angle = self.get_angle(p)
+        distance = self.get_distance(p)
+        return (angle, distance)
+
+    def _draw(self, event, cr, allocation):
+        """
+        Callback for repaint from CairoDrawableArea.
+        We get cairo context and allocation.
+        """
+        AbstractColorWheel._draw(self, event, cr, allocation)
+
+        _draw_select_circle(cr, self.cursor_x - self.CIRCLE_HALF, self.cursor_y - self.CIRCLE_HALF, (1,1,1), ACTIVE_RING_COLOR)
+
+
+class SMHColorWheel(AbstractColorWheel):
+
+    def __init__(self, edit_listener):
+        AbstractColorWheel.__init__(self, edit_listener)
+        self.band = SHADOW
+        self.shadow_x = self.cursor_x 
+        self.shadow_y = self.cursor_y
+        self.mid_x = self.cursor_x 
+        self.mid_y = self.cursor_y
+        self.hi_x = self.cursor_x
+        self.hi_y = self.cursor_y
+
+    def set_band(self, band):
+        self.band = band
+        if self.band == SHADOW:
+            self.cursor_x = self.shadow_x
+            self.cursor_y = self.shadow_y
+        elif self.band == MID:
+            self.cursor_x = self.mid_x
+            self.cursor_y = self.mid_y
+        else:
+            self.cursor_x = self.hi_x
+            self.cursor_y = self.hi_y 
+
+    def _save_point(self):
+        if self.band == SHADOW:
+            self.shadow_x = self.cursor_x 
+            self.shadow_y = self.cursor_y
+        elif self.band == MID:
+            self.mid_x = self.cursor_x 
+            self.mid_y = self.cursor_y
+        else:
+            self.hi_x = self.cursor_x
+            self.hi_y = self.cursor_y
+
+    def get_angle_and_distance(self):
+        if self.band == SHADOW:
+            x = self.shadow_x
+            y = self.shadow_y
+        elif self.band == MID:
+            x = self.mid_x
+            y = self.mid_y
+        else:
+            x = self.hi_x
+            y = self.hi_y
+        p = (x, y)
+        angle = self.get_angle(p)
+        distance = self.get_distance(p)
+        return (angle, distance)
+
+    def _draw(self, event, cr, allocation):
+        """
+        Callback for repaint from CairoDrawableArea.
+        We get cairo context and allocation.
+        """
+        AbstractColorWheel._draw(self, event, cr, allocation)
+        
+        if self.band == SHADOW:
+            band_color = ACTIVE_SHADOW_COLOR
+        elif self.band == MID:
+            band_color = ACTIVE_MID_COLOR
+        else:
+            band_color = ACTIVE_HI_COLOR
+        
+        _draw_select_circle(cr, self.cursor_x - self.CIRCLE_HALF, self.cursor_y - self.CIRCLE_HALF, band_color, ACTIVE_RING_COLOR)
+
+
+class ColorBandSelector:
+    def __init__(self):
+        self.band = SHADOW
+
+        self.widget = CairoDrawableArea(42, 
+                                        18, 
+                                        self._draw)
+
+        self.widget.press_func = self._press_event
+        self.SHADOW_X = 0
+        self.MID_X = 15
+        self.HI_X = 30
+        
+        self.band_change_listener = None # monkey patched in at creation site
+    
+    def _press_event(self, event):
+        x = event.x
+        y = event.y
+        
+        if self._circle_hit(self.SHADOW_X, x, y):
+            self.band_change_listener(SHADOW)
+        elif self._circle_hit(self.MID_X, x, y):
+            self.band_change_listener(MID)
+        elif self._circle_hit(self.HI_X, x, y):
+             self.band_change_listener(HI)
+
+    def _circle_hit(self, band_x, x, y):
+        if x >= band_x and x < band_x + 12:
+            if y > 0 and y < 12:
+                return True
+        
+        return False
+
+    def _draw(self, event, cr, allocation):
+        """
+        Callback for repaint from CairoDrawableArea.
+        We get cairo context and allocation.
+        """
+        x, y, w, h = allocation
+       
+        # Draw bg
+        cr.set_source_rgb(*(gui.bg_color_tuple))
+        cr.rectangle(0, 0, w, h)
+        cr.fill()
+        
+        ring_color = (0.0, 0.0, 0.0)
+        _draw_select_circle(cr, self.SHADOW_X, 0, (0.1, 0.1, 0.1), ring_color)
+        _draw_select_circle(cr, self.MID_X, 0, (0.5, 0.5, 0.5), ring_color)
+        _draw_select_circle(cr, self.HI_X, 0, (1.0, 1.0, 1.0), ring_color)
+
+        self._draw_active_indicator(cr)
+    
+    def _draw_active_indicator(self, cr):
+        y = 14.5
+        HALF = 4.5
+        HEIGHT = 2
+
+        if self.band == SHADOW:
+            x = self.SHADOW_X + 1.5
+        elif self.band == MID:
+            x = self.MID_X + 1.5
+        else:
+            x = self.HI_X + 1.5
+
+        cr.set_source_rgb(0, 0, 0)
+        cr.move_to(x, y)
+        cr.line_to(x + 2 * HALF, y)
+        cr.line_to(x + 2 * HALF, y + HEIGHT)
+        cr.line_to(x, y + HEIGHT)
+        cr.close_path()
+        cr.fill()
+
+
+class ColorCorrector:
+    def __init__(self, editable_properties, slider_rows):
+        self.band = SHADOW
+        self.filt = lutfilter.ColorCorrectorFilter(editable_properties)
+        self.widget = gtk.VBox()
+
+        self.color_wheel = SMHColorWheel(self.color_wheel_edit_done)
+        self.band_selector = ColorBandSelector()
+        self.band_selector.band_change_listener = self._band_changed
+
+        lift_slider_row = slider_rows[0]
+        gain_slider_row = slider_rows[1]
+        gamma_slider_row = slider_rows[2]
+
+        band_row = gtk.HBox()
+        band_row.pack_start(gtk.Label(), True, True, 0)
+        band_row.pack_start(self.band_selector.widget, False, False, 0)
+        band_row.pack_start(gtk.Label(), True, True, 0)
+
+        wheel_row = gtk.HBox()
+        wheel_row.pack_start(gtk.Label(), True, True, 0)
+        wheel_row.pack_start(self.color_wheel.widget, False, False, 0)
+        wheel_row.pack_start(gtk.Label(), True, True, 0)
+
+        self.widget.pack_start(band_row, True, True, 0)
+        self.widget.pack_start(wheel_row, False, False, 0)
+        self.widget.pack_start(lift_slider_row, False, False, 0)
+        self.widget.pack_start(gain_slider_row, False, False, 0)
+        self.widget.pack_start(gamma_slider_row, False, False, 0)
+
+    def _band_changed(self, band):
+        self.band = band
+        self.color_wheel.set_band(band)
+        self.band_selector.band = band
+    
+        self.band_selector.widget.queue_draw()
+        self.color_wheel.widget.queue_draw()
+
+    def color_wheel_edit_done(self):
+        angle, distance = self.color_wheel.get_angle_and_distance()
+        if self.band == SHADOW:
+            self.filt.set_shadows_correction(angle, distance)
+        elif self.band == MID:
+            self.filt.set_midtone_correction(angle, distance)
+        else:
+            self.filt.set_high_ligh_correction(angle, distance)
+        
+        self.filt.create_lookup_tables()
+        self.filt.write_out_tables()

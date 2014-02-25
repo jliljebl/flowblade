@@ -521,6 +521,10 @@ def get_RGB_for_angle(angle):
     hsl = get_HSL(angle, 1.0, 0.5)
     return hsl_to_rgb(hsl)
 
+def get_RGB_for_angle_saturation_and_value(angle, saturation, value):
+    hsl = get_HSL(angle,saturation, value)
+    return hsl_to_rgb(hsl)
+    
 def get_HSL(h, s, l):
     h  = h / 360.0
     return (h, s, l)

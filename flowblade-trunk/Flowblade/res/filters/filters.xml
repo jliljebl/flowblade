@@ -481,7 +481,7 @@
         <name>Invert</name>
         <group>Color</group>
     </filter>
-    <filter id="liftgaingamma">
+    <filter id="lumaliftgaingamma">
         <name>Lift Gain Gamma</name>
         <group>Color</group>
         <property name="lift" args="range_in=-100,100 range_out=-0.5,0.5 displayname=Lift">0.0</property>
@@ -536,10 +536,10 @@
         <property name="R_table" args="editor=no_editor exptype=lut_table">LINEAR</property>
         <property name="G_table" args="editor=no_editor exptype=lut_table">LINEAR</property>
         <property name="B_table" args="editor=no_editor exptype=lut_table">LINEAR</property>
-        <propertynonmlt name="r_curve" args="">0/0;255/255</propertynonmlt>
-        <propertynonmlt name="g_curve" args="">0/0;255/255</propertynonmlt>
-        <propertynonmlt name="b_curve" args="">0/0;255/255</propertynonmlt>
-        <propertynonmlt name="value_curve" args="">0/0;255/255</propertynonmlt>
+        <propertynonmlt name="r_curve" args="editor=no_editor">0/0;255/255</propertynonmlt>
+        <propertynonmlt name="g_curve" args="editor=no_editor">0/0;255/255</propertynonmlt>
+        <propertynonmlt name="b_curve" args="editor=no_editor">0/0;255/255</propertynonmlt>
+        <propertynonmlt name="value_curve" args="editor=no_editor">0/0;255/255</propertynonmlt>
         <extraeditor name="crcurves"></extraeditor>
     </filter>
     <filter id="frei0r.levels">
@@ -564,6 +564,21 @@
         <property name="Alpha controlled" args="editor=no_editor">0</property>
         <property name="Luma formula" args="editor=combobox exptype=default cbopts=Rec.601:0.0,Rec.709:1.0 displayname=Luma!Formula">0.0</property>
    </filter>
+   <filter id="frei0r.coloradj_RGB">
+        <name>Color Adjustment</name>
+        <group>Color</group>
+        <property name="R" args="editor=no_editor exptype=default">0=0.5</property>
+        <property name="G" args="editor=no_editor exptype=default">0=0.5</property>
+        <property name="B" args="editor=no_editor exptype=default">0=0.5</property>
+        <propertynonmlt name="hue" args="range_in=0,360 range_out=0,1.0">0</propertynonmlt>
+        <propertynonmlt name="saturation" args="range_in=0,100 range_out=0,1.0">0</propertynonmlt>
+        <property name="Action" args="displayname=Luma!Band editor=combobox exptype=default cbopts=Shadows:0.0,Midtones:0.5,Highlights:1.0">0.0</property>
+        <property name="Keep luma" args="editor=no_editor">1</property>
+        <property name="Alpha controlled" args="editor=no_editor">0</property>
+        <property name="Luma formula" args="editor=no_editor">0.0</property>
+        <extraeditor name="colorbox"></extraeditor> 
+   </filter>
+   <!--
    <filter id="frei0r.three_point_balance">
         <name>3 Point Balance</name>
         <group>Color</group>
@@ -573,11 +588,14 @@
         <property name="Split preview" args="editor=booleancheckbox displayname=Split!Preview">0</property>
         <property name="Source image on left side" args="editor=booleancheckbox displayname=Source!on!Left">1</property>
    </filter>
+    -->
+   <!--
     <filter id="gamma">
         <name>Gamma</name>
         <group>Color</group>
         <property name="gamma" args="range_in=0,300 range_out=0.0,3.0 displayname=Gamma">1.00</property>
     </filter>
+    -->
    <filter id="frei0r.colorize">
         <name>Colorize</name>
         <group>Color</group>
