@@ -8,8 +8,11 @@
         <useservice id="frei0r.coloradj_RGB" name="Color Adjustment"></useservice>
         <dropservice id="frei0r.coloradj_RGB" name="RGB Adjustment"></dropservice>
         <dropservice id="frei0r.hueshift0r" name="Hue"></dropservice>
-   </replacementrelation>
-   
-</replacements>
+    </replacementrelation>
 
-        
+    <replacementrelation>
+        <useservice id="lumaliftgaingamma" name="Lift Gain Gamma"></useservice>
+        <dropservice id="gamma" name="Gamma"></dropservice>
+    </replacementrelation>
+    
+</replacements>
