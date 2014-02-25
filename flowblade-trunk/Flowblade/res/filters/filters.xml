@@ -503,13 +503,6 @@
         <group>Color</group>
         <multipartproperty multistartprop="start" multiendprop="end" args="editor=keyframe_editor range_in=0,100 exptype=multipart_keyframe displayname=Brightness">"0=1.0"</multipartproperty>
     </filter>
-    <filter id="frei0r.tint0r">
-        <name>Tint</name>
-        <group>Color</group>
-        <property name="Map black to" args="editor=color_select exptype=color displayname=Black">#000000</property>
-        <property name="Map white to" args="editor=color_select exptype=color displayname=White">#ff8080</property>
-        <property name="Tint amount" args="exptype=singlekeyframe range_in=0,100 displayname=Amount">0=0.25</property>
-    </filter>
     <!--
     <filter id="frei0r.balanc0r">
         <name>White Balance</name>
@@ -676,7 +669,13 @@
         <property name="u" args="range_in=0,255 range_out=0,255 displayname=U">75</property>
         <property name="v" args="range_in=0,255 range_out=0,255 displayname=V">150</property>
     </filter>
-
+    <filter id="frei0r.tint0r">
+        <name>Tint</name>
+        <group>Color Effect</group>
+        <property name="Map black to" args="editor=color_select exptype=color displayname=Black">#000000</property>
+        <property name="Map white to" args="editor=color_select exptype=color displayname=White">#ff8080</property>
+        <property name="Tint amount" args="exptype=singlekeyframe range_in=0,100 displayname=Amount">0=0.25</property>
+    </filter>
 
     <!-- DISTORT -->
     <filter id="frei0r.distort0r">
