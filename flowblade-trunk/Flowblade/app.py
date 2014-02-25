@@ -172,6 +172,9 @@ def main(root_path):
     # Load filter and compositor descriptions from xml files.
     mltfilters.load_filters_xml(mltenv.services)
     mlttransitions.load_compositors_xml(mltenv.transitions)
+    
+    # Replace some services if better replacements available
+    mltfilters.replace_services(mltenv.services)
 
     # Create list of available mlt profiles
     mltprofiles.load_profile_list()

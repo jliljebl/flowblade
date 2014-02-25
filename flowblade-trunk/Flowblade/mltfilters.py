@@ -43,6 +43,9 @@ EXTRA_EDITOR = appconsts.EXTRA_EDITOR
 FILTER = "filter"
 GROUP = "group"
 ID = "id"
+REPLACEMENT_RELATION = "replacementrelation"
+USE_SERVICE = "useservice"
+DROP_SERVICE = "dropservice"
 
 COMPOSITOR_FILTER_GROUP = "COMPOSITOR_FILTER" # THIS IS NOT USED ANYMORE! DOUBLE CHECK THAT THIS REALLY IS THE CASE AND KILL!
 MULTIPART_FILTER = "multipart" # identifies filter as multipart filter
@@ -137,8 +140,7 @@ class FilterInfo:
              
         self.xml = filter_node.toxml()
         self.name = filter_node.getElementsByTagName(NAME).item(0).firstChild.nodeValue
-        group_name = filter_node.getElementsByTagName(GROUP).item(0).firstChild # There's only one group node with text content child node
-        self.group = group_name.nodeValue
+        self.group = filter_node.getElementsByTagName(GROUP).item(0).firstChild.nodeValue
 
         # Properties saved as name-value-type tuplets
         p_node_list = filter_node.getElementsByTagName(PROPERTY)
@@ -222,6 +224,7 @@ class FilterObject:
             self.properties[i] = (name, o_value, prop_type)
         
         self.update_mlt_filter_properties_all()
+
 
 class MultipartFilterObject:
     """
@@ -390,6 +393,53 @@ def clone_filter_object(filter_object, mlt_profile):
     clone.properties = copy.deepcopy(filter_object.properties)
     clone.create_mlt_filter(mlt_profile)
     return clone
+
+def replace_services(services):
+    # this has gotta be bullshit way to do this
+    
+    replacements_doc = xml.dom.minidom.parse(respaths.REPLACEMENTS_XML_DOC)
+
+    # Build dict that has enough info to enable deleting and finding filters by name
+    filters_dict = {}
+    for group_data in groups:
+        gkey, group = group_data
+        for f in group:
+            filters_dict[f.name] = (f, group)
+
+    # Replace services
+    replacement_nodes = replacements_doc.getElementsByTagName(REPLACEMENT_RELATION)
+    for r_node in replacement_nodes:
+
+        # Get use service values
+        use_node = r_node.getElementsByTagName(USE_SERVICE).item(0)
+        use_service_id = use_node.getAttribute(ID)
+        use_service_name = use_node.getAttribute(NAME)
+
+        # Try replace if use service and use filter exist
+        if (use_service_id in services) and len(services) > 0:
+            try:
+                use_service_data = filters_dict[use_service_name]
+            except:
+                print "Replace service " + use_service_name + " not found."
+                continue
+            
+            drop_nodes = r_node.getElementsByTagName(DROP_SERVICE)
+            
+            try:
+                # Drop service if found
+                for d_node in drop_nodes:
+                    drop_service_id = d_node.getAttribute(ID)
+                    drop_service_name = d_node.getAttribute(NAME)
+
+                    drop_service_data = filters_dict[drop_service_name]
+                    f_info, group = drop_service_data
+                    for i in range(0, len(group)):
+                        if group[i].name == f_info.name:
+                            group.pop(i)
+                            print f_info.name +" dropped for " + use_service_name
+                            break
+            except:
+                print "Dropping service failed, maybe not present."
 
 def get_compositor_filter(filter_id):
     return compositor_filters[filter_id]

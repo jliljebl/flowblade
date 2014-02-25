@@ -613,7 +613,6 @@ class SimpleColorWheel(AbstractColorWheel):
 
     def __init__(self, edit_listener):
         AbstractColorWheel.__init__(self, edit_listener)
-        print type(edit_listener)
         self.value_x = self.cursor_x 
         self.value_y = self.cursor_y
 
