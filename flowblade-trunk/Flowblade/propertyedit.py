@@ -403,7 +403,8 @@ class TransitionEditableProperty(AbstractProperty):
 
 class NonMltEditableProperty(AbstractProperty):
     """
-    A wrapper for editable persistent properties that do not write out values to mlt objects
+    A wrapper for editable persistent properties that do not write out values to MLT objects.
+    Values of these are used to compute valuse that _are_ written to MLT.
     """
     def __init__(self, prop, args_str, clip, filter_index, non_mlt_property_index):
         AbstractProperty.__init__(self, args_str)
@@ -426,12 +427,10 @@ class NonMltEditableProperty(AbstractProperty):
         self.write_property_value(str(numb))
 
     def write_property_value(self, str_value):
-        # Persistant python object
         filter_object = self._get_filter_object()
         prop = (str(self.name), str(str_value), self.type)
         filter_object.non_mlt_properties[self.non_mlt_property_index] = prop
         self.value = str_value
-        #print self.value
 
     def get_float_value(self):
         return float(self.value)

@@ -439,7 +439,7 @@ def replace_services(services):
                             print f_info.name +" dropped for " + use_service_name
                             break
             except:
-                print "Dropping service failed, maybe not present."
+                print "Dropping a mlt service for " + use_service_name + " failed, maybe not present."
 
 def get_compositor_filter(filter_id):
     return compositor_filters[filter_id]

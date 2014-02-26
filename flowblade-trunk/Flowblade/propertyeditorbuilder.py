@@ -483,10 +483,13 @@ def _create_color_corrector(filt, editable_properties):
 
     color_corrector = extraeditors.ColorCorrector(editable_properties, [lift_slider_row, gain_slider_row, gamma_slider_row])
 
+    lift.adjustment_listener = color_corrector.lift_changed
+
     vbox = gtk.VBox(False, 4)
     vbox.pack_start(gtk.Label(), True, True, 0)
     vbox.pack_start(color_corrector.widget, False, False, 0)
     vbox.pack_start(gtk.Label(), True, True, 0)
+    vbox.no_separator = True
     return vbox
 
 def _create_crcurves_editor(filt, editable_properties):
