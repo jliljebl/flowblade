@@ -517,10 +517,15 @@
         <property name="R_table" args="editor=no_editor exptype=lut_table">LINEAR</property>
         <property name="G_table" args="editor=no_editor exptype=lut_table">LINEAR</property>
         <property name="B_table" args="editor=no_editor exptype=lut_table">LINEAR</property>
-        <property name="lift" args="editor=no_editor range_in=-100,100 range_out=-0.5,0.5 displayname=Lift">0.0</property>
-        <property name="gain" args="editor=no_editor range_in=-100,100 range_out=-0.5,0.5 displayname=Gain">0.0</property>
-        <property name="gamma" args="editor=no_editor range_in=-100,100 range_out=-1.0,1.0 displayname=Gamma">0.0</property>
-        <property name="hue" args="editor=no_editor">0.0</property>
+        <propertynonmlt name="lift" args="editor=no_editor range_in=-100,100 range_out=-0.5,0.5 displayname=Lift">0.0</propertynonmlt>
+        <propertynonmlt name="gain" args="editor=no_editor range_in=-100,100 range_out=-0.5,0.5 displayname=Gain">0.0</propertynonmlt>
+        <propertynonmlt name="gamma" args="editor=no_editor range_in=-100,100 range_out=-1.0,1.0 displayname=Gamma">0.0</propertynonmlt>
+        <propertynonmlt name="shadow_hue" args="editor=no_editor">0.0</propertynonmlt>
+        <propertynonmlt name="mid_hue" args="editor=no_editor">0.33</propertynonmlt>
+        <propertynonmlt name="hi_hue" args="editor=no_editor">0.66</propertynonmlt>
+        <propertynonmlt name="shadow_saturation" args="editor=no_editor">0.5</propertynonmlt>
+        <propertynonmlt name="mid_saturation" args="editor=no_editor">0.5</propertynonmlt>
+        <propertynonmlt name="hi_saturation" args="editor=no_editor">0.5</propertynonmlt>
         <extraeditor name="color_corrector"></extraeditor>
     </filter>
     <filter id="rgblut">
