@@ -36,12 +36,14 @@ SHADOW = 0
 MID = 1
 HI = 2
 
+NO_HIT = 99
+
 ACTIVE_RING_COLOR = (0.0, 0.0, 0.0)
 DEACTIVE_RING_COLOR = (0.6, 0.6, 0.6)
 
-ACTIVE_SHADOW_COLOR = (0.1, 0.1, 0.1)
+ACTIVE_SHADOW_COLOR = (0.15, 0.15, 0.15)
 ACTIVE_MID_COLOR = (0.5, 0.5, 0.5)
-ACTIVE_HI_COLOR = (1.0, 1.0, 1.0)
+ACTIVE_HI_COLOR = (0.95, 0.95, 0.95)
 
 DEACTIVE_SHADOW_COLOR = (0.6, 0.6, 0.6)
 DEACTIVE_MID_COLOR = (0.7, 0.7, 0.7)
@@ -63,45 +65,62 @@ BLUE_STOP = (4.0/6.0, 0, 0, 1, 1)
 MAGENTA_STOP = (5.0/6.0, 1, 0, 1, 1)
 RED_STOP_END = (1, 1, 0, 0, 1)
 
-GREY_GRAD_1 = (1, 0.5, 0.5, 0.5, 1)
-GREY_GRAD_2 = (0, 0.5, 0.5, 0.5, 0)
+GREY_GRAD_1 = (1, 0.4, 0.4, 0.4, 1)
+GREY_GRAD_2 = (0, 0.4, 0.4, 0.4, 0)
 
-MID_GREY_GRAD_1 = (1, 0.5, 0.5, 0.5, 0)
-MID_GREY_GRAD_2 = (0.5, 0.5, 0.5, 0.5, 1)
-MID_GREY_GRAD_3 = (0, 0.5, 0.5, 0.5, 0)
+MID_GREY_GRAD_1 = (1, 0.3, 0.3, 0.3, 0)
+MID_GREY_GRAD_2 = (0.5, 0.3, 0.3, 0.3, 1)
+MID_GREY_GRAD_3 = (0, 0.3, 0.3, 0.3, 0)
+
+CIRCLE_GRAD_1 = (1, 0.3, 0.3, 0.3, 1)
+CIRCLE_GRAD_2 = (0, 0.8, 0.8, 0.8, 1)
+
+FX_GRAD_1 = (0, 1.0, 1.0, 1.0, 0.4)
+FX_GRAD_2 = (1, 0.3, 0.3, 0.3, 0.4)
 
 
-def _draw_select_circle(cr, x, y, band_color, ring_color, radius = 6, small_radius = 4, pad = 6):
+def _draw_select_circle(cr, x, y, main_color, radius = 6, small_radius = 4, pad = 6):
     degrees = math.pi / 180.0
 
-    cr.set_source_rgb(*ring_color)
+    grad = cairo.LinearGradient (x, y, x, y + 2 * radius)
+    grad.add_color_stop_rgba(*CIRCLE_GRAD_1)
+    grad.add_color_stop_rgba(*CIRCLE_GRAD_2)
+    cr.set_source(grad)
     cr.move_to(x + pad, y + pad)
     cr.arc (x + pad, y + pad, radius, 0.0 * degrees, 360.0 * degrees)
     cr.fill()
-    
-    cr.set_source_rgb(*band_color)
+
+    cr.set_source_rgb(*main_color)
     cr.move_to(x + pad, y + pad)
     cr.arc (x + pad, y + pad, small_radius, 0.0 * degrees, 360.0 * degrees)
     cr.fill()
 
-    cr.set_source_rgb(0,0,0)
+    grad = cairo.LinearGradient (x, y, x, y + 2 * radius)
+    grad.add_color_stop_rgba(*FX_GRAD_1)
+    grad.add_color_stop_rgba(*FX_GRAD_2)
+    cr.set_source(grad)
+    cr.move_to(x + pad, y + pad)
+    cr.arc (x + pad, y + pad, small_radius, 0.0 * degrees, 360.0 * degrees)
+    cr.fill()
+
+    cr.set_source_rgb(0.4,0.4,0.4)
     cr.set_line_width(1.0)
     cr.move_to(x + radius - 0.5, y)
     cr.line_to(x + radius - 0.5, y + 2 * radius)
     cr.stroke()
 
-    cr.set_source_rgb(0,0,0)
+    cr.set_source_rgb(0.4,0.4,0.4)
     cr.set_line_width(1.0)
     cr.move_to(x, y + radius - 0.5)
     cr.line_to(x + 2 * radius, y + radius - 0.5)
     cr.stroke()
 
-    cr.set_source_rgb(0.7,0.7,0.7)
+    cr.set_source_rgb(0.6,0.6,0.6)
     cr.move_to(x, y + radius + 0.5)
     cr.line_to(x + radius * 2.0, y + radius + 0.5)
     cr.stroke()
 
-    cr.set_source_rgb(0.7,0.7,0.7)
+    cr.set_source_rgb(0.6,0.6,0.6)
     cr.move_to(x + radius + 0.5, y)
     cr.line_to(x + radius + 0.5, y + 2 * radius)
     cr.stroke()
@@ -120,7 +139,7 @@ class ColorBox:
         self.widget.release_func = self._release_event
         self.X_PAD = 6
         self.Y_PAD = 6
-        self.CIRCLE_HALF = 6
+        self.CIRCLE_HALF = 8
         self.cursor_x = self.X_PAD
         self.cursor_y = self.H - self.Y_PAD
         self.edit_listener = edit_listener
@@ -148,13 +167,13 @@ class ColorBox:
     def _press_event(self, event):
         self.cursor_x, self.cursor_y = self._get_legal_point(event.x, event.y)
         self._save_values()
-        #self.edit_listener()
+        self.edit_listener()
         self.widget.queue_draw()
 
     def _motion_notify_event(self, x, y, state):
         self.cursor_x, self.cursor_y = self._get_legal_point(x, y)
         self._save_values()
-        #self.edit_listener()
+        self.edit_listener()
         self.widget.queue_draw()
         
     def _release_event(self, event):
@@ -213,7 +232,7 @@ class ColorBox:
         cr.rectangle(self.X_PAD, self.Y_PAD, x_out - x_in, y_out - y_in)
         cr.fill()
 
-        _draw_select_circle(cr, self.cursor_x - self.CIRCLE_HALF, self.cursor_y - self.CIRCLE_HALF, (1, 1, 1), (0, 0, 0))
+        _draw_select_circle(cr, self.cursor_x - self.CIRCLE_HALF, self.cursor_y - self.CIRCLE_HALF, (1, 1, 1), 8, 6, 8)
 
 
 class ThreeBandColorBox(ColorBox):
@@ -237,6 +256,44 @@ class ThreeBandColorBox(ColorBox):
         self.hi_x = self._x_for_hue(h_h)
         self.hi_y = self._y_for_saturation(h_s)
 
+    def _press_event(self, event):
+        self.cursor_x, self.cursor_y = self._get_legal_point(event.x, event.y)
+        hit_value = self._check_band_hit(self.cursor_x, self.cursor_y)
+        if hit_value != self.band and hit_value != NO_HIT:
+            self.band = hit_value
+        
+        self._save_values()
+        #self.edit_listener()
+        self.widget.queue_draw()
+
+    def _motion_notify_event(self, x, y, state):
+        self.cursor_x, self.cursor_y = self._get_legal_point(x, y)
+        self._save_values()
+        #self.edit_listener()
+        self.widget.queue_draw()
+        
+    def _release_event(self, event):
+        self.cursor_x, self.cursor_y = self._get_legal_point(event.x, event.y)
+        self._save_values()
+        #self.edit_listener()
+        self.widget.queue_draw()
+
+    def _check_band_hit(self, x, y):
+        if self._control_point_hit(x, y, self.shadow_x, self.shadow_y):
+            return SHADOW
+        elif self._control_point_hit(x, y, self.mid_x, self.mid_y):
+            return MID
+        elif self._control_point_hit(x, y, self.hi_x, self.hi_y):
+            return HI
+        else:
+            return NO_HIT
+            
+    def _control_point_hit(self, x, y, cx, cy):
+        if x >= cx - self.CIRCLE_HALF and x <= cx + self.CIRCLE_HALF:
+            if y >= cy - self.CIRCLE_HALF and y <= cy + self.CIRCLE_HALF:
+                return True
+        return False
+        
     def _save_values(self):
         self.hue = float((self.cursor_x - self.X_PAD)) / float((self.W - 2 * self.X_PAD))
         self.saturation = float(abs(self.cursor_y - self.H + self.Y_PAD)) / float((self.H - 2 * self.Y_PAD))
@@ -288,18 +345,18 @@ class ThreeBandColorBox(ColorBox):
         cr.rectangle(self.X_PAD, self.Y_PAD, x_out - x_in, y_out - y_in)
         cr.fill()
 
-        y_mid =  self.Y_PAD + math.floor((y_out - y_in)/2.0) + 1.5
-        cr.set_line_width(1.0)
-        cr.set_source_rgb(0,0,0)
+        y_mid =  self.Y_PAD + math.floor((y_out - y_in)/2.0) + 0.2
+        cr.set_line_width(0.6)
+        cr.set_source_rgb(0.7,0.7,0.7)
         cr.move_to(x_in, y_mid)
         cr.line_to(x_out, y_mid)
         cr.stroke()
 
-        _draw_select_circle(cr, self.shadow_x - self.CIRCLE_HALF, self.shadow_y - self.CIRCLE_HALF, ACTIVE_SHADOW_COLOR, (0.2, 0.2, 0.2))
-        _draw_select_circle(cr, self.mid_x - self.CIRCLE_HALF, self.mid_y - self.CIRCLE_HALF, ACTIVE_MID_COLOR, (0.2, 0.2, 0.2))
-        _draw_select_circle(cr, self.hi_x - self.CIRCLE_HALF, self.hi_y - self.CIRCLE_HALF, ACTIVE_HI_COLOR, (0.2, 0.2, 0.2))
+        _draw_select_circle(cr, self.shadow_x - self.CIRCLE_HALF, self.shadow_y - self.CIRCLE_HALF, ACTIVE_SHADOW_COLOR, 8, 7, 8)
+        _draw_select_circle(cr, self.mid_x - self.CIRCLE_HALF, self.mid_y - self.CIRCLE_HALF, ACTIVE_MID_COLOR, 8, 7, 8)
+        _draw_select_circle(cr, self.hi_x - self.CIRCLE_HALF, self.hi_y - self.CIRCLE_HALF, ACTIVE_HI_COLOR, 8, 7, 8)
 
-        _draw_select_circle(cr, self.cursor_x - self.CIRCLE_HALF, self.cursor_y - self.CIRCLE_HALF, ACTIVE_SHADOW_COLOR, (0.2, 0.2, 0.2))
+        #_draw_select_circle(cr, self.cursor_x - self.CIRCLE_HALF, self.cursor_y - self.CIRCLE_HALF, ACTIVE_SHADOW_COLOR, (0.2, 0.2, 0.2), 8, 7, 8)
         
 class ColorBoxFilterEditor:
     
