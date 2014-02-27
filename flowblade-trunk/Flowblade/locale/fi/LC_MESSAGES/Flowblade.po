@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-01-18 18:56+0200\n"
+"POT-Creation-Date: 2014-02-27 13:02+0200\n"
 "PO-Revision-Date: 2011-12-13 23:55+0200\n"
 "Last-Translator: Janne Liljeblad <janne@janne-kx557aa-uuw-a6521-sc>\n"
 "Language-Team: Finnish\n"
@@ -57,81 +57,81 @@ msgstr "Projektia ei ole tallennettu aikaisemmin"
 msgid " minutes ago."
 msgstr " minuuttia sitten."
 
-#: app.py:691 projectaction.py:220
+#: app.py:691 projectaction.py:216
 msgid "Project has not been saved previously"
 msgstr "Projektia ei ole tallennettu aikaisemmin"
 
-#: app.py:692 projectaction.py:221
+#: app.py:692 projectaction.py:217
 msgid "Save project with File -> Save As before closing."
 msgstr ""
 "Tallenna projekti valinnalla Tiedosto -> Tallenna nimellä ennen sulkemista."
 
-#: projectaction.py:97 dialogs.py:815 render.py:108
+#: projectaction.py:93 dialogs.py:851 render.py:105
 msgid "File: "
 msgstr "Tiedosto"
 
-#: projectaction.py:97
+#: projectaction.py:93
 msgid " was not found on load!"
 msgstr " ei löytynyt ladattaessa!"
 
-#: projectaction.py:98
+#: projectaction.py:94
 msgid "Place dummy file with same name and similar content to enable"
 msgstr ""
 "Aseta samaan paikkaan samanniminen ja tyyppinen tiedosto mahdollistaaksesi"
 
-#: projectaction.py:98
+#: projectaction.py:94
 msgid "project load. "
 msgstr " projektin latauksen."
 
-#: projectaction.py:99
+#: projectaction.py:95
 msgid "Doing so does not quarantee succesful load"
 msgstr "Tämä ei takaa onnistunutta latausta"
 
-#: projectaction.py:99
+#: projectaction.py:95
 msgid "if files have different properties."
 msgstr "jos tiedostoilla on erilaiset ominaisuudet."
 
-#: projectaction.py:104
+#: projectaction.py:100
 msgid "Opening"
 msgstr "Avaa"
 
-#: projectaction.py:311
+#: projectaction.py:307
 msgid "Project not found on disk"
 msgstr "Projektia ei löytynyt kovalevyltä"
 
-#: projectaction.py:312
+#: projectaction.py:308
 msgid "Project can't be loaded."
 msgstr "Projektia ei voida ladata."
 
-#: projectaction.py:366
+#: projectaction.py:362
 msgid "Adding item to render queue failed!"
 msgstr ""
 
-#: projectaction.py:367 tools/batchrendering.py:219
+#: projectaction.py:363 tools/batchrendering.py:219
 msgid "Error message: "
 msgstr "Virhe viesti"
 
-#: projectaction.py:390
+#: projectaction.py:386
 msgid "Open.."
 msgstr "Avaa"
 
-#: projectaction.py:400
+#: projectaction.py:396
 msgid "All files"
 msgstr "Kaikki tiedostot"
 
-#: projectaction.py:439
+#: projectaction.py:434
 msgid "No file was selected"
 msgstr "Tiedostoa ei valittu"
 
-#: projectaction.py:439
+#: projectaction.py:434
 msgid "Select a numbered file to add an Image Sequence to Project."
 msgstr "Valitse numeroitu tiedosto lisätäksesi kuvasarjan projektiin"
 
-#: projectaction.py:447
+#: projectaction.py:442
 msgid "Not a sequence file!"
 msgstr "Tiedosto ei kuulu kuvasarjaan"
 
-#: projectaction.py:447
+#: projectaction.py:442
 msgid ""
 "Selected file does not have a number part in it,\n"
 "so it can't be an image sequence file."
@@ -139,40 +139,40 @@ msgstr ""
 "Valitussa tiedostossa ei ole numero osuutta,\n"
 "joten se ei voi olla osa kuvasarjaa."
 
-#: projectaction.py:497
+#: projectaction.py:490
 msgid "Can't make home folder thumbnails folder"
 msgstr "Et voi valita kotikansiotasi mediaikoni kansioksi"
 
-#: projectaction.py:498 dialogs.py:198
+#: projectaction.py:491 dialogs.py:200
 msgid "Please create and select some other folder then '"
 msgstr "Luo ja valitse joku toinen kansio kuin '"
 
-#: projectaction.py:499
+#: projectaction.py:492
 msgid "' as thumbnails folder"
 msgstr "' mediaikoni kansioksi."
 
-#: projectaction.py:677
+#: projectaction.py:670
 msgid "Can't remove a non-empty bin"
 msgstr "Et voi poistaa laatikkoa jos se ei ole tyhjä."
 
-#: projectaction.py:678
+#: projectaction.py:671
 msgid "You must remove all files from the bin before deleting it."
 msgstr ""
 "Sinun täytyy poistaa kaikki tiedostot laatikosta ennen kuin poistat sen."
 
-#: projectaction.py:686
+#: projectaction.py:679
 msgid "Can't remove last bin"
 msgstr "Et voi poistaa viimeista laatikkoa"
 
-#: projectaction.py:687
+#: projectaction.py:680
 msgid "There must always exist at least one bin."
 msgstr "Vähintään yksi laatikko taytyy aina olla olemassa."
 
-#: projectaction.py:758
+#: projectaction.py:751
 msgid "Selected sequence is already being edited"
 msgstr "Valittu ohjelma on jo editoitavana"
 
-#: projectaction.py:759
+#: projectaction.py:752
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
@@ -180,11 +180,11 @@ msgstr ""
 "Valitse toinen ohjelma. Paina tarvittaessa Lisää -nappia luodaksesi\n"
 "uuden ohjelman"
 
-#: projectaction.py:769 projectaction.py:786 projectdata.py:191
+#: projectaction.py:762 projectaction.py:779 projectdata.py:188
 msgid "sequence_"
 msgstr "ohjelma_"
 
-#: projectaction.py:819
+#: projectaction.py:812
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
@@ -192,268 +192,268 @@ msgstr ""
 "Oletko varma että haluat poistaa\n"
 "ohjelman '"
 
-#: projectaction.py:819
+#: projectaction.py:812
 msgid "'?"
 msgstr "'?"
 
-#: projectaction.py:820
+#: projectaction.py:813
 msgid "This operation can not be undone. Sequence will be permanently lost."
 msgstr "Tätä toimintoa ei voida peruuttaa. Ohjelma menetetään pysyvästi."
 
-#: projectaction.py:835
+#: projectaction.py:828
 msgid "Can't remove last sequence"
 msgstr "Et voi poistaa viimeistä ohjelmaa"
 
-#: projectaction.py:836
+#: projectaction.py:829
 msgid "There must always exist at least one sequence."
 msgstr "Projektissa täytyy olla olemassa aina vähintään yksi ohjelma."
 
-#: editorwindow.py:150
+#: editorwindow.py:140
 msgid "_File"
 msgstr "_Tiedosto"
 
-#: editorwindow.py:151
+#: editorwindow.py:141
 msgid "_New..."
 msgstr "Uusi..."
 
-#: editorwindow.py:152
+#: editorwindow.py:142
 msgid "_Open..."
 msgstr "Avaa..."
 
-#: editorwindow.py:153
+#: editorwindow.py:143
 msgid "Open Recent"
 msgstr "Avaa äskettäinen"
 
-#: editorwindow.py:154
+#: editorwindow.py:144
 msgid "_Save"
 msgstr "Tallenna"
 
-#: editorwindow.py:155
+#: editorwindow.py:145
 msgid "_Save As..."
 msgstr "Tallenna nimellä..."
 
-#: editorwindow.py:156 dialogs.py:144
+#: editorwindow.py:146 dialogs.py:143
 msgid "Export"
 msgstr "Exporttaa"
 
-#: editorwindow.py:157
+#: editorwindow.py:147
 msgid "melt XML"
 msgstr ""
 
-#: editorwindow.py:158
+#: editorwindow.py:148
 msgid "_Close"
 msgstr "Sulje"
 
-#: editorwindow.py:159
+#: editorwindow.py:149
 msgid "_Quit"
 msgstr "Lopeta"
 
-#: editorwindow.py:160
+#: editorwindow.py:150
 msgid "_Edit"
 msgstr "_Muokkaa"
 
-#: editorwindow.py:161
+#: editorwindow.py:151
 msgid "_Undo"
 msgstr "Uudelleen"
 
-#: editorwindow.py:162
+#: editorwindow.py:152
 msgid "_Redo"
 msgstr "Kumoa"
 
-#: editorwindow.py:163
+#: editorwindow.py:153
 msgid "Add Monitor Clip"
 msgstr "Lisää monitorileike"
 
-#: editorwindow.py:164 dialogs.py:1030
+#: editorwindow.py:154 dialogs.py:1066
 msgid "Append"
 msgstr "Lisää viimeiseksi"
 
-#: editorwindow.py:165 dialogs.py:1029 dialogs.py:1052 guicomponents.py:1720
+#: editorwindow.py:155 dialogs.py:1065 dialogs.py:1088 guicomponents.py:1727
 msgid "Insert"
 msgstr "Väliinsijoitus siirto"
 
-#: editorwindow.py:166
+#: editorwindow.py:156
 msgid "Three Point Overwrite"
 msgstr "Kolmen pisteen ylikirjoitus"
 
-#: editorwindow.py:167
+#: editorwindow.py:157
 msgid "Range Overwrite"
 msgstr "Ylikirjoitus alue"
 
-#: editorwindow.py:168 dialogs.py:1027
+#: editorwindow.py:158 dialogs.py:1063
 msgid "Cut Clip"
 msgstr "Leikkaa"
 
-#: editorwindow.py:169
+#: editorwindow.py:159
 msgid "Lift"
 msgstr "Nosta leike"
 
-#: editorwindow.py:170 dialogs.py:1028
+#: editorwindow.py:160 dialogs.py:1064
 msgid "Splice Out"
 msgstr "Poista leike välistä"
 
-#: editorwindow.py:171 guicomponents.py:1018 guicomponents.py:1076
+#: editorwindow.py:161 guicomponents.py:1018 guicomponents.py:1076
 msgid "Resync"
 msgstr "Synkronoi kaikki"
 
-#: editorwindow.py:172
+#: editorwindow.py:162
 msgid "Set Sync Parent"
 msgstr "Valitse synkronointi emoleike"
 
-#: editorwindow.py:173
+#: editorwindow.py:163
 msgid "Add Single Track Transition"
 msgstr "Lisää yhden raidan siirtymä"
 
-#: editorwindow.py:174
+#: editorwindow.py:164
 msgid "Add Single Track Fade"
 msgstr "Lisää yhden raidan häivytys"
 
-#: editorwindow.py:175
+#: editorwindow.py:165
 msgid "Clear Filters"
 msgstr "Poista suotimet"
 
-#: editorwindow.py:176
+#: editorwindow.py:166
 msgid "Consolidate Selected Blanks"
 msgstr "Yhdistä valitut tyhjät"
 
-#: editorwindow.py:177
+#: editorwindow.py:167
 msgid "Consolidate All Blanks"
 msgstr "Yhdistä kaikki tyhjät"
 
-#: editorwindow.py:178
+#: editorwindow.py:168
 msgid "Change Sequence Tracks Count..."
 msgstr "Muuta ohjelman Raitojen lukumäärää"
 
-#: editorwindow.py:179
+#: editorwindow.py:169
 msgid "Watermark..."
 msgstr ""
 
-#: editorwindow.py:180 profilesmanager.py:43
+#: editorwindow.py:170 profilesmanager.py:42
 msgid "Profiles Manager"
 msgstr "Profiili Mangeri"
 
-#: editorwindow.py:181
+#: editorwindow.py:171
 msgid "Preferences"
 msgstr "Asetukset"
 
-#: editorwindow.py:182 preferenceswindow.py:57
+#: editorwindow.py:172 preferenceswindow.py:57
 msgid "View"
 msgstr "Näkymä"
 
-#: editorwindow.py:183 editorwindow.py:479
+#: editorwindow.py:173 editorwindow.py:469
 msgid "Project"
 msgstr "Projekti"
 
-#: editorwindow.py:184
+#: editorwindow.py:174
 msgid "Add Media Clip..."
 msgstr "Lisää mediatiedosto"
 
-#: editorwindow.py:185
+#: editorwindow.py:175
 msgid "Add Image Sequence..."
 msgstr "Lisää kuva sekvenssi..."
 
-#: editorwindow.py:186
+#: editorwindow.py:176
 msgid "Create Color Clip..."
 msgstr "Luo värileike..."
 
-#: editorwindow.py:187
+#: editorwindow.py:177
 msgid "Create Pattern Producer"
 msgstr "Luo kuva lähde"
 
-#: editorwindow.py:188 translations.py:356
+#: editorwindow.py:178 translations.py:356
 msgid "Noise"
 msgstr "Kohina"
 
-#: editorwindow.py:189
+#: editorwindow.py:179
 msgid "EBU Bars"
 msgstr "EBU palkit"
 
-#: editorwindow.py:190
+#: editorwindow.py:180
 msgid "Log Marked Clip Range"
 msgstr "Loggaaa merkitty alue"
 
-#: editorwindow.py:191
+#: editorwindow.py:181
 msgid "Recreate Media Icons..."
 msgstr "Uudelleen luo media-ikonit..."
 
-#: editorwindow.py:192
+#: editorwindow.py:182
 msgid "Remove Unused Media..."
 msgstr "Poista käyttämätön media"
 
-#: editorwindow.py:193 proxyediting.py:164
+#: editorwindow.py:183 proxyediting.py:164
 msgid "Proxy Manager"
 msgstr "Proxymanageri"
 
-#: editorwindow.py:194
+#: editorwindow.py:184
 msgid "Project Info"
 msgstr "Projekti Info"
 
-#: editorwindow.py:195 editorwindow.py:480 rendergui.py:137
+#: editorwindow.py:185 editorwindow.py:470 rendergui.py:148
 #: tools/batchrendering.py:772
 msgid "Render"
 msgstr "Renderöi"
 
-#: editorwindow.py:196
+#: editorwindow.py:186
 msgid "Add To Batch Render Queue..."
 msgstr "Lisää renderöintijonoon"
 
-#: editorwindow.py:197
+#: editorwindow.py:187
 msgid "Batch Render Queue"
 msgstr "Renderöintijono"
 
-#: editorwindow.py:198
+#: editorwindow.py:188
 msgid "Render Timeline"
 msgstr "Renderöi"
 
-#: editorwindow.py:199 dialogs.py:1057
+#: editorwindow.py:189 dialogs.py:1093
 msgid "Tools"
 msgstr "Työkalut"
 
-#: editorwindow.py:200 tools/titler.py:153
+#: editorwindow.py:190 tools/titler.py:152
 msgid "Titler"
 msgstr "Teksti grafiikka"
 
-#: editorwindow.py:201
+#: editorwindow.py:191
 msgid "Audio Mixer"
 msgstr "Audio mikseri"
 
-#: editorwindow.py:202
+#: editorwindow.py:192
 msgid "_Help"
 msgstr "Ohje"
 
-#: editorwindow.py:203
+#: editorwindow.py:193
 msgid "Contents"
 msgstr "Sisältö"
 
-#: editorwindow.py:204 dialogs.py:317
+#: editorwindow.py:194 dialogs.py:318
 msgid "Runtime Environment"
 msgstr "Ajoympäristö"
 
-#: editorwindow.py:205 dialogs.py:1007
+#: editorwindow.py:195 dialogs.py:1043
 msgid "Keyboard Shortcuts"
 msgstr "Näppäimistö toiminnot"
 
-#: editorwindow.py:206 dialogs.py:241
+#: editorwindow.py:196 dialogs.py:243
 msgid "About"
 msgstr "Tietoja"
 
-#: editorwindow.py:475
+#: editorwindow.py:465
 msgid "Media"
 msgstr "Media"
 
-#: editorwindow.py:476
+#: editorwindow.py:466
 msgid "Range Log"
 msgstr "Klippi logi"
 
-#: editorwindow.py:477
+#: editorwindow.py:467
 msgid "Filters"
 msgstr "Suotimet"
 
-#: editorwindow.py:478
+#: editorwindow.py:468
 msgid "Compositors"
 msgstr "Yhdistäjät"
 
-#: editorwindow.py:507
+#: editorwindow.py:495
 msgid ""
 "Prev Frame - Arrow Left\n"
 "Next Frame - Arrow Right\n"
@@ -475,347 +475,368 @@ msgstr ""
 "Siirry merkki sisään\n"
 "Siirry merkki ulos"
 
-#: editorwindow.py:695
+#: editorwindow.py:685
 msgid "Middlebar Layout"
 msgstr "Keskipalkin asettelu"
 
-#: editorwindow.py:697
+#: editorwindow.py:687
 msgid "Timecode Left"
 msgstr "Aikakoodi vasemmalla"
 
-#: editorwindow.py:702
+#: editorwindow.py:692
 msgid "Timecode Center"
 msgstr "Aikakoodi oikealla"
 
-#: editorwindow.py:714
+#: editorwindow.py:704
 msgid "Tabs Position"
 msgstr "Välilehtien paikka"
 
-#: editorwindow.py:716
+#: editorwindow.py:706
 msgid "Up"
 msgstr "Ylös"
 
-#: editorwindow.py:720
+#: editorwindow.py:710
 msgid "Down"
 msgstr "Alas"
 
-#: editorwindow.py:735
+#: editorwindow.py:725
 msgid "Show Monitor Sequence Profile"
 msgstr "Näytä monitori ohjelman profiili"
 
-#: editorwindow.py:743
+#: editorwindow.py:733
+msgid "Monitor Playback Interpolation"
+msgstr ""
+
+#: editorwindow.py:736
+msgid "Nearest Neighbour"
+msgstr ""
+
+#: editorwindow.py:740
+#, fuzzy
+msgid "Bilinear"
+msgstr "Aikajana"
+
+#: editorwindow.py:744
+msgid "Bicubic"
+msgstr ""
+
+#: editorwindow.py:750
+msgid "Hyper/Lanczos"
+msgstr ""
+
+#: editorwindow.py:760
 msgid "Zoom In"
 msgstr "Zoomaa sisään"
 
-#: editorwindow.py:746
+#: editorwindow.py:763
 msgid "Zoom Out"
 msgstr "Zoomaa ulos"
 
-#: editorwindow.py:749
+#: editorwindow.py:766
 msgid "Zoom Fit"
 msgstr "Zoomaa mahtumaan"
 
-#: editorwindow.py:835
+#: editorwindow.py:853
 msgid "Timeline current frame timecode"
 msgstr "Tämän hetkisen ruudun aikakoodi"
 
-#: editorwindow.py:837
+#: editorwindow.py:855
 msgid "Select view mode: Video/Vectorscope/RGBParade"
 msgstr "Valitse katselutila: Ohjelma / Vektoriskooppi / RGB Paraati"
 
-#: editorwindow.py:839
+#: editorwindow.py:857
 msgid "Monitor Sequence/Media current frame timecode"
 msgstr "Monitori ohjelman aikakoodi"
 
-#: editorwindow.py:840
+#: editorwindow.py:858
 msgid "Current Monitor Sequence/Media name"
 msgstr "Monitori ohjelman nimi"
 
-#: editorwindow.py:842
+#: editorwindow.py:860
 msgid "Monitor Sequence/Media current position"
 msgstr "Paikka monitori ohjelmassa"
 
-#: editorwindow.py:844
+#: editorwindow.py:862
 msgid "Display Current Sequence on Timeline"
 msgstr "Näytä ohjelma aikajanalla"
 
-#: editorwindow.py:845
+#: editorwindow.py:863
 msgid "Display Monitor Clip"
 msgstr "Näytä monitorileike"
 
-#: clipeffectseditor.py:104
+#: clipeffectseditor.py:102
 msgid "Select Filter Group"
 msgstr "Valitse suodin ryhmä"
 
-#: clipeffectseditor.py:105
+#: clipeffectseditor.py:103
 msgid "Current group Filters"
 msgstr "Suotimet tässä ryhmässä"
 
-#: clipeffectseditor.py:193
+#: clipeffectseditor.py:191
 msgid "Quit editing Clip in editor"
 msgstr "Lopeta leikkeen editointi"
 
-#: clipeffectseditor.py:203 panels.py:54 panels.py:93 panels.py:111
-#: translations.py:505 mlttransitions.py:137 tools/titler.py:168
+#: clipeffectseditor.py:201 panels.py:48 panels.py:87 panels.py:105
+#: translations.py:505 mlttransitions.py:133 tools/titler.py:167
 msgid "Add"
 msgstr "Lisää"
 
-#: clipeffectseditor.py:204 compositeeditor.py:58 dialogs.py:1015
-#: dialogs.py:1028 guicomponents.py:1059 guicomponents.py:1114
-#: guicomponents.py:1293 guicomponents.py:1312 panels.py:55 panels.py:94
-#: panels.py:112 tools/titler.py:169 tools/batchrendering.py:936
+#: clipeffectseditor.py:202 compositeeditor.py:55 dialogs.py:1051
+#: dialogs.py:1064 guicomponents.py:1059 guicomponents.py:1114
+#: guicomponents.py:1299 guicomponents.py:1319 panels.py:49 panels.py:88
+#: panels.py:106 tools/titler.py:168 tools/batchrendering.py:935
 msgid "Delete"
 msgstr "Poista"
 
-#: clipeffectseditor.py:213
+#: clipeffectseditor.py:211
 msgid "Clip being edited"
 msgstr "Editoitava leike"
 
-#: clipeffectseditor.py:214
+#: clipeffectseditor.py:212
 msgid "Clip Filter Stack"
 msgstr "Leikkeen suodinpino"
 
-#: clipeffectseditor.py:215
+#: clipeffectseditor.py:213
 msgid "Add Filter to Clip Filter Stack"
 msgstr "Lisää suodin leikkeen suodinpinoon"
 
-#: clipeffectseditor.py:216
+#: clipeffectseditor.py:214
 msgid "Delete Filter from Clip Filter Stack"
 msgstr "Poista suodin leikkeen suodinpinoon"
 
-#: clipeffectseditor.py:406
+#: clipeffectseditor.py:422
 msgid "No editable parameters"
 msgstr "Ei editoitavia parametreja"
 
-#: compositeeditor.py:60 render.py:249
+#: compositeeditor.py:57 render.py:258
 msgid "Reset"
 msgstr "Resetoi"
 
-#: compositeeditor.py:64 compositeeditor.py:149
+#: compositeeditor.py:61 compositeeditor.py:144
 msgid "No Compositor"
 msgstr "Ei yhdistäjää"
 
-#: compositeeditor.py:171
+#: compositeeditor.py:166
 msgid "Destination Track:"
 msgstr "Kohde raita:"
 
-#: dialogs.py:51
+#: dialogs.py:50
 msgid "New Project"
 msgstr "Uusi projekti"
 
-#: dialogs.py:53 dialogs.py:112 dialogs.py:125 dialogs.py:143 dialogs.py:157
-#: dialogs.py:168 dialogs.py:183 dialogs.py:213 dialogs.py:232 dialogs.py:474
-#: dialogs.py:581 dialogs.py:678 dialogs.py:714 dialogs.py:758 dialogs.py:787
-#: dialogs.py:843 dialogs.py:876 dialogs.py:983 dialogs.py:996 dialogs.py:1155
-#: rendergui.py:24 rendergui.py:70 rendergui.py:84 rendergui.py:101
-#: preferenceswindow.py:45 tools/batchrendering.py:300
-#: tools/batchrendering.py:870 proxyediting.py:382
+#: dialogs.py:52 dialogs.py:111 dialogs.py:124 dialogs.py:142 dialogs.py:156
+#: dialogs.py:167 dialogs.py:182 dialogs.py:215 dialogs.py:234 dialogs.py:475
+#: dialogs.py:582 dialogs.py:676 dialogs.py:712 dialogs.py:756 dialogs.py:785
+#: dialogs.py:814 dialogs.py:879 dialogs.py:912 dialogs.py:1019
+#: dialogs.py:1032 dialogs.py:1191 rendergui.py:24 rendergui.py:81
+#: rendergui.py:95 rendergui.py:112 preferenceswindow.py:45
+#: tools/batchrendering.py:300 tools/batchrendering.py:869 proxyediting.py:382
 msgid "Cancel"
 msgstr "Peruuta"
 
-#: dialogs.py:54 dialogs.py:113 dialogs.py:243 dialogs.py:319 dialogs.py:442
-#: dialogs.py:458 dialogs.py:1156 rendergui.py:71 preferenceswindow.py:46
+#: dialogs.py:53 dialogs.py:112 dialogs.py:245 dialogs.py:320 dialogs.py:443
+#: dialogs.py:459 dialogs.py:1192 rendergui.py:82 preferenceswindow.py:46
 msgid "OK"
 msgstr "OK"
 
-#: dialogs.py:62
+#: dialogs.py:61
 msgid "Project profile:"
 msgstr "Projektin profiili:"
 
-#: dialogs.py:72 panels.py:138 projectinfogui.py:25
+#: dialogs.py:71 panels.py:132 projectinfogui.py:25
 msgid "Profile"
 msgstr "Profiili"
 
-#: dialogs.py:75
+#: dialogs.py:74
 msgid "Number of tracks:"
 msgstr "Raitojen lukumäärä:"
 
-#: dialogs.py:81
+#: dialogs.py:80
 msgid "Tracks"
 msgstr "Raidat"
 
-#: dialogs.py:110
+#: dialogs.py:109
 msgid "Select Project File"
 msgstr "Valitse projektitiedosto"
 
-#: dialogs.py:123
+#: dialogs.py:122
 msgid "Save Project As"
 msgstr "Tallenna projekti nimellä"
 
-#: dialogs.py:126 dialogs.py:158 dialogs.py:214 dialogs.py:233 rendergui.py:85
-#: tools/batchrendering.py:871
+#: dialogs.py:125 dialogs.py:157 dialogs.py:216 dialogs.py:235 rendergui.py:96
+#: tools/batchrendering.py:870
 msgid "Save"
 msgstr "Tallenna"
 
-#: dialogs.py:141
+#: dialogs.py:140
 msgid "Export Project as XML to"
 msgstr "Exporttaa"
 
-#: dialogs.py:155
+#: dialogs.py:154
 msgid "Save Runtime Environment Data"
 msgstr ""
 
-#: dialogs.py:169 dialogs.py:184 dialogs.py:844
+#: dialogs.py:168 dialogs.py:183 dialogs.py:880
 msgid "Ok"
 msgstr "Ok"
 
-#: dialogs.py:170 dialogs.py:185
+#: dialogs.py:169 dialogs.py:184
 msgid "Select Thumbnail Folder"
 msgstr "Valitse media-ikoni kansio"
 
-#: dialogs.py:197
+#: dialogs.py:199
 msgid "Can't make home folder render clips folder"
 msgstr "Et voi valita kotikansiotasi renderöinti klippi kansioksi"
 
-#: dialogs.py:199
+#: dialogs.py:201
 msgid "' as render clips folder"
 msgstr "' renderöinti klippi kansioksi."
 
-#: dialogs.py:203 dialogs.py:222
+#: dialogs.py:205 dialogs.py:224
 msgid "Save project '"
 msgstr "Tallennetaanko projekti '"
 
-#: dialogs.py:203
+#: dialogs.py:205
 msgid "' before exiting?"
 msgstr "' ennen sulkemista?"
 
-#: dialogs.py:212 dialogs.py:231
+#: dialogs.py:214 dialogs.py:233
 msgid "Don't Save"
 msgstr "Älä tallenna"
 
-#: dialogs.py:222
+#: dialogs.py:224
 msgid "' before closing project?"
 msgstr "' ennen sulkemista?"
 
-#: dialogs.py:307
+#: dialogs.py:308
 msgid "Application"
 msgstr "Ohjelma"
 
-#: dialogs.py:308
+#: dialogs.py:309
 msgid "Thanks"
 msgstr "Kiitokset"
 
-#: dialogs.py:309
+#: dialogs.py:310
 msgid "License"
 msgstr "Lisenssi"
 
-#: dialogs.py:310
+#: dialogs.py:311
 msgid "Translations"
 msgstr "Käännökset"
 
-#: dialogs.py:323
+#: dialogs.py:324
 msgid "MLT version: "
 msgstr "MLT versio"
 
-#: dialogs.py:329
+#: dialogs.py:330
 msgid "GTK version: "
 msgstr "GTK versio"
 
-#: dialogs.py:331
+#: dialogs.py:332
 msgid "Locale: "
 msgstr "Kieli:"
 
-#: dialogs.py:334
+#: dialogs.py:335
 msgid "INSTALLATION"
 msgstr ""
 
-#: dialogs.py:336
+#: dialogs.py:337
 msgid "DEVELOPER VERSION"
 msgstr ""
 
-#: dialogs.py:338
+#: dialogs.py:339
 msgid "Running from: "
 msgstr "Asennus:"
 
-#: dialogs.py:339
+#: dialogs.py:340
 msgid "Write Environment Data to File"
 msgstr "Kirjoita ympäristo tiedot tiedostoon"
 
-#: dialogs.py:369
+#: dialogs.py:370
 msgid " AVAILABLE"
 msgstr " KÄYTETTÄVISSÄ"
 
-#: dialogs.py:371
+#: dialogs.py:372
 msgid " NOT AVAILABLE, "
 msgstr " EI KÄYTETTÄVISSÄ, "
 
-#: dialogs.py:371
+#: dialogs.py:372
 msgid " MISSING"
 msgstr " PUUTTUU"
 
-#: dialogs.py:377
+#: dialogs.py:378
 msgid " FOR FILTER "
 msgstr " FILTTERILLE "
 
-#: dialogs.py:377 dialogs.py:380
+#: dialogs.py:378 dialogs.py:381
 msgid " NOT FOUND"
 msgstr " EI LÖYTYNYT"
 
-#: dialogs.py:380
+#: dialogs.py:381
 msgid " FOR TRANSITION "
 msgstr " YHDISTÄJÄLLE "
 
-#: dialogs.py:384 dialogs.py:1022 preferenceswindow.py:55
+#: dialogs.py:385 dialogs.py:1058 preferenceswindow.py:55
 msgid "General"
 msgstr "Yleiset"
 
-#: dialogs.py:385
+#: dialogs.py:386
 msgid "MLT Filters"
 msgstr "MLT Suotimet"
 
-#: dialogs.py:386
+#: dialogs.py:387
 msgid "MLT Transitions"
 msgstr "MLT Yhdistäjät"
 
-#: dialogs.py:387
+#: dialogs.py:388
 msgid "Missing MLT Services"
 msgstr "Puuttuvat MLT palvelut"
 
-#: dialogs.py:390
+#: dialogs.py:391
 msgid "Video Codecs"
 msgstr "Video koodekit"
 
-#: dialogs.py:391
+#: dialogs.py:392
 msgid "Audio Codecs"
 msgstr "Audio koodekit"
 
-#: dialogs.py:392
+#: dialogs.py:393
 msgid "Formats"
 msgstr "Formaatit"
 
-#: dialogs.py:393
+#: dialogs.py:394
 msgid "Render Options"
 msgstr "Renderöinti optiot"
 
-#: dialogs.py:440 guicomponents.py:1296
+#: dialogs.py:441 guicomponents.py:1302
 msgid "File Properties"
 msgstr "Tiedoston ominaisuudet"
 
-#: dialogs.py:456
+#: dialogs.py:457
 msgid "Clip Properties"
 msgstr "Leikkeen ominaisuudet"
 
-#: dialogs.py:472
+#: dialogs.py:473
 msgid "Composite Target Track"
 msgstr "Yhdistäjän kohde raita"
 
-#: dialogs.py:475 guicomponents.py:1161
+#: dialogs.py:476 guicomponents.py:1161
 msgid "Add Compositor"
 msgstr "Lisää yhdistäjä"
 
-#: dialogs.py:496
+#: dialogs.py:497
 msgid "Loading project"
 msgstr "Ladataan projektia"
 
-#: dialogs.py:533
+#: dialogs.py:534
 msgid "Recreating icons"
 msgstr "Uudelleen luo media-ikonit"
 
-#: dialogs.py:568
+#: dialogs.py:569
 msgid "Are you sure you want to delete these media files?"
 msgstr "Oletko varma että haluat poistaa nämä media tiedostot?"
 
-#: dialogs.py:569
+#: dialogs.py:570
 msgid ""
 "One or more of the Media Files you are deleting from the project\n"
 "either <b>have proxy files or are proxy files.</b>\n"
@@ -825,7 +846,7 @@ msgstr ""
 "joko on proxy tiedosto tai sille on luotu proxy tiedosto\n"
 "\n"
 
-#: dialogs.py:570
+#: dialogs.py:571
 msgid ""
 "Deleting these files could <b>prevent converting</b> between\n"
 "using proxy files and using original media.\n"
@@ -835,15 +856,15 @@ msgstr ""
 "käyttämään alkuperäisiä tiedostoja proxy tiedostojen sijaan\n"
 "\n"
 
-#: dialogs.py:582
+#: dialogs.py:583
 msgid "Force Delete"
 msgstr "Poista"
 
-#: dialogs.py:592
+#: dialogs.py:593
 msgid "Open last autosave?"
 msgstr "Avaa viimein autotallennettu versio?"
 
-#: dialogs.py:593
+#: dialogs.py:594
 msgid ""
 "It seems that Flowblade exited abnormally last time.\n"
 "\n"
@@ -851,36 +872,36 @@ msgstr ""
 "Näyttää siltä, että Flowblade kaatui viime kerralla.\n"
 "\n"
 
-#: dialogs.py:594
+#: dialogs.py:595
 msgid ""
 "If there is another instance of Flowblade running,\n"
 "this dialog has probably detected its autosave file.\n"
 "\n"
 msgstr ""
 
-#: dialogs.py:595
+#: dialogs.py:596
 msgid "It is NOT possible to open this autosaved version later."
 msgstr "EI ole mahdollista avata autotallennettua versiota myöhemmin"
 
-#: dialogs.py:605 dialogs.py:649
+#: dialogs.py:606 dialogs.py:650
 msgid "Continue with default 'untitled' project"
 msgstr "Jatka tyhjällä oletus projektilla"
 
-#: dialogs.py:606
+#: dialogs.py:607
 msgid "Open Autosaved Project"
 msgstr "Avaa autotallennettu projekti"
 
-#: dialogs.py:614
+#: dialogs.py:615
 msgid "Open a autosave file?"
 msgstr "Avaa autotallennettu versio?"
 
-#: dialogs.py:615
+#: dialogs.py:616
 msgid ""
 "There are <b>multiple autosave files</b> from application crashes.\n"
 "\n"
 msgstr ""
 
-#: dialogs.py:616
+#: dialogs.py:617
 msgid ""
 "If you just <b>experienced a crash, select the last created autosave</b> "
 "file\n"
@@ -888,428 +909,450 @@ msgid ""
 "\n"
 msgstr ""
 
-#: dialogs.py:617
+#: dialogs.py:618
 msgid ""
 "If you see this at application start without a recent crash,\n"
 "you should probably delete all autosave files to stop seeing this dialog."
 msgstr ""
 
-#: dialogs.py:650
+#: dialogs.py:651
 msgid "Open Selected Autosave"
 msgstr "Avaa valittu autotallennus"
 
-#: dialogs.py:676
+#: dialogs.py:674
 msgid "Change Sequence Tracks Count"
 msgstr "Muuta ohjelman raitojen määrää"
 
-#: dialogs.py:679
+#: dialogs.py:677
 msgid "Change Tracks"
 msgstr "Muuta raitoja"
 
-#: dialogs.py:682
+#: dialogs.py:680
 msgid "New Number of Tracks:"
 msgstr "Raitojen lukumäärä"
 
-#: dialogs.py:685
+#: dialogs.py:683
 msgid "Please note:\n"
 msgstr "Huomaa:\n"
 
-#: dialogs.py:686
+#: dialogs.py:684
 msgid ""
 "* It is recommended that you save Project before completing this operation\n"
 msgstr "* Sousitellaan että talleen ennen tätä operaatiota\n"
 
-#: dialogs.py:687
+#: dialogs.py:685
 msgid "* There is no Undo for this operation\n"
 msgstr "* Tätä operatiota ei voida perua\n"
 
-#: dialogs.py:688
+#: dialogs.py:686
 msgid "* Current Undo Stack will be destroyed\n"
 msgstr "* Peruutustoiminto pino tuhotaan\n"
 
-#: dialogs.py:689
+#: dialogs.py:687
 msgid ""
 "* All Clips and Compositors on deleted Tracks will be permanently destroyed"
 msgstr "* Kaikki leikkeet ja yhdistäjät tuhotuilla raidoilla tuhoutuvat"
 
-#: dialogs.py:712
+#: dialogs.py:710
 msgid "Create New Sequence"
 msgstr "Luo uusi ohjelma"
 
-#: dialogs.py:715
+#: dialogs.py:713
 msgid "Create Sequence"
 msgstr "Luo ohjelma"
 
-#: dialogs.py:722
+#: dialogs.py:720
 msgid "Sequence Name:"
 msgstr "Ohjelman Nimi:"
 
-#: dialogs.py:727
+#: dialogs.py:725
 msgid "Number of Tracks:"
 msgstr "Raitujen lukumäärä:"
 
-#: dialogs.py:733
+#: dialogs.py:731
 msgid "Open For Editing:"
 msgstr "Avaa suodineditorissa"
 
-#: dialogs.py:756
+#: dialogs.py:754
 msgid "Rename New Media Object"
 msgstr "Udelleen nimeä media objekti"
 
-#: dialogs.py:759 dialogs.py:788 guicomponents.py:1292
+#: dialogs.py:757 dialogs.py:786 dialogs.py:843 guicomponents.py:1298
 msgid "Rename"
 msgstr "Uudelleen nimeä"
 
-#: dialogs.py:766 dialogs.py:795
+#: dialogs.py:764 dialogs.py:793
 msgid "New Name:"
 msgstr "Nimi:"
 
-#: dialogs.py:785 guicomponents.py:1046 guicomponents.py:1100
+#: dialogs.py:783 guicomponents.py:1046 guicomponents.py:1100
 msgid "Rename Clip"
 msgstr "Uudelleen nimeä leike"
 
-#: dialogs.py:814
-msgid "Can't open non-valid media"
+#: dialogs.py:812
+msgid "New Range Item Group"
 msgstr ""
 
 #: dialogs.py:815
+msgid "Create"
+msgstr "Luo"
+
+#: dialogs.py:819
+#, fuzzy
+msgid "User Group "
+msgstr "Käyttäjä "
+
+#: dialogs.py:822 dialogs.py:844
+#, fuzzy
+msgid "New Group Name:"
+msgstr "Nimi:"
+
+#: dialogs.py:842
+msgid "Rename Range Log Item Group"
+msgstr ""
+
+#: dialogs.py:850
+msgid "Can't open non-valid media"
+msgstr ""
+
+#: dialogs.py:851
 msgid ""
 "\n"
 "is not a valid media file."
 msgstr ""
 
-#: dialogs.py:819
+#: dialogs.py:855
 msgid "New Marker"
 msgstr "Uusi merkki"
 
-#: dialogs.py:821 guicomponents.py:1689
+#: dialogs.py:857 guicomponents.py:1696
 msgid "Add Marker"
 msgstr "Lisää merkki"
 
-#: dialogs.py:828
+#: dialogs.py:864
 msgid "Name for marker at "
 msgstr "Anna merkille nimi kohdassa "
 
-#: dialogs.py:845
+#: dialogs.py:881
 msgid "Add Image Sequence Clip"
 msgstr "Lisää kuva sarja projektiin"
 
-#: dialogs.py:851
+#: dialogs.py:887
 msgid "Select First Frame"
 msgstr "Valitse Ensimmäinen ruutu"
 
-#: dialogs.py:855
+#: dialogs.py:891
 msgid "First frame:"
 msgstr "Ensimmäinen ruutu"
 
-#: dialogs.py:859
+#: dialogs.py:895
 msgid "Frames per Source Image:"
 msgstr "Ruutuja yhtä kuvaa kohti:"
 
-#: dialogs.py:877
+#: dialogs.py:913
 msgid "Export Files"
 msgstr "Exporttaa"
 
-#: dialogs.py:878
+#: dialogs.py:914
 msgid "Export DVDAuthor Files"
 msgstr ""
 
-#: dialogs.py:890
+#: dialogs.py:926
 msgid "Use Markers as Chapter Starts:"
 msgstr ""
 
-#: dialogs.py:918
+#: dialogs.py:954
 msgid "Select Work Folder:"
 msgstr "Valitse kansio"
 
-#: dialogs.py:924
+#: dialogs.py:960
 msgid "XML File Name:"
 msgstr ""
 
-#: dialogs.py:928
+#: dialogs.py:964
 msgid "Render MPEG File:"
 msgstr "Renderöi MPEG tiedosto profiili"
 
-#: dialogs.py:936
+#: dialogs.py:972
 msgid "MPEG File for DVD Type:"
 msgstr ""
 
-#: dialogs.py:942
+#: dialogs.py:978
 msgid "MPEG File Name:"
 msgstr ""
 
-#: dialogs.py:981
+#: dialogs.py:1017
 msgid "Add Transition"
 msgstr "Lisää yhdistäjä"
 
-#: dialogs.py:984 dialogs.py:997
+#: dialogs.py:1020 dialogs.py:1033
 msgid "Apply"
 msgstr "Aseta"
 
-#: dialogs.py:994
+#: dialogs.py:1030
 msgid "Add Fade"
 msgstr "Lisää häivytys"
 
-#: dialogs.py:1010 dialogs.py:1109 tools/titler.py:377 proxyediting.py:373
+#: dialogs.py:1046 dialogs.py:1145 tools/titler.py:376 proxyediting.py:373
 msgid "Close"
 msgstr "Sulje"
 
-#: dialogs.py:1013
+#: dialogs.py:1049
 msgid "Control + N"
 msgstr "Control + N"
 
-#: dialogs.py:1013
+#: dialogs.py:1049
 msgid "Create New Project"
 msgstr "Luo uusi projekti"
 
-#: dialogs.py:1014
+#: dialogs.py:1050
 msgid "Control + S"
 msgstr "Control + S"
 
-#: dialogs.py:1014
+#: dialogs.py:1050
 msgid "Save Project"
 msgstr "Tallenna projekti"
 
-#: dialogs.py:1015
+#: dialogs.py:1051
 msgid "Delete Selected Item"
 msgstr "Poista valitut"
 
-#: dialogs.py:1016
+#: dialogs.py:1052
 msgid "Escape"
 msgstr "Escape"
 
-#: dialogs.py:1016
+#: dialogs.py:1052
 msgid "Stop Rendering Audio Levels"
 msgstr "Lopeta Audio tasojen rendaaminen"
 
-#: dialogs.py:1017
+#: dialogs.py:1053
 #, fuzzy
 msgid "Control + Q"
 msgstr "Control + N"
 
-#: dialogs.py:1017
+#: dialogs.py:1053
 msgid "Quit"
 msgstr "Lopeta"
 
-#: dialogs.py:1018
+#: dialogs.py:1054
 msgid "Control + Z"
 msgstr "Control + s"
 
-#: dialogs.py:1018
+#: dialogs.py:1054
 msgid "Undo"
 msgstr "Kumoa"
 
-#: dialogs.py:1019
+#: dialogs.py:1055
 msgid "Control + Y"
 msgstr "Control + Y"
 
-#: dialogs.py:1019
+#: dialogs.py:1055
 msgid "Redo"
 msgstr "Uudelleen"
 
-#: dialogs.py:1020
+#: dialogs.py:1056
 msgid "Control + O"
 msgstr "Control + O"
 
-#: dialogs.py:1020
+#: dialogs.py:1056
 msgid "Open Project"
 msgstr "Avaa projekti"
 
-#: dialogs.py:1021
+#: dialogs.py:1057
 msgid "TAB"
 msgstr "TAB"
 
-#: dialogs.py:1021
+#: dialogs.py:1057
 msgid "Switch Monitor Source"
 msgstr "VAihda monitori lähdettä"
 
-#: dialogs.py:1025
+#: dialogs.py:1061
 msgid "Set Mark In"
 msgstr "Alku merkki"
 
-#: dialogs.py:1026
+#: dialogs.py:1062
 msgid "Set Mark Out"
 msgstr "Loppu merkki"
 
-#: dialogs.py:1031
+#: dialogs.py:1067
 msgid "3 Point Overwrite Insert"
 msgstr "3 Piste Ylikirjoitus Insertointi"
 
-#: dialogs.py:1032
+#: dialogs.py:1068
 msgid "Add Mark"
 msgstr "Lisää merkki"
 
-#: dialogs.py:1033
+#: dialogs.py:1069
 #, fuzzy
 msgid "Copy Clips"
 msgstr "Värileike"
 
-#: dialogs.py:1034
+#: dialogs.py:1070
 #, fuzzy
 msgid "Paste Clips"
 msgstr "Uudelleen nimeä leike"
 
-#: dialogs.py:1035
+#: dialogs.py:1071
 msgid "Timeline"
 msgstr "Aikajana"
 
-#: dialogs.py:1038
+#: dialogs.py:1074
 msgid "Space"
 msgstr "Välilyönti"
 
-#: dialogs.py:1038
+#: dialogs.py:1074
 msgid "Start / Stop Playback"
 msgstr "Aloita/lopeta toisto"
 
-#: dialogs.py:1039
+#: dialogs.py:1075
 msgid "Backwards Faster"
 msgstr "Takaisisn nopeammin"
 
-#: dialogs.py:1040 proxyediting.py:302
+#: dialogs.py:1076 proxyediting.py:302
 msgid "Stop"
 msgstr "Pysäytä"
 
-#: dialogs.py:1041
+#: dialogs.py:1077
 msgid "Forward Faster"
 msgstr "Eteenpäin nopeammin"
 
-#: dialogs.py:1042 dialogs.py:1060
+#: dialogs.py:1078 dialogs.py:1096
 msgid "Left Arrow "
 msgstr "Nuoli vasen"
 
-#: dialogs.py:1042
+#: dialogs.py:1078
 msgid "Prev Frame"
 msgstr "Edellinen ruutu"
 
-#: dialogs.py:1043 dialogs.py:1061
+#: dialogs.py:1079 dialogs.py:1097
 msgid "Right Arrow"
 msgstr "Nuoli oikea"
 
-#: dialogs.py:1043
+#: dialogs.py:1079
 msgid "Next Frame"
 msgstr "Seuraava ruutu"
 
-#: dialogs.py:1044 dialogs.py:1062
+#: dialogs.py:1080 dialogs.py:1098
 msgid "Up Arrow"
 msgstr "Nuoli ylös"
 
-#: dialogs.py:1044
+#: dialogs.py:1080
 msgid "Next Edit/Mark"
 msgstr "Seuraava leikkaus"
 
-#: dialogs.py:1045 dialogs.py:1063
+#: dialogs.py:1081 dialogs.py:1099
 msgid "Down Arrow"
 msgstr "Nuoli alas"
 
-#: dialogs.py:1045
+#: dialogs.py:1081
 msgid "Prev Edit/Mark"
 msgstr "Eddellinen leikkaus"
 
-#: dialogs.py:1046
+#: dialogs.py:1082
 msgid "Home"
 msgstr "Home"
 
-#: dialogs.py:1046
+#: dialogs.py:1082
 msgid "Go To Start"
 msgstr "Mene alkuun"
 
-#: dialogs.py:1047
+#: dialogs.py:1083
 msgid "Shift + I"
 msgstr "Vaihto + I"
 
-#: dialogs.py:1047
+#: dialogs.py:1083
 msgid "To Mark In"
 msgstr "Siirry alku merkkiin"
 
-#: dialogs.py:1048
+#: dialogs.py:1084
 msgid "Shift + O"
 msgstr "Vaihto + O"
 
-#: dialogs.py:1048
+#: dialogs.py:1084
 msgid "To Mark Out"
 msgstr "Siirry loppu merkkiin"
 
-#: dialogs.py:1049
+#: dialogs.py:1085
 msgid "Playback"
 msgstr "Toista"
 
-#: dialogs.py:1053 guicomponents.py:1725 translations.py:502
+#: dialogs.py:1089 guicomponents.py:1732 translations.py:502
 msgid "Overwrite"
 msgstr "Ylikirjoitus"
 
-#: dialogs.py:1054 guicomponents.py:1730
+#: dialogs.py:1090 guicomponents.py:1737
 msgid "Trim"
 msgstr ""
 
-#: dialogs.py:1055 guicomponents.py:1735
+#: dialogs.py:1091 guicomponents.py:1742
 msgid "Roll"
 msgstr ""
 
-#: dialogs.py:1056 guicomponents.py:1740
+#: dialogs.py:1092 guicomponents.py:1747
 msgid "Slip"
 msgstr ""
 
-#: dialogs.py:1060
+#: dialogs.py:1096
 msgid "Move Source Video Left"
 msgstr "Siirrä lähde video vasemmalle"
 
-#: dialogs.py:1061
+#: dialogs.py:1097
 msgid "Move Source Video Right"
 msgstr "Siirrä lähde video oikealle"
 
-#: dialogs.py:1062
+#: dialogs.py:1098
 msgid "Move Source Video Up"
 msgstr "Siirrä lähde video ylös"
 
-#: dialogs.py:1063
+#: dialogs.py:1099
 msgid "Move Source Video Down"
 msgstr "Siirrä lähde video alas"
 
-#: dialogs.py:1064
+#: dialogs.py:1100
 msgid "Geometry Editor"
 msgstr "Yhdistäjäeditori"
 
-#: dialogs.py:1107
+#: dialogs.py:1143
 msgid "Sequence Watermark"
 msgstr "Ohjelma vesileima"
 
-#: dialogs.py:1111
+#: dialogs.py:1147
 msgid "Sequence:"
 msgstr "Ohjelma:"
 
-#: dialogs.py:1115
+#: dialogs.py:1151
 msgid "Watermark:"
 msgstr ""
 
-#: dialogs.py:1117
+#: dialogs.py:1153
 msgid "Set Watermark File"
 msgstr "Valitse vesileima tiedosto"
 
-#: dialogs.py:1118
+#: dialogs.py:1154
 msgid "Remove Watermark"
 msgstr ""
 
-#: dialogs.py:1153
+#: dialogs.py:1189
 msgid "Select Watermark File"
 msgstr "Valitse vesileima tiedosto"
 
-#: editevent.py:135
+#: editevent.py:131
 msgid "Can't put an audio clip on a video track."
 msgstr "Et voi laittaa äänileikettä videoraidalle."
 
-#: editevent.py:136 editevent.py:1057 movemodes.py:580
+#: editevent.py:132 editevent.py:1135 movemodes.py:576
 msgid "Track "
 msgstr "Raita "
 
-#: editevent.py:136
+#: editevent.py:132
 msgid " is a video track and can't display audio only material."
 msgstr " on video raita, eikä toista kuvatonta äänimateriaalia."
 
-#: editevent.py:685
+#: editevent.py:712
 msgid "Origin clip not found!"
 msgstr "Lähde leikettä ei löydetty!"
 
-#: editevent.py:686
+#: editevent.py:713
 msgid ""
 "Clip used to create this Compositor has been removed\n"
 "or moved to different track."
@@ -1317,12 +1360,12 @@ msgstr ""
 "Leike, jota äytettiin tämän Yhdistäjän luomiseen on poistettu\n"
 "tai siirretty toiselle raidalle."
 
-#: editevent.py:896
+#: editevent.py:974
 msgid "Not enough vertical space on Timeline to expand track"
 msgstr ""
 "Aikajanalla ei ole pystysuunnassa riittävästi tilaa raidan laajentamiseksi"
 
-#: editevent.py:897
+#: editevent.py:975
 msgid ""
 "Maximize or resize application window to get more\n"
 "space for tracks if possible."
@@ -1330,91 +1373,91 @@ msgstr ""
 "Jos mahdollista, maximoi tai suurenna ohjeman ikkuna saadaksesi\n"
 "lisää tilaa raidoille."
 
-#: editevent.py:953
+#: editevent.py:1031
 msgid "Previous clip does not have enough material to cover blank area"
 msgstr "Edellisessä leikkeessä ei ole materiaalia tyhjän alueen peittämiseksi"
 
-#: editevent.py:954 editevent.py:978
+#: editevent.py:1032 editevent.py:1056
 msgid "Requested edit can't be done."
 msgstr "Pyydettyä muutosta ei voida tehdä"
 
-#: editevent.py:977
+#: editevent.py:1055
 msgid "Next clip does not have enough material to cover blank area"
 msgstr "Seuravalla leikkeellä ei tarpeeksi pituutta peittää tyhjä alue"
 
-#: editevent.py:1056
+#: editevent.py:1134
 msgid "Can't edit a locked track"
 msgstr "Et voi editoida lukittua raitaa"
 
-#: editevent.py:1057
+#: editevent.py:1135
 msgid " is locked. Unlock track to edit it."
 msgstr " on lukittu. Vapauta raita editoidaksesi sitä."
 
-#: editorpersistance.py:142
+#: editorpersistance.py:141
 msgid "Empty"
 msgstr "Tyhjä"
 
-#: editorpersistance.py:205
+#: editorpersistance.py:204
 msgid "No Autosave"
 msgstr "Ei autotallennusta"
 
-#: editorpersistance.py:205
+#: editorpersistance.py:204
 msgid "1 min"
 msgstr "1 minuutti"
 
-#: editorpersistance.py:205
+#: editorpersistance.py:204
 msgid "2 min"
 msgstr "2 minuuttia"
 
-#: editorpersistance.py:205
+#: editorpersistance.py:204
 msgid "5 min"
 msgstr "5 minuuttia"
 
-#: guicomponents.py:536
+#: guicomponents.py:522
 msgid "default"
 msgstr "oletusvalinta"
 
-#: guicomponents.py:565
+#: guicomponents.py:551
 msgid "Clip:"
 msgstr "Leike:"
 
-#: guicomponents.py:569
+#: guicomponents.py:555
 msgid "Track:"
 msgstr "Raita:"
 
-#: guicomponents.py:572
+#: guicomponents.py:558
 msgid "Pos:"
 msgstr "Paikka:"
 
-#: guicomponents.py:594
+#: guicomponents.py:580
 msgid "<b>Clip: </b>"
 msgstr "<b>Leike: </b>"
 
-#: guicomponents.py:596
+#: guicomponents.py:582
 msgid "<b>Track: </b>"
 msgstr "<b>Raita: </b>"
 
-#: guicomponents.py:598 guicomponents.py:609 guicomponents.py:688
+#: guicomponents.py:584 guicomponents.py:595 guicomponents.py:674
 msgid "<b>Position:</b>"
 msgstr "<b>Paikka:</b>"
 
-#: guicomponents.py:605
+#: guicomponents.py:591
 msgid "<b>Clip:</b>"
 msgstr "<b>Leike:</b>"
 
-#: guicomponents.py:607
+#: guicomponents.py:593
 msgid "<b>Track:</b>"
 msgstr "<b>Raita: </b>"
 
-#: guicomponents.py:682
+#: guicomponents.py:668
 msgid "<b>Source Track:</b>"
 msgstr "<b>Lähde raita: </b>"
 
-#: guicomponents.py:685
+#: guicomponents.py:671
 msgid "<b>Destination Track:</b>"
 msgstr "<b>Kohde raita: </b>"
 
-#: guicomponents.py:691
+#: guicomponents.py:677
 msgid "<b>Length:</b>"
 msgstr "<b>Pituus:</b>"
 
@@ -1438,7 +1481,7 @@ msgstr "Normaali korkeus"
 msgid "Open in Filters Editor"
 msgstr "Avaa suodineditorissa"
 
-#: guicomponents.py:989 guicomponents.py:1070 guicomponents.py:1295
+#: guicomponents.py:989 guicomponents.py:1070 guicomponents.py:1301
 msgid "Open in Clip Monitor"
 msgstr "Avaa leike monitorissa"
 
@@ -1518,250 +1561,255 @@ msgstr "Hiljennä"
 msgid "Unmute"
 msgstr "Poista hiljennys"
 
-#: guicomponents.py:1226 guicomponents.py:1255
+#: guicomponents.py:1226 guicomponents.py:1257
 msgid "Mute Audio"
 msgstr "Sammuta ääni"
 
-#: guicomponents.py:1249
+#: guicomponents.py:1251
 msgid "Mute Video"
 msgstr "Sammuta kuva"
 
-#: guicomponents.py:1262
+#: guicomponents.py:1268
 msgid "Mute All"
 msgstr "Sammuta kaikki"
 
-#: guicomponents.py:1272
+#: guicomponents.py:1278
 msgid "Clip Color"
 msgstr "Leike väri"
 
-#: guicomponents.py:1274
+#: guicomponents.py:1280
 msgid "Default"
 msgstr "oletusvalinta"
 
-#: guicomponents.py:1275 translations.py:457 translations.py:512
+#: guicomponents.py:1281 translations.py:457 translations.py:512
 msgid "Red"
 msgstr "Punainen"
 
-#: guicomponents.py:1276 translations.py:458 translations.py:507
+#: guicomponents.py:1282 translations.py:458 translations.py:507
 #: translations.py:513
 msgid "Green"
 msgstr "Vihreä"
 
-#: guicomponents.py:1277 translations.py:459 translations.py:508
+#: guicomponents.py:1283 translations.py:459 translations.py:508
 #: translations.py:514
 msgid "Blue"
 msgstr "Sininen"
 
-#: guicomponents.py:1278
+#: guicomponents.py:1284
 msgid "Orange"
 msgstr "Oranssi"
 
-#: guicomponents.py:1279
+#: guicomponents.py:1285
 msgid "Brown"
 msgstr "Ruskea"
 
-#: guicomponents.py:1280
+#: guicomponents.py:1286
 msgid "Olive"
 msgstr "Oliivi"
 
-#: guicomponents.py:1298
+#: guicomponents.py:1304
 msgid "Render Slow/Fast Motion File"
 msgstr "Rendaa Nopeutettu/hidastettu versio"
 
-#: guicomponents.py:1304
+#: guicomponents.py:1305
+#, fuzzy
+msgid "Render Proxy File"
+msgstr "Renderöinti profiili"
+
+#: guicomponents.py:1311
 msgid "Toggle Active"
 msgstr "Vaihda aktiivisuustilaa"
 
-#: guicomponents.py:1305
+#: guicomponents.py:1312
 msgid "Reset Values"
 msgstr "Resetoi arvot"
 
-#: guicomponents.py:1310
+#: guicomponents.py:1317
 msgid "Display In Clip Monitor"
 msgstr "Avaa leike monitorissa"
 
-#: guicomponents.py:1311
+#: guicomponents.py:1318
 msgid "Toggle Star"
 msgstr "Vaihda aktiivisuustilaa"
 
-#: guicomponents.py:1378 propertyeditorbuilder.py:333
-#: propertyeditorbuilder.py:427
+#: guicomponents.py:1385 propertyeditorbuilder.py:360
+#: propertyeditorbuilder.py:453
 msgid "Progressive"
 msgstr "Progressiivinen"
 
-#: guicomponents.py:1380
+#: guicomponents.py:1387
 msgid "Interlaced"
 msgstr ""
 
-#: guicomponents.py:1383
+#: guicomponents.py:1390
 msgid "Fps: "
 msgstr "Ruutuja sek."
 
-#: guicomponents.py:1386
+#: guicomponents.py:1393
 msgid "Pixel Aspect: "
 msgstr "Pikselin muoto:"
 
-#: guicomponents.py:1393
+#: guicomponents.py:1400
 msgid "Description:"
 msgstr "Kuvaus:"
 
-#: guicomponents.py:1395
+#: guicomponents.py:1402
 msgid "Dimensions:"
 msgstr "Ulottuvuudet:"
 
-#: guicomponents.py:1397
+#: guicomponents.py:1404
 msgid "Frames per second:"
 msgstr "Ruutuja sek.:"
 
-#: guicomponents.py:1399
+#: guicomponents.py:1406
 msgid "Size:"
 msgstr "Koko:"
 
-#: guicomponents.py:1401
+#: guicomponents.py:1408
 msgid "Pixel aspect ratio: "
 msgstr "Pikselin muoto:"
 
-#: guicomponents.py:1403 profilesmanager.py:140
+#: guicomponents.py:1410 profilesmanager.py:139
 msgid "Progressive:"
 msgstr "Progressiivinen:"
 
-#: guicomponents.py:1429
+#: guicomponents.py:1436
 msgid "Yes"
 msgstr "Kyllä"
 
-#: guicomponents.py:1431
+#: guicomponents.py:1438
 msgid "No"
 msgstr "Ei"
 
-#: guicomponents.py:1660
+#: guicomponents.py:1667
 msgid "5 video, 4 audio"
 msgstr "5 video, 4 ääni"
 
-#: guicomponents.py:1661
+#: guicomponents.py:1668
 msgid "4 video, 3 audio"
 msgstr "4 video, 3 ääni "
 
-#: guicomponents.py:1662
+#: guicomponents.py:1669
 msgid "3 video, 2 audio"
 msgstr "3 video, 2 ääni"
 
-#: guicomponents.py:1663
+#: guicomponents.py:1670
 msgid "2 video, 1 audio"
 msgstr "2 video 1 ääni"
 
-#: guicomponents.py:1664
+#: guicomponents.py:1671
 msgid "8 video, 1 audio"
 msgstr "8 video 1 ääni"
 
-#: guicomponents.py:1665
+#: guicomponents.py:1672
 msgid "1 video, 8 audio"
 msgstr "1 video, 8 ääni"
 
-#: guicomponents.py:1686
+#: guicomponents.py:1693
 msgid "No Markers"
 msgstr "Ei merkkejä"
 
-#: guicomponents.py:1690
+#: guicomponents.py:1697
 msgid "Delete Marker"
 msgstr "Poista merkki"
 
-#: guicomponents.py:1692
+#: guicomponents.py:1699
 msgid "Delete All Markers"
 msgstr "Poista kaikki merkit"
 
-#: guicomponents.py:1698
+#: guicomponents.py:1705
 msgid "Maximize Tracks"
 msgstr "Maximoi raidat"
 
-#: guicomponents.py:1699
+#: guicomponents.py:1706
 msgid "Maximize Video Tracks"
 msgstr "Maksimoi kuvaraidat"
 
-#: guicomponents.py:1700
+#: guicomponents.py:1707
 msgid "Maximize Audio Tracks"
 msgstr "Maximoi ääniraidat"
 
-#: guicomponents.py:1702
+#: guicomponents.py:1709
 msgid "Minimize Tracks"
 msgstr "Minimoi raidat"
 
-#: guicomponents.py:1708
+#: guicomponents.py:1715
 msgid "Image"
 msgstr "Kuva"
 
-#: guicomponents.py:1710
+#: guicomponents.py:1717
 msgid "Vectorscope"
 msgstr "Voektori skooppi"
 
-#: guicomponents.py:1712
+#: guicomponents.py:1719
 msgid "RGB Parade"
 msgstr "RGB paraati"
 
-#: movemodes.py:579
+#: movemodes.py:575
 msgid "Can't do edit on a locked track"
 msgstr "Et voi editoida lukittua raitaa"
 
-#: movemodes.py:580
+#: movemodes.py:576
 msgid " is locked. Unlock track to edit it.\n"
 msgstr " on lukittu. Vapauta raita editoidaksesi sitä.\n"
 
-#: panels.py:58
+#: panels.py:52
 msgid "Add Media File to Bin"
 msgstr "Lisää mediatiedosto laatikkoon"
 
-#: panels.py:59
+#: panels.py:53
 msgid "Delete Media File from Bin"
 msgstr "Poista mediatiedosto laatikosta"
 
-#: panels.py:64
+#: panels.py:58
 msgid "Render Proxy Files For Selected Media"
 msgstr "Renderöi proxytiedostot valitulle medialle"
 
-#: panels.py:97
+#: panels.py:91
 msgid "Add Bin to Project"
 msgstr "Lisää laatikko projekiin"
 
-#: panels.py:98
+#: panels.py:92
 msgid "Delete Bin from Project"
 msgstr "Poista laatikko projektista"
 
-#: panels.py:107
+#: panels.py:101
 msgid "Bins"
 msgstr "Laatikot"
 
-#: panels.py:113
+#: panels.py:107
 msgid "Edit"
 msgstr "Muokkaa"
 
-#: panels.py:114
+#: panels.py:108
 msgid "Add new Sequence to Project"
 msgstr "Lisää uusi ohjelma projektiin"
 
-#: panels.py:115
+#: panels.py:109
 msgid "Delete Sequence from Project"
 msgstr "Poista ohjelma projektista"
 
-#: panels.py:116
+#: panels.py:110
 msgid "Start editing Sequence"
 msgstr "Editoi ohjelmaa"
 
-#: panels.py:130
+#: panels.py:124
 msgid "Sequences"
 msgstr "Ohjelmat"
 
-#: panels.py:142 projectinfogui.py:17
+#: panels.py:136 projectinfogui.py:17
 msgid "Name"
 msgstr "Nimi"
 
-#: panels.py:145
+#: panels.py:139
 msgid "Select folder for new thumbnails."
 msgstr "Valitse kansio uusille mediaikoneille"
 
-#: panels.py:146
+#: panels.py:140
 msgid "Old thumbnails in this or other projects will"
 msgstr "Vanhat media-ikonit"
 
-#: panels.py:147
+#: panels.py:141
 msgid ""
 " still be available,\n"
 "this only affects thumnails that are created for new media.\n"
@@ -1769,7 +1817,7 @@ msgstr ""
 " ovat edelleen käytettävissä,\n"
 "tämä vaikuttaa vain uusiin mediaikoneihin.\n"
 
-#: panels.py:148
+#: panels.py:142
 msgid ""
 "\n"
 "Setting your home folder as thumbnails folder is not allowed."
@@ -1777,15 +1825,15 @@ msgstr ""
 "\n"
 "Et voi asettaa koti kansiotasi media-ikoni kansioksi."
 
-#: panels.py:166
+#: panels.py:160
 msgid "Select folder for rendered clips."
 msgstr "Valitse kansio johon tallennetaan renderöity tiedostot"
 
-#: panels.py:167
+#: panels.py:161
 msgid "Old rendered clips in this or other projects will"
 msgstr "Vanhat renderöidyt klipit ja projektit"
 
-#: panels.py:168
+#: panels.py:162
 msgid ""
 " still be available,\n"
 "this only affects rendered files that are created from now on.\n"
@@ -1793,7 +1841,7 @@ msgstr ""
 " ovat edelleen käytettävissä,\n"
 "tämä vaikuttaa vain uusiin mediaikoneihin.\n"
 
-#: panels.py:169
+#: panels.py:163
 msgid ""
 "\n"
 "Setting your home folder as folder for rendered clips is not allowed."
@@ -1801,99 +1849,99 @@ msgstr ""
 "\n"
 "Et voi asettaa koti kansiotasi media-ikoni kansioksi."
 
-#: panels.py:291 rendergui.py:427
+#: panels.py:255 rendergui.py:438
 msgid "Name:"
 msgstr "Nimi:"
 
-#: panels.py:292
+#: panels.py:256
 msgid "Path:"
 msgstr "Polku:"
 
-#: panels.py:293 panels.py:321
+#: panels.py:257 panels.py:285
 msgid "Image Size:"
 msgstr "Kuvan koko"
 
-#: panels.py:294 tools/batchrendering.py:910
+#: panels.py:258 tools/batchrendering.py:909
 msgid "Frames Per Second:"
 msgstr "Ruutuja sekunnissa:"
 
-#: panels.py:295
+#: panels.py:259
 msgid "Playtime:"
 msgstr "Soittoaika:"
 
-#: panels.py:296
+#: panels.py:260
 msgid "Video Codec:"
 msgstr "Video koodekki:"
 
-#: panels.py:297
+#: panels.py:261
 msgid "Audio Codec:"
 msgstr "Audio koodekki:"
 
-#: panels.py:298
+#: panels.py:262
 msgid "Audio Channels:"
 msgstr "Audio kanavat"
 
-#: panels.py:299
+#: panels.py:263
 msgid "Audio Sample Rate:"
 msgstr "Audio näytetaajuus:"
 
-#: panels.py:320
+#: panels.py:284
 msgid "Clip Length:"
 msgstr "Leikkeen pituus:"
 
-#: panels.py:322
+#: panels.py:286
 msgid "Media Path:"
 msgstr "Media polku:"
 
-#: panels.py:346
+#: panels.py:310
 msgid "Composite clip on:"
 msgstr "Yhdistäjän kohde:"
 
-#: panels.py:359 panels.py:451 rendergui.py:440
+#: panels.py:323 panels.py:415 rendergui.py:451
 msgid "Type:"
 msgstr "Tyyppi:"
 
-#: panels.py:368
+#: panels.py:332
 msgid "Wipe Pattern:"
 msgstr "Siirtymä kuvio:"
 
-#: panels.py:374
+#: panels.py:338
 msgid "Dip Color:"
 msgstr "Väli väri:"
 
-#: panels.py:389 panels.py:461
+#: panels.py:353 panels.py:425
 msgid "Length:"
 msgstr "Pituus:"
 
-#: panels.py:395
+#: panels.py:359
 msgid "From Clip Handle:"
 msgstr "Ulos leike ruutuja:"
 
-#: panels.py:398
+#: panels.py:362
 msgid "To Clip Handle:"
 msgstr "Sisään leike ruutuja:"
 
-#: panels.py:436 panels.py:488
+#: panels.py:400 panels.py:452
 msgid "Transition Options"
 msgstr "Yhdistäjä valinnat"
 
-#: panels.py:437
+#: panels.py:401
 msgid "Clips info"
 msgstr "Leike info"
 
-#: panels.py:438 panels.py:489
+#: panels.py:402 panels.py:453
 msgid "Encoding"
 msgstr "Enkoodaus"
 
-#: panels.py:447 mlttransitions.py:169
+#: panels.py:411 mlttransitions.py:165
 msgid "Fade In"
 msgstr "Häive sisään"
 
-#: panels.py:448 mlttransitions.py:170
+#: panels.py:412 mlttransitions.py:166
 msgid "Fade Out"
 msgstr "Häive ulos"
 
-#: panels.py:456
+#: panels.py:420
 msgid "Color:"
 msgstr "Väri:"
 
@@ -1905,109 +1953,109 @@ msgstr "Rakennetaan ohjelmaa "
 msgid "Loading icons"
 msgstr "Ladataan ikoneita"
 
-#: projectdata.py:70
+#: projectdata.py:66
 msgid "untitled"
 msgstr "tallentamaton"
 
-#: projectdata.py:183
+#: projectdata.py:180
 msgid "bin_"
 msgstr "laatikko_"
 
-#: projectdata.py:410
+#: projectdata.py:433
 msgid "Created using dialog"
 msgstr ""
 
-#: projectdata.py:412
+#: projectdata.py:435
 msgid "Created using Save As... "
 msgstr ""
 
-#: projectdata.py:414
+#: projectdata.py:437
 msgid "Saved "
 msgstr "Tallenna"
 
-#: projectdata.py:417
+#: projectdata.py:440
 msgid "Saved as "
 msgstr "Tallenna"
 
-#: projectdata.py:419
+#: projectdata.py:442
 msgid "Rendered "
 msgstr "Renderöity"
 
-#: render.py:102
+#: render.py:99
 msgid "Render file name entry is empty"
 msgstr "Nimi argumentti on tyhjä"
 
-#: render.py:103
+#: render.py:100
 msgid "You have to provide a name for the file to be rendered."
 msgstr "Rendattavalle tiedostolle täytyy antaa nimi."
 
-#: render.py:108
+#: render.py:105
 msgid " already exists!"
 msgstr "Rendattava tiedosto on jo olemassa!"
 
-#: render.py:109
+#: render.py:106
 msgid "Do you want to overwrite existing file?"
 msgstr "Haluatko kirjoittaa olemassa olevan tiedoston päälle?"
 
-#: render.py:251
+#: render.py:260
 msgid "To Queue"
 msgstr "Jonoon"
 
-#: render.py:252
+#: render.py:261
 msgid "Save Project in Render Queue"
 msgstr "Tallenna projekti renderöintijonoon"
 
-#: render.py:255
+#: render.py:264
 msgid "Select render range"
 msgstr "Valitse renderöinti alue"
 
-#: render.py:256
+#: render.py:265
 msgid "Reset all render options to defaults"
 msgstr "Palaa oletusarvoihin"
 
-#: render.py:257
+#: render.py:266
 msgid "Begin Rendering"
 msgstr "Aloita renderöinti"
 
-#: render.py:276
+#: render.py:285
 msgid "<b>Output File: </b>"
 msgstr "<b>Tuotettu tiedosto: </b>"
 
-#: render.py:278
+#: render.py:287
 msgid "<b>Estimated time left: </b>"
 msgstr "<b>Arvioitu aika: </b>"
 
-#: render.py:280
+#: render.py:289
 msgid "<b>Render time: </b>"
 msgstr "<b>Kulunut aika: </b>"
 
-#: render.py:301 render.py:318
-msgid "<b>Estimated Time Left: </b>"
-msgstr "<b>Arvioitu aika: </b>"
-
-#: render.py:303 render.py:320
+#: render.py:306 render.py:332
 msgid "<b>Render Time: </b>"
 msgstr "<b>Kulunut aika: </b>"
 
-#: render.py:322
+#: render.py:312 render.py:330
+msgid "<b>Estimated Time Left: </b>"
+msgstr "<b>Arvioitu aika: </b>"
+
+#: render.py:334
 msgid "Render Complete!"
 msgstr "Renderöinti valmis!"
 
-#: render.py:438
+#: render.py:450
 msgid "A File with given path exists!"
 msgstr ""
 
-#: render.py:439
+#: render.py:451
 msgid ""
 "It is not allowed to render Motion Files with same paths as existing files.\n"
 "Select another name for file."
 msgstr ""
 
-#: render.py:493
+#: render.py:505
 msgid "Rendering Motion Clip"
 msgstr "Renderöidää nopeusmuutos tiedostoa"
 
-#: render.py:543
+#: render.py:555
 msgid "Rendering Transition Clip"
 msgstr "Renderöidää transitio leike"
 
@@ -2048,13 +2096,13 @@ msgstr "Äänisuodin"
 msgid "Blur"
 msgstr "Sumennus"
 
-#: translations.py:88 translations.py:471 propertyeditorbuilder.py:349
-#: propertyeditorbuilder.py:443
+#: translations.py:88 translations.py:471 propertyeditorbuilder.py:375
+#: propertyeditorbuilder.py:468
 msgid "Distort"
 msgstr "Vääristys"
 
-#: translations.py:89 propertyeditorbuilder.py:351
-#: propertyeditorbuilder.py:445
+#: translations.py:89 propertyeditorbuilder.py:377
+#: propertyeditorbuilder.py:470
 msgid "Alpha"
 msgstr "Alpha"
 
@@ -2242,7 +2290,7 @@ msgstr "Harmaaskaala"
 msgid "Contrast"
 msgstr "Kontrasti"
 
-#: translations.py:145 translations.py:360 mlttransitions.py:151
+#: translations.py:145 translations.py:360 mlttransitions.py:147
 msgid "Saturation"
 msgstr "Värikylläisyys"
 
@@ -2251,7 +2299,7 @@ msgstr "Värikylläisyys"
 msgid "Invert"
 msgstr "Invertoi"
 
-#: translations.py:147 translations.py:361 mlttransitions.py:147
+#: translations.py:147 translations.py:361 mlttransitions.py:143
 msgid "Hue"
 msgstr "Sävy"
 
@@ -3262,7 +3310,7 @@ msgstr "Laiha"
 msgid "Ellipsoid"
 msgstr "Ellipsoidi"
 
-#: translations.py:506 mlttransitions.py:154
+#: translations.py:506 mlttransitions.py:150
 msgid "Subtract"
 msgstr "Vähennä"
 
@@ -3286,7 +3334,7 @@ msgstr "Lisää vakio"
 msgid "Change Gamma"
 msgstr "Muuta Gammaa"
 
-#: translations.py:517 mlttransitions.py:149
+#: translations.py:517 mlttransitions.py:145
 msgid "Multiply"
 msgstr "Kerro"
 
@@ -3318,331 +3366,331 @@ msgstr "KeltaSininen"
 msgid "Esses"
 msgstr ""
 
-#: mlttransitions.py:80
+#: mlttransitions.py:76
 msgid "Vertical From Center"
 msgstr "Pysty keskeltä"
 
-#: mlttransitions.py:81
+#: mlttransitions.py:77
 msgid "Vertical Top to Bottom"
 msgstr "Pysty ylhäältä"
 
-#: mlttransitions.py:82
+#: mlttransitions.py:78
 msgid "Vertical Bottom to Top"
 msgstr "Pysty alhaalta"
 
-#: mlttransitions.py:83
+#: mlttransitions.py:79
 msgid "Horizontal From Center"
 msgstr "Vaaka keskeltä"
 
-#: mlttransitions.py:84
+#: mlttransitions.py:80
 msgid "Horizontal Left to Right"
 msgstr "Vaaka vasemmalta"
 
-#: mlttransitions.py:85
+#: mlttransitions.py:81
 msgid "Horizontal Right to Left"
 msgstr "Vaaka oikealta"
 
-#: mlttransitions.py:86
+#: mlttransitions.py:82
 msgid "Clock Left To Right"
 msgstr "Kello vasemmalle"
 
-#: mlttransitions.py:87
+#: mlttransitions.py:83
 msgid "Clock Right to Left"
 msgstr "Kello oikealle"
 
-#: mlttransitions.py:88
+#: mlttransitions.py:84
 msgid "Clock Symmetric"
 msgstr "Kello symmetrinen"
 
-#: mlttransitions.py:89
+#: mlttransitions.py:85
 msgid "Stripes Horizontal"
 msgstr "Raidat vaaka"
 
-#: mlttransitions.py:90
+#: mlttransitions.py:86
 msgid "Stripes Horizontal Big"
 msgstr "Raidat vaaka iso"
 
-#: mlttransitions.py:91
+#: mlttransitions.py:87
 msgid "Stripes Horizontal Moving"
 msgstr "Raidat vaaka liike"
 
-#: mlttransitions.py:92
+#: mlttransitions.py:88
 msgid "Stripes Vertical"
 msgstr "Raidat pysty"
 
-#: mlttransitions.py:93
+#: mlttransitions.py:89
 msgid "Stripes Vertical Big"
 msgstr "Raidat pysty iso"
 
-#: mlttransitions.py:94
+#: mlttransitions.py:90
 msgid "Burst"
 msgstr "Purkaus"
 
-#: mlttransitions.py:95
+#: mlttransitions.py:91
 msgid "Circle From In"
 msgstr "Ympyrä ulos"
 
-#: mlttransitions.py:96
+#: mlttransitions.py:92
 msgid "Circle From Out"
 msgstr "Ympyrä sisään"
 
-#: mlttransitions.py:97
+#: mlttransitions.py:93
 msgid "Cloud"
 msgstr "Pilvi"
 
-#: mlttransitions.py:98
+#: mlttransitions.py:94
 msgid "Hatched 1"
 msgstr "Kuvio 1"
 
-#: mlttransitions.py:99
+#: mlttransitions.py:95
 msgid "Hatched 2"
 msgstr "Kuvio 2"
 
-#: mlttransitions.py:100
+#: mlttransitions.py:96
 msgid "Hourglass"
 msgstr "Tiimalasi"
 
-#: mlttransitions.py:101
+#: mlttransitions.py:97
 msgid "Puddles"
 msgstr "Lammikot"
 
-#: mlttransitions.py:102
+#: mlttransitions.py:98
 msgid "Rings"
 msgstr "Renkaat"
 
-#: mlttransitions.py:103
+#: mlttransitions.py:99
 msgid "Rectangle From In"
 msgstr "Suorakulmio ulos"
 
-#: mlttransitions.py:104
+#: mlttransitions.py:100
 msgid "Rectangle From Out"
 msgstr "Suorakulmio sisään"
 
-#: mlttransitions.py:105
+#: mlttransitions.py:101
 msgid "Rectangle Bars"
 msgstr "Suorakulmio kaistat"
 
-#: mlttransitions.py:106
+#: mlttransitions.py:102
 msgid "Sand"
 msgstr "Hiekka"
 
-#: mlttransitions.py:107
+#: mlttransitions.py:103
 msgid "Sphere"
 msgstr "Pyöreä"
 
-#: mlttransitions.py:108
+#: mlttransitions.py:104
 msgid "Spiral Abstract"
 msgstr "Spiraali abstrakti"
 
-#: mlttransitions.py:109
+#: mlttransitions.py:105
 msgid "Spiral"
 msgstr "Spiraali"
 
-#: mlttransitions.py:110
+#: mlttransitions.py:106
 msgid "Spiral Galaxy"
 msgstr "Spiraali galaksi"
 
-#: mlttransitions.py:111
+#: mlttransitions.py:107
 msgid "Spiral Big"
 msgstr "Spiraali suuri"
 
-#: mlttransitions.py:112
+#: mlttransitions.py:108
 msgid "Spiral Medium"
 msgstr "Spiraali keskikoko"
 
-#: mlttransitions.py:113
+#: mlttransitions.py:109
 msgid "Spots"
 msgstr "Pilkut"
 
-#: mlttransitions.py:114 medialog.py:249
+#: mlttransitions.py:110 medialog.py:420
 msgid "Star"
 msgstr "Tähdet"
 
-#: mlttransitions.py:115
+#: mlttransitions.py:111
 msgid "Arch"
 msgstr "Kaaret"
 
-#: mlttransitions.py:116
+#: mlttransitions.py:112
 msgid "Patches"
 msgstr "Paikat"
 
-#: mlttransitions.py:117
+#: mlttransitions.py:113
 msgid "Free Stripes"
 msgstr "Vapaat raidat"
 
-#: mlttransitions.py:118
+#: mlttransitions.py:114
 msgid "Free Curves"
 msgstr "Vapaat kurvit"
 
-#: mlttransitions.py:119
+#: mlttransitions.py:115
 msgid "Diagonal 1"
 msgstr "Diagonaali 1"
 
-#: mlttransitions.py:120
+#: mlttransitions.py:116
 msgid "Diagonal 2"
 msgstr "Diagonaali 2"
 
-#: mlttransitions.py:121
+#: mlttransitions.py:117
 msgid "Diagonal 3"
 msgstr "Diagonaali 3"
 
-#: mlttransitions.py:122
+#: mlttransitions.py:118
 msgid "Diagonal 4"
 msgstr "Diagonaali 4"
 
-#: mlttransitions.py:123
+#: mlttransitions.py:119
 msgid "Checkerboard"
 msgstr "Shakkilauta"
 
-#: mlttransitions.py:126
+#: mlttransitions.py:122
 msgid "Affine"
 msgstr "Affiini"
 
-#: mlttransitions.py:127 mlttransitions.py:166
+#: mlttransitions.py:123 mlttransitions.py:162
 msgid "Dissolve"
 msgstr "Ristikuva"
 
-#: mlttransitions.py:128
+#: mlttransitions.py:124
 msgid "Picture in Picture"
 msgstr "Kuva kuvassa"
 
-#: mlttransitions.py:129
+#: mlttransitions.py:125
 msgid "Region"
 msgstr "Alue"
 
-#: mlttransitions.py:130
+#: mlttransitions.py:126
 msgid "Affine Blend"
 msgstr "Affine blendaus"
 
-#: mlttransitions.py:131
+#: mlttransitions.py:127
 msgid "Blend"
 msgstr "Blendaus"
 
-#: mlttransitions.py:132
+#: mlttransitions.py:128
 msgid "Wipe Clip Length"
 msgstr "Siirtymä"
 
-#: mlttransitions.py:138
+#: mlttransitions.py:134
 msgid "Burn"
 msgstr "Lisävalota"
 
-#: mlttransitions.py:139
+#: mlttransitions.py:135
 msgid "Color only"
 msgstr "Väri"
 
-#: mlttransitions.py:140
+#: mlttransitions.py:136
 msgid "Darken"
 msgstr "Tummenna"
 
-#: mlttransitions.py:141
+#: mlttransitions.py:137
 msgid "Difference"
 msgstr "Erotus"
 
-#: mlttransitions.py:142
+#: mlttransitions.py:138
 msgid "Divide"
 msgstr "Jaa"
 
-#: mlttransitions.py:143
+#: mlttransitions.py:139
 msgid "Dodge"
 msgstr "Varjosta"
 
-#: mlttransitions.py:144
+#: mlttransitions.py:140
 msgid "Grain extract"
 msgstr "Värin vähennys"
 
-#: mlttransitions.py:145
+#: mlttransitions.py:141
 msgid "Grain merge"
 msgstr "Värin lisäys"
 
-#: mlttransitions.py:146
+#: mlttransitions.py:142
 msgid "Hardlight"
 msgstr "Kova valo"
 
-#: mlttransitions.py:148
+#: mlttransitions.py:144
 msgid "Lighten"
 msgstr "Vaalenna"
 
-#: mlttransitions.py:150
+#: mlttransitions.py:146
 msgid "Overlay"
 msgstr "Peite"
 
-#: mlttransitions.py:152
+#: mlttransitions.py:148
 msgid "Screen"
 msgstr "Näyttö"
 
-#: mlttransitions.py:153
+#: mlttransitions.py:149
 msgid "Softlight"
 msgstr "Pehmeä valo"
 
-#: mlttransitions.py:155
+#: mlttransitions.py:151
 msgid "Value"
 msgstr "Arvo"
 
-#: mlttransitions.py:167
+#: mlttransitions.py:163
 msgid "Wipe"
 msgstr "Pyyhkäisy"
 
-#: mlttransitions.py:168
+#: mlttransitions.py:164
 msgid "Color Dip"
 msgstr "Värikäynti"
 
-#: propertyeditorbuilder.py:216
+#: propertyeditorbuilder.py:244
 msgid "Size/Height"
 msgstr "Korkeus"
 
-#: propertyeditorbuilder.py:333 propertyeditorbuilder.py:427
+#: propertyeditorbuilder.py:360 propertyeditorbuilder.py:453
 msgid "Nothing"
 msgstr "Ei mitään"
 
-#: propertyeditorbuilder.py:333 propertyeditorbuilder.py:427
+#: propertyeditorbuilder.py:360 propertyeditorbuilder.py:453
 msgid "Deinterlace"
 msgstr ""
 
-#: propertyeditorbuilder.py:333 propertyeditorbuilder.py:427
+#: propertyeditorbuilder.py:360 propertyeditorbuilder.py:453
 msgid "Both"
 msgstr "Molemmat"
 
-#: propertyeditorbuilder.py:343 propertyeditorbuilder.py:437
+#: propertyeditorbuilder.py:369 propertyeditorbuilder.py:462
 msgid "Force"
 msgstr "Pakoita"
 
-#: propertyeditorbuilder.py:348 propertyeditorbuilder.py:442
+#: propertyeditorbuilder.py:374 propertyeditorbuilder.py:467
 msgid "Align"
 msgstr "Kohdista"
 
-#: keyframeeditor.py:1481
+#: keyframeeditor.py:1477
 msgid "View:"
 msgstr "Näkymä:"
 
-#: keyframeeditor.py:1487
+#: keyframeeditor.py:1483
 msgid "Large"
 msgstr "Suuri"
 
-#: keyframeeditor.py:1488
+#: keyframeeditor.py:1484
 msgid "Medium"
 msgstr "Keskikokoinen"
 
-#: keyframeeditor.py:1489
+#: keyframeeditor.py:1485
 msgid "Small"
 msgstr "Pieni"
 
-#: keyframeeditor.py:1506
+#: keyframeeditor.py:1502
 msgid "Reset Geometry"
 msgstr "Resetoi geometria"
 
-#: keyframeeditor.py:1507
+#: keyframeeditor.py:1503
 msgid "Geometry to Original Aspect Ratio"
 msgstr "Aseta lähdekuva alkuperäiseen kuvasuhteeseen"
 
-#: keyframeeditor.py:1508
+#: keyframeeditor.py:1504
 msgid "Center Horizontal"
 msgstr "Raidat vaaka"
 
-#: keyframeeditor.py:1509
+#: keyframeeditor.py:1505
 msgid "Center Vertical"
 msgstr "Raidat pysty"
 
-#: middlebar.py:110
+#: middlebar.py:109
 msgid ""
 "Zoom In - Mouse Middle Scroll\n"
 " Zoom Out - Mouse Middle Scroll\n"
@@ -3652,7 +3700,7 @@ msgstr ""
 "Zoomaa ulos\n"
 "Zoomaa mahtumaan"
 
-#: middlebar.py:117
+#: middlebar.py:116
 msgid ""
 "Cut - X\n"
 "Splice Out - Delete\n"
@@ -3664,7 +3712,7 @@ msgstr ""
 "Nosta\n"
 "Synkronoi valitut"
 
-#: middlebar.py:124
+#: middlebar.py:123
 msgid ""
 "Overwrite Range\n"
 "Overwrite Clip - T\n"
@@ -3676,7 +3724,7 @@ msgstr ""
 "Insertoi leike - Y\n"
 "Laita leike viimeiseksi - U"
 
-#: middlebar.py:129
+#: middlebar.py:128
 msgid ""
 "Undo - Ctrl + X\n"
 "Redo - Ctrl + Y"
@@ -3684,7 +3732,7 @@ msgstr ""
 "Kumoa - Ctrl + X\n"
 "Tee uudelleen - Ctrl + Y"
 
-#: middlebar.py:134
+#: middlebar.py:133
 msgid ""
 "Audio Mixer\n"
 "Titler"
@@ -3692,7 +3740,7 @@ msgstr ""
 "Audio mikseri\n"
 "Tekstitys"
 
-#: middlebar.py:138
+#: middlebar.py:137
 msgid ""
 "Add Rendered Transition - 2 clips selected\n"
 "Add Rendered Fade - 1 clip selected"
@@ -3700,95 +3748,167 @@ msgstr ""
 "Lisää renderöitu siirtymä - 2 klippiä valittuna\n"
 "Lisää renderöity häivytys - 1 klippi valittuna"
 
-#: medialog.py:251 projectinfogui.py:83
+#: medialog.py:227
+msgid "New Group..."
+msgstr ""
+
+#: medialog.py:228
+#, fuzzy
+msgid "New Group From Selected..."
+msgstr "Poista suotimet valituista"
+
+#: medialog.py:232
+msgid "Rename Current Group..."
+msgstr ""
+
+#: medialog.py:238
+#, fuzzy
+msgid "Move Selected Items To Group"
+msgstr "Valitse suodin ryhmä"
+
+#: medialog.py:241
+msgid "No Groups"
+msgstr ""
+
+#: medialog.py:254
+#, fuzzy
+msgid "Delete Current Group"
+msgstr "Valitse suodin ryhmä"
+
+#: medialog.py:258
+#, fuzzy
+msgid "Delete Current Group and Items"
+msgstr "Suotimet tässä ryhmässä"
+
+#: medialog.py:287
+#, fuzzy
+msgid "Delete Group and Items?"
+msgstr "Poista valitut"
+
+#: medialog.py:288
+#, fuzzy
+msgid "Are you sure you want to delete group "
+msgstr ""
+"Oletko varma että haluat poistaa\n"
+"ohjelman '"
+
+#: medialog.py:288
+msgid " and "
+msgstr ""
+
+#: medialog.py:288
+msgid " items it contains?\n"
+msgstr ""
+
+#: medialog.py:289 profilesmanager.py:281 tools/batchrendering.py:639
+msgid "This operation cannot be undone."
+msgstr "Tätä toimintoa ei voida peruuttaa."
+
+#: medialog.py:360
+msgid "Group "
+msgstr ""
+
+#: medialog.py:422 projectinfogui.py:80
 msgid "Event"
 msgstr "Tapahtuma"
 
-#: medialog.py:253
+#: medialog.py:424
 msgid "Comment"
 msgstr "Kommentti"
 
-#: medialog.py:255
+#: medialog.py:426
 msgid "File Name"
 msgstr "Tiedoston nimi"
 
-#: medialog.py:257
+#: medialog.py:428
 msgid "Mark In"
 msgstr "Alku merkki"
 
-#: medialog.py:259
+#: medialog.py:430
 msgid "Mark Out"
 msgstr "Loppu merkki"
 
-#: medialog.py:261 projectinfogui.py:81
+#: medialog.py:432 projectinfogui.py:78
 msgid "Date"
 msgstr "Päivämäärä"
 
-#: medialog.py:429
+#: medialog.py:584
+msgid "Use Comments as Clip Names"
+msgstr ""
+
+#: medialog.py:609
 msgid "Display starred ranges"
 msgstr "Näytä tähdellä varustetut"
 
-#: medialog.py:430
+#: medialog.py:610
 msgid "Display non-starred ranges"
 msgstr "Näytä ilman tähteä olevat"
 
-#: medialog.py:431
+#: medialog.py:611
 msgid "Set selected ranges starred"
 msgstr "Lisää valittuihin tähti"
 
-#: medialog.py:432
+#: medialog.py:612
 msgid "Set selected ranges non-starred"
 msgstr "Poista valituistä tähti"
 
-#: medialog.py:433
+#: medialog.py:613
 msgid "Log current marked range"
 msgstr "Loggaaa merkitty alue"
 
-#: medialog.py:434
+#: medialog.py:614
 msgid "Delete selected ranges"
 msgstr "Poista valitut"
 
-#: medialog.py:435
+#: medialog.py:615
 msgid "Append displayed ranges on Timeline"
 msgstr "Lisää leike alueet ohjelman perään"
+
+#: medialog.py:628
+msgid "All"
+msgstr ""
+
+#: medialog.py:635
+msgid "Select viewed Range Log Items Group"
+msgstr ""
 
 #: projectinfogui.py:30
 msgid "Project Events"
 msgstr "Projekti Tapahtumat"
 
-#: projectinfogui.py:85
+#: projectinfogui.py:82
 msgid "Path"
 msgstr "Polku"
 
-#: tools/titler.py:284
+#: tools/titler.py:283
 msgid "Load Layers"
 msgstr "Ladataa kerrokset"
 
-#: tools/titler.py:286
+#: tools/titler.py:285
 msgid "Save Layers"
 msgstr "Tallenna kerrokset"
 
-#: tools/titler.py:288
+#: tools/titler.py:287
 msgid "Clear All"
 msgstr "Poista kaikki"
 
-#: tools/titler.py:360
+#: tools/titler.py:359
 msgid "Active Layer"
 msgstr "Aktivoi kerros"
 
-#: tools/titler.py:361
+#: tools/titler.py:360
 msgid "Layers"
 msgstr "Kerrokset"
 
-#: tools/titler.py:367
+#: tools/titler.py:366
 msgid "Keep Layers When Closed"
 msgstr "Pidä kerrokset kun suljetaan"
 
-#: tools/titler.py:372
+#: tools/titler.py:371
 msgid "Open Saved Title In Bin"
 msgstr "Avaa tallennettu grafiikka laatikossa"
 
-#: tools/titler.py:379
+#: tools/titler.py:378
 msgid "Save Title Graphic"
 msgstr "Tallenna grafiikka"
 
@@ -3796,11 +3916,17 @@ msgstr "Tallenna grafiikka"
 msgid "Render Progress"
 msgstr "Rederöinnin edistyminen"
 
-#: rendergui.py:63
+#: rendergui.py:45
+msgid ""
+"Project and Render Profile FPS values are not same. Rendered file may have A/"
+"V sync issues."
+msgstr ""
+
+#: rendergui.py:74
 msgid "Render range not defined!"
 msgstr "Renderöinti alue ei ole määritelty"
 
-#: rendergui.py:64
+#: rendergui.py:75
 msgid ""
 "Define render range using Mark In and Mark Out points\n"
 "or select range option 'Sequence length' to start rendering."
@@ -3808,301 +3934,297 @@ msgstr ""
 "Määrittele rendaus alue asettalla aloitus ja lopetus merkit,\n"
 "tai valitse vaihtoehto 'Ohjelman pituus' aloittaaksesi rendauksen."
 
-#: rendergui.py:68
+#: rendergui.py:79
 msgid "Load Render Args File"
 msgstr "Lataa renderöintiargumentit"
 
-#: rendergui.py:82
+#: rendergui.py:93
 msgid "Save Render Args As"
 msgstr "Tallenna renderöintiargumentit nimellä"
 
-#: rendergui.py:134
+#: rendergui.py:145
 msgid "Render Slow/Fast Motion Video File"
 msgstr ""
 
-#: rendergui.py:139
+#: rendergui.py:150
 msgid "Source Media File: "
 msgstr "Lähde media tiedosto:"
 
-#: rendergui.py:146 rendergui.py:147
+#: rendergui.py:157 rendergui.py:158
 msgid "<b>not set</b>"
 msgstr "<b>ei asetettu</b>"
 
-#: rendergui.py:167
+#: rendergui.py:178
 msgid "Select Target Folder"
 msgstr "Valitse kohde kansio"
 
-#: rendergui.py:171
+#: rendergui.py:182
 msgid "Speed %:"
 msgstr "Nopeus %"
 
-#: rendergui.py:209
+#: rendergui.py:220
 msgid "Full Source Length"
 msgstr "Lähteen täysi pituus"
 
-#: rendergui.py:214
+#: rendergui.py:225
 msgid "Source Mark In to Mark Out"
 msgstr "Lähteen merkkien väli"
 
-#: rendergui.py:226
+#: rendergui.py:237
 msgid "Source Mark In: "
 msgstr "Lähteen aloitus aloitus merkki"
 
-#: rendergui.py:227
+#: rendergui.py:238
 msgid "Source_Mark Out: "
 msgstr "Lähteen lopetus merkki"
 
-#: rendergui.py:231
+#: rendergui.py:242
 msgid "Target File:"
 msgstr "Kohde tiedosto"
 
-#: rendergui.py:232
+#: rendergui.py:243
 msgid "Target Folder:"
 msgstr "Valitse kansio"
 
-#: rendergui.py:233
+#: rendergui.py:244
 msgid "Target Profile:"
 msgstr "Hallitse profiileja"
 
-#: rendergui.py:234
+#: rendergui.py:245
 msgid "Target Encoding:"
 msgstr "Kohteen enkoodaus"
 
-#: rendergui.py:235
+#: rendergui.py:246
 msgid "Target Quality:"
 msgstr "Kohteen Laatu:"
 
-#: rendergui.py:237 rendergui.py:378
+#: rendergui.py:248 rendergui.py:389
 msgid "Render Range:"
 msgstr "Renderöinti alue:"
 
-#: rendergui.py:256
+#: rendergui.py:267
 msgid "Select Render quality"
 msgstr "Valitse renderöinti laatu"
 
-#: rendergui.py:282
+#: rendergui.py:293
 msgid "Select Render encoding"
 msgstr "Valitse renderöinti enkoodaus"
 
-#: rendergui.py:319
+#: rendergui.py:330
 msgid "Select render profile"
 msgstr "Valitse renderöinti profiili"
 
-#: rendergui.py:346
+#: rendergui.py:357
 msgid "Full Length"
 msgstr "Täysi pituus"
 
-#: rendergui.py:347
+#: rendergui.py:358
 msgid "Marked Range"
 msgstr "Merkitty alue"
 
-#: rendergui.py:353
+#: rendergui.py:364
 msgid "File"
 msgstr "Tiedosto"
 
-#: rendergui.py:354
+#: rendergui.py:365
 msgid "Render Type"
 msgstr "Renderöinti tyyppi"
 
-#: rendergui.py:355
+#: rendergui.py:366
 msgid "Render Profile"
 msgstr "Renderöinti profiili"
 
-#: rendergui.py:356
+#: rendergui.py:367
 msgid "Encoding Format"
 msgstr "Enkoodaus formaatti"
 
-#: rendergui.py:367
+#: rendergui.py:378
 msgid "Render Args"
 msgstr "Renderöinti argumentit"
 
-#: rendergui.py:371
+#: rendergui.py:382
 msgid "Open File in Bin:"
 msgstr "Avaa tiedosto laatikossa"
 
-#: rendergui.py:413 preferenceswindow.py:99 preferenceswindow.py:102
+#: rendergui.py:424 preferenceswindow.py:99 preferenceswindow.py:102
 msgid "Select Folder"
 msgstr "Valitse kansio"
 
-#: rendergui.py:417
+#: rendergui.py:428
 msgid "Folder:"
 msgstr "Kansio:"
 
-#: rendergui.py:433
+#: rendergui.py:444
 msgid "Select folder to place rendered file in"
 msgstr "Valitse kansio johon tallennetaan renderöity tiedosto"
 
-#: rendergui.py:434
+#: rendergui.py:445
 msgid "Give name for rendered file"
 msgstr "Anne nimi renderöidylle tiedostolle"
 
-#: rendergui.py:441
+#: rendergui.py:452
 msgid "Presets:"
 msgstr "Resetoi"
 
-#: rendergui.py:444
+#: rendergui.py:455
 msgid "User Defined"
 msgstr "Käyttäjän määrittelemä"
 
-#: rendergui.py:445
+#: rendergui.py:456
 msgid "Preset File type"
 msgstr "Esiasetettu tiedosto tyyppi"
 
-#: rendergui.py:462 rendergui.py:534
+#: rendergui.py:473 rendergui.py:546
 msgid "Use Project Profile:"
 msgstr "Käytä projektin profiilia:"
 
-#: rendergui.py:463 rendergui.py:535
+#: rendergui.py:474 rendergui.py:547
 msgid "Render using args:"
 msgstr "Renderöi argumenteilla"
 
-#: rendergui.py:478
+#: rendergui.py:489
 msgid "Select used project profile for rendering"
 msgstr "Valitse profiili renderöinnille"
 
-#: rendergui.py:479
+#: rendergui.py:490
 msgid "Render profile info"
 msgstr "Renderöiti profiili info"
 
-#: rendergui.py:551
+#: rendergui.py:563
 msgid "Load Selection"
 msgstr "Lataa valinta"
 
-#: rendergui.py:556
+#: rendergui.py:568
 msgid "Ext.:"
 msgstr ""
 
-#: rendergui.py:596
+#: rendergui.py:608
 msgid "Render using key=value rendering options"
 msgstr "Renderöi käyttämällä avain=arvo pareja"
 
-#: rendergui.py:597
+#: rendergui.py:609
 msgid "Load render options from currently selected encoding"
 msgstr "Lataa renderöiti arjot valittuna olevasta enkoodauksesta"
 
-#: rendergui.py:598
+#: rendergui.py:610
 msgid "Edit render options"
 msgstr "Editoi renderöinti arvoja"
 
-#: rendergui.py:599
+#: rendergui.py:611
 msgid "Save Render Args into a text file"
 msgstr "Tallenna renderöinti argumentit tiedostoon"
 
-#: rendergui.py:600
+#: rendergui.py:612
 msgid "Load Render Args from a text file"
 msgstr "Lataa renderöintiargumentit tiedostosta"
 
-#: profilesmanager.py:45 proxyediting.py:166
+#: profilesmanager.py:44 proxyediting.py:166
 msgid "Close Manager"
 msgstr "Sulje manageri"
 
-#: profilesmanager.py:74 tools/batchrendering.py:550
+#: profilesmanager.py:73 tools/batchrendering.py:550
 msgid "Delete Selected"
 msgstr "Poista valitut"
 
-#: profilesmanager.py:84
+#: profilesmanager.py:83
 msgid "Load Profile Values"
 msgstr "Ladataan arvot"
 
-#: profilesmanager.py:119
+#: profilesmanager.py:118
 msgid "Save New Profile"
 msgstr "Tallenna uusi profiili"
 
-#: profilesmanager.py:131
+#: profilesmanager.py:130
 msgid "Description.:"
 msgstr "Kuvaus:"
 
-#: profilesmanager.py:132
+#: profilesmanager.py:131
 msgid "Frame rate num.:"
 msgstr "Ruutuja sekunnissa nimittäjä:"
 
-#: profilesmanager.py:133
+#: profilesmanager.py:132
 msgid "Frame rate den.:"
 msgstr "Ruutuja sekunnissa osoittaja:"
 
-#: profilesmanager.py:134
+#: profilesmanager.py:133
 msgid "Width:"
 msgstr "Leveys:"
 
-#: profilesmanager.py:135
+#: profilesmanager.py:134
 msgid "Height:"
 msgstr "Korkeus:"
 
-#: profilesmanager.py:136
+#: profilesmanager.py:135
 msgid "Sample aspect num.:"
 msgstr "Pikseli muoto nimittäjä:"
 
-#: profilesmanager.py:137
+#: profilesmanager.py:136
 msgid "Sample aspect den.:"
 msgstr "Pikseli muoto osoittaja:"
 
-#: profilesmanager.py:138
+#: profilesmanager.py:137
 msgid "Display aspect num.:"
 msgstr "Näyttö muoto nimittäjä"
 
-#: profilesmanager.py:139
+#: profilesmanager.py:138
 msgid "Display aspect den.:"
 msgstr "Näyttö muoto osoittaja"
 
-#: profilesmanager.py:168
+#: profilesmanager.py:167
 msgid "Create User Profile"
 msgstr "Luo uusi profiili"
 
-#: profilesmanager.py:169
+#: profilesmanager.py:168
 msgid "User Profiles"
 msgstr "Käyttäjäprofiilit"
 
-#: profilesmanager.py:177
+#: profilesmanager.py:176
 msgid "Visible"
 msgstr "Näkyvät"
 
-#: profilesmanager.py:179
+#: profilesmanager.py:178
 msgid "Hide Selected"
 msgstr "Piilota valitut"
 
-#: profilesmanager.py:181
+#: profilesmanager.py:180
 msgid "Hidden"
 msgstr "Piiloitetut"
 
-#: profilesmanager.py:183
+#: profilesmanager.py:182
 msgid "Unhide Selected"
 msgstr "Näytä valitut"
 
-#: profilesmanager.py:212
+#: profilesmanager.py:211
 msgid "Factory Profiles"
 msgstr "Tehdasprofiilit"
 
-#: profilesmanager.py:218
+#: profilesmanager.py:217
 msgid "User "
 msgstr "Käyttäjä "
 
-#: profilesmanager.py:260 profilesmanager.py:268
+#: profilesmanager.py:259 profilesmanager.py:267
 msgid "Profile '"
 msgstr "Profiili '"
 
-#: profilesmanager.py:260
+#: profilesmanager.py:259
 msgid "' already exists!"
 msgstr "' on jo olemassa!"
 
-#: profilesmanager.py:261
+#: profilesmanager.py:260
 msgid "Delete profile and save again."
 msgstr "Poista profiili ja tallenna uudestaan"
 
-#: profilesmanager.py:268
+#: profilesmanager.py:267
 msgid "' saved."
 msgstr "' tallennettu."
 
-#: profilesmanager.py:269
+#: profilesmanager.py:268
 msgid "You can now create a new project using the new profile."
 msgstr "Voit luoda uuden projektin käyttämällä uutta profiilia"
 
-#: profilesmanager.py:281
+#: profilesmanager.py:280
 msgid "Confirm user profile delete"
 msgstr "Vahvista käyttäjän luoman profiilin poisto!"
-
-#: profilesmanager.py:282 tools/batchrendering.py:639
-msgid "This operation cannot be undone."
-msgstr "Tätä toimintoa ei voida peruuttaa."
 
 #: preferenceswindow.py:43
 msgid "Editor Preferences"
@@ -4340,47 +4462,47 @@ msgstr "Renderöinti tiedosto"
 msgid "Render Time"
 msgstr "Renderöinti aika"
 
-#: tools/batchrendering.py:868
+#: tools/batchrendering.py:867
 msgid "Save Render Item Project As"
 msgstr "Tallenna projekti nimellä"
 
-#: tools/batchrendering.py:904
+#: tools/batchrendering.py:903
 msgid "Encoding:"
 msgstr "Enkoodaus:"
 
-#: tools/batchrendering.py:905
+#: tools/batchrendering.py:904
 msgid "Quality:"
 msgstr "Laatu:"
 
-#: tools/batchrendering.py:906
+#: tools/batchrendering.py:905
 msgid "Audio Encoding:"
 msgstr "Audio Enkoodaus"
 
-#: tools/batchrendering.py:907
+#: tools/batchrendering.py:906
 msgid "Use User Args:"
 msgstr "Renderöinti argumentit:"
 
-#: tools/batchrendering.py:908
+#: tools/batchrendering.py:907
 msgid "Start:"
 msgstr "Alku:"
 
-#: tools/batchrendering.py:909
+#: tools/batchrendering.py:908
 msgid "End:"
 msgstr "Loppu:"
 
-#: tools/batchrendering.py:911
+#: tools/batchrendering.py:910
 msgid "Render Profile Name:"
 msgstr "Renderöinti profiilin nimi:"
 
-#: tools/batchrendering.py:912
+#: tools/batchrendering.py:911
 msgid "Render Profile:"
 msgstr "Renderöinti profiili"
 
-#: tools/batchrendering.py:928 tools/batchrendering.py:934
+#: tools/batchrendering.py:927 tools/batchrendering.py:933
 msgid "Render Properties"
 msgstr "Rederöinti ominaisuudet"
 
-#: tools/batchrendering.py:933
+#: tools/batchrendering.py:932
 msgid "Save Item Project As..."
 msgstr "Tallenna projekti nimellä..."
 
@@ -4512,13 +4634,68 @@ msgstr "Renderöi kaikki"
 msgid "Select Render Action: "
 msgstr "Valitse renderöinti toiminto: "
 
-#: proxyediting.py:602
+#: proxyediting.py:617
 msgid "Converting Project to Use Proxy Media"
 msgstr "Muutetaan käyttämään proxytiedostoja"
 
-#: proxyediting.py:612
+#: proxyediting.py:627
 msgid "Converting to Use Original Media"
 msgstr "Muutetaan käyttämään alkuperäisiä tiedostoja"
+
+#: tlineaction.py:236
+#, fuzzy
+msgid "No Clips are selected!"
+msgstr "Tiedostoa ei valittu"
+
+#: tlineaction.py:237
+msgid "You need to select clips to overwrite to perform this edit."
+msgstr ""
+
+#: tlineaction.py:291
+#, fuzzy
+msgid "Timeline Range not set!"
+msgstr "Renderöinti alue ei ole määritelty"
+
+#: tlineaction.py:292
+msgid ""
+"You need to set Timeline Range using Mark In and Mark Out buttons\n"
+"to perform this edit."
+msgstr ""
+
+#: tlineaction.py:508 tlineaction.py:615
+#, fuzzy
+msgid "Rendering "
+msgstr "Renderöi"
+
+#: tlineaction.py:559
+msgid "Only Video Track mix / fades available"
+msgstr ""
+
+#: tlineaction.py:560
+msgid ""
+"Unfortunately rendered mixes and fades can currently\n"
+"only be applied on clips on Video Tracks."
+msgstr ""
+
+#: tlineaction.py:653
+msgid "No Clip loaded into Monitor"
+msgstr "Leikettä ei ole asetettu monitoriin"
+
+#: tlineaction.py:654
+msgid "Can't do the requested edit because there is no Clip in Monitor."
+msgstr "Pyydettyä muutosta ei voida tehdä koska monitorissa ei ole leikettä."
+
+#: tlineaction.py:658
+msgid "Defined range in Monitor Clip is too short"
+msgstr "Monitori leikkeeseen määritelty alue on liian lyhyt"
+
+#: tlineaction.py:659
+msgid ""
+"Can't do the requested edit because Mark In -> Mark Out Range or Clip is too "
+"short."
+msgstr ""
+"Pyydettyä muutosta ei voida tehdä koska Monitori leikkeeseen määritelty alue "
+"on liian lyhyt."
 
 #~ msgid "Insert Move"
 #~ msgstr "Väliinsijoitus siirto"
@@ -4540,9 +4717,6 @@ msgstr "Muutetaan käyttämään alkuperäisiä tiedostoja"
 
 #~ msgid "Create Color Clip"
 #~ msgstr "Luo värileike"
-
-#~ msgid "Create"
-#~ msgstr "Luo"
 
 #~ msgid "Manage Profiles"
 #~ msgstr "Hallitse profiileja"
@@ -4567,9 +4741,6 @@ msgstr "Muutetaan käyttämään alkuperäisiä tiedostoja"
 
 #~ msgid "_Export XML..."
 #~ msgstr "Exporttaa XML..."
-
-#~ msgid "Clear Filters From Selected"
-#~ msgstr "Poista suotimet valituista"
 
 #~ msgid "Environment"
 #~ msgstr "Ympäristö"
@@ -4621,23 +4792,6 @@ msgstr "Muutetaan käyttämään alkuperäisiä tiedostoja"
 
 #~ msgid "Loading Media Files"
 #~ msgstr "Ladataan media tiedostoja"
-
-#~ msgid "No Clip loaded into Monitor"
-#~ msgstr "Leikettä ei ole asetettu monitoriin"
-
-#~ msgid "Can't do the requested edit because there is no Clip in Monitor."
-#~ msgstr ""
-#~ "Pyydettyä muutosta ei voida tehdä koska monitorissa ei ole leikettä."
-
-#~ msgid "Defined range in Monitor Clip is too short"
-#~ msgstr "Monitori leikkeeseen määritelty alue on liian lyhyt"
-
-#~ msgid ""
-#~ "Can't do the requested edit because Mark In -> Mark Out Range or Clip is "
-#~ "too short."
-#~ msgstr ""
-#~ "Pyydettyä muutosta ei voida tehdä koska Monitori leikkeeseen määritelty "
-#~ "alue on liian lyhyt."
 
 #~ msgid "Compositor"
 #~ msgstr "Yhdistäjät"
