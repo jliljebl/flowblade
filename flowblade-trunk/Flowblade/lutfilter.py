@@ -338,6 +338,17 @@ class ColorGradeBandCorrection:
         self.b_correction_look_up = copy.deepcopy(LINEAR_LUT_256)
 
     def set_hue_and_saturation(self, hue, saturation):
+        # Convert saved and editor hue, saturation ranges to one used 
+        # to generate look-up tables 
+        saturation = (saturation - 0.5) * 2.0
+        # Negative saturation means addding complementary color
+        if saturation < 0.0:
+            saturation = abs(saturation)
+            hue = hue + 0.5
+            if hue > 1.0:
+                hue = hue - 1.0
+                
+        # Get r, g, b multipliers
         r, g, b = get_RGB_for_angle_saturation_and_value(hue * 360, saturation, 0.5)
         self.r_mult = (r - 0.5) / 0.5 
         self.g_mult = (g - 0.5) / 0.5
@@ -358,7 +369,7 @@ class ColorGradeBandCorrection:
 
         #self.print_table(self.mask_curve.curve)
 
-    def update_lookups(self):
+    def update_correction(self):
         for i in range(0, 256):
             self.r_mult_table[i] = (float(self.mask_curve.curve[i] - 128) / 128.0) * self.r_mult
             self.g_mult_table[i] = (float(self.mask_curve.curve[i] - 128) / 128.0) * self.g_mult
@@ -381,17 +392,127 @@ class ColorGradeBandCorrection:
 
 class ColorGradeFilter:
     
-    def __init__(self):
+    def __init__(self, editable_properties):
+        # These properties hold the values that are writtenout to MLT to do the filtering
+        self.r_table_prop = filter(lambda ep: ep.name == "R_table", editable_properties)[0]
+        self.g_table_prop = filter(lambda ep: ep.name == "G_table", editable_properties)[0]
+        self.b_table_prop = filter(lambda ep: ep.name == "B_table", editable_properties)[0]
+
+        self.r_lookup = [0] * 256 
+        self.g_lookup = [0] * 256
+        self.b_lookup = [0] * 256 
+        
         self.shadow_band = ColorGradeBandCorrection()
         self.shadow_band.set_mask_points("0/128;45/200;90/128;255/128", 0, 90)
         
         self.mid_band = ColorGradeBandCorrection()
-        self.mid_band.set_mask_points("0/128;45/200;90/128;255/128", 0, 90)
+        self.mid_band.set_mask_points("0/128;80/128;128/200;170/128;255/128", 80, 170)
 
         self.hi_band = ColorGradeBandCorrection()
-        self.hi_band.set_mask_points("0/128;45/200;90/128;255/128", 0, 90)
+        self.hi_band.set_mask_points("0/128;160/128;220/200;255/128", 0, 255)
+
+    def update_all_corrections(self):
+        self.shadow_band.update_correction()   
+        self.mid_band.update_correction()
+        self.hi_band.update_correction()
+
+    def update_rgb_lookups(self):
+        for i in range(0, 256):
+            self.r_lookup[i] = clamp(i + self.shadow_band.r_correction_look_up[i] + \
+                                         self.mid_band.r_correction_look_up[i] + \
+                                         self.hi_band.r_correction_look_up[i])
+
+            self.g_lookup[i] = clamp(i + self.shadow_band.g_correction_look_up[i] + \
+                                         self.mid_band.g_correction_look_up[i] + \
+                                         self.hi_band.g_correction_look_up[i])
+
+            self.b_lookup[i] = clamp(i + self.shadow_band.b_correction_look_up[i] + \
+                                         self.mid_band.b_correction_look_up[i] + \
+                                         self.hi_band.b_correction_look_up[i])
+
+    def write_out_tables(self):
+        self.r_table_prop.write_out_table(self.r_lookup)
+        self.g_table_prop.write_out_table(self.g_lookup)
+        self.b_table_prop.write_out_table(self.b_lookup)
+
+    """
+    def conv_saved_ranges_to_band_ranges(self, hue, sat):
+        sat = (sat - 0.5) * 2.0
+        # Negative saturation means addding complementary color
+        if sat < 0.0:
+            sat = abs(sat)
+            hue = hue + 0.5
+            if hue > 1.0:
+                hue = hue - 1.0
+        return (hue, sat)
+    """
+
+def get_RGB_for_angle(angle):
+    hsl = get_HSL(angle, 1.0, 0.5)
+    return hsl_to_rgb(hsl)
+
+def get_RGB_for_angle_saturation_and_value(angle, saturation, value):
+    hsl = get_HSL(angle,saturation, value)
+    return hsl_to_rgb(hsl)
+    
+def get_HSL(h, s, l):
+    h  = h / 360.0
+    return (h, s, l)
+
+def hsl_to_rgb(hsl):
+    h, s, l = hsl
+    
+    if s == 0.0:
+        #  achromatic case
+        r = l
+        g = l
+        b = l
+
+    else:
+    
+        if l <= 0.5:
+            m2 = l * (1.0 + s)
+        else:
+            m2 = l + s - l * s
+
+        m1 = 2.0 * l - m2
+
+        r = hsl_value( m1, m2, h * 6.0 + 2.0 )
+        g = hsl_value( m1, m2, h * 6.0 )
+        b = hsl_value( m1, m2, h * 6.0 - 2.0 )
+    
+    return (r, g, b)
+
+def hsl_value(n1, n2, hue):
+    if hue > 6.0:
+        hue -= 6.0
+    elif hue < 0.0:
+        hue += 6.0
+
+    if hue < 1.0:
+        val = n1 + (n2 - n1) * hue
+    elif hue < 3.0:
+        val = n2
+    elif hue < 4.0:
+        val = n1 + (n2 - n1) * (4.0 - hue)
+    else:
+        val = n1
+
+    return val
+    
+def SQR(v):
+    return v * v
+    
+def clamp(val):
+    if val > 255:
+        return 255
+    if val < 0:
+        return 0
+
+    return int(val)
 
 
+"""
 class ColorCorrectorFilter:
 
     SHADOWS_DIST_MULT = 0.75
@@ -592,66 +713,4 @@ class ColorCorrectorFilter:
         self.g_table_prop.write_out_table(self.g_lookup)
         self.b_table_prop.write_out_table(self.b_lookup)
         
-def get_RGB_for_angle(angle):
-    hsl = get_HSL(angle, 1.0, 0.5)
-    return hsl_to_rgb(hsl)
-
-def get_RGB_for_angle_saturation_and_value(angle, saturation, value):
-    hsl = get_HSL(angle,saturation, value)
-    return hsl_to_rgb(hsl)
-    
-def get_HSL(h, s, l):
-    h  = h / 360.0
-    return (h, s, l)
-
-def hsl_to_rgb(hsl):
-    h, s, l = hsl
-    
-    if s == 0.0:
-        #  achromatic case
-        r = l
-        g = l
-        b = l
-
-    else:
-    
-        if l <= 0.5:
-            m2 = l * (1.0 + s)
-        else:
-            m2 = l + s - l * s
-
-        m1 = 2.0 * l - m2
-
-        r = hsl_value( m1, m2, h * 6.0 + 2.0 )
-        g = hsl_value( m1, m2, h * 6.0 )
-        b = hsl_value( m1, m2, h * 6.0 - 2.0 )
-    
-    return (r, g, b)
-
-def hsl_value(n1, n2, hue):
-    if hue > 6.0:
-        hue -= 6.0
-    elif hue < 0.0:
-        hue += 6.0
-
-    if hue < 1.0:
-        val = n1 + (n2 - n1) * hue
-    elif hue < 3.0:
-        val = n2
-    elif hue < 4.0:
-        val = n1 + (n2 - n1) * (4.0 - hue)
-    else:
-        val = n1
-
-    return val
-    
-def SQR(v):
-    return v * v
-    
-def clamp(val):
-    if val > 255:
-        return 255
-    if val < 0:
-        return 0
-
-    return int(val)
+"""

@@ -607,7 +607,16 @@ class ColorCorrector:
     def __init__(self, editable_properties, slider_rows):
         # Initial active band
         self.band = SHADOW
-        
+
+        # HUE and SAT are both saved in range (0,1)
+        # HUE and SAT are both handled in editor using range (0,1)
+        # Saved and editor ranges are the same.
+        # ColorGradeBandCorrection objects handle ranges differently
+        # - saturation values 0-1 converted to range (-1, 1) 
+        # - saturation value 0.5 is converted to 0 and means no correction applied
+        # - converted range(-1, 0) means negative correction applied
+        # - negative correction is interpreted as positive correction of complimentary color
+
         # Editable properties
         self.shadow_hue = filter(lambda ep: ep.name == "shadow_hue", editable_properties)[0]
         self.shadow_saturation = filter(lambda ep: ep.name == "shadow_saturation", editable_properties)[0]
@@ -617,13 +626,16 @@ class ColorCorrector:
         self.hi_saturation = filter(lambda ep: ep.name == "hi_saturation", editable_properties)[0]
         
         # Create filter and init values
-        self.filt = lutfilter.ColorGradeFilter()
+        self.filt = lutfilter.ColorGradeFilter(editable_properties)
         self.filt.shadow_band.set_hue_and_saturation(self.shadow_hue.get_float_value(), 
                                                      self.shadow_saturation.get_float_value())
         self.filt.mid_band.set_hue_and_saturation(self.mid_hue.get_float_value(), 
                                                      self.mid_saturation.get_float_value())
         self.filt.hi_band.set_hue_and_saturation(self.hi_hue.get_float_value(), 
                                                      self.hi_saturation.get_float_value())
+        self.filt.update_all_corrections()
+        self.filt.update_rgb_lookups()
+        self.filt.write_out_tables()
 
         # Create GUI
         self.color_box = ThreeBandColorBox(self.color_box_values_changed, 320, 200)
@@ -631,8 +643,7 @@ class ColorCorrector:
         self.color_box.set_cursors(self.shadow_hue.get_float_value(), self.shadow_saturation.get_float_value(),
                                    self.mid_hue.get_float_value(), self.mid_saturation.get_float_value(),
                                    self.hi_hue.get_float_value(), self.hi_saturation.get_float_value())
-        print self.mid_hue.get_float_value(), self.hi_hue.get_float_value()
-                                   
+
         lift_slider_row = slider_rows[0]
         gain_slider_row = slider_rows[1]
         gamma_slider_row = slider_rows[2]
@@ -654,18 +665,13 @@ class ColorCorrector:
 
     def color_box_values_changed(self):
         hue, sat = self.color_box.get_hue_saturation()
-        sat = (sat - 0.5) * 2.0
-        if sat < 0.0:
-            sat = abs(sat)
-            hue = hue + 0.5
-            if hue > 1.0:
-                hue = hue - 1.0
-        
         self.filt.shadow_band.set_hue_and_saturation(hue, sat)
-        self.filt.shadow_band.update_lookups()
+        self.filt.shadow_band.update_correction()
+        self.filt.update_rgb_lookups()
+        self.filt.write_out_tables()
 
     def lift_changed(self, ep, value):
-        print "vidduuuu"
+        pass
         #ep.write_property_value(str(value))
         #self.update_properties()
 
