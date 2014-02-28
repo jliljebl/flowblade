@@ -377,7 +377,7 @@ class ColorGradeBandCorrection:
         
         #self.print_table(self.r_mult_table)
 
-        CORRECTION_STRENGTH_MULT = 128.0
+        CORRECTION_STRENGTH_MULT = 80.0
         for i in range(0, 256):    
             self.r_correction_look_up[i] = int(self.r_mult_table[i] * CORRECTION_STRENGTH_MULT) #- LINEAR_LUT_256[i]
             self.g_correction_look_up[i] = int(self.g_mult_table[i] * CORRECTION_STRENGTH_MULT) #- LINEAR_LUT_256[i]
@@ -403,13 +403,13 @@ class ColorGradeFilter:
         self.b_lookup = [0] * 256 
         
         self.shadow_band = ColorGradeBandCorrection()
-        self.shadow_band.set_mask_points("0/128;45/200;90/128;255/128", 0, 90)
+        self.shadow_band.set_mask_points("0/128;20/180;45/200;128/146;255/128", 0, 255)
         
         self.mid_band = ColorGradeBandCorrection()
-        self.mid_band.set_mask_points("0/128;80/128;128/200;170/128;255/128", 80, 170)
+        self.mid_band.set_mask_points("0/128;80/155;128/200;170/155;255/128", 0, 255)
 
         self.hi_band = ColorGradeBandCorrection()
-        self.hi_band.set_mask_points("0/128;160/128;220/200;255/128", 0, 255)
+        self.hi_band.set_mask_points("0/128;128/128;220/200;255/128", 0, 255)
 
     def update_all_corrections(self):
         self.shadow_band.update_correction()   
@@ -435,17 +435,6 @@ class ColorGradeFilter:
         self.g_table_prop.write_out_table(self.g_lookup)
         self.b_table_prop.write_out_table(self.b_lookup)
 
-    """
-    def conv_saved_ranges_to_band_ranges(self, hue, sat):
-        sat = (sat - 0.5) * 2.0
-        # Negative saturation means addding complementary color
-        if sat < 0.0:
-            sat = abs(sat)
-            hue = hue + 0.5
-            if hue > 1.0:
-                hue = hue - 1.0
-        return (hue, sat)
-    """
 
 def get_RGB_for_angle(angle):
     hsl = get_HSL(angle, 1.0, 0.5)

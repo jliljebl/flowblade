@@ -43,7 +43,7 @@ DEACTIVE_RING_COLOR = (0.6, 0.6, 0.6)
 
 ACTIVE_SHADOW_COLOR = (0.15, 0.15, 0.15)
 ACTIVE_MID_COLOR = (0.5, 0.5, 0.5)
-ACTIVE_HI_COLOR = (0.95, 0.95, 0.95)
+ACTIVE_HI_COLOR = (1.0, 1.0, 1.0)
 
 DEACTIVE_SHADOW_COLOR = (0.6, 0.6, 0.6)
 DEACTIVE_MID_COLOR = (0.7, 0.7, 0.7)
@@ -79,7 +79,7 @@ FX_GRAD_1 = (0, 1.0, 1.0, 1.0, 0.4)
 FX_GRAD_2 = (1, 0.3, 0.3, 0.3, 0.4)
 
 
-def _draw_select_circle(cr, x, y, main_color, radius = 6, small_radius = 4, pad = 6):
+def _draw_select_circle(cr, x, y, main_color, radius, small_radius, pad):
     degrees = math.pi / 180.0
 
     grad = cairo.LinearGradient (x, y, x, y + 2 * radius)
@@ -125,6 +125,15 @@ def _draw_select_circle(cr, x, y, main_color, radius = 6, small_radius = 4, pad 
     cr.line_to(x + radius + 0.5, y + 2 * radius)
     cr.stroke()
 
+def _draw_cursor_indicator(cr, x, y, radius):
+    degrees = math.pi / 180.0
+
+    pad = radius    
+    cr.set_source_rgba(0.9, 0.9, 0.9, 0.6)
+    cr.set_line_width(3.0)
+    cr.arc (x + pad, y + pad, radius, 0.0 * degrees, 360.0 * degrees)
+    cr.stroke()
+
 
 class ColorBox:
 
@@ -137,8 +146,8 @@ class ColorBox:
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
-        self.X_PAD = 6
-        self.Y_PAD = 6
+        self.X_PAD = 12
+        self.Y_PAD = 12
         self.CIRCLE_HALF = 8
         self.cursor_x = self.X_PAD
         self.cursor_y = self.H - self.Y_PAD
@@ -237,9 +246,8 @@ class ColorBox:
 
 class ThreeBandColorBox(ColorBox):
 
-    def __init__(self, edit_listener, width=260, height=260):
+    def __init__(self, edit_listener, band_change_listerner, width=260, height=260):
         ColorBox.__init__(self, edit_listener, width, height)
-        
         self.band = SHADOW
         self.shadow_x = self.cursor_x 
         self.shadow_y = self.cursor_y
@@ -247,6 +255,7 @@ class ThreeBandColorBox(ColorBox):
         self.mid_y = self.cursor_y
         self.hi_x = self.cursor_x
         self.hi_y = self.cursor_y
+        self.band_change_listerner = band_change_listerner
 
     def set_cursors(self, s_h, s_s, m_h, m_s, h_h, h_s):
         self.shadow_x = self._x_for_hue(s_h)
@@ -261,7 +270,7 @@ class ThreeBandColorBox(ColorBox):
         hit_value = self._check_band_hit(self.cursor_x, self.cursor_y)
         if hit_value != self.band and hit_value != NO_HIT:
             self.band = hit_value
-        
+            self.band_change_listerner(self.band)
         self._save_values()
         #self.edit_listener()
         self.widget.queue_draw()
@@ -275,7 +284,7 @@ class ThreeBandColorBox(ColorBox):
     def _release_event(self, event):
         self.cursor_x, self.cursor_y = self._get_legal_point(event.x, event.y)
         self._save_values()
-        #self.edit_listener()
+        self.edit_listener()
         self.widget.queue_draw()
 
     def _check_band_hit(self, x, y):
@@ -293,7 +302,7 @@ class ThreeBandColorBox(ColorBox):
             if y >= cy - self.CIRCLE_HALF and y <= cy + self.CIRCLE_HALF:
                 return True
         return False
-        
+
     def _save_values(self):
         self.hue = float((self.cursor_x - self.X_PAD)) / float((self.W - 2 * self.X_PAD))
         self.saturation = float(abs(self.cursor_y - self.H + self.Y_PAD)) / float((self.H - 2 * self.Y_PAD))
@@ -356,7 +365,7 @@ class ThreeBandColorBox(ColorBox):
         _draw_select_circle(cr, self.mid_x - self.CIRCLE_HALF, self.mid_y - self.CIRCLE_HALF, ACTIVE_MID_COLOR, 8, 7, 8)
         _draw_select_circle(cr, self.hi_x - self.CIRCLE_HALF, self.hi_y - self.CIRCLE_HALF, ACTIVE_HI_COLOR, 8, 7, 8)
 
-        #_draw_select_circle(cr, self.cursor_x - self.CIRCLE_HALF, self.cursor_y - self.CIRCLE_HALF, ACTIVE_SHADOW_COLOR, (0.2, 0.2, 0.2), 8, 7, 8)
+        _draw_cursor_indicator(cr, self.cursor_x - 11, self.cursor_y - 11, 11)
         
 class ColorBoxFilterEditor:
     
@@ -660,8 +669,8 @@ class CurvesBoxEditor(BoxEditor):
             px, py = BoxEditor.get_box_panel_point(self, p.x, p.y, 255.0)
             _draw_select_circle(cr, px, py, (1,1,1), (0,0,0), radius = 4, small_radius = 2, pad = 0)
 
-class ColorCorrector:
-    def __init__(self, editable_properties, slider_rows):
+class ColorGrader:
+    def __init__(self, editable_properties):
         # Initial active band
         self.band = SHADOW
 
@@ -695,15 +704,11 @@ class ColorCorrector:
         self.filt.write_out_tables()
 
         # Create GUI
-        self.color_box = ThreeBandColorBox(self.color_box_values_changed, 320, 200)
+        self.color_box = ThreeBandColorBox(self.color_box_values_changed, self.band_changed, 340, 200)
         self.color_box.set_cursor(self.shadow_hue.get_float_value(), self.shadow_saturation.get_float_value())
         self.color_box.set_cursors(self.shadow_hue.get_float_value(), self.shadow_saturation.get_float_value(),
                                    self.mid_hue.get_float_value(), self.mid_saturation.get_float_value(),
                                    self.hi_hue.get_float_value(), self.hi_saturation.get_float_value())
-
-        lift_slider_row = slider_rows[0]
-        gain_slider_row = slider_rows[1]
-        gamma_slider_row = slider_rows[2]
 
         box_row = gtk.HBox()
         box_row.pack_start(gtk.Label(), True, True, 0)
@@ -712,21 +717,36 @@ class ColorCorrector:
 
         self.widget = gtk.VBox()
         self.widget.pack_start(box_row, False, False, 0)
-        self.widget.pack_start(lift_slider_row, False, False, 0)
-        self.widget.pack_start(gain_slider_row, False, False, 0)
-        self.widget.pack_start(gamma_slider_row, False, False, 0)
         self.widget.pack_start(gtk.Label(), True, True, 0)
         
-    def _band_changed(self, band):
+    def band_changed(self, band):
         self.band = band
 
     def color_box_values_changed(self):
         hue, sat = self.color_box.get_hue_saturation()
-        self.filt.shadow_band.set_hue_and_saturation(hue, sat)
-        self.filt.shadow_band.update_correction()
+
+        if self.band == SHADOW:
+            self.shadow_hue.write_number_value(hue)
+            self.shadow_saturation.write_number_value(sat)
+
+            self.filt.shadow_band.set_hue_and_saturation(hue, sat)
+            self.filt.shadow_band.update_correction()
+        elif self.band == MID:
+            self.mid_hue.write_number_value(hue)
+            self.mid_saturation.write_number_value(sat)
+
+            self.filt.mid_band.set_hue_and_saturation(hue, sat)
+            self.filt.mid_band.update_correction()
+        else:
+            self.hi_hue.write_number_value(hue)
+            self.hi_saturation.write_number_value(sat)
+
+            self.filt.hi_band.set_hue_and_saturation(hue, sat)
+            self.filt.hi_band.update_correction()
+
         self.filt.update_rgb_lookups()
         self.filt.write_out_tables()
-
+        
     def lift_changed(self, ep, value):
         pass
         #ep.write_property_value(str(value))
