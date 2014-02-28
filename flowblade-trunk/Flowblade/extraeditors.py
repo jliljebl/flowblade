@@ -272,13 +272,13 @@ class ThreeBandColorBox(ColorBox):
             self.band = hit_value
             self.band_change_listerner(self.band)
         self._save_values()
-        #self.edit_listener()
+        self.edit_listener()
         self.widget.queue_draw()
 
     def _motion_notify_event(self, x, y, state):
         self.cursor_x, self.cursor_y = self._get_legal_point(x, y)
         self._save_values()
-        #self.edit_listener()
+        self.edit_listener()
         self.widget.queue_draw()
         
     def _release_event(self, event):
@@ -670,6 +670,9 @@ class CurvesBoxEditor(BoxEditor):
             _draw_select_circle(cr, px, py, (1,1,1), (0,0,0), radius = 4, small_radius = 2, pad = 0)
 
 class ColorGrader:
+    
+    DEGREE_CHAR = u'\u00B0'
+    
     def __init__(self, editable_properties):
         # Initial active band
         self.band = SHADOW
@@ -715,8 +718,51 @@ class ColorGrader:
         box_row.pack_start(self.color_box.widget, False, False, 0)
         box_row.pack_start(gtk.Label(), True, True, 0)
 
+
+        shadow_icon = gtk.image_new_from_file(respaths.IMAGE_PATH + "shadow.png")
+        self.sh_label = gtk.Label()
+        self.ss_label = gtk.Label()
+        shadow_box = gtk.HBox()
+        shadow_box.pack_start(shadow_icon, False, False, 0)
+        shadow_box.pack_start(guiutils.pad_label(3,5), False, False, 0)
+        shadow_box.pack_start(self.sh_label, False, False, 0)
+        shadow_box.pack_start(self.ss_label, False, False, 0)
+        shadow_box.set_size_request(95, 20)
+
+        midtone_icon = gtk.image_new_from_file(respaths.IMAGE_PATH + "midtones.png")
+        self.mh_label = gtk.Label()
+        self.ms_label = gtk.Label()
+        midtone_box = gtk.HBox()
+        midtone_box.pack_start(midtone_icon, False, False, 0)
+        midtone_box.pack_start(guiutils.pad_label(3,5), False, False, 0)
+        midtone_box.pack_start(self.mh_label, False, False, 0)
+        midtone_box.pack_start(self.ms_label, False, False, 0)
+        midtone_box.set_size_request(95, 20)
+
+        highligh_icon = gtk.image_new_from_file(respaths.IMAGE_PATH + "highlights.png")
+        self.hh_label = gtk.Label()
+        self.hs_label = gtk.Label()
+        highlight_box = gtk.HBox()
+        highlight_box.pack_start(highligh_icon, False, False, 0)
+        highlight_box.pack_start(guiutils.pad_label(3,5), False, False, 0)
+        highlight_box.pack_start(self.hh_label, False, False, 0)
+        highlight_box.pack_start(self.hs_label, False, False, 0)
+        highlight_box.set_size_request(95, 20)
+
+        self._display_values(SHADOW, self.shadow_hue.get_float_value(), self.shadow_saturation.get_float_value())
+        self._display_values(MID, self.mid_hue.get_float_value(), self.mid_saturation.get_float_value())
+        self._display_values(HI, self.hi_hue.get_float_value(), self.hi_saturation.get_float_value())
+        
+        info_row = gtk.HBox()
+        info_row.pack_start(gtk.Label(), True, True, 0)
+        info_row.pack_start(shadow_box, False, False, 0)
+        info_row.pack_start(midtone_box, False, False, 0)
+        info_row.pack_start(highlight_box, False, False, 0)
+        info_row.pack_start(gtk.Label(), True, True, 0)
+                
         self.widget = gtk.VBox()
         self.widget.pack_start(box_row, False, False, 0)
+        self.widget.pack_start(info_row, False, False, 0)
         self.widget.pack_start(gtk.Label(), True, True, 0)
         
     def band_changed(self, band):
@@ -744,26 +790,25 @@ class ColorGrader:
             self.filt.hi_band.set_hue_and_saturation(hue, sat)
             self.filt.hi_band.update_correction()
 
+        self._display_values(self.band, hue, sat)
+
         self.filt.update_rgb_lookups()
         self.filt.write_out_tables()
-        
-    def lift_changed(self, ep, value):
-        pass
-        #ep.write_property_value(str(value))
-        #self.update_properties()
 
-        """
-        angle, distance = self.color_wheel.get_angle_and_distance()
-        if self.band == SHADOW:
-            self.filt.set_shadows_correction(angle, distance)
-        elif self.band == MID:
-            self.filt.set_midtone_correction(angle, distance)
+    def _display_values(self, band, hue, saturation):
+        sat_str = str(int(((saturation - 0.5) * 2.0) * 100)) + "%"
+        hue_str = unicode(int(360 * hue)) + ColorGrader.DEGREE_CHAR + u' '
+        if band == SHADOW:
+            self.sh_label.set_text(hue_str)
+            self.ss_label.set_text(sat_str)
+        elif band == MID:
+            self.mh_label.set_text(hue_str)
+            self.ms_label.set_text(sat_str)
         else:
-            self.filt.set_high_ligh_correction(angle, distance)
-        
-        self.filt.create_lookup_tables()
-        self.filt.write_out_tables()
-        """
+            self.hh_label.set_text(hue_str)
+            self.hs_label.set_text(sat_str)
+
+
 """
 # NON_ MLT PROPERTY SLIDER DEMO CODE
 def hue_changed(self, ep, value):
