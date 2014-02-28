@@ -473,21 +473,12 @@ def _create_region_editor(clip, editable_properties):
     hbox.pack_start(guiutils.get_pad_label(3, 5), False, False, 0)
     return hbox
 
-def _create_color_corrector(filt, editable_properties):
-    lift = filter(lambda ep: ep.name == "lift", editable_properties)[0]
-    lift_slider_row = _get_slider_row(lift, None, True)
-    gain = filter(lambda ep: ep.name == "gain", editable_properties)[0]
-    gain_slider_row = _get_slider_row(gain, None, True)
-    gamma = filter(lambda ep: ep.name == "gamma", editable_properties)[0]
-    gamma_slider_row = _get_slider_row(gamma, None, True)
-
-    color_corrector = extraeditors.ColorCorrector(editable_properties, [lift_slider_row, gain_slider_row, gamma_slider_row])
-
-    lift.adjustment_listener = color_corrector.lift_changed
+def _create_color_grader(filt, editable_properties):
+    color_grader = extraeditors.ColorGrader(editable_properties)
 
     vbox = gtk.VBox(False, 4)
     vbox.pack_start(gtk.Label(), True, True, 0)
-    vbox.pack_start(color_corrector.widget, False, False, 0)
+    vbox.pack_start(color_grader.widget, False, False, 0)
     vbox.pack_start(gtk.Label(), True, True, 0)
     vbox.no_separator = True
     return vbox
@@ -620,7 +611,7 @@ EDITOR_ROW_CREATORS = { \
     COMPOSITE_EDITOR_BUILDER: lambda comp, editable_properties: _create_composite_editor(comp, editable_properties),
     REGION_EDITOR_BUILDER: lambda comp, editable_properties: _create_region_editor(comp, editable_properties),
     ROTATION_GEOMETRY_EDITOR_BUILDER: lambda comp, editable_properties: _create_rotion_geometry_editor(comp, editable_properties),
-    COLOR_CORRECTOR: lambda filt, editable_properties: _create_color_corrector(filt, editable_properties),
+    COLOR_CORRECTOR: lambda filt, editable_properties: _create_color_grader(filt, editable_properties),
     CR_CURVES: lambda filt, editable_properties:_create_crcurves_editor(filt, editable_properties),
     COLOR_BOX: lambda filt, editable_properties:_create_colorbox_editor(filt, editable_properties)
     }
@@ -634,7 +625,7 @@ EDITOR_ROW_CREATORS = { \
     #value = filter(lambda ep: ep.name == "value", editable_properties)[0]
     #value_row = _get_slider_row(value, None, True)
     #colorbox_editor = extraeditors.ColorBoxFilterEditor(editable_properties, [hue_row, saturation_row, value_row])
-    #hue.adjustment_listener = colorwheel_editor.hue_changed
-    #saturation.adjustment_listener = colorwheel_editor.saturation_changed
-    #value.adjustment_listener = colorwheel_editor.value_changed
+    #hue.adjustment_listener = colorbox_editor.hue_changed
+    #saturation.adjustment_listener = colorbox_editor.saturation_changed
+    #value.adjustment_listener = colorbox_editor.value_changed
 """
