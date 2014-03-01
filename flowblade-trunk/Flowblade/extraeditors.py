@@ -383,23 +383,46 @@ class ColorBoxFilterEditor:
         self.color_box = ColorBox(self.color_box_values_changed)
         self.color_box.set_cursor(self.hue.get_float_value(), self.saturation.get_float_value())
     
-        wheel_row = gtk.HBox()
-        wheel_row.pack_start(gtk.Label(), True, True, 0)
-        wheel_row.pack_start(self.color_box.widget, False, False, 0)
-        wheel_row.pack_start(gtk.Label(), True, True, 0)
+        box_row = gtk.HBox()
+        box_row.pack_start(gtk.Label(), True, True, 0)
+        box_row.pack_start(self.color_box.widget, False, False, 0)
+        box_row.pack_start(gtk.Label(), True, True, 0)
 
-        self.widget.pack_start(wheel_row, False, False, 0)
+        self.h_label = gtk.Label()
+        self.s_label = gtk.Label()
 
+        info_box = gtk.HBox(True)
+        info_box.pack_start(self.h_label, False, False, 0)
+        info_box.pack_start(self.s_label, False, False, 0)
+        info_box.set_size_request(65, 20)
+
+        info_row = gtk.HBox()
+        info_row.pack_start(gtk.Label(), True, True, 0)
+        info_row.pack_start(info_box, False, False, 0)
+        info_row.pack_start(gtk.Label(), True, True, 0)
+        
+        self.widget.pack_start(box_row, False, False, 0)
+        self.widget.pack_start(info_row, False, False, 0)
+        self.widget.pack_start(gtk.Label(), True, True, 0)
+
+        self._display_values(self.hue.get_float_value(), self.saturation.get_float_value())
+        
     def color_box_values_changed(self):
         hue_val, sat_val = self.color_box.get_hue_saturation()
         self.hue.write_property_value(str(hue_val))
         self.saturation.write_property_value(str(sat_val))
-        
+        self._display_values(hue_val, sat_val)
         r, g, b = lutfilter.get_RGB_for_angle_saturation_and_value(hue_val * 360, sat_val * self.SAT_MAX, 0.5)
             
         self.R.write_value("0=" + str(r))
         self.G.write_value("0=" + str(g))
         self.B.write_value("0=" + str(b))
+
+    def _display_values(self, hue, saturation):
+        sat_str = str(int(saturation * 100)) + "%"
+        hue_str = unicode(int(360 * hue)) + ColorGrader.DEGREE_CHAR + u' '
+        self.h_label.set_text(hue_str)
+        self.s_label.set_text(sat_str)
 
 
 class BoxEditor:
