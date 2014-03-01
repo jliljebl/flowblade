@@ -475,7 +475,7 @@
     <filter id="frei0r.saturat0r">
         <name>Saturation</name>
         <group>Color</group>
-        <property name="Saturation" args="exptype=singlekeyframe range_in=-20,100 range_out=0.0,0.750">"0=0.125"</property>
+        <property name="Saturation" args="exptype=singlekeyframe range_in=-20,40 range_out=0.0,0.375">"0=0.125"</property>
     </filter>
     <filter id="invert">
         <name>Invert</name>
