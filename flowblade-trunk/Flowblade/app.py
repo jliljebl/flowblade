@@ -607,7 +607,6 @@ def _set_draw_params(scr_w, scr_h):
         tlinewidgets.COMPOSITOR_HEIGHT = 14
         tlinewidgets.COMPOSITOR_TEXT_Y = 11
         tlinewidgets.INSRT_ICON_POS_SMALL = (81, 4)
-        audiowaveform.SMALL_TRACK_DRAW_CONSTS = (60, 16, 5)
 
 def _too_small_screen_exit():
     global exit_timeout_id
