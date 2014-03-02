@@ -377,7 +377,7 @@ class ColorGradeBandCorrection:
         
         #self.print_table(self.r_mult_table)
 
-        CORRECTION_STRENGTH_MULT = 80.0
+        CORRECTION_STRENGTH_MULT = 100.0
         for i in range(0, 256):    
             self.r_correction_look_up[i] = int(self.r_mult_table[i] * CORRECTION_STRENGTH_MULT) #- LINEAR_LUT_256[i]
             self.g_correction_look_up[i] = int(self.g_mult_table[i] * CORRECTION_STRENGTH_MULT) #- LINEAR_LUT_256[i]

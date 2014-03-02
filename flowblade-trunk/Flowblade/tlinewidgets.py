@@ -888,7 +888,9 @@ class TimeLineCanvas:
         # Get clip indexes for clips in first and last displayed frame.
         start = track.get_clip_index_at(int(pos))
         end = track.get_clip_index_at(int(pos + width / pix_per_frame))
-
+        
+        width_frames = int(width / pix_per_frame)
+                
         # Add 1 to end because range() last index exclusive 
         # MLT returns clips structure size + 1 if frame after last clip,
         # so in that case don't add anything.
@@ -929,8 +931,10 @@ class TimeLineCanvas:
             # Fill clip bg 
             if scale_length > FILL_MIN:
                 # Select color
+                clip_bg_col = None
                 if clip.color != None:
                     cr.set_source_rgb(*clip.color)
+                    clip_bg_col = clip.color
                 elif clip.is_blanck_clip:
                     if clip.selected:
                         grad = cairo.LinearGradient (0, y, 0, y + track_height)
@@ -948,24 +952,30 @@ class TimeLineCanvas:
                             grad = cairo.LinearGradient (0, y, 0, y + track_height)
                             grad.add_color_stop_rgba(*CLIP_COLOR_GRAD)
                             grad.add_color_stop_rgba(*CLIP_COLOR_GRAD_L)
+                            clip_bg_col = CLIP_COLOR_GRAD[1:4]
                             cr.set_source(grad)
                         else:
                             cr.set_source_rgb(*CLIP_SELECTED_COLOR)
+                            clip_bg_col = CLIP_SELECTED_COLOR
                     else: # IMAGE type
                         if not clip.selected:
                             grad = cairo.LinearGradient (0, y, 0, y + track_height)
                             grad.add_color_stop_rgba(*IMAGE_CLIP_COLOR_GRAD)
                             grad.add_color_stop_rgba(*IMAGE_CLIP_COLOR_GRAD_L)
+                            clip_bg_col = IMAGE_CLIP_COLOR_GRAD[1:4]
                             cr.set_source(grad)
                         else:
                             cr.set_source_rgb(*IMAGE_CLIP_SELECTED_COLOR)
+                            clip_bg_col = IMAGE_CLIP_SELECTED_COLOR
                 else:
                     if not clip.selected:
                         grad = cairo.LinearGradient (0, y, 0, y + track_height)
                         grad.add_color_stop_rgba(*AUDIO_CLIP_COLOR_GRAD)
                         grad.add_color_stop_rgba(*AUDIO_CLIP_COLOR_GRAD_L)
+                        clip_bg_col = AUDIO_CLIP_COLOR_GRAD[1:4]
                         cr.set_source(grad)
                     else:
+                        clip_bg_col = AUDIO_CLIP_SELECTED_COLOR
                         cr.set_source_rgb(*AUDIO_CLIP_SELECTED_COLOR)
                 
                 # Clip bg
@@ -1144,36 +1154,47 @@ class TimeLineCanvas:
 
             # Draw audio level data
             if clip.waveform_data != None and scale_length > FILL_MIN:
-                if not clip.selected:
-                    cr.set_source_rgb(0, 0, 0)
-                else:
-                    cr.set_source_rgb(0.2, 0.2, 0.2)
+                r, g, b = clip_bg_col
+                cr.set_source_rgb(r * 0.7, g * 0.7, b * 0.7)
+
                 if track.height == sequence.TRACK_HEIGHT_NORMAL:
                     y_pad = WAVEFORM_PAD_LARGE
                     bar_height = 40.0
                 else:
                     y_pad = WAVEFORM_PAD_SMALL
                     bar_height = 20.0
-                level_pix_count = len(clip.waveform_data)
-                if clip.get_length() < level_pix_count:
-                    level_pix_count = clip.get_length()
+                
+                # Draw all frames only if pixels per frame > 2, otherwise
+                # draw only every other or fewer frames
                 draw_pix_per_frame = pix_per_frame
-                if draw_pix_per_frame < 1:
-                    draw_pix_per_frame = 1
-                    step = int(1 / pix_per_frame)
+                if draw_pix_per_frame < 2:
+                    draw_pix_per_frame = 2
+                    step = int(2 / pix_per_frame)
                     if step < 1:
                         step = 1
                 else:
                     step = 1
-                draw_pix_per_frame += 0.5
-                for i in range(0, level_pix_count, step):
+
+                draw_pix_per_frame += 0.5 # Make sure that there are no holes between frames
+
+                # Draw only frames in display
+                draw_first = clip_in
+                draw_last = clip_out
+                if clip_start_frame < 0:
+                    draw_first = int(draw_first - clip_start_frame)
+                if draw_first + width_frames < draw_last:
+                    draw_last = int(draw_first + width_frames)
+             
+                # Draw level values
+                for i in range(draw_first, draw_last, step):
                     x = scale_in + i * pix_per_frame
                     h = bar_height * clip.waveform_data[i]
                     if h < 1:
                         h = 1
                     cr.rectangle(x, y + y_pad + (bar_height - h), draw_pix_per_frame, h)
-                    cr.fill()
 
+                cr.fill()
+            
             # Draw text and filter, sync icons
             if scale_length > TEXT_MIN:
                 if not hasattr(clip, "rendered_type"):

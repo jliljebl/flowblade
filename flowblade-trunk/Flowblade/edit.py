@@ -753,9 +753,6 @@ def _multitrack_insert_move_redo(self):
         _insert_clip(self.to_track, clip, self.insert_index + i, \
                      clip.clip_in, clip.clip_out )
 
-    # Remove wrong sized waveforms
-    audiowaveform.maybe_delete_waveforms(self.clips, self.to_track)
-
     self.move_edit_done_func(self.clips)
     
 
@@ -936,9 +933,6 @@ def _multitrack_overwrite_move_redo(self):
     for i in range(0, len(self.moved_clips)):
         clip = self.moved_clips[i]
         _insert_clip(to_track, clip, in_index + i, clip.clip_in, clip.clip_out)
-
-    # Remove wrong sized waveforms
-    audiowaveform.maybe_delete_waveforms(self.moved_clips, to_track)
     
     # HACK, see EditAction for details
     self.turn_on_stop_for_edit = True
@@ -1722,10 +1716,7 @@ def _add_centered_transition_redo(self):
     _insert_clip(track, transition_clip, 
                  self.transition_index, 1, # first frame is dropped as it is 100% from clip
                  transition_clip.get_length() - 1)
-    
-    # These need to be copied for persistance purposes.
-    #transition_clip.save_data.clip_in = transition.clip_in
-    #transition_clip.save_data.clip_out = transition.clip_out      
+   
 
 # -------------------------------------------------------- RENDERED FADE IN
 # "fade_clip", "clip_index", "track", "length"

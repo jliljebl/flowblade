@@ -980,7 +980,6 @@ def _set_track_normal_height(track_index):
     
     tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.allocation)
     gui.tline_column.init_listeners()
-    audiowaveform.maybe_delete_waveforms(track.clips, track)
     updater.repaint_tline()
 
 def _set_track_small_height(track_index):
@@ -991,7 +990,6 @@ def _set_track_small_height(track_index):
     
     tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.allocation)
     gui.tline_column.init_listeners()
-    audiowaveform.maybe_delete_waveforms(track.clips, track)
     updater.repaint_tline()
 
 def _consolidate_blanks_from_popup(data):
