@@ -889,8 +889,7 @@ class TimeLineCanvas:
         start = track.get_clip_index_at(int(pos))
         end = track.get_clip_index_at(int(pos + width / pix_per_frame))
         
-        width_frames = int(width / pix_per_frame)
-                
+        width_frames = float(width) / pix_per_frame
         # Add 1 to end because range() last index exclusive 
         # MLT returns clips structure size + 1 if frame after last clip,
         # so in that case don't add anything.
@@ -901,7 +900,7 @@ class TimeLineCanvas:
         clip_start_in_tline = track.clip_start(start)
 
         # Pos is the first drawn frame.
-        # clip_start_frame is always less or equal to zero as this is
+        # clip_start_frame starts always less or equal to zero as this is
         # the first maybe partially displayed clip.
         clip_start_frame = clip_start_in_tline - pos
 
@@ -1125,6 +1124,51 @@ class TimeLineCanvas:
             if clip.sync_data != None:
                 self.sync_children.append((clip, track, scale_in))
 
+            # Draw audio level data
+            if clip.waveform_data != None and scale_length > FILL_MIN:
+                r, g, b = clip_bg_col
+                cr.set_source_rgb(r * 0.7, g * 0.7, b * 0.7)
+
+                # Get level bar height and position for track height
+                if track.height == sequence.TRACK_HEIGHT_NORMAL:
+                    y_pad = WAVEFORM_PAD_LARGE
+                    bar_height = 40.0
+                else:
+                    y_pad = WAVEFORM_PAD_SMALL
+                    bar_height = 20.0
+                
+                # Draw all frames only if pixels per frame > 2, otherwise
+                # draw only every other or fewer frames
+                draw_pix_per_frame = pix_per_frame
+                if draw_pix_per_frame < 2:
+                    draw_pix_per_frame = 2
+                    step = int(2 / pix_per_frame)
+                    if step < 1:
+                        step = 1
+                else:
+                    step = 1
+
+                # Draw only frames in display
+                draw_first = clip_in
+                draw_last = clip_out + 1
+                if clip_start_frame < 0:
+                    draw_first = int(draw_first - clip_start_frame)
+                if draw_first + width_frames < draw_last:
+                    draw_last = int(draw_first + width_frames) + 1
+
+                # Get media frame 0 position in screen pixels
+                media_start_pos_pix = scale_in - clip_in * pix_per_frame
+                
+                # Draw level bar for each frame in draw range
+                for i in range(draw_first, draw_last, step):
+                    x = media_start_pos_pix + i * pix_per_frame
+                    h = bar_height * clip.waveform_data[i]
+                    if h < 1:
+                        h = 1
+                    cr.rectangle(x, y + y_pad + (bar_height - h), draw_pix_per_frame, h)
+
+                cr.fill()
+
             # Emboss
             if scale_length > EMBOSS_MIN:
                 # Corner points
@@ -1152,49 +1196,6 @@ class TimeLineCanvas:
                 cr.line_to(left, down)
                 cr.stroke()
 
-            # Draw audio level data
-            if clip.waveform_data != None and scale_length > FILL_MIN:
-                r, g, b = clip_bg_col
-                cr.set_source_rgb(r * 0.7, g * 0.7, b * 0.7)
-
-                if track.height == sequence.TRACK_HEIGHT_NORMAL:
-                    y_pad = WAVEFORM_PAD_LARGE
-                    bar_height = 40.0
-                else:
-                    y_pad = WAVEFORM_PAD_SMALL
-                    bar_height = 20.0
-                
-                # Draw all frames only if pixels per frame > 2, otherwise
-                # draw only every other or fewer frames
-                draw_pix_per_frame = pix_per_frame
-                if draw_pix_per_frame < 2:
-                    draw_pix_per_frame = 2
-                    step = int(2 / pix_per_frame)
-                    if step < 1:
-                        step = 1
-                else:
-                    step = 1
-
-                draw_pix_per_frame += 0.5 # Make sure that there are no holes between frames
-
-                # Draw only frames in display
-                draw_first = clip_in
-                draw_last = clip_out
-                if clip_start_frame < 0:
-                    draw_first = int(draw_first - clip_start_frame)
-                if draw_first + width_frames < draw_last:
-                    draw_last = int(draw_first + width_frames)
-             
-                # Draw level values
-                for i in range(draw_first, draw_last, step):
-                    x = scale_in + i * pix_per_frame
-                    h = bar_height * clip.waveform_data[i]
-                    if h < 1:
-                        h = 1
-                    cr.rectangle(x, y + y_pad + (bar_height - h), draw_pix_per_frame, h)
-
-                cr.fill()
-            
             # Draw text and filter, sync icons
             if scale_length > TEXT_MIN:
                 if not hasattr(clip, "rendered_type"):

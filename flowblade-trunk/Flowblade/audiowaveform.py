@@ -40,14 +40,10 @@ import guiutils
 import updater
 import utils
 
-RENDERING_FRAME_DISPLAY_STEP = 100
-
-# Frame image cache for waveform images
-# path -> tuple of two arrays (for small & large track heights) of 
-# gtk.gdk.PixBuf images or Nones, depending if frames have been created
+# Frame image cache for audio levels
+# path -> list of frame levels
 frames_cache = {}
 
-# Thread creates waveform images after waveform displayer is changed or zoomed
 waveform_thread = None
 
 LEFT_CHANNEL = "_audio_level.0"
