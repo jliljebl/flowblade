@@ -103,7 +103,7 @@ def main(root_path):
         print "OS: " + os_text[s_index + 13:e_index - 1]
     except:
         pass
-    
+
     print "Python", sys.version
 
     print "GTK+ version:", gtk.gtk_version
@@ -123,7 +123,9 @@ def main(root_path):
         os.mkdir(user_dir + AUTOSAVE_DIR)
     if not os.path.exists(user_dir + BATCH_DIR):
         os.mkdir(user_dir + BATCH_DIR)
-
+    if not os.path.exists(user_dir + appconsts.AUDIO_LEVELS_DIR):
+        os.mkdir(user_dir + appconsts.AUDIO_LEVELS_DIR)
+        
     # Set paths.
     respaths.set_paths(root_path)
 

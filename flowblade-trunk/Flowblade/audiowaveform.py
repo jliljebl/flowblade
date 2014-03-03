@@ -24,13 +24,21 @@ Modules handles creating and caching audio waveform images for clips.
 
 import gtk
 import math
+import md5
 import mlt
+import os
+import pickle
 import struct
 import threading
+import time
 
+import appconsts
+import dialogutils
 from editorstate import PROJECT
 import gui
+import guiutils
 import updater
+import utils
 
 RENDERING_FRAME_DISPLAY_STEP = 100
 
@@ -42,14 +50,39 @@ frames_cache = {}
 # Thread creates waveform images after waveform displayer is changed or zoomed
 waveform_thread = None
 
+LEFT_CHANNEL = "_audio_level.0"
+RIGHT_CHANNEL = "_audio_level.1"
 
 # ------------------------------------------------- waveforms
 def set_waveform_displayer_clip_from_popup(data):
     clip, track, item_id, item_data = data
 
+    global frames_cache
+    if clip.path in frames_cache:
+        frame_levels = frames_cache[clip.path]
+        clip.waveform_data = frame_levels
+        return
+
+    cache_file_path = utils.get_hidden_user_dir_path() + appconsts.AUDIO_LEVELS_DIR + _get_unique_name_for_media(clip.path)
+    if os.path.isfile(cache_file_path):
+        f = open(cache_file_path)
+        frame_levels = pickle.load(f)
+        frames_cache[clip.path] = frame_levels
+        clip.waveform_data = frame_levels
+        return
+    
+    progress_bar = gtk.ProgressBar()
+    title = _("Audio Waveform Render")
+    text = "<b>Media File: </b>" + clip.path
+    dialog = _waveform_render_progress_dialog(_waveform_render_stop, title, text, progress_bar, gui.editor_window.window)
+    dialog.progress_bar = progress_bar
+    
     global waveform_thread
-    waveform_thread = WaveformCreator(clip, track.height)
-    waveform_thread.run()
+    waveform_thread = WaveformCreator(clip, track.height, dialog)
+    waveform_thread.start()
+    
+def _waveform_render_stop(dialog, response_id):
+    dialogutils.delay_destroy_window(dialog, 1.6)
 
 def clear_waveform(data):
     clip, track, item_id, item_data = data
@@ -64,75 +97,73 @@ def clear_caches():
     frames_cache = {}
     waveform_thread = None
 
+def _get_unique_name_for_media(media_file_path):
+    size_str = str(os.path.getsize(media_file_path))
+    file_name = md5.new(media_file_path + size_str).hexdigest()
+    return file_name
+
 
 class WaveformCreator(threading.Thread):    
-    def __init__(self, clip, track_height):
+    def __init__(self, clip, track_height, dialog):
         threading.Thread.__init__(self)
-        self.target_clip = clip
-        self.clip = self._get_temp_producer(clip)
+        self.clip = clip
+        self.temp_clip = self._get_temp_producer(clip)
+        self.file_cache_path = utils.get_hidden_user_dir_path() + appconsts.AUDIO_LEVELS_DIR + _get_unique_name_for_media(clip.path)
         self.track_height = track_height
         self.abort = False
-
+        self.clip_media_length = PROJECT().get_media_file_for_path(self.clip.path).length
+        self.last_rendered_frame = 0
+        self.stopped = False
+        self.dialog = dialog
+        
     def run(self):
         global frames_cache
-        temp_producer = self._get_temp_producer(self.clip)
-    
-        # Get clip data
-        clip = self.clip
-        clip.waveform_data = None # attempted draws won't draw half done image array
+        frame_levels = [None] * self.clip_media_length 
+        frames_cache[self.clip.path] = frame_levels
 
+        gtk.gdk.threads_enter()
+        self.dialog.progress_bar.set_fraction(0.0)
+        self.dialog.progress_bar.set_text(str(0) + "%")
+        while(gtk.events_pending()):
+            gtk.main_iteration()
+        gtk.gdk.threads_leave()
+        time.sleep(0.2)
 
-        # Get calculated and cached values for  media object frame audio levels
-        if clip.path in frames_cache:
-            frame_levels = frames_cache[clip.path]
-            self.target_clip.waveform_data = frame_levels
-            render_levels = False
-        else:
-            clip_media_length = PROJECT().get_media_file_for_path(clip.path).length
-            frame_levels = [None] * clip_media_length 
-            frames_cache[clip.path] = frame_levels
-
-        #in_frame = 0
-        #out_frame = len(prerendered_frames)
-        
-        # Calculate frame levels for current displayed clip area using waveform image 
-        values = []
-        VAL_MIN = 5100.0
-        VAL_MAX = 15000.0
-        VAL_RANGE = VAL_MAX - VAL_MIN
         for frame in range(0, len(frame_levels)):
-            clip.seek(frame)
-            wave_img_array = mlt.frame_get_waveform(clip.get_frame(), 10, 50)
-            val = 0
-            for i in range(0, len(wave_img_array)):
-                val += max(struct.unpack("B", wave_img_array[i]))
-            if val > VAL_MAX:
-                val = VAL_MAX
-            val = val - VAL_MIN
-            val = math.sqrt(float(val) / VAL_RANGE)
-                
-            frame_levels[frame] = val
-
-            if self.abort == True:
-                break
-            
-            """
-            if frame > 0 and frame % RENDERING_FRAME_DISPLAY_STEP == 0:
-                self.target_clip.waveform_data = values
-                updater.repaint_tline()
+            self.temp_clip.seek(frame)
+            mlt.frame_get_waveform(self.temp_clip.get_frame(), 10, 50)
+            val = self.levels.get(RIGHT_CHANNEL)
+            if val == None:
+                val = 0.0
+            frame_levels[frame] = float(val)
+            self.last_rendered_frame = frame
+            if frame % 500 == 0:
+                render_fraction = float(self.last_rendered_frame) / float(self.clip_media_length)
+                gtk.gdk.threads_enter()
+                self.dialog.progress_bar.set_fraction(render_fraction)
+                pros = int(render_fraction * 100)
+                self.dialog.progress_bar.set_text(str(pros) + "%")
                 while(gtk.events_pending()):
                     gtk.main_iteration()
-            """
+                gtk.gdk.threads_leave()
+                time.sleep(0.1)
 
-                
-        # Set clip wavorm data and display
-        self.target_clip.waveform_data = frame_levels
+        self.clip.waveform_data = frame_levels
+        write_file = file(self.file_cache_path, "wb")
+        pickle.dump(frame_levels, write_file)
+        
+        gtk.gdk.threads_enter()
+        self.dialog.progress_bar.set_fraction(1.0)
+        self.dialog.progress_bar.set_text(_("Saving to Hard Drive"))
+        gtk.gdk.threads_leave()
+        
         updater.repaint_tline()
 
-        print "dfdf"
         # Set thread ref to None to flag that no waveforms are being created
         global waveform_thread
         waveform_thread = None
+        
+        _waveform_render_stop(self.dialog, None)
 
     def _get_temp_producer(self, clip):
         service = clip.get("mlt_service")
@@ -145,12 +176,64 @@ class WaveformCreator(threading.Thread):
         temp_producer.attach(channels)
         temp_producer.attach(converter)
         temp_producer.attach(self.levels)
-        temp_producer.clip_in = 0
-        temp_producer.clip_out = clip.get_length() - 1
         temp_producer.path = clip.path
         return temp_producer
 
-    def abort_rendering(self):
-        normal_cursor = gtk.gdk.Cursor(gtk.gdk.LEFT_PTR)
-        gui.editor_window.window.window.set_cursor(normal_cursor)
-        self.abort = True
+
+def _waveform_render_progress_dialog(callback, title, text, progress_bar, parent_window):
+    dialog = gtk.Dialog(title,
+                         parent_window,
+                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                         (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT))
+
+    dialog.text_label = gtk.Label(text)
+    dialog.text_label.set_use_markup(True)
+    text_box = gtk.HBox(False, 2)
+    text_box.pack_start(dialog.text_label,False, False, 0)
+    text_box.pack_start(gtk.Label(), True, True, 0)
+
+    status_box = gtk.HBox(False, 2)
+    status_box.pack_start(text_box, False, False, 0)
+    status_box.pack_start(gtk.Label(), True, True, 0)
+
+    progress_vbox = gtk.VBox(False, 2)
+    progress_vbox.pack_start(status_box, False, False, 0)
+    progress_vbox.pack_start(guiutils.get_pad_label(10, 10), False, False, 0)
+    progress_vbox.pack_start(progress_bar, False, False, 0)
+
+    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment.set_padding(12, 12, 12, 12)
+    alignment.add(progress_vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialog.set_default_size(500, 125)
+    alignment.show_all()
+    dialog.set_has_separator(False)
+    dialog.connect('response', callback)
+    dialog.show()
+    return dialog
+
+
+
+            
+"""
+VAL_RANGE = max_val - VAL_MIN
+for frame in range(0, len(frame_levels)):
+    val = uncorrected_frame_levels[frame] - VAL_MIN
+    val = math.sqrt(float(val) / VAL_RANGE)
+    frame_levels[frame] = val
+"""
+
+"""
+wave_img_array = mlt.frame_get_waveform(self.temp_clip.get_frame(), 10, 50)
+val = 0
+for i in range(0, len(wave_img_array)):
+    val += max(struct.unpack("B", wave_img_array[i]))
+if val > max_val:
+    max_val = val
+
+uncorrected_frame_levels[frame] = val
+
+if self.abort == True:
+    return
+"""
