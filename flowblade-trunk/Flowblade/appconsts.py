@@ -123,6 +123,7 @@ CONVERTING_TO_USE_ORIGINAL_MEDIA = 3
 
 # Autosave directory relative path
 AUTOSAVE_DIR = "autosave/"
+AUDIO_LEVELS_DIR = "audiolevels/"
 
 # Luma bands
 SHADOWS = 0
