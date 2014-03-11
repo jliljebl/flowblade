@@ -1749,6 +1749,12 @@ def get_mode_selector_popup_menu(launcher, event, callback):
     menu_item.set_accel_path("<Actions>/WindowActions/SlideMode") 
     menu.add(menu_item)
 
+    menu_item = _get_image_menu_item(gtk.image_new_from_file(
+        respaths.IMAGE_PATH + "multimove_cursor.png"), _("Multi"), callback, 5)
+
+    menu_item.set_accel_path("<Actions>/WindowActions/MultiMode") 
+    menu.add(menu_item)
+    
     menu.popup(None, None, None, event.button, event.time)
 
 

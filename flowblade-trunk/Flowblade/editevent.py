@@ -53,6 +53,7 @@ import gui
 import guicomponents
 import medialog
 import movemodes
+import multimovemode
 import syncsplitevent
 import tlinewidgets
 import trimmodes
@@ -227,6 +228,16 @@ def overwrite_move_mode_pressed():
     tlinewidgets.set_edit_mode(None, tlinewidgets.draw_overwrite_overlay)
 
     _set_move_mode()
+
+def multi_mode_pressed():
+    stop_looping()
+    current_sequence().clear_hidden_track()
+
+    editorstate.edit_mode = editorstate.MULTI_MOVE
+    tlinewidgets.set_edit_mode(None, tlinewidgets.draw_multi_overlay)
+    
+    updater.set_move_mode_gui()
+    updater.repaint_tline()
 
 def _set_move_mode():
     updater.set_move_mode_gui()
@@ -1272,7 +1283,10 @@ SLIDE_TRIM_FUNCS = [trimmodes.slide_trim_press,
 SLIDE_TRIM_NO_EDIT_FUNCS = [slide_trim_no_edit_press,
                             slide_trim_no_edit_move,
                             slide_trim_no_edit_release]
-
+MULTI_MOVE_FUNCS = [multimovemode.mouse_press,
+                    multimovemode.mouse_move,
+                    multimovemode.mouse_release]
+                        
 # (mode - mouse handler function list) table
 EDIT_MODE_FUNCS = {editorstate.INSERT_MOVE:INSERT_MOVE_FUNCS,
                    editorstate.OVERWRITE_MOVE:OVERWRITE_MOVE_FUNCS,
@@ -1282,7 +1296,8 @@ EDIT_MODE_FUNCS = {editorstate.INSERT_MOVE:INSERT_MOVE_FUNCS,
                    editorstate.ONE_ROLL_TRIM_NO_EDIT:ONE_ROLL_TRIM_NO_EDIT_FUNCS,
                    editorstate.TWO_ROLL_TRIM_NO_EDIT:TWO_ROLL_TRIM_NO_EDIT_FUNCS,
                    editorstate.SLIDE_TRIM:SLIDE_TRIM_FUNCS,
-                   editorstate.SLIDE_TRIM_NO_EDIT:SLIDE_TRIM_NO_EDIT_FUNCS}
+                   editorstate.SLIDE_TRIM_NO_EDIT:SLIDE_TRIM_NO_EDIT_FUNCS,
+                   editorstate.MULTI_MOVE:MULTI_MOVE_FUNCS}
                     
 # Functions to handle popup menu selections for strings 
 # set as activation messages in guicomponents.py

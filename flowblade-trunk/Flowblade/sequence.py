@@ -436,7 +436,7 @@ class Sequence:
         clip.sync_data = None 
         clip.mute_filter = None #
         clip.stream_indexes = None # a, v stream indexes when not muted
-        clip.clip_length = lambda: _clip_length(clip)
+        clip.clip_length = lambda: _clip_length(clip) # MLT get_length gives wrong values for blanks
         clip.waveform_data = None
         clip.color = None # None means that clip type default color is displayed
 
