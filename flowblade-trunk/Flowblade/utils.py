@@ -136,7 +136,10 @@ def get_track_name(track, sequence):
     if track.type == appconsts.VIDEO:
         # Video tracks are numbered to USER as 'V1' ,'V2' with 'V1' being
         # tracks[current_sequence.first_video_index]
-        text = "V" + str(track.id - sequence.first_video_index + 1)
+        if track.id == sequence.first_video_index:
+            text = "V1"
+        else:
+            text = "V" + str(track.id - sequence.first_video_index + 1)
     else:
         # Audio tracks are numbered in *opposite* direction for USER view
         # so if we have audio tracks in tracks[1] and tracks[2]

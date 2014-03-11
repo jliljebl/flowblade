@@ -37,6 +37,7 @@ ONE_ROLL_TRIM_NO_EDIT = 6
 TWO_ROLL_TRIM_NO_EDIT = 7
 SLIDE_TRIM = 8
 SLIDE_TRIM_NO_EDIT = 9
+MULTI_MOVE = 10
 
 # Project being edited
 project = None

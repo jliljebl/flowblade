@@ -897,7 +897,7 @@ def _multitrack_overwrite_move_redo(self):
     track = self.track
     to_track = self.to_track
 
-    # Lift moved clips and insert 
+    # Lift moved clips and insert blank
     for i in range(self.selected_range_in, self.selected_range_out + 1): # + 1 == out inclusive
         removed_clip = _remove_clip(track, self.selected_range_in) # THIS LINE BUGS SOMETIMES FIND OUT WHY
         self.moved_clips.append(removed_clip)
@@ -905,7 +905,7 @@ def _multitrack_overwrite_move_redo(self):
     removed_length = self.over_out - self.over_in
     _insert_blank(track, self.selected_range_in, removed_length)
 
-    # Find out if overwrite starts after track end and pad track with blanck if so
+    # Find out if overwrite starts after track end and pad track with blank if so
     if self.over_in >= to_track.get_length():
         self.starts_after_end = True
         gap = self.over_out - to_track.get_length()
@@ -937,6 +937,17 @@ def _multitrack_overwrite_move_redo(self):
     # HACK, see EditAction for details
     self.turn_on_stop_for_edit = True
 
+#-------------------------------------------- MULTI MOVE
+# "multi_data", "edit_delta"
+def multi_move_action(data):
+    action = EditAction(_multi_move_undo, _multi_move_redo, data)
+    return action
+
+def _multi_move_undo(self):
+    pass
+    
+def _multi_move_redo(self):
+    pass
     
 #------------------ TRIM CLIP START
 # "track","clip","index","delta","first_do"

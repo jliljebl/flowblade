@@ -495,6 +495,32 @@ def _draw_move_overlay(cr, data, y):
         # Start frame for next clip
         clip_start_frame += clip_length
 
+def draw_multi_overlay(cr, data):
+    print "multi"
+    if data == None:
+        return
+    if data["move_on"] == False:
+        return
+
+    press_frame = data["press_frame"]
+    current_frame = data["current_frame"]
+    min_allowed_delta = data["multi_data"].max_backwards
+    
+    delta = current_frame - press_frame
+    
+    print min_allowed_delta, delta
+
+    first_moved_frame = data["first_moved_frame"]
+
+    draw_frame = first_moved_frame + delta - pos
+    draw_x = draw_frame * pix_per_frame
+    draw_y = _get_track_y(1)
+    cr.set_line_width(1.0)
+    cr.set_source_rgb(*OVERLAY_COLOR)
+    cr.move_to(draw_x, 0)
+    cr.line_to(draw_x, draw_y)
+    cr.stroke()
+
 def draw_two_roll_overlay(cr, data):
     edit_frame = data["edit_frame"]
     frame_x = _get_frame_x(edit_frame)
