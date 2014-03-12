@@ -504,9 +504,8 @@ def draw_multi_overlay(cr, data):
     min_allowed_delta = - data["multi_data"].max_backwards
     first_moved_frame = data["first_moved_frame"]
     
-    #delta = press_frame - first_moved_frame + (current_frame - press_frame)
     delta = current_frame - press_frame
-    if delta < min_allowed_delta:
+    if delta <= min_allowed_delta:
         delta = min_allowed_delta
         can_move_back = False
     else:
@@ -547,7 +546,7 @@ def draw_multi_overlay(cr, data):
             cr.line_to(draw_x - 2, draw_y + 5)
             cr.close_path()
             cr.fill()
-        
+
 def draw_two_roll_overlay(cr, data):
     edit_frame = data["edit_frame"]
     frame_x = _get_frame_x(edit_frame)
