@@ -314,6 +314,12 @@ class CompositorObject:
         # ducktyping for clip for property editors
         return self.clip_out - self.clip_in  + 1 # +1 out inclusive
 
+    def move(self, delta):
+        self.clip_in = self.clip_in + delta
+        self.clip_out = self.clip_out + delta
+        self.transition.mlt_transition.set("in", str(self.clip_in))
+        self.transition.mlt_transition.set("out", str(self.clip_out))
+
     def set_in_and_out(self, in_frame, out_frame):
         self.clip_in = in_frame
         self.clip_out = out_frame
