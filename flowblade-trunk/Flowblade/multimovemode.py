@@ -169,7 +169,6 @@ def mouse_press(event, frame):
 
     first_moved_frame = track.clip_start(clip_index)
     multi_data = MultimoveData(track, first_moved_frame)
-    print multi_data
     
     edit_data = {"track_id":track.id,
                  "press_frame":frame,
@@ -178,7 +177,7 @@ def mouse_press(event, frame):
                  "mouse_start_x":x,
                  "mouse_start_y":y,
                  "multi_data":multi_data}
-    print "joo"
+
     tlinewidgets.set_edit_mode_data(edit_data)
     updater.repaint_tline()
 
@@ -199,11 +198,11 @@ def mouse_release(x, y, frame, state):
     global edit_data
 
     press_frame = edit_data["press_frame"]
-    current_frame = edit_data["current_frame"]
+    #current_frame = edit_data["current_frame"]
     min_allowed_delta = - edit_data["multi_data"].max_backwards
-    first_moved_frame = edit_data["first_moved_frame"]
+    #first_moved_frame = edit_data["first_moved_frame"]
     
-    delta = press_frame - first_moved_frame + (current_frame - press_frame)
+    delta = frame - press_frame
     if delta < min_allowed_delta:
         delta = min_allowed_delta
     
