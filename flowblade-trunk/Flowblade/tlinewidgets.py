@@ -504,24 +504,50 @@ def draw_multi_overlay(cr, data):
     min_allowed_delta = - data["multi_data"].max_backwards
     first_moved_frame = data["first_moved_frame"]
     
-    delta = press_frame - first_moved_frame + (current_frame - press_frame)
+    #delta = press_frame - first_moved_frame + (current_frame - press_frame)
+    delta = current_frame - press_frame
     if delta < min_allowed_delta:
         delta = min_allowed_delta
-    
-    
-    print min_allowed_delta, delta
+        can_move_back = False
+    else:
+        can_move_back = True
 
+    draw_y = _get_track_y(0) + 100
+    cr.set_line_width(1.0)
 
+    first_frame = first_moved_frame - pos
+    first_x = first_frame * pix_per_frame
 
     draw_frame = first_moved_frame + delta - pos
     draw_x = draw_frame * pix_per_frame
-    draw_y = _get_track_y(1)
-    cr.set_line_width(1.0)
+
+    cr.rectangle(first_x, 0, draw_x - first_x, draw_y)
+    cr.set_source_rgba(0,0,0,0.2)
+    cr.fill()
+    
     cr.set_source_rgb(*OVERLAY_COLOR)
     cr.move_to(draw_x, 0)
     cr.line_to(draw_x, draw_y)
     cr.stroke()
 
+    tracks = current_sequence().tracks
+    for i in range(1, len(tracks) - 1):
+        track = tracks[i]
+        draw_y = _get_track_y(i) + track.height / 2
+        cr.move_to(draw_x + 2, draw_y)
+        cr.line_to(draw_x + 2, draw_y - 5)
+        cr.line_to(draw_x + 7, draw_y)
+        cr.line_to(draw_x + 2, draw_y + 5)
+        cr.close_path()
+        cr.fill()
+        if can_move_back:
+            cr.move_to(draw_x - 2, draw_y)
+            cr.line_to(draw_x - 2, draw_y - 5)
+            cr.line_to(draw_x - 7, draw_y)
+            cr.line_to(draw_x - 2, draw_y + 5)
+            cr.close_path()
+            cr.fill()
+        
 def draw_two_roll_overlay(cr, data):
     edit_frame = data["edit_frame"]
     frame_x = _get_frame_x(edit_frame)
