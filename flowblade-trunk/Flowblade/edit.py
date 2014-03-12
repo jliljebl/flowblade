@@ -970,7 +970,14 @@ def _multi_move_undo(self):
                 _remove_clip(track, trim_blank_index) 
                 
             _insert_blank(track, trim_blank_index, self.orig_length)
-    
+
+    tracks_compositors = _get_tracks_compositors_list()
+    for track_comp in tracks_compositors:
+        for comp in track_comp:
+            if comp.clip_in >= self.multi_data.first_moved_frame + self.edit_delta:
+                comp.move(-self.edit_delta)
+
+
 def _multi_move_redo(self):
     tracks = current_sequence().tracks
     print self.edit_delta
@@ -997,6 +1004,26 @@ def _multi_move_redo(self):
             if self.edit_delta != -self.multi_data.max_backwards:
                 #print "zububub", orig_length + self.edit_delta
                 _insert_blank(track, trim_blank_index, self.orig_length + self.edit_delta)
+
+    tracks_compositors = _get_tracks_compositors_list()
+    for track_comp in tracks_compositors:
+        for comp in track_comp:
+            if comp.clip_in >= self.multi_data.first_moved_frame:
+                comp.move(self.edit_delta)
+
+def _get_tracks_compositors_list():
+    tracks_list = []
+    tracks = current_sequence().tracks
+    compositors = current_sequence().compositors
+    for track_index in range(1, len(tracks) - 1):
+        track_compositors = []
+        for j in range(0, len(compositors)):
+            comp = compositors[j]
+            if comp.transition.b_track == track_index:
+                track_compositors.append(comp)
+        tracks_list.append(track_compositors)
+    
+    return tracks_list
 
 #------------------ TRIM CLIP START
 # "track","clip","index","delta","first_do"
