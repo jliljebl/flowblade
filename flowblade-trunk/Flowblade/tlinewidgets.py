@@ -496,21 +496,22 @@ def _draw_move_overlay(cr, data, y):
         clip_start_frame += clip_length
 
 def draw_multi_overlay(cr, data):
-    print "multi"
     if data == None:
-        return
-    if data["move_on"] == False:
         return
 
     press_frame = data["press_frame"]
     current_frame = data["current_frame"]
-    min_allowed_delta = data["multi_data"].max_backwards
+    min_allowed_delta = - data["multi_data"].max_backwards
+    first_moved_frame = data["first_moved_frame"]
     
-    delta = current_frame - press_frame
+    delta = press_frame - first_moved_frame + (current_frame - press_frame)
+    if delta < min_allowed_delta:
+        delta = min_allowed_delta
+    
     
     print min_allowed_delta, delta
 
-    first_moved_frame = data["first_moved_frame"]
+
 
     draw_frame = first_moved_frame + delta - pos
     draw_x = draw_frame * pix_per_frame
