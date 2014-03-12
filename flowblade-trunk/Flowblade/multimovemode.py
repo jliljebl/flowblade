@@ -1,14 +1,11 @@
 
 import gtk
 
-
 import appconsts
+import edit
 from editorstate import current_sequence
 import tlinewidgets
 import updater
-
-# Mouse delta in pix needed before selection is interpreted as move.
-MOVE_START_LIMIT = 5
 
 MAX_DELTA = 100000000
         
@@ -25,8 +22,8 @@ class MultimoveData:
         self.pressed_track_id = pressed_track.id
         self.max_backwards = 0
         self.move_all_tracks = move_all_tracks
-        self.tracks_edit_data = []
         self.trim_blank_indexes = []
+        self.track_edit_ops = []
         self.legal_edit = True
         self._build_move_data()
 
@@ -64,7 +61,7 @@ class MultimoveData:
                     else:
                         # not last clip on track
                         next_clip = track.clips[clip_index + 1]
-                        if next_clip.is_blanck_clip:
+                        if not next_clip.is_blanck_clip:
                             # first clip to be moved is tight after clip on first move frame
                             track_max_deltas.append(0)
                             trim_blank_indexes.append(clip_index + 1)
@@ -80,8 +77,6 @@ class MultimoveData:
                     print "2"
                     track_max_deltas.append(track.clips[clip_index].clip_length())
                     trim_blank_indexes.append(clip_index)
-
-
 
         self.trim_blank_indexes = trim_blank_indexes
 
@@ -105,7 +100,7 @@ class MultimoveData:
                 trim_index = clip_index - 1
             else:
                 max_d = 0
-                trim_index = -1
+                trim_index = clip_index
         
         track_max_deltas[self.pressed_track_id - 1] = max_d
         self.trim_blank_indexes[self.pressed_track_id - 1] = trim_index
@@ -119,6 +114,7 @@ class MultimoveData:
             if d < smallest_max_delta:
                 smallest_max_delta = d
         self.max_backwards = smallest_max_delta
+        print self.max_backwards
         
         # Track have different ways the edit will need to be applied
         # make a list of those
@@ -176,7 +172,6 @@ def mouse_press(event, frame):
     print multi_data
     
     edit_data = {"track_id":track.id,
-                 "move_on":False,
                  "press_frame":frame,
                  "current_frame":frame,
                  "first_moved_frame":first_moved_frame,
@@ -188,38 +183,38 @@ def mouse_press(event, frame):
     updater.repaint_tline()
 
 def mouse_move(x, y, frame, state):
-
     if mouse_disabled:
         return
-
-    print "move"
 
     global edit_data
     edit_data["current_frame"] = frame
 
-    if abs(x - edit_data["mouse_start_x"]) > MOVE_START_LIMIT:
-        edit_data["move_on"] = True
-    if abs(y - edit_data["mouse_start_y"]) > MOVE_START_LIMIT:
-        edit_data["move_on"] = True
 
     updater.repaint_tline()
     
 def mouse_release(x, y, frame, state):
-
     if mouse_disabled:
         return
-    print "release"
-    global edit_data
-    
-    if frame != edit_data["press_frame"]:
-        # do edit
-        pass
-    
 
+    global edit_data
+
+    press_frame = edit_data["press_frame"]
+    current_frame = edit_data["current_frame"]
+    min_allowed_delta = - edit_data["multi_data"].max_backwards
+    first_moved_frame = edit_data["first_moved_frame"]
     
+    delta = press_frame - first_moved_frame + (current_frame - press_frame)
+    if delta < min_allowed_delta:
+        delta = min_allowed_delta
+    
+    if delta != 0:
+        data = {"edit_delta":delta,
+                "multi_data":edit_data["multi_data"]}
+        action = edit.multi_move_action(data)
+        action.do_edit()
     
     edit_data = None
     tlinewidgets.set_edit_mode_data(edit_data)
     
     updater.repaint_tline()
-    
+

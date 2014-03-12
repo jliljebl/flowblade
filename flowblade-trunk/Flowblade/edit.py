@@ -939,16 +939,65 @@ def _multitrack_overwrite_move_redo(self):
 
 #-------------------------------------------- MULTI MOVE
 # "multi_data", "edit_delta"
+# self.multi_data is multimovemode.MultimoveData
 def multi_move_action(data):
     action = EditAction(_multi_move_undo, _multi_move_redo, data)
     return action
 
 def _multi_move_undo(self):
-    pass
+    tracks = current_sequence().tracks
+    for i in range(1, len(tracks) - 1):
+        track = tracks[i]
+        edit_op = self.multi_data.track_edit_ops[i - 1]        
+        trim_blank_index = self.multi_data.trim_blank_indexes[i - 1]
+        
+        if edit_op == appconsts.MULTI_NOOP:
+            print i, "MULTI_NOOP", trim_blank_index
+            continue
+        elif edit_op == appconsts.MULTI_TRIM:
+            print i, "MULTI_TRIM", trim_blank_index
+            blank_length = track.clips[trim_blank_index].clip_length()
+            _remove_clip(track, trim_blank_index) 
+            _insert_blank(track, trim_blank_index, blank_length - self.edit_delta)
+        elif edit_op == appconsts.MULTI_ADD_TRIM:
+            print i, "MULTI_ADD_TRIM", trim_blank_index
+            _remove_clip(track, trim_blank_index) 
+        elif edit_op == appconsts.MULTI_TRIM_REMOVE:
+            print i, "MULTI_TRIM_REMOVE", trim_blank_index
+            #orig_length = track.clips[trim_blank_index].clip_length()
+            if self.edit_delta != -self.multi_data.max_backwards:
+                print "zububub", orig_length + self.edit_delta
+                _remove_clip(track, trim_blank_index) 
+                
+            _insert_blank(track, trim_blank_index, self.orig_length)
     
 def _multi_move_redo(self):
-    pass
-    
+    tracks = current_sequence().tracks
+    print self.edit_delta
+    for i in range(1, len(tracks) - 1):
+        track = tracks[i]
+        edit_op = self.multi_data.track_edit_ops[i - 1]        
+        trim_blank_index = self.multi_data.trim_blank_indexes[i - 1]
+        
+        if edit_op == appconsts.MULTI_NOOP:
+            print i, "MULTI_NOOP", trim_blank_index
+            continue
+        elif edit_op == appconsts.MULTI_TRIM:
+            print i, "MULTI_TRIM", trim_blank_index
+            blank_length = track.clips[trim_blank_index].clip_length()
+            _remove_clip(track, trim_blank_index) 
+            _insert_blank(track, trim_blank_index, blank_length + self.edit_delta)
+        elif edit_op == appconsts.MULTI_ADD_TRIM:
+            print i, "MULTI_ADD_TRIM", trim_blank_index
+            _insert_blank(track, trim_blank_index, self.edit_delta)
+        elif edit_op == appconsts.MULTI_TRIM_REMOVE:
+            print i, "MULTI_TRIM_REMOVE", trim_blank_index
+            self.orig_length = track.clips[trim_blank_index].clip_length()
+            _remove_clip(track, trim_blank_index) 
+            if self.edit_delta != -self.multi_data.max_backwards:
+                #print "zububub", orig_length + self.edit_delta
+                _insert_blank(track, trim_blank_index, self.orig_length + self.edit_delta)
+
 #------------------ TRIM CLIP START
 # "track","clip","index","delta","first_do"
 # "undo_done_callback" <- THIS IS REALLY BADLY NAMED, IT SHOULD BE FIRST DO CALLBACK

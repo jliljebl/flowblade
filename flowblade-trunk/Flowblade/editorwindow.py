@@ -942,7 +942,7 @@ class EditorWindow:
         elif mode == editorstate.SELECT_PARENT_CLIP:
             cursor =  gtk.gdk.Cursor(gtk.gdk.TCROSS)
         elif mode == editorstate.MULTI_MOVE:
-            cursor = gtk.gdk.Cursor(display, MULTIMOVE_CURSOR, 0, 0)
+            cursor = gtk.gdk.Cursor(display, MULTIMOVE_CURSOR, 4, 8)
         else:
             cursor = gtk.gdk.Cursor(gtk.gdk.LEFT_PTR)
         
