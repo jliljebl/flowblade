@@ -945,8 +945,11 @@ def multi_move_action(data):
     return action
 
 def _multi_move_undo(self):
+    track_moved = self.multi_data.track_affected    
     tracks = current_sequence().tracks
     for i in range(1, len(tracks) - 1):
+        if not track_moved[i - 1]:
+            continue
         track = tracks[i]
         edit_op = self.multi_data.track_edit_ops[i - 1]        
         trim_blank_index = self.multi_data.trim_blank_indexes[i - 1]
@@ -964,7 +967,6 @@ def _multi_move_undo(self):
             _remove_clip(track, trim_blank_index) 
         elif edit_op == appconsts.MULTI_TRIM_REMOVE:
             print i, "MULTI_TRIM_REMOVE", trim_blank_index
-            #orig_length = track.clips[trim_blank_index].clip_length()
             if self.edit_delta != -self.multi_data.max_backwards:
                 print "zububub", orig_length + self.edit_delta
                 _remove_clip(track, trim_blank_index) 
@@ -972,7 +974,10 @@ def _multi_move_undo(self):
             _insert_blank(track, trim_blank_index, self.orig_length)
 
     tracks_compositors = _get_tracks_compositors_list()
-    for track_comp in tracks_compositors:
+    for i in range(1, len(tracks) - 1):
+        if not track_moved[i - 1]:
+            continue
+        track_comp = tracks_compositors[i - 1]
         for comp in track_comp:
             if comp.clip_in >= self.multi_data.first_moved_frame + self.edit_delta:
                 comp.move(-self.edit_delta)
@@ -980,8 +985,10 @@ def _multi_move_undo(self):
 
 def _multi_move_redo(self):
     tracks = current_sequence().tracks
-    print self.edit_delta
+    track_moved = self.multi_data.track_affected          
     for i in range(1, len(tracks) - 1):
+        if not track_moved[i - 1]:
+            continue
         track = tracks[i]
         edit_op = self.multi_data.track_edit_ops[i - 1]        
         trim_blank_index = self.multi_data.trim_blank_indexes[i - 1]
@@ -1006,7 +1013,10 @@ def _multi_move_redo(self):
                 _insert_blank(track, trim_blank_index, self.orig_length + self.edit_delta)
 
     tracks_compositors = _get_tracks_compositors_list()
-    for track_comp in tracks_compositors:
+    for i in range(1, len(tracks) - 1):
+        if not track_moved[i - 1]:
+            continue
+        track_comp = tracks_compositors[i - 1]
         for comp in track_comp:
             if comp.clip_in >= self.multi_data.first_moved_frame:
                 comp.move(self.edit_delta)
