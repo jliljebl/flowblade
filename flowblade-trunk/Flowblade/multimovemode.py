@@ -16,7 +16,7 @@ class MultimoveData:
     """
     This class collects and saves data that enables a "Multi" tool edit to be performed.
     """
-    def __init__(self, pressed_track, first_moved_frame, move_all_tracks=True):
+    def __init__(self, pressed_track, first_moved_frame, move_all_tracks):
         
         self.first_moved_frame = first_moved_frame
         self.pressed_track_id = pressed_track.id
@@ -24,6 +24,7 @@ class MultimoveData:
         self.move_all_tracks = move_all_tracks
         self.trim_blank_indexes = []
         self.track_edit_ops = []
+        self.track_affected = []
         self.legal_edit = True
         self._build_move_data()
 
@@ -132,8 +133,14 @@ class MultimoveData:
                 track_edit_ops.append(appconsts.MULTI_TRIM)
         self.track_edit_ops = track_edit_ops
 
-
-            
+        # Make list of boolean values of tracks affected by the edit
+        if self.move_all_tracks:
+            for i in range(1, len(tracks) - 1):
+                self.track_affected.append(True)
+        else:
+            for i in range(1, len(tracks) - 1):
+                self.track_affected.append(False)
+            self.track_affected[self.pressed_track_id - 1] = True
                 
 def mouse_press(event, frame):
     x = event.x
@@ -165,10 +172,12 @@ def mouse_press(event, frame):
         return
 
     if (event.state & gtk.gdk.CONTROL_MASK):
-       print "CTRL down"
+        move_all = False
+    else:
+        move_all = True
 
     first_moved_frame = track.clip_start(clip_index)
-    multi_data = MultimoveData(track, first_moved_frame)
+    multi_data = MultimoveData(track, first_moved_frame, move_all)
     
     edit_data = {"track_id":track.id,
                  "press_frame":frame,

@@ -503,7 +503,8 @@ def draw_multi_overlay(cr, data):
     current_frame = data["current_frame"]
     min_allowed_delta = - data["multi_data"].max_backwards
     first_moved_frame = data["first_moved_frame"]
-    
+    move_all = data["multi_data"].move_all_tracks
+
     delta = current_frame - press_frame
     if delta <= min_allowed_delta:
         delta = min_allowed_delta
@@ -520,17 +521,31 @@ def draw_multi_overlay(cr, data):
     draw_frame = first_moved_frame + delta - pos
     draw_x = draw_frame * pix_per_frame
 
-    cr.rectangle(first_x, 0, draw_x - first_x, draw_y)
-    cr.set_source_rgba(0,0,0,0.2)
-    cr.fill()
-    
-    cr.set_source_rgb(*OVERLAY_COLOR)
-    cr.move_to(draw_x, 0)
-    cr.line_to(draw_x, draw_y)
-    cr.stroke()
+    if move_all:
+        cr.rectangle(first_x, 0, draw_x - first_x, draw_y)
+        cr.set_source_rgba(0,0,0,0.2)
+        cr.fill()
+        cr.set_source_rgb(*OVERLAY_COLOR)
+        cr.move_to(draw_x, 0)
+        cr.line_to(draw_x, draw_y)
+        cr.stroke()
+    else:
+        moved_track_index = data["multi_data"].pressed_track_id
+        draw_y = _get_track_y(moved_track_index)
+        h = current_sequence().tracks[moved_track_index].height
+        cr.rectangle(first_x, draw_y, draw_x - first_x,  h)
+        cr.set_source_rgba(0,0,0,0.2)
+        cr.fill()
+        cr.set_source_rgb(*OVERLAY_COLOR)
+        cr.move_to(draw_x, draw_y - 5)
+        cr.line_to(draw_x, draw_y + h + 10)
+        cr.stroke()
 
     tracks = current_sequence().tracks
+    track_moved = data["multi_data"].track_affected
     for i in range(1, len(tracks) - 1):
+        if not track_moved[i - 1]:
+            continue
         track = tracks[i]
         draw_y = _get_track_y(i) + track.height / 2
         cr.move_to(draw_x + 2, draw_y)
