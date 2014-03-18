@@ -955,20 +955,15 @@ def _multi_move_undo(self):
         trim_blank_index = self.multi_data.trim_blank_indexes[i - 1]
         
         if edit_op == appconsts.MULTI_NOOP:
-            print i, "MULTI_NOOP", trim_blank_index
             continue
         elif edit_op == appconsts.MULTI_TRIM:
-            print i, "MULTI_TRIM", trim_blank_index
             blank_length = track.clips[trim_blank_index].clip_length()
             _remove_clip(track, trim_blank_index) 
             _insert_blank(track, trim_blank_index, blank_length - self.edit_delta)
         elif edit_op == appconsts.MULTI_ADD_TRIM:
-            print i, "MULTI_ADD_TRIM", trim_blank_index
             _remove_clip(track, trim_blank_index) 
         elif edit_op == appconsts.MULTI_TRIM_REMOVE:
-            print i, "MULTI_TRIM_REMOVE", trim_blank_index
             if self.edit_delta != -self.multi_data.max_backwards:
-                print "zububub", orig_length + self.edit_delta
                 _remove_clip(track, trim_blank_index) 
                 
             _insert_blank(track, trim_blank_index, self.orig_length)
@@ -982,10 +977,11 @@ def _multi_move_undo(self):
             if comp.clip_in >= self.multi_data.first_moved_frame + self.edit_delta:
                 comp.move(-self.edit_delta)
 
-
 def _multi_move_redo(self):
     tracks = current_sequence().tracks
-    track_moved = self.multi_data.track_affected          
+    track_moved = self.multi_data.track_affected
+
+    # Move clips          
     for i in range(1, len(tracks) - 1):
         if not track_moved[i - 1]:
             continue
@@ -994,24 +990,20 @@ def _multi_move_redo(self):
         trim_blank_index = self.multi_data.trim_blank_indexes[i - 1]
         
         if edit_op == appconsts.MULTI_NOOP:
-            print i, "MULTI_NOOP", trim_blank_index
             continue
         elif edit_op == appconsts.MULTI_TRIM:
-            print i, "MULTI_TRIM", trim_blank_index
             blank_length = track.clips[trim_blank_index].clip_length()
             _remove_clip(track, trim_blank_index) 
             _insert_blank(track, trim_blank_index, blank_length + self.edit_delta)
         elif edit_op == appconsts.MULTI_ADD_TRIM:
-            print i, "MULTI_ADD_TRIM", trim_blank_index
             _insert_blank(track, trim_blank_index, self.edit_delta)
         elif edit_op == appconsts.MULTI_TRIM_REMOVE:
-            print i, "MULTI_TRIM_REMOVE", trim_blank_index
             self.orig_length = track.clips[trim_blank_index].clip_length()
             _remove_clip(track, trim_blank_index) 
             if self.edit_delta != -self.multi_data.max_backwards:
-                #print "zububub", orig_length + self.edit_delta
                 _insert_blank(track, trim_blank_index, self.orig_length + self.edit_delta)
 
+    # Move compositors
     tracks_compositors = _get_tracks_compositors_list()
     for i in range(1, len(tracks) - 1):
         if not track_moved[i - 1]:

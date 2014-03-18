@@ -445,14 +445,12 @@
         <property name="noise" args="range_in=0,100 range_out=0,1.0 displayname=Amount">0.2</property>
    </filter>
 
-
-
     <!-- COLOR -->
     <filter id="greyscale">
         <name>Grayscale</name>
         <group>Color</group>
     </filter>
-    <!--
+    <!---
     <filter id="frei0r.cairogradient">
         <name>Cairogradient</name>
         <group>Color</group>
@@ -503,6 +501,12 @@
         <group>Color</group>
         <multipartproperty multistartprop="start" multiendprop="end" args="editor=keyframe_editor range_in=0,100 exptype=multipart_keyframe displayname=Brightness">"0=1.0"</multipartproperty>
     </filter>
+    <filter id="brightness">
+        <name>Brightness New</name>
+        <group>Color</group>
+         <property name="level" args="exptype=keyframe_hcs editor=keyframe_editor range_in=0,1500 range_out=0.0,15.0">"0=1.0"</property>
+    </filter>
+    
     <!--
     <filter id="frei0r.balanc0r">
         <name>White Balance</name>
