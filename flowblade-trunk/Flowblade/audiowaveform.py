@@ -68,30 +68,31 @@ def set_waveform_displayer_clip_from_popup(data):
         return
     
     progress_bar = gtk.ProgressBar()
-    title = _("Audio Waveform Render")
+    title = _("Audio Levels Data Render")
     text = "<b>Media File: </b>" + clip.path
-    dialog = _waveform_render_progress_dialog(_waveform_render_stop, title, text, progress_bar, gui.editor_window.window)
+    dialog = _waveform_render_progress_dialog(_waveform_render_abort, title, text, progress_bar, gui.editor_window.window)
     dialog.progress_bar = progress_bar
     
     global waveform_thread
     waveform_thread = WaveformCreator(clip, track.height, dialog)
     waveform_thread.start()
-    
+
+def _waveform_render_abort(dialog, response_id):
+    if waveform_thread != None:
+        waveform_thread.abort_rendering()
+        
 def _waveform_render_stop(dialog, response_id):
+    global waveform_thread
+    waveform_thread = None
+    
     dialogutils.delay_destroy_window(dialog, 1.6)
 
 def clear_waveform(data):
+    # LOOK TO REMOVE; DOES NOT SEEMS CURRENT
     clip, track, item_id, item_data = data
     clip.waveform_data = None
     clip.waveform_data_frame_height = -1
     updater.repaint_tline()
-
-def clear_caches():
-    global frames_cache, waveform_thread
-    if waveform_thread != None:
-        waveform_thread.abort_rendering()
-    frames_cache = {}
-    waveform_thread = None
 
 def _get_unique_name_for_media(media_file_path):
     size_str = str(os.path.getsize(media_file_path))
@@ -126,6 +127,8 @@ class WaveformCreator(threading.Thread):
         time.sleep(0.2)
 
         for frame in range(0, len(frame_levels)):
+            if self.abort:
+                break
             self.temp_clip.seek(frame)
             mlt.frame_get_waveform(self.temp_clip.get_frame(), 10, 50)
             val = self.levels.get(RIGHT_CHANNEL)
@@ -144,15 +147,19 @@ class WaveformCreator(threading.Thread):
                 gtk.gdk.threads_leave()
                 time.sleep(0.1)
 
-        self.clip.waveform_data = frame_levels
-        write_file = file(self.file_cache_path, "wb")
-        pickle.dump(frame_levels, write_file)
+        if not self.abort:
+            self.clip.waveform_data = frame_levels
+            write_file = file(self.file_cache_path, "wb")
+            pickle.dump(frame_levels, write_file)
+
+            gtk.gdk.threads_enter()
+            self.dialog.progress_bar.set_fraction(1.0)
+            self.dialog.progress_bar.set_text(_("Saving to Hard Drive"))
+            gtk.gdk.threads_leave()
         
-        gtk.gdk.threads_enter()
-        self.dialog.progress_bar.set_fraction(1.0)
-        self.dialog.progress_bar.set_text(_("Saving to Hard Drive"))
-        gtk.gdk.threads_leave()
-        
+        else:
+            frames_cache.pop(self.clip.path, None)
+
         updater.repaint_tline()
 
         # Set thread ref to None to flag that no waveforms are being created
@@ -175,6 +182,8 @@ class WaveformCreator(threading.Thread):
         temp_producer.path = clip.path
         return temp_producer
 
+    def abort_rendering(self):
+        self.abort = True
 
 def _waveform_render_progress_dialog(callback, title, text, progress_bar, parent_window):
     dialog = gtk.Dialog(title,
@@ -209,27 +218,3 @@ def _waveform_render_progress_dialog(callback, title, text, progress_bar, parent
     dialog.show()
     return dialog
 
-
-
-            
-"""
-VAL_RANGE = max_val - VAL_MIN
-for frame in range(0, len(frame_levels)):
-    val = uncorrected_frame_levels[frame] - VAL_MIN
-    val = math.sqrt(float(val) / VAL_RANGE)
-    frame_levels[frame] = val
-"""
-
-"""
-wave_img_array = mlt.frame_get_waveform(self.temp_clip.get_frame(), 10, 50)
-val = 0
-for i in range(0, len(wave_img_array)):
-    val += max(struct.unpack("B", wave_img_array[i]))
-if val > max_val:
-    max_val = val
-
-uncorrected_frame_levels[frame] = val
-
-if self.abort == True:
-    return
-"""

@@ -728,8 +728,11 @@ def _shutdown_dialog_callback(dialog, response_id):
         gtk.main_iteration()
 
     # Wait threads to stop
-    while((editorstate.player.running == True) and (editorstate.player.ticker.exited == False)
-          and(projectdata.thumbnail_thread.stopped == False) and (audiomonitoring._update_ticker.exited == False)):
+    while((editorstate.player.running == True) and 
+         (editorstate.player.ticker.exited == False) and
+         (projectdata.thumbnail_thread.stopped == False) and
+         (audiomonitoring._update_ticker.exited == False) and
+         (audiowaveform.waveform_thread != None)):
         pass
 
     # Delete autosave file
