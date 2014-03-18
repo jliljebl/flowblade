@@ -34,7 +34,7 @@ class MultimoveData:
 
         # Get per track:
         # - maximum length edit can be done backwards before an overwrite happens
-        # - indexes of blanks that are trimmed and/or added/removed, -1 when no blanks are trimmed on that track
+        # - indexes of blanks that are trimmed and/or added/removed, -1 when no blanks are altered on that track
         track_max_deltas = []
         trim_blank_indexes = []
         for i in range(1, len(tracks) - 1):
@@ -42,10 +42,8 @@ class MultimoveData:
             if len(track.clips) == 0:
                 track_max_deltas.append(MAX_DELTA)
                 trim_blank_indexes.append(-1)
-                print "empty"
             else:
                 clip_index = current_sequence().get_clip_index(track, self.first_moved_frame)
-                print "clip_index", clip_index
                 # Case: frame after track last clip, no clips are moved
                 if clip_index == -1:
                     track_max_deltas.append(MAX_DELTA)
@@ -56,7 +54,6 @@ class MultimoveData:
                 if not first_frame_clip.is_blanck_clip:
                     # last clip on track, no clips are moved
                     if clip_index == len(track.clips) - 1:
-                        print "eeee"
                         track_max_deltas.append(MAX_DELTA)
                         trim_blank_indexes.append(-1)
                     else:
@@ -66,16 +63,13 @@ class MultimoveData:
                             # first clip to be moved is tight after clip on first move frame
                             track_max_deltas.append(0)
                             trim_blank_indexes.append(clip_index + 1)
-                            print "d"
                         else:
-                            print "f2"
                             blank_clip_start_frame = track.clip_start(clip_index + 1)
                             moved_clip_start_frame = track.clip_start(clip_index + 2)
                             track_max_deltas.append(moved_clip_start_frame - blank_clip_start_frame)
                             trim_blank_indexes.append(clip_index + 1) 
                 # case: frame on blank
                 else:
-                    print "2"
                     track_max_deltas.append(track.clips[clip_index].clip_length())
                     trim_blank_indexes.append(clip_index)
 
@@ -105,8 +99,6 @@ class MultimoveData:
         
         track_max_deltas[self.pressed_track_id - 1] = max_d
         self.trim_blank_indexes[self.pressed_track_id - 1] = trim_index
-
-        print track_max_deltas
         
         # Smallest track delta is the max number of frames the edit can be done backwards 
         smallest_max_delta = MAX_DELTA
@@ -115,7 +107,6 @@ class MultimoveData:
             if d < smallest_max_delta:
                 smallest_max_delta = d
         self.max_backwards = smallest_max_delta
-        print self.max_backwards
         
         # Track have different ways the edit will need to be applied
         # make a list of those
@@ -197,7 +188,6 @@ def mouse_move(x, y, frame, state):
     global edit_data
     edit_data["current_frame"] = frame
 
-
     updater.repaint_tline()
     
 def mouse_release(x, y, frame, state):
@@ -207,9 +197,7 @@ def mouse_release(x, y, frame, state):
     global edit_data
 
     press_frame = edit_data["press_frame"]
-    #current_frame = edit_data["current_frame"]
     min_allowed_delta = - edit_data["multi_data"].max_backwards
-    #first_moved_frame = edit_data["first_moved_frame"]
     
     delta = frame - press_frame
     if delta < min_allowed_delta:
