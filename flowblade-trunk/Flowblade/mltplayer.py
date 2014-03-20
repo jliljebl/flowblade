@@ -241,7 +241,7 @@ class Player(threading.Thread):
         return (self.producer.get_speed() != 0)
 
     def _ticker_event(self):
-        # Stop ticker if playback has stoppped.
+        # Stop ticker if playback has stopped.
         if (self.consumer.is_stopped() or self.producer.get_speed() == 0):
             self.ticker.stop_ticker()
 
@@ -260,7 +260,7 @@ class Player(threading.Thread):
                 render_fraction = ((float(current_frame - self.render_start_frame)) / 
                   (float(self.render_stop_frame - self.render_start_frame)))
             self.render_gui_update_count = self.render_gui_update_count + 1
-            if self.render_gui_update_count % 8 == 0:
+            if self.render_gui_update_count % 8 == 0: # we need quick updates for stop accuracy, but slower gui updating
                 self.render_gui_update_count = 1
                 gtk.gdk.threads_enter()
                 self.render_callbacks.set_render_progress_gui(render_fraction)
@@ -273,7 +273,7 @@ class Player(threading.Thread):
             self.seek_frame(current_frame)
             gtk.gdk.threads_leave()
             return
-            
+
         # If trim looping and past loop end, start from loop start
         if ((not(self.loop_start == -1)) and 
             ((current_frame >= self.loop_end)

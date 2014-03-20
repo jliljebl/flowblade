@@ -28,6 +28,7 @@ import mlt
 import xml.dom.minidom
 
 import appconsts
+import editorstate
 from editorstate import PROJECT
 import propertyparse
 import respaths
@@ -39,6 +40,8 @@ NON_MLT_PROPERTY = appconsts.NON_MLT_PROPERTY
 NAME = appconsts.NAME
 ARGS = appconsts.ARGS
 MLT_SERVICE = appconsts.MLT_SERVICE
+MLT_DROP_VERSION = "mlt_drop_version"
+MLT_MIN_VERSION = "mlt_min_version"
 EXTRA_EDITOR = appconsts.EXTRA_EDITOR
 FILTER = "filter"
 GROUP = "group"
@@ -137,7 +140,17 @@ class FilterInfo:
             self.multipart_filter = (filter_node.getAttribute(MULTIPART_FILTER) == "true")
         except: # default is False
             self.multipart_filter = False
-             
+
+        try:
+            self.mlt_drop_version = filter_node.getAttribute(MLT_DROP_VERSION)
+        except: 
+            self.mlt_drop_version = None
+
+        try:
+            self.mlt_min_version = filter_node.getAttribute(MLT_MIN_VERSION)
+        except:
+            self.mlt_min_version = None
+
         self.xml = filter_node.toxml()
         self.name = filter_node.getElementsByTagName(NAME).item(0).firstChild.nodeValue
         self.group = filter_node.getElementsByTagName(GROUP).item(0).firstChild.nodeValue
@@ -354,6 +367,17 @@ def load_filters_xml(services):
     filter_nodes = filters_doc.getElementsByTagName(FILTER)
     for f_node in filter_nodes:
         filter_info = FilterInfo(f_node)
+        
+        if filter_info.mlt_drop_version != "":
+            if editorstate.mlt_version_is_equal_or_greater(filter_info.mlt_drop_version):
+                print filter_info.name + " dropped, MLT version too high for this filter."
+                continue
+
+        if filter_info.mlt_min_version != "":
+            if not editorstate.mlt_version_is_equal_or_greater(filter_info.mlt_min_version):
+                print filter_info.name + " dropped, MLT version too low for this filter."
+                continue
+
         if (not filter_info.mlt_service_id in services) and len(services) > 0:
             print "MLT service " + filter_info.mlt_service_id + " not found."
             global not_found_filters
@@ -363,6 +387,8 @@ def load_filters_xml(services):
         if filter_info.mlt_service_id == "volume": # we need this filter to do mutes so save reference to it
             global _volume_filter_info
             _volume_filter_info = filter_info
+
+        # Add filter compositor filters or filter groups
         if filter_info.group == COMPOSITOR_FILTER_GROUP:
             global compositor_filters
             compositor_filters[filter_info.name] = filter_info
