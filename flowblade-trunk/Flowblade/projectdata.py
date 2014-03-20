@@ -241,7 +241,17 @@ class Project:
     def exit_clip_renderer_process(self):
         pass
 
+    def get_last_render_folder(self):
+        last_render_event = None
+        for pe in self.events:
+            if pe.event_type == EVENT_RENDERED:
+                last_render_event = pe
+        if last_render_event == None:
+            return None
 
+        return os.path.dirname(last_render_event.data)
+
+            
 class MediaFile:
     """
     Media file that can added to and edited in Sequence.

@@ -85,7 +85,10 @@ def _general_options_panel(folder_select_clicked_cb, render_folder_select_clicke
     # Widgets
     open_in_last_opened_check = gtk.CheckButton()
     open_in_last_opened_check.set_active(prefs.open_in_last_opended_media_dir)
-    
+
+    open_in_last_rendered_check = gtk.CheckButton()
+    open_in_last_rendered_check.set_active(prefs.remember_last_render_dir)
+
     default_profile_combo = gtk.combo_box_new_text()
     profiles = mltprofiles.get_profiles()
     for profile in profiles:
@@ -113,13 +116,16 @@ def _general_options_panel(folder_select_clicked_cb, render_folder_select_clicke
     row2 = guiutils.get_two_column_box(gtk.Label(_("Remember last media directory")), open_in_last_opened_check, PREFERENCES_LEFT)
     row3 = guiutils.get_two_column_box(gtk.Label(_("Undo stack size")), undo_max_spin, PREFERENCES_LEFT)
     row4 = guiutils.get_two_column_box(gtk.Label(_("Thumbnail folder")), folder_select, PREFERENCES_LEFT)
+    row5 = guiutils.get_two_column_box(gtk.Label(_("Remember last render directory")), open_in_last_rendered_check, PREFERENCES_LEFT)
     row6 = guiutils.get_two_column_box(gtk.Label(_("Autosave for crash recovery every")), autosave_combo, PREFERENCES_LEFT)
     row8 = guiutils.get_two_column_box(gtk.Label(_("Rendered Clips folder")), render_folder_select, PREFERENCES_LEFT)
 
+    
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
+    vbox.pack_start(row5, False, False, 0)
     vbox.pack_start(row3, False, False, 0)
     vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row8, False, False, 0)
@@ -129,7 +135,7 @@ def _general_options_panel(folder_select_clicked_cb, render_folder_select_clicke
     align.set_padding(12, 0, 12, 12)
     align.add(vbox)
 
-    return align, (default_profile_combo, open_in_last_opened_check, undo_max_spin)
+    return align, (default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin)
 
 def _edit_prefs_panel():
     prefs = editorpersistance.prefs

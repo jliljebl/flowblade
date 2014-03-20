@@ -362,13 +362,18 @@ def init_project_gui():
     selection = gui.sequence_list_view.treeview.get_selection()
     selected_index = editorstate.project.sequences.index(editorstate.current_sequence())
     selection.select_path(str(selected_index))
-
+  
     # Display media events
     medialog.update_media_log_view()
 
     render.set_default_values_for_widgets(True)
     gui.tline_left_corner.update_gui()
     projectinfogui.update_project_info()
+
+    # Set render folder selector to last render if prefs require 
+    folder_path = editorstate.PROJECT().get_last_render_folder()
+    if folder_path != None and editorpersistance.prefs.remember_last_render_dir == True:
+        gui.render_out_folder.set_current_folder(folder_path)
 
 def init_sequence_gui():
     """

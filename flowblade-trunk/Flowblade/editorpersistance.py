@@ -157,12 +157,13 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     # Unpack widgets
     gen_opts_widgets, edit_prefs_widgets, view_prefs_widgets = widgets_tuples_tuple
 
-    default_profile_combo, open_in_last_opened_check, undo_max_spin = gen_opts_widgets
+    default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin = gen_opts_widgets
     auto_play_in_clip_monitor_check, auto_center_check, grfx_insert_length_spin = edit_prefs_widgets
     disp_splash, buttons_style, dark_theme = view_prefs_widgets
 
     global prefs
     prefs.open_in_last_opended_media_dir = open_in_last_opened_check.get_active()
+    prefs.remember_last_render_dir = open_in_last_rendered_check.get_active()
     prefs.default_profile_name = mltprofiles.get_profile_name_for_index(default_profile_combo.get_active())
     prefs.undos_max = undo_max_spin.get_adjustment().get_value()
 
@@ -214,3 +215,5 @@ class EditorPreferences:
         self.show_sequence_profile = True
         self.buttons_style = GLASS_STYLE
         self.dark_theme = False
+        self.remember_last_render_dir = True
+
