@@ -491,20 +491,20 @@
         <group>Color</group>
         <property name="Hue" args="range_in=0,360">0.0</property>
     </filter>
-    <filter id="frei0r.brightness">
+    <filter id="frei0r.brightness"  mlt_drop_version="0.9.1">
         <name>Brightness</name>
         <group>Color</group>
         <property name="Brightness" args="range_in=-100,100">0.5</property>
     </filter>
-    <filter id="brightness" multipart="true">
+    <filter id="brightness" multipart="true" mlt_drop_version="0.9.1">
         <name>Brightness Keyframed</name>
         <group>Color</group>
         <multipartproperty multistartprop="start" multiendprop="end" args="editor=keyframe_editor range_in=0,100 exptype=multipart_keyframe displayname=Brightness">"0=1.0"</multipartproperty>
     </filter>
-    <filter id="brightness">
-        <name>Brightness New</name>
+    <filter id="brightness" mlt_min_version="0.9.1">
+        <name>Brightness</name>
         <group>Color</group>
-         <property name="level" args="exptype=keyframe_hcs editor=keyframe_editor range_in=0,1500 range_out=0.0,15.0">"0=1.0"</property>
+        <property name="level" args="exptype=keyframe_hcs editor=keyframe_editor range_in=0,1500 range_out=0.0,15.0">"0=1.0"</property>
     </filter>
     
     <!--
@@ -594,7 +594,7 @@
         <property name="gamma" args="range_in=0,300 range_out=0.0,3.0 displayname=Gamma">1.00</property>
     </filter>
     <filter id="frei0r.colgate">
-        <name>Colgate White Balance</name>
+        <name>White Balance</name>
         <group>Color</group>
         <property name="Neutral Color" args="editor=color_select exptype=color">#888888</property>
         <property name="Color Temperature" args="range_in=1000,15000 range_out=0.067,1">0.5</property>
