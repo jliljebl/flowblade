@@ -64,6 +64,7 @@ class Player(threading.Thread):
         self.xml_render = False
         self.render_callbacks = None
         self.wait_for_producer_end_stop = True
+        self.render_gui_update_count = 0
 
     def create_sdl_consumer(self):
         """
@@ -258,9 +259,12 @@ class Player(threading.Thread):
             else:
                 render_fraction = ((float(current_frame - self.render_start_frame)) / 
                   (float(self.render_stop_frame - self.render_start_frame)))
-            gtk.gdk.threads_enter()
-            self.render_callbacks.set_render_progress_gui(render_fraction)
-            gtk.gdk.threads_leave()
+            self.render_gui_update_count = self.render_gui_update_count + 1
+            if self.render_gui_update_count % 8 == 0:
+                self.render_gui_update_count = 1
+                gtk.gdk.threads_enter()
+                self.render_callbacks.set_render_progress_gui(render_fraction)
+                gtk.gdk.threads_leave()
             return 
 
         # If we're out of active range seek end.
