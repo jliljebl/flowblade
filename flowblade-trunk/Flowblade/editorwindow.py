@@ -670,7 +670,7 @@ class EditorWindow:
             if (float(w) / editorstate.SCREEN_WIDTH > 0.95) and (float(h) / editorstate.SCREEN_HEIGHT > 0.95):
                 self.window.maximize() 
             else:
-                self.window.set_size_request(w, h)
+                self.window.resize(w, h)
                 self.window.set_position(gtk.WIN_POS_CENTER)
         else:
             self.window.set_position(gtk.WIN_POS_CENTER)
