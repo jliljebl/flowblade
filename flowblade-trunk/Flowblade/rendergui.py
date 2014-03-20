@@ -424,7 +424,7 @@ class RenderFilePanel():
         self.out_folder = gtk.FileChooserButton(_("Select Folder"))
         self.out_folder.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
         self.out_folder.set_current_folder(os.path.expanduser("~") + "/")
-
+        gui.render_out_folder = self.out_folder
         out_folder_row = guiutils.get_two_column_box(gtk.Label(_("Folder:")), self.out_folder, 60)
                               
         self.movie_name = gtk.Entry()

@@ -43,6 +43,8 @@ project_info_vbox = None
 effect_select_list_view = None
 effect_select_combo_box = None
 
+render_out_folder = None
+
 # Monitor
 pos_bar = None
 tc = None
