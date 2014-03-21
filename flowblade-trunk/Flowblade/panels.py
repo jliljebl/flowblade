@@ -279,16 +279,20 @@ def get_file_properties_panel(data):
     return vbox
     
 def get_clip_properties_panel(data):
-    length, size, path = data
+    length, size, path, vcodec, acodec = data
     
     row1 = get_two_column_box(get_bold_label(_("Clip Length:")), gtk.Label(length))
     row2 = get_two_column_box(get_bold_label(_("Image Size:")), gtk.Label(size))
     row3 = get_two_column_box(get_bold_label(_("Media Path:")), gtk.Label(path))
-
+    row4 = get_two_column_box(get_bold_label(_("Video Codec:")), gtk.Label(vcodec))
+    row5 = get_two_column_box(get_bold_label(_("Audio Codec:")), gtk.Label(acodec))
+    
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row3, False, False, 0)
+    vbox.pack_start(row4, False, False, 0)
+    vbox.pack_start(row5, False, False, 0)
     vbox.pack_start(gtk.Label(), True, True, 0)
     
     return vbox   

@@ -755,8 +755,15 @@ def _show_clip_info(data):
     size = str(width) + " x " + str(height)
     l_frames = clip.clip_out - clip.clip_in + 1 # +1 out inclusive
     length = utils.get_tc_string(l_frames)
-    
-    dialogs.clip_properties_dialog((length, size, clip.path))
+
+    video_index = clip.get_int("video_index")
+    audio_index = clip.get_int("audio_index")
+    long_video_property = "meta.media." + str(video_index) + ".codec.long_name"
+    long_audio_property = "meta.media." + str(audio_index) + ".codec.long_name"
+    vcodec = clip.get(str(long_video_property))
+    acodec = clip.get(str(long_audio_property))
+
+    dialogs.clip_properties_dialog((length, size, clip.path, vcodec, acodec))
 
 def _rename_clip(data):
     clip, track, item_id, x = data
