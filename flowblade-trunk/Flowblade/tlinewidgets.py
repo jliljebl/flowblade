@@ -136,6 +136,8 @@ SYNC_SAW_HEIGHT = 5
 NUMBER_OF_LINES = 7
 # Positions for 1-2 icons on clips.
 ICON_SLOTS = [(14, 2),(28, 2),(42,2),(56,2)]
+# Line width for moving clip boxes
+MOVE_CLIPS_LINE_WIDTH = 3.0
 
 # Color creating utils methods
 def get_multiplied_color(color, m):
@@ -213,7 +215,7 @@ COLUMN_NOT_ACTIVE_COLOR = (0.65, 0.65, 0.65)
 OVERLAY_COLOR = (0.9,0.9,0.9)
 OVERLAY_SELECTION_COLOR = (0.9,0.9,0.0)
 CLIP_OVERLAY_COLOR = (0.2, 0.2, 0.9, 0.5)
-OVERWRITE_OVERLAY_COLOR = (0.9, 0.2, 0.2, 0.5)
+OVERWRITE_OVERLAY_COLOR = (0.2, 0.2, 0.2, 0.5)
 INSERT_MODE_COLOR = (0.9,0.9,0.0)
 OVERWRITE_MODE_COLOR = (0.9,0.0,0.0)
 
@@ -482,7 +484,7 @@ def _draw_move_overlay(cr, data, y):
     clip_start_frame = draw_start - pos
         
     # Draw clips in draw range
-    cr.set_line_width(4.0)
+    cr.set_line_width(MOVE_CLIPS_LINE_WIDTH)
     cr.set_source_rgb(*OVERLAY_COLOR)
     for i in range(0, len(clip_lengths)):
         clip_length = clip_lengths[i]
