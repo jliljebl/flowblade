@@ -83,10 +83,8 @@ def new_project_dialog(callback):
     vbox.add(profiles_frame)
     vbox.add(tracks_frame)
 
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(6, 24, 12, 12)
-    alignment.add(vbox)
-    
+    alignment = dialogutils.get_default_alignment(vbox)
+
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
     dialog.connect('response', callback, out_profile_combo, tracks_combo, tracks_combo_values_list)
@@ -443,11 +441,8 @@ def file_properties_dialog(data):
                         ( _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
                         
     panel = panels.get_file_properties_panel(data)
+    alignment = dialogutils.get_default_alignment(panel)
 
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(6, 24, 12, 12)
-    alignment.add(panel)
-    
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
     dialog.connect('response', _dialog_destroy)
@@ -459,10 +454,7 @@ def clip_properties_dialog(data):
                         ( _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
                         
     panel = panels.get_clip_properties_panel(data)
-
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(6, 24, 12, 12)
-    alignment.add(panel)
+    alignment = dialogutils.get_default_alignment(panel)
     
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
@@ -474,11 +466,10 @@ def add_compositor_dialog(current_sequence, callback, data):
                     gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                     (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
                     _("Add Compositor").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+    
     panel, track_combo = panels.get_add_compositor_panel(current_sequence, data)
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(6, 24, 12, 12)
-    alignment.add(panel)
-
+    alignment = dialogutils.get_default_alignment(panel)
+    
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
     dialog.connect('response', callback, data, track_combo)
@@ -823,13 +814,10 @@ def new_media_log_group_name_dialog(callback, next_index, add_selected):
                                                name_entry,
                                                180)
 
-    tracks_vbox = gtk.VBox(False, 2)
-    tracks_vbox.pack_start(name_select, False, False, 0)
-    tracks_vbox.pack_start(guiutils.get_pad_label(12, 12), False, False, 0)
+    vbox = gtk.VBox(False, 2)
+    vbox.pack_start(name_select, False, False, 0)
 
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(6, 24, 24, 24)
-    alignment.add(tracks_vbox)
+    alignment = dialogutils.get_default_alignment(vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
@@ -864,11 +852,8 @@ def marker_name_dialog(frame_str, callback):
     name_select = panels.get_two_column_box(gtk.Label(_("Name for marker at ") + frame_str),
                                                name_entry,
                                                250)
-
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(6, 24, 24, 24)
-    alignment.add(name_select)
-
+    alignment = dialogutils.get_default_alignment(name_select)
+    
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialog.set_default_response(gtk.RESPONSE_ACCEPT)
     _default_behaviour(dialog)
