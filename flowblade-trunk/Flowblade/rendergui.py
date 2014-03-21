@@ -185,7 +185,7 @@ def show_slowmo_dialog(media_file, _response_callback):
     fb_widgets.hslider = gtk.HScale()
     fb_widgets.hslider.set_adjustment(adjustment)
     fb_widgets.hslider.set_draw_value(False)
-    
+
     spin = gtk.SpinButton()
     spin.set_numeric(True)
     spin.set_adjustment(adjustment)
@@ -232,6 +232,13 @@ def show_slowmo_dialog(media_file, _response_callback):
     fb_widgets.render_range.set_active(0)
     fb_widgets.render_range.show()
 
+    # To update rendered length display
+    clip_length = _get_rendered_slomo_clip_length(media_file, fb_widgets.render_range, 100)
+    clip_length_label = gtk.Label(utils.get_tc_string(clip_length))
+    fb_widgets.hslider.connect("value-changed", _slomo_speed_changed, media_file, fb_widgets.render_range, clip_length_label)
+    fb_widgets.render_range.connect("changed", _slomo_range_changed,  media_file, fb_widgets.hslider,  clip_length_label)
+
+    # Build gui
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(mf_row, False, False, 0)
     vbox.pack_start(guiutils.get_left_justified_box([gtk.Label(_("Source Mark In: ")), guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), mark_in]), False, False, 0)
@@ -246,6 +253,7 @@ def show_slowmo_dialog(media_file, _response_callback):
     vbox.pack_start(guiutils.get_two_column_box(gtk.Label(_("Target Quality:")), fb_widgets.quality_cb, 200), False, False, 0)
     vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(gtk.Label(_("Render Range:")), fb_widgets.render_range, 180), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(gtk.Label(_("Rendered Clip Length:")), clip_length_label, 180), False, False, 0)
     
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(6, 24, 24, 24)
@@ -255,7 +263,22 @@ def show_slowmo_dialog(media_file, _response_callback):
     dialogutils.default_behaviour(dialog)
     dialog.connect('response', _response_callback, fb_widgets, media_file)
     dialog.show_all()
-    
+
+def _slomo_speed_changed(slider, media_file, range_combo, length_label):
+    clip_length = _get_rendered_slomo_clip_length(media_file, range_combo, slider.get_adjustment().get_value())
+    length_label.set_text(utils.get_tc_string(clip_length))
+
+def _slomo_range_changed(range_combo, media_file, slider, length_label):
+    clip_length = _get_rendered_slomo_clip_length(media_file, range_combo, slider.get_adjustment().get_value())
+    length_label.set_text(utils.get_tc_string(clip_length))
+
+def _get_rendered_slomo_clip_length(media_file, range_combo, speed):
+    if range_combo.get_active() == 1:
+        orig_len = media_file.mark_out -  media_file.mark_in + 1 # +1 mark out incl
+    else:
+        orig_len = media_file.length
+
+    return int((float(orig_len) * 100.0) / float(speed))
 
 # ----------------------------------------------------------- widgets
 class RenderQualitySelector():
