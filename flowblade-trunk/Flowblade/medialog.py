@@ -40,6 +40,7 @@ import utils
 
 widgets = utils.EmptyClass()
 
+do_multiple_clip_insert_func = None # this mankeypathched her in app.py
 
 class MediaLogEvent:
     def __init__(self, event_type, mark_in, mark_out, name, path):
@@ -192,6 +193,22 @@ def append_log_events():
 
     action = edit.append_media_log_action(data)
     action.do_edit()
+
+def insert_selected_log_events():
+    clips = []
+    log_events = get_current_filtered_events()
+    
+    treeselection = widgets.media_log_view.treeview.get_selection()
+    (model, rows) = treeselection.get_selected_rows()
+    
+    for row_tuple in rows:
+        row = row_tuple[0]
+        le = log_events[row]
+        clips.append(get_log_event_clip(le))
+    
+    track = editorstate.current_sequence().get_first_active_track()
+    tline_pos = editorstate.current_tline_frame()
+    do_multiple_clip_insert_func(track, clips, tline_pos)
 
 def get_log_event_clip(log_event):
     # currently quarateed not to be a pattern producer
@@ -586,6 +603,11 @@ def get_media_log_events_panel(events_list_view):
     use_comments_check.set_active(False)
     widgets.use_comments_check = use_comments_check
 
+    insert_displayed = gtk.Button()
+    insert_displayed.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "insert_media_log.png"))
+    insert_displayed.set_size_request(80, 22)
+    insert_displayed.connect("clicked", lambda w:insert_selected_log_events())
+
     append_displayed = gtk.Button()
     append_displayed.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "append_media_log.png"))
     append_displayed.set_size_request(80, 22)
@@ -598,6 +620,7 @@ def get_media_log_events_panel(events_list_view):
     row2.pack_start(use_comments_label, False, True, 0)
     row2.pack_start(use_comments_check, False, True, 0)
     row2.pack_start(gtk.Label(), True, True, 0)
+    row2.pack_start(insert_displayed, False, True, 0)
     row2.pack_start(append_displayed, False, True, 0)
 
     panel = gtk.VBox()
@@ -612,6 +635,7 @@ def get_media_log_events_panel(events_list_view):
     no_star_button.set_tooltip_text(_("Set selected ranges non-starred"))
     widgets.log_range.set_tooltip_text(_("Log current marked range"))
     delete_button.set_tooltip_text(_("Delete selected ranges"))
+    insert_displayed.set_tooltip_text(_("Insert selected ranges on Timeline"))
     append_displayed.set_tooltip_text(_("Append displayed ranges on Timeline"))
 
     dnd.connect_range_log(events_list_view.treeview)
