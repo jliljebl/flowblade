@@ -274,6 +274,9 @@ def monkeypatch_callbacks():
     dnd.display_monitor_media_file = updater.set_and_display_monitor_media_file
     dnd.range_log_items_tline_drop = editevent.tline_range_item_drop
 
+    # Media log 
+    medialog.do_multiple_clip_insert_func = editevent.do_multiple_clip_insert
+
     # These provide clues for further module refactoring 
 
 # ---------------------------------- program, sequence and project init
