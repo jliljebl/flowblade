@@ -287,7 +287,12 @@ def delete_effect_pressed():
 
     treeselection = widgets.effect_stack_view.treeview.get_selection()
     (model, rows) = treeselection.get_selected_rows()
-    row = rows[0]
+    
+    try:
+        row = rows[0]
+    except:
+        return # This fails when there are filters but no rows are selected
+        
     row_index = max(row)
     data = {"clip":clip,
             "index":row_index,

@@ -366,7 +366,8 @@ class ThreeBandColorBox(ColorBox):
         _draw_select_circle(cr, self.hi_x - self.CIRCLE_HALF, self.hi_y - self.CIRCLE_HALF, ACTIVE_HI_COLOR, 8, 7, 8)
 
         _draw_cursor_indicator(cr, self.cursor_x - 11, self.cursor_y - 11, 11)
-        
+
+
 class ColorBoxFilterEditor:
     
     def __init__(self, editable_properties):
@@ -691,6 +692,7 @@ class CurvesBoxEditor(BoxEditor):
         for p in self.curve.points:
             px, py = BoxEditor.get_box_panel_point(self, p.x, p.y, 255.0)
             _draw_select_circle(cr, px, py, (1,1,1), (0,0,0), radius = 4, small_radius = 2, pad = 0)
+
 
 class ColorGrader:
     
