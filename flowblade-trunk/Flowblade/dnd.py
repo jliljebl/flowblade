@@ -36,6 +36,7 @@ MEDIA_ICON_HEIGHT = 15
 MEDIA_FILES_DND_TARGET = ('media_file', gtk.TARGET_SAME_APP, 0)
 EFFECTS_DND_TARGET = ('effect', gtk.TARGET_SAME_APP, 0)
 CLIPS_DND_TARGET = ('clip', gtk.TARGET_SAME_APP, 0)
+RANGE_DND_TARGET = ('range', gtk.TARGET_SAME_APP, 0)
 STRING_DATA_BITS = 8
 
 # Holds data during drag
@@ -49,7 +50,7 @@ empty_icon = None
 add_current_effect = None
 display_monitor_media_file = None
 range_log_items_tline_drop = None
-
+range_log_items_log_drop = None
 
 def init():
     global clip_icon, empty_icon
@@ -116,6 +117,17 @@ def connect_range_log(treeview):
                            gtk.gdk.ACTION_COPY)
     treeview.connect_after('drag_begin', _range_log_drag_begin)
     treeview.connect("drag_data_get", _range_log_drag_data_get)
+    treeview.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP,
+                             [RANGE_DND_TARGET], 
+                             gtk.gdk.ACTION_COPY)
+    treeview.connect("drag_drop", _on_range_drop)
+    
+def start_tline_clips_out_drag(event, clips, widget):
+    global drag_data
+    drag_data = clips
+    context = widget.drag_begin([RANGE_DND_TARGET], gtk.gdk.ACTION_COPY, 1, event)
+    context.set_icon_pixbuf(clip_icon, 30, 15)
+
 
 # ------------------------------------------------- handlers for drag events
 def _media_files_drag_begin(treeview, context):
@@ -206,3 +218,7 @@ def _on_tline_drop(widget, context, x, y, timestamp, do_effect_drop_func, do_med
     
     context.finish(True, False, timestamp)
 
+def _on_range_drop(widget, context, x, y, timestamp):
+    range_log_items_log_drop(drag_data)
+
+    context.finish(True, False, timestamp)

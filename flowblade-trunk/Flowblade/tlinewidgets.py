@@ -835,7 +835,7 @@ class TimeLineCanvas:
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
         self.widget.mouse_scroll_func = mouse_scroll_listener
-    
+     
         # Mouse events are passed on 
         self.press_listener = press_listener
         self.move_listener = move_listener
@@ -889,7 +889,10 @@ class TimeLineCanvas:
         self.release_listener(event.x, event.y, get_frame(event.x), \
                               event.button, event.state)
     
-    
+
+    def _mouse_left(self, event):
+        print "hailou"
+
     #----------------------------------------- DRAW
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation

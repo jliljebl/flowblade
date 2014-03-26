@@ -25,6 +25,7 @@ import gtk
 
 import appconsts
 import dialogutils
+import dnd
 import edit
 from editorstate import current_sequence
 from editorstate import get_track
@@ -581,3 +582,20 @@ def _track_is_locked(track):
 
     return False
 
+# ------------------------------------- clip d'n'd to range log
+def clips_drag_out_started(event):
+    # Abort move edit
+    global edit_data, drag_disabled
+    edit_data = None
+    drag_disabled = True
+    tlinewidgets.set_edit_mode_data(None)
+    
+    # Set dnd
+    track = current_sequence().tracks[selected_track]
+    clips = []
+    for i in range(selected_range_in, selected_range_out + 1):
+        clips.append(track.clips[i])
+    dnd.start_tline_clips_out_drag(event, clips, gui.tline_canvas.widget)
+    
+    # Update tlione gui
+    updater.repaint_tline()
