@@ -971,6 +971,9 @@ class EditorWindow:
     def tline_cursor_leave(self, event):
         editorstate.cursor_on_tline = False
         self.set_cursor_to_mode()
+        if event.state & gtk.gdk.BUTTON1_MASK:
+            if editorstate.current_is_move_mode():
+                tlineaction.mouse_dragged_out(event)
 
     def tline_cursor_enter(self, event):
         editorstate.cursor_on_tline = True

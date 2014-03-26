@@ -70,7 +70,20 @@ class MediaLogEvent:
         date_str = date_str.lstrip('0')
         return date_str
 
+
+# ----------------------------------------------------------- dnd drop
+def clips_drop(clips):
+    for clip in clips:
+        if clip.media_type == appconsts.VIDEO or clip.media_type == appconsts.AUDIO:
+            log_event = MediaLogEvent(  appconsts.MEDIA_LOG_MARKS_SET,
+                                        clip.clip_in,
+                                        clip.clip_out,
+                                        clip.name,
+                                        clip.path)
+            editorstate.PROJECT().media_log.append(log_event)
+    _update_list_view()
     
+
 # ----------------------------------------------------------- gui events
 def media_log_filtering_changed():
     widgets.media_log_view.fill_data_model()
@@ -109,7 +122,9 @@ def log_range_clicked():
                                 media_file.name,
                                 media_file.path)
     editorstate.PROJECT().media_log.append(log_event)
-    
+    _update_list_view()
+
+def _update_list_view():
     widgets.media_log_view.fill_data_model()
     max_val = widgets.media_log_view.treeview.get_vadjustment().get_upper()
     gui.middle_notebook.set_current_page(1)
