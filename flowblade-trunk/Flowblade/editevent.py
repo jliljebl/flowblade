@@ -1174,7 +1174,7 @@ def _marker_menu_item_activated(widget, msg):
     elif msg == "deleteall":
         current_sequence().markers = []
         updater.repaint_tline()
-    else:
+    else: # seek to marker
         name, frame = current_sequence().markers[int(msg)]
         PLAYER().seek_frame(frame)
 
