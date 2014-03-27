@@ -33,6 +33,7 @@ import guiutils
 import mltfilters
 import propertyedit
 import propertyeditorbuilder
+import respaths
 import translations
 import updater
 import utils
@@ -54,10 +55,16 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     Use components created at clipeffectseditor.py.
     """
     create_widgets()
+
+    ad_buttons_box = gtk.HBox(True,1)
+    ad_buttons_box.pack_start(widgets.add_effect_b)
+    ad_buttons_box.pack_start(widgets.del_effect_b)
+
     
-    stack_buttons_box = gtk.HBox(True,1)
-    stack_buttons_box.pack_start(widgets.add_effect_b)
-    stack_buttons_box.pack_start(widgets.del_effect_b)
+    stack_buttons_box = gtk.HBox(False,1)
+    stack_buttons_box.pack_start(ad_buttons_box, True, True, 0)
+    #stack_buttons_box.pack_start(widgets.del_effect_b, True, True, 0)
+    stack_buttons_box.pack_start(widgets.toggle_all, False, False, 0)
     
     effect_stack = widgets.effect_stack_view    
 
@@ -200,10 +207,13 @@ def create_widgets():
 
     widgets.add_effect_b = gtk.Button(_("Add"))
     widgets.del_effect_b = gtk.Button(_("Delete"))
-    
+    widgets.toggle_all = gtk.Button()
+    widgets.toggle_all.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "filters_all_toggle.png"))
+
     widgets.add_effect_b.connect("clicked", lambda w,e: add_effect_pressed(), None)
     widgets.del_effect_b.connect("clicked", lambda w,e: delete_effect_pressed(), None)
-
+    widgets.toggle_all.connect("clicked", lambda w: toggle_all_pressed())
+    
     # These are created elsewhere and then monkeypatched here
     widgets.group_combo = None
     widgets.effect_list_view = None
@@ -212,6 +222,7 @@ def create_widgets():
     widgets.effect_stack_view.set_tooltip_text(_("Clip Filter Stack"))
     widgets.add_effect_b.set_tooltip_text(_("Add Filter to Clip Filter Stack"))
     widgets.del_effect_b.set_tooltip_text(_("Delete Filter from Clip Filter Stack"))
+    widgets.toggle_all.set_tooltip_text(_("Toggle all Filters On/Off"))
 
 def set_enabled(value):
     widgets.clip_info.set_enabled( value)
@@ -219,12 +230,13 @@ def set_enabled(value):
     widgets.del_effect_b.set_sensitive(value)
     widgets.effect_stack_view.treeview.set_sensitive(value)
     widgets.exit_button.set_sensitive(value)
+    widgets.toggle_all.set_sensitive(value)
 
 def update_stack_view():
     if clip != None:
         filter_infos = []
-        for filter in clip.filters:
-            filter_infos.append(filter.info)
+        for f in clip.filters:
+            filter_infos.append(f.info)
         widgets.effect_stack_view.fill_data_model(filter_infos, clip.filters)
     else:
         widgets.effect_stack_view.fill_data_model([], [])
@@ -310,6 +322,14 @@ def delete_effect_pressed():
     # Causes edit_effect_selected() called as it is the "change" listener
     widgets.effect_stack_view.treeview.get_selection().select_path(path)
 
+def toggle_all_pressed():
+    for i in range(0, len(clip.filters)):
+        filter_object = clip.filters[i]
+        filter_object.active = (filter_object.active == False)
+        filter_object.update_mlt_disabled_value()
+    
+    update_stack_view()
+
 def reset_filter_values():
     treeselection = widgets.effect_stack_view.treeview.get_selection()
     (model, rows) = treeselection.get_selected_rows()
@@ -346,7 +366,7 @@ def effect_selection_changed():
         keyframe_editor_widgets = []
         return
     
-    # "changed" get's called twice when adding filter and selectiong last
+    # "changed" get's called twice when adding filter and selecting last
     # so we use this do this only once 
     if block_changed_update == True:
         return
