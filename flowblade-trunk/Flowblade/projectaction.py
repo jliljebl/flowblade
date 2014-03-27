@@ -169,9 +169,6 @@ class AddMediaFilesThread(threading.Thread):
 def _load_pulse_bar():
     gtk.gdk.threads_enter()
     try: 
-        # For visual reasons we destroy window before we stop pulsebar events
-        # so this might get called on a destroyd dialog.
-        # ...and pulse still freezes, meh.
         persistance.load_dialog.progress_bar.pulse()
     except:
         pass

@@ -328,6 +328,7 @@ def _get_wipe_selector(editable_property):
     """
     Returns GUI component for selecting wipe type.
     """
+    # Preset luma
     combo_box = gtk.combo_box_new_text()
             
     # Get options
@@ -346,9 +347,78 @@ def _get_wipe_selector(editable_property):
             k_index = keys.index(k)
     
     combo_box.set_active(k_index)
+    preset_luma_row = _get_two_column_editor_row(editable_property.get_display_name(), combo_box)
+    
+    # User luma
+    use_preset_luma_combo = gtk.combo_box_new_text()
+    use_preset_luma_combo.append_text(_("Preset Luma"))
+    use_preset_luma_combo.append_text(_("User Luma"))
+        
+    dialog = gtk.FileChooserDialog(_("Select Luma File"), None, 
+                                   gtk.FILE_CHOOSER_ACTION_OPEN, 
+                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                                    _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
+    dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
+    dialog.set_select_multiple(False)
+    file_filter = gtk.FileFilter()
+    file_filter.add_pattern("*.png")
+    file_filter.add_pattern("*.pgm")
+    file_filter.set_name(_("Wipe Luma files"))
+    dialog.add_filter(file_filter)
+        
+    user_luma_select = gtk.FileChooserButton(dialog)
+    user_luma_select.set_size_request(210, 28)
+    
+    user_luma_label = gtk.Label(_("Luma File:"))
+
+    if k_index == -1:
+        use_preset_luma_combo.set_active(1)
+        combo_box.set_sensitive(False)
+        combo_box.set_active(0)
+        user_luma_select.set_filename(editable_property.value)
+    else:
+        use_preset_luma_combo.set_active(0)
+        user_luma_select.set_sensitive(False)
+        user_luma_label.set_sensitive(False)
+    
+    user_luma_row = gtk.HBox(False, 2)
+    user_luma_row.pack_start(use_preset_luma_combo, False, False, 0)
+    user_luma_row.pack_start(gtk.Label(), True, True, 0)
+    user_luma_row.pack_start(user_luma_label, False, False, 2)
+    user_luma_row.pack_start(user_luma_select, False, False, 0)
+
+    editor_pane = gtk.VBox(False)
+    editor_pane.pack_start(preset_luma_row, False, False, 4)
+    editor_pane.pack_start(user_luma_row, False, False, 4)
+
+    widgets = (combo_box, use_preset_luma_combo, user_luma_select, user_luma_label, keys)
     
     combo_box.connect("changed", editable_property.combo_selection_changed, keys)
-    return _get_two_column_editor_row(editable_property.get_display_name(), combo_box)
+    use_preset_luma_combo.connect("changed", _wipe_preset_combo_changed, editable_property, widgets)
+    dialog.connect('response', _wipe_lumafile_dialog_response, editable_property, widgets)
+    
+    return editor_pane
+
+def _wipe_preset_combo_changed(widget, ep, widgets):
+    combo_box, use_preset_luma_combo, user_luma_select, user_luma_label, keys = widgets
+    if widget.get_active() == 1:
+        combo_box.set_sensitive(False)
+        user_luma_select.set_sensitive(True)
+        user_luma_label.set_sensitive(True)
+        file_name = user_luma_select.get_filename()
+        if file_name != None:
+            ep.write_value(file_name)
+    else:
+        user_luma_select.set_sensitive(False)
+        user_luma_label.set_sensitive(False)
+        combo_box.set_sensitive(True)
+        ep.combo_selection_changed(combo_box, keys)
+
+def _wipe_lumafile_dialog_response(dialog, response_id, ep, widgets):
+    combo_box, use_preset_luma_combo, user_luma_select, user_luma_label, keys = widgets
+    file_name = user_luma_select.get_filename()
+    if file_name != None:
+        ep.write_value(file_name)
 
 def _create_composite_editor(clip, editable_properties):
     aligned = filter(lambda ep: ep.name == "aligned", editable_properties)[0]
