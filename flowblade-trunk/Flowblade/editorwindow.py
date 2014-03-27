@@ -328,15 +328,14 @@ class EditorWindow:
 
         self.media_list_view = guicomponents.MediaPanel(projectaction.media_file_menu_item_selected,
                                                         updater.set_and_display_monitor_media_file)
-        media_scroll_window = gtk.ScrolledWindow()
-        media_scroll_window.add_with_viewport(self.media_list_view.widget)
-        media_scroll_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        media_scroll_window.set_size_request(guicomponents.MEDIA_OBJECT_WIDGET_WIDTH * 2 + 70, guicomponents.MEDIA_OBJECT_WIDGET_HEIGHT)
-        media_scroll_window.show_all()
+        self.media_scroll_window = gtk.ScrolledWindow()
+        self.media_scroll_window.add_with_viewport(self.media_list_view.widget)
+        self.media_scroll_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.media_scroll_window.set_size_request(guicomponents.MEDIA_OBJECT_WIDGET_WIDTH * 2 + 70, guicomponents.MEDIA_OBJECT_WIDGET_HEIGHT)
+        self.media_scroll_window.show_all()
 
         media_panel = panels.get_media_files_panel(
-                                media_scroll_window,
-                                #self.media_list_view,
+                                self.media_scroll_window,
                                 lambda w,e: projectaction.add_media_files(), 
                                 lambda w,e: projectaction.delete_media_files(),
                                 lambda a: self.media_list_view.columns_changed(a),

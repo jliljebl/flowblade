@@ -144,6 +144,12 @@ class AddMediaFilesThread(threading.Thread):
                 except projectdata.ProducerNotValidError as err:
                     print err.__str__()
                     dialogs.not_valid_producer_dialog(err.value, gui.editor_window.window)
+            
+            gtk.gdk.threads_enter()
+            gui.media_list_view.fill_data_model()
+            max_val = gui.editor_window.media_scroll_window.get_vadjustment().get_upper()
+            gui.editor_window.media_scroll_window.get_vadjustment().set_value(max_val)
+            gtk.gdk.threads_leave()
 
         if succes_new_file != None:
             editorpersistance.prefs.last_opened_media_dir = os.path.dirname(succes_new_file)

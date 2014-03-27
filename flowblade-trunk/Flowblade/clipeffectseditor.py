@@ -60,10 +60,8 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     ad_buttons_box.pack_start(widgets.add_effect_b)
     ad_buttons_box.pack_start(widgets.del_effect_b)
 
-    
     stack_buttons_box = gtk.HBox(False,1)
     stack_buttons_box.pack_start(ad_buttons_box, True, True, 0)
-    #stack_buttons_box.pack_start(widgets.del_effect_b, True, True, 0)
     stack_buttons_box.pack_start(widgets.toggle_all, False, False, 0)
     
     effect_stack = widgets.effect_stack_view    
