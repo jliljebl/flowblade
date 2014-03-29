@@ -44,20 +44,44 @@ class MultimoveData:
                 trim_blank_indexes.append(-1)
             else:
                 clip_index = current_sequence().get_clip_index(track, self.first_moved_frame)
+                first_frame_clip = track.clips[clip_index]
+                clip_first_frame = track.clip_start(clip_index)
+
                 # Case: frame after track last clip, no clips are moved
                 if clip_index == -1:
                     track_max_deltas.append(MAX_DELTA)
                     trim_blank_indexes.append(-1)
                     continue
-                first_frame_clip = track.clips[clip_index]
-                # case: frame on clip 
+        
+                # Case: Clip start in same frame as moved clip start 
+                if (clip_first_frame == self.first_moved_frame) and (not first_frame_clip.is_blanck_clip):
+                    if clip_index  == 0: # First clip on track
+                        track_max_deltas.append(0)
+                        trim_blank_indexes.append(0)
+                    else:
+                        # not first/last clip on track
+                        prev_clip = track.clips[clip_index - 1]
+                        if not prev_clip.is_blanck_clip:
+                            # first clip to be moved is tight after clip on first move frame
+                            track_max_deltas.append(0)
+                            trim_blank_indexes.append(clip_index)
+                        else:
+                            blank_clip_start_frame = track.clip_start(clip_index + 1)
+                            moved_clip_start_frame = track.clip_start(clip_index + 2)
+                            track_max_deltas.append(moved_clip_start_frame - blank_clip_start_frame)
+                            trim_blank_indexes.append(clip_index - 1) 
+                    continue
+                    
+                # Case: frame on clip 
                 if not first_frame_clip.is_blanck_clip:
-                    # last clip on track, no clips are moved
-                    if clip_index == len(track.clips) - 1:
+                    if clip_index  == 0: # First clip on track
+                        track_max_deltas.append(0)
+                        trim_blank_indexes.append(0)
+                    elif clip_index == len(track.clips) - 1: # last clip on track, no clips are moved
                         track_max_deltas.append(MAX_DELTA)
                         trim_blank_indexes.append(-1)
                     else:
-                        # not last clip on track
+                        # not first/last clip on track
                         next_clip = track.clips[clip_index + 1]
                         if not next_clip.is_blanck_clip:
                             # first clip to be moved is tight after clip on first move frame
@@ -68,7 +92,7 @@ class MultimoveData:
                             moved_clip_start_frame = track.clip_start(clip_index + 2)
                             track_max_deltas.append(moved_clip_start_frame - blank_clip_start_frame)
                             trim_blank_indexes.append(clip_index + 1) 
-                # case: frame on blank
+                # Case: frame on blank
                 else:
                     track_max_deltas.append(track.clips[clip_index].clip_length())
                     trim_blank_indexes.append(clip_index)
@@ -87,7 +111,7 @@ class MultimoveData:
 
         if clip_index == 0:
             max_d = 0
-            trim_index = -1
+            trim_index = 0
         else:
             prev_clip = track.clips[clip_index - 1]
             if prev_clip.is_blanck_clip == True:

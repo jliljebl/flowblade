@@ -115,13 +115,14 @@ def key_down(widget, event):
     #debug
     if event.keyval == gtk.keysyms.F12:
         return True
-    """
+
     
     #debug
     if event.keyval == gtk.keysyms.F11:
         current_sequence().add_watermark()
         return True
-
+    """
+    
     # Key event was not handled here.
     return False
     
