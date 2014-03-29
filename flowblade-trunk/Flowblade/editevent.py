@@ -515,10 +515,8 @@ def tline_canvas_mouse_moved(x, y, frame, button, state):
     if not timeline_visible():
         return
 
-    #Handle timeline position setting with right mouse button
+    # Handle timeline position setting with right mouse button
     if button == 3:
-        #if not editorstate.current_is_move_mode():
-        #    return
         if not timeline_visible():
             return
         PLAYER().seek_frame(frame) 

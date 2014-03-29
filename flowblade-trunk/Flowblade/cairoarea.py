@@ -20,7 +20,7 @@
 
 """
 Module contains CairoDrawableArea widget. You can draw onto it using 
-Cairo, and listen to its mouse and key events.
+Cairo, and listen to its mouse and keyboard events.
 """
 
 import gtk
@@ -63,7 +63,6 @@ class CairoDrawableArea(gtk.Widget):
         # Set an internal flag telling that we're realized
         self.set_flags(self.flags() | gtk.REALIZED)
         
-        #gtk.gdk.POINTER_MOTION_MASK
         # Create GDK window
         self.window = gdk.Window(self.get_parent_window(),
                                  width=self.allocation.width,
@@ -189,6 +188,7 @@ class CairoDrawableArea(gtk.Widget):
     def do_leave_notify_event(self, event):
         self.leave_notify_func(event)
 
+"""
 # Sort of works, not used currently
 class CairoEventBox(gtk.EventBox):
 
@@ -217,4 +217,5 @@ class CairoEventBox(gtk.EventBox):
             child.do_expose_event(child, event)
 
         return True
+"""
         

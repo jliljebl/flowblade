@@ -889,9 +889,10 @@ class TimeLineCanvas:
         self.release_listener(event.x, event.y, get_frame(event.x), \
                               event.button, event.state)
     
-
+    """
     def _mouse_left(self, event):
         print "hailou"
+    """
 
     #----------------------------------------- DRAW
     def _draw(self, event, cr, allocation):
