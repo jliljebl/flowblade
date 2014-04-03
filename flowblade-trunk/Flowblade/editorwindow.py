@@ -310,6 +310,10 @@ class EditorWindow:
         # Add recent projects to menu
         editorpersistance.fill_recents_menu_widget(ui.get_widget('/MenuBar/FileMenu/OpenRecent'), projectaction.open_recent_project)
 
+        # Disable audio mixer if not available
+        if editorstate.audio_monitoring_available == False:
+            ui.get_widget('/MenuBar/ToolsMenu/AudioMix').set_sensitive(False)
+
         # Menu box
         menu_vbox = gtk.VBox(False, 0)
         menu_vbox.pack_start(self.menubar, False, True, 0)

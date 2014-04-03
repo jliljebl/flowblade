@@ -131,6 +131,9 @@ def _create_buttons(editor_window):
     editor_window.tools_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "open_mixer.png"), audiomonitoring.show_audio_monitor)
     editor_window.tools_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "open_titler.png"), titler.show_titler)
     editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer\nTitler"))
+    if editorstate.audio_monitoring_available == False:
+        editor_window.tools_buttons.sensitive[0] = False
+        editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer(not avaialable)\nTitler"))
 
     editor_window.transition_button = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
     editor_window.transition_button.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "dissolve.png"), tlineaction.add_transition_pressed)

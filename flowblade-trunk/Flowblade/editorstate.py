@@ -76,6 +76,7 @@ appversion = "0.10"
 RUNNING_FROM_INSTALLATION = 0
 RUNNING_FROM_DEV_VERSION = 1
 app_running_from = RUNNING_FROM_INSTALLATION
+audio_monitoring_available = False
 
 # Cursor pos
 cursor_on_tline = False

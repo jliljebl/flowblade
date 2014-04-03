@@ -83,8 +83,10 @@ def init(profile):
     global MONITORING_AVAILABLE
     if audio_level_filter != None:
         MONITORING_AVAILABLE = True
+        editorstate.audio_monitoring_available = True
     else:
         MONITORING_AVAILABLE = False
+        editorstate.audio_monitoring_available = False
 
     # We want this to be always present when closing app or we'll need to handle it being missing.
     global _update_ticker
