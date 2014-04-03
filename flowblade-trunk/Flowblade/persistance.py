@@ -287,10 +287,21 @@ def load_project(file_path, icons_and_thumnails=True):
     # Set MLT profile. NEEDS INFO USER ON MISSING PROFILE!!!!!
     project.profile = mltprofiles.get_profile(project.profile_desc)
 
+    if project.SAVEFILE_VERSION < 5:
+        _FIX_N_TO_5_PROJECT_COMBATIBILITY(project)
+    
     # Create proxy editing data object if not found
     if (not(hasattr(project, "proxy_data"))):
         project.proxy_data = miscdataobjects.ProjectProxyEditingData()
 
+    # Create proxy editing data object if not found
+    if (not(hasattr(project, "proxy_data"))):
+        project.proxy_data = miscdataobjects.ProjectProxyEditingData()
+
+        self.events = []
+        self.media_log = []
+        self.media_log_groups = []
+        
     # Some profiles may not be available in system
     # inform user on fix
     if project.profile == None:
@@ -533,6 +544,20 @@ def FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file):
     media_file.is_proxy_file = False
     media_file.second_file_path = None
 
+def _FIX_N_TO_5_PROJECT_COMBATIBILITY(project):
+    if (not(hasattr(project, "proxy_data"))):
+        project.proxy_data = miscdataobjects.ProjectProxyEditingData()
+
+    if (not(hasattr(project, "media_log"))):
+        project.media_log = []
+        
+    if (not(hasattr(project, "events"))):
+        project.events = []
+        
+    if (not(hasattr(project, "media_log_groups"))):
+        project.media_log_groups = []
+        
+        
 # List is used to convert SAVEFILE_VERSIONs 1 and 2 to SAVEFILE_VERSIONs 3 -> n by getting type_id string for compositor index 
 compositors_index_to_type_id = ["##affine","##opacity_kf","##pict_in_pict", "##region","##wipe", "##add",
                                 "##burn", "##color_only", "##darken", "##difference", "##divide", "##dodge",
