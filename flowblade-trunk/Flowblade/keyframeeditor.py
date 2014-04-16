@@ -66,7 +66,8 @@ GEOM_EDITOR_SIZE_SMALL = 0.3
 GEOM_EDITOR_SIZE_MEDIUM = 0.6 # displayed screensize as fraction of available height
 GEOM_EDITOR_SIZES = [GEOM_EDITOR_SIZE_LARGE, GEOM_EDITOR_SIZE_MEDIUM, GEOM_EDITOR_SIZE_SMALL]
 
-# rectangle edit handles ids. Points numbered in clockwise direction to get opposite points easily.
+# Rectangle edit handles ids. Points numbered in clockwise direction 
+# to get opposite points easily.
 TOP_LEFT = 0
 TOP_MIDDLE = 1
 TOP_RIGHT = 2
@@ -76,17 +77,17 @@ BOTTOM_MIDDLE = 5
 BOTTOM_LEFT = 6
 MIDDLE_LEFT = 7
 
-# rotaing rectangle handle ids
+# Rotating rectangle handle ids
 POS_HANDLE = 0
 X_SCALE_HANDLE = 1
 Y_SCALE_HANDLE = 2
 ROTATION_HANDLE = 3
 
-# hit values for rect, edit point hits return edit point id
+# Hit values for rect, edit point hits return edit point id
 AREA_HIT = 9
 NO_HIT = 10
 
-# hit values for rotating geom edits, NO_HIT used too
+# Hit values for rotating geom edits, NO_HIT used too
 POS_EDIT_HIT = 0
 
 # Colors
@@ -106,7 +107,7 @@ KF_DRAG_DISABLED = 2
 ACTIVE_KF_ICON = None
 NON_ACTIVE_KF_ICON = None
 
-# magic value to signify disconnected signal handler 
+# Magic value to signify disconnected signal handler 
 DISCONNECTED_SIGNAL_HANDLER = -9999999
 
 # ----------------------------------------------------- editor objects
@@ -135,7 +136,8 @@ class ClipKeyFrameEditor:
         
         # Some filters start keyframes from *MEDIA* frame 0
         # Some filters or compositors start keyframes from *CLIP* frame 0
-        # Filters starting from *MEDIA* 0 need offset to clip start added to all values.
+        # Filters starting from *MEDIA* 0 need offset 
+        # to clip start added to all values.
         self.use_clip_in = use_clip_in
         if self.use_clip_in == True:
             self.clip_in = editable_property.clip.clip_in

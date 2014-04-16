@@ -265,7 +265,7 @@ def maybe_autocenter():
 
 
 # ----------------------------------------- monitor
-def display_clip_in_monitor(reset_saved_frames=True):
+def display_clip_in_monitor(clip_monitor_currently_active=False):
     """
     Sets mltplayer producer to be video file clip and updates GUI.
     """
@@ -281,10 +281,15 @@ def display_clip_in_monitor(reset_saved_frames=True):
     editorstate._timeline_displayed = False
 
     # Save timeline pos if so directed.
-    if reset_saved_frames == True:
+    if clip_monitor_currently_active == False:
         global saved_timeline_pos
         saved_timeline_pos = PLAYER().current_frame()
         editorstate.tline_shadow_frame = saved_timeline_pos
+
+    # If we're already displaying monitor clip we stop consumer 
+    # to supress timeline flashing between monitor clips
+    if clip_monitor_currently_active == False:
+        editorstate.PLAYER().consumer.stop()
 
     # Clear old clip
     current_sequence().clear_hidden_track()
@@ -296,7 +301,12 @@ def display_clip_in_monitor(reset_saved_frames=True):
     else:
         # File producers
         clip_producer = current_sequence().display_monitor_clip(MONITOR_MEDIA_FILE().path)
-    
+
+    # Timeline flash does not happen if we start consumer after clip is 
+    # already on sequence
+    if clip_monitor_currently_active == False:
+        editorstate.PLAYER().consumer.start()
+        
     # IMAGE_SEQUENCE files always returns 15000 for get_length from mlt so we have to monkeypatch that method to get correct results
     if MONITOR_MEDIA_FILE().type == appconsts.IMAGE_SEQUENCE:
         clip_producer.get_length = lambda : MONITOR_MEDIA_FILE().length
@@ -425,7 +435,7 @@ def set_and_display_monitor_media_file(media_file):
     # If we're displaying sequence we do programmatical click on "Clip" button 
     # to display clip via it's signal listener. 
     if gui.editor_window.clip_editor_b.get_active() == True:
-        display_clip_in_monitor(reset_saved_frames = False)
+        display_clip_in_monitor(clip_monitor_currently_active = True)
     else:
         gui.editor_window.clip_editor_b.set_active(True)
 

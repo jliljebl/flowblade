@@ -435,7 +435,6 @@
         <name>Box Blur</name>
         <group>Blur</group>
         <property name="start" args="range_in=1,50 range_out=1,50 displayname=Amount">5</property>
-        <property name="end" args="editor=no_editor">5</property>
         <property name="hori" args="range_in=1,50 range_out=1,50 displayname=Horizontal">7</property>
         <property name="vert" args="range_in=1,50 range_out=1,50 displayname=Vertical">7</property>
    </filter>

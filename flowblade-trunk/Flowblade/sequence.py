@@ -334,7 +334,7 @@ class Sequence:
         self.master_audio_gain = gain
 
     def add_track_pan_filter(self, track, value):
-        # This used for master too, and called with tractor then
+        # This method is used for master too, and called with tractor then
         pan_filter = mlt.Filter(self.profile, "panner")
         pan_filter.set("start", value)
         track.attach(pan_filter)
@@ -345,7 +345,7 @@ class Sequence:
         track.audio_pan = value
     
     def remove_track_pan_filter(self, track):
-        # This used for master too, and called with tractor then
+        # This method is used for master too, and called with tractor then
         track.detach(track.pan_filter)
         track.pan_filter = None
         track.audio_pan = NO_PAN
@@ -356,7 +356,7 @@ class Sequence:
 
     def first_video_track(self):
         return self.tracks[self.first_video_index]
-    
+
     def all_tracks_off(self):
         for i in range (1, len(self.tracks) - 1):
             track = self.tracks[i]
@@ -739,7 +739,7 @@ class Sequence:
         black_track_clip.clip_in = c_in
         black_track_clip.clip_out = c_out
         black_track_clip.set_in_and_out(c_in, c_out)
- 
+
     def get_length(self):
         return self.multitrack.get_length()
 
