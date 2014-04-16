@@ -33,8 +33,9 @@ class MultimoveData:
         tracks = current_sequence().tracks
 
         # Get per track:
-        # - maximum length edit can be done backwards before an overwrite happens
-        # - indexes of blanks that are trimmed and/or added/removed, -1 when no blanks are altered on that track
+        # * maximum length edit can be done backwards before an overwrite happens
+        # * indexes of blanks that are trimmed and/or added/removed,
+        #   -1 when no blanks are altered on that track
         track_max_deltas = []
         trim_blank_indexes = []
         for i in range(1, len(tracks) - 1):
@@ -99,7 +100,8 @@ class MultimoveData:
 
         self.trim_blank_indexes = trim_blank_indexes
 
-        # Pressed track max delta trim blank index is calculated differently (because on pressed track to the hit clip is moved)
+        # Pressed track max delta trim blank index is calculated differently 
+        # (because on pressed track to the hit clip is moved)
         # and existing values overwritten
         track = tracks[self.pressed_track_id]
         clip_index = current_sequence().get_clip_index(track, self.first_moved_frame)
@@ -124,7 +126,8 @@ class MultimoveData:
         track_max_deltas[self.pressed_track_id - 1] = max_d
         self.trim_blank_indexes[self.pressed_track_id - 1] = trim_index
         
-        # Smallest track delta is the max number of frames the edit can be done backwards 
+        # Smallest track delta is the max number of frames 
+        # the edit can be done backwards 
         smallest_max_delta = MAX_DELTA
         for i in range(1, len(tracks) - 1):
             d = track_max_deltas[i - 1]

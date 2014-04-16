@@ -68,7 +68,10 @@
     <encodingoption name="Lossless H.264 / .mp4" extension="mp4" audiodesc="aac, 384kb/s, 48000Hz"  type="av" resize="True" qgroup="lossless">
         <profile args="f=mp4 acodec=aac ab=384k ar=48000 ac=2 pix_fmt=yuv420p vcodec=libx264 cqp=0 me_method=esa subq=8 qmin=10 qcomp=0.6 qdiff=4 qmax=51 coder=ac partitions=+parti4x4+parti8x8+partp4x4+partp8x8+partb8x8 refs=16 flags2=+dct8x8+mixed_refs trellis=1" />
     </encodingoption>
-
+    <encodingoption name="Apple ProRes 4:2:2 / .mov" extension="mov" audiodesc="pcm lossless" type="av" resize="True" qgroup="variablenooption">
+    <profile args="f=mov acodec=pcm_s16le ar=48000 ac=2 vcodec=prores vb=0 g=0 bf=0 threads=1 vprofile=2" />
+    </encodingoption>
+    
     <!-- Preset encodings -->
     <encodingoption name="Audio PCM/.wav 48kHz" extension="wav" nonuser="True" audiodesc="NA" type="audio" resize="NA" qgroup="lossless"> 
         <profile args="f=wav ar=48000 video_off=1" />
@@ -196,6 +199,7 @@
     <encodingoption name="AVI DVCPRO50 NTSC 16:9" extension="avi" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
         <profile args="f=avi vcodec=dvvideo pix_fmt=yuv422p acodec=pcm_s16le s=720x480 mlt_profile=dv_ntsc_wide" />
     </encodingoption>
+
 
     <!-- Proxy encoding -->
     <proxyencodingoption name="MPEG-4 Preset Ultrafast" extension="mp4" type="av" audiodesc="mp2, 192kb/s, 48000Hz" resize="True" qgroup="qgroup1">
