@@ -302,7 +302,7 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
         # File producers
         clip_producer = current_sequence().display_monitor_clip(MONITOR_MEDIA_FILE().path)
 
-    # Timeline flash does not happen if we start consumer after clip is 
+    # Timeline flash does not happen if we start consumer after monitor clip is 
     # already on sequence
     if clip_monitor_currently_active == False:
         editorstate.PLAYER().consumer.start()
