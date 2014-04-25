@@ -40,7 +40,7 @@ import guiutils
 import updater
 import utils
 
-# Frame image cache for audio levels
+# Frame level value cache for audio levels
 # path -> list of frame levels
 frames_cache = {}
 
@@ -66,7 +66,7 @@ def set_waveform_displayer_clip_from_popup(data):
         frames_cache[clip.path] = frame_levels
         clip.waveform_data = frame_levels
         return
-    
+
     progress_bar = gtk.ProgressBar()
     title = _("Audio Levels Data Render")
     text = "<b>Media File: </b>" + clip.path
