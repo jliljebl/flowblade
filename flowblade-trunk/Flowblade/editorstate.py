@@ -82,7 +82,7 @@ audio_monitoring_available = False
 cursor_on_tline = False
 
 def current_is_move_mode():
-    if ((edit_mode == INSERT_MOVE) or (edit_mode == OVERWRITE_MOVE)):
+    if ((edit_mode == INSERT_MOVE) or (edit_mode == OVERWRITE_MOVE) or (edit_mode == MULTI_MOVE)):
         return True
     return False
 
