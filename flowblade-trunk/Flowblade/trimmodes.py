@@ -92,7 +92,7 @@ def _get_trim_limits(cut_frame, from_clip, to_clip):
     else:
         trim_limits["from_start"] = cut_frame - from_clip.clip_out
         from_length = from_clip.get_length()
-        trim_limits["from_end"] = cut_frame - from_clip.clip_out + from_length
+        trim_limits["from_end"] = cut_frame - from_clip.clip_out + from_length - 1
         trim_limits["both_start"] = cut_frame - (from_clip.clip_out - from_clip.clip_in)
     if to_clip == None:
         trim_limits["to_start"] = -1
@@ -106,7 +106,36 @@ def _get_trim_limits(cut_frame, from_clip, to_clip):
     
     return trim_limits
 
-def _set_edit_data(track, edit_frame):
+def _get_roll_limits(cut_frame, from_clip, to_clip):
+    # Trim_limits frames here are TIMELINE frames, not CLIP frames
+    trim_limits = {}
+
+    trim_limits["from_start"] = cut_frame - from_clip.clip_out
+    from_length = from_clip.get_length()
+    trim_limits["from_end"] = cut_frame - from_clip.clip_out + from_length - 2 # -1 incl, -1 leave one frame, == -2
+
+    if from_clip.is_blanck_clip:
+        trim_limits["from_end"]  = 10000000
+
+    trim_limits["to_start"] = cut_frame - to_clip.clip_in
+    to_length = to_clip.get_length()
+    trim_limits["to_end"] = cut_frame - to_clip.clip_in + to_length - 1 # - 1, leave one frame
+    if to_clip.is_blanck_clip:
+        trim_limits["to_start"] = 0
+
+    if trim_limits["from_start"] > trim_limits["to_start"]:
+        trim_limits["both_start"] = trim_limits["from_start"]
+    else:
+        trim_limits["both_start"] = trim_limits["to_start"]
+        
+    if trim_limits["to_end"] < trim_limits["from_end"]:
+        trim_limits["both_end"] = trim_limits["to_end"]
+    else:
+        trim_limits["both_end"] = trim_limits["from_end"]
+
+    return trim_limits
+    
+def _set_edit_data(track, edit_frame, is_one_roll_trim):
     """
     Sets edit mode data used by both trim modes
     """
@@ -134,8 +163,11 @@ def _set_edit_data(track, edit_frame):
         last_from_trimmed = False
 
     # Get trimlimits
-    trim_limits = _get_trim_limits(edit_frame, from_clip, to_clip)
-
+    if is_one_roll_trim:
+        trim_limits = _get_trim_limits(edit_frame, from_clip, to_clip)
+    else:
+        trim_limits = _get_roll_limits(edit_frame, from_clip, to_clip)
+        
     global edit_data
     edit_data = {"track":track.id,
                  "track_object":track,
@@ -212,7 +244,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
                                 # because cut is now at a different place.
         to_side_being_edited = editing_to_clip
 
-    _set_edit_data(track, edit_frame)
+    _set_edit_data(track, edit_frame, True)
 
     global edit_data
     # Set side being edited to default to-side
@@ -459,8 +491,8 @@ def set_tworoll_mode(track, current_frame = -1):
         return False
 
     try:
-        _set_edit_data(track, edit_frame)
-    except:
+        _set_edit_data(track, edit_frame, False)
+    except: # fails for last clip
         return False
 
     if edit_frame == 0:
@@ -471,7 +503,9 @@ def set_tworoll_mode(track, current_frame = -1):
     if edit_data["from_clip"] == None:
         _tworoll_init_failed_window()
         return False
-    
+
+    print edit_data["trim_limits"]
+
     # Force edit side to be on non-blanck side
     if to_side_being_edited and edit_data["to_clip"].is_blanck_clip:
         to_side_being_edited = False
@@ -662,7 +696,8 @@ def _legalize_two_roll_trim(frame, trim_limits):
     """
     Keeps two roll trim selection in legal edit area.
     """
-    first, last = _get_two_roll_first_and_last()
+    first = trim_limits["both_start"]
+    last = trim_limits["both_end"]
 
     if frame < first:
         frame = first
