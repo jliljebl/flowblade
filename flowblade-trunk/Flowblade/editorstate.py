@@ -26,6 +26,7 @@ Accessor methods are there mainly to improve code readability elsewhere.
 We're using BIG_METHOD_NAMES() for state objects. This is a bit unusual
 but looks good when reading code.
 """
+
 # Edit modes
 INSERT_MOVE = 0
 OVERWRITE_MOVE = 1
@@ -53,7 +54,6 @@ _monitor_media_file = None
 
 # Flag for timeline/clip display in monitor
 _timeline_displayed = True
-
 
 # Timeline current frame is saved here while clip is being displayed in monitor
 # and PLAYER() current frame is not timeline frame 
