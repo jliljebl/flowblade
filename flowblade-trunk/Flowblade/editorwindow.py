@@ -687,7 +687,6 @@ class EditorWindow:
         self.app_v_paned.set_position(editorpersistance.prefs.app_v_paned_position)
 
     def _init_view_menu(self, menu_item):
-        #menu = menu_item.get_submenu()
         menu_item.remove_submenu()
         menu = gtk.Menu()
 

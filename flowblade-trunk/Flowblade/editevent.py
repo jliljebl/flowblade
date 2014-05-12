@@ -160,7 +160,7 @@ def undo_redo_stress_test():
             time.sleep(delay)
     
 # ------------------------------------- edit mode setting
-def set_default_edit_mode():
+def set_default_edit_mode(disable_mouse=False):
     """
     This is used as global 'go to start position' exit door from
     situations where for example user is in trim and exits it
@@ -171,6 +171,9 @@ def set_default_edit_mode():
     """
     gui.editor_window.handle_insert_move_mode_button_press()
     gui.editor_window.set_mode_selector_to_mode()
+    if disable_mouse:
+        global mouse_disabled
+        mouse_disabled = True
 
 def set_clip_monitor_edit_mode():
     """
@@ -469,9 +472,7 @@ def tline_canvas_mouse_pressed(event, frame):
                 PLAYER().seek_frame(frame) 
         else:
             # For trim modes set <X>_NO_EDIT edit mode and seek frame. and seek frame
-            #mouse_disabled == True
             trimmodes.set_no_edit_trim_mode()
-            #set_default_edit_mode()
             PLAYER().seek_frame(frame)
         return
     # LEFT BUTTON + CTRL: Select new trimmed clip in one roll trim mode
@@ -480,8 +481,13 @@ def tline_canvas_mouse_pressed(event, frame):
           and EDIT_MODE() == editorstate.ONE_ROLL_TRIM):
         track = tlinewidgets.get_track(event.y)
         if track == None:
+            if editorpersistance.prefs.empty_click_exits_trims == True:
+                set_default_edit_mode(True)
             return
-        trimmodes.set_oneroll_mode(track, frame)
+        success = trimmodes.set_oneroll_mode(track, frame)
+        if (not success) and  editorpersistance.prefs.empty_click_exits_trims == True:
+            set_default_edit_mode(True)
+            return  
         mouse_disabled = True
         gui.editor_window.set_cursor_to_mode()
         gui.editor_window.set_mode_selector_to_mode()
@@ -491,8 +497,13 @@ def tline_canvas_mouse_pressed(event, frame):
           and EDIT_MODE() == editorstate.TWO_ROLL_TRIM):
         track = tlinewidgets.get_track(event.y)
         if track == None:
+            if editorpersistance.prefs.empty_click_exits_trims == True:
+                set_default_edit_mode(True)
             return
-        trimmodes.set_tworoll_mode(track, frame)
+        success = trimmodes.set_tworoll_mode(track, frame)
+        if (not success) and  editorpersistance.prefs.empty_click_exits_trims == True:
+            set_default_edit_mode(True)
+            return
         mouse_disabled = True
     # LEFT BUTTON: Handle left mouse button edits by passing event to current edit mode
     # handler func

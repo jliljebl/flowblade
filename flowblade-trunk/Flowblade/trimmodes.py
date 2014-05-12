@@ -19,12 +19,13 @@
 """
 
 """
-Module handles user edit events for one- and tworoll trim modes. 
+Module handles user edit events for trim, roll and slip trim modes. 
 """
 
 import appconsts
 import dialogutils
 import edit
+import editorpersistance
 import editorstate
 from editorstate import current_sequence
 from editorstate import PLAYER
@@ -41,7 +42,7 @@ loop_half_length = DEFAULT_LOOP_HALF_LENGTH
 # Data/state for ongoing edit.
 edit_data = None
 
-# Flag for disbling mouse event
+# Flag for disabling mouse event
 mouse_disabled = False
 
 # Flag for temporary blank needed for one roll trim editing track's last clip's out
@@ -294,7 +295,10 @@ def oneroll_trim_press(event, frame):
         track = tlinewidgets.get_track(event.y)
         success = set_oneroll_mode(track, frame)
         if not success:
-            set_no_edit_mode_func() # further mouse events are handled at editevent.py
+            if editorpersistance.prefs.empty_click_exits_trims == True:
+                set_exit_mode_func(True) # further mouse events are handled at editevent.py
+            else:
+                set_no_edit_mode_func() # further mouse events are handled at editevent.py
         else:
             # new trim inited, editing non-active until release
             tlinewidgets.trim_mode_in_non_active_state = True
@@ -307,7 +311,10 @@ def oneroll_trim_press(event, frame):
         track = tlinewidgets.get_track(event.y)
         success = set_oneroll_mode(track, frame)
         if not success:
-            set_no_edit_mode_func() # no furter mouse events will come here
+            if editorpersistance.prefs.empty_click_exits_trims == True:
+                set_exit_mode_func(True) # further mouse events are handled at editevent.py
+            else:
+                set_no_edit_mode_func() # no furter mouse events will come here
         else:
             # new trim inited, editing non-active until release
             tlinewidgets.trim_mode_in_non_active_state = True
@@ -504,8 +511,6 @@ def set_tworoll_mode(track, current_frame = -1):
         _tworoll_init_failed_window()
         return False
 
-    print edit_data["trim_limits"]
-
     # Force edit side to be on non-blanck side
     if to_side_being_edited and edit_data["to_clip"].is_blanck_clip:
         to_side_being_edited = False
@@ -571,7 +576,10 @@ def _attempt_reinit_tworoll(event, frame):
         track = tlinewidgets.get_track(event.y)
         success = set_tworoll_mode(track, frame)
         if not success:
-            set_no_edit_mode_func()
+            if editorpersistance.prefs.empty_click_exits_trims == True:
+                set_exit_mode_func(True) # further mouse events are handled at editevent.py
+            else:
+                set_no_edit_mode_func() # further mouse events are handled at editevent.py
         else:
             global mouse_disabled
             tlinewidgets.trim_mode_in_non_active_state = True
@@ -808,7 +816,10 @@ def _attempt_reinit_slide(event, frame):
     track = tlinewidgets.get_track(event.y)
     success = set_slide_mode(track, frame)
     if not success:
-        set_no_edit_mode_func()
+        if editorpersistance.prefs.empty_click_exits_trims == True:
+            set_exit_mode_func(True) # further mouse events are handled at editevent.py
+        else:
+            set_no_edit_mode_func() # further mouse events are handled at editevent.py
     else:
         global mouse_disabled
         tlinewidgets.trim_mode_in_non_active_state = True
@@ -822,7 +833,10 @@ def slide_trim_press(event, frame):
         return
     
     if frame > tlinewidgets.get_track(event.y).get_length():
-        set_no_edit_mode_func()
+        if editorpersistance.prefs.empty_click_exits_trims == True:
+            set_exit_mode_func(True) # further mouse events are handled at editevent.py
+        else:
+            set_no_edit_mode_func() # further mouse events are handled at editevent.py
         return
 
     if not _pressed_on_slide_active_area(frame):

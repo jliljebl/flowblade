@@ -712,7 +712,7 @@ def draw_compositor_move_overlay(cr, data):
     scale_length = clip_length * pix_per_frame
     scale_in = clip_start_frame * pix_per_frame
 
-    target_track =  current_sequence().tracks[compositor.transition.a_track]
+    target_track = current_sequence().tracks[compositor.transition.a_track]
     target_y = _get_track_y(target_track.id) + target_track.height - COMPOSITOR_HEIGHT_OFF
             
     _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y)
@@ -822,7 +822,7 @@ def _draw_view_icon(cr, x, y):
 # ------------------------------- WIDGETS
 class TimeLineCanvas:
     """
-    GUI component for editing clips
+    GUI component for editing clips.
     """
 
     def __init__(self, press_listener, move_listener, release_listener, double_click_listener,
@@ -835,7 +835,8 @@ class TimeLineCanvas:
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
         self.widget.mouse_scroll_func = mouse_scroll_listener
-     
+        #self.widget.set_events(self.widget.get_events() | gtk.gdk.POINTER_MOTION_MASK)
+
         # Mouse events are passed on 
         self.press_listener = press_listener
         self.move_listener = move_listener
@@ -873,7 +874,9 @@ class TimeLineCanvas:
         Mouse move callback
         """
         if not self.drag_on:
+            self.set_pointer_context(x, y)
             return
+
         button = -1 
         if (state & gtk.gdk.BUTTON1_MASK):
             button = 1
@@ -888,11 +891,31 @@ class TimeLineCanvas:
         self.drag_on = False
         self.release_listener(event.x, event.y, get_frame(event.x), \
                               event.button, event.state)
-    
-    """
-    def _mouse_left(self, event):
-        print "hailou"
-    """
+
+    def set_pointer_context(self, x, y):
+        frame = get_frame(x)
+        hit_compositor = compositor_hit(frame, y, current_sequence().compositors)
+        if hit_compositor != None:
+            print "comp"
+            return
+
+        track = get_track(y)  
+        if track == None:
+            return    
+
+        clip_index = current_sequence().get_clip_index(track, frame)
+        if clip_index == -1:
+            return
+
+        clip_start_frame = track.clip_start(clip_index) - pos
+        if abs(x - _get_frame_x(clip_start_frame)) < 5:
+            print "clip start"
+            return
+
+        clip_end_frame = track.clip_start(clip_index + 1) - pos
+        if abs(x - _get_frame_x(clip_end_frame)) < 5:
+            print "clip end"
+            return
 
     #----------------------------------------- DRAW
     def _draw(self, event, cr, allocation):
@@ -957,12 +980,13 @@ class TimeLineCanvas:
             text_y = TEXT_Y
         else:
             text_y = TEXT_Y_SMALL
-            
-        # Get clip indexes for clips in first and last displayed frame.
+
+        # Get clip indexes for clips overlapping first and last displayed frame.
         start = track.get_clip_index_at(int(pos))
         end = track.get_clip_index_at(int(pos + width / pix_per_frame))
-        
+
         width_frames = float(width) / pix_per_frame
+
         # Add 1 to end because range() last index exclusive 
         # MLT returns clips structure size + 1 if frame after last clip,
         # so in that case don't add anything.
@@ -1168,8 +1192,7 @@ class TimeLineCanvas:
                         except:
                             clip.sync_diff = "n/a"
                             cr.show_text(str(clip.sync_diff))
-    
-                
+
             # Draw proxy indicator
             if scale_length > FILL_MIN:
                 if (not clip.is_blanck_clip) and proxy_paths.get(clip.path) != None:
