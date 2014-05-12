@@ -150,13 +150,23 @@ def _edit_prefs_panel():
     spin_adj = gtk.Adjustment(prefs.default_grfx_length, 1, 15000, 1)
     gfx_length_spin = gtk.SpinButton(spin_adj)
     gfx_length_spin.set_numeric(True)
+
+    trim_exit_on_empty = gtk.CheckButton()
+    trim_exit_on_empty.set_active(prefs.empty_click_exits_trims)
+
+    quick_enter_trim = gtk.CheckButton()
+    quick_enter_trim.set_active(prefs.quick_enter_trims)
     
     # Layout
     row1 = guiutils.get_two_column_box(gtk.Label(_("Autoplay new Clips in Clip Monitor")), auto_play_in_clip_monitor, PREFERENCES_LEFT)
     row2 = guiutils.get_two_column_box(gtk.Label(_("Center Current Frame on Playback Stop")), auto_center_on_stop, PREFERENCES_LEFT)
     row4 = guiutils.get_two_column_box(gtk.Label(_("Graphics default length")), gfx_length_spin, PREFERENCES_LEFT)
+    row5 = guiutils.get_two_column_box(gtk.Label(_("Trim Modes exit on empty click")), trim_exit_on_empty, PREFERENCES_LEFT)
+    row6 = guiutils.get_two_column_box(gtk.Label(_("Quick enter Trim Modes")), quick_enter_trim, PREFERENCES_LEFT)
     
     vbox = gtk.VBox(False, 2)
+    vbox.pack_start(row5, False, False, 0)
+    vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row4, False, False, 0)
@@ -166,7 +176,7 @@ def _edit_prefs_panel():
     align.set_padding(12, 0, 12, 12)
     align.add(vbox)
 
-    return align, (auto_play_in_clip_monitor, auto_center_on_stop, gfx_length_spin)
+    return align, (auto_play_in_clip_monitor, auto_center_on_stop, gfx_length_spin, trim_exit_on_empty, quick_enter_trim)
     
 def _view_prefs_panel():
     prefs = editorpersistance.prefs
