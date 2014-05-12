@@ -300,11 +300,17 @@ def oneroll_trim_press(event, frame):
             else:
                 set_no_edit_mode_func() # further mouse events are handled at editevent.py
         else:
-            # new trim inited, editing non-active until release
-            tlinewidgets.trim_mode_in_non_active_state = True
-            gui.tline_canvas.widget.queue_draw()
-            gui.editor_window.set_tline_cursor(editorstate.ONE_ROLL_TRIM_NO_EDIT)
-            mouse_disabled = True
+
+            if not editorpersistance.prefs.quick_enter_trims:
+                # new trim inited, editing non-active until release
+                tlinewidgets.trim_mode_in_non_active_state = True
+                gui.tline_canvas.widget.queue_draw()
+                gui.editor_window.set_tline_cursor(editorstate.ONE_ROLL_TRIM_NO_EDIT)
+                mouse_disabled = True
+            else:
+                # new trim inited, active immediately
+                oneroll_trim_move(event.x, event.y, frame, None)
+                gui.tline_canvas.widget.queue_draw()
         return
         
     if not _pressed_on_one_roll_active_area(frame):
@@ -316,11 +322,16 @@ def oneroll_trim_press(event, frame):
             else:
                 set_no_edit_mode_func() # no furter mouse events will come here
         else:
-            # new trim inited, editing non-active until release
-            tlinewidgets.trim_mode_in_non_active_state = True
-            gui.tline_canvas.widget.queue_draw()
-            gui.editor_window.set_tline_cursor(editorstate.ONE_ROLL_TRIM_NO_EDIT)
-            mouse_disabled = True
+            if not editorpersistance.prefs.quick_enter_trims:
+                # new trim inited, editing non-active until release
+                tlinewidgets.trim_mode_in_non_active_state = True
+                gui.tline_canvas.widget.queue_draw()
+                gui.editor_window.set_tline_cursor(editorstate.ONE_ROLL_TRIM_NO_EDIT)
+                mouse_disabled = True
+            else:
+                # new trim inited, active immediately
+                oneroll_trim_move(event.x, event.y, frame, None)
+                gui.tline_canvas.widget.queue_draw()
         return
 
     # Get legal edit delta and set to edit mode data for overlay draw
