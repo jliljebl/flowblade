@@ -252,7 +252,7 @@ def oneroll_trim_no_edit_init():
     stop_looping()
     editorstate.edit_mode = editorstate.ONE_ROLL_TRIM_NO_EDIT
     gui.editor_window.set_cursor_to_mode()
-    tlinewidgets.set_edit_mode(None, None) # No overlays are drwn in this edit mode
+    tlinewidgets.set_edit_mode(None, None) # No overlays are drawn in this edit mode
     movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
     updater.set_trim_mode_gui()
 
@@ -263,7 +263,10 @@ def oneroll_trim_no_edit_press(event, frame):
         tlinewidgets.trim_mode_in_non_active_state = True
         mouse_disabled = True
     else:
-        editorstate.edit_mode = editorstate.ONE_ROLL_TRIM_NO_EDIT
+        if editorpersistance.prefs.empty_click_exits_trims == True:
+            set_default_edit_mode(True)
+        else:
+            editorstate.edit_mode = editorstate.ONE_ROLL_TRIM_NO_EDIT
 
 def oneroll_trim_no_edit_move(x, y, frame, state):
     pass
@@ -312,8 +315,11 @@ def tworoll_trim_no_edit_press(event, frame):
         tlinewidgets.trim_mode_in_non_active_state = True
         mouse_disabled = True
     else:
-        editorstate.edit_mode = editorstate.TWO_ROLL_TRIM_NO_EDIT
-    
+        if editorpersistance.prefs.empty_click_exits_trims == True:
+            set_default_edit_mode(True)
+        else:
+            editorstate.edit_mode = editorstate.TWO_ROLL_TRIM_NO_EDIT
+
 def tworoll_trim_no_edit_move(x, y, frame, state):
     pass
 
@@ -360,7 +366,10 @@ def slide_trim_no_edit_press(event, frame):
         tlinewidgets.trim_mode_in_non_active_state = True
         mouse_disabled = True
     else:
-        editorstate.edit_mode = editorstate.SLIDE_TRIM_NO_EDIT
+        if editorpersistance.prefs.empty_click_exits_trims == True:
+            set_default_edit_mode(True)
+        else:
+            editorstate.edit_mode = editorstate.SLIDE_TRIM_NO_EDIT
     
 def slide_trim_no_edit_move(x, y, frame, state):
     pass
@@ -530,7 +539,7 @@ def tline_canvas_mouse_moved(x, y, frame, button, state):
     if button == 3:
         if not timeline_visible():
             return
-        PLAYER().seek_frame(frame) 
+        PLAYER().seek_frame(frame)
     # Handle left mouse button edits
     elif button == 1:
         mode_funcs = EDIT_MODE_FUNCS[EDIT_MODE()]

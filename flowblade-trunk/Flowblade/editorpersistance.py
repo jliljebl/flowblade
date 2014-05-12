@@ -179,14 +179,14 @@ def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
     out_fr = in_fr + int(prefs.default_grfx_length) - 1 # -1, out inclusive
     return (in_fr, out_fr, prefs.default_grfx_length)
-    
 
-    
+
+
 class EditorPreferences:
     """
     Class holds data of persistant user preferences for editor.
     """
-    
+
     def __init__(self):
         self.open_in_last_opended_media_dir = True
         self.last_opened_media_dir = None
@@ -217,4 +217,4 @@ class EditorPreferences:
         self.dark_theme = False
         self.remember_last_render_dir = True
         self.empty_click_exits_trims = True
-
+        self.quick_enter_trims = True
