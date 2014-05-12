@@ -216,4 +216,5 @@ class EditorPreferences:
         self.buttons_style = GLASS_STYLE
         self.dark_theme = False
         self.remember_last_render_dir = True
+        self.empty_click_exits_trims = True
 
