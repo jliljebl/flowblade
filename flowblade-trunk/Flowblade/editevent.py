@@ -259,9 +259,12 @@ def oneroll_trim_no_edit_init():
 def oneroll_trim_no_edit_press(event, frame):
     success = oneroll_trim_mode_init(event.x, event.y)
     if success:
-        global mouse_disabled
-        tlinewidgets.trim_mode_in_non_active_state = True
-        mouse_disabled = True
+        if not editorpersistance.prefs.quick_enter_trims:
+            global mouse_disabled
+            tlinewidgets.trim_mode_in_non_active_state = True
+            mouse_disabled = True
+        else:
+            trimmodes.oneroll_trim_move(event.x, event.y, frame, None)
     else:
         if editorpersistance.prefs.empty_click_exits_trims == True:
             set_default_edit_mode(True)
@@ -494,12 +497,15 @@ def tline_canvas_mouse_pressed(event, frame):
                 set_default_edit_mode(True)
             return
         success = trimmodes.set_oneroll_mode(track, frame)
-        if (not success) and  editorpersistance.prefs.empty_click_exits_trims == True:
+        if (not success) and editorpersistance.prefs.empty_click_exits_trims == True:
             set_default_edit_mode(True)
-            return  
-        mouse_disabled = True
+            return
         gui.editor_window.set_cursor_to_mode()
         gui.editor_window.set_mode_selector_to_mode()
+        if not editorpersistance.prefs.quick_enter_trims:
+            mouse_disabled = True
+        else:
+            trimmodes.oneroll_trim_move(event.x, event.y, frame, None)
     # LEFT BUTTON + CTRL: Select new trimmed clip in two roll trim mode
     elif (event.button == 1 
           and (event.state & gtk.gdk.CONTROL_MASK)
