@@ -300,7 +300,6 @@ def oneroll_trim_press(event, frame):
             else:
                 set_no_edit_mode_func() # further mouse events are handled at editevent.py
         else:
-
             if not editorpersistance.prefs.quick_enter_trims:
                 # new trim inited, editing non-active until release
                 tlinewidgets.trim_mode_in_non_active_state = True
@@ -592,12 +591,18 @@ def _attempt_reinit_tworoll(event, frame):
             else:
                 set_no_edit_mode_func() # further mouse events are handled at editevent.py
         else:
-            global mouse_disabled
-            tlinewidgets.trim_mode_in_non_active_state = True
-            gui.tline_canvas.widget.queue_draw()
-            gui.editor_window.set_tline_cursor(editorstate.TWO_ROLL_TRIM_NO_EDIT)
-            mouse_disabled = True
-
+            if not editorpersistance.prefs.quick_enter_trims:
+                # new trim inited, editing non-active until release
+                global mouse_disabled
+                tlinewidgets.trim_mode_in_non_active_state = True
+                gui.tline_canvas.widget.queue_draw()
+                gui.editor_window.set_tline_cursor(editorstate.TWO_ROLL_TRIM_NO_EDIT)
+                mouse_disabled = True
+            else:
+                # new trim inited, active immediately
+                tworoll_trim_move(event.x, event.y, frame, None)
+                gui.tline_canvas.widget.queue_draw()
+                
 def tworoll_trim_move(x, y, frame, state):
     """
     User moves mouse when in two roll mode.
