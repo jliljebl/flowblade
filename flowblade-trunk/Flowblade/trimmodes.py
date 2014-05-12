@@ -811,7 +811,6 @@ def _set_slide_mode_edit_data(track, edit_frame):
                  "mouse_delta":0,
                  "clip":clip}
 
-
 def _attempt_reinit_slide(event, frame):
     track = tlinewidgets.get_track(event.y)
     success = set_slide_mode(track, frame)
