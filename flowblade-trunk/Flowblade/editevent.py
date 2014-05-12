@@ -368,9 +368,13 @@ def slide_trim_no_edit_init():
 def slide_trim_no_edit_press(event, frame):
     success = slide_trim_mode_init(event.x, event.y)
     if success:
-        global mouse_disabled
-        tlinewidgets.trim_mode_in_non_active_state = True
-        mouse_disabled = True
+        if not editorpersistance.prefs.quick_enter_trims:
+            global mouse_disabled
+            tlinewidgets.trim_mode_in_non_active_state = True
+            mouse_disabled = True
+        else:
+            trimmodes.edit_data["press_start"] = frame
+            trimmodes.slide_trim_move(event.x, event.y, frame, None)
     else:
         if editorpersistance.prefs.empty_click_exits_trims == True:
             set_default_edit_mode(True)

@@ -675,7 +675,6 @@ def _do_two_roll_edit(new_cut_frame):
         edit.do_gui_update = True
         action.do_edit()
 
-
 def two_rolledit_done(was_redo, cut_frame, delta, track, to_side_being_edited):
     """
     Set two roll playback to correct place after edit or redo or undo.
@@ -836,13 +835,23 @@ def _attempt_reinit_slide(event, frame):
         else:
             set_no_edit_mode_func() # further mouse events are handled at editevent.py
     else:
-        global mouse_disabled
-        tlinewidgets.trim_mode_in_non_active_state = True
-        gui.tline_canvas.widget.queue_draw()
-        gui.editor_window.set_tline_cursor(editorstate.SLIDE_TRIM_NO_EDIT)
-        mouse_disabled = True
-    
+        if not editorpersistance.prefs.quick_enter_trims:
+            gui.tline_canvas.widget.queue_draw()
+            gui.editor_window.set_tline_cursor(editorstate.SLIDE_TRIM_NO_EDIT)
+            tlinewidgets.trim_mode_in_non_active_state = True
+            global mouse_disabled
+            mouse_disabled = True
+        else:
+            # new trim inited, active immediately
+            global edit_data
+            edit_data["press_start"] = frame
+            slide_trim_move(event.x, event.y, frame, None)
+            gui.tline_canvas.widget.queue_draw()
+
 def slide_trim_press(event, frame):
+    global edit_data
+    edit_data["press_start"] = frame
+
     if not _pressed_on_edited_track(event.y):
         _attempt_reinit_slide(event, frame)
         return
@@ -858,8 +867,6 @@ def slide_trim_press(event, frame):
         _attempt_reinit_slide(event, frame)
         return
 
-    global edit_data
-    edit_data["press_start"] = frame
     display_frame = _update_slide_trim_for_mouse_frame(frame)
     PLAYER().seek_frame(display_frame)
 
