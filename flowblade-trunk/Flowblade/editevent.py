@@ -314,9 +314,12 @@ def tworoll_trim_no_edit_init():
 def tworoll_trim_no_edit_press(event, frame):
     success = tworoll_trim_mode_init(event.x, event.y)
     if success:
-        global mouse_disabled
-        tlinewidgets.trim_mode_in_non_active_state = True
-        mouse_disabled = True
+        if not editorpersistance.prefs.quick_enter_trims:
+            global mouse_disabled
+            tlinewidgets.trim_mode_in_non_active_state = True
+            mouse_disabled = True
+        else:
+            trimmodes.tworoll_trim_move(event.x, event.y, frame, None)
     else:
         if editorpersistance.prefs.empty_click_exits_trims == True:
             set_default_edit_mode(True)
@@ -519,7 +522,10 @@ def tline_canvas_mouse_pressed(event, frame):
         if (not success) and  editorpersistance.prefs.empty_click_exits_trims == True:
             set_default_edit_mode(True)
             return
-        mouse_disabled = True
+        if not editorpersistance.prefs.quick_enter_trims:
+            mouse_disabled = True
+        else:
+            trimmodes.tworoll_trim_move(event.x, event.y, frame, None)
     # LEFT BUTTON: Handle left mouse button edits by passing event to current edit mode
     # handler func
     elif event.button == 1:
