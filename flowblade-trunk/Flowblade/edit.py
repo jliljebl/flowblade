@@ -361,7 +361,7 @@ class EditAction:
                                          # This REPAINTS TIMELINE as a side effect.
         updater.update_kf_editor()
 
-        current_sequence().update_hidden_track_length()
+        current_sequence().update_edit_tracks_length() # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
 
 
 # ---------------------------------------------------- SYNC DATA
