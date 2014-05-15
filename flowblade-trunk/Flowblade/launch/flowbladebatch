@@ -12,4 +12,3 @@ sys.path.insert(0, modules_path + "/tools")
 import batchrendering
 
 batchrendering.main(modules_path)
-

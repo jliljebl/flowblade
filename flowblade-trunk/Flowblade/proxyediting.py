@@ -32,6 +32,7 @@ import editorpersistance
 import editorstate
 import gui
 import guiutils
+import mltrefhold
 import persistance
 import renderconsumer
 import sequence
@@ -98,6 +99,7 @@ class ProxyRenderRunnerThread(threading.Thread):
             consumer.set("rescale", "nearest")
 
             file_producer = mlt.Producer(self.proxy_profile, str(media_file.path))
+            mltrefhold.hold_ref(file_producer)
             stop_frame = file_producer.get_length() - 1
 
             # Create and launch render thread

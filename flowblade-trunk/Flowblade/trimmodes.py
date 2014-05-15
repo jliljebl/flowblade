@@ -21,6 +21,7 @@
 """
 Module handles user edit events for trim, roll and slip trim modes. 
 """
+#import threading
 
 import appconsts
 import dialogutils
@@ -54,6 +55,7 @@ set_exit_mode_func = None
 # Function that return <X>_NO_EDIT mode that displays trim cursor but no edit is under way 
 set_no_edit_mode_func = None
 
+#trim_init_lock = threading.Lock()
 
 # ------------------------------------ module functions       
 def _get_trim_edit(track, frame):
@@ -278,7 +280,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
 
     # Display trim clip
     if clip.media_type != appconsts.PATTERN_PRODUCER:
-        current_sequence().display_trim_clip(clip.path, clip_start) # File producer
+        current_sequence().display_trim_clip(clip.path, clip_start) # file producer
     else:
         current_sequence().display_trim_clip(None, clip_start, clip.create_data) # pattern producer
         
@@ -432,10 +434,10 @@ def one_roll_trim_undo_done(track, index, is_to_side_edit):
     Callback if initial edit done. Undo and redo do not cause this to be called
     """
     # If in move modes do nothing
-    if editorstate.edit_mode < editorstate.ONE_ROLL_TRIM:
-        return
+    #if editorstate.edit_mode < editorstate.ONE_ROLL_TRIM:
+    #    return
 
-    # If in one roll mode, reinit edit mode to correct side
+    # reinit edit mode to correct side
     frame = track.clip_start(index)
     success = set_oneroll_mode(track, frame, is_to_side_edit)
     if not success:

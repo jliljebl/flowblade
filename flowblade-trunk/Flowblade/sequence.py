@@ -31,8 +31,12 @@ import edit
 import editorstate
 import mltfilters
 import mlttransitions
+import mltrefhold
 import patternproducer
 import utils
+
+
+import traceback
 
 # Media types for tracks or clips
 UNKNOWN = appconsts.UNKNOWN
@@ -133,6 +137,7 @@ class Sequence:
 
         # Create and ad gain filter
         gain_filter = mlt.Filter(self.profile, "volume")
+        mltrefhold.hold_ref(gain_filter)
         gain_filter.set("gain", str(self.master_audio_gain))
         self.tractor.attach(gain_filter)
         self.tractor.gain_filter = gain_filter
@@ -141,9 +146,11 @@ class Sequence:
         self.multitrack = self.tractor.multitrack()
         
         self.vectorscope = mlt.Filter(self.profile, "frei0r.vectorscope")
+        mltrefhold.hold_ref(self.vectorscope)
         self.vectorscope.set("mix", "0.5")
         self.vectorscope.set("overlay sides", "0.0") 
         self.rgbparade =  mlt.Filter(self.profile, "frei0r.rgbparade")
+        mltrefhold.hold_ref(self.rgbparade)
         self.rgbparade.set("mix", "0.4")
         self.rgbparade.set("overlay sides", "0.0") 
         self.outputfilter = None
@@ -273,6 +280,7 @@ class Sequence:
     def _mix_audio_for_track(self, track):
         # Create and add transition to combine track audios
         transition = mlt.Transition(self.profile, "mix")
+        mltrefhold.hold_ref(transition)
         transition.set("a_track", int(AUDIO_MIX_DOWN_TRACK))
         transition.set("b_track", track.id)
         transition.set("always_active", 1)
@@ -281,6 +289,7 @@ class Sequence:
 
         # Create and ad gain filter
         gain_filter = mlt.Filter(self.profile, "volume")
+        mltrefhold.hold_ref(gain_filter)
         gain_filter.set("gain", str(track.audio_gain))
         track.attach(gain_filter)
         track.gain_filter = gain_filter
@@ -336,6 +345,7 @@ class Sequence:
     def add_track_pan_filter(self, track, value):
         # This method is used for master too, and called with tractor then
         pan_filter = mlt.Filter(self.profile, "panner")
+        mltrefhold.hold_ref(pan_filter)
         pan_filter.set("start", value)
         track.attach(pan_filter)
         track.pan_filter = pan_filter 
@@ -371,6 +381,7 @@ class Sequence:
         not add it to track/playlist object.
         """
         producer = mlt.Producer(self.profile, str(path)) # this runs 0.5s+ on some clips
+        mltrefhold.hold_ref(producer)
         producer.path = path
         producer.filters = []
         
@@ -395,7 +406,8 @@ class Sequence:
         """
         fr_path = "framebuffer:" + path + "?" + str(speed)
         producer = mlt.Producer(self.profile, None, str(fr_path)) # this runs 0.5s+ on some clips
- 
+        mltrefhold.hold_ref(producer)
+
         (folder, file_name) = os.path.split(path)
         (name, ext) = os.path.splitext(file_name)
         producer.name = name
@@ -540,7 +552,7 @@ class Sequence:
 
     def _create_and_plant_clone_compositor(self, old_compositor):
         # Remove old compositor
-        edit.old_compositors.append(old_compositor) # HACK. Garbage collecting compositors causes crashes.
+        #edit.old_compositors.append(old_compositor) # HACK. Garbage collecting compositors causes crashes.
         self.field.disconnect_service(old_compositor.transition.mlt_transition)
         
         # Create and plant new compositor
@@ -564,7 +576,7 @@ class Sequence:
     def _create_and_plant_clone_compositor_for_sequnce_clone(self, old_compositor, track_delta):
         # Used when cloning compositors to change track count by cloning sequence
         # Remove old compositor
-        edit.old_compositors.append(old_compositor) # HACK. Garbage collecting compositors causes crashes.
+        # edit.old_compositors.append(old_compositor) # HACK. Garbage collecting compositors causes crashes.
         
         # Create and plant new compositor
         compositor = self.create_compositor(old_compositor.type_id)
@@ -581,7 +593,7 @@ class Sequence:
         self.compositors.append(compositor)
 
     def remove_compositor(self, old_compositor):
-        edit.old_compositors.append(old_compositor)# HACK. Garbage collecting compositors causes crashes.
+        #edit.old_compositors.append(old_compositor)# HACK. Garbage collecting compositors causes crashes.
         try:
             self.compositors.remove(old_compositor)
         except ValueError: # has been restacked since creation, needs to looked up using destroy_id
@@ -590,7 +602,7 @@ class Sequence:
                 if comp.destroy_id == old_compositor.destroy_id:
                     found = True
                     self.compositors.remove(comp)
-                    edit.old_compositors.append(comp)
+                    #edit.old_compositors.append(comp)
                     old_compositor = comp
             if found == False:
                 raise ValueError('compositor not found using destroy_id')
@@ -622,7 +634,6 @@ class Sequence:
         else:
             if pattern_producer_data.type == IMAGE_SEQUENCE:
                 self.monitor_clip = self.create_file_producer_clip(pattern_producer_data.path)
-                #self.monitor_clip.set_in_and_out(0, pattern_producer_data.length)
             else:
                 self.monitor_clip = self.create_pattern_producer(pattern_producer_data)
         
@@ -635,6 +646,7 @@ class Sequence:
         """
         Adds clip to hidden track for trim editing display.
         """
+        self.tracks[-1].clear() # # TRIM INIT CRASH HACK, see clear_hidden_track there may be blank clip here
         track = self.tracks[-1] # Always last track
         
         # Display trimmmed clip on hidden track by creating copy of it.
@@ -647,7 +659,7 @@ class Sequence:
                 edit._insert_clip(track, clip, 1, 0, clip.get_length() - 1)
             else:
                 edit._insert_clip(track, clip, 1, -clip_start_pos, clip.get_length() - 1) # insert index 1 ?
-        # Pattern producer
+        # Pattern producer (FIX ME: does not allow for keyframes in pattern producer)
         else:
             clip = self.create_pattern_producer(patter_producer_data)
             edit._insert_clip(track, clip, 0, 0, clip.get_length() - 1)
@@ -682,10 +694,21 @@ class Sequence:
         Last track is hidden track used to display clips and trim edits.
         Here that track is cleared of any content.
         """
-        self.tracks[-1].clear()
+        seq_len = self.get_length()
+
         self.tracks[-1].clips = []
+        self.tracks[-1].clear()
+        edit._insert_blank(self.tracks[-1], 0, seq_len) # TRIM INIT CRASH HACK. This being empty crashes a lot, so far unexplained.
+        
         self._unmute_editable()
-    
+
+    def update_hidden_track_length(self):
+        seq_len = self.get_length()
+
+        self.tracks[-1].clips = []
+        self.tracks[-1].clear()
+        edit._insert_blank(self.tracks[-1], 0, seq_len)
+
     def _mute_editable(self):
         for i in range(1, len(self.tracks) - 1):
             track = self.tracks[i]
@@ -714,6 +737,7 @@ class Sequence:
     # ---------------------------------------------------- def add watermark
     def add_watermark(self, watermark_file_path):
         watermark = mlt.Filter(self.profile, "watermark")
+        mltrefhold.hold_ref(watermark)
         watermark.set("resource",str(watermark_file_path))
         watermark.set("composite.always_active", 1)
         self.tractor.attach(watermark)

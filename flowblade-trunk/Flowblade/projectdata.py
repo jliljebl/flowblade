@@ -33,6 +33,7 @@ import threading
 import appconsts
 import editorpersistance
 import mltprofiles
+import mltrefhold
 import patternproducer
 import miscdataobjects
 import respaths
@@ -398,6 +399,7 @@ class ThumbnailThread(threading.Thread):
 
         # Create one frame producer
         self.producer = mlt.Producer(self.profile, str(self.file_path))
+        mltrefhold.hold_ref(self.producer)
         if self.producer.is_valid() == False:
             raise ProducerNotValidError(file_path)
 
@@ -419,6 +421,7 @@ class ThumbnailThread(threading.Thread):
 
         # Create one frame producer
         self.producer = mlt.Producer(self.profile, str(self.file_path))
+        mltrefhold.hold_ref(self.producer)
         return self.producer.get_length()
 
     def shutdown(self):
