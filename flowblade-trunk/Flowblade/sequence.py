@@ -35,9 +35,6 @@ import mltrefhold
 import patternproducer
 import utils
 
-
-import traceback
-
 # Media types for tracks or clips
 UNKNOWN = appconsts.UNKNOWN
 VIDEO = appconsts.VIDEO
@@ -116,6 +113,7 @@ class Sequence:
         self.rendered_versions = {} #future feature, not used currently
         self.watermark_filter = None
         self.watermark_file_path = None
+        self.seq_len = 0
 
         # MLT objects for a multitrack sequence
         self.init_mlt_objects()
@@ -702,12 +700,21 @@ class Sequence:
         
         self._unmute_editable()
 
-    def update_hidden_track_length(self):
-        seq_len = self.get_length()
+    def update_edit_tracks_length(self):
+        # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
+        self.seq_len = 0
+        for i in range(1, len(self.tracks) - 1):
+            track_len = self.tracks[i].get_length()
+            if track_len > self.seq_len:
+                self.seq_len = track_len
 
-        self.tracks[-1].clips = []
-        self.tracks[-1].clear()
-        edit._insert_blank(self.tracks[-1], 0, seq_len)
+    def get_seq_range_frame(self, frame):
+        # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
+        # remove TimeLineFrameScale then too
+        if frame >= self.seq_len:
+            return self.seq_len
+        else:
+            return frame
 
     def _mute_editable(self):
         for i in range(1, len(self.tracks) - 1):

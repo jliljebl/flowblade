@@ -1634,18 +1634,21 @@ class TimeLineFrameScale:
                 updater.display_sequence_in_monitor()
                 return
             trimmodes.set_no_edit_trim_mode()
-            PLAYER().seek_frame(get_frame(event.x))
+            frame = current_sequence().get_seq_range_frame(get_frame(event.x))
+            PLAYER().seek_frame(frame)
             self.drag_on = True
 
     def _motion_notify_event(self, x, y, state):
         if((state & gtk.gdk.BUTTON1_MASK)
            or(state & gtk.gdk.BUTTON3_MASK)):
             if self.drag_on:
-                PLAYER().seek_frame(get_frame(x)) 
+                frame = current_sequence().get_seq_range_frame(get_frame(x))
+                PLAYER().seek_frame(frame) 
                 
     def _release_event(self, event):
         if self.drag_on:
-            PLAYER().seek_frame(get_frame(event.x)) 
+            frame = current_sequence().get_seq_range_frame(get_frame(event.x))
+            PLAYER().seek_frame(frame) 
         
         self.drag_on = False
 
