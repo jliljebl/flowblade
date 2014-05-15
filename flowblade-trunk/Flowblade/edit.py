@@ -43,7 +43,7 @@ import utils
 do_gui_update = False
 # HACK. Used to hold references to all created compositors as some compositors 
 # crash program if garbage collected.
-old_compositors = []
+# old_compositors = []
 
 # ---------------------------------- atomic edit ops
 def append_clip(track, clip, clip_in, clip_out):
@@ -360,6 +360,8 @@ class EditAction:
         updater.update_tline_scrollbar() # Slider needs to adjust to possily new program length.
                                          # This REPAINTS TIMELINE as a side effect.
         updater.update_kf_editor()
+
+        current_sequence().update_hidden_track_length()
 
 
 # ---------------------------------------------------- SYNC DATA
@@ -1232,8 +1234,8 @@ def _add_compositor_undo(self):
     
     # Hack!!! Some filters don't seem to handle setting compositors None (and the
     # following gc) and crash, so we'll hold references to them forever.
-    global old_compositors
-    old_compositors.append(self.compositor)
+    #global old_compositors
+    #old_compositors.append(self.compositor)
     compositeeditor.maybe_clear_editor(self.compositor)
     self.compositor = None
 
@@ -1290,8 +1292,8 @@ def _delete_compositor_redo(self):
     
     # Hack!!! Some filters don't seem to handle setting compositors None (and the
     # following gc) and crash, so we'll hold references to them forever.
-    global old_compositors
-    old_compositors.append(self.compositor)
+    #global old_compositors
+    #old_compositors.append(self.compositor)
     
     compositeeditor.maybe_clear_editor(self.compositor)
 

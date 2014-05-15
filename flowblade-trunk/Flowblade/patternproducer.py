@@ -30,6 +30,7 @@ import dialogutils
 import guiutils
 from editorstate import PROJECT
 import gui
+import mltrefhold
 import respaths
 import utils
 
@@ -130,16 +131,19 @@ def create_color_producer(profile, gdk_color_str):
     mlt_color = utils.gdk_color_str_to_mlt_color_str(gdk_color_str)
 
     producer = mlt.Producer(profile, "colour", mlt_color)
+    mltrefhold.hold_ref(producer)
     producer.gdk_color_str = gdk_color_str
 
     return producer
         
 def _create_noise_clip(profile):
     producer = mlt.Producer(profile, "frei0r.nois0r")
+    mltrefhold.hold_ref(producer)
     return producer
 
 def _create_ebubars_clip(profile):
     producer = mlt.Producer(profile, respaths.PATTERN_PRODUCER_PATH + "ebubars.png")
+    mltrefhold.hold_ref(producer)
     return producer
     
 # --------------------------------------------------- bin media objects

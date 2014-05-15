@@ -28,6 +28,7 @@ import os
 import xml.dom.minidom
 
 import appconsts
+import mltrefhold
 import patternproducer
 import propertyparse
 import respaths
@@ -204,9 +205,10 @@ class CompositorTransition:
         self.b_track = -1 # from, source
     
     def create_mlt_transition(self, mlt_profile):
-        self.mlt_transition = mlt.Transition(mlt_profile, 
-                                              str(self.info.mlt_service_id))
-                                              
+        transition = mlt.Transition(mlt_profile, 
+                                   str(self.info.mlt_service_id))
+        mltrefhold.hold_ref(transition)
+        self.mlt_transition = transition
         self.set_default_values()
         
         # PROP_EXPR values may have keywords that need to be replaced with
@@ -463,6 +465,7 @@ def get_rendered_transition_tractor(current_sequence,
 
     # Create transition
     transition = mlt.Transition(current_sequence.profile, "region")
+    mltrefhold.hold_ref(transition)
     transition.set("composite.geometry", str(kf_str)) # controls mix over time
     transition.set("composite.automatic",1)
     transition.set("composite.aligned", 1)

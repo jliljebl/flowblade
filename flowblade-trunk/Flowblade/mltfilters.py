@@ -30,6 +30,7 @@ import xml.dom.minidom
 import appconsts
 import editorstate
 from editorstate import PROJECT
+import mltrefhold
 import propertyparse
 import respaths
 import translations
@@ -213,6 +214,7 @@ class FilterObject:
     
     def create_mlt_filter(self, mlt_profile):
         self.mlt_filter = mlt.Filter(mlt_profile, str(self.info.mlt_service_id))
+        mltrefhold.hold_ref(self.mlt_filter)
         self.update_mlt_filter_properties_all()
     
     def update_mlt_filter_properties_all(self):
@@ -288,6 +290,7 @@ class MultipartFilterObject:
     def create_filters_for_keyframes(self, keyframes, mlt_profile):
         for i in range(0, len(keyframes) - 1): # Theres one less filter parts than keyframes
             mlt_filter = mlt.Filter(mlt_profile, str(self.info.mlt_service_id))
+            mltrefhold.hold_ref(mlt_filter)
             self.mlt_filters.append(mlt_filter)
             
     def update_mlt_filters_values(self, keyframes):

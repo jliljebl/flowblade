@@ -30,6 +30,7 @@ import appconsts
 from cairoarea import CairoDrawableArea
 import editorpersistance
 import editorstate
+import mltrefhold
 import guiutils
 import utils
 
@@ -146,6 +147,7 @@ def _init_level_filters():
 
 def _add_audio_level_filter(producer, profile):
     audio_level_filter = mlt.Filter(profile, "audiolevel")
+    mltrefhold.hold_ref(audio_level_filter)
     producer.attach(audio_level_filter)
     return audio_level_filter
 

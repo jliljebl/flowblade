@@ -41,6 +41,7 @@ import gui
 import guicomponents
 import guiutils
 import mltprofiles
+import mltrefhold
 import projectdata
 import projectinfogui
 import renderconsumer
@@ -472,7 +473,8 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
         # Create motion producer
         fr_path = "framebuffer:" + media_file.path + "?" + str(speed)
         motion_producer = mlt.Producer(profile, None, str(fr_path))
-    
+        mltrefhold.hold_ref(motion_producer)
+        
         # Create sequence and add motion producer into it
         seq = sequence.Sequence(profile)
         seq.create_default_tracks()
