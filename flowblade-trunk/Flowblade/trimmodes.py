@@ -227,6 +227,12 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     """
     Sets one roll mode
     """
+    if track == None:
+        return False
+
+    if track.id < 1 or (track.id >= len(current_sequence().tracks) - 1):
+        return False
+
     if current_frame == -1: # from button, ctrl + mouse calls with frame
         current_frame = PLAYER().producer.frame() + 1 # +1 because cut frame selects previous clip
 
