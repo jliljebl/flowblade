@@ -301,7 +301,7 @@ def load_project(file_path, icons_and_thumnails=True):
         self.events = []
         self.media_log = []
         self.media_log_groups = []
-        
+
     # Some profiles may not be available in system
     # inform user on fix
     if project.profile == None:
@@ -326,6 +326,9 @@ def load_project(file_path, icons_and_thumnails=True):
         else:
             seq.watermark_filter = None
             seq.watermark_file_path = None
+
+        if not hasattr(seq, "seq_len"):
+            seq.update_edit_tracks_length()
 
     all_clips = {}
     sync_clips = []
