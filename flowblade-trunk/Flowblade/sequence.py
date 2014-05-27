@@ -113,7 +113,7 @@ class Sequence:
         self.rendered_versions = {} #future feature, not used currently
         self.watermark_filter = None
         self.watermark_file_path = None
-        self.seq_len = 0
+        self.seq_len = 0 # used in trim crash hack, remove when fixed
 
         # MLT objects for a multitrack sequence
         self.init_mlt_objects()
@@ -324,7 +324,7 @@ class Sequence:
             track.height = TRACK_HEIGHT_NORMAL
     
         self.resize_tracks_to_fit(allocation)
-        
+
     def get_tracks_height(self):
         h = 0
         for i in range (1, len(self.tracks) - 1):# visible tracks
@@ -490,7 +490,7 @@ class Sequence:
         """
         self.next_id += 1
         return self.next_id - 1
-        
+
     # ------------------------------------------ blanks
     def create_and_insert_blank(self, track, index, length):
         """
@@ -696,6 +696,7 @@ class Sequence:
 
         self.tracks[-1].clips = []
         self.tracks[-1].clear()
+        #print "clear_hidden_track"
         edit._insert_blank(self.tracks[-1], 0, seq_len) # TRIM INIT CRASH HACK. This being empty crashes a lot, so far unexplained.
         
         self._unmute_editable()

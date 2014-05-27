@@ -22,6 +22,7 @@
 Module handles user edit events for trim, roll and slip trim modes. 
 """
 #import threading
+import time
 
 import appconsts
 import dialogutils
@@ -283,7 +284,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         current_sequence().display_trim_clip(clip.path, clip_start) # file producer
     else:
         current_sequence().display_trim_clip(None, clip_start, clip.create_data) # pattern producer
-        
+
     PLAYER().seek_frame(edit_frame)
     return True
 
