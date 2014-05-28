@@ -139,7 +139,8 @@ def main(root_path):
     if editorpersistance.prefs.dark_theme == True:
         respaths.apply_dark_theme()
     editorpersistance.create_thumbs_folder_if_needed(user_dir)
-        
+    editorpersistance.create_rendered_clips_folder_if_needed(user_dir)
+
     # Load drag'n'drop images
     dnd.init()
 
