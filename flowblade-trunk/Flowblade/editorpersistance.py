@@ -182,7 +182,13 @@ def get_graphics_default_in_out_length():
     out_fr = in_fr + int(prefs.default_grfx_length) - 1 # -1, out inclusive
     return (in_fr, out_fr, prefs.default_grfx_length)
 
-
+def create_thumbs_folder_if_needed(user_dir):
+    if prefs.thumbnail_folder == None:
+        thumbs_folder = user_dir + appconsts.THUMBNAILS_DIR
+        if not os.path.exists(thumbs_folder):
+            os.mkdir(thumbs_folder)
+        prefs.thumbnail_folder = thumbs_folder
+    
 
 class EditorPreferences:
     """
