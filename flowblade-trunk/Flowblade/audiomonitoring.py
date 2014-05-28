@@ -25,6 +25,7 @@ import gtk
 import mlt
 import pango
 import pangocairo
+import time
 
 import appconsts
 from cairoarea import CairoDrawableArea
@@ -113,7 +114,7 @@ def close_audio_monitor():
     global _update_ticker, _level_filters, _monitor_window, _audio_levels
 
     _update_ticker.stop_ticker()
-
+            
     if len(_level_filters) != 0:
         seq = editorstate.current_sequence()
         
@@ -124,10 +125,18 @@ def close_audio_monitor():
 
     if _monitor_window != None:
         _monitor_window.set_visible(False)
+        while(gtk.events_pending()):
+            gtk.main_iteration()
+        time.sleep(0.2)
+        _monitor_window.destroy()
+        while(gtk.events_pending()):
+            gtk.main_iteration()
 
     _level_filters = []
     _monitor_window = None
     _audio_levels = []
+
+    return True
 
 def _init_level_filters():
     # We're attaching level filters only to MLT objects and adding nothing to python objects,
