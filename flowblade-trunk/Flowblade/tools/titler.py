@@ -78,8 +78,16 @@ def show_titler():
 
 def close_titler():
     global _titler, _titler_data
-    _titler.window.destroy()
+    
+    _titler.set_visible(False)
+    while(gtk.events_pending()):
+        gtk.main_iteration()
+        
+    _titler.destroy()
+    while(gtk.events_pending()):
+        gtk.main_iteration()
     _titler = None
+
     if not _keep_titler_data:
         _titler_data = None
 
