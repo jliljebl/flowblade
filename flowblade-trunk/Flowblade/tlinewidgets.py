@@ -588,8 +588,9 @@ def draw_two_roll_overlay(cr, data):
 
     trim_limits = data["trim_limits"]
     clip_over_start_x = _get_frame_x(trim_limits["both_start"] - 1) # trim limits leave 1 frame non-trimmable
-    clip_over_end_x = _get_frame_x(trim_limits["both_end"] + 1) # trim limits leave 1 frame non-trimmable  
-    _draw_trim_clip_overlay(cr, clip_over_start_x, clip_over_end_x, track_y, track_height, True)
+    clip_over_end_x = _get_frame_x(trim_limits["both_end"] + 1) # trim limits leave 1 frame non-trimmable
+    cr.set_line_width(2.0)  
+    _draw_trim_clip_overlay(cr, clip_over_start_x, clip_over_end_x, track_y, track_height, True, (1,1,1,0.5))
 
     radius = 5.0
     degrees = M_PI/ 180.0
@@ -616,7 +617,17 @@ def draw_one_roll_overlay(cr, data):
     
     selection_frame_x = _get_frame_x(data["selected_frame"])
 
-    _draw_trim_clip_overlay(cr, selection_frame_x, selection_frame_x - 10,track_y, track_height, True, (1,1,1,1))
+    # Case: editing to-clip
+    trim_limits = data["trim_limits"]
+    if data["to_side_being_edited"]:
+        first = data["selected_frame"]
+        last = trim_limits["both_end"] 
+    # Case: editing from-clip
+    else:
+        first = trim_limits["both_start"]
+        last = data["selected_frame"]
+    cr.set_line_width(2.0)
+    _draw_trim_clip_overlay(cr, _get_frame_x(first), _get_frame_x(last), track_y, track_height, True, (1,1,1,0.5))
         
     cr.set_source_rgb(*OVERLAY_SELECTION_COLOR)
     cr.move_to(selection_frame_x - 0.5, track_y - 6.5)
