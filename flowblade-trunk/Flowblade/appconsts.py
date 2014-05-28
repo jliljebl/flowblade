@@ -125,6 +125,10 @@ CONVERTING_TO_USE_ORIGINAL_MEDIA = 3
 AUTOSAVE_DIR = "autosave/"
 AUDIO_LEVELS_DIR = "audiolevels/"
 
+# Hidden media folders
+THUMBNAILS_DIR = "thumbnails/"
+RENDERED_CLIPS_DIR = "rendered_clips/"
+
 # Luma bands
 SHADOWS = 0
 MIDTONES = 1
