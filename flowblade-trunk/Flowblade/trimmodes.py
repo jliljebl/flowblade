@@ -21,8 +21,6 @@
 """
 Module handles user edit events for trim, roll and slip trim modes. 
 """
-#import threading
-import time
 
 import appconsts
 import dialogutils
@@ -56,7 +54,6 @@ set_exit_mode_func = None
 # Function that return <X>_NO_EDIT mode that displays trim cursor but no edit is under way 
 set_no_edit_mode_func = None
 
-#trim_init_lock = threading.Lock()
 
 # ------------------------------------ module functions       
 def _get_trim_edit(track, frame):
@@ -114,7 +111,7 @@ def _get_roll_limits(cut_frame, from_clip, to_clip):
     # Trim_limits frames here are TIMELINE frames, not CLIP frames
     trim_limits = {}
 
-    trim_limits["from_start"] = cut_frame - from_clip.clip_out
+    trim_limits["from_start"] = cut_frame - (from_clip.clip_out - from_clip.clip_in)
     from_length = from_clip.get_length()
     trim_limits["from_end"] = cut_frame - from_clip.clip_out + from_length - 2 # -1 incl, -1 leave one frame, == -2
 
@@ -123,7 +120,7 @@ def _get_roll_limits(cut_frame, from_clip, to_clip):
 
     trim_limits["to_start"] = cut_frame - to_clip.clip_in
     to_length = to_clip.get_length()
-    trim_limits["to_end"] = cut_frame - to_clip.clip_in + to_length - 1 # - 1, leave one frame
+    trim_limits["to_end"] = cut_frame + (to_clip.clip_out - to_clip.clip_in) #- to_clip.clip_in + to_length - 1 # - 1, leave one frame
     if to_clip.is_blanck_clip:
         trim_limits["to_start"] = 0
 
