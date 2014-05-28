@@ -84,6 +84,7 @@ def _get_trim_limits(cut_frame, from_clip, to_clip):
     - clip handles on both sides of cut
     - clip ends on both sides of cut
     """
+    # This too complex now that roll is handled separately, could be reworked
     trim_limits = {}
 
     if from_clip == None:
@@ -437,10 +438,6 @@ def one_roll_trim_undo_done(track, index, is_to_side_edit):
     WRONG NAME FOR FUNCTION
     Callback if initial edit done. Undo and redo do not cause this to be called
     """
-    # If in move modes do nothing
-    #if editorstate.edit_mode < editorstate.ONE_ROLL_TRIM:
-    #    return
-
     # reinit edit mode to correct side
     frame = track.clip_start(index)
     success = set_oneroll_mode(track, frame, is_to_side_edit)
