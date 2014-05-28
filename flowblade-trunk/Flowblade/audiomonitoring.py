@@ -112,9 +112,13 @@ def show_audio_monitor():
 
 def close_audio_monitor():
     global _update_ticker, _level_filters, _monitor_window, _audio_levels
+    
+    editorstate.PLAYER().stop_playback()
 
+    temp_window = _monitor_window
+    _monitor_window = None
     _update_ticker.stop_ticker()
-            
+
     if len(_level_filters) != 0:
         seq = editorstate.current_sequence()
         
@@ -123,17 +127,16 @@ def close_audio_monitor():
         for i in range(1, len(seq.tracks) - 1):
             seq.tracks[i].detach(_level_filters[i])
 
-    if _monitor_window != None:
-        _monitor_window.set_visible(False)
+    if temp_window != None:
+        temp_window.set_visible(False)
         while(gtk.events_pending()):
             gtk.main_iteration()
         time.sleep(0.2)
-        _monitor_window.destroy()
+        temp_window.destroy()
         while(gtk.events_pending()):
             gtk.main_iteration()
 
     _level_filters = []
-    _monitor_window = None
     _audio_levels = []
 
     return True
