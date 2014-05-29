@@ -196,6 +196,7 @@ def create_rendered_clips_folder_if_needed(user_dir):
             os.mkdir(render_folder + "/")
         prefs.render_folder = render_folder
 
+
 class EditorPreferences:
     """
     Class holds data of persistant user preferences for editor.
