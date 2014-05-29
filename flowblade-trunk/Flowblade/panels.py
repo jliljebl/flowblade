@@ -365,12 +365,16 @@ def get_transition_panel(trans_data):
     
     in_clip_label = gtk.Label(_("To Clip Handle:"))
     in_clip_value = gtk.Label(trans_data["to_handle"])
-
+    
+    max_label = gtk.Label(_("Max. Transition Length:"))
+    max_value = gtk.Label(trans_data["max_length"])
 
     out_handle_row = get_two_column_box(out_clip_label, 
                                         out_clip_value)
     in_handle_row = get_two_column_box(in_clip_label, 
                                        in_clip_value)
+    max_row = get_two_column_box(max_label, 
+                                 max_value)
 
     # Encoding widgets
     encodings_cb = gtk.combo_box_new_text()
@@ -395,6 +399,7 @@ def get_transition_panel(trans_data):
     data_vbox = gtk.VBox(False, 2)
     data_vbox.pack_start(out_handle_row, False, False, 0)
     data_vbox.pack_start(in_handle_row, False, False, 0)
+    data_vbox.pack_start(max_row, False, False, 0)
     
     enconding_vbox = gtk.VBox(False, 2)
     enconding_vbox.pack_start(encodings_cb, False, False, 0)
