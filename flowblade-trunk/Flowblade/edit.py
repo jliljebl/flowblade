@@ -1802,7 +1802,7 @@ def _add_centered_transition_redo(self):
     _remove_clip(track, index)
     _insert_clip(track, to_clip, index, 
                          self.to_out + 1, to_clip.clip_out)  # self.to_out == transition end on to clip
-                                                            # + 1  == because frame is part of inserted transition
+                                                             # + 1  == because frame is part of inserted transition
     # Insert transition
     _insert_clip(track, transition_clip, 
                  self.transition_index, 1, # first frame is dropped as it is 100% from clip
