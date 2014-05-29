@@ -415,7 +415,6 @@ def get_rendered_transition_tractor(current_sequence,
 
     # we'll set in and out points for images and pattern producers.
     if not(transition_type == RENDERED_FADE_IN or transition_type == RENDERED_FADE_OUT): # fades to not use to_clip or some other data used here
-        print "wwwwww"
         if from_clip.media_type == appconsts.IMAGE or from_clip.media_type == appconsts.PATTERN_PRODUCER:
             length = action_from_out - action_from_in
             from_clip.clip_in = 0
@@ -468,7 +467,7 @@ def get_rendered_transition_tractor(current_sequence,
     mltrefhold.hold_ref(transition)
     transition.set("composite.geometry", str(kf_str)) # controls mix over time
     transition.set("composite.automatic",1)
-    transition.set("composite.aligned", 1)
+    transition.set("composite.aligned", 0)
     transition.set("composite.deinterlace",0)
     transition.set("composite.distort",0)
     transition.set("composite.fill",1)
