@@ -1770,9 +1770,9 @@ def add_centered_transition_action(data):
 
 def _add_centered_transition_undo(self):
     index = self.transition_index
-    track = self.transition_data["track"]
-    from_clip = self.transition_data["from_clip"]
-    to_clip = self.transition_data["to_clip"]
+    track = self.track
+    from_clip = self.from_clip
+    to_clip = self.to_clip
 
     for i in range(0, 3): # from, trans, to
         _remove_clip(track, index - 1)

@@ -251,7 +251,7 @@ class PositionBar:
         self._pos = self._legalize_x(event.x)
         # Listener calls self.set_normalized_pos()
         self.position_listener(self.normalized_pos(), self.producer.get_length())
-        #
+
         if self.mouse_release_listener != None:
             self.mouse_release_listener(self.normalized_pos(), self.producer.get_length())
  
