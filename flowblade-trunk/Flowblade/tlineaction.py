@@ -399,10 +399,6 @@ def _do_rendered_transition(track):
         to_handle = IMAGE_MEDIA_HANDLE_LENGTH
      
     max_length = from_handle + to_handle
-    if max_length == 0:
-        # INFOWINDOW
-        print "max_length"
-        return
     
     transition_data = {"track":track,
                        "from_clip":from_clip,
@@ -474,8 +470,6 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                                  transition_data["from_handle"], 
                                  to_part - (1 - add_thingy), 
                                  transition_data["to_handle"]) == False:
-        print "no handles"
-        # INFOWINDOW
         return
     
     # Get from in and out frames
@@ -536,10 +530,22 @@ def _transition_render_complete(clip_path):
 def _check_transition_handles(from_req, from_handle, to_req, to_handle):
 
     if from_req > from_handle:
-        # INFOWINDOW
+        info_text = _("There is not enough material available in the FROM clip after the cut") + \
+                    _("\nto create the transition.\n\n") + \
+                    _("<b>Available:</b> ") + str(from_handle) + _(" frame(s)\n") + \
+                    _("<b>Required:</b> ") + str(from_req) + _(" frame(s)")
+        dialogutils.info_message(_("FROM Clip Handle is too short!"),
+                                 info_text,
+                                 gui.editor_window.window)
         return False
     if to_req  > to_handle:
-        # INFOWINDOW
+        info_text = _("There is not enough material available in the TO clip before the cut") + \
+                    _("\nto create the transition.\n\n") + \
+                    _("<b>Available:</b> ") + str(to_handle) + _(" frame(s)\n") + \
+                    _("<b>Required:</b> ") + str(to_req) + _(" frame(s)")
+        dialogutils.info_message(_("TO Clip Handle is too short!"),
+                                 info_text,
+                                 gui.editor_window.window)
         return False
 
     return True
