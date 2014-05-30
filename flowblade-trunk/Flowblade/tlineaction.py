@@ -594,7 +594,12 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
     clip = transition_data["clip"]
     
     if length > clip.clip_length():
-        print "no_length"
+        info_text = _("Clip is too short for the requested fade:\n\n") + \
+                    _("<b>Clip Length:</b> ") + str(clip.clip_length()) + _(" frame(s)\n") + \
+                    _("<b>Fade Length:</b> ") + str(length) + _(" frame(s)\n")
+        dialogutils.info_message(_("Clip is too short!"),
+                                 info_text,
+                                 gui.editor_window.window)
         return
 
     # Edit clears selection, get track index before selection is cleared
@@ -653,7 +658,7 @@ def view_mode_menu_lauched(launcher, event):
 def _view_mode_menu_item_item_activated(widget, msg):
     editorstate.current_sequence().set_output_mode(msg)
     gui.editor_window.view_mode_select.set_pixbuf(msg)
-    
+
 # ------------------------------------------------------- dialogs    
 def no_monitor_clip_info(parent_window):
     primary_txt = _("No Clip loaded into Monitor")
