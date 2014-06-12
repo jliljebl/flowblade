@@ -664,7 +664,7 @@ def _create_group_select():
         pass
         
     group_view_select = gtk.combo_box_new_text() # filled later when current sequence known
-    group_view_select.append_text(_("All"))
+    group_view_select.append_text(_("All Items"))
     for group_data in PROJECT().media_log_groups:
         name, items = group_data
         group_view_select.append_text(name)

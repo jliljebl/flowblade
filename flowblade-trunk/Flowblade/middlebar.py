@@ -106,7 +106,7 @@ def _create_buttons(editor_window):
     editor_window.zoom_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "zoom_in.png"), updater.zoom_in)
     editor_window.zoom_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "zoom_out.png"), updater.zoom_out)
     editor_window.zoom_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "zoom_length.png"), updater.zoom_project_length)
-    editor_window.zoom_buttons.widget.set_tooltip_text(_("Zoom In - Mouse Middle Scroll\n Zoom Out - Mouse Middle Scroll\n Zoom Length"))
+    editor_window.zoom_buttons.widget.set_tooltip_text(_("Zoom In - Mouse Middle Scroll\n Zoom Out - Mouse Middle Scroll\n Zoom Length - Mouse Middle Click"))
 
     editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
     editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "cut.png"), tlineaction.cut_pressed)
@@ -133,7 +133,7 @@ def _create_buttons(editor_window):
     editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer\nTitler"))
     if editorstate.audio_monitoring_available == False:
         editor_window.tools_buttons.sensitive[0] = False
-        editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer(not avaialable)\nTitler"))
+        editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer(not available)\nTitler"))
 
     editor_window.transition_button = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
     editor_window.transition_button.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "dissolve.png"), tlineaction.add_transition_pressed)

@@ -340,10 +340,10 @@ class Titler(gtk.Window):
         
         positions_box = gtk.HBox()
         positions_box.pack_start(gtk.Label(), True, True, 0)
-        positions_box.pack_start(gtk.Label("X pos"), False, False, 0)
+        positions_box.pack_start(gtk.Label("X:"), False, False, 0)
         positions_box.pack_start(self.x_pos_spin, False, False, 0)
         positions_box.pack_start(guiutils.pad_label(10, 5), False, False, 0)
-        positions_box.pack_start(gtk.Label("Y pos"), False, False, 0)
+        positions_box.pack_start(gtk.Label("Y:"), False, False, 0)
         positions_box.pack_start(self.y_pos_spin, False, False, 0)
         positions_box.pack_start(guiutils.pad_label(10, 5), False, False, 0)
         #positions_box.pack_start(gtk.Label(_("Angle")), False, False, 0)

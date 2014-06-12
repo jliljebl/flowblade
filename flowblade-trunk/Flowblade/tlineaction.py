@@ -368,7 +368,9 @@ def add_transition_pressed(retry_from_render_folder_select=False):
     if editorpersistance.prefs.render_folder == None:
         if retry_from_render_folder_select == True:
             return
-        dialogs.select_rendred_clips_dir(_add_transition_render_folder_select_callback, gui.editor_window.window, editorpersistance.prefs.render_folder)
+        dialogs.select_rendred_clips_dir(_add_transition_render_folder_select_callback,
+                                         gui.editor_window.window,
+                                         editorpersistance.prefs.render_folder)
         return
 
     if clip_count == 2:
@@ -408,7 +410,8 @@ def _do_rendered_transition(track):
                        "max_length":max_length}
 
     if track.id >= current_sequence().first_video_index:
-        dialogs.transition_edit_dialog(_add_transition_dialog_callback, transition_data)
+        dialogs.transition_edit_dialog(_add_transition_dialog_callback, 
+                                       transition_data)
     else:
         _no_audio_tracks_mixing_info()
         

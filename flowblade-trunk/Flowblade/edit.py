@@ -1405,9 +1405,6 @@ def _audio_splice_redo(self):
     filter = _create_mute_volume_filter(current_sequence())
     _do_clip_mute(self.parent_clip, filter)
 
-
-
-   
 # ------------------------------------------------- RESYNC ALL
 # No input data
 def resync_all_action(data):
@@ -1431,7 +1428,6 @@ def _resync_all_redo(self):
 
     resync_data = resync.get_resync_data_list()
     self.actions = _create_and_do_sync_actions_list(resync_data)
-
 
 # ------------------------------------------------- RESYNC SOME CLIPS
 # "clips"
