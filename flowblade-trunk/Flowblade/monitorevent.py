@@ -217,7 +217,7 @@ def to_mark_out_pressed():
     if mark_out == -1:
         return
     PLAYER().seek_frame(mark_out)
-                            
+
 def _do_marks_update():
 
     if timeline_visible():

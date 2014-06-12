@@ -343,7 +343,6 @@ class ChannelMeter:
                     
         self.draw_channel_identifier(cr, x)
 
-        
         if self.draw_dB == True:
             self.draw_value_line(cr, x, 1.0, "0", 6)
             self.draw_value_line(cr, x, DB_IEC_MINUS_4,"-4", 3)

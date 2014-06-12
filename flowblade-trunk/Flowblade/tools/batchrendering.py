@@ -946,6 +946,3 @@ def _get_menu_item(text, callback, data, sensitive=True):
     item.show()
     item.set_sensitive(sensitive)
     return item
-
-
-
