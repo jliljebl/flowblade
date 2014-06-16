@@ -79,7 +79,7 @@ FX_GRAD_1 = (0, 1.0, 1.0, 1.0, 0.4)
 FX_GRAD_2 = (1, 0.3, 0.3, 0.3, 0.4)
 
 
-def _draw_select_circle(cr, x, y, main_color, radius, small_radius, pad):
+def _draw_select_circle(cr, x, y, main_color, radius, small_radius, pad, x_off=0, y_off=0):
     degrees = math.pi / 180.0
 
     grad = cairo.LinearGradient (x, y, x, y + 2 * radius)
@@ -103,6 +103,9 @@ def _draw_select_circle(cr, x, y, main_color, radius, small_radius, pad):
     cr.arc (x + pad, y + pad, small_radius, 0.0 * degrees, 360.0 * degrees)
     cr.fill()
 
+    x = x + x_off
+    y = y + y_off
+ 
     cr.set_source_rgb(0.4,0.4,0.4)
     cr.set_line_width(1.0)
     cr.move_to(x + radius - 0.5, y)
@@ -691,9 +694,9 @@ class CurvesBoxEditor(BoxEditor):
         # edit points
         for p in self.curve.points:
             px, py = BoxEditor.get_box_panel_point(self, p.x, p.y, 255.0)
-            _draw_select_circle(cr, px, py, (1,1,1), (0,0,0), radius = 4, small_radius = 2, pad = 0)
+            _draw_select_circle(cr, px, py, (1,1,1), 4, 2, 0, -4, -4)
 
-
+     
 class ColorGrader:
     
     DEGREE_CHAR = u'\u00B0'
