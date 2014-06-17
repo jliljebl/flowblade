@@ -21,6 +21,7 @@
 """
 Module handles editing positions and clip ends of compositors on timeline.
 """
+import gui
 import edit
 import editorstate
 from editorstate import current_sequence
@@ -113,8 +114,14 @@ def mouse_release(x, y, frame, state):
     editorstate.edit_mode = prev_edit_mode
     if editorstate.edit_mode == editorstate.INSERT_MOVE:
         tlinewidgets.set_edit_mode(None, tlinewidgets.draw_insert_overlay)
-    else:
+    elif editorstate.edit_mode == editorstate.INSERT_MOVE:
         tlinewidgets.set_edit_mode(None, tlinewidgets.draw_overwrite_overlay)
+    elif editorstate.edit_mode == editorstate.MULTI_MOVE:
+        tlinewidgets.set_edit_mode(None, tlinewidgets.draw_multi_overlay)
+    else:
+        print "COMPOSITOR MODE EXIT PROBLEM at compositormodes.mouse_release"
+
+    gui.editor_window.set_cursor_to_mode()
 
     if sub_mode == TRIM_EDIT:
         _bounds_check_trim(frame, edit_data)

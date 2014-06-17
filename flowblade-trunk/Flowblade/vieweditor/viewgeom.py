@@ -223,7 +223,7 @@ class Vec(Line):
     def get_multiplied_vec(self, multiplier):
         start_x, start_y = self.start_point
         end_x, end_y = self.end_point
-        
+
         if (end_x - start_x) == 0:
             x_dist = 0
         else:
