@@ -362,6 +362,8 @@ class EditAction:
         updater.update_kf_editor()
 
         current_sequence().update_edit_tracks_length() # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
+        current_sequence().update_trim_hack_blank_length()
+        PLAYER().display_inside_sequence_length(current_sequence().seq_len)
 
 
 # ---------------------------------------------------- SYNC DATA
