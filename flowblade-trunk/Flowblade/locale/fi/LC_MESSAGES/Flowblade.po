@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-12 20:56+0300\n"
+"POT-Creation-Date: 2014-06-18 18:29+0300\n"
 "PO-Revision-Date: 2011-12-13 23:55+0200\n"
 "Last-Translator: Janne Liljeblad <janne@janne-kx557aa-uuw-a6521-sc>\n"
 "Language-Team: Finnish\n"
@@ -107,7 +107,7 @@ msgstr "Projektia ei voida ladata."
 msgid "Adding item to render queue failed!"
 msgstr ""
 
-#: projectaction.py:366 tools/batchrendering.py:219
+#: projectaction.py:366 tools/batchrendering.py:239
 msgid "Error message: "
 msgstr "Virhe viesti"
 
@@ -268,7 +268,7 @@ msgstr "Lisää monitorileike"
 msgid "Append"
 msgstr "Lisää viimeiseksi"
 
-#: editorwindow.py:160 dialogs.py:1050 dialogs.py:1073 guicomponents.py:1727
+#: editorwindow.py:160 dialogs.py:1050 dialogs.py:1073 guicomponents.py:1756
 msgid "Insert"
 msgstr "Insertti"
 
@@ -292,7 +292,7 @@ msgstr "Nosta leike"
 msgid "Splice Out"
 msgstr "Poista leike välistä"
 
-#: editorwindow.py:166 guicomponents.py:1018 guicomponents.py:1076
+#: editorwindow.py:166 guicomponents.py:1022 guicomponents.py:1105
 msgid "Resync"
 msgstr "Synkronoi kaikki"
 
@@ -388,8 +388,8 @@ msgstr "Proxymanageri"
 msgid "Project Info"
 msgstr "Projekti Info"
 
-#: editorwindow.py:190 editorwindow.py:479 rendergui.py:148
-#: tools/batchrendering.py:772
+#: editorwindow.py:190 editorwindow.py:479 rendergui.py:168
+#: tools/batchrendering.py:792
 msgid "Render"
 msgstr "Renderöi"
 
@@ -581,9 +581,9 @@ msgid "Add"
 msgstr "Lisää"
 
 #: clipeffectseditor.py:207 compositeeditor.py:55 dialogs.py:1036
-#: dialogs.py:1049 guicomponents.py:1059 guicomponents.py:1114
-#: guicomponents.py:1299 guicomponents.py:1319 panels.py:49 panels.py:88
-#: panels.py:106 tools/titler.py:176 tools/batchrendering.py:935
+#: dialogs.py:1049 guicomponents.py:1088 guicomponents.py:1143
+#: guicomponents.py:1328 guicomponents.py:1348 panels.py:49 panels.py:88
+#: panels.py:106 tools/titler.py:176 tools/batchrendering.py:955
 msgid "Delete"
 msgstr "Poista"
 
@@ -632,15 +632,15 @@ msgstr "Uusi projekti"
 #: dialogs.py:573 dialogs.py:667 dialogs.py:703 dialogs.py:747 dialogs.py:776
 #: dialogs.py:805 dialogs.py:864 dialogs.py:897 dialogs.py:1004
 #: dialogs.py:1017 dialogs.py:1176 propertyeditorbuilder.py:359
-#: rendergui.py:24 rendergui.py:81 rendergui.py:95 rendergui.py:112
-#: preferenceswindow.py:45 tools/batchrendering.py:300
-#: tools/batchrendering.py:869 proxyediting.py:384
+#: rendergui.py:44 rendergui.py:101 rendergui.py:115 rendergui.py:132
+#: preferenceswindow.py:45 tools/batchrendering.py:320
+#: tools/batchrendering.py:889 proxyediting.py:384
 msgid "Cancel"
 msgstr "Peruuta"
 
 #: dialogs.py:53 dialogs.py:110 dialogs.py:243 dialogs.py:318 dialogs.py:441
-#: dialogs.py:454 dialogs.py:1177 propertyeditorbuilder.py:360 rendergui.py:82
-#: preferenceswindow.py:46
+#: dialogs.py:454 dialogs.py:1177 propertyeditorbuilder.py:360
+#: rendergui.py:102 preferenceswindow.py:46
 msgid "OK"
 msgstr "OK"
 
@@ -648,7 +648,7 @@ msgstr "OK"
 msgid "Project profile:"
 msgstr "Projektin profiili:"
 
-#: dialogs.py:71 panels.py:132 projectinfogui.py:25
+#: dialogs.py:71 panels.py:132 projectinfogui.py:44
 msgid "Profile"
 msgstr "Profiili"
 
@@ -668,8 +668,8 @@ msgstr "Valitse projektitiedosto"
 msgid "Save Project As"
 msgstr "Tallenna projekti nimellä"
 
-#: dialogs.py:123 dialogs.py:155 dialogs.py:214 dialogs.py:233 rendergui.py:96
-#: tools/batchrendering.py:870
+#: dialogs.py:123 dialogs.py:155 dialogs.py:214 dialogs.py:233
+#: rendergui.py:116 tools/batchrendering.py:890
 msgid "Save"
 msgstr "Tallenna"
 
@@ -813,7 +813,7 @@ msgstr "Formaatit"
 msgid "Render Options"
 msgstr "Renderöinti optiot"
 
-#: dialogs.py:439 guicomponents.py:1302
+#: dialogs.py:439 guicomponents.py:1331
 msgid "File Properties"
 msgstr "Tiedoston ominaisuudet"
 
@@ -825,7 +825,7 @@ msgstr "Leikkeen ominaisuudet"
 msgid "Composite Target Track"
 msgstr "Yhdistäjän kohde raita"
 
-#: dialogs.py:468 guicomponents.py:1161
+#: dialogs.py:468 guicomponents.py:1190
 msgid "Add Compositor"
 msgstr "Lisää yhdistäjä"
 
@@ -982,7 +982,7 @@ msgstr "Avaa suodineditorissa"
 msgid "Rename New Media Object"
 msgstr "Udelleen nimeä media objekti"
 
-#: dialogs.py:748 dialogs.py:777 dialogs.py:831 guicomponents.py:1298
+#: dialogs.py:748 dialogs.py:777 dialogs.py:831 guicomponents.py:1327
 msgid "Rename"
 msgstr "Uudelleen nimeä"
 
@@ -990,7 +990,7 @@ msgstr "Uudelleen nimeä"
 msgid "New Name:"
 msgstr "Nimi:"
 
-#: dialogs.py:774 guicomponents.py:1046 guicomponents.py:1100
+#: dialogs.py:774 guicomponents.py:1048 guicomponents.py:1129
 msgid "Rename Clip"
 msgstr "Uudelleen nimeä leike"
 
@@ -1030,7 +1030,7 @@ msgstr ""
 msgid "New Marker"
 msgstr "Uusi merkki"
 
-#: dialogs.py:845 guicomponents.py:1696
+#: dialogs.py:845 guicomponents.py:1725
 msgid "Add Marker"
 msgstr "Lisää merkki"
 
@@ -1278,19 +1278,19 @@ msgstr "Siirry loppu merkkiin"
 msgid "Playback"
 msgstr "Toista"
 
-#: dialogs.py:1074 guicomponents.py:1732 translations.py:502
+#: dialogs.py:1074 guicomponents.py:1761 translations.py:502
 msgid "Overwrite"
 msgstr "Ylikirjoitus"
 
-#: dialogs.py:1075 guicomponents.py:1737
+#: dialogs.py:1075 guicomponents.py:1766
 msgid "Trim"
 msgstr "Trimmi"
 
-#: dialogs.py:1076 guicomponents.py:1742
+#: dialogs.py:1076 guicomponents.py:1771
 msgid "Roll"
 msgstr "Rullaus"
 
-#: dialogs.py:1077 guicomponents.py:1747
+#: dialogs.py:1077 guicomponents.py:1776
 msgid "Slip"
 msgstr "Luisto"
 
@@ -1479,274 +1479,274 @@ msgstr "Suuri korkeus"
 msgid "Normal Height"
 msgstr "Normaali korkeus"
 
-#: guicomponents.py:982 guicomponents.py:1068
+#: guicomponents.py:986 guicomponents.py:1058 guicomponents.py:1097
 msgid "Open in Filters Editor"
 msgstr "Avaa suodineditorissa"
 
-#: guicomponents.py:989 guicomponents.py:1070 guicomponents.py:1301
+#: guicomponents.py:993 guicomponents.py:1099 guicomponents.py:1330
 msgid "Open in Clip Monitor"
 msgstr "Avaa leike monitorissa"
 
-#: guicomponents.py:996
+#: guicomponents.py:1000
 msgid "Split Audio"
 msgstr "Halkaise audio"
 
-#: guicomponents.py:1002
+#: guicomponents.py:1006
 msgid "Split Audio Synched"
 msgstr "Halkaise audio synkronoituna"
 
-#: guicomponents.py:1008 guicomponents.py:1084
+#: guicomponents.py:1012 guicomponents.py:1113
 msgid "Display Audio Level"
 msgstr "Näytä äänen taso"
 
-#: guicomponents.py:1011 guicomponents.py:1087
+#: guicomponents.py:1015 guicomponents.py:1116
 msgid "Clear Waveform"
 msgstr "Poista aaltomuoto"
 
-#: guicomponents.py:1019 guicomponents.py:1077
+#: guicomponents.py:1023 guicomponents.py:1106
 msgid "Clear Sync Relation"
 msgstr "Poista synkronointi suhde"
 
-#: guicomponents.py:1021 guicomponents.py:1079
+#: guicomponents.py:1025 guicomponents.py:1108
 msgid "Select Sync Parent Clip..."
 msgstr "Valitse synkronointi emoleike"
 
-#: guicomponents.py:1049 guicomponents.py:1103
+#: guicomponents.py:1051 guicomponents.py:1132
 msgid "Clip Info"
 msgstr "Leike info"
 
-#: guicomponents.py:1054
+#: guicomponents.py:1083
 msgid "Strech Prev Clip to Cover"
 msgstr "Pidennä edellistä leikettä peittämään"
 
-#: guicomponents.py:1055
+#: guicomponents.py:1084
 msgid "Strech Next Clip to Cover"
 msgstr "Pidennä seuraavaa leikettä peittämään"
 
-#: guicomponents.py:1057
+#: guicomponents.py:1086
 msgid "Consolidate"
 msgstr "Yhdistä kaikki tyhjät"
 
-#: guicomponents.py:1110
+#: guicomponents.py:1139
 msgid "Open In Compositor Editor"
 msgstr "Avaa yhdistajäeditorissa"
 
-#: guicomponents.py:1112
+#: guicomponents.py:1141
 msgid "Sync with Origin Clip"
 msgstr "Synkronoi lähde leikkeen kanssa"
 
-#: guicomponents.py:1118 guicomponents.py:1139
+#: guicomponents.py:1147 guicomponents.py:1168
 msgid "Add Filter"
 msgstr "Lisää suodin"
 
-#: guicomponents.py:1182
+#: guicomponents.py:1211
 msgid "Add Blend"
 msgstr "Lisää sekoittaja"
 
-#: guicomponents.py:1198
+#: guicomponents.py:1227
 msgid "Clone Filters"
 msgstr "Kloonaa suotimet"
 
-#: guicomponents.py:1202
+#: guicomponents.py:1231
 msgid "From Next Clip"
 msgstr "Seuraavasta leikkeestä"
 
-#: guicomponents.py:1207
+#: guicomponents.py:1236
 msgid "From Previous Clip"
 msgstr "Edellisestä leikkeestä"
 
-#: guicomponents.py:1216 guicomponents.py:1236
+#: guicomponents.py:1245 guicomponents.py:1265
 msgid "Mute"
 msgstr "Hiljennä"
 
-#: guicomponents.py:1220 guicomponents.py:1240
+#: guicomponents.py:1249 guicomponents.py:1269
 msgid "Unmute"
 msgstr "Poista hiljennys"
 
-#: guicomponents.py:1226 guicomponents.py:1257
+#: guicomponents.py:1255 guicomponents.py:1286
 msgid "Mute Audio"
 msgstr "Sammuta ääni"
 
-#: guicomponents.py:1251
+#: guicomponents.py:1280
 msgid "Mute Video"
 msgstr "Sammuta kuva"
 
-#: guicomponents.py:1268
+#: guicomponents.py:1297
 msgid "Mute All"
 msgstr "Sammuta kaikki"
 
-#: guicomponents.py:1278
+#: guicomponents.py:1307
 msgid "Clip Color"
 msgstr "Leike väri"
 
-#: guicomponents.py:1280
+#: guicomponents.py:1309
 msgid "Default"
 msgstr "oletusvalinta"
 
-#: guicomponents.py:1281 translations.py:457 translations.py:512
+#: guicomponents.py:1310 translations.py:457 translations.py:512
 msgid "Red"
 msgstr "Punainen"
 
-#: guicomponents.py:1282 translations.py:458 translations.py:507
+#: guicomponents.py:1311 translations.py:458 translations.py:507
 #: translations.py:513
 msgid "Green"
 msgstr "Vihreä"
 
-#: guicomponents.py:1283 translations.py:459 translations.py:508
+#: guicomponents.py:1312 translations.py:459 translations.py:508
 #: translations.py:514
 msgid "Blue"
 msgstr "Sininen"
 
-#: guicomponents.py:1284
+#: guicomponents.py:1313
 msgid "Orange"
 msgstr "Oranssi"
 
-#: guicomponents.py:1285
+#: guicomponents.py:1314
 msgid "Brown"
 msgstr "Ruskea"
 
-#: guicomponents.py:1286
+#: guicomponents.py:1315
 msgid "Olive"
 msgstr "Oliivi"
 
-#: guicomponents.py:1304
+#: guicomponents.py:1333
 msgid "Render Slow/Fast Motion File"
 msgstr "Rendaa Nopeutettu/hidastettu versio"
 
-#: guicomponents.py:1305
+#: guicomponents.py:1334
 msgid "Render Proxy File"
 msgstr "Renderöi Proxy tiedosto"
 
-#: guicomponents.py:1311
+#: guicomponents.py:1340
 msgid "Toggle Active"
 msgstr "Vaihda aktiivisuustilaa"
 
-#: guicomponents.py:1312
+#: guicomponents.py:1341
 msgid "Reset Values"
 msgstr "Resetoi arvot"
 
-#: guicomponents.py:1317
+#: guicomponents.py:1346
 msgid "Display In Clip Monitor"
 msgstr "Avaa leike monitorissa"
 
-#: guicomponents.py:1318
+#: guicomponents.py:1347
 msgid "Toggle Star"
 msgstr "Vaihda aktiivisuustilaa"
 
-#: guicomponents.py:1385 propertyeditorbuilder.py:430
+#: guicomponents.py:1414 propertyeditorbuilder.py:430
 #: propertyeditorbuilder.py:523
 msgid "Progressive"
 msgstr "Progressiivinen"
 
-#: guicomponents.py:1387
+#: guicomponents.py:1416
 msgid "Interlaced"
 msgstr ""
 
-#: guicomponents.py:1390
+#: guicomponents.py:1419
 msgid "Fps: "
 msgstr "Ruutuja sek."
 
-#: guicomponents.py:1393
+#: guicomponents.py:1422
 msgid "Pixel Aspect: "
 msgstr "Pikselin muoto:"
 
-#: guicomponents.py:1400
+#: guicomponents.py:1429
 msgid "Description:"
 msgstr "Kuvaus:"
 
-#: guicomponents.py:1402
+#: guicomponents.py:1431
 msgid "Dimensions:"
 msgstr "Ulottuvuudet:"
 
-#: guicomponents.py:1404
+#: guicomponents.py:1433
 msgid "Frames per second:"
 msgstr "Ruutuja sek.:"
 
-#: guicomponents.py:1406
+#: guicomponents.py:1435
 msgid "Size:"
 msgstr "Koko:"
 
-#: guicomponents.py:1408
+#: guicomponents.py:1437
 msgid "Pixel aspect ratio: "
 msgstr "Pikselin muoto:"
 
-#: guicomponents.py:1410 profilesmanager.py:139
+#: guicomponents.py:1439 profilesmanager.py:139
 msgid "Progressive:"
 msgstr "Progressiivinen:"
 
-#: guicomponents.py:1436
+#: guicomponents.py:1465
 msgid "Yes"
 msgstr "Kyllä"
 
-#: guicomponents.py:1438
+#: guicomponents.py:1467
 msgid "No"
 msgstr "Ei"
 
-#: guicomponents.py:1667
+#: guicomponents.py:1696
 msgid "5 video, 4 audio"
 msgstr "5 video, 4 ääni"
 
-#: guicomponents.py:1668
+#: guicomponents.py:1697
 msgid "4 video, 3 audio"
 msgstr "4 video, 3 ääni "
 
-#: guicomponents.py:1669
+#: guicomponents.py:1698
 msgid "3 video, 2 audio"
 msgstr "3 video, 2 ääni"
 
-#: guicomponents.py:1670
+#: guicomponents.py:1699
 msgid "2 video, 1 audio"
 msgstr "2 video 1 ääni"
 
-#: guicomponents.py:1671
+#: guicomponents.py:1700
 msgid "8 video, 1 audio"
 msgstr "8 video 1 ääni"
 
-#: guicomponents.py:1672
+#: guicomponents.py:1701
 msgid "1 video, 8 audio"
 msgstr "1 video, 8 ääni"
 
-#: guicomponents.py:1693
+#: guicomponents.py:1722
 msgid "No Markers"
 msgstr "Ei merkkejä"
 
-#: guicomponents.py:1697
+#: guicomponents.py:1726
 msgid "Delete Marker"
 msgstr "Poista merkki"
 
-#: guicomponents.py:1699
+#: guicomponents.py:1728
 msgid "Delete All Markers"
 msgstr "Poista kaikki merkit"
 
-#: guicomponents.py:1705
+#: guicomponents.py:1734
 msgid "Maximize Tracks"
 msgstr "Maximoi raidat"
 
-#: guicomponents.py:1706
+#: guicomponents.py:1735
 msgid "Maximize Video Tracks"
 msgstr "Maksimoi kuvaraidat"
 
-#: guicomponents.py:1707
+#: guicomponents.py:1736
 msgid "Maximize Audio Tracks"
 msgstr "Maximoi ääniraidat"
 
-#: guicomponents.py:1709
+#: guicomponents.py:1738
 msgid "Minimize Tracks"
 msgstr "Minimoi raidat"
 
-#: guicomponents.py:1715
+#: guicomponents.py:1744
 msgid "Image"
 msgstr "Kuva"
 
-#: guicomponents.py:1717
+#: guicomponents.py:1746
 msgid "Vectorscope"
 msgstr "Vektoriskooppi"
 
-#: guicomponents.py:1719
+#: guicomponents.py:1748
 msgid "RGB Parade"
 msgstr "RGB paraati"
 
-#: guicomponents.py:1753
+#: guicomponents.py:1782
 msgid "Spacer"
 msgstr "Siirto"
 
@@ -1802,7 +1802,7 @@ msgstr "Editoi ohjelmaa"
 msgid "Sequences"
 msgstr "Ohjelmat"
 
-#: panels.py:136 projectinfogui.py:17
+#: panels.py:136 projectinfogui.py:36
 msgid "Name"
 msgstr "Nimi"
 
@@ -1854,7 +1854,7 @@ msgstr ""
 "\n"
 "Et voi asettaa koti kansiotasi media-ikoni kansioksi."
 
-#: panels.py:255 rendergui.py:461
+#: panels.py:255 rendergui.py:481
 msgid "Name:"
 msgstr "Nimi:"
 
@@ -1866,7 +1866,7 @@ msgstr "Polku:"
 msgid "Image Size:"
 msgstr "Kuvan koko"
 
-#: panels.py:258 tools/batchrendering.py:909
+#: panels.py:258 tools/batchrendering.py:929
 msgid "Frames Per Second:"
 msgstr "Ruutuja sekunnissa:"
 
@@ -1902,7 +1902,7 @@ msgstr "Media polku:"
 msgid "Composite clip on:"
 msgstr "Yhdistäjän kohde:"
 
-#: panels.py:327 panels.py:424 rendergui.py:474
+#: panels.py:327 panels.py:424 rendergui.py:494
 msgid "Type:"
 msgstr "Tyyppi:"
 
@@ -3809,10 +3809,6 @@ msgstr "Ei ryhmiä"
 msgid "Delete Current Group"
 msgstr "Poista valittu ryhmä"
 
-#: medialog.py:290
-msgid "Delete Current Group and Items"
-msgstr "Poista valittu ryhmä ja klipit"
-
 #: medialog.py:319
 msgid "Delete Group and Items?"
 msgstr "Poista valitut klipit?"
@@ -3831,7 +3827,7 @@ msgstr " ja "
 msgid " items it contains?\n"
 msgstr " siinä olevat klipit?\n"
 
-#: medialog.py:321 profilesmanager.py:281 tools/batchrendering.py:639
+#: medialog.py:321 profilesmanager.py:281 tools/batchrendering.py:659
 msgid "This operation cannot be undone."
 msgstr "Tätä toimintoa ei voida peruuttaa."
 
@@ -3839,7 +3835,7 @@ msgstr "Tätä toimintoa ei voida peruuttaa."
 msgid "Group "
 msgstr "Ryhmä"
 
-#: medialog.py:454 projectinfogui.py:80
+#: medialog.py:454 projectinfogui.py:99
 msgid "Event"
 msgstr "Tapahtuma"
 
@@ -3859,7 +3855,7 @@ msgstr "Alku merkki"
 msgid "Mark Out"
 msgstr "Loppu merkki"
 
-#: medialog.py:464 projectinfogui.py:78
+#: medialog.py:464 projectinfogui.py:97
 msgid "Date"
 msgstr "Päivämäärä"
 
@@ -3907,11 +3903,11 @@ msgstr "Kaikki"
 msgid "Select viewed Range Log Items Group"
 msgstr "Valitse klippi ryhmä"
 
-#: projectinfogui.py:30
+#: projectinfogui.py:49
 msgid "Project Events"
 msgstr "Projekti Tapahtumat"
 
-#: projectinfogui.py:82
+#: projectinfogui.py:101
 msgid "Path"
 msgstr "Polku"
 
@@ -3947,21 +3943,21 @@ msgstr "Avaa tallennettu grafiikka laatikossa"
 msgid "Save Title Graphic"
 msgstr "Tallenna grafiikka"
 
-#: rendergui.py:21
+#: rendergui.py:41
 msgid "Render Progress"
 msgstr "Rederöinnin edistyminen"
 
-#: rendergui.py:45
+#: rendergui.py:65
 msgid ""
 "Project and Render Profile FPS values are not same. Rendered file may have A/"
 "V sync issues."
 msgstr ""
 
-#: rendergui.py:74
+#: rendergui.py:94
 msgid "Render range not defined!"
 msgstr "Renderöinti alue ei ole määritelty"
 
-#: rendergui.py:75
+#: rendergui.py:95
 msgid ""
 "Define render range using Mark In and Mark Out points\n"
 "or select range option 'Sequence length' to start rendering."
@@ -3969,191 +3965,191 @@ msgstr ""
 "Määrittele rendaus alue asettalla aloitus ja lopetus merkit,\n"
 "tai valitse vaihtoehto 'Ohjelman pituus' aloittaaksesi rendauksen."
 
-#: rendergui.py:79
+#: rendergui.py:99
 msgid "Load Render Args File"
 msgstr "Lataa renderöintiargumentit"
 
-#: rendergui.py:93
+#: rendergui.py:113
 msgid "Save Render Args As"
 msgstr "Tallenna renderöintiargumentit nimellä"
 
-#: rendergui.py:145
+#: rendergui.py:165
 msgid "Render Slow/Fast Motion Video File"
 msgstr ""
 
-#: rendergui.py:150
+#: rendergui.py:170
 msgid "Source Media File: "
 msgstr "Lähde media tiedosto:"
 
-#: rendergui.py:157 rendergui.py:158
+#: rendergui.py:177 rendergui.py:178
 msgid "<b>not set</b>"
 msgstr "<b>ei asetettu</b>"
 
-#: rendergui.py:178
+#: rendergui.py:198
 msgid "Select Target Folder"
 msgstr "Valitse kohde kansio"
 
-#: rendergui.py:182
+#: rendergui.py:202
 msgid "Speed %:"
 msgstr "Nopeus %"
 
-#: rendergui.py:220
+#: rendergui.py:240
 msgid "Full Source Length"
 msgstr "Lähteen täysi pituus"
 
-#: rendergui.py:225
+#: rendergui.py:245
 msgid "Source Mark In to Mark Out"
 msgstr "Lähteen merkkien väli"
 
-#: rendergui.py:244
+#: rendergui.py:264
 msgid "Source Mark In: "
 msgstr "Lähteen aloitus aloitus merkki"
 
-#: rendergui.py:245
+#: rendergui.py:265
 msgid "Source_Mark Out: "
 msgstr "Lähteen lopetus merkki"
 
-#: rendergui.py:249
+#: rendergui.py:269
 msgid "Target File:"
 msgstr "Kohde tiedosto"
 
-#: rendergui.py:250
+#: rendergui.py:270
 msgid "Target Folder:"
 msgstr "Valitse kansio"
 
-#: rendergui.py:251
+#: rendergui.py:271
 msgid "Target Profile:"
 msgstr "Hallitse profiileja"
 
-#: rendergui.py:252
+#: rendergui.py:272
 msgid "Target Encoding:"
 msgstr "Kohteen enkoodaus"
 
-#: rendergui.py:253
+#: rendergui.py:273
 msgid "Target Quality:"
 msgstr "Kohteen Laatu:"
 
-#: rendergui.py:255 rendergui.py:412
+#: rendergui.py:275 rendergui.py:432
 msgid "Render Range:"
 msgstr "Renderöinti alue:"
 
-#: rendergui.py:256
+#: rendergui.py:276
 msgid "Rendered Clip Length:"
 msgstr "Renderöidyn klipin pituus:"
 
-#: rendergui.py:290
+#: rendergui.py:310
 msgid "Select Render quality"
 msgstr "Valitse renderöinti laatu"
 
-#: rendergui.py:316
+#: rendergui.py:336
 msgid "Select Render encoding"
 msgstr "Valitse renderöinti enkoodaus"
 
-#: rendergui.py:353
+#: rendergui.py:373
 msgid "Select render profile"
 msgstr "Valitse renderöinti profiili"
 
-#: rendergui.py:380
+#: rendergui.py:400
 msgid "Full Length"
 msgstr "Täysi pituus"
 
-#: rendergui.py:381
+#: rendergui.py:401
 msgid "Marked Range"
 msgstr "Merkitty alue"
 
-#: rendergui.py:387
+#: rendergui.py:407
 msgid "File"
 msgstr "Tiedosto"
 
-#: rendergui.py:388
+#: rendergui.py:408
 msgid "Render Type"
 msgstr "Renderöinti tyyppi"
 
-#: rendergui.py:389
+#: rendergui.py:409
 msgid "Render Profile"
 msgstr "Renderöinti profiili"
 
-#: rendergui.py:390
+#: rendergui.py:410
 msgid "Encoding Format"
 msgstr "Enkoodaus formaatti"
 
-#: rendergui.py:401
+#: rendergui.py:421
 msgid "Render Args"
 msgstr "Renderöinti argumentit"
 
-#: rendergui.py:405
+#: rendergui.py:425
 msgid "Open File in Bin:"
 msgstr "Avaa tiedosto laatikossa"
 
-#: rendergui.py:447 preferenceswindow.py:102 preferenceswindow.py:105
+#: rendergui.py:467 preferenceswindow.py:102 preferenceswindow.py:105
 msgid "Select Folder"
 msgstr "Valitse kansio"
 
-#: rendergui.py:451
+#: rendergui.py:471
 msgid "Folder:"
 msgstr "Kansio:"
 
-#: rendergui.py:467
+#: rendergui.py:487
 msgid "Select folder to place rendered file in"
 msgstr "Valitse kansio johon tallennetaan renderöity tiedosto"
 
-#: rendergui.py:468
+#: rendergui.py:488
 msgid "Give name for rendered file"
 msgstr "Anne nimi renderöidylle tiedostolle"
 
-#: rendergui.py:475
+#: rendergui.py:495
 msgid "Presets:"
 msgstr "Resetoi"
 
-#: rendergui.py:478
+#: rendergui.py:498
 msgid "User Defined"
 msgstr "Käyttäjän määrittelemä"
 
-#: rendergui.py:479
+#: rendergui.py:499
 msgid "Preset File type"
 msgstr "Esiasetettu tiedosto tyyppi"
 
-#: rendergui.py:496 rendergui.py:569
+#: rendergui.py:516 rendergui.py:589
 msgid "Use Project Profile:"
 msgstr "Käytä projektin profiilia:"
 
-#: rendergui.py:497 rendergui.py:570
+#: rendergui.py:517 rendergui.py:590
 msgid "Render using args:"
 msgstr "Renderöi argumenteilla"
 
-#: rendergui.py:512
+#: rendergui.py:532
 msgid "Select used project profile for rendering"
 msgstr "Valitse profiili renderöinnille"
 
-#: rendergui.py:513
+#: rendergui.py:533
 msgid "Render profile info"
 msgstr "Renderöiti profiili info"
 
-#: rendergui.py:586
+#: rendergui.py:606
 msgid "Load Selection"
 msgstr "Lataa valinta"
 
-#: rendergui.py:591
+#: rendergui.py:611
 msgid "Ext.:"
 msgstr ""
 
-#: rendergui.py:631
+#: rendergui.py:651
 msgid "Render using key=value rendering options"
 msgstr "Renderöi käyttämällä avain=arvo pareja"
 
-#: rendergui.py:632
+#: rendergui.py:652
 msgid "Load render options from currently selected encoding"
 msgstr "Lataa renderöiti arjot valittuna olevasta enkoodauksesta"
 
-#: rendergui.py:633
+#: rendergui.py:653
 msgid "Edit render options"
 msgstr "Editoi renderöinti arvoja"
 
-#: rendergui.py:634
+#: rendergui.py:654
 msgid "Save Render Args into a text file"
 msgstr "Tallenna renderöinti argumentit tiedostoon"
 
-#: rendergui.py:635
+#: rendergui.py:655
 msgid "Load Render Args from a text file"
 msgstr "Lataa renderöintiargumentit tiedostosta"
 
@@ -4161,7 +4157,7 @@ msgstr "Lataa renderöintiargumentit tiedostosta"
 msgid "Close Manager"
 msgstr "Sulje manageri"
 
-#: profilesmanager.py:73 tools/batchrendering.py:550
+#: profilesmanager.py:73 tools/batchrendering.py:570
 msgid "Delete Selected"
 msgstr "Poista valitut"
 
@@ -4357,23 +4353,23 @@ msgstr "Nappityyli"
 msgid "Icons and color optimized for"
 msgstr "Ikonit ja värit optimoitu"
 
-#: tools/batchrendering.py:218
+#: tools/batchrendering.py:238
 msgid "Render Item Project File Copy failed!"
 msgstr "Renderöintijonotiedoston kopiointi epäonnistui!"
 
-#: tools/batchrendering.py:274 tools/batchrendering.py:656
+#: tools/batchrendering.py:294 tools/batchrendering.py:676
 msgid "Error loading render queue items!"
 msgstr "Virhe renderöintijonotiedostojen lataamisessa!"
 
-#: tools/batchrendering.py:275 tools/batchrendering.py:657
+#: tools/batchrendering.py:295 tools/batchrendering.py:677
 msgid "Message:\n"
 msgstr "Viesti:\n"
 
-#: tools/batchrendering.py:288
+#: tools/batchrendering.py:308
 msgid "Flowblade Batch Render PID file found!"
 msgstr "Flowblade Renderöintijono applikaation PID tiedosto löytyi!"
 
-#: tools/batchrendering.py:289
+#: tools/batchrendering.py:309
 msgid ""
 "Either Render Queue application is already running\n"
 "or it has crashed.\n"
@@ -4383,177 +4379,177 @@ msgstr ""
 "tai se on kaatunut.\n"
 "\n"
 
-#: tools/batchrendering.py:290
+#: tools/batchrendering.py:310
 msgid "Only select <b>'Force Launch'</b> if Render Queue not already running!"
 msgstr ""
 "Valitse <b>'Pakotettu käynnistys'</b> vain jos Rendereröinti Jono ohjelma ei "
 "ole käynnissä!"
 
-#: tools/batchrendering.py:301
+#: tools/batchrendering.py:321
 msgid "Force Launch"
 msgstr "Pakotettu käynnistys"
 
-#: tools/batchrendering.py:314
+#: tools/batchrendering.py:334
 msgid "Application is rendering and cannot be closed!"
 msgstr "Ohjelma renderöi aikä sitä voida sulkea!"
 
-#: tools/batchrendering.py:315
+#: tools/batchrendering.py:335
 msgid "Stop rendering before closing the application."
 msgstr "Pysäyta renderöinti ennen ohjelman silkemista."
 
-#: tools/batchrendering.py:346
+#: tools/batchrendering.py:366
 msgid " datafile load failed with "
 msgstr " data tiedoston lataus epäonnistui: "
 
-#: tools/batchrendering.py:352
+#: tools/batchrendering.py:372
 msgid " project file load failed with "
 msgstr " projektitiedoston lataus epäonnistui:"
 
-#: tools/batchrendering.py:462
+#: tools/batchrendering.py:482
 msgid "Queued"
 msgstr "Jonossa"
 
-#: tools/batchrendering.py:464
+#: tools/batchrendering.py:484
 msgid "Rendering"
 msgstr "Renderöi"
 
-#: tools/batchrendering.py:466
+#: tools/batchrendering.py:486
 msgid "Finished"
 msgstr "Valmis"
 
-#: tools/batchrendering.py:468
+#: tools/batchrendering.py:488
 msgid "Unqueued"
 msgstr "Poissa jonosta"
 
-#: tools/batchrendering.py:470
+#: tools/batchrendering.py:490
 msgid "Aborted"
 msgstr "Pysäytetty"
 
-#: tools/batchrendering.py:525
+#: tools/batchrendering.py:545
 msgid "Estimated Left:"
 msgstr "Arvioitu aika:"
 
-#: tools/batchrendering.py:526
+#: tools/batchrendering.py:546
 msgid "Current Render:"
 msgstr "Tämänhetkinen renderöinti:"
 
-#: tools/batchrendering.py:527 proxyediting.py:317
+#: tools/batchrendering.py:547 proxyediting.py:317
 msgid "Elapsed:"
 msgstr "Kulunut:"
 
-#: tools/batchrendering.py:538
+#: tools/batchrendering.py:558
 msgid "Items Rendered:"
 msgstr "Renderöity lukum:"
 
-#: tools/batchrendering.py:540
+#: tools/batchrendering.py:560
 msgid "Render Started:"
 msgstr "Renderöinti alkoi:"
 
-#: tools/batchrendering.py:546
+#: tools/batchrendering.py:566
 msgid "Not Rendering"
 msgstr "Ei renderöi"
 
-#: tools/batchrendering.py:554
+#: tools/batchrendering.py:574
 msgid "Delete Finished"
 msgstr "Poista valmiit"
 
-#: tools/batchrendering.py:559
+#: tools/batchrendering.py:579
 msgid "Reload Queue"
 msgstr "Virkistä jono"
 
-#: tools/batchrendering.py:570
+#: tools/batchrendering.py:590
 msgid "Stop Render"
 msgstr "Pysäytä"
 
-#: tools/batchrendering.py:612
+#: tools/batchrendering.py:632
 msgid "Flowblade Batch Render"
 msgstr "Flowblade Renderöintijono"
 
-#: tools/batchrendering.py:638
+#: tools/batchrendering.py:658
 msgid "Delete "
 msgstr "Poista"
 
-#: tools/batchrendering.py:638
+#: tools/batchrendering.py:658
 msgid " item(s) from render queue?"
 msgstr " työtä renderöintijonosta?"
 
-#: tools/batchrendering.py:669
+#: tools/batchrendering.py:689
 msgid "Multiple items with same render target file!"
 msgstr "Useampi työ renderöi samaan tiedostoon!"
 
-#: tools/batchrendering.py:671
+#: tools/batchrendering.py:691
 msgid ""
 "Later items will render on top of earlier items if this queue is rendered.\n"
 msgstr ""
 "Myöhemmät työt renderöivöt aikaisempien päälle jos tämä jon o renderöidään.\n"
 
-#: tools/batchrendering.py:672
+#: tools/batchrendering.py:692
 msgid ""
 "Delete or unqueue some items with same paths:\n"
 "\n"
 msgstr "Poista töitä, joilla on sama renderöinti tiedosto:\n"
 
-#: tools/batchrendering.py:674
+#: tools/batchrendering.py:694
 msgid " items with path: "
 msgstr " työt, joilla sama kohde tiedosto"
 
-#: tools/batchrendering.py:773
+#: tools/batchrendering.py:793
 msgid "Project/Sequence"
 msgstr "Projekti/Ohjelma"
 
-#: tools/batchrendering.py:774
+#: tools/batchrendering.py:794
 msgid "Status"
 msgstr "Status"
 
-#: tools/batchrendering.py:775
+#: tools/batchrendering.py:795
 msgid "Render File"
 msgstr "Renderöinti tiedosto"
 
-#: tools/batchrendering.py:776
+#: tools/batchrendering.py:796
 msgid "Render Time"
 msgstr "Renderöinti aika"
 
-#: tools/batchrendering.py:867
+#: tools/batchrendering.py:887
 msgid "Save Render Item Project As"
 msgstr "Tallenna projekti nimellä"
 
-#: tools/batchrendering.py:903
+#: tools/batchrendering.py:923
 msgid "Encoding:"
 msgstr "Enkoodaus:"
 
-#: tools/batchrendering.py:904
+#: tools/batchrendering.py:924
 msgid "Quality:"
 msgstr "Laatu:"
 
-#: tools/batchrendering.py:905
+#: tools/batchrendering.py:925
 msgid "Audio Encoding:"
 msgstr "Audio Enkoodaus"
 
-#: tools/batchrendering.py:906
+#: tools/batchrendering.py:926
 msgid "Use User Args:"
 msgstr "Renderöinti argumentit:"
 
-#: tools/batchrendering.py:907
+#: tools/batchrendering.py:927
 msgid "Start:"
 msgstr "Alku:"
 
-#: tools/batchrendering.py:908
+#: tools/batchrendering.py:928
 msgid "End:"
 msgstr "Loppu:"
 
-#: tools/batchrendering.py:910
+#: tools/batchrendering.py:930
 msgid "Render Profile Name:"
 msgstr "Renderöinti profiilin nimi:"
 
-#: tools/batchrendering.py:911
+#: tools/batchrendering.py:931
 msgid "Render Profile:"
 msgstr "Renderöinti profiili"
 
-#: tools/batchrendering.py:927 tools/batchrendering.py:933
+#: tools/batchrendering.py:947 tools/batchrendering.py:953
 msgid "Render Properties"
 msgstr "Rederöinti ominaisuudet"
 
-#: tools/batchrendering.py:932
+#: tools/batchrendering.py:952
 msgid "Save Item Project As..."
 msgstr "Tallenna projekti nimellä..."
 
@@ -4810,6 +4806,9 @@ msgid ""
 msgstr ""
 "Pyydettyä muutosta ei voida tehdä koska Monitori leikkeeseen määritelty alue "
 "on liian lyhyt."
+
+#~ msgid "Delete Current Group and Items"
+#~ msgstr "Poista valittu ryhmä ja klipit"
 
 #, fuzzy
 #~ msgid "Multi"
