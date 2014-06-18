@@ -98,12 +98,17 @@ def load_icons():
 # --------------------------------- player
 def refresh_player():
     # First event is initial window displayed event.
-    # Last closing event needs to blocked by setting this flag
+    # Last closing event needs to be blocked by setting this flag
     # before calling window hide
     global player_refresh_enabled
     if not player_refresh_enabled:
         player_refresh_enabled = True
         return
+    # Refreshing while rendering overwrites file on disk and loses 
+    # previous rendered data. 
+    if PLAYER().is_rendering:
+        return
+
     PLAYER().refresh()
 
 # --------------------------------- window 
