@@ -287,9 +287,9 @@ def _group_action_pressed(widget, event):
     _unsensitive_for_all_view(item)
     actions_menu.add(item)
 
-    item = guiutils.get_menu_item(_("Delete Current Group and Items"), _actions_callback, "deletewithitems")
-    _unsensitive_for_all_view(item)
-    actions_menu.add(item)
+    #item = guiutils.get_menu_item(_("Delete Current Group and Items"), _actions_callback, "deletewithitems")
+    #_unsensitive_for_all_view(item)
+    #actions_menu.add(item)
 
     actions_menu.popup(None, None, None, event.button, event.time)
 
