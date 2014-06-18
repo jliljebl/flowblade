@@ -977,7 +977,11 @@ def display_clip_popup_menu(event, clip, track, callback):
     if clip.is_blanck_clip:
         display_blank_clip_popup_menu(event, clip, track, callback)
         return
-    
+
+    if hasattr(clip, "rendered_type"):
+        display_transition_clip_popup_menu(event, clip, track, callback)
+        return
+
     clip_menu = gtk.Menu()
     clip_menu.add(_get_menu_item(_("Open in Filters Editor"), callback, (clip, track, "open_in_editor", event.x)))
     # Only make opening in compositor editor for video tracks V2 and higher
@@ -1039,8 +1043,6 @@ def display_clip_popup_menu(event, clip, track, callback):
     _add_separetor(clip_menu)
     clip_menu.add(_get_clone_filters_menu_item(event, clip, track, callback))
 
-    clip_menu.popup(None, None, None, event.button, event.time)
-
     _add_separetor(clip_menu)
     
     clip_menu.add(_get_menu_item(_("Rename Clip"), callback,\
@@ -1049,6 +1051,33 @@ def display_clip_popup_menu(event, clip, track, callback):
     clip_menu.add(_get_menu_item(_("Clip Info"), callback,\
                   (clip, track, "clip_info", event.x)))
 
+    clip_menu.popup(None, None, None, event.button, event.time)
+
+def display_transition_clip_popup_menu(event, clip, track, callback):
+    clip_menu = gtk.Menu()
+    clip_menu.add(_get_menu_item(_("Open in Filters Editor"), callback, (clip, track, "open_in_editor", event.x)))
+
+    _add_separetor(clip_menu)
+
+    clip_menu.add(_get_mute_menu_item(event, clip, track, callback))
+
+    _add_separetor(clip_menu)
+    
+    clip_menu.add(_get_filters_add_menu_item(event, clip, track, callback))
+    
+    # Only add compositors for video tracks V2 and higher
+    if track.id <= current_sequence().first_video_index:
+        active = False
+    else:
+        active = True
+    clip_menu.add(_get_compositors_add_menu_item(event, clip, track, callback, active))
+    clip_menu.add(_get_blenders_add_menu_item(event, clip, track, callback, active))
+    
+    _add_separetor(clip_menu)
+
+    clip_menu.add(_get_clone_filters_menu_item(event, clip, track, callback))
+    clip_menu.popup(None, None, None, event.button, event.time)
+    
 def display_blank_clip_popup_menu(event, clip, track, callback):
     clip_menu = gtk.Menu()
     clip_menu.add(_get_menu_item(_("Strech Prev Clip to Cover"), callback, (clip, track, "cover_with_prev", event.x)))
