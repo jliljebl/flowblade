@@ -23,7 +23,7 @@
 import os
 import sys
 
-print "FLOWBLADE MOVIE EDITOR 0.14rc"
+print "FLOWBLADE MOVIE EDITOR 0.14"
 print "---------------------------"
 
 # Get launch script dir
