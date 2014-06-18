@@ -237,6 +237,10 @@ class Player(threading.Thread):
         rgb = frame.get_image(mlt.mlt_image_rgb24a, *size) 
         return rgb
 
+    def display_inside_sequence_length(self, new_seq_len):
+        if self.producer.frame() > new_seq_len:
+            self.seek_frame(new_seq_len)
+
     def is_playing(self):
         return (self.producer.get_speed() != 0)
 

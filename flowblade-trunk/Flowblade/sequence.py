@@ -692,11 +692,18 @@ class Sequence:
         Last track is hidden track used to display clips and trim edits.
         Here that track is cleared of any content.
         """
-        seq_len = self.get_length()
+        self.update_edit_tracks_length()
 
+        # Empty timeline needs blank clip of len atleast 1 because  
+        # edit_insert_blank() always needs a clip to add attributes to 
+        # and that method is fundamendal and cannot be changed. 
+        seq_len = self.seq_len
+        if seq_len < 1:
+            seq_len = 1
+        
         self.tracks[-1].clips = []
         self.tracks[-1].clear()
-        #print "clear_hidden_track"
+
         edit._insert_blank(self.tracks[-1], 0, seq_len) # TRIM INIT CRASH HACK. This being empty crashes a lot, so far unexplained.
         
         self._unmute_editable()
@@ -709,11 +716,22 @@ class Sequence:
             if track_len > self.seq_len:
                 self.seq_len = track_len
 
+    def update_trim_hack_blank_length(self):
+        # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
+        self.tracks[-1].clips = []
+        self.tracks[-1].clear()
+
+        seq_len = self.seq_len
+        if seq_len < 1:
+            seq_len = 1
+            
+        edit._insert_blank(self.tracks[-1], 0, seq_len)
+
     def get_seq_range_frame(self, frame):
         # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
         # remove TimeLineFrameScale then too
-        if frame >= self.seq_len:
-            return self.seq_len
+        if frame >= (self.seq_len - 1):
+            return self.seq_len - 1
         else:
             return frame
 

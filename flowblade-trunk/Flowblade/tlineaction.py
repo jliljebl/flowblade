@@ -218,7 +218,7 @@ def insert_button_pressed():
 def append_button_pressed():
     track = current_sequence().get_first_active_track()
 
-    if editevent.track_lock_check_and_user_info(track, insert_button_pressed, "insert"):
+    if editevent.track_lock_check_and_user_info(track, append_button_pressed, "insert"):
         return
 
     tline_pos = track.get_length()
