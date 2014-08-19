@@ -644,18 +644,24 @@ class Sequence:
         """
         Adds clip to hidden track for trim editing display.
         """
-        self.tracks[-1].clear() # # TRIM INIT CRASH HACK, see clear_hidden_track there may be blank clip here
         track = self.tracks[-1] # Always last track
-        
+        track.clear() # # TRIM INIT CRASH HACK, see clear_hidden_track there may be blank clip here
+        track.clips = []
+
+
+        print "clip start pos:", clip_start_pos
+
         # Display trimmmed clip on hidden track by creating copy of it.
         # File producer
         if path != None:
             clip = self.create_file_producer_clip(path)
-            
+            print "path !=None"
             if clip_start_pos > 0:
                 edit._insert_blank(track, 0, clip_start_pos)
                 edit._insert_clip(track, clip, 1, 0, clip.get_length() - 1)
+                print ">0"
             else:
+                print "=<0"
                 edit._insert_clip(track, clip, 1, -clip_start_pos, clip.get_length() - 1) # insert index 1 ?
         # Pattern producer (FIX ME: does not allow for keyframes in pattern producer)
         else:

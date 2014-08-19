@@ -18,7 +18,7 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 """
-Module handles initializing displaying audiomonitor tool.
+Module handles initializing and displaying audiomonitor tool.
 """
 import cairo
 import gtk

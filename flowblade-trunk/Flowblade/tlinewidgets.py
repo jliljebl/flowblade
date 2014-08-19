@@ -1451,7 +1451,7 @@ class TimeLineColumn:
     GUI component for displaying and editing track parameters.
     """
 
-    def __init__(self, active_listener, mute_listener, center_listener):
+    def __init__(self, active_listener, center_listener):
         # Init widget
         self.widget = CairoDrawableArea(COLUMN_WIDTH, 
                                         HEIGHT, 
@@ -1459,7 +1459,6 @@ class TimeLineColumn:
         self.widget.press_func = self._press_event
         
         self.active_listener = active_listener
-        self.mute_listener = mute_listener
         self.center_listener = center_listener
         self.init_listeners()
 

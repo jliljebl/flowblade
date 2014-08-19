@@ -58,6 +58,7 @@ import proxyediting
 import titler
 import tlineaction
 import tlinewidgets
+import trackaction
 import updater
 
 
@@ -168,8 +169,6 @@ class EditorWindow:
             ('AddTransition', None, _('Add Single Track Transition'), None, None, lambda a:tlineaction.add_transition_menu_item_selected()),
             ('AddFade', None, _('Add Single Track Fade'), None, None, lambda a:tlineaction.add_fade_menu_item_selected()),
             ('ClearFilters', None, _('Clear Filters'), None, None, lambda a:editevent.clear_filters()),
-            ('ConsolidateSelectedBlanks', None, _('Consolidate Selected Blanks'), None, None, lambda a:editevent.consolidate_selected_blanks()),
-            ('ConsolidateAllBlanks', None, _('Consolidate All Blanks'), None, None, lambda a:editevent.consolidate_all_blanks()),
             ('ChangeSequenceTracks', None, _('Change Sequence Tracks Count...'), None, None, lambda a:projectaction.change_sequence_track_count()),
             ('Watermark', None, _('Watermark...'), None, None, lambda a:menuactions.edit_watermark()),
             ('ProfilesManager', None, _('Profiles Manager'), None, None, lambda a:menuactions.profiles_manager()),
@@ -584,7 +583,7 @@ class EditorWindow:
         marker_pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "marker.png")
         markers_launcher = guicomponents.get_markers_menu_launcher(editevent.marker_menu_lauch_pressed, marker_pixbuf)
         tracks_launcher_pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_menu_launch.png")
-        tracks_launcher = guicomponents.PressLaunch(editevent.all_tracks_menu_launch_pressed, tracks_launcher_pixbuf)
+        tracks_launcher = guicomponents.PressLaunch(trackaction.all_tracks_menu_launch_pressed, tracks_launcher_pixbuf)
 
         # Timeline top row
         tline_hbox_1 = gtk.HBox()
@@ -595,9 +594,8 @@ class EditorWindow:
 
         # Timeline column
         self.tline_column = tlinewidgets.TimeLineColumn(
-                            editevent.track_active_switch_pressed,
-                            editevent.track_mute_switch_pressed,
-                            editevent.track_center_pressed)
+                            trackaction.track_active_switch_pressed,
+                            trackaction.track_center_pressed)
 
         # Timeline editpanel
         self.tline_canvas = tlinewidgets.TimeLineCanvas(
@@ -671,7 +669,8 @@ class EditorWindow:
         w, h = editorpersistance.prefs.exit_allocation
         if w != 0: # non-existing prefs file causes w and h to be 0
             if (float(w) / editorstate.SCREEN_WIDTH > 0.95) and (float(h) / editorstate.SCREEN_HEIGHT > 0.95):
-                self.window.maximize() 
+                self.window.maximize()
+                print "maximize" 
             else:
                 self.window.resize(w, h)
                 self.window.set_position(gtk.WIN_POS_CENTER)
