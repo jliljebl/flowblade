@@ -126,33 +126,7 @@ def _display_no_audio_on_video_msg(track):
     dialogutils.warning_message(_("Can't put an audio clip on a video track."), 
                             _("Track ")+ utils.get_track_name(track, current_sequence()) + _(" is a video track and can't display audio only material."),
                             gui.editor_window.window)
-                                    
-# --------------------------------- undo, redo
-def do_undo(widget=None, data=None):
-    undo.do_undo()
-    updater.repaint_tline()
-    
-def do_redo(widget=None, data=None):
-    undo.do_redo()
-    updater.repaint_tline()
 
-def undo_redo_stress_test():
-    times = 10
-    delay = 0.100
-    
-    for r in range(0, times):
-        while undo.index > 0:
-            print "undo:", undo.index
-            do_undo()
-
-            time.sleep(delay)
-    
-        while undo.index < len(undo.undo_stack):
-            print "redo:", undo.index
-            do_redo()
-
-            time.sleep(delay)
-    
 # ------------------------------------- edit mode setting
 def set_default_edit_mode(disable_mouse=False):
     """
