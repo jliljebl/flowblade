@@ -225,6 +225,8 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     """
     Sets one roll mode
     """
+    print "ffff"
+
     if track == None:
         return False
 
@@ -241,6 +243,9 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     
     if edit_frame == -1:
         return False
+
+    
+    print"eee"
 
     # hack fix for last clip out trim. If frame pointer not at very end of clip
     # the other functions for getting trim frame given +1 too much 
@@ -365,6 +370,7 @@ def oneroll_trim_release(x, y, frame, state):
     """
     User releases mouse when in one roll mode.
     """
+    print "release"
     global mouse_disabled
     if mouse_disabled:
         mouse_disabled = False
@@ -438,6 +444,7 @@ def one_roll_trim_undo_done(track, index, is_to_side_edit):
     WRONG NAME FOR FUNCTION
     Callback if initial edit done. Undo and redo do not cause this to be called
     """
+    print "dddd"
     # reinit edit mode to correct side
     frame = track.clip_start(index)
     success = set_oneroll_mode(track, frame, is_to_side_edit)

@@ -56,6 +56,7 @@ import movemodes
 import multimovemode
 import syncsplitevent
 import tlinewidgets
+import trackaction
 import trimmodes
 import undo
 import updater
@@ -904,167 +905,6 @@ def _delete_blank(data):
     action = edit.remove_multiple_action(data)
     action.do_edit()
 
-def _mute_track(track, new_mute_state):
-    # NOTE: THIS IS EDITOR STATE CHANGE, NOT AN UNDOABLE EDIT
-
-    current_sequence().set_track_mute_state(track.id, new_mute_state)
-    gui.tline_column.widget.queue_draw()
-
-
-# ---------------------------------- tracks
-def track_active_switch_pressed(data):
-    track = get_track(data.track) # data.track is index, not object
-
-    # Flip active state
-    if data.event.button == 1:
-        track.active = (track.active == False)
-        if current_sequence().all_tracks_off() == True:
-            track.active = True
-        gui.tline_column.widget.queue_draw()
-    elif data.event.button == 3:
-        guicomponents.display_tracks_popup_menu(data.event, data.track, \
-                                                _track_menu_item_activated)
-
-def track_mute_switch_pressed(data):
-    if data.event.button == 1:
-        current_sequence().next_mute_state(data.track) # data.track is index, not object
-        gui.tline_column.widget.queue_draw()
-    elif data.event.button == 3:
-        guicomponents.display_tracks_popup_menu(data.event, data.track, \
-                                                _track_menu_item_activated)
-
-def track_center_pressed(data):
-    if data.event.button == 1:
-        # handle possible mute icon presses
-        press_x = data.event.x
-        press_y = data.event.y
-        track = tlinewidgets.get_track(press_y)
-        if track == None:
-            return
-        y_off = press_y - tlinewidgets._get_track_y(track.id)
-        ICON_WIDTH = 12
-        if press_x > tlinewidgets.COLUMN_LEFT_PAD and press_x < tlinewidgets.COLUMN_LEFT_PAD + ICON_WIDTH:
-            # Mute icon x area hit
-            ix, iy = tlinewidgets.MUTE_ICON_POS
-            if track.height > appconsts.TRACK_HEIGHT_SMALL:
-                ix, iy = tlinewidgets.MUTE_ICON_POS_NORMAL
-            ICON_HEIGHT = 10
-            if track.id >= current_sequence().first_video_index:
-                # Video tracks
-                if y_off > iy and y_off < iy + ICON_HEIGHT:
-                    # Video mute icon hit
-                    if track.mute_state == appconsts.TRACK_MUTE_NOTHING:
-                        new_mute_state = appconsts.TRACK_MUTE_VIDEO
-                    elif track.mute_state == appconsts.TRACK_MUTE_VIDEO:
-                        new_mute_state = appconsts.TRACK_MUTE_NOTHING
-                    elif track.mute_state == appconsts.TRACK_MUTE_AUDIO:
-                        new_mute_state = appconsts.TRACK_MUTE_ALL
-                    elif track.mute_state == appconsts.TRACK_MUTE_ALL:
-                        new_mute_state = appconsts.TRACK_MUTE_AUDIO
-                elif y_off > iy + ICON_HEIGHT and y_off < iy + ICON_HEIGHT * 2:
-                    # Audio mute icon hit
-                    if track.mute_state == appconsts.TRACK_MUTE_NOTHING:
-                        new_mute_state = appconsts.TRACK_MUTE_AUDIO
-                    elif track.mute_state == appconsts.TRACK_MUTE_VIDEO:
-                        new_mute_state = appconsts.TRACK_MUTE_ALL
-                    elif track.mute_state == appconsts.TRACK_MUTE_AUDIO:
-                        new_mute_state = appconsts.TRACK_MUTE_NOTHING
-                    elif track.mute_state == appconsts.TRACK_MUTE_ALL:
-                        new_mute_state = appconsts.TRACK_MUTE_VIDEO
-                else:
-                    return
-            else:
-                # Audio tracks
-                iy = iy + 6 # Mute icon is lower on audio tracks
-                if y_off > iy and y_off < iy + ICON_HEIGHT:
-                    if track.mute_state == appconsts.TRACK_MUTE_VIDEO:
-                        new_mute_state = appconsts.TRACK_MUTE_ALL
-                    else:
-                        new_mute_state = appconsts.TRACK_MUTE_VIDEO
-                else:
-                    return 
-            # Update track mute state
-            current_sequence().set_track_mute_state(track.id, new_mute_state)
-            gui.tline_column.widget.queue_draw()
-    
-    if data.event.button == 3:
-        guicomponents.display_tracks_popup_menu(data.event, data.track, \
-                                                _track_menu_item_activated)
-
-def _track_menu_item_activated(widget, data):
-    track, item_id, selection_data = data
-    handler = POPUP_HANDLERS[item_id]
-    if selection_data == None:
-        handler(track)
-    else:
-        handler(track, selection_data)
-
-def _lock_track(track_index):
-    track = get_track(track_index)
-    track.edit_freedom = appconsts.LOCKED
-    updater.repaint_tline()
-    
-def _unlock_track(track_index):
-    track = get_track(track_index)
-    track.edit_freedom = appconsts.FREE
-    updater.repaint_tline()
-    
-def _sync_lock_track(track_index):
-    track = get_track(track_index)
-    track.edit_freedom = appconsts.SYNC_LOCKED
-    updater.repaint_tline()
-
-def _set_track_normal_height(track_index):
-    track = get_track(track_index)
-    track.height = appconsts.TRACK_HEIGHT_NORMAL
-    
-    # Check that new height tracks can be displayed and cancel if not.
-    new_h = current_sequence().get_tracks_height()
-    x, y, w, h = gui.tline_canvas.widget.allocation
-    if new_h > h:
-        track.height = appconsts.TRACK_HEIGHT_SMALL
-        dialogutils.warning_message(_("Not enough vertical space on Timeline to expand track"), 
-                                _("Maximize or resize application window to get more\nspace for tracks if possible."),
-                                gui.editor_window.window,
-                                True)
-        return
-    
-    
-    tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.allocation)
-    gui.tline_column.init_listeners()
-    updater.repaint_tline()
-
-def _set_track_small_height(track_index):
-    track = get_track(track_index)
-    track.height = appconsts.TRACK_HEIGHT_SMALL
-    if editorstate.SCREEN_HEIGHT < 863:
-        track.height = appconsts.TRACK_HEIGHT_SMALLEST
-    
-    tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.allocation)
-    gui.tline_column.init_listeners()
-    updater.repaint_tline()
-
-def _consolidate_blanks_from_popup(data):
-    clip, track, item_id, item_data = data
-    movemodes.select_blank_range(track, clip)    
-    consolidate_selected_blanks()
-    
-def consolidate_selected_blanks():
-    if movemodes.selected_track == -1:
-        # nothing selected
-        return
-
-    track = get_track(movemodes.selected_track)
-    if track.clips[movemodes.selected_range_in].is_blanck_clip != True:
-        return
-    index = movemodes.selected_range_in
-    movemodes.clear_selected_clips()
-    data = {"track":track, "index":index}
-    action = edit.consolidate_selected_blanks(data)
-    action.do_edit()
-
-    updater.repaint_tline()
-
 def _cover_blank_from_prev(data):
     clip, track, item_id, item_data = data
     clip_index = movemodes.selected_range_in - 1
@@ -1112,12 +952,6 @@ def _cover_blank_from_next(data):
     data = {"track":track, "clip":cover_clip, "blank_index":blank_index}
     action = edit.trim_start_over_blanks(data)
     action.do_edit()
-                  
-def consolidate_all_blanks():
-    action = edit.consolidate_all_blanks({})
-    action.do_edit()
-
-    updater.repaint_tline()
 
 # ------------------------------------ menu selection edits
 def clear_selection():
@@ -1232,32 +1066,6 @@ def _marker_add_dialog_callback(dialog, response_id, name_entry):
     current_sequence().markers = sorted(current_sequence().markers, key=itemgetter(1))
     updater.repaint_tline()
 
-def all_tracks_menu_launch_pressed(widget, event):
-    guicomponents.get_all_tracks_popup_menu(event, _all_tracks_item_activated)
-
-def _all_tracks_item_activated(widget, msg):
-    if msg == "min":
-        current_sequence().minimize_tracks_height()
-        _tracks_resize_update()
-    
-    if msg == "max":
-        current_sequence().maximize_tracks_height(gui.tline_canvas.widget.allocation)
-        _tracks_resize_update()
-    
-    if msg == "maxvideo":
-        current_sequence().maximize_video_tracks_height(gui.tline_canvas.widget.allocation)
-        _tracks_resize_update()
-
-    if msg == "maxaudio":
-        current_sequence().maximize_audio_tracks_height(gui.tline_canvas.widget.allocation)
-        _tracks_resize_update()
-
-def _tracks_resize_update():
-    tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.allocation)
-    gui.tline_column.init_listeners()
-    updater.repaint_tline()
-    gui.tline_column.widget.queue_draw()
-
 # --------------------------------------------------- copy/paste
 def do_timeline_objects_copy():
     if movemodes.selected_track != -1:
@@ -1343,12 +1151,7 @@ EDIT_MODE_FUNCS = {editorstate.INSERT_MOVE:INSERT_MOVE_FUNCS,
 # Functions to handle popup menu selections for strings 
 # set as activation messages in guicomponents.py
 # activation_message -> _handler_func
-POPUP_HANDLERS = {"lock":_lock_track,
-                  "unlock":_unlock_track,
-                  "sync_lock":_sync_lock_track,
-                  "normal_height":_set_track_normal_height,
-                  "small_height":_set_track_small_height,
-                  "set_master":syncsplitevent.init_select_master_clip,
+POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "open_in_editor":_open_clip_in_effects_editor,
                   "clip_info":_show_clip_info,
                   "open_in_clip_monitor":_open_clip_in_clip_monitor,
@@ -1361,11 +1164,9 @@ POPUP_HANDLERS = {"lock":_lock_track,
                   "add_compositor":_add_compositor,
                   "clear_sync_rel":syncsplitevent.clear_sync_relation,
                   "mute_clip":_mute_clip,
-                  "mute_track":_mute_track,
                   "display_waveform":_display_wavefrom,
                   "clear_waveform":_clear_waveform,
                   "delete_blank":_delete_blank,
-                  "comsolidate_blanks":_consolidate_blanks_from_popup,
                   "cover_with_prev": _cover_blank_from_prev,
                   "cover_with_next": _cover_blank_from_next,
                   "clone_filters_from_next": _clone_filters_from_next,

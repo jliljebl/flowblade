@@ -1083,8 +1083,6 @@ def display_blank_clip_popup_menu(event, clip, track, callback):
     clip_menu.add(_get_menu_item(_("Strech Prev Clip to Cover"), callback, (clip, track, "cover_with_prev", event.x)))
     clip_menu.add(_get_menu_item(_("Strech Next Clip to Cover"), callback, (clip, track, "cover_with_next", event.x)))
     _add_separetor(clip_menu)
-    clip_menu.add(_get_menu_item(_("Consolidate"), callback, (clip, track, "comsolidate_blanks", event.x)))
-    _add_separetor(clip_menu)
     clip_menu.add(_get_menu_item(_("Delete"), callback, (clip, track, "delete_blank", event.x)))
     clip_menu.popup(None, None, None, event.button, event.time)
     
