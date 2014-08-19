@@ -678,3 +678,34 @@ def monitor_clip_too_short(parent_window):
 def mouse_dragged_out(event):
     if movemodes.selected_range_in != -1:
         movemodes.clips_drag_out_started(event)
+
+# --------------------------------------------------- copy/paste
+def do_timeline_objects_copy():
+    if movemodes.selected_track != -1:
+        # copying clips
+        track = current_sequence().tracks[movemodes.selected_track]
+        clone_clips = []
+        for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
+            clone_clip = current_sequence().clone_track_clip(track, i)
+            clone_clips.append(clone_clip)
+        editorstate.set_copy_paste_objects(clone_clips)
+
+def do_timeline_objects_paste():
+    track = current_sequence().get_first_active_track()
+    if track == None:
+        return
+
+    paste_objs = editorstate.get_copy_paste_objects()
+    if paste_objs == None:
+        return
+
+    tline_pos = editorstate.current_tline_frame()
+
+    new_clips = []
+    for clip in paste_objs:
+        new_clip = current_sequence().create_clone_clip(clip)
+        new_clips.append(new_clip)
+    editorstate.set_copy_paste_objects(new_clips)
+
+    # Paste clips
+    editevent.do_multiple_clip_insert(track, paste_objs, tline_pos)
