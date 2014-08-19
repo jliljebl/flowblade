@@ -1066,38 +1066,6 @@ def _marker_add_dialog_callback(dialog, response_id, name_entry):
     current_sequence().markers = sorted(current_sequence().markers, key=itemgetter(1))
     updater.repaint_tline()
 
-# --------------------------------------------------- copy/paste
-def do_timeline_objects_copy():
-    if movemodes.selected_track != -1:
-        # copying clips
-        track = current_sequence().tracks[movemodes.selected_track]
-        clone_clips = []
-        for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
-            clone_clip = current_sequence().clone_track_clip(track, i)
-            clone_clips.append(clone_clip)
-        editorstate.set_copy_paste_objects(clone_clips)
-
-def do_timeline_objects_paste():
-    track = current_sequence().get_first_active_track()
-    if track == None:
-        return
-
-    paste_objs = editorstate.get_copy_paste_objects()
-    if paste_objs == None:
-        return
-
-    tline_pos = editorstate.current_tline_frame()
-
-    new_clips = []
-    for clip in paste_objs:
-        new_clip = current_sequence().create_clone_clip(clip)
-        new_clips.append(new_clip)
-    editorstate.set_copy_paste_objects(new_clips)
-
-    # Paste clips
-    do_multiple_clip_insert(track, paste_objs, tline_pos)
-
-
 # ------------------------------------ function tables
 # mouse event indexes
 TL_MOUSE_PRESS = 0
