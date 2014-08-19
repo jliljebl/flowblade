@@ -471,7 +471,6 @@ def display_marks_tc():
     if not timeline_visible():
         display_monitor_clip_name()
 
-
 # ----------------------------------------------- clip editors
 def clip_removed_during_edit(clip):
     clipeffectseditor.clip_removed_during_edit(clip)

@@ -61,7 +61,7 @@ import tlineaction
 import tlinewidgets
 import trackaction
 import updater
-
+import undo
 
 # GUI size params
 """
@@ -155,8 +155,8 @@ class EditorWindow:
             ('Close', None, _('_Close'), None, None, lambda a:projectaction.close_project()),
             ('Quit', None, _('_Quit'), '<control>Q', None, lambda a:app.shutdown()),
             ('EditMenu', None, _('_Edit')),
-            ('Undo', None, _('_Undo'), '<control>Z', None, editevent.do_undo),
-            ('Redo', None, _('_Redo'), '<control>Y', None, editevent.do_redo),
+            ('Undo', None, _('_Undo'), '<control>Z', None, undo.do_undo_and_repaint),
+            ('Redo', None, _('_Redo'), '<control>Y', None, undo.do_redo_and_repaint),
             ('AddFromMonitor', None, _('Add Monitor Clip')),
             ('AppendClip', None, _('Append'), None, None, lambda a:tlineaction.append_button_pressed()),
             ('InsertClip', None, _('Insert'), None, None, lambda a:tlineaction.insert_button_pressed()),

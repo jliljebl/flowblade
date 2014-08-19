@@ -19,7 +19,7 @@
 """
 
 """
-Module handles initializing and changing window contents acoording to user preferences.
+
 """
 
 import gtk
@@ -36,6 +36,7 @@ import respaths
 import titler
 import tlineaction
 import updater
+import undo
 
 # editor window object
 # This needs to be set here because gui.py module ref is not available at init time
@@ -123,8 +124,8 @@ def _create_buttons(editor_window):
     editor_window.monitor_insert_buttons.widget.set_tooltip_text(_("Overwrite Range\nOverwrite Clip - T\nInsert Clip - Y\nAppend Clip - U"))
 
     editor_window.undo_redo = glassbuttons.GlassButtonsGroup(46, 23, 2, 2, 7)
-    editor_window.undo_redo.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "undo.png"), editevent.do_undo)
-    editor_window.undo_redo.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "redo.png"), editevent.do_redo)
+    editor_window.undo_redo.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "undo.png"), undo.do_undo_and_repaint)
+    editor_window.undo_redo.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "redo.png"), undo.do_redo_and_repaint)
     editor_window.undo_redo.widget.set_tooltip_text(_("Undo - Ctrl + X\nRedo - Ctrl + Y"))
 
     editor_window.tools_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 14, 7)

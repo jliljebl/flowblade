@@ -25,6 +25,7 @@ on user requests.
 import editorstate
 
 set_post_undo_redo_edit_mode = None # This is set at startup to avoid circular imports
+repaint_tline = None
 
 # Max stack size
 MAX_UNDOS = 35
@@ -43,6 +44,8 @@ index = 0
 save_item = None
 undo_item = None 
 redo_item = None
+
+
 
 def set_post_undo_redo_callback(undo_redo_callback):
     global set_post_undo_redo_edit_mode
@@ -77,6 +80,14 @@ def register_edit(undo_edit):
     undo_item.set_sensitive(True)
     redo_item.set_sensitive(False)
 
+def do_undo_and_repaint(widget=None, data=None):
+    do_undo()
+    repaint_tline()
+    
+def do_redo_and_repaint(widget=None, data=None):
+    do_redo()
+    repaint_tline()
+    
 def do_undo():
     global index
     
@@ -131,4 +142,20 @@ def do_redo():
 def _set_post_edit_mode():
     if editorstate.edit_mode != editorstate.INSERT_MOVE:
         set_post_undo_redo_edit_mode()
-        
+
+def undo_redo_stress_test():
+    times = 10
+    delay = 0.100
+    
+    for r in range(0, times):
+        while undo.index > 0:
+            print "undo:", undo.index
+            do_undo()
+
+            time.sleep(delay)
+    
+        while undo.index < len(undo.undo_stack):
+            print "redo:", undo.index
+            do_redo()
+
+            time.sleep(delay)

@@ -271,7 +271,8 @@ def monkeypatch_callbacks():
 
     # Set callback for undo/redo ops, batcherrender app does not need this 
     undo.set_post_undo_redo_callback(editevent.set_post_undo_redo_edit_mode)
-    
+    undo.repaint_tline = updater.repaint_tline
+
     # # Drag'n'drop callbacks
     dnd.add_current_effect = clipeffectseditor.add_currently_selected_effect
     dnd.display_monitor_media_file = updater.set_and_display_monitor_media_file
