@@ -113,7 +113,7 @@ def _group_selection_changed(group_combo, filters_list_view):
     group_name, filters_array = mltfilters.groups[group_combo.get_active()]
     filters_list_view.fill_data_model(filters_array)
     filters_list_view.treeview.get_selection().select_path("0")
-    
+
 def set_clip(new_clip, new_track, new_index):
     """
     Sets clip being edited and inits gui.

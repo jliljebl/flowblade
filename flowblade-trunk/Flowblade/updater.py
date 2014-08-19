@@ -480,6 +480,13 @@ def clear_clip_from_editors(clip):
     if clipeffectseditor.clip == clip:
         clipeffectseditor.clear_clip()
 
+def open_clip_in_effects_editor(data):
+    clip, track, item_id, x = data
+    frame = tlinewidgets.get_frame(x)
+    index = current_sequence().get_clip_index(track, frame)
+
+    clipeffectseditor.set_clip(clip, track, index)
+    
 # ----------------------------------------- edit modes
 def set_trim_mode_gui():
     """

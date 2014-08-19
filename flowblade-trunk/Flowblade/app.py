@@ -283,7 +283,8 @@ def monkeypatch_callbacks():
 
 
     editevent.display_clip_menu_pop_up = clipmenuaction.display_clip_menu
-
+    editevent.compositor_menu_item_activated = clipmenuaction._compositor_menu_item_activated
+    
     # These provide clues for further module refactoring 
 
 # ---------------------------------- program, sequence and project init
