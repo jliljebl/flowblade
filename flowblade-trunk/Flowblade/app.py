@@ -37,6 +37,7 @@ import appconsts
 import audiomonitoring
 import audiowaveform
 import clipeffectseditor
+import clipmenuaction
 import compositeeditor
 import dialogs
 import dialogutils
@@ -279,6 +280,9 @@ def monkeypatch_callbacks():
 
     # Media log 
     medialog.do_multiple_clip_insert_func = editevent.do_multiple_clip_insert
+
+
+    editevent.display_clip_menu_pop_up = clipmenuaction.display_clip_menu
 
     # These provide clues for further module refactoring 
 
