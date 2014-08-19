@@ -68,6 +68,8 @@ mouse_disabled = False # Used to ignore drag and release events when press doesn
 repeat_event = None
 parent_selection_data = None # Held here until user presses tline again
 
+# function is monkeypathed in in app.py 
+display_clip_menu_pop_up = None
 
 # ----------------------------- module funcs
 def do_clip_insert(track, new_clip, tline_pos):
@@ -453,7 +455,7 @@ def tline_canvas_mouse_pressed(event, frame):
                 PLAYER().seek_frame(frame)
             # Right mouse on timeline seeks frame
             else:
-                success = _display_clip_menu(event.y, event, frame)
+                success = display_clip_menu_pop_up(event.y, event, frame)
                 if not success:
                     PLAYER().seek_frame(frame)
         return
@@ -485,7 +487,7 @@ def tline_canvas_mouse_pressed(event, frame):
     if (event.button == 3):
         if ((not editorstate.current_is_active_trim_mode()) and timeline_visible()):
             if not(event.state & gtk.gdk.CONTROL_MASK):
-                success = _display_clip_menu(event.y, event, frame)
+                success = display_clip_menu_pop_up(event.y, event, frame)
                 if not success:
                     PLAYER().seek_frame(frame)
             else:
@@ -703,7 +705,7 @@ def tline_range_item_drop(rows, x, y):
     clips = medialog.get_clips_for_rows(rows)
     set_default_edit_mode()
     do_multiple_clip_insert(track, clips, frame)
-
+"""
 # ---------------------------------- clip menu
 def _display_clip_menu(y, event, frame):
     # See if we actually hit a clip
@@ -805,9 +807,6 @@ def _rename_clip(data):
     dialogs.new_clip_name_dialog(_rename_clip_edited, clip)
 
 def _rename_clip_edited(dialog, response_id, data):
-    """
-    Sets edited value to liststore and project data.
-    """
     name_entry, clip = data
     new_text = name_entry.get_text()
     dialog.destroy()
@@ -952,7 +951,7 @@ def _cover_blank_from_next(data):
     data = {"track":track, "clip":cover_clip, "blank_index":blank_index}
     action = edit.trim_start_over_blanks(data)
     action.do_edit()
-
+"""
 # ------------------------------------ menu selection edits
 """
 def clear_selection():
@@ -963,6 +962,7 @@ def track_selection_activated(widget, track_index):
     end_index = len(get_track(track_index).clips) - 1
     movemodes._select_multiple_clips(track_index, 0, end_index)
     updater.repaint_tline()
+"""
 """
 def clear_filters():
     if movemodes.selected_track == -1:
@@ -1009,6 +1009,7 @@ def _do_filter_clone(clip, clone_clip):
     action = edit.clone_filters_action(data)
     action.do_edit()
 
+"""
 
 # ------------------------------------ track locks handling
 def track_lock_check_and_user_info(track, calling_function="this ain't used anymore", actionname="this ain't used anymore"):
@@ -1073,7 +1074,9 @@ EDIT_MODE_FUNCS = {editorstate.INSERT_MOVE:INSERT_MOVE_FUNCS,
                    editorstate.SLIDE_TRIM:SLIDE_TRIM_FUNCS,
                    editorstate.SLIDE_TRIM_NO_EDIT:SLIDE_TRIM_NO_EDIT_FUNCS,
                    editorstate.MULTI_MOVE:MULTI_MOVE_FUNCS}
-                    
+
+
+"""
 # Functions to handle popup menu selections for strings 
 # set as activation messages in guicomponents.py
 # activation_message -> _handler_func
@@ -1097,3 +1100,4 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "cover_with_next": _cover_blank_from_next,
                   "clone_filters_from_next": _clone_filters_from_next,
                   "clone_filters_from_prev": _clone_filters_from_prev}
+"""

@@ -30,6 +30,7 @@ import appconsts
 import audiomonitoring
 import batchrendering
 import clipeffectseditor
+import clipmenuaction
 import compositeeditor
 import dialogs
 import dnd
@@ -168,7 +169,7 @@ class EditorWindow:
             ('SetSyncParent', None, _('Set Sync Parent'), None, None, lambda a:_this_is_not_used()),
             ('AddTransition', None, _('Add Single Track Transition'), None, None, lambda a:tlineaction.add_transition_menu_item_selected()),
             ('AddFade', None, _('Add Single Track Fade'), None, None, lambda a:tlineaction.add_fade_menu_item_selected()),
-            ('ClearFilters', None, _('Clear Filters'), None, None, lambda a:editevent.clear_filters()),
+            ('ClearFilters', None, _('Clear Filters'), None, None, lambda a:clipmenuaction.clear_filters()),
             ('ChangeSequenceTracks', None, _('Change Sequence Tracks Count...'), None, None, lambda a:projectaction.change_sequence_track_count()),
             ('Watermark', None, _('Watermark...'), None, None, lambda a:menuactions.edit_watermark()),
             ('ProfilesManager', None, _('Profiles Manager'), None, None, lambda a:menuactions.profiles_manager()),

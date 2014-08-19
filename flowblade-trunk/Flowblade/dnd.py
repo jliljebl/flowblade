@@ -126,6 +126,8 @@ def start_tline_clips_out_drag(event, clips, widget):
     global drag_data
     drag_data = clips
     context = widget.drag_begin([RANGE_DND_TARGET], gtk.gdk.ACTION_COPY, 1, event)
+    if context == None: # if something outside of the application is clicked we'll end here and cannot create a context
+        return
     context.set_icon_pixbuf(clip_icon, 30, 15)
 
 
