@@ -19,7 +19,7 @@
 """
 
 """
-This module handles actions initiated from clip popup menus.
+This module handles actions initiated from clip and compositor popup menus.
 """
 
 import audiowaveform
@@ -27,6 +27,7 @@ import appconsts
 import clipeffectseditor
 import compositeeditor
 import dialogs
+import dialogutils
 import gtk
 import gui
 import guicomponents
@@ -104,11 +105,7 @@ def _compositor_menu_item_activated(widget, data):
         action.do_edit()
 
 def _open_clip_in_effects_editor(data):
-    clip, track, item_id, x = data
-    frame = tlinewidgets.get_frame(x)
-    index = current_sequence().get_clip_index(track, frame)
-    
-    clipeffectseditor.set_clip(clip, track, index)
+    updater.open_clip_in_effects_editor(data)
     
 def _open_clip_in_clip_monitor(data):
     clip, track, item_id, x = data
