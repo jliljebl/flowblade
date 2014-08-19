@@ -174,7 +174,7 @@ def _handle_tline_key_event(event):
 
     # M
     if event.keyval == gtk.keysyms.m:
-        editevent.add_marker()
+        tlineaction.add_marker()
         return True
 
     # Number edit mode changes

@@ -29,7 +29,7 @@ Module passes mouse edit events to other modules, depending on current edit mode
 """
 
 import gtk
-from operator import itemgetter
+#from operator import itemgetter
 import os
 import time
 
@@ -178,7 +178,7 @@ def set_default_edit_mode(disable_mouse=False):
 
 def set_clip_monitor_edit_mode():
     """
-    Going to clip monitor exits active trimodes into non active trimmodes
+    Going to clip monitor exits active trimodes into non active trimmodes.
     """
     if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
         oneroll_trim_no_edit_init()
@@ -954,15 +954,16 @@ def _cover_blank_from_next(data):
     action.do_edit()
 
 # ------------------------------------ menu selection edits
+"""
 def clear_selection():
     movemodes.clear_selected_clips()
     updater.repaint_tline()
-    
+ 
 def track_selection_activated(widget, track_index):
     end_index = len(get_track(track_index).clips) - 1
     movemodes._select_multiple_clips(track_index, 0, end_index)
     updater.repaint_tline()
-
+"""
 def clear_filters():
     if movemodes.selected_track == -1:
         return
@@ -1022,49 +1023,6 @@ def track_lock_check_and_user_info(track, calling_function="this ain't used anym
 
     return False
 
-#------------------------------------------- tline markers
-def marker_menu_lauch_pressed(widget, event):
-    guicomponents.get_markers_popup_menu(event, _marker_menu_item_activated)
-
-def _marker_menu_item_activated(widget, msg):
-    current_frame = PLAYER().current_frame()
-    if msg == "add":
-        dialogs.marker_name_dialog(utils.get_tc_string(current_frame), _marker_add_dialog_callback)
-    elif msg == "delete":
-        mrk_index = -1
-        for i in range(0, len(current_sequence().markers)):
-            name, frame = current_sequence().markers[i]
-            if frame == current_frame:
-                mrk_index = i
-        if mrk_index != -1:
-            current_sequence().markers.pop(mrk_index)
-            updater.repaint_tline()
-    elif msg == "deleteall":
-        current_sequence().markers = []
-        updater.repaint_tline()
-    else: # seek to marker
-        name, frame = current_sequence().markers[int(msg)]
-        PLAYER().seek_frame(frame)
-
-def add_marker():
-    current_frame = PLAYER().current_frame()
-    dialogs.marker_name_dialog(utils.get_tc_string(current_frame), _marker_add_dialog_callback)
-
-def _marker_add_dialog_callback(dialog, response_id, name_entry):
-    name = name_entry.get_text()
-    dialog.destroy()
-    current_frame = PLAYER().current_frame()
-    dupl_index = -1
-    for i in range(0, len(current_sequence().markers)):
-        marker_name, frame = current_sequence().markers[i]
-        if frame == current_frame:
-            dupl_index = i
-    if dupl_index != -1:
-        current_sequence().markers.pop(dupl_index)
-
-    current_sequence().markers.append((name, current_frame))
-    current_sequence().markers = sorted(current_sequence().markers, key=itemgetter(1))
-    updater.repaint_tline()
 
 # ------------------------------------ function tables
 # mouse event indexes

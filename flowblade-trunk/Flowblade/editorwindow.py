@@ -577,11 +577,12 @@ class EditorWindow:
         info_h = gtk.HBox()
         info_h.pack_start(self.tline_info, False, False, 0)
         info_h.pack_start(gtk.Label(), True, True, 0)
-        info_h.set_size_request(tlinewidgets.COLUMN_WIDTH  - 22 - 22,# - 22, # room for 2 menu launch buttons 
+        info_h.set_size_request(tlinewidgets.COLUMN_WIDTH - 22 - 22,# - 22, # room for 2 menu launch buttons 
                                       tlinewidgets.SCALE_HEIGHT)
 
         marker_pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "marker.png")
-        markers_launcher = guicomponents.get_markers_menu_launcher(editevent.marker_menu_lauch_pressed, marker_pixbuf)
+        markers_launcher = guicomponents.get_markers_menu_launcher(tlineaction.marker_menu_lauch_pressed, marker_pixbuf)
+
         tracks_launcher_pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_menu_launch.png")
         tracks_launcher = guicomponents.PressLaunch(trackaction.all_tracks_menu_launch_pressed, tracks_launcher_pixbuf)
 
