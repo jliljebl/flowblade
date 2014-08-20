@@ -51,7 +51,12 @@ last_from_trimmed = False
 # Function that sets edit mode when exiting with click on empty
 set_exit_mode_func = None
 
-# Function that return <X>_NO_EDIT mode that displays trim cursor but no edit is under way 
+# Function that sets <X>_NO_EDIT mode that displays trim cursor but no edit is under way.
+#
+# This is used e.g. when user clicks empty and preference is to stay in trim mode, 
+# so active edit is exited to <X>_NO_EDIT mode.
+#
+# This function is set when trim modes are entered to be to the "edit init func for" the entered trim mode.
 set_no_edit_mode_func = None
 
 
@@ -225,7 +230,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     """
     Sets one roll mode
     """
-    print "ffff"
+    print "F:trimmodes.set_oneroll_mode"
 
     if track == None:
         return False
@@ -243,9 +248,6 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     
     if edit_frame == -1:
         return False
-
-    
-    print"eee"
 
     # hack fix for last clip out trim. If frame pointer not at very end of clip
     # the other functions for getting trim frame given +1 too much 

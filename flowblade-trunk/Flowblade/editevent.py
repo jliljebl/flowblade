@@ -217,6 +217,13 @@ def _set_move_mode():
 
 # -------------------------------------------------------------- one roll trim
 def oneroll_trim_no_edit_init():
+    """
+    This mode is entered and this method is called when:
+    - user first selects trim tool
+    - user does cut(X) action while in trim mode
+    - user clicks empty and preference is to keep using trim tool (to not exit to INSERT_MOVE)
+    """
+    print "F:editevent.oneroll_trim_no_edit_init"
     stop_looping()
     editorstate.edit_mode = editorstate.ONE_ROLL_TRIM_NO_EDIT
     gui.editor_window.set_cursor_to_mode()
@@ -225,12 +232,19 @@ def oneroll_trim_no_edit_init():
     updater.set_trim_mode_gui()
 
 def oneroll_trim_no_edit_press(event, frame):
+    """
+    Mouse press while in ONE_ROLL_TRIM_NO_EDIT attempts to init edit and 
+    move to ONE_ROLL_TRIM mode.
+    """
     success = oneroll_trim_mode_init(event.x, event.y)
     if success:
+        # If not quick enter, disable edit until mouse released
         if not editorpersistance.prefs.quick_enter_trims:
             global mouse_disabled
             tlinewidgets.trim_mode_in_non_active_state = True
             mouse_disabled = True
+         # If preference is quick enter, call mouse move handler immediately 
+         # to move edit point to where mouse is
         else:
             trimmodes.oneroll_trim_move(event.x, event.y, frame, None)
     else:
@@ -240,15 +254,18 @@ def oneroll_trim_no_edit_press(event, frame):
             editorstate.edit_mode = editorstate.ONE_ROLL_TRIM_NO_EDIT
 
 def oneroll_trim_no_edit_move(x, y, frame, state):
+    # Only presses are handled in ONE_ROLL_TRIM_NO_EDIT mode
     pass
 
 def oneroll_trim_no_edit_release(x, y, frame, state):
+    # Only presses are handled in ONE_ROLL_TRIM_NO_EDIT mode
     pass
     
 def oneroll_trim_mode_init(x, y):
     """
     User enters ONE_ROLL_TRIM mode from ONE_ROLL_TRIM_NO_EDIT 
     """
+    print "F:editevent.oneroll_trim_mode_init"
     track = tlinewidgets.get_track(y)
     if track == None:
         return False

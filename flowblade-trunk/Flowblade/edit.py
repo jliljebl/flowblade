@@ -269,7 +269,7 @@ def _overwrite_restore_out(track, moved_index, self):
                 _insert_blank(track, moved_index, self.out_clip_length)
             self.removed_clips.pop(-1) 
     except:
-        pass # why?
+        pass
 
 
 #---------------------------------------------- EDIT ACTION
@@ -297,9 +297,15 @@ class EditAction:
         
         # HACK!!!! Overwrite edits crash at redo(sometimes undo) when current frame inside 
         # affected area if consumer running.
-        # Remove when fixed upstream.
+        # Remove when fixed in MLT.
         self.stop_for_edit = False 
         self.turn_on_stop_for_edit = False # set true in redo_func for edits that need it
+
+        # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED IN MLT
+        # Length of the blank on hidden track covering the whole seuqunce
+        # needs to be updated after every edit EXCEPT after trim edits which
+        # update the hidden track themselves and this flag "update_hidden_track" to False
+        self.update_hidden_track_blank = True
 
     def do_edit(self):
         if self.exit_active_trimmode_on_edit:
@@ -335,6 +341,7 @@ class EditAction:
             self._update_gui()
             
     def redo(self):
+        print "F:EditAction.redo"
         PLAYER().stop_playback()
 
         # HACK, see above.
@@ -362,8 +369,9 @@ class EditAction:
         updater.update_kf_editor()
 
         current_sequence().update_edit_tracks_length() # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
-        current_sequence().update_trim_hack_blank_length()
-        PLAYER().display_inside_sequence_length(current_sequence().seq_len)
+        if self.update_hidden_track_blank:
+            current_sequence().update_trim_hack_blank_length() # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
+        PLAYER().display_inside_sequence_length(current_sequence().seq_len) # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
 
 
 # ---------------------------------------------------- SYNC DATA
@@ -586,6 +594,7 @@ def _gap_append_redo(self):
 def tworoll_trim_action(data):
     action = EditAction(_tworoll_trim_undo,_tworoll_trim_redo, data)
     action.exit_active_trimmode_on_edit = False
+    action.update_hidden_track_blank = False
     return action
 
 def _tworoll_trim_undo(self):
@@ -642,6 +651,7 @@ def slide_trim_action(data):
 
     action = EditAction(_slide_trim_undo,_slide_trim_redo, data)
     action.exit_active_trimmode_on_edit = False
+    action.update_hidden_track_blank = False
     return action
 
 def _slide_trim_undo(self):
@@ -1035,9 +1045,10 @@ def _get_tracks_compositors_list():
 # "track","clip","index","delta","first_do"
 # "undo_done_callback" <- THIS IS REALLY BADLY NAMED, IT SHOULD BE FIRST DO CALLBACK
 # Trims start of clip
-def trim_start_action(data): 
+def trim_start_action(data):
     action = EditAction(_trim_start_undo,_trim_start_redo, data)
     action.exit_active_trimmode_on_edit = False
+    action.update_hidden_track_blank = False
     return action
 
 def _trim_start_undo(self):
@@ -1059,9 +1070,10 @@ def _trim_start_redo(self):
 # "track","clip","index","delta", "first_do"
 # "undo_done_callback" <- THIS IS REALLY BADLY NAMED, IT SHOULD BE FIRST DO CALLBACK
 # Trims end of clip
-def trim_end_action(data): 
+def trim_end_action(data):
     action = EditAction(_trim_end_undo,_trim_end_redo, data)
     action.exit_active_trimmode_on_edit = False
+    action.update_hidden_track_blank = False
     return action
 
 def _trim_end_undo(self):
@@ -1085,6 +1097,7 @@ def _trim_end_redo(self):
 def trim_last_clip_end_action(data): 
     action = EditAction(_trim_last_clip_end_undo,_trim_last_clip_end_redo, data)
     action.exit_active_trimmode_on_edit = False
+    action.update_hidden_track_blank = False
     return action
 
 def _trim_last_clip_end_undo(self):
@@ -1611,6 +1624,7 @@ def _unmute_clip_redo(self):
 def trim_end_over_blanks(data):
     action = EditAction(_trim_end_over_blanks_undo, _trim_end_over_blanks_redo, data)
     action.exit_active_trimmode_on_edit = False
+    action.update_hidden_track_blank = False
     return action 
 
 def _trim_end_over_blanks_undo(self):
@@ -1642,6 +1656,7 @@ def _trim_end_over_blanks_redo(self):
 def trim_start_over_blanks(data):
     action = EditAction(_trim_start_over_blanks_undo, _trim_start_over_blanks_redo, data)
     action.exit_active_trimmode_on_edit = False
+    action.update_hidden_track_blank = False
     return action
 
 def _trim_start_over_blanks_undo(self):

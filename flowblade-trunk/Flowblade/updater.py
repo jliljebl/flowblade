@@ -274,6 +274,7 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     """
     Sets mltplayer producer to be video file clip and updates GUI.
     """
+    print "F:updater.display_clip_in_monitor"
     if MONITOR_MEDIA_FILE() == None:
         gui.editor_window.clip_editor_b.set_active(False)
         return
@@ -362,6 +363,7 @@ def display_sequence_in_monitor():
     Sets mltplayer producer to be current sequence
     tractor and updates GUI.
     """
+    print "F:updater.display_sequence_in_monitor"
     if PLAYER() == None: # this method gets called too early when initializing, hack fix.
         return
 
