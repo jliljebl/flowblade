@@ -262,7 +262,7 @@ def main(root_path):
 # ----------------------------------- callback setting
 def monkeypatch_callbacks():
     # Prefences setting
-    preferenceswindow.select_thumbnail_dir_callback = projectaction.select_thumbnail_dir_callback, 
+    preferenceswindow.select_thumbnail_dir_callback = projectaction.select_thumbnail_dir_callback
     preferenceswindow.select_render_clips_dir_callback = projectaction.select_render_clips_dir_callback
 
     # We need to do this on app start-up or
