@@ -130,13 +130,13 @@ class AddMediaFilesThread(threading.Thread):
         gui.editor_window.window.window.set_cursor(watch)
         gtk.gdk.threads_leave()
 
-        duplicates = 0
+        duplicates = []
         succes_new_file = None
         filenames = self.filenames
         for new_file in filenames:
             (dir, file_name) = os.path.split(new_file)
             if PROJECT().media_file_exists(new_file):
-                duplicates = duplicates + 1
+                duplicates.append(file_name)
             else:
                 try:
                     PROJECT().add_media_file(new_file)
@@ -160,11 +160,32 @@ class AddMediaFilesThread(threading.Thread):
         gui.media_list_view.fill_data_model()
         gui.bin_list_view.fill_data_model()
         _enable_save()
-        
+
         normal_cursor = gtk.gdk.Cursor(gtk.gdk.LEFT_PTR) #RTL
         gui.editor_window.window.window.set_cursor(normal_cursor)
         gtk.gdk.threads_leave()
 
+        if len(duplicates) > 0:
+            gobject.timeout_add(10, _duplicates_info, duplicates)
+
+def _duplicates_info(duplicates):
+    primary_txt = _("Media files already present in project were opened!")
+    MAX_DISPLAYED_ITEMS = 3
+    items = MAX_DISPLAYED_ITEMS
+    if len(duplicates) < MAX_DISPLAYED_ITEMS:
+        items = len(duplicates)
+    
+    secondary_txt = _("Files already present:\n\n")
+    for i in range(0, items):
+        secondary_txt = secondary_txt + "<b>" + duplicates[i] + "</b>" + "\n"
+    
+    if len(duplicates) > MAX_DISPLAYED_ITEMS:
+        secondary_txt = secondary_txt + "\n" + "and " + str(len(duplicates) - MAX_DISPLAYED_ITEMS) + " other items.\n"
+    
+    secondary_txt = secondary_txt +  "\nNo duplicate media items were added to project."
+    
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+    return False
 
 def _load_pulse_bar():
     gtk.gdk.threads_enter()

@@ -428,7 +428,7 @@ def clone_filter_object(filter_object, mlt_profile):
     return clone
 
 def replace_services(services):
-    # this has gotta be bullshit way to do this
+    # this has gotta be a bullshit way to do this
     
     replacements_doc = xml.dom.minidom.parse(respaths.REPLACEMENTS_XML_DOC)
 
