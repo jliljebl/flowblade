@@ -202,7 +202,11 @@ class FilterObject:
         self.info = filter_info
         # Values of these are edited by the user.
         self.properties = copy.deepcopy(filter_info.properties)
-        self.non_mlt_properties = copy.deepcopy(filter_info.non_mlt_properties) 
+        try:
+            self.non_mlt_properties = copy.deepcopy(filter_info.non_mlt_properties)
+        except:
+            self.non_mlt_properties = [] # Versions prior 0.14 do not have non_mlt_properties and fail here on load
+
         self.mlt_filter = None # reference to MLT C-object
         self.active = True 
 
