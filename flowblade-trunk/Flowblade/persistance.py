@@ -441,6 +441,7 @@ def fill_track_mlt(mlt_track, py_track):
             (clip.media_type == appconsts.PATTERN_PRODUCER)):
             mlt_clip = sequence.create_pattern_producer(clip.create_data)
             mlt_clip.__dict__.update(clip.__dict__)
+            fill_filters_mlt(mlt_clip, sequence)
         # blank clip
         elif ((clip.type == "Mlt__Producer") and clip.is_blanck_clip == True): 
             length = clip.clip_out - clip.clip_in + 1
