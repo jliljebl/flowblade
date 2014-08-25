@@ -65,14 +65,14 @@ def key_down(widget, event):
             # by stopping signal
             gui.editor_window.window.emit_stop_by_name("key_press_event")
         return was_handled
-
+        
     # Insert shortcut keys need more focus then timeline shortcuts.
     # these may already have been handled in timeline focus events
     was_handled = _handle_extended_tline_focus_events(event)
     if was_handled:
         # Stop event handling here
         return True
-        
+
     was_handled = _handle_geometry_editor_arrow_keys(event)
     if was_handled:
         # Stop widget focus from travelling if arrow key pressed
@@ -85,7 +85,7 @@ def key_down(widget, event):
         _handle_tline_key_event(event)
         # Stop event handling here
         return True
-    
+
     # Clip button or posbar focus with clip displayed leaves playback keyshortcuts available
     if (gui.clip_editor_b.has_focus() 
         or (gui.pos_bar.widget.is_focus() and (not timeline_visible()))):
@@ -104,7 +104,7 @@ def key_down(widget, event):
         PLAYER().seek_frame(0)
         return True
 
-    # Home
+    # Select all with CTRL + A in media panel
     if event.keyval == gtk.keysyms.a:
         if (event.state & gtk.gdk.CONTROL_MASK):
             if gui.media_list_view.widget.has_focus() or gui.media_list_view.widget.get_focus_child() != None:
@@ -295,6 +295,22 @@ def _handle_tline_key_event(event):
             # so max one one these will actually delete something
             tlineaction.splice_out_button_pressed()
             compositormodes.delete_current_selection()
+        
+        # HOME
+        if event.keyval == gtk.keysyms.Home:
+            if PLAYER().is_playing():
+                monitorevent.stop_pressed()
+            PLAYER().seek_frame(0)
+            return True
+    else:
+        # HOME
+        if event.keyval == gtk.keysyms.Home:
+            if PLAYER().is_playing():
+                monitorevent.stop_pressed()
+            gui.editor_window.handle_insert_move_mode_button_press()
+            gui.editor_window.set_mode_selector_to_mode()
+            PLAYER().seek_frame(0)
+            return True
 
     return False
 
