@@ -555,7 +555,7 @@ def delete_media_files(force_delete=False):
         if media_obj.media_file == MONITOR_MEDIA_FILE:
             editorstate._monitor_media_file = None
             gui.clip_editor_b.set_sensitive(False)
-    
+
     # Check for proxy rendering issues if not forced delete
     if not force_delete:
         proxy_issues = False
