@@ -676,7 +676,10 @@ def draw_slide_overlay(cr, data):
     orig_media_start_frame_x = _get_frame_x(media_start)
     orig_media_end_frame_x = _get_frame_x(media_start + trim_limits["media_length"])
     _draw_trim_clip_overlay(cr, orig_media_start_frame_x, orig_media_end_frame_x, track_y, track_height, False, (0.65,0.65,0.65, 0.65))
-    
+
+    _draw_end_triangles(cr, orig_media_start_frame_x, track_y, track_height, 6)
+    _draw_end_triangles(cr, orig_media_end_frame_x, track_y, track_height, -6)
+          
     cr.set_line_width(2.0)
     cr.set_source_rgb(*OVERLAY_SELECTION_COLOR)
     orig_clip_start_frame_x = _get_frame_x(clip_start_frame - data["mouse_delta"])
