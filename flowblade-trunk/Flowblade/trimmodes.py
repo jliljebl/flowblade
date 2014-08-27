@@ -446,7 +446,6 @@ def one_roll_trim_undo_done(track, index, is_to_side_edit):
     WRONG NAME FOR FUNCTION
     Callback if initial edit done. Undo and redo do not cause this to be called
     """
-    print "dddd"
     # reinit edit mode to correct side
     frame = track.clip_start(index)
     success = set_oneroll_mode(track, frame, is_to_side_edit)
@@ -470,11 +469,15 @@ def _legalize_one_roll_trim(frame, trim_limits):
         first = trim_limits["both_start"]
         last = trim_limits["from_end"] 
         
-    if frame < first:
+    if frame <= first:
         frame = first
-    if frame > last:
+        tlinewidgets.trim_status = appconsts.ON_FIRST_FRAME
+    elif frame >= last:
         frame = last
-    
+        tlinewidgets.trim_status = appconsts.ON_LAST_FRAME
+    else:
+        tlinewidgets.trim_status = appconsts.ON_BETWEEN_FRAME
+
     return frame
 
 def _pressed_on_one_roll_active_area(frame):

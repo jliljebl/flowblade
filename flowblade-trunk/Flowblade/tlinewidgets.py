@@ -249,9 +249,6 @@ pos = 0 # Current left most frame in timeline display
 # calculations.
 canvas_widget = None
 
-# Value used to display shadow frame when in clip edit mode 
-#shadow_frame = -1
-
 # Used to draw trim modes differently when moving from <X>_NO_EDIT mode to active edit
 trim_mode_in_non_active_state = False
 
@@ -259,6 +256,9 @@ trim_mode_in_non_active_state = False
 # is the view frame user selected while in reality user is displayed images from hidden track and the
 # current frame is moving in opposite directiontion users mouse movement
 fake_current_frame = None
+
+# Used to draw indicators that tell if more frames are available while trimming
+trim_status = appconsts.ON_BETWEEN_FRAME
 
 # ------------------------------------------------------------------- module functions
 def load_icons():
@@ -634,6 +634,12 @@ def draw_one_roll_overlay(cr, data):
     cr.line_to(selection_frame_x - 0.5, track_y + track_height + 6.5)
     cr.stroke()
 
+    if trim_status != appconsts.ON_BETWEEN_FRAME:
+        if trim_status == appconsts.ON_FIRST_FRAME:
+            _draw_end_triangles(cr, selection_frame_x, track_y, track_height, 6)
+        else:
+            _draw_end_triangles(cr, selection_frame_x, track_y, track_height, -6)
+
     radius = 5.0
     degrees = M_PI/ 180.0
     bit = 3
@@ -812,14 +818,25 @@ def _draw_mode_arrow(cr, x, y, color):
     cr.set_source_rgb(0, 0, 0)
     cr.set_line_width(2.0)
     cr.stroke()
-    
+
+def _draw_end_triangles(cr, x, y, h, direction):
+    triangles = 4
+    if h < appconsts.TRACK_HEIGHT_NORMAL:
+        triangles = 2
+    cr.set_source_rgb(1, 1, 1)
+    for i in range(0, triangles):
+        cr.move_to(x, y + 2.5)
+        cr.line_to(x + direction, y + 7.0)
+        cr.line_to(x, y + 11.5)
+        cr.close_path()
+        cr.fill()
+        y = y + 12.0
+
 def _draw_trim_clip_overlay(cr, start_x, end_x, y, track_height, draw_stroke, color=(1,1,1,1)):
     cr.set_source_rgba(*color)
     cr.rectangle(start_x, y, end_x - start_x, track_height)
     if draw_stroke:
-        #cr.set_operator(cairo.OPERATOR_MULTIPLY)
         cr.stroke()
-        #cr.set_operator(cairo.OPERATOR_OVER)
     else:
         cr.fill()
 
