@@ -592,6 +592,21 @@ def draw_two_roll_overlay(cr, data):
     cr.set_line_width(2.0)  
     _draw_trim_clip_overlay(cr, clip_over_start_x, clip_over_end_x, track_y, track_height, False, (1,1,1,0.3))
 
+    cr.set_line_width(1.0)
+    cr.move_to(clip_over_start_x - 0.5, track_y - 6.5)
+    cr.line_to(clip_over_start_x - 0.5, track_y + track_height + 6.5)
+    cr.stroke()
+
+    cr.move_to(clip_over_end_x - 0.5, track_y - 6.5)
+    cr.line_to(clip_over_end_x - 0.5, track_y + track_height + 6.5)
+    cr.stroke()
+
+    if trim_status != appconsts.ON_BETWEEN_FRAME:
+        if trim_status == appconsts.ON_FIRST_FRAME:
+            _draw_end_triangles(cr, selection_frame_x, track_y, track_height, 6)
+        else:
+            _draw_end_triangles(cr, selection_frame_x, track_y, track_height, -6)
+
     radius = 5.0
     degrees = M_PI/ 180.0
     bit = 3
