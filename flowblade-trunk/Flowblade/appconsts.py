@@ -35,6 +35,11 @@ SYNC_AUDIO = 6
 FILE_DOES_NOT_EXIST = 7
 IMAGE_SEQUENCE = 8
 
+# Used to draw indicators that tell if more frames are available while trimming
+ON_FIRST_FRAME = 0
+ON_LAST_FRAME = 1
+ON_BETWEEN_FRAME = 2
+
 # Sync states of sync child clips
 SYNC_CORRECT = 0
 SYNC_OFF = 1
