@@ -372,7 +372,6 @@ def oneroll_trim_release(x, y, frame, state):
     """
     User releases mouse when in one roll mode.
     """
-    print "release"
     global mouse_disabled
     if mouse_disabled:
         mouse_disabled = False
@@ -737,11 +736,15 @@ def _legalize_two_roll_trim(frame, trim_limits):
     first = trim_limits["both_start"]
     last = trim_limits["both_end"]
 
-    if frame < first:
+    if frame <= first:
         frame = first
-    if frame > last:
+        tlinewidgets.trim_status = appconsts.ON_FIRST_FRAME
+    elif frame >= last:
         frame = last
-    
+        tlinewidgets.trim_status = appconsts.ON_LAST_FRAME
+    else:
+        tlinewidgets.trim_status = appconsts.ON_BETWEEN_FRAME
+        
     return frame
 
 def _pressed_on_two_roll_active_area(frame):
