@@ -35,6 +35,14 @@ SYNC_AUDIO = 6
 FILE_DOES_NOT_EXIST = 7
 IMAGE_SEQUENCE = 8
 
+# Mediaview filtering options
+SHOW_ALL_FILES = 0
+SHOW_VIDEO_FILES = 1
+SHOW_AUDIO_FILES = 2
+SHOW_GRAPHICS_FILES = 3
+SHOW_IMAGE_SEQUENCES = 4
+SHOW_PATTERN_PRODUCERS = 5
+
 # Used to draw indicators that tell if more frames are available while trimming
 ON_FIRST_FRAME = 0
 ON_LAST_FRAME = 1

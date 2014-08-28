@@ -673,7 +673,16 @@ def remove_unused_media():
     gui.media_list_view.select_media_file_list(unused)
     delete_media_files()
 
+def media_filtering_select_pressed(widget, event):
+    guicomponents.get_file_filter_popup_menu(widget, event, _media_filtering_selector_item_activated)
 
+def _media_filtering_selector_item_activated(selector, index):
+    gui.media_view_filter_selector.set_pixbuf(index)
+    
+    # Const value correspond with indexes here
+    editorstate.media_view_filter = index
+    gui.media_list_view.fill_data_model()
+    
 # ------------------------------------ bins
 def add_new_bin():
     """

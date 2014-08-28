@@ -282,7 +282,6 @@ def monkeypatch_callbacks():
     # Media log 
     medialog.do_multiple_clip_insert_func = editevent.do_multiple_clip_insert
 
-
     editevent.display_clip_menu_pop_up = clipmenuaction.display_clip_menu
     editevent.compositor_menu_item_activated = clipmenuaction._compositor_menu_item_activated
     
@@ -404,7 +403,9 @@ def init_editor_state():
     to initalize editor state.
     """
     render.fill_out_profile_widgets()
-    
+
+    gui.media_view_filter_selector.set_pixbuf(editorstate.media_view_filter)
+
     gui.clip_editor_b.set_sensitive(False)
     gui.editor_window.window.set_title(editorstate.project.name + " - Flowblade")
     gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(False)
@@ -448,6 +449,8 @@ def open_project(new_project):
     stop_autosave()
     editorstate.project = new_project
 
+    editorstate.media_view_filter = appconsts.SHOW_ALL_FILES
+    
     # Inits widgets with project data
     init_project_gui()
     
@@ -469,7 +472,6 @@ def open_project(new_project):
         print "Deleting", loaded_autosave_file
         os.remove(loaded_autosave_file)
         loaded_autosave_file = None
-
 
     editorstate.update_current_proxy_paths()
 
