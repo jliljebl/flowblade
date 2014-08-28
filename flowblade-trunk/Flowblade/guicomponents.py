@@ -1820,27 +1820,27 @@ def get_file_filter_popup_menu(launcher, event, callback):
     menu.set_accel_group(gui.editor_window.accel_group)
 
     menu_item = _get_image_menu_item(gtk.image_new_from_file(
-        respaths.IMAGE_PATH + "show_all_files.png"), _("Show All Files"), callback, 0)
+        respaths.IMAGE_PATH + "show_all_files.png"), _("All Files"), callback, 0)
     menu.add(menu_item)
 
     menu_item = _get_image_menu_item(gtk.image_new_from_file(
-        respaths.IMAGE_PATH + "show_video_files.png"),   _("Show Video Files"), callback, 1)
+        respaths.IMAGE_PATH + "show_video_files.png"),   _("Video Files"), callback, 1)
     menu.add(menu_item)
 
     menu_item = _get_image_menu_item(gtk.image_new_from_file(
-        respaths.IMAGE_PATH + "show_audio_files.png"), _("Show Audio Files"), callback, 2)
+        respaths.IMAGE_PATH + "show_audio_files.png"), _("Audio Files"), callback, 2)
     menu.add(menu_item)
 
     menu_item = _get_image_menu_item(gtk.image_new_from_file(
-        respaths.IMAGE_PATH + "show_graphics_files.png"), _("Show Graphics Files"), callback, 3)
+        respaths.IMAGE_PATH + "show_graphics_files.png"), _("Graphics Files"), callback, 3)
     menu.add(menu_item)
     
     menu_item = _get_image_menu_item(gtk.image_new_from_file(
-        respaths.IMAGE_PATH + "show_imgseq_files.png"), _("Show Image Sequences"), callback, 4)
+        respaths.IMAGE_PATH + "show_imgseq_files.png"), _("Image Sequences"), callback, 4)
     menu.add(menu_item)
 
     menu_item = _get_image_menu_item(gtk.image_new_from_file(
-        respaths.IMAGE_PATH + "show_pattern_producers.png"), _("Show Pattern Producers"), callback, 5)
+        respaths.IMAGE_PATH + "show_pattern_producers.png"), _("Pattern Producers"), callback, 5)
     menu.add(menu_item)
 
     menu.popup(None, None, None, event.button, event.time)
