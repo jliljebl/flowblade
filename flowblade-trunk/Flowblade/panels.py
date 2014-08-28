@@ -25,6 +25,7 @@ are used to build gui at callsites.
 
 import gtk
 
+import gui
 import guicomponents
 import guiutils
 import editorpersistance
@@ -43,7 +44,7 @@ MEDIA_PANEL_MAX_ROWS = 8
 MEDIA_PANEL_DEFAULT_ROWS = 2
 
 
-def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, proxy_cb):
+def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, proxy_cb, filtering_cb):
     # Create buttons and connect signals
     add_media_b = gtk.Button(_("Add"))
     del_media_b = gtk.Button(_("Delete"))    
@@ -52,7 +53,7 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, proxy
     add_media_b.set_tooltip_text(_("Add Media File to Bin"))
     del_media_b.set_tooltip_text(_("Delete Media File from Bin"))
 
-    proxy_b = gtk.Button() #, _("Timeline"))
+    proxy_b = gtk.Button()
     proxy_b.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "proxy_button.png"))
     proxy_b.connect("clicked", proxy_cb, None)
     proxy_b.set_tooltip_text(_("Render Proxy Files For Selected Media"))
@@ -62,7 +63,20 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, proxy
     adj = gtk.Adjustment(value=editorpersistance.prefs.media_columns, lower=MEDIA_PANEL_MIN_ROWS, upper=MEDIA_PANEL_MAX_ROWS, step_incr=1)
     spin = gtk.SpinButton(adj)
     spin.set_numeric(True)
+    spin.set_size_request(40, 30)
     spin.connect("changed", col_changed_cb)
+
+    all_pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "show_all_files.png")
+    audio_pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "show_audio_files.png")
+    graphics_pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "show_graphics_files.png")
+    video_pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "show_video_files.png")
+    imgseq_pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "show_imgseq_files.png")
+    pattern_pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "show_pattern_producers.png")
+
+    files_filter_launcher = guicomponents.ImageMenuLaunch(filtering_cb, [all_pixbuf, video_pixbuf, audio_pixbuf, graphics_pixbuf, imgseq_pixbuf, pattern_pixbuf], 20, 22)
+    files_filter_launcher.pixbuf_x  = 3
+    files_filter_launcher.pixbuf_y  = 9
+    gui.media_view_filter_selector = files_filter_launcher
 
     buttons_box = gtk.HBox(False,1)
     buttons_box.pack_start(add_media_b, True, True, 0)
@@ -71,6 +85,7 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, proxy
     buttons_box.pack_start(guiutils.get_pad_label(4, 4), False, False, 0)
     buttons_box.pack_start(columns_img, False, False, 0)
     buttons_box.pack_start(spin, False, False, 0)
+    buttons_box.pack_start(files_filter_launcher.widget, False, False, 0)
     
     panel = gtk.VBox()
     panel.pack_start(buttons_box, False, True, 0)

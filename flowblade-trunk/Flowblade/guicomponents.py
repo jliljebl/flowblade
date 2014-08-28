@@ -76,6 +76,7 @@ is_proxy_icon = None
 graphics_icon = None
 imgseq_icon = None
 audio_icon = None
+pattern_icon = None
 
 # ------------------------------------------------- item lists 
 class ImageTextTextListView(gtk.VBox):
@@ -706,13 +707,14 @@ class MediaPanel():
         self.double_click_cb = double_click_cb
         self.monitor_indicator = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "monitor_indicator.png")
         
-        global has_proxy_icon, is_proxy_icon, graphics_icon, imgseq_icon, audio_icon
+        global has_proxy_icon, is_proxy_icon, graphics_icon, imgseq_icon, audio_icon, pattern_icon
         has_proxy_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "has_proxy_indicator.png")
         is_proxy_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "is_proxy_indicator.png")
         graphics_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "graphics_indicator.png")
         imgseq_icon =  gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "imgseq_indicator.png")
         audio_icon =  gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "audio_indicator.png")
-
+        pattern_icon =  gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "pattern_producer_indicator.png")
+        
     def get_selected_media_objects(self):
         return self.selected_objects
         
@@ -783,6 +785,24 @@ class MediaPanel():
         row_box.set_size_request(MEDIA_OBJECT_WIDGET_WIDTH * self.columns, MEDIA_OBJECT_WIDGET_HEIGHT)
         for file_id in current_bin().file_ids:
             media_file = PROJECT().media_files[file_id]
+            
+            # Filter view
+            if ((editorstate.media_view_filter == appconsts.SHOW_VIDEO_FILES) 
+                and (media_file.type != appconsts.VIDEO)):
+                continue
+            if ((editorstate.media_view_filter == appconsts.SHOW_AUDIO_FILES) 
+                and (media_file.type != appconsts.AUDIO)):
+                continue
+            if ((editorstate.media_view_filter == appconsts.SHOW_GRAPHICS_FILES) 
+                and (media_file.type != appconsts.IMAGE)):
+                continue
+            if ((editorstate.media_view_filter == appconsts.SHOW_IMAGE_SEQUENCES) 
+                and (media_file.type != appconsts.IMAGE_SEQUENCE)):
+                continue
+            if ((editorstate.media_view_filter == appconsts.SHOW_PATTERN_PRODUCERS) 
+                and (media_file.type != appconsts.PATTERN_PRODUCER)):
+                continue
+                
             media_object = MediaObjectWidget(media_file, self.media_object_selected, bin_index, self.monitor_indicator)
             dnd.connect_media_files_object_widget(media_object.widget)
             dnd.connect_media_files_object_cairo_widget(media_object.img)
@@ -890,6 +910,12 @@ class MediaObjectWidget:
         if self.media_file.type == appconsts.AUDIO:
             cr.set_source_pixbuf(audio_icon, 6, 6)
             cr.paint()
+
+        if self.media_file.type == appconsts.PATTERN_PRODUCER:
+            cr.set_source_pixbuf(pattern_icon, 6, 6)
+            cr.paint()
+        
+        
             
 # -------------------------------------------- context menus
 class EditorSeparator:
@@ -1779,19 +1805,46 @@ def get_mode_selector_popup_menu(launcher, event, callback):
 
     menu_item = _get_image_menu_item(gtk.image_new_from_file(
         respaths.IMAGE_PATH + "slide_cursor.png"), _("Slip"), callback, 4)
-
     menu_item.set_accel_path("<Actions>/WindowActions/SlideMode") 
     menu.add(menu_item)
 
     menu_item = _get_image_menu_item(gtk.image_new_from_file(
         respaths.IMAGE_PATH + "multimove_cursor.png"), _("Spacer"), callback, 5)
-
     menu_item.set_accel_path("<Actions>/WindowActions/MultiMode") 
     menu.add(menu_item)
     
     menu.popup(None, None, None, event.button, event.time)
 
+def get_file_filter_popup_menu(launcher, event, callback):
+    menu = gtk.Menu()
+    menu.set_accel_group(gui.editor_window.accel_group)
 
+    menu_item = _get_image_menu_item(gtk.image_new_from_file(
+        respaths.IMAGE_PATH + "show_all_files.png"), _("Show All Files"), callback, 0)
+    menu.add(menu_item)
+
+    menu_item = _get_image_menu_item(gtk.image_new_from_file(
+        respaths.IMAGE_PATH + "show_video_files.png"),   _("Show Video Files"), callback, 1)
+    menu.add(menu_item)
+
+    menu_item = _get_image_menu_item(gtk.image_new_from_file(
+        respaths.IMAGE_PATH + "show_audio_files.png"), _("Show Audio Files"), callback, 2)
+    menu.add(menu_item)
+
+    menu_item = _get_image_menu_item(gtk.image_new_from_file(
+        respaths.IMAGE_PATH + "show_graphics_files.png"), _("Show Graphics Files"), callback, 3)
+    menu.add(menu_item)
+    
+    menu_item = _get_image_menu_item(gtk.image_new_from_file(
+        respaths.IMAGE_PATH + "show_imgseq_files.png"), _("Show Image Sequences"), callback, 4)
+    menu.add(menu_item)
+
+    menu_item = _get_image_menu_item(gtk.image_new_from_file(
+        respaths.IMAGE_PATH + "show_pattern_producers.png"), _("Show Pattern Producers"), callback, 5)
+    menu.add(menu_item)
+
+    menu.popup(None, None, None, event.button, event.time)
+    
 class PressLaunch:
     def __init__(self, callback, pixbuf, w=22, h=22):
         self.widget = CairoDrawableArea(w, 

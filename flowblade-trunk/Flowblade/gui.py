@@ -45,6 +45,8 @@ effect_select_combo_box = None
 
 render_out_folder = None
 
+media_view_filter_selector = None
+
 # Monitor
 pos_bar = None
 tc = None

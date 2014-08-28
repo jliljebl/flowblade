@@ -26,6 +26,7 @@ Accessor methods are there mainly to improve code readability elsewhere.
 We're using BIG_METHOD_NAMES() for state objects. This is a bit unusual
 but looks good when reading code.
 """
+import appconsts
 
 # Edit modes
 INSERT_MOVE = 0
@@ -48,6 +49,9 @@ player = None
 
 # Current edit mode
 edit_mode = INSERT_MOVE
+
+# Media files view filter for selecting displayed media objects in bin
+media_view_filter = appconsts.SHOW_ALL_FILES
 
 # Media file displayed in monitor when 'Clip' is pressed 
 _monitor_media_file = None
