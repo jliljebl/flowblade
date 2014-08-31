@@ -36,16 +36,17 @@ import guiutils
 import utils
 
 SLOT_W = 60
-METER_SLOT_H = 426
+METER_SLOT_H = 458
 CONTROL_SLOT_H = 300
 Y_TOP_PAD = 12
 
 # Dash pattern used to create "LED"s
-DASH_INK = 5.0
-DASH_SKIP = 2.0
+DASH_INK = 2.0 #5.0
+DASH_SKIP = 1.0 # 2.0
 DASHES = [DASH_INK, DASH_SKIP, DASH_INK, DASH_SKIP]
 
-METER_LIGHTS = 57
+METER_LIGHTS = 143 #57
+#METER_HEIGHT = METER_LIGHTS * DASH_INK + (METER_LIGHTS - 1) * DASH_SKIP
 METER_HEIGHT = METER_LIGHTS * DASH_INK + (METER_LIGHTS - 1) * DASH_SKIP
 METER_WIDTH = 10
 
@@ -58,23 +59,32 @@ DB_IEC_MINUS_12 = 0.70
 DB_IEC_MINUS_20 = 0.5
 DB_IEC_MINUS_40 = 0.15
 
-PEAK_FRAMES = 7
-OVER_FRAMES = 20
+PEAK_FRAMES = 14
+OVER_FRAMES = 30
+
+# Colors
+METER_BG_COLOR = (0.15, 0.15, 0.15)
+OVERLAY_COLOR = (0.70, 0.70, 0.70) #utils.get_cairo_color_tuple_255_rgb(63, 145, 188)#59, 140, 174) #(0.7, 0.7, 1.0)
 
 # Color gradient used to draw "LED" colors
-RED_1 = (0, 1, 0, 0, 1)
-RED_2 = (1 - DB_IEC_MINUS_4, 1, 0, 0, 1)
-YELLOW_1 = (1 - DB_IEC_MINUS_4 + 0.001, 1, 1, 0, 1)
+rr, rg, rb = utils.get_cairo_color_tuple_255_rgb(219, 69, 69)
+RED_1 = (0, rr, rg, rb, 1)
+RED_2 = (1 - DB_IEC_MINUS_4 - 0.005, rr, rg, rb, 1)
+YELLOW_1 = (1 - DB_IEC_MINUS_4 - 0.005 + 0.001, 1, 1, 0, 1)
 YELLOW_2 = (1 - DB_IEC_MINUS_12, 1, 1, 0, 1)
-GREEN_1 = (1 - DB_IEC_MINUS_12 + 0.001, 0, 1, 0, 1)
-GREEN_2 = (1, 0, 1, 0, 1)
+gr, gg, gb = utils.get_cairo_color_tuple_255_rgb(86, 188, 137)
+GREEN_1 = (1 - DB_IEC_MINUS_12 + 0.001, gr, gg, gb, 1)
+GREEN_2 = (1, gr, gg, gb, 1)
 
 LEFT_CHANNEL = "_audio_level.0"
 RIGHT_CHANNEL = "_audio_level.1"
 
 MONITORING_AVAILABLE = False
 
+# GUI compoents displaying levels
 _monitor_window = None
+_master_volume_meter = None
+
 _update_ticker = None
 _level_filters = [] # 0 master, 1 - (len - 1) editable tracks
 _audio_levels = [] # 0 master, 1 - (len - 1) editable tracks
@@ -95,67 +105,152 @@ def init(profile):
     _update_ticker = utils.Ticker(_audio_monitor_update, 0.04)
     _update_ticker.start_ticker()
     _update_ticker.stop_ticker()    
-    
+
+
+def close():
+    close_audio_monitor()
+    close_master_meter()
+    _update_ticker.stop_ticker()
+
 def show_audio_monitor():
-    #print DB_IEC_MINUS_2, DB_IEC_MINUS_6, IEC_Scale(-40)
     global _monitor_window
     if _monitor_window != None:
         return
     
-    _init_level_filters()
+    _init_level_filters(True)
 
     _monitor_window = AudioMonitorWindow()
         
     global _update_ticker
-    _update_ticker = utils.Ticker(_audio_monitor_update, 0.04)
-    _update_ticker.start_ticker()
+    if _update_ticker.running == False:
+        _update_ticker.start_ticker()
 
 def close_audio_monitor():
     global _update_ticker, _level_filters, _monitor_window, _audio_levels
-    
+    if _monitor_window == None:
+        return
+
     editorstate.PLAYER().stop_playback()
 
+    # To avoid crashes we can't actually lose window object before everything is 
+    # cleaned up well 
     temp_window = _monitor_window
     _monitor_window = None
-    _update_ticker.stop_ticker()
 
-    if len(_level_filters) != 0:
-        seq = editorstate.current_sequence()
-        
-        seq.tractor.detach(_level_filters[0])
-        # editable track level filters
-        for i in range(1, len(seq.tracks) - 1):
-            seq.tracks[i].detach(_level_filters[i])
+    # Hide window before destruction to avoid visible freeze
+    temp_window.set_visible(False)
+    while(gtk.events_pending()):
+        gtk.main_iteration()
+            
+    _destroy_level_filters(True)
 
-    if temp_window != None:
-        temp_window.set_visible(False)
-        while(gtk.events_pending()):
-            gtk.main_iteration()
-        time.sleep(0.2)
-        temp_window.destroy()
-        while(gtk.events_pending()):
-            gtk.main_iteration()
-
-    _level_filters = []
-    _audio_levels = []
+    # Hide and destroy gui object
+    temp_window.destroy()
+    while(gtk.events_pending()):
+        gtk.main_iteration()
 
     return True
 
-def _init_level_filters():
+def get_master_meter():
+    _init_level_filters(False)
+    
+    global _master_volume_meter, _update_ticker
+    
+    _master_volume_meter = MasterVolumeMeter()
+
+    if _update_ticker.running == False:
+        _update_ticker.start_ticker()
+
+    align = gtk.Alignment(xalign=0.5, yalign=0.5, xscale=1.0, yscale=1.0) 
+    align.add(_master_volume_meter.widget)
+    align.set_padding(3, 3, 3, 3)
+
+    frame = gtk.Frame()
+    frame.add(align)
+    frame.set_shadow_type(gtk.SHADOW_ETCHED_OUT)
+
+    return frame
+
+def close_master_meter():
+    global _update_ticker, _level_filters, _master_volume_meter, _audio_levels
+    if _master_volume_meter == None:
+        return
+
+    editorstate.PLAYER().stop_playback()
+
+    # To avoid crashes we can't actually lose widget object before everything is 
+    # cleaned up well
+    temp = _master_volume_meter
+    _master_volume_meter = None
+
+    # Hide window before destruction to avoid visible freeze
+    temp.widget.set_visible(False)
+    while(gtk.events_pending()):
+        gtk.main_iteration()
+            
+    _destroy_level_filters(False)
+
+    # Hide and destroy gui object
+    temp.widget.destroy()
+    while(gtk.events_pending()):
+        gtk.main_iteration()
+
+    return True
+    
+def _init_level_filters(create_track_filters):
     # We're attaching level filters only to MLT objects and adding nothing to python objects,
     # so when Sequence is saved these filters will automatically be removed.
     # Filters are not part of sequence.Sequence object because they just used for monitoring,
     #
     # Track/master gain values are persistant, they're also editing desitions 
     # and are therefore part of sequence.Sequence objects.
+    
+    # Create levels filters array if it deosn't exist
     global _level_filters
-    _level_filters = []
+    if _level_filters == None:
+        _level_filters = []
+
     seq = editorstate.current_sequence()
-    # master level filter
-    _level_filters.append(_add_audio_level_filter(seq.tractor, seq.profile))
-    # editable track level filters
-    for i in range(1, len(seq.tracks) - 1):
-        _level_filters.append(_add_audio_level_filter(seq.tracks[i], seq.profile))
+
+    # Init master level filter if it does not exist
+    if len(_level_filters) == 0:
+        _level_filters.append(_add_audio_level_filter(seq.tractor, seq.profile))
+
+    # Init track level filters if requested
+    if create_track_filters == True:
+        for i in range(1, len(seq.tracks) - 1):
+            _level_filters.append(_add_audio_level_filter(seq.tracks[i], seq.profile))
+
+def _destroy_level_filters(destroy_track_filters=False):
+    global _level_filters, _audio_levels
+
+    # We need to be sure that audio level updates are stopped before
+    # detaching and destroying them
+    _update_ticker.stop_ticker()
+    time.sleep(0.2)
+
+    # Detach filters
+    if len(_level_filters) != 0:
+        seq = editorstate.current_sequence()
+        # Only detach master filter if both GUI components destroyed
+        if _monitor_window == None and _master_volume_meter == None:
+            seq.tractor.detach(_level_filters[0])
+
+        # Track filters are onlty detached when this called from wondow close
+        if destroy_track_filters:
+            for i in range(1, len(seq.tracks) - 1):
+                seq.tracks[i].detach(_level_filters[i])
+
+    # Destroy unneeded filters
+    if _master_volume_meter == None and _monitor_window == None:
+        _level_filters = []
+        _audio_levels = []
+    elif _monitor_window == None:
+        _level_filters = [_level_filters[0]]
+        _audio_levels[0] = 0.0
+
+    if _master_volume_meter != None or _monitor_window != None:
+        _update_ticker.start_ticker()
 
 def _add_audio_level_filter(producer, profile):
     audio_level_filter = mlt.Filter(profile, "audiolevel")
@@ -164,9 +259,9 @@ def _add_audio_level_filter(producer, profile):
     return audio_level_filter
 
 def _audio_monitor_update():
-    if _monitor_window == None:
+    if _monitor_window == None and _master_volume_meter == None:
         return
-    
+
     global _audio_levels
     _audio_levels = []
     for i in range(0, len(_level_filters)):
@@ -175,7 +270,10 @@ def _audio_monitor_update():
         r_val = _get_channel_value(audio_level_filter, RIGHT_CHANNEL)
         _audio_levels.append((l_val, r_val))
 
-    _monitor_window.meters_area.widget.queue_draw()
+    if _monitor_window != None:
+        _monitor_window.meters_area.widget.queue_draw()
+    if _master_volume_meter != None:
+        _master_volume_meter.canvas.queue_draw()
 
 def _get_channel_value(audio_level_filter, channel_property):
     level_value = audio_level_filter.get(channel_property)
@@ -258,7 +356,7 @@ class MetersArea:
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
 
-        cr.set_source_rgb(0,0,0)
+        cr.set_source_rgb(*METER_BG_COLOR)
         cr.rectangle(0, 0, w, h)
         cr.fill()
 
@@ -281,17 +379,20 @@ class AudioMeter:
     def __init__(self, height):
         self.left_channel = ChannelMeter(height, "L")
         self.right_channel = ChannelMeter(height, "R")
+        self.x_pad_l = 18 + 2
+        self.x_pad_r = SLOT_W / 2 + 6 - 2
+        self.meter_width = METER_WIDTH
 
     def display_value(self, cr, x, value_left, value_right, grad):
         cr.set_source(grad)
         cr.set_dash(DASHES, 0) 
-        cr.set_line_width(METER_WIDTH)
-        self.left_channel.display_value(cr, x + 18, value_left)
+        cr.set_line_width(self.meter_width)
+        self.left_channel.display_value(cr, x + self.x_pad_l, value_left)
 
         cr.set_source(grad)
         cr.set_dash(DASHES, 0) 
-        cr.set_line_width(METER_WIDTH)
-        self.right_channel.display_value(cr, x + SLOT_W / 2 + 6, value_right)
+        cr.set_line_width(self.meter_width)
+        self.right_channel.display_value(cr, x + self.x_pad_r, value_right)
 
         
 class ChannelMeter:
@@ -301,6 +402,8 @@ class ChannelMeter:
         self.peak = 0.0
         self.countdown = 0
         self.draw_dB = False
+        self.dB_x_pad = 11
+        self.y_top_pad = Y_TOP_PAD
         self.over_countdown = 0
 
     def display_value(self, cr, x, value):
@@ -310,8 +413,8 @@ class ChannelMeter:
         top = self.get_meter_y_for_value(value)
         if (self.height - top) < 5: # fix for meter y rounding for vol 0
             top = self.height
-        cr.move_to(x, self.height + Y_TOP_PAD)
-        cr.line_to(x, top + Y_TOP_PAD)
+        cr.move_to(x, self.height + self.y_top_pad)
+        cr.line_to(x, top + self.y_top_pad)
         cr.stroke()
         
         if value > self.peak:
@@ -344,12 +447,13 @@ class ChannelMeter:
         self.draw_channel_identifier(cr, x)
 
         if self.draw_dB == True:
-            self.draw_value_line(cr, x, 1.0, "0", 6)
-            self.draw_value_line(cr, x, DB_IEC_MINUS_4,"-4", 3)
-            self.draw_value_line(cr, x, DB_IEC_MINUS_12, "-12", 0)
-            self.draw_value_line(cr, x, DB_IEC_MINUS_20, "-20", 0)
-            self.draw_value_line(cr, x, DB_IEC_MINUS_40, "-40", 0)
-        
+            self.draw_value_line(cr, x, 1.0, "0", 7)
+            self.draw_value_line(cr, x, DB_IEC_MINUS_4,"-4", 4)
+            self.draw_value_line(cr, x, DB_IEC_MINUS_12, "-12", 1)
+            self.draw_value_line(cr, x, DB_IEC_MINUS_20, "-20", 1)
+            self.draw_value_line(cr, x, DB_IEC_MINUS_40, "-40", 1)
+            self.draw_value_line(cr, x, 0.0,  u"\u221E", 5)
+            
     def get_meter_y_for_value(self, value):
         y = self.get_y_for_value(value)
         # Get pad for y value between "LED"s
@@ -367,10 +471,10 @@ class ChannelMeter:
     
     def draw_value_line(self, cr, x, value, val_text, x_fine_tune):
         y = self.get_y_for_value(value)
-        self.draw_text(val_text, "Sans 8", cr, x + 11 + x_fine_tune, y - 8 + Y_TOP_PAD, (1,1,1))
+        self.draw_text(val_text, "Sans 8", cr, x + self.dB_x_pad + x_fine_tune, y - 8 + self.y_top_pad, OVERLAY_COLOR)
         
     def draw_channel_identifier(self, cr, x):
-        self.draw_text(self.channel_text, "Sans Bold 8", cr, x - 4, self.height + 2 + Y_TOP_PAD, (1,1,1))
+        self.draw_text(self.channel_text, "Sans Bold 8", cr, x - 4, self.height + 2 +  self.y_top_pad, OVERLAY_COLOR)
 
     def draw_text(self, text, font_desc, cr, x, y, color):
         pango_context = pangocairo.CairoContext(cr)
@@ -468,3 +572,45 @@ class GainControl(gtk.Frame):
             self.seq.set_master_pan_value(pan_value)
         else:
             self.seq.set_track_pan_value(self.producer, pan_value)
+
+
+
+class MasterVolumeMeter:
+    def __init__(self):
+        self.meter = AudioMeter(METER_HEIGHT + 40)
+        self.meter.x_pad_l = 6
+        self.meter.x_pad_r = 14
+        self.meter.right_channel.draw_dB = True
+        self.meter.right_channel.dB_x_pad = -14
+        self.meter.meter_width = 5
+        self.top_pad = 14
+        self.meter.right_channel.y_top_pad = self.top_pad 
+        self.meter.left_channel.y_top_pad = self.top_pad 
+
+        w = SLOT_W - 40
+        h = METER_SLOT_H + 2 + 40
+        self.canvas = CairoDrawableArea(w,
+                                        h, 
+                                        self._draw)
+
+        self.widget = gtk.VBox(False, 0)
+        self.widget.pack_start(self.canvas, False, False, 0)
+
+    def _draw(self, event, cr, allocation):
+        x, y, w, h = allocation
+
+        cr.set_source_rgb(*METER_BG_COLOR)
+        cr.rectangle(0, 0, w, h)
+        cr.fill()
+
+        grad = cairo.LinearGradient (0, self.top_pad, 0, METER_HEIGHT + self.top_pad)
+        grad.add_color_stop_rgba(*RED_1)
+        grad.add_color_stop_rgba(*RED_2)
+        grad.add_color_stop_rgba(*YELLOW_1)
+        grad.add_color_stop_rgba(*YELLOW_2)
+        grad.add_color_stop_rgba(*GREEN_1)
+        grad.add_color_stop_rgba(*GREEN_2)
+
+        l_value, r_value = _audio_levels[0]
+        x = 0
+        self.meter.display_value(cr, x, l_value, r_value, grad)
