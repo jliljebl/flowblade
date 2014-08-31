@@ -329,7 +329,6 @@ class EditorWindow:
                                            lambda w,e: projectaction.delete_selected_bin())
         bins_panel.set_size_request(MEDIA_MANAGER_WIDTH, BINS_HEIGHT)
 
-
         self.media_list_view = guicomponents.MediaPanel(projectaction.media_file_menu_item_selected,
                                                         updater.set_and_display_monitor_media_file)
         self.media_scroll_window = gtk.ScrolledWindow()
@@ -560,6 +559,7 @@ class EditorWindow:
         # Top row
         self.top_row_hbox = gtk.HBox(False, 0)
         self.top_row_hbox.pack_start(self.top_paned, True, True, 0)
+        self._update_top_row()
 
         # Edit buttons rows
         self.edit_buttons_row = self._get_edit_buttons_row()
@@ -737,6 +737,11 @@ class EditorWindow:
         show_monitor_info_item.connect("toggled", lambda w: middlebar._show_monitor_info_toggled(w))
         menu.append(show_monitor_info_item)
 
+        show_vu_item = gtk.CheckMenuItem(_("Show Master Volume Meter").encode('utf-8'))
+        show_vu_item.set_active(editorpersistance.prefs.show_vu_meter)
+        show_vu_item.connect("toggled", lambda w: self._show_vu_meter(w))
+        menu.append(show_vu_item)
+
         sep = gtk.SeparatorMenuItem()
         menu.append(sep)
 
@@ -800,7 +805,26 @@ class EditorWindow:
         self.notebook.set_tab_pos(gtk.POS_BOTTOM)
         editorpersistance.prefs.tabs_on_top = False
         editorpersistance.save()
-    
+
+    def _show_vu_meter(self, widget):
+        editorpersistance.prefs.show_vu_meter = widget.get_active()
+        editorpersistance.save()
+        
+        self._update_top_row(True)
+
+    def _update_top_row(self, show_all=False):
+        if editorpersistance.prefs.show_vu_meter:
+            if len(self.top_row_hbox) == 1:
+                self.top_row_hbox.pack_end(audiomonitoring.get_master_meter(), False, False, 0)
+        else:
+            if len(self.top_row_hbox) == 2:
+                meter = self.top_row_hbox.get_children()[1]
+                self.top_row_hbox.remove(meter)
+            audiomonitoring.close_master_meter()
+
+        if show_all:
+            self.window.show_all()
+        
     def _create_monitor_buttons(self):
         # Monitor switch buttons
         self.sequence_editor_b = gtk.RadioButton(None) #, _("Timeline"))

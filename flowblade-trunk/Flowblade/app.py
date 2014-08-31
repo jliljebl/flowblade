@@ -740,7 +740,7 @@ def _shutdown_dialog_callback(dialog, response_id):
     # Close threads and stop mlt consumers
     projectdata.thumbnail_thread.shutdown()
     editorstate.player.shutdown() # has ticker thread and player threads running
-    audiomonitoring.close_audio_monitor()
+    audiomonitoring.close()
     
     # Wait toplevel tools windows to close
     while(gtk.events_pending()):

@@ -233,3 +233,4 @@ class EditorPreferences:
         self.remember_last_render_dir = True
         self.empty_click_exits_trims = True
         self.quick_enter_trims = True
+        self.show_vu_meter = True
