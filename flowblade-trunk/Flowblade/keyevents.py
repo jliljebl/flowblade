@@ -145,17 +145,29 @@ def _handle_tline_key_event(event):
     """
     # I
     if event.keyval == gtk.keysyms.i:
+        if (event.state & gtk.gdk.MOD1_MASK):
+            monitorevent.to_mark_in_pressed()
+            return True
         monitorevent.mark_in_pressed()
         return True
     if event.keyval == gtk.keysyms.I:
+        if (event.state & gtk.gdk.MOD1_MASK):
+            monitorevent.to_mark_in_pressed()
+            return True
         monitorevent.to_mark_in_pressed()
         return True
 
     # O
     if event.keyval == gtk.keysyms.o:
+        if (event.state & gtk.gdk.MOD1_MASK):
+            monitorevent.to_mark_out_pressed()
+            return True
         monitorevent.mark_out_pressed()
         return True
     if event.keyval == gtk.keysyms.O:
+        if (event.state & gtk.gdk.MOD1_MASK):
+            monitorevent.to_mark_out_pressed()
+            return True
         monitorevent.to_mark_out_pressed()
         return True
 
@@ -437,17 +449,29 @@ def _handle_clip_key_event(event):
 
         # I
         if event.keyval == gtk.keysyms.i:
+            if (event.state & gtk.gdk.MOD1_MASK):
+                monitorevent.to_mark_in_pressed()
+                return True
             monitorevent.mark_in_pressed()
             return True
         if event.keyval == gtk.keysyms.I:
+            if (event.state & gtk.gdk.MOD1_MASK):
+                monitorevent.to_mark_in_pressed()
+                return True
             monitorevent.to_mark_in_pressed()
             return True
 
         # O
         if event.keyval == gtk.keysyms.o:
+            if (event.state & gtk.gdk.MOD1_MASK):
+                monitorevent.to_mark_out_pressed()
+                return True
             monitorevent.mark_out_pressed()
             return True
         if event.keyval == gtk.keysyms.O:
+            if (event.state & gtk.gdk.MOD1_MASK):
+                monitorevent.to_mark_out_pressed()
+                return True
             monitorevent.to_mark_out_pressed()
             return True
 

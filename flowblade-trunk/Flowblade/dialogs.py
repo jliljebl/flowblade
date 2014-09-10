@@ -1045,6 +1045,8 @@ def keyboard_shortcuts_dialog(parent_window):
     tline_vbox = gtk.VBox()
     tline_vbox.pack_start(_get_kb_row("I", _("Set Mark In")))
     tline_vbox.pack_start(_get_kb_row("O", _("Set Mark Out")))
+    tline_vbox.pack_start(_get_kb_row("Alt + I", _("Go To Mark In")))
+    tline_vbox.pack_start(_get_kb_row("Alt + O", _("Go To Mark Out")))
     tline_vbox.pack_start(_get_kb_row("X", _("Cut Clip")))
     tline_vbox.pack_start(_get_kb_row(_("Delete"),  _("Splice Out")))
     tline_vbox.pack_start(_get_kb_row("Y", _("Insert")))
