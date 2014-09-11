@@ -333,9 +333,11 @@ def load_project(file_path, icons_and_thumnails=True):
     all_clips = {}
     sync_clips = []
 
-    if project.SAVEFILE_VERSION < 4:
-        for k, media_file in project.media_files.iteritems():
+
+    for k, media_file in project.media_files.iteritems():
+        if project.SAVEFILE_VERSION < 4:
             FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
+        media_file.current_frame = 0 # this is always reset onj load, value is not persistent
             
     # Add icons to media files
     if icons_and_thumnails == True:
@@ -498,7 +500,6 @@ def fill_filters_mlt(mlt_clip, sequence):
     
 #------------------------------------------------------------ track building
 # THIS IS COPYPASTED FROM edit.py TO NOT IMPORT IT.
-# IT BREAKS 'DRY' MASSIVELY,.
 def append_clip(track, clip, clip_in, clip_out):
     """
     Affects MLT c-struct and python obj values.

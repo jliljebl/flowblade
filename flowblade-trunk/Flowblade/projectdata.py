@@ -41,8 +41,8 @@ import sequence
 import utils
 
 
-SAVEFILE_VERSION = 4 # this is changed when backwards incompatible changes 
-                     # are introduced to project files to allow for fixing them at load time
+SAVEFILE_VERSION = 5 # this is changed when backwards incompatible changes are introduced 
+                     # to project files to allow for fixing them at load time
 
 FALLBACK_THUMB = "fallback_thumb.png"
 
@@ -273,6 +273,8 @@ class MediaFile:
         self.has_proxy_file = False
         self.is_proxy_file = False
         self.second_file_path = None # to proxy when original, to original when proxy
+        
+        self.current_frame = 0
 
         # Set default length for graphics files
         (f_name, ext) = os.path.splitext(self.name)
