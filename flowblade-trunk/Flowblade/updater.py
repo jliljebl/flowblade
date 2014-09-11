@@ -337,7 +337,13 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
 
     # Display frame, marks and pos
     gui.pos_bar.update_display_from_producer(clip_producer)
-    PLAYER().seek_frame(0)
+
+    if MONITOR_MEDIA_FILE().type == appconsts.IMAGE or \
+        MONITOR_MEDIA_FILE().type == appconsts.PATTERN_PRODUCER:
+        PLAYER().seek_frame(0)
+    else:
+        PLAYER().seek_frame(MONITOR_MEDIA_FILE().current_frame)
+
     display_marks_tc()
     
     gui.pos_bar.widget.grab_focus()
@@ -373,6 +379,11 @@ def display_sequence_in_monitor():
         gui.sequence_editor_b.set_active(True)
         return
 
+    # Save displayed frame if media file was displayed in monitor
+    if MONITOR_MEDIA_FILE() != None and \
+        editorstate._timeline_displayed == False:
+        MONITOR_MEDIA_FILE().current_frame = PLAYER().current_frame()
+        
     editorstate._timeline_displayed = True
 
     # Clear hidden track that has been displaying monitor clip
@@ -434,6 +445,10 @@ def set_and_display_monitor_media_file(media_file):
     Displays media_file in clip monitor when new media file 
     selected for display by double clicking or drag'n'drop
     """
+    if MONITOR_MEDIA_FILE() != None and \
+        editorstate._timeline_displayed == False:
+        MONITOR_MEDIA_FILE().current_frame = PLAYER().current_frame()
+
     editorstate._monitor_media_file = media_file
     
     # If we're already displaying clip monitor, then already button is down we call display_clip_in_monitor(..)
