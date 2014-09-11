@@ -484,7 +484,8 @@ class EditorWindow:
         self.right_notebook.set_tab_pos(gtk.POS_BOTTOM)
    
         # Video display
-        self.tline_display = gtk.DrawingArea() 
+        self.tline_display = gtk.Label() # This can be any GTK+ widget, only its XWindow draw rect 
+                                         # is used to position and scale SDL overlay that actually displays video.
         dnd.connect_video_monitor(self.tline_display)
         
         # Position bar and decorative frame  for it
@@ -532,9 +533,15 @@ class EditorWindow:
         disp_align = gtk.Alignment(xalign=0.0, yalign=0.0, xscale=1.0, yscale=1.0)
         disp_align.add(self.tline_display)
 
+        # This is a hack to keep monitor always black on areas not displaying content
+        black_box = gtk.EventBox()
+        black_box.add(disp_align)
+        bg_color = gtk.gdk.Color(red=0.0, green=0.0, blue=0.0)
+        black_box.modify_bg(gtk.STATE_NORMAL, bg_color)
+        
         # Monitor
         monitor_vbox = gtk.VBox(False, 1)
-        monitor_vbox.pack_start(disp_align, True, True, 0)
+        monitor_vbox.pack_start(black_box, True, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
         monitor_vbox.pack_start(player_buttons_row, False, True, 0)
 
@@ -1016,7 +1023,7 @@ class EditorWindow:
         self.tc = guicomponents.MonitorTCDisplay()
         self.monitor_source = gtk.Label("sequence1")
         self.monitor_source.set_ellipsize(pango.ELLIPSIZE_END)
-   
+
 
 
 def _this_is_not_used():
