@@ -447,6 +447,8 @@ def new_project(profile_index, v_tracks, a_tracks):
         
 def open_project(new_project):
     stop_autosave()
+    audiomonitoring.close_audio_monitor()
+
     editorstate.project = new_project
 
     editorstate.media_view_filter = appconsts.SHOW_ALL_FILES
@@ -474,6 +476,7 @@ def open_project(new_project):
         loaded_autosave_file = None
 
     editorstate.update_current_proxy_paths()
+    audiomonitoring.init_for_project_load()
 
     start_autosave()
 

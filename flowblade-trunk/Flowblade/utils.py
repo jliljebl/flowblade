@@ -58,7 +58,7 @@ class Ticker:
     def stop_ticker(self):
         try:
             self.ev.set()
-            self.running = False
+            self.running = False # ! self.ev.set() may go to Exception leave this having wrong value if already stopped? 
         except Exception:
             pass # called when not running
 
