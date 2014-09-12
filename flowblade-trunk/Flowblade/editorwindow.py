@@ -482,12 +482,7 @@ class EditorWindow:
         # Right notebook, used for Widescreen and Two row layouts
         self.right_notebook = gtk.Notebook()
         self.right_notebook.set_tab_pos(gtk.POS_BOTTOM)
-   
-        # Video display
-        self.tline_display = gtk.Label() # This can be any GTK+ widget, only its XWindow draw rect 
-                                         # is used to position and scale SDL overlay that actually displays video.
-        dnd.connect_video_monitor(self.tline_display)
-        
+
         # Position bar and decorative frame  for it
         self.pos_bar = PositionBar()
         pos_bar_frame = gtk.Frame()
@@ -529,19 +524,19 @@ class EditorWindow:
         sw_pos_hbox.pack_start(pos_bar_vbox, True, True, 0)
         sw_pos_hbox.pack_start(self.view_mode_select.widget, False, False, 0)
 
-        # Display wrapper alignment for better filling behaviour when resizing
-        disp_align = gtk.Alignment(xalign=0.0, yalign=0.0, xscale=1.0, yscale=1.0)
-        disp_align.add(self.tline_display)
-
-        # This is a hack to keep monitor always black on areas not displaying content
+        # Video display
         black_box = gtk.EventBox()
-        black_box.add(disp_align)
+        black_box.add(gtk.Label())
         bg_color = gtk.gdk.Color(red=0.0, green=0.0, blue=0.0)
         black_box.modify_bg(gtk.STATE_NORMAL, bg_color)
         
+        self.tline_display = black_box # This can be any GTK+ widget (that is not "windowless"), only its XWindow draw rect 
+                                       # is used to position and scale SDL overlay that actually displays video.
+        dnd.connect_video_monitor(self.tline_display)
+
         # Monitor
         monitor_vbox = gtk.VBox(False, 1)
-        monitor_vbox.pack_start(black_box, True, True, 0)
+        monitor_vbox.pack_start(self.tline_display, True, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
         monitor_vbox.pack_start(player_buttons_row, False, True, 0)
 
