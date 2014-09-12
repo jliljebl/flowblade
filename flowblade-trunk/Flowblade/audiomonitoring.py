@@ -106,6 +106,16 @@ def init(profile):
     _update_ticker.start_ticker()
     _update_ticker.stop_ticker()    
 
+def init_for_project_load():
+    # Monitor window is quaranteed to be closed
+    if _update_ticker.running:
+        _update_ticker.stop_ticker()    
+        
+    global _level_filters
+    _level_filters = None
+    _init_level_filters(False)
+
+    _update_ticker.start_ticker()
 
 def close():
     close_audio_monitor()
@@ -262,9 +272,13 @@ def _audio_monitor_update():
     if _monitor_window == None and _master_volume_meter == None:
         return
 
+
+    #print "audio update"
+
     global _audio_levels
     _audio_levels = []
     for i in range(0, len(_level_filters)):
+        #print i
         audio_level_filter = _level_filters[i]
         l_val = _get_channel_value(audio_level_filter, LEFT_CHANNEL)
         r_val = _get_channel_value(audio_level_filter, RIGHT_CHANNEL)
