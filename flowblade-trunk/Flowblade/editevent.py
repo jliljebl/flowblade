@@ -73,7 +73,7 @@ def do_clip_insert(track, new_clip, tline_pos):
         return
 
     movemodes.clear_selected_clips()
-
+    
     # Do edit
     data = {"track":track,
             "clip":new_clip,
@@ -82,7 +82,7 @@ def do_clip_insert(track, new_clip, tline_pos):
             "clip_out":new_clip.mark_out}
     action = edit.insert_action(data)
     action.do_edit()
-
+    
     updater.display_tline_cut_frame(track, index)
 
 def do_multiple_clip_insert(track, clips, tline_pos):

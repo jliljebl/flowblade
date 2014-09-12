@@ -77,6 +77,11 @@ last_clicked_media_row = -1
 # This needs to blocked for first and last window state events
 player_refresh_enabled = False
 
+
+#  This needs to be blocked when timeline is displayed as result 
+# of Append/Inset... from monitor to get correct results
+save_monitor_frame = False
+
 # ---------------------------------- init
 def load_icons():
     """
@@ -279,6 +284,9 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
         gui.editor_window.clip_editor_b.set_active(False)
         return
 
+    global save_monitor_frame
+    save_monitor_frame = True
+
     # Opening clip exits trim modes
     if not editorstate.current_is_move_mode():
         set_clip_edit_mode_callback()
@@ -372,17 +380,12 @@ def display_sequence_in_monitor():
     print "F:updater.display_sequence_in_monitor"
     if PLAYER() == None: # this method gets called too early when initializing, hack fix.
         return
-
+    
     # If this gets called without user having pressed 'Timeline' button we'll 
     # programmatically press it to recall this method to have the correct button down.
     if gui.sequence_editor_b.get_active() == False:
         gui.sequence_editor_b.set_active(True)
         return
-
-    # Save displayed frame if media file was displayed in monitor
-    if MONITOR_MEDIA_FILE() != None and \
-        editorstate._timeline_displayed == False:
-        MONITOR_MEDIA_FILE().current_frame = PLAYER().current_frame()
         
     editorstate._timeline_displayed = True
 
@@ -424,7 +427,7 @@ def display_tline_cut_frame(track, index):
     """
     if not timeline_visible():
         display_sequence_in_monitor()
-    
+
     if index < 0:
         index = 0
     if index > (len(track.clips) - 1):
@@ -432,7 +435,7 @@ def display_tline_cut_frame(track, index):
     
     clip_start_frame = track.clip_start(index)
     PLAYER().seek_frame(clip_start_frame)
-    
+
 def media_file_row_double_clicked(treeview, tree_path, col):
     gui.tline_canvas.widget.grab_focus()
     row = max(tree_path)
@@ -445,10 +448,6 @@ def set_and_display_monitor_media_file(media_file):
     Displays media_file in clip monitor when new media file 
     selected for display by double clicking or drag'n'drop
     """
-    if MONITOR_MEDIA_FILE() != None and \
-        editorstate._timeline_displayed == False:
-        MONITOR_MEDIA_FILE().current_frame = PLAYER().current_frame()
-
     editorstate._monitor_media_file = media_file
     
     # If we're already displaying clip monitor, then already button is down we call display_clip_in_monitor(..)
@@ -471,6 +470,10 @@ def update_frame_displayers(frame):
         producer_length = PLAYER().producer.get_length()
     else:
         producer_length = gui.pos_bar.producer.get_length()
+        if save_monitor_frame:
+            MONITOR_MEDIA_FILE().current_frame = frame
+            print " MONITOR_MEDIA_FILE().current_frame set to:", frame
+
     norm_pos = frame / float(producer_length) 
     gui.pos_bar.set_normalized_pos(norm_pos)
 

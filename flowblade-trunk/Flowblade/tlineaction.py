@@ -214,6 +214,7 @@ def insert_button_pressed():
         no_monitor_clip_info(gui.editor_window.window)
         return
 
+    updater.save_monitor_frame = False # hack to not get wrong value saved in MediaFile.current_frame
     editevent.do_clip_insert(track, new_clip, tline_pos)
     
 def append_button_pressed():
@@ -229,6 +230,7 @@ def append_button_pressed():
         no_monitor_clip_info(gui.editor_window.window)
         return
 
+    updater.save_monitor_frame = False # hack to not get wrong value saved in MediaFile.current_frame
     editevent.do_clip_insert(track, new_clip, tline_pos)
 
 def three_point_overwrite_pressed():
@@ -266,7 +268,9 @@ def three_point_overwrite_pressed():
     range_out = movemodes.selected_range_out
     
     movemodes.clear_selected_clips() # edit consumes selection
-    
+
+    updater.save_monitor_frame = False # hack to not get wrong value saved in MediaFile.current_frame
+
     data = {"track":track,
             "clip":over_clip,
             "clip_in":over_clip.mark_in,
@@ -308,7 +312,9 @@ def range_overwrite_pressed():
     over_clip_out = over_clip.mark_in + range_length - 1
 
     movemodes.clear_selected_clips() # edit consumes selection
-    
+
+    updater.save_monitor_frame = False # hack to not get wrong value saved in MediaFile.current_frame
+
     data = {"track":track,
             "clip":over_clip,
             "clip_in":over_clip.mark_in,
