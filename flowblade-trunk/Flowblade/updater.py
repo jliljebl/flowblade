@@ -350,8 +350,11 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
         MONITOR_MEDIA_FILE().type == appconsts.PATTERN_PRODUCER:
         PLAYER().seek_frame(0)
     else:
-        PLAYER().seek_frame(MONITOR_MEDIA_FILE().current_frame)
-
+        if editorpersistance.prefs.remember_monitor_clip_frame: 
+            PLAYER().seek_frame(MONITOR_MEDIA_FILE().current_frame)
+        else:
+            PLAYER().seek_frame(0)
+                    
     display_marks_tc()
     
     gui.pos_bar.widget.grab_focus()
@@ -472,7 +475,6 @@ def update_frame_displayers(frame):
         producer_length = gui.pos_bar.producer.get_length()
         if save_monitor_frame:
             MONITOR_MEDIA_FILE().current_frame = frame
-            print " MONITOR_MEDIA_FILE().current_frame set to:", frame
 
     norm_pos = frame / float(producer_length) 
     gui.pos_bar.set_normalized_pos(norm_pos)

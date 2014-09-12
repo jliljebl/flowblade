@@ -158,7 +158,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     gen_opts_widgets, edit_prefs_widgets, view_prefs_widgets = widgets_tuples_tuple
 
     default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin = gen_opts_widgets
-    auto_play_in_clip_monitor_check, auto_center_check, grfx_insert_length_spin, trim_exit_click, trim_quick_enter = edit_prefs_widgets
+    auto_play_in_clip_monitor_check, auto_center_check, grfx_insert_length_spin, trim_exit_click, trim_quick_enter, remember_clip_frame = edit_prefs_widgets
     disp_splash, buttons_style, dark_theme = view_prefs_widgets
 
     global prefs
@@ -172,6 +172,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.default_grfx_length = int(grfx_insert_length_spin.get_adjustment().get_value())
     prefs.empty_click_exits_trims = trim_exit_click.get_active()
     prefs.quick_enter_trims = trim_quick_enter.get_active()
+    prefs.remember_monitor_clip_frame = remember_clip_frame.get_active()
 
     prefs.display_splash_screen = disp_splash.get_active()
     prefs.buttons_style = buttons_style.get_active() # styles enum values and widget indexes correspond
@@ -234,3 +235,4 @@ class EditorPreferences:
         self.empty_click_exits_trims = True
         self.quick_enter_trims = True
         self.show_vu_meter = True
+        self.remember_monitor_clip_frame = True
