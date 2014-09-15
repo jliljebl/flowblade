@@ -632,15 +632,25 @@ def draw_one_roll_overlay(cr, data):
     
     selection_frame_x = _get_frame_x(data["selected_frame"])
 
-    # Case: editing to-clip
     trim_limits = data["trim_limits"]
     if data["to_side_being_edited"]:
+        # Case: editing to-clip
         first = data["selected_frame"]
         last = trim_limits["both_end"] + 1 # +1, end is allowed trim area, we cant clip
-    # Case: editing from-clip
+        x = _get_frame_x(last)
+
     else:
+        # Case: editing from-clip
         first = trim_limits["both_start"] - 1 # -1, start is allowed trim area, we cant clip
         last = data["selected_frame"]
+        x = _get_frame_x(first)
+        
+    cr.set_line_width(1.0)
+    cr.set_source_rgb(*OVERLAY_COLOR)
+    cr.move_to(x, track_y - 6.5)
+    cr.line_to(x, track_y + track_height + 6.5)
+    cr.stroke()
+        
     cr.set_line_width(2.0)
     _draw_trim_clip_overlay(cr, _get_frame_x(first), _get_frame_x(last), track_y, track_height, False, (1,1,1,0.3))
         
