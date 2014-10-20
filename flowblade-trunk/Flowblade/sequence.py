@@ -109,8 +109,8 @@ class Sequence:
         self.tracks = []
         self.compositors = []
         self.markers = [] # markers are tuples (name_str, frame_int)
-        self.proxyclips = {} #future feature, not used currently
-        self.rendered_versions = {} #future feature, not used currently
+        self.proxyclips = {}
+        self.rendered_versions = {} 
         self.watermark_filter = None
         self.watermark_file_path = None
         self.seq_len = 0 # used in trim crash hack, remove when fixed
@@ -144,16 +144,14 @@ class Sequence:
         self.multitrack = self.tractor.multitrack()
         
         self.vectorscope = mlt.Filter(self.profile, "frei0r.vectorscope")
-        mltrefhold.hold_ref(self.vectorscope)
+        mltrefhold.hold_ref(self.vectorscope) # ?? is this just some anti-crash hack attempt that was not removed
         self.vectorscope.set("mix", "0.5")
         self.vectorscope.set("overlay sides", "0.0") 
         self.rgbparade =  mlt.Filter(self.profile, "frei0r.rgbparade")
-        mltrefhold.hold_ref(self.rgbparade)
+        mltrefhold.hold_ref(self.rgbparade) # ?? is this just some anti-crash hack attempt that was not removed
         self.rgbparade.set("mix", "0.4")
-        self.rgbparade.set("overlay sides", "0.0") 
+        self.rgbparade.set("overlay sides", "0.0")
         self.outputfilter = None
-  
-
 
     # ---------------------------------------- tracks
     def create_default_tracks(self):
@@ -767,7 +765,7 @@ class Sequence:
             self.tractor.attach(self.rgbparade)
             self.outputfilter = self.rgbparade
 
-    # ---------------------------------------------------- def add watermark
+    # ---------------------------------------------------- watermark
     def add_watermark(self, watermark_file_path):
         watermark = mlt.Filter(self.profile, "watermark")
         mltrefhold.hold_ref(watermark)
