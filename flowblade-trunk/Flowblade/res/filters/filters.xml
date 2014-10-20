@@ -70,9 +70,14 @@
         <group>Alpha</group>  
         <property name="supresstype" args="editor=combobox displayname=Supress exptype=default cbopts=Green:0.0,Blue:1.0">0.0</property>
     </filter>
-
-
-
+    <filter id="lumakey">
+        <name>Luma Key</name>
+        <group>Alpha</group>  
+        <property name="threshold" args="range_in=0,255 range_out=0,255 displayname=Threshold">128</property>
+        <property name="slope" args="range_in=0,128 range_out=0,128 displayname=Slope">0</property>
+        <property name="prelevel" args="range_in=0,255 range_out=0,255 displayname=Pre-Level">0</property>
+        <property name="postlevel" args="range_in=0,255 range_out=0,255 displayname=Post-Level">255</property>
+    </filter>
 
     <!-- AUDIO -->
     <filter id="volume" multipart="true">
@@ -753,6 +758,17 @@
         <group>Fix</group>
         <property name="Border Width" args="range_in=0,100 displayname=Border!width">0.2</property>
     </filter>
+    <!-- crashes on app exit, add when fixed
+    <filter id="dynamictext">
+        <name>Timecode</name>
+        <group>Fix</group>
+        <property name="halign" args="editor=no_editor exptype=not_parsed">centre</property>
+        <property name="valign" args="editor=no_editor exptype=not_parsed">bottom</property>
+        <property name="fgcolour" args="editor=no_editor exptype=not_parsed">#ffffff</property>
+        <property name="olcolour" args="editor=no_editor exptype=not_parsed">#000000</property>
+        <property name="outline" args="editor=no_editor exptype=not_parsed">1</property>
+    </filter>
+    -->
 
 
 
