@@ -78,6 +78,12 @@
         <property name="prelevel" args="range_in=0,255 range_out=0,255 displayname=Pre-Level">0</property>
         <property name="postlevel" args="range_in=0,255 range_out=0,255 displayname=Post-Level">255</property>
     </filter>
+   <filter id="chroma">
+    <name>Chroma Key</name>
+        <group>Alpha</group>
+        <property name="key" args="editor=color_select exptype=color displayname=Key!Color">#00ff00</property>
+        <property name="variance"  args="range_in=0,100 range_out=0.0,1.0 displayname=Variance">0.15</property>
+   </filter>
 
     <!-- AUDIO -->
     <filter id="volume" multipart="true">
