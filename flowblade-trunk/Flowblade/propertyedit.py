@@ -28,7 +28,10 @@ edit inputs into mlt property values (that effect how sequence is displayed)
 and python side values (that are persistant).
 """
 
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 
 import appconsts
 from editorstate import current_sequence

@@ -24,6 +24,8 @@ Handles or passes on mouse edit events from timeline.
 Handles edit mode setting.
 """
 
+import pygtk
+pygtk.require('2.0');
 import gtk
 import os
 import time

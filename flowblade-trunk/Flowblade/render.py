@@ -25,7 +25,10 @@ and builds a mlt.Consumer for rendering on request.
 Rendering is done in app.player object of class mltplayer.Player
 """
 
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 import mlt
 import md5
 import os

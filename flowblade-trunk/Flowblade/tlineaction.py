@@ -22,7 +22,10 @@
 Module handles button edit events from buttons in the middle bar.
 """
 
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 import os
 from operator import itemgetter
 

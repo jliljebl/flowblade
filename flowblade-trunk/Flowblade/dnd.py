@@ -22,7 +22,10 @@
 Module handles drag and drop.
 """
 
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 
 import editorstate
 import gui

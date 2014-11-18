@@ -21,7 +21,10 @@
 """
 Module handles saving and loading data that is related to the editor and not any particular project.
 """
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 import os
 import pickle
 

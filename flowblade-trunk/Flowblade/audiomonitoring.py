@@ -21,7 +21,10 @@
 Module handles initializing and displaying audiomonitor tool.
 """
 import cairo
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 import mlt
 import pango
 import pangocairo

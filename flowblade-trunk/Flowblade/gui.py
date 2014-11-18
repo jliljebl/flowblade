@@ -22,7 +22,10 @@
 Module holds references to GUI widgets.
 """
 
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 
 
 # Editor window

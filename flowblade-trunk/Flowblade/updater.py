@@ -22,7 +22,10 @@
 Module contains GUI update routines.
 """
 
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 
 import appconsts
 import clipeffectseditor

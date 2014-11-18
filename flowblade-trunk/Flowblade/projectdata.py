@@ -23,7 +23,10 @@ Module contains objects used to capture project data.
 """
 
 import datetime
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 import mlt
 import md5
 import os

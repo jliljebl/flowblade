@@ -22,7 +22,10 @@
 Modules handles creating and caching audio waveform images for clips.
 """
 
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 import math
 import md5
 import mlt

@@ -25,7 +25,10 @@ Handles application initialization, shutdown, opening projects, autosave and cha
 sequences.
 """
 import gobject
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 import locale
 import md5
 import mlt
@@ -147,6 +150,7 @@ def main(root_path):
 
     # Init gtk threads
     gtk.gdk.threads_init()
+    gtk.gdk.threads_enter()
 
     # Adjust gui parameters for smaller screens
     scr_w = gtk.gdk.screen_width()

@@ -22,7 +22,10 @@
 Module builds dialog windows. User input is handled at 
 callsites which provide callback methods for response signals.
 """
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 import os
 import pango
 

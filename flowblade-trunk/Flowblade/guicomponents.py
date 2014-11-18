@@ -23,7 +23,10 @@ Module contains classes and build methods to create GUI objects.
 """
 import cairo
 import gobject
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 import math
 import pango
 import pangocairo
