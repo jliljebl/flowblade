@@ -21,7 +21,10 @@
 """
 Module contains objects and methods needed to create render consumers.
 """
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 import mlt
 import time
 import threading

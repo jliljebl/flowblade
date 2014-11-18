@@ -23,7 +23,10 @@ Module contains CairoDrawableArea widget. You can draw onto it using
 Cairo, and listen to its mouse and keyboard events.
 """
 
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 from gtk import gdk
 
 class CairoDrawableArea(gtk.Widget):

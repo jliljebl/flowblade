@@ -22,7 +22,10 @@
 Module contains main editor window object.
 """
 
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 import pango
 
 import app

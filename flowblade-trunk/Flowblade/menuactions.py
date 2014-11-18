@@ -22,7 +22,10 @@
 This module handles the less central actions inited by user from menu.
 """
 
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 import platform
 import threading
 import webbrowser

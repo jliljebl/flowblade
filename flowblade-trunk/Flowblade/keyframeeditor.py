@@ -28,7 +28,10 @@ of callbacks to parent objects, this makes the design difficult to follow.
 """
 
 import copy
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 import math
 import pango
 

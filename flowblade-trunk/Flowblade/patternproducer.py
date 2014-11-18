@@ -22,7 +22,10 @@ Module is used to create pattern producer media objects for bins and
 corresponding mlt.Producers for timeline. 
 """
 import copy
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 import mlt
 
 import appconsts

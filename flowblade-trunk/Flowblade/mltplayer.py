@@ -23,7 +23,10 @@ Module contains an object that is used to do playback from mlt.Producers to
 a Xwindow of a GTK+ widget and os audiosystem using a SDL consumer.
 """
 
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 import mlt
 import os
 import time

@@ -27,7 +27,10 @@ and then create MLT objects from pickled objects when project is loaded.
 """
 
 import copy
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 import os
 import pickle
 import time

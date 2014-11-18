@@ -23,7 +23,10 @@ Module contents:
 class PositionBar - Displays position on a clip or a sequence
 """
 
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 
 from cairoarea import CairoDrawableArea
 import editorpersistance

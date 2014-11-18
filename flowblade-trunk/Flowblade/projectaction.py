@@ -23,7 +23,10 @@ Module handles user actions that are not edits on the current sequence.
 Load, save, add media file, etc...
 """
 import gobject
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 import os
 from os import listdir
 from os.path import isfile, join

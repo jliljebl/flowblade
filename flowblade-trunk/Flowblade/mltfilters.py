@@ -23,7 +23,10 @@ Module handles creating mlt.Filter objects and their FilterObject python wrapper
 are attached to mlt:Producer objects.
 """
 import copy
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 import mlt
 import xml.dom.minidom
 

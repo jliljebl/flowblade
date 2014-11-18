@@ -21,7 +21,10 @@
 """
 Helper functions and data
 """
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 import math
 import os
 import threading

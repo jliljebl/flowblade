@@ -21,7 +21,10 @@
 """
 Module handles user edit events for insert and over move modes. 
 """
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 
 import appconsts
 import dialogutils

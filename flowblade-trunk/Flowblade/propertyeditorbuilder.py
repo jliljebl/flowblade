@@ -21,7 +21,10 @@
 """
 Module creates GUI editors for editable mlt properties.
 """
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 
 import appconsts
 from editorstate import PROJECT

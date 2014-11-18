@@ -22,7 +22,10 @@
 Module handles clip effects editing logic and gui
 """
 
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 
 import dnd
 import edit

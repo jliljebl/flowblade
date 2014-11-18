@@ -20,7 +20,10 @@
 
 import datetime
 import gobject
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 import mlt
 import md5
 import os
@@ -264,6 +267,7 @@ def main(root_path, force_launch=False):
 
     # Init gtk threads
     gtk.gdk.threads_init()
+    gtk.gdk.threads_enter()
 
     # Exit with 
     if can_run == False:

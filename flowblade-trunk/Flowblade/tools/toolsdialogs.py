@@ -18,7 +18,10 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 
 
 def load_titler_data_dialog(callback):    

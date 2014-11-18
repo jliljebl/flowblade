@@ -21,7 +21,10 @@
 """
 Module handles events related to audiosplits and setting clip sync relationships.
 """
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 
 import appconsts
 import dialogutils

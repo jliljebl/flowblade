@@ -23,7 +23,10 @@ Module contains GUI components for displayingand  editing clips in timeline.
 Global display position and scale information is in this module.
 """
 import cairo
+import pygtk
+pygtk.require('2.0');
 import gtk
+
 import math
 import pango
 import pangocairo

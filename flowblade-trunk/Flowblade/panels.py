@@ -23,6 +23,8 @@ Module has methods that build panels from widgets. Created panels
 are used to build gui at callsites.
 """
 
+import pygtk
+pygtk.require('2.0');
 import gtk
 
 import gui
