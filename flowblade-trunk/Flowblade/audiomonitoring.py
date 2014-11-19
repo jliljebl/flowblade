@@ -272,11 +272,11 @@ def _add_audio_level_filter(producer, profile):
     return audio_level_filter
 
 def _audio_monitor_update():
+    
     if _monitor_window == None and _master_volume_meter == None:
         return
 
-
-    #print "audio update"
+    gtk.gdk.threads_enter()
 
     global _audio_levels
     _audio_levels = []
@@ -291,6 +291,8 @@ def _audio_monitor_update():
         _monitor_window.meters_area.widget.queue_draw()
     if _master_volume_meter != None:
         _master_volume_meter.canvas.queue_draw()
+
+    gtk.gdk.threads_leave()
 
 def _get_channel_value(audio_level_filter, channel_property):
     level_value = audio_level_filter.get(channel_property)

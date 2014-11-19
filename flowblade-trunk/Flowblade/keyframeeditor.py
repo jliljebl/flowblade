@@ -1482,7 +1482,7 @@ class GeometryEditorButtonsRow(gtk.HBox):
         name_label = gtk.Label(_("View:"))
 
         pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "geom_action.png")
-        action_menu_button = guicomponents.PressLaunch(self._show_actions_menu, pixbuf)
+        action_menu_button = guicomponents.PressLaunch(self._show_actions_menu, pixbuf, 24, 22)
         
         size_select = gtk.combo_box_new_text()
         size_select.append_text(_("Large"))
