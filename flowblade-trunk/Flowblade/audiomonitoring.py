@@ -24,6 +24,7 @@ import cairo
 import pygtk
 pygtk.require('2.0');
 import gtk
+import glib
 
 import mlt
 import pango
@@ -139,30 +140,28 @@ def show_audio_monitor():
         _update_ticker.start_ticker()
 
 def close_audio_monitor():
-    global _update_ticker, _level_filters, _monitor_window, _audio_levels
+    
+    global _monitor_window
     if _monitor_window == None:
         return
 
     editorstate.PLAYER().stop_playback()
 
-    # To avoid crashes we can't actually lose window object before everything is 
-    # cleaned up well 
+    # We're using _monitor_window as a flag here so we need to set to _monitor_window = None
+    # to stop _audio_monitor_update running before destroying resources used by it
     temp_window = _monitor_window
     _monitor_window = None
-
-    # Hide window before destruction to avoid visible freeze
-    temp_window.set_visible(False)
-    while(gtk.events_pending()):
-        gtk.main_iteration()
-            
+    
     _destroy_level_filters(True)
 
-    # Hide and destroy gui object
-    temp_window.destroy()
-    while(gtk.events_pending()):
-        gtk.main_iteration()
+    # Close and destroy window when gtk finds time to do it
+    glib.idle_add(_audio_monitor_destroy, temp_window)
 
-    return True
+def _audio_monitor_destroy(closed_monitor_window):
+    closed_monitor_window.set_visible(False)
+    closed_monitor_window.destroy()
+    
+    return False
 
 def get_master_meter():
     _init_level_filters(False)
@@ -185,31 +184,29 @@ def get_master_meter():
     return frame
 
 def close_master_meter():
-    global _update_ticker, _level_filters, _master_volume_meter, _audio_levels
+    global _master_volume_meter
     if _master_volume_meter == None:
         return
 
     editorstate.PLAYER().stop_playback()
 
     # To avoid crashes we can't actually lose widget object before everything is 
-    # cleaned up well
-    temp = _master_volume_meter
+    # cleaned up well but _master_volume_meter == None is flag for doing audio updates so we must 
+    # set that first
+    temp_meter = _master_volume_meter
     _master_volume_meter = None
 
-    # Hide window before destruction to avoid visible freeze
-    temp.widget.set_visible(False)
-    while(gtk.events_pending()):
-        gtk.main_iteration()
-            
     _destroy_level_filters(False)
-
-    # Hide and destroy gui object
-    temp.widget.destroy()
-    while(gtk.events_pending()):
-        gtk.main_iteration()
-
-    return True
     
+    # Close and destroy window when gtk finds time to do it
+    glib.idle_add(_master_meter_destroy, temp_meter)
+
+def _master_meter_destroy(closed_master_meter):
+    closed_master_meter.widget.set_visible(False)
+    closed_master_meter.widget.destroy()
+
+    return False
+
 def _init_level_filters(create_track_filters):
     # We're attaching level filters only to MLT objects and adding nothing to python objects,
     # so when Sequence is saved these filters will automatically be removed.
@@ -240,7 +237,7 @@ def _destroy_level_filters(destroy_track_filters=False):
     # We need to be sure that audio level updates are stopped before
     # detaching and destroying them
     _update_ticker.stop_ticker()
-    time.sleep(0.2)
+    #time.sleep(0.2)
 
     # Detach filters
     if len(_level_filters) != 0:
@@ -272,7 +269,8 @@ def _add_audio_level_filter(producer, profile):
     return audio_level_filter
 
 def _audio_monitor_update():
-    
+    # This is not called from gtk thread
+
     if _monitor_window == None and _master_volume_meter == None:
         return
 

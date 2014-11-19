@@ -147,7 +147,7 @@ def main(root_path):
 
     # Init gtk threads
     gtk.gdk.threads_init()
-    #gtk.gdk.threads_enter()
+    gtk.gdk.threads_enter()
 
     # Load drag'n'drop images
     dnd.init()
@@ -263,6 +263,8 @@ def main(root_path):
     # Launch gtk+ main loop
     gtk.main()
 
+    gtk.gdk.threads_leave()
+    
 # ----------------------------------- callback setting
 def monkeypatch_callbacks():
     # Prefences setting
