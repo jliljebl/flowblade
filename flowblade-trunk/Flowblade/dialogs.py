@@ -105,7 +105,7 @@ def _new_project_profile_changed(combo_box, profile_info_box):
     profile_info_box.add(info_panel)
     profile_info_box.show_all()
     info_panel.show()
-    
+
 def load_project_dialog(callback):    
     dialog = gtk.FileChooserDialog(_("Select Project File"), None, 
                                    gtk.FILE_CHOOSER_ACTION_OPEN, 
@@ -114,6 +114,7 @@ def load_project_dialog(callback):
     dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
     dialog.set_select_multiple(False)
     file_filter = gtk.FileFilter()
+    file_filter.set_name(_("Flowblade Projects"))
     file_filter.add_pattern("*" + appconsts.PROJECT_FILE_EXTENSION)
     dialog.add_filter(file_filter)
     dialog.connect('response', callback)
@@ -129,7 +130,7 @@ def save_project_as_dialog(callback, current_name, open_dir):
     dialog.set_do_overwrite_confirmation(True)
     if open_dir != None:
         dialog.set_current_folder(open_dir)
-    
+
     dialog.set_select_multiple(False)
     file_filter = gtk.FileFilter()
     file_filter.add_pattern("*" + appconsts.PROJECT_FILE_EXTENSION)

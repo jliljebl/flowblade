@@ -48,7 +48,7 @@ def init_languages():
 
     # Get the language to use
     global lang
-    #lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=["it"], fallback=True) # Testing, comment out for production
+    #lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=["fi"], fallback=True) # Testing, comment out for production
     lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=langs, fallback=True)
     lang.install(APP_NAME) # makes _() a build-in available in all modules without imports
 
@@ -202,12 +202,20 @@ def load_filters_translations():
     filter_names["Soft Glow"]= _("Soft Glow")
     filter_names["Newspaper"]= _("Newspaper")
 
-
-
+    # 0.16 added
+    filter_names["Luma Key"] = _("Luma Key")
+    filter_names["Chroma Key"] = _("Chroma Key")
+    filter_names["Affine"] = _("Affine")
+    filter_names["Color Adjustment"] = _("Color Adjustment")
+    filter_names["Color Grading"] = _("Color Grading")
+    filter_names["Curves"] = _("Curves")
+    filter_names["Lift Gain Gamma"] = _("Lift Gain Gamma")
+    filter_names["Image Grid"] = _("Image Grid")
+    
     # param names
     global param_names
 
-    # filters
+    # param names for filters
     param_names["Position"] = _("Position")
     param_names["Grad width"] = _("Grad width")
     param_names["Tilt"] = _("Tilt")
@@ -422,7 +430,7 @@ def load_filters_translations():
     param_names["Rotate X"] = _("Rotate X")
     param_names["Rotate Y"] = _("Rotate Y")
     param_names["Rotate Z"] = _("Rotate Z")
-    # filters 0.8
+    # added 0.8
     param_names["Edge Mode"] = _("Edge Mode")
     param_names["Sel. Space"] = _("Sel. Space")
     param_names["Operation"] = _("Operation")
@@ -463,8 +471,23 @@ def load_filters_translations():
     param_names["Effect"] = _("Effect")
     param_names["Sharpness"] = _("Sharpness")
     param_names["Blend Type"] = _("Blend Type")
+    # added 0.16
+    param_names["Key Color"] = _("Key Color")
+    param_names["Pre-Level"] = _("Pre-Level")
+    param_names["Post-Level"] = _("Post-Level")
+    param_names["Slope"] = _("Slope")
+    param_names["Luma Band"] = _("Luma Band")
+    param_names["Lift"] = _("Lift")
+    param_names["Gain"] = _("Gain")
+    param_names["Input White Level"] = _("Input White Level")
+    param_names["Input Black Level"] = _("Input Black Level")
+    param_names["Black Output"] = _("Black Output")
+    param_names["White Output"] = _("White Output")
+    param_names["Rows"] = _("Rows")
+    param_names["Columns"] = _("Columns")
+    param_names["Color Temperature"] = _("Color Temperature")
 
-    # compositors
+    # param names for compositors
     param_names["Opacity"] = _("Opacity")
     param_names["Shear X"] = _("Shear X")
     param_names["Shear Y"] = _("Shear Y")
@@ -477,7 +500,7 @@ def load_filters_translations():
     param_names["Wipe Type"] = _("Wipe Type")
     param_names["Invert"] = _("Invert")
     param_names["Softness"] = _("Softness")
-    
+
     # Combo options
     global combo_options
     combo_options["Shave"] = _("Shave")
@@ -525,4 +548,7 @@ def load_filters_translations():
     combo_options["Esses"] = _("Esses")
     combo_options["Horizontal"] = _("Horizontal")
     combo_options["Vertical"] = _("Vertical")
-
+    combo_options["Shadows"] = _("Shadows")
+    combo_options["Midtones"] = _("Midtones")
+    combo_options["Highlights"] = _("Highlights")
+    
