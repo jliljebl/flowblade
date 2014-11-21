@@ -27,6 +27,7 @@ sequences.
 import gobject
 import pygtk
 pygtk.require('2.0');
+import glib
 import gtk
 
 import locale
@@ -264,7 +265,7 @@ def main(root_path):
     gtk.main()
 
     gtk.gdk.threads_leave()
-    
+
 # ----------------------------------- callback setting
 def monkeypatch_callbacks():
     # Prefences setting
@@ -741,19 +742,15 @@ def _shutdown_dialog_callback(dialog, response_id):
     # Block reconnecting consumer before setting window not visible
     updater.player_refresh_enabled = False
     gui.editor_window.window.set_visible(False)
+    
+    # Close and destroy app when gtk finds time to do it after hiding window
+    glib.idle_add(_app_destroy)
 
-    # Wait window to be hidden or it will freeze before disappearing
-    while(gtk.events_pending()):
-        gtk.main_iteration()
- 
+def _app_destroy():
     # Close threads and stop mlt consumers
     projectdata.thumbnail_thread.shutdown()
     editorstate.player.shutdown() # has ticker thread and player threads running
     audiomonitoring.close()
-    
-    # Wait toplevel tools windows to close
-    while(gtk.events_pending()):
-        gtk.main_iteration()
 
     # Wait threads to stop
     while((editorstate.player.running == True) and 
@@ -771,4 +768,3 @@ def _shutdown_dialog_callback(dialog, response_id):
 
     # Exit gtk main loop.
     gtk.main_quit()
-    
