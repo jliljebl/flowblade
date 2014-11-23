@@ -36,6 +36,7 @@ import pickle
 import time
 
 import appconsts
+import editorstate
 import mltprofiles
 import mltfilters
 import mlttransitions
@@ -282,6 +283,9 @@ def load_project(file_path, icons_and_thumnails=True):
     # Load project object
     f = open(file_path)
     project = pickle.load(f)
+    
+    # editorstate.project needs to be available for sequence building and when this is called
+    editorstate.project = project
 
     if(not hasattr(project, "SAVEFILE_VERSION")):
         project.SAVEFILE_VERSION = 1 # first save files did not have this
@@ -365,6 +369,9 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
     # method as when originally created.
     py_tracks = seq.tracks
     seq.tracks = []
+
+    # editorstate.project.c_seq needs to be available for sequence building 
+    editorstate.project.c_seq = seq
     
     # Create and fill MLT tracks.
     for py_track in py_tracks:

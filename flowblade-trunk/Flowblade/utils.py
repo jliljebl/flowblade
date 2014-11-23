@@ -297,6 +297,7 @@ def do_nothing():
 def get_hidden_user_dir_path():
     return os.getenv("HOME") + "/.flowblade/"
 
+"""
 def single_instance_pid_file_test_and_write(pid_file_path, write_pid=True):
     # Returns true if this instance can be run
     # Users of this method should delete pid_file on exit
@@ -333,7 +334,7 @@ def single_instance_pid_file_test_and_write(pid_file_path, write_pid=True):
             pid_file.write(str(this_pid))
             pid_file.close()
         return True
-
+"""
 
 # File exntension lists
 _audio_file_extensions = [  "act",

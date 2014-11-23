@@ -24,8 +24,12 @@ import pygtk
 pygtk.require('2.0');
 import gtk
 
+import dbus
+import dbus.service
+from dbus.mainloop.glib import DBusGMainLoop
 import mlt
 import md5
+import locale
 import os
 from os import listdir
 from os.path import isfile, join
@@ -39,6 +43,7 @@ import time
 import threading
 
 import dialogutils
+import editorstate
 import editorpersistance
 import guiutils
 import mltenv
@@ -74,6 +79,7 @@ queue_runner_thread = None
 
 timeout_id = None
 
+_dbus_service = None
 
 # -------------------------------------------------------- render thread
 class QueueRunnerThread(threading.Thread):
@@ -110,7 +116,7 @@ class QueueRunnerThread(threading.Thread):
             render_thread = renderconsumer.FileRenderPlayer(None, producer, consumer, start_frame, end_frame) # None == file name not needed this time when using FileRenderPlayer because callsite keeps track of things
             render_thread.wait_for_producer_end_stop = wait_for_stop_render
             render_thread.start()
-            
+
             # Set render start time and item state
             render_item.render_started()
 
@@ -157,7 +163,7 @@ class QueueRunnerThread(threading.Thread):
         
         # Update view for render end
         gtk.gdk.threads_enter()
-        batch_window.update_queue_view()
+        batch_window.reload_queue() # item may havee added to queue while rendering
         batch_window.render_queue_stopped()
         gtk.gdk.threads_leave()
                     
@@ -167,6 +173,28 @@ class QueueRunnerThread(threading.Thread):
         self.aborted = True
         self.running = False
         self.thread_running = False
+        
+        batch_window.reload_queue() # item may havee added to queue while rendering
+
+
+class BatchRenderDBUSService(dbus.service.Object):
+    def __init__(self):
+        print "dbus service init"
+        bus_name = dbus.service.BusName('flowblade.movie.editor.batchrender', bus=dbus.SessionBus())
+        dbus.service.Object.__init__(self, bus_name, '/flowblade/movie/editor/batchrender')
+
+    @dbus.service.method('flowblade.movie.editor.batchrender')
+    def render_item_added(self):
+        if queue_runner_thread == None:
+            batch_window.reload_queue()
+        
+        return "OK"
+
+    @dbus.service.method('flowblade.movie.editor.batchrender')
+    def remove_from_dbus(self):
+        self.remove_from_connection()
+        return
+   
 
 # --------------------------------------------------- adding item, always called from main app
 def add_render_item(flowblade_project, render_path, args_vals_list, mark_in, mark_out, render_data):
@@ -189,10 +217,16 @@ def add_render_item(flowblade_project, render_path, args_vals_list, mark_in, mar
     # Write project 
     project_path = get_projects_dir() + identifier + ".flb"
     persistance.save_project(flowblade_project, project_path)
-    
+
     # Write render item file
     render_item.save()
-    
+
+    bus = dbus.SessionBus()
+    if bus.name_has_owner('flowblade.movie.editor.batchrender'):
+        obj = bus.get_object('flowblade.movie.editor.batchrender', '/flowblade/movie/editor/batchrender')
+        iface = dbus.Interface(obj, 'flowblade.movie.editor.batchrender')
+        iface.render_item_added()
+
     print "Render queue item for rendering file into " + render_path + " with identifier " + identifier + " added."
 
 # ------------------------------------------------------- file utils
@@ -241,19 +275,31 @@ def copy_project(render_item, file_name):
         primary_txt = _("Render Item Project File Copy failed!")
         secondary_txt = _("Error message: ") + str(e)
         dialogutils.warning_message(primary_txt, secondary_txt, batch_window.window)
-        
+
 # --------------------------------------------------------------- app thread and data objects
 def launch_batch_rendering():
-    subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladebatch"])
-
-def test_and_write_pid(write_pid=True):
-    return utils.single_instance_pid_file_test_and_write(_get_pid_file_path(), write_pid)
+    bus = dbus.SessionBus()
+    if bus.name_has_owner('flowblade.movie.editor.batchrender'):
+        print "flowblade.movie.editor dbus service exists batch rendering already running"
+        #_show_single_instance_info()
+        subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladebatch"], stdin=FNULL, stdout=FNULL)#, stderr=FNULL)
+    else:
+        print "launching single instance for batchrendering"
+        FNULL = open(os.devnull, 'w')
+        subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladebatch"], stdin=FNULL, stdout=FNULL)#, stderr=FNULL)
 
 def main(root_path, force_launch=False):
     # Allow only on instance to run
-    can_run = test_and_write_pid()
+    #can_run = test_and_write_pid()
+    can_run = True
     init_dirs_if_needed()
 
+    editorstate.gtk_version = gtk.gtk_version
+    try:
+        editorstate.mlt_version = mlt.LIBMLT_VERSION
+    except:
+        editorstate.mlt_version = "0.0.99" # magic string for "not found"
+        
     # Set paths.
     respaths.set_paths(root_path)
 
@@ -269,13 +315,11 @@ def main(root_path, force_launch=False):
     gtk.gdk.threads_init()
     gtk.gdk.threads_enter()
 
-    # Exit with 
-    if can_run == False:
-        _show_single_instance_info()
-        return
-    
     repo = mlt.Factory().init()
-    
+
+    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
+    locale.setlocale(locale.LC_NUMERIC, 'C')
+
     # Check for codecs and formats on the system
     mltenv.check_available_features(repo)
     renderconsumer.load_render_profiles()
@@ -299,7 +343,12 @@ def main(root_path, force_launch=False):
         secondary_txt = _("Message:\n") + render_queue.get_error_status_message()
         dialogutils.warning_message(primary_txt, secondary_txt, batch_window.window)
 
+    DBusGMainLoop(set_as_default=True)
+    global _dbus_service
+    _dbus_service = BatchRenderDBUSService()
+
     gtk.main()
+    gtk.gdk.threads_leave()
 
 def _show_single_instance_info():
     global timeout_id
@@ -342,8 +391,9 @@ def shutdown():
 
     while(gtk.events_pending()):
         gtk.main_iteration()
-    
-    os.remove(_get_pid_file_path())
+
+    if _dbus_service != None:
+        _dbus_service.remove_from_dbus()
     gtk.main_quit()
 
 
