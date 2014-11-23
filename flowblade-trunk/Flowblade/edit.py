@@ -41,9 +41,7 @@ import utils
 
 # GUI updates are turned off for example when doing resync action
 do_gui_update = False
-# HACK. Used to hold references to all created compositors as some compositors 
-# crash program if garbage collected.
-# old_compositors = []
+
 
 # ---------------------------------- atomic edit ops
 def append_clip(track, clip, clip_in, clip_out):
