@@ -284,7 +284,7 @@ def load_project(file_path, icons_and_thumnails=True):
     f = open(file_path)
     project = pickle.load(f)
     
-    # editorstate.project needs to be available for sequence building and when this is called
+    # editorstate.project needs to be available for sequence building
     editorstate.project = project
 
     if(not hasattr(project, "SAVEFILE_VERSION")):

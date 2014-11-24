@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-21 13:15+0200\n"
+"POT-Creation-Date: 2014-11-24 12:26+0200\n"
 "PO-Revision-Date: 2011-12-13 23:55+0200\n"
 "Last-Translator: Janne Liljeblad <janne@janne-kx557aa-uuw-a6521-sc>\n"
 "Language-Team: Finnish\n"
@@ -17,51 +17,51 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:649
+#: app.py:650
 msgid "Too small screen for this application."
 msgstr "Näyttö on liian pieni tälle ohjelmalle."
 
-#: app.py:652
+#: app.py:653
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "Minimi näyttökoko tällle ohjelmalle on 1152 x 768.\n"
 
-#: app.py:653
+#: app.py:654
 msgid "Your screen dimensions are "
 msgstr "Sinun näyttösi koko on "
 
-#: app.py:670
+#: app.py:671
 msgid "Another instance of Flowblade already running."
 msgstr "Toininen instanssi Flowbladesta on jo käynnissä"
 
-#: app.py:671
+#: app.py:672
 msgid "Only one instance of Flowblade is allowed to run at a time."
 msgstr "Vain yksi instanssi Flowbladesta voi olla käynnissä kerrrallaan"
 
-#: app.py:700
+#: app.py:701
 msgid "Project has not been saved since it was opened."
 msgstr "Projektia ei ole tallennettu aikaisemmin."
 
-#: app.py:705
+#: app.py:706
 msgid "Project was saved less than a minute ago."
 msgstr "Projekti tallennettiin viimeksi alle minuutti sitten."
 
-#: app.py:708
+#: app.py:709
 msgid "Project was saved one minute ago."
 msgstr "Projekti tallennettiin viimeksi minuutti sitten."
 
-#: app.py:710
+#: app.py:711
 msgid "Project was saved "
 msgstr "Projektia ei ole tallennettu aikaisemmin"
 
-#: app.py:710
+#: app.py:711
 msgid " minutes ago."
 msgstr " minuuttia sitten."
 
-#: app.py:720 projectaction.py:243
+#: app.py:721 projectaction.py:243
 msgid "Project has not been saved previously"
 msgstr "Projektia ei ole tallennettu aikaisemmin"
 
-#: app.py:721 projectaction.py:244
+#: app.py:722 projectaction.py:244
 msgid "Save project with File -> Save As before closing."
 msgstr ""
 "Tallenna projekti valinnalla Tiedosto -> Tallenna nimellä ennen sulkemista."
@@ -118,31 +118,31 @@ msgstr "Projektia ei voida ladata."
 msgid "Adding item to render queue failed!"
 msgstr ""
 
-#: projectaction.py:390 tools/batchrendering.py:242
+#: projectaction.py:390 tools/batchrendering.py:278
 msgid "Error message: "
 msgstr "Virhe viesti"
 
-#: projectaction.py:413
+#: projectaction.py:412
 msgid "Open.."
 msgstr "Avaa"
 
-#: projectaction.py:423
+#: projectaction.py:422
 msgid "All files"
 msgstr "Kaikki tiedostot"
 
-#: projectaction.py:461
+#: projectaction.py:460
 msgid "No file was selected"
 msgstr "Tiedostoa ei valittu"
 
-#: projectaction.py:461
+#: projectaction.py:460
 msgid "Select a numbered file to add an Image Sequence to Project."
 msgstr "Valitse numeroitu tiedosto lisätäksesi kuvasarjan projektiin"
 
-#: projectaction.py:469
+#: projectaction.py:468
 msgid "Not a sequence file!"
 msgstr "Tiedosto ei kuulu kuvasarjaan"
 
-#: projectaction.py:469
+#: projectaction.py:468
 msgid ""
 "Selected file does not have a number part in it,\n"
 "so it can't be an image sequence file."
@@ -150,40 +150,40 @@ msgstr ""
 "Valitussa tiedostossa ei ole numero osuutta,\n"
 "joten se ei voi olla osa kuvasarjaa."
 
-#: projectaction.py:517
+#: projectaction.py:516
 msgid "Can't make home folder thumbnails folder"
 msgstr "Et voi valita kotikansiotasi mediaikoni kansioksi"
 
-#: projectaction.py:518 dialogs.py:202
+#: projectaction.py:517 dialogs.py:202
 msgid "Please create and select some other folder then '"
 msgstr "Luo ja valitse joku toinen kansio kuin '"
 
-#: projectaction.py:519
+#: projectaction.py:518
 msgid "' as thumbnails folder"
 msgstr "' mediaikoni kansioksi."
 
-#: projectaction.py:706
+#: projectaction.py:705
 msgid "Can't remove a non-empty bin"
 msgstr "Et voi poistaa laatikkoa jos se ei ole tyhjä."
 
-#: projectaction.py:707
+#: projectaction.py:706
 msgid "You must remove all files from the bin before deleting it."
 msgstr ""
 "Sinun täytyy poistaa kaikki tiedostot laatikosta ennen kuin poistat sen."
 
-#: projectaction.py:715
+#: projectaction.py:714
 msgid "Can't remove last bin"
 msgstr "Et voi poistaa viimeista laatikkoa"
 
-#: projectaction.py:716
+#: projectaction.py:715
 msgid "There must always exist at least one bin."
 msgstr "Vähintään yksi laatikko taytyy aina olla olemassa."
 
-#: projectaction.py:787
+#: projectaction.py:786
 msgid "Selected sequence is already being edited"
 msgstr "Valittu ohjelma on jo editoitavana"
 
-#: projectaction.py:788
+#: projectaction.py:787
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
@@ -191,11 +191,11 @@ msgstr ""
 "Valitse toinen ohjelma. Paina tarvittaessa Lisää -nappia luodaksesi\n"
 "uuden ohjelman"
 
-#: projectaction.py:798 projectaction.py:815 projectdata.py:192
+#: projectaction.py:797 projectaction.py:814 projectdata.py:192
 msgid "sequence_"
 msgstr "ohjelma_"
 
-#: projectaction.py:848
+#: projectaction.py:847
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
@@ -203,19 +203,19 @@ msgstr ""
 "Oletko varma että haluat poistaa\n"
 "ohjelman '"
 
-#: projectaction.py:848
+#: projectaction.py:847
 msgid "'?"
 msgstr "'?"
 
-#: projectaction.py:849
+#: projectaction.py:848
 msgid "This operation can not be undone. Sequence will be permanently lost."
 msgstr "Tätä toimintoa ei voida peruuttaa. Ohjelma menetetään pysyvästi."
 
-#: projectaction.py:864
+#: projectaction.py:863
 msgid "Can't remove last sequence"
 msgstr "Et voi poistaa viimeistä ohjelmaa"
 
-#: projectaction.py:865
+#: projectaction.py:864
 msgid "There must always exist at least one sequence."
 msgstr "Projektissa täytyy olla olemassa aina vähintään yksi ohjelma."
 
@@ -392,7 +392,7 @@ msgid "Project Info"
 msgstr "Projekti Info"
 
 #: editorwindow.py:193 editorwindow.py:482 rendergui.py:171
-#: tools/batchrendering.py:796
+#: tools/batchrendering.py:845
 msgid "Render"
 msgstr "Renderöi"
 
@@ -590,7 +590,7 @@ msgstr "Lisää"
 #: clipeffectseditor.py:210 compositeeditor.py:58 dialogs.py:1040
 #: dialogs.py:1055 guicomponents.py:1122 guicomponents.py:1177
 #: guicomponents.py:1362 guicomponents.py:1382 panels.py:52 panels.py:105
-#: panels.py:123 tools/titler.py:179 tools/batchrendering.py:959
+#: panels.py:123 tools/titler.py:179 tools/batchrendering.py:1008
 msgid "Delete"
 msgstr "Poista"
 
@@ -640,14 +640,13 @@ msgstr "Uusi projekti"
 #: dialogs.py:809 dialogs.py:868 dialogs.py:901 dialogs.py:1008
 #: dialogs.py:1021 dialogs.py:1182 propertyeditorbuilder.py:362
 #: rendergui.py:47 rendergui.py:104 rendergui.py:118 rendergui.py:135
-#: preferenceswindow.py:48 tools/batchrendering.py:324
-#: tools/batchrendering.py:893 proxyediting.py:387
+#: preferenceswindow.py:48 tools/batchrendering.py:942 proxyediting.py:387
 msgid "Cancel"
 msgstr "Peruuta"
 
 #: dialogs.py:56 dialogs.py:113 dialogs.py:247 dialogs.py:322 dialogs.py:445
 #: dialogs.py:458 dialogs.py:1183 propertyeditorbuilder.py:363
-#: rendergui.py:105 preferenceswindow.py:49
+#: rendergui.py:105 preferenceswindow.py:49 tools/batchrendering.py:373
 msgid "OK"
 msgstr "OK"
 
@@ -681,7 +680,7 @@ msgid "Save Project As"
 msgstr "Tallenna projekti nimellä"
 
 #: dialogs.py:127 dialogs.py:159 dialogs.py:218 dialogs.py:237
-#: rendergui.py:119 tools/batchrendering.py:894
+#: rendergui.py:119 tools/batchrendering.py:943
 msgid "Save"
 msgstr "Tallenna"
 
@@ -1876,7 +1875,7 @@ msgstr "Polku:"
 msgid "Image Size:"
 msgstr "Kuvan koko"
 
-#: panels.py:275 tools/batchrendering.py:933
+#: panels.py:275 tools/batchrendering.py:982
 msgid "Frames Per Second:"
 msgstr "Ruutuja sekunnissa:"
 
@@ -1964,11 +1963,11 @@ msgstr "Häive ulos"
 msgid "Color:"
 msgstr "Väri:"
 
-#: persistance.py:317
+#: persistance.py:321
 msgid "Building sequence "
 msgstr "Rakennetaan ohjelmaa "
 
-#: persistance.py:347
+#: persistance.py:351
 msgid "Loading icons"
 msgstr "Ladataan ikoneita"
 
@@ -3929,7 +3928,7 @@ msgstr " ja "
 msgid " items it contains?\n"
 msgstr " siinä olevat klipit?\n"
 
-#: medialog.py:324 profilesmanager.py:284 tools/batchrendering.py:663
+#: medialog.py:324 profilesmanager.py:284 tools/batchrendering.py:712
 msgid "This operation cannot be undone."
 msgstr "Tätä toimintoa ei voida peruuttaa."
 
@@ -4259,7 +4258,7 @@ msgstr "Lataa renderöintiargumentit tiedostosta"
 msgid "Close Manager"
 msgstr "Sulje manageri"
 
-#: profilesmanager.py:76 tools/batchrendering.py:574
+#: profilesmanager.py:76 tools/batchrendering.py:623
 msgid "Delete Selected"
 msgstr "Poista valitut"
 
@@ -4460,203 +4459,187 @@ msgstr "Nappityyli"
 msgid "Icons and color optimized for"
 msgstr "Ikonit ja värit optimoitu"
 
-#: tools/batchrendering.py:241
+#: tools/batchrendering.py:277
 msgid "Render Item Project File Copy failed!"
 msgstr "Renderöintijonotiedoston kopiointi epäonnistui!"
 
-#: tools/batchrendering.py:298 tools/batchrendering.py:680
+#: tools/batchrendering.py:342 tools/batchrendering.py:729
 msgid "Error loading render queue items!"
 msgstr "Virhe renderöintijonotiedostojen lataamisessa!"
 
-#: tools/batchrendering.py:299 tools/batchrendering.py:681
+#: tools/batchrendering.py:343 tools/batchrendering.py:730
 msgid "Message:\n"
 msgstr "Viesti:\n"
 
-#: tools/batchrendering.py:312
-msgid "Flowblade Batch Render PID file found!"
-msgstr "Flowblade Renderöintijono applikaation PID tiedosto löytyi!"
+#: tools/batchrendering.py:361
+msgid "Batch Render Queue already running!"
+msgstr "Renderöintijono ohjelma käynnissä!"
 
-#: tools/batchrendering.py:313
-msgid ""
-"Either Render Queue application is already running\n"
-"or it has crashed.\n"
-"\n"
-msgstr ""
-"Redderöinti jono ohjelma on jo käynnissä\n"
-"tai se on kaatunut.\n"
-"\n"
+#: tools/batchrendering.py:363
+msgid "Batch Render Queue application was detected in session dbus."
+msgstr "Renderöintijono ohjelma havaittiin työpöytäsession dbus palvelussa."
 
-#: tools/batchrendering.py:314
-msgid "Only select <b>'Force Launch'</b> if Render Queue not already running!"
-msgstr ""
-"Valitse <b>'Pakotettu käynnistys'</b> vain jos Rendereröinti Jono ohjelma ei "
-"ole käynnissä!"
-
-#: tools/batchrendering.py:325
-msgid "Force Launch"
-msgstr "Pakotettu käynnistys"
-
-#: tools/batchrendering.py:338
+#: tools/batchrendering.py:386
 msgid "Application is rendering and cannot be closed!"
 msgstr "Ohjelma renderöi aikä sitä voida sulkea!"
 
-#: tools/batchrendering.py:339
+#: tools/batchrendering.py:387
 msgid "Stop rendering before closing the application."
 msgstr "Pysäyta renderöinti ennen ohjelman silkemista."
 
-#: tools/batchrendering.py:370
+#: tools/batchrendering.py:419
 msgid " datafile load failed with "
 msgstr " data tiedoston lataus epäonnistui: "
 
-#: tools/batchrendering.py:376
+#: tools/batchrendering.py:425
 msgid " project file load failed with "
 msgstr " projektitiedoston lataus epäonnistui:"
 
-#: tools/batchrendering.py:486
+#: tools/batchrendering.py:535
 msgid "Queued"
 msgstr "Jonossa"
 
-#: tools/batchrendering.py:488
+#: tools/batchrendering.py:537
 msgid "Rendering"
 msgstr "Renderöi"
 
-#: tools/batchrendering.py:490
+#: tools/batchrendering.py:539
 msgid "Finished"
 msgstr "Valmis"
 
-#: tools/batchrendering.py:492
+#: tools/batchrendering.py:541
 msgid "Unqueued"
 msgstr "Poissa jonosta"
 
-#: tools/batchrendering.py:494
+#: tools/batchrendering.py:543
 msgid "Aborted"
 msgstr "Pysäytetty"
 
-#: tools/batchrendering.py:549
+#: tools/batchrendering.py:598
 msgid "Estimated Left:"
 msgstr "Arvioitu aika:"
 
-#: tools/batchrendering.py:550
+#: tools/batchrendering.py:599
 msgid "Current Render:"
 msgstr "Tämänhetkinen renderöinti:"
 
-#: tools/batchrendering.py:551 proxyediting.py:320
+#: tools/batchrendering.py:600 proxyediting.py:320
 msgid "Elapsed:"
 msgstr "Kulunut:"
 
-#: tools/batchrendering.py:562
+#: tools/batchrendering.py:611
 msgid "Items Rendered:"
 msgstr "Renderöity lukum:"
 
-#: tools/batchrendering.py:564
+#: tools/batchrendering.py:613
 msgid "Render Started:"
 msgstr "Renderöinti alkoi:"
 
-#: tools/batchrendering.py:570
+#: tools/batchrendering.py:619
 msgid "Not Rendering"
 msgstr "Ei renderöi"
 
-#: tools/batchrendering.py:578
+#: tools/batchrendering.py:627
 msgid "Delete Finished"
 msgstr "Poista valmiit"
 
-#: tools/batchrendering.py:583
+#: tools/batchrendering.py:632
 msgid "Reload Queue"
 msgstr "Virkistä jono"
 
-#: tools/batchrendering.py:594
+#: tools/batchrendering.py:643
 msgid "Stop Render"
 msgstr "Pysäytä"
 
-#: tools/batchrendering.py:636
+#: tools/batchrendering.py:685
 msgid "Flowblade Batch Render"
 msgstr "Flowblade Renderöintijono"
 
-#: tools/batchrendering.py:662
+#: tools/batchrendering.py:711
 msgid "Delete "
 msgstr "Poista"
 
-#: tools/batchrendering.py:662
+#: tools/batchrendering.py:711
 msgid " item(s) from render queue?"
 msgstr " työtä renderöintijonosta?"
 
-#: tools/batchrendering.py:693
+#: tools/batchrendering.py:742
 msgid "Multiple items with same render target file!"
 msgstr "Useampi työ renderöi samaan tiedostoon!"
 
-#: tools/batchrendering.py:695
+#: tools/batchrendering.py:744
 msgid ""
 "Later items will render on top of earlier items if this queue is rendered.\n"
 msgstr ""
 "Myöhemmät työt renderöivöt aikaisempien päälle jos tämä jon o renderöidään.\n"
 
-#: tools/batchrendering.py:696
+#: tools/batchrendering.py:745
 msgid ""
 "Delete or unqueue some items with same paths:\n"
 "\n"
 msgstr "Poista töitä, joilla on sama renderöinti tiedosto:\n"
 
-#: tools/batchrendering.py:698
+#: tools/batchrendering.py:747
 msgid " items with path: "
 msgstr " työt, joilla sama kohde tiedosto"
 
-#: tools/batchrendering.py:797
+#: tools/batchrendering.py:846
 msgid "Project/Sequence"
 msgstr "Projekti/Ohjelma"
 
-#: tools/batchrendering.py:798
+#: tools/batchrendering.py:847
 msgid "Status"
 msgstr "Status"
 
-#: tools/batchrendering.py:799
+#: tools/batchrendering.py:848
 msgid "Render File"
 msgstr "Renderöinti tiedosto"
 
-#: tools/batchrendering.py:800
+#: tools/batchrendering.py:849
 msgid "Render Time"
 msgstr "Renderöinti aika"
 
-#: tools/batchrendering.py:891
+#: tools/batchrendering.py:940
 msgid "Save Render Item Project As"
 msgstr "Tallenna projekti nimellä"
 
-#: tools/batchrendering.py:927
+#: tools/batchrendering.py:976
 msgid "Encoding:"
 msgstr "Enkoodaus:"
 
-#: tools/batchrendering.py:928
+#: tools/batchrendering.py:977
 msgid "Quality:"
 msgstr "Laatu:"
 
-#: tools/batchrendering.py:929
+#: tools/batchrendering.py:978
 msgid "Audio Encoding:"
 msgstr "Audio Enkoodaus"
 
-#: tools/batchrendering.py:930
+#: tools/batchrendering.py:979
 msgid "Use User Args:"
 msgstr "Renderöinti argumentit:"
 
-#: tools/batchrendering.py:931
+#: tools/batchrendering.py:980
 msgid "Start:"
 msgstr "Alku:"
 
-#: tools/batchrendering.py:932
+#: tools/batchrendering.py:981
 msgid "End:"
 msgstr "Loppu:"
 
-#: tools/batchrendering.py:934
+#: tools/batchrendering.py:983
 msgid "Render Profile Name:"
 msgstr "Renderöinti profiilin nimi:"
 
-#: tools/batchrendering.py:935
+#: tools/batchrendering.py:984
 msgid "Render Profile:"
 msgstr "Renderöinti profiili"
 
-#: tools/batchrendering.py:951 tools/batchrendering.py:957
+#: tools/batchrendering.py:1000 tools/batchrendering.py:1006
 msgid "Render Properties"
 msgstr "Rederöinti ominaisuudet"
 
-#: tools/batchrendering.py:956
+#: tools/batchrendering.py:1005
 msgid "Save Item Project As..."
 msgstr "Tallenna projekti nimellä..."
 
@@ -4926,6 +4909,18 @@ msgid ""
 msgstr ""
 "Jos mahdollista, maximoi tai suurenna ohjeman ikkuna saadaksesi\n"
 "lisää tilaa raidoille."
+
+#~ msgid "Flowblade Batch Render PID file found!"
+#~ msgstr "Flowblade Renderöintijono applikaation PID tiedosto löytyi!"
+
+#~ msgid ""
+#~ "Only select <b>'Force Launch'</b> if Render Queue not already running!"
+#~ msgstr ""
+#~ "Valitse <b>'Pakotettu käynnistys'</b> vain jos Rendereröinti Jono ohjelma "
+#~ "ei ole käynnissä!"
+
+#~ msgid "Force Launch"
+#~ msgstr "Pakotettu käynnistys"
 
 #~ msgid "Consolidate Selected Blanks"
 #~ msgstr "Yhdistä valitut tyhjät"
