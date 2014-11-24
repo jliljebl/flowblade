@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-21 13:15+0200\n"
+"POT-Creation-Date: 2014-11-24 12:26+0200\n"
 "PO-Revision-Date: 2013-09-20 18:54+0200\n"
 "Last-Translator: Loïc Vanderstichelen <lv@loicvanderstichelen.com>\n"
 "Language-Team: French\n"
@@ -17,51 +17,51 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: app.py:649
+#: app.py:650
 msgid "Too small screen for this application."
 msgstr "Votre écran est trop petit pour cette application."
 
-#: app.py:652
+#: app.py:653
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "La résolution minimum pour cet application est de 1152 x 768.\n"
 
-#: app.py:653
+#: app.py:654
 msgid "Your screen dimensions are "
 msgstr "Votre résolution actuelle est "
 
-#: app.py:670
+#: app.py:671
 msgid "Another instance of Flowblade already running."
 msgstr "Une autre session Flowblade est déjà lancée."
 
-#: app.py:671
+#: app.py:672
 msgid "Only one instance of Flowblade is allowed to run at a time."
 msgstr "Vous ne pouvez qu'une seule session Flowblade à la fois."
 
-#: app.py:700
+#: app.py:701
 msgid "Project has not been saved since it was opened."
 msgstr "Ce projet n'a pas été enregistré depuis qu'il a été ouvert."
 
-#: app.py:705
+#: app.py:706
 msgid "Project was saved less than a minute ago."
 msgstr "Le projet a été sauvegardé il y a moins d'une minute."
 
-#: app.py:708
+#: app.py:709
 msgid "Project was saved one minute ago."
 msgstr "Le projet a été sauvegardé il y a une minute."
 
-#: app.py:710
+#: app.py:711
 msgid "Project was saved "
 msgstr "Le projet a été sauvegardé il y a "
 
-#: app.py:710
+#: app.py:711
 msgid " minutes ago."
 msgstr " minutes."
 
-#: app.py:720 projectaction.py:243
+#: app.py:721 projectaction.py:243
 msgid "Project has not been saved previously"
 msgstr "Le projet n'a jamais été sauvegardé"
 
-#: app.py:721 projectaction.py:244
+#: app.py:722 projectaction.py:244
 msgid "Save project with File -> Save As before closing."
 msgstr "Sauvegardez le projet avec Fichier -> Enregistrer sous."
 
@@ -116,34 +116,34 @@ msgstr "Le projet ne peut pas être chargé."
 msgid "Adding item to render queue failed!"
 msgstr "Echec de l'ajout d'élément à la liste de rendu!"
 
-#: projectaction.py:390 tools/batchrendering.py:242
+#: projectaction.py:390 tools/batchrendering.py:278
 #, fuzzy
 msgid "Error message: "
 msgstr "Message d'erreur: "
 
-#: projectaction.py:413
+#: projectaction.py:412
 msgid "Open.."
 msgstr "Ouvrir..."
 
-#: projectaction.py:423
+#: projectaction.py:422
 msgid "All files"
 msgstr "Tous les fichiers"
 
-#: projectaction.py:461
+#: projectaction.py:460
 msgid "No file was selected"
 msgstr "Aucun fichier sélectionné"
 
-#: projectaction.py:461
+#: projectaction.py:460
 msgid "Select a numbered file to add an Image Sequence to Project."
 msgstr ""
 "Sélectionnez un fichier numéroté pour ajouter une séquence d'images au "
 "projet."
 
-#: projectaction.py:469
+#: projectaction.py:468
 msgid "Not a sequence file!"
 msgstr "Ce n'est pas un fichier de séquence!"
 
-#: projectaction.py:469
+#: projectaction.py:468
 msgid ""
 "Selected file does not have a number part in it,\n"
 "so it can't be an image sequence file."
@@ -151,39 +151,39 @@ msgstr ""
 "Le fichier sélectionné ne contient pas de numérotation,\n"
 "il ne peut donc pas constituer une séquence d'images."
 
-#: projectaction.py:517
+#: projectaction.py:516
 msgid "Can't make home folder thumbnails folder"
 msgstr "Le dossier home ne peut pas être le dossier des miniatures"
 
-#: projectaction.py:518 dialogs.py:202
+#: projectaction.py:517 dialogs.py:202
 msgid "Please create and select some other folder then '"
 msgstr "Créez et sélectionnez un autre dossier '"
 
-#: projectaction.py:519
+#: projectaction.py:518
 msgid "' as thumbnails folder"
 msgstr "' comme dossier de miniatures"
 
-#: projectaction.py:706
+#: projectaction.py:705
 msgid "Can't remove a non-empty bin"
 msgstr "Impossible de supprimer un bin contenant des éléments"
 
-#: projectaction.py:707
+#: projectaction.py:706
 msgid "You must remove all files from the bin before deleting it."
 msgstr "Vous devez supprimer tous les fichiers du bin pour pouvoir l'effacer."
 
-#: projectaction.py:715
+#: projectaction.py:714
 msgid "Can't remove last bin"
 msgstr "Impossible de supprimer le dernier bin"
 
-#: projectaction.py:716
+#: projectaction.py:715
 msgid "There must always exist at least one bin."
 msgstr "Il doit toujours y avoir au moins un bin."
 
-#: projectaction.py:787
+#: projectaction.py:786
 msgid "Selected sequence is already being edited"
 msgstr "La séquence sélectionnée est déjà en cours d'édition"
 
-#: projectaction.py:788
+#: projectaction.py:787
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
@@ -191,11 +191,11 @@ msgstr ""
 "Sélectionnez une autre séquence. Cliquez sur Ajouter pour créer\n"
 "une nouvelle séquence si nécéssaire."
 
-#: projectaction.py:798 projectaction.py:815 projectdata.py:192
+#: projectaction.py:797 projectaction.py:814 projectdata.py:192
 msgid "sequence_"
 msgstr "séquence_"
 
-#: projectaction.py:848
+#: projectaction.py:847
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
@@ -203,20 +203,20 @@ msgstr ""
 "Êtes-vous certain de vouloir effacer\n"
 "la séquence '"
 
-#: projectaction.py:848
+#: projectaction.py:847
 msgid "'?"
 msgstr "'?"
 
-#: projectaction.py:849
+#: projectaction.py:848
 msgid "This operation can not be undone. Sequence will be permanently lost."
 msgstr ""
 "Cette opération ne peut être annulée. La séquence sera perdue définitivement."
 
-#: projectaction.py:864
+#: projectaction.py:863
 msgid "Can't remove last sequence"
 msgstr "Impossible de supprimer la dernière séquence"
 
-#: projectaction.py:865
+#: projectaction.py:864
 msgid "There must always exist at least one sequence."
 msgstr "Il doit toujours y avoit au moins une séquence."
 
@@ -393,7 +393,7 @@ msgid "Project Info"
 msgstr "Détail du projet"
 
 #: editorwindow.py:193 editorwindow.py:482 rendergui.py:171
-#: tools/batchrendering.py:796
+#: tools/batchrendering.py:845
 msgid "Render"
 msgstr "Rendu"
 
@@ -591,7 +591,7 @@ msgstr "Ajouter"
 #: clipeffectseditor.py:210 compositeeditor.py:58 dialogs.py:1040
 #: dialogs.py:1055 guicomponents.py:1122 guicomponents.py:1177
 #: guicomponents.py:1362 guicomponents.py:1382 panels.py:52 panels.py:105
-#: panels.py:123 tools/titler.py:179 tools/batchrendering.py:959
+#: panels.py:123 tools/titler.py:179 tools/batchrendering.py:1008
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -641,14 +641,13 @@ msgstr "Nouveau projet"
 #: dialogs.py:809 dialogs.py:868 dialogs.py:901 dialogs.py:1008
 #: dialogs.py:1021 dialogs.py:1182 propertyeditorbuilder.py:362
 #: rendergui.py:47 rendergui.py:104 rendergui.py:118 rendergui.py:135
-#: preferenceswindow.py:48 tools/batchrendering.py:324
-#: tools/batchrendering.py:893 proxyediting.py:387
+#: preferenceswindow.py:48 tools/batchrendering.py:942 proxyediting.py:387
 msgid "Cancel"
 msgstr "Annuler"
 
 #: dialogs.py:56 dialogs.py:113 dialogs.py:247 dialogs.py:322 dialogs.py:445
 #: dialogs.py:458 dialogs.py:1183 propertyeditorbuilder.py:363
-#: rendergui.py:105 preferenceswindow.py:49
+#: rendergui.py:105 preferenceswindow.py:49 tools/batchrendering.py:373
 msgid "OK"
 msgstr "Valider"
 
@@ -682,7 +681,7 @@ msgid "Save Project As"
 msgstr "Enregistrer le projet sous"
 
 #: dialogs.py:127 dialogs.py:159 dialogs.py:218 dialogs.py:237
-#: rendergui.py:119 tools/batchrendering.py:894
+#: rendergui.py:119 tools/batchrendering.py:943
 msgid "Save"
 msgstr "Enregistrer"
 
@@ -1897,7 +1896,7 @@ msgstr "Chemin:"
 msgid "Image Size:"
 msgstr "Taille de l'image:"
 
-#: panels.py:275 tools/batchrendering.py:933
+#: panels.py:275 tools/batchrendering.py:982
 msgid "Frames Per Second:"
 msgstr "Images par seconde:"
 
@@ -1985,11 +1984,11 @@ msgstr "Fondu en fermeture"
 msgid "Color:"
 msgstr "Couleur:"
 
-#: persistance.py:317
+#: persistance.py:321
 msgid "Building sequence "
 msgstr "Construction de la séquence "
 
-#: persistance.py:347
+#: persistance.py:351
 msgid "Loading icons"
 msgstr "Chargement des icônes"
 
@@ -3965,7 +3964,7 @@ msgstr " et "
 msgid " items it contains?\n"
 msgstr " les éléments qu'il contient?\n"
 
-#: medialog.py:324 profilesmanager.py:284 tools/batchrendering.py:663
+#: medialog.py:324 profilesmanager.py:284 tools/batchrendering.py:712
 msgid "This operation cannot be undone."
 msgstr "Cette opération ne peut pas être annulée."
 
@@ -4297,7 +4296,7 @@ msgstr "Charger les paramètres de rendu à partir d'un fichier texte"
 msgid "Close Manager"
 msgstr "Fermer le gestionnaire"
 
-#: profilesmanager.py:76 tools/batchrendering.py:574
+#: profilesmanager.py:76 tools/batchrendering.py:623
 msgid "Delete Selected"
 msgstr "Supprimer la sélection"
 
@@ -4498,199 +4497,189 @@ msgstr "Style des boutons"
 msgid "Icons and color optimized for"
 msgstr "Icônes et couleur optimisées pour:"
 
-#: tools/batchrendering.py:241
+#: tools/batchrendering.py:277
 msgid "Render Item Project File Copy failed!"
 msgstr ""
 
-#: tools/batchrendering.py:298 tools/batchrendering.py:680
+#: tools/batchrendering.py:342 tools/batchrendering.py:729
 msgid "Error loading render queue items!"
 msgstr "Echec du chargement des éléments de la file de rendu!"
 
-#: tools/batchrendering.py:299 tools/batchrendering.py:681
+#: tools/batchrendering.py:343 tools/batchrendering.py:730
 msgid "Message:\n"
 msgstr ""
 
-#: tools/batchrendering.py:312
-msgid "Flowblade Batch Render PID file found!"
-msgstr "Le fichier PID n'a pas été trouvé!"
+#: tools/batchrendering.py:361
+#, fuzzy
+msgid "Batch Render Queue already running!"
+msgstr "File de rendu"
 
-#: tools/batchrendering.py:313
-msgid ""
-"Either Render Queue application is already running\n"
-"or it has crashed.\n"
-"\n"
+#: tools/batchrendering.py:363
+msgid "Batch Render Queue application was detected in session dbus."
 msgstr ""
 
-#: tools/batchrendering.py:314
-msgid "Only select <b>'Force Launch'</b> if Render Queue not already running!"
-msgstr ""
-
-#: tools/batchrendering.py:325
-msgid "Force Launch"
-msgstr "Forcer démarrage"
-
-#: tools/batchrendering.py:338
+#: tools/batchrendering.py:386
 msgid "Application is rendering and cannot be closed!"
 msgstr ""
 
-#: tools/batchrendering.py:339
+#: tools/batchrendering.py:387
 msgid "Stop rendering before closing the application."
 msgstr "Arrêter le rendu avant de fermer l'application."
 
-#: tools/batchrendering.py:370
+#: tools/batchrendering.py:419
 msgid " datafile load failed with "
 msgstr " échec du chargement des données avec "
 
-#: tools/batchrendering.py:376
+#: tools/batchrendering.py:425
 msgid " project file load failed with "
 msgstr ""
 
-#: tools/batchrendering.py:486
+#: tools/batchrendering.py:535
 msgid "Queued"
 msgstr "File d'attente"
 
-#: tools/batchrendering.py:488
+#: tools/batchrendering.py:537
 msgid "Rendering"
 msgstr "Rendu"
 
-#: tools/batchrendering.py:490
+#: tools/batchrendering.py:539
 msgid "Finished"
 msgstr "Terminé"
 
-#: tools/batchrendering.py:492
+#: tools/batchrendering.py:541
 msgid "Unqueued"
 msgstr ""
 
-#: tools/batchrendering.py:494
+#: tools/batchrendering.py:543
 msgid "Aborted"
 msgstr "Interrompu"
 
-#: tools/batchrendering.py:549
+#: tools/batchrendering.py:598
 msgid "Estimated Left:"
 msgstr "Temps restant:"
 
-#: tools/batchrendering.py:550
+#: tools/batchrendering.py:599
 msgid "Current Render:"
 msgstr "Rendu en cours:"
 
-#: tools/batchrendering.py:551 proxyediting.py:320
+#: tools/batchrendering.py:600 proxyediting.py:320
 msgid "Elapsed:"
 msgstr "Ecoulé:"
 
-#: tools/batchrendering.py:562
+#: tools/batchrendering.py:611
 msgid "Items Rendered:"
 msgstr "Elements rendus:"
 
-#: tools/batchrendering.py:564
+#: tools/batchrendering.py:613
 msgid "Render Started:"
 msgstr "Rendu démarré:"
 
-#: tools/batchrendering.py:570
+#: tools/batchrendering.py:619
 msgid "Not Rendering"
 msgstr "N'a pas été rendu"
 
-#: tools/batchrendering.py:578
+#: tools/batchrendering.py:627
 msgid "Delete Finished"
 msgstr "Supprimer les rendus terminés"
 
-#: tools/batchrendering.py:583
+#: tools/batchrendering.py:632
 msgid "Reload Queue"
 msgstr "Recharger la file"
 
-#: tools/batchrendering.py:594
+#: tools/batchrendering.py:643
 msgid "Stop Render"
 msgstr "Interrompre le rendu"
 
-#: tools/batchrendering.py:636
+#: tools/batchrendering.py:685
 msgid "Flowblade Batch Render"
 msgstr "Flowblade Batch Render"
 
-#: tools/batchrendering.py:662
+#: tools/batchrendering.py:711
 msgid "Delete "
 msgstr "Supprimer"
 
-#: tools/batchrendering.py:662
+#: tools/batchrendering.py:711
 msgid " item(s) from render queue?"
 msgstr " élément(s) de la file de rendus?"
 
-#: tools/batchrendering.py:693
+#: tools/batchrendering.py:742
 msgid "Multiple items with same render target file!"
 msgstr "Plusieurs éléments ont le même fichier cible!"
 
-#: tools/batchrendering.py:695
+#: tools/batchrendering.py:744
 msgid ""
 "Later items will render on top of earlier items if this queue is rendered.\n"
 msgstr ""
 
-#: tools/batchrendering.py:696
+#: tools/batchrendering.py:745
 msgid ""
 "Delete or unqueue some items with same paths:\n"
 "\n"
 msgstr ""
 
-#: tools/batchrendering.py:698
+#: tools/batchrendering.py:747
 msgid " items with path: "
 msgstr ""
 
-#: tools/batchrendering.py:797
+#: tools/batchrendering.py:846
 msgid "Project/Sequence"
 msgstr "Projet/Séquence"
 
-#: tools/batchrendering.py:798
+#: tools/batchrendering.py:847
 msgid "Status"
 msgstr "Statuts"
 
-#: tools/batchrendering.py:799
+#: tools/batchrendering.py:848
 msgid "Render File"
 msgstr "Fichier de rendu"
 
-#: tools/batchrendering.py:800
+#: tools/batchrendering.py:849
 msgid "Render Time"
 msgstr "Temps de rendu"
 
-#: tools/batchrendering.py:891
+#: tools/batchrendering.py:940
 #, fuzzy
 msgid "Save Render Item Project As"
 msgstr "Enregistrer le projet sous"
 
-#: tools/batchrendering.py:927
+#: tools/batchrendering.py:976
 msgid "Encoding:"
 msgstr "Encodage:"
 
-#: tools/batchrendering.py:928
+#: tools/batchrendering.py:977
 msgid "Quality:"
 msgstr "Qualité:"
 
-#: tools/batchrendering.py:929
+#: tools/batchrendering.py:978
 msgid "Audio Encoding:"
 msgstr "Encodage audio:"
 
-#: tools/batchrendering.py:930
+#: tools/batchrendering.py:979
 #, fuzzy
 msgid "Use User Args:"
 msgstr "Utiliser paramètres perso:"
 
-#: tools/batchrendering.py:931
+#: tools/batchrendering.py:980
 msgid "Start:"
 msgstr "Démarrage:"
 
-#: tools/batchrendering.py:932
+#: tools/batchrendering.py:981
 msgid "End:"
 msgstr "Fin:"
 
-#: tools/batchrendering.py:934
+#: tools/batchrendering.py:983
 msgid "Render Profile Name:"
 msgstr "Nom du profil de rendu:"
 
-#: tools/batchrendering.py:935
+#: tools/batchrendering.py:984
 msgid "Render Profile:"
 msgstr "Profil de rendu:"
 
-#: tools/batchrendering.py:951 tools/batchrendering.py:957
+#: tools/batchrendering.py:1000 tools/batchrendering.py:1006
 msgid "Render Properties"
 msgstr "Propriétés du rendu"
 
-#: tools/batchrendering.py:956
+#: tools/batchrendering.py:1005
 msgid "Save Item Project As..."
 msgstr "Enregistrer le projet sous..."
 
@@ -4957,6 +4946,12 @@ msgid ""
 msgstr ""
 "Agrandissez la fenêtre du programme pour obtenir\n"
 "plus d'espace pour l'affichage des pistes."
+
+#~ msgid "Flowblade Batch Render PID file found!"
+#~ msgstr "Le fichier PID n'a pas été trouvé!"
+
+#~ msgid "Force Launch"
+#~ msgstr "Forcer démarrage"
 
 #~ msgid "Consolidate Selected Blanks"
 #~ msgstr "Consolider les vides sélectionnés"

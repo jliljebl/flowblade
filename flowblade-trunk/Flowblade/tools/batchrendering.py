@@ -226,6 +226,8 @@ def add_render_item(flowblade_project, render_path, args_vals_list, mark_in, mar
         obj = bus.get_object('flowblade.movie.editor.batchrender', '/flowblade/movie/editor/batchrender')
         iface = dbus.Interface(obj, 'flowblade.movie.editor.batchrender')
         iface.render_item_added()
+    else:
+        launch_batch_rendering()
 
     print "Render queue item for rendering file into " + render_path + " with identifier " + identifier + " added."
 
@@ -280,13 +282,11 @@ def copy_project(render_item, file_name):
 def launch_batch_rendering():
     bus = dbus.SessionBus()
     if bus.name_has_owner('flowblade.movie.editor.batchrender'):
-        print "flowblade.movie.editor dbus service exists batch rendering already running"
-        #_show_single_instance_info()
-        subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladebatch"], stdin=FNULL, stdout=FNULL)#, stderr=FNULL)
+        print "flowblade.movie.editor.batchrender dbus service exists, batch rendering already running"
+        _show_single_instance_info()
     else:
-        print "launching single instance for batchrendering"
         FNULL = open(os.devnull, 'w')
-        subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladebatch"], stdin=FNULL, stdout=FNULL)#, stderr=FNULL)
+        subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladebatch"], stdin=FNULL, stdout=FNULL, stderr=FNULL)
 
 def main(root_path, force_launch=False):
     # Allow only on instance to run
@@ -358,11 +358,11 @@ def _show_single_instance_info():
     
 def _display_single_instance_window():
     gobject.source_remove(timeout_id)
-    primary_txt = _("Flowblade Batch Render PID file found!")
-    msg1 = _("Either Render Queue application is already running\nor it has crashed.\n\n")
-    msg2 = _("Only select <b>'Force Launch'</b> if Render Queue not already running!")
-    msg = msg1 + msg2
-    content = dialogutils.get_warning_message_dialog_panel(primary_txt, msg)
+    primary_txt = _("Batch Render Queue already running!")
+
+    msg = _("Batch Render Queue application was detected in session dbus.")
+    #msg = msg1 + msg2
+    content = dialogutils.get_warning_message_dialog_panel(primary_txt, msg, True)
     align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     align.set_padding(0, 12, 0, 0)
     align.add(content)
@@ -370,8 +370,7 @@ def _display_single_instance_window():
     dialog = gtk.Dialog("",
                         None,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_CANCEL,
-                        _("Force Launch").encode('utf-8'), gtk.RESPONSE_OK))
+                        (_("OK").encode('utf-8'), gtk.RESPONSE_OK))
 
     dialog.vbox.pack_start(align, True, True, 0)
     dialogutils.default_behaviour(dialog)
@@ -651,8 +650,8 @@ class BatchRenderWindow:
         button_row.pack_start(self.remove_selected, False, False, 0)
         button_row.pack_start(self.remove_finished, False, False, 0)
         button_row.pack_start(gtk.Label(), True, True, 0)
-        button_row.pack_start(self.reload_button, True, True, 0)
-        button_row.pack_start(gtk.Label(), True, True, 0)
+        #button_row.pack_start(self.reload_button, True, True, 0)
+        #button_row.pack_start(gtk.Label(), True, True, 0)
         button_row.pack_start(self.stop_render_button, False, False, 0)
         button_row.pack_start(self.render_button, False, False, 0)
 

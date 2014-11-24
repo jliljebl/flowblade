@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-21 13:15+0200\n"
+"POT-Creation-Date: 2014-11-24 12:26+0200\n"
 "PO-Revision-Date: 2014-08-28 17:05+0200\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -19,51 +19,51 @@ msgstr ""
 "X-Language: cs_CZ\n"
 "X-Source-Language: C\n"
 
-#: app.py:649
+#: app.py:650
 msgid "Too small screen for this application."
 msgstr "Příliš malá obrazovka pro tento program."
 
-#: app.py:652
+#: app.py:653
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "Nejmenší rozměry obrazovky pro tento program jsou 1152 x 768.\n"
 
-#: app.py:653
+#: app.py:654
 msgid "Your screen dimensions are "
 msgstr "Rozměry vaší obrazovky jsou "
 
-#: app.py:670
+#: app.py:671
 msgid "Another instance of Flowblade already running."
 msgstr "Již běží jiná instance Flowblade."
 
-#: app.py:671
+#: app.py:672
 msgid "Only one instance of Flowblade is allowed to run at a time."
 msgstr "Současně může běžet pouze jedna instance Flowblade."
 
-#: app.py:700
+#: app.py:701
 msgid "Project has not been saved since it was opened."
 msgstr "Projekt nebyl od té doby, co byl otevřen, uložen."
 
-#: app.py:705
+#: app.py:706
 msgid "Project was saved less than a minute ago."
 msgstr "Projekt byl uložen před méně než minutou."
 
-#: app.py:708
+#: app.py:709
 msgid "Project was saved one minute ago."
 msgstr "Projekt byl uložen před jednou minutou."
 
-#: app.py:710
+#: app.py:711
 msgid "Project was saved "
 msgstr "Projekt byl uložen před "
 
-#: app.py:710
+#: app.py:711
 msgid " minutes ago."
 msgstr " minutami"
 
-#: app.py:720 projectaction.py:243
+#: app.py:721 projectaction.py:243
 msgid "Project has not been saved previously"
 msgstr "Projekt předtím byl uložen"
 
-#: app.py:721 projectaction.py:244
+#: app.py:722 projectaction.py:244
 msgid "Save project with File -> Save As before closing."
 msgstr "Uložte projekt před zavření pomocí Soubor -> Uložit."
 
@@ -119,31 +119,31 @@ msgstr "Projekt nelze nahrát."
 msgid "Adding item to render queue failed!"
 msgstr "Přidání položky do řady ke zpracování se nezdařilo!"
 
-#: projectaction.py:390 tools/batchrendering.py:242
+#: projectaction.py:390 tools/batchrendering.py:278
 msgid "Error message: "
 msgstr "Zpráva o chybě: "
 
-#: projectaction.py:413
+#: projectaction.py:412
 msgid "Open.."
 msgstr "Otevřít..."
 
-#: projectaction.py:423
+#: projectaction.py:422
 msgid "All files"
 msgstr "Všechny soubory"
 
-#: projectaction.py:461
+#: projectaction.py:460
 msgid "No file was selected"
 msgstr "Nebyl vybrán žádný soubor"
 
-#: projectaction.py:461
+#: projectaction.py:460
 msgid "Select a numbered file to add an Image Sequence to Project."
 msgstr "Vyberte číslovaný soubor pro přidání obrazové řady do projektu."
 
-#: projectaction.py:469
+#: projectaction.py:468
 msgid "Not a sequence file!"
 msgstr "Není řadovým souborem!"
 
-#: projectaction.py:469
+#: projectaction.py:468
 msgid ""
 "Selected file does not have a number part in it,\n"
 "so it can't be an image sequence file."
@@ -151,39 +151,39 @@ msgstr ""
 "Vybraný soubor nemá ve svém názvu část s číslem.\n"
 "Nemůže to tedy být soubor obrazové řady."
 
-#: projectaction.py:517
+#: projectaction.py:516
 msgid "Can't make home folder thumbnails folder"
 msgstr "Nelze udělat složku pro náhledy z domovské složky"
 
-#: projectaction.py:518 dialogs.py:202
+#: projectaction.py:517 dialogs.py:202
 msgid "Please create and select some other folder then '"
 msgstr "Vytvořte a vyberte, prosím, nějakou jinou složku než '"
 
-#: projectaction.py:519
+#: projectaction.py:518
 msgid "' as thumbnails folder"
 msgstr "' jako složku pro náhledy"
 
-#: projectaction.py:706
+#: projectaction.py:705
 msgid "Can't remove a non-empty bin"
 msgstr "Nelze odstranit zásobník, který není prázdný"
 
-#: projectaction.py:707
+#: projectaction.py:706
 msgid "You must remove all files from the bin before deleting it."
 msgstr "Před smazáním zásobníku z něj musíte odstranit všechny soubory"
 
-#: projectaction.py:715
+#: projectaction.py:714
 msgid "Can't remove last bin"
 msgstr "Poslední zásobník nelze odstranit"
 
-#: projectaction.py:716
+#: projectaction.py:715
 msgid "There must always exist at least one bin."
 msgstr "Musí být alespoň jeden zásobník."
 
-#: projectaction.py:787
+#: projectaction.py:786
 msgid "Selected sequence is already being edited"
 msgstr "Vybraná sekvence je již upravována"
 
-#: projectaction.py:788
+#: projectaction.py:787
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
@@ -191,11 +191,11 @@ msgstr ""
 "Vyberte jinou sekvenci. V případě potřeby tiskněte tlačítko Přidat\n"
 "pro vytvoření nové sekvence."
 
-#: projectaction.py:798 projectaction.py:815 projectdata.py:192
+#: projectaction.py:797 projectaction.py:814 projectdata.py:192
 msgid "sequence_"
 msgstr "sekvence_"
 
-#: projectaction.py:848
+#: projectaction.py:847
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
@@ -203,19 +203,19 @@ msgstr ""
 "Opravdu chcete smazat\n"
 "sekvenci '"
 
-#: projectaction.py:848
+#: projectaction.py:847
 msgid "'?"
 msgstr "'?"
 
-#: projectaction.py:849
+#: projectaction.py:848
 msgid "This operation can not be undone. Sequence will be permanently lost."
 msgstr "Tuto operaci nelze vrátit zpět. Sekvence bude navždy ztracena."
 
-#: projectaction.py:864
+#: projectaction.py:863
 msgid "Can't remove last sequence"
 msgstr "Nelze odstranit poslední sekvenci"
 
-#: projectaction.py:865
+#: projectaction.py:864
 msgid "There must always exist at least one sequence."
 msgstr "Vždy musí být alespoň jedna sekvence."
 
@@ -392,7 +392,7 @@ msgid "Project Info"
 msgstr "Informace o projektu"
 
 #: editorwindow.py:193 editorwindow.py:482 rendergui.py:171
-#: tools/batchrendering.py:796
+#: tools/batchrendering.py:845
 msgid "Render"
 msgstr "Zpracování"
 
@@ -590,7 +590,7 @@ msgstr "Přidat"
 #: clipeffectseditor.py:210 compositeeditor.py:58 dialogs.py:1040
 #: dialogs.py:1055 guicomponents.py:1122 guicomponents.py:1177
 #: guicomponents.py:1362 guicomponents.py:1382 panels.py:52 panels.py:105
-#: panels.py:123 tools/titler.py:179 tools/batchrendering.py:959
+#: panels.py:123 tools/titler.py:179 tools/batchrendering.py:1008
 msgid "Delete"
 msgstr "Smazat"
 
@@ -640,14 +640,13 @@ msgstr "Nový projekt"
 #: dialogs.py:809 dialogs.py:868 dialogs.py:901 dialogs.py:1008
 #: dialogs.py:1021 dialogs.py:1182 propertyeditorbuilder.py:362
 #: rendergui.py:47 rendergui.py:104 rendergui.py:118 rendergui.py:135
-#: preferenceswindow.py:48 tools/batchrendering.py:324
-#: tools/batchrendering.py:893 proxyediting.py:387
+#: preferenceswindow.py:48 tools/batchrendering.py:942 proxyediting.py:387
 msgid "Cancel"
 msgstr "Zrušit"
 
 #: dialogs.py:56 dialogs.py:113 dialogs.py:247 dialogs.py:322 dialogs.py:445
 #: dialogs.py:458 dialogs.py:1183 propertyeditorbuilder.py:363
-#: rendergui.py:105 preferenceswindow.py:49
+#: rendergui.py:105 preferenceswindow.py:49 tools/batchrendering.py:373
 msgid "OK"
 msgstr "OK"
 
@@ -681,7 +680,7 @@ msgid "Save Project As"
 msgstr "Projekt uložit jako"
 
 #: dialogs.py:127 dialogs.py:159 dialogs.py:218 dialogs.py:237
-#: rendergui.py:119 tools/batchrendering.py:894
+#: rendergui.py:119 tools/batchrendering.py:943
 msgid "Save"
 msgstr "Uložit"
 
@@ -1891,7 +1890,7 @@ msgstr "Cesta:"
 msgid "Image Size:"
 msgstr "Velikost obrázku:"
 
-#: panels.py:275 tools/batchrendering.py:933
+#: panels.py:275 tools/batchrendering.py:982
 msgid "Frames Per Second:"
 msgstr "Snímků za vteřinu:"
 
@@ -1979,11 +1978,11 @@ msgstr "Do ztracena"
 msgid "Color:"
 msgstr "Barva:"
 
-#: persistance.py:317
+#: persistance.py:321
 msgid "Building sequence "
 msgstr "Sestavovací sekvence "
 
-#: persistance.py:347
+#: persistance.py:351
 msgid "Loading icons"
 msgstr "Nahrávají se ikony"
 
@@ -3962,7 +3961,7 @@ msgstr " a "
 msgid " items it contains?\n"
 msgstr " položky, jež obsahuje?\n"
 
-#: medialog.py:324 profilesmanager.py:284 tools/batchrendering.py:663
+#: medialog.py:324 profilesmanager.py:284 tools/batchrendering.py:712
 msgid "This operation cannot be undone."
 msgstr "Tuto operaci nelze vrátit zpět."
 
@@ -4295,7 +4294,7 @@ msgstr "Nahrát argumenty pro zpracování z textového souboru"
 msgid "Close Manager"
 msgstr "Zavřít správce"
 
-#: profilesmanager.py:76 tools/batchrendering.py:574
+#: profilesmanager.py:76 tools/batchrendering.py:623
 msgid "Delete Selected"
 msgstr "Smazat vybrané"
 
@@ -4497,137 +4496,127 @@ msgstr "Styl tlačítek"
 msgid "Icons and color optimized for"
 msgstr "Ikony a barva vyladěny pro"
 
-#: tools/batchrendering.py:241
+#: tools/batchrendering.py:277
 msgid "Render Item Project File Copy failed!"
 msgstr "Nepodařilo se zkopírovat soubor  projektu s položkou ke zpracování! "
 
-#: tools/batchrendering.py:298 tools/batchrendering.py:680
+#: tools/batchrendering.py:342 tools/batchrendering.py:729
 msgid "Error loading render queue items!"
 msgstr "Chyba při nahrávání položek řady ke zpracování!"
 
-#: tools/batchrendering.py:299 tools/batchrendering.py:681
+#: tools/batchrendering.py:343 tools/batchrendering.py:730
 msgid "Message:\n"
 msgstr "Zpráva:\n"
 
-#: tools/batchrendering.py:312
-msgid "Flowblade Batch Render PID file found!"
-msgstr "Nalezen soubor s PID pro dávkové zpracování!"
+#: tools/batchrendering.py:361
+#, fuzzy
+msgid "Batch Render Queue already running!"
+msgstr "Dávkové zpracování řady"
 
-#: tools/batchrendering.py:313
-msgid ""
-"Either Render Queue application is already running\n"
-"or it has crashed.\n"
-"\n"
+#: tools/batchrendering.py:363
+#, fuzzy
+msgid "Batch Render Queue application was detected in session dbus."
 msgstr ""
 "Buď již běží program pro zpracování řady,\n"
 "nebo tento spadl\n"
 "\n"
 
-#: tools/batchrendering.py:314
-msgid "Only select <b>'Force Launch'</b> if Render Queue not already running!"
-msgstr ""
-"pouze vyberte <b>Vynutit spuštění</b>, pokud řada ke zpracování neběží!"
-
-#: tools/batchrendering.py:325
-msgid "Force Launch"
-msgstr "Vynutit spuštění"
-
-#: tools/batchrendering.py:338
+#: tools/batchrendering.py:386
 msgid "Application is rendering and cannot be closed!"
 msgstr "Program zpracovává a nelze jej zavřít!"
 
-#: tools/batchrendering.py:339
+#: tools/batchrendering.py:387
 msgid "Stop rendering before closing the application."
 msgstr "Zastavit zpracování před zavřením programu.."
 
-#: tools/batchrendering.py:370
+#: tools/batchrendering.py:419
 msgid " datafile load failed with "
 msgstr " Nahrání datového souboru se nezdařilo "
 
-#: tools/batchrendering.py:376
+#: tools/batchrendering.py:425
 msgid " project file load failed with "
 msgstr " Nahrání projektového souboru se nezdařilo "
 
-#: tools/batchrendering.py:486
+#: tools/batchrendering.py:535
 msgid "Queued"
 msgstr "Zařazeno"
 
-#: tools/batchrendering.py:488
+#: tools/batchrendering.py:537
 msgid "Rendering"
 msgstr "Zpracování"
 
-#: tools/batchrendering.py:490
+#: tools/batchrendering.py:539
 msgid "Finished"
 msgstr "Dokončeno"
 
-#: tools/batchrendering.py:492
+#: tools/batchrendering.py:541
 msgid "Unqueued"
 msgstr "Vyřazeno"
 
-#: tools/batchrendering.py:494
+#: tools/batchrendering.py:543
 msgid "Aborted"
 msgstr "Zrušeno"
 
-#: tools/batchrendering.py:549
+#: tools/batchrendering.py:598
 msgid "Estimated Left:"
 msgstr "Zbývá odhadem:"
 
-#: tools/batchrendering.py:550
+#: tools/batchrendering.py:599
 msgid "Current Render:"
 msgstr "Nyní se zpracovává:"
 
-#: tools/batchrendering.py:551 proxyediting.py:320
+#: tools/batchrendering.py:600 proxyediting.py:320
 msgid "Elapsed:"
 msgstr "Uplynulo:"
 
-#: tools/batchrendering.py:562
+#: tools/batchrendering.py:611
 msgid "Items Rendered:"
 msgstr "Zpracovávané položky:"
 
-#: tools/batchrendering.py:564
+#: tools/batchrendering.py:613
 msgid "Render Started:"
 msgstr "Zpracování započato:"
 
-#: tools/batchrendering.py:570
+#: tools/batchrendering.py:619
 msgid "Not Rendering"
 msgstr "Nezpracovává se"
 
-#: tools/batchrendering.py:578
+#: tools/batchrendering.py:627
 msgid "Delete Finished"
 msgstr "Smazat dokončené"
 
-#: tools/batchrendering.py:583
+#: tools/batchrendering.py:632
 msgid "Reload Queue"
 msgstr "Nahrát řadu znovu"
 
-#: tools/batchrendering.py:594
+#: tools/batchrendering.py:643
 msgid "Stop Render"
 msgstr "Zastavit zpracování"
 
-#: tools/batchrendering.py:636
+#: tools/batchrendering.py:685
 msgid "Flowblade Batch Render"
 msgstr "Dávkové zpracování"
 
-#: tools/batchrendering.py:662
+#: tools/batchrendering.py:711
 msgid "Delete "
 msgstr "Smazat "
 
-#: tools/batchrendering.py:662
+#: tools/batchrendering.py:711
 msgid " item(s) from render queue?"
 msgstr " položku(y) ze řady ke zpracování?"
 
-#: tools/batchrendering.py:693
+#: tools/batchrendering.py:742
 msgid "Multiple items with same render target file!"
 msgstr "Více položek se stejným cílovým souborem zpracování!"
 
-#: tools/batchrendering.py:695
+#: tools/batchrendering.py:744
 msgid ""
 "Later items will render on top of earlier items if this queue is rendered.\n"
 msgstr ""
 "Pozdější položky budou zpracovány navíc k dřívějším položkám, pokud je tato "
 "řada zpracovávána.\n"
 
-#: tools/batchrendering.py:696
+#: tools/batchrendering.py:745
 msgid ""
 "Delete or unqueue some items with same paths:\n"
 "\n"
@@ -4635,67 +4624,67 @@ msgstr ""
 "Smazat nebo vyřadit určité položky se stejnou cestou:\n"
 "\n"
 
-#: tools/batchrendering.py:698
+#: tools/batchrendering.py:747
 msgid " items with path: "
 msgstr " položky s cestou: "
 
-#: tools/batchrendering.py:797
+#: tools/batchrendering.py:846
 msgid "Project/Sequence"
 msgstr "Projekt/Sekvence"
 
-#: tools/batchrendering.py:798
+#: tools/batchrendering.py:847
 msgid "Status"
 msgstr "Stav"
 
-#: tools/batchrendering.py:799
+#: tools/batchrendering.py:848
 msgid "Render File"
 msgstr "Zpracovat soubor"
 
-#: tools/batchrendering.py:800
+#: tools/batchrendering.py:849
 msgid "Render Time"
 msgstr "Čas zpracování"
 
-#: tools/batchrendering.py:891
+#: tools/batchrendering.py:940
 msgid "Save Render Item Project As"
 msgstr "Uložit projekt zpracování položky jako"
 
-#: tools/batchrendering.py:927
+#: tools/batchrendering.py:976
 msgid "Encoding:"
 msgstr "Kódování:"
 
-#: tools/batchrendering.py:928
+#: tools/batchrendering.py:977
 msgid "Quality:"
 msgstr "Jakost:"
 
-#: tools/batchrendering.py:929
+#: tools/batchrendering.py:978
 msgid "Audio Encoding:"
 msgstr "Kódování zvuku:"
 
-#: tools/batchrendering.py:930
+#: tools/batchrendering.py:979
 msgid "Use User Args:"
 msgstr "Použít uživatelské argumenty:"
 
-#: tools/batchrendering.py:931
+#: tools/batchrendering.py:980
 msgid "Start:"
 msgstr "Začátek:"
 
-#: tools/batchrendering.py:932
+#: tools/batchrendering.py:981
 msgid "End:"
 msgstr "Konec:"
 
-#: tools/batchrendering.py:934
+#: tools/batchrendering.py:983
 msgid "Render Profile Name:"
 msgstr "Název profilu zpracování:"
 
-#: tools/batchrendering.py:935
+#: tools/batchrendering.py:984
 msgid "Render Profile:"
 msgstr "Profil zpracování:"
 
-#: tools/batchrendering.py:951 tools/batchrendering.py:957
+#: tools/batchrendering.py:1000 tools/batchrendering.py:1006
 msgid "Render Properties"
 msgstr "Vlastnosti zpracování"
 
-#: tools/batchrendering.py:956
+#: tools/batchrendering.py:1005
 msgid "Save Item Project As..."
 msgstr "Uložit projekt položky jako..."
 
@@ -4969,6 +4958,17 @@ msgid ""
 msgstr ""
 "Zvětšete nebo změňte velikost okna programu, abyste,\n"
 "pokud to půjde, získali více prostoru pro stopy."
+
+#~ msgid "Flowblade Batch Render PID file found!"
+#~ msgstr "Nalezen soubor s PID pro dávkové zpracování!"
+
+#~ msgid ""
+#~ "Only select <b>'Force Launch'</b> if Render Queue not already running!"
+#~ msgstr ""
+#~ "pouze vyberte <b>Vynutit spuštění</b>, pokud řada ke zpracování neběží!"
+
+#~ msgid "Force Launch"
+#~ msgstr "Vynutit spuštění"
 
 #~ msgid "Consolidate Selected Blanks"
 #~ msgstr "Sjednotit vybrané prázdné"
