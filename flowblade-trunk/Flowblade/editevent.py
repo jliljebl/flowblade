@@ -225,7 +225,6 @@ def oneroll_trim_no_edit_init():
     - user does cut(X) action while in trim mode
     - user clicks empty and preference is to keep using trim tool (to not exit to INSERT_MOVE)
     """
-    print "F:editevent.oneroll_trim_no_edit_init"
     stop_looping()
     editorstate.edit_mode = editorstate.ONE_ROLL_TRIM_NO_EDIT
     gui.editor_window.set_cursor_to_mode()
@@ -267,7 +266,6 @@ def oneroll_trim_mode_init(x, y):
     """
     User enters ONE_ROLL_TRIM mode from ONE_ROLL_TRIM_NO_EDIT 
     """
-    print "F:editevent.oneroll_trim_mode_init"
     track = tlinewidgets.get_track(y)
     if track == None:
         return False

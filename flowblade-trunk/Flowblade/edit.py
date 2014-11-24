@@ -339,7 +339,6 @@ class EditAction:
             self._update_gui()
             
     def redo(self):
-        print "F:EditAction.redo"
         PLAYER().stop_playback()
 
         # HACK, see above.

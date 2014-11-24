@@ -230,8 +230,6 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     """
     Sets one roll mode
     """
-    print "F:trimmodes.set_oneroll_mode"
-
     if track == None:
         return False
 
