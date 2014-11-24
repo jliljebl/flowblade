@@ -624,7 +624,6 @@ class Sequence:
         in and mark out points.
         pattern_producer_data is MediaFile or AbstractPatternProduer object
         """
-        print "  F:sequence.display_monitor_clip"
         track = self.tracks[-1] # Always last track
         if pattern_producer_data == None:
             self.monitor_clip = self.create_file_producer_clip(path)
@@ -643,7 +642,6 @@ class Sequence:
         """
         Adds clip to hidden track for trim editing display.
         """
-        print "  F:sequence.display_trim_clip"
         track = self.tracks[-1] # Always last track
         track.clear() # # TRIM INIT CRASH HACK, see clear_hidden_track there may be blank clip here
         track.clips = []
@@ -694,7 +692,6 @@ class Sequence:
         Last track is hidden track used to display clips and trim edits.
         Here that track is cleared of any content.
         """
-        print "  F:sequence.clear_hidden_track"
         self.update_edit_tracks_length()
 
         # Empty timeline needs blank clip of len atleast 1 because  
@@ -712,7 +709,6 @@ class Sequence:
         self._unmute_editable()
 
     def update_edit_tracks_length(self):
-        print "  F:sequence.update_edit_tracks_length"
         # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
         self.seq_len = 0  # muuta  arvoksi 1 ???
         for i in range(1, len(self.tracks) - 1):
@@ -721,7 +717,6 @@ class Sequence:
                 self.seq_len = track_len
 
     def update_trim_hack_blank_length(self):
-        print "  F:sequence.update_trim_hack_blank_length"
         # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
         self.tracks[-1].clips = []
         self.tracks[-1].clear()
