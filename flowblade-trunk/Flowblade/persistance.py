@@ -340,7 +340,6 @@ def load_project(file_path, icons_and_thumnails=True):
     all_clips = {}
     sync_clips = []
 
-
     for k, media_file in project.media_files.iteritems():
         if project.SAVEFILE_VERSION < 4:
             FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
