@@ -261,7 +261,7 @@ def oneroll_trim_no_edit_move(x, y, frame, state):
 def oneroll_trim_no_edit_release(x, y, frame, state):
     # Only presses are handled in ONE_ROLL_TRIM_NO_EDIT mode
     pass
-    
+
 def oneroll_trim_mode_init(x, y):
     """
     User enters ONE_ROLL_TRIM mode from ONE_ROLL_TRIM_NO_EDIT 

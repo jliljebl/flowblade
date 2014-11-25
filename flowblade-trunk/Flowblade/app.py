@@ -484,6 +484,7 @@ def open_project(new_project):
 
     editorstate.update_current_proxy_paths()
     audiomonitoring.init_for_project_load()
+    updater.window_resized()
 
     start_autosave()
 

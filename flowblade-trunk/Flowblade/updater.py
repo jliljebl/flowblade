@@ -121,6 +121,11 @@ def refresh_player():
 
 # --------------------------------- window 
 def window_resized():
+    # This can get async called from window "size-allocate" signal 
+    # during project load before project.c_seq has been build
+    if editorstate.project.c_seq == None:
+        return
+
     # Resize track heights so that all tracks are displayed
     current_sequence().resize_tracks_to_fit(gui.tline_canvas.widget.allocation)
     
