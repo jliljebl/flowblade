@@ -144,7 +144,7 @@ def save_project(project, file_path):
 
     # Remove unpickleable attributes
     remove_attrs(s_proj, PROJECT_REMOVE)
-    
+
     # Write out file.
     write_file = file(file_path, "wb")
     pickle.dump(s_proj, write_file)

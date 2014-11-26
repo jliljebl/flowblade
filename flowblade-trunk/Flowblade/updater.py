@@ -123,6 +123,8 @@ def refresh_player():
 def window_resized():
     # This can get async called from window "size-allocate" signal 
     # during project load before project.c_seq has been build
+    if not(hasattr(editorstate.project, "c_seq")):
+        return
     if editorstate.project.c_seq == None:
         return
 
