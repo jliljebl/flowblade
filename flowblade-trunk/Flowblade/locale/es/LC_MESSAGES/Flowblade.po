@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-24 12:26+0200\n"
+"POT-Creation-Date: 2014-11-26 23:16+0200\n"
 "PO-Revision-Date: 2014-02-21 12:08+0200\n"
 "Last-Translator: David Gámiz Jiménez <david.gamiz@gmail.com>\n"
 "Language-Team: David Gamiz Jimenez\n"
@@ -18,52 +18,52 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Virtaal 0.7.0\n"
 
-#: app.py:650
+#: app.py:651
 msgid "Too small screen for this application."
 msgstr "La pantalla es demasiado pequeña para esta aplicación."
 
-#: app.py:653
+#: app.py:654
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr ""
 "La dimensión de pantalla mínima para esta aplicación es de 1152 x 768.\n"
 
-#: app.py:654
+#: app.py:655
 msgid "Your screen dimensions are "
 msgstr "Las dimensiones de su pantalla son "
 
-#: app.py:671
+#: app.py:672
 msgid "Another instance of Flowblade already running."
 msgstr "Otra instancia de Flowblade ya esta iniciada."
 
-#: app.py:672
+#: app.py:673
 msgid "Only one instance of Flowblade is allowed to run at a time."
 msgstr "Solo una instancia de Flowblade se permite funcionar al mismo tiempo."
 
-#: app.py:701
+#: app.py:702
 msgid "Project has not been saved since it was opened."
 msgstr "El proyecto no ha sido salvado desde que se abrió."
 
-#: app.py:706
+#: app.py:707
 msgid "Project was saved less than a minute ago."
 msgstr "El proyecto fue salvado hace menos de un minuto."
 
-#: app.py:709
+#: app.py:710
 msgid "Project was saved one minute ago."
 msgstr "El proyecto fue salvado hace un minuto."
 
-#: app.py:711
+#: app.py:712
 msgid "Project was saved "
 msgstr "El proyecto salvado "
 
-#: app.py:711
+#: app.py:712
 msgid " minutes ago."
 msgstr " hace minutos."
 
-#: app.py:721 projectaction.py:243
+#: app.py:722 projectaction.py:243
 msgid "Project has not been saved previously"
 msgstr "El proyecto no se ha salvado antes"
 
-#: app.py:722 projectaction.py:244
+#: app.py:723 projectaction.py:244
 msgid "Save project with File -> Save As before closing."
 msgstr "Salvar el proyecto en un Archivo -> Salvar como antes de cerrar."
 
@@ -85,7 +85,7 @@ msgid "project load. "
 msgstr "proyecto cargado."
 
 #: projectaction.py:98
-msgid "Doing so does not quarantee succesful load"
+msgid "Doing so does not guarantee succesful load"
 msgstr "Haciendo esto no se garantiza una cargar satisfactoria"
 
 #: projectaction.py:98
@@ -1387,7 +1387,7 @@ msgstr "Selecciona archivo de filigrana"
 msgid "Can't put an audio clip on a video track."
 msgstr "No puedo poner el clip de sonido en la pista de video."
 
-#: editevent.py:129 editevent.py:700 movemodes.py:580
+#: editevent.py:129 editevent.py:698 movemodes.py:580
 msgid "Track "
 msgstr "Pista "
 
@@ -1395,11 +1395,11 @@ msgstr "Pista "
 msgid " is a video track and can't display audio only material."
 msgstr " es una pista de vídeo y no se puede mostrar sólo material de audio."
 
-#: editevent.py:699
+#: editevent.py:697
 msgid "Can't edit a locked track"
 msgstr "No se puede editar la pista bloqueada"
 
-#: editevent.py:700
+#: editevent.py:698
 msgid " is locked. Unlock track to edit it."
 msgstr " está bloqueado. Desbloquear la pista para editarlo."
 
@@ -1993,7 +1993,7 @@ msgstr "Color"
 msgid "Building sequence "
 msgstr "Secuencia Building "
 
-#: persistance.py:351
+#: persistance.py:350
 msgid "Loading icons"
 msgstr "Cargando iconos"
 
@@ -3526,9 +3526,8 @@ msgid "Midtones"
 msgstr ""
 
 #: translations.py:553
-#, fuzzy
 msgid "Highlights"
-msgstr "Hardlight"
+msgstr ""
 
 #: mlttransitions.py:77
 msgid "Vertical From Center"

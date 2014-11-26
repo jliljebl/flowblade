@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-24 12:26+0200\n"
+"POT-Creation-Date: 2014-11-26 23:16+0200\n"
 "PO-Revision-Date: 2011-12-13 23:55+0200\n"
 "Last-Translator: Janne Liljeblad <janne@janne-kx557aa-uuw-a6521-sc>\n"
 "Language-Team: Finnish\n"
@@ -17,51 +17,51 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:650
+#: app.py:651
 msgid "Too small screen for this application."
 msgstr "Näyttö on liian pieni tälle ohjelmalle."
 
-#: app.py:653
+#: app.py:654
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "Minimi näyttökoko tällle ohjelmalle on 1152 x 768.\n"
 
-#: app.py:654
+#: app.py:655
 msgid "Your screen dimensions are "
 msgstr "Sinun näyttösi koko on "
 
-#: app.py:671
+#: app.py:672
 msgid "Another instance of Flowblade already running."
 msgstr "Toininen instanssi Flowbladesta on jo käynnissä"
 
-#: app.py:672
+#: app.py:673
 msgid "Only one instance of Flowblade is allowed to run at a time."
 msgstr "Vain yksi instanssi Flowbladesta voi olla käynnissä kerrrallaan"
 
-#: app.py:701
+#: app.py:702
 msgid "Project has not been saved since it was opened."
 msgstr "Projektia ei ole tallennettu aikaisemmin."
 
-#: app.py:706
+#: app.py:707
 msgid "Project was saved less than a minute ago."
 msgstr "Projekti tallennettiin viimeksi alle minuutti sitten."
 
-#: app.py:709
+#: app.py:710
 msgid "Project was saved one minute ago."
 msgstr "Projekti tallennettiin viimeksi minuutti sitten."
 
-#: app.py:711
+#: app.py:712
 msgid "Project was saved "
 msgstr "Projektia ei ole tallennettu aikaisemmin"
 
-#: app.py:711
+#: app.py:712
 msgid " minutes ago."
 msgstr " minuuttia sitten."
 
-#: app.py:721 projectaction.py:243
+#: app.py:722 projectaction.py:243
 msgid "Project has not been saved previously"
 msgstr "Projektia ei ole tallennettu aikaisemmin"
 
-#: app.py:722 projectaction.py:244
+#: app.py:723 projectaction.py:244
 msgid "Save project with File -> Save As before closing."
 msgstr ""
 "Tallenna projekti valinnalla Tiedosto -> Tallenna nimellä ennen sulkemista."
@@ -84,7 +84,7 @@ msgid "project load. "
 msgstr " projektin latauksen."
 
 #: projectaction.py:98
-msgid "Doing so does not quarantee succesful load"
+msgid "Doing so does not guarantee succesful load"
 msgstr "Tämä ei takaa onnistunutta latausta"
 
 #: projectaction.py:98
@@ -100,7 +100,6 @@ msgid "Media files already present in project were opened!"
 msgstr ""
 
 #: projectaction.py:181
-#, fuzzy
 msgid ""
 "Files already present:\n"
 "\n"
@@ -1363,7 +1362,7 @@ msgstr "Valitse vesileima tiedosto"
 msgid "Can't put an audio clip on a video track."
 msgstr "Et voi laittaa äänileikettä videoraidalle."
 
-#: editevent.py:129 editevent.py:700 movemodes.py:580
+#: editevent.py:129 editevent.py:698 movemodes.py:580
 msgid "Track "
 msgstr "Raita "
 
@@ -1371,11 +1370,11 @@ msgstr "Raita "
 msgid " is a video track and can't display audio only material."
 msgstr " on video raita, eikä toista kuvatonta äänimateriaalia."
 
-#: editevent.py:699
+#: editevent.py:697
 msgid "Can't edit a locked track"
 msgstr "Et voi editoida lukittua raitaa"
 
-#: editevent.py:700
+#: editevent.py:698
 msgid " is locked. Unlock track to edit it."
 msgstr " on lukittu. Vapauta raita editoidaksesi sitä."
 
@@ -1967,7 +1966,7 @@ msgstr "Väri:"
 msgid "Building sequence "
 msgstr "Rakennetaan ohjelmaa "
 
-#: persistance.py:351
+#: persistance.py:350
 msgid "Loading icons"
 msgstr "Ladataan ikoneita"
 

@@ -34,10 +34,14 @@ print "Launch script dir:", launch_dir
 # Update sys.path to include modules
 if launch_dir == "/usr/bin":
     print "Running from installation..."
-    modules_path = "/usr/share/pyshared/Flowblade"
+    modules_path = "/usr/share/flowblade/Flowblade"
+    if not os.path.isdir(modules_path):
+        modules_path = "/usr/share/pyshared/Flowblade"
+    print "modules path:", modules_path
 else:
     print "Running from filesystem..."
     modules_path = launch_dir + "/Flowblade"
+
 sys.path.insert(0, modules_path)
 sys.path.insert(0, modules_path + "/vieweditor")
 sys.path.insert(0, modules_path + "/tools")

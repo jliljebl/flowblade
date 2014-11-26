@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-24 12:26+0200\n"
+"POT-Creation-Date: 2014-11-26 23:16+0200\n"
 "PO-Revision-Date: 2014-08-28 17:05+0200\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -19,51 +19,51 @@ msgstr ""
 "X-Language: cs_CZ\n"
 "X-Source-Language: C\n"
 
-#: app.py:650
+#: app.py:651
 msgid "Too small screen for this application."
 msgstr "Příliš malá obrazovka pro tento program."
 
-#: app.py:653
+#: app.py:654
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "Nejmenší rozměry obrazovky pro tento program jsou 1152 x 768.\n"
 
-#: app.py:654
+#: app.py:655
 msgid "Your screen dimensions are "
 msgstr "Rozměry vaší obrazovky jsou "
 
-#: app.py:671
+#: app.py:672
 msgid "Another instance of Flowblade already running."
 msgstr "Již běží jiná instance Flowblade."
 
-#: app.py:672
+#: app.py:673
 msgid "Only one instance of Flowblade is allowed to run at a time."
 msgstr "Současně může běžet pouze jedna instance Flowblade."
 
-#: app.py:701
+#: app.py:702
 msgid "Project has not been saved since it was opened."
 msgstr "Projekt nebyl od té doby, co byl otevřen, uložen."
 
-#: app.py:706
+#: app.py:707
 msgid "Project was saved less than a minute ago."
 msgstr "Projekt byl uložen před méně než minutou."
 
-#: app.py:709
+#: app.py:710
 msgid "Project was saved one minute ago."
 msgstr "Projekt byl uložen před jednou minutou."
 
-#: app.py:711
+#: app.py:712
 msgid "Project was saved "
 msgstr "Projekt byl uložen před "
 
-#: app.py:711
+#: app.py:712
 msgid " minutes ago."
 msgstr " minutami"
 
-#: app.py:721 projectaction.py:243
+#: app.py:722 projectaction.py:243
 msgid "Project has not been saved previously"
 msgstr "Projekt předtím byl uložen"
 
-#: app.py:722 projectaction.py:244
+#: app.py:723 projectaction.py:244
 msgid "Save project with File -> Save As before closing."
 msgstr "Uložte projekt před zavření pomocí Soubor -> Uložit."
 
@@ -84,7 +84,7 @@ msgid "project load. "
 msgstr "pro umožnění nahrání projektu. "
 
 #: projectaction.py:98
-msgid "Doing so does not quarantee succesful load"
+msgid "Doing so does not guarantee succesful load"
 msgstr "Ani to však nezaručuje úspěšné nahrání,"
 
 #: projectaction.py:98
@@ -1377,7 +1377,7 @@ msgstr "Vybrat soubor s vodoznakem"
 msgid "Can't put an audio clip on a video track."
 msgstr "Nelze dát zvukový záběr do stopy s obrazovým záznamem."
 
-#: editevent.py:129 editevent.py:700 movemodes.py:580
+#: editevent.py:129 editevent.py:698 movemodes.py:580
 msgid "Track "
 msgstr "Stopa"
 
@@ -1385,11 +1385,11 @@ msgstr "Stopa"
 msgid " is a video track and can't display audio only material."
 msgstr " je obrazová stopa a nemůže zobrazit materiál, který je pouze zvukový."
 
-#: editevent.py:699
+#: editevent.py:697
 msgid "Can't edit a locked track"
 msgstr "Nelze provádět úpravy na uzamknuté stopě"
 
-#: editevent.py:700
+#: editevent.py:698
 msgid " is locked. Unlock track to edit it."
 msgstr " je zamknuta. Odemkněte stopu, aby mohla být upravována."
 
@@ -1982,7 +1982,7 @@ msgstr "Barva:"
 msgid "Building sequence "
 msgstr "Sestavovací sekvence "
 
-#: persistance.py:351
+#: persistance.py:350
 msgid "Loading icons"
 msgstr "Nahrávají se ikony"
 
