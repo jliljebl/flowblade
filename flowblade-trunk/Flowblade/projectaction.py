@@ -95,7 +95,7 @@ class LoadThread(threading.Thread):
             ticker.stop_ticker()
             primary_txt = _("File: ") + e.value + _(" was not found on load!")
             secondary_txt = _("Place dummy file with same name and similar content to enable") + "\n" + _("project load. ") + \
-                            _("Doing so does not quarantee succesful load") + "\n" + _("if files have different properties.")
+                            _("Doing so does not guarantee succesful load") + "\n" + _("if files have different properties.")
             dialogutils.warning_message(primary_txt, secondary_txt, None, is_info=False)
             return
     

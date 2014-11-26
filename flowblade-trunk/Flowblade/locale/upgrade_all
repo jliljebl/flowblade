@@ -1,6 +1,6 @@
 #/usr/bin/bash
 
-LANGUAGES=("fi" "cs" "fr" "es" "it")
+LANGUAGES=("fi" "cs" "fr" "es" "it" "de")
 
 echo "Upgading all languages"
 
