@@ -343,13 +343,15 @@ class FileRenderPlayer(threading.Thread):
         self.stop_frame = stop_frame
         self.stopped = False
         self.wait_for_producer_end_stop = True
-
+        self.running = False
+        self.has_started_running = False
         print "FileRenderPlayer started, start frame: " + str(self.start_frame) + ", stop frame: " + str(self.stop_frame)
 
         threading.Thread.__init__(self)
 
     def run(self):
         self.running = True
+        self.has_started_running = True
         self.connect_and_start()
 
         while self.running: # set false at shutdown() for abort
