@@ -124,7 +124,12 @@ class QueueRunnerThread(threading.Thread):
             batch_window.update_queue_view()
             batch_window.current_render.set_text("  " + render_item.get_display_name())
             gtk.gdk.threads_leave()
-            
+
+            # Make sure that render thread is actually running before
+            # testing render_thread.running value later
+            while render_thread.has_started_running == False:
+                time.sleep(0.05)
+
             # View update loop
             self.thread_running = True
             self.aborted = False
