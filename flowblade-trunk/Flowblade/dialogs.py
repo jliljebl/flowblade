@@ -139,7 +139,13 @@ def save_project_as_dialog(callback, current_name, open_dir):
     dialog.show()
 
 def export_xml_dialog(callback, project_name):    
-    dialog = gtk.FileChooserDialog(_("Export Project as XML to"), None, 
+    _export_file_name_dialog(callback, project_name, _("Export Project as XML to"))
+
+def export_edl_dialog(callback, project_name):   
+    _export_file_name_dialog(callback, project_name, _("Export Project as EDL to"))
+
+def _export_file_name_dialog(callback, project_name, dialog_title):  
+    dialog = gtk.FileChooserDialog(dialog_title, None, 
                                    gtk.FILE_CHOOSER_ACTION_SAVE, 
                                    (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
                                    _("Export").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
@@ -151,7 +157,7 @@ def export_xml_dialog(callback, project_name):
     dialog.set_select_multiple(False)
     dialog.connect('response', callback)
     dialog.show()
-
+    
 def save_env_data_dialog(callback):    
     dialog = gtk.FileChooserDialog(_("Save Runtime Environment Data"), None, 
                                    gtk.FILE_CHOOSER_ACTION_SAVE, 
