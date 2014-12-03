@@ -64,7 +64,6 @@ class Player(threading.Thread):
         self.is_rendering = False
         self.render_stop_frame = -1
         self.render_start_frame = -1
-        self.xml_render = False
         self.render_callbacks = None
         self.wait_for_producer_end_stop = True
         self.render_gui_update_count = 0
@@ -253,7 +252,7 @@ class Player(threading.Thread):
             self.ticker.stop_ticker()
 
         current_frame = self.producer.frame()
-
+        
         # Stop rendering if last frame reached.
         if self.is_rendering == True and current_frame >= self.render_stop_frame:
             self.stop_rendering()
@@ -305,12 +304,7 @@ class Player(threading.Thread):
             return float(self.producer.frame()) / float(self.producer.get_length() - 1)
         else:
             return float(self.producer.frame() - self.render_start_frame) / float(self.render_stop_frame - self.render_start_frame)
-
-    def start_xml_rendering(self, path):
-        self.xml_render = True
-        xml_consumer = mlt.Consumer(self.profile, "xml", str(path))
-        self.start_rendering(xml_consumer)
-
+    
     def set_render_callbacks(self, callbacks):
         # Callbacks object interface:
         #
@@ -376,15 +370,11 @@ class Player(threading.Thread):
         self.connect_and_start()
         gtk.gdk.threads_leave()
         self.seek_frame(0)
-        
-        if self.xml_render == False:
-            # Do GUI updates
-            gtk.gdk.threads_enter()
-            self.render_callbacks.exit_render_gui()
-            self.render_callbacks.maybe_open_rendered_file_in_bin()
-            gtk.gdk.threads_leave()
-        else:
-            self.xml_render == False
+
+        gtk.gdk.threads_enter()
+        self.render_callbacks.exit_render_gui()
+        self.render_callbacks.maybe_open_rendered_file_in_bin()
+        gtk.gdk.threads_leave()
 
     def shutdown(self):
         self.ticker.stop_ticker()

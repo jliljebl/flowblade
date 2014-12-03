@@ -32,6 +32,8 @@ import xml.dom.minidom
 
 import mltenv
 import respaths
+from editorstate import PLAYER
+from editorstate import PROJECT
 
 # File describing existing encoding and quality options
 RENDER_ENCODING_FILE = "/res/render/renderencoding.xml"
@@ -402,6 +404,61 @@ class FileRenderPlayer(threading.Thread):
         if render_fraction > 1.0:
             render_fraction = 1.0
         return render_fraction
+
+
+class XMLRenderPlayer(threading.Thread):
+    def __init__(self, file_name, callback, data):
+        self.file_name = file_name
+        self.render_done_callback = callback
+        self.data = data
+        self.current_playback_frame = 0
+
+        threading.Thread.__init__(self)
+
+    def run(self):
+        print "Starting XML render"
+        player = PLAYER()
+        
+        # Don't try anything if somehow this was started 
+        # while timeline rendering is running
+        if player.is_rendering:
+            print "Can't render XML when another render is already running!"
+            return
+
+        # Stop all playback before producer is disconnected
+        self.current_playback_frame = player.producer.frame()
+        player.ticker.stop_ticker()
+        player.consumer.stop()
+        player.producer.set_speed(0)
+        player.producer.seek(0)
+        
+        # Wait until producer is at start
+        while player.producer.frame() != 0:
+            time.sleep(0.1)
+        
+        # Get render producer
+        timeline_producer = PROJECT().c_seq.tractor
+
+        # Get render consumer
+        xml_consumer = mlt.Consumer(PROJECT().profile, "xml", str(self.file_name))
+
+        # Connect and start rendering
+        xml_consumer.connect(timeline_producer)
+        xml_consumer.start()
+        timeline_producer.set_speed(1)
+
+        # Wait until done
+        while xml_consumer.is_stopped() == False:
+            print "In XML render wait loop..."
+            time.sleep(0.1)
+    
+        print "XML render done"
+
+        # Get app player going again
+        player.connect_and_start()
+        player.seek_frame(0)
+
+        self.render_done_callback(self.data)
 
 
 class ProgressWindowThread(threading.Thread):
