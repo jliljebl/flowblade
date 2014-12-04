@@ -30,7 +30,6 @@ import gtk
 import mlt
 import os
 import time
-import threading
 
 import gui
 from editorstate import timeline_visible
@@ -40,15 +39,13 @@ import updater
 TICKER_DELAY = 0.25
 RENDER_TICKER_DELAY = 0.05
 
-class Player(threading.Thread):
+class Player:
     
     def __init__(self, profile):
     
         self.init_for_profile(profile)
         
         self.ticker = utils.Ticker(self._ticker_event, TICKER_DELAY)
-
-        threading.Thread.__init__(self)
             
     def init_for_profile(self, profile):
         # Get profile and create ticker for playback GUI updates
@@ -119,19 +116,6 @@ class Player(threading.Thread):
         self.producer.set_speed(0)
         self.consumer.connect(self.producer)
         self.consumer.start()
-
-    def run(self):
-        """
-        Player thread loop. Loop runs until stop requested 
-        at project exit (quit or project load).
-        """
-        self.running = True
-        self.name = "mltplayer"
-        self.connect_and_start()
-
-        # Block
-        while self.running:
-            time.sleep(1)
 
     def start_playback(self):
         """
@@ -380,5 +364,4 @@ class Player(threading.Thread):
         self.ticker.stop_ticker()
         self.producer.set_speed(0)
         self.consumer.stop()
-        self.running = False
 
