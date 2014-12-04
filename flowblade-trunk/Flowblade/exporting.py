@@ -29,7 +29,6 @@ from math import modf, floor
 import mlt
 import time
 
-
 import dialogs
 from editorstate import PLAYER
 from editorstate import PROJECT
@@ -37,6 +36,8 @@ import renderconsumer
 import utils
 
 _xml_render_player = None
+
+
 
 ####---------------MLT--------------####    
 def MELT_XML_export():
@@ -59,20 +60,7 @@ def _export_melt_xml_dialog_callback(dialog, response_id):
 def _xml_render_done(data):
     global _xml_render_player
     _xml_render_player = None
-    
-# ----------------------- mlt player render callbacks, we need to set these no-op when not doing standard rendering
-# ----------------------- we're using different progress update mechanisms here
-def set_render_progress_gui(fraction):
-    pass
-    
-def save_render_start_time():
-    pass
 
-def exit_render_gui():
-    pass
-
-def maybe_open_rendered_file_in_bin():
-    pass
 
 
 ####---------------EDL--------------####
@@ -84,31 +72,27 @@ def _export_edl_dialog_callback(dialog, response_id):
     print "adasdad"
     if response_id == gtk.RESPONSE_ACCEPT:
         filenames = dialog.get_filenames()
-        save_path = filenames[0]
-        path = "/home/janne/temppu4.xml"
+        edl_path = filenames[0]
         global _xml_render_monitor
-        _xml_render_player = renderconsumer.XMLRenderPlayer(path,
-                                                          _edl_xml_render_done,
-                                                          None)
+        _xml_render_player = renderconsumer.XMLRenderPlayer(get_edl_temp_xml_path(),
+                                                            _edl_xml_render_done,
+                                                            edl_path)
         _xml_render_player.start()
         dialog.destroy()
     else:
         dialog.destroy()
 
-def _render_temp_xml(save_path):
-
-    path = "/home/janne/temppu.xml"
-    global _xml_render_monitor
-    _xml_render_monitor = renderconsumer.XMLRenderMonitor(path,
-                                                          _edl_xml_render_done,
-                                                          None)
-    _xml_render_monitor.start()
-            
-
-def _edl_xml_render_done(data):
+def _edl_xml_render_done(edl_path):
+    print "wwwww"
     global _xml_render_player
     _xml_render_player = None
-    
+    mlt_parse = MLTXMLParse(get_edl_temp_xml_path())
+    mlt_parse.create_edl()
+
+def get_edl_temp_xml_path():
+    return utils.get_hidden_user_dir_path() + "edl_temp_xml.xml"
+
+
 class MLTXMLParse:
         
     def __init__(self, kdenliveFile):
@@ -133,7 +117,7 @@ class MLTXMLParse:
         playlist_list = []
         playlists = self.xmldoc.getElementsByTagName("playlist")
         for p in playlists:
-            event_lList = []
+            event_list = []
             pl_dict = {}
             pl_dict["pid"] = p.attributes["id"].value
             events = p.getElementsByTagName("entry")
@@ -142,8 +126,8 @@ class MLTXMLParse:
                 ev_dict["producer"] = event.attributes["producer"].value
                 ev_dict["inTime"] = event.attributes["in"].value
                 ev_dict["outTime"] = event.attributes["out"].value
-                event_dist.append(ev_dict)
-            pl_dict["events"] = eventList
+                event_list.append(ev_dict)
+            pl_dict["events"] = event_list
             playlist_list.append(pl_dict)
         return tuple(playlist_list)
 
@@ -159,63 +143,71 @@ class MLTXMLParse:
             for props in properties:
                 p_dict[props.attributes["name"].value.replace(".","_")] = props.firstChild.data 
                 
-            producer_list.append(pDict)
-        return tuple(producerList)
+            producer_list.append(p_dict)
+        return tuple(producer_list)
     
     def link_references(self):
         source_links = {}
         for i in self.get_producers():
             src_pid = i["pid"]
-            source_links[srcPid] = i["resource"]
+            source_links[src_pid] = i["resource"]
         return source_links
 
-    def createEdl(self):
-        sourceLinks = self.linkReferences()
-        for playlist in self.getPlaylists():
-            EdlEventCnt = 1
-            progIn = 0 # showtime tally
-            progOut = 0
-            srcChannel = "C" # default channel/track assignment 
+    def create_edl(self):
+        source_links = self.link_references()
+        for playlist in self.get_playlists():
+            edl_event = 1
+            prog_in = 0 # showtime tally
+            prog_out = 0
+
             print "\n === " + playlist["pid"] + " === \n"
             for event in playlist["events"]:
-                prod = event["producer"]
-                prodChunks = prod.split("_")
-                srcType = prodChunks[-1].capitalize()[:1] 
-                
-                # if it's an audio event, extract channel info from producer id
-                if srcType == "A":
-                    srcChannel = prodChunks[1]
+                # Get source file
+                producer = event["producer"]
+                source_path = source_links[producer]
+                source_file = source_path.split("/")[-1]
 
-                srcIn = int(event["inTime"]) # source clip IN time
-                srcOut = int(event["outTime"]) # source clip OUT time
-                if EdlEventCnt != 1:
-                    srcOut = srcOut + 1
-                srcDur = srcOut - srcIn 
-                progOut = progOut + srcDur # increment program tally
+                # Get Source in and out
+                src_in = int(event["inTime"]) # source clip IN time
+                src_out = int(event["outTime"]) # source clip OUT time
+                # Fix for first event
+                if edl_event != 1:
+                    src_out = src_out + 1 
                 
-                sourcePath = sourceLinks[prod]
-                sourceFile = sourcePath.split("/")[-1]
+                # Source duration and proram out
+                src_dur = src_out - src_in 
+                prog_out = prog_out + src_dur # increment program tally
+
+                # Write out edl event
+                self.write_edl_event(edl_event, producer, source_file, 
+                                     src_in, src_out, prog_in, prog_out)
+
+                # Fix for first event
+                if edl_event == 1:
+                    prog_in = prog_in + 1
+                
+                # Increment program in and event count     
+                prog_in = prog_in + src_dur
+                edl_event = edl_event + 1
+
+
+    def write_edl_event(self, edl_event, producer, source_file, src_in, src_out, prog_in, prog_out):
         
-                # deref proxy
-
-
-                print "* FROM CLIP NAME: " + sourceRef
-                print str(EdlEventCnt) + "  " + prod + "  ",
-                print srcType + "  " + srcChannel + "  ", 
-                
-                if args.show_frames:
-                    print str(srcIn) + " " + str(srcOut) + "",
-                    print str(progIn) + " " + str(progOut)
-                else:
-                    print self.framesToDF(srcIn) + " " + self.framesToDF(srcOut) + "",
-                    print self.framesToDF(progIn) + " " + self.framesToDF(progOut)
-        
-                if EdlEventCnt == 1:
-                    progIn = progIn + 1
+            src_transition = "C"
+            src_channel = "V"
+            prod = "P"
+            print "* FROM CLIP NAME: " + source_file
+            print "{0:03d}".format(edl_event) + "  " + producer + "  ",
+            print src_channel  + "  " + src_transition + "  ", 
+            
+            show_frames = False
+            if show_frames == True:
+                print str(src_in) + " " + str(src_out) + "",
+                print str(prog_in) + " " + str(prog_out)
+            else:
+                print self.framesToDF(src_in) + " " + self.framesToDF(src_out) + "",
+                print self.framesToDF(prog_in) + " " + self.framesToDF(prog_out)
                     
-                progIn = progIn + srcDur
-                EdlEventCnt = EdlEventCnt + 1
-
     def framesToDF(self, framenumber):
         """
             This method adapted from C++ code called "timecode" by Jason Wood.
@@ -225,7 +217,7 @@ class MLTXMLParse:
             Framerate should be 29.97, 59.94, or 23.976, otherwise the calculations will be off.
         """
 
-        projectMeta = self.getProjectProfile()
+        projectMeta = self.get_project_profile()
         framerate = float(projectMeta["frame_rate_num"]) / float(projectMeta["frame_rate_den"])
         
         # Number of frames to drop on the minute marks is the nearest integer to 6% of the framerate
@@ -262,4 +254,6 @@ class MLTXMLParse:
 
         tc = "%d:%02d:%02d;%02d" % (hours, minutes, seconds, frames)
         return tc
+
+
 
