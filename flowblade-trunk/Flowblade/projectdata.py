@@ -56,7 +56,7 @@ EVENT_SAVED = 2
 EVENT_SAVED_AS = 3
 EVENT_RENDERED = 4
 
-thumbnail_thread = None
+thumbnailer = None
 
 
 class Project:
@@ -92,15 +92,15 @@ class Project:
         self.c_bin = self.bins[0]
         
         # We're running a thumbnail thread here.
-        self.start_thumbnail_thread()
+        self.init_thumbnailer()
     
-    def start_thumbnail_thread(self):
+    def init_thumbnailer(self):
         # Thumbnails are made in thread to avoid some MLT crashes
-        global thumbnail_thread
-        if thumbnail_thread == None:
-            thumbnail_thread = ThumbnailThread()
-            thumbnail_thread.set_context(self.profile)
-            thumbnail_thread.start()
+        global thumbnailer
+        if thumbnailer == None:
+            thumbnailer = Thumbnailer()
+            thumbnailer.set_context(self.profile)
+            #thumbnailer.start()
 
     def add_image_sequence_media_object(self, resource_path, name, length):
         media_object = self.add_media_file(resource_path)
@@ -120,9 +120,9 @@ class Project:
         # Get length and icon
         if media_type == appconsts.AUDIO:
             icon_path = respaths.IMAGE_PATH + "audio_file.png"
-            length = thumbnail_thread.get_file_length(file_path)
+            length = thumbnailer.get_file_length(file_path)
         else: # For non-audio we need write a thumbbnail file and get file lengh while we're at it
-             (icon_path, length) = thumbnail_thread.write_image(file_path)
+             (icon_path, length) = thumbnailer.write_image(file_path)
 
           # Create media file object
         media_object = MediaFile(self.next_media_file_id, file_path, 
@@ -366,24 +366,13 @@ class ProducerNotValidError(Exception):
         return repr(self.value)
 
 
-class ThumbnailThread(threading.Thread):
-
-    def run(self):
-        """
-        Runs and blocks 
-        """
+class Thumbnailer:
+    def __init__(self):
         self.file_path = ""
         self.thumbnail_path = ""
         self.consumer = None
         self.producer = None
-        self.running = True
-        self.stopped = False
 
-        while self.running:
-            time.sleep(1)
-            
-        self.stopped = True
-        
     def set_context(self, profile):
         self.profile = profile
     
@@ -429,10 +418,6 @@ class ThumbnailThread(threading.Thread):
         mltrefhold.hold_ref(self.producer)
         return self.producer.get_length()
 
-    def shutdown(self):
-        if self.consumer != None:
-            self.consumer.stop()
-        self.running = False
 
 # ----------------------------------- project and media log events
 class ProjectEvent:
