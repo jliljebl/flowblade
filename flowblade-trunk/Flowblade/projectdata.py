@@ -31,7 +31,6 @@ import mlt
 import md5
 import os
 import time
-import threading
 
 import appconsts
 import editorpersistance

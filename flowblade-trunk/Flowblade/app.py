@@ -356,7 +356,7 @@ def launch_player():
     gui.editor_window.connect_player(editorstate.player)
     
     # Start player.
-    editorstate.player.start()
+    editorstate.player.connect_and_start()
 
 def init_project_gui():
     """
@@ -753,8 +753,7 @@ def _app_destroy():
     audiomonitoring.close()
 
     # Wait threads to stop
-    while((editorstate.player.running == True) and 
-         (editorstate.player.ticker.exited == False) and
+    while((editorstate.player.ticker.exited == False) and
          (audiomonitoring._update_ticker.exited == False) and
          (audiowaveform.waveform_thread != None)):
         pass
