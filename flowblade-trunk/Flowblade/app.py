@@ -749,14 +749,12 @@ def _shutdown_dialog_callback(dialog, response_id):
 
 def _app_destroy():
     # Close threads and stop mlt consumers
-    projectdata.thumbnail_thread.shutdown()
     editorstate.player.shutdown() # has ticker thread and player threads running
     audiomonitoring.close()
 
     # Wait threads to stop
     while((editorstate.player.running == True) and 
          (editorstate.player.ticker.exited == False) and
-         (projectdata.thumbnail_thread.stopped == False) and
          (audiomonitoring._update_ticker.exited == False) and
          (audiowaveform.waveform_thread != None)):
         pass
