@@ -360,6 +360,17 @@ class Player:
         self.render_callbacks.maybe_open_rendered_file_in_bin()
         gtk.gdk.threads_leave()
 
+    def jack_output_on(self):
+        # We're assuming that we are not rendering and consumer is SDL consumer
+        self.consumer.set("audio_off", "1")
+        self.consumer.set("frequency", "48000")
+
+        self.jack_output_filter = mlt.Filter(self.profile, "jackrack")
+        self.jack_output_filter.set("out_1", "system:playback_1")
+        self.jack_output_filter.set("out_2", "system:playback_2")
+ 
+        self.consumer.attach(self.jack_output_filter)
+
     def shutdown(self):
         self.ticker.stop_ticker()
         self.producer.set_speed(0)

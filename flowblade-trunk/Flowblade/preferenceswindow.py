@@ -115,13 +115,13 @@ def _general_options_panel(folder_select_clicked_cb, render_folder_select_clicke
     autosave_combo.set_active(prefs.auto_save_delay_value_index)
 
     # Layout
-    row1 = guiutils.get_two_column_box(gtk.Label(_("Default Profile")), default_profile_combo, PREFERENCES_LEFT)
-    row2 = guiutils.get_two_column_box(gtk.Label(_("Remember last media directory")), open_in_last_opened_check, PREFERENCES_LEFT)
-    row3 = guiutils.get_two_column_box(gtk.Label(_("Undo stack size")), undo_max_spin, PREFERENCES_LEFT)
-    row4 = guiutils.get_two_column_box(gtk.Label(_("Thumbnail folder")), folder_select, PREFERENCES_LEFT)
-    row5 = guiutils.get_two_column_box(gtk.Label(_("Remember last render directory")), open_in_last_rendered_check, PREFERENCES_LEFT)
-    row6 = guiutils.get_two_column_box(gtk.Label(_("Autosave for crash recovery every")), autosave_combo, PREFERENCES_LEFT)
-    row8 = guiutils.get_two_column_box(gtk.Label(_("Rendered Clips folder")), render_folder_select, PREFERENCES_LEFT)
+    row1 = guiutils.get_two_column_box(gtk.Label(_("Default Profile:")), default_profile_combo, PREFERENCES_LEFT)
+    row2 = guiutils.get_checkbox_row_box(open_in_last_opened_check, gtk.Label(_("Remember last media directory")))
+    row3 = guiutils.get_two_column_box(gtk.Label(_("Undo stack size:")), undo_max_spin, PREFERENCES_LEFT)
+    row4 = guiutils.get_two_column_box(gtk.Label(_("Thumbnail folder:")), folder_select, PREFERENCES_LEFT)
+    row5 = guiutils.get_checkbox_row_box(open_in_last_rendered_check, gtk.Label(_("Remember last render directory")))
+    row6 = guiutils.get_two_column_box(gtk.Label(_("Autosave for crash recovery every:")), autosave_combo, PREFERENCES_LEFT)
+    row8 = guiutils.get_two_column_box(gtk.Label(_("Rendered Clips folder:")), render_folder_select, PREFERENCES_LEFT)
 
     
     vbox = gtk.VBox(False, 2)
@@ -164,12 +164,12 @@ def _edit_prefs_panel():
     remember_clip_frame.set_active(prefs.remember_monitor_clip_frame)
 
     # Layout
-    row1 = guiutils.get_two_column_box(gtk.Label(_("Autoplay new Clips in Clip Monitor")), auto_play_in_clip_monitor, PREFERENCES_LEFT)
-    row2 = guiutils.get_two_column_box(gtk.Label(_("Center Current Frame on Playback Stop")), auto_center_on_stop, PREFERENCES_LEFT)
-    row4 = guiutils.get_two_column_box(gtk.Label(_("Graphics default length")), gfx_length_spin, PREFERENCES_LEFT)
-    row5 = guiutils.get_two_column_box(gtk.Label(_("Trim Modes exit on empty click")), trim_exit_on_empty, PREFERENCES_LEFT)
-    row6 = guiutils.get_two_column_box(gtk.Label(_("Quick enter Trim Modes")), quick_enter_trim, PREFERENCES_LEFT)
-    row7 = guiutils.get_two_column_box(gtk.Label(_("Remember Monitor Clip Frame")), remember_clip_frame, PREFERENCES_LEFT)
+    row1 = guiutils.get_checkbox_row_box(auto_play_in_clip_monitor, gtk.Label(_("Autoplay new Clips in Clip Monitor")))
+    row2 = guiutils.get_checkbox_row_box(auto_center_on_stop, gtk.Label(_("Center Current Frame on Playback Stop")))
+    row4 = guiutils.get_two_column_box(gtk.Label(_("Graphics default length:")), gfx_length_spin, PREFERENCES_LEFT)
+    row5 = guiutils.get_checkbox_row_box(trim_exit_on_empty, gtk.Label(_("Trim Modes exit on empty click")))
+    row6 = guiutils.get_checkbox_row_box(quick_enter_trim, gtk.Label(_("Quick enter Trim Modes")))
+    row7 = guiutils.get_checkbox_row_box(remember_clip_frame, gtk.Label(_("Remember Monitor Clip Frame")))
     
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(row5, False, False, 0)
@@ -210,9 +210,9 @@ def _view_prefs_panel():
         dark_combo.set_active(0)
         
     # Layout
-    row1 = guiutils.get_two_column_box(gtk.Label(_("Display splash screen")), display_splash_check, PREFERENCES_LEFT)
-    row2 = guiutils.get_two_column_box(gtk.Label(_("Buttons style")), buttons_combo, PREFERENCES_LEFT)
-    row3 = guiutils.get_two_column_box(gtk.Label(_("Icons and color optimized for")), dark_combo, PREFERENCES_LEFT)
+    row1 = guiutils.get_checkbox_row_box(display_splash_check, gtk.Label(_("Display splash screen")))
+    row2 = guiutils.get_two_column_box(gtk.Label(_("Buttons style:")), buttons_combo, PREFERENCES_LEFT)
+    row3 = guiutils.get_two_column_box(gtk.Label(_("Icons and color optimized for:")), dark_combo, PREFERENCES_LEFT)
     
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)

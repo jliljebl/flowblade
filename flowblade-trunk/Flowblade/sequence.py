@@ -127,7 +127,7 @@ class Sequence:
         self.tractor.mark_out = -1
 
         # Only create and add pan filter if actual pan is applied
-        # This method gets called on load and we only want to add filter then if pan is applied,
+        # This method gets called on load and we only want to add a filter then if pan is applied,
         # and not on initial creation.
         # audiomonitoring.py calls add_track_pan_filter() when pan turned on for initial creation
         if self.master_audio_pan != NO_PAN:
