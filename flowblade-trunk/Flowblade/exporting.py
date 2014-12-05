@@ -32,6 +32,8 @@ import time
 import dialogs
 from editorstate import PLAYER
 from editorstate import PROJECT
+from editorstate import current_sequence
+import gui
 import renderconsumer
 import utils
 
@@ -65,12 +67,13 @@ def _xml_render_done(data):
 
 ####---------------EDL--------------####
 def EDL_export():
-    dialogs.export_edl_dialog(_export_edl_dialog_callback, PROJECT().name)
-    
+    dialogs.export_edl_dialog(_export_edl_dialog_callback, gui.editor_window.window, PROJECT().name)
 
-def _export_edl_dialog_callback(dialog, response_id):
+def _export_edl_dialog_callback(dialog, response_id, data):
     print "adasdad"
     if response_id == gtk.RESPONSE_ACCEPT:
+        #dialogs.edl_track_select_dialog(_edl_track_select_dialog_callback, PROJECT().name, "/home/janne/adadasd.edl")
+        """
         filenames = dialog.get_filenames()
         edl_path = filenames[0]
         global _xml_render_monitor
@@ -78,6 +81,7 @@ def _export_edl_dialog_callback(dialog, response_id):
                                                             _edl_xml_render_done,
                                                             edl_path)
         _xml_render_player.start()
+        """
         dialog.destroy()
     else:
         dialog.destroy()

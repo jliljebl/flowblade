@@ -141,9 +141,6 @@ def save_project_as_dialog(callback, current_name, open_dir):
 def export_xml_dialog(callback, project_name):    
     _export_file_name_dialog(callback, project_name, _("Export Project as XML to"))
 
-def export_edl_dialog(callback, project_name):   
-    _export_file_name_dialog(callback, project_name, _("Export Project as EDL to"))
-
 def _export_file_name_dialog(callback, project_name, dialog_title):  
     dialog = gtk.FileChooserDialog(dialog_title, None, 
                                    gtk.FILE_CHOOSER_ACTION_SAVE, 
@@ -902,95 +899,58 @@ def open_image_sequence_dialog(callback, parent_window):
     dialog.connect('response', callback, (file_chooser, frames_per_image))
     dialog.show_all()
     
-
-def export_dvd_author_dialog(callback, seq, parent_window):
+def export_edl_dialog(callback, parent_window, project_name):
     cancel_str = _("Cancel").encode('utf-8')
-    ok_str = _("Export Files").encode('utf-8')
-    dialog = gtk.Dialog(_("Export DVDAuthor Files"),
+    ok_str = _("Export To EDL").encode('utf-8')
+    dialog = gtk.Dialog(_("Export EDL"),
                         parent_window,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                         (cancel_str, gtk.RESPONSE_CANCEL,
                         ok_str, gtk.RESPONSE_YES))
     
     INPUT_LABELS_WITDH = 220
-
-    proj_name = editorstate.PROJECT().name.strip(".flb")
-
-    markers_check = gtk.CheckButton()
-    markers_check.set_active(True)
-    row0 = guiutils.get_two_column_box(gtk.Label(_("Use Markers as Chapter Starts:")), markers_check, INPUT_LABELS_WITDH)
-
-    chapters_view = gtk.TextView()
-    chapters_view.set_pixels_above_lines(2)
-    chapters_view.set_left_margin(2)
+    project_name = project_name.strip(".flb")
     
-    chapters_txt = utils.get_tc_string(0) + " " + "chapter1\n"
-    chapter_count = 2
-    for marker in seq.markers:
-        name, frame = marker
-        chapter = utils.get_tc_string(frame) + " " + "chapter" + str(chapter_count) + "(" + name + ")" 
-        chapters_txt = chapters_txt + chapter
-        chapter_count += 1
+    fi_label = gtk.Label(_("Export File Name:"))
     
-    text_buffer = gtk.TextBuffer()
-    text_buffer.set_text(chapters_txt)
-    chapters_view.set_buffer(text_buffer)
+    file_name = gtk.Entry()
+    file_name.set_text(project_name)
 
-    sw = gtk.ScrolledWindow()
-    sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_ALWAYS)
-    sw.add(chapters_view)
-    sw.set_size_request(400, 200)
+    extension_label = gtk.Label(".edl")
+    extension_label.set_size_request(35, 20)
 
-    scroll_frame = gtk.Frame()
-    scroll_frame.add(sw)
+    name_pack = gtk.HBox(False, 4)
+    name_pack.pack_start(file_name, True, True, 0)
+    name_pack.pack_start(extension_label, False, False, 0)
+
+    name_row = guiutils.get_two_column_box(gtk.Label(_("Export File Name:")), name_pack, INPUT_LABELS_WITDH)
+ 
+    out_folder = gtk.FileChooserButton(_("Select Target Folder"))
+    out_folder.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+    out_folder.set_current_folder(os.path.expanduser("~") + "/")
     
-    file_chooser = gtk.FileChooserButton("Select First Frame")
-    file_chooser.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
-    row1 = guiutils.get_two_column_box(gtk.Label(_("Select Work Folder:")), file_chooser, INPUT_LABELS_WITDH)
+    folder_row = guiutils.get_two_column_box(gtk.Label(_("Export Folder:")), out_folder, INPUT_LABELS_WITDH)
 
-    default_name = proj_name + ".xml"
-    name_entry = gtk.Entry(30)
-    name_entry.set_width_chars(30)
-    name_entry.set_text(default_name)
-    row2 = guiutils.get_two_column_box(gtk.Label(_("XML File Name:")), name_entry, INPUT_LABELS_WITDH)
-
-    render_check = gtk.CheckButton()
-    render_check.set_active(True)
-    row3 = guiutils.get_two_column_box(gtk.Label(_("Render MPEG File:")), render_check, INPUT_LABELS_WITDH)
-    
+    seq = editorstate.current_sequence()
     dvd_type_combo = gtk.combo_box_new_text()
-    dvd_type_combo.append_text("DVD PAL")
-    dvd_type_combo.append_text("DVD NTSC")
-    dvd_type_combo.append_text("DVD PAL Widescreen")
-    dvd_type_combo.append_text("DVD NTSC Widescreen")
+    for i in range(seq.first_video_index, len(seq.tracks)- 2):
+        dvd_type_combo.append_text(utils.get_track_name(seq.tracks[i], seq))
+
     dvd_type_combo.set_active(0)
-    row4 = guiutils.get_two_column_box(gtk.Label(_("MPEG File for DVD Type:")), dvd_type_combo, INPUT_LABELS_WITDH)
-
-    default_vob_name = proj_name + ".mpg"
-    mpg_name_entry = gtk.Entry(30)
-    mpg_name_entry.set_width_chars(30)
-    mpg_name_entry.set_text(default_vob_name)
-    row5 = guiutils.get_two_column_box(gtk.Label(_("MPEG File Name:")), mpg_name_entry, INPUT_LABELS_WITDH)
-
-    markers_check.connect("toggled", _markers_chapters_check_toggled, (chapters_view, text_buffer, chapters_txt))
-    render_check.connect("toggled", _mpeg_render_check_toggled, (mpg_name_entry, dvd_type_combo))
+    track_row = guiutils.get_two_column_box(gtk.Label(_("Exported Track:")), dvd_type_combo, INPUT_LABELS_WITDH)
 
     vbox = gtk.VBox(False, 2)
-    vbox.pack_start(row0, False, False, 0)
-    vbox.pack_start(scroll_frame, False, False, 0)
-    vbox.pack_start(row1, False, False, 0)
-    vbox.pack_start(row2, False, False, 0)
-    vbox.pack_start(row3, False, False, 0)
-    vbox.pack_start(row4, False, False, 0)
-    vbox.pack_start(row5, False, False, 0)
+    vbox.pack_start(folder_row, False, False, 0)
+    vbox.pack_start(name_row, False, False, 0)
+    vbox.pack_start(track_row, False, False, 0)
     
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(24, 24, 24, 24)
+    alignment.set_padding(12, 12, 12, 12)
     alignment.add(vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, (markers_check, file_chooser, name_entry, render_check, dvd_type_combo, mpg_name_entry))
+    dialog.connect('response', callback, None)
     dialog.show_all()
 
 def _mpeg_render_check_toggled(widget, data):

@@ -442,6 +442,8 @@ def init_editor_state():
     # Create array needed to update compositors after all edits
     editorstate.current_sequence().restack_compositors()
 
+    #editorstate.PLAYER().jack_output_on()
+
     # Enable edit action GUI updates
     edit.do_gui_update = True
     

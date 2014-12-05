@@ -87,6 +87,13 @@ def get_two_column_box_right_pad(widget1, widget2, left_width, right_pad):
     hbox.pack_start(right_box, True, True, 0)
     return hbox
 
+def get_checkbox_row_box(checkbox, widget2):
+    hbox = gtk.HBox()
+    hbox.pack_start(checkbox, False, False, 0)
+    hbox.pack_start(widget2, False, False, 0)
+    hbox.pack_start(gtk.Label(), True, True, 0)
+    return hbox
+    
 def get_two_row_box(widget1, widget2):
     # widget 1 is left justified
     top = get_left_justified_box([widget1])
