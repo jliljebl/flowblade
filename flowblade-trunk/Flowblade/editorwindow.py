@@ -155,7 +155,7 @@ class EditorWindow:
             ('Save As', None, _('_Save As...'), None, None, lambda a:projectaction.save_project_as()),
             ('ExportMenu', None, _('Export')),
             ('ExportMeltXML', None, _('MLT XML'), None, None, lambda a:exporting.MELT_XML_export()),
-            ('ExportEDL', None, _('EDL (CMX 3600 - Cut list only)'), None, None, lambda a:exporting.EDL_export()),
+            ('ExportEDL', None, _('EDL CMX 3600 - Single Track Only'), None, None, lambda a:exporting.EDL_export()),
             ('Close', None, _('_Close'), None, None, lambda a:projectaction.close_project()),
             ('Quit', None, _('_Quit'), '<control>Q', None, lambda a:app.shutdown()),
             ('EditMenu', None, _('_Edit')),

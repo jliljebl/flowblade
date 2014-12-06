@@ -28,6 +28,7 @@ from decimal import Decimal,getcontext,ROUND_DOWN
 from math import modf, floor
 import mlt
 import time
+import md5
 
 import dialogs
 from editorstate import PLAYER
@@ -36,6 +37,10 @@ from editorstate import current_sequence
 import gui
 import renderconsumer
 import utils
+
+EDL_TYPE_AVID_CMX3600 = 0
+
+
 
 _xml_render_player = None
 
@@ -70,27 +75,24 @@ def EDL_export():
     dialogs.export_edl_dialog(_export_edl_dialog_callback, gui.editor_window.window, PROJECT().name)
 
 def _export_edl_dialog_callback(dialog, response_id, data):
-    print "adasdad"
-    if response_id == gtk.RESPONSE_ACCEPT:
-        #dialogs.edl_track_select_dialog(_edl_track_select_dialog_callback, PROJECT().name, "/home/janne/adadasd.edl")
-        """
-        filenames = dialog.get_filenames()
-        edl_path = filenames[0]
+    if response_id == gtk.RESPONSE_YES:
+        file_name, out_folder, track_select_combo = data
+        edl_path = out_folder.get_filename()+ "/" + file_name.get_text() + ".edl" 
         global _xml_render_monitor
         _xml_render_player = renderconsumer.XMLRenderPlayer(get_edl_temp_xml_path(),
                                                             _edl_xml_render_done,
-                                                            edl_path)
+                                                            (edl_path, track_select_combo))
         _xml_render_player.start()
-        """
+
         dialog.destroy()
     else:
         dialog.destroy()
 
-def _edl_xml_render_done(edl_path):
-    print "wwwww"
+def _edl_xml_render_done(data):
+    edl_path, track_select_combo = data
     global _xml_render_player
     _xml_render_player = None
-    mlt_parse = MLTXMLParse(get_edl_temp_xml_path())
+    mlt_parse = MLTXMLParse(get_edl_temp_xml_path(), edl_path)
     mlt_parse.create_edl()
 
 def get_edl_temp_xml_path():
@@ -99,8 +101,9 @@ def get_edl_temp_xml_path():
 
 class MLTXMLParse:
         
-    def __init__(self, kdenliveFile):
-        self.xmldoc = minidom.parse(kdenliveFile)
+    def __init__(self, xmlfile, title):
+        self.xmldoc = minidom.parse(xmlfile)
+        self.title = title
     
     def get_project_profile(self):
         profile_dict = {}
@@ -155,62 +158,88 @@ class MLTXMLParse:
         for i in self.get_producers():
             src_pid = i["pid"]
             source_links[src_pid] = i["resource"]
-        return source_links
+        
+        reel_names ={}
+        reel_count = 1
+        for pid, resource in source_links.iteritems():
+            not_unique = True
+            reel_name = "{0:03d}".format(reel_count)
+            reel_names[resource] = reel_name
+            reel_count = reel_count + 1
 
+        return (source_links, reel_names)
+            
     def create_edl(self):
-        source_links = self.link_references()
-        for playlist in self.get_playlists():
-            edl_event = 1
-            prog_in = 0 # showtime tally
-            prog_out = 0
+        str_list = []
+        #for num in xrange(loop_count):
+        #str_list.append(`num`)
+        #return ''.join(str_list)
+        title = self.title.split("/")[-1] 
+        title = title.split(".")[0].upper()
+        str_list.append("TITLE:   " + title + "\n")
+        
+        source_links, reel_names = self.link_references()
+        
+        playlist = self.get_playlists()[current_sequence().first_video_index]
 
-            print "\n === " + playlist["pid"] + " === \n"
-            for event in playlist["events"]:
-                # Get source file
-                producer = event["producer"]
-                source_path = source_links[producer]
-                source_file = source_path.split("/")[-1]
+        edl_event = 1
+        prog_in = 0 # showtime tally
+        prog_out = 0
+        for event in playlist["events"]:
+            # Get source file
+            producer = event["producer"]
 
-                # Get Source in and out
-                src_in = int(event["inTime"]) # source clip IN time
-                src_out = int(event["outTime"]) # source clip OUT time
-                # Fix for first event
-                if edl_event != 1:
-                    src_out = src_out + 1 
-                
-                # Source duration and proram out
-                src_dur = src_out - src_in 
-                prog_out = prog_out + src_dur # increment program tally
+            resource = source_links[producer]
+            #source_file = resource.split("/")[-1]
+            reel_name = reel_names[resource]
 
-                # Write out edl event
-                self.write_edl_event(edl_event, producer, source_file, 
-                                     src_in, src_out, prog_in, prog_out)
+            # Get Source in and out
+            src_in = int(event["inTime"]) # source clip IN time
+            src_out = int(event["outTime"]) # source clip OUT time
+            # Fix for first event
+            if edl_event != 1:
+                src_out = src_out + 1 
+            
+            # Source duration and proram out
+            src_dur = src_out - src_in 
+            prog_out = prog_out + src_dur # increment program tally
 
-                # Fix for first event
-                if edl_event == 1:
-                    prog_in = prog_in + 1
-                
-                # Increment program in and event count     
-                prog_in = prog_in + src_dur
-                edl_event = edl_event + 1
+            # Write out edl event
+            self.write_edl_event_CMX3600(str_list, edl_event, reel_name, 
+                                         src_in, src_out, prog_in, prog_out)
 
+            # Fix for first event
+            if edl_event == 1:
+                prog_in = prog_in + 1
+            
+            # Increment program in and event count     
+            prog_in = prog_in + src_dur
+            edl_event = edl_event + 1
 
-    def write_edl_event(self, edl_event, producer, source_file, src_in, src_out, prog_in, prog_out):
+        print ''.join(str_list).strip("\n")
+
+    def write_edl_event_CMX3600(self, str_list, edl_event, reel_name, src_in, src_out, prog_in, prog_out):
         
             src_transition = "C"
-            src_channel = "V"
-            prod = "P"
-            print "* FROM CLIP NAME: " + source_file
-            print "{0:03d}".format(edl_event) + "  " + producer + "  ",
-            print src_channel  + "  " + src_transition + "  ", 
-            
-            show_frames = False
-            if show_frames == True:
-                print str(src_in) + " " + str(src_out) + "",
-                print str(prog_in) + " " + str(prog_out)
-            else:
-                print self.framesToDF(src_in) + " " + self.framesToDF(src_out) + "",
-                print self.framesToDF(prog_in) + " " + self.framesToDF(prog_out)
+            src_channel = "AA/V"
+            str_list.append("{0:03d}".format(edl_event))
+            str_list.append("  ")
+            str_list.append(reel_name)
+            str_list.append("  ")
+            str_list.append(src_channel)            
+            str_list.append("  ")
+            str_list.append(src_transition)
+            str_list.append("  ")
+            str_list.append("  ")
+            str_list.append(utils.get_tc_string(src_in))
+            str_list.append(" ")
+            str_list.append(utils.get_tc_string(src_out))
+            str_list.append(" ")
+            str_list.append(utils.get_tc_string(prog_in))
+            str_list.append(" ")
+            str_list.append(utils.get_tc_string(prog_out))
+            str_list.append("\n")
+
                     
     def framesToDF(self, framenumber):
         """
