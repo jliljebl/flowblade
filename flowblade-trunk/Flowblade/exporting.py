@@ -92,15 +92,17 @@ def _edl_xml_render_done(data):
     edl_path, track_select_combo = data
     global _xml_render_player
     _xml_render_player = None
-    mlt_parse = MLTXMLParse(get_edl_temp_xml_path(), edl_path)
-    mlt_parse.create_edl()
+    mlt_parse = MLTXMLToEDLParse(get_edl_temp_xml_path(), edl_path)
+    edl_contents = mlt_parse.create_edl(track_select_combo.get_active() + 1)
+    f = open(edl_path, 'w')
+    f.write(edl_contents)
+    f.close()
 
 def get_edl_temp_xml_path():
     return utils.get_hidden_user_dir_path() + "edl_temp_xml.xml"
 
 
-class MLTXMLParse:
-        
+class MLTXMLToEDLParse:
     def __init__(self, xmlfile, title):
         self.xmldoc = minidom.parse(xmlfile)
         self.title = title
@@ -169,18 +171,19 @@ class MLTXMLParse:
 
         return (source_links, reel_names)
             
-    def create_edl(self):
+    def create_edl(self, track_index):
         str_list = []
-        #for num in xrange(loop_count):
-        #str_list.append(`num`)
-        #return ''.join(str_list)
         title = self.title.split("/")[-1] 
         title = title.split(".")[0].upper()
         str_list.append("TITLE:   " + title + "\n")
         
         source_links, reel_names = self.link_references()
         
-        playlist = self.get_playlists()[current_sequence().first_video_index]
+        playlist = self.get_playlists()[track_index]
+        if track_index < current_sequence().first_video_index:
+            src_channel = "AA"
+        else:
+            src_channel = "AA/V"
 
         edl_event = 1
         prog_in = 0 # showtime tally
@@ -205,7 +208,7 @@ class MLTXMLParse:
             prog_out = prog_out + src_dur # increment program tally
 
             # Write out edl event
-            self.write_edl_event_CMX3600(str_list, edl_event, reel_name, 
+            self.write_edl_event_CMX3600(str_list, edl_event, reel_name,src_channel,
                                          src_in, src_out, prog_in, prog_out)
 
             # Fix for first event
@@ -216,12 +219,10 @@ class MLTXMLParse:
             prog_in = prog_in + src_dur
             edl_event = edl_event + 1
 
-        print ''.join(str_list).strip("\n")
+        return ''.join(str_list).strip("\n")
 
-    def write_edl_event_CMX3600(self, str_list, edl_event, reel_name, src_in, src_out, prog_in, prog_out):
-        
+    def write_edl_event_CMX3600(self, str_list, edl_event, reel_name, src_channel, src_in, src_out, prog_in, prog_out):
             src_transition = "C"
-            src_channel = "AA/V"
             str_list.append("{0:03d}".format(edl_event))
             str_list.append("  ")
             str_list.append(reel_name)
