@@ -932,12 +932,11 @@ def export_edl_dialog(callback, parent_window, project_name):
     folder_row = guiutils.get_two_column_box(gtk.Label(_("Export Folder:")), out_folder, INPUT_LABELS_WITDH)
 
     seq = editorstate.current_sequence()
-    dvd_type_combo = gtk.combo_box_new_text()
-    for i in range(seq.first_video_index, len(seq.tracks)- 2):
-        dvd_type_combo.append_text(utils.get_track_name(seq.tracks[i], seq))
-
-    dvd_type_combo.set_active(0)
-    track_row = guiutils.get_two_column_box(gtk.Label(_("Exported Track:")), dvd_type_combo, INPUT_LABELS_WITDH)
+    track_select_combo = gtk.combo_box_new_text()
+    for i in range(1,  len(seq.tracks) - 1):
+        track_select_combo.append_text(utils.get_track_name(seq.tracks[i], seq))
+    track_select_combo.set_active(seq.first_video_index - 1)
+    track_row = guiutils.get_two_column_box(gtk.Label(_("Exported Track:")), track_select_combo, INPUT_LABELS_WITDH)
 
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(folder_row, False, False, 0)
@@ -950,7 +949,7 @@ def export_edl_dialog(callback, parent_window, project_name):
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, None)
+    dialog.connect('response', callback, (file_name, out_folder, track_select_combo))
     dialog.show_all()
 
 def _mpeg_render_check_toggled(widget, data):
