@@ -779,6 +779,13 @@ class EditorWindow:
         sep = gtk.SeparatorMenuItem()
         menu.append(sep)
 
+        jack_menu_item = gtk.MenuItem(_("JACK Audio...").encode('utf-8'))
+        jack_menu_item.connect("activate", lambda w: menuactions.jack_output_managing())
+        menu.append(jack_menu_item)
+        
+        sep = gtk.SeparatorMenuItem()
+        menu.append(sep)        
+        
         zoom_in_menu_item = gtk.MenuItem(_("Zoom In").encode('utf-8'))
         zoom_in_menu_item.connect("activate", lambda w: updater.zoom_in())
         menu.append(zoom_in_menu_item)
