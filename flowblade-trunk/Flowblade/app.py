@@ -77,6 +77,7 @@ import undo
 import updater
 import utils
 
+import jackaudio
 
 AUTOSAVE_DIR = appconsts.AUTOSAVE_DIR
 AUTOSAVE_FILE = "autosave/autosave"
@@ -149,7 +150,7 @@ def main(root_path):
     # Init gtk threads
     gtk.gdk.threads_init()
     gtk.gdk.threads_enter()
-
+    
     # Load drag'n'drop images
     dnd.init()
 
@@ -751,6 +752,7 @@ def _shutdown_dialog_callback(dialog, response_id):
 
 def _app_destroy():
     # Close threads and stop mlt consumers
+    # editorstate.player.jack_output_off()
     editorstate.player.shutdown() # has ticker thread and player threads running
     audiomonitoring.close()
 

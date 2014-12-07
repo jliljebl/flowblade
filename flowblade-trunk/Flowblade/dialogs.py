@@ -26,6 +26,7 @@ import pygtk
 pygtk.require('2.0');
 import gtk
 
+import locale
 import os
 import pango
 
@@ -35,7 +36,6 @@ import gui
 import guicomponents
 import guiutils
 import editorstate
-import locale
 import mltenv
 import mltprofiles
 import mltfilters

@@ -75,6 +75,8 @@ class Player:
         self.consumer.set("rescale", "bicubic") # MLT options "nearest", "bilinear", "bicubic", "hyper"
         self.consumer.set("resize", 1)
         self.consumer.set("progressive", 1)
+        #self.consumer.set("audio_off", "1")
+        #self.consumer.set("frequency", "48000")
 
         # Hold ref to switch back from rendering
         self.sdl_consumer = self.consumer 
@@ -362,6 +364,10 @@ class Player:
 
     def jack_output_on(self):
         # We're assuming that we are not rendering and consumer is SDL consumer
+        self.producer.set_speed(0)
+        self.ticker.stop_ticker()
+        self.consumer.stop()
+
         self.consumer.set("audio_off", "1")
         self.consumer.set("frequency", "48000")
 
@@ -371,6 +377,19 @@ class Player:
  
         self.consumer.attach(self.jack_output_filter)
 
+        self.consumer.start()
+
+    def jack_output_off(self):
+        # We're assuming that we are not rendering and consumer is SDL consumer
+        self.producer.set_speed(0)
+        self.ticker.stop_ticker()
+        self.consumer.stop()
+
+        self.consumer.set("audio_off", "0")
+        self.consumer.detach(self.jack_output_filter)
+
+        self.consumer.start()
+        
     def shutdown(self):
         self.ticker.stop_ticker()
         self.producer.set_speed(0)
