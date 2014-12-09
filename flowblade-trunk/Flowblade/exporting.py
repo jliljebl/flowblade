@@ -29,6 +29,7 @@ from math import modf, floor
 import mlt
 import time
 import md5
+import re
 
 import dialogs
 from editorstate import PLAYER
@@ -40,6 +41,10 @@ import utils
 
 EDL_TYPE_AVID_CMX3600 = 0
 
+REEL_NAME_3_NUMBER = 0
+REEL_NAME_8_NUMBER = 1
+REEL_NAME_FILE_NAME_START = 2
+REEL_NAME_FILE_NAME_END = 3
 
 
 _xml_render_player = None
@@ -106,6 +111,8 @@ class MLTXMLToEDLParse:
     def __init__(self, xmlfile, title):
         self.xmldoc = minidom.parse(xmlfile)
         self.title = title
+        self.reel_name_type = REEL_NAME_FILE_NAME_END
+        self.from_clip_comment = True
     
     def get_project_profile(self):
         profile_dict = {}
@@ -164,13 +171,33 @@ class MLTXMLToEDLParse:
         reel_names ={}
         reel_count = 1
         for pid, resource in source_links.iteritems():
-            not_unique = True
-            reel_name = "{0:03d}".format(reel_count)
+            reel_name = self.get_reel_name(resource, reel_count)
             reel_names[resource] = reel_name
             reel_count = reel_count + 1
 
         return (source_links, reel_names)
+
+    def get_reel_name(self, resource, reel_count):
+        if self.reel_name_type == REEL_NAME_3_NUMBER:
+            return "{0:03d}".format(reel_count)
+        elif self.reel_name_type == REEL_NAME_8_NUMBER:
+            return "{0:08d}".format(reel_count)
+        else:
+            file_name = resource.split("/")[-1]
+            file_name_no_ext = file_name.split(".")[0]
+            file_name_len = len(file_name_no_ext)
+            if file_name_len >= 8:
+                if self.reel_name_type == REEL_NAME_FILE_NAME_START:
+                    reel_name = file_name_no_ext[0:8]
+                else:
+                    reel_name = file_name_no_ext[file_name_len - 8:file_name_len]
+            else:
+                reel_name = file_name_no_ext + "         "[0:8 - file_name_len]
             
+            # Replace all non-alphanumeric characters
+            reel_name = re.sub('[^0-9a-zA-Z]+', 'X', reel_name)
+            return reel_name.upper()
+    
     def create_edl(self, track_index):
         str_list = []
         title = self.title.split("/")[-1] 
@@ -208,7 +235,7 @@ class MLTXMLToEDLParse:
             prog_out = prog_out + src_dur # increment program tally
 
             # Write out edl event
-            self.write_edl_event_CMX3600(str_list, edl_event, reel_name,src_channel,
+            self.write_edl_event_CMX3600(str_list, resource, edl_event, reel_name,src_channel,
                                          src_in, src_out, prog_in, prog_out)
 
             # Fix for first event
@@ -221,8 +248,11 @@ class MLTXMLToEDLParse:
 
         return ''.join(str_list).strip("\n")
 
-    def write_edl_event_CMX3600(self, str_list, edl_event, reel_name, src_channel, src_in, src_out, prog_in, prog_out):
+    def write_edl_event_CMX3600(self, str_list, resource, edl_event, reel_name, src_channel, src_in, src_out, prog_in, prog_out):
             src_transition = "C"
+            if self.from_clip_comment  == True:
+                str_list.append("* FROM CLIP NAME: " + resource.split("/")[-1] + "\n")
+            
             str_list.append("{0:03d}".format(edl_event))
             str_list.append("  ")
             str_list.append(reel_name)
@@ -242,52 +272,7 @@ class MLTXMLToEDLParse:
             str_list.append("\n")
 
                     
-    def framesToDF(self, framenumber):
-        """
-            This method adapted from C++ code called "timecode" by Jason Wood.
-            begin: Wed Dec 17 2003
-            copyright: (C) 2003 by Jason Wood
-            email: jasonwood@blueyonder.co.uk 
-            Framerate should be 29.97, 59.94, or 23.976, otherwise the calculations will be off.
-        """
 
-        projectMeta = self.get_project_profile()
-        framerate = float(projectMeta["frame_rate_num"]) / float(projectMeta["frame_rate_den"])
-        
-        # Number of frames to drop on the minute marks is the nearest integer to 6% of the framerate
-        dropFrames = round(framerate * 0.066666) 
-        # Number of frames in an hour
-        framesPerHour = round(framerate * 60 * 60) 
-        # Number of frames in a day - timecode rolls over after 24 hours
-        framesPerDay = framesPerHour * 24 
-        # Number of frames per ten minutes
-        framesPer10Minutes = round(framerate * 60 * 10) 
-        # Number of frames per minute is the round of the framerate * 60 minus the number of dropped frames
-        framesPerMinute = (round(framerate) * 60) - dropFrames 
-        
-        if (framenumber < 0): # For negative time, add 24 hours.
-            framenumber = framesPerDay + framenumber
-
-        # If framenumber is greater than 24 hrs, next operation will rollover clock
-        # % is the modulus operator, which returns a remainder. a % b = the remainder of a/b
-
-        framenumber = framenumber % framesPerDay 
-        d = floor(framenumber / framesPer10Minutes)
-        m = framenumber % framesPer10Minutes
-
-        if (m > 1):
-            framenumber=framenumber + (dropFrames * 9 * d) + dropFrames * floor((m-dropFrames) / framesPerMinute)
-        else:
-            framenumber = framenumber + dropFrames * 9 * d;
-
-        frRound = round(framerate);
-        frames = framenumber % frRound;
-        seconds = floor(framenumber / frRound) % 60;
-        minutes = floor(floor(framenumber / frRound) / 60) % 60;
-        hours = floor(floor(floor(framenumber / frRound) / 60) / 60);    
-
-        tc = "%d:%02d:%02d;%02d" % (hours, minutes, seconds, frames)
-        return tc
 
 
 
