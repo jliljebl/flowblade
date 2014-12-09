@@ -235,7 +235,7 @@ class MLTXMLToEDLParse:
             prog_out = prog_out + src_dur # increment program tally
 
             # Write out edl event
-            self.write_edl_event_CMX3600(str_list, resource, edl_event, reel_name,src_channel,
+            self.write_edl_event_CMX3600(str_list, resource, edl_event, reel_name, src_channel,
                                          src_in, src_out, prog_in, prog_out)
 
             # Fix for first event
@@ -248,7 +248,8 @@ class MLTXMLToEDLParse:
 
         return ''.join(str_list).strip("\n")
 
-    def write_edl_event_CMX3600(self, str_list, resource, edl_event, reel_name, src_channel, src_in, src_out, prog_in, prog_out):
+    def write_edl_event_CMX3600(self, str_list, resource, edl_event, reel_name, 
+                                src_channel, src_in, src_out, prog_in, prog_out):
             src_transition = "C"
             if self.from_clip_comment  == True:
                 str_list.append("* FROM CLIP NAME: " + resource.split("/")[-1] + "\n")
