@@ -75,22 +75,42 @@ def new_project_dialog(callback):
 
     tracks_combo, tracks_combo_values_list = guicomponents.get_track_counts_combo_and_values_list()
     tracks_select = panels.get_two_column_box(gtk.Label(_("Number of tracks:")),
-                                               tracks_combo,
-                                               250)
+                                               tracks_combo, 250)
     tracks_vbox = gtk.VBox(False, 2)
     tracks_vbox.pack_start(tracks_select, False, False, 0)
 
     tracks_frame = panels.get_named_frame(_("Tracks"), tracks_vbox)
 
+    project_type_combo = gtk.combo_box_new_text()
+    project_type_combo.append_text(_("Normal / Absolute Paths"))
+    project_type_combo.append_text(_("Compact / Relative Paths"))
+    project_type_combo.set_active(0) 
+    
+    type_select = panels.get_two_column_box(gtk.Label(_("Type / Save Method:")),
+                                               project_type_combo,
+                                               250)
+
+    project_folder = gtk.FileChooserButton(_("Select Compact Project Folder"))
+    project_folder.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+    project_folder.set_current_folder(os.path.expanduser("~") + "/")
+    project_folder_row = guiutils.get_two_column_box(gtk.Label(_("Compact Project Folder:")), project_folder, 250)
+        
+    type_vbox = gtk.VBox(False, 2)
+    type_vbox.pack_start(type_select, False, False, 0)
+    type_vbox.pack_start(project_folder_row, False, False, 0)
+
+    type_frame = panels.get_named_frame(_("Project Type"), type_vbox)
+    
     vbox = gtk.VBox(False, 2)
     vbox.add(profiles_frame)
     vbox.add(tracks_frame)
+    vbox.add(type_frame)
 
     alignment = dialogutils.get_default_alignment(vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, out_profile_combo, tracks_combo, tracks_combo_values_list)
+    dialog.connect('response', callback, out_profile_combo, tracks_combo, tracks_combo_values_list, project_type_combo)
     out_profile_combo.connect('changed', lambda w: _new_project_profile_changed(w, profile_info_box))
     dialog.show_all()
     
