@@ -254,7 +254,48 @@ class Project:
 
         return os.path.dirname(last_render_event.data)
 
-            
+
+class CompactProject:
+    _projects = "projects/"
+    _media = "media/"
+    _thumbnails = "thumbnails/"
+    _rendered = "rendered/"
+
+    def __init__(self):
+        pass
+
+    def set_root_path(self, root_path):
+        self.root_path = root_path
+    
+    def create_folders(self):
+        d = os.path.dirname(self.root_path)
+        os.mkdir(d) 
+
+        d = os.path.dirname(self.projects_path())
+        os.mkdir(d)
+
+        d = os.path.dirname(self.media_path())
+        os.mkdir(d)
+
+        d = os.path.dirname(self.thumbnails_path())
+        os.mkdir(d)
+
+        d = os.path.dirname(self.rendered_path())
+        os.mkdir(d) 
+
+    def projects_path(self):
+        return self.root_path + self._projects
+
+    def media_path(self):
+        return self.root_path + self._media
+        
+    def thumbnails_path(self):
+        return self.root_path + self._thumbnails
+        
+    def rendered_path(self):
+        return self.root_path + self._rendered
+
+
 class MediaFile:
     """
     Media file that can added to and edited in Sequence.

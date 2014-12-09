@@ -206,13 +206,13 @@ def _enable_save():
 def new_project():
     dialogs.new_project_dialog(_new_project_dialog_callback)
 
-def _new_project_dialog_callback(dialog, response_id, profile_combo, tracks_combo, tracks_combo_values_list):
+def _new_project_dialog_callback(dialog, response_id, profile_combo, tracks_combo, tracks_combo_values_list, project_type_combo):
     v_tracks, a_tracks = tracks_combo_values_list[tracks_combo.get_active()]
     if response_id == gtk.RESPONSE_ACCEPT:
         
         app.new_project(profile_combo.get_active(), v_tracks, a_tracks)
         dialog.destroy()
-        
+
         project_event = projectdata.ProjectEvent(projectdata.EVENT_CREATED_BY_NEW_DIALOG, None)
         PROJECT().events.append(project_event)
     else:
