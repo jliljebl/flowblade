@@ -189,6 +189,7 @@ class EditorWindow:
             ('LogClipRange', None, _('Log Marked Clip Range'), '<control>L', None, lambda a:medialog.log_range_clicked()),
             ('RecreateMediaIcons', None, _('Recreate Media Icons...'), None, None, lambda a:menuactions.recreate_media_file_icons()),
             ('RemoveUnusedMedia', None, _('Remove Unused Media...'), None, None, lambda a:projectaction.remove_unused_media()),
+            ('JackAudio', None, _("JACK Audio..."), None, None, lambda a: menuactions.jack_output_managing()),
             ('ProxyManager', None, _('Proxy Manager'), None, None, lambda a:proxyediting.show_proxy_manager_dialog()),
             ('ProjectInfo', None, _('Project Info'), None, None, lambda a:menuactions.show_project_info()),
             ('RenderMenu', None, _('Render')),
@@ -251,6 +252,8 @@ class EditorWindow:
                     <separator/>
                     <menuitem action='ChangeSequenceTracks'/>
                     <menuitem action='Watermark'/>
+                    <separator/>
+                    <menuitem action='JackAudio'/>
                     <separator/>
                     <menuitem action='ProfilesManager'/>
                     <menuitem action='Preferences'/>
@@ -775,13 +778,6 @@ class EditorWindow:
 
         interp_menu_item.set_submenu(interp_menu)
         menu.append(interp_menu_item)
-
-        sep = gtk.SeparatorMenuItem()
-        menu.append(sep)
-
-        jack_menu_item = gtk.MenuItem(_("JACK Audio...").encode('utf-8'))
-        jack_menu_item.connect("activate", lambda w: menuactions.jack_output_managing())
-        menu.append(jack_menu_item)
         
         sep = gtk.SeparatorMenuItem()
         menu.append(sep)        

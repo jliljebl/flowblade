@@ -25,8 +25,11 @@ import dbus
 
 import appconsts
 import dialogutils
+import editorpersistance
 import editorstate
 import guiutils
+
+_jack_frequencies = [22050, 32000, 44100, 48000, 88200, 96000, 192000]
 
 _dialog = None
 
@@ -64,62 +67,29 @@ class JackAudioManagerDialog:
                             gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                             (_("Close Manager").encode('utf-8'), gtk.RESPONSE_CLOSE))
 
-        """
-        # Encoding
-        self.enc_select = gtk.combo_box_new_text()
-        encodings = renderconsumer.proxy_encodings
-        if len(encodings) < 1: # no encoding options available, system does not have right codecs
-            # display info
-            pass
-        for encoption in encodings:
-            self.enc_select.append_text(encoption.name)
-            
-        current_enc = editorstate.PROJECT().proxy_data.encoding
-        if current_enc >= len(encodings): # current encoding selection not available
-            current_enc = 0
-            editorstate.PROJECT().proxy_data.encoding = 0
-        self.enc_select.set_active(current_enc)
-        self.enc_select.connect("changed", 
-                                lambda w,e: self.encoding_changed(w.get_active()), 
-                                None)
-        """
-        detect_op_select = gtk.Label(_("JACK start-up action:"))
-                           
+        detect_op_select = gtk.Label(_("Start-up action:"))
+        
+        # indexes correspond with values in appconsts.py
         self.detect_op_select = gtk.combo_box_new_text()
         self.detect_op_select.append_text(_("Start JACK output when running JACK Server detected"))
         self.detect_op_select.append_text(_("Never start JACK output"))
         self.detect_op_select.append_text(_("Always start JACK output"))
-        self.detect_op_select.set_active(0)
+        self.detect_op_select.set_active(editorpersistance.prefs.jack_start_up_op)
         self.detect_op_select.connect("changed", 
-                                lambda w,e: self.size_changed(w.get_active()), 
+                                lambda w,e: self.start_op_changed(w.get_active()), 
                                 None)
-        
+
         start_row = gtk.HBox(False, 2)
         start_row.pack_start(detect_op_select, False, False, 0)
+        start_row.pack_start(guiutils.pad_label(4, 4), False, False, 0)
         start_row.pack_start(self.detect_op_select, False, False, 0)
         start_row.pack_start(gtk.Label(), True, True, 0)
-        
-        #row_enc = gtk.HBox(False, 2)
-        #row_enc.pack_start(gtk.Label(), True, True, 0)
-        #row_enc.pack_start(self.enc_select, False, False, 0)
-        #row_enc.pack_start(self.detect_op_select, False, False, 0)
-        #row_enc.pack_start(gtk.Label(), True, True, 0)
         
         vbox_start = gtk.VBox(False, 2)
         vbox_start.pack_start(start_row, False, False, 0)
         vbox_start.pack_start(guiutils.pad_label(8, 12), False, False, 0)
         
-        panel_encoding = guiutils.get_named_frame(_("Application start-up"), vbox_start)
-
-        # Mode
-        media_files = editorstate.PROJECT().media_files
-        video_files = 0
-        proxy_files = 0
-        for k, media_file in media_files.iteritems():
-            if media_file.type == appconsts.VIDEO:
-                video_files = video_files + 1
-                if media_file.has_proxy_file == True or media_file.is_proxy_file == True:
-                    proxy_files = proxy_files + 1
+        start_frame = guiutils.get_named_frame(_("Application Start-Up"), vbox_start)
                     
         if detect_running_pulse_audio() == True:
             audio_server = "Pulseaudio"
@@ -128,22 +98,29 @@ class JackAudioManagerDialog:
         else:
             audio_server = "Unknown"
         
-        proxy_status_label = gtk.Label(_("Running Audio Server:"))
-        proxy_status_value = gtk.Label(audio_server)
-        row_proxy_status = guiutils.get_two_column_box_right_pad(proxy_status_label, proxy_status_value, 150, 150)
+        running_server_label = gtk.Label(_("Running audio server:"))
+        running_server_value = gtk.Label(audio_server)
+        running_row = guiutils.get_two_column_box_right_pad(running_server_label, running_server_value, 190, 15)
 
 
-        proxy_mode_label = gtk.Label(_("Audio output:"))
-        self.proxy_mode_value = gtk.Label("MLT Default")
-        
-        row_proxy_mode = guiutils.get_two_column_box_right_pad(proxy_mode_label, self.proxy_mode_value, 150, 150)
-
+        audio_output_label = gtk.Label(_("Audio output:"))
+        self.audio_output_value = gtk.Label("MLT Default")
+        audio_output_row = guiutils.get_two_column_box_right_pad(audio_output_label, self.audio_output_value, 190, 15)
 
         self.frequency_select = gtk.combo_box_new_text()
-        self.frequency_select.append_text("44100Hz")
-        self.frequency_select.append_text("48000Hz")
-        self.frequency_select.set_active(0)
-        freq_row = guiutils.get_two_column_box_right_pad(gtk.Label("JACK Frequency:"), self.frequency_select, 150, 150)
+        cur_value_index = 0
+        count = 0
+        for freq in _jack_frequencies:
+            self.frequency_select.append_text(str(freq))
+            if freq == editorpersistance.prefs.jack_frequency:
+                cur_value_index = count
+            count = count + 1
+        self.frequency_select.set_active(cur_value_index)
+        self.frequency_select.connect("changed", 
+                                lambda w,e: self.frequency_changed(w.get_active()), 
+                                None)
+                                
+        freq_row = guiutils.get_two_column_box_right_pad(gtk.Label("JACK frequency Hz:"), self.frequency_select, 190, 15)
         
         self.convert_progress_bar = gtk.ProgressBar()
         self.convert_progress_bar.set_text(_("Press Button to Change Mode"))
@@ -164,8 +141,9 @@ class JackAudioManagerDialog:
         row2_onoff.pack_start(gtk.Label(), True, True, 0)
 
         vbox_onoff = gtk.VBox(False, 2)
-        vbox_onoff.pack_start(row_proxy_status, False, False, 0)
-        vbox_onoff.pack_start(row_proxy_mode, False, False, 0)
+        vbox_onoff.pack_start(running_row, False, False, 0)
+        vbox_onoff.pack_start(guiutils.pad_label(12, 2), False, False, 0)
+        vbox_onoff.pack_start(audio_output_row, False, False, 0)
         vbox_onoff.pack_start(freq_row, False, False, 0)
         vbox_onoff.pack_start(guiutils.pad_label(12, 12), False, False, 0)
         vbox_onoff.pack_start(self.convert_progress_bar, False, False, 0)
@@ -175,7 +153,7 @@ class JackAudioManagerDialog:
 
         # Pane
         vbox = gtk.VBox(False, 2)
-        vbox.pack_start(panel_encoding, False, False, 0)
+        vbox.pack_start(start_frame, False, False, 0)
         vbox.pack_start(panel_onoff, False, False, 0)
 
         alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
@@ -190,7 +168,7 @@ class JackAudioManagerDialog:
         global _dialog
         _dialog = self
 
-    def set_convert_buttons_state(self):
+    def set_start_stop_buttons_state(self):
         proxy_mode = editorstate.PROJECT().proxy_data.proxy_mode
         if proxy_mode == appconsts.USE_PROXY_MEDIA:
             self.use_button.set_sensitive(False)
@@ -198,22 +176,10 @@ class JackAudioManagerDialog:
         else:
             self.use_button.set_sensitive(True)
             self.dont_use_button.set_sensitive(False)
-
-    def set_mode_display_value(self):
-        if editorstate.PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA:
-            mode_str = _("Using Proxy Media")
-        else:
-            mode_str = _("Using Original Media")
-        self.proxy_mode_value.set_text(mode_str)
         
-    def encoding_changed(self, enc_index):
-        editorstate.PROJECT().proxy_data.encoding = enc_index
+    def frequency_changed(self,freq_index):
+        editorpersistance.prefs.jack_frequency = _jack_frequencies[freq_index]
 
-    def size_changed(self, size_index):
-        editorstate.PROJECT().proxy_data.size = size_index
+    def start_op_changed(self, start_op):
+        editorpersistance.prefs.jack_start_up_op = start_op
 
-    def update_proxy_mode_display(self):
-        self.set_convert_buttons_state()
-        self.set_mode_display_value()
-        self.convert_progress_bar.set_text(_("Press Button to Change Mode"))
-        self.convert_progress_bar.set_fraction(0.0)
