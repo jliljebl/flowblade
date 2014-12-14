@@ -126,6 +126,72 @@ def _new_project_profile_changed(combo_box, profile_info_box):
     profile_info_box.show_all()
     info_panel.show()
 
+def change_project_type(callback):
+    dialog = gtk.Dialog(_("Change Project Type"), None,
+                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                         _("Change Type").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+
+    info_header_label = gtk.Label()
+    header_box = guiutils.get_left_justified_box([info_header_label])
+    header_box.set_size_request(300, 26)
+
+    info_label = gtk.Label()
+    info_box = guiutils.get_left_justified_box([info_label])
+    small_pad = guiutils.get_pad_label(2, 2)
+    pad = guiutils.get_pad_label(24, 24)
+
+    current_type = panels.get_two_column_box(gtk.Label(_("Current Project Type:")),
+                                             guiutils.get_left_justified_box([gtk.Label(_("Normal / Absolute Paths"))]),
+                                               250)
+
+    project_type_combo = gtk.combo_box_new_text()
+    project_type_combo.append_text(_("Normal / Absolute Paths"))
+    project_type_combo.append_text(_("Compact / Relative Paths"))
+    project_type_combo.connect('changed', lambda w: _set_change_project_type_dialog_texts(w, info_header_label, info_label))
+    project_type_combo.set_active(0)
+    
+    type_select = panels.get_two_column_box(gtk.Label(_("New Project Type:")),
+                                               project_type_combo,
+                                               250)
+
+    vbox = gtk.VBox(False, 2)
+    vbox.pack_start(current_type, False, False)
+    vbox.pack_start(type_select, False, False)
+    #vbox.pack_start(header_box, False, False)
+    vbox.pack_start(info_box, False, False)
+    vbox.pack_start(pad, True, True)
+
+    alignment = dialogutils.get_default_alignment(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, type_select)
+    dialog.show_all()
+
+def _set_change_project_type_dialog_texts(combo, header, text):
+    if combo.get_active() == 0:
+        header.set_text("<b>" + _("Normal Project") + "</b>\n")
+        info_text = u"\u2022" + _(" References to media assets are saved as <b>absolute paths</b>\n") + \
+                    u"\u2022" + _(" No set folder structure for project assets\n") + \
+                    u"\u2022" + _(" Project files can be saved anywhere in relation to media\n") + \
+                    u"\u2022" + _(" Rendered files and thumbnails are saved by default in the hidden <i>(home)/.flowblade</i> directory\n") + \
+                    u"\u2022" + _(" Projects <b>can not be backed up as a single unit</b>\n") + \
+                    u"\u2022" + _(" Assets are not copied when added to project")
+                
+    else:
+        header.set_text("<b>" + _("Compact Project") + "</b>\n")
+
+        info_text = u"\u2022" + _(" Project files, media assets, rendered files and thumbnails <b>are saved in a folder structure inside project folder</b>\n") + \
+                    u"\u2022" + _(" References to media assets are saved as <b>relative paths</b>\n") + \
+                    u"\u2022" + _(" Project files can only saved in /projects folder\n") + \
+                    u"\u2022" + _(" Projects <b>can be backed up as a single unit</b>\n") + \
+                    u"\u2022" + _(" Media assets are copied  to project folder when added to project")
+    text.set_text(info_text)
+
+    header.set_use_markup(True)
+    text.set_use_markup(True)
+
 def load_project_dialog(callback):    
     dialog = gtk.FileChooserDialog(_("Select Project File"), None, 
                                    gtk.FILE_CHOOSER_ACTION_OPEN, 
@@ -699,10 +765,10 @@ def tracks_count_change_dialog(callback):
                                                tracks_combo,
                                                250)
     info_text = _("Please note:\n") + \
-                _("* It is recommended that you save Project before completing this operation\n") + \
-                _("* There is no Undo for this operation\n") + \
-                _("* Current Undo Stack will be destroyed\n") + \
-                _("* All Clips and Compositors on deleted Tracks will be permanently destroyed")
+                u"\u2022" + _(" It is recommended that you save Project before completing this operation\n") + \
+                u"\u2022" + _(" There is no Undo for this operation\n") + \
+                u"\u2022" + _(" Current Undo Stack will be destroyed\n") + \
+                u"\u2022" + _(" All Clips and Compositors on deleted Tracks will be permanently destroyed")
     info_label = gtk.Label(info_text)
     info_label.set_use_markup(True)
     info_box = guiutils.get_left_justified_box([info_label])
@@ -722,7 +788,6 @@ def tracks_count_change_dialog(callback):
     _default_behaviour(dialog)
     dialog.connect('response', callback, tracks_combo)
     dialog.show_all()
-
 
 def new_sequence_dialog(callback, default_name):
     dialog = gtk.Dialog(_("Create New Sequence"), None,

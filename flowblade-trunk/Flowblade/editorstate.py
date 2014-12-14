@@ -85,6 +85,10 @@ audio_monitoring_available = False
 # Cursor pos
 cursor_on_tline = False
 
+# Flag for running JACK audio server. If this is on when SDLConsumer created in mltplayer.py
+# jack rack filter will bw taached to it
+attach_jackrack = False
+
 def current_is_move_mode():
     if ((edit_mode == INSERT_MOVE) or (edit_mode == OVERWRITE_MOVE) or (edit_mode == MULTI_MOVE)):
         return True

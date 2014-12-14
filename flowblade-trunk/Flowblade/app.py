@@ -212,7 +212,10 @@ def main(root_path):
 
     # Audiomonitoring being available needs to be known before GUI creation
     audiomonitoring.init(editorstate.project.profile)
-    
+
+    # Do JACK audio start-up action
+    jackaudio.start_up()
+
     # Create player object
     create_player()
 
@@ -769,5 +772,9 @@ def _app_destroy():
     except:
         print "Delete autosave file FAILED"
 
+    # Delete jack failsafe file
+    jackaudio.delete_failsafe_file()
+
+        
     # Exit gtk main loop.
     gtk.main_quit()

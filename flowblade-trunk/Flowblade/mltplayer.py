@@ -33,6 +33,7 @@ import time
 
 import gui
 from editorstate import timeline_visible
+import editorstate
 import utils
 import updater
 
@@ -75,8 +76,9 @@ class Player:
         self.consumer.set("rescale", "bicubic") # MLT options "nearest", "bilinear", "bicubic", "hyper"
         self.consumer.set("resize", 1)
         self.consumer.set("progressive", 1)
-        #self.consumer.set("audio_off", "1")
-        #self.consumer.set("frequency", "48000")
+        if editorstate.attach_jackrack == True:
+            print "pi-pi-pipi--pilluu"
+            self.attach_jack_to_consumer()
 
         # Hold ref to switch back from rendering
         self.sdl_consumer = self.consumer 
@@ -366,8 +368,11 @@ class Player:
         # We're assuming that we are not rendering and consumer is SDL consumer
         self.producer.set_speed(0)
         self.ticker.stop_ticker()
-        self.consumer.stop()
+        #self.consumer.stop()
 
+        self.attach_jack_to_consumer()
+
+        """
         self.consumer.set("audio_off", "1")
         self.consumer.set("frequency", "48000")
 
@@ -376,9 +381,23 @@ class Player:
         self.jack_output_filter.set("out_2", "system:playback_2")
  
         self.consumer.attach(self.jack_output_filter)
+        """
 
+        #self.consumer.start()
+
+    def attach_jack_to_consumer(self):
+        self.consumer.stop()
+                
+        self.consumer.set("audio_off", "1")
+        self.consumer.set("frequency", "48000")
+
+        self.jack_output_filter = mlt.Filter(self.profile, "jackrack")
+        self.jack_output_filter.set("out_1", "system:playback_1")
+        self.jack_output_filter.set("out_2", "system:playback_2")
+        self.consumer.attach(self.jack_output_filter)
+        
         self.consumer.start()
-
+        
     def jack_output_off(self):
         # We're assuming that we are not rendering and consumer is SDL consumer
         self.producer.set_speed(0)
