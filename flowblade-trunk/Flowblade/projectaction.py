@@ -684,7 +684,13 @@ def _media_filtering_selector_item_activated(selector, index):
     # Const value correspond with indexes here
     editorstate.media_view_filter = index
     gui.media_list_view.fill_data_model()
-    
+
+def change_project_type():
+    dialogs.change_project_type(_change_project_type_dialog_callback)
+        
+def _change_project_type_dialog_callback(dialog, response_id, type_select):
+    dialog.destroy()
+
 # ------------------------------------ bins
 def add_new_bin():
     """

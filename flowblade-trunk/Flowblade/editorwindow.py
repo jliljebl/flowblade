@@ -191,6 +191,7 @@ class EditorWindow:
             ('RemoveUnusedMedia', None, _('Remove Unused Media...'), None, None, lambda a:projectaction.remove_unused_media()),
             ('JackAudio', None, _("JACK Audio..."), None, None, lambda a: menuactions.jack_output_managing()),
             ('ProxyManager', None, _('Proxy Manager'), None, None, lambda a:proxyediting.show_proxy_manager_dialog()),
+            ('ProjectType', None, _("Change Project Type..."), None, None,  lambda a:projectaction.change_project_type()),
             ('ProjectInfo', None, _('Project Info'), None, None, lambda a:menuactions.show_project_info()),
             ('RenderMenu', None, _('Render')),
             ('AddToQueue', None, _('Add To Batch Render Queue...'), None, None, lambda a:projectaction.add_to_render_queue()),
@@ -276,6 +277,7 @@ class EditorWindow:
                     <menuitem action='RemoveUnusedMedia'/>
                     <separator/>
                     <menuitem action='ProxyManager'/>
+                    <menuitem action='ProjectType'/>
                 </menu>
                 <menu action='RenderMenu'>
                     <menuitem action='AddToQueue'/>

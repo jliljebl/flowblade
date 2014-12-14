@@ -22,16 +22,74 @@ import gtk
 
 import commands
 import dbus
+import os
 
 import appconsts
 import dialogutils
 import editorpersistance
 import editorstate
 import guiutils
+import utils
 
+JACK_RUNNING = 0
+PULSEAUDIO_RUNNING = 1
+AUDIO_SERVER_UNKNOWN = 3
+
+_audio_server = AUDIO_SERVER_UNKNOWN
+_audio_server_names = None
 _jack_frequencies = [22050, 32000, 44100, 48000, 88200, 96000, 192000]
 
+_jack_failsafe_path = utils.get_hidden_user_dir_path() + "/jack_fail_safe"
+
 _dialog = None
+
+def start_up():
+    global _audio_server_names # translations only work inside functions because initialization order
+    _audio_server_names = ["JACK", "Pulseaudio", _("Unknown")]
+    
+    detect_running_audio_server()
+    print _audio_server_names[_audio_server] + " audio server running."
+
+    print editorpersistance.prefs.jack_start_up_op 
+
+    # Do user selected jack start-up operation.
+    if editorpersistance.prefs.jack_start_up_op == appconsts.JACK_START_NEVER:
+        delete_failsafe_file()
+        return
+
+    if editorpersistance.prefs.jack_start_up_op == appconsts.JACK_START_ALWAYS:
+        # In case starting JACK always actually crashes application we need to 
+        # turn this user preference off after crashes
+        if os.path.isfile(_jack_failsafe_path) == True:
+            editorpersistance.prefs.jack_start_up_op = appconsts.JACK_START_WHEN_DETECTED
+            editorpersistance.save()
+            delete_failsafe_file()
+            return
+
+        # Write failsafe file to make sure that user doesn't 
+        # get always crashing application and can't reach JACK Audio preferences 
+        # to change start-up op.
+        fail_safe_file = file(_jack_failsafe_path, "wb")
+        fail_safe_file.write('jack_audio_failsafe')
+        fail_safe_file.close()
+    
+        editorstate.attach_jackrack = True
+        return
+
+    # case: editorpersistance.prefs.jack_start_up_op == JACK_START_WHEN_DETECTED
+    if _audio_server == JACK_RUNNING:
+        delete_failsafe_file()
+        editorstate.attach_jackrack = True
+
+def detect_running_audio_server():
+    # This is all very iffy and will fail if we're making wrong assumtions here
+    global _audio_server
+    if detect_running_jack_server() == True:
+        _audio_server = JACK_RUNNING
+    elif detect_pulse_audio_process() == True:
+         _audio_server = PULSEAUDIO_RUNNING
+    else:
+         _audio_server = AUDIO_SERVER_UNKNOWN
 
 def detect_running_jack_server():
     # This is hacky
@@ -49,8 +107,9 @@ def detect_running_jack_server():
 
     return False
 
-def detect_running_pulse_audio():
-    # This is hacky
+def detect_pulse_audio_process():
+    # This is hacky.
+    # Pulse audio process can be present but not running
     try:   
         output = commands.getoutput("ps aux | grep pulseaudio")
         if "/usr/bin/pulseaudio" in output:
@@ -60,6 +119,11 @@ def detect_running_pulse_audio():
 
     return False
 
+def delete_failsafe_file():
+    try:
+        os.remove(_jack_failsafe_path)
+    except:
+        pass
 
 class JackAudioManagerDialog:
     def __init__(self):
@@ -91,17 +155,11 @@ class JackAudioManagerDialog:
         
         start_frame = guiutils.get_named_frame(_("Application Start-Up"), vbox_start)
                     
-        if detect_running_pulse_audio() == True:
-            audio_server = "Pulseaudio"
-        elif detect_running_jack_server() == True:
-            audio_server = "JACK"
-        else:
-            audio_server = "Unknown"
+        detect_running_audio_server()
         
         running_server_label = gtk.Label(_("Running audio server:"))
-        running_server_value = gtk.Label(audio_server)
+        running_server_value = gtk.Label(_audio_server_names[_audio_server])
         running_row = guiutils.get_two_column_box_right_pad(running_server_label, running_server_value, 190, 15)
-
 
         audio_output_label = gtk.Label(_("Audio output:"))
         self.audio_output_value = gtk.Label("MLT Default")
@@ -127,9 +185,17 @@ class JackAudioManagerDialog:
             
         self.use_button = gtk.Button(_("Stop JACK Output and Server"))
         self.dont_use_button = gtk.Button(_("Start JACK Output and Server"))
-        #self.set_convert_buttons_state()
+
         self.use_button.connect("clicked", lambda w: _convert_to_proxy_project())
         self.dont_use_button.connect("clicked", lambda w: _convert_to_original_media_project())
+
+        print _audio_server
+
+        if _audio_server == JACK_RUNNING:
+            self.dont_use_button.set_sensitive(False)
+        else:
+            self.use_button.set_sensitive(False)
+
 
         c_box_2 = gtk.HBox(True, 8)
         c_box_2.pack_start(self.use_button, True, True, 0)

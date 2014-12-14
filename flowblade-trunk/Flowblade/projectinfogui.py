@@ -38,6 +38,11 @@ def get_project_info_panel():
     name_row = guiutils.get_left_justified_box([project_name_label])
     name_panel = guiutils.get_named_frame(_("Name"), name_row, 4)
 
+
+    type_info_label = gtk.Label("Normal / Absolute Media Paths")
+    type_row = guiutils.get_left_justified_box([type_info_label])
+    type_panel = guiutils.get_named_frame(_("Type"), type_row, 4)
+    
     profile = PROJECT().profile
     desc_label = gtk.Label(profile.description())
     info_box = guicomponents.get_profile_info_small_box(profile)
@@ -53,6 +58,7 @@ def get_project_info_panel():
 
     project_info_vbox = gtk.VBox()
     project_info_vbox.pack_start(name_panel, False, True, 0)
+    project_info_vbox.pack_start(type_panel, False, True, 0)
     project_info_vbox.pack_start(profile_panel, False, True, 0)
     project_info_vbox.pack_start(events_panel, True, True, 0)
 
