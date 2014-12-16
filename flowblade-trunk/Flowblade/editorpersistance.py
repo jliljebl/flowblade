@@ -239,6 +239,7 @@ class EditorPreferences:
         self.quick_enter_trims = True
         self.show_vu_meter = True
         self.remember_monitor_clip_frame = True
-        self.jack_start_up_op = appconsts.JACK_START_WHEN_DETECTED
+        self.jack_start_up_op = appconsts.JACK_ON_START_UP_NO
         self.jack_frequency = 48000
+        self.jack_output_type = appconsts.JACK_OUT_AUDIO
 

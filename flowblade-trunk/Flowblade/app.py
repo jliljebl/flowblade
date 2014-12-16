@@ -756,7 +756,8 @@ def _shutdown_dialog_callback(dialog, response_id):
 
 def _app_destroy():
     # Close threads and stop mlt consumers
-    # editorstate.player.jack_output_off()
+    if editorstate.player.jack_output_filter != None:
+        editorstate.player.jack_output_off()
     editorstate.player.shutdown() # has ticker thread and player threads running
     audiomonitoring.close()
 
@@ -775,6 +776,5 @@ def _app_destroy():
     # Delete jack failsafe file
     jackaudio.delete_failsafe_file()
 
-        
     # Exit gtk main loop.
     gtk.main_quit()
