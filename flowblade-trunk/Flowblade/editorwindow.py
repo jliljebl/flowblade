@@ -187,6 +187,7 @@ class EditorWindow:
             ('CreateNoiseClip', None, _('Noise'), None, None, lambda a:patternproducer.create_noise_clip()),
             ('CreateBarsClip', None, _('EBU Bars'), None, None, lambda a:patternproducer.create_bars_clip()),
             ('CreateIsingClip', None, _('Ising'), None, None, lambda a:patternproducer.create_icing_clip()),
+            ('CreateColorPulseClip', None, _('Color Pulse'), None, None, lambda a:patternproducer.create_color_pulse_clip()),
             ('LogClipRange', None, _('Log Marked Clip Range'), '<control>L', None, lambda a:medialog.log_range_clicked()),
             ('RecreateMediaIcons', None, _('Recreate Media Icons...'), None, None, lambda a:menuactions.recreate_media_file_icons()),
             ('RemoveUnusedMedia', None, _('Remove Unused Media...'), None, None, lambda a:projectaction.remove_unused_media()),
@@ -269,8 +270,9 @@ class EditorWindow:
                     <menuitem action='CreateColorClip'/>
                     <menu action='PatternProducersMenu'>
                         <menuitem action='CreateNoiseClip'/>
+                        <menuitem action='CreateColorPulseClip'/>
+                        <menuitem action='CreateIsingClip'/>
                         <menuitem action='CreateBarsClip'/>    
-                        <menuitem action='CreateIsingClip'/>    
                     </menu>
                     <separator/>
                     <menuitem action='LogClipRange'/>

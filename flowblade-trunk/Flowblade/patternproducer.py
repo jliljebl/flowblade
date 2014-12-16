@@ -43,6 +43,7 @@ COLOR_CLIP = 1
 NOISE_CLIP = 2
 EBUBARS_CLIP = 3
 ISING_CLIP = 4
+COLOR_PULSE_CLIP = 5
 
 # ---------------------------------------------------- create callbacks
 def create_color_clip():
@@ -74,6 +75,11 @@ def create_icing_clip():
     PROJECT().add_pattern_producer_media_object(media_object)
     _update_gui_for_pattern_producer_media_object_add()
 
+def create_color_pulse_clip():
+    media_object = BinColorPulseClip(PROJECT().next_media_file_id, _("Color Pulse"))
+    PROJECT().add_pattern_producer_media_object(media_object)
+    _update_gui_for_pattern_producer_media_object_add()
+    
 def _update_gui_for_pattern_producer_media_object_add():
     gui.media_list_view.fill_data_model()
     gui.bin_list_view.fill_data_model()
@@ -126,7 +132,9 @@ def create_pattern_producer(profile, pattern_producer_data):
         clip = _create_ebubars_producer(profile)
     elif pattern_producer_data.patter_producer_type == ISING_CLIP:
         clip = _create_ising_producer(profile)
-
+    elif pattern_producer_data.patter_producer_type == COLOR_PULSE_CLIP:
+        clip = _create_color_pulse_producer(profile)
+        
     clip.path = ""
     clip.filters = []
     clip.name = pattern_producer_data.name
@@ -161,7 +169,12 @@ def _create_ising_producer(profile):
     producer = mlt.Producer(profile, "frei0r.ising0r")
     mltrefhold.hold_ref(producer)
     return producer
-    
+
+def _create_color_pulse_producer(profile):
+    producer = mlt.Producer(profile, "frei0r.plasma")
+    mltrefhold.hold_ref(producer)
+    return producer
+
 # --------------------------------------------------- bin media objects
 class AbstractBinClip:
     """
@@ -222,6 +235,14 @@ class BinIsingClip(AbstractBinClip):
     def __init__(self, id, name):
         AbstractBinClip.__init__(self, id, name)
         self.patter_producer_type = ISING_CLIP
+
+    def create_icon(self):
+        self.icon = gtk.gdk.pixbuf_new_from_file(respaths.PATTERN_PRODUCER_PATH + "noise_icon.png")
+        
+class BinColorPulseClip(AbstractBinClip):
+    def __init__(self, id, name):
+        AbstractBinClip.__init__(self, id, name)
+        self.patter_producer_type = COLOR_PULSE_CLIP
 
     def create_icon(self):
         self.icon = gtk.gdk.pixbuf_new_from_file(respaths.PATTERN_PRODUCER_PATH + "noise_icon.png")
