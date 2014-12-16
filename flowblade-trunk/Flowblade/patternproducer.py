@@ -237,7 +237,7 @@ class BinIsingClip(AbstractBinClip):
         self.patter_producer_type = ISING_CLIP
 
     def create_icon(self):
-        self.icon = gtk.gdk.pixbuf_new_from_file(respaths.PATTERN_PRODUCER_PATH + "noise_icon.png")
+        self.icon = gtk.gdk.pixbuf_new_from_file(respaths.PATTERN_PRODUCER_PATH + "ising_icon.png")
         
 class BinColorPulseClip(AbstractBinClip):
     def __init__(self, id, name):
@@ -245,5 +245,5 @@ class BinColorPulseClip(AbstractBinClip):
         self.patter_producer_type = COLOR_PULSE_CLIP
 
     def create_icon(self):
-        self.icon = gtk.gdk.pixbuf_new_from_file(respaths.PATTERN_PRODUCER_PATH + "noise_icon.png")
+        self.icon = gtk.gdk.pixbuf_new_from_file(respaths.PATTERN_PRODUCER_PATH + "color_pulse_icon.png")
         
