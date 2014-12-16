@@ -42,6 +42,7 @@ UNDEFINED = 0
 COLOR_CLIP = 1
 NOISE_CLIP = 2
 EBUBARS_CLIP = 3
+ISING_CLIP = 4
 
 # ---------------------------------------------------- create callbacks
 def create_color_clip():
@@ -54,21 +55,26 @@ def _create_color_clip_callback(dialog, response_id, widgets):
         color_str = color_button.get_color().to_string()
         media_object = BinColorClip(PROJECT().next_media_file_id, name, color_str)
         PROJECT().add_pattern_producer_media_object(media_object)
-        _update_gui_for_patter_producer_media_object_add()
+        _update_gui_for_pattern_producer_media_object_add()
 
     dialog.destroy()
 
 def create_noise_clip():
     media_object = BinNoiseClip(PROJECT().next_media_file_id, _("Noise"))
     PROJECT().add_pattern_producer_media_object(media_object)
-    _update_gui_for_patter_producer_media_object_add()
+    _update_gui_for_pattern_producer_media_object_add()
 
 def create_bars_clip():
     media_object = BinColorBarsClip(PROJECT().next_media_file_id, _("EBU Bars"))
     PROJECT().add_pattern_producer_media_object(media_object)
-    _update_gui_for_patter_producer_media_object_add()
+    _update_gui_for_pattern_producer_media_object_add()
 
-def _update_gui_for_patter_producer_media_object_add():
+def create_icing_clip():
+    media_object = BinIsingClip(PROJECT().next_media_file_id, _("Ising"))
+    PROJECT().add_pattern_producer_media_object(media_object)
+    _update_gui_for_pattern_producer_media_object_add()
+
+def _update_gui_for_pattern_producer_media_object_add():
     gui.media_list_view.fill_data_model()
     gui.bin_list_view.fill_data_model()
 
@@ -115,15 +121,17 @@ def create_pattern_producer(profile, pattern_producer_data):
     if pattern_producer_data.patter_producer_type == COLOR_CLIP:
         clip = create_color_producer(profile, pattern_producer_data.gdk_color_str)
     elif pattern_producer_data.patter_producer_type == NOISE_CLIP:
-        clip = _create_noise_clip(profile)
+        clip = _create_noise_producer(profile)
     elif pattern_producer_data.patter_producer_type == EBUBARS_CLIP:
-        clip = _create_ebubars_clip(profile)
-        
+        clip = _create_ebubars_producer(profile)
+    elif pattern_producer_data.patter_producer_type == ISING_CLIP:
+        clip = _create_ising_producer(profile)
+
     clip.path = ""
     clip.filters = []
     clip.name = pattern_producer_data.name
     clip.media_type = appconsts.PATTERN_PRODUCER
-    
+
     # Save creation data for cloning when editing or doing save/load 
     clip.create_data = copy.copy(pattern_producer_data)
     clip.create_data.icon = None # this is not pickleable, recreate when needed
@@ -139,18 +147,26 @@ def create_color_producer(profile, gdk_color_str):
 
     return producer
         
-def _create_noise_clip(profile):
+def _create_noise_producer(profile):
     producer = mlt.Producer(profile, "frei0r.nois0r")
     mltrefhold.hold_ref(producer)
     return producer
 
-def _create_ebubars_clip(profile):
+def _create_ebubars_producer(profile):
     producer = mlt.Producer(profile, respaths.PATTERN_PRODUCER_PATH + "ebubars.png")
+    mltrefhold.hold_ref(producer)
+    return producer
+
+def _create_ising_producer(profile):
+    producer = mlt.Producer(profile, "frei0r.ising0r")
     mltrefhold.hold_ref(producer)
     return producer
     
 # --------------------------------------------------- bin media objects
 class AbstractBinClip:
+    """
+    A pattern producer object presnt in Media Bin.
+    """
     def __init__(self, id, name):
         self.id = id
         self.name = name
@@ -201,4 +217,12 @@ class BinColorBarsClip(AbstractBinClip):
 
     def create_icon(self):
         self.icon = gtk.gdk.pixbuf_new_from_file(respaths.PATTERN_PRODUCER_PATH + "bars_icon.png")
+        
+class BinIsingClip(AbstractBinClip):
+    def __init__(self, id, name):
+        AbstractBinClip.__init__(self, id, name)
+        self.patter_producer_type = ISING_CLIP
+
+    def create_icon(self):
+        self.icon = gtk.gdk.pixbuf_new_from_file(respaths.PATTERN_PRODUCER_PATH + "noise_icon.png")
         

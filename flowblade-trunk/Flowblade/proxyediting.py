@@ -687,7 +687,7 @@ class ProxyProjectLoadThread(threading.Thread):
         self.progressbar = progressbar
 
     def run(self):
-        pulse_runner = PulseThread(self.progressbar)
+        pulse_runner = guiutils.PulseThread(self.progressbar)
         pulse_runner.start()
         time.sleep(2.0)
         persistance.show_messages = False
@@ -724,7 +724,7 @@ class ProxyProjectLoadThread(threading.Thread):
         _converting_proxy_mode_done()
         gtk.gdk.threads_leave()
 
-
+"""
 class PulseThread(threading.Thread):
     def __init__(self, proress_bar):
         threading.Thread.__init__(self)
@@ -739,3 +739,4 @@ class PulseThread(threading.Thread):
             gtk.gdk.threads_leave()
             time.sleep(0.1)
         self.exited = True
+"""

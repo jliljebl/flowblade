@@ -25,6 +25,8 @@ import pygtk
 pygtk.require('2.0');
 import gtk
 
+import time
+import threading
 
 import appconsts
 import respaths
@@ -62,6 +64,14 @@ def get_sides_justified_box(widgets, count_of_widgets_on_the_left=1):
         wgets_added +=1
         if wgets_added == count_of_widgets_on_the_left:
             hbox.pack_start(gtk.Label(), True, True, 0)
+    return hbox
+
+def get_centered_box(widgets):
+    hbox = gtk.HBox()
+    hbox.pack_start(gtk.Label(), True, True, 0)
+    for widget in widgets:
+        hbox.pack_start(widget, False, False, 0)
+    hbox.pack_start(gtk.Label(), True, True, 0)
     return hbox
     
 def get_two_column_box(widget1, widget2, left_width):
@@ -231,3 +241,18 @@ def add_separetor(menu):
     sep.show()
     menu.add(sep)
 
+
+class PulseThread(threading.Thread):
+    def __init__(self, proress_bar):
+        threading.Thread.__init__(self)
+        self.proress_bar = proress_bar
+
+    def run(self):
+        self.exited = False
+        self.running = True
+        while self.running:
+            gtk.gdk.threads_enter()
+            self.proress_bar.pulse()
+            gtk.gdk.threads_leave()
+            time.sleep(0.1)
+        self.exited = True

@@ -32,6 +32,7 @@ import os
 import time
 
 import gui
+import editorpersistance
 from editorstate import timeline_visible
 import editorstate
 import utils
@@ -66,6 +67,9 @@ class Player:
         self.wait_for_producer_end_stop = True
         self.render_gui_update_count = 0
 
+        # JACK audio
+        self.jack_output_filter = None
+        
     def create_sdl_consumer(self):
         """
         Creates consumer with sdl output to a gtk+ widget.
@@ -76,9 +80,6 @@ class Player:
         self.consumer.set("rescale", "bicubic") # MLT options "nearest", "bilinear", "bicubic", "hyper"
         self.consumer.set("resize", 1)
         self.consumer.set("progressive", 1)
-        if editorstate.attach_jackrack == True:
-            print "pi-pi-pipi--pilluu"
-            self.attach_jack_to_consumer()
 
         # Hold ref to switch back from rendering
         self.sdl_consumer = self.consumer 
@@ -114,7 +115,7 @@ class Player:
 
     def connect_and_start(self):
         """
-        Connects current procer and comsumer and
+        Connects current procer and consumer and
         """
         self.consumer.purge()
         self.producer.set_speed(0)
@@ -368,46 +369,43 @@ class Player:
         # We're assuming that we are not rendering and consumer is SDL consumer
         self.producer.set_speed(0)
         self.ticker.stop_ticker()
-        #self.consumer.stop()
 
-        self.attach_jack_to_consumer()
-
-        """
-        self.consumer.set("audio_off", "1")
-        self.consumer.set("frequency", "48000")
-
-        self.jack_output_filter = mlt.Filter(self.profile, "jackrack")
-        self.jack_output_filter.set("out_1", "system:playback_1")
-        self.jack_output_filter.set("out_2", "system:playback_2")
- 
-        self.consumer.attach(self.jack_output_filter)
-        """
-
-        #self.consumer.start()
-
-    def attach_jack_to_consumer(self):
         self.consumer.stop()
-                
-        self.consumer.set("audio_off", "1")
-        self.consumer.set("frequency", "48000")
+        #self.consumer.purge()
+        
+        self.create_sdl_consumer()
+        
+
+        
+
 
         self.jack_output_filter = mlt.Filter(self.profile, "jackrack")
-        self.jack_output_filter.set("out_1", "system:playback_1")
-        self.jack_output_filter.set("out_2", "system:playback_2")
+        if editorpersistance.prefs.jack_output_type == appconsts.JACK_OUT_AUDIO:
+            self.jack_output_filter.set("out_1", "system:playback_1")
+            self.jack_output_filter.set("out_2", "system:playback_2")
         self.consumer.attach(self.jack_output_filter)
-        
+        self.consumer.set("audio_off", "1")
+        self.consumer.set("frequency", str(editorpersistance.prefs.jack_frequency))
+
+        #self.connect_and_start()
+        self.consumer.connect(self.producer)
+        #self.consumer.stop()
         self.consumer.start()
+        #self.consumer.start()
         
     def jack_output_off(self):
         # We're assuming that we are not rendering and consumer is SDL consumer
         self.producer.set_speed(0)
         self.ticker.stop_ticker()
-        self.consumer.stop()
 
-        self.consumer.set("audio_off", "0")
         self.consumer.detach(self.jack_output_filter)
+        self.consumer.set("audio_off", "0")
 
+
+        self.consumer.stop()
         self.consumer.start()
+        
+        self.jack_output_filter = None
         
     def shutdown(self):
         self.ticker.stop_ticker()
