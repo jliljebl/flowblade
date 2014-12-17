@@ -496,6 +496,26 @@
         <property name="gain" args="range_in=-100,100 range_out=-0.5,0.5 displayname=Gain">0.0</property>
         <property name="gamma" args="range_in=-100,100 range_out=-1.0,1.0 displayname=Gamma">0.0</property>
     </filter>
+    <filter id="lift_gamma_gain">
+        <name>Color Lift Gain Gamma</name>
+        <group>Color</group>
+        <property name="lift_r" args="editor=no_editor">0.0</property>
+        <property name="lift_g" args="editor=no_editor">0.0</property>
+        <property name="lift_b" args="editor=no_editor">0.0</property>
+        <property name="gamma_r" args="editor=no_editor">1.0</property>
+        <property name="gamma_g" args="editor=no_editor">1.0</property>
+        <property name="gamma_b" args="editor=no_editor">1.0</property>
+        <property name="gain_r" args="editor=no_editor">1.0</property>
+        <property name="gain_g" args="editor=no_editor">1.0</property>
+        <property name="gain_b" args="editor=no_editor">1.0</property>
+        <propertynonmlt name="lift_hue" args="editor=no_editor">0.0</propertynonmlt>
+        <propertynonmlt name="lift_value" args="editor=no_editor range_in=0,100 range_out=0.0,1.0">0.0</propertynonmlt>
+        <propertynonmlt name="gamma_hue" args="editor=no_editor">0.0</propertynonmlt>
+        <propertynonmlt name="gamma_value" args="editor=no_editor range_in=-100,100 range_out=0.1,1.9">1.0</propertynonmlt>
+        <propertynonmlt name="gain_hue" args="editor=no_editor">0.0</propertynonmlt>
+        <propertynonmlt name="gain_value" args="editor=no_editor range_in=-25,75 range_out=0.5,2.5">1.0</propertynonmlt>
+        <extraeditor name="colorlgg"></extraeditor> 
+    </filter>
     <filter id="frei0r.hueshift0r">
         <name>Hue</name>
         <group>Color</group>

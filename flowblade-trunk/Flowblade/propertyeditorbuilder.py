@@ -57,6 +57,7 @@ AFFINE_GEOM_4_SLIDER = "affine_filt_geom_slider"            # 4 rows of gtk.HSca
 COLOR_CORRECTOR = "color_corrector"                         # 3 band color corrector color circle and Lift Gain Gamma sliders
 CR_CURVES = "crcurves"                                      # Curves color editor with Catmull-Rom curve
 COLOR_BOX = "colorbox"                                      # One band color editor with color box interface
+COLOR_LGG = "colorlgg"                                      # Editor for ColorLGG filter
 NO_EDITOR = "no_editor"                                     # No editor displayed for property
 
 COMPOSITE_EDITOR_BUILDER = "composite_properties"           # Creates a single row editor for multiple properties of composite transition
@@ -113,7 +114,7 @@ def get_filter_extra_editor_rows(filt, editable_properties):
             editor_row = create_func(filt, editable_properties)
             rows.append(editor_row)
         except KeyError:
-            print "get_transition_extra_editor_rows fail with:" + editor_name
+            print "get_filter_extra_editor_rows fail with:" + editor_name
 
     return rows
     
@@ -574,6 +575,14 @@ def _create_colorbox_editor(filt, editable_properties):
     vbox.no_separator = True
     return vbox
 
+def _create_color_lgg_editor(filt, editable_properties):
+    color_lgg_editor = extraeditors.ColorLGGFilterEditor(editable_properties)
+    vbox = gtk.VBox(False, 4)
+    vbox.pack_start(color_lgg_editor.widget, False, False, 0)
+    vbox.pack_start(gtk.Label(), True, True, 0)
+    vbox.no_separator = True
+    return vbox
+
 def _get_force_combo_index(deinterlace, progressive):
     # These correspond to hardcoded values ["Nothing","Progressive","Deinterlace","Both"] above
     if int(deinterlace.value) == 0:
@@ -686,7 +695,8 @@ EDITOR_ROW_CREATORS = { \
     ROTATION_GEOMETRY_EDITOR_BUILDER: lambda comp, editable_properties: _create_rotion_geometry_editor(comp, editable_properties),
     COLOR_CORRECTOR: lambda filt, editable_properties: _create_color_grader(filt, editable_properties),
     CR_CURVES: lambda filt, editable_properties:_create_crcurves_editor(filt, editable_properties),
-    COLOR_BOX: lambda filt, editable_properties:_create_colorbox_editor(filt, editable_properties)
+    COLOR_BOX: lambda filt, editable_properties:_create_colorbox_editor(filt, editable_properties),
+    COLOR_LGG: lambda filt, editable_properties:_create_color_lgg_editor(filt, editable_properties)
     }
 
 """

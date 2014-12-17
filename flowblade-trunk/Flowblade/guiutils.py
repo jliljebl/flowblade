@@ -111,7 +111,7 @@ def get_two_row_box(widget1, widget2):
     box.pack_start(top, False, False, 4)
     box.pack_start(widget2, False, False, 0)
     return box
-
+    
 def get_image_button(img_file_name, width, height):
     button = gtk.Button()
     icon = gtk.image_new_from_file(respaths.IMAGE_PATH + img_file_name)        
