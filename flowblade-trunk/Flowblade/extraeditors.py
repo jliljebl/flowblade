@@ -30,6 +30,7 @@ import editorpersistance
 from editorstate import PLAYER
 import gui
 import guiutils
+import guicomponents
 import glassbuttons
 import lutfilter
 import respaths
@@ -41,6 +42,9 @@ HI = 2
 
 NO_HIT = 99
 
+SELECT_CIRCLE = 0
+SELECT_LINE = 1
+    
 ACTIVE_RING_COLOR = (0.0, 0.0, 0.0)
 DEACTIVE_RING_COLOR = (0.6, 0.6, 0.6)
 
@@ -131,6 +135,26 @@ def _draw_select_circle(cr, x, y, main_color, radius, small_radius, pad, x_off=0
     cr.line_to(x + radius + 0.5, y + 2 * radius)
     cr.stroke()
 
+def _draw_select_line(cr, x, y):
+    height = 22
+    y = y - 19
+
+    cr.set_source_rgb(0.7,0.7,0.7)
+    cr.rectangle(x - 2.0, y, 4, height)
+    cr.fill()
+        
+    cr.set_source_rgb(0.3,0.3,0.3)
+    cr.set_line_width(1.0)
+    cr.move_to(x - 0.5, y)
+    cr.line_to(x - 0.5, y + height)
+    cr.stroke()
+    
+    cr.set_source_rgb(0.95,0.95,0.95)
+    cr.move_to(x + 0.5, y)
+    cr.line_to(x + 0.5, y + height)
+    cr.stroke()
+    
+            
 def _draw_cursor_indicator(cr, x, y, radius):
     degrees = math.pi / 180.0
 
@@ -142,7 +166,7 @@ def _draw_cursor_indicator(cr, x, y, radius):
 
 
 class ColorBox:
-
+    
     def __init__(self, edit_listener, width=260, height=260):
         self.W = width
         self.H = height
@@ -160,6 +184,8 @@ class ColorBox:
         self.edit_listener = edit_listener
         self.hue = 0.0
         self.saturation = 0.0
+        self.draw_saturation_gradient = True
+        self.selection_cursor = SELECT_CIRCLE
 
     def get_hue_saturation(self):
         return (self.hue, self.saturation)
@@ -239,16 +265,19 @@ class ColorBox:
         cr.rectangle(self.X_PAD, self.Y_PAD, x_out - x_in, y_out - y_in)
         cr.fill()
 
-        grey_grad = cairo.LinearGradient (0, y_in, 0, y_out)
-        grey_grad.add_color_stop_rgba(*GREY_GRAD_1)
-        grey_grad.add_color_stop_rgba(*GREY_GRAD_2)
+        if self.draw_saturation_gradient == True:
+            grey_grad = cairo.LinearGradient (0, y_in, 0, y_out)
+            grey_grad.add_color_stop_rgba(*GREY_GRAD_1)
+            grey_grad.add_color_stop_rgba(*GREY_GRAD_2)
 
-        cr.set_source(grey_grad)
-        cr.rectangle(self.X_PAD, self.Y_PAD, x_out - x_in, y_out - y_in)
-        cr.fill()
+            cr.set_source(grey_grad)
+            cr.rectangle(self.X_PAD, self.Y_PAD, x_out - x_in, y_out - y_in)
+            cr.fill()
 
-        _draw_select_circle(cr, self.cursor_x - self.CIRCLE_HALF, self.cursor_y - self.CIRCLE_HALF, (1, 1, 1), 8, 6, 8)
-
+        if self.selection_cursor == SELECT_CIRCLE:
+            _draw_select_circle(cr, self.cursor_x - self.CIRCLE_HALF, self.cursor_y - self.CIRCLE_HALF, (1, 1, 1), 8, 6, 8)
+        else:
+            _draw_select_line(cr, self.cursor_x, y_out)
 
 class ThreeBandColorBox(ColorBox):
 
@@ -432,6 +461,220 @@ class ColorBoxFilterEditor:
         self.s_label.set_text(sat_str)
 
 
+
+class ColorLGGFilterEditor:
+
+    def __init__(self, editable_properties):
+        self.widget = gtk.VBox()
+        
+        # Get MLT properties
+        self.lift_r = filter(lambda ep: ep.name == "lift_r", editable_properties)[0]
+        self.lift_g = filter(lambda ep: ep.name == "lift_g", editable_properties)[0]
+        self.lift_b = filter(lambda ep: ep.name == "lift_b", editable_properties)[0]
+        self.gamma_r = filter(lambda ep: ep.name == "gamma_r", editable_properties)[0]
+        self.gamma_g = filter(lambda ep: ep.name == "gamma_g", editable_properties)[0]
+        self.gamma_b = filter(lambda ep: ep.name == "gamma_b", editable_properties)[0]
+        self.gain_r = filter(lambda ep: ep.name == "gain_r", editable_properties)[0]
+        self.gain_g = filter(lambda ep: ep.name == "gain_g", editable_properties)[0]
+        self.gain_b = filter(lambda ep: ep.name == "gain_b", editable_properties)[0]
+
+        # Get Non-MLT properties
+        self.lift_hue = filter(lambda ep: ep.name == "lift_hue", editable_properties)[0]
+        self.lift_value = filter(lambda ep: ep.name == "lift_value", editable_properties)[0]
+        self.gamma_hue = filter(lambda ep: ep.name == "gamma_hue", editable_properties)[0]
+        self.gamma_value = filter(lambda ep: ep.name == "gamma_value", editable_properties)[0]
+        self.gain_hue = filter(lambda ep: ep.name == "gain_hue", editable_properties)[0]
+        self.gain_value = filter(lambda ep: ep.name == "gain_value", editable_properties)[0]
+
+        # Lift editor
+        self.lift_hue_selector = self.get_hue_selector(self.lift_hue_edited)
+        self.lift_hue_value_label = gtk.Label()
+        self.lift_hue_row = self.get_hue_row(self.lift_hue_selector.widget, self.lift_hue_value_label)
+
+        self.lift_adjustment = self.lift_value.get_input_range_adjustment()
+        self.lift_adjustment.connect("value-changed", self.lift_value_changed)
+        self.lift_slider_row = self.get_slider_row(self.lift_adjustment)
+        self.update_lift_display(self.lift_hue.get_float_value(), self.lift_value.get_current_in_value())
+
+        # Gamma editor
+        self.gamma_hue_selector = self.get_hue_selector(self.gamma_hue_edited)
+        self.gamma_hue_value_label = gtk.Label()
+        self.gamma_hue_row = self.get_hue_row(self.gamma_hue_selector.widget, self.gamma_hue_value_label)
+
+        self.gamma_adjustment = self.gamma_value.get_input_range_adjustment()
+        self.gamma_adjustment.connect("value-changed", self.gamma_value_changed)
+        self.gamma_slider_row = self.get_slider_row(self.gamma_adjustment)
+        self.update_gamma_display(self.gamma_hue.get_float_value(), self.gamma_value.get_current_in_value())
+
+        # Gain editor
+        self.gain_hue_selector = self.get_hue_selector(self.gain_hue_edited)
+        self.gain_hue_value_label = gtk.Label()
+        self.gain_hue_row = self.get_hue_row(self.gain_hue_selector.widget, self.gain_hue_value_label)
+
+        self.gain_adjustment = self.gain_value.get_input_range_adjustment()
+        self.gain_adjustment.connect("value-changed", self.gain_value_changed)
+        self.gain_slider_row = self.get_slider_row(self.gain_adjustment)
+        self.update_gain_display(self.gain_hue.get_float_value(), self.gain_value.get_current_in_value())
+
+        # Pack
+        self.widget.pack_start(self.get_name_row("Lift"), True, True, 0)
+        self.widget.pack_start(self.lift_hue_row, True, True, 0)
+        self.widget.pack_start(self.lift_slider_row, True, True, 0)
+        self.widget.pack_start(guicomponents.EditorSeparator().widget, True, True, 0)
+        self.widget.pack_start(self.get_name_row("Gamma"), True, True, 0)
+        self.widget.pack_start(self.gamma_hue_row , True, True, 0)
+        self.widget.pack_start(self.gamma_slider_row , True, True, 0)
+        self.widget.pack_start(guicomponents.EditorSeparator().widget, True, True, 0)
+        self.widget.pack_start(self.get_name_row("Gain"), True, True, 0)
+        self.widget.pack_start(self.gain_hue_row , True, True, 0)
+        self.widget.pack_start(self.gain_slider_row , True, True, 0)
+        self.widget.pack_start(gtk.Label(), True, True, 0)
+
+    # ---------------------------------------------- gui building
+    def get_hue_selector(self, callback):
+        color_box = ColorBox(callback, width=290, height=40)
+        color_box.draw_saturation_gradient = False
+        color_box.selection_cursor = SELECT_LINE
+        return color_box
+
+    def get_name_row(self, name):
+        name_label = gtk.Label(name + ":")
+            
+        hbox = gtk.HBox(False, 4)
+        hbox.pack_start(name_label, False, False, 4)
+        hbox.pack_start(gtk.Label(), True, True, 0)
+        
+        return hbox
+        
+    def get_hue_row(self, color_box, value_label):          
+        hbox = gtk.HBox(False, 4)
+        hbox.pack_start(color_box, False, False, 0)
+        hbox.pack_start(value_label, False, False, 4)
+        hbox.pack_start(gtk.Label(), False, False, 0)
+        
+        return hbox
+
+    def get_slider_row(self, adjustment):#, name):
+        hslider = gtk.HScale()
+        hslider.set_adjustment(adjustment)
+        hslider.set_draw_value(False)
+
+        spin = gtk.SpinButton()
+        spin.set_numeric(True)
+        spin.set_adjustment(adjustment)
+
+        hslider.set_digits(0)
+        spin.set_digits(0)
+            
+        hbox = gtk.HBox(False, 4)
+        #hbox.pack_start(name_label, False, False, 4)
+        hbox.pack_start(hslider, True, True, 0)
+        hbox.pack_start(spin, False, False, 4)
+        
+        return hbox
+
+    # --------------------------------------- gui updating
+    def update_lift_display(self, hue, val):
+        self.lift_hue_selector.set_cursor(hue, 0.0)
+        self.set_hue_label_value(hue, self.lift_hue_value_label)
+
+        self.lift_adjustment.set_value(val)
+
+    def update_gamma_display(self, hue, val):
+        self.gamma_hue_selector.set_cursor(hue, 0.0)
+        self.set_hue_label_value(hue, self.gamma_hue_value_label)
+
+        self.gamma_adjustment.set_value(val)
+
+    def update_gain_display(self, hue, val):
+        self.gain_hue_selector.set_cursor(hue, 0.0)
+        self.set_hue_label_value(hue, self.gain_hue_value_label)
+
+        self.gain_adjustment.set_value(val)
+
+    def set_hue_label_value(self, hue, label):
+        hue_str = unicode(int(360 * hue)) + ColorGrader.DEGREE_CHAR + u' '
+        label.set_text(hue_str)
+
+    # ------------------------------ color box listeners
+    def lift_hue_edited(self):
+        hue, sat = self.lift_hue_selector.get_hue_saturation()
+        self.set_hue_label_value(hue, self.lift_hue_value_label)
+        
+        self.update_lift_property_values()
+
+    def gamma_hue_edited(self):
+        hue, sat = self.gamma_hue_selector.get_hue_saturation()
+        self.set_hue_label_value(hue, self.gamma_hue_value_label)
+
+        self.update_gamma_property_values()
+
+    def gain_hue_edited(self):
+        hue, sat = self.gain_hue_selector.get_hue_saturation()
+        self.set_hue_label_value(hue, self.gain_hue_value_label)
+
+        self.update_gain_property_values()
+
+    # ----------------------------------- slider listeners
+    def lift_value_changed(self, adjustment):
+        self.update_lift_property_values()
+
+    def gamma_value_changed(self, adjustment):
+        self.update_gamma_property_values()
+
+    def gain_value_changed(self, adjustment):
+        self.update_gain_property_values()
+
+    # -------------------------------------- value writers
+    def update_lift_property_values(self):
+        hue, sat = self.lift_hue_selector.get_hue_saturation()
+        r, g, b = lutfilter.get_RGB_for_angle(hue * 360)
+
+        value = self.lift_adjustment.get_value() / 100.0
+
+        r = r * value
+        g = g * value
+        b = b * value
+
+        self.lift_hue.write_number_value(hue)
+        self.lift_value.write_number_value(value)
+        self.lift_r.write_value(r)
+        self.lift_g.write_value(g)
+        self.lift_b.write_value(b)
+
+    def update_gamma_property_values(self):
+        hue, sat = self.gamma_hue_selector.get_hue_saturation()
+        r, g, b = lutfilter.get_RGB_for_angle(hue * 360)
+
+        value = self.gamma_value.get_out_value(self.gamma_adjustment.get_value())
+
+        r = 1.0 + r * (value - 1.0)
+        g = 1.0 + g * (value - 1.0)
+        b = 1.0 + b * (value - 1.0)
+
+        self.gamma_hue.write_number_value(hue)
+        self.gamma_value.write_number_value(value)
+        self.gamma_r.write_value(r)
+        self.gamma_g.write_value(g)
+        self.gamma_b.write_value(b)
+
+    def update_gain_property_values(self):
+        hue, sat = self.gain_hue_selector.get_hue_saturation()
+        r, g, b = lutfilter.get_RGB_for_angle(hue * 360)
+
+        value = self.gain_value.get_out_value(self.gain_adjustment.get_value())
+
+        r = 1.0 + r * (value - 1.0)
+        g = 1.0 + g * (value - 1.0)
+        b = 1.0 + b * (value - 1.0)
+
+        self.gain_hue.write_number_value(hue)
+        self.gain_value.write_number_value(value)
+        self.gain_r.write_value(r)
+        self.gain_g.write_value(g)
+        self.gain_b.write_value(b)
+
+
 class BoxEditor:
     
     def __init__(self, pix_size):
@@ -577,13 +820,10 @@ class CatmullRomFilterEditor:
    
         if channel == CatmullRomFilterEditor.RGB:
             self.cr_filter.value_cr_curve.set_points_from_str(new_points_str)
-            
         elif channel == CatmullRomFilterEditor.R:
             self.cr_filter.r_cr_curve.set_points_from_str(new_points_str)
-            
         elif channel== CatmullRomFilterEditor.G:
             self.cr_filter.g_cr_curve.set_points_from_str(new_points_str)
-            
         else:
             self.cr_filter.b_cr_curve.set_points_from_str(new_points_str)
 
@@ -604,7 +844,7 @@ class CatmullRomFilterEditor:
         elif self.current_edit_curve == CatmullRomFilterEditor.G:
             self.cr_filter.g_points_prop.write_property_value(points_str)
             
-        else:
+        else: # CatmullRomFilterEditor.G
             self.cr_filter.b_points_prop.write_property_value(points_str)
 
         self.cr_filter.update_table_property_values()
