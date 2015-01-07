@@ -120,32 +120,42 @@ def _color_clip_dialog(callback):
     dialog.show_all()
 
 # ---------------------------------------------------- 
-def create_pattern_producer(profile, pattern_producer_data):
+def create_pattern_producer(profile, bin_clip):
     """
-    pattern_producer_data is instance of projectdata.BinColorClip
+    bin_clip is instance of AbstractBinClip extending class
     """
-    if pattern_producer_data.patter_producer_type == COLOR_CLIP:
-        clip = create_color_producer(profile, pattern_producer_data.gdk_color_str)
-    elif pattern_producer_data.patter_producer_type == NOISE_CLIP:
-        clip = _create_noise_producer(profile)
-    elif pattern_producer_data.patter_producer_type == EBUBARS_CLIP:
-        clip = _create_ebubars_producer(profile)
-    elif pattern_producer_data.patter_producer_type == ISING_CLIP:
-        clip = _create_ising_producer(profile)
-    elif pattern_producer_data.patter_producer_type == COLOR_PULSE_CLIP:
-        clip = _create_color_pulse_producer(profile)
-        
+    try:
+        clip = bin_clip.create_mlt_producer(profile)
+    except:
+        clip = _create_patten_producer_old_style(profile, bin_clip)
+
     clip.path = ""
     clip.filters = []
-    clip.name = pattern_producer_data.name
+    clip.name = bin_clip.name
     clip.media_type = appconsts.PATTERN_PRODUCER
 
     # Save creation data for cloning when editing or doing save/load 
-    clip.create_data = copy.copy(pattern_producer_data)
+    clip.create_data = copy.copy(bin_clip)
     clip.create_data.icon = None # this is not pickleable, recreate when needed
     return clip
 
-# --------------------------------------------------- producer create methods
+# --------------------------------------------------- DECPRECATED producer create methods
+# --------------------------------------------------- REMOVE 2017
+"""
+We originally did producer creation using elifs and now using pickle() for save/load 
+requires keeping this around until atleast 2017 for backwards compatibility.
+"""
+def _create_patten_producer_old_style(profile, bin_clip):
+    print "old style"
+    if bin_clip.patter_producer_type == COLOR_CLIP:
+        clip = create_color_producer(profile, bin_clip.gdk_color_str)
+    elif bin_clip.patter_producer_type == NOISE_CLIP:
+        clip = _create_noise_producer(profile)
+    elif bin_clip.patter_producer_type == EBUBARS_CLIP:
+        clip = _create_ebubars_producer(profile)
+    
+    return clip
+
 def create_color_producer(profile, gdk_color_str):
     mlt_color = utils.gdk_color_str_to_mlt_color_str(gdk_color_str)
 
@@ -165,15 +175,7 @@ def _create_ebubars_producer(profile):
     mltrefhold.hold_ref(producer)
     return producer
 
-def _create_ising_producer(profile):
-    producer = mlt.Producer(profile, "frei0r.ising0r")
-    mltrefhold.hold_ref(producer)
-    return producer
-
-def _create_color_pulse_producer(profile):
-    producer = mlt.Producer(profile, "frei0r.plasma")
-    mltrefhold.hold_ref(producer)
-    return producer
+# --------------------------------------------------- END DECPRECATED producer create methods
 
 # --------------------------------------------------- bin media objects
 class AbstractBinClip:
@@ -197,6 +199,9 @@ class AbstractBinClip:
         
         self.create_icon()
 
+    def create_mlt_producer(self, profile):
+        print "create_mlt_producer not implemented"
+
     def create_icon(self):
         print "patter producer create_icon() not implemented"
 
@@ -209,6 +214,15 @@ class BinColorClip(AbstractBinClip):
         AbstractBinClip.__init__(self, id, name)
         self.patter_producer_type = COLOR_CLIP
 
+    def create_mlt_producer(self, profile):
+        mlt_color = utils.gdk_color_str_to_mlt_color_str(self.gdk_color_str)
+
+        producer = mlt.Producer(profile, "colour", mlt_color)
+        mltrefhold.hold_ref(producer)
+        producer.gdk_color_str = self.gdk_color_str
+
+        return producer
+
     def create_icon(self):
         icon = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
         pixel = utils.gdk_color_str_to_int(self.gdk_color_str)
@@ -220,6 +234,11 @@ class BinNoiseClip(AbstractBinClip):
         AbstractBinClip.__init__(self, id, name)
         self.patter_producer_type = NOISE_CLIP
 
+    def create_mlt_producer(self, profile):
+        producer = mlt.Producer(profile, "frei0r.nois0r")
+        mltrefhold.hold_ref(producer)
+        return producer
+    
     def create_icon(self):
         self.icon = gtk.gdk.pixbuf_new_from_file(respaths.PATTERN_PRODUCER_PATH + "noise_icon.png")
 
@@ -227,6 +246,11 @@ class BinColorBarsClip(AbstractBinClip):
     def __init__(self, id, name):
         AbstractBinClip.__init__(self, id, name)
         self.patter_producer_type = EBUBARS_CLIP
+
+    def create_mlt_producer(self, profile):
+        producer = mlt.Producer(profile, respaths.PATTERN_PRODUCER_PATH + "ebubars.png")
+        mltrefhold.hold_ref(producer)
+        return producer
 
     def create_icon(self):
         self.icon = gtk.gdk.pixbuf_new_from_file(respaths.PATTERN_PRODUCER_PATH + "bars_icon.png")
@@ -236,6 +260,11 @@ class BinIsingClip(AbstractBinClip):
         AbstractBinClip.__init__(self, id, name)
         self.patter_producer_type = ISING_CLIP
 
+    def create_mlt_producer(self, profile):
+        producer = mlt.Producer(profile, "frei0r.ising0r")
+        mltrefhold.hold_ref(producer)
+        return producer
+
     def create_icon(self):
         self.icon = gtk.gdk.pixbuf_new_from_file(respaths.PATTERN_PRODUCER_PATH + "ising_icon.png")
         
@@ -243,6 +272,11 @@ class BinColorPulseClip(AbstractBinClip):
     def __init__(self, id, name):
         AbstractBinClip.__init__(self, id, name)
         self.patter_producer_type = COLOR_PULSE_CLIP
+
+    def create_mlt_producer(self, profile):
+        producer = mlt.Producer(profile, "frei0r.plasma")
+        mltrefhold.hold_ref(producer)
+        return producer
 
     def create_icon(self):
         self.icon = gtk.gdk.pixbuf_new_from_file(respaths.PATTERN_PRODUCER_PATH + "color_pulse_icon.png")
