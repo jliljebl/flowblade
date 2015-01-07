@@ -38,7 +38,6 @@ def get_project_info_panel():
     name_row = guiutils.get_left_justified_box([project_name_label])
     name_panel = guiutils.get_named_frame(_("Name"), name_row, 4)
 
-
     type_info_label = gtk.Label("Normal / Absolute Media Paths")
     type_row = guiutils.get_left_justified_box([type_info_label])
     type_panel = guiutils.get_named_frame(_("Type"), type_row, 4)

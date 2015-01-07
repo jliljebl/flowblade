@@ -155,6 +155,29 @@ def get_slider_row(editable_property, listener, slider_name=None):
         name = slider_name
     name = translations.get_param_name(name)
     return (get_two_column_editor_row(name, hbox), hslider)
+
+def get_non_property_slider_row(lower, upper, step, value=0, listener=None):
+    hslider = gtk.HScale()
+    hslider.set_draw_value(False)
+
+    adjustment = hslider.get_adjustment()
+    adjustment.set_lower(lower)
+    adjustment.set_upper(upper)
+    adjustment.set_step_increment(step)
+    adjustment.set_value(value)
+
+    if listener != None:
+        adjustment.connect("value-changed", listener) # patching in to make available for disconnect
+    
+    spin = gtk.SpinButton()
+    spin.set_numeric(True)
+    spin.set_adjustment(adjustment)
+
+    hbox = gtk.HBox(False, 4)
+    hbox.pack_start(hslider, True, True, 0)
+    hbox.pack_start(spin, False, False, 4)
+
+    return (hbox, hslider)
     
 def get_two_column_editor_row(name, editor_widget):
     label = gtk.Label(name + ":")
