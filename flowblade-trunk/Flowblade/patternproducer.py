@@ -71,53 +71,45 @@ def create_bars_clip():
     _update_gui_for_pattern_producer_media_object_add()
 
 def create_icing_clip():
-    media_object = BinIsingClip(PROJECT().next_media_file_id, _("Ising"))
-    PROJECT().add_pattern_producer_media_object(media_object)
-    _update_gui_for_pattern_producer_media_object_add()
+    _ising_clip_dialog(_create_ising_clip_callback)
+
+def _create_ising_clip_callback(dialog, response_id, widgets):
+    if response_id == gtk.RESPONSE_ACCEPT:
+        media_object = BinIsingClip(PROJECT().next_media_file_id, _("Ising"))
+
+        temp_slider, bg_slider, sg_slider = widgets
+        media_object.set_property_values(temp_slider.get_adjustment().get_value() / 100.0,
+                                         bg_slider.get_adjustment().get_value() / 100.0, 
+                                         sg_slider.get_adjustment().get_value() / 100.0)
+
+        PROJECT().add_pattern_producer_media_object(media_object)
+        _update_gui_for_pattern_producer_media_object_add()
+        
+    dialog.destroy()
 
 def create_color_pulse_clip():
-    media_object = BinColorPulseClip(PROJECT().next_media_file_id, _("Color Pulse"))
-    PROJECT().add_pattern_producer_media_object(media_object)
-    _update_gui_for_pattern_producer_media_object_add()
+    _color_pulse_clip_dialog(_create_color_pulse_clip_callback)
+
+def _create_color_pulse_clip_callback(dialog, response_id, widgets):
+    if response_id == gtk.RESPONSE_ACCEPT:
+        media_object = BinColorPulseClip(PROJECT().next_media_file_id, _("Color Pulse"))
+
+        s1_slider, s2_slider, s3_slider, s4_slider, m1_slider, m2_slider = widgets
+        media_object.set_property_values(s1_slider.get_adjustment().get_value() / 100.0,
+                                         s2_slider.get_adjustment().get_value() / 100.0, 
+                                         s3_slider.get_adjustment().get_value() / 100.0,
+                                         s4_slider.get_adjustment().get_value() / 100.0,
+                                         m1_slider.get_adjustment().get_value() / 100.0,
+                                         m2_slider.get_adjustment().get_value() / 100.0)
+                                         
+        PROJECT().add_pattern_producer_media_object(media_object)
+        _update_gui_for_pattern_producer_media_object_add()
+
+    dialog.destroy()
     
 def _update_gui_for_pattern_producer_media_object_add():
     gui.media_list_view.fill_data_model()
     gui.bin_list_view.fill_data_model()
-
-# ----------------------------------------------------- dialogs
-def _color_clip_dialog(callback):
-    dialog = gtk.Dialog(_("Create Color Clip"), None,
-                    gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                    (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                    _("Create").encode('utf-8'), gtk.RESPONSE_ACCEPT))
-
-    name_entry = gtk.Entry()
-    name_entry.set_text(_("Color Clip"))   
-
-    color_button = gtk.ColorButton()
-
-    cb_hbox = gtk.HBox(False, 0)
-    cb_hbox.pack_start(color_button, False, False, 4)
-    cb_hbox.pack_start(gtk.Label(), True, True, 0)
-
-    row1 = guiutils.get_two_column_box(gtk.Label(_("Clip Name")), name_entry, 200)
-    row2 = guiutils.get_two_column_box(gtk.Label(_("Select Color")), cb_hbox, 200)
-    
-    vbox = gtk.VBox(False, 2)
-    vbox.pack_start(row1, False, False, 0)
-    vbox.pack_start(row2, False, False, 0)
-    vbox.pack_start(gtk.Label(), True, True, 0)
-    
-    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(12, 0, 12, 12)
-    align.add(vbox)
-
-    selection_widgets = (name_entry, color_button)
-
-    dialog.connect('response', callback, selection_widgets)
-    dialog.vbox.pack_start(align, True, True, 0)
-    dialogutils.default_behaviour(dialog)
-    dialog.show_all()
 
 # ---------------------------------------------------- 
 def create_pattern_producer(profile, bin_clip):
@@ -235,7 +227,7 @@ class BinNoiseClip(AbstractBinClip):
         self.patter_producer_type = NOISE_CLIP
 
     def create_mlt_producer(self, profile):
-        producer = mlt.Producer(profile, "frei0r.nois0r")
+        producer = mlt.Producer(profile, "frei0r.nois0r")        
         mltrefhold.hold_ref(producer)
         return producer
     
@@ -260,8 +252,16 @@ class BinIsingClip(AbstractBinClip):
         AbstractBinClip.__init__(self, id, name)
         self.patter_producer_type = ISING_CLIP
 
+    def set_property_values(self, temp, bg, sg):
+        self.temp = temp
+        self.bg = bg
+        self.sg = sg
+
     def create_mlt_producer(self, profile):
         producer = mlt.Producer(profile, "frei0r.ising0r")
+        producer.set("Temperature", str(self.temp))
+        producer.set("Border Growth", str(self.bg))
+        producer.set("Spontaneous Growth", str(self.sg))
         mltrefhold.hold_ref(producer)
         return producer
 
@@ -273,11 +273,134 @@ class BinColorPulseClip(AbstractBinClip):
         AbstractBinClip.__init__(self, id, name)
         self.patter_producer_type = COLOR_PULSE_CLIP
 
+    def set_property_values(self, s1, s2, s3, s4, m1, m2):
+        self.s1 = s1
+        self.s2 = s2
+        self.s3 = s3
+        self.s4 = s4
+        self.m1 = m1
+        self.m2 = m2
+
     def create_mlt_producer(self, profile):
         producer = mlt.Producer(profile, "frei0r.plasma")
+        producer.set("1_speed", str(self.s1))
+        producer.set("2_speed", str(self.s2))
+        producer.set("3_speed", str(self.s3))
+        producer.set("4_speed", str(self.s4))
+        producer.set("1_move", str(self.m1))
+        producer.set("2_move", str(self.m2))
         mltrefhold.hold_ref(producer)
         return producer
 
     def create_icon(self):
         self.icon = gtk.gdk.pixbuf_new_from_file(respaths.PATTERN_PRODUCER_PATH + "color_pulse_icon.png")
-        
+
+
+# ----------------------------------------------------- dialogs
+def _color_clip_dialog(callback):
+    dialog = gtk.Dialog(_("Create Color Clip"), None,
+                    gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                    (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                    _("Create").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+
+    name_entry = gtk.Entry()
+    name_entry.set_text(_("Color Clip"))   
+
+    color_button = gtk.ColorButton()
+
+    cb_hbox = gtk.HBox(False, 0)
+    cb_hbox.pack_start(color_button, False, False, 4)
+    cb_hbox.pack_start(gtk.Label(), True, True, 0)
+
+    row1 = guiutils.get_two_column_box(gtk.Label(_("Clip Name")), name_entry, 200)
+    row2 = guiutils.get_two_column_box(gtk.Label(_("Select Color")), cb_hbox, 200)
+    
+    vbox = gtk.VBox(False, 2)
+    vbox.pack_start(row1, False, False, 0)
+    vbox.pack_start(row2, False, False, 0)
+    vbox.pack_start(gtk.Label(), True, True, 0)
+    
+    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    align.set_padding(12, 0, 12, 12)
+    align.add(vbox)
+
+    selection_widgets = (name_entry, color_button)
+
+    dialog.connect('response', callback, selection_widgets)
+    dialog.vbox.pack_start(align, True, True, 0)
+    dialogutils.default_behaviour(dialog)
+    dialog.show_all()
+
+def _ising_clip_dialog(callback):
+    dialog = gtk.Dialog(_("Create Ising Clip"), None,
+                    gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                    (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                    _("Create").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+ 
+    n_box, n_slider = guiutils.get_non_property_slider_row(0, 100, 1)
+    bg_box, bg_slider = guiutils.get_non_property_slider_row(0, 100, 1)
+    sg_box, sg_slider = guiutils.get_non_property_slider_row(0, 100, 1)
+
+    row1 = guiutils.get_two_column_box(gtk.Label(_("Noise temperature:")), n_box, 200)
+    row2 = guiutils.get_two_column_box(gtk.Label(_("Border growth:")), bg_box, 200)
+    row3 = guiutils.get_two_column_box(gtk.Label(_("Spontanious growth:")), sg_box, 200)
+    
+    vbox = gtk.VBox(False, 2)
+    vbox.pack_start(row1, False, False, 0)
+    vbox.pack_start(row2, False, False, 0)
+    vbox.pack_start(row3, False, False, 0)
+    vbox.pack_start(gtk.Label(), True, True, 0)
+    vbox.set_size_request(450, 150)
+
+    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    align.set_padding(12, 0, 12, 12)
+    align.add(vbox)
+
+    selection_widgets = (n_slider, bg_slider, sg_slider)
+
+    dialog.connect('response', callback, selection_widgets)
+    dialog.vbox.pack_start(align, True, True, 0)
+    dialogutils.default_behaviour(dialog)
+    dialog.show_all()
+    
+def _color_pulse_clip_dialog(callback):
+    dialog = gtk.Dialog(_("Create Color Pulse Clip"), None,
+                    gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                    (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                    _("Create").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+ 
+    s1_box, s1_slider = guiutils.get_non_property_slider_row(0, 100, 1, 100)
+    s2_box, s2_slider = guiutils.get_non_property_slider_row(0, 100, 1, 100)
+    s3_box, s3_slider = guiutils.get_non_property_slider_row(0, 100, 1, 100)
+    s4_box, s4_slider = guiutils.get_non_property_slider_row(0, 100, 1, 100)
+    m1_box, m1_slider = guiutils.get_non_property_slider_row(0, 100, 1, 100)
+    m2_box, m2_slider = guiutils.get_non_property_slider_row(0, 100, 1, 100)
+    
+    row1 = guiutils.get_two_column_box(gtk.Label(_("Speed 1:")), s1_box, 200)
+    row2 = guiutils.get_two_column_box(gtk.Label(_("Speed 2:")), s2_box, 200)
+    row3 = guiutils.get_two_column_box(gtk.Label(_("Speed 3:")), s3_box, 200)
+    row4 = guiutils.get_two_column_box(gtk.Label(_("Speed 4:")), s4_box, 200)
+    row5 = guiutils.get_two_column_box(gtk.Label(_("Move 1:")), m1_box, 200)
+    row6 = guiutils.get_two_column_box(gtk.Label(_("Move 2:")), m2_box, 200)
+
+    vbox = gtk.VBox(False, 2)
+    vbox.pack_start(row1, False, False, 0)
+    vbox.pack_start(row2, False, False, 0)
+    vbox.pack_start(row3, False, False, 0)
+    vbox.pack_start(row4, False, False, 0)
+    vbox.pack_start(row5, False, False, 0)
+    vbox.pack_start(row6, False, False, 0)
+    vbox.pack_start(gtk.Label(), True, True, 0)
+    vbox.set_size_request(450, 220)
+
+    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    align.set_padding(12, 0, 12, 12)
+    align.add(vbox)
+
+    selection_widgets = (s1_slider, s2_slider, s3_slider, s4_slider, m1_slider, m2_slider)
+
+    dialog.connect('response', callback, selection_widgets)
+    dialog.vbox.pack_start(align, True, True, 0)
+    dialogutils.default_behaviour(dialog)
+    dialog.show_all()
+    
