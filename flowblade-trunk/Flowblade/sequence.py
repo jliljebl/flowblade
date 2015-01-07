@@ -207,10 +207,14 @@ class Sequence:
     def _create_black_track_clip(self):
         # Create 1 fr long black bg clip and set in and out
         global black_track_clip # btw, why global?
-        pattern_producer_data = utils.EmptyClass()
-        pattern_producer_data.patter_producer_type = patternproducer.COLOR_CLIP
-        pattern_producer_data.gdk_color_str = "#000000000000"
-        pattern_producer_data.name = "black_bg"
+        #pattern_producer_data = utils.EmptyClass()
+        #pattern_producer_data.patter_producer_type = patternproducer.COLOR_CLIP
+        #pattern_producer_data.gdk_color_str = "#000000000000"
+        #pattern_producer_data.name = "black_bg"
+        
+        # This is not an actual bin clip so id can be -1, it is just used to create the producer
+        pattern_producer_data = patternproducer.BinColorClip(-1, "black_bg", "#000000000000")
+            
         black_track_clip = self.create_pattern_producer(pattern_producer_data)
         black_track_clip.clip_in = 0
         black_track_clip.clip_out = 0
@@ -419,7 +423,7 @@ class Sequence:
 
     def create_pattern_producer(self, pattern_producer_data):
         """
-        pattern_producer_data is instance of projectdata.BinColorClip
+        pattern_producer_data is instance of patternproducer.AbstractBinClip
         """
         clip = patternproducer.create_pattern_producer(self.profile, pattern_producer_data)
         self.add_clip_attr(clip)
@@ -569,11 +573,7 @@ class Sequence:
                 new_compositors.append(clone_compositor)
         self.compositors = new_compositors
 
-    def _create_and_plant_clone_compositor_for_sequnce_clone(self, old_compositor, track_delta):
-        # Used when cloning compositors to change track count by cloning sequence
-        # Remove old compositor
-        # edit.old_compositors.append(old_compositor) # HACK. Garbage collecting compositors causes crashes.
-        
+    def _create_and_plant_clone_compositor_for_sequnce_clone(self, old_compositor, track_delta):      
         # Create and plant new compositor
         compositor = self.create_compositor(old_compositor.type_id)
         compositor.clone_properties(old_compositor)
