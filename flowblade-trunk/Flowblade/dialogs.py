@@ -137,7 +137,9 @@ def change_project_type(callback):
     header_box.set_size_request(300, 26)
 
     info_label = gtk.Label()
+    info_label.set_size_request(700, 150)
     info_box = guiutils.get_left_justified_box([info_label])
+    #info_box.set_size_request(700, 300)
     small_pad = guiutils.get_pad_label(2, 2)
     pad = guiutils.get_pad_label(24, 24)
 
@@ -157,6 +159,7 @@ def change_project_type(callback):
 
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(current_type, False, False)
+    vbox.pack_start(guiutils.get_pad_label(10,24), False, False)
     vbox.pack_start(type_select, False, False)
     #vbox.pack_start(header_box, False, False)
     vbox.pack_start(info_box, False, False)
@@ -173,20 +176,18 @@ def _set_change_project_type_dialog_texts(combo, header, text):
     if combo.get_active() == 0:
         header.set_text("<b>" + _("Normal Project") + "</b>\n")
         info_text = u"\u2022" + _(" References to media assets are saved as <b>absolute paths</b>\n") + \
-                    u"\u2022" + _(" No set folder structure for project assets\n") + \
                     u"\u2022" + _(" Project files can be saved anywhere in relation to media\n") + \
-                    u"\u2022" + _(" Rendered files and thumbnails are saved by default in the hidden <i>(home)/.flowblade</i> directory\n") + \
+                    u"\u2022" + _(" Rendered files and thumbnails are saved by default in <i>(home)/.flowblade</i> directory\n") + \
                     u"\u2022" + _(" Projects <b>can not be backed up as a single unit</b>\n") + \
-                    u"\u2022" + _(" Assets are not copied when added to project")
-                
+                    u"\u2022" + _(" <b>Assets are not copied</b> when added to project")
     else:
         header.set_text("<b>" + _("Compact Project") + "</b>\n")
 
-        info_text = u"\u2022" + _(" Project files, media assets, rendered files and thumbnails <b>are saved in a folder structure inside project folder</b>\n") + \
+        info_text = u"\u2022" + _(" Project files, media assets, rendered files and thumbnails <b>are saved in the project folder</b>\n") + \
                     u"\u2022" + _(" References to media assets are saved as <b>relative paths</b>\n") + \
-                    u"\u2022" + _(" Project files can only saved in /projects folder\n") + \
-                    u"\u2022" + _(" Projects <b>can be backed up as a single unit</b>\n") + \
-                    u"\u2022" + _(" Media assets are copied  to project folder when added to project")
+                    u"\u2022" + _(" Project files can only be saved in <i>(project folder)/projects</i> folder\n") + \
+                    u"\u2022" + _(" Projects <b>can be backed up as a single unit</b> by saving a copy of the project folder\n") + \
+                    u"\u2022" + _(" <b>Media assets are copied</b> to project folder when added to project")
     text.set_text(info_text)
 
     header.set_use_markup(True)
@@ -361,7 +362,7 @@ def about_dialog(parent_window):
     up_projs = gtk.Label("MLT")
     up_projs2 = gtk.Label("FFMpeg, Frei0r, LADSPA, Cairo, Gnome, Linux")
     tools_label = gtk.Label("Tools:")
-    tools_list = gtk.Label("Genie, Inkscape, Gimp, ack-grep")
+    tools_list = gtk.Label("Geany, Inkscape, Gimp, ack-grep")
     
     up_label.modify_font(pango.FontDescription("sans bold 12"))
     tools_label.modify_font(pango.FontDescription("sans bold 12"))

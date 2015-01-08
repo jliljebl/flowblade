@@ -73,6 +73,13 @@ def get_centered_box(widgets):
         hbox.pack_start(widget, False, False, 0)
     hbox.pack_start(gtk.Label(), True, True, 0)
     return hbox
+
+def get_single_column_box(widgets):
+    vbox = gtk.VBox()
+    for widget in widgets:
+        vbox.pack_start(get_left_justified_box([widget]), False, False, 0)
+    vbox.pack_start(gtk.Label(), True, True, 0)
+    return vbox
     
 def get_two_column_box(widget1, widget2, left_width):
     hbox = gtk.HBox()
