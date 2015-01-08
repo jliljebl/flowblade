@@ -689,7 +689,10 @@ def change_project_type():
     dialogs.change_project_type(_change_project_type_dialog_callback)
         
 def _change_project_type_dialog_callback(dialog, response_id, type_select):
+    type_index = type_select.get_active()
     dialog.destroy()
+    
+    #if type_index == 1 and 
 
 # ------------------------------------ bins
 def add_new_bin():
