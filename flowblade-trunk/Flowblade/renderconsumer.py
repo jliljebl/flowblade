@@ -29,6 +29,7 @@ import mlt
 import time
 import threading
 import xml.dom.minidom
+import os
 
 import mltenv
 import respaths
@@ -255,6 +256,27 @@ def get_render_consumer_for_text_buffer(file_path, profile, buf):
     render_consumer = get_mlt_render_consumer(file_path, profile, args_vals_list)
     return (render_consumer, None)
 
+def get_img_seq_render_consumer(file_path, profile, encoding_option):
+    #render_path = "%1/%2-%05d.%3" + file_path
+    args_vals_list = encoding_option.get_args_vals_tuples_list(profile)
+    
+    vcodec = None
+    for arg_val in args_vals_list:
+        arg, val = arg_val
+        if arg == "vcodec":
+            vcodec = val
+    
+    print vcodec
+    
+    render_path = os.path.dirname(file_path) + "/" + os.path.basename(file_path).split(".")[0] + "_%05d." + encoding_option.extension
+    
+    consumer = mlt.Consumer(profile, "avformat", str(render_path))
+    consumer.set("real_time", -1)
+    consumer.set("rescale", "bicubic")
+    consumer.set("vcodec", str(vcodec))
+    print "img seq render consumer created, path:" +  str(render_path) #+ ", args: " + args_msg
+    return consumer
+    
 def get_mlt_render_consumer(file_path, profile, args_vals_list):
     consumer = mlt.Consumer(profile, "avformat", str(file_path))
     consumer.set("real_time", -1)
