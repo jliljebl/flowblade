@@ -101,7 +101,7 @@ def _create_color_pulse_clip_callback(dialog, response_id, widgets):
                                          s4_slider.get_adjustment().get_value() / 100.0,
                                          m1_slider.get_adjustment().get_value() / 100.0,
                                          m2_slider.get_adjustment().get_value() / 100.0)
-                                         
+
         PROJECT().add_pattern_producer_media_object(media_object)
         _update_gui_for_pattern_producer_media_object_add()
 
@@ -368,14 +368,14 @@ def _color_pulse_clip_dialog(callback):
                     gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                     (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
                     _("Create").encode('utf-8'), gtk.RESPONSE_ACCEPT))
- 
+
     s1_box, s1_slider = guiutils.get_non_property_slider_row(0, 100, 1, 100)
     s2_box, s2_slider = guiutils.get_non_property_slider_row(0, 100, 1, 100)
     s3_box, s3_slider = guiutils.get_non_property_slider_row(0, 100, 1, 100)
     s4_box, s4_slider = guiutils.get_non_property_slider_row(0, 100, 1, 100)
     m1_box, m1_slider = guiutils.get_non_property_slider_row(0, 100, 1, 100)
     m2_box, m2_slider = guiutils.get_non_property_slider_row(0, 100, 1, 100)
-    
+
     row1 = guiutils.get_two_column_box(gtk.Label(_("Speed 1:")), s1_box, 200)
     row2 = guiutils.get_two_column_box(gtk.Label(_("Speed 2:")), s2_box, 200)
     row3 = guiutils.get_two_column_box(gtk.Label(_("Speed 3:")), s3_box, 200)

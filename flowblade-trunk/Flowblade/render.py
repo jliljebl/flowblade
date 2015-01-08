@@ -184,9 +184,14 @@ def get_render_consumer():
 
     if widgets.render_type_panel.type_combo.get_active() == 1: # Preset encodings
         encoding_option = renderconsumer.non_user_encodings[widgets.render_type_panel.presets_selector.widget.get_active()]
-        consumer = renderconsumer.get_render_consumer_for_encoding(file_path,
-                                                                   profile,
-                                                                   encoding_option)
+        if encoding_option.type != "img_seq":
+            consumer = renderconsumer.get_render_consumer_for_encoding(file_path,
+                                                                       profile,
+                                                                       encoding_option)
+        else: # Image Sequence rendering consumers need to be created a bit differently
+            consumer = renderconsumer.get_img_seq_render_consumer(file_path,
+                                                                  profile,
+                                                                  encoding_option)
         return consumer
 
     if widgets.args_panel.use_args_check.get_active() == False:

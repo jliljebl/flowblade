@@ -37,9 +37,6 @@ transitions = None
 environment_detection_success = False
 
 def check_available_features(repo):
-    """
-    Detect available feratures in the system. Method from Openshot av_formats.py
-    """
     try:
         print "Detecting environment..."
         global acodecs        
@@ -102,9 +99,9 @@ def render_profile_supported(frmt, vcodec, acodec):
     if environment_detection_success == False:
         return (True, "")
 
-    if acodec in acodecs or acodec == None: # some render formats do not specify audio codecs
-        if vcodec in vcodecs or vcodec == None: # some render formats do not specify video codecs
-            if frmt in formats:
+    if acodec in acodecs or acodec == None: # some encoding options do not specify audio codecs
+        if vcodec in vcodecs or vcodec == None: # some encoding options do not specify video codecs
+            if frmt in formats or frmt == None: # some encoding options do not specify formats
                 return (True, "")
             else:
                 err_msg = "format " + frmt

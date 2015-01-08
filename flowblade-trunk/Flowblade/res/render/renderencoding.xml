@@ -76,6 +76,24 @@
     <encodingoption name="Audio PCM/.wav 48kHz" extension="wav" nonuser="True" audiodesc="NA" type="audio" resize="NA" qgroup="lossless"> 
         <profile args="f=wav ar=48000 video_off=1" />
     </encodingoption>
+    <encodingoption name="Image Sequence BMP" extension="bmp" nonuser="True" audiodesc="NA" type="img_seq" resize="NA" qgroup="lossless">
+        <profile args="vcodec=bmp" />
+    </encodingoption>
+    <encodingoption name="Image Sequence DPX" extension="dpx" nonuser="True" audiodesc="NA" type="img_seq" resize="NA" qgroup="lossless">
+        <profile args="vcodec=dpx" />
+    </encodingoption>
+    <encodingoption name="Image Sequence PNG" extension="png" nonuser="True" audiodesc="NA" type="img_seq" resize="NA" qgroup="lossless">
+        <profile args="vcodec=png" />
+    </encodingoption>
+    <encodingoption name="Image Sequence PPM" extension="ppm" nonuser="True" audiodesc="NA" type="img_seq" resize="NA" qgroup="lossless">
+        <profile args="vcodec=ppm" />
+    </encodingoption>
+    <encodingoption name="Image Sequence TGA" extension="tga" nonuser="True" audiodesc="NA" type="img_seq" resize="NA" qgroup="lossless">
+        <profile args="vcodec=targa" />
+    </encodingoption>
+    <encodingoption name="Image Sequence TIFF" extension="tif" nonuser="True" audiodesc="NA" type="img_seq" resize="NA" qgroup="lossless">
+        <profile args="vcodec=tiff" />
+    </encodingoption>
     <encodingoption name="Android 480x320" extension="mpg" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
         <profile args="f=mpeg s=480x320 progressive=1 acodec=aac ab=128k vcodec=libx264 vb=700k flags=+loop cmp=+chroma partitions=+parti8x8+parti4x4+partp8x8+partb8x8 me_method=umh subq=7 me_range=16 g=250 keyint_min=25 sc_threshold=40 i_qfactor=0.71 qcomp=0.6 qmin=10 qmax=51 qdiff=4 directpred=1 trellis=1 coder=0 bf=0 refs=1 flags2=-wpred-dct8x8 level=30 maxrate=10000k bufsize=10000k wpredp=0 pass=1" />
     </encodingoption>
