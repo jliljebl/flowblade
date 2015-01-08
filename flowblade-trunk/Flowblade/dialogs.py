@@ -82,19 +82,23 @@ def new_project_dialog(callback):
     tracks_frame = panels.get_named_frame(_("Tracks"), tracks_vbox)
 
     project_type_combo = gtk.combo_box_new_text()
-    project_type_combo.append_text(_("Normal / Absolute Paths"))
-    project_type_combo.append_text(_("Compact / Relative Paths"))
-    project_type_combo.set_active(0) 
+    project_type_combo.append_text(_("Standard"))
+    project_type_combo.append_text(_("Compact"))
+    project_type_combo.set_active(0)
+
     
-    type_select = panels.get_two_column_box(gtk.Label(_("Type / Save Method:")),
+    type_select = panels.get_two_column_box(gtk.Label(_("Type:")),
                                                project_type_combo,
                                                250)
 
     project_folder = gtk.FileChooserButton(_("Select Compact Project Folder"))
     project_folder.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
     project_folder.set_current_folder(os.path.expanduser("~") + "/")
+    project_folder.set_sensitive(False)
     project_folder_row = guiutils.get_two_column_box(gtk.Label(_("Compact Project Folder:")), project_folder, 250)
-        
+
+    project_type_combo.connect('changed', lambda w: _new_project_type_changed(w, project_folder))
+    
     type_vbox = gtk.VBox(False, 2)
     type_vbox.pack_start(type_select, False, False, 0)
     type_vbox.pack_start(project_folder_row, False, False, 0)
@@ -126,44 +130,53 @@ def _new_project_profile_changed(combo_box, profile_info_box):
     profile_info_box.show_all()
     info_panel.show()
 
+def _new_project_type_changed(type_combo, folder_button):
+    if type_combo.get_active() == 0:
+        folder_button.set_sensitive(False)
+    else:
+        folder_button.set_sensitive(True)
+
 def change_project_type(callback):
     dialog = gtk.Dialog(_("Change Project Type"), None,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                         (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                         _("Change Type").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+                         _("Change Type to 'Compact'").encode('utf-8'), gtk.RESPONSE_ACCEPT))
 
     info_header_label = gtk.Label()
     header_box = guiutils.get_left_justified_box([info_header_label])
     header_box.set_size_request(300, 26)
 
     info_label = gtk.Label()
-    info_label.set_size_request(700, 150)
+    info_label.set_size_request(700, 110)
     info_box = guiutils.get_left_justified_box([info_label])
-    #info_box.set_size_request(700, 300)
     small_pad = guiutils.get_pad_label(2, 2)
-    pad = guiutils.get_pad_label(24, 24)
 
-    current_type = panels.get_two_column_box(gtk.Label(_("Current Project Type:")),
-                                             guiutils.get_left_justified_box([gtk.Label(_("Normal / Absolute Paths"))]),
+    current_type = panels.get_two_column_box(gtk.Label(_("Current Project type:")),
+                                             guiutils.get_left_justified_box([gtk.Label(_("Standard"))]),
                                                250)
-
+    new_type = panels.get_two_column_box(gtk.Label(_("New Project type after change:")),
+                                             guiutils.get_left_justified_box([gtk.Label(_("Compact"))]),
+                                               250)
+                                               
     project_type_combo = gtk.combo_box_new_text()
-    project_type_combo.append_text(_("Normal / Absolute Paths"))
-    project_type_combo.append_text(_("Compact / Relative Paths"))
+    project_type_combo.append_text(_("Standard"))
+    project_type_combo.append_text(_("Compact"))
     project_type_combo.connect('changed', lambda w: _set_change_project_type_dialog_texts(w, info_header_label, info_label))
     project_type_combo.set_active(0)
     
-    type_select = panels.get_two_column_box(gtk.Label(_("New Project Type:")),
+    type_select = panels.get_two_column_box(gtk.Label(_("Project type info for:")),
                                                project_type_combo,
                                                250)
 
     vbox = gtk.VBox(False, 2)
-    vbox.pack_start(current_type, False, False)
+
     vbox.pack_start(guiutils.get_pad_label(10,24), False, False)
     vbox.pack_start(type_select, False, False)
-    #vbox.pack_start(header_box, False, False)
     vbox.pack_start(info_box, False, False)
-    vbox.pack_start(pad, True, True)
+    vbox.pack_start(guiutils.get_pad_label(24, 20), False, False)
+    vbox.pack_start(current_type, False, False)
+    vbox.pack_start(new_type, False, False)
+    vbox.pack_start(guiutils.get_pad_label(24, 24), True, True)
 
     alignment = dialogutils.get_default_alignment(vbox)
 

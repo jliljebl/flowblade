@@ -38,7 +38,7 @@ def get_project_info_panel():
     name_row = guiutils.get_left_justified_box([project_name_label])
     name_panel = guiutils.get_named_frame(_("Name"), name_row, 4)
 
-    type_info_label = gtk.Label("Normal / Absolute Media Paths")
+    type_info_label = gtk.Label("Standard")
     type_row = guiutils.get_left_justified_box([type_info_label])
     type_panel = guiutils.get_named_frame(_("Type"), type_row, 4)
     
@@ -69,6 +69,7 @@ def get_project_info_panel():
     widgets.desc_label = desc_label
     widgets.info_box = info_box
     widgets.events_list = events_list
+    widgets.type_info_label = type_info_label
 
     return align
 
@@ -79,6 +80,12 @@ def update_project_info():
     profile_info_text = guicomponents.get_profile_info_text(profile)
     widgets.info_box.get_children()[0].set_text(profile_info_text)
     widgets.events_list.fill_data_model()
+    
+    # fixaa
+    if True:
+        widgets.type_info_label.set_text("Standard")
+    else:
+        widgets.type_info_label.set_text("Compact")
 
 class ProjectEventListView(gtk.VBox):
 
