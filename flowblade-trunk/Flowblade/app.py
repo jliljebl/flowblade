@@ -451,14 +451,22 @@ def init_editor_state():
 
     # Enable edit action GUI updates
     edit.do_gui_update = True
-    
+
 def new_project(profile_index, v_tracks, a_tracks):
     sequence.VIDEO_TRACKS_COUNT = v_tracks
     sequence.AUDIO_TRACKS_COUNT = a_tracks
     profile = mltprofiles.get_profile_for_index(profile_index)
     new_project = projectdata.Project(profile)
     open_project(new_project)
-        
+
+def new_compact_project(project_root_path, profile_index, v_tracks, a_tracks):
+    sequence.VIDEO_TRACKS_COUNT = v_tracks
+    sequence.AUDIO_TRACKS_COUNT = a_tracks
+    profile = mltprofiles.get_profile_for_index(profile_index)
+    new_project = projectdata.Project(profile)
+    new_project.set_as_compact_project(project_root_path)
+    open_project(new_project)
+
 def open_project(new_project):
     stop_autosave()
     audiomonitoring.close_audio_monitor()

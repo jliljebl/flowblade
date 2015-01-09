@@ -95,13 +95,32 @@ def new_project_dialog(callback):
     project_folder.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
     project_folder.set_current_folder(os.path.expanduser("~") + "/")
     project_folder.set_sensitive(False)
-    project_folder_row = guiutils.get_two_column_box(gtk.Label(_("Compact Project Folder:")), project_folder, 250)
+    
+    project_folder_label = gtk.Label(_("Compact Project Folder:"))
+    project_folder_label.set_sensitive(False)
+    
+    project_folder_row = guiutils.get_two_column_box(project_folder_label, project_folder, 250)
 
-    project_type_combo.connect('changed', lambda w: _new_project_type_changed(w, project_folder))
+    compact_name_entry = gtk.Entry(30)
+    compact_name_entry.set_width_chars(30)
+    compact_name_entry.set_text(_("initial_save"))
+    compact_name_entry.set_sensitive(False)
+    
+    compact_name_label = gtk.Label(_("Compact Project Initial Name:"))
+    compact_name_label.set_sensitive(False)
+    
+    compact_name_entry_row = guiutils.get_two_column_box(compact_name_label, compact_name_entry, 250)
+    
+    project_type_combo.connect('changed', lambda w: _new_project_type_changed(w, 
+                                                    project_folder,
+                                                    project_folder_label,
+                                                    compact_name_entry,
+                                                    compact_name_label))
     
     type_vbox = gtk.VBox(False, 2)
     type_vbox.pack_start(type_select, False, False, 0)
     type_vbox.pack_start(project_folder_row, False, False, 0)
+    type_vbox.pack_start(compact_name_entry_row, False, False, 0)
 
     type_frame = panels.get_named_frame(_("Project Type"), type_vbox)
     
@@ -114,7 +133,7 @@ def new_project_dialog(callback):
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, out_profile_combo, tracks_combo, tracks_combo_values_list, project_type_combo)
+    dialog.connect('response', callback, out_profile_combo, tracks_combo, tracks_combo_values_list, project_type_combo, project_folder)
     out_profile_combo.connect('changed', lambda w: _new_project_profile_changed(w, profile_info_box))
     dialog.show_all()
     
@@ -130,11 +149,17 @@ def _new_project_profile_changed(combo_box, profile_info_box):
     profile_info_box.show_all()
     info_panel.show()
 
-def _new_project_type_changed(type_combo, folder_button):
+def _new_project_type_changed(type_combo, folder_button, project_folder_label, compact_name_entry, compact_name_label):
     if type_combo.get_active() == 0:
         folder_button.set_sensitive(False)
+        project_folder_label.set_sensitive(False)
+        compact_name_entry.set_sensitive(False)
+        compact_name_label.set_sensitive(False)
     else:
         folder_button.set_sensitive(True)
+        project_folder_label.set_sensitive(True)
+        compact_name_entry.set_sensitive(True)
+        compact_name_label.set_sensitive(True)
 
 def change_project_type(callback):
     dialog = gtk.Dialog(_("Change Project Type"), None,
@@ -168,14 +193,21 @@ def change_project_type(callback):
                                                project_type_combo,
                                                250)
 
-    vbox = gtk.VBox(False, 2)
+    project_folder = gtk.FileChooserButton(_("Select Compact Project Folder"))
+    project_folder.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+    project_folder.set_current_folder(os.path.expanduser("~") + "/")
+    project_folder.set_sensitive(True)
+    project_folder_row = guiutils.get_two_column_box(gtk.Label(_("Compact Project Folder:")), project_folder, 250)
 
+    vbox = gtk.VBox(False, 2)
     vbox.pack_start(guiutils.get_pad_label(10,24), False, False)
     vbox.pack_start(type_select, False, False)
     vbox.pack_start(info_box, False, False)
     vbox.pack_start(guiutils.get_pad_label(24, 20), False, False)
     vbox.pack_start(current_type, False, False)
     vbox.pack_start(new_type, False, False)
+    vbox.pack_start(guiutils.get_pad_label(24, 12), True, True)
+    vbox.pack_start(project_folder_row, False, False)
     vbox.pack_start(guiutils.get_pad_label(24, 24), True, True)
 
     alignment = dialogutils.get_default_alignment(vbox)

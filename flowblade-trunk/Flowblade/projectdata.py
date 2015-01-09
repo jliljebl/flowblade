@@ -80,6 +80,7 @@ class Project:
         self.media_log = []
         self.media_log_groups = []
         self.proxy_data = miscdataobjects.ProjectProxyEditingData()
+        self.compact_project_data = None # None == Project type 'Standard'I, not None == Project type 'Compact'
         self.SAVEFILE_VERSION = SAVEFILE_VERSION
         
         # c_seq is the currently edited Sequence
@@ -90,16 +91,13 @@ class Project:
         self.add_unnamed_bin()
         self.c_bin = self.bins[0]
         
-        # We're running a thumbnail thread here.
         self.init_thumbnailer()
     
     def init_thumbnailer(self):
-        # Thumbnails are made in thread to avoid some MLT crashes
         global thumbnailer
         if thumbnailer == None:
             thumbnailer = Thumbnailer()
             thumbnailer.set_context(self.profile)
-            #thumbnailer.start()
 
     def add_image_sequence_media_object(self, resource_path, name, length):
         media_object = self.add_media_file(resource_path)
@@ -254,6 +252,10 @@ class Project:
 
         return os.path.dirname(last_render_event.data)
 
+    def set_as_compact_project(self, root_folder_path):
+        self.compact_project_data = CompactProject(root_folder_path)
+        self.compact_project_data.create_sub_folders()
+
 
 class CompactProject:
     _projects = "projects/"
@@ -261,16 +263,14 @@ class CompactProject:
     _thumbnails = "thumbnails/"
     _rendered = "rendered/"
 
-    def __init__(self):
-        pass
+    def __init__(self, root_path):
+        # Path needs to end with "/"
+        self.set_root_path(root_path)
 
     def set_root_path(self, root_path):
         self.root_path = root_path
     
-    def create_folders(self):
-        d = os.path.dirname(self.root_path)
-        os.mkdir(d) 
-
+    def create_sub_folders(self):
         d = os.path.dirname(self.projects_path())
         os.mkdir(d)
 
