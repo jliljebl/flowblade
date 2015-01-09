@@ -81,8 +81,7 @@ def update_project_info():
     widgets.info_box.get_children()[0].set_text(profile_info_text)
     widgets.events_list.fill_data_model()
     
-    # fixaa
-    if True:
+    if PROJECT().compact_project_data == None:
         widgets.type_info_label.set_text("Standard")
     else:
         widgets.type_info_label.set_text("Compact")

@@ -206,11 +206,29 @@ def _enable_save():
 def new_project():
     dialogs.new_project_dialog(_new_project_dialog_callback)
 
-def _new_project_dialog_callback(dialog, response_id, profile_combo, tracks_combo, tracks_combo_values_list, project_type_combo):
+def _new_project_dialog_callback(dialog, response_id, profile_combo, tracks_combo, 
+                                 tracks_combo_values_list, project_type_combo,
+                                 project_folder):
     v_tracks, a_tracks = tracks_combo_values_list[tracks_combo.get_active()]
     if response_id == gtk.RESPONSE_ACCEPT:
-        
-        app.new_project(profile_combo.get_active(), v_tracks, a_tracks)
+        # 'Standard' project
+        if project_type_combo.get_active() == 0:
+            app.new_project(profile_combo.get_active(), v_tracks, a_tracks)
+        # 'Compact' project
+        else:
+            root_path = project_folder.get_filenames()[0]
+            print root_path
+
+            # 'Compact' project folders cannot have any files in them at creation time
+            if not (os.listdir(root_path) == []):
+                dialog.destroy()
+                primary_txt = _("Selected folder contains files")
+                secondary_txt = _("When creating a 'Compact' type project, the folder selected\nfor the new project is required to be empty.\n\nNo new project was created.")
+                dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+                return
+
+            app.new_compact_project(root_path + "/", profile_combo.get_active(), v_tracks, a_tracks)
+            
         dialog.destroy()
 
         project_event = projectdata.ProjectEvent(projectdata.EVENT_CREATED_BY_NEW_DIALOG, None)
