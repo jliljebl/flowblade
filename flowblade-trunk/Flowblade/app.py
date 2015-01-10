@@ -459,13 +459,16 @@ def new_project(profile_index, v_tracks, a_tracks):
     new_project = projectdata.Project(profile)
     open_project(new_project)
 
-def new_compact_project(project_root_path, profile_index, v_tracks, a_tracks):
+def new_compact_project(project_root_path, project_name, profile_index, v_tracks, a_tracks):
     sequence.VIDEO_TRACKS_COUNT = v_tracks
     sequence.AUDIO_TRACKS_COUNT = a_tracks
     profile = mltprofiles.get_profile_for_index(profile_index)
     new_project = projectdata.Project(profile)
     new_project.set_as_compact_project(project_root_path)
+    new_project.name = project_name + ".flb"
     open_project(new_project)
+    new_project.update_compact_last_save_path()
+    projectaction.save_project()
 
 def open_project(new_project):
     stop_autosave()

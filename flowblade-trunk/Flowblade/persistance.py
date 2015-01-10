@@ -312,14 +312,7 @@ def load_project(file_path, icons_and_thumnails=True):
         seq.profile = project.profile
         fill_sequence_mlt(seq, project.SAVEFILE_VERSION)
 
-        if hasattr(seq, "watermark_file_path"):
-            if seq.watermark_file_path != None:
-                seq.add_watermark(seq.watermark_file_path)
-            else:
-                seq.watermark_filter = None
-        else:
-            seq.watermark_filter = None
-            seq.watermark_file_path = None
+        handle_seq_watermark(seq)
 
         if not hasattr(seq, "seq_len"):
             seq.update_edit_tracks_length()
@@ -330,7 +323,7 @@ def load_project(file_path, icons_and_thumnails=True):
     for k, media_file in project.media_files.iteritems():
         if project.SAVEFILE_VERSION < 4:
             FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
-        media_file.current_frame = 0 # this is always reset onj load, value is not persistent
+        media_file.current_frame = 0 # this is always reset on load, value is not persistent
             
     # Add icons to media files
     if icons_and_thumnails == True:
@@ -420,7 +413,7 @@ def fill_track_mlt(mlt_track, py_track):
     for i in range(0, len(py_track.clips)):
         clip = py_track.clips[i]
         mlt_clip = None
-        append_created = True # blanks get appended at creation time, others don't
+        append_created = True # blanks get appended at creation time, other clips don't
 
         # Add color attribute if not found
         if not hasattr(clip, "color"):
@@ -505,7 +498,19 @@ def append_clip(track, clip, clip_in, clip_out):
     track.clips.append(clip) # py
     track.append(clip, clip_in, clip_out) # mlt
     resync.clip_added_to_timeline(clip, track)
-    
+
+
+# --------------------------------------------------------- watermarks
+def handle_seq_watermark(seq):    
+    if hasattr(seq, "watermark_file_path"):
+        if seq.watermark_file_path != None:
+            seq.add_watermark(seq.watermark_file_path)
+        else:
+            seq.watermark_filter = None
+    else:
+        seq.watermark_filter = None
+        seq.watermark_file_path = None
+
 # ------------------------------------------------------- backwards compability
 def FIX_N_TO_3_COMPOSITOR_COMPABILITY(compositor, SAVEFILE_VERSION):
     if SAVEFILE_VERSION == 1:
@@ -560,6 +565,7 @@ def FIX_MISSING_PROJECT_ATTRS(project):
 
     if (not(hasattr(project, "compact_project_data"))):
         project.compact_project_data = None
+
 
 # List is used to convert SAVEFILE_VERSIONs 1 and 2 to SAVEFILE_VERSIONs 3 -> n by getting type_id string for compositor index 
 compositors_index_to_type_id = ["##affine","##opacity_kf","##pict_in_pict", "##region","##wipe", "##add",
