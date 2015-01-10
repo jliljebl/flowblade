@@ -137,7 +137,7 @@ class AddMediaFilesThread(threading.Thread):
         succes_new_file = None
         filenames = self.filenames
         for new_file in filenames:
-            (dir, file_name) = os.path.split(new_file)
+            (folder, file_name) = os.path.split(new_file)
             if PROJECT().media_file_exists(new_file):
                 duplicates.append(file_name)
             else:
@@ -208,16 +208,15 @@ def new_project():
 
 def _new_project_dialog_callback(dialog, response_id, profile_combo, tracks_combo, 
                                  tracks_combo_values_list, project_type_combo,
-                                 project_folder):
+                                 project_folder, compact_name_entry):
     v_tracks, a_tracks = tracks_combo_values_list[tracks_combo.get_active()]
     if response_id == gtk.RESPONSE_ACCEPT:
-        # 'Standard' project
         if project_type_combo.get_active() == 0:
+            # 'Standard' project
             app.new_project(profile_combo.get_active(), v_tracks, a_tracks)
-        # 'Compact' project
         else:
+            # 'Compact' project
             root_path = project_folder.get_filenames()[0]
-            print root_path
 
             # 'Compact' project folders cannot have any files in them at creation time
             if not (os.listdir(root_path) == []):
@@ -226,8 +225,13 @@ def _new_project_dialog_callback(dialog, response_id, profile_combo, tracks_comb
                 secondary_txt = _("When creating a 'Compact' type project, the folder selected\nfor the new project is required to be empty.\n\nNo new project was created.")
                 dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
                 return
+            
+            # We need some name for initial saved project
+            project_name = compact_name_entry.get_text()
+            if project_name == "":
+                project_name = "untitled"
 
-            app.new_compact_project(root_path + "/", profile_combo.get_active(), v_tracks, a_tracks)
+            app.new_compact_project(root_path + "/", project_name, profile_combo.get_active(), v_tracks, a_tracks)
             
         dialog.destroy()
 
@@ -277,22 +281,28 @@ def actually_load_project(filename, block_recent_files=False):
     load_launch.start()
 
 def save_project():
-    if PROJECT().last_save_path == None:
+    if PROJECT().compact_project_data != None:
+        # check that last save path is still valid for a 'Compact' project
+        _save_project_in_last_saved_path()
+    elif PROJECT().last_save_path == None:
         save_project_as()
     else:
-        updater.set_info_icon(gtk.STOCK_SAVE)
+        _save_project_in_last_saved_path()
 
-        PROJECT().events.append(projectdata.ProjectEvent(projectdata.EVENT_SAVED, PROJECT().last_save_path))
+def _save_project_in_last_saved_path():
+    updater.set_info_icon(gtk.STOCK_SAVE)
 
-        persistance.save_project(PROJECT(), PROJECT().last_save_path) #<----- HERE
+    PROJECT().events.append(projectdata.ProjectEvent(projectdata.EVENT_SAVED, PROJECT().last_save_path))
 
-        global save_icon_remove_event_id
-        save_icon_remove_event_id = gobject.timeout_add(500, remove_save_icon)
+    persistance.save_project(PROJECT(), PROJECT().last_save_path) #<----- HERE
 
-        global save_time
-        save_time = time.clock()
-        
-        projectinfogui.update_project_info()
+    global save_icon_remove_event_id
+    save_icon_remove_event_id = gobject.timeout_add(500, remove_save_icon)
+
+    global save_time
+    save_time = time.clock()
+    
+    projectinfogui.update_project_info()
         
 def save_project_as():
     if  PROJECT().last_save_path != None:

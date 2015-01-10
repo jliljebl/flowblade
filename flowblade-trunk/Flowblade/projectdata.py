@@ -30,6 +30,7 @@ import gtk
 import mlt
 import md5
 import os
+import shutil
 import time
 
 import appconsts
@@ -108,9 +109,16 @@ class Project:
         """
         Adds media file to project if exists and file is of right type.
         """
-        (dir, file_name) = os.path.split(file_path)
+        (directory, file_name) = os.path.split(file_path)
         (name, ext) = os.path.splitext(file_name)
-        
+
+        # For 'Compact' projects files need to be copied to project folder with a
+        # hashed filename
+        if self.compact_project_data != None:
+            comp_file_path = self.get_media_file_compact_project_path(file_path)
+            shutil.copyfile(file_path, comp_file_path)
+            file_path = comp_file_path
+
         # Get media type
         media_type = sequence.get_media_type(file_path)
         
@@ -119,12 +127,12 @@ class Project:
             icon_path = respaths.IMAGE_PATH + "audio_file.png"
             length = thumbnailer.get_file_length(file_path)
         else: # For non-audio we need write a thumbbnail file and get file lengh while we're at it
-             (icon_path, length) = thumbnailer.write_image(file_path)
+             (icon_path, length) = thumbnailer.write_image(file_path, self.compact_project_data)
 
           # Create media file object
         media_object = MediaFile(self.next_media_file_id, file_path, 
                                file_name, media_type, length, icon_path)
-            
+
         self._add_media_object(media_object)
         
         return media_object
@@ -146,8 +154,13 @@ class Project:
         for key, media_file in self.media_files.items():
             if media_file.type == appconsts.PATTERN_PRODUCER:
                 continue
-            if file_path == media_file.path:
-                return True
+            if self.compact_project_data == None:
+                if file_path == media_file.path:
+                    return True
+            else:
+                compact_path = self.get_media_file_compact_project_path(file_path)
+                print compact_path
+                
         return False
 
     def get_media_file_for_path(self, file_path):
@@ -252,9 +265,27 @@ class Project:
 
         return os.path.dirname(last_render_event.data)
 
+    # ------------------------------------------------------- compact project 
     def set_as_compact_project(self, root_folder_path):
         self.compact_project_data = CompactProject(root_folder_path)
         self.compact_project_data.create_sub_folders()
+
+    def update_compact_last_save_path(self):
+        # This used at project creation time to get save path for the initialproject save.
+        # Compact projects always have atleast one saved project created when peroject 
+        # is created or converted
+        self.last_save_path = self.compact_project_data.projects_path() + self.name
+
+    def get_media_file_compact_project_name(self, file_path):
+        # In 'Compact' projects media files are saved in a single directory with names 
+        # computed from their original file path and size some other attributes.
+        proxy_md_key = file_path + str(os.path.getsize(file_path))
+        (directory, file_name) = os.path.split(file_path)
+        (name, ext) = os.path.splitext(file_name)
+        return md5.new(proxy_md_key).hexdigest() + ext
+
+    def get_media_file_compact_project_path(self, file_path):
+        return self.compact_project_data.media_path() + self.get_media_file_compact_project_name(file_path)
 
 
 class CompactProject:
@@ -408,23 +439,26 @@ class ProducerNotValidError(Exception):
 
 class Thumbnailer:
     def __init__(self):
-        self.file_path = ""
-        self.thumbnail_path = ""
+        self.file_path = "" # these are not needed now, remove
+        self.thumbnail_path = ""  # these are not needed now, remove
         self.consumer = None
         self.producer = None
 
     def set_context(self, profile):
         self.profile = profile
     
-    def write_image(self, file_path):
+    def write_image(self, file_path, compact_project_data=None):
         """
         Writes thumbnail image from file producer
         """
         # Get data
         self.file_path = file_path
         md_str = md5.new(file_path).hexdigest()
-        self.thumbnail_path = editorpersistance.prefs.thumbnail_folder + "/" + md_str +  ".png"
-        
+        if compact_project_data == None:
+            self.thumbnail_path = editorpersistance.prefs.thumbnail_folder + "/" + md_str +  ".png"
+        else: # Thumbnails for 'Compact' projects are saved in project folder
+            self.thumbnail_path = compact_project_data.thumbnails_path() + md_str +  ".png"
+            
         # Create consumer
         self.consumer = mlt.Consumer(self.profile, "avformat", 
                                      self.thumbnail_path)
