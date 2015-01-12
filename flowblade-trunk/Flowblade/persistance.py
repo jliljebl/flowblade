@@ -301,6 +301,14 @@ def load_project(file_path, icons_and_thumnails=True):
     if project.profile == None:
         raise ProjectProfileNotFoundError(project.profile_desc)
 
+    # If this 'Compact' project check that folder structure is good
+    # and set root path
+    if project.compact_project_data != None:
+        success = project.compact_project_data.check_and_set_root_path(file_path)
+        if not success:
+            pass
+        
+        
     # Add MLT objects to sequences.
     global all_clips, sync_clips
     for seq in project.sequences:
@@ -310,7 +318,7 @@ def load_project(file_path, icons_and_thumnails=True):
         sync_clips = []
                 
         seq.profile = project.profile
-        fill_sequence_mlt(seq, project.SAVEFILE_VERSION)
+        fill_sequence_mlt(seq, project.SAVEFILE_VERSION, project.compact_project_data)
 
         handle_seq_watermark(seq)
 
@@ -323,7 +331,12 @@ def load_project(file_path, icons_and_thumnails=True):
     for k, media_file in project.media_files.iteritems():
         if project.SAVEFILE_VERSION < 4:
             FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
-        media_file.current_frame = 0 # this is always reset on load, value is not persistent
+        media_file.current_frame = 0 # this is always reset on load, value is not considered persistent
+        
+        # MediaFile object file and thumbnail paths are always re-created dynamically on load 
+        # for 'Compact' projects.
+        if project.compact_project_data != None:
+            project.compact_project_data.update_media_file_paths(media_file)
             
     # Add icons to media files
     if icons_and_thumnails == True:
@@ -337,7 +350,7 @@ def load_project(file_path, icons_and_thumnails=True):
 
     return project
 
-def fill_sequence_mlt(seq, SAVEFILE_VERSION):
+def fill_sequence_mlt(seq, SAVEFILE_VERSION, compact_project_data):
     """
     Replaces sequences py objects with mlt objects
     """
@@ -355,7 +368,7 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
     # Create and fill MLT tracks.
     for py_track in py_tracks:
         mlt_track = seq.add_track(py_track.type)
-        fill_track_mlt(mlt_track, py_track)
+        fill_track_mlt(mlt_track, py_track, compact_project_data)
         # Set audio gain and pan filter values
         if hasattr(mlt_track, "gain_filter"): # Hidden track and black track do not have these
             mlt_track.gain_filter.set("gain", str(mlt_track.audio_gain))
@@ -398,7 +411,7 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
 
     seq.length = None
 
-def fill_track_mlt(mlt_track, py_track):
+def fill_track_mlt(mlt_track, py_track, compact_project_data):
     """
     Replaces py objects in track (MLT Playlist) with mlt objects
     """
@@ -421,7 +434,10 @@ def fill_track_mlt(mlt_track, py_track):
 
         # normal clip
         if ((clip.type == "Mlt__Producer") and clip.is_blanck_clip == False and 
-            (clip.media_type != appconsts.PATTERN_PRODUCER)): 
+            (clip.media_type != appconsts.PATTERN_PRODUCER)):
+            # For 'Compact' projects the file path is always computed on load
+            if compact_project_data != None:
+                compact_project_data.update_clip_producer_path(clip)
             mlt_clip = sequence.create_file_producer_clip(clip.path)
             if mlt_clip == None:
                 raise FileProducerNotFoundError(clip.path)
