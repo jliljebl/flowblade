@@ -115,7 +115,7 @@ class Project:
         # For 'Compact' projects files need to be copied to project folder with a
         # hashed filename
         if self.compact_project_data != None:
-            comp_file_path = self.get_media_file_compact_project_path(file_path)
+            comp_file_path = self.compact_project_data.get_media_file_path(file_path)
             shutil.copyfile(file_path, comp_file_path)
             file_path = comp_file_path
 
@@ -151,6 +151,10 @@ class Project:
         self.c_bin.file_ids.append(media_object.id)
 
     def media_file_exists(self, file_path):
+        # If 'Compact' project compute path for given file path
+        if self.compact_project_data != None:
+            compact_path = self.compact_project_data.get_media_file_path(file_path)
+
         for key, media_file in self.media_files.items():
             if media_file.type == appconsts.PATTERN_PRODUCER:
                 continue
@@ -158,8 +162,8 @@ class Project:
                 if file_path == media_file.path:
                     return True
             else:
-                compact_path = self.get_media_file_compact_project_path(file_path)
-                print compact_path
+                if compact_path == media_file.path:
+                    return True 
                 
         return False
 
@@ -276,17 +280,6 @@ class Project:
         # is created or converted
         self.last_save_path = self.compact_project_data.projects_path() + self.name
 
-    def get_media_file_compact_project_name(self, file_path):
-        # In 'Compact' projects media files are saved in a single directory with names 
-        # computed from their original file path and size some other attributes.
-        proxy_md_key = file_path + str(os.path.getsize(file_path))
-        (directory, file_name) = os.path.split(file_path)
-        (name, ext) = os.path.splitext(file_name)
-        return md5.new(proxy_md_key).hexdigest() + ext
-
-    def get_media_file_compact_project_path(self, file_path):
-        return self.compact_project_data.media_path() + self.get_media_file_compact_project_name(file_path)
-
 
 class CompactProject:
     _projects = "projects/"
@@ -300,7 +293,50 @@ class CompactProject:
 
     def set_root_path(self, root_path):
         self.root_path = root_path
-    
+
+    def check_and_set_root_path(self, file_path):
+        file_dir = os.path.dirname(file_path)
+        root_path, proj_dir = os.path.split(file_dir)
+
+        # Check that folders exist
+        if proj_dir != "projects":
+            return False
+        if not os.path.isdir(root_path + "/" + self._media):
+            return False
+        if not os.path.isdir(root_path + "/" + self._thumbnails):
+            return False
+        if not os.path.isdir(root_path + "/" + self._rendered):
+            return False
+
+        self.set_root_path(root_path + "/")
+        return True
+
+    def get_media_file_path(self, file_path):
+        return self.media_path() + self.get_media_file_hashed_name(file_path)
+
+    def get_media_file_hashed_name(self, file_path):
+        # In 'Compact' projects media files are saved in a single directory with names 
+        # computed from their original file path and size using a m5d hash function
+        proxy_md_key = file_path + str(os.path.getsize(file_path))
+        (directory, file_name) = os.path.split(file_path)
+        (name, ext) = os.path.splitext(file_name)
+        return md5.new(proxy_md_key).hexdigest() + ext
+        
+    def update_clip_producer_path(self, clip):
+        # This called when 'Compact' project is loaded to re-create paths dynamically
+        folder, file_name = os.path.split(clip.path)
+        clip.path = self.media_path() + file_name
+
+    def update_media_file_paths(self, media_file):
+        # This called when 'Compact' project is loaded to re-create paths dynamically
+        # File path
+        folder, file_name = os.path.split(media_file.path)
+        media_file.path = self.media_path() + file_name
+
+        # Thumbnail
+        folder, file_name = os.path.split(media_file.icon_path)
+        media_file.icon_path = self.thumbnails_path() + file_name
+
     def create_sub_folders(self):
         d = os.path.dirname(self.projects_path())
         os.mkdir(d)
@@ -319,10 +355,10 @@ class CompactProject:
 
     def media_path(self):
         return self.root_path + self._media
-        
+
     def thumbnails_path(self):
         return self.root_path + self._thumbnails
-        
+
     def rendered_path(self):
         return self.root_path + self._rendered
 
@@ -388,7 +424,7 @@ class MediaFile:
     def set_as_proxy_media_file(self):
         self.path, self.second_file_path = self.second_file_path, self.path
         self.is_proxy_file = True
-        
+
     def set_as_original_media_file(self):
         self.path, self.second_file_path = self.second_file_path, self.path
         self.is_proxy_file = False
@@ -439,10 +475,12 @@ class ProducerNotValidError(Exception):
 
 class Thumbnailer:
     def __init__(self):
-        self.file_path = "" # these are not needed now, remove
-        self.thumbnail_path = ""  # these are not needed now, remove
-        self.consumer = None
-        self.producer = None
+        self.profile = None
+
+        #self.file_path = "" # these are not needed now, remove
+        #self.thumbnail_path = ""  # these are not needed now, remove
+        #self.consumer = None
+        #self.producer = None
 
     def set_context(self, profile):
         self.profile = profile
@@ -452,45 +490,44 @@ class Thumbnailer:
         Writes thumbnail image from file producer
         """
         # Get data
-        self.file_path = file_path
         md_str = md5.new(file_path).hexdigest()
         if compact_project_data == None:
-            self.thumbnail_path = editorpersistance.prefs.thumbnail_folder + "/" + md_str +  ".png"
+            thumbnail_path = editorpersistance.prefs.thumbnail_folder + "/" + md_str +  ".png"
         else: # Thumbnails for 'Compact' projects are saved in project folder
-            self.thumbnail_path = compact_project_data.thumbnails_path() + md_str +  ".png"
+            thumbnail_path = compact_project_data.thumbnails_path() + md_str +  ".png"
             
         # Create consumer
-        self.consumer = mlt.Consumer(self.profile, "avformat", 
-                                     self.thumbnail_path)
-        self.consumer.set("real_time", 0)
-        self.consumer.set("vcodec", "png")
+        consumer = mlt.Consumer(self.profile, "avformat", 
+                                     thumbnail_path)
+        consumer.set("real_time", 0)
+        consumer.set("vcodec", "png")
 
         # Create one frame producer
-        self.producer = mlt.Producer(self.profile, str(self.file_path))
-        mltrefhold.hold_ref(self.producer)
-        if self.producer.is_valid() == False:
+        producer = mlt.Producer(self.profile, str(file_path))
+        #mltrefhold.hold_ref(producer)
+        if producer.is_valid() == False:
             raise ProducerNotValidError(file_path)
 
-        length = self.producer.get_length()
+        length = producer.get_length()
         frame = length / 2
-        self.producer = self.producer.cut(frame, frame)
+        producer = producer.cut(frame, frame)
 
         # Connect and write image
-        self.consumer.connect(self.producer)
-        self.consumer.run()
+        consumer.connect(producer)
+        consumer.run()
         
-        return (self.thumbnail_path, length)
+        return (thumbnail_path, length)
 
     def get_file_length(self, file_path):
         # This is used for audio files which don't need a thumbnail written
         # but do need file length known
         # Get data
-        self.file_path = file_path
+        #self.file_path = file_path
 
         # Create one frame producer
-        self.producer = mlt.Producer(self.profile, str(self.file_path))
-        mltrefhold.hold_ref(self.producer)
-        return self.producer.get_length()
+        producer = mlt.Producer(self.profile, str(file_path))
+       # mltrefhold.hold_ref(producer)
+        return producer.get_length()
 
 
 # ----------------------------------- project and media log events
