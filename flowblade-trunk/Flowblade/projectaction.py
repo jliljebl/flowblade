@@ -99,8 +99,8 @@ class LoadThread(threading.Thread):
             dialogutils.warning_message(primary_txt, secondary_txt, None, is_info=False)
             return
 
-        # Fo 'Compact' projects last save path needs to updated to 
-        # point to loaded project file. 
+        # For 'Compact' projects last save path needs to updated to 
+        # point to loaded project file because project folder may have been moved. 
         if project.compact_project_data != None:
             project.update_compact_last_save_path()
 
@@ -219,31 +219,38 @@ def _new_project_dialog_callback(dialog, response_id, profile_combo, tracks_comb
         if project_type_combo.get_active() == 0:
             # 'Standard' project
             app.new_project(profile_combo.get_active(), v_tracks, a_tracks)
+            dialog.destroy()
         else:
             # 'Compact' project
             root_path = project_folder.get_filenames()[0]
-
+            project_name = compact_name_entry.get_text()
+            dialog.destroy()
+              
             # 'Compact' project folders cannot have any files in them at creation time
-            if not (os.listdir(root_path) == []):
-                dialog.destroy()
-                primary_txt = _("Selected folder contains files")
-                secondary_txt = _("When creating a 'Compact' type project, the folder selected\nfor the new project is required to be empty.\n\nNo new project was created.")
-                dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+            if _check_compact_project_folder_empty(root_path) == False:
                 return
             
             # We need some name for initial saved project
-            project_name = compact_name_entry.get_text()
+
             if project_name == "":
                 project_name = "untitled"
 
             app.new_compact_project(root_path + "/", project_name, profile_combo.get_active(), v_tracks, a_tracks)
-            
-        dialog.destroy()
 
         project_event = projectdata.ProjectEvent(projectdata.EVENT_CREATED_BY_NEW_DIALOG, None)
         PROJECT().events.append(project_event)
     else:
         dialog.destroy()
+
+def _check_compact_project_folder_empty(root_path):
+    # 'Compact' project folders cannot have any files in them at creation time
+    if not (os.listdir(root_path) == []):
+        primary_txt = _("Selected folder contains files")
+        secondary_txt = _("When creating a 'Compact' type project, the folder selected\nfor the new project has to be empty.\n\nNo new project was created.")
+        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        return False
+    else:
+        return True
 
 def load_project():
     dialogs.load_project_dialog(_load_project_dialog_callback)
@@ -721,11 +728,16 @@ def _media_filtering_selector_item_activated(selector, index):
 def change_project_type():
     dialogs.change_project_type(_change_project_type_dialog_callback)
         
-def _change_project_type_dialog_callback(dialog, response_id, type_select):
-    type_index = type_select.get_active()
+def _change_project_type_dialog_callback(dialog, response_id, folder_button):
+    root_path = folder_button.get_filenames()[0]
     dialog.destroy()
     
-    #if type_index == 1 and 
+    # 'Compact' project folders cannot have any files in them at creation time
+    if _check_compact_project_folder_empty(root_path) == False:
+        return
+
+    PROJECT().convert_to_compact_project(root_path + "/")
+
 
 # ------------------------------------ bins
 def add_new_bin():
@@ -735,7 +747,7 @@ def add_new_bin():
     PROJECT().add_unnamed_bin()
     gui.bin_list_view.fill_data_model()
     selection = gui.bin_list_view.treeview.get_selection()
-    model, iter = selection.get_selected()
+    model, iterator = selection.get_selected()
     selection.select_path(str(len(model)-1))
     _enable_save()
 

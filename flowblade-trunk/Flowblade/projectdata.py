@@ -35,9 +35,11 @@ import time
 
 import appconsts
 import editorpersistance
+from editorstate import PLAYER
 import mltprofiles
 import mltrefhold
 import patternproducer
+import projectaction
 import miscdataobjects
 import respaths
 import sequence
@@ -280,6 +282,10 @@ class Project:
         # is created or converted
         self.last_save_path = self.compact_project_data.projects_path() + self.name
 
+    def convert_to_compact_project(self, root_folder_path):
+        self.set_as_compact_project(root_folder_path)
+        self.compact_project_data.convert_project_data_to_compact(self)
+
 
 class CompactProject:
     _projects = "projects/"
@@ -362,7 +368,43 @@ class CompactProject:
     def rendered_path(self):
         return self.root_path + self._rendered
 
+    def convert_project_data_to_compact(self, project):
+        PLAYER().stop_playback()
+        PLAYER().stop_consumer()
+        
+        # dict old->new file used below to fix producer file  paths
+        clip_paths = {}
+        
+        # Media files, copy and set path
+        for idkey, media_file in project.media_files.items():
+            # Copy asset file and fix path
+            comp_file_path = self.get_media_file_path(media_file.path)
+            shutil.copyfile(media_file.path, comp_file_path)
+            clip_paths[media_file.path] = comp_file_path
+            media_file.path = comp_file_path
+            # Copy thumbnail file and fix path
+            folder, file_name = os.path.split(media_file.icon_path)
+            new_icon_path = self.thumbnails_path() + file_name 
+            shutil.copyfile(media_file.icon_path, new_icon_path)
+            media_file.icon_path = self.thumbnails_path() + file_name
 
+        # Fix clip producer paths
+        for seq in project.sequences:
+            for track in seq.tracks:
+                for i in range(0, len(track.clips)):
+                    clip = track.clips[i]
+                    # Only producer clips are affected
+                    if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
+                        # For 'Compact' projects the file path is always computed on load
+                        clip.path = clip_paths[clip.path]
+
+        # Save the new 'Compact' project
+        project.update_compact_last_save_path()
+        projectaction.save_project()
+        
+        # Load project
+        projectaction.actually_load_project(project.last_save_path)
+        
 class MediaFile:
     """
     Media file that can added to and edited in Sequence.

@@ -374,10 +374,6 @@ class Player:
         #self.consumer.purge()
         
         self.create_sdl_consumer()
-        
-
-        
-
 
         self.jack_output_filter = mlt.Filter(self.profile, "jackrack")
         if editorpersistance.prefs.jack_output_type == appconsts.JACK_OUT_AUDIO:
