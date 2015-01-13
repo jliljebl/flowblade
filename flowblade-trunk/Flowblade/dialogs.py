@@ -163,11 +163,23 @@ def _new_project_type_changed(type_combo, folder_button, project_folder_label, c
         compact_name_entry.set_sensitive(True)
         compact_name_label.set_sensitive(True)
 
-def change_project_type(callback):
+def change_project_type(project, callback):
+    cmp_txt = _("Compact")
+    strd_txt = _("Standard")
+    
+    if not project.is_compact_project():
+        button_txt = _("Change Type to 'Compact'").encode('utf-8')
+        current_type = strd_txt
+        new_type = cmp_txt
+    else:
+        button_txt = _("Change Type to 'Standard'").encode('utf-8')
+        current_type = cmp_txt
+        new_type = strd_txt
+        
     dialog = gtk.Dialog(_("Change Project Type"), None,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                         (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                         _("Change Type to 'Compact'").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+                         button_txt, gtk.RESPONSE_ACCEPT))
 
     info_header_label = gtk.Label()
     header_box = guiutils.get_left_justified_box([info_header_label])
@@ -179,18 +191,21 @@ def change_project_type(callback):
     small_pad = guiutils.get_pad_label(2, 2)
 
     current_type = panels.get_two_column_box(gtk.Label(_("Current Project type:")),
-                                             guiutils.get_left_justified_box([gtk.Label(_("Standard"))]),
+                                             guiutils.get_left_justified_box([gtk.Label(current_type)]),
                                                250)
     new_type = panels.get_two_column_box(gtk.Label(_("New Project type after change:")),
-                                             guiutils.get_left_justified_box([gtk.Label(_("Compact"))]),
+                                             guiutils.get_left_justified_box([gtk.Label(new_type)]),
                                                250)
-                                               
+
     project_type_combo = gtk.combo_box_new_text()
     project_type_combo.append_text(_("Standard"))
     project_type_combo.append_text(_("Compact"))
     project_type_combo.connect('changed', lambda w: _set_change_project_type_dialog_texts(w, info_header_label, info_label))
-    project_type_combo.set_active(0)
-    
+    if not project.is_compact_project():
+        project_type_combo.set_active(0)
+    else:
+        project_type_combo.set_active(1)
+
     type_select = panels.get_two_column_box(gtk.Label(_("Project type info for:")),
                                                project_type_combo,
                                                250)
@@ -199,7 +214,7 @@ def change_project_type(callback):
     project_folder.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
     project_folder.set_current_folder(os.path.expanduser("~") + "/")
     project_folder.set_sensitive(True)
-    project_folder_row = guiutils.get_two_column_box(gtk.Label(_("Compact Project Folder:")), project_folder, 250)
+    project_folder_row = guiutils.get_two_column_box(gtk.Label(_("Compact Project folder:")), project_folder, 250)
 
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(guiutils.get_pad_label(10,24), False, False)
@@ -208,8 +223,9 @@ def change_project_type(callback):
     vbox.pack_start(guiutils.get_pad_label(24, 20), False, False)
     vbox.pack_start(current_type, False, False)
     vbox.pack_start(new_type, False, False)
-    vbox.pack_start(guiutils.get_pad_label(24, 12), True, True)
-    vbox.pack_start(project_folder_row, False, False)
+    if not project.is_compact_project():
+        vbox.pack_start(guiutils.get_pad_label(24, 12), True, True)
+        vbox.pack_start(project_folder_row, False, False)
     vbox.pack_start(guiutils.get_pad_label(24, 24), True, True)
 
     alignment = dialogutils.get_default_alignment(vbox)
