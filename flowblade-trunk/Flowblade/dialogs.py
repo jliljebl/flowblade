@@ -216,7 +216,7 @@ def change_project_type(callback):
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, type_select)
+    dialog.connect('response', callback, project_folder)
     dialog.show_all()
 
 def _set_change_project_type_dialog_texts(combo, header, text):

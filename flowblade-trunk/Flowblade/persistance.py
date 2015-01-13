@@ -197,6 +197,7 @@ def get_p_clip(clip):
     s_clip = copy.copy(clip)
      
     # Set 'type' attribute for MLT object type
+    # This IS NOT USED anywhere anymore and should be removed.
     s_clip.type = 'Mlt__Producer'
 
     # Get replace filters
@@ -307,8 +308,7 @@ def load_project(file_path, icons_and_thumnails=True):
         success = project.compact_project_data.check_and_set_root_path(file_path)
         if not success:
             pass
-        
-        
+
     # Add MLT objects to sequences.
     global all_clips, sync_clips
     for seq in project.sequences:
@@ -433,8 +433,7 @@ def fill_track_mlt(mlt_track, py_track, compact_project_data):
             clip.color = None
 
         # normal clip
-        if ((clip.type == "Mlt__Producer") and clip.is_blanck_clip == False and 
-            (clip.media_type != appconsts.PATTERN_PRODUCER)):
+        if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
             # For 'Compact' projects the file path is always computed on load
             if compact_project_data != None:
                 compact_project_data.update_clip_producer_path(clip)
@@ -444,13 +443,12 @@ def fill_track_mlt(mlt_track, py_track, compact_project_data):
             mlt_clip.__dict__.update(clip.__dict__)
             fill_filters_mlt(mlt_clip, sequence)
         # pattern producer
-        elif ((clip.type == "Mlt__Producer") and clip.is_blanck_clip == False and 
-            (clip.media_type == appconsts.PATTERN_PRODUCER)):
+        elif (clip.is_blanck_clip == False and (clip.media_type == appconsts.PATTERN_PRODUCER)):
             mlt_clip = sequence.create_pattern_producer(clip.create_data)
             mlt_clip.__dict__.update(clip.__dict__)
             fill_filters_mlt(mlt_clip, sequence)
         # blank clip
-        elif ((clip.type == "Mlt__Producer") and clip.is_blanck_clip == True): 
+        elif (clip.is_blanck_clip == True): 
             length = clip.clip_out - clip.clip_in + 1
             mlt_clip = sequence.create_and_insert_blank(mlt_track, i, length)
             mlt_clip.__dict__.update(clip.__dict__)
