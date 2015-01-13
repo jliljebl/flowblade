@@ -84,9 +84,15 @@ class LoadThread(threading.Thread):
         ticker.start_ticker()
 
         try:
+            editorstate.project_is_loading = True
+            
             project = persistance.load_project(self.filename)
             sequence.set_track_counts(project)
+            
+            editorstate.project_is_loading = False
+
         except persistance.FileProducerNotFoundError as e:
+            editorstate.project_is_loading = False
             print "did not find file:", e
             gtk.gdk.threads_enter()
             updater.set_info_icon(None)

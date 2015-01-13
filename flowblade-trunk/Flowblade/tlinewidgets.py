@@ -49,10 +49,10 @@ import updater
 
 M_PI = math.pi
 
-REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is now recalculated on initilization so number here is irrelevent.
+REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is recalculated on initilization, so value here is irrelevent.
 
 WIDTH = 430 # this has no effect if smaller then editorwindow.NOTEBOOK_WIDTH + editorwindow.MONITOR_AREA_WIDTH
-HEIGHT = 260 # defines window min height with editorwindow.TOP_ROW_HEIGHT
+HEIGHT = 260 # defines window min height together with editorwindow.TOP_ROW_HEIGHT
 
 # Timeline draw constants
 # Other elements than black outline are not drawn if clip screen size
@@ -245,7 +245,7 @@ POINTER_COLOR = (1, 0.3, 0.3) # red frame pointer for position bar
 draw_blank_borders = True
 
 # Draw state
-pix_per_frame = 5.0 # Current draw scale. This set set elsewhere on init so value irrelevant.
+pix_per_frame = 5.0 # Current draw scale. This set set elsewhere on init so default value irrelevant.
 pos = 0 # Current left most frame in timeline display
 
 # ref to singleton TimeLineCanvas instance for mode setting and some position
@@ -257,7 +257,7 @@ trim_mode_in_non_active_state = False
 
 # Used ahen editing with SLIDE_TRIM mode to make user believe that the frame being displayed 
 # is the view frame user selected while in reality user is displayed images from hidden track and the
-# current frame is moving in opposite directiontion users mouse movement
+# current frame is moving in opposite direction to users mouse movement
 fake_current_frame = None
 
 # Used to draw indicators that tell if more frames are available while trimming
@@ -982,6 +982,10 @@ class TimeLineCanvas:
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
         
+        # This can get called during loads by unwanted expose events
+        if editorstate.project_is_loading == True:
+            return
+
         # Draw bg
         cr.set_source_rgb(*BG_COLOR)
         cr.rectangle(0, 0, w, h)
@@ -1719,7 +1723,11 @@ class TimeLineFrameScale:
         We get cairo contect and allocation.
         """
         x, y, w, h = allocation
-        
+
+        # This can get called during loads by unwanted expose events
+        if editorstate.project_is_loading == True:
+            return
+
         # Get sequence and frames per second value
         seq = current_sequence()
         fps = seq.profile.fps()

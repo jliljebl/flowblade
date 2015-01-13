@@ -89,6 +89,9 @@ cursor_on_tline = False
 # jack rack filter will bw taached to it
 attach_jackrack = False
 
+# Flag is used to block unwanted draw events during loads  
+project_is_loading = False
+
 def current_is_move_mode():
     if ((edit_mode == INSERT_MOVE) or (edit_mode == OVERWRITE_MOVE) or (edit_mode == MULTI_MOVE)):
         return True
