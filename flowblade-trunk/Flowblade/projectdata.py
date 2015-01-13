@@ -271,7 +271,10 @@ class Project:
 
         return os.path.dirname(last_render_event.data)
 
-    # ------------------------------------------------------- compact project 
+    # ------------------------------------------------------- compact project
+    def is_compact_project(self):
+        return (self.compact_project_data != None)
+        
     def set_as_compact_project(self, root_folder_path):
         self.compact_project_data = CompactProject(root_folder_path)
         self.compact_project_data.create_sub_folders()
@@ -285,6 +288,13 @@ class Project:
     def convert_to_compact_project(self, root_folder_path):
         self.set_as_compact_project(root_folder_path)
         self.compact_project_data.convert_project_data_to_compact(self)
+
+    def convert_to_standart_project(self):
+        self.compact_project_data = None
+        projectaction.save_project()
+        projectaction.actually_load_project(self)
+        
+        
 
 
 class CompactProject:

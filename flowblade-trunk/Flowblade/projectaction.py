@@ -726,18 +726,22 @@ def _media_filtering_selector_item_activated(selector, index):
     gui.media_list_view.fill_data_model()
 
 def change_project_type():
-    dialogs.change_project_type(_change_project_type_dialog_callback)
-        
+    dialogs.change_project_type(PROJECT(), _change_project_type_dialog_callback)
+
 def _change_project_type_dialog_callback(dialog, response_id, folder_button):
-    root_path = folder_button.get_filenames()[0]
-    dialog.destroy()
-    
-    # 'Compact' project folders cannot have any files in them at creation time
-    if _check_compact_project_folder_empty(root_path) == False:
-        return
-
-    PROJECT().convert_to_compact_project(root_path + "/")
-
+   
+    if response_id == gtk.RESPONSE_ACCEPT:
+        if not PROJECT().is_compact_project():
+            root_path = folder_button.get_filenames()[0]
+            dialog.destroy()
+            # 'Compact' project folders cannot have any files in them at creation time
+            if _check_compact_project_folder_empty(root_path) == False:
+                return
+            PROJECT().convert_to_compact_project(root_path + "/")
+        else:
+            dialog.destroy()
+            PROJECT().convert_to_standart_project()
+            
 
 # ------------------------------------ bins
 def add_new_bin():
