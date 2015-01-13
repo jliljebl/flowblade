@@ -98,7 +98,12 @@ class LoadThread(threading.Thread):
                             _("Doing so does not guarantee succesful load") + "\n" + _("if files have different properties.")
             dialogutils.warning_message(primary_txt, secondary_txt, None, is_info=False)
             return
-    
+
+        # Fo 'Compact' projects last save path needs to updated to 
+        # point to loaded project file. 
+        if project.compact_project_data != None:
+            project.update_compact_last_save_path()
+
         gtk.gdk.threads_enter()
         dialog.info.set_text(_("Opening"))
         gtk.gdk.threads_leave()
@@ -108,7 +113,7 @@ class LoadThread(threading.Thread):
         gtk.gdk.threads_enter()
         app.open_project(project)
 
-        if self.block_recent_files:
+        if self.block_recent_files: # naming ????
             editorpersistance.add_recent_project_path(self.filename)
             editorpersistance.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
         gtk.gdk.threads_leave()
