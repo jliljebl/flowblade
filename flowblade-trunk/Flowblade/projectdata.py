@@ -292,7 +292,7 @@ class Project:
     def convert_to_standart_project(self):
         self.compact_project_data = None
         projectaction.save_project()
-        projectaction.actually_load_project(self)
+        projectaction.actually_load_project(self.last_save_path)
         
         
 
@@ -301,7 +301,7 @@ class CompactProject:
     _projects = "projects/"
     _media = "media/"
     _thumbnails = "thumbnails/"
-    _rendered = "rendered/"
+    #_rendered = "rendered/"
 
     def __init__(self, root_path):
         # Path needs to end with "/"
@@ -321,8 +321,8 @@ class CompactProject:
             return False
         if not os.path.isdir(root_path + "/" + self._thumbnails):
             return False
-        if not os.path.isdir(root_path + "/" + self._rendered):
-            return False
+        #if not os.path.isdir(root_path + "/" + self._rendered):
+        #    return False
 
         self.set_root_path(root_path + "/")
         return True
@@ -363,8 +363,8 @@ class CompactProject:
         d = os.path.dirname(self.thumbnails_path())
         os.mkdir(d)
 
-        d = os.path.dirname(self.rendered_path())
-        os.mkdir(d) 
+        #d = os.path.dirname(self.rendered_path())
+        #os.mkdir(d) 
 
     def projects_path(self):
         return self.root_path + self._projects
@@ -374,9 +374,11 @@ class CompactProject:
 
     def thumbnails_path(self):
         return self.root_path + self._thumbnails
-
+    
+    """
     def rendered_path(self):
         return self.root_path + self._rendered
+    """
 
     def convert_project_data_to_compact(self, project):
         PLAYER().stop_playback()
