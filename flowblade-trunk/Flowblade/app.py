@@ -761,23 +761,20 @@ def _shutdown_dialog_callback(dialog, response_id):
     # Block reconnecting consumer before setting window not visible
     updater.player_refresh_enabled = False
     gui.editor_window.window.set_visible(False)
-    
     # Close and destroy app when gtk finds time to do it after hiding window
     glib.idle_add(_app_destroy)
 
 def _app_destroy():
     # Close threads and stop mlt consumers
-    if editorstate.player.jack_output_filter != None:
-        editorstate.player.jack_output_off()
+    #if editorstate.player.jack_output_filter != None:
+    #    editorstate.player.jack_output_off()
     editorstate.player.shutdown() # has ticker thread and player threads running
     audiomonitoring.close()
-
     # Wait threads to stop
     while((editorstate.player.ticker.exited == False) and
          (audiomonitoring._update_ticker.exited == False) and
          (audiowaveform.waveform_thread != None)):
         pass
-
     # Delete autosave file
     try:
         os.remove(utils.get_hidden_user_dir_path() + get_instance_autosave_file())
@@ -785,7 +782,7 @@ def _app_destroy():
         print "Delete autosave file FAILED"
 
     # Delete jack failsafe file
-    jackaudio.delete_failsafe_file()
+    #jackaudio.delete_failsafe_file()
 
     # Exit gtk main loop.
     gtk.main_quit()
