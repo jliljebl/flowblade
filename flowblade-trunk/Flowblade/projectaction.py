@@ -119,7 +119,7 @@ class LoadThread(threading.Thread):
         gtk.gdk.threads_enter()
         app.open_project(project)
 
-        if self.block_recent_files: # naming ????
+        if self.block_recent_files: # naming flipped ????
             editorpersistance.add_recent_project_path(self.filename)
             editorpersistance.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
         gtk.gdk.threads_leave()
@@ -237,7 +237,6 @@ def _new_project_dialog_callback(dialog, response_id, profile_combo, tracks_comb
                 return
             
             # We need some name for initial saved project
-
             if project_name == "":
                 project_name = "untitled"
 

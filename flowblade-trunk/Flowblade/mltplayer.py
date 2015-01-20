@@ -397,7 +397,6 @@ class Player:
         self.consumer.detach(self.jack_output_filter)
         self.consumer.set("audio_off", "0")
 
-
         self.consumer.stop()
         self.consumer.start()
         

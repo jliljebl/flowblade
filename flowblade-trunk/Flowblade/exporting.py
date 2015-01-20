@@ -168,10 +168,24 @@ class MLTXMLToEDLParse:
             src_pid = i["pid"]
             source_links[src_pid] = i["resource"]
         
-        reel_names ={}
+        reel_names = {}
+        resources = []
         reel_count = 1
         for pid, resource in source_links.iteritems():
+            # Only create reel name once for each unique resource
+            if resource in resources:
+                continue
+            else:
+                resources.append(resource)
+
+            # Get 8 char uppercase alphanumeric reelname.
             reel_name = self.get_reel_name(resource, reel_count)
+            
+            # If we happen to get same reel name for two different resources we need to
+            # create different reel names for them
+            if reel_name in reel_names.values():
+                reel_name = reel_name[0:4] + "{0:04d}".format(reel_count)
+
             reel_names[resource] = reel_name
             reel_count = reel_count + 1
 
@@ -185,17 +199,13 @@ class MLTXMLToEDLParse:
         else:
             file_name = resource.split("/")[-1]
             file_name_no_ext = file_name.split(".")[0]
+            file_name_no_ext = re.sub('[^0-9a-zA-Z]+', 'X', file_name_no_ext)
             file_name_len = len(file_name_no_ext)
             if file_name_len >= 8:
-                if self.reel_name_type == REEL_NAME_FILE_NAME_START:
-                    reel_name = file_name_no_ext[0:8]
-                else:
-                    reel_name = file_name_no_ext[file_name_len - 8:file_name_len]
+                reel_name = file_name_no_ext[0:8]
             else:
-                reel_name = file_name_no_ext + "         "[0:8 - file_name_len]
-            
-            # Replace all non-alphanumeric characters
-            reel_name = re.sub('[^0-9a-zA-Z]+', 'X', reel_name)
+                reel_name = file_name_no_ext  + "XXXXXXXX"[0:8 - file_name_len]
+
             return reel_name.upper()
     
     def create_edl(self, track_index):
