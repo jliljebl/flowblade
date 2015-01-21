@@ -41,6 +41,10 @@ import utils
 
 EDL_TYPE_AVID_CMX3600 = 0
 
+AUDIO_FROM_VIDEO = 0
+AUDIO_FROM_AUDIO_TRACK = 1
+NO_AUDIO = 2
+
 REEL_NAME_3_NUMBER = 0
 REEL_NAME_8_NUMBER = 1
 REEL_NAME_FILE_NAME_START = 2
@@ -81,12 +85,12 @@ def EDL_export():
 
 def _export_edl_dialog_callback(dialog, response_id, data):
     if response_id == gtk.RESPONSE_YES:
-        file_name, out_folder, track_select_combo = data
+        file_name, out_folder, track_select_combo, cascade_check, op_combo, audio_track_select_combo = data
         edl_path = out_folder.get_filename()+ "/" + file_name.get_text() + ".edl" 
         global _xml_render_monitor
         _xml_render_player = renderconsumer.XMLRenderPlayer(get_edl_temp_xml_path(),
                                                             _edl_xml_render_done,
-                                                            (edl_path, track_select_combo))
+                                                            (edl_path, track_select_combo, cascade_check, op_combo, audio_track_select_combo))
         _xml_render_player.start()
 
         dialog.destroy()
@@ -94,11 +98,17 @@ def _export_edl_dialog_callback(dialog, response_id, data):
         dialog.destroy()
 
 def _edl_xml_render_done(data):
-    edl_path, track_select_combo = data
+    edl_path, track_select_combo, cascade_check, op_combo, audio_track_select_combo = data
+    video_track = current_sequence().first_video_index + track_select_combo.get_active()
+    print video_track
+    audio_track = 1 + audio_track_select_combo.get_active()
     global _xml_render_player
     _xml_render_player = None
     mlt_parse = MLTXMLToEDLParse(get_edl_temp_xml_path(), edl_path)
-    edl_contents = mlt_parse.create_edl(track_select_combo.get_active() + 1, False)
+    edl_contents = mlt_parse.create_edl(video_track, 
+                                        cascade_check.get_active(),
+                                        op_combo.get_active(), 
+                                        audio_track)
     f = open(edl_path, 'w')
     f.write(edl_contents)
     f.close()
@@ -238,7 +248,8 @@ class MLTXMLToEDLParse:
 
             return reel_name.upper()
     
-    def create_edl(self, track_index, cascade):
+    def create_edl(self, track_index, cascade, audio_op, audio_track_index):
+        print track_index, cascade, audio_op, audio_track_index
         str_list = []
         
         title = self.title.split("/")[-1] 
@@ -249,18 +260,43 @@ class MLTXMLToEDLParse:
         playlists = self.get_playlists()
         event_dict = self.get_event_dict(playlists)
 
+        edl_event_count = 1 # incr. event index
+        
+        # Write video events
         if not cascade:
             playlist = playlists[track_index]
             track_frames = self.get_track_frame_array(playlist)
         else:
             track_frames = self.cascade_playlists(playlists)
 
-        src_channel = "AA/V" #"AA"
+        if audio_op == AUDIO_FROM_VIDEO:
+            src_channel = "AA/V"
+        else:
+            src_channel = "V"
 
-        edl_event_count = 1 # incr. event index
-        prog_in = 0 # showtime tally
+        if len(track_frames) != 0:
+            edl_event_count = self.write_track_events(str_list, 
+                                            track_frames, src_channel, source_links, 
+                                            reel_names, event_dict, 
+                                            edl_event_count)
+        
+        # Write audio events
+        if audio_op == AUDIO_FROM_AUDIO_TRACK:
+            src_channel = "AA"
+            playlist = playlists[audio_track_index]
+            track_frames = self.get_track_frame_array(playlist)
+            self.write_track_events(str_list, track_frames, src_channel, 
+                                    source_links, reel_names, event_dict, 
+                                    edl_event_count)
+            
+        print ''.join(str_list).strip("\n")
+        return ''.join(str_list).strip("\n")
+
+    def write_track_events(self, str_list, track_frames, src_channel, 
+                            source_links, reel_names, event_dict, 
+                            edl_event_count):
+        prog_in = 0
         prog_out = 0
-
         running = True
         while running:
             current_clip = track_frames[prog_in]
@@ -282,8 +318,7 @@ class MLTXMLToEDLParse:
                 
                 self.write_producer_edl_event_CMX3600(str_list, resource, 
                                                      edl_event_count, reel_name, src_channel,
-                                     src_in, src_out, prog_in, prog_out)
-    
+                                                     src_in, src_out, prog_in, prog_out)
                 prog_in = prog_out
             elif event["type"] == "blank":
                 print "blank not impl"
@@ -293,11 +328,10 @@ class MLTXMLToEDLParse:
                 print "event type error at create_edl"
                 break
                     
-            edl_event_count = edl_event_count + 1 
-
-        #print ''.join(str_list).strip("\n")
-        return ''.join(str_list).strip("\n")
-
+            edl_event_count = edl_event_count + 1
+        
+        return edl_event_count
+                
     def get_last_clip_frame(self, frames, first):
         val = frames[first]
         last = first + 1
@@ -397,3 +431,37 @@ class MLTXMLToEDLParse:
         return lst + [fillvalue] * (n - len(self))
         
 
+"""
+running = True
+while running:
+    current_clip = track_frames[prog_in]
+    event = event_dict[current_clip]
+    
+    prog_out = self.get_last_clip_frame(track_frames, prog_in)
+    if prog_out == CLIP_OUT_IS_LAST_FRAME:
+        running = False
+        prog_out = len(track_frames)
+        
+    if event["type"] == "entry":
+        # Get media producer atrrs
+        producer = event["producer"]
+        resource = source_links[producer]
+        reel_name = reel_names[resource]
+        src_in = int(event["inTime"]) # source clip IN time
+        src_out = int(event["outTime"]) # source clip OUT time
+        src_out = src_out + 1 # EDL out is exclusive, MLT out is inclusive
+        
+        self.write_producer_edl_event_CMX3600(str_list, resource, 
+                                             edl_event_count, reel_name, src_channel,
+                                src_in, src_out, prog_in, prog_out)
+        prog_in = prog_out
+    elif event["type"] == "blank":
+        print "blank not impl"
+        prog_out = prog_in + int(event["length"])
+        prog_in = prog_out
+    else:
+        print "event type error at create_edl"
+        break
+            
+    edl_event_count = edl_event_count + 1
+"""
