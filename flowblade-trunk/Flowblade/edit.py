@@ -99,7 +99,7 @@ def _cut_blank(track, index, clip_cut_frame, clip):
     Cuts a blank clip in two.
     """
     _remove_clip(track, index)
-    
+
     clip_one_length = clip_cut_frame
     clip_two_length = clip.clip_out - clip_cut_frame + 1 # +1 == cut frame part of this clip
 

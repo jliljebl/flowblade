@@ -202,6 +202,13 @@ def get_two_column_editor_row(name, editor_widget):
 def get_no_pad_named_frame(name, panel):
     return get_named_frame(name, panel, 0, 0, 0)
 
+def get_named_frame_with_vbox(name, widgets, left_padding=12, right_padding=6, right_out_padding=4):
+    vbox = gtk.VBox()
+    for widget in widgets:
+        vbox.pack_start(widget, False, False, 0)
+
+    return get_named_frame(name, vbox, left_padding, right_padding, right_out_padding)
+    
 def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_padding=4):
     """
     Gnome style named panel

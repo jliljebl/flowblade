@@ -1060,8 +1060,6 @@ def export_edl_dialog(callback, parent_window, project_name):
     INPUT_LABELS_WITDH = 220
     project_name = project_name.strip(".flb")
     
-    fi_label = gtk.Label(_("Export File Name:"))
-    
     file_name = gtk.Entry()
     file_name.set_text(project_name)
 
@@ -1072,25 +1070,49 @@ def export_edl_dialog(callback, parent_window, project_name):
     name_pack.pack_start(file_name, True, True, 0)
     name_pack.pack_start(extension_label, False, False, 0)
 
-    name_row = guiutils.get_two_column_box(gtk.Label(_("Export File Name:")), name_pack, INPUT_LABELS_WITDH)
+    name_row = guiutils.get_two_column_box(gtk.Label(_("Export file name:")), name_pack, INPUT_LABELS_WITDH)
  
-    out_folder = gtk.FileChooserButton(_("Select Target Folder"))
+    out_folder = gtk.FileChooserButton(_("Select target folder"))
     out_folder.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
     out_folder.set_current_folder(os.path.expanduser("~") + "/")
     
-    folder_row = guiutils.get_two_column_box(gtk.Label(_("Export Folder:")), out_folder, INPUT_LABELS_WITDH)
+    folder_row = guiutils.get_two_column_box(gtk.Label(_("Export folder:")), out_folder, INPUT_LABELS_WITDH)
+
+    file_frame = guiutils.get_named_frame_with_vbox(_("File"), [name_row, folder_row])
 
     seq = editorstate.current_sequence()
     track_select_combo = gtk.combo_box_new_text()
-    for i in range(1,  len(seq.tracks) - 1):
+    for i in range(seq.first_video_index,  len(seq.tracks) - 1):
         track_select_combo.append_text(utils.get_track_name(seq.tracks[i], seq))
-    track_select_combo.set_active(seq.first_video_index - 1)
-    track_row = guiutils.get_two_column_box(gtk.Label(_("Exported Track:")), track_select_combo, INPUT_LABELS_WITDH)
+    track_select_combo.set_active(0)
+    track_row = guiutils.get_two_column_box(gtk.Label(_("Exported video track:")), track_select_combo, INPUT_LABELS_WITDH)
+    
+    cascade_check = gtk.CheckButton()
+    cascade_check.connect("toggled", _cascade_toggled, track_select_combo)
+    
+    cascade_row = guiutils.get_left_justified_box( [cascade_check, gtk.Label(_("Cascade video tracks"))])
+
+    audio_track_select_combo = gtk.combo_box_new_text()
+    for i in range(1,  seq.first_video_index):
+        audio_track_select_combo.append_text(utils.get_track_name(seq.tracks[i], seq))
+    audio_track_select_combo.set_active(seq.first_video_index - 2)
+    audio_track_select_combo.set_sensitive(False)
+
+    audio_track_row = guiutils.get_two_column_box(gtk.Label(_("Exported audio track:")), audio_track_select_combo, INPUT_LABELS_WITDH)
+
+    op_combo = gtk.combo_box_new_text()
+    op_combo.append_text(_("Audio From Video"))
+    op_combo.append_text(_("Separate Audio Track"))
+    op_combo.append_text(_("No Audio"))
+    op_combo.set_active(0)
+    op_combo.connect("changed", _audio_op_changed, audio_track_select_combo)
+    op_row = guiutils.get_two_column_box(gtk.Label(_("Audio export:")), op_combo, INPUT_LABELS_WITDH)
+    
+    tracks_frame = guiutils.get_named_frame_with_vbox(_("Tracks"), [cascade_row, track_row, op_row, audio_track_row])
 
     vbox = gtk.VBox(False, 2)
-    vbox.pack_start(folder_row, False, False, 0)
-    vbox.pack_start(name_row, False, False, 0)
-    vbox.pack_start(track_row, False, False, 0)
+    vbox.pack_start(file_frame, False, False, 0)
+    vbox.pack_start(tracks_frame, False, False, 0)
     
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(12, 12, 12, 12)
@@ -1098,9 +1120,22 @@ def export_edl_dialog(callback, parent_window, project_name):
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, (file_name, out_folder, track_select_combo))
+    dialog.connect('response', callback, (file_name, out_folder, track_select_combo, cascade_check, op_combo, audio_track_select_combo))
     dialog.show_all()
 
+def _cascade_toggled(check, track_select_combo):
+    if check.get_active() == True:
+        track_select_combo.set_sensitive(False)
+    else:
+        track_select_combo.set_sensitive(True)
+
+def _audio_op_changed(combo, audio_track_select_combo):
+    if combo.get_active() == 1:
+        audio_track_select_combo.set_sensitive(True)
+    else:
+        audio_track_select_combo.set_sensitive(False)
+
+""" REMOVE WHEN SEEN NEXT
 def _mpeg_render_check_toggled(widget, data):
     mpg_name_entry, dvd_type_combo = data
 
@@ -1115,6 +1150,7 @@ def _markers_chapters_check_toggled(widget, data):
     else:
         chapters_view.set_sensitive(False)
         text_buffer.set_text("")
+"""
 
 def transition_edit_dialog(callback, transition_data):
     dialog = gtk.Dialog(_("Add Transition").encode('utf-8'), None,
