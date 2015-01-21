@@ -44,8 +44,8 @@ EDL_TYPE_AVID_CMX3600 = 0
 REEL_NAME_3_NUMBER = 0
 REEL_NAME_8_NUMBER = 1
 REEL_NAME_FILE_NAME_START = 2
-REEL_NAME_FILE_NAME_END = 3
 
+CLIP_OUT_IS_LAST_FRAME = -999
 
 _xml_render_player = None
 
@@ -98,7 +98,7 @@ def _edl_xml_render_done(data):
     global _xml_render_player
     _xml_render_player = None
     mlt_parse = MLTXMLToEDLParse(get_edl_temp_xml_path(), edl_path)
-    edl_contents = mlt_parse.create_edl(track_select_combo.get_active() + 1)
+    edl_contents = mlt_parse.create_edl(track_select_combo.get_active() + 1, False)
     f = open(edl_path, 'w')
     f.write(edl_contents)
     f.close()
@@ -111,7 +111,7 @@ class MLTXMLToEDLParse:
     def __init__(self, xmlfile, title):
         self.xmldoc = minidom.parse(xmlfile)
         self.title = title
-        self.reel_name_type = REEL_NAME_FILE_NAME_END
+        self.reel_name_type = REEL_NAME_FILE_NAME_START
         self.from_clip_comment = True
     
     def get_project_profile(self):
@@ -132,20 +132,50 @@ class MLTXMLToEDLParse:
     def get_playlists(self):
         playlist_list = []
         playlists = self.xmldoc.getElementsByTagName("playlist")
+        print "get_playlists"
+        eid = 0
         for p in playlists:
             event_list = []
             pl_dict = {}
             pl_dict["pid"] = p.attributes["id"].value
-            events = p.getElementsByTagName("entry")
-            for event in events:
+ 
+            event_nodes = p.childNodes
+            events = []
+            for i in range(0, event_nodes.length):
+                # Get edit event
+                event = event_nodes.item(i)
+                
+                # Create event dict and give it id
                 ev_dict = {}
-                ev_dict["producer"] = event.attributes["producer"].value
-                ev_dict["inTime"] = event.attributes["in"].value
-                ev_dict["outTime"] = event.attributes["out"].value
-                event_list.append(ev_dict)
+                ev_dict["eid"] = eid
+                eid = eid + 1
+                
+                # Set event data
+                if event.localName == "entry":# or  event.localName == "blank":
+                    ev_dict["type"] = event.localName
+                    ev_dict["producer"] = event.attributes["producer"].value
+                    ev_dict["inTime"] = event.attributes["in"].value
+                    ev_dict["outTime"] = event.attributes["out"].value
+                    print  ev_dict["type"] 
+                    event_list.append(ev_dict)
+                elif  event.localName == "blank":
+                    ev_dict["type"] = event.localName
+                    ev_dict["length"] = event.attributes["length"].value
+                    event_list.append(ev_dict)
+                    print  ev_dict["type"] 
+
             pl_dict["events"] = event_list
             playlist_list.append(pl_dict)
         return tuple(playlist_list)
+
+    def get_event_dict(self, playlists):
+        event_dict = {}
+        for play_list in playlists:
+            for event in play_list["events"]:
+                print type(event)
+                eid = event["eid"]
+                event_dict[eid] = event
+        return event_dict
 
     def get_producers(self):
         producer_list = []
@@ -167,7 +197,7 @@ class MLTXMLToEDLParse:
         for i in self.get_producers():
             src_pid = i["pid"]
             source_links[src_pid] = i["resource"]
-        
+
         reel_names = {}
         resources = []
         reel_count = 1
@@ -208,57 +238,77 @@ class MLTXMLToEDLParse:
 
             return reel_name.upper()
     
-    def create_edl(self, track_index):
+    def create_edl(self, track_index, cascade):
         str_list = []
+        
         title = self.title.split("/")[-1] 
         title = title.split(".")[0].upper()
         str_list.append("TITLE:   " + title + "\n")
         
         source_links, reel_names = self.link_references()
-        
-        playlist = self.get_playlists()[track_index]
-        if track_index < current_sequence().first_video_index:
-            src_channel = "AA"
-        else:
-            src_channel = "AA/V"
+        playlists = self.get_playlists()
+        event_dict = self.get_event_dict(playlists)
 
-        edl_event = 1
+        if not cascade:
+            playlist = playlists[track_index]
+            track_frames = self.get_track_frame_array(playlist)
+        else:
+            track_frames = self.cascade_playlists(playlists)
+
+        src_channel = "AA/V" #"AA"
+
+        edl_event_count = 1 # incr. event index
         prog_in = 0 # showtime tally
         prog_out = 0
-        for event in playlist["events"]:
-            # Get source file
-            producer = event["producer"]
 
-            resource = source_links[producer]
-            #source_file = resource.split("/")[-1]
-            reel_name = reel_names[resource]
-
-            # Get Source in and out
-            src_in = int(event["inTime"]) # source clip IN time
-            src_out = int(event["outTime"]) # source clip OUT time
-            # Fix for first event
-            if edl_event != 1:
-                src_out = src_out + 1 
+        running = True
+        while running:
+            current_clip = track_frames[prog_in]
+            event = event_dict[current_clip]
             
-            # Source duration and proram out
-            src_dur = src_out - src_in 
-            prog_out = prog_out + src_dur # increment program tally
+            prog_out = self.get_last_clip_frame(track_frames, prog_in)
+            if prog_out == CLIP_OUT_IS_LAST_FRAME:
+                running = False
+                prog_out = len(track_frames)
+                
+            if event["type"] == "entry":
+                # Get media producer atrrs
+                producer = event["producer"]
+                resource = source_links[producer]
+                reel_name = reel_names[resource]
+                src_in = int(event["inTime"]) # source clip IN time
+                src_out = int(event["outTime"]) # source clip OUT time
+                src_out = src_out + 1 # EDL out is exclusive, MLT out is inclusive
+                
+                self.write_producer_edl_event_CMX3600(str_list, resource, 
+                                                     edl_event_count, reel_name, src_channel,
+                                     src_in, src_out, prog_in, prog_out)
+    
+                prog_in = prog_out
+            elif event["type"] == "blank":
+                print "blank not impl"
+                prog_out = prog_in + int(event["length"])
+                prog_in = prog_out
+            else:
+                print "event type error at create_edl"
+                break
+                    
+            edl_event_count = edl_event_count + 1 
 
-            # Write out edl event
-            self.write_edl_event_CMX3600(str_list, resource, edl_event, reel_name, src_channel,
-                                         src_in, src_out, prog_in, prog_out)
-
-            # Fix for first event
-            if edl_event == 1:
-                prog_in = prog_in + 1
-            
-            # Increment program in and event count     
-            prog_in = prog_in + src_dur
-            edl_event = edl_event + 1
-
+        #print ''.join(str_list).strip("\n")
         return ''.join(str_list).strip("\n")
 
-    def write_edl_event_CMX3600(self, str_list, resource, edl_event, reel_name, 
+    def get_last_clip_frame(self, frames, first):
+        val = frames[first]
+        last = first + 1
+        try:
+            while frames[last] == val:
+                last = last + 1
+            return last
+        except:
+            return CLIP_OUT_IS_LAST_FRAME
+
+    def write_producer_edl_event_CMX3600(self, str_list, resource, edl_event, reel_name, 
                                 src_channel, src_in, src_out, prog_in, prog_out):
             src_transition = "C"
             if self.from_clip_comment  == True:
@@ -282,8 +332,68 @@ class MLTXMLToEDLParse:
             str_list.append(utils.get_tc_string(prog_out))
             str_list.append("\n")
 
-                    
+    def cascade_playlists(self, playlists):
+        """
+        if len(playlists) == 1:
+            return playlists[0]
+        if len(playlists) == 2:
+            return self.combine_two_tracks(playlists[0], playlists[1])
+        """
+            
+        for i in range(len(current_sequence().tracks) - 3, current_sequence().first_video_index - 1, -1):
+            print i, i + 1 
 
+    def combine_two_tracks(self, top_track, bottom_track):
+        if len(top_track) == 0 and len(bottom_track) == 0:
+            return []
+            
+        if len(top_track) == 0:
+            return self.get_track_frame_array(bottom_track)
 
+        if len(bottom_track) == 0:
+            return self.get_track_frame_array(top_track)
 
+        top_frames = self.get_track_frame_array(top_track)
+        bottom_frames = self.get_track_frame_array(bottom_track)
+        combined_frames = []
+        
+        length = len(top_frames)
+        if len(bottom_frames) > len(top_frames):
+            length = len(bottom_frames)
+            self.ljust(top_frames, len(bottom_frames), None)
+        elif len(bottom_frames) < len(top_frames):
+            length = len(top_frames)
+            self.ljust(bottom_frames, len(top_frames), None)
+        else:
+            length = len(top_frames)
+            
+        for i in range(0, length):
+            if top_frames[i] != None:
+                combined_frames.append(top_frames[i])
+            elif bottom_frames[i] != None:
+                combined_frames.append(bottom_frames[i])
+            else:
+                combined_frames.append(None)
+
+        return combined_frames
+
+    def get_track_frame_array(self, track):
+        frames = []
+        for event in track["events"]:
+            if event["type"] == "entry":
+                count = int(event["outTime"]) - int(event["inTime"]) + 1
+                self.append_frames(frames, count, event["eid"])
+            elif event["type"] == "blank":
+                count = int(event["length"])
+                self.append_frames(frames, count, event["eid"])
+
+        return frames
+
+    def append_frames(self, frames, count, value):
+        for i in range(0, count):
+            frames.append(value)
+
+    def ljust(self, lst, n, fillvalue=''):
+        return lst + [fillvalue] * (n - len(self))
+        
 
