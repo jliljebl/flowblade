@@ -142,7 +142,6 @@ class MLTXMLToEDLParse:
     def get_playlists(self):
         playlist_list = []
         playlists = self.xmldoc.getElementsByTagName("playlist")
-        print "get_playlists"
         eid = 0
         for p in playlists:
             event_list = []
@@ -267,7 +266,7 @@ class MLTXMLToEDLParse:
             playlist = playlists[track_index]
             track_frames = self.get_track_frame_array(playlist)
         else:
-            track_frames = self.cascade_playlists(playlists)
+            track_frames = self.cascade_playlists(playlists, event_dict)
 
         if audio_op == AUDIO_FROM_VIDEO:
             src_channel = "AA/V"
@@ -366,46 +365,60 @@ class MLTXMLToEDLParse:
             str_list.append(utils.get_tc_string(prog_out))
             str_list.append("\n")
 
-    def cascade_playlists(self, playlists):
+    def cascade_playlists(self, playlists, event_dict):
         """
         if len(playlists) == 1:
-            return playlists[0]
+            return self.get_track_frame_array(playlists[0])
         if len(playlists) == 2:
             return self.combine_two_tracks(playlists[0], playlists[1])
         """
-            
-        for i in range(len(current_sequence().tracks) - 3, current_sequence().first_video_index - 1, -1):
-            print i, i + 1 
 
-    def combine_two_tracks(self, top_track, bottom_track):
-        if len(top_track) == 0 and len(bottom_track) == 0:
+        top_track_frames = self.get_track_frame_array(playlists[len(current_sequence().tracks) - 2])
+        for i in range(len(current_sequence().tracks) - 3, current_sequence().first_video_index - 1, -1):
+            bottom_track_frames = self.get_track_frame_array(playlists[i])
+            top_track_frames = self.combine_two_tracks(top_track_frames, bottom_track_frames, event_dict)
+
+        return top_track_frames
+
+    def combine_two_tracks(self, t_frames, b_frames, event_dict):
+        if len(t_frames) == 0 and len(b_frames) == 0:
             return []
             
-        if len(top_track) == 0:
-            return self.get_track_frame_array(bottom_track)
+        if len(t_frames) == 0:
+            return b_frames
 
-        if len(bottom_track) == 0:
-            return self.get_track_frame_array(top_track)
+        if len(b_frames) == 0:
+            return t_frames
 
-        top_frames = self.get_track_frame_array(top_track)
-        bottom_frames = self.get_track_frame_array(bottom_track)
         combined_frames = []
         
-        length = len(top_frames)
-        if len(bottom_frames) > len(top_frames):
-            length = len(bottom_frames)
-            self.ljust(top_frames, len(bottom_frames), None)
-        elif len(bottom_frames) < len(top_frames):
-            length = len(top_frames)
-            self.ljust(bottom_frames, len(top_frames), None)
+        #length = len(t_frames)
+        if len(b_frames) > len(t_frames):
+            length = len(b_frames)
+            t_frames = self.ljust(t_frames, len(b_frames), None)
+        elif len(b_frames) < len(t_frames):
+            length = len(t_frames)
+            b_frames = self.ljust(b_frames, len(t_frames), None)
         else:
-            length = len(top_frames)
-            
+            length = len(t_frames)
+
         for i in range(0, length):
-            if top_frames[i] != None:
-                combined_frames.append(top_frames[i])
-            elif bottom_frames[i] != None:
-                combined_frames.append(bottom_frames[i])
+            frame = t_frames[i]
+            if frame != None:
+                t_event = event_dict[frame]
+            else:
+                t_event = None
+
+            frame = b_frames[i]
+            if frame != None:
+                b_event = event_dict[frame]
+            else:
+                b_event = None
+
+            if t_event != None and t_event["type"] !=  "blank":
+                combined_frames.append(t_frames[i])
+            elif b_event != None and b_event["type"] !=  "blank":
+                combined_frames.append(b_frames[i])
             else:
                 combined_frames.append(None)
 
@@ -428,7 +441,7 @@ class MLTXMLToEDLParse:
             frames.append(value)
 
     def ljust(self, lst, n, fillvalue=''):
-        return lst + [fillvalue] * (n - len(self))
+        return lst + [fillvalue] * (n - len(lst))
         
 
 """
