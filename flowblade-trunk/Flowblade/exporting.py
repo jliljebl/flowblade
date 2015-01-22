@@ -265,6 +265,7 @@ class MLTXMLToEDLParse:
         if not cascade:
             playlist = playlists[track_index]
             track_frames = self.get_track_frame_array(playlist)
+            print "cascade"
         else:
             track_frames = self.cascade_playlists(playlists, event_dict)
 
@@ -299,8 +300,9 @@ class MLTXMLToEDLParse:
         running = True
         while running:
             current_clip = track_frames[prog_in]
+            print current_clip
             event = event_dict[current_clip]
-            
+            print event
             prog_out = self.get_last_clip_frame(track_frames, prog_in)
             if prog_out == CLIP_OUT_IS_LAST_FRAME:
                 running = False
@@ -324,6 +326,7 @@ class MLTXMLToEDLParse:
                 src_in = 0
                 src_out = int(event["length"])
                 prog_out = prog_in + int(event["length"])
+                resource = None
 
                 self.write_producer_edl_event_CMX3600(str_list, resource, 
                                                      edl_event_count, reel_name, src_channel,
@@ -350,7 +353,7 @@ class MLTXMLToEDLParse:
     def write_producer_edl_event_CMX3600(self, str_list, resource, edl_event, reel_name, 
                                 src_channel, src_in, src_out, prog_in, prog_out):
             src_transition = "C"
-            if self.from_clip_comment  == True:
+            if self.from_clip_comment  == True and resource != None:
                 str_list.append("* FROM CLIP NAME: " + resource.split("/")[-1] + "\n")
             
             str_list.append("{0:03d}".format(edl_event))
@@ -426,7 +429,7 @@ class MLTXMLToEDLParse:
 
             if t_event != None and t_event["type"] !=  "blank":
                 combined_frames.append(t_frames[i])
-            elif b_event != None and b_event["type"] !=  "blank":
+            elif b_event != None:
                 combined_frames.append(b_frames[i])
             else:
                 combined_frames.append(None)
