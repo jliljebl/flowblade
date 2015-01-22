@@ -320,8 +320,14 @@ class MLTXMLToEDLParse:
                                                      src_in, src_out, prog_in, prog_out)
                 prog_in = prog_out
             elif event["type"] == "blank":
-                print "blank not impl"
+                reel_name = "BL"
+                src_in = 0
+                src_out = int(event["length"])
                 prog_out = prog_in + int(event["length"])
+
+                self.write_producer_edl_event_CMX3600(str_list, resource, 
+                                                     edl_event_count, reel_name, src_channel,
+                                                     src_in, src_out, prog_in, prog_out)
                 prog_in = prog_out
             else:
                 print "event type error at create_edl"
@@ -366,12 +372,16 @@ class MLTXMLToEDLParse:
             str_list.append("\n")
 
     def cascade_playlists(self, playlists, event_dict):
-        """
-        if len(playlists) == 1:
-            return self.get_track_frame_array(playlists[0])
-        if len(playlists) == 2:
-            return self.combine_two_tracks(playlists[0], playlists[1])
-        """
+        tracks_count = len(current_sequence().tracks) - current_sequence().first_video_index - 1
+
+        # Handle 1 and 2 video tracks cases
+        if tracks_count == 1:
+            return self.get_track_frame_array(playlists[len(current_sequence().tracks) - 2])
+        if tracks_count == 2:
+            print "tracks_count", tracks_count
+            top_track_frames = self.get_track_frame_array(playlists[len(current_sequence().tracks) - 2])
+            bottom_track_frames =  self.get_track_frame_array(playlists[len(current_sequence().tracks) - 3])
+            return self.combine_two_tracks(top_track_frames, bottom_track_frames, event_dict)
 
         top_track_frames = self.get_track_frame_array(playlists[len(current_sequence().tracks) - 2])
         for i in range(len(current_sequence().tracks) - 3, current_sequence().first_video_index - 1, -1):
@@ -392,7 +402,6 @@ class MLTXMLToEDLParse:
 
         combined_frames = []
         
-        #length = len(t_frames)
         if len(b_frames) > len(t_frames):
             length = len(b_frames)
             t_frames = self.ljust(t_frames, len(b_frames), None)
@@ -442,39 +451,4 @@ class MLTXMLToEDLParse:
 
     def ljust(self, lst, n, fillvalue=''):
         return lst + [fillvalue] * (n - len(lst))
-        
 
-"""
-running = True
-while running:
-    current_clip = track_frames[prog_in]
-    event = event_dict[current_clip]
-    
-    prog_out = self.get_last_clip_frame(track_frames, prog_in)
-    if prog_out == CLIP_OUT_IS_LAST_FRAME:
-        running = False
-        prog_out = len(track_frames)
-        
-    if event["type"] == "entry":
-        # Get media producer atrrs
-        producer = event["producer"]
-        resource = source_links[producer]
-        reel_name = reel_names[resource]
-        src_in = int(event["inTime"]) # source clip IN time
-        src_out = int(event["outTime"]) # source clip OUT time
-        src_out = src_out + 1 # EDL out is exclusive, MLT out is inclusive
-        
-        self.write_producer_edl_event_CMX3600(str_list, resource, 
-                                             edl_event_count, reel_name, src_channel,
-                                src_in, src_out, prog_in, prog_out)
-        prog_in = prog_out
-    elif event["type"] == "blank":
-        print "blank not impl"
-        prog_out = prog_in + int(event["length"])
-        prog_in = prog_out
-    else:
-        print "event type error at create_edl"
-        break
-            
-    edl_event_count = edl_event_count + 1
-"""
