@@ -100,7 +100,6 @@ def _export_edl_dialog_callback(dialog, response_id, data):
 def _edl_xml_render_done(data):
     edl_path, track_select_combo, cascade_check, op_combo, audio_track_select_combo = data
     video_track = current_sequence().first_video_index + track_select_combo.get_active()
-    print video_track
     audio_track = 1 + audio_track_select_combo.get_active()
     global _xml_render_player
     _xml_render_player = None
@@ -165,13 +164,11 @@ class MLTXMLToEDLParse:
                     ev_dict["producer"] = event.attributes["producer"].value
                     ev_dict["inTime"] = event.attributes["in"].value
                     ev_dict["outTime"] = event.attributes["out"].value
-                    print  ev_dict["type"] 
                     event_list.append(ev_dict)
                 elif  event.localName == "blank":
                     ev_dict["type"] = event.localName
                     ev_dict["length"] = event.attributes["length"].value
                     event_list.append(ev_dict)
-                    print  ev_dict["type"] 
 
             pl_dict["events"] = event_list
             playlist_list.append(pl_dict)
@@ -208,7 +205,7 @@ class MLTXMLToEDLParse:
             for props in properties:
                 p_dict[props.attributes["name"].value.replace(".","_")] = props.firstChild.data 
             producer_list.append(p_dict)
-            print p_dict
+
         return tuple(producer_list)
     
     def link_references(self):
@@ -258,7 +255,6 @@ class MLTXMLToEDLParse:
             return reel_name.upper()
     
     def create_edl(self, track_index, cascade, audio_op, audio_track_index):
-        print track_index, cascade, audio_op, audio_track_index
         str_list = []
         
         title = self.title.split("/")[-1] 
@@ -388,7 +384,6 @@ class MLTXMLToEDLParse:
         if tracks_count == 1:
             return self.get_track_frame_array(playlists[len(current_sequence().tracks) - 2])
         if tracks_count == 2:
-            print "tracks_count", tracks_count
             top_track_frames = self.get_track_frame_array(playlists[len(current_sequence().tracks) - 2])
             bottom_track_frames =  self.get_track_frame_array(playlists[len(current_sequence().tracks) - 3])
             return self.combine_two_tracks(top_track_frames, bottom_track_frames, event_dict)
