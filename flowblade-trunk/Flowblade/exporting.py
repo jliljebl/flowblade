@@ -177,14 +177,24 @@ class MLTXMLToEDLParse:
             playlist_list.append(pl_dict)
         return tuple(playlist_list)
 
-    def get_event_dict(self, playlists):
-        event_dict = {}
+    def get_events_dict(self, playlists, source_links):
+        events_dict = {}
         for play_list in playlists:
             for event in play_list["events"]:
-                print type(event)
+                # Replace pattern producer events with blanks
+                try:
+                    producer = event["producer"]
+                    resource = source_links[producer]
+                    if resource == "<producer>" or resource[0:1] == "#": # This is what MLT puts as resource for pattern producers or color clips
+                        event["type"] = "blank"
+                        event["length"] =  int(event["outTime"]) - int(event["inTime"]) + 1
+                except:
+                    pass
+
+                # Add events to event dict
                 eid = event["eid"]
-                event_dict[eid] = event
-        return event_dict
+                events_dict[eid] = event
+        return events_dict
 
     def get_producers(self):
         producer_list = []
@@ -197,8 +207,8 @@ class MLTXMLToEDLParse:
             properties = p.getElementsByTagName("property")
             for props in properties:
                 p_dict[props.attributes["name"].value.replace(".","_")] = props.firstChild.data 
-                
             producer_list.append(p_dict)
+            print p_dict
         return tuple(producer_list)
     
     def link_references(self):
@@ -257,7 +267,7 @@ class MLTXMLToEDLParse:
         
         source_links, reel_names = self.link_references()
         playlists = self.get_playlists()
-        event_dict = self.get_event_dict(playlists)
+        event_dict = self.get_events_dict(playlists, source_links)
 
         edl_event_count = 1 # incr. event index
         
@@ -265,7 +275,6 @@ class MLTXMLToEDLParse:
         if not cascade:
             playlist = playlists[track_index]
             track_frames = self.get_track_frame_array(playlist)
-            print "cascade"
         else:
             track_frames = self.cascade_playlists(playlists, event_dict)
 
@@ -300,9 +309,7 @@ class MLTXMLToEDLParse:
         running = True
         while running:
             current_clip = track_frames[prog_in]
-            print current_clip
             event = event_dict[current_clip]
-            print event
             prog_out = self.get_last_clip_frame(track_frames, prog_in)
             if prog_out == CLIP_OUT_IS_LAST_FRAME:
                 running = False
