@@ -981,15 +981,15 @@ class TimeLineCanvas:
     #----------------------------------------- DRAW
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
-        
-        # This can get called during loads by unwanted expose events
-        if editorstate.project_is_loading == True:
-            return
 
         # Draw bg
         cr.set_source_rgb(*BG_COLOR)
         cr.rectangle(0, 0, w, h)
         cr.fill()
+
+        # This can get called during loads by unwanted expose events
+        if editorstate.project_is_loading == True:
+            return
 
         # Init sync draw structures
         self.parent_positions = {}
@@ -1724,6 +1724,14 @@ class TimeLineFrameScale:
         """
         x, y, w, h = allocation
 
+        # Draw grad bg
+        grad = cairo.LinearGradient (0, 0, 0, h)
+        grad.add_color_stop_rgba(*FRAME_SCALE_COLOR_GRAD)
+        grad.add_color_stop_rgba(*FRAME_SCALE_COLOR_GRAD_L)
+        cr.set_source(grad)
+        cr.rectangle(0,0,w,h)
+        cr.fill()
+
         # This can get called during loads by unwanted expose events
         if editorstate.project_is_loading == True:
             return
@@ -1732,14 +1740,6 @@ class TimeLineFrameScale:
         seq = current_sequence()
         fps = seq.profile.fps()
         
-        # Draw white bg
-        grad = cairo.LinearGradient (0, 0, 0, h)
-        grad.add_color_stop_rgba(*FRAME_SCALE_COLOR_GRAD)
-        grad.add_color_stop_rgba(*FRAME_SCALE_COLOR_GRAD_L)
-        cr.set_source(grad)
-        cr.rectangle(0,0,w,h)
-        cr.fill()
-
         # Selected range
         if seq.tractor.mark_in != -1 and seq.tractor.mark_out != -1:
             in_x = (seq.tractor.mark_in - pos) * pix_per_frame
