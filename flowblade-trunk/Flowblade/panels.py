@@ -59,6 +59,7 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, proxy
     proxy_b.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "proxy_button.png"))
     proxy_b.connect("clicked", proxy_cb, None)
     proxy_b.set_tooltip_text(_("Render Proxy Files For Selected Media"))
+    gui.proxy_button = proxy_b
 
     columns_img = gtk.image_new_from_file(respaths.IMAGE_PATH + "columns.png")
         

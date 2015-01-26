@@ -461,6 +461,13 @@ def show_proxy_manager_dialog():
     global manager_window
     manager_window = ProxyManagerDialog()
 
+def configure_proxy_gui_for_project_type(project):
+    display_gui = (project.compact_project_data == None)
+    ui = gui.editor_window.uimanager
+    proxy_menu_item = ui.get_widget('/MenuBar/ProjectMenu/ProxyManager')
+    proxy_menu_item.set_sensitive(display_gui)
+    gui.proxy_button.set_sensitive(display_gui)
+
 def create_proxy_files_pressed():
     media_file_widgets = gui.media_list_view.get_selected_media_objects()
     if len(media_file_widgets) == 0:
