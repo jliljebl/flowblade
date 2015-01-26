@@ -66,6 +66,7 @@ import preferenceswindow
 import projectaction
 import projectdata
 import projectinfogui
+import proxyediting
 import render
 import renderconsumer
 import respaths
@@ -501,6 +502,7 @@ def open_project(new_project):
         loaded_autosave_file = None
 
     editorstate.update_current_proxy_paths()
+    proxyediting.configure_proxy_gui_for_project_type(editorstate.project)
     audiomonitoring.init_for_project_load()
     updater.window_resized()
 

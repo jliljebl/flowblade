@@ -743,10 +743,11 @@ def _change_project_type_dialog_callback(dialog, response_id, folder_button):
             if _check_compact_project_folder_empty(root_path) == False:
                 return
             PROJECT().convert_to_compact_project(root_path + "/")
+            proxyediting.configure_proxy_gui_for_project_type(PROJECT())
         else:
             dialog.destroy()
             PROJECT().convert_to_standart_project()
-            
+            proxyediting.configure_proxy_gui_for_project_type(PROJECT())
 
 # ------------------------------------ bins
 def add_new_bin():
