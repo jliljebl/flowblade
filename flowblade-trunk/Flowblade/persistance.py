@@ -67,6 +67,8 @@ proxy_path_dict = None
 # Flag for showing progress messages on GUI when loading
 show_messages = True
 
+# Whenloading for batch render the compact adta is ignored and existing asset paths used
+loading_for_batch_render = False
 
 class FileProducerNotFoundError(Exception):
     """
@@ -284,6 +286,10 @@ def load_project(file_path, icons_and_thumnails=True):
     # Load project object
     f = open(file_path)
     project = pickle.load(f)
+
+    # Batch rendering ignores compact project data
+    if loading_for_batch_render == True:
+        project.compact_project_data = None
     
     # editorstate.project needs to be available for sequence building
     editorstate.project = project

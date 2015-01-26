@@ -102,7 +102,9 @@ class QueueRunnerThread(threading.Thread):
             identifier = render_item.generate_identifier()
             project_file_path = get_projects_dir() + identifier + ".flb"
             persistance.show_messages = False
+            persistance.loading_for_batch_render = True
             project = persistance.load_project(project_file_path, False)
+            persistance.loading_for_batch_render = False # this runs in different process, this is probably not needed
             producer = project.c_seq.tractor
             consumer = renderconsumer.get_mlt_render_consumer(render_item.render_path, 
                                                               project.profile,
