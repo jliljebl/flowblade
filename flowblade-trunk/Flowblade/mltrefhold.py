@@ -22,3 +22,13 @@ mlt_objects = []
 
 def hold_ref(mlt_obj):
     mlt_objects.append(mlt_obj)
+
+def print_objects():
+    global mlt_objects
+    print "len(mlt_objects):", len(mlt_objects)
+    
+def print_and_clear():
+    print_objects()
+    global mlt_objects
+    mlt_objects = []
+    

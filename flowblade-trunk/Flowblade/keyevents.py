@@ -41,6 +41,7 @@ from editorstate import timeline_visible
 import keyframeeditor
 import medialog
 import monitorevent
+import mltrefhold
 import tlineaction
 import updater
 import projectaction
@@ -114,17 +115,20 @@ def key_down(widget, event):
                 gui.media_list_view.select_all()
                 return True
         
-    """
-    #debug
-    if event.keyval == gtk.keysyms.F12:
-        return True
 
-    
     #debug
     if event.keyval == gtk.keysyms.F11:
-        current_sequence().add_watermark()
+        if (event.state & gtk.gdk.CONTROL_MASK):
+            mltrefhold.print_objects()
         return True
-    """
+
+
+    #debug
+    if event.keyval == gtk.keysyms.F12:
+        if (event.state & gtk.gdk.CONTROL_MASK):
+            mltrefhold.print_and_clear()
+        return True
+
     
     # Key event was not handled here.
     return False

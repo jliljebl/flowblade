@@ -22,12 +22,14 @@ import copy
 import pygtk
 pygtk.require('2.0');
 import gtk
+import glib
 
 import os
 import pango
 import pangocairo
 import pickle
 import threading
+import time
 
 import toolsdialogs
 from editorstate import PLAYER
@@ -37,6 +39,8 @@ import editorpersistance
 import gui
 import guicomponents
 import guiutils
+import dialogutils
+import projectaction
 import respaths
 import positionbar
 import utils
@@ -75,6 +79,12 @@ def show_titler():
         _titler_data = TitlerData()
     
     global _titler
+    if _titler != None:
+        primary_txt = _("Titler is already open")
+        secondary_txt =  _("Only single instance of Titler can be opened.")
+        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        return
+
     _titler = Titler()
     _titler.load_titler_data()
     _titler.show_current_frame()
@@ -83,12 +93,12 @@ def close_titler():
     global _titler, _titler_data
     
     _titler.set_visible(False)
-    while(gtk.events_pending()):
-        gtk.main_iteration()
-        
+
+    glib.idle_add(titler_destroy)
+
+def titler_destroy():
+    global _titler, _titler_data
     _titler.destroy()
-    while(gtk.events_pending()):
-        gtk.main_iteration()
     _titler = None
 
     if not _keep_titler_data:
@@ -161,7 +171,8 @@ class Titler(gtk.Window):
     def __init__(self):
         gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
         self.set_title(_("Titler"))
-
+        self.connect("delete-event", lambda w, e:close_titler())
+        
         if editorstate.SCREEN_HEIGHT < 800:
             global TEXT_LAYER_LIST_HEIGHT, TEXT_VIEW_HEIGHT, VIEW_EDITOR_HEIGHT
             TEXT_LAYER_LIST_HEIGHT = 200
@@ -484,14 +495,10 @@ class Titler(gtk.Window):
                 dialog.destroy()
                 save_path = filenames[0]
                 self.view_editor.write_layers_to_png(save_path)
-
-                # This forces the file on disk whixh we need to do
-                while(gtk.events_pending()):
-                    gtk.main_iteration()
- 
+        
                 if _open_saved_in_bin:
-                    open_in_bin_thread = AddMediaFileThread(save_path)
-                    open_in_bin_thread.start()
+                    open_file_thread = OpenFileThread(save_path, self.view_editor)
+                    open_file_thread.start()
                 # INFOWINDOW
             except:
                 # INFOWINDOW
@@ -953,19 +960,17 @@ class TextLayerListView(gtk.VBox):
         self.scroll.queue_draw()
 
 
-class AddMediaFileThread(threading.Thread):
+class OpenFileThread(threading.Thread):
     
-    def __init__(self, filename):
+    def __init__(self, filename, view_editor):
         threading.Thread.__init__(self)
         self.filename = filename
+        self.view_editor = view_editor
 
     def run(self):
-        PROJECT().add_media_file(self.filename)
-        editorpersistance.prefs.last_opened_media_dir = os.path.dirname(self.filename)
-        editorpersistance.save()
-
-        # Update editor gui
-        gtk.gdk.threads_enter()
-        gui.media_list_view.fill_data_model()
-        gui.bin_list_view.fill_data_model()
-        gtk.gdk.threads_leave()
+        # This makes sure that the file has been written to disk
+        while(self.view_editor.write_out_layers == True):
+            time.sleep(0.1)
+        
+        open_in_bin_thread = projectaction.AddMediaFilesThread([self.filename])
+        open_in_bin_thread.start()
