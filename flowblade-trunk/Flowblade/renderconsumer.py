@@ -265,9 +265,7 @@ def get_img_seq_render_consumer(file_path, profile, encoding_option):
         arg, val = arg_val
         if arg == "vcodec":
             vcodec = val
-    
-    print vcodec
-    
+
     render_path = os.path.dirname(file_path) + "/" + os.path.basename(file_path).split(".")[0] + "_%05d." + encoding_option.extension
     
     consumer = mlt.Consumer(profile, "avformat", str(render_path))
@@ -370,7 +368,7 @@ class FileRenderPlayer(threading.Thread):
         self.running = False
         self.has_started_running = False
         print "FileRenderPlayer started, start frame: " + str(self.start_frame) + ", stop frame: " + str(self.stop_frame)
-
+        self.consumer_pos_stop_add = 1 # HACK!!! File renders work then this one, screenshot render requires this to be 2 to work 
         threading.Thread.__init__(self)
 
     def run(self):
@@ -381,6 +379,7 @@ class FileRenderPlayer(threading.Thread):
         while self.running: # set false at shutdown() for abort
             if self.producer.frame() >= self.stop_frame:
                 # This method of stopping makes sure that whole producer is rendered and written to disk
+                # Used when producer out frame is last frame.
                 if self.wait_for_producer_end_stop:
                     while self.producer.get_speed() > 0:
                         time.sleep(0.2)
@@ -388,10 +387,11 @@ class FileRenderPlayer(threading.Thread):
                         time.sleep(0.2)
                 # This method of stopping stops producer
                 # and waits for consumer to reach that frame.
+                # Used when producer out frame is NOT last frame.
                 else:
                     self.producer.set_speed(0)
                     last_frame = self.producer.frame()
-                    while self.consumer.position() + 1 < last_frame:
+                    while self.consumer.position() + self.consumer_pos_stop_add < last_frame:
                         time.sleep(0.2)
 
                     self.consumer.stop()

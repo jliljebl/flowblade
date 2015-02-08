@@ -363,9 +363,6 @@ class CompactProject:
         d = os.path.dirname(self.thumbnails_path())
         os.mkdir(d)
 
-        #d = os.path.dirname(self.rendered_path())
-        #os.mkdir(d) 
-
     def projects_path(self):
         return self.root_path + self._projects
 
@@ -374,11 +371,6 @@ class CompactProject:
 
     def thumbnails_path(self):
         return self.root_path + self._thumbnails
-    
-    """
-    def rendered_path(self):
-        return self.root_path + self._rendered
-    """
 
     def convert_project_data_to_compact(self, project):
         PLAYER().stop_playback()
@@ -531,11 +523,6 @@ class Thumbnailer:
     def __init__(self):
         self.profile = None
 
-        #self.file_path = "" # these are not needed now, remove
-        #self.thumbnail_path = ""  # these are not needed now, remove
-        #self.consumer = None
-        #self.producer = None
-
     def set_context(self, profile):
         self.profile = profile
     
@@ -558,7 +545,6 @@ class Thumbnailer:
 
         # Create one frame producer
         producer = mlt.Producer(self.profile, str(file_path))
-        #mltrefhold.hold_ref(producer)
         if producer.is_valid() == False:
             raise ProducerNotValidError(file_path)
 
@@ -575,12 +561,9 @@ class Thumbnailer:
     def get_file_length(self, file_path):
         # This is used for audio files which don't need a thumbnail written
         # but do need file length known
-        # Get data
-        #self.file_path = file_path
 
         # Create one frame producer
         producer = mlt.Producer(self.profile, str(file_path))
-       # mltrefhold.hold_ref(producer)
         return producer.get_length()
 
 

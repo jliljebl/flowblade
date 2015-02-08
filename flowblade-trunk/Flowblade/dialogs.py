@@ -1135,23 +1135,6 @@ def _audio_op_changed(combo, audio_track_select_combo):
     else:
         audio_track_select_combo.set_sensitive(False)
 
-""" REMOVE WHEN SEEN NEXT
-def _mpeg_render_check_toggled(widget, data):
-    mpg_name_entry, dvd_type_combo = data
-
-    mpg_name_entry.set_sensitive(widget.get_active())
-    dvd_type_combo.set_sensitive(widget.get_active())
-
-def _markers_chapters_check_toggled(widget, data):
-    chapters_view, text_buffer, chapters_text = data
-    if widget.get_active():
-        chapters_view.set_sensitive(True)
-        text_buffer.set_text(chapters_text)
-    else:
-        chapters_view.set_sensitive(False)
-        text_buffer.set_text("")
-"""
-
 def transition_edit_dialog(callback, transition_data):
     dialog = gtk.Dialog(_("Add Transition").encode('utf-8'), None,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,

@@ -278,6 +278,18 @@ def add_separetor(menu):
     sep.show()
     menu.add(sep)
 
+def get_gtk_image_from_file(source_path, image_height):
+    img = gtk.Image()
+    p_map = get_pixmap_from_file(source_path, image_height)
+    img.set_from_pixmap(p_map, None)
+    return img
+
+def get_pixmap_from_file(source_path, image_height):
+    pixbuf = gtk.gdk.pixbuf_new_from_file(source_path)
+    icon_width = int((float(pixbuf.get_width()) / float(pixbuf.get_height())) * image_height)
+    s_pbuf = pixbuf.scale_simple(icon_width, image_height, gtk.gdk.INTERP_BILINEAR)
+    p_map, mask = s_pbuf.render_pixmap_and_mask()
+    return p_map
 
 class PulseThread(threading.Thread):
     def __init__(self, proress_bar):
