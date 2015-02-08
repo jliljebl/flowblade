@@ -156,6 +156,7 @@ class EditorWindow:
             ('ExportMenu', None, _('Export')),
             ('ExportMeltXML', None, _('MLT XML'), None, None, lambda a:exporting.MELT_XML_export()),
             ('ExportEDL', None, _('EDL CMX 3600'), None, None, lambda a:exporting.EDL_export()),
+            ('ExportScreenshot', None, _('Current Frame Image'), None, None, lambda a:exporting.screenshot_export()),
             ('Close', None, _('_Close'), None, None, lambda a:projectaction.close_project()),
             ('Quit', None, _('_Quit'), '<control>Q', None, lambda a:app.shutdown()),
             ('EditMenu', None, _('_Edit')),
@@ -227,6 +228,7 @@ class EditorWindow:
                     <menu action='ExportMenu'>
                         <menuitem action='ExportMeltXML'/>
                         <menuitem action='ExportEDL'/>
+                        <menuitem action='ExportScreenshot'/>
                     </menu>
                     <separator/>
                     <menuitem action='Close'/>

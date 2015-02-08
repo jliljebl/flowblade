@@ -41,6 +41,7 @@ import dialogs
 import dialogutils
 import gui
 import guicomponents
+import guiutils
 import editevent
 import editorstate
 from editorstate import current_sequence
@@ -663,18 +664,10 @@ def _display_file_info(media_file):
     length = utils.get_tc_string(clip.get_length())
 
     try:
-        img = gtk.Image()
-        source_path = media_file.icon_path
-        pixbuf = gtk.gdk.pixbuf_new_from_file(source_path)
-        IMG_HEIGHT = 300
-        icon_width = int((float(pixbuf.get_width()) / float(pixbuf.get_height())) * IMG_HEIGHT)
-        s_pbuf = pixbuf.scale_simple(icon_width, IMG_HEIGHT, gtk.gdk.INTERP_BILINEAR)
-        p_map, mask = s_pbuf.render_pixmap_and_mask()
-        img.set_from_pixmap(p_map, None)
+        img = guiutils.get_gtk_image_from_file(media_file.icon_path, 300)
     except:
         print "_display_file_info() failed to get thumbnail"
-        # stock broken here?
-    
+
     video_index = clip.get_int("video_index")
     audio_index = clip.get_int("audio_index")
     long_video_property = "meta.media." + str(video_index) + ".codec.long_name"

@@ -32,10 +32,12 @@ import md5
 import re
 
 import dialogs
+import dialogutils
 from editorstate import PLAYER
 from editorstate import PROJECT
 from editorstate import current_sequence
 import gui
+import guiutils
 import renderconsumer
 import utils
 
@@ -53,8 +55,9 @@ CLIP_OUT_IS_LAST_FRAME = -999
 
 _xml_render_player = None
 
-
-
+_screenshot_img = None
+_img_types = ["png", "jpg", "bmp", "tga"]
+    
 ####---------------MLT--------------####    
 def MELT_XML_export():
     dialogs.export_xml_dialog(_export_melt_xml_dialog_callback, PROJECT().name)
@@ -457,3 +460,119 @@ class MLTXMLToEDLParse:
     def ljust(self, lst, n, fillvalue=''):
         return lst + [fillvalue] * (n - len(lst))
 
+
+
+####---------------Screenshot--------------####
+def screenshot_export():
+    length = current_sequence().tractor.get_length()
+    if length < 2:
+        return
+    frame = PLAYER().current_frame()
+    render_screen_shot(frame, get_displayed_image_render_path())
+    export_screenshot_dialog(_export_screenshot_dialog_callback, frame,
+                             gui.editor_window.window, PROJECT().name)
+    PLAYER().seek_frame(frame)
+
+def _export_screenshot_dialog_callback(dialog, response_id, data):
+    file_name, out_folder, file_type_combo, frame = data
+    if response_id == gtk.RESPONSE_YES:
+        render_path = out_folder.get_filename()+ "/" + file_name.get_text() + "." + _img_types[file_type_combo.get_active()]
+        print render_path
+        print frame
+        dialog.destroy()
+    else:
+        dialog.destroy()
+
+def get_displayed_image_render_path():
+    return utils.get_hidden_user_dir_path() + "/screenshot_%01d.png"
+
+def get_displayed_image_path():
+    return utils.get_hidden_user_dir_path() + "/screenshot_1.png"
+
+def _screenshot_frame_changed(adjustment):
+    _update_displayed_image(int(adjustment.get_value()))
+
+def _update_displayed_image(frame):
+    render_screen_shot(frame, get_displayed_image_render_path())
+    pixmap = guiutils.get_pixmap_from_file(get_displayed_image_path(), 300)
+    _screenshot_img.set_from_pixmap(pixmap, None)
+    _screenshot_img.queue_draw()
+
+def render_screen_shot(frame, render_path, vcodec = "png"):
+    producer = current_sequence().tractor   
+    
+    consumer = mlt.Consumer(PROJECT().profile, "avformat", str(render_path))
+    consumer.set("real_time", -1)
+    consumer.set("rescale", "bicubic")
+    consumer.set("vcodec", str(vcodec))
+    
+    renderer = renderconsumer.FileRenderPlayer(None, producer, consumer, frame, frame + 1)
+    renderer.wait_for_producer_end_stop = False
+    renderer.consumer_pos_stop_add = 2 # Hack, see FileRenderPlayer
+    renderer.start()
+
+    while renderer.has_started_running == False:
+        time.sleep(0.05)
+
+    while renderer.stopped == False:
+        time.sleep(0.05)
+
+    print "file on disk"
+
+def export_screenshot_dialog(callback, frame, parent_window, project_name):
+    cancel_str = _("Cancel").encode('utf-8')
+    ok_str = _("Export Image").encode('utf-8')
+    dialog = gtk.Dialog(_("Export Frame Image"),
+                        parent_window,
+                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                        (cancel_str, gtk.RESPONSE_CANCEL,
+                        ok_str, gtk.RESPONSE_YES))
+
+    global _screenshot_img
+    _screenshot_img = guiutils.get_gtk_image_from_file(get_displayed_image_path(), 300)
+
+    frame_frame = guiutils.get_named_frame_with_vbox(None, [_screenshot_img])
+    
+    INPUT_LABELS_WITDH = 320
+    project_name = project_name.strip(".flb")
+
+    file_name = gtk.Entry()
+    file_name.set_text(project_name)
+
+    extension_label = gtk.Label(".png")
+    extension_label.set_size_request(35, 20)
+
+    name_pack = gtk.HBox(False, 4)
+    name_pack.pack_start(file_name, True, True, 0)
+    name_pack.pack_start(extension_label, False, False, 0)
+
+    name_row = guiutils.get_two_column_box(gtk.Label(_("Export file name:")), name_pack, INPUT_LABELS_WITDH)
+ 
+    out_folder = gtk.FileChooserButton(_("Select target folder"))
+    out_folder.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+    out_folder.set_current_folder(os.path.expanduser("~") + "/")
+    
+    folder_row = guiutils.get_two_column_box(gtk.Label(_("Export folder:")), out_folder, INPUT_LABELS_WITDH)
+
+    file_type_combo = gtk.combo_box_new_text()
+    for img in _img_types:
+        file_type_combo.append_text(img)
+    file_type_combo.set_active(0)
+    #file_type_combo.connect("changed", _audio_op_changed, file_type_combo)
+    file_type_row = guiutils.get_two_column_box(gtk.Label(_("Image type:")), file_type_combo, INPUT_LABELS_WITDH)
+    
+    file_frame = guiutils.get_named_frame_with_vbox(None, [file_type_row, name_row, folder_row])
+    
+    vbox = gtk.VBox(False, 2)
+    vbox.pack_start(frame_frame, False, False, 0)
+    vbox.pack_start(guiutils.pad_label(12, 12), False, False, 0)
+    vbox.pack_start(file_frame, False, False, 0)
+
+    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment.set_padding(12, 12, 12, 12)
+    alignment.add(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.default_behaviour(dialog)
+    dialog.connect('response', callback, (file_name, out_folder, file_type_combo, frame)) #(file_name, out_folder, track_select_combo, cascade_check, op_combo, audio_track_select_combo))
+    dialog.show_all()
