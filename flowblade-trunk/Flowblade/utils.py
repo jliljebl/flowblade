@@ -297,6 +297,9 @@ def do_nothing():
 def get_hidden_user_dir_path():
     return os.getenv("HOME") + "/.flowblade/"
 
+def get_hidden_screenshot_dir_path():
+    return get_hidden_user_dir_path() + "screenshot/"
+
 # File exntension lists
 _audio_file_extensions = [  "act",
                             "aif",
