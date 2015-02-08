@@ -132,7 +132,9 @@ def main(root_path):
         os.mkdir(user_dir + BATCH_DIR)
     if not os.path.exists(user_dir + appconsts.AUDIO_LEVELS_DIR):
         os.mkdir(user_dir + appconsts.AUDIO_LEVELS_DIR)
-        
+    if not os.path.exists(utils.get_hidden_screenshot_dir_path()):
+        os.mkdir(utils.get_hidden_screenshot_dir_path())
+
     # Set paths.
     respaths.set_paths(root_path)
 

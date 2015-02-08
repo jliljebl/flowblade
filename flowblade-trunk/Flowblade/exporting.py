@@ -30,6 +30,7 @@ import mlt
 import time
 import md5
 import re
+import shutil
 
 import dialogs
 import dialogutils
@@ -56,8 +57,9 @@ CLIP_OUT_IS_LAST_FRAME = -999
 _xml_render_player = None
 
 _screenshot_img = None
-_img_types = ["png", "jpg", "bmp", "tga"]
-    
+_img_types = ["png", "bmp", "targa","tiff"]
+_img_extensions = ["png", "bmp", "tga","tif"]
+
 ####---------------MLT--------------####    
 def MELT_XML_export():
     dialogs.export_xml_dialog(_export_melt_xml_dialog_callback, PROJECT().name)
@@ -466,9 +468,16 @@ class MLTXMLToEDLParse:
 def screenshot_export():
     length = current_sequence().tractor.get_length()
     if length < 2:
+        dialogutils.info_message("Sequence is too short", "Sequence needs to be at least 2 frames long to allow frame export.", None)
         return
+    
     frame = PLAYER().current_frame()
-    render_screen_shot(frame, get_displayed_image_render_path())
+
+    # Can't get last frame to render easily, so just force range.
+    if frame > length - 2:
+        frame = length - 2
+
+    render_screen_shot(frame, get_displayed_image_render_path(), "png")
     export_screenshot_dialog(_export_screenshot_dialog_callback, frame,
                              gui.editor_window.window, PROJECT().name)
     PLAYER().seek_frame(frame)
@@ -476,29 +485,29 @@ def screenshot_export():
 def _export_screenshot_dialog_callback(dialog, response_id, data):
     file_name, out_folder, file_type_combo, frame = data
     if response_id == gtk.RESPONSE_YES:
-        render_path = out_folder.get_filename()+ "/" + file_name.get_text() + "." + _img_types[file_type_combo.get_active()]
-        print render_path
-        print frame
+        vcodec = _img_types[file_type_combo.get_active()]
+        ext = _img_extensions[file_type_combo.get_active()]
+        render_path = utils.get_hidden_screenshot_dir_path() + "screenshot_%01d." + ext
+        rendered_file_path = utils.get_hidden_screenshot_dir_path() + "screenshot_1." + ext 
+        out_file_path = out_folder.get_filename()+ "/" + file_name.get_text() + "." + ext
         dialog.destroy()
+
+        render_screen_shot(frame, render_path, vcodec)
+        shutil.copyfile(rendered_file_path, out_file_path)
+        purge_screenshots()
     else:
         dialog.destroy()
 
 def get_displayed_image_render_path():
-    return utils.get_hidden_user_dir_path() + "/screenshot_%01d.png"
+    return utils.get_hidden_screenshot_dir_path() + "screenshot_%01d.png"
 
 def get_displayed_image_path():
-    return utils.get_hidden_user_dir_path() + "/screenshot_1.png"
+    return utils.get_hidden_screenshot_dir_path() + "screenshot_1.png"
 
 def _screenshot_frame_changed(adjustment):
     _update_displayed_image(int(adjustment.get_value()))
 
-def _update_displayed_image(frame):
-    render_screen_shot(frame, get_displayed_image_render_path())
-    pixmap = guiutils.get_pixmap_from_file(get_displayed_image_path(), 300)
-    _screenshot_img.set_from_pixmap(pixmap, None)
-    _screenshot_img.queue_draw()
-
-def render_screen_shot(frame, render_path, vcodec = "png"):
+def render_screen_shot(frame, render_path, vcodec):
     producer = current_sequence().tractor   
     
     consumer = mlt.Consumer(PROJECT().profile, "avformat", str(render_path))
@@ -558,7 +567,7 @@ def export_screenshot_dialog(callback, frame, parent_window, project_name):
     for img in _img_types:
         file_type_combo.append_text(img)
     file_type_combo.set_active(0)
-    #file_type_combo.connect("changed", _audio_op_changed, file_type_combo)
+    file_type_combo.connect("changed", _file_type_changed, extension_label)
     file_type_row = guiutils.get_two_column_box(gtk.Label(_("Image type:")), file_type_combo, INPUT_LABELS_WITDH)
     
     file_frame = guiutils.get_named_frame_with_vbox(None, [file_type_row, name_row, folder_row])
@@ -576,3 +585,11 @@ def export_screenshot_dialog(callback, frame, parent_window, project_name):
     dialogutils.default_behaviour(dialog)
     dialog.connect('response', callback, (file_name, out_folder, file_type_combo, frame)) #(file_name, out_folder, track_select_combo, cascade_check, op_combo, audio_track_select_combo))
     dialog.show_all()
+
+def _file_type_changed(combo, label):
+    label.set_text("." + _img_extensions[combo.get_active()])
+
+def purge_screenshots():
+    d = utils.get_hidden_screenshot_dir_path()
+    for f in os.listdir(d):
+        os.remove(os.path.join(d, f))
