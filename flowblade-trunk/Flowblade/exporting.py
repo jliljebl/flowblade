@@ -286,7 +286,8 @@ class MLTXMLToEDLParse:
 
         if len(track_frames) != 0:
             edl_event_count = self.write_track_events(str_list, 
-                                            track_frames, src_channel, source_links, 
+                                            track_frames, src_channel, 
+                                            source_links, 
                                             reel_names, event_dict, 
                                             edl_event_count)
         
@@ -494,9 +495,11 @@ def _export_screenshot_dialog_callback(dialog, response_id, data):
 
         render_screen_shot(frame, render_path, vcodec)
         shutil.copyfile(rendered_file_path, out_file_path)
-        purge_screenshots()
     else:
         dialog.destroy()
+    
+    purge_screenshots()
+    PLAYER().seek_frame(frame)
 
 def get_displayed_image_render_path():
     return utils.get_hidden_screenshot_dir_path() + "screenshot_%01d.png"
@@ -525,8 +528,6 @@ def render_screen_shot(frame, render_path, vcodec):
 
     while renderer.stopped == False:
         time.sleep(0.05)
-
-    print "file on disk"
 
 def export_screenshot_dialog(callback, frame, parent_window, project_name):
     cancel_str = _("Cancel").encode('utf-8')
