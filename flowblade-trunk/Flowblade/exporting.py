@@ -127,7 +127,9 @@ class MLTXMLToEDLParse:
         self.title = title
         self.reel_name_type = REEL_NAME_FILE_NAME_START
         self.from_clip_comment = True
-    
+        self.use_drop_frames = False
+        self.blender_fix = True
+
     def get_project_profile(self):
         profile_dict = {}
         profile = self.xmldoc.getElementsByTagName("profile")
@@ -325,7 +327,11 @@ class MLTXMLToEDLParse:
                 src_in = int(event["inTime"]) # source clip IN time
                 src_out = int(event["outTime"]) # source clip OUT time
                 src_out = src_out + 1 # EDL out is exclusive, MLT out is inclusive
-                
+        
+                if self.blender_fix:
+                    src_in = src_in + 1
+                    src_out =  src_in + 1
+
                 self.write_producer_edl_event_CMX3600(str_list, resource, 
                                                      edl_event_count, reel_name, src_channel,
                                                      src_in, src_out, prog_in, prog_out)
@@ -374,13 +380,13 @@ class MLTXMLToEDLParse:
             str_list.append(src_transition)
             str_list.append("  ")
             str_list.append("  ")
-            str_list.append(utils.get_tc_string(src_in))
+            str_list.append(self.frames_to_tc(src_in))
             str_list.append(" ")
-            str_list.append(utils.get_tc_string(src_out))
+            str_list.append(self.frames_to_tc(src_out))
             str_list.append(" ")
-            str_list.append(utils.get_tc_string(prog_in))
+            str_list.append(self.frames_to_tc(prog_in))
             str_list.append(" ")
-            str_list.append(utils.get_tc_string(prog_out))
+            str_list.append(self.frames_to_tc(prog_out))
             str_list.append("\n")
 
     def cascade_playlists(self, playlists, event_dict):
@@ -463,7 +469,58 @@ class MLTXMLToEDLParse:
     def ljust(self, lst, n, fillvalue=''):
         return lst + [fillvalue] * (n - len(lst))
 
+    def frames_to_tc(self, frame):
+        if self.use_drop_frames == True:
+            return self.frames_to_DF(frame)
+        else:
+            return utils.get_tc_string(frame)
 
+    def frames_to_DF(self, framenumber):
+        """
+            This method adapted from C++ code called "timecode" by Jason Wood.
+            begin: Wed Dec 17 2003
+            copyright: (C) 2003 by Jason Wood
+            email: jasonwood@blueyonder.co.uk 
+            Framerate should be 29.97, 59.94, or 23.976, otherwise the calculations will be off.
+        """
+        projectMeta = self.get_project_profile()
+        framerate = float(projectMeta["frame_rate_num"]) / float(projectMeta["frame_rate_den"])
+        
+        # Number of frames to drop on the minute marks is the nearest integer to 6% of the framerate
+        dropFrames = round(framerate * 0.066666) 
+        # Number of frames in an hour
+        framesPerHour = round(framerate * 60 * 60) 
+        # Number of frames in a day - timecode rolls over after 24 hours
+        framesPerDay = framesPerHour * 24 
+        # Number of frames per ten minutes
+        framesPer10Minutes = round(framerate * 60 * 10) 
+        # Number of frames per minute is the round of the framerate * 60 minus the number of dropped frames
+        framesPerMinute = (round(framerate) * 60) - dropFrames 
+        
+        if (framenumber < 0): # For negative time, add 24 hours.
+            framenumber = framesPerDay + framenumber
+
+        # If framenumber is greater than 24 hrs, next operation will rollover clock
+        # % is the modulus operator, which returns a remainder. a % b = the remainder of a/b
+
+        framenumber = framenumber % framesPerDay 
+        d = floor(framenumber / framesPer10Minutes)
+        m = framenumber % framesPer10Minutes
+
+        if (m > 1):
+            framenumber=framenumber + (dropFrames * 9 * d) + dropFrames * floor((m-dropFrames) / framesPerMinute)
+        else:
+            framenumber = framenumber + dropFrames * 9 * d;
+
+        frRound = round(framerate);
+        frames = framenumber % frRound;
+        seconds = floor(framenumber / frRound) % 60;
+        minutes = floor(floor(framenumber / frRound) / 60) % 60;
+        hours = floor(floor(floor(framenumber / frRound) / 60) / 60);    
+
+        tc = "%d:%02d:%02d;%02d" % (hours, minutes, seconds, frames)
+        return tc
+        
 
 ####---------------Screenshot--------------####
 def screenshot_export():
