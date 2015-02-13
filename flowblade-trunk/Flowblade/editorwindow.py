@@ -67,11 +67,6 @@ import updater
 import undo
 
 # GUI size params
-"""
-TOP_ROW_HEIGHT = 500 # defines app min height with tlinewidgets.HEIGHT
-NOTEBOOK_WIDTH = appconsts.NOTEBOOK_WIDTH # defines app min width with MONITOR_AREA_WIDTH
-NOTEBOOK_WIDTH_SMALL = appconsts.NOTEBOOK_WIDTH_SMALL
-"""
 MEDIA_MANAGER_WIDTH = 250
 
 MONITOR_AREA_WIDTH = 600 # defines app min width with NOTEBOOK_WIDTH 400 for small
