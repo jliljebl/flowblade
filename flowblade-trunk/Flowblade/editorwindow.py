@@ -45,6 +45,7 @@ import glassbuttons
 import gui
 import guicomponents
 import guiutils
+import medialinker
 import medialog
 import menuactions
 import middlebar
@@ -198,6 +199,7 @@ class EditorWindow:
             ('ToolsMenu', None, _('Tools')),
             ('Titler', None, _('Titler'), None, None, lambda a:titler.show_titler()),
             ('AudioMix', None, _('Audio Mixer'), None, None, lambda a:audiomonitoring.show_audio_monitor()),
+            ('MediaLink', None, _('Media Linker'), None, None, lambda a:medialinker.display_linker()),
             ('HelpMenu', None, _('_Help')),
             ('QuickReference', None, _('Contents'), None, None, lambda a:menuactions.quick_reference()),
             ('Environment', None, _('Runtime Environment'), None, None, lambda a:menuactions.environment()),
@@ -288,6 +290,7 @@ class EditorWindow:
                 <menu action='ToolsMenu'>
                     <menuitem action='Titler'/>
                     <menuitem action='AudioMix'/>
+                    <menuitem action='MediaLink'/>
                 </menu>
                 <menu action='HelpMenu'>
                     <menuitem action='QuickReference'/>
