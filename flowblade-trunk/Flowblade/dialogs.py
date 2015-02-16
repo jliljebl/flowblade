@@ -80,7 +80,8 @@ def new_project_dialog(callback):
     tracks_vbox.pack_start(tracks_select, False, False, 0)
 
     tracks_frame = panels.get_named_frame(_("Tracks"), tracks_vbox)
-
+    
+    """
     project_type_combo = gtk.combo_box_new_text()
     project_type_combo.append_text(_("Standard"))
     project_type_combo.append_text(_("Compact"))
@@ -116,26 +117,26 @@ def new_project_dialog(callback):
                                                     project_folder_label,
                                                     compact_name_entry,
                                                     compact_name_label))
-    
+
     type_vbox = gtk.VBox(False, 2)
     type_vbox.pack_start(type_select, False, False, 0)
     type_vbox.pack_start(project_folder_row, False, False, 0)
     type_vbox.pack_start(compact_name_entry_row, False, False, 0)
 
     type_frame = panels.get_named_frame(_("Project Type"), type_vbox)
-    
+    """
     vbox = gtk.VBox(False, 2)
     vbox.add(profiles_frame)
     vbox.add(tracks_frame)
-    vbox.add(type_frame)
+    #vbox.add(type_frame)
 
     alignment = dialogutils.get_default_alignment(vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
     dialog.connect('response', callback, out_profile_combo, tracks_combo, 
-                   tracks_combo_values_list, project_type_combo, 
-                   project_folder, compact_name_entry)
+                   tracks_combo_values_list)#, project_type_combo, 
+                   #project_folder, compact_name_entry)
     out_profile_combo.connect('changed', lambda w: _new_project_profile_changed(w, profile_info_box))
     dialog.show_all()
     
@@ -151,6 +152,7 @@ def _new_project_profile_changed(combo_box, profile_info_box):
     profile_info_box.show_all()
     info_panel.show()
 
+"""
 def _new_project_type_changed(type_combo, folder_button, project_folder_label, compact_name_entry, compact_name_label):
     if type_combo.get_active() == 0:
         folder_button.set_sensitive(False)
@@ -255,7 +257,7 @@ def _set_change_project_type_dialog_texts(combo, header, text):
 
     header.set_use_markup(True)
     text.set_use_markup(True)
-
+"""
 def load_project_dialog(callback):    
     dialog = gtk.FileChooserDialog(_("Select Project File"), None, 
                                    gtk.FILE_CHOOSER_ACTION_OPEN, 
