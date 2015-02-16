@@ -278,7 +278,6 @@ class EditorWindow:
                     <menuitem action='RemoveUnusedMedia'/>
                     <separator/>
                     <menuitem action='ProxyManager'/>
-                    <menuitem action='ProjectType'/>
                 </menu>
                 <menu action='RenderMenu'>
                     <menuitem action='AddToQueue'/>
