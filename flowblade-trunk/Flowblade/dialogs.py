@@ -152,6 +152,44 @@ def _new_project_profile_changed(combo_box, profile_info_box):
     profile_info_box.show_all()
     info_panel.show()
 
+def save_backup_snapshot(callback):
+    dialog = gtk.Dialog(_("Save Project Backup Snapshot"), None,
+                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
+                         _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+
+    project_folder = gtk.FileChooserButton(_("Select Snapshot Project Folder"))
+    project_folder.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+    project_folder.set_current_folder(os.path.expanduser("~") + "/")
+    
+    project_folder_label = gtk.Label(_("Snapshot Folder:"))
+    
+    project_folder_row = guiutils.get_two_column_box(project_folder_label, project_folder, 250)
+
+    compact_name_entry = gtk.Entry(30)
+    compact_name_entry.set_width_chars(30)
+    compact_name_entry.set_text(_("initial_save"))
+    
+    compact_name_label = gtk.Label(_("Project File Name:"))
+    
+    compact_name_entry_row = guiutils.get_two_column_box(compact_name_label, compact_name_entry, 250)
+    
+    type_vbox = gtk.VBox(False, 2)
+    type_vbox.pack_start(project_folder_row, False, False, 0)
+    type_vbox.pack_start(compact_name_entry_row, False, False, 0)
+
+    #type_frame = panels.get_named_frame(_("Project Type"), type_vbox)
+    
+    vbox = gtk.VBox(False, 2)
+    vbox.add(type_vbox)
+
+    alignment = dialogutils.get_default_alignment(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, project_folder, compact_name_entry)
+    dialog.show_all()
+    
 """
 def _new_project_type_changed(type_combo, folder_button, project_folder_label, compact_name_entry, compact_name_label):
     if type_combo.get_active() == 0:

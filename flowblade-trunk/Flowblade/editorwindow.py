@@ -149,6 +149,7 @@ class EditorWindow:
             ('OpenRecent', None, _('Open Recent')),
             ('Save', None, _('_Save'), '<control>S', None, lambda a:projectaction.save_project()),
             ('Save As', None, _('_Save As...'), None, None, lambda a:projectaction.save_project_as()),
+            ('SaveSnapshot', None, _('Save Backup Snapshot...'), None, None, lambda a:projectaction.save_backup_snapshot()),
             ('ExportMenu', None, _('Export')),
             ('ExportMeltXML', None, _('MLT XML'), None, None, lambda a:exporting.MELT_XML_export()),
             ('ExportEDL', None, _('EDL CMX 3600'), None, None, lambda a:exporting.EDL_export()),
@@ -221,6 +222,7 @@ class EditorWindow:
                     <menu action='OpenRecent'/>
                     <menuitem action='Save'/>
                     <menuitem action='Save As'/>
+                    <menuitem action='SaveSnapshot'/>
                     <separator/>
                     <menu action='ExportMenu'>
                         <menuitem action='ExportMeltXML'/>
