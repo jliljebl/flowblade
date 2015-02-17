@@ -96,10 +96,15 @@ class LoadThread(threading.Thread):
         except persistance.FileProducerNotFoundError as e:
             print "did not find file:", e
             self._error_stop(dialog, ticker)
-            primary_txt = _("File: ") + e.value + _(" was not found on load!")
-            secondary_txt = _("Place dummy file with same name and similar content to enable") + "\n" + _("project load. ") + \
-                            _("Doing so does not guarantee succesful load") + "\n" + _("if files have different properties.")
+            primary_txt = _("Media asset was missing!")
+            secondary_txt = _("Path of missing asset:") + "\n   <b>" + e.value  + "</b>\n\n" + \
+                            _("Relative search for replacement file in sub folders of project file failed.") + "\n\n" + \
+                            _("To load the project you will need to either:") + "\n" + \
+                            u"\u2022" + " " + _("Use 'Media Linker' tool to relink media assets to new files, or") + "\n" + \
+                            u"\u2022" + " " + _("Place a file with the same exact name and path on the hard drive")
             dialogutils.warning_message(primary_txt, secondary_txt, None, is_info=False)
+            editorstate.project = old_project # persistance.load_project() changes this,
+                                              # we simply change it back as no GUI or other state is yet changed
             return
         except persistance.ProjectProfileNotFoundError as e:
             self._error_stop(dialog, ticker)
@@ -134,7 +139,7 @@ class LoadThread(threading.Thread):
         updater.set_info_icon(None)
         dialog.destroy()
         gtk.gdk.threads_leave()
-        
+
         ticker.stop_ticker()
 
     def _error_stop(self, dialog, ticker):
