@@ -460,12 +460,13 @@ def fill_track_mlt(mlt_track, py_track, compact_project_data):
             # For 'Compact' projects the file path is always computed on load
             if compact_project_data != None:
                 compact_project_data.update_clip_producer_path(clip)
+            orig_path = clip.path # Save the path for error message
             if not os.path.isfile(clip.path):
                 clip.path = get_relative_path(_load_file_path, clip.path)
                 print "clip relative path:", clip.path
             mlt_clip = sequence.create_file_producer_clip(clip.path)
             if mlt_clip == None:
-                raise FileProducerNotFoundError(clip.path)
+                raise FileProducerNotFoundError(orig_path)
             mlt_clip.__dict__.update(clip.__dict__)
             fill_filters_mlt(mlt_clip, sequence)
         # pattern producer
