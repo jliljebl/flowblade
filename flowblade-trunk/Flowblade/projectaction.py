@@ -84,6 +84,7 @@ class LoadThread(threading.Thread):
         ticker = utils.Ticker(_load_pulse_bar, 0.15)
         ticker.start_ticker()
 
+        old_project = editorstate.project
         try:
             editorstate.project_is_loading = True
             
@@ -93,17 +94,21 @@ class LoadThread(threading.Thread):
             editorstate.project_is_loading = False
 
         except persistance.FileProducerNotFoundError as e:
-            editorstate.project_is_loading = False
             print "did not find file:", e
-            gtk.gdk.threads_enter()
-            updater.set_info_icon(None)
-            dialog.destroy()
-            gtk.gdk.threads_leave()
-            ticker.stop_ticker()
+            self._error_stop(dialog, ticker)
             primary_txt = _("File: ") + e.value + _(" was not found on load!")
             secondary_txt = _("Place dummy file with same name and similar content to enable") + "\n" + _("project load. ") + \
                             _("Doing so does not guarantee succesful load") + "\n" + _("if files have different properties.")
             dialogutils.warning_message(primary_txt, secondary_txt, None, is_info=False)
+            return
+        except persistance.ProjectProfileNotFoundError as e:
+            self._error_stop(dialog, ticker)
+            primary_txt = _("Profile with Description: '") + e.value + _("' was not found on load!")
+            secondary_txt = _("It is possible to load the project by creating a User Profile with exactly the same Description\nas the missing profile. ") + "\n\n" + \
+                            _("User Profiles can be created by selecting 'Edit->Profiles Manager'.")
+            dialogutils.warning_message(primary_txt, secondary_txt, None, is_info=False)
+            editorstate.project = old_project # persistance.load_project() changes this,
+                                              # we simply change it back as no GUI or other state is yet changed
             return
 
         # For 'Compact' projects last save path needs to updated to 
@@ -132,6 +137,15 @@ class LoadThread(threading.Thread):
         
         ticker.stop_ticker()
 
+    def _error_stop(self, dialog, ticker):
+        editorstate.project_is_loading = False
+        gtk.gdk.threads_enter()
+        updater.set_info_icon(None)
+        dialog.destroy()
+        gtk.gdk.threads_leave()
+        ticker.stop_ticker()
+
+            
 
 class AddMediaFilesThread(threading.Thread):
     
