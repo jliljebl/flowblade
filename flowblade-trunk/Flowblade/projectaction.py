@@ -369,6 +369,13 @@ def _save_as_dialog_callback(dialog, response_id):
     else:
         dialog.destroy()
 
+
+def save_backup_snapshot():
+    dialogs.save_backup_snapshot(_save_backup_snapshot_dialog_callback)
+
+def _save_backup_snapshot_dialog_callback(dialog, response_id, project_folder, compact_name_entry):
+    dialog.destroy()
+
 def remove_save_icon():
     gobject.source_remove(save_icon_remove_event_id)
     updater.set_info_icon(None)

@@ -26,11 +26,13 @@ SwigPyObject MLT objects with pickleable python objects for save,
 and then create MLT objects from pickled objects when project is loaded.
 """
 
-import copy
+
 import pygtk
 pygtk.require('2.0');
 import gtk
 
+import copy
+import fnmatch
 import os
 import pickle
 import time
@@ -53,6 +55,9 @@ TRANSITION_REMOVE = ['this']
 FILTER_REMOVE = ['mlt_filter','mlt_filters']
 MEDIA_FILE_REMOVE = ['icon']
 
+# Used to flag a not found relative path
+NOT_FOUND = "/not_found_not_found/not_found"
+
 # Used to send messages when loading project
 load_dialog = None
 
@@ -69,6 +74,9 @@ show_messages = True
 
 # Whenloading for batch render the compact adta is ignored and existing asset paths used
 loading_for_batch_render = False
+
+# Path of file being loaded, global for convenience.
+_load_file_path = None
 
 class FileProducerNotFoundError(Exception):
     """
@@ -287,6 +295,9 @@ def load_project(file_path, icons_and_thumnails=True):
     f = open(file_path)
     project = pickle.load(f)
 
+    global _load_file_path
+    _load_file_path = file_path
+
     # Batch rendering ignores compact project data
     if loading_for_batch_render == True:
         project.compact_project_data = None
@@ -339,6 +350,12 @@ def load_project(file_path, icons_and_thumnails=True):
             FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
         media_file.current_frame = 0 # this is always reset on load, value is not considered persistent
         
+        if not os.path.isfile(media_file.path):
+            media_file.path = get_relative_path(_load_file_path, media_file.path)
+            if media_file.path == NOT_FOUND:
+                pass
+            print "madia file relative path:", media_file.path
+                     
         # MediaFile object file and thumbnail paths are always re-created dynamically on load 
         # for 'Compact' projects.
         if project.compact_project_data != None:
@@ -443,6 +460,9 @@ def fill_track_mlt(mlt_track, py_track, compact_project_data):
             # For 'Compact' projects the file path is always computed on load
             if compact_project_data != None:
                 compact_project_data.update_clip_producer_path(clip)
+            if not os.path.isfile(clip.path):
+                clip.path = get_relative_path(_load_file_path, clip.path)
+                print "clip relative path:", clip.path
             mlt_clip = sequence.create_file_producer_clip(clip.path)
             if mlt_clip == None:
                 raise FileProducerNotFoundError(clip.path)
@@ -459,7 +479,7 @@ def fill_track_mlt(mlt_track, py_track, compact_project_data):
             mlt_clip = sequence.create_and_insert_blank(mlt_track, i, length)
             mlt_clip.__dict__.update(clip.__dict__)
             append_created = False
-        else:
+        else: # This is just for info, if this ever happens crash will happen.
             print "Could not recognize clip, dict:"
             print clip.__dict__
 
@@ -530,6 +550,31 @@ def handle_seq_watermark(seq):
     else:
         seq.watermark_filter = None
         seq.watermark_file_path = None
+
+
+# --------------------------------------------------------- relative paths
+def get_relative_path(project_file_path, asset_path):
+    matches = []
+    asset_folder, asset_file_name = os.path.split(asset_path)
+    project_folder, project_file_name =  os.path.split(project_file_path)
+    print project_folder
+    print asset_file_name
+    for root, dirnames, filenames in os.walk(project_folder):
+        print root
+        print dirnames
+        print filenames
+
+        for filename in fnmatch.filter(filenames, asset_file_name):
+            matches.append(os.path.join(root, filename))
+            print "ee"
+
+    if len(matches) == 1:
+        return matches[0]
+    elif  len(matches) > 1:
+        # some error handling
+        return matches[0]
+    else:
+        return NOT_FOUND # no relative path found
 
 # ------------------------------------------------------- backwards compability
 def FIX_N_TO_3_COMPOSITOR_COMPABILITY(compositor, SAVEFILE_VERSION):
