@@ -75,8 +75,13 @@ show_messages = True
 # Whenloading for batch render the compact adta is ignored and existing asset paths used
 loading_for_batch_render = False
 
-# Path of file being loaded, global for convenience.
+# Path of file being loaded, global for convenience. Used toimplement relative paths search on load
 _load_file_path = None
+
+# Used to change media item and clip paths shensaving backup snapshot.
+# Not None flags that snapsave is being done and paths need to be replaced 
+snapshot_paths = None
+
 
 class FileProducerNotFoundError(Exception):
     """
@@ -141,6 +146,10 @@ def save_project(project, file_path):
             if s_media_file.is_proxy_file:
                 proxy_path_dict[s_media_file.path] = s_media_file.second_file_path
                 s_media_file.set_as_original_media_file()
+
+        # Change paths when doing snapshot save
+        if snapshot_paths != None:
+            s_media_file.path = snapshot_paths[s_media_file.path] 
 
         media_files[s_media_file.id] = s_media_file
     s_proj.media_files = media_files
@@ -241,11 +250,18 @@ def get_p_clip(clip):
     # Do proxy mode convert if needed
     if (project_proxy_mode == appconsts.CONVERTING_TO_USE_PROXY_MEDIA or 
         project_proxy_mode == appconsts.CONVERTING_TO_USE_ORIGINAL_MEDIA):
-        try: # This fails whan it is supposed to fail: for clips that have no proxy and pattern procurs and blanks
+        try: # This fails whan it is supposed to fail: for clips that have no proxy and pattern producers and blanks
             s_clip.path = proxy_path_dict[s_clip.path] 
         except:
             pass
-            
+
+    # Change paths when doing snapshot save
+    try: # This fails for pattern producers and blanks
+        if snapshot_paths != None:
+            s_clip.path = snapshot_paths[s_clip.path] 
+    except:
+        pass
+
     return s_clip
 
 def get_p_filter(f):
