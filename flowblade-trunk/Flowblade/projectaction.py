@@ -27,10 +27,12 @@ import pygtk
 pygtk.require('2.0');
 import gtk
 
+import md5
 import os
 from os import listdir
 from os.path import isfile, join
 import re
+import shutil
 import time
 import threading
 
@@ -268,6 +270,7 @@ def _new_project_dialog_callback(dialog, response_id, profile_combo, tracks_comb
     else:
         dialog.destroy()
 
+"""
 def _check_compact_project_folder_empty(root_path):
     # 'Compact' project folders cannot have any files in them at creation time
     if not (os.listdir(root_path) == []):
@@ -277,7 +280,7 @@ def _check_compact_project_folder_empty(root_path):
         return False
     else:
         return True
-
+"""
 def load_project():
     dialogs.load_project_dialog(_load_project_dialog_callback)
     
@@ -388,13 +391,73 @@ def _save_as_dialog_callback(dialog, response_id):
     else:
         dialog.destroy()
 
-
 def save_backup_snapshot():
     dialogs.save_backup_snapshot(_save_backup_snapshot_dialog_callback)
 
-def _save_backup_snapshot_dialog_callback(dialog, response_id, project_folder, compact_name_entry):
-    dialog.destroy()
+def _save_backup_snapshot_dialog_callback(dialog, response_id, project_folder, name_entry):  
+    if response_id == gtk.RESPONSE_ACCEPT:
 
+        root_path = project_folder.get_filenames()[0]
+        if not (os.listdir(root_path) == []):
+            dialog.destroy()
+            primary_txt = _("Selected folder contains files")
+            secondary_txt = _("When saving a back-up snapshot for project, the selected folder\nhas to be empty.")
+            dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+            return
+
+        name = name_entry.get_text()
+        dialog.destroy()
+        
+        _do_snapshot_save(root_path + "/", name)
+
+    else:
+        dialog.destroy()
+
+def _do_snapshot_save(root_folder_path, project_name):
+    media_folder = root_folder_path +  "media/"
+
+    d = os.path.dirname(media_folder)
+    os.mkdir(d)
+
+    asset_paths = {}
+
+    # Copy media files
+    for idkey, media_file in PROJECT().media_files.items():
+        # Copy asset file and fix path
+        directory, file_name = os.path.split(media_file.path)
+        media_file_copy = media_folder + file_name
+        if media_file_copy in asset_paths: # Create different filename for files 
+                                           # that have same filename but different path
+            file_name = get_snapshot_unique_name(media_file.path, file_name)
+            media_file_copy = media_folder + file_name
+            
+        shutil.copyfile(media_file.path, media_file_copy)
+        asset_paths[media_file.path] = media_file_copy
+
+    # Copy clip producers paths
+    for seq in PROJECT().sequences:
+        for track in seq.tracks:
+            for i in range(0, len(track.clips)):
+                clip = track.clips[i]
+                # Only producer clips are affected
+                if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
+                    directory, file_name = os.path.split(clip.path)
+                    clip_file_copy = media_folder + file_name
+                    if not os.path.isfile(clip_file_copy):
+                        print "clip_file_copy", clip_file_copy
+                        shutil.copyfile(clip.path, clip_file_copy) # only rendered files are copied here
+                        asset_paths[clip.path] = clip_file_copy # This stuff is already md5 hashed, so no duplicate problems here
+
+    save_path = root_folder_path + project_name + ".flb"
+    
+    persistance.snapshot_paths = asset_paths
+    persistance.save_project(PROJECT(), save_path)
+    persistance.snapshot_paths = None
+
+def get_snapshot_unique_name(file_path, file_name):
+    (name, ext) = os.path.splitext(file_name)
+    return md5.new(file_path).hexdigest() + ext
+        
 def remove_save_icon():
     gobject.source_remove(save_icon_remove_event_id)
     updater.set_info_icon(None)
