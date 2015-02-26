@@ -449,7 +449,7 @@ def _do_snapshot_save(root_folder_path, project_name):
                         asset_paths[clip.path] = clip_file_copy # This stuff is already md5 hashed, so no duplicate problems here
 
     save_path = root_folder_path + project_name + ".flb"
-    
+
     persistance.snapshot_paths = asset_paths
     persistance.save_project(PROJECT(), save_path)
     persistance.snapshot_paths = None
