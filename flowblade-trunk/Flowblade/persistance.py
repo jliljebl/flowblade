@@ -304,12 +304,16 @@ def remove_attrs(obj, remove_attrs):
 
 
 # -------------------------------------------------- LOAD
-def load_project(file_path, icons_and_thumnails=True):
+def load_project(file_path, icons_and_thumnails=True, load_for_relink=False):
     _show_msg("Unpickling")
 
     # Load project object
     f = open(file_path)
     project = pickle.load(f)
+
+    # We only needed pickled data for relink
+    if load_for_relink:
+        return project
 
     global _load_file_path
     _load_file_path = file_path
@@ -337,10 +341,10 @@ def load_project(file_path, icons_and_thumnails=True):
 
     # If this 'Compact' project check that folder structure is good
     # and set root path
-    if project.compact_project_data != None:
-        success = project.compact_project_data.check_and_set_root_path(file_path)
-        if not success:
-            pass
+    #if project.compact_project_data != None:
+    #    success = project.compact_project_data.check_and_set_root_path(file_path)
+    #    if not success:
+    #        pass
 
     # Add MLT objects to sequences.
     global all_clips, sync_clips
@@ -374,8 +378,8 @@ def load_project(file_path, icons_and_thumnails=True):
                      
         # MediaFile object file and thumbnail paths are always re-created dynamically on load 
         # for 'Compact' projects.
-        if project.compact_project_data != None:
-            project.compact_project_data.update_media_file_paths(media_file)
+        #if project.compact_project_data != None:
+        #    project.compact_project_data.update_media_file_paths(media_file)
             
     # Add icons to media files
     if icons_and_thumnails == True:

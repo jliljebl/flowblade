@@ -312,7 +312,8 @@ class Project:
     def get_unique_name(self, file_path, file_name):
         (name, ext) = os.path.splitext(file_name)
         return md5.new(file_path).hexdigest() + ext
-        
+       
+    # --------------------------------------------------------------------------- Compact project
     def is_compact_project(self):
         return (self.compact_project_data != None)
         
