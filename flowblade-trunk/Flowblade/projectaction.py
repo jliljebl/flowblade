@@ -545,28 +545,7 @@ def add_media_files(this_call_is_retry=False):
         dialogs.select_thumbnail_dir(select_thumbnail_dir_callback, gui.editor_window.window, os.path.expanduser("~"), True)
         return
 
-    file_select = gtk.FileChooserDialog(_("Open.."),None, 
-                                    gtk.FILE_CHOOSER_ACTION_OPEN,
-                                    (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
-                                    gtk.STOCK_OPEN, gtk.RESPONSE_OK))
-
-    file_select.set_default_response(gtk.RESPONSE_CANCEL)
-    file_select.set_select_multiple(True)
-
-    media_filter = utils.get_media_source_file_filter()
-    all_filter = gtk.FileFilter()
-    all_filter.set_name(_("All files"))
-    all_filter.add_pattern("*.*")
-    file_select.add_filter(media_filter)
-    file_select.add_filter(all_filter)
-
-    if ((editorpersistance.prefs.open_in_last_opended_media_dir == True) 
-        and (editorpersistance.prefs.last_opened_media_dir != None)):
-        file_select.set_current_folder(editorpersistance.prefs.last_opened_media_dir)
-    
-    file_select.connect('response', _open_files_dialog_cb)
-    file_select.set_modal(True)
-    file_select.show()
+    dialogs.media_file_dialog(_("Open.."), _open_files_dialog_cb, True)
 
 def _open_files_dialog_cb(file_select, response_id):
     filenames = file_select.get_filenames()
