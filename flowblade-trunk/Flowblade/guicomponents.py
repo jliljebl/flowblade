@@ -1384,6 +1384,13 @@ def display_media_log_event_popup_menu(row, treeview, callback, event):
     log_event_menu.add(_get_menu_item(_("Toggle Star"), callback, ("toggle", row, treeview)))
     log_event_menu.add(_get_menu_item(_("Delete"), callback, ("delete", row, treeview)))
     log_event_menu.popup(None, None, None, event.button, event.time)
+
+def display_media_linker_popup_menu(row, treeview, callback, event):
+    media_linker_menu = gtk.Menu()        
+    media_linker_menu.add(_get_menu_item(_("Set File Relink Path"), callback, ("set relink", row)))
+    media_linker_menu.add(_get_menu_item(_("Delete File Relink Path"), callback, ("delete relink", row)))
+    #media_linker_menu.add(_get_menu_item(_("Delete"), callback, ("delete", row, treeview)))
+    media_linker_menu.popup(None, None, None, event.button, event.time)
     
 def _add_separetor(menu):
     sep = gtk.SeparatorMenuItem()

@@ -34,6 +34,7 @@ import dialogutils
 import editorstate
 import editorpersistance
 import guiutils
+import guicomponents
 import mltenv
 import mltprofiles
 import mlttransitions
@@ -46,6 +47,7 @@ import translations
 
 linker_window = None
 target_project = None
+media_assets = []
 
 
 def display_linker():
@@ -72,36 +74,37 @@ class ProjectLoadThread(threading.Thread):
         
         global target_project
         target_project = project
+        _update_media_assets()
         
         gtk.gdk.threads_enter()
         linker_window.relink_list.fill_data_model()
         linker_window.project_label.set_text(self.filename)
         linker_window.set_active_state()
+        linker_window.update_files_info()
         gtk.gdk.threads_leave()
 
 
 class MediaLinkerWindow(gtk.Window):
     def __init__(self):
         gtk.Window.__init__(self)
-
+        self.connect("delete-event", lambda w, e:_shutdown())
+        
         load_button = gtk.Button(_("Load Project For Relinking"))
         load_button.connect("clicked",
                             lambda w: self.load_button_clicked())
-        self.project_label = gtk.Label(_("<not loaded>"))
+
         
         project_row = gtk.HBox(False, 2)
         project_row.pack_start(load_button, False, False, 0)
-        project_row.pack_start(guiutils.pad_label(30, 12), False, False, 0)
-        project_row.pack_start(gtk.Label(_("Project:")), False, False, 0)
-        project_row.pack_start(guiutils.pad_label(4, 12), False, False, 0)
-        project_row.pack_start(self.project_label, False, False, 0)
         project_row.pack_start(gtk.Label(), True, True, 0)
 
-        self.missing_label = gtk.Label(_("Missing files:"))
-        self.found_label = gtk.Label(_("Found files:"))
+        self.missing_label = gtk.Label(_("Original Media Missing:"))
+        self.found_label = gtk.Label(_("Original Media Found:"))
         self.missing_count = gtk.Label()
         self.found_count = gtk.Label()
-        
+        self.proj = gtk.Label(_("Project:"))
+        self.project_label = gtk.Label(_("<not loaded>"))
+            
         missing_info = guiutils.get_left_justified_box([self.missing_label, guiutils.pad_label(2, 2), self.missing_count])
         missing_info.set_size_request(200, 2)
         found_info = guiutils.get_left_justified_box([self.found_label, guiutils.pad_label(2, 2), self.found_count])
@@ -110,11 +113,15 @@ class MediaLinkerWindow(gtk.Window):
         status_row.pack_start(missing_info, False, False, 0)
         status_row.pack_start(found_info, False, False, 0)
         status_row.pack_start(gtk.Label(), True, True, 0)
+        status_row.pack_start(guiutils.pad_label(30, 12), False, False, 0)
+        status_row.pack_start(self.proj, False, False, 0)
+        status_row.pack_start(guiutils.pad_label(4, 12), False, False, 0)
+        status_row.pack_start(self.project_label, False, False, 0)
         
         self.relink_list = MediaRelinkListView()
 
-        self.find_button = gtk.Button(_("Set File Re-link"))
-        self.delete_button = gtk.Button(_("Delete File Relink"))
+        self.find_button = gtk.Button(_("Set File Relink Path"))
+        self.delete_button = gtk.Button(_("Delete File Relink Path"))
         self.auto_locate_check = gtk.CheckButton()
         self.auto_label = gtk.Label(_("Autorelink other files"))
 
@@ -122,7 +129,8 @@ class MediaLinkerWindow(gtk.Window):
         self.display_combo.append_text(_("Display Missing Media Files"))
         self.display_combo.append_text(_("Display Found Found Media Files"))
         self.display_combo.set_active(0)
-
+        self.display_combo.connect("changed", self.display_list_changed)
+        
         buttons_row = gtk.HBox(False, 2)
         buttons_row.pack_start(self.display_combo, False, False, 0)
         buttons_row.pack_start(gtk.Label(), True, True, 0)
@@ -145,7 +153,7 @@ class MediaLinkerWindow(gtk.Window):
 
         pane = gtk.VBox(False, 2)
         pane.pack_start(project_row, False, False, 0)
-        pane.pack_start(guiutils.pad_label(24, 12), False, False, 0)
+        pane.pack_start(guiutils.pad_label(24, 24), False, False, 0)
         pane.pack_start(status_row, False, False, 0)
         pane.pack_start(guiutils.pad_label(24, 2), False, False, 0)
         pane.pack_start(self.relink_list, False, False, 0)
@@ -181,6 +189,9 @@ class MediaLinkerWindow(gtk.Window):
         else:
             dialog.destroy()
 
+    def display_list_changed(self, display_combo):
+         self.relink_list.fill_data_model()
+
     def set_active_state(self):
         active = (target_project != None)
         
@@ -195,11 +206,28 @@ class MediaLinkerWindow(gtk.Window):
         self.found_label.set_sensitive(active) 
         self.missing_count.set_sensitive(active) 
         self.found_count.set_sensitive(active) 
+        self.project_label.set_sensitive(active) 
+        self.proj.set_sensitive(active) 
+
+    def update_files_info(self):
+        found = 0
+        missing = 0
+        for asset in media_assets:
+            if asset.orig_file_exists:
+                found = found + 1
+            else:
+                missing = missing + 1
+
+        self.missing_count.set_text(str(missing))
+        self.found_count.set_text(str(found))
+
 
 class MediaRelinkListView(gtk.VBox):
 
     def __init__(self):
         gtk.VBox.__init__(self)
+
+        self.assets = [] # Used to store list displayd data items
         
        # Datamodel: icon, text, text
         self.storemodel = gtk.ListStore(str, str)
@@ -213,13 +241,14 @@ class MediaRelinkListView(gtk.VBox):
         self.treeview = gtk.TreeView(self.storemodel)
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(True)
+        self.treeview.connect("button-press-event", self.row_pressed)
         tree_sel = self.treeview.get_selection()
 
         # Column views
         self.text_col_1 = gtk.TreeViewColumn("text1")
-        self.text_col_1.set_title(_("File Path"))
+        self.text_col_1.set_title(_("Media File Path"))
         self.text_col_2 = gtk.TreeViewColumn("text2")
-        self.text_col_2.set_title(_("File Re-link Path"))
+        self.text_col_2.set_title(_("Media File Re-link Path"))
         
         # Cell renderers
         self.text_rend_1 = gtk.CellRendererText()
@@ -246,21 +275,94 @@ class MediaRelinkListView(gtk.VBox):
         self.scroll.add(self.treeview)
         self.pack_start(self.scroll)
         self.scroll.show_all()
-        self.set_size_request(1000, 400)
+        self.set_size_request(1100, 400)
 
     def fill_data_model(self):
+        self.assets = []
         self.storemodel.clear()
-        for media_file_id, media_file in target_project.media_files.iteritems():
-            row_data = [media_file.name,
-                        ""]
-            self.storemodel.append(row_data)
-            self.scroll.queue_draw()
+
+        display_missing = linker_window.display_combo.get_active() == 0
+
+        for media_asset in media_assets:
+            if media_asset.orig_file_exists != display_missing:
+                if media_asset.relink_path == None:
+                    relink = ""
+                else:
+                    relink = media_asset.relink_path
+                row_data = [media_asset.media_file.path,
+                            relink]
+                self.storemodel.append(row_data)
+                self.assets.append(media_asset)
+
+        self.scroll.queue_draw()
 
     def get_selected_rows_list(self):
         model, rows = self.treeview.get_selection().get_selected_rows()
         return rows
 
+    def row_pressed(self, treeview, event):
+        # Only handle right mouse on row, not empty or left mouse
+        path_pos_tuple = treeview.get_path_at_pos(int(event.x), int(event.y))
+        if path_pos_tuple == None:
+            return False
+        if not (event.button == 3):
+            return False
 
+        # Show pop-up
+        path, column, x, y = path_pos_tuple
+        selection = treeview.get_selection()
+        selection.unselect_all()
+        selection.select_path(path)
+        row = int(max(path))
+
+        guicomponents.display_media_linker_popup_menu(row, treeview, _media_asset_menu_item_selected, event)
+        return  True
+
+# ----------------------------------------------------------- logic
+class MediaAsset:
+
+    def __init__(self, media_file):
+        self.media_file = media_file
+        self.orig_file_exists = os.path.isfile(media_file.path) 
+        self.relink_path = None
+
+def _update_media_assets():
+    new_assets = []
+    for media_file_id, media_file in target_project.media_files.iteritems():
+        new_assets.append(MediaAsset(media_file))
+    
+    global media_assets
+    media_assets = new_assets
+        
+def _media_asset_menu_item_selected(widget, data):
+    msg, row = data
+    media_asset = linker_window.relink_list.assets[row]
+    print media_asset, msg
+    if msg == "set relink":
+        _set_relink_path(media_asset)
+    if msg == "delete relink":
+        _delete_relink_path(media_asset)
+        
+def _set_relink_path(media_asset):
+    dialogs.media_file_dialog(_("Select Media File To Relink"), _select_relink_path_dialog_callback, False, media_asset)
+
+def _select_relink_path_dialog_callback(file_select, response_id, media_asset):
+    filenames = file_select.get_filenames()
+    file_select.destroy()
+
+    if response_id != gtk.RESPONSE_OK:
+        return
+    if len(filenames) == 0:
+        return
+
+    media_asset.relink_path = filenames[0]
+    linker_window.relink_list.fill_data_model()
+        
+def _delete_relink_path(media_asset):
+    media_asset.relink_path = None
+    linker_window.relink_list.fill_data_model()
+            
+# ----------------------------------------------------------- main
 def main(root_path, force_launch=False):
     editorstate.gtk_version = gtk.gtk_version
     try:
@@ -302,7 +404,8 @@ def main(root_path, force_launch=False):
     global linker_window
     linker_window = MediaLinkerWindow()
 
-
     gtk.main()
     gtk.gdk.threads_leave()
     
+def _shutdown():
+    gtk.main_quit()
