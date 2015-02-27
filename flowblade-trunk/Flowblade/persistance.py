@@ -72,9 +72,6 @@ proxy_path_dict = None
 # Flag for showing progress messages on GUI when loading
 show_messages = True
 
-# Whenloading for batch render the compact adta is ignored and existing asset paths used
-loading_for_batch_render = False
-
 # Path of file being loaded, global for convenience. Used toimplement relative paths search on load
 _load_file_path = None
 
