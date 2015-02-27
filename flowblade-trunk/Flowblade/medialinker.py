@@ -121,13 +121,15 @@ class MediaLinkerWindow(gtk.Window):
         self.relink_list = MediaRelinkListView()
 
         self.find_button = gtk.Button(_("Set File Relink Path"))
+        self.find_button.connect("clicked", lambda w: _set_button_pressed())
         self.delete_button = gtk.Button(_("Delete File Relink Path"))
+        self.delete_button.connect("clicked", lambda w: _delete_button_pressed())
         self.auto_locate_check = gtk.CheckButton()
         self.auto_label = gtk.Label(_("Autorelink other files"))
 
         self.display_combo = gtk.combo_box_new_text()
         self.display_combo.append_text(_("Display Missing Media Files"))
-        self.display_combo.append_text(_("Display Found Found Media Files"))
+        self.display_combo.append_text(_("Display Found Media Files"))
         self.display_combo.set_active(0)
         self.display_combo.connect("changed", self.display_list_changed)
         
@@ -141,8 +143,9 @@ class MediaLinkerWindow(gtk.Window):
         buttons_row.pack_start(guiutils.pad_label(4, 4), False, False, 0)
         buttons_row.pack_start(self.find_button, False, False, 0)
 
-        self.save_button = gtk.Button(_("Save Project As..."))
+        self.save_button = gtk.Button(_("Save Relinked Project As..."))
         cancel_button = gtk.Button(_("Close"))
+        cancel_button.connect("clicked", lambda w:_shutdown())
         dialog_buttons_box = gtk.HBox(True, 2)
         dialog_buttons_box.pack_start(cancel_button, True, True, 0)
         dialog_buttons_box.pack_start(self.save_button, False, False, 0)
@@ -167,7 +170,7 @@ class MediaLinkerWindow(gtk.Window):
 
         # Set pane and show window
         self.add(align)
-        self.set_title(_("Media Re-linker"))
+        self.set_title(_("Media Relinker"))
         self.show_all()
         self.set_resizable(False)
         self.set_keep_above(True) # Perhaps configurable later
@@ -221,7 +224,15 @@ class MediaLinkerWindow(gtk.Window):
         self.missing_count.set_text(str(missing))
         self.found_count.set_text(str(found))
 
-
+    def get_selected_media_asset(self):
+        selection = self.relink_list.treeview.get_selection()
+        (model, rows) = selection.get_selected_rows()
+        row = max(rows[0])
+        if len(self.relink_list.assets) == 0:
+            return None
+        
+        return self.relink_list.assets[row]
+         
 class MediaRelinkListView(gtk.VBox):
 
     def __init__(self):
@@ -293,6 +304,11 @@ class MediaRelinkListView(gtk.VBox):
                             relink]
                 self.storemodel.append(row_data)
                 self.assets.append(media_asset)
+        
+        if len(self.assets) > 0:
+            selection = self.treeview.get_selection()
+            selection.unselect_all()
+            selection.select_path(0)
 
         self.scroll.queue_draw()
 
@@ -342,7 +358,13 @@ def _media_asset_menu_item_selected(widget, data):
         _set_relink_path(media_asset)
     if msg == "delete relink":
         _delete_relink_path(media_asset)
-        
+
+def _set_button_pressed():
+    media_asset = linker_window.get_selected_media_asset()
+    if media_asset == None:
+        return
+    _set_relink_path(media_asset)
+
 def _set_relink_path(media_asset):
     dialogs.media_file_dialog(_("Select Media File To Relink"), _select_relink_path_dialog_callback, False, media_asset)
 
@@ -357,7 +379,13 @@ def _select_relink_path_dialog_callback(file_select, response_id, media_asset):
 
     media_asset.relink_path = filenames[0]
     linker_window.relink_list.fill_data_model()
-        
+
+def _delete_button_pressed():
+    media_asset = linker_window.get_selected_media_asset()
+    if media_asset == None:
+        return
+    _delete_relink_path(media_asset)
+
 def _delete_relink_path(media_asset):
     media_asset.relink_path = None
     linker_window.relink_list.fill_data_model()
