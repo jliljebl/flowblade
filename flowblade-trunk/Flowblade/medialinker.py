@@ -74,8 +74,9 @@ class ProjectLoadThread(threading.Thread):
         
         global target_project
         target_project = project
+        target_project.c_seq = project.sequences[target_project.c_seq_index]
         _update_media_assets()
-        
+
         gtk.gdk.threads_enter()
         linker_window.relink_list.fill_data_model()
         linker_window.project_label.set_text(self.filename)
@@ -137,13 +138,14 @@ class MediaLinkerWindow(gtk.Window):
         buttons_row.pack_start(self.display_combo, False, False, 0)
         buttons_row.pack_start(gtk.Label(), True, True, 0)
         buttons_row.pack_start(self.delete_button, False, False, 0)
-        buttons_row.pack_start(guiutils.pad_label(12, 12), False, False, 0)
-        buttons_row.pack_start(self.auto_locate_check, False, False, 0)
-        buttons_row.pack_start(self.auto_label, False, False, 0)
+        #buttons_row.pack_start(guiutils.pad_label(12, 12), False, False, 0)
+        #buttons_row.pack_start(self.auto_locate_check, False, False, 0)
+        #buttons_row.pack_start(self.auto_label, False, False, 0)
         buttons_row.pack_start(guiutils.pad_label(4, 4), False, False, 0)
         buttons_row.pack_start(self.find_button, False, False, 0)
 
         self.save_button = gtk.Button(_("Save Relinked Project As..."))
+        self.save_button.connect("clicked", lambda w:_save_project_pressed())
         cancel_button = gtk.Button(_("Close"))
         cancel_button.connect("clicked", lambda w:_shutdown())
         dialog_buttons_box = gtk.HBox(True, 2)
@@ -389,7 +391,39 @@ def _delete_button_pressed():
 def _delete_relink_path(media_asset):
     media_asset.relink_path = None
     linker_window.relink_list.fill_data_model()
-            
+
+def _save_project_pressed():
+    if  target_project.last_save_path != None:
+        open_dir = os.path.dirname(target_project.last_save_path)
+    else:
+        open_dir = None
+    
+    no_ext_name = target_project.name.replace('.flb','')
+        
+    dialogs.save_project_as_dialog(_save_as_dialog_callback, 
+                                   no_ext_name + "_RELINKED.flb", 
+                                   open_dir)
+
+def _save_as_dialog_callback(dialog, response_id):
+    if response_id == gtk.RESPONSE_ACCEPT:
+        filenames = dialog.get_filenames()
+        target_project.last_save_path = filenames[0]
+        target_project.name = os.path.basename(filenames[0])
+        
+        persistance.save_project(target_project, target_project.last_save_path)
+        dialog.destroy()
+                
+        dialogutils.info_message("Relinked version of the Project saved!", 
+                                 "To test the project, close this tool and load the relinked version.", 
+                                 linker_window)
+    else:
+        dialog.destroy()
+
+def _update_project_media_paths():
+    for media_asset in media_assets:
+        if media_asset.relink_path != None:
+            media_asset.media_file.path = media_asset.relink_path
+
 # ----------------------------------------------------------- main
 def main(root_path, force_launch=False):
     editorstate.gtk_version = gtk.gtk_version

@@ -75,8 +75,8 @@ show_messages = True
 # Path of file being loaded, global for convenience. Used toimplement relative paths search on load
 _load_file_path = None
 
-# Used to change media item and clip paths shensaving backup snapshot.
-# Not None flags that snapsave is being done and paths need to be replaced 
+# Used to change media item and clip paths when saving backup snapshot.
+# 'snapshot_paths != None' flags that snapsave is being done and paths need to be replaced 
 snapshot_paths = None
 
 
@@ -556,16 +556,10 @@ def get_relative_path(project_file_path, asset_path):
     matches = []
     asset_folder, asset_file_name = os.path.split(asset_path)
     project_folder, project_file_name =  os.path.split(project_file_path)
-    print project_folder
-    print asset_file_name
-    for root, dirnames, filenames in os.walk(project_folder):
-        print root
-        print dirnames
-        print filenames
 
+    for root, dirnames, filenames in os.walk(project_folder):
         for filename in fnmatch.filter(filenames, asset_file_name):
             matches.append(os.path.join(root, filename))
-            print "ee"
 
     if len(matches) == 1:
         return matches[0]
