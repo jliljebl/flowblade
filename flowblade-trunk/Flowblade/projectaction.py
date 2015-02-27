@@ -118,11 +118,6 @@ class LoadThread(threading.Thread):
                                               # we simply change it back as no GUI or other state is yet changed
             return
 
-        # For 'Compact' projects last save path needs to updated to 
-        # point to loaded project file because project folder may have been moved. 
-        if project.compact_project_data != None:
-            project.update_compact_last_save_path()
-
         gtk.gdk.threads_enter()
         dialog.info.set_text(_("Opening"))
         gtk.gdk.threads_leave()
@@ -240,47 +235,16 @@ def new_project():
     dialogs.new_project_dialog(_new_project_dialog_callback)
 
 def _new_project_dialog_callback(dialog, response_id, profile_combo, tracks_combo, 
-                                 tracks_combo_values_list):#, project_type_combo,
-                                 #project_folder, compact_name_entry):
+                                 tracks_combo_values_list):
     v_tracks, a_tracks = tracks_combo_values_list[tracks_combo.get_active()]
     if response_id == gtk.RESPONSE_ACCEPT:
-        #if project_type_combo.get_active() == 0:
-        # 'Standard' project
         app.new_project(profile_combo.get_active(), v_tracks, a_tracks)
         dialog.destroy()
-        """
-        else:
-            # 'Compact' project
-            root_path = project_folder.get_filenames()[0]
-            project_name = compact_name_entry.get_text()
-            dialog.destroy()
-              
-            # 'Compact' project folders cannot have any files in them at creation time
-            if _check_compact_project_folder_empty(root_path) == False:
-                return
-            
-            # We need some name for initial saved project
-            if project_name == "":
-                project_name = "untitled"
-
-            app.new_compact_project(root_path + "/", project_name, profile_combo.get_active(), v_tracks, a_tracks)
-        """
         project_event = projectdata.ProjectEvent(projectdata.EVENT_CREATED_BY_NEW_DIALOG, None)
         PROJECT().events.append(project_event)
     else:
         dialog.destroy()
 
-"""
-def _check_compact_project_folder_empty(root_path):
-    # 'Compact' project folders cannot have any files in them at creation time
-    if not (os.listdir(root_path) == []):
-        primary_txt = _("Selected folder contains files")
-        secondary_txt = _("When creating a 'Compact' type project, the folder selected\nfor the new project has to be empty.\n\nNo new project was created.")
-        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
-        return False
-    else:
-        return True
-"""
 def load_project():
     dialogs.load_project_dialog(_load_project_dialog_callback)
     
@@ -322,10 +286,7 @@ def actually_load_project(filename, block_recent_files=False):
     load_launch.start()
 
 def save_project():
-    if PROJECT().compact_project_data != None:
-        # check that last save path is still valid for a 'Compact' project
-        _save_project_in_last_saved_path()
-    elif PROJECT().last_save_path == None:
+    if PROJECT().last_save_path == None:
         save_project_as()
     else:
         _save_project_in_last_saved_path()
@@ -792,26 +753,6 @@ def _media_filtering_selector_item_activated(selector, index):
     editorstate.media_view_filter = index
     gui.media_list_view.fill_data_model()
 
-"""
-def change_project_type():
-    dialogs.change_project_type(PROJECT(), _change_project_type_dialog_callback)
-
-def _change_project_type_dialog_callback(dialog, response_id, folder_button):
-   
-    if response_id == gtk.RESPONSE_ACCEPT:
-        if not PROJECT().is_compact_project():
-            root_path = folder_button.get_filenames()[0]
-            dialog.destroy()
-            # 'Compact' project folders cannot have any files in them at creation time
-            if _check_compact_project_folder_empty(root_path) == False:
-                return
-            PROJECT().convert_to_compact_project(root_path + "/")
-            proxyediting.configure_proxy_gui_for_project_type(PROJECT())
-        else:
-            dialog.destroy()
-            PROJECT().convert_to_standart_project()
-            proxyediting.configure_proxy_gui_for_project_type(PROJECT())
-"""
 
 # ------------------------------------ bins
 def add_new_bin():

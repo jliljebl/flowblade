@@ -83,7 +83,6 @@ class Project:
         self.media_log = []
         self.media_log_groups = []
         self.proxy_data = miscdataobjects.ProjectProxyEditingData()
-        self.compact_project_data = None # None == Project type 'Standard'I, not None == Project type 'Compact'
         self.SAVEFILE_VERSION = SAVEFILE_VERSION
         
         # c_seq is the currently edited Sequence
@@ -114,13 +113,6 @@ class Project:
         (directory, file_name) = os.path.split(file_path)
         (name, ext) = os.path.splitext(file_name)
 
-        # For 'Compact' projects files need to be copied to project folder with a
-        # hashed filename
-        if self.compact_project_data != None:
-            comp_file_path = self.compact_project_data.get_media_file_path(file_path)
-            shutil.copyfile(file_path, comp_file_path)
-            file_path = comp_file_path
-
         # Get media type
         media_type = sequence.get_media_type(file_path)
         
@@ -129,7 +121,7 @@ class Project:
             icon_path = respaths.IMAGE_PATH + "audio_file.png"
             length = thumbnailer.get_file_length(file_path)
         else: # For non-audio we need write a thumbbnail file and get file lengh while we're at it
-             (icon_path, length) = thumbnailer.write_image(file_path, self.compact_project_data)
+             (icon_path, length) = thumbnailer.write_image(file_path)
 
           # Create media file object
         media_object = MediaFile(self.next_media_file_id, file_path, 
@@ -153,20 +145,12 @@ class Project:
         self.c_bin.file_ids.append(media_object.id)
 
     def media_file_exists(self, file_path):
-        # If 'Compact' project compute path for given file path
-        if self.compact_project_data != None:
-            compact_path = self.compact_project_data.get_media_file_path(file_path)
-
         for key, media_file in self.media_files.items():
             if media_file.type == appconsts.PATTERN_PRODUCER:
                 continue
-            if self.compact_project_data == None:
-                if file_path == media_file.path:
-                    return True
-            else:
-                if compact_path == media_file.path:
-                    return True 
-                
+            if file_path == media_file.path:
+                return True
+
         return False
 
     def get_media_file_for_path(self, file_path):
@@ -306,37 +290,11 @@ class Project:
                             print "clip_file_copy", clip_file_copy
                             shutil.copyfile(clip.path, clip_file_copy) # only rendered files are copied here
                             asset_paths[clip.path] = clip_file_copy # This stuff is already md5 hashed, so no duplicate problems here
-        
-        
 
     def get_unique_name(self, file_path, file_name):
         (name, ext) = os.path.splitext(file_name)
         return md5.new(file_path).hexdigest() + ext
        
-    # --------------------------------------------------------------------------- Compact project
-    def is_compact_project(self):
-        return (self.compact_project_data != None)
-        
-    def set_as_compact_project(self, root_folder_path):
-        self.compact_project_data = CompactProject(root_folder_path)
-        self.compact_project_data.create_sub_folders()
-
-    def update_compact_last_save_path(self):
-        # This used at project creation time to get save path for the initialproject save.
-        # Compact projects always have atleast one saved project created when peroject 
-        # is created or converted
-        self.last_save_path = self.compact_project_data.projects_path() + self.name
-
-    def convert_to_compact_project(self, root_folder_path):
-        self.set_as_compact_project(root_folder_path)
-        self.compact_project_data.convert_project_data_to_compact(self)
-
-    def convert_to_standart_project(self):
-        self.compact_project_data = None
-        projectaction.save_project()
-        projectaction.actually_load_project(self.last_save_path)
-        
-        
 
 
 class CompactProject:
@@ -443,7 +401,6 @@ class CompactProject:
                         clip.path = clip_paths[clip.path]
 
         # Save the new 'Compact' project
-        project.update_compact_last_save_path()
         projectaction.save_project()
         
         # Load project
@@ -566,17 +523,14 @@ class Thumbnailer:
     def set_context(self, profile):
         self.profile = profile
     
-    def write_image(self, file_path, compact_project_data=None):
+    def write_image(self, file_path):
         """
         Writes thumbnail image from file producer
         """
         # Get data
         md_str = md5.new(file_path).hexdigest()
-        if compact_project_data == None:
-            thumbnail_path = editorpersistance.prefs.thumbnail_folder + "/" + md_str +  ".png"
-        else: # Thumbnails for 'Compact' projects are saved in project folder
-            thumbnail_path = compact_project_data.thumbnails_path() + md_str +  ".png"
-            
+        thumbnail_path = editorpersistance.prefs.thumbnail_folder + "/" + md_str +  ".png"
+
         # Create consumer
         consumer = mlt.Consumer(self.profile, "avformat", 
                                      thumbnail_path)
