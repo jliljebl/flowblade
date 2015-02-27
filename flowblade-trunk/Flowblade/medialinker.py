@@ -29,6 +29,7 @@ import subprocess
 import sys
 import threading
 
+import appconsts
 import dialogs
 import dialogutils
 import editorstate
@@ -302,8 +303,9 @@ class MediaRelinkListView(gtk.VBox):
                     relink = ""
                 else:
                     relink = media_asset.relink_path
-                row_data = [media_asset.media_file.path,
-                            relink]
+                
+                row_data = [media_asset.orig_path, relink]
+                
                 self.storemodel.append(row_data)
                 self.assets.append(media_asset)
         
@@ -339,16 +341,31 @@ class MediaRelinkListView(gtk.VBox):
 # ----------------------------------------------------------- logic
 class MediaAsset:
 
-    def __init__(self, media_file):
-        self.media_file = media_file
-        self.orig_file_exists = os.path.isfile(media_file.path) 
+    def __init__(self, orig_path):
+        self.orig_path = orig_path
+        self.orig_file_exists = os.path.isfile(orig_path) 
         self.relink_path = None
 
 def _update_media_assets():
     new_assets = []
+    asset_paths = {}
+            
+    # Get media file media assets
     for media_file_id, media_file in target_project.media_files.iteritems():
-        new_assets.append(MediaAsset(media_file))
-    
+        new_assets.append(MediaAsset(media_file.path))
+        asset_paths[media_file.path] = media_file.path
+            
+    # Get clip media assets
+    for seq in target_project.sequences:
+        for track in seq.tracks:
+            for i in range(0, len(track.clips)):
+                clip = track.clips[i]
+                # Only producer clips are affected
+                if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
+                    if not(clip.path in asset_paths):
+                        clip.append(MediaAsset(clip.path))
+                        asset_paths[media_file.path] = clip.path
+                            
     global media_assets
     media_assets = new_assets
         
@@ -410,19 +427,39 @@ def _save_as_dialog_callback(dialog, response_id):
         target_project.last_save_path = filenames[0]
         target_project.name = os.path.basename(filenames[0])
         
+        _relink_project_media_paths()
+            
         persistance.save_project(target_project, target_project.last_save_path)
         dialog.destroy()
                 
         dialogutils.info_message("Relinked version of the Project saved!", 
-                                 "To test the project, close this tool and load the relinked version.", 
+                                 "To test the project, close this tool and open the relinked version in Flowblade.", 
                                  linker_window)
     else:
         dialog.destroy()
 
-def _update_project_media_paths():
+def _relink_project_media_paths():
+    # Collect relink paths
+    relinked_paths = {}
     for media_asset in media_assets:
         if media_asset.relink_path != None:
-            media_asset.media_file.path = media_asset.relink_path
+            relinked_paths[media_asset.orig_path] = media_asset.relink_path
+            
+    # Relink media file media assets
+    for media_file_id, media_file in target_project.media_files.iteritems():
+        if media_file.path in relinked_paths:
+            media_file.path = relinked_paths[media_file.path]
+
+    # Relink clip media assets
+    for seq in target_project.sequences:
+        for track in seq.tracks:
+            for i in range(0, len(track.clips)):
+                clip = track.clips[i]
+                # Only producer clips are affected
+                if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
+                    if clip.path in relinked_paths:
+                        clip.path = relinked_paths[clip.path]
+
 
 # ----------------------------------------------------------- main
 def main(root_path, force_launch=False):
