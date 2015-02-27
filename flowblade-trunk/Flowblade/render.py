@@ -544,13 +544,8 @@ def render_single_track_transition_clip(transition_producer, encoding_option_ind
     # Profile
     profile = PROJECT().profile
 
-    # Get path for created file
-    if PROJECT().compact_project_data == None:
-        folder = editorpersistance.prefs.render_folder
-    else:
-        # Rendered files for 'Compact' projects are saved in project media folder
-        folder = PROJECT().compact_project_data.media_path().rstrip("/")
-        
+    folder = editorpersistance.prefs.render_folder
+
     file_name = md5.new(str(os.urandom(32))).hexdigest()
     write_file = folder + "/"+ file_name + file_ext
 

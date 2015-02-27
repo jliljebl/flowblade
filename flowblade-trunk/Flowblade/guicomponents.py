@@ -1366,8 +1366,6 @@ def display_media_file_popup_menu(media_file, callback, event):
     _add_separetor(media_file_menu)
     media_file_menu.add(_get_menu_item(_("Render Slow/Fast Motion File"), callback, ("Render Slow/Fast Motion File", media_file, event)))
     item = _get_menu_item(_("Render Proxy File"), callback, ("Render Proxy File", media_file, event))
-    if PROJECT().compact_project_data != None:
-        item.set_sensitive(False)
     media_file_menu.add(item)
     
     media_file_menu.popup(None, None, None, event.button, event.time)
