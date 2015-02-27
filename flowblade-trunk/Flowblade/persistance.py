@@ -374,7 +374,7 @@ def load_project(file_path, icons_and_thumnails=True, load_for_relink=False):
             media_file.path = get_relative_path(_load_file_path, media_file.path)
             if media_file.path == NOT_FOUND:
                 pass
-            print "madia file relative path:", media_file.path
+            print "media file relative path:", media_file.path
                      
         # MediaFile object file and thumbnail paths are always re-created dynamically on load 
         # for 'Compact' projects.
