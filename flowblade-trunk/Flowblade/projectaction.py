@@ -28,6 +28,7 @@ pygtk.require('2.0');
 import gtk
 import glib
 
+import datetime
 import md5
 import os
 from os import listdir
@@ -354,7 +355,9 @@ def _save_as_dialog_callback(dialog, response_id):
         dialog.destroy()
 
 def save_backup_snapshot():
-    dialogs.save_backup_snapshot(_save_backup_snapshot_dialog_callback)
+    parts = PROJECT().name.split(".")
+    name = parts[0] + datetime.datetime.now().strftime("-%y%m%d") + ".flb"
+    dialogs.save_backup_snapshot(name, _save_backup_snapshot_dialog_callback)
 
 def _save_backup_snapshot_dialog_callback(dialog, response_id, project_folder, name_entry):  
     if response_id == gtk.RESPONSE_ACCEPT:
@@ -391,7 +394,7 @@ class SnaphotSaveThread(threading.Thread):
         project_txt = _("Saving project file")
         
         gtk.gdk.threads_enter()
-        dialog = dialogs.save_snaphot_dialog(copy_txt, project_txt)
+        dialog = dialogs.save_snaphot_progess(copy_txt, project_txt)
         gtk.gdk.threads_leave()
         
         media_folder = self.root_folder_path +  "media/"
@@ -406,7 +409,7 @@ class SnaphotSaveThread(threading.Thread):
             # Copy asset file and fix path
             directory, file_name = os.path.split(media_file.path)
             gtk.gdk.threads_enter()
-            dialog.media_copy_info.set_text(copy_txt + "   " +  file_name)
+            dialog.media_copy_info.set_text(copy_txt + "... " +  file_name)
             gtk.gdk.threads_leave()
             media_file_copy = media_folder + file_name
             if media_file_copy in asset_paths: # Create different filename for files 
@@ -432,7 +435,7 @@ class SnaphotSaveThread(threading.Thread):
                             asset_paths[clip.path] = clip_file_copy # This stuff is already md5 hashed, so no duplicate problems here
 
         gtk.gdk.threads_enter()
-        dialog.media_copy_info.set_text(copy_txt + "   " +  u"\u2713")
+        dialog.media_copy_info.set_text(copy_txt + "    " +  u"\u2713")
         gtk.gdk.threads_leave()
         
         save_path = self.root_folder_path + self.project_name + ".flb"
@@ -442,7 +445,7 @@ class SnaphotSaveThread(threading.Thread):
         persistance.snapshot_paths = None
 
         gtk.gdk.threads_enter()
-        dialog.saving_project_info.set_text(project_txt + "   " +  u"\u2713")
+        dialog.saving_project_info.set_text(project_txt + "    " +  u"\u2713")
         gtk.gdk.threads_leave()
 
         time.sleep(2)

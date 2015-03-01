@@ -153,7 +153,7 @@ def _new_project_profile_changed(combo_box, profile_info_box):
     profile_info_box.show_all()
     info_panel.show()
 
-def save_backup_snapshot(callback):
+def save_backup_snapshot(name, callback):
     dialog = gtk.Dialog(_("Save Project Backup Snapshot"), None,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                         (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
@@ -169,7 +169,7 @@ def save_backup_snapshot(callback):
 
     compact_name_entry = gtk.Entry(30)
     compact_name_entry.set_width_chars(30)
-    compact_name_entry.set_text(_("initial_save"))
+    compact_name_entry.set_text(name)
     
     compact_name_label = gtk.Label(_("Project File Name:"))
     
@@ -1288,7 +1288,7 @@ def media_file_dialog(text, callback, multiple_select, data=None):
     file_select.set_modal(True)
     file_select.show()
 
-def save_snaphot_dialog(media_copy_txt, project_txt):
+def save_snaphot_progess(media_copy_txt, project_txt):
     dialog = gtk.Window(gtk.WINDOW_TOPLEVEL)
     dialog.set_title(_("Saving project snapshot"))
     
