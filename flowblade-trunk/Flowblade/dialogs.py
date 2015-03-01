@@ -1287,3 +1287,29 @@ def media_file_dialog(text, callback, multiple_select, data=None):
 
     file_select.set_modal(True)
     file_select.show()
+
+def save_snaphot_dialog(media_copy_txt, project_txt):
+    dialog = gtk.Window(gtk.WINDOW_TOPLEVEL)
+    dialog.set_title(_("Saving project snapshot"))
+    
+    dialog.media_copy_info = gtk.Label(media_copy_txt)
+    media_copy_row = guiutils.get_left_justified_box([dialog.media_copy_info])
+
+    dialog.saving_project_info = gtk.Label(project_txt)
+    project_row = guiutils.get_left_justified_box([dialog.saving_project_info])
+
+    progress_vbox = gtk.VBox(False, 2)
+    progress_vbox.pack_start(media_copy_row, False, False, 0)
+    progress_vbox.pack_start(project_row, True, True, 0)
+
+    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment.set_padding(12, 12, 12, 12)
+    alignment.add(progress_vbox)
+
+    dialog.add(alignment)
+    dialog.set_default_size(400, 70)
+    dialog.set_position(gtk.WIN_POS_CENTER)
+    dialog.show_all()
+
+    return dialog
+    

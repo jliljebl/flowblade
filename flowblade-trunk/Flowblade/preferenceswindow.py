@@ -30,7 +30,7 @@ import gui
 import guiutils
 import mltprofiles
 
-PREFERENCES_WIDTH = 630
+PREFERENCES_WIDTH = 730
 PREFERENCES_HEIGHT = 300
 PREFERENCES_LEFT = 410
 
@@ -114,6 +114,12 @@ def _general_options_panel(folder_select_clicked_cb, render_folder_select_clicke
         autosave_combo.append_text(desc)
     autosave_combo.set_active(prefs.auto_save_delay_value_index)
 
+    load_order_combo  = gtk.combo_box_new_text()
+    load_order_combo.append_text("Absolute paths first, relative second")
+    load_order_combo.append_text("Relative paths first, absolute second")
+    load_order_combo.append_text("Absolute paths only")
+    load_order_combo.set_active(prefs.media_load_order)
+
     # Layout
     row1 = guiutils.get_two_column_box(gtk.Label(_("Default Profile:")), default_profile_combo, PREFERENCES_LEFT)
     row2 = guiutils.get_checkbox_row_box(open_in_last_opened_check, gtk.Label(_("Remember last media directory")))
@@ -122,8 +128,8 @@ def _general_options_panel(folder_select_clicked_cb, render_folder_select_clicke
     row5 = guiutils.get_checkbox_row_box(open_in_last_rendered_check, gtk.Label(_("Remember last render directory")))
     row6 = guiutils.get_two_column_box(gtk.Label(_("Autosave for crash recovery every:")), autosave_combo, PREFERENCES_LEFT)
     row8 = guiutils.get_two_column_box(gtk.Label(_("Rendered Clips folder:")), render_folder_select, PREFERENCES_LEFT)
+    row9 = guiutils.get_two_column_box(gtk.Label(_("Media look-up order on load:")), load_order_combo, PREFERENCES_LEFT)
 
-    
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row6, False, False, 0)
@@ -132,13 +138,14 @@ def _general_options_panel(folder_select_clicked_cb, render_folder_select_clicke
     vbox.pack_start(row3, False, False, 0)
     vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row8, False, False, 0)
+    vbox.pack_start(row9, False, False, 0)
     vbox.pack_start(gtk.Label(), True, True, 0)
-    
+
     align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     align.set_padding(12, 0, 12, 12)
     align.add(vbox)
 
-    return align, (default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin)
+    return align, (default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo)
 
 def _edit_prefs_panel():
     prefs = editorpersistance.prefs

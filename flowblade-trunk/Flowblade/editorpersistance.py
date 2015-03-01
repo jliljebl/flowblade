@@ -160,7 +160,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     # Unpack widgets
     gen_opts_widgets, edit_prefs_widgets, view_prefs_widgets = widgets_tuples_tuple
 
-    default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin = gen_opts_widgets
+    default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo = gen_opts_widgets
     auto_play_in_clip_monitor_check, auto_center_check, grfx_insert_length_spin, trim_exit_click, trim_quick_enter, remember_clip_frame = edit_prefs_widgets
     disp_splash, buttons_style, dark_theme = view_prefs_widgets
 
@@ -169,6 +169,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.remember_last_render_dir = open_in_last_rendered_check.get_active()
     prefs.default_profile_name = mltprofiles.get_profile_name_for_index(default_profile_combo.get_active())
     prefs.undos_max = undo_max_spin.get_adjustment().get_value()
+    prefs.media_load_order = load_order_combo.get_active()
 
     prefs.auto_play_in_clip_monitor = auto_play_in_clip_monitor_check.get_active()
     prefs.auto_center_on_play_stop = auto_center_check.get_active()
@@ -242,4 +243,4 @@ class EditorPreferences:
         self.jack_start_up_op = appconsts.JACK_ON_START_UP_NO
         self.jack_frequency = 48000
         self.jack_output_type = appconsts.JACK_OUT_AUDIO
-
+        self.media_load_order = appconsts.LOAD_ABSOLUTE_FIRST

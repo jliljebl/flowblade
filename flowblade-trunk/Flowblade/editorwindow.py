@@ -257,8 +257,6 @@ class EditorWindow:
                     <menuitem action='ChangeSequenceTracks'/>
                     <menuitem action='Watermark'/>
                     <separator/>
-                    <menuitem action='JackAudio'/>
-                    <separator/>
                     <menuitem action='ProfilesManager'/>
                     <menuitem action='Preferences'/>
                 </menu>
@@ -292,6 +290,7 @@ class EditorWindow:
                 <menu action='ToolsMenu'>
                     <menuitem action='Titler'/>
                     <menuitem action='AudioMix'/>
+                    <separator/>
                     <menuitem action='MediaLink'/>
                 </menu>
                 <menu action='HelpMenu'>
