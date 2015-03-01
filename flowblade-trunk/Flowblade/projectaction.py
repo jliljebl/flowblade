@@ -26,6 +26,7 @@ import gobject
 import pygtk
 pygtk.require('2.0');
 import gtk
+import glib
 
 import md5
 import os
@@ -362,58 +363,95 @@ def _save_backup_snapshot_dialog_callback(dialog, response_id, project_folder, n
         if not (os.listdir(root_path) == []):
             dialog.destroy()
             primary_txt = _("Selected folder contains files")
-            secondary_txt = _("When saving a back-up snapshot for project, the selected folder\nhas to be empty.")
+            secondary_txt = _("When saving a back-up snapshot of the project, the selected folder\nhas to be empty.")
             dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
             return
 
         name = name_entry.get_text()
         dialog.destroy()
         
-        _do_snapshot_save(root_path + "/", name)
+        glib.idle_add(lambda : _do_snapshot_save(root_path + "/", name))
 
     else:
         dialog.destroy()
 
 def _do_snapshot_save(root_folder_path, project_name):
-    media_folder = root_folder_path +  "media/"
+    save_thread = SnaphotSaveThread(root_folder_path, project_name)
+    save_thread.start()
 
-    d = os.path.dirname(media_folder)
-    os.mkdir(d)
+class SnaphotSaveThread(threading.Thread):
+    
+    def __init__(self, root_folder_path, project_name):
+        self.root_folder_path = root_folder_path
+        self.project_name = project_name
+        threading.Thread.__init__(self)
 
-    asset_paths = {}
+    def run(self):
+        copy_txt = _("Copying project media assets")
+        project_txt = _("Saving project file")
+        
+        gtk.gdk.threads_enter()
+        dialog = dialogs.save_snaphot_dialog(copy_txt, project_txt)
+        gtk.gdk.threads_leave()
+        
+        media_folder = self.root_folder_path +  "media/"
 
-    # Copy media files
-    for idkey, media_file in PROJECT().media_files.items():
-        # Copy asset file and fix path
-        directory, file_name = os.path.split(media_file.path)
-        media_file_copy = media_folder + file_name
-        if media_file_copy in asset_paths: # Create different filename for files 
-                                           # that have same filename but different path
-            file_name = get_snapshot_unique_name(media_file.path, file_name)
+        d = os.path.dirname(media_folder)
+        os.mkdir(d)
+
+        asset_paths = {}
+
+        # Copy media files
+        for idkey, media_file in PROJECT().media_files.items():
+            # Copy asset file and fix path
+            directory, file_name = os.path.split(media_file.path)
+            gtk.gdk.threads_enter()
+            dialog.media_copy_info.set_text(copy_txt + "   " +  file_name)
+            gtk.gdk.threads_leave()
             media_file_copy = media_folder + file_name
-            
-        shutil.copyfile(media_file.path, media_file_copy)
-        asset_paths[media_file.path] = media_file_copy
+            if media_file_copy in asset_paths: # Create different filename for files 
+                                               # that have same filename but different path
+                file_name = get_snapshot_unique_name(media_file.path, file_name)
+                media_file_copy = media_folder + file_name
+                
+            shutil.copyfile(media_file.path, media_file_copy)
+            asset_paths[media_file.path] = media_file_copy
 
-    # Copy clip producers paths
-    for seq in PROJECT().sequences:
-        for track in seq.tracks:
-            for i in range(0, len(track.clips)):
-                clip = track.clips[i]
-                # Only producer clips are affected
-                if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
-                    directory, file_name = os.path.split(clip.path)
-                    clip_file_copy = media_folder + file_name
-                    if not os.path.isfile(clip_file_copy):
-                        print "clip_file_copy", clip_file_copy
-                        shutil.copyfile(clip.path, clip_file_copy) # only rendered files are copied here
-                        asset_paths[clip.path] = clip_file_copy # This stuff is already md5 hashed, so no duplicate problems here
+        # Copy clip producers paths
+        for seq in PROJECT().sequences:
+            for track in seq.tracks:
+                for i in range(0, len(track.clips)):
+                    clip = track.clips[i]
+                    # Only producer clips are affected
+                    if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
+                        directory, file_name = os.path.split(clip.path)
+                        clip_file_copy = media_folder + file_name
+                        if not os.path.isfile(clip_file_copy):
+                            print "clip_file_copy", clip_file_copy
+                            shutil.copyfile(clip.path, clip_file_copy) # only rendered files are copied here
+                            asset_paths[clip.path] = clip_file_copy # This stuff is already md5 hashed, so no duplicate problems here
 
-    save_path = root_folder_path + project_name + ".flb"
+        gtk.gdk.threads_enter()
+        dialog.media_copy_info.set_text(copy_txt + "   " +  u"\u2713")
+        gtk.gdk.threads_leave()
+        
+        save_path = self.root_folder_path + self.project_name + ".flb"
 
-    persistance.snapshot_paths = asset_paths
-    persistance.save_project(PROJECT(), save_path)
-    persistance.snapshot_paths = None
+        persistance.snapshot_paths = asset_paths
+        persistance.save_project(PROJECT(), save_path)
+        persistance.snapshot_paths = None
+
+        gtk.gdk.threads_enter()
+        dialog.saving_project_info.set_text(project_txt + "   " +  u"\u2713")
+        gtk.gdk.threads_leave()
+
+        time.sleep(2)
+
+        gtk.gdk.threads_enter()
+        dialog.destroy()
+        gtk.gdk.threads_leave()
+        
+
 
 def get_snapshot_unique_name(file_path, file_name):
     (name, ext) = os.path.splitext(file_name)

@@ -235,15 +235,16 @@ class MediaLinkerWindow(gtk.Window):
             return None
         
         return self.relink_list.assets[row]
-         
+
+
 class MediaRelinkListView(gtk.VBox):
 
     def __init__(self):
         gtk.VBox.__init__(self)
 
         self.assets = [] # Used to store list displayd data items
-        
-       # Datamodel: icon, text, text
+
+        # Datamodel: text, text
         self.storemodel = gtk.ListStore(str, str)
  
         # Scroll container
@@ -368,15 +369,17 @@ def _update_media_assets():
                             
     global media_assets
     media_assets = new_assets
-        
+
 def _media_asset_menu_item_selected(widget, data):
     msg, row = data
     media_asset = linker_window.relink_list.assets[row]
-    print media_asset, msg
+
     if msg == "set relink":
         _set_relink_path(media_asset)
     if msg == "delete relink":
         _delete_relink_path(media_asset)
+    if msg == "show path":
+        _show_paths(media_asset)
 
 def _set_button_pressed():
     media_asset = linker_window.get_selected_media_asset()
@@ -385,7 +388,8 @@ def _set_button_pressed():
     _set_relink_path(media_asset)
 
 def _set_relink_path(media_asset):
-    dialogs.media_file_dialog(_("Select Media File To Relink"), _select_relink_path_dialog_callback, False, media_asset)
+    file_name = os.path.basename(media_asset.orig_path)
+    dialogs.media_file_dialog(_("Select Media File To Relink To") + " " + file_name, _select_relink_path_dialog_callback, False, media_asset)
 
 def _select_relink_path_dialog_callback(file_select, response_id, media_asset):
     filenames = file_select.get_filenames()
@@ -409,6 +413,21 @@ def _delete_relink_path(media_asset):
     media_asset.relink_path = None
     linker_window.relink_list.fill_data_model()
 
+def _show_paths(media_asset):
+    orig_path_label = gtk.Label(_("<b>Original path:</b> "))
+    orig_path_label.set_use_markup(True)
+    orig_path = guiutils.get_left_justified_box([orig_path_label, gtk.Label(media_asset.orig_path)])
+    relink_path_label = gtk.Label(_("<b>Relink path:</b> "))
+    relink_path_label.set_use_markup(True)
+    relink_path = guiutils.get_left_justified_box([relink_path_label, gtk.Label(media_asset.relink_path)])
+    
+    panel = gtk.VBox()
+    panel.pack_start(orig_path, False, False, 0)
+    panel.pack_start(guiutils.pad_label(12, 12), False, False, 0)
+    panel.pack_start(relink_path, False, False, 0)
+    
+    dialogutils.panel_ok_dialog("Media Asset Paths", panel)
+        
 def _save_project_pressed():
     if  target_project.last_save_path != None:
         open_dir = os.path.dirname(target_project.last_save_path)
@@ -455,7 +474,6 @@ def _relink_project_media_paths():
         for track in seq.tracks:
             for i in range(0, len(track.clips)):
                 clip = track.clips[i]
-                # Only producer clips are affected
                 if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
                     if clip.path in relinked_paths:
                         clip.path = relinked_paths[clip.path]

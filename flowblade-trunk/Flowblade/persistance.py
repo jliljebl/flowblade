@@ -39,6 +39,7 @@ import time
 
 import appconsts
 import editorstate
+import editorpersistance
 import mltprofiles
 import mltfilters
 import mlttransitions
@@ -355,12 +356,13 @@ def load_project(file_path, icons_and_thumnails=True, load_for_relink=False):
         if project.SAVEFILE_VERSION < 4:
             FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
         media_file.current_frame = 0 # this is always reset on load, value is not considered persistent
-        
-        if not os.path.isfile(media_file.path):
-            media_file.path = get_relative_path(_load_file_path, media_file.path)
-            if media_file.path == NOT_FOUND:
-                pass
-            print "media file relative path:", media_file.path
+        media_file.path = get_media_asset_path(media_file.path, _load_file_path)
+            
+        #if not os.path.isfile(media_file.path):
+        #    media_file.path = get_relative_path(_load_file_path, media_file.path)
+        #    if media_file.path == NOT_FOUND:
+        #        pass
+        #    print "media file relative path:", media_file.path
             
     # Add icons to media files
     if icons_and_thumnails == True:
@@ -459,9 +461,12 @@ def fill_track_mlt(mlt_track, py_track):
         # normal clip
         if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
             orig_path = clip.path # Save the path for error message
-            if not os.path.isfile(clip.path):
-                clip.path = get_relative_path(_load_file_path, clip.path)
-                print "clip relative path:", clip.path
+            
+            clip.path = get_media_asset_path(clip.path, _load_file_path)
+            #if not os.path.isfile(clip.path):
+            #    clip.path = get_relative_path(_load_file_path, clip.path)
+            #    print "clip relative path:", clip.path
+                
             mlt_clip = sequence.create_file_producer_clip(clip.path)
             if mlt_clip == None:
                 raise FileProducerNotFoundError(orig_path)
@@ -483,7 +488,7 @@ def fill_track_mlt(mlt_track, py_track):
             print clip.__dict__
 
         mlt_clip.selected = False # This transient state gets saved and 
-                                  # we want everything unselected to begin with
+                                   # we want everything unselected to begin with
         # Mute 
         if clip.mute_filter != None:
             mute_filter = mltfilters.create_mute_volume_filter(sequence) 
@@ -538,7 +543,6 @@ def append_clip(track, clip, clip_in, clip_out):
     track.append(clip, clip_in, clip_out) # mlt
     resync.clip_added_to_timeline(clip, track)
 
-
 # --------------------------------------------------------- watermarks
 def handle_seq_watermark(seq):    
     if hasattr(seq, "watermark_file_path"):
@@ -550,21 +554,37 @@ def handle_seq_watermark(seq):
         seq.watermark_filter = None
         seq.watermark_file_path = None
 
-
 # --------------------------------------------------------- relative paths
+def get_media_asset_path(path, load_file_path):
+    # Load order absolute, relative
+    if editorpersistance.prefs.media_load_order == appconsts.LOAD_ABSOLUTE_FIRST:
+        if not os.path.isfile(path):
+            path = get_relative_path(load_file_path, path)
+        return path
+    # Load order relative, absolute
+    elif editorpersistance.prefs.media_load_order == appconsts.LOAD_RELATIVE_FIRST:
+        abspath = path
+        path = get_relative_path(load_file_path, path)
+        if path == NOT_FOUND:
+            path = abspath
+        return path
+    else: # Only look in existing absolute path
+        return path
+
 def get_relative_path(project_file_path, asset_path):
+    name = os.path.basename(asset_path)
+    _show_msg("Relative file search for "  + name + "...", delay=0.0)
     matches = []
     asset_folder, asset_file_name = os.path.split(asset_path)
     project_folder, project_file_name =  os.path.split(project_file_path)
-
+    
     for root, dirnames, filenames in os.walk(project_folder):
         for filename in fnmatch.filter(filenames, asset_file_name):
             matches.append(os.path.join(root, filename))
-
     if len(matches) == 1:
         return matches[0]
     elif  len(matches) > 1:
-        # some error handling
+        # some error handling may be needed?
         return matches[0]
     else:
         return NOT_FOUND # no relative path found
