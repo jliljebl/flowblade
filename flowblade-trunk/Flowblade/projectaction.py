@@ -454,7 +454,12 @@ class SnaphotSaveThread(threading.Thread):
         dialog.destroy()
         gtk.gdk.threads_leave()
         
+        project_event = projectdata.ProjectEvent(projectdata.EVENT_SAVED_SNAPSHOT, self.root_folder_path)
+        PROJECT().events.append(project_event)
 
+        gtk.gdk.threads_enter()
+        projectinfogui.update_project_info()
+        gtk.gdk.threads_leave()
 
 def get_snapshot_unique_name(file_path, file_name):
     (name, ext) = os.path.splitext(file_name)

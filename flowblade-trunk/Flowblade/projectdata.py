@@ -57,6 +57,7 @@ EVENT_CREATED_BY_SAVING = 1
 EVENT_SAVED = 2
 EVENT_SAVED_AS = 3
 EVENT_RENDERED = 4
+EVENT_SAVED_SNAPSHOT = 5
 
 thumbnailer = None
 
@@ -459,7 +460,7 @@ class ProjectEvent:
         self.data = data
 
     def get_date_str(self):
-        date_str = self.timestamp.strftime('%d %B, %Y - %H:%M')
+        date_str = self.timestamp.strftime('%y-%m-%d %H:%M')
         date_str = date_str.lstrip('0')
         return date_str
 
@@ -475,6 +476,8 @@ class ProjectEvent:
             return (_("Saved as ") + name, path)
         elif self.event_type == EVENT_RENDERED:
             return (_("Rendered "), self.data)
+        elif self.event_type == EVENT_SAVED_SNAPSHOT:
+            return (_("Saved backup snapshot"), self.data)
         else:
             return ("Unknown project event, bug or data corruption", None)
 
