@@ -138,7 +138,6 @@ We originally did producer creation using elifs and now using pickle() for save/
 requires keeping this around until atleast 2017 for backwards compatibility.
 """
 def _create_patten_producer_old_style(profile, bin_clip):
-    print "old style"
     if bin_clip.patter_producer_type == COLOR_CLIP:
         clip = create_color_producer(profile, bin_clip.gdk_color_str)
     elif bin_clip.patter_producer_type == NOISE_CLIP:
@@ -170,7 +169,7 @@ def _create_ebubars_producer(profile):
 # --------------------------------------------------- END DECPRECATED producer create methods
 
 # --------------------------------------------------- bin media objects
-class AbstractBinClip:
+class AbstractBinClip: # wtf not extends projectdata.MediaFile?
     """
     A pattern producer object presnt in Media Bin.
     """

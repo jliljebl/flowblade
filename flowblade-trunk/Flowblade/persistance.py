@@ -147,7 +147,8 @@ def save_project(project, file_path):
 
         # Change paths when doing snapshot save
         if snapshot_paths != None:
-            s_media_file.path = snapshot_paths[s_media_file.path] 
+            if s_media_file.type != appconsts.PATTERN_PRODUCER:
+                s_media_file.path = snapshot_paths[s_media_file.path] 
 
         media_files[s_media_file.id] = s_media_file
     s_proj.media_files = media_files
@@ -356,13 +357,8 @@ def load_project(file_path, icons_and_thumnails=True, load_for_relink=False):
         if project.SAVEFILE_VERSION < 4:
             FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
         media_file.current_frame = 0 # this is always reset on load, value is not considered persistent
-        media_file.path = get_media_asset_path(media_file.path, _load_file_path)
-            
-        #if not os.path.isfile(media_file.path):
-        #    media_file.path = get_relative_path(_load_file_path, media_file.path)
-        #    if media_file.path == NOT_FOUND:
-        #        pass
-        #    print "media file relative path:", media_file.path
+        if media_file.type != appconsts.PATTERN_PRODUCER:
+            media_file.path = get_media_asset_path(media_file.path, _load_file_path)
             
     # Add icons to media files
     if icons_and_thumnails == True:
@@ -463,9 +459,6 @@ def fill_track_mlt(mlt_track, py_track):
             orig_path = clip.path # Save the path for error message
             
             clip.path = get_media_asset_path(clip.path, _load_file_path)
-            #if not os.path.isfile(clip.path):
-            #    clip.path = get_relative_path(_load_file_path, clip.path)
-            #    print "clip relative path:", clip.path
                 
             mlt_clip = sequence.create_file_producer_clip(clip.path)
             if mlt_clip == None:
