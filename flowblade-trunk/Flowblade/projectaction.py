@@ -406,6 +406,9 @@ class SnaphotSaveThread(threading.Thread):
 
         # Copy media files
         for idkey, media_file in PROJECT().media_files.items():
+            if media_file.type == appconsts.PATTERN_PRODUCER:
+                continue
+
             # Copy asset file and fix path
             directory, file_name = os.path.split(media_file.path)
             gtk.gdk.threads_enter()
@@ -430,7 +433,10 @@ class SnaphotSaveThread(threading.Thread):
                         directory, file_name = os.path.split(clip.path)
                         clip_file_copy = media_folder + file_name
                         if not os.path.isfile(clip_file_copy):
-                            print "clip_file_copy", clip_file_copy
+                            directory, file_name = os.path.split(clip.path)
+                            gtk.gdk.threads_enter()
+                            dialog.media_copy_info.set_text(copy_txt + "... " +  file_name)
+                            gtk.gdk.threads_leave()
                             shutil.copyfile(clip.path, clip_file_copy) # only rendered files are copied here
                             asset_paths[clip.path] = clip_file_copy # This stuff is already md5 hashed, so no duplicate problems here
 
@@ -438,7 +444,7 @@ class SnaphotSaveThread(threading.Thread):
         dialog.media_copy_info.set_text(copy_txt + "    " +  u"\u2713")
         gtk.gdk.threads_leave()
         
-        save_path = self.root_folder_path + self.project_name + ".flb"
+        save_path = self.root_folder_path + self.project_name
 
         persistance.snapshot_paths = asset_paths
         persistance.save_project(PROJECT(), save_path)
