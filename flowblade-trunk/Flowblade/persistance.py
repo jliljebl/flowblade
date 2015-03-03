@@ -44,6 +44,7 @@ import mltprofiles
 import mltfilters
 import mlttransitions
 import miscdataobjects
+import propertyparse
 import resync
 
 # Unpickleable attributes for all objects
@@ -410,6 +411,7 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
 
             # Copy and set param values
             compositor.transition.properties = copy.deepcopy(py_compositor.transition.properties)
+            _fix_wipe_relative_path(compositor)
             compositor.transition.update_editable_mlt_properties()
     
             compositor.transition.set_tracks(py_compositor.transition.a_track, py_compositor.transition.b_track)
@@ -634,6 +636,16 @@ def FIX_MISSING_PROJECT_ATTRS(project):
     if (not(hasattr(project, "media_log_groups"))):
         project.media_log_groups = []
 
+def _fix_wipe_relative_path(compositor):
+    if compositor.type_id == "##wipe": # Wipe may have user luma and needs to be looked up relatively
+        _set_wipe_res_path(compositor, "resource")
+    if compositor.type_id == "##region": # Wipe may have user luma and needs to be looked up relatively
+        _set_wipe_res_path(compositor, "composite.luma")
+
+def _set_wipe_res_path(compositor, res_property):
+    res_path = propertyparse.get_property_value(compositor.transition.properties, res_property)
+    new_path = get_media_asset_path(res_path, _load_file_path)
+    propertyparse.set_property_value(compositor.transition.properties, res_property, new_path)
 
 # List is used to convert SAVEFILE_VERSIONs 1 and 2 to SAVEFILE_VERSIONs 3 -> n by getting type_id string for compositor index 
 compositors_index_to_type_id = ["##affine","##opacity_kf","##pict_in_pict", "##region","##wipe", "##add",

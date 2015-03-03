@@ -57,6 +57,7 @@ import movemodes
 import persistance
 import projectdata
 import projectinfogui
+import propertyparse
 import proxyediting
 import render
 import rendergui
@@ -439,6 +440,11 @@ class SnaphotSaveThread(threading.Thread):
                             gtk.gdk.threads_leave()
                             shutil.copyfile(clip.path, clip_file_copy) # only rendered files are copied here
                             asset_paths[clip.path] = clip_file_copy # This stuff is already md5 hashed, so no duplicate problems here
+            for compositor in seq.compositors:
+                if compositor.type_id == "##wipe": # Wipe may have user luma and needs to be looked up relatively
+                    copy_comp_resourse_file(compositor, "resource", media_folder)
+                if compositor.type_id == "##region": # Wipe may have user luma and needs to be looked up relatively
+                    copy_comp_resourse_file(compositor, "composite.luma", media_folder)
 
         gtk.gdk.threads_enter()
         dialog.media_copy_info.set_text(copy_txt + "    " +  u"\u2713")
@@ -470,7 +476,14 @@ class SnaphotSaveThread(threading.Thread):
 def get_snapshot_unique_name(file_path, file_name):
     (name, ext) = os.path.splitext(file_name)
     return md5.new(file_path).hexdigest() + ext
-        
+
+def copy_comp_resourse_file(compositor, res_property, media_folder):
+    res_path = propertyparse.get_property_value(compositor.transition.properties, res_property)
+    directory, file_name = os.path.split(res_path)
+    res_file_copy = media_folder + file_name
+    if not os.path.isfile(res_file_copy):
+        shutil.copyfile(res_path, res_file_copy)
+                        
 def remove_save_icon():
     gobject.source_remove(save_icon_remove_event_id)
     updater.set_info_icon(None)
