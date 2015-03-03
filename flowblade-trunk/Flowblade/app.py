@@ -452,6 +452,8 @@ def init_editor_state():
 
     #editorstate.PLAYER().jack_output_on()
 
+    proxyediting.set_menu_to_proxy_state()
+
     # Enable edit action GUI updates
     edit.do_gui_update = True
 

@@ -461,6 +461,12 @@ def show_proxy_manager_dialog():
     global manager_window
     manager_window = ProxyManagerDialog()
 
+def set_menu_to_proxy_state():
+    if editorstate.PROJECT().proxy_data.proxy_mode == appconsts.USE_ORIGINAL_MEDIA:
+        gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/SaveSnapshot').set_sensitive(True)
+    else:
+        gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/SaveSnapshot').set_sensitive(False)
+
 def create_proxy_files_pressed():
     media_file_widgets = gui.media_list_view.get_selected_media_objects()
     if len(media_file_widgets) == 0:
@@ -678,6 +684,7 @@ def _converting_proxy_mode_done():
     manager_window.update_proxy_mode_display()
     gui.media_list_view.widget.queue_draw()
     gui.tline_left_corner.update_gui()
+    set_menu_to_proxy_state()
 
 class ProxyProjectLoadThread(threading.Thread):
 
