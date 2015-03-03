@@ -426,7 +426,7 @@ def init_editor_state():
     gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(False)
     gui.editor_window.uimanager.get_widget("/MenuBar/EditMenu/Undo").set_sensitive(False)
     gui.editor_window.uimanager.get_widget("/MenuBar/EditMenu/Redo").set_sensitive(False)
-    
+
     # Center tracks vertical display and init some listeners to
     # new value and repaint tracks column.
     tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.allocation)
@@ -439,7 +439,7 @@ def init_editor_state():
 
     # Show first pages on notebooks
     gui.middle_notebook.set_current_page(0)
-    
+
     # Clear clip selection.
     movemodes.clear_selection_values()
 
