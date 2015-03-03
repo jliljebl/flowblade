@@ -304,16 +304,12 @@ def remove_attrs(obj, remove_attrs):
 
 
 # -------------------------------------------------- LOAD
-def load_project(file_path, icons_and_thumnails=True, load_for_relink=False):
+def load_project(file_path, icons_and_thumnails=True):
     _show_msg("Unpickling")
 
     # Load project object
     f = open(file_path)
     project = pickle.load(f)
-
-    # We only needed pickled data for relink
-    if load_for_relink:
-        return project
 
     global _load_file_path
     _load_file_path = file_path

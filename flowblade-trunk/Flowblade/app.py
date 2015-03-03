@@ -251,7 +251,7 @@ def main(root_path):
         splash_timeout_id = gobject.timeout_add(2600, destroy_splash_screen)
         splash_screen.show_all()
 
-    appconsts.SAVEFILE_VERSION = projectdata.SAVEFILE_VERSION
+    appconsts.SAVEFILE_VERSION = projectdata.SAVEFILE_VERSION # THIS IS A QUESTIONABLE IDEA TO SIMPLIFY IMPORTS, NOT DRY. WHEN DOING TOOLS THAT RUN IN ANOTHER PROCESSES AND SAVE PROJECTS, THIS LINE NEEDS TO BE THERE ALSO.
 
     # Every running instance has unique autosave file which is deleted at exit
     set_instance_autosave_id()
