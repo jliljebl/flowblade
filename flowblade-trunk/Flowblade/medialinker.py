@@ -41,6 +41,8 @@ import mltprofiles
 import mlttransitions
 import mltfilters
 import persistance
+import projectdata
+import propertyparse
 import respaths
 import renderconsumer
 import translations
@@ -68,14 +70,11 @@ class ProjectLoadThread(threading.Thread):
         linker_window.project_label.set_text("Loading...")
         gtk.gdk.threads_leave()
 
-        persistance.loading_for_batch_render = True # !?!
         persistance.show_messages = False
-        project = persistance.load_project(self.filename, False, True)
-        persistance.loading_for_batch_render = False
+        project = persistance.load_project(self.filename, False)
         
         global target_project
         target_project = project
-        target_project.c_seq = project.sequences[target_project.c_seq_index]
         _update_media_assets()
 
         gtk.gdk.threads_enter()
@@ -95,7 +94,6 @@ class MediaLinkerWindow(gtk.Window):
         load_button.connect("clicked",
                             lambda w: self.load_button_clicked())
 
-        
         project_row = gtk.HBox(False, 2)
         project_row.pack_start(load_button, False, False, 0)
         project_row.pack_start(gtk.Label(), True, True, 0)
@@ -348,25 +346,39 @@ class MediaAsset:
         self.relink_path = None
 
 def _update_media_assets():
+    # Collect all media assets used by project
+    
     new_assets = []
     asset_paths = {}
             
-    # Get media file media assets
+    # Media file media assets
     for media_file_id, media_file in target_project.media_files.iteritems():
         new_assets.append(MediaAsset(media_file.path))
         asset_paths[media_file.path] = media_file.path
-            
-    # Get clip media assets
+
     for seq in target_project.sequences:
+        # Clip media assets
         for track in seq.tracks:
             for i in range(0, len(track.clips)):
                 clip = track.clips[i]
                 # Only producer clips are affected
                 if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
                     if not(clip.path in asset_paths):
-                        clip.append(MediaAsset(clip.path))
-                        asset_paths[media_file.path] = clip.path
-                            
+                        new_assets.append(MediaAsset(clip.path))
+                        asset_paths[clip.path] = clip.path
+        # Wipe lumas
+        for compositor in seq.compositors:
+            res_path = None
+            if compositor.type_id == "##wipe": # Wipe may have user luma and needs to be looked up relatively
+                res_path = propertyparse.get_property_value(compositor.transition.properties, "resource")
+            if compositor.type_id == "##region": # Wipe may have user luma and needs to be looked up relatively
+                res_path = propertyparse.get_property_value(compositor.transition.properties, "composite.luma")
+
+            if res_path != None:
+                if not(res_path in asset_paths):
+                    new_assets.append(MediaAsset(res_path))
+                    asset_paths[res_path] = res_path
+
     global media_assets
     media_assets = new_assets
 
@@ -443,13 +455,15 @@ def _save_project_pressed():
 def _save_as_dialog_callback(dialog, response_id):
     if response_id == gtk.RESPONSE_ACCEPT:
         filenames = dialog.get_filenames()
+        dialog.destroy()
+
         target_project.last_save_path = filenames[0]
         target_project.name = os.path.basename(filenames[0])
         
         _relink_project_media_paths()
             
         persistance.save_project(target_project, target_project.last_save_path)
-        dialog.destroy()
+
                 
         dialogutils.info_message("Relinked version of the Project saved!", 
                                  "To test the project, close this tool and open the relinked version in Flowblade.", 
@@ -469,14 +483,27 @@ def _relink_project_media_paths():
         if media_file.path in relinked_paths:
             media_file.path = relinked_paths[media_file.path]
 
-    # Relink clip media assets
+
     for seq in target_project.sequences:
+
+        # Relink clip media assets
         for track in seq.tracks:
             for i in range(0, len(track.clips)):
                 clip = track.clips[i]
                 if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
                     if clip.path in relinked_paths:
                         clip.path = relinked_paths[clip.path]
+
+        # Relink wipe lumas
+        for compositor in seq.compositors:
+            if compositor.type_id == "##wipe":
+                res_path = propertyparse.get_property_value(compositor.transition.properties, "resource")
+                if res_path in relinked_paths:
+                    propertyparse.set_property_value(compositor.transition.properties, "resource", relinked_paths[res_path])
+            if compositor.type_id == "##region":
+                res_path = propertyparse.get_property_value(compositor.transition.properties, "composite.luma")
+                if res_path in relinked_paths:
+                    propertyparse.set_property_value(compositor.transition.properties,  "composite.luma", relinked_paths[res_path])
 
 
 # ----------------------------------------------------------- main
@@ -517,6 +544,8 @@ def main(root_path, force_launch=False):
 
     # Create list of available mlt profiles
     mltprofiles.load_profile_list()
+
+    appconsts.SAVEFILE_VERSION = projectdata.SAVEFILE_VERSION # THIS IS SOME BAD IDEA TO SIMPLYFY IMPORT STRUCTURE
 
     global linker_window
     linker_window = MediaLinkerWindow()
