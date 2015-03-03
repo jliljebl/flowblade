@@ -226,3 +226,17 @@ def _property_type(value_str):
             return PROP_FLOAT
         except:
             return PROP_EXPRESSION
+
+def set_property_value(properties, prop_name, prop_value):
+    for i in range(0, len(properties)):
+        name, value, t = properties[i]
+        if prop_name == name:
+            properties[i] = (name, prop_value, t)
+
+def get_property_value(properties, prop_name):
+    for i in range(0, len(properties)):
+        name, value, t = properties[i]
+        if prop_name == name:
+            return value
+    
+    return None
