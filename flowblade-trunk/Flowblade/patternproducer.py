@@ -311,8 +311,8 @@ def _color_clip_dialog(callback):
     cb_hbox.pack_start(color_button, False, False, 4)
     cb_hbox.pack_start(gtk.Label(), True, True, 0)
 
-    row1 = guiutils.get_two_column_box(gtk.Label(_("Clip Name")), name_entry, 200)
-    row2 = guiutils.get_two_column_box(gtk.Label(_("Select Color")), cb_hbox, 200)
+    row1 = guiutils.get_two_column_box(gtk.Label(_("Clip Name:")), name_entry, 200)
+    row2 = guiutils.get_two_column_box(gtk.Label(_("Select Color:")), cb_hbox, 200)
     
     vbox = gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)

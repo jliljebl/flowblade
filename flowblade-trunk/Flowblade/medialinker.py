@@ -174,7 +174,6 @@ class MediaLinkerWindow(gtk.Window):
         self.set_title(_("Media Relinker"))
         self.show_all()
         self.set_resizable(False)
-        self.set_keep_above(True) # Perhaps configurable later
         self.set_active_state()
 
     def load_button_clicked(self):
@@ -464,9 +463,8 @@ def _save_as_dialog_callback(dialog, response_id):
             
         persistance.save_project(target_project, target_project.last_save_path)
 
-                
-        dialogutils.info_message("Relinked version of the Project saved!", 
-                                 "To test the project, close this tool and open the relinked version in Flowblade.", 
+        dialogutils.info_message(_("Relinked version of the Project saved!"), 
+                                 _("To test the project, close this tool and open the relinked version in Flowblade."), 
                                  linker_window)
     else:
         dialog.destroy()

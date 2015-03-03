@@ -48,7 +48,7 @@ def init_languages():
 
     # Get the language to use
     global lang
-    #lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=["de"], fallback=True) # Testing, comment out for production
+    #lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=["fi"], fallback=True) # Testing, comment out for production
     lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=langs, fallback=True)
     lang.install(APP_NAME) # makes _() a build-in available in all modules without imports
 
@@ -211,6 +211,9 @@ def load_filters_translations():
     filter_names["Curves"] = _("Curves")
     filter_names["Lift Gain Gamma"] = _("Lift Gain Gamma")
     filter_names["Image Grid"] = _("Image Grid")
+    
+    # 0.18
+    filter_names["Color Lift Gain Gamma"] = _("Color Lift Gain Gamma")
     
     # param names
     global param_names
