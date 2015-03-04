@@ -371,8 +371,7 @@ class Player:
         self.ticker.stop_ticker()
 
         self.consumer.stop()
-        #self.consumer.purge()
-        
+
         self.create_sdl_consumer()
 
         self.jack_output_filter = mlt.Filter(self.profile, "jackrack")
@@ -383,12 +382,9 @@ class Player:
         self.consumer.set("audio_off", "1")
         self.consumer.set("frequency", str(editorpersistance.prefs.jack_frequency))
 
-        #self.connect_and_start()
         self.consumer.connect(self.producer)
-        #self.consumer.stop()
         self.consumer.start()
-        #self.consumer.start()
-        
+
     def jack_output_off(self):
         # We're assuming that we are not rendering and consumer is SDL consumer
         self.producer.set_speed(0)
