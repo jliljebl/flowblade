@@ -89,7 +89,10 @@ class MediaLinkerWindow(gtk.Window):
     def __init__(self):
         gtk.Window.__init__(self)
         self.connect("delete-event", lambda w, e:_shutdown())
-        
+
+        app_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "flowblademedialinker.png")
+        self.set_icon_list(app_icon)
+
         load_button = gtk.Button(_("Load Project For Relinking"))
         load_button.connect("clicked",
                             lambda w: self.load_button_clicked())
@@ -172,6 +175,7 @@ class MediaLinkerWindow(gtk.Window):
         # Set pane and show window
         self.add(align)
         self.set_title(_("Media Relinker"))
+        self.set_position(gtk.WIN_POS_CENTER)
         self.show_all()
         self.set_resizable(False)
         self.set_active_state()
