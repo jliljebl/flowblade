@@ -112,12 +112,12 @@ def media_log_no_star_button_pressed():
 def log_range_clicked():
     media_file = editorstate.MONITOR_MEDIA_FILE()
     if media_file == None:
-        return False
+        return
     if media_file.type == appconsts.PATTERN_PRODUCER:
         # INFOWINDOW ???
-       return False 
+       return 
     if media_file.mark_in == -1 or media_file.mark_out == -1:
-        return False
+        return
 
     log_event = MediaLogEvent(  appconsts.MEDIA_LOG_MARKS_SET,
                                 media_file.mark_in,

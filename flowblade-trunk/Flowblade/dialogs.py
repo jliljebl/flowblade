@@ -1112,6 +1112,7 @@ def keyboard_shortcuts_dialog(parent_window):
     general_vbox.pack_start(_get_kb_row(_("Control + Y"), _("Redo")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Control + O"), _("Open Project")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("TAB"), _("Switch Monitor Source")), False, False, 0)
+    general_vbox.pack_start(_get_kb_row(_("Control + L"), _("Log Marked Clip Range")), False, False, 0)
     general = guiutils.get_named_frame(_("General"), general_vbox)
 
     tline_vbox = gtk.VBox()
@@ -1126,7 +1127,8 @@ def keyboard_shortcuts_dialog(parent_window):
     tline_vbox.pack_start(_get_kb_row("T", _("3 Point Overwrite Insert")))
     tline_vbox.pack_start(_get_kb_row("M", _("Add Mark")))
     tline_vbox.pack_start(_get_kb_row("Control + C", _("Copy Clips")))
-    tline_vbox.pack_start(_get_kb_row("Control + V", _("Paste Clips")))     
+    tline_vbox.pack_start(_get_kb_row("Control + V", _("Paste Clips")))
+    tline_vbox.pack_start(_get_kb_row(_("G"), _("Log Marked Clip Range")), False, False, 0)
     tline = guiutils.get_named_frame(_("Timeline"), tline_vbox)
 
     play_vbox = gtk.VBox()
@@ -1149,6 +1151,7 @@ def keyboard_shortcuts_dialog(parent_window):
     tools_vbox.pack_start(_get_kb_row("3", _("Trim")))
     tools_vbox.pack_start(_get_kb_row("4", _("Roll")))
     tools_vbox.pack_start(_get_kb_row("5", _("Slip")))
+    tools_vbox.pack_start(_get_kb_row("6", _("Spacer")))
     tools = guiutils.get_named_frame(_("Tools"), tools_vbox)
 
     geom_vbox = gtk.VBox()

@@ -646,8 +646,6 @@ class Sequence:
         track.clear() # # TRIM INIT CRASH HACK, see clear_hidden_track there may be blank clip here
         track.clips = []
 
-        print "clip start pos:", clip_start_pos
-
         # Display trimmmed clip on hidden track by creating copy of it.
         # File producer
         if path != None:
