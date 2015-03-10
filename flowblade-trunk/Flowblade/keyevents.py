@@ -227,6 +227,11 @@ def _handle_tline_key_event(event):
         tlineaction.cut_pressed()
         return True
 
+    # G
+    if event.keyval == gtk.keysyms.g:
+        medialog.log_range_clicked()
+        return True
+
     # Key bindings for MOVE MODES and _NO_EDIT modes
     if editorstate.current_is_move_mode() or editorstate.current_is_active_trim_mode() == False:
          # UP ARROW, next cut
@@ -335,7 +340,7 @@ def _handle_tline_key_event(event):
 
 
 def _handle_extended_tline_focus_events(event):
-    # This was added to fix a bug long time ago but the rationale for "extended_tline_focus_events" has been forgotten, but probably still exists
+    # This was added to fix to a bug long time ago but the rationale for "extended_tline_focus_events" has been forgotten, but probably still exists
     if not(_timeline_has_focus() or
             gui.pos_bar.widget.is_focus() or
             gui.sequence_editor_b.has_focus() or
@@ -381,7 +386,11 @@ def _handle_extended_tline_focus_events(event):
         updater.switch_monitor_display()
         return True
 
-
+    # G
+    if event.keyval == gtk.keysyms.g:
+        medialog.log_range_clicked()
+        return True
+        
     # Number edit mode changes
     if event.keyval == gtk.keysyms._1:
         gui.editor_window.handle_insert_move_mode_button_press()
