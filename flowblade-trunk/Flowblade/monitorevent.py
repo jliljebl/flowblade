@@ -37,8 +37,10 @@ import updater
 
 FF_REW_SPEED = 3.0
 
-JKL_SPEEDS = [-32.0, -16.0, -8.0, -1.0, 0.0, 1.0, 3.0, 5.0, 8.0]
 
+JKL_SPEEDS = [-32.0, -16.0, -8.0, -1.0, 0.0, 1.0, 3.0, 5.0, 8.0]
+#JKL_SPEEDS = [-32.0, -16.0, -8.0, -1.0, -0.2, 0.0, 0.2, 1.0, 3.0, 5.0, 8.0]
+JKL_STOPPED_INDEX = 4
 
 # ---------------------------------------- playback
 # Some events have different meanings depending on edit mode and
@@ -100,8 +102,8 @@ def j_pressed():
     if timeline_visible():
         trimmodes.set_no_edit_trim_mode()
     jkl_index = _get_jkl_speed_index()
-    if jkl_index > 3: # 3 is first backwards speed, any bigger is forward, j starts backwards slow from any forward speed 
-        jkl_index = 3
+    if jkl_index > JKL_STOPPED_INDEX - 1: # JKL_STOPPPED_INDEX - 1 is first backwards speed, any bigger is forward, j starts backwards slow from any forward speed 
+        jkl_index = JKL_STOPPED_INDEX - 1
     else:
         jkl_index = jkl_index - 1
     
@@ -119,8 +121,8 @@ def l_pressed():
     if timeline_visible():
         trimmodes.set_no_edit_trim_mode()
     jkl_index = _get_jkl_speed_index()
-    if jkl_index < 5:# 5 is first forward speed, any smaller is backward, l starts forward slow from any backwards speed 
-        jkl_index = 5
+    if jkl_index < JKL_STOPPED_INDEX + 1:# JKL_STOPPPED_INDEX + 1 is first forward speed, any smaller is backward, l starts forward slow from any backwards speed 
+        jkl_index = JKL_STOPPED_INDEX + 1
     else:
         jkl_index = jkl_index + 1
     

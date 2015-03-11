@@ -207,10 +207,6 @@ class Sequence:
     def _create_black_track_clip(self):
         # Create 1 fr long black bg clip and set in and out
         global black_track_clip # btw, why global?
-        #pattern_producer_data = utils.EmptyClass()
-        #pattern_producer_data.patter_producer_type = patternproducer.COLOR_CLIP
-        #pattern_producer_data.gdk_color_str = "#000000000000"
-        #pattern_producer_data.name = "black_bg"
         
         # This is not an actual bin clip so id can be -1, it is just used to create the producer
         pattern_producer_data = patternproducer.BinColorClip(-1, "black_bg", "#000000000000")
