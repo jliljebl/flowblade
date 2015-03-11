@@ -134,6 +134,7 @@ class Player:
         """
         Starts playback from current producer
         """
+        #print speed
         self.producer.set_speed(speed)
         self.ticker.stop_ticker()
         self.ticker.start_ticker()

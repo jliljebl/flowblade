@@ -26,7 +26,7 @@ class PositionBar - Displays position on a clip or a sequence
 import pygtk
 pygtk.require('2.0');
 import gtk
-
+import cairo
 
 from cairoarea import CairoDrawableArea
 import editorpersistance
@@ -47,7 +47,7 @@ DARK_LINE_COLOR = (0.9, 0.9, 0.9)
 DARK_BG_COLOR = (0.3, 0.3, 0.3)
 DARK_DISABLED_BG_COLOR = (0.1, 0.1, 0.1)
 DARK_SELECTED_RANGE_COLOR = (0.5, 0.5, 0.5)
-
+SPEED_TEST_COLOR = (0.5, 0.5, 0.5)
 POINTER_COLOR = (1, 0.3, 0.3)
 END_PAD = 6 # empty area at both ends in pixels
 MARK_CURVE = 5
@@ -153,7 +153,7 @@ class PositionBar:
             
         cr.set_source_rgb(*LINE_COLOR)
         cr.stroke()
-        
+
         # Draw mark in and mark out
         self.draw_mark_in(cr, h)
         self.draw_mark_out(cr, h)
@@ -166,6 +166,18 @@ class PositionBar:
         cr.move_to(self._pos + 0.5, 0)
         cr.line_to(self._pos + 0.5, BAR_HEIGHT)
         cr.stroke()
+
+        speed = editorstate.PLAYER().producer.get_speed()
+        if speed != 1.0 and speed != 0.0:
+            cr.set_source_rgb(*SPEED_TEST_COLOR)
+            cr.select_font_face ("sans-serif",
+                                 cairo.FONT_SLANT_NORMAL,
+                                 cairo.FONT_WEIGHT_BOLD)
+            cr.set_font_size(11)
+            disp_str = str(speed) + "x"
+            tx, ty, twidth, theight, dx, dy = cr.text_extents(disp_str)
+            cr.move_to( w/2 - twidth/2, 13)
+            cr.show_text(disp_str)
 
     def draw_mark_in(self, cr, h):
         """
