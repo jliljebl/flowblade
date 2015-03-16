@@ -383,6 +383,7 @@ def _do_snapshot_save(root_folder_path, project_name):
     save_thread = SnaphotSaveThread(root_folder_path, project_name)
     save_thread.start()
 
+
 class SnaphotSaveThread(threading.Thread):
     
     def __init__(self, root_folder_path, project_name):

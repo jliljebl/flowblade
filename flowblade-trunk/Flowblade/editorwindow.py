@@ -226,7 +226,6 @@ class EditorWindow:
                     <separator/>
                     <menu action='ExportMenu'>
                         <menuitem action='ExportMeltXML'/>
-                        <menuitem action='ExportEDL'/>
                         <menuitem action='ExportScreenshot'/>
                     </menu>
                     <separator/>
