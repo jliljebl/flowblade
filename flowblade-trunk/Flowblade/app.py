@@ -216,9 +216,6 @@ def main(root_path):
     # Audiomonitoring being available needs to be known before GUI creation
     audiomonitoring.init(editorstate.project.profile)
 
-    # Do JACK audio start-up action
-    jackaudio.start_up()
-
     # Create player object
     create_player()
 
@@ -370,7 +367,7 @@ def init_project_gui():
     """
     Called after project load to initialize interface
     """
-    # Display media files
+    # Display media files in "Media" tab 
     gui.media_list_view.fill_data_model()
     try: # Fails if current bin is empty
         selection = gui.media_list_view.treeview.get_selection()
@@ -378,18 +375,18 @@ def init_project_gui():
     except Exception:
         pass
 
-    # Display bins
+    # Display bins in "Media" tab 
     gui.bin_list_view.fill_data_model()
     selection = gui.bin_list_view.treeview.get_selection()
     selection.select_path("0")
 
-    # Display sequences
+    # Display sequences in "Project" tab
     gui.sequence_list_view.fill_data_model()
     selection = gui.sequence_list_view.treeview.get_selection()
     selected_index = editorstate.project.sequences.index(editorstate.current_sequence())
     selection.select_path(str(selected_index))
   
-    # Display media events
+    # Display logged ranges in "Range Log" tab
     medialog.update_media_log_view()
 
     render.set_default_values_for_widgets(True)
@@ -449,8 +446,6 @@ def init_editor_state():
 
     # Create array needed to update compositors after all edits
     editorstate.current_sequence().restack_compositors()
-
-    #editorstate.PLAYER().jack_output_on()
 
     proxyediting.set_menu_to_proxy_state()
 
@@ -760,8 +755,6 @@ def _shutdown_dialog_callback(dialog, response_id):
 
 def _app_destroy():
     # Close threads and stop mlt consumers
-    #if editorstate.player.jack_output_filter != None:
-    #    editorstate.player.jack_output_off()
     editorstate.player.shutdown() # has ticker thread and player threads running
     audiomonitoring.close()
     # Wait threads to stop
@@ -774,9 +767,6 @@ def _app_destroy():
         os.remove(utils.get_hidden_user_dir_path() + get_instance_autosave_file())
     except:
         print "Delete autosave file FAILED"
-
-    # Delete jack failsafe file
-    #jackaudio.delete_failsafe_file()
 
     # Exit gtk main loop.
     gtk.main_quit()

@@ -126,9 +126,9 @@ class MLTXMLToEDLParse:
         self.xmldoc = minidom.parse(xmlfile)
         self.title = title
         self.reel_name_type = REEL_NAME_FILE_NAME_START
-        self.from_clip_comment = True
+        self.from_clip_comment = False
         self.use_drop_frames = False
-        self.blender_fix = True
+        self.blender_fix = False
 
     def get_project_profile(self):
         profile_dict = {}

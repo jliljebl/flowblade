@@ -429,6 +429,9 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
             clip.sync_data = None # masterclip no longer on track V1
             resync.clip_removed_from_timeline(clip)
 
+    # This sets MLT properties that actually do mute
+    seq.set_tracks_mute_state()
+
     seq.length = None
 
 def fill_track_mlt(mlt_track, py_track):
