@@ -250,7 +250,7 @@ def get_p_clip(clip):
     # Do proxy mode convert if needed
     if (project_proxy_mode == appconsts.CONVERTING_TO_USE_PROXY_MEDIA or 
         project_proxy_mode == appconsts.CONVERTING_TO_USE_ORIGINAL_MEDIA):
-        try: # This fails whan it is supposed to fail: for clips that have no proxy and pattern producers and blanks
+        try: # This fails when it is supposed to fail: for clips that have no proxy and pattern producers and blanks
             s_clip.path = proxy_path_dict[s_clip.path] 
         except:
             pass
@@ -289,6 +289,9 @@ def get_p_compositors(compositors):
 
 def get_p_sync_data(sync_data):
     s_sync_data = copy.copy(sync_data)
+    if isinstance( sync_data.master_clip, int ): # When saving relinked projects sync_data.master_clip 
+                                                   # is already int and does not need to be replaced
+        return s_sync_data
     s_sync_data.master_clip = sync_data.master_clip.id
     return s_sync_data
 
@@ -304,12 +307,16 @@ def remove_attrs(obj, remove_attrs):
 
 
 # -------------------------------------------------- LOAD
-def load_project(file_path, icons_and_thumnails=True):
+def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
     _show_msg("Unpickling")
 
     # Load project object
     f = open(file_path)
     project = pickle.load(f)
+
+    # Relinker only operates on pickleable python data 
+    if relinker_load:
+        return project
 
     global _load_file_path
     _load_file_path = file_path
@@ -488,7 +495,7 @@ def fill_track_mlt(mlt_track, py_track):
             mute_filter = mltfilters.create_mute_volume_filter(sequence) 
             mltfilters.do_clip_mute(mlt_clip, mute_filter)
         
-        # Add to track if hasn't already been appended (blank clip has)
+        # Add to track in MLT if hasn't already been appended (blank clip has)
         if append_created == True:
             append_clip(mlt_track, mlt_clip, clip.clip_in, clip.clip_out)
 

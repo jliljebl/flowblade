@@ -81,7 +81,7 @@ def set_track_small_height(track_index):
     updater.repaint_tline()
     
 def mute_track(track, new_mute_state):
-    # NOTE: THIS IS EDITOR STATE CHANGE, NOT AN UNDOABLE EDIT
+    # NOTE: THIS IS A SAVED EDIT OF SEQUENCE, BUT IS NOT AN UNDOABLE EDIT
     current_sequence().set_track_mute_state(track.id, new_mute_state)
     gui.tline_column.widget.queue_draw()
     
