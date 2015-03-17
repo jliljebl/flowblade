@@ -71,10 +71,11 @@ class ProjectLoadThread(threading.Thread):
         gtk.gdk.threads_leave()
 
         persistance.show_messages = False
-        project = persistance.load_project(self.filename, False)
+        project = persistance.load_project(self.filename, False, True)
         
         global target_project
         target_project = project
+        target_project.c_seq = project.sequences[target_project.c_seq_index]
         _update_media_assets()
 
         gtk.gdk.threads_enter()
@@ -101,13 +102,13 @@ class MediaLinkerWindow(gtk.Window):
         project_row.pack_start(load_button, False, False, 0)
         project_row.pack_start(gtk.Label(), True, True, 0)
 
-        self.missing_label = gtk.Label(_("Original Media Missing:"))
-        self.found_label = gtk.Label(_("Original Media Found:"))
+        self.missing_label = guiutils.bold_label("<b>" + _("Original Media Missing:") + "</b> ")
+        self.found_label = guiutils.bold_label("<b>" + _("Original Media Found:") + "</b> ")
         self.missing_count = gtk.Label()
         self.found_count = gtk.Label()
-        self.proj = gtk.Label(_("Project:"))
+        self.proj = guiutils.bold_label("<b>" + _("Project:") + "</b> ")
         self.project_label = gtk.Label(_("<not loaded>"))
-            
+
         missing_info = guiutils.get_left_justified_box([self.missing_label, guiutils.pad_label(2, 2), self.missing_count])
         missing_info.set_size_request(200, 2)
         found_info = guiutils.get_left_justified_box([self.found_label, guiutils.pad_label(2, 2), self.found_count])
@@ -127,8 +128,6 @@ class MediaLinkerWindow(gtk.Window):
         self.find_button.connect("clicked", lambda w: _set_button_pressed())
         self.delete_button = gtk.Button(_("Delete File Relink Path"))
         self.delete_button.connect("clicked", lambda w: _delete_button_pressed())
-        self.auto_locate_check = gtk.CheckButton()
-        self.auto_label = gtk.Label(_("Autorelink other files"))
 
         self.display_combo = gtk.combo_box_new_text()
         self.display_combo.append_text(_("Display Missing Media Files"))
@@ -140,9 +139,6 @@ class MediaLinkerWindow(gtk.Window):
         buttons_row.pack_start(self.display_combo, False, False, 0)
         buttons_row.pack_start(gtk.Label(), True, True, 0)
         buttons_row.pack_start(self.delete_button, False, False, 0)
-        #buttons_row.pack_start(guiutils.pad_label(12, 12), False, False, 0)
-        #buttons_row.pack_start(self.auto_locate_check, False, False, 0)
-        #buttons_row.pack_start(self.auto_label, False, False, 0)
         buttons_row.pack_start(guiutils.pad_label(4, 4), False, False, 0)
         buttons_row.pack_start(self.find_button, False, False, 0)
 
@@ -197,7 +193,11 @@ class MediaLinkerWindow(gtk.Window):
             dialog.destroy()
 
     def display_list_changed(self, display_combo):
-         self.relink_list.fill_data_model()
+        self.relink_list.fill_data_model()
+        if display_combo.get_active() == 0:
+            self.relink_list.text_col_1.set_title(self.relink_list.missing_text)
+        else:
+            self.relink_list.text_col_1.set_title(self.relink_list.found_text)
 
     def set_active_state(self):
         active = (target_project != None)
@@ -206,8 +206,6 @@ class MediaLinkerWindow(gtk.Window):
         self.relink_list.set_sensitive(active) 
         self.find_button.set_sensitive(active) 
         self.delete_button.set_sensitive(active) 
-        self.auto_locate_check.set_sensitive(active) 
-        self.auto_label.set_sensitive(active) 
         self.display_combo.set_sensitive(active) 
         self.missing_label.set_sensitive(active) 
         self.found_label.set_sensitive(active) 
@@ -261,8 +259,10 @@ class MediaRelinkListView(gtk.VBox):
         tree_sel = self.treeview.get_selection()
 
         # Column views
+        self.missing_text = _("Missing Media File Path")
+        self.found_text = _("Found Media File Path")
         self.text_col_1 = gtk.TreeViewColumn("text1")
-        self.text_col_1.set_title(_("Media File Path"))
+        self.text_col_1.set_title(self.missing_text)
         self.text_col_2 = gtk.TreeViewColumn("text2")
         self.text_col_2.set_title(_("Media File Re-link Path"))
         
@@ -547,7 +547,7 @@ def main(root_path, force_launch=False):
     # Create list of available mlt profiles
     mltprofiles.load_profile_list()
 
-    appconsts.SAVEFILE_VERSION = projectdata.SAVEFILE_VERSION # THIS IS SOME BAD IDEA TO SIMPLYFY IMPORT STRUCTURE
+    appconsts.SAVEFILE_VERSION = projectdata.SAVEFILE_VERSION
 
     global linker_window
     linker_window = MediaLinkerWindow()
