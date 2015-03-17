@@ -270,7 +270,7 @@ def get_p_filter(f):
     """
     s_filter = copy.copy(f)
     remove_attrs(s_filter, FILTER_REMOVE)
-    if hasattr(f, "mlt_filter"):
+    if f.info.multipart_filter == False:
         s_filter.is_multi_filter = False
     else:
         s_filter.is_multi_filter = True

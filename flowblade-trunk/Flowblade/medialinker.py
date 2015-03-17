@@ -40,6 +40,7 @@ import mltenv
 import mltprofiles
 import mlttransitions
 import mltfilters
+import patternproducer
 import persistance
 import projectdata
 import propertyparse
@@ -356,6 +357,8 @@ def _update_media_assets():
             
     # Media file media assets
     for media_file_id, media_file in target_project.media_files.iteritems():
+        if isinstance(media_file, patternproducer.AbstractBinClip):
+            continue
         new_assets.append(MediaAsset(media_file.path))
         asset_paths[media_file.path] = media_file.path
 
@@ -482,9 +485,10 @@ def _relink_project_media_paths():
             
     # Relink media file media assets
     for media_file_id, media_file in target_project.media_files.iteritems():
+        if isinstance(media_file, patternproducer.AbstractBinClip):
+            continue
         if media_file.path in relinked_paths:
             media_file.path = relinked_paths[media_file.path]
-
 
     for seq in target_project.sequences:
 
