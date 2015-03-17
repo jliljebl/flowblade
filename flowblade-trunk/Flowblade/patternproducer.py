@@ -169,7 +169,7 @@ def _create_ebubars_producer(profile):
 # --------------------------------------------------- END DECPRECATED producer create methods
 
 # --------------------------------------------------- bin media objects
-class AbstractBinClip: # wtf not extends projectdata.MediaFile?
+class AbstractBinClip: # not extends projectdata.MediaFile? too late, too late. Also better name would be AbstractBinPatternProducer
     """
     A pattern producer object presnt in Media Bin.
     """

@@ -257,7 +257,7 @@ class MultipartFilterObject:
         self.info = filter_info
         # Values of these are edited by the user.
         self.properties = copy.deepcopy(filter_info.properties)
-        self.non_mlt_properties = copy.deepcopy(filter_info.non_mlt_properties) 
+        self.non_mlt_properties = copy.deepcopy(filter_info.non_mlt_properties)
         self.value = copy.deepcopy(filter_info.multipart_value)
         self.active = True
         
