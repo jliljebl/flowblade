@@ -377,7 +377,7 @@ def load_filters_xml(services):
     filter_nodes = filters_doc.getElementsByTagName(FILTER)
     for f_node in filter_nodes:
         filter_info = FilterInfo(f_node)
-        
+
         if filter_info.mlt_drop_version != "":
             if editorstate.mlt_version_is_equal_or_greater(filter_info.mlt_drop_version):
                 print filter_info.name + " dropped, MLT version too high for this filter."
