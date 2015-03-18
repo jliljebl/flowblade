@@ -111,7 +111,7 @@ class MediaLinkerWindow(gtk.Window):
         self.project_label = gtk.Label(_("<not loaded>"))
 
         missing_info = guiutils.get_left_justified_box([self.missing_label, guiutils.pad_label(2, 2), self.missing_count])
-        missing_info.set_size_request(200, 2)
+        missing_info.set_size_request(250, 2)
         found_info = guiutils.get_left_justified_box([self.found_label, guiutils.pad_label(2, 2), self.found_count])
 
         status_row = gtk.HBox(False, 2)

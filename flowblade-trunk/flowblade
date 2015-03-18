@@ -23,7 +23,7 @@
 import os
 import sys
 
-print "FLOWBLADE MOVIE EDITOR 0.17 repository/dev"
+print "FLOWBLADE MOVIE EDITOR 0.18"
 print "---------------------------"
 
 # Get launch script dir
@@ -58,7 +58,7 @@ except Exception, err:
     print "MLT not found, exiting..."
     print "ERROR:", err
     sys.exit(1)
-  
+
 # Get app.py module and set info which type of installation is running
 try:
     import app
@@ -72,7 +72,6 @@ except Exception, err:
     print "ERROR:", err
     print "Installation was assumed to be at:", modules_path
     sys.exit(1)
-
 
 # Launch application
 app.main(modules_path)

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Floblade Italian Translation 0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-03 22:28+0200\n"
+"POT-Creation-Date: 2015-03-18 02:02+0200\n"
 "PO-Revision-Date: 2014-09-15 23:42+0100\n"
 "Last-Translator: Massimo Stella <info@massimostella.it>\n"
 "Language-Team: Italiano\n"
@@ -18,51 +18,51 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: app.py:663
+#: app.py:658
 msgid "Too small screen for this application."
 msgstr "Lo schermo è troppo piccolo per questa applicazione."
 
-#: app.py:666
+#: app.py:661
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "La risoluzione minima per questa applicazione è 1152 x 768.\n"
 
-#: app.py:667
+#: app.py:662
 msgid "Your screen dimensions are "
 msgstr "La risoluzione corrente è"
 
-#: app.py:684
+#: app.py:679
 msgid "Another instance of Flowblade already running."
 msgstr "Un'altra sessione di  Flowblade è già in esecuzione."
 
-#: app.py:685
+#: app.py:680
 msgid "Only one instance of Flowblade is allowed to run at a time."
 msgstr "E' permessa una sola sessione di Flowblade alla volta."
 
-#: app.py:714
+#: app.py:709
 msgid "Project has not been saved since it was opened."
 msgstr "Questo progetto non è ancora stato salvato dall'apertura."
 
-#: app.py:719
+#: app.py:714
 msgid "Project was saved less than a minute ago."
 msgstr "Il progetto è stato salvato meno di un minuto fa."
 
-#: app.py:722
+#: app.py:717
 msgid "Project was saved one minute ago."
 msgstr "Il progetto è stato salvato un minuto fa."
 
-#: app.py:724
+#: app.py:719
 msgid "Project was saved "
 msgstr "Il progetto è stato salvato"
 
-#: app.py:724
+#: app.py:719
 msgid " minutes ago."
 msgstr " minuti fa."
 
-#: app.py:734 projectaction.py:273
+#: app.py:729 projectaction.py:273
 msgid "Project has not been saved previously"
 msgstr "Il progetto non è mai stato salvato"
 
-#: app.py:735 projectaction.py:274
+#: app.py:730 projectaction.py:274
 msgid "Save project with File -> Save As before closing."
 msgstr "Salva il progetto da File -> Salva con nome"
 
@@ -140,48 +140,48 @@ msgid ""
 "has to be empty."
 msgstr ""
 
-#: projectaction.py:394
+#: projectaction.py:395
 msgid "Copying project media assets"
 msgstr ""
 
-#: projectaction.py:395
+#: projectaction.py:396
 #, fuzzy
 msgid "Saving project file"
 msgstr "Salvo il progetto '"
 
-#: projectaction.py:496
+#: projectaction.py:497
 msgid "Project not found on disk"
 msgstr "Il progetto non è stato trovato sul disco"
 
-#: projectaction.py:497
+#: projectaction.py:498
 msgid "Project can't be loaded."
 msgstr "Il progetto non può essere caricato."
 
-#: projectaction.py:551
+#: projectaction.py:552
 msgid "Adding item to render queue failed!"
 msgstr "Aggiunta alla coda dei render fallita!"
 
-#: projectaction.py:552 tools/batchrendering.py:285
+#: projectaction.py:553 tools/batchrendering.py:285
 msgid "Error message: "
 msgstr "Messaggio d'errore: "
 
-#: projectaction.py:574
+#: projectaction.py:575
 msgid "Open.."
 msgstr "Apri..."
 
-#: projectaction.py:601
+#: projectaction.py:602
 msgid "No file was selected"
 msgstr "Nessun file selezionato"
 
-#: projectaction.py:601
+#: projectaction.py:602
 msgid "Select a numbered file to add an Image Sequence to Project."
 msgstr "Selezionare un file numerato per aggiungere una sequenza di immagini"
 
-#: projectaction.py:609
+#: projectaction.py:610
 msgid "Not a sequence file!"
 msgstr "Questa non è una sequenza!"
 
-#: projectaction.py:609
+#: projectaction.py:610
 msgid ""
 "Selected file does not have a number part in it,\n"
 "so it can't be an image sequence file."
@@ -189,39 +189,39 @@ msgstr ""
 "Il file selezionato non è numerato, \n"
 "quindi non può essere una sequenza di immagini."
 
-#: projectaction.py:657
+#: projectaction.py:658
 msgid "Can't make home folder thumbnails folder"
 msgstr "Non si può usare la carella Home per le miniature"
 
-#: projectaction.py:658 dialogs.py:290
+#: projectaction.py:659 dialogs.py:290
 msgid "Please create and select some other folder then '"
 msgstr "Creare e selezionare una cartella differente da '"
 
-#: projectaction.py:659
+#: projectaction.py:660
 msgid "' as thumbnails folder"
 msgstr "' per le miniature"
 
-#: projectaction.py:839
+#: projectaction.py:840
 msgid "Can't remove a non-empty bin"
 msgstr "Impossibile eliminare un bin pieno"
 
-#: projectaction.py:840
+#: projectaction.py:841
 msgid "You must remove all files from the bin before deleting it."
 msgstr "È necessario eliminare tutti i file dal bin prima di cancellarlo."
 
-#: projectaction.py:848
+#: projectaction.py:849
 msgid "Can't remove last bin"
 msgstr "Impossibile eliminare il bin"
 
-#: projectaction.py:849
+#: projectaction.py:850
 msgid "There must always exist at least one bin."
 msgstr "Deve esserci  almeno un bin."
 
-#: projectaction.py:920
+#: projectaction.py:921
 msgid "Selected sequence is already being edited"
 msgstr "La sequenza selezionata è già in fase di modifica"
 
-#: projectaction.py:921
+#: projectaction.py:922
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
@@ -229,11 +229,11 @@ msgstr ""
 "Selezionare una sequenza diversa. Fare clic su Aggiungi per creare \n"
 "una nuova sequenza se necessario."
 
-#: projectaction.py:931 projectaction.py:948 projectdata.py:193
+#: projectaction.py:932 projectaction.py:949 projectdata.py:193
 msgid "sequence_"
 msgstr "sequenza_"
 
-#: projectaction.py:981
+#: projectaction.py:982
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
@@ -241,21 +241,21 @@ msgstr ""
 "Sei sicuro di voler eliminare \n"
 "la sequenza '"
 
-#: projectaction.py:981
+#: projectaction.py:982
 msgid "'?"
 msgstr "'?"
 
-#: projectaction.py:982
+#: projectaction.py:983
 msgid "This operation can not be undone. Sequence will be permanently lost."
 msgstr ""
 "Questa operazione non può essere annullata. La sequenza non potrà essere "
 "recuperata."
 
-#: projectaction.py:997
+#: projectaction.py:998
 msgid "Can't remove last sequence"
 msgstr "Impossibile eliminare la sequenza"
 
-#: projectaction.py:998
+#: projectaction.py:999
 msgid "There must always exist at least one sequence."
 msgstr "Deve esserci  almeno una sequenza."
 
@@ -328,11 +328,11 @@ msgstr "_Ripristina"
 msgid "Add Monitor Clip"
 msgstr "Apri la Clip nel Monitor"
 
-#: editorwindow.py:163 dialogs.py:1125
+#: editorwindow.py:163 dialogs.py:1126
 msgid "Append"
 msgstr "Accoda"
 
-#: editorwindow.py:164 dialogs.py:1124 dialogs.py:1147 guicomponents.py:1799
+#: editorwindow.py:164 dialogs.py:1125 dialogs.py:1149 guicomponents.py:1799
 msgid "Insert"
 msgstr "Inserisci"
 
@@ -344,7 +344,7 @@ msgstr "Sovrascrivi a 3 Punti"
 msgid "Range Overwrite"
 msgstr "Area di Sovrascrittura"
 
-#: editorwindow.py:167 dialogs.py:1122
+#: editorwindow.py:167 dialogs.py:1123
 msgid "Cut Clip"
 msgstr "Taglia la Clip"
 
@@ -352,7 +352,7 @@ msgstr "Taglia la Clip"
 msgid "Lift"
 msgstr "Solleva"
 
-#: editorwindow.py:169 dialogs.py:1123
+#: editorwindow.py:169 dialogs.py:1124
 msgid "Splice Out"
 msgstr "Estrai"
 
@@ -396,7 +396,7 @@ msgstr "Preferenze"
 msgid "View"
 msgstr "Visualizza"
 
-#: editorwindow.py:180 editorwindow.py:492
+#: editorwindow.py:180 editorwindow.py:491
 msgid "Project"
 msgstr "Progetto"
 
@@ -433,7 +433,7 @@ msgstr ""
 msgid "Color Pulse"
 msgstr "Selezione Colore"
 
-#: editorwindow.py:189
+#: editorwindow.py:189 dialogs.py:1115 dialogs.py:1131
 msgid "Log Marked Clip Range"
 msgstr "Memorizza l'Area Segnata della Clip"
 
@@ -462,7 +462,7 @@ msgstr "Salva il Progetto con Nome..."
 msgid "Project Info"
 msgstr "Dettagli del Progetto"
 
-#: editorwindow.py:196 editorwindow.py:493 rendergui.py:171
+#: editorwindow.py:196 editorwindow.py:492 rendergui.py:171
 #: tools/batchrendering.py:852
 msgid "Render"
 msgstr ""
@@ -479,7 +479,7 @@ msgstr "Coda dei Render"
 msgid "Render Timeline"
 msgstr "Calcola la Timeline"
 
-#: editorwindow.py:200 dialogs.py:1152
+#: editorwindow.py:200 dialogs.py:1155
 msgid "Tools"
 msgstr "Strumenti"
 
@@ -515,23 +515,23 @@ msgstr "Scorciatoie da Tastiera"
 msgid "About"
 msgstr "Informazioni"
 
-#: editorwindow.py:488
+#: editorwindow.py:487
 msgid "Media"
 msgstr "Media"
 
-#: editorwindow.py:489
+#: editorwindow.py:488
 msgid "Range Log"
 msgstr "Sub-clip"
 
-#: editorwindow.py:490
+#: editorwindow.py:489
 msgid "Filters"
 msgstr "Filtri"
 
-#: editorwindow.py:491
+#: editorwindow.py:490
 msgid "Compositors"
 msgstr "Compositing"
 
-#: editorwindow.py:514
+#: editorwindow.py:513
 msgid ""
 "Prev Frame - Arrow Left\n"
 "Next Frame - Arrow Right\n"
@@ -553,95 +553,95 @@ msgstr ""
 "Vai a In\n"
 "Vai a Out"
 
-#: editorwindow.py:711
+#: editorwindow.py:710
 msgid "Middlebar Layout"
 msgstr "Posizione Barra Centrale"
 
-#: editorwindow.py:713
+#: editorwindow.py:712
 msgid "Timecode Left"
 msgstr "Timecode a Sinistra"
 
-#: editorwindow.py:718
+#: editorwindow.py:717
 msgid "Timecode Center"
 msgstr "Timecode al Centro"
 
-#: editorwindow.py:730
+#: editorwindow.py:729
 msgid "Tabs Position"
 msgstr "Posizione delle Schede"
 
-#: editorwindow.py:732
+#: editorwindow.py:731
 msgid "Up"
 msgstr "Alto"
 
-#: editorwindow.py:736
+#: editorwindow.py:735
 msgid "Down"
 msgstr "Basso"
 
-#: editorwindow.py:751
+#: editorwindow.py:750
 msgid "Show Monitor Sequence Profile"
 msgstr "Mostra il Profilo della Sequenza"
 
-#: editorwindow.py:756
+#: editorwindow.py:755
 msgid "Show Master Volume Meter"
 msgstr ""
 
-#: editorwindow.py:764
+#: editorwindow.py:763
 msgid "Monitor Playback Interpolation"
 msgstr "Tipo d'Interpolazione per la Riproduzione"
 
-#: editorwindow.py:767
+#: editorwindow.py:766
 msgid "Nearest Neighbour"
 msgstr "Interpolazione di Prossimità"
 
-#: editorwindow.py:771
+#: editorwindow.py:770
 msgid "Bilinear"
 msgstr "Bilineare"
 
-#: editorwindow.py:775
+#: editorwindow.py:774
 msgid "Bicubic"
 msgstr "Bicubica"
 
-#: editorwindow.py:781
+#: editorwindow.py:780
 msgid "Hyper/Lanczos"
 msgstr ""
 
-#: editorwindow.py:791
+#: editorwindow.py:790
 msgid "Zoom In"
 msgstr "Zoom in Avanti"
 
-#: editorwindow.py:794
+#: editorwindow.py:793
 msgid "Zoom Out"
 msgstr "Zoom in Dietro"
 
-#: editorwindow.py:797
+#: editorwindow.py:796
 msgid "Zoom Fit"
 msgstr "Adatta alla Dimensione"
 
-#: editorwindow.py:903
+#: editorwindow.py:902
 msgid "Timeline current frame timecode"
 msgstr "Timecode del fotogramma corrente sulla timeline"
 
-#: editorwindow.py:905
+#: editorwindow.py:904
 msgid "Select view mode: Video/Vectorscope/RGBParade"
 msgstr "Modalità di visualizzazione: Video/Vettorscopio/OscilloscopioRGB"
 
-#: editorwindow.py:907
+#: editorwindow.py:906
 msgid "Monitor Sequence/Media current frame timecode"
 msgstr "Timecode del fotogramma Corrente della Clip/Sequenza nel Monitor"
 
-#: editorwindow.py:908
+#: editorwindow.py:907
 msgid "Current Monitor Sequence/Media name"
 msgstr "Nome della Clip/Sequenza nel Monitor"
 
-#: editorwindow.py:910
+#: editorwindow.py:909
 msgid "Monitor Sequence/Media current position"
 msgstr "Posizione Corrente della Clip/Sequenza nel Monitor"
 
-#: editorwindow.py:912
+#: editorwindow.py:911
 msgid "Display Current Sequence on Timeline"
 msgstr "Mostra la Sequenza sulla Timeline"
 
-#: editorwindow.py:913
+#: editorwindow.py:912
 msgid "Display Monitor Clip"
 msgstr "Mostra la Clip nel Monitor"
 
@@ -663,7 +663,7 @@ msgid "Add"
 msgstr "Aggiungi"
 
 #: clipeffectseditor.py:210 compositeeditor.py:58 dialogs.py:1108
-#: dialogs.py:1123 guicomponents.py:1122 guicomponents.py:1177
+#: dialogs.py:1124 guicomponents.py:1122 guicomponents.py:1177
 #: guicomponents.py:1362 guicomponents.py:1383 panels.py:52 panels.py:106
 #: panels.py:124 tools/titler.py:190 tools/batchrendering.py:1015
 msgid "Delete"
@@ -713,7 +713,7 @@ msgstr "Nuovo Progetto"
 #: dialogs.py:246 dialogs.py:257 dialogs.py:272 dialogs.py:305 dialogs.py:324
 #: dialogs.py:559 dialogs.py:665 dialogs.py:759 dialogs.py:794 dialogs.py:838
 #: dialogs.py:867 dialogs.py:896 dialogs.py:955 dialogs.py:987 dialogs.py:1076
-#: dialogs.py:1089 dialogs.py:1250 propertyeditorbuilder.py:363
+#: dialogs.py:1089 dialogs.py:1253 propertyeditorbuilder.py:363
 #: rendergui.py:47 rendergui.py:104 rendergui.py:118 rendergui.py:135
 #: preferenceswindow.py:48 tools/batchrendering.py:949 proxyediting.py:387
 #: patternproducer.py:302 patternproducer.py:336 patternproducer.py:368
@@ -721,7 +721,7 @@ msgid "Cancel"
 msgstr "Annulla"
 
 #: dialogs.py:57 dialogs.py:160 dialogs.py:198 dialogs.py:335 dialogs.py:410
-#: dialogs.py:533 dialogs.py:546 dialogs.py:1251 propertyeditorbuilder.py:364
+#: dialogs.py:533 dialogs.py:546 dialogs.py:1254 propertyeditorbuilder.py:364
 #: rendergui.py:105 preferenceswindow.py:49 tools/batchrendering.py:380
 msgid "OK"
 msgstr "OK"
@@ -888,7 +888,7 @@ msgstr " NON TROVATO"
 msgid " FOR TRANSITION "
 msgstr " PER LA TRANSIZIONE "
 
-#: dialogs.py:475 dialogs.py:1115 preferenceswindow.py:58
+#: dialogs.py:475 dialogs.py:1116 preferenceswindow.py:58
 msgid "General"
 msgstr "Generale"
 
@@ -1258,7 +1258,7 @@ msgstr "Applica"
 msgid "Add Fade"
 msgstr "Aggiungi Dissolvenza"
 
-#: dialogs.py:1103 dialogs.py:1204 tools/titler.py:398 proxyediting.py:378
+#: dialogs.py:1103 dialogs.py:1207 tools/titler.py:398 proxyediting.py:378
 #: medialinker.py:148
 msgid "Close"
 msgstr "Chiudi"
@@ -1331,189 +1331,202 @@ msgstr "TAB"
 msgid "Switch Monitor Source"
 msgstr "Cambia la Sorgente del Monitor"
 
-#: dialogs.py:1118
+#: dialogs.py:1115
+#, fuzzy
+msgid "Control + L"
+msgstr "Control + N"
+
+#: dialogs.py:1119
 msgid "Set Mark In"
 msgstr "Inserisci punto di IN"
 
-#: dialogs.py:1119
+#: dialogs.py:1120
 msgid "Set Mark Out"
 msgstr "Inserisci punto di OUT"
 
-#: dialogs.py:1120
+#: dialogs.py:1121
 #, fuzzy
 msgid "Go To Mark In"
 msgstr "Vai a IN"
 
-#: dialogs.py:1121
+#: dialogs.py:1122
 #, fuzzy
 msgid "Go To Mark Out"
 msgstr "Vai a OUT"
 
-#: dialogs.py:1126
+#: dialogs.py:1127
 msgid "3 Point Overwrite Insert"
 msgstr "Sovrascrivi a 3 Punti"
 
-#: dialogs.py:1127
+#: dialogs.py:1128
 msgid "Add Mark"
 msgstr "Aggiungi un Marcatore"
 
-#: dialogs.py:1128
+#: dialogs.py:1129
 msgid "Copy Clips"
 msgstr "Copia Clip"
 
-#: dialogs.py:1129
+#: dialogs.py:1130
 msgid "Paste Clips"
 msgstr "Incolla Clip"
 
-#: dialogs.py:1130
+#: dialogs.py:1131
+msgid "G"
+msgstr ""
+
+#: dialogs.py:1132
 msgid "Timeline"
 msgstr "Timeline"
 
-#: dialogs.py:1133
+#: dialogs.py:1135
 msgid "Space"
 msgstr "Spazio"
 
-#: dialogs.py:1133
+#: dialogs.py:1135
 msgid "Start / Stop Playback"
 msgstr "Avvia/Arresta la Riproduzione"
 
-#: dialogs.py:1134
+#: dialogs.py:1136
 msgid "Backwards Faster"
 msgstr "Indietro Veloce"
 
-#: dialogs.py:1135 proxyediting.py:307
+#: dialogs.py:1137 proxyediting.py:307
 msgid "Stop"
 msgstr "Stop"
 
-#: dialogs.py:1136
+#: dialogs.py:1138
 msgid "Forward Faster"
 msgstr "Avanti Veloce"
 
-#: dialogs.py:1137 dialogs.py:1155
+#: dialogs.py:1139 dialogs.py:1158
 msgid "Left Arrow "
 msgstr "Freccia Sinistra"
 
-#: dialogs.py:1137
+#: dialogs.py:1139
 msgid "Prev Frame"
 msgstr "Fotogramma Precedente"
 
-#: dialogs.py:1138 dialogs.py:1156
+#: dialogs.py:1140 dialogs.py:1159
 msgid "Right Arrow"
 msgstr "Freccia Destra"
 
-#: dialogs.py:1138
+#: dialogs.py:1140
 msgid "Next Frame"
 msgstr "Fotogramma Successivo"
 
-#: dialogs.py:1139 dialogs.py:1157
+#: dialogs.py:1141 dialogs.py:1160
 msgid "Up Arrow"
 msgstr "Freccia Su"
 
-#: dialogs.py:1139
+#: dialogs.py:1141
 msgid "Next Edit/Mark"
 msgstr "Taglio/Marcatore Successivo"
 
-#: dialogs.py:1140 dialogs.py:1158
+#: dialogs.py:1142 dialogs.py:1161
 msgid "Down Arrow"
 msgstr "Freccia Giù"
 
-#: dialogs.py:1140
+#: dialogs.py:1142
 msgid "Prev Edit/Mark"
 msgstr "Taglio/Marcatore Precedente"
 
-#: dialogs.py:1141
+#: dialogs.py:1143
 msgid "Home"
 msgstr "Home"
 
-#: dialogs.py:1141
+#: dialogs.py:1143
 msgid "Go To Start"
 msgstr "Vai all'Inizio"
 
-#: dialogs.py:1142
+#: dialogs.py:1144
 msgid "Shift + I"
 msgstr "Shift + I"
 
-#: dialogs.py:1142
+#: dialogs.py:1144
 msgid "To Mark In"
 msgstr "Vai a IN"
 
-#: dialogs.py:1143
+#: dialogs.py:1145
 msgid "Shift + O"
 msgstr "Shift + O"
 
-#: dialogs.py:1143
+#: dialogs.py:1145
 msgid "To Mark Out"
 msgstr "Vai a OUT"
 
-#: dialogs.py:1144
+#: dialogs.py:1146
 msgid "Playback"
 msgstr "Riproduci"
 
-#: dialogs.py:1148 guicomponents.py:1804 translations.py:528
+#: dialogs.py:1150 guicomponents.py:1804 translations.py:528
 msgid "Overwrite"
 msgstr "Sovrascrivi"
 
-#: dialogs.py:1149 guicomponents.py:1809
+#: dialogs.py:1151 guicomponents.py:1809
 msgid "Trim"
 msgstr ""
 
-#: dialogs.py:1150 guicomponents.py:1814
+#: dialogs.py:1152 guicomponents.py:1814
 msgid "Roll"
 msgstr ""
 
-#: dialogs.py:1151 guicomponents.py:1819
+#: dialogs.py:1153 guicomponents.py:1819
 msgid "Slip"
 msgstr ""
 
-#: dialogs.py:1155
+#: dialogs.py:1154 guicomponents.py:1824
+msgid "Spacer"
+msgstr "Spaziatore"
+
+#: dialogs.py:1158
 msgid "Move Source Video Left"
 msgstr "Muovi la Sorgente Video a sinistra"
 
-#: dialogs.py:1156
+#: dialogs.py:1159
 msgid "Move Source Video Right"
 msgstr "Muovi la Sorgente Video a Destra"
 
-#: dialogs.py:1157
+#: dialogs.py:1160
 msgid "Move Source Video Up"
 msgstr "Muovi la Sorgente Video in Alto"
 
-#: dialogs.py:1158
+#: dialogs.py:1161
 msgid "Move Source Video Down"
 msgstr "Muovi la Sorgente Video in Basso"
 
-#: dialogs.py:1159
+#: dialogs.py:1162
 msgid "Geometry Editor"
 msgstr "Manipolazione delle Geometrie"
 
-#: dialogs.py:1202
+#: dialogs.py:1205
 msgid "Sequence Watermark"
 msgstr "Watermark della sequenza"
 
-#: dialogs.py:1206
+#: dialogs.py:1209
 msgid "Sequence:"
 msgstr "Sequenza:"
 
-#: dialogs.py:1210
+#: dialogs.py:1213
 msgid "Watermark:"
 msgstr ""
 
-#: dialogs.py:1212
+#: dialogs.py:1215
 msgid "Set Watermark File"
 msgstr "Imposta un file per il Watermark"
 
-#: dialogs.py:1213
+#: dialogs.py:1216
 msgid "Remove Watermark"
 msgstr "Rimuovi il Watermark"
 
-#: dialogs.py:1248
+#: dialogs.py:1251
 msgid "Select Watermark File"
 msgstr "Seleziona un file per il Watermark"
 
-#: dialogs.py:1274
+#: dialogs.py:1277
 msgid "All files"
 msgstr "Tutti i file"
 
-#: dialogs.py:1293
+#: dialogs.py:1296
 #, fuzzy
 msgid "Saving project snapshot"
 msgstr "Salvo il progetto '"
@@ -1772,11 +1785,11 @@ msgstr "Mostra nel Monitor delle Clip"
 msgid "Toggle Star"
 msgstr "Attiva/Disattiva Preferito"
 
-#: guicomponents.py:1388 medialinker.py:123
+#: guicomponents.py:1388 medialinker.py:128
 msgid "Set File Relink Path"
 msgstr ""
 
-#: guicomponents.py:1389 medialinker.py:125
+#: guicomponents.py:1389 medialinker.py:130
 msgid "Delete File Relink Path"
 msgstr ""
 
@@ -1896,10 +1909,6 @@ msgstr "Vettorscopio"
 #: guicomponents.py:1791
 msgid "RGB Parade"
 msgstr "Oscilloscopio RGB"
-
-#: guicomponents.py:1824
-msgid "Spacer"
-msgstr "Spaziatore"
 
 #: guicomponents.py:1835
 #, fuzzy
@@ -2130,11 +2139,11 @@ msgstr "Dissolvenza"
 msgid "Color:"
 msgstr "Colore:"
 
-#: persistance.py:338
+#: persistance.py:345
 msgid "Building sequence "
 msgstr "Crea la Sequenza"
 
-#: persistance.py:362
+#: persistance.py:369
 msgid "Loading icons"
 msgstr "Carica icone"
 
@@ -5141,38 +5150,34 @@ msgstr ""
 "Massimizza o ridimensiona la finestra del programma per avere\n"
 "più spazio per le tracce se possibile."
 
-#: medialinker.py:93
+#: medialinker.py:98
 msgid "Load Project For Relinking"
 msgstr ""
 
-#: medialinker.py:101
+#: medialinker.py:106
 #, fuzzy
 msgid "Original Media Missing:"
 msgstr "Usa Sorgenti"
 
-#: medialinker.py:102
+#: medialinker.py:107
 #, fuzzy
 msgid "Original Media Found:"
 msgstr "Usa Sorgenti"
 
-#: medialinker.py:105
+#: medialinker.py:110
 #, fuzzy
 msgid "Project:"
 msgstr "Progetto"
 
-#: medialinker.py:106
+#: medialinker.py:111
 msgid "<not loaded>"
 msgstr ""
 
-#: medialinker.py:128
-msgid "Autorelink other files"
-msgstr ""
-
-#: medialinker.py:131
+#: medialinker.py:134
 msgid "Display Missing Media Files"
 msgstr ""
 
-#: medialinker.py:132
+#: medialinker.py:135
 msgid "Display Found Media Files"
 msgstr ""
 
@@ -5181,35 +5186,40 @@ msgstr ""
 msgid "Save Relinked Project As..."
 msgstr "Salva il Progetto con Nome..."
 
-#: medialinker.py:261
+#: medialinker.py:263
 #, fuzzy
-msgid "Media File Path"
+msgid "Missing Media File Path"
 msgstr "Percorso:"
 
-#: medialinker.py:263
+#: medialinker.py:264
+#, fuzzy
+msgid "Found Media File Path"
+msgstr "Percorso:"
+
+#: medialinker.py:268
 msgid "Media File Re-link Path"
 msgstr ""
 
-#: medialinker.py:403
+#: medialinker.py:410
 #, fuzzy
 msgid "Select Media File To Relink To"
 msgstr "Elimina Media dal Bin"
 
-#: medialinker.py:428
+#: medialinker.py:435
 #, fuzzy
 msgid "<b>Original path:</b> "
 msgstr "<b>Lunghezza Clip:</b> "
 
-#: medialinker.py:431
+#: medialinker.py:438
 #, fuzzy
 msgid "<b>Relink path:</b> "
 msgstr "<b>Lunghezza:</b>"
 
-#: medialinker.py:466
+#: medialinker.py:473
 msgid "Relinked version of the Project saved!"
 msgstr ""
 
-#: medialinker.py:467
+#: medialinker.py:474
 msgid ""
 "To test the project, close this tool and open the relinked version in "
 "Flowblade."
