@@ -336,8 +336,8 @@ def about_dialog(parent_window):
 
     img = gtk.image_new_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
     flow_label = gtk.Label("Flowblade Movie Editor")
-    ver_label = gtk.Label("0.16.0")
-    janne_label = gtk.Label("Copyright 2014 Janne Liljeblad")
+    ver_label = gtk.Label("0.18.0")
+    janne_label = gtk.Label("Copyright 2015 Janne Liljeblad")
 
     flow_label.modify_font(pango.FontDescription("sans bold 14"))
 
@@ -1185,7 +1185,7 @@ def keyboard_shortcuts_dialog(parent_window):
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(24, 24, 24, 24)
     alignment.add(sw)
-    
+
     dialog.vbox.pack_start(alignment, True, True, 0)
 
     _default_behaviour(dialog)
