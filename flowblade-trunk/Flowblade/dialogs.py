@@ -69,67 +69,17 @@ def new_project_dialog(callback):
     profile_info_panel = guicomponents.get_profile_info_box(default_profile, False)
     profile_info_box = gtk.VBox() 
     profile_info_box.add(profile_info_panel)
-    profiles_vbox = gtk.VBox(False, 2)
-    profiles_vbox.pack_start(profile_select, False, False, 0)
-    profiles_vbox.pack_start(profile_info_box, False, False, 0)
+    profiles_vbox = guiutils.get_vbox([profile_select,profile_info_box], False)
     profiles_frame = panels.get_named_frame(_("Profile"), profiles_vbox)
 
     tracks_combo, tracks_combo_values_list = guicomponents.get_track_counts_combo_and_values_list()
     tracks_select = panels.get_two_column_box(gtk.Label(_("Number of tracks:")),
                                                tracks_combo, 250)
-    tracks_vbox = gtk.VBox(False, 2)
-    tracks_vbox.pack_start(tracks_select, False, False, 0)
+    tracks_vbox = guiutils.get_vbox([tracks_select], False)
 
     tracks_frame = panels.get_named_frame(_("Tracks"), tracks_vbox)
-    
-    """
-    project_type_combo = gtk.combo_box_new_text()
-    project_type_combo.append_text(_("Standard"))
-    project_type_combo.append_text(_("Compact"))
-    project_type_combo.set_active(0)
 
-    
-    type_select = panels.get_two_column_box(gtk.Label(_("Type:")),
-                                               project_type_combo,
-                                               250)
-
-    project_folder = gtk.FileChooserButton(_("Select Compact Project Folder"))
-    project_folder.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
-    project_folder.set_current_folder(os.path.expanduser("~") + "/")
-    project_folder.set_sensitive(False)
-    
-    project_folder_label = gtk.Label(_("Compact Project Folder:"))
-    project_folder_label.set_sensitive(False)
-    
-    project_folder_row = guiutils.get_two_column_box(project_folder_label, project_folder, 250)
-
-    compact_name_entry = gtk.Entry(30)
-    compact_name_entry.set_width_chars(30)
-    compact_name_entry.set_text(_("initial_save"))
-    compact_name_entry.set_sensitive(False)
-    
-    compact_name_label = gtk.Label(_("Compact Project Initial Name:"))
-    compact_name_label.set_sensitive(False)
-    
-    compact_name_entry_row = guiutils.get_two_column_box(compact_name_label, compact_name_entry, 250)
-    
-    project_type_combo.connect('changed', lambda w: _new_project_type_changed(w, 
-                                                    project_folder,
-                                                    project_folder_label,
-                                                    compact_name_entry,
-                                                    compact_name_label))
-
-    type_vbox = gtk.VBox(False, 2)
-    type_vbox.pack_start(type_select, False, False, 0)
-    type_vbox.pack_start(project_folder_row, False, False, 0)
-    type_vbox.pack_start(compact_name_entry_row, False, False, 0)
-
-    type_frame = panels.get_named_frame(_("Project Type"), type_vbox)
-    """
-    vbox = gtk.VBox(False, 2)
-    vbox.add(profiles_frame)
-    vbox.add(tracks_frame)
-    #vbox.add(type_frame)
+    vbox = guiutils.get_vbox([profiles_frame, tracks_frame], False)
 
     alignment = dialogutils.get_default_alignment(vbox)
 
@@ -178,8 +128,6 @@ def save_backup_snapshot(name, callback):
     type_vbox = gtk.VBox(False, 2)
     type_vbox.pack_start(project_folder_row, False, False, 0)
     type_vbox.pack_start(compact_name_entry_row, False, False, 0)
-
-    #type_frame = panels.get_named_frame(_("Project Type"), type_vbox)
     
     vbox = gtk.VBox(False, 2)
     vbox.add(type_vbox)
@@ -351,9 +299,7 @@ def about_dialog(parent_window):
     vbox.pack_start(janne_label, False, False, 0)
     vbox.pack_start(gtk.Label(), True, True, 0)
    
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(6, 24, 12, 12)
-    alignment.add(vbox)
+    alignment =  dialogutils.get_default_alignment(vbox)
     alignment.set_size_request(450, 370)
 
     up_label = gtk.Label("Upstream:")
@@ -376,21 +322,15 @@ def about_dialog(parent_window):
     vbox2.pack_start(guiutils.get_pad_label(30, 22), False, False, 0)
     vbox2.pack_start(gtk.Label(), True, True, 0)
 
-    alignment2 = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment2.set_padding(6, 24, 12, 12)
-    alignment2.add(vbox2)
+    alignment2 = dialogutils.get_default_alignment(vbox2)
     alignment2.set_size_request(450, 370)
 
     license_view = guicomponents.get_gpl3_scroll_widget((450, 370))
-    alignment3 = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment3.set_padding(6, 24, 12, 12)
-    alignment3.add(license_view)
+    alignment3 = dialogutils.get_default_alignment(license_view)
     alignment3.set_size_request(450, 370)
 
     translations_view = guicomponents.get_translations_scroll_widget((450, 370))
-    alignment4 = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment4.set_padding(6, 24, 12, 12)
-    alignment4.add(translations_view)
+    alignment4 = dialogutils.get_default_alignment(translations_view)
     alignment4.set_size_request(450, 370)
     
     notebook = gtk.Notebook()
@@ -488,9 +428,7 @@ def environment_dialog(parent_window, write_data_cb):
     pane.pack_start(guiutils.pad_label(5, 5), False, False, 0)
     pane.pack_start(r_pane, False, False, 0)
     
-    a = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    a.set_padding(6, 24, 12, 12)
-    a.add(pane)
+    a = dialogutils.get_default_alignment(pane)
     
     dialog.vbox.pack_start(a, True, True, 0)
     dialog.connect('response', _dialog_destroy)
@@ -779,9 +717,7 @@ def tracks_count_change_dialog(callback):
     tracks_vbox.pack_start(pad, False, False, 0)
     tracks_vbox.pack_start(tracks_select, False, False, 0)
     
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(6, 24, 24, 24)
-    alignment.add(tracks_vbox)
+    alignment = dialogutils.get_alignment2(tracks_vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
@@ -823,9 +759,7 @@ def new_sequence_dialog(callback, default_name):
     tracks_vbox.pack_start(guiutils.get_pad_label(12, 12), False, False, 0)
     tracks_vbox.pack_start(open_hbox, False, False, 0)
 
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(6, 24, 24, 24)
-    alignment.add(tracks_vbox)
+    alignment = dialogutils.get_alignment2(tracks_vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
@@ -851,9 +785,7 @@ def new_media_name_dialog(callback, media_file):
     tracks_vbox.pack_start(name_select, False, False, 0)
     tracks_vbox.pack_start(guiutils.get_pad_label(12, 12), False, False, 0)
 
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(6, 24, 24, 24)
-    alignment.add(tracks_vbox)
+    alignment = dialogutils.get_alignment2(tracks_vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
@@ -880,9 +812,7 @@ def new_clip_name_dialog(callback, clip):
     tracks_vbox.pack_start(name_select, False, False, 0)
     tracks_vbox.pack_start(guiutils.get_pad_label(12, 12), False, False, 0)
 
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(6, 24, 24, 24)
-    alignment.add(tracks_vbox)
+    alignment = dialogutils.get_alignment2(tracks_vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
@@ -974,9 +904,7 @@ def open_image_sequence_dialog(callback, parent_window):
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(6, 24, 24, 24)
-    alignment.add(vbox)
+    alignment = dialogutils.get_alignment2(vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)

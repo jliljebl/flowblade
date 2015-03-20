@@ -25,7 +25,6 @@ import pygtk
 pygtk.require('2.0');
 import gtk
 
-
 import guiutils
 
 def dialog_destroy(dialog, response):
@@ -166,11 +165,18 @@ def get_single_line_text_input_dialog(chars, label_width,title, ok_button_text,
 
 def get_default_alignment(panel):
     alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(6, 24, 12, 12)
+    alignment.set_padding(6, 24, 24, 24)
     alignment.add(panel)
     
     return alignment
 
+def get_alignment2(panel):
+    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment.set_padding(6, 24, 12, 12)
+    alignment.add(panel)
+    
+    return alignment
+    
 # ------------------------------------------------------------------ delayed window destroying 
 def delay_destroy_window(window, delay):
     gobject.timeout_add(int(delay * 1000), _window_destroy_event, window)
