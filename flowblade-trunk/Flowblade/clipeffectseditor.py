@@ -204,6 +204,7 @@ def create_widgets():
     
     widgets.value_edit_box = gtk.VBox()
     widgets.value_edit_frame = gtk.Frame()
+    widgets.value_edit_frame.set_shadow_type(gtk.SHADOW_NONE)
     widgets.value_edit_frame.add(widgets.value_edit_box)
 
     widgets.add_effect_b = gtk.Button(_("Add"))
