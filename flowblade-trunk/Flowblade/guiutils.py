@@ -74,6 +74,14 @@ def get_centered_box(widgets):
     hbox.pack_start(gtk.Label(), True, True, 0)
     return hbox
 
+def get_vbox(widgets, add_pad_label=True, padding=2):
+    vbox = gtk.VBox(False, padding)
+    for widget in widgets:
+        vbox.pack_start(widget, False, False, 0)
+    if add_pad_label:
+        vbox.pack_start(gtk.Label(), True, True, 0)
+    return vbox
+
 def get_single_column_box(widgets):
     vbox = gtk.VBox()
     for widget in widgets:
