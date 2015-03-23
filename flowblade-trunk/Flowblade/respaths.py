@@ -57,7 +57,7 @@ def set_paths(root_path):
     COMPOSITORS_XML_DOC = root_path + "/res/filters/compositors.xml"
     REPLACEMENTS_XML_DOC = root_path + "/res/filters/replace.xml"
     PREFS_PATH = root_path + "/res/prefs/"
-    HELP_DOC = root_path + "/res/help/help.xml"
+    HELP_DOC = root_path + "/res/help/help.html"
     LOCALE_PATH = root_path + "/locale/"
     GPL_3_DOC = root_path + "/res/help/gpl3"
     TRANSLATIONS_DOC = root_path + "/res/help/translations"
