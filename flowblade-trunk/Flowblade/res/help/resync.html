@@ -1,0 +1,74 @@
+ <!DOCTYPE html>
+<html>
+<head>
+  <title>Page Title</title>
+  <link rel="stylesheet" href="style.css">
+<script src="toc.js" type="text/javascript"></script>
+</head>
+
+<body>
+
+<div id="content">
+<img src="header_text_5.png" >
+
+<h2>Clip Syncing and Audio Split Editing</h2>
+
+<p>
+In Flowblade Movie Editor you can <b>set a clip's positions to follow another clip's positions</b> on request.
+</p>
+<p>
+This is done by <b>setting clip to be a Sync Child Clip</b> clips by selecting a
+clip on track V1 as its Sync Parent Clip.
+</p>
+<p>
+<b>Only clips on track V1 can be Sync Parent Clips</b>. This is done to encourage edit style in which the main body of the Sequence is on track V1 and composites and audio split edits are done relative to the clip sequence on track V1.
+</p>
+<p>
+<b>Sync feature helps preserve earlier work</b> an multitrack composites and audio split edits when clips are no longer in correct positions relative to each other, because of edits elsewhere on the Sequence.
+</p>
+<p>
+<b>Resyncs are only done on request</b> to avoid jumping of clips on the timeline while editing. Explicit resyncs are also better from the point of view of avoiding side effects when doing edits.
+</p>
+
+<h3>Setting Sync Parent</h3>
+<ol>
+<li> Click <b>Right Mouse</b> on clip and select Select Sync Parent Clip... on any clip NOT on track V1.</li>
+<li> Cursor turns into a Target Cross. Click on clip on track V1 to select it as Sync Parent Clip.</li>
+<li> Sync Relation is established between the two clips. Cursor turns back into a default pointer.</li>
+<li> Sync State Stripe appers on the Sync Child Clip. Sync State Indicator Stripes on Clips:</li>
+<ul>
+<li> Green means that clip is in sync with parent.</li>
+<li> Red means that clip is NOT in sync with parent.</li>
+<li> Gray means that Sync Parent Clip is no longer on track V1.</li>
+</ul>
+</ol>
+
+<h3>Resyncing Sync Child Clips</h3>
+<ul>
+<li> Select <b>Edit -> Resync All to resync</b> from application menu all Sync Child Clips.</li>
+<li> Select <b>Edit - >Resync Selected to resync</b> from application menu selected Sync Child Clips.</li>
+<li> Click <b>Right Mouse</b> on Sync Child Clip and select <b>Resync</b> from popoup menu to resync single clip.</li>
+<li> Press <b>Resync Selected</b> Bbtton to resync selected Sync Child Clips.</li>
+</ul>
+
+<h3> Clearing Sync Parent Relations </h3>
+<ul>
+<li> Click <b>Right Mouse</b> on Sync Child Clip and select Clear Sync Relation.</li>
+</ul>
+
+<h3>Syncing Composited Clips</h3>
+<ul>
+<li> If appropriate set all clips that are part of a multitrack composite synched to the same clip.</li>
+</ul>
+
+<h3>Audio Split Syncing</h3>
+<ul>
+<li> Click <b>Right Mouse</b> on clip in track V1 and select Split Audio Synched.</li>
+<li> Edit audio split using Two Roll Trim mode to maintain sync with parent clip.</li>
+<li> Resync Audio as needed.</li>
+</ul>
+
+</div>
+</body>
+
+</html> 

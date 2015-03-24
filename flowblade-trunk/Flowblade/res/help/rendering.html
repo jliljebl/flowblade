@@ -1,0 +1,105 @@
+ <!DOCTYPE html>
+<html>
+<head>
+  <title>Page Title</title>
+  <link rel="stylesheet" href="style.css">
+<script src="toc.js" type="text/javascript"></script>
+</head>
+
+<body>
+
+<div id="content">
+<img src="header_text_5.png" >
+
+<h2>Rendering</h2>
+<p>
+In Flowblade there are two ways to render output:
+</p>
+<ul>
+<li> <b>Render Panel</b> in the top left notebook in the main window.</li>
+<li> <b>Batch Render Queue</b> application that can launched from Render menu.</li>
+</ul>
+
+<p>
+Almost all the encodings available for FLOSS applications can used in Flowblade.
+</p>
+
+<h3>Rendering Panel</h3>
+
+<h4>Selecting Parameters</h4>
+<ul>
+<li> <b>Folder File Select</b> button will select folder to place the output file in.</li>
+<li> <b>Name</b> entry widget provides means to set the name of the output file.</li>
+<li> Use <b>Encoding Format</b> and untitled <b>Quality</b> drop down menus make to select the type of file to be rendered.</li>
+</ul>
+
+<h4>Rendering output</h4>
+<ol>
+<li> Press <b>Render</b> Button to begin rendering.</li>
+<li> A Render Window will open displaying information on file path of render file, estimated time left, render time and a Progress bar widget.</li>
+<li> After rendering is complete, Render Window will close automatically.</li>
+</ol>
+
+<h3> Batch Render Queue </h3>
+
+<p>
+Flowblade offers a dedicated Batch Render Queue application. Batch Render Queue is a separate application to Flowblade and runs on different process, so it is possible to close Flowblade without affecting ongoing renders.
+</p>
+<p>
+Render queue is a persistent data structure of render items on disk. Each item consists of a Project file and saved render parameters. Users can add render items to render queue and then render the whole queue without any further user input.
+</p>
+
+<h4>Adding Items to Batch Render Queue</h4>
+<ul>
+<li> Press <b>To Queue</b> button in <b>Render</b> tab.</li>
+<li> Select <b>Render->Add to Batch Render Queue...</b> item from menu</li>
+</ul>
+
+<h4>Using Batch Render Queue application</h4>
+<ol>
+<li> Open Batch Render Queue application by selecting <b>Render->Batch Render Queue</b> from menu.</li>
+<li> Press <b>Reload Queue</b> button to display render items that have been added to render queue since it was opened.</li>
+<li> Use <b>Delete Selected</b> and <b>Delete Finished</b> buttons to remove items from queue.</li>
+<li> Use checkbox widget in the Render column to select which items will be rendered.</li>
+<li> Press <b>Render</b> button to begin rendering.</li>
+</ol>
+<p>
+UI actions:
+</p>
+<ul>
+<li> <b>Right Mouse Click</b> render item to show render item context menu.</li>
+<li> <b>Save Item Project As...</b> allows th user to save the Project file of the render item into same other location</li>
+<li> <b>Render Properties</b> displays the render properties that were set when the item was added to render queue.</li>
+<li> <b>Delete</b> deletes the item from queue</li>
+</ul>
+<h3>Rendering behind the scenes: MLT and libavformat(FFMpeg)</h3>
+<p>
+Flowblade Movie Editor is a Python application interfacing to MLT multitrack media framework.
+Other video editing applications build on top of MLT include OpenShot and Kdenlive.
+</p>
+<p>
+MLT uses C-library libavformat(FFMpeg) to render output files, and rendering is defined by setting FFMpeg encoding parameters.
+These parameters are delivered from Flowblade Movie Editor to MLT by creating a "avformat" Consumer object for
+a  given Render Profile, and then setting its Rendering Args.
+These latter arguments are exactly the same which are used when using FFmpeg to encode video files.
+</p>
+<p>
+Rendering arguments for encoding different types of video files are pre-packed and can be selected using
+Encocing / Format and Quality Drop Down Menus. Arguments can be refined
+by checking Render with args Checkbox and changing args values and/or adding/removing args.
+</p>
+<p>
+Any kind of video files supported by the installed version of MLT can be encoded by creating a user defined
+Render Profile and setting its Rendering Args. Google for FFMpeg encoding to find Args combinations for different video files.
+</p>
+<p>
+Search web for information on encoding files with FFMpeg to get examples of Rendering Args that can be used.
+</p>
+<h3>Flowblade rendering pipeline</h3>
+
+<img src="encoding.png">
+
+</div>
+</body>
+
+</html> 

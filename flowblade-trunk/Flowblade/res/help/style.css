@@ -27,6 +27,12 @@ body {
 	margin-bottom: 10px ;
 }
 
+.important {
+	background-color: #f5d77d;
+	padding: 25px;
+	margin-bottom: 10px ;
+}
+
 .tabbed {
 	padding-left: 25px;
 	margin-bottom: 10px ;
@@ -53,10 +59,12 @@ h2{
 }
 h3{
 	font-size:22px;
-	margin-top: 45px ;
+	margin-top: 50px;
+	margin-bottom:0px;
 }
 h4{
-	margin:10px 0;
+	margin-top:10px;
+	margin-bottom:0px;
 	font-size:18px;
 }
 h5{
@@ -65,11 +73,6 @@ h5{
  h6{
 	font-size:14px;
 }
-
-p {
-	margin:10px 0;
-}
-
 
 /**  fonts  **/
 @font-face {
