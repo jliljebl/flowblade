@@ -5,7 +5,7 @@ html {
 }
 
 body {
-  font-family: Georgia, "Times New Roman", Times, serif;
+ 	font-family: Georgia, "Times New Roman", Times, serif;
 	color:#222222;
 	background-color: #ffffff; 
 	/*font:normal 400 14px/1 'robotoregular', Arial, sans-serif;*/
@@ -19,6 +19,36 @@ body {
   width: 700px ;
   margin-left: auto ;
   margin-right: auto ;
+}
+.grid-container {
+	margin-top: 80px;
+        width: 700px;
+}
+
+.row:before, 
+.row:after {
+	content:"";
+	display: table ;
+	clear:both;
+}
+
+.column4 {
+	float: left; 
+	width: 33.3%;
+	margin-bottom: 50px;
+}
+
+.subject-cell {
+	padding-right: 20px;
+	color:#222222;
+	/*font:normal 400 14px/1 'robotoregular', Arial, sans-serif;*/
+	font-family: sans-serif;
+	word-wrap: break-word;
+	line-height: 1.4;
+	vertical-align: baseline;
+	font-weight:400;
+	font-size:22px;
+	text-transform: uppercase;
 }
 
 .note {
@@ -40,6 +70,27 @@ body {
 
 .tabbed_line {
 	padding-left: 25px;
+}
+
+.tocitem {
+	font-size:12px;
+	line-height: 1.0;
+}
+
+.copyright-info {
+ 	font-family: Georgia, "Times New Roman", Times, serif;
+	margin-top:80px;
+	color: #444444;
+	font-weight:400;
+	font-size:12px;
+}
+
+.subject-header {
+	text-transform: uppercase;
+	margin-top:10px;
+	color: #000000;
+	font-weight:400;
+	font-size:26px;
 }
 
 /* Otsikot 1 */

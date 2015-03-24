@@ -9,145 +9,77 @@
 <body>
 
 <div id="content">
+<img src="header_text_5.png" >
 
-<script>
-window.onload = function () {
-    var toc = "";
-    var level = 0;
-
-    document.getElementById("toccontent").innerHTML =
-        document.getElementById("toccontent").innerHTML.replace(
-            /<h([\d])>([^<]+)<\/h([\d])>/gi,
-            function (str, openLevel, titleText, closeLevel) {
-                if (openLevel != closeLevel) {
-                    return str;
-                }
-
-                if (openLevel > level) {
-                    toc += (new Array(openLevel - level + 1)).join("<ul>");
-                } else if (openLevel < level) {
-                    toc += (new Array(level - openLevel + 1)).join("</ul>");
-                }
-
-                level = parseInt(openLevel);
-
-                var anchor = titleText.replace(/ /g, "_");
-                toc += "<li><a href=\"#" + anchor + "\">" + titleText
-                    + "</a></li>";
-
-                return "<h" + openLevel + "><a name=\"" + anchor + "\">"
-                    + titleText + "</a></h" + closeLevel + ">";
-            }
-        );
-
-    if (level) {
-        toc += (new Array(level + 1)).join("</ul>");
-    }
-
-    document.getElementById("toc").innerHTML += toc;
-};
-</script>
-
-    <div id="toc">
-        <h3>Table of Contents</h3>
-    </div>
-
- <a href="basic_editing.html">Basic Editing</a> 
- <a href="edit_tools.html">Edit Tools</a> 
- <a href="filtering.html">Filtering image and audio</a> 
- <a href="range_log.html">Range Log</a>
- <a href="resync.html">Clip Syncing and Audio Split Editing</a> 
- <a href="tools.html">Tools</a>
- <a href="rendering.html">Rendering</a>
- <a href="proxy.html">Proxy Editing</a>
- <a href="slow.html">Slow / Fast Motion</a>
- <a href="compositor.html">Creating Composited Images</a>
-<div id="toccontent">
-
-<h2>1. Introduction</h2>
-
-<p>
-Flowblade Movie Editor is a <b>multitrack non-linear video editor</b> for Linux.
-<p/>
-<p>
-With Flowblade Movie Editor you can compose movies from video clips, audio clips and graphics files. Clips can be cut at the desired frames, filters can be added to clips, and you can create multilayer composite images using compositor objects.
-</p>
-<p>
-In Flowblade  clips are usually automatically placed tightly after the previous clip - or between two existing clips - when they
-are inserted on the timeline. Edits are fine tuned by trimming in and out points of clips, or by cutting and deleting parts of clips.
-</p>
-
-http://sites.google.com/site/phantom2dsite/Home/flowbladeappicon.png
-----
-
-
-http://sites.google.com/site/phantom2dsite/Home/correct_comp.png
-
-<h3>TABLE: Compositors</h3>
-|| <b>Compositor</b> || <b>Description</b> ||
-||Affine||Does affine transform (move-rotate-skew) before compositing. Has keyframed mix, position and rotation, and non-keyframed skew.||
-||Affine Blend||Does affine transform (move-rotate) before compositing in any blend mode. Has keyframed mix, position and rotation.||
-||Blend||Does keyframed mix in any blend mode.||
-||Dissolve||Does keyframed mix.||
-||Picture in Picture||Does picture in picture composite with keyframed mix and transform.||
-||Region||Does picture in picture composite with keyframed mix, wipe and transform.||
-||Wipe||Does a non-keyframed full wipe that has the same duration as the clip.||
-
-<h3>TABLE: Blenders</h3>
-|| <b>Blend Mode</b> || <b>Description</b> ||
-||Add||This blend mode simply adds pixel values of one layer with the other. In case of values above 255 (in the case of RGB), white is displayed.||
-||Burn||The Burn mode divides the inverted bottom layer by the top layer, and then inverts the result.||
-||Color Only||Color blend mode preserves the luma of the bottom layer, while adopting the hue and chroma of the top layer.||
-||Darken||Darken takes the darkest value for each pixel from each layer.||
-||Difference||Difference subtracts the top layer from the bottom layer or the other way round, to always get a positive value. Blending with black produces no change, as values for all colours are 0. (The RGB value for black is 0,0,0). Blending with white inverts the picture.One of the main utilities for this is during the editing process, when it can be used to verify alignment of pictures with similar content||
-||Divide||This blend mode simply divides pixel values of one layer with the other.||
-||Dodge||Dodge blend mode divides the bottom layer by the inverted top layer. This decreases the contrast to make the bottom layer reflect the top layer: the brighter the top layer, the more its colour affects the bottom layer.||
-||Grain Extract|| - ||
-||Grain Merge|| - ||
-||Hardlight||Hard Light combines Multiply and Screen blend modes. As opposed to Overlay, the contrast is also increased.||
-||Hue||Hue blend mode preserves the luma and chroma of the bottom layer, while adopting the hue of the top layer.||
-||Lighten||Lighten takes the lightest pixel from each layer.||
-||Multiply||Multiply blend mode multiplies the numbers for each pixel of the top layer with the corresponding pixel for the bottom layer. As a simple multiplication for 8-bit/channel can get values as high as 65025 (255x255), which is far higher than the maximum allowed value, 255, the result is divided by 255.||
-||Overlay||Overlay combines Multiply and Screen blend modes. Light parts of the picture become lighter and dark parts become darker. An overlay with the same picture looks like an S-curve.||
-||Saturation||Saturation blend mode preserves the luma and hue of the bottom layer, while adopting the chroma of the top layer.||
-||Screen||With Screen blend mode the values of the pixels in the two layers are negated, multiplied, and then negated again. This is in some way the opposite of multiply. The result is a brighter picture.||
-||Softlight||This is a softer version of Overlay. Applying pure black or white does not result in pure black or white.||
-||Subtract||This blend mode simply subtracts pixel values of one layer with the other. In case of negative values, black is displayed.||
-||Value||Value blend mode preserves the hue and chroma of the bottom layer, while adopting the luma of the top layer.||
-
-_Blend descriptions are from Wikipedia and are under Creative Commons Attribution-ShareAlike License._
-
-
-
-
-http://sites.google.com/site/phantom2dsite/Home/flowbladeappicon.png
-----
-
-http://sites.google.com/site/phantom2dsite/Home/flowbladeappicon.png
-----
-
-
-http://sites.google.com/site/phantom2dsite/Home/flowbladeappicon.png
-----
-
-
-http://sites.google.com/site/phantom2dsite/Home/flowbladeappicon.png
-----
-
-
-
-
-http://sites.google.com/site/phantom2dsite/Home/flowbladeappicon.png
-----
-
-
-http://sites.google.com/site/phantom2dsite/Home/flowbladeappicon.png
-----
-
-
-http://sites.google.com/site/phantom2dsite/Home/flowbladeappicon.png
-
+<div class="grid-container outline">
+	<div class="row">
+		<div class="column4">
+		<div class="subject-cell">
+			<a href="intro.html">Introduction</a>
+		</div>
+		</div> 
+		<div class="column4">
+		<div class="subject-cell">
+			<a href="basic_editing.html">Basic Editing</a> 
+		</div>
+		</div>
+		<div class="column4">
+		<div class="subject-cell">
+			<a href="edit_tools.html">Edit Tools</a> 
+		</div> 
+		</div> 
+	</div> 
+	<div class="row">
+		<div class="column4">
+		<div class="subject-cell">
+			<a href="compositor.html">Creating Composited Images</a>
+		</div>
+		</div> 
+		<div class="column4">
+		<div class="subject-cell">
+ 			<a href="filtering.html">Filtering image and audio</a> 
+		</div>
+		</div> 
+		<div class="column4">
+		<div class="subject-cell">
+ 			<a href="resync.html">Clip Syncing and Audio Split Editing</a> 
+		</div> 
+		</div> 
+	</div>
+	<div class="row">
+		<div class="column4">
+		<div class="subject-cell">
+			<a href="range_log.html">Range Log</a>
+		</div>
+		</div> 
+		<div class="column4">
+		<div class="subject-cell">
+ 			<a href="proxy.html">Proxy Editing</a>
+		</div>
+		</div> 
+		<div class="column4">
+		<div class="subject-cell">
+ 			<a href="slow.html">Slow / Fast Motion</a>
+		</div> 
+		</div> 
+	</div>
+	<div class="row">
+		<div class="column4">
+		<div class="subject-cell">
+ 			<a href="tools.html">Tools</a>
+		</div>
+		</div> 
+		<div class="column4">
+		<div class="subject-cell">
+			 <a href="rendering.html">Rendering</a>
+		</div>
+		</div> 
+	</div>
 </div>
+
+<div class="copyright-info">Flowblade Reference Guide v 1.0 19-3-2015. GLP3</div> 
+
+
 </div>
 </body>
 
