@@ -3,11 +3,56 @@
 <head>
   <title>Page Title</title>
   <link rel="stylesheet" href="style.css">
+<script src="toc.js" type="text/javascript"></script>
 </head>
 
 <body>
+<body onload="generateTOC(document.getElementById('toc'));">
+
+
 <div id="content">
 
+<script>
+window.onload = function () {
+    var toc = "";
+    var level = 0;
+
+    document.getElementById("content").innerHTML =
+        document.getElementById("content").innerHTML.replace(
+            /<h([\d])>([^<]+)<\/h([\d])>/gi,
+            function (str, openLevel, titleText, closeLevel) {
+                if (openLevel != closeLevel) {
+                    return str;
+                }
+
+                if (openLevel > level) {
+                    toc += (new Array(openLevel - level + 1)).join("<ul>");
+                } else if (openLevel < level) {
+                    toc += (new Array(level - openLevel + 1)).join("</ul>");
+                }
+
+                level = parseInt(openLevel);
+
+                var anchor = titleText.replace(/ /g, "_");
+                toc += "<li><a href=\"#" + anchor + "\">" + titleText
+                    + "</a></li>";
+
+                return "<h" + openLevel + "><a name=\"" + anchor + "\">"
+                    + titleText + "</a></h" + closeLevel + ">";
+            }
+        );
+
+    if (level) {
+        toc += (new Array(level + 1)).join("</ul>");
+    }
+
+    document.getElementById("toc").innerHTML += toc;
+};
+</script>
+
+    <div id="toc">
+        <h3>Table of Contents</h3>
+    </div>
 
 <h2>Introduction</h2>
 
@@ -22,12 +67,12 @@ In Flowblade  clips are usually automatically placed tightly after the previous 
 are inserted on the timeline. Edits are fine tuned by trimming in and out points of clips, or by cutting and deleting parts of clips.
 </p>
 
-<h2>Basic Editing</h2>
+<h2>2. Basic Editing</h2>
 <p>
 This section describes the minimal workflow for making a movie using only a single track. Full editing workflow is described in detail in the later sections.
 </p>
 
-<h3>Creating a New Project</h3>
+<h3>2.1 Creating a New Project</h3>
 <p>
 Flowblade Movie Editor saves work in project files.
 </p>
@@ -63,7 +108,7 @@ Flowblade Movie Editor handles image data internally as YUV420 frames, so the en
 For <b>best possible quality</b> the <b>input material, Project Profile and Rendering Profile</b> should <b>all have the same pixel dimensions</b> and pixel aspect ratio.
 </div>
 
-<h3>Adding and removing new Sequences</h3>
+<h3>2.2 Adding and removing new Sequences</h3>
 <p>
 A Project contains one or more Sequences. 
 </p>
@@ -107,120 +152,161 @@ Opening Media Files:
 </div>
 
 <h3>Working with Bins</h3>
-<b>Adding a Bin</b>: Press <b>Add</b> button above Bins table.
 
-<b>Deleting a Bin</b>: Press <b>Delete</b> button in above Bins table.
-Bin must be empty before removing. A project must always have at least one Bin.
-
-<b>Renaming a Bin</b>: Double click on the Bin name.
-
-<b>Moving files to another Bin</b>: Select one or more files in the unnamed table. While holding down the <b>Left mouse</b> button after last selection drag files on
-top of a Bin in the Bins table.
-
+<div class="tabbed">
+<p><b>Adding a Bin</b>: Press <b>Add</b> button above Bins table.</p>
+<p><b>Deleting a Bin</b>: Press <b>Delete</b> button above Bins table.
+Bin must be empty before removing. A project must always have at least one Bin.</p>
+<p><b>Renaming a Bin</b>: Double click on the Bin name.</p>
+<p><b>Moving files to another Bin:</b> Drag files on top of bin icon.</p>
+</div>
 
 <h3>Using Timeline</h3>
 
-<b>Scrolling Timeline</b>:
+<h4>Scrolling Timeline</h4>
+<ul>
 <li> Press and Drag <b>Scrollbar</b> below Timeline</li>
 <li> Scroll <b>Mouse Middle</b> button + <b>CTRL</b> key while on top of Timeline</li>
+</ul>
 
-<b>Zooming Timeline</b>:
+<h4>Zooming Timeline</h4>
+<ul>
 <li> Click <b>Zoom In</b>, <b>Zoom Out</b> or <b>Zoom Length</b> buttons.</li>
 <li> Scroll <b>Mouse Middle</b> button on top of Timeline </li>
+</ul>
 
-<b>Changing Current Frame</b>:
+<h4>Changing Current Frame</h4>
+<ul>
 <li> Drag with <b>Right Mouse</b> button starting from  an empty space in the Timeline.</li>
 <li> Drag with <b>Left Mouse</b> button on the Frame Scale.</li>
 <li> Drag with <b>Left Mouse</b> on the Monitor Position Bar.</li>
 <li> Click <b>Left Arrow</b> key or <b>Right Arrow</b> key to move to next or previous frame.</li>
 <li> Click <b>Up Arrow</b> key or <b>Down Arrow</b> key to move to next or previous cut on topmost active track.</li>
 <li> Click <b>Next</b> or <b>Prev</b> button in Monitor Buttons area to move to next or previous frame.</li>
+</ul>
 
-<b>Changing Current Frame when Clip is displayed on Monitor</b>:
+<h4>Changing Current Frame when Clip is displayed on Monitor</h4>
+<ul>
 <li> Drag with <b>Left Mouse</b> on the Monitor Position Bar.</li>
 <li> Click <b>Left Arrow</b> key or <b>Right Arrow</b> key to move to next or previous frame.</li>
 <li> Click <b>Up Arrow</b> key or <b>Down Arrow</b> key to move to next or previous of the following: Mark In/Mark Out/Start/End</li>
 <li> Click <b>Next</b> or <b>Prev</b> button in Monitor Buttons area to move to next or previous frame.</li>
+</ul>
 
-<b>Switching between Timeline and Clip Display</b>:
+<h4>Switching between Timeline and Clip Display</h4>
+<ul>
 <li> Click <b>Timeline/Clip</b> button in Monitor Buttons area.</li>
 <li> Drag Media File on top of <b>Monitor</b> to display Clip.</li>
+</ul>
 
-_<b>Track switches</b>_
-
-http://sites.google.com/site/phantom2dsite/Home/tracks_column.png
-
-<b>Setting Active Tracks</b>:
+<h4>Setting Active Tracks</h4>
+<ul>
 <li> Click <b>Track Active Switch</b> on the right side of Tracks Column area.</li>
+</ul>
 
-<b>Effects of Track Active State</b>;
+<div class="note">
+<h4>Effects of Track Active State</h4>
+<ul>
 <li> Cuts are only performed on active Tracks.</li>
 <li> Inserting Media File that is currently displayed in Monitor using <b>Insert From Monitor, Append From Monitor</b> or <b>3-Point Ovewrite</b> buttons places clip on the top most active Track indicated by arrow icon.</li>
+</ul>
+</div>
 
-<b>Selecting single clip</b>:
+<h4>Selecting single clip</h4>
+<ul>
 <li> Click on a clip with <b>Left Mouse</b> button.</li>
+</ul>
 
-<b>Selecting multiple clips on the same track</b>:
+<h4>Selecting multiple clips on the same track</h4>
+<ul>
 <li> Click on a clip with <b>Left Mouse</b> button.</li>
 <li> Click on another clip on the same track with <b>Control + Left Mouse</b> button.</li>
 <li> All clips between clicked clips will be selected.</li>
 <li> <b>There is no box selection or any other means of selecting clips from different Tracks at the same time.</b></li>
+</ul>
 
-<b>De-selecting all clips</b>
+<h4>De-selecting all clips</h4>
+<ul>
 <li> Click on Timeline area background.</li>
+</ul>
 
 <h3>Adding clips to Sequence </h3>
 
-<b>Drag'n'Drop</b>
+<h4>Drag'n'Drop</h4>
+<ul>
 <li> Press on a Media File in <b>Media</b> tab and drag it on top of the track you want to place it on. </li>
 <li> Clip will be inserted on the track at the nearest cut.</li>
+</ul>
 
-<b>From Monitor</b>
-# Open clip in Monitor by either:
+<h4>From Monitor</h4>
+<ol>
+<li>Open clip in Monitor by either:</li>
+<ul>
 <li> double clicking on thumbnail icon,</li>
 <li> dragging Media File on top of Monitor or</li>
 <li> selecting <b>Open in Clip Monitor</b> item from <b>Right Mouse</b> context menu.</li>
-# Select insert range
+</ul>
+<li>Select insert range</li>
+<ul>
 <li> Use <b>Mark In</b> and <b>Mark Out</b> buttons to select range. </li>
 <li> Use <b>I</b> an <b>O</b> keys to set to select range.</li>
 <li> If range is not set, then the full clip length will be inserted.</li>
-# Press <b>Insert From Monitor</b> button
+</ul>
+<li>Press <b>Insert From Monitor</b> button</li>
+<ul>
 <li> Clip will be inserted on the first active track at the cut nearest of the currently displayed frame. First active track is marked by down arrow in the track Active Switch.</li>
-
+</ul>
+</ol>
 
 <h3>Editing Clips on Timeline</h3>
+<p>
 Once you have placed clips on the Timeline to form a Sequence, you will probably need to refine the cuts between clips.
-
-<b>Trimming Clips</b>
+</p>
+<h4>Trimming Clips</h4>
+<p>
 Use [FlowbladeReference#Trim_Tool Trim Tool], [FlowbladeReference#Roll_Tool Roll Tool] or  [FlowbladeReference#Slip_Tool Slip Tool]
+</p>
 
-
-<b>Moving Clips</b>
+<h4>Moving Clips</h4>
+<p>
 Use [FlowbladeReference#Insert_Tool Insert Tool] or [FlowbladeReference#Overwrite_Tool Overwrite Tool]
+</p>
 
-<b>Cutting Clips</b>
-# Select cut frame
+<h4>Cutting Clips</h4>
+<ol>
+<li>Select cut frame</li>
+<ul>
 <li> Cut is always made before currently displayed frame on all active tracks.</li>
 <li> If you wish to cut off piece from start of the clip, drag Current Frame Pointer to the first frame you wish to have displayed after cut clip piece is removed.</li>
 <li> If you wish to cut off piece from end of the clip, drag Current Frame Pointer to the last frame you wish to have displayed, and then move one frame forward. </li>
-# Cut clip
+</ul>
+<li>Cut clip</li>
+<ul>
 <li> Press <b>Cut</b> button or press <b>X</b> on the keyboard.</li>
-# Select and delete cut clip piece
+<li>Select and delete cut clip piece</li>
 <li> Click on the cut clip piece and either press <b>Delete</b> key or <b>Splice Out</b> button of <b>Lift</b> button.</li>
+</ul>
+</ol>
 
+<div class="note">
 <b>Use Keyboard Shortcuts!</b> It is much faster to use <b>X</b> key to cut clips and <b>Delete</b> key to splice out clips than it is to use buttons for the same operations.
+</div>
 
 <h3>Rendering Movie</h3>
 
 <h4>Selecting Parameters</h4>
+<ul>
 <li> <b>Folder File Select</b> button will select folder to place the output file in.</li>
 <li> <b>Name</b> entry widget provides means to set the name of the output file.</li>
 <li> Use <b>Encoding Format</b> and untitled <b>Quality</b> drop down menus make to select the type of file to be rendered.</li>
+</ul>
 
 <h4>Rendering output</h4>
-# Press <b>Render</b> Button to begin rendering.
-# A Render Window will open displaying information on file path of render file, estimated time left, render time and a Progress bar widget.
-# After rendering is complete, Render Window will close automatically.
+<ol>
+<li>Press <b>Render</b> Button to begin rendering.</li>
+<li>A Render Window will open displaying information on file path of render file, estimated time left, render time and a Progress bar widget.</li>
+<li>After rendering is complete, Render Window will close automatically.</li>
+</ol>
 
 http://sites.google.com/site/phantom2dsite/Home/flowbladeappicon.png
 ----
