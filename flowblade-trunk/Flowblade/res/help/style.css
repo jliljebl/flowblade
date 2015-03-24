@@ -27,10 +27,19 @@ body {
 	margin-bottom: 10px ;
 }
 
+.tabbed {
+	padding-left: 25px;
+	margin-bottom: 10px ;
+}
+
+.tabbed_line {
+	padding-left: 25px;
+}
+
 /* Otsikot 1 */
 h1, h2, h3, h4, h5, h6{
 	text-transform: uppercase;
-	margin:10px 0;
+	margin:2px 0;
 	color: #000000;
 	font-weight:400;
 }
@@ -44,8 +53,10 @@ h2{
 }
 h3{
 	font-size:22px;
+	margin-top: 45px ;
 }
 h4{
+	margin:10px 0;
 	font-size:18px;
 }
 h5{
@@ -55,6 +66,9 @@ h5{
 	font-size:14px;
 }
 
+p {
+	margin:10px 0;
+}
 
 
 /**  fonts  **/
