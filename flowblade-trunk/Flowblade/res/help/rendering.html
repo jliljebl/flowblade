@@ -1,7 +1,7 @@
  <!DOCTYPE html>
 <html>
 <head>
-  <title>Page Title</title>
+  <title>Rendering</title>
   <link rel="stylesheet" href="style.css">
 <script src="toc.js" type="text/javascript"></script>
 </head>
@@ -10,8 +10,11 @@
 
 <div id="content">
 <img src="header_text_5.png" >
+<script src="tocgen.js"></script>
 
-<h2>Rendering</h2>
+<div id="toccontent">
+
+<div class="subject-header">Rendering</div>
 <p>
 In Flowblade there are two ways to render output:
 </p>
@@ -24,13 +27,24 @@ In Flowblade there are two ways to render output:
 Almost all the encodings available for FLOSS applications can used in Flowblade.
 </p>
 
+<div id="toc"></div>
+
 <h3>Rendering Panel</h3>
 
-<h4>Selecting Parameters</h4>
-<ul>
-<li> <b>Folder File Select</b> button will select folder to place the output file in.</li>
-<li> <b>Name</b> entry widget provides means to set the name of the output file.</li>
-<li> Use <b>Encoding Format</b> and untitled <b>Quality</b> drop down menus make to select the type of file to be rendered.</li>
+<h4>Widgets</h4>
+
+<h5>Folder select button</h5> <div class="r-widget">Select folder to place the output file in.</div>
+<h5>Name entry widget</h5> <div class="r-widget">Set the name of the output file.</div>
+<h5>Type drop down menu</h5> <div class="r-widget">Select between rendering with user defined parameter or use preset render params and file types.</div>
+<h5>Presets drop down menu</h5> <div class="r-widget">Select preset rendering params and file type.</div>
+<h5>Encoding / File Type drop down menu</h5> <div class="r-widget">Select encoding and container format for rendering.</div>
+<h5>Bitrate drop down menu</h5> <div class="r-widget">Select bitrate for rendering.</div>
+<h5>Render Using Args check box</h5> <div class="r-widget">Rendering using arguments set in text edit area below.</div>
+<h5>Args text area</h5> <div class="r-widget">Set arguments for rendering.</div>
+<h5>Load Selection button</h5> <div class="r-widget">Load rendering arguments defined in left panel into args text area.</div>
+<h5>Ext entry widget drop down menu</h5> <div class="r-widget">Set file extension for args rendered file.</div>
+<h5>Open File In Bin check box</h5> <div class="r-widget">Open the rendererd file as media item in current bin.</div>
+<h5>Render Range drop down menu</h5> <div class="r-widget">OSelect between rending the complete program or the marked range.</div>
 </ul>
 
 <h4>Rendering output</h4>
@@ -99,6 +113,7 @@ Search web for information on encoding files with FFMpeg to get examples of Rend
 
 <img src="encoding.png">
 
+</div>
 </div>
 </body>
 

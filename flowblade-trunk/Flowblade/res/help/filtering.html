@@ -3,21 +3,25 @@
 <head>
   <title>Page Title</title>
   <link rel="stylesheet" href="style.css">
-<script src="toc.js" type="text/javascript"></script>
 </head>
 
 <body>
 
 <div id="content">
 <img src="header_text_5.png" >
-<h2>Filtering image and audio</h2>
+
+<script src="tocgen.js"></script>
+
+<div id="toccontent">
+
+<div class="subject-header">Filtering image and audio</div>
 
 <p>
 In Flowblade Movie Editor you can add a Filters to all clips to modify output image and audio.
 </p>
-<p>
-Parameters defing output are edited in the Filters tab. Clips will display small filter icon if a filter has been added to them. To have any effect, the filters that modify alpha channel have to be mixed with images from other clips using Compositors.
-</p>
+
+
+<div id="toc"></div>
 
 <h3>Filter Workflow</h3>
 
@@ -28,15 +32,26 @@ Parameters defing output are edited in the Filters tab. Clips will display small
 <li> In <b>Filters</b> tab: double click on a filter in the currently displayed filters group.</li>
 <li> In <b>Filters</b> tab: drag a filter from the currently displayed filters group to the Filters Stack table below.</li>
 	</ul>
+
 <h4> Opening Filter for Editing in Filters tab</h4>
 	<ul>
 <li> Click <b>Right Mouse</b> on any clip and select <b>Open in Filters Editor</b> from popup menu.</li>
 <li> <b>Double click</b> on any clip.</li>
 	</ul>
+
+<h4> Editing Filters</h4>
+	<ul>
+<li>Parameters defing output are edited in the Filters tab.</li>
+<li> Clips will display small filter icon in the top right corner if a filter has been added to them.</li>
+<li> Clips will display grey filter icon in the center of the clip while clip is being edited.</li>
+<li>The filters that modify alpha channel only have effect if the clip they are attached to is mixed with other clips using Compositors.</li>
+	</ul>
+
 <h4> Cloning Filters from other Clips</h4>
 	<ul>
 <li> Click <b>Right Mouse</b> on any clip and select <b>Clone Filters -> From Next Clip</b> or <b>Clone Filters -> From Previous Clip</b> from popup menu.</li>
 	</ul>
+
 <h4> Deleting Filters from Clips</h4>
 	<ul>
 <li> Select filter in Filters Stack table and click <b>Delete</b> button above.</li>
@@ -44,7 +59,12 @@ Parameters defing output are edited in the Filters tab. Clips will display small
 <li> Select clip or range of clips in Timeline and select <b>Clear Filters</b> from application menu.</li>
 	</ul>
 
+
+
 </div>
+
+</div>
+
 </body>
 
 </html> 

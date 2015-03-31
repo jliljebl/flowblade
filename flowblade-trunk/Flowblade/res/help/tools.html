@@ -1,7 +1,7 @@
  <!DOCTYPE html>
 <html>
 <head>
-  <title>Page Title</title>
+  <title>Tools</title>
   <link rel="stylesheet" href="style.css">
 <script src="toc.js" type="text/javascript"></script>
 </head>
@@ -11,15 +11,18 @@
 <div id="content">
 <img src="header_text_5.png" >
 
-<h2>Tools</h2>
+<script src="tocgen.js"></script>
+
+<div id="toccontent">
+
+<div class="subject-header">Tools</div>
 
 <p>
-Flowblade makes available standalone tools that provide important functionality that cannot be logically or conveniently accessed via top left panels or the timeline.
+Flowblade provides standalone tools for important functionality that cannot be logically or conveniently presented via top left panels or the timeline.
 </p>
 
-<p>
-Some tools run in the same process as the main appliucation, but some run in their own process and do not share state or data with the running application.
-</p>
+
+<div id="toc"></div>
 
 <h3> Titler </h3>
 <p>Features:</p>
@@ -47,9 +50,11 @@ Media Relinker</b> is a standalone application running in its own process and do
 <li> Use drop down menu at bottom left to display either missing or found media files</li>
 <li> Press <b>Save Relinked Project As...</b> button to save the relinked version of the project</li>
 <li> Open the relinked project in Flowblade and continue working with it</li>
-<li> When relinking a project you have open in Flowblade at the same time <b>make sure that do not overwrite the relinked version of project when saving the project you have open in Flowblade</b></li>
+<li> Media Relinker runs in its own process and does not share state or data with the running application.</li>
+<li> When relinking a project you have open in Flowblade at the same time make sure that do not overwrite the relinked version of project when saving the project you have open in Flowblade</li>
 </ol>
 
+</div>
 </div>
 </body>
 

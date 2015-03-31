@@ -4,7 +4,7 @@
 
 window.onload = function () {
     var toc = "";
-    var level = 2;
+    var level = 3;
 
     document.getElementById("toccontent").innerHTML =
         document.getElementById("toccontent").innerHTML.replace(
@@ -23,7 +23,7 @@ window.onload = function () {
                 level = parseInt(openLevel);
 
                 var anchor = titleText.replace(/ /g, "_");
-                toc += "<li><a class=\"tocitem\" href=\"#" + anchor + "\">" + titleText
+                toc += "<li class=\"tocli\"><a class=\"tocitem\" href=\"#" + anchor + "\">" + titleText
                     + "</a></li>";
 
                 return "<h" + openLevel + "><a name=\"" + anchor + "\">"
