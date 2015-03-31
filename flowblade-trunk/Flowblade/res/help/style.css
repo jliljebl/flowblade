@@ -23,6 +23,7 @@ body {
 .grid-container {
 	margin-top: 80px;
         width: 700px;
+	margin-bottom: 80px;
 }
 
 .row:before, 
@@ -51,6 +52,14 @@ body {
 	text-transform: uppercase;
 }
 
+.appendix-pad {
+	color: #666666;
+	font-size:14px;
+}
+.appendix-title {
+	color: #666666;
+}
+
 .note {
 	background-color: #f3f3f0;
 	padding: 25px;
@@ -75,6 +84,11 @@ body {
 .tocitem {
 	font-size:12px;
 	line-height: 1.0;
+
+}
+
+.tocli {
+	list-style-type: none;
 }
 
 .copyright-info {
@@ -93,6 +107,45 @@ body {
 	font-size:26px;
 }
 
+.filter {
+	margin-bottom: 25px;
+	color: #000000;
+	font-weight:400;
+	font-family: sans-serif;
+	word-wrap: break-word;
+	line-height: 1.4;
+	vertical-align: baseline;
+}
+
+.filter-name {
+	padding-left: 20px;
+}
+
+.filter-property {
+	padding-left: 50px;
+	font-size:12px;
+}
+.filter-value {
+	display:inline-block;
+	color: #0000bb;
+	font-size: 8;
+}
+
+.filter-group {
+	color: #000000;
+	font-size: 26;
+	text-transform: uppercase;
+	margin-top: 50px;
+	margin-bottom: 10px;
+}
+
+.r-widget {
+	display: inline-block;
+	margin-top:0px;
+	margin-left:15px;
+	margin-bottom:10px;
+}
+
 /* Otsikot 1 */
 h1, h2, h3, h4, h5, h6{
 	text-transform: uppercase;
@@ -100,6 +153,7 @@ h1, h2, h3, h4, h5, h6{
 	color: #000000;
 	font-weight:400;
 }
+
 /* Otsikot 2 */
 h1{
 	font-size:30px;
@@ -119,7 +173,10 @@ h4{
 	font-size:18px;
 }
 h5{
+	margin-top:5px;
 	font-size:16px;
+	margin-bottom:0px;
+	margin-left:15px;
 }
  h6{
 	font-size:14px;

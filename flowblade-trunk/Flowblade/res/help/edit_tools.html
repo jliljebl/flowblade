@@ -3,17 +3,16 @@
 <head>
   <title>Page Title</title>
   <link rel="stylesheet" href="style.css">
-<script src="toc.js" type="text/javascript"></script>
+  <META CHARSET="UTF-8">
 </head>
 
 <body>
 
 <div id="content">
+
 <img src="header_text_5.png" >
 
 <script src="tocgen.js"></script>
-
-<div id="toccontent">
 
 <div class="subject-header">Edit Tools</div>
 
@@ -21,8 +20,10 @@
 Flowblade Movie Editor has six edit tools, <b>3 move tools</b> and <b>3 trim tools</b>.
 </p>
 
-<div id="toc"></div>
 
+<div id="toccontent">
+<div id="toc"></div>
+<a id="insert"></a>
 <h3>Insert Tool</h3>
 
 <p>
@@ -49,7 +50,7 @@ Splice out one or more clips and insert them at desired cut on any track.
 	<li> You can also move clips to a different track.</li>
 	</ul>
 </ol>
-
+<a id="overwrite"></a>
 <h3>Overwrite Tool</h3>
 
 <p>
@@ -74,6 +75,7 @@ Lift out one or more clips and insert them at any point to overwrite on any trac
 	</ul>
 </ol>
 
+<a id="trim"></a>
 <h3>Trim Tool</h3>
 <p>
 Make clip longer or shorter from either clip's end or from clip's beginning.
@@ -103,6 +105,8 @@ Make clip longer or shorter from either clip's end or from clip's beginning.
 	</ul>
 </ol>
 
+
+<a id="roll"></a>
 <h3>Roll Tool</h3>
 
 <p>Move edit point between two clips so that their combined length stays the same.</p>
@@ -128,6 +132,7 @@ Make clip longer or shorter from either clip's end or from clip's beginning.
 	</ul>
 </ol>
 
+<a id="slip"></a>
 <h3>Slip Tool</h3>
 
 <p>Change the displayed area of media in a clip while keeping the clip position unchanged on the timeline.</p>
@@ -149,6 +154,7 @@ Make clip longer or shorter from either clip's end or from clip's beginning.
 	</ul>
 </ol>
 
+<a id="spacer"></a>
 <h3>Spacer Tool</h3>
 
 <p>Move all Timeline items on all tracks or on a single track</p>

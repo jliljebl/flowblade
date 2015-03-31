@@ -85,6 +85,8 @@
         <property name="variance"  args="range_in=0,100 range_out=0.0,1.0 displayname=Variance">0.15</property>
    </filter>
 
+
+
     <!-- AUDIO -->
     <filter id="volume" multipart="true">
         <name>Volume</name>
@@ -116,7 +118,6 @@
         <name>Swap Channels</name>
         <group>Audio</group>
     </filter>
-
 
 
 

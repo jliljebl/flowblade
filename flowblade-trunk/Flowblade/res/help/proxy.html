@@ -1,7 +1,7 @@
  <!DOCTYPE html>
 <html>
 <head>
-  <title>Page Title</title>
+  <title>Proxy Editing</title>
   <link rel="stylesheet" href="style.css">
 <script src="toc.js" type="text/javascript"></script>
 </head>
@@ -11,18 +11,28 @@
 <div id="content">
 <img src="header_text_5.png" >
 
-<h2>Proxy Editing</h2>
+<script src="tocgen.js"></script>
+
+<div id="toccontent">
+
+<div class="subject-header">Proxy Editing</div>
 
 <p>
-Proxy editing is a method of editing in which original media clips are presented on timeline by proxy clips. Proxy clips usually have smaller data rate and less CPU intensive decoding.
-</p>
+Proxy editing is a method of editing in which original media clips are presented on timeline by proxy clips.
+
+</p> 
+<div id="toc"></div>
+
+<h3>Rationale</h3>
 <p>
-There are two main reasons to use proxy editing to create programs:
+Proxy clips used in proxy editing usually have smaller data rate and less CPU intensive decoding. There are two main reasons to use proxy editing:
 </p>
 <ul>
 <li> Original media from which the program is edited makes too high demands for either disk bandwidth or CPU processing power for decoding to enable responsive editing </li>
-<li> Original is kept on network server, slow external disk or other media with restricted access and does not provide responsice editing if accessed directly.</li>
+<li> Original is kept on network server, slow external disk or other media with restricted access and does not enable provide responsive editing if accessed directly.</li>
 </ul>
+
+
 
 <h3>Generic Proxy Editing workflow</h3>
 
@@ -70,9 +80,16 @@ All proxy editing workflows have the same phases:
 <li> <b>It is only possible to use all <i>existing</i> proxy media and clips or all original media</b>. It is not possible to use only some of the created proxy media.</li>
 
 </div>
+<div class="note">
 <p>
-Flowblade uses a programming techique that changes the paths used by media and clips to point either to proxy media or original media. Changing from one to another is implemented by writing a project file to disk and replacing paths when project is read back. This has important implications on how proxy editing works in Flowblade:
+Flowblade uses a programming techique that changes the paths used by media items and clips to point either to hidden proxy media or original media.
 </p>
+<p>
+ Changing from one to another is implemented by writing a hidden temporary project file to disk and replacing paths when project is read back. Because of this any missing original media makes conversion back to using original media fail.
+</p>
+</div>
+
+</div>
 </div>
 </body>
 
