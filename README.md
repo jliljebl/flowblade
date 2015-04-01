@@ -35,7 +35,7 @@ Image and audio filtering:
 Supported editable media types:
 
   * Most common video and audio formats, depends on installed MLT/FFMPEG codecs
-  * JPEG  PNG, TGA, TIFF graphics file types
+  * JPEG, PNG, TGA, TIFF graphics file types
   * SVG vector graphics
   * Numbered frame sequences 
 
@@ -46,8 +46,8 @@ Output encoding:
         
 # Releases
 
-  * **Latest release:** Flowblade Movie Editor 0.18 has been released on Mach 19, 2015
-  * **Next release:** Flowblade Movie Editor 1.0 will be out between on May/June 2015.
+  * **Latest release:** Flowblade Movie Editor 0.18 has been released on March 19, 2015
+  * **Next release:** Flowblade Movie Editor 1.0 will be out on May/June 2015.
 
 # Installing Flowblade
 
@@ -59,7 +59,7 @@ The easiest way to install Flowblade is using the version in your OS repository.
 
 ### Installing using .deb package
 
-First download .deb file</b> for Flowblade 0.18 from <a href="https://www.dropbox.com/s/v71v4e6y23dse2u/flowblade-0.18.0-1_all.deb?dl=0">here.</a>  
+**First download .deb file** for Flowblade 0.18 from <a href="https://www.dropbox.com/s/v71v4e6y23dse2u/flowblade-0.18.0-1_all.deb?dl=0">here.</a>  
 
 <ul>
     <li>Double Click on the downloaded .deb file to install.</li>
@@ -75,7 +75,7 @@ Other recent Debian based systems should work too.
 
 Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install and run Flowblade without compiling anything.
 
-<b>First download 0.14 .tar.gz</b> source archive file from <a href="https://www.dropbox.com/s/qcw3gcyd6uioill/flowblade-0.18.0.tar.gz?dl=0">here.</a> 
+<b>First download 0.18 .tar.gz</b> source archive file from <a href="https://www.dropbox.com/s/qcw3gcyd6uioill/flowblade-0.18.0.tar.gz?dl=0">here.</a> 
 
 <ul>
     <li>Extract archive into a folder of your choosing</li>
@@ -87,27 +87,20 @@ Flowblade is currently a 100% script application, and all the dependencies shoul
 
 ### Installing Using Development Repository Version
 
-<p>
 Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install and run Flowblade without compiling anything.
-</p>
-<p>
+
 Developer version may however be unstable or have new dependencies. If you fail to install developer version, please file a bug in Issues -tab.
-</p>
-<ul>
-    <li>Install Mercurial in your system:</li>
-        <p/>
-
-        <code>sudo apt-get install mercurial</code></li>
-    <li>Use Mercurial to download Flowblade into a folder of your choosing by using the hg clone command in your terminal:
-        <p/>
-
-        <code>hg clone https://janne.liljeblad@code.google.com/p/flowblade/</code></li>
-
-    <li>Install dependencies. See DependenciesList wiki for more information.</li>
-    <li>Launch by running script .../flowblade-trunk/flowblade that was created in the folder where clone command was done.</li>
-</ul>
-<p/>
-<p><i> Please note: Using the available setup.py script will NOT result in a successful installation, even if dependencies are installed, and may actually break the .deb install if attempted. It is only there to help .deb packaging.</b></i> 
+  * Install Git in your system:
+```bash
+sudo apt-get install mercurial</code>
+```
+  * Use Mercurial to download Flowblade into a folder of your choosing by using the hg clone command in your terminal:
+```bash
+https://github.com/jliljebl/flowblade.git
+```
+  * Install dependencies. See DependenciesList wiki for more information.
+  * Launch by running script .../flowblade-trunk/flowblade that was created in the folder where clone command was done.
+* Please note: Using the available setup.py script will NOT result in a successful installation, even if dependencies are installed, and may actually break the .deb install if attempted. It is only there to help .deb packaging.* 
 
 # Dependencies
 
@@ -153,29 +146,29 @@ Flowblade uses the standard [http://www.gnu.org/software/gettext/manual/gettext.
   * Launch repository version of Flowblade and select *Help -> Environment* from menu to see the two letter locale code for your OS install. For example *fr* for French, *fi* for Finnish etc. Information is under the header *General*.
   * Open terminal in folder */flowblade-trunk/Flowblade/locale* that can be found in the folder you installed repository version of Flowblade in.
   * To create a new translation give a command in the terminal:
-{{{
+```bash
 $ ./add_language LANGUAGE_CODE
-}}} 
+```
   in which LANGUAGE_CODE is the two letter language code for your locale.
   * A folder named with the LANGUAGE_CODE for your language was created in the */locale* folder
   * Inside that folder is a */LC_MESSAGES* folder in which there is a file called *Flowblade.po*. This is the file used to create the translation.
-  * Open the file *Flowblade.po* in a text editor. Translations are given by writing the the translations inside quotes on lines staring with text *msgstr*. To traslate the menu item *Open...* you would need to fill the *msgstr* in example below: 
-{{{
+  * Open the file *Flowblade.po* in a text editor. Translations are given by writing the the translations inside quotes on lines staring with text *msgstr*. To traslate the menu item *Open...* you would need to fill the *msgstr* in example below:
+```bash
 #: useraction.py:489
 msgid "Open.."
 msgstr ""
-}}} 
+```
   * To see the translations in the application, you need to compile them into a machine readable *.mo* file. Go to */locale* folder and give command:
-{{{
+```bash
 $ ./compile_language LANGUAGE_CODE
-}}}
+```
   * Launch repository version of Flowblade to view your translations.
 
-= Updating translation for new version of Flowblade =
+### Updating translation for new version of Flowblade
  * Go to the */locale* folder and give command:
-{{{
+```bash
 $ ./update_language LANGUAGE_CODE
-}}}
+```
  * Translate application as described above
 
 ### Contributing a translation
