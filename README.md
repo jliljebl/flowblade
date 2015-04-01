@@ -1,6 +1,8 @@
 Flowblade
 =========
 
+[Features](https://github.com/jliljebl/flowblade/blob/master/README.md#features)
+
 # Introduction #
 
 Flowblade Movie Editor is a **multitrack non-linear video editor** for Linux released under GPL 3 license.
