@@ -1,102 +1,114 @@
-Flowblade
-=========
+![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
-[Features](https://github.com/jliljebl/flowblade/blob/master/README.md#features)
 
-# Introduction #
+# Introduction
 
-Flowblade Movie Editor is a **multitrack non-linear video editor** for Linux released under GPL 3 license.
+Flowblade Movie Editor is a **multitrack non-linear video editor** for Linux released under **GPL 3 license**.
 
-Flowblade is designed to provide a fast, precise and robust editing experience. In Flowblade clips are usually automatically placed tightly after or between clips when they are inserted on the timeline. Edits are fine tuned by trimming in and out points of clips, or by cutting and deleting parts of clips.
+Flowblade is designed to provide a fast, precise and robust editing experience. Flowblade  employs film-style insert editing model, in which clips are generally placed tightly after or between other clips when they are inserted or moved on the timeline. Edits are fine tuned by trimming in and out points of clips or by cutting and deleting parts of clips.
 
 Flowblade provides powerful tools to mix and filter video and audio.
 
----
+# Features
 
-# Features #
-
-Editing
+Editing:
 
   * 3 move tools
   * 3 trim tools
-  * 4 methods to insert/overwrite/append a clip on the Timeline
+  * 4 methods to insert / overwrite / append clips on the Timeline
   * Drag'n'Drop clips on the Timeline
-  * Clip and Compositor parenting with other clips
-  * Max 9 combined video and audio tracks available
+  * Clip and compositor parenting with other clips
+  * Max. 9 combined video and audio tracks available
 
 Image compositing:
 
   * 7 compositors. Mix, zoom, move and rotate source video with keyframed animation tools
   * 19 blends. Stardand image blend modes like Add, Hardlight and Overlay are available
-  * 41 pattern wipes. 
+  * 40+ pattern wipes. 
 
-Image and audio filtering
+Image and audio filtering:
 
-  * 50+ image filters. Color correction, image effects, distorts, alpha manipulation, blur, edge detection, motion effects, freeze frame
-  * 30+ audio filters. Keyframed volume mixing. Echo, reverb, distort and many other audio effects 
+  * 50+ image filters. Color correction, image effects, distorts, alpha manipulation, blur, edge detection, motion effects, freeze frame, etc.
+  * 30+ audio filters. Keyframed volume mixing. Echo, reverb, distort, etc.
 
-Supported editable media types
+Supported editable media types:
 
-  * Most common video and audio formats
-  * JPEG and PNG image file types
+  * Most common video and audio formats, depends on installed MLT/FFMPEG codecs
+  * JPEG  PNG, TGA, TIFF; image file types
   * SVG vector graphics
-    Numbered frame sequences 
+  * Numbered frame sequences 
 
-Output encoding
+Output encoding:
 
-  * depends on installed MLT/FFMPEG codec
-  * User can define rendering by setting FFMpeg args 
+  * Most common video and audio formats, depends on installed MLT/FFMPEG codecs
+  * User can define rendering by setting FFMpeg args individually
         
-# Releases #
-**NEW RELEASE!** Flowblade Movie Editor 0.18 has been released on Mach 19, 2015
+# Releases
 
-**NEXT RELEASE:** Flowblade 1.0 will be out between on May/June 2015.
+**Latest release:** Flowblade Movie Editor 0.18 has been released on Mach 19, 2015
 
----
+**Next release:** Flowblade 1.0 will be out between on May/June 2015.
 
-# Installing Flowblade #
+# Installing Flowblade
+
+The latest release is **Flowblade 0.18**, released on 4.4.2015.
+
+### Installing from your OS repository
+
+The easiest way to install Flowblade is using the version in your OS repository. The downside is that the version available may not be the current latest release. Contact your OS to get Flowblade included in repositories if not already available.
+
+### Installing using .deb package
+
+First download .deb file</b> for Flowblade 0.18 from <a href="https://dl.dropboxusercontent.com/u/18599079/flowblade_0.14.0-1_all.deb">here.</a>  
+
+<ul>
+    <li>Double Click on the downloaded .deb file to install.</li>
+</ul>
+
+Release has been tested on: <b>Ubuntu 15.05, Linux Mint 17, Debian 7.</b>
+Other recent Debian based systems should work too.
+
+*Please note: The .deb file is in a Dropbox Public folder and may go over download limit, please contact Project Owner if this happens.*
 
 
-### Installing Debian Package ###
+### Installing Using Source Code Archive
 
-  * **Download .deb file** for Flowblade 0.18 from **[here](https://www.dropbox.com/s/v71v4e6y23dse2u/flowblade-0.18.0-1_all.deb?dl=0).**
+Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install and run Flowblade without compiling anything.
 
-  * Double Click on downloaded file to install.
+<b>First download 0.14 .tar.gz</b> source archive file from <a href="https://dl.dropboxusercontent.com/u/18599079/flowblade_0.14.0-1_all.deb">here.</a> 
 
-*Please note: .deb file is in a Dropbox Public folder and may go over download limit, please contact Project Owner if this happens.*
+<ul>
+    <li>Extract archive into a folder of your choosing</li>
+    <li>Install dependencies. See DependenciesList wiki for more information.</li>
+    <li>Launch by running script .../flowblade-0.14.0/flowblade that was created in the folder where archive was unpacked.</li> 
+</ul>
+<p/>
+<p><i> Please note: .tar.gz file is in a Dropbox Public folder and may go over download limit, please contact Project Owner if this happens.</i></p>
 
-### Supported OSes ###
-  * This release has been tested on **Ubuntu 14.10**, **Ubuntu 14.04**, **Ubuntu 13.10**, **Linux Mint 17** and **Debian Testing (jessie/sid)**
-  * May work on earlier Debian based systems
+### Installing Using Development Repository Version
 
-### Currently unsupported OSes ###
-  * **Debian 7.2 or earlier**.  On these the application installed, but crashed on start-up, cause unknown. May work on some systems.
+<p>
+Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install and run Flowblade without compiling anything.
+</p>
+<p>
+Developer version may however be unstable or have new dependencies. If you fail to install developer version, please file a bug in Issues -tab.
+</p>
+<ul>
+    <li>Install Mercurial in your system:</li>
+        <p/>
 
-### Installing From Source Archive ###
-  1. Donwload 0.18 source archive from [here](https://www.dropbox.com/s/qcw3gcyd6uioill/flowblade-0.18.0.tar.gz?dl=0).
-  1. Extract archive into a folder of your choosing
-  1. Install dependencies. See DependenciesList wiki for more information.
-  1. Launch by running script **.../flowblade-0.18.0/flowblade** that was created in the folder where archive was unpacked
-Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install Flowblade without compiling anything.
+        <code>sudo apt-get install mercurial</code></li>
+    <li>Use Mercurial to download Flowblade into a folder of your choosing by using the hg clone command in your terminal:
+        <p/>
 
-*Please note: .tar.gz file is in a Dropbox Public folder and may go over download limit, please contact Project Owner if this happens.*
+        <code>hg clone https://janne.liljeblad@code.google.com/p/flowblade/</code></li>
 
-### Installing Developer Version ###
+    <li>Install dependencies. See DependenciesList wiki for more information.</li>
+    <li>Launch by running script .../flowblade-trunk/flowblade that was created in the folder where clone command was done.</li>
+</ul>
+<p/>
+<p><i> Please note: Using the available setup.py script will NOT result in a successful installation, even if dependencies are installed, and may actually break the .deb install if attempted. It is only there to help .deb packaging.</b></i> 
 
-  1. Install Mercurial in your system.
-  1. Use Mercurial to download Flowblade into a folder of your choosing by using the **hg clone** command in your terminal:
-```
-hg clone https://janne.liljeblad@code.google.com/p/flowblade/
-```
-  1. Install dependencies. See DependenciesList wiki for more information.
-  1. Launch by running script **.../flowblade-trunk/flowblade** that was created in the folder where clone command was done.
-Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install Flowblade without compiling anything.
-
-Developer version may however be unstable or have new dependencies. If you fail to install developer version, please file a bug in **Issues** -tab.
-
-*NOTE: Using the available _setup.py_ script will NOT result in a successful installation, even if dependencies are installed, and may actually break the .deb install if attempted. It is only there to help .deb packaging.*
-
----
 
 # Dependencies #
 
