@@ -1,14 +1,11 @@
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
-[Introduction](https://github.com/jliljebl/flowblade#introduction)
-
-[Releases](https://github.com/jliljebl/flowblade#releases)
-
-[Installing Flowblade](https://github.com/jliljebl/flowblade#installing-flowblade)
-
-[Dependencies](https://github.com/jliljebl/flowblade#dependencies)
-
-[Contributing translation](https://github.com/jliljebl/flowblade#contributing-a-translation)
+**Contents:**
+  1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
+  1. [Releases](https://github.com/jliljebl/flowblade#releases)
+  1. [Installing Flowblade](https://github.com/jliljebl/flowblade#installing-flowblade)
+  1. [Dependencies](https://github.com/jliljebl/flowblade#dependencies)
+  1. [Contributing translation](https://github.com/jliljebl/flowblade#contributing-a-translation)
 
 
 # Introduction
