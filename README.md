@@ -1,7 +1,7 @@
 # flowblade
 Automatically exported from code.google.com/p/flowblade
 
-NEW RELEASE! Flowblade Movie Editor 0.18 has been released on Mach 19, 2015
+*NEW RELEASE!* Flowblade Movie Editor 0.18 has been released on Mach 19, 2015
 
 See ReleaseNotes for new features.
 Installing Flowblade
