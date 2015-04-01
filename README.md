@@ -1,18 +1,7 @@
-# flowblade
-Automatically exported from code.google.com/p/flowblade
+Flowblade
+=========
 
-*NEW RELEASE!* Flowblade Movie Editor 0.18 has been released on Mach 19, 2015
-
-See ReleaseNotes for new features.
-Installing Flowblade
-
-See Install Instructions.
-
-Note: The 0.18 release is NOT available in the Downloads -tab because Google no longer allows new downloads to be added here. Use the link in Install Instructions page instead.
-NEXT RELEASES
-
-Flowblade 1.0 will be out between on May/June 2015.
-Introduction
+**NEW RELEASE!** Flowblade Movie Editor 0.18 has been released on Mach 19, 2015
 
 Flowblade Movie Editor is a multitrack non-linear video editor for Linux released under GPL 3 license.
 
@@ -45,3 +34,17 @@ Features
     Output encoding
         depending on installed MLT/FFMPEG support videos can be rendered with mpeg2, mp4, h264, Theora video codecs and Mp2, mp3, ac3 audio codecs into many container formats
         User can define rendering by setting FFMpeg args 
+        
+        
+    NEW RELEASE! Flowblade Movie Editor 0.18 has been released on Mach 19, 2015
+
+See ReleaseNotes for new features.
+Installing Flowblade
+
+See Install Instructions.
+
+Note: The 0.18 release is NOT available in the Downloads -tab because Google no longer allows new downloads to be added here. Use the link in Install Instructions page instead.
+NEXT RELEASES
+
+Flowblade 1.0 will be out between on May/June 2015.
+Introduction
