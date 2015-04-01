@@ -1,6 +1,15 @@
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
-This is still being fixed after import from Google code.
+[Introduction](https://github.com/jliljebl/flowblade#introduction)
+
+[Releases](https://github.com/jliljebl/flowblade#releases)
+
+[Installing Flowblade](https://github.com/jliljebl/flowblade#installing-flowblade)
+
+[Dependencies](https://github.com/jliljebl/flowblade#dependencies)
+
+[Contributing translation](https://github.com/jliljebl/flowblade#contributing-a-translation)
+
 
 # Introduction
 
