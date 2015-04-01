@@ -65,7 +65,7 @@ The easiest way to install Flowblade is using the version in your OS repository.
     <li>Double Click on the downloaded .deb file to install.</li>
 </ul>
 
-Release has been tested on: <b>Ubuntu 15.05, Linux Mint 17, Debian 7.</b>
+Release has been tested on: <b>Ubuntu 15.05, Linux Mint 17, Debian jessie/sid.</b>
 Other recent Debian based systems should work too.
 
 *Please note: The .deb file is in a Dropbox Public folder and may go over download limit, please contact Project Owner if this happens.*
@@ -90,16 +90,17 @@ Flowblade is currently a 100% script application, and all the dependencies shoul
 Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install and run Flowblade without compiling anything.
 
 Developer version may however be unstable or have new dependencies. If you fail to install developer version, please file a bug in Issues -tab.
-  * Install Git in your system:
+  * Install Git in your system (Ubuntu command):
 ```bash
-sudo apt-get install mercurial</code>
+sudo apt-get install git</code>
 ```
-  * Use Mercurial to download Flowblade into a folder of your choosing by using the hg clone command in your terminal:
+  * Use Git to download Flowblade into a folder of your choosing by using the git clone command in your terminal:
 ```bash
-https://github.com/jliljebl/flowblade.git
+git clone https://github.com/jliljebl/flowblade.git
 ```
   * Install dependencies. See DependenciesList wiki for more information.
-  * Launch by running script .../flowblade-trunk/flowblade that was created in the folder where clone command was done.
+  * Launch by running script ``.../flowblade-trunk/flowblade`` that was created in the folder where clone command was done.
+
 * Please note: Using the available setup.py script will NOT result in a successful installation, even if dependencies are installed, and may actually break the .deb install if attempted. It is only there to help .deb packaging.* 
 
 # Dependencies
@@ -147,7 +148,7 @@ Flowblade uses the standard [http://www.gnu.org/software/gettext/manual/gettext.
   * Open terminal in folder */flowblade-trunk/Flowblade/locale* that can be found in the folder you installed repository version of Flowblade in.
   * To create a new translation give a command in the terminal:
 ```bash
-$ ./add_language LANGUAGE_CODE
+./add_language LANGUAGE_CODE
 ```
   in which LANGUAGE_CODE is the two letter language code for your locale.
   * A folder named with the LANGUAGE_CODE for your language was created in the */locale* folder
@@ -160,14 +161,14 @@ msgstr ""
 ```
   * To see the translations in the application, you need to compile them into a machine readable *.mo* file. Go to */locale* folder and give command:
 ```bash
-$ ./compile_language LANGUAGE_CODE
+./compile_language LANGUAGE_CODE
 ```
   * Launch repository version of Flowblade to view your translations.
 
 ### Updating translation for new version of Flowblade
  * Go to the */locale* folder and give command:
 ```bash
-$ ./update_language LANGUAGE_CODE
+./update_language LANGUAGE_CODE
 ```
  * Translate application as described above
 
