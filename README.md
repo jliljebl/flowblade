@@ -57,7 +57,7 @@ Output encoding:
 
 # Installing Flowblade
 
-The latest release is **Flowblade 0.18**, released on 4.4.2015.
+The latest release is **Flowblade 0.18**, released on March 19, 2015
 
 ### Installing from your OS repository
 
@@ -81,15 +81,13 @@ Other recent Debian based systems should work too.
 
 Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install and run Flowblade without compiling anything.
 
-<b>First download 0.18 .tar.gz</b> source archive file from <a href="https://www.dropbox.com/s/qcw3gcyd6uioill/flowblade-0.18.0.tar.gz?dl=0">here.</a> 
+*First download 0.18 .tar.gz* source archive file from <a href="https://www.dropbox.com/s/qcw3gcyd6uioill/flowblade-0.18.0.tar.gz?dl=0">here.</a> 
 
-<ul>
-    <li>Extract archive into a folder of your choosing</li>
-    <li>Install dependencies. See DependenciesList wiki for more information.</li>
-    <li>Launch by running script .../flowblade-0.14.0/flowblade that was created in the folder where archive was unpacked.</li> 
-</ul>
-<p/>
-<p><i> Please note: .tar.gz file is in a Dropbox Public folder and may go over download limit, please contact Project Owner if this happens.</i></p>
+  * Extract archive into a folder of your choosing
+  * Install dependencies. See [dependencies](https://github.com/jliljebl/flowblade#dependencies) for more information.
+  * Launch by running script .../flowblade-0.14.0/flowblade that was created in the folder where archive was unpacked.
+
+*Please note: .tar.gz file is in a Dropbox Public folder and may go over download limit, please contact Project Owner if this happens.*
 
 ### Installing Using Development Repository Version
 
@@ -98,16 +96,16 @@ Flowblade is currently a 100% script application, and all the dependencies shoul
 Developer version may however be unstable or have new dependencies. If you fail to install developer version, please file a bug in Issues -tab.
   * Install Git in your system (Ubuntu command):
 ```bash
-sudo apt-get install git</code>
+sudo apt-get install git
 ```
   * Use Git to download Flowblade into a folder of your choosing by using the git clone command in your terminal:
 ```bash
 git clone https://github.com/jliljebl/flowblade.git
 ```
-  * Install dependencies. See DependenciesList wiki for more information.
+  * Install dependencies. See [dependencies](https://github.com/jliljebl/flowblade#dependencies) for more information.
   * Launch by running script ``.../flowblade-trunk/flowblade`` that was created in the folder where clone command was done.
 
-* Please note: Using the available setup.py script will NOT result in a successful installation, even if dependencies are installed, and may actually break the .deb install if attempted. It is only there to help .deb packaging.* 
+*Please note: Using the available setup.py script will NOT result in a successful installation, even if dependencies are installed, and may actually break the .deb install if attempted. It is only there to help .deb packaging.* 
 
 # Dependencies
 
@@ -148,24 +146,24 @@ See wiki TestingRepositoryVersion.
 
 ### Creating a translation ###
 
-Flowblade uses the standard [http://www.gnu.org/software/gettext/manual/gettext.html  GNU "gettext" utilities] to translate the application. GNU "gettext" is a relatively complex tool, but Flowblade provides a set of scripts that make it easier to create translations without using "gettext" directly.
+Flowblade uses the standard [GNU "gettext" utilities](http://www.gnu.org/software/gettext/manual/gettext.html) to translate the application. GNU "gettext" is a relatively complex tool, but Flowblade provides a set of scripts that make it easier to create translations without using "gettext" directly.
 
   * Launch repository version of Flowblade and select *Help -> Environment* from menu to see the two letter locale code for your OS install. For example *fr* for French, *fi* for Finnish etc. Information is under the header *General*.
-  * Open terminal in folder */flowblade-trunk/Flowblade/locale* that can be found in the folder you installed repository version of Flowblade in.
+  * Open terminal in folder ``.../flowblade-trunk/Flowblade/locale`` that can be found in the folder you installed repository version of Flowblade in.
   * To create a new translation give a command in the terminal:
 ```bash
 ./add_language LANGUAGE_CODE
 ```
   in which LANGUAGE_CODE is the two letter language code for your locale.
-  * A folder named with the LANGUAGE_CODE for your language was created in the */locale* folder
-  * Inside that folder is a */LC_MESSAGES* folder in which there is a file called *Flowblade.po*. This is the file used to create the translation.
-  * Open the file *Flowblade.po* in a text editor. Translations are given by writing the the translations inside quotes on lines staring with text *msgstr*. To traslate the menu item *Open...* you would need to fill the *msgstr* in example below:
+  * A folder named with the LANGUAGE_CODE for your language was created in the ``/locale`` folder
+  * Inside that folder is a ``/LC_MESSAGES`` folder in which there is a file called ``Flowblade.po``. This is the file used to create the translation.
+  * Open the file ``Flowblade.po`` in a text editor. Translations are given by writing the the translations inside quotes on lines staring with text ``msgstr``. To traslate the menu item *Open...* you would need to fill the ``msgstr`` in example below:
 ```bash
 #: useraction.py:489
 msgid "Open.."
 msgstr ""
 ```
-  * To see the translations in the application, you need to compile them into a machine readable *.mo* file. Go to */locale* folder and give command:
+  * To see the translations in the application, you need to compile them into a machine readable *.mo* file. Go to ``/locale`` folder and give command:
 ```bash
 ./compile_language LANGUAGE_CODE
 ```
@@ -179,4 +177,4 @@ msgstr ""
  * Translate application as described above
 
 ### Contributing a translation
-Send the created *Flowblade.po* file to janne.liljeblad@gmail.com. Please mention words Flowblade, translation and the LANGUAGE_CODE in the subject line. Translation will be in the next release.
+Send the created ``Flowblade.po`` file to janne.liljeblad@gmail.com. Please mention words Flowblade, translation and the LANGUAGE_CODE in the subject line. Translation will be in the next release.
