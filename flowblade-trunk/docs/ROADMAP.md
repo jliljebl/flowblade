@@ -4,6 +4,7 @@ This document gives a broad overview what's happening next in Flowblade developm
 *Last updated: After release 0.18 on April 14, 2015*
 
 ## Next release (1.0)
+*Estimated release time is May-June 2015*
 
 **Local help files** Google Code is going offline at the end of the year and the Reference Guide can no longer be hosted there.
 
@@ -15,13 +16,13 @@ This document gives a broad overview what's happening next in Flowblade developm
 This will be done immediately after 1.0 release. Completed between May - September 2015, depending on the difficulty of task.
 
 ### Webpage
-The content for this mostly aleady exists. This will be done at the same time as the GTK3+ port and will probably be complete before September 2015.
+The content for this mostly already exists. This will be done at the same time as the GTK3+ port and will probably be complete before September 2015.
 
 ### Coming features in the next few releases
 
 **Keyframe editing on the timeline** This is mainly provided for the purpose of audio mixing that can be done more naturally on the timeline. Other parameters may later be also made editable on the timeline.
 
-**Audio Levels display enhancement** This still needs to improved.
+**Audio Levels display enhancement** This still needs to be improved.
 
 **Audio Scrubbing** This will make editing audio on the timeline easier.
 
