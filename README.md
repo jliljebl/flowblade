@@ -5,7 +5,7 @@
   1. [Releases](https://github.com/jliljebl/flowblade#releases)
   1. [Installing Flowblade](https://github.com/jliljebl/flowblade#installing-flowblade)
   1. [Dependencies](https://github.com/jliljebl/flowblade#dependencies)
-  1. [Contributing translation](https://github.com/jliljebl/flowblade#docs)
+  1. [Docs](https://github.com/jliljebl/flowblade#docs)
   1. [Contact](https://github.com/jliljebl/flowblade#contact)
 
 # Introduction
