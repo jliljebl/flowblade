@@ -1,7 +1,0 @@
-# use glob syntax.
-syntax: glob
-
-*.pyc
-*.po~
-*.py~
-*.pot~
