@@ -183,4 +183,4 @@ Send the created ``Flowblade.po`` file to janne.liljeblad@gmail.com. Please ment
 
 Use the **Issues** tab on the right to give bug reports or to make feature requests.
 
-If needed, you can contact project lead for additional infomation: janne.liljeblad@gmail.com
+If needed, you can contact project lead for additional information: janne.liljeblad@gmail.com
