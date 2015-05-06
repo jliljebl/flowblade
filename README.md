@@ -2,6 +2,7 @@
 
 **Contents:**
   1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
+  1. [Features](https://github.com/jliljebl/flowblade#features)
   1. [Releases](https://github.com/jliljebl/flowblade#releases)
   1. [Installing Flowblade](https://github.com/jliljebl/flowblade#installing-flowblade)
   1. [Dependencies](https://github.com/jliljebl/flowblade#dependencies)
