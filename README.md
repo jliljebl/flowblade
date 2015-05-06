@@ -1,7 +1,5 @@
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
-This is the offial project page of Flowblade Movie Editor.
-
 **Contents:**
   1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
   1. [Releases](https://github.com/jliljebl/flowblade#releases)
