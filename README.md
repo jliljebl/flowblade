@@ -6,7 +6,7 @@
   1. [Installing Flowblade](https://github.com/jliljebl/flowblade#installing-flowblade)
   1. [Dependencies](https://github.com/jliljebl/flowblade#dependencies)
   1. [Contributing translation](https://github.com/jliljebl/flowblade#contributing-a-translation)
-
+  1. [Contact](https://github.com/jliljebl/flowblade#contact)
 
 # Introduction
 
@@ -178,3 +178,9 @@ msgstr ""
 
 ### Contributing a translation
 Send the created ``Flowblade.po`` file to janne.liljeblad@gmail.com. Please mention words Flowblade, translation and the LANGUAGE_CODE in the subject line. Translation will be in the next release.
+
+# Contact
+
+Use the **Issues** tab on the right to give bug reports or to make feature requests.
+
+If needed, you can contact project lead for additional infomation: janne.liljeblad@gmail.com
