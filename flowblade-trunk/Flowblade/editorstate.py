@@ -140,12 +140,20 @@ def timeline_visible():
     return _timeline_displayed
 
 def mlt_version_is_equal_or_greater(test_version):
-    mlt_parts = mlt_version.split(".")
-    test_parts = test_version.split(".")
-    if test_parts[0] >= mlt_parts[0] and test_parts[1] >= mlt_parts[1] and test_parts[2] >= mlt_parts[2]:
+    runtime_ver = _get_mlt_ver_num(mlt_version)
+    t_ver = _get_mlt_ver_num(test_version)
+
+    if runtime_ver >= t_ver:
         return True
     
     return False
+
+def _get_mlt_ver_num(ver):
+    parts = ver.split(".")
+    p_str = parts[0] + parts[1] + parts[2]
+    p_str =  p_str.lstrip("0")
+
+    return int(p_str)
 
 def set_copy_paste_objects(objs):
     global _copy_paste_objects

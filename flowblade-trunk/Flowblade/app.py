@@ -120,7 +120,7 @@ def main(root_path):
         editorstate.mlt_version = mlt.LIBMLT_VERSION
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
-    
+
     # Create hidden folders if not present
     user_dir = utils.get_hidden_user_dir_path()
     if not os.path.exists(user_dir):

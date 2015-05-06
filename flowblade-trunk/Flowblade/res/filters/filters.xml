@@ -535,7 +535,7 @@
     <filter id="brightness" mlt_min_version="0.9.1">
         <name>Brightness</name>
         <group>Color</group>
-        <property name="level" args="exptype=keyframe_hcs editor=keyframe_editor range_in=0,1500 range_out=0.0,15.0">"0=1.0"</property>
+        <property name="level" args="exptype=keyframe_hcs editor=keyframe_editor range_in=0,200 range_out=0.0,2.0 displayname=Level">"0=1.0"</property>
     </filter>
     
     <!--

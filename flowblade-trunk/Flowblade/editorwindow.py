@@ -594,11 +594,10 @@ class EditorWindow:
         self.tline_scale = tlinewidgets.TimeLineFrameScale(editevent.insert_move_mode_pressed,  
                                                            updater.mouse_scroll_zoom)
 
-        # Timecode display
         self.tline_info = gtk.HBox()
         info_contents = gtk.Label()
         self.tline_info.add(info_contents)
-        self.tline_info.info_contents = info_contents # this switched and sacved as member of its container
+        self.tline_info.info_contents = info_contents # this switched and saved as member of its container
         info_h = gtk.HBox()
         info_h.pack_start(self.tline_info, False, False, 0)
         info_h.pack_start(gtk.Label(), True, True, 0)
