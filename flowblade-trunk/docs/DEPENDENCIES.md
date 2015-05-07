@@ -1,7 +1,5 @@
 # Flowblade Package Dependencies #
 
-Below is a table of depencies listed in Ubuntu 14.10 tested .deb install package.
-
 | **Debian/Ubuntu package name** | **Description** |
 |:-------------------------------|:----------------|
 | gtk2-engines-pixbuf | Images handling |
