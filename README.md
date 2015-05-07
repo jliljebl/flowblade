@@ -53,8 +53,9 @@ Output encoding:
         
 # Releases
 
-  * **Latest release:** Flowblade Movie Editor 0.18 has been released on March 19, 2015
-  * **Next release:** Flowblade Movie Editor 1.0 will be out on May/June 2015.
+**Latest release:** Flowblade Movie Editor 0.18 was released on March 19, 2015.
+
+**Next release:** Flowblade Movie Editor 1.0 will be out on May/June 2015.
 
 # Installing Flowblade
 
