@@ -5,7 +5,6 @@
   1. [Features](https://github.com/jliljebl/flowblade#features)
   1. [Releases](https://github.com/jliljebl/flowblade#releases)
   1. [Installing Flowblade](https://github.com/jliljebl/flowblade#installing-flowblade)
-  1. [Dependencies](https://github.com/jliljebl/flowblade#dependencies)
   1. [Docs](https://github.com/jliljebl/flowblade#docs)
   1. [Contact](https://github.com/jliljebl/flowblade#contact)
 
@@ -108,33 +107,6 @@ git clone https://github.com/jliljebl/flowblade.git
 
 *Please note: Using the available setup.py script will NOT result in a successful installation, even if dependencies are installed, and may actually break the .deb install if attempted. It is only there to help .deb packaging.* 
 
-# Dependencies
-
-Below is a table of depencies listed in Ubuntu 14.10 tested .deb install package.
-
-| *Debian/Ubuntu package name* | *Description* |
-|------------------------------|---------------|
-| gtk2-engines-pixbuf | Images handling |
-| librsvg2-common | svg support |
-| python-gtk2 | GTK+ python bindings |
-| python-mlt | MLT python bindings, this pulls in MLT |
-| python-dbus | dbus python bindings |
-| libmlt-data | Some image and text resources for MLT |
-| python 2.7 >= | Language and interpreter |
-| frei0r-plugins | Additional video filters |
-| swh-plugins | Additional audio filters |
-| python-cairo | Cairo bindings |
-| python-numpy | Math and arrays library |
-| python-gnome2 | Python Gnome bindings |
-| python-gobject-2 | GObject library bindings |
-
-## Dropped  Dependencies
-
-| *Debian/Ubuntu package name* | *Introduced* | *Dropped* |
-|------------------------------|--------------|-----------|
-| melt | 0.6  | 0.8 |
-| fontconfig | 0.6  | 0.16 |
-
 # Docs
 
 [Roadmap](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/ROADMAP.md)
@@ -142,6 +114,8 @@ Below is a table of depencies listed in Ubuntu 14.10 tested .deb install package
 [Release notes](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/RELEASE_NOTES.md)
 
 [Creating a translation](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/CREATING_TRANSLATION.md)
+
+[Dependencies](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/DEPENDENCIES.md)
 
 # Contact
 
