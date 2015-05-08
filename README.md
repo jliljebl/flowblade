@@ -6,6 +6,7 @@
   1. [Releases](https://github.com/jliljebl/flowblade#releases)
   1. [Installing Flowblade](https://github.com/jliljebl/flowblade#installing-flowblade)
   1. [Docs](https://github.com/jliljebl/flowblade#docs)
+  1. [Screenshot](https://github.com/jliljebl/flowblade#screenshot)
   1. [Contact](https://github.com/jliljebl/flowblade#contact)
 
 # Introduction
@@ -52,8 +53,9 @@ Output encoding:
         
 # Releases
 
-  * **Latest release:** Flowblade Movie Editor 0.18 has been released on March 19, 2015
-  * **Next release:** Flowblade Movie Editor 1.0 will be out on May/June 2015.
+**Latest release:** Flowblade Movie Editor 0.18 was released on March 19, 2015.
+
+**Next release:** Flowblade Movie Editor 1.0 will be out on May/June 2015.
 
 # Installing Flowblade
 
@@ -116,6 +118,10 @@ git clone https://github.com/jliljebl/flowblade.git
 [Creating a translation](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/CREATING_TRANSLATION.md)
 
 [Dependencies](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/DEPENDENCIES.md)
+
+# Screenshot
+
+[Screenshot](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/Screenshot-0-18.png) for version is 0.18 is available in the */docs* folder.
 
 # Contact
 
