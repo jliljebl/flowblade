@@ -152,8 +152,6 @@ def main(root_path):
     editorpersistance.create_rendered_clips_folder_if_needed(user_dir)
     editorpersistance.save()
 
-    print editorpersistance.prefs.thumbnail_folder
-
     # Init gtk threads
     gtk.gdk.threads_init()
     gtk.gdk.threads_enter()

@@ -241,8 +241,8 @@ def profiles_manager():
 def edit_watermark():
     dialogs.watermark_dialog(_watermark_add_callback, _watermark_remove_callback)
 
-def _watermark_add_callback(button, widgets):
-    dialogs.watermark_file_dialog(_watermark_file_select_callback, widgets)
+def _watermark_add_callback(button, dialog, widgets):
+    dialogs.watermark_file_dialog(_watermark_file_select_callback, dialog, widgets)
 
 def _watermark_file_select_callback(dialog, response_id, widgets):
     add_button, remove_button, file_path_value_label = widgets

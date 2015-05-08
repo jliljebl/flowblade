@@ -1157,7 +1157,7 @@ def watermark_dialog(add_callback, remove_callback):
     row3.set_size_request(470, 30)
 
     widgets = (add_button, remove_button, file_path_value_label)
-    add_button.connect("clicked", add_callback, widgets)
+    add_button.connect("clicked", add_callback, dialog, widgets)
     remove_button.connect("clicked", remove_callback, widgets)
 
     vbox = gtk.VBox(False, 2)
@@ -1175,7 +1175,7 @@ def watermark_dialog(add_callback, remove_callback):
     dialog.connect('response', _dialog_destroy)
     dialog.show_all()
 
-def watermark_file_dialog(callback, widgets):
+def watermark_file_dialog(callback, parent, widgets):
     dialog = gtk.FileChooserDialog(_("Select Watermark File"), None, 
                                    gtk.FILE_CHOOSER_ACTION_OPEN, 
                                    (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,

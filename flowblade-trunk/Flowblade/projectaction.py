@@ -27,6 +27,7 @@ import pygtk
 pygtk.require('2.0');
 import gtk
 import glib
+import glob
 
 import datetime
 import md5
@@ -413,23 +414,45 @@ class SnaphotSaveThread(threading.Thread):
 
             # Copy asset file and fix path
             directory, file_name = os.path.split(media_file.path)
+            
+            # Message
             gtk.gdk.threads_enter()
             dialog.media_copy_info.set_text(copy_txt + "... " +  file_name)
             gtk.gdk.threads_leave()
-            media_file_copy = media_folder + file_name
-            if media_file_copy in asset_paths: # Create different filename for files 
-                                               # that have same filename but different path
-                file_name = get_snapshot_unique_name(media_file.path, file_name)
+            
+            # Other media types than image sequences
+            if media_file.type != appconsts.IMAGE_SEQUENCE:
                 media_file_copy = media_folder + file_name
-                
-            shutil.copyfile(media_file.path, media_file_copy)
-            asset_paths[media_file.path] = media_file_copy
+                if media_file_copy in asset_paths: # Create different filename for files 
+                                                   # that have same filename but different path
+                    file_name = get_snapshot_unique_name(media_file.path, file_name)
+                    media_file_copy = media_folder + file_name
+                    
+                shutil.copyfile(media_file.path, media_file_copy)
+                asset_paths[media_file.path] = media_file_copy
+            else: # Image Sequences
+                asset_folder, asset_file_name =  os.path.split(media_file.path)
+                lookup_filename = utils.get_img_seq_glob_lookup_name(asset_file_name)
+                lookup_path = asset_folder + "/" + lookup_filename
+                copyfolder = media_folder.rstrip("/") + asset_folder + "/"
+                print lookup_path
+                print copyfolder
+                os.makedirs(copyfolder)
+                listing = glob.glob(lookup_path)
+                for orig_path in listing:
+                    orig_folder, orig_file_name = os.path.split(orig_path)
+                    shutil.copyfile(orig_path, copyfolder + orig_file_name)
 
-        # Copy clip producers paths
+        # Copy clip producers paths. This is needed just for rendered files as clips
+        # from media file objects should be covered as media files can't be destroyed 
+        # if a clip made from them exists...I think
         for seq in PROJECT().sequences:
             for track in seq.tracks:
                 for i in range(0, len(track.clips)):
                     clip = track.clips[i]
+                    # Image sewunce files cant be rendered files
+                    if media_file.type == appconsts.IMAGE_SEQUENCE:
+                        continue
                     # Only producer clips are affected
                     if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
                         directory, file_name = os.path.split(clip.path)
@@ -620,7 +643,11 @@ def _add_image_sequence_callback(dialog, response_id, data):
         resource_name_str = path_name_part + "%" + "0" + str(len(number_part)) + "d" + end_part + "?begin=" + number_part
     else:
         resource_name_str = path_name_part + "%" + "0" + str(len(number_part)) + "d" + end_part
-    
+
+    print number_part
+    print file_name
+    print "resource_name_str:", resource_name_str
+
     # detect highest file
     # FIX: this fails if two similarily numbered sequences in same dir and both have same substring in frame name
     onlyfiles = [ f for f in listdir(folder) if isfile(join(folder,f)) ]
@@ -796,7 +823,6 @@ def remove_unused_media():
             for clip in track.clips:
                 try:
                     removed = path_to_media_object.pop(clip.path)
-                    print "Removed: " + removed.path
                 except:
                     pass
     

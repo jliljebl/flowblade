@@ -116,7 +116,7 @@ class Project:
 
         # Get media type
         media_type = sequence.get_media_type(file_path)
-        
+        print "media_type:", media_type
         # Get length and icon
         if media_type == appconsts.AUDIO:
             icon_path = respaths.IMAGE_PATH + "audio_file.png"

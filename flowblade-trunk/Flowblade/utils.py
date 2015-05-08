@@ -300,6 +300,17 @@ def get_hidden_user_dir_path():
 def get_hidden_screenshot_dir_path():
     return get_hidden_user_dir_path() + "screenshot/"
 
+def get_img_seq_glob_lookup_name(asset_file_name):
+    parts1 = asset_file_name.split("%")
+    start = parts1[0]
+    end = parts1[1].split("d")[1]
+    try:
+        end = end.split("?")[0]
+    except:
+        print "old style img seq name for " + asset_file_name
+    
+    return start + "*" + end
+        
 # File exntension lists
 _audio_file_extensions = [  "act",
                             "aif",

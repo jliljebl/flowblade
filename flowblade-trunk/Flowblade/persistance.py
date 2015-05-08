@@ -32,6 +32,7 @@ pygtk.require('2.0');
 import gtk
 
 import copy
+import glob
 import fnmatch
 import os
 import pickle
@@ -46,6 +47,7 @@ import mlttransitions
 import miscdataobjects
 import propertyparse
 import resync
+import utils
 
 # Unpickleable attributes for all objects
 # These are removed at save and recreated at load.
@@ -146,9 +148,11 @@ def save_project(project, file_path):
                 proxy_path_dict[s_media_file.path] = s_media_file.second_file_path
                 s_media_file.set_as_original_media_file()
 
-        # Change paths when doing snapshot save
+        # Change paths when doing snapshot save. Image sequences are not 
+        # md5 hashed and are saved in folders and need to be looked up by relative search
+        # when loading.
         if snapshot_paths != None:
-            if s_media_file.type != appconsts.PATTERN_PRODUCER:
+            if s_media_file.type != appconsts.PATTERN_PRODUCER and  s_media_file.type != appconsts.IMAGE_SEQUENCE:
                 s_media_file.path = snapshot_paths[s_media_file.path] 
 
         media_files[s_media_file.id] = s_media_file
@@ -361,8 +365,10 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
         if project.SAVEFILE_VERSION < 4:
             FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
         media_file.current_frame = 0 # this is always reset on load, value is not considered persistent
-        if media_file.type != appconsts.PATTERN_PRODUCER:
+        if media_file.type != appconsts.PATTERN_PRODUCER and media_file.type != appconsts.IMAGE_SEQUENCE:
             media_file.path = get_media_asset_path(media_file.path, _load_file_path)
+        elif media_file.type == appconsts.IMAGE_SEQUENCE:
+            media_file.path = get_img_seq_media_path(media_file.path, _load_file_path)
             
     # Add icons to media files
     if icons_and_thumnails == True:
@@ -466,7 +472,10 @@ def fill_track_mlt(mlt_track, py_track):
         if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
             orig_path = clip.path # Save the path for error message
             
-            clip.path = get_media_asset_path(clip.path, _load_file_path)
+            if clip.media_type != appconsts.IMAGE_SEQUENCE:
+                clip.path = get_media_asset_path(clip.path, _load_file_path)
+            else:
+                clip.path = get_img_seq_media_path(clip.path, _load_file_path)
                 
             mlt_clip = sequence.create_file_producer_clip(clip.path)
             if mlt_clip == None:
@@ -572,6 +581,27 @@ def get_media_asset_path(path, load_file_path):
     else: # Only look in existing absolute path
         return path
 
+def get_img_seq_media_path(path, load_file_path):
+    asset_folder, asset_file_name = os.path.split(path)
+    
+    look_up_file = asset_folder + "/" + utils.get_img_seq_glob_lookup_name(asset_file_name)
+    listing = glob.glob(look_up_file)
+
+    if editorpersistance.prefs.media_load_order == appconsts.LOAD_ABSOLUTE_FIRST:
+        if len(listing) > 0:
+            # Absolute path file present
+            return path
+        # Look for relative path
+        path = get_img_seq_relative_path(load_file_path, path)
+    # Load order relative, absolute
+    elif editorpersistance.prefs.media_load_order == appconsts.LOAD_RELATIVE_FIRST:
+        abspath = path
+        path = get_img_seq_relative_path(load_file_path, path)
+        if path == NOT_FOUND:
+            path = abspath
+        return path
+    return path
+
 def get_relative_path(project_file_path, asset_path):
     name = os.path.basename(asset_path)
     _show_msg("Relative file search for "  + name + "...", delay=0.0)
@@ -590,6 +620,24 @@ def get_relative_path(project_file_path, asset_path):
     else:
         return NOT_FOUND # no relative path found
 
+def get_img_seq_relative_path(project_file_path, asset_path):
+    name = os.path.basename(asset_path)
+    _show_msg("Relative file search for "  + name + "...", delay=0.0)
+    matches = []
+    asset_folder, asset_file_name = os.path.split(asset_path)
+    look_up_file_name = utils.get_img_seq_glob_lookup_name(asset_file_name)
+    
+    project_folder, project_file_name =  os.path.split(project_file_path)
+    
+    for root, dirnames, filenames in os.walk(project_folder):
+        look_up_path = root + "/" + look_up_file_name
+        listing = glob.glob(look_up_path)
+        if len(listing) > 0:
+            return root + "/" + asset_file_name
+
+    return NOT_FOUND # no relative path found
+        
+    
 # ------------------------------------------------------- backwards compability
 def FIX_N_TO_3_COMPOSITOR_COMPABILITY(compositor, SAVEFILE_VERSION):
     if SAVEFILE_VERSION == 1:
