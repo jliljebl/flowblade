@@ -460,7 +460,7 @@ class ProjectEvent:
         self.data = data
 
     def get_date_str(self):
-        date_str = self.timestamp.strftime('%y-%m-%d %H:%M')
+        date_str = self.timestamp.strftime('%Y %b %d, %H:%M')
         date_str = date_str.lstrip('0')
         return date_str
 
