@@ -1,7 +1,7 @@
 #FAQ#
 
-  1. [Crop" filter does not work](https://github.com/jliljebl/flowblade/flowblade-trunk/docs/FAQ#crop-filter-does-not-work)
-  2. [Will there be Windows or OSX versions](https://github.com/jliljebl/flowblade/flowblade-trunk/docs/FAQ#will-there-be windows-or-OSX-versions)
+  1. [Crop filter does not work](https://github.com/jliljebl/flowblade/flowblade-trunk/docs/FAQ#####crop-filter-does-not-work)
+  2. [Will there be Windows or OSX versions](https://github.com/jliljebl/flowblade/flowblade-trunk/docs/FAQ#####will-there-be windows-or-OSX-versions)
   
 ##### Crop filter does not work
 
