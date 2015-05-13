@@ -86,8 +86,8 @@ Flowblade is currently a 100% script application, and all the dependencies shoul
 **First download 0.18 .tar.gz** source archive file from <a href="https://www.dropbox.com/s/qcw3gcyd6uioill/flowblade-0.18.0.tar.gz?dl=0">here.</a> 
 
   * Extract archive into a folder of your choosing
-  * Install dependencies. See [Dependencies](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/DEPENDENCIES.md) doc for more information.
-  * Launch by running script .../flowblade-0.14.0/flowblade that was created in the folder where archive was unpacked.
+  * Install dependencies. See [Dependencies](./flowblade-trunk/docs/DEPENDENCIES.md) doc for more information.
+  * Launch by running script .../flowblade-0.18.0/flowblade that was created in the folder where archive was unpacked.
 
 *Please note: .tar.gz file is in a Dropbox Public folder and may go over download limit, please contact Project Owner if this happens.*
 
@@ -104,24 +104,28 @@ sudo apt-get install git
 ```bash
 git clone https://github.com/jliljebl/flowblade.git
 ```
-  * Install dependencies. See   [Dependencies](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/DEPENDENCIES.md) doc for more information.
+  * Install dependencies. See   [Dependencies](./flowblade-trunk/docs/DEPENDENCIES.md) doc for more information.
   * Launch by running script ``.../flowblade-trunk/flowblade`` that was created in the folder where clone command was done.
 
 *Please note: Using the available setup.py script will NOT result in a successful installation, even if dependencies are installed, and may actually break the .deb install if attempted. It is only there to help .deb packaging.* 
 
 # Docs
 
-[Roadmap](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/ROADMAP.md)
+[FAQ](./flowblade-trunk/docs/FAQ.md)
 
-[Release notes](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/RELEASE_NOTES.md)
+[Roadmap](./flowblade-trunk/docs/ROADMAP.md)
 
-[Creating a translation](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/CREATING_TRANSLATION.md)
+[Release notes](./flowblade-trunk/docs/RELEASE_NOTES.md)
 
-[Dependencies](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/DEPENDENCIES.md)
+[Creating a translation](./flowblade-trunk/docs/CREATING_TRANSLATION.md)
+
+[Dependencies](./flowblade-trunk/docs/DEPENDENCIES.md)
+
+
 
 # Screenshot
 
-[Screenshot](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/Screenshot-0-18.png) for version is 0.18 is available in the */docs* folder.
+[Screenshot](./flowblade-trunk/docs/Screenshot-0-18.png) for version is 0.18 is available in the */docs* folder.
 
 # Contact
 
