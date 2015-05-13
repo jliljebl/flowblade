@@ -15,4 +15,4 @@ If you are trying to crop an image in the sense that you want to cut part of the
   
 #### Will there be Windows or OSX versions?
 
-These are not currently planned. If in the future the port effort is reasonable, does not have adverse effects on the code base and someone provides quality patches, then those patched can probably be pulled.
+These are not currently planned. If in the future the port effort is reasonable, does not have adverse effects on the code base and someone provides quality patches, then those patches can probably be accepted.
