@@ -19,7 +19,7 @@ Flowblade provides powerful tools to mix and filter video and audio.
 
 # Features
 
-Editing:
+**Editing:**
 
   * 3 move tools
   * 3 trim tools
@@ -28,25 +28,25 @@ Editing:
   * Clip and compositor parenting with other clips
   * Max. 9 combined video and audio tracks available
 
-Image compositing:
+**Image compositing:**
 
   * 7 compositors. Mix, zoom, move and rotate source video with keyframed animation tools
   * 19 blends. Stardand image blend modes like Add, Hardlight and Overlay are available
   * 40+ pattern wipes. 
 
-Image and audio filtering:
+**Image and audio filtering:**
 
   * 50+ image filters. Color correction, image effects, distorts, alpha manipulation, blur, edge detection, motion effects, freeze frame, etc.
   * 30+ audio filters. Keyframed volume mixing. Echo, reverb, distort, etc.
 
-Supported editable media types:
+**Supported editable media types:**
 
   * Most common video and audio formats, depends on installed MLT/FFMPEG codecs
   * JPEG, PNG, TGA, TIFF graphics file types
   * SVG vector graphics
   * Numbered frame sequences 
 
-Output encoding:
+**Output encoding:**
 
   * Most common video and audio formats, depends on installed MLT/FFMPEG codecs
   * User can define rendering by setting FFMpeg args individually
