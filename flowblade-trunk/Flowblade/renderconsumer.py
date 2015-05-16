@@ -368,7 +368,7 @@ class FileRenderPlayer(threading.Thread):
         self.running = False
         self.has_started_running = False
         print "FileRenderPlayer started, start frame: " + str(self.start_frame) + ", stop frame: " + str(self.stop_frame)
-        self.consumer_pos_stop_add = 1 # HACK!!! File renders work then this one, screenshot render requires this to be 2 to work 
+        self.consumer_pos_stop_add = 1 # HACK!!! File renders work then this is one, screenshot render requires this to be 2 to work 
         threading.Thread.__init__(self)
 
     def run(self):

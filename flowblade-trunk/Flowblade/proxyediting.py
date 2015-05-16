@@ -22,8 +22,11 @@ import pygtk
 pygtk.require('2.0');
 import gtk
 
+import glob
+import Image
 import mlt
 import os
+import shutil
 import threading
 import time
 
@@ -79,6 +82,10 @@ class ProxyRenderRunnerThread(threading.Thread):
             if self.aborted == True:
                 break
 
+            if media_file.type == appconsts.IMAGE_SEQUENCE:
+                self._create_img_seq_proxy(media_file, proxy_w, proxy_h, items, start)
+                continue
+
             # Create render objects
             proxy_file_path = media_file.create_proxy_path(proxy_w, proxy_h, proxy_encoding.extension)
             self.current_render_file_path = proxy_file_path
@@ -102,7 +109,7 @@ class ProxyRenderRunnerThread(threading.Thread):
             consumer.set("rescale", "nearest")
 
             file_producer = mlt.Producer(self.proxy_profile, str(media_file.path))
-            mltrefhold.hold_ref(file_producer)
+            mltrefhold.hold_ref(file_producer) # this may or may not be needed to avoid crashes
             stop_frame = file_producer.get_length() - 1
 
             # Create and launch render thread
@@ -157,7 +164,47 @@ class ProxyRenderRunnerThread(threading.Thread):
             _auto_renconvert_after_proxy_render_in_proxy_mode()
         
         print "proxy render done"
+
+    def _create_img_seq_proxy(self, media_file, proxy_w, proxy_h, items, start):
+        now = time.time()
+        elapsed = now - start
+        gtk.gdk.threads_enter()
+        progress_window.update_render_progress(0.0, media_file.name, items, len(self.files_to_render), elapsed)
+        gtk.gdk.threads_leave()
+
+        asset_folder, asset_file_name =  os.path.split(media_file.path)
+        lookup_filename = utils.get_img_seq_glob_lookup_name(asset_file_name)
+        lookup_path = asset_folder + "/" + lookup_filename
+
+        proxy_file_path = media_file.create_proxy_path(proxy_w, proxy_h, None)
+        copyfolder, copyfilename = os.path.split(proxy_file_path)
+        os.makedirs(copyfolder)
         
+        listing = glob.glob(lookup_path)
+        size = proxy_w, proxy_h
+        done = 0
+        for orig_path in listing:
+            orig_folder, orig_file_name = os.path.split(orig_path)
+
+            try:
+                im = Image.open(orig_path)
+                im.thumbnail(size, Image.ANTIALIAS)
+                im.save(copyfolder + "/" + orig_file_name, "PNG")
+            except IOError:
+                print "proxy img seq frame failed for '%s'" % orig_path
+
+            done = done + 1
+        
+            frac = float(done) / float(len(listing))
+            now = time.time()
+            elapsed = now - start
+        
+            gtk.gdk.threads_enter()
+            progress_window.update_render_progress(frac, media_file.name, items, len(self.files_to_render), elapsed)
+            gtk.gdk.threads_leave()
+        
+        media_file.add_proxy_file(proxy_file_path)
+
     def abort(self):
         render_thread.shutdown()
         self.aborted = True
@@ -508,11 +555,10 @@ def _do_create_proxy_files(media_files, retry_from_render_folder_select=False):
     is_proxy_file = 0
     other_project_proxies = []
     for f in media_files:
-        #f = w.media_file
         if f.is_proxy_file == True: # Can't create a proxy file for a proxy file
             is_proxy_file = is_proxy_file + 1
             continue
-        if f.type != appconsts.VIDEO: # only video files can have proxy files
+        if f.type != appconsts.VIDEO and f.type != appconsts.IMAGE_SEQUENCE: # only video files and img seqs can have proxy files
             not_video_files = not_video_files + 1
             continue
         if f.has_proxy_file == True: # no need to to create proxy files again, unless forced by user
@@ -520,7 +566,8 @@ def _do_create_proxy_files(media_files, retry_from_render_folder_select=False):
                 already_have_proxies.append(f)
                 continue
         path_for_size_and_encoding = f.create_proxy_path(proxy_w, proxy_h, proxy_file_extension)
-        if os.path.exists(path_for_size_and_encoding): # A proxy for media file has been created by other projects. Get user to confirm overwrite
+        if os.path.exists(path_for_size_and_encoding): # A proxy for media file (with these exact settings) has been created by other projects. 
+                                                       # Get user to confirm overwrite
             other_project_proxies.append(f)
             continue
 
@@ -731,19 +778,3 @@ class ProxyProjectLoadThread(threading.Thread):
         _converting_proxy_mode_done()
         gtk.gdk.threads_leave()
 
-"""
-class PulseThread(threading.Thread):
-    def __init__(self, proress_bar):
-        threading.Thread.__init__(self)
-        self.proress_bar = proress_bar
-
-    def run(self):
-        self.exited = False
-        self.running = True
-        while self.running:
-            gtk.gdk.threads_enter()
-            self.proress_bar.pulse()
-            gtk.gdk.threads_leave()
-            time.sleep(0.1)
-        self.exited = True
-"""

@@ -98,7 +98,7 @@ def save():
 
 def add_recent_project_path(path):
     """
-    Called when project saved.
+    Called when project is saved.
     """
     if len(recent_projects.projects) == MAX_RECENT_PROJS:
         recent_projects.projects.pop(-1)

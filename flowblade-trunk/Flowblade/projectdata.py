@@ -341,11 +341,22 @@ class MediaFile:
                                           gtk.gdk.INTERP_BILINEAR)
 
     def create_proxy_path(self, proxy_width, proxy_height, file_extesion):
+        if self.type == appconsts.IMAGE_SEQUENCE:
+            return self._create_img_seg_proxy_path(proxy_width, proxy_height)
+        
         proxy_md_key = self.path + str(proxy_width) + str(proxy_height)
         if hasattr(self, "use_unique_proxy"): # This may have been added in proxyediting.py to prevent interfering with existing projects
             proxy_md_key = proxy_md_key + os.urandom(16)
         md_str = md5.new(proxy_md_key).hexdigest()
         return str(editorpersistance.prefs.render_folder + "/proxies/" + md_str + "." + file_extesion) # str() because we get unicode here
+
+    def _create_img_seg_proxy_path(self,  proxy_width, proxy_height):
+        folder, file_name = os.path.split(self.path)
+        proxy_md_key = self.path + str(proxy_width) + str(proxy_height)
+        if hasattr(self, "use_unique_proxy"): # This may have been added in proxyediting.py to prevent interfering with existing projects
+            proxy_md_key = proxy_md_key + os.urandom(16)
+        md_str = md5.new(proxy_md_key).hexdigest()
+        return str(editorpersistance.prefs.render_folder + "/proxies/" + md_str + "/" + file_name)
 
     def add_proxy_file(self, proxy_path):
         self.has_proxy_file = True
