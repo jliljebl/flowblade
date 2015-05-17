@@ -172,13 +172,14 @@ class ProxyRenderRunnerThread(threading.Thread):
         progress_window.update_render_progress(0.0, media_file.name, items, len(self.files_to_render), elapsed)
         gtk.gdk.threads_leave()
 
-        asset_folder, asset_file_name =  os.path.split(media_file.path)
+        asset_folder, asset_file_name = os.path.split(media_file.path)
         lookup_filename = utils.get_img_seq_glob_lookup_name(asset_file_name)
         lookup_path = asset_folder + "/" + lookup_filename
 
         proxy_file_path = media_file.create_proxy_path(proxy_w, proxy_h, None)
         copyfolder, copyfilename = os.path.split(proxy_file_path)
-        os.makedirs(copyfolder)
+        if not os.path.isdir(copyfolder):
+            os.makedirs(copyfolder)
         
         listing = glob.glob(lookup_path)
         size = proxy_w, proxy_h
@@ -199,9 +200,10 @@ class ProxyRenderRunnerThread(threading.Thread):
             now = time.time()
             elapsed = now - start
         
-            gtk.gdk.threads_enter()
-            progress_window.update_render_progress(frac, media_file.name, items, len(self.files_to_render), elapsed)
-            gtk.gdk.threads_leave()
+            if done % 5 == 0:
+                gtk.gdk.threads_enter()
+                progress_window.update_render_progress(frac, media_file.name, items, len(self.files_to_render), elapsed)
+                gtk.gdk.threads_leave()
         
         media_file.add_proxy_file(proxy_file_path)
 
@@ -565,12 +567,24 @@ def _do_create_proxy_files(media_files, retry_from_render_folder_select=False):
             if os.path.exists(f.second_file_path):
                 already_have_proxies.append(f)
                 continue
+            p_folder, p_file = os.path.split(f.second_file_path)
+            if os.path.isdir(p_folder):
+                print "eeree"
+                already_have_proxies.append(f)
+                continue
+                
         path_for_size_and_encoding = f.create_proxy_path(proxy_w, proxy_h, proxy_file_extension)
         if os.path.exists(path_for_size_and_encoding): # A proxy for media file (with these exact settings) has been created by other projects. 
                                                        # Get user to confirm overwrite
             other_project_proxies.append(f)
             continue
 
+        if f.type == appconsts.IMAGE_SEQUENCE:
+            p_folder, p_file = os.path.split(path_for_size_and_encoding)
+            if os.path.isdir(p_folder):
+                other_project_proxies.append(f)
+                continue
+            
         files_to_render.append(f)
 
     if  len(already_have_proxies) > 0 or len(other_project_proxies) > 0 or not_video_files > 0 or is_proxy_file > 0 or len(files_to_render) == 0:
