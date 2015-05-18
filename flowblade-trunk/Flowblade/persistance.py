@@ -613,9 +613,11 @@ def get_relative_path(project_file_path, asset_path):
         for filename in fnmatch.filter(filenames, asset_file_name):
             matches.append(os.path.join(root, filename))
     if len(matches) == 1:
+        print "relative path for: ", asset_file_name
         return matches[0]
     elif  len(matches) > 1:
         # some error handling may be needed?
+        print "relative path for: ", asset_file_name
         return matches[0]
     else:
         return NOT_FOUND # no relative path found
@@ -633,6 +635,7 @@ def get_img_seq_relative_path(project_file_path, asset_path):
         look_up_path = root + "/" + look_up_file_name
         listing = glob.glob(look_up_path)
         if len(listing) > 0:
+            print "relative path for: ", asset_file_name
             return root + "/" + asset_file_name
 
     return NOT_FOUND # no relative path found

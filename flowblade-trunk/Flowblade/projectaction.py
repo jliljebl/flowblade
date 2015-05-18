@@ -448,9 +448,11 @@ class SnaphotSaveThread(threading.Thread):
             for track in seq.tracks:
                 for i in range(0, len(track.clips)):
                     clip = track.clips[i]
-                    # Image sewunce files cant be rendered files
-                    if media_file.type == appconsts.IMAGE_SEQUENCE:
+                    
+                    # Image sequence files can't be rendered files
+                    if clip.is_blanck_clip == False and clip.media_type == appconsts.IMAGE_SEQUENCE:
                         continue
+
                     # Only producer clips are affected
                     if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
                         directory, file_name = os.path.split(clip.path)

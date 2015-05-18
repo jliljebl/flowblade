@@ -569,7 +569,6 @@ def _do_create_proxy_files(media_files, retry_from_render_folder_select=False):
                 continue
             p_folder, p_file = os.path.split(f.second_file_path)
             if os.path.isdir(p_folder):
-                print "eeree"
                 already_have_proxies.append(f)
                 continue
                 
