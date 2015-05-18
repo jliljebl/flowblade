@@ -21,6 +21,7 @@
 import pygtk
 pygtk.require('2.0');
 import gtk
+import glob
 import mlt
 import locale
 import os
@@ -346,10 +347,25 @@ class MediaAsset:
 
     def __init__(self, orig_path, media_type):
         self.orig_path = orig_path
-        self.orig_file_exists = os.path.isfile(orig_path)
         self.media_type = media_type
+
+        self.orig_file_exists = os.path.isfile(orig_path)
+        if self.media_type == appconsts.IMAGE_SEQUENCE:
+            self._check_img_seq_existance(orig_path)
+            
         self.relink_path = None
 
+    def _check_img_seq_existance(self, orig_path):
+        asset_folder, asset_file_name = os.path.split(orig_path)
+        lookup_filename = utils.get_img_seq_glob_lookup_name(asset_file_name)
+        lookup_path = asset_folder + "/" + lookup_filename          
+        listing = glob.glob(lookup_path)
+
+        if len(listing) > 0:
+            self.orig_file_exists = True
+        else:
+            self.orig_file_exists = False
+                
 def _update_media_assets():
     # Collect all media assets used by project
     
