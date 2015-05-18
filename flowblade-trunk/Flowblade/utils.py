@@ -27,6 +27,7 @@ import gtk
 
 import math
 import os
+import re
 import threading
 
 import appconsts
@@ -310,7 +311,29 @@ def get_img_seq_glob_lookup_name(asset_file_name):
         print "old style img seq name for " + asset_file_name
     
     return start + "*" + end
-        
+
+def get_img_seq_resource_name(frame_file, new_style_res_name):
+    (folder, file_name) = os.path.split(frame_file)
+    try:
+        number_parts = re.findall("[0-9]+", file_name)
+        number_part = number_parts[-1] # we want the last number part 
+    except:
+        # Selected file does not have a number part in it, so it can't be an image sequence file.
+        return None
+
+    # Create resource name with MLT syntax for MLT producer
+    number_index = file_name.find(number_part)
+    path_name_part = file_name[0:number_index]
+    end_part = file_name[number_index + len(number_part):len(file_name)]
+
+    # The better version with "?begin=xxx" only available after 0.8.7
+    if new_style_res_name:
+        resource_name_str = path_name_part + "%" + "0" + str(len(number_part)) + "d" + end_part + "?begin=" + number_part
+    else:
+        resource_name_str = path_name_part + "%" + "0" + str(len(number_part)) + "d" + end_part
+
+    return resource_name_str
+
 # File exntension lists
 _audio_file_extensions = [  "act",
                             "aif",

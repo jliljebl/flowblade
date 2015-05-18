@@ -640,9 +640,9 @@ def _add_image_sequence_callback(dialog, response_id, data):
 
     # The better version with "?begin=xxx" only available after 0.8.7
     if editorstate.mlt_version_is_equal_or_greater("0.8.5"):
-        resource_name_str = path_name_part + "%" + "0" + str(len(number_part)) + "d" + end_part + "?begin=" + number_part
+        resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
     else:
-        resource_name_str = path_name_part + "%" + "0" + str(len(number_part)) + "d" + end_part
+        resource_name_str = utils.get_img_seq_resource_name(frame_file, False)
 
     # detect highest file
     # FIX: this fails if two similarily numbered sequences in same dir and both have same substring in frame name

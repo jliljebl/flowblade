@@ -47,7 +47,7 @@ import propertyparse
 import respaths
 import renderconsumer
 import translations
-
+import utils
 
 linker_window = None
 target_project = None
@@ -312,7 +312,7 @@ class MediaRelinkListView(gtk.VBox):
                 self.storemodel.append(row_data)
                 self.assets.append(media_asset)
         
-        if len(self.assets) > 0:
+        if len(self.assets) > 0: # Set first selected if exists
             selection = self.treeview.get_selection()
             selection.unselect_all()
             selection.select_path(0)
@@ -344,9 +344,10 @@ class MediaRelinkListView(gtk.VBox):
 # ----------------------------------------------------------- logic
 class MediaAsset:
 
-    def __init__(self, orig_path):
+    def __init__(self, orig_path, media_type):
         self.orig_path = orig_path
-        self.orig_file_exists = os.path.isfile(orig_path) 
+        self.orig_file_exists = os.path.isfile(orig_path)
+        self.media_type = media_type
         self.relink_path = None
 
 def _update_media_assets():
@@ -359,7 +360,7 @@ def _update_media_assets():
     for media_file_id, media_file in target_project.media_files.iteritems():
         if isinstance(media_file, patternproducer.AbstractBinClip):
             continue
-        new_assets.append(MediaAsset(media_file.path))
+        new_assets.append(MediaAsset(media_file.path, media_file.type))
         asset_paths[media_file.path] = media_file.path
 
     for seq in target_project.sequences:
@@ -370,7 +371,7 @@ def _update_media_assets():
                 # Only producer clips are affected
                 if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
                     if not(clip.path in asset_paths):
-                        new_assets.append(MediaAsset(clip.path))
+                        new_assets.append(MediaAsset(clip.path, clip.media_type))
                         asset_paths[clip.path] = clip.path
         # Wipe lumas
         for compositor in seq.compositors:
@@ -382,7 +383,7 @@ def _update_media_assets():
 
             if res_path != None:
                 if not(res_path in asset_paths):
-                    new_assets.append(MediaAsset(res_path))
+                    new_assets.append(MediaAsset(res_path, appconsts.IMAGE))
                     asset_paths[res_path] = res_path
 
     global media_assets
@@ -419,6 +420,16 @@ def _select_relink_path_dialog_callback(file_select, response_id, media_asset):
         return
 
     media_asset.relink_path = filenames[0]
+
+    if media_asset.media_type == appconsts.IMAGE_SEQUENCE: # img seqs need formatted path
+        if editorstate.mlt_version_is_equal_or_greater("0.8.5"):
+            new_style = True
+        else:
+            new_style = False
+        resource_name_str = utils.get_img_seq_resource_name(filenames[0], new_style)
+        folder, file_name = os.path.split(filenames[0])
+        media_asset.relink_path = folder + "/" + resource_name_str
+
     linker_window.relink_list.fill_data_model()
 
 def _delete_button_pressed():
