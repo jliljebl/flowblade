@@ -381,6 +381,7 @@ def _save_backup_snapshot_dialog_callback(dialog, response_id, project_folder, n
         dialog.destroy()
 
 def _do_snapshot_save(root_folder_path, project_name):
+    project_name = project_name.rstrip(".flb") + ".flb" # user may enter ".flb" ... or not
     save_thread = SnaphotSaveThread(root_folder_path, project_name)
     save_thread.start()
 
@@ -657,9 +658,9 @@ def _add_image_sequence_callback(dialog, response_id, data):
             continue
         if file_number_part > highest_number_part:
             highest_number_part = file_number_part
-    
+
     dialog.destroy()
-    
+
     resource_path = folder + "/" + resource_name_str
     length = highest_number_part - int(number_part)
 
