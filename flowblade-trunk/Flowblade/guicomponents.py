@@ -1361,12 +1361,17 @@ def display_media_file_popup_menu(media_file, callback, event):
     media_file_menu.add(_get_menu_item(_("Rename"), callback,("Rename", media_file, event)))
     media_file_menu.add(_get_menu_item(_("Delete"), callback,("Delete", media_file, event))) 
     _add_separetor(media_file_menu)
-    media_file_menu.add(_get_menu_item(_("Open in Clip Monitor"), callback,("Open in Clip Monitor", media_file, event))) 
-    media_file_menu.add(_get_menu_item(_("File Properties"), callback, ("File Properties", media_file, event)))
-    _add_separetor(media_file_menu)
-    media_file_menu.add(_get_menu_item(_("Render Slow/Fast Motion File"), callback, ("Render Slow/Fast Motion File", media_file, event)))
-    item = _get_menu_item(_("Render Proxy File"), callback, ("Render Proxy File", media_file, event))
-    media_file_menu.add(item)
+    media_file_menu.add(_get_menu_item(_("Open in Clip Monitor"), callback,("Open in Clip Monitor", media_file, event)))
+    if media_file.type != appconsts.PATTERN_PRODUCER:
+        media_file_menu.add(_get_menu_item(_("File Properties"), callback, ("File Properties", media_file, event)))
+    
+    if media_file.type != appconsts.IMAGE and media_file.type != appconsts.AUDIO and media_file.type != appconsts.PATTERN_PRODUCER:
+        _add_separetor(media_file_menu)
+        if media_file.type != appconsts.IMAGE_SEQUENCE:
+            media_file_menu.add(_get_menu_item(_("Render Slow/Fast Motion File"), callback, ("Render Slow/Fast Motion File", media_file, event)))
+    if media_file.type == appconsts.VIDEO or media_file.type == appconsts.IMAGE_SEQUENCE:
+        item = _get_menu_item(_("Render Proxy File"), callback, ("Render Proxy File", media_file, event))
+        media_file_menu.add(item)
     
     media_file_menu.popup(None, None, None, event.button, event.time)
 
