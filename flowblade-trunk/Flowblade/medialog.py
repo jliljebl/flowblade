@@ -125,6 +125,7 @@ def log_range_clicked():
                                 media_file.name,
                                 media_file.path)
     editorstate.PROJECT().media_log.append(log_event)
+    editorstate.PROJECT().add_to_group(_get_current_group_index(), [log_event])
     _update_list_view()
 
 def _update_list_view():
@@ -151,7 +152,11 @@ def delete_selected():
     for row in selected:
         index = max(row) # these are tuple, max to extract only value
         delete_events.append(log_events[index])
+    current_group_index = _get_current_group_index()
+    if current_group_index != -1:
+        PROJECT().remove_from_group(current_group_index, delete_events)
     PROJECT().delete_media_log_events(delete_events)
+
 
     widgets.media_log_view.fill_data_model()
 
@@ -197,6 +202,14 @@ def get_current_filtered_events():
                                                          widgets.star_check.get_active(),
                                                          widgets.star_not_active_check.get_active())
     return log_events
+
+def _get_current_group_index():
+    # Interpretation of returned values:
+    # -1 is "All Items" group
+    # 0 - n is group index in Project.media_log_groups list
+
+    return widgets.group_view_select.get_active() - 1
+    
 
 def append_log_events():
     clips = []
@@ -308,14 +321,14 @@ def _actions_callback(widget, data):
         next_index = len(PROJECT().media_log_groups)
         dialogs.new_media_log_group_name_dialog(_new_group_name_callback, next_index, False)
     elif data == "delete":
-        current_group_index = widgets.group_view_select.get_active() - 1
+        current_group_index = _get_current_group_index()
         if current_group_index < 0:
             return
         PROJECT().media_log_groups.pop(current_group_index)
         _create_group_select()
         widgets.group_view_select.set_active(0)
     elif data == "deletewithitems":
-        current_group_index = widgets.group_view_select.get_active() - 1
+        current_group_index = _get_current_group_index()
         if current_group_index < 0:
             return
         name, items = PROJECT().media_log_groups[current_group_index]
@@ -325,16 +338,17 @@ def _actions_callback(widget, data):
         dialogutils.warning_confirmation(_delete_with_items_dialog_callback,
                             primary_txt, secondary_txt, gui.editor_window.window, None, True)
     elif data == "rename":
-        current_group_index = widgets.group_view_select.get_active() - 1
+        current_group_index = _get_current_group_index()
         name, items = PROJECT().media_log_groups[current_group_index]
         dialogs.group_rename_dialog(_rename_callback, name)
-    else:
+    else: # Move to group
         try:
             to_group_index = int(data)
         except:
             return
 
-        current_group_index = widgets.group_view_select.get_active() - 1
+        current_group_index = _get_current_group_index()
+
         if to_group_index == current_group_index:
             return
 
@@ -348,6 +362,7 @@ def _actions_callback(widget, data):
 
         # Move items and update
         PROJECT().remove_from_group(current_group_index, move_items)
+        current_group_index = _get_current_group_index()
         PROJECT().add_to_group(to_group_index, move_items)
         widgets.group_view_select.set_active(to_group_index + 1) # 0 index items is "All" items group not a user created group
 
@@ -356,7 +371,7 @@ def _delete_with_items_dialog_callback(dialog, response_id):
     if response_id != gtk.RESPONSE_ACCEPT:
         return
     
-    current_group_index = widgets.group_view_select.get_active() - 1
+    current_group_index = _get_current_group_index()
     name, items = PROJECT().media_log_groups[current_group_index]
     PROJECT().delete_media_log_events(items)
     PROJECT().media_log_groups.pop(current_group_index)
@@ -371,7 +386,7 @@ def _rename_callback(dialog, response_id, entry):
     if len(new_name) == 0:
         return
         
-    current_group_index = widgets.group_view_select.get_active() - 1
+    current_group_index = _get_current_group_index()
     old_name, items = PROJECT().media_log_groups[current_group_index]
 
     PROJECT().media_log_groups.pop(current_group_index)
@@ -403,7 +418,7 @@ def _new_group_name_callback(dialog, response_id, data):
             index = max(row) # these are tuples, max to extract only value
             items.append(log_events[index])
 
-        current_group_index = widgets.group_view_select.get_active() - 1
+        current_group_index = _get_current_group_index()
         if current_group_index >= 0:
             PROJECT().remove_from_group(current_group_index, items)
 
@@ -660,12 +675,16 @@ def get_media_log_events_panel(events_list_view):
         
     return panel
 
+def update_group_select_for_load():
+    _create_group_select()
+    widgets.group_view_select.set_active(0)
+    
 def _create_group_select():
     try:
         widgets.group_box.remove(widgets.group_view_select)
     except:
         pass
-        
+
     group_view_select = gtk.combo_box_new_text() # filled later when current sequence known
     group_view_select.append_text(_("All Items"))
     for group_data in PROJECT().media_log_groups:

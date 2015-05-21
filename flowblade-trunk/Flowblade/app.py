@@ -388,6 +388,7 @@ def init_project_gui():
     selection.select_path(str(selected_index))
   
     # Display logged ranges in "Range Log" tab
+    medialog.update_group_select_for_load()
     medialog.update_media_log_view()
 
     render.set_default_values_for_widgets(True)
