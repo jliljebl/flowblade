@@ -153,10 +153,12 @@ def delete_selected():
         index = max(row) # these are tuple, max to extract only value
         delete_events.append(log_events[index])
     current_group_index = _get_current_group_index()
-    if current_group_index != -1:
+    if current_group_index != -1: # When user created group is displayed item is only deleted from that group
         PROJECT().remove_from_group(current_group_index, delete_events)
-    PROJECT().delete_media_log_events(delete_events)
-
+    else: # When "All Items" group is displayed item is deleted from "All Items" list and from all groups too  
+        for i in range(0, len(PROJECT().media_log_groups)):
+            PROJECT().remove_from_group(i, delete_events)
+        PROJECT().delete_media_log_events(delete_events)
 
     widgets.media_log_view.fill_data_model()
 
