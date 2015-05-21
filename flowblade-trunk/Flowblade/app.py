@@ -101,7 +101,6 @@ def main(root_path):
     Called at application start.
     Initializes application with a default project.
     """
-    print "GITHUB VERSION!!!!!! pwdetst3"
     # Print OS, Python version and GTK+ version
     try:
         os_release_file = open("/etc/os-release","r")
