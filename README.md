@@ -88,6 +88,7 @@ Flowblade is currently a 100% script application, and all the dependencies shoul
   * Extract archive into a folder of your choosing
   * Install dependencies. See [Dependencies](./flowblade-trunk/docs/DEPENDENCIES.md) doc for more information.
   * Launch by running script .../flowblade-0.18.0/flowblade that was created in the folder where archive was unpacked.
+  * Note that if you have Flowblade installed you will need use full path to repository version or navigate to the folder containing launch script and use command "./flowblade" to launch repository version instead of installed version.
 
 *Please note: .tar.gz file is in a Dropbox Public folder and may go over download limit, please contact Project Owner if this happens.*
 
@@ -106,7 +107,8 @@ git clone https://github.com/jliljebl/flowblade.git
 ```
   * Install dependencies. See   [Dependencies](./flowblade-trunk/docs/DEPENDENCIES.md) doc for more information.
   * Launch by running script ``.../flowblade-trunk/flowblade`` that was created in the folder where clone command was done.
-
+  * Note that if you have Flowblade installed you will need use full path to repository version or navigate to the folder containing launch script and use command "./flowblade" to launch repository version instead of installed version
+ 
 *Please note: Using the available setup.py script will NOT result in a successful installation, even if dependencies are installed, and may actually break the .deb install if attempted. It is only there to help .deb packaging.* 
 
 # Docs
