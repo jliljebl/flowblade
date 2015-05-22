@@ -136,3 +136,5 @@ git clone https://github.com/jliljebl/flowblade.git
 Use the **Issues** tab on the right to give bug reports or to make feature requests.
 
 If needed, you can contact project lead for additional information: janne.liljeblad@gmail.com
+
+https://github.com/jliljebl/flowblade/issues/95
