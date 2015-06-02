@@ -59,8 +59,6 @@ Flowblade provides powerful tools to mix and filter video and audio.
 
 # Installing Flowblade
 
-The latest release is **Flowblade 0.18**, released on March 19, 2015
-
 Installing instructions are available [here](./flowblade-trunk/docs/INSTALLING.md).
 
 # Docs
