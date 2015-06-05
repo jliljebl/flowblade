@@ -23,7 +23,7 @@ pygtk.require('2.0');
 import gtk
 
 import glob
-import Image
+from PIL import Image
 import mlt
 import os
 import shutil
