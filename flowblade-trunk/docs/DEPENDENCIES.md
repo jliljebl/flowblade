@@ -15,7 +15,6 @@
 | python-numpy | Math and arrays library |
 | python-gnome2 | Python Gnome bindings |
 | python-gobject-2 | GObject library bindings |
-| python-imaging | Python Imaging Library compatibility layer |
 | python-pil | PIL image manipulation library |
 
 # Dropped  Dependencies #
