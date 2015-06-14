@@ -1,26 +1,18 @@
 # Road map
 This document gives a broad overview what's happening next in Flowblade development. For more information see open Issues on the Issues tab.
 
-*Last updated: After release 0.18 on April 14, 2015*
+*Last updated: After release 1.0 on June 14, 2015*
 
-## Next release (1.0)
-*Estimated release time is May-June 2015*
+## Next release (1.2)
+*Estimated release date is September - November 2015.*
 
-**Local help files** Google Code is going offline at the end of the year and the Reference Guide can no longer be hosted there.
-
-**Playback speed display for JKL scrubbing** Makes JKL scrubbing nicer.
-
-**Bugfixes** The main focus of 1.0 release is stability, so no new features are added.
-
-### GTK3+ port
-This will be done immediately after 1.0 release. Completed between May - September 2015, depending on the difficulty of task.
-
-### Webpage
-The content for this mostly already exists. This will be done at the same time as the GTK3+ port and will probably be complete before September 2015.
+**GTK3+ port** This release cycle will focus solely on porting the application to GTK3.
 
 ### Coming features in the next few releases
 
 **Keyframe editing on the timeline** This is mainly provided for the purpose of audio mixing that can be done more naturally on the timeline. Other parameters may later be also made editable on the timeline.
+
+**Rendered fade/transition delete update** Make fades and transitions automatically cover the gap left with material from source clip(s) if possible.
 
 **Audio Levels display enhancement** This still needs to be improved.
 
@@ -36,3 +28,5 @@ The content for this mostly already exists. This will be done at the same time a
 
 **EDL Export** We need some subset of this feature, mainly to work with Blender.
 
+### Webpage
+The content for this mostly already exists.
