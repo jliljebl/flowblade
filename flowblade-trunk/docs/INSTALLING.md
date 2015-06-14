@@ -10,14 +10,14 @@ The easiest way to install Flowblade is using the version in your OS repository.
 
 <ul>
     <li>Double Click on the downloaded .deb file to install.</li>
-    <li>On atleast <b>Linux Mint 17</b> you will need to install dependencies separately with command:</li>
+    <li>On at least <b>Linux Mint 17</b> you will need to install dependencies separately with command:</li>
 </ul>
 
 ```bash
 sudo apt-get install -f
 ```
 
-Release has been tested on: <b>Ubuntu 15.05, 14.10, 14.04, Linux Mint 17 and Debian 8</b>
+Release has been tested on: <b>Ubuntu 15.05, 14.10, 14.04, Linux Mint 17 and Debian 8</b>.
 Other recent Debian based systems should work too.
 
 *Please note these issues with Dropbox download:*
