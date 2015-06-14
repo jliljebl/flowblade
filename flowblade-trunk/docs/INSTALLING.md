@@ -6,7 +6,7 @@ The easiest way to install Flowblade is using the version in your OS repository.
 
 ### Installing using .deb package
 
-**First download .deb file** for Flowblade 1.0 from <a href="https://www.dropbox.com/s/9m2e9whcazjo1l8/flowblade-1.0.0-1_all.deb?dl=0">here.</a>  
+**First download .deb file** for Flowblade 1.0 from <a href="https://www.dropbox.com/s/9m2e9whcazjo1l8/flowblade-1.0.0-1_all.deb?dl=0">here.</a>
 
 <ul>
     <li>Double Click on the downloaded .deb file to install.</li>

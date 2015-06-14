@@ -1,5 +1,33 @@
 # Release Notes #
 
+## Flowblade 1.0 ##
+**Date: June 15, 2015**
+
+**Flowblade 1.0** is the eighth release of Flowblade. So it turns out that you *can* write a video editor with those Python bindings to MLT.
+
+This release focused almost entirely on bugfixes to ensure maximum quality of existing features for 1.0 release. This was probably a good decision as quite a few bugs were found and fixed.
+
+Quite a bit of time was spend moving the project from Google Code project hosting to Github. After a short time here it's quite clear that Github is a superior platform, so it was all for the better.
+
+Next release cycle will be devoted to the GTK3 port. Hopefully everything goes according to plan, and we can get back to adding new exiting features to the application.
+
+#### Bug fixes and enhancements ####
+  * Make range item delete work logically
+  * Fix Range log group functionality
+  * Media files pop-ups only display usable items for media type
+  * Fix Media Relinker to work with image sequences correctly
+  * Make backup snapshot have .flb ext no matter what user enters
+  * Fix snapshot saving for image sequences
+  * Add missing image sequence proxy render functionality
+  * Fix snapshot relative paths lookup for image sequences
+  * Update project event time display text
+  *  New fallback thumbnail icon
+  * Fix MLT version comparison 
+  * Brightness Keyframed bug fixed
+  * Moved help files from Google Code to HTML resource files
+  * Remove panel frame shadows for cleaner look
+
+
 ## Flowblade 0.18 ##
 **Date: March 19, 2015**
 
