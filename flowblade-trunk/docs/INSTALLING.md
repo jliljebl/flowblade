@@ -19,16 +19,16 @@ The easiest way to install Flowblade is using the version in your OS repository.
 sudo apt-get install -f
 ```
 
-*Please note about Dropbox download:*
+Release has been tested on: <b>Ubuntu 15.05, 14.010, 14.04, Linux Mint 17 and Debian 8</b>
+Other recent Debian based systems should work too.
 
+*Please note these issues with Dropbox download:*
 <ul>
  <li> <i>The download button may appear grayed out and you have to press it twice.</i></li>
- <li> <i>A window may appear that asks you to create an account but you can close it (click a link at the bottom to continue to download if such link is displayed). Now press Download button again.</i></li> 
+ <li> <i>A window may appear that asks you to create an account, but you can close it and press Download button again.</i></li> 
  <li> <i>The .deb file is in a Dropbox Public folder and may go over download limit, please contact Project Owner if this happens.</i></li>
 </ul>
 
-Release has been tested on: <b>Ubuntu 15.05, 14.010, 14.04, Linux Mint 17 and Debian 8</b>
-Other recent Debian based systems should work too.
 
 ### Installing Using Source Code Archive
 
@@ -42,11 +42,10 @@ Flowblade is currently a 100% script application, and all the dependencies shoul
   * Launch by running script *.../flowblade-1.0.0/flowblade* that was created in the folder where archive was unpacked.
   * Note that if you have Flowblade installed you will need use full path to repository version or navigate to the folder containing launch script and use command "./flowblade" to launch repository version instead of installed version.
 
-*Please note about Dropbox download:*
-
+*Please note these issues with Dropbox download:*
 <ul>
  <li> <i>The download button may appear grayed out and you have to press it twice.</i></li>
- <li> <i>A window may appear that asks you to create an account but you can close it (click a link at the bottom to continue to download if such link is displayed). Now press Download button again.</i></li> 
+ <li> <i>A window may appear that asks you to create an account, but you can close it and press Download button again..</i></li> 
  <li> <i>The .deb file is in a Dropbox Public folder and may go over download limit, please contact Project Owner if this happens.</i></li>
 </ul>
 
