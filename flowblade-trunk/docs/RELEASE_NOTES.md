@@ -3,7 +3,7 @@
 ## Flowblade 1.0 ##
 **Date: June 15, 2015**
 
-**Flowblade 1.0** is the eighth release of Flowblade. So it turns out that you *can* write a video editor with those Python bindings to MLT.
+**Flowblade 1.0** is the eighth release of Flowblade. It turns out that you *can* write a video editor with those Python bindings to MLT.
 
 This release focused almost entirely on bugfixes to ensure maximum quality of existing features for 1.0 release. This was probably a good decision as quite a few bugs were found and fixed.
 
