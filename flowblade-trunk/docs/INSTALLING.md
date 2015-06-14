@@ -1,7 +1,5 @@
 # Installing Flowblade #
 
-**This is just being updated for version 1.0**
-
 ### Installing from your OS repository
 
 The easiest way to install Flowblade is using the version in your OS repository. The downside is that the version available may not be the current latest release. Contact your OS to get Flowblade included in repositories if not already available.
@@ -19,7 +17,7 @@ The easiest way to install Flowblade is using the version in your OS repository.
 sudo apt-get install -f
 ```
 
-Release has been tested on: <b>Ubuntu 15.05, 14.010, 14.04, Linux Mint 17 and Debian 8</b>
+Release has been tested on: <b>Ubuntu 15.05, 14.10, 14.04, Linux Mint 17 and Debian 8</b>
 Other recent Debian based systems should work too.
 
 *Please note these issues with Dropbox download:*
