@@ -19,10 +19,6 @@ See [Installing Flowblade](https://github.com/jliljebl/flowblade#installing-flow
   1. [Screenshot](https://github.com/jliljebl/flowblade#screenshot)
   1. [Contact](https://github.com/jliljebl/flowblade#contact)
 
-<b> Project is on annual summer break from June 14 to early August.</b>
-  * **please DO file new Issues if needed, action will be taken on those when activity on project resumes.**
-  * **commenting on Issues and answering e-mails might take up to a few weeks, depending on vacations etc.**
-
 # Introduction
 
 Flowblade Movie Editor is a **multitrack non-linear video editor** for Linux released under **GPL 3 license**.
