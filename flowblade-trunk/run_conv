@@ -1,0 +1,12 @@
+#/usr/bin/bash
+
+echo "Running Flowblade GTK# conversion script..."
+
+flowroot
+
+cd ..
+echo "Reset to last commit"
+git reset HEAD --hard
+
+cd flowblade-trunk
+./gtk3_conversion
