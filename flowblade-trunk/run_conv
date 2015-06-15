@@ -1,0 +1,5 @@
+#/usr/bin/bash
+
+echo "bulkkuuu"
+
+./gtk3_conversion
