@@ -22,9 +22,9 @@
 Module holds references to GUI widgets.
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 
 
@@ -119,11 +119,11 @@ def capture_references(new_editor_window):
     editmenu = editor_window.uimanager.get_widget('/MenuBar/EditMenu')
 
     style = editor_window.edit_buttons_row.get_style()
-    note_bg_color = style.bg[gtk.STATE_NORMAL]
-    fg_color = style.fg[gtk.STATE_NORMAL]
-    selected_bg_color = style.bg[gtk.STATE_SELECTED]
+    note_bg_color = style.bg[Gtk.StateType.NORMAL]
+    fg_color = style.fg[Gtk.StateType.NORMAL]
+    selected_bg_color = style.bg[Gtk.StateType.SELECTED]
     
-    # Get cairo color tuple from gtk.gdk.Color
+    # Get cairo color tuple from Gdk.Color
     raw_r, raw_g, raw_b = hex_to_rgb(fg_color.to_string())
     fg_color_tuple = (float(raw_r)/65535.0, float(raw_g)/65535.0, float(raw_b)/65535)
 

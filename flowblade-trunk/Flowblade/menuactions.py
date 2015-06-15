@@ -22,9 +22,9 @@
 This module handles the less central actions inited by user from menu.
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 import platform
 import threading
@@ -59,18 +59,18 @@ class RecreateIconsThread(threading.Thread):
 
     def run(self):
         # NEEDS FIXING FOR COMPACT PROJECTS
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         recreate_progress_window = dialogs.recreate_icons_progress_dialog()
         time.sleep(0.1)
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
 
         no_icon_path = respaths.IMAGE_PATH + projectdata.FALLBACK_THUMB
         loaded = 0
         for key in PROJECT().media_files.iterkeys():
             media_file = PROJECT().media_files[key]
-            gtk.gdk.threads_enter()
+            Gdk.threads_enter()
             recreate_progress_window.info.set_text(media_file.name)
-            gtk.gdk.threads_leave()
+            Gdk.threads_leave()
 
             if ((not isinstance(media_file, patternproducer.AbstractBinClip))
                 and (not isinstance(media_file, projectdata.BinColorClip))):
@@ -84,23 +84,23 @@ class RecreateIconsThread(threading.Thread):
 
             loaded = loaded + 1
             
-            gtk.gdk.threads_enter()
+            Gdk.threads_enter()
             loaded_frac = float(loaded) / float(len(PROJECT().media_files))
             recreate_progress_window.progress_bar.set_fraction(loaded_frac)
             time.sleep(0.01)
-            gtk.gdk.threads_leave()
+            Gdk.threads_leave()
 
         # Update editor gui
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         recreate_progress_window.destroy()
         time.sleep(0.3)
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
         
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         gui.media_list_view.fill_data_model()
         gui.bin_list_view.fill_data_model()
         gui.enable_save()
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
 
 def recreate_media_file_icons():
     recreate_thread = RecreateIconsThread()
@@ -124,7 +124,7 @@ def write_env_data():
     dialogs.save_env_data_dialog(write_out_env_data_cb)
 
 def write_out_env_data_cb(dialog, response_id):
-    if response_id == gtk.RESPONSE_ACCEPT:
+    if response_id == Gtk.ResponseType.ACCEPT:
         filenames = dialog.get_filenames()
         file_path = filenames[0]
         # Build env data string list
@@ -246,7 +246,7 @@ def _watermark_add_callback(button, dialog, widgets):
 
 def _watermark_file_select_callback(dialog, response_id, widgets):
     add_button, remove_button, file_path_value_label = widgets
-    if response_id == gtk.RESPONSE_ACCEPT:
+    if response_id == Gtk.ResponseType.ACCEPT:
         filenames = dialog.get_filenames()
         current_sequence().add_watermark(filenames[0])
         add_button.set_sensitive(False)

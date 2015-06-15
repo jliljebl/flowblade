@@ -21,9 +21,9 @@
 """
 Helper functions and data
 """
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 import math
 import os
@@ -154,7 +154,7 @@ def get_track_name(track, sequence):
 
 def get_media_source_file_filter():
     # No idea if these actually play or not, except images mime types
-    f = gtk.FileFilter()
+    f = Gtk.FileFilter()
     f.set_name("Media MIME types")
     f.add_mime_type("image*")
     f.add_mime_type("video*")
@@ -227,7 +227,7 @@ def get_media_source_file_filter():
     return f
 
 def get_image_sequence_file_filter():
-    f = gtk.FileFilter()
+    f = Gtk.FileFilter()
     f.set_name("Image files")
     f.add_mime_type("image/bmp")
     f.add_mime_type("image/tiff")

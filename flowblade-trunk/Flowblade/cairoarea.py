@@ -23,24 +23,24 @@ Module contains CairoDrawableArea widget. You can draw onto it using
 Cairo, and listen to its mouse and keyboard events.
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
 
-from gtk import gdk
 
-class CairoDrawableArea(gtk.Widget):
+from gi.repository import Gtk
+
+from gi.repository import Gdk
+
+class CairoDrawableArea(Gtk.Widget):
     """
     A widget for creating custom components using Cairo canvas. 
     """
-    #KILL# __gsignals__ = { 'realize': 'override',
-      #KILL#               'expose-event' : 'override',
-         #KILL#            'size-allocate': 'override',
-       #KILL#              'size-request': 'override',}
+
+
+
+
 
     def __init__(self, pref_width, pref_height, func_draw, use_widget_bg=False):
         # Init widget.
-        gtk.Widget.__init__(self)
+        GObject.GObject.__init__(self)
 
         # Preferred size. Parant container has an effect on actual size. 
         self._pref_width = pref_width
@@ -64,24 +64,24 @@ class CairoDrawableArea(gtk.Widget):
         
     def do_realize(self):
         # Set an internal flag telling that we're realized
-        self.set_flags(self.flags() | gtk.REALIZED)
+        self.set_flags(self.flags() | Gtk.REALIZED)
         
         # Create GDK window
-        self.window = gdk.Window(self.get_parent_window(),
+        self.window = Gdk.Window(self.get_parent_window(),
                                  width=self.allocation.width,
                                  height=self.allocation.height,
-                                 window_type=gdk.WINDOW_CHILD,
-                                 wclass=gdk.INPUT_OUTPUT,
+                                 window_type=Gdk.WINDOW_CHILD,
+                                 wclass=Gdk.INPUT_OUTPUT,
                                  event_mask=self.get_events() 
-                                 | gdk.EXPOSURE_MASK 
-                                 | gdk.BUTTON_PRESS_MASK
-                                 | gdk.BUTTON_RELEASE_MASK
-                                 | gdk.BUTTON_MOTION_MASK
-                                 | gdk.POINTER_MOTION_HINT_MASK
-                                 | gdk.ENTER_NOTIFY_MASK
-                                 | gdk.LEAVE_NOTIFY_MASK
-                                 | gdk.KEY_PRESS_MASK
-                                 | gdk.SCROLL_MASK)
+                                 | Gdk.EventMask.EXPOSURE_MASK 
+                                 | Gdk.EventMask.BUTTON_PRESS_MASK
+                                 | Gdk.EventMask.BUTTON_RELEASE_MASK
+                                 | Gdk.EventMask.BUTTON_MOTION_MASK
+                                 | Gdk.EventMask.POINTER_MOTION_HINT_MASK
+                                 | Gdk.EventMask.ENTER_NOTIFY_MASK
+                                 | Gdk.EventMask.LEAVE_NOTIFY_MASK
+                                 | Gdk.EventMask.KEY_PRESS_MASK
+                                 | Gdk.EventMask.SCROLL_MASK)
 
         # Connect motion notify event
         self.connect('motion_notify_event', self._motion_notify_event)
@@ -97,7 +97,7 @@ class CairoDrawableArea(gtk.Widget):
             print "no cairo"
             raise SystemExit
 
-        # GTK+ stores the widget that owns a gtk.gdk.Window as user data on it. 
+        # GTK+ stores the widget that owns a Gdk.Window as user data on it. 
         # Custom widgets should do this too
         self.window.set_user_data(self)
 
@@ -106,7 +106,7 @@ class CairoDrawableArea(gtk.Widget):
 
         # Set background color
         if(self._use_widget_bg):
-            self.style.set_background(self.window, gtk.STATE_NORMAL)
+            self.style.set_background(self.window, Gtk.StateType.NORMAL)
 
         # Set size and place 
         self.window.move_resize(*self.allocation)
@@ -125,7 +125,7 @@ class CairoDrawableArea(gtk.Widget):
         # This is called by when widget size is known
         # new size in tuple allocation
         self.allocation = allocation
-        if self.flags() & gtk.REALIZED:
+        if self.get_realized():
             self.window.move_resize(*allocation)
 
     # Noop funcs for unhandled events
@@ -180,7 +180,7 @@ class CairoDrawableArea(gtk.Widget):
         else:
             x = event.x
             y = event.y
-            state = event.state
+            state = event.get_state()
 
         self.motion_notify_func(x, y, state)
 

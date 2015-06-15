@@ -23,9 +23,9 @@ Module handles clips compositing gui.
 """
 
 import copy
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 import gui
 import guicomponents
@@ -54,25 +54,25 @@ def create_widgets():
     """
     # Left side
     widgets.compositor_info = guicomponents.CompositorInfoPanel()
-    widgets.delete_b = gtk.Button(_("Delete"))
+    widgets.delete_b = Gtk.Button(_("Delete"))
     widgets.delete_b.connect("clicked", lambda w,e: _delete_compositor_pressed(), None)
-    widgets.reset_b = gtk.Button(_("Reset"))
+    widgets.reset_b = Gtk.Button(_("Reset"))
     widgets.reset_b.connect("clicked", lambda w,e: _reset_compositor_pressed(), None)
     
     # Right side
-    widgets.empty_label = gtk.Label(_("No Compositor"))
-    widgets.value_edit_box = gtk.VBox()
+    widgets.empty_label = Gtk.Label(label=_("No Compositor"))
+    widgets.value_edit_box = Gtk.VBox()
     widgets.value_edit_box.pack_start(widgets.empty_label, True, True, 0)
-    widgets.value_edit_frame = gtk.Frame()
+    widgets.value_edit_frame = Gtk.Frame()
     widgets.value_edit_frame.add(widgets.value_edit_box)
-    widgets.value_edit_frame.set_shadow_type(gtk.SHADOW_NONE)
+    widgets.value_edit_frame.set_shadow_type(Gtk.ShadowType.NONE)
 
 def get_compositor_clip_panel():
     create_widgets()
     
-    compositor_vbox = gtk.VBox(False, 2)
+    compositor_vbox = Gtk.VBox(False, 2)
     compositor_vbox.pack_start(widgets.compositor_info, False, False, 0)
-    compositor_vbox.pack_start(gtk.Label(), True, True, 0)
+    compositor_vbox.pack_start(Gtk.Label(), True, True, 0)
     compositor_vbox.pack_start(widgets.reset_b, False, False, 0)
     compositor_vbox.pack_start(widgets.delete_b, False, False, 0)
     compositor_vbox.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
@@ -139,21 +139,21 @@ def _display_compositor_edit_box():
     global keyframe_editor_widgets
     keyframe_editor_widgets = []
 
-    vbox = gtk.VBox()
+    vbox = Gtk.VBox()
 
     # case: Empty edit frame
     global compositor
     if compositor == None:
-        widgets.empty_label = gtk.Label(_("No Compositor"))
+        widgets.empty_label = Gtk.Label(label=_("No Compositor"))
         vbox.pack_start(widgets.empty_label, True, True, 0)
 
-        vbox.pack_start(gtk.Label(), True, True, 0)  
+        vbox.pack_start(Gtk.Label(), True, True, 0)  
         vbox.show_all()
         widgets.value_edit_box = vbox
         widgets.value_edit_frame.add(vbox)
         return 
     
-    compositor_name_label = gtk.Label( "<b>" + compositor.name + "</b>")
+    compositor_name_label = Gtk.Label(label= "<b>" + compositor.name + "</b>")
     compositor_name_label.set_use_markup(True)
     vbox.pack_start(compositor_name_label, False, False, 0)
     vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
@@ -164,12 +164,12 @@ def _display_compositor_edit_box():
                     current_sequence().tracks[compositor.transition.a_track], 
                     _target_track_changed)
 
-    target_row = gtk.HBox()
+    target_row = Gtk.HBox()
     target_row.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
-    target_row.pack_start(gtk.Label(_("Destination Track:")), False, False, 0)
+    target_row.pack_start(Gtk.Label(label=_("Destination Track:")), False, False, 0)
     target_row.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
     target_row.pack_start(target_combo, False, False, 0)
-    target_row.pack_start(gtk.Label(), True, True, 0)
+    target_row.pack_start(Gtk.Label(), True, True, 0)
     vbox.pack_start(target_row, False, False, 0)
     vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
 
@@ -199,12 +199,12 @@ def _display_compositor_edit_box():
         vbox.pack_start(editor_row, False, False, 0)
         vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
     
-    vbox.pack_start(gtk.Label(), True, True, 0)  
+    vbox.pack_start(Gtk.Label(), True, True, 0)  
     vbox.show_all()
 
-    scroll_window = gtk.ScrolledWindow()
+    scroll_window = Gtk.ScrolledWindow()
     scroll_window.add_with_viewport(vbox)
-    scroll_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+    scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
     scroll_window.show_all()
 
     widgets.value_edit_box = scroll_window

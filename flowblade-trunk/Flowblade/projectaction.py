@@ -22,11 +22,11 @@
 Module handles user actions that are not edits on the current sequence.
 Load, save, add media file, etc...
 """
-import gobject
-import pygtk
-pygtk.require('2.0');
-import gtk
-import glib
+from gi.repository import GObject
+
+
+from gi.repository import Gtk
+from gi.repository import GLib
 import glob
 
 import datetime
@@ -80,12 +80,12 @@ class LoadThread(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        gtk.gdk.threads_enter()
-        updater.set_info_icon(gtk.STOCK_OPEN)
+        Gdk.threads_enter()
+        updater.set_info_icon(Gtk.STOCK_OPEN)
 
         dialog = dialogs.load_dialog()
         persistance.load_dialog = dialog
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
 
         ticker = utils.Ticker(_load_pulse_bar, 0.15)
         ticker.start_ticker()
@@ -122,33 +122,33 @@ class LoadThread(threading.Thread):
                                               # we simply change it back as no GUI or other state is yet changed
             return
 
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         dialog.info.set_text(_("Opening"))
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
 
         time.sleep(0.3)
 
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         app.open_project(project)
 
         if self.block_recent_files: # naming flipped ????
             editorpersistance.add_recent_project_path(self.filename)
             editorpersistance.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
         
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         updater.set_info_icon(None)
         dialog.destroy()
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
 
         ticker.stop_ticker()
 
     def _error_stop(self, dialog, ticker):
         editorstate.project_is_loading = False
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         updater.set_info_icon(None)
         dialog.destroy()
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
         ticker.stop_ticker()
 
             
@@ -160,10 +160,10 @@ class AddMediaFilesThread(threading.Thread):
         self.filenames = filenames
 
     def run(self): 
-        gtk.gdk.threads_enter()
-        watch = gtk.gdk.Cursor(gtk.gdk.WATCH)
+        Gdk.threads_enter()
+        watch = Gdk.Cursor.new(Gdk.CursorType.WATCH)
         gui.editor_window.window.window.set_cursor(watch)
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
 
         duplicates = []
         succes_new_file = None
@@ -180,28 +180,28 @@ class AddMediaFilesThread(threading.Thread):
                     print err.__str__()
                     dialogs.not_valid_producer_dialog(err.value, gui.editor_window.window)
             
-            gtk.gdk.threads_enter()
+            Gdk.threads_enter()
             gui.media_list_view.fill_data_model()
             max_val = gui.editor_window.media_scroll_window.get_vadjustment().get_upper()
             gui.editor_window.media_scroll_window.get_vadjustment().set_value(max_val)
-            gtk.gdk.threads_leave()
+            Gdk.threads_leave()
 
         if succes_new_file != None:
             editorpersistance.prefs.last_opened_media_dir = os.path.dirname(succes_new_file)
             editorpersistance.save()
 
         # Update editor gui
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         gui.media_list_view.fill_data_model()
         gui.bin_list_view.fill_data_model()
         _enable_save()
 
-        normal_cursor = gtk.gdk.Cursor(gtk.gdk.LEFT_PTR) #RTL
+        normal_cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR) #RTL
         gui.editor_window.window.window.set_cursor(normal_cursor)
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
 
         if len(duplicates) > 0:
-            gobject.timeout_add(10, _duplicates_info, duplicates)
+            GObject.timeout_add(10, _duplicates_info, duplicates)
 
 def _duplicates_info(duplicates):
     primary_txt = _("Media files already present in project were opened!")
@@ -223,12 +223,12 @@ def _duplicates_info(duplicates):
     return False
 
 def _load_pulse_bar():
-    gtk.gdk.threads_enter()
+    Gdk.threads_enter()
     try: 
         persistance.load_dialog.progress_bar.pulse()
     except:
         pass
-    gtk.gdk.threads_leave()
+    Gdk.threads_leave()
 
 def _enable_save():
     gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)
@@ -241,7 +241,7 @@ def new_project():
 def _new_project_dialog_callback(dialog, response_id, profile_combo, tracks_combo, 
                                  tracks_combo_values_list):
     v_tracks, a_tracks = tracks_combo_values_list[tracks_combo.get_active()]
-    if response_id == gtk.RESPONSE_ACCEPT:
+    if response_id == Gtk.ResponseType.ACCEPT:
         app.new_project(profile_combo.get_active(), v_tracks, a_tracks)
         dialog.destroy()
         project_event = projectdata.ProjectEvent(projectdata.EVENT_CREATED_BY_NEW_DIALOG, None)
@@ -253,7 +253,7 @@ def load_project():
     dialogs.load_project_dialog(_load_project_dialog_callback)
     
 def _load_project_dialog_callback(dialog, response_id):
-    if response_id == gtk.RESPONSE_ACCEPT:
+    if response_id == Gtk.ResponseType.ACCEPT:
         filenames = dialog.get_filenames()
         dialog.destroy()
         actually_load_project(filenames[0])
@@ -265,9 +265,9 @@ def close_project():
 
 def _close_dialog_callback(dialog, response_id):
     dialog.destroy()
-    if response_id == gtk.RESPONSE_CLOSE:# "Don't Save"
+    if response_id == Gtk.ResponseType.CLOSE:# "Don't Save"
         pass
-    elif response_id ==  gtk.RESPONSE_YES:# "Save"
+    elif response_id ==  Gtk.ResponseType.YES:# "Save"
         if editorstate.PROJECT().last_save_path != None:
             persistance.save_project(editorstate.PROJECT(), editorstate.PROJECT().last_save_path)
         else:
@@ -296,14 +296,14 @@ def save_project():
         _save_project_in_last_saved_path()
 
 def _save_project_in_last_saved_path():
-    updater.set_info_icon(gtk.STOCK_SAVE)
+    updater.set_info_icon(Gtk.STOCK_SAVE)
 
     PROJECT().events.append(projectdata.ProjectEvent(projectdata.EVENT_SAVED, PROJECT().last_save_path))
 
     persistance.save_project(PROJECT(), PROJECT().last_save_path) #<----- HERE
 
     global save_icon_remove_event_id
-    save_icon_remove_event_id = gobject.timeout_add(500, remove_save_icon)
+    save_icon_remove_event_id = GObject.timeout_add(500, remove_save_icon)
 
     global save_time
     save_time = time.clock()
@@ -318,11 +318,11 @@ def save_project_as():
     dialogs.save_project_as_dialog(_save_as_dialog_callback, PROJECT().name, open_dir)
     
 def _save_as_dialog_callback(dialog, response_id):
-    if response_id == gtk.RESPONSE_ACCEPT:
+    if response_id == Gtk.ResponseType.ACCEPT:
         filenames = dialog.get_filenames()
         PROJECT().last_save_path = filenames[0]
         PROJECT().name = os.path.basename(filenames[0])
-        updater.set_info_icon(gtk.STOCK_SAVE)
+        updater.set_info_icon(Gtk.STOCK_SAVE)
 
         if len(PROJECT().events) == 0: # Save as... with 0 project events is considered Project creation
             p_event = projectdata.ProjectEvent(projectdata.EVENT_CREATED_BY_SAVING, PROJECT().last_save_path)
@@ -337,7 +337,7 @@ def _save_as_dialog_callback(dialog, response_id):
         app.start_autosave()
         
         global save_icon_remove_event_id
-        save_icon_remove_event_id = gobject.timeout_add(500, remove_save_icon)
+        save_icon_remove_event_id = GObject.timeout_add(500, remove_save_icon)
 
         global save_time
         save_time = time.clock()
@@ -362,7 +362,7 @@ def save_backup_snapshot():
     dialogs.save_backup_snapshot(name, _save_backup_snapshot_dialog_callback)
 
 def _save_backup_snapshot_dialog_callback(dialog, response_id, project_folder, name_entry):  
-    if response_id == gtk.RESPONSE_ACCEPT:
+    if response_id == Gtk.ResponseType.ACCEPT:
 
         root_path = project_folder.get_filenames()[0]
         if not (os.listdir(root_path) == []):
@@ -397,9 +397,9 @@ class SnaphotSaveThread(threading.Thread):
         copy_txt = _("Copying project media assets")
         project_txt = _("Saving project file")
         
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         dialog = dialogs.save_snaphot_progess(copy_txt, project_txt)
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
         
         media_folder = self.root_folder_path +  "media/"
 
@@ -417,9 +417,9 @@ class SnaphotSaveThread(threading.Thread):
             directory, file_name = os.path.split(media_file.path)
             
             # Message
-            gtk.gdk.threads_enter()
+            Gdk.threads_enter()
             dialog.media_copy_info.set_text(copy_txt + "... " +  file_name)
-            gtk.gdk.threads_leave()
+            Gdk.threads_leave()
             
             # Other media types than image sequences
             if media_file.type != appconsts.IMAGE_SEQUENCE:
@@ -460,9 +460,9 @@ class SnaphotSaveThread(threading.Thread):
                         clip_file_copy = media_folder + file_name
                         if not os.path.isfile(clip_file_copy):
                             directory, file_name = os.path.split(clip.path)
-                            gtk.gdk.threads_enter()
+                            Gdk.threads_enter()
                             dialog.media_copy_info.set_text(copy_txt + "... " +  file_name)
-                            gtk.gdk.threads_leave()
+                            Gdk.threads_leave()
                             shutil.copyfile(clip.path, clip_file_copy) # only rendered files are copied here
                             asset_paths[clip.path] = clip_file_copy # This stuff is already md5 hashed, so no duplicate problems here
             for compositor in seq.compositors:
@@ -471,9 +471,9 @@ class SnaphotSaveThread(threading.Thread):
                 if compositor.type_id == "##region": # Wipe may have user luma and needs to be looked up relatively
                     copy_comp_resourse_file(compositor, "composite.luma", media_folder)
 
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         dialog.media_copy_info.set_text(copy_txt + "    " +  u"\u2713")
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
         
         save_path = self.root_folder_path + self.project_name
 
@@ -481,22 +481,22 @@ class SnaphotSaveThread(threading.Thread):
         persistance.save_project(PROJECT(), save_path)
         persistance.snapshot_paths = None
 
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         dialog.saving_project_info.set_text(project_txt + "    " +  u"\u2713")
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
 
         time.sleep(2)
 
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         dialog.destroy()
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
         
         project_event = projectdata.ProjectEvent(projectdata.EVENT_SAVED_SNAPSHOT, self.root_folder_path)
         PROJECT().events.append(project_event)
 
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         projectinfogui.update_project_info()
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
 
 def get_snapshot_unique_name(file_path, file_name):
     (name, ext) = os.path.splitext(file_name)
@@ -510,7 +510,7 @@ def copy_comp_resourse_file(compositor, res_property, media_folder):
         shutil.copyfile(res_path, res_file_copy)
                         
 def remove_save_icon():
-    gobject.source_remove(save_icon_remove_event_id)
+    GObject.source_remove(save_icon_remove_event_id)
     updater.set_info_icon(None)
 
 def open_recent_project(widget, index):
@@ -602,7 +602,7 @@ def _open_files_dialog_cb(file_select, response_id):
     filenames = file_select.get_filenames()
     file_select.destroy()
 
-    if response_id != gtk.RESPONSE_OK:
+    if response_id != Gtk.ResponseType.OK:
         return
     if len(filenames) == 0:
         return
@@ -614,7 +614,7 @@ def add_image_sequence():
     dialogs.open_image_sequence_dialog(_add_image_sequence_callback, gui.editor_window.window)
 
 def _add_image_sequence_callback(dialog, response_id, data):
-    if response_id == gtk.RESPONSE_CANCEL:
+    if response_id == Gtk.ResponseType.CANCEL:
         dialog.destroy()
         return
 
@@ -677,7 +677,7 @@ def select_thumbnail_dir_callback(dialog, response_id, data):
     file_select, retry_add_media = data
     folder = file_select.get_filenames()[0]
     dialog.destroy()
-    if response_id == gtk.RESPONSE_YES:
+    if response_id == Gtk.ResponseType.YES:
         if folder ==  os.path.expanduser("~"):
             dialogutils.warning_message(_("Can't make home folder thumbnails folder"), 
                                     _("Please create and select some other folder then \'") + 
@@ -693,7 +693,7 @@ def select_thumbnail_dir_callback(dialog, response_id, data):
 def select_render_clips_dir_callback(dialog, response_id, file_select):
     folder = file_select.get_filenames()[0]
     dialog.destroy()
-    if response_id == gtk.RESPONSE_YES:
+    if response_id == Gtk.ResponseType.YES:
         if folder ==  os.path.expanduser("~"):
             dialogs.rendered_clips_no_home_folder_dialog()
         else:
@@ -753,7 +753,7 @@ def delete_media_files(force_delete=False):
 
 def _proxy_delete_warning_callback(dialog, response_id):
     dialog.destroy()
-    if response_id == gtk.RESPONSE_OK:
+    if response_id == Gtk.ResponseType.OK:
         delete_media_files(True)
 
 def display_media_file_rename_dialog(media_file):
@@ -767,7 +767,7 @@ def media_file_name_edited(dialog, response_id, data):
     new_text = name_entry.get_text()
     dialog.destroy()
             
-    if response_id != gtk.RESPONSE_ACCEPT:
+    if response_id != Gtk.ResponseType.ACCEPT:
         return      
     if len(new_text) == 0:
         return
@@ -959,7 +959,7 @@ def _add_new_sequence_dialog_callback(dialog, response_id, widgets):
     """
     Adds new unnamed sequence and sets it selected 
     """
-    if response_id != gtk.RESPONSE_ACCEPT:
+    if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
         return
     
@@ -1007,7 +1007,7 @@ def delete_selected_sequence():
                                  gui.editor_window.window)
 
 def _delete_confirm_callback(dialog, response_id):
-    if response_id != gtk.RESPONSE_ACCEPT:
+    if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
         return
         
@@ -1055,7 +1055,7 @@ def change_sequence_track_count():
     dialogs.tracks_count_change_dialog(_change_track_count_dialog_callback)
 
 def _change_track_count_dialog_callback(dialog, response_id, tracks_combo):
-    if response_id != gtk.RESPONSE_ACCEPT:
+    if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
         return
     

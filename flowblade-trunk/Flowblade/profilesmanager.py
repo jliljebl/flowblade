@@ -21,9 +21,9 @@
 """
 This module handles functionality presented in Profiles Manager window.
 """
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 import os
 
@@ -42,22 +42,22 @@ PROFILES_HEIGHT = 690
 PROFILE_MANAGER_LEFT = 265 # label column of profile manager panel
 
 def profiles_manager_dialog():
-    dialog = gtk.Dialog(_("Profiles Manager"), None,
-                    gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                    (_("Close Manager").encode('utf-8'), gtk.RESPONSE_CLOSE))
+    dialog = Gtk.Dialog(_("Profiles Manager"), None,
+                    Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                    (_("Close Manager").encode('utf-8'), Gtk.ResponseType.CLOSE))
     
 
     panel2, user_profiles_view = _get_user_profiles_panel()
-    alignment2 = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment2 = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
     alignment2.set_padding(12, 14, 12, 6)
     alignment2.add(panel2)
 
     panel1 = _get_factory_profiles_panel(user_profiles_view)
-    alignment1 = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment1 = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
     alignment1.set_padding(12, 12, 12, 12)
     alignment1.add(panel1)
 
-    pane = gtk.HBox(True, 2)
+    pane = Gtk.HBox(True, 2)
     pane.pack_start(alignment1, True, True, 0)
     pane.pack_start(alignment2, True, True, 0)
     pane.set_size_request(PROFILES_WIDTH * 2, PROFILES_HEIGHT)
@@ -73,9 +73,9 @@ def _get_user_profiles_panel():
     # User profiles view
     user_profiles_list = guicomponents.ProfileListView()
     user_profiles_list.fill_data_model(mltprofiles.get_user_profiles())    
-    delete_selected_button = gtk.Button(_("Delete Selected"))
+    delete_selected_button = Gtk.Button(_("Delete Selected"))
     
-    user_vbox = gtk.VBox(False, 2)
+    user_vbox = Gtk.VBox(False, 2)
     user_vbox.pack_start(user_profiles_list, True, True, 0)
     user_vbox.pack_start(guiutils.get_right_justified_box([delete_selected_button]), False, False, 0)
 
@@ -83,69 +83,69 @@ def _get_user_profiles_panel():
     default_profile_index = mltprofiles.get_default_profile_index()
     default_profile = mltprofiles.get_default_profile()
 
-    load_profile_button = gtk.Button(_("Load Profile Values"))
+    load_profile_button = Gtk.Button(_("Load Profile Values"))
 
-    load_profile_combo = gtk.combo_box_new_text()
+    load_profile_combo = Gtk.ComboBoxText()
     profiles = mltprofiles.get_profiles()
     for profile in profiles:
         load_profile_combo.append_text(profile[0])
     load_profile_combo.set_active(default_profile_index)  
 
-    description = gtk.Entry()
+    description = Gtk.Entry()
     description.set_text("User Created Profile")
 
-    f_rate_num = gtk.Entry()
+    f_rate_num = Gtk.Entry()
     f_rate_num.set_text(str(25))
-    f_rate_dem = gtk.Entry()
+    f_rate_dem = Gtk.Entry()
     f_rate_dem.set_text(str(1))
 
-    width = gtk.Entry()
+    width = Gtk.Entry()
     width.set_text(str(720))
 
-    height = gtk.Entry()
+    height = Gtk.Entry()
     height.set_text(str(576))
     
-    s_rate_num = gtk.Entry()
+    s_rate_num = Gtk.Entry()
     s_rate_num.set_text(str(15))
-    s_rate_dem = gtk.Entry()
+    s_rate_dem = Gtk.Entry()
     s_rate_dem.set_text(str(16))
     
-    d_rate_num = gtk.Entry()
+    d_rate_num = Gtk.Entry()
     d_rate_num.set_text(str(4))
-    d_rate_dem = gtk.Entry()
+    d_rate_dem = Gtk.Entry()
     d_rate_dem.set_text(str(3))
 
-    progressive = gtk.CheckButton()
+    progressive = Gtk.CheckButton()
     progressive.set_active(False)
 
-    save_button = gtk.Button(_("Save New Profile"))
+    save_button = Gtk.Button(_("Save New Profile"))
 
     widgets = (load_profile_combo, description, f_rate_num, f_rate_dem, width, height, s_rate_num,
                 s_rate_dem, d_rate_num, d_rate_dem, progressive)
     _fill_new_profile_panel_widgets(default_profile, widgets)
     
     # build panel
-    profile_row = gtk.HBox(False,0)
+    profile_row = Gtk.HBox(False,0)
     profile_row.pack_start(load_profile_combo, False, False, 0)
-    profile_row.pack_start(gtk.Label(), True, True, 0)
+    profile_row.pack_start(Gtk.Label(), True, True, 0)
     profile_row.pack_start(load_profile_button, False, False, 0)
 
-    row0 = guiutils.get_two_column_box(gtk.Label(_("Description.:")), description, PROFILE_MANAGER_LEFT)
-    row1 = guiutils.get_two_column_box(gtk.Label(_("Frame rate num.:")), f_rate_num, PROFILE_MANAGER_LEFT)
-    row2 = guiutils.get_two_column_box(gtk.Label(_("Frame rate den.:")), f_rate_dem, PROFILE_MANAGER_LEFT)
-    row3 = guiutils.get_two_column_box(gtk.Label(_("Width:")), width, PROFILE_MANAGER_LEFT)
-    row4 = guiutils.get_two_column_box(gtk.Label(_("Height:")), height, PROFILE_MANAGER_LEFT)
-    row5 = guiutils.get_two_column_box(gtk.Label(_("Sample aspect num.:")), s_rate_num, PROFILE_MANAGER_LEFT)
-    row6 = guiutils.get_two_column_box(gtk.Label(_("Sample aspect den.:")), s_rate_dem, PROFILE_MANAGER_LEFT)
-    row7 = guiutils.get_two_column_box(gtk.Label(_("Display aspect num.:")), d_rate_num, PROFILE_MANAGER_LEFT)
-    row8 = guiutils.get_two_column_box(gtk.Label(_("Display aspect den.:")), d_rate_dem, PROFILE_MANAGER_LEFT)
-    row9 = guiutils.get_two_column_box(gtk.Label(_("Progressive:")), progressive, PROFILE_MANAGER_LEFT)
+    row0 = guiutils.get_two_column_box(Gtk.Label(label=_("Description.:")), description, PROFILE_MANAGER_LEFT)
+    row1 = guiutils.get_two_column_box(Gtk.Label(label=_("Frame rate num.:")), f_rate_num, PROFILE_MANAGER_LEFT)
+    row2 = guiutils.get_two_column_box(Gtk.Label(label=_("Frame rate den.:")), f_rate_dem, PROFILE_MANAGER_LEFT)
+    row3 = guiutils.get_two_column_box(Gtk.Label(label=_("Width:")), width, PROFILE_MANAGER_LEFT)
+    row4 = guiutils.get_two_column_box(Gtk.Label(label=_("Height:")), height, PROFILE_MANAGER_LEFT)
+    row5 = guiutils.get_two_column_box(Gtk.Label(label=_("Sample aspect num.:")), s_rate_num, PROFILE_MANAGER_LEFT)
+    row6 = guiutils.get_two_column_box(Gtk.Label(label=_("Sample aspect den.:")), s_rate_dem, PROFILE_MANAGER_LEFT)
+    row7 = guiutils.get_two_column_box(Gtk.Label(label=_("Display aspect num.:")), d_rate_num, PROFILE_MANAGER_LEFT)
+    row8 = guiutils.get_two_column_box(Gtk.Label(label=_("Display aspect den.:")), d_rate_dem, PROFILE_MANAGER_LEFT)
+    row9 = guiutils.get_two_column_box(Gtk.Label(label=_("Progressive:")), progressive, PROFILE_MANAGER_LEFT)
 
-    save_row = gtk.HBox(False,0)
-    save_row.pack_start(gtk.Label(), True, True, 0)
+    save_row = Gtk.HBox(False,0)
+    save_row.pack_start(Gtk.Label(), True, True, 0)
     save_row.pack_start(save_button, False, False, 0)
     
-    create_vbox = gtk.VBox(False, 2)
+    create_vbox = Gtk.VBox(False, 2)
     create_vbox.pack_start(profile_row, False, False, 0)
     create_vbox.pack_start(guiutils.get_pad_label(10, 10), False, False, 0)
     create_vbox.pack_start(row0, False, False, 0)
@@ -166,7 +166,7 @@ def _get_user_profiles_panel():
     save_button.connect("clicked",lambda w,e: _save_profile_clicked(widgets, user_profiles_list), None)
     delete_selected_button.connect("clicked",lambda w,e: _delete_user_profiles_clicked(user_profiles_list), None)
 
-    vbox = gtk.VBox(False, 2)
+    vbox = Gtk.VBox(False, 2)
     vbox.pack_start(guiutils.get_named_frame(_("Create User Profile"), create_vbox), False, False, 0)
     vbox.pack_start(guiutils.get_named_frame(_("User Profiles"), user_vbox), True, True, 0)
 
@@ -178,13 +178,13 @@ def _get_factory_profiles_panel(user_profiles_list):
     # Factory
     all_profiles_list = guicomponents.ProfileListView(_("Visible").encode('utf-8'))
     all_profiles_list.fill_data_model(mltprofiles.get_factory_profiles())    
-    hide_selected_button = gtk.Button(_("Hide Selected"))
+    hide_selected_button = Gtk.Button(_("Hide Selected"))
     
     hidden_profiles_list = guicomponents.ProfileListView(_("Hidden").encode('utf-8'))
     hidden_profiles_list.fill_data_model(mltprofiles.get_hidden_profiles())   
-    unhide_selected_button = gtk.Button(_("Unhide Selected"))
+    unhide_selected_button = Gtk.Button(_("Unhide Selected"))
     
-    stop_icon = gtk.image_new_from_file(respaths.IMAGE_PATH + "bothways.png")
+    stop_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH + "bothways.png")
     
     BUTTON_WIDTH = 120
     BUTTON_HEIGHT = 28
@@ -195,22 +195,22 @@ def _get_factory_profiles_panel(user_profiles_list):
     hide_selected_button.connect("clicked",lambda w,e: _hide_selected_clicked(all_profiles_list, hidden_profiles_list), None)
     unhide_selected_button.connect("clicked",lambda w,e: _unhide_selected_clicked(all_profiles_list, hidden_profiles_list), None)    
 
-    top_hbox = gtk.HBox(True, 2)
+    top_hbox = Gtk.HBox(True, 2)
     top_hbox.pack_start(all_profiles_list, True, True, 0)
     top_hbox.pack_start(hidden_profiles_list, True, True, 0)
     
-    bottom_hbox = gtk.HBox(False, 2)
+    bottom_hbox = Gtk.HBox(False, 2)
     bottom_hbox.pack_start(hide_selected_button, False, False, 0)
-    bottom_hbox.pack_start(gtk.Label(), True, True, 0)
+    bottom_hbox.pack_start(Gtk.Label(), True, True, 0)
     bottom_hbox.pack_start(stop_icon, False, False, 0)
-    bottom_hbox.pack_start(gtk.Label(), True, True, 0)
+    bottom_hbox.pack_start(Gtk.Label(), True, True, 0)
     bottom_hbox.pack_start(unhide_selected_button, False, False, 0)
 
-    factory_vbox = gtk.VBox(False, 2)
+    factory_vbox = Gtk.VBox(False, 2)
     factory_vbox.pack_start(top_hbox, True, True, 0)
     factory_vbox.pack_start(bottom_hbox, False, False, 0)
 
-    vbox = gtk.VBox(True, 2)
+    vbox = Gtk.VBox(True, 2)
     vbox.pack_start(guiutils.get_named_frame(_("Factory Profiles"), factory_vbox), True, True, 0)
     
     return vbox
@@ -288,7 +288,7 @@ def _delete_user_profiles_clicked(user_profiles_view):
                                 (user_profiles_view, delete_indexes))
 
 def _profiles_delete_confirm_callback(dialog, response_id, data):
-    if response_id != gtk.RESPONSE_ACCEPT:
+    if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
         return
 

@@ -21,9 +21,9 @@
 """
 Module handles user edit events for insert and over move modes. 
 """
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 
 import appconsts
@@ -437,7 +437,7 @@ def _move_mode_pressed(event, frame):
             pressed_on_selected = False
             drag_disabled = True
     # case: CTRL or SHIFT down, combine selection with earlier selected clips 
-    elif ((event.state & gtk.gdk.CONTROL_MASK) or (event.state & gtk.gdk.SHIFT_MASK)):
+    elif ((event.get_state() & Gdk.ModifierType.CONTROL_MASK) or (event.get_state() & Gdk.ModifierType.SHIFT_MASK)):
         # CTRL pressing blank clears selection
         if pressed_clip.is_blanck_clip:
             clear_selected_clips()

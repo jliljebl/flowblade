@@ -19,14 +19,14 @@
 """
 
 import copy
-import pygtk
-pygtk.require('2.0');
-import gtk
-import glib
+
+
+from gi.repository import Gtk
+from gi.repository import GLib
 
 import os
-import pango
-import pangocairo
+from gi.repository import Pango
+from gi.repository import PangoCairo
 import pickle
 import threading
 import time
@@ -167,9 +167,9 @@ class TitlerData:
             layer.pango_layout = PangoTextLayout(layer)
             
 # ---------------------------------------------------------- editor
-class Titler(gtk.Window):
+class Titler(Gtk.Window):
     def __init__(self):
-        gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
+        GObject.GObject.__init__(self, Gtk.WindowType.TOPLEVEL)
         self.set_title(_("Titler"))
         self.connect("delete-event", lambda w, e:close_titler())
         
@@ -186,38 +186,38 @@ class Titler(gtk.Window):
         
         self.guides_toggle = vieweditor.GuidesViewToggle(self.view_editor)
         
-        add_b = gtk.Button(_("Add"))
-        del_b = gtk.Button(_("Delete"))
+        add_b = Gtk.Button(_("Add"))
+        del_b = Gtk.Button(_("Delete"))
         add_b.connect("clicked", lambda w:self._add_layer_pressed())
         del_b.connect("clicked", lambda w:self._del_layer_pressed())
-        add_del_box = gtk.HBox()
-        add_del_box = gtk.HBox(True,1)
+        add_del_box = Gtk.HBox()
+        add_del_box = Gtk.HBox(True,1)
         add_del_box.pack_start(add_b)
         add_del_box.pack_start(del_b)
 
-        center_h_icon = gtk.image_new_from_file(respaths.IMAGE_PATH + "center_horizontal.png")
-        center_v_icon = gtk.image_new_from_file(respaths.IMAGE_PATH + "center_vertical.png")
-        center_h = gtk.Button()
+        center_h_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH + "center_horizontal.png")
+        center_v_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH + "center_vertical.png")
+        center_h = Gtk.Button()
         center_h.set_image(center_h_icon)
         center_h.connect("clicked", lambda w:self._center_h_pressed())
-        center_v = gtk.Button()
+        center_v = Gtk.Button()
         center_v.set_image(center_v_icon)
         center_v.connect("clicked", lambda w:self._center_v_pressed())
 
         self.layer_list = TextLayerListView(self._layer_selection_changed, self._layer_visibility_toggled)
         self.layer_list.set_size_request(TEXT_LAYER_LIST_WIDTH, TEXT_LAYER_LIST_HEIGHT)
     
-        self.text_view = gtk.TextView()
+        self.text_view = Gtk.TextView()
         self.text_view.set_pixels_above_lines(2)
         self.text_view.set_left_margin(2)
         self.text_view.get_buffer().connect("changed", self._text_changed)
 
-        self.sw = gtk.ScrolledWindow()
-        self.sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_ALWAYS)
+        self.sw = Gtk.ScrolledWindow()
+        self.sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.ALWAYS)
         self.sw.add(self.text_view)
         self.sw.set_size_request(TEXT_VIEW_WIDTH, TEXT_VIEW_HEIGHT)
 
-        scroll_frame = gtk.Frame()
+        scroll_frame = Gtk.Frame()
         scroll_frame.add(self.sw)
         
         self.tc_display = guicomponents.MonitorTCDisplay()
@@ -227,9 +227,9 @@ class Titler(gtk.Window):
         self.pos_bar.set_listener(self.position_listener)
         self.pos_bar.update_display_from_producer(PLAYER().producer)
         self.pos_bar.mouse_release_listener = self.pos_bar_mouse_released
-        pos_bar_frame = gtk.Frame()
+        pos_bar_frame = Gtk.Frame()
         pos_bar_frame.add(self.pos_bar.widget)
-        pos_bar_frame.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+        pos_bar_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
         
         font_map = pangocairo.cairo_font_map_get_default()
         unsorted_families = font_map.list_families()
@@ -237,7 +237,7 @@ class Titler(gtk.Window):
             print "No font families found in system! Titler will not work."
         self.font_families = sorted(unsorted_families, key=lambda family: family.get_name())
         self.font_family_indexes_for_name = {}
-        combo = gtk.combo_box_new_text()
+        combo = Gtk.ComboBoxText()
         indx = 0
         for family in self.font_families:
             combo.append_text(family.get_name())
@@ -247,36 +247,36 @@ class Titler(gtk.Window):
         self.font_select = combo
         self.font_select.connect("changed", self._edit_value_changed)
     
-        adj = gtk.Adjustment(float(DEFAULT_FONT_SIZE), float(1), float(300), float(1))
-        self.size_spin = gtk.SpinButton(adj)
+        adj = Gtk.Adjustment(float(DEFAULT_FONT_SIZE), float(1), float(300), float(1))
+        self.size_spin = Gtk.SpinButton(adj)
         self.size_spin.connect("changed", self._edit_value_changed)
         self.size_spin.connect("key-press-event", self._key_pressed_on_widget)
 
-        font_main_row = gtk.HBox()
+        font_main_row = Gtk.HBox()
         font_main_row.pack_start(self.font_select, True, True, 0)
         font_main_row.pack_start(guiutils.pad_label(5, 5), False, False, 0)
         font_main_row.pack_start(self.size_spin, False, False, 0)
 
-        self.bold_font = gtk.ToggleButton()
-        self.italic_font = gtk.ToggleButton()
-        bold_icon = gtk.image_new_from_stock(gtk.STOCK_BOLD, 
-                                       gtk.ICON_SIZE_BUTTON)
-        italic_icon = gtk.image_new_from_stock(gtk.STOCK_ITALIC, 
-                                       gtk.ICON_SIZE_BUTTON)
+        self.bold_font = Gtk.ToggleButton()
+        self.italic_font = Gtk.ToggleButton()
+        bold_icon = Gtk.Image.new_from_stock(Gtk.STOCK_BOLD, 
+                                       Gtk.IconSize.BUTTON)
+        italic_icon = Gtk.Image.new_from_stock(Gtk.STOCK_ITALIC, 
+                                       Gtk.IconSize.BUTTON)
         self.bold_font.set_image(bold_icon)
         self.italic_font.set_image(italic_icon)
         self.bold_font.connect("clicked", self._edit_value_changed)
         self.italic_font.connect("clicked", self._edit_value_changed)
         
-        self.left_align = gtk.RadioButton()
-        self.center_align = gtk.RadioButton(self.left_align)
-        self.right_align = gtk.RadioButton(self.left_align)
-        left_icon = gtk.image_new_from_stock(gtk.STOCK_JUSTIFY_LEFT, 
-                                       gtk.ICON_SIZE_BUTTON)
-        center_icon = gtk.image_new_from_stock(gtk.STOCK_JUSTIFY_CENTER, 
-                                       gtk.ICON_SIZE_BUTTON)
-        right_icon = gtk.image_new_from_stock(gtk.STOCK_JUSTIFY_RIGHT, 
-                                       gtk.ICON_SIZE_BUTTON)
+        self.left_align = Gtk.RadioButton()
+        self.center_align = Gtk.RadioButton(self.left_align)
+        self.right_align = Gtk.RadioButton(self.left_align)
+        left_icon = Gtk.Image.new_from_stock(Gtk.STOCK_JUSTIFY_LEFT, 
+                                       Gtk.IconSize.BUTTON)
+        center_icon = Gtk.Image.new_from_stock(Gtk.STOCK_JUSTIFY_CENTER, 
+                                       Gtk.IconSize.BUTTON)
+        right_icon = Gtk.Image.new_from_stock(Gtk.STOCK_JUSTIFY_RIGHT, 
+                                       Gtk.IconSize.BUTTON)
         self.left_align.set_image(left_icon)
         self.center_align.set_image(center_icon)
         self.right_align.set_image(right_icon)
@@ -287,11 +287,11 @@ class Titler(gtk.Window):
         self.center_align.connect("clicked", self._edit_value_changed)
         self.right_align.connect("clicked", self._edit_value_changed)
         
-        self.color_button = gtk.ColorButton()
+        self.color_button = Gtk.ColorButton()
         self.color_button.connect("color-set", self._edit_value_changed)
 
-        buttons_box = gtk.HBox()
-        buttons_box.pack_start(gtk.Label(), True, True, 0)
+        buttons_box = Gtk.HBox()
+        buttons_box.pack_start(Gtk.Label(), True, True, 0)
         buttons_box.pack_start(self.bold_font, False, False, 0)
         buttons_box.pack_start(self.italic_font, False, False, 0)
         buttons_box.pack_start(guiutils.pad_label(5, 5), False, False, 0)
@@ -300,51 +300,51 @@ class Titler(gtk.Window):
         buttons_box.pack_start(self.right_align, False, False, 0)
         buttons_box.pack_start(guiutils.pad_label(5, 5), False, False, 0)
         buttons_box.pack_start(self.color_button, False, False, 0)
-        buttons_box.pack_start(gtk.Label(), True, True, 0)
+        buttons_box.pack_start(Gtk.Label(), True, True, 0)
 
-        load_layers = gtk.Button(_("Load Layers"))
+        load_layers = Gtk.Button(_("Load Layers"))
         load_layers.connect("clicked", lambda w:self._load_layers_pressed())
-        save_layers = gtk.Button(_("Save Layers"))
+        save_layers = Gtk.Button(_("Save Layers"))
         save_layers.connect("clicked", lambda w:self._save_layers_pressed())
-        clear_layers = gtk.Button(_("Clear All"))
+        clear_layers = Gtk.Button(_("Clear All"))
         clear_layers.connect("clicked", lambda w:self._clear_layers_pressed())
 
-        layers_save_buttons_row = gtk.HBox()
+        layers_save_buttons_row = Gtk.HBox()
         layers_save_buttons_row.pack_start(save_layers, False, False, 0)
         layers_save_buttons_row.pack_start(load_layers, False, False, 0)
-        layers_save_buttons_row.pack_start(gtk.Label(), True, True, 0)
+        layers_save_buttons_row.pack_start(Gtk.Label(), True, True, 0)
         #layers_save_buttons_row.pack_start(clear_layers, False, False, 0)
         
-        adj = gtk.Adjustment(float(0), float(0), float(3000), float(1))
-        self.x_pos_spin = gtk.SpinButton(adj)
+        adj = Gtk.Adjustment(float(0), float(0), float(3000), float(1))
+        self.x_pos_spin = Gtk.SpinButton(adj)
         self.x_pos_spin.connect("changed", self._position_value_changed)
         self.x_pos_spin.connect("key-press-event", self._key_pressed_on_widget)
-        adj = gtk.Adjustment(float(0), float(0), float(3000), float(1))
-        self.y_pos_spin = gtk.SpinButton(adj)
+        adj = Gtk.Adjustment(float(0), float(0), float(3000), float(1))
+        self.y_pos_spin = Gtk.SpinButton(adj)
         self.y_pos_spin.connect("changed", self._position_value_changed)
         self.y_pos_spin.connect("key-press-event", self._key_pressed_on_widget)
-        adj = gtk.Adjustment(float(0), float(0), float(3000), float(1))
-        self.rotation_spin = gtk.SpinButton(adj)
+        adj = Gtk.Adjustment(float(0), float(0), float(3000), float(1))
+        self.rotation_spin = Gtk.SpinButton(adj)
         self.rotation_spin.connect("changed", self._position_value_changed)
         self.rotation_spin.connect("key-press-event", self._key_pressed_on_widget)
         
-        undo_pos = gtk.Button()
-        undo_icon = gtk.image_new_from_stock(gtk.STOCK_UNDO, 
-                                       gtk.ICON_SIZE_BUTTON)
+        undo_pos = Gtk.Button()
+        undo_icon = Gtk.Image.new_from_stock(Gtk.STOCK_UNDO, 
+                                       Gtk.IconSize.BUTTON)
         undo_pos.set_image(undo_icon)
 
-        next_icon = gtk.image_new_from_file(respaths.IMAGE_PATH + "next_frame_s.png")
-        prev_icon = gtk.image_new_from_file(respaths.IMAGE_PATH + "prev_frame_s.png")
-        prev_frame = gtk.Button()
+        next_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH + "next_frame_s.png")
+        prev_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH + "prev_frame_s.png")
+        prev_frame = Gtk.Button()
         prev_frame.set_image(prev_icon)
         prev_frame.connect("clicked", lambda w:self._prev_frame_pressed())
-        next_frame = gtk.Button()
+        next_frame = Gtk.Button()
         next_frame.set_image(next_icon)
         next_frame.connect("clicked", lambda w:self._next_frame_pressed())
 
         self.scale_selector = vieweditor.ScaleSelector(self)
 
-        timeline_box = gtk.HBox()
+        timeline_box = Gtk.HBox()
         timeline_box.pack_start(guiutils.get_in_centering_alignment(self.tc_display.widget), False, False, 0)
         timeline_box.pack_start(guiutils.get_in_centering_alignment(pos_bar_frame, 1.0), True, True, 0)
         timeline_box.pack_start(prev_frame, False, False, 0)
@@ -352,46 +352,46 @@ class Titler(gtk.Window):
         timeline_box.pack_start(self.guides_toggle, False, False, 0)
         timeline_box.pack_start(self.scale_selector, False, False, 0)
         
-        positions_box = gtk.HBox()
-        positions_box.pack_start(gtk.Label(), True, True, 0)
-        positions_box.pack_start(gtk.Label("X:"), False, False, 0)
+        positions_box = Gtk.HBox()
+        positions_box.pack_start(Gtk.Label(), True, True, 0)
+        positions_box.pack_start(Gtk.Label(label="X:"), False, False, 0)
         positions_box.pack_start(self.x_pos_spin, False, False, 0)
         positions_box.pack_start(guiutils.pad_label(10, 5), False, False, 0)
-        positions_box.pack_start(gtk.Label("Y:"), False, False, 0)
+        positions_box.pack_start(Gtk.Label(label="Y:"), False, False, 0)
         positions_box.pack_start(self.y_pos_spin, False, False, 0)
         positions_box.pack_start(guiutils.pad_label(10, 5), False, False, 0)
-        #positions_box.pack_start(gtk.Label(_("Angle")), False, False, 0)
+        #positions_box.pack_start(Gtk.Label(label=_("Angle")), False, False, 0)
         #positions_box.pack_start(self.rotation_spin, False, False, 0)
         positions_box.pack_start(guiutils.pad_label(10, 5), False, False, 0)
         positions_box.pack_start(center_h, False, False, 0)
         positions_box.pack_start(center_v, False, False, 0)
-        positions_box.pack_start(gtk.Label(), True, True, 0)
+        positions_box.pack_start(Gtk.Label(), True, True, 0)
 
-        controls_panel_1 = gtk.VBox()
+        controls_panel_1 = Gtk.VBox()
         controls_panel_1.pack_start(add_del_box, False, False, 0)
         controls_panel_1.pack_start(self.layer_list, False, False, 0)
         controls_panel_1.pack_start(layers_save_buttons_row, False, False, 0)
 
-        controls_panel_2 = gtk.VBox()
+        controls_panel_2 = Gtk.VBox()
         controls_panel_2.pack_start(scroll_frame, True, True, 0)
         controls_panel_2.pack_start(font_main_row, False, False, 0)
         controls_panel_2.pack_start(buttons_box, False, False, 0)
         
-        controls_panel = gtk.VBox()
+        controls_panel = Gtk.VBox()
         controls_panel.pack_start(guiutils.get_named_frame(_("Active Layer"),controls_panel_2), True, True, 0)
         controls_panel.pack_start(guiutils.get_named_frame(_("Layers"),controls_panel_1), False, False, 0)
  
-        view_editor_editor_buttons_row = gtk.HBox()
+        view_editor_editor_buttons_row = Gtk.HBox()
         view_editor_editor_buttons_row.pack_start(positions_box, False, False, 0)
-        view_editor_editor_buttons_row.pack_start(gtk.Label(), True, True, 0)
+        view_editor_editor_buttons_row.pack_start(Gtk.Label(), True, True, 0)
 
-        keep_label = gtk.Label(_("Keep Layers When Closed"))
-        self.keep_layers_check = gtk.CheckButton()
+        keep_label = Gtk.Label(label=_("Keep Layers When Closed"))
+        self.keep_layers_check = Gtk.CheckButton()
         self.keep_layers_check.set_active(_keep_titler_data)
         self.keep_layers_check.connect("toggled", self._keep_layers_toggled)
         
-        open_label = gtk.Label(_("Open Saved Title In Bin"))
-        self.open_in_current_check = gtk.CheckButton()
+        open_label = Gtk.Label(label=_("Open Saved Title In Bin"))
+        self.open_in_current_check = Gtk.CheckButton()
         self.open_in_current_check.set_active(_open_saved_in_bin)
         self.open_in_current_check.connect("toggled", self._open_saved_in_bin)
 
@@ -400,8 +400,8 @@ class Titler(gtk.Window):
         save_titles_b = guiutils.get_sized_button(_("Save Title Graphic"), 150, 32)
         save_titles_b.connect("clicked", lambda w:self._save_title_pressed())
         
-        editor_buttons_row = gtk.HBox()
-        editor_buttons_row.pack_start(gtk.Label(), True, True, 0)
+        editor_buttons_row = Gtk.HBox()
+        editor_buttons_row.pack_start(Gtk.Label(), True, True, 0)
         editor_buttons_row.pack_start(keep_label, False, False, 0)
         editor_buttons_row.pack_start(self.keep_layers_check, False, False, 0)
         editor_buttons_row.pack_start(guiutils.pad_label(24, 2), False, False, 0)
@@ -411,18 +411,18 @@ class Titler(gtk.Window):
         editor_buttons_row.pack_start(exit_b, False, False, 0)
         editor_buttons_row.pack_start(save_titles_b, False, False, 0)
         
-        editor_panel = gtk.VBox()
+        editor_panel = Gtk.VBox()
         editor_panel.pack_start(self.view_editor, True, True, 0)
         editor_panel.pack_start(timeline_box, False, False, 0)
         editor_panel.pack_start(guiutils.get_in_centering_alignment(view_editor_editor_buttons_row), False, False, 0)
         editor_panel.pack_start(guiutils.pad_label(2, 24), False, False, 0)
         editor_panel.pack_start(editor_buttons_row, False, False, 0)
 
-        editor_row = gtk.HBox()
+        editor_row = Gtk.HBox()
         editor_row.pack_start(controls_panel, False, False, 0)
         editor_row.pack_start(editor_panel, True, True, 0)
 
-        alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+        alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
         alignment.set_padding(8,8,8,8)
         alignment.add(editor_row)
     
@@ -489,7 +489,7 @@ class Titler(gtk.Window):
         toolsdialogs.save_titler_graphic_as_dialog(self._save_title_dialog_callback, "title.png", None)
 
     def _save_title_dialog_callback(self, dialog, response_id):
-        if response_id == gtk.RESPONSE_ACCEPT:
+        if response_id == Gtk.ResponseType.ACCEPT:
             try:
                 filenames = dialog.get_filenames()
                 dialog.destroy()
@@ -511,7 +511,7 @@ class Titler(gtk.Window):
         toolsdialogs.save_titler_data_as_dialog(self._save_layers_dialog_callback, "titler_layers", None)
 
     def _save_layers_dialog_callback(self, dialog, response_id):
-        if response_id == gtk.RESPONSE_ACCEPT:
+        if response_id == Gtk.ResponseType.ACCEPT:
             filenames = dialog.get_filenames()
             save_path = filenames[0]
             _titler_data.save(save_path)
@@ -523,7 +523,7 @@ class Titler(gtk.Window):
         toolsdialogs.load_titler_data_dialog(self._load_layers_dialog_callback)
         
     def _load_layers_dialog_callback(self, dialog, response_id):
-        if response_id == gtk.RESPONSE_ACCEPT:
+        if response_id == Gtk.ResponseType.ACCEPT:
             try:
                 filenames = dialog.get_filenames()
                 load_path = filenames[0]
@@ -558,13 +558,13 @@ class Titler(gtk.Window):
 
     def _key_pressed_on_widget(self, widget, event):
         # update layer for enter on size spin
-        if widget == self.size_spin and event.keyval == gtk.keysyms.Return:
+        if widget == self.size_spin and event.keyval == Gdk.KEY_Return:
             self.size_spin.update()
             self._update_active_layout()
             return True
 
             # update layer for enter on x, y, angle
-        if ((event.keyval == gtk.keysyms.Return) and ((widget == self.x_pos_spin) or
+        if ((event.keyval == Gdk.KEY_Return) and ((widget == self.x_pos_spin) or
             (widget == self.y_pos_spin) or (widget == self.rotation_spin))):
             self.x_pos_spin.update()
             self.y_pos_spin.update()
@@ -680,7 +680,7 @@ class Titler(gtk.Window):
 
         self.x_pos_spin.set_value(p.x)
         self.y_pos_spin.set_value(p.y)
-        #self.rotation_spin = gtk.SpinButton(adj)
+        #self.rotation_spin = Gtk.SpinButton(adj)
         
         _titler_data.active_layer.x = p.x
         _titler_data.active_layer.y = p.y
@@ -764,7 +764,7 @@ class Titler(gtk.Window):
         self.text_view.get_buffer().set_text(layer.text)
         
         r, g, b, a = layer.color_rgba
-        button_color = gtk.gdk.Color(red=r,
+        button_color = Gdk.Color(red=r,
                                      green=g,
                                      blue=b)
         self.color_button.set_color(button_color)
@@ -820,7 +820,7 @@ class PangoTextLayout:
         
     def load_layer_data(self, layer): 
         self.text = layer.text
-        self.font_desc = pango.FontDescription(layer.get_font_desc_str())
+        self.font_desc = Pango.FontDescription(layer.get_font_desc_str())
         self.color_rgba = layer.color_rgba
         self.alignment = self._get_pango_alignment_for_layer(layer)
         self.pixel_size = layer.pixel_size
@@ -846,58 +846,58 @@ class PangoTextLayout:
 
     def _get_pango_alignment_for_layer(self, layer):
         if layer.alignment == ALIGN_LEFT:
-            return pango.ALIGN_LEFT
+            return Pango.Alignment.LEFT
         elif layer.alignment == ALIGN_CENTER:
-            return pango.ALIGN_CENTER
+            return Pango.Alignment.CENTER
         else:
-            return pango.ALIGN_RIGHT
+            return Pango.Alignment.RIGHT
 
 
-class TextLayerListView(gtk.VBox):
+class TextLayerListView(Gtk.VBox):
 
     def __init__(self, selection_changed_cb, layer_visible_toggled_cb):
-        gtk.VBox.__init__(self)
-        self.layer_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "text_layer.png")
-        self.eye_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "eye.png")
+        GObject.GObject.__init__(self)
+        self.layer_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "text_layer.png")
+        self.eye_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "eye.png")
 
         self.layer_visible_toggled_cb = layer_visible_toggled_cb
 
        # Datamodel: str
-        self.storemodel = gtk.ListStore(gtk.gdk.Pixbuf, str, gtk.gdk.Pixbuf)
+        self.storemodel = Gtk.ListStore(GdkPixbuf.Pixbuf, str, GdkPixbuf.Pixbuf)
  
         # Scroll container
-        self.scroll = gtk.ScrolledWindow()
-        self.scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        self.scroll.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+        self.scroll = Gtk.ScrolledWindow()
+        self.scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
 
         # View
-        self.treeview = gtk.TreeView(self.storemodel)
+        self.treeview = Gtk.TreeView(self.storemodel)
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(False)
         self.treeview.connect("button-press-event", self.button_press)
         
         tree_sel = self.treeview.get_selection()
-        tree_sel.set_mode(gtk.SELECTION_SINGLE)
+        tree_sel.set_mode(Gtk.SelectionMode.SINGLE)
         tree_sel.connect("changed", selection_changed_cb)
 
         # Cell renderers
-        self.text_rend_1 = gtk.CellRendererText()
-        self.text_rend_1.set_property("ellipsize", pango.ELLIPSIZE_END)
+        self.text_rend_1 = Gtk.CellRendererText()
+        self.text_rend_1.set_property("ellipsize", Pango.EllipsizeMode.END)
         self.text_rend_1.set_property("font", "Sans Bold 10")
         self.text_rend_1.set_fixed_height_from_font(1)
 
-        self.icon_rend_1 = gtk.CellRendererPixbuf()
+        self.icon_rend_1 = Gtk.CellRendererPixbuf()
         self.icon_rend_1.props.xpad = 6
         self.icon_rend_1.set_fixed_size(40, 40)
 
-        self.icon_rend_2 = gtk.CellRendererPixbuf()
+        self.icon_rend_2 = Gtk.CellRendererPixbuf()
         self.icon_rend_2.props.xpad = 2
         self.icon_rend_2.set_fixed_size(20, 40)
 
         # Column view
-        self.icon_col_1 = gtk.TreeViewColumn("layer_icon")
-        self.text_col_1 = gtk.TreeViewColumn("layer_text")
-        self.icon_col_2 = gtk.TreeViewColumn("eye_icon")
+        self.icon_col_1 = Gtk.TreeViewColumn("layer_icon")
+        self.text_col_1 = Gtk.TreeViewColumn("layer_text")
+        self.icon_col_2 = Gtk.TreeViewColumn("eye_icon")
         
         # Build column views
         self.icon_col_1.set_expand(False)
@@ -907,7 +907,7 @@ class TextLayerListView(gtk.VBox):
 
         self.text_col_1.set_expand(True)
         self.text_col_1.set_spacing(5)
-        self.text_col_1.set_sizing(gtk.TREE_VIEW_COLUMN_GROW_ONLY)
+        self.text_col_1.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
         self.text_col_1.set_min_width(150)
         self.text_col_1.pack_start(self.text_rend_1)
         self.text_col_1.add_attribute(self.text_rend_1, "text", 1)

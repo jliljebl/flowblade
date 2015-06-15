@@ -22,9 +22,9 @@
 Module handles keyevents.
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 
 import audiowaveform
@@ -52,7 +52,7 @@ def key_down(widget, event):
     Global key press listener.
     """
     # Handle ESCAPE
-    if event.keyval == gtk.keysyms.Escape:
+    if event.keyval == Gdk.KEY_Escape:
         if audiowaveform.waveform_thread != None:
             audiowaveform.waveform_thread.abort_rendering()
             return True
@@ -98,34 +98,34 @@ def key_down(widget, event):
         return True
 
     #  Handle non-timeline delete 
-    if event.keyval == gtk.keysyms.Delete:
+    if event.keyval == Gdk.KEY_Delete:
         return _handle_delete()
 
     # Home
-    if event.keyval == gtk.keysyms.Home:
+    if event.keyval == Gdk.KEY_Home:
         if PLAYER().is_playing():
             monitorevent.stop_pressed()
         PLAYER().seek_frame(0)
         return True
 
     # Select all with CTRL + A in media panel
-    if event.keyval == gtk.keysyms.a:
-        if (event.state & gtk.gdk.CONTROL_MASK):
+    if event.keyval == Gdk.KEY_a:
+        if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
             if gui.media_list_view.widget.has_focus() or gui.media_list_view.widget.get_focus_child() != None:
                 gui.media_list_view.select_all()
                 return True
         
 
     #debug
-    if event.keyval == gtk.keysyms.F11:
-        if (event.state & gtk.gdk.CONTROL_MASK):
+    if event.keyval == Gdk.KEY_F11:
+        if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
             mltrefhold.print_objects()
         return True
 
 
     #debug
-    if event.keyval == gtk.keysyms.F12:
-        if (event.state & gtk.gdk.CONTROL_MASK):
+    if event.keyval == Gdk.KEY_F12:
+        if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
             mltrefhold.print_and_clear()
         return True
 
@@ -151,35 +151,35 @@ def _handle_tline_key_event(event):
     keyevents from going forward.
     """
     # I
-    if event.keyval == gtk.keysyms.i:
-        if (event.state & gtk.gdk.MOD1_MASK):
+    if event.keyval == Gdk.KEY_i:
+        if (event.get_state() & Gdk.ModifierType.MOD1_MASK):
             monitorevent.to_mark_in_pressed()
             return True
         monitorevent.mark_in_pressed()
         return True
-    if event.keyval == gtk.keysyms.I:
-        if (event.state & gtk.gdk.MOD1_MASK):
+    if event.keyval == Gdk.KEY_I:
+        if (event.get_state() & Gdk.ModifierType.MOD1_MASK):
             monitorevent.to_mark_in_pressed()
             return True
         monitorevent.to_mark_in_pressed()
         return True
 
     # O
-    if event.keyval == gtk.keysyms.o:
-        if (event.state & gtk.gdk.MOD1_MASK):
+    if event.keyval == Gdk.KEY_o:
+        if (event.get_state() & Gdk.ModifierType.MOD1_MASK):
             monitorevent.to_mark_out_pressed()
             return True
         monitorevent.mark_out_pressed()
         return True
-    if event.keyval == gtk.keysyms.O:
-        if (event.state & gtk.gdk.MOD1_MASK):
+    if event.keyval == Gdk.KEY_O:
+        if (event.get_state() & Gdk.ModifierType.MOD1_MASK):
             monitorevent.to_mark_out_pressed()
             return True
         monitorevent.to_mark_out_pressed()
         return True
 
     # SPACE
-    if event.keyval == gtk.keysyms.space:
+    if event.keyval == Gdk.KEY_space:
         if PLAYER().is_playing():
             monitorevent.stop_pressed()
         else:
@@ -187,55 +187,55 @@ def _handle_tline_key_event(event):
         return True
     
     # TAB
-    if event.keyval == gtk.keysyms.Tab:
+    if event.keyval == Gdk.KEY_Tab:
         updater.switch_monitor_display()
         return True
 
     # M
-    if event.keyval == gtk.keysyms.m:
+    if event.keyval == Gdk.KEY_m:
         tlineaction.add_marker()
         return True
 
     # Number edit mode changes
-    if event.keyval == gtk.keysyms._1:
+    if event.keyval == Gdk.KEY__1:
         gui.editor_window.handle_insert_move_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
-    if event.keyval == gtk.keysyms._2:
+    if event.keyval == Gdk.KEY__2:
         gui.editor_window.handle_over_move_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
-    if event.keyval == gtk.keysyms._3:
+    if event.keyval == Gdk.KEY__3:
         gui.editor_window.handle_one_roll_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
-    if event.keyval == gtk.keysyms._4:
+    if event.keyval == Gdk.KEY__4:
         gui.editor_window.handle_two_roll_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
-    if event.keyval == gtk.keysyms._5:
+    if event.keyval == Gdk.KEY__5:
         gui.editor_window.handle_slide_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
-    if event.keyval == gtk.keysyms._6:
+    if event.keyval == Gdk.KEY__6:
         gui.editor_window.handle_multi_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
         
     # X
-    if event.keyval == gtk.keysyms.x:
+    if event.keyval == Gdk.KEY_x:
         tlineaction.cut_pressed()
         return True
 
     # G
-    if event.keyval == gtk.keysyms.g:
+    if event.keyval == Gdk.KEY_g:
         medialog.log_range_clicked()
         return True
 
     # Key bindings for MOVE MODES and _NO_EDIT modes
     if editorstate.current_is_move_mode() or editorstate.current_is_active_trim_mode() == False:
          # UP ARROW, next cut
-        if event.keyval == gtk.keysyms.Up:
+        if event.keyval == Gdk.KEY_Up:
             if editorstate.timeline_visible():
                 tline_frame = PLAYER().tracktor_producer.frame()
                 frame = current_sequence().find_next_cut_frame(tline_frame)
@@ -246,7 +246,7 @@ def _handle_tline_key_event(event):
                 monitorevent.up_arrow_seek_on_monitor_clip()
         
         # DOWN ARROW, prev cut
-        if event.keyval == gtk.keysyms.Down:
+        if event.keyval == Gdk.KEY_Down:
             if editorstate.timeline_visible():
                 tline_frame = PLAYER().tracktor_producer.frame()
                 frame = current_sequence().find_prev_cut_frame(tline_frame)
@@ -258,77 +258,77 @@ def _handle_tline_key_event(event):
                  return True
             
         # LEFT ARROW, prev frame
-        if event.keyval == gtk.keysyms.Left:
+        if event.keyval == Gdk.KEY_Left:
             PLAYER().seek_delta(-1)
             return True
 
         # RIGHT ARROW, next frame
-        if event.keyval == gtk.keysyms.Right:
+        if event.keyval == Gdk.KEY_Right:
             PLAYER().seek_delta(1)
             return True
 
         # T
-        if event.keyval == gtk.keysyms.t:
+        if event.keyval == Gdk.KEY_t:
             tlineaction.three_point_overwrite_pressed()
             return True
 
         # Y
-        if event.keyval == gtk.keysyms.y:
-            if not (event.state & gtk.gdk.CONTROL_MASK):
+        if event.keyval == Gdk.KEY_y:
+            if not (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 tlineaction.insert_button_pressed()
                 return True
 
         # U
-        if event.keyval == gtk.keysyms.u:
+        if event.keyval == Gdk.KEY_u:
             tlineaction.append_button_pressed()
             return True
 
         # J
-        if event.keyval == gtk.keysyms.j:
+        if event.keyval == Gdk.KEY_j:
             monitorevent.j_pressed()
             return True
 
         # K
-        if event.keyval == gtk.keysyms.k:
+        if event.keyval == Gdk.KEY_k:
             monitorevent.k_pressed()
             return True
 
         # L
-        if event.keyval == gtk.keysyms.l:
-            if (event.state & gtk.gdk.CONTROL_MASK):
+        if event.keyval == Gdk.KEY_l:
+            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 medialog.log_range_clicked()
             else:
                 monitorevent.l_pressed()
             return True
 
         # CTRL+C
-        if event.keyval == gtk.keysyms.c:
-            if (event.state & gtk.gdk.CONTROL_MASK):
+        if event.keyval == Gdk.KEY_c:
+            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 tlineaction.do_timeline_objects_copy()
                 return True
 
         # CTRL+V
-        if event.keyval == gtk.keysyms.v:
-            if (event.state & gtk.gdk.CONTROL_MASK):
+        if event.keyval == Gdk.KEY_v:
+            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 tlineaction.do_timeline_objects_paste()
                 return True
 
         # DELETE
-        if event.keyval == gtk.keysyms.Delete:
+        if event.keyval == Gdk.KEY_Delete:
             # Clip selection and compositor selection are mutually exclusive, 
             # so max one one these will actually delete something
             tlineaction.splice_out_button_pressed()
             compositormodes.delete_current_selection()
         
         # HOME
-        if event.keyval == gtk.keysyms.Home:
+        if event.keyval == Gdk.KEY_Home:
             if PLAYER().is_playing():
                 monitorevent.stop_pressed()
             PLAYER().seek_frame(0)
             return True
     else:
         # HOME
-        if event.keyval == gtk.keysyms.Home:
+        if event.keyval == Gdk.KEY_Home:
             if PLAYER().is_playing():
                 monitorevent.stop_pressed()
             gui.editor_window.handle_insert_move_mode_button_press()
@@ -348,71 +348,71 @@ def _handle_extended_tline_focus_events(event):
         return False
 
     # T
-    if event.keyval == gtk.keysyms.t:
+    if event.keyval == Gdk.KEY_t:
         tlineaction.three_point_overwrite_pressed()
         return True
 
     # Y
-    if event.keyval == gtk.keysyms.y:
-        if not (event.state & gtk.gdk.CONTROL_MASK):
+    if event.keyval == Gdk.KEY_y:
+        if not (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
             tlineaction.insert_button_pressed()
             return True
 
     # U
-    if event.keyval == gtk.keysyms.u:
+    if event.keyval == Gdk.KEY_u:
         tlineaction.append_button_pressed()
         return True
 
     # J
-    if event.keyval == gtk.keysyms.j:
+    if event.keyval == Gdk.KEY_j:
         monitorevent.j_pressed()
         return True
 
     # K
-    if event.keyval == gtk.keysyms.k:
+    if event.keyval == Gdk.KEY_k:
         monitorevent.k_pressed()
         return True
 
     # L
-    if event.keyval == gtk.keysyms.l:
-        if (event.state & gtk.gdk.CONTROL_MASK):
+    if event.keyval == Gdk.KEY_l:
+        if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
             medialog.log_range_clicked()
         else:
             monitorevent.l_pressed()
         return True
 
     # TAB
-    if event.keyval == gtk.keysyms.Tab:
+    if event.keyval == Gdk.KEY_Tab:
         updater.switch_monitor_display()
         return True
 
     # G
-    if event.keyval == gtk.keysyms.g:
+    if event.keyval == Gdk.KEY_g:
         medialog.log_range_clicked()
         return True
         
     # Number edit mode changes
-    if event.keyval == gtk.keysyms._1:
+    if event.keyval == Gdk.KEY__1:
         gui.editor_window.handle_insert_move_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
-    if event.keyval == gtk.keysyms._2:
+    if event.keyval == Gdk.KEY__2:
         gui.editor_window.handle_over_move_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
-    if event.keyval == gtk.keysyms._3:
+    if event.keyval == Gdk.KEY__3:
         gui.editor_window.handle_one_roll_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
-    if event.keyval == gtk.keysyms._4:
+    if event.keyval == Gdk.KEY__4:
         gui.editor_window.handle_two_roll_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
-    if event.keyval == gtk.keysyms._5:
+    if event.keyval == Gdk.KEY__5:
         gui.editor_window.handle_slide_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
-    if event.keyval == gtk.keysyms._6:
+    if event.keyval == Gdk.KEY__6:
         gui.editor_window.handle_multi_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
@@ -423,17 +423,17 @@ def _handle_clip_key_event(event):
     # Key bindings for MOVE MODES
     if editorstate.current_is_move_mode():                  
         # LEFT ARROW, prev frame
-        if event.keyval == gtk.keysyms.Left:
+        if event.keyval == Gdk.KEY_Left:
             PLAYER().seek_delta(-1)
             return 
 
         # RIGHT ARROW, next frame
-        if event.keyval == gtk.keysyms.Right:
+        if event.keyval == Gdk.KEY_Right:
             PLAYER().seek_delta(1)
             return 
 
          # UP ARROW
-        if event.keyval == gtk.keysyms.Up:
+        if event.keyval == Gdk.KEY_Up:
             if editorstate.timeline_visible():
                 tline_frame = PLAYER().tracktor_producer.frame()
                 frame = current_sequence().find_next_cut_frame(tline_frame)
@@ -445,7 +445,7 @@ def _handle_clip_key_event(event):
                  return True
         
          # DOWN ARROW, prev cut
-        if event.keyval == gtk.keysyms.Down:
+        if event.keyval == Gdk.KEY_Down:
             if editorstate.timeline_visible():
                 tline_frame = PLAYER().tracktor_producer.frame()
                 frame = current_sequence().find_prev_cut_frame(tline_frame)
@@ -457,35 +457,35 @@ def _handle_clip_key_event(event):
                  return True
 
         # SPACE
-        if event.keyval == gtk.keysyms.space:
+        if event.keyval == Gdk.KEY_space:
             if PLAYER().is_playing():
                 monitorevent.stop_pressed()
             else:
                 monitorevent.play_pressed()
 
         # I
-        if event.keyval == gtk.keysyms.i:
-            if (event.state & gtk.gdk.MOD1_MASK):
+        if event.keyval == Gdk.KEY_i:
+            if (event.get_state() & Gdk.ModifierType.MOD1_MASK):
                 monitorevent.to_mark_in_pressed()
                 return True
             monitorevent.mark_in_pressed()
             return True
-        if event.keyval == gtk.keysyms.I:
-            if (event.state & gtk.gdk.MOD1_MASK):
+        if event.keyval == Gdk.KEY_I:
+            if (event.get_state() & Gdk.ModifierType.MOD1_MASK):
                 monitorevent.to_mark_in_pressed()
                 return True
             monitorevent.to_mark_in_pressed()
             return True
 
         # O
-        if event.keyval == gtk.keysyms.o:
-            if (event.state & gtk.gdk.MOD1_MASK):
+        if event.keyval == Gdk.KEY_o:
+            if (event.get_state() & Gdk.ModifierType.MOD1_MASK):
                 monitorevent.to_mark_out_pressed()
                 return True
             monitorevent.mark_out_pressed()
             return True
-        if event.keyval == gtk.keysyms.O:
-            if (event.state & gtk.gdk.MOD1_MASK):
+        if event.keyval == Gdk.KEY_O:
+            if (event.get_state() & Gdk.ModifierType.MOD1_MASK):
                 monitorevent.to_mark_out_pressed()
                 return True
             monitorevent.to_mark_out_pressed()
@@ -538,10 +538,10 @@ def _handle_geometry_editor_arrow_keys(event):
         for kfeditor in compositeeditor.keyframe_editor_widgets:
             if kfeditor.get_focus_child() != None:
                 if kfeditor.__class__ == keyframeeditor.GeometryEditor:
-                    if ((event.keyval == gtk.keysyms.Left) 
-                        or (event.keyval == gtk.keysyms.Right)
-                        or (event.keyval == gtk.keysyms.Up)
-                        or (event.keyval == gtk.keysyms.Down)):
+                    if ((event.keyval == Gdk.KEY_Left) 
+                        or (event.keyval == Gdk.KEY_Right)
+                        or (event.keyval == Gdk.KEY_Up)
+                        or (event.keyval == Gdk.KEY_Down)):
                         kfeditor.arrow_edit(event.keyval)
                         return True
     return False

@@ -23,9 +23,9 @@ Module contains objects used to capture project data.
 """
 
 import datetime
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 import mlt
 import md5
@@ -330,15 +330,15 @@ class MediaFile:
  
     def create_icon(self):
         try:
-            icon = gtk.gdk.pixbuf_new_from_file(self.icon_path)
+            icon = GdkPixbuf.Pixbuf.new_from_file(self.icon_path)
             self.icon = icon.scale_simple(appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT, \
-                                          gtk.gdk.INTERP_BILINEAR)
+                                          GdkPixbuf.InterpType.BILINEAR)
         except:
             print "failed to make icon from:", self.icon_path
             self.icon_path = respaths.IMAGE_PATH + FALLBACK_THUMB
-            icon = gtk.gdk.pixbuf_new_from_file(self.icon_path)
+            icon = GdkPixbuf.Pixbuf.new_from_file(self.icon_path)
             self.icon = icon.scale_simple(appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT, \
-                                          gtk.gdk.INTERP_BILINEAR)
+                                          GdkPixbuf.InterpType.BILINEAR)
 
     def create_proxy_path(self, proxy_width, proxy_height, file_extesion):
         if self.type == appconsts.IMAGE_SEQUENCE:
@@ -394,7 +394,7 @@ class BinColorClip:
         self.mark_out = -1
 
     def create_icon(self):
-        icon = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
+        icon = GdkPixbuf.Pixbuf(GdkPixbuf.Colorspace.RGB, False, 8, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
         pixel = utils.gdk_color_str_to_int(self.gdk_color_str)
         icon.fill(pixel)
         self.icon = icon

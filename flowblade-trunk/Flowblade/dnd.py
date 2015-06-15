@@ -22,9 +22,9 @@
 Module handles drag and drop.
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 
 import editorstate
@@ -36,10 +36,10 @@ import respaths
 MEDIA_ICON_WIDTH = 20
 MEDIA_ICON_HEIGHT = 15
 
-MEDIA_FILES_DND_TARGET = ('media_file', gtk.TARGET_SAME_APP, 0)
-EFFECTS_DND_TARGET = ('effect', gtk.TARGET_SAME_APP, 0)
-CLIPS_DND_TARGET = ('clip', gtk.TARGET_SAME_APP, 0)
-RANGE_DND_TARGET = ('range', gtk.TARGET_SAME_APP, 0)
+MEDIA_FILES_DND_TARGET = ('media_file', Gtk.TargetFlags.SAME_APP, 0)
+EFFECTS_DND_TARGET = ('effect', Gtk.TargetFlags.SAME_APP, 0)
+CLIPS_DND_TARGET = ('clip', Gtk.TargetFlags.SAME_APP, 0)
+RANGE_DND_TARGET = ('range', Gtk.TargetFlags.SAME_APP, 0)
 STRING_DATA_BITS = 8
 
 # Holds data during drag
@@ -57,78 +57,78 @@ range_log_items_log_drop = None
 
 def init():
     global clip_icon, empty_icon
-    clip_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "clip_dnd.png")
-    empty_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "empty.png")
+    clip_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "clip_dnd.png")
+    empty_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "empty.png")
 
 # ----------------------------------------------- set gui components as drag sources and destinations
 def connect_media_files_object_widget(widget):
-    widget.drag_source_set(gtk.gdk.BUTTON1_MASK,
+    widget.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
                            [MEDIA_FILES_DND_TARGET], 
-                           gtk.gdk.ACTION_COPY)
+                           Gdk.DragAction.COPY)
     widget.connect_after('drag_begin', _media_files_drag_begin)
     widget.connect("drag_data_get", _media_files_drag_data_get)
     
 def connect_media_files_object_cairo_widget(widget):
-    widget.drag_source_set(gtk.gdk.BUTTON1_MASK,
+    widget.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
                            [MEDIA_FILES_DND_TARGET], 
-                           gtk.gdk.ACTION_COPY)
+                           Gdk.DragAction.COPY)
     widget.connect_after('drag_begin', _media_files_drag_begin)
     widget.connect("drag_data_get", _media_files_drag_data_get)
     
 def connect_bin_tree_view(treeview, move_files_to_bin_func):
     treeview.enable_model_drag_dest([MEDIA_FILES_DND_TARGET],
-                                    gtk.gdk.ACTION_DEFAULT)
+                                    Gdk.DragAction.DEFAULT)
                                          
     treeview.connect("drag_data_received", _bin_drag_data_received, move_files_to_bin_func)
 
     
 def connect_effects_select_tree_view(tree_view):
-    tree_view.enable_model_drag_source(gtk.gdk.BUTTON1_MASK,
+    tree_view.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK,
                                        [EFFECTS_DND_TARGET], 
-                                       gtk.gdk.ACTION_COPY)
+                                       Gdk.DragAction.COPY)
     tree_view.connect_after('drag_begin', _effects_drag_begin)
     tree_view.connect("drag_data_get", _effects_drag_data_get)
 
 def connect_video_monitor(widget):
-    widget.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP,
+    widget.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
                          [MEDIA_FILES_DND_TARGET], 
-                         gtk.gdk.ACTION_COPY)
+                         Gdk.DragAction.COPY)
 
     widget.connect("drag_drop", _on_monitor_drop)
 
-    widget.drag_source_set(gtk.gdk.BUTTON1_MASK,
+    widget.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
                            [MEDIA_FILES_DND_TARGET], 
-                           gtk.gdk.ACTION_COPY)
+                           Gdk.DragAction.COPY)
     widget.connect_after('drag_begin', _monitor_media_drag_begin)
     widget.connect("drag_data_get", _monitor_media_drag_data_get)
     
 def connect_stack_treeview(widget):
-    widget.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP,
+    widget.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
                          [EFFECTS_DND_TARGET], 
-                         gtk.gdk.ACTION_COPY)
+                         Gdk.DragAction.COPY)
     widget.connect("drag_drop", _on_effect_stack_drop)
 
 def connect_tline(widget, do_effect_drop_func, do_media_drop_func):
-    widget.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP,
+    widget.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
                          [MEDIA_FILES_DND_TARGET, EFFECTS_DND_TARGET, CLIPS_DND_TARGET], 
-                         gtk.gdk.ACTION_COPY)
+                         Gdk.DragAction.COPY)
     widget.connect("drag_drop", _on_tline_drop, do_effect_drop_func, do_media_drop_func)
     
 def connect_range_log(treeview):
-    treeview.drag_source_set(gtk.gdk.BUTTON1_MASK,
+    treeview.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
                            [CLIPS_DND_TARGET], 
-                           gtk.gdk.ACTION_COPY)
+                           Gdk.DragAction.COPY)
     treeview.connect_after('drag_begin', _range_log_drag_begin)
     treeview.connect("drag_data_get", _range_log_drag_data_get)
-    treeview.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP,
+    treeview.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
                              [RANGE_DND_TARGET], 
-                             gtk.gdk.ACTION_COPY)
+                             Gdk.DragAction.COPY)
     treeview.connect("drag_drop", _on_range_drop)
     
 def start_tline_clips_out_drag(event, clips, widget):
     global drag_data
     drag_data = clips
-    context = widget.drag_begin([RANGE_DND_TARGET], gtk.gdk.ACTION_COPY, 1, event)
+    context = widget.drag_begin([RANGE_DND_TARGET], Gdk.DragAction.COPY, 1, event)
     if context == None: # if something outside of the application is clicked we'll end here and cannot create a context
         return
     context.set_icon_pixbuf(clip_icon, 30, 15)

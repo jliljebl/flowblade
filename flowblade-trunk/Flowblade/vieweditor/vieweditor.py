@@ -18,9 +18,9 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 import numpy as np
 
@@ -32,10 +32,10 @@ MIN_PAD = 20
 GUIDES_COLOR = (0.5, 0.5, 0.5, 1.0)
 
 
-class ViewEditor(gtk.Frame):
+class ViewEditor(Gtk.Frame):
 
     def __init__(self, profile, scroll_width, scroll_height):
-        gtk.Frame.__init__(self)
+        GObject.GObject.__init__(self)
         self.scale = 1.0
         self.draw_overlays = True
         self.draw_safe_area = True
@@ -56,9 +56,9 @@ class ViewEditor(gtk.Frame):
         self.edit_area.motion_notify_func = self._motion_notify_event
         self.edit_area.release_func = self._release_event
         
-        self.scroll_window = gtk.ScrolledWindow()
+        self.scroll_window = Gtk.ScrolledWindow()
         self.scroll_window.add_with_viewport(self.edit_area)
-        self.scroll_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         self.scroll_window.show_all()
         self.scroll_window.set_size_request(scroll_width, scroll_height)  # +2 to not show scrollbars
         self.add(self.scroll_window)
@@ -269,13 +269,13 @@ class ViewEditor(gtk.Frame):
             cr.stroke()
 
 
-class ScaleSelector(gtk.VBox):
+class ScaleSelector(Gtk.VBox):
     
     def __init__(self, listener):
-        gtk.VBox.__init__(self)
+        GObject.GObject.__init__(self)
         self.listener = listener # listerner needs to implement scale_changed(scale) interface
         self.scales = [0.25, 0.33, 0.5, 0.75, 1.0, 1.5, 2.0, 4.0]
-        combo = gtk.combo_box_new_text()
+        combo = Gtk.ComboBoxText()
         for scale in self.scales:
             scale_str = str(int(100 * scale)) + "%"
             combo.append_text(scale_str)
@@ -293,11 +293,11 @@ class ScaleSelector(gtk.VBox):
         self.listener.scale_changed(self.scales[scale_index])
 
 
-class GuidesViewToggle(gtk.ToggleButton):
+class GuidesViewToggle(Gtk.ToggleButton):
     
     def __init__(self, view_editor):
-        gtk.ToggleButton.__init__(self)
-        icon = gtk.image_new_from_file(respaths.IMAGE_PATH + "guides_view_switch.png")
+        GObject.GObject.__init__(self)
+        icon = Gtk.image_new_from_file(respaths.IMAGE_PATH + "guides_view_switch.png")
         self.set_image(icon)
         self.view_editor = view_editor
         

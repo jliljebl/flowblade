@@ -22,13 +22,13 @@
 Module builds dialog windows. User input is handled at 
 callsites which provide callback methods for response signals.
 """
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 import locale
 import os
-import pango
+from gi.repository import Pango
 
 import appconsts
 import dialogutils
@@ -51,29 +51,29 @@ def new_project_dialog(callback):
     default_profile_index = mltprofiles.get_default_profile_index()
     default_profile = mltprofiles.get_default_profile()
 
-    dialog = gtk.Dialog(_("New Project"), None,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                         _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+    dialog = Gtk.Dialog(_("New Project"), None,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                         _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
                         
-    out_profile_combo = gtk.combo_box_new_text()
+    out_profile_combo = Gtk.ComboBoxText()
     profiles = mltprofiles.get_profiles()
     for profile in profiles:
         out_profile_combo.append_text(profile[0])
 
     out_profile_combo.set_active(default_profile_index)    
-    profile_select = panels.get_two_column_box(gtk.Label(_("Project profile:")),
+    profile_select = panels.get_two_column_box(Gtk.Label(label=_("Project profile:")),
                                                out_profile_combo,
                                                250)
 
     profile_info_panel = guicomponents.get_profile_info_box(default_profile, False)
-    profile_info_box = gtk.VBox() 
+    profile_info_box = Gtk.VBox() 
     profile_info_box.add(profile_info_panel)
     profiles_vbox = guiutils.get_vbox([profile_select,profile_info_box], False)
     profiles_frame = panels.get_named_frame(_("Profile"), profiles_vbox)
 
     tracks_combo, tracks_combo_values_list = guicomponents.get_track_counts_combo_and_values_list()
-    tracks_select = panels.get_two_column_box(gtk.Label(_("Number of tracks:")),
+    tracks_select = panels.get_two_column_box(Gtk.Label(label=_("Number of tracks:")),
                                                tracks_combo, 250)
     tracks_vbox = guiutils.get_vbox([tracks_select], False)
 
@@ -104,32 +104,32 @@ def _new_project_profile_changed(combo_box, profile_info_box):
     info_panel.show()
 
 def save_backup_snapshot(name, callback):
-    dialog = gtk.Dialog(_("Save Project Backup Snapshot"), None,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                         _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+    dialog = Gtk.Dialog(_("Save Project Backup Snapshot"), None,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                         _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
 
-    project_folder = gtk.FileChooserButton(_("Select Snapshot Project Folder"))
-    project_folder.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+    project_folder = Gtk.FileChooserButton(_("Select Snapshot Project Folder"))
+    project_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
     project_folder.set_current_folder(os.path.expanduser("~") + "/")
     
-    project_folder_label = gtk.Label(_("Snapshot Folder:"))
+    project_folder_label = Gtk.Label(label=_("Snapshot Folder:"))
     
     project_folder_row = guiutils.get_two_column_box(project_folder_label, project_folder, 250)
 
-    compact_name_entry = gtk.Entry(30)
+    compact_name_entry = Gtk.Entry(30)
     compact_name_entry.set_width_chars(30)
     compact_name_entry.set_text(name)
     
-    compact_name_label = gtk.Label(_("Project File Name:"))
+    compact_name_label = Gtk.Label(label=_("Project File Name:"))
     
     compact_name_entry_row = guiutils.get_two_column_box(compact_name_label, compact_name_entry, 250)
     
-    type_vbox = gtk.VBox(False, 2)
+    type_vbox = Gtk.VBox(False, 2)
     type_vbox.pack_start(project_folder_row, False, False, 0)
     type_vbox.pack_start(compact_name_entry_row, False, False, 0)
     
-    vbox = gtk.VBox(False, 2)
+    vbox = Gtk.VBox(False, 2)
     vbox.add(type_vbox)
 
     alignment = dialogutils.get_default_alignment(vbox)
@@ -140,13 +140,13 @@ def save_backup_snapshot(name, callback):
     dialog.show_all()
 
 def load_project_dialog(callback):    
-    dialog = gtk.FileChooserDialog(_("Select Project File"), None, 
-                                   gtk.FILE_CHOOSER_ACTION_OPEN, 
-                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                                    _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
-    dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
+    dialog = Gtk.FileChooserDialog(_("Select Project File"), None, 
+                                   Gtk.FileChooserAction.OPEN, 
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
+    dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
-    file_filter = gtk.FileFilter()
+    file_filter = Gtk.FileFilter()
     file_filter.set_name(_("Flowblade Projects"))
     file_filter.add_pattern("*" + appconsts.PROJECT_FILE_EXTENSION)
     dialog.add_filter(file_filter)
@@ -154,18 +154,18 @@ def load_project_dialog(callback):
     dialog.show()
 
 def save_project_as_dialog(callback, current_name, open_dir):    
-    dialog = gtk.FileChooserDialog(_("Save Project As"), None, 
-                                   gtk.FILE_CHOOSER_ACTION_SAVE, 
-                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                                    _("Save").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
-    dialog.set_action(gtk.FILE_CHOOSER_ACTION_SAVE)
+    dialog = Gtk.FileChooserDialog(_("Save Project As"), None, 
+                                   Gtk.FileChooserAction.SAVE, 
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                                    _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
+    dialog.set_action(Gtk.FileChooserAction.SAVE)
     dialog.set_current_name(current_name)
     dialog.set_do_overwrite_confirmation(True)
     if open_dir != None:
         dialog.set_current_folder(open_dir)
 
     dialog.set_select_multiple(False)
-    file_filter = gtk.FileFilter()
+    file_filter = Gtk.FileFilter()
     file_filter.add_pattern("*" + appconsts.PROJECT_FILE_EXTENSION)
     dialog.add_filter(file_filter)
     dialog.connect('response', callback)
@@ -175,11 +175,11 @@ def export_xml_dialog(callback, project_name):
     _export_file_name_dialog(callback, project_name, _("Export Project as XML to"))
 
 def _export_file_name_dialog(callback, project_name, dialog_title):  
-    dialog = gtk.FileChooserDialog(dialog_title, None, 
-                                   gtk.FILE_CHOOSER_ACTION_SAVE, 
-                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                                   _("Export").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
-    dialog.set_action(gtk.FILE_CHOOSER_ACTION_SAVE)
+    dialog = Gtk.FileChooserDialog(dialog_title, None, 
+                                   Gtk.FileChooserAction.SAVE, 
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                                   _("Export").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
+    dialog.set_action(Gtk.FileChooserAction.SAVE)
     project_name = project_name.strip(".flb")
     dialog.set_current_name(project_name + ".xml")
     dialog.set_do_overwrite_confirmation(True)
@@ -189,11 +189,11 @@ def _export_file_name_dialog(callback, project_name, dialog_title):
     dialog.show()
     
 def save_env_data_dialog(callback):    
-    dialog = gtk.FileChooserDialog(_("Save Runtime Environment Data"), None, 
-                                   gtk.FILE_CHOOSER_ACTION_SAVE, 
-                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                                   _("Save").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
-    dialog.set_action(gtk.FILE_CHOOSER_ACTION_SAVE)
+    dialog = Gtk.FileChooserDialog(_("Save Runtime Environment Data"), None, 
+                                   Gtk.FileChooserAction.SAVE, 
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                                   _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
+    dialog.set_action(Gtk.FileChooserAction.SAVE)
     dialog.set_current_name("flowblade_runtime_environment_data")
     dialog.set_do_overwrite_confirmation(True)
     dialog.set_select_multiple(False)
@@ -204,11 +204,11 @@ def select_thumbnail_dir(callback, parent_window, current_dir_path, retry_open_m
     panel, file_select = panels.get_thumbnail_select_panel(current_dir_path)
     cancel_str = _("Cancel").encode('utf-8')
     ok_str = _("Ok").encode('utf-8')
-    dialog = gtk.Dialog(_("Select Thumbnail Folder"),
+    dialog = Gtk.Dialog(_("Select Thumbnail Folder"),
                         parent_window,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (cancel_str, gtk.RESPONSE_CANCEL,
-                        ok_str, gtk.RESPONSE_YES))
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (cancel_str, Gtk.ResponseType.CANCEL,
+                        ok_str, Gtk.ResponseType.YES))
 
     dialog.vbox.pack_start(panel, True, True, 0)
     _default_behaviour(dialog)
@@ -219,11 +219,11 @@ def select_rendred_clips_dir(callback, parent_window, current_dir_path, context_
     panel, file_select = panels.get_render_folder_select_panel(current_dir_path)
     cancel_str = _("Cancel").encode('utf-8')
     ok_str = _("Ok").encode('utf-8')
-    dialog = gtk.Dialog(_("Select Thumbnail Folder"),
+    dialog = Gtk.Dialog(_("Select Thumbnail Folder"),
                         parent_window,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (cancel_str, gtk.RESPONSE_CANCEL,
-                        ok_str, gtk.RESPONSE_YES))
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (cancel_str, Gtk.ResponseType.CANCEL,
+                        ok_str, Gtk.ResponseType.YES))
 
     dialog.vbox.pack_start(panel, True, True, 0)
     _default_behaviour(dialog)
@@ -241,17 +241,17 @@ def rendered_clips_no_home_folder_dialog():
 
 def exit_confirm_dialog(callback, msg, parent_window, project_name):
     title = _("Save project '") + project_name + _("' before exiting?")
-    content = dialogutils.get_warning_message_dialog_panel(title, msg, False, gtk.STOCK_QUIT)
-    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    content = dialogutils.get_warning_message_dialog_panel(title, msg, False, Gtk.STOCK_QUIT)
+    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
     align.set_padding(0, 12, 0, 0)
     align.add(content)
 
-    dialog = gtk.Dialog("",
+    dialog = Gtk.Dialog("",
                         parent_window,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (_("Don't Save").encode('utf-8'), gtk.RESPONSE_CLOSE,
-                        _("Cancel").encode('utf-8'), gtk.RESPONSE_CANCEL,
-                        _("Save").encode('utf-8'), gtk.RESPONSE_YES))
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Don't Save").encode('utf-8'), Gtk.ResponseType.CLOSE,
+                        _("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                        _("Save").encode('utf-8'), Gtk.ResponseType.YES))
 
     dialog.vbox.pack_start(align, True, True, 0)
     _default_behaviour(dialog)
@@ -260,17 +260,17 @@ def exit_confirm_dialog(callback, msg, parent_window, project_name):
 
 def close_confirm_dialog(callback, msg, parent_window, project_name):
     title = _("Save project '") + project_name + _("' before closing project?")
-    content = dialogutils.get_warning_message_dialog_panel(title, msg, False, gtk.STOCK_QUIT)
-    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    content = dialogutils.get_warning_message_dialog_panel(title, msg, False, Gtk.STOCK_QUIT)
+    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
     align.set_padding(0, 12, 0, 0)
     align.add(content)
 
-    dialog = gtk.Dialog("",
+    dialog = Gtk.Dialog("",
                         parent_window,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (_("Don't Save").encode('utf-8'), gtk.RESPONSE_CLOSE,
-                        _("Cancel").encode('utf-8'), gtk.RESPONSE_CANCEL,
-                        _("Save").encode('utf-8'), gtk.RESPONSE_YES))
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Don't Save").encode('utf-8'), Gtk.ResponseType.CLOSE,
+                        _("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                        _("Save").encode('utf-8'), Gtk.ResponseType.YES))
 
     dialog.vbox.pack_start(align, True, True, 0)
     _default_behaviour(dialog)
@@ -278,18 +278,18 @@ def close_confirm_dialog(callback, msg, parent_window, project_name):
     dialog.show_all()
 
 def about_dialog(parent_window):
-    dialog = gtk.Dialog(_("About"), None,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (_("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+    dialog = Gtk.Dialog(_("About"), None,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
 
-    img = gtk.image_new_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
-    flow_label = gtk.Label("Flowblade Movie Editor")
-    ver_label = gtk.Label("1.0.0")
-    janne_label = gtk.Label("Copyright 2015 Janne Liljeblad")
+    img = Gtk.image_new_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
+    flow_label = Gtk.Label(label="Flowblade Movie Editor")
+    ver_label = Gtk.Label(label="1.0.0")
+    janne_label = Gtk.Label(label="Copyright 2015 Janne Liljeblad")
 
-    flow_label.modify_font(pango.FontDescription("sans bold 14"))
+    flow_label.modify_font(Pango.FontDescription("sans bold 14"))
 
-    vbox = gtk.VBox(False, 4)
+    vbox = Gtk.VBox(False, 4)
     vbox.pack_start(guiutils.get_pad_label(30, 12), False, False, 0)
     vbox.pack_start(img, False, False, 0)
     vbox.pack_start(guiutils.get_pad_label(30, 4), False, False, 0)
@@ -297,21 +297,21 @@ def about_dialog(parent_window):
     vbox.pack_start(ver_label, False, False, 0)
     vbox.pack_start(guiutils.get_pad_label(30, 22), False, False, 0)
     vbox.pack_start(janne_label, False, False, 0)
-    vbox.pack_start(gtk.Label(), True, True, 0)
+    vbox.pack_start(Gtk.Label(), True, True, 0)
    
     alignment =  dialogutils.get_default_alignment(vbox)
     alignment.set_size_request(450, 370)
 
-    up_label = gtk.Label("Upstream:")
-    up_projs = gtk.Label("MLT")
-    up_projs2 = gtk.Label("FFMpeg, Frei0r, LADSPA, Cairo, Gnome, Linux")
-    tools_label = gtk.Label("Tools:")
-    tools_list = gtk.Label("Geany, Inkscape, Gimp, ack-grep")
+    up_label = Gtk.Label(label="Upstream:")
+    up_projs = Gtk.Label(label="MLT")
+    up_projs2 = Gtk.Label("FFMpeg, Frei0r, LADSPA, Cairo, Gnome, Linux")
+    tools_label = Gtk.Label(label="Tools:")
+    tools_list = Gtk.Label("Geany, Inkscape, Gimp, ack-grep")
     
-    up_label.modify_font(pango.FontDescription("sans bold 12"))
-    tools_label.modify_font(pango.FontDescription("sans bold 12"))
+    up_label.modify_font(Pango.FontDescription("sans bold 12"))
+    tools_label.modify_font(Pango.FontDescription("sans bold 12"))
     
-    vbox2 = gtk.VBox(False, 4)
+    vbox2 = Gtk.VBox(False, 4)
     vbox2.pack_start(guiutils.get_pad_label(30, 12), False, False, 0)
     vbox2.pack_start(up_label, False, False, 0)
     vbox2.pack_start(up_projs, False, False, 0)
@@ -320,7 +320,7 @@ def about_dialog(parent_window):
     vbox2.pack_start(tools_label, False, False, 0)
     vbox2.pack_start(tools_list, False, False, 0)
     vbox2.pack_start(guiutils.get_pad_label(30, 22), False, False, 0)
-    vbox2.pack_start(gtk.Label(), True, True, 0)
+    vbox2.pack_start(Gtk.Label(), True, True, 0)
 
     alignment2 = dialogutils.get_default_alignment(vbox2)
     alignment2.set_size_request(450, 370)
@@ -333,45 +333,45 @@ def about_dialog(parent_window):
     alignment4 = dialogutils.get_default_alignment(translations_view)
     alignment4.set_size_request(450, 370)
     
-    notebook = gtk.Notebook()
+    notebook = Gtk.Notebook()
     notebook.set_size_request(450 + 10, 370 + 10)
-    notebook.append_page(alignment, gtk.Label(_("Application")))
-    notebook.append_page(alignment2, gtk.Label(_("Thanks")))
-    notebook.append_page(alignment3, gtk.Label(_("License")))
-    notebook.append_page(alignment4, gtk.Label(_("Translations")))
+    notebook.append_page(alignment, Gtk.Label(label=_("Application")))
+    notebook.append_page(alignment2, Gtk.Label(label=_("Thanks")))
+    notebook.append_page(alignment3, Gtk.Label(label=_("License")))
+    notebook.append_page(alignment4, Gtk.Label(label=_("Translations")))
     
     dialog.vbox.pack_start(notebook, True, True, 0)
     dialog.connect('response', _dialog_destroy)
     dialog.show_all()
 
 def environment_dialog(parent_window, write_data_cb):
-    dialog = gtk.Dialog(_("Runtime Environment"), None,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (_("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+    dialog = Gtk.Dialog(_("Runtime Environment"), None,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
 
     COLUMN_WIDTH = 450
 
-    r1 = guiutils.get_left_justified_box([gtk.Label(_("MLT version: ")), gtk.Label(str(editorstate.mlt_version))])
+    r1 = guiutils.get_left_justified_box([Gtk.Label(label=_("MLT version: ")), Gtk.Label(label=str(editorstate.mlt_version))])
     try:
         major, minor, rev = editorstate.gtk_version
         gtk_ver = str(major) + "." + str(minor) + "." + str(rev)
     except:
         gtk_ver = str(editorstate.gtk_version)
-    r2 = guiutils.get_left_justified_box([gtk.Label(_("GTK version: ")), gtk.Label(gtk_ver)])
+    r2 = guiutils.get_left_justified_box([Gtk.Label(label=_("GTK version: ")), Gtk.Label(label=gtk_ver)])
     lc, encoding = locale.getdefaultlocale()
-    r3 = guiutils.get_left_justified_box([gtk.Label(_("Locale: ")), gtk.Label(str(lc))])
+    r3 = guiutils.get_left_justified_box([Gtk.Label(label=_("Locale: ")), Gtk.Label(label=str(lc))])
 
     if editorstate.app_running_from == editorstate.RUNNING_FROM_INSTALLATION:
         run_type = _("INSTALLATION")
     else:
         run_type = _("DEVELOPER VERSION")
         
-    r4 = guiutils.get_left_justified_box([gtk.Label(_("Running from: ")), gtk.Label(run_type)])
-    write_button = gtk.Button(_("Write Environment Data to File"))
+    r4 = guiutils.get_left_justified_box([Gtk.Label(label=_("Running from: ")), Gtk.Label(label=run_type)])
+    write_button = Gtk.Button(_("Write Environment Data to File"))
     write_button.connect("clicked", lambda w,e: write_data_cb(), None)
     r5 = guiutils.get_left_justified_box([write_button])
     
-    vbox = gtk.VBox(False, 4)
+    vbox = Gtk.VBox(False, 4)
     vbox.pack_start(r1, False, False, 0)
     vbox.pack_start(r2, False, False, 0)
     vbox.pack_start(r3, False, False, 0)
@@ -411,19 +411,19 @@ def environment_dialog(parent_window, write_data_cb):
         msg = "mlt.Transition " + t.mlt_service_id + _(" FOR TRANSITION ") + t.name + _(" NOT FOUND")
     missing_services_sw = _get_items_in_scroll_window(missing_mlt_services, 5, COLUMN_WIDTH, 60)
     
-    l_pane = gtk.VBox(False, 4)
+    l_pane = Gtk.VBox(False, 4)
     l_pane.pack_start(guiutils.get_named_frame(_("General"), vbox), False, False, 0)
     l_pane.pack_start(guiutils.get_named_frame(_("MLT Filters"), filters_sw), False, False, 0)
     l_pane.pack_start(guiutils.get_named_frame(_("MLT Transitions"), transitions_sw), False, False, 0)
     l_pane.pack_start(guiutils.get_named_frame(_("Missing MLT Services"), missing_services_sw), True, True, 0)
 
-    r_pane = gtk.VBox(False, 4)
+    r_pane = Gtk.VBox(False, 4)
     r_pane.pack_start(guiutils.get_named_frame(_("Video Codecs"), v_codecs_sw), False, False, 0)
     r_pane.pack_start(guiutils.get_named_frame(_("Audio Codecs"), a_codecs_sw), False, False, 0)
     r_pane.pack_start(guiutils.get_named_frame(_("Formats"), formats_sw), False, False, 0)
     r_pane.pack_start(guiutils.get_named_frame(_("Render Options"), enc_opt_sw), False, False, 0)
 
-    pane = gtk.HBox(False, 4)
+    pane = Gtk.HBox(False, 4)
     pane.pack_start(l_pane, False, False, 0)
     pane.pack_start(guiutils.pad_label(5, 5), False, False, 0)
     pane.pack_start(r_pane, False, False, 0)
@@ -438,21 +438,21 @@ def environment_dialog(parent_window, write_data_cb):
 def _get_items_in_scroll_window(items, rows_count, w, h):
     row_widgets = []
     for i in items:
-        row = guiutils.get_left_justified_box([gtk.Label(i)])
+        row = guiutils.get_left_justified_box([Gtk.Label(label=i)])
         row_widgets.append(row)
     items_pane = _get_item_columns_panel(row_widgets, rows_count)
 
-    sw = gtk.ScrolledWindow()
-    sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+    sw = Gtk.ScrolledWindow()
+    sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
     sw.add_with_viewport(items_pane)
     sw.set_size_request(w, h)
     return sw
     
 def _get_item_columns_panel(items, rows):
-    hbox = gtk.HBox(False, 4)
+    hbox = Gtk.HBox(False, 4)
     n_item = 0
     col_items = 0
-    vbox = gtk.VBox()
+    vbox = Gtk.VBox()
     hbox.pack_start(vbox, False, False, 0)
     while n_item < len(items):
         item = items[n_item]
@@ -460,15 +460,15 @@ def _get_item_columns_panel(items, rows):
         n_item += 1
         col_items += 1
         if col_items > rows:
-            vbox = gtk.VBox()
+            vbox = Gtk.VBox()
             hbox.pack_start(vbox, False, False, 0)
             col_items = 0
     return hbox
 
 def file_properties_dialog(data):
-    dialog = gtk.Dialog(_("File Properties"), None,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        ( _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+    dialog = Gtk.Dialog(_("File Properties"), None,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        ( _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
                         
     panel = panels.get_file_properties_panel(data)
     alignment = dialogutils.get_default_alignment(panel)
@@ -479,9 +479,9 @@ def file_properties_dialog(data):
     dialog.show_all()
 
 def clip_properties_dialog(data):
-    dialog = gtk.Dialog(_("Clip Properties"), None,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        ( _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+    dialog = Gtk.Dialog(_("Clip Properties"), None,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        ( _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
                         
     panel = panels.get_clip_properties_panel(data)
     alignment = dialogutils.get_default_alignment(panel)
@@ -492,10 +492,10 @@ def clip_properties_dialog(data):
     dialog.show_all()
 
 def add_compositor_dialog(current_sequence, callback, data):
-    dialog = gtk.Dialog(_("Composite Target Track"), None,
-                    gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                    (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                    _("Add Compositor").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+    dialog = Gtk.Dialog(_("Composite Target Track"), None,
+                    Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                    (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                    _("Add Compositor").encode('utf-8'), Gtk.ResponseType.ACCEPT))
     
     panel, track_combo = panels.get_add_compositor_panel(current_sequence, data)
     alignment = dialogutils.get_default_alignment(panel)
@@ -509,39 +509,39 @@ def _dialog_destroy(dialog, response):
     dialog.destroy()
 
 def _default_behaviour(dialog):
-    dialog.set_default_response(gtk.RESPONSE_OK)
+    dialog.set_default_response(Gtk.ResponseType.OK)
     dialog.set_has_separator(False)
     dialog.set_resizable(False)
 
 def load_dialog():
-    dialog = gtk.Window(gtk.WINDOW_TOPLEVEL)
+    dialog = Gtk.Window(Gtk.WindowType.TOPLEVEL)
     dialog.set_title(_("Loading project"))
 
-    info_label = gtk.Label("")
-    status_box = gtk.HBox(False, 2)
+    info_label = Gtk.Label(label="")
+    status_box = Gtk.HBox(False, 2)
     status_box.pack_start(info_label, False, False, 0)
-    status_box.pack_start(gtk.Label(), True, True, 0)
+    status_box.pack_start(Gtk.Label(), True, True, 0)
 
-    progress_bar = gtk.ProgressBar()
+    progress_bar = Gtk.ProgressBar()
     progress_bar.set_fraction(0.2)
     progress_bar.set_pulse_step(0.1)
 
-    est_box = gtk.HBox(False, 2)
-    est_box.pack_start(gtk.Label(""),False, False, 0)
-    est_box.pack_start(gtk.Label(), True, True, 0)
+    est_box = Gtk.HBox(False, 2)
+    est_box.pack_start(Gtk.Label(label=""),False, False, 0)
+    est_box.pack_start(Gtk.Label(), True, True, 0)
 
-    progress_vbox = gtk.VBox(False, 2)
+    progress_vbox = Gtk.VBox(False, 2)
     progress_vbox.pack_start(status_box, False, False, 0)
     progress_vbox.pack_start(progress_bar, True, True, 0)
     progress_vbox.pack_start(est_box, False, False, 0)
 
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(12, 12, 12, 12)
     alignment.add(progress_vbox)
 
     dialog.add(alignment)
     dialog.set_default_size(400, 70)
-    dialog.set_position(gtk.WIN_POS_CENTER)
+    dialog.set_position(Gtk.WindowPosition.CENTER)
     dialog.show_all()
 
     # Make refs available for updates
@@ -551,33 +551,33 @@ def load_dialog():
     return dialog
 
 def recreate_icons_progress_dialog():
-    dialog = gtk.Window(gtk.WINDOW_TOPLEVEL)
+    dialog = Gtk.Window(Gtk.WindowType.TOPLEVEL)
     dialog.set_title(_("Recreating icons"))
 
-    info_label = gtk.Label("")
-    status_box = gtk.HBox(False, 2)
+    info_label = Gtk.Label(label="")
+    status_box = Gtk.HBox(False, 2)
     status_box.pack_start(info_label, False, False, 0)
-    status_box.pack_start(gtk.Label(), True, True, 0)
+    status_box.pack_start(Gtk.Label(), True, True, 0)
 
-    progress_bar = gtk.ProgressBar()
+    progress_bar = Gtk.ProgressBar()
     progress_bar.set_fraction(0.0)
 
-    est_box = gtk.HBox(False, 2)
-    est_box.pack_start(gtk.Label(""),False, False, 0)
-    est_box.pack_start(gtk.Label(), True, True, 0)
+    est_box = Gtk.HBox(False, 2)
+    est_box.pack_start(Gtk.Label(label=""),False, False, 0)
+    est_box.pack_start(Gtk.Label(), True, True, 0)
 
-    progress_vbox = gtk.VBox(False, 2)
+    progress_vbox = Gtk.VBox(False, 2)
     progress_vbox.pack_start(status_box, False, False, 0)
     progress_vbox.pack_start(progress_bar, True, True, 0)
     progress_vbox.pack_start(est_box, False, False, 0)
 
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(12, 12, 12, 12)
     alignment.add(progress_vbox)
 
     dialog.add(alignment)
     dialog.set_default_size(400, 70)
-    dialog.set_position(gtk.WIN_POS_CENTER)
+    dialog.set_position(Gtk.WindowPosition.CENTER)
     dialog.show_all()
 
     # Make refs available for updates
@@ -593,19 +593,19 @@ def proxy_delete_warning_dialog(parent_window, callback):
 
     msg = msg1 + msg2 
     content = dialogutils.get_warning_message_dialog_panel(title, msg)
-    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
     align.set_padding(0, 12, 0, 0)
     align.add(content)
 
-    dialog = gtk.Dialog("",
+    dialog = Gtk.Dialog("",
                         parent_window,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_CANCEL,
-                        _("Force Delete").encode('utf-8'), gtk.RESPONSE_OK))
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                        _("Force Delete").encode('utf-8'), Gtk.ResponseType.OK))
 
     dialog.vbox.pack_start(align, True, True, 0)
     _default_behaviour(dialog)
-    dialog.set_default_response(gtk.RESPONSE_CANCEL)
+    dialog.set_default_response(Gtk.ResponseType.CANCEL)
     dialog.connect('response', callback)
 
     dialog.show_all()
@@ -617,15 +617,15 @@ def autosave_recovery_dialog(callback, parent_window):
     msg3 = _("It is NOT possible to open this autosaved version later.")
     msg = msg1 + msg2 + msg3
     content = dialogutils.get_warning_message_dialog_panel(title, msg)
-    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
     align.set_padding(0, 12, 0, 0)
     align.add(content)
 
-    dialog = gtk.Dialog("",
+    dialog = Gtk.Dialog("",
                         parent_window,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (_("Continue with default 'untitled' project").encode('utf-8'), gtk.RESPONSE_CANCEL,
-                        _("Open Autosaved Project").encode('utf-8'), gtk.RESPONSE_OK))
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Continue with default 'untitled' project").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                        _("Open Autosaved Project").encode('utf-8'), Gtk.ResponseType.OK))
 
     dialog.vbox.pack_start(align, True, True, 0)
     _default_behaviour(dialog)
@@ -644,32 +644,32 @@ def autosaves_many_recovery_dialog(response_callback, autosaves, parent_window):
     autosaves_view.set_size_request(300, 300)
     autosaves_view.fill_data_model(autosaves)
 
-    delete_all = gtk.Button("Delete all autosaves")
+    delete_all = Gtk.Button("Delete all autosaves")
     delete_all.connect("clicked", lambda w : _autosaves_delete_all_clicked(autosaves, autosaves_view, dialog))
-    delete_all_but_selected = gtk.Button("Delete all but selected autosave")
+    delete_all_but_selected = Gtk.Button("Delete all but selected autosave")
     delete_all_but_selected.connect("clicked", lambda w : _autosaves_delete_unselected(autosaves, autosaves_view))
 
-    delete_buttons_vbox = gtk.HBox()
-    delete_buttons_vbox.pack_start(gtk.Label(), True, True, 0)
+    delete_buttons_vbox = Gtk.HBox()
+    delete_buttons_vbox.pack_start(Gtk.Label(), True, True, 0)
     delete_buttons_vbox.pack_start(delete_all, False, False, 0)
     delete_buttons_vbox.pack_start(delete_all_but_selected, False, False, 0)
-    delete_buttons_vbox.pack_start(gtk.Label(), True, True, 0)
+    delete_buttons_vbox.pack_start(Gtk.Label(), True, True, 0)
 
-    pane = gtk.VBox()
+    pane = Gtk.VBox()
     pane.pack_start(info_panel, False, False, 0)
     pane.pack_start(delete_buttons_vbox, False, False, 0)
     pane.pack_start(guiutils.get_pad_label(12,12), False, False, 0)
     pane.pack_start(autosaves_view, False, False, 0)
 
-    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
     align.set_padding(0, 12, 0, 0)
     align.add(pane)
 
-    dialog = gtk.Dialog("",
+    dialog = Gtk.Dialog("",
                         parent_window,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (_("Continue with default 'untitled' project").encode('utf-8'), gtk.RESPONSE_CANCEL,
-                        _("Open Selected Autosave").encode('utf-8'), gtk.RESPONSE_OK))
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Continue with default 'untitled' project").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                        _("Open Selected Autosave").encode('utf-8'), Gtk.ResponseType.OK))
 
     dialog.vbox.pack_start(align, True, True, 0)
     _default_behaviour(dialog)
@@ -679,7 +679,7 @@ def autosaves_many_recovery_dialog(response_callback, autosaves, parent_window):
 def _autosaves_delete_all_clicked(autosaves, autosaves_view, dialog):
     for autosave in autosaves:
         os.remove(autosave.path)
-    dialog.set_response_sensitive(gtk.RESPONSE_OK, False)
+    dialog.set_response_sensitive(Gtk.ResponseType.OK, False)
     del autosaves[:]
     autosaves_view.fill_data_model(autosaves)
 
@@ -692,13 +692,13 @@ def _autosaves_delete_unselected(autosaves, autosaves_view):
     autosaves_view.fill_data_model(autosaves)
 
 def tracks_count_change_dialog(callback):
-    dialog = gtk.Dialog(_("Change Sequence Tracks Count"), None,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                        _("Change Tracks").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+    dialog = Gtk.Dialog(_("Change Sequence Tracks Count"), None,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                        _("Change Tracks").encode('utf-8'), Gtk.ResponseType.ACCEPT))
 
     tracks_combo, tracks_combo_values_list = guicomponents.get_track_counts_combo_and_values_list()
-    tracks_select = panels.get_two_column_box(gtk.Label(_("New Number of Tracks:")),
+    tracks_select = panels.get_two_column_box(Gtk.Label(label=_("New Number of Tracks:")),
                                                tracks_combo,
                                                250)
     info_text = _("Please note:\n") + \
@@ -706,13 +706,13 @@ def tracks_count_change_dialog(callback):
                 u"\u2022" + _(" There is no Undo for this operation\n") + \
                 u"\u2022" + _(" Current Undo Stack will be destroyed\n") + \
                 u"\u2022" + _(" All Clips and Compositors on deleted Tracks will be permanently destroyed")
-    info_label = gtk.Label(info_text)
+    info_label = Gtk.Label(label=info_text)
     info_label.set_use_markup(True)
     info_box = guiutils.get_left_justified_box([info_label])
 
     pad = guiutils.get_pad_label(24, 24)
     
-    tracks_vbox = gtk.VBox(False, 2)
+    tracks_vbox = Gtk.VBox(False, 2)
     tracks_vbox.pack_start(info_box, False, False, 0)
     tracks_vbox.pack_start(pad, False, False, 0)
     tracks_vbox.pack_start(tracks_select, False, False, 0)
@@ -725,35 +725,35 @@ def tracks_count_change_dialog(callback):
     dialog.show_all()
 
 def new_sequence_dialog(callback, default_name):
-    dialog = gtk.Dialog(_("Create New Sequence"), None,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                        _("Create Sequence").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+    dialog = Gtk.Dialog(_("Create New Sequence"), None,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                        _("Create Sequence").encode('utf-8'), Gtk.ResponseType.ACCEPT))
 
-    name_entry = gtk.Entry(30)
+    name_entry = Gtk.Entry(30)
     name_entry.set_width_chars(30)
     name_entry.set_text(default_name)
     name_entry.set_activates_default(True)
 
-    name_select = panels.get_two_column_box(gtk.Label(_("Sequence Name:")),
+    name_select = panels.get_two_column_box(Gtk.Label(label=_("Sequence Name:")),
                                                name_entry,
                                                250)
 
     tracks_combo, tracks_combo_values_list = guicomponents.get_track_counts_combo_and_values_list()
-    tracks_select = panels.get_two_column_box(gtk.Label(_("Number of Tracks:")),
+    tracks_select = panels.get_two_column_box(Gtk.Label(label=_("Number of Tracks:")),
                                                tracks_combo,
                                                250)
 
-    open_check = gtk.CheckButton()
+    open_check = Gtk.CheckButton()
     open_check.set_active(True)
-    open_label = gtk.Label(_("Open For Editing:"))
+    open_label = Gtk.Label(label=_("Open For Editing:"))
 
-    open_hbox = gtk.HBox(False, 2)
-    open_hbox.pack_start(gtk.Label(), True, True, 0)
+    open_hbox = Gtk.HBox(False, 2)
+    open_hbox.pack_start(Gtk.Label(), True, True, 0)
     open_hbox.pack_start(open_label, False, False, 0)
     open_hbox.pack_start(open_check, False, False, 0)
     
-    tracks_vbox = gtk.VBox(False, 2)
+    tracks_vbox = Gtk.VBox(False, 2)
     tracks_vbox.pack_start(name_select, False, False, 0)
     tracks_vbox.pack_start(tracks_select, False, False, 0)
     tracks_vbox.pack_start(guiutils.get_pad_label(12, 12), False, False, 0)
@@ -767,21 +767,21 @@ def new_sequence_dialog(callback, default_name):
     dialog.show_all()
 
 def new_media_name_dialog(callback, media_file):
-    dialog = gtk.Dialog(_("Rename New Media Object"), None,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                        _("Rename").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+    dialog = Gtk.Dialog(_("Rename New Media Object"), None,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                        _("Rename").encode('utf-8'), Gtk.ResponseType.ACCEPT))
                         
-    name_entry = gtk.Entry(30)
+    name_entry = Gtk.Entry(30)
     name_entry.set_width_chars(30)
     name_entry.set_text(media_file.name)
     name_entry.set_activates_default(True)
 
-    name_select = panels.get_two_column_box(gtk.Label(_("New Name:")),
+    name_select = panels.get_two_column_box(Gtk.Label(label=_("New Name:")),
                                                name_entry,
                                                180)
 
-    tracks_vbox = gtk.VBox(False, 2)
+    tracks_vbox = Gtk.VBox(False, 2)
     tracks_vbox.pack_start(name_select, False, False, 0)
     tracks_vbox.pack_start(guiutils.get_pad_label(12, 12), False, False, 0)
 
@@ -789,26 +789,26 @@ def new_media_name_dialog(callback, media_file):
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
-    dialog.set_default_response(gtk.RESPONSE_ACCEPT)
+    dialog.set_default_response(Gtk.ResponseType.ACCEPT)
     dialog.connect('response', callback, (name_entry, media_file))
     dialog.show_all()
 
 def new_clip_name_dialog(callback, clip):
-    dialog = gtk.Dialog(_("Rename Clip"), None,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                        _("Rename").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+    dialog = Gtk.Dialog(_("Rename Clip"), None,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                        _("Rename").encode('utf-8'), Gtk.ResponseType.ACCEPT))
 
-    name_entry = gtk.Entry(30)
+    name_entry = Gtk.Entry(30)
     name_entry.set_width_chars(30)
     name_entry.set_text(clip.name)
     name_entry.set_activates_default(True)
 
-    name_select = panels.get_two_column_box(gtk.Label(_("New Name:")),
+    name_select = panels.get_two_column_box(Gtk.Label(label=_("New Name:")),
                                                name_entry,
                                                180)
 
-    tracks_vbox = gtk.VBox(False, 2)
+    tracks_vbox = Gtk.VBox(False, 2)
     tracks_vbox.pack_start(name_select, False, False, 0)
     tracks_vbox.pack_start(guiutils.get_pad_label(12, 12), False, False, 0)
 
@@ -816,33 +816,33 @@ def new_clip_name_dialog(callback, clip):
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
-    dialog.set_default_response(gtk.RESPONSE_ACCEPT)
+    dialog.set_default_response(Gtk.ResponseType.ACCEPT)
     dialog.connect('response', callback, (name_entry, clip))
     dialog.show_all()
 
 def new_media_log_group_name_dialog(callback, next_index, add_selected):
-    dialog = gtk.Dialog(_("New Range Item Group"), None,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                        _("Create").encode('utf-8'), gtk.RESPONSE_OK))
+    dialog = Gtk.Dialog(_("New Range Item Group"), None,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                        _("Create").encode('utf-8'), Gtk.ResponseType.OK))
 
-    name_entry = gtk.Entry(30)
+    name_entry = Gtk.Entry(30)
     name_entry.set_width_chars(30)
     name_entry.set_text(_("User Group ") + str(next_index))
     name_entry.set_activates_default(True)
 
-    name_select = panels.get_two_column_box(gtk.Label(_("New Group Name:")),
+    name_select = panels.get_two_column_box(Gtk.Label(label=_("New Group Name:")),
                                                name_entry,
                                                180)
 
-    vbox = gtk.VBox(False, 2)
+    vbox = Gtk.VBox(False, 2)
     vbox.pack_start(name_select, False, False, 0)
 
     alignment = dialogutils.get_default_alignment(vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
-    dialog.set_default_response(gtk.RESPONSE_ACCEPT)
+    dialog.set_default_response(Gtk.ResponseType.ACCEPT)
     dialog.connect('response', callback, (name_entry, add_selected))
     dialog.show_all()
 
@@ -861,22 +861,22 @@ def not_valid_producer_dialog(file_path, parent_window):
     dialogutils.warning_message(primary_txt, secondary_txt, parent_window, is_info=True)
 
 def marker_name_dialog(frame_str, callback):
-    dialog = gtk.Dialog(_("New Marker"), None,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (_("Add Marker").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+    dialog = Gtk.Dialog(_("New Marker"), None,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Add Marker").encode('utf-8'), Gtk.ResponseType.ACCEPT))
 
-    name_entry = gtk.Entry(30)
+    name_entry = Gtk.Entry(30)
     name_entry.set_width_chars(30)
     name_entry.set_text("")
     name_entry.set_activates_default(True)
 
-    name_select = panels.get_two_column_box(gtk.Label(_("Name for marker at ") + frame_str),
+    name_select = panels.get_two_column_box(Gtk.Label(label=_("Name for marker at ") + frame_str),
                                                name_entry,
                                                250)
     alignment = dialogutils.get_default_alignment(name_select)
     
     dialog.vbox.pack_start(alignment, True, True, 0)
-    dialog.set_default_response(gtk.RESPONSE_ACCEPT)
+    dialog.set_default_response(Gtk.ResponseType.ACCEPT)
     _default_behaviour(dialog)
     dialog.connect('response', callback, name_entry)
     dialog.show_all()
@@ -884,23 +884,23 @@ def marker_name_dialog(frame_str, callback):
 def open_image_sequence_dialog(callback, parent_window):
     cancel_str = _("Cancel").encode('utf-8')
     ok_str = _("Ok").encode('utf-8')
-    dialog = gtk.Dialog(_("Add Image Sequence Clip"),
+    dialog = Gtk.Dialog(_("Add Image Sequence Clip"),
                         parent_window,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (cancel_str, gtk.RESPONSE_CANCEL,
-                        ok_str, gtk.RESPONSE_YES))
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (cancel_str, Gtk.ResponseType.CANCEL,
+                        ok_str, Gtk.ResponseType.YES))
 
-    file_chooser = gtk.FileChooserButton(_("Select First Frame"))
+    file_chooser = Gtk.FileChooserButton(_("Select First Frame"))
     file_chooser.set_size_request(250, 25)
     filt = utils.get_image_sequence_file_filter()
     file_chooser.add_filter(filt)
-    row1 = guiutils.get_two_column_box(gtk.Label(_("First frame:")), file_chooser, 220)
+    row1 = guiutils.get_two_column_box(Gtk.Label(label=_("First frame:")), file_chooser, 220)
 
-    adj = gtk.Adjustment(value=1, lower=1, upper=250, step_incr=1)
-    frames_per_image = gtk.SpinButton(adjustment=adj, climb_rate=1.0, digits=0)
-    row2 = guiutils.get_two_column_box(gtk.Label(_("Frames per Source Image:")), frames_per_image, 220)
+    adj = Gtk.Adjustment(value=1, lower=1, upper=250, step_incr=1)
+    frames_per_image = Gtk.SpinButton(adjustment=adj, climb_rate=1.0, digits=0)
+    row2 = guiutils.get_two_column_box(Gtk.Label(label=_("Frames per Source Image:")), frames_per_image, 220)
 
-    vbox = gtk.VBox(False, 2)
+    vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     
@@ -914,70 +914,70 @@ def open_image_sequence_dialog(callback, parent_window):
 def export_edl_dialog(callback, parent_window, project_name):
     cancel_str = _("Cancel").encode('utf-8')
     ok_str = _("Export To EDL").encode('utf-8')
-    dialog = gtk.Dialog(_("Export EDL"),
+    dialog = Gtk.Dialog(_("Export EDL"),
                         parent_window,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (cancel_str, gtk.RESPONSE_CANCEL,
-                        ok_str, gtk.RESPONSE_YES))
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (cancel_str, Gtk.ResponseType.CANCEL,
+                        ok_str, Gtk.ResponseType.YES))
     
     INPUT_LABELS_WITDH = 220
     project_name = project_name.strip(".flb")
     
-    file_name = gtk.Entry()
+    file_name = Gtk.Entry()
     file_name.set_text(project_name)
 
-    extension_label = gtk.Label(".edl")
+    extension_label = Gtk.Label(label=".edl")
     extension_label.set_size_request(35, 20)
 
-    name_pack = gtk.HBox(False, 4)
+    name_pack = Gtk.HBox(False, 4)
     name_pack.pack_start(file_name, True, True, 0)
     name_pack.pack_start(extension_label, False, False, 0)
 
-    name_row = guiutils.get_two_column_box(gtk.Label(_("Export file name:")), name_pack, INPUT_LABELS_WITDH)
+    name_row = guiutils.get_two_column_box(Gtk.Label(label=_("Export file name:")), name_pack, INPUT_LABELS_WITDH)
  
-    out_folder = gtk.FileChooserButton(_("Select target folder"))
-    out_folder.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+    out_folder = Gtk.FileChooserButton(_("Select target folder"))
+    out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
     out_folder.set_current_folder(os.path.expanduser("~") + "/")
     
-    folder_row = guiutils.get_two_column_box(gtk.Label(_("Export folder:")), out_folder, INPUT_LABELS_WITDH)
+    folder_row = guiutils.get_two_column_box(Gtk.Label(label=_("Export folder:")), out_folder, INPUT_LABELS_WITDH)
 
     file_frame = guiutils.get_named_frame_with_vbox(_("File"), [name_row, folder_row])
 
     seq = editorstate.current_sequence()
-    track_select_combo = gtk.combo_box_new_text()
+    track_select_combo = Gtk.ComboBoxText()
     for i in range(seq.first_video_index,  len(seq.tracks) - 1):
         track_select_combo.append_text(utils.get_track_name(seq.tracks[i], seq))
     track_select_combo.set_active(0)
-    track_row = guiutils.get_two_column_box(gtk.Label(_("Exported video track:")), track_select_combo, INPUT_LABELS_WITDH)
+    track_row = guiutils.get_two_column_box(Gtk.Label(label=_("Exported video track:")), track_select_combo, INPUT_LABELS_WITDH)
     
-    cascade_check = gtk.CheckButton()
+    cascade_check = Gtk.CheckButton()
     cascade_check.connect("toggled", _cascade_toggled, track_select_combo)
     
-    cascade_row = guiutils.get_left_justified_box( [cascade_check, gtk.Label(_("Cascade video tracks"))])
+    cascade_row = guiutils.get_left_justified_box( [cascade_check, Gtk.Label(label=_("Cascade video tracks"))])
 
-    audio_track_select_combo = gtk.combo_box_new_text()
+    audio_track_select_combo = Gtk.ComboBoxText()
     for i in range(1,  seq.first_video_index):
         audio_track_select_combo.append_text(utils.get_track_name(seq.tracks[i], seq))
     audio_track_select_combo.set_active(seq.first_video_index - 2)
     audio_track_select_combo.set_sensitive(False)
 
-    audio_track_row = guiutils.get_two_column_box(gtk.Label(_("Exported audio track:")), audio_track_select_combo, INPUT_LABELS_WITDH)
+    audio_track_row = guiutils.get_two_column_box(Gtk.Label(label=_("Exported audio track:")), audio_track_select_combo, INPUT_LABELS_WITDH)
 
-    op_combo = gtk.combo_box_new_text()
+    op_combo = Gtk.ComboBoxText()
     op_combo.append_text(_("Audio From Video"))
     op_combo.append_text(_("Separate Audio Track"))
     op_combo.append_text(_("No Audio"))
     op_combo.set_active(0)
     op_combo.connect("changed", _audio_op_changed, audio_track_select_combo)
-    op_row = guiutils.get_two_column_box(gtk.Label(_("Audio export:")), op_combo, INPUT_LABELS_WITDH)
+    op_row = guiutils.get_two_column_box(Gtk.Label(label=_("Audio export:")), op_combo, INPUT_LABELS_WITDH)
     
     tracks_frame = guiutils.get_named_frame_with_vbox(_("Tracks"), [cascade_row, track_row, op_row, audio_track_row])
 
-    vbox = gtk.VBox(False, 2)
+    vbox = Gtk.VBox(False, 2)
     vbox.pack_start(file_frame, False, False, 0)
     vbox.pack_start(tracks_frame, False, False, 0)
     
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(12, 12, 12, 12)
     alignment.add(vbox)
 
@@ -999,10 +999,10 @@ def _audio_op_changed(combo, audio_track_select_combo):
         audio_track_select_combo.set_sensitive(False)
 
 def transition_edit_dialog(callback, transition_data):
-    dialog = gtk.Dialog(_("Add Transition").encode('utf-8'), None,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                        _("Apply").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+    dialog = Gtk.Dialog(_("Add Transition").encode('utf-8'), None,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                        _("Apply").encode('utf-8'), Gtk.ResponseType.ACCEPT))
 
     alignment, type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button = panels.get_transition_panel(transition_data)
     widgets = (type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button)
@@ -1012,10 +1012,10 @@ def transition_edit_dialog(callback, transition_data):
     dialog.show_all()
 
 def fade_edit_dialog(callback, transition_data):
-    dialog = gtk.Dialog(_("Add Fade"), None,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                        _("Apply").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+    dialog = Gtk.Dialog(_("Add Fade"), None,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                        _("Apply").encode('utf-8'), Gtk.ResponseType.ACCEPT))
 
     alignment, type_combo, length_entry, encodings_cb, quality_cb, color_button = panels.get_fade_panel(transition_data)
     widgets = (type_combo, length_entry, encodings_cb, quality_cb, color_button)
@@ -1025,12 +1025,12 @@ def fade_edit_dialog(callback, transition_data):
     dialog.show_all()
 
 def keyboard_shortcuts_dialog(parent_window):    
-    dialog = gtk.Dialog(_("Keyboard Shortcuts"),
+    dialog = Gtk.Dialog(_("Keyboard Shortcuts"),
                         parent_window,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (_("Close").encode('utf-8'), gtk.RESPONSE_CLOSE))
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Close").encode('utf-8'), Gtk.ResponseType.CLOSE))
     
-    general_vbox = gtk.VBox()
+    general_vbox = Gtk.VBox()
     general_vbox.pack_start(_get_kb_row(_("Control + N"), _("Create New Project")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Control + S"), _("Save Project")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Delete"), _("Delete Selected Item")), False, False, 0)
@@ -1043,7 +1043,7 @@ def keyboard_shortcuts_dialog(parent_window):
     general_vbox.pack_start(_get_kb_row(_("Control + L"), _("Log Marked Clip Range")), False, False, 0)
     general = guiutils.get_named_frame(_("General"), general_vbox)
 
-    tline_vbox = gtk.VBox()
+    tline_vbox = Gtk.VBox()
     tline_vbox.pack_start(_get_kb_row("I", _("Set Mark In")))
     tline_vbox.pack_start(_get_kb_row("O", _("Set Mark Out")))
     tline_vbox.pack_start(_get_kb_row("Alt + I", _("Go To Mark In")))
@@ -1059,7 +1059,7 @@ def keyboard_shortcuts_dialog(parent_window):
     tline_vbox.pack_start(_get_kb_row(_("G"), _("Log Marked Clip Range")), False, False, 0)
     tline = guiutils.get_named_frame(_("Timeline"), tline_vbox)
 
-    play_vbox = gtk.VBox()
+    play_vbox = Gtk.VBox()
     play_vbox.pack_start(_get_kb_row(_("Space"), _("Start / Stop Playback")))
     play_vbox.pack_start(_get_kb_row("J", _("Backwards Faster")))
     play_vbox.pack_start(_get_kb_row("K", _("Stop")))
@@ -1073,7 +1073,7 @@ def keyboard_shortcuts_dialog(parent_window):
     play_vbox.pack_start(_get_kb_row(_("Shift + O"), _("To Mark Out")))
     play = guiutils.get_named_frame(_("Playback"), play_vbox)
 
-    tools_vbox = gtk.VBox()
+    tools_vbox = Gtk.VBox()
     tools_vbox.pack_start(_get_kb_row("1", _("Insert")))
     tools_vbox.pack_start(_get_kb_row("2", _("Overwrite")))
     tools_vbox.pack_start(_get_kb_row("3", _("Trim")))
@@ -1082,14 +1082,14 @@ def keyboard_shortcuts_dialog(parent_window):
     tools_vbox.pack_start(_get_kb_row("6", _("Spacer")))
     tools = guiutils.get_named_frame(_("Tools"), tools_vbox)
 
-    geom_vbox = gtk.VBox()
+    geom_vbox = Gtk.VBox()
     geom_vbox.pack_start(_get_kb_row(_("Left Arrow "), _("Move Source Video Left")))
     geom_vbox.pack_start(_get_kb_row(_("Right Arrow"), _("Move Source Video Right")))
     geom_vbox.pack_start(_get_kb_row(_("Up Arrow"), _("Move Source Video Up")))
     geom_vbox.pack_start(_get_kb_row(_("Down Arrow"), _("Move Source Video Down"))) 
     geom = guiutils.get_named_frame(_("Geometry Editor"), geom_vbox)
     
-    panel = gtk.VBox()
+    panel = Gtk.VBox()
     panel.pack_start(tools, False, False, 0)
     panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
     panel.pack_start(tline, False, False, 0)
@@ -1100,17 +1100,17 @@ def keyboard_shortcuts_dialog(parent_window):
     panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
     panel.pack_start(geom, False, False, 0)
 
-    pad_panel = gtk.HBox()
+    pad_panel = Gtk.HBox()
     pad_panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
     pad_panel.pack_start(panel, True, False, 0)
     pad_panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
 
-    sw = gtk.ScrolledWindow()
-    sw.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+    sw = Gtk.ScrolledWindow()
+    sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
     sw.add_with_viewport(pad_panel)
     sw.set_size_request(420, 400)
     
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(24, 24, 24, 24)
     alignment.add(sw)
 
@@ -1121,8 +1121,8 @@ def keyboard_shortcuts_dialog(parent_window):
     dialog.show_all()
 
 def _get_kb_row(msg1, msg2):
-    label1 = gtk.Label(msg1)
-    label2 = gtk.Label(msg2)
+    label1 = Gtk.Label(label=msg1)
+    label2 = Gtk.Label(label=msg2)
     KB_SHORTCUT_ROW_WIDTH = 400
     KB_SHORTCUT_ROW_HEIGHT = 22
     row = guiutils.get_two_column_box(label1, label2, 170)
@@ -1130,43 +1130,43 @@ def _get_kb_row(msg1, msg2):
     return row
 
 def watermark_dialog(add_callback, remove_callback):
-    dialog = gtk.Dialog(_("Sequence Watermark"), None,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (_("Close").encode('utf-8'), gtk.RESPONSE_CLOSE))
+    dialog = Gtk.Dialog(_("Sequence Watermark"), None,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Close").encode('utf-8'), Gtk.ResponseType.CLOSE))
 
     seq_label = guiutils.bold_label(_("Sequence:") + " ")
-    seq_name = gtk.Label(editorstate.current_sequence().name)
+    seq_name = Gtk.Label(label=editorstate.current_sequence().name)
 
  
     file_path_label = guiutils.bold_label(_("Watermark:") + " ")
 
-    add_button = gtk.Button(_("Set Watermark File"))
-    remove_button = gtk.Button(_("Remove Watermark"))
+    add_button = Gtk.Button(_("Set Watermark File"))
+    remove_button = Gtk.Button(_("Remove Watermark"))
     if editorstate.current_sequence().watermark_file_path == None:
-        file_path_value_label = gtk.Label("Not Set")
+        file_path_value_label = Gtk.Label(label="Not Set")
         add_button.set_sensitive(True)
         remove_button.set_sensitive(False)
     else:
-        file_path_value_label = gtk.Label(editorstate.current_sequence().watermark_file_path)
+        file_path_value_label = Gtk.Label(label=editorstate.current_sequence().watermark_file_path)
         add_button.set_sensitive(False)
         remove_button.set_sensitive(True)    
 
     row1 = guiutils.get_left_justified_box([seq_label, seq_name])
     row2 = guiutils.get_left_justified_box([file_path_label, file_path_value_label])
-    row3 = guiutils.get_left_justified_box([gtk.Label(), remove_button, guiutils.pad_label(8, 8), add_button])
+    row3 = guiutils.get_left_justified_box([Gtk.Label(), remove_button, guiutils.pad_label(8, 8), add_button])
     row3.set_size_request(470, 30)
 
     widgets = (add_button, remove_button, file_path_value_label)
     add_button.connect("clicked", add_callback, dialog, widgets)
     remove_button.connect("clicked", remove_callback, widgets)
 
-    vbox = gtk.VBox(False, 2)
+    vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(guiutils.pad_label(12, 8), False, False, 0)
     vbox.pack_start(row3, False, False, 0)
 
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(12, 12, 12, 12)
     alignment.add(vbox)
 
@@ -1176,13 +1176,13 @@ def watermark_dialog(add_callback, remove_callback):
     dialog.show_all()
 
 def watermark_file_dialog(callback, parent, widgets):
-    dialog = gtk.FileChooserDialog(_("Select Watermark File"), None, 
-                                   gtk.FILE_CHOOSER_ACTION_OPEN, 
-                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                                    _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
-    dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
+    dialog = Gtk.FileChooserDialog(_("Select Watermark File"), None, 
+                                   Gtk.FileChooserAction.OPEN, 
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
+    dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
-    file_filter = gtk.FileFilter()
+    file_filter = Gtk.FileFilter()
     file_filter.set_name("Accepted Watermark Files")
     file_filter.add_pattern("*" + ".png")
     file_filter.add_pattern("*" + ".jpeg")
@@ -1193,15 +1193,15 @@ def watermark_file_dialog(callback, parent, widgets):
     dialog.show()
 
 def media_file_dialog(text, callback, multiple_select, data=None):
-    file_select = gtk.FileChooserDialog(text, None, gtk.FILE_CHOOSER_ACTION_OPEN,
-                                    (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
-                                    gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+    file_select = Gtk.FileChooserDialog(text, None, Gtk.FileChooserAction.OPEN,
+                                    (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                                    Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
 
-    file_select.set_default_response(gtk.RESPONSE_CANCEL)
+    file_select.set_default_response(Gtk.ResponseType.CANCEL)
     file_select.set_select_multiple(multiple_select)
 
     media_filter = utils.get_media_source_file_filter()
-    all_filter = gtk.FileFilter()
+    all_filter = Gtk.FileFilter()
     all_filter.set_name(_("All files"))
     all_filter.add_pattern("*.*")
     file_select.add_filter(media_filter)
@@ -1220,26 +1220,26 @@ def media_file_dialog(text, callback, multiple_select, data=None):
     file_select.show()
 
 def save_snaphot_progess(media_copy_txt, project_txt):
-    dialog = gtk.Window(gtk.WINDOW_TOPLEVEL)
+    dialog = Gtk.Window(Gtk.WindowType.TOPLEVEL)
     dialog.set_title(_("Saving project snapshot"))
     
-    dialog.media_copy_info = gtk.Label(media_copy_txt)
+    dialog.media_copy_info = Gtk.Label(label=media_copy_txt)
     media_copy_row = guiutils.get_left_justified_box([dialog.media_copy_info])
 
-    dialog.saving_project_info = gtk.Label(project_txt)
+    dialog.saving_project_info = Gtk.Label(label=project_txt)
     project_row = guiutils.get_left_justified_box([dialog.saving_project_info])
 
-    progress_vbox = gtk.VBox(False, 2)
+    progress_vbox = Gtk.VBox(False, 2)
     progress_vbox.pack_start(media_copy_row, False, False, 0)
     progress_vbox.pack_start(project_row, True, True, 0)
 
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(12, 12, 12, 12)
     alignment.add(progress_vbox)
 
     dialog.add(alignment)
     dialog.set_default_size(400, 70)
-    dialog.set_position(gtk.WIN_POS_CENTER)
+    dialog.set_position(Gtk.WindowPosition.CENTER)
     dialog.show_all()
 
     return dialog

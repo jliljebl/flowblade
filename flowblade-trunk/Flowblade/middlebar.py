@@ -22,9 +22,9 @@
 
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 
 import audiomonitoring
@@ -107,40 +107,40 @@ def _create_buttons(editor_window):
     editor_window.modes_selector = guicomponents.ToolSelector(editor_window.mode_selector_pressed, m_pixbufs, 40, 22)
 
     editor_window.zoom_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
-    editor_window.zoom_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "zoom_in.png"), updater.zoom_in)
-    editor_window.zoom_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "zoom_out.png"), updater.zoom_out)
-    editor_window.zoom_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "zoom_length.png"), updater.zoom_project_length)
+    editor_window.zoom_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "zoom_in.png"), updater.zoom_in)
+    editor_window.zoom_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "zoom_out.png"), updater.zoom_out)
+    editor_window.zoom_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "zoom_length.png"), updater.zoom_project_length)
     editor_window.zoom_buttons.widget.set_tooltip_text(_("Zoom In - Mouse Middle Scroll\n Zoom Out - Mouse Middle Scroll\n Zoom Length - Mouse Middle Click"))
 
     editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
-    editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "cut.png"), tlineaction.cut_pressed)
-    editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "splice_out.png"), tlineaction.splice_out_button_pressed)
-    editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "lift.png"), tlineaction.lift_button_pressed)
-    editor_window.edit_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "resync.png"), tlineaction.resync_button_pressed)
+    editor_window.edit_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "cut.png"), tlineaction.cut_pressed)
+    editor_window.edit_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "splice_out.png"), tlineaction.splice_out_button_pressed)
+    editor_window.edit_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "lift.png"), tlineaction.lift_button_pressed)
+    editor_window.edit_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "resync.png"), tlineaction.resync_button_pressed)
     editor_window.edit_buttons.widget.set_tooltip_text(_("Cut - X\nSplice Out - Delete\nLift\nResync Selected"))
 
     editor_window.monitor_insert_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
-    editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "overwrite_range.png"), tlineaction.range_overwrite_pressed)
-    editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "overwrite_clip.png"), tlineaction.three_point_overwrite_pressed)
-    editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "insert_clip.png"), tlineaction.insert_button_pressed)
-    editor_window.monitor_insert_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "append_clip.png"), tlineaction.append_button_pressed)
+    editor_window.monitor_insert_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "overwrite_range.png"), tlineaction.range_overwrite_pressed)
+    editor_window.monitor_insert_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "overwrite_clip.png"), tlineaction.three_point_overwrite_pressed)
+    editor_window.monitor_insert_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "insert_clip.png"), tlineaction.insert_button_pressed)
+    editor_window.monitor_insert_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "append_clip.png"), tlineaction.append_button_pressed)
     editor_window.monitor_insert_buttons.widget.set_tooltip_text(_("Overwrite Range\nOverwrite Clip - T\nInsert Clip - Y\nAppend Clip - U"))
 
     editor_window.undo_redo = glassbuttons.GlassButtonsGroup(46, 23, 2, 2, 7)
-    editor_window.undo_redo.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "undo.png"), undo.do_undo_and_repaint)
-    editor_window.undo_redo.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "redo.png"), undo.do_redo_and_repaint)
+    editor_window.undo_redo.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "undo.png"), undo.do_undo_and_repaint)
+    editor_window.undo_redo.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "redo.png"), undo.do_redo_and_repaint)
     editor_window.undo_redo.widget.set_tooltip_text(_("Undo - Ctrl + X\nRedo - Ctrl + Y"))
 
     editor_window.tools_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 14, 7)
-    editor_window.tools_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "open_mixer.png"), audiomonitoring.show_audio_monitor)
-    editor_window.tools_buttons.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "open_titler.png"), titler.show_titler)
+    editor_window.tools_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "open_mixer.png"), audiomonitoring.show_audio_monitor)
+    editor_window.tools_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "open_titler.png"), titler.show_titler)
     editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer\nTitler"))
     if editorstate.audio_monitoring_available == False:
         editor_window.tools_buttons.sensitive[0] = False
         editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer(not available)\nTitler"))
 
     editor_window.transition_button = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
-    editor_window.transition_button.add_button(gtk.gdk.pixbuf_new_from_file(IMG_PATH + "dissolve.png"), tlineaction.add_transition_pressed)
+    editor_window.transition_button.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "dissolve.png"), tlineaction.add_transition_pressed)
     editor_window.transition_button.widget.set_tooltip_text(_("Add Rendered Transition - 2 clips selected\nAdd Rendered Fade - 1 clip selected"))
 
 def fill_with_TC_LEFT_pattern(buttons_row, window):
@@ -149,24 +149,24 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     buttons_row.pack_start(w.big_TC.widget, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     buttons_row.pack_start(w.modes_selector.widget, False, True, 0)
-    buttons_row.pack_start(gtk.Label(), True, True, 0)
+    buttons_row.pack_start(Gtk.Label(), True, True, 0)
     if editorstate.SCREEN_WIDTH > 1279:
         buttons_row.pack_start(_get_tools_buttons(), False, True, 0)
-        buttons_row.pack_start(gtk.Label(), True, True, 0)
+        buttons_row.pack_start(Gtk.Label(), True, True, 0)
     buttons_row.pack_start(_get_undo_buttons_panel(), False, True, 0)
-    buttons_row.pack_start(gtk.Label(), True, True, 0)
+    buttons_row.pack_start(Gtk.Label(), True, True, 0)
     buttons_row.pack_start(_get_zoom_buttons_panel(),False, True, 0)
-    buttons_row.pack_start(gtk.Label(), True, True, 0)
+    buttons_row.pack_start(Gtk.Label(), True, True, 0)
     buttons_row.pack_start(_get_edit_buttons_panel(),False, True, 0)
-    buttons_row.pack_start(gtk.Label(), True, True, 0)
+    buttons_row.pack_start(Gtk.Label(), True, True, 0)
     buttons_row.pack_start(_get_transition_button(), False, True, 0)
-    buttons_row.pack_start(gtk.Label(), True, True, 0)
+    buttons_row.pack_start(Gtk.Label(), True, True, 0)
     buttons_row.pack_start(_get_monitor_insert_buttons(), False, True, 0)
 
 def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     global w
     w = window
-    left_panel = gtk.HBox(False, 0)    
+    left_panel = Gtk.HBox(False, 0)    
     left_panel.pack_start(_get_undo_buttons_panel(), False, True, 0)
     left_panel.pack_start(guiutils.get_pad_label(10, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     left_panel.pack_start(_get_zoom_buttons_panel(), False, True, 0)
@@ -176,15 +176,15 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
         left_panel.pack_start(guiutils.get_pad_label(50, 10), False, True, 10) # to left and right panel same size for centering
     else:
         left_panel.pack_start(guiutils.get_pad_label(60, 10), False, True, 10) # to left and right panel same size for centering
-    left_panel.pack_start(gtk.Label(), True, True, 0)
+    left_panel.pack_start(Gtk.Label(), True, True, 0)
 
-    middle_panel = gtk.HBox(False, 0) 
+    middle_panel = Gtk.HBox(False, 0) 
     middle_panel.pack_start(w.big_TC.widget, False, True, 0)
     middle_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
     middle_panel.pack_start(w.modes_selector.widget, False, True, 0)
     
-    right_panel = gtk.HBox(False, 0) 
-    right_panel.pack_start(gtk.Label(), True, True, 0)
+    right_panel = Gtk.HBox(False, 0) 
+    right_panel.pack_start(Gtk.Label(), True, True, 0)
     right_panel.pack_start(_get_edit_buttons_panel(), False, True, 0)
     right_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
     right_panel.pack_start(_get_monitor_insert_buttons(), False, True, 0)
@@ -216,7 +216,7 @@ def _get_transition_button():
     return w.transition_button.widget
 
 def _get_buttons_panel(btns_count, btn_width=BUTTON_WIDTH):
-    panel = gtk.HBox(True, 0)
+    panel = Gtk.HBox(True, 0)
     panel.set_size_request(btns_count * btn_width, BUTTON_HEIGHT)
     return panel
 
@@ -224,7 +224,7 @@ def _b(button, icon, remove_relief=False):
     button.set_image(icon)
     button.set_property("can-focus",  False)
     if remove_relief:
-        button.set_relief(gtk.RELIEF_NONE)
+        button.set_relief(Gtk.ReliefStyle.NONE)
 
 def _clear_container(cont):
     children = cont.get_children()

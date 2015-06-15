@@ -22,9 +22,9 @@
 Module handles button edit events from buttons in the middle bar.
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 import os
 from operator import itemgetter
@@ -433,7 +433,7 @@ def _add_transition_render_folder_select_callback(dialog, response_id, file_sele
         return
 
     dialog.destroy()
-    if response_id == gtk.RESPONSE_YES:
+    if response_id == Gtk.ResponseType.YES:
         if folder ==  os.path.expanduser("~"):
             dialogs.rendered_clips_no_home_folder_dialog()
         else:
@@ -442,7 +442,7 @@ def _add_transition_render_folder_select_callback(dialog, response_id, file_sele
             add_transition_pressed(True)
 
 def _add_transition_dialog_callback(dialog, response_id, selection_widgets, transition_data):
-    if response_id != gtk.RESPONSE_ACCEPT:
+    if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
         return
 
@@ -580,7 +580,7 @@ def _no_audio_tracks_mixing_info():
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
 
 def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition_data):
-    if response_id != gtk.RESPONSE_ACCEPT:
+    if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
         return
 

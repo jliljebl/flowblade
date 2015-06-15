@@ -27,9 +27,9 @@ and then create MLT objects from pickled objects when project is loaded.
 """
 
 
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 import copy
 import glob
@@ -105,10 +105,10 @@ class ProjectProfileNotFoundError(Exception):
 # -------------------------------------------------- LOAD MESSAGES
 def _show_msg(msg, delay=0.0):
     if show_messages == True:
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         load_dialog.info.set_text(msg)
         time.sleep(delay)
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
 
 # -------------------------------------------------- SAVE
 def save_project(project, file_path):

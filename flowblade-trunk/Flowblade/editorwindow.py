@@ -22,11 +22,11 @@
 Module contains main editor window object.
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
 
-import pango
+
+from gi.repository import Gtk
+
+from gi.repository import Pango
 
 import app
 import appconsts
@@ -98,7 +98,7 @@ def _b(button, icon, remove_relief=False):
     button.set_image(icon)
     button.set_property("can-focus",  False)
     if remove_relief:
-        button.set_relief(gtk.RELIEF_NONE)
+        button.set_relief(Gtk.ReliefStyle.NONE)
 
 def _toggle_image_switch(widget, icons):
     not_pressed, pressed = icons
@@ -118,19 +118,19 @@ class EditorWindow:
         global INSERTMOVE_CURSOR, OVERWRITE_CURSOR, TWOROLL_CURSOR, ONEROLL_CURSOR, \
         ONEROLL_NO_EDIT_CURSOR, TWOROLL_NO_EDIT_CURSOR, SLIDE_CURSOR, SLIDE_NO_EDIT_CURSOR, \
         MULTIMOVE_CURSOR, MULTIMOVE_NO_EDIT_CURSOR
-        INSERTMOVE_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "insertmove_cursor.png")
-        OVERWRITE_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "overwrite_cursor.png")
-        TWOROLL_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "tworoll_cursor.png")
-        ONEROLL_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "oneroll_cursor.png")
-        SLIDE_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "slide_cursor.png")
-        ONEROLL_NO_EDIT_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "oneroll_noedit_cursor.png")
-        TWOROLL_NO_EDIT_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "tworoll_noedit_cursor.png")
-        SLIDE_NO_EDIT_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "slide_noedit_cursor.png")
-        MULTIMOVE_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "multimove_cursor.png")
-        MULTIMOVE_NO_EDIT_CURSOR = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "multimove_cursor.png")
+        INSERTMOVE_CURSOR = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "insertmove_cursor.png")
+        OVERWRITE_CURSOR = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "overwrite_cursor.png")
+        TWOROLL_CURSOR = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "tworoll_cursor.png")
+        ONEROLL_CURSOR = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "oneroll_cursor.png")
+        SLIDE_CURSOR = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "slide_cursor.png")
+        ONEROLL_NO_EDIT_CURSOR = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "oneroll_noedit_cursor.png")
+        TWOROLL_NO_EDIT_CURSOR = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "tworoll_noedit_cursor.png")
+        SLIDE_NO_EDIT_CURSOR = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "slide_noedit_cursor.png")
+        MULTIMOVE_CURSOR = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "multimove_cursor.png")
+        MULTIMOVE_NO_EDIT_CURSOR = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "multimove_cursor.png")
 
         # Window
-        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.window = Gtk.Window(Gtk.WindowType.TOPLEVEL)
         self.window.set_icon_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
         self.window.set_border_width(5)
 
@@ -303,11 +303,11 @@ class EditorWindow:
         </ui>"""
         
         # Create global action group            
-        action_group = gtk.ActionGroup('WindowActions')
+        action_group = Gtk.ActionGroup('WindowActions')
         action_group.add_actions(menu_actions, user_data=None)
         
         # Create UIManager and add accelators to window
-        ui = gtk.UIManager()
+        ui = Gtk.UIManager()
         ui.insert_action_group(action_group, 0)
         ui.add_ui_from_string(menu_string)
         accel_group = ui.get_accel_group()
@@ -328,7 +328,7 @@ class EditorWindow:
             ui.get_widget('/MenuBar/ToolsMenu/AudioMix').set_sensitive(False)
 
         # Menu box
-        menu_vbox = gtk.VBox(False, 0)
+        menu_vbox = Gtk.VBox(False, 0)
         menu_vbox.pack_start(self.menubar, False, True, 0)
 
         # Media manager
@@ -346,16 +346,16 @@ class EditorWindow:
                                                         updater.set_and_display_monitor_media_file)
     
     
-        view = gtk.Viewport()
+        view = Gtk.Viewport()
         view.add(self.media_list_view.widget)
-        view.set_shadow_type(gtk.SHADOW_NONE)
+        view.set_shadow_type(Gtk.ShadowType.NONE)
     
-        self.media_scroll_window = gtk.ScrolledWindow()
+        self.media_scroll_window = Gtk.ScrolledWindow()
         self.media_scroll_window.add(view)
         #self.media_scroll_window.add_with_viewport(self.media_list_view.widget)
-        self.media_scroll_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.media_scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         self.media_scroll_window.set_size_request(guicomponents.MEDIA_OBJECT_WIDGET_WIDTH * 2 + 70, guicomponents.MEDIA_OBJECT_WIDGET_HEIGHT)
-        #self.media_scroll_window.set_shadow_type(gtk.SHADOW_NONE)
+        #self.media_scroll_window.set_shadow_type(Gtk.ShadowType.NONE)
         self.media_scroll_window.show_all()
 
         media_panel = panels.get_media_files_panel(
@@ -366,17 +366,17 @@ class EditorWindow:
                                 lambda w,e: proxyediting.create_proxy_files_pressed(),
                                 projectaction.media_filtering_select_pressed)
 
-        self.mm_paned = gtk.HPaned()
+        self.mm_paned = Gtk.HPaned()
         self.mm_paned.pack1(bins_panel, resize=True, shrink=True)
         self.mm_paned.pack2(media_panel, resize=True, shrink=False)
         
-        mm_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+        mm_panel = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
         mm_panel.set_padding(2, 2, 6, 2)
         mm_panel.add(self.mm_paned)
 
         # Effects
         self.effect_select_list_view = guicomponents.FilterListView()
-        self.effect_select_combo_box = gtk.combo_box_new_text()
+        self.effect_select_combo_box = Gtk.ComboBoxText()
         self.effect_select_list_view.treeview.connect("row-activated", clipeffectseditor.effect_select_row_double_clicked)
         dnd.connect_effects_select_tree_view(self.effect_select_list_view.treeview)
 
@@ -387,32 +387,32 @@ class EditorWindow:
         clipeffectseditor.widgets.effect_stack_view.treeview.connect("button-press-event",
                                               clipeffectseditor.filter_stack_button_press)
                                               
-        effects_editor_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+        effects_editor_panel = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
         effects_editor_panel.set_padding(0, 0, 4, 0)
         effects_editor_panel.add(clipeffectseditor.widgets.value_edit_frame)
         
-        effects_hbox = gtk.HBox()
+        effects_hbox = Gtk.HBox()
         effects_hbox.set_border_width(5)
         effects_hbox.pack_start(clip_editor_panel, False, False, 0)
         effects_hbox.pack_start(effects_editor_panel, True, True, 0)
 
-        self.effects_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+        self.effects_panel = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
         self.effects_panel.set_padding(2, 2, 2, 2)
         self.effects_panel.add(effects_hbox)
         
         # Compositors
         compositor_clip_panel = compositeeditor.get_compositor_clip_panel()
 
-        compositor_editor_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+        compositor_editor_panel = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
         compositor_editor_panel.set_padding(0, 0, 4, 0)
         compositor_editor_panel.add(compositeeditor.widgets.value_edit_frame)
 
-        compositors_hbox = gtk.HBox()
+        compositors_hbox = Gtk.HBox()
         compositors_hbox.set_border_width(5)
         compositors_hbox.pack_start(compositor_clip_panel, False, False, 0)
         compositors_hbox.pack_start(compositor_editor_panel, True, True, 0)
 
-        self.compositors_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+        self.compositors_panel = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
         self.compositors_panel.set_padding(0, 0, 0, 0)
         self.compositors_panel.add(compositors_hbox)
 
@@ -438,21 +438,21 @@ class EditorWindow:
         # 'None' here means that no possible rendering options were available
         # and creating panel failed. Inform user of this and hide render GUI 
         if render_panel_left == None:
-            render_hbox = gtk.VBox(False, 5)
-            render_hbox.pack_start(gtk.Label("Rendering disabled."), False, False, 0)
-            render_hbox.pack_start(gtk.Label("No available rendering options found."), False, False, 0)
-            render_hbox.pack_start(gtk.Label("See Help->Environment->Render Options for details."), False, False, 0)
-            render_hbox.pack_start(gtk.Label("Install codecs to make rendering available."), False, False, 0)
-            render_hbox.pack_start(gtk.Label(" "), True, True, 0)
+            render_hbox = Gtk.VBox(False, 5)
+            render_hbox.pack_start(Gtk.Label(label="Rendering disabled."), False, False, 0)
+            render_hbox.pack_start(Gtk.Label(label="No available rendering options found."), False, False, 0)
+            render_hbox.pack_start(Gtk.Label(label="See Help->Environment->Render Options for details."), False, False, 0)
+            render_hbox.pack_start(Gtk.Label(label="Install codecs to make rendering available."), False, False, 0)
+            render_hbox.pack_start(Gtk.Label(label=" "), True, True, 0)
         else: # all is good
             render_panel_right = rendergui.get_render_panel_right(render.widgets,
                                                                   lambda w,e: projectaction.do_rendering(),
                                                                   lambda w,e: projectaction.add_to_render_queue())
-            render_hbox = gtk.HBox(True, 5)
+            render_hbox = Gtk.HBox(True, 5)
             render_hbox.pack_start(render_panel_left, True, True, 0)
             render_hbox.pack_start(render_panel_right, True, True, 0)
 
-        render_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+        render_panel = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
         render_panel.set_padding(2, 6, 8, 6)
         render_panel.add(render_hbox)
 
@@ -460,10 +460,10 @@ class EditorWindow:
         media_log_events_list_view = medialog.get_media_log_list_view()   
         events_panel = medialog.get_media_log_events_panel(media_log_events_list_view)
 
-        media_log_vbox = gtk.HBox()
+        media_log_vbox = Gtk.HBox()
         media_log_vbox.pack_start(events_panel, True, True, 0)
         
-        media_log_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+        media_log_panel = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
         media_log_panel.set_padding(6, 6, 6, 6)
         media_log_panel.add(media_log_vbox)
         self.media_log_events_list_view = media_log_events_list_view
@@ -481,37 +481,37 @@ class EditorWindow:
         project_info_panel = projectinfogui.get_project_info_panel()
     
         # Project vbox and panel
-        project_vbox = gtk.HBox()
+        project_vbox = Gtk.HBox()
         project_vbox.pack_start(project_info_panel, False, True, 0)
         project_vbox.pack_start(seq_panel, True, True, 0)
         
-        project_panel = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+        project_panel = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
         project_panel.set_padding(0, 2, 6, 2)
         project_panel.add(project_vbox)
         
         # Notebook
-        self.notebook = gtk.Notebook()
+        self.notebook = Gtk.Notebook()
         self.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH, appconsts.TOP_ROW_HEIGHT)
-        self.notebook.append_page(mm_panel, gtk.Label(_("Media")))
-        self.notebook.append_page(media_log_panel, gtk.Label(_("Range Log")))
-        self.notebook.append_page(self.effects_panel, gtk.Label(_("Filters")))
-        self.notebook.append_page(self.compositors_panel, gtk.Label(_("Compositors")))
-        self.notebook.append_page(project_panel, gtk.Label(_("Project")))
-        self.notebook.append_page(render_panel, gtk.Label(_("Render")))
-        self.notebook.set_tab_pos(gtk.POS_BOTTOM)
+        self.notebook.append_page(mm_panel, Gtk.Label(label=_("Media")))
+        self.notebook.append_page(media_log_panel, Gtk.Label(label=_("Range Log")))
+        self.notebook.append_page(self.effects_panel, Gtk.Label(label=_("Filters")))
+        self.notebook.append_page(self.compositors_panel, Gtk.Label(label=_("Compositors")))
+        self.notebook.append_page(project_panel, Gtk.Label(label=_("Project")))
+        self.notebook.append_page(render_panel, Gtk.Label(label=_("Render")))
+        self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
 
         # Right notebook, used for Widescreen and Two row layouts
-        self.right_notebook = gtk.Notebook()
-        self.right_notebook.set_tab_pos(gtk.POS_BOTTOM)
+        self.right_notebook = Gtk.Notebook()
+        self.right_notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
 
         # Position bar and decorative frame  for it
         self.pos_bar = PositionBar()
-        pos_bar_frame = gtk.Frame()
+        pos_bar_frame = Gtk.Frame()
         pos_bar_frame.add(self.pos_bar.widget)
-        pos_bar_frame.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+        pos_bar_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
         
         # Positionbar vbox
-        pos_bar_vbox = gtk.VBox(False, 1)
+        pos_bar_vbox = Gtk.VBox(False, 1)
         pos_bar_vbox.pack_start(guiutils.get_pad_label(5, 2), False, True, 0)
         pos_bar_vbox.pack_start(pos_bar_frame, False, True, 0)
 
@@ -519,8 +519,8 @@ class EditorWindow:
         self._create_monitor_row_widgets()
         self.player_buttons = glassbuttons.PlayerButtons()
         self.player_buttons.widget.set_tooltip_text(_("Prev Frame - Arrow Left\nNext Frame - Arrow Right\nPlay - Space\nStop - Space\nMark In - I\nMark Out - O\nClear Marks\nTo Mark In\nTo Mark Out"))
-        self.monitor_source.modify_font(pango.FontDescription("sans bold 8"))
-        player_buttons_row = gtk.HBox(False, 0)
+        self.monitor_source.modify_font(Pango.FontDescription("sans bold 8"))
+        player_buttons_row = Gtk.HBox(False, 0)
 
         player_buttons_row.pack_start(self.player_buttons.widget, False, True, 0)
         player_buttons_row.pack_start(self.monitor_source, True, True, 0)
@@ -529,89 +529,89 @@ class EditorWindow:
         self._create_monitor_buttons()
 
         # Switch button box
-        switch_hbox = gtk.HBox(True, 1)
+        switch_hbox = Gtk.HBox(True, 1)
         switch_hbox.pack_start(self.sequence_editor_b, False, False, 0)
         switch_hbox.pack_start(self.clip_editor_b, False, False, 0)
 
         # Switch button box V, for centered buttons
-        switch_vbox = gtk.VBox(False, 1)
+        switch_vbox = Gtk.VBox(False, 1)
         switch_vbox.pack_start(guiutils.get_pad_label(5, 2), False, True, 0)
         switch_vbox.pack_start(switch_hbox, False, True, 0)
 
         # Switch / pos bar row
         self.view_mode_select = guicomponents.get_monitor_view_select_combo(lambda w, e: tlineaction.view_mode_menu_lauched(w, e))
-        sw_pos_hbox = gtk.HBox(False, 1)
+        sw_pos_hbox = Gtk.HBox(False, 1)
         sw_pos_hbox.pack_start(switch_vbox, False, True, 0)
         sw_pos_hbox.pack_start(pos_bar_vbox, True, True, 0)
         sw_pos_hbox.pack_start(self.view_mode_select.widget, False, False, 0)
 
         # Video display
-        black_box = gtk.EventBox()
-        black_box.add(gtk.Label())
-        bg_color = gtk.gdk.Color(red=0.0, green=0.0, blue=0.0)
-        black_box.modify_bg(gtk.STATE_NORMAL, bg_color)
+        black_box = Gtk.EventBox()
+        black_box.add(Gtk.Label())
+        bg_color = Gdk.Color(red=0.0, green=0.0, blue=0.0)
+        black_box.modify_bg(Gtk.StateType.NORMAL, bg_color)
         
         self.tline_display = black_box # This can be any GTK+ widget (that is not "windowless"), only its XWindow draw rect 
                                        # is used to position and scale SDL overlay that actually displays video.
         dnd.connect_video_monitor(self.tline_display)
 
         # Monitor
-        monitor_vbox = gtk.VBox(False, 1)
+        monitor_vbox = Gtk.VBox(False, 1)
         monitor_vbox.pack_start(self.tline_display, True, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
         monitor_vbox.pack_start(player_buttons_row, False, True, 0)
 
-        monitor_align = gtk.Alignment(xalign=0.0, yalign=0.0, xscale=1.0, yscale=1.0) 
+        monitor_align = Gtk.Alignment.new(xalign=0.0, yalign=0.0, xscale=1.0, yscale=1.0) 
         monitor_align.add(monitor_vbox)
         monitor_align.set_padding(3, 0, 3, 3)
 
-        monitor_frame = gtk.Frame()
+        monitor_frame = Gtk.Frame()
         monitor_frame.add(monitor_align)
-        monitor_frame.set_shadow_type(gtk.SHADOW_ETCHED_OUT)
+        monitor_frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
         monitor_frame.set_size_request(MONITOR_AREA_WIDTH, appconsts.TOP_ROW_HEIGHT)
 
         # Notebook panel
-        notebook_vbox = gtk.VBox(False, 1)
+        notebook_vbox = Gtk.VBox(False, 1)
         notebook_vbox.pack_start(self.notebook, True, True)
 
         # Top row paned
-        self.top_paned = gtk.HPaned()
+        self.top_paned = Gtk.HPaned()
         self.top_paned.pack1(notebook_vbox, resize=False, shrink=False)
         self.top_paned.pack2(monitor_frame, resize=True, shrink=False)
 
         # Top row
-        self.top_row_hbox = gtk.HBox(False, 0)
+        self.top_row_hbox = Gtk.HBox(False, 0)
         self.top_row_hbox.pack_start(self.top_paned, True, True, 0)
         self._update_top_row()
 
         # Edit buttons rows
         self.edit_buttons_row = self._get_edit_buttons_row()
-        self.edit_buttons_frame = gtk.Frame()
+        self.edit_buttons_frame = Gtk.Frame()
         self.edit_buttons_frame.add(self.edit_buttons_row)
-        self.edit_buttons_frame.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+        self.edit_buttons_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
                 
         # Timeline scale
         self.tline_scale = tlinewidgets.TimeLineFrameScale(editevent.insert_move_mode_pressed,  
                                                            updater.mouse_scroll_zoom)
 
-        self.tline_info = gtk.HBox()
-        info_contents = gtk.Label()
+        self.tline_info = Gtk.HBox()
+        info_contents = Gtk.Label()
         self.tline_info.add(info_contents)
         self.tline_info.info_contents = info_contents # this switched and saved as member of its container
-        info_h = gtk.HBox()
+        info_h = Gtk.HBox()
         info_h.pack_start(self.tline_info, False, False, 0)
-        info_h.pack_start(gtk.Label(), True, True, 0)
+        info_h.pack_start(Gtk.Label(), True, True, 0)
         info_h.set_size_request(tlinewidgets.COLUMN_WIDTH - 22 - 22,# - 22, # room for 2 menu launch buttons 
                                       tlinewidgets.SCALE_HEIGHT)
 
-        marker_pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "marker.png")
+        marker_pixbuf = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "marker.png")
         markers_launcher = guicomponents.get_markers_menu_launcher(tlineaction.marker_menu_lauch_pressed, marker_pixbuf)
 
-        tracks_launcher_pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_menu_launch.png")
+        tracks_launcher_pixbuf = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "track_menu_launch.png")
         tracks_launcher = guicomponents.PressLaunch(trackaction.all_tracks_menu_launch_pressed, tracks_launcher_pixbuf)
 
         # Timeline top row
-        tline_hbox_1 = gtk.HBox()
+        tline_hbox_1 = Gtk.HBox()
         tline_hbox_1.pack_start(info_h, False, False, 0)
         tline_hbox_1.pack_start(tracks_launcher.widget, False, False, 0)
         tline_hbox_1.pack_start(markers_launcher.widget, False, False, 0)
@@ -636,7 +636,7 @@ class EditorWindow:
                           editevent.tline_media_drop)
 
         # Timeline middle row
-        tline_hbox_2 = gtk.HBox()
+        tline_hbox_2 = Gtk.HBox()
         tline_hbox_2.pack_start(self.tline_column.widget, False, False, 0)
         tline_hbox_2.pack_start(self.tline_canvas.widget, True, True, 0)
         
@@ -648,32 +648,32 @@ class EditorWindow:
         self.tline_scroller = tlinewidgets.TimeLineScroller(updater.tline_scrolled)
         
         # Timeline bottom row
-        tline_hbox_3 = gtk.HBox()
+        tline_hbox_3 = Gtk.HBox()
         tline_hbox_3.pack_start(self.left_corner.widget, False, False, 0)
         tline_hbox_3.pack_start(self.tline_scroller, True, True, 0)
         
         # Timeline hbox 
-        tline_vbox = gtk.VBox()
+        tline_vbox = Gtk.VBox()
         tline_vbox.pack_start(tline_hbox_1, False, False, 0)
         tline_vbox.pack_start(tline_hbox_2, True, True, 0)
         tline_vbox.pack_start(tline_hbox_3, False, False, 0)
         
         # Timeline box 
-        self.tline_box = gtk.HBox()
+        self.tline_box = Gtk.HBox()
         self.tline_box.pack_start(tline_vbox, True, True, 0)
 
         # Timeline pane
-        tline_pane = gtk.VBox(False, 1)
+        tline_pane = Gtk.VBox(False, 1)
         tline_pane.pack_start(self.edit_buttons_frame, False, True, 0)
         tline_pane.pack_start(self.tline_box, True, True, 0)
 
         # VPaned top row / timeline
-        self.app_v_paned = gtk.VPaned()
+        self.app_v_paned = Gtk.VPaned()
         self.app_v_paned.pack1(self.top_row_hbox, resize=False, shrink=False)
         self.app_v_paned.pack2(tline_pane, resize=True, shrink=False)
 
         # Pane
-        pane = gtk.VBox(False, 1)
+        pane = Gtk.VBox(False, 1)
         pane.pack_start(menu_vbox, False, True, 0)
         pane.pack_start(self.app_v_paned, True, True, 0)
         
@@ -698,9 +698,9 @@ class EditorWindow:
                 print "maximize" 
             else:
                 self.window.resize(w, h)
-                self.window.set_position(gtk.WIN_POS_CENTER)
+                self.window.set_position(Gtk.WindowPosition.CENTER)
         else:
-            self.window.set_position(gtk.WIN_POS_CENTER)
+            self.window.set_position(Gtk.WindowPosition.CENTER)
 
         # Show window and all of its components
         self.window.show_all()
@@ -712,16 +712,16 @@ class EditorWindow:
 
     def _init_view_menu(self, menu_item):
         menu_item.remove_submenu()
-        menu = gtk.Menu()
+        menu = Gtk.Menu()
 
-        mb_menu_item = gtk.MenuItem(_("Middlebar Layout").encode('utf-8'))
-        mb_menu = gtk.Menu()
-        tc_left = gtk.RadioMenuItem(None, _("Timecode Left").encode('utf-8'))
+        mb_menu_item = Gtk.MenuItem(_("Middlebar Layout").encode('utf-8'))
+        mb_menu = Gtk.Menu()
+        tc_left = Gtk.RadioMenuItem(None, _("Timecode Left").encode('utf-8'))
         tc_left.set_active(True)
         tc_left.connect("activate", lambda w: middlebar._show_buttons_TC_LEFT_layout(w))
         mb_menu.append(tc_left)
 
-        tc_middle = gtk.RadioMenuItem(tc_left, _("Timecode Center").encode('utf-8'))
+        tc_middle = Gtk.RadioMenuItem(tc_left, _("Timecode Center").encode('utf-8'))
         tc_middle.connect("activate", lambda w: middlebar._show_buttons_TC_MIDDLE_layout(w))
         mb_menu.append(tc_middle)
 
@@ -733,13 +733,13 @@ class EditorWindow:
         mb_menu_item.set_submenu(mb_menu)
         menu.append(mb_menu_item)
 
-        tabs_menu_item = gtk.MenuItem(_("Tabs Position").encode('utf-8'))
-        tabs_menu =  gtk.Menu()
-        tabs_up = gtk.RadioMenuItem(None, _("Up").encode('utf-8'))
+        tabs_menu_item = Gtk.MenuItem(_("Tabs Position").encode('utf-8'))
+        tabs_menu =  Gtk.Menu()
+        tabs_up = Gtk.RadioMenuItem(None, _("Up").encode('utf-8'))
         tabs_up.connect("activate", lambda w: self._show_tabs_up(w))
         tabs_menu.append(tabs_up)
         
-        tabs_down = gtk.RadioMenuItem(tabs_up, _("Down").encode('utf-8'))
+        tabs_down = Gtk.RadioMenuItem(tabs_up, _("Down").encode('utf-8'))
         tabs_down.connect("activate", lambda w: self._show_tabs_down(w))
 
         if editorpersistance.prefs.tabs_on_top == True:
@@ -751,56 +751,56 @@ class EditorWindow:
         tabs_menu_item.set_submenu(tabs_menu)
         menu.append(tabs_menu_item)
 
-        sep = gtk.SeparatorMenuItem()
+        sep = Gtk.SeparatorMenuItem()
         menu.append(sep)
 
-        show_monitor_info_item = gtk.CheckMenuItem(_("Show Monitor Sequence Profile").encode('utf-8'))
+        show_monitor_info_item = Gtk.CheckMenuItem(_("Show Monitor Sequence Profile").encode('utf-8'))
         show_monitor_info_item.set_active(editorpersistance.prefs.show_sequence_profile)
         show_monitor_info_item.connect("toggled", lambda w: middlebar._show_monitor_info_toggled(w))
         menu.append(show_monitor_info_item)
 
-        show_vu_item = gtk.CheckMenuItem(_("Show Master Volume Meter").encode('utf-8'))
+        show_vu_item = Gtk.CheckMenuItem(_("Show Master Volume Meter").encode('utf-8'))
         show_vu_item.set_active(editorpersistance.prefs.show_vu_meter)
         show_vu_item.connect("toggled", lambda w: self._show_vu_meter(w))
         menu.append(show_vu_item)
 
-        sep = gtk.SeparatorMenuItem()
+        sep = Gtk.SeparatorMenuItem()
         menu.append(sep)
 
-        interp_menu_item = gtk.MenuItem(_("Monitor Playback Interpolation").encode('utf-8'))
-        interp_menu = gtk.Menu()
+        interp_menu_item = Gtk.MenuItem(_("Monitor Playback Interpolation").encode('utf-8'))
+        interp_menu = Gtk.Menu()
         
-        interp_nearest = gtk.RadioMenuItem(None, _("Nearest Neighbour").encode('utf-8'))
+        interp_nearest = Gtk.RadioMenuItem(None, _("Nearest Neighbour").encode('utf-8'))
         interp_nearest.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("nearest"))
         interp_menu.append(interp_nearest)
         
-        interp_bilinear = gtk.RadioMenuItem(interp_nearest, _("Bilinear").encode('utf-8'))
+        interp_bilinear = Gtk.RadioMenuItem(interp_nearest, _("Bilinear").encode('utf-8'))
         interp_bilinear.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("bilinear"))
         interp_menu.append(interp_bilinear)
 
-        interp_bicubic = gtk.RadioMenuItem(interp_nearest, _("Bicubic").encode('utf-8'))
+        interp_bicubic = Gtk.RadioMenuItem(interp_nearest, _("Bicubic").encode('utf-8'))
         interp_bicubic.set_active(True)
         interp_bicubic.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("bicubic"))
 
         interp_menu.append(interp_bicubic)
 
-        interp_hyper = gtk.RadioMenuItem(interp_nearest, _("Hyper/Lanczos").encode('utf-8'))
+        interp_hyper = Gtk.RadioMenuItem(interp_nearest, _("Hyper/Lanczos").encode('utf-8'))
         interp_hyper.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("hyper"))
         interp_menu.append(interp_hyper)
 
         interp_menu_item.set_submenu(interp_menu)
         menu.append(interp_menu_item)
         
-        sep = gtk.SeparatorMenuItem()
+        sep = Gtk.SeparatorMenuItem()
         menu.append(sep)        
         
-        zoom_in_menu_item = gtk.MenuItem(_("Zoom In").encode('utf-8'))
+        zoom_in_menu_item = Gtk.MenuItem(_("Zoom In").encode('utf-8'))
         zoom_in_menu_item.connect("activate", lambda w: updater.zoom_in())
         menu.append(zoom_in_menu_item)
-        zoom_out_menu_item = gtk.MenuItem(_("Zoom Out").encode('utf-8'))
+        zoom_out_menu_item = Gtk.MenuItem(_("Zoom Out").encode('utf-8'))
         zoom_out_menu_item.connect("activate", lambda w: updater.zoom_out())
         menu.append(zoom_out_menu_item)
-        zoom_fit_menu_item = gtk.MenuItem(_("Zoom Fit").encode('utf-8'))
+        zoom_fit_menu_item = Gtk.MenuItem(_("Zoom Fit").encode('utf-8'))
         zoom_fit_menu_item.connect("activate", lambda w: updater.zoom_project_length())
         menu.append(zoom_fit_menu_item)
         
@@ -808,23 +808,23 @@ class EditorWindow:
                 
     def _init_gui_to_prefs(self):
         if editorpersistance.prefs.tabs_on_top == True:
-            self.notebook.set_tab_pos(gtk.POS_TOP)
-            self.right_notebook.set_tab_pos(gtk.POS_TOP)
+            self.notebook.set_tab_pos(Gtk.PositionType.TOP)
+            self.right_notebook.set_tab_pos(Gtk.PositionType.TOP)
         else:
-            self.notebook.set_tab_pos(gtk.POS_BOTTOM)
-            self.right_notebook.set_tab_pos(gtk.POS_BOTTOM)
+            self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
+            self.right_notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
 
     def _show_tabs_up(self, widget):
         if widget.get_active() == False:
             return
-        self.notebook.set_tab_pos(gtk.POS_TOP)
+        self.notebook.set_tab_pos(Gtk.PositionType.TOP)
         editorpersistance.prefs.tabs_on_top = True
         editorpersistance.save()
 
     def _show_tabs_down(self, widget):
         if widget.get_active() == False:
             return
-        self.notebook.set_tab_pos(gtk.POS_BOTTOM)
+        self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
         editorpersistance.prefs.tabs_on_top = False
         editorpersistance.save()
 
@@ -849,17 +849,17 @@ class EditorWindow:
         
     def _create_monitor_buttons(self):
         # Monitor switch buttons
-        self.sequence_editor_b = gtk.RadioButton(None) #, _("Timeline"))
+        self.sequence_editor_b = Gtk.RadioButton(None) #, _("Timeline"))
         self.sequence_editor_b.set_mode(False)
-        self.sequence_editor_b.set_image(gtk.image_new_from_file(IMG_PATH + "timeline_button.png"))
+        self.sequence_editor_b.set_image(Gtk.image_new_from_file(IMG_PATH + "timeline_button.png"))
         self.sequence_editor_b.connect("clicked", 
                         lambda w,e: self._monitor_switch_handler(w), 
                         None)
         self.sequence_editor_b.set_size_request(100, 25)
 
-        self.clip_editor_b = gtk.RadioButton(self.sequence_editor_b)#,_("Clip"))
+        self.clip_editor_b = Gtk.RadioButton(self.sequence_editor_b)#,_("Clip"))
         self.clip_editor_b.set_mode(False)
-        self.clip_editor_b.set_image(gtk.image_new_from_file(IMG_PATH + "clip_button.png"))
+        self.clip_editor_b.set_image(Gtk.image_new_from_file(IMG_PATH + "clip_button.png"))
         self.clip_editor_b.connect("clicked",
                         lambda w,e: self._monitor_switch_handler(w),
                         None)
@@ -897,7 +897,7 @@ class EditorWindow:
         modes_pixbufs = [INSERTMOVE_CURSOR, OVERWRITE_CURSOR, ONEROLL_CURSOR, TWOROLL_CURSOR, SLIDE_CURSOR, MULTIMOVE_CURSOR]
         middlebar.create_edit_buttons_row_buttons(self, modes_pixbufs)
     
-        buttons_row = gtk.HBox(False, 1)
+        buttons_row = Gtk.HBox(False, 1)
         if editorpersistance.prefs.midbar_tc_left == True:
             middlebar.fill_with_TC_LEFT_pattern(buttons_row, self)
         else:
@@ -967,34 +967,34 @@ class EditorWindow:
             self.set_tline_cursor(editorstate.EDIT_MODE())
         else:
             gdk_window = gui.tline_display.get_parent_window();
-            gdk_window.set_cursor(gtk.gdk.Cursor(gtk.gdk.LEFT_PTR))
+            gdk_window.set_cursor(Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR))
 
     def set_tline_cursor(self, mode):
-        display = gtk.gdk.display_get_default()
+        display = Gdk.Display.get_default()
         gdk_window = gui.tline_display.get_parent_window()
 
         if mode == editorstate.INSERT_MOVE:
-            cursor = gtk.gdk.Cursor(display, INSERTMOVE_CURSOR, 0, 0)
+            cursor = Gdk.Cursor.new(display, INSERTMOVE_CURSOR, 0, 0)
         elif mode == editorstate.OVERWRITE_MOVE:
-            cursor = gtk.gdk.Cursor(display, OVERWRITE_CURSOR, 6, 15)
+            cursor = Gdk.Cursor.new(display, OVERWRITE_CURSOR, 6, 15)
         elif mode == editorstate.TWO_ROLL_TRIM:
-            cursor = gtk.gdk.Cursor(display, TWOROLL_CURSOR, 11, 9)
+            cursor = Gdk.Cursor.new(display, TWOROLL_CURSOR, 11, 9)
         elif mode == editorstate.TWO_ROLL_TRIM_NO_EDIT:
-            cursor = gtk.gdk.Cursor(display, TWOROLL_NO_EDIT_CURSOR, 11, 9)
+            cursor = Gdk.Cursor.new(display, TWOROLL_NO_EDIT_CURSOR, 11, 9)
         elif mode == editorstate.ONE_ROLL_TRIM:
-            cursor = gtk.gdk.Cursor(display, ONEROLL_CURSOR, 9, 9)
+            cursor = Gdk.Cursor.new(display, ONEROLL_CURSOR, 9, 9)
         elif mode == editorstate.ONE_ROLL_TRIM_NO_EDIT:
-            cursor = gtk.gdk.Cursor(display, ONEROLL_NO_EDIT_CURSOR, 9, 9)
+            cursor = Gdk.Cursor.new(display, ONEROLL_NO_EDIT_CURSOR, 9, 9)
         elif mode == editorstate.SLIDE_TRIM:
-            cursor = gtk.gdk.Cursor(display, SLIDE_CURSOR, 9, 9)
+            cursor = Gdk.Cursor.new(display, SLIDE_CURSOR, 9, 9)
         elif mode == editorstate.SLIDE_TRIM_NO_EDIT:
-            cursor = gtk.gdk.Cursor(display, SLIDE_NO_EDIT_CURSOR, 9, 9)
+            cursor = Gdk.Cursor.new(display, SLIDE_NO_EDIT_CURSOR, 9, 9)
         elif mode == editorstate.SELECT_PARENT_CLIP:
-            cursor =  gtk.gdk.Cursor(gtk.gdk.TCROSS)
+            cursor =  Gdk.Cursor.new(Gdk.TCROSS)
         elif mode == editorstate.MULTI_MOVE:
-            cursor = gtk.gdk.Cursor(display, MULTIMOVE_CURSOR, 4, 8)
+            cursor = Gdk.Cursor.new(display, MULTIMOVE_CURSOR, 4, 8)
         else:
-            cursor = gtk.gdk.Cursor(gtk.gdk.LEFT_PTR)
+            cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR)
         
         gdk_window.set_cursor(cursor)  
             
@@ -1021,7 +1021,7 @@ class EditorWindow:
     def tline_cursor_leave(self, event):
         editorstate.cursor_on_tline = False
         self.set_cursor_to_mode()
-        if event.state & gtk.gdk.BUTTON1_MASK:
+        if event.get_state() & Gdk.ModifierType.BUTTON1_MASK:
             if editorstate.current_is_move_mode():
                 tlineaction.mouse_dragged_out(event)
 
@@ -1036,8 +1036,8 @@ class EditorWindow:
 
     def _create_monitor_row_widgets(self):
         self.tc = guicomponents.MonitorTCDisplay()
-        self.monitor_source = gtk.Label("sequence1")
-        self.monitor_source.set_ellipsize(pango.ELLIPSIZE_END)
+        self.monitor_source = Gtk.Label(label="sequence1")
+        self.monitor_source.set_ellipsize(Pango.EllipsizeMode.END)
 
 
 

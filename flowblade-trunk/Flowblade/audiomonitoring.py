@@ -21,14 +21,14 @@
 Module handles initializing and displaying audiomonitor tool.
 """
 import cairo
-import pygtk
-pygtk.require('2.0');
-import gtk
-import glib
+
+
+from gi.repository import Gtk
+from gi.repository import GLib
 
 import mlt
-import pango
-import pangocairo
+from gi.repository import Pango
+from gi.repository import PangoCairo
 import time
 
 import appconsts
@@ -173,13 +173,13 @@ def get_master_meter():
     if _update_ticker.running == False:
         _update_ticker.start_ticker()
 
-    align = gtk.Alignment(xalign=0.5, yalign=0.5, xscale=1.0, yscale=1.0) 
+    align = Gtk.Alignment.new(xalign=0.5, yalign=0.5, xscale=1.0, yscale=1.0) 
     align.add(_master_volume_meter.widget)
     align.set_padding(3, 3, 3, 3)
 
-    frame = gtk.Frame()
+    frame = Gtk.Frame()
     frame.add(align)
-    frame.set_shadow_type(gtk.SHADOW_ETCHED_OUT)
+    frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
 
     return frame
 
@@ -274,7 +274,7 @@ def _audio_monitor_update():
     if _monitor_window == None and _master_volume_meter == None:
         return
 
-    gtk.gdk.threads_enter()
+    Gdk.threads_enter()
 
     global _audio_levels
     _audio_levels = []
@@ -290,7 +290,7 @@ def _audio_monitor_update():
     if _master_volume_meter != None:
         _master_volume_meter.canvas.queue_draw()
 
-    gtk.gdk.threads_leave()
+    Gdk.threads_leave()
 
 def _get_channel_value(audio_level_filter, channel_property):
     level_value = audio_level_filter.get(channel_property)
@@ -305,9 +305,9 @@ def _get_channel_value(audio_level_filter, channel_property):
     return level_float
 
 
-class AudioMonitorWindow(gtk.Window):
+class AudioMonitorWindow(Gtk.Window):
     def __init__(self):
-        gtk.Window.__init__(self)
+        GObject.GObject.__init__(self)
         self.connect("delete-event", lambda w, e:close_audio_monitor())
         
         seq = editorstate.current_sequence()
@@ -315,7 +315,7 @@ class AudioMonitorWindow(gtk.Window):
         self.gain_controls = []
         
         self.meters_area = MetersArea(meters_count)
-        gain_control_area = gtk.HBox(False, 0)
+        gain_control_area = Gtk.HBox(False, 0)
         seq = editorstate.current_sequence()
         for i in range(0, meters_count):
             if i == 0:
@@ -326,23 +326,23 @@ class AudioMonitorWindow(gtk.Window):
                 gain = GainControl(name, seq, seq.tracks[i])
             if i == 0:
                 tmp = gain
-                gain = gtk.EventBox()
+                gain = Gtk.EventBox()
                 gain.add(tmp)
-                bg_color = gtk.gdk.Color(red=0.8, green=0.8, blue=0.8)
+                bg_color = Gdk.Color(red=0.8, green=0.8, blue=0.8)
                 if editorpersistance.prefs.dark_theme == True:
-                    bg_color = gtk.gdk.Color(red=0.4, green=0.4, blue=0.4)
-                gain.modify_bg(gtk.STATE_NORMAL, bg_color)
+                    bg_color = Gdk.Color(red=0.4, green=0.4, blue=0.4)
+                gain.modify_bg(Gtk.StateType.NORMAL, bg_color)
             self.gain_controls.append(gain)
             gain_control_area.pack_start(gain, False, False, 0)
 
-        meters_frame = gtk.Frame()
+        meters_frame = Gtk.Frame()
         meters_frame.add(self.meters_area.widget)
 
-        pane = gtk.VBox(False, 1)
+        pane = Gtk.VBox(False, 1)
         pane.pack_start(meters_frame, True, True, 0)
         pane.pack_start(gain_control_area, True, True, 0)
 
-        align = gtk.Alignment()
+        align = Gtk.Alignment.new()
         align.set_padding(12, 12, 4, 4)
         align.add(pane)
 
@@ -497,7 +497,7 @@ class ChannelMeter:
         pango_context = pangocairo.CairoContext(cr)
         layout = pango_context.create_layout()
         layout.set_text(text)
-        desc = pango.FontDescription(font_desc)
+        desc = Pango.FontDescription(font_desc)
         layout.set_font_description(desc)
 
         pango_context.set_source_rgb(*color)
@@ -506,9 +506,9 @@ class ChannelMeter:
         pango_context.show_layout(layout)
         
 
-class GainControl(gtk.Frame):
+class GainControl(Gtk.Frame):
     def __init__(self, name, seq, producer, is_master=False):
-        gtk.Frame.__init__(self)
+        GObject.GObject.__init__(self)
         
         self.seq = seq
         self.producer = producer
@@ -520,8 +520,8 @@ class GainControl(gtk.Frame):
             gain_value = producer.audio_gain # track
         gain_value = gain_value * 100
         
-        self.adjustment = gtk.Adjustment(value=gain_value, lower=0, upper=100, step_incr=1)
-        self.slider = gtk.VScale()
+        self.adjustment = Gtk.Adjustment(value=gain_value, lower=0, upper=100, step_incr=1)
+        self.slider = Gtk.VScale()
         self.slider.set_adjustment(self.adjustment)
         self.slider.set_size_request(SLOT_W - 10, CONTROL_SLOT_H - 105)
         self.slider.set_inverted(True)
@@ -535,12 +535,12 @@ class GainControl(gtk.Frame):
             pan_value = 0.5 # center
         pan_value = (pan_value - 0.5) * 200 # from range 0 - 1 to range -100 - 100
 
-        self.pan_adjustment = gtk.Adjustment(value=pan_value, lower=-100, upper=100, step_incr=1)
-        self.pan_slider = gtk.HScale()
+        self.pan_adjustment = Gtk.Adjustment(value=pan_value, lower=-100, upper=100, step_incr=1)
+        self.pan_slider = Gtk.HScale()
         self.pan_slider.set_adjustment(self.pan_adjustment)
         self.pan_slider.connect("value-changed", self.pan_changed)
 
-        self.pan_button = gtk.ToggleButton(_("Pan"))
+        self.pan_button = Gtk.ToggleButton(_("Pan"))
         self.pan_button.connect("toggled", self.pan_active_toggled)
         
         if pan_value == 0.0:
@@ -551,7 +551,7 @@ class GainControl(gtk.Frame):
 
         label = guiutils.bold_label(name)
 
-        vbox = gtk.VBox(False, 0)
+        vbox = Gtk.VBox(False, 0)
         vbox.pack_start(guiutils.get_pad_label(5,5), False, False, 0)
         vbox.pack_start(label, False, False, 0)
         vbox.pack_start(guiutils.get_pad_label(5,5), False, False, 0)
@@ -610,7 +610,7 @@ class MasterVolumeMeter:
                                         h, 
                                         self._draw)
 
-        self.widget = gtk.VBox(False, 0)
+        self.widget = Gtk.VBox(False, 0)
         self.widget.pack_start(self.canvas, False, False, 0)
 
     def _draw(self, event, cr, allocation):

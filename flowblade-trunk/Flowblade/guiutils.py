@@ -21,9 +21,9 @@
 """
 Module contains utility methods for creating GUI objects.
 """
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 import time
 import threading
@@ -35,7 +35,7 @@ import translations
 TWO_COLUMN_BOX_HEIGHT = 20
 
 def bold_label(str):
-    label = gtk.Label(bold_text(str))
+    label = Gtk.Label(label=bold_text(str))
     label.set_use_markup(True)
     return label
 
@@ -43,54 +43,54 @@ def bold_text(str):
     return "<b>" + str + "</b>"
 
 def get_left_justified_box(widgets):
-    hbox = gtk.HBox()
+    hbox = Gtk.HBox()
     for widget in widgets:
         hbox.pack_start(widget, False, False, 0)
-    hbox.pack_start(gtk.Label(), True, True, 0)
+    hbox.pack_start(Gtk.Label(), True, True, 0)
     return hbox
 
 def get_right_justified_box(widgets):
-    hbox = gtk.HBox()
-    hbox.pack_start(gtk.Label(), True, True, 0)
+    hbox = Gtk.HBox()
+    hbox.pack_start(Gtk.Label(), True, True, 0)
     for widget in widgets:
         hbox.pack_start(widget, False, False, 0)
     return hbox
 
 def get_sides_justified_box(widgets, count_of_widgets_on_the_left=1):
-    hbox = gtk.HBox()
+    hbox = Gtk.HBox()
     wgets_added = 0
     for widget in widgets:
         hbox.pack_start(widget, False, False, 0)
         wgets_added +=1
         if wgets_added == count_of_widgets_on_the_left:
-            hbox.pack_start(gtk.Label(), True, True, 0)
+            hbox.pack_start(Gtk.Label(), True, True, 0)
     return hbox
 
 def get_centered_box(widgets):
-    hbox = gtk.HBox()
-    hbox.pack_start(gtk.Label(), True, True, 0)
+    hbox = Gtk.HBox()
+    hbox.pack_start(Gtk.Label(), True, True, 0)
     for widget in widgets:
         hbox.pack_start(widget, False, False, 0)
-    hbox.pack_start(gtk.Label(), True, True, 0)
+    hbox.pack_start(Gtk.Label(), True, True, 0)
     return hbox
 
 def get_vbox(widgets, add_pad_label=True, padding=2):
-    vbox = gtk.VBox(False, padding)
+    vbox = Gtk.VBox(False, padding)
     for widget in widgets:
         vbox.pack_start(widget, False, False, 0)
     if add_pad_label:
-        vbox.pack_start(gtk.Label(), True, True, 0)
+        vbox.pack_start(Gtk.Label(), True, True, 0)
     return vbox
 
 def get_single_column_box(widgets):
-    vbox = gtk.VBox()
+    vbox = Gtk.VBox()
     for widget in widgets:
         vbox.pack_start(get_left_justified_box([widget]), False, False, 0)
-    vbox.pack_start(gtk.Label(), True, True, 0)
+    vbox.pack_start(Gtk.Label(), True, True, 0)
     return vbox
     
 def get_two_column_box(widget1, widget2, left_width):
-    hbox = gtk.HBox()
+    hbox = Gtk.HBox()
     left_box = get_left_justified_box([widget1])
     left_box.set_size_request(left_width, TWO_COLUMN_BOX_HEIGHT)
     hbox.pack_start(left_box, False, True, 0)
@@ -103,41 +103,41 @@ def get_two_column_box_right_pad(widget1, widget2, left_width, right_pad):
     
     right_widget_box = get_left_justified_box([widget2])
     pad_label = get_pad_label(right_pad, 5)
-    right_box = gtk.HBox()
+    right_box = Gtk.HBox()
     right_box.pack_start(right_widget_box, True, True, 0)
     right_box.pack_start(pad_label, False, False, 0)
     
-    hbox = gtk.HBox()
+    hbox = Gtk.HBox()
     hbox.pack_start(left_box, False, True, 0)
     hbox.pack_start(right_box, True, True, 0)
     return hbox
 
 def get_checkbox_row_box(checkbox, widget2):
-    hbox = gtk.HBox()
+    hbox = Gtk.HBox()
     hbox.pack_start(checkbox, False, False, 0)
     hbox.pack_start(widget2, False, False, 0)
-    hbox.pack_start(gtk.Label(), True, True, 0)
+    hbox.pack_start(Gtk.Label(), True, True, 0)
     return hbox
     
 def get_two_row_box(widget1, widget2):
     # widget 1 is left justified
     top = get_left_justified_box([widget1])
-    box = gtk.VBox(False, 2)
+    box = Gtk.VBox(False, 2)
     box.pack_start(top, False, False, 4)
     box.pack_start(widget2, False, False, 0)
     return box
     
 def get_image_button(img_file_name, width, height):
-    button = gtk.Button()
-    icon = gtk.image_new_from_file(respaths.IMAGE_PATH + img_file_name)        
-    button_box = gtk.HBox()
+    button = Gtk.Button()
+    icon = Gtk.image_new_from_file(respaths.IMAGE_PATH + img_file_name)        
+    button_box = Gtk.HBox()
     button_box.pack_start(icon, False, False, 0)
     button.add(button_box)
     button.set_size_request(width, height)
     return button
     
 def get_pad_label(w, h):
-    label = gtk.Label()
+    label = Gtk.Label()
     label.set_size_request(w, h)
     return label
 
@@ -152,15 +152,15 @@ def get_slider_row(editable_property, listener, slider_name=None):
     editable_property.value_changed_ID = adjustment.connect("value-changed", listener) # patching in to make available for disconnect
     editable_property.adjustment = adjustment # patching in to make available for disconnect
 
-    hslider = gtk.HScale()
+    hslider = Gtk.HScale()
     hslider.set_adjustment(adjustment)
     hslider.set_draw_value(False)
     
-    spin = gtk.SpinButton()
+    spin = Gtk.SpinButton()
     spin.set_numeric(True)
     spin.set_adjustment(adjustment)
 
-    hbox = gtk.HBox(False, 4)
+    hbox = Gtk.HBox(False, 4)
     hbox.pack_start(hslider, True, True, 0)
     hbox.pack_start(spin, False, False, 4)
     
@@ -172,7 +172,7 @@ def get_slider_row(editable_property, listener, slider_name=None):
     return (get_two_column_editor_row(name, hbox), hslider)
 
 def get_non_property_slider_row(lower, upper, step, value=0, listener=None):
-    hslider = gtk.HScale()
+    hslider = Gtk.HScale()
     hslider.set_draw_value(False)
 
     adjustment = hslider.get_adjustment()
@@ -184,25 +184,25 @@ def get_non_property_slider_row(lower, upper, step, value=0, listener=None):
     if listener != None:
         adjustment.connect("value-changed", listener) # patching in to make available for disconnect
     
-    spin = gtk.SpinButton()
+    spin = Gtk.SpinButton()
     spin.set_numeric(True)
     spin.set_adjustment(adjustment)
 
-    hbox = gtk.HBox(False, 4)
+    hbox = Gtk.HBox(False, 4)
     hbox.pack_start(hslider, True, True, 0)
     hbox.pack_start(spin, False, False, 4)
 
     return (hbox, hslider)
     
 def get_two_column_editor_row(name, editor_widget):
-    label = gtk.Label(name + ":")
+    label = Gtk.Label(label=name + ":")
 
-    label_box = gtk.HBox()
+    label_box = Gtk.HBox()
     label_box.pack_start(label, False, False, 0)
-    label_box.pack_start(gtk.Label(), True, True, 0)
+    label_box.pack_start(Gtk.Label(), True, True, 0)
     label_box.set_size_request(appconsts.PROPERTY_NAME_WIDTH, appconsts.PROPERTY_ROW_HEIGHT)
     
-    hbox = gtk.HBox(False, 2)
+    hbox = Gtk.HBox(False, 2)
     hbox.pack_start(label_box, False, False, 4)
     hbox.pack_start(editor_widget, True, True, 0)
     return hbox
@@ -211,7 +211,7 @@ def get_no_pad_named_frame(name, panel):
     return get_named_frame(name, panel, 0, 0, 0)
 
 def get_named_frame_with_vbox(name, widgets, left_padding=12, right_padding=6, right_out_padding=4):
-    vbox = gtk.VBox()
+    vbox = Gtk.VBox()
     for widget in widgets:
         vbox.pack_start(widget, False, False, 0)
 
@@ -223,79 +223,79 @@ def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_pa
     """
     if name != None:
         label = bold_label(name)
-        label.set_justify(gtk.JUSTIFY_LEFT)
+        label.set_justify(Gtk.Justification.LEFT)
         
-        label_box = gtk.HBox()
+        label_box = Gtk.HBox()
         label_box.pack_start(label, False, False, 0)
-        label_box.pack_start(gtk.Label(), True, True, 0)
+        label_box.pack_start(Gtk.Label(), True, True, 0)
 
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(right_padding, 0, left_padding, 0)
     alignment.add(widget)
     
-    frame = gtk.VBox()
+    frame = Gtk.VBox()
     if name != None:
         frame.pack_start(label_box, False, False, 0)
     frame.pack_start(alignment, True, True, 0)
     
-    out_align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    out_align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
     out_align.set_padding(4, 4, 0, right_out_padding)
     out_align.add(frame)
     
     return out_align
 
 def get_in_centering_alignment(widget, xsc=0.0, ysc=0.0):
-    align = gtk.Alignment(xalign=0.5, yalign=0.5, xscale=xsc, yscale=ysc)
+    align = Gtk.Alignment.new(xalign=0.5, yalign=0.5, xscale=xsc, yscale=ysc)
     align.add(widget)
     return align
 
 def pad_label(w, h):
-    pad_label = gtk.Label()
+    pad_label = Gtk.Label()
     pad_label.set_size_request(w, h)
     return pad_label
 
 def get_sized_button(lable, w, h, clicked_listener=None):
-    b = gtk.Button(lable)
+    b = Gtk.Button(lable)
     if clicked_listener != None:
         b.connect("clicked", lambda w,e: clicked_listener())
     b.set_size_request(w, h)
     return b  
 
 def get_render_button():
-    render_button = gtk.Button()
-    render_icon = gtk.image_new_from_stock(gtk.STOCK_MEDIA_RECORD, 
-                                           gtk.ICON_SIZE_BUTTON)
-    render_button_box = gtk.HBox()
+    render_button = Gtk.Button()
+    render_icon = Gtk.Image.new_from_stock(Gtk.STOCK_MEDIA_RECORD, 
+                                           Gtk.IconSize.BUTTON)
+    render_button_box = Gtk.HBox()
     render_button_box.pack_start(get_pad_label(10, 10), False, False, 0)
     render_button_box.pack_start(render_icon, False, False, 0)
     render_button_box.pack_start(get_pad_label(5, 10), False, False, 0)
-    render_button_box.pack_start(gtk.Label(_("Render")), False, False, 0)
+    render_button_box.pack_start(Gtk.Label(label=_("Render")), False, False, 0)
     render_button_box.pack_start(get_pad_label(10, 10), False, False, 0)
     render_button.add(render_button_box)
     return render_button
 
 def get_menu_item(text, callback, data, sensitive=True):
-    item = gtk.MenuItem(text)
+    item = Gtk.MenuItem(text)
     item.connect("activate", callback, data)
     item.show()
     item.set_sensitive(sensitive)
     return item
 
 def add_separetor(menu):
-    sep = gtk.SeparatorMenuItem()
+    sep = Gtk.SeparatorMenuItem()
     sep.show()
     menu.add(sep)
 
 def get_gtk_image_from_file(source_path, image_height):
-    img = gtk.Image()
+    img = Gtk.Image()
     p_map = get_pixmap_from_file(source_path, image_height)
     img.set_from_pixmap(p_map, None)
     return img
 
 def get_pixmap_from_file(source_path, image_height):
-    pixbuf = gtk.gdk.pixbuf_new_from_file(source_path)
+    pixbuf = GdkPixbuf.Pixbuf.new_from_file(source_path)
     icon_width = int((float(pixbuf.get_width()) / float(pixbuf.get_height())) * image_height)
-    s_pbuf = pixbuf.scale_simple(icon_width, image_height, gtk.gdk.INTERP_BILINEAR)
+    s_pbuf = pixbuf.scale_simple(icon_width, image_height, GdkPixbuf.InterpType.BILINEAR)
     p_map, mask = s_pbuf.render_pixmap_and_mask()
     return p_map
 
@@ -308,8 +308,8 @@ class PulseThread(threading.Thread):
         self.exited = False
         self.running = True
         while self.running:
-            gtk.gdk.threads_enter()
+            Gdk.threads_enter()
             self.proress_bar.pulse()
-            gtk.gdk.threads_leave()
+            Gdk.threads_leave()
             time.sleep(0.1)
         self.exited = True

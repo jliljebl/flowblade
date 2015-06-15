@@ -21,9 +21,9 @@
 """
 Module creates GUI editors for editable mlt properties.
 """
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 
 import appconsts
@@ -41,19 +41,19 @@ import utils
 EDITOR = "editor"
 
 # editor types                                              editor component
-SLIDER = "slider"                                           # gtk.HScale                              
-BOOLEAN_CHECK_BOX = "booleancheckbox"                       # gtk.CheckButton
-COMBO_BOX = "combobox"                                      # gtk.Combobox
+SLIDER = "slider"                                           # Gtk.HScale                              
+BOOLEAN_CHECK_BOX = "booleancheckbox"                       # Gtk.CheckButton
+COMBO_BOX = "combobox"                                      # Gtk.Combobox
 KEYFRAME_EDITOR = "keyframe_editor"                         # keyfremeeditor.KeyFrameEditor that has all the key frames relative to MEDIA start
 KEYFRAME_EDITOR_CLIP = "keyframe_editor_clip"               # keyfremeeditor.KeyFrameEditor that has all the key frames relative to CLIP start
 KEYFRAME_EDITOR_RELEASE = "keyframe_editor_release"         # HACK, HACK. used to prevent property update crashes in slider keyfremeeditor.KeyFrameEditor
-COLOR_SELECT = "color_select"                               # gtk.ColorButton
+COLOR_SELECT = "color_select"                               # Gtk.ColorButton
 GEOMETRY_EDITOR = "geometry_editor"                         # keyfremeeditor.GeometryEditor
-WIPE_SELECT = "wipe_select"                                 # gtk.Combobox with options from mlttransitions.wipe_lumas
+WIPE_SELECT = "wipe_select"                                 # Gtk.Combobox with options from mlttransitions.wipe_lumas
 COMBO_BOX_OPTIONS = "cbopts"                                # List of options for combo box editor displayed to user
-LADSPA_SLIDER = "ladspa_slider"                             # gtk.HScale, does ladspa update for release changes(disconnect, reconnect)
-CLIP_FRAME_SLIDER = "clip_frame_slider"                     # gtk.HScale, range 0 - clip length in frames
-AFFINE_GEOM_4_SLIDER = "affine_filt_geom_slider"            # 4 rows of gtk.HScales to set the position and size
+LADSPA_SLIDER = "ladspa_slider"                             # Gtk.HScale, does ladspa update for release changes(disconnect, reconnect)
+CLIP_FRAME_SLIDER = "clip_frame_slider"                     # Gtk.HScale, range 0 - clip length in frames
+AFFINE_GEOM_4_SLIDER = "affine_filt_geom_slider"            # 4 rows of Gtk.HScales to set the position and size
 COLOR_CORRECTOR = "color_corrector"                         # 3 band color corrector color circle and Lift Gain Gamma sliders
 CR_CURVES = "crcurves"                                      # Curves color editor with Catmull-Rom curve
 COLOR_BOX = "colorbox"                                      # One band color editor with color box interface
@@ -121,14 +121,14 @@ def get_filter_extra_editor_rows(filt, editable_properties):
 # ------------------------------------------------- gui builders
 def _get_two_column_editor_row(name, editor_widget):
     name = _p(name)
-    label = gtk.Label(name + ":")
+    label = Gtk.Label(label=name + ":")
 
-    label_box = gtk.HBox()
+    label_box = Gtk.HBox()
     label_box.pack_start(label, False, False, 0)
-    label_box.pack_start(gtk.Label(), True, True, 0)
+    label_box.pack_start(Gtk.Label(), True, True, 0)
     label_box.set_size_request(appconsts.PROPERTY_NAME_WIDTH, appconsts.PROPERTY_ROW_HEIGHT)
     
-    hbox = gtk.HBox(False, 2)
+    hbox = Gtk.HBox(False, 2)
     hbox.pack_start(label_box, False, False, 4)
     hbox.pack_start(editor_widget, True, True, 0)
     return hbox
@@ -137,11 +137,11 @@ def _get_slider_row(editable_property, slider_name=None, compact=False):
     adjustment = editable_property.get_input_range_adjustment()
     adjustment.connect("value-changed", editable_property.adjustment_value_changed)
 
-    hslider = gtk.HScale()
+    hslider = Gtk.HScale()
     hslider.set_adjustment(adjustment)
     hslider.set_draw_value(False)
 
-    spin = gtk.SpinButton()
+    spin = Gtk.SpinButton()
     spin.set_numeric(True)
     spin.set_adjustment(adjustment)
 
@@ -153,18 +153,18 @@ def _get_slider_row(editable_property, slider_name=None, compact=False):
         name = slider_name
     name = _p(name)
     
-    hbox = gtk.HBox(False, 4)
+    hbox = Gtk.HBox(False, 4)
     if compact:
-        name_label = gtk.Label(name + ":")
+        name_label = Gtk.Label(label=name + ":")
         hbox.pack_start(name_label, False, False, 4)
     hbox.pack_start(hslider, True, True, 0)
     hbox.pack_start(spin, False, False, 4)
 
-    vbox = gtk.VBox(False)
+    vbox = Gtk.VBox(False)
     if compact:
         vbox.pack_start(hbox, False, False, 0)
     else:
-        top_row = _get_two_column_editor_row(name, gtk.HBox())
+        top_row = _get_two_column_editor_row(name, Gtk.HBox())
         vbox.pack_start(top_row, True, True, 0)
         vbox.pack_start(hbox, False, False, 0)
     return vbox
@@ -172,19 +172,19 @@ def _get_slider_row(editable_property, slider_name=None, compact=False):
 def _get_ladspa_slider_row(editable_property, slider_name=None):
     adjustment = editable_property.get_input_range_adjustment()
 
-    hslider = gtk.HScale()
+    hslider = Gtk.HScale()
     hslider.set_adjustment(adjustment)
     hslider.set_draw_value(False)
     hslider.connect("button-release-event", lambda w, e: _ladspa_slider_update(editable_property, adjustment))
     
-    spin = gtk.SpinButton()
+    spin = Gtk.SpinButton()
     spin.set_numeric(True)
     spin.set_adjustment(adjustment)
     spin.connect("button-release-event", lambda w, e: _ladspa_slider_update(editable_property, adjustment))
 
     _set_digits(editable_property, hslider, spin)
 
-    hbox = gtk.HBox(False, 4)
+    hbox = Gtk.HBox(False, 4)
     hbox.pack_start(hslider, True, True, 0)
     hbox.pack_start(spin, False, False, 4)
     if slider_name == None:
@@ -192,8 +192,8 @@ def _get_ladspa_slider_row(editable_property, slider_name=None):
     else:
         name = slider_name
 
-    top_row = _get_two_column_editor_row(name, gtk.HBox())
-    vbox = gtk.VBox(False)
+    top_row = _get_two_column_editor_row(name, Gtk.HBox())
+    vbox = Gtk.VBox(False)
     vbox.pack_start(top_row, True, True, 0)
     vbox.pack_start(hbox, False, False, 0)
     return vbox
@@ -209,12 +209,12 @@ def _get_clip_frame_slider(editable_property):
             
     adjustment = editable_property.get_input_range_adjustment()
 
-    hslider = gtk.HScale()
+    hslider = Gtk.HScale()
     hslider.set_adjustment(adjustment)
     hslider.set_draw_value(False)
     hslider.connect("button-release-event", lambda w, e: _clip_frame_slider_update(editable_property, adjustment))
     
-    spin = gtk.SpinButton()
+    spin = Gtk.SpinButton()
     spin.set_numeric(True)
     spin.set_adjustment(adjustment)
     spin.connect("button-release-event", lambda w, e: _clip_frame_slider_update(editable_property, adjustment))
@@ -222,7 +222,7 @@ def _get_clip_frame_slider(editable_property):
     hslider.set_digits(0)
     spin.set_digits(0)
 
-    hbox = gtk.HBox(False, 4)
+    hbox = Gtk.HBox(False, 4)
     hbox.pack_start(hslider, True, True, 0)
     hbox.pack_start(spin, False, False, 4)
 
@@ -239,9 +239,9 @@ def _get_affine_filt_geom_sliders(ep):
     pos_tokens = tokens[0].split("/")
     size_tokens = tokens[1].split("x")
 
-    x_adj = gtk.Adjustment(float(pos_tokens[0]), float(-scr_width), float(scr_width), float(1))
-    y_adj = gtk.Adjustment(float(pos_tokens[1]), float(-scr_height), float(scr_height), float(1))
-    h_adj = gtk.Adjustment(float(size_tokens[1]), float(0), float(scr_height * 5), float(1))
+    x_adj = Gtk.Adjustment(float(pos_tokens[0]), float(-scr_width), float(scr_width), float(1))
+    y_adj = Gtk.Adjustment(float(pos_tokens[1]), float(-scr_height), float(scr_height), float(1))
+    h_adj = Gtk.Adjustment(float(size_tokens[1]), float(0), float(scr_height * 5), float(1))
     
     x_slider, x_spin, x_row =  _get_affine_slider("X", x_adj)
     y_slider, y_spin, y_row =  _get_affine_slider("Y", y_adj)
@@ -257,7 +257,7 @@ def _get_affine_filt_geom_sliders(ep):
     h_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
 
     
-    vbox = gtk.VBox(False, 4)
+    vbox = Gtk.VBox(False, 4)
     vbox.pack_start(x_row, True, True, 0)
     vbox.pack_start(y_row, True, True, 0)
     vbox.pack_start(h_row, True, True, 0)
@@ -265,37 +265,37 @@ def _get_affine_filt_geom_sliders(ep):
     return vbox
 
 def _get_affine_slider(name, adjustment):
-    hslider = gtk.HScale()
+    hslider = Gtk.HScale()
     hslider.set_adjustment(adjustment)
     hslider.set_draw_value(False)
     
-    spin = gtk.SpinButton()
+    spin = Gtk.SpinButton()
     spin.set_numeric(True)
     spin.set_adjustment(adjustment)
 
     hslider.set_digits(0)
     spin.set_digits(0)
 
-    hbox = gtk.HBox(False, 4)
+    hbox = Gtk.HBox(False, 4)
     hbox.pack_start(hslider, True, True, 0)
     hbox.pack_start(spin, False, False, 4)
 
     return (hslider, spin, _get_two_column_editor_row(name, hbox))
     
 def _get_boolean_check_box_row(editable_property):
-    check_button = gtk.CheckButton()
+    check_button = Gtk.CheckButton()
     check_button.set_active(editable_property.value == "1")
     check_button.connect("toggled", editable_property.boolean_button_toggled)
     
-    hbox = gtk.HBox(False, 4)
+    hbox = Gtk.HBox(False, 4)
 
     hbox.pack_start(check_button, False, False, 4)
-    hbox.pack_start(gtk.Label(), True, True, 0)
+    hbox.pack_start(Gtk.Label(), True, True, 0)
     
     return _get_two_column_editor_row(editable_property.get_display_name(), hbox)
 
 def _get_combo_box_row(editable_property):
-    combo_box = gtk.combo_box_new_text()
+    combo_box = Gtk.ComboBoxText()
             
     # Parse options and fill combo box
     opts_str = editable_property.args[COMBO_BOX_OPTIONS]
@@ -319,12 +319,12 @@ def _get_combo_box_row(editable_property):
 
 def _get_color_selector(editable_property):
     gdk_color = editable_property.get_value_as_gdk_color()
-    color_button = gtk.ColorButton(gdk_color)
+    color_button = Gtk.ColorButton(gdk_color)
     color_button.connect("color-set", editable_property.color_selected)
 
-    hbox = gtk.HBox(False, 4)
+    hbox = Gtk.HBox(False, 4)
     hbox.pack_start(color_button, False, False, 4)
-    hbox.pack_start(gtk.Label(), True, True, 0)
+    hbox.pack_start(Gtk.Label(), True, True, 0)
     
     return _get_two_column_editor_row(editable_property.get_display_name(), hbox)
 
@@ -333,7 +333,7 @@ def _get_wipe_selector(editable_property):
     Returns GUI component for selecting wipe type.
     """
     # Preset luma
-    combo_box = gtk.combo_box_new_text()
+    combo_box = Gtk.ComboBoxText()
             
     # Get options
     keys = mlttransitions.wipe_lumas.keys()
@@ -354,26 +354,26 @@ def _get_wipe_selector(editable_property):
     preset_luma_row = _get_two_column_editor_row(editable_property.get_display_name(), combo_box)
     
     # User luma
-    use_preset_luma_combo = gtk.combo_box_new_text()
+    use_preset_luma_combo = Gtk.ComboBoxText()
     use_preset_luma_combo.append_text(_("Preset Luma"))
     use_preset_luma_combo.append_text(_("User Luma"))
         
-    dialog = gtk.FileChooserDialog(_("Select Luma File"), None, 
-                                   gtk.FILE_CHOOSER_ACTION_OPEN, 
-                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                                    _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
-    dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
+    dialog = Gtk.FileChooserDialog(_("Select Luma File"), None, 
+                                   Gtk.FileChooserAction.OPEN, 
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
+    dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
-    file_filter = gtk.FileFilter()
+    file_filter = Gtk.FileFilter()
     file_filter.add_pattern("*.png")
     file_filter.add_pattern("*.pgm")
     file_filter.set_name(_("Wipe Luma files"))
     dialog.add_filter(file_filter)
         
-    user_luma_select = gtk.FileChooserButton(dialog)
+    user_luma_select = Gtk.FileChooserButton(dialog)
     user_luma_select.set_size_request(210, 28)
     
-    user_luma_label = gtk.Label(_("Luma File:"))
+    user_luma_label = Gtk.Label(label=_("Luma File:"))
 
     if k_index == -1:
         use_preset_luma_combo.set_active(1)
@@ -385,13 +385,13 @@ def _get_wipe_selector(editable_property):
         user_luma_select.set_sensitive(False)
         user_luma_label.set_sensitive(False)
     
-    user_luma_row = gtk.HBox(False, 2)
+    user_luma_row = Gtk.HBox(False, 2)
     user_luma_row.pack_start(use_preset_luma_combo, False, False, 0)
-    user_luma_row.pack_start(gtk.Label(), True, True, 0)
+    user_luma_row.pack_start(Gtk.Label(), True, True, 0)
     user_luma_row.pack_start(user_luma_label, False, False, 2)
     user_luma_row.pack_start(user_luma_select, False, False, 0)
 
-    editor_pane = gtk.VBox(False)
+    editor_pane = Gtk.VBox(False)
     editor_pane.pack_start(preset_luma_row, False, False, 4)
     editor_pane.pack_start(user_luma_row, False, False, 4)
 
@@ -433,23 +433,23 @@ def _create_composite_editor(clip, editable_properties):
     progressive = filter(lambda ep: ep.name == "progressive", editable_properties)[0]
     force_values = [_("Nothing"),_("Progressive"),_("Deinterlace"),_("Both")]
 
-    combo_box = gtk.combo_box_new_text()
+    combo_box = Gtk.ComboBoxText()
     for val in force_values:
         combo_box.append_text(val)
     selection = _get_force_combo_index(deinterlace, progressive)
     combo_box.set_active(selection)
     combo_box.connect("changed", _compositor_editor_force_combo_box_callback, (deinterlace, progressive))
-    force_vbox = gtk.VBox(False, 4)
-    force_vbox.pack_start(gtk.Label(_("Force")), True, True, 0)
+    force_vbox = Gtk.VBox(False, 4)
+    force_vbox.pack_start(Gtk.Label(label=_("Force")), True, True, 0)
     force_vbox.pack_start(combo_box, True, True, 0)
 
-    hbox = gtk.HBox(False, 4)
+    hbox = Gtk.HBox(False, 4)
     hbox.pack_start(guiutils.get_pad_label(3, 5), False, False, 0)
     hbox.pack_start(_get_boolean_check_box_button_column(_("Align"), aligned), False, False, 0)
     hbox.pack_start(_get_boolean_check_box_button_column(_("Distort"), distort), False, False, 0)
-    hbox.pack_start(gtk.Label(), True, True, 0)
+    hbox.pack_start(Gtk.Label(), True, True, 0)
     hbox.pack_start(_get_combo_box_column(_("Alpha"), values, operator), False, False, 0)
-    hbox.pack_start(gtk.Label(), True, True, 0)
+    hbox.pack_start(Gtk.Label(), True, True, 0)
     hbox.pack_start(force_vbox, False, False, 0)
     hbox.pack_start(guiutils.get_pad_label(3, 5), False, False, 0)
     return hbox
@@ -487,7 +487,7 @@ def _create_rotion_geometry_editor(clip, editable_properties):
     # duck type methods, using opacity is not meaningful, any property with clip member could do
     ep.get_clip_tline_pos = lambda : ep.opacity.clip.clip_in # clip is compositor, compositor in and out points staright in timeline frames
     ep.get_clip_length = lambda : ep.opacity.clip.clip_out - ep.opacity.clip.clip_in + 1
-    ep.get_input_range_adjustment = lambda : gtk.Adjustment(float(100), float(0), float(100), float(1))
+    ep.get_input_range_adjustment = lambda : Gtk.Adjustment(float(100), float(0), float(100), float(1))
     ep.get_display_name = lambda : "Opacity"
     ep.get_pixel_aspect_ratio = lambda : (float(current_sequence().profile.sample_aspect_num()) / current_sequence().profile.sample_aspect_den())
     ep.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
@@ -526,23 +526,23 @@ def _create_region_editor(clip, editable_properties):
     progressive = filter(lambda ep: ep.name == "composite.progressive", editable_properties)[0]
     force_values = [_("Nothing"),_("Progressive"),_("Deinterlace"),_("Both")]
 
-    combo_box = gtk.combo_box_new_text()
+    combo_box = Gtk.ComboBoxText()
     for val in force_values:
         combo_box.append_text(val)
     selection = _get_force_combo_index(deinterlace, progressive)
     combo_box.set_active(selection)
     combo_box.connect("changed", _compositor_editor_force_combo_box_callback, (deinterlace, progressive))
-    force_vbox = gtk.VBox(False, 4)
-    force_vbox.pack_start(gtk.Label(_("Force")), True, True, 0)
+    force_vbox = Gtk.VBox(False, 4)
+    force_vbox.pack_start(Gtk.Label(label=_("Force")), True, True, 0)
     force_vbox.pack_start(combo_box, True, True, 0)
 
-    hbox = gtk.HBox(False, 4)
+    hbox = Gtk.HBox(False, 4)
     hbox.pack_start(guiutils.get_pad_label(3, 5), False, False, 0)
     hbox.pack_start(_get_boolean_check_box_button_column(_("Align"), aligned), False, False, 0)
     hbox.pack_start(_get_boolean_check_box_button_column(_("Distort"), distort), False, False, 0)
-    hbox.pack_start(gtk.Label(), True, True, 0)
+    hbox.pack_start(Gtk.Label(), True, True, 0)
     hbox.pack_start(_get_combo_box_column(_("Alpha"), values, operator), False, False, 0)
-    hbox.pack_start(gtk.Label(), True, True, 0)
+    hbox.pack_start(Gtk.Label(), True, True, 0)
     hbox.pack_start(force_vbox, False, False, 0)
     hbox.pack_start(guiutils.get_pad_label(3, 5), False, False, 0)
     return hbox
@@ -550,36 +550,36 @@ def _create_region_editor(clip, editable_properties):
 def _create_color_grader(filt, editable_properties):
     color_grader = extraeditors.ColorGrader(editable_properties)
 
-    vbox = gtk.VBox(False, 4)
-    vbox.pack_start(gtk.Label(), True, True, 0)
+    vbox = Gtk.VBox(False, 4)
+    vbox.pack_start(Gtk.Label(), True, True, 0)
     vbox.pack_start(color_grader.widget, False, False, 0)
-    vbox.pack_start(gtk.Label(), True, True, 0)
+    vbox.pack_start(Gtk.Label(), True, True, 0)
     vbox.no_separator = True
     return vbox
 
 def _create_crcurves_editor(filt, editable_properties):
     curves_editor = extraeditors.CatmullRomFilterEditor(editable_properties)
 
-    vbox = gtk.VBox(False, 4)
+    vbox = Gtk.VBox(False, 4)
     vbox.pack_start(curves_editor.widget, False, False, 0)
-    vbox.pack_start(gtk.Label(), True, True, 0)
+    vbox.pack_start(Gtk.Label(), True, True, 0)
     vbox.no_separator = True
     return vbox
 
 def _create_colorbox_editor(filt, editable_properties):
     colorbox_editor = extraeditors.ColorBoxFilterEditor(editable_properties)
     
-    vbox = gtk.VBox(False, 4)
+    vbox = Gtk.VBox(False, 4)
     vbox.pack_start(colorbox_editor.widget, False, False, 0)
-    vbox.pack_start(gtk.Label(), True, True, 0)
+    vbox.pack_start(Gtk.Label(), True, True, 0)
     vbox.no_separator = True
     return vbox
 
 def _create_color_lgg_editor(filt, editable_properties):
     color_lgg_editor = extraeditors.ColorLGGFilterEditor(editable_properties)
-    vbox = gtk.VBox(False, 4)
+    vbox = Gtk.VBox(False, 4)
     vbox.pack_start(color_lgg_editor.widget, False, False, 0)
-    vbox.pack_start(gtk.Label(), True, True, 0)
+    vbox.pack_start(Gtk.Label(), True, True, 0)
     vbox.no_separator = True
     return vbox
 
@@ -625,18 +625,18 @@ def _set_digits(editable_property, scale, spin):
 
 # -------------------------------------------------------- gui utils funcs
 def _get_boolean_check_box_button_column(name, editable_property):
-    check_button = gtk.CheckButton()
+    check_button = Gtk.CheckButton()
     check_button.set_active(editable_property.value == "1")
     check_button.connect("toggled", editable_property.boolean_button_toggled)
-    check_align = gtk.Alignment(0.5, 0.0)
+    check_align = Gtk.Alignment.new(0.5, 0.0)
     check_align.add(check_button)
-    vbox = gtk.VBox(False, 0)
-    vbox.pack_start(gtk.Label(name), True, True, 0)
+    vbox = Gtk.VBox(False, 0)
+    vbox.pack_start(Gtk.Label(label=name), True, True, 0)
     vbox.pack_start(check_align, True, True, 0)
     return vbox
 
 def _get_combo_box_column(name, values, editable_property):
-    combo_box = gtk.combo_box_new_text()
+    combo_box = Gtk.ComboBoxText()
     for val in values:
         val = translations.get_combo_option(val)
         combo_box.append_text(val)
@@ -646,8 +646,8 @@ def _get_combo_box_column(name, values, editable_property):
     combo_box.set_active(selection)    
     combo_box.connect("changed", editable_property.combo_selection_changed, values)
 
-    vbox = gtk.VBox(False, 4)
-    vbox.pack_start(gtk.Label(name), True, True, 0)
+    vbox = Gtk.VBox(False, 4)
+    vbox.pack_start(Gtk.Label(label=name), True, True, 0)
     vbox.pack_start(combo_box, True, True, 0)
     return vbox
     

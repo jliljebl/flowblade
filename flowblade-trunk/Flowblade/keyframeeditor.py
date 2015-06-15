@@ -28,12 +28,12 @@ of callbacks to parent objects, this makes the design difficult to follow.
 """
 
 import copy
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 import math
-import pango
+from gi.repository import Pango
 
 from cairoarea import CairoDrawableArea
 from editorstate import PLAYER
@@ -164,9 +164,9 @@ class ClipKeyFrameEditor:
         # init icons if needed
         global ACTIVE_KF_ICON, NON_ACTIVE_KF_ICON
         if ACTIVE_KF_ICON == None:
-            ACTIVE_KF_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "kf_active.png")
+            ACTIVE_KF_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "kf_active.png")
         if NON_ACTIVE_KF_ICON == None:
-            NON_ACTIVE_KF_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "kf_not_active.png")    
+            NON_ACTIVE_KF_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "kf_not_active.png")    
             
     def set_keyframes(self, keyframes_str, out_to_in_func):
         self.keyframes = self.keyframe_parser(keyframes_str, out_to_in_func)
@@ -1074,13 +1074,13 @@ class BoxGeometryScreenEditor(AbstractScreenEditor):
             self.source_edit_rect.clear_projection_point()
 
     def handle_arrow_edit(self, keyval):
-        if keyval == gtk.keysyms.Left:
+        if keyval == Gdk.KEY_Left:
             self.source_edit_rect.x -= 1
-        if keyval == gtk.keysyms.Right:
+        if keyval == Gdk.KEY_Right:
             self.source_edit_rect.x += 1
-        if keyval == gtk.keysyms.Up:
+        if keyval == Gdk.KEY_Up:
             self.source_edit_rect.y -= 1
-        if keyval == gtk.keysyms.Down:                         
+        if keyval == Gdk.KEY_Down:                         
             self.source_edit_rect.y += 1
             
     def print_keyframes(self):
@@ -1417,7 +1417,7 @@ class RotatingScreenEditor(AbstractScreenEditor):
         cr.identity_matrix()
 
 # ----------------------------------------------------------- buttons objects
-class ClipEditorButtonsRow(gtk.HBox):
+class ClipEditorButtonsRow(Gtk.HBox):
     """
     Row of buttons used to navigate and add keyframes and frame 
     entry box for active keyframe. Parent editor must implemnt interface
@@ -1430,7 +1430,7 @@ class ClipEditorButtonsRow(gtk.HBox):
         editor_parent.next_frame_pressed()
     """
     def __init__(self, editor_parent):
-        gtk.HBox.__init__(self, False, 2)
+        GObject.GObject.__init__(self, False, 2)
         
         # Buttons
         self.add_button = guiutils.get_image_button("add_kf.png", BUTTON_WIDTH, BUTTON_HEIGHT)
@@ -1447,8 +1447,8 @@ class ClipEditorButtonsRow(gtk.HBox):
         self.next_frame_button.connect("clicked", lambda w,e: editor_parent.next_frame_pressed(), None)
         
         # Position entry
-        self.kf_pos_label = gtk.Label()
-        self.modify_font(pango.FontDescription("light 8"))
+        self.kf_pos_label = Gtk.Label()
+        self.modify_font(Pango.FontDescription("light 8"))
         self.kf_pos_label.set_text("0")
         
         # Build row
@@ -1458,7 +1458,7 @@ class ClipEditorButtonsRow(gtk.HBox):
         self.pack_start(self.next_kf_button, False, False, 0)
         self.pack_start(self.prev_frame_button, False, False, 0)
         self.pack_start(self.next_frame_button, False, False, 0)
-        self.pack_start(gtk.Label(), True, True, 0)
+        self.pack_start(Gtk.Label(), True, True, 0)
         self.pack_start(self.kf_pos_label, False, False, 0)
         self.pack_start(guiutils.get_pad_label(1, 10), False, False, 0)
 
@@ -1467,7 +1467,7 @@ class ClipEditorButtonsRow(gtk.HBox):
         self.kf_pos_label.set_text(frame_str)
         
 
-class GeometryEditorButtonsRow(gtk.HBox):
+class GeometryEditorButtonsRow(Gtk.HBox):
     def __init__(self, editor_parent):
         """
         editor_parent needs to implement interface:
@@ -1475,35 +1475,35 @@ class GeometryEditorButtonsRow(gtk.HBox):
         editor_parent.view_size_changed(widget_active_index)
         editor_parent.menu_item_activated()
         """
-        gtk.HBox.__init__(self, False, 2)
+        GObject.GObject.__init__(self, False, 2)
         
         self.editor_parent = editor_parent
         
-        name_label = gtk.Label(_("View:"))
+        name_label = Gtk.Label(label=_("View:"))
 
-        pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "geom_action.png")
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "geom_action.png")
         action_menu_button = guicomponents.PressLaunch(self._show_actions_menu, pixbuf, 24, 22)
         
-        size_select = gtk.combo_box_new_text()
+        size_select = Gtk.ComboBoxText()
         size_select.append_text(_("Large"))
         size_select.append_text(_("Medium"))
         size_select.append_text(_("Small"))
         size_select.set_active(1)
         size_select.set_size_request(120, 30)
-        font_desc = pango.FontDescription("normal 9")
-        size_select.child.modify_font(font_desc)
+        font_desc = Pango.FontDescription("normal 9")
+        size_select.get_child().modify_font(font_desc)
         size_select.connect("changed", lambda w,e: editor_parent.view_size_changed(w.get_active()), 
                             None)
         # Build row
         self.pack_start(guiutils.get_pad_label(2, 10), False, False, 0)
         self.pack_start(name_label, False, False, 0)
         self.pack_start(size_select, False, False, 0)
-        self.pack_start(gtk.Label(), True, True, 0)
+        self.pack_start(Gtk.Label(), True, True, 0)
         self.pack_start(action_menu_button.widget, False, False, 0)
         self.pack_start(guiutils.get_pad_label(2, 10), False, False, 0)
 
     def _show_actions_menu(self, widget, event):
-        menu = gtk.Menu()
+        menu = Gtk.Menu()
         menu.add(self._get_menu_item(_("Reset Geometry"), self.editor_parent.menu_item_activated, "reset" ))
         menu.add(self._get_menu_item(_("Geometry to Original Aspect Ratio"), self.editor_parent.menu_item_activated, "ratio" ))
         menu.add(self._get_menu_item(_("Center Horizontal"), self.editor_parent.menu_item_activated, "hcenter" ))
@@ -1511,14 +1511,14 @@ class GeometryEditorButtonsRow(gtk.HBox):
         menu.popup(None, None, None, event.button, event.time)
 
     def _get_menu_item(self, text, callback, data):
-        item = gtk.MenuItem(text)
+        item = Gtk.MenuItem(text)
         item.connect("activate", callback, data)
         item.show()
         return item
 
 # ------------------------------------------------------------ master editors
 
-class AbstractKeyFrameEditor(gtk.VBox):
+class AbstractKeyFrameEditor(Gtk.VBox):
     """
     Extending editor is parent editor for ClipKeyFrameEditor and is updated
     from timeline posion changes.
@@ -1527,7 +1527,7 @@ class AbstractKeyFrameEditor(gtk.VBox):
     """
     def __init__(self, editable_property, use_clip_in=True):
         # editable_property is KeyFrameProperty
-        gtk.VBox.__init__(self, False, 2)
+        GObject.GObject.__init__(self, False, 2)
         self.editable_property = editable_property
         self.clip_tline_pos = editable_property.get_clip_tline_pos()
 
@@ -1715,8 +1715,8 @@ class GeometryEditor(AbstractKeyFrameEditor):
         # Create components
         self.geom_buttons_row = GeometryEditorButtonsRow(self)
         
-        g_frame = gtk.Frame()
-        g_frame.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+        g_frame = Gtk.Frame()
+        g_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
         g_frame.add(self.geom_kf_edit.widget)
              
         self.buttons_row = ClipEditorButtonsRow(self)

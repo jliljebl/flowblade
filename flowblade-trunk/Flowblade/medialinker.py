@@ -18,14 +18,14 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 import glob
 import mlt
 import locale
 import os
-import pango
+from gi.repository import Pango
 import subprocess
 import sys
 import threading
@@ -68,9 +68,9 @@ class ProjectLoadThread(threading.Thread):
         self.filename = filename
 
     def run(self):
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         linker_window.project_label.set_text("Loading...")
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
 
         persistance.show_messages = False
         project = persistance.load_project(self.filename, False, True)
@@ -80,45 +80,45 @@ class ProjectLoadThread(threading.Thread):
         target_project.c_seq = project.sequences[target_project.c_seq_index]
         _update_media_assets()
 
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         linker_window.relink_list.fill_data_model()
         linker_window.project_label.set_text(self.filename)
         linker_window.set_active_state()
         linker_window.update_files_info()
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
 
 
-class MediaLinkerWindow(gtk.Window):
+class MediaLinkerWindow(Gtk.Window):
     def __init__(self):
-        gtk.Window.__init__(self)
+        GObject.GObject.__init__(self)
         self.connect("delete-event", lambda w, e:_shutdown())
 
-        app_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "flowblademedialinker.png")
+        app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowblademedialinker.png")
         self.set_icon_list(app_icon)
 
-        load_button = gtk.Button(_("Load Project For Relinking"))
+        load_button = Gtk.Button(_("Load Project For Relinking"))
         load_button.connect("clicked",
                             lambda w: self.load_button_clicked())
 
-        project_row = gtk.HBox(False, 2)
+        project_row = Gtk.HBox(False, 2)
         project_row.pack_start(load_button, False, False, 0)
-        project_row.pack_start(gtk.Label(), True, True, 0)
+        project_row.pack_start(Gtk.Label(), True, True, 0)
 
         self.missing_label = guiutils.bold_label("<b>" + _("Original Media Missing:") + "</b> ")
         self.found_label = guiutils.bold_label("<b>" + _("Original Media Found:") + "</b> ")
-        self.missing_count = gtk.Label()
-        self.found_count = gtk.Label()
+        self.missing_count = Gtk.Label()
+        self.found_count = Gtk.Label()
         self.proj = guiutils.bold_label("<b>" + _("Project:") + "</b> ")
-        self.project_label = gtk.Label(_("<not loaded>"))
+        self.project_label = Gtk.Label(label=_("<not loaded>"))
 
         missing_info = guiutils.get_left_justified_box([self.missing_label, guiutils.pad_label(2, 2), self.missing_count])
         missing_info.set_size_request(250, 2)
         found_info = guiutils.get_left_justified_box([self.found_label, guiutils.pad_label(2, 2), self.found_count])
 
-        status_row = gtk.HBox(False, 2)
+        status_row = Gtk.HBox(False, 2)
         status_row.pack_start(missing_info, False, False, 0)
         status_row.pack_start(found_info, False, False, 0)
-        status_row.pack_start(gtk.Label(), True, True, 0)
+        status_row.pack_start(Gtk.Label(), True, True, 0)
         status_row.pack_start(guiutils.pad_label(30, 12), False, False, 0)
         status_row.pack_start(self.proj, False, False, 0)
         status_row.pack_start(guiutils.pad_label(4, 12), False, False, 0)
@@ -126,37 +126,37 @@ class MediaLinkerWindow(gtk.Window):
         
         self.relink_list = MediaRelinkListView()
 
-        self.find_button = gtk.Button(_("Set File Relink Path"))
+        self.find_button = Gtk.Button(_("Set File Relink Path"))
         self.find_button.connect("clicked", lambda w: _set_button_pressed())
-        self.delete_button = gtk.Button(_("Delete File Relink Path"))
+        self.delete_button = Gtk.Button(_("Delete File Relink Path"))
         self.delete_button.connect("clicked", lambda w: _delete_button_pressed())
 
-        self.display_combo = gtk.combo_box_new_text()
+        self.display_combo = Gtk.ComboBoxText()
         self.display_combo.append_text(_("Display Missing Media Files"))
         self.display_combo.append_text(_("Display Found Media Files"))
         self.display_combo.set_active(0)
         self.display_combo.connect("changed", self.display_list_changed)
         
-        buttons_row = gtk.HBox(False, 2)
+        buttons_row = Gtk.HBox(False, 2)
         buttons_row.pack_start(self.display_combo, False, False, 0)
-        buttons_row.pack_start(gtk.Label(), True, True, 0)
+        buttons_row.pack_start(Gtk.Label(), True, True, 0)
         buttons_row.pack_start(self.delete_button, False, False, 0)
         buttons_row.pack_start(guiutils.pad_label(4, 4), False, False, 0)
         buttons_row.pack_start(self.find_button, False, False, 0)
 
-        self.save_button = gtk.Button(_("Save Relinked Project As..."))
+        self.save_button = Gtk.Button(_("Save Relinked Project As..."))
         self.save_button.connect("clicked", lambda w:_save_project_pressed())
-        cancel_button = gtk.Button(_("Close"))
+        cancel_button = Gtk.Button(_("Close"))
         cancel_button.connect("clicked", lambda w:_shutdown())
-        dialog_buttons_box = gtk.HBox(True, 2)
+        dialog_buttons_box = Gtk.HBox(True, 2)
         dialog_buttons_box.pack_start(cancel_button, True, True, 0)
         dialog_buttons_box.pack_start(self.save_button, False, False, 0)
         
-        dialog_buttons_row = gtk.HBox(False, 2)
-        dialog_buttons_row.pack_start(gtk.Label(), True, True, 0)
+        dialog_buttons_row = Gtk.HBox(False, 2)
+        dialog_buttons_row.pack_start(Gtk.Label(), True, True, 0)
         dialog_buttons_row.pack_start(dialog_buttons_box, False, False, 0)
 
-        pane = gtk.VBox(False, 2)
+        pane = Gtk.VBox(False, 2)
         pane.pack_start(project_row, False, False, 0)
         pane.pack_start(guiutils.pad_label(24, 24), False, False, 0)
         pane.pack_start(status_row, False, False, 0)
@@ -166,14 +166,14 @@ class MediaLinkerWindow(gtk.Window):
         pane.pack_start(guiutils.pad_label(24, 24), False, False, 0)
         pane.pack_start(dialog_buttons_row, False, False, 0)
         
-        align = gtk.Alignment()
+        align = Gtk.Alignment.new()
         align.set_padding(12, 12, 12, 12)
         align.add(pane)
 
         # Set pane and show window
         self.add(align)
         self.set_title(_("Media Relinker"))
-        self.set_position(gtk.WIN_POS_CENTER)
+        self.set_position(Gtk.WindowPosition.CENTER)
         self.show_all()
         self.set_resizable(False)
         self.set_active_state()
@@ -182,7 +182,7 @@ class MediaLinkerWindow(gtk.Window):
         dialogs.load_project_dialog(self.load_project_dialog_callback)
     
     def load_project_dialog_callback(self, dialog, response_id):
-        if response_id == gtk.RESPONSE_ACCEPT:
+        if response_id == Gtk.ResponseType.ACCEPT:
             filenames = dialog.get_filenames()
             
             dialog.destroy()
@@ -238,23 +238,23 @@ class MediaLinkerWindow(gtk.Window):
         return self.relink_list.assets[row]
 
 
-class MediaRelinkListView(gtk.VBox):
+class MediaRelinkListView(Gtk.VBox):
 
     def __init__(self):
-        gtk.VBox.__init__(self)
+        GObject.GObject.__init__(self)
 
         self.assets = [] # Used to store list displayd data items
 
         # Datamodel: text, text
-        self.storemodel = gtk.ListStore(str, str)
+        self.storemodel = Gtk.ListStore(str, str)
  
         # Scroll container
-        self.scroll = gtk.ScrolledWindow()
-        self.scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        self.scroll.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+        self.scroll = Gtk.ScrolledWindow()
+        self.scroll.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
 
         # View
-        self.treeview = gtk.TreeView(self.storemodel)
+        self.treeview = Gtk.TreeView(self.storemodel)
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(True)
         self.treeview.connect("button-press-event", self.row_pressed)
@@ -263,17 +263,17 @@ class MediaRelinkListView(gtk.VBox):
         # Column views
         self.missing_text = _("Missing Media File Path")
         self.found_text = _("Found Media File Path")
-        self.text_col_1 = gtk.TreeViewColumn("text1")
+        self.text_col_1 = Gtk.TreeViewColumn("text1")
         self.text_col_1.set_title(self.missing_text)
-        self.text_col_2 = gtk.TreeViewColumn("text2")
+        self.text_col_2 = Gtk.TreeViewColumn("text2")
         self.text_col_2.set_title(_("Media File Re-link Path"))
         
         # Cell renderers
-        self.text_rend_1 = gtk.CellRendererText()
-        self.text_rend_1.set_property("ellipsize", pango.ELLIPSIZE_START)
+        self.text_rend_1 = Gtk.CellRendererText()
+        self.text_rend_1.set_property("ellipsize", Pango.EllipsizeMode.START)
 
-        self.text_rend_2 = gtk.CellRendererText()
-        self.text_rend_2.set_property("ellipsize", pango.ELLIPSIZE_START)
+        self.text_rend_2 = Gtk.CellRendererText()
+        self.text_rend_2.set_property("ellipsize", Pango.EllipsizeMode.START)
         self.text_rend_2.set_property("yalign", 0.0)
 
         # Build column views
@@ -430,7 +430,7 @@ def _select_relink_path_dialog_callback(file_select, response_id, media_asset):
     filenames = file_select.get_filenames()
     file_select.destroy()
 
-    if response_id != gtk.RESPONSE_OK:
+    if response_id != Gtk.ResponseType.OK:
         return
     if len(filenames) == 0:
         return
@@ -459,14 +459,14 @@ def _delete_relink_path(media_asset):
     linker_window.relink_list.fill_data_model()
 
 def _show_paths(media_asset):
-    orig_path_label = gtk.Label(_("<b>Original path:</b> "))
+    orig_path_label = Gtk.Label(label=_("<b>Original path:</b> "))
     orig_path_label.set_use_markup(True)
-    orig_path = guiutils.get_left_justified_box([orig_path_label, gtk.Label(media_asset.orig_path)])
-    relink_path_label = gtk.Label(_("<b>Relink path:</b> "))
+    orig_path = guiutils.get_left_justified_box([orig_path_label, Gtk.Label(label=media_asset.orig_path)])
+    relink_path_label = Gtk.Label(label=_("<b>Relink path:</b> "))
     relink_path_label.set_use_markup(True)
-    relink_path = guiutils.get_left_justified_box([relink_path_label, gtk.Label(media_asset.relink_path)])
+    relink_path = guiutils.get_left_justified_box([relink_path_label, Gtk.Label(label=media_asset.relink_path)])
     
-    panel = gtk.VBox()
+    panel = Gtk.VBox()
     panel.pack_start(orig_path, False, False, 0)
     panel.pack_start(guiutils.pad_label(12, 12), False, False, 0)
     panel.pack_start(relink_path, False, False, 0)
@@ -486,7 +486,7 @@ def _save_project_pressed():
                                    open_dir)
 
 def _save_as_dialog_callback(dialog, response_id):
-    if response_id == gtk.RESPONSE_ACCEPT:
+    if response_id == Gtk.ResponseType.ACCEPT:
         filenames = dialog.get_filenames()
         dialog.destroy()
 
@@ -541,7 +541,7 @@ def _relink_project_media_paths():
 
 # ----------------------------------------------------------- main
 def main(root_path, force_launch=False):
-    editorstate.gtk_version = gtk.gtk_version
+    editorstate.gtk_version = Gtk.gtk_version
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
     except:
@@ -559,8 +559,8 @@ def main(root_path, force_launch=False):
     editorpersistance.load()
 
     # Init gtk threads
-    gtk.gdk.threads_init()
-    gtk.gdk.threads_enter()
+    Gdk.threads_init()
+    Gdk.threads_enter()
 
     repo = mlt.Factory().init()
 
@@ -583,8 +583,8 @@ def main(root_path, force_launch=False):
     global linker_window
     linker_window = MediaLinkerWindow()
 
-    gtk.main()
-    gtk.gdk.threads_leave()
+    Gtk.main()
+    Gdk.threads_leave()
     
 def _shutdown():
-    gtk.main_quit()
+    Gtk.main_quit()

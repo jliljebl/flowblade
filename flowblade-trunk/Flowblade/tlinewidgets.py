@@ -23,13 +23,13 @@ Module contains GUI components for displayingand  editing clips in timeline.
 Global display position and scale information is in this module.
 """
 import cairo
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 import math
-import pango
-import pangocairo
+from gi.repository import Pango
+from gi.repository import PangoCairo
 
 import appconsts
 from cairoarea import CairoDrawableArea
@@ -270,18 +270,18 @@ def load_icons():
     VIDEO_MUTE_ICON, ALL_MUTE_ICON, TRACK_BG_ICON, MUTE_AUDIO_ICON, MUTE_VIDEO_ICON, MUTE_ALL_ICON, \
     TRACK_ALL_ON_V_ICON, TRACK_ALL_ON_A_ICON, MUTE_AUDIO_A_ICON, TC_POINTER_HEAD, EDIT_INDICATOR
 
-    FULL_LOCK_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "full_lock.png")
-    FILTER_CLIP_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "filter_clip_icon_sharp.png")
-    COMPOSITOR_CLIP_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "compositor.png")
-    VIEW_SIDE_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "view_side.png")
-    INSERT_ARROW_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "insert_arrow.png")
-    AUDIO_MUTE_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "clip_audio_mute.png")
-    VIDEO_MUTE_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "clip_video_mute.png")
-    ALL_MUTE_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "clip_all_mute.png")
-    TRACK_BG_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_bg.png")
-    MUTE_AUDIO_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_audio_mute.png")
-    MUTE_VIDEO_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_video_mute.png")
-    MUTE_ALL_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_all_mute.png")
+    FULL_LOCK_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "full_lock.png")
+    FILTER_CLIP_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "filter_clip_icon_sharp.png")
+    COMPOSITOR_CLIP_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "compositor.png")
+    VIEW_SIDE_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "view_side.png")
+    INSERT_ARROW_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "insert_arrow.png")
+    AUDIO_MUTE_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "clip_audio_mute.png")
+    VIDEO_MUTE_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "clip_video_mute.png")
+    ALL_MUTE_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "clip_all_mute.png")
+    TRACK_BG_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "track_bg.png")
+    MUTE_AUDIO_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "track_audio_mute.png")
+    MUTE_VIDEO_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "track_video_mute.png")
+    MUTE_ALL_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "track_all_mute.png")
     MARKER_ICON = _load_pixbuf("marker.png")
     TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V.png")
     TRACK_ALL_ON_A_ICON = _load_pixbuf("track_all_on_A.png")
@@ -297,7 +297,7 @@ def load_icons():
         FRAME_SCALE_LINES = (0.8, 0.8, 0.8)
 
 def _load_pixbuf(icon_file):
-    return gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + icon_file)
+    return GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + icon_file)
 
 def set_ref_line_y(allocation):
     """
@@ -896,7 +896,7 @@ class TimeLineCanvas:
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
         self.widget.mouse_scroll_func = mouse_scroll_listener
-        #self.widget.set_events(self.widget.get_events() | gtk.gdk.POINTER_MOTION_MASK)
+        #self.widget.set_events(self.widget.get_events() | Gdk.EventMask.POINTER_MOTION_MASK)
 
         # Mouse events are passed on 
         self.press_listener = press_listener
@@ -923,7 +923,7 @@ class TimeLineCanvas:
         """
         Mouse button callback
         """
-        if event.type == gtk.gdk._2BUTTON_PRESS:
+        if event.type == Gdk._2BUTTON_PRESS:
             self.double_click_listener(get_frame(event.x), event.x, event.y)
             return
          
@@ -939,9 +939,9 @@ class TimeLineCanvas:
             return
 
         button = -1 
-        if (state & gtk.gdk.BUTTON1_MASK):
+        if (state & Gdk.ModifierType.BUTTON1_MASK):
             button = 1
-        elif (state & gtk.gdk.BUTTON3_MASK):
+        elif (state & Gdk.ModifierType.BUTTON3_MASK):
             button = 3
         self.move_listener(x, y, get_frame(x), button, state)
         
@@ -951,7 +951,7 @@ class TimeLineCanvas:
         """
         self.drag_on = False
         self.release_listener(event.x, event.y, get_frame(event.x), \
-                              event.button, event.state)
+                              event.button, event.get_state())
 
     def set_pointer_context(self, x, y):
         frame = get_frame(x)
@@ -1608,7 +1608,7 @@ class TimeLineColumn:
         layout = pango_context.create_layout()
         text = utils.get_track_name(track, current_sequence())        
         layout.set_text(text)
-        desc = pango.FontDescription("Sans Bold 11")
+        desc = Pango.FontDescription("Sans Bold 11")
         layout.set_font_description(desc)
 
         pango_context.set_source_rgb(0.0, 0.0, 0)
@@ -1703,8 +1703,8 @@ class TimeLineFrameScale:
             self.drag_on = True
 
     def _motion_notify_event(self, x, y, state):
-        if((state & gtk.gdk.BUTTON1_MASK)
-           or(state & gtk.gdk.BUTTON3_MASK)):
+        if((state & Gdk.ModifierType.BUTTON1_MASK)
+           or(state & Gdk.ModifierType.BUTTON3_MASK)):
             if self.drag_on:
                 frame = current_sequence().get_seq_range_frame(get_frame(x))
                 PLAYER().seek_frame(frame) 
@@ -1902,13 +1902,13 @@ class TimeLineFrameScale:
         cr.fill()
    
 
-class TimeLineScroller(gtk.HScrollbar):
+class TimeLineScroller(Gtk.HScrollbar):
     """
     Scrollbar for timeline.
     """
     def __init__(self, scroll_listener):
-        gtk.HScrollbar.__init__(self)
-        adjustment = gtk.Adjustment(0.0, 0.0, 100.0, 1.0, 10.0, 30.0)
+        GObject.GObject.__init__(self)
+        adjustment = Gtk.Adjustment(0.0, 0.0, 100.0, 1.0, 10.0, 30.0)
         adjustment.connect("value-changed", scroll_listener)
         self.set_adjustment(adjustment)
 

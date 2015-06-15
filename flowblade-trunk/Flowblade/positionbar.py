@@ -23,9 +23,9 @@ Module contents:
 class PositionBar - Displays position on a clip or a sequence
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 import cairo
 
 from cairoarea import CairoDrawableArea
@@ -250,8 +250,8 @@ class PositionBar:
         if self.disabled:
             return
 
-        if((state & gtk.gdk.BUTTON1_MASK)
-            or (state & gtk.gdk.BUTTON3_MASK)):
+        if((state & Gdk.ModifierType.BUTTON1_MASK)
+            or (state & Gdk.ModifierType.BUTTON3_MASK)):
             self._pos = self._legalize_x(x)
             # Listener calls self.set_normalized_pos()
             self.position_listener(self.normalized_pos(), self.producer.get_length())

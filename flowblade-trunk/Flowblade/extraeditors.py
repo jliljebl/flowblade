@@ -18,9 +18,9 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 import math
 
@@ -407,7 +407,7 @@ class ColorBoxFilterEditor:
     
     def __init__(self, editable_properties):
         self.SAT_MAX = 0.5
-        self.widget = gtk.VBox()
+        self.widget = Gtk.VBox()
 
         self.hue = filter(lambda ep: ep.name == "hue", editable_properties)[0]
         self.saturation = filter(lambda ep: ep.name == "saturation", editable_properties)[0]
@@ -419,27 +419,27 @@ class ColorBoxFilterEditor:
         self.color_box = ColorBox(self.color_box_values_changed)
         self.color_box.set_cursor(self.hue.get_float_value(), self.saturation.get_float_value())
     
-        box_row = gtk.HBox()
-        box_row.pack_start(gtk.Label(), True, True, 0)
+        box_row = Gtk.HBox()
+        box_row.pack_start(Gtk.Label(), True, True, 0)
         box_row.pack_start(self.color_box.widget, False, False, 0)
-        box_row.pack_start(gtk.Label(), True, True, 0)
+        box_row.pack_start(Gtk.Label(), True, True, 0)
 
-        self.h_label = gtk.Label()
-        self.s_label = gtk.Label()
+        self.h_label = Gtk.Label()
+        self.s_label = Gtk.Label()
 
-        info_box = gtk.HBox(True)
+        info_box = Gtk.HBox(True)
         info_box.pack_start(self.h_label, False, False, 0)
         info_box.pack_start(self.s_label, False, False, 0)
         info_box.set_size_request(65, 20)
 
-        info_row = gtk.HBox()
-        info_row.pack_start(gtk.Label(), True, True, 0)
+        info_row = Gtk.HBox()
+        info_row.pack_start(Gtk.Label(), True, True, 0)
         info_row.pack_start(info_box, False, False, 0)
-        info_row.pack_start(gtk.Label(), True, True, 0)
+        info_row.pack_start(Gtk.Label(), True, True, 0)
         
         self.widget.pack_start(box_row, False, False, 0)
         self.widget.pack_start(info_row, False, False, 0)
-        self.widget.pack_start(gtk.Label(), True, True, 0)
+        self.widget.pack_start(Gtk.Label(), True, True, 0)
 
         self._display_values(self.hue.get_float_value(), self.saturation.get_float_value())
         
@@ -465,7 +465,7 @@ class ColorBoxFilterEditor:
 class ColorLGGFilterEditor:
 
     def __init__(self, editable_properties):
-        self.widget = gtk.VBox()
+        self.widget = Gtk.VBox()
         
         # Get MLT properties
         self.lift_r = filter(lambda ep: ep.name == "lift_r", editable_properties)[0]
@@ -488,7 +488,7 @@ class ColorLGGFilterEditor:
 
         # Lift editor
         self.lift_hue_selector = self.get_hue_selector(self.lift_hue_edited)
-        self.lift_hue_value_label = gtk.Label()
+        self.lift_hue_value_label = Gtk.Label()
         self.lift_hue_row = self.get_hue_row(self.lift_hue_selector.widget, self.lift_hue_value_label)
 
         self.lift_adjustment = self.lift_value.get_input_range_adjustment()
@@ -498,7 +498,7 @@ class ColorLGGFilterEditor:
 
         # Gamma editor
         self.gamma_hue_selector = self.get_hue_selector(self.gamma_hue_edited)
-        self.gamma_hue_value_label = gtk.Label()
+        self.gamma_hue_value_label = Gtk.Label()
         self.gamma_hue_row = self.get_hue_row(self.gamma_hue_selector.widget, self.gamma_hue_value_label)
 
         self.gamma_adjustment = self.gamma_value.get_input_range_adjustment()
@@ -508,7 +508,7 @@ class ColorLGGFilterEditor:
 
         # Gain editor
         self.gain_hue_selector = self.get_hue_selector(self.gain_hue_edited)
-        self.gain_hue_value_label = gtk.Label()
+        self.gain_hue_value_label = Gtk.Label()
         self.gain_hue_row = self.get_hue_row(self.gain_hue_selector.widget, self.gain_hue_value_label)
 
         self.gain_adjustment = self.gain_value.get_input_range_adjustment()
@@ -528,7 +528,7 @@ class ColorLGGFilterEditor:
         self.widget.pack_start(self.get_name_row("Gain"), True, True, 0)
         self.widget.pack_start(self.gain_hue_row , True, True, 0)
         self.widget.pack_start(self.gain_slider_row , True, True, 0)
-        self.widget.pack_start(gtk.Label(), True, True, 0)
+        self.widget.pack_start(Gtk.Label(), True, True, 0)
 
     # ---------------------------------------------- gui building
     def get_hue_selector(self, callback):
@@ -538,35 +538,35 @@ class ColorLGGFilterEditor:
         return color_box
 
     def get_name_row(self, name):
-        name_label = gtk.Label(name + ":")
+        name_label = Gtk.Label(label=name + ":")
             
-        hbox = gtk.HBox(False, 4)
+        hbox = Gtk.HBox(False, 4)
         hbox.pack_start(name_label, False, False, 4)
-        hbox.pack_start(gtk.Label(), True, True, 0)
+        hbox.pack_start(Gtk.Label(), True, True, 0)
         
         return hbox
         
     def get_hue_row(self, color_box, value_label):          
-        hbox = gtk.HBox(False, 4)
+        hbox = Gtk.HBox(False, 4)
         hbox.pack_start(color_box, False, False, 0)
         hbox.pack_start(value_label, False, False, 4)
-        hbox.pack_start(gtk.Label(), False, False, 0)
+        hbox.pack_start(Gtk.Label(), False, False, 0)
         
         return hbox
 
     def get_slider_row(self, adjustment):#, name):
-        hslider = gtk.HScale()
+        hslider = Gtk.HScale()
         hslider.set_adjustment(adjustment)
         hslider.set_draw_value(False)
 
-        spin = gtk.SpinButton()
+        spin = Gtk.SpinButton()
         spin.set_numeric(True)
         spin.set_adjustment(adjustment)
 
         hslider.set_digits(0)
         spin.set_digits(0)
             
-        hbox = gtk.HBox(False, 4)
+        hbox = Gtk.HBox(False, 4)
         #hbox.pack_start(name_label, False, False, 4)
         hbox.pack_start(hslider, True, True, 0)
         hbox.pack_start(spin, False, False, 4)
@@ -742,7 +742,7 @@ class CatmullRomFilterEditor:
     B = 3
     
     def __init__(self, editable_properties):
-        self.widget = gtk.VBox()
+        self.widget = Gtk.VBox()
         
         # These properties hold the values that are writtenout to MLT to do the filtering
         self.cr_filter = lutfilter.CatmullRomFilter(editable_properties)
@@ -754,36 +754,36 @@ class CatmullRomFilterEditor:
         
         # This is used to change currently active curve
         self.channel_buttons = glassbuttons.GlassButtonsToggleGroup(32, 19, 2, 2, 5)
-        self.channel_buttons.add_button(gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "rgb_channel.png"), self.channel_changed)
-        self.channel_buttons.add_button(gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "red_channel.png"), self.channel_changed)
-        self.channel_buttons.add_button(gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "green_channel.png"), self.channel_changed)
-        self.channel_buttons.add_button(gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "blue_channel.png"), self.channel_changed)
+        self.channel_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "rgb_channel.png"), self.channel_changed)
+        self.channel_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "red_channel.png"), self.channel_changed)
+        self.channel_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "green_channel.png"), self.channel_changed)
+        self.channel_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "blue_channel.png"), self.channel_changed)
         self.channel_buttons.widget.set_pref_size(132, 28)
         self.channel_buttons.set_pressed_button(0)
 
         self.curve_buttons = glassbuttons.GlassButtonsGroup(32, 19, 2, 2, 5)
-        self.curve_buttons.add_button(gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "linear_curve.png"), self.do_curve_reset_pressed)
-        self.curve_buttons.add_button(gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "curve_s.png"), self.do_curve_reset_pressed)
-        self.curve_buttons.add_button(gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "curve_flipped_s.png"), self.do_curve_reset_pressed)
+        self.curve_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "linear_curve.png"), self.do_curve_reset_pressed)
+        self.curve_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "curve_s.png"), self.do_curve_reset_pressed)
+        self.curve_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "curve_flipped_s.png"), self.do_curve_reset_pressed)
         self.curve_buttons.widget.set_pref_size(97, 28)
 
-        button_hbox = gtk.HBox()
+        button_hbox = Gtk.HBox()
         button_hbox.pack_start(self.channel_buttons.widget, False, False, 0)
         button_hbox.pack_start(guiutils.get_pad_label(4, 4), False, False, 0)
         button_hbox.pack_start(self.curve_buttons.widget, False, False, 0)
         
         buttons_row = guiutils.get_in_centering_alignment(button_hbox)
         
-        box_row = gtk.HBox()
-        box_row.pack_start(gtk.Label(), True, True, 0)
+        box_row = Gtk.HBox()
+        box_row.pack_start(Gtk.Label(), True, True, 0)
         box_row.pack_start(self.curve_editor.widget, False, False, 0)
-        box_row.pack_start(gtk.Label(), True, True, 0)
+        box_row.pack_start(Gtk.Label(), True, True, 0)
 
-        self.widget.pack_start(gtk.Label(), True, True, 0)
+        self.widget.pack_start(Gtk.Label(), True, True, 0)
         self.widget.pack_start(box_row, False, False, 0)
         self.widget.pack_start(guiutils.get_pad_label(12, 8), False, False, 0)
         self.widget.pack_start(buttons_row, False, False, 0)
-        self.widget.pack_start(gtk.Label(), True, True, 0)
+        self.widget.pack_start(Gtk.Label(), True, True, 0)
         
     def channel_changed(self):
         channel = self.channel_buttons.pressed_button # indexes match
@@ -984,36 +984,36 @@ class ColorGrader:
                                    self.mid_hue.get_float_value(), self.mid_saturation.get_float_value(),
                                    self.hi_hue.get_float_value(), self.hi_saturation.get_float_value())
 
-        box_row = gtk.HBox()
-        box_row.pack_start(gtk.Label(), True, True, 0)
+        box_row = Gtk.HBox()
+        box_row.pack_start(Gtk.Label(), True, True, 0)
         box_row.pack_start(self.color_box.widget, False, False, 0)
-        box_row.pack_start(gtk.Label(), True, True, 0)
+        box_row.pack_start(Gtk.Label(), True, True, 0)
 
 
-        shadow_icon = gtk.image_new_from_file(respaths.IMAGE_PATH + "shadow.png")
-        self.sh_label = gtk.Label()
-        self.ss_label = gtk.Label()
-        shadow_box = gtk.HBox()
+        shadow_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH + "shadow.png")
+        self.sh_label = Gtk.Label()
+        self.ss_label = Gtk.Label()
+        shadow_box = Gtk.HBox()
         shadow_box.pack_start(shadow_icon, False, False, 0)
         shadow_box.pack_start(guiutils.pad_label(3,5), False, False, 0)
         shadow_box.pack_start(self.sh_label, False, False, 0)
         shadow_box.pack_start(self.ss_label, False, False, 0)
         shadow_box.set_size_request(95, 20)
 
-        midtone_icon = gtk.image_new_from_file(respaths.IMAGE_PATH + "midtones.png")
-        self.mh_label = gtk.Label()
-        self.ms_label = gtk.Label()
-        midtone_box = gtk.HBox()
+        midtone_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH + "midtones.png")
+        self.mh_label = Gtk.Label()
+        self.ms_label = Gtk.Label()
+        midtone_box = Gtk.HBox()
         midtone_box.pack_start(midtone_icon, False, False, 0)
         midtone_box.pack_start(guiutils.pad_label(3,5), False, False, 0)
         midtone_box.pack_start(self.mh_label, False, False, 0)
         midtone_box.pack_start(self.ms_label, False, False, 0)
         midtone_box.set_size_request(95, 20)
 
-        highligh_icon = gtk.image_new_from_file(respaths.IMAGE_PATH + "highlights.png")
-        self.hh_label = gtk.Label()
-        self.hs_label = gtk.Label()
-        highlight_box = gtk.HBox()
+        highligh_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH + "highlights.png")
+        self.hh_label = Gtk.Label()
+        self.hs_label = Gtk.Label()
+        highlight_box = Gtk.HBox()
         highlight_box.pack_start(highligh_icon, False, False, 0)
         highlight_box.pack_start(guiutils.pad_label(3,5), False, False, 0)
         highlight_box.pack_start(self.hh_label, False, False, 0)
@@ -1024,17 +1024,17 @@ class ColorGrader:
         self._display_values(MID, self.mid_hue.get_float_value(), self.mid_saturation.get_float_value())
         self._display_values(HI, self.hi_hue.get_float_value(), self.hi_saturation.get_float_value())
         
-        info_row = gtk.HBox()
-        info_row.pack_start(gtk.Label(), True, True, 0)
+        info_row = Gtk.HBox()
+        info_row.pack_start(Gtk.Label(), True, True, 0)
         info_row.pack_start(shadow_box, False, False, 0)
         info_row.pack_start(midtone_box, False, False, 0)
         info_row.pack_start(highlight_box, False, False, 0)
-        info_row.pack_start(gtk.Label(), True, True, 0)
+        info_row.pack_start(Gtk.Label(), True, True, 0)
                 
-        self.widget = gtk.VBox()
+        self.widget = Gtk.VBox()
         self.widget.pack_start(box_row, False, False, 0)
         self.widget.pack_start(info_row, False, False, 0)
-        self.widget.pack_start(gtk.Label(), True, True, 0)
+        self.widget.pack_start(Gtk.Label(), True, True, 0)
         
     def band_changed(self, band):
         self.band = band
@@ -1113,7 +1113,7 @@ class AbstractColorWheel:
         self.CIRCLE_HALF = 6
         self.cursor_x = self.CENTER_X
         self.cursor_y = self.CENTER_Y
-        self.WHEEL_IMG = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "color_wheel.png")
+        self.WHEEL_IMG = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "color_wheel.png")
         self.edit_listener = edit_listener
         self.angle = 0.0
         self.distance = 0.0

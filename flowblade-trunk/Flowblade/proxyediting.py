@@ -18,9 +18,9 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 import glob
 from PIL import Image
@@ -126,9 +126,9 @@ class ProxyRenderRunnerThread(threading.Thread):
                 render_fraction = render_thread.get_render_fraction()
                 now = time.time()
                 elapsed = now - start
-                gtk.gdk.threads_enter()
+                Gdk.threads_enter()
                 progress_window.update_render_progress(render_fraction, media_file.name, items, len(self.files_to_render), elapsed)
-                gtk.gdk.threads_leave()
+                Gdk.threads_leave()
                 render_thread.producer.get_length()
                 if render_thread.producer.frame() >= stop_frame:
                     self.thread_running = False
@@ -141,9 +141,9 @@ class ProxyRenderRunnerThread(threading.Thread):
 
             if not self.aborted:
                 items = items + 1
-                gtk.gdk.threads_enter()
+                Gdk.threads_enter()
                 progress_window.update_render_progress(0, media_file.name, items, len(self.files_to_render), elapsed)
-                gtk.gdk.threads_leave()
+                Gdk.threads_leave()
             else:
                 print "proxy render aborted"
                 render_thread.shutdown()
@@ -151,9 +151,9 @@ class ProxyRenderRunnerThread(threading.Thread):
 
             render_thread.shutdown()
 
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         _proxy_render_stopped()
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
 
         # Remove unfinished proxy files
         if self.current_render_file_path != None:
@@ -168,9 +168,9 @@ class ProxyRenderRunnerThread(threading.Thread):
     def _create_img_seq_proxy(self, media_file, proxy_w, proxy_h, items, start):
         now = time.time()
         elapsed = now - start
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         progress_window.update_render_progress(0.0, media_file.name, items, len(self.files_to_render), elapsed)
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
 
         asset_folder, asset_file_name = os.path.split(media_file.path)
         lookup_filename = utils.get_img_seq_glob_lookup_name(asset_file_name)
@@ -201,9 +201,9 @@ class ProxyRenderRunnerThread(threading.Thread):
             elapsed = now - start
         
             if done % 5 == 0:
-                gtk.gdk.threads_enter()
+                Gdk.threads_enter()
                 progress_window.update_render_progress(frac, media_file.name, items, len(self.files_to_render), elapsed)
-                gtk.gdk.threads_leave()
+                Gdk.threads_leave()
         
         media_file.add_proxy_file(proxy_file_path)
 
@@ -215,12 +215,12 @@ class ProxyRenderRunnerThread(threading.Thread):
 
 class ProxyManagerDialog:
     def __init__(self):
-        self.dialog = gtk.Dialog(_("Proxy Manager"), None,
-                            gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                            (_("Close Manager").encode('utf-8'), gtk.RESPONSE_CLOSE))
+        self.dialog = Gtk.Dialog(_("Proxy Manager"), None,
+                            Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                            (_("Close Manager").encode('utf-8'), Gtk.ResponseType.CLOSE))
 
         # Encoding
-        self.enc_select = gtk.combo_box_new_text()
+        self.enc_select = Gtk.ComboBoxText()
         encodings = renderconsumer.proxy_encodings
         if len(encodings) < 1: # no encoding options available, system does not have right codecs
             # display info
@@ -237,7 +237,7 @@ class ProxyManagerDialog:
                                 lambda w,e: self.encoding_changed(w.get_active()), 
                                 None)
                             
-        self.size_select = gtk.combo_box_new_text()
+        self.size_select = Gtk.ComboBoxText()
         self.size_select.append_text(_("Project Image Size"))
         self.size_select.append_text(_("Half Project Image Size"))
         self.size_select.append_text(_("Quarter Project Image Size"))
@@ -246,13 +246,13 @@ class ProxyManagerDialog:
                                 lambda w,e: self.size_changed(w.get_active()), 
                                 None)
                                 
-        row_enc = gtk.HBox(False, 2)
-        row_enc.pack_start(gtk.Label(), True, True, 0)
+        row_enc = Gtk.HBox(False, 2)
+        row_enc.pack_start(Gtk.Label(), True, True, 0)
         row_enc.pack_start(self.enc_select, False, False, 0)
         row_enc.pack_start(self.size_select, False, False, 0)
-        row_enc.pack_start(gtk.Label(), True, True, 0)
+        row_enc.pack_start(Gtk.Label(), True, True, 0)
         
-        vbox_enc = gtk.VBox(False, 2)
+        vbox_enc = Gtk.VBox(False, 2)
         vbox_enc.pack_start(row_enc, False, False, 0)
         vbox_enc.pack_start(guiutils.pad_label(8, 12), False, False, 0)
         
@@ -268,35 +268,35 @@ class ProxyManagerDialog:
                 if media_file.has_proxy_file == True or media_file.is_proxy_file == True:
                     proxy_files = proxy_files + 1
                     
-        proxy_status_label = gtk.Label(_("Proxy Stats:"))
-        proxy_status_value = gtk.Label(str(proxy_files) + _(" proxy file(s) for ") + str(video_files) + _(" video file(s)"))
+        proxy_status_label = Gtk.Label(label=_("Proxy Stats:"))
+        proxy_status_value = Gtk.Label(label=str(proxy_files) + _(" proxy file(s) for ") + str(video_files) + _(" video file(s)"))
         row_proxy_status = guiutils.get_two_column_box_right_pad(proxy_status_label, proxy_status_value, 150, 150)
 
-        proxy_mode_label = gtk.Label(_("Current Proxy Mode:"))
-        self.proxy_mode_value = gtk.Label()
+        proxy_mode_label = Gtk.Label(label=_("Current Proxy Mode:"))
+        self.proxy_mode_value = Gtk.Label()
         self.set_mode_display_value()
                
         row_proxy_mode = guiutils.get_two_column_box_right_pad(proxy_mode_label, self.proxy_mode_value, 150, 150)
 
-        self.convert_progress_bar = gtk.ProgressBar()
+        self.convert_progress_bar = Gtk.ProgressBar()
         self.convert_progress_bar.set_text(_("Press Button to Change Mode"))
             
-        self.use_button = gtk.Button(_("Use Proxy Media"))
-        self.dont_use_button = gtk.Button(_("Use Original Media"))
+        self.use_button = Gtk.Button(_("Use Proxy Media"))
+        self.dont_use_button = Gtk.Button(_("Use Original Media"))
         self.set_convert_buttons_state()
         self.use_button.connect("clicked", lambda w: _convert_to_proxy_project())
         self.dont_use_button.connect("clicked", lambda w: _convert_to_original_media_project())
 
-        c_box_2 = gtk.HBox(True, 8)
+        c_box_2 = Gtk.HBox(True, 8)
         c_box_2.pack_start(self.use_button, True, True, 0)
         c_box_2.pack_start(self.dont_use_button, True, True, 0)
 
-        row2_onoff = gtk.HBox(False, 2)
-        row2_onoff.pack_start(gtk.Label(), True, True, 0)
+        row2_onoff = Gtk.HBox(False, 2)
+        row2_onoff.pack_start(Gtk.Label(), True, True, 0)
         row2_onoff.pack_start(c_box_2, False, False, 0)
-        row2_onoff.pack_start(gtk.Label(), True, True, 0)
+        row2_onoff.pack_start(Gtk.Label(), True, True, 0)
 
-        vbox_onoff = gtk.VBox(False, 2)
+        vbox_onoff = Gtk.VBox(False, 2)
         vbox_onoff.pack_start(row_proxy_status, False, False, 0)
         vbox_onoff.pack_start(row_proxy_mode, False, False, 0)
         vbox_onoff.pack_start(guiutils.pad_label(12, 12), False, False, 0)
@@ -306,11 +306,11 @@ class ProxyManagerDialog:
         panel_onoff = guiutils.get_named_frame(_("Project Proxy Mode"), vbox_onoff)
 
         # Pane
-        vbox = gtk.VBox(False, 2)
+        vbox = Gtk.VBox(False, 2)
         vbox.pack_start(panel_encoding, False, False, 0)
         vbox.pack_start(panel_onoff, False, False, 0)
 
-        alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+        alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
         alignment.set_padding(12, 12, 12, 12)
         alignment.add(vbox)
 
@@ -350,21 +350,21 @@ class ProxyManagerDialog:
 
 class ProxyRenderProgressDialog:
     def __init__(self):
-        self.dialog = gtk.Dialog(_("Creating Proxy Files"),
+        self.dialog = Gtk.Dialog(_("Creating Proxy Files"),
                                  gui.editor_window.window,
-                                 gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                                 (_("Stop").encode('utf-8'), gtk.RESPONSE_REJECT))
+                                 Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                 (_("Stop").encode('utf-8'), Gtk.ResponseType.REJECT))
         
-        self.render_progress_bar = gtk.ProgressBar()
+        self.render_progress_bar = Gtk.ProgressBar()
         self.render_progress_bar.set_text("0 %")
-        prog_align = gtk.Alignment(0.5, 0.5, 1.0, 0.0)
+        prog_align = Gtk.Alignment.new(0.5, 0.5, 1.0, 0.0)
         prog_align.set_padding(0, 0, 0, 0)
         prog_align.add(self.render_progress_bar)
         prog_align.set_size_request(550, 30)
         
-        self.elapsed_value = gtk.Label()
-        self.current_render_value = gtk.Label()
-        self.items_value = gtk.Label()
+        self.elapsed_value = Gtk.Label()
+        self.current_render_value = Gtk.Label()
+        self.items_value = Gtk.Label()
         
         est_label = guiutils.get_right_justified_box([guiutils.bold_label(_("Elapsed:"))])
         current_label = guiutils.get_right_justified_box([guiutils.bold_label(_("Current Media File:"))])
@@ -374,17 +374,17 @@ class ProxyRenderProgressDialog:
         current_label.set_size_request(250, 20)
         items_label.set_size_request(250, 20)
 
-        info_vbox = gtk.VBox(False, 0)
+        info_vbox = Gtk.VBox(False, 0)
         info_vbox.pack_start(guiutils.get_left_justified_box([est_label, self.elapsed_value]), False, False, 0)
         info_vbox.pack_start(guiutils.get_left_justified_box([current_label, self.current_render_value]), False, False, 0)
         info_vbox.pack_start(guiutils.get_left_justified_box([items_label, self.items_value]), False, False, 0)
 
-        progress_vbox = gtk.VBox(False, 2)
+        progress_vbox = Gtk.VBox(False, 2)
         progress_vbox.pack_start(info_vbox, False, False, 0)
         progress_vbox.pack_start(guiutils.get_pad_label(10, 8), False, False, 0)
         progress_vbox.pack_start(prog_align, False, False, 0)
 
-        alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+        alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
         alignment.set_padding(12, 12, 12, 12)
         alignment.add(progress_vbox)
         alignment.show_all()
@@ -421,20 +421,20 @@ class ProxyRenderIssuesWindow:
 
         self.issues = 1
         if (len(files_to_render) + len(already_have_proxies) + len(other_project_proxies)) == 0 and not_video_files > 0:
-            self.dialog = gtk.Dialog(dialog_title,
+            self.dialog = Gtk.Dialog(dialog_title,
                                      gui.editor_window.window,
-                                     gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                                     (_("Close").encode('utf-8'), gtk.RESPONSE_CLOSE))
+                                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                     (_("Close").encode('utf-8'), Gtk.ResponseType.CLOSE))
             info_box = dialogutils.get_warning_message_dialog_panel(_("Nothing will be rendered"), 
                                                                       _("No video files were selected.\nOnly video files can have proxy files."),
                                                                       True)
             self.dialog.connect('response', dialogutils.dialog_destroy)
         else:
-            self.dialog = gtk.Dialog(dialog_title,
+            self.dialog = Gtk.Dialog(dialog_title,
                                      gui.editor_window.window,
-                                     gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                                     (_("Cancel").encode('utf-8'), gtk.RESPONSE_CANCEL,
-                                      _("Do Render Action" ).encode('utf-8'), gtk.RESPONSE_OK))
+                                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                     (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                                      _("Do Render Action" ).encode('utf-8'), Gtk.ResponseType.OK))
             self.dialog.connect('response', self.response)
                                       
             rows = ""
@@ -456,17 +456,17 @@ class ProxyRenderIssuesWindow:
             issues_box = dialogutils.get_warning_message_dialog_panel("There are some issues with proxy render request", 
                                                                     rows,
                                                                     True)
-            self.action_select = gtk.combo_box_new_text()
+            self.action_select = Gtk.ComboBoxText()
             self.action_select.append_text(_("Render Unrendered Possible & Use existing"))
             self.action_select.append_text(_("Rerender All Possible" ))
             self.action_select.set_active(0)
-            action_row = guiutils.get_left_justified_box([guiutils.get_pad_label(24, 10), gtk.Label(_("Select Render Action: ")), self.action_select])
+            action_row = guiutils.get_left_justified_box([guiutils.get_pad_label(24, 10), Gtk.Label(label=_("Select Render Action: ")), self.action_select])
 
-            info_box = gtk.VBox()
+            info_box = Gtk.VBox()
             info_box.pack_start(issues_box, False, False, 0)
             info_box.pack_start(action_row, False, False, 0)
             
-        alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+        alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
         alignment.set_padding(0, 0, 0, 0)
         alignment.add(info_box)
         alignment.show_all()
@@ -481,7 +481,7 @@ class ProxyRenderIssuesWindow:
         return issue_str
 
     def response(self, dialog, response_id):
-        if response_id == gtk.RESPONSE_CANCEL:
+        if response_id == Gtk.ResponseType.CANCEL:
             dialog.destroy()
         else:
             if self.action_select.get_active() == 0: # Render Unrendered Possible & Use existing
@@ -673,7 +673,7 @@ def _create_proxy_render_folder_select_callback(dialog, response_id, file_select
         return
 
     dialog.destroy()
-    if response_id == gtk.RESPONSE_YES:
+    if response_id == Gtk.ResponseType.YES:
         if folder ==  os.path.expanduser("~"):
             dialogs.rendered_clips_no_home_folder_dialog()
         else:
@@ -725,9 +725,9 @@ def _auto_renconvert_after_proxy_render_in_proxy_mode():
     # Open saved temp project
     app.stop_autosave()
 
-    gtk.gdk.threads_enter()
+    Gdk.threads_enter()
     app.open_project(project)
-    gtk.gdk.threads_leave()
+    Gdk.threads_leave()
 
     app.start_autosave()
     
@@ -759,10 +759,10 @@ class ProxyProjectLoadThread(threading.Thread):
         time.sleep(2.0)
         persistance.show_messages = False
         try:
-            gtk.gdk.threads_enter()
+            Gdk.threads_enter()
             project = persistance.load_project(self.proxy_project_path)
             sequence.set_track_counts(project)
-            gtk.gdk.threads_leave()
+            Gdk.threads_leave()
         except persistance.FileProducerNotFoundError as e:
             print "did not find file:", e
 
@@ -771,9 +771,9 @@ class ProxyProjectLoadThread(threading.Thread):
         
         app.stop_autosave()
 
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         app.open_project(project)
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
 
         # Loaded project has been converted, set proxy mode to correct mode 
         if project.proxy_data.proxy_mode == appconsts.CONVERTING_TO_USE_PROXY_MEDIA:
@@ -787,7 +787,7 @@ class ProxyProjectLoadThread(threading.Thread):
         load_thread = None
         persistance.show_messages = True
 
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         _converting_proxy_mode_done()
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
 

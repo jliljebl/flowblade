@@ -22,9 +22,9 @@
 Module handles clip effects editing logic and gui
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 
 import dnd
@@ -59,11 +59,11 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     """
     create_widgets()
 
-    ad_buttons_box = gtk.HBox(True,1)
+    ad_buttons_box = Gtk.HBox(True,1)
     ad_buttons_box.pack_start(widgets.add_effect_b)
     ad_buttons_box.pack_start(widgets.del_effect_b)
 
-    stack_buttons_box = gtk.HBox(False,1)
+    stack_buttons_box = Gtk.HBox(False,1)
     stack_buttons_box.pack_start(ad_buttons_box, True, True, 0)
     stack_buttons_box.pack_start(widgets.toggle_all, False, False, 0)
     
@@ -83,15 +83,15 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     widgets.effect_list_view = effects_list_view
     set_enabled(False)
     
-    exit_button_vbox = gtk.VBox(False, 2)
+    exit_button_vbox = Gtk.VBox(False, 2)
     exit_button_vbox.pack_start(widgets.exit_button, False, False, 0)
-    exit_button_vbox.pack_start(gtk.Label(), True, True, 0)
+    exit_button_vbox.pack_start(Gtk.Label(), True, True, 0)
 
-    info_row = gtk.HBox(False, 2)
+    info_row = Gtk.HBox(False, 2)
     info_row.pack_start(widgets.clip_info, False, False, 0)
     info_row.pack_start(exit_button_vbox, True, True, 0)
     
-    combo_row = gtk.HBox(False, 2)
+    combo_row = Gtk.HBox(False, 2)
     combo_row.pack_start(group_combo_box, True, True, 0)
     combo_row.pack_start(guiutils.get_pad_label(8, 2), False, False, 0)
 
@@ -99,7 +99,7 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     effects_list_view.fill_data_model(filters_array)
     effects_list_view.treeview.get_selection().select_path("0")
     
-    effects_vbox = gtk.VBox(False, 2)
+    effects_vbox = Gtk.VBox(False, 2)
     effects_vbox.pack_start(info_row, False, False, 0)
     effects_vbox.pack_start(guiutils.get_pad_label(2, 2), False, False, 0)
     effects_vbox.pack_start(stack_buttons_box, False, False, 0)
@@ -192,8 +192,8 @@ def create_widgets():
     """
     widgets.clip_info = guicomponents.ClipInfoPanel()
     
-    widgets.exit_button = gtk.Button()
-    icon = gtk.image_new_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
+    widgets.exit_button = Gtk.Button()
+    icon = Gtk.Image.new_from_stock(Gtk.STOCK_CLOSE, Gtk.IconSize.MENU)
     widgets.exit_button.set_image(icon)
     widgets.exit_button.connect("clicked", lambda w: _quit_editing_clip_clicked())
     widgets.exit_button.set_tooltip_text(_("Quit editing Clip in editor"))
@@ -202,15 +202,15 @@ def create_widgets():
     dnd.connect_stack_treeview(widgets.effect_stack_view)
     gui.effect_stack_list_view = widgets.effect_stack_view
     
-    widgets.value_edit_box = gtk.VBox()
-    widgets.value_edit_frame = gtk.Frame()
-    widgets.value_edit_frame.set_shadow_type(gtk.SHADOW_NONE)
+    widgets.value_edit_box = Gtk.VBox()
+    widgets.value_edit_frame = Gtk.Frame()
+    widgets.value_edit_frame.set_shadow_type(Gtk.ShadowType.NONE)
     widgets.value_edit_frame.add(widgets.value_edit_box)
 
-    widgets.add_effect_b = gtk.Button(_("Add"))
-    widgets.del_effect_b = gtk.Button(_("Delete"))
-    widgets.toggle_all = gtk.Button()
-    widgets.toggle_all.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "filters_all_toggle.png"))
+    widgets.add_effect_b = Gtk.Button(_("Add"))
+    widgets.del_effect_b = Gtk.Button(_("Delete"))
+    widgets.toggle_all = Gtk.Button()
+    widgets.toggle_all.set_image(Gtk.image_new_from_file(respaths.IMAGE_PATH + "filters_all_toggle.png"))
 
     widgets.add_effect_b.connect("clicked", lambda w,e: add_effect_pressed(), None)
     widgets.del_effect_b.connect("clicked", lambda w,e: delete_effect_pressed(), None)
@@ -359,8 +359,8 @@ def effect_selection_changed():
     # Check we actually have filters so we can display one.
     # If not, clear previous filters from view.
     if len(clip.filters) == 0:
-        vbox = gtk.VBox(False, 0)
-        vbox.pack_start(gtk.Label(), False, False, 0)
+        vbox = Gtk.VBox(False, 0)
+        vbox.pack_start(Gtk.Label(), False, False, 0)
         widgets.value_edit_frame.remove(widgets.value_edit_box)
         widgets.value_edit_frame.add(vbox)
         vbox.show_all()
@@ -397,13 +397,13 @@ def effect_selection_changed():
                                                                clip_index)
 
     # Get editors and set them displayed
-    vbox = gtk.VBox(False, 0)
+    vbox = Gtk.VBox(False, 0)
     try:
         filter_name = translations.filter_names[filter_object.info.name]
     except KeyError:
         filter_name = filter_object.info.name
 
-    filter_name_label = gtk.Label( "<b>" + filter_name + "</b>")
+    filter_name_label = Gtk.Label(label= "<b>" + filter_name + "</b>")
     filter_name_label.set_use_markup(True)
     vbox.pack_start(filter_name_label, False, False, 0)
     vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
@@ -444,14 +444,14 @@ def effect_selection_changed():
             if not hasattr(editor_row, "no_separator"):
                 vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
         
-        vbox.pack_start(gtk.Label(), True, True, 0)
+        vbox.pack_start(Gtk.Label(), True, True, 0)
     else:
-        vbox.pack_start(gtk.Label(_("No editable parameters")), True, True, 0)
+        vbox.pack_start(Gtk.Label(label=_("No editable parameters")), True, True, 0)
     vbox.show_all()
 
-    scroll_window = gtk.ScrolledWindow()
+    scroll_window = Gtk.ScrolledWindow()
     scroll_window.add_with_viewport(vbox)
-    scroll_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+    scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
     scroll_window.show_all()
 
     widgets.value_edit_frame.remove(widgets.value_edit_box)
@@ -461,7 +461,7 @@ def effect_selection_changed():
 
 def clear_effects_edit_panel():
     widgets.value_edit_frame.remove(widgets.value_edit_box)
-    label = gtk.Label()
+    label = Gtk.Label()
     widgets.value_edit_frame.add(label)
     widgets.value_edit_box = label
 

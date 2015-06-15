@@ -19,10 +19,10 @@
 """
 
 import datetime
-import gobject
-import pygtk
-pygtk.require('2.0');
-import gtk
+from gi.repository import GObject
+
+
+from gi.repository import Gtk
 
 import dbus
 import dbus.service
@@ -33,7 +33,7 @@ import locale
 import os
 from os import listdir
 from os.path import isfile, join
-import pango
+from gi.repository import Pango
 import pickle
 import shutil
 import subprocess
@@ -122,10 +122,10 @@ class QueueRunnerThread(threading.Thread):
             # Set render start time and item state
             render_item.render_started()
 
-            gtk.gdk.threads_enter()
+            Gdk.threads_enter()
             batch_window.update_queue_view()
             batch_window.current_render.set_text("  " + render_item.get_display_name())
-            gtk.gdk.threads_leave()
+            Gdk.threads_leave()
 
             # Make sure that render thread is actually running before
             # testing render_thread.running value later
@@ -142,16 +142,16 @@ class QueueRunnerThread(threading.Thread):
                 now = time.time()
                 current_render_time = now - render_item.start_time
                 
-                gtk.gdk.threads_enter()
+                Gdk.threads_enter()
                 batch_window.update_render_progress(render_fraction, items, render_item.get_display_name(), current_render_time)
-                gtk.gdk.threads_leave()
+                Gdk.threads_leave()
                 
                 if render_thread.running == False: # Rendering has reached end
                     self.thread_running = False
                     
-                    gtk.gdk.threads_enter()
+                    Gdk.threads_enter()
                     batch_window.render_progress_bar.set_fraction(1.0)
-                    gtk.gdk.threads_leave()
+                    Gdk.threads_leave()
                                     
                     render_item.render_completed()
                 else:
@@ -159,9 +159,9 @@ class QueueRunnerThread(threading.Thread):
                     
             if not self.aborted:
                 items = items + 1
-                gtk.gdk.threads_enter()
+                Gdk.threads_enter()
                 batch_window.update_render_progress(0, items, render_item.get_display_name(), 0)
-                gtk.gdk.threads_leave()
+                Gdk.threads_leave()
             else:
                 if render_item != None:
                     render_item.render_aborted()
@@ -169,10 +169,10 @@ class QueueRunnerThread(threading.Thread):
             render_thread.shutdown()
         
         # Update view for render end
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         batch_window.reload_queue() # item may havee added to queue while rendering
         batch_window.render_queue_stopped()
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
                     
     def abort(self):
         render_thread.shutdown()
@@ -301,7 +301,7 @@ def main(root_path, force_launch=False):
     can_run = True
     init_dirs_if_needed()
 
-    editorstate.gtk_version = gtk.gtk_version
+    editorstate.gtk_version = Gtk.gtk_version
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
     except:
@@ -319,8 +319,8 @@ def main(root_path, force_launch=False):
     editorpersistance.load()
 
     # Init gtk threads
-    gtk.gdk.threads_init()
-    gtk.gdk.threads_enter()
+    Gdk.threads_init()
+    Gdk.threads_enter()
 
     repo = mlt.Factory().init()
 
@@ -354,30 +354,30 @@ def main(root_path, force_launch=False):
     global _dbus_service
     _dbus_service = BatchRenderDBUSService()
 
-    gtk.main()
-    gtk.gdk.threads_leave()
+    Gtk.main()
+    Gdk.threads_leave()
 
 def _show_single_instance_info():
     global timeout_id
-    timeout_id = gobject.timeout_add(200, _display_single_instance_window)
+    timeout_id = GObject.timeout_add(200, _display_single_instance_window)
     # Launch gtk+ main loop
-    gtk.main()
+    Gtk.main()
     
 def _display_single_instance_window():
-    gobject.source_remove(timeout_id)
+    GObject.source_remove(timeout_id)
     primary_txt = _("Batch Render Queue already running!")
 
     msg = _("Batch Render Queue application was detected in session dbus.")
     #msg = msg1 + msg2
     content = dialogutils.get_warning_message_dialog_panel(primary_txt, msg, True)
-    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
     align.set_padding(0, 12, 0, 0)
     align.add(content)
 
-    dialog = gtk.Dialog("",
+    dialog = Gtk.Dialog("",
                         None,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (_("OK").encode('utf-8'), gtk.RESPONSE_OK))
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("OK").encode('utf-8'), Gtk.ResponseType.OK))
 
     dialog.vbox.pack_start(align, True, True, 0)
     dialogutils.default_behaviour(dialog)
@@ -386,7 +386,7 @@ def _display_single_instance_window():
 
 def _early_exit(dialog, response):
     dialog.destroy()
-    gtk.main_quit() 
+    Gtk.main_quit() 
     
 def shutdown():
     if queue_runner_thread != None:
@@ -395,12 +395,12 @@ def shutdown():
         dialogutils.info_message(primary_txt, secondary_txt, batch_window.window)
         return True # Tell callsite (inside GTK toolkit) that event is handled, otherwise it'll destroy window anyway.
 
-    while(gtk.events_pending()):
-        gtk.main_iteration()
+    while(Gtk.events_pending()):
+        Gtk.main_iteration()
 
     if _dbus_service != None:
         _dbus_service.remove_from_dbus()
-    gtk.main_quit()
+    Gtk.main_quit()
 
 
 class RenderQueue:
@@ -594,14 +594,14 @@ class BatchRenderWindow:
 
     def __init__(self):
         # Window
-        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.window = Gtk.Window(Gtk.WindowType.TOPLEVEL)
         self.window.connect("delete-event", lambda w, e:shutdown())
-        app_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "flowbladebatchappicon.png")
+        app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowbladebatchappicon.png")
         self.window.set_icon_list(app_icon)
 
-        self.est_time_left = gtk.Label()
-        self.current_render = gtk.Label()
-        self.current_render_time = gtk.Label()
+        self.est_time_left = Gtk.Label()
+        self.current_render = Gtk.Label()
+        self.current_render_time = Gtk.Label()
         est_r = guiutils.get_right_justified_box([guiutils.bold_label(_("Estimated Left:"))])
         current_r = guiutils.get_right_justified_box([guiutils.bold_label(_("Current Render:"))])
         current_r_t = guiutils.get_right_justified_box([guiutils.bold_label(_("Elapsed:"))])
@@ -609,34 +609,34 @@ class BatchRenderWindow:
         current_r.set_size_request(250, 20)
         current_r_t.set_size_request(250, 20)
         
-        info_vbox = gtk.VBox(False, 0)
+        info_vbox = Gtk.VBox(False, 0)
         info_vbox.pack_start(guiutils.get_left_justified_box([current_r, self.current_render]), False, False, 0)
         info_vbox.pack_start(guiutils.get_left_justified_box([current_r_t, self.current_render_time]), False, False, 0)
         info_vbox.pack_start(guiutils.get_left_justified_box([est_r, self.est_time_left]), False, False, 0)
         
-        self.items_rendered = gtk.Label()
-        items_r = gtk.Label(_("Items Rendered:"))
-        self.render_started_label = gtk.Label()
-        started_r = gtk.Label(_("Render Started:"))
+        self.items_rendered = Gtk.Label()
+        items_r = Gtk.Label(label=_("Items Rendered:"))
+        self.render_started_label = Gtk.Label()
+        started_r = Gtk.Label(label=_("Render Started:"))
     
-        bottom_info_vbox = gtk.HBox(True, 0)
+        bottom_info_vbox = Gtk.HBox(True, 0)
         bottom_info_vbox.pack_start(guiutils.get_left_justified_box([items_r, self.items_rendered]), True, True, 0)
         bottom_info_vbox.pack_start(guiutils.get_left_justified_box([started_r, self.render_started_label]), True, True, 0)
         
         self.not_rendering_txt = _("Not Rendering")
-        self.render_progress_bar = gtk.ProgressBar()
+        self.render_progress_bar = Gtk.ProgressBar()
         self.render_progress_bar.set_text(self.not_rendering_txt)
 
-        self.remove_selected = gtk.Button(_("Delete Selected"))
+        self.remove_selected = Gtk.Button(_("Delete Selected"))
         self.remove_selected.connect("clicked", 
                                      lambda w, e: self.remove_selected_clicked(), 
                                      None)
-        self.remove_finished = gtk.Button(_("Delete Finished"))
+        self.remove_finished = Gtk.Button(_("Delete Finished"))
         self.remove_finished.connect("clicked", 
                                      lambda w, e: self.remove_finished_clicked(), 
                                      None)
 
-        self.reload_button = gtk.Button(_("Reload Queue"))
+        self.reload_button = Gtk.Button(_("Reload Queue"))
         self.reload_button.connect("clicked", 
                                      lambda w, e: self.reload_queue(), 
                                      None)
@@ -647,29 +647,29 @@ class BatchRenderWindow:
                                    lambda w, e: self.launch_render(), 
                                    None)
                                          
-        self.stop_render_button = gtk.Button(_("Stop Render"))
+        self.stop_render_button = Gtk.Button(_("Stop Render"))
         self.stop_render_button.set_sensitive(False)
         self.stop_render_button.connect("clicked", 
                                    lambda w, e: self.abort_render(), 
                                    None)
 
-        button_row =  gtk.HBox(False, 0)
+        button_row =  Gtk.HBox(False, 0)
         button_row.pack_start(self.remove_selected, False, False, 0)
         button_row.pack_start(self.remove_finished, False, False, 0)
-        button_row.pack_start(gtk.Label(), True, True, 0)
+        button_row.pack_start(Gtk.Label(), True, True, 0)
         #button_row.pack_start(self.reload_button, True, True, 0)
-        #button_row.pack_start(gtk.Label(), True, True, 0)
+        #button_row.pack_start(Gtk.Label(), True, True, 0)
         button_row.pack_start(self.stop_render_button, False, False, 0)
         button_row.pack_start(self.render_button, False, False, 0)
 
-        top_vbox = gtk.VBox(False, 0)
+        top_vbox = Gtk.VBox(False, 0)
         top_vbox.pack_start(info_vbox, False, False, 0)
         top_vbox.pack_start(guiutils.get_pad_label(12, 12), False, False, 0)
         top_vbox.pack_start(self.render_progress_bar, False, False, 0)
         top_vbox.pack_start(guiutils.get_pad_label(12, 12), False, False, 0)
         top_vbox.pack_start(button_row, False, False, 0)
 
-        top_align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+        top_align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
         top_align.set_padding(12, 12, 12, 12)
         top_align.add(top_vbox)
     
@@ -677,12 +677,12 @@ class BatchRenderWindow:
         self.queue_view.fill_data_model(render_queue)
         self.queue_view.set_size_request(WINDOW_WIDTH, QUEUE_HEIGHT)
 
-        bottom_align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+        bottom_align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
         bottom_align.set_padding(0, 2, 8, 8)
         bottom_align.add(bottom_info_vbox)
 
         # Content pane
-        pane = gtk.VBox(False, 1)
+        pane = Gtk.VBox(False, 1)
         pane.pack_start(top_align, False, False, 0)
         pane.pack_start(self.queue_view, True, True, 0)
         pane.pack_start(bottom_align, False, False, 0)
@@ -690,7 +690,7 @@ class BatchRenderWindow:
         # Set pane and show window
         self.window.add(pane)
         self.window.set_title(_("Flowblade Batch Render"))
-        self.window.set_position(gtk.WIN_POS_CENTER)  
+        self.window.set_position(Gtk.WindowPosition.CENTER)  
         self.window.show_all()
 
     def remove_finished_clicked(self):
@@ -720,7 +720,7 @@ class BatchRenderWindow:
         dialogutils.warning_confirmation(self._confirm_items_delete_callback, primary_txt, secondary_txt, self.window , data=delete_list, is_info=False)
         
     def _confirm_items_delete_callback(self, dialog, response_id, delete_list):
-        if response_id == gtk.RESPONSE_ACCEPT:
+        if response_id == Gtk.ResponseType.ACCEPT:
             for delete_item in delete_list:
                 delete_item.delete_from_queue()
             self.update_queue_view()
@@ -812,48 +812,48 @@ class BatchRenderWindow:
         queue_runner_thread = None        
 
 
-class RenderQueueView(gtk.VBox):
+class RenderQueueView(Gtk.VBox):
 
     def __init__(self):
-        gtk.VBox.__init__(self)
+        GObject.GObject.__init__(self)
         
-        self.storemodel = gtk.ListStore(bool, str, str, str, str)
+        self.storemodel = Gtk.ListStore(bool, str, str, str, str)
         
         # Scroll container
-        self.scroll = gtk.ScrolledWindow()
-        self.scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        self.scroll.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+        self.scroll = Gtk.ScrolledWindow()
+        self.scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
 
         # View
-        self.treeview = gtk.TreeView(self.storemodel)
+        self.treeview = Gtk.TreeView(self.storemodel)
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(True)
         tree_sel = self.treeview.get_selection()
-        tree_sel.set_mode(gtk.SELECTION_MULTIPLE)
+        tree_sel.set_mode(Gtk.SelectionMode.MULTIPLE)
 
         # Cell renderers
-        self.toggle_rend = gtk.CellRendererToggle()
+        self.toggle_rend = Gtk.CellRendererToggle()
         self.toggle_rend.set_property('activatable', True)
         self.toggle_rend.connect( 'toggled', self.toggled)
 
-        self.text_rend_1 = gtk.CellRendererText()
-        self.text_rend_1.set_property("ellipsize", pango.ELLIPSIZE_END)
+        self.text_rend_1 = Gtk.CellRendererText()
+        self.text_rend_1.set_property("ellipsize", Pango.EllipsizeMode.END)
 
-        self.text_rend_2 = gtk.CellRendererText()
+        self.text_rend_2 = Gtk.CellRendererText()
         self.text_rend_2.set_property("yalign", 0.0)
         
-        self.text_rend_3 = gtk.CellRendererText()
+        self.text_rend_3 = Gtk.CellRendererText()
         self.text_rend_3.set_property("yalign", 0.0)
         
-        self.text_rend_4 = gtk.CellRendererText()
+        self.text_rend_4 = Gtk.CellRendererText()
         self.text_rend_4.set_property("yalign", 0.0)
 
         # Column views
-        self.toggle_col = gtk.TreeViewColumn(_("Render"), self.toggle_rend)
-        self.text_col_1 = gtk.TreeViewColumn(_("Project/Sequence"))
-        self.text_col_2 = gtk.TreeViewColumn(_("Status"))
-        self.text_col_3 = gtk.TreeViewColumn(_("Render File"))
-        self.text_col_4 = gtk.TreeViewColumn(_("Render Time"))
+        self.toggle_col = Gtk.TreeViewColumn(_("Render"), self.toggle_rend)
+        self.text_col_1 = Gtk.TreeViewColumn(_("Project/Sequence"))
+        self.text_col_2 = Gtk.TreeViewColumn(_("Status"))
+        self.text_col_3 = Gtk.TreeViewColumn(_("Render File"))
+        self.text_col_4 = Gtk.TreeViewColumn(_("Render Time"))
 
         # Build column views
         self.toggle_col.set_expand(False)
@@ -861,7 +861,7 @@ class RenderQueueView(gtk.VBox):
         
         self.text_col_1.set_expand(True)
         self.text_col_1.set_spacing(5)
-        self.text_col_1.set_sizing(gtk.TREE_VIEW_COLUMN_GROW_ONLY)
+        self.text_col_1.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
         self.text_col_1.set_min_width(150)
         self.text_col_1.pack_start(self.text_rend_1)
         self.text_col_1.add_attribute(self.text_rend_1, "text", 1) # <- note column index
@@ -944,16 +944,16 @@ class RenderQueueView(gtk.VBox):
 
 
 def run_save_project_as_dialog(project_name):
-    dialog = gtk.FileChooserDialog(_("Save Render Item Project As"), None, 
-                                   gtk.FILE_CHOOSER_ACTION_SAVE, 
-                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                                    _("Save").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
-    dialog.set_action(gtk.FILE_CHOOSER_ACTION_SAVE)
+    dialog = Gtk.FileChooserDialog(_("Save Render Item Project As"), None, 
+                                   Gtk.FileChooserAction.SAVE, 
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                                    _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
+    dialog.set_action(Gtk.FileChooserAction.SAVE)
     project_name = project_name.rstrip(".flb")
     dialog.set_current_name(project_name + "_FROM_BATCH.flb")
     dialog.set_do_overwrite_confirmation(True)
     response_id = dialog.run()
-    if response_id == gtk.RESPONSE_NONE:
+    if response_id == Gtk.ResponseType.NONE:
         dialog.destroy()
         return None
     file_name = dialog.get_filename()
@@ -980,18 +980,18 @@ def show_render_properties_panel(render_item):
     
     LEFT_WIDTH = 200
     render_item.get_display_name()
-    row0 = guiutils.get_two_column_box(guiutils.bold_label(_("Encoding:")), gtk.Label(enc_desc), LEFT_WIDTH)
-    row1 = guiutils.get_two_column_box(guiutils.bold_label(_("Quality:")), gtk.Label(quality_desc), LEFT_WIDTH)
-    row2 = guiutils.get_two_column_box(guiutils.bold_label(_("Audio Encoding:")), gtk.Label(audio_desc), LEFT_WIDTH)
-    row3 = guiutils.get_two_column_box(guiutils.bold_label(_("Use User Args:")), gtk.Label(user_args), LEFT_WIDTH)
-    row4 = guiutils.get_two_column_box(guiutils.bold_label(_("Start:")), gtk.Label(start_str), LEFT_WIDTH)
-    row5 = guiutils.get_two_column_box(guiutils.bold_label(_("End:")), gtk.Label(end_str), LEFT_WIDTH)
-    row6 = guiutils.get_two_column_box(guiutils.bold_label(_("Frames Per Second:")), gtk.Label(str(render_item.render_data.fps)), LEFT_WIDTH)
-    row7 = guiutils.get_two_column_box(guiutils.bold_label(_("Render Profile Name:")), gtk.Label(str(render_item.render_data.profile_name)), LEFT_WIDTH)
-    row8 = guiutils.get_two_column_box(guiutils.bold_label(_("Render Profile:")), gtk.Label(render_item.render_data.profile_desc), LEFT_WIDTH)
+    row0 = guiutils.get_two_column_box(guiutils.bold_label(_("Encoding:")), Gtk.Label(label=enc_desc), LEFT_WIDTH)
+    row1 = guiutils.get_two_column_box(guiutils.bold_label(_("Quality:")), Gtk.Label(label=quality_desc), LEFT_WIDTH)
+    row2 = guiutils.get_two_column_box(guiutils.bold_label(_("Audio Encoding:")), Gtk.Label(label=audio_desc), LEFT_WIDTH)
+    row3 = guiutils.get_two_column_box(guiutils.bold_label(_("Use User Args:")), Gtk.Label(label=user_args), LEFT_WIDTH)
+    row4 = guiutils.get_two_column_box(guiutils.bold_label(_("Start:")), Gtk.Label(label=start_str), LEFT_WIDTH)
+    row5 = guiutils.get_two_column_box(guiutils.bold_label(_("End:")), Gtk.Label(label=end_str), LEFT_WIDTH)
+    row6 = guiutils.get_two_column_box(guiutils.bold_label(_("Frames Per Second:")), Gtk.Label(label=str(render_item.render_data.fps)), LEFT_WIDTH)
+    row7 = guiutils.get_two_column_box(guiutils.bold_label(_("Render Profile Name:")), Gtk.Label(label=str(render_item.render_data.profile_name)), LEFT_WIDTH)
+    row8 = guiutils.get_two_column_box(guiutils.bold_label(_("Render Profile:")), Gtk.Label(label=render_item.render_data.profile_desc), LEFT_WIDTH)
 
-    vbox = gtk.VBox(False, 2)
-    vbox.pack_start(gtk.Label(render_item.get_display_name()), False, False, 0)
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(Gtk.Label(label=render_item.get_display_name()), False, False, 0)
     vbox.pack_start(guiutils.get_pad_label(12, 16), False, False, 0)
     vbox.pack_start(row0, False, False, 0)
     vbox.pack_start(row1, False, False, 0)
@@ -1002,13 +1002,13 @@ def show_render_properties_panel(render_item):
     vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(row7, False, False, 0)
     vbox.pack_start(row8, False, False, 0)
-    vbox.pack_start(gtk.Label(), True, True, 0)
+    vbox.pack_start(Gtk.Label(), True, True, 0)
 
     title = _("Render Properties")
     dialogutils.panel_ok_dialog(title, vbox)
     
 def display_render_item_popup_menu(callback, event):
-    menu = gtk.Menu()
+    menu = Gtk.Menu()
     menu.add(_get_menu_item(_("Save Item Project As..."), callback,"saveas"))
     menu.add(_get_menu_item(_("Render Properties"), callback,"renderinfo")) 
     _add_separetor(menu)
@@ -1016,12 +1016,12 @@ def display_render_item_popup_menu(callback, event):
     menu.popup(None, None, None, event.button, event.time)
     
 def _add_separetor(menu):
-    sep = gtk.SeparatorMenuItem()
+    sep = Gtk.SeparatorMenuItem()
     sep.show()
     menu.add(sep)
 
 def _get_menu_item(text, callback, data, sensitive=True):
-    item = gtk.MenuItem(text)
+    item = Gtk.MenuItem(text)
     item.connect("activate", callback, data)
     item.show()
     item.set_sensitive(sensitive)

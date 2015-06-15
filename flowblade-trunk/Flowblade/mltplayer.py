@@ -23,9 +23,9 @@ Module contains an object that is used to do playback from mlt.Producers to
 a Xwindow of a GTK+ widget and os audiosystem using a SDL consumer.
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 import mlt
 import os
@@ -89,7 +89,7 @@ class Player:
         Connects SDL output to display widget's xwindow
         """
         os.putenv('SDL_WINDOWID', str(widget.window.xid))
-        gtk.gdk.flush()
+        Gdk.flush()
     
     def set_tracktor_producer(self, tractor):
         """
@@ -258,16 +258,16 @@ class Player:
             self.render_gui_update_count = self.render_gui_update_count + 1
             if self.render_gui_update_count % 8 == 0: # we need quick updates for stop accuracy, but slower gui updating
                 self.render_gui_update_count = 1
-                gtk.gdk.threads_enter()
+                Gdk.threads_enter()
                 self.render_callbacks.set_render_progress_gui(render_fraction)
-                gtk.gdk.threads_leave()
+                Gdk.threads_leave()
             return 
 
         # If we're out of active range seek end.
         if current_frame >= self.get_active_length():
-            gtk.gdk.threads_enter()
+            Gdk.threads_enter()
             self.seek_frame(current_frame)
-            gtk.gdk.threads_leave()
+            Gdk.threads_leave()
             return
 
         # If trim looping and past loop end, start from loop start
@@ -277,9 +277,9 @@ class Player:
             self.seek_frame(self.loop_start, False) #NOTE: False==GUI not updated
             self.producer.set_speed(1)
 
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         updater.update_frame_displayers(current_frame)
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
         
     def get_active_length(self):
         # Displayed range is different
@@ -356,15 +356,15 @@ class Player:
 
         # Enter monitor playback state
         self.consumer = self.sdl_consumer
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         self.connect_and_start()
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
         self.seek_frame(0)
 
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         self.render_callbacks.exit_render_gui()
         self.render_callbacks.maybe_open_rendered_file_in_bin()
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
 
     def jack_output_on(self):
         # We're assuming that we are not rendering and consumer is SDL consumer
