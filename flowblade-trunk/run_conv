@@ -1,5 +1,10 @@
 #/usr/bin/bash
 
-echo "bulkkuuu"
+echo "Running Flowblade GTK# conversion script..."
 
+cd ..
+echo "Reset to last commit"
+git reset HEAD --hard
+
+cd flowblade-trunk
 ./gtk3_conversion

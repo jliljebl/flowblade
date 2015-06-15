@@ -2,7 +2,11 @@
 
 import fileinput
 import shutil
+import os
+import fnmatch
 
+
+"""
 BOLD_O = "<b>"
 BOLD_C = "</b>"
 bold_is_open = True
@@ -66,22 +70,27 @@ def headers(line):
         line = line.replace("=", H2_C)
         
     return line
-
+"""
   
 # ---- main
-orig_f = "/home/janne/codes/hg/flowblade/flowblade-trunk/Flowblade/res/help/help_orig.html"
-f = "/home/janne/codes/hg/flowblade/flowblade-trunk/Flowblade/res/help/help.html"
+source_folder = "/home/janne/codes/flowblade/flowblade/flowblade-trunk/Flowblade/"
+#f = "/home/janne/codes/hg/flowblade/flowblade-trunk/Flowblade/res/help/help.html"
 
-print "haloo"
+source_files = []
+for root, dirnames, filenames in os.walk(source_folder):
+    for filename in fnmatch.filter(filenames, "*.py"):
+        if filename.find("__init__") != -1:
+            continue
+        source_files.append(os.path.join(root, filename))
 
 #shutil.copyfile(orig_f , f)
 
-"""
-for line in fileinput.input(f, inplace=True):
-    line = line.rstrip("\n")
-    line = list_items(line)
-    line = line.strip()
-    line = bolds(line)
-    line = headers(line)
-    print line
-"""
+print len(source_files), " .py files found"
+
+for f in source_files:
+    print f
+    for line in fileinput.input(f, inplace=True):
+        line = line.rstrip("\n")
+        print line
+
+print "Done"
