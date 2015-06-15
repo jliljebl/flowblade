@@ -33,10 +33,10 @@ class CairoDrawableArea(gtk.Widget):
     """
     A widget for creating custom components using Cairo canvas. 
     """
-    __gsignals__ = { 'realize': 'override',
-                     'expose-event' : 'override',
-                     'size-allocate': 'override',
-                     'size-request': 'override',}
+    #KILL# __gsignals__ = { 'realize': 'override',
+      #KILL#               'expose-event' : 'override',
+         #KILL#            'size-allocate': 'override',
+       #KILL#              'size-request': 'override',}
 
     def __init__(self, pref_width, pref_height, func_draw, use_widget_bg=False):
         # Init widget.
