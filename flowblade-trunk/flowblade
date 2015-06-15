@@ -23,8 +23,8 @@
 import os
 import sys
 
-print "BRANCH: GTK3 CONVERSION"
-
+print "BRANCH: GTK3 CONVERSION!"
+print " "
 print "FLOWBLADE MOVIE EDITOR 1.0"
 print "--------------------------"
 
