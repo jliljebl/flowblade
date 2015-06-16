@@ -22,14 +22,14 @@
 Module contains classes and build methods to create GUI objects.
 """
 import cairo
+
 from gi.repository import GObject
-
-
+from gi.repository import GdkPixbuf
 from gi.repository import Gtk
-
-import math
 from gi.repository import Pango
 from gi.repository import PangoCairo
+
+import math
 
 import appconsts
 from cairoarea import CairoDrawableArea
@@ -124,18 +124,18 @@ class ImageTextTextListView(Gtk.VBox):
         # Build column views
         self.icon_col.set_expand(False)
         self.icon_col.set_spacing(5)
-        self.icon_col.pack_start(self.icon_rend)
+        self.icon_col.pack_start(self.icon_rend, False)
         self.icon_col.add_attribute(self.icon_rend, 'pixbuf', 0)
         
         self.text_col_1.set_expand(True)
         self.text_col_1.set_spacing(5)
         self.text_col_1.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
         self.text_col_1.set_min_width(150)
-        self.text_col_1.pack_start(self.text_rend_1)
+        self.text_col_1.pack_start(self.text_rend_1, True)
         self.text_col_1.add_attribute(self.text_rend_1, "text", 1)
 
         self.text_col_2.set_expand(False)
-        self.text_col_2.pack_start(self.text_rend_2)
+        self.text_col_2.pack_start(self.text_rend_2, True)
         self.text_col_2.add_attribute(self.text_rend_2, "text", 2)
         
         # Add column views to view
@@ -145,7 +145,7 @@ class ImageTextTextListView(Gtk.VBox):
 
         # Build widget graph and display
         self.scroll.add(self.treeview)
-        self.pack_start(self.scroll)
+        self.pack_start(self.scroll, True, True, 0)
         self.scroll.show_all()
 
     def get_selected_rows_list(self):
@@ -196,19 +196,19 @@ class ImageTextImageListView(Gtk.VBox):
         # Build column views
         self.icon_col_1.set_expand(False)
         self.icon_col_1.set_spacing(5)
-        self.icon_col_1.pack_start(self.icon_rend_1)
+        self.icon_col_1.pack_start(self.icon_rend_1, False)
         self.icon_col_1.add_attribute(self.icon_rend_1, 'pixbuf', 0)
         
         self.text_col_1.set_expand(True)
         self.text_col_1.set_spacing(5)
         self.text_col_1.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
         self.text_col_1.set_min_width(150)
-        self.text_col_1.pack_start(self.text_rend_1)
+        self.text_col_1.pack_start(self.text_rend_1, True)
         self.text_col_1.add_attribute(self.text_rend_1, "text", 1)
 
         self.icon_col_2.set_expand(False)
         self.icon_col_2.set_spacing(5)
-        self.icon_col_2.pack_start(self.icon_rend_2)
+        self.icon_col_2.pack_start(self.icon_rend_2, False)
         self.icon_col_2.add_attribute(self.icon_rend_2, 'pixbuf', 2)
         
         # Add column views to view
@@ -218,7 +218,7 @@ class ImageTextImageListView(Gtk.VBox):
 
         # Build widget graph and display
         self.scroll.add(self.treeview)
-        self.pack_start(self.scroll)
+        self.pack_start(self.scroll, True, True, 0)
         self.scroll.show_all()
 
     def get_selected_rows_list(self):
@@ -399,19 +399,19 @@ class FilterSwitchListView(Gtk.VBox):
         # Build column views
         self.icon_col_1.set_expand(False)
         self.icon_col_1.set_spacing(5)
-        self.icon_col_1.pack_start(self.icon_rend_1)
+        self.icon_col_1.pack_start(self.icon_rend_1, False)
         self.icon_col_1.add_attribute(self.icon_rend_1, 'pixbuf', 0)
         
         self.text_col_1.set_expand(True)
         self.text_col_1.set_spacing(5)
         self.text_col_1.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
         self.text_col_1.set_min_width(150)
-        self.text_col_1.pack_start(self.text_rend_1)
+        self.text_col_1.pack_start(self.text_rend_1, True)
         self.text_col_1.add_attribute(self.text_rend_1, "text", 1)
 
         self.check_col_1.set_expand(False)
         self.check_col_1.set_spacing(5)
-        self.check_col_1.pack_start(self.toggle_rend)
+        self.check_col_1.pack_start(self.toggle_rend, False)
         self.check_col_1.add_attribute(self.toggle_rend, "active", 2)
         
         # Add column views to view
@@ -421,7 +421,7 @@ class FilterSwitchListView(Gtk.VBox):
 
         # Build widget graph and display
         self.scroll.add(self.treeview)
-        self.pack_start(self.scroll)
+        self.pack_start(self.scroll, True, True, 0)
         self.scroll.show_all()
 
         # Connect selection 'changed' signal
@@ -552,7 +552,7 @@ class AutoSavesListView(TextListView):
 class ClipInfoPanel(Gtk.VBox):
     
     def __init__(self):
-        GObject.GObject.__init__(self, False, 2)
+        GObject.GObject.__init__(self)
 
         self.name_label = guiutils.bold_label(_("Clip:"))
         self.name_value = Gtk.Label()

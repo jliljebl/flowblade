@@ -23,8 +23,8 @@ corresponding mlt.Producers for timeline.
 """
 import copy
 
-
 from gi.repository import Gtk
+from gi.repository import GdkPixbuf
 
 import mlt
 
@@ -215,7 +215,7 @@ class BinColorClip(AbstractBinClip):
         return producer
 
     def create_icon(self):
-        icon = GdkPixbuf.Pixbuf(GdkPixbuf.Colorspace.RGB, False, 8, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
+        icon = GdkPixbuf.Pixbuf.new(GdkPixbuf.Colorspace.RGB, False, 8, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
         pixel = utils.gdk_color_str_to_int(self.gdk_color_str)
         icon.fill(pixel)
         self.icon = icon

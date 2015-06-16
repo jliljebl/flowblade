@@ -22,10 +22,7 @@
 Module contains GUI update routines.
 """
 
-
-
 from gi.repository import Gtk
-
 
 import appconsts
 import clipeffectseditor
@@ -93,14 +90,14 @@ def load_icons():
     global play_icon, play_loop_icon,  next_icon, next_trim_icon, \
     prev_icon, prev_trim_icon, stop_icon, stop_trim_icon
      
-    play_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH + "play_2_s.png")
-    play_loop_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH  + "play_loop.png")
-    next_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH  + "next_frame_s.png")
-    next_trim_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH  + "next_frame_trim.png")
-    prev_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH  + "prev_frame_s.png")
-    prev_trim_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH  + "prev_frame_trim.png")
-    stop_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH  + "stop_s.png")
-    stop_trim_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH  + "stop_loop.png")
+    play_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "play_2_s.png")
+    play_loop_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH  + "play_loop.png")
+    next_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH  + "next_frame_s.png")
+    next_trim_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH  + "next_frame_trim.png")
+    prev_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH  + "prev_frame_s.png")
+    prev_trim_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH  + "prev_frame_trim.png")
+    stop_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH  + "stop_s.png")
+    stop_trim_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH  + "stop_loop.png")
 
 
 # --------------------------------- player

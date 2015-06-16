@@ -23,20 +23,14 @@ Module contains CairoDrawableArea widget. You can draw onto it using
 Cairo, and listen to its mouse and keyboard events.
 """
 
-
-
 from gi.repository import Gtk
-
+from gi.repository import GObject
 from gi.repository import Gdk
 
 class CairoDrawableArea(Gtk.Widget):
     """
     A widget for creating custom components using Cairo canvas. 
     """
-
-
-
-
 
     def __init__(self, pref_width, pref_height, func_draw, use_widget_bg=False):
         # Init widget.

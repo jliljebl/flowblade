@@ -29,6 +29,7 @@ from gi.repository import GObject
 
 from gi.repository import GLib
 from gi.repository import Gtk
+from gi.repository import Gdk
 
 import locale
 import md5
@@ -616,7 +617,7 @@ def show_splash_screen():
     splash_screen.set_border_width(0)
     splash_screen.set_decorated(False)
     splash_screen.set_position(Gtk.WindowPosition.CENTER)
-    img = Gtk.image_new_from_file(respaths.IMAGE_PATH + "flowblade_splash_black_small.png")
+    img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "flowblade_splash_black_small.png")
 
     splash_screen.add(img)
     splash_screen.set_keep_above(True)

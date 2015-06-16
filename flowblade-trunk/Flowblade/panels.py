@@ -23,9 +23,8 @@ Module has methods that build panels from widgets. Created panels
 are used to build gui at callsites.
 """
 
-
-
 from gi.repository import Gtk
+from gi.repository import GdkPixbuf
 
 import gui
 import guicomponents
@@ -56,15 +55,15 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, proxy
     del_media_b.set_tooltip_text(_("Delete Media File from Bin"))
 
     proxy_b = Gtk.Button()
-    proxy_b.set_image(Gtk.image_new_from_file(respaths.IMAGE_PATH + "proxy_button.png"))
+    proxy_b.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "proxy_button.png"))
     proxy_b.connect("clicked", proxy_cb, None)
     proxy_b.set_tooltip_text(_("Render Proxy Files For Selected Media"))
     gui.proxy_button = proxy_b
 
-    columns_img = Gtk.image_new_from_file(respaths.IMAGE_PATH + "columns.png")
+    columns_img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "columns.png")
         
     adj = Gtk.Adjustment(value=editorpersistance.prefs.media_columns, lower=MEDIA_PANEL_MIN_ROWS, upper=MEDIA_PANEL_MAX_ROWS, step_incr=1)
-    spin = Gtk.SpinButton(adj)
+    spin = Gtk.SpinButton.new(adj, 1.0, 0)
     spin.set_numeric(True)
     spin.set_size_request(40, 30)
     spin.connect("changed", col_changed_cb)
@@ -109,8 +108,8 @@ def get_bins_panel(bin_list_view, add_cb, delete_cb):
     add_b.set_tooltip_text(_("Add Bin to Project"))
     del_b.set_tooltip_text(_("Delete Bin from Project"))
     buttons_box = Gtk.HBox(True,1)
-    buttons_box.pack_start(add_b)
-    buttons_box.pack_start(del_b)
+    buttons_box.pack_start(add_b, True, True, 0)
+    buttons_box.pack_start(del_b, True, True, 0)
     
     panel = Gtk.VBox()
     panel.pack_start(buttons_box, False, True, 0)
@@ -131,30 +130,15 @@ def get_sequences_panel(sequence_list_view, edit_seq_cb, add_seq_cb, del_seq_cb)
     del_b.connect("clicked", del_seq_cb, None)
 
     buttons_box = Gtk.HBox(True,1)
-    buttons_box.pack_start(edit_b)
-    buttons_box.pack_start(add_b)
-    buttons_box.pack_start(del_b)
+    buttons_box.pack_start(edit_b, True, True, 0)
+    buttons_box.pack_start(add_b, True, True, 0)
+    buttons_box.pack_start(del_b, True, True, 0)
     
     panel = Gtk.VBox()
     panel.pack_start(buttons_box, False, True, 0)
     panel.pack_start(sequence_list_view, True, True, 0)
 
     return get_named_frame(_("Sequences"), panel, 4)
-
-"""
-def get_profile_info_panel(profile):
-    desc_label = Gtk.Label(label=profile.description())
-    info = guicomponents.get_profile_info_small_box(profile)
-    panel = Gtk.VBox()
-    panel.pack_start(guiutils.get_left_justified_box([desc_label]), False, True, 0)
-    panel.pack_start(info, False, True, 0)
-    return get_named_frame(_("Profile"), panel, 4)
-"""
-"""
-def get_project_name_panel(project_name):
-    name_row = get_left_justified_box([Gtk.Label(label=project_name)])
-    return get_named_frame(_("Name"), name_row, 4)
-"""
 
 def get_thumbnail_select_panel(current_folder_path):    
     texts_panel = get_two_text_panel(_("Select folder for new thumbnails."), 

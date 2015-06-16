@@ -22,10 +22,8 @@
 Module contains main editor window object.
 """
 
-
-
 from gi.repository import Gtk
-
+from gi.repository import GdkPixbuf
 from gi.repository import Pango
 
 import app

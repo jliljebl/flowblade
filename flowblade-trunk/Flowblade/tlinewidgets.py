@@ -24,12 +24,12 @@ Global display position and scale information is in this module.
 """
 import cairo
 
-
 from gi.repository import Gtk
-
-import math
+from gi.repository import GdkPixbuf
 from gi.repository import Pango
 from gi.repository import PangoCairo
+
+import math
 
 import appconsts
 from cairoarea import CairoDrawableArea

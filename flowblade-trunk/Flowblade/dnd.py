@@ -22,10 +22,9 @@
 Module handles drag and drop.
 """
 
-
-
 from gi.repository import Gtk
-
+from gi.repository import Gdk
+from gi.repository import GdkPixbuf
 
 import editorstate
 import gui
