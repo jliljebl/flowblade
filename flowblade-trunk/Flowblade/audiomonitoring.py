@@ -21,15 +21,14 @@
 Module handles initializing and displaying audiomonitor tool.
 """
 import cairo
-
+import mlt
+import time
 
 from gi.repository import Gtk
 from gi.repository import GLib
-
-import mlt
+from gi.repository import Gdk
 from gi.repository import Pango
 from gi.repository import PangoCairo
-import time
 
 import appconsts
 from cairoarea import CairoDrawableArea

@@ -57,9 +57,32 @@ class CairoDrawableArea(Gtk.Widget):
         self.grab_focus_on_press = True
         
     def do_realize(self):
-        # Set an internal flag telling that we're realized
-        self.set_flags(self.flags() | Gtk.REALIZED)
+
+
+        allocation = self.get_allocation()
+        attr = Gdk.WindowAttr()
+        attr.window_type = Gdk.WindowType.CHILD
+        attr.x = allocation.x
+        attr.y = allocation.y
+        attr.width = allocation.width
+        attr.height = allocation.height
+        attr.visual = self.get_visual()
+        attr.event_mask = self.get_events() \
+                                 | Gdk.EventMask.EXPOSURE_MASK \
+                                 | Gdk.EventMask.BUTTON_PRESS_MASK \
+                                 | Gdk.EventMask.BUTTON_RELEASE_MASK \
+                                 | Gdk.EventMask.BUTTON_MOTION_MASK \
+                                 | Gdk.EventMask.POINTER_MOTION_HINT_MASK \
+                                 | Gdk.EventMask.ENTER_NOTIFY_MASK \
+                                 | Gdk.EventMask.LEAVE_NOTIFY_MASK \
+                                 | Gdk.EventMask.KEY_PRESS_MASK \
+                                 | Gdk.EventMask.SCROLL_MASK \
+                                 
+        WAT = Gdk.WindowAttributesType
+        mask = WAT.X | WAT.Y | WAT.VISUAL
+        window = Gdk.Window(self.get_parent_window(), attr, mask);
         
+        """
         # Create GDK window
         self.window = Gdk.Window(self.get_parent_window(),
                                  width=self.allocation.width,
@@ -76,7 +99,7 @@ class CairoDrawableArea(Gtk.Widget):
                                  | Gdk.EventMask.LEAVE_NOTIFY_MASK
                                  | Gdk.EventMask.KEY_PRESS_MASK
                                  | Gdk.EventMask.SCROLL_MASK)
-
+        """
         # Connect motion notify event
         self.connect('motion_notify_event', self._motion_notify_event)
         
@@ -87,24 +110,30 @@ class CairoDrawableArea(Gtk.Widget):
         self.set_property("can-focus",  True)
 
         # Check that cairo context can be created
-        if not hasattr(self.window, "cairo_create"):
-            print "no cairo"
-            raise SystemExit
+        #if not hasattr(self.window, "cairo_create"):
+        #    print "no cairo"
+        #    raise SystemExit
 
         # GTK+ stores the widget that owns a Gdk.Window as user data on it. 
         # Custom widgets should do this too
-        self.window.set_user_data(self)
+        #self.window.set_user_data(self)
 
         # Attach style
-        self.style.attach(self.window)
+        #self.style.attach(self.window)
 
         # Set background color
-        if(self._use_widget_bg):
-            self.style.set_background(self.window, Gtk.StateType.NORMAL)
+        #if(self._use_widget_bg):
+        #    self.style.set_background(self.window, Gtk.StateType.NORMAL)
 
         # Set size and place 
-        self.window.move_resize(*self.allocation)
-
+        #self.window.move_resize(self.allocation)
+        #self.window.move_resize(self.allocation)
+        # Set an internal flag telling that we're realized
+        self.set_window(window)
+        self.register_window(window)
+        self.set_realized(True)
+        window.set_background_pattern(None)
+        
     def set_pref_size(self, pref_width, pref_height):
         self._pref_width = pref_width
         self._pref_height = pref_height

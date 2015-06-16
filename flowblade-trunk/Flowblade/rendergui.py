@@ -18,9 +18,8 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-
-
 from gi.repository import Gtk
+from gi.repository import GObject
 
 import os
 
@@ -36,7 +35,6 @@ import utils
 destroy_window_event_id = -1
 
 FFMPEG_VIEW_SIZE = (200, 210) # Text edit area height for render opts. Width 200 seems to be ignored in current layout?
-
 
 
 # ----------------------------------------------------------- dialogs
@@ -386,7 +384,7 @@ class ProfileSelector():
 
 class ProfileInfoBox(Gtk.VBox):
     def __init__(self):
-        GObject.GObject.__init__(self, False, 2)
+        GObject.GObject.__init__(self)
         self.add(Gtk.Label()) # This is removed when we have data to fill this
         
     def display_info(self, info_panel):
@@ -563,7 +561,7 @@ class RenderEncodingPanel():
                                                         self.audio_desc)
         self.encoding_selector.encoding_selection_changed()
         
-        self.speaker_image = Gtk.image_new_from_file(respaths.IMAGE_PATH + "audio_desc_icon.png")
+        self.speaker_image = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "audio_desc_icon.png")
 
         quality_row  = Gtk.HBox()
         quality_row.pack_start(self.quality_selector.widget, False, False, 0)

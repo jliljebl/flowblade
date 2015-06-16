@@ -35,10 +35,10 @@ import respaths
 MEDIA_ICON_WIDTH = 20
 MEDIA_ICON_HEIGHT = 15
 
-MEDIA_FILES_DND_TARGET = ('media_file', Gtk.TargetFlags.SAME_APP, 0)
-EFFECTS_DND_TARGET = ('effect', Gtk.TargetFlags.SAME_APP, 0)
-CLIPS_DND_TARGET = ('clip', Gtk.TargetFlags.SAME_APP, 0)
-RANGE_DND_TARGET = ('range', Gtk.TargetFlags.SAME_APP, 0)
+MEDIA_FILES_DND_TARGET = Gtk.TargetEntry.new('media_file', Gtk.TargetFlags.SAME_APP, 0)
+EFFECTS_DND_TARGET = Gtk.TargetEntry.new('effect', Gtk.TargetFlags.SAME_APP, 0)
+CLIPS_DND_TARGET = Gtk.TargetEntry.new('clip', Gtk.TargetFlags.SAME_APP, 0)
+RANGE_DND_TARGET = Gtk.TargetEntry.new('range', Gtk.TargetFlags.SAME_APP, 0)
 STRING_DATA_BITS = 8
 
 # Holds data during drag
@@ -53,6 +53,7 @@ add_current_effect = None
 display_monitor_media_file = None
 range_log_items_tline_drop = None
 range_log_items_log_drop = None
+
 
 def init():
     global clip_icon, empty_icon
@@ -105,6 +106,7 @@ def connect_stack_treeview(widget):
     widget.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
                          [EFFECTS_DND_TARGET], 
                          Gdk.DragAction.COPY)
+                         
     widget.connect("drag_drop", _on_effect_stack_drop)
 
 def connect_tline(widget, do_effect_drop_func, do_media_drop_func):

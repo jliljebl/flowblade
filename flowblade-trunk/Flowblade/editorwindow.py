@@ -23,6 +23,7 @@ Module contains main editor window object.
 """
 
 from gi.repository import Gtk
+from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import Pango
 
@@ -570,7 +571,7 @@ class EditorWindow:
 
         # Notebook panel
         notebook_vbox = Gtk.VBox(False, 1)
-        notebook_vbox.pack_start(self.notebook, True, True)
+        notebook_vbox.pack_start(self.notebook, True, True, 0)
 
         # Top row paned
         self.top_paned = Gtk.HPaned()
@@ -709,7 +710,7 @@ class EditorWindow:
         self.app_v_paned.set_position(editorpersistance.prefs.app_v_paned_position)
 
     def _init_view_menu(self, menu_item):
-        menu_item.remove_submenu()
+        menu_item.set_submenu(None)
         menu = Gtk.Menu()
 
         mb_menu_item = Gtk.MenuItem(_("Middlebar Layout").encode('utf-8'))
@@ -849,7 +850,7 @@ class EditorWindow:
         # Monitor switch buttons
         self.sequence_editor_b = Gtk.RadioButton(None) #, _("Timeline"))
         self.sequence_editor_b.set_mode(False)
-        self.sequence_editor_b.set_image(Gtk.image_new_from_file(IMG_PATH + "timeline_button.png"))
+        self.sequence_editor_b.set_image(Gtk.Image.new_from_file(IMG_PATH + "timeline_button.png"))
         self.sequence_editor_b.connect("clicked", 
                         lambda w,e: self._monitor_switch_handler(w), 
                         None)
@@ -857,7 +858,7 @@ class EditorWindow:
 
         self.clip_editor_b = Gtk.RadioButton(self.sequence_editor_b)#,_("Clip"))
         self.clip_editor_b.set_mode(False)
-        self.clip_editor_b.set_image(Gtk.image_new_from_file(IMG_PATH + "clip_button.png"))
+        self.clip_editor_b.set_image(Gtk.Image.new_from_file(IMG_PATH + "clip_button.png"))
         self.clip_editor_b.connect("clicked",
                         lambda w,e: self._monitor_switch_handler(w),
                         None)

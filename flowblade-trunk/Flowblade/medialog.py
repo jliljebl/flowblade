@@ -21,9 +21,11 @@
 
 
 from gi.repository import Gtk
+from gi.repository import GObject
+from gi.repository import GdkPixbuf
+from gi.repository import Pango
 
 import datetime
-from gi.repository import Pango
 
 import appconsts
 import dialogs
@@ -511,29 +513,29 @@ class MediaLogListView(Gtk.VBox):
         self.icon_col_1.set_expand(False)
         self.icon_col_1.set_spacing(5)
         self.text_col_1.set_min_width(20)
-        self.icon_col_1.pack_start(self.icon_rend_1)
+        self.icon_col_1.pack_start(self.icon_rend_1, False)
         self.icon_col_1.add_attribute(self.icon_rend_1, 'pixbuf', 0)
 
         self.text_col_2.set_expand(True)
         self.text_col_2.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
         self.text_col_2.set_min_width(150)
-        self.text_col_2.pack_start(self.text_rend_2)
+        self.text_col_2.pack_start(self.text_rend_2, True)
         self.text_col_2.add_attribute(self.text_rend_2, "text", 1)
 
         self.text_col_3.set_expand(True)
-        self.text_col_3.pack_start(self.text_rend_3)
+        self.text_col_3.pack_start(self.text_rend_3, True)
         self.text_col_3.add_attribute(self.text_rend_3, "text", 2)
 
         self.text_col_4.set_expand(True)
-        self.text_col_4.pack_start(self.text_rend_4)
+        self.text_col_4.pack_start(self.text_rend_4, True)
         self.text_col_4.add_attribute(self.text_rend_4, "text", 3)
 
         self.text_col_5.set_expand(True)
-        self.text_col_5.pack_start(self.text_rend_5)
+        self.text_col_5.pack_start(self.text_rend_5, True)
         self.text_col_5.add_attribute(self.text_rend_5, "text", 4)
 
         self.text_col_6.set_expand(True)
-        self.text_col_6.pack_start(self.text_rend_6)
+        self.text_col_6.pack_start(self.text_rend_6, True)
         self.text_col_6.add_attribute(self.text_rend_6, "text", 5)
         
         # Add column views to view
@@ -546,7 +548,7 @@ class MediaLogListView(Gtk.VBox):
 
         # Build widget graph and display
         self.scroll.add(self.treeview)
-        self.pack_start(self.scroll)
+        self.pack_start(self.scroll, True, True, 0)
         self.scroll.show_all()
 
     def fill_data_model(self):
@@ -596,11 +598,11 @@ def get_media_log_events_panel(events_list_view):
     star_not_active_label.set_from_file(respaths.IMAGE_PATH + "star_not_active.png")
 
     star_button = Gtk.Button()
-    star_button.set_image(Gtk.image_new_from_file(respaths.IMAGE_PATH + "star.png"))
+    star_button.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "star.png"))
     star_button.connect("clicked", lambda w: media_log_star_button_pressed())
 
     no_star_button = Gtk.Button()
-    no_star_button.set_image(Gtk.image_new_from_file(respaths.IMAGE_PATH + "star_not_active.png"))
+    no_star_button.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "star_not_active.png"))
     no_star_button.connect("clicked", lambda w: media_log_no_star_button_pressed())
 
     widgets.group_box = Gtk.HBox()
@@ -624,12 +626,12 @@ def get_media_log_events_panel(events_list_view):
     row1.pack_start(Gtk.Label(), True, True, 0)
 
     widgets.log_range = Gtk.Button()
-    widgets.log_range.set_image(Gtk.image_new_from_file(respaths.IMAGE_PATH + "log_range.png"))
+    widgets.log_range.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "log_range.png"))
     widgets.log_range.set_size_request(80, 30)
     widgets.log_range.connect("clicked", lambda w:log_range_clicked())
 
     delete_button = Gtk.Button()
-    delete_button.set_image(Gtk.image_new_from_file(respaths.IMAGE_PATH + "delete_log_range.png"))
+    delete_button.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "delete_log_range.png"))
     delete_button.set_size_request(80, 30)
     delete_button.connect("clicked", lambda w:delete_selected())
 
@@ -639,12 +641,12 @@ def get_media_log_events_panel(events_list_view):
     widgets.use_comments_check = use_comments_check
 
     insert_displayed = Gtk.Button()
-    insert_displayed.set_image(Gtk.image_new_from_file(respaths.IMAGE_PATH + "insert_media_log.png"))
+    insert_displayed.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "insert_media_log.png"))
     insert_displayed.set_size_request(80, 22)
     insert_displayed.connect("clicked", lambda w:insert_selected_log_events())
 
     append_displayed = Gtk.Button()
-    append_displayed.set_image(Gtk.image_new_from_file(respaths.IMAGE_PATH + "append_media_log.png"))
+    append_displayed.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "append_media_log.png"))
     append_displayed.set_size_request(80, 22)
     append_displayed.connect("clicked", lambda w:append_log_events())
 

@@ -19,9 +19,8 @@
 """
 
 
-
 from gi.repository import Gtk
-
+from gi.repository import GObject
 from gi.repository import Pango
 
 from editorstate import PROJECT
@@ -118,15 +117,15 @@ class ProjectEventListView(Gtk.VBox):
         self.text_col_1.set_spacing(5)
         self.text_col_1.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
         self.text_col_1.set_min_width(150)
-        self.text_col_1.pack_start(self.text_rend_1)
+        self.text_col_1.pack_start(self.text_rend_1, True)
         self.text_col_1.add_attribute(self.text_rend_1, "text", 0)
 
         self.text_col_2.set_expand(True)
-        self.text_col_2.pack_start(self.text_rend_2)
+        self.text_col_2.pack_start(self.text_rend_2, True)
         self.text_col_2.add_attribute(self.text_rend_2, "text", 1)
 
         self.text_col_3.set_expand(True)
-        self.text_col_3.pack_start(self.text_rend_3)
+        self.text_col_3.pack_start(self.text_rend_3, True)
         self.text_col_3.add_attribute(self.text_rend_3, "text", 2)
         
         # Add column views to view
@@ -136,7 +135,7 @@ class ProjectEventListView(Gtk.VBox):
 
         # Build widget graph and display
         self.scroll.add(self.treeview)
-        self.pack_start(self.scroll)
+        self.pack_start(self.scroll, True, True, 0)
         self.scroll.show_all()
 
     def fill_data_model(self):

@@ -118,10 +118,11 @@ def capture_references(new_editor_window):
 
     editmenu = editor_window.uimanager.get_widget('/MenuBar/EditMenu')
 
-    style = editor_window.edit_buttons_row.get_style()
-    note_bg_color = style.bg[Gtk.StateType.NORMAL]
-    fg_color = style.fg[Gtk.StateType.NORMAL]
-    selected_bg_color = style.bg[Gtk.StateType.SELECTED]
+    style = editor_window.edit_buttons_row.get_style_context ()
+    print style
+    note_bg_color = style.get_background_color(Gtk.StateFlags.NORMAL)
+    fg_color = style.get_color(Gtk.StateFlags.NORMAL)
+    selected_bg_color = style.get_background_color(Gtk.StateFlags.SELECTED)
     
     # Get cairo color tuple from Gdk.Color
     raw_r, raw_g, raw_b = hex_to_rgb(fg_color.to_string())

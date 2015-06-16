@@ -615,7 +615,7 @@ class ClipInfoPanel(Gtk.VBox):
 
 class CompositorInfoPanel(Gtk.VBox):
     def __init__(self):
-        GObject.GObject.__init__(self, False, 2)
+        GObject.GObject.__init__(self)
 
         self.source_track = Gtk.Label()
         self.source_track_value = Gtk.Label()
@@ -1694,10 +1694,10 @@ class TimeLineLeftBottom:
     def update_gui(self):
         for child in self.widget.get_children():
             self.widget.remove(child)
-        self.widget.pack_start(Gtk.Label(), True, True)
+        self.widget.pack_start(Gtk.Label(), True, True, 0)
         if PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA:
             proxy_img =  Gtk.image_new_from_file(respaths.IMAGE_PATH + "project_proxy.png")
-            self.widget.pack_start(proxy_img, False, False)
+            self.widget.pack_start(proxy_img, False, False, 0)
 
         self.widget.show_all()
         self.widget.queue_draw()

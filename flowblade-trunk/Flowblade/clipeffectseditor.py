@@ -60,8 +60,8 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     create_widgets()
 
     ad_buttons_box = Gtk.HBox(True,1)
-    ad_buttons_box.pack_start(widgets.add_effect_b)
-    ad_buttons_box.pack_start(widgets.del_effect_b)
+    ad_buttons_box.pack_start(widgets.add_effect_b, True, True, 0)
+    ad_buttons_box.pack_start(widgets.del_effect_b, True, True, 0)
 
     stack_buttons_box = Gtk.HBox(False,1)
     stack_buttons_box.pack_start(ad_buttons_box, True, True, 0)
@@ -210,7 +210,7 @@ def create_widgets():
     widgets.add_effect_b = Gtk.Button(_("Add"))
     widgets.del_effect_b = Gtk.Button(_("Delete"))
     widgets.toggle_all = Gtk.Button()
-    widgets.toggle_all.set_image(Gtk.image_new_from_file(respaths.IMAGE_PATH + "filters_all_toggle.png"))
+    widgets.toggle_all.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "filters_all_toggle.png"))
 
     widgets.add_effect_b.connect("clicked", lambda w,e: add_effect_pressed(), None)
     widgets.del_effect_b.connect("clicked", lambda w,e: delete_effect_pressed(), None)

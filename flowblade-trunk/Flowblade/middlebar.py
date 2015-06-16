@@ -25,7 +25,7 @@
 
 
 from gi.repository import Gtk
-
+from gi.repository import GdkPixbuf
 
 import audiomonitoring
 import editevent
