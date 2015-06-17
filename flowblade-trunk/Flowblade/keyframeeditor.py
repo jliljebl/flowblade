@@ -27,12 +27,11 @@ but slighly different editors can be made in the future). There are a lots
 of callbacks to parent objects, this makes the design difficult to follow.
 """
 
+import cairo
 import copy
-
+import math
 
 from gi.repository import Gtk
-
-import math
 from gi.repository import Pango
 
 from cairoarea import CairoDrawableArea
@@ -1481,7 +1480,7 @@ class GeometryEditorButtonsRow(Gtk.HBox):
         
         name_label = Gtk.Label(label=_("View:"))
 
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "geom_action.png")
+        surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "geom_action.png")
         action_menu_button = guicomponents.PressLaunch(self._show_actions_menu, pixbuf, 24, 22)
         
         size_select = Gtk.ComboBoxText()

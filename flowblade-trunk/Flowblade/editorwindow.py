@@ -21,6 +21,7 @@
 """
 Module contains main editor window object.
 """
+import cairo
 
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -603,11 +604,11 @@ class EditorWindow:
         info_h.set_size_request(tlinewidgets.COLUMN_WIDTH - 22 - 22,# - 22, # room for 2 menu launch buttons 
                                       tlinewidgets.SCALE_HEIGHT)
 
-        marker_pixbuf = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "marker.png")
-        markers_launcher = guicomponents.get_markers_menu_launcher(tlineaction.marker_menu_lauch_pressed, marker_pixbuf)
+        marker_surface =  cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "marker.png")
+        markers_launcher = guicomponents.get_markers_menu_launcher(tlineaction.marker_menu_lauch_pressed, marker_surface)
 
-        tracks_launcher_pixbuf = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "track_menu_launch.png")
-        tracks_launcher = guicomponents.PressLaunch(trackaction.all_tracks_menu_launch_pressed, tracks_launcher_pixbuf)
+        tracks_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "track_menu_launch.png")
+        tracks_launcher = guicomponents.PressLaunch(trackaction.all_tracks_menu_launch_pressed, tracks_launcher_surface)
 
         # Timeline top row
         tline_hbox_1 = Gtk.HBox()

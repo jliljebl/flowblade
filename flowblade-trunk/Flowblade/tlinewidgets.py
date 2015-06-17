@@ -25,6 +25,7 @@ Global display position and scale information is in this module.
 import cairo
 
 from gi.repository import Gtk
+from gi.repository import Gdk
 from gi.repository import GObject
 from gi.repository import GdkPixbuf
 from gi.repository import Pango
@@ -271,18 +272,18 @@ def load_icons():
     VIDEO_MUTE_ICON, ALL_MUTE_ICON, TRACK_BG_ICON, MUTE_AUDIO_ICON, MUTE_VIDEO_ICON, MUTE_ALL_ICON, \
     TRACK_ALL_ON_V_ICON, TRACK_ALL_ON_A_ICON, MUTE_AUDIO_A_ICON, TC_POINTER_HEAD, EDIT_INDICATOR
 
-    FULL_LOCK_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "full_lock.png")
-    FILTER_CLIP_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "filter_clip_icon_sharp.png")
-    COMPOSITOR_CLIP_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "compositor.png")
-    VIEW_SIDE_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "view_side.png")
-    INSERT_ARROW_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "insert_arrow.png")
-    AUDIO_MUTE_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "clip_audio_mute.png")
-    VIDEO_MUTE_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "clip_video_mute.png")
-    ALL_MUTE_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "clip_all_mute.png")
-    TRACK_BG_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "track_bg.png")
-    MUTE_AUDIO_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "track_audio_mute.png")
-    MUTE_VIDEO_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "track_video_mute.png")
-    MUTE_ALL_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "track_all_mute.png")
+    FULL_LOCK_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "full_lock.png")
+    FILTER_CLIP_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filter_clip_icon_sharp.png")
+    COMPOSITOR_CLIP_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "compositor.png")
+    VIEW_SIDE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "view_side.png")
+    INSERT_ARROW_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow.png")
+    AUDIO_MUTE_ICON =cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH +"clip_audio_mute.png")
+    VIDEO_MUTE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH +"clip_video_mute.png")
+    ALL_MUTE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "clip_all_mute.png")
+    TRACK_BG_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "track_bg.png")
+    MUTE_AUDIO_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "track_audio_mute.png")
+    MUTE_VIDEO_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "track_video_mute.png")
+    MUTE_ALL_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "track_all_mute.png")
     MARKER_ICON = _load_pixbuf("marker.png")
     TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V.png")
     TRACK_ALL_ON_A_ICON = _load_pixbuf("track_all_on_A.png")
@@ -298,7 +299,7 @@ def load_icons():
         FRAME_SCALE_LINES = (0.8, 0.8, 0.8)
 
 def _load_pixbuf(icon_file):
-    return GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + icon_file)
+    return cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + icon_file)
 
 def set_ref_line_y(allocation):
     """
@@ -1606,6 +1607,7 @@ class TimeLineColumn:
         self.draw_edge(cr, rect)
 
         # Draw type and index text
+        """
         pango_context = pangocairo.CairoContext(cr)
         layout = pango_context.create_layout()
         text = utils.get_track_name(track, current_sequence())        
@@ -1621,7 +1623,8 @@ class TimeLineColumn:
         pango_context.move_to(COLUMN_LEFT_PAD + ID_PAD_X, y + text_y)
         pango_context.update_layout(layout)
         pango_context.show_layout(layout)
-        
+        """
+
         # Draw mute icon
         mute_icon = None
         if track.mute_state == appconsts.TRACK_MUTE_VIDEO and track.type == appconsts.VIDEO:
@@ -1641,13 +1644,15 @@ class TimeLineColumn:
             ix, iy = MUTE_ICON_POS
             if track.height > sequence.TRACK_HEIGHT_SMALL:
                 ix, iy = MUTE_ICON_POS_NORMAL
-            cr.set_source_pixbuf(mute_icon, ix, y + iy)
+            cr.set_source_surface(mute_icon, ix, y + iy)
+            #cr.move_to(ix, y + iy)
             cr.paint()
 
         # Draw locked icon
         if track.edit_freedom == sequence.LOCKED:
             ix, iy = LOCK_POS
-            cr.set_source_pixbuf(FULL_LOCK_ICON, ix, y + iy)
+            cr.set_source_surface(FULL_LOCK_ICON, ix, y + iy)
+            #cr.move_to(ix, y + iy
             cr.paint()
         
         # Draw insert arrow
@@ -1655,7 +1660,8 @@ class TimeLineColumn:
             ix, iy = INSRT_ICON_POS
             if track.height == sequence.TRACK_HEIGHT_SMALL:
                 ix, iy = INSRT_ICON_POS_SMALL
-            cr.set_source_pixbuf(INSERT_ARROW_ICON, ix, y + iy)
+            cr.set_source_surface(INSERT_ARROW_ICON, ix, y + iy)
+            #r.move_to(ix, y + iy)
             cr.paint()
 
     def _add_gradient_color_stops(self, grad, track):
@@ -1855,7 +1861,7 @@ class TimeLineFrameScale:
         cr.stroke()
 
         # Draw pos triangle
-        cr.set_source_pixbuf(TC_POINTER_HEAD, frame_x - 7.5, 0)
+        cr.set_source_surface(TC_POINTER_HEAD, frame_x - 7.5, 0)
         cr.paint()
 
     def draw_mark_in(self, cr, h):

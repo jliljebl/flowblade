@@ -954,10 +954,10 @@ class EditorSeparator:
 
 # ---------------------------------------------- MISC WIDGETS
 def get_monitor_view_select_combo(callback):
-    pixbuf_list = [GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "program_view_2.png"), 
-                   GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "vectorscope.png"),
-                   GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "rgbparade.png")]
-    menu_launch = ImageMenuLaunch(callback, pixbuf_list, w=24, h=20)
+    surface_list = [cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "program_view_2.png"), 
+                   cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "vectorscope.png"),
+                   cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "rgbparade.png")]
+    menu_launch = ImageMenuLaunch(callback, surface_list, w=24, h=20)
     menu_launch.pixbuf_y = 10
     return menu_launch
 
@@ -1863,16 +1863,16 @@ def get_file_filter_popup_menu(launcher, event, callback):
     menu.popup(None, None, None, event.button, event.time)
     
 class PressLaunch:
-    def __init__(self, callback, pixbuf, w=22, h=22):
+    def __init__(self, callback, surface, w=22, h=22):
         self.widget = CairoDrawableArea(w, 
                                         h, 
                                         self._draw)
         self.widget.press_func = self._press_event
 
         self.callback = callback
-        self.pixbuf = pixbuf
-        self.pixbuf_x  = 6
-        self.pixbuf_y  = 6
+        self.surface = surface
+        self.surface_x  = 6
+        self.surface_y  = 6
 
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
@@ -1882,7 +1882,7 @@ class PressLaunch:
         cr.rectangle(0, 0, w, h)
         cr.fill()
         
-        cr.set_source_pixbuf(self.pixbuf, self.pixbuf_x, self.pixbuf_y)
+        cr.set_source_surface(self.surface, self.surface_x, self.surface_y)
         cr.paint()
 
     def _press_event(self, event):
@@ -1890,12 +1890,12 @@ class PressLaunch:
 
 
 class ImageMenuLaunch(PressLaunch):
-    def __init__(self, callback, pixbuf_list, w=22, h=22):
-        PressLaunch.__init__(self, callback, pixbuf_list[0], w, h)
-        self.pixbuf_list = pixbuf_list
+    def __init__(self, callback, surface_list, w=22, h=22):
+        PressLaunch.__init__(self, callback, surface_list[0], w, h)
+        self.surface_list = surface_list
 
-    def set_pixbuf(self, pixbuf_index):
-        self.pixbuf = self.pixbuf_list[pixbuf_index]
+    def set_pixbuf(self, surface_index):
+        self.surface = self.surface_list[surface_index]
         self.widget.queue_draw()
         
 

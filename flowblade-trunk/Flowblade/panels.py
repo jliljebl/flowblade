@@ -22,6 +22,7 @@
 Module has methods that build panels from widgets. Created panels
 are used to build gui at callsites.
 """
+import cairo
 
 from gi.repository import Gtk
 from gi.repository import GdkPixbuf
@@ -68,12 +69,12 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, proxy
     spin.set_size_request(40, 30)
     spin.connect("changed", col_changed_cb)
 
-    all_pixbuf = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "show_all_files.png")
-    audio_pixbuf = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "show_audio_files.png")
-    graphics_pixbuf = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "show_graphics_files.png")
-    video_pixbuf = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "show_video_files.png")
-    imgseq_pixbuf = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "show_imgseq_files.png")
-    pattern_pixbuf = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "show_pattern_producers.png")
+    all_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_all_files.png")
+    audio_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_audio_files.png")
+    graphics_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_graphics_files.png")
+    video_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_video_files.png")
+    imgseq_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_imgseq_files.png")
+    pattern_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_pattern_producers.png")
 
     files_filter_launcher = guicomponents.ImageMenuLaunch(filtering_cb, [all_pixbuf, video_pixbuf, audio_pixbuf, graphics_pixbuf, imgseq_pixbuf, pattern_pixbuf], 20, 22)
     files_filter_launcher.pixbuf_x  = 3

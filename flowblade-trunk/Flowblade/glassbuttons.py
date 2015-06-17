@@ -214,7 +214,7 @@ class AbstractGlassButtons:
         x = self.button_x
         for i in range(0, len(self.icons)):
             icon = self.icons[i]
-            cr.set_source_pixbuf(icon, x + self.image_x[i], self.image_y[i])
+            cr.set_source_surface(icon, x + self.image_x[i], self.image_y[i])
             cr.paint()
             if self.sensitive[i] == False:
                 cr.save()
@@ -267,15 +267,15 @@ class PlayerButtons(AbstractGlassButtons):
         AbstractGlassButtons.__init__(self, MB_BUTTON_WIDTH, MB_BUTTON_HEIGHT, MB_BUTTON_Y, MB_BUTTONS_WIDTH, MB_BUTTONS_HEIGHT)
 
         IMG_PATH = respaths.IMAGE_PATH
-        play_icon = GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "play_2_s.png")
-        stop_icon = GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "stop_s.png")
-        next_icon = GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "next_frame_s.png")
-        prev_icon = GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "prev_frame_s.png")
-        mark_in_icon = GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "mark_in_s.png")
-        mark_out_icon = GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "mark_out_s.png")
-        marks_clear_icon = GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "marks_clear_s.png") 
-        to_mark_in_icon = GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "to_mark_in_s.png")        
-        to_mark_out_icon = GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "to_mark_out_s.png") 
+        play_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "play_2_s.png")
+        stop_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "stop_s.png")
+        next_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "next_frame_s.png")
+        prev_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "prev_frame_s.png")
+        mark_in_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "mark_in_s.png")
+        mark_out_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "mark_out_s.png")
+        marks_clear_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "marks_clear_s.png") 
+        to_mark_in_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "to_mark_in_s.png")        
+        to_mark_out_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "to_mark_out_s.png") 
 
         self.icons = [prev_icon, next_icon, play_icon, stop_icon, 
                       mark_in_icon, mark_out_icon, 

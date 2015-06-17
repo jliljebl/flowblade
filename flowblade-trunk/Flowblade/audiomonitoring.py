@@ -493,17 +493,17 @@ class ChannelMeter:
         self.draw_text(self.channel_text, "Sans Bold 8", cr, x - 4, self.height + 2 +  self.y_top_pad, OVERLAY_COLOR)
 
     def draw_text(self, text, font_desc, cr, x, y, color):
-        pango_context = pangocairo.CairoContext(cr)
-        layout = pango_context.create_layout()
-        layout.set_text(text)
+        layout = PangoCairo.create_layout(cr)
+        layout.set_text(text, -1)
+
         desc = Pango.FontDescription(font_desc)
         layout.set_font_description(desc)
 
-        pango_context.set_source_rgb(*color)
-        pango_context.move_to(x, y)
-        pango_context.update_layout(layout)
-        pango_context.show_layout(layout)
-        
+        cr.set_source_rgb(*color)
+        cr.move_to(x, y)
+        PangoCairo.update_layout(cr, layout)
+        PangoCairo.show_layout(cr, layout)
+
 
 class GainControl(Gtk.Frame):
     def __init__(self, name, seq, producer, is_master=False):

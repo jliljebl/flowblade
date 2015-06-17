@@ -173,15 +173,9 @@ class CairoDrawableArea(Gtk.Widget):
     # Event handlers
     # Expose event callback
     # Create cairo context and pass it on for custom widget drawing.
-    def do_expose_event(self, event):
-        self.chain(event)
-        try:
-            cr = self.window.cairo_create()
-        except AttributeError:
-            print "Cairo create failed"
-            raise SystemExit
-
-        return self._draw_func(event, cr, self.allocation)
+    def do_draw(self, cr):
+        a = self.get_allocation()
+        return self._draw_func(None, cr, (a.x, a.y, a.width, a.height)) # GTK2 used tuple and all draw func expect it
 
     # Mouse press / release events
     def do_button_press_event(self, event):

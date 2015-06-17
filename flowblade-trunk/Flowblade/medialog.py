@@ -18,14 +18,13 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
-
+import cairo
+import datetime
 
 from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import GdkPixbuf
 from gi.repository import Pango
-
-import datetime
 
 import appconsts
 import dialogs
@@ -578,8 +577,9 @@ class MediaLogListView(Gtk.VBox):
 
 def get_media_log_events_panel(events_list_view):
     global widgets
-    actions_pixbuf = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "media_log_action.png")
-    group_actions_menu = guicomponents.PressLaunch(_group_action_pressed, actions_pixbuf, 38, 22)
+
+    actions_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "media_log_action.png")
+    group_actions_menu = guicomponents.PressLaunch(_group_action_pressed, actions_surface, 38, 22)
 
     star_check = Gtk.CheckButton()
     star_check.set_active(True)
