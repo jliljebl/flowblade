@@ -125,10 +125,10 @@ def capture_references(new_editor_window):
     selected_bg_color = style.get_background_color(Gtk.StateFlags.SELECTED)
     
     # Get cairo color tuple from Gdk.Color
-    raw_r, raw_g, raw_b = hex_to_rgb(fg_color.to_string())
+    raw_r, raw_g, raw_b = fg_color.red,  fg_color.green, fg_color.blue
     fg_color_tuple = (float(raw_r)/65535.0, float(raw_g)/65535.0, float(raw_b)/65535)
 
-    raw_r, raw_g, raw_b = hex_to_rgb(note_bg_color.to_string())
+    raw_r, raw_g, raw_b = note_bg_color.red, note_bg_color.green ,note_bg_color.blue
     bg_color_tuple = (float(raw_r)/65535.0, float(raw_g)/65535.0, float(raw_b)/65535)
 
 def hex_to_rgb(value):

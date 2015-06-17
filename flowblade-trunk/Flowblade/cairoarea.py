@@ -149,7 +149,10 @@ class CairoDrawableArea(Gtk.Widget):
         # new size in tuple allocation
         self.allocation = allocation
         if self.get_realized():
-            self.window.move_resize(*allocation)
+            self.get_window().move_resize(  allocation.x,
+                                            allocation.y,
+                                            allocation.height,
+                                            allocation.width)
 
     # Noop funcs for unhandled events
     def _press(self, event):

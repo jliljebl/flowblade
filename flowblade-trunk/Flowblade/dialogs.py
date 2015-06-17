@@ -510,7 +510,7 @@ def _dialog_destroy(dialog, response):
 
 def _default_behaviour(dialog):
     dialog.set_default_response(Gtk.ResponseType.OK)
-    dialog.set_has_separator(False)
+    #dialog.set_has_separator(False)
     dialog.set_resizable(False)
 
 def load_dialog():

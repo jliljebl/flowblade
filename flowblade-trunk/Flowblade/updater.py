@@ -210,8 +210,8 @@ def update_pix_per_frame_full_view():
     """
     global pix_per_frame_full_view
     length = current_sequence().get_length() + 5 # +5 is just selected end pad so that end of movie is visible
-    x, y, w, h = gui.tline_canvas.widget.allocation
-    pix_per_frame_full_view = float(w) / length
+    #x, y, w, h = gui.tline_canvas.widget.allocation.width
+    pix_per_frame_full_view = float(gui.tline_canvas.widget.allocation.width) / length
 
 def set_info_icon(info_icon_id):
     if info_icon_id == None:

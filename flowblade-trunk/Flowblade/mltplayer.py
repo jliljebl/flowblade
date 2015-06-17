@@ -23,9 +23,9 @@ Module contains an object that is used to do playback from mlt.Producers to
 a Xwindow of a GTK+ widget and os audiosystem using a SDL consumer.
 """
 
-
-
 from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GdkX11
 
 import mlt
 import os
@@ -88,7 +88,7 @@ class Player:
         """
         Connects SDL output to display widget's xwindow
         """
-        os.putenv('SDL_WINDOWID', str(widget.window.xid))
+        os.putenv('SDL_WINDOWID', str(widget.get_window().get_xid()))
         Gdk.flush()
     
     def set_tracktor_producer(self, tractor):

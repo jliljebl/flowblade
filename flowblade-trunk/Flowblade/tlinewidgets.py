@@ -311,14 +311,15 @@ def set_ref_line_y(allocation):
         if i < current_sequence().first_video_index:
             below_ref_h += current_sequence().tracks[i].height
 
-    x, y, w, panel_height = allocation
+    x, y, w, panel_height = allocation.x, allocation.y, allocation.width, allocation.height
     centerered_tracks_bottom_y = (panel_height / 2.0) + (total_h / 2.0)
     global REF_LINE_Y
     REF_LINE_Y = centerered_tracks_bottom_y - below_ref_h
 
 def get_pos_for_tline_centered_to_current_frame():
     current_frame = PLAYER().current_frame()
-    x, y, w, h = canvas_widget.widget.allocation
+    allocation = canvas_widget.widget.allocation
+    x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
     frames_in_panel = w / pix_per_frame
 
     # current in first half on first screen width of tline display
