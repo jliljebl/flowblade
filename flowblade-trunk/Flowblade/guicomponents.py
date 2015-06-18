@@ -21,6 +21,7 @@
 """
 Module contains classes and build methods to create GUI objects.
 """
+
 import cairo
 import math
 
@@ -930,9 +931,9 @@ class EditorSeparator:
     """
 
     def __init__(self):
-        self.widget = CairoDrawableArea(SEPARATOR_WIDTH, 
-                                        SEPARATOR_HEIGHT,
-                                        self._draw)
+        self.widget = cairoarea.CairoDrawableArea2( SEPARATOR_WIDTH, 
+                                                    SEPARATOR_HEIGHT,
+                                                    self._draw)
     def _draw(self, event, cr, allocation):
         """
         Callback for repaint from CairoDrawableArea.
@@ -941,7 +942,7 @@ class EditorSeparator:
         x, y, w, h = allocation
         
         # Draw bg
-        cr.set_source_rgb(*(gui.bg_color_tuple))
+        cr.set_source_rgb(*guiutils.get_theme_bg_color())
         cr.rectangle(0, 0, w, h)
         cr.fill()
         
@@ -1523,12 +1524,12 @@ def set_profile_info_values_text(profile, label, show_description):
 class BigTCDisplay:
     
     def __init__(self):
-        self.widget = CairoDrawableArea(170, 
-                                        22,
-                                        self._draw)
+        self.widget = cairoarea.CairoDrawableArea2( 170, 
+                                                    22,
+                                                    self._draw)
         self.font_desc = Pango.FontDescription("Bitstream Vera Sans Mono Condensed 15")
         
-        #Draw consts
+        # Draw consts
         x = 2
         y = 2
         width = 166
@@ -1551,7 +1552,7 @@ class BigTCDisplay:
         x, y, w, h = allocation
 
         # Draw bg
-        cr.set_source_rgba(*gui.bg_color_tuple) 
+        cr.set_source_rgba(*guiutils.get_theme_bg_color()) 
         cr.rectangle(0, 0, w, h)
         cr.fill()
 
@@ -1603,12 +1604,12 @@ class MonitorTCDisplay:
     annoying.
     """
     def __init__(self):
-        self.widget = CairoDrawableArea(94, 
-                                        20,
-                                        self._draw)
+        self.widget = cairoarea.CairoDrawableArea2( 94, 
+                                                    20,
+                                                    self._draw)
         self.font_desc = Pango.FontDescription("Bitstream Vera Sans Mono Condensed 9")
         
-        #Draw consts
+        # Draw consts
         x = 2
         y = 2
         width = 90
@@ -1635,7 +1636,7 @@ class MonitorTCDisplay:
         x, y, w, h = allocation
 
         # Draw bg
-        cr.set_source_rgb(*(gui.bg_color_tuple))
+        cr.set_source_rgb(*guiutils.get_theme_bg_color())
         cr.rectangle(0, 0, w, h)
         cr.fill()
 
@@ -1665,15 +1666,14 @@ class MonitorTCDisplay:
         frame_str = utils.get_tc_string(frame)
 
         # Text
-        pango_context = pangocairo.CairoContext(cr)
-        layout = pango_context.create_layout()
-        layout.set_text(frame_str)
+        layout = PangoCairo.create_layout(cr)
+        layout.set_text(frame_str, -1)
         layout.set_font_description(self.font_desc)
 
-        pango_context.set_source_rgb(0.7, 0.7, 0.7)
-        pango_context.move_to(8, 2)
-        pango_context.update_layout(layout)
-        pango_context.show_layout(layout)
+        cr.set_source_rgb(0.7, 0.7, 0.7)
+        cr.move_to(8, 2)
+        PangoCairo.update_layout(cr, layout)
+        PangoCairo.show_layout(cr, layout)
 
     def _round_rect_path(self, cr):
         x, y, width, height, aspect, corner_radius, radius, degrees = self._draw_consts

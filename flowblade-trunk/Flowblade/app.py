@@ -427,7 +427,7 @@ def init_editor_state():
 
     # Center tracks vertical display and init some listeners to
     # new value and repaint tracks column.
-    tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.allocation)
+    tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
     gui.tline_column.init_listeners()
     gui.tline_column.widget.queue_draw()
 

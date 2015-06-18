@@ -126,10 +126,10 @@ def window_resized():
         return
 
     # Resize track heights so that all tracks are displayed
-    current_sequence().resize_tracks_to_fit(gui.tline_canvas.widget.allocation)
+    current_sequence().resize_tracks_to_fit(gui.tline_canvas.widget.get_allocation())
     
     # Place clips in the middle of timeline canvas after window resize
-    tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.allocation)
+    tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
 
     gui.tline_column.init_listeners() # hit areas for track swicthes need to be recalculated
     repaint_tline()
@@ -211,7 +211,7 @@ def update_pix_per_frame_full_view():
     global pix_per_frame_full_view
     length = current_sequence().get_length() + 5 # +5 is just selected end pad so that end of movie is visible
     #x, y, w, h = gui.tline_canvas.widget.allocation.width
-    pix_per_frame_full_view = float(gui.tline_canvas.widget.allocation.width) / length
+    pix_per_frame_full_view = float(gui.tline_canvas.widget.get_allocation().width) / length
 
 def set_info_icon(info_icon_id):
     if info_icon_id == None:

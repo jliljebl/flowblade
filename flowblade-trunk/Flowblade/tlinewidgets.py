@@ -23,6 +23,7 @@ Module contains GUI components for displayingand  editing clips in timeline.
 Global display position and scale information is in this module.
 """
 import cairo
+import math
 
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -31,10 +32,9 @@ from gi.repository import GdkPixbuf
 from gi.repository import Pango
 from gi.repository import PangoCairo
 
-import math
-
 import appconsts
 from cairoarea import CairoDrawableArea
+import cairoarea
 import clipeffectseditor
 import editorpersistance
 from editorstate import current_sequence
@@ -892,14 +892,13 @@ class TimeLineCanvas:
     def __init__(self, press_listener, move_listener, release_listener, double_click_listener,
                     mouse_scroll_listener, leave_notify_listener, enter_notify_listener):
         # Create widget and connect listeners
-        self.widget = CairoDrawableArea(WIDTH, 
-                                        HEIGHT, 
-                                        self._draw)
+        self.widget = cairoarea.CairoDrawableArea2( WIDTH, 
+                                                    HEIGHT, 
+                                                    self._draw)
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
         self.widget.mouse_scroll_func = mouse_scroll_listener
-        #self.widget.set_events(self.widget.get_events() | Gdk.EventMask.POINTER_MOTION_MASK)
 
         # Mouse events are passed on 
         self.press_listener = press_listener
@@ -1508,9 +1507,9 @@ class TimeLineColumn:
 
     def __init__(self, active_listener, center_listener):
         # Init widget
-        self.widget = CairoDrawableArea(COLUMN_WIDTH, 
-                                        HEIGHT, 
-                                        self._draw)
+        self.widget = cairoarea.CairoDrawableArea2( COLUMN_WIDTH, 
+                                                    HEIGHT, 
+                                                    self._draw)
         self.widget.press_func = self._press_event
         
         self.active_listener = active_listener
@@ -1682,9 +1681,9 @@ class TimeLineFrameScale:
     """
 
     def __init__(self, set_default_callback, mouse_scroll_listener):
-        self.widget = CairoDrawableArea(WIDTH, 
-                                        SCALE_HEIGHT, 
-                                        self._draw)
+        self.widget = cairoarea.CairoDrawableArea2( WIDTH, 
+                                                    SCALE_HEIGHT, 
+                                                    self._draw)
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event

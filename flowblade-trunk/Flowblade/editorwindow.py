@@ -974,25 +974,25 @@ class EditorWindow:
         gdk_window = gui.tline_display.get_parent_window()
 
         if mode == editorstate.INSERT_MOVE:
-            cursor = Gdk.Cursor.new(display, INSERTMOVE_CURSOR, 0, 0)
+            cursor = Gdk.Cursor.new_from_surface(display, INSERTMOVE_CURSOR, 0, 0)
         elif mode == editorstate.OVERWRITE_MOVE:
-            cursor = Gdk.Cursor.new(display, OVERWRITE_CURSOR, 6, 15)
+            cursor = Gdk.Cursor.new_from_surface(display, OVERWRITE_CURSOR, 6, 15)
         elif mode == editorstate.TWO_ROLL_TRIM:
-            cursor = Gdk.Cursor.new(display, TWOROLL_CURSOR, 11, 9)
+            cursor = Gdk.Cursor.new_from_surface(display, TWOROLL_CURSOR, 11, 9)
         elif mode == editorstate.TWO_ROLL_TRIM_NO_EDIT:
-            cursor = Gdk.Cursor.new(display, TWOROLL_NO_EDIT_CURSOR, 11, 9)
+            cursor = Gdk.Cursor.new_from_surface(display, TWOROLL_NO_EDIT_CURSOR, 11, 9)
         elif mode == editorstate.ONE_ROLL_TRIM:
-            cursor = Gdk.Cursor.new(display, ONEROLL_CURSOR, 9, 9)
+            cursor = Gdk.Cursor.new_from_surface(display, ONEROLL_CURSOR, 9, 9)
         elif mode == editorstate.ONE_ROLL_TRIM_NO_EDIT:
-            cursor = Gdk.Cursor.new(display, ONEROLL_NO_EDIT_CURSOR, 9, 9)
+            cursor = Gdk.Cursor.new_from_surface(display, ONEROLL_NO_EDIT_CURSOR, 9, 9)
         elif mode == editorstate.SLIDE_TRIM:
-            cursor = Gdk.Cursor.new(display, SLIDE_CURSOR, 9, 9)
+            cursor = Gdk.Cursor.new_from_surface(display, SLIDE_CURSOR, 9, 9)
         elif mode == editorstate.SLIDE_TRIM_NO_EDIT:
-            cursor = Gdk.Cursor.new(display, SLIDE_NO_EDIT_CURSOR, 9, 9)
+            cursor = Gdk.Cursor.new_from_surface(display, SLIDE_NO_EDIT_CURSOR, 9, 9)
         elif mode == editorstate.SELECT_PARENT_CLIP:
             cursor =  Gdk.Cursor.new(Gdk.TCROSS)
         elif mode == editorstate.MULTI_MOVE:
-            cursor = Gdk.Cursor.new(display, MULTIMOVE_CURSOR, 4, 8)
+            cursor = Gdk.Cursor.new_from_surface(display, MULTIMOVE_CURSOR, 4, 8)
         else:
             cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR)
         

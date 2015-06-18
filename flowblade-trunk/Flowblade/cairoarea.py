@@ -40,7 +40,10 @@ class CairoDrawableArea2(Gtk.DrawingArea):
         
         self.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
         self.add_events(Gdk.EventMask.BUTTON_RELEASE_MASK)
-        
+        self.add_events(Gdk.EventMask.SCROLL_MASK)
+        self.add_events(Gdk.EventMask.ENTER_NOTIFY_MASK)
+        self.add_events(Gdk.EventMask.LEAVE_NOTIFY_MASK)
+                                 
         self.set_size_request(pref_width, pref_height)
         self._use_widget_bg = use_widget_bg
 
@@ -51,12 +54,18 @@ class CairoDrawableArea2(Gtk.DrawingArea):
         self.connect('button-press-event', self._button_press_event)
         self.connect('button-release-event', self._button_release_event)
         self.connect('motion-notify-event', self._motion_notify_event)
+        self.connect('enter-notify-event', self._enter_notify_event)
+        self.connect('leave-notify-event', self._leave_notify_event)
+        self.connect("scroll-event", self._mouse_scroll_event)
 
         # Signal handler funcs. These are monkeypatched as needed on codes sites
         # that create the objects.
         self.press_func = self._press
         self.release_func = self._release
         self.motion_notify_func = self._motion_notify
+        self.leave_notify_func = self._leave
+        self.enter_notify_func = self._enter
+        self.mouse_scroll_func = None
 
         # Flag for grabbing focus
         self.grab_focus_on_press = True
@@ -96,9 +105,18 @@ class CairoDrawableArea2(Gtk.DrawingArea):
 
         self.motion_notify_func(x, y, state)
 
+    def _enter_notify_event(self, widget, event):
+        self.enter_notify_func(event)
+        
+    def _leave_notify_event(self, widget, event):
+        self.leave_notify_func(event)
+        
+    def _mouse_scroll_event(self, widget, event):
+        if self.mouse_scroll_func == None:
+            return
+        self.mouse_scroll_func(event)
 
     # ------------------------------------------------------- Noop funcs for unhandled events
-    # This makes possible to just monkeypath listener functions after widget creation.
     def _press(self, event):
         pass
 
