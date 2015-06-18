@@ -27,6 +27,94 @@ from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import Gdk
 
+import gui
+
+bg_color = None
+
+
+class CairoDrawableArea2(Gtk.DrawingArea):
+
+
+    def __init__(self, pref_width, pref_height, func_draw, use_widget_bg=False):
+        Gtk.DrawingArea.__init__(self)
+        
+        self.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
+        self.add_events(Gdk.EventMask.BUTTON_RELEASE_MASK)
+        
+        self.set_size_request(pref_width, pref_height)
+        self._use_widget_bg = use_widget_bg
+
+        # Connect signal listeners
+        self._draw_func = func_draw
+        self.connect('draw', self._draw_event)
+
+        self.connect('button-press-event', self._button_press_event)
+        self.connect('button-release-event', self._button_release_event)
+        self.connect('motion-notify-event', self._motion_notify_event)
+
+        # Signal handler funcs. These are monkeypatched as needed on codes sites
+        # that create the objects.
+        self.press_func = self._press
+        self.release_func = self._release
+        self.motion_notify_func = self._motion_notify
+
+        # Flag for grabbing focus
+        self.grab_focus_on_press = True
+
+    def set_pref_size(self, pref_width, pref_height):
+        self.set_size_request(pref_width, pref_height)
+
+    def _draw_event(self, widget, cr):
+        a = self.get_allocation()       
+        self._draw_func(None, cr, (a.x, a.y, a.width, a.height)) # 'None' is event object that was used to pass through here. Can be removed.
+                                                                  # GTK2 used a tuple for allocation and all draw funcs expect it, so we provide
+                                                                  # allocation as tuple
+        return False
+
+    # ------------------------------------------------------------ Signal listeners 
+    # These pass on events to handler functions that 
+    # are by default the noop functions here, but are monkeypathed 
+    # at creation sites as needed. 
+    def _button_press_event(self, widget, event):
+        if self.grab_focus_on_press:
+            self.grab_focus()
+        self.press_func(event)
+
+        return True
+
+    def _button_release_event(self,  widget, event):
+        self.release_func(event)
+        return True
+
+    def _motion_notify_event(self, widget, event):
+        if event.is_hint:
+            x, y, state = event.window.get_pointer()
+        else:
+            x = event.x
+            y = event.y
+            state = event.get_state()
+
+        self.motion_notify_func(x, y, state)
+
+
+    # ------------------------------------------------------- Noop funcs for unhandled events
+    # This makes possible to just monkeypath listener functions after widget creation.
+    def _press(self, event):
+        pass
+
+    def _release(self, event):
+        pass
+
+    def _motion_notify(self, x, y, state):
+        pass
+
+    def _enter(self, event):
+        pass
+
+    def _leave(self, event):
+        pass
+
+
 class CairoDrawableArea(Gtk.Widget):
     """
     A widget for creating custom components using Cairo canvas. 
@@ -34,7 +122,7 @@ class CairoDrawableArea(Gtk.Widget):
 
     def __init__(self, pref_width, pref_height, func_draw, use_widget_bg=False):
         # Init widget.
-        GObject.GObject.__init__(self)
+        Gtk.Widget.__init__(self)
 
         # Preferred size. Parant container has an effect on actual size. 
         self._pref_width = pref_width
@@ -175,7 +263,8 @@ class CairoDrawableArea(Gtk.Widget):
     # Create cairo context and pass it on for custom widget drawing.
     def do_draw(self, cr):
         a = self.get_allocation()
-        return self._draw_func(None, cr, (a.x, a.y, a.width, a.height)) # GTK2 used tuple and all draw func expect it
+        self._draw_func(None, cr, (a.x, a.y, a.width, a.height)) # GTK2 used tuple and all draw func expect it
+        return
 
     # Mouse press / release events
     def do_button_press_event(self, event):

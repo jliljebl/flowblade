@@ -19,7 +19,7 @@
 """
 
 import cairo
-
+import cairoarea
 
 from gi.repository import Gtk
 from gi.repository import GdkPixbuf
@@ -29,6 +29,7 @@ import math
 from cairoarea import CairoDrawableArea
 import editorpersistance
 import gui
+import guiutils
 import respaths
 
 BUTTONS_GRAD_STOPS = [   (1, 1, 1, 1, 0.2),
@@ -70,9 +71,9 @@ class AbstractGlassButtons:
 
     def __init__(self, button_width, button_height, button_y, widget_width, widget_height):
         # Create widget and connect listeners
-        self.widget = CairoDrawableArea(widget_width, 
-                                        widget_height, 
-                                        self._draw)
+        self.widget = cairoarea.CairoDrawableArea2( widget_width, 
+                                                    widget_height, 
+                                                    self._draw)
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
@@ -158,7 +159,7 @@ class AbstractGlassButtons:
         buttons_width = self.button_width * len(self.icons)
 
         # Draw bg
-        cr.set_source_rgb(*gui.bg_color_tuple)
+        cr.set_source_rgb(*guiutils.get_theme_bg_color())
         cr.rectangle(0, 0, w, h)
         cr.fill()
 

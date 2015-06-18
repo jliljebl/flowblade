@@ -25,8 +25,6 @@ Handles application initialization, shutdown, opening projects, autosave and cha
 sequences.
 """
 from gi.repository import GObject
-
-
 from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -247,7 +245,7 @@ def main(root_path):
     # Show splash
     if ((editorpersistance.prefs.display_splash_screen == True) and len(autosave_files) == 0):
         global splash_timeout_id
-        splash_timeout_id = GObject.timeout_add(2600, destroy_splash_screen)
+        splash_timeout_id = GLib.timeout_add(2600, destroy_splash_screen)
         splash_screen.show_all()
 
     appconsts.SAVEFILE_VERSION = projectdata.SAVEFILE_VERSION # THIS IS A QUESTIONABLE IDEA TO SIMPLIFY IMPORTS, NOT DRY. WHEN DOING TOOLS THAT RUN IN ANOTHER PROCESSES AND SAVE PROJECTS, THIS LINE NEEDS TO BE THERE ALSO.
@@ -744,7 +742,8 @@ def _shutdown_dialog_callback(dialog, response_id):
     stop_autosave()
 
     # Save window dimensions on exit
-    x, y, w, h = gui.editor_window.window.get_allocation()
+    alloc = gui.editor_window.window.get_allocation()
+    x, y, w, h = alloc.x, alloc.y, alloc.width, alloc.height 
     editorpersistance.prefs.exit_allocation = (w, h)
     editorpersistance.prefs.app_v_paned_position = gui.editor_window.app_v_paned.get_position()
     editorpersistance.prefs.top_paned_position = gui.editor_window.top_paned.get_position()
@@ -755,7 +754,7 @@ def _shutdown_dialog_callback(dialog, response_id):
     updater.player_refresh_enabled = False
     gui.editor_window.window.set_visible(False)
     # Close and destroy app when gtk finds time to do it after hiding window
-    glib.idle_add(_app_destroy)
+    GLib.idle_add(_app_destroy)
 
 def _app_destroy():
     # Close threads and stop mlt consumers

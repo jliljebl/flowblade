@@ -30,7 +30,6 @@ import editorstate
 import gui
 import respaths
 
-
 # GUI consts
 MEDIA_ICON_WIDTH = 20
 MEDIA_ICON_HEIGHT = 15

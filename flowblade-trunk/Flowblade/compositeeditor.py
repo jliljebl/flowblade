@@ -60,6 +60,7 @@ def create_widgets():
     
     # Right side
     widgets.empty_label = Gtk.Label(label=_("No Compositor"))
+    gui.label = widgets.empty_label
     widgets.value_edit_box = Gtk.VBox()
     widgets.value_edit_box.pack_start(widgets.empty_label, True, True, 0)
     widgets.value_edit_frame = Gtk.Frame()

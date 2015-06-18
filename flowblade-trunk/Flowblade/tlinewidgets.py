@@ -277,7 +277,7 @@ def load_icons():
     COMPOSITOR_CLIP_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "compositor.png")
     VIEW_SIDE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "view_side.png")
     INSERT_ARROW_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow.png")
-    AUDIO_MUTE_ICON =cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH +"clip_audio_mute.png")
+    AUDIO_MUTE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH +"clip_audio_mute.png")
     VIDEO_MUTE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH +"clip_video_mute.png")
     ALL_MUTE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "clip_all_mute.png")
     TRACK_BG_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "track_bg.png")
@@ -1645,14 +1645,12 @@ class TimeLineColumn:
             if track.height > sequence.TRACK_HEIGHT_SMALL:
                 ix, iy = MUTE_ICON_POS_NORMAL
             cr.set_source_surface(mute_icon, ix, y + iy)
-            #cr.move_to(ix, y + iy)
             cr.paint()
 
         # Draw locked icon
         if track.edit_freedom == sequence.LOCKED:
             ix, iy = LOCK_POS
             cr.set_source_surface(FULL_LOCK_ICON, ix, y + iy)
-            #cr.move_to(ix, y + iy
             cr.paint()
         
         # Draw insert arrow
@@ -1661,7 +1659,6 @@ class TimeLineColumn:
             if track.height == sequence.TRACK_HEIGHT_SMALL:
                 ix, iy = INSRT_ICON_POS_SMALL
             cr.set_source_surface(INSERT_ARROW_ICON, ix, y + iy)
-            #r.move_to(ix, y + iy)
             cr.paint()
 
     def _add_gradient_color_stops(self, grad, track):

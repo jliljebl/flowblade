@@ -18,11 +18,7 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
-"""
-
-"""
-
-
+import cairo
 
 from gi.repository import Gtk
 from gi.repository import GdkPixbuf
@@ -107,40 +103,40 @@ def _create_buttons(editor_window):
     editor_window.modes_selector = guicomponents.ToolSelector(editor_window.mode_selector_pressed, m_pixbufs, 40, 22)
 
     editor_window.zoom_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
-    editor_window.zoom_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "zoom_in.png"), updater.zoom_in)
-    editor_window.zoom_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "zoom_out.png"), updater.zoom_out)
-    editor_window.zoom_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "zoom_length.png"), updater.zoom_project_length)
+    editor_window.zoom_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "zoom_in.png"), updater.zoom_in)
+    editor_window.zoom_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "zoom_out.png"), updater.zoom_out)
+    editor_window.zoom_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "zoom_length.png"), updater.zoom_project_length)
     editor_window.zoom_buttons.widget.set_tooltip_text(_("Zoom In - Mouse Middle Scroll\n Zoom Out - Mouse Middle Scroll\n Zoom Length - Mouse Middle Click"))
 
     editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
-    editor_window.edit_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "cut.png"), tlineaction.cut_pressed)
-    editor_window.edit_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "splice_out.png"), tlineaction.splice_out_button_pressed)
-    editor_window.edit_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "lift.png"), tlineaction.lift_button_pressed)
-    editor_window.edit_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "resync.png"), tlineaction.resync_button_pressed)
+    editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "cut.png"), tlineaction.cut_pressed)
+    editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "splice_out.png"), tlineaction.splice_out_button_pressed)
+    editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "lift.png"), tlineaction.lift_button_pressed)
+    editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "resync.png"), tlineaction.resync_button_pressed)
     editor_window.edit_buttons.widget.set_tooltip_text(_("Cut - X\nSplice Out - Delete\nLift\nResync Selected"))
 
     editor_window.monitor_insert_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
-    editor_window.monitor_insert_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "overwrite_range.png"), tlineaction.range_overwrite_pressed)
-    editor_window.monitor_insert_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "overwrite_clip.png"), tlineaction.three_point_overwrite_pressed)
-    editor_window.monitor_insert_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "insert_clip.png"), tlineaction.insert_button_pressed)
-    editor_window.monitor_insert_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "append_clip.png"), tlineaction.append_button_pressed)
+    editor_window.monitor_insert_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "overwrite_range.png"), tlineaction.range_overwrite_pressed)
+    editor_window.monitor_insert_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "overwrite_clip.png"), tlineaction.three_point_overwrite_pressed)
+    editor_window.monitor_insert_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "insert_clip.png"), tlineaction.insert_button_pressed)
+    editor_window.monitor_insert_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "append_clip.png"), tlineaction.append_button_pressed)
     editor_window.monitor_insert_buttons.widget.set_tooltip_text(_("Overwrite Range\nOverwrite Clip - T\nInsert Clip - Y\nAppend Clip - U"))
 
     editor_window.undo_redo = glassbuttons.GlassButtonsGroup(46, 23, 2, 2, 7)
-    editor_window.undo_redo.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "undo.png"), undo.do_undo_and_repaint)
-    editor_window.undo_redo.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "redo.png"), undo.do_redo_and_repaint)
+    editor_window.undo_redo.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "undo.png"), undo.do_undo_and_repaint)
+    editor_window.undo_redo.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "redo.png"), undo.do_redo_and_repaint)
     editor_window.undo_redo.widget.set_tooltip_text(_("Undo - Ctrl + X\nRedo - Ctrl + Y"))
 
     editor_window.tools_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 14, 7)
-    editor_window.tools_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "open_mixer.png"), audiomonitoring.show_audio_monitor)
-    editor_window.tools_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "open_titler.png"), titler.show_titler)
+    editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_mixer.png"), audiomonitoring.show_audio_monitor)
+    editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_titler.png"), titler.show_titler)
     editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer\nTitler"))
     if editorstate.audio_monitoring_available == False:
         editor_window.tools_buttons.sensitive[0] = False
         editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer(not available)\nTitler"))
 
     editor_window.transition_button = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
-    editor_window.transition_button.add_button(GdkPixbuf.Pixbuf.new_from_file(IMG_PATH + "dissolve.png"), tlineaction.add_transition_pressed)
+    editor_window.transition_button.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "dissolve.png"), tlineaction.add_transition_pressed)
     editor_window.transition_button.widget.set_tooltip_text(_("Add Rendered Transition - 2 clips selected\nAdd Rendered Fade - 1 clip selected"))
 
 def fill_with_TC_LEFT_pattern(buttons_row, window):

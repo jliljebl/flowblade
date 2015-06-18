@@ -21,17 +21,16 @@
 """
 Module contains objects used to capture project data.
 """
-
+import cairo
 import datetime
-
-
-from gi.repository import Gtk
-
 import mlt
 import md5
 import os
 import shutil
 import time
+
+from gi.repository import Gtk
+from gi.repository import GdkPixbuf
 
 import appconsts
 import editorpersistance
@@ -330,16 +329,31 @@ class MediaFile:
  
     def create_icon(self):
         try:
-            icon = GdkPixbuf.Pixbuf.new_from_file(self.icon_path)
-            self.icon = icon.scale_simple(appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT, \
-                                          GdkPixbuf.InterpType.BILINEAR)
+            self.icon = self._create_image_surface(self.icon_path)
         except:
             print "failed to make icon from:", self.icon_path
             self.icon_path = respaths.IMAGE_PATH + FALLBACK_THUMB
-            icon = GdkPixbuf.Pixbuf.new_from_file(self.icon_path)
-            self.icon = icon.scale_simple(appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT, \
-                                          GdkPixbuf.InterpType.BILINEAR)
+            self.icon = self._create_image_surface(self.icon_path)
 
+    def _create_image_surface(self, path):
+        icon = cairo.ImageSurface.create_from_png(self.icon_path)
+        scaled_icon = cairo.ImageSurface(cairo.FORMAT_ARGB32, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
+        cr = cairo.Context(scaled_icon)
+
+        print appconsts.THUMB_WIDTH 
+        print icon.get_width()
+        print appconsts.THUMB_HEIGHT
+        print icon.get_height()
+
+        cr.scale( float(appconsts.THUMB_WIDTH) / float(icon.get_width()), float(appconsts.THUMB_HEIGHT) / float(icon.get_height()))
+        cr.set_source_surface(icon, 0, 0)
+        cr.paint()
+        
+        return scaled_icon
+        
+        
+        
+            
     def create_proxy_path(self, proxy_width, proxy_height, file_extesion):
         if self.type == appconsts.IMAGE_SEQUENCE:
             return self._create_img_seg_proxy_path(proxy_width, proxy_height)

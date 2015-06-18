@@ -22,11 +22,12 @@
 Module handles user actions that are not edits on the current sequence.
 Load, save, add media file, etc...
 """
+
 from gi.repository import GObject
-
-
 from gi.repository import Gtk
+from gi.repository import Gdk
 from gi.repository import GLib
+
 import glob
 
 import datetime
@@ -162,7 +163,7 @@ class AddMediaFilesThread(threading.Thread):
     def run(self): 
         Gdk.threads_enter()
         watch = Gdk.Cursor.new(Gdk.CursorType.WATCH)
-        gui.editor_window.window.window.set_cursor(watch)
+        gui.editor_window.window.get_window().set_cursor(watch)
         Gdk.threads_leave()
 
         duplicates = []
@@ -197,7 +198,7 @@ class AddMediaFilesThread(threading.Thread):
         _enable_save()
 
         normal_cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR) #RTL
-        gui.editor_window.window.window.set_cursor(normal_cursor)
+        gui.editor_window.window.get_window().set_cursor(normal_cursor)
         Gdk.threads_leave()
 
         if len(duplicates) > 0:

@@ -299,6 +299,9 @@ def get_pixmap_from_file(source_path, image_height):
     p_map, mask = s_pbuf.render_pixmap_and_mask()
     return p_map
 
+def get_theme_bg_color():
+    return (242.0/255.0, 241.0/ 255.0, 240.0/255.0)
+    
 class PulseThread(threading.Thread):
     def __init__(self, proress_bar):
         threading.Thread.__init__(self)

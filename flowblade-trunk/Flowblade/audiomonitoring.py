@@ -154,7 +154,7 @@ def close_audio_monitor():
     _destroy_level_filters(True)
 
     # Close and destroy window when gtk finds time to do it
-    glib.idle_add(_audio_monitor_destroy, temp_window)
+    GLib.idle_add(_audio_monitor_destroy, temp_window)
 
 def _audio_monitor_destroy(closed_monitor_window):
     closed_monitor_window.set_visible(False)
@@ -198,7 +198,7 @@ def close_master_meter():
     _destroy_level_filters(False)
     
     # Close and destroy window when gtk finds time to do it
-    glib.idle_add(_master_meter_destroy, temp_meter)
+    GLib.idle_add(_master_meter_destroy, temp_meter)
 
 def _master_meter_destroy(closed_master_meter):
     closed_master_meter.widget.set_visible(False)

@@ -754,17 +754,17 @@ class CatmullRomFilterEditor:
         
         # This is used to change currently active curve
         self.channel_buttons = glassbuttons.GlassButtonsToggleGroup(32, 19, 2, 2, 5)
-        self.channel_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "rgb_channel.png"), self.channel_changed)
-        self.channel_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "red_channel.png"), self.channel_changed)
-        self.channel_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "green_channel.png"), self.channel_changed)
-        self.channel_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "blue_channel.png"), self.channel_changed)
+        self.channel_buttons.add_button(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "rgb_channel.png"), self.channel_changed)
+        self.channel_buttons.add_button(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "red_channel.png"), self.channel_changed)
+        self.channel_buttons.add_button(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "green_channel.png"), self.channel_changed)
+        self.channel_buttons.add_button(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "blue_channel.png"), self.channel_changed)
         self.channel_buttons.widget.set_pref_size(132, 28)
         self.channel_buttons.set_pressed_button(0)
 
         self.curve_buttons = glassbuttons.GlassButtonsGroup(32, 19, 2, 2, 5)
-        self.curve_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "linear_curve.png"), self.do_curve_reset_pressed)
-        self.curve_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "curve_s.png"), self.do_curve_reset_pressed)
-        self.curve_buttons.add_button(GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "curve_flipped_s.png"), self.do_curve_reset_pressed)
+        self.curve_buttons.add_button(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "linear_curve.png"), self.do_curve_reset_pressed)
+        self.curve_buttons.add_button(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "curve_s.png"), self.do_curve_reset_pressed)
+        self.curve_buttons.add_button(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "curve_flipped_s.png"), self.do_curve_reset_pressed)
         self.curve_buttons.widget.set_pref_size(97, 28)
 
         button_hbox = Gtk.HBox()

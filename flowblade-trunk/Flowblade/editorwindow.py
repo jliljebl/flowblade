@@ -118,16 +118,16 @@ class EditorWindow:
         global INSERTMOVE_CURSOR, OVERWRITE_CURSOR, TWOROLL_CURSOR, ONEROLL_CURSOR, \
         ONEROLL_NO_EDIT_CURSOR, TWOROLL_NO_EDIT_CURSOR, SLIDE_CURSOR, SLIDE_NO_EDIT_CURSOR, \
         MULTIMOVE_CURSOR, MULTIMOVE_NO_EDIT_CURSOR
-        INSERTMOVE_CURSOR = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "insertmove_cursor.png")
-        OVERWRITE_CURSOR = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "overwrite_cursor.png")
-        TWOROLL_CURSOR = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "tworoll_cursor.png")
-        ONEROLL_CURSOR = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "oneroll_cursor.png")
-        SLIDE_CURSOR = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "slide_cursor.png")
-        ONEROLL_NO_EDIT_CURSOR = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "oneroll_noedit_cursor.png")
-        TWOROLL_NO_EDIT_CURSOR = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "tworoll_noedit_cursor.png")
-        SLIDE_NO_EDIT_CURSOR = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "slide_noedit_cursor.png")
-        MULTIMOVE_CURSOR = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "multimove_cursor.png")
-        MULTIMOVE_NO_EDIT_CURSOR = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "multimove_cursor.png")
+        INSERTMOVE_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insertmove_cursor.png")
+        OVERWRITE_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "overwrite_cursor.png")
+        TWOROLL_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "tworoll_cursor.png")
+        ONEROLL_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "oneroll_cursor.png")
+        SLIDE_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "slide_cursor.png")
+        ONEROLL_NO_EDIT_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "oneroll_noedit_cursor.png")
+        TWOROLL_NO_EDIT_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "tworoll_noedit_cursor.png")
+        SLIDE_NO_EDIT_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "slide_noedit_cursor.png")
+        MULTIMOVE_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "multimove_cursor.png")
+        MULTIMOVE_NO_EDIT_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "multimove_cursor.png")
 
         # Window
         self.window = Gtk.Window(Gtk.WindowType.TOPLEVEL)

@@ -22,17 +22,18 @@
 Module contains classes and build methods to create GUI objects.
 """
 import cairo
+import math
 
 from gi.repository import GObject
 from gi.repository import GdkPixbuf
 from gi.repository import Gtk
+from gi.repository import Gdk
 from gi.repository import Pango
 from gi.repository import PangoCairo
 
-import math
-
 import appconsts
 from cairoarea import CairoDrawableArea
+import cairoarea
 import dnd
 import editorpersistance
 import editorstate
@@ -711,12 +712,12 @@ class MediaPanel():
         self.monitor_indicator = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "monitor_indicator.png")
         
         global has_proxy_icon, is_proxy_icon, graphics_icon, imgseq_icon, audio_icon, pattern_icon
-        has_proxy_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "has_proxy_indicator.png")
-        is_proxy_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "is_proxy_indicator.png")
-        graphics_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "graphics_indicator.png")
-        imgseq_icon =  GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "imgseq_indicator.png")
-        audio_icon =  GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "audio_indicator.png")
-        pattern_icon =  GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "pattern_producer_indicator.png")
+        has_proxy_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "has_proxy_indicator.png")
+        is_proxy_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "is_proxy_indicator.png")
+        graphics_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "graphics_indicator.png")
+        imgseq_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "imgseq_indicator.png")
+        audio_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "audio_indicator.png")
+        pattern_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "pattern_producer_indicator.png")
         
     def get_selected_media_objects(self):
         return self.selected_objects
@@ -853,13 +854,13 @@ class MediaObjectWidget:
         self.widget.dnd_media_widget_attr = True # this is used to identify widget at dnd drop
         self.widget.set_can_focus(True)
  
-        self.align = Gtk.Alignment.new()
+        self.align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
         self.align.set_padding(3, 2, 3, 2)
         self.align.set_size_request(MEDIA_OBJECT_WIDGET_WIDTH, MEDIA_OBJECT_WIDGET_HEIGHT)
         
         self.vbox = Gtk.VBox()
 
-        self.img = CairoDrawableArea(appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT, self._draw_icon)
+        self.img = cairoarea.CairoDrawableArea2(appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT, self._draw_icon)
         self.img.press_func = self._press
         self.img.dnd_media_widget_attr = True # this is used to identify widget at dnd drop
 
@@ -879,10 +880,10 @@ class MediaObjectWidget:
         
     def _draw_icon(self, event, cr, allocation):
         x, y, w, h = allocation
-        cr.set_source_pixbuf(self.media_file.icon, 0, 0)
+        cr.set_source_surface(self.media_file.icon, 0, 0)
         cr.paint()
         if self.media_file == editorstate.MONITOR_MEDIA_FILE():
-            cr.set_source_pixbuf(self.indicator_icon, 29, 22)
+            cr.set_source_surface(self.indicator_icon, 29, 22)
             cr.paint()     
         if self.media_file.mark_in != -1 and self.media_file.mark_out != -1:
             cr.set_source_rgb(1, 1, 1)
@@ -1577,15 +1578,14 @@ class BigTCDisplay:
         frame_str = utils.get_tc_string(frame)
 
         # Text
-        pango_context = pangocairo.CairoContext(cr)
-        layout = pango_context.create_layout()
-        layout.set_text(frame_str)
+        layout = PangoCairo.create_layout(cr)
+        layout.set_text(frame_str, -1)
         layout.set_font_description(self.font_desc)
 
-        pango_context.set_source_rgb(*TC_COLOR)#0.7, 0.7, 0.7)
-        pango_context.move_to(self.TEXT_X, self.TEXT_Y)
-        pango_context.update_layout(layout)
-        pango_context.show_layout(layout)
+        cr.set_source_rgb(*TC_COLOR)
+        cr.move_to(self.TEXT_X, self.TEXT_Y)
+        PangoCairo.update_layout(cr, layout)
+        PangoCairo.show_layout(cr, layout)
 
     def _round_rect_path(self, cr):
         x, y, width, height, aspect, corner_radius, radius, degrees = self._draw_consts
@@ -1775,7 +1775,9 @@ def get_markers_popup_menu(event, callback):
     menu.add(del_item)
     del_all_item = _get_menu_item(_("Delete All Markers"), callback, "deleteall", markers_exist==True)
     menu.add(del_all_item)
-    menu.popup(None, None, None, event.button, event.time)
+    menu.show_all()
+    print "halooo"
+    menu.popup(None, None, None, None, event.button, event.time)
 
 def get_all_tracks_popup_menu(event, callback):
     menu = Gtk.Menu()
@@ -1784,7 +1786,7 @@ def get_all_tracks_popup_menu(event, callback):
     menu.add(_get_menu_item(_("Maximize Audio Tracks"), callback, "maxaudio" ))
     _add_separetor(menu)
     menu.add(_get_menu_item(_("Minimize Tracks"), callback, "min" ))
-    menu.popup(None, None, None, event.button, event.time)
+    menu.popup(None, None, None, None, event.button, event.time)
 
 def get_monitor_view_popupmenu(launcher, event, callback):
     menu = Gtk.Menu()
@@ -1800,73 +1802,73 @@ def get_mode_selector_popup_menu(launcher, event, callback):
     menu = Gtk.Menu()
     menu.set_accel_group(gui.editor_window.accel_group)
 
-    menu_item = _get_image_menu_item(Gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "insertmove_cursor.png"), _("Insert"), callback, 0)
     menu_item.set_accel_path("<Actions>/WindowActions/InsertMode")
     menu.add(menu_item)
 
-    menu_item = _get_image_menu_item(Gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "overwrite_cursor.png"),    _("Overwrite"), callback, 1)
     menu_item.set_accel_path("<Actions>/WindowActions/OverMode")
     menu.add(menu_item)
 
-    menu_item = _get_image_menu_item(Gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "oneroll_cursor.png"), _("Trim"), callback, 2)
     menu_item.set_accel_path("<Actions>/WindowActions/OneRollMode")        
     menu.add(menu_item)
 
-    menu_item = _get_image_menu_item(Gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "tworoll_cursor.png"), _("Roll"), callback, 3)
     menu_item.set_accel_path("<Actions>/WindowActions/TwoRollMode") 
     menu.add(menu_item)
 
-    menu_item = _get_image_menu_item(Gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "slide_cursor.png"), _("Slip"), callback, 4)
     menu_item.set_accel_path("<Actions>/WindowActions/SlideMode") 
     menu.add(menu_item)
 
-    menu_item = _get_image_menu_item(Gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "multimove_cursor.png"), _("Spacer"), callback, 5)
     menu_item.set_accel_path("<Actions>/WindowActions/MultiMode") 
     menu.add(menu_item)
-    
-    menu.popup(None, None, None, event.button, event.time)
+    menu.show_all()
+    menu.popup(None, None, None, None, event.button, event.time)
 
 def get_file_filter_popup_menu(launcher, event, callback):
     menu = Gtk.Menu()
     menu.set_accel_group(gui.editor_window.accel_group)
 
-    menu_item = _get_image_menu_item(Gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "show_all_files.png"), _("All Files"), callback, 0)
     menu.add(menu_item)
 
-    menu_item = _get_image_menu_item(Gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "show_video_files.png"),   _("Video Files"), callback, 1)
     menu.add(menu_item)
 
-    menu_item = _get_image_menu_item(Gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "show_audio_files.png"), _("Audio Files"), callback, 2)
     menu.add(menu_item)
 
-    menu_item = _get_image_menu_item(Gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "show_graphics_files.png"), _("Graphics Files"), callback, 3)
     menu.add(menu_item)
     
-    menu_item = _get_image_menu_item(Gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "show_imgseq_files.png"), _("Image Sequences"), callback, 4)
     menu.add(menu_item)
 
-    menu_item = _get_image_menu_item(Gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "show_pattern_producers.png"), _("Pattern Producers"), callback, 5)
     menu.add(menu_item)
-
-    menu.popup(None, None, None, event.button, event.time)
+    menu.show_all()
+    menu.popup(None, None, None, None, event.button, event.time)
     
 class PressLaunch:
     def __init__(self, callback, surface, w=22, h=22):
-        self.widget = CairoDrawableArea(w, 
-                                        h, 
-                                        self._draw)
+        self.widget = cairoarea.CairoDrawableArea2( w, 
+                                                    h, 
+                                                    self._draw)
         self.widget.press_func = self._press_event
 
         self.callback = callback
@@ -1876,9 +1878,9 @@ class PressLaunch:
 
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
-        
+
         # Draw bg
-        cr.set_source_rgb(*gui.bg_color_tuple)
+        cr.set_source_rgb(*guiutils.get_theme_bg_color())
         cr.rectangle(0, 0, w, h)
         cr.fill()
         
