@@ -301,7 +301,12 @@ def get_pixmap_from_file(source_path, image_height):
 
 def get_theme_bg_color():
     return (242.0/255.0, 241.0/ 255.0, 240.0/255.0)
-    
+
+def remove_children(container):
+    children = container.get_children()
+    for child in children:
+        container.remove(child)
+
 class PulseThread(threading.Thread):
     def __init__(self, proress_bar):
         threading.Thread.__init__(self)

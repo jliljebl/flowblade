@@ -361,14 +361,14 @@ class MetersArea:
         self.widget = cairoarea.CairoDrawableArea2(  w,
                                                     h, 
                                                     self._draw)
-        
+
         self.audio_meters = [] # displays both l_Value and r_value
         for i in range(0, meters_count):
             meter = AudioMeter(METER_HEIGHT)
             if i != meters_count - 1:
                 meter.right_channel.draw_dB = True
             self.audio_meters.append(meter)
-            
+
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
 

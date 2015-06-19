@@ -82,6 +82,10 @@ imgseq_icon = None
 audio_icon = None
 pattern_icon = None
 
+# GTK3 requires these to be created outside of callback
+markers_menu = Gtk.Menu.new()
+tracks_menu = Gtk.Menu.new()
+
 # ------------------------------------------------- item lists 
 class ImageTextTextListView(Gtk.VBox):
     """
@@ -1403,7 +1407,7 @@ def _add_separetor(menu):
     menu.add(sep)
     
 def _get_menu_item(text, callback, data, sensitive=True):
-    item = Gtk.MenuItem(text)
+    item = Gtk.MenuItem.new_with_label(text)
     item.connect("activate", callback, data)
     item.show()
     item.set_sensitive(sensitive)
@@ -1757,7 +1761,8 @@ def get_markers_menu_launcher(callback, pixbuf):
 def get_markers_popup_menu(event, callback):
     seq = current_sequence()
     markers_exist = len(seq.markers) != 0
-    menu = Gtk.Menu()
+    menu = markers_menu
+    guiutils.remove_children(menu)
     if markers_exist:
         for i in range(0, len(seq.markers)):
             marker = seq.markers[i]
@@ -1775,11 +1780,11 @@ def get_markers_popup_menu(event, callback):
     del_all_item = _get_menu_item(_("Delete All Markers"), callback, "deleteall", markers_exist==True)
     menu.add(del_all_item)
     menu.show_all()
-    print "halooo"
     menu.popup(None, None, None, None, event.button, event.time)
 
 def get_all_tracks_popup_menu(event, callback):
-    menu = Gtk.Menu()
+    menu = tracks_menu
+    guiutils.remove_children(menu)
     menu.add(_get_menu_item(_("Maximize Tracks"), callback, "max" ))
     menu.add(_get_menu_item(_("Maximize Video Tracks"), callback, "maxvideo" ))
     menu.add(_get_menu_item(_("Maximize Audio Tracks"), callback, "maxaudio" ))

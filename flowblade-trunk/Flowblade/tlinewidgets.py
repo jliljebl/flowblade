@@ -1604,25 +1604,22 @@ class TimeLineColumn:
         cr.fill()
         self.draw_edge(cr, rect)
 
-        # Draw type and index text
-        """
-        pango_context = pangocairo.CairoContext(cr)
-        layout = pango_context.create_layout()
-        text = utils.get_track_name(track, current_sequence())        
-        layout.set_text(text)
+        # Draw track name
+        layout = PangoCairo.create_layout(cr)
+        text = utils.get_track_name(track, current_sequence())
         desc = Pango.FontDescription("Sans Bold 11")
+        layout.set_text(text, -1)
         layout.set_font_description(desc)
 
-        pango_context.set_source_rgb(0.0, 0.0, 0)
+        cr.set_source_rgb(0.0, 0.0, 0.0)
         if track.height == sequence.TRACK_HEIGHT_NORMAL:
             text_y = ID_PAD_Y
         else:
             text_y = ID_PAD_Y_SMALL
-        pango_context.move_to(COLUMN_LEFT_PAD + ID_PAD_X, y + text_y)
-        pango_context.update_layout(layout)
-        pango_context.show_layout(layout)
-        """
-
+        cr.move_to(COLUMN_LEFT_PAD + ID_PAD_X, y + text_y)
+        PangoCairo.update_layout(cr, layout)
+        PangoCairo.show_layout(cr, layout)
+        
         # Draw mute icon
         mute_icon = None
         if track.mute_state == appconsts.TRACK_MUTE_VIDEO and track.type == appconsts.VIDEO:
