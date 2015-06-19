@@ -33,7 +33,6 @@ from gi.repository import Pango
 from gi.repository import PangoCairo
 
 import appconsts
-from cairoarea import CairoDrawableArea
 import cairoarea
 import dnd
 import editorpersistance

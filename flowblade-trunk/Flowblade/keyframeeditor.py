@@ -34,7 +34,7 @@ import math
 from gi.repository import Gtk
 from gi.repository import Pango
 
-from cairoarea import CairoDrawableArea
+import cairoarea
 from editorstate import PLAYER
 from editorstate import current_sequence
 import gui
@@ -127,9 +127,9 @@ class ClipKeyFrameEditor:
     """
 
     def __init__(self, editable_property, parent_editor, use_clip_in=True):
-        self.widget = CairoDrawableArea(CLIP_EDITOR_WIDTH, 
-                                        CLIP_EDITOR_HEIGHT, 
-                                        self._draw)
+        self.widget = cairoarea.CairoDrawableArea2( CLIP_EDITOR_WIDTH, 
+                                                    CLIP_EDITOR_HEIGHT, 
+                                                    self._draw)
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
@@ -685,9 +685,9 @@ class AbstractScreenEditor:
     screen.
     """
     def __init__(self, editable_property, parent_editor):
-        self.widget = CairoDrawableArea(GEOMETRY_EDITOR_WIDTH, 
-                                        GEOMETRY_EDITOR_HEIGHT, 
-                                        self._draw)
+        self.widget = cairoarea.CairoDrawableArea2( GEOMETRY_EDITOR_WIDTH, 
+                                                    GEOMETRY_EDITOR_HEIGHT, 
+                                                    self._draw)
 
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event

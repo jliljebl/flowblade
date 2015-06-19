@@ -528,16 +528,6 @@ class EditorWindow:
         # Creates monitor switch buttons
         self._create_monitor_buttons()
 
-        # Switch button box
-        #switch_hbox = Gtk.HBox(True, 1)
-        #switch_hbox.pack_start(self.sequence_editor_b, False, False, 0)
-        #switch_hbox.pack_start(self.clip_editor_b, False, False, 0)
-
-        # Switch button box V, for centered buttons
-        #switch_vbox = Gtk.VBox(False, 1)
-        #switch_vbox.pack_start(guiutils.get_pad_label(5, 2), False, True, 0)
-        #switch_vbox.pack_start(switch_hbox, False, True, 0)
-
         # Switch / pos bar row
         self.view_mode_select = guicomponents.get_monitor_view_select_combo(lambda w, e: tlineaction.view_mode_menu_lauched(w, e))
         sw_pos_hbox = Gtk.HBox(False, 1)

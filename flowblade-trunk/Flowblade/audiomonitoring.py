@@ -31,7 +31,7 @@ from gi.repository import Pango
 from gi.repository import PangoCairo
 
 import appconsts
-from cairoarea import CairoDrawableArea
+import cairoarea
 import editorpersistance
 import editorstate
 import mltrefhold
@@ -358,9 +358,9 @@ class MetersArea:
         w = SLOT_W * meters_count
         h = METER_SLOT_H
         
-        self.widget = CairoDrawableArea(w,
-                                        h, 
-                                        self._draw)
+        self.widget = cairoarea.CairoDrawableArea2(  w,
+                                                    h, 
+                                                    self._draw)
         
         self.audio_meters = [] # displays both l_Value and r_value
         for i in range(0, meters_count):
@@ -605,9 +605,9 @@ class MasterVolumeMeter:
 
         w = SLOT_W - 40
         h = METER_SLOT_H + 2 + 40
-        self.canvas = CairoDrawableArea(w,
-                                        h, 
-                                        self._draw)
+        self.canvas = cairoarea.CairoDrawableArea2(  w,
+                                                    h, 
+                                                    self._draw)
 
         self.widget = Gtk.VBox(False, 0)
         self.widget.pack_start(self.canvas, False, False, 0)

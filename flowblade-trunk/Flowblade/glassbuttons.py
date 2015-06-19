@@ -19,14 +19,12 @@
 """
 
 import cairo
-import cairoarea
+import math
 
 from gi.repository import Gtk
 from gi.repository import GdkPixbuf
 
-import math
-
-from cairoarea import CairoDrawableArea
+import cairoarea
 import editorpersistance
 import gui
 import guiutils

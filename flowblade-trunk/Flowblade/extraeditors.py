@@ -25,7 +25,7 @@ from gi.repository import Gtk
 import math
 
 import cairo
-from cairoarea import CairoDrawableArea
+import cairoarea
 import editorpersistance
 from editorstate import PLAYER
 import gui
@@ -170,9 +170,9 @@ class ColorBox:
     def __init__(self, edit_listener, width=260, height=260):
         self.W = width
         self.H = height
-        self.widget = CairoDrawableArea(self.W, 
-                                        self.H, 
-                                        self._draw)
+        self.widget = cairoarea.CairoDrawableArea2( self.W, 
+                                                    self.H, 
+                                                    self._draw)
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
@@ -859,9 +859,9 @@ class CurvesBoxEditor(BoxEditor):
         self.curve_color = CURVE_COLOR
         self.edit_listener = edit_listener # Needs to implement "curve_edit_done()"
 
-        self.widget = CairoDrawableArea(self.pix_size + 2, 
-                                        self.pix_size + 2, 
-                                        self._draw)
+        self.widget = cairoarea.CairoDrawableArea2( self.pix_size + 2, 
+                                                    self.pix_size + 2, 
+                                                    self._draw)
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
@@ -1098,9 +1098,9 @@ def value_changed(self, ep, value):
 class AbstractColorWheel:
 
     def __init__(self, edit_listener):
-        self.widget = CairoDrawableArea(260, 
-                                        260, 
-                                        self._draw)
+        self.widget = cairoarea.CairoDrawableArea2( 260, 
+                                                    260, 
+                                                    self._draw)
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
@@ -1301,9 +1301,9 @@ class ColorBandSelector:
     def __init__(self):
         self.band = SHADOW
 
-        self.widget = CairoDrawableArea(42, 
-                                        18, 
-                                        self._draw)
+        self.widget = cairoarea.CairoDrawableArea2( 42, 
+                                                    18, 
+                                                    self._draw)
 
         self.widget.press_func = self._press_event
         self.SHADOW_X = 0

@@ -18,11 +18,9 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-
+import numpy as np
 
 from gi.repository import Gtk
-
-import numpy as np
 
 import cairoarea
 import cairo
@@ -51,7 +49,7 @@ class ViewEditor(Gtk.Frame):
         self.write_out_layers = False
         self.write_file_path = None
 
-        self.edit_area = cairoarea.CairoDrawableArea(int(self.scaled_screen_width + MIN_PAD * 2), self.profile_h + MIN_PAD * 2, self._draw)
+        self.edit_area = cairoarea.CairoDrawableArea2(int(self.scaled_screen_width + MIN_PAD * 2), self.profile_h + MIN_PAD * 2, self._draw)
         self.edit_area.press_func = self._press_event
         self.edit_area.motion_notify_func = self._motion_notify_event
         self.edit_area.release_func = self._release_event
