@@ -511,9 +511,9 @@ class EditorWindow:
         pos_bar_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
         
         # Positionbar vbox
-        pos_bar_vbox = Gtk.VBox(False, 1)
-        pos_bar_vbox.pack_start(guiutils.get_pad_label(5, 2), False, True, 0)
-        pos_bar_vbox.pack_start(pos_bar_frame, False, True, 0)
+        pos_bar_align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
+        pos_bar_align.set_padding(2, 2, 5, 0)
+        pos_bar_align.add(pos_bar_frame)
 
         # Play buttons row
         self._create_monitor_row_widgets()
@@ -529,20 +529,21 @@ class EditorWindow:
         self._create_monitor_buttons()
 
         # Switch button box
-        switch_hbox = Gtk.HBox(True, 1)
-        switch_hbox.pack_start(self.sequence_editor_b, False, False, 0)
-        switch_hbox.pack_start(self.clip_editor_b, False, False, 0)
+        #switch_hbox = Gtk.HBox(True, 1)
+        #switch_hbox.pack_start(self.sequence_editor_b, False, False, 0)
+        #switch_hbox.pack_start(self.clip_editor_b, False, False, 0)
 
         # Switch button box V, for centered buttons
-        switch_vbox = Gtk.VBox(False, 1)
-        switch_vbox.pack_start(guiutils.get_pad_label(5, 2), False, True, 0)
-        switch_vbox.pack_start(switch_hbox, False, True, 0)
+        #switch_vbox = Gtk.VBox(False, 1)
+        #switch_vbox.pack_start(guiutils.get_pad_label(5, 2), False, True, 0)
+        #switch_vbox.pack_start(switch_hbox, False, True, 0)
 
         # Switch / pos bar row
         self.view_mode_select = guicomponents.get_monitor_view_select_combo(lambda w, e: tlineaction.view_mode_menu_lauched(w, e))
         sw_pos_hbox = Gtk.HBox(False, 1)
-        sw_pos_hbox.pack_start(switch_vbox, False, True, 0)
-        sw_pos_hbox.pack_start(pos_bar_vbox, True, True, 0)
+        sw_pos_hbox.pack_start(self.sequence_editor_b, False, True, 0)
+        sw_pos_hbox.pack_start(self.clip_editor_b, False, True, 0)
+        sw_pos_hbox.pack_start(pos_bar_align, True, True, 0)
         sw_pos_hbox.pack_start(self.view_mode_select.widget, False, False, 0)
 
         # Video display
@@ -551,7 +552,7 @@ class EditorWindow:
         bg_color = Gdk.Color(red=0.0, green=0.0, blue=0.0)
         black_box.modify_bg(Gtk.StateType.NORMAL, bg_color)
         
-        self.tline_display = black_box # This can be any GTK+ widget (that is not "windowless"), only its XWindow draw rect 
+        self.tline_display = black_box # This could be any GTK+ widget (that is not "windowless"), only its XWindow draw rect 
                                        # is used to position and scale SDL overlay that actually displays video.
         dnd.connect_video_monitor(self.tline_display)
 
@@ -561,7 +562,7 @@ class EditorWindow:
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
         monitor_vbox.pack_start(player_buttons_row, False, True, 0)
 
-        monitor_align = Gtk.Alignment.new(xalign=0.0, yalign=0.0, xscale=1.0, yscale=1.0) 
+        monitor_align = Gtk.Alignment.new(xalign=0.5, yalign=0.5, xscale=1.0, yscale=1.0) 
         monitor_align.add(monitor_vbox)
         monitor_align.set_padding(3, 0, 3, 3)
 
@@ -857,7 +858,7 @@ class EditorWindow:
                         None)
         self.sequence_editor_b.set_size_request(100, 25)
 
-        self.clip_editor_b = Gtk.RadioButton(self.sequence_editor_b)#,_("Clip"))
+        self.clip_editor_b = Gtk.RadioButton.new_from_widget(self.sequence_editor_b)#,_("Clip"))
         self.clip_editor_b.set_mode(False)
         self.clip_editor_b.set_image(Gtk.Image.new_from_file(IMG_PATH + "clip_button.png"))
         self.clip_editor_b.connect("clicked",

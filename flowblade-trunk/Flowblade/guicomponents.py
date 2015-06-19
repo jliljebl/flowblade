@@ -1863,7 +1863,8 @@ def get_file_filter_popup_menu(launcher, event, callback):
     menu.add(menu_item)
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
-    
+
+
 class PressLaunch:
     def __init__(self, callback, surface, w=22, h=22):
         self.widget = cairoarea.CairoDrawableArea2( w, 
