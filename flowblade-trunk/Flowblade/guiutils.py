@@ -22,11 +22,10 @@
 Module contains utility methods for creating GUI objects.
 """
 
-
-from gi.repository import Gtk
-
 import time
 import threading
+
+from gi.repository import Gtk
 
 import appconsts
 import respaths
@@ -129,7 +128,7 @@ def get_two_row_box(widget1, widget2):
     
 def get_image_button(img_file_name, width, height):
     button = Gtk.Button()
-    icon = Gtk.image_new_from_file(respaths.IMAGE_PATH + img_file_name)        
+    icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + img_file_name)        
     button_box = Gtk.HBox()
     button_box.pack_start(icon, False, False, 0)
     button.add(button_box)

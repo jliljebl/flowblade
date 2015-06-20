@@ -295,7 +295,7 @@ class GuidesViewToggle(Gtk.ToggleButton):
     
     def __init__(self, view_editor):
         GObject.GObject.__init__(self)
-        icon = Gtk.image_new_from_file(respaths.IMAGE_PATH + "guides_view_switch.png")
+        icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "guides_view_switch.png")
         self.set_image(icon)
         self.view_editor = view_editor
         

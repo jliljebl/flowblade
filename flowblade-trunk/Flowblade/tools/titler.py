@@ -19,17 +19,15 @@
 """
 
 import copy
-
-
-from gi.repository import Gtk
-from gi.repository import GLib
-
 import os
-from gi.repository import Pango
-from gi.repository import PangoCairo
 import pickle
 import threading
 import time
+
+from gi.repository import Gtk
+from gi.repository import GLib
+from gi.repository import Pango
+from gi.repository import PangoCairo
 
 import toolsdialogs
 from editorstate import PLAYER
@@ -195,8 +193,8 @@ class Titler(Gtk.Window):
         add_del_box.pack_start(add_b)
         add_del_box.pack_start(del_b)
 
-        center_h_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH + "center_horizontal.png")
-        center_v_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH + "center_vertical.png")
+        center_h_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "center_horizontal.png")
+        center_v_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "center_vertical.png")
         center_h = Gtk.Button()
         center_h.set_image(center_h_icon)
         center_h.connect("clicked", lambda w:self._center_h_pressed())
@@ -333,8 +331,8 @@ class Titler(Gtk.Window):
                                        Gtk.IconSize.BUTTON)
         undo_pos.set_image(undo_icon)
 
-        next_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH + "next_frame_s.png")
-        prev_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH + "prev_frame_s.png")
+        next_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "next_frame_s.png")
+        prev_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "prev_frame_s.png")
         prev_frame = Gtk.Button()
         prev_frame.set_image(prev_icon)
         prev_frame.connect("clicked", lambda w:self._prev_frame_pressed())

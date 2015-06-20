@@ -318,7 +318,7 @@ def set_ref_line_y(allocation):
 
 def get_pos_for_tline_centered_to_current_frame():
     current_frame = PLAYER().current_frame()
-    allocation = canvas_widget.widget.allocation
+    allocation = canvas_widget.widget.get_allocation()
     x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
     frames_in_panel = w / pix_per_frame
 
@@ -924,7 +924,7 @@ class TimeLineCanvas:
         """
         Mouse button callback
         """
-        if event.type == Gdk._2BUTTON_PRESS:
+        if event.type == Gdk.EventType._2BUTTON_PRESS:
             self.double_click_listener(get_frame(event.x), event.x, event.y)
             return
          

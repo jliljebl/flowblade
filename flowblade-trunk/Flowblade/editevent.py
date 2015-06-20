@@ -410,7 +410,7 @@ def tline_canvas_mouse_pressed(event, frame):
         PLAYER().stop_playback()
     
     # Double click handled separately
-    if event.type == Gdk._2BUTTON_PRESS:
+    if event.type == Gdk.EventType._2BUTTON_PRESS:
         return
 
     # Handle and exit parent clip selecting

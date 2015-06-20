@@ -339,21 +339,12 @@ class MediaFile:
         icon = cairo.ImageSurface.create_from_png(self.icon_path)
         scaled_icon = cairo.ImageSurface(cairo.FORMAT_ARGB32, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
         cr = cairo.Context(scaled_icon)
-
-        print appconsts.THUMB_WIDTH 
-        print icon.get_width()
-        print appconsts.THUMB_HEIGHT
-        print icon.get_height()
-
         cr.scale( float(appconsts.THUMB_WIDTH) / float(icon.get_width()), float(appconsts.THUMB_HEIGHT) / float(icon.get_height()))
         cr.set_source_surface(icon, 0, 0)
         cr.paint()
         
         return scaled_icon
-        
-        
-        
-            
+
     def create_proxy_path(self, proxy_width, proxy_height, file_extesion):
         if self.type == appconsts.IMAGE_SEQUENCE:
             return self._create_img_seg_proxy_path(proxy_width, proxy_height)

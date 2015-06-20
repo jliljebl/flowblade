@@ -990,7 +990,7 @@ class ColorGrader:
         box_row.pack_start(Gtk.Label(), True, True, 0)
 
 
-        shadow_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH + "shadow.png")
+        shadow_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "shadow.png")
         self.sh_label = Gtk.Label()
         self.ss_label = Gtk.Label()
         shadow_box = Gtk.HBox()
@@ -1000,7 +1000,7 @@ class ColorGrader:
         shadow_box.pack_start(self.ss_label, False, False, 0)
         shadow_box.set_size_request(95, 20)
 
-        midtone_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH + "midtones.png")
+        midtone_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "midtones.png")
         self.mh_label = Gtk.Label()
         self.ms_label = Gtk.Label()
         midtone_box = Gtk.HBox()
@@ -1010,7 +1010,7 @@ class ColorGrader:
         midtone_box.pack_start(self.ms_label, False, False, 0)
         midtone_box.set_size_request(95, 20)
 
-        highligh_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH + "highlights.png")
+        highligh_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "highlights.png")
         self.hh_label = Gtk.Label()
         self.hs_label = Gtk.Label()
         highlight_box = Gtk.HBox()

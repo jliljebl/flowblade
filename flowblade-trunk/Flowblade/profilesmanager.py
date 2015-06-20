@@ -184,7 +184,7 @@ def _get_factory_profiles_panel(user_profiles_list):
     hidden_profiles_list.fill_data_model(mltprofiles.get_hidden_profiles())   
     unhide_selected_button = Gtk.Button(_("Unhide Selected"))
     
-    stop_icon = Gtk.image_new_from_file(respaths.IMAGE_PATH + "bothways.png")
+    stop_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "bothways.png")
     
     BUTTON_WIDTH = 120
     BUTTON_HEIGHT = 28

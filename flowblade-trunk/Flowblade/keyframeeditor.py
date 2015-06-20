@@ -174,13 +174,13 @@ class ClipKeyFrameEditor:
         return self._get_panel_pos_for_frame(self.current_clip_frame) 
 
     def _get_panel_pos_for_frame(self, frame):
-        active_width = self.widget.allocation.width - 2 * END_PAD
+        active_width = self.widget.get_allocation().width - 2 * END_PAD
         disp_frame = frame - self.clip_in 
         return END_PAD + int((float(disp_frame) / float(self.clip_length)) * 
                              active_width)
 
     def _get_frame_for_panel_pos(self, panel_x):
-        active_width = self.widget.allocation.width - 2 * END_PAD
+        active_width = self.widget.get_allocation().width - 2 * END_PAD
         clip_panel_x = panel_x - END_PAD
         norm_pos = float(clip_panel_x) / float(active_width)
         return int(norm_pos * self.clip_length) + self.clip_in
@@ -722,8 +722,8 @@ class AbstractScreenEditor:
     # ---------------------------------------------------- draw params
     def _create_coords(self):
         self.coords = utils.EmptyClass()
-        panel_w = self.widget.allocation.width
-        panel_h = self.widget.allocation.height
+        panel_w = self.widget.get_allocation().width
+        panel_h = self.widget.get_allocation().height
         self.coords.screen_h = panel_h * self.y_fract
         self.coords.screen_w = self.coords.screen_h * self.screen_ratio * self.pixel_aspect_ratio
         self.coords.orig_x = (panel_w - self.coords.screen_w) / 2.0

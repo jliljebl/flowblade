@@ -85,7 +85,10 @@ pattern_icon = None
 # GTK3 requires these to be created outside of callback
 markers_menu = Gtk.Menu.new()
 tracks_menu = Gtk.Menu.new()
-
+monitor_menu = Gtk.Menu.new()
+tools_menu = Gtk.Menu.new()
+file_filter_menu = Gtk.Menu()
+    
 # ------------------------------------------------- item lists 
 class ImageTextTextListView(Gtk.VBox):
     """
@@ -713,7 +716,7 @@ class MediaPanel():
         self.columns = editorpersistance.prefs.media_columns
         self.media_file_popup_cb = media_file_popup_cb
         self.double_click_cb = double_click_cb
-        self.monitor_indicator = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "monitor_indicator.png")
+        self.monitor_indicator = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "monitor_indicator.png")
         
         global has_proxy_icon, is_proxy_icon, graphics_icon, imgseq_icon, audio_icon, pattern_icon
         has_proxy_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "has_proxy_indicator.png")
@@ -728,7 +731,7 @@ class MediaPanel():
         
     def media_object_selected(self, media_object, widget, event):
         widget.grab_focus()
-        if event.type == Gdk._2BUTTON_PRESS:
+        if event.type == Gdk.EventType._2BUTTON_PRESS:
              self.double_click_cb(media_object.media_file)
         elif event.button == 1:
             if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
@@ -740,15 +743,14 @@ class MediaPanel():
                     self.selected_objects.append(media_object)
             else:
                 self.clear_selection()
-                widget.modify_bg(Gtk.StateType.NORMAL, gui.selected_bg_color)
+                widget.override_background_color(Gtk.StateType.NORMAL, gui.selected_bg_color)
                 self.selected_objects.append(media_object)
         elif event.button == 3:
             self.clear_selection()
             display_media_file_popup_menu(media_object.media_file,
                                           self.media_file_popup_cb,
                                           event)
-        elif event.type == Gdk._2BUTTON_PRESS:
-             print "double click"
+
         self.widget.queue_draw()
 
     def select_media_file(self, media_file):
@@ -771,7 +773,7 @@ class MediaPanel():
 
     def clear_selection(self):
         for m_obj in self.selected_objects:
-            m_obj.widget.modify_bg(Gtk.StateType.NORMAL, gui.note_bg_color)
+            m_obj.widget.override_background_color(Gtk.StateType.NORMAL, gui.note_bg_color)
         self.selected_objects = []
 
     def columns_changed(self, adjustment):
@@ -1699,7 +1701,7 @@ class TimeLineLeftBottom:
             self.widget.remove(child)
         self.widget.pack_start(Gtk.Label(), True, True, 0)
         if PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA:
-            proxy_img =  Gtk.image_new_from_file(respaths.IMAGE_PATH + "project_proxy.png")
+            proxy_img =  Gtk.Image.new_from_file(respaths.IMAGE_PATH + "project_proxy.png")
             self.widget.pack_start(proxy_img, False, False, 0)
 
         self.widget.show_all()
@@ -1793,17 +1795,19 @@ def get_all_tracks_popup_menu(event, callback):
     menu.popup(None, None, None, None, event.button, event.time)
 
 def get_monitor_view_popupmenu(launcher, event, callback):
-    menu = Gtk.Menu()
-    menu.add(_get_image_menu_item(Gtk.image_new_from_file(
+    menu = monitor_menu
+    guiutils.remove_children(menu)
+    menu.add(_get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "program_view_2.png"), _("Image"), callback, 0))
-    menu.add(_get_image_menu_item(Gtk.image_new_from_file(
+    menu.add(_get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "vectorscope.png"), _("Vectorscope"), callback, 1))
-    menu.add(_get_image_menu_item(Gtk.image_new_from_file(
+    menu.add(_get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "rgbparade.png"), _("RGB Parade"), callback, 2))
-    menu.popup(None, None, None, event.button, event.time)
+    menu.popup(None, None, None,  None, event.button, event.time)
 
 def get_mode_selector_popup_menu(launcher, event, callback):
-    menu = Gtk.Menu()
+    menu = tools_menu
+    guiutils.remove_children(menu)
     menu.set_accel_group(gui.editor_window.accel_group)
 
     menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
@@ -1839,7 +1843,8 @@ def get_mode_selector_popup_menu(launcher, event, callback):
     menu.popup(None, None, None, None, event.button, event.time)
 
 def get_file_filter_popup_menu(launcher, event, callback):
-    menu = Gtk.Menu()
+    menu = file_filter_menu
+    guiutils.remove_children(menu)
     menu.set_accel_group(gui.editor_window.accel_group)
 
     menu_item = _get_image_menu_item(Gtk.Image.new_from_file(

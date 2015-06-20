@@ -60,20 +60,25 @@ def init():
     empty_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "empty.png")
 
 # ----------------------------------------------- set gui components as drag sources and destinations
+
 def connect_media_files_object_widget(widget):
+    print "rr"
     widget.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
                            [MEDIA_FILES_DND_TARGET], 
                            Gdk.DragAction.COPY)
     widget.connect_after('drag_begin', _media_files_drag_begin)
     widget.connect("drag_data_get", _media_files_drag_data_get)
-    
+    widget.drag_source_set_icon_pixbuf(clip_icon)
+
 def connect_media_files_object_cairo_widget(widget):
+    print "ww"
     widget.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
                            [MEDIA_FILES_DND_TARGET], 
                            Gdk.DragAction.COPY)
     widget.connect_after('drag_begin', _media_files_drag_begin)
     widget.connect("drag_data_get", _media_files_drag_data_get)
-    
+    widget.drag_source_set_icon_pixbuf(clip_icon)
+
 def connect_bin_tree_view(treeview, move_files_to_bin_func):
     treeview.enable_model_drag_dest([MEDIA_FILES_DND_TARGET],
                                     Gdk.DragAction.DEFAULT)
@@ -135,9 +140,10 @@ def start_tline_clips_out_drag(event, clips, widget):
 
 
 # ------------------------------------------------- handlers for drag events
-def _media_files_drag_begin(treeview, context):
+def _media_files_drag_begin(widget, context):
+    print "ddd"
     _save_media_panel_selection()
-    context.set_icon_pixbuf(clip_icon, 30, 15)
+    #context.set_icon_pixbuf(clip_icon, 30, 15)
 
 def _media_files_drag_data_get(widget, context, selection, target_id, timestamp):
     _save_media_panel_selection()

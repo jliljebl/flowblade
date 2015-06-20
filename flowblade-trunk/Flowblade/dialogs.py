@@ -23,7 +23,6 @@ Module builds dialog windows. User input is handled at
 callsites which provide callback methods for response signals.
 """
 
-
 from gi.repository import Gtk
 
 import locale
@@ -51,7 +50,7 @@ def new_project_dialog(callback):
     default_profile_index = mltprofiles.get_default_profile_index()
     default_profile = mltprofiles.get_default_profile()
 
-    dialog = Gtk.Dialog(_("New Project"), None,
+    dialog = Gtk.Dialog(_("New Project"), gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
                          _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
@@ -282,7 +281,7 @@ def about_dialog(parent_window):
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
 
-    img = Gtk.image_new_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
+    img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
     flow_label = Gtk.Label(label="Flowblade Movie Editor")
     ver_label = Gtk.Label(label="1.0.0")
     janne_label = Gtk.Label(label="Copyright 2015 Janne Liljeblad")
