@@ -22,10 +22,8 @@
 Module handles keyevents.
 """
 
-
-
 from gi.repository import Gtk
-
+from gi.repository import Gdk
 
 import audiowaveform
 import clipeffectseditor
@@ -197,27 +195,27 @@ def _handle_tline_key_event(event):
         return True
 
     # Number edit mode changes
-    if event.keyval == Gdk.KEY__1:
+    if event.keyval == Gdk.KEY_1:
         gui.editor_window.handle_insert_move_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
-    if event.keyval == Gdk.KEY__2:
+    if event.keyval == Gdk.KEY_2:
         gui.editor_window.handle_over_move_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
-    if event.keyval == Gdk.KEY__3:
+    if event.keyval == Gdk.KEY_3:
         gui.editor_window.handle_one_roll_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
-    if event.keyval == Gdk.KEY__4:
+    if event.keyval == Gdk.KEY_4:
         gui.editor_window.handle_two_roll_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
-    if event.keyval == Gdk.KEY__5:
+    if event.keyval == Gdk.KEY_5:
         gui.editor_window.handle_slide_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
-    if event.keyval == Gdk.KEY__6:
+    if event.keyval == Gdk.KEY_6:
         gui.editor_window.handle_multi_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
@@ -392,27 +390,27 @@ def _handle_extended_tline_focus_events(event):
         return True
         
     # Number edit mode changes
-    if event.keyval == Gdk.KEY__1:
+    if event.keyval == Gdk.KEY_1:
         gui.editor_window.handle_insert_move_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
-    if event.keyval == Gdk.KEY__2:
+    if event.keyval == Gdk.KEY_2:
         gui.editor_window.handle_over_move_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
-    if event.keyval == Gdk.KEY__3:
+    if event.keyval == Gdk.KEY_3:
         gui.editor_window.handle_one_roll_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
-    if event.keyval == Gdk.KEY__4:
+    if event.keyval == Gdk.KEY_4:
         gui.editor_window.handle_two_roll_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
-    if event.keyval == Gdk.KEY__5:
+    if event.keyval == Gdk.KEY_5:
         gui.editor_window.handle_slide_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True
-    if event.keyval == Gdk.KEY__6:
+    if event.keyval == Gdk.KEY_6:
         gui.editor_window.handle_multi_mode_button_press()
         gui.editor_window.set_mode_selector_to_mode()
         return True

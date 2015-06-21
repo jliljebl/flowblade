@@ -23,14 +23,8 @@ Module handles user actions that are not edits on the current sequence.
 Load, save, add media file, etc...
 """
 
-from gi.repository import GObject
-from gi.repository import Gtk
-from gi.repository import Gdk
-from gi.repository import GLib
-
-import glob
-
 import datetime
+import glob
 import md5
 import os
 from os import listdir
@@ -39,6 +33,11 @@ import re
 import shutil
 import time
 import threading
+
+from gi.repository import GObject
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GLib
 
 import app
 import appconsts
@@ -376,7 +375,7 @@ def _save_backup_snapshot_dialog_callback(dialog, response_id, project_folder, n
         name = name_entry.get_text()
         dialog.destroy()
         
-        glib.idle_add(lambda : _do_snapshot_save(root_path + "/", name))
+        GLib.idle_add(lambda : _do_snapshot_save(root_path + "/", name))
 
     else:
         dialog.destroy()

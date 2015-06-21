@@ -92,7 +92,7 @@ def close_titler():
     
     _titler.set_visible(False)
 
-    glib.idle_add(titler_destroy)
+    GLib.idle_add(titler_destroy)
 
 def titler_destroy():
     global _titler, _titler_data

@@ -62,7 +62,6 @@ def warning_message_with_callback(primary_txt, secondary_txt, parent_window, is_
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         ( _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
     dialog.vbox.pack_start(content, True, True, 0)
-    dialog.set_has_separator(False)
     dialog.set_resizable(False)
     dialog.connect('response', callback)
     dialog.show_all()
@@ -140,7 +139,7 @@ def get_single_line_text_input_dialog(chars, label_width,title, ok_button_text,
                             (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
                             ok_button_text, Gtk.ResponseType.OK))
 
-    entry = Gtk.Entry(30)
+    entry = Gtk.Entry()
     entry.set_width_chars(30)
     entry.set_text(default_text)
     entry.set_activates_default(True)

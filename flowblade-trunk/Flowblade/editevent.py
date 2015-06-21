@@ -24,11 +24,11 @@ Handles or passes on mouse edit events from timeline.
 Handles edit mode setting.
 """
 
-
-
-from gi.repository import Gtk
 import os
 import time
+
+from gi.repository import Gtk
+from gi.repository import Gdk
 
 import appconsts
 import clipeffectseditor

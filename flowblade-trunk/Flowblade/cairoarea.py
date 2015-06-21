@@ -34,16 +34,18 @@ bg_color = None
 
 class CairoDrawableArea2(Gtk.DrawingArea):
 
-
     def __init__(self, pref_width, pref_height, func_draw, use_widget_bg=False):
         Gtk.DrawingArea.__init__(self)
         
         self.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
         self.add_events(Gdk.EventMask.BUTTON_RELEASE_MASK)
+        self.add_events(Gdk.EventMask.BUTTON_MOTION_MASK)
         self.add_events(Gdk.EventMask.SCROLL_MASK)
         self.add_events(Gdk.EventMask.ENTER_NOTIFY_MASK)
         self.add_events(Gdk.EventMask.LEAVE_NOTIFY_MASK)
-                                 
+        self.add_events(Gdk.EventMask.KEY_PRESS_MASK)
+        self.add_events(Gdk.EventMask.POINTER_MOTION_HINT_MASK)
+    
         self.set_size_request(pref_width, pref_height)
         self._use_widget_bg = use_widget_bg
 
@@ -68,6 +70,7 @@ class CairoDrawableArea2(Gtk.DrawingArea):
         self.mouse_scroll_func = None
 
         # Flag for grabbing focus
+        self.set_property("can-focus",  True)
         self.grab_focus_on_press = True
 
     def set_pref_size(self, pref_width, pref_height):
@@ -97,7 +100,7 @@ class CairoDrawableArea2(Gtk.DrawingArea):
 
     def _motion_notify_event(self, widget, event):
         if event.is_hint:
-            x, y, state = event.window.get_pointer()
+            winbdow, x, y, state = event.window.get_pointer()
         else:
             x = event.x
             y = event.y

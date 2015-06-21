@@ -26,17 +26,15 @@ SwigPyObject MLT objects with pickleable python objects for save,
 and then create MLT objects from pickled objects when project is loaded.
 """
 
-
-
-
-from gi.repository import Gtk
-
 import copy
 import glob
 import fnmatch
 import os
 import pickle
 import time
+
+from gi.repository import Gtk
+from gi.repository import Gdk
 
 import appconsts
 import editorstate
