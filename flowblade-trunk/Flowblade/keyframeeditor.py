@@ -112,6 +112,8 @@ NON_ACTIVE_KF_ICON = None
 # Magic value to signify disconnected signal handler 
 DISCONNECTED_SIGNAL_HANDLER = -9999999
 
+actions_menu = Gtk.Menu()
+        
 # ----------------------------------------------------- editor objects
 class ClipKeyFrameEditor:
     """
@@ -1502,7 +1504,8 @@ class GeometryEditorButtonsRow(Gtk.HBox):
         self.pack_start(guiutils.get_pad_label(2, 10), False, False, 0)
 
     def _show_actions_menu(self, widget, event):
-        menu = Gtk.Menu()
+        menu = actions_menu
+        guiutils.remove_children(menu)
         menu.add(self._get_menu_item(_("Reset Geometry"), self.editor_parent.menu_item_activated, "reset" ))
         menu.add(self._get_menu_item(_("Geometry to Original Aspect Ratio"), self.editor_parent.menu_item_activated, "ratio" ))
         menu.add(self._get_menu_item(_("Center Horizontal"), self.editor_parent.menu_item_activated, "hcenter" ))

@@ -19,9 +19,8 @@
 """
 
 import datetime
+
 from gi.repository import GObject
-
-
 from gi.repository import Gtk
 
 import dbus
@@ -80,6 +79,8 @@ queue_runner_thread = None
 timeout_id = None
 
 _dbus_service = None
+
+render_item_menu = Gtk.Menu()
 
 # -------------------------------------------------------- render thread
 class QueueRunnerThread(threading.Thread):
@@ -1008,12 +1009,14 @@ def show_render_properties_panel(render_item):
     dialogutils.panel_ok_dialog(title, vbox)
     
 def display_render_item_popup_menu(callback, event):
-    menu = Gtk.Menu()
+    menu = render_item_menu
+    guiutils.remove_children(menu)
+
     menu.add(_get_menu_item(_("Save Item Project As..."), callback,"saveas"))
     menu.add(_get_menu_item(_("Render Properties"), callback,"renderinfo")) 
     _add_separetor(menu)
     menu.add(_get_menu_item(_("Delete"), callback,"delete"))
-    menu.popup(None, None, None, event.button, event.time)
+    menu.popup(None, None, None, None, event.button, event.time)
     
 def _add_separetor(menu):
     sep = Gtk.SeparatorMenuItem()

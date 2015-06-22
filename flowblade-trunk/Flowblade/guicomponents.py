@@ -88,7 +88,17 @@ tracks_menu = Gtk.Menu.new()
 monitor_menu = Gtk.Menu.new()
 tools_menu = Gtk.Menu.new()
 file_filter_menu = Gtk.Menu()
-    
+clip_popup_menu = Gtk.Menu()
+tracks_pop_menu = Gtk.Menu()
+transition_clip_menu = Gtk.Menu()
+blank_clip_menu = Gtk.Menu()
+audio_clip_menu = Gtk.Menu()
+compositor_popup_menu = Gtk.Menu()
+media_file_popup_menu = Gtk.Menu()
+filter_stack_menu_popup_menu = Gtk.Menu()
+media_linker_popup_menu = Gtk.Menu()
+log_event_popup_menu = Gtk.Menu()
+
 # ------------------------------------------------- item lists 
 class ImageTextTextListView(Gtk.VBox):
     """
@@ -970,7 +980,6 @@ def get_monitor_view_select_combo(callback):
 
 def get_compositor_track_select_combo(source_track, target_track, callback):
     tracks_combo = Gtk.ComboBoxText()
-    #tracks_combo.append_text("Auto Track Below")
     active_index = -1
     cb_index = 0
     for track_index in range(source_track.id - 1, current_sequence().first_video_index - 1, -1):
@@ -989,7 +998,8 @@ def get_compositor_track_select_combo(source_track, target_track, callback):
 # -------------------------------------------- context menus
 def display_tracks_popup_menu(event, track, callback):    
     track_obj = current_sequence().tracks[track]
-    track_menu = Gtk.Menu()
+    track_menu = tracks_pop_menu
+    guiutils.remove_children(track_menu)
 
     if track_obj.edit_freedom != appconsts.FREE:
         track_menu.append(_get_menu_item(_("Lock Track"), callback, (track,"lock", None), False))
@@ -1014,7 +1024,7 @@ def display_tracks_popup_menu(event, track, callback):
     
     track_menu.append(_get_track_mute_menu_item(event, track_obj, callback))
 
-    track_menu.popup(None, None, None, event.button, event.time)
+    track_menu.popup(None, None, None, None, event.button, event.time)
 
 def display_clip_popup_menu(event, clip, track, callback):
     if clip.is_blanck_clip:
@@ -1025,7 +1035,8 @@ def display_clip_popup_menu(event, clip, track, callback):
         display_transition_clip_popup_menu(event, clip, track, callback)
         return
 
-    clip_menu = Gtk.Menu()
+    clip_menu = clip_popup_menu
+    guiutils.remove_children(clip_menu)
     clip_menu.add(_get_menu_item(_("Open in Filters Editor"), callback, (clip, track, "open_in_editor", event.x)))
     # Only make opening in compositor editor for video tracks V2 and higher
     if track.id <= current_sequence().first_video_index:
@@ -1094,10 +1105,12 @@ def display_clip_popup_menu(event, clip, track, callback):
     clip_menu.add(_get_menu_item(_("Clip Info"), callback,\
                   (clip, track, "clip_info", event.x)))
 
-    clip_menu.popup(None, None, None, event.button, event.time)
+    clip_menu.popup(None, None, None, None, event.button, event.time)
 
 def display_transition_clip_popup_menu(event, clip, track, callback):
-    clip_menu = Gtk.Menu()
+    clip_menu = transition_clip_menu
+    guiutils.remove_children(clip_menu)
+
     clip_menu.add(_get_menu_item(_("Open in Filters Editor"), callback, (clip, track, "open_in_editor", event.x)))
 
     _add_separetor(clip_menu)
@@ -1119,22 +1132,26 @@ def display_transition_clip_popup_menu(event, clip, track, callback):
     _add_separetor(clip_menu)
 
     clip_menu.add(_get_clone_filters_menu_item(event, clip, track, callback))
-    clip_menu.popup(None, None, None, event.button, event.time)
+    clip_menu.popup(None, None, None, None, event.button, event.time)
     
 def display_blank_clip_popup_menu(event, clip, track, callback):
-    clip_menu = Gtk.Menu()
+    clip_menu = blank_clip_menu
+    guiutils.remove_children(clip_menu)
+
     clip_menu.add(_get_menu_item(_("Strech Prev Clip to Cover"), callback, (clip, track, "cover_with_prev", event.x)))
     clip_menu.add(_get_menu_item(_("Strech Next Clip to Cover"), callback, (clip, track, "cover_with_next", event.x)))
     _add_separetor(clip_menu)
     clip_menu.add(_get_menu_item(_("Delete"), callback, (clip, track, "delete_blank", event.x)))
-    clip_menu.popup(None, None, None, event.button, event.time)
+    clip_menu.popup(None, None, None, None, event.button, event.time)
     
 def display_audio_clip_popup_menu(event, clip, track, callback):
     if clip.is_blanck_clip:
         display_blank_clip_popup_menu(event, clip, track, callback)
         return
 
-    clip_menu = Gtk.Menu()
+    clip_menu = audio_clip_menu
+    guiutils.remove_children(clip_menu)
+
     clip_menu.add(_get_menu_item(_("Open in Filters Editor"), callback, (clip, track, "open_in_editor", event.x)))
     if clip.media_type != appconsts.PATTERN_PRODUCER:
         clip_menu.add(_get_menu_item(_("Open in Clip Monitor"), callback,\
@@ -1173,16 +1190,18 @@ def display_audio_clip_popup_menu(event, clip, track, callback):
     clip_menu.add(_get_menu_item(_("Clip Info"), callback,\
                   (clip, track, "clip_info", event.x)))
 
-    clip_menu.popup(None, None, None, event.button, event.time)
+    clip_menu.popup(None, None, None, None, event.button, event.time)
 
 def display_compositor_popup_menu(event, compositor, callback):
-    compositor_menu = Gtk.Menu()
+    compositor_menu = compositor_popup_menu
+    guiutils.remove_children(compositor_menu)
+    
     compositor_menu.add(_get_menu_item(_("Open In Compositor Editor"), callback, ("open in editor",compositor)))
     _add_separetor(compositor_menu)
     compositor_menu.add(_get_menu_item(_("Sync with Origin Clip"), callback, ("sync with origin",compositor)))
     _add_separetor(compositor_menu)
     compositor_menu.add(_get_menu_item(_("Delete"), callback, ("delete",compositor)))
-    compositor_menu.popup(None, None, None, event.button, event.time)
+    compositor_menu.popup(None, None, None, None, event.button, event.time)
 
 def _get_filters_add_menu_item(event, clip, track, callback):
     menu_item = Gtk.MenuItem(_("Add Filter"))
@@ -1363,7 +1382,9 @@ def _set_non_sensitive_if_state_matches(mutable, item, state):
         item.set_sensitive(False)
 
 def display_media_file_popup_menu(media_file, callback, event):
-    media_file_menu = Gtk.Menu()
+    media_file_menu = media_file_popup_menu
+    guiutils.remove_children(media_file_menu)
+
     # "Open in Clip Monitor" is sent as event id, same for all below
     media_file_menu.add(_get_menu_item(_("Rename"), callback,("Rename", media_file, event)))
     media_file_menu.add(_get_menu_item(_("Delete"), callback,("Delete", media_file, event))) 
@@ -1380,28 +1401,34 @@ def display_media_file_popup_menu(media_file, callback, event):
         item = _get_menu_item(_("Render Proxy File"), callback, ("Render Proxy File", media_file, event))
         media_file_menu.add(item)
     
-    media_file_menu.popup(None, None, None, event.button, event.time)
+    media_file_menu.popup(None, None, None, None, event.button, event.time)
 
 def display_filter_stack_popup_menu(row, treeview, callback, event):
-    filter_stack_menu = Gtk.Menu()        
+    filter_stack_menu = filter_stack_menu_popup_menu
+    guiutils.remove_children(filter_stack_menu)
+
     filter_stack_menu.add(_get_menu_item(_("Toggle Active"), callback, ("toggle", row, treeview)))
     filter_stack_menu.add(_get_menu_item(_("Reset Values"), callback, ("reset", row, treeview)))
-    filter_stack_menu.popup(None, None, None, event.button, event.time)
+    filter_stack_menu.popup(None, None, None, None, event.button, event.time)
 
 def display_media_log_event_popup_menu(row, treeview, callback, event):
-    log_event_menu = Gtk.Menu()        
+    log_event_menu = log_event_popup_menu
+    guiutils.remove_children(log_event_menu)
+
     log_event_menu.add(_get_menu_item(_("Display In Clip Monitor"), callback, ("display", row, treeview)))
     log_event_menu.add(_get_menu_item(_("Toggle Star"), callback, ("toggle", row, treeview)))
     log_event_menu.add(_get_menu_item(_("Delete"), callback, ("delete", row, treeview)))
-    log_event_menu.popup(None, None, None, event.button, event.time)
+    log_event_menu.popup(None, None, None, None, event.button, event.time)
 
 def display_media_linker_popup_menu(row, treeview, callback, event):
-    media_linker_menu = Gtk.Menu()        
+    media_linker_menu = media_linker_popup_menu
+    guiutils.remove_children(media_linker_menu)
+
     media_linker_menu.add(_get_menu_item(_("Set File Relink Path"), callback, ("set relink", row)))
     media_linker_menu.add(_get_menu_item(_("Delete File Relink Path"), callback, ("delete relink", row)))
     _add_separetor(media_linker_menu)
     media_linker_menu.add(_get_menu_item(_("Show Full Paths"), callback, ("show path", row)))
-    media_linker_menu.popup(None, None, None, event.button, event.time)
+    media_linker_menu.popup(None, None, None, None, event.button, event.time)
 
 def _add_separetor(menu):
     sep = Gtk.SeparatorMenuItem()
@@ -1803,7 +1830,7 @@ def get_monitor_view_popupmenu(launcher, event, callback):
         respaths.IMAGE_PATH + "vectorscope.png"), _("Vectorscope"), callback, 1))
     menu.add(_get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "rgbparade.png"), _("RGB Parade"), callback, 2))
-    menu.popup(None, None, None,  None, event.button, event.time)
+    menu.popup(None, None, None, None, event.button, event.time)
 
 def get_mode_selector_popup_menu(launcher, event, callback):
     menu = tools_menu

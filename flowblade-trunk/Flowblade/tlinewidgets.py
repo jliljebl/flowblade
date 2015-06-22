@@ -28,7 +28,6 @@ import math
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GObject
-from gi.repository import GdkPixbuf
 from gi.repository import Pango
 from gi.repository import PangoCairo
 
@@ -747,7 +746,7 @@ def draw_slide_overlay(cr, data):
     else:
         x = clip_end_frame_x - 16
 
-    cr.set_source_pixbuf(VIEW_SIDE_ICON, x, track_y + 4)
+    cr.set_source_surface(VIEW_SIDE_ICON, x, track_y + 4)
     cr.paint()
 
 def draw_compositor_move_overlay(cr, data):
@@ -879,7 +878,7 @@ def _draw_overwrite_clips_overlay(cr, start_x, end_x, y, track_height):
     cr.fill()
 
 def _draw_view_icon(cr, x, y):
-    cr.set_source_pixbuf(VIEW_SIDE_ICON, x, y)
+    cr.set_source_surface(VIEW_SIDE_ICON, x, y)
     cr.paint()
 
 # ------------------------------- WIDGETS
@@ -1374,14 +1373,14 @@ class TimeLineCanvas:
                 # Filter icon
                 if len(clip.filters) > 0:
                     ix, iy = ICON_SLOTS[icon_slot]
-                    cr.set_source_pixbuf(FILTER_CLIP_ICON, int(scale_in) + int(scale_length) - ix, y + iy)
+                    cr.set_source_surface(FILTER_CLIP_ICON, int(scale_in) + int(scale_length) - ix, y + iy)
                     cr.paint()
                     icon_slot = icon_slot + 1
                 # Mute icon
                 if clip.mute_filter != None:
                     icon = AUDIO_MUTE_ICON
                     ix, iy = ICON_SLOTS[icon_slot]
-                    cr.set_source_pixbuf(icon, int(scale_in) + int(scale_length) - ix, y + iy)
+                    cr.set_source_surface(icon, int(scale_in) + int(scale_length) - ix, y + iy)
                     cr.paint()
                     icon_slot = icon_slot + 1
 
@@ -1389,7 +1388,7 @@ class TimeLineCanvas:
                     icon = EDIT_INDICATOR
                     ix =  int(scale_in) + int(scale_length) / 2 - 7
                     iy = y + int(track_height) / 2 - 7
-                    cr.set_source_pixbuf(icon, ix, iy)
+                    cr.set_source_surface(icon, ix, iy)
                     cr.paint()
                     
             # Draw sync offset value
@@ -1829,7 +1828,7 @@ class TimeLineFrameScale:
         for i in range(0, len(seq.markers)):
             marker_name, marker_frame = seq.markers[i]
             x = math.floor(_get_frame_x(marker_frame))
-            cr.set_source_pixbuf(MARKER_ICON, x - 4, 15)
+            cr.set_source_surface(MARKER_ICON, x - 4, 15)
             cr.paint()
 
         # Select draw colors and frame based on mode

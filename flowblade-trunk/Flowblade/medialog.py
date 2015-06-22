@@ -46,6 +46,8 @@ widgets = utils.EmptyClass()
 
 do_multiple_clip_insert_func = None # this mankeypathched her in app.py
 
+actions_popup_menu = Gtk.Menu()        
+
 class MediaLogEvent:
     def __init__(self, event_type, mark_in, mark_out, name, path):
         self.event_type = event_type
@@ -274,7 +276,8 @@ def display_log_clip_double_click_listener(treeview, path, view_column):
     _log_event_menu_item_selected(treeview, data)
 
 def _group_action_pressed(widget, event):
-    actions_menu = Gtk.Menu()        
+    actions_menu = actions_popup_menu
+    guiutils.remove_children(actions_menu)      
     actions_menu.add(guiutils.get_menu_item(_("New Group..."), _actions_callback, "new"))
     actions_menu.add(guiutils.get_menu_item(_("New Group From Selected..."), _actions_callback, "newfromselected"))
     
@@ -306,11 +309,7 @@ def _group_action_pressed(widget, event):
     _unsensitive_for_all_view(item)
     actions_menu.add(item)
 
-    #item = guiutils.get_menu_item(_("Delete Current Group and Items"), _actions_callback, "deletewithitems")
-    #_unsensitive_for_all_view(item)
-    #actions_menu.add(item)
-
-    actions_menu.popup(None, None, None, event.button, event.time)
+    actions_menu.popup(None, None, None, None, event.button, event.time)
 
 def _unsensitive_for_all_view(item):
     if widgets.group_view_select.get_active() == 0:
