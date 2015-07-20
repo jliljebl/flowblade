@@ -24,7 +24,7 @@ import pickle
 import threading
 import time
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk, GdkPixbuf
 from gi.repository import GLib
 from gi.repository import Pango
 from gi.repository import PangoCairo

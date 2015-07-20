@@ -20,7 +20,8 @@
 
 
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
+
 import glob
 import mlt
 import locale

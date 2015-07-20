@@ -22,7 +22,6 @@ import cairo
 import math
 
 from gi.repository import Gtk
-from gi.repository import GdkPixbuf
 
 import cairoarea
 import editorpersistance

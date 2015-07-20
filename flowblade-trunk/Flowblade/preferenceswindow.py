@@ -18,10 +18,7 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-
-
 from gi.repository import Gtk
-
 
 import dialogs
 import dialogutils
@@ -96,10 +93,11 @@ def _general_options_panel(folder_select_clicked_cb, render_folder_select_clicke
     profiles = mltprofiles.get_profiles()
     for profile in profiles:
         default_profile_combo.append_text(profile[0])
-    default_profile_combo.set_active( mltprofiles.get_default_profile_index())
+    default_profile_combo.set_active(mltprofiles.get_default_profile_index())
 
     spin_adj = Gtk.Adjustment(prefs.undos_max, editorpersistance.UNDO_STACK_MIN, editorpersistance.UNDO_STACK_MAX, 1)
-    undo_max_spin = Gtk.SpinButton(spin_adj)
+    undo_max_spin = Gtk.SpinButton.new_with_range(editorpersistance.UNDO_STACK_MIN, editorpersistance.UNDO_STACK_MAX, 1)
+    undo_max_spin.set_adjustment(spin_adj)
     undo_max_spin.set_numeric(True)
 
     folder_select = Gtk.Button(_("Select Folder")) # thumbnails

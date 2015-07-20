@@ -20,7 +20,7 @@
 
 
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 
 import glob
 from PIL import Image
@@ -390,7 +390,6 @@ class ProxyRenderProgressDialog:
         alignment.show_all()
 
         self.dialog.vbox.pack_start(alignment, True, True, 0)
-        self.dialog.set_has_separator(False)
         self.dialog.connect('response', self.stop_pressed)
         self.dialog.show()
 
@@ -472,7 +471,6 @@ class ProxyRenderIssuesWindow:
         alignment.show_all()
 
         self.dialog.vbox.pack_start(alignment, True, True, 0)
-        self.dialog.set_has_separator(False)
         self.dialog.show()
 
     def issues_str(self):

@@ -25,7 +25,7 @@ Module contains utility methods for creating GUI objects.
 import time
 import threading
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 from gi.repository import GdkPixbuf
 
 import appconsts

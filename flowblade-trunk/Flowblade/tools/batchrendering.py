@@ -21,7 +21,7 @@
 import datetime
 
 from gi.repository import GObject
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 
 import dbus
 import dbus.service

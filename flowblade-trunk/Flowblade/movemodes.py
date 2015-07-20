@@ -23,7 +23,7 @@ Module handles user edit events for insert and over move modes.
 """
 
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 
 
 import appconsts

@@ -24,7 +24,7 @@ are used to build gui at callsites.
 """
 import cairo
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 from gi.repository import GdkPixbuf
 
 import gui
@@ -412,9 +412,9 @@ def get_transition_panel(trans_data):
     enconding_vbox.pack_start(quality_cb, False, False, 0)
     
     vbox = Gtk.VBox(False, 2)
-    vbox.pack_start(get_named_frame(_("Transition Options"),  edit_vbox))
-    vbox.pack_start(get_named_frame(_("Clips info"),  data_vbox))
-    vbox.pack_start(get_named_frame(_("Encoding"),  enconding_vbox))
+    vbox.pack_start(get_named_frame(_("Transition Options"),  edit_vbox), True, True, 0)
+    vbox.pack_start(get_named_frame(_("Clips info"),  data_vbox), True, True, 0)
+    vbox.pack_start(get_named_frame(_("Encoding"),  enconding_vbox), True, True, 0)
 
     alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(12, 24, 12, 12)
@@ -464,8 +464,8 @@ def get_fade_panel(fade_data):
     enconding_vbox.pack_start(quality_cb, False, False, 0)
 
     vbox = Gtk.VBox(False, 2)
-    vbox.pack_start(get_named_frame(_("Transition Options"),  edit_vbox))
-    vbox.pack_start(get_named_frame(_("Encoding"),  enconding_vbox))
+    vbox.pack_start(get_named_frame(_("Transition Options"),  edit_vbox), True, True, 0)
+    vbox.pack_start(get_named_frame(_("Encoding"),  enconding_vbox), True, True, 0)
 
     alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(12, 24, 12, 12)

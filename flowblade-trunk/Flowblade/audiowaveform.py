@@ -24,7 +24,7 @@ Modules handles creating and caching audio waveform images for clips.
 
 
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 
 import math
 import md5

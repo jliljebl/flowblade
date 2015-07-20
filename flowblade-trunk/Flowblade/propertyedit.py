@@ -28,10 +28,7 @@ edit inputs into mlt property values (that effect how sequence is displayed)
 and python side values (that are persistant).
 """
 
-
-
-from gi.repository import Gtk
-
+from gi.repository import Gtk, Gdk
 
 import appconsts
 from editorstate import current_sequence

@@ -31,7 +31,7 @@ import cairo
 import copy
 import math
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 from gi.repository import Pango
 
 import cairoarea

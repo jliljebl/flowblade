@@ -86,7 +86,6 @@ def render_progress_dialog(callback, parent_window, frame_rates_match=True):
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialog.set_default_size(500, 125)
     alignment.show_all()
-    dialog.set_has_separator(False)
     dialog.connect('response', callback)
     dialog.show()
     return dialog
@@ -154,7 +153,6 @@ def clip_render_progress_dialog(callback, title, text, progress_bar, parent_wind
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialog.set_default_size(500, 125)
     alignment.show_all()
-    dialog.set_has_separator(False)
     dialog.connect('response', callback)
     dialog.show()
     return dialog

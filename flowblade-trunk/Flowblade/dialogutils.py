@@ -32,7 +32,6 @@ def dialog_destroy(dialog, response):
 
 def default_behaviour(dialog):
     dialog.set_default_response(Gtk.ResponseType.OK)
-    #dialog.set_has_separator(False)
     dialog.set_resizable(False)
 
 def panel_ok_dialog(title, panel):
@@ -78,7 +77,6 @@ def warning_confirmation(callback, primary_txt, secondary_txt, parent_window, da
                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
                          _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
     dialog.vbox.pack_start(align, True, True, 0)
-    #dialog.set_has_separator(False)
     dialog.set_resizable(False)
     if data == None:
         dialog.connect('response', callback)

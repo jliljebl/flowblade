@@ -506,7 +506,7 @@ class TextListView(Gtk.VBox):
         self.text_col_1.set_spacing(5)
         self.text_col_1.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
         self.text_col_1.set_min_width(width)
-        self.text_col_1.pack_start(self.text_rend_1)
+        self.text_col_1.pack_start(self.text_rend_1, False)
         self.text_col_1.add_attribute(self.text_rend_1, "text", 0)
 
         # Add column views to view
@@ -514,7 +514,7 @@ class TextListView(Gtk.VBox):
 
         # Build widget graph and display
         self.scroll.add(self.treeview)
-        self.pack_start(self.scroll)
+        self.pack_start(self.scroll, True, True, 0)
         self.scroll.show_all()
 
     def get_selected_rows_list(self):
