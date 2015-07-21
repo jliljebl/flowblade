@@ -72,9 +72,6 @@ MEDIA_MANAGER_WIDTH = 250
 
 MONITOR_AREA_WIDTH = 600 # defines app min width with NOTEBOOK_WIDTH 400 for small
 
-MODE_BUTTON_ACTIVE_COLOR = "#9d9d9d"
-MODE_BUTTON_PRELIGHT_COLOR = "#bdbdbd"
-
 BINS_HEIGHT = 250
 EFFECT_STACK_VIEW_HEIGHT = 160
 EFFECT_VALUE_EDITOR_HEIGHT = 200
@@ -707,12 +704,13 @@ class EditorWindow:
 
         mb_menu_item = Gtk.MenuItem(_("Middlebar Layout").encode('utf-8'))
         mb_menu = Gtk.Menu()
-        tc_left = Gtk.RadioMenuItem(None, _("Timecode Left").encode('utf-8'))
+        tc_left = Gtk.RadioMenuItem()
+        tc_left.set_label(_("Timecode Left").encode('utf-8'))
         tc_left.set_active(True)
         tc_left.connect("activate", lambda w: middlebar._show_buttons_TC_LEFT_layout(w))
         mb_menu.append(tc_left)
 
-        tc_middle = Gtk.RadioMenuItem(tc_left, _("Timecode Center").encode('utf-8'))
+        tc_middle = Gtk.RadioMenuItem.new_with_label([tc_left], _("Timecode Center").encode('utf-8'))
         tc_middle.connect("activate", lambda w: middlebar._show_buttons_TC_MIDDLE_layout(w))
         mb_menu.append(tc_middle)
 
@@ -726,11 +724,12 @@ class EditorWindow:
 
         tabs_menu_item = Gtk.MenuItem(_("Tabs Position").encode('utf-8'))
         tabs_menu =  Gtk.Menu()
-        tabs_up = Gtk.RadioMenuItem(None, _("Up").encode('utf-8'))
+        tabs_up = Gtk.RadioMenuItem()
+        tabs_up.set_label( _("Up").encode('utf-8'))
         tabs_up.connect("activate", lambda w: self._show_tabs_up(w))
         tabs_menu.append(tabs_up)
         
-        tabs_down = Gtk.RadioMenuItem(tabs_up, _("Down").encode('utf-8'))
+        tabs_down = Gtk.RadioMenuItem.new_with_label([tabs_up], _("Down").encode('utf-8'))
         tabs_down.connect("activate", lambda w: self._show_tabs_down(w))
 
         if editorpersistance.prefs.tabs_on_top == True:
@@ -761,21 +760,22 @@ class EditorWindow:
         interp_menu_item = Gtk.MenuItem(_("Monitor Playback Interpolation").encode('utf-8'))
         interp_menu = Gtk.Menu()
         
-        interp_nearest = Gtk.RadioMenuItem(None, _("Nearest Neighbour").encode('utf-8'))
+        interp_nearest = Gtk.RadioMenuItem()
+        interp_nearest.set_label(_("Nearest Neighbour").encode('utf-8'))
         interp_nearest.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("nearest"))
         interp_menu.append(interp_nearest)
         
-        interp_bilinear = Gtk.RadioMenuItem(interp_nearest, _("Bilinear").encode('utf-8'))
+        interp_bilinear = Gtk.RadioMenuItem.new_with_label([interp_nearest], _("Bilinear").encode('utf-8'))
         interp_bilinear.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("bilinear"))
         interp_menu.append(interp_bilinear)
 
-        interp_bicubic = Gtk.RadioMenuItem(interp_nearest, _("Bicubic").encode('utf-8'))
+        interp_bicubic = Gtk.RadioMenuItem.new_with_label([interp_nearest], _("Bicubic").encode('utf-8'))
         interp_bicubic.set_active(True)
         interp_bicubic.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("bicubic"))
 
         interp_menu.append(interp_bicubic)
 
-        interp_hyper = Gtk.RadioMenuItem(interp_nearest, _("Hyper/Lanczos").encode('utf-8'))
+        interp_hyper = Gtk.RadioMenuItem.new_with_label([interp_nearest], _("Hyper/Lanczos").encode('utf-8'))
         interp_hyper.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("hyper"))
         interp_menu.append(interp_hyper)
 

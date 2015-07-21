@@ -285,6 +285,11 @@ def gdk_color_str_to_int(gdk_color_str):
     
     return (red << 24) + (green << 16) + (blue << 8)
 
+def gdk_color_str_to_cairo_rgb(gdk_color_str):
+    # returned int is 32-bit RGBA, alpha is 00 
+    raw_r, raw_g, raw_b = hex_to_rgb(gdk_color_str)
+    return (float(raw_r)/65535.0, float(raw_g) /65535.0, float(raw_b)/65535.0)
+
 def get_cairo_color_tuple_255_rgb(r, g, b):
     return (float(r)/255.0, float(g)/255.0, float(b)/255.0)
 

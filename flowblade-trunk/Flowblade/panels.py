@@ -63,11 +63,12 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, proxy
 
     columns_img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "columns.png")
         
-    adj = Gtk.Adjustment(value=editorpersistance.prefs.media_columns, lower=MEDIA_PANEL_MIN_ROWS, upper=MEDIA_PANEL_MAX_ROWS, step_incr=1)
-    spin = Gtk.SpinButton.new(adj, 1.0, 0)
-    spin.set_numeric(True)
-    spin.set_size_request(40, 30)
-    spin.connect("changed", col_changed_cb)
+    #adj = Gtk.Adjustment(value=editorpersistance.prefs.media_columns, lower=MEDIA_PANEL_MIN_ROWS, upper=MEDIA_PANEL_MAX_ROWS, step_incr=1)
+    #spin = Gtk.SpinButton.new(adj, 1.0, 0)
+    #spin.set_numeric(True)
+    #spin.set_digits(0)
+    #spin.set_size_request(20, 30)
+    #spin.connect("changed", col_changed_cb)
 
     all_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_all_files.png")
     audio_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_audio_files.png")
@@ -76,7 +77,7 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, proxy
     imgseq_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_imgseq_files.png")
     pattern_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_pattern_producers.png")
 
-    files_filter_launcher = guicomponents.ImageMenuLaunch(filtering_cb, [all_pixbuf, video_pixbuf, audio_pixbuf, graphics_pixbuf, imgseq_pixbuf, pattern_pixbuf], 20, 22)
+    files_filter_launcher = guicomponents.ImageMenuLaunch(filtering_cb, [all_pixbuf, video_pixbuf, audio_pixbuf, graphics_pixbuf, imgseq_pixbuf, pattern_pixbuf], 24, 22)
     files_filter_launcher.pixbuf_x  = 3
     files_filter_launcher.pixbuf_y  = 9
     gui.media_view_filter_selector = files_filter_launcher
@@ -87,7 +88,7 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, proxy
     buttons_box.pack_start(proxy_b, False, False, 0)
     buttons_box.pack_start(guiutils.get_pad_label(4, 4), False, False, 0)
     buttons_box.pack_start(columns_img, False, False, 0)
-    buttons_box.pack_start(spin, False, False, 0)
+    #buttons_box.pack_start(spin, False, False, 0)
     buttons_box.pack_start(files_filter_launcher.widget, False, False, 0)
     
     panel = Gtk.VBox()

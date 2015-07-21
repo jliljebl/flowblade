@@ -246,7 +246,8 @@ class Titler(Gtk.Window):
         self.font_select.connect("changed", self._edit_value_changed)
     
         adj = Gtk.Adjustment(float(DEFAULT_FONT_SIZE), float(1), float(300), float(1))
-        self.size_spin = Gtk.SpinButton(adj)
+        self.size_spin = Gtk.SpinButton()
+        self.size_spin.set_adjustment(adj)
         self.size_spin.connect("changed", self._edit_value_changed)
         self.size_spin.connect("key-press-event", self._key_pressed_on_widget)
 
@@ -311,18 +312,20 @@ class Titler(Gtk.Window):
         layers_save_buttons_row.pack_start(save_layers, False, False, 0)
         layers_save_buttons_row.pack_start(load_layers, False, False, 0)
         layers_save_buttons_row.pack_start(Gtk.Label(), True, True, 0)
-        #layers_save_buttons_row.pack_start(clear_layers, False, False, 0)
         
         adj = Gtk.Adjustment(float(0), float(0), float(3000), float(1))
-        self.x_pos_spin = Gtk.SpinButton(adj)
+        self.x_pos_spin = Gtk.SpinButton()
+        self.x_pos_spin.set_adjustment(adj)
         self.x_pos_spin.connect("changed", self._position_value_changed)
         self.x_pos_spin.connect("key-press-event", self._key_pressed_on_widget)
         adj = Gtk.Adjustment(float(0), float(0), float(3000), float(1))
-        self.y_pos_spin = Gtk.SpinButton(adj)
+        self.y_pos_spin = Gtk.SpinButton()
+        self.y_pos_spin.set_adjustment(adj)
         self.y_pos_spin.connect("changed", self._position_value_changed)
         self.y_pos_spin.connect("key-press-event", self._key_pressed_on_widget)
         adj = Gtk.Adjustment(float(0), float(0), float(3000), float(1))
-        self.rotation_spin = Gtk.SpinButton(adj)
+        self.rotation_spin = Gtk.SpinButton()
+        self.rotation_spin.set_adjustment(adj)
         self.rotation_spin.connect("changed", self._position_value_changed)
         self.rotation_spin.connect("key-press-event", self._key_pressed_on_widget)
         
@@ -678,7 +681,6 @@ class Titler(Gtk.Window):
 
         self.x_pos_spin.set_value(p.x)
         self.y_pos_spin.set_value(p.y)
-        #self.rotation_spin = Gtk.SpinButton(adj)
         
         _titler_data.active_layer.x = p.x
         _titler_data.active_layer.y = p.y

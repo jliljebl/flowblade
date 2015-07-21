@@ -21,9 +21,10 @@
 Module is used to create pattern producer media objects for bins and 
 corresponding mlt.Producers for timeline. 
 """
+import cairo
 import copy
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 from gi.repository import GdkPixbuf
 
 import mlt
@@ -215,10 +216,12 @@ class BinColorClip(AbstractBinClip):
         return producer
 
     def create_icon(self):
-        icon = GdkPixbuf.Pixbuf.new(GdkPixbuf.Colorspace.RGB, False, 8, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
-        pixel = utils.gdk_color_str_to_int(self.gdk_color_str)
-        icon.fill(pixel)
-        self.icon = icon
+        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
+        cr = cairo.Context(surface)
+        cr.set_source_rgb(*utils.gdk_color_str_to_cairo_rgb(self.gdk_color_str))
+        cr.rectangle(0, 0,   appconsts.THUMB_WIDTH + 1, appconsts.THUMB_HEIGHT + 1)
+        cr.fill()
+        self.icon = surface
 
 class BinNoiseClip(AbstractBinClip):
     def __init__(self, id, name):
@@ -231,7 +234,7 @@ class BinNoiseClip(AbstractBinClip):
         return producer
     
     def create_icon(self):
-        self.icon = GdkPixbuf.Pixbuf.new_from_file(respaths.PATTERN_PRODUCER_PATH + "noise_icon.png")
+        self.icon = cairo.ImageSurface.create_from_png(respaths.PATTERN_PRODUCER_PATH + "noise_icon.png")
 
 class BinColorBarsClip(AbstractBinClip):
     def __init__(self, id, name):
@@ -244,7 +247,7 @@ class BinColorBarsClip(AbstractBinClip):
         return producer
 
     def create_icon(self):
-        self.icon = GdkPixbuf.Pixbuf.new_from_file(respaths.PATTERN_PRODUCER_PATH + "bars_icon.png")
+        self.icon = cairo.ImageSurface.create_from_png(respaths.PATTERN_PRODUCER_PATH + "bars_icon.png")
         
 class BinIsingClip(AbstractBinClip):
     def __init__(self, id, name):
@@ -265,7 +268,7 @@ class BinIsingClip(AbstractBinClip):
         return producer
 
     def create_icon(self):
-        self.icon = GdkPixbuf.Pixbuf.new_from_file(respaths.PATTERN_PRODUCER_PATH + "ising_icon.png")
+        self.icon = cairo.ImageSurface.create_from_png(respaths.PATTERN_PRODUCER_PATH + "ising_icon.png")
         
 class BinColorPulseClip(AbstractBinClip):
     def __init__(self, id, name):
@@ -292,7 +295,7 @@ class BinColorPulseClip(AbstractBinClip):
         return producer
 
     def create_icon(self):
-        self.icon = GdkPixbuf.Pixbuf.new_from_file(respaths.PATTERN_PRODUCER_PATH + "color_pulse_icon.png")
+        self.icon = cairo.ImageSurface.create_from_png(respaths.PATTERN_PRODUCER_PATH + "color_pulse_icon.png")
 
 
 # ----------------------------------------------------- dialogs
@@ -305,7 +308,7 @@ def _color_clip_dialog(callback):
     name_entry = Gtk.Entry()
     name_entry.set_text(_("Color Clip"))   
 
-    color_button = Gtk.ColorButton()
+    color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(0,0,0,1))
 
     cb_hbox = Gtk.HBox(False, 0)
     cb_hbox.pack_start(color_button, False, False, 4)

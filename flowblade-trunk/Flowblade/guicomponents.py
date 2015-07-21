@@ -913,26 +913,26 @@ class MediaObjectWidget:
         
         if self.media_file.type != appconsts.PATTERN_PRODUCER:
             if self.media_file.is_proxy_file == True:
-                cr.set_source_pixbuf(is_proxy_icon, 96, 6)
+                cr.set_source_surface(is_proxy_icon, 96, 6)
                 cr.paint()
             elif self.media_file.has_proxy_file == True:
-                cr.set_source_pixbuf(has_proxy_icon, 96, 6)
+                cr.set_source_surface(has_proxy_icon, 96, 6)
                 cr.paint()
 
         if self.media_file.type == appconsts.IMAGE:
-            cr.set_source_pixbuf(graphics_icon, 6, 6)
+            cr.set_source_surface(graphics_icon, 6, 6)
             cr.paint()
 
         if self.media_file.type == appconsts.IMAGE_SEQUENCE:
-            cr.set_source_pixbuf(imgseq_icon, 6, 6)
+            cr.set_source_surface(imgseq_icon, 6, 6)
             cr.paint()
 
         if self.media_file.type == appconsts.AUDIO:
-            cr.set_source_pixbuf(audio_icon, 6, 6)
+            cr.set_source_surface(audio_icon, 6, 6)
             cr.paint()
 
         if self.media_file.type == appconsts.PATTERN_PRODUCER:
-            cr.set_source_pixbuf(pattern_icon, 6, 6)
+            cr.set_source_surface(pattern_icon, 6, 6)
             cr.paint()
         
         

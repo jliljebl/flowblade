@@ -156,7 +156,8 @@ def _edit_prefs_panel():
     auto_center_on_stop.set_active(prefs.auto_center_on_play_stop)
 
     spin_adj = Gtk.Adjustment(prefs.default_grfx_length, 1, 15000, 1)
-    gfx_length_spin = Gtk.SpinButton(spin_adj)
+    gfx_length_spin = Gtk.SpinButton()
+    gfx_length_spin.set_adjustment(spin_adj)
     gfx_length_spin.set_numeric(True)
 
     trim_exit_on_empty = Gtk.CheckButton()
