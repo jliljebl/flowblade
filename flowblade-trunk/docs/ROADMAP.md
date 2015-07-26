@@ -28,5 +28,10 @@ This document gives a broad overview what's happening next in Flowblade developm
 
 **EDL Export** We need some subset of this feature, mainly to work with Blender.
 
-### Webpage
-The content for this mostly already exists.
+### Long term developments
+
+**GPU Rendering** MLT already contains support for GPL rendering and it has been used by Shotcut for a while, but my experience has been that it is quite unstable. It may work well with some combinations of Qt version, graphics card and drivers but other combinations may be unusably crashy. 
+
+The Wayland transition should probably be completed too before this is attempted. Currently the earliest date that this will be looked at looks to be early 2017.
+
+**Webpage** The content for this mostly already exists. 
