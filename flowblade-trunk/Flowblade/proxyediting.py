@@ -18,10 +18,6 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
-
-
-from gi.repository import Gtk, Gdk
-
 import glob
 from PIL import Image
 import mlt
@@ -29,6 +25,8 @@ import os
 import shutil
 import threading
 import time
+
+from gi.repository import Gtk, Gdk
 
 import app
 import appconsts
@@ -215,7 +213,7 @@ class ProxyRenderRunnerThread(threading.Thread):
 
 class ProxyManagerDialog:
     def __init__(self):
-        self.dialog = Gtk.Dialog(_("Proxy Manager"), None,
+        self.dialog = Gtk.Dialog(_("Proxy Manager"), gui.editor_window.window,
                             Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                             (_("Close Manager").encode('utf-8'), Gtk.ResponseType.CLOSE))
 

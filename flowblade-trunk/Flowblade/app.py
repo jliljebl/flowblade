@@ -24,6 +24,7 @@ Application module.
 Handles application initialization, shutdown, opening projects, autosave and changing
 sequences.
 """
+
 from gi.repository import GObject
 from gi.repository import GLib
 from gi.repository import Gtk

@@ -20,7 +20,7 @@
 
 import numpy as np
 
-from gi.repository import Gtk
+from gi.repository import Gtk, GObject
 
 import cairoarea
 import cairo

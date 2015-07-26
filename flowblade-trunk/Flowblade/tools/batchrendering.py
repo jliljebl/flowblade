@@ -21,7 +21,7 @@
 import datetime
 
 from gi.repository import GObject
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, GdkPixbuf
 
 import dbus
 import dbus.service
@@ -301,8 +301,9 @@ def main(root_path, force_launch=False):
     #can_run = test_and_write_pid()
     can_run = True
     init_dirs_if_needed()
-
-    editorstate.gtk_version = Gtk.gtk_version
+    
+    gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_micro_version(), Gtk.get_minor_version())
+    editorstate.gtk_version = gtk_version
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
     except:
@@ -598,7 +599,7 @@ class BatchRenderWindow:
         self.window = Gtk.Window(Gtk.WindowType.TOPLEVEL)
         self.window.connect("delete-event", lambda w, e:shutdown())
         app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowbladebatchappicon.png")
-        self.window.set_icon_list(app_icon)
+        self.window.set_icon(app_icon)
 
         self.est_time_left = Gtk.Label()
         self.current_render = Gtk.Label()
@@ -864,19 +865,19 @@ class RenderQueueView(Gtk.VBox):
         self.text_col_1.set_spacing(5)
         self.text_col_1.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
         self.text_col_1.set_min_width(150)
-        self.text_col_1.pack_start(self.text_rend_1)
+        self.text_col_1.pack_start(self.text_rend_1, True)
         self.text_col_1.add_attribute(self.text_rend_1, "text", 1) # <- note column index
 
         self.text_col_2.set_expand(False)
-        self.text_col_2.pack_start(self.text_rend_2)
+        self.text_col_2.pack_start(self.text_rend_2, True)
         self.text_col_2.add_attribute(self.text_rend_2, "text", 2)
 
         self.text_col_3.set_expand(False)
-        self.text_col_3.pack_start(self.text_rend_3)
+        self.text_col_3.pack_start(self.text_rend_3, True)
         self.text_col_3.add_attribute(self.text_rend_3, "text", 3)
 
         self.text_col_4.set_expand(False)
-        self.text_col_4.pack_start(self.text_rend_4)
+        self.text_col_4.pack_start(self.text_rend_4, True)
         self.text_col_4.add_attribute(self.text_rend_4, "text", 4)
 
         # Add column views to view
@@ -891,7 +892,7 @@ class RenderQueueView(Gtk.VBox):
 
         # Build widget graph and display
         self.scroll.add(self.treeview)
-        self.pack_start(self.scroll)
+        self.pack_start(self.scroll, True, True, 0)
         self.scroll.show_all()
         self.show_all()
 

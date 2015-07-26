@@ -25,7 +25,7 @@ import threading
 import time
 
 from gi.repository import Gtk, Gdk, GdkPixbuf
-from gi.repository import GLib
+from gi.repository import GLib, GObject
 from gi.repository import Pango
 from gi.repository import PangoCairo
 
@@ -167,7 +167,7 @@ class TitlerData:
 # ---------------------------------------------------------- editor
 class Titler(Gtk.Window):
     def __init__(self):
-        GObject.GObject.__init__(self, Gtk.WindowType.TOPLEVEL)
+        GObject.GObject.__init__(self)
         self.set_title(_("Titler"))
         self.connect("delete-event", lambda w, e:close_titler())
         
