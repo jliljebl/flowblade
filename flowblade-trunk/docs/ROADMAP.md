@@ -1,7 +1,7 @@
 # Road map
 This document gives a broad overview what's happening next in Flowblade development. For more information see open Issues on the Issues tab.
 
-*Last updated: After release 1.0 on June 14, 2015*
+*Last updated: July 27, 2015*
 
 ## Next release (1.2)
 *Estimated release date is September - November 2015.*
