@@ -668,15 +668,18 @@ class ColorProperty(EditableProperty):
         return Gdk.Color(red=(float(raw_r)/255.0),
                              green=(float(raw_g)/255.0),
                              blue=(float(raw_b)/255.0))
-        
+
+    def get_value_rgba(self):
+        raw_r, raw_g, raw_b = utils.hex_to_rgb(self.value)
+        print raw_r, raw_g, raw_b
+        return (float(raw_r)/255.0, float(raw_g)/255.0, float(raw_b)/255.0, 1.0)
+
     def color_selected(self, color_button):
         color = color_button.get_color()
-        value = utils.hex_to_rgb(color.to_string())
-        raw_r, raw_g, raw_b = value
-        val_str = "#" + utils.int_to_hex(int((float(raw_r) * 255.0) / 65535.0)) + \
-                        utils.int_to_hex(int((float(raw_g) * 255.0) / 65535.0)) + \
-                        utils.int_to_hex(int((float(raw_b) * 255.0) / 65535.0))
-                        
+        raw_r, raw_g, raw_b = color.to_floats()
+        val_str = "#" + utils.int_to_hex_str(int(raw_r * 255.0)) + \
+                        utils.int_to_hex_str(int(raw_g * 255.0)) + \
+                        utils.int_to_hex_str(int(raw_b * 255.0))
         self.write_value(val_str)
 
 

@@ -190,8 +190,8 @@ class Titler(Gtk.Window):
         del_b.connect("clicked", lambda w:self._del_layer_pressed())
         add_del_box = Gtk.HBox()
         add_del_box = Gtk.HBox(True,1)
-        add_del_box.pack_start(add_b)
-        add_del_box.pack_start(del_b)
+        add_del_box.pack_start(add_b, True, True, 0)
+        add_del_box.pack_start(del_b, True, True, 0)
 
         center_h_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "center_horizontal.png")
         center_v_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "center_vertical.png")
@@ -229,7 +229,7 @@ class Titler(Gtk.Window):
         pos_bar_frame.add(self.pos_bar.widget)
         pos_bar_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
         
-        font_map = pangocairo.cairo_font_map_get_default()
+        font_map = PangoCairo.font_map_get_default()
         unsorted_families = font_map.list_families()
         if len(unsorted_families) == 0:
             print "No font families found in system! Titler will not work."
@@ -267,9 +267,9 @@ class Titler(Gtk.Window):
         self.bold_font.connect("clicked", self._edit_value_changed)
         self.italic_font.connect("clicked", self._edit_value_changed)
         
-        self.left_align = Gtk.RadioButton()
-        self.center_align = Gtk.RadioButton(self.left_align)
-        self.right_align = Gtk.RadioButton(self.left_align)
+        self.left_align = Gtk.RadioButton(None)
+        self.center_align = Gtk.RadioButton.new_from_widget(self.left_align)
+        self.right_align = Gtk.RadioButton.new_from_widget(self.left_align)
         left_icon = Gtk.Image.new_from_stock(Gtk.STOCK_JUSTIFY_LEFT, 
                                        Gtk.IconSize.BUTTON)
         center_icon = Gtk.Image.new_from_stock(Gtk.STOCK_JUSTIFY_CENTER, 
@@ -829,18 +829,19 @@ class PangoTextLayout:
     def draw_layout(self, cr, x, y, rotation, xscale, yscale):
         cr.save()
         
-        pango_context = pangocairo.CairoContext(cr)
-        layout = pango_context.create_layout()
-        layout.set_text(self.text)
+        layout = PangoCairo.create_layout(cr)
+        layout.set_text(self.text, 1)
         layout.set_font_description(self.font_desc)
         layout.set_alignment(self.alignment)
+        
         self.pixel_size = layout.get_pixel_size()
-        pango_context.set_source_rgba(*self.color_rgba)
-        pango_context.move_to(x, y)
-        pango_context.scale( xscale, yscale)
-        pango_context.rotate(rotation)
-        pango_context.update_layout(layout)
-        pango_context.show_layout(layout)
+        cr.set_source_rgba(*self.color_rgba)
+        cr.move_to(x, y)
+        cr.scale( xscale, yscale)
+        cr.rotate(rotation)
+        
+        PangoCairo.update_layout(cr, layout)
+        PangoCairo.show_layout(cr, layout)
 
         cr.restore()
 
@@ -902,19 +903,19 @@ class TextLayerListView(Gtk.VBox):
         # Build column views
         self.icon_col_1.set_expand(False)
         self.icon_col_1.set_spacing(5)
-        self.icon_col_1.pack_start(self.icon_rend_1)
+        self.icon_col_1.pack_start(self.icon_rend_1, True)
         self.icon_col_1.add_attribute(self.icon_rend_1, 'pixbuf', 0)
 
         self.text_col_1.set_expand(True)
         self.text_col_1.set_spacing(5)
         self.text_col_1.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
         self.text_col_1.set_min_width(150)
-        self.text_col_1.pack_start(self.text_rend_1)
+        self.text_col_1.pack_start(self.text_rend_1, True)
         self.text_col_1.add_attribute(self.text_rend_1, "text", 1)
 
         self.icon_col_2.set_expand(False)
         self.icon_col_2.set_spacing(5)
-        self.icon_col_2.pack_start(self.icon_rend_2)
+        self.icon_col_2.pack_start(self.icon_rend_2, True)
         self.icon_col_2.add_attribute(self.icon_rend_2, 'pixbuf', 2)
 
         # Add column views to view
@@ -924,7 +925,7 @@ class TextLayerListView(Gtk.VBox):
 
         # Build widget graph and display
         self.scroll.add(self.treeview)
-        self.pack_start(self.scroll)
+        self.pack_start(self.scroll, True, True, 0)
         self.scroll.show_all()
 
     def button_press(self, tree_view, event):

@@ -31,8 +31,8 @@ import cairo
 import copy
 import math
 
-from gi.repository import Gtk, Gdk
-from gi.repository import Pango
+from gi.repository import Gtk, Gdk, GObject
+from gi.repository import Pango, GdkPixbuf
 
 import cairoarea
 from editorstate import PLAYER
@@ -165,9 +165,9 @@ class ClipKeyFrameEditor:
         # init icons if needed
         global ACTIVE_KF_ICON, NON_ACTIVE_KF_ICON
         if ACTIVE_KF_ICON == None:
-            ACTIVE_KF_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "kf_active.png")
+            ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active.png")
         if NON_ACTIVE_KF_ICON == None:
-            NON_ACTIVE_KF_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "kf_not_active.png")    
+            NON_ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active.png")    
             
     def set_keyframes(self, keyframes_str, out_to_in_func):
         self.keyframes = self.keyframe_parser(keyframes_str, out_to_in_func)
@@ -240,7 +240,7 @@ class ClipKeyFrameEditor:
                 kf_pos = self._get_panel_pos_for_frame(frame)
             except ZeroDivisionError: # math fails for 1 frame clip
                 kf_pos = END_PAD
-            cr.set_source_pixbuf(icon, kf_pos - 6, KF_Y)
+            cr.set_source_surface(icon, kf_pos - 6, KF_Y)
             cr.paint()
 
         # Draw frame pointer
@@ -374,7 +374,7 @@ class ClipKeyFrameEditor:
         """
         Get x in pixel range between end pads.
         """
-        w = self.widget.allocation.width
+        w = self.widget.get_allocation().width
         if x < END_PAD:
             return END_PAD
         elif x > w - END_PAD:
@@ -1431,8 +1431,10 @@ class ClipEditorButtonsRow(Gtk.HBox):
         editor_parent.next_frame_pressed()
     """
     def __init__(self, editor_parent):
-        GObject.GObject.__init__(self, False, 2)
-        
+        GObject.GObject.__init__(self)
+        self.set_homogeneous(False)
+        self.set_spacing(2)
+
         # Buttons
         self.add_button = guiutils.get_image_button("add_kf.png", BUTTON_WIDTH, BUTTON_HEIGHT)
         self.delete_button = guiutils.get_image_button("delete_kf.png", BUTTON_WIDTH, BUTTON_HEIGHT)
@@ -1529,7 +1531,9 @@ class AbstractKeyFrameEditor(Gtk.VBox):
     """
     def __init__(self, editable_property, use_clip_in=True):
         # editable_property is KeyFrameProperty
-        GObject.GObject.__init__(self, False, 2)
+        GObject.GObject.__init__(self)
+        self.set_homogeneous(False)
+        self.set_spacing(2)
         self.editable_property = editable_property
         self.clip_tline_pos = editable_property.get_clip_tline_pos()
 

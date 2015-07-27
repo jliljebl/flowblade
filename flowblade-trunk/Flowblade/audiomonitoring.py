@@ -24,7 +24,7 @@ import cairo
 import mlt
 import time
 
-from gi.repository import Gtk
+from gi.repository import Gtk, GObject
 from gi.repository import GLib
 from gi.repository import Gdk
 from gi.repository import Pango
@@ -341,7 +341,7 @@ class AudioMonitorWindow(Gtk.Window):
         pane.pack_start(meters_frame, True, True, 0)
         pane.pack_start(gain_control_area, True, True, 0)
 
-        align = Gtk.Alignment.new()
+        align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
         align.set_padding(12, 12, 4, 4)
         align.add(pane)
 

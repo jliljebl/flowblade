@@ -18,18 +18,16 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
-
-
-from gi.repository import Gtk, Gdk
-
 import glob
 import mlt
 import locale
 import os
-from gi.repository import Pango
 import subprocess
 import sys
 import threading
+
+from gi.repository import Gtk, Gdk, GdkPixbuf
+from gi.repository import Pango, GObject
 
 import appconsts
 import dialogs
@@ -95,7 +93,7 @@ class MediaLinkerWindow(Gtk.Window):
         self.connect("delete-event", lambda w, e:_shutdown())
 
         app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowblademedialinker.png")
-        self.set_icon_list(app_icon)
+        self.set_icon(app_icon)
 
         load_button = Gtk.Button(_("Load Project For Relinking"))
         load_button.connect("clicked",
@@ -167,7 +165,7 @@ class MediaLinkerWindow(Gtk.Window):
         pane.pack_start(guiutils.pad_label(24, 24), False, False, 0)
         pane.pack_start(dialog_buttons_row, False, False, 0)
         
-        align = Gtk.Alignment.new()
+        align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
         align.set_padding(12, 12, 12, 12)
         align.add(pane)
 
@@ -279,11 +277,11 @@ class MediaRelinkListView(Gtk.VBox):
 
         # Build column views
         self.text_col_1.set_expand(True)
-        self.text_col_1.pack_start(self.text_rend_1)
+        self.text_col_1.pack_start(self.text_rend_1, True)
         self.text_col_1.add_attribute(self.text_rend_1, "text", 0)
     
         self.text_col_2.set_expand(True)
-        self.text_col_2.pack_start(self.text_rend_2)
+        self.text_col_2.pack_start(self.text_rend_2, True)
         self.text_col_2.add_attribute(self.text_rend_2, "text", 1)
 
         # Add column views to view
@@ -292,7 +290,7 @@ class MediaRelinkListView(Gtk.VBox):
 
         # Build widget graph and display
         self.scroll.add(self.treeview)
-        self.pack_start(self.scroll)
+        self.pack_start(self.scroll, True, True, 0)
         self.scroll.show_all()
         self.set_size_request(1100, 400)
 
@@ -542,7 +540,9 @@ def _relink_project_media_paths():
 
 # ----------------------------------------------------------- main
 def main(root_path, force_launch=False):
-    editorstate.gtk_version = Gtk.gtk_version
+    gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_micro_version(), Gtk.get_minor_version())
+    print "GTK+ version:", gtk_version
+    editorstate.gtk_version = gtk_version
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
     except:

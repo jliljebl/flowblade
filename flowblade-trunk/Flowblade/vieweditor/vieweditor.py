@@ -101,7 +101,8 @@ class ViewEditor(Gtk.Frame):
         self.scaled_screen_height = self.scale * self.profile_h
 
     def set_edit_area_size_and_origo(self):
-        x, y, scroll_w, scroll_h = self.scroll_window.get_allocation()
+        alloc = self.scroll_window.get_allocation()
+        x, y, scroll_w, scroll_h = alloc.x, alloc.y, alloc.width, alloc.height
 
         # If scaled screen smaller then scroll window size center it and set origo
         if ((self.scaled_screen_width < scroll_w) and (self.scaled_screen_height < scroll_h)):
