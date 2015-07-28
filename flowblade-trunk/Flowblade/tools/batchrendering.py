@@ -302,7 +302,7 @@ def main(root_path, force_launch=False):
     can_run = True
     init_dirs_if_needed()
     
-    gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_micro_version(), Gtk.get_minor_version())
+    gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
     editorstate.gtk_version = gtk_version
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION

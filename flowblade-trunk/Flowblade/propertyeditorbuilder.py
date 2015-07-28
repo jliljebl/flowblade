@@ -317,9 +317,7 @@ def _get_combo_box_row(editable_property):
 
 def _get_color_selector(editable_property):
     gdk_color = editable_property.get_value_rgba()
-    #color_button = Gtk.ColorButton(gdk_color)
     color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(*gdk_color))
-     
     color_button.connect("color-set", editable_property.color_selected)
 
     hbox = Gtk.HBox(False, 4)

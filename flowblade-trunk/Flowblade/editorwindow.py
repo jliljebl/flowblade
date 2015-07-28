@@ -359,14 +359,14 @@ class EditorWindow:
                                 self.media_scroll_window,
                                 lambda w,e: projectaction.add_media_files(), 
                                 lambda w,e: projectaction.delete_media_files(),
-                                lambda a: self.media_list_view.columns_changed(a),
+                                projectaction.columns_count_launch_pressed,
                                 lambda w,e: proxyediting.create_proxy_files_pressed(),
                                 projectaction.media_filtering_select_pressed)
 
         self.mm_paned = Gtk.HPaned()
         self.mm_paned.pack1(bins_panel, resize=True, shrink=True)
         self.mm_paned.pack2(media_panel, resize=True, shrink=False)
-        
+
         mm_panel = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
         mm_panel.set_padding(2, 2, 6, 2)
         mm_panel.add(self.mm_paned)

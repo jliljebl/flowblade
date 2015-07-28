@@ -113,7 +113,7 @@ def main(root_path):
 
     print "Python", sys.version
 
-    gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_micro_version(), Gtk.get_minor_version())
+    gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
     print "GTK+ version:", gtk_version
     editorstate.gtk_version = gtk_version
     try:

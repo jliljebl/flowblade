@@ -61,14 +61,9 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, proxy
     proxy_b.set_tooltip_text(_("Render Proxy Files For Selected Media"))
     gui.proxy_button = proxy_b
 
-    columns_img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "columns.png")
-        
-    #adj = Gtk.Adjustment(value=editorpersistance.prefs.media_columns, lower=MEDIA_PANEL_MIN_ROWS, upper=MEDIA_PANEL_MAX_ROWS, step_incr=1)
-    #spin = Gtk.SpinButton.new(adj, 1.0, 0)
-    #spin.set_numeric(True)
-    #spin.set_digits(0)
-    #spin.set_size_request(20, 30)
-    #spin.connect("changed", col_changed_cb)
+    columns_img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "columns.png")
+    columns_launcher = guicomponents.PressLaunch(col_changed_cb, columns_img, w=22, h=22)
+    columns_launcher.surface_y = 7
 
     all_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_all_files.png")
     audio_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_audio_files.png")
@@ -87,10 +82,9 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, proxy
     buttons_box.pack_start(del_media_b, True, True, 0)
     buttons_box.pack_start(proxy_b, False, False, 0)
     buttons_box.pack_start(guiutils.get_pad_label(4, 4), False, False, 0)
-    buttons_box.pack_start(columns_img, False, False, 0)
-    #buttons_box.pack_start(spin, False, False, 0)
+    buttons_box.pack_start(columns_launcher.widget, False, False, 0)
     buttons_box.pack_start(files_filter_launcher.widget, False, False, 0)
-    
+
     panel = Gtk.VBox()
     panel.pack_start(buttons_box, False, True, 0)
     panel.pack_start(media_list_view, True, True, 0)

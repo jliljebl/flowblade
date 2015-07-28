@@ -671,7 +671,6 @@ class ColorProperty(EditableProperty):
 
     def get_value_rgba(self):
         raw_r, raw_g, raw_b = utils.hex_to_rgb(self.value)
-        print raw_r, raw_g, raw_b
         return (float(raw_r)/255.0, float(raw_g)/255.0, float(raw_b)/255.0, 1.0)
 
     def color_selected(self, color_button):

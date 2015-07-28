@@ -88,6 +88,7 @@ tracks_menu = Gtk.Menu.new()
 monitor_menu = Gtk.Menu.new()
 tools_menu = Gtk.Menu.new()
 file_filter_menu = Gtk.Menu()
+column_count_menu = Gtk.Menu()
 clip_popup_menu = Gtk.Menu()
 tracks_pop_menu = Gtk.Menu()
 transition_clip_menu = Gtk.Menu()
@@ -786,8 +787,8 @@ class MediaPanel():
             m_obj.widget.override_background_color(Gtk.StateType.NORMAL, gui.note_bg_color)
         self.selected_objects = []
 
-    def columns_changed(self, adjustment):
-        self.columns = int(adjustment.get_value())
+    def columns_changed(self, columns):
+        self.columns = columns
         editorpersistance.prefs.media_columns = self.columns
         editorpersistance.save()
         self.fill_data_model()
@@ -1011,6 +1012,7 @@ def display_tracks_popup_menu(event, track, callback):
 
     _add_separetor(track_menu)
 
+    """
     normal_size_item = _get_radio_menu_item(_("Large Height"), callback, None)
     normal_size_item.set_active(track_obj.height == appconsts.TRACK_HEIGHT_NORMAL)
     normal_size_item.connect("activate", callback, (track, "normal_height", None))
@@ -1019,10 +1021,24 @@ def display_tracks_popup_menu(event, track, callback):
     small_size_item.set_active(track_obj.height != appconsts.TRACK_HEIGHT_NORMAL)
     small_size_item.connect("activate", callback, (track, "small_height", None))
     track_menu.append(small_size_item)
+    """
+    
+    normal_size_item = Gtk.RadioMenuItem() 
+    normal_size_item.set_label(_("Large Height"))
+    normal_size_item.set_active(track_obj.height == appconsts.TRACK_HEIGHT_NORMAL)
+    normal_size_item.connect("activate", callback, (track, "normal_height", None))
+    track_menu.append(normal_size_item)
 
+    small_size_item = Gtk.RadioMenuItem.new_with_label([normal_size_item], _("Normal Height"))
+    small_size_item.set_active(track_obj.height != appconsts.TRACK_HEIGHT_NORMAL)
+    small_size_item.connect("activate", callback, (track, "small_height", None))
+    track_menu.append(small_size_item)
+    
     _add_separetor(track_menu)
     
     track_menu.append(_get_track_mute_menu_item(event, track_obj, callback))
+
+    track_menu.show_all()
 
     track_menu.popup(None, None, None, None, event.button, event.time)
 
@@ -1900,7 +1916,48 @@ def get_file_filter_popup_menu(launcher, event, callback):
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
 
+def get_columns_count_popup_menu(event, callback):
+    menu = column_count_menu
+    guiutils.remove_children(menu)
+    menu.set_accel_group(gui.editor_window.accel_group)
+    
+    columns = gui.editor_window.media_list_view.columns
+    
+    menu_item_2 = Gtk.RadioMenuItem() 
+    menu_item_2.set_label("2 Columns")
+    menu_item_2.set_active(columns==2)
+    menu_item_2.connect("activate", callback, 2)
+    menu.append(menu_item_2)
 
+    menu_item_3 = Gtk.RadioMenuItem.new_with_label([menu_item_2], "3 Columns")
+    menu_item_3.connect("activate", callback, 3)
+    menu_item_3.set_active(columns==3)
+    menu.append(menu_item_3)
+
+    menu_item_4 = Gtk.RadioMenuItem.new_with_label([menu_item_2], "4 Columns")
+    menu_item_4.connect("activate", callback, 4)
+    menu_item_4.set_active(columns==4)
+    menu.append(menu_item_4)
+
+    menu_item_5 = Gtk.RadioMenuItem.new_with_label([menu_item_2], "5 Columns")
+    menu_item_5.connect("activate", callback, 5)
+    menu_item_5.set_active(columns==5)
+    menu.append(menu_item_5)
+
+    menu_item_6 = Gtk.RadioMenuItem.new_with_label([menu_item_2], "6 Columns")
+    menu_item_6.connect("activate", callback, 6)
+    menu_item_6.set_active(columns==6)
+    menu.append(menu_item_6)
+
+    menu_item_7 = Gtk.RadioMenuItem.new_with_label([menu_item_2], "7 Columns")
+    menu_item_7.connect("activate", callback, 7)
+    menu_item_7.set_active(columns==7)
+    menu.append(menu_item_7)
+    
+    menu.show_all()
+    menu.popup(None, None, None, None, event.button, event.time)
+
+    
 class PressLaunch:
     def __init__(self, callback, surface, w=22, h=22):
         self.widget = cairoarea.CairoDrawableArea2( w, 

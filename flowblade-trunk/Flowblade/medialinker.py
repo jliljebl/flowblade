@@ -540,7 +540,7 @@ def _relink_project_media_paths():
 
 # ----------------------------------------------------------- main
 def main(root_path, force_launch=False):
-    gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_micro_version(), Gtk.get_minor_version())
+    gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
     print "GTK+ version:", gtk_version
     editorstate.gtk_version = gtk_version
     try:
