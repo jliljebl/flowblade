@@ -208,7 +208,7 @@ class ClipKeyFrameEditor:
         active_height = h - 2 * TOP_PAD      
         
         # Draw bg
-        cr.set_source_rgb(*(gui.bg_color_tuple))
+        cr.set_source_rgb(*guiutils.get_theme_bg_color())
         cr.rectangle(0, 0, w, h)
         cr.fill()
         
@@ -904,7 +904,7 @@ class AbstractScreenEditor:
         x, y, w, h = allocation
         
         # Draw bg
-        cr.set_source_rgb(*(gui.bg_color_tuple))
+        cr.set_source_rgb(0.75, 0.75, 0.77)
         cr.rectangle(0, 0, w, h)
         cr.fill()
         
@@ -1478,14 +1478,16 @@ class GeometryEditorButtonsRow(Gtk.HBox):
         editor_parent.view_size_changed(widget_active_index)
         editor_parent.menu_item_activated()
         """
-        GObject.GObject.__init__(self, False, 2)
+        GObject.GObject.__init__(self)
+        self.set_homogeneous(False)
+        self.set_spacing(2)
         
         self.editor_parent = editor_parent
         
         name_label = Gtk.Label(label=_("View:"))
 
         surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "geom_action.png")
-        action_menu_button = guicomponents.PressLaunch(self._show_actions_menu, pixbuf, 24, 22)
+        action_menu_button = guicomponents.PressLaunch(self._show_actions_menu, surface, 24, 22)
         
         size_select = Gtk.ComboBoxText()
         size_select.append_text(_("Large"))
@@ -1512,7 +1514,7 @@ class GeometryEditorButtonsRow(Gtk.HBox):
         menu.add(self._get_menu_item(_("Geometry to Original Aspect Ratio"), self.editor_parent.menu_item_activated, "ratio" ))
         menu.add(self._get_menu_item(_("Center Horizontal"), self.editor_parent.menu_item_activated, "hcenter" ))
         menu.add(self._get_menu_item(_("Center Vertical"), self.editor_parent.menu_item_activated, "vcenter" ))
-        menu.popup(None, None, None, event.button, event.time)
+        menu.popup(None, None, None, None, event.button, event.time)
 
     def _get_menu_item(self, text, callback, data):
         item = Gtk.MenuItem(text)
@@ -1532,6 +1534,8 @@ class AbstractKeyFrameEditor(Gtk.VBox):
     def __init__(self, editable_property, use_clip_in=True):
         # editable_property is KeyFrameProperty
         GObject.GObject.__init__(self)
+        self.initializing = True # Hack against too early for on slider listner
+        
         self.set_homogeneous(False)
         self.set_spacing(2)
         self.editable_property = editable_property
@@ -1552,6 +1556,8 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         row, slider = guiutils.get_slider_row(editable_property, self.slider_value_changed)
         self.value_slider_row = row
         self.slider = slider
+        
+        self.initializing = False # Hack against too early for on slider listner
 
     def display_tline_frame(self, tline_frame):
         # This is called after timeline current frame changed. 
@@ -1707,7 +1713,7 @@ class GeometryEditor(AbstractKeyFrameEditor):
         AbstractKeyFrameEditor.__init__(self, editable_property, use_clip_in)
         self.init_geom_gui(editable_property)
         self.init_non_geom_gui()
-    
+        
     def init_geom_gui(self, editable_property):
         self.geom_kf_edit = BoxGeometryScreenEditor(editable_property, self)
         self.geom_kf_edit.init_editor(current_sequence().profile.width(),
@@ -1874,6 +1880,9 @@ class GeometryEditor(AbstractKeyFrameEditor):
         PLAYER().seek_frame(self.clip_tline_pos + clip_frame)
 
     def update_property_value(self):
+        if self.initializing:
+            return
+
         write_keyframes = []
         for opa_kf, geom_kf in zip(self.clip_editor.keyframes, self.geom_kf_edit.keyframes):
             frame, opacity = opa_kf

@@ -22,10 +22,6 @@
 Modules handles creating and caching audio waveform images for clips.
 """
 
-
-
-from gi.repository import Gtk, Gdk
-
 import math
 import md5
 import mlt
@@ -34,6 +30,8 @@ import pickle
 import struct
 import threading
 import time
+
+from gi.repository import Gtk, Gdk
 
 import appconsts
 import dialogutils
@@ -216,7 +214,6 @@ def _waveform_render_progress_dialog(callback, title, text, progress_bar, parent
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialog.set_default_size(500, 125)
     alignment.show_all()
-    dialog.set_has_separator(False)
     dialog.connect('response', callback)
     dialog.show()
     return dialog
