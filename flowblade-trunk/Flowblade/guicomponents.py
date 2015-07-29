@@ -884,6 +884,7 @@ class MediaObjectWidget:
         txt = Gtk.Label(label=media_file.name)
         txt.modify_font(Pango.FontDescription("sans 9"))
         txt.set_ellipsize(Pango.EllipsizeMode.END)
+        txt.set_max_width_chars(13)
 
         self.vbox.pack_start(self.img, True, True, 0)
         self.vbox.pack_start(txt, False, False, 0)

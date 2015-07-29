@@ -92,11 +92,12 @@ class CairoDrawableArea2(Gtk.DrawingArea):
             self.grab_focus()
         self.press_func(event)
 
-        return True
+        return False
 
     def _button_release_event(self,  widget, event):
         self.release_func(event)
-        return True
+
+        return False
 
     def _motion_notify_event(self, widget, event):
         if event.is_hint:
