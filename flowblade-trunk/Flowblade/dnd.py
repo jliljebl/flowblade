@@ -19,7 +19,7 @@
 """
 
 """
-Module handles drag and drop.
+Module handles drag and drop between widgets.
 """
 
 from gi.repository import Gtk
@@ -44,7 +44,6 @@ MEDIA_FILES_DND_TARGET = Gtk.TargetEntry.new('media_file', Gtk.TargetFlags.SAME_
 EFFECTS_DND_TARGET = Gtk.TargetEntry.new('effect', Gtk.TargetFlags.SAME_APP, 0)
 CLIPS_DND_TARGET = Gtk.TargetEntry.new('clip', Gtk.TargetFlags.SAME_APP, 0)
 RANGE_DND_TARGET = Gtk.TargetEntry.new('range', Gtk.TargetFlags.SAME_APP, 0)
-STRING_DATA_BITS = 8
 
 # These used to hold data needed on drag drop instead of the API provided GtkSelectionData.
 drag_data = None 
@@ -80,7 +79,6 @@ def connect_media_files_object_cairo_widget(widget):
     widget.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
                            [MEDIA_FILES_DND_TARGET], 
                            Gdk.DragAction.COPY)
-    #widget.connect_after('drag_begin', _media_files_drag_begin)
     widget.connect("drag_data_get", _media_files_drag_data_get)
     widget.drag_source_set_icon_pixbuf(clip_icon)
 
@@ -94,7 +92,6 @@ def connect_effects_select_tree_view(tree_view):
     tree_view.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK,
                                        [EFFECTS_DND_TARGET], 
                                        Gdk.DragAction.COPY)
-    #tree_view.connect_after('drag_begin', _effects_drag_begin)
     tree_view.connect("drag_data_get", _effects_drag_data_get)
 
 def connect_video_monitor(widget):
@@ -107,8 +104,6 @@ def connect_video_monitor(widget):
     widget.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
                            [MEDIA_FILES_DND_TARGET], 
                            Gdk.DragAction.COPY)
-    #widget.connect_after('drag_begin', _monitor_media_drag_begin)
-    widget.connect("drag_data_get", _monitor_media_drag_data_get)
     widget.drag_source_set_icon_pixbuf(clip_icon)
 
 def connect_stack_treeview(widget):
@@ -128,7 +123,6 @@ def connect_range_log(treeview):
     treeview.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
                            [CLIPS_DND_TARGET], 
                            Gdk.DragAction.COPY)
-    #treeview.connect_after('drag_begin', _range_log_drag_begin)
     treeview.connect("drag_data_get", _range_log_drag_data_get)
     treeview.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
                              [RANGE_DND_TARGET], 
@@ -139,44 +133,18 @@ def connect_range_log(treeview):
 def start_tline_clips_out_drag(event, clips, widget):
     global drag_data
     drag_data = clips
-    context = widget.drag_begin([RANGE_DND_TARGET], Gdk.DragAction.COPY, 1, event)
-    if context == None: # if something outside of the application is clicked we'll end here and cannot create a context
-        return
-    context.set_icon_pixbuf(clip_icon, 30, 15)
-
+    target_list = Gtk.TargetList.new([RANGE_DND_TARGET])
+    context = widget.drag_begin(target_list, Gdk.DragAction.COPY, 1, event)
 
 # ------------------------------------------------- handlers for drag events
-"""
-def _media_files_drag_begin(widget, context):
-    print "ddd"
-    #_save_media_panel_selection()
-    #context.set_icon_pixbuf(clip_icon, 30, 15)
-"""
 
 def _media_files_drag_data_get(widget, context, selection, target_id, timestamp):
     _save_media_panel_selection()
 
-def  _monitor_media_drag_begin(widget, context):
-    success = _save_monitor_media()
-    if success:
-        context.set_icon_pixbuf(clip_icon, 30, 15)
-    else:
-        context.set_icon_pixbuf(empty_icon, 30, 15)
-
-def _monitor_media_drag_data_get(widget, context, selection, target_id, timestamp):
-    pass
-    #context.set_icon_pixbuf(clip_icon, 30, 15)
-
-def _range_log_drag_begin(widget, context):
-    context.set_icon_pixbuf(clip_icon, 30, 15)
-
 def _range_log_drag_data_get(treeview, context, selection, target_id, timestamp):
     _save_treeview_selection(treeview)
-
-"""
-def _effects_drag_begin(widget, context):
-    pass 
-"""
+    global drag_source
+    drag_source = SOURCE_RANGE_LOG
 
 def _effects_drag_data_get(treeview, context, selection, target_id, timestamp):
     _save_treeview_selection(treeview)
@@ -234,7 +202,7 @@ def _on_tline_drop(widget, context, x, y, timestamp, do_effect_drop_func, do_med
         do_media_drop_func(media_file, x, y)
         gui.tline_canvas.widget.grab_focus()
     elif drag_source == SOURCE_MONITOR_WIDGET:
-        if drag_data != None: # fixaa, ei toimi 
+        if drag_data != None:
             do_media_drop_func(drag_data, x, y, True)
             gui.tline_canvas.widget.grab_focus()
         else:

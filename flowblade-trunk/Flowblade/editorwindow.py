@@ -962,7 +962,7 @@ class EditorWindow:
 
     def set_tline_cursor(self, mode):
         display = Gdk.Display.get_default()
-        gdk_window = gui.tline_display.get_parent_window()
+        gdk_window = self.window.get_window()#gui.tline_display.get_window()
 
         if mode == editorstate.INSERT_MOVE:
             cursor = Gdk.Cursor.new_from_surface(display, INSERTMOVE_CURSOR, 0, 0)
@@ -1010,8 +1010,10 @@ class EditorWindow:
             self.modes_selector.set_pixbuf(5)
 
     def tline_cursor_leave(self, event):
-        editorstate.cursor_on_tline = False
-        self.set_cursor_to_mode()
+        cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR)
+        gdk_window = self.window.get_window()
+        gdk_window.set_cursor(cursor)  
+        
         if event.get_state() & Gdk.ModifierType.BUTTON1_MASK:
             if editorstate.current_is_move_mode():
                 tlineaction.mouse_dragged_out(event)
