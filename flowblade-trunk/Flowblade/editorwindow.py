@@ -761,27 +761,26 @@ class EditorWindow:
         interp_menu = Gtk.Menu()
         
         interp_nearest = Gtk.RadioMenuItem()
-        interp_nearest.set_label(_("Nearest Neighbour").encode('utf-8'))
+        interp_nearest.set_label(_("Nearest Neighbour (fast)").encode('utf-8'))
         interp_nearest.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("nearest"))
         interp_menu.append(interp_nearest)
         
-        interp_bilinear = Gtk.RadioMenuItem.new_with_label([interp_nearest], _("Bilinear").encode('utf-8'))
+        interp_bilinear = Gtk.RadioMenuItem.new_with_label([interp_nearest], _("Bilinear (good)").encode('utf-8'))
         interp_bilinear.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("bilinear"))
         interp_menu.append(interp_bilinear)
 
-        interp_bicubic = Gtk.RadioMenuItem.new_with_label([interp_nearest], _("Bicubic").encode('utf-8'))
+        interp_bicubic = Gtk.RadioMenuItem.new_with_label([interp_nearest], _("Bicubic (better)").encode('utf-8'))
         interp_bicubic.set_active(True)
         interp_bicubic.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("bicubic"))
-
         interp_menu.append(interp_bicubic)
 
-        interp_hyper = Gtk.RadioMenuItem.new_with_label([interp_nearest], _("Hyper/Lanczos").encode('utf-8'))
+        interp_hyper = Gtk.RadioMenuItem.new_with_label([interp_nearest], _("Hyper/Lanczos (best)").encode('utf-8'))
         interp_hyper.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("hyper"))
         interp_menu.append(interp_hyper)
 
         interp_menu_item.set_submenu(interp_menu)
         menu.append(interp_menu_item)
-        
+
         sep = Gtk.SeparatorMenuItem()
         menu.append(sep)        
         

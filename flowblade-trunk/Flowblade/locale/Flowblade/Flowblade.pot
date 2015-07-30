@@ -554,19 +554,19 @@ msgid "Monitor Playback Interpolation"
 msgstr ""
 
 #: editorwindow.py:773
-msgid "Nearest Neighbour"
+msgid "Nearest Neighbour (fast)"
 msgstr ""
 
 #: editorwindow.py:777
-msgid "Bilinear"
+msgid "Bilinear (good)"
 msgstr ""
 
 #: editorwindow.py:781
-msgid "Bicubic"
+msgid "Bicubic (better)"
 msgstr ""
 
 #: editorwindow.py:787
-msgid "Hyper/Lanczos"
+msgid "Hyper/Lanczos (best)"
 msgstr ""
 
 #: editorwindow.py:797
