@@ -24,11 +24,11 @@ Application module.
 Handles application initialization, shutdown, opening projects, autosave and changing
 sequences.
 """
-import gobject
-import pygtk
-pygtk.require('2.0');
-import glib
-import gtk
+
+from gi.repository import GObject
+from gi.repository import GLib
+from gi.repository import Gtk
+from gi.repository import Gdk
 
 import locale
 import md5
@@ -113,8 +113,9 @@ def main(root_path):
 
     print "Python", sys.version
 
-    print "GTK+ version:", gtk.gtk_version
-    editorstate.gtk_version = gtk.gtk_version
+    gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
+    print "GTK+ version:", gtk_version
+    editorstate.gtk_version = gtk_version
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
     except:
@@ -152,15 +153,15 @@ def main(root_path):
     editorpersistance.save()
 
     # Init gtk threads
-    gtk.gdk.threads_init()
-    gtk.gdk.threads_enter()
+    Gdk.threads_init()
+    Gdk.threads_enter()
     
     # Load drag'n'drop images
     dnd.init()
 
     # Adjust gui parameters for smaller screens
-    scr_w = gtk.gdk.screen_width()
-    scr_h = gtk.gdk.screen_height()
+    scr_w = Gdk.Screen.width()
+    scr_h = Gdk.Screen.height()
     editorstate.SCREEN_WIDTH = scr_w
     editorstate.SCREEN_HEIGHT = scr_h
     _set_draw_params(scr_w, scr_h)
@@ -245,7 +246,7 @@ def main(root_path):
     # Show splash
     if ((editorpersistance.prefs.display_splash_screen == True) and len(autosave_files) == 0):
         global splash_timeout_id
-        splash_timeout_id = gobject.timeout_add(2600, destroy_splash_screen)
+        splash_timeout_id = GLib.timeout_add(2600, destroy_splash_screen)
         splash_screen.show_all()
 
     appconsts.SAVEFILE_VERSION = projectdata.SAVEFILE_VERSION # THIS IS A QUESTIONABLE IDEA TO SIMPLIFY IMPORTS, NOT DRY. WHEN DOING TOOLS THAT RUN IN ANOTHER PROCESSES AND SAVE PROJECTS, THIS LINE NEEDS TO BE THERE ALSO.
@@ -256,9 +257,9 @@ def main(root_path):
     # Existance of autosave file hints that program was exited abnormally
     if check_crash == True and len(autosave_files) > 0:
         if len(autosave_files) == 1:
-            gobject.timeout_add(10, autosave_recovery_dialog)
+            GObject.timeout_add(10, autosave_recovery_dialog)
         else:
-            gobject.timeout_add(10, autosaves_many_recovery_dialog)
+            GObject.timeout_add(10, autosaves_many_recovery_dialog)
     else:
         start_autosave()
 
@@ -267,9 +268,9 @@ def main(root_path):
     monkeypatch_callbacks()
      
     # Launch gtk+ main loop
-    gtk.main()
+    Gtk.main()
 
-    gtk.gdk.threads_leave()
+    Gdk.threads_leave()
 
 # ----------------------------------- callback setting
 def monkeypatch_callbacks():
@@ -427,7 +428,7 @@ def init_editor_state():
 
     # Center tracks vertical display and init some listeners to
     # new value and repaint tracks column.
-    tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.allocation)
+    tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
     gui.tline_column.init_listeners()
     gui.tline_column.widget.queue_draw()
 
@@ -540,7 +541,7 @@ def autosave_recovery_dialog():
 def autosave_dialog_callback(dialog, response):
     dialog.destroy()
     autosave_file = utils.get_hidden_user_dir_path() + AUTOSAVE_DIR + get_autosave_files()[0]
-    if response == gtk.RESPONSE_OK:
+    if response == Gtk.ResponseType.OK:
         global loaded_autosave_file
         loaded_autosave_file = autosave_file
         projectaction.actually_load_project(autosave_file, True)
@@ -564,7 +565,7 @@ def autosaves_many_recovery_dialog():
     return False
 
 def autosaves_many_dialog_callback(dialog, response, autosaves_view, autosaves):
-    if response == gtk.RESPONSE_OK:
+    if response == Gtk.ResponseType.OK:
         autosave_file = autosaves[autosaves_view.get_selected_indexes_list()[0]].path # Single selection, 1 quaranteed to exist
         print "autosave_file", autosave_file
         global loaded_autosave_file
@@ -588,7 +589,7 @@ def start_autosave():
     autosave_delay_millis = time_min * 60 * 1000
 
     print "Autosave started..."
-    autosave_timeout_id = gobject.timeout_add(autosave_delay_millis, do_autosave)
+    autosave_timeout_id = GObject.timeout_add(autosave_delay_millis, do_autosave)
     autosave_file = utils.get_hidden_user_dir_path() + get_instance_autosave_file()
     persistance.save_project(editorstate.PROJECT(), autosave_file)
 
@@ -600,7 +601,7 @@ def stop_autosave():
     global autosave_timeout_id
     if autosave_timeout_id == -1:
         return
-    gobject.source_remove(autosave_timeout_id)
+    GObject.source_remove(autosave_timeout_id)
     autosave_timeout_id = -1
 
 def do_autosave():
@@ -611,11 +612,11 @@ def do_autosave():
 # ------------------------------------------------- splash screen
 def show_splash_screen():
     global splash_screen
-    splash_screen = gtk.Window(gtk.WINDOW_TOPLEVEL)
+    splash_screen = Gtk.Window(Gtk.WindowType.TOPLEVEL)
     splash_screen.set_border_width(0)
     splash_screen.set_decorated(False)
-    splash_screen.set_position(gtk.WIN_POS_CENTER)
-    img = gtk.image_new_from_file(respaths.IMAGE_PATH + "flowblade_splash_black_small.png")
+    splash_screen.set_position(Gtk.WindowPosition.CENTER)
+    img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "flowblade_splash_black_small.png")
 
     splash_screen.add(img)
     splash_screen.set_keep_above(True)
@@ -623,12 +624,12 @@ def show_splash_screen():
 
     splash_screen.set_resizable(False)
 
-    while(gtk.events_pending()):
-        gtk.main_iteration()
+    while(Gtk.events_pending()):
+        Gtk.main_iteration()
 
 def destroy_splash_screen():
     splash_screen.destroy()
-    gobject.source_remove(splash_timeout_id)
+    GObject.source_remove(splash_timeout_id)
 
 # ------------------------------------------------------- small screens
 def _set_draw_params(scr_w, scr_h):
@@ -650,15 +651,15 @@ def _set_draw_params(scr_w, scr_h):
 
 def _too_small_screen_exit():
     global exit_timeout_id
-    exit_timeout_id = gobject.timeout_add(200, _show_too_small_info)
+    exit_timeout_id = GObject.timeout_add(200, _show_too_small_info)
     # Launch gtk+ main loop
-    gtk.main()
+    Gtk.main()
 
 def _show_too_small_info():
-    gobject.source_remove(exit_timeout_id)
+    GObject.source_remove(exit_timeout_id)
     primary_txt = _("Too small screen for this application.")
-    scr_w = gtk.gdk.screen_width()
-    scr_h = gtk.gdk.screen_height()
+    scr_w = Gdk.Screen.width()
+    scr_h = Gdk.Screen.height()
     secondary_txt = _("Minimum screen dimensions for this application are 1152 x 768.\n") + \
                     _("Your screen dimensions are ") + str(scr_w) + " x " + str(scr_h) + "."
     dialogutils.warning_message_with_callback(primary_txt, secondary_txt, None, False, _early_exit)
@@ -666,18 +667,18 @@ def _show_too_small_info():
 def _early_exit(dialog, response):
     dialog.destroy()
     # Exit gtk main loop.
-    gtk.main_quit() 
+    Gtk.main_quit() 
 
 # ------------------------------------------------------- single instance
 """
 def _not_first_instance_exit():
     global exit_timeout_id
-    exit_timeout_id = gobject.timeout_add(200, _show_single_instance_info)
+    exit_timeout_id = GObject.timeout_add(200, _show_single_instance_info)
     # Launch gtk+ main loop
-    gtk.main()
+    Gtk.main()
 
 def _show_single_instance_info():
-    gobject.source_remove(exit_timeout_id)
+    GObject.source_remove(exit_timeout_id)
     primary_txt = _("Another instance of Flowblade already running.")
     secondary_txt = _("Only one instance of Flowblade is allowed to run at a time.")
     dialogutils.warning_message_with_callback(primary_txt, secondary_txt, None, False, _early_exit)
@@ -722,9 +723,9 @@ def get_save_time_msg():
 
 def _shutdown_dialog_callback(dialog, response_id):
     dialog.destroy()
-    if response_id == gtk.RESPONSE_CLOSE:# "Don't Save"
+    if response_id == Gtk.ResponseType.CLOSE:# "Don't Save"
         pass
-    elif response_id ==  gtk.RESPONSE_YES:# "Save"
+    elif response_id ==  Gtk.ResponseType.YES:# "Save"
         if editorstate.PROJECT().last_save_path != None:
             persistance.save_project(editorstate.PROJECT(), editorstate.PROJECT().last_save_path)
         else:
@@ -742,7 +743,8 @@ def _shutdown_dialog_callback(dialog, response_id):
     stop_autosave()
 
     # Save window dimensions on exit
-    x, y, w, h = gui.editor_window.window.get_allocation()
+    alloc = gui.editor_window.window.get_allocation()
+    x, y, w, h = alloc.x, alloc.y, alloc.width, alloc.height 
     editorpersistance.prefs.exit_allocation = (w, h)
     editorpersistance.prefs.app_v_paned_position = gui.editor_window.app_v_paned.get_position()
     editorpersistance.prefs.top_paned_position = gui.editor_window.top_paned.get_position()
@@ -753,7 +755,7 @@ def _shutdown_dialog_callback(dialog, response_id):
     updater.player_refresh_enabled = False
     gui.editor_window.window.set_visible(False)
     # Close and destroy app when gtk finds time to do it after hiding window
-    glib.idle_add(_app_destroy)
+    GLib.idle_add(_app_destroy)
 
 def _app_destroy():
     # Close threads and stop mlt consumers
@@ -771,4 +773,4 @@ def _app_destroy():
         print "Delete autosave file FAILED"
 
     # Exit gtk main loop.
-    gtk.main_quit()
+    Gtk.main_quit()

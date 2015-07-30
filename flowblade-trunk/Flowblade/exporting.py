@@ -18,10 +18,10 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
-import glib
+
+
+from gi.repository import Gtk
+from gi.repository import GLib
 import os, sys
 from xml.dom import minidom
 from decimal import Decimal,getcontext,ROUND_DOWN
@@ -65,7 +65,7 @@ def MELT_XML_export():
     dialogs.export_xml_dialog(_export_melt_xml_dialog_callback, PROJECT().name)
 
 def _export_melt_xml_dialog_callback(dialog, response_id):
-    if response_id == gtk.RESPONSE_ACCEPT:
+    if response_id == Gtk.ResponseType.ACCEPT:
         filenames = dialog.get_filenames()
         save_path = filenames[0]
         global _xml_render_monitor
@@ -89,7 +89,7 @@ def EDL_export():
     dialogs.export_edl_dialog(_export_edl_dialog_callback, gui.editor_window.window, PROJECT().name)
 
 def _export_edl_dialog_callback(dialog, response_id, data):
-    if response_id == gtk.RESPONSE_YES:
+    if response_id == Gtk.ResponseType.YES:
         file_name, out_folder, track_select_combo, cascade_check, op_combo, audio_track_select_combo = data
         edl_path = out_folder.get_filename()+ "/" + file_name.get_text() + ".edl" 
         global _xml_render_monitor
@@ -542,7 +542,7 @@ def screenshot_export():
 
 def _export_screenshot_dialog_callback(dialog, response_id, data):
     file_name, out_folder, file_type_combo, frame = data
-    if response_id == gtk.RESPONSE_YES:
+    if response_id == Gtk.ResponseType.YES:
         vcodec = _img_types[file_type_combo.get_active()]
         ext = _img_extensions[file_type_combo.get_active()]
         render_path = utils.get_hidden_screenshot_dir_path() + "screenshot_%01d." + ext
@@ -589,11 +589,11 @@ def render_screen_shot(frame, render_path, vcodec):
 def export_screenshot_dialog(callback, frame, parent_window, project_name):
     cancel_str = _("Cancel").encode('utf-8')
     ok_str = _("Export Image").encode('utf-8')
-    dialog = gtk.Dialog(_("Export Frame Image"),
+    dialog = Gtk.Dialog(_("Export Frame Image"),
                         parent_window,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        (cancel_str, gtk.RESPONSE_CANCEL,
-                        ok_str, gtk.RESPONSE_YES))
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (cancel_str, Gtk.ResponseType.CANCEL,
+                        ok_str, Gtk.ResponseType.YES))
 
     global _screenshot_img
     _screenshot_img = guiutils.get_gtk_image_from_file(get_displayed_image_path(), 300)
@@ -603,39 +603,39 @@ def export_screenshot_dialog(callback, frame, parent_window, project_name):
     INPUT_LABELS_WITDH = 320
     project_name = project_name.strip(".flb")
 
-    file_name = gtk.Entry()
+    file_name = Gtk.Entry()
     file_name.set_text(project_name)
 
-    extension_label = gtk.Label(".png")
+    extension_label = Gtk.Label(label=".png")
     extension_label.set_size_request(35, 20)
 
-    name_pack = gtk.HBox(False, 4)
+    name_pack = Gtk.HBox(False, 4)
     name_pack.pack_start(file_name, True, True, 0)
     name_pack.pack_start(extension_label, False, False, 0)
 
-    name_row = guiutils.get_two_column_box(gtk.Label(_("Export file name:")), name_pack, INPUT_LABELS_WITDH)
+    name_row = guiutils.get_two_column_box(Gtk.Label(label=_("Export file name:")), name_pack, INPUT_LABELS_WITDH)
  
-    out_folder = gtk.FileChooserButton(_("Select target folder"))
-    out_folder.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+    out_folder = Gtk.FileChooserButton(_("Select target folder"))
+    out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
     out_folder.set_current_folder(os.path.expanduser("~") + "/")
     
-    folder_row = guiutils.get_two_column_box(gtk.Label(_("Export folder:")), out_folder, INPUT_LABELS_WITDH)
+    folder_row = guiutils.get_two_column_box(Gtk.Label(label=_("Export folder:")), out_folder, INPUT_LABELS_WITDH)
 
-    file_type_combo = gtk.combo_box_new_text()
+    file_type_combo = Gtk.ComboBoxText()
     for img in _img_types:
         file_type_combo.append_text(img)
     file_type_combo.set_active(0)
     file_type_combo.connect("changed", _file_type_changed, extension_label)
-    file_type_row = guiutils.get_two_column_box(gtk.Label(_("Image type:")), file_type_combo, INPUT_LABELS_WITDH)
+    file_type_row = guiutils.get_two_column_box(Gtk.Label(label=_("Image type:")), file_type_combo, INPUT_LABELS_WITDH)
     
     file_frame = guiutils.get_named_frame_with_vbox(None, [file_type_row, name_row, folder_row])
     
-    vbox = gtk.VBox(False, 2)
+    vbox = Gtk.VBox(False, 2)
     vbox.pack_start(frame_frame, False, False, 0)
     vbox.pack_start(guiutils.pad_label(12, 12), False, False, 0)
     vbox.pack_start(file_frame, False, False, 0)
 
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(12, 12, 12, 12)
     alignment.add(vbox)
 

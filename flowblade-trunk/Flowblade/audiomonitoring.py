@@ -21,18 +21,17 @@
 Module handles initializing and displaying audiomonitor tool.
 """
 import cairo
-import pygtk
-pygtk.require('2.0');
-import gtk
-import glib
-
 import mlt
-import pango
-import pangocairo
 import time
 
+from gi.repository import Gtk, GObject
+from gi.repository import GLib
+from gi.repository import Gdk
+from gi.repository import Pango
+from gi.repository import PangoCairo
+
 import appconsts
-from cairoarea import CairoDrawableArea
+import cairoarea
 import editorpersistance
 import editorstate
 import mltrefhold
@@ -155,7 +154,7 @@ def close_audio_monitor():
     _destroy_level_filters(True)
 
     # Close and destroy window when gtk finds time to do it
-    glib.idle_add(_audio_monitor_destroy, temp_window)
+    GLib.idle_add(_audio_monitor_destroy, temp_window)
 
 def _audio_monitor_destroy(closed_monitor_window):
     closed_monitor_window.set_visible(False)
@@ -173,13 +172,13 @@ def get_master_meter():
     if _update_ticker.running == False:
         _update_ticker.start_ticker()
 
-    align = gtk.Alignment(xalign=0.5, yalign=0.5, xscale=1.0, yscale=1.0) 
+    align = Gtk.Alignment.new(xalign=0.5, yalign=0.5, xscale=1.0, yscale=1.0) 
     align.add(_master_volume_meter.widget)
     align.set_padding(3, 3, 3, 3)
 
-    frame = gtk.Frame()
+    frame = Gtk.Frame()
     frame.add(align)
-    frame.set_shadow_type(gtk.SHADOW_ETCHED_OUT)
+    frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
 
     return frame
 
@@ -199,7 +198,7 @@ def close_master_meter():
     _destroy_level_filters(False)
     
     # Close and destroy window when gtk finds time to do it
-    glib.idle_add(_master_meter_destroy, temp_meter)
+    GLib.idle_add(_master_meter_destroy, temp_meter)
 
 def _master_meter_destroy(closed_master_meter):
     closed_master_meter.widget.set_visible(False)
@@ -274,7 +273,7 @@ def _audio_monitor_update():
     if _monitor_window == None and _master_volume_meter == None:
         return
 
-    gtk.gdk.threads_enter()
+    Gdk.threads_enter()
 
     global _audio_levels
     _audio_levels = []
@@ -290,7 +289,7 @@ def _audio_monitor_update():
     if _master_volume_meter != None:
         _master_volume_meter.canvas.queue_draw()
 
-    gtk.gdk.threads_leave()
+    Gdk.threads_leave()
 
 def _get_channel_value(audio_level_filter, channel_property):
     level_value = audio_level_filter.get(channel_property)
@@ -305,9 +304,9 @@ def _get_channel_value(audio_level_filter, channel_property):
     return level_float
 
 
-class AudioMonitorWindow(gtk.Window):
+class AudioMonitorWindow(Gtk.Window):
     def __init__(self):
-        gtk.Window.__init__(self)
+        GObject.GObject.__init__(self)
         self.connect("delete-event", lambda w, e:close_audio_monitor())
         
         seq = editorstate.current_sequence()
@@ -315,7 +314,7 @@ class AudioMonitorWindow(gtk.Window):
         self.gain_controls = []
         
         self.meters_area = MetersArea(meters_count)
-        gain_control_area = gtk.HBox(False, 0)
+        gain_control_area = Gtk.HBox(False, 0)
         seq = editorstate.current_sequence()
         for i in range(0, meters_count):
             if i == 0:
@@ -326,23 +325,23 @@ class AudioMonitorWindow(gtk.Window):
                 gain = GainControl(name, seq, seq.tracks[i])
             if i == 0:
                 tmp = gain
-                gain = gtk.EventBox()
+                gain = Gtk.EventBox()
                 gain.add(tmp)
-                bg_color = gtk.gdk.Color(red=0.8, green=0.8, blue=0.8)
+                bg_color = Gdk.Color(red=0.8, green=0.8, blue=0.8)
                 if editorpersistance.prefs.dark_theme == True:
-                    bg_color = gtk.gdk.Color(red=0.4, green=0.4, blue=0.4)
-                gain.modify_bg(gtk.STATE_NORMAL, bg_color)
+                    bg_color = Gdk.Color(red=0.4, green=0.4, blue=0.4)
+                gain.modify_bg(Gtk.StateType.NORMAL, bg_color)
             self.gain_controls.append(gain)
             gain_control_area.pack_start(gain, False, False, 0)
 
-        meters_frame = gtk.Frame()
+        meters_frame = Gtk.Frame()
         meters_frame.add(self.meters_area.widget)
 
-        pane = gtk.VBox(False, 1)
+        pane = Gtk.VBox(False, 1)
         pane.pack_start(meters_frame, True, True, 0)
         pane.pack_start(gain_control_area, True, True, 0)
 
-        align = gtk.Alignment()
+        align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
         align.set_padding(12, 12, 4, 4)
         align.add(pane)
 
@@ -359,17 +358,17 @@ class MetersArea:
         w = SLOT_W * meters_count
         h = METER_SLOT_H
         
-        self.widget = CairoDrawableArea(w,
-                                        h, 
-                                        self._draw)
-        
+        self.widget = cairoarea.CairoDrawableArea2(  w,
+                                                    h, 
+                                                    self._draw)
+
         self.audio_meters = [] # displays both l_Value and r_value
         for i in range(0, meters_count):
             meter = AudioMeter(METER_HEIGHT)
             if i != meters_count - 1:
                 meter.right_channel.draw_dB = True
             self.audio_meters.append(meter)
-            
+
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
 
@@ -494,21 +493,21 @@ class ChannelMeter:
         self.draw_text(self.channel_text, "Sans Bold 8", cr, x - 4, self.height + 2 +  self.y_top_pad, OVERLAY_COLOR)
 
     def draw_text(self, text, font_desc, cr, x, y, color):
-        pango_context = pangocairo.CairoContext(cr)
-        layout = pango_context.create_layout()
-        layout.set_text(text)
-        desc = pango.FontDescription(font_desc)
+        layout = PangoCairo.create_layout(cr)
+        layout.set_text(text, -1)
+
+        desc = Pango.FontDescription(font_desc)
         layout.set_font_description(desc)
 
-        pango_context.set_source_rgb(*color)
-        pango_context.move_to(x, y)
-        pango_context.update_layout(layout)
-        pango_context.show_layout(layout)
-        
+        cr.set_source_rgb(*color)
+        cr.move_to(x, y)
+        PangoCairo.update_layout(cr, layout)
+        PangoCairo.show_layout(cr, layout)
 
-class GainControl(gtk.Frame):
+
+class GainControl(Gtk.Frame):
     def __init__(self, name, seq, producer, is_master=False):
-        gtk.Frame.__init__(self)
+        GObject.GObject.__init__(self)
         
         self.seq = seq
         self.producer = producer
@@ -520,8 +519,8 @@ class GainControl(gtk.Frame):
             gain_value = producer.audio_gain # track
         gain_value = gain_value * 100
         
-        self.adjustment = gtk.Adjustment(value=gain_value, lower=0, upper=100, step_incr=1)
-        self.slider = gtk.VScale()
+        self.adjustment = Gtk.Adjustment(value=gain_value, lower=0, upper=100, step_incr=1)
+        self.slider = Gtk.VScale()
         self.slider.set_adjustment(self.adjustment)
         self.slider.set_size_request(SLOT_W - 10, CONTROL_SLOT_H - 105)
         self.slider.set_inverted(True)
@@ -535,12 +534,12 @@ class GainControl(gtk.Frame):
             pan_value = 0.5 # center
         pan_value = (pan_value - 0.5) * 200 # from range 0 - 1 to range -100 - 100
 
-        self.pan_adjustment = gtk.Adjustment(value=pan_value, lower=-100, upper=100, step_incr=1)
-        self.pan_slider = gtk.HScale()
+        self.pan_adjustment = Gtk.Adjustment(value=pan_value, lower=-100, upper=100, step_incr=1)
+        self.pan_slider = Gtk.HScale()
         self.pan_slider.set_adjustment(self.pan_adjustment)
         self.pan_slider.connect("value-changed", self.pan_changed)
 
-        self.pan_button = gtk.ToggleButton(_("Pan"))
+        self.pan_button = Gtk.ToggleButton(_("Pan"))
         self.pan_button.connect("toggled", self.pan_active_toggled)
         
         if pan_value == 0.0:
@@ -551,7 +550,7 @@ class GainControl(gtk.Frame):
 
         label = guiutils.bold_label(name)
 
-        vbox = gtk.VBox(False, 0)
+        vbox = Gtk.VBox(False, 0)
         vbox.pack_start(guiutils.get_pad_label(5,5), False, False, 0)
         vbox.pack_start(label, False, False, 0)
         vbox.pack_start(guiutils.get_pad_label(5,5), False, False, 0)
@@ -606,11 +605,11 @@ class MasterVolumeMeter:
 
         w = SLOT_W - 40
         h = METER_SLOT_H + 2 + 40
-        self.canvas = CairoDrawableArea(w,
-                                        h, 
-                                        self._draw)
+        self.canvas = cairoarea.CairoDrawableArea2(  w,
+                                                    h, 
+                                                    self._draw)
 
-        self.widget = gtk.VBox(False, 0)
+        self.widget = Gtk.VBox(False, 0)
         self.widget.pack_start(self.canvas, False, False, 0)
 
     def _draw(self, event, cr, allocation):

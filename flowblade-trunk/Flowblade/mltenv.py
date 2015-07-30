@@ -21,7 +21,7 @@
 """
 Module checks environment for available codecs and formats.
 """
-import gobject
+from gi.repository import GObject
 import mlt
 
 import dialogutils
@@ -93,7 +93,7 @@ def check_available_features(repo):
 
     except:
         print "Environment detection failed, environment unknown."
-        gobject.timeout_add(2000, _show_failed_environment_info)
+        GObject.timeout_add(2000, _show_failed_environment_info)
 
 def render_profile_supported(frmt, vcodec, acodec):
     if environment_detection_success == False:

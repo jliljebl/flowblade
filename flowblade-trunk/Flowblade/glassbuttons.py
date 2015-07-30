@@ -19,15 +19,14 @@
 """
 
 import cairo
-import pygtk
-pygtk.require('2.0');
-import gtk
-
 import math
 
-from cairoarea import CairoDrawableArea
+from gi.repository import Gtk
+
+import cairoarea
 import editorpersistance
 import gui
+import guiutils
 import respaths
 
 BUTTONS_GRAD_STOPS = [   (1, 1, 1, 1, 0.2),
@@ -69,9 +68,9 @@ class AbstractGlassButtons:
 
     def __init__(self, button_width, button_height, button_y, widget_width, widget_height):
         # Create widget and connect listeners
-        self.widget = CairoDrawableArea(widget_width, 
-                                        widget_height, 
-                                        self._draw)
+        self.widget = cairoarea.CairoDrawableArea2( widget_width, 
+                                                    widget_height, 
+                                                    self._draw)
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
@@ -157,7 +156,7 @@ class AbstractGlassButtons:
         buttons_width = self.button_width * len(self.icons)
 
         # Draw bg
-        cr.set_source_rgb(*gui.bg_color_tuple)
+        cr.set_source_rgb(*guiutils.get_theme_bg_color())
         cr.rectangle(0, 0, w, h)
         cr.fill()
 
@@ -213,7 +212,7 @@ class AbstractGlassButtons:
         x = self.button_x
         for i in range(0, len(self.icons)):
             icon = self.icons[i]
-            cr.set_source_pixbuf(icon, x + self.image_x[i], self.image_y[i])
+            cr.set_source_surface(icon, x + self.image_x[i], self.image_y[i])
             cr.paint()
             if self.sensitive[i] == False:
                 cr.save()
@@ -266,15 +265,15 @@ class PlayerButtons(AbstractGlassButtons):
         AbstractGlassButtons.__init__(self, MB_BUTTON_WIDTH, MB_BUTTON_HEIGHT, MB_BUTTON_Y, MB_BUTTONS_WIDTH, MB_BUTTONS_HEIGHT)
 
         IMG_PATH = respaths.IMAGE_PATH
-        play_icon = gtk.gdk.pixbuf_new_from_file(IMG_PATH + "play_2_s.png")
-        stop_icon = gtk.gdk.pixbuf_new_from_file(IMG_PATH + "stop_s.png")
-        next_icon = gtk.gdk.pixbuf_new_from_file(IMG_PATH + "next_frame_s.png")
-        prev_icon = gtk.gdk.pixbuf_new_from_file(IMG_PATH + "prev_frame_s.png")
-        mark_in_icon = gtk.gdk.pixbuf_new_from_file(IMG_PATH + "mark_in_s.png")
-        mark_out_icon = gtk.gdk.pixbuf_new_from_file(IMG_PATH + "mark_out_s.png")
-        marks_clear_icon = gtk.gdk.pixbuf_new_from_file(IMG_PATH + "marks_clear_s.png") 
-        to_mark_in_icon = gtk.gdk.pixbuf_new_from_file(IMG_PATH + "to_mark_in_s.png")        
-        to_mark_out_icon = gtk.gdk.pixbuf_new_from_file(IMG_PATH + "to_mark_out_s.png") 
+        play_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "play_2_s.png")
+        stop_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "stop_s.png")
+        next_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "next_frame_s.png")
+        prev_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "prev_frame_s.png")
+        mark_in_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "mark_in_s.png")
+        mark_out_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "mark_out_s.png")
+        marks_clear_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "marks_clear_s.png") 
+        to_mark_in_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "to_mark_in_s.png")        
+        to_mark_out_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "to_mark_out_s.png") 
 
         self.icons = [prev_icon, next_icon, play_icon, stop_icon, 
                       mark_in_icon, mark_out_icon, 

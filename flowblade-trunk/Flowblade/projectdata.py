@@ -21,17 +21,16 @@
 """
 Module contains objects used to capture project data.
 """
-
+import cairo
 import datetime
-import pygtk
-pygtk.require('2.0');
-import gtk
-
 import mlt
 import md5
 import os
 import shutil
 import time
+
+from gi.repository import Gtk
+from gi.repository import GdkPixbuf
 
 import appconsts
 import editorpersistance
@@ -330,15 +329,21 @@ class MediaFile:
  
     def create_icon(self):
         try:
-            icon = gtk.gdk.pixbuf_new_from_file(self.icon_path)
-            self.icon = icon.scale_simple(appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT, \
-                                          gtk.gdk.INTERP_BILINEAR)
+            self.icon = self._create_image_surface(self.icon_path)
         except:
             print "failed to make icon from:", self.icon_path
             self.icon_path = respaths.IMAGE_PATH + FALLBACK_THUMB
-            icon = gtk.gdk.pixbuf_new_from_file(self.icon_path)
-            self.icon = icon.scale_simple(appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT, \
-                                          gtk.gdk.INTERP_BILINEAR)
+            self.icon = self._create_image_surface(self.icon_path)
+
+    def _create_image_surface(self, path):
+        icon = cairo.ImageSurface.create_from_png(self.icon_path)
+        scaled_icon = cairo.ImageSurface(cairo.FORMAT_ARGB32, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
+        cr = cairo.Context(scaled_icon)
+        cr.scale( float(appconsts.THUMB_WIDTH) / float(icon.get_width()), float(appconsts.THUMB_HEIGHT) / float(icon.get_height()))
+        cr.set_source_surface(icon, 0, 0)
+        cr.paint()
+        
+        return scaled_icon
 
     def create_proxy_path(self, proxy_width, proxy_height, file_extesion):
         if self.type == appconsts.IMAGE_SEQUENCE:
@@ -394,7 +399,7 @@ class BinColorClip:
         self.mark_out = -1
 
     def create_icon(self):
-        icon = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
+        icon = GdkPixbuf.Pixbuf(GdkPixbuf.Colorspace.RGB, False, 8, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
         pixel = utils.gdk_color_str_to_int(self.gdk_color_str)
         icon.fill(pixel)
         self.icon = icon

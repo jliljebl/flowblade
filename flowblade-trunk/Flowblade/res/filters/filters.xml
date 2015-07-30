@@ -1,11 +1,8 @@
 <filters>
 
-
     <!-- See propertyparse.py, propertyedit.py and propertyeditorbuilder.py modules for attr and argument keys and values explanations-->
     <!-- NOTE: 'displayname' args values have spaces encoded as ! character so "X Scatter" becomes "X!Scatter" -->
     <!-- NOTE: extra spaces (more than 1) between key=value pairs crash when opening filter in editor -->
-
-
 
     <!-- ALPHA -->
     <filter id="frei0r.alphagrad">

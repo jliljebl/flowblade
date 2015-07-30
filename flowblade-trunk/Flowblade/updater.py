@@ -22,10 +22,8 @@
 Module contains GUI update routines.
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
-
+from gi.repository import Gtk
+from gi.repository import Gdk
 
 import appconsts
 import clipeffectseditor
@@ -43,7 +41,7 @@ import utils
 import respaths
 import tlinewidgets
 
-page_size = 99.0 # gtk.Adjustment.get_page_size() wasn't there
+page_size = 99.0 # Gtk.Adjustment.get_page_size() wasn't there
                  # (wft?) so use this to have page size
 
 # Scale constants
@@ -93,14 +91,14 @@ def load_icons():
     global play_icon, play_loop_icon,  next_icon, next_trim_icon, \
     prev_icon, prev_trim_icon, stop_icon, stop_trim_icon
      
-    play_icon = gtk.image_new_from_file(respaths.IMAGE_PATH + "play_2_s.png")
-    play_loop_icon = gtk.image_new_from_file(respaths.IMAGE_PATH  + "play_loop.png")
-    next_icon = gtk.image_new_from_file(respaths.IMAGE_PATH  + "next_frame_s.png")
-    next_trim_icon = gtk.image_new_from_file(respaths.IMAGE_PATH  + "next_frame_trim.png")
-    prev_icon = gtk.image_new_from_file(respaths.IMAGE_PATH  + "prev_frame_s.png")
-    prev_trim_icon = gtk.image_new_from_file(respaths.IMAGE_PATH  + "prev_frame_trim.png")
-    stop_icon = gtk.image_new_from_file(respaths.IMAGE_PATH  + "stop_s.png")
-    stop_trim_icon = gtk.image_new_from_file(respaths.IMAGE_PATH  + "stop_loop.png")
+    play_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "play_2_s.png")
+    play_loop_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH  + "play_loop.png")
+    next_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH  + "next_frame_s.png")
+    next_trim_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH  + "next_frame_trim.png")
+    prev_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH  + "prev_frame_s.png")
+    prev_trim_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH  + "prev_frame_trim.png")
+    stop_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH  + "stop_s.png")
+    stop_trim_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH  + "stop_loop.png")
 
 
 # --------------------------------- player
@@ -129,10 +127,10 @@ def window_resized():
         return
 
     # Resize track heights so that all tracks are displayed
-    current_sequence().resize_tracks_to_fit(gui.tline_canvas.widget.allocation)
+    current_sequence().resize_tracks_to_fit(gui.tline_canvas.widget.get_allocation())
     
     # Place clips in the middle of timeline canvas after window resize
-    tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.allocation)
+    tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
 
     gui.tline_column.init_listeners() # hit areas for track swicthes need to be recalculated
     repaint_tline()
@@ -169,7 +167,7 @@ def update_tline_scrollbar():
         pos = 0.0
 
     # Create and set adjustment
-    adjustment = gtk.Adjustment(pos, 0.0, 100.0, 
+    adjustment = Gtk.Adjustment(pos, 0.0, 100.0, 
                                 1.0, 10.0, page_size)
     adjustment.connect("value-changed", tline_scrolled)
     try: # when testing this might get called before gui is build
@@ -213,14 +211,13 @@ def update_pix_per_frame_full_view():
     """
     global pix_per_frame_full_view
     length = current_sequence().get_length() + 5 # +5 is just selected end pad so that end of movie is visible
-    x, y, w, h = gui.tline_canvas.widget.allocation
-    pix_per_frame_full_view = float(w) / length
+    pix_per_frame_full_view = float(gui.tline_canvas.widget.get_allocation().width) / length
 
 def set_info_icon(info_icon_id):
     if info_icon_id == None:
-        widget = gtk.Label()
+        widget = Gtk.Label()
     else:
-        widget = gtk.image_new_from_stock(info_icon_id, gtk.ICON_SIZE_MENU)
+        widget = Gtk.Image.new_from_stock(info_icon_id, Gtk.IconSize.MENU)
     
     gui.tline_info.remove(gui.tline_info.info_contents)
     gui.tline_info.add(widget)
@@ -265,15 +262,15 @@ def zoom_project_length():
     update_tline_scrollbar()
 
 def mouse_scroll_zoom(event):
-    if event.state & gtk.gdk.CONTROL_MASK:
+    if event.get_state() & Gdk.ModifierType.CONTROL_MASK:
         adj = gui.tline_scroll.get_adjustment()
         incr = adj.get_step_increment()
-        if event.direction == gtk.gdk.SCROLL_UP:
+        if event.direction == Gdk.ScrollDirection.UP:
             adj.set_value(adj.get_value() + incr)
         else:
             adj.set_value(adj.get_value() - incr)
     else:
-        if event.direction == gtk.gdk.SCROLL_UP:
+        if event.direction == Gdk.ScrollDirection.UP:
             zoom_in()
         else:
             zoom_out()

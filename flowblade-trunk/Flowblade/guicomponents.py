@@ -21,18 +21,19 @@
 """
 Module contains classes and build methods to create GUI objects.
 """
-import cairo
-import gobject
-import pygtk
-pygtk.require('2.0');
-import gtk
 
+import cairo
 import math
-import pango
-import pangocairo
+
+from gi.repository import GObject
+from gi.repository import GdkPixbuf
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import Pango
+from gi.repository import PangoCairo
 
 import appconsts
-from cairoarea import CairoDrawableArea
+import cairoarea
 import dnd
 import editorpersistance
 import editorstate
@@ -81,61 +82,79 @@ imgseq_icon = None
 audio_icon = None
 pattern_icon = None
 
+# GTK3 requires these to be created outside of callback
+markers_menu = Gtk.Menu.new()
+tracks_menu = Gtk.Menu.new()
+monitor_menu = Gtk.Menu.new()
+tools_menu = Gtk.Menu.new()
+file_filter_menu = Gtk.Menu()
+column_count_menu = Gtk.Menu()
+clip_popup_menu = Gtk.Menu()
+tracks_pop_menu = Gtk.Menu()
+transition_clip_menu = Gtk.Menu()
+blank_clip_menu = Gtk.Menu()
+audio_clip_menu = Gtk.Menu()
+compositor_popup_menu = Gtk.Menu()
+media_file_popup_menu = Gtk.Menu()
+filter_stack_menu_popup_menu = Gtk.Menu()
+media_linker_popup_menu = Gtk.Menu()
+log_event_popup_menu = Gtk.Menu()
+
 # ------------------------------------------------- item lists 
-class ImageTextTextListView(gtk.VBox):
+class ImageTextTextListView(Gtk.VBox):
     """
     GUI component displaying list with columns: img, text, text
     Middle column expands.
     """
 
     def __init__(self):
-        gtk.VBox.__init__(self)
+        GObject.GObject.__init__(self)
        
        # Datamodel: icon, text, text
-        self.storemodel = gtk.ListStore(gtk.gdk.Pixbuf, str, str)
+        self.storemodel = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str)
  
         # Scroll container
-        self.scroll = gtk.ScrolledWindow()
-        self.scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        self.scroll.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+        self.scroll = Gtk.ScrolledWindow()
+        self.scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
 
         # View
-        self.treeview = gtk.TreeView(self.storemodel)
+        self.treeview = Gtk.TreeView(self.storemodel)
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(False)
         tree_sel = self.treeview.get_selection()
-        tree_sel.set_mode(gtk.SELECTION_SINGLE)
+        tree_sel.set_mode(Gtk.SelectionMode.SINGLE)
 
         # Column views
-        self.icon_col = gtk.TreeViewColumn("Icon")
-        self.text_col_1 = gtk.TreeViewColumn("text1")
-        self.text_col_2 = gtk.TreeViewColumn("text2")
+        self.icon_col = Gtk.TreeViewColumn("Icon")
+        self.text_col_1 = Gtk.TreeViewColumn("text1")
+        self.text_col_2 = Gtk.TreeViewColumn("text2")
         
         # Cell renderers
-        self.icon_rend = gtk.CellRendererPixbuf()
+        self.icon_rend = Gtk.CellRendererPixbuf()
         self.icon_rend.props.xpad = 6
 
-        self.text_rend_1 = gtk.CellRendererText()
-        self.text_rend_1.set_property("ellipsize", pango.ELLIPSIZE_END)
+        self.text_rend_1 = Gtk.CellRendererText()
+        self.text_rend_1.set_property("ellipsize", Pango.EllipsizeMode.END)
 
-        self.text_rend_2 = gtk.CellRendererText()
+        self.text_rend_2 = Gtk.CellRendererText()
         self.text_rend_2.set_property("yalign", 0.0)
 
         # Build column views
         self.icon_col.set_expand(False)
         self.icon_col.set_spacing(5)
-        self.icon_col.pack_start(self.icon_rend)
+        self.icon_col.pack_start(self.icon_rend, False)
         self.icon_col.add_attribute(self.icon_rend, 'pixbuf', 0)
         
         self.text_col_1.set_expand(True)
         self.text_col_1.set_spacing(5)
-        self.text_col_1.set_sizing(gtk.TREE_VIEW_COLUMN_GROW_ONLY)
+        self.text_col_1.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
         self.text_col_1.set_min_width(150)
-        self.text_col_1.pack_start(self.text_rend_1)
+        self.text_col_1.pack_start(self.text_rend_1, True)
         self.text_col_1.add_attribute(self.text_rend_1, "text", 1)
 
         self.text_col_2.set_expand(False)
-        self.text_col_2.pack_start(self.text_rend_2)
+        self.text_col_2.pack_start(self.text_rend_2, True)
         self.text_col_2.add_attribute(self.text_rend_2, "text", 2)
         
         # Add column views to view
@@ -145,7 +164,7 @@ class ImageTextTextListView(gtk.VBox):
 
         # Build widget graph and display
         self.scroll.add(self.treeview)
-        self.pack_start(self.scroll)
+        self.pack_start(self.scroll, True, True, 0)
         self.scroll.show_all()
 
     def get_selected_rows_list(self):
@@ -154,61 +173,61 @@ class ImageTextTextListView(gtk.VBox):
 
 
 # ------------------------------------------------- item lists 
-class ImageTextImageListView(gtk.VBox):
+class ImageTextImageListView(Gtk.VBox):
     """
     GUI component displaying list with columns: img, text, img
     Middle column expands.
     """
 
     def __init__(self):
-        gtk.VBox.__init__(self)
+        GObject.GObject.__init__(self)
         
        # Datamodel: icon, text, icon
-        self.storemodel = gtk.ListStore(gtk.gdk.Pixbuf, str, gtk.gdk.Pixbuf)
+        self.storemodel = Gtk.ListStore(GdkPixbuf.Pixbuf, str, GdkPixbuf.Pixbuf)
  
         # Scroll container
-        self.scroll = gtk.ScrolledWindow()
-        self.scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        self.scroll.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+        self.scroll = Gtk.ScrolledWindow()
+        self.scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
 
         # View
-        self.treeview = gtk.TreeView(self.storemodel)
+        self.treeview = Gtk.TreeView(self.storemodel)
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(False)
         tree_sel = self.treeview.get_selection()
-        tree_sel.set_mode(gtk.SELECTION_SINGLE)
+        tree_sel.set_mode(Gtk.SelectionMode.SINGLE)
 
         # Column views
-        self.icon_col_1 = gtk.TreeViewColumn("icon1")
-        self.text_col_1 = gtk.TreeViewColumn("text1")
-        self.icon_col_2 = gtk.TreeViewColumn("icon2")
+        self.icon_col_1 = Gtk.TreeViewColumn("icon1")
+        self.text_col_1 = Gtk.TreeViewColumn("text1")
+        self.icon_col_2 = Gtk.TreeViewColumn("icon2")
         
         # Cell renderers
-        self.icon_rend_1 = gtk.CellRendererPixbuf()
+        self.icon_rend_1 = Gtk.CellRendererPixbuf()
         self.icon_rend_1.props.xpad = 6
 
-        self.text_rend_1 = gtk.CellRendererText()
-        self.text_rend_1.set_property("ellipsize", pango.ELLIPSIZE_END)
+        self.text_rend_1 = Gtk.CellRendererText()
+        self.text_rend_1.set_property("ellipsize", Pango.EllipsizeMode.END)
 
-        self.icon_rend_2 = gtk.CellRendererPixbuf()
+        self.icon_rend_2 = Gtk.CellRendererPixbuf()
         self.icon_rend_2.props.xpad = 6
 
         # Build column views
         self.icon_col_1.set_expand(False)
         self.icon_col_1.set_spacing(5)
-        self.icon_col_1.pack_start(self.icon_rend_1)
+        self.icon_col_1.pack_start(self.icon_rend_1, False)
         self.icon_col_1.add_attribute(self.icon_rend_1, 'pixbuf', 0)
         
         self.text_col_1.set_expand(True)
         self.text_col_1.set_spacing(5)
-        self.text_col_1.set_sizing(gtk.TREE_VIEW_COLUMN_GROW_ONLY)
+        self.text_col_1.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
         self.text_col_1.set_min_width(150)
-        self.text_col_1.pack_start(self.text_rend_1)
+        self.text_col_1.pack_start(self.text_rend_1, True)
         self.text_col_1.add_attribute(self.text_rend_1, "text", 1)
 
         self.icon_col_2.set_expand(False)
         self.icon_col_2.set_spacing(5)
-        self.icon_col_2.pack_start(self.icon_rend_2)
+        self.icon_col_2.pack_start(self.icon_rend_2, False)
         self.icon_col_2.add_attribute(self.icon_rend_2, 'pixbuf', 2)
         
         # Add column views to view
@@ -218,7 +237,7 @@ class ImageTextImageListView(gtk.VBox):
 
         # Build widget graph and display
         self.scroll.add(self.treeview)
-        self.pack_start(self.scroll)
+        self.pack_start(self.scroll, True, True, 0)
         self.scroll.show_all()
 
     def get_selected_rows_list(self):
@@ -250,7 +269,7 @@ class SequenceListView(ImageTextTextListView):
         """
         self.storemodel.clear()
         for seq in PROJECT().sequences:
-            icon = gtk.gdk.pixbuf_new_from_file(self.icon_path)
+            icon = GdkPixbuf.Pixbuf.new_from_file(self.icon_path)
             active = ""
             if seq == current_sequence():
                 active = "<edit>"
@@ -274,14 +293,14 @@ class MediaListView(ImageTextTextListView):
                               row_activated_cb)
 
         tree_sel = self.treeview.get_selection()
-        tree_sel.set_mode(gtk.SELECTION_MULTIPLE)
+        tree_sel.set_mode(Gtk.SelectionMode.MULTIPLE)
         self.text_rend_1.set_property("editable", True)
-        self.text_rend_1.set_property("font-desc", pango.FontDescription("sans bold 9"))
+        self.text_rend_1.set_property("font-desc", Pango.FontDescription("sans bold 9"))
         self.text_rend_1.connect("edited", 
                                  file_name_edited_cb, 
                                  (self.storemodel, 1))
                                  
-        self.text_rend_2.set_property("font-desc", pango.FontDescription("sans 8"))
+        self.text_rend_2.set_property("font-desc", Pango.FontDescription("sans 8"))
         self.text_rend_2.set_property("yalign", 0.5)
 
     def fill_data_model(self):
@@ -324,13 +343,13 @@ class BinListView(ImageTextTextListView):
 
         for bin in PROJECT().bins:
             try:
-                pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "bin_5.png")
+                pixbuf = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "bin_5.png")
                 row_data = [pixbuf,
                             bin.name, 
                             str(len(bin.file_ids))]
                 self.storemodel.append(row_data)
                 self.scroll.queue_draw()
-            except gobject.GError, exc:
+            except GObject.GError, exc:
                 print "can't load icon", exc
 
 
@@ -357,61 +376,61 @@ class FilterListView(ImageTextImageListView):
             self.scroll.queue_draw()
 
 
-class FilterSwitchListView(gtk.VBox):
+class FilterSwitchListView(Gtk.VBox):
     """
     GUI component displaying list of filters applied to a clip.
     """
 
     def __init__(self, selection_cb, toggle_cb):
-        gtk.VBox.__init__(self)
+        GObject.GObject.__init__(self)
         
        # Datamodel: icon, text, icon
-        self.storemodel = gtk.ListStore(gtk.gdk.Pixbuf, str, bool)
+        self.storemodel = Gtk.ListStore(GdkPixbuf.Pixbuf, str, bool)
  
         # Scroll container
-        self.scroll = gtk.ScrolledWindow()
-        self.scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        self.scroll.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+        self.scroll = Gtk.ScrolledWindow()
+        self.scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
 
         # View
-        self.treeview = gtk.TreeView(self.storemodel)
+        self.treeview = Gtk.TreeView(self.storemodel)
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(False)
         tree_sel = self.treeview.get_selection()
-        tree_sel.set_mode(gtk.SELECTION_SINGLE)
+        tree_sel.set_mode(Gtk.SelectionMode.SINGLE)
 
         # Column views
-        self.icon_col_1 = gtk.TreeViewColumn("icon1")
-        self.text_col_1 = gtk.TreeViewColumn("text1")
-        self.check_col_1 = gtk.TreeViewColumn("switch")
+        self.icon_col_1 = Gtk.TreeViewColumn("icon1")
+        self.text_col_1 = Gtk.TreeViewColumn("text1")
+        self.check_col_1 = Gtk.TreeViewColumn("switch")
         
         # Cell renderers
-        self.icon_rend_1 = gtk.CellRendererPixbuf()
+        self.icon_rend_1 = Gtk.CellRendererPixbuf()
         self.icon_rend_1.props.xpad = 6
 
-        self.text_rend_1 = gtk.CellRendererText()
-        self.text_rend_1.set_property("ellipsize", pango.ELLIPSIZE_END)
+        self.text_rend_1 = Gtk.CellRendererText()
+        self.text_rend_1.set_property("ellipsize", Pango.EllipsizeMode.END)
 
-        self.toggle_rend = gtk.CellRendererToggle()
+        self.toggle_rend = Gtk.CellRendererToggle()
         self.toggle_rend.set_property('activatable', True)
         self.toggle_rend.connect( 'toggled', self.toggled)
 
         # Build column views
         self.icon_col_1.set_expand(False)
         self.icon_col_1.set_spacing(5)
-        self.icon_col_1.pack_start(self.icon_rend_1)
+        self.icon_col_1.pack_start(self.icon_rend_1, False)
         self.icon_col_1.add_attribute(self.icon_rend_1, 'pixbuf', 0)
         
         self.text_col_1.set_expand(True)
         self.text_col_1.set_spacing(5)
-        self.text_col_1.set_sizing(gtk.TREE_VIEW_COLUMN_GROW_ONLY)
+        self.text_col_1.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
         self.text_col_1.set_min_width(150)
-        self.text_col_1.pack_start(self.text_rend_1)
+        self.text_col_1.pack_start(self.text_rend_1, True)
         self.text_col_1.add_attribute(self.text_rend_1, "text", 1)
 
         self.check_col_1.set_expand(False)
         self.check_col_1.set_spacing(5)
-        self.check_col_1.pack_start(self.toggle_rend)
+        self.check_col_1.pack_start(self.toggle_rend, False)
         self.check_col_1.add_attribute(self.toggle_rend, "active", 2)
         
         # Add column views to view
@@ -421,7 +440,7 @@ class FilterSwitchListView(gtk.VBox):
 
         # Build widget graph and display
         self.scroll.add(self.treeview)
-        self.pack_start(self.scroll)
+        self.pack_start(self.scroll, True, True, 0)
         self.scroll.show_all()
 
         # Connect selection 'changed' signal
@@ -455,40 +474,40 @@ class FilterSwitchListView(gtk.VBox):
         self.toggle_callback(int(path))
         
 
-class TextListView(gtk.VBox):
+class TextListView(Gtk.VBox):
     """
     GUI component displaying list with  single column text column.
     """
     def __init__(self, width, column_name=None):
-        gtk.VBox.__init__(self)
+        GObject.GObject.__init__(self)
         
        # Datamodel: icon, text, text
-        self.storemodel = gtk.ListStore(str)
+        self.storemodel = Gtk.ListStore(str)
  
         # Scroll container
-        self.scroll = gtk.ScrolledWindow()
-        self.scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        self.scroll.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+        self.scroll = Gtk.ScrolledWindow()
+        self.scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
 
         # View
-        self.treeview = gtk.TreeView(self.storemodel)
+        self.treeview = Gtk.TreeView(self.storemodel)
         self.treeview.set_property("rules_hint", True)
         if column_name == None:
             self.treeview.set_headers_visible(False)
             column_name = "text1"
-        self.treeview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
 
         # Cell renderers
-        self.text_rend_1 = gtk.CellRendererText()
-        self.text_rend_1.set_property("ellipsize", pango.ELLIPSIZE_END)
+        self.text_rend_1 = Gtk.CellRendererText()
+        self.text_rend_1.set_property("ellipsize", Pango.EllipsizeMode.END)
 
         # Build column views
-        self.text_col_1 = gtk.TreeViewColumn(column_name)
+        self.text_col_1 = Gtk.TreeViewColumn(column_name)
         self.text_col_1.set_expand(True)
         self.text_col_1.set_spacing(5)
-        self.text_col_1.set_sizing(gtk.TREE_VIEW_COLUMN_GROW_ONLY)
+        self.text_col_1.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
         self.text_col_1.set_min_width(width)
-        self.text_col_1.pack_start(self.text_rend_1)
+        self.text_col_1.pack_start(self.text_rend_1, False)
         self.text_col_1.add_attribute(self.text_rend_1, "text", 0)
 
         # Add column views to view
@@ -496,7 +515,7 @@ class TextListView(gtk.VBox):
 
         # Build widget graph and display
         self.scroll.add(self.treeview)
-        self.pack_start(self.scroll)
+        self.pack_start(self.scroll, True, True, 0)
         self.scroll.show_all()
 
     def get_selected_rows_list(self):
@@ -534,7 +553,7 @@ class ProfileListView(TextListView):
 class AutoSavesListView(TextListView):
     def __init__(self, column_name=None):
         TextListView.__init__(self, 300, None)
-        self.treeview.get_selection().set_mode(gtk.SELECTION_SINGLE)
+        self.treeview.get_selection().set_mode(Gtk.SelectionMode.SINGLE)
 
     def fill_data_model(self, autosaves):
         self.storemodel.clear()
@@ -549,30 +568,30 @@ class AutoSavesListView(TextListView):
 
 
 # -------------------------------------------- clip info
-class ClipInfoPanel(gtk.VBox):
+class ClipInfoPanel(Gtk.VBox):
     
     def __init__(self):
-        gtk.VBox.__init__(self, False, 2)
+        GObject.GObject.__init__(self)
 
         self.name_label = guiutils.bold_label(_("Clip:"))
-        self.name_value = gtk.Label()
-        self.name_value.set_ellipsize(pango.ELLIPSIZE_END)
+        self.name_value = Gtk.Label()
+        self.name_value.set_ellipsize(Pango.EllipsizeMode.END)
 
         self.track = guiutils.bold_label(_("Track:"))
-        self.track_value = gtk.Label()
+        self.track_value = Gtk.Label()
 
         self.position = guiutils.bold_label(_("Pos:"))
-        self.position_value = gtk.Label()
+        self.position_value = Gtk.Label()
         
-        info_row_1 = gtk.HBox()
+        info_row_1 = Gtk.HBox()
         info_row_1.pack_start(self.name_label, False, True, 0)
         info_row_1.pack_start(self.name_value, True, True, 0)
 
-        info_row_2 = gtk.HBox()
+        info_row_2 = Gtk.HBox()
         info_row_2.pack_start(self.track, False, False, 0)
         info_row_2.pack_start(self.track_value, True, True, 0)
 
-        info_row_3 = gtk.HBox()
+        info_row_3 = Gtk.HBox()
         info_row_3.pack_start(self.position, False, False, 0)
         info_row_3.pack_start(self.position_value, True, True, 0)
 
@@ -613,35 +632,35 @@ class ClipInfoPanel(gtk.VBox):
         self.position.set_sensitive(value)
 
 
-class CompositorInfoPanel(gtk.VBox):
+class CompositorInfoPanel(Gtk.VBox):
     def __init__(self):
-        gtk.VBox.__init__(self, False, 2)
+        GObject.GObject.__init__(self)
 
-        self.source_track = gtk.Label()
-        self.source_track_value = gtk.Label()
+        self.source_track = Gtk.Label()
+        self.source_track_value = Gtk.Label()
 
-        self.destination_track = gtk.Label()
-        self.destination_track_value = gtk.Label()
+        self.destination_track = Gtk.Label()
+        self.destination_track_value = Gtk.Label()
 
-        self.position = gtk.Label()
-        self.position_value = gtk.Label()
+        self.position = Gtk.Label()
+        self.position_value = Gtk.Label()
 
-        self.length = gtk.Label()
-        self.length_value = gtk.Label()
+        self.length = Gtk.Label()
+        self.length_value = Gtk.Label()
 
-        info_row_2 = gtk.HBox()
+        info_row_2 = Gtk.HBox()
         info_row_2.pack_start(self.source_track, False, True, 0)
         info_row_2.pack_start(self.source_track_value, True, True, 0)
 
-        info_row_3 = gtk.HBox()
+        info_row_3 = Gtk.HBox()
         info_row_3.pack_start(self.destination_track, False, True, 0)
         info_row_3.pack_start(self.destination_track_value, True, True, 0)
     
-        info_row_4 = gtk.HBox()
+        info_row_4 = Gtk.HBox()
         info_row_4.pack_start(self.position, False, True, 0)
         info_row_4.pack_start(self.position_value, True, True, 0)
 
-        info_row_5 = gtk.HBox()
+        info_row_5 = Gtk.HBox()
         info_row_5.pack_start(self.length, False, False, 0)
         info_row_5.pack_start(self.length_value, True, True, 0)
 
@@ -702,32 +721,32 @@ class CompositorInfoPanel(gtk.VBox):
 class MediaPanel():
     
     def __init__(self, media_file_popup_cb, double_click_cb):
-        self.widget = gtk.VBox()
+        self.widget = Gtk.VBox()
         self.row_widgets = []
         self.selected_objects = []
         self.columns = editorpersistance.prefs.media_columns
         self.media_file_popup_cb = media_file_popup_cb
         self.double_click_cb = double_click_cb
-        self.monitor_indicator = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "monitor_indicator.png")
+        self.monitor_indicator = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "monitor_indicator.png")
         
         global has_proxy_icon, is_proxy_icon, graphics_icon, imgseq_icon, audio_icon, pattern_icon
-        has_proxy_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "has_proxy_indicator.png")
-        is_proxy_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "is_proxy_indicator.png")
-        graphics_icon = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "graphics_indicator.png")
-        imgseq_icon =  gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "imgseq_indicator.png")
-        audio_icon =  gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "audio_indicator.png")
-        pattern_icon =  gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "pattern_producer_indicator.png")
+        has_proxy_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "has_proxy_indicator.png")
+        is_proxy_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "is_proxy_indicator.png")
+        graphics_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "graphics_indicator.png")
+        imgseq_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "imgseq_indicator.png")
+        audio_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "audio_indicator.png")
+        pattern_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "pattern_producer_indicator.png")
         
     def get_selected_media_objects(self):
         return self.selected_objects
         
     def media_object_selected(self, media_object, widget, event):
         widget.grab_focus()
-        if event.type == gtk.gdk._2BUTTON_PRESS:
+        if event.type == Gdk.EventType._2BUTTON_PRESS:
              self.double_click_cb(media_object.media_file)
         elif event.button == 1:
-            if (event.state & gtk.gdk.CONTROL_MASK):
-                widget.modify_bg(gtk.STATE_NORMAL, gui.selected_bg_color)
+            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+                widget.modify_bg(Gtk.StateType.NORMAL, gui.selected_bg_color)
                 # only add to selected if not already there
                 try:
                     self.selected_objects.index(media_object)
@@ -735,15 +754,14 @@ class MediaPanel():
                     self.selected_objects.append(media_object)
             else:
                 self.clear_selection()
-                widget.modify_bg(gtk.STATE_NORMAL, gui.selected_bg_color)
+                widget.override_background_color(Gtk.StateType.NORMAL, gui.selected_bg_color)
                 self.selected_objects.append(media_object)
         elif event.button == 3:
             self.clear_selection()
             display_media_file_popup_menu(media_object.media_file,
                                           self.media_file_popup_cb,
                                           event)
-        elif event.type == gtk.gdk._2BUTTON_PRESS:
-             print "double click"
+
         self.widget.queue_draw()
 
     def select_media_file(self, media_file):
@@ -761,16 +779,16 @@ class MediaPanel():
     def select_all(self):
         self.clear_selection()
         for media_file, media_object in self.widget_for_mediafile.iteritems():
-            media_object.widget.modify_bg(gtk.STATE_NORMAL, gui.selected_bg_color)
+            media_object.widget.modify_bg(Gtk.StateType.NORMAL, gui.selected_bg_color)
             self.selected_objects.append(media_object)
 
     def clear_selection(self):
         for m_obj in self.selected_objects:
-            m_obj.widget.modify_bg(gtk.STATE_NORMAL, gui.note_bg_color)
+            m_obj.widget.override_background_color(Gtk.StateType.NORMAL, gui.note_bg_color)
         self.selected_objects = []
 
-    def columns_changed(self, adjustment):
-        self.columns = int(adjustment.get_value())
+    def columns_changed(self, columns):
+        self.columns = columns
         editorpersistance.prefs.media_columns = self.columns
         editorpersistance.save()
         self.fill_data_model()
@@ -784,7 +802,7 @@ class MediaPanel():
 
         column = 0
         bin_index = 0
-        row_box = gtk.HBox()
+        row_box = Gtk.HBox()
         row_box.set_size_request(MEDIA_OBJECT_WIDGET_WIDTH * self.columns, MEDIA_OBJECT_WIDGET_HEIGHT)
         for file_id in current_bin().file_ids:
             media_file = PROJECT().media_files[file_id]
@@ -817,7 +835,7 @@ class MediaPanel():
                 row_box.pack_start(filler, True, True, 0)
                 self.widget.pack_start(row_box, False, False, 0)
                 self.row_widgets.append(row_box)
-                row_box = gtk.HBox()
+                row_box = Gtk.HBox()
                 column = 0
             bin_index += 1
 
@@ -834,9 +852,9 @@ class MediaPanel():
         self.widget.show_all()
 
     def _get_empty_filler(self):
-        filler = gtk.EventBox()
+        filler = Gtk.EventBox()
         filler.connect("button-press-event", lambda w,e: self.empty_pressed(w,e))
-        filler.add(gtk.Label())
+        filler.add(Gtk.Label())
         return filler
 
 
@@ -848,24 +866,25 @@ class MediaObjectWidget:
         self.bin_index = bin_index
         self.indicator_icon = indicator_icon
         self.selected_callback = selected_callback
-        self.widget = gtk.EventBox()
+        self.widget = Gtk.EventBox()
         self.widget.connect("button-press-event", lambda w,e: selected_callback(self, w, e))
         self.widget.dnd_media_widget_attr = True # this is used to identify widget at dnd drop
         self.widget.set_can_focus(True)
  
-        self.align = gtk.Alignment()
+        self.align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
         self.align.set_padding(3, 2, 3, 2)
         self.align.set_size_request(MEDIA_OBJECT_WIDGET_WIDTH, MEDIA_OBJECT_WIDGET_HEIGHT)
         
-        self.vbox = gtk.VBox()
+        self.vbox = Gtk.VBox()
 
-        self.img = CairoDrawableArea(appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT, self._draw_icon)
+        self.img = cairoarea.CairoDrawableArea2(appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT, self._draw_icon)
         self.img.press_func = self._press
         self.img.dnd_media_widget_attr = True # this is used to identify widget at dnd drop
 
-        txt = gtk.Label(media_file.name)
-        txt.modify_font(pango.FontDescription("sans 9"))
-        txt.set_ellipsize(pango.ELLIPSIZE_END)
+        txt = Gtk.Label(label=media_file.name)
+        txt.modify_font(Pango.FontDescription("sans 9"))
+        txt.set_ellipsize(Pango.EllipsizeMode.END)
+        txt.set_max_width_chars(13)
 
         self.vbox.pack_start(self.img, True, True, 0)
         self.vbox.pack_start(txt, False, False, 0)
@@ -879,10 +898,10 @@ class MediaObjectWidget:
         
     def _draw_icon(self, event, cr, allocation):
         x, y, w, h = allocation
-        cr.set_source_pixbuf(self.media_file.icon, 0, 0)
+        cr.set_source_surface(self.media_file.icon, 0, 0)
         cr.paint()
         if self.media_file == editorstate.MONITOR_MEDIA_FILE():
-            cr.set_source_pixbuf(self.indicator_icon, 29, 22)
+            cr.set_source_surface(self.indicator_icon, 29, 22)
             cr.paint()     
         if self.media_file.mark_in != -1 and self.media_file.mark_out != -1:
             cr.set_source_rgb(1, 1, 1)
@@ -896,26 +915,26 @@ class MediaObjectWidget:
         
         if self.media_file.type != appconsts.PATTERN_PRODUCER:
             if self.media_file.is_proxy_file == True:
-                cr.set_source_pixbuf(is_proxy_icon, 96, 6)
+                cr.set_source_surface(is_proxy_icon, 96, 6)
                 cr.paint()
             elif self.media_file.has_proxy_file == True:
-                cr.set_source_pixbuf(has_proxy_icon, 96, 6)
+                cr.set_source_surface(has_proxy_icon, 96, 6)
                 cr.paint()
 
         if self.media_file.type == appconsts.IMAGE:
-            cr.set_source_pixbuf(graphics_icon, 6, 6)
+            cr.set_source_surface(graphics_icon, 6, 6)
             cr.paint()
 
         if self.media_file.type == appconsts.IMAGE_SEQUENCE:
-            cr.set_source_pixbuf(imgseq_icon, 6, 6)
+            cr.set_source_surface(imgseq_icon, 6, 6)
             cr.paint()
 
         if self.media_file.type == appconsts.AUDIO:
-            cr.set_source_pixbuf(audio_icon, 6, 6)
+            cr.set_source_surface(audio_icon, 6, 6)
             cr.paint()
 
         if self.media_file.type == appconsts.PATTERN_PRODUCER:
-            cr.set_source_pixbuf(pattern_icon, 6, 6)
+            cr.set_source_surface(pattern_icon, 6, 6)
             cr.paint()
         
         
@@ -929,9 +948,9 @@ class EditorSeparator:
     """
 
     def __init__(self):
-        self.widget = CairoDrawableArea(SEPARATOR_WIDTH, 
-                                        SEPARATOR_HEIGHT,
-                                        self._draw)
+        self.widget = cairoarea.CairoDrawableArea2( SEPARATOR_WIDTH, 
+                                                    SEPARATOR_HEIGHT,
+                                                    self._draw)
     def _draw(self, event, cr, allocation):
         """
         Callback for repaint from CairoDrawableArea.
@@ -940,7 +959,7 @@ class EditorSeparator:
         x, y, w, h = allocation
         
         # Draw bg
-        cr.set_source_rgb(*(gui.bg_color_tuple))
+        cr.set_source_rgb(*guiutils.get_theme_bg_color())
         cr.rectangle(0, 0, w, h)
         cr.fill()
         
@@ -954,16 +973,15 @@ class EditorSeparator:
 
 # ---------------------------------------------- MISC WIDGETS
 def get_monitor_view_select_combo(callback):
-    pixbuf_list = [gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "program_view_2.png"), 
-                   gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "vectorscope.png"),
-                   gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "rgbparade.png")]
-    menu_launch = ImageMenuLaunch(callback, pixbuf_list, w=24, h=20)
+    surface_list = [cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "program_view_2.png"), 
+                   cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "vectorscope.png"),
+                   cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "rgbparade.png")]
+    menu_launch = ImageMenuLaunch(callback, surface_list, w=24, h=20)
     menu_launch.pixbuf_y = 10
     return menu_launch
 
 def get_compositor_track_select_combo(source_track, target_track, callback):
-    tracks_combo = gtk.combo_box_new_text()
-    #tracks_combo.append_text("Auto Track Below")
+    tracks_combo = Gtk.ComboBoxText()
     active_index = -1
     cb_index = 0
     for track_index in range(source_track.id - 1, current_sequence().first_video_index - 1, -1):
@@ -982,7 +1000,8 @@ def get_compositor_track_select_combo(source_track, target_track, callback):
 # -------------------------------------------- context menus
 def display_tracks_popup_menu(event, track, callback):    
     track_obj = current_sequence().tracks[track]
-    track_menu = gtk.Menu()
+    track_menu = tracks_pop_menu
+    guiutils.remove_children(track_menu)
 
     if track_obj.edit_freedom != appconsts.FREE:
         track_menu.append(_get_menu_item(_("Lock Track"), callback, (track,"lock", None), False))
@@ -994,6 +1013,7 @@ def display_tracks_popup_menu(event, track, callback):
 
     _add_separetor(track_menu)
 
+    """
     normal_size_item = _get_radio_menu_item(_("Large Height"), callback, None)
     normal_size_item.set_active(track_obj.height == appconsts.TRACK_HEIGHT_NORMAL)
     normal_size_item.connect("activate", callback, (track, "normal_height", None))
@@ -1002,12 +1022,26 @@ def display_tracks_popup_menu(event, track, callback):
     small_size_item.set_active(track_obj.height != appconsts.TRACK_HEIGHT_NORMAL)
     small_size_item.connect("activate", callback, (track, "small_height", None))
     track_menu.append(small_size_item)
+    """
+    
+    normal_size_item = Gtk.RadioMenuItem() 
+    normal_size_item.set_label(_("Large Height"))
+    normal_size_item.set_active(track_obj.height == appconsts.TRACK_HEIGHT_NORMAL)
+    normal_size_item.connect("activate", callback, (track, "normal_height", None))
+    track_menu.append(normal_size_item)
 
+    small_size_item = Gtk.RadioMenuItem.new_with_label([normal_size_item], _("Normal Height"))
+    small_size_item.set_active(track_obj.height != appconsts.TRACK_HEIGHT_NORMAL)
+    small_size_item.connect("activate", callback, (track, "small_height", None))
+    track_menu.append(small_size_item)
+    
     _add_separetor(track_menu)
     
     track_menu.append(_get_track_mute_menu_item(event, track_obj, callback))
 
-    track_menu.popup(None, None, None, event.button, event.time)
+    track_menu.show_all()
+
+    track_menu.popup(None, None, None, None, event.button, event.time)
 
 def display_clip_popup_menu(event, clip, track, callback):
     if clip.is_blanck_clip:
@@ -1018,7 +1052,8 @@ def display_clip_popup_menu(event, clip, track, callback):
         display_transition_clip_popup_menu(event, clip, track, callback)
         return
 
-    clip_menu = gtk.Menu()
+    clip_menu = clip_popup_menu
+    guiutils.remove_children(clip_menu)
     clip_menu.add(_get_menu_item(_("Open in Filters Editor"), callback, (clip, track, "open_in_editor", event.x)))
     # Only make opening in compositor editor for video tracks V2 and higher
     if track.id <= current_sequence().first_video_index:
@@ -1087,10 +1122,12 @@ def display_clip_popup_menu(event, clip, track, callback):
     clip_menu.add(_get_menu_item(_("Clip Info"), callback,\
                   (clip, track, "clip_info", event.x)))
 
-    clip_menu.popup(None, None, None, event.button, event.time)
+    clip_menu.popup(None, None, None, None, event.button, event.time)
 
 def display_transition_clip_popup_menu(event, clip, track, callback):
-    clip_menu = gtk.Menu()
+    clip_menu = transition_clip_menu
+    guiutils.remove_children(clip_menu)
+
     clip_menu.add(_get_menu_item(_("Open in Filters Editor"), callback, (clip, track, "open_in_editor", event.x)))
 
     _add_separetor(clip_menu)
@@ -1112,22 +1149,26 @@ def display_transition_clip_popup_menu(event, clip, track, callback):
     _add_separetor(clip_menu)
 
     clip_menu.add(_get_clone_filters_menu_item(event, clip, track, callback))
-    clip_menu.popup(None, None, None, event.button, event.time)
+    clip_menu.popup(None, None, None, None, event.button, event.time)
     
 def display_blank_clip_popup_menu(event, clip, track, callback):
-    clip_menu = gtk.Menu()
+    clip_menu = blank_clip_menu
+    guiutils.remove_children(clip_menu)
+
     clip_menu.add(_get_menu_item(_("Strech Prev Clip to Cover"), callback, (clip, track, "cover_with_prev", event.x)))
     clip_menu.add(_get_menu_item(_("Strech Next Clip to Cover"), callback, (clip, track, "cover_with_next", event.x)))
     _add_separetor(clip_menu)
     clip_menu.add(_get_menu_item(_("Delete"), callback, (clip, track, "delete_blank", event.x)))
-    clip_menu.popup(None, None, None, event.button, event.time)
+    clip_menu.popup(None, None, None, None, event.button, event.time)
     
 def display_audio_clip_popup_menu(event, clip, track, callback):
     if clip.is_blanck_clip:
         display_blank_clip_popup_menu(event, clip, track, callback)
         return
 
-    clip_menu = gtk.Menu()
+    clip_menu = audio_clip_menu
+    guiutils.remove_children(clip_menu)
+
     clip_menu.add(_get_menu_item(_("Open in Filters Editor"), callback, (clip, track, "open_in_editor", event.x)))
     if clip.media_type != appconsts.PATTERN_PRODUCER:
         clip_menu.add(_get_menu_item(_("Open in Clip Monitor"), callback,\
@@ -1166,30 +1207,32 @@ def display_audio_clip_popup_menu(event, clip, track, callback):
     clip_menu.add(_get_menu_item(_("Clip Info"), callback,\
                   (clip, track, "clip_info", event.x)))
 
-    clip_menu.popup(None, None, None, event.button, event.time)
+    clip_menu.popup(None, None, None, None, event.button, event.time)
 
 def display_compositor_popup_menu(event, compositor, callback):
-    compositor_menu = gtk.Menu()
+    compositor_menu = compositor_popup_menu
+    guiutils.remove_children(compositor_menu)
+    
     compositor_menu.add(_get_menu_item(_("Open In Compositor Editor"), callback, ("open in editor",compositor)))
     _add_separetor(compositor_menu)
     compositor_menu.add(_get_menu_item(_("Sync with Origin Clip"), callback, ("sync with origin",compositor)))
     _add_separetor(compositor_menu)
     compositor_menu.add(_get_menu_item(_("Delete"), callback, ("delete",compositor)))
-    compositor_menu.popup(None, None, None, event.button, event.time)
+    compositor_menu.popup(None, None, None, None, event.button, event.time)
 
 def _get_filters_add_menu_item(event, clip, track, callback):
-    menu_item = gtk.MenuItem(_("Add Filter"))
-    sub_menu = gtk.Menu()
+    menu_item = Gtk.MenuItem(_("Add Filter"))
+    sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
     
     for group in mltfilters.groups:
         group_name, filters_array = group
-        group_item = gtk.MenuItem(group_name)
+        group_item = Gtk.MenuItem(group_name)
         sub_menu.append(group_item)
-        sub_sub_menu = gtk.Menu()
+        sub_sub_menu = Gtk.Menu()
         group_item.set_submenu(sub_sub_menu)
         for filter_info in filters_array:
-            filter_item = gtk.MenuItem(translations.get_filter_name(filter_info.name))
+            filter_item = Gtk.MenuItem(translations.get_filter_name(filter_info.name))
             sub_sub_menu.append(filter_item)
             filter_item.connect("activate", callback, (clip, track, "add_filter", (event.x, filter_info)))
             filter_item.show()
@@ -1199,19 +1242,19 @@ def _get_filters_add_menu_item(event, clip, track, callback):
     return menu_item
 
 def _get_audio_filters_add_menu_item(event, clip, track, callback):
-    menu_item = gtk.MenuItem(_("Add Filter"))
-    sub_menu = gtk.Menu()
+    menu_item = Gtk.MenuItem(_("Add Filter"))
+    sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
     
     audio_groups = mltfilters.get_audio_filters_groups()
     for group in audio_groups:
         group_name, filters_array = group
-        group_item = gtk.MenuItem(group_name)
+        group_item = Gtk.MenuItem(group_name)
         sub_menu.append(group_item)
-        sub_sub_menu = gtk.Menu()
+        sub_sub_menu = Gtk.Menu()
         group_item.set_submenu(sub_sub_menu)
         for filter_info in filters_array:
-            filter_item = gtk.MenuItem(translations.get_filter_name(filter_info.name))
+            filter_item = Gtk.MenuItem(translations.get_filter_name(filter_info.name))
             sub_sub_menu.append(filter_item)
             filter_item.connect("activate", callback, (clip, track, "add_filter", (event.x, filter_info)))
             filter_item.show()
@@ -1221,8 +1264,8 @@ def _get_audio_filters_add_menu_item(event, clip, track, callback):
     return menu_item
     
 def _get_compositors_add_menu_item(event, clip, track, callback, sensitive):
-    menu_item = gtk.MenuItem(_("Add Compositor"))
-    sub_menu = gtk.Menu()
+    menu_item = Gtk.MenuItem(_("Add Compositor"))
+    sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
        
     for i in range(0, len(mlttransitions.compositors)):
@@ -1233,7 +1276,7 @@ def _get_compositors_add_menu_item(event, clip, track, callback, sensitive):
             info = mlttransitions.mlt_compositor_transition_infos[compositor_type]
         except:
             continue
-        compositor_item = gtk.MenuItem(name)
+        compositor_item = Gtk.MenuItem(name)
         sub_menu.append(compositor_item)
         compositor_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type)))
         compositor_item.show()
@@ -1242,14 +1285,14 @@ def _get_compositors_add_menu_item(event, clip, track, callback, sensitive):
     return menu_item
 
 def _get_blenders_add_menu_item(event, clip, track, callback, sensitive):
-    menu_item = gtk.MenuItem(_("Add Blend"))
-    sub_menu = gtk.Menu()
+    menu_item = Gtk.MenuItem(_("Add Blend"))
+    sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
     
     for i in range(0, len(mlttransitions.blenders)):
         blend = mlttransitions.blenders[i]
         name, compositor_type = blend
-        blender_item = gtk.MenuItem(name)
+        blender_item = Gtk.MenuItem(name)
         sub_menu.append(blender_item)
         blender_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type)))
         blender_item.show()
@@ -1258,16 +1301,16 @@ def _get_blenders_add_menu_item(event, clip, track, callback, sensitive):
     return menu_item
 
 def _get_clone_filters_menu_item(event, clip, track, callback):
-    menu_item = gtk.MenuItem(_("Clone Filters"))
-    sub_menu = gtk.Menu()
+    menu_item = Gtk.MenuItem(_("Clone Filters"))
+    sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
     
-    clone_item = gtk.MenuItem(_("From Next Clip"))
+    clone_item = Gtk.MenuItem(_("From Next Clip"))
     sub_menu.append(clone_item)
     clone_item.connect("activate", callback, (clip, track, "clone_filters_from_next", None))
     clone_item.show()
 
-    clone_item = gtk.MenuItem(_("From Previous Clip"))
+    clone_item = Gtk.MenuItem(_("From Previous Clip"))
     sub_menu.append(clone_item)
     clone_item.connect("activate", callback, (clip, track, "clone_filters_from_prev", None))
     clone_item.show()
@@ -1276,17 +1319,17 @@ def _get_clone_filters_menu_item(event, clip, track, callback):
     return menu_item
 
 def _get_mute_menu_item(event, clip, track, callback):
-    menu_item = gtk.MenuItem(_("Mute"))
-    sub_menu = gtk.Menu()
+    menu_item = Gtk.MenuItem(_("Mute"))
+    sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
 
-    item = gtk.MenuItem(_("Unmute"))
+    item = Gtk.MenuItem(_("Unmute"))
     sub_menu.append(item)
     item.connect("activate", callback, (clip, track, "mute_clip", (False)))
     item.show()
     item.set_sensitive(not(clip.mute_filter==None))
 
-    item = gtk.MenuItem(_("Mute Audio"))
+    item = Gtk.MenuItem(_("Mute Audio"))
     sub_menu.append(item)
     item.connect("activate", callback, (clip, track, "mute_clip", (True)))
     item.show()
@@ -1296,11 +1339,11 @@ def _get_mute_menu_item(event, clip, track, callback):
     return menu_item
 
 def _get_track_mute_menu_item(event, track, callback):
-    menu_item = gtk.MenuItem(_("Mute"))
-    sub_menu = gtk.Menu()
+    menu_item = Gtk.MenuItem(_("Mute"))
+    sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
 
-    item = gtk.MenuItem(_("Unmute"))
+    item = Gtk.MenuItem(_("Unmute"))
     sub_menu.append(item)
     if track.type == appconsts.VIDEO:
         item.connect("activate", callback, (track, "mute_track", appconsts.TRACK_MUTE_NOTHING))
@@ -1311,13 +1354,13 @@ def _get_track_mute_menu_item(event, track, callback):
     item.show()
     
     if track.type == appconsts.VIDEO:
-        item = gtk.MenuItem(_("Mute Video"))
+        item = Gtk.MenuItem(_("Mute Video"))
         sub_menu.append(item)
         item.connect("activate", callback, (track, "mute_track", appconsts.TRACK_MUTE_VIDEO))
         _set_non_sensitive_if_state_matches(track, item, appconsts.TRACK_MUTE_VIDEO)
         item.show()
 
-    item = gtk.MenuItem(_("Mute Audio"))
+    item = Gtk.MenuItem(_("Mute Audio"))
     sub_menu.append(item)
     if track.type == appconsts.VIDEO:
         item.connect("activate", callback, (track, "mute_track", appconsts.TRACK_MUTE_AUDIO))
@@ -1328,7 +1371,7 @@ def _get_track_mute_menu_item(event, track, callback):
     item.show()
 
     if track.type == appconsts.VIDEO:
-        item = gtk.MenuItem(_("Mute All"))
+        item = Gtk.MenuItem(_("Mute All"))
         sub_menu.append(item)
         item.connect("activate", callback, (track, "mute_track", appconsts.TRACK_MUTE_ALL))
         _set_non_sensitive_if_state_matches(track, item, appconsts.TRACK_MUTE_ALL)
@@ -1338,8 +1381,8 @@ def _get_track_mute_menu_item(event, track, callback):
     return menu_item
 
 def _get_color_menu_item(clip, track, callback):
-    color_menu_item = gtk.MenuItem(_("Clip Color"))
-    color_menu =  gtk.Menu()
+    color_menu_item = Gtk.MenuItem(_("Clip Color"))
+    color_menu =  Gtk.Menu()
     color_menu.add(_get_menu_item(_("Default"), callback, (clip, track, "clip_color", "default")))
     color_menu.add(_get_menu_item(_("Red"), callback, (clip, track, "clip_color", "red")))
     color_menu.add(_get_menu_item(_("Green"), callback, (clip, track, "clip_color", "green")))
@@ -1356,7 +1399,9 @@ def _set_non_sensitive_if_state_matches(mutable, item, state):
         item.set_sensitive(False)
 
 def display_media_file_popup_menu(media_file, callback, event):
-    media_file_menu = gtk.Menu()
+    media_file_menu = media_file_popup_menu
+    guiutils.remove_children(media_file_menu)
+
     # "Open in Clip Monitor" is sent as event id, same for all below
     media_file_menu.add(_get_menu_item(_("Rename"), callback,("Rename", media_file, event)))
     media_file_menu.add(_get_menu_item(_("Delete"), callback,("Delete", media_file, event))) 
@@ -1373,48 +1418,54 @@ def display_media_file_popup_menu(media_file, callback, event):
         item = _get_menu_item(_("Render Proxy File"), callback, ("Render Proxy File", media_file, event))
         media_file_menu.add(item)
     
-    media_file_menu.popup(None, None, None, event.button, event.time)
+    media_file_menu.popup(None, None, None, None, event.button, event.time)
 
 def display_filter_stack_popup_menu(row, treeview, callback, event):
-    filter_stack_menu = gtk.Menu()        
+    filter_stack_menu = filter_stack_menu_popup_menu
+    guiutils.remove_children(filter_stack_menu)
+
     filter_stack_menu.add(_get_menu_item(_("Toggle Active"), callback, ("toggle", row, treeview)))
     filter_stack_menu.add(_get_menu_item(_("Reset Values"), callback, ("reset", row, treeview)))
-    filter_stack_menu.popup(None, None, None, event.button, event.time)
+    filter_stack_menu.popup(None, None, None, None, event.button, event.time)
 
 def display_media_log_event_popup_menu(row, treeview, callback, event):
-    log_event_menu = gtk.Menu()        
+    log_event_menu = log_event_popup_menu
+    guiutils.remove_children(log_event_menu)
+
     log_event_menu.add(_get_menu_item(_("Display In Clip Monitor"), callback, ("display", row, treeview)))
     log_event_menu.add(_get_menu_item(_("Toggle Star"), callback, ("toggle", row, treeview)))
     log_event_menu.add(_get_menu_item(_("Delete"), callback, ("delete", row, treeview)))
-    log_event_menu.popup(None, None, None, event.button, event.time)
+    log_event_menu.popup(None, None, None, None, event.button, event.time)
 
 def display_media_linker_popup_menu(row, treeview, callback, event):
-    media_linker_menu = gtk.Menu()        
+    media_linker_menu = media_linker_popup_menu
+    guiutils.remove_children(media_linker_menu)
+
     media_linker_menu.add(_get_menu_item(_("Set File Relink Path"), callback, ("set relink", row)))
     media_linker_menu.add(_get_menu_item(_("Delete File Relink Path"), callback, ("delete relink", row)))
     _add_separetor(media_linker_menu)
     media_linker_menu.add(_get_menu_item(_("Show Full Paths"), callback, ("show path", row)))
-    media_linker_menu.popup(None, None, None, event.button, event.time)
+    media_linker_menu.popup(None, None, None, None, event.button, event.time)
 
 def _add_separetor(menu):
-    sep = gtk.SeparatorMenuItem()
+    sep = Gtk.SeparatorMenuItem()
     sep.show()
     menu.add(sep)
     
 def _get_menu_item(text, callback, data, sensitive=True):
-    item = gtk.MenuItem(text)
+    item = Gtk.MenuItem.new_with_label(text)
     item.connect("activate", callback, data)
     item.show()
     item.set_sensitive(sensitive)
     return item
 
 def _get_radio_menu_item(text, callback, group):
-    item = gtk.RadioMenuItem(group, text, False)
+    item = Gtk.RadioMenuItem(group, text, False)
     item.show()
     return item
 
 def _get_image_menu_item(img, text, callback, data):
-    item = gtk.ImageMenuItem()
+    item = Gtk.ImageMenuItem()
     item.set_image(img)
     item.connect("activate", callback, data)
     item.set_always_show_image(True)
@@ -1426,15 +1477,15 @@ def _get_image_menu_item(img, text, callback, data):
 # --------------------------------------------------- profile info gui
 def get_profile_info_box(profile, show_description=True):
     # Labels text
-    label_label = gtk.Label()
+    label_label = Gtk.Label()
     set_profile_info_labels_text(label_label, show_description)
     
     # Values text
-    value_label = gtk.Label()
+    value_label = Gtk.Label()
     set_profile_info_values_text(profile, value_label, show_description) 
     
     # Create box
-    hbox = gtk.HBox()
+    hbox = Gtk.HBox()
     hbox.pack_start(label_label, False, False, 0)
     hbox.pack_start(value_label, True, True, 0)
     
@@ -1442,9 +1493,9 @@ def get_profile_info_box(profile, show_description=True):
 
 def get_profile_info_small_box(profile):
     text = get_profile_info_text(profile)
-    label = gtk.Label(text)
+    label = Gtk.Label(label=text)
 
-    hbox = gtk.HBox()
+    hbox = Gtk.HBox()
     hbox.pack_start(label, False, False, 0)
     
     return hbox
@@ -1488,7 +1539,7 @@ def set_profile_info_labels_text(label, show_description):
 
     label_label_text = ''.join(str_list)
     label.set_text(label_label_text)
-    label.set_justify(gtk.JUSTIFY_LEFT)
+    label.set_justify(Gtk.Justification.LEFT)
 
 def set_profile_info_values_text(profile, label, show_description):
     str_list = []
@@ -1516,18 +1567,18 @@ def set_profile_info_values_text(profile, label, show_description):
     str_list.append(prog)
     value_label_text = ''.join(str_list)
     label.set_text(value_label_text)
-    label.set_justify(gtk.JUSTIFY_LEFT)
+    label.set_justify(Gtk.Justification.LEFT)
 
 
 class BigTCDisplay:
     
     def __init__(self):
-        self.widget = CairoDrawableArea(170, 
-                                        22,
-                                        self._draw)
-        self.font_desc = pango.FontDescription("Bitstream Vera Sans Mono Condensed 15")
+        self.widget = cairoarea.CairoDrawableArea2( 170, 
+                                                    22,
+                                                    self._draw)
+        self.font_desc = Pango.FontDescription("Bitstream Vera Sans Mono Condensed 15")
         
-        #Draw consts
+        # Draw consts
         x = 2
         y = 2
         width = 166
@@ -1550,7 +1601,7 @@ class BigTCDisplay:
         x, y, w, h = allocation
 
         # Draw bg
-        cr.set_source_rgba(*gui.bg_color_tuple) 
+        cr.set_source_rgba(*guiutils.get_theme_bg_color()) 
         cr.rectangle(0, 0, w, h)
         cr.fill()
 
@@ -1577,15 +1628,14 @@ class BigTCDisplay:
         frame_str = utils.get_tc_string(frame)
 
         # Text
-        pango_context = pangocairo.CairoContext(cr)
-        layout = pango_context.create_layout()
-        layout.set_text(frame_str)
+        layout = PangoCairo.create_layout(cr)
+        layout.set_text(frame_str, -1)
         layout.set_font_description(self.font_desc)
 
-        pango_context.set_source_rgb(*TC_COLOR)#0.7, 0.7, 0.7)
-        pango_context.move_to(self.TEXT_X, self.TEXT_Y)
-        pango_context.update_layout(layout)
-        pango_context.show_layout(layout)
+        cr.set_source_rgb(*TC_COLOR)
+        cr.move_to(self.TEXT_X, self.TEXT_Y)
+        PangoCairo.update_layout(cr, layout)
+        PangoCairo.show_layout(cr, layout)
 
     def _round_rect_path(self, cr):
         x, y, width, height, aspect, corner_radius, radius, degrees = self._draw_consts
@@ -1603,12 +1653,12 @@ class MonitorTCDisplay:
     annoying.
     """
     def __init__(self):
-        self.widget = CairoDrawableArea(94, 
-                                        20,
-                                        self._draw)
-        self.font_desc = pango.FontDescription("Bitstream Vera Sans Mono Condensed 9")
+        self.widget = cairoarea.CairoDrawableArea2( 94, 
+                                                    20,
+                                                    self._draw)
+        self.font_desc = Pango.FontDescription("Bitstream Vera Sans Mono Condensed 9")
         
-        #Draw consts
+        # Draw consts
         x = 2
         y = 2
         width = 90
@@ -1635,7 +1685,7 @@ class MonitorTCDisplay:
         x, y, w, h = allocation
 
         # Draw bg
-        cr.set_source_rgb(*(gui.bg_color_tuple))
+        cr.set_source_rgb(*guiutils.get_theme_bg_color())
         cr.rectangle(0, 0, w, h)
         cr.fill()
 
@@ -1665,15 +1715,14 @@ class MonitorTCDisplay:
         frame_str = utils.get_tc_string(frame)
 
         # Text
-        pango_context = pangocairo.CairoContext(cr)
-        layout = pango_context.create_layout()
-        layout.set_text(frame_str)
+        layout = PangoCairo.create_layout(cr)
+        layout.set_text(frame_str, -1)
         layout.set_font_description(self.font_desc)
 
-        pango_context.set_source_rgb(0.7, 0.7, 0.7)
-        pango_context.move_to(8, 2)
-        pango_context.update_layout(layout)
-        pango_context.show_layout(layout)
+        cr.set_source_rgb(0.7, 0.7, 0.7)
+        cr.move_to(8, 2)
+        PangoCairo.update_layout(cr, layout)
+        PangoCairo.show_layout(cr, layout)
 
     def _round_rect_path(self, cr):
         x, y, width, height, aspect, corner_radius, radius, degrees = self._draw_consts
@@ -1688,16 +1737,16 @@ class MonitorTCDisplay:
 
 class TimeLineLeftBottom:
     def __init__(self):
-        self.widget = gtk.HBox()        
+        self.widget = Gtk.HBox()        
         self.update_gui()
 
     def update_gui(self):
         for child in self.widget.get_children():
             self.widget.remove(child)
-        self.widget.pack_start(gtk.Label(), True, True)
+        self.widget.pack_start(Gtk.Label(), True, True, 0)
         if PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA:
-            proxy_img =  gtk.image_new_from_file(respaths.IMAGE_PATH + "project_proxy.png")
-            self.widget.pack_start(proxy_img, False, False)
+            proxy_img =  Gtk.Image.new_from_file(respaths.IMAGE_PATH + "project_proxy.png")
+            self.widget.pack_start(proxy_img, False, False, 0)
 
         self.widget.show_all()
         self.widget.queue_draw()
@@ -1707,15 +1756,15 @@ def get_gpl3_scroll_widget(size):
     license_file = open(respaths.GPL_3_DOC)
     license_text = license_file.read()
     
-    view = gtk.TextView()
+    view = Gtk.TextView()
     view.set_sensitive(False)
     view.set_pixels_above_lines(2)
     view.set_left_margin(2)
-    view.set_wrap_mode(gtk.WRAP_WORD)
+    view.set_wrap_mode(Gtk.WrapMode.WORD)
     view.get_buffer().set_text(license_text)
 
-    sw = gtk.ScrolledWindow()
-    sw.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+    sw = Gtk.ScrolledWindow()
+    sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
     sw.add(view)
     sw.set_size_request(*size)
     
@@ -1725,22 +1774,22 @@ def get_translations_scroll_widget(size):
     trans_file = open(respaths.TRANSLATIONS_DOC)
     trans_text = trans_file.read()
     
-    view = gtk.TextView()
+    view = Gtk.TextView()
     view.set_sensitive(False)
     view.set_pixels_above_lines(2)
     view.set_left_margin(2)
-    view.set_wrap_mode(gtk.WRAP_WORD)
+    view.set_wrap_mode(Gtk.WrapMode.WORD)
     view.get_buffer().set_text(trans_text)
 
-    sw = gtk.ScrolledWindow()
-    sw.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+    sw = Gtk.ScrolledWindow()
+    sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
     sw.add(view)
     sw.set_size_request(*size)
     
     return sw
     
 def get_track_counts_combo_and_values_list():
-    tracks_combo = gtk.combo_box_new_text()
+    tracks_combo = Gtk.ComboBoxText()
     tracks_combo.append_text(_("5 video, 4 audio"))
     tracks_combo.append_text(_("4 video, 3 audio"))
     tracks_combo.append_text(_("3 video, 2 audio"))
@@ -1758,7 +1807,8 @@ def get_markers_menu_launcher(callback, pixbuf):
 def get_markers_popup_menu(event, callback):
     seq = current_sequence()
     markers_exist = len(seq.markers) != 0
-    menu = gtk.Menu()
+    menu = markers_menu
+    guiutils.remove_children(menu)
     if markers_exist:
         for i in range(0, len(seq.markers)):
             marker = seq.markers[i]
@@ -1775,114 +1825,161 @@ def get_markers_popup_menu(event, callback):
     menu.add(del_item)
     del_all_item = _get_menu_item(_("Delete All Markers"), callback, "deleteall", markers_exist==True)
     menu.add(del_all_item)
-    menu.popup(None, None, None, event.button, event.time)
+    menu.show_all()
+    menu.popup(None, None, None, None, event.button, event.time)
 
 def get_all_tracks_popup_menu(event, callback):
-    menu = gtk.Menu()
+    menu = tracks_menu
+    guiutils.remove_children(menu)
     menu.add(_get_menu_item(_("Maximize Tracks"), callback, "max" ))
     menu.add(_get_menu_item(_("Maximize Video Tracks"), callback, "maxvideo" ))
     menu.add(_get_menu_item(_("Maximize Audio Tracks"), callback, "maxaudio" ))
     _add_separetor(menu)
     menu.add(_get_menu_item(_("Minimize Tracks"), callback, "min" ))
-    menu.popup(None, None, None, event.button, event.time)
+    menu.popup(None, None, None, None, event.button, event.time)
 
 def get_monitor_view_popupmenu(launcher, event, callback):
-    menu = gtk.Menu()
-    menu.add(_get_image_menu_item(gtk.image_new_from_file(
+    menu = monitor_menu
+    guiutils.remove_children(menu)
+    menu.add(_get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "program_view_2.png"), _("Image"), callback, 0))
-    menu.add(_get_image_menu_item(gtk.image_new_from_file(
+    menu.add(_get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "vectorscope.png"), _("Vectorscope"), callback, 1))
-    menu.add(_get_image_menu_item(gtk.image_new_from_file(
+    menu.add(_get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "rgbparade.png"), _("RGB Parade"), callback, 2))
-    menu.popup(None, None, None, event.button, event.time)
+    menu.popup(None, None, None, None, event.button, event.time)
 
 def get_mode_selector_popup_menu(launcher, event, callback):
-    menu = gtk.Menu()
+    menu = tools_menu
+    guiutils.remove_children(menu)
     menu.set_accel_group(gui.editor_window.accel_group)
 
-    menu_item = _get_image_menu_item(gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "insertmove_cursor.png"), _("Insert"), callback, 0)
     menu_item.set_accel_path("<Actions>/WindowActions/InsertMode")
     menu.add(menu_item)
 
-    menu_item = _get_image_menu_item(gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "overwrite_cursor.png"),    _("Overwrite"), callback, 1)
     menu_item.set_accel_path("<Actions>/WindowActions/OverMode")
     menu.add(menu_item)
 
-    menu_item = _get_image_menu_item(gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "oneroll_cursor.png"), _("Trim"), callback, 2)
     menu_item.set_accel_path("<Actions>/WindowActions/OneRollMode")        
     menu.add(menu_item)
 
-    menu_item = _get_image_menu_item(gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "tworoll_cursor.png"), _("Roll"), callback, 3)
     menu_item.set_accel_path("<Actions>/WindowActions/TwoRollMode") 
     menu.add(menu_item)
 
-    menu_item = _get_image_menu_item(gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "slide_cursor.png"), _("Slip"), callback, 4)
     menu_item.set_accel_path("<Actions>/WindowActions/SlideMode") 
     menu.add(menu_item)
 
-    menu_item = _get_image_menu_item(gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "multimove_cursor.png"), _("Spacer"), callback, 5)
     menu_item.set_accel_path("<Actions>/WindowActions/MultiMode") 
     menu.add(menu_item)
-    
-    menu.popup(None, None, None, event.button, event.time)
+    menu.show_all()
+    menu.popup(None, None, None, None, event.button, event.time)
 
 def get_file_filter_popup_menu(launcher, event, callback):
-    menu = gtk.Menu()
+    menu = file_filter_menu
+    guiutils.remove_children(menu)
     menu.set_accel_group(gui.editor_window.accel_group)
 
-    menu_item = _get_image_menu_item(gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "show_all_files.png"), _("All Files"), callback, 0)
     menu.add(menu_item)
 
-    menu_item = _get_image_menu_item(gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "show_video_files.png"),   _("Video Files"), callback, 1)
     menu.add(menu_item)
 
-    menu_item = _get_image_menu_item(gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "show_audio_files.png"), _("Audio Files"), callback, 2)
     menu.add(menu_item)
 
-    menu_item = _get_image_menu_item(gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "show_graphics_files.png"), _("Graphics Files"), callback, 3)
     menu.add(menu_item)
     
-    menu_item = _get_image_menu_item(gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "show_imgseq_files.png"), _("Image Sequences"), callback, 4)
     menu.add(menu_item)
 
-    menu_item = _get_image_menu_item(gtk.image_new_from_file(
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "show_pattern_producers.png"), _("Pattern Producers"), callback, 5)
     menu.add(menu_item)
+    menu.show_all()
+    menu.popup(None, None, None, None, event.button, event.time)
 
-    menu.popup(None, None, None, event.button, event.time)
+def get_columns_count_popup_menu(event, callback):
+    menu = column_count_menu
+    guiutils.remove_children(menu)
+    menu.set_accel_group(gui.editor_window.accel_group)
+    
+    columns = gui.editor_window.media_list_view.columns
+    
+    menu_item_2 = Gtk.RadioMenuItem() 
+    menu_item_2.set_label("2 Columns")
+    menu_item_2.set_active(columns==2)
+    menu_item_2.connect("activate", callback, 2)
+    menu.append(menu_item_2)
+
+    menu_item_3 = Gtk.RadioMenuItem.new_with_label([menu_item_2], "3 Columns")
+    menu_item_3.connect("activate", callback, 3)
+    menu_item_3.set_active(columns==3)
+    menu.append(menu_item_3)
+
+    menu_item_4 = Gtk.RadioMenuItem.new_with_label([menu_item_2], "4 Columns")
+    menu_item_4.connect("activate", callback, 4)
+    menu_item_4.set_active(columns==4)
+    menu.append(menu_item_4)
+
+    menu_item_5 = Gtk.RadioMenuItem.new_with_label([menu_item_2], "5 Columns")
+    menu_item_5.connect("activate", callback, 5)
+    menu_item_5.set_active(columns==5)
+    menu.append(menu_item_5)
+
+    menu_item_6 = Gtk.RadioMenuItem.new_with_label([menu_item_2], "6 Columns")
+    menu_item_6.connect("activate", callback, 6)
+    menu_item_6.set_active(columns==6)
+    menu.append(menu_item_6)
+
+    menu_item_7 = Gtk.RadioMenuItem.new_with_label([menu_item_2], "7 Columns")
+    menu_item_7.connect("activate", callback, 7)
+    menu_item_7.set_active(columns==7)
+    menu.append(menu_item_7)
+    
+    menu.show_all()
+    menu.popup(None, None, None, None, event.button, event.time)
+
     
 class PressLaunch:
-    def __init__(self, callback, pixbuf, w=22, h=22):
-        self.widget = CairoDrawableArea(w, 
-                                        h, 
-                                        self._draw)
+    def __init__(self, callback, surface, w=22, h=22):
+        self.widget = cairoarea.CairoDrawableArea2( w, 
+                                                    h, 
+                                                    self._draw)
         self.widget.press_func = self._press_event
 
         self.callback = callback
-        self.pixbuf = pixbuf
-        self.pixbuf_x  = 6
-        self.pixbuf_y  = 6
+        self.surface = surface
+        self.surface_x  = 6
+        self.surface_y  = 6
 
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
-        
+
         # Draw bg
-        cr.set_source_rgb(*gui.bg_color_tuple)
+        cr.set_source_rgb(*guiutils.get_theme_bg_color())
         cr.rectangle(0, 0, w, h)
         cr.fill()
         
-        cr.set_source_pixbuf(self.pixbuf, self.pixbuf_x, self.pixbuf_y)
+        cr.set_source_surface(self.surface, self.surface_x, self.surface_y)
         cr.paint()
 
     def _press_event(self, event):
@@ -1890,12 +1987,12 @@ class PressLaunch:
 
 
 class ImageMenuLaunch(PressLaunch):
-    def __init__(self, callback, pixbuf_list, w=22, h=22):
-        PressLaunch.__init__(self, callback, pixbuf_list[0], w, h)
-        self.pixbuf_list = pixbuf_list
+    def __init__(self, callback, surface_list, w=22, h=22):
+        PressLaunch.__init__(self, callback, surface_list[0], w, h)
+        self.surface_list = surface_list
 
-    def set_pixbuf(self, pixbuf_index):
-        self.pixbuf = self.pixbuf_list[pixbuf_index]
+    def set_pixbuf(self, surface_index):
+        self.surface = self.surface_list[surface_index]
         self.widget.queue_draw()
         
 

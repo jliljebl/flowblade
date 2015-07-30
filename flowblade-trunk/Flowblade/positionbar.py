@@ -23,12 +23,12 @@ Module contents:
 class PositionBar - Displays position on a clip or a sequence
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
 import cairo
 
-from cairoarea import CairoDrawableArea
+from gi.repository import Gtk
+from gi.repository import Gdk
+
+from cairoarea import CairoDrawableArea2
 import editorpersistance
 import editorstate
 import trimmodes
@@ -64,9 +64,9 @@ class PositionBar:
     """
 
     def __init__(self):
-        self.widget = CairoDrawableArea(BAR_WIDTH, 
-                                        BAR_HEIGHT, 
-                                        self._draw)
+        self.widget = CairoDrawableArea2(   BAR_WIDTH, 
+                                            BAR_HEIGHT, 
+                                            self._draw)
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
@@ -74,7 +74,7 @@ class PositionBar:
         self.mark_in_norm = -1.0 # program length normalized
         self.mark_out_norm = -1.0
         self.disabled = False
-        self.mouse_release_listener = None # when used in tools (Tiler ate.) this used to update bg image
+        self.mouse_release_listener = None # when used in tools (Titler ate.) this used to update bg image
 
         if editorpersistance.prefs.dark_theme == True:
             global LINE_COLOR, BG_COLOR, DISABLED_BG_COLOR, SELECTED_RANGE_COLOR, MARK_COLOR
@@ -112,7 +112,7 @@ class PositionBar:
 
     def _get_panel_pos(self, norm_pos):
         return END_PAD + int(norm_pos * 
-               (self.widget.allocation.width - 2 * END_PAD))
+               (self.widget.get_allocation().width - 2 * END_PAD))
 
     def _draw(self, event, cr, allocation):
         """
@@ -250,8 +250,8 @@ class PositionBar:
         if self.disabled:
             return
 
-        if((state & gtk.gdk.BUTTON1_MASK)
-            or (state & gtk.gdk.BUTTON3_MASK)):
+        if((state & Gdk.ModifierType.BUTTON1_MASK)
+            or (state & Gdk.ModifierType.BUTTON3_MASK)):
             self._pos = self._legalize_x(x)
             # Listener calls self.set_normalized_pos()
             self.position_listener(self.normalized_pos(), self.producer.get_length())
@@ -275,7 +275,7 @@ class PositionBar:
         Get x in pixel range corresponding normalized position 0.0 - 1.0.
         This is needed because of end pads.
         """
-        w = self.widget.allocation.width
+        w = self.widget.get_allocation().width
         if x < END_PAD:
             return END_PAD
         elif x > w - END_PAD:
@@ -285,5 +285,5 @@ class PositionBar:
     
     def normalized_pos(self):
         return float(self._pos - END_PAD) / \
-                (self.widget.allocation.width - END_PAD * 2)
+                (self.widget.get_allocation().width - END_PAD * 2)
 

@@ -21,9 +21,9 @@
 """
 Module contains objects and methods needed to create render consumers.
 """
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk, Gdk
 
 import mlt
 import time
@@ -496,17 +496,17 @@ class ProgressWindowThread(threading.Thread):
         
         while self.running:         
             render_fraction = self.clip_renderer.get_render_fraction()
-            gtk.gdk.threads_enter()
+            Gdk.threads_enter()
             self.progress_bar.set_fraction(render_fraction)
             pros = int(render_fraction * 100)
             self.progress_bar.set_text(str(pros) + "%")
-            gtk.gdk.threads_leave()
+            Gdk.threads_leave()
             if self.clip_renderer.stopped == True:
-                gtk.gdk.threads_enter()
+                Gdk.threads_enter()
                 self.progress_bar.set_fraction(1.0)
                 self.progress_bar.set_text("Render Complete!")
                 self.callback(self.dialog, 0)
-                gtk.gdk.threads_leave()
+                Gdk.threads_leave()
                 self.running = False
 
             time.sleep(0.33)

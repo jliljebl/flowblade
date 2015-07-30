@@ -792,7 +792,7 @@ class Sequence:
         return self.multitrack.get_length()
 
     def resize_tracks_to_fit(self, allocation):
-        x, y, w, panel_height = allocation
+        x, y, w, panel_height = allocation.x, allocation.y, allocation.width, allocation.height
         count = 0
         fix_next = True
         while(fix_next):

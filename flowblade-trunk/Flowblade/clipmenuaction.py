@@ -28,7 +28,7 @@ import clipeffectseditor
 import compositeeditor
 import dialogs
 import dialogutils
-import gtk
+from gi.repository import Gtk
 import gui
 import guicomponents
 import edit
@@ -146,7 +146,7 @@ def _rename_clip_edited(dialog, response_id, data):
     new_text = name_entry.get_text()
     dialog.destroy()
 
-    if response_id != gtk.RESPONSE_ACCEPT:
+    if response_id != Gtk.ResponseType.ACCEPT:
         return      
     if len(new_text) == 0:
         return

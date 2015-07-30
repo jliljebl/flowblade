@@ -23,16 +23,16 @@ Module contains GUI components for displayingand  editing clips in timeline.
 Global display position and scale information is in this module.
 """
 import cairo
-import pygtk
-pygtk.require('2.0');
-import gtk
-
 import math
-import pango
-import pangocairo
+
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GObject
+from gi.repository import Pango
+from gi.repository import PangoCairo
 
 import appconsts
-from cairoarea import CairoDrawableArea
+import cairoarea
 import clipeffectseditor
 import editorpersistance
 from editorstate import current_sequence
@@ -270,18 +270,18 @@ def load_icons():
     VIDEO_MUTE_ICON, ALL_MUTE_ICON, TRACK_BG_ICON, MUTE_AUDIO_ICON, MUTE_VIDEO_ICON, MUTE_ALL_ICON, \
     TRACK_ALL_ON_V_ICON, TRACK_ALL_ON_A_ICON, MUTE_AUDIO_A_ICON, TC_POINTER_HEAD, EDIT_INDICATOR
 
-    FULL_LOCK_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "full_lock.png")
-    FILTER_CLIP_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "filter_clip_icon_sharp.png")
-    COMPOSITOR_CLIP_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "compositor.png")
-    VIEW_SIDE_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "view_side.png")
-    INSERT_ARROW_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "insert_arrow.png")
-    AUDIO_MUTE_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "clip_audio_mute.png")
-    VIDEO_MUTE_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "clip_video_mute.png")
-    ALL_MUTE_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "clip_all_mute.png")
-    TRACK_BG_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_bg.png")
-    MUTE_AUDIO_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_audio_mute.png")
-    MUTE_VIDEO_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_video_mute.png")
-    MUTE_ALL_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "track_all_mute.png")
+    FULL_LOCK_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "full_lock.png")
+    FILTER_CLIP_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filter_clip_icon_sharp.png")
+    COMPOSITOR_CLIP_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "compositor.png")
+    VIEW_SIDE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "view_side.png")
+    INSERT_ARROW_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow.png")
+    AUDIO_MUTE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH +"clip_audio_mute.png")
+    VIDEO_MUTE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH +"clip_video_mute.png")
+    ALL_MUTE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "clip_all_mute.png")
+    TRACK_BG_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "track_bg.png")
+    MUTE_AUDIO_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "track_audio_mute.png")
+    MUTE_VIDEO_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "track_video_mute.png")
+    MUTE_ALL_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "track_all_mute.png")
     MARKER_ICON = _load_pixbuf("marker.png")
     TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V.png")
     TRACK_ALL_ON_A_ICON = _load_pixbuf("track_all_on_A.png")
@@ -297,7 +297,7 @@ def load_icons():
         FRAME_SCALE_LINES = (0.8, 0.8, 0.8)
 
 def _load_pixbuf(icon_file):
-    return gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + icon_file)
+    return cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + icon_file)
 
 def set_ref_line_y(allocation):
     """
@@ -310,14 +310,15 @@ def set_ref_line_y(allocation):
         if i < current_sequence().first_video_index:
             below_ref_h += current_sequence().tracks[i].height
 
-    x, y, w, panel_height = allocation
+    x, y, w, panel_height = allocation.x, allocation.y, allocation.width, allocation.height
     centerered_tracks_bottom_y = (panel_height / 2.0) + (total_h / 2.0)
     global REF_LINE_Y
     REF_LINE_Y = centerered_tracks_bottom_y - below_ref_h
 
 def get_pos_for_tline_centered_to_current_frame():
     current_frame = PLAYER().current_frame()
-    x, y, w, h = canvas_widget.widget.allocation
+    allocation = canvas_widget.widget.get_allocation()
+    x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
     frames_in_panel = w / pix_per_frame
 
     # current in first half on first screen width of tline display
@@ -745,7 +746,7 @@ def draw_slide_overlay(cr, data):
     else:
         x = clip_end_frame_x - 16
 
-    cr.set_source_pixbuf(VIEW_SIDE_ICON, x, track_y + 4)
+    cr.set_source_surface(VIEW_SIDE_ICON, x, track_y + 4)
     cr.paint()
 
 def draw_compositor_move_overlay(cr, data):
@@ -877,7 +878,7 @@ def _draw_overwrite_clips_overlay(cr, start_x, end_x, y, track_height):
     cr.fill()
 
 def _draw_view_icon(cr, x, y):
-    cr.set_source_pixbuf(VIEW_SIDE_ICON, x, y)
+    cr.set_source_surface(VIEW_SIDE_ICON, x, y)
     cr.paint()
 
 # ------------------------------- WIDGETS
@@ -889,14 +890,13 @@ class TimeLineCanvas:
     def __init__(self, press_listener, move_listener, release_listener, double_click_listener,
                     mouse_scroll_listener, leave_notify_listener, enter_notify_listener):
         # Create widget and connect listeners
-        self.widget = CairoDrawableArea(WIDTH, 
-                                        HEIGHT, 
-                                        self._draw)
+        self.widget = cairoarea.CairoDrawableArea2( WIDTH, 
+                                                    HEIGHT, 
+                                                    self._draw)
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
         self.widget.mouse_scroll_func = mouse_scroll_listener
-        #self.widget.set_events(self.widget.get_events() | gtk.gdk.POINTER_MOTION_MASK)
 
         # Mouse events are passed on 
         self.press_listener = press_listener
@@ -923,7 +923,7 @@ class TimeLineCanvas:
         """
         Mouse button callback
         """
-        if event.type == gtk.gdk._2BUTTON_PRESS:
+        if event.type == Gdk.EventType._2BUTTON_PRESS:
             self.double_click_listener(get_frame(event.x), event.x, event.y)
             return
          
@@ -939,9 +939,9 @@ class TimeLineCanvas:
             return
 
         button = -1 
-        if (state & gtk.gdk.BUTTON1_MASK):
+        if (state & Gdk.ModifierType.BUTTON1_MASK):
             button = 1
-        elif (state & gtk.gdk.BUTTON3_MASK):
+        elif (state & Gdk.ModifierType.BUTTON3_MASK):
             button = 3
         self.move_listener(x, y, get_frame(x), button, state)
         
@@ -951,7 +951,7 @@ class TimeLineCanvas:
         """
         self.drag_on = False
         self.release_listener(event.x, event.y, get_frame(event.x), \
-                              event.button, event.state)
+                              event.button, event.get_state())
 
     def set_pointer_context(self, x, y):
         frame = get_frame(x)
@@ -1373,14 +1373,14 @@ class TimeLineCanvas:
                 # Filter icon
                 if len(clip.filters) > 0:
                     ix, iy = ICON_SLOTS[icon_slot]
-                    cr.set_source_pixbuf(FILTER_CLIP_ICON, int(scale_in) + int(scale_length) - ix, y + iy)
+                    cr.set_source_surface(FILTER_CLIP_ICON, int(scale_in) + int(scale_length) - ix, y + iy)
                     cr.paint()
                     icon_slot = icon_slot + 1
                 # Mute icon
                 if clip.mute_filter != None:
                     icon = AUDIO_MUTE_ICON
                     ix, iy = ICON_SLOTS[icon_slot]
-                    cr.set_source_pixbuf(icon, int(scale_in) + int(scale_length) - ix, y + iy)
+                    cr.set_source_surface(icon, int(scale_in) + int(scale_length) - ix, y + iy)
                     cr.paint()
                     icon_slot = icon_slot + 1
 
@@ -1388,7 +1388,7 @@ class TimeLineCanvas:
                     icon = EDIT_INDICATOR
                     ix =  int(scale_in) + int(scale_length) / 2 - 7
                     iy = y + int(track_height) / 2 - 7
-                    cr.set_source_pixbuf(icon, ix, iy)
+                    cr.set_source_surface(icon, ix, iy)
                     cr.paint()
                     
             # Draw sync offset value
@@ -1505,9 +1505,9 @@ class TimeLineColumn:
 
     def __init__(self, active_listener, center_listener):
         # Init widget
-        self.widget = CairoDrawableArea(COLUMN_WIDTH, 
-                                        HEIGHT, 
-                                        self._draw)
+        self.widget = cairoarea.CairoDrawableArea2( COLUMN_WIDTH, 
+                                                    HEIGHT, 
+                                                    self._draw)
         self.widget.press_func = self._press_event
         
         self.active_listener = active_listener
@@ -1603,22 +1603,21 @@ class TimeLineColumn:
         cr.fill()
         self.draw_edge(cr, rect)
 
-        # Draw type and index text
-        pango_context = pangocairo.CairoContext(cr)
-        layout = pango_context.create_layout()
-        text = utils.get_track_name(track, current_sequence())        
-        layout.set_text(text)
-        desc = pango.FontDescription("Sans Bold 11")
+        # Draw track name
+        layout = PangoCairo.create_layout(cr)
+        text = utils.get_track_name(track, current_sequence())
+        desc = Pango.FontDescription("Sans Bold 11")
+        layout.set_text(text, -1)
         layout.set_font_description(desc)
 
-        pango_context.set_source_rgb(0.0, 0.0, 0)
+        cr.set_source_rgb(0.0, 0.0, 0.0)
         if track.height == sequence.TRACK_HEIGHT_NORMAL:
             text_y = ID_PAD_Y
         else:
             text_y = ID_PAD_Y_SMALL
-        pango_context.move_to(COLUMN_LEFT_PAD + ID_PAD_X, y + text_y)
-        pango_context.update_layout(layout)
-        pango_context.show_layout(layout)
+        cr.move_to(COLUMN_LEFT_PAD + ID_PAD_X, y + text_y)
+        PangoCairo.update_layout(cr, layout)
+        PangoCairo.show_layout(cr, layout)
         
         # Draw mute icon
         mute_icon = None
@@ -1639,13 +1638,13 @@ class TimeLineColumn:
             ix, iy = MUTE_ICON_POS
             if track.height > sequence.TRACK_HEIGHT_SMALL:
                 ix, iy = MUTE_ICON_POS_NORMAL
-            cr.set_source_pixbuf(mute_icon, ix, y + iy)
+            cr.set_source_surface(mute_icon, ix, y + iy)
             cr.paint()
 
         # Draw locked icon
         if track.edit_freedom == sequence.LOCKED:
             ix, iy = LOCK_POS
-            cr.set_source_pixbuf(FULL_LOCK_ICON, ix, y + iy)
+            cr.set_source_surface(FULL_LOCK_ICON, ix, y + iy)
             cr.paint()
         
         # Draw insert arrow
@@ -1653,7 +1652,7 @@ class TimeLineColumn:
             ix, iy = INSRT_ICON_POS
             if track.height == sequence.TRACK_HEIGHT_SMALL:
                 ix, iy = INSRT_ICON_POS_SMALL
-            cr.set_source_pixbuf(INSERT_ARROW_ICON, ix, y + iy)
+            cr.set_source_surface(INSERT_ARROW_ICON, ix, y + iy)
             cr.paint()
 
     def _add_gradient_color_stops(self, grad, track):
@@ -1677,9 +1676,9 @@ class TimeLineFrameScale:
     """
 
     def __init__(self, set_default_callback, mouse_scroll_listener):
-        self.widget = CairoDrawableArea(WIDTH, 
-                                        SCALE_HEIGHT, 
-                                        self._draw)
+        self.widget = cairoarea.CairoDrawableArea2( WIDTH, 
+                                                    SCALE_HEIGHT, 
+                                                    self._draw)
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
@@ -1703,8 +1702,8 @@ class TimeLineFrameScale:
             self.drag_on = True
 
     def _motion_notify_event(self, x, y, state):
-        if((state & gtk.gdk.BUTTON1_MASK)
-           or(state & gtk.gdk.BUTTON3_MASK)):
+        if((state & Gdk.ModifierType.BUTTON1_MASK)
+           or(state & Gdk.ModifierType.BUTTON3_MASK)):
             if self.drag_on:
                 frame = current_sequence().get_seq_range_frame(get_frame(x))
                 PLAYER().seek_frame(frame) 
@@ -1829,7 +1828,7 @@ class TimeLineFrameScale:
         for i in range(0, len(seq.markers)):
             marker_name, marker_frame = seq.markers[i]
             x = math.floor(_get_frame_x(marker_frame))
-            cr.set_source_pixbuf(MARKER_ICON, x - 4, 15)
+            cr.set_source_surface(MARKER_ICON, x - 4, 15)
             cr.paint()
 
         # Select draw colors and frame based on mode
@@ -1853,7 +1852,7 @@ class TimeLineFrameScale:
         cr.stroke()
 
         # Draw pos triangle
-        cr.set_source_pixbuf(TC_POINTER_HEAD, frame_x - 7.5, 0)
+        cr.set_source_surface(TC_POINTER_HEAD, frame_x - 7.5, 0)
         cr.paint()
 
     def draw_mark_in(self, cr, h):
@@ -1902,13 +1901,13 @@ class TimeLineFrameScale:
         cr.fill()
    
 
-class TimeLineScroller(gtk.HScrollbar):
+class TimeLineScroller(Gtk.HScrollbar):
     """
     Scrollbar for timeline.
     """
     def __init__(self, scroll_listener):
-        gtk.HScrollbar.__init__(self)
-        adjustment = gtk.Adjustment(0.0, 0.0, 100.0, 1.0, 10.0, 30.0)
+        GObject.GObject.__init__(self)
+        adjustment = Gtk.Adjustment(0.0, 0.0, 100.0, 1.0, 10.0, 30.0)
         adjustment.connect("value-changed", scroll_listener)
         self.set_adjustment(adjustment)
 

@@ -18,10 +18,7 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
-
+from gi.repository import Gtk, Gdk
 
 import appconsts
 import edit
@@ -211,7 +208,7 @@ def mouse_press(event, frame):
         mouse_disabled = True
         return
 
-    if (event.state & gtk.gdk.CONTROL_MASK):
+    if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
         move_all = False
     else:
         move_all = True

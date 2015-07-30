@@ -18,28 +18,28 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 
 
 def load_titler_data_dialog(callback):    
-    dialog = gtk.FileChooserDialog(_("Select Titler Data File"), None, 
-                                   gtk.FILE_CHOOSER_ACTION_OPEN, 
-                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                                    _("OK").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
-    dialog.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
+    dialog = Gtk.FileChooserDialog(_("Select Titler Data File"), None, 
+                                   Gtk.FileChooserAction.OPEN, 
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
+    dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
     dialog.connect('response', callback)
     dialog.show()
 
 def save_titler_data_as_dialog(callback, current_name, open_dir):    
-    dialog = gtk.FileChooserDialog(_("Save Titler Layers As"), None, 
-                                   gtk.FILE_CHOOSER_ACTION_SAVE, 
-                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                                   _("Save").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
-    dialog.set_action(gtk.FILE_CHOOSER_ACTION_SAVE)
+    dialog = Gtk.FileChooserDialog(_("Save Titler Layers As"), None, 
+                                   Gtk.FileChooserAction.SAVE, 
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                                   _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
+    dialog.set_action(Gtk.FileChooserAction.SAVE)
     dialog.set_current_name(current_name)
     dialog.set_do_overwrite_confirmation(True)
     if open_dir != None:
@@ -50,18 +50,18 @@ def save_titler_data_as_dialog(callback, current_name, open_dir):
     dialog.show()
 
 def save_titler_graphic_as_dialog(callback, current_name, open_dir):    
-    dialog = gtk.FileChooserDialog(_("Save Titler Graphic As"), None, 
-                                   gtk.FILE_CHOOSER_ACTION_SAVE, 
-                                   (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                                   _("Save").encode('utf-8'), gtk.RESPONSE_ACCEPT), None)
-    dialog.set_action(gtk.FILE_CHOOSER_ACTION_SAVE)
+    dialog = Gtk.FileChooserDialog(_("Save Titler Graphic As"), None, 
+                                   Gtk.FileChooserAction.SAVE, 
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                                   _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
+    dialog.set_action(Gtk.FileChooserAction.SAVE)
     dialog.set_current_name(current_name)
     dialog.set_do_overwrite_confirmation(True)
     if open_dir != None:
         dialog.set_current_folder(open_dir)
     
     dialog.set_select_multiple(False)
-    file_filter = gtk.FileFilter()
+    file_filter = Gtk.FileFilter()
     file_filter.add_pattern("*" + ".png")
     dialog.add_filter(file_filter)
     dialog.connect('response', callback)

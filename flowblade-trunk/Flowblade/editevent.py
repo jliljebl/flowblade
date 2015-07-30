@@ -24,11 +24,11 @@ Handles or passes on mouse edit events from timeline.
 Handles edit mode setting.
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
 import os
 import time
+
+from gi.repository import Gtk
+from gi.repository import Gdk
 
 import appconsts
 import clipeffectseditor
@@ -410,7 +410,7 @@ def tline_canvas_mouse_pressed(event, frame):
         PLAYER().stop_playback()
     
     # Double click handled separately
-    if event.type == gtk.gdk._2BUTTON_PRESS:
+    if event.type == Gdk.EventType._2BUTTON_PRESS:
         return
 
     # Handle and exit parent clip selecting
@@ -433,7 +433,7 @@ def tline_canvas_mouse_pressed(event, frame):
         if (event.button == 3):
             mouse_disabled == True
             # Right mouse + CTRL displays clip menu if we hit clip
-            if (event.state & gtk.gdk.CONTROL_MASK):
+            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 PLAYER().seek_frame(frame)
             # Right mouse on timeline seeks frame
             else:
@@ -468,7 +468,7 @@ def tline_canvas_mouse_pressed(event, frame):
     # RIGHT BUTTON: seek frame or display clip menu
     if (event.button == 3):
         if ((not editorstate.current_is_active_trim_mode()) and timeline_visible()):
-            if not(event.state & gtk.gdk.CONTROL_MASK):
+            if not(event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 success = display_clip_menu_pop_up(event.y, event, frame)
                 if not success:
                     PLAYER().seek_frame(frame)
@@ -481,7 +481,7 @@ def tline_canvas_mouse_pressed(event, frame):
         return
     # LEFT BUTTON + CTRL: Select new trimmed clip in one roll trim mode
     elif (event.button == 1 
-          and (event.state & gtk.gdk.CONTROL_MASK)
+          and (event.get_state() & Gdk.ModifierType.CONTROL_MASK)
           and EDIT_MODE() == editorstate.ONE_ROLL_TRIM):
         track = tlinewidgets.get_track(event.y)
         if track == None:
@@ -500,7 +500,7 @@ def tline_canvas_mouse_pressed(event, frame):
             trimmodes.oneroll_trim_move(event.x, event.y, frame, None)
     # LEFT BUTTON + CTRL: Select new trimmed clip in two roll trim mode
     elif (event.button == 1 
-          and (event.state & gtk.gdk.CONTROL_MASK)
+          and (event.get_state() & Gdk.ModifierType.CONTROL_MASK)
           and EDIT_MODE() == editorstate.TWO_ROLL_TRIM):
         track = tlinewidgets.get_track(event.y)
         if track == None:

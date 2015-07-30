@@ -23,9 +23,9 @@ Module handles creating mlt.Filter objects and their FilterObject python wrapper
 are attached to mlt:Producer objects.
 """
 import copy
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+from gi.repository import Gtk
+from gi.repository import GdkPixbuf
 
 import mlt
 import xml.dom.minidom
@@ -94,23 +94,23 @@ _volume_filter_info = None
 
 def _load_icons():
     global FILTER_DEFAULT_ICON
-    FILTER_DEFAULT_ICON = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "filter.png")
+    FILTER_DEFAULT_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "filter.png")
     
 def _get_group_icon(group_name):
     global group_icons
     if group_icons == None:
         group_icons = {}
-        group_icons["Color"] = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "color.png")
-        group_icons["Color Effect"] = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "color_filter.png")
-        group_icons["Audio"] = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "audio_filter.png")
-        group_icons["Audio Filter"] = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "audio_filter_sin.png")
-        group_icons["Blur"] = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "blur_filter.png")
-        group_icons["Distort"] = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "distort_filter.png")
-        group_icons["Alpha"] = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "alpha_filter.png")
-        group_icons["Movement"] = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "movement_filter.png")
-        group_icons["Transform"] = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "transform.png")
-        group_icons["Edge"] = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "edge.png")
-        group_icons["Fix"] = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "fix.png")
+        group_icons["Color"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "color.png")
+        group_icons["Color Effect"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "color_filter.png")
+        group_icons["Audio"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "audio_filter.png")
+        group_icons["Audio Filter"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "audio_filter_sin.png")
+        group_icons["Blur"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "blur_filter.png")
+        group_icons["Distort"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "distort_filter.png")
+        group_icons["Alpha"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "alpha_filter.png")
+        group_icons["Movement"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "movement_filter.png")
+        group_icons["Transform"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "transform.png")
+        group_icons["Edge"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "edge.png")
+        group_icons["Fix"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "fix.png")
         group_icons["Artistic"] = FILTER_DEFAULT_ICON
 
     try:

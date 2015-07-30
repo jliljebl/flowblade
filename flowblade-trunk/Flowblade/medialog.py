@@ -18,12 +18,13 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
-
+import cairo
 import datetime
-import pango
+
+from gi.repository import Gtk
+from gi.repository import GObject
+from gi.repository import GdkPixbuf
+from gi.repository import Pango
 
 import appconsts
 import dialogs
@@ -44,6 +45,8 @@ import utils
 widgets = utils.EmptyClass()
 
 do_multiple_clip_insert_func = None # this mankeypathched her in app.py
+
+actions_popup_menu = Gtk.Menu()        
 
 class MediaLogEvent:
     def __init__(self, event_type, mark_in, mark_out, name, path):
@@ -273,7 +276,8 @@ def display_log_clip_double_click_listener(treeview, path, view_column):
     _log_event_menu_item_selected(treeview, data)
 
 def _group_action_pressed(widget, event):
-    actions_menu = gtk.Menu()        
+    actions_menu = actions_popup_menu
+    guiutils.remove_children(actions_menu)      
     actions_menu.add(guiutils.get_menu_item(_("New Group..."), _actions_callback, "new"))
     actions_menu.add(guiutils.get_menu_item(_("New Group From Selected..."), _actions_callback, "newfromselected"))
     
@@ -285,8 +289,8 @@ def _group_action_pressed(widget, event):
 
     guiutils.add_separetor(actions_menu)
     
-    move_menu_item = gtk.MenuItem(_("Move Selected Items To Group").encode('utf-8'))
-    move_menu = gtk.Menu()
+    move_menu_item = Gtk.MenuItem(_("Move Selected Items To Group").encode('utf-8'))
+    move_menu = Gtk.Menu()
     if len(PROJECT().media_log_groups) == 0:
         move_menu.add(guiutils.get_menu_item(_("No Groups").encode('utf-8'), _actions_callback, "dummy", False))
     else:
@@ -305,11 +309,7 @@ def _group_action_pressed(widget, event):
     _unsensitive_for_all_view(item)
     actions_menu.add(item)
 
-    #item = guiutils.get_menu_item(_("Delete Current Group and Items"), _actions_callback, "deletewithitems")
-    #_unsensitive_for_all_view(item)
-    #actions_menu.add(item)
-
-    actions_menu.popup(None, None, None, event.button, event.time)
+    actions_menu.popup(None, None, None, None, event.button, event.time)
 
 def _unsensitive_for_all_view(item):
     if widgets.group_view_select.get_active() == 0:
@@ -370,7 +370,7 @@ def _actions_callback(widget, data):
 
 def _delete_with_items_dialog_callback(dialog, response_id):
     dialog.destroy()
-    if response_id != gtk.RESPONSE_ACCEPT:
+    if response_id != Gtk.ResponseType.ACCEPT:
         return
     
     current_group_index = _get_current_group_index()
@@ -383,7 +383,7 @@ def _delete_with_items_dialog_callback(dialog, response_id):
 def _rename_callback(dialog, response_id, entry):
     new_name = entry.get_text()
     dialog.destroy()
-    if response_id == gtk.RESPONSE_CANCEL:
+    if response_id == Gtk.ResponseType.CANCEL:
         return
     if len(new_name) == 0:
         return
@@ -400,7 +400,7 @@ def _viewed_group_changed(widget):
     update_media_log_view()
 
 def _new_group_name_callback(dialog, response_id, data):
-    if response_id == gtk.RESPONSE_CANCEL:
+    if response_id == Gtk.ResponseType.CANCEL:
         dialog.destroy()
         return
     
@@ -445,95 +445,95 @@ def update_media_log_view():
     widgets.media_log_view.treeview.get_vadjustment().set_value(max_val)
 
     
-class MediaLogListView(gtk.VBox):
+class MediaLogListView(Gtk.VBox):
 
     def __init__(self):
-        gtk.VBox.__init__(self)
+        GObject.GObject.__init__(self)
         
        # Datamodel: icon, text, text
-        self.storemodel = gtk.ListStore(gtk.gdk.Pixbuf, str, str, str, str, str)
+        self.storemodel = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str, str, str, str)
  
         # Scroll container
-        self.scroll = gtk.ScrolledWindow()
-        self.scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        self.scroll.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+        self.scroll = Gtk.ScrolledWindow()
+        self.scroll.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
 
         # View
-        self.treeview = gtk.TreeView(self.storemodel)
+        self.treeview = Gtk.TreeView(self.storemodel)
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(True)
         tree_sel = self.treeview.get_selection()
-        tree_sel.set_mode(gtk.SELECTION_MULTIPLE)
+        tree_sel.set_mode(Gtk.SelectionMode.MULTIPLE)
         self.treeview.connect("button-press-event", log_list_view_button_press)
         self.treeview.connect("row-activated", display_log_clip_double_click_listener)
                               
         # Column views
-        self.icon_col_1 = gtk.TreeViewColumn("icon1")
+        self.icon_col_1 = Gtk.TreeViewColumn("icon1")
         self.icon_col_1.set_title(_("Star"))
-        self.text_col_1 = gtk.TreeViewColumn("text1")
+        self.text_col_1 = Gtk.TreeViewColumn("text1")
         self.text_col_1.set_title(_("Event"))
-        self.text_col_2 = gtk.TreeViewColumn("text2")
+        self.text_col_2 = Gtk.TreeViewColumn("text2")
         self.text_col_2.set_title(_("Comment"))
-        self.text_col_3 = gtk.TreeViewColumn("text3")
+        self.text_col_3 = Gtk.TreeViewColumn("text3")
         self.text_col_3.set_title(_("File Name"))
-        self.text_col_4 = gtk.TreeViewColumn("text4")
+        self.text_col_4 = Gtk.TreeViewColumn("text4")
         self.text_col_4.set_title(_("Mark In"))
-        self.text_col_5 = gtk.TreeViewColumn("text5")
+        self.text_col_5 = Gtk.TreeViewColumn("text5")
         self.text_col_5.set_title(_("Mark Out"))
-        self.text_col_6 = gtk.TreeViewColumn("text6")
+        self.text_col_6 = Gtk.TreeViewColumn("text6")
         self.text_col_6.set_title(_("Date"))
     
         # Cell renderers
-        self.icon_rend_1 = gtk.CellRendererPixbuf()
+        self.icon_rend_1 = Gtk.CellRendererPixbuf()
         self.icon_rend_1.props.xpad = 6
 
-        self.text_rend_1 = gtk.CellRendererText()
-        self.text_rend_1.set_property("ellipsize", pango.ELLIPSIZE_END)
+        self.text_rend_1 = Gtk.CellRendererText()
+        self.text_rend_1.set_property("ellipsize", Pango.EllipsizeMode.END)
 
-        self.text_rend_2 = gtk.CellRendererText()
+        self.text_rend_2 = Gtk.CellRendererText()
         self.text_rend_2.set_property("yalign", 0.0)
         self.text_rend_2.set_property("editable", True)
         self.text_rend_2.connect("edited", log_item_name_edited, (self.storemodel, 2))
                                  
-        self.text_rend_3 = gtk.CellRendererText()
+        self.text_rend_3 = Gtk.CellRendererText()
         self.text_rend_3.set_property("yalign", 0.0)
 
-        self.text_rend_4 = gtk.CellRendererText()
+        self.text_rend_4 = Gtk.CellRendererText()
         self.text_rend_4.set_property("yalign", 0.0)
 
-        self.text_rend_5 = gtk.CellRendererText()
+        self.text_rend_5 = Gtk.CellRendererText()
         self.text_rend_5.set_property("yalign", 0.0)
 
-        self.text_rend_6 = gtk.CellRendererText()
+        self.text_rend_6 = Gtk.CellRendererText()
         self.text_rend_6.set_property("yalign", 0.0)
 
         # Build column views
         self.icon_col_1.set_expand(False)
         self.icon_col_1.set_spacing(5)
         self.text_col_1.set_min_width(20)
-        self.icon_col_1.pack_start(self.icon_rend_1)
+        self.icon_col_1.pack_start(self.icon_rend_1, False)
         self.icon_col_1.add_attribute(self.icon_rend_1, 'pixbuf', 0)
 
         self.text_col_2.set_expand(True)
-        self.text_col_2.set_sizing(gtk.TREE_VIEW_COLUMN_GROW_ONLY)
+        self.text_col_2.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
         self.text_col_2.set_min_width(150)
-        self.text_col_2.pack_start(self.text_rend_2)
+        self.text_col_2.pack_start(self.text_rend_2, True)
         self.text_col_2.add_attribute(self.text_rend_2, "text", 1)
 
         self.text_col_3.set_expand(True)
-        self.text_col_3.pack_start(self.text_rend_3)
+        self.text_col_3.pack_start(self.text_rend_3, True)
         self.text_col_3.add_attribute(self.text_rend_3, "text", 2)
 
         self.text_col_4.set_expand(True)
-        self.text_col_4.pack_start(self.text_rend_4)
+        self.text_col_4.pack_start(self.text_rend_4, True)
         self.text_col_4.add_attribute(self.text_rend_4, "text", 3)
 
         self.text_col_5.set_expand(True)
-        self.text_col_5.pack_start(self.text_rend_5)
+        self.text_col_5.pack_start(self.text_rend_5, True)
         self.text_col_5.add_attribute(self.text_rend_5, "text", 4)
 
         self.text_col_6.set_expand(True)
-        self.text_col_6.pack_start(self.text_rend_6)
+        self.text_col_6.pack_start(self.text_rend_6, True)
         self.text_col_6.add_attribute(self.text_rend_6, "text", 5)
         
         # Add column views to view
@@ -546,7 +546,7 @@ class MediaLogListView(gtk.VBox):
 
         # Build widget graph and display
         self.scroll.add(self.treeview)
-        self.pack_start(self.scroll)
+        self.pack_start(self.scroll, True, True, 0)
         self.scroll.show_all()
 
     def fill_data_model(self):
@@ -557,9 +557,9 @@ class MediaLogListView(gtk.VBox):
         log_events = get_current_filtered_events()
         for log_event in log_events:
             if log_event.starred == True:
-                icon = gtk.gdk.pixbuf_new_from_file(star_icon_path)
+                icon = GdkPixbuf.Pixbuf.new_from_file(star_icon_path)
             else:
-                icon =  gtk.gdk.pixbuf_new_from_file(no_star_icon_path)
+                icon =  GdkPixbuf.Pixbuf.new_from_file(no_star_icon_path)
             row_data = [icon, 
                         log_event.comment,
                         log_event.name,
@@ -576,38 +576,39 @@ class MediaLogListView(gtk.VBox):
 
 def get_media_log_events_panel(events_list_view):
     global widgets
-    actions_pixbuf = gtk.gdk.pixbuf_new_from_file(respaths.IMAGE_PATH + "media_log_action.png")
-    group_actions_menu = guicomponents.PressLaunch(_group_action_pressed, actions_pixbuf, 38, 22)
 
-    star_check = gtk.CheckButton()
+    actions_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "media_log_action.png")
+    group_actions_menu = guicomponents.PressLaunch(_group_action_pressed, actions_surface, 38, 22)
+
+    star_check = Gtk.CheckButton()
     star_check.set_active(True)
     star_check.connect("clicked", lambda w:media_log_filtering_changed())
     widgets.star_check = star_check
 
-    star_label = gtk.Image()
+    star_label = Gtk.Image()
     star_label.set_from_file(respaths.IMAGE_PATH + "star.png")
 
-    star_not_active_check = gtk.CheckButton()
+    star_not_active_check = Gtk.CheckButton()
     star_not_active_check.set_active(True)
     star_not_active_check.connect("clicked", lambda w:media_log_filtering_changed())
     widgets.star_not_active_check = star_not_active_check
 
-    star_not_active_label = gtk.Image()
+    star_not_active_label = Gtk.Image()
     star_not_active_label.set_from_file(respaths.IMAGE_PATH + "star_not_active.png")
 
-    star_button = gtk.Button()
-    star_button.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "star.png"))
+    star_button = Gtk.Button()
+    star_button.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "star.png"))
     star_button.connect("clicked", lambda w: media_log_star_button_pressed())
 
-    no_star_button = gtk.Button()
-    no_star_button.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "star_not_active.png"))
+    no_star_button = Gtk.Button()
+    no_star_button.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "star_not_active.png"))
     no_star_button.connect("clicked", lambda w: media_log_no_star_button_pressed())
 
-    widgets.group_box = gtk.HBox()
+    widgets.group_box = Gtk.HBox()
     _create_group_select()
     widgets.group_view_select.set_active(0)
     
-    row1 = gtk.HBox()
+    row1 = Gtk.HBox()
     row1.pack_start(guiutils.get_pad_label(6, 12), False, True, 0)
     row1.pack_start(group_actions_menu.widget, False, True, 0)
     row1.pack_start(guiutils.get_pad_label(6, 12), False, True, 0)
@@ -621,44 +622,44 @@ def get_media_log_events_panel(events_list_view):
     row1.pack_start(guiutils.pad_label(12, 12), False, False, 0)
     row1.pack_start(star_button, False, True, 0)
     row1.pack_start(no_star_button, False, True, 0)
-    row1.pack_start(gtk.Label(), True, True, 0)
+    row1.pack_start(Gtk.Label(), True, True, 0)
 
-    widgets.log_range = gtk.Button()
-    widgets.log_range.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "log_range.png"))
+    widgets.log_range = Gtk.Button()
+    widgets.log_range.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "log_range.png"))
     widgets.log_range.set_size_request(80, 30)
     widgets.log_range.connect("clicked", lambda w:log_range_clicked())
 
-    delete_button = gtk.Button()
-    delete_button.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "delete_log_range.png"))
+    delete_button = Gtk.Button()
+    delete_button.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "delete_log_range.png"))
     delete_button.set_size_request(80, 30)
     delete_button.connect("clicked", lambda w:delete_selected())
 
-    use_comments_label = gtk.Label(_("Use Comments as Clip Names"))
-    use_comments_check =  gtk.CheckButton()
+    use_comments_label = Gtk.Label(label=_("Use Comments as Clip Names"))
+    use_comments_check =  Gtk.CheckButton()
     use_comments_check.set_active(False)
     widgets.use_comments_check = use_comments_check
 
-    insert_displayed = gtk.Button()
-    insert_displayed.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "insert_media_log.png"))
+    insert_displayed = Gtk.Button()
+    insert_displayed.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "insert_media_log.png"))
     insert_displayed.set_size_request(80, 22)
     insert_displayed.connect("clicked", lambda w:insert_selected_log_events())
 
-    append_displayed = gtk.Button()
-    append_displayed.set_image(gtk.image_new_from_file(respaths.IMAGE_PATH + "append_media_log.png"))
+    append_displayed = Gtk.Button()
+    append_displayed.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "append_media_log.png"))
     append_displayed.set_size_request(80, 22)
     append_displayed.connect("clicked", lambda w:append_log_events())
 
-    row2 =  gtk.HBox()
+    row2 =  Gtk.HBox()
     row2.pack_start(widgets.log_range, False, True, 0)
     row2.pack_start(delete_button, False, True, 0)
-    row2.pack_start(gtk.Label(), True, True, 0)
+    row2.pack_start(Gtk.Label(), True, True, 0)
     row2.pack_start(use_comments_label, False, True, 0)
     row2.pack_start(use_comments_check, False, True, 0)
-    row2.pack_start(gtk.Label(), True, True, 0)
+    row2.pack_start(Gtk.Label(), True, True, 0)
     row2.pack_start(insert_displayed, False, True, 0)
     row2.pack_start(append_displayed, False, True, 0)
 
-    panel = gtk.VBox()
+    panel = Gtk.VBox()
     panel.pack_start(row1, False, True, 0)
     panel.pack_start(events_list_view, True, True, 0)
     panel.pack_start(row2, False, True, 0)
@@ -687,7 +688,7 @@ def _create_group_select():
     except:
         pass
 
-    group_view_select = gtk.combo_box_new_text() # filled later when current sequence known
+    group_view_select = Gtk.ComboBoxText() # filled later when current sequence known
     group_view_select.append_text(_("All Items"))
     for group_data in PROJECT().media_log_groups:
         name, items = group_data

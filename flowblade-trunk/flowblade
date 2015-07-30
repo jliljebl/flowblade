@@ -23,9 +23,11 @@
 import os
 import sys
 
+print "BRANCH: GTK3 CONVERSION!"
+print " "
 print "FLOWBLADE MOVIE EDITOR 1.0"
 print "--------------------------"
-
+# TESTII
 # Get launch script dir
 launch_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
 

@@ -25,9 +25,9 @@ and builds a mlt.Consumer for rendering on request.
 Rendering is done in app.player object of class mltplayer.Player
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 import mlt
 import md5
@@ -115,7 +115,7 @@ def render_timeline():
 def _render_overwrite_confirm_callback(dialog, response_id):
     dialog.destroy()
     
-    if response_id == gtk.RESPONSE_ACCEPT:
+    if response_id == Gtk.ResponseType.ACCEPT:
         _do_rendering()
 
 def _do_rendering():
@@ -264,9 +264,9 @@ def create_widgets(normal_height):
     # Range, Render, Reset, Render Queue
     widgets.render_button = guiutils.get_render_button()
     widgets.range_cb = rendergui.get_range_selection_combo()
-    widgets.reset_button = gtk.Button(_("Reset"))
+    widgets.reset_button = Gtk.Button(_("Reset"))
     widgets.reset_button.connect("clicked", lambda w: set_default_values_for_widgets())
-    widgets.queue_button = gtk.Button(_("To Queue"))
+    widgets.queue_button = Gtk.Button(_("To Queue"))
     widgets.queue_button.set_tooltip_text(_("Save Project in Render Queue"))
     
     # Tooltips
@@ -417,7 +417,7 @@ def _save_opts_pressed():
     rendergui.save_ffmpeg_opts_dialog(_save_opts_dialog_callback, FFMPEG_OPTS_SAVE_FILE_EXTENSION)
 
 def _save_opts_dialog_callback(dialog, response_id):
-    if response_id == gtk.RESPONSE_ACCEPT:
+    if response_id == Gtk.ResponseType.ACCEPT:
         file_path = dialog.get_filenames()[0]
         opts_file = open(file_path, "w")
         buf = widgets.args_panel.opts_view.get_buffer()
@@ -432,7 +432,7 @@ def _load_opts_pressed():
     rendergui.load_ffmpeg_opts_dialog(_load_opts_dialog_callback, FFMPEG_OPTS_SAVE_FILE_EXTENSION)
 
 def _load_opts_dialog_callback(dialog, response_id):
-    if response_id == gtk.RESPONSE_ACCEPT:
+    if response_id == Gtk.ResponseType.ACCEPT:
         filename = dialog.get_filenames()[0]
         args_file = open(filename)
         args_text = args_file.read()
@@ -447,7 +447,7 @@ def render_frame_buffer_clip(media_file):
     rendergui.show_slowmo_dialog(media_file, _render_frame_buffer_clip_dialog_callback)
 
 def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, media_file):
-    if response_id == gtk.RESPONSE_ACCEPT:
+    if response_id == Gtk.ResponseType.ACCEPT:
         # speed, filename folder
         speed = float(int(fb_widgets.hslider.get_value())) / 100.0
         file_name = fb_widgets.file_name.get_text()
@@ -514,7 +514,7 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
 
         title = _("Rendering Motion Clip")
         text = "<b>Motion Clip File: </b>" + write_file
-        progress_bar = gtk.ProgressBar()
+        progress_bar = Gtk.ProgressBar()
         dialog = rendergui.clip_render_progress_dialog(_FB_render_stop, title, text, progress_bar, gui.editor_window.window)
 
         motion_progress_update = renderconsumer.ProgressWindowThread(dialog, progress_bar, motion_renderer, _FB_render_stop)
@@ -564,7 +564,7 @@ def render_single_track_transition_clip(transition_producer, encoding_option_ind
     
     title = _("Rendering Transition Clip")
     
-    progress_bar = gtk.ProgressBar()
+    progress_bar = Gtk.ProgressBar()
     dialog = rendergui.clip_render_progress_dialog(_transition_render_stop, title, window_text, progress_bar, gui.editor_window.window)
     
     motion_progress_update = renderconsumer.ProgressWindowThread(dialog, progress_bar, motion_renderer, _transition_render_stop)

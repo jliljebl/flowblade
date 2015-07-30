@@ -21,9 +21,9 @@
 """
 Helper functions and data
 """
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 import math
 import os
@@ -154,7 +154,7 @@ def get_track_name(track, sequence):
 
 def get_media_source_file_filter():
     # No idea if these actually play or not, except images mime types
-    f = gtk.FileFilter()
+    f = Gtk.FileFilter()
     f.set_name("Media MIME types")
     f.add_mime_type("image*")
     f.add_mime_type("video*")
@@ -227,7 +227,7 @@ def get_media_source_file_filter():
     return f
 
 def get_image_sequence_file_filter():
-    f = gtk.FileFilter()
+    f = Gtk.FileFilter()
     f.set_name("Image files")
     f.add_mime_type("image/bmp")
     f.add_mime_type("image/tiff")
@@ -266,7 +266,15 @@ def hex_to_rgb(value):
     lv = len(value)
     return tuple(int(value[i:i+lv/3], 16) for i in range(0, lv, lv/3))
 
+def int_to_hex_str(n):
+    val = int_to_hex(n)
+    if val == "0":
+        return "00"
+    else:
+        return val
+
 def int_to_hex(n):
+    # Input value range 0 - 255, 00 - ff
     return hex(n)[2:]
 
 def gdk_color_str_to_mlt_color_str(gdk_color_str):
@@ -284,6 +292,11 @@ def gdk_color_str_to_int(gdk_color_str):
     blue = int((float(raw_b) * 255.0) / 65535.0)
     
     return (red << 24) + (green << 16) + (blue << 8)
+
+def gdk_color_str_to_cairo_rgb(gdk_color_str):
+    # returned int is 32-bit RGBA, alpha is 00 
+    raw_r, raw_g, raw_b = hex_to_rgb(gdk_color_str)
+    return (float(raw_r)/65535.0, float(raw_g) /65535.0, float(raw_b)/65535.0)
 
 def get_cairo_color_tuple_255_rgb(r, g, b):
     return (float(r)/255.0, float(g)/255.0, float(b)/255.0)

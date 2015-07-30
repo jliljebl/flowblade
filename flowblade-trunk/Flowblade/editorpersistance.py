@@ -21,9 +21,9 @@
 """
 Module handles saving and loading data that is related to the editor and not any particular project.
 """
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+
+from gi.repository import Gtk
 
 import os
 import pickle
@@ -135,13 +135,13 @@ def fill_recents_menu_widget(menu_item, callback):
         for i in range (0, len(recent_proj_names)):
             proj_name = recent_proj_names[i]
             proj_name = proj_name.replace("_","__") # to display names with underscored correctly
-            new_item = gtk.MenuItem(proj_name)
+            new_item = Gtk.MenuItem(proj_name)
             new_item.connect("activate", callback, i)
             menu.append(new_item)
             new_item.show()
     # ...or a single non-sensitive Empty item 
     else:
-        new_item = gtk.MenuItem(_("Empty"))
+        new_item = Gtk.MenuItem(_("Empty"))
         new_item.set_sensitive(False)
         menu.append(new_item)
         new_item.show()

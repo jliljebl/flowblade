@@ -18,7 +18,7 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
-import gtk
+from gi.repository import Gtk
 
 import commands
 import dbus
@@ -58,9 +58,9 @@ class JackStartThread(JackChangeThread):
 
         time.sleep(1.0)
 
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         self.window.set_gui_state()
-        gtk.gdk.threads_leave()
+        Gdk.threads_leave()
 
 def frequency_changed(freq_index):
     editorpersistance.prefs.jack_frequency = _jack_frequencies[freq_index]
@@ -85,13 +85,13 @@ def delete_failsafe_file():
 
 class JackAudioManagerDialog:
     def __init__(self):
-        self.dialog = gtk.Dialog(_("JACK Audio Manager"), None,
-                            gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                            (_("Close").encode('utf-8'), gtk.RESPONSE_CLOSE))
+        self.dialog = Gtk.Dialog(_("JACK Audio Manager"), None,
+                            Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                            (_("Close").encode('utf-8'), Gtk.ResponseType.CLOSE))
 
-        start_up_label = gtk.Label(_("Start JACK output on application start-up"))
+        start_up_label = Gtk.Label(label=_("Start JACK output on application start-up"))
 
-        self.startup_check_button = gtk.CheckButton()
+        self.startup_check_button = Gtk.CheckButton()
         if editorpersistance.prefs.jack_start_up_op == appconsts.JACK_ON_START_UP_YES:
              self.startup_check_button.set_active(True)
         self.startup_check_button.connect("toggled", 
@@ -100,7 +100,7 @@ class JackAudioManagerDialog:
         
         start_row = guiutils.get_checkbox_row_box(self.startup_check_button, start_up_label)
         
-        self.frequency_select = gtk.combo_box_new_text()
+        self.frequency_select = Gtk.ComboBoxText()
         cur_value_index = 0
         count = 0
         for freq in _jack_frequencies:
@@ -113,9 +113,9 @@ class JackAudioManagerDialog:
                                       lambda w,e: frequency_changed(w.get_active()), 
                                       None)
                                 
-        freq_row = guiutils.get_two_column_box_right_pad(gtk.Label("JACK frequency Hz:"), self.frequency_select, 190, 15)
+        freq_row = guiutils.get_two_column_box_right_pad(Gtk.Label(label="JACK frequency Hz:"), self.frequency_select, 190, 15)
 
-        self.output_type_select = gtk.combo_box_new_text()
+        self.output_type_select = Gtk.ComboBoxText()
         self.output_type_select.append_text(_("Audio"))
         self.output_type_select.append_text(_("Sync Master Timecode"))
         # Indexes correspond with appconsts.JACK_OUT_AUDIO, appconsts.JACK_OUT_SYNC values
@@ -124,9 +124,9 @@ class JackAudioManagerDialog:
                                       lambda w,e: output_type_changed(w.get_active()), 
                                       None)
                                       
-        output_row = guiutils.get_two_column_box_right_pad(gtk.Label("JACK output type:"), self.output_type_select, 190, 15)
+        output_row = guiutils.get_two_column_box_right_pad(Gtk.Label(label="JACK output type:"), self.output_type_select, 190, 15)
         
-        vbox_props = gtk.VBox(False, 2)
+        vbox_props = Gtk.VBox(False, 2)
         vbox_props.pack_start(freq_row, False, False, 0)
         vbox_props.pack_start(output_row, False, False, 0)
         vbox_props.pack_start(start_row, False, False, 0)
@@ -134,29 +134,29 @@ class JackAudioManagerDialog:
         
         props_frame = guiutils.get_named_frame(_("Properties"), vbox_props)
         
-        self.jack_output_status_value = gtk.Label("<b>OFF</b>")
+        self.jack_output_status_value = Gtk.Label(label="<b>OFF</b>")
         self.jack_output_status_value.set_use_markup(True)
-        self.jack_output_status_label = gtk.Label("JACK output is ")
+        self.jack_output_status_label = Gtk.Label(label="JACK output is ")
         status_row = guiutils.get_centered_box([self.jack_output_status_label, self.jack_output_status_value]) 
     
-        self.dont_use_button = gtk.Button(_("Stop JACK Output"))
-        self.use_button = gtk.Button(_("Start JACK Output"))
+        self.dont_use_button = Gtk.Button(_("Stop JACK Output"))
+        self.use_button = Gtk.Button(_("Start JACK Output"))
 
         self.use_button.connect("clicked", lambda w: use_jack_clicked(self))
         self.dont_use_button.connect("clicked", lambda w: _convert_to_original_media_project())
 
         self.set_gui_state()
 
-        c_box_2 = gtk.HBox(True, 8)
+        c_box_2 = Gtk.HBox(True, 8)
         c_box_2.pack_start(self.dont_use_button, True, True, 0)
         c_box_2.pack_start(self.use_button, True, True, 0)
 
-        row2_onoff = gtk.HBox(False, 2)
-        row2_onoff.pack_start(gtk.Label(), True, True, 0)
+        row2_onoff = Gtk.HBox(False, 2)
+        row2_onoff.pack_start(Gtk.Label(), True, True, 0)
         row2_onoff.pack_start(c_box_2, False, False, 0)
-        row2_onoff.pack_start(gtk.Label(), True, True, 0)
+        row2_onoff.pack_start(Gtk.Label(), True, True, 0)
 
-        vbox_onoff = gtk.VBox(False, 2)
+        vbox_onoff = Gtk.VBox(False, 2)
         vbox_onoff.pack_start(guiutils.pad_label(12, 4), False, False, 0)
         vbox_onoff.pack_start(status_row, False, False, 0)
         vbox_onoff.pack_start(guiutils.pad_label(12, 12), False, False, 0)
@@ -165,11 +165,11 @@ class JackAudioManagerDialog:
         onoff_frame = guiutils.get_named_frame(_("Output Status"), vbox_onoff)
 
         # Pane
-        vbox = gtk.VBox(False, 2)
+        vbox = Gtk.VBox(False, 2)
         vbox.pack_start(props_frame, False, False, 0)
         vbox.pack_start(onoff_frame, False, False, 0)
 
-        alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+        alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
         alignment.set_padding(12, 12, 12, 12)
         alignment.add(vbox)
 

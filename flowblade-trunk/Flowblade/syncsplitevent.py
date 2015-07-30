@@ -21,10 +21,8 @@
 """
 Module handles events related to audiosplits and setting clip sync relationships.
 """
-import pygtk
-pygtk.require('2.0');
-import gtk
 
+from gi.repository import Gtk, Gdk
 
 import appconsts
 import dialogutils
@@ -100,7 +98,7 @@ def init_select_master_clip(popup_data):
         return
 
     gdk_window = gui.tline_display.get_parent_window();
-    gdk_window.set_cursor(gtk.gdk.Cursor(gtk.gdk.TCROSS))
+    gdk_window.set_cursor(Gdk.Cursor.new(Gdk.TCROSS))
     editorstate.edit_mode = editorstate.SELECT_PARENT_CLIP
     global parent_selection_data
     parent_selection_data = (clip, child_index, track)
@@ -109,7 +107,7 @@ def select_sync_parent_mouse_pressed(event, frame):
     _set_sync_parent_clip(event, frame)
     
     gdk_window = gui.tline_display.get_parent_window();
-    gdk_window.set_cursor(gtk.gdk.Cursor(gtk.gdk.LEFT_PTR))
+    gdk_window.set_cursor(Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR))
    
     global parent_selection_data
     parent_selection_data = None

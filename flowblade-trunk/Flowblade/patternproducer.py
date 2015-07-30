@@ -21,10 +21,11 @@
 Module is used to create pattern producer media objects for bins and 
 corresponding mlt.Producers for timeline. 
 """
+import cairo
 import copy
-import pygtk
-pygtk.require('2.0');
-import gtk
+
+from gi.repository import Gtk, Gdk
+from gi.repository import GdkPixbuf
 
 import mlt
 
@@ -50,7 +51,7 @@ def create_color_clip():
     _color_clip_dialog(_create_color_clip_callback)
 
 def _create_color_clip_callback(dialog, response_id, widgets):
-    if response_id == gtk.RESPONSE_ACCEPT:
+    if response_id == Gtk.ResponseType.ACCEPT:
         entry, color_button = widgets
         name = entry.get_text()
         color_str = color_button.get_color().to_string()
@@ -74,7 +75,7 @@ def create_icing_clip():
     _ising_clip_dialog(_create_ising_clip_callback)
 
 def _create_ising_clip_callback(dialog, response_id, widgets):
-    if response_id == gtk.RESPONSE_ACCEPT:
+    if response_id == Gtk.ResponseType.ACCEPT:
         media_object = BinIsingClip(PROJECT().next_media_file_id, _("Ising"))
 
         temp_slider, bg_slider, sg_slider = widgets
@@ -91,7 +92,7 @@ def create_color_pulse_clip():
     _color_pulse_clip_dialog(_create_color_pulse_clip_callback)
 
 def _create_color_pulse_clip_callback(dialog, response_id, widgets):
-    if response_id == gtk.RESPONSE_ACCEPT:
+    if response_id == Gtk.ResponseType.ACCEPT:
         media_object = BinColorPulseClip(PROJECT().next_media_file_id, _("Color Pulse"))
 
         s1_slider, s2_slider, s3_slider, s4_slider, m1_slider, m2_slider = widgets
@@ -215,10 +216,12 @@ class BinColorClip(AbstractBinClip):
         return producer
 
     def create_icon(self):
-        icon = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
-        pixel = utils.gdk_color_str_to_int(self.gdk_color_str)
-        icon.fill(pixel)
-        self.icon = icon
+        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
+        cr = cairo.Context(surface)
+        cr.set_source_rgb(*utils.gdk_color_str_to_cairo_rgb(self.gdk_color_str))
+        cr.rectangle(0, 0,   appconsts.THUMB_WIDTH + 1, appconsts.THUMB_HEIGHT + 1)
+        cr.fill()
+        self.icon = surface
 
 class BinNoiseClip(AbstractBinClip):
     def __init__(self, id, name):
@@ -231,7 +234,7 @@ class BinNoiseClip(AbstractBinClip):
         return producer
     
     def create_icon(self):
-        self.icon = gtk.gdk.pixbuf_new_from_file(respaths.PATTERN_PRODUCER_PATH + "noise_icon.png")
+        self.icon = cairo.ImageSurface.create_from_png(respaths.PATTERN_PRODUCER_PATH + "noise_icon.png")
 
 class BinColorBarsClip(AbstractBinClip):
     def __init__(self, id, name):
@@ -244,7 +247,7 @@ class BinColorBarsClip(AbstractBinClip):
         return producer
 
     def create_icon(self):
-        self.icon = gtk.gdk.pixbuf_new_from_file(respaths.PATTERN_PRODUCER_PATH + "bars_icon.png")
+        self.icon = cairo.ImageSurface.create_from_png(respaths.PATTERN_PRODUCER_PATH + "bars_icon.png")
         
 class BinIsingClip(AbstractBinClip):
     def __init__(self, id, name):
@@ -265,7 +268,7 @@ class BinIsingClip(AbstractBinClip):
         return producer
 
     def create_icon(self):
-        self.icon = gtk.gdk.pixbuf_new_from_file(respaths.PATTERN_PRODUCER_PATH + "ising_icon.png")
+        self.icon = cairo.ImageSurface.create_from_png(respaths.PATTERN_PRODUCER_PATH + "ising_icon.png")
         
 class BinColorPulseClip(AbstractBinClip):
     def __init__(self, id, name):
@@ -292,34 +295,34 @@ class BinColorPulseClip(AbstractBinClip):
         return producer
 
     def create_icon(self):
-        self.icon = gtk.gdk.pixbuf_new_from_file(respaths.PATTERN_PRODUCER_PATH + "color_pulse_icon.png")
+        self.icon = cairo.ImageSurface.create_from_png(respaths.PATTERN_PRODUCER_PATH + "color_pulse_icon.png")
 
 
 # ----------------------------------------------------- dialogs
 def _color_clip_dialog(callback):
-    dialog = gtk.Dialog(_("Create Color Clip"), None,
-                    gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                    (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                    _("Create").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+    dialog = Gtk.Dialog(_("Create Color Clip"), None,
+                    Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                    (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                    _("Create").encode('utf-8'), Gtk.ResponseType.ACCEPT))
 
-    name_entry = gtk.Entry()
+    name_entry = Gtk.Entry()
     name_entry.set_text(_("Color Clip"))   
 
-    color_button = gtk.ColorButton()
+    color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(0,0,0,1))
 
-    cb_hbox = gtk.HBox(False, 0)
+    cb_hbox = Gtk.HBox(False, 0)
     cb_hbox.pack_start(color_button, False, False, 4)
-    cb_hbox.pack_start(gtk.Label(), True, True, 0)
+    cb_hbox.pack_start(Gtk.Label(), True, True, 0)
 
-    row1 = guiutils.get_two_column_box(gtk.Label(_("Clip Name:")), name_entry, 200)
-    row2 = guiutils.get_two_column_box(gtk.Label(_("Select Color:")), cb_hbox, 200)
+    row1 = guiutils.get_two_column_box(Gtk.Label(label=_("Clip Name:")), name_entry, 200)
+    row2 = guiutils.get_two_column_box(Gtk.Label(label=_("Select Color:")), cb_hbox, 200)
     
-    vbox = gtk.VBox(False, 2)
+    vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
-    vbox.pack_start(gtk.Label(), True, True, 0)
+    vbox.pack_start(Gtk.Label(), True, True, 0)
     
-    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
     align.set_padding(12, 0, 12, 12)
     align.add(vbox)
 
@@ -331,27 +334,27 @@ def _color_clip_dialog(callback):
     dialog.show_all()
 
 def _ising_clip_dialog(callback):
-    dialog = gtk.Dialog(_("Create Ising Clip"), None,
-                    gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                    (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                    _("Create").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+    dialog = Gtk.Dialog(_("Create Ising Clip"), None,
+                    Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                    (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                    _("Create").encode('utf-8'), Gtk.ResponseType.ACCEPT))
  
     n_box, n_slider = guiutils.get_non_property_slider_row(0, 100, 1)
     bg_box, bg_slider = guiutils.get_non_property_slider_row(0, 100, 1)
     sg_box, sg_slider = guiutils.get_non_property_slider_row(0, 100, 1)
 
-    row1 = guiutils.get_two_column_box(gtk.Label(_("Noise temperature:")), n_box, 200)
-    row2 = guiutils.get_two_column_box(gtk.Label(_("Border growth:")), bg_box, 200)
-    row3 = guiutils.get_two_column_box(gtk.Label(_("Spontanious growth:")), sg_box, 200)
+    row1 = guiutils.get_two_column_box(Gtk.Label(label=_("Noise temperature:")), n_box, 200)
+    row2 = guiutils.get_two_column_box(Gtk.Label(label=_("Border growth:")), bg_box, 200)
+    row3 = guiutils.get_two_column_box(Gtk.Label(label=_("Spontanious growth:")), sg_box, 200)
     
-    vbox = gtk.VBox(False, 2)
+    vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row3, False, False, 0)
-    vbox.pack_start(gtk.Label(), True, True, 0)
+    vbox.pack_start(Gtk.Label(), True, True, 0)
     vbox.set_size_request(450, 150)
 
-    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
     align.set_padding(12, 0, 12, 12)
     align.add(vbox)
 
@@ -363,10 +366,10 @@ def _ising_clip_dialog(callback):
     dialog.show_all()
     
 def _color_pulse_clip_dialog(callback):
-    dialog = gtk.Dialog(_("Create Color Pulse Clip"), None,
-                    gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                    (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT,
-                    _("Create").encode('utf-8'), gtk.RESPONSE_ACCEPT))
+    dialog = Gtk.Dialog(_("Create Color Pulse Clip"), None,
+                    Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                    (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                    _("Create").encode('utf-8'), Gtk.ResponseType.ACCEPT))
 
     s1_box, s1_slider = guiutils.get_non_property_slider_row(0, 100, 1, 100)
     s2_box, s2_slider = guiutils.get_non_property_slider_row(0, 100, 1, 100)
@@ -375,24 +378,24 @@ def _color_pulse_clip_dialog(callback):
     m1_box, m1_slider = guiutils.get_non_property_slider_row(0, 100, 1, 100)
     m2_box, m2_slider = guiutils.get_non_property_slider_row(0, 100, 1, 100)
 
-    row1 = guiutils.get_two_column_box(gtk.Label(_("Speed 1:")), s1_box, 200)
-    row2 = guiutils.get_two_column_box(gtk.Label(_("Speed 2:")), s2_box, 200)
-    row3 = guiutils.get_two_column_box(gtk.Label(_("Speed 3:")), s3_box, 200)
-    row4 = guiutils.get_two_column_box(gtk.Label(_("Speed 4:")), s4_box, 200)
-    row5 = guiutils.get_two_column_box(gtk.Label(_("Move 1:")), m1_box, 200)
-    row6 = guiutils.get_two_column_box(gtk.Label(_("Move 2:")), m2_box, 200)
+    row1 = guiutils.get_two_column_box(Gtk.Label(label=_("Speed 1:")), s1_box, 200)
+    row2 = guiutils.get_two_column_box(Gtk.Label(label=_("Speed 2:")), s2_box, 200)
+    row3 = guiutils.get_two_column_box(Gtk.Label(label=_("Speed 3:")), s3_box, 200)
+    row4 = guiutils.get_two_column_box(Gtk.Label(label=_("Speed 4:")), s4_box, 200)
+    row5 = guiutils.get_two_column_box(Gtk.Label(label=_("Move 1:")), m1_box, 200)
+    row6 = guiutils.get_two_column_box(Gtk.Label(label=_("Move 2:")), m2_box, 200)
 
-    vbox = gtk.VBox(False, 2)
+    vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row3, False, False, 0)
     vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row5, False, False, 0)
     vbox.pack_start(row6, False, False, 0)
-    vbox.pack_start(gtk.Label(), True, True, 0)
+    vbox.pack_start(Gtk.Label(), True, True, 0)
     vbox.set_size_request(450, 220)
 
-    align = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
     align.set_padding(12, 0, 12, 12)
     align.add(vbox)
 

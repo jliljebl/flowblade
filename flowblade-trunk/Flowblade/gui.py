@@ -22,10 +22,8 @@
 Module holds references to GUI widgets.
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
 
+from gi.repository import Gtk
 
 
 # Editor window
@@ -80,6 +78,8 @@ fg_color_tuple = None
 bg_color_tuple = None
 selected_bg_color = None
 
+label = None
+
 def capture_references(new_editor_window):
     """
     Create shorter names for some of the frequently used GUI objects.
@@ -96,7 +96,7 @@ def capture_references(new_editor_window):
     sequence_list_view = editor_window.sequence_list_view
 
     middle_notebook = editor_window.notebook
-    
+
     effect_select_list_view = editor_window.effect_select_list_view
     effect_select_combo_box = editor_window.effect_select_combo_box
 
@@ -118,22 +118,25 @@ def capture_references(new_editor_window):
 
     editmenu = editor_window.uimanager.get_widget('/MenuBar/EditMenu')
 
-    style = editor_window.edit_buttons_row.get_style()
-    note_bg_color = style.bg[gtk.STATE_NORMAL]
-    fg_color = style.fg[gtk.STATE_NORMAL]
-    selected_bg_color = style.bg[gtk.STATE_SELECTED]
+    style = editor_window.edit_buttons_row.get_style_context ()
+    note_bg_color = style.get_background_color(Gtk.StateFlags.NORMAL)
+    print note_bg_color
+    fg_color = style.get_color(Gtk.StateFlags.NORMAL)
+    selected_bg_color = style.get_background_color(Gtk.StateFlags.SELECTED)
     
-    # Get cairo color tuple from gtk.gdk.Color
-    raw_r, raw_g, raw_b = hex_to_rgb(fg_color.to_string())
+    # Get cairo color tuple from Gdk.Color
+    raw_r, raw_g, raw_b = fg_color.red,  fg_color.green, fg_color.blue
     fg_color_tuple = (float(raw_r)/65535.0, float(raw_g)/65535.0, float(raw_b)/65535)
 
-    raw_r, raw_g, raw_b = hex_to_rgb(note_bg_color.to_string())
+    raw_r, raw_g, raw_b = note_bg_color.red, note_bg_color.green ,note_bg_color.blue
     bg_color_tuple = (float(raw_r)/65535.0, float(raw_g)/65535.0, float(raw_b)/65535)
 
+"""
 def hex_to_rgb(value):
     value = value.lstrip('#')
     lv = len(value)
     return tuple(int(value[i:i+lv/3], 16) for i in range(0, lv, lv/3))
+"""
 
 def enable_save():
     editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)

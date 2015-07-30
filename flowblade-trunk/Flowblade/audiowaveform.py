@@ -22,10 +22,6 @@
 Modules handles creating and caching audio waveform images for clips.
 """
 
-import pygtk
-pygtk.require('2.0');
-import gtk
-
 import math
 import md5
 import mlt
@@ -34,6 +30,8 @@ import pickle
 import struct
 import threading
 import time
+
+from gi.repository import Gtk, Gdk
 
 import appconsts
 import dialogutils
@@ -70,7 +68,7 @@ def set_waveform_displayer_clip_from_popup(data):
         clip.waveform_data = frame_levels
         return
 
-    progress_bar = gtk.ProgressBar()
+    progress_bar = Gtk.ProgressBar()
     title = _("Audio Levels Data Render")
     text = "<b>Media File: </b>" + clip.path
     dialog = _waveform_render_progress_dialog(_waveform_render_abort, title, text, progress_bar, gui.editor_window.window)
@@ -121,12 +119,12 @@ class WaveformCreator(threading.Thread):
         frame_levels = [None] * self.clip_media_length 
         frames_cache[self.clip.path] = frame_levels
 
-        gtk.gdk.threads_enter()
+        Gdk.threads_enter()
         self.dialog.progress_bar.set_fraction(0.0)
         self.dialog.progress_bar.set_text(str(0) + "%")
-        while(gtk.events_pending()):
-            gtk.main_iteration()
-        gtk.gdk.threads_leave()
+        while(Gtk.events_pending()):
+            Gtk.main_iteration()
+        Gdk.threads_leave()
         time.sleep(0.2)
 
         for frame in range(0, len(frame_levels)):
@@ -141,13 +139,13 @@ class WaveformCreator(threading.Thread):
             self.last_rendered_frame = frame
             if frame % 500 == 0:
                 render_fraction = float(self.last_rendered_frame) / float(self.clip_media_length)
-                gtk.gdk.threads_enter()
+                Gdk.threads_enter()
                 self.dialog.progress_bar.set_fraction(render_fraction)
                 pros = int(render_fraction * 100)
                 self.dialog.progress_bar.set_text(str(pros) + "%")
-                while(gtk.events_pending()):
-                    gtk.main_iteration()
-                gtk.gdk.threads_leave()
+                while(Gtk.events_pending()):
+                    Gtk.main_iteration()
+                Gdk.threads_leave()
                 time.sleep(0.1)
 
         if not self.abort:
@@ -155,10 +153,10 @@ class WaveformCreator(threading.Thread):
             write_file = file(self.file_cache_path, "wb")
             pickle.dump(frame_levels, write_file)
 
-            gtk.gdk.threads_enter()
+            Gdk.threads_enter()
             self.dialog.progress_bar.set_fraction(1.0)
             self.dialog.progress_bar.set_text(_("Saving to Hard Drive"))
-            gtk.gdk.threads_leave()
+            Gdk.threads_leave()
         
         else:
             frames_cache.pop(self.clip.path, None)
@@ -189,34 +187,33 @@ class WaveformCreator(threading.Thread):
         self.abort = True
 
 def _waveform_render_progress_dialog(callback, title, text, progress_bar, parent_window):
-    dialog = gtk.Dialog(title,
+    dialog = Gtk.Dialog(title,
                          parent_window,
-                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                         (_("Cancel").encode('utf-8'), gtk.RESPONSE_REJECT))
+                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT))
 
-    dialog.text_label = gtk.Label(text)
+    dialog.text_label = Gtk.Label(label=text)
     dialog.text_label.set_use_markup(True)
-    text_box = gtk.HBox(False, 2)
+    text_box = Gtk.HBox(False, 2)
     text_box.pack_start(dialog.text_label,False, False, 0)
-    text_box.pack_start(gtk.Label(), True, True, 0)
+    text_box.pack_start(Gtk.Label(), True, True, 0)
 
-    status_box = gtk.HBox(False, 2)
+    status_box = Gtk.HBox(False, 2)
     status_box.pack_start(text_box, False, False, 0)
-    status_box.pack_start(gtk.Label(), True, True, 0)
+    status_box.pack_start(Gtk.Label(), True, True, 0)
 
-    progress_vbox = gtk.VBox(False, 2)
+    progress_vbox = Gtk.VBox(False, 2)
     progress_vbox.pack_start(status_box, False, False, 0)
     progress_vbox.pack_start(guiutils.get_pad_label(10, 10), False, False, 0)
     progress_vbox.pack_start(progress_bar, False, False, 0)
 
-    alignment = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
     alignment.set_padding(12, 12, 12, 12)
     alignment.add(progress_vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialog.set_default_size(500, 125)
     alignment.show_all()
-    dialog.set_has_separator(False)
     dialog.connect('response', callback)
     dialog.show()
     return dialog
