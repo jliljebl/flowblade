@@ -959,9 +959,9 @@ class EditorSeparator:
         x, y, w, h = allocation
         
         # Draw bg
-        cr.set_source_rgb(*guiutils.get_theme_bg_color())
-        cr.rectangle(0, 0, w, h)
-        cr.fill()
+        #cr.set_source_rgb(*guiutils.get_theme_bg_color())
+        #cr.rectangle(0, 0, w, h)
+        #cr.fill()
         
         # Draw separator
         cr.set_line_width(1.0)
@@ -1601,9 +1601,9 @@ class BigTCDisplay:
         x, y, w, h = allocation
 
         # Draw bg
-        cr.set_source_rgba(*guiutils.get_theme_bg_color()) 
-        cr.rectangle(0, 0, w, h)
-        cr.fill()
+        #cr.set_source_rgba(*guiutils.get_theme_bg_color()) 
+        #cr.rectangle(0, 0, w, h)
+        #cr.fill()
 
         # Draw round rect with gradient and stroke around for thin bezel
         self._round_rect_path(cr)        
@@ -1634,6 +1634,7 @@ class BigTCDisplay:
 
         cr.set_source_rgb(*TC_COLOR)
         cr.move_to(self.TEXT_X, self.TEXT_Y)
+
         PangoCairo.update_layout(cr, layout)
         PangoCairo.show_layout(cr, layout)
 
@@ -1685,9 +1686,9 @@ class MonitorTCDisplay:
         x, y, w, h = allocation
 
         # Draw bg
-        cr.set_source_rgb(*guiutils.get_theme_bg_color())
-        cr.rectangle(0, 0, w, h)
-        cr.fill()
+        #cr.set_source_rgb(*guiutils.get_theme_bg_color())
+        #cr.rectangle(0, 0, w, h)
+        #cr.fill()
 
         # Draw round rect with gradient and stroke around for thin bezel
         self._round_rect_path(cr)        
@@ -1972,12 +1973,12 @@ class PressLaunch:
         self.surface_y  = 6
 
     def _draw(self, event, cr, allocation):
-        x, y, w, h = allocation
+        #x, y, w, h = allocation
 
         # Draw bg
-        cr.set_source_rgb(*guiutils.get_theme_bg_color())
-        cr.rectangle(0, 0, w, h)
-        cr.fill()
+        #cr.set_source_rgb(*guiutils.get_theme_bg_color())
+        #cr.rectangle(0, 0, w, h)
+        #cr.fill()
         
         cr.set_source_surface(self.surface, self.surface_x, self.surface_y)
         cr.paint()

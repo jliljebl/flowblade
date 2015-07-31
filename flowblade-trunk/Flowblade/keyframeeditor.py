@@ -208,9 +208,9 @@ class ClipKeyFrameEditor:
         active_height = h - 2 * TOP_PAD      
         
         # Draw bg
-        cr.set_source_rgb(*guiutils.get_theme_bg_color())
-        cr.rectangle(0, 0, w, h)
-        cr.fill()
+        # cr.set_source_rgb(*guiutils.get_theme_bg_color())
+        # cr.rectangle(0, 0, w, h)
+        # cr.fill()
         
         # Draw clip bg  
         cr.set_source_rgb(*CLIP_EDITOR_BG_COLOR)

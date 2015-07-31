@@ -120,7 +120,7 @@ def capture_references(new_editor_window):
 
     style = editor_window.edit_buttons_row.get_style_context ()
     note_bg_color = style.get_background_color(Gtk.StateFlags.NORMAL)
-    print note_bg_color
+    #print note_bg_color
     fg_color = style.get_color(Gtk.StateFlags.NORMAL)
     selected_bg_color = style.get_background_color(Gtk.StateFlags.SELECTED)
     

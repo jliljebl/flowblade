@@ -323,14 +323,10 @@ class AudioMonitorWindow(Gtk.Window):
             else:
                 name = utils.get_track_name(seq.tracks[i], seq)
                 gain = GainControl(name, seq, seq.tracks[i])
-            if i == 0:
-                tmp = gain
-                gain = Gtk.EventBox()
-                gain.add(tmp)
-                bg_color = Gdk.Color(red=0.8, green=0.8, blue=0.8)
-                if editorpersistance.prefs.dark_theme == True:
-                    bg_color = Gdk.Color(red=0.4, green=0.4, blue=0.4)
-                gain.modify_bg(Gtk.StateType.NORMAL, bg_color)
+            #if i == 0:
+            #    tmp = gain # for bg color ?
+            #    gain = Gtk.EventBox() # for bg color ?
+            #    gain.add(tmp) # for bg color ?
             self.gain_controls.append(gain)
             gain_control_area.pack_start(gain, False, False, 0)
 
@@ -358,7 +354,7 @@ class MetersArea:
         w = SLOT_W * meters_count
         h = METER_SLOT_H
         
-        self.widget = cairoarea.CairoDrawableArea2(  w,
+        self.widget = cairoarea.CairoDrawableArea2( w,
                                                     h, 
                                                     self._draw)
 

@@ -18,11 +18,13 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
-
-
-from gi.repository import Gtk
+"""
+This module contains complex property editors.
+"""
 
 import math
+
+from gi.repository import Gtk
 
 import cairo
 import cairoarea
@@ -244,9 +246,9 @@ class ColorBox:
         x, y, w, h = allocation
 
         # Draw bg
-        cr.set_source_rgb(*(gui.bg_color_tuple))
-        cr.rectangle(0, 0, w, h)
-        cr.fill()
+        #cr.set_source_rgb(*guiutils.get_theme_bg_color())
+        #cr.rectangle(0, 0, w, h)
+        #cr.fill()
 
         x_in = self.X_PAD
         x_out = self.W - self.X_PAD
@@ -359,9 +361,9 @@ class ThreeBandColorBox(ColorBox):
         x, y, w, h = allocation
 
         # Draw bg
-        cr.set_source_rgb(*(gui.bg_color_tuple))
-        cr.rectangle(0, 0, w, h)
-        cr.fill()
+        #cr.set_source_rgb(*guiutils.get_theme_bg_color())
+        #cr.rectangle(0, 0, w, h)
+        #cr.fill()
 
         x_in = self.X_PAD
         x_out = self.W - self.X_PAD
@@ -711,9 +713,9 @@ class BoxEditor:
         x, y, w, h = allocation
        
         # Draw bg
-        cr.set_source_rgb(*(gui.bg_color_tuple))
-        cr.rectangle(0, 0, w, h)
-        cr.fill()
+        #cr.set_source_rgb(*(gui.bg_color_tuple))
+        #cr.rectangle(0, 0, w, h)
+        #cr.fill()
         
         if editorpersistance.prefs.dark_theme == False:
             cr.set_source_rgb(*BOX_BG_COLOR )
@@ -1095,6 +1097,7 @@ def value_changed(self, ep, value):
     self.update_properties()
 """
 
+"""
 class AbstractColorWheel:
 
     def __init__(self, edit_listener):
@@ -1119,17 +1122,13 @@ class AbstractColorWheel:
         self.distance = 0.0
 
     def _press_event(self, event):
-        """
-        Mouse button callback
-        """
+
         self.cursor_x, self.cursor_y = self._get_legal_point(event.x, event.y)
         self._save_point()
         self.widget.queue_draw()
 
     def _motion_notify_event(self, x, y, state):
-        """
-        Mouse move callback
-        """
+
         self.cursor_x, self.cursor_y = self._get_legal_point(x, y)
         self._save_point()
         self.widget.queue_draw()
@@ -1188,10 +1187,6 @@ class AbstractColorWheel:
         return (angle, distance)
 
     def _draw(self, event, cr, allocation):
-        """
-        Callback for repaint from CairoDrawableArea.
-        We get cairo context and allocation.
-        """
         x, y, w, h = allocation
 
         # Draw bg
@@ -1221,10 +1216,6 @@ class SimpleColorWheel(AbstractColorWheel):
         return (angle, distance)
 
     def _draw(self, event, cr, allocation):
-        """
-        Callback for repaint from CairoDrawableArea.
-        We get cairo context and allocation.
-        """
         AbstractColorWheel._draw(self, event, cr, allocation)
 
         _draw_select_circle(cr, self.cursor_x - self.CIRCLE_HALF, self.cursor_y - self.CIRCLE_HALF, (1,1,1), ACTIVE_RING_COLOR)
@@ -1281,10 +1272,6 @@ class SMHColorWheel(AbstractColorWheel):
         return (angle, distance)
 
     def _draw(self, event, cr, allocation):
-        """
-        Callback for repaint from CairoDrawableArea.
-        We get cairo context and allocation.
-        """
         AbstractColorWheel._draw(self, event, cr, allocation)
         
         if self.band == SHADOW:
@@ -1295,7 +1282,7 @@ class SMHColorWheel(AbstractColorWheel):
             band_color = ACTIVE_HI_COLOR
         
         _draw_select_circle(cr, self.cursor_x - self.CIRCLE_HALF, self.cursor_y - self.CIRCLE_HALF, band_color, ACTIVE_RING_COLOR)
-
+"""
 
 class ColorBandSelector:
     def __init__(self):
@@ -1338,9 +1325,9 @@ class ColorBandSelector:
         x, y, w, h = allocation
        
         # Draw bg
-        cr.set_source_rgb(*(gui.bg_color_tuple))
-        cr.rectangle(0, 0, w, h)
-        cr.fill()
+        #cr.set_source_rgb(*guiutils.get_theme_bg_color())
+        #cr.rectangle(0, 0, w, h)
+        #cr.fill()
         
         ring_color = (0.0, 0.0, 0.0)
         _draw_select_circle(cr, self.SHADOW_X, 0, (0.1, 0.1, 0.1), ring_color)

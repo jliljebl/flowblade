@@ -22,6 +22,7 @@ import copy
 import os
 import pickle
 import threading
+import traceback
 import time
 
 from gi.repository import Gtk, Gdk, GdkPixbuf
@@ -50,6 +51,8 @@ _titler_data = None
 
 _keep_titler_data = True
 _open_saved_in_bin = True
+
+_filling_layer_list = False
 
 VIEW_EDITOR_WIDTH = 815
 VIEW_EDITOR_HEIGHT = 620
@@ -286,7 +289,7 @@ class Titler(Gtk.Window):
         self.center_align.connect("clicked", self._edit_value_changed)
         self.right_align.connect("clicked", self._edit_value_changed)
         
-        self.color_button = Gtk.ColorButton()
+        self.color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=1.0, green=1.0, blue=1.0, alpha=1.0))
         self.color_button.connect("color-set", self._edit_value_changed)
 
         buttons_box = Gtk.HBox()
@@ -357,13 +360,12 @@ class Titler(Gtk.Window):
         positions_box.pack_start(Gtk.Label(), True, True, 0)
         positions_box.pack_start(Gtk.Label(label="X:"), False, False, 0)
         positions_box.pack_start(self.x_pos_spin, False, False, 0)
-        positions_box.pack_start(guiutils.pad_label(10, 5), False, False, 0)
+        positions_box.pack_start(guiutils.pad_label(40, 5), False, False, 0)
         positions_box.pack_start(Gtk.Label(label="Y:"), False, False, 0)
         positions_box.pack_start(self.y_pos_spin, False, False, 0)
-        positions_box.pack_start(guiutils.pad_label(10, 5), False, False, 0)
         #positions_box.pack_start(Gtk.Label(label=_("Angle")), False, False, 0)
         #positions_box.pack_start(self.rotation_spin, False, False, 0)
-        positions_box.pack_start(guiutils.pad_label(10, 5), False, False, 0)
+        positions_box.pack_start(guiutils.pad_label(40, 5), False, False, 0)
         positions_box.pack_start(center_h, False, False, 0)
         positions_box.pack_start(center_v, False, False, 0)
         positions_box.pack_start(Gtk.Label(), True, True, 0)
@@ -649,8 +651,9 @@ class Titler(Gtk.Window):
         PLAYER().seek_delta(1)
         self.show_current_frame()
 
-    def _layer_selection_changed(self, selection):
-        selected_row = self.layer_list.get_selected_row()
+    def _layer_selection_changed(self, treeview, path, column):
+        selected_row = path.get_indices()[0]
+
         # we're listeneing to "changed" on treeview and get some events (text updated)
         # when layer selection was not changed.
         if selected_row == -1:
@@ -755,19 +758,19 @@ class Titler(Gtk.Window):
         self.view_editor.edit_area.queue_draw()
 
     def _update_gui_with_active_layer_data(self):
+        if _filling_layer_list:
+            return
+        
         # This a bit hackish, but works. Finding a method that blocks all
         # gui events from being added to queue would be nice.
         self.block_updates = True
         
         layer = _titler_data.active_layer
-        
         self.text_view.get_buffer().set_text(layer.text)
-        
+
         r, g, b, a = layer.color_rgba
-        button_color = Gdk.Color(red=r,
-                                     green=g,
-                                     blue=b)
-        self.color_button.set_color(button_color)
+        button_color = Gdk.RGBA(r, g, b, 1.0)
+        self.color_button.set_rgba(button_color)
 
         if FACE_REGULAR == layer.font_face:
             self.bold_font.set_active(False)
@@ -830,14 +833,14 @@ class PangoTextLayout:
         cr.save()
         
         layout = PangoCairo.create_layout(cr)
-        layout.set_text(self.text, 1)
+        layout.set_text(self.text, -1)
         layout.set_font_description(self.font_desc)
         layout.set_alignment(self.alignment)
         
         self.pixel_size = layout.get_pixel_size()
         cr.set_source_rgba(*self.color_rgba)
         cr.move_to(x, y)
-        cr.scale( xscale, yscale)
+        cr.scale(xscale, yscale)
         cr.rotate(rotation)
         
         PangoCairo.update_layout(cr, layout)
@@ -876,10 +879,12 @@ class TextLayerListView(Gtk.VBox):
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(False)
         self.treeview.connect("button-press-event", self.button_press)
-        
+        self.treeview.set_activate_on_single_click(True)
+        self.treeview.connect("row-activated", selection_changed_cb)
+         
         tree_sel = self.treeview.get_selection()
         tree_sel.set_mode(Gtk.SelectionMode.SINGLE)
-        tree_sel.connect("changed", selection_changed_cb)
+        #tree_sel.connect("changed", selection_changed_cb)
 
         # Cell renderers
         self.text_rend_1 = Gtk.CellRendererText()
@@ -936,10 +941,7 @@ class TextLayerListView(Gtk.VBox):
 
     def get_selected_row(self):
         model, rows = self.treeview.get_selection().get_selected_rows()
-        # When listening to "changed" this gets called too often for our needs (namely when user types),
-        # but "row-activated" would activate layer changes only with double clicks, do we'll send -1 when this
-        # is called and active layer is not actually changed. 
-        try:
+        try: # This has at times been called too often, but try may not be needed here anymore.
             return max(rows)[0]
         except:
             return -1
@@ -949,6 +951,8 @@ class TextLayerListView(Gtk.VBox):
         Creates displayed data.
         Displays icon, sequence name and sequence length
         """
+        global _filling_layer_list
+        _filling_layer_list = True
         self.storemodel.clear()
         for layer in _titler_data.layers:
             if layer.visible:
@@ -959,7 +963,7 @@ class TextLayerListView(Gtk.VBox):
             self.storemodel.append(row_data)
         
         self.scroll.queue_draw()
-
+        _filling_layer_list = False
 
 class OpenFileThread(threading.Thread):
     

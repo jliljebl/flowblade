@@ -203,6 +203,14 @@ class ViewEditor(Gtk.Frame):
         self.bg_buf = out
 
     def _draw(self, event, cr, allocation):
+        x, y, w, h = allocation
+        
+        # Draw bg
+        cr.set_source_rgb(0.5, 0.5, 0.5)
+        cr.rectangle(0, 0, w, h)
+        cr.fill()
+
+
         if self.bg_buf != None:
             # MLT Provides images in which R <-> B are swiched from what Cairo wants them,
             # so use numpy to switch them and to create a modifiable buffer for Cairo

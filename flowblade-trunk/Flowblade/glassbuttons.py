@@ -156,9 +156,9 @@ class AbstractGlassButtons:
         buttons_width = self.button_width * len(self.icons)
 
         # Draw bg
-        cr.set_source_rgb(*guiutils.get_theme_bg_color())
-        cr.rectangle(0, 0, w, h)
-        cr.fill()
+        #cr.set_source_rgb(*guiutils.get_theme_bg_color())
+        #cr.rectangle(0, 0, w, h)
+        #cr.fill()
 
         # Line width for all strokes
         cr.set_line_width(1.0)

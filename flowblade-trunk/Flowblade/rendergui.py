@@ -161,7 +161,7 @@ def show_slowmo_dialog(media_file, _response_callback):
     folder, file_name = os.path.split(media_file.path)
     name, ext = os.path.splitext(file_name)
         
-    dialog = Gtk.Dialog(_("Render Slow/Fast Motion Video File"), None,
+    dialog = Gtk.Dialog(_("Render Slow/Fast Motion Video File"), gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (Gtk.STOCK_CANCEL, Gtk.ResponseType.REJECT,
                         _("Render").encode('utf-8'), Gtk.ResponseType.ACCEPT))
@@ -243,7 +243,8 @@ def show_slowmo_dialog(media_file, _response_callback):
         range_available = False
     objects_list.append(None, [_("Source Mark In to Mark Out"), range_available])
     
-    fb_widgets.render_range = Gtk.ComboBox(objects_list)
+    fb_widgets.render_range = Gtk.ComboBox.new_with_model(objects_list)
+    
     renderer_text = Gtk.CellRendererText()
     fb_widgets.render_range.pack_start(renderer_text, True)
     fb_widgets.render_range.add_attribute(renderer_text, "text", 0)
