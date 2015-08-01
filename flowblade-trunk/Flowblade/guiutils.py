@@ -149,7 +149,6 @@ def get_multiplied_color(color, m):
 
 def get_slider_row(editable_property, listener, slider_name=None):
     adjustment = editable_property.get_input_range_adjustment()
-    editable_property.value_changed_ID = adjustment.connect("value-changed", listener) # patching in to make available for disconnect
     editable_property.adjustment = adjustment # patching in to make available for disconnect
 
     hslider = Gtk.HScale()
@@ -169,6 +168,10 @@ def get_slider_row(editable_property, listener, slider_name=None):
     else:
         name = slider_name
     name = translations.get_param_name(name)
+    
+    editable_property.value_changed_ID = adjustment.connect("value-changed", listener) # patching in to make available for disconnect
+                                                                                       # This also needs to be after adjustment is set to not loose exiting value for build dummy value 
+        
     return (get_two_column_editor_row(name, hbox), hslider)
 
 def get_non_property_slider_row(lower, upper, step, value=0, listener=None):

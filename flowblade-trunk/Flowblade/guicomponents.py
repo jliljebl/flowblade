@@ -1758,7 +1758,7 @@ def get_gpl3_scroll_widget(size):
     license_text = license_file.read()
     
     view = Gtk.TextView()
-    view.set_sensitive(False)
+    view.set_editable(False)
     view.set_pixels_above_lines(2)
     view.set_left_margin(2)
     view.set_wrap_mode(Gtk.WrapMode.WORD)
@@ -1776,7 +1776,7 @@ def get_translations_scroll_widget(size):
     trans_text = trans_file.read()
     
     view = Gtk.TextView()
-    view.set_sensitive(False)
+    view.set_editable(False)
     view.set_pixels_above_lines(2)
     view.set_left_margin(2)
     view.set_wrap_mode(Gtk.WrapMode.WORD)

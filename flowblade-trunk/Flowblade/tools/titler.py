@@ -22,7 +22,7 @@ import copy
 import os
 import pickle
 import threading
-import traceback
+
 import time
 
 from gi.repository import Gtk, Gdk, GdkPixbuf
