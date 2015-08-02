@@ -424,8 +424,8 @@ def get_fade_panel(fade_data):
 
     type_row = get_two_column_box(Gtk.Label(label=_("Type:")), 
                                  type_combo_box)
-
-    color_button = Gtk.ColorButton(Gdk.Color(0.0, 0.0, 0.0))
+        
+    color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(0,0,0,1))
     color_button_box = guiutils.get_left_justified_box([color_button])
     color_label = Gtk.Label(label=_("Color:"))
     color_row = get_two_column_box(color_label, color_button_box)

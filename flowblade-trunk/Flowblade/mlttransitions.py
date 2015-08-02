@@ -389,7 +389,7 @@ def get_rendered_transition_tractor(current_sequence,
                                     gdk_color_str):
 
     name, transition_type = rendered_transitions[transition_type_selection_index]
-
+    
     # New from clip
     if orig_from.media_type != appconsts.PATTERN_PRODUCER:
         from_clip = current_sequence.create_file_producer_clip(orig_from.path)# File producer

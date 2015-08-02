@@ -240,6 +240,7 @@ def new_project():
 
 def _new_project_dialog_callback(dialog, response_id, profile_combo, tracks_combo, 
                                  tracks_combo_values_list):
+
     v_tracks, a_tracks = tracks_combo_values_list[tracks_combo.get_active()]
     if response_id == Gtk.ResponseType.ACCEPT:
         app.new_project(profile_combo.get_active(), v_tracks, a_tracks)

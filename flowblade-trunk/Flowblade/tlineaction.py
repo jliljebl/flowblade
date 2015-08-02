@@ -448,6 +448,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
 
     # Get input data
     type_combo, length_entry, enc_combo, quality_combo, wipe_luma_combo_box, color_button = selection_widgets
+    transition_type_selection_index = type_combo.get_active()
     encoding_option_index = enc_combo.get_active()
     quality_option_index = quality_combo.get_active()
     extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
@@ -496,7 +497,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
     # Edit clears selection, get track index before selection is cleared
     trans_index = movemodes.selected_range_out
     movemodes.clear_selected_clips()
-    transition_type_selection_index = type_combo.get_active() # these corespond with ...
+
     producer_tractor = mlttransitions.get_rendered_transition_tractor(  editorstate.current_sequence(),
                                                                         from_clip,
                                                                         to_clip,
@@ -586,6 +587,9 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
 
     # Get input data
     type_combo, length_entry, enc_combo, quality_combo, color_button = selection_widgets
+
+    transition_type_selection_index = type_combo.get_active() + 3 # +3 because mlttransitions.RENDERED_FADE_IN = 3 and mlttransitions.RENDERED_FADE_OUT = 4
+                                                                  # and fade in/out selection indexes are 0 and 1
     encoding_option_index = enc_combo.get_active()
     quality_option_index = quality_combo.get_active()
     extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
@@ -618,8 +622,7 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
     # Edit clears selection, get track index before selection is cleared
     clip_index = movemodes.selected_range_in
     movemodes.clear_selected_clips()
-    transition_type_selection_index = type_combo.get_active() + 3 # +3 because mlttransitions.RENDERED_FADE_IN = 3 and mlttransitions.RENDERED_FADE_OUT = 4
-                                                                  # and fade in/out selection indexes are 0 and 1
+
     producer_tractor = mlttransitions.get_rendered_transition_tractor(  editorstate.current_sequence(),
                                                                         clip,
                                                                         None,
