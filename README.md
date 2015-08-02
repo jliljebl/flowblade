@@ -1,6 +1,3 @@
-<b> Project is on annual summer break from June 14 to early August.</b>
-  * **please DO file new Issues if needed, action will be taken on those when activity on project resumes.**
-  * **commenting on Issues and answering e-mails might take up to a few weeks, depending on vacations etc.**
 
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
