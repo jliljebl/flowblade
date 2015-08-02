@@ -1,12 +1,6 @@
 
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
-**NEW RELEASE! Flowblade 1.0 was released on June 14, 2015.**
-
-<b>
-See [Installing Flowblade](https://github.com/jliljebl/flowblade#installing-flowblade) on how to get Flowblade on your system. See [Release notes](./flowblade-trunk/docs/RELEASE_NOTES.md) for info on this release.
-</b>
-
 **Contents:**
   1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
   1. [Features](https://github.com/jliljebl/flowblade#features)
