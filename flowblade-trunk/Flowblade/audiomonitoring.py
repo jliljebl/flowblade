@@ -103,6 +103,11 @@ def init(profile):
         MONITORING_AVAILABLE = False
         editorstate.audio_monitoring_available = False
 
+    global CONTROL_SLOT_H, METER_SLOT_H
+    if editorstate.screen_size_small_height() == True:
+        METER_SLOT_H = 400
+        CONTROL_SLOT_H = 220
+            
     # We want this to be always present when closing app or we'll need to handle it being missing.
     global _update_ticker
     _update_ticker = utils.Ticker(_audio_monitor_update, 0.04)
@@ -236,7 +241,6 @@ def _destroy_level_filters(destroy_track_filters=False):
     # We need to be sure that audio level updates are stopped before
     # detaching and destroying them
     _update_ticker.stop_ticker()
-    #time.sleep(0.2)
 
     # Detach filters
     if len(_level_filters) != 0:
@@ -504,7 +508,9 @@ class ChannelMeter:
 class GainControl(Gtk.Frame):
     def __init__(self, name, seq, producer, is_master=False):
         GObject.GObject.__init__(self)
-        
+
+
+
         self.seq = seq
         self.producer = producer
         self.is_master = is_master

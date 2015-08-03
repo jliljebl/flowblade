@@ -671,7 +671,7 @@ class EditorWindow:
                 self.window.set_position(Gtk.WindowPosition.CENTER)
         else:
             self.window.set_position(Gtk.WindowPosition.CENTER)
-
+                
         # Show window and all of its components
         self.window.show_all()
         
@@ -726,18 +726,20 @@ class EditorWindow:
         sep = Gtk.SeparatorMenuItem()
         menu.append(sep)
 
-        show_monitor_info_item = Gtk.CheckMenuItem(_("Show Monitor Sequence Profile").encode('utf-8'))
-        show_monitor_info_item.set_active(editorpersistance.prefs.show_sequence_profile)
-        show_monitor_info_item.connect("toggled", lambda w: middlebar._show_monitor_info_toggled(w))
-        menu.append(show_monitor_info_item)
+        if not (editorstate.screen_size_small_height() == True or editorstate.screen_size_small_height() == True):
+            
+            show_monitor_info_item = Gtk.CheckMenuItem(_("Show Monitor Sequence Profile").encode('utf-8'))
+            show_monitor_info_item.set_active(editorpersistance.prefs.show_sequence_profile)
+            show_monitor_info_item.connect("toggled", lambda w: middlebar._show_monitor_info_toggled(w))
+            menu.append(show_monitor_info_item)
 
-        show_vu_item = Gtk.CheckMenuItem(_("Show Master Volume Meter").encode('utf-8'))
-        show_vu_item.set_active(editorpersistance.prefs.show_vu_meter)
-        show_vu_item.connect("toggled", lambda w: self._show_vu_meter(w))
-        menu.append(show_vu_item)
+            show_vu_item = Gtk.CheckMenuItem(_("Show Master Volume Meter").encode('utf-8'))
+            show_vu_item.set_active(editorpersistance.prefs.show_vu_meter)
+            show_vu_item.connect("toggled", lambda w: self._show_vu_meter(w))
+            menu.append(show_vu_item)
 
-        sep = Gtk.SeparatorMenuItem()
-        menu.append(sep)
+            sep = Gtk.SeparatorMenuItem()
+            menu.append(sep)
 
         interp_menu_item = Gtk.MenuItem(_("Monitor Playback Interpolation").encode('utf-8'))
         interp_menu = Gtk.Menu()

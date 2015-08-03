@@ -84,13 +84,6 @@ RGB_PARADE_MODE = 2
 # black clip
 black_track_clip = None
 
-# DEAD CODE !??!
-# Mute states as (video_on, audio_on) tuples
-# Indexes correspond to "hide" property values 0 - 3
-# for playlists in MLT
-# USED FOR TRACKS, NOT CLIPS. Clips handled using values in appconsts.py
-#MUTE_STATES = [(True, True), (False, True), (True, False), (False, False)]
-
 # Track that all audio is mixed down to combine for output.
 AUDIO_MIX_DOWN_TRACK = 0
 
@@ -924,22 +917,6 @@ class Sequence:
             return -1
         
         return index
-
-    """
-    def next_mute_state(self, track_index):
-        # track.mute_state values corrspond to mlt "hide" values
-        track = self.tracks[track_index]
-        if track.type == VIDEO:
-            track.mute_state = track.mute_state + 1
-            if track.mute_state > 3:
-                track.mute_state = 0 # mlt "hide" all on
-        else:
-            if track.mute_state == 1:
-                track.mute_state = 3 # mlt "hide" all off
-            else:
-                track.mute_state = 1 # mlt "hide" video off
-        track.set("hide", int(track.mute_state))
-    """
     
     def set_track_mute_state(self, track_index, mute_state):
         track = self.tracks[track_index]
