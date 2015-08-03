@@ -809,7 +809,7 @@ class EditorWindow:
         self._update_top_row(True)
 
     def _update_top_row(self, show_all=False):
-        if editorpersistance.prefs.show_vu_meter:
+        if editorpersistance.prefs.show_vu_meter and editorstate.screen_size_small_height() == False:
             if len(self.top_row_hbox) == 1:
                 self.top_row_hbox.pack_end(audiomonitoring.get_master_meter(), False, False, 0)
         else:
