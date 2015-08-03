@@ -76,7 +76,6 @@ def get_compositor_clip_panel():
     compositor_vbox.pack_start(widgets.reset_b, False, False, 0)
     compositor_vbox.pack_start(widgets.delete_b, False, False, 0)
     compositor_vbox.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
-    compositor_vbox.set_size_request(COMPOSITOR_PANEL_LEFT_WIDTH, 200)
 
     set_enabled(False)
     

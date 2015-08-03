@@ -264,8 +264,6 @@ class Sequence:
         
         # Display height
         track.height = TRACK_HEIGHT_NORMAL
-        if editorstate.SCREEN_HEIGHT < 863:# Fix for 786 screens
-            track.height = TRACK_HEIGHT_SMALL
         
         # Audio gain and pan values, these are overwritten later with saved values when loading 
         track.audio_gain = 1.0 # active range 0 - 1

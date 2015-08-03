@@ -24,6 +24,7 @@ from gi.repository import GObject
 import os
 
 import dialogutils
+import editorstate
 import gui
 import guiutils
 from editorstate import current_sequence
@@ -34,7 +35,7 @@ import utils
 
 destroy_window_event_id = -1
 
-FFMPEG_VIEW_SIZE = (200, 210) # Text edit area height for render opts. Width 200 seems to be ignored in current layout?
+FFMPEG_VIEW_SIZE = (200, 20) # Text edit area height for render opts. Width 200 seems to be ignored in current layout?
 
 
 # ----------------------------------------------------------- dialogs
@@ -403,21 +404,34 @@ def get_range_selection_combo():
     return range_cb
 
 # ------------------------------------------------------------ panels
-def get_render_panel_left(render_widgets, add_audio_panel, normal_height):
-    file_opts_panel = guiutils.get_named_frame(_("File"), render_widgets.file_panel.vbox, 4)
-    render_type_panel = guiutils.get_named_frame(_("Render Type"), render_widgets.render_type_panel.vbox, 4)
+def get_render_panel_left(render_widgets):
+    small_height = editorstate.screen_size_small_height()
+    
+    file_opts_panel = guiutils.get_named_frame(_("File"), render_widgets.file_panel.vbox, 4)         
     profile_panel = guiutils.get_named_frame(_("Render Profile"), render_widgets.profile_panel.vbox, 4)
-    encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
 
+    if small_height == False:
+        encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
+        render_type_panel = guiutils.get_named_frame(_("Render Type"), render_widgets.render_type_panel.vbox, 4)
+    
     render_panel = Gtk.VBox()
     render_panel.pack_start(file_opts_panel, False, False, 0)
-    render_panel.pack_start(render_type_panel, False, False, 0)
+    if small_height == False:
+        render_panel.pack_start(render_type_panel, False, False, 0)
     render_panel.pack_start(profile_panel, False, False, 0)
-    render_panel.pack_start(encoding_panel, False, False, 0)
-    render_panel.pack_start(Gtk.Label(), True, True, 0)
+    if small_height == False:
+        render_panel.pack_start(encoding_panel, False, False, 0)
+        render_panel.pack_start(Gtk.Label(), True, True, 0)
+        
     return render_panel
 
 def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_cb):
+    small_height = editorstate.screen_size_small_height()
+
+    if small_height:
+        encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
+        render_type_panel = guiutils.get_named_frame(_("Render Type"), render_widgets.render_type_panel.vbox, 4)
+                
     opts_panel = guiutils.get_named_frame(_("Render Args"), render_widgets.args_panel.vbox, 4)
     
     bin_row = Gtk.HBox()
@@ -450,11 +464,18 @@ def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_c
                                          None)
 
     render_panel = Gtk.VBox()
-    render_panel.pack_start(opts_panel, True, True, 0)
-    render_panel.pack_start(guiutils.get_pad_label(10, 22), False, False, 0)
-    render_panel.pack_start(bin_row, False, False, 0)
+    if small_height:
+        render_panel.pack_start(render_type_panel, False, False, 0)
+        render_panel.pack_start(encoding_panel, False, False, 0)
+        render_panel.pack_start(Gtk.Label(), True, True, 0)
+    else:
+        render_panel.pack_start(opts_panel, True, True, 0)
+    if small_height == False:
+        render_panel.pack_start(guiutils.get_pad_label(10, 22), False, False, 0)
+        render_panel.pack_start(bin_row, False, False, 0)
     render_panel.pack_start(range_row, False, False, 0)
-    render_panel.pack_start(guiutils.get_pad_label(10, 12), False, False, 0)
+    if small_height == False:
+        render_panel.pack_start(guiutils.get_pad_label(10, 12), False, False, 0)
     render_panel.pack_start(buttons_panel, False, False, 0)
 
     return render_panel
@@ -582,7 +603,7 @@ class RenderEncodingPanel():
 
 class RenderArgsPanel():
 
-    def __init__(self, normal_height, save_args_callback, 
+    def __init__(self, save_args_callback, 
                  load_args_callback, display_selection_callback):
         self.display_selection_callback = display_selection_callback
         
@@ -632,12 +653,7 @@ class RenderArgsPanel():
         sw = Gtk.ScrolledWindow()
         sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         sw.add(self.opts_view)
-        if normal_height:
-            sw.set_size_request(*FFMPEG_VIEW_SIZE)
-        else:
-            w, h = FFMPEG_VIEW_SIZE
-            h = h - 30
-            sw.set_size_request(w, h)
+        sw.set_size_request(*FFMPEG_VIEW_SIZE)
 
         scroll_frame = Gtk.Frame()
         scroll_frame.add(sw)

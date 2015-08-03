@@ -46,7 +46,6 @@ def get_project_info_panel():
     profile_panel = guiutils.get_named_frame(_("Profile"), vbox, 4)
 
     events_list = ProjectEventListView()
-    events_list.set_size_request(270, 300)
     events_list.fill_data_model()
     events_panel = guiutils.get_named_frame(_("Project Events"), events_list, 4)
 

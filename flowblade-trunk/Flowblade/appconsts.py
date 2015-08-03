@@ -68,7 +68,7 @@ PROP_EXPRESSION = 2
 # Display heights for tracks.
 TRACK_HEIGHT_NORMAL = 50 # track height in canvas and column
 TRACK_HEIGHT_SMALL = 25 # track height in canvas and column
-TRACK_HEIGHT_SMALLEST = 20 # track height in canvas and column
+TRACK_HEIGHT_SMALLEST = 25 # 20 # track height in canvas and column
 
 # Notebook widths
 NOTEBOOK_WIDTH = 600 # defines app min width with MONITOR_AREA_WIDTH

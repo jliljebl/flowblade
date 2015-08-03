@@ -72,11 +72,6 @@ MEDIA_MANAGER_WIDTH = 250
 
 MONITOR_AREA_WIDTH = 600 # defines app min width with NOTEBOOK_WIDTH 400 for small
 
-BINS_HEIGHT = 250
-EFFECT_STACK_VIEW_HEIGHT = 160
-EFFECT_VALUE_EDITOR_HEIGHT = 200
-EFFECT_SELECT_EDITOR_HEIGHT = 140
-
 IMG_PATH = None
 
 # Cursors
@@ -323,7 +318,7 @@ class EditorWindow:
         # Disable audio mixer if not available
         if editorstate.audio_monitoring_available == False:
             ui.get_widget('/MenuBar/ToolsMenu/AudioMix').set_sensitive(False)
-
+            
         # Menu box
         menu_vbox = Gtk.VBox(False, 0)
         menu_vbox.pack_start(self.menubar, False, True, 0)
@@ -337,7 +332,7 @@ class EditorWindow:
         bins_panel = panels.get_bins_panel(self.bin_list_view,
                                            lambda w,e: projectaction.add_new_bin(),
                                            lambda w,e: projectaction.delete_selected_bin())
-        bins_panel.set_size_request(MEDIA_MANAGER_WIDTH, BINS_HEIGHT)
+        bins_panel.set_size_request(MEDIA_MANAGER_WIDTH, 10) # this component is always expanded, so 10 for minimum size ok
 
         self.media_list_view = guicomponents.MediaPanel(projectaction.media_file_menu_item_selected,
                                                         updater.set_and_display_monitor_media_file)
@@ -349,10 +344,8 @@ class EditorWindow:
     
         self.media_scroll_window = Gtk.ScrolledWindow()
         self.media_scroll_window.add(view)
-        #self.media_scroll_window.add_with_viewport(self.media_list_view.widget)
         self.media_scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         self.media_scroll_window.set_size_request(guicomponents.MEDIA_OBJECT_WIDGET_WIDTH * 2 + 70, guicomponents.MEDIA_OBJECT_WIDGET_HEIGHT)
-        #self.media_scroll_window.set_shadow_type(Gtk.ShadowType.NONE)
         self.media_scroll_window.show_all()
 
         media_panel = panels.get_media_files_panel(
@@ -414,20 +407,9 @@ class EditorWindow:
         self.compositors_panel.add(compositors_hbox)
 
         # Render
-        normal_height = True
-        if appconsts.TOP_ROW_HEIGHT < 500: # small screens have no space to display this
-            normal_height = False
-
-        add_audio_desc = True
-        if editorstate.SCREEN_HEIGHT < 863:
-            add_audio_desc = False
-
         try:
-            render.create_widgets(normal_height)
-            render_panel_left = rendergui.get_render_panel_left(
-                                    render.widgets,
-                                    add_audio_desc,
-                                    normal_height)
+            render.create_widgets()
+            render_panel_left = rendergui.get_render_panel_left(render.widgets)
         except IndexError:
             print "No rendering options found"
             render_panel_left = None

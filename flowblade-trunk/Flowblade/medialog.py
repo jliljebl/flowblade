@@ -663,7 +663,7 @@ def get_media_log_events_panel(events_list_view):
     panel.pack_start(row1, False, True, 0)
     panel.pack_start(events_list_view, True, True, 0)
     panel.pack_start(row2, False, True, 0)
-    panel.set_size_request(400, 200)
+    panel.set_size_request(400, 10)
 
     star_check.set_tooltip_text(_("Display starred ranges"))    
     star_not_active_check.set_tooltip_text(_("Display non-starred ranges"))

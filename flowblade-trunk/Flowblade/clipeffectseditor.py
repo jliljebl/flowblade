@@ -29,6 +29,7 @@ from gi.repository import Gtk
 
 import dnd
 import edit
+import editorstate
 from editorstate import PROJECT
 import gui
 import guicomponents
@@ -101,7 +102,8 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     
     effects_vbox = Gtk.VBox(False, 2)
     effects_vbox.pack_start(info_row, False, False, 0)
-    effects_vbox.pack_start(guiutils.get_pad_label(2, 2), False, False, 0)
+    if editorstate.screen_size_small_height() == False:
+        effects_vbox.pack_start(guiutils.get_pad_label(2, 2), False, False, 0)
     effects_vbox.pack_start(stack_buttons_box, False, False, 0)
     effects_vbox.pack_start(effect_stack, True, True, 0)
     effects_vbox.pack_start(combo_row, False, False, 0)

@@ -164,7 +164,7 @@ def main(root_path):
     scr_h = Gdk.Screen.height()
     editorstate.SCREEN_WIDTH = scr_w
     editorstate.SCREEN_HEIGHT = scr_h
-    _set_draw_params(scr_w, scr_h)
+    _set_draw_params()
 
     # Refuse to run on too small screen.
     if scr_w < 1151 or scr_h < 767:
@@ -632,22 +632,14 @@ def destroy_splash_screen():
     GObject.source_remove(splash_timeout_id)
 
 # ------------------------------------------------------- small screens
-def _set_draw_params(scr_w, scr_h):
-    if scr_w < 1220:
-        appconsts.NOTEBOOK_WIDTH = 580
-        editorwindow.MONITOR_AREA_WIDTH = 500
-    if scr_h < 960:
-        appconsts.TOP_ROW_HEIGHT = 460
-    if scr_h < 863:
-        appconsts.TOP_ROW_HEIGHT = 420
-        sequence.TRACK_HEIGHT_SMALL = appconsts.TRACK_HEIGHT_SMALLEST
-        tlinewidgets.HEIGHT = 184
-        tlinewidgets.TEXT_Y_SMALL = 15
-        tlinewidgets.ID_PAD_Y_SMALL = 2
-        tlinewidgets.COMPOSITOR_HEIGHT_OFF = 7
-        tlinewidgets.COMPOSITOR_HEIGHT = 14
-        tlinewidgets.COMPOSITOR_TEXT_Y = 11
-        tlinewidgets.INSRT_ICON_POS_SMALL = (81, 4)
+def _set_draw_params():
+    if editorstate.screen_size_small_width() == True:
+        appconsts.NOTEBOOK_WIDTH = 450
+        editorwindow.MONITOR_AREA_WIDTH = 450
+        editorwindow.MEDIA_MANAGER_WIDTH = 220
+        
+    if editorstate.screen_size_small_height() == True:
+        appconsts.TOP_ROW_HEIGHT = 10
 
 def _too_small_screen_exit():
     global exit_timeout_id

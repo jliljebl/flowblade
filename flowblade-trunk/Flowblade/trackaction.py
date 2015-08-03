@@ -19,7 +19,7 @@
 """
 
 """
-This module handles track actions; mute, active state, size change.
+This module handles track actions; mute, change active state, size change.
 """
 
 import appconsts

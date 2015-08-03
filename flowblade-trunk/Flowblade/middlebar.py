@@ -188,9 +188,6 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     buttons_row.pack_start(middle_panel, False, False, 0)
     buttons_row.pack_start(right_panel, True, True, 0)
 
-# These get methods are unnecessery, unless we later make possible to use differnt kinds of buttons
-def _get_mode_buttons_panel():
-    return w.mode_buttons_group.widget
 
 def _get_zoom_buttons_panel():    
     return w.zoom_buttons.widget
@@ -209,11 +206,6 @@ def _get_tools_buttons():
 
 def _get_transition_button():
     return w.transition_button.widget
-
-def _get_buttons_panel(btns_count, btn_width=BUTTON_WIDTH):
-    panel = Gtk.HBox(True, 0)
-    panel.set_size_request(btns_count * btn_width, BUTTON_HEIGHT)
-    return panel
 
 def _b(button, icon, remove_relief=False):
     button.set_image(icon)

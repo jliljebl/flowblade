@@ -249,7 +249,7 @@ def get_file_path():
 
 
 # --------------------------------------------------- gui
-def create_widgets(normal_height):
+def create_widgets():
     """
     Widgets for editing render properties and viewing render progress.
     """
@@ -257,8 +257,7 @@ def create_widgets(normal_height):
     widgets.render_type_panel = rendergui.RenderTypePanel(_render_type_changed, _preset_selection_changed)
     widgets.profile_panel = rendergui.RenderProfilePanel(_out_profile_changed)
     widgets.encoding_panel = rendergui.RenderEncodingPanel(widgets.file_panel.extension_label)
-    widgets.args_panel = rendergui.RenderArgsPanel(normal_height,
-                                                   _save_opts_pressed, _load_opts_pressed,
+    widgets.args_panel = rendergui.RenderArgsPanel(_save_opts_pressed, _load_opts_pressed,
                                                    _display_selection_in_opts_view)
 
     # Range, Render, Reset, Render Queue

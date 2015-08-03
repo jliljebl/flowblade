@@ -599,7 +599,10 @@ class ClipInfoPanel(Gtk.VBox):
         self.pack_start(info_row_2, False, False, 0)
         self.pack_start(info_row_3, False, False, 0)
         
-        self.set_size_request(CLIP_EDITOR_LEFT_WIDTH, 56)
+        if editorstate.screen_size_small_height():
+            self.set_size_request(CLIP_EDITOR_LEFT_WIDTH, 10)
+        else:
+            self.set_size_request(CLIP_EDITOR_LEFT_WIDTH, 56)
 
     def display_clip_info(self, clip, track, index):
         self.name_label.set_text(_("<b>Clip: </b>"))

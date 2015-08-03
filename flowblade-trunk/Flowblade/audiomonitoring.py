@@ -601,7 +601,7 @@ class MasterVolumeMeter:
 
         w = SLOT_W - 40
         h = METER_SLOT_H + 2 + 40
-        self.canvas = cairoarea.CairoDrawableArea2(  w,
+        self.canvas = cairoarea.CairoDrawableArea2( w,
                                                     h, 
                                                     self._draw)
 

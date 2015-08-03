@@ -162,4 +162,15 @@ def set_copy_paste_objects(objs):
 def get_copy_paste_objects():
     return _copy_paste_objects
 
-   
+def screen_size_small_height():
+    if SCREEN_HEIGHT < 865:
+        return True
+    else:
+        return False
+
+def screen_size_small_width():
+    if SCREEN_WIDTH < 1200:
+        return True
+    else:
+        return False
+        
