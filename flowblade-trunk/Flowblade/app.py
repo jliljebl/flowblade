@@ -164,6 +164,10 @@ def main(root_path):
     scr_h = Gdk.Screen.height()
     editorstate.SCREEN_WIDTH = scr_w
     editorstate.SCREEN_HEIGHT = scr_h
+
+    print "Small height:", editorstate.screen_size_small_height()
+    print "Small width:",  editorstate.screen_size_small_width()
+
     _set_draw_params()
 
     # Refuse to run on too small screen.
