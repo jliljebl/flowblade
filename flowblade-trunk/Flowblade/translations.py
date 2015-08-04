@@ -23,6 +23,7 @@ import locale
 import os
 
 import respaths
+import editorpersistance
 
 APP_NAME = "Flowblade"
 lang = None
@@ -48,8 +49,13 @@ def init_languages():
 
     # Get the language to use
     global lang
-    #lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=["fi"], fallback=True) # Testing, comment out for production
-    lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=langs, fallback=True)
+    if editorpersistance.prefs.use_english_always == True:
+        print "Force use English texts"
+        lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=["C"], fallback=True)
+    else:
+        print "Use locale texts"
+        lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=langs, fallback=True)
+
     lang.install(APP_NAME) # makes _() a build-in available in all modules without imports
 
 def get_filter_name(f_name):

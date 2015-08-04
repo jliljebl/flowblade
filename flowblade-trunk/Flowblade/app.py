@@ -139,11 +139,6 @@ def main(root_path):
     # Set paths.
     respaths.set_paths(root_path)
 
-    # Init translations module with translations data
-    translations.init_languages()
-    translations.load_filters_translations()
-    mlttransitions.init_module()
-
     # Load editor prefs and list of recent projects
     editorpersistance.load()
     if editorpersistance.prefs.dark_theme == True:
@@ -151,6 +146,11 @@ def main(root_path):
     editorpersistance.create_thumbs_folder_if_needed(user_dir)
     editorpersistance.create_rendered_clips_folder_if_needed(user_dir)
     editorpersistance.save()
+
+    # Init translations module with translations data
+    translations.init_languages()
+    translations.load_filters_translations()
+    mlttransitions.init_module()
 
     # Init gtk threads
     Gdk.threads_init()

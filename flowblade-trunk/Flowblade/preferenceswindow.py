@@ -107,8 +107,10 @@ def _general_options_panel(folder_select_clicked_cb, render_folder_select_clicke
     render_folder_select.connect("clicked" , render_folder_select_clicked_cb)
 
     autosave_combo = Gtk.ComboBoxText()
-    for i in range(0, len(editorpersistance.prefs.AUTO_SAVE_OPTS)):
-        time, desc = editorpersistance.prefs.AUTO_SAVE_OPTS[i]
+    AUTO_SAVE_OPTS = ((-1, _("No Autosave")),(1, _("1 min")),(2, _("2 min")),(5, _("5 min")))
+
+    for i in range(0, len(AUTO_SAVE_OPTS)):
+        time, desc = AUTO_SAVE_OPTS[i]
         autosave_combo.append_text(desc)
     autosave_combo.set_active(prefs.auto_save_delay_value_index)
 
@@ -196,6 +198,9 @@ def _view_prefs_panel():
     prefs = editorpersistance.prefs
 
     # Widgets
+    force_english_check = Gtk.CheckButton()
+    force_english_check.set_active(prefs.use_english_always)
+    
     display_splash_check = Gtk.CheckButton()
     display_splash_check.set_active(prefs.display_splash_screen)
 
@@ -216,11 +221,13 @@ def _view_prefs_panel():
         dark_combo.set_active(0)
         
     # Layout
+    row0 = guiutils.get_checkbox_row_box(force_english_check, Gtk.Label(label=_("Use English texts on localized OS")))
     row1 = guiutils.get_checkbox_row_box(display_splash_check, Gtk.Label(label=_("Display splash screen")))
     row2 = guiutils.get_two_column_box(Gtk.Label(label=_("Buttons style:")), buttons_combo, PREFERENCES_LEFT)
     row3 = guiutils.get_two_column_box(Gtk.Label(label=_("Icons and color optimized for:")), dark_combo, PREFERENCES_LEFT)
     
     vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(row0, False, False, 0)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row3, False, False, 0)
@@ -231,5 +238,5 @@ def _view_prefs_panel():
     align.set_padding(12, 0, 12, 12)
     align.add(vbox)
 
-    return align, (display_splash_check, buttons_combo, dark_combo)
+    return align, (force_english_check, display_splash_check, buttons_combo, dark_combo)
     

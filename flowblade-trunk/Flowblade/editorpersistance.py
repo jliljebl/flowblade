@@ -162,7 +162,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
 
     default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo = gen_opts_widgets
     auto_play_in_clip_monitor_check, auto_center_check, grfx_insert_length_spin, trim_exit_click, trim_quick_enter, remember_clip_frame = edit_prefs_widgets
-    disp_splash, buttons_style, dark_theme = view_prefs_widgets
+    use_english, disp_splash, buttons_style, dark_theme = view_prefs_widgets
 
     global prefs
     prefs.open_in_last_opended_media_dir = open_in_last_opened_check.get_active()
@@ -178,6 +178,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.quick_enter_trims = trim_quick_enter.get_active()
     prefs.remember_monitor_clip_frame = remember_clip_frame.get_active()
 
+    prefs.use_english_always = use_english.get_active()
     prefs.display_splash_screen = disp_splash.get_active()
     prefs.buttons_style = buttons_style.get_active() # styles enum values and widget indexes correspond
     prefs.dark_theme = (dark_theme.get_active() == 1)
@@ -211,7 +212,7 @@ class EditorPreferences:
         self.open_in_last_opended_media_dir = True
         self.last_opened_media_dir = None
         self.img_length = 2000
-        self.auto_save_delay_value_index = 1 # value is index of self.AUTO_SAVE_OPTS
+        self.auto_save_delay_value_index = 1 # value is index of AUTO_SAVE_OPTS in preferenceswindow._general_options_panel()
         self.undos_max = UNDO_STACK_DEFAULT
         self.default_profile_name = 10 # index of default profile
         self.auto_play_in_clip_monitor = False
@@ -222,7 +223,7 @@ class EditorPreferences:
         self.auto_move_after_edit = False
         self.default_grfx_length = 250 # value is in frames
         self.track_configuration = 0 # this is index on list appconsts.TRACK_CONFIGURATIONS
-        self.AUTO_SAVE_OPTS = ((-1, _("No Autosave")),(1, _("1 min")),(2, _("2 min")),(5, _("5 min")))
+        self.AUTO_SAVE_OPTS = None # not used, these are cerated and translated else where
         self.tabs_on_top = False
         self.midbar_tc_left = True
         self.default_layout = True
@@ -240,7 +241,8 @@ class EditorPreferences:
         self.quick_enter_trims = True
         self.show_vu_meter = True
         self.remember_monitor_clip_frame = True
-        self.jack_start_up_op = appconsts.JACK_ON_START_UP_NO
-        self.jack_frequency = 48000
-        self.jack_output_type = appconsts.JACK_OUT_AUDIO
+        self.jack_start_up_op = appconsts.JACK_ON_START_UP_NO # not used
+        self.jack_frequency = 48000 # not used 
+        self.jack_output_type = appconsts.JACK_OUT_AUDIO # not used
         self.media_load_order = appconsts.LOAD_ABSOLUTE_FIRST
+        self.use_english_always = False
