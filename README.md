@@ -14,7 +14,7 @@
 
 Flowblade Movie Editor is a **multitrack non-linear video editor** for Linux released under **GPL 3 license**.
 
-Flowblade is designed to provide a fast, precise and robust editing experience. Flowblade  employs film-style insert editing model for workflow. In insert editing clips are generally placed tightly after other clips when they are inserted on the timeline. Edits are fine tuned by trimming in and out points of clips or by cutting and deleting parts of clips.
+Flowblade is designed to provide a fast, precise and robust editing experience. Flowblade employs a film-style insert editing model as workflow. In insert editing clips are generally placed tightly after other clips when they are inserted on the timeline. Edits are fine tuned by trimming in and out points of clips or by cutting and deleting parts of clips.
 
 Flowblade provides powerful tools to mix and filter video and audio.
 
@@ -24,8 +24,8 @@ Flowblade provides powerful tools to mix and filter video and audio.
 
   * 3 move tools
   * 3 trim tools
-  * 4 methods to insert / overwrite / append clips on the Timeline
-  * Drag'n'Drop clips on the Timeline
+  * 4 methods to insert / overwrite / append clips on the timeline
+  * Drag'n'Drop clips on the timeline
   * Clip and compositor parenting with other clips
   * Max. 9 combined video and audio tracks available
 
@@ -37,8 +37,8 @@ Flowblade provides powerful tools to mix and filter video and audio.
 
 **Image and audio filtering:**
 
-  * 50+ image filters. Color correction, image effects, distorts, alpha manipulation, blur, edge detection, motion effects, freeze frame, etc.
-  * 30+ audio filters. Keyframed volume mixing. Echo, reverb, distort, etc.
+  * 50+ image filters: color correction, image effects, distorts, alpha manipulation, blur, edge detection, motion effects, freeze frame, etc.
+  * 30+ audio filters: keyframed volume mixing, echo, reverb, distort, etc.
 
 **Supported editable media types:**
 
@@ -84,4 +84,4 @@ Installing instructions are available [here](./flowblade-trunk/docs/INSTALLING.m
 
 Use the **Issues** tab on the right to give bug reports or to make feature requests.
 
-If needed, you can contact project lead for additional information: janne.liljeblad@gmail.com
+If needed, contact the project lead for additional information: janne.liljeblad@gmail.com
