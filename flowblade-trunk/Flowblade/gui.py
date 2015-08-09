@@ -200,64 +200,11 @@ def set_theme_colors():
         _bg_color = bg_color
         _button_colors = bg_color
 
-    if editorpersistance.prefs.dark_theme == True:
-        editor_window.tline_pane.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
-        #_fix_all_dark_widgets()
+    # Adwaita and some others show big area of black without this, does not bother ubuntu
+    editor_window.tline_pane.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
 
 def unpack_gdk_color(gdk_color):
     return (gdk_color.red, gdk_color.green, gdk_color.blue, gdk_color.alpha)
-
-def _fix_all_dark_widgets():
-    children = editor_window.window.get_children()
-    bg_color = get_bg_color()
-    for child in children:
-        _fix_container_color(child, bg_color)
-
-    #editor_window.top_paned.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1,0,0))
-
-    # Undo notebook labels
-    #children = editor_window.notebook.get_children()
-    #for child in children:
-        #label = editor_window.notebook.get_tab_label(child)
-        #label.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1,0,0))
-
-    #editor_window.notebook.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1,0,0))
-
-def _fix_container_color(container, bg_color):
-    try:
-        children = container.get_children()
-        if _is_fixed(container):
-            if container.get_name() == "GtkNotebook":
-                _set_dark_color(container, bg_color)
-            _print_widget(container)
-    except:
-        if _is_fixed(container):
-            _set_dark_color(container, bg_color)
-            _print_widget(container)
-        return 
-
-    for child in children:
-        try:
-            child_children = child.get_children()
-            if _is_fixed(child):
-                _fix_container_color(child, bg_color)
-                _print_widget(child)
-        except: # This is not a container
-            if _is_fixed(child):
-                _set_dark_color(child, bg_color)
-                _print_widget(child)
-
-def _is_fixed(widget):
-    if widget.get_name() in _not_dark_fixed:
-        return False
-    else:
-        return True
-
-def _set_dark_color(widget, c):
-    if not hasattr(widget, "no_dark_bg"):
-        widget.override_background_color(Gtk.StateFlags.NORMAL, c)
-    else:
-        print "skipped"
 
 def _print_widget(widget): # debug
     path_str = widget.get_path().to_string()

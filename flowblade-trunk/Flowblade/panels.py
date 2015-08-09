@@ -89,11 +89,7 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, proxy
     panel.pack_start(buttons_box, False, True, 0)
     panel.pack_start(media_list_view, True, True, 0)
     
-    out_align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    out_align.set_padding(4, 4, 0, 4)
-    out_align.add(panel)
-    
-    return out_align
+    return panel
 
 def get_bins_panel(bin_list_view, add_cb, delete_cb):
     # Create buttons and connect signals
@@ -209,20 +205,16 @@ def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_pa
         label_box.pack_start(label, False, False, 0)
         label_box.pack_start(Gtk.Label(), True, True, 0)
 
-    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(right_padding, 0, left_padding, 0)
-    alignment.add(widget)
-    
+    guiutils.set_margins(widget, right_padding, 0, left_padding, 0)
+
     frame = Gtk.VBox()
     if name != None:
         frame.pack_start(label_box, False, False, 0)
-    frame.pack_start(alignment, True, True, 0)
+    frame.pack_start(widget, True, True, 0)
+
+    guiutils.set_margins(frame, 4, 4, 0, right_out_padding)
     
-    out_align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    out_align.set_padding(4, 4, 0, right_out_padding)
-    out_align.add(frame)
-    
-    return out_align
+    return frame
 
 def get_two_text_panel(primary_txt, secondary_txt):
     p_label = guiutils.bold_label(primary_txt)

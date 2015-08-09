@@ -334,7 +334,7 @@ class EditorWindow:
                                            lambda w,e: projectaction.add_new_bin(),
                                            lambda w,e: projectaction.delete_selected_bin())
         bins_panel.set_size_request(MEDIA_MANAGER_WIDTH, 10) # this component is always expanded, so 10 for minimum size ok
-
+        bins_panel.set_margin_right(4)
         self.media_list_view = guicomponents.MediaPanel(projectaction.media_file_menu_item_selected,
                                                         updater.set_and_display_monitor_media_file)
     
@@ -356,6 +356,7 @@ class EditorWindow:
                                 projectaction.columns_count_launch_pressed,
                                 lambda w,e: proxyediting.create_proxy_files_pressed(),
                                 projectaction.media_filtering_select_pressed)
+        guiutils.set_margins(media_panel, 6, 6, 4, 6)
 
         self.mm_paned = Gtk.HPaned()
         self.mm_paned.pack1(bins_panel, resize=True, shrink=True)

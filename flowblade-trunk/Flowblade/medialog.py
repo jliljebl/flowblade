@@ -547,6 +547,8 @@ class MediaLogListView(Gtk.VBox):
         # Build widget graph and display
         self.scroll.add(self.treeview)
         self.pack_start(self.scroll, True, True, 0)
+        
+        guiutils.set_margins(self, 6, 6, 0, 0)
         self.scroll.show_all()
 
     def fill_data_model(self):
