@@ -757,7 +757,7 @@ class MediaPanel():
                     self.selected_objects.append(media_object)
             else:
                 self.clear_selection()
-                widget.override_background_color(Gtk.StateType.NORMAL, gui.selected_bg_color)
+                widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
                 self.selected_objects.append(media_object)
         elif event.button == 3:
             self.clear_selection()
@@ -781,13 +781,16 @@ class MediaPanel():
 
     def select_all(self):
         self.clear_selection()
+        bg_color = gui.get_selected_bg_color()
+        
         for media_file, media_object in self.widget_for_mediafile.iteritems():
-            media_object.widget.modify_bg(Gtk.StateType.NORMAL, gui.selected_bg_color)
+            media_object.widget.override_background_color(Gtk.StateType.NORMAL, bg_color)
             self.selected_objects.append(media_object)
 
     def clear_selection(self):
+        bg_color = gui.get_bg_color()
         for m_obj in self.selected_objects:
-            m_obj.widget.override_background_color(Gtk.StateType.NORMAL, gui.note_bg_color)
+            m_obj.widget.override_background_color(Gtk.StateType.NORMAL, bg_color)
         self.selected_objects = []
 
     def columns_changed(self, columns):
@@ -961,15 +964,10 @@ class EditorSeparator:
         """
         x, y, w, h = allocation
         
-        # Draw bg
-        #cr.set_source_rgb(*guiutils.get_theme_bg_color())
-        #cr.rectangle(0, 0, w, h)
-        #cr.fill()
-        
         # Draw separator
         cr.set_line_width(1.0)
-        r,g,b = gui.fg_color_tuple
-        cr.set_source_rgba(r,g,b,0.2)
+        #r,g,b = gui.fg_color_tuple
+        cr.set_source_rgba(0.5,0.5,0.5,0.2)
         cr.move_to(8.5, 2.5)
         cr.line_to(w - 8.5, 2.5)
         cr.stroke()

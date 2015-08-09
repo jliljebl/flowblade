@@ -220,7 +220,7 @@ class ClipKeyFrameEditor:
         # Clip edge and emboss
         rect = (END_PAD, TOP_PAD, active_width, active_height)
         self.draw_edge(cr, rect)
-        self.draw_emboss(cr, rect, gui.bg_color_tuple)
+        self.draw_emboss(cr, rect, gui.get_bg_color())
 
         # Draw center line
         cr.set_source_rgb(0.4, 0.4, 0.4)
@@ -262,7 +262,8 @@ class ClipKeyFrameEditor:
         down = up + rect[3] - 2.0
             
         # Draw lines
-        light_color = guiutils.get_multiplied_color(color, LIGHT_MULTILPLIER)
+        color_tuple = gui.unpack_gdk_color(color)
+        light_color = guiutils.get_multiplied_color(color_tuple, LIGHT_MULTILPLIER)
         cr.set_source_rgb(*light_color)
         cr.move_to(left, down)
         cr.line_to(left, up)
@@ -272,7 +273,7 @@ class ClipKeyFrameEditor:
         cr.line_to(right, up)
         cr.stroke()
 
-        dark_color = guiutils.get_multiplied_color(color, DARK_MULTIPLIER)
+        dark_color = guiutils.get_multiplied_color(color_tuple, DARK_MULTIPLIER)
         cr.set_source_rgb(*dark_color)
         cr.move_to(right, up)
         cr.line_to(right, down)

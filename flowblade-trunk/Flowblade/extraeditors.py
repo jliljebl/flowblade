@@ -711,11 +711,6 @@ class BoxEditor:
 
     def draw_box(self, cr, allocation):
         x, y, w, h = allocation
-       
-        # Draw bg
-        #cr.set_source_rgb(*(gui.bg_color_tuple))
-        #cr.rectangle(0, 0, w, h)
-        #cr.fill()
         
         if editorpersistance.prefs.dark_theme == False:
             cr.set_source_rgb(*BOX_BG_COLOR )

@@ -41,6 +41,7 @@ from editorstate import PLAYER
 from editorstate import EDIT_MODE
 from editorstate import current_proxy_media_paths
 import editorstate
+import gui
 import respaths
 import sequence
 import trimmodes
@@ -210,9 +211,7 @@ DARK_FRAME_SCALE_SELECTED_COLOR_GRAD_L = get_multiplied_grad(1, 1, FRAME_SCALE_S
 FRAME_SCALE_LINES = (0, 0, 0)
 
 BG_COLOR = (0.5, 0.5, 0.55)#(0.6, 0.6, 0.65)
-TRACK_BG_COLOR = (0.25, 0.25, 0.27)#(0.6, 0.6, 0.65)
 
-COLUMN_ACTIVE_COLOR = (0.36, 0.37, 0.37)
 COLUMN_NOT_ACTIVE_COLOR = (0.65, 0.65, 0.65)
 
 OVERLAY_COLOR = (0.9,0.9,0.9)
@@ -295,6 +294,15 @@ def load_icons():
         FRAME_SCALE_COLOR_GRAD_L = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, GRAD_MULTIPLIER)
         BG_COLOR = (0.44, 0.44, 0.46)
         FRAME_SCALE_LINES = (0.8, 0.8, 0.8)
+
+def set_dark_bg_color():
+    if editorpersistance.prefs.dark_theme == False:
+        return
+
+    r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())
+
+    global BG_COLOR
+    BG_COLOR = get_multiplied_color((r, g, b), 1.25)
 
 def _load_pixbuf(icon_file):
     return cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + icon_file)
@@ -1725,8 +1733,12 @@ class TimeLineFrameScale:
 
         # Draw grad bg
         grad = cairo.LinearGradient (0, 0, 0, h)
-        grad.add_color_stop_rgba(*FRAME_SCALE_COLOR_GRAD)
-        grad.add_color_stop_rgba(*FRAME_SCALE_COLOR_GRAD_L)
+        if editorpersistance.prefs.dark_theme == True:
+            grad = self._get_dark_theme_grad(h)
+        else:
+            grad = cairo.LinearGradient (0, 0, 0, h)
+            grad.add_color_stop_rgba(*FRAME_SCALE_COLOR_GRAD)
+            grad.add_color_stop_rgba(*FRAME_SCALE_COLOR_GRAD_L)
         cr.set_source(grad)
         cr.rectangle(0,0,w,h)
         cr.fill()
@@ -1900,7 +1912,15 @@ class TimeLineFrameScale:
 
         cr.fill()
    
-
+    def _get_dark_theme_grad(self, h):
+        r, g, b, a  = gui.get_bg_color()
+           
+        grad = cairo.LinearGradient (0, 0, 0, h)
+        grad.add_color_stop_rgba(1, r, g, b, 1)
+        grad.add_color_stop_rgba(0, r + 0.05, g + 0.05, b + 0.05, 1)
+        
+        return grad
+        
 class TimeLineScroller(Gtk.HScrollbar):
     """
     Scrollbar for timeline.

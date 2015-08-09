@@ -22,8 +22,9 @@
 Module holds references to GUI widgets.
 """
 
+from gi.repository import Gtk, Gdk
 
-from gi.repository import Gtk
+import editorpersistance
 
 
 # Editor window
@@ -72,13 +73,30 @@ clip_editor_b = None
 sequence_editor_b = None
 
 # Theme colors
-note_bg_color = None
-fg_color = None
-fg_color_tuple = None
-bg_color_tuple = None
-selected_bg_color = None
+# Theme colors are given as tuple three RGB tuples, ((LIGHT_BG), (DARK_BG), (SELECTED_BG), (BUTTON_C0LORS))
+_UBUNTU_COLORS = ((-1, -1, -1), (-1, -1, -1), (0.941, 0.466, 0.274, 0.9),(-1, -1, -1))
+_GNOME_COLORS = ((-1, -1, -1), (0.172, 0.172, 0.172), (0.192, 0.361, 0.608), (-1, -1, -1))
+_MINT_COLORS = ((-1, -1, -1), (-1, -1, -1), (0.941, 0.466, 0.274, 0.9), (-1, -1, -1))
+ 
+_THEME_COLORS = (_UBUNTU_COLORS, _GNOME_COLORS, _MINT_COLORS)
 
-label = None
+_selected_bg_color = None
+_bg_color = None
+_button_colors = None
+
+_colors_set = False 
+
+
+_not_dark_fixed = ["GtkButton","cairoarea+CairoDrawableArea2", "GtkTreeView"]
+
+#note_bg_color = None
+#fg_color = None
+#fg_color_tuple = None
+#bg_color_tuple = None
+#_selected_bg_color = None
+#_selected_bg_color_exists = False  # _selected_bg_color cannot be tested == None because cracy Gdk.py 
+
+#label = None
 
 def capture_references(new_editor_window):
     """
@@ -121,22 +139,133 @@ def capture_references(new_editor_window):
     style = editor_window.edit_buttons_row.get_style_context ()
     note_bg_color = style.get_background_color(Gtk.StateFlags.NORMAL)
     #print note_bg_color
-    fg_color = style.get_color(Gtk.StateFlags.NORMAL)
-    selected_bg_color = style.get_background_color(Gtk.StateFlags.SELECTED)
+
+    #fg_color = style.get_color(Gtk.StateFlags.NORMAL)
+    #
+
+    #style = editor_window.edit_buttons_row.get_style_context ()
+    #selected_bg_color = style.get_background_color(Gtk.StateFlags.SELECTED)
     
     # Get cairo color tuple from Gdk.Color
-    raw_r, raw_g, raw_b = fg_color.red,  fg_color.green, fg_color.blue
-    fg_color_tuple = (float(raw_r)/65535.0, float(raw_g)/65535.0, float(raw_b)/65535)
+    #raw_r, raw_g, raw_b = fg_color.red,  fg_color.green, fg_color.blue
+    #fg_color_tuple = (float(raw_r)/65535.0, float(raw_g)/65535.0, float(raw_b)/65535)
 
-    raw_r, raw_g, raw_b = note_bg_color.red, note_bg_color.green ,note_bg_color.blue
-    bg_color_tuple = (float(raw_r)/65535.0, float(raw_g)/65535.0, float(raw_b)/65535)
-
-"""
-def hex_to_rgb(value):
-    value = value.lstrip('#')
-    lv = len(value)
-    return tuple(int(value[i:i+lv/3], 16) for i in range(0, lv, lv/3))
-"""
+    #raw_r, raw_g, raw_b = note_bg_color.red, note_bg_color.green ,note_bg_color.blue
+    #bg_color_tuple = (float(raw_r)/65535.0, float(raw_g)/65535.0, float(raw_b)/65535)
 
 def enable_save():
     editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)
+
+# returns Gdk.RGBA color
+def get_bg_color():
+    return _bg_color
+
+# returns Gdk.RGBA color
+def get_selected_bg_color():
+    return _selected_bg_color
+
+# returns Gdk.RGBA color
+def get_buttons_color():
+    return _button_colors
+    
+def set_theme_colors():
+    # Find out if theme color discovery works and set selected bg color apppropiately when 
+    # this is first called.
+    global _selected_bg_color, _bg_color, _button_colors, _colors_set
+
+    fallback_theme_colors = 1
+    theme_colors = _THEME_COLORS[fallback_theme_colors]
+    
+    style = editor_window.bin_list_view.get_style_context()
+    sel_bg_color = style.get_background_color(Gtk.StateFlags.SELECTED)
+
+    r, g, b, a = unpack_gdk_color(sel_bg_color)
+    if r == 0.0 and g == 0.0 and b == 0.0:
+        print "sel color NOT detected"
+        _selected_bg_color = Gdk.RGBA(*theme_colors[2])
+    else:
+        print "sel color detected"
+        _selected_bg_color = sel_bg_color
+
+    style = editor_window.window.get_style_context()
+    bg_color = style.get_background_color(Gtk.StateFlags.NORMAL)
+    r, g, b, a = unpack_gdk_color(bg_color)
+
+    if r == 0.0 and g == 0.0 and b == 0.0:
+        print "bg color NOT detected"
+        _bg_color = Gdk.RGBA(*theme_colors[0])
+        _button_colors = Gdk.RGBA(*theme_colors[3])
+    else:
+        print "bg color detected"
+        _bg_color = bg_color
+        _button_colors = bg_color
+
+    if editorpersistance.prefs.dark_theme == True:
+        editor_window.tline_pane.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
+        #_fix_all_dark_widgets()
+
+def unpack_gdk_color(gdk_color):
+    return (gdk_color.red, gdk_color.green, gdk_color.blue, gdk_color.alpha)
+
+def _fix_all_dark_widgets():
+    children = editor_window.window.get_children()
+    bg_color = get_bg_color()
+    for child in children:
+        _fix_container_color(child, bg_color)
+
+    #editor_window.top_paned.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1,0,0))
+
+    # Undo notebook labels
+    #children = editor_window.notebook.get_children()
+    #for child in children:
+        #label = editor_window.notebook.get_tab_label(child)
+        #label.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1,0,0))
+
+    #editor_window.notebook.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1,0,0))
+
+def _fix_container_color(container, bg_color):
+    try:
+        children = container.get_children()
+        if _is_fixed(container):
+            if container.get_name() == "GtkNotebook":
+                _set_dark_color(container, bg_color)
+            _print_widget(container)
+    except:
+        if _is_fixed(container):
+            _set_dark_color(container, bg_color)
+            _print_widget(container)
+        return 
+
+    for child in children:
+        try:
+            child_children = child.get_children()
+            if _is_fixed(child):
+                _fix_container_color(child, bg_color)
+                _print_widget(child)
+        except: # This is not a container
+            if _is_fixed(child):
+                _set_dark_color(child, bg_color)
+                _print_widget(child)
+
+def _is_fixed(widget):
+    if widget.get_name() in _not_dark_fixed:
+        return False
+    else:
+        return True
+
+def _set_dark_color(widget, c):
+    if not hasattr(widget, "no_dark_bg"):
+        widget.override_background_color(Gtk.StateFlags.NORMAL, c)
+    else:
+        print "skipped"
+
+def _print_widget(widget): # debug
+    path_str = widget.get_path().to_string()
+    path_str = path_str.replace("GtkWindow:dir-ltr.background","")
+    path_str = path_str.replace("dir-ltr","")
+    path_str = path_str.replace("vertical","")
+    path_str = path_str.replace("horizontal","")
+    path_str = path_str.replace("[1/2]","")
+    path_str = path_str.replace("GtkVBox:. GtkVPaned:[2/2]. GtkHBox:. GtkHPaned:. GtkVBox:. GtkNotebook:[1/1]","notebook:")
+    print path_str
+

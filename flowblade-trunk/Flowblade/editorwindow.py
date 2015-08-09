@@ -69,10 +69,11 @@ import undo
 
 # GUI size params
 MEDIA_MANAGER_WIDTH = 250
-
 MONITOR_AREA_WIDTH = 600 # defines app min width with NOTEBOOK_WIDTH 400 for small
 
 IMG_PATH = None
+
+DARK_BG_COLOR = (0.223, 0.247, 0.247, 1.0)
 
 # Cursors
 OVERWRITE_CURSOR = None
@@ -471,13 +472,16 @@ class EditorWindow:
         # Notebook
         self.notebook = Gtk.Notebook()
         self.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH, appconsts.TOP_ROW_HEIGHT)
-        self.notebook.append_page(mm_panel, Gtk.Label(label=_("Media")))
+        media_label = Gtk.Label(label=_("Media"))
+        media_label.no_dark_bg = True
+        self.notebook.append_page(mm_panel, media_label)
         self.notebook.append_page(media_log_panel, Gtk.Label(label=_("Range Log")))
         self.notebook.append_page(self.effects_panel, Gtk.Label(label=_("Filters")))
         self.notebook.append_page(self.compositors_panel, Gtk.Label(label=_("Compositors")))
         self.notebook.append_page(project_panel, Gtk.Label(label=_("Project")))
         self.notebook.append_page(render_panel, Gtk.Label(label=_("Render")))
         self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
+        #self.notebook.set_show_tabs(False) 
 
         # Right notebook, used for Widescreen and Two row layouts
         self.right_notebook = Gtk.Notebook()
@@ -542,6 +546,7 @@ class EditorWindow:
 
         # Notebook panel
         notebook_vbox = Gtk.VBox(False, 1)
+        notebook_vbox.no_dark_bg = True
         notebook_vbox.pack_start(self.notebook, True, True, 0)
 
         # Top row paned
@@ -556,10 +561,13 @@ class EditorWindow:
 
         # Edit buttons rows
         self.edit_buttons_row = self._get_edit_buttons_row()
-        self.edit_buttons_frame = Gtk.Frame()
-        self.edit_buttons_frame.add(self.edit_buttons_row)
-        self.edit_buttons_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
-                
+        if editorpersistance.prefs.dark_theme == False:
+            self.edit_buttons_frame = Gtk.Frame()
+            self.edit_buttons_frame.add(self.edit_buttons_row)
+            self.edit_buttons_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
+        else:
+            self.edit_buttons_frame  = self.edit_buttons_row
+
         # Timeline scale
         self.tline_scale = tlinewidgets.TimeLineFrameScale(editevent.insert_move_mode_pressed,  
                                                            updater.mouse_scroll_zoom)
@@ -636,11 +644,14 @@ class EditorWindow:
         tline_pane = Gtk.VBox(False, 1)
         tline_pane.pack_start(self.edit_buttons_frame, False, True, 0)
         tline_pane.pack_start(self.tline_box, True, True, 0)
-
+        #tline_pane.override_background_color(Gtk.StateFlags.NORMAL, gui.get_bg_color())
+        self.tline_pane = tline_pane
+    
         # VPaned top row / timeline
         self.app_v_paned = Gtk.VPaned()
         self.app_v_paned.pack1(self.top_row_hbox, resize=False, shrink=False)
         self.app_v_paned.pack2(tline_pane, resize=True, shrink=False)
+        self.app_v_paned.no_dark_bg = True
 
         # Pane
         pane = Gtk.VBox(False, 1)

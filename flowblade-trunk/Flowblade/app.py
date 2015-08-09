@@ -270,7 +270,9 @@ def main(root_path):
     # We prefer to monkeypatch some callbacks into some modules, usually to
     # maintain a simpler and non-circular import structure
     monkeypatch_callbacks()
-     
+
+    print gui.get_selected_bg_color()
+    
     # Launch gtk+ main loop
     Gtk.main()
 
@@ -337,6 +339,10 @@ def create_gui():
     # Make references to various gui components available via gui module
     gui.capture_references(editor_window)
 
+    # All widgets are now realized and references captured so can find out theme colors
+    gui.set_theme_colors()
+    tlinewidgets.set_dark_bg_color()
+    
     # Connect window global key listener
     gui.editor_window.window.connect("key-press-event", keyevents.key_down)
     

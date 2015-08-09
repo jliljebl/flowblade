@@ -26,7 +26,7 @@ from gi.repository import Gtk
 import cairoarea
 import editorpersistance
 import gui
-import guiutils
+#import guiutils
 import respaths
 
 BUTTONS_GRAD_STOPS = [   (1, 1, 1, 1, 0.2),
@@ -63,6 +63,8 @@ NO_HIT = -1
 DEFAULT_FOCUS_GROUP = "default_focus_group"
 focus_groups = {DEFAULT_FOCUS_GROUP:[]}
 
+#FLAT_COLOR_LIGHT = (0.9, 0.9, 0.9)
+#FLAT_COLOR_DARK = (0.25, 0.25, 0.25)
 
 class AbstractGlassButtons:
 
@@ -103,7 +105,7 @@ class AbstractGlassButtons:
             self.glass_style = False
             self.dark_theme = True
 
-        self.draw_button_gradients = True # set False at object creation site to kill all gradients
+        self.draw_button_gradients = True # old code artifact, remove (set False at object creation site to kill all gradients)
 
     def _set_button_draw_consts(self, x, y, width, height):
         aspect = 1.0
@@ -155,21 +157,16 @@ class AbstractGlassButtons:
         # Width of buttons group
         buttons_width = self.button_width * len(self.icons)
 
-        # Draw bg
-        #cr.set_source_rgb(*guiutils.get_theme_bg_color())
-        #cr.rectangle(0, 0, w, h)
-        #cr.fill()
-
         # Line width for all strokes
         cr.set_line_width(1.0)
 
         # bg 
         self._set_button_draw_consts(self.button_x + 0.5, self.button_y + 0.5, buttons_width, self.button_height + 1.0)
         self._round_rect_path(cr)
-        r, g, b = gui.bg_color_tuple
+        r, g, b, a  = gui.get_bg_color()
         if self.draw_button_gradients:
             if self.glass_style == True:
-                cr.set_source_rgb(0.75, 0.75, 0.75)#*gui.bg_color_tuple)#0.75, 0.75, 0.75)
+                cr.set_source_rgb(0.75, 0.75, 0.75)
                 cr.fill_preserve()
             else:
                 grad = cairo.LinearGradient (self.button_x, self.button_y, self.button_x, self.button_y + self.button_height)
@@ -246,7 +243,7 @@ class AbstractGlassButtons:
             cr.stroke()
 
         if self.dark_theme == True:
-            cr.set_source_rgb(*gui.bg_color_tuple)
+            cr.set_source_rgb(0,0,0)
 
         # Vert lines
         x = self.button_x
