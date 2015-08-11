@@ -28,7 +28,7 @@ import guiutils
 import mltprofiles
 
 PREFERENCES_WIDTH = 730
-PREFERENCES_HEIGHT = 300
+PREFERENCES_HEIGHT = 320
 PREFERENCES_LEFT = 410
 
 select_thumbnail_dir_callback = None # app.py sets at start up
@@ -36,9 +36,6 @@ select_render_clips_dir_callback = None # app.py sets at start up
 
 def preferences_dialog():
 
-    #global select_thumbnail_dir_callback, select_render_clips_dir_callback
-    #select_thumbnail_dir_callback = select_thumbnail_cb
-    #select_render_clips_dir_callback = select_render_clips_cb
 
     dialog = Gtk.Dialog(_("Editor Preferences"), None,
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -122,14 +119,14 @@ def _general_options_panel(folder_select_clicked_cb, render_folder_select_clicke
     load_order_combo.set_active(prefs.media_load_order)
 
     # Layout
-    row1 = guiutils.get_two_column_box(Gtk.Label(label=_("Default Profile:")), default_profile_combo, PREFERENCES_LEFT)
-    row2 = guiutils.get_checkbox_row_box(open_in_last_opened_check, Gtk.Label(label=_("Remember last media directory")))
-    row3 = guiutils.get_two_column_box(Gtk.Label(label=_("Undo stack size:")), undo_max_spin, PREFERENCES_LEFT)
-    row4 = guiutils.get_two_column_box(Gtk.Label(label=_("Thumbnail folder:")), folder_select, PREFERENCES_LEFT)
-    row5 = guiutils.get_checkbox_row_box(open_in_last_rendered_check, Gtk.Label(label=_("Remember last render directory")))
-    row6 = guiutils.get_two_column_box(Gtk.Label(label=_("Autosave for crash recovery every:")), autosave_combo, PREFERENCES_LEFT)
-    row8 = guiutils.get_two_column_box(Gtk.Label(label=_("Rendered Clips folder:")), render_folder_select, PREFERENCES_LEFT)
-    row9 = guiutils.get_two_column_box(Gtk.Label(label=_("Media look-up order on load:")), load_order_combo, PREFERENCES_LEFT)
+    row1 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Default Profile:")), default_profile_combo, PREFERENCES_LEFT))
+    row2 = _row(guiutils.get_checkbox_row_box(open_in_last_opened_check, Gtk.Label(label=_("Remember last media directory"))))
+    row3 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Undo stack size:")), undo_max_spin, PREFERENCES_LEFT))
+    row4 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Thumbnail folder:")), folder_select, PREFERENCES_LEFT))
+    row5 = _row(guiutils.get_checkbox_row_box(open_in_last_rendered_check, Gtk.Label(label=_("Remember last render directory"))))
+    row6 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Autosave for crash recovery every:")), autosave_combo, PREFERENCES_LEFT))
+    row8 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Rendered Clips folder:")), render_folder_select, PREFERENCES_LEFT))
+    row9 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Media look-up order on load:")), load_order_combo, PREFERENCES_LEFT))
 
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)
@@ -142,11 +139,9 @@ def _general_options_panel(folder_select_clicked_cb, render_folder_select_clicke
     vbox.pack_start(row9, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
 
-    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(12, 0, 12, 12)
-    align.add(vbox)
+    guiutils.set_margins(vbox, 12, 0, 12, 12)
 
-    return align, (default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo)
+    return vbox, (default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo)
 
 def _edit_prefs_panel():
     prefs = editorpersistance.prefs
@@ -173,12 +168,12 @@ def _edit_prefs_panel():
     remember_clip_frame.set_active(prefs.remember_monitor_clip_frame)
 
     # Layout
-    row1 = guiutils.get_checkbox_row_box(auto_play_in_clip_monitor, Gtk.Label(label=_("Autoplay new Clips in Clip Monitor")))
-    row2 = guiutils.get_checkbox_row_box(auto_center_on_stop, Gtk.Label(label=_("Center Current Frame on Playback Stop")))
-    row4 = guiutils.get_two_column_box(Gtk.Label(label=_("Graphics default length:")), gfx_length_spin, PREFERENCES_LEFT)
-    row5 = guiutils.get_checkbox_row_box(trim_exit_on_empty, Gtk.Label(label=_("Trim Modes exit on empty click")))
-    row6 = guiutils.get_checkbox_row_box(quick_enter_trim, Gtk.Label(label=_("Quick enter Trim Modes")))
-    row7 = guiutils.get_checkbox_row_box(remember_clip_frame, Gtk.Label(label=_("Remember Monitor Clip Frame")))
+    row1 = _row(guiutils.get_checkbox_row_box(auto_play_in_clip_monitor, Gtk.Label(label=_("Autoplay new Clips in Clip Monitor"))))
+    row2 = _row(guiutils.get_checkbox_row_box(auto_center_on_stop, Gtk.Label(label=_("Center Current Frame on Playback Stop"))))
+    row4 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Graphics default length:")), gfx_length_spin, PREFERENCES_LEFT))
+    row5 = _row(guiutils.get_checkbox_row_box(trim_exit_on_empty, Gtk.Label(label=_("Trim Modes exit on empty click"))))
+    row6 = _row(guiutils.get_checkbox_row_box(quick_enter_trim, Gtk.Label(label=_("Quick enter Trim Modes"))))
+    row7 = _row(guiutils.get_checkbox_row_box(remember_clip_frame, Gtk.Label(label=_("Remember Monitor Clip Frame"))))
     
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row5, False, False, 0)
@@ -189,12 +184,10 @@ def _edit_prefs_panel():
     vbox.pack_start(row7, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
     
-    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(12, 0, 12, 12)
-    align.add(vbox)
+    guiutils.set_margins(vbox, 12, 0, 12, 12)
 
-    return align, (auto_play_in_clip_monitor, auto_center_on_stop, gfx_length_spin, trim_exit_on_empty, quick_enter_trim, remember_clip_frame)
-    
+    return vbox, (auto_play_in_clip_monitor, auto_center_on_stop, gfx_length_spin, trim_exit_on_empty, quick_enter_trim, remember_clip_frame)
+
 def _view_prefs_panel():
     prefs = editorpersistance.prefs
 
@@ -222,22 +215,22 @@ def _view_prefs_panel():
         dark_combo.set_active(0)
         
     # Layout
-    row0 = guiutils.get_checkbox_row_box(force_english_check, Gtk.Label(label=_("Use English texts on localized OS")))
-    row1 = guiutils.get_checkbox_row_box(display_splash_check, Gtk.Label(label=_("Display splash screen")))
-    row2 = guiutils.get_two_column_box(Gtk.Label(label=_("Buttons style:")), buttons_combo, PREFERENCES_LEFT)
-    row3 = guiutils.get_two_column_box(Gtk.Label(label=_("Icons and color optimized for:")), dark_combo, PREFERENCES_LEFT)
+    row0 =  _row(guiutils.get_checkbox_row_box(force_english_check, Gtk.Label(label=_("Use English texts on localized OS"))))
+    row1 =  _row(guiutils.get_checkbox_row_box(display_splash_check, Gtk.Label(label=_("Display splash screen"))))
+    row2 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Buttons style:")), buttons_combo, PREFERENCES_LEFT))
+    row3 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Icons and color optimized for:")), dark_combo, PREFERENCES_LEFT))
     
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row0, False, False, 0)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row3, False, False, 0)
-
     vbox.pack_start(Gtk.Label(), True, True, 0)
     
-    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(12, 0, 12, 12)
-    align.add(vbox)
+    guiutils.set_margins(vbox, 12, 0, 12, 12)
 
-    return align, (force_english_check, display_splash_check, buttons_combo, dark_combo)
+    return vbox, (force_english_check, display_splash_check, buttons_combo, dark_combo)
     
+def _row(row_cont):
+    row_cont.set_size_request(10, 26)
+    return row_cont
