@@ -31,6 +31,8 @@ from gi.repository import Gdk
 from cairoarea import CairoDrawableArea2
 import editorpersistance
 import editorstate
+import gui
+import guiutils
 import trimmodes
 
 # Draw params
@@ -77,9 +79,8 @@ class PositionBar:
         self.mouse_release_listener = None # when used in tools (Titler ate.) this used to update bg image
 
         if editorpersistance.prefs.dark_theme == True:
-            global LINE_COLOR, BG_COLOR, DISABLED_BG_COLOR, SELECTED_RANGE_COLOR, MARK_COLOR
+            global LINE_COLOR, DISABLED_BG_COLOR, SELECTED_RANGE_COLOR, MARK_COLOR
             LINE_COLOR = DARK_LINE_COLOR
-            BG_COLOR = DARK_BG_COLOR
             DISABLED_BG_COLOR = DARK_DISABLED_BG_COLOR
             SELECTED_RANGE_COLOR = DARK_SELECTED_RANGE_COLOR
             MARK_COLOR = DARK_MARK_COLOR
@@ -110,6 +111,15 @@ class PositionBar:
 
         self.widget.queue_draw()
 
+    def set_dark_bg_color(self):
+        if editorpersistance.prefs.dark_theme == False:
+            return
+
+        r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())
+
+        global BG_COLOR
+        BG_COLOR = guiutils.get_multiplied_color((r, g, b), 1.25)
+    
     def _get_panel_pos(self, norm_pos):
         return END_PAD + int(norm_pos * 
                (self.widget.get_allocation().width - 2 * END_PAD))

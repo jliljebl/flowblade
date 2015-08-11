@@ -45,26 +45,22 @@ def profiles_manager_dialog():
     dialog = Gtk.Dialog(_("Profiles Manager"), None,
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                     (_("Close Manager").encode('utf-8'), Gtk.ResponseType.CLOSE))
-    
 
     panel2, user_profiles_view = _get_user_profiles_panel()
-    alignment2 = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    alignment2.set_padding(12, 14, 12, 6)
-    alignment2.add(panel2)
+    guiutils.set_margins(panel2, 12, 14, 12, 6)
 
     panel1 = _get_factory_profiles_panel(user_profiles_view)
-    alignment1 = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    alignment1.set_padding(12, 12, 12, 12)
-    alignment1.add(panel1)
+    guiutils.set_margins(panel1, 12, 12, 12, 12)
 
     pane = Gtk.HBox(True, 2)
-    pane.pack_start(alignment1, True, True, 0)
-    pane.pack_start(alignment2, True, True, 0)
+    pane.pack_start(panel1, True, True, 0)
+    pane.pack_start(panel2, True, True, 0)
     pane.set_size_request(PROFILES_WIDTH * 2, PROFILES_HEIGHT)
     pane.show_all()
     dialog.connect('response', dialogutils.dialog_destroy)
     
     dialog.vbox.pack_start(pane, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     dialogutils.default_behaviour(dialog)
     dialog.show_all()
     return dialog

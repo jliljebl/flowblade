@@ -60,7 +60,9 @@ def warning_message_with_callback(primary_txt, secondary_txt, parent_window, is_
                         parent_window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         ( _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
-    dialog.vbox.pack_start(content, True, True, 0)
+    alignment = get_default_alignment(content)
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    set_outer_margins(dialog.vbox)
     dialog.set_resizable(False)
     dialog.connect('response', callback)
     dialog.show_all()
@@ -124,11 +126,11 @@ def get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=False, 
     hbox.pack_start(icon_box, False, False, 0)
     hbox.pack_start(text_box, True, True, 0)
     
-    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(12, 0, 12, 12)
-    align.add(hbox)
+    #align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
+    #align.set_padding(12, 0, 12, 12)
+    #align.add(hbox)
     
-    return align
+    return hbox
 
 def get_single_line_text_input_dialog(chars, label_width,title, ok_button_text,
                                       label, default_text):
@@ -161,19 +163,23 @@ def get_single_line_text_input_dialog(chars, label_width,title, ok_button_text,
     return (dialog, entry)
 
 def get_default_alignment(panel):
-    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(6, 24, 24, 24)
+    alignment = Gtk.Frame.new(None)
     alignment.add(panel)
-    
+    alignment.set_shadow_type(Gtk.ShadowType.NONE)
+    guiutils.set_margins(alignment, 12, 24, 12, 18)
     return alignment
 
 def get_alignment2(panel):
-    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(6, 24, 12, 12)
+    alignment = Gtk.Frame.new(None)
     alignment.add(panel)
+    alignment.set_shadow_type(Gtk.ShadowType.NONE)
+    guiutils.set_margins(alignment, 6, 24, 12, 12)
     
     return alignment
-    
+
+def set_outer_margins(cont):
+    guiutils.set_margins(cont, 0, 6, 0, 6)
+
 # ------------------------------------------------------------------ delayed window destroying 
 def delay_destroy_window(window, delay):
     GObject.timeout_add(int(delay * 1000), _window_destroy_event, window)

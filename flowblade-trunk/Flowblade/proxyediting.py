@@ -300,7 +300,7 @@ class ProxyManagerDialog:
         vbox_onoff.pack_start(guiutils.pad_label(12, 12), False, False, 0)
         vbox_onoff.pack_start(self.convert_progress_bar, False, False, 0)
         vbox_onoff.pack_start(row2_onoff, False, False, 0)
-        
+
         panel_onoff = guiutils.get_named_frame(_("Project Proxy Mode"), vbox_onoff)
 
         # Pane
@@ -308,12 +308,11 @@ class ProxyManagerDialog:
         vbox.pack_start(panel_encoding, False, False, 0)
         vbox.pack_start(panel_onoff, False, False, 0)
 
-        alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-        alignment.set_padding(12, 12, 12, 12)
-        alignment.add(vbox)
+        guiutils.set_margins(vbox, 8, 12, 12, 12)
 
-        self.dialog.vbox.pack_start(alignment, True, True, 0)
-        dialogutils.default_behaviour(self.dialog)
+        self.dialog.vbox.pack_start(vbox, True, True, 0)
+        dialogutils.set_outer_margins(self.dialog.vbox)
+        
         self.dialog.connect('response', dialogutils.dialog_destroy)
         self.dialog.show_all()
 
@@ -462,13 +461,9 @@ class ProxyRenderIssuesWindow:
             info_box = Gtk.VBox()
             info_box.pack_start(issues_box, False, False, 0)
             info_box.pack_start(action_row, False, False, 0)
-            
-        alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-        alignment.set_padding(0, 0, 0, 0)
-        alignment.add(info_box)
-        alignment.show_all()
 
-        self.dialog.vbox.pack_start(alignment, True, True, 0)
+        self.dialog.vbox.pack_start(info_box, True, True, 0)
+        dialogutils.set_outer_margins(self.dialog.vbox)
         self.dialog.show()
 
     def issues_str(self):

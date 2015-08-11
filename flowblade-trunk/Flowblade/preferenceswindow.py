@@ -51,13 +51,14 @@ def preferences_dialog():
 
     notebook = Gtk.Notebook()
     notebook.set_size_request(PREFERENCES_WIDTH, PREFERENCES_HEIGHT)
-
     notebook.append_page(gen_opts_panel, Gtk.Label(label=_("General")))
     notebook.append_page(edit_prefs_panel, Gtk.Label(label=_("Editing")))
     notebook.append_page(view_pres_panel, Gtk.Label(label=_("View")))
+    guiutils.set_margins(notebook, 4, 24, 6, 0)
 
     dialog.connect('response', _preferences_dialog_callback, (gen_opts_widgets, edit_prefs_widgets, view_pref_widgets))
     dialog.vbox.pack_start(notebook, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     dialogutils.default_behaviour(dialog)
     dialog.show_all()
 

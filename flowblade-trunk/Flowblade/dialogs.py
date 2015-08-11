@@ -81,7 +81,7 @@ def new_project_dialog(callback):
     vbox = guiutils.get_vbox([profiles_frame, tracks_frame], False)
 
     alignment = dialogutils.get_default_alignment(vbox)
-
+    dialogutils.set_outer_margins(dialog.vbox)
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
     dialog.connect('response', callback, out_profile_combo, tracks_combo, 
@@ -134,6 +134,7 @@ def save_backup_snapshot(name, callback):
     alignment = dialogutils.get_default_alignment(vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
     dialog.connect('response', callback, project_folder, compact_name_entry)
     dialog.show_all()
@@ -210,6 +211,7 @@ def select_thumbnail_dir(callback, parent_window, current_dir_path, retry_open_m
                         ok_str, Gtk.ResponseType.YES))
 
     dialog.vbox.pack_start(panel, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
     dialog.connect('response', callback, (file_select, retry_open_media))
     dialog.show_all()
@@ -225,6 +227,7 @@ def select_rendred_clips_dir(callback, parent_window, current_dir_path, context_
                         ok_str, Gtk.ResponseType.YES))
 
     dialog.vbox.pack_start(panel, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
     if context_data == None:
         dialog.connect('response', callback, file_select)
@@ -241,9 +244,6 @@ def rendered_clips_no_home_folder_dialog():
 def exit_confirm_dialog(callback, msg, parent_window, project_name):
     title = _("Save project '") + project_name + _("' before exiting?")
     content = dialogutils.get_warning_message_dialog_panel(title, msg, False, Gtk.STOCK_QUIT)
-    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(0, 12, 0, 0)
-    align.add(content)
 
     dialog = Gtk.Dialog("",
                         parent_window,
@@ -252,7 +252,9 @@ def exit_confirm_dialog(callback, msg, parent_window, project_name):
                         _("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
                         _("Save").encode('utf-8'), Gtk.ResponseType.YES))
 
-    dialog.vbox.pack_start(align, True, True, 0)
+    alignment = dialogutils.get_default_alignment(content)
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
     dialog.connect('response', callback)
     dialog.show_all()
@@ -260,9 +262,7 @@ def exit_confirm_dialog(callback, msg, parent_window, project_name):
 def close_confirm_dialog(callback, msg, parent_window, project_name):
     title = _("Save project '") + project_name + _("' before closing project?")
     content = dialogutils.get_warning_message_dialog_panel(title, msg, False, Gtk.STOCK_QUIT)
-    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(0, 12, 0, 0)
-    align.add(content)
+    align = dialogutils.get_default_alignment(content)
 
     dialog = Gtk.Dialog("",
                         parent_window,
@@ -272,6 +272,7 @@ def close_confirm_dialog(callback, msg, parent_window, project_name):
                         _("Save").encode('utf-8'), Gtk.ResponseType.YES))
 
     dialog.vbox.pack_start(align, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
     dialog.connect('response', callback)
     dialog.show_all()
@@ -338,8 +339,10 @@ def about_dialog(parent_window):
     notebook.append_page(alignment2, Gtk.Label(label=_("Thanks")))
     notebook.append_page(alignment3, Gtk.Label(label=_("License")))
     notebook.append_page(alignment4, Gtk.Label(label=_("Translations")))
-    
+    guiutils.set_margins(notebook, 6, 6, 6, 0)
+         
     dialog.vbox.pack_start(notebook, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     dialog.connect('response', _dialog_destroy)
     dialog.show_all()
 
@@ -428,8 +431,9 @@ def environment_dialog(parent_window, write_data_cb):
     pane.pack_start(r_pane, False, False, 0)
     
     a = dialogutils.get_default_alignment(pane)
-    
+
     dialog.vbox.pack_start(a, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     dialog.connect('response', _dialog_destroy)
     dialog.show_all()
     dialog.set_resizable(False)
@@ -471,7 +475,7 @@ def file_properties_dialog(data):
                         
     panel = panels.get_file_properties_panel(data)
     alignment = dialogutils.get_default_alignment(panel)
-
+    guiutils.set_margins(dialog.vbox, 6, 6, 6, 6)
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
     dialog.connect('response', _dialog_destroy)
@@ -484,12 +488,13 @@ def clip_properties_dialog(data):
                         
     panel = panels.get_clip_properties_panel(data)
     alignment = dialogutils.get_default_alignment(panel)
-    
     dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
     dialog.connect('response', _dialog_destroy)
     dialog.show_all()
 
+"""
 def add_compositor_dialog(current_sequence, callback, data):
     dialog = Gtk.Dialog(_("Composite Target Track"),  gui.editor_window.window,
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -503,6 +508,7 @@ def add_compositor_dialog(current_sequence, callback, data):
     _default_behaviour(dialog)
     dialog.connect('response', callback, data, track_combo)
     dialog.show_all()
+"""
     
 def _dialog_destroy(dialog, response):
     dialog.destroy()
@@ -602,6 +608,7 @@ def proxy_delete_warning_dialog(parent_window, callback):
                         _("Force Delete").encode('utf-8'), Gtk.ResponseType.OK))
 
     dialog.vbox.pack_start(align, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
     dialog.set_default_response(Gtk.ResponseType.CANCEL)
     dialog.connect('response', callback)
@@ -614,10 +621,8 @@ def autosave_recovery_dialog(callback, parent_window):
     msg2 = _("If there is another instance of Flowblade running,\nthis dialog has probably detected its autosave file.\n\n")
     msg3 = _("It is NOT possible to open this autosaved version later.")
     msg = msg1 + msg2 + msg3
-    content = dialogutils.get_warning_message_dialog_panel(title, msg)
-    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(0, 12, 0, 0)
-    align.add(content)
+    content = dialogutils.get_warning_message_dialog_panel(title, msg)    
+    align = dialogutils.get_default_alignment(content)
 
     dialog = Gtk.Dialog("",
                         parent_window,
@@ -626,6 +631,8 @@ def autosave_recovery_dialog(callback, parent_window):
                         _("Open Autosaved Project").encode('utf-8'), Gtk.ResponseType.OK))
 
     dialog.vbox.pack_start(align, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    dialog.vbox.set_margin_left(6)
     _default_behaviour(dialog)
     dialog.connect('response', callback)
     dialog.show_all()
@@ -658,11 +665,9 @@ def autosaves_many_recovery_dialog(response_callback, autosaves, parent_window):
     pane.pack_start(delete_buttons_vbox, False, False, 0)
     pane.pack_start(guiutils.get_pad_label(12,12), False, False, 0)
     pane.pack_start(autosaves_view, False, False, 0)
-
-    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(0, 12, 0, 0)
-    align.add(pane)
-
+    
+    align = dialogutils.get_default_alignment(pane)
+    
     dialog = Gtk.Dialog("",
                         parent_window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -670,6 +675,8 @@ def autosaves_many_recovery_dialog(response_callback, autosaves, parent_window):
                         _("Open Selected Autosave").encode('utf-8'), Gtk.ResponseType.OK))
 
     dialog.vbox.pack_start(align, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    dialog.vbox.set_margin_left(6)
     _default_behaviour(dialog)
     dialog.connect('response', response_callback, autosaves_view, autosaves)
     dialog.show_all()
@@ -718,6 +725,7 @@ def tracks_count_change_dialog(callback):
     alignment = dialogutils.get_alignment2(tracks_vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
     dialog.connect('response', callback, tracks_combo)
     dialog.show_all()
@@ -760,6 +768,7 @@ def new_sequence_dialog(callback, default_name):
     alignment = dialogutils.get_alignment2(tracks_vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
     dialog.connect('response', callback, (name_entry, tracks_combo, open_check))
     dialog.show_all()
@@ -786,6 +795,7 @@ def new_media_name_dialog(callback, media_file):
     alignment = dialogutils.get_alignment2(tracks_vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
     dialog.set_default_response(Gtk.ResponseType.ACCEPT)
     dialog.connect('response', callback, (name_entry, media_file))
@@ -813,6 +823,7 @@ def new_clip_name_dialog(callback, clip):
     alignment = dialogutils.get_alignment2(tracks_vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
     dialog.set_default_response(Gtk.ResponseType.ACCEPT)
     dialog.connect('response', callback, (name_entry, clip))
@@ -839,6 +850,7 @@ def new_media_log_group_name_dialog(callback, next_index, add_selected):
     alignment = dialogutils.get_default_alignment(vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
     dialog.set_default_response(Gtk.ResponseType.ACCEPT)
     dialog.connect('response', callback, (name_entry, add_selected))
@@ -874,6 +886,7 @@ def marker_name_dialog(frame_str, callback):
     alignment = dialogutils.get_default_alignment(name_select)
     
     dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     dialog.set_default_response(Gtk.ResponseType.ACCEPT)
     _default_behaviour(dialog)
     dialog.connect('response', callback, name_entry)
@@ -905,6 +918,7 @@ def open_image_sequence_dialog(callback, parent_window):
     alignment = dialogutils.get_alignment2(vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
     dialog.connect('response', callback, (file_chooser, frames_per_image))
     dialog.show_all()
@@ -1006,6 +1020,7 @@ def transition_edit_dialog(callback, transition_data):
     widgets = (type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button)
     dialog.connect('response', callback, widgets, transition_data)
     dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
     dialog.show_all()
 
@@ -1019,6 +1034,7 @@ def fade_edit_dialog(callback, transition_data):
     widgets = (type_combo, length_entry, encodings_cb, quality_cb, color_button)
     dialog.connect('response', callback, widgets, transition_data)
     dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
     dialog.show_all()
 
@@ -1108,12 +1124,10 @@ def keyboard_shortcuts_dialog(parent_window):
     sw.add_with_viewport(pad_panel)
     sw.set_size_request(420, 400)
     
-    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(24, 24, 24, 24)
-    alignment.add(sw)
+    guiutils.set_margins(sw, 24, 24, 24, 24)
 
-    dialog.vbox.pack_start(alignment, True, True, 0)
-
+    dialog.vbox.pack_start(sw, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
     dialog.connect('response', _dialog_destroy)
     dialog.show_all()
@@ -1164,11 +1178,12 @@ def watermark_dialog(add_callback, remove_callback):
     vbox.pack_start(guiutils.pad_label(12, 8), False, False, 0)
     vbox.pack_start(row3, False, False, 0)
 
-    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(12, 12, 12, 12)
-    alignment.add(vbox)
+    alignment = dialogutils.get_default_alignment(vbox)
+    #alignment.set_padding(12, 12, 12, 12)
+    #alignment.add(vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
     dialog.connect('response', _dialog_destroy)
     dialog.show_all()

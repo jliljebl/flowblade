@@ -202,7 +202,8 @@ def set_theme_colors():
 
     # Adwaita and some others show big area of black without this, does not bother ubuntu
     editor_window.tline_pane.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
-
+    editor_window.media_panel.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
+    
 def unpack_gdk_color(gdk_color):
     return (gdk_color.red, gdk_color.green, gdk_color.blue, gdk_color.alpha)
 

@@ -36,7 +36,6 @@ import renderconsumer
 import respaths
 import utils
 
-
 HALF_ROW_WIDTH = 160 # Size of half row when using two column row components created here
 EFFECT_PANEL_WIDTH_PAD = 20 # This is subtracted from notebGtk.Calendar ook width to get some component widths
 TC_LABEL_WIDTH = 80 # in, out and length timecodes in monitor area top row 
@@ -63,7 +62,7 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, proxy
 
     columns_img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "columns.png")
     columns_launcher = guicomponents.PressLaunch(col_changed_cb, columns_img, w=22, h=22)
-    columns_launcher.surface_y = 7
+    columns_launcher.surface_y = 9
 
     all_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_all_files.png")
     audio_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_audio_files.png")
@@ -73,8 +72,8 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, proxy
     pattern_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_pattern_producers.png")
 
     files_filter_launcher = guicomponents.ImageMenuLaunch(filtering_cb, [all_pixbuf, video_pixbuf, audio_pixbuf, graphics_pixbuf, imgseq_pixbuf, pattern_pixbuf], 24, 22)
-    files_filter_launcher.pixbuf_x  = 3
-    files_filter_launcher.pixbuf_y  = 9
+    files_filter_launcher.surface_x  = 3
+    files_filter_launcher.surface_y  = 8
     gui.media_view_filter_selector = files_filter_launcher
 
     buttons_box = Gtk.HBox(False,1)
@@ -330,7 +329,7 @@ def get_transition_panel(trans_data):
     wipe_row = get_two_column_box(wipe_label, 
                                  wipe_luma_combo_box)
 
-    color_button = Gtk.ColorButton(Gdk.Color(0.0, 0.0, 0.0))
+    color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(0,0,0,1))
     color_button_box = guiutils.get_left_justified_box([color_button])
     color_label = Gtk.Label(label=_("Dip Color:"))
     color_row = get_two_column_box(color_label, color_button_box)

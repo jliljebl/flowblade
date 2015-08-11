@@ -978,7 +978,7 @@ def get_monitor_view_select_combo(callback):
                    cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "vectorscope.png"),
                    cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "rgbparade.png")]
     menu_launch = ImageMenuLaunch(callback, surface_list, w=24, h=20)
-    menu_launch.pixbuf_y = 10
+    menu_launch.surface_y = 10
     return menu_launch
 
 def get_compositor_track_select_combo(source_track, target_track, callback):
@@ -1601,21 +1601,17 @@ class BigTCDisplay:
         """
         x, y, w, h = allocation
 
-        # Draw bg
-        #cr.set_source_rgba(*guiutils.get_theme_bg_color()) 
-        #cr.rectangle(0, 0, w, h)
-        #cr.fill()
-
         # Draw round rect with gradient and stroke around for thin bezel
         self._round_rect_path(cr)        
         cr.set_source_rgb(0.2, 0.2, 0.2)
         cr.fill_preserve()
 
-        grad = cairo.LinearGradient (0, 0, 0, h)
-        for stop in BIG_TC_GRAD_STOPS:
-            grad.add_color_stop_rgba(*stop)
-        cr.set_source(grad)
-        cr.fill_preserve()
+        if editorpersistance.prefs.dark_theme == False:
+            grad = cairo.LinearGradient (0, 0, 0, h)
+            for stop in BIG_TC_GRAD_STOPS:
+                grad.add_color_stop_rgba(*stop)
+            cr.set_source(grad)
+            cr.fill_preserve()
  
         grad = cairo.LinearGradient (0, 0, 0, h)
         for stop in BIG_TC_FRAME_GRAD_STOPS:
@@ -1648,6 +1644,7 @@ class BigTCDisplay:
         cr.arc (x + radius, y + height - radius, radius, 90 * degrees, 180 * degrees)
         cr.arc (x + radius, y + radius, radius, 180 * degrees, 270 * degrees)
         cr.close_path ()
+
 
 class MonitorTCDisplay:
     """
@@ -1973,14 +1970,7 @@ class PressLaunch:
         self.surface_x  = 6
         self.surface_y  = 6
 
-    def _draw(self, event, cr, allocation):
-        #x, y, w, h = allocation
-
-        # Draw bg
-        #cr.set_source_rgb(*guiutils.get_theme_bg_color())
-        #cr.rectangle(0, 0, w, h)
-        #cr.fill()
-        
+    def _draw(self, event, cr, allocation):        
         cr.set_source_surface(self.surface, self.surface_x, self.surface_y)
         cr.paint()
 
@@ -2006,5 +1996,8 @@ class ToolSelector(ImageMenuLaunch):
         cr.line_to(32, 18)
         cr.line_to(37, 13)
         cr.close_path()
-        cr.set_source_rgb(0, 0, 0)
+        if editorpersistance.prefs.dark_theme == False:
+            cr.set_source_rgb(0, 0, 0)
+        else:
+            cr.set_source_rgb(0.66, 0.66, 0.66)
         cr.fill()

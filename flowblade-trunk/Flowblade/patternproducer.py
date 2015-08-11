@@ -330,6 +330,7 @@ def _color_clip_dialog(callback):
 
     dialog.connect('response', callback, selection_widgets)
     dialog.vbox.pack_start(align, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     dialogutils.default_behaviour(dialog)
     dialog.show_all()
 
@@ -363,6 +364,7 @@ def _ising_clip_dialog(callback):
     dialog.connect('response', callback, selection_widgets)
     dialog.vbox.pack_start(align, True, True, 0)
     dialogutils.default_behaviour(dialog)
+    dialogutils.set_outer_margins(dialog.vbox)
     dialog.show_all()
     
 def _color_pulse_clip_dialog(callback):
@@ -404,5 +406,6 @@ def _color_pulse_clip_dialog(callback):
     dialog.connect('response', callback, selection_widgets)
     dialog.vbox.pack_start(align, True, True, 0)
     dialogutils.default_behaviour(dialog)
+    dialogutils.set_outer_margins(dialog.vbox)
     dialog.show_all()
     

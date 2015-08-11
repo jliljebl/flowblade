@@ -357,6 +357,7 @@ class EditorWindow:
                                 lambda w,e: proxyediting.create_proxy_files_pressed(),
                                 projectaction.media_filtering_select_pressed)
         guiutils.set_margins(media_panel, 6, 6, 4, 6)
+        self.media_panel = media_panel
 
         self.mm_paned = Gtk.HPaned()
         self.mm_paned.pack1(bins_panel, resize=True, shrink=True)
@@ -391,7 +392,7 @@ class EditorWindow:
         self.effects_panel = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
         self.effects_panel.set_padding(2, 2, 2, 2)
         self.effects_panel.add(effects_hbox)
-        
+
         # Compositors
         compositor_clip_panel = compositeeditor.get_compositor_clip_panel()
 
@@ -493,12 +494,10 @@ class EditorWindow:
         pos_bar_frame = Gtk.Frame()
         pos_bar_frame.add(self.pos_bar.widget)
         pos_bar_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
-        
-        # Positionbar vbox
-        pos_bar_align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-        pos_bar_align.set_padding(2, 2, 5, 0)
-        pos_bar_align.add(pos_bar_frame)
-
+        pos_bar_frame.set_margin_top(4)
+        pos_bar_frame.set_margin_bottom(4)
+        pos_bar_frame.set_margin_left(6)
+    
         # Play buttons row
         self._create_monitor_row_widgets()
         self.player_buttons = glassbuttons.PlayerButtons()
@@ -508,6 +507,7 @@ class EditorWindow:
 
         player_buttons_row.pack_start(self.player_buttons.widget, False, True, 0)
         player_buttons_row.pack_start(self.monitor_source, True, True, 0)
+        player_buttons_row.set_margin_bottom(2)
 
         # Creates monitor switch buttons
         self._create_monitor_buttons()
@@ -517,9 +517,11 @@ class EditorWindow:
         sw_pos_hbox = Gtk.HBox(False, 1)
         sw_pos_hbox.pack_start(self.sequence_editor_b, False, True, 0)
         sw_pos_hbox.pack_start(self.clip_editor_b, False, True, 0)
-        sw_pos_hbox.pack_start(pos_bar_align, True, True, 0)
+        sw_pos_hbox.pack_start(pos_bar_frame, True, True, 0)
         sw_pos_hbox.pack_start(self.view_mode_select.widget, False, False, 0)
-
+        sw_pos_hbox.set_margin_top(4)
+        sw_pos_hbox.set_margin_left(2)
+        
         # Video display
         black_box = Gtk.EventBox()
         black_box.add(Gtk.Label())
@@ -888,6 +890,10 @@ class EditorWindow:
             middlebar.fill_with_TC_LEFT_pattern(buttons_row, self)
         else:
             middlebar.fill_with_TC_MIDDLE_pattern(buttons_row, self)
+
+        buttons_row.set_margin_top(2)
+        buttons_row.set_margin_left(2)
+        buttons_row.set_margin_right(2)
 
         return buttons_row
 

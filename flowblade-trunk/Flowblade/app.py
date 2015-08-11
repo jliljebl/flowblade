@@ -342,6 +342,7 @@ def create_gui():
     # All widgets are now realized and references captured so can find out theme colors
     gui.set_theme_colors()
     tlinewidgets.set_dark_bg_color()
+    gui.pos_bar.set_dark_bg_color()
     
     # Connect window global key listener
     gui.editor_window.window.connect("key-press-event", keyevents.key_down)

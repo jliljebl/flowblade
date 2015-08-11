@@ -312,13 +312,13 @@ def main(root_path, force_launch=False):
     # Set paths.
     respaths.set_paths(root_path)
 
+    # Load editor prefs and list of recent projects
+    editorpersistance.load()
+    
     # Init translations module with translations data
     translations.init_languages()
     translations.load_filters_translations()
     mlttransitions.init_module()
-
-    # Load editor prefs and list of recent projects
-    editorpersistance.load()
 
     # Init gtk threads
     Gdk.threads_init()
