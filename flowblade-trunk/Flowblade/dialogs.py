@@ -901,6 +901,12 @@ def open_image_sequence_dialog(callback, parent_window):
 
     file_chooser = Gtk.FileChooserButton(_("Select First Frame"))
     file_chooser.set_size_request(250, 25)
+    if ((editorpersistance.prefs.open_in_last_opended_media_dir == True) 
+        and (editorpersistance.prefs.last_opened_media_dir != None)):
+        file_chooser.set_current_folder(editorpersistance.prefs.last_opened_media_dir)
+    else:
+        file_chooser.set_current_folder(os.path.expanduser("~") + "/")
+
     filt = utils.get_image_sequence_file_filter()
     file_chooser.add_filter(filt)
     row1 = guiutils.get_two_column_box(Gtk.Label(label=_("First frame:")), file_chooser, 220)

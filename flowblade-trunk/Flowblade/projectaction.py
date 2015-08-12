@@ -593,7 +593,6 @@ def add_media_files(this_call_is_retry=False):
     if editorpersistance.prefs.thumbnail_folder == None:
         if this_call_is_retry == True:
             return
-
         dialogs.select_thumbnail_dir(select_thumbnail_dir_callback, gui.editor_window.window, os.path.expanduser("~"), True)
         return
 
@@ -669,6 +668,9 @@ def _add_image_sequence_callback(dialog, response_id, data):
 
     gui.media_list_view.fill_data_model()
     gui.bin_list_view.fill_data_model()
+
+    editorpersistance.prefs.last_opened_media_dir = os.path.dirname(resource_path)
+    editorpersistance.save()
 
 def open_rendered_file(rendered_file_path):
     add_media_thread = AddMediaFilesThread([rendered_file_path])
