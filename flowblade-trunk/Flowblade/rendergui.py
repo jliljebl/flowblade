@@ -80,11 +80,10 @@ def render_progress_dialog(callback, parent_window, frame_rates_match=True):
     progress_vbox.pack_start(guiutils.get_pad_label(10, 10), False, False, 0)
     progress_vbox.pack_start(dialog.progress_bar, False, False, 0)
     
-    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(12, 12, 12, 12)
-    alignment.add(progress_vbox)
+    alignment = guiutils.set_margins(progress_vbox, 12, 12, 12, 12)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     dialog.set_default_size(500, 125)
     alignment.show_all()
     dialog.connect('response', callback)
@@ -147,11 +146,11 @@ def clip_render_progress_dialog(callback, title, text, progress_bar, parent_wind
     progress_vbox.pack_start(guiutils.get_pad_label(10, 10), False, False, 0)
     progress_vbox.pack_start(progress_bar, False, False, 0)
 
-    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(12, 12, 12, 12)
-    alignment.add(progress_vbox)
+
+    alignment = guiutils.set_margins(progress_vbox, 12, 12, 12, 12)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     dialog.set_default_size(500, 125)
     alignment.show_all()
     dialog.connect('response', callback)
@@ -276,11 +275,10 @@ def show_slowmo_dialog(media_file, _response_callback):
     vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Render Range:")), fb_widgets.render_range, 180), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Rendered Clip Length:")), clip_length_label, 180), False, False, 0)
     
-    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(6, 24, 24, 24)
-    alignment.add(vbox)
-
+    alignment = guiutils.set_margins(vbox, 6, 24, 24, 24)
+    
     dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     dialogutils.default_behaviour(dialog)
     dialog.connect('response', _response_callback, fb_widgets, media_file)
     dialog.show_all()
