@@ -354,11 +354,9 @@ class ProxyRenderProgressDialog:
         
         self.render_progress_bar = Gtk.ProgressBar()
         self.render_progress_bar.set_text("0 %")
-        prog_align = Gtk.Alignment.new(0.5, 0.5, 1.0, 0.0)
-        prog_align.set_padding(0, 0, 0, 0)
-        prog_align.add(self.render_progress_bar)
+        prog_align = guiutils.set_margins(self.render_progress_bar, 0, 0, 6, 0)
         prog_align.set_size_request(550, 30)
-        
+
         self.elapsed_value = Gtk.Label()
         self.current_render_value = Gtk.Label()
         self.items_value = Gtk.Label()
@@ -381,12 +379,11 @@ class ProxyRenderProgressDialog:
         progress_vbox.pack_start(guiutils.get_pad_label(10, 8), False, False, 0)
         progress_vbox.pack_start(prog_align, False, False, 0)
 
-        alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-        alignment.set_padding(12, 12, 12, 12)
-        alignment.add(progress_vbox)
+        alignment = guiutils.set_margins(progress_vbox, 12, 12, 12, 12)
         alignment.show_all()
 
         self.dialog.vbox.pack_start(alignment, True, True, 0)
+        dialogutils.set_outer_margins(self.dialog.vbox)
         self.dialog.connect('response', self.stop_pressed)
         self.dialog.show()
 
@@ -432,7 +429,7 @@ class ProxyRenderIssuesWindow:
                                      (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
                                       _("Do Render Action" ).encode('utf-8'), Gtk.ResponseType.OK))
             self.dialog.connect('response', self.response)
-                                      
+
             rows = ""
             if len(already_have_proxies) > 0 and len(other_project_proxies) > 0:
                 text = _("Proxies exist that were created by this and other projects for ") + str(len(already_have_proxies) + len(other_project_proxies)) + _(" file(s).\n")
@@ -453,6 +450,7 @@ class ProxyRenderIssuesWindow:
                                                                     rows,
                                                                     True)
             self.action_select = Gtk.ComboBoxText()
+
             self.action_select.append_text(_("Render Unrendered Possible & Use existing"))
             self.action_select.append_text(_("Rerender All Possible" ))
             self.action_select.set_active(0)
@@ -462,9 +460,10 @@ class ProxyRenderIssuesWindow:
             info_box.pack_start(issues_box, False, False, 0)
             info_box.pack_start(action_row, False, False, 0)
 
+        guiutils.set_margins(info_box, 12, 48, 12, 0)
         self.dialog.vbox.pack_start(info_box, True, True, 0)
         dialogutils.set_outer_margins(self.dialog.vbox)
-        self.dialog.show()
+        self.dialog.show_all()
 
     def issues_str(self):
         issue_str = str(self.issues) + ") "

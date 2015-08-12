@@ -626,11 +626,9 @@ def _get_boolean_check_box_button_column(name, editable_property):
     check_button = Gtk.CheckButton()
     check_button.set_active(editable_property.value == "1")
     check_button.connect("toggled", editable_property.boolean_button_toggled)
-    check_align = Gtk.Alignment.new(0.5, 0.0, 1.0, 1.0)
-    check_align.add(check_button)
     vbox = Gtk.VBox(False, 0)
     vbox.pack_start(Gtk.Label(label=name), True, True, 0)
-    vbox.pack_start(check_align, True, True, 0)
+    vbox.pack_start(check_button, True, True, 0)
     return vbox
 
 def _get_combo_box_column(name, values, editable_property):

@@ -301,6 +301,8 @@ def set_margins(widget, t, b, l, r):
     widget.set_margin_left(l)
     widget.set_margin_bottom(b)
     widget.set_margin_right(r)
+    
+    return widget
 
 """
 def get_pixmap_from_file(source_path, image_height):

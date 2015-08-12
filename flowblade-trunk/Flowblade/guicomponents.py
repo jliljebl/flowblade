@@ -749,7 +749,7 @@ class MediaPanel():
              self.double_click_cb(media_object.media_file)
         elif event.button == 1:
             if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-                widget.modify_bg(Gtk.StateType.NORMAL, gui.selected_bg_color)
+                widget.override_background_color(Gtk.StateType.NORMAL, gui. get_selected_bg_color())
                 # only add to selected if not already there
                 try:
                     self.selected_objects.index(media_object)

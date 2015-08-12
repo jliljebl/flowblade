@@ -538,11 +538,9 @@ def load_dialog():
     progress_vbox.pack_start(status_box, False, False, 0)
     progress_vbox.pack_start(progress_bar, True, True, 0)
     progress_vbox.pack_start(est_box, False, False, 0)
-
-    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(12, 12, 12, 12)
-    alignment.add(progress_vbox)
-
+    
+    alignment = guiutils.set_margins(progress_vbox, 12, 12, 12, 12)
+      
     dialog.add(alignment)
     dialog.set_default_size(400, 70)
     dialog.set_position(Gtk.WindowPosition.CENTER)

@@ -53,17 +53,13 @@ def get_project_info_panel():
     project_info_vbox.pack_start(name_panel, False, True, 0)
     project_info_vbox.pack_start(profile_panel, False, True, 0)
     project_info_vbox.pack_start(events_panel, True, True, 0)
-
-    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(0, 0, 0, 0)
-    align.add(project_info_vbox)
     
     widgets.project_name_label = project_name_label
     widgets.desc_label = desc_label
     widgets.info_box = info_box
     widgets.events_list = events_list
 
-    return align
+    return project_info_vbox
 
 def update_project_info():
     profile = PROJECT().profile

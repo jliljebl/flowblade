@@ -177,10 +177,8 @@ def get_master_meter():
     if _update_ticker.running == False:
         _update_ticker.start_ticker()
 
-    align = Gtk.Alignment.new(xalign=0.5, yalign=0.5, xscale=1.0, yscale=1.0) 
-    align.add(_master_volume_meter.widget)
-    align.set_padding(3, 3, 3, 3)
-
+    align = guiutils.set_margins(_master_volume_meter.widget, 3, 3, 3, 3)
+    
     frame = Gtk.Frame()
     frame.add(align)
     frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
@@ -341,9 +339,7 @@ class AudioMonitorWindow(Gtk.Window):
         pane.pack_start(meters_frame, True, True, 0)
         pane.pack_start(gain_control_area, True, True, 0)
 
-        align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-        align.set_padding(12, 12, 4, 4)
-        align.add(pane)
+        align = guiutils.set_margins(pane, 12, 12, 4, 4)
 
         # Set pane and show window
         self.add(align)

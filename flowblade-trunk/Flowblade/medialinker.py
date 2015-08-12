@@ -165,9 +165,7 @@ class MediaLinkerWindow(Gtk.Window):
         pane.pack_start(guiutils.pad_label(24, 24), False, False, 0)
         pane.pack_start(dialog_buttons_row, False, False, 0)
         
-        align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-        align.set_padding(12, 12, 12, 12)
-        align.add(pane)
+        align = guiutils.set_margins(pane, 12, 12, 12, 12)
 
         # Set pane and show window
         self.add(align)

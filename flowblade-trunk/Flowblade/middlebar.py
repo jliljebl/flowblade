@@ -188,7 +188,6 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     buttons_row.pack_start(middle_panel, False, False, 0)
     buttons_row.pack_start(right_panel, True, True, 0)
 
-
 def _get_zoom_buttons_panel():    
     return w.zoom_buttons.widget
 

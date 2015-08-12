@@ -322,14 +322,12 @@ def _color_clip_dialog(callback):
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
     
-    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(12, 0, 12, 12)
-    align.add(vbox)
+    align = guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     selection_widgets = (name_entry, color_button)
 
     dialog.connect('response', callback, selection_widgets)
-    dialog.vbox.pack_start(align, True, True, 0)
+    dialog.vbox.pack_start(vbox, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     dialogutils.default_behaviour(dialog)
     dialog.show_all()
@@ -355,9 +353,7 @@ def _ising_clip_dialog(callback):
     vbox.pack_start(Gtk.Label(), True, True, 0)
     vbox.set_size_request(450, 150)
 
-    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(12, 0, 12, 12)
-    align.add(vbox)
+    align = guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     selection_widgets = (n_slider, bg_slider, sg_slider)
 
@@ -397,9 +393,7 @@ def _color_pulse_clip_dialog(callback):
     vbox.pack_start(Gtk.Label(), True, True, 0)
     vbox.set_size_request(450, 220)
 
-    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(12, 0, 12, 12)
-    align.add(vbox)
+    align = guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     selection_widgets = (s1_slider, s2_slider, s3_slider, s4_slider, m1_slider, m2_slider)
 
