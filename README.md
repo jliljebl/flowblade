@@ -8,7 +8,7 @@
   1. [Installing Flowblade](https://github.com/jliljebl/flowblade#installing-flowblade)
   1. [Docs](https://github.com/jliljebl/flowblade#docs)
   1. [Screenshot](https://github.com/jliljebl/flowblade#screenshot)
-  1. [Contact](https://github.com/jliljebl/flowblade#contact)
+  1. [Forum and Contact](https://github.com/jliljebl/flowblade#contact)
 
 # Introduction
 
@@ -80,7 +80,9 @@ Installing instructions are available [here](./flowblade-trunk/docs/INSTALLING.m
 
 [Screenshot](./flowblade-trunk/docs/Screenshot-0-18.png) for version is 0.18 is available in the */docs* folder.
 
-# Contact
+# Forum and Contact
+
+For questions and discussion on Flowblade we have a [Google+ group] (https://plus.google.com/u/0/communities/103860400113389238474) available. There will be some updates on what is happening with the project too.
 
 Use the **Issues** tab on the right to give bug reports or to make feature requests.
 
