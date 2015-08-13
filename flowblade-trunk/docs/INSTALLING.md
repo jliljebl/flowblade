@@ -4,6 +4,23 @@
 
 The easiest way to install Flowblade is using the version in your OS repository. The downside is that the version available may not be the current latest release. Contact your OS to get Flowblade included in repositories if not already available.
 
+#### Ubuntu, Debian and Linux Mint
+
+```bash
+sudo apt-get install flowblade
+```
+#### Archlinux
+
+_Latest release_. Visit the <a href="https://aur.archlinux.org/packages/flowblade/">AUR</a> page or use terminal command:
+```bash
+yaourt -S flowblade
+```
+
+_Git version_. Visit the <a href="https://aur.archlinux.org/packages/flowblade-git/">AUR</a> page or use terminal command:
+```bash
+yaourt -S flowblade-git
+```
+
 ### Installing using .deb package
 
 **First download .deb file** for Flowblade 1.0 from <a href="https://www.dropbox.com/s/9m2e9whcazjo1l8/flowblade-1.0.0-1_all.deb?dl=0">here.</a>
