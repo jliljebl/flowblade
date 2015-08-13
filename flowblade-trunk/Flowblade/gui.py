@@ -72,31 +72,20 @@ play_b = None
 clip_editor_b = None
 sequence_editor_b = None
 
+
 # Theme colors
-# Theme colors are given as tuple three RGB tuples, ((LIGHT_BG), (DARK_BG), (SELECTED_BG), (BUTTON_C0LORS))
-_UBUNTU_COLORS = ((-1, -1, -1), (-1, -1, -1), (0.941, 0.466, 0.274, 0.9),(-1, -1, -1))
-_GNOME_COLORS = ((-1, -1, -1), (0.172, 0.172, 0.172), (0.192, 0.361, 0.608), (-1, -1, -1))
-_MINT_COLORS = ((-1, -1, -1), (-1, -1, -1), (0.941, 0.466, 0.274, 0.9), (-1, -1, -1))
- 
-_THEME_COLORS = (_UBUNTU_COLORS, _GNOME_COLORS, _MINT_COLORS)
+# Theme colors are given as 4 RGB tuples and string, ((LIGHT_BG), (DARK_BG), (SELECTED_BG), (DARK_SELECTED_BG), name)
+_UBUNTU_COLORS = ((0.949020, 0.945098, 0.941176),  (0.172, 0.172, 0.172), (0.941, 0.466, 0.274, 0.9), (0.941, 0.466, 0.274, 0.9), "Ubuntu")
+_GNOME_COLORS = ((0.929412, 0.929412, 0.929412), (0.172, 0.172, 0.172), (0.28627451, 0.560784314, 0.843137255), (0.192, 0.361, 0.608), "Gnome")
+_MINT_COLORS = ((0.839215686, 0.839215686, 0.839215686), (0.172, 0.172, 0.172), (0.556862745, 0.678431373, 0.439215686), (0.556862745, 0.678431373, 0.439215686), "Linux Mint")
+_ARC_COLORS = ((0.960784, 0.964706, 0.968627), (0.266667, 0.282353, 0.321569), (0.321568627, 0.580392157, 0.88627451), (0.321568627, 0.580392157, 0.88627451), "Arc (theme)")
+
+
+_THEME_COLORS = (_UBUNTU_COLORS, _GNOME_COLORS, _MINT_COLORS, _ARC_COLORS)
 
 _selected_bg_color = None
 _bg_color = None
 _button_colors = None
-
-_colors_set = False 
-
-
-_not_dark_fixed = ["GtkButton","cairoarea+CairoDrawableArea2", "GtkTreeView"]
-
-#note_bg_color = None
-#fg_color = None
-#fg_color_tuple = None
-#bg_color_tuple = None
-#_selected_bg_color = None
-#_selected_bg_color_exists = False  # _selected_bg_color cannot be tested == None because cracy Gdk.py 
-
-#label = None
 
 def capture_references(new_editor_window):
     """
@@ -104,7 +93,7 @@ def capture_references(new_editor_window):
     """
     global editor_window, media_list_view, bin_list_view, sequence_list_view, pos_bar, \
     tc, tline_display, tline_scale, tline_canvas, tline_scroll, tline_v_scroll, tline_info, \
-    tline_column, play_b, clip_editor_b, sequence_editor_b, note_bg_color, fg_color, fg_color_tuple, bg_color_tuple, selected_bg_color, \
+    tline_column, play_b, clip_editor_b, sequence_editor_b, \
     effect_select_list_view, effect_select_combo_box, project_info_vbox, middle_notebook, big_tc, editmenu, notebook_buttons, tline_left_corner
 
     editor_window = new_editor_window
@@ -136,23 +125,6 @@ def capture_references(new_editor_window):
 
     editmenu = editor_window.uimanager.get_widget('/MenuBar/EditMenu')
 
-    style = editor_window.edit_buttons_row.get_style_context ()
-    note_bg_color = style.get_background_color(Gtk.StateFlags.NORMAL)
-    #print note_bg_color
-
-    #fg_color = style.get_color(Gtk.StateFlags.NORMAL)
-    #
-
-    #style = editor_window.edit_buttons_row.get_style_context ()
-    #selected_bg_color = style.get_background_color(Gtk.StateFlags.SELECTED)
-    
-    # Get cairo color tuple from Gdk.Color
-    #raw_r, raw_g, raw_b = fg_color.red,  fg_color.green, fg_color.blue
-    #fg_color_tuple = (float(raw_r)/65535.0, float(raw_g)/65535.0, float(raw_b)/65535)
-
-    #raw_r, raw_g, raw_b = note_bg_color.red, note_bg_color.green ,note_bg_color.blue
-    #bg_color_tuple = (float(raw_r)/65535.0, float(raw_g)/65535.0, float(raw_b)/65535)
-
 def enable_save():
     editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)
 
@@ -171,36 +143,48 @@ def get_buttons_color():
 def set_theme_colors():
     # Find out if theme color discovery works and set selected bg color apppropiately when 
     # this is first called.
-    global _selected_bg_color, _bg_color, _button_colors, _colors_set
+    global _selected_bg_color, _bg_color, _button_colors
 
-    fallback_theme_colors = 1
+    fallback_theme_colors = editorpersistance.prefs.theme_fallback_colors
     theme_colors = _THEME_COLORS[fallback_theme_colors]
     
+    # Try to detect selected color and set from fallback if fails
     style = editor_window.bin_list_view.get_style_context()
     sel_bg_color = style.get_background_color(Gtk.StateFlags.SELECTED)
 
     r, g, b, a = unpack_gdk_color(sel_bg_color)
     if r == 0.0 and g == 0.0 and b == 0.0:
         print "sel color NOT detected"
-        _selected_bg_color = Gdk.RGBA(*theme_colors[2])
+        if editorpersistance.prefs.dark_theme == False:
+            c = theme_colors[2]
+        else:
+            c = theme_colors[3]
+        _selected_bg_color = Gdk.RGBA(*c)
     else:
         print "sel color detected"
         _selected_bg_color = sel_bg_color
 
+    # Try to detect bg color and set frow fallback if fails
     style = editor_window.window.get_style_context()
     bg_color = style.get_background_color(Gtk.StateFlags.NORMAL)
     r, g, b, a = unpack_gdk_color(bg_color)
 
     if r == 0.0 and g == 0.0 and b == 0.0:
         print "bg color NOT detected"
-        _bg_color = Gdk.RGBA(*theme_colors[0])
-        _button_colors = Gdk.RGBA(*theme_colors[3])
+        if editorpersistance.prefs.dark_theme == False:
+            c = theme_colors[0]
+        else:
+            c = theme_colors[1]
+        _bg_color = Gdk.RGBA(*c)
+        _button_colors = Gdk.RGBA(*c)
     else:
         print "bg color detected"
         _bg_color = bg_color
         _button_colors = bg_color
 
-    # Adwaita and some others show big area of black without this, does not bother ubuntu
+    print _bg_color, _selected_bg_color
+
+    # Adwaita and some others show big area of black without this, does not bother Ambient on Ubuntu
     editor_window.tline_pane.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
     editor_window.media_panel.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
     editor_window.mm_paned.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())

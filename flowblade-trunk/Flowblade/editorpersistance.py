@@ -162,7 +162,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
 
     default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo = gen_opts_widgets
     auto_play_in_clip_monitor_check, auto_center_check, grfx_insert_length_spin, trim_exit_click, trim_quick_enter, remember_clip_frame = edit_prefs_widgets
-    use_english, disp_splash, buttons_style, dark_theme = view_prefs_widgets
+    use_english, disp_splash, buttons_style, dark_theme, theme_combo = view_prefs_widgets
 
     global prefs
     prefs.open_in_last_opended_media_dir = open_in_last_opened_check.get_active()
@@ -182,6 +182,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.display_splash_screen = disp_splash.get_active()
     prefs.buttons_style = buttons_style.get_active() # styles enum values and widget indexes correspond
     prefs.dark_theme = (dark_theme.get_active() == 1)
+    prefs.theme_fallback_colors = theme_combo.get_active() 
 
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
@@ -246,3 +247,5 @@ class EditorPreferences:
         self.jack_output_type = appconsts.JACK_OUT_AUDIO # not used
         self.media_load_order = appconsts.LOAD_ABSOLUTE_FIRST
         self.use_english_always = False
+        self.theme_fallback_colors = 0 # index oc gui._THEME_COLORS
+        
