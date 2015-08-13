@@ -573,9 +573,7 @@ def recreate_icons_progress_dialog():
     progress_vbox.pack_start(progress_bar, True, True, 0)
     progress_vbox.pack_start(est_box, False, False, 0)
 
-    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(12, 12, 12, 12)
-    alignment.add(progress_vbox)
+    alignment = guiutils.set_margins(progress_vbox, 12, 12, 12, 12)
 
     dialog.add(alignment)
     dialog.set_default_size(400, 70)
@@ -595,10 +593,8 @@ def proxy_delete_warning_dialog(parent_window, callback):
 
     msg = msg1 + msg2 
     content = dialogutils.get_warning_message_dialog_panel(title, msg)
-    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(0, 12, 0, 0)
-    align.add(content)
-
+    align = guiutils.set_margins(content, 12, 12, 12, 12)
+    
     dialog = Gtk.Dialog("",
                         parent_window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -993,9 +989,10 @@ def export_edl_dialog(callback, parent_window, project_name):
     vbox.pack_start(file_frame, False, False, 0)
     vbox.pack_start(tracks_frame, False, False, 0)
     
-    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(12, 12, 12, 12)
-    alignment.add(vbox)
+    # remove alignment when doing this again
+    #alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
+    #alignment.set_padding(12, 12, 12, 12)
+    #alignment.add(vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
@@ -1250,9 +1247,7 @@ def save_snaphot_progess(media_copy_txt, project_txt):
     progress_vbox.pack_start(media_copy_row, False, False, 0)
     progress_vbox.pack_start(project_row, True, True, 0)
 
-    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(12, 12, 12, 12)
-    alignment.add(progress_vbox)
+    alignment = guiutils.set_margins(progress_vbox, 12, 12, 12, 12)
 
     dialog.add(alignment)
     dialog.set_default_size(400, 70)

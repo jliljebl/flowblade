@@ -218,10 +218,9 @@ def get_args_vals_list_for_current_selections():
     encoding_option_index = widgets.encoding_panel.encoding_selector.widget.get_active()
     quality_option_index = widgets.encoding_panel.quality_selector.widget.get_active()
         
-    if widgets.render_type_panel.type_combo.get_active() == 1: # Preset encodings
-        args_vals_list = renderconsumer.get_args_vals_tuples_list_for_encoding_and_quality( profile, 
-                                                                                            encoding_option_index, 
-                                                                                            -1)
+    if widgets.render_type_panel.type_combo.get_active() == 1: # Preset encodings                                                                             -1)
+        encoding_option = renderconsumer.non_user_encodings[widgets.render_type_panel.presets_selector.widget.get_active()]
+        args_vals_list = encoding_option.get_args_vals_tuples_list(profile)
     elif widgets.args_panel.use_args_check.get_active() == False: # User encodings
         args_vals_list = renderconsumer.get_args_vals_tuples_list_for_encoding_and_quality( profile, 
                                                                                             encoding_option_index, 

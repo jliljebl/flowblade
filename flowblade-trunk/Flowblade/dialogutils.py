@@ -39,11 +39,10 @@ def panel_ok_dialog(title, panel):
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         ( _("OK").encode('utf-8'), Gtk.ResponseType.OK))
                         
-    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(6, 24, 12, 12)
-    alignment.add(panel)
+    alignment = get_default_alignment(panel)
     
     dialog.vbox.pack_start(alignment, True, True, 0)
+    set_outer_margins(dialog.vbox)
     default_behaviour(dialog)
     dialog.connect('response', dialog_destroy)
     dialog.show_all()
@@ -69,9 +68,7 @@ def warning_message_with_callback(primary_txt, secondary_txt, parent_window, is_
     
 def warning_confirmation(callback, primary_txt, secondary_txt, parent_window, data=None, is_info=False):
     content = get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info)
-    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(0, 12, 0, 0)
-    align.add(content)
+    align = get_default_alignment(content)
     
     dialog = Gtk.Dialog("",
                         parent_window,
@@ -79,6 +76,7 @@ def warning_confirmation(callback, primary_txt, secondary_txt, parent_window, da
                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
                          _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
     dialog.vbox.pack_start(align, True, True, 0)
+    set_outer_margins(dialog.vbox)
     dialog.set_resizable(False)
     if data == None:
         dialog.connect('response', callback)
@@ -126,10 +124,6 @@ def get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=False, 
     hbox.pack_start(icon_box, False, False, 0)
     hbox.pack_start(text_box, True, True, 0)
     
-    #align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    #align.set_padding(12, 0, 12, 12)
-    #align.add(hbox)
-    
     return hbox
 
 def get_single_line_text_input_dialog(chars, label_width,title, ok_button_text,
@@ -152,11 +146,11 @@ def get_single_line_text_input_dialog(chars, label_width,title, ok_button_text,
     vbox.pack_start(entry_row, False, False, 0)
     vbox.pack_start(guiutils.get_pad_label(12, 12), False, False, 0)
 
-    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(6, 24, 24, 24)
-    alignment.add(vbox)
+    alignment = guiutils.set_margins(vbox, 6, 24, 24, 24)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
+    set_outer_margins(dialog.vbox)
+
     default_behaviour(dialog)
     dialog.set_default_response(Gtk.ResponseType.ACCEPT)
     

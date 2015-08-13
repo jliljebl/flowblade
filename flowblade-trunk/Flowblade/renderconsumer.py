@@ -306,6 +306,24 @@ def get_args_vals_tuples_list_for_encoding_and_quality(profile, enc_opt_index, q
     
     return args_vals_list
 
+"""
+def get_args_vals_tuples_list_for_encoding_option(profile, encoding_option):
+    encoding_option = encoding_options[enc_opt_index]
+    if quality_opt_index >= 0:
+        quality_option = encoding_option.quality_options[quality_opt_index]
+    else:
+        quality_option = None
+
+    args_vals_list = encoding_option.get_args_vals_tuples_list(profile, quality_option)
+
+    # Quality options  key, value list
+    if quality_option != None:
+        for k, v in quality_option.add_map.iteritems():
+            args_vals_list.append((str(k), str(v)))
+    
+    return args_vals_list
+"""
+
 def get_ffmpeg_opts_args_vals_tuples_list(buf):
     end = buf.get_end_iter()
     arg_vals = []

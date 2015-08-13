@@ -429,10 +429,8 @@ class Titler(Gtk.Window):
         editor_row.pack_start(controls_panel, False, False, 0)
         editor_row.pack_start(editor_panel, True, True, 0)
 
-        alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-        alignment.set_padding(8,8,8,8)
-        alignment.add(editor_row)
-    
+        alignment = guiutils.set_margins(editor_row, 8,8,8,8)
+
         self.add(alignment)
 
         self.layer_list.fill_data_model()

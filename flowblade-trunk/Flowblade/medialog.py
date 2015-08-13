@@ -329,16 +329,6 @@ def _actions_callback(widget, data):
         PROJECT().media_log_groups.pop(current_group_index)
         _create_group_select()
         widgets.group_view_select.set_active(0)
-    elif data == "deletewithitems":
-        current_group_index = _get_current_group_index()
-        if current_group_index < 0:
-            return
-        name, items = PROJECT().media_log_groups[current_group_index]
-        primary_txt = _("Delete Group and Items?")
-        secondary_txt = _("Are you sure you want to delete group ") + name + _(" and ") + str(len(items)) + _(" items it contains?\n") + \
-                        _("This operation cannot be undone.")
-        dialogutils.warning_confirmation(_delete_with_items_dialog_callback,
-                            primary_txt, secondary_txt, gui.editor_window.window, None, True)
     elif data == "rename":
         current_group_index = _get_current_group_index()
         name, items = PROJECT().media_log_groups[current_group_index]

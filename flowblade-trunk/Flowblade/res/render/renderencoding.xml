@@ -76,6 +76,9 @@
     <encodingoption name="Audio PCM/.wav 48kHz" extension="wav" nonuser="True" audiodesc="NA" type="audio" resize="NA" qgroup="lossless"> 
         <profile args="f=wav ar=48000 video_off=1" />
     </encodingoption>
+    <encodingoption name="Audio PCM/.wav 44.1kHz" extension="wav" nonuser="True" audiodesc="NA" type="audio" resize="NA" qgroup="lossless"> 
+        <profile args="f=wav ar=44100 video_off=1" />
+    </encodingoption>
     <encodingoption name="Image Sequence BMP" extension="bmp" nonuser="True" audiodesc="NA" type="img_seq" resize="NA" qgroup="lossless">
         <profile args="vcodec=bmp" />
     </encodingoption>

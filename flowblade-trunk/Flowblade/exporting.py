@@ -635,11 +635,10 @@ def export_screenshot_dialog(callback, frame, parent_window, project_name):
     vbox.pack_start(guiutils.pad_label(12, 12), False, False, 0)
     vbox.pack_start(file_frame, False, False, 0)
 
-    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(12, 12, 12, 12)
-    alignment.add(vbox)
+    alignment = guiutils.set_margins(vbox, 12, 12, 12, 12)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     dialogutils.default_behaviour(dialog)
     dialog.connect('response', callback, (file_name, out_folder, file_type_combo, frame)) #(file_name, out_folder, track_select_combo, cascade_check, op_combo, audio_track_select_combo))
     dialog.show_all()
