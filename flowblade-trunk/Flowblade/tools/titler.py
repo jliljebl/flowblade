@@ -227,15 +227,19 @@ class Titler(Gtk.Window):
         
         self.tc_display = guicomponents.MonitorTCDisplay()
         self.tc_display.use_internal_frame = True
+        self.tc_display.widget.set_valign(Gtk.Align.CENTER)
         
         self.pos_bar = positionbar.PositionBar()
         self.pos_bar.set_listener(self.position_listener)
         self.pos_bar.update_display_from_producer(PLAYER().producer)
         self.pos_bar.mouse_release_listener = self.pos_bar_mouse_released
+
+
         pos_bar_frame = Gtk.Frame()
         pos_bar_frame.add(self.pos_bar.widget)
         pos_bar_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
-        
+        pos_bar_frame.set_valign(Gtk.Align.CENTER)
+                
         font_map = PangoCairo.font_map_get_default()
         unsorted_families = font_map.list_families()
         if len(unsorted_families) == 0:
@@ -353,12 +357,16 @@ class Titler(Gtk.Window):
         self.scale_selector = vieweditor.ScaleSelector(self)
 
         timeline_box = Gtk.HBox()
-        timeline_box.pack_start(guiutils.get_in_centering_alignment(self.tc_display.widget), False, False, 0)
-        timeline_box.pack_start(guiutils.get_in_centering_alignment(pos_bar_frame, 1.0), True, True, 0)
+        timeline_box.pack_start(self.tc_display.widget, False, False, 0)
+        timeline_box.pack_start(guiutils.pad_label(12, 12), False, False, 0)
+        timeline_box.pack_start(pos_bar_frame, True, True, 0)
+        timeline_box.pack_start(guiutils.pad_label(12, 12), False, False, 0)
         timeline_box.pack_start(prev_frame, False, False, 0)
         timeline_box.pack_start(next_frame, False, False, 0)
         timeline_box.pack_start(self.guides_toggle, False, False, 0)
         timeline_box.pack_start(self.scale_selector, False, False, 0)
+        timeline_box.set_margin_top(6)
+        timeline_box.set_margin_bottom(6)
         
         positions_box = Gtk.HBox()
         positions_box.pack_start(Gtk.Label(), True, True, 0)
@@ -422,7 +430,7 @@ class Titler(Gtk.Window):
         editor_panel.pack_start(self.view_editor, True, True, 0)
         editor_panel.pack_start(timeline_box, False, False, 0)
         editor_panel.pack_start(guiutils.get_in_centering_alignment(view_editor_editor_buttons_row), False, False, 0)
-        editor_panel.pack_start(guiutils.pad_label(2, 24), False, False, 0)
+        editor_panel.pack_start(guiutils.pad_label(2, 24), True, True, 0)
         editor_panel.pack_start(editor_buttons_row, False, False, 0)
 
         editor_row = Gtk.HBox()

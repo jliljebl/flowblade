@@ -877,9 +877,7 @@ class MediaObjectWidget:
         self.widget.dnd_media_widget_attr = True # this is used to identify widget at dnd drop
         self.widget.set_can_focus(True)
  
-        self.align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-        self.align.set_padding(3, 2, 3, 2)
-        self.align.set_size_request(MEDIA_OBJECT_WIDGET_WIDTH, MEDIA_OBJECT_WIDGET_HEIGHT)
+
         
         self.vbox = Gtk.VBox()
 
@@ -894,9 +892,9 @@ class MediaObjectWidget:
 
         self.vbox.pack_start(self.img, True, True, 0)
         self.vbox.pack_start(txt, False, False, 0)
-        
-        self.align.add(self.vbox)
-        
+
+        self.align = guiutils.set_margins(self.vbox, 3, 2, 3, 2)
+
         self.widget.add(self.align)
 
     def _press(self, event):
@@ -966,7 +964,6 @@ class EditorSeparator:
         
         # Draw separator
         cr.set_line_width(1.0)
-        #r,g,b = gui.fg_color_tuple
         cr.set_source_rgba(0.5,0.5,0.5,0.2)
         cr.move_to(8.5, 2.5)
         cr.line_to(w - 8.5, 2.5)
@@ -1013,17 +1010,6 @@ def display_tracks_popup_menu(event, track, callback):
         track_menu.append(_get_menu_item(_("Unlock Track"), callback, (track,"unlock", None), False))
 
     _add_separetor(track_menu)
-
-    """
-    normal_size_item = _get_radio_menu_item(_("Large Height"), callback, None)
-    normal_size_item.set_active(track_obj.height == appconsts.TRACK_HEIGHT_NORMAL)
-    normal_size_item.connect("activate", callback, (track, "normal_height", None))
-    track_menu.append(normal_size_item)
-    small_size_item = _get_radio_menu_item(_("Normal Height"), callback, normal_size_item)
-    small_size_item.set_active(track_obj.height != appconsts.TRACK_HEIGHT_NORMAL)
-    small_size_item.connect("activate", callback, (track, "small_height", None))
-    track_menu.append(small_size_item)
-    """
     
     normal_size_item = Gtk.RadioMenuItem() 
     normal_size_item.set_label(_("Large Height"))
