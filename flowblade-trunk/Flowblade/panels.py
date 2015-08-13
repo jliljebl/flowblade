@@ -142,10 +142,8 @@ def get_thumbnail_select_panel(current_folder_path):
     if current_folder_path != None:
         out_folder.set_current_folder(current_folder_path)
     
-    out_folder_align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    out_folder_align.set_padding(12, 24, 12, 12)
-    out_folder_align.add(out_folder)
-    
+    out_folder_align = guiutils.set_margins(out_folder, 12, 24, 12, 12)
+
     panel = Gtk.VBox()
     panel.pack_start(texts_panel, False, False, 0)
     panel.pack_start(out_folder_align, False, False, 0)
@@ -163,9 +161,7 @@ def get_render_folder_select_panel(current_folder_path):
     if current_folder_path != None:
         out_folder.set_current_folder(current_folder_path)
 
-    out_folder_align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    out_folder_align.set_padding(12, 24, 12, 12)
-    out_folder_align.add(out_folder)
+    out_folder_align = guiutils.set_margins(out_folder, 12, 24, 12, 12)
     
     panel = Gtk.VBox()
     panel.pack_start(texts_panel, False, False, 0)
@@ -176,7 +172,7 @@ def get_render_folder_select_panel(current_folder_path):
 def _set_sensive_widgets(sensitive, list):
     for widget in list:
         widget.set_sensitive(sensitive)
-
+"""
 def get_motion_render_progress_panel(file_name, progress_bar):
     status_box = Gtk.HBox(False, 2)
     status_box.pack_start(Gtk.Label(label=file_name),False, False, 0)
@@ -186,12 +182,12 @@ def get_motion_render_progress_panel(file_name, progress_bar):
     progress_vbox.pack_start(status_box, False, False, 0)
     progress_vbox.pack_start(guiutils.get_pad_label(10, 10), False, False, 0)
     progress_vbox.pack_start(progress_bar, False, False, 0)
-    
-    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(12, 12, 12, 12)
-    alignment.add(progress_vbox)
+    print "ee"
+    alignment = guiutils.set_margins(progress_vbox, 12, 12, 12, 12)
+
     return alignment
-    
+"""
+
 def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_padding=4):
     """
     Gnome style named panel
@@ -235,9 +231,7 @@ def get_two_text_panel(primary_txt, secondary_txt):
     text_box.pack_start(sbox, False, False, 0)
     text_box.pack_start(Gtk.Label(), True, True, 0)
 
-    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(12, 0, 12, 12)
-    align.add(text_box)
+    align = guiutils.set_margins(text_box, 12, 0, 12, 12)
     
     return align
 
@@ -402,9 +396,8 @@ def get_transition_panel(trans_data):
     vbox.pack_start(get_named_frame(_("Clips info"),  data_vbox), True, True, 0)
     vbox.pack_start(get_named_frame(_("Encoding"),  enconding_vbox), True, True, 0)
 
-    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(12, 24, 12, 12)
-    alignment.add(vbox)
+    alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
+
     return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button)
 
 def get_fade_panel(fade_data):
@@ -453,9 +446,8 @@ def get_fade_panel(fade_data):
     vbox.pack_start(get_named_frame(_("Transition Options"),  edit_vbox), True, True, 0)
     vbox.pack_start(get_named_frame(_("Encoding"),  enconding_vbox), True, True, 0)
 
-    alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    alignment.set_padding(12, 24, 12, 12)
-    alignment.add(vbox)
+    alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
+    
     return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, color_button)
     
 def _transition_encoding_changed(widgets):

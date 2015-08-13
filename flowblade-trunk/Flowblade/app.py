@@ -270,8 +270,6 @@ def main(root_path):
     # We prefer to monkeypatch some callbacks into some modules, usually to
     # maintain a simpler and non-circular import structure
     monkeypatch_callbacks()
-
-    print gui.get_selected_bg_color()
     
     # Launch gtk+ main loop
     Gtk.main()

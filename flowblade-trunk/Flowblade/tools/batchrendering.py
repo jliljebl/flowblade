@@ -370,11 +370,9 @@ def _display_single_instance_window():
     primary_txt = _("Batch Render Queue already running!")
 
     msg = _("Batch Render Queue application was detected in session dbus.")
-    #msg = msg1 + msg2
+
     content = dialogutils.get_warning_message_dialog_panel(primary_txt, msg, True)
-    align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    align.set_padding(0, 12, 0, 0)
-    align.add(content)
+    align = dialogutils.get_default_alignment(content)
 
     dialog = Gtk.Dialog("",
                         None,
@@ -382,6 +380,7 @@ def _display_single_instance_window():
                         (_("OK").encode('utf-8'), Gtk.ResponseType.OK))
 
     dialog.vbox.pack_start(align, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     dialogutils.default_behaviour(dialog)
     dialog.connect('response', _early_exit)
     dialog.show_all()
@@ -671,17 +670,13 @@ class BatchRenderWindow:
         top_vbox.pack_start(guiutils.get_pad_label(12, 12), False, False, 0)
         top_vbox.pack_start(button_row, False, False, 0)
 
-        top_align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-        top_align.set_padding(12, 12, 12, 12)
-        top_align.add(top_vbox)
-    
+        top_align = guiutils.set_margins(top_vbox, 12, 12, 12, 12)
+
         self.queue_view = RenderQueueView()
         self.queue_view.fill_data_model(render_queue)
         self.queue_view.set_size_request(WINDOW_WIDTH, QUEUE_HEIGHT)
 
-        bottom_align = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-        bottom_align.set_padding(0, 2, 8, 8)
-        bottom_align.add(bottom_info_vbox)
+        bottom_align = guiutils.set_margins(bottom_info_vbox, 0, 2, 8, 8)
 
         # Content pane
         pane = Gtk.VBox(False, 1)

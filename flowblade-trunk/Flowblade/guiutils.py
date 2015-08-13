@@ -304,15 +304,6 @@ def set_margins(widget, t, b, l, r):
     
     return widget
 
-"""
-def get_pixmap_from_file(source_path, image_height):
-    pixbuf = GdkPixbuf.Pixbuf.new_from_file(source_path)
-    icon_width = int((float(pixbuf.get_width()) / float(pixbuf.get_height())) * image_height)
-    s_pbuf = pixbuf.scale_simple(icon_width, image_height, GdkPixbuf.InterpType.BILINEAR)
-    p_map, mask = s_pbuf.render_pixmap_and_mask()
-    return p_map
-"""
-
 def get_theme_bg_color():
     return (242.0/255.0, 241.0/ 255.0, 240.0/255.0)
 

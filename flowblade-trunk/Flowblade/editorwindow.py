@@ -363,9 +363,7 @@ class EditorWindow:
         self.mm_paned.pack1(bins_panel, resize=True, shrink=True)
         self.mm_paned.pack2(media_panel, resize=True, shrink=False)
 
-        mm_panel = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-        mm_panel.set_padding(2, 2, 6, 2)
-        mm_panel.add(self.mm_paned)
+        mm_panel = guiutils.set_margins(self.mm_paned, 2, 2, 6, 2)
 
         # Effects
         self.effect_select_list_view = guicomponents.FilterListView()
@@ -380,34 +378,25 @@ class EditorWindow:
         clipeffectseditor.widgets.effect_stack_view.treeview.connect("button-press-event",
                                               clipeffectseditor.filter_stack_button_press)
                                               
-        effects_editor_panel = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-        effects_editor_panel.set_padding(0, 0, 4, 0)
-        effects_editor_panel.add(clipeffectseditor.widgets.value_edit_frame)
+        effects_editor_panel = guiutils.set_margins(clipeffectseditor.widgets.value_edit_frame, 0, 0, 4, 0)
         
         effects_hbox = Gtk.HBox()
         effects_hbox.set_border_width(5)
         effects_hbox.pack_start(clip_editor_panel, False, False, 0)
         effects_hbox.pack_start(effects_editor_panel, True, True, 0)
 
-        self.effects_panel = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-        self.effects_panel.set_padding(2, 2, 2, 2)
-        self.effects_panel.add(effects_hbox)
-
+        self.effects_panel = guiutils.set_margins(effects_hbox, 2, 2, 2, 2)
+        
         # Compositors
         compositor_clip_panel = compositeeditor.get_compositor_clip_panel()
-
-        compositor_editor_panel = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-        compositor_editor_panel.set_padding(0, 0, 4, 0)
-        compositor_editor_panel.add(compositeeditor.widgets.value_edit_frame)
+        compositor_editor_panel = guiutils.set_margins(compositeeditor.widgets.value_edit_frame, 0, 0, 4, 0)
 
         compositors_hbox = Gtk.HBox()
         compositors_hbox.set_border_width(5)
         compositors_hbox.pack_start(compositor_clip_panel, False, False, 0)
         compositors_hbox.pack_start(compositor_editor_panel, True, True, 0)
 
-        self.compositors_panel = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-        self.compositors_panel.set_padding(0, 0, 0, 0)
-        self.compositors_panel.add(compositors_hbox)
+        self.compositors_panel = compositors_hbox
 
         # Render
         try:
@@ -434,9 +423,7 @@ class EditorWindow:
             render_hbox.pack_start(render_panel_left, True, True, 0)
             render_hbox.pack_start(render_panel_right, True, True, 0)
 
-        render_panel = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-        render_panel.set_padding(2, 6, 8, 6)
-        render_panel.add(render_hbox)
+        render_panel = guiutils.set_margins(render_hbox, 2, 6, 8, 6)
 
         # Media log events List
         media_log_events_list_view = medialog.get_media_log_list_view()   
@@ -445,9 +432,7 @@ class EditorWindow:
         media_log_vbox = Gtk.HBox()
         media_log_vbox.pack_start(events_panel, True, True, 0)
         
-        media_log_panel = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-        media_log_panel.set_padding(6, 6, 6, 6)
-        media_log_panel.add(media_log_vbox)
+        media_log_panel = guiutils.set_margins(media_log_vbox, 6, 6, 6, 6)
         self.media_log_events_list_view = media_log_events_list_view
 
         # Sequence list
@@ -467,9 +452,7 @@ class EditorWindow:
         project_vbox.pack_start(project_info_panel, False, True, 0)
         project_vbox.pack_start(seq_panel, True, True, 0)
         
-        project_panel = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-        project_panel.set_padding(0, 2, 6, 2)
-        project_panel.add(project_vbox)
+        project_panel = guiutils.set_margins(project_vbox, 0, 2, 6, 2)
         
         # Notebook
         self.notebook = Gtk.Notebook()
@@ -538,9 +521,7 @@ class EditorWindow:
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
         monitor_vbox.pack_start(player_buttons_row, False, True, 0)
 
-        monitor_align = Gtk.Alignment.new(xalign=0.5, yalign=0.5, xscale=1.0, yscale=1.0) 
-        monitor_align.add(monitor_vbox)
-        monitor_align.set_padding(3, 0, 3, 3)
+        monitor_align = guiutils.set_margins(monitor_vbox, 3, 0, 3, 3)
 
         monitor_frame = Gtk.Frame()
         monitor_frame.add(monitor_align)
