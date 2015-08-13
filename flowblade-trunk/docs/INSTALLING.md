@@ -11,17 +11,15 @@ sudo apt-get install flowblade
 ```
 #### Archlinux
 
-Latest release:
+_Latest release_. Visit the <a href="https://aur.archlinux.org/packages/flowblade/">AUR</a> page or use terminal command:
 ```bash
 yaourt -S flowblade
 ```
-Or visit the <a href="https://aur.archlinux.org/packages/flowblade/">AUR</a> page.
 
-Git version:
+_Git version_. Visit the <a href="https://aur.archlinux.org/packages/flowblade-git/">AUR</a> page or use terminal command:
 ```bash
 yaourt -S flowblade-git
 ```
-Or visit the <a href="https://aur.archlinux.org/packages/flowblade-git/">AUR</a> page.
 
 ### Installing using .deb package
 
