@@ -155,7 +155,11 @@ def main(root_path):
     # Init gtk threads
     Gdk.threads_init()
     Gdk.threads_enter()
-    
+
+    # Request dark them if so desired
+    if editorpersistance.prefs.dark_theme == True:
+        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
+
     # Load drag'n'drop images
     dnd.init()
 
