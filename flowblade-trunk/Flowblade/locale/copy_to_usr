@@ -1,0 +1,24 @@
+#/usr/bin/bash
+
+# Move to Flowblade root directory
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $SCRIPT_DIR
+cd ..
+ROOT_DIR=$(pwd)
+
+echo $SCRIPT_DIR
+echo $ROOT_DIR
+
+LANGUAGES=("fi" "cs" "fr" "es" "it" "de")
+
+echo "Copying all compiled translation files languages to /usr/share/locale"
+
+for LANG in "${LANGUAGES[@]}"
+do
+   :
+   LANG_FILE=$SCRIPT_DIR"/"$LANG"/LC_MESSAGES/flowblade.mo"
+   COPY_FILE="/usr/share/locale/"$LANG"/LC_MESSAGES/flowblade.mo"
+   sudo cp $LANG_FILE $COPY_FILE
+done
+
+

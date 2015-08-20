@@ -25,7 +25,7 @@ import os
 import respaths
 import editorpersistance
 
-APP_NAME = "Flowblade"
+APP_NAME = "flowblade"
 lang = None
 
 filter_groups = {}
@@ -44,18 +44,28 @@ def init_languages():
     if (language):
         langs += language.split(":")
 
-    gettext.bindtextdomain(APP_NAME, respaths.LOCALE_PATH)
+    # Use /usr/share/locale if available
+    if os.path.isfile("/usr/share/locale/fi/LC_MESSAGES/flowblade.mo"): # fi is the translation controlled by program author
+        print "Found translations at /usr/share/locale, using those."
+        locale_path = "/usr/share/locale/"
+    else:
+        print "Translations at /usr/share/locale were not found, using program root directory translations."
+        locale_path = respaths.LOCALE_PATH
+    
+    gettext.bindtextdomain(APP_NAME, locale_path)
     gettext.textdomain(APP_NAME)
 
     # Get the language to use
     global lang
     if editorpersistance.prefs.use_english_always == True:
-        print "Force use English texts"
-        lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=["C"], fallback=True)
+        print "Force use English."
+        lang = gettext.translation(APP_NAME, locale_path, languages=["C"], fallback=True)
     else:
-        print "Use locale texts"
-        lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=langs, fallback=True)
+        print "Use OS locale language."
+        lang = gettext.translation(APP_NAME, locale_path, languages=langs, fallback=True)
 
+    # testing, comment out for production
+    lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=["fi"], fallback=True)  # testing, 
     lang.install(APP_NAME) # makes _() a build-in available in all modules without imports
 
 def get_filter_name(f_name):

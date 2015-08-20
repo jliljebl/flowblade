@@ -11,7 +11,7 @@ cd ..
 ROOT_DIR=$(pwd)
 
 # Check if directory for translation already exists
-PO_FILE=$ROOT_DIR"/locale/"$LANG"/LC_MESSAGES/Flowblade.po"
+PO_FILE=$ROOT_DIR"/locale/"$LANG"/LC_MESSAGES/flowblade.po"
 if [ ! -f $PO_FILE ]; then
   echo "Translation file $PO_FILE does not exist."
   echo "No .mo files were compiled."
@@ -19,7 +19,7 @@ if [ ! -f $PO_FILE ]; then
 fi
 
 # Create mo file
-MO_FILE=$ROOT_DIR"/locale/"$LANG"/LC_MESSAGES/Flowblade.mo"
+MO_FILE=$ROOT_DIR"/locale/"$LANG"/LC_MESSAGES/flowblade.mo"
 msgfmt --output-file=$MO_FILE $PO_FILE
 
 echo "Done."

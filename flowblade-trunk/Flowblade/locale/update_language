@@ -11,7 +11,7 @@ cd ..
 ROOT_DIR=$(pwd)
 
 # Check if directory for translation already exists
-PO_FILE=$ROOT_DIR"/locale/"$LANG"/LC_MESSAGES/Flowblade.po"
+PO_FILE=$ROOT_DIR"/locale/"$LANG"/LC_MESSAGES/flowblade.po"
 if [ ! -f $PO_FILE ]; then
   echo "Translation file $PO_FILE does not exist."
   echo "Can't update .po file for language code: $LANG."
@@ -24,8 +24,8 @@ fi
 # Create new merge .po file
 LANG_DIR=$ROOT_DIR"/locale/"$LANG"/LC_MESSAGES/"
 MERGE_FILE=$LANG_DIR"Flowblade_merge.po"
-REF_FILE=$ROOT_DIR"/locale/Flowblade/Flowblade.pot"
-EXISTING_TRANSLATION=$LANG_DIR"Flowblade.po"
+REF_FILE=$ROOT_DIR"/locale/Flowblade/flowblade.pot"
+EXISTING_TRANSLATION=$LANG_DIR"flowblade.po"
 msgmerge -o $MERGE_FILE $EXISTING_TRANSLATION $REF_FILE
 
 # Remove old and copy new
