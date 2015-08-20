@@ -69,13 +69,13 @@ def init_languages():
     global lang
     if editorpersistance.prefs.use_english_always == True:
         print "Force use English."
-        lang = gettext.translation(APP_NAME, locale_path, languages=["C"], fallback=True)
+        lang = gettext.translation(APP_NAME, locale_path, languages=["dummy"], fallback=True)
     else:
         print "Use OS locale language."
         lang = gettext.translation(APP_NAME, locale_path, languages=langs, fallback=True)
 
     # testing, comment out for production
-    # lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=["fi"], fallback=True)  # testing, 
+    # lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=["fi"], fallback=True)
     lang.install(APP_NAME) # makes _() a build-in available in all modules without imports
 
 def get_filter_name(f_name):
