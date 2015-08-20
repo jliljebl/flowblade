@@ -63,10 +63,10 @@ _timeline_displayed = True
 # and PLAYER() current frame is not timeline frame 
 tline_shadow_frame = -1
 
-# Dict of curren proxy media paths
+# Dict of current proxy media paths
 _current_proxy_paths = {}
 
-# Clips or compositor that are copy/pasted with CTRL+C, CTRL+V 
+# Clips or compositors that are copy/pasted with CTRL+C, CTRL+V 
 _copy_paste_objects = None
 
 # Used to alter gui layout and tracks configuration, set at startup
@@ -87,6 +87,7 @@ cursor_on_tline = False
 
 # Flag for running JACK audio server. If this is on when SDLConsumer created in mltplayer.py
 # jack rack filter will bw taached to it
+# NOT USED CURRENTLY.
 attach_jackrack = False
 
 # Flag is used to block unwanted draw events during loads  

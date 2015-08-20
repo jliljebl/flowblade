@@ -24,6 +24,7 @@ import os
 
 import respaths
 import editorpersistance
+import editorstate
 
 APP_NAME = "flowblade"
 lang = None
@@ -44,14 +45,23 @@ def init_languages():
     if (language):
         langs += language.split(":")
 
-    # Use /usr/share/locale if available
-    if os.path.isfile("/usr/share/locale/fi/LC_MESSAGES/flowblade.mo"): # fi is the translation controlled by program author
-        print "Found translations at /usr/share/locale, using those."
-        locale_path = "/usr/share/locale/"
+    if editorstate.app_running_from == editorstate.RUNNING_FROM_INSTALLATION:
+        # Use /usr/share/locale first if available and running from installation
+        if os.path.isfile("/usr/share/locale/fi/LC_MESSAGES/flowblade.mo"): # fi is the translation controlled by program author
+            print "Found translations at /usr/share/locale, using those."
+            locale_path = "/usr/share/locale/"
+        else:
+            print "Translations at /usr/share/locale were not found, using program root directory translations."
+            locale_path = respaths.LOCALE_PATH
     else:
-        print "Translations at /usr/share/locale were not found, using program root directory translations."
-        locale_path = respaths.LOCALE_PATH
-    
+        # Use translations in program folder first if NOT running from installation
+        if os.path.isfile("/usr/share/locale/fi/LC_MESSAGES/flowblade.mo"): # fi is the translation controlled by program author
+            print "Found translations at /usr/share/locale, using those."
+            locale_path = "/usr/share/locale/"
+        else:
+            print "Translations at /usr/share/locale were not found, using program root directory translations."
+            locale_path = respaths.LOCALE_PATH
+
     gettext.bindtextdomain(APP_NAME, locale_path)
     gettext.textdomain(APP_NAME)
 
@@ -65,7 +75,7 @@ def init_languages():
         lang = gettext.translation(APP_NAME, locale_path, languages=langs, fallback=True)
 
     # testing, comment out for production
-    lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=["fi"], fallback=True)  # testing, 
+    # lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=["fi"], fallback=True)  # testing, 
     lang.install(APP_NAME) # makes _() a build-in available in all modules without imports
 
 def get_filter_name(f_name):
