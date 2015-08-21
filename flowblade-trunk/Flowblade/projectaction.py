@@ -795,12 +795,16 @@ def _display_file_info(media_file):
     audio_index = clip.get_int("audio_index")
     long_video_property = "meta.media." + str(video_index) + ".codec.long_name"
     long_audio_property = "meta.media." + str(audio_index) + ".codec.long_name"
+    sample_rate_property = "meta.media." + str(audio_index) + ".codec.sample_rate"
+    channels_property = "meta.media." + str(audio_index) +  ".codec.channels"
+    
     vcodec = clip.get(str(long_video_property))
     acodec = clip.get(str(long_audio_property))
     
     frame = clip.get_frame()
-    channels = str(frame.get_int("channels"))
-    frequency = str(frame.get_int("frequency")) + "Hz"
+    channels = str(clip.get_int(str(channels_property))) 
+    frequency =  str(clip.get_int(str(sample_rate_property))) + "Hz"
+    
     try:
         num = float(clip.get("meta.media.frame_rate_num")) # from producer_avformat.c
         den = float(clip.get("meta.media.frame_rate_den")) # from producer_avformat.c
