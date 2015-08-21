@@ -316,7 +316,7 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
     f = open(file_path)
     project = pickle.load(f)
 
-    project.name = unicode(project.name, "utf-8")
+    project.name = project.name.encode("utf-8")
 
     # Relinker only operates on pickleable python data 
     if relinker_load:
