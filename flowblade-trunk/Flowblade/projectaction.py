@@ -801,7 +801,6 @@ def _display_file_info(media_file):
     vcodec = clip.get(str(long_video_property))
     acodec = clip.get(str(long_audio_property))
     
-    frame = clip.get_frame()
     channels = str(clip.get_int(str(channels_property))) 
     frequency =  str(clip.get_int(str(sample_rate_property))) + "Hz"
     

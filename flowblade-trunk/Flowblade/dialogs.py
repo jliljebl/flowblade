@@ -139,9 +139,12 @@ def save_backup_snapshot(name, callback):
     dialog.connect('response', callback, project_folder, compact_name_entry)
     dialog.show_all()
 
-def load_project_dialog(callback):    
-    dialog = Gtk.FileChooserDialog(_("Select Project File"),  gui.editor_window.window, 
-                                   Gtk.FileChooserAction.OPEN, 
+def load_project_dialog(callback, parent=None):
+    if parent == None:
+        parent = gui.editor_window.window
+
+    dialog = Gtk.FileChooserDialog(_("Select Project File"), parent,
+                                   Gtk.FileChooserAction.OPEN,
                                    (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
                                     _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
     dialog.set_action(Gtk.FileChooserAction.OPEN)

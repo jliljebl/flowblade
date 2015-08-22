@@ -176,7 +176,7 @@ class MediaLinkerWindow(Gtk.Window):
         self.set_active_state()
 
     def load_button_clicked(self):
-        dialogs.load_project_dialog(self.load_project_dialog_callback)
+        dialogs.load_project_dialog(self.load_project_dialog_callback, self)
     
     def load_project_dialog_callback(self, dialog, response_id):
         if response_id == Gtk.ResponseType.ACCEPT:
@@ -373,9 +373,12 @@ def _update_media_assets():
     for media_file_id, media_file in target_project.media_files.iteritems():
         if isinstance(media_file, patternproducer.AbstractBinClip):
             continue
-        new_assets.append(MediaAsset(media_file.path, media_file.type))
-        asset_paths[media_file.path] = media_file.path
-
+        try:
+            new_assets.append(MediaAsset(media_file.path, media_file.type))
+            asset_paths[media_file.path] = media_file.path
+        except:
+            print "failed loading:", media_file
+            
     for seq in target_project.sequences:
         # Clip media assets
         for track in seq.tracks:

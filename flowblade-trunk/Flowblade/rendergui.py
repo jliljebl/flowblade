@@ -21,6 +21,7 @@
 from gi.repository import Gtk
 from gi.repository import GObject
 
+import math
 import os
 
 import dialogutils
@@ -321,6 +322,22 @@ class RenderQualitySelector():
             self.widget.set_active(0)
 
 
+class RenderAudioRateSelector():
+    def __init__(self):
+        self.widget = Gtk.ComboBoxText()
+        self.widget.set_tooltip_text(_("Select audio sample frequency"))
+        self.sample_rates = [8000, 12000, 16000, 22500, 32000, 44100, 48000, 96000]
+        for rate in self.sample_rates:
+            val = rate / 1000.0
+            if val == math.floor(val):
+                val = int(val)
+            self.widget.append_text(str(val) +" kHz")
+        self.widget.set_active(6)
+        
+    def get_selected_rate(self):
+        return self.sample_rates[self.widget.get_active()]
+        
+
 class RenderEncodingSelector():
 
     def __init__(self, quality_selector, extension_label, audio_desc_label):
@@ -579,15 +596,18 @@ class RenderEncodingPanel():
                                                         self.audio_desc)
         self.encoding_selector.encoding_selection_changed()
         
+        self.sample_rate_selector = RenderAudioRateSelector()
+
+        
         self.speaker_image = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "audio_desc_icon.png")
 
         quality_row  = Gtk.HBox()
         quality_row.pack_start(self.quality_selector.widget, False, False, 0)
         quality_row.pack_start(Gtk.Label(), True, False, 0)
         quality_row.pack_start(self.speaker_image, False, False, 0)
+        quality_row.pack_start(self.sample_rate_selector.widget, False, False, 0)
         quality_row.pack_start(self.audio_desc, False, False, 0)
-        quality_row.pack_start(Gtk.Label(), True, False, 0)
-        
+
         self.vbox = Gtk.VBox(False, 2)
         self.vbox.pack_start(self.encoding_selector.widget, False, False, 0)
         self.vbox.pack_start(quality_row, False, False, 0)
