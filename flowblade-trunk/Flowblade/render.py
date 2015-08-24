@@ -225,6 +225,7 @@ def get_args_vals_list_for_current_selections():
         args_vals_list = renderconsumer.get_args_vals_tuples_list_for_encoding_and_quality( profile, 
                                                                                             encoding_option_index, 
                                                                                             quality_option_index)
+        args_vals_list.append(("ar", str(widgets.encoding_panel.sample_rate_selector.get_selected_rate())))
     else: # Manual args encodings
         buf = widgets.args_panel.opts_view.get_buffer()
         args_vals_list, error = renderconsumer.get_ffmpeg_opts_args_vals_tuples_list(buf)

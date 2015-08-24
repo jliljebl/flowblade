@@ -1064,7 +1064,7 @@ def add_single_render_item(flowblade_project, render_path, args_vals_list, mark_
 
 def launch_single_rendering():
     # This is called from GTK thread, so we need to launch process from another thread to 
-    # clean-up preperly and not block GTK thread/GUI
+    # clean-up properly and not block GTK thread/GUI
     global single_render_launch_thread
     single_render_launch_thread = SingleRenderLaunchThread()
     single_render_launch_thread.start()
