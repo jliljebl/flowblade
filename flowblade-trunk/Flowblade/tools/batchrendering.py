@@ -1177,7 +1177,7 @@ class SingleRenderThread(threading.Thread):
 
         Gdk.threads_enter()
         #single_render_window.update_queue_view()
-        single_render_window.current_render.set_text("  " + render_item.get_display_name())
+        single_render_window.current_render.set_text("  " + os.path.basename(render_item.render_path))
         Gdk.threads_leave()
 
         # Make sure that render thread is actually running before
@@ -1222,14 +1222,14 @@ class SingleRenderWindow:
         # Window
         self.window = Gtk.Window(Gtk.WindowType.TOPLEVEL)
         self.window.connect("delete-event", lambda w, e:_start_single_render_shutdown())
-        app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowbladebatchappicon.png")
+        app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowbladesinglerendericon.png")
         self.window.set_icon(app_icon)
 
         self.est_time_left = Gtk.Label()
         self.current_render = Gtk.Label()
         self.current_render_time = Gtk.Label()
         est_r = guiutils.get_right_justified_box([guiutils.bold_label(_("Estimated Left:"))])
-        current_r = guiutils.get_right_justified_box([guiutils.bold_label(_("Current Render:"))])
+        current_r = guiutils.get_right_justified_box([guiutils.bold_label(_("File:"))])
         current_r_t = guiutils.get_right_justified_box([guiutils.bold_label(_("Elapsed:"))])
         est_r.set_size_request(250, 20)
         current_r.set_size_request(250, 20)
@@ -1242,7 +1242,7 @@ class SingleRenderWindow:
 
         self.stop_render_button = Gtk.Button(_("Stop Render"))
         self.stop_render_button.connect("clicked", 
-                                   lambda w, e: self.abort_render(), 
+                                   lambda w, e: _start_single_render_shutdown(), 
                                    None)
 
         self.not_rendering_txt = "0 %"
