@@ -674,20 +674,7 @@ def _early_exit(dialog, response):
     # Exit gtk main loop.
     Gtk.main_quit() 
 
-# ------------------------------------------------------- single instance
-"""
-def _not_first_instance_exit():
-    global exit_timeout_id
-    exit_timeout_id = GObject.timeout_add(200, _show_single_instance_info)
-    # Launch gtk+ main loop
-    Gtk.main()
 
-def _show_single_instance_info():
-    GObject.source_remove(exit_timeout_id)
-    primary_txt = _("Another instance of Flowblade already running.")
-    secondary_txt = _("Only one instance of Flowblade is allowed to run at a time.")
-    dialogutils.warning_message_with_callback(primary_txt, secondary_txt, None, False, _early_exit)
-"""
 # ------------------------------------------------------- logging
 def init_logger():
     try:
