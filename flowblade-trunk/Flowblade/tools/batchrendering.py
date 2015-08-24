@@ -1062,8 +1062,8 @@ def add_single_render_item(flowblade_project, render_path, args_vals_list, mark_
     render_item.save_as_single_render_item(hidden_dir + CURRNET_RENDER_RENDER_ITEM)
 
 def launch_single_rendering():
-    FNULL = open("/home/janne/log", 'w')
-    subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladesinglerender"], stdin=FNULL, stdout=FNULL, stderr=FNULL)
+    FLOG = open(utils.get_hidden_user_dir_path() + "log_single_render", 'w')
+    subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladesinglerender"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
 
 def single_render_main(root_path):
     # Allow only on instance to run
