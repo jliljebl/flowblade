@@ -20,7 +20,7 @@
 
 import datetime
 
-from gi.repository import GObject
+from gi.repository import GObject, GLib
 from gi.repository import Gtk, Gdk, GdkPixbuf
 
 import dbus
@@ -62,8 +62,13 @@ PROJECTS_DIR = "batchrender/projects/"
 
 PID_FILE = "batchrenderingpid"
 
+CURRENT_RENDER_PROJECT_FILE = "current_render_project.flb"
+CURRNET_RENDER_RENDER_ITEM = "current_render.renderitem"
+         
 WINDOW_WIDTH = 800
 QUEUE_HEIGHT = 400
+
+SINGLE_WINDOW_WIDTH = 600
 
 IN_QUEUE = 0
 RENDERING = 1
@@ -81,6 +86,9 @@ timeout_id = None
 _dbus_service = None
 
 render_item_menu = Gtk.Menu()
+
+single_render_window = None
+
 
 # -------------------------------------------------------- render thread
 class QueueRunnerThread(threading.Thread):
@@ -299,7 +307,7 @@ def launch_batch_rendering():
 def main(root_path, force_launch=False):
     # Allow only on instance to run
     #can_run = test_and_write_pid()
-    can_run = True
+    #can_run = True
     init_dirs_if_needed()
     
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
@@ -510,6 +518,10 @@ class BatchRenderItemData:
         item_write_file = file(item_path, "wb")
         pickle.dump(self, item_write_file)
 
+    def save_as_single_render_item(self, item_path):
+        item_write_file = file(item_path, "wb")
+        pickle.dump(self, item_write_file)
+
     def delete_from_queue(self):
         identifier = self.generate_identifier()
         item_path = get_datafiles_dir() + identifier + ".renderitem"
@@ -568,7 +580,7 @@ class RenderData:
     def __init__(self, enc_index, quality_index, user_args, profile_desc, profile_name, fps):
         self.enc_index = enc_index
         self.quality_index = quality_index
-        self.user_args = user_args
+        self.user_args = user_args # Used only for display purposes
         self.profile_desc = profile_desc
         self.profile_name = profile_name
         self.fps = fps
@@ -658,8 +670,6 @@ class BatchRenderWindow:
         button_row.pack_start(self.remove_selected, False, False, 0)
         button_row.pack_start(self.remove_finished, False, False, 0)
         button_row.pack_start(Gtk.Label(), True, True, 0)
-        #button_row.pack_start(self.reload_button, True, True, 0)
-        #button_row.pack_start(Gtk.Label(), True, True, 0)
         button_row.pack_start(self.stop_render_button, False, False, 0)
         button_row.pack_start(self.render_button, False, False, 0)
 
@@ -1025,3 +1035,252 @@ def _get_menu_item(text, callback, data, sensitive=True):
     item.show()
     item.set_sensitive(sensitive)
     return item
+
+
+
+# --------------------------------------------------- single item render
+def add_single_render_item(flowblade_project, render_path, args_vals_list, mark_in, mark_out, render_data):
+    hidden_dir = utils.get_hidden_user_dir_path()
+        
+    timestamp = datetime.datetime.now()
+
+    # Create item data file
+    project_name = flowblade_project.name
+    sequence_name = flowblade_project.c_seq.name
+    sequence_index = flowblade_project.sequences.index(flowblade_project.c_seq)
+    length = flowblade_project.c_seq.get_length()
+    render_item = BatchRenderItemData(project_name, sequence_name, render_path, \
+                                      sequence_index, args_vals_list, timestamp, length, \
+                                      mark_in, mark_out, render_data)
+
+
+    # Write project 
+    project_path = hidden_dir + CURRENT_RENDER_PROJECT_FILE
+    persistance.save_project(flowblade_project, project_path)
+
+    # Write render item file
+    render_item.save_as_single_render_item(hidden_dir + CURRNET_RENDER_RENDER_ITEM)
+
+def launch_single_rendering():
+    FNULL = open("/home/janne/log", 'w')
+    subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladesinglerender"], stdin=FNULL, stdout=FNULL, stderr=FNULL)
+
+def single_render_main(root_path):
+    # Allow only on instance to run
+    #can_run = test_and_write_pid()
+    #can_run = True
+    #init_dirs_if_needed()
+    
+    gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
+    editorstate.gtk_version = gtk_version
+    try:
+        editorstate.mlt_version = mlt.LIBMLT_VERSION
+    except:
+        editorstate.mlt_version = "0.0.99" # magic string for "not found"
+        
+    # Set paths.
+    respaths.set_paths(root_path)
+
+    # Load editor prefs and list of recent projects
+    editorpersistance.load()
+    
+    # Init translations module with translations data
+    translations.init_languages()
+    translations.load_filters_translations()
+    mlttransitions.init_module()
+
+    # Init gtk threads
+    Gdk.threads_init()
+    Gdk.threads_enter()
+
+    repo = mlt.Factory().init()
+
+    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
+    locale.setlocale(locale.LC_NUMERIC, 'C')
+
+    # Check for codecs and formats on the system
+    mltenv.check_available_features(repo)
+    renderconsumer.load_render_profiles()
+
+    # Load filter and compositor descriptions from xml files.
+    mltfilters.load_filters_xml(mltenv.services)
+    mlttransitions.load_compositors_xml(mltenv.transitions)
+
+    # Create list of available mlt profiles
+    mltprofiles.load_profile_list()
+
+    global single_render_window
+    single_render_window = SingleRenderWindow()
+
+    global single_render_thread
+    single_render_thread = SingleRenderThread()
+    single_render_thread.start()
+        
+    Gtk.main()
+    Gdk.threads_leave()
+
+
+class SingleRenderThread(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+    
+    def run(self):      
+        hidden_dir = utils.get_hidden_user_dir_path()
+
+        try:
+            data_file_path = hidden_dir + CURRNET_RENDER_RENDER_ITEM
+            data_file = open(data_file_path)
+            render_item = pickle.load(data_file)
+            self.error_status = None
+        except Exception as e:
+            if self.error_status == None:
+                self.error_status = []
+            self.error_status = ("Current render datafile load failed with ") + str(e)
+            # something 
+            return 
+
+        current_render_time = 0
+
+        # Create render objects
+        project_file_path = hidden_dir + CURRENT_RENDER_PROJECT_FILE
+        persistance.show_messages = False
+
+        project = persistance.load_project(project_file_path, False)
+
+        producer = project.c_seq.tractor
+        consumer = renderconsumer.get_mlt_render_consumer(render_item.render_path, 
+                                                          project.profile,
+                                                          render_item.args_vals_list)
+
+        # Get render range
+        start_frame, end_frame, wait_for_stop_render = get_render_range(render_item)
+        
+        # Create and launch render thread
+        global render_thread 
+        render_thread = renderconsumer.FileRenderPlayer(None, producer, consumer, start_frame, end_frame) # None == file name not needed this time when using FileRenderPlayer because callsite keeps track of things
+        render_thread.wait_for_producer_end_stop = wait_for_stop_render
+        render_thread.start()
+
+        # Set render start time and item state
+        render_item.render_started()
+
+        Gdk.threads_enter()
+        #single_render_window.update_queue_view()
+        single_render_window.current_render.set_text("  " + render_item.get_display_name())
+        Gdk.threads_leave()
+
+        # Make sure that render thread is actually running before
+        # testing render_thread.running value later
+        while render_thread.has_started_running == False:
+            time.sleep(0.05)
+
+        # View update loop
+        self.running = True
+
+        while self.running:
+            render_fraction = render_thread.get_render_fraction()
+            now = time.time()
+            current_render_time = now - render_item.start_time
+            
+            Gdk.threads_enter()
+            single_render_window.update_render_progress(render_fraction, render_item.get_display_name(), current_render_time)
+            Gdk.threads_leave()
+            
+            if render_thread.running == False: # Rendering has reached end
+                self.running = False
+                
+                Gdk.threads_enter()
+                single_render_window.render_progress_bar.set_fraction(1.0)
+                Gdk.threads_leave()
+
+            time.sleep(0.33)
+                
+        render_thread.shutdown()
+        global single_render_thread
+        single_render_thread = None
+        # Update view for render end
+        GLib.idle_add(_single_render_shutdown)
+                    
+    def abort(self):
+        self.running = False
+
+
+class SingleRenderWindow:
+
+    def __init__(self):
+        # Window
+        self.window = Gtk.Window(Gtk.WindowType.TOPLEVEL)
+        self.window.connect("delete-event", lambda w, e:_start_single_render_shutdown())
+        app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowbladebatchappicon.png")
+        self.window.set_icon(app_icon)
+
+        self.est_time_left = Gtk.Label()
+        self.current_render = Gtk.Label()
+        self.current_render_time = Gtk.Label()
+        est_r = guiutils.get_right_justified_box([guiutils.bold_label(_("Estimated Left:"))])
+        current_r = guiutils.get_right_justified_box([guiutils.bold_label(_("Current Render:"))])
+        current_r_t = guiutils.get_right_justified_box([guiutils.bold_label(_("Elapsed:"))])
+        est_r.set_size_request(250, 20)
+        current_r.set_size_request(250, 20)
+        current_r_t.set_size_request(250, 20)
+        
+        info_vbox = Gtk.VBox(False, 0)
+        info_vbox.pack_start(guiutils.get_left_justified_box([current_r, self.current_render]), False, False, 0)
+        info_vbox.pack_start(guiutils.get_left_justified_box([current_r_t, self.current_render_time]), False, False, 0)
+        info_vbox.pack_start(guiutils.get_left_justified_box([est_r, self.est_time_left]), False, False, 0)
+
+        self.stop_render_button = Gtk.Button(_("Stop Render"))
+        self.stop_render_button.connect("clicked", 
+                                   lambda w, e: self.abort_render(), 
+                                   None)
+
+        self.not_rendering_txt = "0 %"
+        self.render_progress_bar = Gtk.ProgressBar()
+        self.render_progress_bar.set_text(self.not_rendering_txt)
+        
+        button_row =  Gtk.HBox(False, 0)
+        button_row.pack_start(Gtk.Label(), True, True, 0)
+        button_row.pack_start(self.stop_render_button, False, False, 0)
+
+        top_vbox = Gtk.VBox(False, 0)
+        top_vbox.pack_start(info_vbox, False, False, 0)
+        top_vbox.pack_start(guiutils.get_pad_label(12, 12), False, False, 0)
+        top_vbox.pack_start(self.render_progress_bar, False, False, 0)
+        top_vbox.pack_start(guiutils.get_pad_label(12, 12), False, False, 0)
+        top_vbox.pack_start(button_row, False, False, 0)
+
+        top_align = guiutils.set_margins(top_vbox, 12, 12, 12, 12)
+        top_align.set_size_request(SINGLE_WINDOW_WIDTH, 20)
+
+        # Set pane and show window
+        self.window.add(top_align)
+        self.window.set_title(_("Flowblade Timeline Render"))
+        self.window.set_position(Gtk.WindowPosition.CENTER)  
+        self.window.show_all()
+
+    def update_render_progress(self, fraction, current_name, current_render_time_passed):
+        self.render_progress_bar.set_fraction(fraction)
+
+        progress_str = str(int(fraction * 100)) + " %"
+        self.render_progress_bar.set_text(progress_str)
+
+        if fraction != 0:
+            full_time_est = (1.0 / fraction) * current_render_time_passed
+            left_est = full_time_est - current_render_time_passed
+            est_str = "  " + utils.get_time_str_for_sec_float(left_est)
+        else:
+            est_str = ""
+        self.est_time_left.set_text(est_str)
+
+        if current_render_time_passed != 0:
+            current_str= "  " + utils.get_time_str_for_sec_float(current_render_time_passed)
+        else:
+            current_str = ""
+        self.current_render_time.set_text(current_str)
+
+def _start_single_render_shutdown():
+    single_render_thread.abort()
+
+def _single_render_shutdown():
+    Gtk.main_quit()
+    

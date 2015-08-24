@@ -528,10 +528,16 @@ def open_recent_project(widget, index):
 
 # ---------------------------------- rendering
 def do_rendering():
-    editevent.insert_move_mode_pressed()
-    render.render_timeline()
+    _write_out_render_item(True)
+    batchrendering.launch_single_rendering()
+    #editevent.insert_move_mode_pressed()
+    #render.render_timeline()
 
 def add_to_render_queue():
+    _write_out_render_item(False)
+
+def _write_out_render_item(single_render_item_item):
+    # Get render arga and path
     args_vals_list = render.get_args_vals_list_for_current_selections()
     render_path = render.get_file_path()
 
@@ -549,39 +555,49 @@ def add_to_render_queue():
             rendergui.no_good_rander_range_info()
             return
 
-    # Create render data object
-    if render.widgets.args_panel.use_args_check.get_active() == False:
-        enc_index = render.widgets.encoding_panel.encoding_selector.widget.get_active()
-        quality_index = render.widgets.encoding_panel.quality_selector.widget.get_active()
-        user_args = False
-    else: # This is not implemented
-        enc_index = render.widgets.encoding_panel.encoding_selector.widget.get_active()
-        quality_index = render.widgets.encoding_panel.quality_selector.widget.get_active()
-        user_args = False
-
+    # Create batchrendering.RenderData object.
+    # batchrendering.RenderData object is only used to display info about render,
+    # it is not used to set render args.
+    user_args = render.widgets.args_panel.use_args_check.get_active()
+    enc_index = render.widgets.encoding_panel.encoding_selector.widget.get_active()
+    quality_index = render.widgets.encoding_panel.quality_selector.widget.get_active()
     profile = render.get_current_profile()
     profile_text = guicomponents.get_profile_info_text(profile)
     fps = profile.fps()
     profile_name = profile.description()
     r_data = batchrendering.RenderData(enc_index, quality_index, user_args, profile_text, profile_name, fps) 
+    if user_args == True:
+        r_data.args_vals_list = args_vals_list # pack these to go for display purposes if used
+    
+    if single_render_item_item:
+        # Add item
+        try:
+            batchrendering.add_single_render_item( PROJECT(), 
+                                                   render_path,
+                                                   args_vals_list,
+                                                   start_frame,
+                                                   end_frame,
+                                                   r_data)
+        except Exception as e:
+            primary_txt = _("Render launch failed!")
+            secondary_txt = _("Error message: ") + str(e)
+            dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window, is_info=False)
+            return
+    else: # batch render item
+        # Add item
+        try:
+            batchrendering.add_render_item(PROJECT(), 
+                                           render_path,
+                                           args_vals_list,
+                                           start_frame,
+                                           end_frame,
+                                           r_data)
+        except Exception as e:
+            primary_txt = _("Adding item to render queue failed!")
+            secondary_txt = _("Error message: ") + str(e)
+            dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window, is_info=False)
+            return
 
-    # Add item
-    try:
-        batchrendering.add_render_item(PROJECT(), 
-                                       render_path,
-                                       args_vals_list,
-                                       start_frame,
-                                       end_frame,
-                                       r_data)
-    except Exception as e:
-        primary_txt = _("Adding item to render queue failed!")
-        secondary_txt = _("Error message: ") + str(e)
-        dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window, is_info=False)
-        return
-
-    #primary_txt = "New Render Item File Added to Queue"
-    #secondary_txt = "Select <b>'Render->Batch Render Queue'</b> from menu\nto launch render queue application.\n" #Press <b>'Reload Queue'</b> button to load new item\ninto queue if application already running."
-    #dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
 
 
 # ----------------------------------- media files

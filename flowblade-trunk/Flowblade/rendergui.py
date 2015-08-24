@@ -598,7 +598,6 @@ class RenderEncodingPanel():
         
         self.sample_rate_selector = RenderAudioRateSelector()
 
-        
         self.speaker_image = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "audio_desc_icon.png")
 
         quality_row  = Gtk.HBox()
