@@ -88,7 +88,8 @@ _dbus_service = None
 render_item_menu = Gtk.Menu()
 
 single_render_window = None
-
+single_render_launch_thread = None
+single_render_thread = None
 
 # -------------------------------------------------------- render thread
 class QueueRunnerThread(threading.Thread):
@@ -1062,15 +1063,26 @@ def add_single_render_item(flowblade_project, render_path, args_vals_list, mark_
     render_item.save_as_single_render_item(hidden_dir + CURRNET_RENDER_RENDER_ITEM)
 
 def launch_single_rendering():
-    FLOG = open(utils.get_hidden_user_dir_path() + "log_single_render", 'w')
-    subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladesinglerender"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
-
-def single_render_main(root_path):
-    # Allow only on instance to run
-    #can_run = test_and_write_pid()
-    #can_run = True
-    #init_dirs_if_needed()
+    # This is called from GTK thread, so we need to launch process from another thread to 
+    # clean-up preperly and not block GTK thread/GUI
+    global single_render_launch_thread
+    single_render_launch_thread = SingleRenderLaunchThread()
+    single_render_launch_thread.start()
     
+
+class SingleRenderLaunchThread(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+    
+    def run(self):      
+        # Launch render process and wait for it to end
+        FLOG = open(utils.get_hidden_user_dir_path() + "log_single_render", 'w')
+        process = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladesinglerender"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
+        process.wait()
+
+    
+def single_render_main(root_path):
+    # called from .../launch/flowbladesinglerender script
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
     editorstate.gtk_version = gtk_version
     try:
@@ -1115,7 +1127,7 @@ def single_render_main(root_path):
     global single_render_thread
     single_render_thread = SingleRenderThread()
     single_render_thread.start()
-        
+
     Gtk.main()
     Gdk.threads_leave()
 
@@ -1156,7 +1168,6 @@ class SingleRenderThread(threading.Thread):
         start_frame, end_frame, wait_for_stop_render = get_render_range(render_item)
         
         # Create and launch render thread
-        global render_thread 
         render_thread = renderconsumer.FileRenderPlayer(None, producer, consumer, start_frame, end_frame) # None == file name not needed this time when using FileRenderPlayer because callsite keeps track of things
         render_thread.wait_for_producer_end_stop = wait_for_stop_render
         render_thread.start()
