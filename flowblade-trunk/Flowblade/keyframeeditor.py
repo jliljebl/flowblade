@@ -1354,7 +1354,10 @@ class RotatingScreenEditor(AbstractScreenEditor):
         self._draw_scale_arrow(cr, self.edit_points[2], 90)
         self._draw_scale_arrow(cr, self.edit_points[1], 0)
 
+
         # center cross
+        cr.save()
+        
         x, y = self.get_panel_point(*self.edit_points[0])
         cr.translate(x,y)
         cr.rotate(math.radians(self.rotation))
@@ -1366,8 +1369,9 @@ class RotatingScreenEditor(AbstractScreenEditor):
         cr.move_to(-CROSS_LENGTH - 0.5, -0.5)
         cr.line_to(CROSS_LENGTH - 0.5, -0.5)
         cr.stroke()
-        cr.identity_matrix()
-        
+
+        cr.restore()
+
         # roto handle
         x, y = self.get_panel_point(*self.edit_points[3])
         cr.translate(x,y)
@@ -1390,6 +1394,8 @@ class RotatingScreenEditor(AbstractScreenEditor):
         cr.fill()
     
     def _draw_scale_arrow(self, cr, edit_point, add_angle):
+        cr.save()
+        
         x, y = self.get_panel_point(*edit_point)
         cr.translate(x,y)
         cr.rotate(math.radians(self.rotation + add_angle))
@@ -1416,7 +1422,8 @@ class RotatingScreenEditor(AbstractScreenEditor):
         cr.set_line_width(2.0)
         cr.set_source_rgb(0,0,0)
         cr.stroke()
-        cr.identity_matrix()
+        
+        cr.restore()
 
 # ----------------------------------------------------------- buttons objects
 class ClipEditorButtonsRow(Gtk.HBox):
