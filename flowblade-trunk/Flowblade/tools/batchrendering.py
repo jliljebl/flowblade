@@ -302,13 +302,10 @@ def launch_batch_rendering():
         print "flowblade.movie.editor.batchrender dbus service exists, batch rendering already running"
         _show_single_instance_info()
     else:
-        FNULL = open(os.devnull, 'w')
-        subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladebatch"], stdin=FNULL, stdout=FNULL, stderr=FNULL)
+        FLOG = open(utils.get_hidden_user_dir_path() + "log_batch_render", 'w')
+        subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladebatch"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
 
 def main(root_path, force_launch=False):
-    # Allow only on instance to run
-    #can_run = test_and_write_pid()
-    #can_run = True
     init_dirs_if_needed()
     
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())

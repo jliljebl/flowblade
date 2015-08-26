@@ -156,8 +156,11 @@ def load_project_dialog(callback, parent=None):
     dialog.connect('response', callback)
     dialog.show()
 
-def save_project_as_dialog(callback, current_name, open_dir):    
-    dialog = Gtk.FileChooserDialog(_("Save Project As"),  gui.editor_window.window, 
+def save_project_as_dialog(callback, current_name, open_dir, parent=None):
+    if parent == None:
+        parent = gui.editor_window.window
+
+    dialog = Gtk.FileChooserDialog(_("Save Project As"), parent, 
                                    Gtk.FileChooserAction.SAVE, 
                                    (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
                                     _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
@@ -1209,8 +1212,11 @@ def watermark_file_dialog(callback, parent, widgets):
     dialog.connect('response', callback, widgets)
     dialog.show()
 
-def media_file_dialog(text, callback, multiple_select, data=None):
-    file_select = Gtk.FileChooserDialog(text, gui.editor_window.window, Gtk.FileChooserAction.OPEN,
+def media_file_dialog(text, callback, multiple_select, data=None, parent=None):
+    if parent == None:
+        parent = gui.editor_window.window
+
+    file_select = Gtk.FileChooserDialog(text, parent, Gtk.FileChooserAction.OPEN,
                                     (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                                     Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
 

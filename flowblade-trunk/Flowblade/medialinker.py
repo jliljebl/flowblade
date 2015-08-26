@@ -56,8 +56,8 @@ media_assets = []
 
 def display_linker():
     print "Launching Media Re-linker"
-    FNULL = open(os.devnull, 'w')
-    subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowblademedialinker"], stdin=FNULL, stdout=FNULL, stderr=FNULL)
+    FLOG = open(utils.get_hidden_user_dir_path() + "log_media_relinker", 'w')
+    subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowblademedialinker"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
 
 
 # -------------------------------------------------------- render thread
@@ -424,7 +424,9 @@ def _set_button_pressed():
 
 def _set_relink_path(media_asset):
     file_name = os.path.basename(media_asset.orig_path)
-    dialogs.media_file_dialog(_("Select Media File To Relink To") + " " + file_name, _select_relink_path_dialog_callback, False, media_asset)
+    dialogs.media_file_dialog(_("Select Media File To Relink To") + " " + file_name, 
+                                _select_relink_path_dialog_callback, False, 
+                                media_asset, linker_window)
 
 def _select_relink_path_dialog_callback(file_select, response_id, media_asset):
     filenames = file_select.get_filenames()
@@ -483,7 +485,7 @@ def _save_project_pressed():
         
     dialogs.save_project_as_dialog(_save_as_dialog_callback, 
                                    no_ext_name + "_RELINKED.flb", 
-                                   open_dir)
+                                   open_dir, linker_window)
 
 def _save_as_dialog_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:

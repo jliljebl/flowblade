@@ -82,7 +82,7 @@ def warning_confirmation(callback, primary_txt, secondary_txt, parent_window, da
         dialog.connect('response', callback)
     else:
         dialog.connect('response', callback, data)
-    print "eeee"
+
     dialog.show_all()
 
 def get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=False, alternative_icon=None):

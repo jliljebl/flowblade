@@ -940,7 +940,7 @@ class BoxGeometryScreenEditor(AbstractScreenEditor):
     also keyframe creation and deletion and opacity, and
     writing out the keyframes with combined information.
 
-    Needed parent_editor callback interface:
+    Required parent_editor callback interface:
         def geometry_edit_started(self)
         def geometry_edit_finished(self)
         def update_request_from_geom_editor(self)
