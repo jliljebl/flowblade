@@ -820,35 +820,30 @@
    </filter>
 
 
-
     <!-- TRANSFORM -->
     <filter id="affine">
         <name>Rotate</name>
         <group>Transform</group>
         <property name="transition.fix_rotate_x" args="range_in=-180,180 range_out=-180,180 displayname=Angle">0</property>
         <property name="transition.use_normalised" args="editor=no_editor">0</property>
-        <property name="transition.geometry" args="editor=affine_filt_geom_slider exptype=geom_in_affine_filt">0=0/0:SCREENSIZE:100</property>
+        <property name="transition.geometry" args="editor=affine_filt_geom_slider_2 exptype=geom_in_affine_filt_v2">0=0/0:SCREENSIZE:100</property>
     </filter>
    <filter id="affine">
         <name>Shear</name>
         <group>Transform</group>
         <property name="transition.fix_shear_x" args="range_in=-180,180 range_out=-180,180 displayname=Shear!X">0</property>
         <property name="transition.fix_shear_y" args="range_in=-180,180 range_out=-180,180 displayname=Shear!Y">0</property>
-        <property name="transition.geometry" args="editor=affine_filt_geom_slider exptype=geom_in_affine_filt">0=0/0:SCREENSIZE:100</property>
+        <property name="transition.geometry" args="editor=affine_filt_geom_slider_2 exptype=geom_in_affine_filt_v2">0=0/0:SCREENSIZE:100</property>
    </filter>
     <filter id="affine">
         <name>Translate</name>
         <group>Transform</group>
-        <property name="transition.geometry" args="editor=affine_filt_geom_slider exptype=geom_in_affine_filt">0=0/0:SCREENSIZE:100</property>
+        <property name="transition.geometry" args="editor=affine_filt_geom_slider_2 exptype=geom_in_affine_filt_v2">0=0/0:SCREENSIZE:100</property>
     </filter>
     <filter id="affine">
         <name>Affine</name>
         <group>Transform</group>
-        <property name="transition.geometry" args="editor=affine_filt_geom_slider exptype=geom_in_affine_filt">0=0/0:SCREENSIZE:100</property>
-        <!--
-        <property name="transition.scale_x" args="range_in=0,500 exptype=affine_scale displayname=Scale!X">"0=1.0"</property>
-        <property name="transition.scale_y" args="range_in=0,500 exptype=affine_scale displayname=Scale!Y">"0=1.0"</property>
-        -->
+        <property name="transition.geometry" args="editor=affine_filt_geom_slider_2 exptype=geom_in_affine_filt_v2">0=0/0:SCREENSIZE:100</property>
         <property name="transition.fix_rotate_x" args="range_in=-180,180 range_out=-180,180 displayname=Angle">0</property>
         <property name="transition.fix_shear_x" args="range_in=-180,180 range_out=-180,180 displayname=Shear!X">0</property>
         <property name="transition.fix_shear_y" args="range_in=-180,180 range_out=-180,180 displayname=Shear!Y">0</property>

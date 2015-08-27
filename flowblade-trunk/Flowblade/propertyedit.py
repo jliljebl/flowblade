@@ -58,6 +58,7 @@ OPACITY_IN_GEOM_SINGLE_KF = "opacity_in_geom_kf_single"     # 0=0/0:SCREEN_WIDTH
 OPACITY_IN_GEOM_KF = "opacity_in_geom_kf"                   # frame=0/0:SCREEN_WIDTHxSCREEN_HEIGHT:opacity (kf_str;kf_str;kf_str;...;kf_str)
 GEOMETRY_OPACITY_KF ="geom_opac_kf"                         # frame=x/y:widthxheight:opacity
 GEOM_IN_AFFINE_FILTER = "geom_in_affine_filt"               # x/y:widthxheight:opacity
+GEOM_IN_AFFINE_FILTER_V2 =  "geom_in_affine_filt_v2"        # x/y:widthxheight:opacity
 AFFINE_SCALE = "affine_scale"                               # special property to get the 1/ x that the filter wants
 KEYFRAME_HCS = "keyframe_hcs"                               # frame=value(;frame=value) HCS = half comma separeted
 KEYFRAME_HCS_TRANSITION = "keyframe_hcs_transition"         # frame=value(;frame=value) HCS = half comma separeted, used to edit transitions
@@ -474,6 +475,19 @@ class AffineFilterGeomProperty(EditableProperty):
         val_str = "0=" + str(x) + "/" + str(y) + ":" + str(w) + "x" + str(h) + ":100" # 100x MLT ignores width
         self.write_value(val_str)
 
+class AffineFilterGeomPropertyV2(EditableProperty):
+    """
+    Converts values of four sliders to position and size info
+    """
+    def slider_values_changed(self, all_sliders, height):
+        x_s, y_s, xs_s = all_sliders
+        x = x_s.get_adjustment().get_value()
+        y = y_s.get_adjustment().get_value()
+        w = xs_s.get_adjustment().get_value()
+
+        # "0=x/y:widthxheight:opacity"
+        val_str = "0=" + str(x) + "/" + str(y) + ":" + str(w) + "x" + str(height) + ":100" # 100x MLT does translate for height
+        self.write_value(val_str)
 
 class FreiPosHCSFilterProperty(EditableProperty):    
     def adjustment_value_changed(self, adjustment):
@@ -790,6 +804,7 @@ EDITABLE_PROPERTY_CREATORS = { \
     COLOR: lambda params : ColorProperty(params),
     GEOMETRY_OPACITY_KF: lambda params : KeyFrameGeometryOpacityProperty(params),
     GEOM_IN_AFFINE_FILTER: lambda params : AffineFilterGeomProperty(params),
+    GEOM_IN_AFFINE_FILTER_V2: lambda params :AffineFilterGeomPropertyV2(params),
     WIPE_RESOURCE : lambda params : WipeResourceProperty(params),
     LUT_TABLE : lambda params  : LUTTableProperty(params),
     NOT_PARSED : lambda params : EditableProperty(params), # This should only be used with params that have editor=NO_EDITOR
