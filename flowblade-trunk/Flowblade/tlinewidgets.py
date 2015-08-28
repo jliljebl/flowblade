@@ -1571,6 +1571,10 @@ class TimeLineColumn:
     
     # --------------------------------------------- DRAW
     def _draw(self, event, cr, allocation):
+        # This can get called during loads by unwanted expose events
+        if editorstate.project_is_loading == True:
+            return
+
         x, y, w, h = allocation
         
         # Draw bg
