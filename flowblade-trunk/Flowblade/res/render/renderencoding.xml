@@ -51,7 +51,7 @@
         <profile args="f=mp4 s=%SCREENSIZE% hq=1 acodec=libmp3lame ab=384k pix_fmt=yuv420p vcodec=libx264 minrate=0 b=%BITRATE% b_strategy=1 subcmp=2 cmp=2 coder=1 flags=+loop qmax=51 subq=7 qmin=10 qcomp=0.6 qdiff=4 trellis=1 aspect=%ASPECT%"/>
     </encodingoption>
     <encodingoption name="MPEG-4 / .mp4" extension="mp4" type="av" audiodesc=" mp2" resize="True" qgroup="qgroup1">
-        <profile args="f=mp4 s=%SCREENSIZE% hq=1 acodec=mp2 ab=192k vcodec=mpeg4 minrate=0 vb=%BITRATE%"/>
+        <profile args="f=mp4 hq=1 acodec=mp2 ab=192k vcodec=mpeg4 minrate=0 vb=%BITRATE%"/>
     </encodingoption>
     <encodingoption name="Theora / .ogv" extension="ogv" audiodesc="flac" type="av" resize="True" qgroup="qgroup1">
         <profile args="f=ogg acodec=flac ac=2 vcodec=libtheora minrate=0 vb=%BITRATE%" />
