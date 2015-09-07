@@ -223,7 +223,6 @@ class BinColorClip(AbstractBinClip):
 
         file_name =  md5.new(self.gdk_color_str + str(width) + str(height)).hexdigest()      
         write_file_path = utils.get_hidden_user_dir_path() + appconsts.RENDERED_CLIPS_DIR + "/" + file_name + ".png"
-        #print write_file_path
         surface.write_to_png(write_file_path)
         
         producer = mlt.Producer(profile, write_file_path)
