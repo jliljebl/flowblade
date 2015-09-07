@@ -23,6 +23,8 @@ corresponding mlt.Producers for timeline.
 """
 import cairo
 import copy
+import md5
+import traceback
 
 from gi.repository import Gtk, Gdk
 from gi.repository import GdkPixbuf
@@ -117,6 +119,8 @@ def create_pattern_producer(profile, bin_clip):
     """
     bin_clip is instance of AbstractBinClip extending class
     """
+    clip = bin_clip.create_mlt_producer(profile)
+      
     try:
         clip = bin_clip.create_mlt_producer(profile)
     except:
@@ -149,6 +153,7 @@ def _create_patten_producer_old_style(profile, bin_clip):
     return clip
 
 def create_color_producer(profile, gdk_color_str):
+    print "eee"
     mlt_color = utils.gdk_color_str_to_mlt_color_str(gdk_color_str)
 
     producer = mlt.Producer(profile, "colour", mlt_color)
@@ -207,12 +212,22 @@ class BinColorClip(AbstractBinClip):
         self.patter_producer_type = COLOR_CLIP
 
     def create_mlt_producer(self, profile):
-        mlt_color = utils.gdk_color_str_to_mlt_color_str(self.gdk_color_str)
+        width = profile.width()
+        height = profile.height()
 
-        producer = mlt.Producer(profile, "colour", mlt_color)
+        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  width, height)
+        cr = cairo.Context(surface)
+        cr.set_source_rgb(*utils.gdk_color_str_to_cairo_rgb(self.gdk_color_str))
+        cr.rectangle(0, 0, width + 1, height+ 1)
+        cr.fill()
+
+        file_name =  md5.new(self.gdk_color_str + str(width) + str(height)).hexdigest()      
+        write_file_path = utils.get_hidden_user_dir_path() + appconsts.RENDERED_CLIPS_DIR + "/" + file_name + ".png"
+        #print write_file_path
+        surface.write_to_png(write_file_path)
+        
+        producer = mlt.Producer(profile, write_file_path)
         mltrefhold.hold_ref(producer)
-        producer.gdk_color_str = self.gdk_color_str
-
         return producer
 
     def create_icon(self):
