@@ -290,10 +290,12 @@ def about_dialog(parent_window):
 
     img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
     flow_label = Gtk.Label(label="Flowblade Movie Editor")
-    ver_label = Gtk.Label(label="1.0.0")
-    janne_label = Gtk.Label(label="Copyright 2015 Janne Liljeblad")
-
+    ver_label = Gtk.Label(label="1.2.0")
+    janne_label = Gtk.Label(label="Copyright 2015 Janne Liljeblad and contributors")
+    page_label = Gtk.Label(label="Project page: https://github.com/jliljebl/flowblade")
     flow_label.modify_font(Pango.FontDescription("sans bold 14"))
+    janne_label.modify_font(Pango.FontDescription("sans 8"))
+    page_label.modify_font(Pango.FontDescription("sans 8"))
 
     vbox = Gtk.VBox(False, 4)
     vbox.pack_start(guiutils.get_pad_label(30, 12), False, False, 0)
@@ -301,10 +303,11 @@ def about_dialog(parent_window):
     vbox.pack_start(guiutils.get_pad_label(30, 4), False, False, 0)
     vbox.pack_start(flow_label, False, False, 0)
     vbox.pack_start(ver_label, False, False, 0)
-    vbox.pack_start(guiutils.get_pad_label(30, 22), False, False, 0)
-    vbox.pack_start(janne_label, False, False, 0)
+    vbox.pack_start(guiutils.get_pad_label(30, 12), False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
-   
+    vbox.pack_start(janne_label, False, False, 0)
+    vbox.pack_start(page_label, False, False, 0)
+
     alignment =  dialogutils.get_default_alignment(vbox)
     alignment.set_size_request(450, 370)
 
