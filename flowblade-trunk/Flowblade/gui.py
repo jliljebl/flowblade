@@ -154,14 +154,14 @@ def set_theme_colors():
 
     r, g, b, a = unpack_gdk_color(sel_bg_color)
     if r == 0.0 and g == 0.0 and b == 0.0:
-        print "sel color NOT detected"
+        print "Selected color NOT detected"
         if editorpersistance.prefs.dark_theme == False:
             c = theme_colors[2]
         else:
             c = theme_colors[3]
         _selected_bg_color = Gdk.RGBA(*c)
     else:
-        print "sel color detected"
+        print "Selected color detected"
         _selected_bg_color = sel_bg_color
 
     # Try to detect bg color and set frow fallback if fails
@@ -170,7 +170,7 @@ def set_theme_colors():
     r, g, b, a = unpack_gdk_color(bg_color)
 
     if r == 0.0 and g == 0.0 and b == 0.0:
-        print "bg color NOT detected"
+        print "BG color NOT detected"
         if editorpersistance.prefs.dark_theme == False:
             c = theme_colors[0]
         else:
@@ -178,11 +178,9 @@ def set_theme_colors():
         _bg_color = Gdk.RGBA(*c)
         _button_colors = Gdk.RGBA(*c)
     else:
-        print "bg color detected"
+        print "BG color detected"
         _bg_color = bg_color
         _button_colors = bg_color
-
-    print _bg_color, _selected_bg_color
 
     # Adwaita and some others show big area of black without this, does not bother Ambient on Ubuntu
     editor_window.tline_pane.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())

@@ -55,13 +55,14 @@ def init_languages():
             locale_path = respaths.LOCALE_PATH
     else:
         # Use translations in program folder first if NOT running from installation
-        if os.path.isfile("/usr/share/locale/fi/LC_MESSAGES/flowblade.mo"): # fi is the translation controlled by program author
-            print "Found translations at /usr/share/locale, using those."
-            locale_path = "/usr/share/locale/"
-        else:
-            print "Translations at /usr/share/locale were not found, using program root directory translations."
+        locale_file = respaths.LOCALE_PATH + "fi/LC_MESSAGES/flowblade.mo"
+        if os.path.isfile(locale_file): # fi is the translation controlled by program author
+            print "Found translations at " +  respaths.LOCALE_PATH + ", using those."
             locale_path = respaths.LOCALE_PATH
-
+        else:
+            print "Translations at " + locale_file + " were not found, using /usr/share/locale translations."
+            locale_path = "/usr/share/locale/"
+            
     gettext.bindtextdomain(APP_NAME, locale_path)
     gettext.textdomain(APP_NAME)
 
@@ -74,8 +75,6 @@ def init_languages():
         print "Use OS locale language."
         lang = gettext.translation(APP_NAME, locale_path, languages=langs, fallback=True)
 
-    # testing, comment out for production
-    # lang = gettext.translation(APP_NAME, respaths.LOCALE_PATH, languages=["fi"], fallback=True)
     lang.install(APP_NAME) # makes _() a build-in available in all modules without imports
 
 def get_filter_name(f_name):
