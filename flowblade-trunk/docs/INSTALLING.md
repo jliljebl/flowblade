@@ -2,7 +2,7 @@
 
 ### Installing from your OS repository
 
-The easiest way to install Flowblade is using the version in your OS repository. The downside is that the version available may not be the current latest release. Contact your OS to get Flowblade included in repositories if not already available.
+The easiest way to install Flowblade is using the version in your OS repository. The downside is that **the version available may not be the current latest release**. Contact your OS to get Flowblade included in repositories if not already available.
 
 #### Ubuntu, Debian and Linux Mint
 
@@ -23,7 +23,7 @@ yaourt -S flowblade-git
 
 ### Installing using .deb package
 
-**First download .deb file** for Flowblade 1.0 from <a href="https://www.dropbox.com/s/9m2e9whcazjo1l8/flowblade-1.0.0-1_all.deb?dl=0">here.</a>
+**First download .deb file** for Flowblade 1.2 from <a href="https://www.dropbox.com/s/6hrvhbqtpmx0uj3/flowblade-1.2.0-1_all.deb?dl=0">here.</a>
 
 <ul>
     <li>Double Click on the downloaded .deb file to install.</li>
@@ -49,7 +49,7 @@ Other recent Debian based systems should work too.
 
 Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install and run Flowblade without compiling anything.
 
-**First download 1.0 tar.gz** source archive file from <a href="https://www.dropbox.com/s/goligzl0lnhi77k/flowblade-1.0.0.tar.gz?dl=0">here.</a> 
+**First download 1.2 tar.gz** source archive file from <a href="https://www.dropbox.com/s/lzwlycblfpgn8vg/flowblade-1.2.0.tar.gz?dl=0">here.</a> 
 
   * Extract archive into a folder of your choosing
   * Install dependencies. See [Dependencies](DEPENDENCIES.md) doc for more information.
