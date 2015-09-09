@@ -6,8 +6,8 @@
 **Flowblade 1.2** is the ninth release of Flowblade.
 
 Flowblade has now been ported to GTK3.
-  * **The process was not as straight forward as one might think**, but eventually everything worked out. There always seemed to be just one more little change in API that required all instances to be fixed by hand. Luckily there was a conversion script that did most of the grunt work to get things going.
-  * **We did get something in return**. A small but percipteble responsiveness improvement was gained probably because GTK3 provides a Cairo widget for creating custom widgets that is now used instead of the project specific version that was used before. GTK3 also seems to render widgets a bit crispier.
+  * **The process was not as straight forward as one might think** but eventually everything worked out. There always seemed to be just one more little change in API that required all instances to be fixed by hand. Luckily there was a conversion script available that did most of the grunt work to get things going.
+  * **We did get something in return**. A small but percipteble responsiveness improvement was gained probably because GTK3 provides a Cairo widget for creating custom widgets that is now used instead of the project specific Cairo widget that was used before. GTK3 also seems to render widgets a bit crispier.
   * **I really hope that major API breaking version jumps for widget toolkits are avoided as much as possible**. Projects with large interface and small man power can really suffer here. 
 
 There were some other major developments during the cycle too:
