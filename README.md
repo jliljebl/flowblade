@@ -1,6 +1,12 @@
 
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
+**NEW: Release 1.2 is out now.**
+
+Release notes are available [here.](./flowblade-trunk/docs/RELEASE_NOTES.md)
+
+Install instructions can be found [here.](./flowblade-trunk/docs/INSTALLING.md)
+
 **Contents:**
   1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
   1. [Features](https://github.com/jliljebl/flowblade#features)
