@@ -14,7 +14,7 @@ Flowblade has now been ported to GTK3.
 
 There were some other major developments during the cycle too.
    * **All rendering was moved out of process** as the in-process rendering had some issues.
-   * **Dark theme support was improved** quite a lot. It is now possible to use a dark theme just by setting a preference if the GTK3 theme used has a dark variant available.
+   * **Dark theme support was improved** quite a lot. It is now possible to use a dark theme just by setting a preference, if the GTK3 theme used has a dark variant available.
    * **Small screen support has been upgraded**. The application now works much better on 768px height screens.
 
 There has also been more contributors then ever, so the move to Github seems to have a positive effect on the project visibility and participation.
@@ -29,7 +29,7 @@ There is also a node based compositor in works, but it is uncertain if it will b
 
   * Add preference to always use English on a localized OS
   * Make audio sample rate user selectable for rendering
-  * Drop support for creating 'Affine' new compositors. "Affine" didn't work properly.
+  * Drop support for creating new 'Affine' compositors. "Affine" didn't work properly.
   * Make color clips use hidden pngs instead of mlt producer to fix copositing crashes.
   * Fix MPEG - 4 / .mp4 rendering to always respect source image shape 
   * Fix transform filters by removing non-persitant scaling properties
