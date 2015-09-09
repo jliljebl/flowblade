@@ -3,7 +3,7 @@
 **Latest relese notes are for the 1.2 which is coming shortly, but is not out yet**
 
 ## Flowblade 1.2 ##
-**Date: September 9, 2015**
+**Date: September X, 2015**
 
 **Flowblade 1.2** is the ninth release of Flowblade.
 
