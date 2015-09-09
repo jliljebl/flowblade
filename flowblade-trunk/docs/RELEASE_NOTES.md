@@ -1,42 +1,38 @@
 # Release Notes #
 
-**Latest relese notes are for the 1.2 which is coming shortly, but is not out yet**
-
 ## Flowblade 1.2 ##
-**Date: September X, 2015**
+**Date: September 9, 2015**
 
 **Flowblade 1.2** is the ninth release of Flowblade.
 
 Flowblade has now been ported to GTK3.
-  * **The process was not as straight forward as one might think**, and it was actually quite taxing mentally. There always seemed to be just one more little change in API that required all instances to be fixed by hand. Luckily there was a conversion script that did most of the grunt work to get things going.
-  * **We did get something in return for the work**. A small but percipteble responsiveness improvement was gained probably because GTK3 provides a Cairo widget for creating custom widgets that is now used instead of the home cooked one we had before. GTK3 also seems to render a bit crisper.
-  * **I really hope that such major API breaking version jumps for widget toolkits are avoided** as much as possible. Projects with large interface and small man power can really suffer here. It is going to be atleast five years before the application will be ported to any possible "GTK4". 
+  * **The process was not as straight forward as one might think**, but eventually everything worked out. There always seemed to be just one more little change in API that required all instances to be fixed by hand. Luckily there was a conversion script that did most of the grunt work to get things going.
+  * **We did get something in return**. A small but percipteble responsiveness improvement was gained probably because GTK3 provides a Cairo widget for creating custom widgets that is now used instead of the project specific version that was used before. GTK3 also seems to render widgets a bit crispier.
+  * **I really hope that major API breaking version jumps for widget toolkits are avoided as much as possible**. Projects with large interface and small man power can really suffer here. 
 
-There were some other major developments during the cycle too.
-   * **All rendering was moved out of process** as the in-process rendering had some issues.
-   * **Dark theme support was improved** quite a lot. It is now possible to use a dark theme just by setting a preference, if the GTK3 theme used has a dark variant available.
-   * **Small screen support has been upgraded**. The application now works much better on 768px height screens.
+There were some other major developments during the cycle too:
+   * **All rendering was moved out of process** as the in-process rendering was found to not work correctly in same cases.
+   * **Dark theme support was improved**. It is now possible to use a dark theme just by setting a preference if the GTK3 theme used has a dark variant available.
+   * **Small screen support has been upgraded**. The application now works better on 768px height screens.
 
 There has also been more contributors then ever, so the move to Github seems to have a positive effect on the project visibility and participation.
 
-After bug fix release 1.0 and GTK3 port release 1.2, the next cycle will be all about getting back on track with steady improvement in features and stabilization.
+After bug fix release 1.0 and GTK3 port release 1.2, the next cycle will be about getting back on track with steady improvement in features and stabilization.
 
-The 1.4 will also be the first "real" release of the 1.x series. In the 1.x series all changes to project format, editing paradigm and fundamental technical structure are avoided in favor of creating a solid application that reaches its full potential within the chosen tech/design path. It is assumed that the 1.x series will last for about two years, after which further fundamental change may be considered.
-
-There is also a node based compositor in works, but it is uncertain if it will be realesed in the next release.
+The 1.4 will also be the first "real" release of the 1.x series. In the 1.x series all changes to project format, editing paradigm and fundamental technical structure are avoided in favor of creating a solid application that reaches its full potential within the chosen tech/design path. The 1.x series will probably last for about two years, after which further fundamental change will be considered.
 
 #### Other bug fixes and enhancements ####
 
   * Add preference to always use English on a localized OS
   * Make audio sample rate user selectable for rendering
-  * Drop support for creating new 'Affine' compositors. "Affine" didn't work properly.
+  * Drop support for creating new 'Affine' compositors. 'Affine' didn't work properly.
   * Make color clips use hidden pngs instead of mlt producer to fix compositing crashes.
   * Fix MPEG - 4 / .mp4 rendering to always respect source image shape 
   * Fix transform filters by removing non-persitant scaling properties
   * Fix clip audio sample frequency and channels info display
   * Use translations at /usr/share/locale if available
   * Fix preset encodings batch rendering 
-  * Make image seqence open dialog use the last opened media directory
+  * Make image sequence open dialog use the last opened media directory
   * Make out-of-process tools write log files
     
 ## Flowblade 1.0 ##
