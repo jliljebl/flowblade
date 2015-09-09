@@ -30,13 +30,13 @@ There is also a node based compositor in works, but it is uncertain if it will b
   * Add preference to always use English on a localized OS
   * Make audio sample rate user selectable for rendering
   * Drop support for creating new 'Affine' compositors. "Affine" didn't work properly.
-  * Make color clips use hidden pngs instead of mlt producer to fix copositing crashes.
+  * Make color clips use hidden pngs instead of mlt producer to fix compositing crashes.
   * Fix MPEG - 4 / .mp4 rendering to always respect source image shape 
   * Fix transform filters by removing non-persitant scaling properties
   * Fix clip audio sample frequency and channels info display
   * Use translations at /usr/share/locale if available
   * Fix preset encodings batch rendering 
-  * Make image seqence open dialog use last opened media directory
+  * Make image seqence open dialog use the last opened media directory
   * Make out-of-process tools write log files
     
 ## Flowblade 1.0 ##
