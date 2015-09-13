@@ -6,7 +6,7 @@ This document gives a broad overview what's happening next in Flowblade developm
 ## Next release (1.4)
 *Estimated release date is November 2015.*
 
-**All audio levels displayed and rendered on background process** Some users were not happy with "display on request" model that we had before, but that will stay available for those who wish to keep it
+**All audio levels displayed and rendered on background process** Some users were not happy with the "display levels on request" model that we had before, but that will stay available for those who wish to keep it
 
 **Rendered fade/transition delete update** Make fades and transitions automatically cover the gap left with material from source clip(s) if possible.
 
