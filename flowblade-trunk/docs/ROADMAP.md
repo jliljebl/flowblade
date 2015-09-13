@@ -1,12 +1,12 @@
 # Road map
 This document gives a broad overview what's happening next in Flowblade development. For more information see open Issues on the Issues tab.
 
-*Last updated: July 27, 2015*
+*Last updated: September 13, 2015*
 
-## Next release (1.2)
-*Estimated release date is September - November 2015.*
+## Next release (1.4)
+*Estimated release date is November 2015.*
 
-**GTK3+ port** This release cycle will focus solely on porting the application to GTK3.
+**All audio levels displayed and rendered on background process** Some users were not happy with "display on request" model that we had before, but that will stay available for those who wish to keep it
 
 ### Coming features in the next few releases
 
@@ -14,7 +14,7 @@ This document gives a broad overview what's happening next in Flowblade developm
 
 **Rendered fade/transition delete update** Make fades and transitions automatically cover the gap left with material from source clip(s) if possible.
 
-**Audio Levels display enhancement** This still needs to be improved.
+
 
 **Audio Scrubbing** This will make editing audio on the timeline easier.
 
