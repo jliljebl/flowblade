@@ -1065,14 +1065,15 @@ def display_clip_popup_menu(event, clip, track, callback):
         clip_menu.add(_get_menu_item(_("Split Audio Synched"), callback,\
               (clip, track, "split_audio_synched", event.x), active))
 
-    _add_separetor(clip_menu)
+    if editorstate.display_all_audio_levels == False:
+        _add_separetor(clip_menu)
 
-    if clip.waveform_data == None:
-       clip_menu.add(_get_menu_item(_("Display Audio Level"), callback,\
-                  (clip, track, "display_waveform", event.x), True))
-    else:
-       clip_menu.add(_get_menu_item(_("Clear Waveform"), callback,\
-          (clip, track, "clear_waveform", event.x), True))
+        if clip.waveform_data == None:
+           clip_menu.add(_get_menu_item(_("Display Audio Level"), callback,\
+                      (clip, track, "display_waveform", event.x), True))
+        else:
+           clip_menu.add(_get_menu_item(_("Clear Waveform"), callback,\
+              (clip, track, "clear_waveform", event.x), True))
     
     _add_separetor(clip_menu)
 

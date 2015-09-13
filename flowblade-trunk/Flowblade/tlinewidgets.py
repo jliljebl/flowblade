@@ -118,6 +118,7 @@ AUDIO_MUTE_ICON = None
 VIDEO_MUTE_ICON = None
 ALL_MUTE_ICON = None
 MARKER_ICON = None
+LEVELS_RENDER_ICON = None
 
 # tc scale
 TC_POINTER_HEAD = None
@@ -268,7 +269,7 @@ def load_icons():
     global FULL_LOCK_ICON, FILTER_CLIP_ICON, VIEW_SIDE_ICON,\
     COMPOSITOR_CLIP_ICON, INSERT_ARROW_ICON, AUDIO_MUTE_ICON, MARKER_ICON, \
     VIDEO_MUTE_ICON, ALL_MUTE_ICON, TRACK_BG_ICON, MUTE_AUDIO_ICON, MUTE_VIDEO_ICON, MUTE_ALL_ICON, \
-    TRACK_ALL_ON_V_ICON, TRACK_ALL_ON_A_ICON, MUTE_AUDIO_A_ICON, TC_POINTER_HEAD, EDIT_INDICATOR
+    TRACK_ALL_ON_V_ICON, TRACK_ALL_ON_A_ICON, MUTE_AUDIO_A_ICON, TC_POINTER_HEAD, EDIT_INDICATOR, LEVELS_RENDER_ICON
 
     FULL_LOCK_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "full_lock.png")
     FILTER_CLIP_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filter_clip_icon_sharp.png")
@@ -282,6 +283,8 @@ def load_icons():
     MUTE_AUDIO_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "track_audio_mute.png")
     MUTE_VIDEO_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "track_video_mute.png")
     MUTE_ALL_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "track_all_mute.png")
+    LEVELS_RENDER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "audio_levels_render.png")
+
     MARKER_ICON = _load_pixbuf("marker.png")
     TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V.png")
     TRACK_ALL_ON_A_ICON = _load_pixbuf("track_all_on_A.png")
@@ -1302,7 +1305,7 @@ class TimeLineCanvas:
                  
             if clip.waveform_data != None and scale_length > FILL_MIN:
                 r, g, b = clip_bg_col
-                cr.set_source_rgb(r * 0.93, g * 0.93, b * 0.93)
+                cr.set_source_rgb(r * 0.9, g * 0.9, b * 0.9)
 
                 # Get level bar height and position for track height
                 if track.height == sequence.TRACK_HEIGHT_NORMAL:
@@ -1416,7 +1419,11 @@ class TimeLineCanvas:
                         cr.set_font_size(9)
                         cr.move_to(scale_in + TEXT_X, y + track_height - 2)
                         cr.show_text(str(clip.sync_diff))
-                        
+
+            if clip.waveform_data == None and editorstate.display_all_audio_levels == True and scale_length > FILL_MIN:
+                cr.set_source_surface(LEVELS_RENDER_ICON, int(scale_in) + 4, y + 8)
+                cr.paint()
+
             # Get next draw position
             clip_start_frame += clip_length
 
