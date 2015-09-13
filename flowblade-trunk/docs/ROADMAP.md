@@ -8,13 +8,13 @@ This document gives a broad overview what's happening next in Flowblade developm
 
 **All audio levels displayed and rendered on background process** Some users were not happy with "display on request" model that we had before, but that will stay available for those who wish to keep it
 
+**Rendered fade/transition delete update** Make fades and transitions automatically cover the gap left with material from source clip(s) if possible.
+
+**Clip drag-and-drop to do overwrite when clip dopped after the last clip on track** Now user needs to move clips manually to position and often they wish to drop clip into certain position on timeline.
+
 ### Coming features in the next few releases
 
 **Keyframe editing on the timeline** This is mainly provided for the purpose of audio mixing that can be done more naturally on the timeline. Other parameters may later be also made editable on the timeline.
-
-**Rendered fade/transition delete update** Make fades and transitions automatically cover the gap left with material from source clip(s) if possible.
-
-
 
 **Audio Scrubbing** This will make editing audio on the timeline easier.
 
