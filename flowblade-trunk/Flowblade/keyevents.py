@@ -44,6 +44,9 @@ import tlineaction
 import updater
 import projectaction
 
+import audiowaveformrenderer
+
+
 # ------------------------------------- keyboard events
 def key_down(widget, event):
     """
@@ -117,7 +120,8 @@ def key_down(widget, event):
     #debug
     if event.keyval == Gdk.KEY_F11:
         if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-            mltrefhold.print_objects()
+            print "333"
+            audiowaveformrenderer.launch_audio_levels_rendering([])
         return True
 
 

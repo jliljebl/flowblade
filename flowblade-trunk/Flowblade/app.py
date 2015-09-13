@@ -40,6 +40,7 @@ import time
 import appconsts
 import audiomonitoring
 import audiowaveform
+import audiowaveformrenderer
 import clipeffectseditor
 import clipmenuaction
 import compositeeditor
@@ -143,6 +144,8 @@ def main(root_path):
     editorpersistance.load()
     if editorpersistance.prefs.dark_theme == True:
         respaths.apply_dark_theme()
+    if editorpersistance.prefs.display_all_audio_levels == False:
+        editorstate.display_all_audio_levels = False
     editorpersistance.create_thumbs_folder_if_needed(user_dir)
     editorpersistance.create_rendered_clips_folder_if_needed(user_dir)
     editorpersistance.save()
@@ -477,6 +480,7 @@ def new_project(profile_index, v_tracks, a_tracks):
 def open_project(new_project):
     stop_autosave()
     audiomonitoring.close_audio_monitor()
+    audiowaveformrenderer.clear_cache()
 
     editorstate.project = new_project
 

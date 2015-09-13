@@ -93,6 +93,9 @@ attach_jackrack = False
 # Flag is used to block unwanted draw events during loads  
 project_is_loading = False
 
+# Audio levels display mode, False means that audio levels are displayed on request
+display_all_audio_levels = True
+
 def current_is_move_mode():
     if ((edit_mode == INSERT_MOVE) or (edit_mode == OVERWRITE_MOVE) or (edit_mode == MULTI_MOVE)):
         return True

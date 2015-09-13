@@ -563,7 +563,7 @@ class EditorWindow:
         info_h = Gtk.HBox()
         info_h.pack_start(self.tline_info, False, False, 0)
         info_h.pack_start(Gtk.Label(), True, True, 0)
-        info_h.set_size_request(tlinewidgets.COLUMN_WIDTH - 22 - 22,# - 22, # room for 2 menu launch buttons 
+        info_h.set_size_request(tlinewidgets.COLUMN_WIDTH - 22 - 22 - 22,# - 22, # room for 3 menu launch buttons 
                                       tlinewidgets.SCALE_HEIGHT)
 
         marker_surface =  cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "marker.png")
@@ -572,9 +572,13 @@ class EditorWindow:
         tracks_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "track_menu_launch.png")
         tracks_launcher = guicomponents.PressLaunch(trackaction.all_tracks_menu_launch_pressed, tracks_launcher_surface)
 
+        levels_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "audio_levels_menu_launch.png")
+        levels_launcher = guicomponents.PressLaunch(trackaction.audio_levels_menu_launch_pressed, levels_launcher_surface)
+        
         # Timeline top row
         tline_hbox_1 = Gtk.HBox()
         tline_hbox_1.pack_start(info_h, False, False, 0)
+        tline_hbox_1.pack_start(levels_launcher.widget, False, False, 0)
         tline_hbox_1.pack_start(tracks_launcher.widget, False, False, 0)
         tline_hbox_1.pack_start(markers_launcher.widget, False, False, 0)
         tline_hbox_1.pack_start(self.tline_scale.widget, True, True, 0)

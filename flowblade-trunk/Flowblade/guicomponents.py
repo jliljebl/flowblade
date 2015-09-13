@@ -99,6 +99,7 @@ media_file_popup_menu = Gtk.Menu()
 filter_stack_menu_popup_menu = Gtk.Menu()
 media_linker_popup_menu = Gtk.Menu()
 log_event_popup_menu = Gtk.Menu()
+levels_menu = Gtk.Menu()
 
 # ------------------------------------------------- item lists 
 class ImageTextTextListView(Gtk.VBox):
@@ -1825,6 +1826,30 @@ def get_all_tracks_popup_menu(event, callback):
     menu.add(_get_menu_item(_("Minimize Tracks"), callback, "min" ))
     menu.popup(None, None, None, None, event.button, event.time)
 
+def get_audio_levels_popup_menu(event, callback):
+    menu = levels_menu
+    guiutils.remove_children(menu)
+
+    allways_item = Gtk.RadioMenuItem() 
+    allways_item.set_label(_("Display All Audio Levels"))
+    menu.append(allways_item)
+
+    on_request_item = Gtk.RadioMenuItem.new_with_label([allways_item], _("Display Audio Levels On Request"))
+
+    menu.append(on_request_item)
+
+    if editorstate.display_all_audio_levels == True:
+        on_request_item.connect("activate", callback, "on request")
+        allways_item.set_active(True)
+        on_request_item.set_active(False)
+    else:
+        allways_item.connect("activate", callback, "all")
+        allways_item.set_active(False)
+        on_request_item.set_active(True)
+    
+    menu.show_all()
+    menu.popup(None, None, None, None, event.button, event.time)
+    
 def get_monitor_view_popupmenu(launcher, event, callback):
     menu = monitor_menu
     guiutils.remove_children(menu)

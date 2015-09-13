@@ -112,6 +112,18 @@ def _tracks_resize_update():
     updater.repaint_tline()
     gui.tline_column.widget.queue_draw()
 
+def audio_levels_menu_launch_pressed(widget, event):
+    guicomponents.get_audio_levels_popup_menu(event, _audio_levels_item_activated)
+
+def _audio_levels_item_activated(widget, msg):
+    if msg == "all":
+        editorstate.display_all_audio_levels = True
+        updater.repaint_tline()
+    else:
+        editorstate.display_all_audio_levels = False
+        current_sequence().drop_audio_levels()
+        updater.repaint_tline()
+
 # ------------------------------------------------------------- mouse events
 def track_active_switch_pressed(data):
     track = get_track(data.track) # data.track is index, not object

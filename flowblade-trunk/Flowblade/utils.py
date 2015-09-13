@@ -26,6 +26,7 @@ Helper functions and data
 from gi.repository import Gtk
 
 import math
+import md5
 import os
 import re
 import threading
@@ -308,6 +309,11 @@ def cairo_color_from_gdk_color(gdk_color):
 def do_nothing():
     pass
 
+def get_unique_name_for_audio_levels_file(media_file_path):
+    size_str = str(os.path.getsize(media_file_path))
+    file_name = md5.new(media_file_path + size_str).hexdigest()
+    return file_name
+    
 def get_hidden_user_dir_path():
     return os.getenv("HOME") + "/.flowblade/"
 

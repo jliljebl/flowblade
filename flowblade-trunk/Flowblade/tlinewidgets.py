@@ -32,6 +32,7 @@ from gi.repository import Pango
 from gi.repository import PangoCairo
 
 import appconsts
+import audiowaveformrenderer
 import cairoarea
 import clipeffectseditor
 import editorpersistance
@@ -64,8 +65,8 @@ FILL_MIN = 1 # if clip shorter, no fill
 TEXT_X = 6 # pos for clip text
 TEXT_Y = 29 
 TEXT_Y_SMALL = 17
-WAVEFORM_PAD_LARGE = 9
-WAVEFORM_PAD_SMALL = 4
+WAVEFORM_PAD_LARGE = 19
+WAVEFORM_PAD_SMALL = 8
 MARK_PAD = 6
 MARK_LINE_WIDTH = 4
 
@@ -1042,6 +1043,8 @@ class TimeLineCanvas:
         # Draw edit mode overlay
         if self.edit_mode_overlay_draw_func != None:
             self.edit_mode_overlay_draw_func(cr,self.edit_mode_data)
+        
+        audiowaveformrenderer.render_queued()
 
     def draw_track(self, cr, track, y, width):
         """
@@ -1294,17 +1297,20 @@ class TimeLineCanvas:
                 self.sync_children.append((clip, track, scale_in))
 
             # Draw audio level data
+            if clip.waveform_data == None and editorstate.display_all_audio_levels == True:
+                 clip.waveform_data = audiowaveformrenderer.get_waveform_data(clip)
+                 
             if clip.waveform_data != None and scale_length > FILL_MIN:
                 r, g, b = clip_bg_col
-                cr.set_source_rgb(r * 0.7, g * 0.7, b * 0.7)
+                cr.set_source_rgb(r * 0.93, g * 0.93, b * 0.93)
 
                 # Get level bar height and position for track height
                 if track.height == sequence.TRACK_HEIGHT_NORMAL:
                     y_pad = WAVEFORM_PAD_LARGE
-                    bar_height = 40.0
+                    bar_height = 30.0
                 else:
                     y_pad = WAVEFORM_PAD_SMALL
-                    bar_height = 20.0
+                    bar_height = 17.0
                 
                 # Draw all frames only if pixels per frame > 2, otherwise
                 # draw only every other or fewer frames

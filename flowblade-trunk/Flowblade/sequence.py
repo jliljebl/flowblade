@@ -923,6 +923,13 @@ class Sequence:
         track.mute_state = mute_state
         track.set("hide", int(track.mute_state))
 
+    def drop_audio_levels(self):
+        for i in range(1, len(self.tracks)):
+            clips = self.tracks[i].clips
+            for clip in clips:
+                if clip.is_blanck_clip == False:
+                    clip.waveform_data = None
+
     def print_all(self):
         print "------------------------######"
         for i in range(0, len(self.tracks)):

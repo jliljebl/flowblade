@@ -40,6 +40,7 @@ from gi.repository import Gdk
 from gi.repository import GLib
 
 import app
+import audiowaveformrenderer
 import appconsts
 import batchrendering
 import dialogs
@@ -202,6 +203,8 @@ class AddMediaFilesThread(threading.Thread):
 
         if len(duplicates) > 0:
             GObject.timeout_add(10, _duplicates_info, duplicates)
+        
+        audiowaveformrenderer.launch_audio_levels_rendering(filenames)
 
 def _duplicates_info(duplicates):
     primary_txt = _("Media files already present in project were opened!")
@@ -530,8 +533,6 @@ def open_recent_project(widget, index):
 def do_rendering():
     _write_out_render_item(True)
     batchrendering.launch_single_rendering()
-    #editevent.insert_move_mode_pressed()
-    #render.render_timeline()
 
 def add_to_render_queue():
     _write_out_render_item(False)

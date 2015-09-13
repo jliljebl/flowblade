@@ -97,7 +97,7 @@ class RenderLauncher(threading.Thread):
         PLAYER().set_render_callbacks(callbacks)
         PLAYER().start_rendering(self.render_consumer, self.start_frame, self.end_frame)
 
-
+"""
 def render_timeline():
     if len(widgets.file_panel.movie_name.get_text()) == 0:
         primary_txt = _("Render file name entry is empty")
@@ -173,7 +173,8 @@ def _render_cancel_callback(dialog, response_id):
     dialog.destroy()
     PLAYER().consumer.stop()
     PLAYER().producer.set_speed(0)
-    
+"""
+
 # -------------------------------------------------- render consumer
 def get_render_consumer():
     file_path = get_file_path()
