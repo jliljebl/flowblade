@@ -12,6 +12,8 @@ This document gives a broad overview what's happening next in Flowblade developm
 
 **Clip drag-and-drop to do overwrite when clip dopped after the last clip on track** Now user needs to move clips manually to position and often they wish to drop clip into certain position on timeline.
 
+**Trimming with arrow keys** In many cases this will be more a precise and relaxed way of choosing in and out frames for trims.
+
 ### Coming features in the next few releases
 
 **Keyframe editing on the timeline** This is mainly provided for the purpose of audio mixing that can be done more naturally on the timeline. Other parameters may later be also made editable on the timeline.
@@ -21,8 +23,6 @@ This document gives a broad overview what's happening next in Flowblade developm
 **Compositioning and masking tool** A dedicated tool for masking and simple compositioning will be provided instead of making the timeline editing more complex by adding these features as part of the main workflow.
 
 **Single filter resizing** This is a frequently asked feature.
-
-**Trimming with arrow keys** In many cases this will be more a precise and relaxed way of choosing in and out frames for trims.
 
 **Slowmotion forward playback for JKL scrubbing** This needs special casing to work for technical reasons, and because of that has not been added so far.
 
