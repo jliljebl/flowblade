@@ -37,7 +37,7 @@ Flowblade provides powerful tools to mix and filter video and audio.
 
 **Image compositing:**
 
-  * 7 compositors. Mix, zoom, move and rotate source video with keyframed animation tools
+  * 6 compositors. Mix, zoom, move and rotate source video with keyframed animation tools
   * 19 blends. Stardand image blend modes like Add, Hardlight and Overlay are available
   * 40+ pattern wipes. 
 
