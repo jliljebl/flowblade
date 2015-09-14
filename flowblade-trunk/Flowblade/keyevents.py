@@ -63,7 +63,13 @@ def key_down(widget, event):
             return True
 
     # Compositor editors keyevents
-    was_handled = _handle_geometry_editor_arrow_keys(event)
+    was_handled = _handle_geometry_editor_keys(event)
+    if was_handled:
+        # Stop widget focus from travelling if arrow key pressed
+        gui.editor_window.window.emit_stop_by_name("key_press_event")
+        return True
+
+    was_handled = _handle_effects_editor_keys(event)
     if was_handled:
         # Stop widget focus from travelling if arrow key pressed
         gui.editor_window.window.emit_stop_by_name("key_press_event")
@@ -535,7 +541,7 @@ def _handle_delete():
 
     return False
 
-def _handle_geometry_editor_arrow_keys(event):
+def _handle_geometry_editor_keys(event):
     if compositeeditor.keyframe_editor_widgets != None:
         for kfeditor in compositeeditor.keyframe_editor_widgets:
             if kfeditor.get_focus_child() != None:
@@ -555,6 +561,18 @@ def _handle_geometry_editor_arrow_keys(event):
                         else:
                             monitorevent.play_pressed()
                         return True
+    return False
+
+def _handle_effects_editor_keys(event):
+    focus_editor = _get_focus_keyframe_editor(clipeffectseditor.keyframe_editor_widgets)
+    if focus_editor != None:
+      if event.keyval == Gdk.KEY_space:
+            if PLAYER().is_playing():
+                monitorevent.stop_pressed()
+            else:
+                monitorevent.play_pressed()
+            return True
+
     return False
 
 def _get_focus_keyframe_editor(keyframe_editor_widgets):
