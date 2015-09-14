@@ -686,6 +686,14 @@ class AbstractScreenEditor:
     """
     Base class for editors used to edit something on top of rectangle representing 
     screen.
+    
+    parent_editor needs to implement interface
+        mouse_scroll_up()
+        mouse_scroll_down()
+        geometry_edit_started()
+        update_request_from_geom_editor()
+        queue_draw()
+        geometry_edit_finished()
     """
     def __init__(self, editable_property, parent_editor):
         self.widget = cairoarea.CairoDrawableArea2( GEOMETRY_EDITOR_WIDTH, 
@@ -695,6 +703,7 @@ class AbstractScreenEditor:
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
+        self.widget.mouse_scroll_func = self._mouse_scroll_listener
 
         self.clip_length = editable_property.get_clip_length()
         self.pixel_aspect_ratio = editable_property.get_pixel_aspect_ratio()
@@ -892,7 +901,15 @@ class AbstractScreenEditor:
 
     def _shape_release_event(self, delta_x, delta_y):
         print "_shape_release_event not impl"
+
+    def _mouse_scroll_listener(self, event):
+        if event.direction == Gdk.ScrollDirection.UP:
+            self.parent_editor.mouse_scroll_up()
+        else:
+            self.parent_editor.mouse_scroll_down()
         
+        return True
+
     # ----------------------------------------------- drawing
     def _draw(self, event, cr, allocation):
         """
@@ -941,9 +958,12 @@ class BoxGeometryScreenEditor(AbstractScreenEditor):
     writing out the keyframes with combined information.
 
     Required parent_editor callback interface:
-        def geometry_edit_started(self)
-        def geometry_edit_finished(self)
-        def update_request_from_geom_editor(self)
+        mouse_scroll_up()
+        mouse_scroll_down()
+        geometry_edit_started()
+        update_request_from_geom_editor()
+        queue_draw()
+        geometry_edit_finished()
     """
     def __init__(self, editable_property, parent_editor):
         AbstractScreenEditor.__init__(self, editable_property, parent_editor)
@@ -991,7 +1011,6 @@ class BoxGeometryScreenEditor(AbstractScreenEditor):
             frame, rect, opacity = self.keyframes[i]
             if frame == self.current_clip_frame:
                 self.source_edit_rect.set_geom(*self._get_screen_to_panel_rect(rect))
-                #self.source_edit_rect.editable = True
                 return
             
             try:
@@ -1003,11 +1022,9 @@ class BoxGeometryScreenEditor(AbstractScreenEditor):
                                  float((frame_n - frame))
                     frame_rect = self._get_interpolated_rect(rect, rect_n, time_fract)
                     self.source_edit_rect.set_geom(*self._get_screen_to_panel_rect(frame_rect))
-                    #self.source_edit_rect.editable = False
                     return
             except: # past last frame, use its value
                 self.source_edit_rect.set_geom(*self._get_screen_to_panel_rect(rect))
-                #self.source_edit_rect.editable = False
                 return
                 
         print "reached end of _update_source_rect, this should be unreachable"
@@ -1093,9 +1110,12 @@ class BoxGeometryScreenEditor(AbstractScreenEditor):
 class RotatingScreenEditor(AbstractScreenEditor):
     """
     Needed parent_editor callback interface:
-        def geometry_edit_started(self)
-        def geometry_edit_finished(self)
-        def update_request_from_geom_editor(self)
+        mouse_scroll_up()
+        mouse_scroll_down()
+        geometry_edit_started()
+        update_request_from_geom_editor()
+        queue_draw()
+        geometry_edit_finished()
         
     Keyframes in form: [frame, [x, y, x_scale, y_scale, rotation] opacity]
     """
@@ -1210,7 +1230,6 @@ class RotatingScreenEditor(AbstractScreenEditor):
                 return
     
     def set_geom(self, x, y, x_scale, y_scale, rotation):
-        #print "set geom", x, y, x_scale, y_scale, rotation
         self.shape_x = x
         self.shape_y = y
         self.x_scale = x_scale
@@ -1517,6 +1536,8 @@ class GeometryEditorButtonsRow(Gtk.HBox):
         size_select.get_child().modify_font(font_desc)
         size_select.connect("changed", lambda w,e: editor_parent.view_size_changed(w.get_active()), 
                             None)
+        self.size_select = size_select
+        
         # Build row
         self.pack_start(guiutils.get_pad_label(2, 10), False, False, 0)
         self.pack_start(name_label, False, False, 0)
@@ -1910,8 +1931,20 @@ class GeometryEditor(AbstractKeyFrameEditor):
         
         self.editable_property.write_out_keyframes(write_keyframes)
         
- 
- 
+    def mouse_scroll_up(self):
+        view_size_index = self.geom_buttons_row.size_select.get_active()
+        view_size_index = view_size_index - 1
+        if view_size_index < 0:
+            view_size_index = 0
+        self.geom_buttons_row.size_select.set_active(view_size_index)
+
+    def mouse_scroll_down(self):
+        view_size_index = self.geom_buttons_row.size_select.get_active()
+        view_size_index = view_size_index + 1
+        if view_size_index > 2:
+            view_size_index = 2
+        self.geom_buttons_row.size_select.set_active(view_size_index)
+
 class RotatingGeometryEditor(GeometryEditor):
     
     def init_geom_gui(self, editable_property):

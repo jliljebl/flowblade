@@ -1318,11 +1318,6 @@ class ColorBandSelector:
         We get cairo context and allocation.
         """
         x, y, w, h = allocation
-       
-        # Draw bg
-        #cr.set_source_rgb(*guiutils.get_theme_bg_color())
-        #cr.rectangle(0, 0, w, h)
-        #cr.fill()
         
         ring_color = (0.0, 0.0, 0.0)
         _draw_select_circle(cr, self.SHADOW_X, 0, (0.1, 0.1, 0.1), ring_color)
