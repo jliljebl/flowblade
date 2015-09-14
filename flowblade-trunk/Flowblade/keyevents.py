@@ -120,15 +120,14 @@ def key_down(widget, event):
     #debug
     if event.keyval == Gdk.KEY_F11:
         if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-            print "333"
-            audiowaveformrenderer.launch_audio_levels_rendering([])
+            pass
         return True
 
 
     #debug
     if event.keyval == Gdk.KEY_F12:
         if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-            mltrefhold.print_and_clear()
+            pass
         return True
 
     
@@ -546,6 +545,8 @@ def _handle_geometry_editor_arrow_keys(event):
                         or (event.keyval == Gdk.KEY_Down)):
                         kfeditor.arrow_edit(event.keyval)
                         return True
+                    if event.keyval == Gdk.KEY_plus:
+                        pass # not impl
     return False
 
 def _get_focus_keyframe_editor(keyframe_editor_widgets):

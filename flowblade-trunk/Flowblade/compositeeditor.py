@@ -32,6 +32,7 @@ import guiutils
 import edit
 from editorstate import current_sequence
 import editorpersistance
+import keyframeeditor
 import propertyeditorbuilder
 import propertyedit
 import propertyparse
@@ -185,6 +186,7 @@ def _display_compositor_edit_box():
             editor_type = ep.args[propertyeditorbuilder.EDITOR]
         except KeyError:
             editor_type = propertyeditorbuilder.SLIDER # this is the default value
+
         if ((editor_type == propertyeditorbuilder.KEYFRAME_EDITOR)
             or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_RELEASE)
             or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_CLIP)
@@ -195,6 +197,10 @@ def _display_compositor_edit_box():
     # and will be looked up by editors from clip
     editor_rows = propertyeditorbuilder.get_transition_extra_editor_rows(compositor, t_editable_properties)
     for editor_row in editor_rows:
+        # These are added to keyframe editor based on editor type, not based on EditableProperty type as above
+        # because one editor set values for multiple EditableProperty objects
+        if editor_row.__class__ == keyframeeditor.RotatingGeometryEditor:
+            keyframe_editor_widgets.append(editor_row)
         vbox.pack_start(editor_row, False, False, 0)
         vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
     
