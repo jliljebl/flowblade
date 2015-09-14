@@ -11,7 +11,7 @@ Flowblade has now been ported to GTK3.
   * **I really hope that major API breaking version jumps for widget toolkits are avoided as much as possible**. Projects with large interface and small man power can really suffer here. 
 
 There were some other major developments during the cycle too:
-   * **All rendering was moved out of process** as the in-process rendering was found to not work correctly in same cases.
+   * **All rendering was moved out of process** as the in-process rendering was found to not work correctly in some cases.
    * **Dark theme support was improved**. It is now possible to use a dark theme just by setting a preference if the GTK3 theme used has a dark variant available.
    * **Small screen support has been upgraded**. The application now works better on 768px height screens.
 
