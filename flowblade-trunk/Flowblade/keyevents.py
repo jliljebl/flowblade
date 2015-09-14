@@ -77,7 +77,7 @@ def key_down(widget, event):
             # by stopping signal
             gui.editor_window.window.emit_stop_by_name("key_press_event")
         return was_handled
-        
+
     # Insert shortcut keys need more focus then timeline shortcuts.
     # these may already have been handled in timeline focus events
     was_handled = _handle_extended_tline_focus_events(event)
@@ -549,7 +549,12 @@ def _handle_geometry_editor_arrow_keys(event):
                         return True
                     if event.keyval == Gdk.KEY_plus:
                         pass # not impl
-                
+                    if event.keyval == Gdk.KEY_space:
+                        if PLAYER().is_playing():
+                            monitorevent.stop_pressed()
+                        else:
+                            monitorevent.play_pressed()
+                        return True
     return False
 
 def _get_focus_keyframe_editor(keyframe_editor_widgets):
