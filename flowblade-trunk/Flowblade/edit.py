@@ -304,6 +304,10 @@ class EditAction:
         # needs to be updated after every edit EXCEPT after trim edits which
         # update the hidden track themselves and this flag "update_hidden_track" to False
         self.update_hidden_track_blank = True
+        
+        # Clip effects editor can't handle moving clips between tracks and 
+        # needs to be clearad when clips are moved to another track.
+        self.clear_effects_editor_for_multitrack_edit = False  
 
     def do_edit(self):
         if self.exit_active_trimmode_on_edit:
@@ -363,7 +367,10 @@ class EditAction:
     def _update_gui(self):
         updater.update_tline_scrollbar() # Slider needs to adjust to possily new program length.
                                          # This REPAINTS TIMELINE as a side effect.
-        updater.update_kf_editor()
+        if self.clear_effects_editor_for_multitrack_edit == False:
+            updater.update_kf_editor()
+        else:
+            updater.clear_kf_editor()
 
         current_sequence().update_edit_tracks_length() # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
         if self.update_hidden_track_blank:
@@ -733,6 +740,7 @@ def _insert_multiple_redo(self):
 # Splices out clips in range and splices them in at given index
 def multitrack_insert_move_action(data):
     action = EditAction(_multitrack_insert_move_undo,_multitrack_insert_move_redo, data)
+    action.clear_effects_editor_for_multitrack_edit = True  
     return action
 
 def _multitrack_insert_move_undo(self):    
@@ -863,6 +871,7 @@ def _overwrite_move_redo(self):
 # Lifts clips from track and overwrites part of track with them
 def multitrack_overwrite_move_action(data):
     action = EditAction(_multitrack_overwrite_move_undo, _multitrack_overwrite_move_redo, data)
+    action.clear_effects_editor_for_multitrack_edit = True
     return action
 
 def _multitrack_overwrite_move_undo(self):    

@@ -493,6 +493,9 @@ def update_frame_displayers(frame):
 def update_kf_editor():
     clipeffectseditor.update_kfeditors_positions()
 
+def clear_kf_editor():
+    clipeffectseditor.clear_clip()
+
 # ----------------------------------------- marks
 def display_marks_tc():
     if not timeline_visible():
