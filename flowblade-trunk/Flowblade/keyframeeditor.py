@@ -1227,7 +1227,17 @@ class RotatingScreenEditor(AbstractScreenEditor):
         ys = ys1 + (ys2 - ys1) * fract
         r = r1 + (r2 - r1) * fract
         return (x, y, xs, ys, r)
-        
+
+    def handle_arrow_edit(self, keyval):
+        if keyval == Gdk.KEY_Left:
+            self.shape_x -= 1
+        if keyval == Gdk.KEY_Right:
+            self.shape_x += 1
+        if keyval == Gdk.KEY_Up:
+            self.shape_y -= 1
+        if keyval == Gdk.KEY_Down:                         
+            self.shape_y += 1
+            
     # --------------------------------------------------------- mouse events
     def _shape_press_event(self):
         self.start_edit_points = copy.deepcopy(self.edit_points)

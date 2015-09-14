@@ -62,6 +62,13 @@ def key_down(widget, event):
                 editevent.set_default_edit_mode()
             return True
 
+    # Compositor editors keyevents
+    was_handled = _handle_geometry_editor_arrow_keys(event)
+    if was_handled:
+        # Stop widget focus from travelling if arrow key pressed
+        gui.editor_window.window.emit_stop_by_name("key_press_event")
+        return True
+    
     # If timeline widgets are in focus timeline keyevents are available
     if _timeline_has_focus():
         was_handled = _handle_tline_key_event(event)
@@ -76,12 +83,6 @@ def key_down(widget, event):
     was_handled = _handle_extended_tline_focus_events(event)
     if was_handled:
         # Stop event handling here
-        return True
-
-    was_handled = _handle_geometry_editor_arrow_keys(event)
-    if was_handled:
-        # Stop widget focus from travelling if arrow key pressed
-        gui.editor_window.window.emit_stop_by_name("key_press_event")
         return True
 
     # Pressing timeline button obivously leaves user expecting
@@ -538,7 +539,8 @@ def _handle_geometry_editor_arrow_keys(event):
     if compositeeditor.keyframe_editor_widgets != None:
         for kfeditor in compositeeditor.keyframe_editor_widgets:
             if kfeditor.get_focus_child() != None:
-                if kfeditor.__class__ == keyframeeditor.GeometryEditor:
+                if kfeditor.__class__ == keyframeeditor.GeometryEditor or \
+                kfeditor.__class__ == keyframeeditor.RotatingGeometryEditor:
                     if ((event.keyval == Gdk.KEY_Left) 
                         or (event.keyval == Gdk.KEY_Right)
                         or (event.keyval == Gdk.KEY_Up)
@@ -547,6 +549,7 @@ def _handle_geometry_editor_arrow_keys(event):
                         return True
                     if event.keyval == Gdk.KEY_plus:
                         pass # not impl
+                
     return False
 
 def _get_focus_keyframe_editor(keyframe_editor_widgets):
