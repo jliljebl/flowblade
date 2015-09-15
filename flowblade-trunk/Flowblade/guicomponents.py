@@ -273,7 +273,7 @@ class SequenceListView(ImageTextTextListView):
             icon = GdkPixbuf.Pixbuf.new_from_file(self.icon_path)
             active = ""
             if seq == current_sequence():
-                active = "<edit>"
+                active = _("active") + " "
             row_data = [icon,
                         seq.name, 
                         active]

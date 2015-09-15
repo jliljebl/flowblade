@@ -448,7 +448,7 @@ class EditorWindow:
         project_info_panel = projectinfogui.get_project_info_panel()
     
         # Project vbox and panel
-        project_vbox = Gtk.HBox()
+        project_vbox = Gtk.VBox()
         project_vbox.pack_start(project_info_panel, False, True, 0)
         project_vbox.pack_start(seq_panel, True, True, 0)
         

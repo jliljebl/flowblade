@@ -52,14 +52,18 @@ def get_project_info_panel():
     project_info_vbox = Gtk.VBox()
     project_info_vbox.pack_start(name_panel, False, True, 0)
     project_info_vbox.pack_start(profile_panel, False, True, 0)
-    project_info_vbox.pack_start(events_panel, True, True, 0)
+    project_info_vbox.set_size_request(250, 200)
+    
+    project_info_hbox = Gtk.HBox()
+    project_info_hbox.pack_start(project_info_vbox, False, False, 0)
+    project_info_hbox.pack_start(events_panel, True, True, 0)
     
     widgets.project_name_label = project_name_label
     widgets.desc_label = desc_label
     widgets.info_box = info_box
     widgets.events_list = events_list
 
-    return project_info_vbox
+    return project_info_hbox
 
 def update_project_info():
     profile = PROJECT().profile
