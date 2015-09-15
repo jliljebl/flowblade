@@ -332,8 +332,9 @@ def _do_filter_clone(clip, clone_clip):
     action = edit.clone_filters_action(data)
     action.do_edit()
 
-
-
+def _clear_filters(data):
+    clip, track, item_id, item_data = data
+    clear_filters()
 
 # Functions to handle popup menu selections for strings 
 # set as activation messages in guicomponents.py
@@ -357,4 +358,5 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "cover_with_prev": _cover_blank_from_prev,
                   "cover_with_next": _cover_blank_from_next,
                   "clone_filters_from_next": _clone_filters_from_next,
-                  "clone_filters_from_prev": _clone_filters_from_prev}
+                  "clone_filters_from_prev": _clone_filters_from_prev,
+                  "clear_filters": _clear_filters}

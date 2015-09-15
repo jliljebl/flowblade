@@ -1102,6 +1102,7 @@ def display_clip_popup_menu(event, clip, track, callback):
     
     _add_separetor(clip_menu)
     clip_menu.add(_get_clone_filters_menu_item(event, clip, track, callback))
+    clip_menu.add(_get_menu_item(_("Clear Filters"), callback, (clip, track, "clear_filters", event.x)))
 
     _add_separetor(clip_menu)
     
@@ -1138,6 +1139,7 @@ def display_transition_clip_popup_menu(event, clip, track, callback):
     _add_separetor(clip_menu)
 
     clip_menu.add(_get_clone_filters_menu_item(event, clip, track, callback))
+    clip_menu.add(_get_menu_item(_("Clear Filters"), callback, (clip, track, "clear_filters", event.x)))
     clip_menu.popup(None, None, None, None, event.button, event.time)
     
 def display_blank_clip_popup_menu(event, clip, track, callback):
