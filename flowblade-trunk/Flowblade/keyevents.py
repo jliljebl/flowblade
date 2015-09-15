@@ -267,14 +267,20 @@ def _handle_tline_key_event(event):
             
         # LEFT ARROW, prev frame
         if event.keyval == Gdk.KEY_Left:
-            PLAYER().seek_delta(-1)
+            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+                PLAYER().seek_delta(-10)
+            else:
+                PLAYER().seek_delta(-1)
             return True
 
         # RIGHT ARROW, next frame
         if event.keyval == Gdk.KEY_Right:
-            PLAYER().seek_delta(1)
+            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+                PLAYER().seek_delta(10)
+            else:
+                PLAYER().seek_delta(1)
             return True
-
+            
         # T
         if event.keyval == Gdk.KEY_t:
             tlineaction.three_point_overwrite_pressed()
@@ -432,13 +438,19 @@ def _handle_clip_key_event(event):
     if editorstate.current_is_move_mode():                  
         # LEFT ARROW, prev frame
         if event.keyval == Gdk.KEY_Left:
-            PLAYER().seek_delta(-1)
-            return 
+            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+                PLAYER().seek_delta(-10)
+            else:
+                PLAYER().seek_delta(-1)
+            return True
 
         # RIGHT ARROW, next frame
         if event.keyval == Gdk.KEY_Right:
-            PLAYER().seek_delta(1)
-            return 
+            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+                PLAYER().seek_delta(10)
+            else:
+                PLAYER().seek_delta(1)
+            return True
 
          # UP ARROW
         if event.keyval == Gdk.KEY_Up:

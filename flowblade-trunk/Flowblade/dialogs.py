@@ -1090,6 +1090,8 @@ def keyboard_shortcuts_dialog(parent_window):
     play_vbox.pack_start(_get_kb_row("L", _("Forward Faster")), False, False, 0)
     play_vbox.pack_start(_get_kb_row(_("Left Arrow "), _("Prev Frame")), False, False, 0)
     play_vbox.pack_start(_get_kb_row(_("Right Arrow"), _("Next Frame")), False, False, 0)
+    play_vbox.pack_start(_get_kb_row(_("Control + Left Arrow "), _("Move Back 10 Frames")), False, False, 0)
+    play_vbox.pack_start(_get_kb_row(_("Control + Right Arrow"), _("Move Forward 10 Frames")), False, False, 0)
     play_vbox.pack_start(_get_kb_row(_("Up Arrow"), _("Next Edit/Mark")), False, False, 0)
     play_vbox.pack_start(_get_kb_row(_("Down Arrow"), _("Prev Edit/Mark")), False, False, 0) 
     play_vbox.pack_start(_get_kb_row(_("Home"), _("Go To Start")), False, False, 0)
