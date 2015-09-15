@@ -65,8 +65,10 @@ FILL_MIN = 1 # if clip shorter, no fill
 TEXT_X = 6 # pos for clip text
 TEXT_Y = 29 
 TEXT_Y_SMALL = 17
-WAVEFORM_PAD_LARGE = 19
+WAVEFORM_PAD_LARGE = 27
 WAVEFORM_PAD_SMALL = 8
+WAVEFORM_HEIGHT_LARGE = 22.0
+WAVEFORM_HEIGHT_SMALL = 17.0
 MARK_PAD = 6
 MARK_LINE_WIDTH = 4
 
@@ -1310,10 +1312,10 @@ class TimeLineCanvas:
                 # Get level bar height and position for track height
                 if track.height == sequence.TRACK_HEIGHT_NORMAL:
                     y_pad = WAVEFORM_PAD_LARGE
-                    bar_height = 30.0
+                    bar_height = WAVEFORM_HEIGHT_LARGE
                 else:
                     y_pad = WAVEFORM_PAD_SMALL
-                    bar_height = 17.0
+                    bar_height = WAVEFORM_HEIGHT_SMALL
                 
                 # Draw all frames only if pixels per frame > 2, otherwise
                 # draw only every other or fewer frames
