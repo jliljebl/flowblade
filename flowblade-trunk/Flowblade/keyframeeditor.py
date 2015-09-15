@@ -171,6 +171,9 @@ class ClipKeyFrameEditor:
             
     def set_keyframes(self, keyframes_str, out_to_in_func):
         self.keyframes = self.keyframe_parser(keyframes_str, out_to_in_func)
+
+    def get_kf_info(self):
+        return (self.active_kf_index, len(self.keyframes))
         
     def _get_panel_pos(self):
         return self._get_panel_pos_for_frame(self.current_clip_frame) 
@@ -206,12 +209,7 @@ class ClipKeyFrameEditor:
         x, y, w, h = allocation
         active_width = w - 2 * END_PAD
         active_height = h - 2 * TOP_PAD      
-        
-        # Draw bg
-        # cr.set_source_rgb(*guiutils.get_theme_bg_color())
-        # cr.rectangle(0, 0, w, h)
-        # cr.fill()
-        
+                
         # Draw clip bg  
         cr.set_source_rgb(*CLIP_EDITOR_BG_COLOR)
         cr.rectangle(END_PAD, TOP_PAD, active_width, active_height)
@@ -1490,6 +1488,10 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.kf_pos_label = Gtk.Label()
         self.modify_font(Pango.FontDescription("light 8"))
         self.kf_pos_label.set_text("0")
+
+        self.kf_info_label = Gtk.Label()
+        #self.modify_font(Pango.FontDescription("light 8"))
+        self.kf_info_label.set_text("1/1")
         
         # Build row
         self.pack_start(self.add_button, False, False, 0)
@@ -1498,6 +1500,8 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.pack_start(self.next_kf_button, False, False, 0)
         self.pack_start(self.prev_frame_button, False, False, 0)
         self.pack_start(self.next_frame_button, False, False, 0)
+        self.pack_start(guiutils.pad_label(4,4), False, False, 0)
+        self.pack_start(self.kf_info_label, False, False, 0)
         self.pack_start(Gtk.Label(), True, True, 0)
         self.pack_start(self.kf_pos_label, False, False, 0)
         self.pack_start(guiutils.get_pad_label(1, 10), False, False, 0)
@@ -1505,7 +1509,11 @@ class ClipEditorButtonsRow(Gtk.HBox):
     def set_frame(self, frame):
         frame_str = utils.get_tc_string(frame)
         self.kf_pos_label.set_text(frame_str)
-        
+
+    def set_kf_info(self, info):
+        active_index, total = info
+        self.kf_info_label.set_text(str(active_index + 1) + "/" + str(total))
+
 
 class GeometryEditorButtonsRow(Gtk.HBox):
     def __init__(self, editor_parent):
@@ -1638,6 +1646,7 @@ class AbstractKeyFrameEditor(Gtk.VBox):
     def update_editor_view(self, seek_tline=True):
         print "update_editor_view not implemented"
 
+
 class KeyFrameEditor(AbstractKeyFrameEditor):
     """
     Class combines named value slider with ClipKeyFrameEditor and 
@@ -1686,6 +1695,7 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         self.slider.set_value(value)
         self.buttons_row.set_frame(frame)
         self.seek_tline_frame(frame)
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
         
     def clip_editor_frame_changed(self, clip_frame):
         self.seek_tline_frame(clip_frame)
@@ -1695,16 +1705,19 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         self.clip_editor.add_keyframe(self.clip_editor.current_clip_frame)
         self.update_editor_view()
         self.update_property_value()
-
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+        
     def delete_pressed(self):
         self.clip_editor.delete_active_keyframe()
         self.update_editor_view()
         self.update_property_value()
-
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+        
     def next_pressed(self):
         self.clip_editor.set_next_active()
         self.update_editor_view()
-    
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+        
     def prev_pressed(self):
         self.clip_editor.set_prev_active()
         self.update_editor_view()
@@ -1712,7 +1725,8 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
     def prev_frame_pressed(self):
         self.clip_editor.move_clip_frame(-1)
         self.update_editor_view()
-
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+        
     def next_frame_pressed(self):
         self.clip_editor.move_clip_frame(1)
         self.update_editor_view()
@@ -1800,6 +1814,7 @@ class GeometryEditor(AbstractKeyFrameEditor):
         frame = self.clip_editor.get_active_kf_frame()
         self.update_editor_view_with_frame(frame)
         self.update_property_value()
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
 
     def delete_pressed(self):
         active = self.clip_editor.active_kf_index
@@ -1809,17 +1824,20 @@ class GeometryEditor(AbstractKeyFrameEditor):
         frame = self.clip_editor.get_active_kf_frame()
         self.update_editor_view_with_frame(frame)
         self.update_property_value()
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
         
     def next_pressed(self):
         self.clip_editor.set_next_active()
         frame = self.clip_editor.get_active_kf_frame()
         self.update_editor_view_with_frame(frame)
-    
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+        
     def prev_pressed(self):
         self.clip_editor.set_prev_active()
         frame = self.clip_editor.get_active_kf_frame()
         self.update_editor_view_with_frame(frame)
-    
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+        
     def slider_value_changed(self, adjustment):
         value = adjustment.get_value()
         self.clip_editor.set_active_kf_value(value)
@@ -1865,7 +1883,8 @@ class GeometryEditor(AbstractKeyFrameEditor):
     def active_keyframe_changed(self): # callback from clip_editor
         kf_frame = self.clip_editor.get_active_kf_frame()
         self.update_editor_view_with_frame(kf_frame)
-
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+        
     def _reset_rect_pressed(self):
         self.geom_kf_edit.reset_active_keyframe_shape(self.clip_editor.active_kf_index)
         frame = self.clip_editor.get_active_kf_frame()
