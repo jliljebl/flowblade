@@ -118,9 +118,7 @@ def _update_gui_for_pattern_producer_media_object_add():
 def create_pattern_producer(profile, bin_clip):
     """
     bin_clip is instance of AbstractBinClip extending class
-    """
-    clip = bin_clip.create_mlt_producer(profile)
-      
+    """    
     try:
         clip = bin_clip.create_mlt_producer(profile)
     except:
