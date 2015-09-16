@@ -426,6 +426,75 @@ def _remove_multiple_redo(self):
         removed_clip = _remove_clip(self.track, self.from_index)
         self.clips.append(removed_clip)
 
+#------------------ COVER DELETE FADE OUT
+# "track","clip","index"
+def cover_delete_fade_out(data):
+    action = EditAction(_cover_delete_fade_out_undo,_cover_delete_fade_out_redo, data)
+    return action
+
+def _cover_delete_fade_out_undo(self):
+    cover_clip = _remove_clip(self.track, self.index - 1)
+    _insert_clip(self.track, cover_clip, self.index - 1,
+                 cover_clip.clip_in, self.original_out)
+    _insert_clip(self.track, self.clip, self.index,
+                 self.clip.clip_in, self.clip.clip_out)
+
+def _cover_delete_fade_out_redo(self):
+    _remove_clip(self.track, self.index)
+    cover_clip = _remove_clip(self.track, self.index - 1)
+    self.original_out = cover_clip.clip_out
+    _insert_clip(self.track, cover_clip, self.index - 1,
+                 cover_clip.clip_in, cover_clip.clip_out + self.clip.get_length() - 1) # -1, out is iclusive
+
+#------------------ COVER DELETE FADE IN
+# "track","clip","index"
+def cover_delete_fade_in(data):
+    action = EditAction(_cover_delete_fade_in_undo,_cover_delete_fade_in_redo, data)
+    return action
+
+def _cover_delete_fade_in_undo(self):
+    cover_clip = _remove_clip(self.track, self.index)
+    _insert_clip(self.track, cover_clip, self.index,
+                 self.original_in,  cover_clip.clip_out)
+    _insert_clip(self.track, self.clip, self.index,
+                 self.clip.clip_in, self.clip.clip_out)
+
+def _cover_delete_fade_in_redo(self):
+    _remove_clip(self.track, self.index)
+    cover_clip = _remove_clip(self.track, self.index)
+    self.original_in = cover_clip.clip_in
+    _insert_clip(self.track, cover_clip, self.index,
+                 cover_clip.clip_in - self.clip.get_length(), cover_clip.clip_out) # -1, out is iclusive
+
+#------------------ COVER DELETE TRANSITION
+# "track", "clip","index","to_part","from_part"
+def cover_delete_transition(data):
+    action = EditAction(_cover_delete_transition_undo, _cover_delete_transition_redo, data)
+    return action
+
+def _cover_delete_transition_undo(self):
+    cover_clip_from = _remove_clip(self.track, self.index - 1)
+    cover_clip_to = _remove_clip(self.track, self.index - 1)
+
+    _insert_clip(self.track, cover_clip_from, self.index - 1,
+                 cover_clip_from.clip_in, self.original_from_out)
+    _insert_clip(self.track, self.clip, self.index,
+                 self.clip.clip_in, self.clip.clip_out)
+    _insert_clip(self.track, cover_clip_to, self.index + 1,
+                 self.original_to_in, cover_clip_to.clip_out)
+
+def _cover_delete_transition_redo(self):
+    cover_clip_from = _remove_clip(self.track, self.index - 1)
+    _remove_clip(self.track, self.index - 1)
+    cover_clip_to = _remove_clip(self.track, self.index - 1)
+    
+    self.original_from_out = cover_clip_from.clip_out
+    self.original_to_in = cover_clip_to.clip_in
+    
+    _insert_clip(self.track, cover_clip_from, self.index - 1,
+                 cover_clip_from.clip_in, cover_clip_from.clip_out + self.from_part - 1)
+    _insert_clip(self.track, cover_clip_to, self.index,
+                 cover_clip_to.clip_in - self.to_part, cover_clip_to.clip_out)
 
 #----------------- LIFT MULTIPLE CLIPS 
 # "track","from_index","to_index"

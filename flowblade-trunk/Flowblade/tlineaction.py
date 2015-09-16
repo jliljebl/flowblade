@@ -162,17 +162,97 @@ def splice_out_button_pressed():
         movemodes.clear_selection_values()
         return
 
+    # A single clip delete can trigger a special clip cover delete
+    # See if such delete should be attempted.
+    # Exit if done succesfully, do normal splice out and report if failed
+    cover_delete_failed = False
+    if movemodes.selected_range_out == movemodes.selected_range_in:
+        clip = track.clips[movemodes.selected_range_in]
+        if hasattr(clip, "rendered_type") and (track.id >= current_sequence().first_video_index):
+            cover_delete_success =  _attempt_clip_cover_delete(clip, track, movemodes.selected_range_in)
+            if cover_delete_success:
+                return # A successful cover delete happened
+            else:
+                cover_delete_failed = True # A successful cover delete failed, do normal delete and gove info
+
+    # Do delete
     data = {"track":track,
             "from_index":movemodes.selected_range_in,
             "to_index":movemodes.selected_range_out}
     edit_action = edit.remove_multiple_action(data)
     edit_action.do_edit()
 
+    _splice_out_done_update()
+    
+    if cover_delete_failed == True:
+        dialogutils.info_message(_("Fade/Transition cover delete failed!"),
+         _("There wasn't enough material available in adjacent clips.\nA normal Splice Out was done instead."),
+         gui.editor_window.window)
+
+def _attempt_clip_cover_delete(clip, track, index):
+    if clip.rendered_type == appconsts.RENDERED_FADE_OUT:
+        if index != 0:
+            cover_clip = track.clips[movemodes.selected_range_in - 1]
+            if clip.get_length() <= (cover_clip.clip_out - cover_clip.clip_in + 1):
+                # Do delete
+                data = {"track":track,
+                        "clip":clip,
+                        "index":movemodes.selected_range_in}
+                edit_action = edit.cover_delete_fade_out(data)
+                edit_action.do_edit()
+                _splice_out_done_update()
+                return True
+        return False
+        
+    elif clip.rendered_type == appconsts.RENDERED_FADE_IN:
+        if index != len(track.clips) - 1:
+            cover_clip = track.clips[movemodes.selected_range_in + 1]
+            if clip.get_length() <= cover_clip.clip_in + 1:
+                # Do delete
+                data = {"track":track,
+                        "clip":clip,
+                        "index":movemodes.selected_range_in}
+                edit_action = edit.cover_delete_fade_in(data)
+                edit_action.do_edit()
+                _splice_out_done_update()
+                return True
+        return False
+        
+    else:# RENDERED_DISSOLVE, RENDERED_WIPE, RENDERED_COLOR_DIP
+        if index == 0:
+            return False
+        if index == len(track.clips) - 1:
+            return False
+        cover_form_clip = track.clips[movemodes.selected_range_in - 1]
+        cover_to_clip = track.clips[movemodes.selected_range_in + 1]
+        
+        real_length = clip.get_length()
+        to_part = real_length / 2
+        from_part = real_length - to_part
+    
+        if to_part > cover_to_clip.clip_in:
+            return False
+        if from_part > cover_form_clip.get_length() - cover_form_clip.clip_out - 1:# -1, clip_out inclusive
+            return False
+            
+        # Do delete
+        data = {"track":track,
+                "clip":clip,
+                "index":movemodes.selected_range_in,
+                "to_part": to_part,
+                "from_part":from_part}
+        edit_action = edit.cover_delete_transition(data)
+        edit_action.do_edit()
+        return True
+  
+    return False
+
+def _splice_out_done_update():
     # Nothing is selected after edit
     movemodes.clear_selection_values()
-
     updater.repaint_tline()
 
+    
 def lift_button_pressed():
     """
     Removes 1 - n long continuous clip range from track and fills
