@@ -64,6 +64,7 @@ parent_selection_data = None # Held here until user presses tline again
 display_clip_menu_pop_up = None
 compositor_menu_item_activated = None
 
+
 # ----------------------------- module funcs
 def do_clip_insert(track, new_clip, tline_pos):
     index = _get_insert_index(track, tline_pos)
@@ -108,6 +109,101 @@ def do_multiple_clip_insert(track, clips, tline_pos):
 
     updater.display_tline_cut_frame(track, index)
 
+def  _attempt_dnd_overwrite(track, clip, frame):
+    # Can't put audio media on video track 
+    if ((clip.media_type == appconsts.AUDIO)
+       and (track.type == appconsts.VIDEO)):        
+        return
+
+    # Dropping on first available frame after last clip is append 
+    # and is handled by insert code
+    if track.get_length() == frame:
+        return False
+
+    # Clip dropped after last clip on track
+    if track.get_length() < frame:
+        index = _get_insert_index(track, track.get_length())
+
+        movemodes.clear_selected_clips()
+    
+        data = {"track":track,
+                "clip":clip,
+                "blank_length":frame - track.get_length(),
+                "index":index,
+                "clip_in":clip.mark_in,
+                "clip_out":clip.mark_out}
+        action = edit.dnd_after_track_end_action(data)
+        action.do_edit()
+
+        updater.display_tline_cut_frame(track, index + 1)
+        return True
+    else: # Clip dropped before end of last clip on track
+        index = track.get_clip_index_at(frame)
+        overwritten_clip = track.clips[index]
+        
+        # dnd overwrites can only done on blank clips
+        # Drops on clips are considered inserts
+        if overwritten_clip.is_blanck_clip == False:
+            return False
+
+        drop_length = clip.mark_out - clip.mark_in + 1 # +1 , mark out incl.
+        blank_start = track.clip_start(index)
+        blank_end = track.clip_start(index + 1)
+        
+        movemodes.clear_selected_clips()
+  
+        # Clip dropped on first frame of blank
+        if blank_start == frame:
+            # If dropped clip longer then blank, replace blank
+            if frame + drop_length >= blank_end:
+                data = {"track":track,
+                        "clip":clip,
+                        "blank_length":blank_end - blank_start,
+                        "index":index,
+                        "clip_in":clip.mark_in}
+                action = edit.dnd_on_blank_replace_action(data)
+                action.do_edit()
+            else: # If dropped clip shorter then blank, replace start part of blank
+                data = {"track":track,
+                        "clip":clip,
+                        "blank_length":blank_end - blank_start,
+                        "index":index,
+                        "clip_in":clip.mark_in,
+                        "clip_out":clip.mark_out}
+                action = edit.dnd_on_blank_start_action(data)
+                action.do_edit()
+
+            updater.display_tline_cut_frame(track, index)
+            return True
+
+        # Clip dropped after first frame of blank        
+        if frame + drop_length >= blank_end:
+            # Overwrite end half of blank
+            data = {"track":track,
+                    "clip":clip,
+                    "overwritten_blank_length":frame - blank_start,
+                    "blank_length":blank_end - blank_start,
+                    "index":index,
+                    "clip_in":clip.mark_in,
+                    "clip_out":clip.mark_out}
+            action = edit.dnd_on_blank_end_action(data)
+            action.do_edit()
+        else: # Overwrite part of blank ei toimi
+            data = {"track":track,
+                    "clip":clip,
+                    "overwritten_start_frame":frame - blank_start,
+                    "blank_length":blank_end - blank_start,
+                    "index":index,
+                    "clip_in":clip.mark_in,
+                    "clip_out":clip.mark_out}
+            action = edit.dnd_on_blank_middle_action(data)
+            action.do_edit()
+            
+        updater.display_tline_cut_frame(track, index + 1)
+        return True
+
+    return False # this won't be hit
+    
 def _get_insert_index(track, tline_pos):
     cut_frame = current_sequence().get_closest_cut_frame(track.id, tline_pos)
     index = current_sequence().get_clip_index(track, cut_frame)
@@ -670,7 +766,12 @@ def tline_media_drop(media_file, x, y, use_marks=False):
         in_fr, out_fr, l = editorpersistance.get_graphics_default_in_out_length()
         new_clip.mark_in = in_fr
         new_clip.mark_out = out_fr
-            
+
+    if track.id != current_sequence().first_video_track().id:
+        drop_done = _attempt_dnd_overwrite(track, new_clip, frame)
+        if drop_done == True:
+            return
+
     do_clip_insert(track, new_clip, frame)
 
 def tline_range_item_drop(rows, x, y):

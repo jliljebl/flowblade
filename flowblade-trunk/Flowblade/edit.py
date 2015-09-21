@@ -1755,6 +1755,90 @@ def _trim_start_over_blanks_redo(self):
     _remove_clip(self.track, self.blank_index)
     _insert_clip(self.track, self.clip, self.blank_index, self.clip.clip_in - self.total_length, self.clip.clip_out) 
 
+# ----------------------------------------- CLIP DROPPED AFTER TRACK END APPEND
+#"track","clip","blank_length", "index","clip_in", "clip_out"
+def dnd_after_track_end_action(data):
+    action = EditAction(_dnd_after_track_end_undo, _dnd_after_track_end_redo, data)
+    return action
+
+def _dnd_after_track_end_undo(self):
+    _remove_clip(self.track, self.index)
+    _remove_clip(self.track, self.index)
+
+def _dnd_after_track_end_redo(self):
+    _insert_blank(self.track, self.index, self.blank_length)
+    _insert_clip(self.track, self.clip, self.index + 1, self.clip_in, self.clip_out)
+
+# ----------------------------------------- CLIP DROPPED ON START PART OF BLANK
+# "track","clip","blank_length","index","clip_in","clip_out"
+def dnd_on_blank_start_action(data):
+    action = EditAction(_dnd_on_blank_start_undo, _dnd_on_blank_start_redo, data)
+    return action
+
+def _dnd_on_blank_start_undo(self):
+    _remove_clip(self.track, self.index)
+    _remove_clip(self.track, self.index)
+    _insert_blank(self.track, self.index, self.blank_length)
+
+def _dnd_on_blank_start_redo(self):
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.clip, self.index, 
+                 self.clip_in, self.clip_out)
+    last_blank_length = self.blank_length - (self.clip_out - self.clip_in + 1) 
+    _insert_blank(self.track, self.index + 1, last_blank_length)
+
+# ----------------------------------------- CLIP DROPPED ON END PART OF BLANK
+# "track","clip","overwritten_blank_length","blank_length","index","clip_in","clip_out"
+def dnd_on_blank_end_action(data):
+    action = EditAction(_dnd_on_blank_end_undo, _dnd_on_blank_end_redo, data)
+    return action
+    
+def _dnd_on_blank_end_undo(self):
+    _remove_clip(self.track, self.index)
+    _remove_clip(self.track, self.index)
+    _insert_blank(self.track, self.index, self.blank_length)
+    
+def _dnd_on_blank_end_redo(self):
+    _remove_clip(self.track, self.index)
+    _insert_blank(self.track, self.index, self.overwritten_blank_length)
+    clip_length = self.blank_length - self.overwritten_blank_length - 1
+    _insert_clip(self.track, self.clip, self.index + 1, 
+                 self.clip_in, self.clip_in + clip_length)
+
+# ----------------------------------------- CLIP DROPPED ON MIDDLE OF BLANK
+# "track","clip","overwritten_start_frame","blank_length","index","clip_in","clip_out"
+def dnd_on_blank_middle_action(data):
+    action = EditAction(_dnd_on_blank_middle_undo, _dnd_on_blank_middle_redo, data)
+    return action
+    
+def _dnd_on_blank_middle_undo(self):
+    _remove_clip(self.track, self.index)
+    _remove_clip(self.track, self.index)
+    _remove_clip(self.track, self.index)
+    _insert_blank(self.track, self.index, self.blank_length)
+
+def _dnd_on_blank_middle_redo(self):
+    _remove_clip(self.track, self.index)
+    _insert_blank(self.track, self.index, self.overwritten_start_frame)
+    _insert_clip(self.track, self.clip, self.index + 1, 
+                 self.clip_in, self.clip_out)
+    last_blank_length = self.blank_length - self.overwritten_start_frame - (self.clip_out - self.clip_in + 1) 
+    _insert_blank(self.track, self.index + 2, last_blank_length)
+
+# ----------------------------------------- CLIP DROPPED TO REPLACE FULL BLANK LENGTH
+# "track","clip","blank_length","index","clip_in"
+def dnd_on_blank_replace_action(data):
+    action = EditAction(_dnd_on_blank_replace_undo, _dnd_on_blank_replace_redo, data)
+    return action
+
+def _dnd_on_blank_replace_undo(self):
+    _remove_clip(self.track, self.index)
+    _insert_blank(self.track, self.index, self.blank_length)
+
+def _dnd_on_blank_replace_redo(self):
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.clip, self.index, 
+                 self.clip_in,  self.clip_in + self.blank_length - 1)
 
 # ---------------------------------------- CONSOLIDATE SELECTED BLANKS
 # "track","index"
