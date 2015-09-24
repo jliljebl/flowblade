@@ -32,7 +32,7 @@ import re
 import threading
 
 import appconsts
-from editorstate import PROJECT
+import editorstate
 
 # ---------------------------------- CLASSES
 class EmptyClass:
@@ -81,7 +81,7 @@ class Ticker:
 
 # -------------------------------- UTIL FUNCTIONS
 def fps():
-    return PROJECT().profile.fps()
+    return editorstate.PROJECT().profile.fps()
 
 def clip_length_string(length):
     """ 
@@ -315,7 +315,12 @@ def get_unique_name_for_audio_levels_file(media_file_path):
     return file_name
     
 def get_hidden_user_dir_path():
-    return os.getenv("HOME") + "/.flowblade/"
+    if editorstate.use_xdg:
+        return os.path.join( 
+                            os.getenv("XDG_CONFIG_HOME", os.path.join(os.getenv("HOME"),".config")),
+                            "flowblade/")
+    else:
+        return os.getenv("HOME") + "/.flowblade/"
 
 def get_hidden_screenshot_dir_path():
     return get_hidden_user_dir_path() + "screenshot/"
