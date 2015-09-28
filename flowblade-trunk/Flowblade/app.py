@@ -122,8 +122,14 @@ def main(root_path):
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
+    # passing -xdg as a flag will change the user_dir location with XDG_CONFIG_HOME
+    for arg in sys.argv:
+        if arg.lower() == "-xdg":
+            editorstate.use_xdg = True
+
     # Create hidden folders if not present
     user_dir = utils.get_hidden_user_dir_path()
+    print "User dir:",user_dir
     if not os.path.exists(user_dir):
         os.mkdir(user_dir)
     if not os.path.exists(user_dir + mltprofiles.USER_PROFILES_DIR):

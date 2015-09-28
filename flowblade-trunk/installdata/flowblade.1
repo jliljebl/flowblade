@@ -1,9 +1,11 @@
-.TH FLOWBLADE 1 "JUNE 2014" Linux "User Manuals"
+.TH FLOWBLADE 1 "SEPTEMBER 2015" Linux "User Manuals"
 .SH NAME
 flowblade \- Non-Linear Video Editor
 
 .SH SYNOPSIS
-.B flowblade 
+.B flowblade
+[\fIoptions\fR]
+[\fIfile\fR]
 
 .SH DESCRIPTION
 Flowblade is multitrack non-linear video editor.
@@ -22,14 +24,22 @@ or by cutting and deleting parts of clips.
 
 .TP
 .B More information
- Project Website: http://code.google.com/p/flowblade/
- User Website: http://code.google.com/p/flowblade/
+ Project Website: https://github.com/jliljebl/flowblade
+ User Website: https://github.com/jliljebl/flowblade
  Reference guide: http://code.google.com/p/flowblade/wiki/FlowbladeReference
+
+.SH OPTIONS
+.TP
+.BR \-xdg
+Use XDG specification and relocate program settings to
+.I $XDG_CONFIG_DIR\fR/flowblade/ 
 
 .SH FILES
 .I /home/your_user/.flowblade/
 .RS
-This folder stores preferences used by Flowblade.
+This folder stores preferences used by Flowblade, unless
+.B -xdg
+flag is set.
 
 .SH AUTHORS
 Janne Liljeblad

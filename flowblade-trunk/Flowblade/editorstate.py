@@ -83,6 +83,9 @@ RUNNING_FROM_DEV_VERSION = 1
 app_running_from = RUNNING_FROM_INSTALLATION
 audio_monitoring_available = False
 
+# Whether to let the user set their user_dir using XDG Base dir spec
+use_xdg = False
+
 # Cursor pos
 cursor_on_tline = False
 
