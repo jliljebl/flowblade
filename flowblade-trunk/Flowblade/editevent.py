@@ -32,6 +32,7 @@ from gi.repository import Gdk
 
 import appconsts
 import clipeffectseditor
+import clipenddragmode
 import compositeeditor
 import compositormodes
 import dialogutils
@@ -538,6 +539,10 @@ def tline_canvas_mouse_pressed(event, frame):
                     PLAYER().seek_frame(frame)
         return
 
+    # If clip end drag mode is for some reason still active, exit to default edit mode
+    if EDIT_MODE() == editorstate.CLIP_END_DRAG:
+        editorstate.edit_mode = INSERT_MOVE
+
     #  Check if compositor is hit and if so handle compositor editing
     if editorstate.current_is_move_mode() and timeline_visible():
         hit_compositor = tlinewidgets.compositor_hit(frame, event.y, current_sequence().compositors)
@@ -559,17 +564,22 @@ def tline_canvas_mouse_pressed(event, frame):
 
     compositormodes.clear_compositor_selection()
 
+    # Check if we should enter clip end drag mode.
+    if (event.button == 3 and editorstate.current_is_move_mode()
+        and timeline_visible() and (event.get_state() & Gdk.ModifierType.CONTROL_MASK)):
+        clipenddragmode.maybe_init_for_mouse_press(event, frame)
+
     # Handle mouse button presses depending which button was pressed and
     # editor state.
-    # RIGHT BUTTON: seek frame or display clip menu
-    if (event.button == 3):
+    # RIGHT BUTTON: seek frame or display clip menu if not dragging clip end
+    if (event.button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG):
         if ((not editorstate.current_is_active_trim_mode()) and timeline_visible()):
             if not(event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 success = display_clip_menu_pop_up(event.y, event, frame)
                 if not success:
                     PLAYER().seek_frame(frame)
-            else:
-                PLAYER().seek_frame(frame) 
+            #else:
+            #    PLAYER().seek_frame(frame) 
         else:
             # For trim modes set <X>_NO_EDIT edit mode and seek frame. and seek frame
             trimmodes.set_no_edit_trim_mode()
@@ -611,14 +621,14 @@ def tline_canvas_mouse_pressed(event, frame):
             mouse_disabled = True
         else:
             trimmodes.tworoll_trim_move(event.x, event.y, frame, None)
+    elif event.button == 2:
+        updater.zoom_project_length()
     # LEFT BUTTON: Handle left mouse button edits by passing event to current edit mode
     # handler func
-    elif event.button == 1:
+    elif event.button == 1 or event.button == 3:
         mode_funcs = EDIT_MODE_FUNCS[EDIT_MODE()]
         press_func = mode_funcs[TL_MOUSE_PRESS]
         press_func(event, frame)
-    elif event.button == 2:
-        updater.zoom_project_length()
 
 def tline_canvas_mouse_moved(x, y, frame, button, state):
     """
@@ -633,12 +643,12 @@ def tline_canvas_mouse_moved(x, y, frame, button, state):
         return
 
     # Handle timeline position setting with right mouse button
-    if button == 3:
+    if button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG:
         if not timeline_visible():
             return
         PLAYER().seek_frame(frame)
-    # Handle left mouse button edits
-    elif button == 1:
+    # Handle mouse button edits
+    elif button == 1 or button == 3:
         mode_funcs = EDIT_MODE_FUNCS[EDIT_MODE()]
         move_func = mode_funcs[TL_MOUSE_MOVE]
         move_func(x, y, frame, state)
@@ -665,14 +675,12 @@ def tline_canvas_mouse_released(x, y, frame, button, state):
         return
 
     # Handle timeline position setting with right mouse button
-    if button == 3:
-        #if not editorstate.current_is_move_mode():
-        #    return
+    if button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG:
         if not timeline_visible():
             return
         PLAYER().seek_frame(frame) 
-    # Handle left mouse button edits
-    elif button == 1:
+    # Handle mouse button edits
+    elif button == 1 or button == 3:
         mode_funcs = EDIT_MODE_FUNCS[EDIT_MODE()]
         release_func = mode_funcs[TL_MOUSE_RELEASE]
         release_func(x, y, frame, state)
@@ -840,8 +848,11 @@ SLIDE_TRIM_NO_EDIT_FUNCS = [slide_trim_no_edit_press,
 MULTI_MOVE_FUNCS = [multimovemode.mouse_press,
                     multimovemode.mouse_move,
                     multimovemode.mouse_release]
-                        
-# (mode - mouse handler function list) table
+CLIP_END_DRAG_FUNCS = [clipenddragmode.mouse_press,
+                       clipenddragmode.mouse_move,
+                       clipenddragmode.mouse_release]
+                    
+# (mode -> mouse handler function list) table
 EDIT_MODE_FUNCS = {editorstate.INSERT_MOVE:INSERT_MOVE_FUNCS,
                    editorstate.OVERWRITE_MOVE:OVERWRITE_MOVE_FUNCS,
                    editorstate.ONE_ROLL_TRIM:ONE_ROLL_TRIM_FUNCS,
@@ -851,5 +862,6 @@ EDIT_MODE_FUNCS = {editorstate.INSERT_MOVE:INSERT_MOVE_FUNCS,
                    editorstate.TWO_ROLL_TRIM_NO_EDIT:TWO_ROLL_TRIM_NO_EDIT_FUNCS,
                    editorstate.SLIDE_TRIM:SLIDE_TRIM_FUNCS,
                    editorstate.SLIDE_TRIM_NO_EDIT:SLIDE_TRIM_NO_EDIT_FUNCS,
-                   editorstate.MULTI_MOVE:MULTI_MOVE_FUNCS}
+                   editorstate.MULTI_MOVE:MULTI_MOVE_FUNCS,
+                   editorstate.CLIP_END_DRAG:CLIP_END_DRAG_FUNCS}
 

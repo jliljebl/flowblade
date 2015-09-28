@@ -40,6 +40,7 @@ TWO_ROLL_TRIM_NO_EDIT = 7
 SLIDE_TRIM = 8
 SLIDE_TRIM_NO_EDIT = 9
 MULTI_MOVE = 10
+CLIP_END_DRAG = 11
 
 # Project being edited
 project = None
