@@ -2,9 +2,7 @@
 
 | **Debian/Ubuntu package name** | **Description** |
 |:-------------------------------|:----------------|
-| gtk2-engines-pixbuf | Images handling |
-| librsvg2-common | svg support |
-| python-gtk2 | GTK+ python bindings |
+| python-gi | GTK3 Python bindings |
 | python-mlt | MLT python bindings, this pulls in MLT |
 | python-dbus | dbus python bindings |
 | libmlt-data | Some image and text resources for MLT |
@@ -13,9 +11,8 @@
 | swh-plugins | Additional audio filters |
 | python-cairo | Cairo bindings |
 | python-numpy | Math and arrays library |
-| python-gnome2 | Python Gnome bindings |
-| python-gobject-2 | GObject library bindings |
 | python-pil | PIL image manipulation library |
+| librsvg2-common | svg support |
 
 # Dropped  Dependencies #
 
@@ -23,3 +20,7 @@
 |:-------------------------------|:---------------|:------------|
 | melt | 0.6  | 0.8 |
 | fontconfig | 0.6  | 0.16 |
+| python-gtk2 |  0.6   | 1.2 |
+| gtk2-engines-pixbuf |  0.6   |  1.2 |
+| python-gnome2 |  0.6   |  1.2 |
+| python-gobject-2 |  0.6   |  1.2 |
