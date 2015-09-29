@@ -98,7 +98,7 @@ def _get_trim_limits(cut_frame, from_clip, to_clip):
         trim_limits["both_start"] = -1
     else:
         trim_limits["from_start"] = cut_frame - from_clip.clip_out
-        from_length = from_clip.get_length()
+        from_length = from_clip.get_length() # This is available media length, not current clip length
         trim_limits["from_end"] = cut_frame - from_clip.clip_out + from_length - 1
         trim_limits["both_start"] = cut_frame - (from_clip.clip_out - from_clip.clip_in)
     if to_clip == None:
@@ -107,7 +107,7 @@ def _get_trim_limits(cut_frame, from_clip, to_clip):
         trim_limits["both_end"] = -1
     else:
         trim_limits["to_start"] = cut_frame - to_clip.clip_in
-        to_length = to_clip.get_length()
+        to_length = to_clip.get_length() # This is available media length, not current clip length
         trim_limits["to_end"] = cut_frame - to_clip.clip_in + to_length
         trim_limits["both_end"] = cut_frame + (to_clip.clip_out - to_clip.clip_in)
     

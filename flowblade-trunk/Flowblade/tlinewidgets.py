@@ -763,6 +763,28 @@ def draw_slide_overlay(cr, data):
     cr.set_source_surface(VIEW_SIDE_ICON, x, track_y + 4)
     cr.paint()
 
+def draw_clip_end_drag_overlay(cr, data):
+    if data["editing_clip_end"] == True:
+        end = data["frame"]  - pos
+        start = data["bound_start"]  - pos
+    else:
+        start = data["frame"]  - pos
+        end = data["bound_end"]  - pos
+
+    y = _get_track_y(data["track"].id)
+    
+    # Draw clips in draw range
+    cr.set_line_width(MOVE_CLIPS_LINE_WIDTH)
+    cr.set_source_rgb(*OVERLAY_COLOR)
+
+    clip_length = end - start
+    scale_length = clip_length * pix_per_frame
+    scale_in = start * pix_per_frame
+    track_height = data["track_height"]
+
+    cr.rectangle(scale_in, y + 1.5, scale_length, track_height - 2.5)
+    cr.stroke()
+
 def draw_compositor_move_overlay(cr, data):
     # Get data
     press_frame = data["press_frame"]

@@ -996,6 +996,8 @@ def get_media_type(file_path):
     return UNKNOWN
 
 def _clip_length(clip):
+    print "wwwww"
+    print (clip.clip_out - clip.clip_in + 1)
     return clip.clip_out - clip.clip_in + 1
 
 def _sort_compositors_comparator(a_comp, b_comp):

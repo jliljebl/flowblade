@@ -970,6 +970,8 @@ class EditorWindow:
             cursor =  Gdk.Cursor.new(Gdk.TCROSS)
         elif mode == editorstate.MULTI_MOVE:
             cursor = Gdk.Cursor.new_from_surface(display, MULTIMOVE_CURSOR, 4, 8)
+        elif mode == editorstate.CLIP_END_DRAG:
+            cursor = Gdk.Cursor.new(Gdk.CursorType.SB_H_DOUBLE_ARROW)
         else:
             cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR)
         
