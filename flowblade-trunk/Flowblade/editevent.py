@@ -541,7 +541,9 @@ def tline_canvas_mouse_pressed(event, frame):
 
     # If clip end drag mode is for some reason still active, exit to default edit mode
     if EDIT_MODE() == editorstate.CLIP_END_DRAG:
-        editorstate.edit_mode = INSERT_MOVE
+        editorstate.edit_mode = editorstate.INSERT_MOVE
+        # This shouldn't happen unless for some reason mouse release didn't hit clipenddragmode listener.
+        print "EDIT_MODE() == editorstate.CLIP_END_DRAG at mouse press!"
 
     #  Check if compositor is hit and if so handle compositor editing
     if editorstate.current_is_move_mode() and timeline_visible():

@@ -300,7 +300,7 @@ class EditAction:
         self.turn_on_stop_for_edit = False # set true in redo_func for edits that need it
 
         # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED IN MLT
-        # Length of the blank on hidden track covering the whole seuqunce
+        # Length of the blank on hidden track covering the whole sequence
         # needs to be updated after every edit EXCEPT after trim edits which
         # update the hidden track themselves and this flag "update_hidden_track" to False
         self.update_hidden_track_blank = True
@@ -1136,8 +1136,8 @@ def _trim_start_redo(self):
     _insert_clip(self.track, self.clip, self.index,
                  self.clip.clip_in + self.delta, self.clip.clip_out)
 
-    # Reinit one roll trim 
-    if self.first_do == True:
+    # Reinit one roll trim, when used with clip start drag this is not needed
+    if  hasattr(self, "first_do") and self.first_do == True:
         self.first_do = False
         self.undo_done_callback(self.track, self.index, True)
 
@@ -1168,7 +1168,7 @@ def _trim_end_redo(self):
 
 #------------------ TRIM LAST CLIP END
 # "track","clip","index","delta", "first_do"
-# "undo_done_callback" <- THIS IS REALLY BADLY NAMED, IT SHOULD BE FIRST DO CALLBACK
+# "undo_done_callback" <- THIS IS BADLY NAMED, IT SHOULD BE FIRST DO CALLBACK
 def trim_last_clip_end_action(data): 
     action = EditAction(_trim_last_clip_end_undo,_trim_last_clip_end_redo, data)
     action.exit_active_trimmode_on_edit = False
@@ -1185,11 +1185,91 @@ def _trim_last_clip_end_redo(self):
     _insert_clip(self.track, self.clip, self.index,
                  self.clip.clip_in, self.clip.clip_out + self.delta)
 
-    # Reinit one roll trim for 
-    if self.first_do == True:
+    # Reinit one roll trim for continued trim mode, whenused with clip end drag this is not needed
+    if hasattr(self, "first_do") and self.first_do == True:
         self.first_do = False
         self.undo_done_callback(self.track)
 
+# ----------------------------------- CLIP END DRAG ON BLANK
+# "track","index","clip","blank_clip_length","delta"
+def clip_end_drag_on_blank_action(data):
+    action = EditAction(_clip_end_drag_on_blank_undo, _clip_end_drag_on_blank_redo, data)
+    return action
+
+def _clip_end_drag_on_blank_undo(self):
+    _remove_clip(self.track, self.index)
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.clip, self.index,
+                 self.clip.clip_in, self.orig_out)
+    _insert_blank(self.track, self.index + 1, self.blank_clip_length)
+    
+def _clip_end_drag_on_blank_redo(self):
+    _remove_clip(self.track, self.index)
+    _remove_clip(self.track, self.index)
+    self.orig_out = self.clip.clip_out
+    _insert_clip(self.track, self.clip, self.index,
+                 self.clip.clip_in, self.clip.clip_out + self.delta)
+    _insert_blank(self.track, self.index + 1, self.blank_clip_length - self.delta)
+
+# ----------------------------------- CLIP END DRAG REPLACE BLANK
+# "track","index","clip","blank_clip_length","delta"
+def clip_end_drag_replace_blank_action(data):
+    action = EditAction(_clip_end_drag_replace_blank_undo, _clip_end_drag_replace_blank_redo, data)
+    return action
+
+def _clip_end_drag_replace_blank_undo(self):
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.clip, self.index,
+                 self.clip.clip_in, self.orig_out)
+    _insert_blank(self.track, self.index + 1, self.blank_clip_length)
+    
+def _clip_end_drag_replace_blank_redo(self):
+    _remove_clip(self.track, self.index)
+    _remove_clip(self.track, self.index)
+    self.orig_out = self.clip.clip_out
+    _insert_clip(self.track, self.clip, self.index,
+                 self.clip.clip_in, self.clip.clip_out + self.delta)
+
+# ----------------------------------- CLIP START DRAG ON BLANK
+# "track","index","clip","blank_clip_length","delta"
+def clip_start_drag_on_blank_action(data):
+    action = EditAction(_clip_start_drag_on_blank_undo, _clip_start_drag_on_blank_redo, data)
+    return action
+
+def _clip_start_drag_on_blank_undo(self):
+    _remove_clip(self.track, self.index - 1)
+    _remove_clip(self.track, self.index - 1)
+    _insert_blank(self.track, self.index - 1, self.blank_clip_length)
+    _insert_clip(self.track, self.clip, self.index,
+                 self.orig_in, self.clip.clip_out)
+
+def _clip_start_drag_on_blank_redo(self):
+    _remove_clip(self.track, self.index - 1)
+    _remove_clip(self.track, self.index - 1)
+    self.orig_in = self.clip.clip_in
+    _insert_blank(self.track, self.index - 1, self.blank_clip_length + self.delta)
+    _insert_clip(self.track, self.clip, self.index,
+                 self.clip.clip_in + self.delta, self.clip.clip_out)
+
+# ----------------------------------- CLIP START DRAG REPLACE BLANK
+# "track","index","clip","blank_clip_length","delta"
+def clip_start_drag_replace_blank_action(data):
+    action = EditAction(_clip_start_drag_replace_blank_undo, _clip_start_drag_replace_blank_redo, data)
+    return action
+
+def _clip_start_drag_replace_blank_undo(self):
+    _remove_clip(self.track, self.index - 1)
+    _insert_blank(self.track, self.index - 1, self.blank_clip_length)
+    _insert_clip(self.track, self.clip, self.index,
+                 self.orig_in, self.clip.clip_out)
+
+def _clip_start_drag_replace_blank_redo(self):
+    _remove_clip(self.track, self.index - 1)
+    _remove_clip(self.track, self.index - 1)
+    self.orig_in = self.clip.clip_in
+    _insert_clip(self.track, self.clip, self.index - 1,
+                 self.clip.clip_in + self.delta, self.clip.clip_out)
+                 
 #------------------- ADD FILTER
 # "clip","filter_info","filter_edit_done_func"
 # Adds filter to clip.
@@ -1693,7 +1773,6 @@ def _unmute_clip_redo(self):
     _do_clip_unmute(self.clip)
 
 
-
 # ----------------------------------------- TRIM END OVER BLANKS
 #"track","clip","clip_index"
 def trim_end_over_blanks(data):
@@ -1724,7 +1803,6 @@ def _trim_end_over_blanks_redo(self):
     # trim clip
     _remove_clip(self.track, self.clip_index)
     _insert_clip(self.track, self.clip, self.clip_index, self.clip.clip_in, self.clip.clip_out + total_length) 
-
 
 # ----------------------------------------- TRIM START OVER BLANKS
 # "track","clip","blank_index"
@@ -1859,7 +1937,6 @@ def _consolidate_selected_blanks_redo(self):
         total_length = total_length + length
     _insert_blank(self.track, self.index, total_length)
 
-
 #----------------------------------- CONSOLIDATE ALL BLANKS
 def consolidate_all_blanks(data):
     action = EditAction(_consolidate_all_blanks_undo,_consolidate_all_blanks_redo, data)
@@ -1904,8 +1981,6 @@ def _consolidate_all_blanks_redo(self):
                 _insert_blank(track, i, total_length)
                 self.consolidate_actions.append((track, i, removed_lengths))
                 break
-
-
 
 #----------------- RANGE OVERWRITE 
 # "track","clip","clip_in","clip_out","mark_in_frame","mark_out_frame"

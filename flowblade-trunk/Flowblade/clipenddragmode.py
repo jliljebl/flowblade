@@ -23,6 +23,7 @@ Module handles clip effects editing logic and gui
 """
 
 import gui
+import edit
 from editorstate import current_sequence
 import editorstate
 import tlinewidgets
@@ -33,9 +34,7 @@ _enter_mode = None
 _enter_draw_func = None
 
 
-def maybe_init_for_mouse_press(event, frame):
-    print "maybe"
-    
+def maybe_init_for_mouse_press(event, frame): 
     # See if we actually hit a clip
     track = tlinewidgets.get_track(event.y)
     if track == None:
@@ -48,6 +47,10 @@ def maybe_init_for_mouse_press(event, frame):
 
     clip = track.clips[clip_index]
     
+    if clip.is_blanck_clip:
+        return
+    
+    # Now we will in fact enter CLIP_END_DRAG edit mode
     # See if we're dragging clip end or start
     cut_frame = current_sequence().get_closest_cut_frame(track.id, frame)
     editing_clip_end = True
@@ -56,13 +59,15 @@ def maybe_init_for_mouse_press(event, frame):
     else:
         cut_frame = cut_frame - (clip.clip_out - clip.clip_in)
 
-    if editing_clip_end == True:
+    if editing_clip_end == True: # clip end drags
         bound_end = cut_frame - clip.clip_in + clip.get_length() # get_length() is available media length, not current clip length
-        bound_start = cut_frame
-    else:
+        bound_start = cut_frame - 1
+        if clip_index == len(track.clips) - 1: # last clip
+            bound_end = bound_end - 1
+    else: # clip beginning drags
         bound_start = cut_frame - clip.clip_in 
-        bound_end =  cut_frame + (clip.clip_out - clip.clip_in)
-    
+        bound_end =  cut_frame + (clip.clip_out - clip.clip_in) + 1
+
     global _enter_mode, _enter_draw_func, _edit_data
 
     _enter_mode = editorstate.edit_mode
@@ -74,37 +79,98 @@ def maybe_init_for_mouse_press(event, frame):
     _edit_data["track"] = track
     _edit_data["clip_index"] = clip_index
     _edit_data["frame"] = frame
+    _edit_data["press_frame"] = frame
     _edit_data["editing_clip_end"] = editing_clip_end
     _edit_data["bound_end"] = bound_end
     _edit_data["bound_start"] = bound_start
     _edit_data["track_height"] = track.height
+    _edit_data["orig_in"] = cut_frame - 1
+    _edit_data["orig_out"] = cut_frame + (clip.clip_out - clip.clip_in)
 
     tlinewidgets.set_edit_mode(_edit_data, tlinewidgets.draw_clip_end_drag_overlay)
 
     gui.editor_window.set_cursor_to_mode()
 
 def mouse_press(event, frame):
-    print "press"
     frame = _legalize_frame(frame)
     _edit_data["frame"] = frame
-    print frame
+
     updater.repaint_tline()
 
 def mouse_move(x, y, frame, state):
-    print "move"
     frame = _legalize_frame(frame)
     _edit_data["frame"] = frame
-    print frame
     updater.repaint_tline()
 
 def mouse_release(x, y, frame, state):
-    print "release"
-
     frame = _legalize_frame(frame)
     _edit_data["frame"] = frame
+    updater.repaint_tline()
+
+    track = _edit_data["track"]
+    clip_index = _edit_data["clip_index"]
+    clip = track.clips[clip_index]
+    orig_in = _edit_data["orig_in"]
+    orig_out = _edit_data["orig_out"]
     
     # do edit
-    
+    # Dragging clip end
+    if _edit_data["editing_clip_end"] == True:
+        delta = frame - orig_out
+         # next clip is not blank or last clip
+        if ((clip_index == len(track.clips) - 1) or 
+            (track.clips[clip_index + 1].is_blanck_clip == False)):
+            data = {"track":track,
+                    "index":clip_index,
+                    "clip":clip,
+                    "delta":delta}
+            action = edit.trim_last_clip_end_action(data)
+            action.do_edit()
+        else: # next clip is blank
+            blank_clip = track.clips[clip_index + 1]
+            blank_clip_length = blank_clip.clip_length()
+            data = {"track":track,
+                    "index":clip_index,
+                    "clip":clip,
+                    "blank_clip_length":blank_clip_length,
+                    "delta":delta}
+            if delta < blank_clip_length: # partial blank overwrite
+                action = edit.clip_end_drag_on_blank_action(data)
+                action.do_edit()
+            else: # full blank replace
+                action = edit.clip_end_drag_replace_blank_action(data)
+                action.do_edit()
+    else:# Dragging clip start
+        delta =  frame - orig_in  - 1 # -1 because..uhh..inclusive exclusive something something
+        # prev clip is not blank or first clip
+        if ((clip_index == 0) or
+            (track.clips[clip_index - 1].is_blanck_clip == False)):
+            data = {"track":track,
+                    "index":clip_index,
+                    "clip":clip,
+                    "delta":delta}
+            action = edit.trim_start_action(data)
+            action.do_edit()
+        else: # prev clip is blank
+            blank_clip = track.clips[clip_index - 1]
+            blank_clip_length = blank_clip.clip_length()
+            data = {"track":track,
+                    "index":clip_index,
+                    "clip":clip,
+                    "blank_clip_length":blank_clip_length,
+                    "delta":delta}
+            if -delta < blank_clip_length: # partial blank overwrite
+                action = edit.clip_start_drag_on_blank_action(data)
+                action.do_edit()
+            else: # full blank replace
+                action = edit.clip_start_drag_replace_blank_action(data)
+                action.do_edit()
+
+    _exit_clip_end_drag()
+
+    updater.repaint_tline()
+
+def _exit_clip_end_drag(): 
     # Go back to enter mode
     editorstate.edit_mode = _enter_mode
     tlinewidgets.set_edit_mode(None, _enter_draw_func)
@@ -128,7 +194,3 @@ def _legalize_frame(frame):
             frame = start
     
     return frame
-    
-    
-
-    
