@@ -100,6 +100,9 @@ project_is_loading = False
 # Audio levels display mode, False means that audio levels are displayed on request
 display_all_audio_levels = True
 
+# Flag for window being in fullscreen mode
+fullscreen = False
+
 def current_is_move_mode():
     if ((edit_mode == INSERT_MOVE) or (edit_mode == OVERWRITE_MOVE) or (edit_mode == MULTI_MOVE)):
         return True

@@ -170,6 +170,7 @@ class EditorWindow:
             ('ProfilesManager', None, _('Profiles Manager'), None, None, lambda a:menuactions.profiles_manager()),
             ('Preferences', None, _('Preferences'), None, None, lambda a:preferenceswindow.preferences_dialog()),
             ('ViewMenu', None, _('View')),
+            ('FullScreen', None, _('Fullscreen'), 'F11', None, lambda a:menuactions.toggle_fullscreen()),
             ('ProjectMenu', None, _('Project')),
             ('AddMediaClip', None, _('Add Media Clip...'), None, None, lambda a: projectaction.add_media_files()),
             ('AddImageSequence', None, _('Add Image Sequence...'), None, None, lambda a:projectaction.add_image_sequence()),
@@ -253,6 +254,7 @@ class EditorWindow:
                     <menuitem action='Preferences'/>
                 </menu>
                 <menu action='ViewMenu'>
+                    <menuitem action='FullScreen'/>
                 </menu>
                 <menu action='ProjectMenu'>
                     <menuitem action='AddMediaClip'/>
@@ -680,8 +682,11 @@ class EditorWindow:
         self.app_v_paned.set_position(editorpersistance.prefs.app_v_paned_position)
 
     def _init_view_menu(self, menu_item):
-        menu_item.set_submenu(None)
-        menu = Gtk.Menu()
+        menu = menu_item.get_submenu()
+
+        # Full Screen -tem is already in menu, we need separator here
+        sep = Gtk.SeparatorMenuItem()
+        menu.append(sep)
 
         mb_menu_item = Gtk.MenuItem(_("Middlebar Layout").encode('utf-8'))
         mb_menu = Gtk.Menu()
@@ -776,8 +781,6 @@ class EditorWindow:
         zoom_fit_menu_item = Gtk.MenuItem(_("Zoom Fit").encode('utf-8'))
         zoom_fit_menu_item.connect("activate", lambda w: updater.zoom_project_length())
         menu.append(zoom_fit_menu_item)
-        
-        menu_item.set_submenu(menu)
                 
     def _init_gui_to_prefs(self):
         if editorpersistance.prefs.tabs_on_top == True:

@@ -38,6 +38,7 @@ from editorstate import PLAYER
 from editorstate import timeline_visible
 import keyframeeditor
 import medialog
+import menuactions
 import monitorevent
 import mltrefhold
 import tlineaction
@@ -123,13 +124,9 @@ def key_down(widget, event):
                 gui.media_list_view.select_all()
                 return True
         
-
-    #debug
     if event.keyval == Gdk.KEY_F11:
-        if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-            pass
+        menuactions.toggle_fullscreen()
         return True
-
 
     #debug
     if event.keyval == Gdk.KEY_F12:

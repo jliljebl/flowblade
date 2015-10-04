@@ -265,3 +265,13 @@ def _watermark_remove_callback(button, widgets):
 def jack_output_managing():
     dialog = jackaudio.JackAudioManagerDialog()
     #PLAYER().jack_output_on()
+
+
+def toggle_fullscreen():
+    print "toggle_fullscreen"
+    if editorstate.fullscreen == False:
+       gui.editor_window.window.fullscreen()
+       editorstate.fullscreen = True
+    else:
+       gui.editor_window.window.unfullscreen()
+       editorstate.fullscreen = False
