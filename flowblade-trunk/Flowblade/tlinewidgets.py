@@ -1323,8 +1323,8 @@ class TimeLineCanvas:
             if clip.sync_data != None:
                 self.sync_children.append((clip, track, scale_in))
 
-            # Draw audio level data
-            if clip.waveform_data == None and editorstate.display_all_audio_levels == True:
+            # Draw audio level data, except for IMAGE_SEQUENCE clips
+            if clip.waveform_data == None and editorstate.display_all_audio_levels == True and clip.media_type != appconsts.IMAGE_SEQUENCE:
                  clip.waveform_data = audiowaveformrenderer.get_waveform_data(clip)
                  
             if clip.waveform_data != None and scale_length > FILL_MIN:
@@ -1445,8 +1445,9 @@ class TimeLineCanvas:
                         cr.show_text(str(clip.sync_diff))
 
             if clip.waveform_data == None and editorstate.display_all_audio_levels == True and scale_length > FILL_MIN:
-                cr.set_source_surface(LEVELS_RENDER_ICON, int(scale_in) + 4, y + 8)
-                cr.paint()
+                if clip.media_type != appconsts.IMAGE_SEQUENCE:
+                    cr.set_source_surface(LEVELS_RENDER_ICON, int(scale_in) + 4, y + 8)
+                    cr.paint()
 
             # Get next draw position
             clip_start_frame += clip_length

@@ -74,7 +74,7 @@ def get_waveform_data(clip):
         return waveform
     except:
         pass
-    
+        
     # Load from disk if found, otherwise queue for levels render
     levels_file_path = _get_levels_file_path(clip.path)
     if os.path.isfile(levels_file_path):
@@ -229,7 +229,6 @@ class WaveformCreator(threading.Thread):
         #frames_cache[self.clip.path] = frame_levels
 
         for frame in range(0, len(frame_levels)):
-            print frame
             self.temp_clip.seek(frame)
             mlt.frame_get_waveform(self.temp_clip.get_frame(), 10, 50)
             val = self.levels.get(RIGHT_CHANNEL)
@@ -239,7 +238,6 @@ class WaveformCreator(threading.Thread):
             self.last_rendered_frame = frame
 
         write_file = file(self.file_cache_path, "wb")
-        print self.file_cache_path
         pickle.dump(frame_levels, write_file)
 
     def _get_temp_producer(self, clip_path, profile_desc):
