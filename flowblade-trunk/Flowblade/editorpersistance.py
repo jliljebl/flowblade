@@ -161,7 +161,10 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     gen_opts_widgets, edit_prefs_widgets, view_prefs_widgets = widgets_tuples_tuple
 
     default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo = gen_opts_widgets
-    auto_play_in_clip_monitor_check, auto_center_check, grfx_insert_length_spin, trim_exit_click, trim_quick_enter, remember_clip_frame, overwrite_clip_drop = edit_prefs_widgets
+    
+    auto_play_in_clip_monitor_check, auto_center_check, grfx_insert_length_spin, \
+    trim_exit_click, trim_quick_enter, remember_clip_frame, overwrite_clip_drop, cover_delete = edit_prefs_widgets
+    
     use_english, disp_splash, buttons_style, dark_theme, theme_combo, audio_levels_combo = view_prefs_widgets
 
     global prefs
@@ -178,7 +181,8 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.quick_enter_trims = trim_quick_enter.get_active()
     prefs.remember_monitor_clip_frame = remember_clip_frame.get_active()
     prefs.overwrite_clip_drop = (overwrite_clip_drop.get_active() == 0)
-        
+    prefs.trans_cover_delete = cover_delete.get_active()
+    
     prefs.use_english_always = use_english.get_active()
     prefs.display_splash_screen = disp_splash.get_active()
     prefs.buttons_style = buttons_style.get_active() # styles enum values and widget indexes correspond
@@ -252,3 +256,4 @@ class EditorPreferences:
         self.theme_fallback_colors = 0 # index oc gui._THEME_COLORS
         self.display_all_audio_levels = True
         self.overwrite_clip_drop = True
+        self.trans_cover_delete = True

@@ -174,6 +174,9 @@ def _edit_prefs_panel():
     overwrite_clip_drop.append_text(_("Overwrite blanks"))
     overwrite_clip_drop.append_text(_("Always insert"))
     overwrite_clip_drop.set_active(active)
+
+    cover_delete = Gtk.CheckButton()
+    cover_delete.set_active(prefs.trans_cover_delete)
     
     # Layout
     row1 = _row(guiutils.get_checkbox_row_box(auto_play_in_clip_monitor, Gtk.Label(label=_("Autoplay new Clips in Clip Monitor"))))
@@ -183,6 +186,7 @@ def _edit_prefs_panel():
     row6 = _row(guiutils.get_checkbox_row_box(quick_enter_trim, Gtk.Label(label=_("Quick enter Trim Modes"))))
     row7 = _row(guiutils.get_checkbox_row_box(remember_clip_frame, Gtk.Label(label=_("Remember Monitor Clip Frame"))))
     row8 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Media drag'n'drop action on non-V1 tracks")), overwrite_clip_drop, PREFERENCES_LEFT))
+    row9 = _row(guiutils.get_checkbox_row_box(cover_delete, Gtk.Label(label=_("Cover Transition/Fade on delete if possible"))))
     
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row5, False, False, 0)
@@ -192,11 +196,13 @@ def _edit_prefs_panel():
     vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row7, False, False, 0)
     vbox.pack_start(row8, False, False, 0)
+    vbox.pack_start(row9, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
     
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
-    return vbox, (auto_play_in_clip_monitor, auto_center_on_stop, gfx_length_spin, trim_exit_on_empty, quick_enter_trim, remember_clip_frame, overwrite_clip_drop)
+    return vbox, (auto_play_in_clip_monitor, auto_center_on_stop, gfx_length_spin,
+                   trim_exit_on_empty, quick_enter_trim, remember_clip_frame, overwrite_clip_drop, cover_delete)
 
 def _view_prefs_panel():
     prefs = editorpersistance.prefs

@@ -166,14 +166,15 @@ def splice_out_button_pressed():
     # See if such delete should be attempted.
     # Exit if done succesfully, do normal splice out and report if failed
     cover_delete_failed = False
-    if movemodes.selected_range_out == movemodes.selected_range_in:
-        clip = track.clips[movemodes.selected_range_in]
-        if hasattr(clip, "rendered_type") and (track.id >= current_sequence().first_video_index):
-            cover_delete_success =  _attempt_clip_cover_delete(clip, track, movemodes.selected_range_in)
-            if cover_delete_success:
-                return # A successful cover delete happened
-            else:
-                cover_delete_failed = True # A successful cover delete failed, do normal delete and gove info
+    if editorpersistance.prefs.trans_cover_delete == True:
+        if movemodes.selected_range_out == movemodes.selected_range_in:
+            clip = track.clips[movemodes.selected_range_in]
+            if hasattr(clip, "rendered_type") and (track.id >= current_sequence().first_video_index):
+                cover_delete_success =  _attempt_clip_cover_delete(clip, track, movemodes.selected_range_in)
+                if cover_delete_success:
+                    return # A successful cover delete happened
+                else:
+                    cover_delete_failed = True # A successful cover delete failed, do normal delete and gove info
 
     # Do delete
     data = {"track":track,
