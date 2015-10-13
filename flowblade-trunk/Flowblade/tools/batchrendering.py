@@ -63,7 +63,7 @@ PROJECTS_DIR = "batchrender/projects/"
 PID_FILE = "batchrenderingpid"
 
 CURRENT_RENDER_PROJECT_FILE = "current_render_project.flb"
-CURRNET_RENDER_RENDER_ITEM = "current_render.renderitem"
+CURRENT_RENDER_RENDER_ITEM = "current_render.renderitem"
          
 WINDOW_WIDTH = 800
 QUEUE_HEIGHT = 400
@@ -1057,7 +1057,7 @@ def add_single_render_item(flowblade_project, render_path, args_vals_list, mark_
     persistance.save_project(flowblade_project, project_path)
 
     # Write render item file
-    render_item.save_as_single_render_item(hidden_dir + CURRNET_RENDER_RENDER_ITEM)
+    render_item.save_as_single_render_item(hidden_dir + CURRENT_RENDER_RENDER_ITEM)
 
 def launch_single_rendering():
     # This is called from GTK thread, so we need to launch process from another thread to 
@@ -1137,7 +1137,7 @@ class SingleRenderThread(threading.Thread):
         hidden_dir = utils.get_hidden_user_dir_path()
 
         try:
-            data_file_path = hidden_dir + CURRNET_RENDER_RENDER_ITEM
+            data_file_path = hidden_dir + CURRENT_RENDER_RENDER_ITEM
             data_file = open(data_file_path)
             render_item = pickle.load(data_file)
             self.error_status = None

@@ -777,10 +777,11 @@ def tline_media_drop(media_file, x, y, use_marks=False):
         new_clip.mark_in = in_fr
         new_clip.mark_out = out_fr
 
-    if track.id != current_sequence().first_video_track().id:
-        drop_done = _attempt_dnd_overwrite(track, new_clip, frame)
-        if drop_done == True:
-            return
+    if editorpersistance.prefs.overwrite_clip_drop == True:
+        if track.id != current_sequence().first_video_track().id:
+            drop_done = _attempt_dnd_overwrite(track, new_clip, frame)
+            if drop_done == True:
+                return
 
     do_clip_insert(track, new_clip, frame)
 
