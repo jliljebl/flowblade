@@ -257,6 +257,7 @@ class Project:
 
     # ------------------------------------------------------- Snapshot save project
     def save_backup_snapshot(self, root_folder_path):
+        print "wwww"
         media_folder = root_folder_path +  "media/"
 
         d = os.path.dirname(media_folder)
@@ -269,8 +270,10 @@ class Project:
             # Copy asset file and fix path
             directory, file_name = os.path.split(media_file.path)
             media_file_copy = media_folder + file_name
+            print media_file_copy, "out side"
             if media_file_copy in asset_paths: # Create different filename for files 
                                                # that have same filename but different path
+                print "in side"
                 file_name = self.get_unique_name(media_file.path, file_name)
                 media_file_copy = media_folder + file_name
                 

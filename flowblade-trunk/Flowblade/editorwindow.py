@@ -152,6 +152,9 @@ class EditorWindow:
             ('EditMenu', None, _('_Edit')),
             ('Undo', None, _('_Undo'), '<control>Z', None, undo.do_undo_and_repaint),
             ('Redo', None, _('_Redo'), '<control>Y', None, undo.do_redo_and_repaint),
+            ('Copy', None, _('Copy'), '<control>C', None, lambda a:projectaction.new_project()),
+            ('Paste', None, _('Paste'), '<control>V', None, lambda a:projectaction.load_project()),
+            ('PasteFilters', None, _('Paste Filters'), '<control><alt>V', None, lambda a:projectaction.load_project()),
             ('AddFromMonitor', None, _('Add Monitor Clip')),
             ('AppendClip', None, _('Append'), None, None, lambda a:tlineaction.append_button_pressed()),
             ('InsertClip', None, _('Insert'), None, None, lambda a:tlineaction.insert_button_pressed()),
@@ -229,6 +232,10 @@ class EditorWindow:
                 <menu action='EditMenu'>
                     <menuitem action='Undo'/>
                     <menuitem action='Redo'/>
+                    <separator/>
+                    <menuitem action='Copy'/>
+                    <menuitem action='Paste'/>
+                    <menuitem action='PasteFilters'/>
                     <separator/>
                     <menu action='AddFromMonitor'>
                         <menuitem action='AppendClip'/>
