@@ -254,10 +254,11 @@ class Project:
             return None
 
         return os.path.dirname(last_render_event.data)
-
+    """
+    not handled here anymore
     # ------------------------------------------------------- Snapshot save project
+
     def save_backup_snapshot(self, root_folder_path):
-        print "wwww"
         media_folder = root_folder_path +  "media/"
 
         d = os.path.dirname(media_folder)
@@ -294,10 +295,11 @@ class Project:
                             shutil.copyfile(clip.path, clip_file_copy) # only rendered files are copied here
                             asset_paths[clip.path] = clip_file_copy # This stuff is already md5 hashed, so no duplicate problems here
 
+
     def get_unique_name(self, file_path, file_name):
         (name, ext) = os.path.splitext(file_name)
         return md5.new(file_path).hexdigest() + ext
-
+    """
         
 class MediaFile:
     """

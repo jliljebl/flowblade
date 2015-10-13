@@ -32,6 +32,7 @@ from operator import itemgetter
 import appconsts
 import dialogs
 import dialogutils
+import glassbuttons
 import gui
 import guicomponents
 import edit
@@ -729,8 +730,6 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
                                         window_text)
 
 def _fade_render_complete(clip_path):
-    print "fade render complete"
-
     global transition_render_data
     clip_index, fade_type, clip, track, length = transition_render_data
 
@@ -775,6 +774,10 @@ def mouse_dragged_out(event):
 
 # --------------------------------------------------- copy/paste
 def do_timeline_objects_copy():
+
+    if _timeline_has_focus() == False:
+        return 
+
     if movemodes.selected_track != -1:
         # copying clips
         track = current_sequence().tracks[movemodes.selected_track]
@@ -783,15 +786,18 @@ def do_timeline_objects_copy():
             clone_clip = current_sequence().clone_track_clip(track, i)
             clone_clips.append(clone_clip)
         editorstate.set_copy_paste_objects(clone_clips)
+        return
 
 def do_timeline_objects_paste():
+    if _timeline_has_focus() == False:
+        return 
+        
     track = current_sequence().get_first_active_track()
     if track == None:
-        return
-
+        return 
     paste_objs = editorstate.get_copy_paste_objects()
     if paste_objs == None:
-        return
+        return 
 
     tline_pos = editorstate.current_tline_frame()
 
@@ -804,6 +810,17 @@ def do_timeline_objects_paste():
     # Paste clips
     editevent.do_multiple_clip_insert(track, paste_objs, tline_pos)
 
+def _timeline_has_focus(): # copied from keyevents.by. maybe put in utils?
+    if(gui.tline_canvas.widget.is_focus()
+       or gui.tline_column.widget.is_focus()
+       or gui.editor_window.modes_selector.widget.is_focus()
+       or (gui.pos_bar.widget.is_focus() and timeline_visible())
+       or gui.tline_scale.widget.is_focus()
+       or glassbuttons.focus_group_has_focus(glassbuttons.DEFAULT_FOCUS_GROUP)):
+        return True
+
+    return False
+    
 #------------------------------------------- markers
 def marker_menu_lauch_pressed(widget, event):
     guicomponents.get_markers_popup_menu(event, _marker_menu_item_activated)

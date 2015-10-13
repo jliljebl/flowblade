@@ -429,7 +429,7 @@ class SnaphotSaveThread(threading.Thread):
             if media_file.type != appconsts.IMAGE_SEQUENCE:
                 media_file_copy = media_folder + file_name
                 if media_file_copy in asset_paths.values(): # Create different filename for files 
-                                                   # that have same filename but different path
+                                                             # that have same basename but different path
                     file_name = get_snapshot_unique_name(media_file.path, file_name)
                     media_file_copy = media_folder + file_name
                     

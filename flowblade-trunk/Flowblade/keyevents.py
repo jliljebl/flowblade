@@ -134,7 +134,6 @@ def key_down(widget, event):
             pass
         return True
 
-    
     # Key event was not handled here.
     return False
     
