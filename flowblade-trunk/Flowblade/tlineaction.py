@@ -810,6 +810,40 @@ def do_timeline_objects_paste():
     # Paste clips
     editevent.do_multiple_clip_insert(track, paste_objs, tline_pos)
 
+def do_timeline_filters_paste():
+    if _timeline_has_focus() == False:
+        return 
+        
+    track = current_sequence().get_first_active_track()
+    if track == None:
+        return 
+
+    paste_objs = editorstate.get_copy_paste_objects()
+    if paste_objs == None:
+        return 
+
+    if movemodes.selected_track == -1:
+        return
+        
+    target_clips = []
+    track = current_sequence().tracks[movemodes.selected_track]
+    for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
+        target_clips.append(track.clips[i])
+
+    # First clip of selection is used as filters source
+    source_clip = paste_objs[0]
+
+    # Currently selected clips are target clips
+    target_clips = []
+    track = current_sequence().tracks[movemodes.selected_track]
+    for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
+        target_clips.append(track.clips[i])
+        
+    for target_clip in target_clips:
+        data = {"clip":target_clip,"clone_source_clip":source_clip}
+        action = edit.paste_filters_action(data)
+        action.do_edit()
+
 def _timeline_has_focus(): # copied from keyevents.by. maybe put in utils?
     if(gui.tline_canvas.widget.is_focus()
        or gui.tline_column.widget.is_focus()

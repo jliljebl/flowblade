@@ -1372,7 +1372,7 @@ def _remove_multiple_filters_redo(self):
         updater.clear_clip_from_editors(clip)
 
 # -------------------------------------- CLONE FILTERS
-#"clip","clone_source_clip"
+# "clip","clone_source_clip"
 def clone_filters_action(data):
     action = EditAction(_clone_filters_undo, _clone_filters_redo, data)
     return action
@@ -1391,6 +1391,27 @@ def _clone_filters_redo(self):
     self.clip.filters = self.clone_filters
     _attach_all(self.clip)
 
+# -------------------------------------- PASTE FILTERS
+# "clip","clone_source_clip"
+def paste_filters_action(data):
+    action = EditAction(_paste_filters_undo, _paste_filters_redo, data)
+    return action
+
+def _paste_filters_undo(self):
+    _detach_all(self.clip)
+    self.clip.filters = self.old_filters
+    _attach_all(self.clip)
+    
+def _paste_filters_redo(self):
+    if not hasattr(self, "clone_filters"):
+        self.clone_filters = current_sequence().clone_filters(self.clone_source_clip)
+        self.old_filters = self.clip.filters
+
+    _detach_all(self.clip)
+    new_filters = self.old_filters + self.clone_filters
+    self.clip.filters = new_filters
+    _attach_all(self.clip)
+    
 # -------------------------------------- ADD COMPOSITOR ACTION
 # "origin_clip_id",in_frame","out_frame","compositor_type","a_track","b_track"
 def add_compositor_action(data):
