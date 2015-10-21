@@ -552,7 +552,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
 
     # Get values to build transition render sequence
     # Divide transition lenght between clips, odd frame goes to from_clip 
-    real_length = length + 1 # first frame is full from clip frame so we are going to have to drop that
+    real_length = length + 1 # first frame is 100% from clip frame so we are going to have to drop that
     to_part = real_length / 2
     from_part = real_length - to_part
 
@@ -774,8 +774,14 @@ def mouse_dragged_out(event):
 
 # --------------------------------------------------- copy/paste
 def do_timeline_objects_copy():
-
     if _timeline_has_focus() == False:
+        # try to extract text to clipboard because user pressed CTRL + C
+        copy_source = gui.editor_window.window.get_focus()
+        try:
+            copy_source.copy_clipboard()
+        except:# selected widget was not a Gtk.Editable that can provide text to clipboard
+            pass
+
         return 
 
     if movemodes.selected_track != -1:
@@ -854,7 +860,7 @@ def _timeline_has_focus(): # copied from keyevents.by. maybe put in utils?
         return True
 
     return False
-    
+
 #------------------------------------------- markers
 def marker_menu_lauch_pressed(widget, event):
     guicomponents.get_markers_popup_menu(event, _marker_menu_item_activated)
