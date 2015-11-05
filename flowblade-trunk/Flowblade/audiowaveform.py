@@ -96,9 +96,7 @@ def clear_waveform(data):
     updater.repaint_tline()
 
 def _get_unique_name_for_media(media_file_path):
-    size_str = str(os.path.getsize(media_file_path))
-    file_name = md5.new(media_file_path + size_str).hexdigest()
-    return file_name
+    return utils.get_unique_name_for_audio_levels_file(media_file_path, PROJECT().profile)
 
 
 class WaveformCreator(threading.Thread):    
@@ -109,7 +107,7 @@ class WaveformCreator(threading.Thread):
         self.file_cache_path = utils.get_hidden_user_dir_path() + appconsts.AUDIO_LEVELS_DIR + _get_unique_name_for_media(clip.path)
         self.track_height = track_height
         self.abort = False
-        self.clip_media_length = PROJECT().get_media_file_for_path(self.clip.path).length
+        self.clip_media_length = self.temp_clip.get_length()
         self.last_rendered_frame = 0
         self.stopped = False
         self.dialog = dialog

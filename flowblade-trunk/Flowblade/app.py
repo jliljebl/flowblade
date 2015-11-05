@@ -487,6 +487,7 @@ def open_project(new_project):
     stop_autosave()
     audiomonitoring.close_audio_monitor()
     audiowaveformrenderer.clear_cache()
+    audiowaveform.frames_cache = {}
 
     editorstate.project = new_project
 

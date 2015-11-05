@@ -76,7 +76,7 @@ def get_waveform_data(clip):
         pass
         
     # Load from disk if found, otherwise queue for levels render
-    levels_file_path = _get_levels_file_path(clip.path)
+    levels_file_path = _get_levels_file_path(clip.path, editorstate.PROJECT().profile)
     if os.path.isfile(levels_file_path):
         f = open(levels_file_path)
         waveform = pickle.load(f)
@@ -103,7 +103,7 @@ def launch_audio_levels_rendering(file_names):
     rendered_media = ""
 
     for media_file in file_names:
-        levels_file_path = _get_levels_file_path(media_file)
+        levels_file_path = _get_levels_file_path(media_file, editorstate.PROJECT().profile)
         if os.path.isfile(levels_file_path):
             continue
         else:
@@ -123,8 +123,8 @@ def launch_audio_levels_rendering(file_names):
     single_render_launch_thread = AudioRenderLaunchThread(rendered_media, profile_desc)
     single_render_launch_thread.start()
 
-def _get_levels_file_path(media_file):
-    return utils.get_hidden_user_dir_path() + appconsts.AUDIO_LEVELS_DIR + utils.get_unique_name_for_audio_levels_file(media_file)
+def _get_levels_file_path(media_file_path, profile):
+    return utils.get_hidden_user_dir_path() + appconsts.AUDIO_LEVELS_DIR + utils.get_unique_name_for_audio_levels_file(media_file_path, profile)
  
 
 class AudioRenderLaunchThread(threading.Thread):
@@ -220,13 +220,13 @@ class WaveformCreator(threading.Thread):
     def __init__(self, clip_path, profile_desc):
         threading.Thread.__init__(self)
         self.clip_path = clip_path
-        self.temp_clip = self._get_temp_producer(clip_path, profile_desc)
-        self.file_cache_path =_get_levels_file_path(clip_path)
+        profile = mltprofiles.get_profile(profile_desc)
+        self.temp_clip = self._get_temp_producer(clip_path, profile)
+        self.file_cache_path =_get_levels_file_path(clip_path, profile)
         self.last_rendered_frame = 0
 
     def run(self):
         frame_levels = [None] * self.clip_media_length 
-        #frames_cache[self.clip.path] = frame_levels
 
         for frame in range(0, len(frame_levels)):
             self.temp_clip.seek(frame)
@@ -240,8 +240,7 @@ class WaveformCreator(threading.Thread):
         write_file = file(self.file_cache_path, "wb")
         pickle.dump(frame_levels, write_file)
 
-    def _get_temp_producer(self, clip_path, profile_desc):
-        profile = mltprofiles.get_profile(profile_desc)
+    def _get_temp_producer(self, clip_path, profile):
         temp_producer = mlt.Producer(profile, str(clip_path))
         channels = mlt.Filter(profile, "audiochannels")
         converter = mlt.Filter(profile, "audioconvert")
