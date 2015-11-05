@@ -1868,38 +1868,53 @@ def get_mode_selector_popup_menu(launcher, event, callback):
     menu = tools_menu
     guiutils.remove_children(menu)
     menu.set_accel_group(gui.editor_window.accel_group)
+    menu.set_take_focus(False)
+    menu_items = []
 
     menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "insertmove_cursor.png"), _("Insert"), callback, 0)
     menu_item.set_accel_path("<Actions>/WindowActions/InsertMode")
     menu.add(menu_item)
+    menu_items.append(menu_item)
 
     menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "overwrite_cursor.png"),    _("Overwrite"), callback, 1)
     menu_item.set_accel_path("<Actions>/WindowActions/OverMode")
     menu.add(menu_item)
-
+    menu_items.append(menu_item)
+    
     menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "oneroll_cursor.png"), _("Trim"), callback, 2)
     menu_item.set_accel_path("<Actions>/WindowActions/OneRollMode")        
     menu.add(menu_item)
-
+    menu_items.append(menu_item)
+    
     menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "tworoll_cursor.png"), _("Roll"), callback, 3)
     menu_item.set_accel_path("<Actions>/WindowActions/TwoRollMode") 
     menu.add(menu_item)
-
+    menu_items.append(menu_item)
+    
     menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "slide_cursor.png"), _("Slip"), callback, 4)
     menu_item.set_accel_path("<Actions>/WindowActions/SlideMode") 
     menu.add(menu_item)
-
+    menu_items.append(menu_item)
+    
     menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "multimove_cursor.png"), _("Spacer"), callback, 5)
     menu_item.set_accel_path("<Actions>/WindowActions/MultiMode") 
     menu.add(menu_item)
+    menu_items.append(menu_item)
+    
+    menu.connect("hide", lambda w : _tools_menu_hidden(w,menu_items))
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
+
+def _tools_menu_hidden(tools_menu, menu_items):
+    # needed to make number 1-6 work elsewhere in the application
+    for menu_item in menu_items:
+        menu_item.set_accel_path(None)
 
 def get_file_filter_popup_menu(launcher, event, callback):
     menu = file_filter_menu

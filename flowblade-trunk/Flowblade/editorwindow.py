@@ -333,7 +333,7 @@ class EditorWindow:
         menu_vbox = Gtk.VBox(False, 0)
         menu_vbox.pack_start(self.menubar, False, True, 0)
 
-        # Media manager
+        # Media panel
         self.bin_list_view = guicomponents.BinListView(
                                         projectaction.bin_selection_changed, 
                                         projectaction.bin_name_edited)
@@ -374,7 +374,7 @@ class EditorWindow:
 
         mm_panel = guiutils.set_margins(self.mm_paned, 2, 2, 6, 2)
 
-        # Effects
+        # Effects panel
         self.effect_select_list_view = guicomponents.FilterListView()
         self.effect_select_combo_box = Gtk.ComboBoxText()
         self.effect_select_list_view.treeview.connect("row-activated", clipeffectseditor.effect_select_row_double_clicked)
@@ -396,7 +396,7 @@ class EditorWindow:
 
         self.effects_panel = guiutils.set_margins(effects_hbox, 2, 2, 2, 2)
         
-        # Compositors
+        # Compositors panel
         compositor_clip_panel = compositeeditor.get_compositor_clip_panel()
         compositor_editor_panel = guiutils.set_margins(compositeeditor.widgets.value_edit_frame, 0, 0, 4, 0)
 
@@ -407,7 +407,7 @@ class EditorWindow:
 
         self.compositors_panel = compositors_hbox
 
-        # Render
+        # Render panel
         try:
             render.create_widgets()
             render_panel_left = rendergui.get_render_panel_left(render.widgets)
@@ -434,7 +434,7 @@ class EditorWindow:
 
         render_panel = guiutils.set_margins(render_hbox, 2, 6, 8, 6)
 
-        # Media log events List
+        # Range Log panel
         media_log_events_list_view = medialog.get_media_log_list_view()   
         events_panel = medialog.get_media_log_events_panel(media_log_events_list_view)
 
