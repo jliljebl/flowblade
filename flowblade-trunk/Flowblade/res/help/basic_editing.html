@@ -184,7 +184,20 @@ Bin must be empty before removing. A project must always have at least one Bin.<
 <h4>Drag'n'Drop</h4>
 <ul>
 <li> Press on a Media File in <b>Media</b> tab and drag it on top of the track you want to place it on. </li>
-<li> Clip will be inserted on the track at the nearest cut.</li>
+
+<li> <i>'Overwrite blank' </i> is selected as preference for drag'n'drop action:</li>
+<ul>
+<li> On track V1 clip will be inserted on the track at the nearest cut. </li>
+<li> On non-V1 tracks:. </li>
+<ul>
+<li> Clip will be inserted if dropped on a clip. </li>
+<li> Clip will overwrite available blank and empty space and will perform insert for the length of frames that would be overwritten.  </li>
+</ul>
+</ul>
+<li>  <i>'Always Insert' </i> is selected as preference for drag'n'drop action:</li>
+<ul>
+<li> Clip will be inserted on the track at the nearest cut. </li>
+</ul>
 </ul>
 
 <h4>From Monitor</h4>
@@ -232,6 +245,12 @@ Use  <a href="edit_tools.html#insert">Insert Tool</a>,  <a href="edit_tools.html
 <li> Press <b>Cut</b> button or press <b>X</b> on the keyboard.</li>
 </ul>
 </ol>
+
+
+<h4>Deleting Clips</h4>
+<p><b>Splice Out</b>: Select clip(s) and press <b>Delete</b> key or use the <b>Splice Out</b> button on middle bar. All the clips in the track after the deleted clip(s) are moved to left to cover the created empty space. Some editors call this operation <i>Ripple Delete</i>.</p>
+<p><b>Lift</b>: Select clip(s) and press the <b>Lift</b> button on the middle bar. Clip is replaced with a blank if it is in middle of track. Other clips on the track are not moved.
+<p><b>Fade/Transition cover delete</b>: Select a single rendered fade or transition clip and press <b>Delete</b> key or button. If clips before and after of the deleted clip have frames available, then the space left by the deleted clip will covered using material from adjacent clips. If material is not available a splice out will be performed. A preference exists to always perform splice out on fades and transitions.
 
 <div class="note">
 <b>Use Keyboard Shortcuts!</b> It is much faster to use <b>X</b> key to cut clips and <b>Delete</b> key to splice out clips than it is to use buttons for the same operations.

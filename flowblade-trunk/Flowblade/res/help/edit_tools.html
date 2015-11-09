@@ -1,7 +1,7 @@
  <!DOCTYPE html>
 <html>
 <head>
-  <title>Page Title</title>
+  <title>Edit Tools</title>
   <link rel="stylesheet" href="style.css">
   <META CHARSET="UTF-8">
 </head>
@@ -19,11 +19,16 @@
 <p>
 Flowblade Movie Editor has six edit tools, <b>3 move tools</b> and <b>3 trim tools</b>.
 </p>
-
+<div class="note">
+<b>Use Keyboard Shortcuts!</b> It is much faster to use keys <b>1-6</b> to change tools. Note that keys 1-6 only change tools if timeline has keyboard focus. 
+</div>
 
 <div id="toccontent">
 <div id="toc"></div>
 <a id="insert"></a>
+
+
+
 <h3>Insert Tool</h3>
 
 <p>
@@ -50,6 +55,7 @@ Splice out one or more clips and insert them at desired cut on any track.
 	<li> You can also move clips to a different track.</li>
 	</ul>
 </ol>
+
 <a id="overwrite"></a>
 <h3>Overwrite Tool</h3>
 
@@ -157,7 +163,7 @@ Make clip longer or shorter from either clip's end or from clip's beginning.
 <a id="spacer"></a>
 <h3>Spacer Tool</h3>
 
-<p>Move all Timeline items on all tracks or on a single track</p>
+<p>Move all Timeline items after pressed frame on all tracks or on a single track</p>
 <ol>
 <li>Pick 'Spacer' tool</li>
 	<ul>
@@ -175,6 +181,35 @@ Make clip longer or shorter from either clip's end or from clip's beginning.
 	</ul>
 </ol>
 
+<a id="movetrim"></a>
+<h3>Move Tool clip end trim</h3>
+
+<p>
+When an <b>Insert, Overwrite</b> or <b>Spacer</b> tool is selected the ends of clips can be dragged to lengthen or shorten the clip. 
+</p>
+
+<ol>
+<li>Pick 'Insert', 'Overwrite' or 'Spacer' tool</li>
+	<ul>
+	<li> Use <b>Tool Switcher</b> button drop menu or press <b>1, 2</b> or <b>6</b> key.</li>
+	</ul>
+<li>Select clip end to trim</li>
+	<ul>
+	<li> Click <b>Control + Right Mouse</b> on a clip.</li>
+	</ul>
+	<ul>
+	<li> The nearer clip end will be selected for edit.</li>
+	</ul>
+<li>Drag clip end</li>
+	<ul>
+	<li> Added clip length will perform overwrite on blanks and empty space</li>
+	</ul>
+	<ul>
+	<li> Added clip length will perform insert on other clips</li>
+	</ul>
+	<ul>
+	<li> Decreased clip length will perform splice out.</li>
+	</ul>
 </div>
 
 </div>
