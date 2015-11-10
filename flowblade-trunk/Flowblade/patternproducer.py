@@ -151,7 +151,6 @@ def _create_patten_producer_old_style(profile, bin_clip):
     return clip
 
 def create_color_producer(profile, gdk_color_str):
-    print "eee"
     mlt_color = utils.gdk_color_str_to_mlt_color_str(gdk_color_str)
 
     producer = mlt.Producer(profile, "colour", mlt_color)

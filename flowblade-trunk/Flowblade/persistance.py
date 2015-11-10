@@ -320,6 +320,7 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
 
     # Relinker only operates on pickleable python data 
     if relinker_load:
+        FIX_MISSING_PROJECT_ATTRS(project)
         return project
 
     global _load_file_path
@@ -370,7 +371,11 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
         elif media_file.type == appconsts.IMAGE_SEQUENCE:
             media_file.path = get_img_seq_media_path(media_file.path, _load_file_path)
             
-    # Add icons to media files
+        # This fixes Media Relinked projects with SAVEFILE_VERSION < 4:
+        # Remove 2018
+        if (not(hasattr(media_file,  "is_proxy_file"))):
+            FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
+
     if icons_and_thumnails == True:
         _show_msg(_("Loading icons"))
         for k, media_file in project.media_files.iteritems():
