@@ -93,6 +93,8 @@ loaded_autosave_file = None
 splash_screen = None
 splash_timeout_id = -1
 exit_timeout_id = -1
+window_resize_id = -1
+window_state_id = -1
 
 logger = None
 
@@ -254,8 +256,9 @@ def main(root_path):
 
     # Tracks need to be recentered if window is resized.
     # Connect listener for this now that the tline panel size allocation is sure to be available.
-    gui.editor_window.window.connect("size-allocate", lambda w, e:updater.window_resized())
-    gui.editor_window.window.connect("window-state-event", lambda w, e:updater.window_resized())
+    global window_resize_id, window_state_id
+    window_resize_id = gui.editor_window.window.connect("size-allocate", lambda w, e:updater.window_resized())
+    window_state_id = gui.editor_window.window.connect("window-state-event", lambda w, e:updater.window_resized())
 
     # Get existing autosave files
     autosave_files = get_autosave_files()
@@ -485,6 +488,9 @@ def new_project(profile_index, v_tracks, a_tracks):
 
 def open_project(new_project):
     stop_autosave()
+    gui.editor_window.window.handler_block(window_resize_id)
+    gui.editor_window.window.handler_block(window_state_id)
+
     audiomonitoring.close_audio_monitor()
     audiowaveformrenderer.clear_cache()
     audiowaveform.frames_cache = {}
@@ -519,6 +525,8 @@ def open_project(new_project):
     audiomonitoring.init_for_project_load()
     updater.window_resized()
 
+    gui.editor_window.window.handler_unblock(window_resize_id)
+    gui.editor_window.window.handler_unblock(window_state_id)
     start_autosave()
 
 def change_current_sequence(index):
