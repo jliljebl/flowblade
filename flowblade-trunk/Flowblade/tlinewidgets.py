@@ -224,6 +224,7 @@ CLIP_OVERLAY_COLOR = (0.2, 0.2, 0.9, 0.5)
 OVERWRITE_OVERLAY_COLOR = (0.2, 0.2, 0.2, 0.5)
 INSERT_MODE_COLOR = (0.9,0.9,0.0)
 OVERWRITE_MODE_COLOR = (0.9,0.0,0.0)
+OVERLAY_TRIM_COLOR = (0.81, 0.82, 0.3)
 
 POINTER_TRIANGLE_COLOR = (0.6, 0.7, 0.8, 0.7)
 SHADOW_POINTER_COLOR = (0.5, 0.5, 0.5)
@@ -775,7 +776,7 @@ def draw_clip_end_drag_overlay(cr, data):
     
     # Draw clips in draw range
     cr.set_line_width(MOVE_CLIPS_LINE_WIDTH)
-    cr.set_source_rgb(*OVERLAY_COLOR)
+    cr.set_source_rgb(*OVERLAY_TRIM_COLOR)
 
     clip_length = end - start
     scale_length = clip_length * pix_per_frame
@@ -825,7 +826,7 @@ def draw_compositor_trim(cr, data):
     _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y)
     
     cr.set_line_width(2.0)
-    cr.set_source_rgb(*OVERLAY_COLOR)
+    cr.set_source_rgb(*OVERLAY_TRIM_COLOR)
     cr.stroke()
     
     if data["trim_is_clip_in"] == True:
