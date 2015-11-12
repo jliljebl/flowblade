@@ -550,7 +550,7 @@ def tline_canvas_mouse_pressed(event, frame):
         hit_compositor = tlinewidgets.compositor_hit(frame, event.y, current_sequence().compositors)
         if hit_compositor != None:
             movemodes.clear_selected_clips()
-            if event.button == 1:
+            if event.button == 1 or (event.button == 3 and event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 compositormodes.set_compositor_mode(hit_compositor)
                 mode_funcs = EDIT_MODE_FUNCS[editorstate.COMPOSITOR_EDIT]
                 press_func = mode_funcs[TL_MOUSE_PRESS]
@@ -645,7 +645,7 @@ def tline_canvas_mouse_moved(x, y, frame, button, state):
         return
 
     # Handle timeline position setting with right mouse button
-    if button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG:
+    if button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG and EDIT_MODE() != editorstate.COMPOSITOR_EDIT:
         if not timeline_visible():
             return
         PLAYER().seek_frame(frame)
@@ -677,7 +677,7 @@ def tline_canvas_mouse_released(x, y, frame, button, state):
         return
 
     # Handle timeline position setting with right mouse button
-    if button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG:
+    if button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG and EDIT_MODE() != editorstate.COMPOSITOR_EDIT:
         if not timeline_visible():
             return
         PLAYER().seek_frame(frame) 

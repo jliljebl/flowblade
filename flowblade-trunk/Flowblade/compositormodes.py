@@ -34,7 +34,7 @@ TRIM_HANDLE_WIDTH = 10
 # modes
 MOVE_EDIT = 0
 TRIM_EDIT = 1
-NO_COMPOSITOR_EDIT = -1
+NO_COMPOSITOR_EDIT = -1 # used to block deleting compositor while editing
 
 # module globals 
 compositor = None
