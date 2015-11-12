@@ -65,8 +65,8 @@ def init():
     clip_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "clip_dnd.png")
     empty_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "empty.png")
 
-# ----------------------------------------------- set gui components as drag sources and destinations
 
+# ----------------------------------------------- set gui components as drag sources and destinations
 def connect_media_files_object_widget(widget):
     widget.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
                            [MEDIA_FILES_DND_TARGET], 
@@ -100,7 +100,8 @@ def connect_video_monitor(widget):
                          Gdk.DragAction.COPY)
 
     widget.connect("drag_drop", _on_monitor_drop)
-
+    widget.connect("drag_data_get", _save_monitor_media)
+    
     widget.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
                            [MEDIA_FILES_DND_TARGET], 
                            Gdk.DragAction.COPY)
@@ -136,8 +137,8 @@ def start_tline_clips_out_drag(event, clips, widget):
     target_list = Gtk.TargetList.new([RANGE_DND_TARGET])
     context = widget.drag_begin(target_list, Gdk.DragAction.COPY, 1, event)
 
-# ------------------------------------------------- handlers for drag events
 
+# ------------------------------------------------- handlers for drag events
 def _media_files_drag_data_get(widget, context, selection, target_id, timestamp):
     _save_media_panel_selection()
 
@@ -179,7 +180,7 @@ def _save_media_panel_selection():
     drag_data = gui.media_list_view.get_selected_media_objects()
     drag_source = SOURCE_MEDIA_FILE
 
-def _save_monitor_media():
+def _save_monitor_media(widget, context, selection, target_id, timestamp):
     media_file = editorstate.MONITOR_MEDIA_FILE()
     global drag_data, drag_source
     drag_data = media_file
