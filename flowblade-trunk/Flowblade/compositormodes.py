@@ -122,7 +122,7 @@ def mouse_release(x, y, frame, state):
     editorstate.edit_mode = prev_edit_mode
     if editorstate.edit_mode == editorstate.INSERT_MOVE:
         tlinewidgets.set_edit_mode(None, tlinewidgets.draw_insert_overlay)
-    elif editorstate.edit_mode == editorstate.INSERT_MOVE:
+    elif editorstate.edit_mode == editorstate.OVERWRITE_MOVE:
         tlinewidgets.set_edit_mode(None, tlinewidgets.draw_overwrite_overlay)
     elif editorstate.edit_mode == editorstate.MULTI_MOVE:
         tlinewidgets.set_edit_mode(None, tlinewidgets.draw_multi_overlay)
