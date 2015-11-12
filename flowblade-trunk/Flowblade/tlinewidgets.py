@@ -509,7 +509,7 @@ def _draw_move_overlay(cr, data, y):
         
         scale_length = clip_length * pix_per_frame
         scale_in = clip_start_frame * pix_per_frame
-        cr.rectangle(scale_in, y + 1.5, scale_length, track_height - 2.5)
+        cr.rectangle(scale_in, y + 1.5, scale_length, track_height - 2.0)
         cr.stroke()
         
         # Start frame for next clip
@@ -779,10 +779,10 @@ def draw_clip_end_drag_overlay(cr, data):
 
     clip_length = end - start
     scale_length = clip_length * pix_per_frame
-    scale_in = start * pix_per_frame
+    scale_in = int(start * pix_per_frame) + 0.5
     track_height = data["track_height"]
 
-    cr.rectangle(scale_in, y + 1.5, scale_length, track_height - 2.5)
+    cr.rectangle(scale_in, int(y) + 1.5, int(scale_length), track_height - 2.0)
     cr.stroke()
 
 def draw_compositor_move_overlay(cr, data):
@@ -835,6 +835,9 @@ def draw_compositor_trim(cr, data):
     _draw_two_arrows(cr, x, y + 4, 4)
 
 def _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y):
+    scale_in = int(scale_in) + 0.5
+    scale_length = int(scale_length)
+    y = int(y) + 0.5
     cr.move_to(scale_in + 0.5, y + 0.5)
     cr.line_to(scale_in + 0.5 + scale_length, y + 0.5)
     cr.line_to(scale_in + 0.5 + scale_length, y + 0.5 + COMPOSITOR_HEIGHT)
