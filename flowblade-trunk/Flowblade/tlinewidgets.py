@@ -1609,17 +1609,17 @@ class TimeLineColumn:
     
     # --------------------------------------------- DRAW
     def _draw(self, event, cr, allocation):
-        # This can get called during loads by unwanted expose events
-        if editorstate.project_is_loading == True:
-            return
-
         x, y, w, h = allocation
         
         # Draw bg
         cr.set_source_rgb(*BG_COLOR)
         cr.rectangle(0, 0, w, h)
         cr.fill()
-        
+
+        # This can get called during loads by expose events.
+        if editorstate.project_is_loading == True:
+            return
+
         # get insert track
         insert_track_index = current_sequence().get_first_active_track().id
         
