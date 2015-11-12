@@ -28,13 +28,18 @@ from editorstate import current_sequence
 import tlinewidgets
 import updater
 
+# mouse press area to trim instead of move
 TRIM_HANDLE_WIDTH = 10
+
+# modes
 MOVE_EDIT = 0
 TRIM_EDIT = 1
+NO_COMPOSITOR_EDIT = -1
 
+# module globals 
 compositor = None
 edit_data = None
-sub_mode = None
+sub_mode = NO_COMPOSITOR_EDIT
 prev_edit_mode = None
 
 def set_compositor_mode(new_compositor):
@@ -54,12 +59,15 @@ def clear_compositor_selection():
     global compositor
     if compositor == None:
         return
+
     compositor.selected = False
     compositor = None
 
 def delete_current_selection():
     global compositor
     if compositor == None:
+        return
+    if sub_mode != NO_COMPOSITOR_EDIT:
         return
     data = {"compositor":compositor}
     action = edit.delete_compositor_action(data)
@@ -144,6 +152,9 @@ def mouse_release(x, y, frame, state):
             data["clip_out"] = 0
         action = edit.move_compositor_action(data)
         action.do_edit()
+    
+    global sub_mode
+    sub_mode = NO_COMPOSITOR_EDIT
     
     updater.repaint_tline()
 
