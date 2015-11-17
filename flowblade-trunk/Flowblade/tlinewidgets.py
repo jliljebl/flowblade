@@ -1926,11 +1926,11 @@ class TimeLineFrameScale:
         cr.move_to (x, MARK_PAD)
         cr.line_to (x, h - MARK_PAD)
         cr.line_to (x - 2 * MARK_LINE_WIDTH, h - MARK_PAD)
-        cr.line_to (x - 2 * MARK_LINE_WIDTH, 
+        cr.line_to (x - 1 * MARK_LINE_WIDTH, 
                     h - MARK_LINE_WIDTH - MARK_PAD) 
         cr.line_to (x - MARK_LINE_WIDTH, h - MARK_LINE_WIDTH - MARK_PAD )
         cr.line_to (x - MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD)
-        cr.line_to (x - 2 * MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD )
+        cr.line_to (x - 1 * MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD )
         cr.line_to (x - 2 * MARK_LINE_WIDTH, MARK_PAD)
         cr.close_path();
         cr.fill()
@@ -1948,11 +1948,11 @@ class TimeLineFrameScale:
         cr.move_to (x, MARK_PAD)
         cr.line_to (x, h - MARK_PAD)
         cr.line_to (x + 2 * MARK_LINE_WIDTH, h - MARK_PAD)
-        cr.line_to (x + 2 * MARK_LINE_WIDTH, 
+        cr.line_to (x + 1 * MARK_LINE_WIDTH, 
                     h - MARK_LINE_WIDTH - MARK_PAD) 
         cr.line_to (x + MARK_LINE_WIDTH, h - MARK_LINE_WIDTH - MARK_PAD )
         cr.line_to (x + MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD)
-        cr.line_to (x + 2 * MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD )
+        cr.line_to (x + 1 * MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD )
         cr.line_to (x + 2 * MARK_LINE_WIDTH, MARK_PAD)
         cr.close_path();
 
