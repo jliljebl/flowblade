@@ -132,7 +132,7 @@ def window_resized():
     # Place clips in the middle of timeline canvas after window resize
     tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
 
-    gui.tline_column.init_listeners() # hit areas for track swicthes need to be recalculated
+    gui.tline_column.init_listeners() # hit areas for track switches need to be recalculated
     repaint_tline()
 
 # --------------------------------- timeline
