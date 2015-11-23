@@ -1,5 +1,47 @@
 # Release Notes #
 
+## Flowblade 1.4 ##
+
+**Date: November 24, 2015**
+
+**Flowblade 1.4** is the tenth release of Flowblade and the first release after the GTK3 port.
+
+### Main Features in this release ###
+
+* **Fade/Transition cover delete feature was added.** Selecting a single rendered fade/transition clip and pressing delete will cause the deleted area to covered using material from adjacent clips if such meterial is available. This makes working with single track transitions/fades faster. Previous delete behaviour can be restored using a preference option.
+
+* **Clip ends drag with Control + Right mouse.** When a move tool - <i>Insert, Overwrite or Spacer</i> - is selected clips ends can now be dragged to change clip's length. This is useful when for example a clip in a multitrack composition needs to made longer to cover a clip track below. Clips end drags perform overwrite on empty/blank regions and insert on media regions of timeline.
+
+* **Drag'n'drop overwrite action on non-V1 tracks** has been added. Dropping on track V1 works like before, but on non-V1 tracks:
+  * clip will be inserted if dropped on a clip 
+  * clip will overwrite available blank and empty space and will perform insert for the length of media frames that would be overwritten.
+ 
+ This makes creating multitrack compositions faster.Previous Drag'n'drop behaviour can be restored using a preference option.
+
+* **Always on audio levels display** functionality was added. Before the audio levels could only be displayd on request, but now it possible to have audio levels rendered on background and displayed as soon as they are available 
+
+* **Filters can now be copy/pasted from one clip to another**. It has been possible to copy paste clips on timeline for quite a while, but now this feature was made more discovarable by adding menu items for the functionality.  
+
+
+####Other features and enhancements####
+* Fix media relinking for projects with SAVEFILE_VERSION < 4
+* Add 1080p 50fps profile
+* Fix keys 1-6 stopping working after tool selection
+* Fix snapshot save same basename bug
+* Add fullscreen view
+* Begin work on add xdg-app support 
+* Fix color clips backwards compatibility for some old projects
+* Add info text active keyframe and number of keyframes to keyframe editors
+* Make 'Control + Left/Right arrow' move 10 frames at a time
+* Add 'Clear Filters' item to clip pop-up menu
+* Make effects editor keyframe editors listen for space key play/stop
+* Fix crashing keyframe editor for multitrack moves
+* Make compositor editors zoom with mouse scroll
+* Make Space for play/stop work then focus on keyframe editor
+* Make Affine Blend editable with arrows keys
+* Make keyframeeditor.RotatingGeometryEditor receive keyframe updates
+
+
 ## Flowblade 1.2 ##
 **Date: September 9, 2015**
 
