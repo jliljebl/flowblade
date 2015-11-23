@@ -125,6 +125,7 @@ def main(root_path):
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
     # passing -xdg as a flag will change the user_dir location with XDG_CONFIG_HOME
+    # For full xdg-app support all the launch processes need to add this too, currently not impl.
     for arg in sys.argv:
         if arg.lower() == "-xdg":
             editorstate.use_xdg = True
