@@ -997,7 +997,6 @@ class TimeLineCanvas:
         frame = get_frame(x)
         hit_compositor = compositor_hit(frame, y, current_sequence().compositors)
         if hit_compositor != None:
-            print "comp"
             return
 
         track = get_track(y)  
@@ -1010,12 +1009,10 @@ class TimeLineCanvas:
 
         clip_start_frame = track.clip_start(clip_index) - pos
         if abs(x - _get_frame_x(clip_start_frame)) < 5:
-            print "clip start"
             return
 
         clip_end_frame = track.clip_start(clip_index + 1) - pos
         if abs(x - _get_frame_x(clip_end_frame)) < 5:
-            print "clip end"
             return
 
     #----------------------------------------- DRAW
@@ -1366,9 +1363,9 @@ class TimeLineCanvas:
                 media_start_pos_pix = scale_in - clip_in * pix_per_frame
                 
                 # Draw level bar for each frame in draw range
-                for i in range(draw_first, draw_last, step):
-                    x = media_start_pos_pix + i * pix_per_frame
-                    h = bar_height * clip.waveform_data[i]
+                for f in range(draw_first, draw_last, step):
+                    x = media_start_pos_pix + f * pix_per_frame
+                    h = bar_height * clip.waveform_data[f]
                     if h < 1:
                         h = 1
                     cr.rectangle(x, y + y_pad + (bar_height - h), draw_pix_per_frame, h)

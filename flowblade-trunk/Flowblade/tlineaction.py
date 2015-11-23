@@ -195,7 +195,7 @@ def _attempt_clip_cover_delete(clip, track, index):
     if clip.rendered_type == appconsts.RENDERED_FADE_OUT:
         if index != 0:
             cover_clip = track.clips[movemodes.selected_range_in - 1]
-            if clip.get_length() <= (cover_clip.clip_out - cover_clip.clip_in + 1):
+            if clip.get_length() < (cover_clip.clip_out - cover_clip.clip_in + 1):
                 # Do delete
                 data = {"track":track,
                         "clip":clip,

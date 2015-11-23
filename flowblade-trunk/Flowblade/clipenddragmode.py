@@ -60,7 +60,7 @@ def maybe_init_for_mouse_press(event, frame):
         cut_frame = cut_frame - (clip.clip_out - clip.clip_in)
 
     if editing_clip_end == True: # clip end drags
-        bound_end = cut_frame - clip.clip_in + clip.get_length() # get_length() is available media length, not current clip length
+        bound_end = cut_frame - clip.clip_in + clip.get_length() - 1 # get_length() is available media length, not current clip length
         bound_start = cut_frame - 1
         if clip_index == len(track.clips) - 1: # last clip
             bound_end = bound_end - 1
