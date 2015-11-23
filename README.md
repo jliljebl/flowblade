@@ -1,6 +1,8 @@
 
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
+**Release 1.4 is now avalable. See [release notes](./flowblade-trunk/docs/RELEASE_NOTES.md) for more info.**
+
 **Contents:**
   1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
   1. [Features](https://github.com/jliljebl/flowblade#features)
@@ -54,9 +56,9 @@ Flowblade provides powerful tools to mix and filter video and audio.
         
 # Releases
 
-**Latest release:** Flowblade Movie Editor 1.2 was released on September 9, 2015.
+**Latest release:** Flowblade Movie Editor 1.4 was released on November 24, 2015.
 
-**Next release:** Flowblade Movie Editor 1.4 will be out on November 2015.
+**Next release:** Flowblade Movie Editor 1.6 will be out on March 2016.
 
 # Installing Flowblade
 
