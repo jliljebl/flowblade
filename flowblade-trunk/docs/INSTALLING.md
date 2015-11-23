@@ -3,7 +3,7 @@
 
 ### Installing using .deb package
 
-**First download .deb file** for Flowblade 1.2 from <a href="https://www.dropbox.com/s/6hrvhbqtpmx0uj3/flowblade-1.2.0-1_all.deb?dl=0">here.</a>
+**First download .deb file** for Flowblade 1.4 from <a href="https://www.dropbox.com/s/xe94cjwmf195de2/flowblade-1.4.0-1_all.deb?dl=0">here.</a>
 
 <ul>
     <li>Double Click on the downloaded .deb file to install.</li>
@@ -14,8 +14,9 @@
 sudo apt-get install -f
 ```
 
-Release has been tested on: <b>Ubuntu 15.05, 14.10, 14.04, Linux Mint 17 and Debian 8</b>.
-Other recent Debian based systems should work too.
+Release has been tested on: <b>Ubuntu 15.10, 14.10, Linux Mint 17 and Debian 8</b>.
+
+<b><i>Flowblade versions 1.2 and 1.4 are not supported for Ubuntu 14.04, Debian 7 or earlier systems.</i></b> Flowblade uses a GTK3 feature that is not available on those systems. Last GTK2 version 1.0 should work fine and it can be downloaded <a href="https://www.dropbox.com/s/9m2e9whcazjo1l8/flowblade-1.0.0-1_all.deb?dl=0">here.</a>
 
 *Please note these issues with Dropbox download:*
 <ul>
@@ -26,7 +27,7 @@ Other recent Debian based systems should work too.
 
 ### Installing from your OS repository
 
-The easiest way to install Flowblade is using the version in your OS repository. The downside is that **the version available may not be the current latest release**. Contact your OS to get Flowblade included in repositories if not already available.
+The easiest way to install Flowblade is using the version in your OS repository. The downside is that **the version available may not be the current latest release**. Contact your OS to get latest Flowblade included in repositories if not already available.
 
 #### Ubuntu, Debian and Linux Mint
 
@@ -51,12 +52,12 @@ yaourt -S flowblade-git
 
 Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install and run Flowblade without compiling anything.
 
-**First download 1.2 tar.gz** source archive file from <a href="https://www.dropbox.com/s/lzwlycblfpgn8vg/flowblade-1.2.0.tar.gz?dl=0">here.</a> 
+**First download 1.4 tar.gz** source archive file from <a href="https://www.dropbox.com/s/vmu12w36ov2aza8/flowblade-1.4.0.tar.gz?dl=0">here.</a> 
 
   * Extract archive into a folder of your choosing
   * Install dependencies. See [Dependencies](DEPENDENCIES.md) doc for more information.
   * If you have Flowblade installed in your system, you probably have the dependencies installed, unless some new ones have been added.
-  * Launch by running script *.../flowblade-1.0.0/flowblade* that was created in the folder where archive was unpacked.
+  * Launch by running script *.../flowblade-1.4.0/flowblade* that was created in the folder where archive was unpacked.
   * Note that if you have Flowblade installed you will need use full path to repository version or navigate to the folder containing launch script and use command "./flowblade" to launch repository version instead of installed version.
 
 *Please note these issues with Dropbox download:*
