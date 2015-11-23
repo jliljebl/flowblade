@@ -6,6 +6,12 @@
 
 **Flowblade 1.4** is the tenth release of Flowblade and the first release after the GTK3 port.
 
+Most main features in this release are changes to editing model that are designed to make editing more approachable and quicker. It is also notable that a large part of the main features were based on user requests, a first for the project.
+
+In the next release cycle features that will be attempted include G'MIC effects scripting tool, a node compositor tool using an existing code base, a first launch tips window for new users, and a clip snapping feature.
+
+In 2016 there will probably be 3-4 releases, and the next release 1.6 is targeted for March. There will be some reports on progress in the Flowblade Google+ group.
+
 ### Main Features in this release ###
 
 * **Fade/Transition cover delete feature was added.** Selecting a single rendered fade/transition clip and pressing delete will cause the deleted area to covered using material from adjacent clips if such meterial is available. This makes working with single track transitions/fades faster. Previous delete behaviour can be restored using a preference option.
