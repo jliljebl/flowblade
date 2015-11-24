@@ -6,7 +6,7 @@
 
 **Flowblade 1.4** is the tenth release of Flowblade and the first release after the GTK3 port.
 
-Most main features in this release are changes to editing model that are designed to make editing more approachable and quicker. It is also notable that a large part of the main features were based on user requests, a first for the project.
+Most main features in this release are changes to editing model that were designed to make editing more approachable and quicker. It is also notable that a large part of the main features were based on user requests, a first for the project.
 
 In the next release cycle features that will be attempted include a G'MIC effects scripting tool, a node compositor tool using an existing code base, a first launch tips window for new users, and a clip snapping feature.
 
@@ -14,15 +14,15 @@ In 2016 there will probably be 3-4 releases, and the next release 1.6 is targete
 
 ### Main Features in this release ###
 
-* **Fade/Transition cover delete feature was added.** Selecting a single rendered fade/transition clip and pressing delete will cause the deleted area to covered using material from adjacent clips if such meterial is available. This makes working with single track transitions/fades faster. Previous delete behaviour can be restored using a preference option.
+* **Fade/Transition cover delete feature was added.** Selecting a single rendered fade/transition clip and pressing delete will cause the deleted area to be covered using material from adjacent clips if such material is available. This makes working with single track transitions/fades faster. Previous behaviour can be restored using a preference option.
 
-* **Clip ends drag with Control + Right mouse.** When a move tool - <i>Insert, Overwrite or Spacer</i> - is selected clips ends can now be dragged to change clip's length. This is useful when for example a clip in a multitrack composition needs to made longer to cover a clip track below. Clips end drags perform overwrite on empty/blank regions and insert on media regions of timeline.
+* **Clip ends drag with Control + Right mouse.** When a move tool - <i>Insert, Overwrite or Spacer</i> - is selected clip's ends can now be dragged to change clip's length. This is useful when for example a clip in a multitrack composition needs to be made longer to cover a clip on a track below. Clips end drags perform overwrite on empty/blank regions and insert on media regions of timeline.
 
-* **Drag'n'drop overwrite action on non-V1 tracks** has been added. Dropping on track V1 works like before, but on non-V1 tracks:
+* **Drag'n'drop overwrite action on non-V1 tracks** has been added. Dropping clip on track V1 works like before, but on non-V1 tracks:
   * clip will be inserted if dropped on a clip 
   * clip will overwrite available blank and empty space and will perform insert for the length of media frames that would be overwritten.
  
- This makes creating multitrack compositions faster.Previous Drag'n'drop behaviour can be restored using a preference option.
+ This makes creating multitrack compositions faster. Previous drag'n'drop behaviour can be restored using a preference option.
 
 * **Always on audio levels display** functionality was added. Before the audio levels could only be displayd on request, but now it possible to have audio levels rendered on background and displayed as soon as they are available 
 
