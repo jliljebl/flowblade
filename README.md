@@ -3,6 +3,8 @@
 
 **NEW: Release 1.4 is now available. See [release notes](./flowblade-trunk/docs/RELEASE_NOTES.md) for more info.**
 
+**Installing instructions for the new release are available [here](./flowblade-trunk/docs/INSTALLING.md).**
+
 **Contents:**
   1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
   1. [Features](https://github.com/jliljebl/flowblade#features)
