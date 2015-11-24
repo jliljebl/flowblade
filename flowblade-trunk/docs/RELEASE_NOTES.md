@@ -16,7 +16,7 @@ In 2016 there will probably be 3-4 releases, and the next release 1.6 is targete
 
 * **Fade/Transition cover delete feature was added.** Selecting a single rendered fade/transition clip and pressing delete will cause the deleted area to be covered using material from adjacent clips if such material is available. This makes working with single track transitions/fades faster. Previous behaviour can be restored using a preference option.
 
-* **Clip ends drag with Control + Right mouse.** When a move tool - <i>Insert, Overwrite or Spacer</i> - is selected clips ends can now be dragged to change clip's length. This is useful when for example a clip in a multitrack composition needs to be made longer to cover a clip on a track below. Clips end drags perform overwrite on empty/blank regions and insert on media regions of timeline.
+* **Clip ends drag with Control + Right mouse.** When a move tool - <i>Insert, Overwrite or Spacer</i> - is selected clip's ends can now be dragged to change clip's length. This is useful when for example a clip in a multitrack composition needs to be made longer to cover a clip on a track below. Clips end drags perform overwrite on empty/blank regions and insert on media regions of timeline.
 
 * **Drag'n'drop overwrite action on non-V1 tracks** has been added. Dropping clip on track V1 works like before, but on non-V1 tracks:
   * clip will be inserted if dropped on a clip 
