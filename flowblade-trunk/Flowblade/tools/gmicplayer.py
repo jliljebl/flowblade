@@ -31,20 +31,19 @@ import mlt
 import os
 import time
 
-import gui
-#import editorpersistance
-from editorstate import timeline_visible
+import editorpersistance
 import editorstate
+import mltprofiles
 import utils
-import updater
 
 TICKER_DELAY = 0.25
 RENDER_TICKER_DELAY = 0.05
 
-class Player:
+class GmicPlayer:
     
-    def __init__(self, profile):
-    
+    def __init__(self, clip):
+        self.clip = clip
+        profile = get_default_profile():
         self.init_for_profile(profile)
         
         self.ticker = utils.Ticker(self._ticker_event, TICKER_DELAY)
@@ -52,12 +51,7 @@ class Player:
     def init_for_profile(self, profile):
         # Get profile and create ticker for playback GUI updates
         self.profile = profile
-        print "Player initialized with profile: ", self.profile.description()
-        
-        # Trim loop preview
-        self.loop_start = -1
-        self.loop_end = -1
-        self.is_looping = False
+        print "GMic Player initialized with profile: ", self.profile.description()
         
         # Rendering
         self.is_rendering = False
@@ -366,43 +360,10 @@ class Player:
         self.render_callbacks.maybe_open_rendered_file_in_bin()
         Gdk.threads_leave()
 
-    """
-    def jack_output_on(self):
-        # We're assuming that we are not rendering and consumer is SDL consumer
-        self.producer.set_speed(0)
-        self.ticker.stop_ticker()
-
-        self.consumer.stop()
-
-        self.create_sdl_consumer()
-
-        self.jack_output_filter = mlt.Filter(self.profile, "jackrack")
-        if editorpersistance.prefs.jack_output_type == appconsts.JACK_OUT_AUDIO:
-            self.jack_output_filter.set("out_1", "system:playback_1")
-            self.jack_output_filter.set("out_2", "system:playback_2")
-        self.consumer.attach(self.jack_output_filter)
-        self.consumer.set("audio_off", "1")
-        self.consumer.set("frequency", str(editorpersistance.prefs.jack_frequency))
-
-        self.consumer.connect(self.producer)
-        self.consumer.start()
-
-    def jack_output_off(self):
-        # We're assuming that we are not rendering and consumer is SDL consumer
-        self.producer.set_speed(0)
-        self.ticker.stop_ticker()
-
-        self.consumer.detach(self.jack_output_filter)
-        self.consumer.set("audio_off", "0")
-
-        self.consumer.stop()
-        self.consumer.start()
         
-        self.jack_output_filter = None
-    """
-
     def shutdown(self):
         self.ticker.stop_ticker()
         self.producer.set_speed(0)
         self.consumer.stop()
+
 

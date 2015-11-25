@@ -33,7 +33,11 @@ import editorpersistance
 import editorstate
 import gui
 import guiutils
-import trimmodes
+trimmodes_set_no_edit_trim_mode = None # This monkey patched in app.py to avoid unncessary dependencies in gmic.py
+
+#import trimmodes
+
+
 
 # Draw params
 BAR_WIDTH = 200 # NOTE: DOES NOT HAVE ANY EFFECT IF OTHER WIDTHS MAKE MONITOR AREA MIN WIDTH BIGGER, AS THIS EXPANDS TO FILL
@@ -65,7 +69,7 @@ class PositionBar:
     GUI component used to set/display position in clip/timeline
     """
 
-    def __init__(self):
+    def __init__(self, handle_trimmodes=True):
         self.widget = CairoDrawableArea2(   BAR_WIDTH, 
                                             BAR_HEIGHT, 
                                             self._draw)
@@ -77,6 +81,8 @@ class PositionBar:
         self.mark_out_norm = -1.0
         self.disabled = False
         self.mouse_release_listener = None # when used in tools (Titler ate.) this used to update bg image
+
+        self.handle_trimmodes = handle_trimmodes
 
         if editorpersistance.prefs.dark_theme == True:
             global LINE_COLOR, DISABLED_BG_COLOR, SELECTED_RANGE_COLOR, MARK_COLOR
@@ -177,17 +183,20 @@ class PositionBar:
         cr.line_to(self._pos + 0.5, BAR_HEIGHT)
         cr.stroke()
 
-        speed = editorstate.PLAYER().producer.get_speed()
-        if speed != 1.0 and speed != 0.0:
-            cr.set_source_rgb(*SPEED_TEST_COLOR)
-            cr.select_font_face ("sans-serif",
-                                 cairo.FONT_SLANT_NORMAL,
-                                 cairo.FONT_WEIGHT_BOLD)
-            cr.set_font_size(11)
-            disp_str = str(speed) + "x"
-            tx, ty, twidth, theight, dx, dy = cr.text_extents(disp_str)
-            cr.move_to( w/2 - twidth/2, 13)
-            cr.show_text(disp_str)
+        # This only needed when this is used in main app, 
+        # with gmic.py process self.handle_trimmodes == False.
+        if self.handle_trimmodes == True:
+            speed = editorstate.PLAYER().producer.get_speed()
+            if speed != 1.0 and speed != 0.0:
+                cr.set_source_rgb(*SPEED_TEST_COLOR)
+                cr.select_font_face ("sans-serif",
+                                     cairo.FONT_SLANT_NORMAL,
+                                     cairo.FONT_WEIGHT_BOLD)
+                cr.set_font_size(11)
+                disp_str = str(speed) + "x"
+                tx, ty, twidth, theight, dx, dy = cr.text_extents(disp_str)
+                cr.move_to( w/2 - twidth/2, 13)
+                cr.show_text(disp_str)
 
     def draw_mark_in(self, cr, h):
         """
@@ -241,8 +250,10 @@ class PositionBar:
         """
         if self.disabled:
             return
-        if editorstate.timeline_visible():
-            trimmodes.set_no_edit_trim_mode()
+
+        if self.handle_trimmodes == True:
+            if editorstate.timeline_visible():
+                trimmodes_set_no_edit_trim_mode()
 
         if((event.button == 1)
             or(event.button == 3)):

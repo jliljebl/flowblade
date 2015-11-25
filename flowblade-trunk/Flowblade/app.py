@@ -63,6 +63,7 @@ import mltprofiles
 import mlttransitions
 import movemodes
 import persistance
+import positionbar
 import preferenceswindow
 import projectaction
 import projectdata
@@ -74,6 +75,7 @@ import respaths
 import resync
 import sequence
 import tlinewidgets
+import trimmodes
 import translations
 import undo
 import updater
@@ -285,7 +287,7 @@ def main(root_path):
         start_autosave()
 
     # We prefer to monkeypatch some callbacks into some modules, usually to
-    # maintain a simpler and non-circular import structure
+    # maintain a simpler and/or non-circular import structure
     monkeypatch_callbacks()
     
     # Launch gtk+ main loop
@@ -318,6 +320,9 @@ def monkeypatch_callbacks():
 
     editevent.display_clip_menu_pop_up = clipmenuaction.display_clip_menu
     editevent.compositor_menu_item_activated = clipmenuaction._compositor_menu_item_activated
+    
+    # Posionbar in gmic.py doesnot need trimmodes.py dependency and is avoided 
+    positionbar.trimmodes_set_no_edit_trim_mode = trimmodes.set_no_edit_trim_mode
     
     # These provide clues for further module refactoring 
 
