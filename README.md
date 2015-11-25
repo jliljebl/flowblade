@@ -82,12 +82,17 @@ Installing instructions are available [here](./flowblade-trunk/docs/INSTALLING.m
 
 # Screenshot
 
-[Screenshot](./flowblade-trunk/docs/Screenshot-0-18.png) for version is 0.18 is available in the */docs* folder.
+[Screenshot 1.4 dark theme](./flowblade-trunk/docs/Screenshot-1-4-dark.png)
+
+[Screenshot 0.18 light theme](./flowblade-trunk/docs/Screenshot-0-18.png)
+
+These are in the repository */docs* folder.
+
 
 # Forum and Contact
 
 For questions and discussion on Flowblade we have a [Google+ group] (https://plus.google.com/u/0/communities/103860400113389238474) available. There will be some updates on what is happening with the project too.
 
-Use the **Issues** tab on the right to give bug reports or to make feature requests.
+Use the **Issues** tab to give bug reports or to make feature requests.
 
 If needed, contact the project lead for additional information: janne.liljeblad@gmail.com
