@@ -24,8 +24,10 @@ Module holds references to GUI widgets.
 
 from gi.repository import Gtk, Gdk
 
-import editorpersistance
+import pickle
 
+import editorpersistance
+import utils
 
 # Editor window
 editor_window = None
@@ -82,6 +84,8 @@ _ARC_COLORS = ((0.960784, 0.964706, 0.968627), (0.266667, 0.282353, 0.321569), (
 
 
 _THEME_COLORS = (_UBUNTU_COLORS, _GNOME_COLORS, _MINT_COLORS, _ARC_COLORS)
+
+_CURRENT_THEME_COLORS_FILE = "currentcolors.data"
 
 _selected_bg_color = None
 _bg_color = None
@@ -189,6 +193,26 @@ def set_theme_colors():
     
 def unpack_gdk_color(gdk_color):
     return (gdk_color.red, gdk_color.green, gdk_color.blue, gdk_color.alpha)
+
+def save_current_colors():
+    # Used to communicate theme colors to tools like gmic.py running on separate process
+    colors = (unpack_gdk_color(_selected_bg_color), unpack_gdk_color(_bg_color), unpack_gdk_color(_button_colors))
+    save_file_path = _colors_data_path()
+    write_file = file(save_file_path, "wb")
+    pickle.dump(colors, write_file)
+
+def load_current_colors():
+    load_path = _colors_data_path() 
+    f = open(load_path)
+    colors = pickle.load(f)
+    sel, bg, button = colors
+    global _selected_bg_color, _bg_color, _button_colors
+    _selected_bg_color = Gdk.RGBA(*sel)
+    _bg_color = Gdk.RGBA(*bg)
+    _button_colors = Gdk.RGBA(*button)
+        
+def _colors_data_path():
+    return utils.get_hidden_user_dir_path() + _CURRENT_THEME_COLORS_FILE
 
 def _print_widget(widget): # debug
     path_str = widget.get_path().to_string()

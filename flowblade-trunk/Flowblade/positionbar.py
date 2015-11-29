@@ -183,8 +183,8 @@ class PositionBar:
         cr.line_to(self._pos + 0.5, BAR_HEIGHT)
         cr.stroke()
 
-        # This only needed when this is used in main app, 
-        # with gmic.py process self.handle_trimmodes == False.
+        # This only needed when this widget is used in main app, 
+        # for gmic.py process self.handle_trimmodes == False.
         if self.handle_trimmodes == True:
             speed = editorstate.PLAYER().producer.get_speed()
             if speed != 1.0 and speed != 0.0:

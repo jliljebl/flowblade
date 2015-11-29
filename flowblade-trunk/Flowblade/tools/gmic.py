@@ -20,6 +20,7 @@
 
 from gi.repository import GObject, GLib
 from gi.repository import Gtk, Gdk, GdkPixbuf
+from gi.repository import GdkX11
 
 import locale
 import mlt
@@ -30,24 +31,27 @@ import sys
 import dialogutils
 import editorstate
 import editorpersistance
+import gui
 import guiutils
 import mltenv
 import mltprofiles
 import mlttransitions
 import mltfilters
-#import persistance
 import positionbar
 import respaths
 import renderconsumer
 import translations
 import utils
 
+import gmicplayer
 
-gmic_window = None
-
+_window = None
+_player = None
 
 def launch_gmic():
     print "Launch gmic..."
+    gui.save_current_colors()
+    
     FLOG = open(utils.get_hidden_user_dir_path() + "log_gmic", 'w')
     subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladegmic"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
 
@@ -97,9 +101,17 @@ def main(root_path, force_launch=False):
     # Create list of available mlt profiles
     mltprofiles.load_profile_list()
 
-    global gmic_window
-    gmic_window = GmicWindow()
-
+    gui.load_current_colors()
+    
+    global _window
+    _window = GmicWindow()
+    
+    #gui.set_theme_colors()
+    _window.pos_bar.set_dark_bg_color()
+    
+    os.putenv('SDL_WINDOWID', str(_window.monitor.get_window().get_xid()))
+    Gdk.flush()
+        
     Gtk.main()
     Gdk.threads_leave()
     
@@ -115,6 +127,47 @@ def init_dirs_if_needed():
         os.mkdir(get_projects_dir())
     """
 
+def open_clip_dialog(callback):
+    
+
+    file_select = Gtk.FileChooserDialog(_("Select Image Media"), _window, Gtk.FileChooserAction.OPEN,
+                                    (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                                    Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+
+    file_select.set_default_response(Gtk.ResponseType.CANCEL)
+    file_select.set_select_multiple(False)
+
+    media_filter = utils.get_media_source_file_filter(False)
+    all_filter = Gtk.FileFilter()
+    all_filter.set_name(_("All files"))
+    all_filter.add_pattern("*.*")
+    file_select.add_filter(media_filter)
+    file_select.add_filter(all_filter)
+
+    if ((editorpersistance.prefs.open_in_last_opended_media_dir == True) 
+        and (editorpersistance.prefs.last_opened_media_dir != None)):
+        file_select.set_current_folder(editorpersistance.prefs.last_opened_media_dir)
+    
+    file_select.connect('response', callback)
+
+    file_select.set_modal(True)
+    file_select.show()
+
+def _open_files_dialog_cb(file_select, response_id):
+    filenames = file_select.get_filenames()
+    file_select.destroy()
+
+    if response_id != Gtk.ResponseType.OK:
+        return
+    if len(filenames) == 0:
+        return
+
+    global _player
+    _player = gmicplayer.GmicPlayer(filenames[0])
+    _window.init_for_new_clip(filenames[0])
+    _player.create_sdl_consumer()
+    _player.connect_and_start()
+    #_window.pos_bar.widget.queue_draw()
 
 class GmicWindow(Gtk.Window):
     def __init__(self):
@@ -123,7 +176,6 @@ class GmicWindow(Gtk.Window):
 
         app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowblademedialinker.png")
         self.set_icon(app_icon)
-
 
         self.pos_bar = positionbar.PositionBar(False)
         self.pos_bar.set_listener(self.position_listener)
@@ -139,8 +191,18 @@ class GmicWindow(Gtk.Window):
         left_vbox = Gtk.VBox(False, 0)
         left_vbox.pack_start(self.pos_bar.widget, False, False, 0)
 
+        black_box = Gtk.EventBox()
+        black_box.add(Gtk.Label())
+        bg_color = Gdk.Color(red=0.0, green=0.0, blue=0.0)
+        black_box.modify_bg(Gtk.StateType.NORMAL, bg_color)
+        self.monitor = black_box  # This could be any GTK+ widget (that is not "windowless"), only its XWindow draw rect 
+                                  # is used to position and scale SDL overlay that actually displays video.
+        self.monitor.set_size_request(400, 300)
+
+        
         pane = Gtk.VBox(False, 2)
         pane.pack_start(project_row, False, False, 0)
+        pane.pack_start(self.monitor, False, False, 0)
         pane.pack_start(left_vbox, False, False, 0)
 
         align = guiutils.set_margins(pane, 12, 12, 12, 12)
@@ -151,15 +213,21 @@ class GmicWindow(Gtk.Window):
         self.set_position(Gtk.WindowPosition.CENTER)
         self.show_all()
         self.set_resizable(False)
-        self.set_active_state()
+        self.set_active_state(False)
+
+    def init_for_new_clip(self, clip_path):
+        self.clip_path = clip_path
+        self.set_active_state(True)
+        self.pos_bar.update_display_from_producer(_player.producer)
     
     def load_button_clicked(self):
-        dialogs.load_project_dialog(self.load_project_dialog_callback, self)
+        open_clip_dialog(_open_files_dialog_cb)
     
-    def set_active_state(self):
-        pass
+    def set_active_state(self, active):
+        self.monitor.set_sensitive(active)
+        self.pos_bar.widget.set_sensitive(active)
 
     def position_listener(self, normalized_pos, length):
         frame = normalized_pos * length
-        self.tc_display.set_frame(int(frame))
+        #self.tc_display.set_frame(int(frame))
         self.pos_bar.widget.queue_draw()
