@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-23 20:30+0200\n"
+"POT-Creation-Date: 2015-11-30 00:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,43 +17,43 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: app.py:685
+#: app.py:690
 msgid "Too small screen for this application."
 msgstr ""
 
-#: app.py:688
+#: app.py:693
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr ""
 
-#: app.py:689
+#: app.py:694
 msgid "Your screen dimensions are "
 msgstr ""
 
-#: app.py:724
+#: app.py:729
 msgid "Project has not been saved since it was opened."
 msgstr ""
 
-#: app.py:729
+#: app.py:734
 msgid "Project was saved less than a minute ago."
 msgstr ""
 
-#: app.py:732
+#: app.py:737
 msgid "Project was saved one minute ago."
 msgstr ""
 
-#: app.py:734
+#: app.py:739
 msgid "Project was saved "
 msgstr ""
 
-#: app.py:734
+#: app.py:739
 msgid " minutes ago."
 msgstr ""
 
-#: app.py:744 projectaction.py:278
+#: app.py:749 projectaction.py:278
 msgid "Project has not been saved previously"
 msgstr ""
 
-#: app.py:745 projectaction.py:279
+#: app.py:750 projectaction.py:279
 msgid "Save project with File -> Save As before closing."
 msgstr ""
 
@@ -239,292 +239,296 @@ msgstr ""
 msgid "There must always exist at least one sequence."
 msgstr ""
 
-#: editorwindow.py:139
+#: editorwindow.py:140
 msgid "_File"
 msgstr ""
 
-#: editorwindow.py:140
+#: editorwindow.py:141
 msgid "_New..."
 msgstr ""
 
-#: editorwindow.py:141
+#: editorwindow.py:142
 msgid "_Open..."
 msgstr ""
 
-#: editorwindow.py:142
+#: editorwindow.py:143
 msgid "Open Recent"
 msgstr ""
 
-#: editorwindow.py:143
+#: editorwindow.py:144
 msgid "_Save"
 msgstr ""
 
-#: editorwindow.py:144
+#: editorwindow.py:145
 msgid "_Save As..."
 msgstr ""
 
-#: editorwindow.py:145
+#: editorwindow.py:146
 msgid "Save Backup Snapshot..."
 msgstr ""
 
-#: editorwindow.py:146 dialogs.py:187
+#: editorwindow.py:147 dialogs.py:187
 msgid "Export"
 msgstr ""
 
-#: editorwindow.py:147
+#: editorwindow.py:148
 msgid "MLT XML"
 msgstr ""
 
-#: editorwindow.py:148
+#: editorwindow.py:149
 msgid "EDL CMX 3600"
 msgstr ""
 
-#: editorwindow.py:149
+#: editorwindow.py:150
 msgid "Current Frame"
 msgstr ""
 
-#: editorwindow.py:150
+#: editorwindow.py:151
 msgid "_Close"
 msgstr ""
 
-#: editorwindow.py:151
+#: editorwindow.py:152
 msgid "_Quit"
 msgstr ""
 
-#: editorwindow.py:152
+#: editorwindow.py:153
 msgid "_Edit"
 msgstr ""
 
-#: editorwindow.py:153
+#: editorwindow.py:154
 msgid "_Undo"
 msgstr ""
 
-#: editorwindow.py:154
+#: editorwindow.py:155
 msgid "_Redo"
 msgstr ""
 
-#: editorwindow.py:155
+#: editorwindow.py:156
 msgid "Copy"
 msgstr ""
 
-#: editorwindow.py:156
+#: editorwindow.py:157
 msgid "Paste"
 msgstr ""
 
-#: editorwindow.py:157
+#: editorwindow.py:158
 msgid "Paste Filters"
 msgstr ""
 
-#: editorwindow.py:158
+#: editorwindow.py:159
 msgid "Add Monitor Clip"
 msgstr ""
 
-#: editorwindow.py:159 dialogs.py:1078
+#: editorwindow.py:160 dialogs.py:1078
 msgid "Append"
 msgstr ""
 
-#: editorwindow.py:160 dialogs.py:1077 dialogs.py:1103 guicomponents.py:1875
+#: editorwindow.py:161 dialogs.py:1077 dialogs.py:1103 guicomponents.py:1875
 msgid "Insert"
 msgstr ""
 
-#: editorwindow.py:161
+#: editorwindow.py:162
 msgid "Three Point Overwrite"
 msgstr ""
 
-#: editorwindow.py:162
+#: editorwindow.py:163
 msgid "Range Overwrite"
 msgstr ""
 
-#: editorwindow.py:163 dialogs.py:1075
+#: editorwindow.py:164 dialogs.py:1075
 msgid "Cut Clip"
 msgstr ""
 
-#: editorwindow.py:164 translations.py:508
+#: editorwindow.py:165 translations.py:508
 msgid "Lift"
 msgstr ""
 
-#: editorwindow.py:165 dialogs.py:1076
+#: editorwindow.py:166 dialogs.py:1076
 msgid "Splice Out"
 msgstr ""
 
-#: editorwindow.py:166 guicomponents.py:1082 guicomponents.py:1171
+#: editorwindow.py:167 guicomponents.py:1082 guicomponents.py:1171
 msgid "Resync"
 msgstr ""
 
-#: editorwindow.py:167
+#: editorwindow.py:168
 msgid "Set Sync Parent"
 msgstr ""
 
-#: editorwindow.py:168
+#: editorwindow.py:169
 msgid "Add Single Track Transition"
 msgstr ""
 
-#: editorwindow.py:169
+#: editorwindow.py:170
 msgid "Add Single Track Fade"
 msgstr ""
 
-#: editorwindow.py:170 guicomponents.py:1105 guicomponents.py:1142
+#: editorwindow.py:171 guicomponents.py:1105 guicomponents.py:1142
 msgid "Clear Filters"
 msgstr ""
 
-#: editorwindow.py:171
+#: editorwindow.py:172
 msgid "Change Sequence Tracks Count..."
 msgstr ""
 
-#: editorwindow.py:172
+#: editorwindow.py:173
 msgid "Watermark..."
 msgstr ""
 
-#: editorwindow.py:173 profilesmanager.py:45
+#: editorwindow.py:174 profilesmanager.py:45
 msgid "Profiles Manager"
 msgstr ""
 
-#: editorwindow.py:174
+#: editorwindow.py:175
 msgid "Preferences"
 msgstr ""
 
-#: editorwindow.py:175 preferenceswindow.py:53
+#: editorwindow.py:176 preferenceswindow.py:53
 msgid "View"
 msgstr ""
 
-#: editorwindow.py:176
+#: editorwindow.py:177
 msgid "Fullscreen"
 msgstr ""
 
-#: editorwindow.py:177 editorwindow.py:475
+#: editorwindow.py:178 editorwindow.py:479
 msgid "Project"
 msgstr ""
 
-#: editorwindow.py:178
+#: editorwindow.py:179
 msgid "Add Media Clip..."
 msgstr ""
 
-#: editorwindow.py:179
+#: editorwindow.py:180
 msgid "Add Image Sequence..."
 msgstr ""
 
-#: editorwindow.py:180
+#: editorwindow.py:181
 msgid "Create Color Clip..."
 msgstr ""
 
-#: editorwindow.py:181
+#: editorwindow.py:182
 msgid "Create Pattern Producer"
 msgstr ""
 
-#: editorwindow.py:182 translations.py:392 patternproducer.py:67
+#: editorwindow.py:183 translations.py:392 patternproducer.py:67
 msgid "Noise"
 msgstr ""
 
-#: editorwindow.py:183 patternproducer.py:72
+#: editorwindow.py:184 patternproducer.py:72
 msgid "EBU Bars"
 msgstr ""
 
-#: editorwindow.py:184 patternproducer.py:81
+#: editorwindow.py:185 patternproducer.py:81
 msgid "Ising"
 msgstr ""
 
-#: editorwindow.py:185 patternproducer.py:98
+#: editorwindow.py:186 patternproducer.py:98
 msgid "Color Pulse"
 msgstr ""
 
-#: editorwindow.py:186 dialogs.py:1067 dialogs.py:1083
+#: editorwindow.py:187 dialogs.py:1067 dialogs.py:1083
 msgid "Log Marked Clip Range"
 msgstr ""
 
-#: editorwindow.py:187
+#: editorwindow.py:188
 msgid "Recreate Media Icons..."
 msgstr ""
 
-#: editorwindow.py:188
+#: editorwindow.py:189
 msgid "Remove Unused Media..."
 msgstr ""
 
-#: editorwindow.py:189
+#: editorwindow.py:190
 msgid "JACK Audio..."
 msgstr ""
 
-#: editorwindow.py:190 proxyediting.py:216
+#: editorwindow.py:191 proxyediting.py:216
 msgid "Proxy Manager"
 msgstr ""
 
-#: editorwindow.py:191
+#: editorwindow.py:192
 msgid "Change Project Type..."
 msgstr ""
 
-#: editorwindow.py:192
+#: editorwindow.py:193
 msgid "Project Info"
 msgstr ""
 
-#: editorwindow.py:193 editorwindow.py:476 rendergui.py:168
+#: editorwindow.py:194 editorwindow.py:480 rendergui.py:168
 #: tools/batchrendering.py:857
 msgid "Render"
 msgstr ""
 
-#: editorwindow.py:194
+#: editorwindow.py:195
 msgid "Add To Batch Render Queue..."
 msgstr ""
 
-#: editorwindow.py:195
+#: editorwindow.py:196
 msgid "Batch Render Queue"
 msgstr ""
 
-#: editorwindow.py:196
+#: editorwindow.py:197
 msgid "Render Timeline"
 msgstr ""
 
-#: editorwindow.py:197 dialogs.py:1109
+#: editorwindow.py:198 dialogs.py:1109
 msgid "Tools"
 msgstr ""
 
-#: editorwindow.py:198 tools/titler.py:174
+#: editorwindow.py:199 tools/titler.py:174
 msgid "Titler"
 msgstr ""
 
-#: editorwindow.py:199
+#: editorwindow.py:200
 msgid "Audio Mixer"
 msgstr ""
 
-#: editorwindow.py:200 medialinker.py:172
+#: editorwindow.py:201
+msgid "G'MIC Effects"
+msgstr ""
+
+#: editorwindow.py:202 medialinker.py:172
 msgid "Media Relinker"
 msgstr ""
 
-#: editorwindow.py:201
+#: editorwindow.py:203
 msgid "_Help"
 msgstr ""
 
-#: editorwindow.py:202
+#: editorwindow.py:204
 msgid "Contents"
 msgstr ""
 
-#: editorwindow.py:203 dialogs.py:359
+#: editorwindow.py:205 dialogs.py:359
 msgid "Runtime Environment"
 msgstr ""
 
-#: editorwindow.py:204 dialogs.py:1052
+#: editorwindow.py:206 dialogs.py:1052
 msgid "Keyboard Shortcuts"
 msgstr ""
 
-#: editorwindow.py:205 dialogs.py:287
+#: editorwindow.py:207 dialogs.py:287
 msgid "About"
 msgstr ""
 
-#: editorwindow.py:469
+#: editorwindow.py:473
 msgid "Media"
 msgstr ""
 
-#: editorwindow.py:472
+#: editorwindow.py:476
 msgid "Range Log"
 msgstr ""
 
-#: editorwindow.py:473
+#: editorwindow.py:477
 msgid "Filters"
 msgstr ""
 
-#: editorwindow.py:474
+#: editorwindow.py:478
 msgid "Compositors"
 msgstr ""
 
-#: editorwindow.py:496
+#: editorwindow.py:500
 msgid ""
 "Prev Frame - Arrow Left\n"
 "Next Frame - Arrow Right\n"
@@ -537,95 +541,95 @@ msgid ""
 "To Mark Out"
 msgstr ""
 
-#: editorwindow.py:698
+#: editorwindow.py:702
 msgid "Middlebar Layout"
 msgstr ""
 
-#: editorwindow.py:701
+#: editorwindow.py:705
 msgid "Timecode Left"
 msgstr ""
 
-#: editorwindow.py:706
+#: editorwindow.py:710
 msgid "Timecode Center"
 msgstr ""
 
-#: editorwindow.py:718
+#: editorwindow.py:722
 msgid "Tabs Position"
 msgstr ""
 
-#: editorwindow.py:721
+#: editorwindow.py:725
 msgid "Up"
 msgstr ""
 
-#: editorwindow.py:725
+#: editorwindow.py:729
 msgid "Down"
 msgstr ""
 
-#: editorwindow.py:742
+#: editorwindow.py:746
 msgid "Show Monitor Sequence Profile"
 msgstr ""
 
-#: editorwindow.py:747
+#: editorwindow.py:751
 msgid "Show Master Volume Meter"
 msgstr ""
 
-#: editorwindow.py:755
+#: editorwindow.py:759
 msgid "Monitor Playback Interpolation"
 msgstr ""
 
-#: editorwindow.py:759
+#: editorwindow.py:763
 msgid "Nearest Neighbour (fast)"
 msgstr ""
 
-#: editorwindow.py:763
+#: editorwindow.py:767
 msgid "Bilinear (good)"
 msgstr ""
 
-#: editorwindow.py:767
+#: editorwindow.py:771
 msgid "Bicubic (better)"
 msgstr ""
 
-#: editorwindow.py:772
+#: editorwindow.py:776
 msgid "Hyper/Lanczos (best)"
 msgstr ""
 
-#: editorwindow.py:782
+#: editorwindow.py:786
 msgid "Zoom In"
 msgstr ""
 
-#: editorwindow.py:785
+#: editorwindow.py:789
 msgid "Zoom Out"
 msgstr ""
 
-#: editorwindow.py:788
+#: editorwindow.py:792
 msgid "Zoom Fit"
 msgstr ""
 
-#: editorwindow.py:896
+#: editorwindow.py:900
 msgid "Timeline current frame timecode"
 msgstr ""
 
-#: editorwindow.py:898
+#: editorwindow.py:902
 msgid "Select view mode: Video/Vectorscope/RGBParade"
 msgstr ""
 
-#: editorwindow.py:900
+#: editorwindow.py:904
 msgid "Monitor Sequence/Media current frame timecode"
 msgstr ""
 
-#: editorwindow.py:901
+#: editorwindow.py:905
 msgid "Current Monitor Sequence/Media name"
 msgstr ""
 
-#: editorwindow.py:903
+#: editorwindow.py:907
 msgid "Monitor Sequence/Media current position"
 msgstr ""
 
-#: editorwindow.py:905
+#: editorwindow.py:909
 msgid "Display Current Sequence on Timeline"
 msgstr ""
 
-#: editorwindow.py:906
+#: editorwindow.py:910
 msgid "Display Monitor Clip"
 msgstr ""
 
