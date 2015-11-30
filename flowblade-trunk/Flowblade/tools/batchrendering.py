@@ -1102,6 +1102,10 @@ def single_render_main(root_path):
     Gdk.threads_init()
     Gdk.threads_enter()
 
+    # Request dark them if so desired
+    if editorpersistance.prefs.dark_theme == True:
+        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
+
     repo = mlt.Factory().init()
 
     # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
@@ -1242,11 +1246,11 @@ class SingleRenderWindow:
                                    lambda w, e: _start_single_render_shutdown(), 
                                    None)
 
-        self.not_rendering_txt = "0 %"
         self.render_progress_bar = Gtk.ProgressBar()
-        self.render_progress_bar.set_text(self.not_rendering_txt)
+        self.progress_label = Gtk.Label("0 %")
         
         button_row =  Gtk.HBox(False, 0)
+        button_row.pack_start(self.progress_label, False, False, 0)
         button_row.pack_start(Gtk.Label(), True, True, 0)
         button_row.pack_start(self.stop_render_button, False, False, 0)
 
@@ -1270,7 +1274,7 @@ class SingleRenderWindow:
         self.render_progress_bar.set_fraction(fraction)
 
         progress_str = str(int(fraction * 100)) + " %"
-        self.render_progress_bar.set_text(progress_str)
+        self.progress_label.set_text(progress_str)
 
         if fraction != 0:
             full_time_est = (1.0 / fraction) * current_render_time_passed
