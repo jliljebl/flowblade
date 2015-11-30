@@ -822,9 +822,7 @@ def _display_file_info(media_file):
     frequency =  str(clip.get_int(str(sample_rate_property))) + "Hz"
     
     try:
-        num = float(clip.get("meta.media.frame_rate_num")) # from producer_avformat.c
-        den = float(clip.get("meta.media.frame_rate_den")) # from producer_avformat.c
-        fps = str(num/den)
+        fps = float(clip.get_fps())
     except:
         fps ="N/A"
     
