@@ -61,6 +61,7 @@ _player = None
 _frame_writer = None
 _current_preview_surface = None
 
+
 def launch_gmic():
     print "Launch gmic..."
     gui.save_current_colors()
@@ -207,6 +208,12 @@ def write_out_current_frame():
     
 def render_current_frame_preview():
     shutil.copyfile(get_current_frame_file(), get_preview_file())
+    
+    # gmic 00012.jpg -gimp_charcoal 65,70,170,0,1,0,50,70,255,255,255,0,0,0,0,0 -output gmic_test2.png
+    script_str = "gmic " + get_current_frame_file() + " -gimp_charcoal 65,70,170,0,1,0,50,70,255,255,255,0,0,0,0,0 -output " +  get_preview_file()
+    print script_str
+    subprocess.call(script_str, shell=True)
+     
     global _current_preview_surface
     _current_preview_surface = cairo.ImageSurface.create_from_png(get_preview_file())
 
