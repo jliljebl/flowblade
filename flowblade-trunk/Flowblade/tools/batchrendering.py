@@ -330,6 +330,10 @@ def main(root_path, force_launch=False):
     Gdk.threads_init()
     Gdk.threads_enter()
 
+    # Request dark them if so desired
+    if editorpersistance.prefs.dark_theme == True:
+        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
+
     repo = mlt.Factory().init()
 
     # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
