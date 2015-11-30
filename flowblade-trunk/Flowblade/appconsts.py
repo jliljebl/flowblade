@@ -141,6 +141,7 @@ AUDIO_LEVELS_DIR = "audiolevels/"
 # Hidden media folders
 THUMBNAILS_DIR = "thumbnails"
 RENDERED_CLIPS_DIR = "rendered_clips"
+GMIC_DIR = "gmic"
 
 # Luma bands
 SHADOWS = 0

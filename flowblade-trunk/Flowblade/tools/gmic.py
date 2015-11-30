@@ -22,12 +22,17 @@ from gi.repository import GObject, GLib
 from gi.repository import Gtk, Gdk, GdkPixbuf
 from gi.repository import GdkX11
 
+import cairo
 import locale
 import mlt
+import numpy as np
 import os
+import shutil
 import subprocess
 import sys
 
+import appconsts
+import cairoarea
 import dialogutils
 import editorstate
 import editorpersistance
@@ -45,8 +50,16 @@ import utils
 
 import gmicplayer
 
+
+MONITOR_WIDTH = 400
+MONITOR_HEIGHT = 300
+CLIP_FRAMES_DIR = "/clip_frames"
+PREVIEW_FILE = "preview.png"
+
 _window = None
 _player = None
+_frame_writer = None
+_current_preview_surface = None
 
 def launch_gmic():
     print "Launch gmic..."
@@ -57,8 +70,7 @@ def launch_gmic():
 
 
 def main(root_path, force_launch=False):
-    init_dirs_if_needed()
-    
+       
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
     editorstate.gtk_version = gtk_version
     try:
@@ -69,6 +81,14 @@ def main(root_path, force_launch=False):
     # Set paths.
     respaths.set_paths(root_path)
 
+    #c Init gmic tool session dirs
+    if os.path.exists(get_session_folder()):
+        shutil.rmtree(get_session_folder())
+        
+    os.mkdir(get_session_folder())
+    
+    init_clip_frames_dir()
+    
     # Load editor prefs and list of recent projects
     editorpersistance.load()
     
@@ -115,21 +135,25 @@ def main(root_path, force_launch=False):
     Gtk.main()
     Gdk.threads_leave()
     
-def init_dirs_if_needed():
-    user_dir = utils.get_hidden_user_dir_path()
+def get_session_folder():
+    return utils.get_hidden_user_dir_path() + appconsts.GMIC_DIR + "/test"
 
-    """
-    if not os.path.exists(user_dir + BATCH_DIR):
-        os.mkdir(user_dir + BATCH_DIR)
-    if not os.path.exists(get_datafiles_dir()):
-        os.mkdir(get_datafiles_dir())
-    if not os.path.exists(get_projects_dir()):
-        os.mkdir(get_projects_dir())
-    """
+def get_clip_frames_dir():
+    return get_session_folder() + CLIP_FRAMES_DIR
 
+def get_current_frame_file():
+    return get_clip_frames_dir() + "/frame" + str(_player.current_frame()) + ".png"
+
+def get_preview_file():
+    return get_session_folder() + PREVIEW_FILE
+    
+def init_clip_frames_dir():
+    if os.path.exists(get_clip_frames_dir()):
+        shutil.rmtree(get_clip_frames_dir())
+    os.mkdir(get_clip_frames_dir())
+    
 def open_clip_dialog(callback):
     
-
     file_select = Gtk.FileChooserDialog(_("Select Image Media"), _window, Gtk.FileChooserAction.OPEN,
                                     (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                                     Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
@@ -162,12 +186,29 @@ def _open_files_dialog_cb(file_select, response_id):
     if len(filenames) == 0:
         return
 
-    global _player
+    global _player, _frame_writer
     _player = gmicplayer.GmicPlayer(filenames[0])
+    _frame_writer = gmicplayer.FrameWriter(filenames[0])
+    
     _window.init_for_new_clip(filenames[0])
     _player.create_sdl_consumer()
     _player.connect_and_start()
-    #_window.pos_bar.widget.queue_draw()
+
+def show_preview():
+    write_out_current_frame()
+    
+def write_out_current_frame():
+    if os.path.exists(get_current_frame_file()):
+        return
+
+    _frame_writer.write_frame(get_clip_frames_dir() + "/", _player.current_frame())
+    render_current_frame_preview()
+    _window.preview_monitor.queue_draw()
+    
+def render_current_frame_preview():
+    shutil.copyfile(get_current_frame_file(), get_preview_file())
+    global _current_preview_surface
+    _current_preview_surface = cairo.ImageSurface.create_from_png(get_preview_file())
 
 class GmicWindow(Gtk.Window):
     def __init__(self):
@@ -188,22 +229,41 @@ class GmicWindow(Gtk.Window):
         project_row.pack_start(load_button, False, False, 0)
         project_row.pack_start(Gtk.Label(), True, True, 0)
 
-        left_vbox = Gtk.VBox(False, 0)
-        left_vbox.pack_start(self.pos_bar.widget, False, False, 0)
-
+        # Clip monitor
         black_box = Gtk.EventBox()
         black_box.add(Gtk.Label())
         bg_color = Gdk.Color(red=0.0, green=0.0, blue=0.0)
         black_box.modify_bg(Gtk.StateType.NORMAL, bg_color)
         self.monitor = black_box  # This could be any GTK+ widget (that is not "windowless"), only its XWindow draw rect 
                                   # is used to position and scale SDL overlay that actually displays video.
-        self.monitor.set_size_request(400, 300)
+        self.monitor.set_size_request(MONITOR_WIDTH, MONITOR_HEIGHT)
 
+        left_vbox = Gtk.VBox(False, 0)
+        left_vbox.pack_start(self.monitor, False, False, 0)
+        left_vbox.pack_start(self.pos_bar.widget, False, False, 0)
+
+        # Effect preview
+        self.preview_monitor = cairoarea.CairoDrawableArea2(MONITOR_WIDTH, MONITOR_HEIGHT, self._draw_preview)
+
+        preview_button = Gtk.Button(_("Preview"))
+        preview_button.connect("clicked",
+                            lambda w: self.preview_button_clicked())
+
+        preview_row = Gtk.HBox(False, 2)
+        preview_row.pack_start(preview_button, False, False, 0)
+        preview_row.pack_start(Gtk.Label(), True, True, 0)
+
+        right_vbox = Gtk.VBox(False, 2)
+        right_vbox.pack_start(self.preview_monitor, False, False, 0)
+        right_vbox.pack_start(preview_row, False, False, 0)
+
+        monitors_row = Gtk.HBox(False, 2)
+        monitors_row.pack_start(left_vbox, False, False, 0)
+        monitors_row.pack_start(right_vbox, True, True, 0)
         
         pane = Gtk.VBox(False, 2)
         pane.pack_start(project_row, False, False, 0)
-        pane.pack_start(self.monitor, False, False, 0)
-        pane.pack_start(left_vbox, False, False, 0)
+        pane.pack_start(monitors_row, False, False, 0)
 
         align = guiutils.set_margins(pane, 12, 12, 12, 12)
 
@@ -222,7 +282,10 @@ class GmicWindow(Gtk.Window):
     
     def load_button_clicked(self):
         open_clip_dialog(_open_files_dialog_cb)
-    
+
+    def preview_button_clicked(self):
+        show_preview()
+
     def set_active_state(self, active):
         self.monitor.set_sensitive(active)
         self.pos_bar.widget.set_sensitive(active)
@@ -231,3 +294,17 @@ class GmicWindow(Gtk.Window):
         frame = normalized_pos * length
         #self.tc_display.set_frame(int(frame))
         self.pos_bar.widget.queue_draw()
+
+    def _draw_preview(self, event, cr, allocation):
+        x, y, w, h = allocation
+
+        if _current_preview_surface != None:
+            cr.set_source_surface(_current_preview_surface, 0, 0)
+            cr.paint()
+        else:
+            cr.set_source_rgb(0.5, 0.5, 0.5)
+            cr.rectangle(0, 0, w, h)
+            cr.fill()
+
+
+            

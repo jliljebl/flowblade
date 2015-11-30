@@ -85,17 +85,7 @@ class GmicPlayer:
         self.producer.set_speed(0)
         self.producer.seek(frame) 
 
-    def seek_and_get_rgb_frame(self, frame, update_gui=True):
-        # Force range
-        length = self.get_active_length()
-        if frame < 0:
-            frame = 0
-        elif frame >= length:
-            frame = length - 1
-
-        self.producer.set_speed(0)
-        self.producer.seek(frame) 
-
+    def get_rgb_frame(self):
         frame = self.producer.get_frame()
         # And make sure we deinterlace if input is interlaced
         frame.set("consumer_deinterlace", 1)
@@ -108,3 +98,30 @@ class GmicPlayer:
     def shutdown(self):
         self.producer.set_speed(0)
         self.consumer.stop()
+
+
+class FrameWriter:
+
+    def __init__(self, file_path):
+        self.profile = mltprofiles.get_default_profile()
+        self.producer = mlt.Producer(self.profile, str(file_path))
+    
+    def write_frame(self, clip_folder, frame):
+        """
+        Writes thumbnail image from file producer
+        """
+        # Get data
+        
+        frame_path = clip_folder + "frame" + str(frame) +  ".png"
+
+        # Create consumer
+        consumer = mlt.Consumer(self.profile, "avformat", 
+                                frame_path)
+        consumer.set("real_time", 0)
+        consumer.set("vcodec", "png")
+
+        frame_producer = self.producer.cut(frame, frame)
+
+        # Connect and write image
+        consumer.connect(frame_producer)
+        consumer.run()

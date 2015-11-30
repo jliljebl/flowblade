@@ -64,7 +64,7 @@ class ViewEditor(Gtk.Frame):
         self.edit_layers = []
         self.active_layer = None
         self.edit_target_layer = None
-        
+
         self.change_active_layer_for_hit = True
         self.active_layer_changed_listener = None # interface: listener(new_active_index)
                                                   # note: vieweditor calls activate_layer( ) when non-active layer hit
