@@ -14,9 +14,9 @@
 sudo apt-get install -f
 ```
 
-Release has been tested on: <b>Ubuntu 15.10, 14.10, Linux Mint 17 and Debian 8</b>.
+Release has been tested on: <b>Ubuntu 15.10, 14.10 and Debian 8</b>.
 
-<b><i>Flowblade versions 1.2 and 1.4 are not supported for Ubuntu 14.04, Debian 7 or earlier systems.</i></b> Flowblade uses a GTK3 feature that is not available on those systems. Last GTK2 version 1.0 should work fine and it can be downloaded <a href="https://www.dropbox.com/s/9m2e9whcazjo1l8/flowblade-1.0.0-1_all.deb?dl=0">here.</a>
+<b><i>Flowblade versions 1.2 and 1.4 are not supported for Ubuntu 14.04, Linux Mint 17.x,  Debian 7 or earlier systems.</i></b> Flowblade uses a GTK3 feature that is not available on those systems. Last GTK2 version 1.0 should work fine and it can be downloaded <a href="https://www.dropbox.com/s/9m2e9whcazjo1l8/flowblade-1.0.0-1_all.deb?dl=0">here.</a>
 
 *Please note these issues with Dropbox download:*
 <ul>
