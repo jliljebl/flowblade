@@ -796,35 +796,29 @@ def media_file_name_edited(dialog, response_id, data):
     gui.media_list_view.fill_data_model()
 
 def _display_file_info(media_file):
+    # get info
     clip = current_sequence().create_file_producer_clip(media_file.path)
+    info = utils.get_file_producer_info(clip)
 
-    width = clip.get("width")
-    height = clip.get("height")
+    width = info["width"]
+    height = info["height"]
     size = str(width) + " x " + str(height)
-    length = utils.get_tc_string(clip.get_length())
+    length = utils.get_tc_string(info["length"])
 
     try:
         img = guiutils.get_gtk_image_from_file(media_file.icon_path, 300)
     except:
         print "_display_file_info() failed to get thumbnail"
-
-    video_index = clip.get_int("video_index")
-    audio_index = clip.get_int("audio_index")
-    long_video_property = "meta.media." + str(video_index) + ".codec.long_name"
-    long_audio_property = "meta.media." + str(audio_index) + ".codec.long_name"
-    sample_rate_property = "meta.media." + str(audio_index) + ".codec.sample_rate"
-    channels_property = "meta.media." + str(audio_index) +  ".codec.channels"
     
-    vcodec = clip.get(str(long_video_property))
-    acodec = clip.get(str(long_audio_property))
+    vcodec = info["vcodec"]
+    acodec = info["acodec"]
     
-    channels = str(clip.get_int(str(channels_property))) 
-    frequency =  str(clip.get_int(str(sample_rate_property))) + "Hz"
+    channels = str(info["channels"]) 
+    frequency =  str(info["frequency"]) + "Hz"
         
     try:
-        frame = clip.get_frame()
-        num = frame.get_double("meta.media.frame_rate_num")
-        den = frame.get_double("meta.media.frame_rate_den")
+        num = info["fps_num"]
+        den = info["fps_den"]
         fps = float(num/den) 
     except:
         fps ="N/A"

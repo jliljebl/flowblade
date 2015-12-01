@@ -360,6 +360,33 @@ def get_img_seq_resource_name(frame_file, new_style_res_name):
 
     return resource_name_str
 
+def get_file_producer_info(file_producer):
+    clip = file_producer
+    
+    info = {}
+    info["width"] = clip.get("width")
+    info["height"] = clip.get("height")
+    info["length"]  = clip.get_length()
+    
+    video_index = clip.get_int("video_index")
+    audio_index = clip.get_int("audio_index")
+    long_video_property = "meta.media." + str(video_index) + ".codec.long_name"
+    long_audio_property = "meta.media." + str(audio_index) + ".codec.long_name"
+    sample_rate_property = "meta.media." + str(audio_index) + ".codec.sample_rate"
+    channels_property = "meta.media." + str(audio_index) +  ".codec.channels"
+    
+    info["vcodec"] = clip.get(str(long_video_property))
+    info["acodec"] = clip.get(str(long_audio_property))
+    info["channels"] = clip.get_int(str(channels_property))
+    info["frequency"] =  clip.get_int(str(sample_rate_property))
+    frame = clip.get_frame()
+    info["fps_num"] = frame.get_double("meta.media.frame_rate_num")
+    info["fps_den"] = frame.get_double("meta.media.frame_rate_den")
+    info["progressive"] = frame.get_int("meta.media.progressive") == 1
+    info["top_field_first"] = frame.get_int("meta.media.top_field_first") == 1
+    
+    return info
+        
 # File exntension lists
 _audio_file_extensions = [  "act",
                             "aif",
