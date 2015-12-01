@@ -28,15 +28,23 @@ import mlt
 import os
 
 import mltprofiles
+import utils
 
 TICKER_DELAY = 0.25
 RENDER_TICKER_DELAY = 0.05
 
+_current_profile = None
+
+def set_current_profile(clip_path):
+    profile = mltprofiles.get_default_profile()
+    producer = mlt.Producer(profile, str(clip_path))
+    global _current_profile
+    _current_profile = mltprofiles.get_closest_matching_profile(utils.get_file_producer_info(producer))
+        
 class GmicPlayer:
     
     def __init__(self, clip_path):
-        self.profile = mltprofiles.get_default_profile()
-        self.producer = mlt.Producer(self.profile, str(clip_path))
+        self.producer = mlt.Producer(_current_profile, str(clip_path))
         self.producer.mark_in = -1
         self.producer.mark_out = -1
         
@@ -45,7 +53,7 @@ class GmicPlayer:
         Creates consumer with sdl output to a gtk+ widget.
         """
         # Create consumer and set params
-        self.consumer = mlt.Consumer(self.profile, "sdl")
+        self.consumer = mlt.Consumer(_current_profile, "sdl")
         self.consumer.set("real_time", 1)
         self.consumer.set("rescale", "bicubic") # MLT options "nearest", "bilinear", "bicubic", "hyper"
         self.consumer.set("resize", 1)
@@ -103,9 +111,8 @@ class GmicPlayer:
 class FrameWriter:
 
     def __init__(self, file_path):
-        self.profile = mltprofiles.get_default_profile()
-        self.producer = mlt.Producer(self.profile, str(file_path))
-    
+        self.producer = mlt.Producer(_current_profile, str(file_path))
+            
     def write_frame(self, clip_folder, frame):
         """
         Writes thumbnail image from file producer
@@ -115,8 +122,7 @@ class FrameWriter:
         frame_path = clip_folder + "frame" + str(frame) +  ".png"
 
         # Create consumer
-        consumer = mlt.Consumer(self.profile, "avformat", 
-                                frame_path)
+        consumer = mlt.Consumer(_current_profile, "avformat", frame_path)
         consumer.set("real_time", 0)
         consumer.set("vcodec", "png")
 

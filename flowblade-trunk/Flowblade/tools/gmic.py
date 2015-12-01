@@ -187,6 +187,8 @@ def _open_files_dialog_cb(file_select, response_id):
     if len(filenames) == 0:
         return
 
+    gmicplayer.set_current_profile(filenames[0])
+
     global _player, _frame_writer
     _player = gmicplayer.GmicPlayer(filenames[0])
     _frame_writer = gmicplayer.FrameWriter(filenames[0])

@@ -364,8 +364,8 @@ def get_file_producer_info(file_producer):
     clip = file_producer
     
     info = {}
-    info["width"] = clip.get("width")
-    info["height"] = clip.get("height")
+    info["width"] = clip.get_int("width")
+    info["height"] = clip.get_int("height")
     info["length"]  = clip.get_length()
     
     video_index = clip.get_int("video_index")
