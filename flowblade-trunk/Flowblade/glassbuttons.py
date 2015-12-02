@@ -26,7 +26,6 @@ from gi.repository import Gtk
 import cairoarea
 import editorpersistance
 import gui
-#import guiutils
 import respaths
 
 BUTTONS_GRAD_STOPS = [   (1, 1, 1, 1, 0.2),
@@ -54,6 +53,8 @@ MB_BUTTON_HEIGHT = 22
 MB_BUTTON_WIDTH = 35
 MB_BUTTON_Y = 4
 MB_BUTTON_IMAGE_Y = 6
+
+GMIC_BUTTONS_WIDTH = 250
 
 M_PI = math.pi
 
@@ -334,6 +335,79 @@ class PlayerButtons(AbstractGlassButtons):
         self.button_x = mid_x - (buttons_width / 2)
         self._draw_buttons(cr, w, h)
 
+
+class GmicButtons(AbstractGlassButtons):
+
+    def __init__(self):
+
+        AbstractGlassButtons.__init__(self, MB_BUTTON_WIDTH, MB_BUTTON_HEIGHT, MB_BUTTON_Y, GMIC_BUTTONS_WIDTH, MB_BUTTONS_HEIGHT)
+
+        IMG_PATH = respaths.IMAGE_PATH
+        next_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "next_frame_s.png")
+        prev_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "prev_frame_s.png")
+        mark_in_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "mark_in_s.png")
+        mark_out_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "mark_out_s.png")
+        marks_clear_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "marks_clear_s.png") 
+        to_mark_in_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "to_mark_in_s.png")        
+        to_mark_out_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "to_mark_out_s.png") 
+
+        self.icons = [prev_icon, next_icon, mark_in_icon, mark_out_icon, 
+                      marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
+        self.image_x = [8, 10, 6, 14, 5, 10, 9]
+
+        for i in range(0, len(self.icons)):
+            self.image_y.append(MB_BUTTON_IMAGE_Y)
+
+        self.pressed_callback_funcs = None # set using set_callbacks()
+
+        self.set_sensitive(True)
+        
+        focus_groups[DEFAULT_FOCUS_GROUP].append(self.widget)
+
+
+    def set_normal_sensitive_pattern(self):
+        self.set_sensitive(True)
+        self.widget.queue_draw()
+
+    # ------------------------------------------------------------- mouse events
+    def _press_event(self, event):
+        """
+        Mouse button callback
+        """
+        self.pressed_button = self._get_hit_code(event.x, event.y)
+        if self.pressed_button >= 0 and self.pressed_button < len(self.icons):
+            callback_func = self.pressed_callback_funcs[self.pressed_button] # index is set to match at editorwindow.py where callback func list is created
+            callback_func()
+        self.widget.queue_draw()
+
+    def _motion_notify_event(self, x, y, state):
+        """
+        Mouse move callback
+        """
+        button_under = self._get_hit_code(x, y)
+        if self.pressed_button != button_under: # pressed button is released
+            self.pressed_button = NO_HIT
+        self.widget.queue_draw()
+
+    def _release_event(self, event):
+        """
+        Mouse release callback
+        """
+        self.pressed_button = -1
+        self.widget.queue_draw()
+
+    def set_callbacks(self, pressed_callback_funcs):
+        self.pressed_callback_funcs = pressed_callback_funcs 
+
+    # ---------------------------------------------------------------- painting
+    def _draw(self, event, cr, allocation):
+        x, y, w, h = allocation
+        self.allocation = allocation
+
+        mid_x = w / 2
+        buttons_width = self.button_width * len(self.icons)
+        self.button_x = mid_x - (buttons_width / 2)
+        self._draw_buttons(cr, w, h)
 
 class GlassButtonsGroup(AbstractGlassButtons):
 

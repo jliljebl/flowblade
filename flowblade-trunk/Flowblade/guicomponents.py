@@ -1658,11 +1658,17 @@ class MonitorTCDisplay:
         corner_radius = height / 3.5
         radius = corner_radius / aspect
         degrees = M_PI / 180.0
-        
+
         self._draw_consts = (x, y, width, height, aspect, corner_radius, radius, degrees)
-        
+
+        self.FPS_NOT_SET = -99.0
+
         self._frame = 0
         self.use_internal_frame = False
+
+        self.use_internal_fps = False # if False, fps value for calulating tc comes from utils.fps(), 
+                                       # if True, fps value from self.fps that will have to be set from user site
+        self.fps = self.FPS_NOT_SET # this will have to be set from user site
 
     def set_frame(self, frame):
         self._frame = frame # this is used in tools, editor window uses PLAYER frame
@@ -1700,10 +1706,17 @@ class MonitorTCDisplay:
 
         # Get current TIMELINE frame str
         if self.use_internal_frame:
-            frame = self._frame
+            frame = self._frame 
         else:
-            frame = PLAYER().tracktor_producer.frame()
-        frame_str = utils.get_tc_string(frame)
+            frame = PLAYER().tracktor_producer.frame() # is this used actually?
+        
+        if self.use_internal_fps == False:
+            frame_str = utils.get_tc_string(frame)
+        else:
+            if  self.fps != self.FPS_NOT_SET:
+                frame_str = utils.get_tc_string_with_fps(frame, self.fps)
+            else:
+                frame_str = ""
 
         # Text
         layout = PangoCairo.create_layout(cr)

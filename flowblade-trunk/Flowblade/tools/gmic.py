@@ -37,7 +37,9 @@ import dialogutils
 import editorstate
 import editorpersistance
 import gui
+import guicomponents
 import guiutils
+import glassbuttons
 import mltenv
 import mltprofiles
 import mlttransitions
@@ -51,8 +53,8 @@ import utils
 import gmicplayer
 
 
-MONITOR_WIDTH = 400
-MONITOR_HEIGHT = 300
+MONITOR_WIDTH = 450
+MONITOR_HEIGHT = 300 # initial value this gets changed when material is loaded
 CLIP_FRAMES_DIR = "/clip_frames"
 PREVIEW_FILE = "preview.png"
 
@@ -60,7 +62,8 @@ _window = None
 _player = None
 _frame_writer = None
 _current_preview_surface = None
-
+_current_dimensions = None
+_current_fps = None
 
 def launch_gmic():
     print "Launch gmic..."
@@ -92,7 +95,9 @@ def main(root_path, force_launch=False):
     
     # Load editor prefs and list of recent projects
     editorpersistance.load()
-    
+    if editorpersistance.prefs.dark_theme == True:
+        respaths.apply_dark_theme()
+
     # Init translations module with translations data
     translations.init_languages()
     translations.load_filters_translations()
@@ -187,13 +192,20 @@ def _open_files_dialog_cb(file_select, response_id):
     if len(filenames) == 0:
         return
 
-    gmicplayer.set_current_profile(filenames[0])
+    new_profile = gmicplayer.set_current_profile(filenames[0])
+    global _current_dimensions, _current_fps
+    _current_dimensions = (new_profile.width(), new_profile.height(), 1.0)
+    _current_fps = float(new_profile.frame_rate_num())/float(new_profile.frame_rate_den())
 
     global _player, _frame_writer
     _player = gmicplayer.GmicPlayer(filenames[0])
     _frame_writer = gmicplayer.FrameWriter(filenames[0])
-    
+
+    #display_aspect_num(self): return _mlt.Profile_display_aspect_num(self)
+    #def display_aspect_den(self):
+    _window.set_fps()
     _window.init_for_new_clip(filenames[0])
+    _window.set_monitor_sizes()
     _player.create_sdl_consumer()
     _player.connect_and_start()
 
@@ -227,15 +239,17 @@ class GmicWindow(Gtk.Window):
         app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowblademedialinker.png")
         self.set_icon(app_icon)
 
-        self.pos_bar = positionbar.PositionBar(False)
-        self.pos_bar.set_listener(self.position_listener)
 
+        # Load media row
         load_button = Gtk.Button(_("Load Clip"))
         load_button.connect("clicked",
                             lambda w: self.load_button_clicked())
-
+        self.media_info = Gtk.Label("video_clip.mpg   1920x 1080  25.0 fps")
+        
         project_row = Gtk.HBox(False, 2)
         project_row.pack_start(load_button, False, False, 0)
+        project_row.pack_start(guiutils.get_pad_label(24, 2), False, False, 0)
+        project_row.pack_start(self.media_info, False, False, 0)
         project_row.pack_start(Gtk.Label(), True, True, 0)
 
         # Clip monitor
@@ -249,30 +263,102 @@ class GmicWindow(Gtk.Window):
 
         left_vbox = Gtk.VBox(False, 0)
         left_vbox.pack_start(self.monitor, False, False, 0)
-        left_vbox.pack_start(self.pos_bar.widget, False, False, 0)
 
-        # Effect preview
+        # Preview monitor
         self.preview_monitor = cairoarea.CairoDrawableArea2(MONITOR_WIDTH, MONITOR_HEIGHT, self._draw_preview)
+        right_vbox = Gtk.VBox(False, 2)
+        right_vbox.pack_start(self.preview_monitor, False, False, 0)
+        #right_vbox.pack_start(preview_row, False, False, 0)
 
+        # Monitors panel
+        monitors_panel = Gtk.HBox(False, 2)
+        monitors_panel.pack_start(left_vbox, False, False, 0)
+        monitors_panel.pack_start(right_vbox, False, False, 0)
+        
+        # Control row
+        self.tc_display = guicomponents.MonitorTCDisplay()
+        self.tc_display.use_internal_frame = True
+        self.tc_display.widget.set_valign(Gtk.Align.CENTER)
+        self.tc_display.use_internal_fps = True
+        
+        self.pos_bar = positionbar.PositionBar(False)
+        self.pos_bar.set_listener(self.position_listener)
+
+        self.control_buttons = glassbuttons.GmicButtons()
+        
         preview_button = Gtk.Button(_("Preview"))
         preview_button.connect("clicked",
                             lambda w: self.preview_button_clicked())
+                            
+        control_panel = Gtk.HBox(False, 2)
+        control_panel.pack_start(self.tc_display.widget, False, False, 0)
+        control_panel.pack_start(self.pos_bar.widget, True, True, 0)
+        control_panel.pack_start(self.control_buttons.widget, False, False, 0)
+        control_panel.pack_start(preview_button, False, False, 0)
 
-        preview_row = Gtk.HBox(False, 2)
-        preview_row.pack_start(preview_button, False, False, 0)
-        preview_row.pack_start(Gtk.Label(), True, True, 0)
-
-        right_vbox = Gtk.VBox(False, 2)
-        right_vbox.pack_start(self.preview_monitor, False, False, 0)
-        right_vbox.pack_start(preview_row, False, False, 0)
-
-        monitors_row = Gtk.HBox(False, 2)
-        monitors_row.pack_start(left_vbox, False, False, 0)
-        monitors_row.pack_start(right_vbox, True, True, 0)
+        # Script area
+        self.preset_label = Gtk.Label("Select Preset Script")
         
+        self.preset_select = Gtk.ComboBoxText()
+        self.preset_select.set_tooltip_text(_("Select Preset G'Mic script"))
+        self.preset_select.append_text("Gimp Charcoal")
+        self.preset_select.set_active(0)
+
+        preset_row = Gtk.HBox(False, 2)
+        preset_row.pack_start(self.preset_label, False, False, 0)
+        preset_row.pack_start(self.preset_select, False, False, 0)
+        preset_row.pack_start(Gtk.Label(), True, True, 0)
+
+        self.script_view = Gtk.TextView()
+        self.script_view.set_sensitive(False)
+        self.script_view.set_pixels_above_lines(2)
+        self.script_view.set_left_margin(2)
+
+        script_sw = Gtk.ScrolledWindow()
+        script_sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        script_sw.add(self.script_view)
+        
+        script_vbox = Gtk.VBox(False, 2)
+        script_vbox.pack_start(preset_row, False, False, 0)
+        script_vbox.pack_start(script_sw, True, True, 0)
+        script_vbox.set_size_request(MONITOR_WIDTH, 200)
+        
+        # Outout area
+        self.out_view = Gtk.TextView()
+        self.out_view.set_sensitive(False)
+        self.out_view.set_pixels_above_lines(2)
+        self.out_view.set_left_margin(2)
+
+        out_sw = Gtk.ScrolledWindow()
+        out_sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        out_sw.add(self.out_view)
+        
+        output_vbox = Gtk.VBox(False, 2)
+        output_vbox.pack_start(out_sw, True, True, 0)
+        output_vbox.set_size_request(MONITOR_WIDTH, 200)
+    
+        # Script work panel
+        script_work_panel = Gtk.HBox(False, 2)
+        script_work_panel.pack_start(script_vbox, False, False, 0)
+        script_work_panel.pack_start(output_vbox, False, False, 0)
+
+        # Render panel
+        self.render_progress_bar = Gtk.ProgressBar()
+        stop_button = Gtk.Button(_("Stop"))
+        render_button = Gtk.Button(_("Render"))
+
+        render_row = Gtk.HBox(False, 2)
+        render_row.pack_start(self.render_progress_bar, True, True, 0)
+        render_row.pack_start(stop_button, False, False, 0)
+        render_row.pack_start(render_button, False, False, 0)
+
+        # Build window
         pane = Gtk.VBox(False, 2)
         pane.pack_start(project_row, False, False, 0)
-        pane.pack_start(monitors_row, False, False, 0)
+        pane.pack_start(monitors_panel, False, False, 0)
+        pane.pack_start(control_panel, False, False, 0)
+        pane.pack_start(script_work_panel, False, False, 0)
+        pane.pack_start(render_row, False, False, 0)
 
         align = guiutils.set_margins(pane, 12, 12, 12, 12)
 
@@ -299,6 +385,9 @@ class GmicWindow(Gtk.Window):
         self.monitor.set_sensitive(active)
         self.pos_bar.widget.set_sensitive(active)
 
+    def set_fps(self):
+        self.tc_display.fps = _current_fps
+        
     def position_listener(self, normalized_pos, length):
         frame = normalized_pos * length
         #self.tc_display.set_frame(int(frame))
@@ -308,6 +397,10 @@ class GmicWindow(Gtk.Window):
         x, y, w, h = allocation
 
         if _current_preview_surface != None:
+            width, height, pixel_aspect = _current_dimensions
+            scale = float(MONITOR_WIDTH) / float(width)
+            print "scale", scale
+            cr.scale(scale * pixel_aspect, scale)
             cr.set_source_surface(_current_preview_surface, 0, 0)
             cr.paint()
         else:
@@ -315,5 +408,11 @@ class GmicWindow(Gtk.Window):
             cr.rectangle(0, 0, w, h)
             cr.fill()
 
+    def set_monitor_sizes(self):
+        w, h, pixel_aspect = _current_dimensions
+        new_height = MONITOR_WIDTH * (float(h)/float(w)) * pixel_aspect
+        self.monitor.set_size_request(MONITOR_WIDTH, new_height)
+        self.preview_monitor.set_size_request(MONITOR_WIDTH, new_height)
 
-            
+        
+        
