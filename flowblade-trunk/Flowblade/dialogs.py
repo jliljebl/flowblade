@@ -145,8 +145,8 @@ def load_project_dialog(callback, parent=None):
 
     dialog = Gtk.FileChooserDialog(_("Select Project File"), parent,
                                    Gtk.FileChooserAction.OPEN,
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
     file_filter = Gtk.FileFilter()
@@ -162,8 +162,8 @@ def save_project_as_dialog(callback, current_name, open_dir, parent=None):
 
     dialog = Gtk.FileChooserDialog(_("Save Project As"), parent, 
                                    Gtk.FileChooserAction.SAVE, 
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                                    _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                                    _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.SAVE)
     dialog.set_current_name(current_name)
     dialog.set_do_overwrite_confirmation(True)
@@ -183,8 +183,8 @@ def export_xml_dialog(callback, project_name):
 def _export_file_name_dialog(callback, project_name, dialog_title):  
     dialog = Gtk.FileChooserDialog(dialog_title,  gui.editor_window.window, 
                                    Gtk.FileChooserAction.SAVE, 
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                                   _("Export").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                                   _("Export").encode('utf-8'), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.SAVE)
     project_name = project_name.strip(".flb")
     dialog.set_current_name(project_name + ".xml")
@@ -197,8 +197,8 @@ def _export_file_name_dialog(callback, project_name, dialog_title):
 def save_env_data_dialog(callback):    
     dialog = Gtk.FileChooserDialog(_("Save Runtime Environment Data"),  gui.editor_window.window, 
                                    Gtk.FileChooserAction.SAVE, 
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                                   _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                                   _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.SAVE)
     dialog.set_current_name("flowblade_runtime_environment_data")
     dialog.set_do_overwrite_confirmation(True)
@@ -1203,8 +1203,8 @@ def watermark_dialog(add_callback, remove_callback):
 def watermark_file_dialog(callback, parent, widgets):
     dialog = Gtk.FileChooserDialog(_("Select Watermark File"),  gui.editor_window.window, 
                                    Gtk.FileChooserAction.OPEN, 
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
     file_filter = Gtk.FileFilter()

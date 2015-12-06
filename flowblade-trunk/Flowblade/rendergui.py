@@ -99,8 +99,8 @@ def no_good_rander_range_info():
 def load_ffmpeg_opts_dialog(callback, opts_extension):
     dialog = Gtk.FileChooserDialog(_("Load Render Args File"), None, 
                                    Gtk.FileChooserAction.OPEN, 
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
     file_filter = Gtk.FileFilter()
@@ -113,8 +113,8 @@ def load_ffmpeg_opts_dialog(callback, opts_extension):
 def save_ffmpeg_opts_dialog(callback, opts_extension):
     dialog = Gtk.FileChooserDialog(_("Save Render Args As"), None, 
                                    Gtk.FileChooserAction.SAVE, 
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                                   _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                                   _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.SAVE)
     dialog.set_current_name("untitled" + opts_extension)
     dialog.set_do_overwrite_confirmation(True)

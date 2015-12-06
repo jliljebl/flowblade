@@ -170,6 +170,8 @@ def main(root_path):
     mlttransitions.init_module()
 
     # Init gtk threads
+    if gtk_version == "3.8.8":
+        GObject.threads_init()
     Gdk.threads_init()
     Gdk.threads_enter()
 

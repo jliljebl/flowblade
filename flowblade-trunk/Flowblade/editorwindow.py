@@ -132,7 +132,7 @@ class EditorWindow:
         self.window.connect("delete-event", lambda w, e:app.shutdown())
 
         # Player consumer has to be stopped and started when window resized
-        self.window.connect("window-state-event", lambda w, e:updater.refresh_player())
+        self.window.connect("window-state-event", lambda w, e:updater.refresh_player(e))
 
         # Build menubar
         # Menubar build resources
@@ -960,30 +960,34 @@ class EditorWindow:
             gdk_window = gui.tline_display.get_parent_window();
             gdk_window.set_cursor(Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR))
 
+    def get_own_cursor(self, display, surface, hotx, hoty):
+        pixbuf = Gdk.pixbuf_get_from_surface(surface, 0, 0, surface.get_width(), surface.get_height())
+        return Gdk.Cursor.new_from_pixbuf(display, pixbuf, hotx, hoty)
+
     def set_tline_cursor(self, mode):
         display = Gdk.Display.get_default()
         gdk_window = self.window.get_window()#gui.tline_display.get_window()
 
         if mode == editorstate.INSERT_MOVE:
-            cursor = Gdk.Cursor.new_from_surface(display, INSERTMOVE_CURSOR, 0, 0)
+            cursor = self.get_own_cursor(display, INSERTMOVE_CURSOR, 0, 0)
         elif mode == editorstate.OVERWRITE_MOVE:
-            cursor = Gdk.Cursor.new_from_surface(display, OVERWRITE_CURSOR, 6, 15)
+            cursor = self.get_own_cursor(display, OVERWRITE_CURSOR, 6, 15)
         elif mode == editorstate.TWO_ROLL_TRIM:
-            cursor = Gdk.Cursor.new_from_surface(display, TWOROLL_CURSOR, 11, 9)
+            cursor = self.get_own_cursor(display, TWOROLL_CURSOR, 11, 9)
         elif mode == editorstate.TWO_ROLL_TRIM_NO_EDIT:
-            cursor = Gdk.Cursor.new_from_surface(display, TWOROLL_NO_EDIT_CURSOR, 11, 9)
+            cursor = self.get_own_cursor(display, TWOROLL_NO_EDIT_CURSOR, 11, 9)
         elif mode == editorstate.ONE_ROLL_TRIM:
-            cursor = Gdk.Cursor.new_from_surface(display, ONEROLL_CURSOR, 9, 9)
+            cursor = self.get_own_cursor(display, ONEROLL_CURSOR, 9, 9)
         elif mode == editorstate.ONE_ROLL_TRIM_NO_EDIT:
-            cursor = Gdk.Cursor.new_from_surface(display, ONEROLL_NO_EDIT_CURSOR, 9, 9)
+            cursor = self.get_own_cursor(display, ONEROLL_NO_EDIT_CURSOR, 9, 9)
         elif mode == editorstate.SLIDE_TRIM:
-            cursor = Gdk.Cursor.new_from_surface(display, SLIDE_CURSOR, 9, 9)
+            cursor = self.get_own_cursor(display, SLIDE_CURSOR, 9, 9)
         elif mode == editorstate.SLIDE_TRIM_NO_EDIT:
-            cursor = Gdk.Cursor.new_from_surface(display, SLIDE_NO_EDIT_CURSOR, 9, 9)
+            cursor = self.get_own_cursor(display, SLIDE_NO_EDIT_CURSOR, 9, 9)
         elif mode == editorstate.SELECT_PARENT_CLIP:
             cursor =  Gdk.Cursor.new(Gdk.TCROSS)
         elif mode == editorstate.MULTI_MOVE:
-            cursor = Gdk.Cursor.new_from_surface(display, MULTIMOVE_CURSOR, 4, 8)
+            cursor = self.get_own_cursor(display, MULTIMOVE_CURSOR, 4, 8)
         elif mode == editorstate.CLIP_END_DRAG:
             cursor = Gdk.Cursor.new(Gdk.CursorType.SB_H_DOUBLE_ARROW)
         else:

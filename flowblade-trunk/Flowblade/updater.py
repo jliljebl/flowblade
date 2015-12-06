@@ -102,7 +102,9 @@ def load_icons():
 
 
 # --------------------------------- player
-def refresh_player():
+def refresh_player(e):
+    if (e.changed_mask & (~ Gdk.WindowState.FOCUSED)) == 0:
+        return
     # First event is initial window displayed event.
     # Last closing event needs to be blocked by setting this flag
     # before calling window hide

@@ -157,14 +157,14 @@ def get_single_line_text_input_dialog(chars, label_width,title, ok_button_text,
     return (dialog, entry)
 
 def get_default_alignment(panel):
-    alignment = Gtk.Frame.new(None)
+    alignment = Gtk.Frame.new("") #Gtk.Frame.new(None)
     alignment.add(panel)
     alignment.set_shadow_type(Gtk.ShadowType.NONE)
     guiutils.set_margins(alignment, 12, 24, 12, 18)
     return alignment
 
 def get_alignment2(panel):
-    alignment = Gtk.Frame.new(None)
+    alignment = Gtk.Frame.new("") #Gtk.Frame.new(None)
     alignment.add(panel)
     alignment.set_shadow_type(Gtk.ShadowType.NONE)
     guiutils.set_margins(alignment, 6, 24, 12, 12)

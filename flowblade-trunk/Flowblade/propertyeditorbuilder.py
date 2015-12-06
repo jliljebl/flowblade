@@ -398,8 +398,8 @@ def _get_wipe_selector(editable_property):
         
     dialog = Gtk.FileChooserDialog(_("Select Luma File"), None, 
                                    Gtk.FileChooserAction.OPEN, 
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
     file_filter = Gtk.FileFilter()
