@@ -246,11 +246,14 @@ class GmicWindow(Gtk.Window):
                             lambda w: self.load_button_clicked())
         self.media_info = Gtk.Label("video_clip.mpg   1920x 1080  25.0 fps")
         
-        project_row = Gtk.HBox(False, 2)
-        project_row.pack_start(load_button, False, False, 0)
-        project_row.pack_start(guiutils.get_pad_label(24, 2), False, False, 0)
-        project_row.pack_start(self.media_info, False, False, 0)
-        project_row.pack_start(Gtk.Label(), True, True, 0)
+        load_row = Gtk.HBox(False, 2)
+        load_row.pack_start(load_button, False, False, 0)
+        load_row.pack_start(guiutils.get_pad_label(24, 2), False, False, 0)
+        load_row.pack_start(self.media_info, False, False, 0)
+        load_row.pack_start(Gtk.Label(), True, True, 0)
+        load_row.set_margin_bottom(4)
+
+        #clip_panel = guiutils.get_named_frame(_("Preview"), load_row)
 
         # Clip monitor
         black_box = Gtk.EventBox()
@@ -262,19 +265,31 @@ class GmicWindow(Gtk.Window):
         self.monitor.set_size_request(MONITOR_WIDTH, MONITOR_HEIGHT)
 
         left_vbox = Gtk.VBox(False, 0)
-        left_vbox.pack_start(self.monitor, False, False, 0)
+        left_vbox.pack_start(load_row, False, False, 0)
+        left_vbox.pack_start(self.monitor, True, True, 0)
 
-        # Preview monitor
+        self.preview_info = Gtk.Label(_("No Preview"))
+        preview_info_row = Gtk.HBox()
+        preview_info_row.pack_start(self.preview_info, False, False, 0)
+        preview_info_row.pack_start(Gtk.Label(), True, True, 0)
+        preview_info_row.set_margin_top(6)
+        preview_info_row.set_margin_bottom(8)
+
         self.preview_monitor = cairoarea.CairoDrawableArea2(MONITOR_WIDTH, MONITOR_HEIGHT, self._draw_preview)
+
         right_vbox = Gtk.VBox(False, 2)
-        right_vbox.pack_start(self.preview_monitor, False, False, 0)
-        #right_vbox.pack_start(preview_row, False, False, 0)
+        #right_vbox.pack_start(Gtk.Label(), True, True, 0)
+        #right_vbox.pack_start(guiutils.get_pad_label(10, 5), False, False, 0)
+        right_vbox.pack_start(preview_info_row, False, False, 0)
+        right_vbox.pack_start(self.preview_monitor, True, True, 0)
+
 
         # Monitors panel
         monitors_panel = Gtk.HBox(False, 2)
         monitors_panel.pack_start(left_vbox, False, False, 0)
+        monitors_panel.pack_start(Gtk.Label(), True, True, 0)
         monitors_panel.pack_start(right_vbox, False, False, 0)
-        
+
         # Control row
         self.tc_display = guicomponents.MonitorTCDisplay()
         self.tc_display.use_internal_frame = True
@@ -283,7 +298,14 @@ class GmicWindow(Gtk.Window):
         
         self.pos_bar = positionbar.PositionBar(False)
         self.pos_bar.set_listener(self.position_listener)
-
+        pos_bar_frame = Gtk.Frame()
+        pos_bar_frame.add(self.pos_bar.widget)
+        pos_bar_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
+        pos_bar_frame.set_margin_top(5)
+        pos_bar_frame.set_margin_bottom(4)
+        pos_bar_frame.set_margin_left(6)
+        pos_bar_frame.set_margin_right(2)
+        
         self.control_buttons = glassbuttons.GmicButtons()
         
         preview_button = Gtk.Button(_("Preview"))
@@ -292,12 +314,18 @@ class GmicWindow(Gtk.Window):
                             
         control_panel = Gtk.HBox(False, 2)
         control_panel.pack_start(self.tc_display.widget, False, False, 0)
-        control_panel.pack_start(self.pos_bar.widget, True, True, 0)
+        control_panel.pack_start(pos_bar_frame, True, True, 0)
         control_panel.pack_start(self.control_buttons.widget, False, False, 0)
+        control_panel.pack_start(guiutils.pad_label(2, 2), False, False, 0)
         control_panel.pack_start(preview_button, False, False, 0)
 
+        preview_panel = Gtk.VBox(False, 2)
+        preview_panel.pack_start(monitors_panel, False, False, 0)
+        preview_panel.pack_start(control_panel, False, False, 0)
+        preview_panel.set_margin_bottom(8)
+
         # Script area
-        self.preset_label = Gtk.Label("Select Preset Script")
+        self.preset_label = Gtk.Label("Preset Script:")
         
         self.preset_select = Gtk.ComboBoxText()
         self.preset_select.set_tooltip_text(_("Select Preset G'Mic script"))
@@ -306,6 +334,7 @@ class GmicWindow(Gtk.Window):
 
         preset_row = Gtk.HBox(False, 2)
         preset_row.pack_start(self.preset_label, False, False, 0)
+        preset_row.pack_start(guiutils.pad_label(6, 12), False, False, 0)
         preset_row.pack_start(self.preset_select, False, False, 0)
         preset_row.pack_start(Gtk.Label(), True, True, 0)
 
@@ -317,13 +346,8 @@ class GmicWindow(Gtk.Window):
         script_sw = Gtk.ScrolledWindow()
         script_sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         script_sw.add(self.script_view)
-        
-        script_vbox = Gtk.VBox(False, 2)
-        script_vbox.pack_start(preset_row, False, False, 0)
-        script_vbox.pack_start(script_sw, True, True, 0)
-        script_vbox.set_size_request(MONITOR_WIDTH, 200)
-        
-        # Outout area
+        script_sw.set_size_request(MONITOR_WIDTH - 100, 150)
+
         self.out_view = Gtk.TextView()
         self.out_view.set_sensitive(False)
         self.out_view.set_pixels_above_lines(2)
@@ -332,17 +356,87 @@ class GmicWindow(Gtk.Window):
         out_sw = Gtk.ScrolledWindow()
         out_sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         out_sw.add(self.out_view)
+        out_sw.set_size_request(MONITOR_WIDTH - 150, 75)
         
-        output_vbox = Gtk.VBox(False, 2)
-        output_vbox.pack_start(out_sw, True, True, 0)
-        output_vbox.set_size_request(MONITOR_WIDTH, 200)
+        script_vbox = Gtk.VBox(False, 2)
+        script_vbox.pack_start(preset_row, False, False, 0)
+        script_vbox.pack_start(script_sw, True, True, 0)
+        script_vbox.pack_start(out_sw, True, True, 0)
+
+        #script_vbox = guiutils.get_named_frame(_("G'MIC Script"), script_vbox)
+  
+        # Outout area
+
+        
+        #output_vbox = Gtk.VBox(False, 2)
+        #output_vbox.pack_start(out_sw, True, True, 0)
+        #output_vbox.set_size_request(MONITOR_WIDTH - 150, 200)
     
-        # Script work panel
-        script_work_panel = Gtk.HBox(False, 2)
-        script_work_panel.pack_start(script_vbox, False, False, 0)
-        script_work_panel.pack_start(output_vbox, False, False, 0)
+        #output_vbox = guiutils.get_named_frame(_("Script Output"), output_vbox)
 
         # Render panel
+        self.mark_in_info = Gtk.Label("Mark In: 00:00:00:00")
+        self.mark_out_info = Gtk.Label("Mark Out: 00:00:02:00")
+        self.length_info = Gtk.Label("Length: 52 frames")
+
+        marks_row = Gtk.VBox(False, 2)
+        marks_row.pack_start(guiutils.get_left_justified_box([self.mark_in_info]), True, True, 0)
+        marks_row.pack_start(guiutils.get_left_justified_box([self.mark_out_info]), True, True, 0)
+        marks_row.pack_start(guiutils.get_left_justified_box([self.length_info]), True, True, 0)
+        #marks_row.set_margin_bottom(12)
+
+        self.disk_info = Gtk.Label("Frames disk space est.: 768 MB")
+
+        disk_row = Gtk.HBox(False, 2)
+        disk_row.pack_start(guiutils.get_left_justified_box([self.disk_info]), False, False, 0)
+        disk_row.pack_start(Gtk.Label(), True, True, 0)
+        #disk_row.set_margin_bottom(6)
+
+        self.out_folder = Gtk.FileChooserButton(_("Select Folder"))
+        self.out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
+        self.out_folder.set_current_folder(os.path.expanduser("~") + "/")
+        out_folder_row = guiutils.get_left_justified_box([Gtk.Label(label=_("Frames Folder:")), guiutils.pad_label(12, 2), self.out_folder])
+
+
+        self.encode_check_label = Gtk.Label("Encode Video")
+        self.encode_check = Gtk.CheckButton()
+        self.encode_check.set_active(False)
+        
+        self.encode_settings_button = Gtk.Button(_("Encoding settings"))
+        self.encode_desc = Gtk.Label()
+        self.encode_desc.set_markup("<small>"+ "MPEG-2, 3000kbps" + "</small>")
+        
+        encode_row = Gtk.HBox(False, 2)
+        encode_row.pack_start(self.encode_check, False, False, 0)
+        encode_row.pack_start(self.encode_check_label, False, False, 0)
+        encode_row.pack_start(guiutils.pad_label(48, 12), False, False, 0)
+        encode_row.pack_start(self.encode_settings_button, False, False, 0)
+        encode_row.pack_start(guiutils.pad_label(6, 12), False, False, 0)
+        encode_row.pack_start(self.encode_desc, False, False, 0)
+        #encode_row.pack_start(self.encode_settings_button, False, False, 0)
+        encode_row.pack_start(Gtk.Label(), True, True, 0)
+        encode_row.set_margin_bottom(6)
+
+        self.file_name_label = Gtk.Label(_("Name:"))
+        self.movie_name = Gtk.Entry()
+        self.movie_name.set_text("movie")
+        self.extension_label = Gtk.Label(".mpg")
+        
+        
+        video_file_row = Gtk.HBox(False, 2)
+        video_file_row.pack_start(self.file_name_label, False, False, 0)
+        video_file_row.pack_start(self.movie_name, False, False, 0)
+        video_file_row.pack_start(self.extension_label, False, False, 0)
+        video_file_row.pack_start(Gtk.Label(), True, True, 0)
+        
+        self.render_status_info = Gtk.Label()
+        self.render_status_info.set_markup("<small>"+ "52 frames, requiring 768MB dis space, video file: ../movie.mpg" + "</small>")
+
+        render_status_row = Gtk.HBox(False, 2)
+        render_status_row.pack_start(self.render_status_info, False, False, 0)
+        render_status_row.pack_start(Gtk.Label(), True, True, 0)
+        render_status_row.set_margin_bottom(6)
+
         self.render_progress_bar = Gtk.ProgressBar()
         stop_button = Gtk.Button(_("Stop"))
         render_button = Gtk.Button(_("Render"))
@@ -352,13 +446,66 @@ class GmicWindow(Gtk.Window):
         render_row.pack_start(stop_button, False, False, 0)
         render_row.pack_start(render_button, False, False, 0)
 
+        render_vbox = Gtk.VBox(False, 2)
+        render_vbox.pack_start(marks_row, False, False, 0)
+        render_vbox.pack_start(Gtk.Label(), True, True, 0)
+        render_vbox.pack_start(encode_row, False, False, 0)
+        #render_vbox.pack_start(video_file_row, False, False, 0)
+        render_vbox.pack_start(Gtk.Label(), True, True, 0)
+        render_vbox.pack_start(out_folder_row, False, False, 0)
+        render_vbox.pack_start(Gtk.Label(), True, True, 0)
+        render_vbox.pack_start(render_status_row, False, False, 0)
+        render_vbox.pack_start(render_row, False, False, 0)
+        render_vbox.pack_start(guiutils.pad_label(24, 24), False, False, 0)
+
+        
+        #render_vbox.set_size_request(MONITOR_WIDTH, 200)
+    
+        #render_vbox = guiutils.get_named_frame(_("Render"), render_vbox)
+        
+        # Script work panel
+        script_work_panel = Gtk.HBox(False, 2)
+        script_work_panel.pack_start(script_vbox, False, False, 0)
+        script_work_panel.pack_start(guiutils.pad_label(12, 2), False, False, 0)
+        script_work_panel.pack_start(render_vbox, True, True, 0)
+
+        load_script = Gtk.Button(_("Load Script"))
+        #load_layers.connect("clicked", lambda w:self._load_layers_pressed())
+        save_script = Gtk.Button(_("Save Script"))
+        #save_layers.connect("clicked", lambda w:self._save_layers_pressed())
+
+        info_b = guiutils.get_sized_button(_("Info"), 150, 32)
+        exit_b = guiutils.get_sized_button(_("Close"), 150, 32)
+        #exit_b.connect("clicked", lambda w:close_titler())
+        #save_titles_b = guiutils.get_sized_button(_("Save Title Graphic"), 150, 32)
+        #save_titles_b.connect("clicked", lambda w:self._save_title_pressed())
+        
+        editor_buttons_row = Gtk.HBox()
+        editor_buttons_row.pack_start(load_script, False, False, 0)
+        editor_buttons_row.pack_start(save_script, False, False, 0)
+        editor_buttons_row.pack_start(Gtk.Label(), True, True, 0)
+        #editor_buttons_row.pack_start(keep_label, False, False, 0)
+        #editor_buttons_row.pack_start(self.keep_layers_check, False, False, 0)
+        #editor_buttons_row.pack_start(guiutils.pad_label(24, 2), False, False, 0)
+        #editor_buttons_row.pack_start(open_label, False, False, 0)
+        #editor_buttons_row.pack_start(self.open_in_current_check, False, False, 0)
+        #editor_buttons_row.pack_start(guiutils.pad_label(24, 2), False, False, 0)
+        editor_buttons_row.pack_start(info_b, False, False, 0)
+        editor_buttons_row.pack_start(guiutils.pad_label(96, 2), False, False, 0)
+        editor_buttons_row.pack_start(exit_b, False, False, 0)
+
+        
         # Build window
         pane = Gtk.VBox(False, 2)
-        pane.pack_start(project_row, False, False, 0)
-        pane.pack_start(monitors_panel, False, False, 0)
-        pane.pack_start(control_panel, False, False, 0)
+        #pane.pack_start(clip_panel, False, False, 0)
+        #pane.pack_start(guiutils.get_pad_label(2, 12), False, False, 0)
+        
+        #pane.pack_start(monitors_panel, False, False, 0)
+        pane.pack_start(preview_panel, False, False, 0)
+        #pane.pack_start(guiutils.get_pad_label(2, 12), False, False, 0)
         pane.pack_start(script_work_panel, False, False, 0)
-        pane.pack_start(render_row, False, False, 0)
+        #pane.pack_start(guiutils.get_pad_label(2, 12), False, False, 0)
+        pane.pack_start(editor_buttons_row, False, False, 0)
 
         align = guiutils.set_margins(pane, 12, 12, 12, 12)
 

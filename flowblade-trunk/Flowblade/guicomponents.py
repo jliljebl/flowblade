@@ -1691,11 +1691,12 @@ class MonitorTCDisplay:
         cr.set_source_rgb(0.2, 0.2, 0.2)
         cr.fill_preserve()
 
-        grad = cairo.LinearGradient (0, 0, 0, h)
-        for stop in BIG_TC_GRAD_STOPS:
-            grad.add_color_stop_rgba(*stop)
-        cr.set_source(grad)
-        cr.fill_preserve()
+        if editorpersistance.prefs.dark_theme == False:
+            grad = cairo.LinearGradient (0, 0, 0, h)
+            for stop in BIG_TC_GRAD_STOPS:
+                grad.add_color_stop_rgba(*stop)
+            cr.set_source(grad)
+            cr.fill_preserve()
         
         grad = cairo.LinearGradient (0, 0, 0, h)
         for stop in BIG_TC_FRAME_GRAD_STOPS:

@@ -169,9 +169,11 @@ def main(root_path):
     translations.load_filters_translations()
     mlttransitions.init_module()
 
-    # Init gtk threads
+    # RHEL7/CentOS compatibility fix
     if gtk_version == "3.8.8":
         GObject.threads_init()
+
+    # Init gtk threads
     Gdk.threads_init()
     Gdk.threads_enter()
 

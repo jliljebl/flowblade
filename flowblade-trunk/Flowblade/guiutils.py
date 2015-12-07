@@ -234,7 +234,6 @@ def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_pa
 
     alignment = set_margins(widget, right_padding, 0, left_padding, 0)
 
-    
     frame = Gtk.VBox()
     if name != None:
         frame.pack_start(label_box, False, False, 0)
@@ -250,7 +249,6 @@ def get_in_centering_alignment(widget, xsc=0.0, ysc=0.0):
     align.pack_start(widget, False, False, 0)
     align.pack_start(Gtk.Label(), True, True, 0)
 
-    
     return align
 
 def pad_label(w, h):
