@@ -79,6 +79,8 @@ class Ticker:
             event.wait(delay)
         self.exited = True
 
+        
+        
 # -------------------------------- UTIL FUNCTIONS
 def fps():
     return editorstate.PROJECT().profile.fps()

@@ -78,7 +78,10 @@ class GmicPlayer:
 
     def current_frame(self):
         return self.producer.frame()
-    
+
+    def get_active_length(self):
+        return self.producer.get_length()
+                
     def seek_position_normalized(self, pos, length):
         frame_number = pos * length
         self.seek_frame(int(frame_number)) 
@@ -91,9 +94,15 @@ class GmicPlayer:
         elif frame >= length:
             frame = length - 1
 
-        self.producer.set_speed(0)
+        #self.producer.set_speed(0)
         self.producer.seek(frame) 
-
+    
+    def seek_delta(self, delta):
+        # Get new frame
+        frame = self.producer.frame() + delta
+        # Seek frame
+        self.seek_frame(frame)
+        
     def get_rgb_frame(self):
         frame = self.producer.get_frame()
         # And make sure we deinterlace if input is interlaced

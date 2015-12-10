@@ -148,7 +148,7 @@ def get_closest_matching_profile(producer_info):
     fps = round(float(fps_num/fps_den), 2)
     
     # We calculate match score for all available profiles and return 
-    # the one width the highest score
+    # the one with the highest score
     current_match_index = -1
     current_match_score = 0
     for i in range(0, len(_profile_list)):

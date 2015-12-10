@@ -39,14 +39,14 @@ LOCALE_PATH = None
 ROOT_PARENT = None
 PATTERN_PRODUCER_PATH = None
 LAUNCH_DIR = None
-
+GMIC_SCRIPTS_DOC = None
 
 def set_paths(root_path):
     global ROOT_PATH, IMAGE_PATH, THUMBNAIL_PATH, PROFILE_PATH,\
     BLACK_IMAGE_PATH, FILTERS_XML_DOC, COMPOSITORS_XML_DOC, \
     WIPE_RESOURCES_PATH, PREFS_PATH, HELP_DOC, LOCALE_PATH, \
     GPL_3_DOC, ROOT_PARENT, PATTERN_PRODUCER_PATH, TRANSLATIONS_DOC, \
-    LAUNCH_DIR, REPLACEMENTS_XML_DOC #, PROXY_PROFILE_PATH
+    LAUNCH_DIR, REPLACEMENTS_XML_DOC, GMIC_SCRIPTS_DOC #, PROXY_PROFILE_PATH
     
     ROOT_PATH = root_path
     IMAGE_PATH = root_path + "/res/img/"
@@ -64,6 +64,7 @@ def set_paths(root_path):
     ROOT_PARENT = ROOT_PATH.strip("Flowblade")
     PATTERN_PRODUCER_PATH = root_path + "/res/patternproducer/"
     LAUNCH_DIR = root_path + "/launch/"
+    GMIC_SCRIPTS_DOC = root_path + "/res/gmic/gmicscripts.xml"
 
 def apply_dark_theme():
     global IMAGE_PATH

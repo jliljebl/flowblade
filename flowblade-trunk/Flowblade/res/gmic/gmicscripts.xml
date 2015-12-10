@@ -1,0 +1,13 @@
+<gmic>
+    
+    <gmicscript>
+        <name>Charcoal</name>
+        <script>-gimp_charcoal 65,70,170,0,1,0,50,70,255,255,255,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Glow</name>
+        <script>-glow 10%</script>
+    </gmicscript>
+    
+</gmic>
