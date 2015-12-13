@@ -26,6 +26,7 @@ from gi.repository import Gdk
 
 import mlt
 import os
+import time
 
 import mltprofiles
 import utils
@@ -118,7 +119,7 @@ class GmicPlayer:
         self.consumer.stop()
 
 
-class FrameWriter:
+class PreviewFrameWriter:
 
     def __init__(self, file_path):
         self.producer = mlt.Producer(_current_profile, str(file_path))
@@ -141,3 +142,50 @@ class FrameWriter:
         # Connect and write image
         consumer.connect(frame_producer)
         consumer.run()
+        
+        
+class FramesRangeWriter:
+
+    def __init__(self, file_path, callback):
+        self.producer = mlt.Producer(_current_profile, str(file_path))
+        self.callback = callback
+
+    def write_frames(self, clip_folder, frame_name, mark_in, mark_out):
+        """
+        Writes thumbnail image from file producer
+        """
+        # Get data
+        render_path = clip_folder + frame_name + "_%04d." + "png"
+    
+        print render_path
+
+        consumer = mlt.Consumer(_current_profile, "avformat", str(render_path))
+        consumer.set("real_time", -1)
+        consumer.set("rescale", "bicubic")
+        consumer.set("vcodec", "png")
+    
+        frame_producer = self.producer.cut(mark_in, mark_out)
+
+        consumer.connect(frame_producer)
+        frame_producer.set_speed(0)
+        frame_producer.seek(0)
+        frame_producer.set_speed(1)
+        consumer.start()
+
+        self.running = True
+        while self.running: # set false at shutdown() for abort
+            if frame_producer.frame() >= (mark_out - mark_in):
+                
+                self.callback(frame_producer.frame())
+                time.sleep(2.0) # This seems enough, other methods produced bad waits
+
+                self.running = False
+            else:
+                print "rendering frames"
+                self.callback(frame_producer.frame())
+                time.sleep(0.2)
+    
+        print "wwwww"
+        #self.callback()
+
+        

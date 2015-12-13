@@ -28,6 +28,7 @@ import locale
 import mlt
 import numpy as np
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -66,11 +67,14 @@ GMIC_SCRIPT_NODE = "gmicscript"
 
 _scripts = None
 
-_current_fps = None
-
 _window = None
+
 _player = None
+_preview_render = None
 _frame_writer = None
+_effect_renderer = None
+
+_current_path = None
 _current_preview_surface = None
 _current_dimensions = None
 _current_fps = None
@@ -146,6 +150,7 @@ def main(root_path, force_launch=False):
     
     #gui.set_theme_colors()
     _window.pos_bar.set_dark_bg_color()
+    _window.update_script_view()
     
     os.putenv('SDL_WINDOWID', str(_window.monitor.get_window().get_xid()))
     Gdk.flush()
@@ -215,52 +220,35 @@ def _open_files_dialog_cb(file_select, response_id):
     if len(filenames) == 0:
         return
 
-    new_profile = gmicplayer.set_current_profile(filenames[0])
+    global _current_path
+    _current_path = filenames[0]
+
+    new_profile = gmicplayer.set_current_profile(_current_path)
     global _current_dimensions, _current_fps
     _current_dimensions = (new_profile.width(), new_profile.height(), 1.0)
     _current_fps = float(new_profile.frame_rate_num())/float(new_profile.frame_rate_den())
 
     global _player, _frame_writer
-    _player = gmicplayer.GmicPlayer(filenames[0])
-    _frame_writer = gmicplayer.FrameWriter(filenames[0])
+    _player = gmicplayer.GmicPlayer(_current_path)
+    _frame_writer = gmicplayer.PreviewFrameWriter(_current_path)
 
-    #display_aspect_num(self): return _mlt.Profile_display_aspect_num(self)
-    #def display_aspect_den(self):
     _window.set_fps()
-    _window.init_for_new_clip(filenames[0])
+    _window.init_for_new_clip(_current_path)
     _window.set_monitor_sizes()
     _window.set_widgets_sensitive(True)
     _player.create_sdl_consumer()
     _player.connect_and_start()
-
-def show_preview():
-    write_out_current_frame()
-    
-def write_out_current_frame():
-    if os.path.exists(get_current_frame_file()):
-        return
-
+   
+def render_preview_frame():
     _frame_writer.write_frame(get_clip_frames_dir() + "/", _player.current_frame())
     render_current_frame_preview()
     _window.preview_monitor.queue_draw()
     
 def render_current_frame_preview():
-    
-    renderer = GmicPreviewRendererer()
-    renderer.start()
-    
-    """
-    shutil.copyfile(get_current_frame_file(), get_preview_file())
-    
-    # gmic 00012.jpg -gimp_charcoal 65,70,170,0,1,0,50,70,255,255,255,0,0,0,0,0 -output gmic_test2.png
-    script_str = "gmic " + get_current_frame_file() + " -gimp_charcoal 65,70,170,0,1,0,50,70,255,255,255,0,0,0,0,0 -output " +  get_preview_file()
-    print "Render preview:", script_str
-    subprocess.call(script_str, shell=True)
-     
-    global _current_preview_surface
-    _current_preview_surface = cairo.ImageSurface.create_from_png(get_preview_file())
-    """
-
+    global _preview_render
+    _preview_render = GmicPreviewRendererer()
+    _preview_render.start()
+  
 def prev_pressed():
     _player.seek_delta(-1)
     update_frame_displayers()
@@ -298,8 +286,15 @@ def update_frame_displayers():
     frame = _player.current_frame()
     _window.tc_display.set_frame(frame)
     _window.pos_bar.update_display_from_producer(_player.producer)
-    
 
+def render():
+    global _effect_renderer
+    _effect_renderer = GmicEffectRendererer()
+    _effect_renderer.start()
+    
+def _render_frames_completed():
+    print "done"
+    
 class GmicWindow(Gtk.Window):
     def __init__(self):
         GObject.GObject.__init__(self)
@@ -348,7 +343,6 @@ class GmicWindow(Gtk.Window):
         right_vbox.pack_start(preview_info_row, False, False, 0)
         right_vbox.pack_start(self.preview_monitor, True, True, 0)
 
-
         # Monitors panel
         monitors_panel = Gtk.HBox(False, 2)
         monitors_panel.pack_start(left_vbox, False, False, 0)
@@ -382,8 +376,7 @@ class GmicWindow(Gtk.Window):
         self.control_buttons.set_callbacks(pressed_callback_funcs)
         
         self.preview_button = Gtk.Button(_("Preview"))
-        self.preview_button.connect("clicked",
-                            lambda w: self.preview_button_clicked())
+        self.preview_button.connect("clicked", lambda w: render_preview_frame())
                             
         control_panel = Gtk.HBox(False, 2)
         control_panel.pack_start(self.tc_display.widget, False, False, 0)
@@ -406,6 +399,7 @@ class GmicWindow(Gtk.Window):
             self.preset_select.append_text(gmic_script.name)
             print gmic_script.script
         self.preset_select.set_active(0)
+        self.preset_select.connect('changed', lambda w:  self.update_script_view())
 
         preset_row = Gtk.HBox(False, 2)
         preset_row.pack_start(self.preset_label, False, False, 0)
@@ -462,7 +456,15 @@ class GmicWindow(Gtk.Window):
         self.out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
         self.out_folder.set_current_folder(os.path.expanduser("~") + "/")
         self.out_label = Gtk.Label(label=_("Frames Folder:"))
-        out_folder_row = guiutils.get_left_justified_box([self.out_label, guiutils.pad_label(12, 2), self.out_folder])
+        
+        self.frame_name = Gtk.Entry()
+        self.frame_name.set_text("frame")
+        self.extension_label = Gtk.Label()
+        self.extension_label.set_markup("<small>XXXX.png</small>")
+
+        out_folder_row = guiutils.get_left_justified_box([self.out_label, guiutils.pad_label(12, 2), \
+                            self.out_folder, guiutils.pad_label(24, 2), self.frame_name, \
+                            guiutils.pad_label(2, 2), self.extension_label])
 
         self.encode_check_label = Gtk.Label("Encode Video")
         self.encode_check = Gtk.CheckButton()
@@ -482,17 +484,6 @@ class GmicWindow(Gtk.Window):
         encode_row.pack_start(Gtk.Label(), True, True, 0)
         encode_row.set_margin_bottom(6)
 
-        self.file_name_label = Gtk.Label(_("Name:"))
-        self.movie_name = Gtk.Entry()
-        self.movie_name.set_text("movie")
-        self.extension_label = Gtk.Label(".mpg")
-        
-        video_file_row = Gtk.HBox(False, 2)
-        video_file_row.pack_start(self.file_name_label, False, False, 0)
-        video_file_row.pack_start(self.movie_name, False, False, 0)
-        video_file_row.pack_start(self.extension_label, False, False, 0)
-        video_file_row.pack_start(Gtk.Label(), True, True, 0)
-        
         self.render_percentage = Gtk.Label("0%")
         
         self.render_status_info = Gtk.Label()
@@ -510,6 +501,7 @@ class GmicWindow(Gtk.Window):
 
         self.stop_button = guiutils.get_sized_button(_("Stop"), 100, 32)
         self.render_button = guiutils.get_sized_button(_("Render"), 100, 32)
+        self.render_button.connect("clicked", lambda w:render())
 
         render_row = Gtk.HBox(False, 2)
         render_row.pack_start(self.render_progress_bar, True, True, 0)
@@ -590,9 +582,6 @@ class GmicWindow(Gtk.Window):
     def load_button_clicked(self):
         open_clip_dialog(_open_files_dialog_cb)
 
-    def preview_button_clicked(self):
-        show_preview()
-
     def set_active_state(self, active):
         self.monitor.set_sensitive(active)
         self.pos_bar.widget.set_sensitive(active)
@@ -627,6 +616,10 @@ class GmicWindow(Gtk.Window):
         self.monitor.set_size_request(MONITOR_WIDTH, new_height)
         self.preview_monitor.set_size_request(MONITOR_WIDTH, new_height)
 
+    def update_script_view(self):
+        script = _scripts[self.preset_select.get_active()].script
+        self.script_view.get_buffer().set_text(script)
+
     def set_widgets_sensitive(self, value):
         self.monitor.set_sensitive(value)
         self.preview_info.set_sensitive(value)
@@ -646,8 +639,7 @@ class GmicWindow(Gtk.Window):
         self.encode_check.set_sensitive(value)
         self.encode_settings_button.set_sensitive(value)
         self.encode_desc.set_sensitive(value)
-        self.file_name_label.set_sensitive(value)
-        self.movie_name.set_sensitive(value)
+        self.frame_name.set_sensitive(value)
         self.extension_label.set_sensitive(value)       
         self.render_percentage.set_sensitive(value)
         self.render_status_info.set_sensitive(value)
@@ -672,29 +664,19 @@ class GmicPreviewRendererer(threading.Thread):
 
     def run(self):
         start_time = time.time()
-        _window.preview_info.set_markup("<small>" + _("Rendering preview...") + "</small>" )
             
         shutil.copyfile(get_current_frame_file(), get_preview_file())
         
-        # gmic 00012.jpg -gimp_charcoal 65,70,170,0,1,0,50,70,255,255,255,0,0,0,0,0 -output gmic_test2.png
-        script_str = "gmic " + get_current_frame_file() + " -gimp_charcoal 65,70,170,0,1,0,50,70,255,255,255,0,0,0,0,0 -output " +  get_preview_file()
-        script_str = "gmic " + get_current_frame_file() + " -glow 10% -output " +  get_preview_file()
-        script_str = "gmic " + get_current_frame_file() + " -ditheredbw  -output " +  get_preview_file()
-        script_str = "gmic " + get_current_frame_file() + " -blur_angular 10 -output " +  get_preview_file()
-        script_str = "gmic " + get_current_frame_file() + " -rodilius 20,5,200,17,2,1 -output " +  get_preview_file()
-        script_str = "gmic " + get_current_frame_file() + " -circlism 2,10 -output " +  get_preview_file()
-        script_str = "gmic " + get_current_frame_file() + " -cartoon 3,200,20,0.25,1.5,8,0 -output " +  get_preview_file()
-        script_str = "gmic " + get_current_frame_file() + " -gimp_circle_abstraction 8,5,0.8,0,1,1,1,0 -output " +  get_preview_file()
-        script_str = "gmic " + get_current_frame_file() + " -gimp_feltpen 300,50,1,0.1,20,5,0 -output " +  get_preview_file()
-        script_str = "gmic " + get_current_frame_file() + " -gimp_pen_drawing 10,0 -output " +  get_preview_file()
-        script_str = "gmic " + get_current_frame_file() + " -gimp_polygonize 300,10,10,10,10,0,0,0,255,0 -output " +  get_preview_file()
-        script_str = "gmic " + get_current_frame_file() + " -gimp_poster_hope 0,3,0 -output " +  get_preview_file()
+        Gdk.threads_enter()
+        _window.preview_info.set_markup("<small>" + _("Rendering preview...") + "</small>" )
+        buf = _window.script_view.get_buffer()
+        view_text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
+        Gdk.threads_leave()
+        
+        script_str = "gmic " + get_current_frame_file() + " " + view_text + " -output " +  get_preview_file()
 
         print "Render preview:", script_str
-        #out = subprocess.check_output(script_str, stdin=subprocess.STDIN, shell=True)
         
-
-
         FLOG = open(utils.get_hidden_user_dir_path() + "log_gmic_preview", 'w')
         p = subprocess.Popen(script_str, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
         p.wait()
@@ -708,6 +690,7 @@ class GmicPreviewRendererer(threading.Thread):
         global _current_preview_surface
         _current_preview_surface = cairo.ImageSurface.create_from_png(get_preview_file())
 
+        Gdk.threads_enter()
         _window.out_view.get_buffer().set_text(out)
 
         render_time = time.time() - start_time
@@ -716,8 +699,85 @@ class GmicPreviewRendererer(threading.Thread):
             utils.get_tc_string_with_fps(_player.current_frame(), _current_fps) + ", render time: " + time_str +  "</small>" )
             
         _window.preview_monitor.queue_draw()
+        Gdk.threads_leave()
 
 
+class GmicEffectRendererer(threading.Thread):
+
+    def __init__(self):
+        threading.Thread.__init__(self)
+
+    def run(self):
+        # Refuse to render into user home folder
+        out_folder = _window.out_folder.get_filenames()[0] + "/"
+        if out_folder == (os.path.expanduser("~") + "/"):
+            print "home folder"
+            return
+            
+        start_time = time.time()
+
+        # Delete old preview frames
+        folder = get_clip_frames_dir()
+        for frame_file in os.listdir(folder):
+            file_path = os.path.join(folder, frame_file)
+            os.remove(file_path)
+        
+        # Render clipm frames for range
+        mark_in = _player.producer.mark_in
+        mark_out = _player.producer.mark_out
+        self.length = mark_out - mark_in + 1
+        
+        frame_name = "frrrrame"
+        
+        frames_range_writer = gmicplayer.FramesRangeWriter(_current_path, self.frames_update)
+        frames_range_writer.write_frames(get_clip_frames_dir() + "/", frame_name, mark_in, mark_out)
+        
+        # Render effect for frames
+        # Get user script 
+        Gdk.threads_enter()
+        buf = _window.script_view.get_buffer()
+        user_script = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
+        Gdk.threads_leave()
+
+        clip_frames = os.listdir(folder)
+        frame_count = 1
+        
+        for clip_frame in clip_frames:
+            update_info = "Render effect frame " + str(frame_count) + "/" +  str(self.length)
+
+            Gdk.threads_enter()
+            _window.render_percentage.set_text(update_info)
+            Gdk.threads_leave()
+            frame_count = frame_count + 1
+        
+            file_numbers_list = re.findall(r'\d+', clip_frame)
+            filled_number_str = str(file_numbers_list[0]).zfill(3)
+
+            clip_frame_path = os.path.join(folder, clip_frame)
+            rendered_file_path = out_folder + frame_name + "_" + filled_number_str + ".png"
+            
+            script_str = "gmic " + clip_frame_path + " " + user_script + " -output " +  rendered_file_path
+            print script_str
+
+            FLOG = open(utils.get_hidden_user_dir_path() + "log_gmic_preview", 'w')
+            p = subprocess.Popen(script_str, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
+            p.wait()
+            FLOG.close()
+    
+            # read log
+            """
+            f = open(utils.get_hidden_user_dir_path() + "log_gmic_preview", 'r')
+            out = f.read()
+            f.close()
+            """
+
+    def frames_update(self, frame):
+        update_info = "Writing clip frame " + str(frame + 1) + "/" +  str(self.length)
+
+        Gdk.threads_enter()
+        _window.render_percentage.set_text(update_info)
+        Gdk.threads_leave()
+        
 class GmicScript:
     """
     Info of a filter (mlt.Service) that is is available to the user.
