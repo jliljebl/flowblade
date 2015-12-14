@@ -154,38 +154,39 @@ class FramesRangeWriter:
         """
         Writes thumbnail image from file producer
         """
+        self.running = True
+
         # Get data
         render_path = clip_folder + frame_name + "_%04d." + "png"
+
+        self.consumer = mlt.Consumer(_current_profile, "avformat", str(render_path))
+        self.consumer.set("real_time", -1)
+        self.consumer.set("rescale", "bicubic")
+        self.consumer.set("vcodec", "png")
     
-        print render_path
+        self.frame_producer = self.producer.cut(mark_in, mark_out)
 
-        consumer = mlt.Consumer(_current_profile, "avformat", str(render_path))
-        consumer.set("real_time", -1)
-        consumer.set("rescale", "bicubic")
-        consumer.set("vcodec", "png")
-    
-        frame_producer = self.producer.cut(mark_in, mark_out)
+        self.consumer.connect(self.frame_producer)
+        self.frame_producer.set_speed(0)
+        self.frame_producer.seek(0)
+        self.frame_producer.set_speed(1)
+        self.consumer.start()
 
-        consumer.connect(frame_producer)
-        frame_producer.set_speed(0)
-        frame_producer.seek(0)
-        frame_producer.set_speed(1)
-        consumer.start()
-
-        self.running = True
         while self.running: # set false at shutdown() for abort
-            if frame_producer.frame() >= (mark_out - mark_in):
+            if self.frame_producer.frame() >= (mark_out - mark_in):
                 
-                self.callback(frame_producer.frame())
+                self.callback(self.frame_producer.frame())
                 time.sleep(2.0) # This seems enough, other methods produced bad waits
 
                 self.running = False
             else:
                 print "rendering frames"
-                self.callback(frame_producer.frame())
+                self.callback(self.frame_producer.frame())
                 time.sleep(0.2)
     
-        print "wwwww"
-        #self.callback()
-
+    def shutdown(self):
+        self.consumer.stop()
+        self.frame_producer.set_speed(0)
+        self.running = False
+        
         

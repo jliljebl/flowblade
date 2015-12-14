@@ -2,12 +2,26 @@
     
     <gmicscript>
         <name>Charcoal</name>
+        <group>Filter</group>
         <script>-gimp_charcoal 65,70,170,0,1,0,50,70,255,255,255,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Glow</name>
+        <group>Filter</group>
         <script>-glow 10%</script>
     </gmicscript>
-    
+
+    <gmicscript>
+        <name>Pencil Portrait</name>
+        <group>Black and White</group>
+        <script>-gimp_pencil_portraitbw 30,120,1,0.5,144,79,21,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Ink Wash</name>
+        <group>Black and White</group>
+        <script>-gimp_ink_wash 0.14,23,0,0.5,0.54,2.25,0,2,6,5,20</script>
+    </gmicscript>
+
 </gmic>

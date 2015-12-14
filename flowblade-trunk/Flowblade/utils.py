@@ -230,6 +230,37 @@ def get_media_source_file_filter(include_audio=True):
 
     return f
 
+def get_video_source_file_filter():
+    # No idea if these actually play or not, except images mime types
+    f = Gtk.FileFilter()
+    f.set_name("Video files")
+    f.add_mime_type("image*")
+    f.add_mime_type("video*")
+    f.add_mime_type("audio*")
+    f.add_mime_type("video/x-theora+ogg")
+    f.add_mime_type("video/x-sgi-movie")
+    f.add_mime_type("video/ogg")
+    f.add_mime_type("video/x-ogm")
+    f.add_mime_type("video/x-ogm+ogg")
+    f.add_mime_type("video/x-ms-asf")
+    f.add_mime_type("video/x-ms-wmv")
+    f.add_mime_type("video/x-msvideo")
+    f.add_mime_type("video/x-matroska")
+    f.add_mime_type("video/x-flv")
+    f.add_mime_type("video/vnd.rn-realvideo")
+    f.add_mime_type("video/quicktime")
+    f.add_mime_type("video/ogg")
+    f.add_mime_type("video/mpeg")
+    f.add_mime_type("video/mp4")
+    f.add_mime_type("video/mp2t")
+    f.add_mime_type("video/isivideo")
+    f.add_mime_type("video/dv")
+    f.add_mime_type("video/annodex")
+    f.add_mime_type("video/3gpp")
+    f.add_mime_type("video/webm")
+
+    return f
+
 def get_image_sequence_file_filter():
     f = Gtk.FileFilter()
     f.set_name("Image files")

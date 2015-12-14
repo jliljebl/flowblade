@@ -1,0 +1,89 @@
+
+
+
+from gi.repository import Gtk
+import xml.dom.minidom
+
+import respaths
+
+GMIC_SCRIPT_NODE = "gmicscript"
+
+_scripts = None
+_script_groups = []
+_scripts_menu = Gtk.Menu()
+
+class GmicScript:
+    """
+    Info of a filter (mlt.Service) that is is available to the user.
+    Constructor input is a dom node object.
+    This is used to create FilterObject objects.
+    """
+    def __init__(self, script_node):
+        self.name = script_node.getElementsByTagName("name").item(0).firstChild.nodeValue
+        self.script = script_node.getElementsByTagName("script").item(0).firstChild.nodeValue
+        self.group = script_node.getElementsByTagName("group").item(0).firstChild.nodeValue
+
+def get_scripts():
+    return _scripts
+
+def load_preset_scripts_xml():
+
+    _script_groups_names = {}
+    _script_groups_names["Black and White"] = _("Black and White")
+    _script_groups_names["Filter"] = _("Filter")
+    
+    presets_doc = xml.dom.minidom.parse(respaths.GMIC_SCRIPTS_DOC)
+
+    global _scripts
+    _scripts = []
+    load_groups = {}
+    script_nodes = presets_doc.getElementsByTagName(GMIC_SCRIPT_NODE)
+    for script_node in script_nodes:
+        gmic_script = GmicScript(script_node)
+        _scripts.append(gmic_script)
+
+        # Add filter compositor filters or filter groups
+        translated_group_name = _script_groups_names[gmic_script.group]
+        try:
+            group = load_groups[translated_group_name]
+            group.append(gmic_script)
+        except:
+            load_groups[translated_group_name] = [gmic_script]
+
+    # We used translated group names as keys in load_groups
+    # Now we sort them and use them to place data in groups array in the same
+    # order as it will be presented to user, so selection indexes in gui components will match
+    # group array indexes here.
+    sorted_keys = sorted(load_groups.keys())
+    global _script_groups
+    for gkey in sorted_keys:
+        group = load_groups[gkey]
+        add_group = sorted(group, key=lambda gmic_script: gmic_script.name)
+        _script_groups.append((gkey, add_group))
+
+def get_default_script():
+    key, group = _script_groups[0]
+    return group[0]
+
+def show_menu(event, callback):
+    # Remove current items
+    items = _scripts_menu.get_children()
+    for item in items:
+        _scripts_menu.remove(item)
+
+    for script_group in _script_groups:
+        group_name, group = script_group
+        group_item = Gtk.MenuItem(group_name)
+        #group_item.connect("activate", callback, i)
+        _scripts_menu.append(group_item)
+        sub_menu = Gtk.Menu()
+        group_item.set_submenu(sub_menu)
+
+        for script in group:
+            script_item = Gtk.MenuItem(script.name)
+            sub_menu.append(script_item)
+            script_item.connect("activate", callback, script)
+
+    _scripts_menu.show_all()
+    _scripts_menu.popup(None, None, None, None, event.button, event.time)
+

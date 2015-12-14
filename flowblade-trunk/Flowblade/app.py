@@ -730,7 +730,6 @@ def shutdown():
     dialogs.exit_confirm_dialog(_shutdown_dialog_callback, get_save_time_msg(), gui.editor_window.window, editorstate.PROJECT().name)
     return True # Signal that event is handled, otherwise it'll destroy window anyway
 
-
 def get_save_time_msg():
     if projectaction.save_time == None:
         return _("Project has not been saved since it was opened.")
