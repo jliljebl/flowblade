@@ -58,8 +58,8 @@ import utils
 import gmicplayer
 import gmicscript
 
-MONITOR_WIDTH = 450
-MONITOR_HEIGHT = 300 # initial value this gets changed when material is loaded
+MONITOR_WIDTH = 500
+MONITOR_HEIGHT = 300 # initial value, this gets changed when material is loaded
 CLIP_FRAMES_DIR = "/clip_frames"
 PREVIEW_FILE = "preview.png"
 NO_PREVIEW_FILE = "fallback_thumb.png"
@@ -423,25 +423,28 @@ class GmicWindow(Gtk.Window):
 
         # Script area
         self.preset_label = Gtk.Label()
-        
-        #self.preset_select = Gtk.ComboBoxText()
-        #self.preset_select.set_tooltip_text(_("Select Preset G'Mic script"))
-        #for gmic_script in gmicscript.get_scripts():
-        #    self.preset_select.append_text(gmic_script.name)
+        self.script_menu = PressLaunch(script_menu_lauched)
+        self.action_select = Gtk.ComboBoxText()
+        self.action_select.set_tooltip_text(_("Select Preset G'Mic script"))
+        #self.action_label = Gtk.Label("Selectio Action:")
+        self.action_select.append_text(_("Replace Script"))
+        self.action_select.append_text(_("Add to Script"))
+        self.action_select.set_active(0)
         #    print gmic_script.script
         #self.preset_select.set_active(0)
         #self.preset_select.connect('changed', lambda w:  self.update_script_view())
-
-        self.script_menu = PressLaunch(script_menu_lauched)
-
+        
         preset_row = Gtk.HBox(False, 2)
         preset_row.pack_start(self.preset_label, False, False, 0)
         preset_row.pack_start(self.script_menu.widget, False, False, 0)
         preset_row.pack_start(guiutils.pad_label(6, 12), False, False, 0)
         #preset_row.pack_start(self.preset_select, False, False, 0)
-        preset_row.pack_start(self.script_menu.widget, False, False, 0)
-        preset_row.pack_start(Gtk.Label(), True, True, 0)
 
+        preset_row.pack_start(Gtk.Label(), True, True, 0)
+        #preset_row.pack_start(self.action_label, False, False, 0)
+        #preset_row.pack_start(guiutils.pad_label(6, 12), False, False, 0)
+        preset_row.pack_start(self.action_select, False, False, 0)
+        
         self.script_view = Gtk.TextView()
         self.script_view.set_sensitive(False)
         self.script_view.set_pixels_above_lines(2)
@@ -674,7 +677,7 @@ class GmicWindow(Gtk.Window):
         self.pos_bar.widget.set_sensitive(value)      
         self.control_buttons.set_sensitive(value)
         self.preset_label.set_sensitive(value)
-        #self.preset_select.set_sensitive(value)
+        self.action_select.set_sensitive(value)
         self.script_view.set_sensitive(value) 
         self.out_view.set_sensitive(value)       
         self.mark_in_info.set_sensitive(value)

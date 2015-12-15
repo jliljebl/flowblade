@@ -31,7 +31,22 @@ def load_preset_scripts_xml():
     _script_groups_names = {}
     _script_groups_names["Black and White"] = _("Black and White")
     _script_groups_names["Filter"] = _("Filter")
-    
+    _script_groups_names["Blur"] = _("Blur")
+    _script_groups_names["Special Effect"] = _("Special Effect")
+    _script_groups_names["Misc"] = _("Misc")
+    _script_groups_names["Drawing"] = _("Drawing")
+    _script_groups_names["Painting"] = _("Painting")
+    _script_groups_names["Transform"] = _("Transform")
+    _script_groups_names["Glow"] = _("Glow")
+    _script_groups_names["Geometric"] = _("Geometric")
+    _script_groups_names["Edges"] = _("Edges")
+    _script_groups_names["New"] = _("New")
+    _script_groups_names["Texture"] = _("Texture")
+    _script_groups_names["Technical"] = _("Technical")
+    _script_groups_names["Photographic"] = _("Photographic")
+    _script_groups_names["Pattern"] = _("Pattern")
+    _script_groups_names["Artistic"] = _("Artistic")
+
     presets_doc = xml.dom.minidom.parse(respaths.GMIC_SCRIPTS_DOC)
 
     global _scripts
@@ -43,7 +58,11 @@ def load_preset_scripts_xml():
         _scripts.append(gmic_script)
 
         # Add filter compositor filters or filter groups
-        translated_group_name = _script_groups_names[gmic_script.group]
+        try:
+            translated_group_name = _script_groups_names[gmic_script.group]
+        except:
+            translated_group_name = "Misc"
+
         try:
             group = load_groups[translated_group_name]
             group.append(gmic_script)
