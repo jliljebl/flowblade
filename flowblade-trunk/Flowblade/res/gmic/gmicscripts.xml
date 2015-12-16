@@ -104,7 +104,7 @@
 
     <gmicscript>
         <name>Whirl</name>
-        <group>Special Effect</group>
+        <group>Artistic</group>
         <script>-draw_whirl 20,0</script>
     </gmicscript>
 
@@ -192,11 +192,13 @@
         <script>-gimp_engrave 0.5,50,0,8,40,0,0,0,10,1,0,0,0,1,0</script>
     </gmicscript>
 
+    <!--
     <gmicscript>
         <name>BWrecolorize</name>
         <group>Misc</group>
         <script>-gimp_bwrecolorize 0,1,0,0,0,1,0,5,0,0,0,255,43,25,55,255,158,137,189,255,224,191,228,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,0</script>
     </gmicscript>
+    -->
 
     <gmicscript>
         <name>Segment Watershed</name>
@@ -212,7 +214,7 @@
 
     <gmicscript>
         <name>Local Orientation</name>
-        <group>Misc</group>
+        <group>Artistic</group>
         <script>-gimp_local_orientation 0,0,100,0,0,0</script>
     </gmicscript>
 
@@ -242,7 +244,7 @@
 
     <gmicscript>
         <name>Edge Offsets</name>
-        <group>Special Effect</group>
+        <group>Black and White</group>
         <script>-gimp_edge_offsets 0,15,4,1,0,0</script>
     </gmicscript>
 
@@ -302,7 +304,7 @@
 
     <gmicscript>
         <name>Skeleton</name>
-        <group>Special Effect</group>
+        <group>Artistic</group>
         <script>-gimp_skeleton 0,0,0,1,0</script>
     </gmicscript>
 
@@ -344,7 +346,7 @@
 
     <gmicscript>
         <name>Reflect</name>
-        <group>Misc</group>
+        <group>Special Effect</group>
         <script>-gimp_reflect 50,1,110,160,190,64,0,1.5,0,-3.3,7,1.5</script>
     </gmicscript>
 
@@ -368,13 +370,13 @@
 
     <gmicscript>
         <name>Lomo</name>
-        <group>Special Effect</group>
+        <group>Photographic</group>
         <script>-gimp_lomo 20,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Dirty</name>
-        <group>Special Effect</group>
+        <group>Texture</group>
         <script>-gimp_dirty 30,1,0,0,0</script>
     </gmicscript>
 
@@ -416,7 +418,7 @@
 
     <gmicscript>
         <name>Wind</name>
-        <group>Special Effect</group>
+        <group>Blur</group>
         <script>-gimp_wind 20,0,0.7,20,1,0,0,0</script>
     </gmicscript>
 
@@ -428,43 +430,43 @@
 
     <gmicscript>
         <name>Mighty Details</name>
-        <group>Misc</group>
+        <group>Photographic</group>
         <script>-gimp_mighty_details 25,1,25,1,11,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Normalize Local</name>
-        <group>Misc</group>
+        <group>Photographic</group>
         <script>-gimp_normalize_local 2,6,5,20,1,11,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Freaky Details</name>
-        <group>Misc</group>
+        <group>Photographic</group>
         <script>-gimp_freaky_details 2,10,1,11,0,32,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Scanlines</name>
-        <group>Special Effect</group>
+        <group>Pattern</group>
         <script>-gimp_scanlines 60,2,0,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Shade Stripes</name>
-        <group>Special Effect</group>
+        <group>Pattern</group>
         <script>-gimp_shade_stripes 30,1,0.8,1.3,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>8bits</name>
-        <group>Special Effect</group>
+        <group>Artistic</group>
         <script>-gimp_8bits 25,800,16,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Stripes Y</name>
-        <group>Special Effect</group>
+        <group>Pattern</group>
         <script>-gimp_stripes_y 10,0,0,0</script>
     </gmicscript>
 
@@ -596,13 +598,13 @@
 
     <gmicscript>
         <name>Color Ellipses</name>
-        <group>Special Effect</group>
+        <group>Texture</group>
         <script>-gimp_color_ellipses 400,8,0.1</script>
     </gmicscript>
 
     <gmicscript>
         <name>Shockwaves</name>
-        <group>Special Effect</group>
+        <group>Artistic</group>
         <script>-gimp_shockwaves 10,10,20,0,0</script>
     </gmicscript>
 
@@ -614,7 +616,7 @@
 
     <gmicscript>
         <name>Stained Glass</name>
-        <group>Special Effect</group>
+        <group>Artistic</group>
         <script>-gimp_stained_glass 20,0.1,1,1,1,0,1,0,0</script>
     </gmicscript>
 
@@ -626,7 +628,7 @@
 
     <gmicscript>
         <name>Tetris</name>
-        <group>Special Effect</group>
+        <group>Artistic</group>
         <script>-gimp_tetris 10</script>
     </gmicscript>
 
@@ -638,7 +640,7 @@
 
     <gmicscript>
         <name>Whirls</name>
-        <group>Special Effect</group>
+        <group>Artistic</group>
         <script>-gimp_whirls 7,2,0.2,1.8,11,0</script>
     </gmicscript>
 
@@ -734,7 +736,7 @@
 
     <gmicscript>
         <name>Marble</name>
-        <group>Special Effect</group>
+        <group>Artistic</group>
         <script>-gimp_marble 0.5,1,0,0,0.4,0.6,0.6,1.1,0,100</script>
     </gmicscript>
 
@@ -770,15 +772,17 @@
 
     <gmicscript>
         <name>Shadow Patch</name>
-        <group>Special Effect</group>
+        <group>Texture</group>
         <script>-gimp_shadow_patch 0.7,0</script>
     </gmicscript>
 
+    <!--
     <gmicscript>
         <name>Rgb2bayer</name>
         <group>Artistic</group>
         <script>-rgb2bayer 0,1</script>
     </gmicscript>
+    -->
 
     <gmicscript>
         <name>Boxfitting</name>

@@ -449,9 +449,10 @@ class GmicWindow(Gtk.Window):
         self.script_view.set_sensitive(False)
         self.script_view.set_pixels_above_lines(2)
         self.script_view.set_left_margin(2)
-
+        self.script_view.set_wrap_mode(Gtk.WrapMode.CHAR)
+        
         script_sw = Gtk.ScrolledWindow()
-        script_sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        script_sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         script_sw.add(self.script_view)
         script_sw.set_size_request(MONITOR_WIDTH - 100, 125)
 
@@ -459,11 +460,12 @@ class GmicWindow(Gtk.Window):
         self.out_view.set_sensitive(False)
         self.out_view.set_pixels_above_lines(2)
         self.out_view.set_left_margin(2)
+        self.out_view.set_wrap_mode(Gtk.WrapMode.WORD)
         fd = Pango.FontDescription.from_string("Sans 8")
         self.out_view.override_font(fd)
 
         out_sw = Gtk.ScrolledWindow()
-        out_sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        out_sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         out_sw.add(self.out_view)
         out_sw.set_size_request(MONITOR_WIDTH - 150, 100)
         
@@ -755,6 +757,13 @@ class GmicPreviewRendererer(threading.Thread):
         p.wait()
         FLOG.close()
     
+        print p.returncode
+     
+        if p.returncode != 0:
+           _window.out_view.override_color((Gtk.StateFlags.NORMAL and Gtk.StateFlags.ACTIVE), Gdk.RGBA(red=1.0, green=0.0, blue=0.0))
+        else:
+            _window.out_view.override_color((Gtk.StateFlags.NORMAL and Gtk.StateFlags.ACTIVE), None)
+
         # read log
         f = open(utils.get_hidden_user_dir_path() + "log_gmic_preview", 'r')
         out = f.read()
@@ -764,7 +773,7 @@ class GmicPreviewRendererer(threading.Thread):
         _current_preview_surface = cairo.ImageSurface.create_from_png(get_preview_file())
 
         Gdk.threads_enter()
-        _window.out_view.get_buffer().set_text(out)
+        _window.out_view.get_buffer().set_text(out + "Return code:" + str(p.returncode))
 
         render_time = time.time() - start_time
         time_str = "{0:.2f}".format(round(render_time,2))
