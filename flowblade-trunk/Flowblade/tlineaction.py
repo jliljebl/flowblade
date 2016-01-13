@@ -767,7 +767,7 @@ def monitor_clip_too_short(parent_window):
     dialogutils.info_message(primary_txt, secondary_txt, parent_window)
 
 
-# ------------------------------------------------- clip to rang log d'n'd
+# ------------------------------------------------- clip to range log d'n'd
 def mouse_dragged_out(event):
     if movemodes.selected_range_in != -1:
         movemodes.clips_drag_out_started(event)

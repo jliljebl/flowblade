@@ -173,9 +173,9 @@ class FramesRangeWriter:
         self.consumer.start()
 
         while self.running: # set false at shutdown() for abort
-            if self.frame_producer.frame() >= (mark_out - mark_in):
+            if self.frame_producer.frame() >= mark_out:
                 
-                self.callback(self.frame_producer.frame())
+                self.callback(self.frame_producer.frame() - mark_in)
                 time.sleep(2.0) # This seems enough, other methods produced bad waits
 
                 self.running = False

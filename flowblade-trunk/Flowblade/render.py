@@ -45,8 +45,6 @@ import guicomponents
 import guiutils
 import mltprofiles
 import mltrefhold
-import projectdata
-import projectinfogui
 import renderconsumer
 import rendergui
 import sequence

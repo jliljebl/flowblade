@@ -28,7 +28,6 @@ import guicomponents
 import guiutils
 import utils
 
-
 widgets = utils.EmptyClass()
 
 
