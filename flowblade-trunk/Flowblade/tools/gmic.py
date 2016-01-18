@@ -43,6 +43,7 @@ import gui
 import guicomponents
 import guiutils
 import glassbuttons
+import mlt
 import mltenv
 import mltprofiles
 import mlttransitions
@@ -79,7 +80,9 @@ _current_path = None
 _current_preview_surface = None
 _current_dimensions = None
 _current_fps = None
-
+_current_profile_index = None
+_render_data = None
+    
 _encoding_panel = None
 
 #-------------------------------------------------- launch and inits
@@ -167,6 +170,7 @@ def main(root_path, force_launch=False):
 def init_frames_dirs():
     os.mkdir(get_clip_frames_dir())
     os.mkdir(get_render_frames_dir())
+
 #----------------------------------------------- session folders and files
 def get_session_folder():
     return utils.get_hidden_user_dir_path() + appconsts.GMIC_DIR + "/session_" + str(_session_id)
@@ -222,22 +226,26 @@ def _open_files_dialog_cb(file_select, response_id):
     global _current_path
     _current_path = filenames[0]
 
-    new_profile = gmicplayer.set_current_profile(_current_path)
-    global _current_dimensions, _current_fps
+    new_profile_index = gmicplayer.set_current_profile(_current_path)
+    new_profile = mltprofiles.get_profile_for_index(new_profile_index)
+
+    global _current_dimensions, _current_fps, _current_profile_index
     _current_dimensions = (new_profile.width(), new_profile.height(), 1.0)
     _current_fps = float(new_profile.frame_rate_num())/float(new_profile.frame_rate_den())
+    _current_profile_index = new_profile_index
 
     global _player, _frame_writer
     _player = gmicplayer.GmicPlayer(_current_path)
     _frame_writer = gmicplayer.PreviewFrameWriter(_current_path)
 
     _window.set_fps()
-    _window.init_for_new_clip(_current_path)
+    _window.init_for_new_clip(_current_path, new_profile.description())
     _window.set_monitor_sizes()
     _window.set_widgets_sensitive(True)
     _player.create_sdl_consumer()
     _player.connect_and_start()
 
+#-------------------------------------------------- script setting
 def script_menu_lauched(launcher, event):
     gmicscript.show_menu(event, script_menu_item_selected)
 
@@ -315,7 +323,7 @@ def render_current_frame_preview():
     _preview_render.start()
 
 def _encode_settings_clicked():
-    toolsencoding.create_widgets()
+    toolsencoding.create_widgets(_current_profile_index, True)
         
     global _encoding_panel
     _encoding_panel = toolsencoding.get_gmic_render_panel()
@@ -336,7 +344,9 @@ def _encode_settings_clicked():
 
 def _encode_settings_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
-        pass
+        global _render_data
+        _render_data = toolsencoding.get_render_data_for_current_selections()
+        _window.update_encode_desc()
     
     dialog.destroy()
         
@@ -542,7 +552,7 @@ class GmicWindow(Gtk.Window):
         self.encode_settings_button = Gtk.Button(_("Encoding settings"))
         self.encode_settings_button.connect("clicked", lambda w:_encode_settings_clicked())
         self.encode_desc = Gtk.Label()
-        self.encode_desc.set_markup("<small>"+ "MPEG-2, 3000kbps" + "</small>")
+        self.encode_desc.set_markup("<small>"+ "mpeg2video, 3000k" + "</small>")
         
         encode_row = Gtk.HBox(False, 2)
         encode_row.pack_start(self.encode_check, False, False, 0)
@@ -559,7 +569,7 @@ class GmicWindow(Gtk.Window):
         self.status_no_render = _("Set Mark In, Mark Out and Frames Folder for valid render")
          
         self.render_status_info = Gtk.Label()
-        self.render_status_info.set_markup("<small>" + self.status_no_render  + "</small>") #+ "52 frames, requiring 768MB dis space, video file: ../movie.mpg" + "</small>")
+        self.render_status_info.set_markup("<small>" + self.status_no_render  + "</small>") 
 
         render_status_row = Gtk.HBox(False, 2)
         render_status_row.pack_start(self.render_percentage, False, False, 0)
@@ -641,11 +651,11 @@ class GmicWindow(Gtk.Window):
         self.set_resizable(False)
         self.set_active_state(False)
 
-    def init_for_new_clip(self, clip_path):
+    def init_for_new_clip(self, clip_path, profile_name):
         self.clip_path = clip_path
         self.set_active_state(True)
         self.pos_bar.update_display_from_producer(_player.producer)
-        self.media_info.set_markup("<small>" + os.path.basename(clip_path) + "</small>")
+        self.media_info.set_markup("<small>" + os.path.basename(clip_path) + ", " + profile_name + "</small>")
 
     def update_marks_display(self):
         if _player.producer.mark_in == -1:
@@ -719,7 +729,16 @@ class GmicWindow(Gtk.Window):
         value = self.encode_check.get_active()
         self.encode_settings_button.set_sensitive(value)
         self.encode_desc.set_sensitive(value)
-   
+
+    def update_encode_desc(self):
+        if _render_data == None:
+            desc_str =  "mpeg2video, 3000k" 
+        else:
+            args_vals = toolsencoding.get_args_vals_list_for_render_data(_render_data)
+            desc_str = toolsencoding.get_encoding_desc(args_vals)
+
+        self.encode_desc.set_markup("<small>" + desc_str + "</small>")
+        
     def set_widgets_sensitive(self, value):
         self.monitor.set_sensitive(value)
         self.preview_info.set_sensitive(value)
@@ -985,6 +1004,44 @@ class GmicEffectRendererer(threading.Thread):
                 FLOG.close()
 
             frame_count = frame_count + 1
+
+        # Render video
+        if _window.encode_check.get_active() == True:
+            # Render consumer
+            args_vals_list = toolsencoding.get_args_vals_list_for_render_data(_render_data)
+            profile = mltprofiles.get_profile_for_index(_current_profile_index) 
+            file_path = _render_data.render_dir + "/" +  _render_data.file_name
+            
+            print file_path
+            
+            consumer = renderconsumer.get_mlt_render_consumer(file_path, profile, args_vals_list)
+            
+            # Render producer
+            frame_file = out_folder + frame_name + "_0000.png"
+            if editorstate.mlt_version_is_equal_or_greater("0.8.5"):
+                resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
+            else:
+                resource_name_str = utils.get_img_seq_resource_name(frame_file, False)
+            resource_path = out_folder + "/" + resource_name_str
+            producer = mlt.Producer(profile, str(resource_path))
+
+
+            print resource_path
+
+            render_player = renderconsumer.FileRenderPlayer("", producer, consumer, 0, len(clip_frames) - 1)
+            render_player.start()
+
+            while render_player.stopped == False:
+
+                fraction = render_player.get_render_fraction()
+                update_info = "Rendering video, " + str(int(fraction * 100)) + "% done"
+                
+                Gdk.threads_enter()
+                _window.render_percentage.set_markup("<small>" + update_info + "</small>")
+                _window.render_progress_bar.set_fraction(fraction)
+                Gdk.threads_leave()
+                
+                time.sleep(0.3)
 
         Gdk.threads_enter()
         _window.render_percentage.set_markup("<small>" + _("Render complete!") + "</small>")

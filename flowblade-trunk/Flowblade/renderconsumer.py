@@ -306,6 +306,14 @@ def get_args_vals_tuples_list_for_encoding_and_quality(profile, enc_opt_index, q
     
     return args_vals_list
 
+def get_video_non_user_encodigs():
+    video_non_user_encs = []
+    for enc in non_user_encodings:
+        if enc.type != "audio":
+            video_non_user_encs.append(enc)
+
+    return video_non_user_encs
+
 """
 def get_args_vals_tuples_list_for_encoding_option(profile, encoding_option):
     encoding_option = encoding_options[enc_opt_index]

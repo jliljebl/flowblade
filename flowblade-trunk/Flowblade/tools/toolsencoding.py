@@ -1,4 +1,22 @@
+"""
+    Flowblade Movie Editor is a nonlinear video editor.
+    Copyright 2012 Janne Liljeblad.
 
+    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+
+    Flowblade Movie Editor is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Flowblade Movie Editor is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
+"""
 
 from gi.repository import Gtk
 from gi.repository import GObject
@@ -6,10 +24,13 @@ from gi.repository import GObject
 import os
 
 import guiutils
+import mltprofiles
 import renderconsumer
 import utils
 
-widgets =  None
+widgets = None
+disable_audio_encoding = False
+default_profile_index = None
 
 # ----------------------------------------------------- GUI objects
 class RenderFilePanel():
@@ -19,7 +40,6 @@ class RenderFilePanel():
         self.out_folder = Gtk.FileChooserButton(_("Select Folder"))
         self.out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
         self.out_folder.set_current_folder(os.path.expanduser("~") + "/")
-        #gui.render_out_folder = self.out_folder
         out_folder_row = guiutils.get_two_column_box(Gtk.Label(label=_("Folder:")), self.out_folder, 60)
                               
         self.movie_name = Gtk.Entry()
@@ -50,7 +70,7 @@ class RenderTypePanel():
         self.type_combo.append_text(_("User Defined"))
         self.type_combo.append_text(_("Preset File type"))
         self.type_combo.set_active(0)
-        self.type_combo.connect('changed', lambda w: render_type_changed_callback())
+        self.type_combo.connect('changed', lambda w: render_type_changed_callback(w))
     
         self.presets_selector = PresetEncodingsSelector(preset_selection_changed_callback)
 
@@ -66,24 +86,20 @@ class RenderTypePanel():
 class RenderProfilePanel():
 
     def __init__(self, out_profile_changed_callback):
-        self.use_project_label = Gtk.Label(label=_("Use Project Profile:"))
-        self.use_args_label = Gtk.Label(label=_("Render using args:"))
+        self.use_project_label = Gtk.Label(label=_("Use Default Profile:"))
+
+        self.out_profile_info_box = ProfileInfoBox() # filled later when current sequence known
 
         self.use_project_profile_check = Gtk.CheckButton()
         self.use_project_profile_check.set_active(True)
         self.use_project_profile_check.connect("toggled", self.use_project_check_toggled)
 
         self.out_profile_combo = ProfileSelector(out_profile_changed_callback)
-        
-        self.out_profile_info_box = ProfileInfoBox() # filled later when current sequence known
-        
+
         use_project_profile_row = Gtk.HBox()
         use_project_profile_row.pack_start(self.use_project_label,  False, False, 0)
         use_project_profile_row.pack_start(self.use_project_profile_check,  False, False, 0)
         use_project_profile_row.pack_start(Gtk.Label(), True, True, 0)
-
-        self.use_project_profile_check.set_tooltip_text(_("Select used project profile for rendering"))
-        self.out_profile_info_box.set_tooltip_text(_("Render profile info"))
     
         self.vbox = Gtk.VBox(False, 2)
         self.vbox.pack_start(use_project_profile_row, False, False, 0)
@@ -98,8 +114,9 @@ class RenderProfilePanel():
     def use_project_check_toggled(self, checkbutton):
         self.out_profile_combo.widget.set_sensitive(checkbutton.get_active() == False)
         if checkbutton.get_active() == True:
-            self.out_profile_combo.widget.set_active(0)
-
+            self.out_profile_combo.widget.set_active(default_profile_index)
+            #_display_default_profile()
+            
 
 class RenderEncodingPanel():
     
@@ -112,17 +129,10 @@ class RenderEncodingPanel():
                                                         extension_label,
                                                         self.audio_desc)
         self.encoding_selector.encoding_selection_changed()
-        
-        #self.sample_rate_selector = RenderAudioRateSelector()
-
-        #self.speaker_image = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "audio_desc_icon.png")
 
         quality_row  = Gtk.HBox()
         quality_row.pack_start(self.quality_selector.widget, False, False, 0)
         quality_row.pack_start(Gtk.Label(), True, False, 0)
-        #quality_row.pack_start(self.speaker_image, False, False, 0)
-        #quality_row.pack_start(self.sample_rate_selector.widget, False, False, 0)
-        #quality_row.pack_start(self.audio_desc, False, False, 0)
 
         self.vbox = Gtk.VBox(False, 2)
         self.vbox.pack_start(self.encoding_selector.widget, False, False, 0)
@@ -139,17 +149,18 @@ class ProfileSelector():
     def __init__(self, out_profile_changed_callback=None):
         self.widget = Gtk.ComboBoxText() # filled later when current sequence known
         if out_profile_changed_callback != None:
-            self.widget.connect('changed', lambda w:  out_profile_changed_callback())
+            self.widget.connect('changed', lambda w:  out_profile_changed_callback(w))
         self.widget.set_sensitive(False)
         self.widget.set_tooltip_text(_("Select render profile"))
         
     def fill_options(self):
         self.widget.get_model().clear()
-        self.widget.append_text(current_sequence().profile.description())
+        #self.widget.append_text(current_sequence().profile.description())
         profiles = mltprofiles.get_profiles()
         for profile in profiles:
             self.widget.append_text(profile[0])
-        self.widget.set_active(0)
+        self.widget.set_active(default_profile_index)
+
 
 class RenderQualitySelector():
     """
@@ -171,17 +182,23 @@ class RenderQualitySelector():
         else:
             self.widget.set_active(0)
 
+
 class PresetEncodingsSelector():
     
      def __init__(self, selection_changed_callback):
         self.widget = Gtk.ComboBoxText()
-        for encoding in renderconsumer.non_user_encodings:
+        encs = renderconsumer.non_user_encodings
+        
+        if disable_audio_encoding == True:
+            encs = renderconsumer.get_video_non_user_encodigs()
+        
+        for encoding in encs:
             self.widget.append_text(encoding.name)
         
         self.widget.set_active(0)
         self.widget.set_sensitive(False)
         self.widget.connect("changed", 
-                             lambda w,e: selection_changed_callback(), 
+                             lambda w,e: selection_changed_callback(w), 
                              None)
 
 
@@ -229,17 +246,24 @@ class RenderEncodingSelector():
 
 
 # ------------------------------------------------------------ interface
-def create_widgets():
+def create_widgets(def_profile_index, disable_audio=False):
     """
     Widgets for editing render properties and viewing render progress.
     """
-    global widgets
+    global widgets, disable_audio_encoding, default_profile_index
+    default_profile_index = def_profile_index
+    if disable_audio:
+        disable_audio_encoding = True
+
     widgets = utils.EmptyClass()
      
     widgets.file_panel = RenderFilePanel()
     widgets.render_type_panel = RenderTypePanel(_render_type_changed, _preset_selection_changed)
     widgets.profile_panel = RenderProfilePanel(_out_profile_changed)
     widgets.encoding_panel = RenderEncodingPanel(widgets.file_panel.extension_label)
+
+    widgets.profile_panel.out_profile_combo.fill_options()
+    _display_default_profile()
     
 def get_gmic_render_panel():   
     file_opts_panel = guiutils.get_named_frame(_("File"), widgets.file_panel.vbox, 4)         
@@ -256,18 +280,120 @@ def get_gmic_render_panel():
         
     return render_panel
 
-
 def _render_type_changed(w):
-    pass
-    
-def _preset_selection_changed(w):
-    pass
-    
-def _preset_selection_changed(w):
-    pass
+    if w.get_active() == 0: # User Defined
+        widgets.render_type_panel.presets_selector.widget.set_sensitive(False)
+    else: # Preset Encodings
+        widgets.render_type_panel.presets_selector.widget.set_sensitive(True)
+        _preset_selection_changed(widgets.render_type_panel.presets_selector.widget)
 
+def _preset_selection_changed(w):
+    encs = renderconsumer.non_user_encodings
+    if disable_audio_encoding == True:
+        encs = renderconsumer.get_video_non_user_encodigs()
+
+    enc_index = w.get_active()
+    ext = encs[enc_index].extension
+    widgets.file_panel.extension_label.set_text("." + ext)
+    
 def _out_profile_changed(w):
-    pass
+    profile = mltprofiles.get_profile_for_index(w.get_active())
+    _fill_info_box(profile)
 
+def _display_default_profile():
+    profile = mltprofiles.get_profile_for_index(default_profile_index)
+    _fill_info_box(profile)
+    
+def _fill_info_box(profile):
+    info_panel = get_profile_info_small_box(profile)
+    widgets.info_panel = info_panel
+    widgets.profile_panel.out_profile_info_box.display_info(info_panel)
 
+def get_profile_info_small_box(profile):
+    text = get_profile_info_text(profile)
+    label = Gtk.Label(label=text)
 
+    hbox = Gtk.HBox()
+    hbox.pack_start(label, False, False, 0)
+    
+    return hbox
+
+def get_profile_info_text(profile):
+    str_list = []
+    str_list.append(str(profile.width()))
+    str_list.append(" x ")    
+    str_list.append(str(profile.height()))
+    str_list.append(", " + str(profile.display_aspect_num()))
+    str_list.append(":")
+    str_list.append(str(profile.display_aspect_den()))
+    str_list.append(", ")
+    if profile.progressive() == True:
+        str_list.append(_("Progressive"))
+    else:
+        str_list.append(_("Interlaced"))
+        
+    str_list.append("\n")
+    str_list.append(_("Fps: ") + str(profile.fps()))
+    pix_asp = float(profile.sample_aspect_num()) / profile.sample_aspect_den()
+    pa_str =  "%.2f" % pix_asp
+    str_list.append(", " + _("Pixel Aspect: ") + pa_str)
+
+    return ''.join(str_list)
+
+def get_render_data_for_current_selections():
+    render_data = ToolsRenderData()
+    render_data.profile_index = widgets.profile_panel.out_profile_combo.widget.get_active()
+    render_data.encoding_option_index = widgets.encoding_panel.encoding_selector.widget.get_active()
+    render_data.quality_option_index = widgets.encoding_panel.quality_selector.widget.get_active()
+    render_data.presets_index = widgets.render_type_panel.presets_selector.widget.get_active()
+    render_data.use_preset_encodings = (widgets.render_type_panel.type_combo.get_active() == 1)
+    render_data.render_dir = widgets.file_panel.out_folder.get_current_folder()
+    render_data.file_name = widgets.file_panel.movie_name.get_text() + widgets.file_panel.extension_label.get_text()
+
+    return render_data
+
+def get_args_vals_list_for_render_data(render_data):
+    profile = mltprofiles.get_profile_for_index(render_data.profile_index)
+    if render_data.use_preset_encodings == 1: # Preset encodings
+        encs = renderconsumer.non_user_encodings
+        if render_data.disable_audio_encoding == True:
+            encs = renderconsumer.get_video_non_user_encodigs()
+        encoding_option = encs[render_data.non_user_presets_index]
+        args_vals_list = encoding_option.get_args_vals_tuples_list(profile)
+    else: # User encodings
+        args_vals_list = renderconsumer.get_args_vals_tuples_list_for_encoding_and_quality( profile, 
+                                                                                            render_data.encoding_option_index, 
+                                                                                            render_data.quality_option_index)
+        # sample rate not supported
+    # args rendering not supported
+
+    return args_vals_list
+
+def get_encoding_desc(args_vals_list):
+    print args_vals_list
+    vcodec = ""
+    vb = ""
+    for arg_val in args_vals_list:
+        k, v = arg_val
+        if k == "vcodec":
+            vcodec = v
+        if k == "vb":
+            vb = v
+
+    if vb  == "":
+        vb = "lossless"
+
+    return vcodec + ", " + vb
+
+class ToolsRenderData():
+    """
+    This is used to save render selections defined bt user.
+    """
+    def __init__(self):
+        self.profile_index = None
+        self.use_preset_encodings = None
+        self.presets_index = None
+        self.encoding_option_index = None
+        self.quality_option_index = None
+        self.render_dir = None
+        self.file_name = None

@@ -138,7 +138,7 @@ def get_index_for_name(lookup_profile_name):
             return i
     return -1
 
-def get_closest_matching_profile(producer_info):
+def get_closest_matching_profile_index(producer_info):
     # producer_info is dict from utils.get_file_producer_info
     width = producer_info["width"]
     height= producer_info["height"]
@@ -178,10 +178,10 @@ def get_closest_matching_profile(producer_info):
             current_match_index = i
     
     if current_match_index == -1:
-        return get_default_profile()
+        return get_default_profile_index()
     
     print "current_match_index:", current_match_index
-    return get_profile_for_index(current_match_index)
+    return current_match_index
 
 def _sort_profiles(a, b):
     a_desc, a_profile = a

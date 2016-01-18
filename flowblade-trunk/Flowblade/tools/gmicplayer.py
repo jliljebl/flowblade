@@ -40,8 +40,9 @@ def set_current_profile(clip_path):
     profile = mltprofiles.get_default_profile()
     producer = mlt.Producer(profile, str(clip_path))
     global _current_profile
-    _current_profile = mltprofiles.get_closest_matching_profile(utils.get_file_producer_info(producer))
-    return _current_profile
+    profile_index = mltprofiles.get_closest_matching_profile_index(utils.get_file_producer_info(producer))
+    _current_profile = mltprofiles.get_profile_for_index(profile_index)
+    return profile_index
 
 class GmicPlayer:
     

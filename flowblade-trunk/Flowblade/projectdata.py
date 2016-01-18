@@ -254,52 +254,7 @@ class Project:
             return None
 
         return os.path.dirname(last_render_event.data)
-    """
-    not handled here anymore
-    # ------------------------------------------------------- Snapshot save project
 
-    def save_backup_snapshot(self, root_folder_path):
-        media_folder = root_folder_path +  "media/"
-
-        d = os.path.dirname(media_folder)
-        os.mkdir(d)
-
-        asset_paths = {}
-
-        # Copy media files
-        for idkey, media_file in self.media_files.items():
-            # Copy asset file and fix path
-            directory, file_name = os.path.split(media_file.path)
-            media_file_copy = media_folder + file_name
-            print media_file_copy, "out side"
-            if media_file_copy in asset_paths: # Create different filename for files 
-                                               # that have same filename but different path
-                print "in side"
-                file_name = self.get_unique_name(media_file.path, file_name)
-                media_file_copy = media_folder + file_name
-                
-            shutil.copyfile(media_file.path, media_file_copy)
-            asset_paths[media_file.path] = media_file_copy
-
-        # Copy clip producers paths
-        for seq in self.sequences:
-            for track in seq.tracks:
-                for i in range(0, len(track.clips)):
-                    clip = track.clips[i]
-                    # Only producer clips are affected
-                    if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
-                        directory, file_name = os.path.split(clip.path)
-                        clip_file_copy = media_folder + file_name
-                        if not os.path.isfile(clip_file_copy):
-                            print "clip_file_copy", clip_file_copy
-                            shutil.copyfile(clip.path, clip_file_copy) # only rendered files are copied here
-                            asset_paths[clip.path] = clip_file_copy # This stuff is already md5 hashed, so no duplicate problems here
-
-
-    def get_unique_name(self, file_path, file_name):
-        (name, ext) = os.path.splitext(file_name)
-        return md5.new(file_path).hexdigest() + ext
-    """
         
 class MediaFile:
     """
