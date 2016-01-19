@@ -242,10 +242,11 @@ def _open_files_dialog_cb(file_select, response_id):
     _window.init_for_new_clip(_current_path, new_profile.description())
     _window.set_monitor_sizes()
     _window.set_widgets_sensitive(True)
+    _window.render_button.set_sensitive(False)
     _player.create_sdl_consumer()
     _player.connect_and_start()
 
-#-------------------------------------------------- script setting
+#-------------------------------------------------- script setting and save/load
 def script_menu_lauched(launcher, event):
     gmicscript.show_menu(event, script_menu_item_selected)
 
@@ -256,7 +257,52 @@ def script_menu_item_selected(item, script):
         buf = _window.script_view.get_buffer()
         buf.insert(buf.get_end_iter(), " " + script.script)
     _window.preset_label.set_text(script.name)
-    
+
+def save_script_dialog(callback):
+    dialog = Gtk.FileChooserDialog(_("Save Gmic Script As"), None, 
+                                   Gtk.FileChooserAction.SAVE, 
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                                   _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+    dialog.set_action(Gtk.FileChooserAction.SAVE)
+    dialog.set_current_name("gmic_script")
+    dialog.set_do_overwrite_confirmation(True)
+    dialog.set_select_multiple(False)
+    dialog.connect('response', callback)
+    dialog.show()
+
+def _save_script_dialog_callback(dialog, response_id):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        file_path = dialog.get_filenames()[0]
+        script_file = open(file_path, "w")
+        buf = _window.script_view.get_buffer()
+        script_text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), include_hidden_chars=True)
+        script_file.write(script_text)
+        script_file.close()
+        dialog.destroy()
+    else:
+        dialog.destroy()
+
+def load_script_dialog(callback):
+    dialog = Gtk.FileChooserDialog(_("Load Gmic Script"), None, 
+                                   Gtk.FileChooserAction.OPEN, 
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+    dialog.set_action(Gtk.FileChooserAction.OPEN)
+    dialog.set_select_multiple(False)
+    dialog.connect('response', callback)
+    dialog.show()
+
+
+def _load_script_dialog_callback(dialog, response_id):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        filename = dialog.get_filenames()[0]
+        args_file = open(filename)
+        args_text = args_file.read()
+        _window.script_view.get_buffer().set_text(args_text)
+        dialog.destroy()
+    else:
+        dialog.destroy()
+        
 #-------------------------------------------------- player buttons
 def prev_pressed():
     _player.seek_delta(-1)
@@ -290,7 +336,8 @@ def marks_clear_pressed():
 
     _window.update_marks_display()
     _window.pos_bar.update_display_from_producer(_player.producer)
-        
+    _window.update_render_status_info()
+
 def to_mark_in_pressed():
     if _player.producer.mark_in != -1:
         _player.seek_frame(_player.producer.mark_in)
@@ -609,9 +656,9 @@ class GmicWindow(Gtk.Window):
         script_work_panel.pack_start(render_vbox, True, True, 0)
 
         self.load_script = Gtk.Button(_("Load Script"))
-        #load_layers.connect("clicked", lambda w:self._load_layers_pressed())
+        self.load_script.connect("clicked", lambda w:load_script_dialog(_load_script_dialog_callback))
         self.save_script = Gtk.Button(_("Save Script"))
-        #save_layers.connect("clicked", lambda w:self._save_layers_pressed())
+        self.save_script.connect("clicked", lambda w:save_script_dialog(_save_script_dialog_callback))
 
         info_b = guiutils.get_sized_button(_("Info"), 150, 32)
         exit_b = guiutils.get_sized_button(_("Close"), 150, 32)
@@ -678,14 +725,24 @@ class GmicWindow(Gtk.Window):
         self.length_info.queue_draw()
 
     def update_render_status_info(self):
+        if _player == None:# this gets called too on startup to set text before player is ready
+            self.render_status_info.set_markup("<small>" + self.status_no_render  + "</small>")
+            self.render_button.set_sensitive(False)
+            return
+        
         if  _player.producer.mark_in == -1 or _player.producer.mark_out == -1 \
             or self.out_folder.get_filename() == None:
             self.render_status_info.set_markup("<small>" + self.status_no_render  + "</small>")
+            self.render_button.set_sensitive(False)
         else:
             length = _player.producer.mark_out - _player.producer.mark_in + 1
-            info_str = str(length) + _(" frame(s),") + _(" no video file")
+            video_info = _(" no video file")
+            if self.encode_check.get_active() == True:
+                video_info = _(" render video file")
+            info_str = str(length) + _(" frame(s),") + video_info
             self.render_status_info.set_markup("<small>" + info_str +  "</small>")
-
+            self.render_button.set_sensitive(True)
+            
     def folder_selection_changed(self, chooser):
         self.update_render_status_info()
  
@@ -729,6 +786,7 @@ class GmicWindow(Gtk.Window):
         value = self.encode_check.get_active()
         self.encode_settings_button.set_sensitive(value)
         self.encode_desc.set_sensitive(value)
+        self.update_render_status_info()
 
     def update_encode_desc(self):
         if _render_data == None:
@@ -763,7 +821,7 @@ class GmicWindow(Gtk.Window):
         self.render_percentage.set_sensitive(value)
         self.render_status_info.set_sensitive(value)
         self.render_progress_bar.set_sensitive(value)
-        self.stop_button.set_sensitive(value)
+        self.stop_button.set_sensitive(False)
         self.render_button.set_sensitive(value)
         self.preview_button.set_sensitive(value)
         self.load_script.set_sensitive(value)
@@ -1012,8 +1070,6 @@ class GmicEffectRendererer(threading.Thread):
             profile = mltprofiles.get_profile_for_index(_current_profile_index) 
             file_path = _render_data.render_dir + "/" +  _render_data.file_name
             
-            print file_path
-            
             consumer = renderconsumer.get_mlt_render_consumer(file_path, profile, args_vals_list)
             
             # Render producer
@@ -1024,9 +1080,6 @@ class GmicEffectRendererer(threading.Thread):
                 resource_name_str = utils.get_img_seq_resource_name(frame_file, False)
             resource_path = out_folder + "/" + resource_name_str
             producer = mlt.Producer(profile, str(resource_path))
-
-
-            print resource_path
 
             render_player = renderconsumer.FileRenderPlayer("", producer, consumer, 0, len(clip_frames) - 1)
             render_player.start()
