@@ -1426,6 +1426,7 @@ def display_media_log_event_popup_menu(row, treeview, callback, event):
     guiutils.remove_children(log_event_menu)
 
     log_event_menu.add(_get_menu_item(_("Display In Clip Monitor"), callback, ("display", row, treeview)))
+    log_event_menu.add(_get_menu_item(_("Render Slow/Fast Motion File"), callback, ("renderslowmo",  row, treeview)))
     log_event_menu.add(_get_menu_item(_("Toggle Star"), callback, ("toggle", row, treeview)))
     log_event_menu.add(_get_menu_item(_("Delete"), callback, ("delete", row, treeview)))
     log_event_menu.popup(None, None, None, None, event.button, event.time)

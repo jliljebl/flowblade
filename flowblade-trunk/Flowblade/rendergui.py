@@ -158,7 +158,7 @@ def clip_render_progress_dialog(callback, title, text, progress_bar, parent_wind
     dialog.show()
     return dialog
 
-def show_slowmo_dialog(media_file, _response_callback):
+def show_slowmo_dialog(media_file, default_range_render, _response_callback):
     folder, file_name = os.path.split(media_file.path)
     name, ext = os.path.splitext(file_name)
         
@@ -250,7 +250,10 @@ def show_slowmo_dialog(media_file, _response_callback):
     fb_widgets.render_range.pack_start(renderer_text, True)
     fb_widgets.render_range.add_attribute(renderer_text, "text", 0)
     fb_widgets.render_range.add_attribute(renderer_text, 'sensitive', 1)
-    fb_widgets.render_range.set_active(0)
+    if default_range_render == False:
+        fb_widgets.render_range.set_active(0)
+    else:
+        fb_widgets.render_range.set_active(1)
     fb_widgets.render_range.show()
 
     # To update rendered length display
@@ -263,7 +266,7 @@ def show_slowmo_dialog(media_file, _response_callback):
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(mf_row, False, False, 0)
     vbox.pack_start(guiutils.get_left_justified_box([Gtk.Label(label=_("Source Mark In: ")), guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), mark_in]), False, False, 0)
-    vbox.pack_start(guiutils.get_left_justified_box([Gtk.Label(label=_("Source_Mark Out: ")), guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), mark_out]), False, False, 0)
+    vbox.pack_start(guiutils.get_left_justified_box([Gtk.Label(label=_("Source Mark Out: ")), guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), mark_out]), False, False, 0)
     vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
     vbox.pack_start(hbox, False, False, 0)
     vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)

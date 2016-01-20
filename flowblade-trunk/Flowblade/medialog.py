@@ -37,6 +37,7 @@ import guiutils
 import editorstate
 from editorstate import PROJECT
 import monitorevent
+import render
 import respaths
 import updater
 import utils
@@ -201,6 +202,16 @@ def _log_event_menu_item_selected(widget, data):
         widgets.media_log_view.fill_data_model()
     elif item_id == "display":
         display_item(row)
+    elif item_id == "renderslowmo":
+        render_slowmo_from_item(row)
+
+def render_slowmo_from_item(row):
+    log_events = get_current_filtered_events()
+    event_item = log_events[row]
+    media_file = PROJECT().get_media_file_for_path(event_item.path)
+    media_file.mark_in = event_item.mark_in
+    media_file.mark_out = event_item.mark_out
+    render.render_frame_buffer_clip(media_file, True)
 
 def get_current_filtered_events():
     log_events = PROJECT().get_filtered_media_log_events(widgets.group_view_select.get_active() - 1,

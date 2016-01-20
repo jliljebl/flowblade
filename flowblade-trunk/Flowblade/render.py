@@ -441,8 +441,8 @@ def _load_opts_dialog_callback(dialog, response_id):
 
 # ------------------------------------------------------------- framebuffer clip rendering
 # Rendering a slow/fast motion version of media file.
-def render_frame_buffer_clip(media_file):
-    rendergui.show_slowmo_dialog(media_file, _render_frame_buffer_clip_dialog_callback)
+def render_frame_buffer_clip(media_file, default_range_render=False):
+    rendergui.show_slowmo_dialog(media_file, default_range_render, _render_frame_buffer_clip_dialog_callback)
 
 def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, media_file):
     if response_id == Gtk.ResponseType.ACCEPT:
