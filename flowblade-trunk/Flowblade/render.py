@@ -477,7 +477,11 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
         dialog.destroy()
 
         # Create motion producer
-        fr_path = "framebuffer:" + media_file.path + "?" + str(speed)
+        source_path = media_file.path
+        if media_file.is_proxy_file == True:
+            source_path = media_file.second_file_path
+
+        fr_path = "framebuffer:" + source_path + "?" + str(speed)
         motion_producer = mlt.Producer(profile, None, str(fr_path))
         mltrefhold.hold_ref(motion_producer)
         

@@ -160,6 +160,9 @@ def clip_render_progress_dialog(callback, title, text, progress_bar, parent_wind
 
 def show_slowmo_dialog(media_file, default_range_render, _response_callback):
     folder, file_name = os.path.split(media_file.path)
+    if media_file.is_proxy_file:
+        folder, file_name = os.path.split(media_file.second_file_path)
+
     name, ext = os.path.splitext(file_name)
         
     dialog = Gtk.Dialog(_("Render Slow/Fast Motion Video File"), gui.editor_window.window,
