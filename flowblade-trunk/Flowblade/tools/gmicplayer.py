@@ -173,6 +173,8 @@ class FramesRangeWriter:
         self.frame_producer.set_speed(1)
         self.consumer.start()
 
+        print "Rendering frames range"
+                
         while self.running: # set false at shutdown() for abort
             if self.frame_producer.frame() >= mark_out:
                 
@@ -181,7 +183,6 @@ class FramesRangeWriter:
 
                 self.running = False
             else:
-                print "rendering frames"
                 self.callback(self.frame_producer.frame())
                 time.sleep(0.2)
     
