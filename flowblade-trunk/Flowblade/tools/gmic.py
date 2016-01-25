@@ -359,6 +359,9 @@ def render_output():
     _effect_renderer = GmicEffectRendererer()
     _effect_renderer.start()
 
+def abort_render():
+    _effect_renderer.abort_render()
+
 def render_preview_frame():
     _frame_writer.write_frame(get_clip_frames_dir() + "/", _player.current_frame())
     render_current_frame_preview()
@@ -599,8 +602,10 @@ class GmicWindow(Gtk.Window):
         self.encode_settings_button = Gtk.Button(_("Encoding settings"))
         self.encode_settings_button.connect("clicked", lambda w:_encode_settings_clicked())
         self.encode_desc = Gtk.Label()
-        self.encode_desc.set_markup("<small>"+ "mpeg2video, 3000k" + "</small>")
-        
+        self.encode_desc.set_markup("<small>" + _("not set")  + "</small>")
+        self.encode_desc.set_ellipsize(Pango.EllipsizeMode.END)
+        self.encode_desc.set_max_width_chars(32)
+
         encode_row = Gtk.HBox(False, 2)
         encode_row.pack_start(self.encode_check, False, False, 0)
         encode_row.pack_start(self.encode_check_label, False, False, 0)
@@ -629,6 +634,7 @@ class GmicWindow(Gtk.Window):
         self.render_progress_bar.set_valign(Gtk.Align.CENTER)
 
         self.stop_button = guiutils.get_sized_button(_("Stop"), 100, 32)
+        self.stop_button.connect("clicked", lambda w:abort_render())
         self.render_button = guiutils.get_sized_button(_("Render"), 100, 32)
         self.render_button.connect("clicked", lambda w:render_output())
 
@@ -660,7 +666,6 @@ class GmicWindow(Gtk.Window):
         self.save_script = Gtk.Button(_("Save Script"))
         self.save_script.connect("clicked", lambda w:save_script_dialog(_save_script_dialog_callback))
 
-        info_b = guiutils.get_sized_button(_("Info"), 150, 32)
         exit_b = guiutils.get_sized_button(_("Close"), 150, 32)
         exit_b.connect("clicked", lambda w:_shutdown())
         
@@ -668,8 +673,6 @@ class GmicWindow(Gtk.Window):
         editor_buttons_row.pack_start(self.load_script, False, False, 0)
         editor_buttons_row.pack_start(self.save_script, False, False, 0)
         editor_buttons_row.pack_start(Gtk.Label(), True, True, 0)
-        editor_buttons_row.pack_start(info_b, False, False, 0)
-        editor_buttons_row.pack_start(guiutils.pad_label(96, 2), False, False, 0)
         editor_buttons_row.pack_start(exit_b, False, False, 0)
 
         # Build window
@@ -790,13 +793,14 @@ class GmicWindow(Gtk.Window):
 
     def update_encode_desc(self):
         if _render_data == None:
-            desc_str =  "mpeg2video, 3000k" 
+            desc_str = "not set" 
         else:
             args_vals = toolsencoding.get_args_vals_list_for_render_data(_render_data)
-            desc_str = toolsencoding.get_encoding_desc(args_vals)
+            desc_str = toolsencoding.get_encoding_desc(args_vals) + ", " + _render_data.file_name 
 
         self.encode_desc.set_markup("<small>" + desc_str + "</small>")
-        
+        self.encode_desc.set_ellipsize(Pango.EllipsizeMode.END)
+
     def set_widgets_sensitive(self, value):
         self.monitor.set_sensitive(value)
         self.preview_info.set_sensitive(value)
@@ -967,6 +971,9 @@ class GmicEffectRendererer(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
+        self.render_player = None
+        self.frames_range_writer = None
+        
         self.abort = False
         
         # Refuse to render into user home folder
@@ -979,6 +986,7 @@ class GmicEffectRendererer(threading.Thread):
         
         Gdk.threads_enter()
         _window.render_status_info.set_markup("")
+        _window.stop_button.set_sensitive(True)
         Gdk.threads_leave()
             
         # Delete old preview frames
@@ -1000,13 +1008,16 @@ class GmicEffectRendererer(threading.Thread):
 
         self.frames_range_writer = gmicplayer.FramesRangeWriter(_current_path, self.frames_update)
         self.frames_range_writer.write_frames(get_render_frames_dir() + "/", frame_name, mark_in, mark_out)
+
+        if self.abort == True:
+            return
         
         # Render effect for frames
         # Get user script 
         Gdk.threads_enter()
         buf = _window.script_view.get_buffer()
         user_script = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
-        _window.render_percentage.set_text(_("Waiting for frames write to complete..."))
+        _window.render_percentage.set_markup("<small>" + _("Waiting for frames write to complete...") + "</small>")
         Gdk.threads_leave()
 
         while len(os.listdir(folder)) != self.length:
@@ -1081,13 +1092,16 @@ class GmicEffectRendererer(threading.Thread):
             resource_path = out_folder + "/" + resource_name_str
             producer = mlt.Producer(profile, str(resource_path))
 
-            render_player = renderconsumer.FileRenderPlayer("", producer, consumer, 0, len(clip_frames) - 1)
-            render_player.wait_for_producer_end_stop = False
-            render_player.start()
+            self.render_player = renderconsumer.FileRenderPlayer("", producer, consumer, 0, len(clip_frames) - 1)
+            self.render_player.wait_for_producer_end_stop = False
+            self.render_player.start()
 
-            while render_player.stopped == False:
+            while self.render_player.stopped == False:
 
-                fraction = render_player.get_render_fraction()
+                if self.abort == True:
+                    return
+                
+                fraction = self.render_player.get_render_fraction()
                 update_info = "Rendering video, " + str(int(fraction * 100)) + "% done"
                 
                 Gdk.threads_enter()
@@ -1099,11 +1113,12 @@ class GmicEffectRendererer(threading.Thread):
 
         Gdk.threads_enter()
         _window.render_percentage.set_markup("<small>" + _("Render complete!") + "</small>")
+        _window.render_progress_bar.set_fraction(0.0)
         _window.update_render_status_info()
+        _window.stop_button.set_sensitive(False)
         Gdk.threads_leave()
         
     def frames_update(self, frame):
-        
         if frame - self.mark_in < 0:
             frame = self.length # hack fix, producer suddenly changes the frame i thinks it is in
         else:
@@ -1116,9 +1131,20 @@ class GmicEffectRendererer(threading.Thread):
         _window.render_progress_bar.set_fraction(float(frame + 1)/float(self.length))
         Gdk.threads_leave()
 
-    def shutdown(self):
-        self.frames_range_writer.shutdown()
+    def abort_render(self):
         self.abort = True
 
+        self.shutdown()
+                         
+        _window.render_percentage.set_markup("<small>" + _("Render stopped!") + "</small>")
+        _window.render_progress_bar.set_fraction(0.0)
+        _window.update_render_status_info()
+        _window.stop_button.set_sensitive(False)
 
+    def shutdown(self):
+        if self.frames_range_writer != None:
+            self.frames_range_writer.shutdown()
         
+        if self.render_player != None:
+            self.render_player.shutdown()        
+

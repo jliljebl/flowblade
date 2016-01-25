@@ -150,13 +150,12 @@ class FramesRangeWriter:
     def __init__(self, file_path, callback):
         self.producer = mlt.Producer(_current_profile, str(file_path))
         self.callback = callback
+        self.running = True
 
     def write_frames(self, clip_folder, frame_name, mark_in, mark_out):
         """
         Writes thumbnail image from file producer
         """
-        self.running = True
-
         # Get data
         render_path = clip_folder + frame_name + "_%04d." + "png"
 
@@ -187,6 +186,9 @@ class FramesRangeWriter:
                 time.sleep(0.2)
     
     def shutdown(self):
+        if self.running == False:
+            return
+
         self.consumer.stop()
         self.frame_producer.set_speed(0)
         self.running = False
