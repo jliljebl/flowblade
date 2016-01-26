@@ -85,6 +85,9 @@ _render_data = None
     
 _encoding_panel = None
 
+# GTK3 requires this to be created outside of callback
+_hamburger_menu = Gtk.Menu()
+
 #-------------------------------------------------- launch and inits
 def launch_gmic():
     print "Launch gmic..."
@@ -302,7 +305,23 @@ def _load_script_dialog_callback(dialog, response_id):
         dialog.destroy()
     else:
         dialog.destroy()
-        
+
+#-------------------------------------------------- menu
+def _hamburger_menu_callback(widget, msg):
+    print msg
+
+def _get_menu_item(text, callback, data, sensitive=True):
+    item = Gtk.MenuItem.new_with_label(text)
+    item.connect("activate", callback, data)
+    item.show()
+    item.set_sensitive(sensitive)
+    return item
+
+def _add_separetor(menu):
+    sep = Gtk.SeparatorMenuItem()
+    sep.show()
+    menu.add(sep)
+
 #-------------------------------------------------- player buttons
 def prev_pressed():
     _player.seek_delta(-1)
@@ -425,6 +444,9 @@ class GmicWindow(Gtk.Window):
         app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowblademedialinker.png")
         self.set_icon(app_icon)
 
+        hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger.png")
+        hamburger_launcher = guicomponents.PressLaunch(self.hamburger_launch_pressed, hamburger_launcher_surface)
+        
         # Load media row
         load_button = Gtk.Button(_("Load Clip"))
         load_button.connect("clicked",
@@ -432,6 +454,8 @@ class GmicWindow(Gtk.Window):
         self.media_info = Gtk.Label()
         self.media_info.set_markup("<small>no clip loaded</small>")#"<small>" + "video_clip.mpg, 1920x1080,  25.0fps" + "</small>" )
         load_row = Gtk.HBox(False, 2)
+        load_row.pack_start(hamburger_launcher.widget, False, False, 0)
+        load_row.pack_start(guiutils.get_pad_label(6, 2), False, False, 0)
         load_row.pack_start(load_button, False, False, 0)
         load_row.pack_start(guiutils.get_pad_label(6, 2), False, False, 0)
         load_row.pack_start(self.media_info, False, False, 0)
@@ -751,6 +775,19 @@ class GmicWindow(Gtk.Window):
  
     def load_button_clicked(self):
         open_clip_dialog()
+
+    def hamburger_launch_pressed(self, widget, event):
+        menu = _hamburger_menu
+        guiutils.remove_children(menu)
+        
+        menu.add(_get_menu_item(_("Load Clip") + "...", _hamburger_menu_callback, "load" ))
+        _add_separetor(menu)
+        menu.add(_get_menu_item(_("G'Mic Docs"), _hamburger_menu_callback, "docs" ))
+        menu.add(_get_menu_item(_("Why are some scripts not working?"), _hamburger_menu_callback, "why" ))
+        _add_separetor(menu)
+        menu.add(_get_menu_item(_("Close"), _hamburger_menu_callback, "close" ))
+        
+        menu.popup(None, None, None, None, event.button, event.time)
 
     def set_active_state(self, active):
         self.monitor.set_sensitive(active)
