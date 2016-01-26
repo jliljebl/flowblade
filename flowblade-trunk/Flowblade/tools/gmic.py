@@ -376,7 +376,7 @@ def _encode_settings_clicked():
     toolsencoding.create_widgets(_current_profile_index, True)
         
     global _encoding_panel
-    _encoding_panel = toolsencoding.get_gmic_render_panel()
+    _encoding_panel = toolsencoding.get_enconding_panel(_render_data)
 
     align = dialogutils.get_default_alignment(_encoding_panel)
     
@@ -796,7 +796,7 @@ class GmicWindow(Gtk.Window):
             desc_str = "not set" 
         else:
             args_vals = toolsencoding.get_args_vals_list_for_render_data(_render_data)
-            desc_str = toolsencoding.get_encoding_desc(args_vals) + ", " + _render_data.file_name 
+            desc_str = toolsencoding.get_encoding_desc(args_vals) + ", " + _render_data.file_name + _render_data.file_extension
 
         self.encode_desc.set_markup("<small>" + desc_str + "</small>")
         self.encode_desc.set_ellipsize(Pango.EllipsizeMode.END)
@@ -1079,7 +1079,7 @@ class GmicEffectRendererer(threading.Thread):
             # Render consumer
             args_vals_list = toolsencoding.get_args_vals_list_for_render_data(_render_data)
             profile = mltprofiles.get_profile_for_index(_current_profile_index) 
-            file_path = _render_data.render_dir + "/" +  _render_data.file_name
+            file_path = _render_data.render_dir + "/" +  _render_data.file_name  + _render_data.file_extension
             
             consumer = renderconsumer.get_mlt_render_consumer(file_path, profile, args_vals_list)
             

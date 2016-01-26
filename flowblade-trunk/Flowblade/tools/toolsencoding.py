@@ -40,6 +40,7 @@ class RenderFilePanel():
         self.out_folder = Gtk.FileChooserButton(_("Select Folder"))
         self.out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
         self.out_folder.set_current_folder(os.path.expanduser("~") + "/")
+        self.out_folder.set_local_only(True)
         out_folder_row = guiutils.get_two_column_box(Gtk.Label(label=_("Folder:")), self.out_folder, 60)
                               
         self.movie_name = Gtk.Entry()
@@ -265,7 +266,7 @@ def create_widgets(def_profile_index, disable_audio=False):
     widgets.profile_panel.out_profile_combo.fill_options()
     _display_default_profile()
     
-def get_gmic_render_panel():   
+def get_enconding_panel(render_data):   
     file_opts_panel = guiutils.get_named_frame(_("File"), widgets.file_panel.vbox, 4)         
     profile_panel = guiutils.get_named_frame(_("Render Profile"), widgets.profile_panel.vbox, 4)
     encoding_panel = guiutils.get_named_frame(_("Encoding Format"), widgets.encoding_panel.vbox, 4)
@@ -276,13 +277,24 @@ def get_gmic_render_panel():
     render_panel.pack_start(render_type_panel, False, False, 0)
     render_panel.pack_start(profile_panel, False, False, 0)
     render_panel.pack_start(encoding_panel, False, False, 0)
-    #render_panel.pack_start(Gtk.Label(), True, True, 0)
-        
+
+    if render_data != None:
+        widgets.file_panel.movie_name.set_text(render_data.file_name)
+        widgets.file_panel.extension_label.set_text(render_data.file_extension)
+        widgets.file_panel.out_folder.set_current_folder(render_data.render_dir + "/")
+        widgets.encoding_panel.encoding_selector.widget.set_active(render_data.encoding_option_index) 
+        widgets.encoding_panel.quality_selector.widget.set_active(render_data.quality_option_index)
+        widgets.profile_panel.out_profile_combo.widget.set_active(render_data.profile_index)
+        widgets.profile_panel.use_project_profile_check.set_active(render_data.use_default_profile)
+        widgets.render_type_panel.presets_selector.widget.set_active(render_data.presets_index)
+        widgets.render_type_panel.type_combo.set_active(render_data.use_preset_encodings)
+            
     return render_panel
 
 def _render_type_changed(w):
     if w.get_active() == 0: # User Defined
         widgets.render_type_panel.presets_selector.widget.set_sensitive(False)
+        widgets.encoding_panel.encoding_selector.encoding_selection_changed()
     else: # Preset Encodings
         widgets.render_type_panel.presets_selector.widget.set_sensitive(True)
         _preset_selection_changed(widgets.render_type_panel.presets_selector.widget)
@@ -343,22 +355,23 @@ def get_profile_info_text(profile):
 def get_render_data_for_current_selections():
     render_data = ToolsRenderData()
     render_data.profile_index = widgets.profile_panel.out_profile_combo.widget.get_active()
+    render_data.use_default_profile = widgets.profile_panel.use_project_profile_check.get_active()
     render_data.encoding_option_index = widgets.encoding_panel.encoding_selector.widget.get_active()
     render_data.quality_option_index = widgets.encoding_panel.quality_selector.widget.get_active()
     render_data.presets_index = widgets.render_type_panel.presets_selector.widget.get_active()
     render_data.use_preset_encodings = (widgets.render_type_panel.type_combo.get_active() == 1)
-    render_data.render_dir = widgets.file_panel.out_folder.get_current_folder()
-    render_data.file_name = widgets.file_panel.movie_name.get_text() + widgets.file_panel.extension_label.get_text()
-
+    render_data.render_dir = "/" + widgets.file_panel.out_folder.get_uri().lstrip("file:/")
+    render_data.file_name = widgets.file_panel.movie_name.get_text()
+    render_data.file_extension = widgets.file_panel.extension_label.get_text()
     return render_data
 
 def get_args_vals_list_for_render_data(render_data):
     profile = mltprofiles.get_profile_for_index(render_data.profile_index)
     if render_data.use_preset_encodings == 1: # Preset encodings
         encs = renderconsumer.non_user_encodings
-        if render_data.disable_audio_encoding == True:
+        if disable_audio_encoding == True:
             encs = renderconsumer.get_video_non_user_encodigs()
-        encoding_option = encs[render_data.non_user_presets_index]
+        encoding_option = encs[render_data.presets_index]
         args_vals_list = encoding_option.get_args_vals_tuples_list(profile)
     else: # User encodings
         args_vals_list = renderconsumer.get_args_vals_tuples_list_for_encoding_and_quality( profile, 
@@ -391,9 +404,12 @@ class ToolsRenderData():
     """
     def __init__(self):
         self.profile_index = None
+        self.use_default_profile = None
         self.use_preset_encodings = None
         self.presets_index = None
         self.encoding_option_index = None
         self.quality_option_index = None
         self.render_dir = None
         self.file_name = None
+        self.file_extension = None
+
