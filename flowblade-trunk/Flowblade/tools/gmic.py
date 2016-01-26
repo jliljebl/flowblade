@@ -33,6 +33,7 @@ import shutil
 import subprocess
 import sys
 import time
+import webbrowser
 
 import appconsts
 import cairoarea
@@ -225,10 +226,22 @@ def _open_files_dialog_cb(file_select, response_id):
     # Only accept video files
     if utils.get_file_type(filenames[0]) != "video":
         return
-    
-    global _current_path
-    _current_path = filenames[0]
 
+    global _current_path
+    
+    # if another clip has already been opened then we need to shutdown players.
+    if _current_path != None:
+        if _player != None:
+            _player.shutdown()
+        if _effect_renderer != None:
+            _effect_renderer.shutdown()
+
+    _current_path = filenames[0]
+    
+    # Finish clip open when dialog has been destroyed
+    GLib.idle_add(_finish_clip_open)
+    
+def _finish_clip_open():
     new_profile_index = gmicplayer.set_current_profile(_current_path)
     new_profile = mltprofiles.get_profile_for_index(new_profile_index)
 
@@ -248,6 +261,7 @@ def _open_files_dialog_cb(file_select, response_id):
     _window.render_button.set_sensitive(False)
     _player.create_sdl_consumer()
     _player.connect_and_start()
+
 
 #-------------------------------------------------- script setting and save/load
 def script_menu_lauched(launcher, event):
@@ -308,7 +322,12 @@ def _load_script_dialog_callback(dialog, response_id):
 
 #-------------------------------------------------- menu
 def _hamburger_menu_callback(widget, msg):
-    print msg
+    if msg == "load":
+        open_clip_dialog()
+    elif msg == "close":
+        _shutdown()
+    elif msg == "docs":
+        webbrowser.open(url="http://gmic.eu/", new=0, autoraise=True)
 
 def _get_menu_item(text, callback, data, sensitive=True):
     item = Gtk.MenuItem.new_with_label(text)
@@ -449,10 +468,11 @@ class GmicWindow(Gtk.Window):
         
         # Load media row
         load_button = Gtk.Button(_("Load Clip"))
-        load_button.connect("clicked",
-                            lambda w: self.load_button_clicked())
+        load_button.connect("clicked", lambda w: open_clip_dialog())
+        
         self.media_info = Gtk.Label()
         self.media_info.set_markup("<small>no clip loaded</small>")#"<small>" + "video_clip.mpg, 1920x1080,  25.0fps" + "</small>" )
+        
         load_row = Gtk.HBox(False, 2)
         load_row.pack_start(hamburger_launcher.widget, False, False, 0)
         load_row.pack_start(guiutils.get_pad_label(6, 2), False, False, 0)
@@ -772,18 +792,13 @@ class GmicWindow(Gtk.Window):
             
     def folder_selection_changed(self, chooser):
         self.update_render_status_info()
- 
-    def load_button_clicked(self):
-        open_clip_dialog()
 
     def hamburger_launch_pressed(self, widget, event):
         menu = _hamburger_menu
         guiutils.remove_children(menu)
         
         menu.add(_get_menu_item(_("Load Clip") + "...", _hamburger_menu_callback, "load" ))
-        _add_separetor(menu)
-        menu.add(_get_menu_item(_("G'Mic Docs"), _hamburger_menu_callback, "docs" ))
-        menu.add(_get_menu_item(_("Why are some scripts not working?"), _hamburger_menu_callback, "why" ))
+        menu.add(_get_menu_item(_("G'Mic Webpage"), _hamburger_menu_callback, "docs" ))
         _add_separetor(menu)
         menu.add(_get_menu_item(_("Close"), _hamburger_menu_callback, "close" ))
         
