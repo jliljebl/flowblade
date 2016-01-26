@@ -121,10 +121,10 @@ def _create_buttons(editor_window):
     editor_window.monitor_insert_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "append_clip.png"), tlineaction.append_button_pressed)
     editor_window.monitor_insert_buttons.widget.set_tooltip_text(_("Overwrite Range\nOverwrite Clip - T\nInsert Clip - Y\nAppend Clip - U"))
 
-    editor_window.undo_redo = glassbuttons.GlassButtonsGroup(46, 23, 2, 2, 7)
+    editor_window.undo_redo = glassbuttons.GlassButtonsGroup(28, 23, 2, 2, 7)
     editor_window.undo_redo.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "undo.png"), undo.do_undo_and_repaint)
     editor_window.undo_redo.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "redo.png"), undo.do_redo_and_repaint)
-    editor_window.undo_redo.widget.set_tooltip_text(_("Undo - Ctrl + X\nRedo - Ctrl + Y"))
+    editor_window.undo_redo.widget.set_tooltip_text(_("Undo - Ctrl + Z\nRedo - Ctrl + Y"))
 
     editor_window.tools_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 14, 7)
     editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_mixer.png"), audiomonitoring.show_audio_monitor)
