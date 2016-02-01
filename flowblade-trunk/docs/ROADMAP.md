@@ -11,6 +11,8 @@ This document gives a broad overview what's happening next in Flowblade developm
 
 **Natron Integration** The Natron compositor seems very powerful and has programmable headless rendering which will make it possible to be integrate it with Flowblade to create for example animated text effects.
 
+** Big translations update ** Translations have currently some issues that shoud all be fixed in one go, possible adding some net based translation tool to make crating translations easier at the same time.
+
 **Trimming with arrow keys** In many cases this will be more a precise and relaxed way of choosing in and out frames for trims.
 
 **Audio Scrubbing** This will make editing audio on the timeline easier.
