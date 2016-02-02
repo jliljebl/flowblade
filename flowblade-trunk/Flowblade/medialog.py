@@ -49,6 +49,14 @@ do_multiple_clip_insert_func = None # this mankeypathched her in app.py
 
 actions_popup_menu = Gtk.Menu()        
 
+# Sort order
+TIME_SORT = appconsts.TIME_SORT
+NAME_SORT = appconsts.NAME_SORT
+COMMENT_SORT = appconsts.COMMENT_SORT
+
+sorting_order = TIME_SORT
+
+                
 class MediaLogEvent:
     def __init__(self, event_type, mark_in, mark_out, name, path):
         self.event_type = event_type
@@ -88,7 +96,7 @@ def clips_drop(clips):
                                         clip.name,
                                         clip.path)
             editorstate.PROJECT().media_log.append(log_event)
-    _update_list_view()
+    _update_list_view(log_event)
     
 
 # ----------------------------------------------------------- gui events
@@ -130,13 +138,15 @@ def log_range_clicked():
                                 media_file.path)
     editorstate.PROJECT().media_log.append(log_event)
     editorstate.PROJECT().add_to_group(_get_current_group_index(), [log_event])
-    _update_list_view()
+    _update_list_view(log_event)
 
-def _update_list_view():
+def _update_list_view(log_event):
     widgets.media_log_view.fill_data_model()
     max_val = widgets.media_log_view.treeview.get_vadjustment().get_upper()
     gui.middle_notebook.set_current_page(1)
-    widgets.media_log_view.treeview.get_selection().select_path(str(len(get_current_filtered_events())-1))
+    view_group = get_current_filtered_events()
+    event_index = view_group.index(log_event)
+    widgets.media_log_view.treeview.get_selection().select_path(str(event_index))
     widgets.media_log_view.treeview.get_vadjustment().set_value(max_val)
 
 def log_item_name_edited(cell, path, new_text, user_data):
@@ -213,10 +223,11 @@ def render_slowmo_from_item(row):
     media_file.mark_out = event_item.mark_out
     render.render_frame_buffer_clip(media_file, True)
 
-def get_current_filtered_events():
+def get_current_filtered_events():   
     log_events = PROJECT().get_filtered_media_log_events(widgets.group_view_select.get_active() - 1,
                                                          widgets.star_check.get_active(),
-                                                         widgets.star_not_active_check.get_active())
+                                                         widgets.star_not_active_check.get_active(),
+                                                         sorting_order)
     return log_events
 
 def _get_current_group_index():
@@ -320,6 +331,46 @@ def _group_action_pressed(widget, event):
     _unsensitive_for_all_view(item)
     actions_menu.add(item)
 
+    guiutils.add_separetor(actions_menu)
+    
+    sort_item = Gtk.MenuItem(_("Sort by").encode('utf-8'))
+    sort_menu = Gtk.Menu()
+    time_item = Gtk.RadioMenuItem()
+    time_item.set_label(_("Time").encode('utf-8'))
+    time_item.set_active(True)
+    time_item.show()
+    time_item.connect("activate", lambda w: _sorting_changed("time"))
+    sort_menu.append(time_item)
+
+    name_item = Gtk.RadioMenuItem.new_with_label([time_item], _("File Name").encode('utf-8'))
+    name_item.connect("activate", lambda w: _sorting_changed("name"))
+    name_item.show()
+    sort_menu.append(name_item)
+
+    comment_item = Gtk.RadioMenuItem.new_with_label([time_item], _("Comment").encode('utf-8'))
+    comment_item.connect("activate", lambda w: _sorting_changed("comment"))
+    comment_item.show()
+    sort_menu.append(comment_item)
+
+    global sorting_order
+    if sorting_order == TIME_SORT:
+        time_item.set_active(True)
+    elif sorting_order == NAME_SORT:
+        name_item.set_active(True)
+    else:# "comment"
+        comment_item.set_active(True)
+        
+    """
+    if editorpersistance.prefs.midbar_tc_left == True:
+        tc_left.set_active(True)
+    else:
+        tc_middle.set_active(True)
+    """
+
+    sort_item.set_submenu(sort_menu)
+    sort_item.show()
+    actions_menu.add(sort_item)
+        
     actions_menu.popup(None, None, None, None, event.button, event.time)
 
 def _unsensitive_for_all_view(item):
@@ -431,6 +482,16 @@ def _new_group_name_callback(dialog, response_id, data):
     widgets.group_view_select.set_active(len(PROJECT().media_log_groups))
     update_media_log_view()
 
+def _sorting_changed(msg):
+    global sorting_order
+    if msg == "time":
+        sorting_order = TIME_SORT
+    elif msg == "name":
+        sorting_order = NAME_SORT
+    else:# "comment"
+        sorting_order = COMMENT_SORT
+
+    media_log_filtering_changed()
     
 # ------------------------------------------------------------ gui
 def get_media_log_list_view():

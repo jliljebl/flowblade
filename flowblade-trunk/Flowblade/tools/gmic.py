@@ -227,10 +227,12 @@ def _open_files_dialog_cb(file_select, response_id):
     if utils.get_file_type(filenames[0]) != "video":
         return
 
-    global _current_path
-    
+    global _current_path, _render_data
+
     # if another clip has already been opened then we need to shutdown players.
+    # and reset render data
     if _current_path != None:
+        _render_data = None
         if _player != None:
             _player.shutdown()
         if _effect_renderer != None:
@@ -712,6 +714,7 @@ class GmicWindow(Gtk.Window):
 
         exit_b = guiutils.get_sized_button(_("Close"), 150, 32)
         exit_b.connect("clicked", lambda w:_shutdown())
+        self.close_button = exit_b
         
         editor_buttons_row = Gtk.HBox()
         editor_buttons_row.pack_start(self.load_script, False, False, 0)
@@ -1038,7 +1041,15 @@ class GmicEffectRendererer(threading.Thread):
         
         Gdk.threads_enter()
         _window.render_status_info.set_markup("")
+        _window.set_widgets_sensitive(False)
+        _window.render_percentage.set_sensitive(True)
+        _window.render_status_info.set_sensitive(True)
+        _window.render_progress_bar.set_sensitive(True)
         _window.stop_button.set_sensitive(True)
+        _window.render_button.set_sensitive(False)
+        _window.close_button.set_sensitive(False)
+        _window.encode_settings_button.set_sensitive(False)
+        _window.encode_desc.set_sensitive(False)
         Gdk.threads_leave()
             
         # Delete old preview frames
@@ -1082,7 +1093,7 @@ class GmicEffectRendererer(threading.Thread):
             if self.abort == True:
                 return
             
-            update_info = "Rending frame: " + str(frame_count) + "/" +  str(self.length)
+            update_info = "Rendering frame: " + str(frame_count) + "/" +  str(self.length)
 
             Gdk.threads_enter()
             _window.render_percentage.set_markup("<small>" + update_info + "</small>")
@@ -1168,6 +1179,11 @@ class GmicEffectRendererer(threading.Thread):
         _window.render_progress_bar.set_fraction(0.0)
         _window.update_render_status_info()
         _window.stop_button.set_sensitive(False)
+        _window.set_widgets_sensitive(True)
+        _window.close_button.set_sensitive(True)
+        if _window.encode_check.get_active() == True:
+            _window.encode_settings_button.set_sensitive(True)
+            _window.encode_desc.set_sensitive(True)
         Gdk.threads_leave()
         
     def frames_update(self, frame):
@@ -1192,6 +1208,11 @@ class GmicEffectRendererer(threading.Thread):
         _window.render_progress_bar.set_fraction(0.0)
         _window.update_render_status_info()
         _window.stop_button.set_sensitive(False)
+        _window.set_widgets_sensitive(True)
+        _window.close_button.set_sensitive(True)
+        if _window.encode_check.get_active() == True:
+            _window.encode_settings_button.set_sensitive(True)
+            _window.encode_desc.set_sensitive(True)
 
     def shutdown(self):
         if self.frames_range_writer != None:

@@ -121,6 +121,11 @@ MEDIA_LOG_ALL = -1 # no MediaLogEvent has this type, this used when filtering ev
 MEDIA_LOG_INSERT = 0
 MEDIA_LOG_MARKS_SET = 1
 
+# Media log item sorting
+TIME_SORT = 0
+NAME_SORT = 1
+COMMENT_SORT = 2
+
 # Rendered clip types
 RENDERED_DISSOLVE = 0
 RENDERED_WIPE = 1

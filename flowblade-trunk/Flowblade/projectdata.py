@@ -198,7 +198,7 @@ class Project:
         self.sequences.append(seq)
         self.next_seq_number += 1
 
-    def get_filtered_media_log_events(self, group_index, incl_starred, incl_not_starred):
+    def get_filtered_media_log_events(self, group_index, incl_starred, incl_not_starred, sorting_order):
         filtered_events = []
         if group_index < 0:
             view_items = self.media_log
@@ -208,6 +208,12 @@ class Project:
         for media_log_event in view_items:
             if self._media_log_included_by_starred(media_log_event.starred, incl_starred, incl_not_starred):
                 filtered_events.append(media_log_event)
+        
+        if sorting_order == appconsts.NAME_SORT:
+            filtered_events = sorted(filtered_events, key=lambda mevent: mevent.name)
+        elif sorting_order == appconsts.COMMENT_SORT:
+            filtered_events = sorted(filtered_events, key=lambda mevent: mevent.comment)
+
         return filtered_events
 
     def _media_log_included_by_starred(self, starred, incl_starred, incl_not_starred):
