@@ -238,8 +238,13 @@ class TextEditLayer(SimpleRectEditLayer):
     def draw(self, cr, write_out_layers, draw_overlays):
         x, y = self.edit_point_shape.get_panel_point(0, self.view_editor)
         rotation = self.edit_point_shape.get_first_two_points_rotation_angle()
-        xscale = self.view_editor.scale * self.view_editor.aspect_ratio
+        xscale = self.view_editor.scale #* self.view_editor.aspect_ratio
         yscale = self.view_editor.scale
+        # x fo write out image is on different place because computer screen has box pixels, 
+        # some video formats do not
+        if write_out_layers == True:
+            x = x / self.view_editor.aspect_ratio
+            
         self.text_layout.draw_layout(cr, x, y, rotation, xscale, yscale)
 
         if self.update_rect:

@@ -974,6 +974,7 @@ class TextLayerListView(Gtk.VBox):
         self.scroll.queue_draw()
         _filling_layer_list = False
 
+
 class OpenFileThread(threading.Thread):
     
     def __init__(self, filename, view_editor):

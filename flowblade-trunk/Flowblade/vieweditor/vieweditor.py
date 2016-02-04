@@ -235,7 +235,9 @@ class ViewEditor(Gtk.Frame):
             self.origo = (0.0, 0.0)
             img_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.profile_w, self.profile_h)
             cr = cairo.Context(img_surface)
+            #cr.translate(-1.0 /ox, 0.0)
 
+ 
         for editorlayer in self.edit_layers:
             if editorlayer.visible:
                 editorlayer.draw(cr, self.write_out_layers, self.draw_overlays)
