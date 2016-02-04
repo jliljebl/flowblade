@@ -16,4 +16,13 @@ Audio output (especially when using H.264 /mp4-codec and mp3 for audio) may be u
 
 **Status:** No work is planned on this. This is almost guaranteed to be MLT or codec issue and as such cannot be fixed within Flowblade.
 
+#### 3. Changing profile for rendering changes image scaling / positioning for compositors.
+
+Compositors and filters receive broken image scaling and positioning if project profile is changed for rendering.
+
+The problem is that the relevant data is saved as absolute pixel values, not as 0-1 normalized floats. Changing the render profile does not change the positioning or scaling correctly, e.g 50 px x position is different image posiotion for HD and SD images.
+
+The current proposed solution is to render using original profile and re-render to desired dimensions.
+
+**Status** No work is planned on this. An acceptable work around exists, and a fix would require large de-stabilizing changes all over the code base.
 
