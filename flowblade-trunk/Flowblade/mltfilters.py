@@ -427,6 +427,7 @@ def clone_filter_object(filter_object, mlt_profile):
     """
     clone = FilterObject(filter_object.info)
     clone.properties = copy.deepcopy(filter_object.properties)
+    clone.non_mlt_properties = copy.deepcopy(filter_object.non_mlt_properties)
     clone.create_mlt_filter(mlt_profile)
     return clone
 
