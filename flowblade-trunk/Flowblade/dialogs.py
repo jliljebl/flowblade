@@ -355,7 +355,7 @@ def about_dialog(parent_window):
     dialog.connect('response', _dialog_destroy)
     dialog.show_all()
 
-def environment_dialog(parent_window, write_data_cb):
+def environment_dialog(parent_window):
     dialog = Gtk.Dialog(_("Runtime Environment"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
@@ -378,16 +378,13 @@ def environment_dialog(parent_window, write_data_cb):
         run_type = _("DEVELOPER VERSION")
         
     r4 = guiutils.get_left_justified_box([Gtk.Label(label=_("Running from: ")), Gtk.Label(label=run_type)])
-    write_button = Gtk.Button(_("Write Environment Data to File"))
-    write_button.connect("clicked", lambda w,e: write_data_cb(), None)
-    r5 = guiutils.get_left_justified_box([write_button])
     
     vbox = Gtk.VBox(False, 4)
     vbox.pack_start(r1, False, False, 0)
     vbox.pack_start(r2, False, False, 0)
     vbox.pack_start(r3, False, False, 0)
     vbox.pack_start(r4, False, False, 0)
-    vbox.pack_start(r5, False, False, 0)
+
 
     filters = sorted(mltenv.services)
     filters_sw = _get_items_in_scroll_window(filters, 7, COLUMN_WIDTH, 140)
@@ -502,22 +499,6 @@ def clip_properties_dialog(data):
     _default_behaviour(dialog)
     dialog.connect('response', _dialog_destroy)
     dialog.show_all()
-
-"""
-def add_compositor_dialog(current_sequence, callback, data):
-    dialog = Gtk.Dialog(_("Composite Target Track"),  gui.editor_window.window,
-                    Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                    (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                    _("Add Compositor").encode('utf-8'), Gtk.ResponseType.ACCEPT))
-    
-    panel, track_combo = panels.get_add_compositor_panel(current_sequence, data)
-    alignment = dialogutils.get_default_alignment(panel)
-    
-    dialog.vbox.pack_start(alignment, True, True, 0)
-    _default_behaviour(dialog)
-    dialog.connect('response', callback, data, track_combo)
-    dialog.show_all()
-"""
     
 def _dialog_destroy(dialog, response):
     dialog.destroy()
