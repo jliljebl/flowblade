@@ -109,11 +109,12 @@ def _create_buttons(editor_window):
     editor_window.zoom_buttons.widget.set_tooltip_text(_("Zoom In - Mouse Middle Scroll\n Zoom Out - Mouse Middle Scroll\n Zoom Length - Mouse Middle Click"))
 
     editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
+    editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "dissolve.png"), tlineaction.add_transition_pressed)
     editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "cut.png"), tlineaction.cut_pressed)
     editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "splice_out.png"), tlineaction.splice_out_button_pressed)
     editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "lift.png"), tlineaction.lift_button_pressed)
     editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "resync.png"), tlineaction.resync_button_pressed)
-    editor_window.edit_buttons.widget.set_tooltip_text(_("Cut - X\nSplice Out - Delete\nLift\nResync Selected"))
+    editor_window.edit_buttons.widget.set_tooltip_text(_("Add Rendered Transition - 2 clips selected\nAdd Rendered Fade - 1 clip selected\nCut - X\nSplice Out - Delete\nLift\nResync Selected"))
 
     editor_window.monitor_insert_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
     editor_window.monitor_insert_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "overwrite_range.png"), tlineaction.range_overwrite_pressed)
@@ -136,10 +137,6 @@ def _create_buttons(editor_window):
         editor_window.tools_buttons.sensitive[0] = False
         editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer(not available)\nTitler"))
 
-    editor_window.transition_button = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
-    editor_window.transition_button.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "dissolve.png"), tlineaction.add_transition_pressed)
-    editor_window.transition_button.widget.set_tooltip_text(_("Add Rendered Transition - 2 clips selected\nAdd Rendered Fade - 1 clip selected"))
-
 def fill_with_TC_LEFT_pattern(buttons_row, window):
     global w
     w = window
@@ -155,8 +152,6 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     buttons_row.pack_start(_get_zoom_buttons_panel(),False, True, 0)
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
     buttons_row.pack_start(_get_edit_buttons_panel(),False, True, 0)
-    buttons_row.pack_start(Gtk.Label(), True, True, 0)
-    buttons_row.pack_start(_get_transition_button(), False, True, 0)
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
     buttons_row.pack_start(_get_monitor_insert_buttons(), False, True, 0)
 
@@ -204,9 +199,6 @@ def _get_monitor_insert_buttons():
 
 def _get_tools_buttons():
     return w.tools_buttons.widget
-
-def _get_transition_button():
-    return w.transition_button.widget
 
 def _b(button, icon, remove_relief=False):
     button.set_image(icon)
