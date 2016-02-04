@@ -8,5 +8,5 @@ In awesomeWM there are often problems dragging clips. Instead of moving the clip
 
 The problem causing the bug is that awesome fires 'leave-notify-event' signals even when mouse has not left the timeline area.
 
-**Status:** Problem is another program, cannot be fixed in Flowblade
+**Status:** Problem is in another program, cannot be fixed in Flowblade
 
