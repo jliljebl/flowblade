@@ -810,6 +810,7 @@ class MediaPanel():
         column = 0
         bin_index = 0
         row_box = Gtk.HBox()
+        dnd.connect_media_drop_widget(row_box)
         row_box.set_size_request(MEDIA_OBJECT_WIDGET_WIDTH * self.columns, MEDIA_OBJECT_WIDGET_HEIGHT)
         for file_id in current_bin().file_ids:
             media_file = PROJECT().media_files[file_id]
@@ -848,11 +849,13 @@ class MediaPanel():
 
         if column != 0:
             filler = self._get_empty_filler()
+            dnd.connect_media_drop_widget(filler)
             row_box.pack_start(filler, True, True, 0)
             self.widget.pack_start(row_box, False, False, 0)
             self.row_widgets.append(row_box)
 
         filler = self._get_empty_filler()
+        dnd.connect_media_drop_widget(filler)
         self.row_widgets.append(filler)
         self.widget.pack_start(filler, True, True, 0)
 

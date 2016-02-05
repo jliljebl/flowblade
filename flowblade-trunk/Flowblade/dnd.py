@@ -28,6 +28,7 @@ from gi.repository import GdkPixbuf
 
 import editorstate
 import gui
+import utils
 import respaths
 
 # Source identifiers
@@ -45,6 +46,9 @@ EFFECTS_DND_TARGET = Gtk.TargetEntry.new('effect', Gtk.TargetFlags.SAME_APP, 0)
 CLIPS_DND_TARGET = Gtk.TargetEntry.new('clip', Gtk.TargetFlags.SAME_APP, 0)
 RANGE_DND_TARGET = Gtk.TargetEntry.new('range', Gtk.TargetFlags.SAME_APP, 0)
 
+URI_DND_TARGET = Gtk.TargetEntry.new('text/uri-list', 0, 0)
+
+
 # These used to hold data needed on drag drop instead of the API provided GtkSelectionData.
 drag_data = None 
 drag_source = None
@@ -58,7 +62,7 @@ add_current_effect = None
 display_monitor_media_file = None
 range_log_items_tline_drop = None
 range_log_items_log_drop = None
-
+open_dropped_files = None
 
 def init():
     global clip_icon, empty_icon
@@ -71,10 +75,11 @@ def connect_media_files_object_widget(widget):
     widget.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
                            [MEDIA_FILES_DND_TARGET], 
                            Gdk.DragAction.COPY)
-    #widget.connect_after('drag_begin', _media_files_drag_begin)
     widget.connect("drag_data_get", _media_files_drag_data_get)
     widget.drag_source_set_icon_pixbuf(clip_icon)
-
+    
+    connect_media_drop_widget(widget)
+    
 def connect_media_files_object_cairo_widget(widget):
     widget.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
                            [MEDIA_FILES_DND_TARGET], 
@@ -82,6 +87,13 @@ def connect_media_files_object_cairo_widget(widget):
     widget.connect("drag_data_get", _media_files_drag_data_get)
     widget.drag_source_set_icon_pixbuf(clip_icon)
 
+    connect_media_drop_widget(widget)
+
+def connect_media_drop_widget(widget):
+    widget.drag_dest_set(Gtk.DestDefaults.ALL, [URI_DND_TARGET], Gdk.DragAction.COPY)
+    widget.drag_dest_add_uri_targets()
+    widget.connect("drag_data_received", _media_files_drag_received)
+    
 def connect_bin_tree_view(treeview, move_files_to_bin_func):
     treeview.enable_model_drag_dest([MEDIA_FILES_DND_TARGET],
                                     Gdk.DragAction.DEFAULT)
@@ -142,6 +154,20 @@ def start_tline_clips_out_drag(event, clips, widget):
 def _media_files_drag_data_get(widget, context, selection, target_id, timestamp):
     _save_media_panel_selection()
 
+def _media_files_drag_received(widget, context, x, y, data, info, timestamp):
+    uris = data.get_uris()
+    files = []
+    for uri in uris:
+        if "file://" in uri:
+            uri = "/" + uri.lstrip("file://")
+            if utils.is_media_file(uri) == True:
+                files.append(uri.encode('utf-8'))
+
+    if len(files) == 0:
+        return
+
+    open_dropped_files(files)
+    
 def _range_log_drag_data_get(treeview, context, selection, target_id, timestamp):
     _save_treeview_selection(treeview)
     global drag_source

@@ -623,7 +623,10 @@ def _open_files_dialog_cb(file_select, response_id):
         return
     if len(filenames) == 0:
         return
+        
+    open_file_names(filenames)
 
+def open_file_names(filenames):
     add_media_thread = AddMediaFilesThread(filenames)
     add_media_thread.start()
 

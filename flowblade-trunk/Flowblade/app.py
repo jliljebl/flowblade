@@ -320,6 +320,7 @@ def monkeypatch_callbacks():
     dnd.display_monitor_media_file = updater.set_and_display_monitor_media_file
     dnd.range_log_items_tline_drop = editevent.tline_range_item_drop
     dnd.range_log_items_log_drop = medialog.clips_drop
+    dnd.open_dropped_files = projectaction.open_file_names
 
     # Media log 
     medialog.do_multiple_clip_insert_func = editevent.do_multiple_clip_insert

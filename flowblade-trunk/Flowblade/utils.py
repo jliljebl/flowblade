@@ -419,7 +419,14 @@ def get_file_producer_info(file_producer):
     info["top_field_first"] = frame.get_int("meta.media.top_field_first") == 1
     
     return info
-        
+
+def is_media_file(file_path):
+    file_type = get_file_type(file_path)
+    if file_type == "unknown":
+        return False
+    else:
+        return True
+
 # File exntension lists
 _audio_file_extensions = [  "act",
                             "aif",
