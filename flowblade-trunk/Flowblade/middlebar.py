@@ -111,10 +111,14 @@ def _create_buttons(editor_window):
     editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
     editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "dissolve.png"), tlineaction.add_transition_pressed)
     editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "cut.png"), tlineaction.cut_pressed)
-    editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "splice_out.png"), tlineaction.splice_out_button_pressed)
-    editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "lift.png"), tlineaction.lift_button_pressed)
-    editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "resync.png"), tlineaction.resync_button_pressed)
-    editor_window.edit_buttons.widget.set_tooltip_text(_("Add Rendered Transition - 2 clips selected\nAdd Rendered Fade - 1 clip selected\nCut - X\nSplice Out - Delete\nLift\nResync Selected"))
+    editor_window.edit_buttons.widget.set_tooltip_text(_("Add Rendered Transition - 2 clips selected\nAdd Rendered Fade - 1 clip selected\nCut - X"))
+
+    editor_window.edit_buttons_2 = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
+    editor_window.edit_buttons_2.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "splice_out.png"), tlineaction.splice_out_button_pressed)
+    editor_window.edit_buttons_2.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "lift.png"), tlineaction.lift_button_pressed)
+    editor_window.edit_buttons_2.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "resync.png"), tlineaction.resync_button_pressed)
+    editor_window.edit_buttons_2.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "split_audio.png"), tlineaction.split_audio_button_pressed)
+    editor_window.edit_buttons_2.widget.set_tooltip_text(_("Splice Out - Delete\nLift\nResync Selected"))
 
     editor_window.monitor_insert_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
     editor_window.monitor_insert_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "overwrite_range.png"), tlineaction.range_overwrite_pressed)
@@ -153,6 +157,8 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
     buttons_row.pack_start(_get_edit_buttons_panel(),False, True, 0)
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
+    buttons_row.pack_start(_get_edit_buttons_2_panel(),False, True, 0)
+    buttons_row.pack_start(Gtk.Label(), True, True, 0)
     buttons_row.pack_start(_get_monitor_insert_buttons(), False, True, 0)
 
 def fill_with_TC_MIDDLE_pattern(buttons_row, window):
@@ -179,6 +185,8 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     right_panel.pack_start(Gtk.Label(), True, True, 0)
     right_panel.pack_start(_get_edit_buttons_panel(), False, True, 0)
     right_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
+    right_panel.pack_start(_get_edit_buttons_2_panel(),False, True, 0)
+    right_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
     right_panel.pack_start(_get_monitor_insert_buttons(), False, True, 0)
 
     buttons_row.pack_start(left_panel, True, True, 0)
@@ -194,6 +202,9 @@ def _get_undo_buttons_panel():
 def _get_edit_buttons_panel():
     return w.edit_buttons.widget
 
+def _get_edit_buttons_2_panel():
+    return w.edit_buttons_2.widget
+    
 def _get_monitor_insert_buttons():
     return w.monitor_insert_buttons.widget
 

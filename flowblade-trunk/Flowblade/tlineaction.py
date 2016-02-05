@@ -416,6 +416,9 @@ def range_overwrite_pressed():
 def resync_button_pressed():
     syncsplitevent.resync_selected()
 
+def split_audio_button_pressed():
+    print "split audio"
+
 def add_transition_menu_item_selected():
     if movemodes.selected_track == -1:
         # INFOWINDOW
