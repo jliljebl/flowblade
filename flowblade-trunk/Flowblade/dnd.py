@@ -25,6 +25,9 @@ Module handles drag and drop between widgets.
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
+from gi.repository import GLib
+
+import os
 
 import editorstate
 import gui
@@ -158,10 +161,14 @@ def _media_files_drag_received(widget, context, x, y, data, info, timestamp):
     uris = data.get_uris()
     files = []
     for uri in uris:
-        if "file://" in uri:
-            uri = "/" + uri.lstrip("file://")
+        try:
+            uri_tuple = GLib.filename_from_uri(uri)
+        except:
+            continue
+        uri, unused = uri_tuple
+        if os.path.exists(uri) == True:
             if utils.is_media_file(uri) == True:
-                files.append(uri.encode('utf-8'))
+                files.append(uri)
 
     if len(files) == 0:
         return
