@@ -863,6 +863,9 @@ class EditorWindow:
             and (widget == self.clip_editor_b)):
             updater.display_clip_in_monitor()
 
+    def layouts_pressed(self, widget, event):
+        print "kkkkkkkkkkkkkkkkkkk"
+
     def connect_player(self, mltplayer):
         # Buttons
         # NOTE: ORDER OF CALLBACKS IS THE SAME AS ORDER OF BUTTONS FROM LEFT TO RIGHT

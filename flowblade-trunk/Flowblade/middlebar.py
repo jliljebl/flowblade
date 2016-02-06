@@ -23,6 +23,7 @@ import cairo
 from gi.repository import Gtk
 
 import audiomonitoring
+import batchrendering
 import editevent
 import editorpersistance
 import editorstate
@@ -136,6 +137,7 @@ def _create_buttons(editor_window):
     editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_mixer.png"), audiomonitoring.show_audio_monitor)
     editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_titler.png"), titler.show_titler)
     editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_gmic.png"), gmic.launch_gmic)
+    editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_renderqueue.png"), lambda :batchrendering.launch_batch_rendering())
     editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer\nTitler\nG'Mic Effects"))
     if editorstate.audio_monitoring_available == False:
         editor_window.tools_buttons.sensitive[0] = False
