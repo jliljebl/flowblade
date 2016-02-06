@@ -409,7 +409,7 @@ class EditorWindow:
         compositors_hbox.pack_start(compositor_clip_panel, False, False, 0)
         compositors_hbox.pack_start(compositor_editor_panel, True, True, 0)
 
-        self.compositors_panel = compositors_hbox
+        self.compositors_panel = guiutils.set_margins(compositors_hbox, 2, 2, 2, 2) 
 
         # Render panel
         try:

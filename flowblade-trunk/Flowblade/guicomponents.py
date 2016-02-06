@@ -600,6 +600,8 @@ class ClipInfoPanel(Gtk.VBox):
         self.pack_start(info_row_2, False, False, 0)
         self.pack_start(info_row_3, False, False, 0)
         
+        self.set_spacing(4)
+                
         if editorstate.screen_size_small_height():
             self.set_size_request(CLIP_EDITOR_LEFT_WIDTH, 10)
         else:
@@ -639,6 +641,7 @@ class ClipInfoPanel(Gtk.VBox):
 class CompositorInfoPanel(Gtk.VBox):
     def __init__(self):
         GObject.GObject.__init__(self)
+        self.set_homogeneous(False)
 
         self.source_track = Gtk.Label()
         self.source_track_value = Gtk.Label()
@@ -654,29 +657,31 @@ class CompositorInfoPanel(Gtk.VBox):
 
         info_row_2 = Gtk.HBox()
         info_row_2.pack_start(self.source_track, False, True, 0)
-        info_row_2.pack_start(self.source_track_value, True, True, 0)
+        info_row_2.pack_start(self.source_track_value, False, False, 0)
+        info_row_2.pack_start(Gtk.Label(), True, True, 0)
 
         info_row_3 = Gtk.HBox()
-        info_row_3.pack_start(self.destination_track, False, True, 0)
-        info_row_3.pack_start(self.destination_track_value, True, True, 0)
-    
-        info_row_4 = Gtk.HBox()
-        info_row_4.pack_start(self.position, False, True, 0)
-        info_row_4.pack_start(self.position_value, True, True, 0)
+        info_row_3.pack_start(self.destination_track, False, False, 0)
+        info_row_3.pack_start(self.destination_track_value, False, False, 0)
+        info_row_3.pack_start(Gtk.Label(), True, True, 0)
 
+        info_row_4 = Gtk.HBox()
+        info_row_4.pack_start(self.position, False, False, 0)
+        info_row_4.pack_start(self.position_value, False, False, 0)
+        info_row_4.pack_start(Gtk.Label(), True, True, 0)
+        
         info_row_5 = Gtk.HBox()
         info_row_5.pack_start(self.length, False, False, 0)
-        info_row_5.pack_start(self.length_value, True, True, 0)
-
+        info_row_5.pack_start(self.length_value, False, False, 0)
+        info_row_5.pack_start(Gtk.Label(), True, True, 0)
+        
         PAD_HEIGHT = 2
-        self.pack_start(info_row_2, False, False, 0)
-        self.pack_start(guiutils.get_pad_label(5, PAD_HEIGHT), False, False, 0) 
+        self.pack_start(info_row_2, False, False, 0) 
         self.pack_start(info_row_3, False, False, 0)
-        self.pack_start(guiutils.get_pad_label(5, PAD_HEIGHT), False, False, 0) 
         self.pack_start(info_row_4, False, False, 0)
-        self.pack_start(guiutils.get_pad_label(5, PAD_HEIGHT), False, False, 0) 
         self.pack_start(info_row_5, False, False, 0)
         
+        self.set_spacing(4)
         self.set_no_compositor_info()
         self.set_enabled(False)
 
@@ -694,16 +699,16 @@ class CompositorInfoPanel(Gtk.VBox):
         self.length_value.set_text(length)
 
     def set_no_compositor_info(self):
-        self.source_track.set_text(_("<b>Source Track:</b>"))
+        self.source_track.set_text(_("<b>Source Track:</b>") + " ")
         self.source_track_value.set_text("")
 
-        self.destination_track.set_text(_("<b>Destination Track:</b>"))
+        self.destination_track.set_text(_("<b>Destination Track:</b>") + " ")
         self.destination_track_value.set_text("")
 
-        self.position.set_text(_("<b>Position:</b>"))
+        self.position.set_text(_("<b>Position:</b>") + " ")
         self.position_value.set_text("")
 
-        self.length.set_text(_("<b>Length:</b>"))
+        self.length.set_text(_("<b>Length:</b>") + " ")
         self.length_value.set_text("")
 
         self._set_use_mark_up()
