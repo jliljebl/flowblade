@@ -63,6 +63,17 @@ def split_audio_synched(popup_data):
 def split_audio(popup_data):
     _do_split_audio_edit(popup_data)
 
+def split_audio_from_clips_list(clips, track):
+    item_id = "not actually used"
+    for clip in clips:
+        # We're using the existing function to do thid need x for clip frame to use it
+        index = track.clips.index(clip)
+        frame = track.clip_start(index)
+        x = tlinewidgets._get_frame_x(frame)
+
+        popup_data = (clip, track, item_id, x)
+        _do_split_audio_edit(popup_data)
+    
 def _do_split_audio_edit(popup_data):
     # NOTE: THIS HARD CODES ALL SPLITS TO HAPPEN ON TRACK A1, THIS MAY CHANGE
     to_track = current_sequence().tracks[current_sequence().first_video_index - 1]

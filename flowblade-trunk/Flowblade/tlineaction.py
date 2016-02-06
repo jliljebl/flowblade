@@ -417,7 +417,19 @@ def resync_button_pressed():
     syncsplitevent.resync_selected()
 
 def split_audio_button_pressed():
-    print "split audio"
+    if movemodes.selected_track == -1:
+        return
+    
+    track = current_sequence().tracks[movemodes.selected_track]
+    clips = []
+    for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
+        
+        clip = track.clips[i]
+        print i, clip
+        if clip.is_blanck_clip == False:
+            clips.append(clip)
+
+    syncsplitevent.split_audio_from_clips_list(clips, track)
 
 def add_transition_menu_item_selected():
     if movemodes.selected_track == -1:
