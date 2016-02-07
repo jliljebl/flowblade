@@ -65,6 +65,19 @@ def warning_message_with_callback(primary_txt, secondary_txt, parent_window, is_
     dialog.set_resizable(False)
     dialog.connect('response', callback)
     dialog.show_all()
+
+def warning_message_with_panels(primary_txt, secondary_txt, parent_window, is_info, callback, panels):
+    content = get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info, None, panels)
+    dialog = Gtk.Dialog("",
+                        parent_window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        ( _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+    alignment = get_default_alignment(content)
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    set_outer_margins(dialog.vbox)
+    dialog.set_resizable(False)
+    dialog.connect('response', callback)
+    dialog.show_all()
     
 def warning_confirmation(callback, primary_txt, secondary_txt, parent_window, data=None, is_info=False):
     content = get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info)
@@ -85,8 +98,8 @@ def warning_confirmation(callback, primary_txt, secondary_txt, parent_window, da
 
     dialog.show_all()
 
-def get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=False, alternative_icon=None):
-    
+def get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=False, alternative_icon=None, panels=None):
+
     if is_info == True:
         icon = Gtk.STOCK_DIALOG_INFO
     else:
@@ -118,6 +131,9 @@ def get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=False, 
     text_box.pack_start(pbox, False, False, 0)
     text_box.pack_start(texts_pad, False, False, 0)
     text_box.pack_start(sbox, False, False, 0)
+    if panels != None:
+        for panel in panels:
+            text_box.pack_start(panel, False, False, 0)
     text_box.pack_start(Gtk.Label(), True, True, 0)
 
     hbox = Gtk.HBox(False, 12)

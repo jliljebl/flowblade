@@ -12,4 +12,4 @@ sys.path.insert(0, modules_path + "/tools")
 
 import medialinker
 
-medialinker.main(modules_path)
+medialinker.main(modules_path, sys.argv[1]) # sys.argv[1] is possibly a file path to project to be opened at startup

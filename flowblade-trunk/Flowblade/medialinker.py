@@ -53,11 +53,12 @@ linker_window = None
 target_project = None
 media_assets = []
 
+NO_PROJECT_AT_LAUNCH = "##&&noproject&&##"
 
-def display_linker():
+def display_linker(filename=NO_PROJECT_AT_LAUNCH):
     print "Launching Media Re-linker"
     FLOG = open(utils.get_hidden_user_dir_path() + "log_media_relinker", 'w')
-    subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowblademedialinker"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
+    subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowblademedialinker", filename], stdin=FLOG, stdout=FLOG, stderr=FLOG)
 
 
 # -------------------------------------------------------- render thread
@@ -184,13 +185,15 @@ class MediaLinkerWindow(Gtk.Window):
             
             dialog.destroy()
             
-            global load_thread
-            load_thread = ProjectLoadThread(filenames[0])
-            load_thread.start()
-
+            self.load_project(filenames[0])
         else:
             dialog.destroy()
 
+    def load_project(self, filename):
+        global load_thread
+        load_thread = ProjectLoadThread(filename)
+        load_thread.start()
+            
     def display_list_changed(self, display_combo):
         self.relink_list.fill_data_model()
         if display_combo.get_active() == 0:
@@ -542,7 +545,7 @@ def _relink_project_media_paths():
 
 
 # ----------------------------------------------------------- main
-def main(root_path, force_launch=False):
+def main(root_path, filename):
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
     print "GTK+ version:", gtk_version
     editorstate.gtk_version = gtk_version
@@ -590,6 +593,9 @@ def main(root_path, force_launch=False):
 
     global linker_window
     linker_window = MediaLinkerWindow()
+
+    if filename != NO_PROJECT_AT_LAUNCH:
+        linker_window.load_project(filename)
 
     Gtk.main()
     Gdk.threads_leave()

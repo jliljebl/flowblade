@@ -55,6 +55,7 @@ from editorstate import current_bin
 from editorstate import PROJECT
 from editorstate import MONITOR_MEDIA_FILE
 import editorpersistance
+import medialinker
 import movemodes
 import persistance
 import projectdata
@@ -110,7 +111,19 @@ class LoadThread(threading.Thread):
                             _("To load the project you will need to either:") + "\n" + \
                             u"\u2022" + " " + _("Open project in 'Media Relinker' tool to relink media assets to new files, or") + "\n" + \
                             u"\u2022" + " " + _("Place a file with the same exact name and path on the hard drive")
-            dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window, is_info=False)
+            open_label = Gtk.Label(_("Open project in Media Relinker tool"))
+            self.open_check = Gtk.CheckButton()
+            self.open_check.set_active(True)
+            check_row = Gtk.HBox(False, 1)
+            check_row.pack_start(Gtk.Label(), True, True, 0)
+            check_row.pack_start(self.open_check, False, False, 0)
+            check_row.pack_start(open_label, False, False, 0)
+            guiutils.set_margins(check_row,24,0,0,0)
+            panels = [check_row]
+            dialogutils.warning_message_with_panels(primary_txt, secondary_txt, 
+                                                    gui.editor_window.window, 
+                                                    False, self._missing_file_dialog_callback,
+                                                    panels)
             editorstate.project = old_project # persistance.load_project() changes this,
                                               # we simply change it back as no GUI or other state is yet changed
             Gdk.threads_leave()
@@ -154,8 +167,14 @@ class LoadThread(threading.Thread):
         Gdk.threads_leave()
         ticker.stop_ticker()
 
-            
 
+    def _missing_file_dialog_callback(self, dialog, response_id):
+        if self.open_check.get_active() == True:
+            medialinker.display_linker(self.filename)
+            dialog.destroy()
+        else:
+            dialog.destroy()
+    
 class AddMediaFilesThread(threading.Thread):
     
     def __init__(self, filenames):
