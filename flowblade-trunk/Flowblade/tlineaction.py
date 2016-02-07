@@ -431,6 +431,33 @@ def split_audio_button_pressed():
 
     syncsplitevent.split_audio_from_clips_list(clips, track)
 
+def sync_all_compositors():
+    # Pair all compositors with their origin clips and clip data
+    comp_clip_pairings = {}
+    for compositor in current_sequence().compositors:
+        comp_clip_pairings[compositor.origin_clip_id] = compositor
+    
+    for i in range(current_sequence().first_video_index, len(current_sequence().tracks) - 1): # -1, there is a topmost hidden track 
+        track = current_sequence().tracks[i] # b_track is source track where origin clip is
+        for j in range(0, len(track.clips)):
+            clip = track.clips[j]
+            if clip.id in comp_clip_pairings:
+                compositor = comp_clip_pairings[clip.id]
+                comp_clip_pairings[clip.id] = (clip, track, j, compositor)
+
+    # Do sync
+    for origin_clip_id in comp_clip_pairings:
+        try:
+            clip, track, clip_index, compositor = comp_clip_pairings[origin_clip_id]
+            clip_start = track.clip_start(clip_index)
+            clip_end = clip_start + clip.clip_out - clip.clip_in
+            data = {"compositor":compositor,"clip_in":clip_start,"clip_out":clip_end}
+            action = edit.move_compositor_action(data)
+            action.do_edit()
+        except:
+            # Clip is probably  already deleted
+            pass
+
 def add_transition_menu_item_selected():
     if movemodes.selected_track == -1:
         # INFOWINDOW

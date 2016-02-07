@@ -1436,7 +1436,7 @@ def _add_compositor_redo(self):
     self.compositor.set_in_and_out(self.in_frame, self.out_frame)
     self.compositor.origin_clip_id = self.origin_clip_id
 
-    # Compositors are recreated continually in sequnece.restack_compositors() and cannot be identified for undo/redo using object identity 
+    # Compositors are recreated continually in sequence.restack_compositors() and cannot be identified for undo/redo using object identity 
     # so these ids must be  preserved for all succesive versions of a compositor
     if self.first_do == True:
         self.destroy_id = self.compositor.destroy_id

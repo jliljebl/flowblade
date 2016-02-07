@@ -169,6 +169,7 @@ class EditorWindow:
             ('AddTransition', None, _('Add Single Track Transition'), None, None, lambda a:tlineaction.add_transition_menu_item_selected()),
             ('AddFade', None, _('Add Single Track Fade'), None, None, lambda a:tlineaction.add_fade_menu_item_selected()),
             ('ClearFilters', None, _('Clear Filters'), None, None, lambda a:clipmenuaction.clear_filters()),
+            ('SyncCompositors', None, _('Sync All Compositors'), None, None, lambda a:tlineaction.sync_all_compositors()),
             ('ChangeSequenceTracks', None, _('Change Sequence Tracks Count...'), None, None, lambda a:projectaction.change_sequence_track_count()),
             ('Watermark', None, _('Watermark...'), None, None, lambda a:menuactions.edit_watermark()),
             ('ProfilesManager', None, _('Profiles Manager'), None, None, lambda a:menuactions.profiles_manager()),
@@ -251,6 +252,7 @@ class EditorWindow:
                     <menuitem action='SpliceOutClip'/>
                     <menuitem action='DeleteClip'/>
                     <menuitem action='ResyncSelected'/>
+                    <menuitem action='SyncCompositors'/>
                     <menuitem action='ClearFilters'/>
                     <separator/>
                     <menuitem action='AddTransition'/>
