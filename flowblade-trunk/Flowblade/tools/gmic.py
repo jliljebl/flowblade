@@ -424,6 +424,9 @@ def _encode_settings_clicked():
     global _encoding_panel
     _encoding_panel = toolsencoding.get_enconding_panel(_render_data)
 
+    if _render_data == None and toolsencoding.widgets.file_panel.movie_name.get_text() == "movie":
+        toolsencoding.widgets.file_panel.movie_name.set_text(os.path.basename(_current_path).split(".")[0] + "_gmic")
+
     align = dialogutils.get_default_alignment(_encoding_panel)
     
     dialog = Gtk.Dialog("Video Encoding Settings",
