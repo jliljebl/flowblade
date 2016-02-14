@@ -3,8 +3,8 @@
 **Contents**
 
   1. [Crop filter does not work](./FAQ.md####crop-filter-does-not-work)
-  2. [How can I move clips around freely](./FAQ.md####how-can-i-move-clips-around-freely?)
-  3. [Will there be Windows or OSX versions](./FAQ.md####will-there-be windows-or-OSX-versions?)
+  2. [How can I move clips around freely?](./FAQ.md####how-can-i-move-clips-around-freely)
+  3. [Will there be Windows or OSX versions?](./FAQ.md####will-there-be windows-or-OSX-versions)
   
 #### Crop filter does not work
 
