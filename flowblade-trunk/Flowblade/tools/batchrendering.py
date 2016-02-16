@@ -116,8 +116,9 @@ class QueueRunnerThread(threading.Thread):
             project = persistance.load_project(project_file_path, False)
 
             producer = project.c_seq.tractor
+            profile = mltprofiles.get_profile(render_item.render_data.profile_name)
             consumer = renderconsumer.get_mlt_render_consumer(render_item.render_path, 
-                                                              project.profile,
+                                                              profile,
                                                               render_item.args_vals_list)
 
             # Get render range
