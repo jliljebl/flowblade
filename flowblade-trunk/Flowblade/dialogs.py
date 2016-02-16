@@ -102,6 +102,64 @@ def _new_project_profile_changed(combo_box, profile_info_box):
     profile_info_box.show_all()
     info_panel.show()
 
+def change_profile_project_dialog(project, callback):
+    project_name = project.name.rstrip(".flb")
+    default_profile_index = mltprofiles.get_index_for_name(project.profile.description())
+    default_profile = mltprofiles.get_default_profile()
+
+    dialog = Gtk.Dialog(_("Save To Change Project Profile"), gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                         _("Save With Changed Profile").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+    
+    info_label = guiutils.bold_label("Project Profile can only changed by saving a version\nwith different profile.")
+                            
+    out_profile_combo = Gtk.ComboBoxText()
+    profiles = mltprofiles.get_profiles()
+    for profile in profiles:
+        out_profile_combo.append_text(profile[0])
+
+    out_profile_combo.set_active(default_profile_index)    
+    profile_select = panels.get_two_column_box(Gtk.Label(label=_("Project profile:")),
+                                               out_profile_combo,
+                                               250)
+
+    profile_info_panel = guicomponents.get_profile_info_box(default_profile, False)
+    profile_info_box = Gtk.VBox() 
+    profile_info_box.add(profile_info_panel)
+    profiles_vbox = guiutils.get_vbox([profile_select,profile_info_box], False)
+    profiles_frame = panels.get_named_frame(_("New Profile"), profiles_vbox)
+
+    out_folder = Gtk.FileChooserButton(_("Select Folder"))
+    out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
+    out_folder.set_current_folder(os.path.expanduser("~") + "/")
+    out_folder.set_local_only(True)
+    out_folder_row = panels.get_two_column_box(Gtk.Label(label=_("Folder:")), out_folder,  250)
+                          
+    project_name_entry = Gtk.Entry()
+    project_name_entry.set_text(project_name + "_NEW_PROFILE.flb")
+    extension_label = Gtk.Label()
+
+    name_box = Gtk.HBox(False, 8)
+    name_box.pack_start(project_name_entry, True, True, 0)
+      
+    movie_name_row =  panels.get_two_column_box(Gtk.Label(label=_("Project Name:")), name_box,  250)
+        
+    new_file_vbox = guiutils.get_vbox([out_folder_row, movie_name_row], False)
+
+    new_file_frame = panels.get_named_frame(_("New Project File"), new_file_vbox)
+
+    vbox = guiutils.get_vbox([info_label, guiutils.pad_label(2, 24), profiles_frame, new_file_frame], False)
+
+    alignment = dialogutils.get_default_alignment(vbox)
+    dialogutils.set_outer_margins(dialog.vbox)
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, out_profile_combo, out_folder, project_name_entry)#, project_type_combo, 
+                   #project_folder, compact_name_entry)
+    out_profile_combo.connect('changed', lambda w: _new_project_profile_changed(w, profile_info_box))
+    dialog.show_all()
+    
 def save_backup_snapshot(name, callback):
     dialog = Gtk.Dialog(_("Save Project Backup Snapshot"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,

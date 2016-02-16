@@ -168,10 +168,6 @@ def get_closest_matching_profile_index(producer_info):
             match_score = match_score + 100
         if prof_progressive: # prefer progressive always
             match_score = match_score + 10
-
-        #print "producer", width, height, fps_num, fps_den, progressive, fps
-        #print name,  prof_width, prof_height, prof_fps_num, prof_fps_den, prof_progressive, prof_fps
-        #print match_score
         
         if match_score > current_match_score:
             current_match_score = match_score

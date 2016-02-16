@@ -109,7 +109,7 @@ def _show_msg(msg, delay=0.0):
         Gdk.threads_leave()
 
 # -------------------------------------------------- SAVE
-def save_project(project, file_path):
+def save_project(project, file_path, changed_profile_desc=None):
     """
     Creates pickleable project object
     """
@@ -117,6 +117,11 @@ def save_project(project, file_path):
     
     # Get shallow copy
     s_proj = copy.copy(project)
+    
+    # Implements "change profile" functionality
+    if changed_profile_desc != None:
+        s_proj.profile_desc = changed_profile_desc
+        print "Saving changed profile project: ", changed_profile_desc
     
     # Set current sequence index
     s_proj.c_seq_index = project.sequences.index(project.c_seq)

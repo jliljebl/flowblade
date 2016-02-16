@@ -57,6 +57,7 @@ from editorstate import MONITOR_MEDIA_FILE
 import editorpersistance
 import medialinker
 import movemodes
+import mltprofiles
 import persistance
 import projectdata
 import projectinfogui
@@ -409,6 +410,22 @@ def _do_snapshot_save(root_folder_path, project_name):
     project_name = project_name.rstrip(".flb") + ".flb" # user may enter ".flb" ... or not
     save_thread = SnaphotSaveThread(root_folder_path, project_name)
     save_thread.start()
+
+def change_project_profile():
+    dialogs.change_profile_project_dialog(PROJECT(), _change_project_profile_callback)
+
+def _change_project_profile_callback(dialog, response_id, profile_combo, out_folder, project_name_entry):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        folder = "/" + out_folder.get_uri().lstrip("file:/")
+        name = project_name_entry.get_text()
+        profile = mltprofiles.get_profile_for_index(profile_combo.get_active())
+        path = folder + "/" + name
+
+        persistance.save_project(PROJECT(), path, profile.description()) #<----- HERE
+
+        dialog.destroy()
+    else:
+        dialog.destroy()
 
 
 class SnaphotSaveThread(threading.Thread):
