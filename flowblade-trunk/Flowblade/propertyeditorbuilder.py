@@ -486,8 +486,10 @@ def _create_composite_editor(clip, editable_properties):
     hbox.pack_start(_get_boolean_check_box_button_column(_("Align"), aligned), False, False, 0)
     hbox.pack_start(_get_boolean_check_box_button_column(_("Distort"), distort), False, False, 0)
     hbox.pack_start(Gtk.Label(), True, True, 0)
-    hbox.pack_start(_get_combo_box_column(_("Alpha"), values, operator), False, False, 0)
-    hbox.pack_start(Gtk.Label(), True, True, 0)
+    # THESE ARE DISABLED BECAUSE CHANGING APLHA MODE CAN MAKE PROJECTS UNOPENABLE IF AFFECTED 
+    # COMPOSITOR IS ON THE FIRST FRAME
+    #hbox.pack_start(_get_combo_box_column(_("Alpha"), values, operator), False, False, 0)
+    #hbox.pack_start(Gtk.Label(), True, True, 0)
     hbox.pack_start(force_vbox, False, False, 0)
     hbox.pack_start(guiutils.get_pad_label(3, 5), False, False, 0)
     return hbox
@@ -578,8 +580,10 @@ def _create_region_editor(clip, editable_properties):
     hbox.pack_start(guiutils.get_pad_label(3, 5), False, False, 0)
     hbox.pack_start(_get_boolean_check_box_button_column(_("Align"), aligned), False, False, 0)
     hbox.pack_start(_get_boolean_check_box_button_column(_("Distort"), distort), False, False, 0)
-    hbox.pack_start(Gtk.Label(), True, True, 0)
-    hbox.pack_start(_get_combo_box_column(_("Alpha"), values, operator), False, False, 0)
+    # THESE ARE DISABLED BECAUSE CHANGING APLHA MODE CAN MAKE PROJECTS UNOPENABLE IF THE AFFECTED 
+    # COMPOSITOR IS ON THE FIRST FRAME
+    #hbox.pack_start(Gtk.Label(), True, True, 0)
+    #hbox.pack_start(_get_combo_box_column(_("Alpha"), values, operator), False, False, 0)
     hbox.pack_start(Gtk.Label(), True, True, 0)
     hbox.pack_start(force_vbox, False, False, 0)
     hbox.pack_start(guiutils.get_pad_label(3, 5), False, False, 0)
