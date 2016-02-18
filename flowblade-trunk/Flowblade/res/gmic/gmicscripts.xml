@@ -209,7 +209,7 @@
     <gmicscript>
         <name>Morpho</name>
         <group>Blur</group>
-        <script>-gimp_morpho 0,5,0,0,0,0,0</script>
+        <script>-gimp_morpho 3,70,0,0,0,1,0</script>
     </gmicscript>
 
     <gmicscript>
@@ -832,4 +832,46 @@
         <script>-gimp_frame_fuzzy 5,5,10,1,255,255,255,255</script>
     </gmicscript>
 
+    <gmicscript>
+        <name>Negative</name>
+        <group>Basic</group>
+        <script>-negative</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Gamma</name>
+        <group>Basic</group>
+        <script>-apply_gamma 0.5</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Luminance</name>
+        <group>Basic</group>
+        <script>-luminance</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Mirror X</name>
+        <group>Transform</group>
+        <script>-mirror x</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Mirror Y</name>
+        <group>Transform</group>
+        <script>-mirror y</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Solarize</name>
+        <group>Artistic</group>
+        <script>-solarize</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Cubism</name>
+        <group>Painting</group>
+        <script>-cubism 50,10,75,0.7,0</script>
+    </gmicscript>
+    
 </gmic>

@@ -46,6 +46,7 @@ def load_preset_scripts_xml():
     _script_groups_names["Photographic"] = _("Photographic")
     _script_groups_names["Pattern"] = _("Pattern")
     _script_groups_names["Artistic"] = _("Artistic")
+    _script_groups_names["Basic"] = _("Basic")
 
     presets_doc = xml.dom.minidom.parse(respaths.GMIC_SCRIPTS_DOC)
 
