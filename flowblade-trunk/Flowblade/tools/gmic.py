@@ -267,6 +267,7 @@ def _finish_clip_open():
     _window.set_monitor_sizes()
     _window.set_widgets_sensitive(True)
     _window.render_button.set_sensitive(False)
+    _window.encode_desc.set_markup("<small>" + _("not set")  + "</small>")
     _player.create_sdl_consumer()
     _player.connect_and_start()
 
@@ -350,14 +351,22 @@ def _add_separetor(menu):
     menu.add(sep)
 
 #-------------------------------------------------- player buttons
-def prev_pressed():
-    _player.seek_delta(-1)
+def prev_pressed(delta=-1):
+    _player.seek_delta(delta)
     update_frame_displayers()
         
-def next_pressed():
-    _player.seek_delta(1)
+def next_pressed(delta=1):
+    _player.seek_delta(delta)
     update_frame_displayers()
 
+def start_pressed():
+    _player.seek_frame(0)
+    update_frame_displayers()
+        
+def end_pressed():
+    _player.seek_delta(_player.get_active_length() - 1)
+    update_frame_displayers()
+    
 def mark_in_pressed():
     _player.producer.mark_in = _player.current_frame()
     if _player.producer.mark_in > _player.producer.mark_out:
@@ -945,12 +954,26 @@ def _global_key_down_listener(widget, event):
         
     # LEFT ARROW, prev frame
     if event.keyval == Gdk.KEY_Left:
-        prev_pressed()
+        if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+            prev_pressed(-10)
+        else:
+            prev_pressed()
 
     # RIGHT ARROW, next frame
     if event.keyval == Gdk.KEY_Right:
-        next_pressed()
+        if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+            next_pressed(10)
+        else:
+            next_pressed()
 
+    # DOWN ARROW, start
+    if event.keyval == Gdk.KEY_Down:
+        start_pressed()
+        
+    # UP ARROW, end
+    if event.keyval == Gdk.KEY_Up:
+        end_pressed()
+    
     # I
     if event.keyval == Gdk.KEY_i:
         if (event.get_state() & Gdk.ModifierType.MOD1_MASK):
