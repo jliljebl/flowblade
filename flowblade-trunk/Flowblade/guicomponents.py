@@ -342,12 +342,12 @@ class BinListView(ImageTextTextListView):
     def fill_data_model(self):
         self.storemodel.clear()
 
-        for bin in PROJECT().bins:
+        for media_bin in PROJECT().bins:
             try:
                 pixbuf = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "bin_5.png")
                 row_data = [pixbuf,
-                            bin.name, 
-                            str(len(bin.file_ids))]
+                            media_bin.name, 
+                            str(len(media_bin.file_ids))]
                 self.storemodel.append(row_data)
                 self.scroll.queue_draw()
             except GObject.GError, exc:
