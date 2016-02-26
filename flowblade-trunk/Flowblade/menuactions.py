@@ -58,7 +58,6 @@ class RecreateIconsThread(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        # NEEDS FIXING FOR COMPACT PROJECTS
         Gdk.threads_enter()
         recreate_progress_window = dialogs.recreate_icons_progress_dialog()
         time.sleep(0.1)
@@ -74,13 +73,12 @@ class RecreateIconsThread(threading.Thread):
 
             if ((not isinstance(media_file, patternproducer.AbstractBinClip))
                 and (not isinstance(media_file, projectdata.BinColorClip))):
-                if media_file.icon_path == no_icon_path:
-                    if media_file.type == appconsts.AUDIO:
-                        icon_path = respaths.IMAGE_PATH + "audio_file.png"
-                    else:
-                        (icon_path, length) = projectdata.thumbnailer.write_image(media_file.path)
-                    media_file.icon_path = icon_path
-                    media_file.create_icon()
+                if media_file.type == appconsts.AUDIO:
+                    icon_path = respaths.IMAGE_PATH + "audio_file.png"
+                else:
+                    (icon_path, length) = projectdata.thumbnailer.write_image(media_file.path)
+                media_file.icon_path = icon_path
+                media_file.create_icon()
 
             loaded = loaded + 1
             
