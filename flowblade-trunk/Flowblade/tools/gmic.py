@@ -480,7 +480,7 @@ class GmicWindow(Gtk.Window):
         GObject.GObject.__init__(self)
         self.connect("delete-event", lambda w, e:_shutdown())
 
-        app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowblademedialinker.png")
+        app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowbladetoolicon.png")
         self.set_icon(app_icon)
 
         hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger.png")
