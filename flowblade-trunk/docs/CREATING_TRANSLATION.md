@@ -55,5 +55,4 @@ If a translation already exists and you want to update it:
 ```bash
 ./update_language LANGUAGE_CODE
 ```
- * Translate application as described above in paragraph **Editing translation**
- * 
+ * Translate application as described above.
