@@ -54,6 +54,37 @@ Media Relinker</b> is a standalone application running in its own process and do
 <li> When relinking a project you have open in Flowblade at the same time make sure that do not overwrite the relinked version of project when saving the project you have open in Flowblade</li>
 </ol>
 
+<h3> G'Mic Effects</h3>
+<p>
+G'MIC is a full-featured open-source framework for image processing.
+</p>
+<p>
+Flowblade G'MIC tool presents user with a selection of commads that can be used to achieve complex filtering of video clips.</p>
+<p>
+<b>NOTE: If a command is not present in the system then the corresponding filtering selection will not work.</b>
+</p>
+<p>
+Commands are mostly embedded in the <b>/usr/bin/gmic</b> binary itself, so to have access to more commands you will mostly need to upgrade the binary in your system.
+</p>
+<p>
+It is however possible to add and use custom commands and use them for video filtering, <a href="  http://gmic.eu/reference.shtml#section11">more info here.</a>
+</p>
+
+<h4>Loading clip and rendering previews</h4>
+<ul>
+<li> Start by pressing <b>Load Clip</b> button, and select the video clip you wish to apply filtering on.</li>
+<li> Press on the downward triangle on top of the <b>Script Edit Area</b> on the left middle of the window to select a gmic command.</li>
+<li> You can alter the values given to commands in the <b>Script Edit Area</b>.</li>
+<li> Press the <b>Preview</b> button on the right middle to view the filtered image.</li>
+<li> After rendering preview the area below <b>Script Edit Area</b> shows text output from gmic with possible error messages.</li>
+<li> You can apply multiple commands by checking <b>Add to script</b> checkbox.</li>
+</ul>
+<h4>Rendering Output</h4>
+<ul>
+<li> To render a frame sequence you will need to set <b>Mark In and Mark out points</b> and  <b>select a folder</b> to hold the rendered frame sequence.</li>
+<li> To render a video file from the filtered frame sequence, check <b>Encode video</b> checkbox and press the <b>Encoding Settings</b> button to set properties of the rendered video file.</li>
+</ul>
+
 </div>
 </div>
 </body>
