@@ -18,7 +18,7 @@ To create a translation you should probably first install the repository version
 
 ### 2. Use the provided scripts to create a translation template for your language
 
-  * Open Flowblade and select *Help -> Environment* from menu to see the *two letter locale code* for your OS install. For example *fr* for French, *fi* for Finnish etc. Information is under the header *General*.
+  * Open Flowblade and select *Help -> Runtime Environment* from menu to see the *two letter locale code* for your OS install. For example *fr* for French, *fi* for Finnish etc. Information is under the header *General*.
   * Open terminal in folder ``.../flowblade-trunk/Flowblade/locale`` that can be found in the folder you installed repository version of Flowblade in.
   * To create a new translation give a command in the terminal:
 ```bash
