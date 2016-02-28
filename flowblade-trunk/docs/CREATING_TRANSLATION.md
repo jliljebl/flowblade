@@ -10,7 +10,7 @@ Flowblade uses the standard [GNU "gettext" utilities](http://www.gnu.org/softwar
 3. Edit the created template to create the translation and compile **.mo** file from it to see your work
 4. Send the created **.po** file to project lead
 
-### 1. Use **git** to pull repository version of Flowblade ### 
+### 1. Use **git** to pull repository version of Flowblade
 
 To create a translation you should probably first install the repository version of Flowblade using **git** so that you can edit and compile the translation file ``Flowblade.po``, see [Install Instructions](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/INSTALLING.md).
 
