@@ -992,7 +992,7 @@ class EditorWindow:
         elif mode == editorstate.SLIDE_TRIM_NO_EDIT:
             cursor = self.get_own_cursor(display, SLIDE_NO_EDIT_CURSOR, 9, 9)
         elif mode == editorstate.SELECT_PARENT_CLIP:
-            cursor =  Gdk.Cursor.new(Gdk.TCROSS)
+            cursor =  Gdk.Cursor.new(Gdk.CursorType.TCROSS)
         elif mode == editorstate.MULTI_MOVE:
             cursor = self.get_own_cursor(display, MULTIMOVE_CURSOR, 4, 8)
         elif mode == editorstate.CLIP_END_DRAG:
