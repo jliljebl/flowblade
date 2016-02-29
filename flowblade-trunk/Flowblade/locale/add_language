@@ -11,7 +11,7 @@ cd ..
 ROOT_DIR=$(pwd)
 
 # Check if directory for translation already exists
-TRANS_FILE=$ROOT_DIR"/locale/"$LANG"/LC_MESSAGES/Flowblade.po"
+TRANS_FILE=$ROOT_DIR"/locale/"$LANG"/LC_MESSAGES/flowblade.po"
 if [ -f $TRANS_FILE ]; then
   echo "Translation files for $LANG_NAME already exist."
   echo "No new translation files were created."
@@ -28,7 +28,7 @@ mkdir $NEW_DIR_TWO
 ./locale/create_pot
 
 # Create language .po file
-SOURCE_POT=$ROOT_DIR"/locale/Flowblade/Flowblade.pot"
+SOURCE_POT=$ROOT_DIR"/locale/Flowblade/flowblade.pot"
 msginit --output-file=$TRANS_FILE --input=$SOURCE_POT --locale=$LANG
 
 # Give info
