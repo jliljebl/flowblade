@@ -10,6 +10,21 @@ sys.path.insert(0, modules_path)
 sys.path.insert(0, modules_path + "/vieweditor")
 sys.path.insert(0, modules_path + "/tools")
 
-import gmic
+# Get app.py module and set info which type of installation is running
+try:
+    import gmic
+    import editorstate # Used to decide which translations from file system are used
+    root_dir = modules_path.split("/")[1]
+    if root_dir != "home":
+        editorstate.app_running_from = editorstate.RUNNING_FROM_INSTALLATION
+    else:
+        editorstate.app_running_from = editorstate.RUNNING_FROM_DEV_VERSION
+except Exception, err:
+    print "Failed to import gmic"
+    print "ERROR:", err
+    print "Installation was assumed to be at:", modules_path
+    sys.exit(1)
+    
+
 
 gmic.main(modules_path)

@@ -112,7 +112,7 @@ def change_profile_project_dialog(project, callback):
                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
                          _("Save With Changed Profile").encode('utf-8'), Gtk.ResponseType.ACCEPT))
     
-    info_label = guiutils.bold_label("Project Profile can only changed by saving a version\nwith different profile.")
+    info_label = guiutils.bold_label(_("Project Profile can only changed by saving a version\nwith different profile."))
                             
     out_profile_combo = Gtk.ComboBoxText()
     profiles = mltprofiles.get_profiles()

@@ -195,7 +195,7 @@ def get_preview_file():
 # --------------------------------------------- load clip
 def open_clip_dialog():
     
-    file_select = Gtk.FileChooserDialog(_("Select Image Media"), _window, Gtk.FileChooserAction.OPEN,
+    file_select = Gtk.FileChooserDialog(_("Select Video Media"), _window, Gtk.FileChooserAction.OPEN,
                                     (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                                     Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
 
@@ -438,7 +438,7 @@ def _encode_settings_clicked():
 
     align = dialogutils.get_default_alignment(_encoding_panel)
     
-    dialog = Gtk.Dialog("Video Encoding Settings",
+    dialog = Gtk.Dialog(_("Video Encoding Settings"),
                         _window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
@@ -489,10 +489,10 @@ class GmicWindow(Gtk.Window):
         # Load media row
         self.load_button = Gtk.Button(_("Load Clip"))
         self.load_button.connect("clicked", lambda w: open_clip_dialog())
-        
+
         self.media_info = Gtk.Label()
-        self.media_info.set_markup("<small>no clip loaded</small>")#"<small>" + "video_clip.mpg, 1920x1080,  25.0fps" + "</small>" )
-        
+        self.media_info.set_markup("<small>" + _("no clip loaded") + "</small>")
+
         load_row = Gtk.HBox(False, 2)
         load_row.pack_start(self.hamburger_launcher.widget, False, False, 0)
         load_row.pack_start(guiutils.get_pad_label(6, 2), False, False, 0)
@@ -628,9 +628,9 @@ class GmicWindow(Gtk.Window):
         script_vbox.pack_start(out_sw, True, True, 0)
 
         # Render panel
-        self.mark_in_label = guiutils.bold_label("Mark In:")
-        self.mark_out_label = guiutils.bold_label("Mark Out:")
-        self.length_label = guiutils.bold_label("Length:")
+        self.mark_in_label = guiutils.bold_label(_("Mark In:"))
+        self.mark_out_label = guiutils.bold_label(_("Mark Out:"))
+        self.length_label = guiutils.bold_label(_("Length:"))
         
         self.mark_in_info = Gtk.Label("-")
         self.mark_out_info = Gtk.Label("-")
@@ -659,7 +659,7 @@ class GmicWindow(Gtk.Window):
                             self.out_folder, guiutils.pad_label(24, 2), self.frame_name, \
                             guiutils.pad_label(2, 2), self.extension_label])
 
-        self.encode_check_label = Gtk.Label("Encode Video")
+        self.encode_check_label = Gtk.Label(_("Encode Video"))
         self.encode_check = Gtk.CheckButton()
         self.encode_check.set_active(False)
         self.encode_check.connect("toggled", lambda w:self.update_encode_sensitive())
@@ -1056,7 +1056,7 @@ class GmicPreviewRendererer(threading.Thread):
         render_time = time.time() - start_time
         time_str = "{0:.2f}".format(round(render_time,2))
         _window.preview_info.set_markup("<small>" + _("Preview for frame: ") + \
-            utils.get_tc_string_with_fps(_player.current_frame(), _current_fps) + ", render time: " + time_str +  "</small>" )
+            utils.get_tc_string_with_fps(_player.current_frame(), _current_fps) + _(", render time: ") + time_str +  "</small>" )
             
         _window.preview_monitor.queue_draw()
         Gdk.threads_leave()
@@ -1137,7 +1137,7 @@ class GmicEffectRendererer(threading.Thread):
             if self.abort == True:
                 return
             
-            update_info = "Rendering frame: " + str(frame_count) + "/" +  str(self.length)
+            update_info = _("Rendering frame: ") + str(frame_count) + "/" +  str(self.length)
 
             Gdk.threads_enter()
             _window.render_percentage.set_markup("<small>" + update_info + "</small>")
@@ -1209,7 +1209,7 @@ class GmicEffectRendererer(threading.Thread):
                     return
                 
                 fraction = self.render_player.get_render_fraction()
-                update_info = "Rendering video, " + str(int(fraction * 100)) + "% done"
+                update_info = _("Rendering video, ") + str(int(fraction * 100)) + _("% done")
                 
                 Gdk.threads_enter()
                 _window.render_percentage.set_markup("<small>" + update_info + "</small>")
@@ -1229,7 +1229,7 @@ class GmicEffectRendererer(threading.Thread):
         else:
             frame = frame - self.mark_in # producer returns original clip frames
         
-        update_info = "Writing clip frame: " + str(frame) + "/" +  str(self.length)
+        update_info = _("Writing clip frame: ") + str(frame) + "/" +  str(self.length)
 
         Gdk.threads_enter()
         _window.render_percentage.set_markup("<small>" + update_info + "</small>")

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-29 09:08+0200\n"
+"POT-Creation-Date: 2016-02-29 11:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -465,7 +465,7 @@ msgid "Project Info"
 msgstr ""
 
 #: editorwindow.py:195 editorwindow.py:484 rendergui.py:171
-#: tools/batchrendering.py:862
+#: tools/batchrendering.py:862 tools/gmic.py:703
 msgid "Render"
 msgstr ""
 
@@ -493,7 +493,7 @@ msgstr ""
 msgid "Audio Mixer"
 msgstr ""
 
-#: editorwindow.py:202
+#: editorwindow.py:202 tools/gmic.py:763
 msgid "G'MIC Effects"
 msgstr ""
 
@@ -714,12 +714,14 @@ msgstr ""
 #: rendergui.py:47 rendergui.py:102 rendergui.py:116 rendergui.py:133
 #: preferenceswindow.py:42 tools/batchrendering.py:959 proxyediting.py:429
 #: patternproducer.py:316 patternproducer.py:349 patternproducer.py:380
+#: tools/gmic.py:290 tools/gmic.py:314 tools/gmic.py:444
 msgid "Cancel"
 msgstr ""
 
 #: dialogs.py:56 dialogs.py:167 dialogs.py:207 dialogs.py:347 dialogs.py:419
 #: dialogs.py:538 dialogs.py:551 dialogs.py:1246 propertyeditorbuilder.py:402
 #: rendergui.py:103 preferenceswindow.py:43 tools/batchrendering.py:391
+#: tools/gmic.py:315
 msgid "OK"
 msgstr ""
 
@@ -747,16 +749,22 @@ msgstr ""
 msgid "Save With Changed Profile"
 msgstr ""
 
+#: dialogs.py:115
+msgid ""
+"Project Profile can only changed by saving a version\n"
+"with different profile."
+msgstr ""
+
 #: dialogs.py:131
 msgid "New Profile"
 msgstr ""
 
 #: dialogs.py:133 rendergui.py:510 preferenceswindow.py:101
-#: preferenceswindow.py:104
+#: preferenceswindow.py:104 tools/gmic.py:648 tools/toolsencoding.py:40
 msgid "Select Folder"
 msgstr ""
 
-#: dialogs.py:137 rendergui.py:514
+#: dialogs.py:137 rendergui.py:514 tools/toolsencoding.py:44
 msgid "Folder:"
 msgstr ""
 
@@ -797,7 +805,7 @@ msgid "Save Project As"
 msgstr ""
 
 #: dialogs.py:224 dialogs.py:259 dialogs.py:317 dialogs.py:336
-#: rendergui.py:117 tools/batchrendering.py:960
+#: rendergui.py:117 tools/batchrendering.py:960 tools/gmic.py:291
 msgid "Save"
 msgstr ""
 
@@ -1185,7 +1193,7 @@ msgstr ""
 msgid "Export folder:"
 msgstr ""
 
-#: dialogs.py:1004 rendergui.py:431
+#: dialogs.py:1004 rendergui.py:431 tools/toolsencoding.py:270
 msgid "File"
 msgstr ""
 
@@ -1230,7 +1238,7 @@ msgid "Add Fade"
 msgstr ""
 
 #: dialogs.py:1094 dialogs.py:1198 tools/titler.py:412 proxyediting.py:420
-#: medialinker.py:149
+#: medialinker.py:149 tools/gmic.py:734 tools/gmic.py:825
 msgid "Close"
 msgstr ""
 
@@ -1358,7 +1366,7 @@ msgstr ""
 msgid "Backwards Faster"
 msgstr ""
 
-#: dialogs.py:1128 proxyediting.py:353
+#: dialogs.py:1128 proxyediting.py:353 tools/gmic.py:701
 msgid "Stop"
 msgstr ""
 
@@ -1773,19 +1781,19 @@ msgid "Show Full Paths"
 msgstr ""
 
 #: guicomponents.py:1515 propertyeditorbuilder.py:472
-#: propertyeditorbuilder.py:567
+#: propertyeditorbuilder.py:567 tools/toolsencoding.py:343
 msgid "Progressive"
 msgstr ""
 
-#: guicomponents.py:1517
+#: guicomponents.py:1517 tools/toolsencoding.py:345
 msgid "Interlaced"
 msgstr ""
 
-#: guicomponents.py:1520
+#: guicomponents.py:1520 tools/toolsencoding.py:348
 msgid "Fps: "
 msgstr ""
 
-#: guicomponents.py:1523
+#: guicomponents.py:1523 tools/toolsencoding.py:351
 msgid "Pixel Aspect: "
 msgstr ""
 
@@ -2009,7 +2017,7 @@ msgid ""
 "Setting your home folder as folder for rendered clips is not allowed."
 msgstr ""
 
-#: panels.py:241 rendergui.py:524
+#: panels.py:241 rendergui.py:524 tools/toolsencoding.py:54
 msgid "Name:"
 msgstr ""
 
@@ -2045,11 +2053,11 @@ msgstr ""
 msgid "Audio Sample Rate:"
 msgstr ""
 
-#: panels.py:270
+#: panels.py:270 tools/gmic.py:631
 msgid "Mark In:"
 msgstr ""
 
-#: panels.py:271
+#: panels.py:271 tools/gmic.py:632
 msgid "Mark Out:"
 msgstr ""
 
@@ -2065,7 +2073,7 @@ msgstr ""
 msgid "Composite clip on:"
 msgstr ""
 
-#: panels.py:317 panels.py:413 rendergui.py:537
+#: panels.py:317 panels.py:413 rendergui.py:537 tools/toolsencoding.py:67
 msgid "Type:"
 msgstr ""
 
@@ -2077,7 +2085,7 @@ msgstr ""
 msgid "Dip Color:"
 msgstr ""
 
-#: panels.py:347 panels.py:423
+#: panels.py:347 panels.py:423 tools/gmic.py:633
 msgid "Length:"
 msgstr ""
 
@@ -4264,7 +4272,7 @@ msgstr ""
 msgid "Rendered Clip Length:"
 msgstr ""
 
-#: rendergui.py:316
+#: rendergui.py:316 tools/toolsencoding.py:172
 msgid "Select Render quality"
 msgstr ""
 
@@ -4272,11 +4280,11 @@ msgstr ""
 msgid "Select audio sample frequency"
 msgstr ""
 
-#: rendergui.py:358
+#: rendergui.py:358 tools/toolsencoding.py:231
 msgid "Select Render encoding"
 msgstr ""
 
-#: rendergui.py:395
+#: rendergui.py:395 tools/toolsencoding.py:155
 msgid "Select render profile"
 msgstr ""
 
@@ -4288,15 +4296,15 @@ msgstr ""
 msgid "Marked Range"
 msgstr ""
 
-#: rendergui.py:432
+#: rendergui.py:432 tools/toolsencoding.py:271
 msgid "Render Profile"
 msgstr ""
 
-#: rendergui.py:435 rendergui.py:453
+#: rendergui.py:435 rendergui.py:453 tools/toolsencoding.py:272
 msgid "Encoding Format"
 msgstr ""
 
-#: rendergui.py:436 rendergui.py:454
+#: rendergui.py:436 rendergui.py:454 tools/toolsencoding.py:273
 msgid "Render Type"
 msgstr ""
 
@@ -4308,23 +4316,23 @@ msgstr ""
 msgid "Open File in Bin:"
 msgstr ""
 
-#: rendergui.py:530
+#: rendergui.py:530 tools/toolsencoding.py:60
 msgid "Select folder to place rendered file in"
 msgstr ""
 
-#: rendergui.py:531
+#: rendergui.py:531 tools/toolsencoding.py:61
 msgid "Give name for rendered file"
 msgstr ""
 
-#: rendergui.py:538
+#: rendergui.py:538 tools/toolsencoding.py:68
 msgid "Presets:"
 msgstr ""
 
-#: rendergui.py:541
+#: rendergui.py:541 tools/toolsencoding.py:71
 msgid "User Defined"
 msgstr ""
 
-#: rendergui.py:542
+#: rendergui.py:542 tools/toolsencoding.py:72
 msgid "Preset File type"
 msgstr ""
 
@@ -5213,4 +5221,141 @@ msgstr ""
 
 #: patternproducer.py:395
 msgid "Move 2:"
+msgstr ""
+
+#: tools/gmic.py:198
+msgid "Select Video Media"
+msgstr ""
+
+#: tools/gmic.py:270 tools/gmic.py:670
+msgid "not set"
+msgstr ""
+
+#: tools/gmic.py:288
+msgid "Save Gmic Script As"
+msgstr ""
+
+#: tools/gmic.py:312
+msgid "Load Gmic Script"
+msgstr ""
+
+#: tools/gmic.py:441
+msgid "Video Encoding Settings"
+msgstr ""
+
+#: tools/gmic.py:445
+msgid "Set Encoding"
+msgstr ""
+
+#: tools/gmic.py:490 tools/gmic.py:822
+msgid "Load Clip"
+msgstr ""
+
+#: tools/gmic.py:494
+msgid "no clip loaded"
+msgstr ""
+
+#: tools/gmic.py:519
+msgid "no preview"
+msgstr ""
+
+#: tools/gmic.py:566
+msgid "Preview"
+msgstr ""
+
+#: tools/gmic.py:591
+msgid "Add to Script"
+msgstr ""
+
+#: tools/gmic.py:651
+msgid "Frames Folder:"
+msgstr ""
+
+#: tools/gmic.py:662
+msgid "Encode Video"
+msgstr ""
+
+#: tools/gmic.py:667
+msgid "Encoding settings"
+msgstr ""
+
+#: tools/gmic.py:686
+msgid "Set Mark In, Mark Out and Frames Folder for valid render"
+msgstr ""
+
+#: tools/gmic.py:729
+msgid "Load Script"
+msgstr ""
+
+#: tools/gmic.py:731
+msgid "Save Script"
+msgstr ""
+
+#: tools/gmic.py:790
+msgid "frames"
+msgstr ""
+
+#: tools/gmic.py:808
+msgid " no video file"
+msgstr ""
+
+#: tools/gmic.py:810
+msgid " render video file"
+msgstr ""
+
+#: tools/gmic.py:811
+msgid " frame(s),"
+msgstr ""
+
+#: tools/gmic.py:823
+msgid "G'Mic Webpage"
+msgstr ""
+
+#: tools/gmic.py:1026
+msgid "Rendering preview..."
+msgstr ""
+
+#: tools/gmic.py:1058
+msgid "Preview for frame: "
+msgstr ""
+
+#: tools/gmic.py:1059
+msgid ", render time: "
+msgstr ""
+
+#: tools/gmic.py:1127
+msgid "Waiting for frames write to complete..."
+msgstr ""
+
+#: tools/gmic.py:1140
+msgid "Rendering frame: "
+msgstr ""
+
+#: tools/gmic.py:1170
+msgid "Render error!"
+msgstr ""
+
+#: tools/gmic.py:1212
+msgid "Rendering video, "
+msgstr ""
+
+#: tools/gmic.py:1212
+#, python-format
+msgid "% done"
+msgstr ""
+
+#: tools/gmic.py:1222
+msgid "Render complete!"
+msgstr ""
+
+#: tools/gmic.py:1232
+msgid "Writing clip frame: "
+msgstr ""
+
+#: tools/gmic.py:1244
+msgid "Render stopped!"
+msgstr ""
+
+#: tools/toolsencoding.py:90
+msgid "Use Default Profile:"
 msgstr ""
