@@ -28,7 +28,7 @@ mkdir $NEW_DIR_TWO
 ./locale/create_pot
 
 # Create language .po file
-SOURCE_POT=$ROOT_DIR"/locale/Flowblade/Flowblade.pot"
+SOURCE_POT=$ROOT_DIR"/locale/Flowblade/flowblade.pot"
 msginit --output-file=$TRANS_FILE --input=$SOURCE_POT --locale=$LANG
 
 # Give info
