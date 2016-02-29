@@ -13,6 +13,7 @@
 | python-numpy | Math and arrays library |
 | python-pil | PIL image manipulation library |
 | librsvg2-common | svg support |
+| gmic | framework for image processing |
 
 # Dropped  Dependencies #
 
