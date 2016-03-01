@@ -68,6 +68,8 @@ RENDER_FRAMES_DIR = "/render_frames"
 PREVIEW_FILE = "preview.png"
 NO_PREVIEW_FILE = "fallback_thumb.png"
 
+_gmic_found = False
+
 _session_id = None
 
 _window = None
@@ -91,7 +93,21 @@ _encoding_panel = None
 _hamburger_menu = Gtk.Menu()
 
 #-------------------------------------------------- launch and inits
+def test_availablity():
+    if os.path.exists("/usr/bin/gmic") == True:
+        print "G'MIC found"
+        global _gmic_found
+        _gmic_found = True
+    else:
+        print "G'MIC NOT found"
+        
 def launch_gmic():
+    if _gmic_found == False:
+        primary_txt = _("G'Mic not found!")
+        secondary_txt = _("G'Mic binary was not present at <b>/usr/bin/gmic</b>.\nInstall G'MIC to use this tool.")
+        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        return
+
     print "Launch gmic..."
     gui.save_current_colors()
     

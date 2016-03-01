@@ -52,6 +52,7 @@ import editevent
 import editorpersistance
 import editorstate
 import editorwindow
+import gmic
 import gui
 import keyevents
 import medialog
@@ -244,6 +245,9 @@ def main(root_path):
 
     # Audiomonitoring being available needs to be known before GUI creation
     audiomonitoring.init(editorstate.project.profile)
+
+    # Check for gmic
+    gmic.test_availablity()
 
     # Create player object
     create_player()
