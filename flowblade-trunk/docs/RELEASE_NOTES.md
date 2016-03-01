@@ -1,5 +1,64 @@
 # Release Notes #
 
+
+## Flowblade 1.6 (to come shortly, not yet available) ##
+
+**Date: March xx, 2016**
+
+**Flowblade 1.6** is the eleventh release of Flowblade. The main feature of this release is the new GMIC Effects tool.
+
+### G'MIC effects tool ###
+
+G'MIC is a full-featured open-source framework for image processing developed by French research scientist David Tschumperlé and others. Its main strength is that it enables creating complex new image filters without writing any compiled code.
+
+For applications such as Flowblade this makes it possible to offer a wide range of image filtering capabilities using a relatively small amount of managed code.
+
+A demo video of some features available in the first release can be seen _here_(add link). This is just the first step, many more filters will come in the future.
+
+### Other main features in this release ###
+
+* **Changing project profile is now possible.** This is a feature that was requested by users who felt uneasy about having to commit to a profile at the beginning of the project.
+
+* **Drag'n'drop of media files from other applications** is a standard feature that has so far been missing from Flowblade.
+ 
+* **Middlebar was updated** on wider screens as G'MIC, Batch Render Queue and Split Audio buttons were added.
+
+* **'Sync All Compositors' functionality was added** This can be very useful in situations where a track as a whole is moved in relation to other media.
+
+For the next release cycle the focus will be on integrating existing technologies to improve Flowblade's capabilites in doing motion graphics. The Natron compositor project offers a lot of promise here, and the exisiting node compositor by myself will be made available in some form.
+
+Also a new project website will be developed during this cycle. The first version is to be made available in a week or two.
+
+The next cycle will the longest since 0.16 because the amount of coding and research needed. The target release date for 1.8 is September 2016.
+
+####Bugfixes and enhancements####
+* Fix set parent clip functionality
+* Fix translation scripts (apienk)
+* Re-create all media icons always when requested
+* Fix dark theme monitor indicator icon
+* Fix change to first bin after media load bug
+* Remove alpha mode functionality from compositors
+* Fix batch render to respect profile selection
+* Fix single render to respect changed profile
+* Open missing asset project directly from info dialog into Media Relinker on request
+* Add Mark In and Mark Out data to clip info dialog
+* Remove write env data functionality
+* Fix dark theme mute video icon
+* Add transition button to TC Middle layout and combine it with edit buttons group
+* Fix filter cloning for filters witn non-mlt properties
+* Make Titler work better with non-square pixel formats
+* Add HD 1080p 60fps profile
+* Range Log sorting upgrade and gmic encode view update
+* New undo-redo icons (bergamote)
+* Render slowmo files from original when using proxy files
+* Make possible to render slowmo file from a Range Log item
+* RHEL7/CentOS compatibility patch (Martin A. Wielebinski)
+* Fix file info fps display
+* Make relinker and batchrender use dark theme
+* Make single render use dark theme and add percentage display
+* New in/out markers (bergamote)
+
+
 ## Flowblade 1.4 ##
 
 **Date: November 24, 2015**
