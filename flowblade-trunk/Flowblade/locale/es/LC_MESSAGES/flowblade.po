@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-29 21:04+0200\n"
+"POT-Creation-Date: 2016-03-02 00:27+0200\n"
 "PO-Revision-Date: 2014-02-21 12:08+0200\n"
 "Last-Translator: David Gámiz Jiménez <david.gamiz@gmail.com>\n"
 "Language-Team: David Gamiz Jimenez\n"
@@ -18,44 +18,44 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Virtaal 0.7.0\n"
 
-#: app.py:697
+#: app.py:701
 msgid "Too small screen for this application."
 msgstr "La pantalla es demasiado pequeña para esta aplicación."
 
-#: app.py:700
+#: app.py:704
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr ""
 "La dimensión de pantalla mínima para esta aplicación es de 1152 x 768.\n"
 
-#: app.py:701
+#: app.py:705
 msgid "Your screen dimensions are "
 msgstr "Las dimensiones de su pantalla son "
 
-#: app.py:735
+#: app.py:739
 msgid "Project has not been saved since it was opened."
 msgstr "El proyecto no ha sido salvado desde que se abrió."
 
-#: app.py:740
+#: app.py:744
 msgid "Project was saved less than a minute ago."
 msgstr "El proyecto fue salvado hace menos de un minuto."
 
-#: app.py:743
+#: app.py:747
 msgid "Project was saved one minute ago."
 msgstr "El proyecto fue salvado hace un minuto."
 
-#: app.py:745
+#: app.py:749
 msgid "Project was saved "
 msgstr "El proyecto salvado "
 
-#: app.py:745
+#: app.py:749
 msgid " minutes ago."
 msgstr " hace minutos."
 
-#: app.py:755 projectaction.py:300
+#: app.py:759 projectaction.py:300
 msgid "Project has not been saved previously"
 msgstr "El proyecto no se ha salvado antes"
 
-#: app.py:756 projectaction.py:301
+#: app.py:760 projectaction.py:301
 msgid "Save project with File -> Save As before closing."
 msgstr "Salvar el proyecto en un Archivo -> Salvar como antes de cerrar."
 
@@ -493,7 +493,7 @@ msgid "Project Info"
 msgstr "Información del proyecto"
 
 #: editorwindow.py:195 editorwindow.py:484 rendergui.py:171
-#: tools/batchrendering.py:862 tools/gmic.py:703
+#: tools/batchrendering.py:862 tools/gmic.py:719
 msgid "Render"
 msgstr "Renderizar"
 
@@ -521,7 +521,7 @@ msgstr "Creador de Títulos"
 msgid "Audio Mixer"
 msgstr "Mezclador de audio"
 
-#: editorwindow.py:202 tools/gmic.py:763
+#: editorwindow.py:202 tools/gmic.py:779
 #, fuzzy
 msgid "G'MIC Effects"
 msgstr "Efecto de color"
@@ -757,14 +757,14 @@ msgstr "Nuevo Proyecto"
 #: rendergui.py:47 rendergui.py:102 rendergui.py:116 rendergui.py:133
 #: preferenceswindow.py:42 tools/batchrendering.py:959 proxyediting.py:429
 #: patternproducer.py:316 patternproducer.py:349 patternproducer.py:380
-#: tools/gmic.py:290 tools/gmic.py:314 tools/gmic.py:444
+#: tools/gmic.py:306 tools/gmic.py:330 tools/gmic.py:460
 msgid "Cancel"
 msgstr "Cancelar"
 
 #: dialogs.py:56 dialogs.py:167 dialogs.py:207 dialogs.py:347 dialogs.py:419
 #: dialogs.py:538 dialogs.py:551 dialogs.py:1246 propertyeditorbuilder.py:402
 #: rendergui.py:103 preferenceswindow.py:43 tools/batchrendering.py:391
-#: tools/gmic.py:315
+#: tools/gmic.py:331
 msgid "OK"
 msgstr "Aceptar"
 
@@ -806,7 +806,7 @@ msgid "New Profile"
 msgstr "Guardar Nuevo Perfil"
 
 #: dialogs.py:133 rendergui.py:510 preferenceswindow.py:101
-#: preferenceswindow.py:104 tools/gmic.py:648 tools/toolsencoding.py:40
+#: preferenceswindow.py:104 tools/gmic.py:664 tools/toolsencoding.py:40
 msgid "Select Folder"
 msgstr "Seleccionar Carpeta"
 
@@ -858,7 +858,7 @@ msgid "Save Project As"
 msgstr "Guardar proyecto como"
 
 #: dialogs.py:224 dialogs.py:259 dialogs.py:317 dialogs.py:336
-#: rendergui.py:117 tools/batchrendering.py:960 tools/gmic.py:291
+#: rendergui.py:117 tools/batchrendering.py:960 tools/gmic.py:307
 msgid "Save"
 msgstr "Guardar"
 
@@ -1333,7 +1333,7 @@ msgid "Add Fade"
 msgstr "Añadir fundido"
 
 #: dialogs.py:1094 dialogs.py:1198 tools/titler.py:412 proxyediting.py:420
-#: medialinker.py:149 tools/gmic.py:734 tools/gmic.py:825
+#: medialinker.py:149 tools/gmic.py:750 tools/gmic.py:841
 msgid "Close"
 msgstr "Cerrar"
 
@@ -1465,7 +1465,7 @@ msgstr "Comienzo / Parada de reproducción"
 msgid "Backwards Faster"
 msgstr "Rebobinado Rápido"
 
-#: dialogs.py:1128 proxyediting.py:353 tools/gmic.py:701
+#: dialogs.py:1128 proxyediting.py:353 tools/gmic.py:717
 msgid "Stop"
 msgstr "Parar"
 
@@ -2172,12 +2172,12 @@ msgstr "Canales de Audio:"
 msgid "Audio Sample Rate:"
 msgstr "Audio Frecuencia de muestreo:"
 
-#: panels.py:270 tools/gmic.py:631
+#: panels.py:270 tools/gmic.py:647
 #, fuzzy
 msgid "Mark In:"
 msgstr "Mark In"
 
-#: panels.py:271 tools/gmic.py:632
+#: panels.py:271 tools/gmic.py:648
 #, fuzzy
 msgid "Mark Out:"
 msgstr "Trazar"
@@ -2206,7 +2206,7 @@ msgstr "Limpie Patrón:"
 msgid "Dip Color:"
 msgstr "Dip Color:"
 
-#: panels.py:347 panels.py:423 tools/gmic.py:633
+#: panels.py:347 panels.py:423 tools/gmic.py:649
 msgid "Length:"
 msgstr "Longitud:"
 
@@ -5465,161 +5465,172 @@ msgstr ""
 msgid "Move 2:"
 msgstr ""
 
-#: tools/gmic.py:198
+#: tools/gmic.py:106
+#, fuzzy
+msgid "G'Mic not found!"
+msgstr "¡El clip original no se encuentra!"
+
+#: tools/gmic.py:107
+msgid ""
+"G'Mic binary was not present at <b>/usr/bin/gmic</b>.\n"
+"Install G'MIC to use this tool."
+msgstr ""
+
+#: tools/gmic.py:214
 #, fuzzy
 msgid "Select Video Media"
 msgstr "Selecciona archivo de filigrana"
 
-#: tools/gmic.py:270 tools/gmic.py:670
+#: tools/gmic.py:286 tools/gmic.py:686
 #, fuzzy
 msgid "not set"
 msgstr "<b> no set </b>"
 
-#: tools/gmic.py:288
+#: tools/gmic.py:304
 msgid "Save Gmic Script As"
 msgstr ""
 
-#: tools/gmic.py:312
+#: tools/gmic.py:328
 msgid "Load Gmic Script"
 msgstr ""
 
-#: tools/gmic.py:441
+#: tools/gmic.py:457
 #, fuzzy
 msgid "Video Encoding Settings"
 msgstr "Cifrado"
 
-#: tools/gmic.py:445
+#: tools/gmic.py:461
 #, fuzzy
 msgid "Set Encoding"
 msgstr "Cifrado"
 
-#: tools/gmic.py:490 tools/gmic.py:822
+#: tools/gmic.py:506 tools/gmic.py:838
 #, fuzzy
 msgid "Load Clip"
 msgstr "Copiar los Clips"
 
-#: tools/gmic.py:494
+#: tools/gmic.py:510
 #, fuzzy
 msgid "no clip loaded"
 msgstr "Para acortar la manija:"
 
-#: tools/gmic.py:519
+#: tools/gmic.py:535
 #, fuzzy
 msgid "no preview"
 msgstr "Dividir Prevista"
 
-#: tools/gmic.py:566
+#: tools/gmic.py:582
 #, fuzzy
 msgid "Preview"
 msgstr "Dividir Prevista"
 
-#: tools/gmic.py:591
+#: tools/gmic.py:607
 #, fuzzy
 msgid "Add to Script"
 msgstr "Agregar clip de Monitor"
 
-#: tools/gmic.py:651
+#: tools/gmic.py:667
 #, fuzzy
 msgid "Frames Folder:"
 msgstr "Objetivo de la carpeta:"
 
-#: tools/gmic.py:662
+#: tools/gmic.py:678
 #, fuzzy
 msgid "Encode Video"
 msgstr "Vídeo Mute"
 
-#: tools/gmic.py:667
+#: tools/gmic.py:683
 #, fuzzy
 msgid "Encoding settings"
 msgstr "Cifrado"
 
-#: tools/gmic.py:686
+#: tools/gmic.py:702
 msgid "Set Mark In, Mark Out and Frames Folder for valid render"
 msgstr ""
 
-#: tools/gmic.py:729
+#: tools/gmic.py:745
 #, fuzzy
 msgid "Load Script"
 msgstr "Cargar selección"
 
-#: tools/gmic.py:731
+#: tools/gmic.py:747
 #, fuzzy
 msgid "Save Script"
 msgstr "Guardar proyecto"
 
-#: tools/gmic.py:790
+#: tools/gmic.py:806
 #, fuzzy
 msgid "frames"
 msgstr " archivo (s).\n"
 
-#: tools/gmic.py:808
+#: tools/gmic.py:824
 #, fuzzy
 msgid " no video file"
 msgstr " archivo de video (s)"
 
-#: tools/gmic.py:810
+#: tools/gmic.py:826
 #, fuzzy
 msgid " render video file"
 msgstr " archivo de video (s)"
 
-#: tools/gmic.py:811
+#: tools/gmic.py:827
 #, fuzzy
 msgid " frame(s),"
 msgstr " archivo (s).\n"
 
-#: tools/gmic.py:823
+#: tools/gmic.py:839
 msgid "G'Mic Webpage"
 msgstr ""
 
-#: tools/gmic.py:1026
+#: tools/gmic.py:1042
 #, fuzzy
 msgid "Rendering preview..."
 msgstr "Renderización"
 
-#: tools/gmic.py:1058
+#: tools/gmic.py:1074
 #, fuzzy
 msgid "Preview for frame: "
 msgstr "Fotograma anterior"
 
-#: tools/gmic.py:1059
+#: tools/gmic.py:1075
 #, fuzzy
 msgid ", render time: "
 msgstr "Render Tiempo"
 
-#: tools/gmic.py:1127
+#: tools/gmic.py:1143
 msgid "Waiting for frames write to complete..."
 msgstr ""
 
-#: tools/gmic.py:1140
+#: tools/gmic.py:1156
 #, fuzzy
 msgid "Rendering frame: "
 msgstr "Representación del artículo:"
 
-#: tools/gmic.py:1170
+#: tools/gmic.py:1186
 #, fuzzy
 msgid "Render error!"
 msgstr "Render Progreso"
 
-#: tools/gmic.py:1212
+#: tools/gmic.py:1228
 #, fuzzy
 msgid "Rendering video, "
 msgstr "Renderización"
 
-#: tools/gmic.py:1212
+#: tools/gmic.py:1228
 #, python-format
 msgid "% done"
 msgstr ""
 
-#: tools/gmic.py:1222
+#: tools/gmic.py:1238
 #, fuzzy
 msgid "Render complete!"
 msgstr "¡Renderizado completo!"
 
-#: tools/gmic.py:1232
+#: tools/gmic.py:1248
 msgid "Writing clip frame: "
 msgstr ""
 
-#: tools/gmic.py:1244
+#: tools/gmic.py:1260
 #, fuzzy
 msgid "Render stopped!"
 msgstr "¡Renderizado completo!"
@@ -5769,9 +5780,6 @@ msgstr "Perfil por Defecto"
 
 #~ msgid "Consolidate All Blanks"
 #~ msgstr "Consolidar Todos los espacios en blanco"
-
-#~ msgid "Origin clip not found!"
-#~ msgstr "¡El clip original no se encuentra!"
 
 #~ msgid ""
 #~ "Clip used to create this Compositor has been removed\n"

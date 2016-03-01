@@ -192,14 +192,6 @@
         <script>-gimp_engrave 0.5,50,0,8,40,0,0,0,10,1,0,0,0,1,0</script>
     </gmicscript>
 
-    <!--
-    <gmicscript>
-        <name>BWrecolorize</name>
-        <group>Misc</group>
-        <script>-gimp_bwrecolorize 0,1,0,0,0,1,0,5,0,0,0,255,43,25,55,255,158,137,189,255,224,191,228,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,0</script>
-    </gmicscript>
-    -->
-
     <gmicscript>
         <name>Segment Watershed</name>
         <group>Painting</group>
@@ -775,14 +767,6 @@
         <group>Texture</group>
         <script>-gimp_shadow_patch 0.7,0</script>
     </gmicscript>
-
-    <!--
-    <gmicscript>
-        <name>Rgb2bayer</name>
-        <group>Artistic</group>
-        <script>-rgb2bayer 0,1</script>
-    </gmicscript>
-    -->
 
     <gmicscript>
         <name>Boxfitting</name>

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-29 21:04+0200\n"
+"POT-Creation-Date: 2016-03-02 00:27+0200\n"
 "PO-Revision-Date: 2011-12-13 23:55+0200\n"
 "Last-Translator: Janne Liljeblad <janne@janne-kx557aa-uuw-a6521-sc>\n"
 "Language-Team: Finnish\n"
@@ -17,43 +17,43 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:697
+#: app.py:701
 msgid "Too small screen for this application."
 msgstr "Näyttö on liian pieni tälle ohjelmalle."
 
-#: app.py:700
+#: app.py:704
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "Minimi näyttökoko tällle ohjelmalle on 1152 x 768.\n"
 
-#: app.py:701
+#: app.py:705
 msgid "Your screen dimensions are "
 msgstr "Sinun näyttösi koko on "
 
-#: app.py:735
+#: app.py:739
 msgid "Project has not been saved since it was opened."
 msgstr "Projektia ei ole tallennettu aikaisemmin."
 
-#: app.py:740
+#: app.py:744
 msgid "Project was saved less than a minute ago."
 msgstr "Projekti tallennettiin viimeksi alle minuutti sitten."
 
-#: app.py:743
+#: app.py:747
 msgid "Project was saved one minute ago."
 msgstr "Projekti tallennettiin viimeksi minuutti sitten."
 
-#: app.py:745
+#: app.py:749
 msgid "Project was saved "
 msgstr "Projektia ei ole tallennettu aikaisemmin"
 
-#: app.py:745
+#: app.py:749
 msgid " minutes ago."
 msgstr " minuuttia sitten."
 
-#: app.py:755 projectaction.py:300
+#: app.py:759 projectaction.py:300
 msgid "Project has not been saved previously"
 msgstr "Projektia ei ole tallennettu aikaisemmin"
 
-#: app.py:756 projectaction.py:301
+#: app.py:760 projectaction.py:301
 msgid "Save project with File -> Save As before closing."
 msgstr ""
 "Tallenna projekti valinnalla Tiedosto -> Tallenna nimellä ennen sulkemista."
@@ -482,7 +482,7 @@ msgid "Project Info"
 msgstr "Projekti Info"
 
 #: editorwindow.py:195 editorwindow.py:484 rendergui.py:171
-#: tools/batchrendering.py:862 tools/gmic.py:703
+#: tools/batchrendering.py:862 tools/gmic.py:719
 msgid "Render"
 msgstr "Renderöi"
 
@@ -510,7 +510,7 @@ msgstr "Teksti grafiikka"
 msgid "Audio Mixer"
 msgstr "Audio mikseri"
 
-#: editorwindow.py:202 tools/gmic.py:763
+#: editorwindow.py:202 tools/gmic.py:779
 msgid "G'MIC Effects"
 msgstr "G'MIC efectit"
 
@@ -740,14 +740,14 @@ msgstr "Uusi projekti"
 #: rendergui.py:47 rendergui.py:102 rendergui.py:116 rendergui.py:133
 #: preferenceswindow.py:42 tools/batchrendering.py:959 proxyediting.py:429
 #: patternproducer.py:316 patternproducer.py:349 patternproducer.py:380
-#: tools/gmic.py:290 tools/gmic.py:314 tools/gmic.py:444
+#: tools/gmic.py:306 tools/gmic.py:330 tools/gmic.py:460
 msgid "Cancel"
 msgstr "Peruuta"
 
 #: dialogs.py:56 dialogs.py:167 dialogs.py:207 dialogs.py:347 dialogs.py:419
 #: dialogs.py:538 dialogs.py:551 dialogs.py:1246 propertyeditorbuilder.py:402
 #: rendergui.py:103 preferenceswindow.py:43 tools/batchrendering.py:391
-#: tools/gmic.py:315
+#: tools/gmic.py:331
 msgid "OK"
 msgstr "OK"
 
@@ -788,7 +788,7 @@ msgid "New Profile"
 msgstr "Uusi profiili"
 
 #: dialogs.py:133 rendergui.py:510 preferenceswindow.py:101
-#: preferenceswindow.py:104 tools/gmic.py:648 tools/toolsencoding.py:40
+#: preferenceswindow.py:104 tools/gmic.py:664 tools/toolsencoding.py:40
 msgid "Select Folder"
 msgstr "Valitse kansio"
 
@@ -833,7 +833,7 @@ msgid "Save Project As"
 msgstr "Tallenna projekti nimellä"
 
 #: dialogs.py:224 dialogs.py:259 dialogs.py:317 dialogs.py:336
-#: rendergui.py:117 tools/batchrendering.py:960 tools/gmic.py:291
+#: rendergui.py:117 tools/batchrendering.py:960 tools/gmic.py:307
 msgid "Save"
 msgstr "Tallenna"
 
@@ -1276,7 +1276,7 @@ msgid "Add Fade"
 msgstr "Lisää häivytys"
 
 #: dialogs.py:1094 dialogs.py:1198 tools/titler.py:412 proxyediting.py:420
-#: medialinker.py:149 tools/gmic.py:734 tools/gmic.py:825
+#: medialinker.py:149 tools/gmic.py:750 tools/gmic.py:841
 msgid "Close"
 msgstr "Sulje"
 
@@ -1404,7 +1404,7 @@ msgstr "Aloita/lopeta toisto"
 msgid "Backwards Faster"
 msgstr "Takaisisn nopeammin"
 
-#: dialogs.py:1128 proxyediting.py:353 tools/gmic.py:701
+#: dialogs.py:1128 proxyediting.py:353 tools/gmic.py:717
 msgid "Stop"
 msgstr "Pysäytä"
 
@@ -2099,11 +2099,11 @@ msgstr "Audio kanavat"
 msgid "Audio Sample Rate:"
 msgstr "Audio näytetaajuus:"
 
-#: panels.py:270 tools/gmic.py:631
+#: panels.py:270 tools/gmic.py:647
 msgid "Mark In:"
 msgstr "Alku merkki:"
 
-#: panels.py:271 tools/gmic.py:632
+#: panels.py:271 tools/gmic.py:648
 msgid "Mark Out:"
 msgstr "Loppu merkki:"
 
@@ -2131,7 +2131,7 @@ msgstr "Siirtymä kuvio:"
 msgid "Dip Color:"
 msgstr "Väli väri:"
 
-#: panels.py:347 panels.py:423 tools/gmic.py:633
+#: panels.py:347 panels.py:423 tools/gmic.py:649
 msgid "Length:"
 msgstr "Pituus:"
 
@@ -5315,136 +5315,148 @@ msgstr "Liike 1:"
 msgid "Move 2:"
 msgstr "Liike 2:"
 
-#: tools/gmic.py:198
+#: tools/gmic.py:106
+msgid "G'Mic not found!"
+msgstr "G'Mic ohjelmaa ei löytynyt!"
+
+#: tools/gmic.py:107
+msgid ""
+"G'Mic binary was not present at <b>/usr/bin/gmic</b>.\n"
+"Install G'MIC to use this tool."
+msgstr ""
+"G'Mic ohjelmaa ei löytynyt paikasta <b>/usr/bin/gmic</b>.\n"
+"Asenna G'MIC käyttääksesi tätä työkalua."
+
+#: tools/gmic.py:214
 msgid "Select Video Media"
 msgstr "Valitse video tiedosto"
 
-#: tools/gmic.py:270 tools/gmic.py:670
+#: tools/gmic.py:286 tools/gmic.py:686
 msgid "not set"
 msgstr "ei asetettu"
 
-#: tools/gmic.py:288
+#: tools/gmic.py:304
 msgid "Save Gmic Script As"
 msgstr "Tallenna Gmic skripti nimellä"
 
-#: tools/gmic.py:312
+#: tools/gmic.py:328
 msgid "Load Gmic Script"
 msgstr "Lataa Gmic skripti"
 
-#: tools/gmic.py:441
+#: tools/gmic.py:457
 msgid "Video Encoding Settings"
 msgstr "Video asetukset"
 
-#: tools/gmic.py:445
+#: tools/gmic.py:461
 msgid "Set Encoding"
 msgstr "Aseta Enkoodaus"
 
-#: tools/gmic.py:490 tools/gmic.py:822
+#: tools/gmic.py:506 tools/gmic.py:838
 msgid "Load Clip"
 msgstr "Lataa klippi"
 
-#: tools/gmic.py:494
+#: tools/gmic.py:510
 msgid "no clip loaded"
 msgstr "ei klippiä"
 
-#: tools/gmic.py:519
+#: tools/gmic.py:535
 msgid "no preview"
 msgstr "ei ennakkokatselukuvaa"
 
-#: tools/gmic.py:566
+#: tools/gmic.py:582
 msgid "Preview"
 msgstr "Ennakkokatselu"
 
-#: tools/gmic.py:591
+#: tools/gmic.py:607
 msgid "Add to Script"
 msgstr "Lisää skriptiin"
 
-#: tools/gmic.py:651
+#: tools/gmic.py:667
 msgid "Frames Folder:"
 msgstr "Kuvat kansio:"
 
-#: tools/gmic.py:662
+#: tools/gmic.py:678
 msgid "Encode Video"
 msgstr "Tee video"
 
-#: tools/gmic.py:667
+#: tools/gmic.py:683
 msgid "Encoding settings"
 msgstr "Enkoodaus asetukset"
 
-#: tools/gmic.py:686
+#: tools/gmic.py:702
 msgid "Set Mark In, Mark Out and Frames Folder for valid render"
 msgstr "Aseta alku merkki, loppu merkki ja kuvat kansio"
 
-#: tools/gmic.py:729
+#: tools/gmic.py:745
 msgid "Load Script"
 msgstr "Lataa skripti"
 
-#: tools/gmic.py:731
+#: tools/gmic.py:747
 msgid "Save Script"
 msgstr "Tallenna skripti"
 
-#: tools/gmic.py:790
+#: tools/gmic.py:806
 msgid "frames"
 msgstr "kuvat"
 
-#: tools/gmic.py:808
+#: tools/gmic.py:824
 msgid " no video file"
 msgstr " ei video tiedostoa"
 
-#: tools/gmic.py:810
+#: tools/gmic.py:826
 msgid " render video file"
 msgstr " rendaa video tiedosto"
 
-#: tools/gmic.py:811
+#: tools/gmic.py:827
 msgid " frame(s),"
 msgstr " kuva(a)"
 
-#: tools/gmic.py:823
+#: tools/gmic.py:839
 msgid "G'Mic Webpage"
 msgstr "G'Mic nettisivu"
 
-#: tools/gmic.py:1026
+#: tools/gmic.py:1042
 msgid "Rendering preview..."
 msgstr "Renderöi ennakkokatselua"
 
-#: tools/gmic.py:1058
+#: tools/gmic.py:1074
 msgid "Preview for frame: "
 msgstr "Ennakkokatselu ruudulle:"
 
-#: tools/gmic.py:1059
+#: tools/gmic.py:1075
 msgid ", render time: "
 msgstr ", renderöinti aika"
 
-#: tools/gmic.py:1127
+#: tools/gmic.py:1143
 msgid "Waiting for frames write to complete..."
 msgstr "Odotetaan kuvien kirrjoittamisen valmistumista..."
 
-#: tools/gmic.py:1140
+#: tools/gmic.py:1156
 msgid "Rendering frame: "
 msgstr "Renderöi ruutua: "
 
-#: tools/gmic.py:1170
+#: tools/gmic.py:1186
 msgid "Render error!"
 msgstr "Rederöinti virhe"
 
-#: tools/gmic.py:1212
+#: tools/gmic.py:1228
 msgid "Rendering video, "
 msgstr "Renderöi videota, "
 
-#: tools/gmic.py:1212
+#: tools/gmic.py:1228
 #, python-format
 msgid "% done"
 msgstr "% valmiina"
 
-#: tools/gmic.py:1222
+#: tools/gmic.py:1238
 msgid "Render complete!"
 msgstr "Renderöinti valmis!"
 
-#: tools/gmic.py:1232
+#: tools/gmic.py:1248
 msgid "Writing clip frame: "
 msgstr "Kirjoittaa klippi ruutua: "
 
-#: tools/gmic.py:1244
+#: tools/gmic.py:1260
 msgid "Render stopped!"
 msgstr "Renderöinti pysähtynyt!"
 
@@ -5576,9 +5588,6 @@ msgstr "Käytä oletus profiilia:"
 
 #~ msgid "Consolidate All Blanks"
 #~ msgstr "Yhdistä kaikki tyhjät"
-
-#~ msgid "Origin clip not found!"
-#~ msgstr "Lähde leikettä ei löydetty!"
 
 #~ msgid ""
 #~ "Clip used to create this Compositor has been removed\n"
