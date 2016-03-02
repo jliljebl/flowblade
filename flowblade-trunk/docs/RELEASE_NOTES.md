@@ -29,7 +29,7 @@ For the next release cycle the focus will be on integrating existing technologie
 
 Also a new project website will be developed during this cycle. The first version is to be made available in a week or two.
 
-The next cycle will the longest since 0.16 because the amount of coding and research needed. The target release date for 1.8 is September 2016.
+The next cycle will be the longest since 0.16 because of the amount of coding and research needed. The target release date for 1.8 is September 2016.
 
 ####Bugfixes and enhancements####
 * Fix set parent clip functionality
