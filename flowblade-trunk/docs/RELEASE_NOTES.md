@@ -27,7 +27,7 @@ A [demo video](https://vimeo.com/157364651) of some features available in the fi
 
 For the next release cycle the focus will be on integrating existing technologies to improve Flowblade's capabilites in doing motion graphics. The Natron compositor project offers a lot of promise here, and the exisiting node compositor by myself will be made available in some form.
 
-Also a new project website will be developed during this cycle. The first version is to be made available in a week or two.
+Also a project website will be developed during this cycle. The first version is to be made available in a week or two.
 
 The next cycle will be the longest since 0.16 because of the amount of coding and research needed. The target release date for 1.8 is September 2016.
 
