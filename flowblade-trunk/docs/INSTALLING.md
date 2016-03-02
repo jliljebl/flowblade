@@ -3,7 +3,7 @@
 
 ### Installing using .deb package
 
-**First download .deb file** for Flowblade 1.4 from <a href="https://www.dropbox.com/s/xe94cjwmf195de2/flowblade-1.4.0-1_all.deb?dl=0">here.</a>
+**First download .deb file** for Flowblade 1.6 from <a href="https://www.dropbox.com/s/4smy1jlofzn896o/flowblade-1.6.0-1_all.deb?dl=0">here.</a>
 
 <ul>
     <li>Double Click on the downloaded .deb file to install.</li>
@@ -14,9 +14,7 @@
 sudo apt-get install -f
 ```
 
-Release has been tested on: <b>Ubuntu 15.10, 14.10 and Debian 8</b>.
-
-<b><i>Flowblade versions 1.2 and 1.4 are not supported for Ubuntu 14.04, Linux Mint 17.x,  Debian 7 or earlier systems.</i></b> Flowblade uses a GTK3 feature that is not available on those systems. Last GTK2 version 1.0 should work fine and it can be downloaded <a href="https://www.dropbox.com/s/9m2e9whcazjo1l8/flowblade-1.0.0-1_all.deb?dl=0">here.</a>
+Release has been install tested on: <b>Ubuntu 15.10, 14.10 and 14.04</b>. Should work on all recent Debian based distributions.
 
 *Please note these issues with Dropbox download:*
 <ul>
@@ -52,7 +50,7 @@ yaourt -S flowblade-git
 
 Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install and run Flowblade without compiling anything.
 
-**First download 1.4 tar.gz** source archive file from <a href="https://www.dropbox.com/s/vmu12w36ov2aza8/flowblade-1.4.0.tar.gz?dl=0">here.</a> 
+**First download 1.6 tar.gz** source archive file from <a href="https://www.dropbox.com/s/2i70jzatz71o11j/flowblade-1.6.0.tar.gz?dl=0">here.</a> 
 
   * Extract archive into a folder of your choosing
   * Install dependencies. See [Dependencies](DEPENDENCIES.md) doc for more information.
