@@ -10,6 +10,11 @@
   1. [Screenshot](https://github.com/jliljebl/flowblade#screenshot)
   1. [Forum and Contact](https://github.com/jliljebl/flowblade#forum-and-contact)
 
+**Flowblade 1.6 is now available!**
+**See [release notes](./flowblade-trunk/docs/RELEASE_NOTES.md) for more info.**
+
+**Installing instructions are [here](./flowblade-trunk/docs/INSTALLING.md).**
+
 # Introduction
 
 Flowblade is a **multitrack non-linear video editor** for Linux released under **GPL 3 license**.
@@ -54,9 +59,9 @@ Flowblade provides powerful tools to mix and filter video and audio.
         
 # Releases
 
-**Latest release:** Flowblade Movie Editor 1.4 was released on November 24, 2015.
+**Latest release:** Flowblade Movie Editor 1.6 was released on March 2, 2016.
 
-**Next release:** Flowblade Movie Editor 1.6 will be out on March 2016.
+**Next release:** Flowblade Movie Editor 1.8 will be out on September 2016.
 
 # Installing Flowblade
 
