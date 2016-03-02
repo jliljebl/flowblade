@@ -1,9 +1,9 @@
 # Release Notes #
 
 
-## Flowblade 1.6 (to come shortly, not yet available) ##
+## Flowblade 1.6 ##
 
-**Date: March xx, 2016**
+**Date: March 2, 2016**
 
 **Flowblade 1.6** is the eleventh release of Flowblade. The main feature of this release is the new GMIC Effects tool.
 
@@ -13,7 +13,7 @@ G'MIC is a full-featured open-source framework for image processing developed by
 
 For applications such as Flowblade this makes it possible to offer a wide range of image filtering capabilities using a relatively small amount of managed code.
 
-A demo video of some features available in the first release can be seen _here_(add link). This is just the first step, many more filters will come in the future.
+A [demo video](https://vimeo.com/157364651) of some features available in the first release is available at Vimeo. This is just the first step, many more filters will come in the future.
 
 ### Other main features in this release ###
 
