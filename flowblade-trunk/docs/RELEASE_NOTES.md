@@ -5,7 +5,7 @@
 
 **Date: March 2, 2016**
 
-**Flowblade 1.6** is the eleventh release of Flowblade. The main feature of this release is the new GMIC Effects tool.
+**Flowblade 1.6** is the eleventh release of Flowblade. The main feature of this release is the new G'MIC Effects tool.
 
 ### G'MIC effects tool ###
 
