@@ -9,7 +9,7 @@
 
 ### G'MIC effects tool ###
 
-G'MIC is a full-featured open-source framework for image processing developed by French research scientist David Tschumperlé and others. Its main strength is that it enables creating complex new image filters without writing any compiled code.
+G'MIC is a full-featured open-source framework for image processing developed by french research scientist David Tschumperlé and others. Its main strength is that it enables creating complex new image filters without writing any compiled code.
 
 For applications such as Flowblade this makes it possible to offer a wide range of image filtering capabilities using a relatively small amount of managed code.
 
