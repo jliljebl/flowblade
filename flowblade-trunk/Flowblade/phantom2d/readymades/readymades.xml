@@ -5,7 +5,7 @@
         <group>Group 1</group>  
         <projectfile>simpleproject.phr</projectfile>
         <editableparam name="Shape  Color" nodeid="1" paramid="4" paramtype="ColorParam">
-            <value>255,126,125</value>  
+            <value>30,255,125</value>  
         </editableparam>
     </program>
 

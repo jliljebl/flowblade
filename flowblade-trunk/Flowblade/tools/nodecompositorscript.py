@@ -60,7 +60,7 @@ def load_phantom_readymades_xml():
     
     program_nodes = readymades_doc.getElementsByTagName(PROGRAM)
     for prog_node in program_nodes:
-        program_info = PhantomProgramInfo(prog_node)
+        program_info = PhantomProgram(prog_node)
 
         _phantom_programs.append(program_info)
 
@@ -88,7 +88,7 @@ def load_phantom_readymades_xml():
 
 
 
-class PhantomProgramInfo:
+class PhantomProgram:
 
     def __init__(self, phantom_program_node):
         self.name = phantom_program_node.getElementsByTagName(NAME).item(0).firstChild.nodeValue

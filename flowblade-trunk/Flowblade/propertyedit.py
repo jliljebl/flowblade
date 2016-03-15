@@ -440,7 +440,7 @@ class NonMltEditableProperty(AbstractProperty):
 class SingleKeyFrameProperty(EditableProperty):
     """
     Converts adjustments to expressions like "0=value" and
-    crates adjustments from expressions.
+    creates adjustments from expressions.
     """
     
     def get_input_range_adjustment(self):

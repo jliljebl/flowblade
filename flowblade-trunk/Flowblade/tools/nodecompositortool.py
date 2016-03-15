@@ -43,6 +43,7 @@ import mltprofiles
 import mlttransitions
 import mltfilters
 import nodecompositorscript
+import nodecompositoreditors
 import renderconsumer
 import respaths
 import toolguicomponents
@@ -55,7 +56,6 @@ _session_id = None
 
 _phantom_session_port = None
 _phantom_socket = None
-_phantom_socket_read_file = None
 _current_phantom_prog = None
 
 def main(root_path, force_launch=False):
@@ -148,7 +148,6 @@ def create_phantom_socket():
     global _phantom_socket, _phantom_socket_read_file
     _phantom_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     _phantom_socket.connect(("localhost", _phantom_session_port))
-    #_phantom_socket_file = _phantom_socket.makefile()
 
 def close_phantom_socket():
      _phantom_socket.close();
@@ -163,18 +162,25 @@ def send_phantom_command(command):
 
 def init_session():
     global _current_phantom_prog
-    _current_phantom_prog = nodecompositorscript.get_default_phantom_prog()
-    init_phantom_prog()
+    phantom_prog = nodecompositorscript.get_default_phantom_prog()
+    init_phantom_prog(phantom_prog)
 
-def init_phantom_prog():
+def init_phantom_prog(phantom_prog):
+    global _current_phantom_prog
+    _current_phantom_prog = phantom_prog
+    
     load_command = "LOAD " + respaths.PHANTOM_READYMADES_DIR + _current_phantom_prog.project_file
     send_phantom_command(load_command)
     
     folder_command = "SET_FOLDER /home/janne/test/phantom_server_frames/"
     send_phantom_command(folder_command)
     
-    render_command = "RENDER_FRAME 15"
-    send_phantom_command(render_command)
+    editors = nodecompositoreditors.get_phantom_param_editors(_current_phantom_prog)
+    
+    _window.show_program_editors(editors)
+
+    #render_command = "RENDER_FRAME 15"
+    #send_phantom_command(render_command)
     
     #close_phantom_socket()
     
@@ -194,10 +200,11 @@ def read_session_phantom_socket_port():
     port_str = f.read()
     global _phantom_session_port
     _phantom_session_port = int(port_str)
-    print "port:", _phantom_session_port
+    print "Phantom server port:", _phantom_session_port
 
 # --------------------------------------------------------- #
 def _shutdown():
+    close_phantom_socket()
     # Exit gtk main loop.
     Gtk.main_quit()
 
@@ -240,6 +247,11 @@ class CompositorProgramsWindow(Gtk.Window):
         programs_row.pack_start(self.program_event_box, False, False, 0)
         programs_row.pack_start(Gtk.Label(), True, True, 0)
 
+        self.editors_box = Gtk.VBox(False, 2)
+        self.editors_box.pack_start(Gtk.Label(), False, False, 0)
+        self.editors_container = Gtk.VBox(False, 2)
+        self.editors_container.pack_start(self.editors_box, False, False, 0)
+        
         self.close_button = guiutils.get_sized_button(_("Close"), 150, 32)
         self.close_button.connect("clicked", lambda w:_shutdown())
         
@@ -250,6 +262,7 @@ class CompositorProgramsWindow(Gtk.Window):
         # Build window
         pane = Gtk.VBox(False, 2)
         pane.pack_start(programs_row, False, False, 0)
+        pane.pack_start(self.editors_container, False, False, 0)
         pane.pack_start(editor_buttons_row, False, False, 0)
 
         align = guiutils.set_margins(pane, 12, 12, 12, 12)
@@ -259,12 +272,23 @@ class CompositorProgramsWindow(Gtk.Window):
         self.set_title(_("Node Compositor Programs"))
         self.set_position(Gtk.WindowPosition.CENTER)
         self.show_all()
-        self.set_resizable(False)
+        #self.set_resizable(False)
 
+    def show_program_editors(self, editors):
+        new_edit_box = Gtk.VBox()
+        for editor in editors:
+            new_edit_box.pack_start(editor.widget, False, False, 0)
+            print editor
+        new_edit_box.pack_start(Gtk.Label(), True, True, 0)
+        
+        self.editors_container.remove(self.editors_box)
+        self.editors_box = new_edit_box
+        self.editors_container.pack_start(self.editors_box, False, False, 0)
+        self.editors_box.show_all()
 
 class PhantomServerLaunchScript(threading.Thread):
     
-    def __init__(self, ):
+    def __init__(self):
         threading.Thread.__init__(self)
 
     def run(self):
