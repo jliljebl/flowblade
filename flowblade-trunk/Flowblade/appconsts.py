@@ -147,6 +147,7 @@ AUDIO_LEVELS_DIR = "audiolevels/"
 THUMBNAILS_DIR = "thumbnails"
 RENDERED_CLIPS_DIR = "rendered_clips"
 GMIC_DIR = "gmic"
+NODE_COMPOSITORS_DIR = "node_compositors"
 
 # Luma bands
 SHADOWS = 0

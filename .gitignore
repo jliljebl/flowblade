@@ -11,3 +11,8 @@ mlt.py
 *.po~
 *.py~
 *.pot~
+
+# All java related
+*.java
+*.class
+*.jar

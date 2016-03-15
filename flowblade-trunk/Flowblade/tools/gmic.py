@@ -44,7 +44,6 @@ import gui
 import guicomponents
 import guiutils
 import glassbuttons
-import mlt
 import mltenv
 import mltprofiles
 import mlttransitions
@@ -53,6 +52,7 @@ import positionbar
 import render
 import respaths
 import renderconsumer
+import toolguicomponents
 import toolsencoding
 import translations
 import threading
@@ -123,8 +123,7 @@ def main(root_path, force_launch=False):
         editorstate.mlt_version = mlt.LIBMLT_VERSION
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
-    
-    
+
     global _session_id
     _session_id = int(time.time() * 1000) # good enough
 
@@ -600,7 +599,8 @@ class GmicWindow(Gtk.Window):
         self.present_event_box.add(self.preset_label)
         self.present_event_box.connect("button-press-event",  script_menu_lauched)
 
-        self.script_menu = PressLaunch(script_menu_lauched)
+        self.script_menu = toolguicomponents.PressLaunch(script_menu_lauched)
+        
         self.action_select = Gtk.CheckButton()
         self.action_select.set_active(False)
                 
@@ -931,7 +931,7 @@ class GmicWindow(Gtk.Window):
  
         self.update_encode_sensitive()
 
-
+"""
 class PressLaunch:
     def __init__(self, callback, w=22, h=22):
         self.widget = cairoarea.CairoDrawableArea2( w, 
@@ -960,6 +960,7 @@ class PressLaunch:
            return 
 
         self.callback(self.widget, event)
+"""
 
 #------------------------------------------------- global key listener
 def _global_key_down_listener(widget, event):

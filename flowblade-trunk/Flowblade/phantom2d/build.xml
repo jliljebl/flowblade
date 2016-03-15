@@ -1,0 +1,47 @@
+<project name="phantom" basedir=".">
+
+  <target name="clean">
+    <delete dir="build" />
+    <delete dir="phantom2D" />
+  </target>
+
+  <target name="compile">
+    <mkdir dir="build" />
+    <javac srcdir="phantom2D/giotto2D" destdir="build" />
+    <javac srcdir="phantom2D/com" destdir="build" />
+    <javac srcdir="phantom2D/animator" destdir="build" />
+    <copy todir="build/res">
+      <fileset dir="phantom2D/res"/>
+    </copy>
+    <copy todir="res/format">
+      <fileset dir="phantom2D/res/format"/>
+    </copy>
+  </target>
+
+  <target name="copylocal">
+    <mkdir dir="build" />
+    <copy todir="build/giotto2D">
+      <fileset dir="/home/janne/codes/eclipse/Phantom2D/bin/giotto2D"/>
+    </copy>
+    <copy todir="build/com">
+      <fileset dir="/home/janne/codes/eclipse/Phantom2D/bin/com"/>
+    </copy>
+    <copy todir="build/animator">
+      <fileset dir="/home/janne/codes/eclipse/Phantom2D/bin/animator"/>
+    </copy>
+    <copy todir="res">
+      <fileset dir="/home/janne/codes/eclipse/Phantom2D/bin/res"/>
+    </copy>
+  </target>
+
+  <target name="jar">
+    <jar destfile="Phantom2D.jar" basedir="build">
+      <manifest>
+        <attribute name="Main-Class" value="animator.phantom.controller.Phantom2D"/>
+      </manifest>
+    </jar>
+
+  </target>
+
+</project>
+

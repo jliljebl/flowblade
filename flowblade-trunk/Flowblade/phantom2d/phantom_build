@@ -1,0 +1,16 @@
+#!/bin/bash
+
+echo "Building phantom2D..."
+
+ant clean
+
+#git clone https://github.com/jliljebl/phantom2D.git
+
+#ant compile
+
+ant copylocal
+
+ant jar
+
+ant clean
+

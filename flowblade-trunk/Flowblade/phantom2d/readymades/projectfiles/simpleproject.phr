@@ -1,0 +1,91 @@
+<phantom2D>
+<project fname="HD 1080p 25 fps" fps="25" height="1080" length="125" name="simpleproject.phr" width="1920">
+<filesourcelib/>
+<bins>
+<bin name="bin1"/>
+</bins>
+<flow nextid="3">
+<rendernode id="0">
+<source id="-1" index="0"/>
+<source id="-1" index="1"/>
+<target id="2" index="0"/>
+<iop beginframe="0" bgtype="0" blendmode="0" class="animator.phantom.renderer.plugin.BrushedMetalPlugin" clipendframe="124" clipstartframe="0" filesource="-1" hasswitches="false" locked="false" looping="0" maxlength="125" name="BrushedMetal" on="true" parentnodeid="-1" parenttype="-1">
+<p id="0" l="false" max="100.0" min="0.0" name="Opacity" r="true" stepped="false" t="AnimatedValue">
+<kf f="0" l="2" lt="0.3" t="2" tt="0.3" v="100.0"/>
+</p>
+<p id="1" name="param name not set" t="IntegerParam" value="0"/>
+<p id="2" name="Radius" t="IntegerParam" value="10"/>
+<p id="3" name="Amount" t="FloatParam" value="0.1"/>
+<p blue="136" green="136" id="4" name="Color" red="136" t="ColorParam"/>
+<p id="5" name="Shine" t="FloatParam" value="0.1"/>
+<p id="6" name="Monochrome" t="BooleanParam" value="true"/>
+<filterstack/>
+</iop>
+</rendernode>
+<rendernode id="2">
+<source id="0" index="0"/>
+<source id="-1" index="1"/>
+<target id="-1" index="0"/>
+<iop beginframe="0" bgtype="0" blendmode="0" class="animator.phantom.renderer.plugin.ShapePlugin" clipendframe="124" clipstartframe="0" filesource="-1" fineedges="false" hasswitches="true" interpolation="2" locked="false" looping="0" maxlength="125" motionblur="false" name="Shape" on="true" parentnodeid="-1" parenttype="-1">
+<p id="0" l="false" max="100.0" min="0.0" name="Opacity" r="true" stepped="false" t="AnimatedValue">
+<kf f="0" l="2" lt="0.3" t="2" tt="0.3" v="100.0"/>
+</p>
+<p id="1" name="Alpha combine" t="BooleanParam" value="false"/>
+<p id="2" l="false" max="0.0" min="0.0" name="X Position" r="false" stepped="false" t="AnimatedValue">
+<kf f="0" l="2" lt="0.3" t="2" tt="0.3" v="0.0"/>
+<kf f="86" l="2" lt="0.3" t="2" tt="0.3" v="718.1818"/>
+</p>
+<p id="3" l="false" max="0.0" min="0.0" name="Y Position" r="false" stepped="false" t="AnimatedValue">
+<kf f="0" l="2" lt="0.3" t="2" tt="0.3" v="0.0"/>
+<kf f="86" l="2" lt="0.3" t="2" tt="0.3" v="509.09088"/>
+</p>
+<p id="4" l="false" max="0.0" min="0.0" name="X Scale" r="false" stepped="false" t="AnimatedValue">
+<kf f="0" l="2" lt="0.3" t="2" tt="0.3" v="100.0"/>
+</p>
+<p id="5" l="false" max="0.0" min="0.0" name="Y Scale" r="false" stepped="false" t="AnimatedValue">
+<kf f="0" l="2" lt="0.3" t="2" tt="0.3" v="100.0"/>
+</p>
+<p id="6" l="false" max="0.0" min="0.0" name="Anchor X" r="false" stepped="false" t="AnimatedValue">
+<kf f="0" l="2" lt="0.3" t="2" tt="0.3" v="0.0"/>
+</p>
+<p id="7" l="false" max="0.0" min="0.0" name="Anchor Y" r="false" stepped="false" t="AnimatedValue">
+<kf f="0" l="2" lt="0.3" t="2" tt="0.3" v="0.0"/>
+</p>
+<p id="8" l="false" max="0.0" min="0.0" name="Rotation" r="false" stepped="false" t="AnimatedValue">
+<kf f="0" l="2" lt="0.3" t="2" tt="0.3" v="0.0"/>
+</p>
+<p id="9" name="Mask shape" t="IntegerParam" value="0"/>
+<p id="10" l="false" max="255.0" min="0.0" name="Fill Red" r="true" stepped="false" t="AnimatedValue">
+<kf f="0" l="2" lt="0.3" t="2" tt="0.3" v="255.0"/>
+</p>
+<p id="11" l="false" max="255.0" min="0.0" name="Fill Green" r="true" stepped="false" t="AnimatedValue">
+<kf f="0" l="2" lt="0.3" t="2" tt="0.3" v="255.0"/>
+</p>
+<p id="12" l="false" max="255.0" min="0.0" name="Fill Blue" r="true" stepped="false" t="AnimatedValue">
+<kf f="0" l="2" lt="0.3" t="2" tt="0.3" v="255.0"/>
+</p>
+<p id="13" l="false" max="255.0" min="0.0" name="Line Red" r="true" stepped="false" t="AnimatedValue">
+<kf f="0" l="2" lt="0.3" t="2" tt="0.3" v="0.0"/>
+</p>
+<p id="14" l="false" max="255.0" min="0.0" name="Line Green" r="true" stepped="false" t="AnimatedValue">
+<kf f="0" l="2" lt="0.3" t="2" tt="0.3" v="0.0"/>
+</p>
+<p id="15" l="false" max="255.0" min="0.0" name="Line Blue" r="true" stepped="false" t="AnimatedValue">
+<kf f="0" l="2" lt="0.3" t="2" tt="0.3" v="0.0"/>
+</p>
+<p id="16" name="Line width" t="IntegerParam" value="5"/>
+<p id="17" name="Roundness" t="FloatParam" value="10.0"/>
+<p id="18" name="Fill shape" t="BooleanParam" value="true"/>
+<filterstack/>
+</iop>
+</rendernode>
+<flowbox nodeid="0" x="114" y="257"/>
+<flowbox nodeid="2" x="114" y="284"/>
+</flow>
+<timelineclips>
+<clip nodeid="0"/>
+<clip nodeid="2"/>
+</timelineclips>
+<renderoutput framename="frame" writefolder="null"/>
+</project>
+</phantom2D>
