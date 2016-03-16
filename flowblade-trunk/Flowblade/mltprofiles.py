@@ -119,7 +119,7 @@ def get_default_profile_index():
     """
     def_profile_index = get_index_for_name(editorpersistance.prefs.default_profile_name)
     if def_profile_index == -1:
-        print "default profile from prefs nor found"
+        print "default profile from prefs not found"
         def_profile_index = get_index_for_name(DEFAULT_DEFAULT_PROFILE)
         def_profile_name =  DEFAULT_DEFAULT_PROFILE
         if def_profile_index == -1:
