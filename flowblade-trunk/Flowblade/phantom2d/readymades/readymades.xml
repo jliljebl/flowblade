@@ -4,7 +4,7 @@
         <name>Simple Test 1</name>
         <group>Group 1</group>  
         <projectfile>simpleproject.phr</projectfile>
-        <editableparam name="Shape  Color" nodeid="1" paramid="4" paramtype="ColorParam">
+        <editableparam name="Shape  Color" nodeid="0" paramid="4" paramtype="ColorParam">
             <value>30,255,125</value>  
         </editableparam>
     </program>
@@ -13,7 +13,7 @@
         <name>Simple Test 2</name>
         <group>Group 1</group>  
         <projectfile>simpleproject.phr</projectfile>
-        <editableparam name="Shape  Color" nodeid="1" paramid="4" paramtype="ColorParam">
+        <editableparam name="Shape  Color" nodeid="0" paramid="4" paramtype="ColorParam">
             <value>255,126,125</value>     
         </editableparam>
     </program>
@@ -22,7 +22,7 @@
         <name>Simple Test 3</name>
         <group>Group 2</group>  
         <projectfile>simpleproject.phr</projectfile>
-        <editableparam name="Shape  Color" nodeid="1" paramid="4" paramtype="ColorParam">
+        <editableparam name="Shape  Color" nodeid="0" paramid="4" paramtype="ColorParam">
             <value>255,126,125</value>  
         </editableparam>
     </program>
@@ -31,7 +31,7 @@
         <name>Simple Test 4</name>
         <group>Group 2</group>  
         <projectfile>simpleproject.phr</projectfile>
-        <editableparam name="Shape  Color" nodeid="1" paramid="4" paramtype="ColorParam">
+        <editableparam name="Shape  Color" nodeid="0" paramid="4" paramtype="ColorParam">
             <value>255,126,125</value>  
         </editableparam>
     </program>

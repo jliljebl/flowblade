@@ -179,8 +179,14 @@ def init_phantom_prog(phantom_prog):
     
     _window.show_program_editors(editors)
 
-    #render_command = "RENDER_FRAME 15"
-    #send_phantom_command(render_command)
+    param = phantom_prog.params[ 0 ]
+
+    param_command = "PARAM_VALUE " + str(param.nodeid) + " " + str(param.paramid) + " " + param.paramtype + " 128 128 255"
+    print param_command
+    send_phantom_command(param_command)
+    
+    render_command = "RENDER_FRAME 16"
+    send_phantom_command(render_command)
     
     #close_phantom_socket()
     
