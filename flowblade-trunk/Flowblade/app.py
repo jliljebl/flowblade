@@ -150,8 +150,8 @@ def main(root_path):
         os.mkdir(utils.get_hidden_screenshot_dir_path())
     if not os.path.exists(user_dir + appconsts.GMIC_DIR):
         os.mkdir(user_dir + appconsts.GMIC_DIR)
-    if not os.path.exists(user_dir + appconsts.NODE_COMPOSITORS):
-        os.mkdir(user_dir + appconsts.NODE_COMPOSITORS)
+    if not os.path.exists(user_dir + appconsts.NODE_COMPOSITORS_DIR):
+        os.mkdir(user_dir + appconsts.NODE_COMPOSITORS_DIR)
 
     # Set paths.
     respaths.set_paths(root_path)
