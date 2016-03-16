@@ -81,6 +81,7 @@ graphics_icon = None
 imgseq_icon = None
 audio_icon = None
 pattern_icon = None
+profile_warning_icon = None
 
 # GTK3 requires these to be created outside of callback
 markers_menu = Gtk.Menu.new()
@@ -738,13 +739,14 @@ class MediaPanel():
         self.double_click_cb = double_click_cb
         self.monitor_indicator = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "monitor_indicator.png")
         
-        global has_proxy_icon, is_proxy_icon, graphics_icon, imgseq_icon, audio_icon, pattern_icon
+        global has_proxy_icon, is_proxy_icon, graphics_icon, imgseq_icon, audio_icon, pattern_icon, profile_warning_icon
         has_proxy_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "has_proxy_indicator.png")
         is_proxy_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "is_proxy_indicator.png")
         graphics_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "graphics_indicator.png")
         imgseq_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "imgseq_indicator.png")
         audio_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "audio_indicator.png")
         pattern_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "pattern_producer_indicator.png")
+        profile_warning_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "profile_warning.png")
         
     def get_selected_media_objects(self):
         return self.selected_objects
@@ -934,6 +936,10 @@ class MediaObjectWidget:
                 cr.set_source_surface(has_proxy_icon, 96, 6)
                 cr.paint()
 
+        #if self.media_file.type != appconsts.PATTERN_PRODUCER:
+        #    cr.set_source_surface(profile_warning_icon, 4, 70)
+        #    cr.paint()
+            
         if self.media_file.type == appconsts.IMAGE:
             cr.set_source_surface(graphics_icon, 6, 6)
             cr.paint()
