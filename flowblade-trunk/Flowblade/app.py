@@ -75,6 +75,7 @@ import renderconsumer
 import respaths
 import resync
 import sequence
+import titler
 import tlinewidgets
 import trimmodes
 import translations
@@ -438,6 +439,8 @@ def init_project_gui():
     render.set_default_values_for_widgets(True)
     gui.tline_left_corner.update_gui()
     projectinfogui.update_project_info()
+
+    titler.reset_titler()
 
     # Set render folder selector to last render if prefs require 
     folder_path = editorstate.PROJECT().get_last_render_folder()

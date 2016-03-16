@@ -105,7 +105,10 @@ def titler_destroy():
     if not _keep_titler_data:
         _titler_data = None
 
-
+def reset_titler():
+    global _titler_data
+    _titler_data = None
+        
 # ------------------------------------------------------------- data
 class TextLayer:
     """
