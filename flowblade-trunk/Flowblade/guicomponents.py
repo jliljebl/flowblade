@@ -883,13 +883,13 @@ class MediaObjectWidget:
         self.bin_index = bin_index
         self.indicator_icon = indicator_icon
         self.selected_callback = selected_callback
+        self.matches_project_profile = self._get_matches_profile()
+        
         self.widget = Gtk.EventBox()
         self.widget.connect("button-press-event", lambda w,e: selected_callback(self, w, e))
         self.widget.dnd_media_widget_attr = True # this is used to identify widget at dnd drop
         self.widget.set_can_focus(True)
  
-
-        
         self.vbox = Gtk.VBox()
 
         self.img = cairoarea.CairoDrawableArea2(appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT, self._draw_icon)
@@ -907,6 +907,23 @@ class MediaObjectWidget:
         self.align = guiutils.set_margins(self.vbox, 3, 2, 3, 2)
 
         self.widget.add(self.align)
+
+    def _get_matches_profile(self):
+        if (not hasattr(self.media_file, "info")): # to make really sure that old projects don't crash,
+            return True                            # but probably is not needed as attr is added at load
+        if self.media_file.info == None:
+            return True
+        
+        is_match = True # this is true for audio and graphics and image sequences and is only 
+                        # set false for video that does not match profile
+                        
+        if self.media_file.type == appconsts.VIDEO:
+            best_media_profile_index = mltprofiles.get_closest_matching_profile_index(self.media_file.info)
+            project_profile_index = mltprofiles.get_index_for_name(PROJECT().profile.description())
+            if best_media_profile_index != project_profile_index:
+                is_match = False
+        
+        return is_match
 
     def _press(self, event):
         self.selected_callback(self, self.widget, event)
@@ -936,9 +953,9 @@ class MediaObjectWidget:
                 cr.set_source_surface(has_proxy_icon, 96, 6)
                 cr.paint()
 
-        #if self.media_file.type != appconsts.PATTERN_PRODUCER:
-        #    cr.set_source_surface(profile_warning_icon, 4, 70)
-        #    cr.paint()
+        if self.matches_project_profile == False:
+            cr.set_source_surface(profile_warning_icon, 4, 70)
+            cr.paint()
             
         if self.media_file.type == appconsts.IMAGE:
             cr.set_source_surface(graphics_icon, 6, 6)

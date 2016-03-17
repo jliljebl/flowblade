@@ -120,12 +120,13 @@ class Project:
         if media_type == appconsts.AUDIO:
             icon_path = respaths.IMAGE_PATH + "audio_file.png"
             length = thumbnailer.get_file_length(file_path)
+            info = None
         else: # For non-audio we need write a thumbbnail file and get file lengh while we're at it
-             (icon_path, length) = thumbnailer.write_image(file_path)
+             (icon_path, length, info) = thumbnailer.write_image(file_path)
 
           # Create media file object
         media_object = MediaFile(self.next_media_file_id, file_path, 
-                               file_name, media_type, length, icon_path)
+                               file_name, media_type, length, icon_path, info)
 
         self._add_media_object(media_object)
         
@@ -266,7 +267,7 @@ class MediaFile:
     """
     Media file that can added to and edited in Sequence.
     """
-    def __init__(self, id, file_path, name, media_type, length, icon_path):
+    def __init__(self, id, file_path, name, media_type, length, icon_path, info):
         self.id = id
         self.path = file_path
         self.name = name
@@ -284,6 +285,8 @@ class MediaFile:
         self.second_file_path = None # to proxy when original, to original when proxy
         
         self.current_frame = 0
+
+        self.info = info
 
         # Set default length for graphics files
         (f_name, ext) = os.path.splitext(self.name)
@@ -415,6 +418,8 @@ class Thumbnailer:
         if producer.is_valid() == False:
             raise ProducerNotValidError(file_path)
 
+        info = utils.get_file_producer_info(producer)
+
         length = producer.get_length()
         frame = length / 2
         producer = producer.cut(frame, frame)
@@ -423,7 +428,7 @@ class Thumbnailer:
         consumer.connect(producer)
         consumer.run()
         
-        return (thumbnail_path, length)
+        return (thumbnail_path, length, info)
 
     def get_file_length(self, file_path):
         # This is used for audio files which don't need a thumbnail written

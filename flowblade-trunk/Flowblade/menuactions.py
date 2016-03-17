@@ -75,8 +75,10 @@ class RecreateIconsThread(threading.Thread):
                 and (not isinstance(media_file, projectdata.BinColorClip))):
                 if media_file.type == appconsts.AUDIO:
                     icon_path = respaths.IMAGE_PATH + "audio_file.png"
+                    media_file.info = None
                 else:
-                    (icon_path, length) = projectdata.thumbnailer.write_image(media_file.path)
+                    (icon_path, length, info) = projectdata.thumbnailer.write_image(media_file.path)
+                    media_file.info = info
                 media_file.icon_path = icon_path
                 media_file.create_icon()
 

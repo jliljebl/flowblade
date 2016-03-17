@@ -380,7 +380,10 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
         # Remove 2018
         if (not(hasattr(media_file,  "is_proxy_file"))):
             FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
-
+        # This attr was added for 1.8. It is not computed for older projects.
+        if (not hasattr(media_file, "info")):
+            media_file.info = None
+       
     if icons_and_thumnails == True:
         _show_msg(_("Loading icons"))
         for k, media_file in project.media_files.iteritems():
