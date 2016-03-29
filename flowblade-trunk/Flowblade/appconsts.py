@@ -148,6 +148,7 @@ THUMBNAILS_DIR = "thumbnails"
 RENDERED_CLIPS_DIR = "rendered_clips"
 GMIC_DIR = "gmic"
 NODE_COMPOSITORS_DIR = "node_compositors"
+PHANTOM_DISK_CACHE_DIR = "phantom_disk_cache"
 
 # Luma bands
 SHADOWS = 0
