@@ -2,6 +2,8 @@
 
 echo "Building phantom2D..."
 
+cd /home/janne/codes/flowblade/flowblade/flowblade-trunk/Flowblade/phantom2d
+
 ant clean
 
 #git clone https://github.com/jliljebl/phantom2D.git

@@ -174,6 +174,7 @@ def _render_cancel_callback(dialog, response_id):
 """
 
 # -------------------------------------------------- render consumer
+"""
 def get_render_consumer():
     file_path = get_file_path()
     if file_path == None:
@@ -211,6 +212,7 @@ def get_render_consumer():
             return None
         
     return consumer
+"""
 
 def get_args_vals_list_for_current_selections():
     profile = get_current_profile()
