@@ -18,10 +18,12 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+import glob
 import locale
 import md5
 import mlt
 import os
+import shutil
 import socket
 import sys
 import time
@@ -55,6 +57,7 @@ DROP = "DROP"
 # File consts
 FRAME_NAME = "frame"
 
+
 def main(root_path):
     respaths.set_paths(root_path)
     
@@ -67,6 +70,10 @@ def main(root_path):
         print "session id was not provided in args, exiting..."
         sys.exit()
 
+    if not os.path.exists(get_temp_frames_folder()):
+        print "Created temp folder for rendering at " + get_temp_frames_folder()
+        os.mkdir(get_temp_frames_folder())
+        
     # Init necessary resources and MLT
     editorpersistance.load()
     
@@ -139,6 +146,14 @@ def get_port_file():
 def get_frames_folder_for_frame_source(frame_source):
     return get_frames_cache_folder() + "/" + frame_source.md5id
 
+def get_temp_frames_folder():
+    return get_frames_cache_folder() + "/temp_frames"
+
+def clear_temp_frames():
+    files = glob.glob(get_temp_frames_folder() + "/*")
+    for f in files:
+        os.remove(f)
+    
 # ------------------------------------------------------------- commands
 def load(tokens):
     try:
@@ -175,11 +190,14 @@ def render_frame(tokens):
 
     try:
         frame_source = get_frame_source(clip_path)
-        consumer = get_img_seq_render_consumer( get_frames_folder_for_frame_source(frame_source), \
-                                                frame_source.profile)
+        consumer = get_img_seq_render_consumer(frame_source.profile)
     except:
         return ERROR + " creating consumer failed " + NEW_LINE
-        
+    
+    # Check range
+    
+    clear_temp_frames()
+    
     renderer = renderconsumer.FileRenderPlayer(None, frame_source.producer, consumer, frame, frame + 1)
     renderer.wait_for_producer_end_stop = False
     renderer.consumer_pos_stop_add = 2 # Hack, see FileRenderPlayer
@@ -190,7 +208,9 @@ def render_frame(tokens):
 
     while renderer.stopped == False:
         time.sleep(0.05)
-    
+
+    copy_frames_from_temp_folder(frame_source, frame)
+
     return OK
 
 def shutdown():
@@ -209,17 +229,40 @@ class FrameSourceClip:
         
 def get_frame_source(clip_path):
     return _frame_sources[md5.new(clip_path).hexdigest()]
-    
+
+def copy_frames_from_temp_folder(frame_source, range_in):
+    temp_frames = glob.glob(get_temp_frames_folder() + "/*.png")
+    for temp_frame_file in temp_frames:
+        folder, file_name = os.path.split(temp_frame_file)
+        
+        # get temp frame frame number
+        frame_name, frame_number_part = file_name.split("_")
+        frame_number_string = frame_number_part.rstrip(".png")
+        frame_number_string = frame_number_string.lstrip("0")
+        frame_number = int(frame_number_string)
+
+        # copy frame
+        write_frame_number = frame_number - 1 + range_in
+        write_frame_string = str(write_frame_number).zfill(5)
+        write_frame_file = get_frames_folder_for_frame_source(frame_source) + \
+                    "/frame_" + write_frame_string + ".png"
+
+        print temp_frame_file
+        print write_frame_file
+
+        shutil.copyfile(temp_frame_file, write_frame_file)
+
+
 def get_clip_profile_index(clip_path):
     profile = mltprofiles.get_default_profile()
     producer = mlt.Producer(profile, str(clip_path))
     profile_index = mltprofiles.get_closest_matching_profile_index(utils.get_file_producer_info(producer))
     return profile_index
 
-def get_img_seq_render_consumer(frames_folder, profile):
+def get_img_seq_render_consumer(profile):
     #render_path = "%1/%2-%05d.%3" + file_path
 
-    render_path = frames_folder + "/" + FRAME_NAME + "_%05d.png"
+    render_path = get_temp_frames_folder() + "/" + FRAME_NAME + "_%05d.png"
     print render_path
 
     consumer = mlt.Consumer(profile, "avformat", str(render_path))
