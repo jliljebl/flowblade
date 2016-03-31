@@ -194,7 +194,7 @@ def render_frame(tokens):
     except:
         return ERROR + " creating consumer failed " + NEW_LINE
     
-    # Check range
+    # Check frame range
     
     clear_temp_frames()
     
@@ -246,9 +246,6 @@ def copy_frames_from_temp_folder(frame_source, range_in):
         write_frame_string = str(write_frame_number).zfill(5)
         write_frame_file = get_frames_folder_for_frame_source(frame_source) + \
                     "/frame_" + write_frame_string + ".png"
-
-        print temp_frame_file
-        print write_frame_file
 
         shutil.copyfile(temp_frame_file, write_frame_file)
 
