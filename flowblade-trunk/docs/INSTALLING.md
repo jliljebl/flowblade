@@ -7,9 +7,15 @@
 
 <ul>
     <li>Double Click on the downloaded .deb file to install.</li>
-    <li>On at least <b>Linux Mint 17</b> you will need to install dependencies separately with command:</li>
+    <li>Add some <b>missing dependencies</b> with command:</li>
 </ul>
 
+```bash
+sudo apt-get install gir1.2-glib-2.0 gir1.2-gtk-3.0 gir1.2-pango-1.0 gir1.2-gdkpixbuf-2.0
+```
+Unfortunately the .deb file is missing some dependencies that are not always present on some systems.
+
+<b>On at least Linux Mint 17</b> you will need also need to give command:
 ```bash
 sudo apt-get install -f
 ```
