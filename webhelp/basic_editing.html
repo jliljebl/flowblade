@@ -1,0 +1,291 @@
+ <!DOCTYPE html>
+<html>
+<head>
+	<title>Basic Editing</title>
+	<link rel="stylesheet" href="style.css">
+	<script src="toc.js" type="text/javascript"></script>
+	<script src="../jquery.js"></script> 
+	<script> 
+		$(function(){
+		$("#includedHeader").load("help_header.html"); 
+		});
+	</script>
+</head>
+
+<body>
+
+<!-- Header -->
+<div id="includedHeader"></div>
+
+<div id="content">
+<img src="header_text_5.png" >
+
+<script src="tocgen.js"></script>
+
+<div class="subject-header">Basic Editing</div>
+
+<p>
+This section describes the minimal workflow for making a movie using only a single track.
+</p>
+<div id="toc"></div>
+
+<div id="toccontent">
+
+<h3>Creating a New Project</h3>
+<p>
+Flowblade Movie Editor saves work in project files.
+</p>
+<p>
+To create a new Project:
+</p>
+<ul>
+<li> <b>Menu:</b> Select <b>File -> New</b> from menu.</li>
+<li> <b>Keyboard Shortcut:</b> Press <b>Control+N</b>.</li>
+</ul>
+<p>
+A project contains:
+</p>
+ <ul>
+<li> one or more Sequences of edited media</li>
+<li> a collection of Media Files stored in Bins.</li>
+</ul>
+<p>
+There are two parameters that can be selected for a new project:
+</p>
+<ul style="list-style-type:none">
+<li> <b>Project Profile</b> Project Profile determines frame rate per second, image size in pixels and pixel aspect ratio.</li>
+<li> <b>Tracks count</b> Select the number of video and audio tracks that are used in the project. This can be changed later, but the operation destroys the Undo / Redo stack and all the Timeline Clips that do not fit in the newly created version of the Sequence.</li>
+</ul>
+
+<div class="note">
+Video material is internally scaled to profile dimensions, so selecting Project Profile with smaller pixel dimensions than the rendered output leads to decreased quality.
+</div>
+<div class="note">
+Flowblade Movie Editor handles image data internally as YUV420 frames, so the encoding associated with a given profile has no affect on quality before rendering.
+</div>
+<div class="note">
+For <b>best possible quality</b> the <b>input material, Project Profile and Rendering Profile</b> should <b>all have the same pixel dimensions</b> and pixel aspect ratio.
+</div>
+
+<h3>Adding and removing new Sequences</h3>
+<p>
+A Project contains one or more Sequences. 
+</p>
+<p>
+Use <b>Add</b> and <b>Delete</b> buttons in the <b>Project</b> tab <b>Sequences</b> panel. All Sequences use the same Profile.
+</p>
+<p>
+When creating a new Sequence, you can choose the number of Tracks in the Sequence. This can be changed later, but the operation destroys the Undo / Redo stack and all the Timeline Clips that do not fit in the newly created version of the Sequence.
+</p>
+
+<h3>Working with Media Files</h3>
+
+<p>
+Flowblade Movie Editor holds files in <b>Media</b> tab. Files are listed in unnamed table that displays contents of the currently selected Bin. Bins are listed in the <b>Bins</b> table.
+</p>
+
+<p>
+Opening Media Files:
+</p>
+
+<ol>
+<li> Press <b>Add</b> button above the unnamed Bin contents table in the <b>Media</b> tab.</li>
+<li> Use dialog to find and select files.</li>
+<li> Files are displayed as thumbnails.</li>
+<li> Note that creating thumbnails for opened files will take some time.</li>
+</ol>
+
+<div class="note">
+<h3 style="margin-top:10px">Project Media: Absolute and relative paths</h3>
+<ul>
+<li> Flowblade <b>saves references</b> to media files used in a project as <b>absolute paths</b>.</li>
+<li> If a media is <b>not found on load</b>, Flowblade attempts to find a media file with the same name in subfolders relative to the project file.</li>
+<li> If all media used by a project is saved in subfolders relative to project file, <b>project file and media can moved as a unit</b> and the project will load successfully after data is copied to a different place</li>
+<li> <b>Rendered files</b> like transitions <b>are saved by default in a hidden folder</b> <i><home folder>/.flowblade/rendered_clips/</i>.</li>
+<li> Menu item <b>File->Save Backup Snapshot...</b> saves project file, all media and rendered files in a single folder that can saved as unit and and project can always be loaded using this data </li>
+<li> <b>Load order</b> between absolute and relative paths can be set in preferences window</li>
+<li> <b>Media Relinker</b> tool can be used to fix problems that may occur </li>
+
+</ul>
+<p><b>NOTE:</b> Information given here only applies to version 0.18 and above.</p>
+</div>
+
+<h3>Working with Bins</h3>
+
+<div class="tabbed">
+<p><b>Adding a Bin</b>: Press <b>Add</b> button above Bins table.</p>
+<p><b>Deleting a Bin</b>: Press <b>Delete</b> button above Bins table.
+Bin must be empty before removing. A project must always have at least one Bin.</p>
+<p><b>Renaming a Bin</b>: Double click on the Bin name.</p>
+<p><b>Moving files to another Bin:</b> Drag files on top of bin icon.</p>
+</div>
+
+<h3>Using Timeline</h3>
+
+<h4>Scrolling Timeline</h4>
+<ul>
+<li> Press and Drag <b>Scrollbar</b> below Timeline</li>
+<li> Scroll <b>Mouse Middle</b> button + <b>CTRL</b> key while on top of Timeline</li>
+</ul>
+
+<h4>Zooming Timeline</h4>
+<ul>
+<li> Click <b>Zoom In</b>, <b>Zoom Out</b> or <b>Zoom Length</b> buttons.</li>
+<li> Scroll <b>Mouse Middle</b> button on top of Timeline </li>
+</ul>
+
+<h4>Changing Current Frame</h4>
+<ul>
+<li> Drag with <b>Right Mouse</b> button starting from  an empty space in the Timeline.</li>
+<li> Drag with <b>Left Mouse</b> button on the Frame Scale.</li>
+<li> Drag with <b>Left Mouse</b> on the Monitor Position Bar.</li>
+<li> Click <b>Left Arrow</b> key or <b>Right Arrow</b> key to move to next or previous frame.</li>
+<li> Click <b>Up Arrow</b> key or <b>Down Arrow</b> key to move to next or previous cut on topmost active track.</li>
+<li> Click <b>Next</b> or <b>Prev</b> button in Monitor Buttons area to move to next or previous frame.</li>
+</ul>
+
+<h4>Changing Current Frame when Clip is displayed on Monitor</h4>
+<ul>
+<li> Drag with <b>Left Mouse</b> on the Monitor Position Bar.</li>
+<li> Click <b>Left Arrow</b> key or <b>Right Arrow</b> key to move to next or previous frame.</li>
+<li> Click <b>Up Arrow</b> key or <b>Down Arrow</b> key to move to next or previous of the following: Mark In/Mark Out/Start/End</li>
+<li> Click <b>Next</b> or <b>Prev</b> button in Monitor Buttons area to move to next or previous frame.</li>
+</ul>
+
+<h4>Switching between Timeline and Clip Display</h4>
+<ul>
+<li> Click buttons with icons representing sequence or single clip in Monitor Buttons area.</li>
+<li> Drag Media File on top of <b>Monitor</b> to display Clip.</li>
+</ul>
+
+<h4>Setting Active Tracks</h4>
+<ul>
+<li> Click <b>Track Active Switch</b> on the right side of Tracks Column area. Topmost  <b>Track Active Switch</b> displays arrow pointing downwards indicating that <b>Insert From Monitor</b> and other buttons place clips on that track.</li>
+</ul>
+
+<div class="note">
+<h4>Effects of Track Active State</h4>
+<ul>
+<li> Cuts are only performed on active Tracks.</li>
+<li> Inserting Media File that is currently displayed in Monitor using <b>Insert From Monitor, Append From Monitor</b> or <b>3-Point Ovewrite</b> buttons places clip on the top most active Track indicated by arrow icon.</li>
+</ul>
+</div>
+
+<h4>Selecting single clip</h4>
+<ul>
+<li> Click on a clip with <b>Left Mouse</b> button.</li>
+</ul>
+
+<h4>Selecting multiple clips on the same track</h4>
+<ul>
+<li> Click on a clip with <b>Left Mouse</b> button.</li>
+<li> Click on another clip on the same track with <b>Control + Left Mouse</b> button.</li>
+<li> All clips between clicked clips will be selected.</li>
+</ul>
+<div class="note"><b>There is no box selection or any other means of selecting clips from different Tracks at the same time.</b></div>
+
+<h4>De-selecting all clips</h4>
+<ul>
+<li> Click on Timeline area background.</li>
+</ul>
+
+<h3>Adding clips to Sequence </h3>
+
+<h4>Drag'n'Drop</h4>
+<ul>
+<li> Press on a Media File in <b>Media</b> tab and drag it on top of the track you want to place it on. </li>
+
+<li> <i>'Overwrite blank' </i> is selected as preference for drag'n'drop action:</li>
+<ul>
+<li> On track V1 clip will be inserted on the track at the nearest cut. </li>
+<li> On non-V1 tracks:. </li>
+<ul>
+<li> Clip will be inserted if dropped on a clip. </li>
+<li> Clip will overwrite available blank and empty space and will perform insert for the length of frames that would be overwritten.  </li>
+</ul>
+</ul>
+<li>  <i>'Always Insert' </i> is selected as preference for drag'n'drop action:</li>
+<ul>
+<li> Clip will be inserted on the track at the nearest cut. </li>
+</ul>
+</ul>
+
+<h4>From Monitor</h4>
+<ol>
+<li>Open clip in Monitor by either:</li>
+<ul>
+<li> double clicking on thumbnail icon,</li>
+<li> dragging Media File on top of Monitor or</li>
+<li> selecting <b>Open in Clip Monitor</b> item from <b>Right Mouse</b> context menu.</li>
+</ul>
+<li>Select insert range</li>
+<ul>
+<li> Use <b>Mark In</b> and <b>Mark Out</b> buttons to select range. </li>
+<li> Use <b>I</b> an <b>O</b> keys to set to select range.</li>
+<li> If range is not set, then the full clip length will be inserted.</li>
+</ul>
+<li>Press <b>Insert From Monitor</b> button</li>
+<ul>
+<li> Clip will be inserted on the first active track at the cut nearest of the currently displayed frame. First active track is marked by down arrow in the track Active Switch.</li>
+</ul>
+</ol>
+
+<h3>Editing Clips on Timeline</h3>
+<p>
+Once you have placed clips on the Timeline to form a Sequence, you will probably need to refine the cuts between clips.
+</p>
+<h4>Trimming Clips</h4>
+<p>
+Use <a href="edit_tools.html#trim">Trim Tool</a>,  <a href="edit_tools.html#roll">Roll Tool</a> or <a href="edit_tools.html#slip">Slip Tool</a>
+</p>
+
+<h4>Moving Clips</h4>
+<p>
+Use  <a href="edit_tools.html#insert">Insert Tool</a>,  <a href="edit_tools.html#overwrite">Overwrite Tool</a> or  <a href="edit_tools.html#spacer">Spacer Tool</a>
+</p>
+
+<h4>Cutting Clips</h4>
+<ol>
+<li>Select cut frame</li>
+<ul>
+<li> Cut is always made before the currently displayed frame on all active tracks.</li>
+</ul>
+<li>Cut clip</li>
+<ul>
+<li> Press <b>Cut</b> button or press <b>X</b> on the keyboard.</li>
+</ul>
+</ol>
+
+
+<h4>Deleting Clips</h4>
+<p><b>Splice Out</b>: Select clip(s) and press <b>Delete</b> key or use the <b>Splice Out</b> button on middle bar. All the clips in the track after the deleted clip(s) are moved to left to cover the created empty space. Some editors call this operation <i>Ripple Delete</i>.</p>
+<p><b>Lift</b>: Select clip(s) and press the <b>Lift</b> button on the middle bar. Clip is replaced with a blank if it is in middle of track. Other clips on the track are not moved.
+<p><b>Fade/Transition cover delete</b>: Select a single rendered fade or transition clip and press <b>Delete</b> key or button. If clips before and after of the deleted clip have frames available, then the space left by the deleted clip will covered using material from adjacent clips. If material is not available a splice out will be performed. A preference exists to always perform splice out on fades and transitions.
+
+<div class="note">
+<b>Use Keyboard Shortcuts!</b> It is much faster to use <b>X</b> key to cut clips and <b>Delete</b> key to splice out clips than it is to use buttons for the same operations.
+</div>
+
+<h3>Rendering Movie</h3>
+
+<h4>Selecting Parameters</h4>
+<ul>
+<li> <b>Folder File Select</b> button selects folder to place the rendered file.</li>
+<li> <b>Name</b> entry widget provides means to set the name of the output file.</li>
+<li> Use <b>Encoding Format</b> and untitled <b>Quality</b> drop down menus make to select the type of file to be rendered.</li>
+</ul>
+
+<h4>Rendering output</h4>
+<ol>
+<li>Press <b>Render</b> Button to begin rendering.</li>
+<li>A Render Window will open displaying information on file path of render file, estimated time left, render time and a Progress bar widget.</li>
+<li>After rendering is complete, Render Window will close automatically.</li>
+</ol>
+
+</div>
+
+</div>
+
+</body>
+
+</html> 

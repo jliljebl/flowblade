@@ -1,0 +1,228 @@
+ <!DOCTYPE html>
+<html>
+<head>
+	<title>Edit Tools</title>
+	<link rel="stylesheet" href="style.css">
+	<script src="toc.js" type="text/javascript"></script>
+	<script src="../jquery.js"></script> 
+	<script> 
+		$(function(){
+		$("#includedHeader").load("help_header.html"); 
+		});
+	</script>
+</head>
+
+<body>
+
+<!-- Header -->
+<div id="includedHeader"></div>
+
+<div id="content">
+
+<img src="header_text_5.png" >
+
+<script src="tocgen.js"></script>
+
+<div class="subject-header">Edit Tools</div>
+
+<p>
+Flowblade Movie Editor has six edit tools, <b>3 move tools</b> and <b>3 trim tools</b>.
+</p>
+<div class="note">
+<b>Use Keyboard Shortcuts!</b> It is much faster to use keys <b>1-6</b> to change tools. Note that keys 1-6 only change tools if timeline has keyboard focus. 
+</div>
+
+<div id="toccontent">
+<div id="toc"></div>
+<a id="insert"></a>
+
+
+
+<h3>Insert Tool</h3>
+
+<p>
+Splice out one or more clips and insert them at desired cut on any track.
+</p>
+
+<ol>
+<li>Pick 'Insert' tool</li>
+	<ul>
+	<li> Use <b>Tool Switcher</b> button drop menu or press <b>1</b> key.</li>
+	</ul>
+<li>Select clip</li>
+	<ul>
+	<li> Click <b>Left Mouse</b> on a clip.</li>
+	</ul>
+<li>Select other end of clip range if moving multiple clips</li>
+	<ul>
+	<li> Click <b>CTRL+Left Mouse</b> on the clip you wish to be the other end of move clip range.</li>
+	</ul>
+<li>Drag Clip(s) to new position</li>
+	<ul>
+	<li> Press <b>Left Mouse</b> on a selecetd clip and drag clip/s to a new position.</li>
+	<li> Yellow arrow displays insert point.</li>
+	<li> You can also move clips to a different track.</li>
+	</ul>
+</ol>
+
+<a id="overwrite"></a>
+<h3>Overwrite Tool</h3>
+
+<p>
+Lift out one or more clips and insert them at any point to overwrite on any track.
+</p>
+
+<ol>
+<li>Pick 'Overwrite' tool</li>
+	<ul>
+	<li> Use <b>Tool Switcher</b> button drop menu or press <b>2</b> key.</li>
+	</ul>
+<li>Select clip</li>
+	<ul>
+	<li><b> Click </b>Left Mouse<b> on a clip.</li>
+	<li></b> Select other end of clip range if moving multiple clips. Click <b>CTRL+Left Mouse</b> on the clip you wish to be the other end of move clip range./li>
+	</ul>
+<li>Drag Clip(s) to new position</li>
+	<ul>
+	<li> Press <b>Left Mouse</b> on a selecetd clip and drag clip/s to a new position.</li>
+	<li> Red shadow clips show overwrite area.</li>
+	<li> You can also move clips to a different track.</li>
+	</ul>
+</ol>
+
+<a id="trim"></a>
+<h3>Trim Tool</h3>
+<p>
+Make clip longer or shorter from either clip's end or from clip's beginning.
+</p>
+<ol>
+<li> Pick 'Trim' tool</li>
+	<ul>
+	<li> Use <b>Tool Switcher</b> button drop menu or press <b>3</b> key.</li>
+	</ul>
+<li> Select trimmed cut and select new in or out frame</li>
+	<ul>
+	<li> Press with <b>Left Mouse</b> on a clip near the side you wish to trim</li>
+	<li> Continue on to <b>Left drag</b> on clip to select new in or out frame</li>
+	</ul>
+<li> View trimmed cut</li>
+	<ul>
+	<li> Press <b>Play Loop</b> button to view edit.</li>
+	</ul>
+<li> Select new trim from another clip</li>
+	<ul>
+	<li> Click with <b>Left Mouse</b> on another clip near the side you wish to trim</li>
+	</ul>
+<li> Select other end of same clip to trim</li>
+	<ul>
+	<li> Click on empty space on the Timeline</li>
+	<li> Click with <b>Left Mouse</b> on the original clip near the side you wish to trim</li>
+	</ul>
+</ol>
+
+
+<a id="roll"></a>
+<h3>Roll Tool</h3>
+
+<p>Move edit point between two clips so that their combined length stays the same.</p>
+
+<ol>
+<li> Pick 'Roll' tool</li>
+	<ul>
+<li> Use <b>Tool Switcher</b> button drop menu or press <b>4</b> key.</li>
+	</ul>
+<li> Select trimmed cut and select new in or out frames</li>
+	<ul>
+<li> Press with <b>Left Mouse</b> on a clip near the cut you wish to trim on the side you wish to view while trimming</li>
+<li> Continue on to <b>Left drag</b> on the two selected clips to select in or out frames for both clips            </li>
+	</ul>
+<li> View trimmed cut</li>
+	<ul>
+<li> Press <b>Play Loop</b> button to view edit.</li>
+	</ul>
+<li> Select new trim from another clip</li>
+	<ul>
+<li> Click on empty space on the Timeline</li>
+<li> Click with <b>Left Mouse</b> near the cut you wish to trim</li>
+	</ul>
+</ol>
+
+<a id="slip"></a>
+<h3>Slip Tool</h3>
+
+<p>Change the displayed area of media in a clip while keeping the clip position unchanged on the timeline.</p>
+
+<ol>
+<li>Pick 'Slip' tool</li>
+	<ul>
+<li> Use <b>Tool Switcher</b> button drop menu or press <b>5</b> key.</li>
+	</ul>
+<li>Select trimmed clip and change displayed media</li>
+	<ul>
+<li> Press with <b>Left Mouse</b> on a clip you wish to slip trim</li>
+<li> Continue on to <b>Left drag</b> from clip area to display different area of media</li>
+	</ul>
+<li>Select new trim from another clip</li>
+	<ul>
+<li> Click on empty space on the Timeline</li>
+<li> Click with <b>Left Mouse</b> on the clip you wish to trim</li>
+	</ul>
+</ol>
+
+<a id="spacer"></a>
+<h3>Spacer Tool</h3>
+
+<p>Move all Timeline items after pressed frame on all tracks or on a single track</p>
+<ol>
+<li>Pick 'Spacer' tool</li>
+	<ul>
+<li> Use <b>Tool Switcher</b> button drop menu or press <b>6</b> key.</li>
+	</ul>
+<li>Select a clip on Timeline and move it and all items to the right of it</li>
+	<ul>
+<li> Press <b>Left Mouse</b> on a clip.</li>
+<li>  Continue on to <b>Left drag</b> clip and all clips and compositors to right of it to a new position</li>
+<li> It is not possible to move items on top of clips. Items can only be moved on top of empty space </li>
+	</ul>
+<li>Use <b>Control</b> button to only affect items on a single track</li>
+	<ul>
+<li> Press <b>Control</b> and use <b>Left Mouse</b> to move all items on single track to the right of the selected clip</li>
+	</ul>
+</ol>
+
+<a id="movetrim"></a>
+<h3>Move Tool clip end trim</h3>
+
+<p>
+When an <b>Insert, Overwrite</b> or <b>Spacer</b> tool is selected the ends of clips can be dragged to lengthen or shorten the clip. 
+</p>
+
+<ol>
+<li>Pick 'Insert', 'Overwrite' or 'Spacer' tool</li>
+	<ul>
+	<li> Use <b>Tool Switcher</b> button drop menu or press <b>1, 2</b> or <b>6</b> key.</li>
+	</ul>
+<li>Select clip end to trim</li>
+	<ul>
+	<li> Click <b>Control + Right Mouse</b> on a clip.</li>
+	</ul>
+	<ul>
+	<li> The nearer clip end will be selected for edit.</li>
+	</ul>
+<li>Drag clip end</li>
+	<ul>
+	<li> Added clip length will perform overwrite on blanks and empty space</li>
+	</ul>
+	<ul>
+	<li> Added clip length will perform insert on other clips</li>
+	</ul>
+	<ul>
+	<li> Decreased clip length will perform splice out.</li>
+	</ul>
+</div>
+
+</div>
+
+</body>
+
+</html> 

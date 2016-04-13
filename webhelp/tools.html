@@ -1,0 +1,101 @@
+ <!DOCTYPE html>
+<html>
+<head>
+	<title>Tools</title>
+	<link rel="stylesheet" href="style.css">
+	<script src="toc.js" type="text/javascript"></script>
+	<script src="../jquery.js"></script> 
+	<script> 
+		$(function(){
+		$("#includedHeader").load("help_header.html"); 
+		});
+	</script>
+</head>
+
+<body>
+
+<!-- Header -->
+<div id="includedHeader"></div>
+
+<div id="content">
+<img src="header_text_5.png" >
+
+<script src="tocgen.js"></script>
+
+<div id="toccontent">
+
+<div class="subject-header">Tools</div>
+
+<p>
+Flowblade provides standalone tools for important functionality that cannot be logically or conveniently presented via top left panels or the timeline.
+</p>
+
+
+<div id="toc"></div>
+
+<h3> Titler </h3>
+<p>Features:</p>
+<ul>
+<li> Add and remove layers in Layers area</li>
+<li> Edit layer properties and text in Active Layer area</li>
+<li> Set text position by dragging the active layer around in the view editor</li>
+<li> Set background image from Timeline to position texts appropriately by dragging frame pointer in the Position Bar</li>
+<li> Load and Save layers data in Layers Area</li>
+</ul>
+<h3> Audio Mixer </h3>
+<p>Features:</p>
+<ul>
+<li> Monitor audio levels on VU meters during playback</li>
+<li> Use sliders to set volume for tracks or Master Out</li>
+<li> Click <b>Pan</b> button to activate pannig slider and use it to pan audio  </li>
+</ul>
+<h3> Media Relinker </h3>
+<p>
+Media Relinker</b> is a standalone application running in its own process and does not affect the project that is open in Flowblade
+</p>
+<ol>
+<li> Start by pressing <b>Load Project For Relinking</b> button and select the project you wish to relink.</li>
+<li> Select the media file you wish to replace with some other media file. Press <b>Set File Relink Path</b> button or press <b>Right Mouse</b> on item to start selecting the new file. Clips and wipes in the project are linked to this new media file. </li>
+<li> Use drop down menu at bottom left to display either missing or found media files</li>
+<li> Press <b>Save Relinked Project As...</b> button to save the relinked version of the project</li>
+<li> Open the relinked project in Flowblade and continue working with it</li>
+<li> Media Relinker runs in its own process and does not share state or data with the running application.</li>
+<li> When relinking a project you have open in Flowblade at the same time make sure that do not overwrite the relinked version of project when saving the project you have open in Flowblade</li>
+</ol>
+
+<h3> G'Mic Effects</h3>
+<p>
+G'MIC is a full-featured open-source framework for image processing.
+</p>
+<p>
+Flowblade G'MIC tool presents user with a selection of commads that can be used to achieve complex filtering of video clips.</p>
+<p>
+<b>NOTE: If a command is not present in the system then the corresponding filtering selection will not work.</b>
+</p>
+<p>
+Commands are mostly embedded in the <b>/usr/bin/gmic</b> binary itself, so to have access to more commands you will mostly need to upgrade the binary in your system.
+</p>
+<p>
+It is however possible to add and use custom commands and use them for video filtering, <a href="  http://gmic.eu/reference.shtml#section11">more info here.</a>
+</p>
+
+<h4>Loading clip and rendering previews</h4>
+<ul>
+<li> Start by pressing <b>Load Clip</b> button, and select the video clip you wish to apply filtering on.</li>
+<li> Press on the downward triangle on top of the <b>Script Edit Area</b> on the left middle of the window to select a gmic command.</li>
+<li> You can alter the values given to commands in the <b>Script Edit Area</b>.</li>
+<li> Press the <b>Preview</b> button on the right middle to view the filtered image.</li>
+<li> After rendering preview the area below <b>Script Edit Area</b> shows text output from gmic with possible error messages.</li>
+<li> You can apply multiple commands by checking <b>Add to script</b> checkbox.</li>
+</ul>
+<h4>Rendering Output</h4>
+<ul>
+<li> To render a frame sequence you will need to set <b>Mark In and Mark out points</b> and  <b>select a folder</b> to hold the rendered frame sequence.</li>
+<li> To render a video file from the filtered frame sequence, check <b>Encode video</b> checkbox and press the <b>Encoding Settings</b> button to set properties of the rendered video file.</li>
+</ul>
+
+</div>
+</div>
+</body>
+
+</html> 

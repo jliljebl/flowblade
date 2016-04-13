@@ -1,0 +1,113 @@
+ <!DOCTYPE html>
+<html>
+<head>
+	<title>Flowblade - Download</title>
+	<link rel="stylesheet" href="style.css">
+	<script src="jquery.js"></script> 
+	<script> 
+		$(function(){
+		$("#includedHeader").load("header.html"); 
+		});
+	</script>
+	<script> 
+		$(function(){
+		$("#includedFooter").load("footer.html"); 
+		});
+	</script> 
+</head>
+
+<!-- content -->
+<body>
+
+<!-- Header -->
+<div id="includedHeader"></div>
+
+<!-- Install -->
+<div class="white-bg" >
+<div class="content-box">
+
+<div class="big-text">
+Download
+</div>
+
+<h3>Installing using .deb</h3>
+
+<p>
+<b>First download .deb file</b> for Flowblade 1.6 from <a href="https://www.dropbox.com/s/4smy1jlofzn896o/flowblade-1.6.0-1_all.deb?dl=0">here.</a>
+</p>
+
+<ul>
+	<li>Double Click on the downloaded <b>.deb</b> file to install.</li>
+	<li>Add some <b>missing dependencies</b> with command:</li>
+	<div class="code-bg"> 
+	sudo apt-get install gir1.2-glib-2.0 gir1.2-gtk-3.0 gir1.2-pango-1.0 gir1.2-gdkpixbuf-2.0
+	</div>
+
+	<p>
+	Unfortunately the .deb file is missing some dependencies that are not always present on some systems.
+	</p>
+	</li>
+</ul>
+
+
+</ul>
+
+
+<p>
+Release has been tested on: <b>Ubuntu 15.10, 14.10 and Debian 8</b>.
+</p>
+
+<p>
+Additional information <a href="https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/INSTALLING.md">here.</a>
+</p>
+
+<h3>Installing from your OS repository</h3>
+
+<p>
+The easiest way to install Flowblade is using the version in your OS repository. The downside is that the version available may not be the current latest release. Contact your OS to get latest Flowblade included in repositories if not already available.
+</p>
+
+<h3>Installing Using Source Code Archive</h3>
+
+<p>
+Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install and run Flowblade without compiling anything.
+</p>
+
+<p>
+Additional information <a href="https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/INSTALLING.md">here.</a>
+</p>
+
+
+<h3>Installing Development Version</h3>
+
+<p>
+Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install and run Flowblade without compiling anything.
+</p> 
+
+<p>
+Developer version may however be unstable or have new dependencies.
+</p>
+
+<p>
+To install repository version you need to install <b>git</b> and pull from the project Github repository. 
+</p>
+
+<p>
+Additional information <a href="https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/INSTALLING.md">here.</a>
+</p>
+
+<img src="webres/white_blade.png" width="80px" class="centered-block paddingtop">
+
+<p style="margin-top:40px"><b>Windows and OS X are not supported. Flowblade has focused on providing the best possible experience on Linux and other free platforms.
+</b>
+</p>
+
+</div>
+</div>
+
+<!-- Footer -->
+<div id="includedFooter"></div>
+
+<!-- end content -->
+</body>
+</html> 
