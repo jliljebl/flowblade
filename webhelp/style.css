@@ -22,10 +22,6 @@ time, mark, audio, video {
 
 html {
 	font-size: 100%;
-	-webkit-text-size-adjust: 100%;
-	-ms-text-size-adjust: 100%;
-	-webkit-transform: translateY(-50%);
-	-ms-transform: translateY(-50%);
 }
 
 body {
