@@ -329,9 +329,10 @@ img.centered-block {
 }
 
 .text-quote {
-	 font-style: italic;
+	font-style: italic;
 	text-align: center;
 	font-size: 12px;
+	margin-bottom:12px;
 }
 
 /* headers */
