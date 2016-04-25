@@ -27,6 +27,8 @@ sudo dpkg -i ./flowblade-1.6.0-1_all.deb
 
 Release has been install tested on: <b>Ubuntu 15.10, 14.10 and 14.04</b>. Should work on all recent Debian based distributions.
 
+<b>Unfortunately since Ubuntu 16.04 it is not possible to install .deb opackages just by double clicking on them.</b> 
+
 *Please note these issues with Dropbox download:*
 <ul>
  <li> <i>The download button may appear grayed out and you have to press it twice.</i></li>
