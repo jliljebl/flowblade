@@ -220,7 +220,7 @@ def load_render_profiles():
             msg = "...NOT available, " + encoding_option.err_msg + " missing"
             not_supported_encoding_options.append(encoding_option)
             print encoding_option.name + msg
-    
+
     # Proxy encoding
     proxy_encoding_nodes = render_encoding_doc.getElementsByTagName(PROXY_ENCODING_OPTION)
     found_proxy_encodings = []

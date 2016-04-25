@@ -6,19 +6,25 @@
 **First download .deb file** for Flowblade 1.6 from <a href="https://www.dropbox.com/s/4smy1jlofzn896o/flowblade-1.6.0-1_all.deb?dl=0">here.</a>
 
 <ul>
-    <li>Double Click on the downloaded .deb file to install.</li>
-    <li>Add some <b>missing dependencies</b> with command:</li>
+	<li>	<p>Open terminal in the directory you saved the  downloaded <b>.deb</b> file. Give command:
+```bash
+sudo dpkg -i ./flowblade-1.6.0-1_all.deb
+```
+	</li>
+
+	<li>Add some <b>missing dependencies</b> with command:</li>
+```bash
+	sudo apt-get install gir1.2-glib-2.0 gir1.2-gtk-3.0 gir1.2-pango-1.0 gir1.2-gdkpixbuf-2.0
+```
+	</li>
+
+	<li>Force install all dependencies with command:</li>
+```bash
+	sudo apt-get install -f
+```
+
+	</li>
 </ul>
-
-```bash
-sudo apt-get install gir1.2-glib-2.0 gir1.2-gtk-3.0 gir1.2-pango-1.0 gir1.2-gdkpixbuf-2.0
-```
-Unfortunately the .deb file is missing some dependencies that are not always present on some systems.
-
-<b>On at least Linux Mint 17</b> you will need also need to give command:
-```bash
-sudo apt-get install -f
-```
 
 Release has been install tested on: <b>Ubuntu 15.10, 14.10 and 14.04</b>. Should work on all recent Debian based distributions.
 
