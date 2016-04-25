@@ -6,25 +6,24 @@
 **First download .deb file** for Flowblade 1.6 from <a href="https://www.dropbox.com/s/4smy1jlofzn896o/flowblade-1.6.0-1_all.deb?dl=0">here.</a>
 
 <ul>
-	<li>	<p>Open terminal in the directory you saved the  downloaded <b>.deb</b> file. Give command:
+	<li>	<p>Open terminal in the directory you saved the  downloaded <b>.deb</b> file. Give command:	</li>
+</ul>
 ```bash
 sudo dpkg -i ./flowblade-1.6.0-1_all.deb
 ```
-	</li>
 
+<ul>
 	<li>Add some <b>missing dependencies</b> with command:</li>
+</ul>
 ```bash
 	sudo apt-get install gir1.2-glib-2.0 gir1.2-gtk-3.0 gir1.2-pango-1.0 gir1.2-gdkpixbuf-2.0
 ```
-	</li>
-
+<ul>
 	<li>Force install all dependencies with command:</li>
+</ul>
 ```bash
 	sudo apt-get install -f
 ```
-
-	</li>
-</ul>
 
 Release has been install tested on: <b>Ubuntu 15.10, 14.10 and 14.04</b>. Should work on all recent Debian based distributions.
 
