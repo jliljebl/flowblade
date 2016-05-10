@@ -569,8 +569,9 @@ def open_recent_project(widget, index):
 
 # ---------------------------------- rendering
 def do_rendering():
-    _write_out_render_item(True)
-    batchrendering.launch_single_rendering()
+    success = _write_out_render_item(True)
+    if success:
+        batchrendering.launch_single_rendering()
 
 def add_to_render_queue():
     _write_out_render_item(False)
@@ -592,7 +593,7 @@ def _write_out_render_item(single_render_item_item):
     if start_frame == -1 or end_frame == -1:
         if render.widgets.range_cb.get_active() == 1:
             rendergui.no_good_rander_range_info()
-            return
+            return False
 
     # Create batchrendering.RenderData object.
     # batchrendering.RenderData object is only used to display info about render,
@@ -621,7 +622,7 @@ def _write_out_render_item(single_render_item_item):
             primary_txt = _("Render launch failed!")
             secondary_txt = _("Error message: ") + str(e)
             dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window, is_info=False)
-            return
+            return False
     else: # batch render item
         # Add item
         try:
@@ -635,9 +636,9 @@ def _write_out_render_item(single_render_item_item):
             primary_txt = _("Adding item to render queue failed!")
             secondary_txt = _("Error message: ") + str(e)
             dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window, is_info=False)
-            return
+            return False
 
-
+    return True
 
 # ----------------------------------- media files
 def add_media_files(this_call_is_retry=False):
