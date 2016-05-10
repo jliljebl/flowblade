@@ -578,6 +578,7 @@ class ClipInfoPanel(Gtk.VBox):
         self.name_label = guiutils.bold_label(_("Clip:"))
         self.name_value = Gtk.Label()
         self.name_value.set_ellipsize(Pango.EllipsizeMode.END)
+        self.name_value.set_max_width_chars(15)
 
         self.track = guiutils.bold_label(_("Track:"))
         self.track_value = Gtk.Label()
