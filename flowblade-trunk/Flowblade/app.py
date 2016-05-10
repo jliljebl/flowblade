@@ -738,6 +738,7 @@ def log_msg(msg):
 
 # ------------------------------------------------------ shutdown
 def shutdown():
+    print type(editorstate.PROJECT().name)
     dialogs.exit_confirm_dialog(_shutdown_dialog_callback, get_save_time_msg(), gui.editor_window.window, editorstate.PROJECT().name)
     return True # Signal that event is handled, otherwise it'll destroy window anyway
 
