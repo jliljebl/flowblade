@@ -26,3 +26,12 @@ The current proposed solution is to render using original profile and re-render 
 
 **Status:** No work is planned on this. An acceptable work around exists, and a fix would require large de-stabilizing changes all over the code base.
 
+#### 4. mov/xdcam422 clips with high bitrate  (50000kb/s) may not work with proxy editing
+This has been reported and a single case has been reproduced.
+
+**Status:** No work on a fix is planned.
+
+
+
+
+
