@@ -31,7 +31,13 @@ This has been reported and a single case has been reproduced.
 
 **Status:** No work on a fix is planned.
 
+#### 5. Changing profile framerate results in shifting beginning and end of clips
 
+Yes, this can happen.
+
+The "Change profile" funcionality is considered a feature to save some of the work done when user has selected a profile that does not match the edited material, but it is not quaranteed to work perfectly. 
+
+**Status:** Patches will be accepted to improve this.
 
 
 
