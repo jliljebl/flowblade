@@ -759,9 +759,13 @@ class MediaPanel():
         elif event.button == 1:
             if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 widget.override_background_color(Gtk.StateType.NORMAL, gui. get_selected_bg_color())
-                # only add to selected if not already there
+                # add to selected if not already there, otherwise remove
                 try:
                     self.selected_objects.index(media_object)
+                    self.selected_objects.remove(media_object)
+                    
+                    bg_color = gui.get_bg_color()
+                    media_object.widget.override_background_color(Gtk.StateType.NORMAL, bg_color)
                 except:
                     self.selected_objects.append(media_object)
             else:
