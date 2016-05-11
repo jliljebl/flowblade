@@ -35,6 +35,7 @@ from gi.repository import GdkPixbuf
 import appconsts
 import editorpersistance
 from editorstate import PLAYER
+from editorstate import PROJECT
 import mltprofiles
 import mltrefhold
 import patternproducer
@@ -262,7 +263,14 @@ class Project:
 
         return os.path.dirname(last_render_event.data)
 
+    def is_first_video_load(self):
+        for uid, media_file in self.media_files.iteritems():
+            if media_file.type == appconsts.VIDEO:
+                return False
         
+        return True
+
+
 class MediaFile:
     """
     Media file that can added to and edited in Sequence.
@@ -348,6 +356,23 @@ class MediaFile:
         self.path, self.second_file_path = self.second_file_path, self.path
         self.is_proxy_file = False
 
+    def matches_project_profile(self):
+        if (not hasattr(self, "info")): # to make really sure that old projects don't crash,
+            return True                            # but probably is not needed as attr is added at load
+        if self.info == None:
+            return True
+        
+        is_match = True # this is true for audio and graphics and image sequences and is only 
+                        # set false for video that does not match profile
+                        
+        if self.type == appconsts.VIDEO:
+            best_media_profile_index = mltprofiles.get_closest_matching_profile_index(self.info)
+            project_profile_index = mltprofiles.get_index_for_name(PROJECT().profile.description())
+            if best_media_profile_index != project_profile_index:
+                is_match = False
+        
+        return is_match
+        
 
 class BinColorClip:
     # DECPRECATED, this is replaced by patternproducer.BinColorClip.

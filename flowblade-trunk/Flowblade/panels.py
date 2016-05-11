@@ -236,7 +236,7 @@ def get_two_text_panel(primary_txt, secondary_txt):
     return align
 
 def get_file_properties_panel(data):
-    media_file, img, size, length, vcodec, acodec, channels, frequency, fps = data
+    media_file, img, size, length, vcodec, acodec, channels, frequency, fps, match_profile_name, matches_current_profile = data
     
     row0 = get_two_column_box(get_bold_label(_("Name:")), Gtk.Label(label=media_file.name))
     row00 = get_two_column_box(get_bold_label(_("Path:")), Gtk.Label(label=media_file.path))
@@ -247,6 +247,8 @@ def get_file_properties_panel(data):
     row3 = get_two_column_box(get_bold_label(_("Audio Codec:")), Gtk.Label(label=acodec))
     row4 = get_two_column_box(get_bold_label(_("Audio Channels:")), Gtk.Label(label=channels))
     row5 = get_two_column_box(get_bold_label(_("Audio Sample Rate:")), Gtk.Label(label=frequency))
+    row6 = get_two_column_box(get_bold_label(_("Best Profile:")), Gtk.Label(label=match_profile_name))
+    row7 = get_two_column_box(get_bold_label(_("Matches Project Profile:")), Gtk.Label(label=matches_current_profile))
     
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(img, False, False, 0)
@@ -260,6 +262,8 @@ def get_file_properties_panel(data):
     vbox.pack_start(row3, False, False, 0)
     vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row5, False, False, 0)
+    vbox.pack_start(row6, False, False, 0)
+    vbox.pack_start(row7, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
     
     return vbox

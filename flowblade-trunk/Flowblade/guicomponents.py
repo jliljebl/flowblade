@@ -884,7 +884,7 @@ class MediaObjectWidget:
         self.bin_index = bin_index
         self.indicator_icon = indicator_icon
         self.selected_callback = selected_callback
-        self.matches_project_profile = self._get_matches_profile()
+        self.matches_project_profile = media_file.matches_project_profile()
         
         self.widget = Gtk.EventBox()
         self.widget.connect("button-press-event", lambda w,e: selected_callback(self, w, e))

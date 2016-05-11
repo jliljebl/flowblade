@@ -1309,3 +1309,38 @@ def save_snaphot_progess(media_copy_txt, project_txt):
 
     return dialog
     
+def not_matching_media_info_dialog(project, media_file, callback):
+    dialog = Gtk.Dialog(_("Loaded Media Profile Mismatch"),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Keep Current Profile").encode('utf-8'), Gtk.ResponseType.REJECT,
+                         _("Change To File Profile").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+
+    primary_txt = "A video file was loaded that does not match the Project Profile!" 
+    secondary_txt = ""
+
+    match_profile_index = mltprofiles.get_closest_matching_profile_index(media_file.info)
+    match_profile_name =  mltprofiles.get_profile_name_for_index(match_profile_index)
+    project_profile_name = project.profile.description()
+    
+    row1 = guiutils.get_two_column_box(guiutils.bold_label(_("File:")), Gtk.Label(label=media_file.name), 120)
+    row2 = guiutils.get_two_column_box(guiutils.bold_label(_("File Profile:")), Gtk.Label(label=match_profile_name), 120)
+    row3 = guiutils.get_two_column_box(guiutils.bold_label(_("Project Profile:")), Gtk.Label(label=project_profile_name), 120)
+    row4 = guiutils.get_left_justified_box([Gtk.Label(_("Using a matching profile is recommended.\n\nThis message is only displayed on first media load for Project."))])
+
+    text_panel = Gtk.VBox(False, 2)
+    text_panel.pack_start(row1, False, False, 0)
+    text_panel.pack_start(row2, False, False, 0)
+    text_panel.pack_start(row3, False, False, 0)
+    text_panel.pack_start(Gtk.Label(" "), False, False, 0)
+    text_panel.pack_start(row4, False, False, 0)
+
+    vbox = dialogutils.get_warning_message_dialog_panel(primary_txt, secondary_txt,
+                                                        True, None, [text_panel])
+
+    alignment = dialogutils.get_default_alignment(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, media_file)
+    dialog.show_all()

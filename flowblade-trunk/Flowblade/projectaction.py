@@ -188,6 +188,7 @@ class AddMediaFilesThread(threading.Thread):
         gui.editor_window.window.get_window().set_cursor(watch)
         Gdk.threads_leave()
 
+        is_first_video_load = PROJECT().is_first_video_load()
         duplicates = []
         succes_new_file = None
         filenames = self.filenames
@@ -225,7 +226,10 @@ class AddMediaFilesThread(threading.Thread):
 
         if len(duplicates) > 0:
             GObject.timeout_add(10, _duplicates_info, duplicates)
-        
+
+        if is_first_video_load:
+            GObject.timeout_add(10, _first_load_profile_check)
+            
         audiowaveformrenderer.launch_audio_levels_rendering(filenames)
 
 def _duplicates_info(duplicates):
@@ -246,6 +250,27 @@ def _duplicates_info(duplicates):
     
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
     return False
+
+def _first_load_profile_check():
+    for uid, media_file in PROJECT().media_files.iteritems():
+        if media_file.type == appconsts.VIDEO:
+            if media_file.matches_project_profile() == False:
+                dialogs.not_matching_media_info_dialog(PROJECT(), media_file, _not_matching_media_info_callback)
+                break
+
+def _not_matching_media_info_callback(dialog, response_id, media_file):
+    dialog.destroy()
+            
+    if response_id == Gtk.ResponseType.ACCEPT:
+        # Save in hidden and open
+        match_profile_index = mltprofiles.get_closest_matching_profile_index(media_file.info)
+        profile = mltprofiles.get_profile_for_index(match_profile_index)
+
+        path = utils.get_hidden_user_dir_path() + "/" + PROJECT().name
+
+        persistance.save_project(PROJECT(), path, profile.description()) #<----- HERE
+        
+        actually_load_project(path)
 
 def _load_pulse_bar():
     Gdk.threads_enter()
@@ -857,15 +882,29 @@ def _display_file_info(media_file):
     
     channels = str(info["channels"]) 
     frequency =  str(info["frequency"]) + "Hz"
+
+    if media_file.type == appconsts.VIDEO:
+        match_profile_index = mltprofiles.get_closest_matching_profile_index(info)
+        match_profile_name =  mltprofiles.get_profile_name_for_index(match_profile_index)
+    else:
+        match_profile_name = _("N/A")
+    
+    if media_file.type == appconsts.VIDEO:
+        if media_file.matches_project_profile():
+            matches_project_profile = _("Yes")
+        else:
+            matches_project_profile = _("No")
+    else:
+        matches_project_profile = _("N/A")
         
     try:
         num = info["fps_num"]
         den = info["fps_den"]
         fps = float(num/den) 
     except:
-        fps ="N/A"
+        fps = _("N/A")
     
-    dialogs.file_properties_dialog((media_file, img, size, length, vcodec, acodec, channels, frequency, fps))
+    dialogs.file_properties_dialog((media_file, img, size, length, vcodec, acodec, channels, frequency, fps, match_profile_name, matches_project_profile))
 
 def remove_unused_media():
     # Create path -> media item dict
