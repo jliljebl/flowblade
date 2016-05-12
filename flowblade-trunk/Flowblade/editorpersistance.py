@@ -72,7 +72,19 @@ def load():
         write_file = file(recents_file_path, "wb")
         pickle.dump(recent_projects, write_file)
 
-    # version of program may have different prefs objects and 
+    # Remove non-existing projects from recents list
+    remove_list = []
+    for proj_path in recent_projects.projects:
+        if os.path.isfile(proj_path) == False:
+            remove_list.append(proj_path)
+
+    if len(remove_list) > 0:
+        for proj_path in remove_list:
+            recent_projects.projects.remove(proj_path)
+        write_file = file(recents_file_path, "wb")
+        pickle.dump(recent_projects, write_file)
+        
+    # Versions of program may have different prefs objects and 
     # we may need to to update prefs on disk if user has e.g.
     # installed later version of Flowblade
     current_prefs = EditorPreferences()

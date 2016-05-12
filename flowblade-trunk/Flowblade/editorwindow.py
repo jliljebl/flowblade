@@ -483,7 +483,6 @@ class EditorWindow:
         self.notebook.append_page(project_panel, Gtk.Label(label=_("Project")))
         self.notebook.append_page(render_panel, Gtk.Label(label=_("Render")))
         self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
-        #self.notebook.set_show_tabs(False) 
 
         # Right notebook, used for Widescreen and Two row layouts
         self.right_notebook = Gtk.Notebook()
