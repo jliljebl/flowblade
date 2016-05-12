@@ -794,9 +794,14 @@ def view_mode_menu_lauched(launcher, event):
     guicomponents.get_monitor_view_popupmenu(launcher, event, _view_mode_menu_item_item_activated)
     
 def _view_mode_menu_item_item_activated(widget, msg):
-    editorstate.current_sequence().set_output_mode(msg)
-    gui.editor_window.view_mode_select.set_pixbuf(msg)
-
+    if msg < 3:
+        editorstate.current_sequence().set_output_mode(msg)
+        gui.editor_window.view_mode_select.set_pixbuf(msg)
+    else:
+        mix_value_index = msg - 3 ## this just done in a bit hackish way, 
+        # see guicomponents.get_monitor_view_popupmenu and sequence.SCOPE_MIX_VALUES
+        editorstate.current_sequence().set_scope_overlay_mix(mix_value_index)
+        
 # ------------------------------------------------------- dialogs    
 def no_monitor_clip_info(parent_window):
     primary_txt = _("No Clip loaded into Monitor")

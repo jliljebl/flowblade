@@ -87,6 +87,9 @@ black_track_clip = None
 # Track that all audio is mixed down to combine for output.
 AUDIO_MIX_DOWN_TRACK = 0
 
+# Vectorscop and RGB Parade
+SCOPE_MIX_VALUES = [1.0, 0.8, 0.5, 0.2, 0.0]
+_scope_over_lay_mix = 2
 
 class Sequence:
     """
@@ -139,11 +142,11 @@ class Sequence:
         
         self.vectorscope = mlt.Filter(self.profile, "frei0r.vectorscope")
         mltrefhold.hold_ref(self.vectorscope) # ?? is this just some anti-crash hack attempt that was not removed
-        self.vectorscope.set("mix", "0.5")
+        self.vectorscope.set("mix", str(SCOPE_MIX_VALUES[_scope_over_lay_mix]))
         self.vectorscope.set("overlay sides", "0.0") 
         self.rgbparade =  mlt.Filter(self.profile, "frei0r.rgbparade")
         mltrefhold.hold_ref(self.rgbparade) # ?? is this just some anti-crash hack attempt that was not removed
-        self.rgbparade.set("mix", "0.4")
+        self.rgbparade.set("mix", str(SCOPE_MIX_VALUES[_scope_over_lay_mix]))
         self.rgbparade.set("overlay sides", "0.0")
         self.outputfilter = None
 
@@ -748,6 +751,16 @@ class Sequence:
         elif mode == RGB_PARADE_MODE:
             self.tractor.attach(self.rgbparade)
             self.outputfilter = self.rgbparade
+
+    def set_scope_overlay_mix(self, mix_value_index):
+        global _scope_over_lay_mix
+        _scope_over_lay_mix = mix_value_index
+
+        self.vectorscope.set("mix", str(SCOPE_MIX_VALUES[_scope_over_lay_mix]))
+        self.rgbparade.set("mix", str(SCOPE_MIX_VALUES[_scope_over_lay_mix]))
+
+    def get_mix_index(self):
+        return _scope_over_lay_mix
 
     # ---------------------------------------------------- watermark
     def add_watermark(self, watermark_file_path):
