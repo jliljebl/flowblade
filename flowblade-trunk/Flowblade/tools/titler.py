@@ -48,6 +48,7 @@ import vieweditorlayer
 
 _titler = None
 _titler_data = None
+_titler_lastdir = None
 
 _keep_titler_data = True
 _open_saved_in_bin = True
@@ -501,7 +502,7 @@ class Titler(Gtk.Window):
         self.show_current_frame()
 
     def _save_title_pressed(self):
-        toolsdialogs.save_titler_graphic_as_dialog(self._save_title_dialog_callback, "title.png", None)
+        toolsdialogs.save_titler_graphic_as_dialog(self._save_title_dialog_callback, "title.png", _titler_lastdir)
 
     def _save_title_dialog_callback(self, dialog, response_id):
         if response_id == Gtk.ResponseType.ACCEPT:
@@ -510,6 +511,9 @@ class Titler(Gtk.Window):
                 dialog.destroy()
                 save_path = filenames[0]
                 self.view_editor.write_layers_to_png(save_path)
+                (dirname, filename) = os.path.split(save_path)
+                global _titler_lastdir
+                _titler_lastdir = dirname
         
                 if _open_saved_in_bin:
                     open_file_thread = OpenFileThread(save_path, self.view_editor)
