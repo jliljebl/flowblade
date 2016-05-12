@@ -1794,6 +1794,20 @@ class TimeLineFrameScale:
         seq = current_sequence()
         fps = seq.profile.fps()
         
+        # Draw start indicator triangles
+        if pos == 0:
+            cr.set_source_rgb(*FRAME_SCALE_LINES)
+            start_y = 1
+            tri_h = 8
+            tri_h_half = tri_h / 2
+            tri_w = 8
+            for i in range(0, 3):
+                cr.move_to (0, start_y + i * tri_h)
+                cr.line_to (tri_w, start_y + i * tri_h + tri_h_half)
+                cr.line_to (0, start_y + i * tri_h + tri_h)
+                cr.close_path();
+                cr.fill()
+
         # Selected range
         if seq.tractor.mark_in != -1 and seq.tractor.mark_out != -1:
             in_x = (seq.tractor.mark_in - pos) * pix_per_frame
