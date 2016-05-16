@@ -1930,7 +1930,7 @@ def get_monitor_view_popupmenu(launcher, event, callback):
     op_80.connect("activate", callback, 4)
     op_80.show()
     overlay_menu.append(op_80)
-        
+
     op_50 = Gtk.RadioMenuItem.new_with_label([op_100], _("50%").encode('utf-8'))
     op_50.connect("activate", callback, 5)
     op_50.show()

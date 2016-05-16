@@ -193,6 +193,9 @@ class AbstractBinClip: # not extends projectdata.MediaFile? too late, too late. 
         
         self.create_icon()
 
+    def matches_project_profile(self):
+        return True # these are created to match project profile
+
     def create_mlt_producer(self, profile):
         print "create_mlt_producer not implemented"
 
