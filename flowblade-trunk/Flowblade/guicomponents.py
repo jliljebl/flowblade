@@ -1884,6 +1884,15 @@ def get_audio_levels_popup_menu(event, callback):
     menu = levels_menu
     guiutils.remove_children(menu)
 
+    thumbs_item = Gtk.CheckMenuItem(_("Display Clip Media Thumbnails").encode('utf-8'))
+    thumbs_item.set_label(_("Display Clip Media Thumbnails"))
+    thumbs_item.set_active(editorstate.display_clip_media_thumbnails)
+    thumbs_item.connect("activate", callback, "thumbs")
+    
+    menu.append(thumbs_item)
+
+    _add_separetor(menu)
+    
     allways_item = Gtk.RadioMenuItem() 
     allways_item.set_label(_("Display All Audio Levels"))
     menu.append(allways_item)

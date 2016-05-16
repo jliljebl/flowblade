@@ -119,9 +119,12 @@ def _audio_levels_item_activated(widget, msg):
     if msg == "all":
         editorstate.display_all_audio_levels = True
         updater.repaint_tline()
-    else:
+    elif msg == "on request":
         editorstate.display_all_audio_levels = False
         current_sequence().drop_audio_levels()
+        updater.repaint_tline()
+    else: # media thumbnails
+        editorstate.display_clip_media_thumbnails = widget.get_active()
         updater.repaint_tline()
 
 # ------------------------------------------------------------- mouse events

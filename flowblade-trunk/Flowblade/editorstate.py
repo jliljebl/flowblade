@@ -99,6 +99,7 @@ project_is_loading = False
 
 # Audio levels display mode, False means that audio levels are displayed on request
 display_all_audio_levels = True
+display_clip_media_thumbnails = True
 
 # Flag for window being in fullscreen mode
 fullscreen = False

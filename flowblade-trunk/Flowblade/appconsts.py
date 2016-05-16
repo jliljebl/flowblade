@@ -161,7 +161,7 @@ MULTI_ADD_TRIM = 1
 MULTI_TRIM_REMOVE = 2
 MULTI_TRIM = 3
 
-# Jack options
+# Jack options (not used currently)
 JACK_ON_START_UP_NO = 0
 JACK_ON_START_UP_YES = 1
 

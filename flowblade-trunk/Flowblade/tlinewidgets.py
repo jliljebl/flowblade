@@ -268,7 +268,7 @@ fake_current_frame = None
 # Used to draw indicators that tell if more frames are available while trimming
 trim_status = appconsts.ON_BETWEEN_FRAME
 
-# Dict foor clip thumbnails path -> image
+# Dict for clip thumbnails path -> image
 clip_thumbnails = {}
 
 # ------------------------------------------------------------------- module functions
@@ -1256,7 +1256,7 @@ class TimeLineCanvas:
 
             # Draw video clip icon
             text_x_add = 0
-            if scale_length > TEXT_MIN:
+            if scale_length > TEXT_MIN and editorstate.display_clip_media_thumbnails:
                 if clip.is_blanck_clip == False and track.type == sequence.VIDEO and \
                     (clip.media_type == sequence.VIDEO or clip.media_type == sequence.IMAGE 
                         or clip.media_type == sequence.IMAGE_SEQUENCE):
