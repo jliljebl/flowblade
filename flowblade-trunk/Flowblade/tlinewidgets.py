@@ -39,6 +39,7 @@ import editorpersistance
 from editorstate import current_sequence
 from editorstate import timeline_visible
 from editorstate import PLAYER
+from editorstate import PROJECT
 from editorstate import EDIT_MODE
 from editorstate import current_proxy_media_paths
 import editorstate
@@ -266,6 +267,9 @@ fake_current_frame = None
 
 # Used to draw indicators that tell if more frames are available while trimming
 trim_status = appconsts.ON_BETWEEN_FRAME
+
+# Dict foor clip thumbnails path -> image
+clip_thumbnails = {}
 
 # ------------------------------------------------------------------- module functions
 def load_icons():
@@ -1112,6 +1116,8 @@ class TimeLineCanvas:
 
         proxy_paths = current_proxy_media_paths()
 
+        global clip_thumbnails
+                
         # Draw clips in draw range
         for i in range(start, end):
 
@@ -1167,7 +1173,7 @@ class TimeLineCanvas:
                         else:
                             cr.set_source_rgb(*IMAGE_CLIP_SELECTED_COLOR)
                             clip_bg_col = IMAGE_CLIP_SELECTED_COLOR
-                else:
+                else:# Audio clip
                     if not clip.selected:
                         grad = cairo.LinearGradient (0, y, 0, y + track_height)
                         grad.add_color_stop_rgba(*AUDIO_CLIP_COLOR_GRAD)
@@ -1248,6 +1254,31 @@ class TimeLineCanvas:
                     cr.close_path()
                     cr.fill()
 
+            # Draw video clip icon
+            text_x_add = 0
+            if scale_length > TEXT_MIN:
+                if clip.is_blanck_clip == False and track.type == sequence.VIDEO and \
+                    (clip.media_type == sequence.VIDEO or clip.media_type == sequence.IMAGE 
+                        or clip.media_type == sequence.IMAGE_SEQUENCE):
+                        
+                    text_x_add = 115
+                    cr.save()
+                    try: # paint thumbnail
+                        thumb_img = clip_thumbnails[clip.path]
+                        cr.rectangle(scale_in + 4, y + 3.5, scale_length - 8, track_height - 6)
+                        cr.clip()
+                        cr.set_source_surface(thumb_img,scale_in, y)
+                        cr.paint()
+                    except: # thumbnail not found  in dict, get it pait it
+                        media_file = PROJECT().get_media_file_for_path(clip.path)
+                        thumb_img = media_file.icon
+                        cr.rectangle(scale_in + 4, y + 3.5, scale_length - 8, track_height - 6)
+                        cr.clip()
+                        cr.set_source_surface(thumb_img, scale_in, y)
+                        cr.paint()
+                        clip_thumbnails[clip.path] = thumb_img
+                    cr.restore()
+                
             # Draw sync stripe
             if scale_length > FILL_MIN: 
                 if clip.sync_data != None:
@@ -1408,7 +1439,7 @@ class TimeLineCanvas:
                                          cairo.FONT_SLANT_NORMAL,
                                          cairo.FONT_WEIGHT_NORMAL)
                     cr.set_font_size(11)
-                    cr.move_to(scale_in + TEXT_X, y + text_y)
+                    cr.move_to(scale_in + TEXT_X + text_x_add, y + text_y)
                     cr.show_text(clip.name.upper())
                 
                 icon_slot = 0
