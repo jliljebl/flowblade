@@ -121,7 +121,7 @@ def _open_clip_in_clip_monitor(data):
 
 def _show_clip_info(data):
     clip, track, item_id, x = data
-    
+
     width = clip.get("width")
     height = clip.get("height")
     if clip.media_type == appconsts.IMAGE:

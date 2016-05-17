@@ -1867,7 +1867,8 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.geom_kf_edit.set_keyframe_to_edit_shape(self.clip_editor.active_kf_index)
         self.update_editor_view_with_frame(self.clip_editor.current_clip_frame)
         self.update_property_value()
-    
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+
     def arrow_edit(self, keyval):
         self.geom_kf_edit.handle_arrow_edit(keyval)
         self.geom_kf_edit.set_keyframe_to_edit_shape(self.clip_editor.active_kf_index)
