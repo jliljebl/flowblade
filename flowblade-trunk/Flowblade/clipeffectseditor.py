@@ -490,5 +490,7 @@ def display_kfeditors_tline_frame(frame):
         kf_widget.display_tline_frame(frame)
 
 def update_kfeditors_positions():
+    if clip == None:
+        return
     for kf_widget in keyframe_editor_widgets:
         kf_widget.update_clip_pos()
