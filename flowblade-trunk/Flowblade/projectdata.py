@@ -125,7 +125,7 @@ class Project:
         else: # For non-audio we need write a thumbbnail file and get file lengh while we're at it
              (icon_path, length, info) = thumbnailer.write_image(file_path)
 
-          # Create media file object
+        # Create media file object
         media_object = MediaFile(self.next_media_file_id, file_path, 
                                file_name, media_type, length, icon_path, info)
 

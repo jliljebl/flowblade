@@ -22,13 +22,16 @@
 This module handles actions initiated from clip and compositor popup menus.
 """
 
+from PIL import Image
+
+from gi.repository import Gtk
+
 import audiowaveform
 import appconsts
 import clipeffectseditor
 import compositeeditor
 import dialogs
 import dialogutils
-from gi.repository import Gtk
 import gui
 import guicomponents
 import edit
@@ -121,6 +124,9 @@ def _show_clip_info(data):
     
     width = clip.get("width")
     height = clip.get("height")
+    if clip.media_type == appconsts.IMAGE:
+        graphic_img = Image.open(clip.path)
+        width, height = graphic_img.size
     size = str(width) + " x " + str(height)
     l_frames = clip.clip_out - clip.clip_in + 1 # +1 out inclusive
     length = utils.get_tc_string(l_frames)
@@ -132,7 +138,11 @@ def _show_clip_info(data):
     long_video_property = "meta.media." + str(video_index) + ".codec.long_name"
     long_audio_property = "meta.media." + str(audio_index) + ".codec.long_name"
     vcodec = clip.get(str(long_video_property))
-    acodec = clip.get(str(long_audio_property))
+    acodec = clip.get(str(long_audio_property))    
+    if vcodec == None:
+        vcodec = _("N/A")
+    if acodec == None:
+        acodec = _("N/A")
 
     dialogs.clip_properties_dialog((mark_in, mark_out, length, size, clip.path, vcodec, acodec))
 

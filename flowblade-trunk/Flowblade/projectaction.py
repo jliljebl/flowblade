@@ -29,6 +29,7 @@ import md5
 import os
 from os import listdir
 from os.path import isfile, join
+from PIL import Image
 import re
 import shutil
 import time
@@ -869,6 +870,10 @@ def _display_file_info(media_file):
 
     width = info["width"]
     height = info["height"]
+    if media_file.type == appconsts.IMAGE:
+        graphic_img = Image.open(media_file.path)
+        width, height = graphic_img.size 
+
     size = str(width) + " x " + str(height)
     length = utils.get_tc_string(info["length"])
 
@@ -880,6 +885,11 @@ def _display_file_info(media_file):
     vcodec = info["vcodec"]
     acodec = info["acodec"]
     
+    if vcodec == None:
+        vcodec = _("N/A")
+    if acodec == None:
+        acodec = _("N/A")
+
     channels = str(info["channels"]) 
     frequency =  str(info["frequency"]) + "Hz"
 
