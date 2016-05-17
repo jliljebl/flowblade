@@ -1721,7 +1721,8 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
     def prev_pressed(self):
         self.clip_editor.set_prev_active()
         self.update_editor_view()
-    
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+
     def prev_frame_pressed(self):
         self.clip_editor.move_clip_frame(-1)
         self.update_editor_view()
