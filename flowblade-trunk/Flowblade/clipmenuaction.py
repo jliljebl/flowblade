@@ -42,6 +42,7 @@ from editorstate import PROJECT
 import movemodes
 import syncsplitevent
 import tlinewidgets
+import tlineaction
 import updater
 import utils
 
@@ -90,23 +91,8 @@ def _compositor_menu_item_activated(widget, data):
         action = edit.delete_compositor_action(data)
         action.do_edit()
     elif action_id == "sync with origin":
-        track = current_sequence().tracks[compositor.transition.b_track] # b_track is source track where origin clip is
-        origin_clip = None
-        for clip in track.clips:
-            if clip.id == compositor.origin_clip_id:
-                origin_clip = clip
-        if origin_clip == None:
-            dialogutils.info_message(_("Origin clip not found!"), 
-                                 _("Clip used to create this Compositor has been removed\nor moved to different track."), 
-                                 gui.editor_window.window)
-            return
-        clip_index = track.clips.index(origin_clip)
-        clip_start = track.clip_start(clip_index)
-        clip_end = clip_start + origin_clip.clip_out - origin_clip.clip_in
-        data = {"compositor":compositor,"clip_in":clip_start,"clip_out":clip_end}
-        action = edit.move_compositor_action(data)
-        action.do_edit()
-
+        tlineaction.sync_compositor(compositor)
+        
 def _open_clip_in_effects_editor(data):
     updater.open_clip_in_effects_editor(data)
     

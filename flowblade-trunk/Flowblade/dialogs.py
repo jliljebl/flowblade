@@ -1119,6 +1119,7 @@ def keyboard_shortcuts_dialog(parent_window):
     tline_vbox.pack_start(_get_kb_row("M", _("Add Mark")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row("Control + C", _("Copy Clips")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row("Control + V", _("Paste Clips")), False, False, 0)
+    tline_vbox.pack_start(_get_kb_row(_("R"), _("Resync selected Clip or Compositor")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("G"), _("Log Marked Clip Range")), False, False, 0)
     tline = guiutils.get_named_frame(_("Timeline"), tline_vbox)
 

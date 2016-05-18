@@ -30,6 +30,7 @@ import os
 from operator import itemgetter
 
 import appconsts
+import compositormodes
 import dialogs
 import dialogutils
 import glassbuttons
@@ -414,8 +415,30 @@ def range_overwrite_pressed():
     updater.display_tline_cut_frame(track, track.get_clip_index_at(mark_in_frame))
 
 def resync_button_pressed():
-    syncsplitevent.resync_selected()
+    if movemodes.selected_track != -1:
+        syncsplitevent.resync_selected()
+    else:
+        if compositormodes.compositor != None:
+            sync_compositor(compositormodes.compositor)
 
+def sync_compositor(compositor):
+    track = current_sequence().tracks[compositor.transition.b_track] # b_track is source track where origin clip is
+    origin_clip = None
+    for clip in track.clips:
+        if clip.id == compositor.origin_clip_id:
+            origin_clip = clip
+    if origin_clip == None:
+        dialogutils.info_message(_("Origin clip not found!"), 
+                             _("Clip used to create this Compositor has been removed\nor moved to different track."), 
+                             gui.editor_window.window)
+        return
+    clip_index = track.clips.index(origin_clip)
+    clip_start = track.clip_start(clip_index)
+    clip_end = clip_start + origin_clip.clip_out - origin_clip.clip_in
+    data = {"compositor":compositor,"clip_in":clip_start,"clip_out":clip_end}
+    action = edit.move_compositor_action(data)
+    action.do_edit()
+    
 def split_audio_button_pressed():
     if movemodes.selected_track == -1:
         return
