@@ -376,6 +376,16 @@ def _save_as_dialog_callback(dialog, response_id):
         PROJECT().name = unicode(os.path.basename(filenames[0]), "utf-8")
         updater.set_info_icon(Gtk.STOCK_SAVE)
 
+        try: 
+            persistance.save_project(PROJECT(), PROJECT().last_save_path) #<----- HERE
+        except IOError as ioe:
+            dialog.destroy()
+            updater.set_info_icon(None)
+            primary_txt = "I/O error({0})".format(ioe.errno)
+            secondary_txt = ioe.strerror + "."
+            dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window, is_info=False)
+            return
+
         if len(PROJECT().events) == 0: # Save as... with 0 project events is considered Project creation
             p_event = projectdata.ProjectEvent(projectdata.EVENT_CREATED_BY_SAVING, PROJECT().last_save_path)
             PROJECT().events.append(p_event)
@@ -383,8 +393,6 @@ def _save_as_dialog_callback(dialog, response_id):
             p_event = projectdata.ProjectEvent(projectdata.EVENT_SAVED_AS, (PROJECT().name, PROJECT().last_save_path))
             PROJECT().events.append(p_event)
             
-        persistance.save_project(PROJECT(), PROJECT().last_save_path) #<----- HERE
-        
         app.stop_autosave()
         app.start_autosave()
         

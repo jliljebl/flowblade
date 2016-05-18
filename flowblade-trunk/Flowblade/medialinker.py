@@ -497,7 +497,18 @@ def _save_as_dialog_callback(dialog, response_id):
 
         target_project.last_save_path = filenames[0]
         target_project.name = os.path.basename(filenames[0])
-        
+    
+        # Test that saving is not IOError
+        try:
+            filehandle = open( target_project.last_save_path, 'w' )
+            filehandle.close()
+        except IOError as ioe:
+            primary_txt = "I/O error({0})".format(ioe.errno)
+            secondary_txt = ioe.strerror + "."
+            dialogutils.warning_message(primary_txt, secondary_txt, linker_window, is_info=False)
+            return 
+
+        # Relink and save
         _relink_project_media_paths()
             
         persistance.save_project(target_project, target_project.last_save_path)
