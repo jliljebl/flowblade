@@ -350,10 +350,19 @@ def save_project():
 def _save_project_in_last_saved_path():
     updater.set_info_icon(Gtk.STOCK_SAVE)
 
+    try:
+        
+        persistance.save_project(PROJECT(), PROJECT().last_save_path) #<----- HERE
+        
+    except IOError as ioe:
+        updater.set_info_icon(None)
+        primary_txt = "I/O error({0})".format(ioe.errno)
+        secondary_txt = ioe.strerror + "."
+        dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window, is_info=False)
+        return
+
     PROJECT().events.append(projectdata.ProjectEvent(projectdata.EVENT_SAVED, PROJECT().last_save_path))
-
-    persistance.save_project(PROJECT(), PROJECT().last_save_path) #<----- HERE
-
+    
     global save_icon_remove_event_id
     save_icon_remove_event_id = GObject.timeout_add(500, remove_save_icon)
 
@@ -376,8 +385,10 @@ def _save_as_dialog_callback(dialog, response_id):
         PROJECT().name = unicode(os.path.basename(filenames[0]), "utf-8")
         updater.set_info_icon(Gtk.STOCK_SAVE)
 
-        try: 
+        try:
+            
             persistance.save_project(PROJECT(), PROJECT().last_save_path) #<----- HERE
+            
         except IOError as ioe:
             dialog.destroy()
             updater.set_info_icon(None)
