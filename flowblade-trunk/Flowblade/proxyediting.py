@@ -159,7 +159,7 @@ class ProxyRenderRunnerThread(threading.Thread):
         # If we're currently proxy editing, we need to update 
         # all the clips on the timeline to use proxy media.
         if editorstate.PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA:
-            _auto_renconvert_after_proxy_render_in_proxy_mode()
+            _auto_re_convert_after_proxy_render_in_proxy_mode()
         
         print "proxy render done"
 
@@ -692,7 +692,10 @@ def _convert_to_original_media_project():
     load_thread = ProxyProjectLoadThread(conv_temp_project_path, manager_window.convert_progress_bar)
     load_thread.start()
 
-def _auto_renconvert_after_proxy_render_in_proxy_mode():
+def _auto_re_convert_after_proxy_render_in_proxy_mode():
+
+    editorstate.project_is_loading = True
+
     # Save to temp to convert to using original media
     project = editorstate.PROJECT()
     project.proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_ORIGINAL_MEDIA
@@ -707,11 +710,13 @@ def _auto_renconvert_after_proxy_render_in_proxy_mode():
     # Save to temp to convert back to using proxy media
     project.proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_PROXY_MEDIA
     persistance.save_project(project, conv_temp_project_path)
-    project.proxy_data.proxy_mode = appconsts.USE_PROXY_MEDIA
-
+    
     # Load saved temp proxy project
     project = persistance.load_project(conv_temp_project_path)
-
+    project.proxy_data.proxy_mode = appconsts.USE_PROXY_MEDIA
+        
+    editorstate.project_is_loading = False
+            
     # Open saved temp project
     app.stop_autosave()
 

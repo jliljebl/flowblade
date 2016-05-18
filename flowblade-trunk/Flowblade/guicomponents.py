@@ -750,9 +750,7 @@ class MediaPanel():
         audio_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "audio_indicator.png")
         pattern_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "pattern_producer_indicator.png")
         profile_warning_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "profile_warning.png")
-        
-        
-        
+
     def get_selected_media_objects(self):
         return self.selected_objects
         
