@@ -754,7 +754,11 @@ class MediaPanel():
     def get_selected_media_objects(self):
         return self.selected_objects
         
-    def media_object_selected(self, media_object, widget, event):       
+    def media_object_selected(self, media_object, widget, event):
+        if event.type == Gdk.EventType._2BUTTON_PRESS:
+            widget.grab_focus()
+            self.double_click_cb(media_object.media_file)
+            
         # HACK! We're using event times to exclude double events when icon is pressed 
         now = time.time()
         if (now - self.last_event_time) < 0.05:
@@ -763,9 +767,7 @@ class MediaPanel():
         self.last_event_time = now
         
         widget.grab_focus()
-        if event.type == Gdk.EventType._2BUTTON_PRESS:
-            self.double_click_cb(media_object.media_file)
-        elif event.button == 1:
+        if event.button == 1:
             if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
                 # add to selected if not already there, otherwise remove
