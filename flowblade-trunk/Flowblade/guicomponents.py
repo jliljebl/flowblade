@@ -24,6 +24,7 @@ Module contains classes and build methods to create GUI objects.
 
 import cairo
 import math
+import time
 
 from gi.repository import GObject
 from gi.repository import GdkPixbuf
@@ -739,6 +740,7 @@ class MediaPanel():
         self.media_file_popup_cb = media_file_popup_cb
         self.double_click_cb = double_click_cb
         self.monitor_indicator = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "monitor_indicator.png")
+        self.last_event_time = 0.0
         
         global has_proxy_icon, is_proxy_icon, graphics_icon, imgseq_icon, audio_icon, pattern_icon, profile_warning_icon
         has_proxy_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "has_proxy_indicator.png")
@@ -749,28 +751,37 @@ class MediaPanel():
         pattern_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "pattern_producer_indicator.png")
         profile_warning_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "profile_warning.png")
         
+        
+        
     def get_selected_media_objects(self):
         return self.selected_objects
         
-    def media_object_selected(self, media_object, widget, event):
+    def media_object_selected(self, media_object, widget, event):       
+        # HACK! We're using event times to exclude double events when icon is pressed 
+        now = time.time()
+        if (now - self.last_event_time) < 0.05:
+            self.last_event_time = now
+            return 
+        self.last_event_time = now
+        
         widget.grab_focus()
         if event.type == Gdk.EventType._2BUTTON_PRESS:
-             self.double_click_cb(media_object.media_file)
+            self.double_click_cb(media_object.media_file)
         elif event.button == 1:
             if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-                widget.override_background_color(Gtk.StateType.NORMAL, gui. get_selected_bg_color())
+                media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
                 # add to selected if not already there, otherwise remove
                 try:
                     self.selected_objects.index(media_object)
                     self.selected_objects.remove(media_object)
-                    
                     bg_color = gui.get_bg_color()
                     media_object.widget.override_background_color(Gtk.StateType.NORMAL, bg_color)
+                    return True
                 except:
                     self.selected_objects.append(media_object)
             else:
                 self.clear_selection()
-                widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
+                media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
                 self.selected_objects.append(media_object)
         elif event.button == 3:
             self.clear_selection()
@@ -894,12 +905,13 @@ class MediaObjectWidget:
         self.widget.connect("button-press-event", lambda w,e: selected_callback(self, w, e))
         self.widget.dnd_media_widget_attr = True # this is used to identify widget at dnd drop
         self.widget.set_can_focus(True)
- 
+        self.widget.add_events(Gdk.EventMask.KEY_PRESS_MASK) 
         self.vbox = Gtk.VBox()
 
         self.img = cairoarea.CairoDrawableArea2(appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT, self._draw_icon)
         self.img.press_func = self._press
         self.img.dnd_media_widget_attr = True # this is used to identify widget at dnd drop
+        self.img.set_can_focus(True)
 
         txt = Gtk.Label(label=media_file.name)
         txt.modify_font(Pango.FontDescription("sans 9"))
