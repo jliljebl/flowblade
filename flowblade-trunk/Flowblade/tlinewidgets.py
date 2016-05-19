@@ -1829,7 +1829,17 @@ class TimeLineFrameScale:
         # Get sequence and frames per second value
         seq = current_sequence()
         fps = seq.profile.fps()
-        
+
+        # Selected range
+        if seq.tractor.mark_in != -1 and seq.tractor.mark_out != -1:
+            in_x = (seq.tractor.mark_in - pos) * pix_per_frame
+            out_x = (seq.tractor.mark_out + 1 - pos) * pix_per_frame
+            grad = cairo.LinearGradient (0, 0, 0, h)
+            grad.add_color_stop_rgba(*FRAME_SCALE_SELECTED_COLOR_GRAD)
+            cr.set_source(grad)
+            cr.rectangle(in_x,0,out_x-in_x,h)
+            cr.fill()
+
         # Draw start indicator triangles
         if pos == 0:
             cr.set_source_rgb(*FRAME_SCALE_LINES)
@@ -1844,16 +1854,6 @@ class TimeLineFrameScale:
                 cr.close_path();
                 cr.fill()
 
-        # Selected range
-        if seq.tractor.mark_in != -1 and seq.tractor.mark_out != -1:
-            in_x = (seq.tractor.mark_in - pos) * pix_per_frame
-            out_x = (seq.tractor.mark_out + 1 - pos) * pix_per_frame
-            grad = cairo.LinearGradient (0, 0, 0, h)
-            grad.add_color_stop_rgba(*FRAME_SCALE_SELECTED_COLOR_GRAD)
-            cr.set_source(grad)
-            cr.rectangle(in_x,0,out_x-in_x,h)
-            cr.fill()
-            
         # Set line attr for frames lines
         cr.set_source_rgb(*FRAME_SCALE_LINES)
         cr.set_line_width(1.0)

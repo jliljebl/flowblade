@@ -99,6 +99,7 @@ class LoadThread(threading.Thread):
             editorstate.project_is_loading = True
             
             project = persistance.load_project(self.filename)
+
             sequence.set_track_counts(project)
             
             editorstate.project_is_loading = False
