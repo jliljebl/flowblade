@@ -24,9 +24,17 @@ Application module.
 Handles application initialization, shutdown, opening projects, autosave and changing
 sequences.
 """
+try:
+    import pgi
+    pgi.install_as_gi()
+except ImportError:
+    pass
+    
+import gi
 
 from gi.repository import GObject
 from gi.repository import GLib
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository import Gdk
 

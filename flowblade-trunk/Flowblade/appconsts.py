@@ -68,7 +68,7 @@ PROP_EXPRESSION = 2
 # Display heights for tracks.
 TRACK_HEIGHT_NORMAL = 50 # track height in canvas and column
 TRACK_HEIGHT_SMALL = 25 # track height in canvas and column
-TRACK_HEIGHT_SMALLEST = 25 # 20 # track height in canvas and column
+TRACK_HEIGHT_SMALLEST = 25 # maybe remove as it is no longer meaningful
 
 # Notebook widths
 NOTEBOOK_WIDTH = 600 # defines app min width with MONITOR_AREA_WIDTH
@@ -133,7 +133,7 @@ RENDERED_COLOR_DIP = 2
 RENDERED_FADE_IN = 3
 RENDERED_FADE_OUT = 4
 
-# Project proxt modes
+# Project proxy modes
 USE_ORIGINAL_MEDIA = 0
 USE_PROXY_MEDIA = 1
 CONVERTING_TO_USE_PROXY_MEDIA = 2

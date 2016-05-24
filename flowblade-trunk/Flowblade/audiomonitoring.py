@@ -20,6 +20,14 @@
 """
 Module handles initializing and displaying audiomonitor tool.
 """
+try:
+    import pgi
+    pgi.install_as_gi()
+except ImportError:
+    pass
+    
+import gi
+
 import cairo
 import mlt
 import time
@@ -28,6 +36,7 @@ from gi.repository import Gtk, GObject
 from gi.repository import GLib
 from gi.repository import Gdk
 from gi.repository import Pango
+gi.require_version('PangoCairo', '1.0')
 from gi.repository import PangoCairo
 
 import appconsts
