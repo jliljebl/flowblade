@@ -27,8 +27,13 @@ from editorstate import EDIT_MODE
 _get_frame_for_x_func = None
 _get_x_for_frame_func = None
 
-_snapping_on = True
+snapping_on = True
+show_magnet_icon = True
+
 _snap_threshold = 6 # in pixels
+
+_snap_happened = False
+_last_snap_x = -1
 
 #------------------------------------------- module utils funcs
 def _get_track_above(track):
@@ -51,13 +56,15 @@ def _get_track_snapped_x(track, x, frame, frame_x):
     cut_frame_x = _get_x_for_frame_func(closest_cut_frame)
     
     if abs(cut_frame_x - frame_x) < _snap_threshold:
+        global _last_snap_x
+        _last_snap_x = cut_frame_x
         return x - (frame_x - cut_frame_x)
     else:
         return -1 # no snapping happened
         
 #---------------------------------------------------- interface
 def get_snapped_x(x, track, edit_data):
-    if _snapping_on == False:
+    if snapping_on == False:
         return x
     
     frame = _get_frame_for_x_func(x)
@@ -68,9 +75,19 @@ def get_snapped_x(x, track, edit_data):
     # Many edit modes do not have snapping even if snapping is on
     return x
 
+def snap_active():
+    return _snap_happened
+
+def get_snap_x():
+    return _last_snap_x
+
+def mouse_edit_ended():
+    global _snap_happened
+    _snap_happened = False
+
+
 #---------------------------------------------------- edit mode snapping funcsd
 def _overwrite_move_snap(x, track, frame, edit_data):
-    print "_overwrite_move_snap"
     if edit_data == None:
         return x
 
@@ -84,17 +101,23 @@ def _overwrite_move_snap(x, track, frame, edit_data):
     track_above = _get_track_above(track)
     track_below = _get_track_below(track)
     
-    # Check snapping for track beside mouse move track
-    # Check track_below last so that its snapped  x is preferred if snapping
-    # happends for both tracks
+    # Check snapping for mouse track and the tracks beside mouse track
+    # Check order: track_above, track_below, track, last in order is preferred if multiple snapping happens
     if track_above != None:
         snapped_x = _get_track_snapped_x(track_above, x, first_clip_frame, first_clip_x)
     if track_below != None:
-        snapped_x = _get_track_snapped_x(track_below, x, first_clip_frame, first_clip_x)
-    
+        snapped_next_track_x = _get_track_snapped_x(track_below, x, first_clip_frame, first_clip_x)
+        if snapped_next_track_x != -1:
+            snapped_x = snapped_next_track_x
+    snapped_next_track_x = _get_track_snapped_x(track, x, first_clip_frame, first_clip_x)
+    if snapped_next_track_x != -1:
+        snapped_x = snapped_next_track_x
+            
     # Return either original or snapped x
+    global _snap_happened
     if snapped_x == -1:
+        _snap_happened = False
         return x
     else:
-        print "snapped"
+        _snap_happened = True
         return snapped_x

@@ -48,6 +48,7 @@ import mltfilters
 import mltprofiles
 import mlttransitions
 import respaths
+import snapping
 import translations
 import utils
 
@@ -1896,13 +1897,29 @@ def get_audio_levels_popup_menu(event, callback):
     menu = levels_menu
     guiutils.remove_children(menu)
 
-    thumbs_item = Gtk.CheckMenuItem(_("Display Clip Media Thumbnails").encode('utf-8'))
+    thumbs_item = Gtk.CheckMenuItem()
     thumbs_item.set_label(_("Display Clip Media Thumbnails"))
     thumbs_item.set_active(editorstate.display_clip_media_thumbnails)
     thumbs_item.connect("activate", callback, "thumbs")
     
     menu.append(thumbs_item)
 
+    _add_separetor(menu)
+
+    snapping_item = Gtk.CheckMenuItem()
+    snapping_item.set_label(_("Snapping On"))
+    snapping_item.set_active(snapping.snapping_on)
+    snapping_item.connect("activate", callback, "snapping")
+    
+    menu.append(snapping_item)
+    
+    show_magnet_item = Gtk.CheckMenuItem()
+    show_magnet_item.set_label(_("Show Magnet Icon"))
+    show_magnet_item.set_active(snapping.show_magnet_icon)
+    show_magnet_item.connect("activate", callback, "magnet")
+    
+    menu.append(show_magnet_item)
+    
     _add_separetor(menu)
     
     allways_item = Gtk.RadioMenuItem() 

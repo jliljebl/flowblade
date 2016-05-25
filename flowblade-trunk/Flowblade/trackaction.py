@@ -29,6 +29,7 @@ import guicomponents
 import editorstate
 from editorstate import get_track
 from editorstate import current_sequence
+import snapping
 import tlinewidgets
 import updater
 
@@ -123,6 +124,10 @@ def _audio_levels_item_activated(widget, msg):
         editorstate.display_all_audio_levels = False
         current_sequence().drop_audio_levels()
         updater.repaint_tline()
+    elif msg == "snapping":
+        snapping.snapping_on = widget.get_active()
+    elif msg == "magnet":
+        snapping.show_magnet_icon = widget.get_active()
     else: # media thumbnails
         editorstate.display_clip_media_thumbnails = widget.get_active()
         updater.repaint_tline()
