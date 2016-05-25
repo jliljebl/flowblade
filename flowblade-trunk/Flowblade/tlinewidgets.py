@@ -46,6 +46,7 @@ import editorstate
 import gui
 import respaths
 import sequence
+import snapping
 import trimmodes
 import utils
 import updater
@@ -988,6 +989,10 @@ class TimeLineCanvas:
             button = 1
         elif (state & Gdk.ModifierType.BUTTON3_MASK):
             button = 3
+        
+        track = get_track(y)
+        x = snapping.get_snapped_x(x, track, self.edit_mode_data)
+            
         self.move_listener(x, y, get_frame(x), button, state)
         
     def _release_event(self, event):
@@ -995,7 +1000,11 @@ class TimeLineCanvas:
         Mouse release callback.
         """
         self.drag_on = False
-        self.release_listener(event.x, event.y, get_frame(event.x), \
+        
+        track = get_track(event.y)
+        x = snapping.get_snapped_x(event.x, track, self.edit_mode_data)
+        
+        self.release_listener(x, event.y, get_frame(x), \
                               event.button, event.get_state())
 
     def set_pointer_context(self, x, y):

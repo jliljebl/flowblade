@@ -83,6 +83,7 @@ import renderconsumer
 import respaths
 import resync
 import sequence
+import snapping
 import titler
 import tlinewidgets
 import trimmodes
@@ -347,7 +348,11 @@ def monkeypatch_callbacks():
     
     # Posionbar in gmic.py doesnot need trimmodes.py dependency and is avoided 
     positionbar.trimmodes_set_no_edit_trim_mode = trimmodes.set_no_edit_trim_mode
-    
+
+    # Snapping is done in a separate module but needs tlinewidgets stae info
+    snapping._get_frame_for_x_func = tlinewidgets.get_frame
+    snapping._get_x_for_frame_func = tlinewidgets._get_frame_x
+
     # These provide clues for further module refactoring 
 
 # ---------------------------------- program, sequence and project init

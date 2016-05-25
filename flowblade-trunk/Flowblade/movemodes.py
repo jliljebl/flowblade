@@ -413,6 +413,7 @@ def _move_mode_pressed(event, frame):
         return
         
     # Check locking for pressed track
+    # This ain't used crrently!!!!!
     if _track_is_locked(track):
         clear_selected_clips()
         pressed_on_selected = False
@@ -432,6 +433,7 @@ def _move_mode_pressed(event, frame):
             # seems to a single blank area. All of these must be
             # selected together automatically or user will be exposed to
             # this impl. detail unnecesserarely.
+            # THIS HAS BEEN CHANGED BECAUSE BLANKS ARE NOW AUTO CONSOLIDATED AFTER ALL EDITS.
             range_in, range_out = _get_blanck_range(track, clip_index)
             _select_multiple_clips(track.id, range_in, range_out)
             pressed_on_selected = False
@@ -494,9 +496,9 @@ def _move_mode_pressed(event, frame):
                  "track_object":track,
                  "to_track_object":track,
                  "move_on":False,
-                 "press_frame":frame,
+                 "press_frame":frame, # on timeline at mouse press
                  "current_frame":frame,
-                 "first_clip_start":insert_frame,
+                 "first_clip_start":insert_frame,  # on timeline at mouse press
                  "insert_frame":insert_frame,
                  "clip_lengths":clip_lengths,
                  "mouse_start_x":x,
