@@ -499,9 +499,7 @@ def draw_overwrite_overlay(cr, data):
     arrow_x = start_x + ((end_x - start_x)/2.0)
     _draw_mode_arrow(cr, arrow_x, y, OVERWRITE_MODE_COLOR)
     
-    if snapping.snap_active() == True and snapping.show_magnet_icon == True:
-        cr.set_source_surface(SNAP_ICON, int(snapping.get_snap_x()) - 6, int(y) - 14)
-        cr.paint()
+    _draw_snap(cr, y)
      
 def _draw_move_overlay(cr, data, y):
     # Get data
@@ -799,6 +797,8 @@ def draw_clip_end_drag_overlay(cr, data):
     cr.rectangle(scale_in, int(y) + 1.5, int(scale_length), track_height - 2.0)
     cr.stroke()
 
+    _draw_snap(cr, y)
+    
 def draw_compositor_move_overlay(cr, data):
     # Get data
     press_frame = data["press_frame"]
@@ -934,6 +934,11 @@ def _draw_view_icon(cr, x, y):
     cr.set_source_surface(VIEW_SIDE_ICON, x, y)
     cr.paint()
 
+def _draw_snap(cr, y):
+    if snapping.snap_active() == True and snapping.show_magnet_icon == True:
+        cr.set_source_surface(SNAP_ICON, int(snapping.get_snap_x()) - 6, int(y) - 14)
+        cr.paint()
+        
 # ------------------------------- WIDGETS
 class TimeLineCanvas:
     """

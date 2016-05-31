@@ -18,6 +18,10 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
+"""
+This module handles snapping to clip ends while mouse dragging on timeline.
+"""
+
 import appconsts
 import editorstate
 from editorstate import current_sequence
@@ -35,7 +39,35 @@ _snap_threshold = 6 # in pixels
 _snap_happened = False
 _last_snap_x = -1
 
-#------------------------------------------- module utils funcs
+
+#---------------------------------------------------- interface
+def get_snapped_x(x, track, edit_data):
+    if snapping_on == False:
+        return x
+    
+    frame = _get_frame_for_x_func(x)
+
+    # Do snaps for relevant edit modes.
+    if EDIT_MODE() == editorstate.OVERWRITE_MOVE:
+        return _overwrite_move_snap(x, track, frame, edit_data)
+    elif EDIT_MODE() == editorstate.CLIP_END_DRAG:
+        return _clip_end_drag_snap(x, track, frame, edit_data)
+    
+    # Many edit modes do not have snapping even if snapping is on
+    return x
+
+def snap_active():
+    return _snap_happened
+
+def get_snap_x():
+    return _last_snap_x
+
+def mouse_edit_ended():
+    global _snap_happened
+    _snap_happened = False
+
+
+#------------------------------------------- utils funcs
 def _get_track_above(track):
     if track.id < len(current_sequence().tracks) - 2:
         return current_sequence().tracks[track.id  + 1]
@@ -61,31 +93,7 @@ def _get_track_snapped_x(track, x, frame, frame_x):
         return x - (frame_x - cut_frame_x)
     else:
         return -1 # no snapping happened
-        
-#---------------------------------------------------- interface
-def get_snapped_x(x, track, edit_data):
-    if snapping_on == False:
-        return x
     
-    frame = _get_frame_for_x_func(x)
-
-    if EDIT_MODE() == editorstate.OVERWRITE_MOVE:
-        return _overwrite_move_snap(x, track, frame, edit_data)
-
-    # Many edit modes do not have snapping even if snapping is on
-    return x
-
-def snap_active():
-    return _snap_happened
-
-def get_snap_x():
-    return _last_snap_x
-
-def mouse_edit_ended():
-    global _snap_happened
-    _snap_happened = False
-
-
 #---------------------------------------------------- edit mode snapping funcsd
 def _overwrite_move_snap(x, track, frame, edit_data):
     if edit_data == None:
@@ -121,3 +129,37 @@ def _overwrite_move_snap(x, track, frame, edit_data):
     else:
         _snap_happened = True
         return snapped_x
+
+def _clip_end_drag_snap(x, track, frame, edit_data):
+    if edit_data == None:
+        return x
+
+    snapped_x = -1 # if value stys same till end , no snapping has happened
+
+    frame_x = _get_x_for_frame_func(frame)
+
+    track_above = _get_track_above(track)
+    track_below = _get_track_below(track)
+    
+    # Check snapping for mouse track and the tracks beside mouse track
+    # Check order: track_above, track_below, track, last in order is preferred if multiple snapping happens
+    if track_above != None:
+        snapped_x = _get_track_snapped_x(track_above, x, frame, frame_x)
+    if track_below != None:
+        snapped_next_track_x = _get_track_snapped_x(track_below, x, frame, frame_x)
+        if snapped_next_track_x != -1:
+            snapped_x = snapped_next_track_x
+    snapped_next_track_x = _get_track_snapped_x(track, x, frame, frame_x)
+    if snapped_next_track_x != -1:
+        snapped_x = snapped_next_track_x
+        
+
+    # Return either original or snapped x
+    global _snap_happened
+    if snapped_x == -1:
+        _snap_happened = False
+        return x
+    else:
+        _snap_happened = True
+        return snapped_x
+        
