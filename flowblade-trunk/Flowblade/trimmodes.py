@@ -29,6 +29,7 @@ import editorpersistance
 import editorstate
 from editorstate import current_sequence
 from editorstate import PLAYER
+from editorstate import EDIT_MODE
 import gui
 import tlinewidgets
 import updater
@@ -58,6 +59,13 @@ set_exit_mode_func = None
 #
 # This function is set when trim modes are entered to be to the "edit init func for" the entered trim mode.
 set_no_edit_mode_func = None
+
+# Sub modes for handling mouse vs. keyboard edits
+NOTHING_ON = 0
+MOUSE_EDIT_ON = 1
+KEYB_EDIT_ON = 2
+
+submode = NOTHING_ON
 
 
 # ------------------------------------ module functions       
@@ -225,6 +233,66 @@ def set_no_edit_trim_mode():
         set_no_edit_mode_func()
 
 
+#----------------------------------------------------- keyboard events
+def left_arrow_pressed(ctrl_pressed):
+    global submode
+    if submode == MOUSE_EDIT_ON:
+        return
+        
+    submode = KEYB_EDIT_ON
+    delta = 1
+    if ctrl_pressed:
+        delta = 10
+        
+    if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
+        _one_roll_trim_left(delta)
+
+def right_arrow_pressed(ctrl_pressed):
+    global submode
+    if submode == MOUSE_EDIT_ON:
+        return
+        
+    submode = KEYB_EDIT_ON
+    delta = 1
+    if ctrl_pressed:
+        delta = 10
+        
+    if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
+        _one_roll_trim_right(delta)
+
+def enter_pressed():
+    global submode
+    if submode != KEYB_EDIT_ON:
+        return
+
+    if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
+        _one_roll_enter_edit()
+        
+    submode = NOTHING_ON
+
+def _one_roll_trim_left(delta):
+    # Get legal edit frame for overlay display
+    global edit_data
+    frame = edit_data["selected_frame"] - delta
+    frame = _legalize_one_roll_trim(frame, edit_data["trim_limits"])
+    edit_data["selected_frame"] = frame
+    
+    PLAYER().seek_frame(frame)
+    
+def _one_roll_trim_right(delta):
+    # Get legal edit frame for overlay display
+    global edit_data
+    frame = edit_data["selected_frame"] + delta
+    frame = _legalize_one_roll_trim(frame, edit_data["trim_limits"])
+    edit_data["selected_frame"] = frame
+    
+    PLAYER().seek_frame(frame)
+    
+def _one_roll_enter_edit():
+    frame = edit_data["selected_frame"]
+    _do_one_roll_trim_edit(frame)
+
+
 # ------------------------------------- ONE ROLL TRIM EVENTS
 def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     """
@@ -301,7 +369,7 @@ def oneroll_trim_press(event, frame):
     """
     User presses mouse when in one roll mode.
     """
-    global mouse_disabled
+    global mouse_disabled, submode
 
     if not _pressed_on_edited_track(event.y):
         track = tlinewidgets.get_track(event.y)
@@ -312,6 +380,7 @@ def oneroll_trim_press(event, frame):
             else:
                 set_no_edit_mode_func() # further mouse events are handled at editevent.py
         else:
+            submode = MOUSE_EDIT_ON # to stop entering keyboard edits until mouse released
             if not editorpersistance.prefs.quick_enter_trims:
                 # new trim inited, editing non-active until release
                 tlinewidgets.trim_mode_in_non_active_state = True
@@ -333,6 +402,7 @@ def oneroll_trim_press(event, frame):
             else:
                 set_no_edit_mode_func() # no furter mouse events will come here
         else:
+            submode = MOUSE_EDIT_ON # to stop entering keyboard edits until mouse released
             if not editorpersistance.prefs.quick_enter_trims:
                 # new trim inited, editing non-active until release
                 tlinewidgets.trim_mode_in_non_active_state = True
@@ -370,7 +440,8 @@ def oneroll_trim_release(x, y, frame, state):
     """
     User releases mouse when in one roll mode.
     """
-    global mouse_disabled
+    global mouse_disabled, submode
+    submode = NOTHING_ON # we can now enter keyboard edits 
     if mouse_disabled:
         mouse_disabled = False
         # we may have been in non active state because the clip being edited was changed

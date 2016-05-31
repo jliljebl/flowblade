@@ -42,6 +42,7 @@ import menuactions
 import monitorevent
 import mltrefhold
 import tlineaction
+import trimmodes
 import updater
 import projectaction
 
@@ -235,6 +236,23 @@ def _handle_tline_key_event(event):
     if event.keyval == Gdk.KEY_g:
         medialog.log_range_clicked()
         return True
+
+
+    # Key bindings for keyboard trimming
+    if editorstate.current_is_active_trim_mode() == True:
+        # LEFT ARROW, prev frame
+        if event.keyval == Gdk.KEY_Left:
+            trimmodes.left_arrow_pressed((event.get_state() & Gdk.ModifierType.CONTROL_MASK))
+            return True
+
+        # RIGHT ARROW, next frame
+        if event.keyval == Gdk.KEY_Right:
+            trimmodes.right_arrow_pressed((event.get_state() & Gdk.ModifierType.CONTROL_MASK))
+            return True
+
+        if event.keyval == Gdk.KEY_Return:
+            trimmodes.enter_pressed()
+            return True
 
     # Key bindings for MOVE MODES and _NO_EDIT modes
     if editorstate.current_is_move_mode() or editorstate.current_is_active_trim_mode() == False:
