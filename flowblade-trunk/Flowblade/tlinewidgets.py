@@ -821,7 +821,9 @@ def draw_compositor_move_overlay(cr, data):
     cr.set_line_width(2.0)
     cr.set_source_rgb(*OVERLAY_COLOR)
     cr.stroke()
-    
+
+    _draw_snap(cr, y)
+
 def draw_compositor_trim(cr, data):
     clip_in = data["clip_in"]
     clip_out = data["clip_out"]

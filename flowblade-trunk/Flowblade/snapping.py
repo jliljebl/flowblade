@@ -54,9 +54,11 @@ def get_snapped_x(x, track, edit_data):
     elif EDIT_MODE() == editorstate.CLIP_END_DRAG:
         return _object_end_drag_snap(x, track, frame, edit_data)
     elif EDIT_MODE() == editorstate.COMPOSITOR_EDIT:
+        track = current_sequence().tracks[compositormodes.compositor.transition.b_track - 1]
         if compositormodes.sub_mode == compositormodes.TRIM_EDIT:
-            track = current_sequence().tracks[compositormodes.compositor.transition.b_track - 1]
             return _object_end_drag_snap(x, track, frame, edit_data)
+        elif compositormodes.sub_mode == compositormodes.MOVE_EDIT:
+            return _compositor_move_snap(x, track, frame, edit_data)
 
     # Many edit modes do not have snapping even if snapping is on
     return x
@@ -98,51 +100,10 @@ def _get_track_snapped_x(track, x, frame, frame_x):
         return x - (frame_x - cut_frame_x)
     else:
         return -1 # no snapping happened
+
+def _three_track_snap(track, x, frame, frame_x):
+    snapped_x = -1
     
-#---------------------------------------------------- edit mode snapping funcsd
-def _overwrite_move_snap(x, track, frame, edit_data):
-    if edit_data == None:
-        return x
-
-    snapped_x = -1 # if value stys same till end , no snapping has happened
-
-    press_frame = edit_data["press_frame"]
-    first_clip_start = edit_data["first_clip_start"]
-    first_clip_frame = first_clip_start + (frame - press_frame)
-    first_clip_x = _get_x_for_frame_func(first_clip_frame)
-    
-    track_above = _get_track_above(track)
-    track_below = _get_track_below(track)
-    
-    # Check snapping for mouse track and the tracks beside mouse track
-    # Check order: track_above, track_below, track, last in order is preferred if multiple snapping happens
-    if track_above != None:
-        snapped_x = _get_track_snapped_x(track_above, x, first_clip_frame, first_clip_x)
-    if track_below != None:
-        snapped_next_track_x = _get_track_snapped_x(track_below, x, first_clip_frame, first_clip_x)
-        if snapped_next_track_x != -1:
-            snapped_x = snapped_next_track_x
-    snapped_next_track_x = _get_track_snapped_x(track, x, first_clip_frame, first_clip_x)
-    if snapped_next_track_x != -1:
-        snapped_x = snapped_next_track_x
-            
-    # Return either original or snapped x
-    global _snap_happened
-    if snapped_x == -1:
-        _snap_happened = False
-        return x
-    else:
-        _snap_happened = True
-        return snapped_x
-
-def _object_end_drag_snap(x, track, frame, edit_data):
-    if edit_data == None:
-        return x
-
-    snapped_x = -1 # if value stys same till end , no snapping has happened
-
-    frame_x = _get_x_for_frame_func(frame)
-
     track_above = _get_track_above(track)
     track_below = _get_track_below(track)
     
@@ -157,14 +118,65 @@ def _object_end_drag_snap(x, track, frame, edit_data):
     snapped_next_track_x = _get_track_snapped_x(track, x, frame, frame_x)
     if snapped_next_track_x != -1:
         snapped_x = snapped_next_track_x
-        
 
+    return snapped_x
+
+def return_snapped_x_or_x(snapped_x, x):
     # Return either original or snapped x
     global _snap_happened
-    if snapped_x == -1:
+    if snapped_x == -1: # indicates no snap happened
         _snap_happened = False
         return x
     else:
         _snap_happened = True
         return snapped_x
         
+#---------------------------------------------------- edit mode snapping funcsd
+def _overwrite_move_snap(x, track, frame, edit_data):
+    if edit_data == None:
+        return x
+
+    snapped_x = -1 # if value stays same till end no snapping happened.
+
+    press_frame = edit_data["press_frame"]
+    first_clip_start = edit_data["first_clip_start"]
+    first_clip_frame = first_clip_start + (frame - press_frame)
+    first_clip_x = _get_x_for_frame_func(first_clip_frame)
+
+    snapped_x = -1 # if value stys same till end, no snapping has happened
+    snapped_x = _three_track_snap(track, x, first_clip_frame, first_clip_x)
+            
+    # Return either original x or snapped x
+    return return_snapped_x_or_x(snapped_x, x)
+
+def _object_end_drag_snap(x, track, frame, edit_data):
+    if edit_data == None:
+        return x
+
+    frame_x = _get_x_for_frame_func(frame)
+
+    snapped_x = -1  # if value stays same till end no snapping happened.
+    snapped_x = _three_track_snap(track, x, frame, frame_x)
+        
+    # Return either original or snapped x
+    return return_snapped_x_or_x(snapped_x, x)
+
+def _compositor_move_snap(x, track, frame, edit_data):
+    if edit_data == None:
+        return x
+
+    snapped_x = -1 # if value stays same till end no snapping happened.
+
+    comp_in_frame = edit_data["clip_in"] + (frame - edit_data["press_frame"])
+    comp_in_x = _get_x_for_frame_func(comp_in_frame)
+
+    snapped_x = -1 # if value stys same till end, no snapping has happened
+    snapped_x = _three_track_snap(track, x, comp_in_frame, comp_in_x)
+
+    if snapped_x == -1: # indicates no snap happened
+        comp_out_frame = edit_data["clip_in"] + (frame - edit_data["press_frame"]) + edit_data["clip_length"] 
+        comp_out_x = _get_x_for_frame_func(comp_out_frame)
+        snapped_x = _three_track_snap(track, x, comp_out_frame, comp_out_x)
+    
+    # Return either original x or snapped x
+    return return_snapped_x_or_x(snapped_x, x)
