@@ -117,9 +117,10 @@ def _create_buttons(editor_window):
     editor_window.edit_buttons_2 = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
     editor_window.edit_buttons_2.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "splice_out.png"), tlineaction.splice_out_button_pressed)
     editor_window.edit_buttons_2.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "lift.png"), tlineaction.lift_button_pressed)
+    editor_window.edit_buttons_2.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "delete_range.png"), tlineaction.append_button_pressed)
     editor_window.edit_buttons_2.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "resync.png"), tlineaction.resync_button_pressed)
     editor_window.edit_buttons_2.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "split_audio.png"), tlineaction.split_audio_button_pressed)
-    editor_window.edit_buttons_2.widget.set_tooltip_text(_("Splice Out - Delete\nLift\nResync Selected\nSplit Audio"))
+    editor_window.edit_buttons_2.widget.set_tooltip_text(_("Splice Out - Delete\nLift\nDelete Range\nResync Selected\nSplit Audio"))
 
     editor_window.monitor_insert_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
     editor_window.monitor_insert_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "overwrite_range.png"), tlineaction.range_overwrite_pressed)

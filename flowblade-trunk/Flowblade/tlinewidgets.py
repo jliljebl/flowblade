@@ -1288,13 +1288,16 @@ class TimeLineCanvas:
                         cr.set_source_surface(thumb_img,scale_in, y)
                         cr.paint()
                     except: # thumbnail not found  in dict, get it pait it
-                        media_file = PROJECT().get_media_file_for_path(clip.path)
-                        thumb_img = media_file.icon
-                        cr.rectangle(scale_in + 4, y + 3.5, scale_length - 8, track_height - 6)
-                        cr.clip()
-                        cr.set_source_surface(thumb_img, scale_in, y)
-                        cr.paint()
-                        clip_thumbnails[clip.path] = thumb_img
+                        try:
+                            media_file = PROJECT().get_media_file_for_path(clip.path)
+                            thumb_img = media_file.icon
+                            cr.rectangle(scale_in + 4, y + 3.5, scale_length - 8, track_height - 6)
+                            cr.clip()
+                            cr.set_source_surface(thumb_img, scale_in, y)
+                            cr.paint()
+                            clip_thumbnails[clip.path] = thumb_img
+                        except:
+                            pass # This fails for rendered fades and transitions
                     cr.restore()
                 
             # Draw sync stripe
