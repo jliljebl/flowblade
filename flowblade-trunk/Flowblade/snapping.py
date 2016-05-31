@@ -23,6 +23,7 @@ This module handles snapping to clip ends while mouse dragging on timeline.
 """
 
 import appconsts
+import compositormodes
 import editorstate
 from editorstate import current_sequence
 from editorstate import EDIT_MODE
@@ -51,8 +52,12 @@ def get_snapped_x(x, track, edit_data):
     if EDIT_MODE() == editorstate.OVERWRITE_MOVE:
         return _overwrite_move_snap(x, track, frame, edit_data)
     elif EDIT_MODE() == editorstate.CLIP_END_DRAG:
-        return _clip_end_drag_snap(x, track, frame, edit_data)
-    
+        return _object_end_drag_snap(x, track, frame, edit_data)
+    elif EDIT_MODE() == editorstate.COMPOSITOR_EDIT:
+        if compositormodes.sub_mode == compositormodes.TRIM_EDIT:
+            track = current_sequence().tracks[compositormodes.compositor.transition.b_track - 1]
+            return _object_end_drag_snap(x, track, frame, edit_data)
+
     # Many edit modes do not have snapping even if snapping is on
     return x
 
@@ -130,7 +135,7 @@ def _overwrite_move_snap(x, track, frame, edit_data):
         _snap_happened = True
         return snapped_x
 
-def _clip_end_drag_snap(x, track, frame, edit_data):
+def _object_end_drag_snap(x, track, frame, edit_data):
     if edit_data == None:
         return x
 

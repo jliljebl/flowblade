@@ -848,6 +848,8 @@ def draw_compositor_trim(cr, data):
         x = scale_in + scale_length - 26
     _draw_two_arrows(cr, x, y + 4, 4)
 
+    _draw_snap(cr, y)
+    
 def _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y):
     scale_in = int(scale_in) + 0.5
     scale_length = int(scale_length)
