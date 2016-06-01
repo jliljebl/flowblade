@@ -248,7 +248,9 @@ def left_arrow_pressed(ctrl_pressed):
         _one_roll_trim_left(delta)
     elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
         _tworoll_trim_left(delta)
- 
+    elif EDIT_MODE() == editorstate.SLIDE_TRIM:
+        _slide_trim_left(delta)
+        
 def right_arrow_pressed(ctrl_pressed):
     global submode
     if submode == MOUSE_EDIT_ON:
@@ -263,7 +265,9 @@ def right_arrow_pressed(ctrl_pressed):
         _one_roll_trim_right(delta)
     elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
         _tworoll_trim_right(delta)
-        
+    elif EDIT_MODE() == editorstate.SLIDE_TRIM:
+        _slide_trim_right(delta)
+
 def enter_pressed():
     global submode
     if submode != KEYB_EDIT_ON:
@@ -273,6 +277,8 @@ def enter_pressed():
         _one_roll_enter_edit()
     elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
         _tworoll_enter_edit()
+    elif EDIT_MODE() == editorstate.SLIDE_TRIM:
+        _slide_enter_edit()
 
     submode = NOTHING_ON
 
@@ -317,18 +323,41 @@ def _tworoll_trim_right(delta):
 def _tworoll_enter_edit():
     _do_two_roll_edit(edit_data["selected_frame"])
 
-
-"""
-def slide_trim_move(x, y, frame, state):
+def _slide_trim_left(delta):
     global edit_data
-    frame = edit_data["selected_frame"] - delta
-    frame = _legalize_one_roll_trim(frame, edit_data["trim_limits"])
-    edit_data["selected_frame"] = frame
+    try:
+        frame = edit_data["keyboard_selected_frame"]
+        edit_data["keyboard_selected_frame"] = frame - delta
+    except:
+        try:
+            edit_data["keyboard_selected_frame"] = edit_data["press_start"] - delta
+        except:
+            trim_limits = edit_data["trim_limits"]
+            edit_data["press_start"] = trim_limits["clip_start"] + 1 # this can be anything the relevant thing here is mouse delta
+            edit_data["keyboard_selected_frame"] = edit_data["press_start"] - delta
 
-    display_frame = _update_slide_trim_for_mouse_frame(frame)
+    display_frame = _update_slide_trim_for_mouse_frame(edit_data["keyboard_selected_frame"])
     PLAYER().seek_frame(display_frame)
-"""
 
+def _slide_trim_right(delta):
+    global edit_data
+    try:
+        frame = edit_data["keyboard_selected_frame"]
+        edit_data["keyboard_selected_frame"] = frame + delta
+    except:
+        try:
+            edit_data["keyboard_selected_frame"] = edit_data["press_start"] + delta
+        except:
+            trim_limits = edit_data["trim_limits"]
+            edit_data["press_start"] = trim_limits["clip_start"] + 1 # this can be anything the relevant thing here is mouse delta
+            edit_data["keyboard_selected_frame"] = edit_data["press_start"] + delta
+
+    display_frame = _update_slide_trim_for_mouse_frame(edit_data["keyboard_selected_frame"])
+    PLAYER().seek_frame(display_frame)
+
+def _slide_enter_edit():
+    _do_slide_edit()
+    
 # ------------------------------------- ONE ROLL TRIM EVENTS
 def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     """

@@ -781,6 +781,8 @@ def draw_slide_overlay(cr, data):
     cr.set_source_surface(VIEW_SIDE_ICON, x, track_y + 4)
     cr.paint()
 
+    _draw_kb_trim_indicator(cr, x, track_y)
+    
 def draw_clip_end_drag_overlay(cr, data):
     if data["editing_clip_end"] == True:
         end = data["frame"]  - pos
