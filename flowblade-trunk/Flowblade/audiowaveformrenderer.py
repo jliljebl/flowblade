@@ -88,7 +88,7 @@ def get_waveform_data(clip):
         return None
     
 # ------------------------------------------------- launching render
-def render_queued():
+def launch_queued_renders():
     # Render files that were not found when timeline was displayed
     global _queued_waveform_renders
     if len(_queued_waveform_renders) == 0:
@@ -133,7 +133,7 @@ class AudioRenderLaunchThread(threading.Thread):
         self.rendered_media = rendered_media
         self.profile_desc = profile_desc
 
-    def run(self):      
+    def run(self):
         # Launch render process and wait for it to end
         FLOG = open(utils.get_hidden_user_dir_path() + "log_audio_levels_render", 'w')
         process = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladeaudiorender", \

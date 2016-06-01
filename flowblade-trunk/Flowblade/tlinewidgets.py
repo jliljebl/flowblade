@@ -1117,7 +1117,7 @@ class TimeLineCanvas:
         if self.edit_mode_overlay_draw_func != None:
             self.edit_mode_overlay_draw_func(cr,self.edit_mode_data)
         
-        audiowaveformrenderer.render_queued()
+        audiowaveformrenderer.launch_queued_renders()
 
     def draw_track(self, cr, track, y, width):
         """
