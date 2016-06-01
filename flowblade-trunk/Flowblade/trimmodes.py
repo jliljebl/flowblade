@@ -246,7 +246,9 @@ def left_arrow_pressed(ctrl_pressed):
         
     if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
         _one_roll_trim_left(delta)
-
+    elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
+        _tworoll_trim_left(delta)
+ 
 def right_arrow_pressed(ctrl_pressed):
     global submode
     if submode == MOUSE_EDIT_ON:
@@ -259,7 +261,9 @@ def right_arrow_pressed(ctrl_pressed):
         
     if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
         _one_roll_trim_right(delta)
-
+    elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
+        _tworoll_trim_right(delta)
+        
 def enter_pressed():
     global submode
     if submode != KEYB_EDIT_ON:
@@ -267,7 +271,9 @@ def enter_pressed():
 
     if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
         _one_roll_enter_edit()
-        
+    elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
+        _tworoll_enter_edit()
+
     submode = NOTHING_ON
 
 def _one_roll_trim_left(delta):
@@ -292,6 +298,36 @@ def _one_roll_enter_edit():
     frame = edit_data["selected_frame"]
     _do_one_roll_trim_edit(frame)
 
+def _tworoll_trim_left(delta):
+    global edit_data
+    frame = edit_data["selected_frame"] - delta
+    frame = _legalize_two_roll_trim(frame, edit_data["trim_limits"])
+    edit_data["selected_frame"] = frame
+
+    PLAYER().seek_frame(frame)
+
+def _tworoll_trim_right(delta):
+    global edit_data
+    frame = edit_data["selected_frame"] + delta
+    frame = _legalize_two_roll_trim(frame, edit_data["trim_limits"])
+    edit_data["selected_frame"] = frame
+
+    PLAYER().seek_frame(frame)
+
+def _tworoll_enter_edit():
+    _do_two_roll_edit(edit_data["selected_frame"])
+
+
+"""
+def slide_trim_move(x, y, frame, state):
+    global edit_data
+    frame = edit_data["selected_frame"] - delta
+    frame = _legalize_one_roll_trim(frame, edit_data["trim_limits"])
+    edit_data["selected_frame"] = frame
+
+    display_frame = _update_slide_trim_for_mouse_frame(frame)
+    PLAYER().seek_frame(display_frame)
+"""
 
 # ------------------------------------- ONE ROLL TRIM EVENTS
 def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
