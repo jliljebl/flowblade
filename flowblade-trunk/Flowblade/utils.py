@@ -345,7 +345,7 @@ def do_nothing():
 
 def get_unique_name_for_audio_levels_file(media_file_path, profile):
     size_str = str(os.path.getsize(media_file_path))
-    fps_str = str(profile.fps())
+    fps_str = str(profile.description())
     file_name = md5.new(media_file_path + size_str + fps_str).hexdigest()
     return file_name
     

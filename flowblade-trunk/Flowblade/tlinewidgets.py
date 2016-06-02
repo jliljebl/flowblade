@@ -1443,11 +1443,15 @@ class TimeLineCanvas:
                 
                 # Draw level bar for each frame in draw range
                 for f in range(draw_first, draw_last, step):
-                    x = media_start_pos_pix + f * pix_per_frame
-                    h = bar_height * clip.waveform_data[f]
-                    if h < 1:
-                        h = 1
-                    cr.rectangle(x, y + y_pad + (bar_height - h), draw_pix_per_frame, h)
+                    try:
+                        x = media_start_pos_pix + f * pix_per_frame
+                        h = bar_height * clip.waveform_data[f]
+                        if h < 1:
+                            h = 1
+                        cr.rectangle(x, y + y_pad + (bar_height - h), draw_pix_per_frame, h)
+                    except:
+                        # This is just dirty fix a when 23.98 fps does not work
+                        break
 
                 cr.fill()
 

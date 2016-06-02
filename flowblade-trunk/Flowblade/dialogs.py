@@ -107,7 +107,7 @@ def change_profile_project_dialog(project, callback):
     default_profile_index = mltprofiles.get_index_for_name(project.profile.description())
     default_profile = mltprofiles.get_default_profile()
 
-    dialog = Gtk.Dialog(_("Save To Change Project Profile"), gui.editor_window.window,
+    dialog = Gtk.Dialog(_("Change Project Profile"), gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
                          _("Save With Changed Profile").encode('utf-8'), Gtk.ResponseType.ACCEPT))
@@ -158,6 +158,63 @@ def change_profile_project_dialog(project, callback):
     dialog.connect('response', callback, out_profile_combo, out_folder, project_name_entry)#, project_type_combo, 
                    #project_folder, compact_name_entry)
     out_profile_combo.connect('changed', lambda w: _new_project_profile_changed(w, profile_info_box))
+    dialog.show_all()
+
+def change_profile_project_to_match_media_dialog(project, media_file, callback):
+    project_name = project.name.rstrip(".flb")
+    default_profile_index = mltprofiles.get_index_for_name(project.profile.description())
+    default_profile = mltprofiles.get_default_profile()
+
+    dialog = Gtk.Dialog(_("Change Project Profile"), gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                         _("Save With Changed Profile").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+    
+    info_label = guiutils.bold_label(_("Project Profile can only changed by saving a version\nwith different profile."))
+
+    match_profile_index = mltprofiles.get_closest_matching_profile_index(media_file.info)
+    match_profile_name =  mltprofiles.get_profile_name_for_index(match_profile_index)
+    project_profile_name = project.profile.description()
+    
+    row1 = guiutils.get_two_column_box(guiutils.bold_label(_("File:")), Gtk.Label(label=media_file.name), 120)
+    row2 = guiutils.get_two_column_box(guiutils.bold_label(_("File Best Match Profile:")), Gtk.Label(label=match_profile_name), 120)
+    row3 = guiutils.get_two_column_box(guiutils.bold_label(_("Project Current Profile:")), Gtk.Label(label=project_profile_name), 120)
+    
+    text_panel = Gtk.VBox(False, 2)
+    text_panel.pack_start(row1, False, False, 0)
+    text_panel.pack_start(row2, False, False, 0)
+    text_panel.pack_start(row3, False, False, 0)
+    
+    out_folder = Gtk.FileChooserButton(_("Select Folder"))
+    out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
+    out_folder.set_current_folder(os.path.expanduser("~") + "/")
+    out_folder.set_local_only(True)
+    out_folder_row = panels.get_two_column_box(Gtk.Label(label=_("Folder:")), out_folder,  250)
+                          
+    project_name_entry = Gtk.Entry()
+    project_name_entry.set_text(project_name + "_NEW_PROFILE.flb")
+    extension_label = Gtk.Label()
+
+    name_box = Gtk.HBox(False, 8)
+    name_box.pack_start(project_name_entry, True, True, 0)
+      
+    movie_name_row =  panels.get_two_column_box(Gtk.Label(label=_("Project Name:")), name_box,  250)
+        
+    new_file_vbox = guiutils.get_vbox([out_folder_row, movie_name_row], False)
+
+    new_file_frame = panels.get_named_frame(_("New Project File"), new_file_vbox)
+
+    save_profile_info =  guiutils.bold_label(_("Project will be saved with profile: ") + match_profile_name)
+
+    vbox = guiutils.get_vbox([info_label, guiutils.pad_label(2, 24), text_panel, \
+                              guiutils.pad_label(2, 24), save_profile_info, guiutils.pad_label(2, 24), \
+                              new_file_frame], False)
+
+    alignment = dialogutils.get_default_alignment(vbox)
+    dialogutils.set_outer_margins(dialog.vbox)
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, match_profile_index, out_folder, project_name_entry)
     dialog.show_all()
     
 def save_backup_snapshot(name, callback):

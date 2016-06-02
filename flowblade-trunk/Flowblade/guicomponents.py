@@ -1459,7 +1459,19 @@ def display_media_file_popup_menu(media_file, callback, event):
     if media_file.type == appconsts.VIDEO or media_file.type == appconsts.IMAGE_SEQUENCE:
         item = _get_menu_item(_("Render Proxy File"), callback, ("Render Proxy File", media_file, event))
         media_file_menu.add(item)
-    
+
+    if media_file.type == appconsts.VIDEO:
+        if media_file.info != None:
+
+            best_media_profile_index = mltprofiles.get_closest_matching_profile_index(media_file.info)
+            project_profile_index = mltprofiles.get_index_for_name(PROJECT().profile.description())
+
+            # Add this item if best profile does not match project profile
+            if best_media_profile_index != project_profile_index:                
+                _add_separetor(media_file_menu)
+                item = _get_menu_item(_("Change Project Profile To Match..."), callback, ("Project Profile", media_file, event))
+                media_file_menu.add(item)
+        
     media_file_menu.popup(None, None, None, None, event.button, event.time)
 
 def display_filter_stack_popup_menu(row, treeview, callback, event):

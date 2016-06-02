@@ -473,6 +473,22 @@ def _change_project_profile_callback(dialog, response_id, profile_combo, out_fol
     else:
         dialog.destroy()
 
+def change_profile_to_match_media(media_file):
+    dialogs.change_profile_project_to_match_media_dialog(PROJECT(), media_file, _change_project_profile_to_match_media_callback)
+
+def _change_project_profile_to_match_media_callback(dialog, response_id, match_profile_index, out_folder, project_name_entry):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        folder = "/" + out_folder.get_uri().lstrip("file:/")
+        name = project_name_entry.get_text()
+        profile = mltprofiles.get_profile_for_index(match_profile_index)
+        path = folder + "/" + name
+
+        persistance.save_project(PROJECT(), path, profile.description()) #<----- HERE
+
+        dialog.destroy()
+    else:
+        dialog.destroy()
+
 
 class SnaphotSaveThread(threading.Thread):
     
@@ -1233,6 +1249,8 @@ def media_file_menu_item_selected(widget, data):
         delete_media_files()
     if item_id == "Render Proxy File":
         proxyediting.create_proxy_menu_item_selected(media_file)
+    if item_id == "Project Profile":
+        change_profile_to_match_media(media_file)
 
 def _select_treeview_on_pos_and_return_row_and_column_title(event, treeview):
     selection = treeview.get_selection()

@@ -273,7 +273,7 @@ def get_p_clip(clip):
 
 def get_p_filter(f):
     """
-    Creates pickleable version MLT Filter object.
+    Creates pickleable version of MLT Filter object.
     """
     s_filter = copy.copy(f)
     remove_attrs(s_filter, FILTER_REMOVE)
