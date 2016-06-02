@@ -630,7 +630,8 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
     if _check_transition_handles((from_part - add_thingy),
                                  transition_data["from_handle"], 
                                  to_part - (1 - add_thingy), 
-                                 transition_data["to_handle"]) == False:
+                                 transition_data["to_handle"],
+                                 length) == False:
         return
     
     # Get from in and out frames
@@ -688,23 +689,31 @@ def _transition_render_complete(clip_path):
     action = edit.add_centered_transition_action(data)
     action.do_edit()
 
-def _check_transition_handles(from_req, from_handle, to_req, to_handle):
+def _check_transition_handles(from_req, from_handle, to_req, to_handle, length):
 
-    if from_req > from_handle:
-        info_text = _("There is not enough material available in the FROM clip after the cut") + \
-                    _("\nto create the transition.\n\n") + \
-                    _("<b>Available:</b> ") + str(from_handle) + _(" frame(s)\n") + \
-                    _("<b>Required:</b> ") + str(from_req) + _(" frame(s)")
-        dialogutils.info_message(_("FROM Clip Handle is too short!"),
-                                 info_text,
-                                 gui.editor_window.window)
-        return False
-    if to_req  > to_handle:
-        info_text = _("There is not enough material available in the TO clip before the cut") + \
-                    _("\nto create the transition.\n\n") + \
-                    _("<b>Available:</b> ") + str(to_handle) + _(" frame(s)\n") + \
-                    _("<b>Required:</b> ") + str(to_req) + _(" frame(s)")
-        dialogutils.info_message(_("TO Clip Handle is too short!"),
+    if from_req > from_handle or to_req  > to_handle:
+        SPACE_TAB = "    "
+        info_text = _("To create a rendered transition you need enough media overlap from both clips!\n\n")
+        
+        if from_req > from_handle:
+        
+            info_text = info_text + \
+                        _("More media overlap needed from <b>first</b> clip:\n\n") + \
+                        SPACE_TAB + _("<b>Available:</b> ") + str(from_handle) + _(" frame(s)\n") + \
+                        SPACE_TAB + _("<b>Required:</b> ") + str(from_req) + _(" frame(s)\n\n") + \
+                        SPACE_TAB + _("Cut ") + str(from_req - from_handle) + _(" frame(s) from the <b>end</b> of first clip.")
+
+
+        if to_req  > to_handle:
+                info_text = info_text + "\n\n"
+            
+                info_text = info_text + \
+                            _("More media overlap needed from <b>second</b> clip:\n\n") + \
+                            SPACE_TAB + _("<b>Available:</b> ") + str(to_handle) + _(" frame(s)\n") + \
+                            SPACE_TAB + _("<b>Required:</b> ") + str(to_req) + _(" frame(s)\n\n") + \
+                            SPACE_TAB + _("Cut ") + str(to_req - to_handle) + _(" frame(s) from the <b>beginning</b> of the second clip.")
+                            
+        dialogutils.info_message(_("More media overlap needed to create transition!"),
                                  info_text,
                                  gui.editor_window.window)
         return False

@@ -354,21 +354,16 @@ def get_transition_panel(trans_data):
     filler = Gtk.Label()
     filler.set_size_request(10,10)
 
-    out_clip_label = Gtk.Label(label=_("From Clip Handle:"))
-    out_clip_value = Gtk.Label(label=trans_data["from_handle"])
+    out_clip_label = Gtk.Label(label=_("First Clip Out Handle:"))
+    out_clip_value = Gtk.Label(label=str(trans_data["from_handle"]) + _(" frame(s)"))
     
-    in_clip_label = Gtk.Label(label=_("To Clip Handle:"))
-    in_clip_value = Gtk.Label(label=trans_data["to_handle"])
+    in_clip_label = Gtk.Label(label=_("Second Clip In Handle:"))
+    in_clip_value = Gtk.Label(label=str(trans_data["to_handle"]) + _(" frame(s)"))
     
-    max_label = Gtk.Label(label=_("Max. Transition Length:"))
-    max_value = Gtk.Label(label=trans_data["max_length"])
-
     out_handle_row = get_two_column_box(out_clip_label, 
                                         out_clip_value)
     in_handle_row = get_two_column_box(in_clip_label, 
                                        in_clip_value)
-    max_row = get_two_column_box(max_label, 
-                                 max_value)
 
     # Encoding widgets
     encodings_cb = Gtk.ComboBoxText()
@@ -393,7 +388,6 @@ def get_transition_panel(trans_data):
     data_vbox = Gtk.VBox(False, 2)
     data_vbox.pack_start(out_handle_row, False, False, 0)
     data_vbox.pack_start(in_handle_row, False, False, 0)
-    data_vbox.pack_start(max_row, False, False, 0)
     
     enconding_vbox = Gtk.VBox(False, 2)
     enconding_vbox.pack_start(encodings_cb, False, False, 0)
@@ -401,8 +395,8 @@ def get_transition_panel(trans_data):
     
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(get_named_frame(_("Transition Options"),  edit_vbox), True, True, 0)
-    vbox.pack_start(get_named_frame(_("Clips info"),  data_vbox), True, True, 0)
     vbox.pack_start(get_named_frame(_("Encoding"),  enconding_vbox), True, True, 0)
+    vbox.pack_start(get_named_frame(_("Media Overlap info"),  data_vbox), True, True, 0)
 
     alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
 
