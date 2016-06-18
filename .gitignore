@@ -16,3 +16,7 @@ mlt.py
 *.java
 *.class
 *.jar
+
+# Phantom 2D contents
+/flowblade-trunk/Flowblade/phantom2d/res
+

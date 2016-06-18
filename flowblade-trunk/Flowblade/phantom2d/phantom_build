@@ -8,11 +8,11 @@ ant clean
 
 #git clone https://github.com/jliljebl/phantom2D.git
 
-#ant compile
-
 ant copylocal
+
+ant compile
 
 ant jar
 
-ant clean
+
 

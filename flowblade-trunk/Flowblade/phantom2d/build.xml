@@ -2,35 +2,35 @@
 
   <target name="clean">
     <delete dir="build" />
-    <delete dir="phantom2D" />
+    <delete dir="src" />
+    <delete dir="res" />
   </target>
 
   <target name="compile">
     <mkdir dir="build" />
-    <javac srcdir="phantom2D/giotto2D" destdir="build" />
-    <javac srcdir="phantom2D/com" destdir="build" />
-    <javac srcdir="phantom2D/animator" destdir="build" />
-    <copy todir="build/res">
-      <fileset dir="phantom2D/res"/>
-    </copy>
-    <copy todir="res/format">
-      <fileset dir="phantom2D/res/format"/>
-    </copy>
+    <javac srcdir="src/giotto2D" destdir="build" />
+    <javac srcdir="src/com" destdir="build" />
+    <javac srcdir="src/animator" destdir="build" />
+
   </target>
 
   <target name="copylocal">
-    <mkdir dir="build" />
-    <copy todir="build/giotto2D">
-      <fileset dir="/home/janne/codes/eclipse/Phantom2D/bin/giotto2D"/>
+    <mkdir dir="src" />
+    <mkdir dir="res" />
+    <copy todir="src/giotto2D">
+      <fileset dir="/home/janne/codes/phantom2d/phantom2D/giotto2D"/>
     </copy>
-    <copy todir="build/com">
-      <fileset dir="/home/janne/codes/eclipse/Phantom2D/bin/com"/>
+    <copy todir="src/com">
+      <fileset dir="/home/janne/codes/phantom2d/phantom2D/com"/>
     </copy>
-    <copy todir="build/animator">
-      <fileset dir="/home/janne/codes/eclipse/Phantom2D/bin/animator"/>
+    <copy todir="src/animator">
+      <fileset dir="/home/janne/codes/phantom2d/phantom2D/animator"/>
     </copy>
     <copy todir="res">
-      <fileset dir="/home/janne/codes/eclipse/Phantom2D/bin/res"/>
+      <fileset dir="/home/janne/codes/phantom2d/phantom2D/res"/>
+    </copy>
+    <copy todir="res/format">
+      <fileset dir="/home/janne/codes/flowblade/flowblade/flowblade-trunk/Flowblade/res/profiles"/>
     </copy>
   </target>
 
