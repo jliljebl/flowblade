@@ -9,7 +9,7 @@
 | python 2.7 >=| Language and interpreter |
 | frei0r-plugins | Additional video filters |
 | swh-plugins | Additional audio filters |
-| python-cairo | Cairo bindings |
+| python-gi-cairo | Gi Cairo bindings |
 | python-numpy | Math and arrays library |
 | python-pil | PIL image manipulation library |
 | librsvg2-common | svg support |
@@ -29,3 +29,4 @@
 | gtk2-engines-pixbuf |  0.6   |  1.2 |
 | python-gnome2 |  0.6   |  1.2 |
 | python-gobject-2 |  0.6   |  1.2 |
+| python-cairo | Cairo bindings | 0.6   |  1.6 |
