@@ -213,6 +213,7 @@ def _edit_prefs_panel():
     
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
+    # Jul-2016 - SvdB - Added play_pause_button
     return vbox, (auto_play_in_clip_monitor, auto_center_on_stop, gfx_length_spin,
                    trim_exit_on_empty, quick_enter_trim, remember_clip_frame, overwrite_clip_drop, cover_delete, play_pause_button)
 

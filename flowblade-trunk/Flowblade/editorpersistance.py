@@ -174,6 +174,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
 
     default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo = gen_opts_widgets
     
+    # Jul-2016 - SvdB - Added play_pause_button
     auto_play_in_clip_monitor_check, auto_center_check, grfx_insert_length_spin, \
     trim_exit_click, trim_quick_enter, remember_clip_frame, overwrite_clip_drop, cover_delete, play_pause_button = edit_prefs_widgets
     
