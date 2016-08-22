@@ -140,15 +140,9 @@ def main(root_path):
     # passing -xdg as a flag will change the user_dir location with XDG_CONFIG_HOME
     # For full xdg-app support all the launch processes need to add this too, currently not impl.
 
-    # Jul-2016 - SvdB - Allow Play/pause switch as command line option
-    play_pause_switch = None
     for arg in sys.argv:
         if arg.lower() == "-xdg":
             editorstate.use_xdg = True
-        if arg.lower() == "--enable-play-pause":
-            play_pause_switch = True
-        if arg.lower() == "--disable-play-pause":
-            play_pause_switch = False
 
     # Create hidden folders if not present
     user_dir = utils.get_hidden_user_dir_path()
@@ -183,9 +177,7 @@ def main(root_path):
         editorstate.display_all_audio_levels = False
     editorpersistance.create_thumbs_folder_if_needed(user_dir)
     editorpersistance.create_rendered_clips_folder_if_needed(user_dir)
-    # Jul-2016 - SvdB - Override preference if command line arg was given. The result will be saved in the preferences
-    if play_pause_switch != None:
-        editorpersistance.prefs.play_pause = play_pause_switch    
+
     editorpersistance.save()
 
     # Init translations module with translations data
