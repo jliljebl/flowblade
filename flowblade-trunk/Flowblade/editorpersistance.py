@@ -273,5 +273,5 @@ class EditorPreferences:
         self.overwrite_clip_drop = True
         self.trans_cover_delete = True
         # Jul-2016 - SvdB - For play/pause button
-        self.play_pause = True
+        self.play_pause = False
 
