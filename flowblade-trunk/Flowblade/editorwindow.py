@@ -872,15 +872,26 @@ class EditorWindow:
     def connect_player(self, mltplayer):
         # Buttons
         # NOTE: ORDER OF CALLBACKS IS THE SAME AS ORDER OF BUTTONS FROM LEFT TO RIGHT
-        pressed_callback_funcs = [monitorevent.prev_pressed,
-                                  monitorevent.next_pressed,
-                                  monitorevent.play_pressed,
-                                  monitorevent.stop_pressed,
-                                  monitorevent.mark_in_pressed,
-                                  monitorevent.mark_out_pressed,
-                                  monitorevent.marks_clear_pressed,
-                                  monitorevent.to_mark_in_pressed,
-                                  monitorevent.to_mark_out_pressed]
+        # Jul-2016 - SvdB - For play/pause button
+        if editorpersistance.prefs.play_pause == False:
+            pressed_callback_funcs = [monitorevent.prev_pressed,
+                                      monitorevent.next_pressed,
+                                      monitorevent.play_pressed,
+                                      monitorevent.stop_pressed,
+                                      monitorevent.mark_in_pressed,
+                                      monitorevent.mark_out_pressed,
+                                      monitorevent.marks_clear_pressed,
+                                      monitorevent.to_mark_in_pressed,
+                                      monitorevent.to_mark_out_pressed]
+        else:
+            pressed_callback_funcs = [monitorevent.prev_pressed,
+                                      monitorevent.next_pressed,
+                                      monitorevent.play_pressed,
+                                      monitorevent.mark_in_pressed,
+                                      monitorevent.mark_out_pressed,
+                                      monitorevent.marks_clear_pressed,
+                                      monitorevent.to_mark_in_pressed,
+                                      monitorevent.to_mark_out_pressed]
         self.player_buttons.set_callbacks(pressed_callback_funcs)
 
         # Monitor position bar

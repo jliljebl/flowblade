@@ -94,7 +94,7 @@ class AbstractGlassButtons:
         self.image_x = []
         self.image_y = []
         self.sensitive = []
-        
+
         if editorpersistance.prefs.buttons_style == editorpersistance.GLASS_STYLE:
             self.glass_style = True
         else:
@@ -263,6 +263,9 @@ class PlayerButtons(AbstractGlassButtons):
         AbstractGlassButtons.__init__(self, MB_BUTTON_WIDTH, MB_BUTTON_HEIGHT, MB_BUTTON_Y, MB_BUTTONS_WIDTH, MB_BUTTONS_HEIGHT)
 
         IMG_PATH = respaths.IMAGE_PATH
+        # Jul-2016 - SvdB - Modified to replace play/stop combo by single play/pause button, if option is set
+        play_pause_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "play_pause_s.png")
+        #
         play_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "play_2_s.png")
         stop_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "stop_s.png")
         next_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "next_frame_s.png")
@@ -273,10 +276,17 @@ class PlayerButtons(AbstractGlassButtons):
         to_mark_in_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "to_mark_in_s.png")        
         to_mark_out_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "to_mark_out_s.png") 
 
-        self.icons = [prev_icon, next_icon, play_icon, stop_icon, 
-                      mark_in_icon, mark_out_icon, 
-                      marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
-        self.image_x = [8, 10, 13, 13, 6, 14, 5, 10, 9]
+        # Jul-2016 - SvdB - For play/pause button
+        if (editorpersistance.prefs.play_pause == True):
+            self.icons = [prev_icon, next_icon, play_pause_icon,
+                          mark_in_icon, mark_out_icon, 
+                          marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
+            self.image_x = [8, 10, 8, 6, 14, 5, 10, 9]
+        else:
+            self.icons = [prev_icon, next_icon, play_icon, stop_icon, 
+                          mark_in_icon, mark_out_icon, 
+                          marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
+            self.image_x = [8, 10, 13, 13, 6, 14, 5, 10, 9]
 
         for i in range(0, len(self.icons)):
             self.image_y.append(MB_BUTTON_IMAGE_Y)
@@ -288,7 +298,11 @@ class PlayerButtons(AbstractGlassButtons):
         focus_groups[DEFAULT_FOCUS_GROUP].append(self.widget)
 
     def set_trim_sensitive_pattern(self):
-        self.sensitive = [True, True, True, True, False, False, False, False, False]
+        # Jul-2016 - SvdB - For play/pause button
+        if (editorpersistance.prefs.play_pause == True):
+            self.sensitive = [True, True, True, False, False, False, False, False]
+        else:
+            self.sensitive = [True, True, True, True, False, False, False, False, False]
         self.widget.queue_draw()
 
     def set_normal_sensitive_pattern(self):
@@ -332,6 +346,8 @@ class PlayerButtons(AbstractGlassButtons):
 
         mid_x = w / 2
         buttons_width = self.button_width * len(self.icons)
+        # Jul-2016 - SvdB - No changes made here, but because of the calculation of button_x the row of buttons is slightly moved right if play/pause
+        # is enabled. This could be solved by setting self.button_x = 1, if wished.
         self.button_x = mid_x - (buttons_width / 2)
         self._draw_buttons(cr, w, h)
 
