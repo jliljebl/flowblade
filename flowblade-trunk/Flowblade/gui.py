@@ -143,15 +143,15 @@ def get_selected_bg_color():
 # returns Gdk.RGBA color
 def get_buttons_color():
     return _button_colors
-    
+
 def set_theme_colors():
-    # Find out if theme color discovery works and set selected bg color apppropiately when 
+    # Find out if theme color discovery works and set selected bg color apppropiately when
     # this is first called.
     global _selected_bg_color, _bg_color, _button_colors
 
     fallback_theme_colors = editorpersistance.prefs.theme_fallback_colors
     theme_colors = _THEME_COLORS[fallback_theme_colors]
-    
+
     # Try to detect selected color and set from fallback if fails
     style = editor_window.bin_list_view.get_style_context()
     sel_bg_color = style.get_background_color(Gtk.StateFlags.SELECTED)
@@ -190,7 +190,7 @@ def set_theme_colors():
     editor_window.tline_pane.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
     editor_window.media_panel.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
     editor_window.mm_paned.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
-    
+
 def unpack_gdk_color(gdk_color):
     return (gdk_color.red, gdk_color.green, gdk_color.blue, gdk_color.alpha)
 
@@ -202,7 +202,7 @@ def save_current_colors():
     pickle.dump(colors, write_file)
 
 def load_current_colors():
-    load_path = _colors_data_path() 
+    load_path = _colors_data_path()
     f = open(load_path)
     colors = pickle.load(f)
     sel, bg, button = colors
@@ -210,7 +210,7 @@ def load_current_colors():
     _selected_bg_color = Gdk.RGBA(*sel)
     _bg_color = Gdk.RGBA(*bg)
     _button_colors = Gdk.RGBA(*button)
-        
+
 def _colors_data_path():
     return utils.get_hidden_user_dir_path() + _CURRENT_THEME_COLORS_FILE
 

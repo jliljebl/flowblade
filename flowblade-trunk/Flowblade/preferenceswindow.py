@@ -41,7 +41,7 @@ def preferences_dialog():
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                     (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
                     _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
-    
+
     gen_opts_panel, gen_opts_widgets = _general_options_panel(_thumbs_select_clicked, _renders_select_clicked)
     edit_prefs_panel, edit_prefs_widgets = _edit_prefs_panel()
     view_pres_panel, view_pref_widgets = _view_prefs_panel()
@@ -76,7 +76,7 @@ def _preferences_dialog_callback(dialog, response_id, all_widgets):
         return
 
     dialog.destroy()
-    
+
 def _general_options_panel(folder_select_clicked_cb, render_folder_select_clicked_cb):
     prefs = editorpersistance.prefs
 
@@ -113,9 +113,9 @@ def _general_options_panel(folder_select_clicked_cb, render_folder_select_clicke
     autosave_combo.set_active(prefs.auto_save_delay_value_index)
 
     load_order_combo  = Gtk.ComboBoxText()
-    load_order_combo.append_text("Absolute paths first, relative second")
-    load_order_combo.append_text("Relative paths first, absolute second")
-    load_order_combo.append_text("Absolute paths only")
+    load_order_combo.append_text(_("Absolute paths first, relative second"))
+    load_order_combo.append_text(_("Relative paths first, absolute second"))
+    load_order_combo.append_text(_("Absolute paths only"))
     load_order_combo.set_active(prefs.media_load_order)
 
     # Layout
@@ -177,7 +177,7 @@ def _edit_prefs_panel():
 
     cover_delete = Gtk.CheckButton()
     cover_delete.set_active(prefs.trans_cover_delete)
-    
+
     # Layout
     row1 = _row(guiutils.get_checkbox_row_box(auto_play_in_clip_monitor, Gtk.Label(label=_("Autoplay new Clips in Clip Monitor"))))
     row2 = _row(guiutils.get_checkbox_row_box(auto_center_on_stop, Gtk.Label(label=_("Center Current Frame on Playback Stop"))))
@@ -187,7 +187,7 @@ def _edit_prefs_panel():
     row7 = _row(guiutils.get_checkbox_row_box(remember_clip_frame, Gtk.Label(label=_("Remember Monitor Clip Frame"))))
     row8 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Media drag'n'drop action on non-V1 tracks")), overwrite_clip_drop, PREFERENCES_LEFT))
     row9 = _row(guiutils.get_checkbox_row_box(cover_delete, Gtk.Label(label=_("Cover Transition/Fade clips on delete if possible"))))
-    
+
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row5, False, False, 0)
     vbox.pack_start(row6, False, False, 0)
@@ -198,7 +198,7 @@ def _edit_prefs_panel():
     vbox.pack_start(row8, False, False, 0)
     vbox.pack_start(row9, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
-    
+
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     return vbox, (auto_play_in_clip_monitor, auto_center_on_stop, gfx_length_spin,
@@ -210,7 +210,7 @@ def _view_prefs_panel():
     # Widgets
     force_english_check = Gtk.CheckButton()
     force_english_check.set_active(prefs.use_english_always)
-    
+
     display_splash_check = Gtk.CheckButton()
     display_splash_check.set_active(prefs.display_splash_screen)
 
@@ -231,7 +231,7 @@ def _view_prefs_panel():
         dark_combo.set_active(0)
 
     theme_combo = Gtk.ComboBoxText()
-    for theme in gui._THEME_COLORS: 
+    for theme in gui._THEME_COLORS:
         theme_combo.append_text(theme[4])
     theme_combo.set_active(prefs.theme_fallback_colors)
 
@@ -250,7 +250,7 @@ def _view_prefs_panel():
     row3 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Icons and color optimized for:")), dark_combo, PREFERENCES_LEFT))
     row4 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme detection fail fallback colors:")), theme_combo, PREFERENCES_LEFT))
     row5 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Default audio levels display:")), audio_levels_combo, PREFERENCES_LEFT))
-    
+
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row0, False, False, 0)
     vbox.pack_start(row1, False, False, 0)
@@ -259,11 +259,11 @@ def _view_prefs_panel():
     vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row5, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
-    
+
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     return vbox, (force_english_check, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo)
-    
+
 def _row(row_cont):
     row_cont.set_size_request(10, 26)
     return row_cont
