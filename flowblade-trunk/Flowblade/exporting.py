@@ -68,7 +68,7 @@ def _export_melt_xml_dialog_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         filenames = dialog.get_filenames()
         save_path = filenames[0]
-        global _xml_render_monitor
+        #global _xml_render_monitor
         _xml_render_player = renderconsumer.XMLRenderPlayer(save_path,
                                                           _xml_render_done,
                                                           None)
@@ -90,12 +90,12 @@ def EDL_export():
 
 def _export_edl_dialog_callback(dialog, response_id, data):
     if response_id == Gtk.ResponseType.YES:
-        file_name, out_folder, track_select_combo, cascade_check, op_combo, audio_track_select_combo = data
+        file_name, out_folder, track_select_combo, cascade_check = data
         edl_path = out_folder.get_filename()+ "/" + file_name.get_text() + ".edl" 
-        global _xml_render_monitor
+        #global _xml_render_monitor
         _xml_render_player = renderconsumer.XMLRenderPlayer(get_edl_temp_xml_path(),
                                                             _edl_xml_render_done,
-                                                            (edl_path, track_select_combo, cascade_check, op_combo, audio_track_select_combo))
+                                                            (edl_path, track_select_combo, cascade_check))
         _xml_render_player.start()
 
         dialog.destroy()
@@ -103,19 +103,18 @@ def _export_edl_dialog_callback(dialog, response_id, data):
         dialog.destroy()
 
 def _edl_xml_render_done(data):
-    edl_path, track_select_combo, cascade_check, op_combo, audio_track_select_combo = data
+
+    edl_path, track_select_combo, cascade_check  = data
     video_track = current_sequence().first_video_index + track_select_combo.get_active()
-    audio_track = 1 + audio_track_select_combo.get_active()
-    global _xml_render_player
-    _xml_render_player = None
+    #global _xml_render_player
+    #_xml_render_player = None
     mlt_parse = MLTXMLToEDLParse(get_edl_temp_xml_path(), edl_path)
     edl_contents = mlt_parse.create_edl(video_track, 
-                                        cascade_check.get_active(),
-                                        op_combo.get_active(), 
-                                        audio_track)
+                                        cascade_check.get_active())
     f = open(edl_path, 'w')
     f.write(edl_contents)
     f.close()
+
 
 def get_edl_temp_xml_path():
     return utils.get_hidden_user_dir_path() + "edl_temp_xml.xml"
@@ -150,6 +149,13 @@ class MLTXMLToEDLParse:
         playlists = self.xmldoc.getElementsByTagName("playlist")
         eid = 0
         for p in playlists:
+
+            if p.attributes["id"].value == "playlist0":
+                continue
+            
+            if len(p.getElementsByTagName("entry")) < 1:
+                continue
+                
             event_list = []
             pl_dict = {}
             pl_dict["pid"] = p.attributes["id"].value
@@ -179,6 +185,7 @@ class MLTXMLToEDLParse:
 
             pl_dict["events"] = event_list
             playlist_list.append(pl_dict)
+            
         return tuple(playlist_list)
 
     def get_events_dict(self, playlists, source_links):
@@ -261,7 +268,7 @@ class MLTXMLToEDLParse:
 
             return reel_name.upper()
     
-    def create_edl(self, track_index, cascade, audio_op, audio_track_index):
+    def create_edl(self, track_index, cascade):
         str_list = []
         
         title = self.title.split("/")[-1] 
@@ -273,39 +280,22 @@ class MLTXMLToEDLParse:
         event_dict = self.get_events_dict(playlists, source_links)
 
         edl_event_count = 1 # incr. event index
-        
-        # Write video events
-        if not cascade:
-            playlist = playlists[track_index]
-            track_frames = self.get_track_frame_array(playlist)
-        else:
-            track_frames = self.cascade_playlists(playlists, event_dict)
 
-        if audio_op == AUDIO_FROM_VIDEO:
-            src_channel = "AA/V"
-        else:
-            src_channel = "V"
-
-        if len(track_frames) != 0:
-            edl_event_count = self.write_track_events(str_list, 
-                                            track_frames, src_channel, 
-                                            source_links, 
-                                            reel_names, event_dict, 
-                                            edl_event_count)
-        
-        # Write audio events
-        if audio_op == AUDIO_FROM_AUDIO_TRACK:
-            src_channel = "AA"
-            playlist = playlists[audio_track_index]
-            track_frames = self.get_track_frame_array(playlist)
-            self.write_track_events(str_list, track_frames, src_channel, 
-                                    source_links, reel_names, event_dict, 
-                                    edl_event_count)
+        src_channel = "AA/V"
             
+        for p in playlists:
+            track_event_count = self.write_track_events(str_list, 
+                                                        src_channel, 
+                                                        source_links, 
+                                                        reel_names, 
+                                                        event_dict, 
+                                                        edl_event_count)
+            edl_event_count = edl_event_count + track_event_count
+
         print ''.join(str_list).strip("\n")
         return ''.join(str_list).strip("\n")
 
-    def write_track_events(self, str_list, track_frames, src_channel, 
+    def write_track_events(self, str_list, src_channel, 
                             source_links, reel_names, event_dict, 
                             edl_event_count):
         prog_in = 0
@@ -327,10 +317,6 @@ class MLTXMLToEDLParse:
                 src_in = int(event["inTime"]) # source clip IN time
                 src_out = int(event["outTime"]) # source clip OUT time
                 src_out = src_out + 1 # EDL out is exclusive, MLT out is inclusive
-        
-                if self.blender_fix:
-                    src_in = src_in + 1
-                    src_out =  src_in + 1
 
                 self.write_producer_edl_event_CMX3600(str_list, resource, 
                                                      edl_event_count, reel_name, src_channel,

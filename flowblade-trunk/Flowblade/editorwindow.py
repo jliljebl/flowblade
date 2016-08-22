@@ -146,7 +146,7 @@ class EditorWindow:
             ('SaveSnapshot', None, _('Save Backup Snapshot...'), None, None, lambda a:projectaction.save_backup_snapshot()),
             ('ExportMenu', None, _('Export')),
             ('ExportMeltXML', None, _('MLT XML'), None, None, lambda a:exporting.MELT_XML_export()),
-            ('ExportEDL', None, _('EDL CMX 3600'), None, None, lambda a:exporting.EDL_export()),
+            ('ExportEDL', None, _('EDL'), None, None, lambda a:exporting.EDL_export()),
             ('ExportScreenshot', None, _('Current Frame'), None, None, lambda a:exporting.screenshot_export()),
             ('Close', None, _('_Close'), None, None, lambda a:projectaction.close_project()),
             ('Quit', None, _('_Quit'), '<control>Q', None, lambda a:app.shutdown()),
@@ -226,6 +226,7 @@ class EditorWindow:
                     <separator/>
                     <menu action='ExportMenu'>
                         <menuitem action='ExportMeltXML'/>
+                        <menuitem action='ExportEDL'/>
                         <menuitem action='ExportScreenshot'/>
                     </menu>
                     <separator/>
