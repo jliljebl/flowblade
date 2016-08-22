@@ -28,6 +28,7 @@ from gi.repository import Gtk, Gdk
 
 import appconsts
 import dialogutils
+import editorpersistance # Jul-2016 - SvdB - For play/pause button
 import dnd
 import edit
 from editorstate import current_sequence
@@ -66,7 +67,15 @@ edit_data = None
 # These four buttons act differently in trimmodes and move modes
 def play_pressed():
     # This handles only move modes, see trimmodes.py module for others.
-    PLAYER().start_playback()  
+    # Jul-2016 - SvdB - Added code to handle play/pause button
+    if editorpersistance.prefs.play_pause == True:
+        if PLAYER().is_playing():
+            PLAYER().stop_playback()
+        else:
+            PLAYER().start_playback()
+    else:
+        # Original code
+        PLAYER().start_playback()  
 
 def stop_pressed():
     # This handles only move modes, see trimmodes.py module for others.

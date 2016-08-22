@@ -174,8 +174,9 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
 
     default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo = gen_opts_widgets
     
+    # Jul-2016 - SvdB - Added play_pause_button
     auto_play_in_clip_monitor_check, auto_center_check, grfx_insert_length_spin, \
-    trim_exit_click, trim_quick_enter, remember_clip_frame, overwrite_clip_drop, cover_delete = edit_prefs_widgets
+    trim_exit_click, trim_quick_enter, remember_clip_frame, overwrite_clip_drop, cover_delete, play_pause_button = edit_prefs_widgets
     
     use_english, disp_splash, buttons_style, dark_theme, theme_combo, audio_levels_combo = view_prefs_widgets
 
@@ -194,6 +195,8 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.remember_monitor_clip_frame = remember_clip_frame.get_active()
     prefs.overwrite_clip_drop = (overwrite_clip_drop.get_active() == 0)
     prefs.trans_cover_delete = cover_delete.get_active()
+    # Jul-2016 - SvdB - For play/pause button
+    prefs.play_pause = play_pause_button.get_active()
     
     prefs.use_english_always = use_english.get_active()
     prefs.display_splash_screen = disp_splash.get_active()
@@ -269,3 +272,6 @@ class EditorPreferences:
         self.display_all_audio_levels = True
         self.overwrite_clip_drop = True
         self.trans_cover_delete = True
+        # Jul-2016 - SvdB - For play/pause button
+        self.play_pause = True
+
