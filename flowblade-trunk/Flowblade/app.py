@@ -139,6 +139,7 @@ def main(root_path):
 
     # passing -xdg as a flag will change the user_dir location with XDG_CONFIG_HOME
     # For full xdg-app support all the launch processes need to add this too, currently not impl.
+
     for arg in sys.argv:
         if arg.lower() == "-xdg":
             editorstate.use_xdg = True
@@ -176,6 +177,7 @@ def main(root_path):
         editorstate.display_all_audio_levels = False
     editorpersistance.create_thumbs_folder_if_needed(user_dir)
     editorpersistance.create_rendered_clips_folder_if_needed(user_dir)
+
     editorpersistance.save()
 
     # Init translations module with translations data
