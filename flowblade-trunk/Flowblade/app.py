@@ -568,6 +568,8 @@ def open_project(new_project):
     gui.editor_window.window.handler_unblock(window_state_id)
     start_autosave()
 
+    editorstate.project.c_seq.print_all()
+        
 def change_current_sequence(index):
     stop_autosave()
     editorstate.project.c_seq = editorstate.project.sequences[index]
