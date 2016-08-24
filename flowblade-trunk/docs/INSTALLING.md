@@ -27,6 +27,8 @@ sudo dpkg -i ./flowblade-1.6.0-1_all.deb
 
 Release has been install tested on: <b>Ubuntu 15.10, 14.10 and 14.04</b>. Should work on all recent Debian based distributions.
 
+<b>NOTE: Running a KDEnlive PPA on Ubuntu may cause an uncompatible MLT to be installed and prevent Flowblade from running, more <a href="https://plus.google.com/105369302467641615295/posts/QSKQoPtbLKg">here.</a></b> 
+
 <b>Unfortunately since Ubuntu 16.04 it is not possible to install .deb packages just by double clicking on them.</b> 
 
 *Please note these issues with Dropbox download:*
