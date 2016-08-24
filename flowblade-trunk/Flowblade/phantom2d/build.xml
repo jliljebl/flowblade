@@ -3,7 +3,6 @@
   <target name="clean">
     <delete dir="build" />
     <delete dir="src" />
-    <delete dir="res" />
   </target>
 
   <target name="compile">
