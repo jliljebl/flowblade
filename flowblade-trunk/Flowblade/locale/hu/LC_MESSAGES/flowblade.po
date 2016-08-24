@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-07 09:44+0200\n"
-"PO-Revision-Date: 2016-08-04 21:35+0100\n"
+"POT-Creation-Date: 2016-08-22 17:40+0200\n"
+"PO-Revision-Date: 2016-08-22 19:08+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
 "Language: hu-HU\n"
@@ -17,43 +17,43 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: app.py:721
+#: app.py:723
 msgid "Too small screen for this application."
 msgstr "Túl kicsi a képernyő az alkalmazás számára."
 
-#: app.py:724
+#: app.py:726
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "A minimális képernyőfelbontás ezen alkalmazás számára 1152 x 768.\n"
 
-#: app.py:725
+#: app.py:727
 msgid "Your screen dimensions are "
 msgstr "Az ön képernyőjének felbontása "
 
-#: app.py:759
+#: app.py:761
 msgid "Project has not been saved since it was opened."
 msgstr "A projekt még nem volt mentve a megnyitás óta."
 
-#: app.py:764
+#: app.py:766
 msgid "Project was saved less than a minute ago."
 msgstr "A projekt kevesebb mint egy perce volt mentve"
 
-#: app.py:767
+#: app.py:769
 msgid "Project was saved one minute ago."
 msgstr "A projekt egy perce volt mentve."
 
-#: app.py:769
+#: app.py:771
 msgid "Project was saved "
 msgstr "A projekt mentése "
 
-#: app.py:769
+#: app.py:771
 msgid " minutes ago."
 msgstr " perce történt."
 
-#: app.py:779 projectaction.py:327
+#: app.py:781 projectaction.py:327
 msgid "Project has not been saved previously"
 msgstr "A projekt korábban még nem volt mentve"
 
-#: app.py:780 projectaction.py:328
+#: app.py:782 projectaction.py:328
 msgid "Save project with File -> Save As before closing."
 msgstr ""
 "Mentse a projektet a Fájl -> Mentés másként menüpont használatával mielőtt "
@@ -658,31 +658,31 @@ msgstr "Kicsinyítés"
 msgid "Zoom Fit"
 msgstr "Helykitöltés"
 
-#: editorwindow.py:906
+#: editorwindow.py:917
 msgid "Timeline current frame timecode"
 msgstr "Az aktuális képkocka időkódja az idővonalon"
 
-#: editorwindow.py:908
+#: editorwindow.py:919
 msgid "Select view mode: Video/Vectorscope/RGBParade"
 msgstr "Megjelenítési mód váltása: Videó / Vektorszkóp / RGB Parádé"
 
-#: editorwindow.py:910
+#: editorwindow.py:921
 msgid "Monitor Sequence/Media current frame timecode"
 msgstr "A monitoron lévő jelenet/média képkockájának aktuális időkódja"
 
-#: editorwindow.py:911
+#: editorwindow.py:922
 msgid "Current Monitor Sequence/Media name"
 msgstr "A jelenleg monitoron lévő jelenet/média neve"
 
-#: editorwindow.py:913
+#: editorwindow.py:924
 msgid "Monitor Sequence/Media current position"
 msgstr "A monitoron lévő jelenet/média aktuális időkódja"
 
-#: editorwindow.py:915
+#: editorwindow.py:926
 msgid "Display Current Sequence on Timeline"
 msgstr "Aktuális jelenet megjelenítése az idővonalon"
 
-#: editorwindow.py:916
+#: editorwindow.py:927
 msgid "Display Monitor Clip"
 msgstr "A monitoron lévő klip megjelenítése"
 
@@ -807,8 +807,8 @@ msgstr ""
 msgid "New Profile"
 msgstr "Új profil"
 
-#: dialogs.py:133 dialogs.py:188 rendergui.py:510 preferenceswindow.py:101
-#: preferenceswindow.py:104 tools/gmic.py:664 tools/toolsencoding.py:40
+#: dialogs.py:133 dialogs.py:188 rendergui.py:510 preferenceswindow.py:103
+#: preferenceswindow.py:106 tools/gmic.py:664 tools/toolsencoding.py:40
 msgid "Select Folder"
 msgstr "Mappa kiválasztása"
 
@@ -1671,7 +1671,7 @@ msgstr ""
 msgid "Can't put an audio clip on a video track."
 msgstr "Hangklipet nem lehet videosávra helyezni."
 
-#: editevent.py:226 editevent.py:810 movemodes.py:582
+#: editevent.py:226 editevent.py:810 movemodes.py:591
 msgid "Track "
 msgstr "A sáv "
 
@@ -2126,11 +2126,11 @@ msgstr "6 oszlop"
 msgid "7 Columns"
 msgstr "7 oszlop"
 
-#: movemodes.py:581
+#: movemodes.py:590
 msgid "Can't do edit on a locked track"
 msgstr "Zárolt sáv nem szerkeszthető"
 
-#: movemodes.py:582
+#: movemodes.py:591
 msgid " is locked. Unlock track to edit it.\n"
 msgstr " zárolva van. Fel kell oldani a zárolást a szerkesztéshez.\n"
 
@@ -4753,159 +4753,163 @@ msgstr "Szerkesztő beállításai"
 msgid "Editing"
 msgstr "Szerkesztés"
 
-#: preferenceswindow.py:73
+#: preferenceswindow.py:75
 msgid "Restart required for some setting changes to take effect."
 msgstr "Újraindítás szükséges bizonyos beállítások életbe léptetéséhez."
 
-#: preferenceswindow.py:74
+#: preferenceswindow.py:76
 msgid "If requested change is not in effect, restart application."
 msgstr "Ha módosításnak nincs hatása, indítsa újra az alkalmazást."
 
-#: preferenceswindow.py:108
+#: preferenceswindow.py:110
 msgid "No Autosave"
 msgstr "Nincs automatikus mentés"
 
-#: preferenceswindow.py:108
+#: preferenceswindow.py:110
 msgid "1 min"
 msgstr "1 perc"
 
-#: preferenceswindow.py:108
+#: preferenceswindow.py:110
 msgid "2 min"
 msgstr "2 perc"
 
-#: preferenceswindow.py:108
+#: preferenceswindow.py:110
 msgid "5 min"
 msgstr "5 perc"
 
-#: preferenceswindow.py:116
+#: preferenceswindow.py:118
 msgid "Absolute paths first, relative second"
 msgstr "Abszolút útvonalak először, relatívak másodikként"
 
-#: preferenceswindow.py:117
+#: preferenceswindow.py:119
 msgid "Relative paths first, absolute second"
 msgstr "Relatív útvonalak először, abszolútak másodikként"
 
-#: preferenceswindow.py:118
+#: preferenceswindow.py:120
 msgid "Absolute paths only"
 msgstr "Csak abszolút útvonalak"
 
-#: preferenceswindow.py:122
+#: preferenceswindow.py:124
 msgid "Default Profile:"
 msgstr "Alapértelmezett profil:"
 
-#: preferenceswindow.py:123
+#: preferenceswindow.py:125
 msgid "Remember last media directory"
 msgstr "Legutóbbi média mappa megjegyzése"
 
-#: preferenceswindow.py:124
+#: preferenceswindow.py:126
 msgid "Undo stack size:"
 msgstr "Visszavonási lista mérete:"
 
-#: preferenceswindow.py:125
+#: preferenceswindow.py:127
 msgid "Thumbnail folder:"
 msgstr "Bélyegképek mappája:"
 
-#: preferenceswindow.py:126
+#: preferenceswindow.py:128
 msgid "Remember last render directory"
 msgstr "Legutóbbi renderelés mappájának megjegyzése"
 
-#: preferenceswindow.py:127
+#: preferenceswindow.py:129
 msgid "Autosave for crash recovery every:"
 msgstr "Automatikus mentések időköze:"
 
-#: preferenceswindow.py:128
+#: preferenceswindow.py:130
 msgid "Rendered Clips folder:"
 msgstr "Renderelt klipek mappája:"
 
-#: preferenceswindow.py:129
+#: preferenceswindow.py:131
 msgid "Media look-up order on load:"
 msgstr "Médiakeresési sorrend betöltéskor:"
 
-#: preferenceswindow.py:174
+#: preferenceswindow.py:176
 msgid "Overwrite blanks"
 msgstr "Üresek felülírása"
 
-#: preferenceswindow.py:175
+#: preferenceswindow.py:177
 msgid "Always insert"
 msgstr "Mindig beszúrás"
 
-#: preferenceswindow.py:182
+#: preferenceswindow.py:190
 msgid "Autoplay new Clips in Clip Monitor"
 msgstr "Új klipek automatikus lejátszása a klip monitoron"
 
-#: preferenceswindow.py:183
+#: preferenceswindow.py:191
 msgid "Center Current Frame on Playback Stop"
 msgstr "Képkocka középre hozása a lejátszás megállításakor"
 
-#: preferenceswindow.py:184
+#: preferenceswindow.py:192
 msgid "Graphics default length:"
 msgstr "Grafika alapértelmezett hossza:"
 
-#: preferenceswindow.py:185
+#: preferenceswindow.py:193
 msgid "Trim Modes exit on empty click"
 msgstr "Kilépés a levágás (trim) módból üres helyre kattintáskor"
 
-#: preferenceswindow.py:186
+#: preferenceswindow.py:194
 msgid "Quick enter Trim Modes"
 msgstr "Gyors belépés a levágás (trim) módba"
 
-#: preferenceswindow.py:187
+#: preferenceswindow.py:195
 msgid "Remember Monitor Clip Frame"
 msgstr "A monitoron lévő klip képkockájának megjegyzése"
 
-#: preferenceswindow.py:188
+#: preferenceswindow.py:196
 msgid "Media drag'n'drop action on non-V1 tracks"
 msgstr "Médiákkal végzett fogd és vidd művelet a sávokon (kivéve V1)"
 
-#: preferenceswindow.py:189
+#: preferenceswindow.py:197
 msgid "Cover Transition/Fade clips on delete if possible"
 msgstr "Törléskor az áttűnés/halványodás klipeket is foglalja bele ha lehet"
 
-#: preferenceswindow.py:218
+#: preferenceswindow.py:199
+msgid "Enable single Play/Pause button"
+msgstr "Egyesített Lejátszás/Szünet gomb használata"
+
+#: preferenceswindow.py:231
 msgid "Glass"
 msgstr "Üveg"
 
-#: preferenceswindow.py:219
+#: preferenceswindow.py:232
 msgid "Simple"
 msgstr "Egyszerű"
 
-#: preferenceswindow.py:226
+#: preferenceswindow.py:239
 msgid "Light Theme"
 msgstr "Világos téma"
 
-#: preferenceswindow.py:227
+#: preferenceswindow.py:240
 msgid "Dark Theme"
 msgstr "Sötét téma"
 
-#: preferenceswindow.py:239
+#: preferenceswindow.py:252
 msgid "Display All Levels"
 msgstr "Szintek megjelenítése"
 
-#: preferenceswindow.py:240
+#: preferenceswindow.py:253
 msgid "Display Levels On Request"
 msgstr "Összes szint megjelenítése kérésre"
 
-#: preferenceswindow.py:247
+#: preferenceswindow.py:260
 msgid "Use English texts on localized OS"
 msgstr "Angol nyelv használata más nyelvű rendszeren"
 
-#: preferenceswindow.py:248
+#: preferenceswindow.py:261
 msgid "Display splash screen"
 msgstr "Indítókép megjelenítése"
 
-#: preferenceswindow.py:249
+#: preferenceswindow.py:262
 msgid "Buttons style:"
 msgstr "Gombok stílusa:"
 
-#: preferenceswindow.py:250
+#: preferenceswindow.py:263
 msgid "Icons and color optimized for:"
 msgstr "Ikonok és színek igazítása ehhez:"
 
-#: preferenceswindow.py:251
+#: preferenceswindow.py:264
 msgid "Theme detection fail fallback colors:"
 msgstr "Témaérzékelés sikertelensége esetén használandó színek:"
 
-#: preferenceswindow.py:252
+#: preferenceswindow.py:265
 msgid "Default audio levels display:"
 msgstr "Hangszintek alapértelmezett megjelenítési módja"
 
