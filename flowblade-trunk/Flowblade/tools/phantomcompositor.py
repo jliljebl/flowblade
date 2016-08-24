@@ -34,8 +34,6 @@ def launch_phantom():
         #dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return
 
-    launch_command = [str(respaths.LAUNCH_DIR + "flowbladephantom"), str(respaths.PHANTOM_JAR)]
-    print launch_command
     FLOG = open(utils.get_hidden_user_dir_path() + "log_phantom", 'w')
     subprocess.Popen([str(respaths.LAUNCH_DIR + "flowbladephantom") + " " + str(respaths.PHANTOM_JAR) + " profile" + " " + _get_underscored_profile()], shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
 

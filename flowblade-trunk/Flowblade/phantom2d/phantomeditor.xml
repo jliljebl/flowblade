@@ -16,15 +16,10 @@
 <preference key="disp_kf_key_sc" value="F3"/>
 <preference key="disp_flow_key_sc" value="F1"/>
 <preference key="definterp" value="2"/>
-<preference key="switch_big_editor_sc" value="F4"/>
-<preference key="tline_next_key_sc" value="control RIGHT"/>
-<preference key="disp_clip_key_sc" value="F2"/>
 <preference key="tline_zoom_out_key_sc" value="control DOWN"/>
+<preference key="disp_clip_key_sc" value="F2"/>
+<preference key="tline_next_key_sc" value="control RIGHT"/>
+<preference key="switch_big_editor_sc" value="F4"/>
 <preference key="firstrun" value="false"/>
-<recentprojects path="/home/janne/test/steam/steamPunkTrain_4.phr"/>
-<recentprojects path="/home/janne/test/steam/steamPunkTrain_3.phr"/>
-<recentprojects path="/home/janne/test/steam/steamPunkTrain_2.phr"/>
-<recentprojects path="/home/janne/test/steam/steamPunkTrain.phr"/>
-<recentprojects path="/home/janne/test/phantom_new/emboss_pre_3.phr"/>
-<recentprojects path="/home/janne/test/phantom_new/emboss_pre_2.phr"/>
+<recentprojects path="/home/janne/asdasdasdasdasd.phr"/>
 </phantompersistence>
