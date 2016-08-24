@@ -74,9 +74,10 @@ def main(root_path):
         print "Created temp folder for rendering at " + get_temp_frames_folder()
         os.mkdir(get_temp_frames_folder())
         
-    # Init necessary resources and MLT
+    # Init necessary resources 
     editorpersistance.load()
     
+    # init MLT
     repo = mlt.Factory().init()
 
     # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 

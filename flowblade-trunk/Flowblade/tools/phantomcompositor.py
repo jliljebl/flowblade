@@ -21,6 +21,7 @@
 import subprocess
 import sys
 
+import editorstate
 import respaths
 import utils
 
@@ -33,6 +34,12 @@ def launch_phantom():
         #dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return
 
+    launch_command = [str(respaths.LAUNCH_DIR + "flowbladephantom"), str(respaths.PHANTOM_JAR)]
+    print launch_command
     FLOG = open(utils.get_hidden_user_dir_path() + "log_phantom", 'w')
-    subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladephantom" + " " + respaths.PHANTOM_JAR], stdin=FLOG, stdout=FLOG, stderr=FLOG)
+    subprocess.Popen([str(respaths.LAUNCH_DIR + "flowbladephantom") + " " + str(respaths.PHANTOM_JAR) + " profile" + " " + _get_underscored_profile()], shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
 
+    print "Phantom2D launched"
+
+def _get_underscored_profile():
+    return editorstate.PROJECT().profile_desc.replace (" ", "_")
