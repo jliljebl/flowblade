@@ -861,7 +861,199 @@
     <gmicscript>
         <name>Fuji 3510 - Constclip</name>
         <group>Film Emulate Print</group>
-        <script>-gimp_emulate_film_print 1,100,0,0,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_print 1,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Fuji 3510 - Constlmap</name>
+        <group>Film Emulate Print</group>
+        <script>-gimp_emulate_film_print 2,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Fuji 3510 - Cuspclip</name>
+        <group>Film Emulate Print</group>
+        <script>-gimp_emulate_film_print 3,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Fuji 3513 - Constclip</name>
+        <group>Film Emulate Print</group>
+        <script>-gimp_emulate_film_print 4,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Fuji 3513 - Constlmap</name>
+        <group>Film Emulate Print</group>
+        <script>-gimp_emulate_film_print 5,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Fuji 3513 - Cuspclip</name>
+        <group>Film Emulate Print</group>
+        <script>-gimp_emulate_film_print 6,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Kodak 2383 - Constclip</name>
+        <group>Film Emulate Print</group>
+        <script>-gimp_emulate_film_print 7,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Kodak 2383 - Constlmap</name>
+        <group>Film Emulate Print</group>
+        <script>-gimp_emulate_film_print 8,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Kodak 2383 - Cuspclip</name>
+        <group>Film Emulate Print</group>
+        <script>-gimp_emulate_film_print 9,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Kodak 2393 - Constclip</name>
+        <group>Film Emulate Print</group>
+        <script>-gimp_emulate_film_print 10,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Kodak 2393 - Constlmap</name>
+        <group>Film Emulate Print</group>
+        <script>-gimp_emulate_film_print 11,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Kodak 2393 - Cuspclip</name>
+        <group>Film Emulate Print</group>
+        <script>-gimp_emulate_film_print 12,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Agfa Ultra Color</name>
+        <group>Film Emulate Negative Color</group>
+        <script>-gimp_emulate_film_negative_color 1,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Agfa Vista 200</name>
+        <group>Film Emulate Negative Color</group>
+        <script>-gimp_emulate_film_negative_color 2,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Fuji Superia 200</name>
+        <group>Film Emulate Negative Color</group>
+        <script>-gimp_emulate_film_negative_color 3,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Fuji Superia HG 1600</name>
+        <group>Film Emulate Negative Color</group>
+        <script>-gimp_emulate_film_negative_color 4,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Fuji Superia Reala 100</name>
+        <group>Film Emulate Negative Color</group>
+        <script>-gimp_emulate_film_negative_color 5,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Fuji Superia X-Tra 800</name>
+        <group>Film Emulate Negative Color</group>
+        <script>-gimp_emulate_film_negative_color 6,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Kodak Elite 100 XPRO</name>
+        <group>Film Emulate Negative Color</group>
+        <script>-gimp_emulate_film_negative_color 7,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Kodak Elite Color 200</name>
+        <group>Film Emulate Negative Color</group>
+        <script>-gimp_emulate_film_negative_color 8,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Kodak Elite Color 400</name>
+        <group>Film Emulate Negative Color</group>
+        <script>-gimp_emulate_film_negative_color 9,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Kodak Portra 160 NC</name>
+        <group>Film Emulate Negative Color</group>
+        <script>-gimp_emulate_film_negative_color 10,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Kodak Porta 160 VC</name>
+        <group>Film Emulate Negative Color</group>
+        <script>-gimp_emulate_film_negative_color 11,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Lomography Redscale 100</name>
+        <group>Film Emulate Negative Color</group>
+        <script>-gimp_emulate_film_negative_color 12,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Fuji 160C</name>
+        <group>Film Emulate Negative New</group>
+        <script>-gimp_emulate_film_negative_new 1,1,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Fuji 400H</name>
+        <group>Film Emulate Negative New</group>
+        <script>-gimp_emulate_film_negative_new 2,1,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Fuji 800Z</name>
+        <group>Film Emulate Negative New</group>
+        <script>-gimp_emulate_film_negative_new 3,1,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Fuji Ilford HP5</name>
+        <group>Film Emulate Negative New</group>
+        <script>-gimp_emulate_film_negative_new 4,1,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Kodak Potra 160</name>
+        <group>Film Emulate Negative New</group>
+        <script>-gimp_emulate_film_negative_new 5,1,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Kodak Porta 400</name>
+        <group>Film Emulate Negative New</group>
+        <script>-gimp_emulate_film_negative_new 6,1,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Kodak Potra 800</name>
+        <group>Film Emulate Negative New</group>
+        <script>-gimp_emulate_film_negative_new 7,1,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Kodak TMAX 3200</name>
+        <group>Film Emulate Negative New</group>
+        <script>-gimp_emulate_film_negative_new 8,1,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Kodak TRI-X 400</name>
+        <group>Film Emulate Negative New</group>
+        <script>-gimp_emulate_film_negative_new 9,1,1,0,1,0,0,0,0,0</script>
     </gmicscript>
     
 </gmic>
