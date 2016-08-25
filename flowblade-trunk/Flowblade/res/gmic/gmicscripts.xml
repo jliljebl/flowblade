@@ -858,4 +858,10 @@
         <script>-cubism 50,10,75,0.7,0</script>
     </gmicscript>
     
+    <gmicscript>
+        <name>Fuji 3510 - Constclip</name>
+        <group>Film Emulate Print</group>
+        <script>-gimp_emulate_film_print 1,100,0,0,0,0,0,0,0</script>
+    </gmicscript>
+    
 </gmic>
