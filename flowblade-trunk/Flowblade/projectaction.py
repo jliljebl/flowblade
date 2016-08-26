@@ -467,7 +467,9 @@ def _change_project_profile_callback(dialog, response_id, profile_combo, out_fol
         profile = mltprofiles.get_profile_for_index(profile_combo.get_active())
         path = folder + "/" + name
 
-        persistance.save_project(PROJECT(), path, profile.description()) #<----- HERE
+        current_sequence().print_all()
+        
+        #ersistance.save_project(PROJECT(), path, profile.description()) #<----- HERE
 
         dialog.destroy()
     else:

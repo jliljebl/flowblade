@@ -118,7 +118,7 @@ def get_checkbox_row_box(checkbox, widget2):
     hbox.pack_start(widget2, False, False, 0)
     hbox.pack_start(Gtk.Label(), True, True, 0)
     return hbox
-    
+
 def get_two_row_box(widget1, widget2):
     # widget 1 is left justified
     top = get_left_justified_box([widget1])

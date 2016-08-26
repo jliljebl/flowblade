@@ -56,6 +56,7 @@ import render
 import rendergui
 import panels
 import patternproducer
+import phantomcompositor
 from positionbar import PositionBar
 import preferenceswindow
 import projectaction
@@ -146,7 +147,7 @@ class EditorWindow:
             ('SaveSnapshot', None, _('Save Backup Snapshot...'), None, None, lambda a:projectaction.save_backup_snapshot()),
             ('ExportMenu', None, _('Export')),
             ('ExportMeltXML', None, _('MLT XML'), None, None, lambda a:exporting.MELT_XML_export()),
-            ('ExportEDL', None, _('EDL CMX 3600'), None, None, lambda a:exporting.EDL_export()),
+            ('ExportEDL', None, _('EDL'), None, None, lambda a:exporting.EDL_export()),
             ('ExportScreenshot', None, _('Current Frame'), None, None, lambda a:exporting.screenshot_export()),
             ('Close', None, _('_Close'), None, None, lambda a:projectaction.close_project()),
             ('Quit', None, _('_Quit'), '<control>Q', None, lambda a:app.shutdown()),
@@ -199,7 +200,8 @@ class EditorWindow:
             ('ToolsMenu', None, _('Tools')),
             ('Titler', None, _('Titler'), None, None, lambda a:titler.show_titler()),
             ('AudioMix', None, _('Audio Mixer'), None, None, lambda a:audiomonitoring.show_audio_monitor()),
-            ('GMIC', None, _("G'MIC Effects"), None, None, lambda a:gmic.launch_gmic()),
+            ('GMIC', None, _("G'MIC Effects"), None, None, lambda a:gmic.launch_gmic()()),
+            ('Phantom2D', None, _("Phantom2D"), None, None, lambda a: phantomcompositor.launch_phantom()),
             ('MediaLink', None, _('Media Relinker'), None, None, lambda a:medialinker.display_linker()),
             ('HelpMenu', None, _('_Help')),
             ('QuickReference', None, _('Contents'), None, None, lambda a:menuactions.quick_reference()),
@@ -226,6 +228,7 @@ class EditorWindow:
                     <separator/>
                     <menu action='ExportMenu'>
                         <menuitem action='ExportMeltXML'/>
+                        <menuitem action='ExportEDL'/>
                         <menuitem action='ExportScreenshot'/>
                     </menu>
                     <separator/>
@@ -299,6 +302,7 @@ class EditorWindow:
                     <separator/>
                     <menuitem action='Titler'/>
                     <menuitem action='GMIC'/>
+                    <menuitem action='Phantom2D'/>
                     <separator/>
                     <menuitem action='MediaLink'/>
                 </menu>

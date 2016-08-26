@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-07 09:44+0200\n"
+"POT-Creation-Date: 2016-08-26 12:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,43 +17,43 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: app.py:721
+#: app.py:725
 msgid "Too small screen for this application."
 msgstr ""
 
-#: app.py:724
+#: app.py:728
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr ""
 
-#: app.py:725
+#: app.py:729
 msgid "Your screen dimensions are "
 msgstr ""
 
-#: app.py:759
+#: app.py:763
 msgid "Project has not been saved since it was opened."
 msgstr ""
 
-#: app.py:764
+#: app.py:768
 msgid "Project was saved less than a minute ago."
 msgstr ""
 
-#: app.py:767
+#: app.py:771
 msgid "Project was saved one minute ago."
 msgstr ""
 
-#: app.py:769
+#: app.py:773
 msgid "Project was saved "
 msgstr ""
 
-#: app.py:769
+#: app.py:773
 msgid " minutes ago."
 msgstr ""
 
-#: app.py:779 projectaction.py:327
+#: app.py:783 projectaction.py:327
 msgid "Project has not been saved previously"
 msgstr ""
 
-#: app.py:780 projectaction.py:328
+#: app.py:784 projectaction.py:328
 msgid "Save project with File -> Save As before closing."
 msgstr ""
 
@@ -130,427 +130,431 @@ msgid ""
 "has to be empty."
 msgstr ""
 
-#: projectaction.py:501
+#: projectaction.py:503
 msgid "Copying project media assets"
 msgstr ""
 
-#: projectaction.py:502
+#: projectaction.py:504
 msgid "Saving project file"
 msgstr ""
 
-#: projectaction.py:625
+#: projectaction.py:627
 msgid "Project not found on disk"
 msgstr ""
 
-#: projectaction.py:626
+#: projectaction.py:628
 msgid "Project can't be loaded."
 msgstr ""
 
-#: projectaction.py:684
+#: projectaction.py:686
 msgid "Render launch failed!"
 msgstr ""
 
-#: projectaction.py:685 projectaction.py:699 tools/batchrendering.py:296
+#: projectaction.py:687 projectaction.py:701 tools/batchrendering.py:296
 msgid "Error message: "
 msgstr ""
 
-#: projectaction.py:698
+#: projectaction.py:700
 msgid "Adding item to render queue failed!"
 msgstr ""
 
-#: projectaction.py:717
+#: projectaction.py:719
 msgid "Open.."
 msgstr ""
 
-#: projectaction.py:747
+#: projectaction.py:749
 msgid "No file was selected"
 msgstr ""
 
-#: projectaction.py:747
+#: projectaction.py:749
 msgid "Select a numbered file to add an Image Sequence to Project."
 msgstr ""
 
-#: projectaction.py:755
+#: projectaction.py:757
 msgid "Not a sequence file!"
 msgstr ""
 
-#: projectaction.py:755
+#: projectaction.py:757
 msgid ""
 "Selected file does not have a number part in it,\n"
 "so it can't be an image sequence file."
 msgstr ""
 
-#: projectaction.py:806
+#: projectaction.py:808
 msgid "Can't make home folder thumbnails folder"
 msgstr ""
 
-#: projectaction.py:807 dialogs.py:361
+#: projectaction.py:809 dialogs.py:361
 msgid "Please create and select some other folder then '"
 msgstr ""
 
-#: projectaction.py:808
+#: projectaction.py:810
 msgid "' as thumbnails folder"
 msgstr ""
 
-#: projectaction.py:925 projectaction.py:927 projectaction.py:936
-#: projectaction.py:944 projectaction.py:951
+#: projectaction.py:927 projectaction.py:929 projectaction.py:938
+#: projectaction.py:946 projectaction.py:953
 msgid "N/A"
 msgstr ""
 
-#: projectaction.py:940 guicomponents.py:1619
+#: projectaction.py:942 guicomponents.py:1621
 msgid "Yes"
 msgstr ""
 
-#: projectaction.py:942 guicomponents.py:1621
+#: projectaction.py:944 guicomponents.py:1623
 msgid "No"
 msgstr ""
 
-#: projectaction.py:1013
+#: projectaction.py:1015
 msgid "Can't remove a non-empty bin"
 msgstr ""
 
-#: projectaction.py:1014
+#: projectaction.py:1016
 msgid "You must remove all files from the bin before deleting it."
 msgstr ""
 
-#: projectaction.py:1022
+#: projectaction.py:1024
 msgid "Can't remove last bin"
 msgstr ""
 
-#: projectaction.py:1023
+#: projectaction.py:1025
 msgid "There must always exist at least one bin."
 msgstr ""
 
-#: projectaction.py:1109
+#: projectaction.py:1111
 msgid "Selected sequence is already being edited"
 msgstr ""
 
-#: projectaction.py:1110
+#: projectaction.py:1112
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
 msgstr ""
 
-#: projectaction.py:1120 projectaction.py:1137 projectdata.py:194
+#: projectaction.py:1122 projectaction.py:1139 projectdata.py:194
 msgid "sequence_"
 msgstr ""
 
-#: projectaction.py:1170
+#: projectaction.py:1172
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
 msgstr ""
 
-#: projectaction.py:1170
+#: projectaction.py:1172
 msgid "'?"
 msgstr ""
 
-#: projectaction.py:1171
+#: projectaction.py:1173
 msgid "This operation can not be undone. Sequence will be permanently lost."
 msgstr ""
 
-#: projectaction.py:1186
+#: projectaction.py:1188
 msgid "Can't remove last sequence"
 msgstr ""
 
-#: projectaction.py:1187
+#: projectaction.py:1189
 msgid "There must always exist at least one sequence."
 msgstr ""
 
-#: editorwindow.py:140
+#: editorwindow.py:141
 msgid "_File"
 msgstr ""
 
-#: editorwindow.py:141
+#: editorwindow.py:142
 msgid "_New..."
 msgstr ""
 
-#: editorwindow.py:142
+#: editorwindow.py:143
 msgid "_Open..."
 msgstr ""
 
-#: editorwindow.py:143
+#: editorwindow.py:144
 msgid "Open Recent"
 msgstr ""
 
-#: editorwindow.py:144
+#: editorwindow.py:145
 msgid "_Save"
 msgstr ""
 
-#: editorwindow.py:145
+#: editorwindow.py:146
 msgid "_Save As..."
 msgstr ""
 
-#: editorwindow.py:146
+#: editorwindow.py:147
 msgid "Save Backup Snapshot..."
 msgstr ""
 
-#: editorwindow.py:147 dialogs.py:302
+#: editorwindow.py:148 dialogs.py:302
 msgid "Export"
 msgstr ""
 
-#: editorwindow.py:148
+#: editorwindow.py:149
 msgid "MLT XML"
 msgstr ""
 
-#: editorwindow.py:149
-msgid "EDL CMX 3600"
-msgstr ""
-
 #: editorwindow.py:150
-msgid "Current Frame"
+msgid "EDL"
 msgstr ""
 
 #: editorwindow.py:151
-msgid "_Close"
+msgid "Current Frame"
 msgstr ""
 
 #: editorwindow.py:152
-msgid "_Quit"
+msgid "_Close"
 msgstr ""
 
 #: editorwindow.py:153
-msgid "_Edit"
+msgid "_Quit"
 msgstr ""
 
 #: editorwindow.py:154
-msgid "_Undo"
+msgid "_Edit"
 msgstr ""
 
 #: editorwindow.py:155
-msgid "_Redo"
+msgid "_Undo"
 msgstr ""
 
 #: editorwindow.py:156
-msgid "Copy"
+msgid "_Redo"
 msgstr ""
 
 #: editorwindow.py:157
-msgid "Paste"
+msgid "Copy"
 msgstr ""
 
 #: editorwindow.py:158
-msgid "Paste Filters"
+msgid "Paste"
 msgstr ""
 
 #: editorwindow.py:159
+msgid "Paste Filters"
+msgstr ""
+
+#: editorwindow.py:160
 msgid "Add Monitor Clip"
 msgstr ""
 
-#: editorwindow.py:160 dialogs.py:1174
+#: editorwindow.py:161 dialogs.py:1155
 msgid "Append"
 msgstr ""
 
-#: editorwindow.py:161 dialogs.py:1173 dialogs.py:1200 guicomponents.py:2017
+#: editorwindow.py:162 dialogs.py:1154 dialogs.py:1181 guicomponents.py:2019
 msgid "Insert"
 msgstr ""
 
-#: editorwindow.py:162
+#: editorwindow.py:163
 msgid "Three Point Overwrite"
 msgstr ""
 
-#: editorwindow.py:163
+#: editorwindow.py:164
 msgid "Range Overwrite"
 msgstr ""
 
-#: editorwindow.py:164 dialogs.py:1171
+#: editorwindow.py:165 dialogs.py:1152
 msgid "Cut Clip"
 msgstr ""
 
-#: editorwindow.py:165 translations.py:511
+#: editorwindow.py:166 translations.py:511
 msgid "Lift"
 msgstr ""
 
-#: editorwindow.py:166 dialogs.py:1172
+#: editorwindow.py:167 dialogs.py:1153
 msgid "Splice Out"
 msgstr ""
 
-#: editorwindow.py:167 guicomponents.py:1131 guicomponents.py:1220
+#: editorwindow.py:168 guicomponents.py:1131 guicomponents.py:1220
 msgid "Resync"
 msgstr ""
 
-#: editorwindow.py:168
+#: editorwindow.py:169
 msgid "Set Sync Parent"
 msgstr ""
 
-#: editorwindow.py:169
+#: editorwindow.py:170
 msgid "Add Single Track Transition"
 msgstr ""
 
-#: editorwindow.py:170
+#: editorwindow.py:171
 msgid "Add Single Track Fade"
 msgstr ""
 
-#: editorwindow.py:171 guicomponents.py:1154 guicomponents.py:1191
+#: editorwindow.py:172 guicomponents.py:1154 guicomponents.py:1191
 msgid "Clear Filters"
 msgstr ""
 
-#: editorwindow.py:172
+#: editorwindow.py:173
 msgid "Sync All Compositors"
 msgstr ""
 
-#: editorwindow.py:173
+#: editorwindow.py:174
 msgid "Change Sequence Tracks Count..."
 msgstr ""
 
-#: editorwindow.py:174
+#: editorwindow.py:175
 msgid "Watermark..."
 msgstr ""
 
-#: editorwindow.py:175 profilesmanager.py:45
+#: editorwindow.py:176 profilesmanager.py:45
 msgid "Profiles Manager"
 msgstr ""
 
-#: editorwindow.py:176
+#: editorwindow.py:177
 msgid "Preferences"
 msgstr ""
 
-#: editorwindow.py:177 preferenceswindow.py:53
+#: editorwindow.py:178 preferenceswindow.py:53
 msgid "View"
 msgstr ""
 
-#: editorwindow.py:178
+#: editorwindow.py:179
 msgid "Fullscreen"
 msgstr ""
 
-#: editorwindow.py:179 editorwindow.py:483
+#: editorwindow.py:180 editorwindow.py:487
 msgid "Project"
 msgstr ""
 
-#: editorwindow.py:180
+#: editorwindow.py:181
 msgid "Add Media Clip..."
 msgstr ""
 
-#: editorwindow.py:181
+#: editorwindow.py:182
 msgid "Add Image Sequence..."
 msgstr ""
 
-#: editorwindow.py:182
+#: editorwindow.py:183
 msgid "Create Color Clip..."
 msgstr ""
 
-#: editorwindow.py:183
+#: editorwindow.py:184
 msgid "Create Pattern Producer"
 msgstr ""
 
-#: editorwindow.py:184 translations.py:395 patternproducer.py:67
+#: editorwindow.py:185 translations.py:395 patternproducer.py:67
 msgid "Noise"
 msgstr ""
 
-#: editorwindow.py:185 patternproducer.py:72
+#: editorwindow.py:186 patternproducer.py:72
 msgid "EBU Bars"
 msgstr ""
 
-#: editorwindow.py:186 patternproducer.py:81
+#: editorwindow.py:187 patternproducer.py:81
 msgid "Ising"
 msgstr ""
 
-#: editorwindow.py:187 patternproducer.py:98
+#: editorwindow.py:188 patternproducer.py:98
 msgid "Color Pulse"
 msgstr ""
 
-#: editorwindow.py:188 dialogs.py:1163 dialogs.py:1180
+#: editorwindow.py:189 dialogs.py:1144 dialogs.py:1161
 msgid "Log Marked Clip Range"
 msgstr ""
 
-#: editorwindow.py:189
+#: editorwindow.py:190
 msgid "Recreate Media Icons..."
 msgstr ""
 
-#: editorwindow.py:190
+#: editorwindow.py:191
 msgid "Remove Unused Media..."
 msgstr ""
 
-#: editorwindow.py:191
+#: editorwindow.py:192
 msgid "JACK Audio..."
 msgstr ""
 
-#: editorwindow.py:192
+#: editorwindow.py:193
 msgid "Change Project Profile..."
 msgstr ""
 
-#: editorwindow.py:193 proxyediting.py:216
+#: editorwindow.py:194 proxyediting.py:216
 msgid "Proxy Manager"
 msgstr ""
 
-#: editorwindow.py:194
+#: editorwindow.py:195
 msgid "Project Info"
 msgstr ""
 
-#: editorwindow.py:195 editorwindow.py:484 rendergui.py:171
+#: editorwindow.py:196 editorwindow.py:488 rendergui.py:171
 #: tools/batchrendering.py:862 tools/gmic.py:719
 msgid "Render"
 msgstr ""
 
-#: editorwindow.py:196
+#: editorwindow.py:197
 msgid "Add To Batch Render Queue..."
 msgstr ""
 
-#: editorwindow.py:197
+#: editorwindow.py:198
 msgid "Batch Render Queue"
 msgstr ""
 
-#: editorwindow.py:198
+#: editorwindow.py:199
 msgid "Render Timeline"
 msgstr ""
 
-#: editorwindow.py:199 dialogs.py:1206
+#: editorwindow.py:200 dialogs.py:1187
 msgid "Tools"
 msgstr ""
 
-#: editorwindow.py:200 tools/titler.py:178
+#: editorwindow.py:201 tools/titler.py:178
 msgid "Titler"
 msgstr ""
 
-#: editorwindow.py:201
+#: editorwindow.py:202
 msgid "Audio Mixer"
 msgstr ""
 
-#: editorwindow.py:202 tools/gmic.py:779
+#: editorwindow.py:203 tools/gmic.py:779
 msgid "G'MIC Effects"
 msgstr ""
 
-#: editorwindow.py:203 medialinker.py:173
+#: editorwindow.py:204
+msgid "Phantom2D"
+msgstr ""
+
+#: editorwindow.py:205 medialinker.py:173
 msgid "Media Relinker"
 msgstr ""
 
-#: editorwindow.py:204
+#: editorwindow.py:206
 msgid "_Help"
 msgstr ""
 
-#: editorwindow.py:205
+#: editorwindow.py:207
 msgid "Contents"
 msgstr ""
 
-#: editorwindow.py:206 dialogs.py:474
+#: editorwindow.py:208 dialogs.py:474
 msgid "Runtime Environment"
 msgstr ""
 
-#: editorwindow.py:207 dialogs.py:1148
+#: editorwindow.py:209 dialogs.py:1129
 msgid "Keyboard Shortcuts"
 msgstr ""
 
-#: editorwindow.py:208 dialogs.py:402
+#: editorwindow.py:210 dialogs.py:402
 msgid "About"
 msgstr ""
 
-#: editorwindow.py:477
+#: editorwindow.py:481
 msgid "Media"
 msgstr ""
 
-#: editorwindow.py:480
+#: editorwindow.py:484
 msgid "Range Log"
 msgstr ""
 
-#: editorwindow.py:481
+#: editorwindow.py:485
 msgid "Filters"
 msgstr ""
 
-#: editorwindow.py:482
+#: editorwindow.py:486
 msgid "Compositors"
 msgstr ""
 
-#: editorwindow.py:503
+#: editorwindow.py:507
 msgid ""
 "Prev Frame - Arrow Left\n"
 "Next Frame - Arrow Right\n"
@@ -563,95 +567,95 @@ msgid ""
 "To Mark Out"
 msgstr ""
 
-#: editorwindow.py:705
+#: editorwindow.py:709
 msgid "Middlebar Layout"
 msgstr ""
 
-#: editorwindow.py:708
+#: editorwindow.py:712
 msgid "Timecode Left"
 msgstr ""
 
-#: editorwindow.py:713
+#: editorwindow.py:717
 msgid "Timecode Center"
 msgstr ""
 
-#: editorwindow.py:725
+#: editorwindow.py:729
 msgid "Tabs Position"
 msgstr ""
 
-#: editorwindow.py:728
+#: editorwindow.py:732
 msgid "Up"
 msgstr ""
 
-#: editorwindow.py:732
+#: editorwindow.py:736
 msgid "Down"
 msgstr ""
 
-#: editorwindow.py:749
+#: editorwindow.py:753
 msgid "Show Monitor Sequence Profile"
 msgstr ""
 
-#: editorwindow.py:754
+#: editorwindow.py:758
 msgid "Show Master Volume Meter"
 msgstr ""
 
-#: editorwindow.py:762
+#: editorwindow.py:766
 msgid "Monitor Playback Interpolation"
 msgstr ""
 
-#: editorwindow.py:766
+#: editorwindow.py:770
 msgid "Nearest Neighbour (fast)"
 msgstr ""
 
-#: editorwindow.py:770
+#: editorwindow.py:774
 msgid "Bilinear (good)"
 msgstr ""
 
-#: editorwindow.py:774
+#: editorwindow.py:778
 msgid "Bicubic (better)"
 msgstr ""
 
-#: editorwindow.py:779
+#: editorwindow.py:783
 msgid "Hyper/Lanczos (best)"
 msgstr ""
 
-#: editorwindow.py:789
+#: editorwindow.py:793
 msgid "Zoom In"
 msgstr ""
 
-#: editorwindow.py:792
+#: editorwindow.py:796
 msgid "Zoom Out"
 msgstr ""
 
-#: editorwindow.py:795
+#: editorwindow.py:799
 msgid "Zoom Fit"
 msgstr ""
 
-#: editorwindow.py:906
+#: editorwindow.py:921
 msgid "Timeline current frame timecode"
 msgstr ""
 
-#: editorwindow.py:908
+#: editorwindow.py:923
 msgid "Select view mode: Video/Vectorscope/RGBParade"
 msgstr ""
 
-#: editorwindow.py:910
+#: editorwindow.py:925
 msgid "Monitor Sequence/Media current frame timecode"
 msgstr ""
 
-#: editorwindow.py:911
+#: editorwindow.py:926
 msgid "Current Monitor Sequence/Media name"
 msgstr ""
 
-#: editorwindow.py:913
+#: editorwindow.py:928
 msgid "Monitor Sequence/Media current position"
 msgstr ""
 
-#: editorwindow.py:915
+#: editorwindow.py:930
 msgid "Display Current Sequence on Timeline"
 msgstr ""
 
-#: editorwindow.py:916
+#: editorwindow.py:931
 msgid "Display Monitor Clip"
 msgstr ""
 
@@ -673,7 +677,7 @@ msgid "Add"
 msgstr ""
 
 #: clipeffectseditor.py:213 compositeeditor.py:57 guicomponents.py:1201
-#: guicomponents.py:1260 guicomponents.py:1449 guicomponents.py:1492
+#: guicomponents.py:1260 guicomponents.py:1449 guicomponents.py:1494
 #: panels.py:51 panels.py:96 panels.py:114 tools/titler.py:199
 #: tools/batchrendering.py:1027
 msgid "Delete"
@@ -723,7 +727,7 @@ msgstr ""
 #: dialogs.py:280 dialogs.py:301 dialogs.py:315 dialogs.py:326 dialogs.py:342
 #: dialogs.py:373 dialogs.py:392 dialogs.py:706 dialogs.py:801 dialogs.py:835
 #: dialogs.py:878 dialogs.py:906 dialogs.py:934 dialogs.py:995 dialogs.py:1032
-#: dialogs.py:1122 dialogs.py:1136 dialogs.py:1303
+#: dialogs.py:1103 dialogs.py:1117 dialogs.py:1284
 #: propertyeditorbuilder.py:401 rendergui.py:47 rendergui.py:102
 #: rendergui.py:116 rendergui.py:133 preferenceswindow.py:42
 #: tools/batchrendering.py:959 proxyediting.py:429 patternproducer.py:319
@@ -733,7 +737,7 @@ msgid "Cancel"
 msgstr ""
 
 #: dialogs.py:56 dialogs.py:224 dialogs.py:264 dialogs.py:404 dialogs.py:476
-#: dialogs.py:595 dialogs.py:608 dialogs.py:1304 propertyeditorbuilder.py:402
+#: dialogs.py:595 dialogs.py:608 dialogs.py:1285 propertyeditorbuilder.py:402
 #: rendergui.py:103 preferenceswindow.py:43 tools/batchrendering.py:391
 #: tools/gmic.py:330
 msgid "OK"
@@ -751,7 +755,7 @@ msgstr ""
 msgid "Number of tracks:"
 msgstr ""
 
-#: dialogs.py:79 dialogs.py:1091
+#: dialogs.py:79 dialogs.py:1078
 msgid "Tracks"
 msgstr ""
 
@@ -773,8 +777,8 @@ msgstr ""
 msgid "New Profile"
 msgstr ""
 
-#: dialogs.py:133 dialogs.py:188 rendergui.py:510 preferenceswindow.py:101
-#: preferenceswindow.py:104 tools/gmic.py:664 tools/toolsencoding.py:40
+#: dialogs.py:133 dialogs.py:188 rendergui.py:510 preferenceswindow.py:103
+#: preferenceswindow.py:106 tools/gmic.py:664 tools/toolsencoding.py:40
 msgid "Select Folder"
 msgstr ""
 
@@ -790,7 +794,7 @@ msgstr ""
 msgid "New Project File"
 msgstr ""
 
-#: dialogs.py:179 dialogs.py:1383 tools/batchrendering.py:1239
+#: dialogs.py:179 dialogs.py:1364 tools/batchrendering.py:1239
 msgid "File:"
 msgstr ""
 
@@ -943,7 +947,7 @@ msgstr ""
 msgid " FOR TRANSITION "
 msgstr ""
 
-#: dialogs.py:538 dialogs.py:1164 preferenceswindow.py:51
+#: dialogs.py:538 dialogs.py:1145 preferenceswindow.py:51
 msgid "General"
 msgstr ""
 
@@ -1179,7 +1183,7 @@ msgstr ""
 msgid "New Marker"
 msgstr ""
 
-#: dialogs.py:975 guicomponents.py:1890
+#: dialogs.py:975 guicomponents.py:1892
 msgid "Add Marker"
 msgstr ""
 
@@ -1227,380 +1231,360 @@ msgstr ""
 msgid "File"
 msgstr ""
 
-#: dialogs.py:1068
+#: dialogs.py:1069
 msgid "Exported video track:"
 msgstr ""
 
-#: dialogs.py:1073
-msgid "Cascade video tracks"
+#: dialogs.py:1076
+msgid "Export single video track"
 msgstr ""
 
-#: dialogs.py:1081
-msgid "Exported audio track:"
-msgstr ""
-
-#: dialogs.py:1084
-msgid "Audio From Video"
-msgstr ""
-
-#: dialogs.py:1085
-msgid "Separate Audio Track"
-msgstr ""
-
-#: dialogs.py:1086
-msgid "No Audio"
-msgstr ""
-
-#: dialogs.py:1089
-msgid "Audio export:"
-msgstr ""
-
-#: dialogs.py:1120
+#: dialogs.py:1101
 msgid "Add Transition"
 msgstr ""
 
-#: dialogs.py:1123 dialogs.py:1137
+#: dialogs.py:1104 dialogs.py:1118
 msgid "Apply"
 msgstr ""
 
-#: dialogs.py:1134
+#: dialogs.py:1115
 msgid "Add Fade"
 msgstr ""
 
-#: dialogs.py:1151 dialogs.py:1256 tools/titler.py:416 proxyediting.py:420
+#: dialogs.py:1132 dialogs.py:1237 tools/titler.py:416 proxyediting.py:420
 #: medialinker.py:149 tools/gmic.py:750 tools/gmic.py:841
 msgid "Close"
 msgstr ""
 
-#: dialogs.py:1154
+#: dialogs.py:1135
 msgid "Control + N"
 msgstr ""
 
-#: dialogs.py:1154
+#: dialogs.py:1135
 msgid "Create New Project"
 msgstr ""
 
-#: dialogs.py:1155
+#: dialogs.py:1136
 msgid "Control + S"
 msgstr ""
 
-#: dialogs.py:1155
+#: dialogs.py:1136
 msgid "Save Project"
 msgstr ""
 
-#: dialogs.py:1156 dialogs.py:1172
+#: dialogs.py:1137 dialogs.py:1153
 msgid "DELETE"
 msgstr ""
 
-#: dialogs.py:1156
+#: dialogs.py:1137
 msgid "Delete Selected Item"
 msgstr ""
 
-#: dialogs.py:1157
+#: dialogs.py:1138
 msgid "ESCAPE"
 msgstr ""
 
-#: dialogs.py:1157
+#: dialogs.py:1138
 msgid "Stop Rendering Audio Levels"
 msgstr ""
 
-#: dialogs.py:1158
+#: dialogs.py:1139
 msgid "Control + Q"
 msgstr ""
 
-#: dialogs.py:1158
+#: dialogs.py:1139
 msgid "Quit"
 msgstr ""
 
-#: dialogs.py:1159
+#: dialogs.py:1140
 msgid "Control + Z"
 msgstr ""
 
-#: dialogs.py:1159
+#: dialogs.py:1140
 msgid "Undo"
 msgstr ""
 
-#: dialogs.py:1160
+#: dialogs.py:1141
 msgid "Control + Y"
 msgstr ""
 
-#: dialogs.py:1160
+#: dialogs.py:1141
 msgid "Redo"
 msgstr ""
 
-#: dialogs.py:1161
+#: dialogs.py:1142
 msgid "Control + O"
 msgstr ""
 
-#: dialogs.py:1161
+#: dialogs.py:1142
 msgid "Open Project"
 msgstr ""
 
-#: dialogs.py:1162
+#: dialogs.py:1143
 msgid "TAB"
 msgstr ""
 
-#: dialogs.py:1162
+#: dialogs.py:1143
 msgid "Switch Monitor Source"
 msgstr ""
 
-#: dialogs.py:1163
+#: dialogs.py:1144
 msgid "Control + L"
 msgstr ""
 
-#: dialogs.py:1167
+#: dialogs.py:1148
 msgid "Set Mark In"
 msgstr ""
 
-#: dialogs.py:1168
+#: dialogs.py:1149
 msgid "Set Mark Out"
 msgstr ""
 
-#: dialogs.py:1169
+#: dialogs.py:1150
 msgid "Alt + I"
 msgstr ""
 
-#: dialogs.py:1169
+#: dialogs.py:1150
 msgid "Go To Mark In"
 msgstr ""
 
-#: dialogs.py:1170
+#: dialogs.py:1151
 msgid "Alt + O"
 msgstr ""
 
-#: dialogs.py:1170
+#: dialogs.py:1151
 msgid "Go To Mark Out"
 msgstr ""
 
-#: dialogs.py:1175
+#: dialogs.py:1156
 msgid "3 Point Overwrite Insert"
 msgstr ""
 
-#: dialogs.py:1176
+#: dialogs.py:1157
 msgid "Add Mark"
 msgstr ""
 
-#: dialogs.py:1177
+#: dialogs.py:1158
 msgid "Control + C"
 msgstr ""
 
-#: dialogs.py:1177
+#: dialogs.py:1158
 msgid "Copy Clips"
 msgstr ""
 
-#: dialogs.py:1178
+#: dialogs.py:1159
 msgid "Control + V"
 msgstr ""
 
-#: dialogs.py:1178
+#: dialogs.py:1159
 msgid "Paste Clips"
 msgstr ""
 
-#: dialogs.py:1179
+#: dialogs.py:1160
 msgid "R"
 msgstr ""
 
-#: dialogs.py:1179
+#: dialogs.py:1160
 msgid "Resync selected Clip or Compositor"
 msgstr ""
 
-#: dialogs.py:1180
+#: dialogs.py:1161
 msgid "G"
 msgstr ""
 
-#: dialogs.py:1181
+#: dialogs.py:1162
 msgid "Timeline"
 msgstr ""
 
-#: dialogs.py:1184
+#: dialogs.py:1165
 msgid "SPACE"
 msgstr ""
 
-#: dialogs.py:1184
+#: dialogs.py:1165
 msgid "Start / Stop Playback"
 msgstr ""
 
-#: dialogs.py:1185
+#: dialogs.py:1166
 msgid "Backwards Faster"
 msgstr ""
 
-#: dialogs.py:1186 proxyediting.py:353 tools/gmic.py:717
+#: dialogs.py:1167 proxyediting.py:353 tools/gmic.py:717
 msgid "Stop"
 msgstr ""
 
-#: dialogs.py:1187
+#: dialogs.py:1168
 msgid "Forward Faster"
 msgstr ""
 
-#: dialogs.py:1188 dialogs.py:1209
+#: dialogs.py:1169 dialogs.py:1190
 msgid "Left Arrow "
 msgstr ""
 
-#: dialogs.py:1188
+#: dialogs.py:1169
 msgid "Prev Frame"
 msgstr ""
 
-#: dialogs.py:1189 dialogs.py:1210
+#: dialogs.py:1170 dialogs.py:1191
 msgid "Right Arrow"
 msgstr ""
 
-#: dialogs.py:1189
+#: dialogs.py:1170
 msgid "Next Frame"
 msgstr ""
 
-#: dialogs.py:1190
+#: dialogs.py:1171
 msgid "Control + Left Arrow "
 msgstr ""
 
-#: dialogs.py:1190
+#: dialogs.py:1171
 msgid "Move Back 10 Frames"
 msgstr ""
 
-#: dialogs.py:1191
+#: dialogs.py:1172
 msgid "Control + Right Arrow"
 msgstr ""
 
-#: dialogs.py:1191
+#: dialogs.py:1172
 msgid "Move Forward 10 Frames"
 msgstr ""
 
-#: dialogs.py:1192 dialogs.py:1211
+#: dialogs.py:1173 dialogs.py:1192
 msgid "Up Arrow"
 msgstr ""
 
-#: dialogs.py:1192
+#: dialogs.py:1173
 msgid "Next Edit/Mark"
 msgstr ""
 
-#: dialogs.py:1193 dialogs.py:1212
+#: dialogs.py:1174 dialogs.py:1193
 msgid "Down Arrow"
 msgstr ""
 
-#: dialogs.py:1193
+#: dialogs.py:1174
 msgid "Prev Edit/Mark"
 msgstr ""
 
-#: dialogs.py:1194
+#: dialogs.py:1175
 msgid "HOME"
 msgstr ""
 
-#: dialogs.py:1194
+#: dialogs.py:1175
 msgid "Go To Start"
 msgstr ""
 
-#: dialogs.py:1195
+#: dialogs.py:1176
 msgid "Shift + I"
 msgstr ""
 
-#: dialogs.py:1195
+#: dialogs.py:1176
 msgid "To Mark In"
 msgstr ""
 
-#: dialogs.py:1196
+#: dialogs.py:1177
 msgid "Shift + O"
 msgstr ""
 
-#: dialogs.py:1196
+#: dialogs.py:1177
 msgid "To Mark Out"
 msgstr ""
 
-#: dialogs.py:1197
+#: dialogs.py:1178
 msgid "Playback"
 msgstr ""
 
-#: dialogs.py:1201 guicomponents.py:2023 translations.py:556
+#: dialogs.py:1182 guicomponents.py:2025 translations.py:556
 msgid "Overwrite"
 msgstr ""
 
-#: dialogs.py:1202 guicomponents.py:2029
+#: dialogs.py:1183 guicomponents.py:2031
 msgid "Trim"
 msgstr ""
 
-#: dialogs.py:1203 guicomponents.py:2035
+#: dialogs.py:1184 guicomponents.py:2037
 msgid "Roll"
 msgstr ""
 
-#: dialogs.py:1204 guicomponents.py:2041
+#: dialogs.py:1185 guicomponents.py:2043
 msgid "Slip"
 msgstr ""
 
-#: dialogs.py:1205 guicomponents.py:2047
+#: dialogs.py:1186 guicomponents.py:2049
 msgid "Spacer"
 msgstr ""
 
-#: dialogs.py:1209
+#: dialogs.py:1190
 msgid "Move Source Video Left"
 msgstr ""
 
-#: dialogs.py:1210
+#: dialogs.py:1191
 msgid "Move Source Video Right"
 msgstr ""
 
-#: dialogs.py:1211
+#: dialogs.py:1192
 msgid "Move Source Video Up"
 msgstr ""
 
-#: dialogs.py:1212
+#: dialogs.py:1193
 msgid "Move Source Video Down"
 msgstr ""
 
-#: dialogs.py:1213
+#: dialogs.py:1194
 msgid "Geometry Editor"
 msgstr ""
 
-#: dialogs.py:1254
+#: dialogs.py:1235
 msgid "Sequence Watermark"
 msgstr ""
 
-#: dialogs.py:1258
+#: dialogs.py:1239
 msgid "Sequence:"
 msgstr ""
 
-#: dialogs.py:1262
+#: dialogs.py:1243
 msgid "Watermark:"
 msgstr ""
 
-#: dialogs.py:1264
+#: dialogs.py:1245
 msgid "Set Watermark File"
 msgstr ""
 
-#: dialogs.py:1265
+#: dialogs.py:1246
 msgid "Remove Watermark"
 msgstr ""
 
-#: dialogs.py:1301
+#: dialogs.py:1282
 msgid "Select Watermark File"
 msgstr ""
 
-#: dialogs.py:1330
+#: dialogs.py:1311
 msgid "All files"
 msgstr ""
 
-#: dialogs.py:1349
+#: dialogs.py:1330
 msgid "Saving project snapshot"
 msgstr ""
 
-#: dialogs.py:1371
+#: dialogs.py:1352
 msgid "Loaded Media Profile Mismatch"
 msgstr ""
 
-#: dialogs.py:1373
+#: dialogs.py:1354
 msgid "Keep Current Profile"
 msgstr ""
 
-#: dialogs.py:1374
+#: dialogs.py:1355
 msgid "Change To File Profile"
 msgstr ""
 
-#: dialogs.py:1384
+#: dialogs.py:1365
 msgid "File Profile:"
 msgstr ""
 
-#: dialogs.py:1385
+#: dialogs.py:1366
 msgid "Project Profile:"
 msgstr ""
 
-#: dialogs.py:1386
+#: dialogs.py:1367
 msgid ""
 "Using a matching profile is recommended.\n"
 "\n"
@@ -1611,7 +1595,7 @@ msgstr ""
 msgid "Can't put an audio clip on a video track."
 msgstr ""
 
-#: editevent.py:226 editevent.py:810 movemodes.py:582
+#: editevent.py:226 editevent.py:810 movemodes.py:591
 msgid "Track "
 msgstr ""
 
@@ -1829,7 +1813,7 @@ msgstr ""
 msgid "Olive"
 msgstr ""
 
-#: guicomponents.py:1458 guicomponents.py:1490
+#: guicomponents.py:1458 guicomponents.py:1492
 msgid "Render Slow/Fast Motion File"
 msgstr ""
 
@@ -1837,240 +1821,236 @@ msgstr ""
 msgid "Render Proxy File"
 msgstr ""
 
-#: guicomponents.py:1472
-msgid "Change Project Profile To Match..."
-msgstr ""
-
-#: guicomponents.py:1481
+#: guicomponents.py:1483
 msgid "Toggle Active"
 msgstr ""
 
-#: guicomponents.py:1482
+#: guicomponents.py:1484
 msgid "Reset Values"
 msgstr ""
 
-#: guicomponents.py:1489
+#: guicomponents.py:1491
 msgid "Display In Clip Monitor"
 msgstr ""
 
-#: guicomponents.py:1491
+#: guicomponents.py:1493
 msgid "Toggle Star"
 msgstr ""
 
-#: guicomponents.py:1499 medialinker.py:129
+#: guicomponents.py:1501 medialinker.py:129
 msgid "Set File Relink Path"
 msgstr ""
 
-#: guicomponents.py:1500 medialinker.py:131
+#: guicomponents.py:1502 medialinker.py:131
 msgid "Delete File Relink Path"
 msgstr ""
 
-#: guicomponents.py:1502
+#: guicomponents.py:1504
 msgid "Show Full Paths"
 msgstr ""
 
-#: guicomponents.py:1568 propertyeditorbuilder.py:472
+#: guicomponents.py:1570 propertyeditorbuilder.py:472
 #: propertyeditorbuilder.py:567 tools/toolsencoding.py:343
 msgid "Progressive"
 msgstr ""
 
-#: guicomponents.py:1570 tools/toolsencoding.py:345
+#: guicomponents.py:1572 tools/toolsencoding.py:345
 msgid "Interlaced"
 msgstr ""
 
-#: guicomponents.py:1573 tools/toolsencoding.py:348
+#: guicomponents.py:1575 tools/toolsencoding.py:348
 msgid "Fps: "
 msgstr ""
 
-#: guicomponents.py:1576 tools/toolsencoding.py:351
+#: guicomponents.py:1578 tools/toolsencoding.py:351
 msgid "Pixel Aspect: "
 msgstr ""
 
-#: guicomponents.py:1583
+#: guicomponents.py:1585
 msgid "Description:"
 msgstr ""
 
-#: guicomponents.py:1585
+#: guicomponents.py:1587
 msgid "Dimensions:"
 msgstr ""
 
-#: guicomponents.py:1587
+#: guicomponents.py:1589
 msgid "Frames per second:"
 msgstr ""
 
-#: guicomponents.py:1589
+#: guicomponents.py:1591
 msgid "Size:"
 msgstr ""
 
-#: guicomponents.py:1591
+#: guicomponents.py:1593
 msgid "Pixel aspect ratio: "
 msgstr ""
 
-#: guicomponents.py:1593 profilesmanager.py:138
+#: guicomponents.py:1595 profilesmanager.py:138
 msgid "Progressive:"
 msgstr ""
 
-#: guicomponents.py:1860
+#: guicomponents.py:1862
 msgid "5 video, 4 audio"
 msgstr ""
 
-#: guicomponents.py:1861
+#: guicomponents.py:1863
 msgid "4 video, 3 audio"
 msgstr ""
 
-#: guicomponents.py:1862
+#: guicomponents.py:1864
 msgid "3 video, 2 audio"
 msgstr ""
 
-#: guicomponents.py:1863
+#: guicomponents.py:1865
 msgid "2 video, 1 audio"
 msgstr ""
 
-#: guicomponents.py:1864
+#: guicomponents.py:1866
 msgid "8 video, 1 audio"
 msgstr ""
 
-#: guicomponents.py:1865
+#: guicomponents.py:1867
 msgid "1 video, 8 audio"
 msgstr ""
 
-#: guicomponents.py:1887
+#: guicomponents.py:1889
 msgid "No Markers"
 msgstr ""
 
-#: guicomponents.py:1891
+#: guicomponents.py:1893
 msgid "Delete Marker"
 msgstr ""
 
-#: guicomponents.py:1893
+#: guicomponents.py:1895
 msgid "Delete All Markers"
 msgstr ""
 
-#: guicomponents.py:1901
+#: guicomponents.py:1903
 msgid "Maximize Tracks"
 msgstr ""
 
-#: guicomponents.py:1902
+#: guicomponents.py:1904
 msgid "Maximize Video Tracks"
 msgstr ""
 
-#: guicomponents.py:1903
+#: guicomponents.py:1905
 msgid "Maximize Audio Tracks"
 msgstr ""
 
-#: guicomponents.py:1905
+#: guicomponents.py:1907
 msgid "Minimize Tracks"
 msgstr ""
 
-#: guicomponents.py:1913
+#: guicomponents.py:1915
 msgid "Display Clip Media Thumbnails"
 msgstr ""
 
-#: guicomponents.py:1922
+#: guicomponents.py:1924
 msgid "Snapping On"
 msgstr ""
 
-#: guicomponents.py:1929
+#: guicomponents.py:1931
 msgid "Show Magnet Icon"
 msgstr ""
 
-#: guicomponents.py:1938
+#: guicomponents.py:1940
 msgid "Display All Audio Levels"
 msgstr ""
 
-#: guicomponents.py:1941
+#: guicomponents.py:1943
 msgid "Display Audio Levels On Request"
 msgstr ""
 
-#: guicomponents.py:1961
+#: guicomponents.py:1963
 msgid "Image"
 msgstr ""
 
-#: guicomponents.py:1963
+#: guicomponents.py:1965
 msgid "Vectorscope"
 msgstr ""
 
-#: guicomponents.py:1965
+#: guicomponents.py:1967
 msgid "RGB Parade"
 msgstr ""
 
-#: guicomponents.py:1969
+#: guicomponents.py:1971
 msgid "Overlay Opacity"
 msgstr ""
 
-#: guicomponents.py:1974
+#: guicomponents.py:1976
 msgid "100%"
 msgstr ""
 
-#: guicomponents.py:1979
+#: guicomponents.py:1981
 msgid "80%"
 msgstr ""
 
-#: guicomponents.py:1984
+#: guicomponents.py:1986
 msgid "50%"
 msgstr ""
 
-#: guicomponents.py:1989
+#: guicomponents.py:1991
 msgid "20%"
 msgstr ""
 
-#: guicomponents.py:1994
+#: guicomponents.py:1996
 msgid "0%"
 msgstr ""
 
-#: guicomponents.py:2067
+#: guicomponents.py:2069
 msgid "All Files"
 msgstr ""
 
-#: guicomponents.py:2071
+#: guicomponents.py:2073
 msgid "Video Files"
 msgstr ""
 
-#: guicomponents.py:2075
+#: guicomponents.py:2077
 msgid "Audio Files"
 msgstr ""
 
-#: guicomponents.py:2079
+#: guicomponents.py:2081
 msgid "Graphics Files"
 msgstr ""
 
-#: guicomponents.py:2083
+#: guicomponents.py:2085
 msgid "Image Sequences"
 msgstr ""
 
-#: guicomponents.py:2087
+#: guicomponents.py:2089
 msgid "Pattern Producers"
 msgstr ""
 
-#: guicomponents.py:2100
+#: guicomponents.py:2102
 msgid "2 Columns"
 msgstr ""
 
-#: guicomponents.py:2105
+#: guicomponents.py:2107
 msgid "3 Columns"
 msgstr ""
 
-#: guicomponents.py:2110
+#: guicomponents.py:2112
 msgid "4 Columns"
 msgstr ""
 
-#: guicomponents.py:2115
+#: guicomponents.py:2117
 msgid "5 Columns"
 msgstr ""
 
-#: guicomponents.py:2120
+#: guicomponents.py:2122
 msgid "6 Columns"
 msgstr ""
 
-#: guicomponents.py:2125
+#: guicomponents.py:2127
 msgid "7 Columns"
 msgstr ""
 
-#: movemodes.py:581
+#: movemodes.py:590
 msgid "Can't do edit on a locked track"
 msgstr ""
 
-#: movemodes.py:582
+#: movemodes.py:591
 msgid " is locked. Unlock track to edit it.\n"
 msgstr ""
 
@@ -4651,159 +4631,163 @@ msgstr ""
 msgid "Editing"
 msgstr ""
 
-#: preferenceswindow.py:73
+#: preferenceswindow.py:75
 msgid "Restart required for some setting changes to take effect."
 msgstr ""
 
-#: preferenceswindow.py:74
+#: preferenceswindow.py:76
 msgid "If requested change is not in effect, restart application."
 msgstr ""
 
-#: preferenceswindow.py:108
+#: preferenceswindow.py:110
 msgid "No Autosave"
 msgstr ""
 
-#: preferenceswindow.py:108
+#: preferenceswindow.py:110
 msgid "1 min"
 msgstr ""
 
-#: preferenceswindow.py:108
+#: preferenceswindow.py:110
 msgid "2 min"
 msgstr ""
 
-#: preferenceswindow.py:108
+#: preferenceswindow.py:110
 msgid "5 min"
 msgstr ""
 
-#: preferenceswindow.py:116
+#: preferenceswindow.py:118
 msgid "Absolute paths first, relative second"
 msgstr ""
 
-#: preferenceswindow.py:117
+#: preferenceswindow.py:119
 msgid "Relative paths first, absolute second"
 msgstr ""
 
-#: preferenceswindow.py:118
+#: preferenceswindow.py:120
 msgid "Absolute paths only"
 msgstr ""
 
-#: preferenceswindow.py:122
+#: preferenceswindow.py:124
 msgid "Default Profile:"
 msgstr ""
 
-#: preferenceswindow.py:123
+#: preferenceswindow.py:125
 msgid "Remember last media directory"
 msgstr ""
 
-#: preferenceswindow.py:124
+#: preferenceswindow.py:126
 msgid "Undo stack size:"
 msgstr ""
 
-#: preferenceswindow.py:125
+#: preferenceswindow.py:127
 msgid "Thumbnail folder:"
 msgstr ""
 
-#: preferenceswindow.py:126
+#: preferenceswindow.py:128
 msgid "Remember last render directory"
 msgstr ""
 
-#: preferenceswindow.py:127
+#: preferenceswindow.py:129
 msgid "Autosave for crash recovery every:"
 msgstr ""
 
-#: preferenceswindow.py:128
+#: preferenceswindow.py:130
 msgid "Rendered Clips folder:"
 msgstr ""
 
-#: preferenceswindow.py:129
+#: preferenceswindow.py:131
 msgid "Media look-up order on load:"
 msgstr ""
 
-#: preferenceswindow.py:174
+#: preferenceswindow.py:176
 msgid "Overwrite blanks"
 msgstr ""
 
-#: preferenceswindow.py:175
+#: preferenceswindow.py:177
 msgid "Always insert"
 msgstr ""
 
-#: preferenceswindow.py:182
+#: preferenceswindow.py:190
 msgid "Autoplay new Clips in Clip Monitor"
 msgstr ""
 
-#: preferenceswindow.py:183
+#: preferenceswindow.py:191
 msgid "Center Current Frame on Playback Stop"
 msgstr ""
 
-#: preferenceswindow.py:184
+#: preferenceswindow.py:192
 msgid "Graphics default length:"
 msgstr ""
 
-#: preferenceswindow.py:185
+#: preferenceswindow.py:193
 msgid "Trim Modes exit on empty click"
 msgstr ""
 
-#: preferenceswindow.py:186
+#: preferenceswindow.py:194
 msgid "Quick enter Trim Modes"
 msgstr ""
 
-#: preferenceswindow.py:187
+#: preferenceswindow.py:195
 msgid "Remember Monitor Clip Frame"
 msgstr ""
 
-#: preferenceswindow.py:188
+#: preferenceswindow.py:196
 msgid "Media drag'n'drop action on non-V1 tracks"
 msgstr ""
 
-#: preferenceswindow.py:189
+#: preferenceswindow.py:197
 msgid "Cover Transition/Fade clips on delete if possible"
 msgstr ""
 
-#: preferenceswindow.py:218
+#: preferenceswindow.py:199
+msgid "Enable single Play/Pause button"
+msgstr ""
+
+#: preferenceswindow.py:231
 msgid "Glass"
 msgstr ""
 
-#: preferenceswindow.py:219
+#: preferenceswindow.py:232
 msgid "Simple"
 msgstr ""
 
-#: preferenceswindow.py:226
+#: preferenceswindow.py:239
 msgid "Light Theme"
 msgstr ""
 
-#: preferenceswindow.py:227
+#: preferenceswindow.py:240
 msgid "Dark Theme"
 msgstr ""
 
-#: preferenceswindow.py:239
+#: preferenceswindow.py:252
 msgid "Display All Levels"
 msgstr ""
 
-#: preferenceswindow.py:240
+#: preferenceswindow.py:253
 msgid "Display Levels On Request"
 msgstr ""
 
-#: preferenceswindow.py:247
+#: preferenceswindow.py:260
 msgid "Use English texts on localized OS"
 msgstr ""
 
-#: preferenceswindow.py:248
+#: preferenceswindow.py:261
 msgid "Display splash screen"
 msgstr ""
 
-#: preferenceswindow.py:249
+#: preferenceswindow.py:262
 msgid "Buttons style:"
 msgstr ""
 
-#: preferenceswindow.py:250
+#: preferenceswindow.py:263
 msgid "Icons and color optimized for:"
 msgstr ""
 
-#: preferenceswindow.py:251
+#: preferenceswindow.py:264
 msgid "Theme detection fail fallback colors:"
 msgstr ""
 
-#: preferenceswindow.py:252
+#: preferenceswindow.py:265
 msgid "Default audio levels display:"
 msgstr ""
 

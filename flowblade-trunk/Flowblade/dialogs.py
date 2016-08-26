@@ -1065,56 +1065,37 @@ def export_edl_dialog(callback, parent_window, project_name):
     for i in range(seq.first_video_index,  len(seq.tracks) - 1):
         track_select_combo.append_text(utils.get_track_name(seq.tracks[i], seq))
     track_select_combo.set_active(0)
-    track_row = guiutils.get_two_column_box(Gtk.Label(label=_("Exported video track:")), track_select_combo, INPUT_LABELS_WITDH)
+    track_select_combo.set_sensitive(False)
+    tracks_label = Gtk.Label(label=_("Exported video track:"))
+    tracks_label.set_sensitive(False)
+    track_row = guiutils.get_two_column_box(tracks_label, track_select_combo, INPUT_LABELS_WITDH)
 
     cascade_check = Gtk.CheckButton()
-    cascade_check.connect("toggled", _cascade_toggled, track_select_combo)
+    cascade_check.connect("toggled", _cascade_toggled, track_select_combo, tracks_label)
 
-    cascade_row = guiutils.get_left_justified_box( [cascade_check, Gtk.Label(label=_("Cascade video tracks"))])
+    single_check_row = guiutils.get_checkbox_row_box(cascade_check, Gtk.Label(label=_("Export single video track")))
 
-    audio_track_select_combo = Gtk.ComboBoxText()
-    for i in range(1,  seq.first_video_index):
-        audio_track_select_combo.append_text(utils.get_track_name(seq.tracks[i], seq))
-    audio_track_select_combo.set_active(seq.first_video_index - 2)
-    audio_track_select_combo.set_sensitive(False)
-
-    audio_track_row = guiutils.get_two_column_box(Gtk.Label(label=_("Exported audio track:")), audio_track_select_combo, INPUT_LABELS_WITDH)
-
-    op_combo = Gtk.ComboBoxText()
-    op_combo.append_text(_("Audio From Video"))
-    op_combo.append_text(_("Separate Audio Track"))
-    op_combo.append_text(_("No Audio"))
-    op_combo.set_active(0)
-    op_combo.connect("changed", _audio_op_changed, audio_track_select_combo)
-    op_row = guiutils.get_two_column_box(Gtk.Label(label=_("Audio export:")), op_combo, INPUT_LABELS_WITDH)
-
-    tracks_frame = guiutils.get_named_frame_with_vbox(_("Tracks"), [cascade_row, track_row, op_row, audio_track_row])
+    tracks_frame = guiutils.get_named_frame_with_vbox(_("Tracks"), [single_check_row, track_row])
 
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(file_frame, False, False, 0)
     vbox.pack_start(tracks_frame, False, False, 0)
 
-    # remove alignment when doing this again
-    #alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
-    #alignment.set_padding(12, 12, 12, 12)
-    #alignment.add(vbox)
+    alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, (file_name, out_folder, track_select_combo, cascade_check, op_combo, audio_track_select_combo))
+    dialog.connect('response', callback, (file_name, out_folder, track_select_combo, cascade_check))
     dialog.show_all()
 
-def _cascade_toggled(check, track_select_combo):
+def _cascade_toggled(check, track_select_combo, tracks_label):
     if check.get_active() == True:
-        track_select_combo.set_sensitive(False)
-    else:
         track_select_combo.set_sensitive(True)
-
-def _audio_op_changed(combo, audio_track_select_combo):
-    if combo.get_active() == 1:
-        audio_track_select_combo.set_sensitive(True)
+        tracks_label.set_sensitive(True)
     else:
-        audio_track_select_combo.set_sensitive(False)
+        track_select_combo.set_sensitive(False)
+        tracks_label.set_sensitive(False)
 
 def transition_edit_dialog(callback, transition_data):
     dialog = Gtk.Dialog(_("Add Transition").encode('utf-8'),  gui.editor_window.window,

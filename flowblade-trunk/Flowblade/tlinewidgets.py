@@ -217,6 +217,8 @@ FRAME_SCALE_SELECTED_COLOR_GRAD_L = get_multiplied_grad(1, 1, FRAME_SCALE_SELECT
 DARK_FRAME_SCALE_SELECTED_COLOR_GRAD = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, 0.7)
 DARK_FRAME_SCALE_SELECTED_COLOR_GRAD_L = get_multiplied_grad(1, 1, FRAME_SCALE_SELECTED_COLOR_GRAD, GRAD_MULTIPLIER * 0.8) 
 
+ICON_SELECTED_OVERLAY_COLOR = (0.8, 0.8, 1.0, 0.3)
+
 FRAME_SCALE_LINES = (0, 0, 0)
 
 BG_COLOR = (0.5, 0.5, 0.55)#(0.6, 0.6, 0.65)
@@ -1321,6 +1323,16 @@ class TimeLineCanvas:
                             clip_thumbnails[clip.path] = thumb_img
                         except:
                             pass # This fails for rendered fades and transitions
+                    
+                    if clip.selected:
+                        if scale_length - 8 < appconsts.THUMB_WIDTH:
+                            ow = scale_length - 8 
+                        else:
+                            ow = appconsts.THUMB_WIDTH
+                        cr.rectangle(scale_in + 4, y + 3.5, ow, track_height - 6)
+                        cr.set_source_rgba(*ICON_SELECTED_OVERLAY_COLOR)
+                        cr.fill()
+                                                    
                     cr.restore()
                 
             # Draw sync stripe
