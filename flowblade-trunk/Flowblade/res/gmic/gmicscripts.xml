@@ -1176,7 +1176,6 @@
         <script>-gimp_emulate_film_bw 15,1,0,1,0,0,0,0,0</script>
     </gmicscript>
     
-
      <gmicscript>
         <name>Kodak T-MAX 3200</name>
         <group>Film Emulate BW</group>
@@ -1235,6 +1234,72 @@
         <name>Rollei Retro 80s</name>
         <group>Film Emulate BW</group>
         <script>-gimp_emulate_film_bw 25,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Fuji Ilford Delta 3200</name>
+        <group>Film Emulate Negative Old</group>
+        <script>-gimp_emulate_film_negative_old 1,1,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Fuji Neopan 1600</name>
+        <group>Film Emulate Negative Old</group>
+        <script>-gimp_emulate_film_negative_old 2,1,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Fuji Superia 100</name>
+        <group>Film Emulate Negative Old</group>
+        <script>-gimp_emulate_film_negative_old 3,1,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Fuji Superia 400</name>
+        <group>Film Emulate Negative Old</group>
+        <script>-gimp_emulate_film_negative_old 4,1,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Fuji Superia 800</name>
+        <group>Film Emulate Negative Old</group>
+        <script>-gimp_emulate_film_negative_old 5,1,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Fuji Superia 1600</name>
+        <group>Film Emulate Negative Old</group>
+        <script>-gimp_emulate_film_negative_old 6,1,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Kodak Potra 160 NC</name>
+        <group>Film Emulate Negative Old</group>
+        <script>-gimp_emulate_film_negative_old 7,1,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Kodak Potra 160 VC</name>
+        <group>Film Emulate Negative Old</group>
+        <script>-gimp_emulate_film_negative_old 8,1,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Kodak Potra 400 NC</name>
+        <group>Film Emulate Negative Old</group>
+        <script>-gimp_emulate_film_negative_old 9,1,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Kodak Potra 160 UC</name>
+        <group>Film Emulate Negative Old</group>
+        <script>-gimp_emulate_film_negative_old 10,1,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Kodak Potra 400 VC</name>
+        <group>Film Emulate Negative Old</group>
+        <script>-gimp_emulate_film_negative_old 11,1,1,0,1,0,0,0,0,0</script>
     </gmicscript>
 
 </gmic>
