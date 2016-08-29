@@ -68,7 +68,9 @@ def load_preset_scripts_xml():
     _script_groups_names["Film Emulate Print"] = _("Film Emulate Print")
     _script_groups_names["Film Emulate Negative Color"] = _("Film Emulate Negative Color")
     _script_groups_names["Film Emulate Negative New"] = _("Film Emulate Negative New")
-
+    _script_groups_names["Film Emulate Add Grain"] = _("Film Emulate Add Grain")
+    _script_groups_names["Film Emulate BW"] = _("Film Emulate BW")
+    
     presets_doc = xml.dom.minidom.parse(respaths.GMIC_SCRIPTS_DOC)
 
     global _scripts

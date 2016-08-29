@@ -1055,5 +1055,186 @@
         <group>Film Emulate Negative New</group>
         <script>-gimp_emulate_film_negative_new 9,1,1,0,1,0,0,0,0,0</script>
     </gmicscript>
+
+    <gmicscript>
+        <name>Orwo NP20-GDR</name>
+        <group>Film Emulate Add Grain</group>
+        <script>-gimp_emulate_grain 0,1,0.2,100,0,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Kodak TMAX-400</name>
+        <group>Film Emulate Add Grain</group>
+        <script>-gimp_emulate_grain 1,1,0.2,100,0,0,1,0,0,0,0,0</script>
+    </gmicscript>
     
+     <gmicscript>
+        <name>Kodak TMAX-3200</name>
+        <group>Film Emulate Add Grain</group>
+        <script>-gimp_emulate_grain 2,1,0.2,100,0,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Kodak TRI-X 1600</name>
+        <group>Film Emulate Add Grain</group>
+        <script>-gimp_emulate_grain 3,1,0.2,100,0,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Unknow</name>
+        <group>Film Emulate Add Grain</group>
+        <script>-gimp_emulate_grain 4,1,0.2,100,0,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Agfa APX 100</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 1,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Agfa APX 100</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 2,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Fuji Neopan 1600</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 3,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+ 
+     <gmicscript>
+        <name>Fuji Neopan 1600 Actos 100</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 4,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+     <gmicscript>
+        <name>Ilford Delta 100</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 5,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+     <gmicscript>
+        <name>Ilford Delta 3200</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 6,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+     <gmicscript>
+        <name>Ilford Delta 400</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 7,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+     <gmicscript>
+        <name>Ilford FP4 Plus 125</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 8,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+     <gmicscript>
+        <name>Ilford FP4 Plus 400</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 9,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+     <gmicscript>
+        <name>Ilford HPS 800</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 10,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+     <gmicscript>
+        <name>Ilford PAN F Plus 50</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 11,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+     <gmicscript>
+        <name>Ilford XP2</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 12,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+     <gmicscript>
+        <name>Kodak BW 400 CN</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 13,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+     <gmicscript>
+        <name>Kodak HIE HS Infra</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 14,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+     <gmicscript>
+        <name>Kodak T-MAX 100</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 15,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+
+     <gmicscript>
+        <name>Kodak T-MAX 3200</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 16,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+     <gmicscript>
+        <name>Kodak T-MAX 400</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 17,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+     <gmicscript>
+        <name>Kodak Tri-X 400</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 18,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+     <gmicscript>
+        <name>Polaroid 664</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 19,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+     <gmicscript>
+        <name>Polaroid 667</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 20,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+     <gmicscript>
+        <name>Polaroid 672</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 21,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+     <gmicscript>
+        <name>Rollei IR 400</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 22,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+     <gmicscript>
+        <name>Rollei Ortho 25</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 23,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+     <gmicscript>
+        <name>Rollei Retro 100 Tonal</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 24,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+     <gmicscript>
+        <name>Rollei Retro 80s</name>
+        <group>Film Emulate BW</group>
+        <script>-gimp_emulate_film_bw 25,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
 </gmic>
