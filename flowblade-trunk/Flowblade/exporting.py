@@ -120,7 +120,7 @@ class MLTXMLToEDLParse:
         self.reel_name_to_resource = {}
         
         self.reel_name_type = REEL_NAME_FILE_NAME_START
-        self.from_clip_comment = False
+        self.from_clip_comment = True
         self.use_drop_frames = False
 
     def get_project_profile(self):
@@ -267,14 +267,12 @@ class MLTXMLToEDLParse:
                 src_out = int(event["outTime"])
                 src_len = src_out - src_in + 1
                  
-                prog_out = prog_out + src_len
+                prog_out = prog_out + src_len - 1
                 
                 producer_id = event["producer"]
                 reel_name, resource = self.get_producer_media_data(producer_id)
                     
                 src_transition = "C"
-                if self.from_clip_comment  == True and resource != None:
-                    str_list.append("* FROM CLIP NAME: " + resource.split("/")[-1] + "\n")
                 
                 str_list.append("{0:03d}".format(edl_event_count))
                 str_list.append("  ")
@@ -294,45 +292,13 @@ class MLTXMLToEDLParse:
                 str_list.append(self.frames_to_tc(prog_out))
                 str_list.append("\n")
 
+                if self.from_clip_comment == True and resource != None:
+                    str_list.append("* FROM CLIP NAME: " + resource.split("/")[-1] + "\n")
+                    
                 edl_event_count += 1;
    
-                prog_in += src_len
+                prog_in += src_len - 1
 
-                """
-                if prog_out == CLIP_OUT_IS_LAST_FRAME:
-                    running = False
-                    prog_out = len(track_frames)
-                    
-                if event["type"] == "entry":
-                    # Get media producer atrrs
-                    producer = event["producer"]
-                    resource = source_links[producer]
-                    reel_name = reel_names[resource]
-                    src_in = int(event["inTime"]) # source clip IN time
-                    src_out = int(event["outTime"]) # source clip OUT time
-                    src_out = src_out + 1 # EDL out is exclusive, MLT out is inclusive
-
-                    self.write_producer_edl_event_CMX3600(str_list, resource, 
-                                                         edl_event_count, reel_name, src_channel,
-                                                         src_in, src_out, prog_in, prog_out)
-                    prog_in = prog_out
-                elif event["type"] == "blank":
-                    reel_name = "BL"
-                    src_in = 0
-                    src_out = int(event["length"])
-                    prog_out = prog_in + int(event["length"])
-                    resource = None
-
-                    self.write_producer_edl_event_CMX3600(str_list, resource, 
-                                                         edl_event_count, reel_name, src_channel,
-                                                         src_in, src_out, prog_in, prog_out)
-                    prog_in = prog_out
-                else:
-                    print "event type error at create_edl"
-                    break
-                        
-                edl_event_count = edl_event_count + 1
-                """
                 
         print ''.join(str_list).strip("\n")
         return ''.join(str_list).strip("\n")
