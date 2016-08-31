@@ -32,6 +32,7 @@ import md5
 import re
 import shutil
 
+import appconsts
 import dialogs
 import dialogutils
 from editorstate import PLAYER
@@ -99,7 +100,7 @@ def _edl_xml_render_done(data):
     video_track = current_sequence().first_video_index + track_select_combo.get_active()
     #global _xml_render_player
     #_xml_render_player = None
-    mlt_parse = MLTXMLToEDLParse(get_edl_temp_xml_path(), edl_path)
+    mlt_parse = MLTXMLToEDLParse(get_edl_temp_xml_path(), current_sequence())
     edl_contents = mlt_parse.create_edl(video_track, 
                                         cascade_check.get_active())
     f = open(edl_path, 'w')
@@ -112,8 +113,9 @@ def get_edl_temp_xml_path():
 
 
 class MLTXMLToEDLParse:
-    def __init__(self, xmlfile, asdasdasd):
+    def __init__(self, xmlfile, current_sequence):
         self.xmldoc = minidom.parse(xmlfile)
+        self.current_sequence = current_sequence
 
         self.producers = {} # producer id -> producer_data
         self.resource_to_reel_name = {}
@@ -143,9 +145,11 @@ class MLTXMLToEDLParse:
         playlists = self.xmldoc.getElementsByTagName("playlist")
         eid = 0
         for p in playlists:
+            
+            track_id_attr_value = p.attributes["id"].value
 
             # Don't empty, black or hidden tracks
-            if p.attributes["id"].value == "playlist0":
+            if track_id_attr_value == "playlist0":
                 continue
             
             if len(p.getElementsByTagName("entry")) < 1:
@@ -153,8 +157,15 @@ class MLTXMLToEDLParse:
                 
             # plist contains id and events list data
             plist = {}
-            plist["pl_id"] = p.attributes["id"].value
+            plist["pl_id"] = track_id_attr_value
  
+            # Set track type info
+            track_index = int(track_id_attr_value.lstrip("playlist"))
+            track_object =  self.current_sequence.tracks[track_index]
+            plist["src_channel"] =  "AA/V" 
+            if track_object.type == appconsts.AUDIO:
+                plist["src_channel"] = "AA"
+                        
             # Create events list
             event_list = []
             event_nodes = p.childNodes
@@ -250,7 +261,7 @@ class MLTXMLToEDLParse:
 
         edl_event_count = 1 # incr. event index
 
-        src_channel = "AA/V"
+
         
         str_list = []
         for plist in playlists:
@@ -261,17 +272,29 @@ class MLTXMLToEDLParse:
             
             event_list = plist["events_list"]
             
+            src_channel = plist["src_channel"] 
+                    
             for event in event_list:
                 
-                src_in = int(event["inTime"])
-                src_out = int(event["outTime"])
-                src_len = src_out - src_in + 1
-                 
-                prog_out = prog_out + src_len - 1
-                
-                producer_id = event["producer"]
-                reel_name, resource = self.get_producer_media_data(producer_id)
+                if event["type"] == "entry":
+                    src_in = int(event["inTime"])
+                    src_out = int(event["outTime"])
+                    src_len = src_out - src_in + 1
+                     
+                    prog_out = prog_out + src_len - 1
                     
+                    producer_id = event["producer"]
+                    reel_name, resource = self.get_producer_media_data(producer_id)
+                elif event["type"] == "blank":
+
+                    src_in = 0
+                    src_out = int(event["length"])
+                    src_len = int(event["length"])
+                    prog_out = prog_in + int(event["length"]) - 1
+
+                    reel_name = "BL      "
+                    resource = None
+
                 src_transition = "C"
                 
                 str_list.append("{0:03d}".format(edl_event_count))

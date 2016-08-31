@@ -85,8 +85,8 @@ def new_project_dialog(callback):
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
     dialog.connect('response', callback, out_profile_combo, tracks_combo,
-                   tracks_combo_values_list)#, project_type_combo,
-                   #project_folder, compact_name_entry)
+                   tracks_combo_values_list)
+                   
     out_profile_combo.connect('changed', lambda w: _new_project_profile_changed(w, profile_info_box))
     dialog.show_all()
 
@@ -1038,7 +1038,7 @@ def export_edl_dialog(callback, parent_window, project_name):
                         ok_str, Gtk.ResponseType.YES))
 
     INPUT_LABELS_WITDH = 220
-    project_name = project_name.strip(".flb")
+    project_name = project_name.rstrip(".flb")
 
     file_name = Gtk.Entry()
     file_name.set_text(project_name)
