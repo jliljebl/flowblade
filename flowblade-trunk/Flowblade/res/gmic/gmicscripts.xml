@@ -2184,5 +2184,378 @@
         <script>-gimp_emulate_film_colorslide 26,1,0,1,0,0,0,0,0</script>
     </gmicscript>
 
+    <gmicscript>
+        <name>60s</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 1,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>60s faded</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 2,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>60s faded alt</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 3,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Alien green</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 4,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Black and White</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 5,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Bleach bypass</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 6,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Blue mono</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 7,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Color - rich</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 8,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Faded</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 9,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Faded alt</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 10,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>faded analog</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 11,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Faded extreme</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 12,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Faded vivid</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 13,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Expired fade</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 14,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Expired polaroid</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 15,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Extreme</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 16,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Fade</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 17,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Faux infrared</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 18,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Golden</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 19,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Golden bright</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 20,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Golden fade</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 21,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Golden mono</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 22,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Golden vibrant</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 23,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Green mono</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 24,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Hong Kong</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 25,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Light blown</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 26,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Lomo</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 27,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Mono tinted</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 28,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Muted fade</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 29,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Mute shift</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 30,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Natural vivid</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 31,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Nostalgic</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 32,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Orange Tone</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 33,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Pink fade</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 34,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Purple</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 35,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Retro</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 36,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Rotate muted</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 37,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Rotate vibrant</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 38,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Smooth chromeish</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 39,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Smooth fade</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 40,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Soft fade</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 41,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Solarized color</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 42,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Solarized color2</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 43,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Summer</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 44,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Summer alt</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 45,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Sunny</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 46,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Sunny alt</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 47,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Sunny warm</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 48,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Sunny rich</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 49,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Super warm</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 50,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Super warm rich</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 51,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Sutro FX</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 52,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Vibrant</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 53,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Vibrant alien</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 54,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Vibrant contrast</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 55,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Vibrant chromeish</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 56,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Vintage</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 57,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Vintage alt</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 58,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Vintage brighter</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 59,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Warm</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 60,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Warm highlight</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 61,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Warm yellow</name>
+        <group>Film Emulate FX</group>
+        <script>-gimp_emulate_film_various 62,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+  
+
 
 </gmic>

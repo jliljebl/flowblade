@@ -74,7 +74,8 @@ def load_preset_scripts_xml():
     _script_groups_names["Film Emulate Instant Consumer"] = _("Film Emulate Instant Consumer")
     _script_groups_names["Film Emulate Instant Pro"] = _("Film Emulate Instant Pro")
     _script_groups_names["Film Emulate Slide"] = _("Film Emulate Slide")
-    
+    _script_groups_names["Film Emulate FX"] = _("Film Emulate FX")
+
     presets_doc = xml.dom.minidom.parse(respaths.GMIC_SCRIPTS_DOC)
 
     global _scripts
