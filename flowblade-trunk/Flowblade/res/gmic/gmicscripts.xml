@@ -2028,4 +2028,161 @@
         <script>-gimp_emulate_film_instant_pro 67,1,0,1,0,0,0,0,0</script>
     </gmicscript>
 
+    <gmicscript>
+        <name>Agfa Precisa 100</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 1,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Fuji Astia 100F</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 2,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Fuji FP 100C</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 3,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Fuji Provia 100F</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 4,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Fuji Provia 400F</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 5,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Fuji Provia 400FX</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 6,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Fuji Sensia 100</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 7,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Fuji Superia 200 XPRO</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 8,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Fuji Velvia 50</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 9,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Generic Fuji Astia 100</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 10,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Generic Fuji Provia 100</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 11,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Generic Fuji Velvia 100</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 12,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Generic Kodachrome 64</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 13,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Generic Kodak Ektachrome 100 VS</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 14,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Kodak E-100 GX Ektachrome 100</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 15,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Kodak Ektachrome 100 VS</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 16,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Kodak Elite Chrome 200</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 17,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Kodak Elite Chrome 400</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 18,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Kodak Elite ExtraColor 100</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 19,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Kodak Kodachrome 200</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 20,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+    
+    <gmicscript>
+        <name>Kodak Kodachrome 25</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 21,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Kodak Kodachrome 64</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 22,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Lomography X-Pro Slide 200</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 23,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Polaroid 669</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 24,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Polaroid 690</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 25,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+        
+    <gmicscript>
+        <name>Polaroid Polachrome</name>
+        <group>Film Emulate Slide</group>
+        <script>-gimp_emulate_film_colorslide 26,1,0,1,0,0,0,0,0</script>
+    </gmicscript>
+
+
 </gmic>
