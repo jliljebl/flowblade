@@ -80,14 +80,14 @@ def _xml_render_done(data):
 def EDL_export():
     dialogs.export_edl_dialog(_export_edl_dialog_callback, gui.editor_window.window, PROJECT().name)
 
-def _export_edl_dialog_callback(dialog, response_id, data):
-    if response_id == Gtk.ResponseType.YES:
-        file_name, out_folder, track_select_combo, cascade_check = data
-        edl_path = out_folder.get_filename()+ "/" + file_name.get_text() + ".edl" 
-        #global _xml_render_monitor
+def _export_edl_dialog_callback(dialog, response_id):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        filenames = dialog.get_filenames()
+        edl_path = filenames[0]
+        
         _xml_render_player = renderconsumer.XMLRenderPlayer(get_edl_temp_xml_path(),
                                                             _edl_xml_render_done,
-                                                            (edl_path, track_select_combo, cascade_check))
+                                                            edl_path)
         _xml_render_player.start()
 
         dialog.destroy()
@@ -95,14 +95,9 @@ def _export_edl_dialog_callback(dialog, response_id, data):
         dialog.destroy()
 
 def _edl_xml_render_done(data):
-
-    edl_path, track_select_combo, cascade_check  = data
-    video_track = current_sequence().first_video_index + track_select_combo.get_active()
-    #global _xml_render_player
-    #_xml_render_player = None
+    edl_path  = data
     mlt_parse = MLTXMLToEDLParse(get_edl_temp_xml_path(), current_sequence())
-    edl_contents = mlt_parse.create_edl(video_track, 
-                                        cascade_check.get_active())
+    edl_contents = mlt_parse.create_edl()
     f = open(edl_path, 'w')
     f.write(edl_contents)
     f.close()
@@ -252,7 +247,7 @@ class MLTXMLToEDLParse:
         
         return reel_name, producer_resource
 
-    def create_edl(self, track_index, cascade):
+    def create_edl(self):
 
         self.create_producers_dict()
         self.link_resources()
@@ -261,8 +256,6 @@ class MLTXMLToEDLParse:
 
         edl_event_count = 1 # incr. event index
 
-
-        
         str_list = []
         for plist in playlists:
             prog_in = 0
