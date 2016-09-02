@@ -32,6 +32,7 @@ import md5
 import re
 import shutil
 
+import appconsts
 import dialogs
 import dialogutils
 from editorstate import PLAYER
@@ -79,14 +80,14 @@ def _xml_render_done(data):
 def EDL_export():
     dialogs.export_edl_dialog(_export_edl_dialog_callback, gui.editor_window.window, PROJECT().name)
 
-def _export_edl_dialog_callback(dialog, response_id, data):
-    if response_id == Gtk.ResponseType.YES:
-        file_name, out_folder, track_select_combo, cascade_check = data
-        edl_path = out_folder.get_filename()+ "/" + file_name.get_text() + ".edl" 
-        #global _xml_render_monitor
+def _export_edl_dialog_callback(dialog, response_id):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        filenames = dialog.get_filenames()
+        edl_path = filenames[0]
+        
         _xml_render_player = renderconsumer.XMLRenderPlayer(get_edl_temp_xml_path(),
                                                             _edl_xml_render_done,
-                                                            (edl_path, track_select_combo, cascade_check))
+                                                            edl_path)
         _xml_render_player.start()
 
         dialog.destroy()
@@ -94,14 +95,9 @@ def _export_edl_dialog_callback(dialog, response_id, data):
         dialog.destroy()
 
 def _edl_xml_render_done(data):
-
-    edl_path, track_select_combo, cascade_check  = data
-    video_track = current_sequence().first_video_index + track_select_combo.get_active()
-    #global _xml_render_player
-    #_xml_render_player = None
-    mlt_parse = MLTXMLToEDLParse(get_edl_temp_xml_path(), edl_path)
-    edl_contents = mlt_parse.create_edl(video_track, 
-                                        cascade_check.get_active())
+    edl_path  = data
+    mlt_parse = MLTXMLToEDLParse(get_edl_temp_xml_path(), current_sequence())
+    edl_contents = mlt_parse.create_edl()
     f = open(edl_path, 'w')
     f.write(edl_contents)
     f.close()
@@ -112,15 +108,16 @@ def get_edl_temp_xml_path():
 
 
 class MLTXMLToEDLParse:
-    def __init__(self, xmlfile, asdasdasd):
+    def __init__(self, xmlfile, current_sequence):
         self.xmldoc = minidom.parse(xmlfile)
+        self.current_sequence = current_sequence
 
         self.producers = {} # producer id -> producer_data
         self.resource_to_reel_name = {}
         self.reel_name_to_resource = {}
         
         self.reel_name_type = REEL_NAME_FILE_NAME_START
-        self.from_clip_comment = False
+        self.from_clip_comment = True
         self.use_drop_frames = False
 
     def get_project_profile(self):
@@ -143,9 +140,11 @@ class MLTXMLToEDLParse:
         playlists = self.xmldoc.getElementsByTagName("playlist")
         eid = 0
         for p in playlists:
+            
+            track_id_attr_value = p.attributes["id"].value
 
             # Don't empty, black or hidden tracks
-            if p.attributes["id"].value == "playlist0":
+            if track_id_attr_value == "playlist0":
                 continue
             
             if len(p.getElementsByTagName("entry")) < 1:
@@ -153,8 +152,15 @@ class MLTXMLToEDLParse:
                 
             # plist contains id and events list data
             plist = {}
-            plist["pl_id"] = p.attributes["id"].value
+            plist["pl_id"] = track_id_attr_value
  
+            # Set track type info
+            track_index = int(track_id_attr_value.lstrip("playlist"))
+            track_object =  self.current_sequence.tracks[track_index]
+            plist["src_channel"] =  "AA/V" 
+            if track_object.type == appconsts.AUDIO:
+                plist["src_channel"] = "AA"
+                        
             # Create events list
             event_list = []
             event_nodes = p.childNodes
@@ -241,7 +247,7 @@ class MLTXMLToEDLParse:
         
         return reel_name, producer_resource
 
-    def create_edl(self, track_index, cascade):
+    def create_edl(self):
 
         self.create_producers_dict()
         self.link_resources()
@@ -250,8 +256,6 @@ class MLTXMLToEDLParse:
 
         edl_event_count = 1 # incr. event index
 
-        src_channel = "AA/V"
-        
         str_list = []
         for plist in playlists:
             prog_in = 0
@@ -261,20 +265,30 @@ class MLTXMLToEDLParse:
             
             event_list = plist["events_list"]
             
+            src_channel = plist["src_channel"] 
+                    
             for event in event_list:
                 
-                src_in = int(event["inTime"])
-                src_out = int(event["outTime"])
-                src_len = src_out - src_in + 1
-                 
-                prog_out = prog_out + src_len
-                
-                producer_id = event["producer"]
-                reel_name, resource = self.get_producer_media_data(producer_id)
+                if event["type"] == "entry":
+                    src_in = int(event["inTime"])
+                    src_out = int(event["outTime"])
+                    src_len = src_out - src_in + 1
+                     
+                    prog_out = prog_out + src_len - 1
                     
+                    producer_id = event["producer"]
+                    reel_name, resource = self.get_producer_media_data(producer_id)
+                elif event["type"] == "blank":
+
+                    src_in = 0
+                    src_out = int(event["length"])
+                    src_len = int(event["length"])
+                    prog_out = prog_in + int(event["length"]) - 1
+
+                    reel_name = "BL      "
+                    resource = None
+
                 src_transition = "C"
-                if self.from_clip_comment  == True and resource != None:
-                    str_list.append("* FROM CLIP NAME: " + resource.split("/")[-1] + "\n")
                 
                 str_list.append("{0:03d}".format(edl_event_count))
                 str_list.append("  ")
@@ -294,45 +308,13 @@ class MLTXMLToEDLParse:
                 str_list.append(self.frames_to_tc(prog_out))
                 str_list.append("\n")
 
+                if self.from_clip_comment == True and resource != None:
+                    str_list.append("* FROM CLIP NAME: " + resource.split("/")[-1] + "\n")
+                    
                 edl_event_count += 1;
    
-                prog_in += src_len
+                prog_in += src_len - 1
 
-                """
-                if prog_out == CLIP_OUT_IS_LAST_FRAME:
-                    running = False
-                    prog_out = len(track_frames)
-                    
-                if event["type"] == "entry":
-                    # Get media producer atrrs
-                    producer = event["producer"]
-                    resource = source_links[producer]
-                    reel_name = reel_names[resource]
-                    src_in = int(event["inTime"]) # source clip IN time
-                    src_out = int(event["outTime"]) # source clip OUT time
-                    src_out = src_out + 1 # EDL out is exclusive, MLT out is inclusive
-
-                    self.write_producer_edl_event_CMX3600(str_list, resource, 
-                                                         edl_event_count, reel_name, src_channel,
-                                                         src_in, src_out, prog_in, prog_out)
-                    prog_in = prog_out
-                elif event["type"] == "blank":
-                    reel_name = "BL"
-                    src_in = 0
-                    src_out = int(event["length"])
-                    prog_out = prog_in + int(event["length"])
-                    resource = None
-
-                    self.write_producer_edl_event_CMX3600(str_list, resource, 
-                                                         edl_event_count, reel_name, src_channel,
-                                                         src_in, src_out, prog_in, prog_out)
-                    prog_in = prog_out
-                else:
-                    print "event type error at create_edl"
-                    break
-                        
-                edl_event_count = edl_event_count + 1
-                """
                 
         print ''.join(str_list).strip("\n")
         return ''.join(str_list).strip("\n")

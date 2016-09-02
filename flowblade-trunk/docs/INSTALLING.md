@@ -3,7 +3,12 @@
 
 ### Installing using .deb package
 
+#### Step 1. Download and install .deb 
 **First download .deb file** for Flowblade 1.6 from <a href="https://www.dropbox.com/s/4smy1jlofzn896o/flowblade-1.6.0-1_all.deb?dl=0">here.</a>
+
+Double click on <b>.deb</b> file to install it. 
+
+On some systems double clicking may not work, and you need to install <b>.deb</b> file using terminal:
 
 <ul>
 	<li>	<p>Open terminal in the directory you saved the  downloaded <b>.deb</b> file. Give command:	</li>
@@ -12,6 +17,9 @@
 sudo dpkg -i ./flowblade-1.6.0-1_all.deb
 ```
 
+#### Step 2. Give some additional commands on terminal
+
+You may need to give some additional commands on terminal:
 <ul>
 	<li>Add some <b>missing dependencies</b> with command:</li>
 </ul>
@@ -27,7 +35,7 @@ sudo dpkg -i ./flowblade-1.6.0-1_all.deb
 
 Release has been install tested on: <b>Ubuntu 15.10, 14.10 and 14.04</b>. Should work on all recent Debian based distributions.
 
-<b>Unfortunately since Ubuntu 16.04 it is not possible to install .deb packages just by double clicking on them.</b> 
+<b>NOTE: Running a KDEnlive PPA on Ubuntu may cause an uncompatible MLT to be installed and prevent Flowblade from running, more <a href="https://plus.google.com/105369302467641615295/posts/QSKQoPtbLKg">here.</a></b> 
 
 *Please note these issues with Dropbox download:*
 <ul>

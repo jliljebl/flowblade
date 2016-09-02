@@ -85,8 +85,8 @@ def new_project_dialog(callback):
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
     dialog.connect('response', callback, out_profile_combo, tracks_combo,
-                   tracks_combo_values_list)#, project_type_combo,
-                   #project_folder, compact_name_entry)
+                   tracks_combo_values_list)
+                   
     out_profile_combo.connect('changed', lambda w: _new_project_profile_changed(w, profile_info_box))
     dialog.show_all()
 
@@ -1029,6 +1029,20 @@ def open_image_sequence_dialog(callback, parent_window):
     dialog.show_all()
 
 def export_edl_dialog(callback, parent_window, project_name):
+    dialog = Gtk.FileChooserDialog(_("Export EDL"), parent_window,
+                                   Gtk.FileChooserAction.SAVE,
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                                   _("Export").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+    dialog.set_action(Gtk.FileChooserAction.SAVE)
+    project_name = project_name.rstrip(".flb")
+    dialog.set_current_name(project_name + ".edl")
+    dialog.set_do_overwrite_confirmation(True)
+
+    dialog.set_select_multiple(False)
+    dialog.connect('response', callback)
+    dialog.show()
+    
+    """
     cancel_str = _("Cancel").encode('utf-8')
     ok_str = _("Export To EDL").encode('utf-8')
     dialog = Gtk.Dialog(_("Export EDL"),
@@ -1038,7 +1052,7 @@ def export_edl_dialog(callback, parent_window, project_name):
                         ok_str, Gtk.ResponseType.YES))
 
     INPUT_LABELS_WITDH = 220
-    project_name = project_name.strip(".flb")
+    project_name = project_name.rstrip(".flb")
 
     file_name = Gtk.Entry()
     file_name.set_text(project_name)
@@ -1088,7 +1102,8 @@ def export_edl_dialog(callback, parent_window, project_name):
     _default_behaviour(dialog)
     dialog.connect('response', callback, (file_name, out_folder, track_select_combo, cascade_check))
     dialog.show_all()
-
+    """
+    
 def _cascade_toggled(check, track_select_combo, tracks_label):
     if check.get_active() == True:
         track_select_combo.set_sensitive(True)
