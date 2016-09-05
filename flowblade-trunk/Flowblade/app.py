@@ -72,6 +72,7 @@ import mltprofiles
 import mlttransitions
 import movemodes
 import persistance
+import phantomcompositor
 import positionbar
 import preferenceswindow
 import projectaction
@@ -262,9 +263,10 @@ def main(root_path):
     # Audiomonitoring being available needs to be known before GUI creation
     audiomonitoring.init(editorstate.project.profile)
 
-    # Check for gmic
+    # Check for tools
     gmic.test_availablity()
-
+    phantomcompositor.test_availablity()
+    
     # Create player object
     create_player()
 

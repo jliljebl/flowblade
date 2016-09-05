@@ -40,8 +40,6 @@ ROOT_PARENT = None
 PATTERN_PRODUCER_PATH = None
 LAUNCH_DIR = None
 GMIC_SCRIPTS_DOC = None
-PHANTOM_READYMADES_DOC = None
-PHANTOM_READYMADES_DIR = None
 PHANTOM_JAR = None
 
 def set_paths(root_path):
@@ -49,8 +47,8 @@ def set_paths(root_path):
     BLACK_IMAGE_PATH, FILTERS_XML_DOC, COMPOSITORS_XML_DOC, \
     WIPE_RESOURCES_PATH, PREFS_PATH, HELP_DOC, LOCALE_PATH, \
     GPL_3_DOC, ROOT_PARENT, PATTERN_PRODUCER_PATH, TRANSLATIONS_DOC, \
-    LAUNCH_DIR, REPLACEMENTS_XML_DOC, GMIC_SCRIPTS_DOC, PHANTOM_READYMADES_DOC, \
-    PHANTOM_JAR, PHANTOM_READYMADES_DIR, PHANTOM_DIR
+    LAUNCH_DIR, REPLACEMENTS_XML_DOC, GMIC_SCRIPTS_DOC,  \
+    PHANTOM_JAR, PHANTOM_DIR
     
     ROOT_PATH = root_path
     IMAGE_PATH = root_path + "/res/img/"
@@ -69,8 +67,6 @@ def set_paths(root_path):
     PATTERN_PRODUCER_PATH = root_path + "/res/patternproducer/"
     LAUNCH_DIR = root_path + "/launch/"
     GMIC_SCRIPTS_DOC = root_path + "/res/gmic/gmicscripts.xml"
-    PHANTOM_READYMADES_DOC = root_path + "/phantom2d/readymades/readymades.xml"
-    PHANTOM_READYMADES_DIR = root_path + "/phantom2d/readymades/projectfiles/"
     PHANTOM_JAR = root_path + "/phantom2d/Phantom2D.jar"
 
 def apply_dark_theme():

@@ -139,7 +139,7 @@ def main(root_path):
 
 # ------------------------------------------------------------- files
 def get_frames_cache_folder():
-    return utils.get_hidden_user_dir_path() +  appconsts.NODE_COMPOSITORS_DIR + "/" + appconsts.PHANTOM_DISK_CACHE_DIR
+    return utils.get_phantom_disk_cache_folder()
 
 def get_port_file():
     return get_frames_cache_folder() + "/" + "session_" + _session_id
