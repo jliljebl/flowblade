@@ -36,6 +36,7 @@ import dialogutils
 import glassbuttons
 import gui
 import guicomponents
+import guiutils
 import edit
 import editevent
 import editorpersistance
@@ -50,6 +51,7 @@ import movemodes
 import mlttransitions
 import render
 import renderconsumer
+import respaths
 import syncsplitevent
 import updater
 import utils
@@ -694,28 +696,61 @@ def _check_transition_handles(from_req, from_handle, to_req, to_handle, length):
     if from_req > from_handle or to_req  > to_handle:
         SPACE_TAB = "    "
         info_text = _("To create a rendered transition you need enough media overlap from both clips!\n\n")
-        
+        first_clip_info = None
         if from_req > from_handle:
         
-            info_text = info_text + \
-                        _("More media overlap needed from <b>first</b> clip:\n\n") + \
-                        SPACE_TAB + _("<b>Available:</b> ") + str(from_handle) + _(" frame(s)\n") + \
-                        SPACE_TAB + _("<b>Required:</b> ") + str(from_req) + _(" frame(s)\n\n") + \
-                        SPACE_TAB + _("Cut ") + str(from_req - from_handle) + _(" frame(s) from the <b>end</b> of first clip.")
+            first_clip_info = \
+                        _("<b>FIRST CLIP MEDIA OVERLAP:</b>  ") + \
+                        SPACE_TAB + _("Available <b>") + str(from_handle) + _("</b> frame(s), " ) + \
+                        SPACE_TAB + _("Required <b>") + str(from_req) + _("</b> frame(s)")
 
 
+        second_clip_info = None
         if to_req  > to_handle:
-                info_text = info_text + "\n\n"
-            
-                info_text = info_text + \
-                            _("More media overlap needed from <b>second</b> clip:\n\n") + \
-                            SPACE_TAB + _("<b>Available:</b> ") + str(to_handle) + _(" frame(s)\n") + \
-                            SPACE_TAB + _("<b>Required:</b> ") + str(to_req) + _(" frame(s)\n\n") + \
-                            SPACE_TAB + _("Cut ") + str(to_req - to_handle) + _(" frame(s) from the <b>beginning</b> of the second clip.")
-                            
-        dialogutils.info_message(_("More media overlap needed to create transition!"),
-                                 info_text,
-                                 gui.editor_window.window)
+            second_clip_info = \
+                            _("<b>SECOND CLIP MEDIA OVERLAP:</b> ") + \
+                            SPACE_TAB + _("Available <b>") + str(to_handle) + _("</b> frame(s), ") + \
+                            SPACE_TAB + _("Required <b>") + str(to_req) + _("</b> frame(s) ")
+
+        
+        img = Gtk.Image.new_from_file ((respaths.IMAGE_PATH + "transition_wrong.png"))
+        img2 = Gtk.Image.new_from_file ((respaths.IMAGE_PATH + "transition_right.png"))
+        img2.set_margin_bottom(24)
+
+        label1 = Gtk.Label(_("Current situation, not enought media overlap:"))
+        label1.set_margin_bottom(12)
+        label2 = Gtk.Label(_("You need more media overlap:"))
+        label2.set_margin_bottom(12)
+        label2.set_margin_top(24)
+        label3 = Gtk.Label(info_text)
+        label3.set_use_markup(True)
+        if first_clip_info != None:
+            label4 = Gtk.Label(first_clip_info)
+            label4.set_use_markup(True)
+        if second_clip_info != None:
+            label5 = Gtk.Label(second_clip_info)
+            label5.set_use_markup(True)
+        
+        row1 = guiutils.get_centered_box([label1])
+        row2 = guiutils.get_centered_box([img])
+        row3 = guiutils.get_centered_box([label2])
+        row4 = guiutils.get_centered_box([img2])
+        row5 = guiutils.get_centered_box([label3])
+        
+        rows = [row1, row2, row3, row4]
+
+        
+        if first_clip_info != None:
+            row6 = guiutils.get_left_justified_box([label4])
+            rows.append(row6)
+        if second_clip_info != None:
+            row7 = guiutils.get_left_justified_box([label5])
+            rows.append(row7)
+        
+
+        dialogutils.warning_message_with_panels(_("More media overlap needed to create transition!"), 
+                                                "", gui.editor_window.window, True, dialogutils.dialog_destroy, rows)
+                
         return False
 
     return True

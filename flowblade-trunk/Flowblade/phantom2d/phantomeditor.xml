@@ -21,6 +21,8 @@
 <preference key="tline_next_key_sc" value="control RIGHT"/>
 <preference key="switch_big_editor_sc" value="F4"/>
 <preference key="firstrun" value="false"/>
-<recentprojects path="/home/janne/loading.phr"/>
-<recentprojects path="/home/janne/asdasdasdasdasd.phr"/>
+<recentprojects path="/home/janne/test/phantom-tests/replaced.phr"/>
+<recentprojects path="/home/janne/test/phantom-tests/madichange.phr"/>
+<recentprojects path="/home/janne/codes/phantom-example-projects/text_reveal_moving.phr"/>
+<recentprojects path="/home/janne/codes/phantom-example-projects/circles.phr"/>
 </phantompersistence>
