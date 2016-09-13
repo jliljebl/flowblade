@@ -302,7 +302,6 @@ class EditorWindow:
                     <separator/>
                     <menuitem action='Titler'/>
                     <menuitem action='GMIC'/>
-                    <menuitem action='Phantom2D'/>
                     <separator/>
                     <menuitem action='MediaLink'/>
                 </menu>

@@ -162,11 +162,12 @@ def main(root_path):
         os.mkdir(utils.get_hidden_screenshot_dir_path())
     if not os.path.exists(user_dir + appconsts.GMIC_DIR):
         os.mkdir(user_dir + appconsts.GMIC_DIR)
+    """ This may be added back later
     if not os.path.exists(user_dir + appconsts.NODE_COMPOSITORS_DIR):
         os.mkdir(user_dir + appconsts.NODE_COMPOSITORS_DIR)
     if not os.path.exists(user_dir + appconsts.NODE_COMPOSITORS_DIR + "/" + appconsts.PHANTOM_DISK_CACHE_DIR):
         os.mkdir(user_dir + appconsts.NODE_COMPOSITORS_DIR + "/" + appconsts.PHANTOM_DISK_CACHE_DIR)
-
+    """
     # Set paths.
     respaths.set_paths(root_path)
 
@@ -265,7 +266,7 @@ def main(root_path):
 
     # Check for tools
     gmic.test_availablity()
-    phantomcompositor.test_availablity()
+    #phantomcompositor.test_availablity()
     
     # Create player object
     create_player()
