@@ -238,7 +238,7 @@ class MLTXMLToEDLParse:
             else:
                 reel_name = file_name_no_ext  + "XXXXXXXX"[0:8 - file_name_len]
 
-            return reel_name.upper()
+            return reel_name
 
     def get_producer_media_data(self, producer_id):
         producer_data = self.producers[producer_id]
@@ -317,30 +317,6 @@ class MLTXMLToEDLParse:
                 
         print ''.join(str_list).strip("\n")
         return ''.join(str_list).strip("\n")
-
-    def write_producer_edl_event_CMX3600(self, str_list, resource, edl_event, reel_name, 
-                                src_channel, src_in, src_out, prog_in, prog_out):
-            src_transition = "C"
-            if self.from_clip_comment  == True and resource != None:
-                str_list.append("* FROM CLIP NAME: " + resource.split("/")[-1] + "\n")
-            
-            str_list.append("{0:03d}".format(edl_event))
-            str_list.append("  ")
-            str_list.append(reel_name)
-            str_list.append("  ")
-            str_list.append(src_channel)            
-            str_list.append("  ")
-            str_list.append(src_transition)
-            str_list.append("  ")
-            str_list.append("  ")
-            str_list.append(self.frames_to_tc(src_in))
-            str_list.append(" ")
-            str_list.append(self.frames_to_tc(src_out))
-            str_list.append(" ")
-            str_list.append(self.frames_to_tc(prog_in))
-            str_list.append(" ")
-            str_list.append(self.frames_to_tc(prog_out))
-            str_list.append("\n")
 
     def frames_to_tc(self, frame):
         if self.use_drop_frames == True:
