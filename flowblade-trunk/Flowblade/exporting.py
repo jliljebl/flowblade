@@ -274,7 +274,7 @@ class MLTXMLToEDLParse:
                     src_out = int(event["outTime"])
                     src_len = src_out - src_in + 1
                      
-                    prog_out = prog_out + src_len - 1
+                    prog_out = prog_in + src_len
                     
                     producer_id = event["producer"]
                     reel_name, resource = self.get_producer_media_data(producer_id)
@@ -283,7 +283,7 @@ class MLTXMLToEDLParse:
                     src_in = 0
                     src_out = int(event["length"])
                     src_len = int(event["length"])
-                    prog_out = prog_in + int(event["length"]) - 1
+                    prog_out = prog_in + int(event["length"])
 
                     reel_name = "BL      "
                     resource = None
@@ -300,7 +300,7 @@ class MLTXMLToEDLParse:
                 str_list.append("        ")
                 str_list.append(self.frames_to_tc(src_in))
                 str_list.append(" ")
-                str_list.append(self.frames_to_tc(src_out))
+                str_list.append(self.frames_to_tc(src_out + 1))
                 str_list.append(" ")
                 str_list.append(self.frames_to_tc(prog_in))
                 str_list.append(" ")
@@ -312,7 +312,7 @@ class MLTXMLToEDLParse:
                     
                 edl_event_count += 1;
    
-                prog_in += src_len - 1
+                prog_in += src_len
 
                 
         print ''.join(str_list).strip("\n")
