@@ -112,6 +112,8 @@ window_state_id = -1
 
 _log_file = None
 
+assoc_file_path = None
+assoc_timeout_id = None
 
 def main(root_path):
     """
@@ -247,24 +249,14 @@ def main(root_path):
     # Create list of available mlt profiles
     mltprofiles.load_profile_list()
     
-    # Launch association file if found in arguments
-    launch_file_path = get_assoc_file_path()
-    if launch_file_path != None:
-        try:
-            print "Launching assoc file:" +  launch_file_path
-            persistance.show_messages = False
-            editorstate.project = persistance.load_project(launch_file_path)
-            persistance.show_messages = True
-            check_crash = False
-        except:
-            editorstate.project = projectdata.get_default_project()
-            persistance.show_messages = True
-            check_crash = True
-    else:
-        # There is always a project open, so at startup we create a default project.
-        # Set default project as the project being edited.
-        editorstate.project = projectdata.get_default_project()
-        check_crash = True
+    # Save assoc file path if found in arguments
+    global assoc_file_path
+    assoc_file_path = get_assoc_file_path()
+        
+    # There is always a project open, so at startup we create a default project.
+    # Set default project as the project being edited.
+    editorstate.project = projectdata.get_default_project()
+    check_crash = True
 
     # Audiomonitoring being available needs to be known before GUI creation
     audiomonitoring.init(editorstate.project.profile)
@@ -323,7 +315,13 @@ def main(root_path):
     # We prefer to monkeypatch some callbacks into some modules, usually to
     # maintain a simpler and/or non-circular import structure
     monkeypatch_callbacks()
-    
+
+    if not(check_crash == True and len(autosave_files) > 0):
+        if assoc_file_path != None:
+            print "Launch assoc file:", assoc_file_path
+            global assoc_timeout_id
+            assoc_timeout_id = GObject.timeout_add(10, open_assoc_file)
+            
     # Launch gtk+ main loop
     Gtk.main()
 
@@ -372,17 +370,19 @@ def get_assoc_file_path():
     """
     arg_str = ""
     for arg in sys.argv:
-        arg_str = arg
+        ext_index = arg.find(".flb")
+        if ext_index != -1:
+            arg_str = arg
     
     if len(arg_str) == 0:
-        return None
-    
-    ext_index = arg_str.find(".flb")
-    if ext_index == -1:
         return None
     else:
         return arg_str
 
+def open_assoc_file():
+    GObject.source_remove(assoc_timeout_id)
+    projectaction.actually_load_project(assoc_file_path, block_recent_files=False)
+    
 def create_gui():
     """
     Called at app start to create gui objects and handles for them.
@@ -741,7 +741,6 @@ def _early_exit(dialog, response):
     dialog.destroy()
     # Exit gtk main loop.
     Gtk.main_quit() 
-
 
 # ------------------------------------------------------- logging
 def log_print_output_to_file():
