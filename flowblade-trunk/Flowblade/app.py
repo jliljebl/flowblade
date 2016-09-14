@@ -110,7 +110,7 @@ exit_timeout_id = -1
 window_resize_id = -1
 window_state_id = -1
 
-logger = None
+_log_file = None
 
 
 def main(root_path):
@@ -118,6 +118,10 @@ def main(root_path):
     Called at application start.
     Initializes application with a default project.
     """
+    # DEBUG: Direct output to log file if log file set
+    if _log_file != None:
+        log_print_output_to_file()
+    
     # Print OS, Python version and GTK+ version
     try:
         os_release_file = open("/etc/os-release","r")
@@ -740,22 +744,13 @@ def _early_exit(dialog, response):
 
 
 # ------------------------------------------------------- logging
-def init_logger():
-    try:
-        import logging
-        global logger
-        logger = logging.getLogger('flowblade')
-        hdlr = logging.FileHandler('/home/janne/flog')
-        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-        hdlr.setFormatter(formatter)
-        logger.addHandler(hdlr)
-        logger.setLevel(logging.INFO)
-    except:
-        print "logging failed"
+def log_print_output_to_file():
+    so = se = open(_log_file, 'w', 0)
 
-def log_msg(msg):
-    global logger
-    logger.info(msg)
+    sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
+
+    os.dup2(so.fileno(), sys.stdout.fileno())
+    os.dup2(se.fileno(), sys.stderr.fileno())
 
 # ------------------------------------------------------ shutdown
 def shutdown():
