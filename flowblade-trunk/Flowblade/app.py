@@ -168,6 +168,7 @@ def main(root_path):
     if not os.path.exists(user_dir + appconsts.NODE_COMPOSITORS_DIR + "/" + appconsts.PHANTOM_DISK_CACHE_DIR):
         os.mkdir(user_dir + appconsts.NODE_COMPOSITORS_DIR + "/" + appconsts.PHANTOM_DISK_CACHE_DIR)
     """
+    
     # Set paths.
     respaths.set_paths(root_path)
 
@@ -195,7 +196,7 @@ def main(root_path):
     Gdk.threads_init()
     Gdk.threads_enter()
 
-    # Request dark them if so desired
+    # Request dark theme if so desired
     if editorpersistance.prefs.dark_theme == True:
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
 
@@ -295,7 +296,7 @@ def main(root_path):
     # Get existing autosave files
     autosave_files = get_autosave_files()
 
-    # Show splash
+    # Clear splash
     if ((editorpersistance.prefs.display_splash_screen == True) and len(autosave_files) == 0):
         global splash_timeout_id
         splash_timeout_id = GLib.timeout_add(2600, destroy_splash_screen)
@@ -354,7 +355,7 @@ def monkeypatch_callbacks():
     # Posionbar in gmic.py doesnot need trimmodes.py dependency and is avoided 
     positionbar.trimmodes_set_no_edit_trim_mode = trimmodes.set_no_edit_trim_mode
 
-    # Snapping is done in a separate module but needs tlinewidgets stae info
+    # Snapping is done in a separate module but needs some tlinewidgets state info
     snapping._get_frame_for_x_func = tlinewidgets.get_frame
     snapping._get_x_for_frame_func = tlinewidgets._get_frame_x
 

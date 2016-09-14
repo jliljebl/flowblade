@@ -145,7 +145,7 @@ def get_closest_matching_profile_index(producer_info):
     fps_num =  producer_info["fps_num"]
     fps_den = producer_info["fps_den"]
     progressive = producer_info["progressive"]
-    fps = round(float(fps_num/fps_den), 2)
+    fps = round(float(float(fps_num)/float(fps_den)), 1)
     
     # We calculate match score for all available profiles and return 
     # the one with the highest score
@@ -160,7 +160,7 @@ def get_closest_matching_profile_index(producer_info):
         prof_fps_num =  profile.frame_rate_num()
         prof_fps_den = profile.frame_rate_den()
         prof_progressive = profile.progressive()
-        prof_fps = round(float(float(prof_fps_num)/float(prof_fps_den)), 2)
+        prof_fps = round(float(float(prof_fps_num)/float(prof_fps_den)), 1)
 
         if width == prof_width and height == prof_height:
             match_score = match_score + 1000
@@ -172,6 +172,9 @@ def get_closest_matching_profile_index(producer_info):
         if match_score > current_match_score:
             current_match_score = match_score
             current_match_index = i
+            
+        print profile.description(), match_score
+            
     
     if current_match_index == -1:
         return get_default_profile_index()
