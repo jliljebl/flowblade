@@ -168,14 +168,11 @@ def get_closest_matching_profile_index(producer_info):
             match_score = match_score + 100
         if prof_progressive: # prefer progressive always
             match_score = match_score + 10
-        
+
         if match_score > current_match_score:
             current_match_score = match_score
             current_match_index = i
-            
-        print profile.description(), match_score
-            
-    
+
     if current_match_index == -1:
         return get_default_profile_index()
 
