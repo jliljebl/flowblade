@@ -23,7 +23,7 @@
 import os
 import sys
 
-print "FLOWBLADE MOVIE EDITOR repository 1.8rc"
+print "FLOWBLADE MOVIE EDITOR repository 1.8"
 print "-------------------------------------"
 
 
