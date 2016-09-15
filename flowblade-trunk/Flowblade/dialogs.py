@@ -1299,7 +1299,7 @@ def not_matching_media_info_dialog(project, media_file, callback):
                         (_("Keep Current Profile").encode('utf-8'), Gtk.ResponseType.REJECT,
                          _("Change To File Profile").encode('utf-8'), Gtk.ResponseType.ACCEPT))
 
-    primary_txt = "A video file was loaded that does not match the Project Profile!"
+    primary_txt = _("A video file was loaded that does not match the Project Profile!")
     secondary_txt = ""
 
     match_profile_index = mltprofiles.get_closest_matching_profile_index(media_file.info)
