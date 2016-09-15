@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-15 21:17+0300\n"
+"POT-Creation-Date: 2016-09-15 21:26+0300\n"
 "PO-Revision-Date: 2016-03-05 13:35+0100\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -359,7 +359,7 @@ msgstr "Přidat záběr v okně pro sledování"
 msgid "Append"
 msgstr "Připojit"
 
-#: editorwindow.py:162 dialogs.py:1099 dialogs.py:1126 guicomponents.py:2019
+#: editorwindow.py:162 dialogs.py:1099 dialogs.py:1131 guicomponents.py:2019
 msgid "Insert"
 msgstr "Vložení"
 
@@ -512,7 +512,7 @@ msgstr "Dávkové zpracování řady"
 msgid "Render Timeline"
 msgstr "Zpracovat časovou osu"
 
-#: editorwindow.py:200 dialogs.py:1132
+#: editorwindow.py:200 dialogs.py:1137
 msgid "Tools"
 msgstr "Nástroje"
 
@@ -754,7 +754,7 @@ msgstr "Nový projekt"
 #: dialogs.py:280 dialogs.py:301 dialogs.py:315 dialogs.py:326 dialogs.py:342
 #: dialogs.py:373 dialogs.py:392 dialogs.py:706 dialogs.py:801 dialogs.py:835
 #: dialogs.py:878 dialogs.py:906 dialogs.py:934 dialogs.py:995 dialogs.py:1034
-#: dialogs.py:1048 dialogs.py:1062 dialogs.py:1229 propertyeditorbuilder.py:401
+#: dialogs.py:1048 dialogs.py:1062 dialogs.py:1234 propertyeditorbuilder.py:401
 #: rendergui.py:47 rendergui.py:102 rendergui.py:116 rendergui.py:133
 #: preferenceswindow.py:42 tools/batchrendering.py:959 proxyediting.py:429
 #: patternproducer.py:319 patternproducer.py:352 patternproducer.py:383
@@ -763,7 +763,7 @@ msgid "Cancel"
 msgstr "Zrušit"
 
 #: dialogs.py:56 dialogs.py:224 dialogs.py:264 dialogs.py:404 dialogs.py:476
-#: dialogs.py:595 dialogs.py:608 dialogs.py:1230 propertyeditorbuilder.py:402
+#: dialogs.py:595 dialogs.py:608 dialogs.py:1235 propertyeditorbuilder.py:402
 #: rendergui.py:103 preferenceswindow.py:43 tools/batchrendering.py:391
 #: tools/gmic.py:330
 msgid "OK"
@@ -823,7 +823,7 @@ msgstr "Název projektu:"
 msgid "New Project File"
 msgstr "Nový soubor s projektem"
 
-#: dialogs.py:179 dialogs.py:1309 tools/batchrendering.py:1239
+#: dialogs.py:179 dialogs.py:1314 tools/batchrendering.py:1239
 msgid "File:"
 msgstr "Soubor:"
 
@@ -1279,7 +1279,7 @@ msgstr "Použít"
 msgid "Add Fade"
 msgstr "Přidat prolínání"
 
-#: dialogs.py:1077 dialogs.py:1182 tools/titler.py:416 proxyediting.py:420
+#: dialogs.py:1077 dialogs.py:1187 tools/titler.py:416 proxyediting.py:420
 #: medialinker.py:149 tools/gmic.py:750 tools/gmic.py:841
 msgid "Close"
 msgstr "Zavřít"
@@ -1425,208 +1425,236 @@ msgstr "Seřídit znovu vybrané záběry"
 msgid "G"
 msgstr "G"
 
-#: dialogs.py:1107
-msgid "Timeline"
-msgstr "Časová osa"
-
-#: dialogs.py:1110
-msgid "SPACE"
-msgstr ""
-
-#: dialogs.py:1110
-msgid "Start / Stop Playback"
-msgstr "Spustit/Zastavit přehrávání"
-
-#: dialogs.py:1111
-msgid "Backwards Faster"
-msgstr "Rychle zpět"
-
-#: dialogs.py:1112 proxyediting.py:353 tools/gmic.py:717
-msgid "Stop"
-msgstr "Zastavit"
-
-#: dialogs.py:1113
-msgid "Forward Faster"
-msgstr "Rychle vpřed"
-
-#: dialogs.py:1114 dialogs.py:1135
+#: dialogs.py:1107 dialogs.py:1119 dialogs.py:1140
 msgid "Left Arrow "
 msgstr "Šipka vlevo "
 
-#: dialogs.py:1114
-msgid "Prev Frame"
+#: dialogs.py:1107
+#, fuzzy
+msgid "Prev Frame Trim Edit"
 msgstr "Předchozí snímek"
 
-#: dialogs.py:1115 dialogs.py:1136
+#: dialogs.py:1108 dialogs.py:1120 dialogs.py:1141
 msgid "Right Arrow"
 msgstr "Šipka vpravo"
 
-#: dialogs.py:1115
-msgid "Next Frame"
+#: dialogs.py:1108
+#, fuzzy
+msgid "Next Frame Trim Edit"
 msgstr "Další snímek"
 
-#: dialogs.py:1116
+#: dialogs.py:1109 dialogs.py:1121
 msgid "Control + Left Arrow "
 msgstr "Ctrl +šipka vlevo"
 
-#: dialogs.py:1116
-msgid "Move Back 10 Frames"
+#: dialogs.py:1109
+#, fuzzy
+msgid "Back 10 Frames Trim Edit"
 msgstr "Posunout zpět o 10 snímků"
 
-#: dialogs.py:1117
+#: dialogs.py:1110 dialogs.py:1122
 msgid "Control + Right Arrow"
 msgstr "Ctrl +šipka vpravo"
 
-#: dialogs.py:1117
+#: dialogs.py:1110
+#, fuzzy
+msgid "Forward 10 Frames Trim Edit"
+msgstr "Posunout vpřed o  snímků"
+
+#: dialogs.py:1111
+msgid "ENTER"
+msgstr ""
+
+#: dialogs.py:1111
+msgid "Complete Keyboard Trim Edit"
+msgstr ""
+
+#: dialogs.py:1112
+msgid "Timeline"
+msgstr "Časová osa"
+
+#: dialogs.py:1115
+msgid "SPACE"
+msgstr ""
+
+#: dialogs.py:1115
+msgid "Start / Stop Playback"
+msgstr "Spustit/Zastavit přehrávání"
+
+#: dialogs.py:1116
+msgid "Backwards Faster"
+msgstr "Rychle zpět"
+
+#: dialogs.py:1117 proxyediting.py:353 tools/gmic.py:717
+msgid "Stop"
+msgstr "Zastavit"
+
+#: dialogs.py:1118
+msgid "Forward Faster"
+msgstr "Rychle vpřed"
+
+#: dialogs.py:1119
+msgid "Prev Frame"
+msgstr "Předchozí snímek"
+
+#: dialogs.py:1120
+msgid "Next Frame"
+msgstr "Další snímek"
+
+#: dialogs.py:1121
+msgid "Move Back 10 Frames"
+msgstr "Posunout zpět o 10 snímků"
+
+#: dialogs.py:1122
 msgid "Move Forward 10 Frames"
 msgstr "Posunout vpřed o  snímků"
 
-#: dialogs.py:1118 dialogs.py:1137
+#: dialogs.py:1123 dialogs.py:1142
 msgid "Up Arrow"
 msgstr "Šipka nahoru"
 
-#: dialogs.py:1118
+#: dialogs.py:1123
 msgid "Next Edit/Mark"
 msgstr "Další úprava/značka"
 
-#: dialogs.py:1119 dialogs.py:1138
+#: dialogs.py:1124 dialogs.py:1143
 msgid "Down Arrow"
 msgstr "Šipka dolů"
 
-#: dialogs.py:1119
+#: dialogs.py:1124
 msgid "Prev Edit/Mark"
 msgstr "Předchozí úprava/značka"
 
-#: dialogs.py:1120
+#: dialogs.py:1125
 msgid "HOME"
 msgstr ""
 
-#: dialogs.py:1120
+#: dialogs.py:1125
 msgid "Go To Start"
 msgstr "Jít na začátek"
 
-#: dialogs.py:1121
+#: dialogs.py:1126
 msgid "Shift + I"
 msgstr "Shift+I"
 
-#: dialogs.py:1121
+#: dialogs.py:1126
 msgid "To Mark In"
 msgstr "Jít na značku pro začátek záběru"
 
-#: dialogs.py:1122
+#: dialogs.py:1127
 msgid "Shift + O"
 msgstr "Shift+O"
 
-#: dialogs.py:1122
+#: dialogs.py:1127
 msgid "To Mark Out"
 msgstr "Jít na značku pro konec záběru"
 
-#: dialogs.py:1123
+#: dialogs.py:1128
 msgid "Playback"
 msgstr "Přehrávání"
 
-#: dialogs.py:1127 guicomponents.py:2025 translations.py:556
+#: dialogs.py:1132 guicomponents.py:2025 translations.py:556
 msgid "Overwrite"
 msgstr "Přepsání"
 
-#: dialogs.py:1128 guicomponents.py:2031
+#: dialogs.py:1133 guicomponents.py:2031
 msgid "Trim"
 msgstr "Oříznutí"
 
-#: dialogs.py:1129 guicomponents.py:2037
+#: dialogs.py:1134 guicomponents.py:2037
 msgid "Roll"
 msgstr "Posun bodu úprav"
 
-#: dialogs.py:1130 guicomponents.py:2043
+#: dialogs.py:1135 guicomponents.py:2043
 msgid "Slip"
 msgstr "Změna zobrazené oblasti"
 
-#: dialogs.py:1131 guicomponents.py:2049
+#: dialogs.py:1136 guicomponents.py:2049
 msgid "Spacer"
 msgstr "Rozmístit"
 
-#: dialogs.py:1135
+#: dialogs.py:1140
 msgid "Move Source Video Left"
 msgstr "Přesunout zdrojový obrazový záznam doleva"
 
-#: dialogs.py:1136
+#: dialogs.py:1141
 msgid "Move Source Video Right"
 msgstr "Přesunout zdrojový obrazový záznam doprava"
 
-#: dialogs.py:1137
+#: dialogs.py:1142
 msgid "Move Source Video Up"
 msgstr "Přesunout zdrojový obrazový záznam nahoru"
 
-#: dialogs.py:1138
+#: dialogs.py:1143
 msgid "Move Source Video Down"
 msgstr "Přesunout zdrojový obrazový záznam dolů"
 
-#: dialogs.py:1139
+#: dialogs.py:1144
 msgid "Geometry Editor"
 msgstr "Editor rozvržení"
 
-#: dialogs.py:1180
+#: dialogs.py:1185
 msgid "Sequence Watermark"
 msgstr "Vodoznak sekvence"
 
-#: dialogs.py:1184
+#: dialogs.py:1189
 msgid "Sequence:"
 msgstr "Sekvence:"
 
-#: dialogs.py:1188
+#: dialogs.py:1193
 msgid "Watermark:"
 msgstr "Vodoznak:"
 
-#: dialogs.py:1190
+#: dialogs.py:1195
 msgid "Set Watermark File"
 msgstr "Nastavit soubor s vodoznakem"
 
-#: dialogs.py:1191
+#: dialogs.py:1196
 msgid "Remove Watermark"
 msgstr "Odstranit vodoznak"
 
-#: dialogs.py:1227
+#: dialogs.py:1232
 msgid "Select Watermark File"
 msgstr "Vybrat soubor s vodoznakem"
 
-#: dialogs.py:1256
+#: dialogs.py:1261
 msgid "All files"
 msgstr "Všechny soubory"
 
-#: dialogs.py:1275
+#: dialogs.py:1280
 msgid "Saving project snapshot"
 msgstr "Ukládá se snímek s projektem"
 
-#: dialogs.py:1297
+#: dialogs.py:1302
 #, fuzzy
 msgid "Loaded Media Profile Mismatch"
 msgstr "Cesta k nalezenému souboru záznamu"
 
-#: dialogs.py:1299
+#: dialogs.py:1304
 #, fuzzy
 msgid "Keep Current Profile"
 msgstr "Smazat nynější skupinu"
 
-#: dialogs.py:1300
+#: dialogs.py:1305
 #, fuzzy
 msgid "Change To File Profile"
 msgstr "Změnit profil projektu..."
 
-#: dialogs.py:1302
+#: dialogs.py:1307
 msgid "A video file was loaded that does not match the Project Profile!"
 msgstr ""
 
-#: dialogs.py:1310
+#: dialogs.py:1315
 #, fuzzy
 msgid "File Profile:"
 msgstr "Nový profil"
 
-#: dialogs.py:1311
+#: dialogs.py:1316
 #, fuzzy
 msgid "Project Profile:"
 msgstr "Profil projektu:"
 
-#: dialogs.py:1312
+#: dialogs.py:1317
 msgid ""
 "Using a matching profile is recommended.\n"
 "\n"
