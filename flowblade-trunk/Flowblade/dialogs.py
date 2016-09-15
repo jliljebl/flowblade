@@ -405,7 +405,7 @@ def about_dialog(parent_window):
 
     img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
     flow_label = Gtk.Label(label="Flowblade Movie Editor")
-    ver_label = Gtk.Label(label="1.6.0")
+    ver_label = Gtk.Label(label="1.8.0")
     janne_label = Gtk.Label(label="Copyright 2016 Janne Liljeblad and contributors")
     page_label = Gtk.Label(label="Project page: https://github.com/jliljebl/flowblade")
     flow_label.modify_font(Pango.FontDescription("sans bold 14"))
@@ -1041,76 +1041,6 @@ def export_edl_dialog(callback, parent_window, project_name):
     dialog.set_select_multiple(False)
     dialog.connect('response', callback)
     dialog.show()
-    
-    """
-    cancel_str = _("Cancel").encode('utf-8')
-    ok_str = _("Export To EDL").encode('utf-8')
-    dialog = Gtk.Dialog(_("Export EDL"),
-                        parent_window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (cancel_str, Gtk.ResponseType.CANCEL,
-                        ok_str, Gtk.ResponseType.YES))
-
-    INPUT_LABELS_WITDH = 220
-    project_name = project_name.rstrip(".flb")
-
-    file_name = Gtk.Entry()
-    file_name.set_text(project_name)
-
-    extension_label = Gtk.Label(label=".edl")
-    extension_label.set_size_request(35, 20)
-
-    name_pack = Gtk.HBox(False, 4)
-    name_pack.pack_start(file_name, True, True, 0)
-    name_pack.pack_start(extension_label, False, False, 0)
-
-    name_row = guiutils.get_two_column_box(Gtk.Label(label=_("Export file name:")), name_pack, INPUT_LABELS_WITDH)
-
-    out_folder = Gtk.FileChooserButton(_("Select target folder"))
-    out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
-    out_folder.set_current_folder(os.path.expanduser("~") + "/")
-
-    folder_row = guiutils.get_two_column_box(Gtk.Label(label=_("Export folder:")), out_folder, INPUT_LABELS_WITDH)
-
-    file_frame = guiutils.get_named_frame_with_vbox(_("File"), [name_row, folder_row])
-
-    seq = editorstate.current_sequence()
-    track_select_combo = Gtk.ComboBoxText()
-    for i in range(seq.first_video_index,  len(seq.tracks) - 1):
-        track_select_combo.append_text(utils.get_track_name(seq.tracks[i], seq))
-    track_select_combo.set_active(0)
-    track_select_combo.set_sensitive(False)
-    tracks_label = Gtk.Label(label=_("Exported video track:"))
-    tracks_label.set_sensitive(False)
-    track_row = guiutils.get_two_column_box(tracks_label, track_select_combo, INPUT_LABELS_WITDH)
-
-    cascade_check = Gtk.CheckButton()
-    cascade_check.connect("toggled", _cascade_toggled, track_select_combo, tracks_label)
-
-    single_check_row = guiutils.get_checkbox_row_box(cascade_check, Gtk.Label(label=_("Export single video track")))
-
-    tracks_frame = guiutils.get_named_frame_with_vbox(_("Tracks"), [single_check_row, track_row])
-
-    vbox = Gtk.VBox(False, 2)
-    vbox.pack_start(file_frame, False, False, 0)
-    vbox.pack_start(tracks_frame, False, False, 0)
-
-    alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
-
-    dialog.vbox.pack_start(alignment, True, True, 0)
-    dialogutils.set_outer_margins(dialog.vbox)
-    _default_behaviour(dialog)
-    dialog.connect('response', callback, (file_name, out_folder, track_select_combo, cascade_check))
-    dialog.show_all()
-    """
-    
-def _cascade_toggled(check, track_select_combo, tracks_label):
-    if check.get_active() == True:
-        track_select_combo.set_sensitive(True)
-        tracks_label.set_sensitive(True)
-    else:
-        track_select_combo.set_sensitive(False)
-        tracks_label.set_sensitive(False)
 
 def transition_edit_dialog(callback, transition_data):
     dialog = Gtk.Dialog(_("Add Transition").encode('utf-8'),  gui.editor_window.window,
