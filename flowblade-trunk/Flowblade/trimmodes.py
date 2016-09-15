@@ -725,7 +725,9 @@ def tworoll_trim_press(event, frame):
         _attempt_reinit_tworoll(event, frame)
         return
 
-    global edit_data
+    global edit_data, submode
+    submode = MOUSE_EDIT_ON
+
     frame = _legalize_two_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
     PLAYER().seek_frame(frame)
@@ -777,7 +779,9 @@ def tworoll_trim_release(x, y, frame, state):
         mouse_disabled = False
         return
 
-    global edit_data
+    global edit_data, submode
+    submode = NOTHING_ON # we can now enter keyboard edits
+     
     frame = _legalize_two_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
     _do_two_roll_edit(frame)
@@ -1019,6 +1023,9 @@ def slide_trim_press(event, frame):
         _attempt_reinit_slide(event, frame)
         return
 
+    global submode
+    submode = MOUSE_EDIT_ON
+    
     display_frame = _update_slide_trim_for_mouse_frame(frame)
     PLAYER().seek_frame(display_frame)
 
@@ -1042,7 +1049,8 @@ def slide_trim_release(x, y, frame, state):
     display_frame = _update_slide_trim_for_mouse_frame(frame)
     PLAYER().seek_frame(display_frame)
 
-    global edit_data
+    global edit_data, submode
+    submode = NOTHING_ON # we can now enter keyboard edits
     display_frame = _update_slide_trim_for_mouse_frame(frame)
     PLAYER().seek_frame(display_frame)
     _do_slide_edit()
