@@ -1310,7 +1310,7 @@ class TimeLineCanvas:
                         thumb_img = clip_thumbnails[clip.path]
                         cr.rectangle(scale_in + 4, y + 3.5, scale_length - 8, track_height - 6)
                         cr.clip()
-                        cr.set_source_surface(thumb_img,scale_in, y)
+                        cr.set_source_surface(thumb_img,scale_in, y - 20)
                         cr.paint()
                     except: # thumbnail not found  in dict, get it pait it
                         try:
@@ -1318,7 +1318,7 @@ class TimeLineCanvas:
                             thumb_img = media_file.icon
                             cr.rectangle(scale_in + 4, y + 3.5, scale_length - 8, track_height - 6)
                             cr.clip()
-                            cr.set_source_surface(thumb_img, scale_in, y)
+                            cr.set_source_surface(thumb_img, scale_in, y - 20)
                             cr.paint()
                             clip_thumbnails[clip.path] = thumb_img
                         except:
