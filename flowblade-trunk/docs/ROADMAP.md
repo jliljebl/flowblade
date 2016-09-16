@@ -20,6 +20,8 @@ This document gives a broad overview what's happening next in Flowblade developm
 
 **Trim edit view** This may be possible with current available APIs and will be attempted.
 
+**Titler improvements** This tool has not been updated in a while should probably be moved forward.
+
 ### Long term
 
 **GPU Rendering** MLT already contains support for GPU rendering and it has been used by Shotcut for a while, but my experience has been that it is quite unstable. It may work well with some combinations of Qt version, graphics card and drivers but other combinations may be unusably crashy.
