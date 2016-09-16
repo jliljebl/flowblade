@@ -6,11 +6,11 @@ This document gives a broad overview what's happening next in Flowblade developm
 ### Next
 
 **Increasing Tools Integration** Flowblade's standalone tools and  external tools like Natron will be increasingly integrated with the timeline. There are three levels of integration here, and development will go on to increase integration one level at a time:
-  * **Clip and Range export** for. e.g. user can open a timeline clip on G'MIC effects tool
-  * **Auto-update on render completion** So after havin applied an effect to a timeline clip it will be automatically updated on timeline
-  * **Continuos synchronization** Heve doing changes on timeline clips previously set as clips containing extrenal tool rendering, will cause automatic rerenders to happen.For samo tools this will require additinal IPC interface that is not yet available.
+  * **Clip and Range export** For e.g. user can open a timeline clip on the G'MIC effects tool.
+  * **Auto-update on render completion** After having applied an effect to a timeline clip it will be automatically updated on timeline after rendering is complete.
+  * **Continuos synchronization** Here doing changes on timeline clips previously set as clips containing extrenal tool rendering will cause automatic re-renders. For same tools this will require additinal IPC interface that is not yet available.
 
-**Compound clips** It should possible to make selected range and other sequences in the project available as compound clips
+**Compound clips** It should possible to make selected range and the other sequences in the project available as compound clips.
 
 **Audio Scrubbing** This will make editing audio on the timeline easier.
 
