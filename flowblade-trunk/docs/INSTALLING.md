@@ -4,28 +4,22 @@
 ### Installing using .deb package
 
 #### Step 1. Download and install .deb 
-**First download .deb file** for Flowblade 1.6 from <a href="https://www.dropbox.com/s/4smy1jlofzn896o/flowblade-1.6.0-1_all.deb?dl=0">here.</a>
+**First download .deb file** for Flowblade 1.8 from <a href="https://www.dropbox.com/s/onrdoivia6t0rjd/flowblade-1.8.0-1_all.deb?dl=0">here.</a>
 
 Double click on <b>.deb</b> file to install it. 
 
-On some systems double clicking may not work, and you need to install <b>.deb</b> file using terminal:
+On some systems double clicking may not work (on Ubuntu it has sometimes istalled old version from repository), and you need to install <b>.deb</b> file using terminal:
 
 <ul>
 	<li>	<p>Open terminal in the directory you saved the  downloaded <b>.deb</b> file. Give command:	</li>
 </ul>
 ```bash
-sudo dpkg -i ./flowblade-1.6.0-1_all.deb
+sudo dpkg -i ./flowblade-1.8.0-1_all.deb
 ```
 
 #### Step 2. Give some additional commands on terminal
 
 You may need to give some additional commands on terminal:
-<ul>
-	<li>Add some <b>missing dependencies</b> with command:</li>
-</ul>
-```bash
-	sudo apt-get install gir1.2-glib-2.0 gir1.2-gtk-3.0 gir1.2-pango-1.0 gir1.2-gdkpixbuf-2.0
-```
 <ul>
 	<li>Force install all dependencies with command:</li>
 </ul>
@@ -33,7 +27,7 @@ You may need to give some additional commands on terminal:
 	sudo apt-get install -f
 ```
 
-Release has been install tested on: <b>Ubuntu 15.10, 14.10 and 14.04</b>. Should work on all recent Debian based distributions.
+Release has been install tested on: <b>Ubuntu 16.04</b>. <b>Linux Mint 18</b> and <b>Debian 8</b>. It should work on all recent Debian based distributions.
 
 <b>NOTE: Running a KDEnlive PPA on Ubuntu may cause an uncompatible MLT to be installed and prevent Flowblade from running, more <a href="https://plus.google.com/105369302467641615295/posts/QSKQoPtbLKg">here.</a></b> 
 
@@ -71,13 +65,13 @@ yaourt -S flowblade-git
 
 Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install and run Flowblade without compiling anything.
 
-**First download 1.6 tar.gz** source archive file from <a href="https://www.dropbox.com/s/2i70jzatz71o11j/flowblade-1.6.0.tar.gz?dl=0">here.</a> 
+**First download 1.8 tar.gz** source archive file from <a href="https://www.dropbox.com/s/j0f1uzl2grsivzw/flowblade-1.8.0.tar.gz?dl=0">here.</a> 
 
   * Extract archive into a folder of your choosing
   * Install dependencies. See [Dependencies](DEPENDENCIES.md) doc for more information.
   * If you have Flowblade installed in your system, you probably have the dependencies installed, unless some new ones have been added.
-  * Launch by running script *.../flowblade-1.4.0/flowblade* that was created in the folder where archive was unpacked.
-  * Note that if you have Flowblade installed you will need use full path to repository version or navigate to the folder containing launch script and use command "./flowblade" to launch repository version instead of installed version.
+  * Launch by running script *.../flowblade-1.8.0/flowblade* that was created in the folder where archive was unpacked.
+  * Note that if you have Flowblade installed yu will need use full path to repository version or navigate to the folder containing launch script and use command "./flowblade" to launch repository version instead of installed version.
 
 *Please note these issues with Dropbox download:*
 <ul>
