@@ -316,7 +316,7 @@ class MediaFile:
         icon = cairo.ImageSurface.create_from_png(self.icon_path)
         scaled_icon = cairo.ImageSurface(cairo.FORMAT_ARGB32, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
         cr = cairo.Context(scaled_icon)
-        cr.scale( float(appconsts.THUMB_WIDTH) / float(icon.get_width()), float(appconsts.THUMB_HEIGHT) / float(icon.get_height()))
+        cr.scale(float(appconsts.THUMB_WIDTH) / float(icon.get_width()), float(appconsts.THUMB_HEIGHT) / float(icon.get_height()))
         cr.set_source_surface(icon, 0, 0)
         cr.paint()
         

@@ -236,6 +236,8 @@ OVERLAY_TRIM_COLOR = (0.81, 0.82, 0.3)
 POINTER_TRIANGLE_COLOR = (0.6, 0.7, 0.8, 0.7)
 SHADOW_POINTER_COLOR = (0.5, 0.5, 0.5)
 
+MATCH_FRAME_LINES_COLOR = (0.78, 0.31, 0.31)
+
 BLANK_SELECTED = (0.68, 0.68, 0.74)
 
 TRACK_GRAD_STOP1 = (1, 0.68, 0.68, 0.68, 1) #0.93, 0.93, 0.93, 1)
@@ -276,6 +278,15 @@ trim_status = appconsts.ON_BETWEEN_FRAME
 
 # Dict for clip thumbnails path -> image
 clip_thumbnails = {}
+
+# Timeline match image
+match_frame = -1
+match_frame_track_index = -1
+image_on_right = True 
+match_frame_image = None
+match_frame_width = 1
+match_frame_height = 1
+
 
 # ------------------------------------------------------------------- module functions
 def load_icons():
@@ -323,6 +334,13 @@ def set_dark_bg_color():
 
     global BG_COLOR
     BG_COLOR = get_multiplied_color((r, g, b), 1.25)
+
+def set_match_frame(tline_match_frame, track_index, display_on_right):
+    global match_frame, match_frame_track_index, image_on_right, match_frame_image
+    match_frame = tline_match_frame
+    match_frame_track_index = track_index
+    image_on_right = display_on_right
+    match_frame_image = None
 
 def _load_pixbuf(icon_file):
     return cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + icon_file)
@@ -1095,6 +1113,9 @@ class TimeLineCanvas:
         if EDIT_MODE() != editorstate.SLIDE_TRIM and fake_current_frame != None:
             PLAYER().seek_frame(fake_current_frame)
             fake_current_frame = None
+        
+        # Draw match frame
+        self.draw_match_frame(cr)
             
         # Draw frame pointer
         if EDIT_MODE() != editorstate.SLIDE_TRIM or PLAYER().looping():
@@ -1639,7 +1660,74 @@ class TimeLineCanvas:
             cr.arc(parent_x + pad, parent_y + pad, small_radius,  0.0 * degrees, 360.0 * degrees)
             cr.fill()
 
+    def draw_match_frame(self, cr):
+        if match_frame == -1:
+            return
+        
+        global match_frame_image
+        if match_frame_image == None:
+            self.create_match_frame_image_surface()
 
+        scale_in = (match_frame - pos) * pix_per_frame
+        cr.set_source_surface(match_frame_image, scale_in, 20)
+        cr.paint_with_alpha(0.7)
+        
+        cr.set_source_rgb(*MATCH_FRAME_LINES_COLOR)
+        cr.set_line_width(2.0)
+        cr.rectangle(int(scale_in), 20, int(match_frame_width), int(match_frame_height))
+        cr.stroke()
+
+        cr.move_to(int(scale_in), 0, )
+        cr.line_to(int(scale_in), int(match_frame_height) + 42)
+        cr.stroke()
+
+        start_y = _get_track_y(match_frame_track_index)
+        end_y = _get_track_y(match_frame_track_index - 1)
+        
+        cr.move_to (int(scale_in) + 8, start_y)
+        cr.line_to (int(scale_in), start_y)
+        cr.line_to (int(scale_in), end_y + 1)
+        cr.line_to (int(scale_in) + 8, end_y + 1)
+        cr.set_source_rgb(0.2, 0.2, 0.2)
+        cr.set_line_width(4.0)
+        cr.stroke()
+    
+        """
+        tri_h = 8
+        tri_h_half = tri_h / 2
+        tri_w = 8
+        for i in range(0, 3):
+            cr.move_to (int(scale_in), start_y + i * tri_h)
+            cr.line_to (int(scale_in) + tri_w, start_y + i * tri_h + tri_h_half)
+            cr.line_to (int(scale_in), start_y + i * tri_h + tri_h)
+            cr.close_path();
+            cr.fill()
+        """
+        
+    def create_match_frame_image_surface(self):
+        # Create non-scaled icon
+        matchframe_path = utils.get_hidden_user_dir_path() + appconsts.MATCH_FRAME
+        icon = cairo.ImageSurface.create_from_png(matchframe_path)
+
+        # Create and return scaled icon
+        allocation = canvas_widget.widget.get_allocation()
+        x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
+        profile_screen_ratio = float(PROJECT().profile.width()) / float(PROJECT().profile.height())
+        
+        global match_frame_width, match_frame_height
+        match_frame_height = h - 40
+        match_frame_width = match_frame_height * profile_screen_ratio
+    
+        scaled_icon = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(match_frame_width), int(match_frame_height))
+        cr = cairo.Context(scaled_icon)
+        cr.scale(float(match_frame_width) / float(icon.get_width()), float(match_frame_height) / float(icon.get_height()))
+
+        cr.set_source_surface(icon, 0, 0)
+        cr.paint()
+        
+        global match_frame_image
+        match_frame_image = scaled_icon
+        
 class TimeLineColumn:
     """
     GUI component for displaying and editing track parameters.

@@ -149,6 +149,9 @@ RENDERED_CLIPS_DIR = "rendered_clips"
 GMIC_DIR = "gmic"
 NODE_COMPOSITORS_DIR = "node_compositors"
 PHANTOM_DISK_CACHE_DIR = "phantom_disk_cache"
+MATCH_FRAME_DIR = "match_frame"
+MATCH_FRAME = MATCH_FRAME_DIR + "/match_frame.png"
+MATCH_FRAME_NEW = MATCH_FRAME_DIR + "/match_frame_new.png"
 
 # Luma bands
 SHADOWS = 0
