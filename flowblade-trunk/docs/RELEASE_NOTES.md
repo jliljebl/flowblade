@@ -2,7 +2,7 @@
 
 ## Flowblade 1.8 ##
 
-**Date: September 2, 2016**
+**Date: September 19, 2016**
 
 **Flowblade 1.8** is the twelth release of Flowblade. 
 
