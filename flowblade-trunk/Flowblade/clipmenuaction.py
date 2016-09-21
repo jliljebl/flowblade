@@ -359,6 +359,10 @@ def _set_match_frame(clip, frame, track, display_on_right):
 def _write_match_frame():
     _match_frame_writer.write_image()
 
+def _match_frame_close(data):
+    tlinewidgets.set_match_frame(-1, -1, True)
+    updater.repaint_tline()
+        
 class MatchFrameWriter:
     def __init__(self, clip, clip_frame, track, display_on_right):
         self.clip = clip
@@ -436,5 +440,6 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "clone_filters_from_next": _clone_filters_from_next,
                   "clone_filters_from_prev": _clone_filters_from_prev,
                   "clear_filters": _clear_filters,
+                  "match_frame_close":_match_frame_close,
                   "match_frame_start":_match_frame_start,
                   "match_frame_end":_match_frame_end}

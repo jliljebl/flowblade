@@ -1348,20 +1348,27 @@ def _get_blenders_add_menu_item(event, clip, track, callback, sensitive):
     return menu_item
 
 def _get_match_frame_menu_item(event, clip, track, callback):
-    menu_item = Gtk.MenuItem(_("Show Timeline Match Frame"))
+    menu_item = Gtk.MenuItem(_("Show Match Frame"))
     sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
 
-    start_item = Gtk.MenuItem(_("At First frame"))
+    start_item = Gtk.MenuItem(_("First frame"))
     sub_menu.append(start_item)
     start_item.connect("activate", callback, (clip, track, "match_frame_start", None))
     start_item.show()
 
-    end_item = Gtk.MenuItem(_("At Last frame"))
+    end_item = Gtk.MenuItem(_("Last frame"))
     sub_menu.append(end_item)
     end_item.connect("activate", callback, (clip, track, "match_frame_end", None))
     end_item.show()
 
+    _add_separetor(sub_menu)
+    
+    clear_item = Gtk.MenuItem(_("Clear Match Frame"))
+    sub_menu.append(clear_item)
+    clear_item.connect("activate", callback, (clip, track, "match_frame_close", None))
+    clear_item.show()
+    
     menu_item.set_sensitive(True)
     menu_item.show()
     return menu_item

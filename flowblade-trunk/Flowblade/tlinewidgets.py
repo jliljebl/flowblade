@@ -125,6 +125,7 @@ MARKER_ICON = None
 LEVELS_RENDER_ICON = None
 SNAP_ICON = None
 KEYBOARD_ICON = None
+CLOSE_MATCH_ICON = None
 
 # tc scale
 TC_POINTER_HEAD = None
@@ -294,7 +295,7 @@ def load_icons():
     COMPOSITOR_CLIP_ICON, INSERT_ARROW_ICON, AUDIO_MUTE_ICON, MARKER_ICON, \
     VIDEO_MUTE_ICON, ALL_MUTE_ICON, TRACK_BG_ICON, MUTE_AUDIO_ICON, MUTE_VIDEO_ICON, MUTE_ALL_ICON, \
     TRACK_ALL_ON_V_ICON, TRACK_ALL_ON_A_ICON, MUTE_AUDIO_A_ICON, TC_POINTER_HEAD, EDIT_INDICATOR, \
-    LEVELS_RENDER_ICON, SNAP_ICON, KEYBOARD_ICON
+    LEVELS_RENDER_ICON, SNAP_ICON, KEYBOARD_ICON, CLOSE_MATCH_ICON
 
     FULL_LOCK_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "full_lock.png")
     FILTER_CLIP_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filter_clip_icon_sharp.png")
@@ -311,6 +312,7 @@ def load_icons():
     LEVELS_RENDER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "audio_levels_render.png")
     SNAP_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "snap_magnet.png")
     KEYBOARD_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "keyb_trim.png")
+    CLOSE_MATCH_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "close_match.png")
 
     MARKER_ICON = _load_pixbuf("marker.png")
     TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V.png")
@@ -341,6 +343,26 @@ def set_match_frame(tline_match_frame, track_index, display_on_right):
     match_frame_track_index = track_index
     image_on_right = display_on_right
     match_frame_image = None
+
+def match_frame_close_hit(x, y):
+    if match_frame == -1:
+        return False
+    
+    if image_on_right == True:
+        frame_adj = 0
+        img_pos_adj = 0
+    else:
+        frame_adj = 1
+        img_pos_adj = int(match_frame_width)
+    
+    scale_in = (match_frame + frame_adj - pos) * pix_per_frame
+
+    test_x = scale_in - img_pos_adj + 4
+    test_y = 24
+    if (x >= test_x and  x <= test_x + 12) and (y >= test_y and  y <= test_y + 12):
+        return True
+    
+    return False
 
 def _load_pixbuf(icon_file):
     return cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + icon_file)
@@ -1668,13 +1690,26 @@ class TimeLineCanvas:
         if match_frame_image == None:
             self.create_match_frame_image_surface()
 
-        scale_in = (match_frame - pos) * pix_per_frame
-        cr.set_source_surface(match_frame_image, scale_in, 20)
+        if image_on_right == True:
+            dir_mult = 1
+            frame_adj = 0
+            img_pos_adj = 0
+        else:
+            dir_mult = -1
+            frame_adj = 1
+            img_pos_adj = int(match_frame_width)
+        
+        scale_in = (match_frame + frame_adj - pos) * pix_per_frame
+                
+        cr.set_source_surface(match_frame_image, scale_in - img_pos_adj, 20)
         cr.paint_with_alpha(0.7)
+    
+        cr.set_source_surface(CLOSE_MATCH_ICON, scale_in - img_pos_adj + 4, 24)
+        cr.paint()
         
         cr.set_source_rgb(*MATCH_FRAME_LINES_COLOR)
         cr.set_line_width(2.0)
-        cr.rectangle(int(scale_in), 20, int(match_frame_width), int(match_frame_height))
+        cr.rectangle(int(scale_in) - img_pos_adj, 20, int(match_frame_width), int(match_frame_height))
         cr.stroke()
 
         cr.move_to(int(scale_in), 0, )
@@ -1684,25 +1719,13 @@ class TimeLineCanvas:
         start_y = _get_track_y(match_frame_track_index)
         end_y = _get_track_y(match_frame_track_index - 1)
         
-        cr.move_to (int(scale_in) + 8, start_y)
+        cr.move_to (int(scale_in) + 8 * dir_mult, start_y)
         cr.line_to (int(scale_in), start_y)
         cr.line_to (int(scale_in), end_y + 1)
-        cr.line_to (int(scale_in) + 8, end_y + 1)
+        cr.line_to (int(scale_in) + 8 * dir_mult, end_y + 1)
         cr.set_source_rgb(0.2, 0.2, 0.2)
         cr.set_line_width(4.0)
         cr.stroke()
-    
-        """
-        tri_h = 8
-        tri_h_half = tri_h / 2
-        tri_w = 8
-        for i in range(0, 3):
-            cr.move_to (int(scale_in), start_y + i * tri_h)
-            cr.line_to (int(scale_in) + tri_w, start_y + i * tri_h + tri_h_half)
-            cr.line_to (int(scale_in), start_y + i * tri_h + tri_h)
-            cr.close_path();
-            cr.fill()
-        """
         
     def create_match_frame_image_surface(self):
         # Create non-scaled icon
