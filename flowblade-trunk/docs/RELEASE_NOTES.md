@@ -2,7 +2,7 @@
 
 ## Flowblade 1.8 ##
 
-**Date: September 2, 2016**
+**Date: September 19, 2016**
 
 **Flowblade 1.8** is the twelth release of Flowblade. 
 
@@ -20,7 +20,7 @@ Particular attention will given to the current *Issues* list, with some of the o
 
 ### Flowblade Main Features ###
 
-* **Keybord trimming with arrow keys** Trim positions can now be moved using arrow keys and trim edit confirmed with pressing Enter key. This is often more convenient and previse then always working with a mouse
+* **Keybord trimming with arrow keys** Trim positions can now be moved using arrow keys and trim edit confirmed with pressing Enter key. This is often more convenient and precise then always working with a mouse
 * **Clip Snapping** Clips and compositors will now snap to clip ends on adjacent tracks when clips or compositors are moved or their ends dragged. 
 * **Clips display media thumbnails** This helps differentiating clips from each other on timeline.
 * **EDL export** is now available. Thanks to Github user *tin2tin* for extensive testing on software not available on my system. Unfortunately it became clear that Blender EDL import is buggy.
