@@ -530,6 +530,7 @@ def set_move_mode_gui():
     Called when user selects move mode
     """
     display_sequence_in_monitor()
+    gui.monitor_widget.set_default_view()
 
 def set_transition_render_edit_menu_items_sensitive(range_start, range_end):
     if not editorstate.current_is_move_mode():

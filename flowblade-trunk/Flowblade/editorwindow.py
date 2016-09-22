@@ -51,6 +51,7 @@ import medialog
 import menuactions
 import middlebar
 import monitorevent
+import monitorwidget
 import respaths
 import render
 import rendergui
@@ -525,18 +526,25 @@ class EditorWindow:
         sw_pos_hbox.set_margin_left(2)
         
         # Video display
+        """
         black_box = Gtk.EventBox()
         black_box.add(Gtk.Label())
         bg_color = Gdk.Color(red=0.0, green=0.0, blue=0.0)
         black_box.modify_bg(Gtk.StateType.NORMAL, bg_color)
-        
+
         self.tline_display = black_box # This could be any GTK+ widget (that is not "windowless"), only its XWindow draw rect 
                                        # is used to position and scale SDL overlay that actually displays video.
+        """
+        monitor_widget = monitorwidget.MonitorWidget()
+        self.tline_display = monitor_widget.get_monitor()
+        self.monitor_widget = monitor_widget
+
         dnd.connect_video_monitor(self.tline_display)
 
         # Monitor
         monitor_vbox = Gtk.VBox(False, 1)
-        monitor_vbox.pack_start(self.tline_display, True, True, 0)
+        #monitor_vbox.pack_start(self.tline_display, True, True, 0)
+        monitor_vbox.pack_start(monitor_widget.widget, True, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
         monitor_vbox.pack_start(player_buttons_row, False, True, 0)
 

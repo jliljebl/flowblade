@@ -427,6 +427,8 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     else:
         current_sequence().display_trim_clip(None, clip_start, clip.create_data) # pattern producer
 
+    gui.monitor_widget.set_start_trim_view()
+    
     PLAYER().seek_frame(edit_frame)
     return True
 

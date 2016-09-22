@@ -67,6 +67,8 @@ tline_column = None
 tline_left_corner = None
 big_tc = None
 
+monitor_widget = None
+
 # indexes match editmode values in editorstate.py
 notebook_buttons = None
 
@@ -98,7 +100,8 @@ def capture_references(new_editor_window):
     global editor_window, media_list_view, bin_list_view, sequence_list_view, pos_bar, \
     tc, tline_display, tline_scale, tline_canvas, tline_scroll, tline_v_scroll, tline_info, \
     tline_column, play_b, clip_editor_b, sequence_editor_b, \
-    effect_select_list_view, effect_select_combo_box, project_info_vbox, middle_notebook, big_tc, editmenu, notebook_buttons, tline_left_corner
+    effect_select_list_view, effect_select_combo_box, project_info_vbox, middle_notebook, big_tc, editmenu, notebook_buttons, tline_left_corner, \
+    monitor_widget
 
     editor_window = new_editor_window
 
@@ -113,6 +116,8 @@ def capture_references(new_editor_window):
 
     pos_bar = editor_window.pos_bar
     tc = editor_window.tc
+
+    monitor_widget = editor_window.monitor_widget
 
     tline_display = editor_window.tline_display
     tline_scale = editor_window.tline_scale
