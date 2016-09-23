@@ -170,6 +170,8 @@ def main(root_path):
         os.mkdir(user_dir + appconsts.GMIC_DIR)
     if not os.path.exists(user_dir + appconsts.MATCH_FRAME_DIR):
         os.mkdir(user_dir + appconsts.MATCH_FRAME_DIR)
+    if not os.path.exists(user_dir + appconsts.TRIM_VIEW_DIR):
+        os.mkdir(user_dir + appconsts.TRIM_VIEW_DIR)
         
     # Set paths.
     respaths.set_paths(root_path)

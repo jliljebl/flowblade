@@ -421,14 +421,17 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         clip = edit_data["from_clip"]
         clip_start = trim_limits["from_start"]
 
-    # Display trim clip
     if clip.media_type != appconsts.PATTERN_PRODUCER:
         current_sequence().display_trim_clip(clip.path, clip_start) # file producer
     else:
         current_sequence().display_trim_clip(None, clip_start, clip.create_data) # pattern producer
 
-    gui.monitor_widget.set_start_trim_view()
-    
+    # Init trim view
+    if edit_data["to_side_being_edited"]:
+        gui.monitor_widget.set_start_trim_view(edit_data["from_clip"])
+    else:
+        gui.monitor_widget.set_end_trim_view(edit_data["to_clip"])
+        
     PLAYER().seek_frame(edit_frame)
     return True
 
