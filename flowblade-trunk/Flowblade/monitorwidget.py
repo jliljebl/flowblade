@@ -38,6 +38,8 @@ END_TRIM_VIEW = 2
 
 MATCH_FRAME = "match_frame.png"
 
+MONITOR_INDICATOR_COLOR = utils.get_cairo_color_tuple_255_rgb(71, 131, 169)
+
 class MonitorWidget:
     
     def __init__(self):
@@ -49,8 +51,8 @@ class MonitorWidget:
         # top row
         self.top_row = Gtk.HBox()
         
-        top = cairoarea.CairoDrawableArea2(1, 1, self._draw_black, use_widget_bg=False)
-        self.top_row.pack_start(top, True, True,0)
+        self.top_edge_panel = cairoarea.CairoDrawableArea2(1, 1, self._draw_top_panel, use_widget_bg=False)
+        self.top_row.pack_start(self.top_edge_panel, True, True,0)
         
         # mid row
         self.mid_row = Gtk.HBox()
@@ -70,9 +72,9 @@ class MonitorWidget:
         self.mid_row.pack_start(self.right_display, False, False,0)
         
         # bottom row
+        self.bottom_edge_panel = cairoarea.CairoDrawableArea2(1, 1, self._draw_bottom_panel, use_widget_bg=False)
         self.bottom_row = Gtk.HBox()
-        bottom = cairoarea.CairoDrawableArea2(1, 1, self._draw_black, use_widget_bg=False)
-        self.bottom_row.pack_start(bottom, True, True,0)
+        self.bottom_row.pack_start(self.bottom_edge_panel, True, True,0)
         
         # build pane
         self.widget.pack_start(self.top_row, False, False,0)
@@ -94,6 +96,10 @@ class MonitorWidget:
         self.view = DEFAULT_VIEW
         self.left_display.set_pref_size(1, 1)
         self.right_display.set_pref_size(1, 1)
+
+        self.top_edge_panel.set_pref_size(1, 1)
+        self.bottom_edge_panel.set_pref_size(1, 1)
+        
         self.widget.queue_draw()
         PLAYER().refresh()
         
@@ -113,12 +119,18 @@ class MonitorWidget:
         self.view = START_TRIM_VIEW
         self.match_frame_surface = None
 
-        print "jjajaj"
         self.left_display.set_pref_size(*self.get_match_frame_panel_size())
         self.right_display.set_pref_size(1, 1)
+        
+        self.top_edge_panel.set_pref_size(*self.get_edge_row_panel_size())
+        self.bottom_edge_panel.set_pref_size(*self.get_edge_row_panel_size())
+        
         self.widget.queue_draw()
         PLAYER().refresh()
 
+        if match_clip == None: # track last end trim and track first start trim
+            return
+            
         match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_out, 
                                                             MATCH_FRAME, self.match_frame_write_complete)
         match_frame_write_thread.start()
@@ -139,11 +151,18 @@ class MonitorWidget:
         self.view = END_TRIM_VIEW
         self.match_frame_surface = None
         
-        print "jjajaj"
+
         self.left_display.set_pref_size(1, 1)
         self.right_display.set_pref_size(*self.get_match_frame_panel_size())
+        
+        self.top_edge_panel.set_pref_size(*self.get_edge_row_panel_size())
+        self.bottom_edge_panel.set_pref_size(*self.get_edge_row_panel_size())
+        
         self.widget.queue_draw()
         PLAYER().refresh()
+        
+        if match_clip == None: # track last end trim and track first start trim
+            return
         
         match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_in, 
                                                             MATCH_FRAME, self.match_frame_write_complete)
@@ -161,7 +180,39 @@ class MonitorWidget:
             # Draw match frame
             cr.set_source_surface(self.match_frame_surface, 0, 0)
             cr.paint()
-            
+
+    def _draw_top_panel(self, event, cr, allocation):
+        x, y, w, h = allocation
+
+        # Draw bg
+        cr.set_source_rgb(0.0, 0.0, 0.0)
+        cr.rectangle(0, 0, w, h)
+        cr.fill()
+
+        # Draw active screen indicator
+        cr.set_source_rgb(*MONITOR_INDICATOR_COLOR)
+        if self.view == START_TRIM_VIEW:
+            cr.rectangle(w/2, h - 4, w/2, 4)
+        elif self.view == END_TRIM_VIEW: 
+            cr.rectangle(0, h - 4, w/2, 4)
+        cr.fill()
+
+    def _draw_bottom_panel(self, event, cr, allocation):
+        x, y, w, h = allocation
+
+        # Draw bg
+        cr.set_source_rgb(0.0, 0.0, 0.0)
+        cr.rectangle(0, 0, w, h)
+        cr.fill()
+
+        # Draw active screen indicator
+        cr.set_source_rgb(*MONITOR_INDICATOR_COLOR)
+        if self.view == START_TRIM_VIEW:
+            cr.rectangle(w/2, 0, w/2, 4)
+        elif self.view == END_TRIM_VIEW:
+            cr.rectangle(0, 0, w/2, 4)
+        cr.fill()
+        
     def _draw_black(self, event, cr, allocation):
         x, y, w, h = allocation
 
@@ -183,6 +234,13 @@ class MonitorWidget:
         monitor_alloc = self.widget.get_allocation()
         inv_profile_screen_ratio = float(PROJECT().profile.height()) / float(PROJECT().profile.width())
         return (int(monitor_alloc.width/2), int(inv_profile_screen_ratio * monitor_alloc.width/2))
+
+    def get_edge_row_panel_size(self):
+        monitor_alloc = self.widget.get_allocation()
+        inv_profile_screen_ratio = float(PROJECT().profile.height()) / float(PROJECT().profile.width())
+        screen_height = int(inv_profile_screen_ratio * monitor_alloc.width/2)
+        edge_row_height = (monitor_alloc.height - screen_height)/2
+        return (monitor_alloc.width, edge_row_height)
         
     def match_frame_write_complete(self, frame_name):
         self.match_frame_surface = self.create_match_frame_image_surface(frame_name)
@@ -199,7 +257,6 @@ class MonitorWidget:
         profile_screen_ratio = float(PROJECT().profile.width()) / float(PROJECT().profile.height())
         match_frame_width, match_frame_height = self.get_match_frame_panel_size()
         
-        print  match_frame_width, match_frame_height, surface.get_width(), surface.get_height()
         scaled_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(match_frame_width), int(match_frame_height))
         cr = cairo.Context(scaled_surface)
         cr.scale(float(match_frame_width) / float(surface.get_width()), float(match_frame_height) / float(surface.get_height()))
@@ -222,7 +279,6 @@ class MonitorMatchFrameWriter(threading.Thread):
         """
         Writes thumbnail image from file producer
         """
-        print "kkkkkkkkkkkkk"
         # Create consumer
         matchframe_path = utils.get_hidden_user_dir_path() + appconsts.TRIM_VIEW_DIR + "/" + self.frame_name
         consumer = mlt.Consumer(PROJECT().profile, "avformat", matchframe_path)
