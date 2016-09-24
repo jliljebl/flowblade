@@ -244,9 +244,12 @@ class MonitorWidget:
         
     def match_frame_write_complete(self, frame_name):
         self.match_frame_surface = self.create_match_frame_image_surface(frame_name)
+        
+        Gdk.threads_enter()
         self.left_display.queue_draw()
         self.right_display.queue_draw()
-
+        Gdk.threads_leave()
+        
     def create_match_frame_image_surface(self, frame_name):
         # Create non-scaled surface
         matchframe_path = utils.get_hidden_user_dir_path() + appconsts.TRIM_VIEW_DIR + "/" + frame_name 
@@ -287,6 +290,7 @@ class MonitorMatchFrameWriter(threading.Thread):
 
         # Create one frame producer
         producer = mlt.Producer(PROJECT().profile, str(self.clip_path))
+        producer.set("mlt_service", "avformat-novalidate")
         producer = producer.cut(int(self.clip_frame), int(self.clip_frame))
 
         # Delete match frame
