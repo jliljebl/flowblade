@@ -40,6 +40,9 @@ MATCH_FRAME = "match_frame.png"
 
 MONITOR_INDICATOR_COLOR = utils.get_cairo_color_tuple_255_rgb(71, 131, 169)
 
+def _get_match_frame_path():
+    return utils.get_hidden_user_dir_path() + appconsts.TRIM_VIEW_DIR + "/" + MATCH_FRAME
+        
 class MonitorWidget:
     
     def __init__(self):
@@ -47,6 +50,9 @@ class MonitorWidget:
         
         self.view = DEFAULT_VIEW
         self.match_frame_surface = None
+        self.match_frame = -1
+        self.edit_tline_frame = -1
+        self.edit_clip_start_on_tline = -1
         
         # top row
         self.top_row = Gtk.HBox()
@@ -80,7 +86,11 @@ class MonitorWidget:
         self.widget.pack_start(self.top_row, False, False,0)
         self.widget.pack_start(self.mid_row , True, True,0)
         self.widget.pack_start(self.bottom_row, False, False,0)
-        
+    
+    def set_edit_tline_frame(self, edit_tline_frame):
+        self.edit_tline_frame = edit_tline_frame
+        self.bottom_edge_panel.queue_draw()
+
     def get_monitor(self):
         return self.monitor
 
@@ -93,7 +103,17 @@ class MonitorWidget:
         if PLAYER().is_rendering:
             return
 
+        # Delete match frame
+        try:
+            os.remove(_get_match_frame_path())
+        except:
+            # This fails when done first time ever  
+            pass
+        
+        self.match_frame_surface = None
+                
         self.view = DEFAULT_VIEW
+        
         self.left_display.set_pref_size(1, 1)
         self.right_display.set_pref_size(1, 1)
 
@@ -103,7 +123,7 @@ class MonitorWidget:
         self.widget.queue_draw()
         PLAYER().refresh()
         
-    def set_start_trim_view(self, match_clip):
+    def set_start_trim_view(self, match_clip, edit_clip_start):
         if editorstate.show_trim_view == False:
             return
 
@@ -118,7 +138,8 @@ class MonitorWidget:
         
         self.view = START_TRIM_VIEW
         self.match_frame_surface = None
-
+        self.edit_clip_start_on_tline = edit_clip_start
+        
         self.left_display.set_pref_size(*self.get_match_frame_panel_size())
         self.right_display.set_pref_size(1, 1)
         
@@ -128,14 +149,17 @@ class MonitorWidget:
         self.widget.queue_draw()
         PLAYER().refresh()
 
-        if match_clip == None: # track last end trim and track first start trim
+        if match_clip == None: # track last clip end trim and track first clip start trim
+            self.match_frame = -1
             return
-            
+        
+        self.match_frame = match_clip.clip_out
+        
         match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_out, 
                                                             MATCH_FRAME, self.match_frame_write_complete)
         match_frame_write_thread.start()
 
-    def set_end_trim_view(self, match_clip):
+    def set_end_trim_view(self, match_clip, edit_clip_start):
         if editorstate.show_trim_view == False:
             return
 
@@ -150,7 +174,7 @@ class MonitorWidget:
         
         self.view = END_TRIM_VIEW
         self.match_frame_surface = None
-        
+        self.edit_clip_start_on_tline = edit_clip_start
 
         self.left_display.set_pref_size(1, 1)
         self.right_display.set_pref_size(*self.get_match_frame_panel_size())
@@ -162,8 +186,11 @@ class MonitorWidget:
         PLAYER().refresh()
         
         if match_clip == None: # track last end trim and track first start trim
+            self.match_frame = -1
             return
         
+        self.match_frame = match_clip.clip_in
+                
         match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_in, 
                                                             MATCH_FRAME, self.match_frame_write_complete)
         match_frame_write_thread.start()
@@ -205,14 +232,41 @@ class MonitorWidget:
         cr.rectangle(0, 0, w, h)
         cr.fill()
 
+        # if were minimized, stop
+        if w == 1:
+            return
+
         # Draw active screen indicator
         cr.set_source_rgb(*MONITOR_INDICATOR_COLOR)
+
         if self.view == START_TRIM_VIEW:
             cr.rectangle(w/2, 0, w/2, 4)
+            match_tc_x = (w/2) - 220
+            edit_tc_x = (w/2) + 20
         elif self.view == END_TRIM_VIEW:
             cr.rectangle(0, 0, w/2, 4)
+            match_tc_x = (w/2) + 20
+            edit_tc_x = (w/2) - 220
+
         cr.fill()
         
+        cr.set_source_rgb(1.0, 1.0, 1.0)
+        cr.select_font_face ("monospace",
+                                         cairo.FONT_SLANT_NORMAL,
+                                         cairo.FONT_WEIGHT_BOLD)
+        cr.set_font_size(21)
+
+        if self.match_frame != -1:
+            match_tc = utils.get_tc_string(self.match_frame)
+            cr.move_to(match_tc_x, 50)
+            cr.show_text(match_tc)
+        
+        if self.edit_tline_frame != -1 and self.edit_clip_start_on_tline != -1:
+            clip_frame = self.edit_tline_frame - self.edit_clip_start_on_tline
+            edit_tc = utils.get_tc_string(clip_frame)
+            cr.move_to(edit_tc_x, 50)
+            cr.show_text(edit_tc)
+
     def _draw_black(self, event, cr, allocation):
         x, y, w, h = allocation
 
