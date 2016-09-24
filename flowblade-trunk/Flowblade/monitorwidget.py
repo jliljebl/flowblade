@@ -52,6 +52,7 @@ class MonitorWidget:
         self.match_frame_surface = None
         self.match_frame = -1
         self.edit_tline_frame = -1
+        self.edit_delta = None
         self.edit_clip_start_on_tline = -1
         
         # top row
@@ -87,10 +88,19 @@ class MonitorWidget:
         self.widget.pack_start(self.mid_row , True, True,0)
         self.widget.pack_start(self.bottom_row, False, False,0)
     
-    def set_edit_tline_frame(self, edit_tline_frame):
+    def set_edit_tline_frame(self, edit_tline_frame, edit_delta):
         self.edit_tline_frame = edit_tline_frame
+        self.edit_delta = edit_delta
         self.bottom_edge_panel.queue_draw()
 
+    def one_roll_mouse_done(self, edit_tline_frame, edit_delta):
+        self.edit_tline_frame = edit_tline_frame
+        if self.view == START_TRIM_VIEW: # were computing displayed edit side TC 
+                                         # from current_tline_frame - clip_start_frame and clip_start_frame changes now if START_TRIM_VIEW
+            self.edit_clip_start_on_tline = self.edit_clip_start_on_tline - edit_delta
+        self.edit_delta = None
+        self.bottom_edge_panel.queue_draw()
+        
     def get_monitor(self):
         return self.monitor
 
@@ -236,21 +246,29 @@ class MonitorWidget:
         if w == 1:
             return
 
-        # Draw active screen indicator
+        # Draw active screen indicator and compute tc positions
         cr.set_source_rgb(*MONITOR_INDICATOR_COLOR)
 
+        TC_LEFT_SIDE_PAD = 172
+        TC_RIGHT_SIDE_PAD = 28
+        TC_HEIGHT = 27
+        
+        match_tc_x = 0
+        edit_tc_x = 0
+        delta_frames_x = 0
         if self.view == START_TRIM_VIEW:
             cr.rectangle(w/2, 0, w/2, 4)
-            match_tc_x = (w/2) - 220
-            edit_tc_x = (w/2) + 20
+            match_tc_x = (w/2) - TC_LEFT_SIDE_PAD
+            edit_tc_x = (w/2) + TC_RIGHT_SIDE_PAD
+            delta_frames_x = (w/2) + 12
         elif self.view == END_TRIM_VIEW:
             cr.rectangle(0, 0, w/2, 4)
-            match_tc_x = (w/2) + 20
-            edit_tc_x = (w/2) - 220
-
+            match_tc_x = (w/2) + TC_RIGHT_SIDE_PAD
+            edit_tc_x = (w/2) - TC_LEFT_SIDE_PAD
+            delta_frames_x = (w/2) - 12
         cr.fill()
         
-        cr.set_source_rgb(1.0, 1.0, 1.0)
+        cr.set_source_rgb(0.9, 0.9, 0.9)
         cr.select_font_face ("monospace",
                                          cairo.FONT_SLANT_NORMAL,
                                          cairo.FONT_WEIGHT_BOLD)
@@ -258,17 +276,24 @@ class MonitorWidget:
 
         if self.match_frame != -1:
             match_tc = utils.get_tc_string(self.match_frame)
-            cr.move_to(match_tc_x, 50)
+            cr.move_to(match_tc_x, TC_HEIGHT)
             cr.show_text(match_tc)
         
-        if self.edit_tline_frame != -1 and self.edit_clip_start_on_tline != -1:
+        if self.edit_tline_frame != -1 or self.edit_clip_start_on_tline != -1:
             clip_frame = self.edit_tline_frame - self.edit_clip_start_on_tline
             edit_tc = utils.get_tc_string(clip_frame)
-            cr.move_to(edit_tc_x, 50)
+            cr.move_to(edit_tc_x, TC_HEIGHT)
             cr.show_text(edit_tc)
+        
+        if self.edit_delta != None:
+            cr.move_to(delta_frames_x, TC_HEIGHT + 20)
+            cr.show_text(str(self.edit_delta))
 
+        self._draw_range_mark(cr,(w/2) - 10, 14, -1)
+        self._draw_range_mark(cr,(w/2) + 10, 14, 1)
+        
     def _draw_black(self, event, cr, allocation):
-        x, y, w, h = allocation
+        x, y, w, h = allocation  
 
         # Draw bg
         cr.set_source_rgb(0.0, 0.0, 0.0)
@@ -284,6 +309,15 @@ class MonitorWidget:
         cr.rectangle(0, 0, w, h)
         cr.fill()
     
+    def _draw_range_mark(self, cr, x, y, dir_mult):
+        cr.move_to (x + 8 * dir_mult, y)
+        cr.line_to (x, y)
+        cr.line_to (x, y + 10)
+        cr.line_to (x + 8 * dir_mult, y + 10)
+        cr.set_source_rgb(0.65, 0.65, 0.7)
+        cr.set_line_width(4.0)
+        cr.stroke()
+        
     def get_match_frame_panel_size(self):
         monitor_alloc = self.widget.get_allocation()
         inv_profile_screen_ratio = float(PROJECT().profile.height()) / float(PROJECT().profile.width())

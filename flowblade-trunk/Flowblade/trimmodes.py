@@ -426,7 +426,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         gui.monitor_widget.set_start_trim_view(edit_data["from_clip"], clip_start)
     else:
         gui.monitor_widget.set_end_trim_view(edit_data["to_clip"], clip_start)
-    gui.monitor_widget.set_edit_tline_frame(current_frame)
+    gui.monitor_widget.set_edit_tline_frame(current_frame, current_frame - edit_frame)
 
     # Set interactive trimview on hidden track
     if clip.media_type != appconsts.PATTERN_PRODUCER:
@@ -505,7 +505,7 @@ def oneroll_trim_move(x, y, frame, state):
     global edit_data
     frame = _legalize_one_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
-    gui.monitor_widget.set_edit_tline_frame(frame)
+    gui.monitor_widget.set_edit_tline_frame(frame, frame - edit_data["edit_frame"])
 
     PLAYER().seek_frame(frame)
     
@@ -523,7 +523,7 @@ def oneroll_trim_release(x, y, frame, state):
         gui.tline_canvas.widget.queue_draw()
         return
     
-    gui.monitor_widget.set_edit_tline_frame(frame)
+    gui.monitor_widget.one_roll_mouse_done(edit_data["edit_frame"], frame - edit_data["edit_frame"])
     
     _do_one_roll_trim_edit(frame)
 
