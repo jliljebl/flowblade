@@ -708,6 +708,17 @@ def set_tworoll_mode(track, current_frame = -1):
     else:
         clip = edit_data["from_clip"]
         clip_start = trim_limits["from_start"]
+
+    # Init two roll trim view layout
+    if edit_data["to_side_being_edited"]:
+        print "to side"
+        #gui.monitor_widget.set_roll_trim_right_active_view(edit_data["from_clip"], clip_start)
+    else:
+        print "from side"
+        #gui.monitor_widget.set_end_trim_view(edit_data["to_clip"], clip_start)
+    #gui.monitor_widget.set_edit_tline_frame(current_frame, current_frame - edit_frame)
+
+    # Set interactive trimview on hidden track
     if clip.media_type != appconsts.PATTERN_PRODUCER:
         current_sequence().display_trim_clip(clip.path, clip_start) # File producer
     else:
@@ -851,7 +862,7 @@ def two_rolledit_done(was_redo, cut_frame, delta, track, to_side_being_edited):
     # Calculated frame always reinits in to side, so we need to 
     # step one back to reinit on from side if we did the edit from that side
     if to_side_being_edited != True:
-        frame = frame - 1
+        frame = frame - 2
         if frame < 0:
             frame = 0
 

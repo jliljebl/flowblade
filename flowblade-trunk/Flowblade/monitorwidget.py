@@ -35,6 +35,8 @@ from editorstate import PROJECT
 DEFAULT_VIEW = 0
 START_TRIM_VIEW = 1
 END_TRIM_VIEW = 2
+ROLL_TRIM_RIGHT_ACTIVE_VIEW = 3
+ROLL_TRIM_LEFT_ACTIVE_VIEW = 4
 
 MATCH_FRAME = "match_frame.png"
 
@@ -137,9 +139,9 @@ class MonitorWidget:
         if editorstate.show_trim_view == False:
             return
 
-        if self.view == START_TRIM_VIEW:
+        #if self.view == START_TRIM_VIEW:
             # get trim match image
-            return
+            #return
 
         # Refreshing while rendering overwrites file on disk and loses 
         # previous rendered data. 
@@ -173,9 +175,9 @@ class MonitorWidget:
         if editorstate.show_trim_view == False:
             return
 
-        if self.view == END_TRIM_VIEW:
+        #if self.view == END_TRIM_VIEW:
             # get trim match image
-            return
+            #return
 
         # Refreshing while rendering overwrites file on disk and loses 
         # previous rendered data. 
@@ -205,6 +207,44 @@ class MonitorWidget:
                                                             MATCH_FRAME, self.match_frame_write_complete)
         match_frame_write_thread.start()
 
+    def set_roll_trim_right_active_view(self, match_clip, edit_clip_start):
+        if editorstate.show_trim_view == False:
+            return
+
+        #if self.view == ROLL_TRIM_RIGHT_ACTIVE_VIEW:
+            # get trim match image
+            #return
+
+        # Refreshing while rendering overwrites file on disk and loses 
+        # previous rendered data. 
+        if PLAYER().is_rendering:
+            return
+        
+        self.view = ROLL_TRIM_RIGHT_ACTIVE_VIEW
+        self.match_frame_surface = None
+        self.edit_clip_start_on_tline = edit_clip_start
+
+        self.left_display.set_pref_size(1, 1)
+        self.right_display.set_pref_size(*self.get_match_frame_panel_size())
+        
+        self.top_edge_panel.set_pref_size(*self.get_edge_row_panel_size())
+        self.bottom_edge_panel.set_pref_size(*self.get_edge_row_panel_size())
+        
+        self.widget.queue_draw()
+        PLAYER().refresh()
+        
+        if match_clip == None: # track last end trim and track first start trim
+            self.match_frame = -1
+            return
+        
+        self.match_frame = match_clip.clip_in
+        
+        print "set_roll_trim_right_active_view"
+                
+        match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_in, 
+                                                            MATCH_FRAME, self.match_frame_write_complete)
+        match_frame_write_thread.start()
+        
     def _draw_match_frame(self, event, cr, allocation):
         x, y, w, h = allocation
 
@@ -246,7 +286,7 @@ class MonitorWidget:
         if w == 1:
             return
 
-        # Draw active screen indicator and compute tc positions
+        # Draw active screen indicator and compute tc and frame delta positions
         cr.set_source_rgb(*MONITOR_INDICATOR_COLOR)
 
         TC_LEFT_SIDE_PAD = 172
@@ -260,18 +300,19 @@ class MonitorWidget:
             cr.rectangle(w/2, 0, w/2, 4)
             match_tc_x = (w/2) - TC_LEFT_SIDE_PAD
             edit_tc_x = (w/2) + TC_RIGHT_SIDE_PAD
-            delta_frames_x = (w/2) + 12
+            delta_frames_x = (w/2) + 8
         elif self.view == END_TRIM_VIEW:
             cr.rectangle(0, 0, w/2, 4)
             match_tc_x = (w/2) + TC_RIGHT_SIDE_PAD
             edit_tc_x = (w/2) - TC_LEFT_SIDE_PAD
-            delta_frames_x = (w/2) - 12
+            delta_frames_x = (w/2) - 20
+            # move left for every additional digit after ones
+            CHAR_WIDTH = 12
+            delta_frames_x = delta_frames_x - ((len(str(self.edit_delta)) - 1) * CHAR_WIDTH)
         cr.fill()
         
         cr.set_source_rgb(0.9, 0.9, 0.9)
-        cr.select_font_face ("monospace",
-                                         cairo.FONT_SLANT_NORMAL,
-                                         cairo.FONT_WEIGHT_BOLD)
+        cr.select_font_face ("monospace", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
         cr.set_font_size(21)
 
         if self.match_frame != -1:
@@ -286,7 +327,7 @@ class MonitorWidget:
             cr.show_text(edit_tc)
         
         if self.edit_delta != None:
-            cr.move_to(delta_frames_x, TC_HEIGHT + 20)
+            cr.move_to(delta_frames_x, TC_HEIGHT + 30)
             cr.show_text(str(self.edit_delta))
 
         self._draw_range_mark(cr,(w/2) - 10, 14, -1)
