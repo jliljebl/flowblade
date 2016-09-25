@@ -38,6 +38,10 @@ END_TRIM_VIEW = 2
 ROLL_TRIM_RIGHT_ACTIVE_VIEW = 3
 ROLL_TRIM_LEFT_ACTIVE_VIEW = 4
 
+TC_LEFT_SIDE_PAD = 172
+TC_RIGHT_SIDE_PAD = 28
+TC_HEIGHT = 27
+        
 MATCH_FRAME = "match_frame.png"
 
 MONITOR_INDICATOR_COLOR = utils.get_cairo_color_tuple_255_rgb(71, 131, 169)
@@ -89,7 +93,12 @@ class MonitorWidget:
         self.widget.pack_start(self.top_row, False, False,0)
         self.widget.pack_start(self.mid_row , True, True,0)
         self.widget.pack_start(self.bottom_row, False, False,0)
-    
+
+    # ------------------------------------------------------------------ INTERFACE
+    def get_monitor(self):
+        return self.monitor
+        
+    # ----------------------------------------------------------------- MOUSE EVENTS
     def set_edit_tline_frame(self, edit_tline_frame, edit_delta):
         self.edit_tline_frame = edit_tline_frame
         self.edit_delta = edit_delta
@@ -102,10 +111,8 @@ class MonitorWidget:
             self.edit_clip_start_on_tline = self.edit_clip_start_on_tline - edit_delta
         self.edit_delta = None
         self.bottom_edge_panel.queue_draw()
-        
-    def get_monitor(self):
-        return self.monitor
 
+    # ------------------------------------------------------------------ SET VIEW TYPE
     def set_default_view(self):
         if self.view == DEFAULT_VIEW:
             return
@@ -224,8 +231,8 @@ class MonitorWidget:
         self.match_frame_surface = None
         self.edit_clip_start_on_tline = edit_clip_start
 
-        self.left_display.set_pref_size(1, 1)
-        self.right_display.set_pref_size(*self.get_match_frame_panel_size())
+        self.left_display.set_pref_size(*self.get_match_frame_panel_size())
+        self.right_display.set_pref_size(1,1)
         
         self.top_edge_panel.set_pref_size(*self.get_edge_row_panel_size())
         self.bottom_edge_panel.set_pref_size(*self.get_edge_row_panel_size())
@@ -245,6 +252,47 @@ class MonitorWidget:
                                                             MATCH_FRAME, self.match_frame_write_complete)
         match_frame_write_thread.start()
         
+    def get_match_frame_panel_size(self):
+        monitor_alloc = self.widget.get_allocation()
+        inv_profile_screen_ratio = float(PROJECT().profile.height()) / float(PROJECT().profile.width())
+        return (int(monitor_alloc.width/2), int(inv_profile_screen_ratio * monitor_alloc.width/2))
+
+    def get_edge_row_panel_size(self):
+        monitor_alloc = self.widget.get_allocation()
+        inv_profile_screen_ratio = float(PROJECT().profile.height()) / float(PROJECT().profile.width())
+        screen_height = int(inv_profile_screen_ratio * monitor_alloc.width/2)
+        edge_row_height = (monitor_alloc.height - screen_height)/2
+        return (monitor_alloc.width, edge_row_height)
+    
+    # ------------------------------------------------------------------ MATCH FRAME
+    def match_frame_write_complete(self, frame_name):
+        self.match_frame_surface = self.create_match_frame_image_surface(frame_name)
+        
+        Gdk.threads_enter()
+        self.left_display.queue_draw()
+        self.right_display.queue_draw()
+        Gdk.threads_leave()
+        
+    def create_match_frame_image_surface(self, frame_name):
+        # Create non-scaled surface
+        matchframe_path = utils.get_hidden_user_dir_path() + appconsts.TRIM_VIEW_DIR + "/" + frame_name 
+        
+        surface = cairo.ImageSurface.create_from_png(matchframe_path)
+
+        # Create and return scaled surface
+        profile_screen_ratio = float(PROJECT().profile.width()) / float(PROJECT().profile.height())
+        match_frame_width, match_frame_height = self.get_match_frame_panel_size()
+        
+        scaled_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(match_frame_width), int(match_frame_height))
+        cr = cairo.Context(scaled_surface)
+        cr.scale(float(match_frame_width) / float(surface.get_width()), float(match_frame_height) / float(surface.get_height()))
+
+        cr.set_source_surface(surface, 0, 0)
+        cr.paint()
+        
+        return scaled_surface
+        
+    # ------------------------------------------------------------------ DRAW
     def _draw_match_frame(self, event, cr, allocation):
         x, y, w, h = allocation
 
@@ -286,13 +334,17 @@ class MonitorWidget:
         if w == 1:
             return
 
+        if self.view == START_TRIM_VIEW or self.view == END_TRIM_VIEW:
+            self._draw_bottom_panel_one_roll(event, cr, allocation)
+        elif self.view == ROLL_TRIM_RIGHT_ACTIVE_VIEW or self.view == ROLL_TRIM_LEFT_ACTIVE_VIEW:
+            self._draw_bottom_panel_two_roll(event, cr, allocation)
+            
+    def _draw_bottom_panel_one_roll(self, event, cr, allocation):
+        x, y, w, h = allocation
+
         # Draw active screen indicator and compute tc and frame delta positions
         cr.set_source_rgb(*MONITOR_INDICATOR_COLOR)
 
-        TC_LEFT_SIDE_PAD = 172
-        TC_RIGHT_SIDE_PAD = 28
-        TC_HEIGHT = 27
-        
         match_tc_x = 0
         edit_tc_x = 0
         delta_frames_x = 0
@@ -302,6 +354,53 @@ class MonitorWidget:
             edit_tc_x = (w/2) + TC_RIGHT_SIDE_PAD
             delta_frames_x = (w/2) + 8
         elif self.view == END_TRIM_VIEW:
+            cr.rectangle(0, 0, w/2, 4)
+            match_tc_x = (w/2) + TC_RIGHT_SIDE_PAD
+            edit_tc_x = (w/2) - TC_LEFT_SIDE_PAD
+            delta_frames_x = (w/2) - 20
+            # move left for every additional digit after ones
+            CHAR_WIDTH = 12
+            delta_frames_x = delta_frames_x - ((len(str(self.edit_delta)) - 1) * CHAR_WIDTH)
+        cr.fill()
+        
+        cr.set_source_rgb(0.9, 0.9, 0.9)
+        cr.select_font_face ("monospace", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        cr.set_font_size(21)
+
+        if self.match_frame != -1:
+            match_tc = utils.get_tc_string(self.match_frame)
+            cr.move_to(match_tc_x, TC_HEIGHT)
+            cr.show_text(match_tc)
+        
+        if self.edit_tline_frame != -1 or self.edit_clip_start_on_tline != -1:
+            clip_frame = self.edit_tline_frame - self.edit_clip_start_on_tline
+            edit_tc = utils.get_tc_string(clip_frame)
+            cr.move_to(edit_tc_x, TC_HEIGHT)
+            cr.show_text(edit_tc)
+        
+        if self.edit_delta != None:
+            cr.move_to(delta_frames_x, TC_HEIGHT + 30)
+            cr.show_text(str(self.edit_delta))
+
+        self._draw_range_mark(cr,(w/2) - 10, 14, -1)
+        self._draw_range_mark(cr,(w/2) + 10, 14, 1)
+
+    def _draw_bottom_panel_two_roll(self, event, cr, allocation):
+        print "ttttttttt"
+        x, y, w, h = allocation
+
+        # Draw active screen indicator and compute tc and frame delta positions
+        cr.set_source_rgb(*MONITOR_INDICATOR_COLOR)
+       
+        match_tc_x = 0
+        edit_tc_x = 0
+        delta_frames_x = 0
+        if self.view == ROLL_TRIM_RIGHT_ACTIVE_VIEW:
+            cr.rectangle(w/2, 0, w/2, 4)
+            match_tc_x = (w/2) - TC_LEFT_SIDE_PAD
+            edit_tc_x = (w/2) + TC_RIGHT_SIDE_PAD
+            delta_frames_x = (w/2) + 8
+        elif self.view == ROLL_TRIM_LEFT_ACTIVE_VIEW:
             cr.rectangle(0, 0, w/2, 4)
             match_tc_x = (w/2) + TC_RIGHT_SIDE_PAD
             edit_tc_x = (w/2) - TC_LEFT_SIDE_PAD
@@ -359,44 +458,6 @@ class MonitorWidget:
         cr.set_line_width(4.0)
         cr.stroke()
         
-    def get_match_frame_panel_size(self):
-        monitor_alloc = self.widget.get_allocation()
-        inv_profile_screen_ratio = float(PROJECT().profile.height()) / float(PROJECT().profile.width())
-        return (int(monitor_alloc.width/2), int(inv_profile_screen_ratio * monitor_alloc.width/2))
-
-    def get_edge_row_panel_size(self):
-        monitor_alloc = self.widget.get_allocation()
-        inv_profile_screen_ratio = float(PROJECT().profile.height()) / float(PROJECT().profile.width())
-        screen_height = int(inv_profile_screen_ratio * monitor_alloc.width/2)
-        edge_row_height = (monitor_alloc.height - screen_height)/2
-        return (monitor_alloc.width, edge_row_height)
-        
-    def match_frame_write_complete(self, frame_name):
-        self.match_frame_surface = self.create_match_frame_image_surface(frame_name)
-        
-        Gdk.threads_enter()
-        self.left_display.queue_draw()
-        self.right_display.queue_draw()
-        Gdk.threads_leave()
-        
-    def create_match_frame_image_surface(self, frame_name):
-        # Create non-scaled surface
-        matchframe_path = utils.get_hidden_user_dir_path() + appconsts.TRIM_VIEW_DIR + "/" + frame_name 
-        
-        surface = cairo.ImageSurface.create_from_png(matchframe_path)
-
-        # Create and return scaled surface
-        profile_screen_ratio = float(PROJECT().profile.width()) / float(PROJECT().profile.height())
-        match_frame_width, match_frame_height = self.get_match_frame_panel_size()
-        
-        scaled_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(match_frame_width), int(match_frame_height))
-        cr = cairo.Context(scaled_surface)
-        cr.scale(float(match_frame_width) / float(surface.get_width()), float(match_frame_height) / float(surface.get_height()))
-
-        cr.set_source_surface(surface, 0, 0)
-        cr.paint()
-        
-        return scaled_surface
         
 
 class MonitorMatchFrameWriter(threading.Thread):

@@ -712,11 +712,11 @@ def set_tworoll_mode(track, current_frame = -1):
     # Init two roll trim view layout
     if edit_data["to_side_being_edited"]:
         print "to side"
-        #gui.monitor_widget.set_roll_trim_right_active_view(edit_data["from_clip"], clip_start)
+        gui.monitor_widget.set_roll_trim_right_active_view(edit_data["from_clip"], clip_start)
     else:
         print "from side"
         #gui.monitor_widget.set_end_trim_view(edit_data["to_clip"], clip_start)
-    #gui.monitor_widget.set_edit_tline_frame(current_frame, current_frame - edit_frame)
+    gui.monitor_widget.set_edit_tline_frame(current_frame, current_frame - edit_frame)
 
     # Set interactive trimview on hidden track
     if clip.media_type != appconsts.PATTERN_PRODUCER:
@@ -785,6 +785,8 @@ def tworoll_trim_move(x, y, frame, state):
     frame = _legalize_two_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
 
+    gui.monitor_widget.set_edit_tline_frame(frame, frame - edit_data["edit_frame"])
+    
     PLAYER().seek_frame(frame)
     
 def tworoll_trim_release(x, y, frame, state):
