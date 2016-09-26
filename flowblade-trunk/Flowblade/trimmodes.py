@@ -727,7 +727,7 @@ def set_tworoll_mode(track, current_frame = -1):
     gui.monitor_widget.set_edit_tline_frame(current_frame + current_frame_trim_view_fix, 
                                             current_frame + current_frame_trim_view_fix - edit_frame)
 
-    # Set interactive trimview on hidden track
+    # Set interactive trim view clip on hidden track
     if clip.media_type != appconsts.PATTERN_PRODUCER:
         current_sequence().display_trim_clip(clip.path, clip_start) # File producer
     else:
@@ -943,10 +943,10 @@ def _get_two_roll_first_and_last():
                  
     return (first, last)
 
-#---------------------------------------- SLIDE ROLL TRIM EVENTS
-def set_slide_mode(track, current_frame):
+#---------------------------------------- SLIP ROLL TRIM EVENTS
+def set_slide_mode(track, current_frame): # we need to change to to correct one some time
     """
-    Sets two roll mode
+    Sets SLIP tool mode
     """
     if track == None:
         return None
@@ -985,10 +985,25 @@ def set_slide_mode(track, current_frame):
     clip = edit_data["clip"]
     clip_start = 0 # we'll calculate the offset from actual position of clip on timeline to display the frame displayed after sliding
 
+
+    # Init two roll trim view layout
+    if not start_frame_being_viewed:
+        print "#################################"
+        gui.monitor_widget.set_slip_trim_right_active_view(edit_data["clip"], clip_start)
+        gui.monitor_widget.set_edit_tline_frame(clip.clip_out, 
+                                                clip.clip_out)
+    else:
+        pass
+        #gui.monitor_widget.set_roll_trim_left_active_view(edit_data["to_clip"], clip_start)
+        #gui.monitor_widget.set_edit_tline_frame(current_frame + current_frame_trim_view_fix, 
+        #current_frame + current_frame_trim_view_fix - edit_frame)
+    
+    # Set interactive trim view clip on hidden track
     if clip.media_type != appconsts.PATTERN_PRODUCER:
         current_sequence().display_trim_clip(clip.path, clip_start) # File producer
     else:
         current_sequence().display_trim_clip(None, clip_start, clip.create_data) # pattern producer
+        
     if start_frame_being_viewed:
         PLAYER().seek_frame(clip.clip_in)
     else:

@@ -39,6 +39,8 @@ START_TRIM_VIEW = 1
 END_TRIM_VIEW = 2
 ROLL_TRIM_RIGHT_ACTIVE_VIEW = 3
 ROLL_TRIM_LEFT_ACTIVE_VIEW = 4
+SLIP_TRIM_RIGHT_ACTIVE_VIEW = 5
+SLIP_TRIM_LEFT_ACTIVE_VIEW = 6
 
 TC_LEFT_SIDE_PAD = 172
 TC_RIGHT_SIDE_PAD = 28
@@ -161,11 +163,8 @@ class MonitorWidget:
         self.match_frame_surface = None
         self.edit_clip_start_on_tline = edit_clip_start
         
-        self.left_display.set_pref_size(*self.get_match_frame_panel_size())
-        self.right_display.set_pref_size(1, 1)
-        
-        self.top_edge_panel.set_pref_size(*self.get_edge_row_panel_size())
-        self.bottom_edge_panel.set_pref_size(*self.get_edge_row_panel_size())
+        self._layout_match_frame_left()
+        self._layout_expand_edge_panels()
         
         self.widget.queue_draw()
         PLAYER().refresh()
@@ -197,9 +196,7 @@ class MonitorWidget:
         self.match_frame_surface = None
         self.edit_clip_start_on_tline = edit_clip_start
 
-        self.left_display.set_pref_size(1, 1)
-        self.right_display.set_pref_size(*self.get_match_frame_panel_size())
-        
+        self._layout_match_frame_right()        
         self._layout_expand_edge_panels()
         
         self.widget.queue_draw()
@@ -232,9 +229,7 @@ class MonitorWidget:
         self.match_frame_surface = None
         self.edit_clip_start_on_tline = edit_clip_start
 
-        self.left_display.set_pref_size(*self.get_match_frame_panel_size())
-        self.right_display.set_pref_size(1,1)
-        
+        self._layout_match_frame_left()
         self._layout_expand_edge_panels()
         
         self.widget.queue_draw()
@@ -267,9 +262,7 @@ class MonitorWidget:
         self.match_frame_surface = None
         self.edit_clip_start_on_tline = edit_clip_start
 
-        self.left_display.set_pref_size(1, 1)
-        self.right_display.set_pref_size(*self.get_match_frame_panel_size())
-        
+        self._layout_match_frame_right()        
         self._layout_expand_edge_panels()
         
         self.widget.queue_draw()
@@ -284,12 +277,56 @@ class MonitorWidget:
         match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_in, 
                                                             MATCH_FRAME, self.match_frame_write_complete)
         match_frame_write_thread.start()
+
+    def set_slip_trim_right_active_view(self, match_clip, edit_clip_start):
+        print "iiiiiiiiiiiiiiiiiiiii"
+        if editorstate.show_trim_view == False:
+            return
+
+        #if self.view == ROLL_TRIM_RIGHT_ACTIVE_VIEW:
+            # get trim match image
+            #return
+
+        # Refreshing while rendering overwrites file on disk and loses 
+        # previous rendered data. 
+        if PLAYER().is_rendering:
+            return
         
+        self.view = SLIP_TRIM_RIGHT_ACTIVE_VIEW
+        self.match_frame_surface = None
+        self.edit_clip_start_on_tline = edit_clip_start
+
+        self._layout_match_frame_left()
+        self._layout_expand_edge_panels()
+        
+        self.widget.queue_draw()
+        PLAYER().refresh()
+        
+        if match_clip == None:
+            print "kkkkkkkkkkkkkkkkk"
+            self.match_frame = -1
+            return
+        
+        self.match_frame = match_clip.clip_in
+        
+        print match_clip.clip_in
+        match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_in, 
+                                                            MATCH_FRAME, self.match_frame_write_complete)
+        match_frame_write_thread.start()
+
     # ------------------------------------------------------------------ LAYOUT
     def _layout_expand_edge_panels(self):
         self.top_edge_panel.set_pref_size(*self.get_edge_row_panel_size())
         self.bottom_edge_panel.set_pref_size(*self.get_edge_row_panel_size())
  
+    def _layout_match_frame_left(self):
+        self.left_display.set_pref_size(*self.get_match_frame_panel_size())
+        self.right_display.set_pref_size(1,1)
+
+    def _layout_match_frame_right(self):
+        self.left_display.set_pref_size(1,1)
+        self.right_display.set_pref_size(*self.get_match_frame_panel_size())
+
     def get_edge_row_panel_size(self):
         monitor_alloc = self.widget.get_allocation()
         inv_profile_screen_ratio = float(PROJECT().profile.height()) / float(PROJECT().profile.width())
