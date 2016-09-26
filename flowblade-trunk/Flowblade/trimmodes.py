@@ -523,7 +523,7 @@ def oneroll_trim_release(x, y, frame, state):
         gui.tline_canvas.widget.queue_draw()
         return
     
-    gui.monitor_widget.one_roll_mouse_done(edit_data["edit_frame"], frame - edit_data["edit_frame"])
+    gui.monitor_widget.one_roll_mouse_release(edit_data["edit_frame"], frame - edit_data["edit_frame"])
     
     _do_one_roll_trim_edit(frame)
 
@@ -650,8 +650,10 @@ def set_tworoll_mode(track, current_frame = -1):
     if track == None:
         return False
     
+    current_frame_trim_view_fix = 0
     if current_frame == -1:
         current_frame = PLAYER().producer.frame() + 1 # +1 because cut frame selects previous clip
+        current_frame_trim_view_fix = -1 # when initing trim view the +1 for current frame needs to be undone
 
     if current_frame >= track.get_length():
         return False
@@ -711,12 +713,11 @@ def set_tworoll_mode(track, current_frame = -1):
 
     # Init two roll trim view layout
     if edit_data["to_side_being_edited"]:
-        print "to side"
         gui.monitor_widget.set_roll_trim_right_active_view(edit_data["from_clip"], clip_start)
     else:
-        print "from side"
-        #gui.monitor_widget.set_end_trim_view(edit_data["to_clip"], clip_start)
-    gui.monitor_widget.set_edit_tline_frame(current_frame, current_frame - edit_frame)
+        gui.monitor_widget.set_roll_trim_left_active_view(edit_data["to_clip"], clip_start)
+    gui.monitor_widget.set_edit_tline_frame(current_frame + current_frame_trim_view_fix, 
+                                            current_frame + current_frame_trim_view_fix - edit_frame)
 
     # Set interactive trimview on hidden track
     if clip.media_type != appconsts.PATTERN_PRODUCER:
@@ -786,7 +787,8 @@ def tworoll_trim_move(x, y, frame, state):
     edit_data["selected_frame"] = frame
 
     gui.monitor_widget.set_edit_tline_frame(frame, frame - edit_data["edit_frame"])
-    
+    gui.monitor_widget.update_roll_match_frame()
+
     PLAYER().seek_frame(frame)
     
 def tworoll_trim_release(x, y, frame, state):
