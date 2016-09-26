@@ -245,9 +245,7 @@ class MonitorWidget:
             return
         
         self.match_frame = match_clip.clip_out
-        
-        print "set_roll_trim_right_active_view"
-                
+                       
         match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_out, 
                                                             MATCH_FRAME, self.match_frame_write_complete)
         match_frame_write_thread.start()
@@ -282,8 +280,6 @@ class MonitorWidget:
             return
         
         self.match_frame = match_clip.clip_in
-        
-        print "set_roll_trim_right_active_view"
                 
         match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_in, 
                                                             MATCH_FRAME, self.match_frame_write_complete)
@@ -338,57 +334,11 @@ class MonitorWidget:
             return
         _last_render_time = current_time
         _frame_write_on = True
-        """
-        
-        #frame_update_thread = MatchFrameUpdate(self.match_frame + self.edit_delta, MATCH_FRAME, self._roll_frame_update_done)
-        #frame_update_thread.start()
-
-
-        
+        """       
         match_frame = self.match_frame + self.edit_delta
 
         match_surface_creator = MatchSurfaceCreator(match_frame)
         match_surface_creator.start()
-        
-        """
-        #_producer.set_speed(0)
-        #_producer.seek(self.match_frame + self.edit_delta)
-        print "frame number:", match_frame
-        
-        image_producer = _producer.cut(int(match_frame), int(match_frame))
-        print _producer.frame()
-        
-        image_producer.set_speed(0)
-        image_producer.seek(0)
-        
-        #while _producer.frame() != self.match_frame + self.edit_delta:
-        #    print "wait"
-        #    time.sleep(0.1)
-        
-        frame = image_producer.get_frame()
-        # And make sure we deinterlace if input is interlaced
-        frame.set("consumer_deinterlace", 1)
-
-        # Get MLT rgb frame data
-        size = self.get_match_frame_panel_size()
-
-        mlt_rgb = frame.get_image(mlt.mlt_image_rgb24a, *size) 
-   
-        # Create cairo surface
-        cairo_buf = self._get_cairo_buf_from_mlt_rgb(mlt_rgb, *size)
-        img_w, img_h = size
-        stride = cairo.ImageSurface.format_stride_for_width(cairo.FORMAT_RGB24, img_w)
-        surface = cairo.ImageSurface.create_for_data(cairo_buf, cairo.FORMAT_RGB24, img_w, img_h, stride)
-        if surface == None:
-            print "surface"
-        self.match_frame_surface = surface
-        
-        #Gdk.threads_enter()
-        self.left_display.queue_draw()
-        self.right_display.queue_draw()
-        #Gdk.threads_leave()
-        print "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr"
-        """
         
     def _roll_frame_update_done(self):
         print "_roll_frame_update_done"
@@ -448,7 +398,6 @@ class MonitorWidget:
             cr.fill()
         else:
             # Draw match frame
-            print "Draw match frame"
             cr.set_source_surface(self.match_frame_surface, 0, 0)
             cr.paint()
 
@@ -465,7 +414,6 @@ class MonitorWidget:
             cr.fill()
         else:
             # Draw match frame
-            print "Draw match frame"
             cr.set_source_surface(self.match_frame_surface, 0, 0)
             cr.paint()
             
@@ -641,11 +589,10 @@ class MonitorMatchFrameWriter(threading.Thread):
         consumer.set("vcodec", "png")
 
         # Create one frame producer
-        start = time.time()
         producer = mlt.Producer(PROJECT().profile, str(self.clip_path))
         producer.set("mlt_service", "avformat-novalidate")
         producer = producer.cut(int(self.clip_frame), int(self.clip_frame))
-        print "prodtime:", time.time() - start
+
         # Delete match frame
         try:
             os.remove(matchframe_path)
@@ -671,74 +618,22 @@ class MonitorMatchFrameWriter(threading.Thread):
         self.completion_callback(self.frame_name)
 
 
-
-class MatchFrameUpdate(threading.Thread):
-    def __init__(self, clip_frame, frame_name, completion_callback):
-        self.clip_frame = clip_frame
-        self.completion_callback = completion_callback
-        self.frame_name = frame_name
-        threading.Thread.__init__(self)
-        
-    def run(self):
-        """
-        Writes thumbnail image from file producer
-        """
-        # Create consumer
-        matchframe_path = utils.get_hidden_user_dir_path() + appconsts.TRIM_VIEW_DIR + "/" + self.frame_name
-
-        print "ppppppppppppppppp", matchframe_path
-        
-        # Create one frame producer
-        frame_producer = _producer.cut(int(self.clip_frame), int(self.clip_frame))
-
-        # Delete match frame
-        try:
-            os.remove(matchframe_path)
-        except:
-            # This fails when done first time ever  
-            pass
-
-        # Connect and write image
-        _consumer.connect(frame_producer)
-        _consumer.run()
-        
-        # Wait until new file exists
-        while os.path.isfile(matchframe_path) != True:
-            time.sleep(0.1)
-        
-        _consumer.disconnect_producer(0)
-
-        # Do completion callback
-        self.completion_callback()
-        
-
 class MatchSurfaceCreator(threading.Thread):
     def __init__(self, match_frame):
         self.match_frame = match_frame
         threading.Thread.__init__(self)
         
     def run(self):
-
-        #_producer.set_speed(0)
-        #_producer.seek(self.match_frame + self.edit_delta)
-        print "run((), frame number:", self.match_frame
-        
+        # Create new producer to get mlt frame data
         image_producer = _producer.cut(int(self.match_frame), int(self.match_frame))
-        
         image_producer.set_speed(0)
         image_producer.seek(0)
         
-        #while _producer.frame() != self.match_frame + self.edit_delta:
-        #    print "wait"
-        #    time.sleep(0.1)
-        
-        frame = image_producer.get_frame()
-        # And make sure we deinterlace if input is interlaced
-        frame.set("consumer_deinterlace", 1)
-
         # Get MLT rgb frame data
+        frame = image_producer.get_frame()
+        # And make sureto deinterlace if input is interlaced
+        frame.set("consumer_deinterlace", 1)
         size = _widget.get_match_frame_panel_size()
-
         mlt_rgb = frame.get_image(mlt.mlt_image_rgb24a, *size) 
    
         # Create cairo surface
@@ -746,10 +641,10 @@ class MatchSurfaceCreator(threading.Thread):
         img_w, img_h = size
         stride = cairo.ImageSurface.format_stride_for_width(cairo.FORMAT_RGB24, img_w)
         surface = cairo.ImageSurface.create_for_data(cairo_buf, cairo.FORMAT_RGB24, img_w, img_h, stride)
-        if surface == None:
-            print "surface"
+        
         _widget.match_frame_surface = surface
         
+        # Repaint
         Gdk.threads_enter()
         _widget.left_display.queue_draw()
         _widget.right_display.queue_draw()

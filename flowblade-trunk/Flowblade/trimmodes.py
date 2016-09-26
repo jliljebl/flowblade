@@ -288,6 +288,7 @@ def _one_roll_trim_left(delta):
     frame = edit_data["selected_frame"] - delta
     frame = _legalize_one_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
+    gui.monitor_widget.set_edit_tline_frame(frame, frame - edit_data["edit_frame"])
     
     PLAYER().seek_frame(frame)
     
@@ -297,6 +298,7 @@ def _one_roll_trim_right(delta):
     frame = edit_data["selected_frame"] + delta
     frame = _legalize_one_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
+    gui.monitor_widget.set_edit_tline_frame(frame, frame - edit_data["edit_frame"])
     
     PLAYER().seek_frame(frame)
     
@@ -310,6 +312,9 @@ def _tworoll_trim_left(delta):
     frame = _legalize_two_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
 
+    gui.monitor_widget.set_edit_tline_frame(frame, frame - edit_data["edit_frame"])
+    gui.monitor_widget.update_roll_match_frame()
+    
     PLAYER().seek_frame(frame)
 
 def _tworoll_trim_right(delta):
@@ -318,6 +323,9 @@ def _tworoll_trim_right(delta):
     frame = _legalize_two_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
 
+    gui.monitor_widget.set_edit_tline_frame(frame, frame - edit_data["edit_frame"])
+    gui.monitor_widget.update_roll_match_frame()
+    
     PLAYER().seek_frame(frame)
 
 def _tworoll_enter_edit():
@@ -809,6 +817,10 @@ def tworoll_trim_release(x, y, frame, state):
      
     frame = _legalize_two_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
+
+    gui.monitor_widget.set_edit_tline_frame(frame, frame - edit_data["edit_frame"])
+    gui.monitor_widget.update_roll_match_frame()
+    
     _do_two_roll_edit(frame)
 
 def tworoll_play_pressed():
