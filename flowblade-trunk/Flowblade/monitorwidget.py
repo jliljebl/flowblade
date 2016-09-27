@@ -73,7 +73,8 @@ class MonitorWidget:
         self.edit_tline_frame = -1
         self.edit_delta = None
         self.edit_clip_start_on_tline = -1
-        
+        self.slip_clip_length = -1
+
         # top row
         self.top_row = Gtk.HBox()
         
@@ -273,13 +274,12 @@ class MonitorWidget:
             return
         
         self.match_frame = match_clip.clip_in
-                
+        
         match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_in, 
                                                             MATCH_FRAME, self.match_frame_write_complete)
         match_frame_write_thread.start()
 
     def set_slip_trim_right_active_view(self, match_clip, edit_clip_start):
-        print "iiiiiiiiiiiiiiiiiiiii"
         if editorstate.show_trim_view == False:
             return
 
@@ -292,9 +292,12 @@ class MonitorWidget:
         if PLAYER().is_rendering:
             return
         
+        print "RIGHT ACTIVE"
+        
         self.view = SLIP_TRIM_RIGHT_ACTIVE_VIEW
         self.match_frame_surface = None
         self.edit_clip_start_on_tline = edit_clip_start
+        self.slip_clip_length = self._get_media_length(match_clip)
 
         self._layout_match_frame_left()
         self._layout_expand_edge_panels()
@@ -303,16 +306,55 @@ class MonitorWidget:
         PLAYER().refresh()
         
         if match_clip == None:
-            print "kkkkkkkkkkkkkkkkk"
             self.match_frame = -1
             return
         
         self.match_frame = match_clip.clip_in
+        self.edit_delta = 0
+        print self.match_frame, self.edit_delta
         
-        print match_clip.clip_in
         match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_in, 
                                                             MATCH_FRAME, self.match_frame_write_complete)
         match_frame_write_thread.start()
+
+    def set_slip_trim_left_active_view(self, match_clip, edit_clip_start):
+        if editorstate.show_trim_view == False:
+            return
+
+        #if self.view == ROLL_TRIM_RIGHT_ACTIVE_VIEW:
+            # get trim match image
+            #return
+
+        # Refreshing while rendering overwrites file on disk and loses 
+        # previous rendered data. 
+        if PLAYER().is_rendering:
+            return
+        
+        print "LEFT ACTIVE"
+                
+        self.view = SLIP_TRIM_LEFT_ACTIVE_VIEW
+        self.match_frame_surface = None
+        self.edit_clip_start_on_tline = edit_clip_start
+        self.slip_clip_length = self._get_media_length(match_clip)
+
+        self._layout_match_frame_right()
+        self._layout_expand_edge_panels()
+        
+        self.widget.queue_draw()
+        PLAYER().refresh()
+        
+        if match_clip == None:
+            self.match_frame = -1
+            return
+        
+        self.match_frame = match_clip.clip_out
+        
+        match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_out, 
+                                                            MATCH_FRAME, self.match_frame_write_complete)
+        match_frame_write_thread.start()
+        
+    def _get_media_length(self, clip):
+        return PROJECT().get_media_file_for_path(clip.path).length
 
     # ------------------------------------------------------------------ LAYOUT
     def _layout_expand_edge_panels(self):
@@ -348,6 +390,18 @@ class MonitorWidget:
         self.edit_delta = edit_delta
         self.bottom_edge_panel.queue_draw()
 
+    def set_slip_edit_tline_frame(self, clip, edit_delta):
+        if editorstate.show_trim_view == False:
+            return
+
+        if self.view == SLIP_TRIM_RIGHT_ACTIVE_VIEW:
+            self.edit_tline_frame = clip.clip_out + edit_delta
+        else:
+            self.edit_tline_frame = clip.clip_in + edit_delta
+            
+        self.edit_delta = edit_delta
+        self.bottom_edge_panel.queue_draw()
+        
     def one_roll_mouse_release(self, edit_tline_frame, edit_delta):
         if editorstate.show_trim_view == False:
             return
@@ -378,7 +432,6 @@ class MonitorWidget:
         match_surface_creator.start()
         
     def _roll_frame_update_done(self):
-        print "_roll_frame_update_done"
         global _frame_write_on        
         _frame_write_on = False
         self.match_frame_write_complete(MATCH_FRAME)
@@ -486,6 +539,8 @@ class MonitorWidget:
             self._draw_bottom_panel_one_roll(event, cr, allocation)
         elif self.view == ROLL_TRIM_RIGHT_ACTIVE_VIEW or self.view == ROLL_TRIM_LEFT_ACTIVE_VIEW:
             self._draw_bottom_panel_two_roll(event, cr, allocation)
+        elif self.view == SLIP_TRIM_RIGHT_ACTIVE_VIEW or self.view == SLIP_TRIM_LEFT_ACTIVE_VIEW:
+            self._draw_bottom_panel_slip(event, cr, allocation)
             
     def _draw_bottom_panel_one_roll(self, event, cr, allocation):
         x, y, w, h = allocation
@@ -563,6 +618,58 @@ class MonitorWidget:
 
         if self.match_frame != -1:
             match_tc = utils.get_tc_string(self.match_frame + self.edit_delta)
+            cr.move_to(match_tc_x, TC_HEIGHT)
+            cr.show_text(match_tc)
+        
+        if self.edit_tline_frame != -1 or self.edit_clip_start_on_tline != -1:
+            clip_frame = self.edit_tline_frame - self.edit_clip_start_on_tline
+            edit_tc = utils.get_tc_string(clip_frame)
+            cr.move_to(edit_tc_x, TC_HEIGHT)
+            cr.show_text(edit_tc)
+        
+        if self.edit_delta != None:
+            cr.move_to(delta_frames_x, TC_HEIGHT + 30)
+            cr.show_text(str(self.edit_delta))
+
+        self._draw_range_mark(cr,(w/2) - 10, 14, -1)
+        self._draw_range_mark(cr,(w/2) + 10, 14, 1)
+
+    def _draw_bottom_panel_slip(self, event, cr, allocation):
+        x, y, w, h = allocation
+
+        # Draw active screen indicator and compute tc and frame delta positions
+        cr.set_source_rgb(*MONITOR_INDICATOR_COLOR)
+       
+        match_tc_x = 0
+        edit_tc_x = 0
+        delta_frames_x = 0
+        if self.view == SLIP_TRIM_RIGHT_ACTIVE_VIEW:
+            cr.rectangle(w/2, 0, w/2, 4)
+            match_tc_x = (w/2) - TC_LEFT_SIDE_PAD
+            edit_tc_x = (w/2) + TC_RIGHT_SIDE_PAD
+            delta_frames_x = (w/2) + 8
+        elif self.view == SLIP_TRIM_LEFT_ACTIVE_VIEW:
+            cr.rectangle(0, 0, w/2, 4)
+            match_tc_x = (w/2) + TC_RIGHT_SIDE_PAD
+            edit_tc_x = (w/2) - TC_LEFT_SIDE_PAD
+            delta_frames_x = (w/2) - 20
+            # move left for every additional digit after ones
+            CHAR_WIDTH = 12
+            delta_frames_x = delta_frames_x - ((len(str(self.edit_delta)) - 1) * CHAR_WIDTH)
+        cr.fill()
+        
+        cr.set_source_rgb(0.9, 0.9, 0.9)
+        cr.select_font_face ("monospace", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        cr.set_font_size(21)
+
+        if self.match_frame != -1:
+            disp_match_frame = self.match_frame + self.edit_delta
+            if disp_match_frame < 0:
+                disp_match_frame = 0
+            if disp_match_frame >= self.slip_clip_length:
+                disp_match_frame = self.slip_clip_length - 1
+            
+            match_tc = utils.get_tc_string(disp_match_frame)
             cr.move_to(match_tc_x, TC_HEIGHT)
             cr.show_text(match_tc)
         
