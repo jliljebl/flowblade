@@ -29,4 +29,4 @@
 | gtk2-engines-pixbuf |  0.6   |  1.2 |
 | python-gnome2 |  0.6   |  1.2 |
 | python-gobject-2 |  0.6   |  1.2 |
-| python-cairo | Cairo bindings | 0.6   |  1.6 |
+| python-cairo |  0.6   |  1.6 |

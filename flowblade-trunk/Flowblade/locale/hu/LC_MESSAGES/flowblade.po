@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-02 15:12+0200\n"
-"PO-Revision-Date: 2016-08-26 12:02+0100\n"
+"POT-Creation-Date: 2016-09-27 14:41+0200\n"
+"PO-Revision-Date: 2016-09-22 15:35+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
 "Language: hu-HU\n"
@@ -17,43 +17,43 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: app.py:725
+#: app.py:731
 msgid "Too small screen for this application."
 msgstr "Túl kicsi a képernyő az alkalmazás számára."
 
-#: app.py:728
+#: app.py:734
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "A minimális képernyőfelbontás ezen alkalmazás számára 1152 x 768.\n"
 
-#: app.py:729
+#: app.py:735
 msgid "Your screen dimensions are "
 msgstr "Az ön képernyőjének felbontása "
 
-#: app.py:763
+#: app.py:759
 msgid "Project has not been saved since it was opened."
 msgstr "A projekt még nem volt mentve a megnyitás óta."
 
-#: app.py:768
+#: app.py:764
 msgid "Project was saved less than a minute ago."
 msgstr "A projekt kevesebb mint egy perce volt mentve"
 
-#: app.py:771
+#: app.py:767
 msgid "Project was saved one minute ago."
 msgstr "A projekt egy perce volt mentve."
 
-#: app.py:773
+#: app.py:769
 msgid "Project was saved "
 msgstr "A projekt mentése "
 
-#: app.py:773
+#: app.py:769
 msgid " minutes ago."
 msgstr " perce történt."
 
-#: app.py:783 projectaction.py:327
+#: app.py:779 projectaction.py:327
 msgid "Project has not been saved previously"
 msgstr "A projekt korábban még nem volt mentve"
 
-#: app.py:784 projectaction.py:328
+#: app.py:780 projectaction.py:328
 msgid "Save project with File -> Save As before closing."
 msgstr ""
 "Mentse a projektet a Fájl -> Mentés másként menüpont használatával mielőtt "
@@ -145,52 +145,52 @@ msgstr ""
 "Egy projekt állapotának mentésekor a választott mappának\n"
 "üresnek kell lennie."
 
-#: projectaction.py:503
+#: projectaction.py:501
 msgid "Copying project media assets"
 msgstr "A projekt média összetevőinek másolása"
 
-#: projectaction.py:504
+#: projectaction.py:502
 msgid "Saving project file"
 msgstr "Projekt fájl mentése"
 
-#: projectaction.py:627
+#: projectaction.py:625
 msgid "Project not found on disk"
 msgstr "A projekt nem található a lemezen"
 
-#: projectaction.py:628
+#: projectaction.py:626
 msgid "Project can't be loaded."
 msgstr "A projekt nem tölthető be."
 
-#: projectaction.py:686
+#: projectaction.py:684
 msgid "Render launch failed!"
 msgstr "Nem sikerült elindítani a renderelést!"
 
-#: projectaction.py:687 projectaction.py:701 tools/batchrendering.py:296
+#: projectaction.py:685 projectaction.py:699 tools/batchrendering.py:296
 msgid "Error message: "
 msgstr "Hibaüzenet: "
 
-#: projectaction.py:700
+#: projectaction.py:698
 msgid "Adding item to render queue failed!"
 msgstr "Nem sikerült hozzáadni az elemet a renderelés várólistájához!"
 
-#: projectaction.py:719
+#: projectaction.py:717
 msgid "Open.."
 msgstr "Megnyitás..."
 
-#: projectaction.py:749
+#: projectaction.py:747
 msgid "No file was selected"
 msgstr "Nem lett fájl kiválasztva"
 
-#: projectaction.py:749
+#: projectaction.py:747
 msgid "Select a numbered file to add an Image Sequence to Project."
 msgstr ""
 "Válasszon egy sorszámozott fájlt, hogy képsorozatot adjon a projekthez."
 
-#: projectaction.py:757
+#: projectaction.py:755
 msgid "Not a sequence file!"
 msgstr "Nem jelenetfájl!"
 
-#: projectaction.py:757
+#: projectaction.py:755
 msgid ""
 "Selected file does not have a number part in it,\n"
 "so it can't be an image sequence file."
@@ -198,52 +198,52 @@ msgstr ""
 "A kiválasztott fájl nem tartalmaz számot a nevében,\n"
 "így nem is lehet képsorozat része."
 
-#: projectaction.py:808
+#: projectaction.py:806
 msgid "Can't make home folder thumbnails folder"
 msgstr "A \"Saját mappa\" nem állítható be a bélyegképek mappájaként"
 
-#: projectaction.py:809 dialogs.py:361
+#: projectaction.py:807 dialogs.py:361
 msgid "Please create and select some other folder then '"
 msgstr "Hozzon létre és válasszon egy másik mappát e helyett '"
 
-#: projectaction.py:810
+#: projectaction.py:808
 msgid "' as thumbnails folder"
 msgstr "' a bélyegképek számára"
 
-#: projectaction.py:927 projectaction.py:929 projectaction.py:938
-#: projectaction.py:946 projectaction.py:953
+#: projectaction.py:925 projectaction.py:927 projectaction.py:936
+#: projectaction.py:944 projectaction.py:951
 msgid "N/A"
 msgstr "N/A"
 
-#: projectaction.py:942 guicomponents.py:1621
+#: projectaction.py:940 guicomponents.py:1652
 msgid "Yes"
 msgstr "Igen"
 
-#: projectaction.py:944 guicomponents.py:1623
+#: projectaction.py:942 guicomponents.py:1654
 msgid "No"
 msgstr "Nem"
 
-#: projectaction.py:1015
+#: projectaction.py:1013
 msgid "Can't remove a non-empty bin"
 msgstr "Nem üres rekeszek nem törölhetők"
 
-#: projectaction.py:1016
+#: projectaction.py:1014
 msgid "You must remove all files from the bin before deleting it."
 msgstr "Törölnie kell minden fájlt a rekeszből a rekesz törlése előtt."
 
-#: projectaction.py:1024
+#: projectaction.py:1022
 msgid "Can't remove last bin"
 msgstr "Az utolsó rekesz nem törölhető"
 
-#: projectaction.py:1025
+#: projectaction.py:1023
 msgid "There must always exist at least one bin."
 msgstr "Legalább egy rekesznek léteznie kell."
 
-#: projectaction.py:1111
+#: projectaction.py:1109
 msgid "Selected sequence is already being edited"
 msgstr "A kiválasztott jelenet már szerkesztés alatt áll"
 
-#: projectaction.py:1112
+#: projectaction.py:1110
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
@@ -251,11 +251,11 @@ msgstr ""
 "Válasszon egy másik jelenetet. Kattintson a hozzáadás gombra\n"
 "új jelenet létrehozásához."
 
-#: projectaction.py:1122 projectaction.py:1139 projectdata.py:194
+#: projectaction.py:1120 projectaction.py:1137 projectdata.py:194
 msgid "sequence_"
 msgstr "jelenet_"
 
-#: projectaction.py:1172
+#: projectaction.py:1170
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
@@ -263,300 +263,300 @@ msgstr ""
 "Biztosan törölni akarja\n"
 "a jelenetet: '"
 
-#: projectaction.py:1172
+#: projectaction.py:1170
 msgid "'?"
 msgstr "'?"
 
-#: projectaction.py:1173
+#: projectaction.py:1171
 msgid "This operation can not be undone. Sequence will be permanently lost."
 msgstr "Ez a művelet nem vonható vissza. A jelenet véglegesen elvész."
 
-#: projectaction.py:1188
+#: projectaction.py:1186
 msgid "Can't remove last sequence"
 msgstr "Az utolsó jelenet nem törölhető"
 
-#: projectaction.py:1189
+#: projectaction.py:1187
 msgid "There must always exist at least one sequence."
 msgstr "Mindig kell léteznie legalább egy jelenetnek."
 
-#: editorwindow.py:141
+#: editorwindow.py:142
 msgid "_File"
 msgstr "_Fájl"
 
-#: editorwindow.py:142
+#: editorwindow.py:143
 msgid "_New..."
 msgstr "_Új..."
 
-#: editorwindow.py:143
+#: editorwindow.py:144
 msgid "_Open..."
 msgstr "_Megnyitás…"
 
-#: editorwindow.py:144
+#: editorwindow.py:145
 msgid "Open Recent"
 msgstr "Legutóbbi megnyitása"
 
-#: editorwindow.py:145
+#: editorwindow.py:146
 msgid "_Save"
 msgstr "M_entés"
 
-#: editorwindow.py:146
+#: editorwindow.py:147
 msgid "_Save As..."
 msgstr "Mentés má_sként..."
 
-#: editorwindow.py:147
+#: editorwindow.py:148
 msgid "Save Backup Snapshot..."
 msgstr "Állapot mentése..."
 
-#: editorwindow.py:148 dialogs.py:302 dialogs.py:1035
+#: editorwindow.py:149 dialogs.py:302 dialogs.py:1035
 msgid "Export"
 msgstr "Exportálás"
 
-#: editorwindow.py:149
+#: editorwindow.py:150
 msgid "MLT XML"
 msgstr "MLT XML"
 
-#: editorwindow.py:150
+#: editorwindow.py:151
 msgid "EDL"
 msgstr "EDL"
 
-#: editorwindow.py:151
+#: editorwindow.py:152
 msgid "Current Frame"
 msgstr "Aktuális képkocka"
 
-#: editorwindow.py:152
+#: editorwindow.py:153
 msgid "_Close"
 msgstr "_Bezárás"
 
-#: editorwindow.py:153
+#: editorwindow.py:154
 msgid "_Quit"
 msgstr "_Kilépés"
 
-#: editorwindow.py:154
+#: editorwindow.py:155
 msgid "_Edit"
 msgstr "S_zerkesztés"
 
-#: editorwindow.py:155
+#: editorwindow.py:156
 msgid "_Undo"
 msgstr "_Visszavonás"
 
-#: editorwindow.py:156
+#: editorwindow.py:157
 msgid "_Redo"
 msgstr "Ú_jra"
 
-#: editorwindow.py:157
+#: editorwindow.py:158
 msgid "Copy"
 msgstr "Másolás"
 
-#: editorwindow.py:158
+#: editorwindow.py:159
 msgid "Paste"
 msgstr "Beillesztés"
 
-#: editorwindow.py:159
+#: editorwindow.py:160
 msgid "Paste Filters"
 msgstr "Szűrők beillesztése"
 
-#: editorwindow.py:160
+#: editorwindow.py:161
 msgid "Add Monitor Clip"
 msgstr "A monitoron lévő klip hozzáadása"
 
-#: editorwindow.py:161 dialogs.py:1170
+#: editorwindow.py:162 dialogs.py:1100
 msgid "Append"
 msgstr "Hozzáfűzés"
 
-#: editorwindow.py:162 dialogs.py:1169 dialogs.py:1196 guicomponents.py:2019
+#: editorwindow.py:163 dialogs.py:1099 dialogs.py:1131 guicomponents.py:2050
 msgid "Insert"
 msgstr "Beszúrás"
 
-#: editorwindow.py:163
+#: editorwindow.py:164
 msgid "Three Point Overwrite"
 msgstr ""
 
-#: editorwindow.py:164
+#: editorwindow.py:165
 msgid "Range Overwrite"
 msgstr "Tartomány felülírása"
 
-#: editorwindow.py:165 dialogs.py:1167
+#: editorwindow.py:166 dialogs.py:1097
 msgid "Cut Clip"
 msgstr "Klip vágása"
 
-#: editorwindow.py:166 translations.py:511
+#: editorwindow.py:167 translations.py:511
 msgid "Lift"
 msgstr "Kiemelés"
 
-#: editorwindow.py:167 dialogs.py:1168
+#: editorwindow.py:168 dialogs.py:1098
 msgid "Splice Out"
 msgstr "Kidobás"
 
-#: editorwindow.py:168 guicomponents.py:1131 guicomponents.py:1220
+#: editorwindow.py:169 guicomponents.py:1131 guicomponents.py:1225
 msgid "Resync"
 msgstr "Újraigazítás"
 
-#: editorwindow.py:169
+#: editorwindow.py:170
 msgid "Set Sync Parent"
 msgstr "Igazítás alapklipjének megadása"
 
-#: editorwindow.py:170
+#: editorwindow.py:171
 msgid "Add Single Track Transition"
 msgstr "Egysávos átmenet hozzáadása"
 
-#: editorwindow.py:171
+#: editorwindow.py:172
 msgid "Add Single Track Fade"
 msgstr "Egysávos halványodás hozzáadása"
 
-#: editorwindow.py:172 guicomponents.py:1154 guicomponents.py:1191
+#: editorwindow.py:173 guicomponents.py:1154 guicomponents.py:1196
 msgid "Clear Filters"
 msgstr "Szűrők törlése"
 
-#: editorwindow.py:173
+#: editorwindow.py:174
 msgid "Sync All Compositors"
 msgstr "Minden kompozitor szinkronizálása"
 
-#: editorwindow.py:174
+#: editorwindow.py:175
 msgid "Change Sequence Tracks Count..."
 msgstr "Sávok számának megváltoztatása a jelenetben..."
 
-#: editorwindow.py:175
+#: editorwindow.py:176
 msgid "Watermark..."
 msgstr "Vízjel..."
 
-#: editorwindow.py:176 profilesmanager.py:45
+#: editorwindow.py:177 profilesmanager.py:45
 msgid "Profiles Manager"
 msgstr "Profilkezelő"
 
-#: editorwindow.py:177
+#: editorwindow.py:178
 msgid "Preferences"
 msgstr "Beállítások"
 
-#: editorwindow.py:178 preferenceswindow.py:53
+#: editorwindow.py:179 preferenceswindow.py:53
 msgid "View"
 msgstr "Nézet"
 
-#: editorwindow.py:179
+#: editorwindow.py:180
 msgid "Fullscreen"
 msgstr "Teljes képernyő"
 
-#: editorwindow.py:180 editorwindow.py:487
+#: editorwindow.py:181 editorwindow.py:487
 msgid "Project"
 msgstr "Projekt"
 
-#: editorwindow.py:181
+#: editorwindow.py:182
 msgid "Add Media Clip..."
 msgstr "Média klip hozzáadása..."
 
-#: editorwindow.py:182
+#: editorwindow.py:183
 msgid "Add Image Sequence..."
 msgstr "Képsorozat hozzáadása..."
 
-#: editorwindow.py:183
+#: editorwindow.py:184
 msgid "Create Color Clip..."
 msgstr "Szín klip létrehozása..."
 
-#: editorwindow.py:184
+#: editorwindow.py:185
 msgid "Create Pattern Producer"
 msgstr "Minta előállító létrehozása"
 
-#: editorwindow.py:185 translations.py:395 patternproducer.py:67
+#: editorwindow.py:186 translations.py:395 patternproducer.py:67
 msgid "Noise"
 msgstr "Zaj"
 
-#: editorwindow.py:186 patternproducer.py:72
+#: editorwindow.py:187 patternproducer.py:72
 msgid "EBU Bars"
 msgstr "EMSZ sávok"
 
-#: editorwindow.py:187 patternproducer.py:81
+#: editorwindow.py:188 patternproducer.py:81
 msgid "Ising"
 msgstr "Ising"
 
-#: editorwindow.py:188 patternproducer.py:98
+#: editorwindow.py:189 patternproducer.py:98
 msgid "Color Pulse"
 msgstr "Színes lüktetés"
 
-#: editorwindow.py:189 dialogs.py:1159 dialogs.py:1176
+#: editorwindow.py:190 dialogs.py:1089 dialogs.py:1106
 msgid "Log Marked Clip Range"
 msgstr "A kijelölt kliptartomány megjegyzése"
 
-#: editorwindow.py:190
+#: editorwindow.py:191
 msgid "Recreate Media Icons..."
 msgstr "Média ikonok ismételt létrehozása..."
 
-#: editorwindow.py:191
+#: editorwindow.py:192
 msgid "Remove Unused Media..."
 msgstr "Nem használt média eltávolítása..."
 
-#: editorwindow.py:192
+#: editorwindow.py:193
 msgid "JACK Audio..."
 msgstr "JACK hangrendszer..."
 
-#: editorwindow.py:193
+#: editorwindow.py:194
 msgid "Change Project Profile..."
 msgstr "Projekt profiljának megváltoztatása..."
 
-#: editorwindow.py:194 proxyediting.py:216
+#: editorwindow.py:195 proxyediting.py:216
 msgid "Proxy Manager"
 msgstr "Helyettesítés kezelő"
 
-#: editorwindow.py:195
+#: editorwindow.py:196
 msgid "Project Info"
 msgstr "Projekt adatai"
 
-#: editorwindow.py:196 editorwindow.py:488 rendergui.py:171
+#: editorwindow.py:197 editorwindow.py:488 rendergui.py:171
 #: tools/batchrendering.py:862 tools/gmic.py:719
 msgid "Render"
 msgstr "Renderelés"
 
-#: editorwindow.py:197
+#: editorwindow.py:198
 msgid "Add To Batch Render Queue..."
 msgstr "Hozzáadás a kötegelt renderelés várólistájához..."
 
-#: editorwindow.py:198
+#: editorwindow.py:199
 msgid "Batch Render Queue"
 msgstr "Kötegelt renderelés várólistája"
 
-#: editorwindow.py:199
+#: editorwindow.py:200
 msgid "Render Timeline"
 msgstr "Idővonal renderelése"
 
-#: editorwindow.py:200 dialogs.py:1202
+#: editorwindow.py:201 dialogs.py:1137
 msgid "Tools"
 msgstr "Eszközök"
 
-#: editorwindow.py:201 tools/titler.py:178
+#: editorwindow.py:202 tools/titler.py:178
 msgid "Titler"
 msgstr "Feliratozó"
 
-#: editorwindow.py:202
+#: editorwindow.py:203
 msgid "Audio Mixer"
 msgstr "Hangkeverő"
 
-#: editorwindow.py:203 tools/gmic.py:779
+#: editorwindow.py:204 tools/gmic.py:779
 msgid "G'MIC Effects"
 msgstr "G'Mic hatások"
 
-#: editorwindow.py:204
+#: editorwindow.py:205
 msgid "Phantom2D"
 msgstr "Phantom2D"
 
-#: editorwindow.py:205 medialinker.py:173
+#: editorwindow.py:206 medialinker.py:173
 msgid "Media Relinker"
 msgstr "Média újracsatoló"
 
-#: editorwindow.py:206
+#: editorwindow.py:207
 msgid "_Help"
 msgstr "_Súgó"
 
-#: editorwindow.py:207
+#: editorwindow.py:208
 msgid "Contents"
 msgstr "Tartalom"
 
-#: editorwindow.py:208 dialogs.py:474
+#: editorwindow.py:209 dialogs.py:474
 msgid "Runtime Environment"
 msgstr "Futási környezet"
 
-#: editorwindow.py:209 dialogs.py:1144
+#: editorwindow.py:210 dialogs.py:1074
 msgid "Keyboard Shortcuts"
 msgstr "Gyorsbillentyűk"
 
-#: editorwindow.py:210 dialogs.py:402
+#: editorwindow.py:211 dialogs.py:402
 msgid "About"
 msgstr "Névjegy"
 
@@ -598,95 +598,95 @@ msgstr ""
 "\"A\" jelzőhöz\n"
 "\"B\" jelzőhöz"
 
-#: editorwindow.py:709
+#: editorwindow.py:716
 msgid "Middlebar Layout"
 msgstr "Középső eszköztár elrendezése"
 
-#: editorwindow.py:712
+#: editorwindow.py:719
 msgid "Timecode Left"
 msgstr "Időkód a bal oldalon"
 
-#: editorwindow.py:717
+#: editorwindow.py:724
 msgid "Timecode Center"
 msgstr "Időkód középen"
 
-#: editorwindow.py:729
+#: editorwindow.py:736
 msgid "Tabs Position"
 msgstr "Fülek elhelyezése"
 
-#: editorwindow.py:732
+#: editorwindow.py:739
 msgid "Up"
 msgstr "Fel"
 
-#: editorwindow.py:736
+#: editorwindow.py:743
 msgid "Down"
 msgstr "Le"
 
-#: editorwindow.py:753
+#: editorwindow.py:760
 msgid "Show Monitor Sequence Profile"
 msgstr "Monitoron lévő jelenet profiljának megjelenítése"
 
-#: editorwindow.py:758
+#: editorwindow.py:765
 msgid "Show Master Volume Meter"
 msgstr "Főhangerő kijelzőjének megjelenítése"
 
-#: editorwindow.py:766
+#: editorwindow.py:773
 msgid "Monitor Playback Interpolation"
 msgstr "Interpoláció módja a lejátszó monitoron"
 
-#: editorwindow.py:770
+#: editorwindow.py:777
 msgid "Nearest Neighbour (fast)"
 msgstr "Legközelebbi szomszéd (leggyorsabb)"
 
-#: editorwindow.py:774
+#: editorwindow.py:781
 msgid "Bilinear (good)"
 msgstr "Bilineáris (jó)"
 
-#: editorwindow.py:778
+#: editorwindow.py:785
 msgid "Bicubic (better)"
 msgstr "Bikubikus (jobb)"
 
-#: editorwindow.py:783
+#: editorwindow.py:790
 msgid "Hyper/Lanczos (best)"
 msgstr "Hyper/Lanczos (legjobb)"
 
-#: editorwindow.py:793
+#: editorwindow.py:800
 msgid "Zoom In"
 msgstr "Nagyítás"
 
-#: editorwindow.py:796
+#: editorwindow.py:803
 msgid "Zoom Out"
 msgstr "Kicsinyítés"
 
-#: editorwindow.py:799
+#: editorwindow.py:806
 msgid "Zoom Fit"
 msgstr "Helykitöltés"
 
-#: editorwindow.py:921
+#: editorwindow.py:928
 msgid "Timeline current frame timecode"
 msgstr "Az aktuális képkocka időkódja az idővonalon"
 
-#: editorwindow.py:923
+#: editorwindow.py:930
 msgid "Select view mode: Video/Vectorscope/RGBParade"
 msgstr "Megjelenítési mód váltása: Videó / Vektorszkóp / RGB Parádé"
 
-#: editorwindow.py:925
+#: editorwindow.py:932
 msgid "Monitor Sequence/Media current frame timecode"
 msgstr "A monitoron lévő jelenet/média képkockájának aktuális időkódja"
 
-#: editorwindow.py:926
+#: editorwindow.py:933
 msgid "Current Monitor Sequence/Media name"
 msgstr "A jelenleg monitoron lévő jelenet/média neve"
 
-#: editorwindow.py:928
+#: editorwindow.py:935
 msgid "Monitor Sequence/Media current position"
 msgstr "A monitoron lévő jelenet/média aktuális időkódja"
 
-#: editorwindow.py:930
+#: editorwindow.py:937
 msgid "Display Current Sequence on Timeline"
 msgstr "Aktuális jelenet megjelenítése az idővonalon"
 
-#: editorwindow.py:931
+#: editorwindow.py:938
 msgid "Display Monitor Clip"
 msgstr "A monitoron lévő klip megjelenítése"
 
@@ -707,8 +707,8 @@ msgstr "Klip szerkesztésének befejezése"
 msgid "Add"
 msgstr "Hozzáadás"
 
-#: clipeffectseditor.py:213 compositeeditor.py:57 guicomponents.py:1201
-#: guicomponents.py:1260 guicomponents.py:1449 guicomponents.py:1494
+#: clipeffectseditor.py:213 compositeeditor.py:57 guicomponents.py:1206
+#: guicomponents.py:1265 guicomponents.py:1480 guicomponents.py:1525
 #: panels.py:51 panels.py:96 panels.py:114 tools/titler.py:199
 #: tools/batchrendering.py:1027
 msgid "Delete"
@@ -758,7 +758,7 @@ msgstr "Új projekt"
 #: dialogs.py:280 dialogs.py:301 dialogs.py:315 dialogs.py:326 dialogs.py:342
 #: dialogs.py:373 dialogs.py:392 dialogs.py:706 dialogs.py:801 dialogs.py:835
 #: dialogs.py:878 dialogs.py:906 dialogs.py:934 dialogs.py:995 dialogs.py:1034
-#: dialogs.py:1118 dialogs.py:1132 dialogs.py:1299
+#: dialogs.py:1048 dialogs.py:1062 dialogs.py:1234
 #: propertyeditorbuilder.py:401 rendergui.py:47 rendergui.py:102
 #: rendergui.py:116 rendergui.py:133 preferenceswindow.py:42
 #: tools/batchrendering.py:959 proxyediting.py:429 patternproducer.py:319
@@ -768,7 +768,7 @@ msgid "Cancel"
 msgstr "Mégsem"
 
 #: dialogs.py:56 dialogs.py:224 dialogs.py:264 dialogs.py:404 dialogs.py:476
-#: dialogs.py:595 dialogs.py:608 dialogs.py:1300 propertyeditorbuilder.py:402
+#: dialogs.py:595 dialogs.py:608 dialogs.py:1235 propertyeditorbuilder.py:402
 #: rendergui.py:103 preferenceswindow.py:43 tools/batchrendering.py:391
 #: tools/gmic.py:330
 msgid "OK"
@@ -828,7 +828,7 @@ msgstr "Projekt neve:"
 msgid "New Project File"
 msgstr "Új projekt fájl"
 
-#: dialogs.py:179 dialogs.py:1379 tools/batchrendering.py:1239
+#: dialogs.py:179 dialogs.py:1314 tools/batchrendering.py:1239
 msgid "File:"
 msgstr "Fájl:"
 
@@ -981,7 +981,7 @@ msgstr " NEM TALÁLHATÓ"
 msgid " FOR TRANSITION "
 msgstr " ÁTMENET: "
 
-#: dialogs.py:538 dialogs.py:1160 preferenceswindow.py:51
+#: dialogs.py:538 dialogs.py:1090 preferenceswindow.py:51
 msgid "General"
 msgstr "Általános"
 
@@ -1013,7 +1013,7 @@ msgstr "Formátumok"
 msgid "Render Options"
 msgstr "Renderelés beállításai"
 
-#: dialogs.py:593 guicomponents.py:1453
+#: dialogs.py:593 guicomponents.py:1484
 msgid "File Properties"
 msgstr "Fájl tulajdonságai"
 
@@ -1187,7 +1187,7 @@ msgstr "Megnyitás szerkesztésre:"
 msgid "Rename New Media Object"
 msgstr "Új médiaobjektum átnevezése"
 
-#: dialogs.py:879 dialogs.py:907 dialogs.py:961 guicomponents.py:1448
+#: dialogs.py:879 dialogs.py:907 dialogs.py:961 guicomponents.py:1479
 msgid "Rename"
 msgstr "Átnevezés"
 
@@ -1195,7 +1195,7 @@ msgstr "Átnevezés"
 msgid "New Name:"
 msgstr "Új név:"
 
-#: dialogs.py:904 guicomponents.py:1158 guicomponents.py:1244
+#: dialogs.py:904 guicomponents.py:1158 guicomponents.py:1249
 msgid "Rename Clip"
 msgstr "Klip átnevezése"
 
@@ -1240,7 +1240,7 @@ msgstr ""
 msgid "New Marker"
 msgstr "Új jelző"
 
-#: dialogs.py:975 guicomponents.py:1892
+#: dialogs.py:975 guicomponents.py:1923
 msgid "Add Marker"
 msgstr "Jelző hozzáadása"
 
@@ -1268,352 +1268,381 @@ msgstr "Képkockaszám képenként:"
 msgid "Export EDL"
 msgstr "EDL exportálása"
 
-#: dialogs.py:1116
+#: dialogs.py:1046
 msgid "Add Transition"
 msgstr "Átmenet hozzáadása"
 
-#: dialogs.py:1119 dialogs.py:1133
+#: dialogs.py:1049 dialogs.py:1063
 msgid "Apply"
 msgstr "Alkalmazás"
 
-#: dialogs.py:1130
+#: dialogs.py:1060
 msgid "Add Fade"
 msgstr "Halványodás hozzáadása"
 
-#: dialogs.py:1147 dialogs.py:1252 tools/titler.py:416 proxyediting.py:420
+#: dialogs.py:1077 dialogs.py:1187 tools/titler.py:416 proxyediting.py:420
 #: medialinker.py:149 tools/gmic.py:750 tools/gmic.py:841
 msgid "Close"
 msgstr "Bezárás"
 
-#: dialogs.py:1150
+#: dialogs.py:1080
 msgid "Control + N"
 msgstr "Ctrl + N"
 
-#: dialogs.py:1150
+#: dialogs.py:1080
 msgid "Create New Project"
 msgstr "Új projekt létrehozása"
 
-#: dialogs.py:1151
+#: dialogs.py:1081
 msgid "Control + S"
 msgstr "Ctrl + S"
 
-#: dialogs.py:1151
+#: dialogs.py:1081
 msgid "Save Project"
 msgstr "Projekt mentése"
 
-#: dialogs.py:1152 dialogs.py:1168
+#: dialogs.py:1082 dialogs.py:1098
 msgid "DELETE"
 msgstr "DEL"
 
-#: dialogs.py:1152
+#: dialogs.py:1082
 msgid "Delete Selected Item"
 msgstr "Kijelölt elem törlése"
 
-#: dialogs.py:1153
+#: dialogs.py:1083
 msgid "ESCAPE"
 msgstr "ESC"
 
-#: dialogs.py:1153
+#: dialogs.py:1083
 msgid "Stop Rendering Audio Levels"
 msgstr "Hangszintek renderelésének megállítása"
 
-#: dialogs.py:1154
+#: dialogs.py:1084
 msgid "Control + Q"
 msgstr "Ctrl + Q"
 
-#: dialogs.py:1154
+#: dialogs.py:1084
 msgid "Quit"
 msgstr "Kilépés"
 
-#: dialogs.py:1155
+#: dialogs.py:1085
 msgid "Control + Z"
 msgstr "Ctrl + Z"
 
-#: dialogs.py:1155
+#: dialogs.py:1085
 msgid "Undo"
 msgstr "Visszavonás"
 
-#: dialogs.py:1156
+#: dialogs.py:1086
 msgid "Control + Y"
 msgstr "Ctrl + Y"
 
-#: dialogs.py:1156
+#: dialogs.py:1086
 msgid "Redo"
 msgstr "Újra"
 
-#: dialogs.py:1157
+#: dialogs.py:1087
 msgid "Control + O"
 msgstr "Ctrl + O"
 
-#: dialogs.py:1157
+#: dialogs.py:1087
 msgid "Open Project"
 msgstr "Projekt megnyitása"
 
-#: dialogs.py:1158
+#: dialogs.py:1088
 msgid "TAB"
 msgstr "TAB"
 
-#: dialogs.py:1158
+#: dialogs.py:1088
 msgid "Switch Monitor Source"
 msgstr "A monitor forrásának váltása"
 
-#: dialogs.py:1159
+#: dialogs.py:1089
 msgid "Control + L"
 msgstr "Ctrl + L"
 
-#: dialogs.py:1163
+#: dialogs.py:1093
 msgid "Set Mark In"
 msgstr "\"A\" jelző beállítása"
 
-#: dialogs.py:1164
+#: dialogs.py:1094
 msgid "Set Mark Out"
 msgstr "\"B\" jelző beállítása"
 
-#: dialogs.py:1165
+#: dialogs.py:1095
 msgid "Alt + I"
 msgstr "Alt + I"
 
-#: dialogs.py:1165
+#: dialogs.py:1095
 msgid "Go To Mark In"
 msgstr "\"A\" jelzőhöz ugrás"
 
-#: dialogs.py:1166
+#: dialogs.py:1096
 msgid "Alt + O"
 msgstr "Alt + O"
 
-#: dialogs.py:1166
+#: dialogs.py:1096
 msgid "Go To Mark Out"
 msgstr "\"B\" jelzőhöz ugrás"
 
-#: dialogs.py:1171
+#: dialogs.py:1101
 msgid "3 Point Overwrite Insert"
 msgstr ""
 
-#: dialogs.py:1172
+#: dialogs.py:1102
 msgid "Add Mark"
 msgstr "Jelző hozzáadása"
 
-#: dialogs.py:1173
+#: dialogs.py:1103
 msgid "Control + C"
 msgstr "Ctrl + C"
 
-#: dialogs.py:1173
+#: dialogs.py:1103
 msgid "Copy Clips"
 msgstr "Klipek másolása"
 
-#: dialogs.py:1174
+#: dialogs.py:1104
 msgid "Control + V"
 msgstr "Ctrl + V"
 
-#: dialogs.py:1174
+#: dialogs.py:1104
 msgid "Paste Clips"
 msgstr "Klipek beillesztése"
 
-#: dialogs.py:1175
+#: dialogs.py:1105
 msgid "R"
 msgstr "R"
 
-#: dialogs.py:1175
+#: dialogs.py:1105
 msgid "Resync selected Clip or Compositor"
 msgstr "A kijelölt klip vagy kompozitor újraszinkronizálása"
 
-#: dialogs.py:1176
+#: dialogs.py:1106
 msgid "G"
 msgstr "G"
 
-#: dialogs.py:1177
-msgid "Timeline"
-msgstr "Idővonal"
-
-#: dialogs.py:1180
-msgid "SPACE"
-msgstr "Szóköz"
-
-#: dialogs.py:1180
-msgid "Start / Stop Playback"
-msgstr "Lejátszás indítása / megállítása"
-
-#: dialogs.py:1181
-msgid "Backwards Faster"
-msgstr "Visszafelé gyorsabban"
-
-#: dialogs.py:1182 proxyediting.py:353 tools/gmic.py:717
-msgid "Stop"
-msgstr "Leállítás"
-
-#: dialogs.py:1183
-msgid "Forward Faster"
-msgstr "Előre gyorsabban"
-
-#: dialogs.py:1184 dialogs.py:1205
+#: dialogs.py:1107 dialogs.py:1119 dialogs.py:1140
 msgid "Left Arrow "
 msgstr "Balra nyíl"
 
-#: dialogs.py:1184
-msgid "Prev Frame"
-msgstr "Előző képkocka"
+#: dialogs.py:1107
+msgid "Prev Frame Trim Edit"
+msgstr ""
 
-#: dialogs.py:1185 dialogs.py:1206
+#: dialogs.py:1108 dialogs.py:1120 dialogs.py:1141
 msgid "Right Arrow"
 msgstr "Jobbra nyíl"
 
-#: dialogs.py:1185
-msgid "Next Frame"
-msgstr "Következő képkocka"
+#: dialogs.py:1108
+msgid "Next Frame Trim Edit"
+msgstr ""
 
-#: dialogs.py:1186
+#: dialogs.py:1109 dialogs.py:1121
 msgid "Control + Left Arrow "
 msgstr "Ctrl + Balra nyíl"
 
-#: dialogs.py:1186
-msgid "Move Back 10 Frames"
-msgstr "Vissza 10 képkockával"
+#: dialogs.py:1109
+msgid "Back 10 Frames Trim Edit"
+msgstr ""
 
-#: dialogs.py:1187
+#: dialogs.py:1110 dialogs.py:1122
 msgid "Control + Right Arrow"
 msgstr "Ctrl + Jobbra nyíl"
 
-#: dialogs.py:1187
+#: dialogs.py:1110
+msgid "Forward 10 Frames Trim Edit"
+msgstr ""
+
+#: dialogs.py:1111
+msgid "ENTER"
+msgstr "ENTER"
+
+#: dialogs.py:1111
+msgid "Complete Keyboard Trim Edit"
+msgstr ""
+
+#: dialogs.py:1112
+msgid "Timeline"
+msgstr "Idővonal"
+
+#: dialogs.py:1115
+msgid "SPACE"
+msgstr "Szóköz"
+
+#: dialogs.py:1115
+msgid "Start / Stop Playback"
+msgstr "Lejátszás indítása / megállítása"
+
+#: dialogs.py:1116
+msgid "Backwards Faster"
+msgstr "Visszafelé gyorsabban"
+
+#: dialogs.py:1117 proxyediting.py:353 tools/gmic.py:717
+msgid "Stop"
+msgstr "Leállítás"
+
+#: dialogs.py:1118
+msgid "Forward Faster"
+msgstr "Előre gyorsabban"
+
+#: dialogs.py:1119
+msgid "Prev Frame"
+msgstr "Előző képkocka"
+
+#: dialogs.py:1120
+msgid "Next Frame"
+msgstr "Következő képkocka"
+
+#: dialogs.py:1121
+msgid "Move Back 10 Frames"
+msgstr "Vissza 10 képkockával"
+
+#: dialogs.py:1122
 msgid "Move Forward 10 Frames"
 msgstr "Előre 10 képkockával"
 
-#: dialogs.py:1188 dialogs.py:1207
+#: dialogs.py:1123 dialogs.py:1142
 msgid "Up Arrow"
 msgstr "Felfelé nyíl"
 
-#: dialogs.py:1188
+#: dialogs.py:1123
 msgid "Next Edit/Mark"
 msgstr "Következő vágás"
 
-#: dialogs.py:1189 dialogs.py:1208
+#: dialogs.py:1124 dialogs.py:1143
 msgid "Down Arrow"
 msgstr "Lefelé nyíl"
 
-#: dialogs.py:1189
+#: dialogs.py:1124
 msgid "Prev Edit/Mark"
 msgstr "Előző vágás"
 
-#: dialogs.py:1190
+#: dialogs.py:1125
 msgid "HOME"
 msgstr "HOME"
 
-#: dialogs.py:1190
+#: dialogs.py:1125
 msgid "Go To Start"
 msgstr "Ugrás az elejére"
 
-#: dialogs.py:1191
+#: dialogs.py:1126
 msgid "Shift + I"
 msgstr "Shift + I"
 
-#: dialogs.py:1191
+#: dialogs.py:1126
 msgid "To Mark In"
 msgstr "\"A\" jelzőhöz"
 
-#: dialogs.py:1192
+#: dialogs.py:1127
 msgid "Shift + O"
 msgstr "Shift + O"
 
-#: dialogs.py:1192
+#: dialogs.py:1127
 msgid "To Mark Out"
 msgstr "\"B\" jelzőhöz"
 
-#: dialogs.py:1193
+#: dialogs.py:1128
 msgid "Playback"
 msgstr "Lejátszás"
 
-#: dialogs.py:1197 guicomponents.py:2025 translations.py:556
+#: dialogs.py:1132 guicomponents.py:2056 translations.py:556
 msgid "Overwrite"
 msgstr "Felülírás"
 
-#: dialogs.py:1198 guicomponents.py:2031
+#: dialogs.py:1133 guicomponents.py:2062
 msgid "Trim"
 msgstr "Levágás (trim)"
 
-#: dialogs.py:1199 guicomponents.py:2037
+#: dialogs.py:1134 guicomponents.py:2068
 msgid "Roll"
 msgstr "Görgetés"
 
-#: dialogs.py:1200 guicomponents.py:2043
+#: dialogs.py:1135 guicomponents.py:2074
 msgid "Slip"
 msgstr "Csúsztatás"
 
-#: dialogs.py:1201 guicomponents.py:2049
+#: dialogs.py:1136 guicomponents.py:2080
 msgid "Spacer"
 msgstr "Távtartó"
 
-#: dialogs.py:1205
+#: dialogs.py:1140
 msgid "Move Source Video Left"
 msgstr "Forrásvideó mozgatása balra"
 
-#: dialogs.py:1206
+#: dialogs.py:1141
 msgid "Move Source Video Right"
 msgstr "Forrásvideó mozgatása jobbra"
 
-#: dialogs.py:1207
+#: dialogs.py:1142
 msgid "Move Source Video Up"
 msgstr "Forrásvideó mozgatása feljebb"
 
-#: dialogs.py:1208
+#: dialogs.py:1143
 msgid "Move Source Video Down"
 msgstr "Forrásvideó mozgatása lejjebb"
 
-#: dialogs.py:1209
+#: dialogs.py:1144
 msgid "Geometry Editor"
 msgstr "Geometria szerkesztő"
 
-#: dialogs.py:1250
+#: dialogs.py:1185
 msgid "Sequence Watermark"
 msgstr "Jelenet vízjele"
 
-#: dialogs.py:1254
+#: dialogs.py:1189
 msgid "Sequence:"
 msgstr "Jelenet:"
 
-#: dialogs.py:1258
+#: dialogs.py:1193
 msgid "Watermark:"
 msgstr "Vízjel:"
 
-#: dialogs.py:1260
+#: dialogs.py:1195
 msgid "Set Watermark File"
 msgstr "Vízjel fájl megadása"
 
-#: dialogs.py:1261
+#: dialogs.py:1196
 msgid "Remove Watermark"
 msgstr "Vízjel eltávolítása"
 
-#: dialogs.py:1297
+#: dialogs.py:1232
 msgid "Select Watermark File"
 msgstr "Vízjelfájl kiválasztása"
 
-#: dialogs.py:1326
+#: dialogs.py:1261
 msgid "All files"
 msgstr "Minden fájl"
 
-#: dialogs.py:1345
+#: dialogs.py:1280
 msgid "Saving project snapshot"
 msgstr "Projekt állapotának mentése"
 
-#: dialogs.py:1367
+#: dialogs.py:1302
 msgid "Loaded Media Profile Mismatch"
 msgstr "A betöltött médiaprofil eltérő"
 
-#: dialogs.py:1369
+#: dialogs.py:1304
 msgid "Keep Current Profile"
 msgstr "Jelenlegi profil megtartása"
 
-#: dialogs.py:1370
+#: dialogs.py:1305
 msgid "Change To File Profile"
 msgstr "Váltás a fájl profiljára"
 
-#: dialogs.py:1380
+#: dialogs.py:1307
+msgid "A video file was loaded that does not match the Project Profile!"
+msgstr ""
+"A betöltött videó fájl formátuma nem illeszkedik a projekt profiljához!"
+
+#: dialogs.py:1315
 msgid "File Profile:"
 msgstr "A fájl profilja:"
 
-#: dialogs.py:1381
+#: dialogs.py:1316
 msgid "Project Profile:"
 msgstr "A projekt profilja:"
 
-#: dialogs.py:1382
+#: dialogs.py:1317
 msgid ""
 "Using a matching profile is recommended.\n"
 "\n"
@@ -1627,7 +1656,7 @@ msgstr ""
 msgid "Can't put an audio clip on a video track."
 msgstr "Hangklipet nem lehet videosávra helyezni."
 
-#: editevent.py:226 editevent.py:810 movemodes.py:591
+#: editevent.py:226 editevent.py:817 movemodes.py:591
 msgid "Track "
 msgstr "A sáv "
 
@@ -1635,11 +1664,11 @@ msgstr "A sáv "
 msgid " is a video track and can't display audio only material."
 msgstr " egy videosáv és hanganyagot önmagában nem tud megjeleníteni."
 
-#: editevent.py:809
+#: editevent.py:816
 msgid "Can't edit a locked track"
 msgstr "Zárolt sáv nem szerkeszthető"
 
-#: editevent.py:810
+#: editevent.py:817
 msgid " is locked. Unlock track to edit it."
 msgstr " zárolva van. Fel kell oldani a zárolást a szerkesztéshez."
 
@@ -1715,11 +1744,11 @@ msgstr "Nagy magasság"
 msgid "Normal Height"
 msgstr "Normál magasság"
 
-#: guicomponents.py:1094 guicomponents.py:1170 guicomponents.py:1212
+#: guicomponents.py:1094 guicomponents.py:1175 guicomponents.py:1217
 msgid "Open in Filters Editor"
 msgstr "Megnyitás a szűrő szerkesztőben"
 
-#: guicomponents.py:1101 guicomponents.py:1214 guicomponents.py:1451
+#: guicomponents.py:1101 guicomponents.py:1219 guicomponents.py:1482
 msgid "Open in Clip Monitor"
 msgstr "Megnyitás a klip monitoron"
 
@@ -1731,350 +1760,366 @@ msgstr "Hang leválasztása"
 msgid "Split Audio Synched"
 msgstr "Hang leválasztása szinkronizálva"
 
-#: guicomponents.py:1121 guicomponents.py:1228
+#: guicomponents.py:1121 guicomponents.py:1233
 msgid "Display Audio Level"
 msgstr "Hang szintjének megjelenítése"
 
-#: guicomponents.py:1124 guicomponents.py:1231
+#: guicomponents.py:1124 guicomponents.py:1236
 msgid "Clear Waveform"
 msgstr "Hanghullám törlése"
 
-#: guicomponents.py:1132 guicomponents.py:1221
+#: guicomponents.py:1132 guicomponents.py:1226
 msgid "Clear Sync Relation"
 msgstr "Igazítási kapcsolat megszüntetése"
 
-#: guicomponents.py:1134 guicomponents.py:1223
+#: guicomponents.py:1134 guicomponents.py:1228
 msgid "Select Sync Parent Clip..."
 msgstr "Igazítás alapklipjének kiválasztása..."
 
-#: guicomponents.py:1161 guicomponents.py:1247
+#: guicomponents.py:1161 guicomponents.py:1252
 msgid "Clip Info"
 msgstr "Klip adatai"
 
-#: guicomponents.py:1198
+#: guicomponents.py:1203
 msgid "Strech Prev Clip to Cover"
 msgstr "Előző klip nyújtása a fedvényhez"
 
-#: guicomponents.py:1199
+#: guicomponents.py:1204
 msgid "Strech Next Clip to Cover"
 msgstr "Következő klip nyújtása a fedvényhez"
 
-#: guicomponents.py:1256
+#: guicomponents.py:1261
 msgid "Open In Compositor Editor"
 msgstr "Megnyitás a kompozitor szerkesztőben"
 
-#: guicomponents.py:1258
+#: guicomponents.py:1263
 msgid "Sync with Origin Clip"
 msgstr "Igazítás a kiinduló kliphez"
 
-#: guicomponents.py:1264 guicomponents.py:1285
+#: guicomponents.py:1269 guicomponents.py:1290
 msgid "Add Filter"
 msgstr "Szűrő hozzáadása"
 
-#: guicomponents.py:1307
+#: guicomponents.py:1312
 msgid "Add Compositor"
 msgstr "Kompozitor hozzáadása"
 
-#: guicomponents.py:1330
+#: guicomponents.py:1335
 msgid "Add Blend"
 msgstr "Vegyítés hozzáadása"
 
-#: guicomponents.py:1346
+#: guicomponents.py:1351
+msgid "Show Match Frame"
+msgstr ""
+
+#: guicomponents.py:1355
+msgid "First frame"
+msgstr "Első képkocka"
+
+#: guicomponents.py:1360
+msgid "Last frame"
+msgstr "Utolsó képkocka"
+
+#: guicomponents.py:1367
+msgid "Clear Match Frame"
+msgstr ""
+
+#: guicomponents.py:1377
 msgid "Clone Filters"
 msgstr "Szűrők másolása"
 
-#: guicomponents.py:1350
+#: guicomponents.py:1381
 msgid "From Next Clip"
 msgstr "Következő klipből"
 
-#: guicomponents.py:1355
+#: guicomponents.py:1386
 msgid "From Previous Clip"
 msgstr "Előző klipből"
 
-#: guicomponents.py:1364 guicomponents.py:1384
+#: guicomponents.py:1395 guicomponents.py:1415
 msgid "Mute"
 msgstr "Némítás"
 
-#: guicomponents.py:1368 guicomponents.py:1388
+#: guicomponents.py:1399 guicomponents.py:1419
 msgid "Unmute"
 msgstr "Visszakapcsolás"
 
-#: guicomponents.py:1374 guicomponents.py:1405
+#: guicomponents.py:1405 guicomponents.py:1436
 msgid "Mute Audio"
 msgstr "Hang kikapcsolása"
 
-#: guicomponents.py:1399
+#: guicomponents.py:1430
 msgid "Mute Video"
 msgstr "Videó kikapcsolása"
 
-#: guicomponents.py:1416
+#: guicomponents.py:1447
 msgid "Mute All"
 msgstr "Minden kikapcsolása"
 
-#: guicomponents.py:1426
+#: guicomponents.py:1457
 msgid "Clip Color"
 msgstr "Klip színe"
 
-#: guicomponents.py:1428
+#: guicomponents.py:1459
 msgid "Default"
 msgstr "Alapértelmezett"
 
-#: guicomponents.py:1429 translations.py:496 translations.py:566
+#: guicomponents.py:1460 translations.py:496 translations.py:566
 msgid "Red"
 msgstr "Vörös"
 
-#: guicomponents.py:1430 translations.py:497 translations.py:561
+#: guicomponents.py:1461 translations.py:497 translations.py:561
 #: translations.py:567
 msgid "Green"
 msgstr "Zöld"
 
-#: guicomponents.py:1431 translations.py:498 translations.py:562
+#: guicomponents.py:1462 translations.py:498 translations.py:562
 #: translations.py:568
 msgid "Blue"
 msgstr "Kék"
 
-#: guicomponents.py:1432
+#: guicomponents.py:1463
 msgid "Orange"
 msgstr "Narancssárga"
 
-#: guicomponents.py:1433
+#: guicomponents.py:1464
 msgid "Brown"
 msgstr "Barna"
 
-#: guicomponents.py:1434
+#: guicomponents.py:1465
 msgid "Olive"
 msgstr "Olívazöld"
 
-#: guicomponents.py:1458 guicomponents.py:1492
+#: guicomponents.py:1489 guicomponents.py:1523
 msgid "Render Slow/Fast Motion File"
 msgstr "Lassított/Gyorsított mozgású fájl renderelése"
 
-#: guicomponents.py:1460
+#: guicomponents.py:1491
 msgid "Render Proxy File"
 msgstr "Helyettesítő fájl renderelése"
 
-#: guicomponents.py:1483
+#: guicomponents.py:1514
 msgid "Toggle Active"
 msgstr "Be-/Kikapcsolás"
 
-#: guicomponents.py:1484
+#: guicomponents.py:1515
 msgid "Reset Values"
 msgstr "Értékek visszaállítása"
 
-#: guicomponents.py:1491
+#: guicomponents.py:1522
 msgid "Display In Clip Monitor"
 msgstr "Megjelenítés a klip monitoron"
 
-#: guicomponents.py:1493
+#: guicomponents.py:1524
 msgid "Toggle Star"
 msgstr "Csillag be/ki"
 
-#: guicomponents.py:1501 medialinker.py:129
+#: guicomponents.py:1532 medialinker.py:129
 msgid "Set File Relink Path"
 msgstr "A fájl újracsatolási útvonalának beállítása"
 
-#: guicomponents.py:1502 medialinker.py:131
+#: guicomponents.py:1533 medialinker.py:131
 msgid "Delete File Relink Path"
 msgstr "A fájl újracsatolási útvonalának törlése"
 
-#: guicomponents.py:1504
+#: guicomponents.py:1535
 msgid "Show Full Paths"
 msgstr "Teljes útvonalak megjelenítése"
 
-#: guicomponents.py:1570 propertyeditorbuilder.py:472
+#: guicomponents.py:1601 propertyeditorbuilder.py:472
 #: propertyeditorbuilder.py:567 tools/toolsencoding.py:343
 msgid "Progressive"
 msgstr "Progresszív"
 
-#: guicomponents.py:1572 tools/toolsencoding.py:345
+#: guicomponents.py:1603 tools/toolsencoding.py:345
 msgid "Interlaced"
 msgstr "Váltottsoros"
 
-#: guicomponents.py:1575 tools/toolsencoding.py:348
+#: guicomponents.py:1606 tools/toolsencoding.py:348
 msgid "Fps: "
 msgstr "FPS: "
 
-#: guicomponents.py:1578 tools/toolsencoding.py:351
+#: guicomponents.py:1609 tools/toolsencoding.py:351
 msgid "Pixel Aspect: "
 msgstr "Képpontarány: "
 
-#: guicomponents.py:1585
+#: guicomponents.py:1616
 msgid "Description:"
 msgstr "Leírás:"
 
-#: guicomponents.py:1587
+#: guicomponents.py:1618
 msgid "Dimensions:"
 msgstr "Méretek:"
 
-#: guicomponents.py:1589
+#: guicomponents.py:1620
 msgid "Frames per second:"
 msgstr "Másodpercenkénti képkockaszám:"
 
-#: guicomponents.py:1591
+#: guicomponents.py:1622
 msgid "Size:"
 msgstr "Méret:"
 
-#: guicomponents.py:1593
+#: guicomponents.py:1624
 msgid "Pixel aspect ratio: "
 msgstr "Képpontméretarány:"
 
-#: guicomponents.py:1595 profilesmanager.py:138
+#: guicomponents.py:1626 profilesmanager.py:138
 msgid "Progressive:"
 msgstr "Progresszív:"
 
-#: guicomponents.py:1862
+#: guicomponents.py:1893
 msgid "5 video, 4 audio"
 msgstr "5 videó, 4 hang"
 
-#: guicomponents.py:1863
+#: guicomponents.py:1894
 msgid "4 video, 3 audio"
 msgstr "4 videó, 3 hang"
 
-#: guicomponents.py:1864
+#: guicomponents.py:1895
 msgid "3 video, 2 audio"
 msgstr "3 videó, 2 hang"
 
-#: guicomponents.py:1865
+#: guicomponents.py:1896
 msgid "2 video, 1 audio"
 msgstr "2 videó, 1 hang"
 
-#: guicomponents.py:1866
+#: guicomponents.py:1897
 msgid "8 video, 1 audio"
 msgstr "8 videó, 1 hang"
 
-#: guicomponents.py:1867
+#: guicomponents.py:1898
 msgid "1 video, 8 audio"
 msgstr "1 videó, 8 hang"
 
-#: guicomponents.py:1889
+#: guicomponents.py:1920
 msgid "No Markers"
 msgstr "Nincsenek jelzők"
 
-#: guicomponents.py:1893
+#: guicomponents.py:1924
 msgid "Delete Marker"
 msgstr "Jelző törlése"
 
-#: guicomponents.py:1895
+#: guicomponents.py:1926
 msgid "Delete All Markers"
 msgstr "Összes jelző törlése"
 
-#: guicomponents.py:1903
+#: guicomponents.py:1934
 msgid "Maximize Tracks"
 msgstr "Sávok maximalizálása"
 
-#: guicomponents.py:1904
+#: guicomponents.py:1935
 msgid "Maximize Video Tracks"
 msgstr "Videosávok maximalizálása"
 
-#: guicomponents.py:1905
+#: guicomponents.py:1936
 msgid "Maximize Audio Tracks"
 msgstr "Hangsávok maximalizálása"
 
-#: guicomponents.py:1907
+#: guicomponents.py:1938
 msgid "Minimize Tracks"
 msgstr "Sávok minimalizálása"
 
-#: guicomponents.py:1915
+#: guicomponents.py:1946
 msgid "Display Clip Media Thumbnails"
 msgstr "Média klipek bélyegképeinek megjelenítése"
 
-#: guicomponents.py:1924
+#: guicomponents.py:1955
 msgid "Snapping On"
 msgstr "Igazítás bekapcsolása"
 
-#: guicomponents.py:1931
+#: guicomponents.py:1962
 msgid "Show Magnet Icon"
 msgstr "Mágnes ikon megjelenítése"
 
-#: guicomponents.py:1940
+#: guicomponents.py:1971
 msgid "Display All Audio Levels"
 msgstr "Összes hang szintjének megjelenítése"
 
-#: guicomponents.py:1943
+#: guicomponents.py:1974
 msgid "Display Audio Levels On Request"
 msgstr "Hangok szintjének megjelenítése kérésre"
 
-#: guicomponents.py:1963
+#: guicomponents.py:1994
 msgid "Image"
 msgstr "Kép"
 
-#: guicomponents.py:1965
+#: guicomponents.py:1996
 msgid "Vectorscope"
 msgstr "Vektorszkóp"
 
-#: guicomponents.py:1967
+#: guicomponents.py:1998
 msgid "RGB Parade"
 msgstr "RGB parádé"
 
-#: guicomponents.py:1971
+#: guicomponents.py:2002
 msgid "Overlay Opacity"
 msgstr "Átfedés átlátszatlansága"
 
-#: guicomponents.py:1976
+#: guicomponents.py:2007
 msgid "100%"
 msgstr "100%"
 
-#: guicomponents.py:1981
+#: guicomponents.py:2012
 msgid "80%"
 msgstr "80%"
 
-#: guicomponents.py:1986
+#: guicomponents.py:2017
 msgid "50%"
 msgstr "50%"
 
-#: guicomponents.py:1991
+#: guicomponents.py:2022
 msgid "20%"
 msgstr "20%"
 
-#: guicomponents.py:1996
+#: guicomponents.py:2027
 msgid "0%"
 msgstr "0%"
 
-#: guicomponents.py:2069
+#: guicomponents.py:2100
 msgid "All Files"
 msgstr "Minden fájl"
 
-#: guicomponents.py:2073
+#: guicomponents.py:2104
 msgid "Video Files"
 msgstr "Videofájlok"
 
-#: guicomponents.py:2077
+#: guicomponents.py:2108
 msgid "Audio Files"
 msgstr "Hangfájlok"
 
-#: guicomponents.py:2081
+#: guicomponents.py:2112
 msgid "Graphics Files"
 msgstr "Grafikus fájlok"
 
-#: guicomponents.py:2085
+#: guicomponents.py:2116
 msgid "Image Sequences"
 msgstr "Képsorozatok"
 
-#: guicomponents.py:2089
+#: guicomponents.py:2120
 msgid "Pattern Producers"
 msgstr "Minta előállítók"
 
-#: guicomponents.py:2102
+#: guicomponents.py:2133
 msgid "2 Columns"
 msgstr "2 oszlop"
 
-#: guicomponents.py:2107
+#: guicomponents.py:2138
 msgid "3 Columns"
 msgstr "3 oszlop"
 
-#: guicomponents.py:2112
+#: guicomponents.py:2143
 msgid "4 Columns"
 msgstr "4 oszlop"
 
-#: guicomponents.py:2117
+#: guicomponents.py:2148
 msgid "5 Columns"
 msgstr "5 oszlop"
 
-#: guicomponents.py:2122
+#: guicomponents.py:2153
 msgid "6 Columns"
 msgstr "6 oszlop"
 
-#: guicomponents.py:2127
+#: guicomponents.py:2158
 msgid "7 Columns"
 msgstr "7 oszlop"
 
@@ -2294,11 +2339,11 @@ msgstr "Eltűnés"
 msgid "Color:"
 msgstr "Szín:"
 
-#: persistance.py:353
+#: persistance.py:371
 msgid "Building sequence "
 msgstr "Jelenet építése: "
 
-#: persistance.py:386
+#: persistance.py:404
 msgid "Loading icons"
 msgstr "Ikonok betöltése"
 
@@ -4173,13 +4218,11 @@ msgstr ""
 msgid ""
 "Splice Out - Delete\n"
 "Lift\n"
-"Delete Range\n"
 "Resync Selected\n"
 "Split Audio"
 msgstr ""
 "Kidobás - DEL\n"
 "Kiemelés\n"
-"Tartomány törlése\n"
 "Kijelölt újraigazítása\n"
 "Hang leválasztása"
 
@@ -5199,11 +5242,11 @@ msgstr "Projekt átalakítása helyettesítő média használatához"
 msgid "Converting to Use Original Media"
 msgstr "Átalakítás az eredeti média használatához"
 
-#: tlineaction.py:191
+#: tlineaction.py:193
 msgid "Fade/Transition cover delete failed!"
 msgstr "A halványodás/átmenet fedvény törlése nem sikerült!"
 
-#: tlineaction.py:192
+#: tlineaction.py:194
 msgid ""
 "There wasn't enough material available in adjacent clips.\n"
 "A normal Splice Out was done instead."
@@ -5211,19 +5254,19 @@ msgstr ""
 "Nem volt elegendő anyag a szomszédos klipben.\n"
 "Normál \"kidoobás\" művelet lett végrehajtva."
 
-#: tlineaction.py:325
+#: tlineaction.py:327
 msgid "No Clips are selected!"
 msgstr "Nincsenek kiválasztva klipek!"
 
-#: tlineaction.py:326
+#: tlineaction.py:328
 msgid "You need to select clips to overwrite to perform this edit."
 msgstr "A művelet végrehajtásához ki kell jelölnie a felülírandó klipeket."
 
-#: tlineaction.py:382
+#: tlineaction.py:384
 msgid "Timeline Range not set!"
 msgstr "Nincs kijelölve tartomány az idővonalon!"
 
-#: tlineaction.py:383
+#: tlineaction.py:385
 msgid ""
 "You need to set Timeline Range using Mark In and Mark Out buttons\n"
 "to perform this edit."
@@ -5231,11 +5274,11 @@ msgstr ""
 "Ezen szerkesztési  művelethez ki kell jelölni egy tartományt az\n"
 "idővonalon az \"A jelző\" és a \"B jelző\" gombokkal."
 
-#: tlineaction.py:431
+#: tlineaction.py:433
 msgid "Origin clip not found!"
 msgstr "A kiinduló klip nem található!"
 
-#: tlineaction.py:432
+#: tlineaction.py:434
 msgid ""
 "Clip used to create this Compositor has been removed\n"
 "or moved to different track."
@@ -5243,11 +5286,11 @@ msgstr ""
 "A klip amelyhez ez a kompozitor tartozik törölve lett\n"
 "vagy már egy másik sávon van."
 
-#: tlineaction.py:664 tlineaction.py:798
+#: tlineaction.py:666 tlineaction.py:833
 msgid "Rendering "
 msgstr "Renderelés"
 
-#: tlineaction.py:696
+#: tlineaction.py:698
 msgid ""
 "To create a rendered transition you need enough media overlap from both "
 "clips!\n"
@@ -5257,63 +5300,51 @@ msgstr ""
 "mindkét klipből!\n"
 "\n"
 
-#: tlineaction.py:701
-msgid ""
-"More media overlap needed from <b>first</b> clip:\n"
-"\n"
+#: tlineaction.py:703
+msgid "<b>FIRST CLIP MEDIA OVERLAP:</b>  "
 msgstr ""
-"Hosszabb átfedő médiára van szükség az <b>első</b> klipből:\n"
-"\n"
 
-#: tlineaction.py:702 tlineaction.py:712
-msgid "<b>Available:</b> "
-msgstr "<b>Elérhető:</b> "
+#: tlineaction.py:704 tlineaction.py:712
+msgid "Available <b>"
+msgstr "Elérhető: <b>"
 
-#: tlineaction.py:702 tlineaction.py:712 tlineaction.py:771 tlineaction.py:772
-msgid " frame(s)\n"
-msgstr " képkocka\n"
+#: tlineaction.py:704 tlineaction.py:712
+msgid "</b> frame(s), "
+msgstr "</b> képkocka, "
 
-#: tlineaction.py:703 tlineaction.py:713
-msgid "<b>Required:</b> "
-msgstr "<b>Szükséges:</b> "
+#: tlineaction.py:705 tlineaction.py:713
+msgid "Required <b>"
+msgstr "Szükséges: <b>"
 
-#: tlineaction.py:703 tlineaction.py:713
-msgid ""
-" frame(s)\n"
-"\n"
-msgstr ""
-" képkocka\n"
-"\n"
-
-#: tlineaction.py:704 tlineaction.py:714
-msgid "Cut "
-msgstr "Vágás"
-
-#: tlineaction.py:704
-msgid " frame(s) from the <b>end</b> of first clip."
-msgstr " képkocka az első klip <b>végétől</b>."
+#: tlineaction.py:705
+msgid "</b> frame(s)"
+msgstr "</b> képkocka"
 
 #: tlineaction.py:711
-msgid ""
-"More media overlap needed from <b>second</b> clip:\n"
-"\n"
+msgid "<b>SECOND CLIP MEDIA OVERLAP:</b> "
 msgstr ""
-"Hosszabb átfedő médiára van szükség a <b>második</b> klipből:\n"
-"\n"
 
-#: tlineaction.py:714
-msgid " frame(s) from the <b>beginning</b> of the second clip."
-msgstr " képkocka a második klip <b>elejétől</b>."
+#: tlineaction.py:713
+msgid "</b> frame(s) "
+msgstr "</b> képkocka "
 
-#: tlineaction.py:716
+#: tlineaction.py:720
+msgid "Current situation, not enought media overlap:"
+msgstr ""
+
+#: tlineaction.py:722
+msgid "You need more media overlap:"
+msgstr ""
+
+#: tlineaction.py:751
 msgid "More media overlap needed to create transition!"
 msgstr "Hosszabb média átfedésre van szükség az átmenet létrehozásához!"
 
-#: tlineaction.py:735
+#: tlineaction.py:770
 msgid "Only Video Track mix / fades available"
 msgstr "Csak videosávok keverése / halványítása lehetséges"
 
-#: tlineaction.py:736
+#: tlineaction.py:771
 msgid ""
 "Unfortunately rendered mixes and fades can currently\n"
 "only be applied on clips on Video Tracks."
@@ -5321,7 +5352,7 @@ msgstr ""
 "Sajnos a renderelt keverések és halványodások jelenleg\n"
 "csak videosávokon található klipekre alkalmazhatók."
 
-#: tlineaction.py:770
+#: tlineaction.py:805
 msgid ""
 "Clip is too short for the requested fade:\n"
 "\n"
@@ -5329,32 +5360,36 @@ msgstr ""
 "A klip túl rövid a kért halványodáshoz:\n"
 "\n"
 
-#: tlineaction.py:771
+#: tlineaction.py:806
 msgid "<b>Clip Length:</b> "
 msgstr "<b>Klip hossza:</b> "
 
-#: tlineaction.py:772
+#: tlineaction.py:806 tlineaction.py:807
+msgid " frame(s)\n"
+msgstr " képkocka\n"
+
+#: tlineaction.py:807
 msgid "<b>Fade Length:</b> "
 msgstr "<b>Halványodás hossza:</b>"
 
-#: tlineaction.py:773
+#: tlineaction.py:808
 msgid "Clip is too short!"
 msgstr "A klip túl rövid!"
 
-#: tlineaction.py:839
+#: tlineaction.py:874
 msgid "No Clip loaded into Monitor"
 msgstr "Nincs klip a monitoron"
 
-#: tlineaction.py:840
+#: tlineaction.py:875
 msgid "Can't do the requested edit because there is no Clip in Monitor."
 msgstr ""
 "A kért szerkesztési művelet nem hajtható végre mert nincs klip a monitoron"
 
-#: tlineaction.py:844
+#: tlineaction.py:879
 msgid "Defined range in Monitor Clip is too short"
 msgstr "A monitoron lévő klip megadott tartománya túl rövid."
 
-#: tlineaction.py:845
+#: tlineaction.py:880
 msgid ""
 "Can't do the requested edit because Mark In -> Mark Out Range or Clip is too "
 "short."
@@ -5650,117 +5685,3 @@ msgstr "Renderelés leállítva!"
 #: tools/toolsencoding.py:90
 msgid "Use Default Profile:"
 msgstr "Alapértelmezett profil használata:"
-
-#~ msgid "Export To EDL"
-#~ msgstr "Exportálás EDL-be"
-
-#~ msgid "Export file name:"
-#~ msgstr "Exportált fájl neve:"
-
-#~ msgid "Select target folder"
-#~ msgstr "Célmappa választása"
-
-#~ msgid "Export folder:"
-#~ msgstr "Exportálás mappája:"
-
-#~ msgid "Exported video track:"
-#~ msgstr "Exportált videosáv:"
-
-#~ msgid "Export single video track"
-#~ msgstr "Egyetlen sáv exportálása"
-
-#~ msgid "EDL CMX 3600"
-#~ msgstr "EDL CMX 3600"
-
-#~ msgid "Exported audio track:"
-#~ msgstr "Exportált hangsáv:"
-
-#~ msgid "Audio From Video"
-#~ msgstr "Hang a videóból"
-
-#~ msgid "Separate Audio Track"
-#~ msgstr "Különálló hangsáv"
-
-#~ msgid "No Audio"
-#~ msgstr "Nincs hangsáv"
-
-#~ msgid "Audio export:"
-#~ msgstr "Hang exportálása:"
-
-#~ msgid "Change Project Profile To Match..."
-#~ msgstr "Projekt profiljának megváltoztatása..."
-
-#~ msgid "Escape"
-#~ msgstr "ESC"
-
-#~ msgid "Space"
-#~ msgstr "Szóköz"
-
-#~ msgid "Home"
-#~ msgstr "HOME"
-
-#~ msgid "Save To Change Project Profile"
-#~ msgstr "Mentés a projekt profiljának megváltoztatásához"
-
-#~ msgid "Max. Transition Length:"
-#~ msgstr "Átmenet maximális hossza:"
-
-#~ msgid "Clips info"
-#~ msgstr "Klipek adatai"
-
-#~ msgid ""
-#~ "There is not enough material available in the FROM clip after the cut"
-#~ msgstr "Nincs elegendő anyag a kiinduló klipben a vágás után"
-
-#~ msgid ""
-#~ "\n"
-#~ "to create the transition.\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "az átmenet létrehozásához.\n"
-#~ "\n"
-
-#~ msgid "FROM Clip Handle is too short!"
-#~ msgstr "A kiinduló klip túl rövid!"
-
-#~ msgid "There is not enough material available in the TO clip before the cut"
-#~ msgstr "Nincs elegendő anyag a cél klipben a vágás után"
-
-#~ msgid "TO Clip Handle is too short!"
-#~ msgstr "A cél klip túl rövid!"
-
-#~ msgid "Write Environment Data to File"
-#~ msgstr "A környezet adatainak fájlba írása"
-
-#~ msgid ""
-#~ "Audio Mixer\n"
-#~ "Titler"
-#~ msgstr ""
-#~ "Hangkeverő\n"
-#~ "Feliratozó"
-
-#, fuzzy
-#~ msgid "You have to provide a name for the file to be rendered."
-#~ msgstr "Meg kell adnia egy nevet az elkészítendő fájlnak."
-
-#~ msgid " already exists!"
-#~ msgstr " már létezik!"
-
-#~ msgid "Do you want to overwrite existing file?"
-#~ msgstr "Felülírja a létező fájlt?"
-
-#~ msgid "Delete Group and Items?"
-#~ msgstr "Kijelölt csoport és elemeinek törlése?"
-
-#, fuzzy
-#~ msgid "Are you sure you want to delete group "
-#~ msgstr "Biztos, hogy törölni szeretné a következő csoportot: "
-
-#, fuzzy
-#~ msgid " and "
-#~ msgstr " és"
-
-#, fuzzy
-#~ msgid " items it contains?\n"
-#~ msgstr " elemet, melyet tartalmaz?\n"

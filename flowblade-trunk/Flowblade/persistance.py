@@ -81,7 +81,9 @@ _load_file_path = None
 # 'snapshot_paths != None' flags that snapsave is being done and paths need to be replaced 
 snapshot_paths = None
 
-
+# Used to compute in/out points when saving to change profile
+_fps_conv_mult = 1.0
+    
 class FileProducerNotFoundError(Exception):
     """
     We're only catching this, other errors we'll just crash on load
@@ -119,10 +121,14 @@ def save_project(project, file_path, changed_profile_desc=None):
     s_proj = copy.copy(project)
     
     # Implements "change profile" functionality
+    global _fps_conv_mult
+    _fps_conv_mult = 1.0
     if changed_profile_desc != None:
+        _fps_conv_mult = mltprofiles.get_profile(changed_profile_desc).fps() / mltprofiles.get_profile(s_proj.profile_desc).fps()
         s_proj.profile_desc = changed_profile_desc
         print "Saving changed profile project: ", changed_profile_desc
-    
+        print "FPS conversion multiplier:", _fps_conv_mult
+
     # Set current sequence index
     s_proj.c_seq_index = project.sequences.index(project.c_seq)
     
@@ -244,7 +250,10 @@ def get_p_clip(clip):
     # Get replace sync data
     if s_clip.sync_data != None:
          s_clip.sync_data = get_p_sync_data(s_clip.sync_data)
-    
+
+    if _fps_conv_mult != 1.0:
+        _update_clip_in_out_for_fps_change(s_clip)
+
     # Remove unpicleable attributes
     remove_attrs(s_clip, CLIP_REMOVE)
 
@@ -290,6 +299,8 @@ def get_p_compositors(compositors):
         s_compositor = copy.copy(compositor)
         s_compositor.transition = copy.copy(compositor.transition)
         s_compositor.transition.mlt_transition = None
+        if _fps_conv_mult != 1.0:
+            _update_compositor_in_out_for_fps_change(s_compositor)
         s_compositors.append(s_compositor)
 
     return s_compositors
@@ -312,7 +323,14 @@ def remove_attrs(obj, remove_attrs):
         except Exception:
             pass
 
+def _update_clip_in_out_for_fps_change(s_clip):
+    s_clip.clip_in = int(s_clip.clip_in * _fps_conv_mult)
+    s_clip.clip_out = int(s_clip.clip_out * _fps_conv_mult)
 
+def _update_compositor_in_out_for_fps_change(s_compositor):
+    s_compositor.clip_in = int(s_compositor.clip_in * _fps_conv_mult)
+    s_compositor.clip_out = int(s_compositor.clip_out * _fps_conv_mult)
+ 
 # -------------------------------------------------- LOAD
 def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
     _show_msg("Unpickling")

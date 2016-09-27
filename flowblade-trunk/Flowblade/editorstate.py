@@ -106,6 +106,9 @@ display_clip_media_thumbnails = True
 # Flag for window being in fullscreen mode
 fullscreen = False
 
+# Flog for showing trim views
+show_trim_view = True
+
 def current_is_move_mode():
     if ((edit_mode == INSERT_MOVE) or (edit_mode == OVERWRITE_MOVE) or (edit_mode == MULTI_MOVE)):
         return True

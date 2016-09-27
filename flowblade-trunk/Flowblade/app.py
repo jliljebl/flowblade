@@ -72,6 +72,7 @@ import mltprofiles
 import mlttransitions
 import movemodes
 import persistance
+import phantomcompositor
 import positionbar
 import preferenceswindow
 import projectaction
@@ -109,14 +110,20 @@ exit_timeout_id = -1
 window_resize_id = -1
 window_state_id = -1
 
-logger = None
+_log_file = None
 
+assoc_file_path = None
+assoc_timeout_id = None
 
 def main(root_path):
     """
     Called at application start.
     Initializes application with a default project.
     """
+    # DEBUG: Direct output to log file if log file set
+    if _log_file != None:
+        log_print_output_to_file()
+    
     # Print OS, Python version and GTK+ version
     try:
         os_release_file = open("/etc/os-release","r")
@@ -161,11 +168,11 @@ def main(root_path):
         os.mkdir(utils.get_hidden_screenshot_dir_path())
     if not os.path.exists(user_dir + appconsts.GMIC_DIR):
         os.mkdir(user_dir + appconsts.GMIC_DIR)
-    if not os.path.exists(user_dir + appconsts.NODE_COMPOSITORS_DIR):
-        os.mkdir(user_dir + appconsts.NODE_COMPOSITORS_DIR)
-    if not os.path.exists(user_dir + appconsts.NODE_COMPOSITORS_DIR + "/" + appconsts.PHANTOM_DISK_CACHE_DIR):
-        os.mkdir(user_dir + appconsts.NODE_COMPOSITORS_DIR + "/" + appconsts.PHANTOM_DISK_CACHE_DIR)
-
+    if not os.path.exists(user_dir + appconsts.MATCH_FRAME_DIR):
+        os.mkdir(user_dir + appconsts.MATCH_FRAME_DIR)
+    if not os.path.exists(user_dir + appconsts.TRIM_VIEW_DIR):
+        os.mkdir(user_dir + appconsts.TRIM_VIEW_DIR)
+        
     # Set paths.
     respaths.set_paths(root_path)
 
@@ -193,7 +200,7 @@ def main(root_path):
     Gdk.threads_init()
     Gdk.threads_enter()
 
-    # Request dark them if so desired
+    # Request dark theme if so desired
     if editorpersistance.prefs.dark_theme == True:
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
 
@@ -240,31 +247,22 @@ def main(root_path):
     # Create list of available mlt profiles
     mltprofiles.load_profile_list()
     
-    # Launch association file if found in arguments
-    launch_file_path = get_assoc_file_path()
-    if launch_file_path != None:
-        try:
-            print "Launching assoc file:" +  launch_file_path
-            persistance.show_messages = False
-            editorstate.project = persistance.load_project(launch_file_path)
-            persistance.show_messages = True
-            check_crash = False
-        except:
-            editorstate.project = projectdata.get_default_project()
-            persistance.show_messages = True
-            check_crash = True
-    else:
-        # There is always a project open, so at startup we create a default project.
-        # Set default project as the project being edited.
-        editorstate.project = projectdata.get_default_project()
-        check_crash = True
+    # Save assoc file path if found in arguments
+    global assoc_file_path
+    assoc_file_path = get_assoc_file_path()
+        
+    # There is always a project open, so at startup we create a default project.
+    # Set default project as the project being edited.
+    editorstate.project = projectdata.get_default_project()
+    check_crash = True
 
     # Audiomonitoring being available needs to be known before GUI creation
     audiomonitoring.init(editorstate.project.profile)
 
-    # Check for gmic
+    # Check for tools
     gmic.test_availablity()
-
+    #phantomcompositor.test_availablity()
+    
     # Create player object
     create_player()
 
@@ -292,7 +290,7 @@ def main(root_path):
     # Get existing autosave files
     autosave_files = get_autosave_files()
 
-    # Show splash
+    # Clear splash
     if ((editorpersistance.prefs.display_splash_screen == True) and len(autosave_files) == 0):
         global splash_timeout_id
         splash_timeout_id = GLib.timeout_add(2600, destroy_splash_screen)
@@ -315,7 +313,13 @@ def main(root_path):
     # We prefer to monkeypatch some callbacks into some modules, usually to
     # maintain a simpler and/or non-circular import structure
     monkeypatch_callbacks()
-    
+
+    if not(check_crash == True and len(autosave_files) > 0):
+        if assoc_file_path != None:
+            print "Launch assoc file:", assoc_file_path
+            global assoc_timeout_id
+            assoc_timeout_id = GObject.timeout_add(10, open_assoc_file)
+            
     # Launch gtk+ main loop
     Gtk.main()
 
@@ -351,7 +355,7 @@ def monkeypatch_callbacks():
     # Posionbar in gmic.py doesnot need trimmodes.py dependency and is avoided 
     positionbar.trimmodes_set_no_edit_trim_mode = trimmodes.set_no_edit_trim_mode
 
-    # Snapping is done in a separate module but needs tlinewidgets stae info
+    # Snapping is done in a separate module but needs some tlinewidgets state info
     snapping._get_frame_for_x_func = tlinewidgets.get_frame
     snapping._get_x_for_frame_func = tlinewidgets._get_frame_x
 
@@ -364,17 +368,19 @@ def get_assoc_file_path():
     """
     arg_str = ""
     for arg in sys.argv:
-        arg_str = arg
+        ext_index = arg.find(".flb")
+        if ext_index != -1:
+            arg_str = arg
     
     if len(arg_str) == 0:
-        return None
-    
-    ext_index = arg_str.find(".flb")
-    if ext_index == -1:
         return None
     else:
         return arg_str
 
+def open_assoc_file():
+    GObject.source_remove(assoc_timeout_id)
+    projectaction.actually_load_project(assoc_file_path, block_recent_files=False)
+    
 def create_gui():
     """
     Called at app start to create gui objects and handles for them.
@@ -734,24 +740,14 @@ def _early_exit(dialog, response):
     # Exit gtk main loop.
     Gtk.main_quit() 
 
-
 # ------------------------------------------------------- logging
-def init_logger():
-    try:
-        import logging
-        global logger
-        logger = logging.getLogger('flowblade')
-        hdlr = logging.FileHandler('/home/janne/flog')
-        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-        hdlr.setFormatter(formatter)
-        logger.addHandler(hdlr)
-        logger.setLevel(logging.INFO)
-    except:
-        print "logging failed"
+def log_print_output_to_file():
+    so = se = open(_log_file, 'w', 0)
 
-def log_msg(msg):
-    global logger
-    logger.info(msg)
+    sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
+
+    os.dup2(so.fileno(), sys.stdout.fileno())
+    os.dup2(se.fileno(), sys.stderr.fileno())
 
 # ------------------------------------------------------ shutdown
 def shutdown():

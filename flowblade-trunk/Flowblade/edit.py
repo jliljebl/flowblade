@@ -34,6 +34,7 @@ from editorstate import PLAYER
 import mltfilters
 import movemodes
 import resync
+import tlinewidgets
 import trimmodes
 import undo
 import updater
@@ -356,6 +357,8 @@ class EditAction:
         _consolidate_all_blanks_redo(self)
         _remove_trailing_blanks_redo(self)
         resync.calculate_and_set_child_clip_sync_states()
+
+        tlinewidgets.set_match_frame(-1, -1, True)
 
         # HACK, see above.
         if self.stop_for_edit:

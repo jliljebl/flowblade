@@ -1161,7 +1161,12 @@ def display_clip_popup_menu(event, clip, track, callback):
     clip_menu.add(_get_menu_item(_("Clip Info"), callback,\
                   (clip, track, "clip_info", event.x)))
 
+    if track.type == appconsts.VIDEO:
+        _add_separetor(clip_menu)
+        clip_menu.add(_get_match_frame_menu_item(event, clip, track, callback))
+            
     clip_menu.popup(None, None, None, None, event.button, event.time)
+
 
 def display_transition_clip_popup_menu(event, clip, track, callback):
     clip_menu = transition_clip_menu
@@ -1339,6 +1344,32 @@ def _get_blenders_add_menu_item(event, clip, track, callback, sensitive):
         blender_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type)))
         blender_item.show()
     menu_item.set_sensitive(sensitive)
+    menu_item.show()
+    return menu_item
+
+def _get_match_frame_menu_item(event, clip, track, callback):
+    menu_item = Gtk.MenuItem(_("Show Match Frame"))
+    sub_menu = Gtk.Menu()
+    menu_item.set_submenu(sub_menu)
+
+    start_item = Gtk.MenuItem(_("First frame"))
+    sub_menu.append(start_item)
+    start_item.connect("activate", callback, (clip, track, "match_frame_start", None))
+    start_item.show()
+
+    end_item = Gtk.MenuItem(_("Last frame"))
+    sub_menu.append(end_item)
+    end_item.connect("activate", callback, (clip, track, "match_frame_end", None))
+    end_item.show()
+
+    _add_separetor(sub_menu)
+    
+    clear_item = Gtk.MenuItem(_("Clear Match Frame"))
+    sub_menu.append(clear_item)
+    clear_item.connect("activate", callback, (clip, track, "match_frame_close", None))
+    clear_item.show()
+    
+    menu_item.set_sensitive(True)
     menu_item.show()
     return menu_item
 

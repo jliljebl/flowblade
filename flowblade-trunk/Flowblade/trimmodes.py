@@ -22,6 +22,8 @@
 Module handles user edit events for trim, roll and slip trim modes. 
 """
 
+import traceback
+
 import appconsts
 import dialogutils
 import edit
@@ -288,6 +290,7 @@ def _one_roll_trim_left(delta):
     frame = edit_data["selected_frame"] - delta
     frame = _legalize_one_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
+    gui.monitor_widget.set_edit_tline_frame(frame, frame - edit_data["edit_frame"])
     
     PLAYER().seek_frame(frame)
     
@@ -297,6 +300,7 @@ def _one_roll_trim_right(delta):
     frame = edit_data["selected_frame"] + delta
     frame = _legalize_one_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
+    gui.monitor_widget.set_edit_tline_frame(frame, frame - edit_data["edit_frame"])
     
     PLAYER().seek_frame(frame)
     
@@ -310,6 +314,9 @@ def _tworoll_trim_left(delta):
     frame = _legalize_two_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
 
+    gui.monitor_widget.set_edit_tline_frame(frame, frame - edit_data["edit_frame"])
+    gui.monitor_widget.update_roll_match_frame()
+    
     PLAYER().seek_frame(frame)
 
 def _tworoll_trim_right(delta):
@@ -318,6 +325,9 @@ def _tworoll_trim_right(delta):
     frame = _legalize_two_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
 
+    gui.monitor_widget.set_edit_tline_frame(frame, frame - edit_data["edit_frame"])
+    gui.monitor_widget.update_roll_match_frame()
+    
     PLAYER().seek_frame(frame)
 
 def _tworoll_enter_edit():
@@ -421,7 +431,14 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         clip = edit_data["from_clip"]
         clip_start = trim_limits["from_start"]
 
-    # Display trim clip
+    # Init trim view layout
+    if edit_data["to_side_being_edited"]:
+        gui.monitor_widget.set_start_trim_view(edit_data["from_clip"], clip_start)
+    else:
+        gui.monitor_widget.set_end_trim_view(edit_data["to_clip"], clip_start)
+    gui.monitor_widget.set_edit_tline_frame(current_frame, current_frame - edit_frame)
+
+    # Set interactive trimview on hidden track
     if clip.media_type != appconsts.PATTERN_PRODUCER:
         current_sequence().display_trim_clip(clip.path, clip_start) # file producer
     else:
@@ -498,7 +515,8 @@ def oneroll_trim_move(x, y, frame, state):
     global edit_data
     frame = _legalize_one_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
-    
+    gui.monitor_widget.set_edit_tline_frame(frame, frame - edit_data["edit_frame"])
+
     PLAYER().seek_frame(frame)
     
 def oneroll_trim_release(x, y, frame, state):
@@ -514,7 +532,9 @@ def oneroll_trim_release(x, y, frame, state):
         tlinewidgets.trim_mode_in_non_active_state = False 
         gui.tline_canvas.widget.queue_draw()
         return
-
+    
+    gui.monitor_widget.one_roll_mouse_release(edit_data["edit_frame"], frame - edit_data["edit_frame"])
+    
     _do_one_roll_trim_edit(frame)
 
 def _do_one_roll_trim_edit(frame):
@@ -636,12 +656,14 @@ def _pressed_on_one_roll_active_area(frame):
 def set_tworoll_mode(track, current_frame = -1):
     """
     Sets two roll mode
-    """
+    """     
     if track == None:
         return False
     
+    current_frame_trim_view_fix = 0
     if current_frame == -1:
         current_frame = PLAYER().producer.frame() + 1 # +1 because cut frame selects previous clip
+        current_frame_trim_view_fix = -1 # when initing trim view the +1 for current frame needs to be undone
 
     if current_frame >= track.get_length():
         return False
@@ -698,6 +720,16 @@ def set_tworoll_mode(track, current_frame = -1):
     else:
         clip = edit_data["from_clip"]
         clip_start = trim_limits["from_start"]
+
+    # Init two roll trim view layout
+    if edit_data["to_side_being_edited"]:
+        gui.monitor_widget.set_roll_trim_right_active_view(edit_data["from_clip"], clip_start)
+    else:
+        gui.monitor_widget.set_roll_trim_left_active_view(edit_data["to_clip"], clip_start)
+    gui.monitor_widget.set_edit_tline_frame(current_frame + current_frame_trim_view_fix, 
+                                            current_frame + current_frame_trim_view_fix - edit_frame)
+
+    # Set interactive trim view clip on hidden track
     if clip.media_type != appconsts.PATTERN_PRODUCER:
         current_sequence().display_trim_clip(clip.path, clip_start) # File producer
     else:
@@ -725,7 +757,9 @@ def tworoll_trim_press(event, frame):
         _attempt_reinit_tworoll(event, frame)
         return
 
-    global edit_data
+    global edit_data, submode
+    submode = MOUSE_EDIT_ON
+
     frame = _legalize_two_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
     PLAYER().seek_frame(frame)
@@ -762,6 +796,9 @@ def tworoll_trim_move(x, y, frame, state):
     frame = _legalize_two_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
 
+    gui.monitor_widget.set_edit_tline_frame(frame, frame - edit_data["edit_frame"])
+    gui.monitor_widget.update_roll_match_frame()
+
     PLAYER().seek_frame(frame)
     
 def tworoll_trim_release(x, y, frame, state):
@@ -777,9 +814,15 @@ def tworoll_trim_release(x, y, frame, state):
         mouse_disabled = False
         return
 
-    global edit_data
+    global edit_data, submode
+    submode = NOTHING_ON # we can now enter keyboard edits
+     
     frame = _legalize_two_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
+
+    gui.monitor_widget.set_edit_tline_frame(frame, frame - edit_data["edit_frame"])
+    gui.monitor_widget.update_roll_match_frame()
+    
     _do_two_roll_edit(frame)
 
 def tworoll_play_pressed():
@@ -837,7 +880,7 @@ def two_rolledit_done(was_redo, cut_frame, delta, track, to_side_being_edited):
     # Calculated frame always reinits in to side, so we need to 
     # step one back to reinit on from side if we did the edit from that side
     if to_side_being_edited != True:
-        frame = frame - 1
+        frame = frame - 2
         if frame < 0:
             frame = 0
 
@@ -902,10 +945,10 @@ def _get_two_roll_first_and_last():
                  
     return (first, last)
 
-#---------------------------------------- SLIDE ROLL TRIM EVENTS
-def set_slide_mode(track, current_frame):
+#---------------------------------------- SLIP ROLL TRIM EVENTS
+def set_slide_mode(track, current_frame): # we need to change to to correct one some time
     """
-    Sets two roll mode
+    Sets SLIP tool mode
     """
     if track == None:
         return None
@@ -944,10 +987,21 @@ def set_slide_mode(track, current_frame):
     clip = edit_data["clip"]
     clip_start = 0 # we'll calculate the offset from actual position of clip on timeline to display the frame displayed after sliding
 
+
+    # Init two roll trim view layout
+    if not start_frame_being_viewed:
+        gui.monitor_widget.set_slip_trim_right_active_view(edit_data["clip"], clip_start)
+        gui.monitor_widget.set_edit_tline_frame(clip.clip_out, 0)
+    else:
+        gui.monitor_widget.set_slip_trim_left_active_view(edit_data["clip"], clip_start)
+        gui.monitor_widget.set_edit_tline_frame(clip.clip_in, 0)
+    
+    # Set interactive trim view clip on hidden track
     if clip.media_type != appconsts.PATTERN_PRODUCER:
         current_sequence().display_trim_clip(clip.path, clip_start) # File producer
     else:
         current_sequence().display_trim_clip(None, clip_start, clip.create_data) # pattern producer
+        
     if start_frame_being_viewed:
         PLAYER().seek_frame(clip.clip_in)
     else:
@@ -1019,6 +1073,9 @@ def slide_trim_press(event, frame):
         _attempt_reinit_slide(event, frame)
         return
 
+    global submode
+    submode = MOUSE_EDIT_ON
+    
     display_frame = _update_slide_trim_for_mouse_frame(frame)
     PLAYER().seek_frame(display_frame)
 
@@ -1026,6 +1083,10 @@ def slide_trim_move(x, y, frame, state):
     if mouse_disabled:
         return
 
+    mouse_delta = edit_data["press_start"] - frame
+    #gui.monitor_widget.set_edit_tline_frame(frame, mouse_delta)
+    gui.monitor_widget.set_slip_edit_tline_frame(edit_data["clip"], mouse_delta)
+        
     display_frame = _update_slide_trim_for_mouse_frame(frame)
     PLAYER().seek_frame(display_frame)
 
@@ -1042,7 +1103,8 @@ def slide_trim_release(x, y, frame, state):
     display_frame = _update_slide_trim_for_mouse_frame(frame)
     PLAYER().seek_frame(display_frame)
 
-    global edit_data
+    global edit_data, submode
+    submode = NOTHING_ON # we can now enter keyboard edits
     display_frame = _update_slide_trim_for_mouse_frame(frame)
     PLAYER().seek_frame(display_frame)
     _do_slide_edit()

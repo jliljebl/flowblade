@@ -545,6 +545,13 @@ def tline_canvas_mouse_pressed(event, frame):
         # This shouldn't happen unless for some reason mouse release didn't hit clipenddragmode listener.
         print "EDIT_MODE() == editorstate.CLIP_END_DRAG at mouse press!"
 
+    #  Check if match frame close is hit
+    if editorstate.current_is_move_mode() and timeline_visible():
+        if tlinewidgets.match_frame_close_hit(event.x, event.y) == True:
+            tlinewidgets.set_match_frame(-1, -1, True)
+            updater.repaint_tline()
+            return
+
     #  Check if compositor is hit and if so handle compositor editing
     if editorstate.current_is_move_mode() and timeline_visible():
         hit_compositor = tlinewidgets.compositor_hit(frame, event.y, current_sequence().compositors)

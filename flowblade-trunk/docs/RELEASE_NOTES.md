@@ -1,5 +1,75 @@
 # Release Notes #
 
+## Flowblade 1.8 ##
+
+**Date: September 19, 2016**
+
+**Flowblade 1.8** is the twelth release of Flowblade. 
+
+During this cycle a lot of time was spend on creating a website for the project and on bringing a node compositor tool to Flowblade. Website was succesfully deployed, but the node compositor tool was dropped in final stages of development.
+
+The node compositor was dropped when I realized that it does not serve any user group particularly well.
+
+Casual users will find difficult to use node compositors effectively as any non-trivial composition requires creating complex node graphs. On the other hand adcanced users already have alternative FLOSS solutions like Natron and Blender available, and are unlikely to adopt this tool in meaningful numbers.
+
+Once it became clear that it would require postponing this release quite a bit to do the remaining bugfixing and creating documentation, I decided that the project is best served by allocating resources to other areas of development.
+
+We did get some good stuff in, and with the next cycle we can hopefully get moving with improved speed of feature development.
+
+Particular attention will given to the current *Issues* list, with some of the other focus areas being improving integration between tools and timeline, and an attempt to make nested clips available.
+
+### Flowblade Main Features ###
+
+* **Keybord trimming with arrow keys** Trim positions can now be moved using arrow keys and trim edit confirmed with pressing Enter key. This is often more convenient and precise then always working with a mouse
+* **Clip Snapping** Clips and compositors will now snap to clip ends on adjacent tracks when clips or compositors are moved or their ends dragged. 
+* **Clips display media thumbnails** This helps differentiating clips from each other on timeline.
+* **EDL export** is now available. Thanks to Github user *tin2tin* for extensive testing on software not available on my system. Unfortunately it became clear that Blender EDL import is buggy.
+
+### G'MIC Film Emulation Filters ###
+
+G'MIC Effects tool got an important capability update with the addition of film emulation filters.
+
+G'MIC Film Emulation Filters change the tones and gamma of the image to resemble different film stocks. Where as other color correction filters available in Flowblade work with luma or R,G,B LUTs, film emulation filters employ much bigger LUTs which are applied to the 3D color space of the image, and can achieve more detailed changes. 
+
+The results have been quite nice during testing; it is often possible to achive subtle effects that greatly improve the look of the material.
+
+
+### Contributions ###
+
+In this cycle we got the largest amount of contributions per cycle so far.
+
+* **Hungarian translation** was provided by Péter Gábor. These take a big amount work and we're always happy to receive a new one.
+* **Play/pause toggle with single button** functionality was provided by Github user *dvdlvr*. This has been asked before so a portion of users probably likes it better like. The new behaviour needs to be activated from *Preferences*
+* **Titler remembers last save directory** patch by Martin Mois. Before the user needed to always navigate away from the default folder when saving titles.
+* **New anti-aliased the monitor control icons and modified the clear marks icon** by Github user *bergamote* improve visuals on that part of the GUI.
+
+
+###  Bugfixes and enhancements ###
+* "Change Project" functionality fixed, and works much better now 
+* If first loaded media does not match current project profile, user is informed and given option to switch to matching profile.
+* Fix assoc file launch from e.g. Nautilus
+* Improve missing rendered transition media overlap info
+* Compositors can now move by dragging from middle too, not just edges
+* Do gi.require() for Gtk and PangoCairo to silence warnings and specify Gtk+ 3
+* Make MLT version detection work for two digit version number parts
+* Fix adding media while in proxy mode
+* Check and give info on IO errors when saving in main app and relinker
+* Add keyboard shorcut 'R' for resyncing selected clip or compositor
+* Display image sizes for graphics files in info dialogs
+* Make CTRL + Mouse toggle media items selection state, not just add to selection
+* Make KeyFrameEditor prev button update keuframes info
+* Fix updating non-existing clip in effects editor after delete
+* Make Compositor GUI edit update keyframe count display
+* Add user selectable scope overlay opacity
+* Add timeline start indicator triangles
+* Remove non-existing files from recents list
+* Fix launching uninited renders
+* Fix too long filename layout bug in filter editor
+* Fix unicode project name bug
+* Display warning icons for non-profile-matching video media
+* Reset titler for new project
+
+
 
 ## Flowblade 1.6 ##
 
