@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-27 14:41+0200\n"
-"PO-Revision-Date: 2016-09-22 15:35+0100\n"
+"POT-Creation-Date: 2016-09-28 12:53+0200\n"
+"PO-Revision-Date: 2016-09-28 12:53+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
 "Language: hu-HU\n"
@@ -369,7 +369,7 @@ msgstr "Beszúrás"
 
 #: editorwindow.py:164
 msgid "Three Point Overwrite"
-msgstr ""
+msgstr "Három pontos felülírás"
 
 #: editorwindow.py:165
 msgid "Range Overwrite"
@@ -1387,7 +1387,7 @@ msgstr "\"B\" jelzőhöz ugrás"
 
 #: dialogs.py:1101
 msgid "3 Point Overwrite Insert"
-msgstr ""
+msgstr "Három pontos felülírás - beillesztés"
 
 #: dialogs.py:1102
 msgid "Add Mark"
@@ -1427,7 +1427,7 @@ msgstr "Balra nyíl"
 
 #: dialogs.py:1107
 msgid "Prev Frame Trim Edit"
-msgstr ""
+msgstr "Vágásjel az előző képkockára"
 
 #: dialogs.py:1108 dialogs.py:1120 dialogs.py:1141
 msgid "Right Arrow"
@@ -1435,7 +1435,7 @@ msgstr "Jobbra nyíl"
 
 #: dialogs.py:1108
 msgid "Next Frame Trim Edit"
-msgstr ""
+msgstr "Vágásjel a következő képkockára"
 
 #: dialogs.py:1109 dialogs.py:1121
 msgid "Control + Left Arrow "
@@ -1443,7 +1443,7 @@ msgstr "Ctrl + Balra nyíl"
 
 #: dialogs.py:1109
 msgid "Back 10 Frames Trim Edit"
-msgstr ""
+msgstr "Vágásjel 10 képkockával vissza"
 
 #: dialogs.py:1110 dialogs.py:1122
 msgid "Control + Right Arrow"
@@ -1451,7 +1451,7 @@ msgstr "Ctrl + Jobbra nyíl"
 
 #: dialogs.py:1110
 msgid "Forward 10 Frames Trim Edit"
-msgstr ""
+msgstr "Vágásjel 10 képkockával előre"
 
 #: dialogs.py:1111
 msgid "ENTER"
@@ -1459,7 +1459,7 @@ msgstr "ENTER"
 
 #: dialogs.py:1111
 msgid "Complete Keyboard Trim Edit"
-msgstr ""
+msgstr "Vágás végrehajtása billenytűzettel"
 
 #: dialogs.py:1112
 msgid "Timeline"
@@ -2053,7 +2053,7 @@ msgstr "RGB parádé"
 
 #: guicomponents.py:2002
 msgid "Overlay Opacity"
-msgstr "Átfedés átlátszatlansága"
+msgstr "Rávetítés átlátszatlansága"
 
 #: guicomponents.py:2007
 msgid "100%"
@@ -2628,7 +2628,7 @@ msgstr "Jel eltolás"
 
 #: translations.py:157
 msgid "Distort - Sinus Wavewrap"
-msgstr "Torzítás - szinusz burkológörbe"
+msgstr "Torzítás - Szinusz burkológörbe"
 
 #: translations.py:158
 msgid "Vinyl Effect"
@@ -2890,7 +2890,7 @@ msgstr "Szín kulcs"
 
 #: translations.py:236 mlttransitions.py:123
 msgid "Affine"
-msgstr "Affin"
+msgstr "Összetett átalakítás (Affin)"
 
 #: translations.py:237
 msgid "Color Adjustment"
@@ -3351,11 +3351,11 @@ msgstr "Fejlődés hossza"
 
 #: translations.py:390
 msgid "Triplevel"
-msgstr ""
+msgstr "Ugrásszint"
 
 #: translations.py:391
 msgid "Difference Space"
-msgstr ""
+msgstr "Köztes tér"
 
 #: translations.py:392
 msgid "Block width"
@@ -3371,11 +3371,11 @@ msgstr "Méret"
 
 #: translations.py:403
 msgid "U"
-msgstr "U"
+msgstr "U (sárga-kék)"
 
 #: translations.py:404
 msgid "V"
-msgstr "V"
+msgstr "V (türkizkék-vörös)"
 
 #: translations.py:405 translations.py:412
 msgid "Black"
@@ -4092,7 +4092,7 @@ msgstr "Világosítás"
 
 #: mlttransitions.py:147
 msgid "Overlay"
-msgstr "Átfedés"
+msgstr "Rávetítés"
 
 #: mlttransitions.py:149
 msgid "Screen"
@@ -4858,7 +4858,7 @@ msgstr "Médiákkal végzett fogd és vidd művelet a sávokon (kivéve V1)"
 
 #: preferenceswindow.py:197
 msgid "Cover Transition/Fade clips on delete if possible"
-msgstr "Törléskor az áttűnés/halványodás klipeket is foglalja bele ha lehet"
+msgstr "Törléskor a klipek áttűnését/halványodását is foglalja bele ha lehet"
 
 #: preferenceswindow.py:199
 msgid "Enable single Play/Pause button"
@@ -5224,7 +5224,7 @@ msgstr " helyettesítő fájlhoz.\n"
 
 #: proxyediting.py:454
 msgid "Render Unrendered Possible & Use existing"
-msgstr ""
+msgstr "A még nem rendereltek elkészítése és a létezők használata"
 
 #: proxyediting.py:455
 msgid "Rerender All Possible"
@@ -5302,7 +5302,7 @@ msgstr ""
 
 #: tlineaction.py:703
 msgid "<b>FIRST CLIP MEDIA OVERLAP:</b>  "
-msgstr ""
+msgstr "<b>ELSŐ MÉDIA KLIP ÁTFEDÉSE:</b> "
 
 #: tlineaction.py:704 tlineaction.py:712
 msgid "Available <b>"
@@ -5322,7 +5322,7 @@ msgstr "</b> képkocka"
 
 #: tlineaction.py:711
 msgid "<b>SECOND CLIP MEDIA OVERLAP:</b> "
-msgstr ""
+msgstr "<b>MÁSODIK MÉDIA KLIP ÁTFEDÉSE:</b> "
 
 #: tlineaction.py:713
 msgid "</b> frame(s) "
@@ -5330,11 +5330,11 @@ msgstr "</b> képkocka "
 
 #: tlineaction.py:720
 msgid "Current situation, not enought media overlap:"
-msgstr ""
+msgstr "Jelenleg nincs elég átfedés a médiák között:"
 
 #: tlineaction.py:722
 msgid "You need more media overlap:"
-msgstr ""
+msgstr "Hosszabb média átfedésre van szükség:"
 
 #: tlineaction.py:751
 msgid "More media overlap needed to create transition!"
