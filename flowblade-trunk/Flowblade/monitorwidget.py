@@ -291,9 +291,7 @@ class MonitorWidget:
         # previous rendered data. 
         if PLAYER().is_rendering:
             return
-        
-        print "RIGHT ACTIVE"
-        
+
         self.view = SLIP_TRIM_RIGHT_ACTIVE_VIEW
         self.match_frame_surface = None
         self.edit_clip_start_on_tline = edit_clip_start
@@ -329,9 +327,7 @@ class MonitorWidget:
         # previous rendered data. 
         if PLAYER().is_rendering:
             return
-        
-        print "LEFT ACTIVE"
-                
+    
         self.view = SLIP_TRIM_LEFT_ACTIVE_VIEW
         self.match_frame_surface = None
         self.edit_clip_start_on_tline = edit_clip_start
@@ -398,10 +394,15 @@ class MonitorWidget:
             self.edit_tline_frame = clip.clip_out + edit_delta
         else:
             self.edit_tline_frame = clip.clip_in + edit_delta
-            
+    
         self.edit_delta = edit_delta
         self.bottom_edge_panel.queue_draw()
-        
+    
+        match_frame = self.match_frame + self.edit_delta
+
+        match_surface_creator = MatchSurfaceCreator(match_frame)
+        match_surface_creator.start()
+            
     def one_roll_mouse_release(self, edit_tline_frame, edit_delta):
         if editorstate.show_trim_view == False:
             return
