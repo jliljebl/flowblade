@@ -89,6 +89,7 @@ profile_warning_icon = None
 markers_menu = Gtk.Menu.new()
 tracks_menu = Gtk.Menu.new()
 monitor_menu = Gtk.Menu.new()
+trim_view_menu = Gtk.Menu.new()
 tools_menu = Gtk.Menu.new()
 file_filter_menu = Gtk.Menu()
 column_count_menu = Gtk.Menu()
@@ -1028,6 +1029,12 @@ def get_monitor_view_select_combo(callback):
     menu_launch.surface_y = 10
     return menu_launch
 
+def get_trim_view_select_combo(callback):
+    surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "trim_view.png")
+    menu_launch = PressLaunch(callback, surface, w=24, h=20)
+    menu_launch.surface_y = 10
+    return menu_launch
+    
 def get_compositor_track_select_combo(source_track, target_track, callback):
     tracks_combo = Gtk.ComboBoxText()
     active_index = -1
@@ -2039,6 +2046,34 @@ def get_monitor_view_popupmenu(launcher, event, callback):
 
     menu.popup(None, None, None, None, event.button, event.time)
 
+def get_trim_view_popupmenu(launcher, event, callback):
+    menu = trim_view_menu
+    guiutils.remove_children(menu)
+
+    trim_view_all = Gtk.RadioMenuItem()
+    trim_view_all.set_label(_("Trim View On").encode('utf-8'))
+    trim_view_all.connect("activate", callback, 5)
+    trim_view_all.show()
+    menu.append(trim_view_all)
+    
+    trim_view_single = Gtk.RadioMenuItem.new_with_label([trim_view_all], _("Trim View Single Side Edits Only").encode('utf-8'))
+    trim_view_single.connect("activate", callback, 4)
+    trim_view_single.show()
+    menu.append(trim_view_single)
+
+    no_trim_view = Gtk.RadioMenuItem.new_with_label([trim_view_all], _("Trim View Off").encode('utf-8'))
+    no_trim_view.connect("activate", callback, 3)
+    no_trim_view.show()
+    menu.append(no_trim_view)
+
+
+    active_index = 0 #current_sequence().get_mix_index()
+    items = [trim_view_all, trim_view_single, no_trim_view]
+    active_item = items[active_index]
+    active_item.set_active(True)
+
+    menu.popup(None, None, None, None, event.button, event.time)
+    
 def get_mode_selector_popup_menu(launcher, event, callback):
     menu = tools_menu
     guiutils.remove_children(menu)

@@ -30,6 +30,7 @@ from editorstate import EDIT_MODE
 from editorstate import current_is_move_mode
 from editorstate import MONITOR_MEDIA_FILE
 import gui
+import guicomponents
 import movemodes
 import trimmodes
 import updater
@@ -265,7 +266,14 @@ def down_arrow_seek_on_monitor_clip():
 
     PLAYER().seek_frame(0)
 
+# -------------------------------------------------- monitor playback interpolation
 def set_monitor_playback_interpolation(new_interpolation):
     PLAYER().consumer.set("rescale", str(new_interpolation)) # MLT options "nearest", "bilinear", "bicubic", "hyper" hardcoded into menu items
+
+# --------------------------------------------------------- trim view
+def trim_view_menu_launched(launcher, event):
+    guicomponents.get_trim_view_popupmenu(launcher, event, _trim_view_menu_item_activated)
     
-    
+
+def _trim_view_menu_item_activated(widget, msg):
+    pass

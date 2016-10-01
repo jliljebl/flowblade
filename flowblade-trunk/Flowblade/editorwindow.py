@@ -517,24 +517,17 @@ class EditorWindow:
 
         # Switch / pos bar row
         self.view_mode_select = guicomponents.get_monitor_view_select_combo(lambda w, e: tlineaction.view_mode_menu_lauched(w, e))
+        self.trim_view_select = guicomponents.get_trim_view_select_combo(lambda w, e: monitorevent.trim_view_menu_launched(w, e))
         sw_pos_hbox = Gtk.HBox(False, 1)
         sw_pos_hbox.pack_start(self.sequence_editor_b, False, True, 0)
         sw_pos_hbox.pack_start(self.clip_editor_b, False, True, 0)
         sw_pos_hbox.pack_start(pos_bar_frame, True, True, 0)
+        sw_pos_hbox.pack_start(self.trim_view_select.widget, False, False, 0)
         sw_pos_hbox.pack_start(self.view_mode_select.widget, False, False, 0)
         sw_pos_hbox.set_margin_top(4)
         sw_pos_hbox.set_margin_left(2)
         
         # Video display
-        """
-        black_box = Gtk.EventBox()
-        black_box.add(Gtk.Label())
-        bg_color = Gdk.Color(red=0.0, green=0.0, blue=0.0)
-        black_box.modify_bg(Gtk.StateType.NORMAL, bg_color)
-
-        self.tline_display = black_box # This could be any GTK+ widget (that is not "windowless"), only its XWindow draw rect 
-                                       # is used to position and scale SDL overlay that actually displays video.
-        """
         monitor_widget = monitorwidget.MonitorWidget()
         self.tline_display = monitor_widget.get_monitor()
         self.monitor_widget = monitor_widget
@@ -543,7 +536,6 @@ class EditorWindow:
 
         # Monitor
         monitor_vbox = Gtk.VBox(False, 1)
-        #monitor_vbox.pack_start(self.tline_display, True, True, 0)
         monitor_vbox.pack_start(monitor_widget.widget, True, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
         monitor_vbox.pack_start(player_buttons_row, False, True, 0)
