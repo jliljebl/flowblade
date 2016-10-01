@@ -987,13 +987,12 @@ def set_slide_mode(track, current_frame): # we need to change to to correct one 
     clip = edit_data["clip"]
     clip_start = 0 # we'll calculate the offset from actual position of clip on timeline to display the frame displayed after sliding
 
-
     # Init two roll trim view layout
     if not start_frame_being_viewed:
-        gui.monitor_widget.set_slip_trim_right_active_view(edit_data["clip"], clip_start)
+        gui.monitor_widget.set_slip_trim_right_active_view(edit_data["clip"])
         gui.monitor_widget.set_edit_tline_frame(clip.clip_out, 0)
     else:
-        gui.monitor_widget.set_slip_trim_left_active_view(edit_data["clip"], clip_start)
+        gui.monitor_widget.set_slip_trim_left_active_view(edit_data["clip"])
         gui.monitor_widget.set_edit_tline_frame(clip.clip_in, 0)
     
     # Set interactive trim view clip on hidden track
