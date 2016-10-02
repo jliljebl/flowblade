@@ -36,7 +36,7 @@ import utils
 
 destroy_window_event_id = -1
 
-FFMPEG_VIEW_SIZE = (200, 20) # Text edit area height for render opts. Width 200 seems to be ignored in current layout?
+FFMPEG_VIEW_SIZE = (20, 20) # Text edit area height for render opts. Width 200 seems to be ignored in current layout?
 
 
 # ----------------------------------------------------------- dialogs
@@ -433,12 +433,12 @@ def get_render_panel_left(render_widgets):
 
     if small_height == False:
         encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
-        render_type_panel = guiutils.get_named_frame(_("Render Type"), render_widgets.render_type_panel.vbox, 4)
+    
+    render_type_panel = guiutils.get_named_frame(_("Render Type"), render_widgets.render_type_panel.vbox, 4)
     
     render_panel = Gtk.VBox()
     render_panel.pack_start(file_opts_panel, False, False, 0)
-    if small_height == False:
-        render_panel.pack_start(render_type_panel, False, False, 0)
+    render_panel.pack_start(render_type_panel, False, False, 0)
     render_panel.pack_start(profile_panel, False, False, 0)
     if small_height == False:
         render_panel.pack_start(encoding_panel, False, False, 0)
@@ -451,7 +451,6 @@ def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_c
 
     if small_height:
         encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
-        render_type_panel = guiutils.get_named_frame(_("Render Type"), render_widgets.render_type_panel.vbox, 4)
                 
     opts_panel = guiutils.get_named_frame(_("Render Args"), render_widgets.args_panel.vbox, 4)
     
@@ -464,15 +463,17 @@ def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_c
 
     range_row = Gtk.HBox()
     range_row.pack_start(guiutils.get_pad_label(10, 8),  False, False, 0)
-    range_row.pack_start(Gtk.Label(label=_("Render Range:")),  False, False, 0)
-    range_row.pack_start(guiutils.get_pad_label(10, 2),  False, False, 0)
+    if not  editorstate.screen_size_small_width():
+        range_row.pack_start(Gtk.Label(label=_("Render Range:")),  False, False, 0)
+        range_row.pack_start(guiutils.get_pad_label(10, 2),  False, False, 0)
     range_row.pack_start(render_widgets.range_cb,  True, True, 0)
 
     buttons_panel = Gtk.HBox()
     buttons_panel.pack_start(guiutils.get_pad_label(10, 8), False, False, 0)
     buttons_panel.pack_start(render_widgets.reset_button, False, False, 0)
-    buttons_panel.pack_start(Gtk.Label(), True, True, 0)
-    buttons_panel.pack_start(render_widgets.queue_button, False, False, 0)
+    if not  editorstate.screen_size_small_width():
+        buttons_panel.pack_start(Gtk.Label(), True, True, 0)
+        buttons_panel.pack_start(render_widgets.queue_button, False, False, 0)
     buttons_panel.pack_start(Gtk.Label(), True, True, 0)
     buttons_panel.pack_start(render_widgets.render_button, False, False, 0)
 
@@ -486,7 +487,6 @@ def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_c
 
     render_panel = Gtk.VBox()
     if small_height:
-        render_panel.pack_start(render_type_panel, False, False, 0)
         render_panel.pack_start(encoding_panel, False, False, 0)
         render_panel.pack_start(Gtk.Label(), True, True, 0)
     else:
@@ -578,7 +578,8 @@ class RenderProfilePanel():
         self.vbox = Gtk.VBox(False, 2)
         self.vbox.pack_start(use_project_profile_row, False, False, 0)
         self.vbox.pack_start(self.out_profile_combo.widget, False, False, 0)
-        self.vbox.pack_start(self.out_profile_info_box, False, False, 0)
+        if editorstate.screen_size_small_height() == False:
+            self.vbox.pack_start(self.out_profile_info_box, False, False, 0)
 
     def set_sensitive(self, value):
         self.use_project_profile_check.set_sensitive(value)

@@ -175,14 +175,23 @@ def get_copy_paste_objects():
     return _copy_paste_objects
 
 def screen_size_small_height():
-    if SCREEN_HEIGHT < 865:
+    if SCREEN_HEIGHT < 901:
+        return True
+    else:
+        if SCREEN_WIDTH < 1280:
+            return True
+            
+        return False
+
+def screen_size_small_width():
+    if SCREEN_WIDTH < 1368:
         return True
     else:
         return False
 
-def screen_size_small_width():
-    if SCREEN_WIDTH < 1200:
+def screen_size_small():
+    if screen_size_small_height() == True or screen_size_small_width() == True:
         return True
-    else:
-        return False
-        
+    
+    return False
+
