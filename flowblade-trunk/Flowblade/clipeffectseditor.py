@@ -372,6 +372,8 @@ def dnd_row_deleted(model, path):
             stack_dnd_state = NOT_ON
             insert_row = int(stack_dnd_event_info)
             delete_row = int(path.to_string())
+            if abs(insert_row - delete_row) < 2: # filter was dropped on its previous place
+                return
             stack_dnd_event_info = (insert_row, delete_row)
             # Because of dnd is gtk thing it for some internal reason needs to complete before we go 
             # touching storemodel again with .clear() or it dies in gtktreeviewaccessible.c

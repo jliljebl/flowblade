@@ -1357,39 +1357,49 @@ def move_filter_action(data):
 
 def _move_filter_undo(self):
     _detach_all(self.clip)
+
+    """
+    # STEP 1: Insert filter
+    if self.delete_index < self.insert_index:
+        # d < i, moved filter can be found at d
+        #moved_filter = self.clip.filters[elf.delete_index]
+       # final_index = self.insert_index - 1
+    else:   
+        #final_index = self.insert_index
+
+    #move_filter = self.clip.filters.pop(final_index)
+    """
     try:
-        self.clip.filters.insert(self.index, self.filter_object)
+        self.clip.filters.insert(self.delete_index, move_filter)
     except:
-        self.clip.filters.append(self.filter_object)
+        self.clip.filters.append(self.delete_index, move_filter)
 
     _attach_all(self.clip)
-        
-    self.filter_edit_done_func(self.clip,self.index) # updates effect stack gui if needed
+
+    self.filter_edit_done_func(self.clip, self.delete_index)
 
 def _move_filter_redo(self):
     _detach_all(self.clip)
+
     print self.insert_index, self.delete_index
-    try:
-        self.clip.filters.insert(self.insert_index, self.clip.filters[self.delete_index])
-    except:
-        self.clip.filters.append(self.insert_index, self.clip.filters[self.delete_index])
-
-    self.filter_object = self.clip.filters.pop(self.delete_index)
     
+    # STEP 1: Insert filter
     if self.delete_index < self.insert_index:
-        final_index = self.insert_index - 1
-    else:   
-        final_index = self.insert_index
-    #print final_index
-    #self.clip.filters.pop(final_index)
-    #self.clip.filters.insert(final_index, self.filter_object)
-    _attach_all(self.clip)
-    
-    for i in range(0, len(self.clip.filters)):
-        print self.clip.filters[i].info.name
+        # d < i, moved filter can be found at d
+        moved_filter = self.clip.filters[self.delete_index]
+        _filter_move_insert(self.clip.filters, moved_filter, self.insert_index)
+        self.clip.filters.pop(self.delete_index)
+        active_index = self.insert_index - 1
+    else:
+        # d > i, moved filter can be found at d - 1
+        moved_filter = self.clip.filters[self.delete_index - 1]
+        _filter_move_insert(self.clip.filters, moved_filter, self.insert_index)
+        self.clip.filters.pop(self.delete_index)
+        active_index = self.insert_index
 
-    print "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
-    self.filter_edit_done_func(self.clip, final_index)# updates effect stack gui
+    _attach_all(self.clip)
+
+    self.filter_edit_done_func(self.clip, active_index)
     
 def _detach_all(clip):
     mltfilters.detach_all_filters(clip)
@@ -1397,6 +1407,12 @@ def _detach_all(clip):
 def _attach_all(clip):
     mltfilters.attach_all_filters(clip)
 
+def _filter_move_insert(filters_list, f, insert_index):
+    try:
+        filters_list.insert(insert_index, f)
+    except:
+        filters_list.append(insert_index, f)
+        
 #------------------- REMOVE MULTIPLE FILTERS
 # "clips"
 # Adds filter to clip.
