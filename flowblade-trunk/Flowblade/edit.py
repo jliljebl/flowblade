@@ -1348,6 +1348,49 @@ def _remove_filter_redo(self):
 
     self.filter_edit_done_func(self.clip, len(self.clip.filters) - 1)# updates effect stack gui
 
+#------------------- MOVE FILTER
+# "clip",""insert_index","delete_index"","filter_edit_done_func"
+# MOves filter in filter stack filter to clip.
+def move_filter_action(data):
+    action = EditAction(_move_filter_undo,_move_filter_redo, data)
+    return action
+
+def _move_filter_undo(self):
+    _detach_all(self.clip)
+    try:
+        self.clip.filters.insert(self.index, self.filter_object)
+    except:
+        self.clip.filters.append(self.filter_object)
+
+    _attach_all(self.clip)
+        
+    self.filter_edit_done_func(self.clip,self.index) # updates effect stack gui if needed
+
+def _move_filter_redo(self):
+    _detach_all(self.clip)
+    print self.insert_index, self.delete_index
+    try:
+        self.clip.filters.insert(self.insert_index, self.clip.filters[self.delete_index])
+    except:
+        self.clip.filters.append(self.insert_index, self.clip.filters[self.delete_index])
+
+    self.filter_object = self.clip.filters.pop(self.delete_index)
+    
+    if self.delete_index < self.insert_index:
+        final_index = self.insert_index - 1
+    else:   
+        final_index = self.insert_index
+    #print final_index
+    #self.clip.filters.pop(final_index)
+    #self.clip.filters.insert(final_index, self.filter_object)
+    _attach_all(self.clip)
+    
+    for i in range(0, len(self.clip.filters)):
+        print self.clip.filters[i].info.name
+
+    print "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"
+    self.filter_edit_done_func(self.clip, final_index)# updates effect stack gui
+    
 def _detach_all(clip):
     mltfilters.detach_all_filters(clip)
 

@@ -386,12 +386,14 @@ class FilterSwitchListView(Gtk.VBox):
     GUI component displaying list of filters applied to a clip.
     """
 
-    def __init__(self, selection_cb, toggle_cb):
+    def __init__(self, selection_cb, toggle_cb, row_deleted, row_inserted):
         GObject.GObject.__init__(self)
 
-       # Datamodel: icon, text, icon
+        # Datamodel: icon, text, icon
         self.storemodel = Gtk.ListStore(GdkPixbuf.Pixbuf, str, bool)
-
+        self.storemodel.connect("row-deleted", row_deleted)
+        self.storemodel.connect("row-inserted", row_inserted)
+        
         # Scroll container
         self.scroll = Gtk.ScrolledWindow()
         self.scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
@@ -401,6 +403,9 @@ class FilterSwitchListView(Gtk.VBox):
         self.treeview = Gtk.TreeView(self.storemodel)
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(False)
+        self.treeview.set_reorderable(True)
+
+        
         tree_sel = self.treeview.get_selection()
         tree_sel.set_mode(Gtk.SelectionMode.SINGLE)
 
@@ -466,8 +471,11 @@ class FilterSwitchListView(Gtk.VBox):
         filter_group is array of mltfilter.FilterInfo objects.
         filter_obejcts is array of mltfilter.FilterObject objects
         """
+        print "uuu"
         self.storemodel.clear()
+        print "llll"
         for i in range(0, len(filter_group)):
+            print "fiil", i
             f = filter_group[i]
             row_data = [f.get_icon(),
                         translations.get_filter_name(f.name),

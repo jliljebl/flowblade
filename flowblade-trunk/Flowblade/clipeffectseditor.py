@@ -23,9 +23,9 @@ Module handles clip effects editing logic and gui
 """
 
 
-
+from gi.repository import GLib
 from gi.repository import Gtk
-
+import time
 
 import dnd
 import edit
@@ -53,6 +53,14 @@ block_changed_update = False # Used to block unwanted callback update from "chan
 # Used to update kfeditors with external tline frame position changes
 keyframe_editor_widgets = []
 
+# Filter stack DND requires some state info to be maintained to make sure that it's only done when certain events
+# happen in a certain sequence.
+NOT_ON = 0
+MOUSE_PRESS_DONE = 1
+INSERT_DONE = 2
+stack_dnd_state = NOT_ON
+stack_dnd_event_time = 0.0
+stack_dnd_event_info = None
 
 def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     """
@@ -200,8 +208,12 @@ def create_widgets():
     widgets.exit_button.connect("clicked", lambda w: _quit_editing_clip_clicked())
     widgets.exit_button.set_tooltip_text(_("Quit editing Clip in editor"))
 
-    widgets.effect_stack_view = guicomponents.FilterSwitchListView(lambda ts: effect_selection_changed(), toggle_filter_active)
-    dnd.connect_stack_treeview(widgets.effect_stack_view)
+    widgets.effect_stack_view = guicomponents.FilterSwitchListView(lambda ts: effect_selection_changed(), 
+                                                                   toggle_filter_active, dnd_row_deleted, dnd_row_inserted)
+                                                                   
+    widgets.effect_stack_view.treeview.connect("button-press-event", lambda w,e, wtf: stack_view_pressed(), None)
+    #widgets.effect_stack_view.treeview.connect("button-release-event", lambda w,e, wtf: stack_view_released(), None)
+    #dnd.connect_STACK_treeview(widgets.effect_stack_view.treeview, None)
     gui.effect_stack_list_view = widgets.effect_stack_view
     
     widgets.value_edit_box = Gtk.VBox()
@@ -349,7 +361,59 @@ def toggle_filter_active(row, update_stack_view=True):
     filter_object.update_mlt_disabled_value()
     if update_stack_view == True:
         update_stack_view_changed_blocked()
+
+def dnd_row_deleted(model, path):
+    print "deleted:", path.to_string(), time.time()
+
+    now = time.time()
+    global stack_dnd_state, stack_dnd_event_time, stack_dnd_event_info
+    if stack_dnd_state == INSERT_DONE:
+        if (now - stack_dnd_event_time) < 0.1:
+            stack_dnd_state = NOT_ON
+            insert_row = int(stack_dnd_event_info)
+            delete_row = int(path.to_string())
+            stack_dnd_event_info = (insert_row, delete_row)
+            # Because of dnd is gtk thing it for some internal reason needs to complete before we go 
+            # touching storemodel again with .clear() or it dies in gtktreeviewaccessible.c
+            GLib.idle_add(do_dnd_stack_move)
+        else:
+            stack_dnd_state = NOT_ON
+            print "DON't DO DND"
+    else:
+        stack_dnd_state = NOT_ON
+        print "DON't DO DND"
+        
+def dnd_row_inserted(model, path, tree_iter):
+    print "inserted:", path.to_string(), time.time()
+
+    global stack_dnd_state, stack_dnd_event_time, stack_dnd_event_info
+    if stack_dnd_state == MOUSE_PRESS_DONE:
+        stack_dnd_state = INSERT_DONE
+        stack_dnd_event_time = time.time()
+        stack_dnd_event_info = path.to_string()
+    else:
+        stack_dnd_state = NOT_ON
+
+def do_dnd_stack_move():
+    insert, delete_row = stack_dnd_event_info
+    do_stack_move(insert, delete_row)
+    
+def do_stack_move(insert_row, delete_row):
+    data = {"clip":clip,
+            "insert_index":insert_row,
+            "delete_index":delete_row,
+            "filter_edit_done_func":filter_edit_done}
+    action = edit.move_filter_action(data)
+    action.do_edit()
             
+def stack_view_pressed():
+    global stack_dnd_state
+    stack_dnd_state = MOUSE_PRESS_DONE
+
+
+
+
+    
 def effect_selection_changed():
     global keyframe_editor_widgets
 
