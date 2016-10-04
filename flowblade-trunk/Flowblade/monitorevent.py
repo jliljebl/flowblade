@@ -22,6 +22,7 @@
 Module handles button presses from monitor control buttons row.
 """
 
+import appconsts
 import editorstate
 from editorstate import PLAYER
 from editorstate import current_sequence
@@ -276,4 +277,12 @@ def trim_view_menu_launched(launcher, event):
     
 
 def _trim_view_menu_item_activated(widget, msg):
-    pass
+    if widget.get_active() == False:
+        return
+    
+    if msg == "trimon":
+        editorstate.show_trim_view = appconsts.TRIM_VIEW_ON
+    if msg == "trimsingle":
+        editorstate.show_trim_view = appconsts.TRIM_VIEW_SINGLE
+    if msg == "trimoff":
+        editorstate.show_trim_view = appconsts.TRIM_VIEW_OFF

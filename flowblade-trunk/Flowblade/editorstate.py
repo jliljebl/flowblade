@@ -107,7 +107,7 @@ display_clip_media_thumbnails = True
 fullscreen = False
 
 # Flog for showing trim views
-show_trim_view = True
+show_trim_view = appconsts.TRIM_VIEW_ON
 
 def current_is_move_mode():
     if ((edit_mode == INSERT_MOVE) or (edit_mode == OVERWRITE_MOVE) or (edit_mode == MULTI_MOVE)):

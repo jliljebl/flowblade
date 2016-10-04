@@ -2061,26 +2061,29 @@ def get_trim_view_popupmenu(launcher, event, callback):
 
     trim_view_all = Gtk.RadioMenuItem()
     trim_view_all.set_label(_("Trim View On").encode('utf-8'))
-    trim_view_all.connect("activate", callback, 5)
+
     trim_view_all.show()
     menu.append(trim_view_all)
     
     trim_view_single = Gtk.RadioMenuItem.new_with_label([trim_view_all], _("Trim View Single Side Edits Only").encode('utf-8'))
-    trim_view_single.connect("activate", callback, 4)
+
     trim_view_single.show()
     menu.append(trim_view_single)
 
     no_trim_view = Gtk.RadioMenuItem.new_with_label([trim_view_all], _("Trim View Off").encode('utf-8'))
-    no_trim_view.connect("activate", callback, 3)
+
     no_trim_view.show()
     menu.append(no_trim_view)
 
-
-    active_index = 0 #current_sequence().get_mix_index()
+    active_index = editorstate.show_trim_view # The values for this as defines in appconsts.py correspond to indexes here
     items = [trim_view_all, trim_view_single, no_trim_view]
     active_item = items[active_index]
     active_item.set_active(True)
 
+    trim_view_all.connect("activate", callback, "trimon")
+    trim_view_single.connect("activate", callback, "trimsingle")
+    no_trim_view.connect("activate", callback, "trimoff")
+    
     menu.popup(None, None, None, None, event.button, event.time)
     
 def get_mode_selector_popup_menu(launcher, event, callback):

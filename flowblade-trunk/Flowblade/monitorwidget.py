@@ -119,6 +119,21 @@ class MonitorWidget:
     def get_monitor(self):
         return self.monitor
         
+    def is_active(self, attempting_trim=False):
+        if editorstate.show_trim_view == appconsts.TRIM_VIEW_ON:
+            return True
+            
+        if editorstate.show_trim_view == appconsts.TRIM_VIEW_OFF:
+            return False
+        
+        if editorstate.show_trim_view == appconsts.TRIM_VIEW_SINGLE and attempting_trim:
+            return True
+        
+        if (editorstate.show_trim_view == appconsts.TRIM_VIEW_SINGLE and 
+            (self.view == START_TRIM_VIEW or self.view == END_TRIM_VIEW)):
+                return True
+
+        return False
 
     # ------------------------------------------------------------------ SET VIEW TYPE
     def set_default_view(self):
@@ -151,7 +166,7 @@ class MonitorWidget:
         PLAYER().refresh()
         
     def set_start_trim_view(self, match_clip, edit_clip_start):
-        if editorstate.show_trim_view == False:
+        if self.is_active(True) == False:
             return
 
         # Refreshing while rendering overwrites file on disk and loses 
@@ -180,7 +195,7 @@ class MonitorWidget:
         match_frame_write_thread.start()
 
     def set_end_trim_view(self, match_clip, edit_clip_start):
-        if editorstate.show_trim_view == False:
+        if self.is_active(True) == False:
             return
 
         # Refreshing while rendering overwrites file on disk and loses 
@@ -209,7 +224,7 @@ class MonitorWidget:
         match_frame_write_thread.start()
 
     def set_roll_trim_right_active_view(self, match_clip, edit_clip_start):
-        if editorstate.show_trim_view == False:
+        if self.is_active() == False:
             return
 
         # Refreshing while rendering overwrites file on disk and loses 
@@ -238,9 +253,9 @@ class MonitorWidget:
         match_frame_write_thread.start()
 
     def set_roll_trim_left_active_view(self, match_clip, edit_clip_start):
-        if editorstate.show_trim_view == False:
+        if self.is_active() == False:
             return
-
+            
         # Refreshing while rendering overwrites file on disk and loses 
         # previous rendered data. 
         if PLAYER().is_rendering:
@@ -267,7 +282,7 @@ class MonitorWidget:
         match_frame_write_thread.start()
 
     def set_slip_trim_right_active_view(self, match_clip):
-        if editorstate.show_trim_view == False:
+        if self.is_active() == False:
             return
 
         # Refreshing while rendering overwrites file on disk and loses 
@@ -301,7 +316,7 @@ class MonitorWidget:
         match_frame_write_thread.start()
 
     def set_slip_trim_left_active_view(self, match_clip):
-        if editorstate.show_trim_view == False:
+        if self.is_active() == False:
             return
 
         # Refreshing while rendering overwrites file on disk and loses 
@@ -361,7 +376,7 @@ class MonitorWidget:
 
     # ----------------------------------------------------------------- MOUSE EVENTS
     def set_edit_tline_frame(self, edit_tline_frame, edit_delta):
-        if editorstate.show_trim_view == False:
+        if self.is_active() == False:
             return
             
         self.edit_tline_frame = edit_tline_frame
@@ -369,7 +384,7 @@ class MonitorWidget:
         self.bottom_edge_panel.queue_draw()
 
     def set_slip_edit_tline_frame(self, clip, edit_delta):
-        if editorstate.show_trim_view == False:
+        if self.is_active() == False:
             return
 
         if self.view == SLIP_TRIM_RIGHT_ACTIVE_VIEW:
@@ -388,7 +403,7 @@ class MonitorWidget:
         match_surface_creator.start()
             
     def one_roll_mouse_release(self, edit_tline_frame, edit_delta):
-        if editorstate.show_trim_view == False:
+        if self.is_active() == False:
             return
             
         self.edit_tline_frame = edit_tline_frame
@@ -399,7 +414,7 @@ class MonitorWidget:
         self.bottom_edge_panel.queue_draw()
 
     def update_roll_match_frame(self):
-        if editorstate.show_trim_view == False:
+        if self.is_active() == False:
             return
     
         match_frame = self.match_frame + self.edit_delta
