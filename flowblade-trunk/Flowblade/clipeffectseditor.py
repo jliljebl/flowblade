@@ -173,12 +173,24 @@ def filter_stack_button_press(treeview, event):
 
 def _filter_stack_menu_item_selected(widget, data):
     item_id, row, treeview = data
-    # Toggle filter active state
+
     if item_id == "toggle":
         toggle_filter_active(row)
     if item_id == "reset":
         reset_filter_values()
-
+    if item_id == "moveup":
+        delete_row = row
+        insert_row = row + 2
+        if insert_row > len(clip.filters):
+            insert_row = len(clip.filters)
+        do_stack_move(insert_row, delete_row)
+    if item_id == "movedown":
+        delete_row = row + 1
+        insert_row = row - 1
+        if insert_row < 0:
+            insert_row = 0
+        do_stack_move(insert_row, delete_row)
+        
 def _quit_editing_clip_clicked(): # this is a button callback
     clear_clip()
 
@@ -212,8 +224,6 @@ def create_widgets():
                                                                    toggle_filter_active, dnd_row_deleted, dnd_row_inserted)
                                                                    
     widgets.effect_stack_view.treeview.connect("button-press-event", lambda w,e, wtf: stack_view_pressed(), None)
-    #widgets.effect_stack_view.treeview.connect("button-release-event", lambda w,e, wtf: stack_view_released(), None)
-    #dnd.connect_STACK_treeview(widgets.effect_stack_view.treeview, None)
     gui.effect_stack_list_view = widgets.effect_stack_view
     
     widgets.value_edit_box = Gtk.VBox()
@@ -363,8 +373,6 @@ def toggle_filter_active(row, update_stack_view=True):
         update_stack_view_changed_blocked()
 
 def dnd_row_deleted(model, path):
-    print "deleted:", path.to_string(), time.time()
-
     now = time.time()
     global stack_dnd_state, stack_dnd_event_time, stack_dnd_event_info
     if stack_dnd_state == INSERT_DONE:
@@ -372,22 +380,16 @@ def dnd_row_deleted(model, path):
             stack_dnd_state = NOT_ON
             insert_row = int(stack_dnd_event_info)
             delete_row = int(path.to_string())
-            if abs(insert_row - delete_row) < 2: # filter was dropped on its previous place
-                return
             stack_dnd_event_info = (insert_row, delete_row)
-            # Because of dnd is gtk thing it for some internal reason needs to complete before we go 
+            # Because of dnd is gtk thing for some internal reason it needs to complete before we go on
             # touching storemodel again with .clear() or it dies in gtktreeviewaccessible.c
             GLib.idle_add(do_dnd_stack_move)
         else:
             stack_dnd_state = NOT_ON
-            print "DON't DO DND"
     else:
         stack_dnd_state = NOT_ON
-        print "DON't DO DND"
         
 def dnd_row_inserted(model, path, tree_iter):
-    print "inserted:", path.to_string(), time.time()
-
     global stack_dnd_state, stack_dnd_event_time, stack_dnd_event_info
     if stack_dnd_state == MOUSE_PRESS_DONE:
         stack_dnd_state = INSERT_DONE
@@ -401,6 +403,12 @@ def do_dnd_stack_move():
     do_stack_move(insert, delete_row)
     
 def do_stack_move(insert_row, delete_row):
+    if abs(insert_row - delete_row) < 2: # filter was dropped on its previous place or cannot moved further up or down
+        return
+    
+    # The insert insert_row and delete_row values are rows we get when listening 
+    # "row-deleted" and "row-inserted" events after setting treeview "reorderable"
+    # Dnd is detected by order and timing of these events together with mouse press event
     data = {"clip":clip,
             "insert_index":insert_row,
             "delete_index":delete_row,
@@ -412,10 +420,6 @@ def stack_view_pressed():
     global stack_dnd_state
     stack_dnd_state = MOUSE_PRESS_DONE
 
-
-
-
-    
 def effect_selection_changed():
     global keyframe_editor_widgets
 

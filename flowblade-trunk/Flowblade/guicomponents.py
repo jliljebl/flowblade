@@ -471,11 +471,8 @@ class FilterSwitchListView(Gtk.VBox):
         filter_group is array of mltfilter.FilterInfo objects.
         filter_obejcts is array of mltfilter.FilterObject objects
         """
-        print "uuu"
         self.storemodel.clear()
-        print "llll"
         for i in range(0, len(filter_group)):
-            print "fiil", i
             f = filter_group[i]
             row_data = [f.get_icon(),
                         translations.get_filter_name(f.name),
@@ -1528,6 +1525,10 @@ def display_filter_stack_popup_menu(row, treeview, callback, event):
 
     filter_stack_menu.add(_get_menu_item(_("Toggle Active"), callback, ("toggle", row, treeview)))
     filter_stack_menu.add(_get_menu_item(_("Reset Values"), callback, ("reset", row, treeview)))
+    _add_separetor(filter_stack_menu)
+    filter_stack_menu.add(_get_menu_item(_("Move Up"), callback, ("moveup", row, treeview)))
+    filter_stack_menu.add(_get_menu_item(_("Move Down"), callback, ("movedown", row, treeview)))
+    
     filter_stack_menu.popup(None, None, None, None, event.button, event.time)
 
 def display_media_log_event_popup_menu(row, treeview, callback, event):

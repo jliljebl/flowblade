@@ -109,30 +109,7 @@ def connect_effects_select_tree_view(tree_view):
                                        [EFFECTS_DND_TARGET], 
                                        Gdk.DragAction.COPY)
     tree_view.connect("drag_data_get", _effects_drag_data_get)
-
-
-
-
-
-"""
-def connect_STACK_treeview(tree_view, completed_cb):
-    # EFFECTS STACK IS THIS ONE
-    tree_view.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK,
-                                       [EFFECTS_STACK_DND_TARGET], 
-                                       Gdk.DragAction.DEFAULT)
-    tree_view.connect("drag_data_get", _effects_STACK_data_get)
-    
-    tree_view.enable_model_drag_dest([EFFECTS_STACK_DND_TARGET],
-                                    Gdk.DragAction.DEFAULT)
-                                         
-    tree_view.connect("drag_data_received", _STACK_drag_data_received, completed_cb)
-""" 
-    
-    
-    
-    
-    
-    
+  
 def connect_video_monitor(widget):
     widget.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
                          [MEDIA_FILES_DND_TARGET], 
@@ -202,15 +179,6 @@ def _effects_drag_data_get(treeview, context, selection, target_id, timestamp):
     global drag_source
     drag_source = SOURCE_EFFECTS_TREE
 
-
-
-"""
-def _effects_STACK_data_get(treeview, context, selection, target_id, timestamp):
-    # EFFECTS STACK
-    _save_treeview_selection(treeview)
-"""
-
-
 def _on_monitor_drop(widget, context, x, y, timestamp):
     context.finish(True, False, timestamp)
     media_file = drag_data[0].media_file
@@ -228,24 +196,11 @@ def _bin_drag_data_received(treeview, context, x, y, selection, info, etime, mov
         moved_rows.append(media_object.bin_index)
     move_files_to_bin_func(max(bin_path), moved_rows)
 
-
-
-
-"""
-def _STACK_drag_data_received(treeview, context, x, y, selection, info, etime, stack_dnd_completed_cb_func):
-    context.finish(True, False, timestamp)
-    bin_path, drop_pos = treeview.get_dest_row_at_pos(x, y)
-    print "STCK DND:", bin_path, drag_data
-    #context.finish(True, False, timestamp)
-"""
-
-
 def _save_treeview_selection(treeview):
     treeselection = treeview.get_selection()
     (model, rows) = treeselection.get_selected_rows()
     global drag_data
     drag_data = rows
-    print "gggg"
 
 def _save_media_panel_selection():
     global drag_data, drag_source

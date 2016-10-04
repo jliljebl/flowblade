@@ -1350,7 +1350,7 @@ def _remove_filter_redo(self):
 
 #------------------- MOVE FILTER
 # "clip",""insert_index","delete_index"","filter_edit_done_func"
-# MOves filter in filter stack filter to clip.
+# Moves filter in filter stack filter to clip.
 def move_filter_action(data):
     action = EditAction(_move_filter_undo,_move_filter_redo, data)
     return action
@@ -1358,32 +1358,29 @@ def move_filter_action(data):
 def _move_filter_undo(self):
     _detach_all(self.clip)
 
-    """
-    # STEP 1: Insert filter
+    for i in range(0, len(self.filters_orig)):
+        self.clip.filters.pop(0)
+
+    for i in range(0, len(self.filters_orig)):
+        self.clip.filters.append(self.filters_orig[i])
+
     if self.delete_index < self.insert_index:
-        # d < i, moved filter can be found at d
-        #moved_filter = self.clip.filters[elf.delete_index]
-       # final_index = self.insert_index - 1
-    else:   
-        #final_index = self.insert_index
-
-    #move_filter = self.clip.filters.pop(final_index)
-    """
-    try:
-        self.clip.filters.insert(self.delete_index, move_filter)
-    except:
-        self.clip.filters.append(self.delete_index, move_filter)
-
+        active_index = self.delete_index
+    else:
+        active_index = self.delete_index - 1
+        
     _attach_all(self.clip)
 
-    self.filter_edit_done_func(self.clip, self.delete_index)
+    self.filter_edit_done_func(self.clip, active_index)
 
 def _move_filter_redo(self):
     _detach_all(self.clip)
-
-    print self.insert_index, self.delete_index
     
-    # STEP 1: Insert filter
+    # Copy filters in original order for undo
+    self.filters_orig = []
+    for i in range(0, len(self.clip.filters)):
+        self.filters_orig.append(self.clip.filters[i])
+        
     if self.delete_index < self.insert_index:
         # d < i, moved filter can be found at d
         moved_filter = self.clip.filters[self.delete_index]
