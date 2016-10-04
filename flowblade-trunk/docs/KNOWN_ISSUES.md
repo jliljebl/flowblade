@@ -39,7 +39,7 @@ Image describing issue here: http://i.xomf.com/rfncv.png
 
 #### 6. Title causes distortion in mixed aspect ratio project
 
-Issue is described in Issue #258.
+Problem is described in Issue #258.
 
 **Status:** Some fix may be attempted later.
 
