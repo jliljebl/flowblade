@@ -31,8 +31,8 @@ This has been reported and a single case has been reproduced.
 
 **Status:** No work on a fix is planned.
 
-#### 5. Using Affine filter on .png file may result in image Glitches 
+#### 5. Using Affine filter on .png file may result in image errors 
 Image describing issue here: http://i.xomf.com/rfncv.png
 
-**Status:** No work on a fix is planned. Affine filter is not part rodamap on improving Flowblade's motion graphics capabilities and will not be worked on.
+**Status:** No work on a fix is planned. *Affine* filter is not part rodamap on improving Flowblade's motion graphics capabilities and will not be worked on.
 
