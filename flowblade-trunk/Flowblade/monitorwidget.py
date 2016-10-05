@@ -309,7 +309,6 @@ class MonitorWidget:
         
         self.match_frame = match_clip.clip_in
         self.edit_delta = 0
-        print self.match_frame, self.edit_delta
         
         match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_in, 
                                                             MATCH_FRAME, self.match_frame_write_complete)
@@ -513,7 +512,7 @@ class MonitorWidget:
             cr.fill()
             if self.view != START_TRIM_VIEW:
                 cr.set_source_rgb(*MONITOR_INDICATOR_COLOR_MATCH)
-                cr.rectangle(0, 0, w/2, 4)
+                cr.rectangle(0, h - 4, w/2, 4)
                 cr.fill()
         else:
             cr.rectangle(0, h - 4, w/2, 4)
@@ -621,7 +620,6 @@ class MonitorWidget:
             CHAR_WIDTH = 12
             delta_frames_x = delta_frames_x - ((len(str(self.edit_delta)) - 1) * CHAR_WIDTH)
 
-        
         cr.set_source_rgb(0.9, 0.9, 0.9)
         cr.select_font_face ("monospace", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
         cr.set_font_size(21)
@@ -682,18 +680,21 @@ class MonitorWidget:
         cr.select_font_face ("monospace", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
         cr.set_font_size(21)
 
+        delta_corr = 0
         if self.match_frame != -1:
             disp_match_frame = self.match_frame + self.edit_delta
             if disp_match_frame < 0:
+                delta_corr = disp_match_frame
                 disp_match_frame = 0
+
             if disp_match_frame >= self.slip_clip_media_length:
+                delta_corr = disp_match_frame - self.slip_clip_media_length - 1
                 disp_match_frame = self.slip_clip_media_length - 1
             
             match_tc = utils.get_tc_string(disp_match_frame)
             cr.move_to(match_tc_x, TC_HEIGHT)
             cr.show_text(match_tc)
         
-
         if self.edit_tline_frame != -1 or self.edit_clip_start_on_tline != -1:
             clip_frame = self.edit_tline_frame - self.edit_clip_start_on_tline
 
@@ -715,7 +716,7 @@ class MonitorWidget:
         
         if self.edit_delta != None:
             cr.move_to(delta_frames_x, TC_HEIGHT + 30)
-            cr.show_text(str(self.edit_delta))
+            cr.show_text(str(-self.edit_delta + delta_corr))
 
         self._draw_range_mark(cr,(w/2) - 10, 14, 1)
         self._draw_range_mark(cr,(w/2) + 10, 14, -1)

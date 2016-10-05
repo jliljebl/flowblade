@@ -1083,7 +1083,6 @@ def slide_trim_move(x, y, frame, state):
         return
 
     mouse_delta = edit_data["press_start"] - frame
-    #gui.monitor_widget.set_edit_tline_frame(frame, mouse_delta)
     gui.monitor_widget.set_slip_edit_tline_frame(edit_data["clip"], mouse_delta)
         
     display_frame = _update_slide_trim_for_mouse_frame(frame)
