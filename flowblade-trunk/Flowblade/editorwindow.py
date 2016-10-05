@@ -171,6 +171,9 @@ class EditorWindow:
             ('AddTransition', None, _('Add Single Track Transition'), None, None, lambda a:tlineaction.add_transition_menu_item_selected()),
             ('AddFade', None, _('Add Single Track Fade'), None, None, lambda a:tlineaction.add_fade_menu_item_selected()),
             ('ClearFilters', None, _('Clear Filters'), None, None, lambda a:clipmenuaction.clear_filters()),
+            ('Timeline', None, _('Timeline')),
+            ('FiltersOff', None, _('All Filters Off'), None, None, lambda a:tlineaction.all_filters_off()),
+            ('FiltersOn', None, _('All Filters On'), None, None, lambda a:tlineaction.all_filters_on()),
             ('SyncCompositors', None, _('Sync All Compositors'), None, None, lambda a:tlineaction.sync_all_compositors()),
             ('ChangeSequenceTracks', None, _('Change Sequence Tracks Count...'), None, None, lambda a:projectaction.change_sequence_track_count()),
             ('Watermark', None, _('Watermark...'), None, None, lambda a:menuactions.edit_watermark()),
@@ -258,6 +261,11 @@ class EditorWindow:
                     <menuitem action='ResyncSelected'/>
                     <menuitem action='SyncCompositors'/>
                     <menuitem action='ClearFilters'/>
+                    <separator/>
+                    <menu action='Timeline'>
+                        <menuitem action='FiltersOff'/>
+                        <menuitem action='FiltersOn'/>
+                    </menu>
                     <separator/>
                     <menuitem action='AddTransition'/>
                     <menuitem action='AddFade'/>

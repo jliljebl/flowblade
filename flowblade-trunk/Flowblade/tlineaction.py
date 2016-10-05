@@ -30,6 +30,7 @@ import os
 from operator import itemgetter
 
 import appconsts
+import clipeffectseditor
 import compositormodes
 import dialogs
 import dialogutils
@@ -1018,3 +1019,15 @@ def _marker_add_dialog_callback(dialog, response_id, name_entry):
     current_sequence().markers.append((name, current_frame))
     current_sequence().markers = sorted(current_sequence().markers, key=itemgetter(1))
     updater.repaint_tline()
+    
+
+# ---------------------------------------- timeline edits
+def all_filters_off():
+    current_sequence().set_all_filters_active_state(False)
+    clipeffectseditor.update_stack_view()
+
+def all_filters_on():
+    current_sequence().set_all_filters_active_state(True)
+    clipeffectseditor.update_stack_view()
+
+

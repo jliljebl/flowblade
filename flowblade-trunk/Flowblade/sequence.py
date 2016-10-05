@@ -516,6 +516,15 @@ class Sequence:
         filter_object.create_mlt_filters(self.profile, clip)
         return filter_object
 
+    def set_all_filters_active_state(self, is_active):
+        for i in range(1, len(self.tracks)):
+            track = self.tracks[i]
+            for clip in track.clips:
+                if clip.is_blanck_clip == False:
+                    for f in clip.filters:
+                        f.active = is_active
+                        f.update_mlt_disabled_value()
+        
     # ------------------------------------------------------ compositors
     def create_compositor(self, compositor_type):
         compositor = mlttransitions.create_compositor(compositor_type)
