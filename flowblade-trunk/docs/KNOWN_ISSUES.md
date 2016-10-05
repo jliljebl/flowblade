@@ -36,3 +36,11 @@ Image describing issue here: http://i.xomf.com/rfncv.png
 
 **Status:** No work on a fix is planned. *Affine* filter is not part rodamap on improving Flowblade's motion graphics capabilities and will not be worked on.
 
+
+#### 6. Title causes distortion in mixed aspect ratio project
+
+Problem is described in Issue #258.
+
+**Status:** Some fix may be attempted later.
+
+
