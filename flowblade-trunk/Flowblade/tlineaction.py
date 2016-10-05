@@ -195,6 +195,9 @@ def splice_out_button_pressed():
          _("There wasn't enough material available in adjacent clips.\nA normal Splice Out was done instead."),
          gui.editor_window.window)
 
+def delete_range_button_pressed():
+    print "range"
+
 def _attempt_clip_cover_delete(clip, track, index):
     if clip.rendered_type == appconsts.RENDERED_FADE_OUT:
         if index != 0:
@@ -369,6 +372,9 @@ def three_point_overwrite_pressed():
     action = edit.three_point_overwrite_action(data)
     action.do_edit()
 
+    if not editorstate.timeline_visible():
+        updater.display_sequence_in_monitor()
+    
     updater.display_tline_cut_frame(track, range_in)
 
 def range_overwrite_pressed():
@@ -417,6 +423,35 @@ def range_overwrite_pressed():
 
     updater.display_tline_cut_frame(track, track.get_clip_index_at(mark_in_frame))
 
+def delete_range_button_pressed():
+    # Get data
+    #track = current_sequence().get_first_active_track()
+    #if editevent.track_lock_check_and_user_info(track, range_overwrite_pressed, "range overwrite"):
+    #    return
+    
+    # tractor is has mark in and mark
+    mark_in_frame = current_sequence().tractor.mark_in
+    mark_out_frame = current_sequence().tractor.mark_out
+    range_length = mark_out_frame - mark_in_frame + 1 # end is incl.
+    if mark_in_frame == -1 or mark_out_frame == -1:
+        primary_txt = _("Timeline Range not set!")
+        secondary_txt = _("You need to set Timeline Range using Mark In and Mark Out buttons\nto perform this edit.")
+        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        return
+
+    movemodes.clear_selected_clips() # edit consumes selection
+
+    updater.save_monitor_frame = False # hack to not get wrong value saved in MediaFile.current_frame
+
+    data = {"mark_in_frame":mark_in_frame,
+            "mark_out_frame":mark_out_frame + 1} # +1 because mark is displayed and end of frame end this 
+                                                 # confirms to user expectation of
+                                                 # of how this should work
+    action = edit.range_delete_action(data)
+    action.do_edit()
+
+    PLAYER().seek_frame(mark_in_frame)
+    
 def resync_button_pressed():
     if movemodes.selected_track != -1:
         syncsplitevent.resync_selected()

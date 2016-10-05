@@ -2089,6 +2089,36 @@ def _range_over_redo(self):
     self.turn_on_stop_for_edit = True
 
 
+#----------------- RANGE DELETE 
+# "mark_in_frame","mark_out_frame"
+def range_delete_action(data):
+    action = EditAction(_range_delete_undo, _range_delete_redo, data)
+    action.stop_for_edit = True
+    return action
+
+def _range_delete_undo(self):
+    for i in range(1, len(current_sequence().tracks) - 1): # -1 because hidden track, 1 because black track
+        print i
+        track = current_sequence().tracks[i]
+        track_extract_data = self.tracks_extract_data[i - 1] # -1 because hidden track, indexes have diff
+
+        _track_put_back_range(self.mark_in_frame, 
+                              track, 
+                              track_extract_data)
+    
+def _range_delete_redo(self):
+    self.tracks_extract_data = []
+    for i in range(1, len(current_sequence().tracks) - 1): # -1 because hidden track, 1 because black track
+        track = current_sequence().tracks[i]
+        track_extracted = _track_extract_range(self.mark_in_frame, 
+                                               self.mark_out_frame, 
+                                               track)
+        self.tracks_extract_data.append(track_extracted)
+    
+    # HACK, see EditAction for details
+    self.turn_on_stop_for_edit = True
+    
+
 #------------------- ADD CENTERED TRANSITION
 # "transition_clip","transition_index", "from_clip","to_clip","track","from_in","to_out"
 def add_centered_transition_action(data):
