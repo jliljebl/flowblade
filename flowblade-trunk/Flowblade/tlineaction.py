@@ -428,7 +428,16 @@ def delete_range_button_pressed():
     #track = current_sequence().get_first_active_track()
     #if editevent.track_lock_check_and_user_info(track, range_overwrite_pressed, "range overwrite"):
     #    return
-    
+    tracks = []
+    for i in range(1, len(current_sequence().tracks) - 1):
+        track = current_sequence().tracks[i]
+        if track.edit_freedom != appconsts.LOCKED:
+            tracks.append(track)
+
+    if len(tracks) == 0:
+        # all tracks are locked!
+        return
+            
     # tractor is has mark in and mark
     mark_in_frame = current_sequence().tractor.mark_in
     mark_out_frame = current_sequence().tractor.mark_out
@@ -443,7 +452,8 @@ def delete_range_button_pressed():
 
     updater.save_monitor_frame = False # hack to not get wrong value saved in MediaFile.current_frame
 
-    data = {"mark_in_frame":mark_in_frame,
+    data = {"tracks":tracks,
+            "mark_in_frame":mark_in_frame,
             "mark_out_frame":mark_out_frame + 1} # +1 because mark is displayed and end of frame end this 
                                                  # confirms to user expectation of
                                                  # of how this should work
