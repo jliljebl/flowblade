@@ -100,6 +100,8 @@ class AbstractGlassButtons:
         else:
             self.glass_style = False
         
+        self.no_decorations = False
+        
         # Dark theme comes with flat buttons
         self.dark_theme = False
         if editorpersistance.prefs.dark_theme == True:
@@ -157,6 +159,24 @@ class AbstractGlassButtons:
     def _draw_buttons(self, cr, w, h):
         # Width of buttons group
         buttons_width = self.button_width * len(self.icons)
+
+        if self.no_decorations == True:
+            x = self.button_x
+            for i in range(0, len(self.icons)):
+                icon = self.icons[i]
+                cr.set_source_surface(icon, x + self.image_x[i], self.image_y[i])
+                cr.paint()
+                if self.sensitive[i] == False:
+                    cr.save()
+                    self._round_rect_path(cr)
+                    cr.set_source(grad)
+                    cr.clip()
+                    cr.rectangle(x, self.button_y, self.button_width, self.button_height)
+                    cr.fill()
+                    cr.restore()
+                x += self.button_width
+            
+            return
 
         # Line width for all strokes
         cr.set_line_width(1.0)

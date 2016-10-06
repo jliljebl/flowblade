@@ -103,17 +103,21 @@ def _create_buttons(editor_window):
     editor_window.big_TC = guicomponents.BigTCDisplay()
     editor_window.modes_selector = guicomponents.ToolSelector(editor_window.mode_selector_pressed, m_pixbufs, 40, 22)
 
+    no_decorations = False
+
     editor_window.zoom_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
     editor_window.zoom_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "zoom_in.png"), updater.zoom_in)
     editor_window.zoom_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "zoom_out.png"), updater.zoom_out)
     editor_window.zoom_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "zoom_length.png"), updater.zoom_project_length)
     editor_window.zoom_buttons.widget.set_tooltip_text(_("Zoom In - Mouse Middle Scroll\n Zoom Out - Mouse Middle Scroll\n Zoom Length - Mouse Middle Click"))
-
+    editor_window.zoom_buttons.no_decorations = no_decorations
+    
     editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
     editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "dissolve.png"), tlineaction.add_transition_pressed)
     editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "cut.png"), tlineaction.cut_pressed)
     editor_window.edit_buttons.widget.set_tooltip_text(_("Add Rendered Transition - 2 clips selected\nAdd Rendered Fade - 1 clip selected\nCut - X"))
-
+    editor_window.edit_buttons.no_decorations = no_decorations
+    
     editor_window.edit_buttons_2 = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
     editor_window.edit_buttons_2.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "splice_out.png"), tlineaction.splice_out_button_pressed)
     editor_window.edit_buttons_2.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "lift.png"), tlineaction.lift_button_pressed)
@@ -121,25 +125,30 @@ def _create_buttons(editor_window):
     editor_window.edit_buttons_2.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "resync.png"), tlineaction.resync_button_pressed)
     editor_window.edit_buttons_2.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "split_audio.png"), tlineaction.split_audio_button_pressed)
     editor_window.edit_buttons_2.widget.set_tooltip_text(_("Splice Out - Delete\nLift\nDelete Range\nResync Selected\nSplit Audio"))
-
+    editor_window.edit_buttons_2.no_decorations = no_decorations
+    
     editor_window.monitor_insert_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
     editor_window.monitor_insert_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "overwrite_range.png"), tlineaction.range_overwrite_pressed)
     editor_window.monitor_insert_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "overwrite_clip.png"), tlineaction.three_point_overwrite_pressed)
     editor_window.monitor_insert_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "insert_clip.png"), tlineaction.insert_button_pressed)
     editor_window.monitor_insert_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "append_clip.png"), tlineaction.append_button_pressed)
     editor_window.monitor_insert_buttons.widget.set_tooltip_text(_("Overwrite Range\nOverwrite Clip - T\nInsert Clip - Y\nAppend Clip - U"))
-
+    editor_window.monitor_insert_buttons.no_decorations = no_decorations
+    
     editor_window.undo_redo = glassbuttons.GlassButtonsGroup(28, 23, 2, 2, 7)
     editor_window.undo_redo.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "undo.png"), undo.do_undo_and_repaint)
     editor_window.undo_redo.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "redo.png"), undo.do_redo_and_repaint)
     editor_window.undo_redo.widget.set_tooltip_text(_("Undo - Ctrl + Z\nRedo - Ctrl + Y"))
-
-    editor_window.tools_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 14, 7)
+    editor_window.undo_redo.no_decorations = no_decorations
+    
+    editor_window.tools_buttons = glassbuttons.GlassButtonsGroup(30, 23, 2, 14, 7)
     editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_mixer.png"), audiomonitoring.show_audio_monitor)
     editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_titler.png"), titler.show_titler)
     editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_gmic.png"), gmic.launch_gmic)
     editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_renderqueue.png"), lambda :batchrendering.launch_batch_rendering())
     editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer\nTitler\nG'Mic Effects\nBatch Render Queue"))
+    editor_window.tools_buttons.no_decorations = True
+    
     if editorstate.audio_monitoring_available == False:
         editor_window.tools_buttons.sensitive[0] = False
         editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer(not available)\nTitler"))
