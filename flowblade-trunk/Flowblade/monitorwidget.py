@@ -377,15 +377,33 @@ class MonitorWidget:
     def set_edit_tline_frame(self, edit_tline_frame, edit_delta):
         if self.is_active() == False:
             return
-            
+
+        if self.view == DEFAULT_VIEW:
+            return
+
         self.edit_tline_frame = edit_tline_frame
         self.edit_delta = edit_delta
         self.bottom_edge_panel.queue_draw()
+
+    def update_roll_match_frame(self):
+        if self.is_active() == False:
+            return
+
+        if self.view == DEFAULT_VIEW:
+            return
+
+        match_frame = self.match_frame + self.edit_delta
+
+        match_surface_creator = MatchSurfaceCreator(match_frame)
+        match_surface_creator.start()
 
     def set_slip_edit_tline_frame(self, clip, edit_delta):
         if self.is_active() == False:
             return
 
+        if self.view == DEFAULT_VIEW:
+            return
+        
         if self.view == SLIP_TRIM_RIGHT_ACTIVE_VIEW:
             mouse_clip_frame = clip.clip_out + edit_delta
         else:
@@ -411,15 +429,6 @@ class MonitorWidget:
             self.edit_clip_start_on_tline = self.edit_clip_start_on_tline - edit_delta
         self.edit_delta = None
         self.bottom_edge_panel.queue_draw()
-
-    def update_roll_match_frame(self):
-        if self.is_active() == False:
-            return
-    
-        match_frame = self.match_frame + self.edit_delta
-
-        match_surface_creator = MatchSurfaceCreator(match_frame)
-        match_surface_creator.start()
         
     def _roll_frame_update_done(self):
         global _frame_write_on        
