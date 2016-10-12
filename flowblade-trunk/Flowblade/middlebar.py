@@ -158,31 +158,31 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     if editorstate.SCREEN_WIDTH > 1279:
         buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
         buttons_row.pack_start(_get_tools_buttons(), False, True, 0)
-        #buttons_row.pack_start(Gtk.Label(), True, True, 0)
         buttons_row.pack_start(guiutils.get_pad_label(120, 10), False, True, 0)
     else:
-        #buttons_row.pack_start(Gtk.Label(), True, True, 0)
         buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+        
     buttons_row.pack_start(_get_undo_buttons_panel(), False, True, 0)
     #buttons_row.pack_start(Gtk.Label(), True, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+        
     buttons_row.pack_start(_get_zoom_buttons_panel(),False, True, 0)
     #buttons_row.pack_start(Gtk.Label(), True, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
-    #buttons_row.pack_start(guiutils.get_pad_label(120, 10), False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    
     buttons_row.pack_start(_get_edit_buttons_panel(),False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
+    #buttons_row.pack_start(Gtk.Label(), True, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    
     buttons_row.pack_start(_get_edit_buttons_2_panel(),False, True, 0)
     #buttons_row.pack_start(Gtk.Label(), True, True, 0)
-    #buttons_row.pack_start(Gtk.Label(), True, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    
     buttons_row.pack_start(_get_edit_buttons_3_panel(),False, True, 0)
     #buttons_row.pack_start(Gtk.Label(), True, True, 0)
-
-    #buttons_row.pack_start(Gtk.Label(), True, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    
     buttons_row.pack_start(_get_monitor_insert_buttons(), False, True, 0)
-
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
     
 def fill_with_TC_MIDDLE_pattern(buttons_row, window):
