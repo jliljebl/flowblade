@@ -1246,7 +1246,7 @@ def watermark_file_dialog(callback, parent, widgets):
     dialog.connect('response', callback, widgets)
     dialog.show()
 
-def media_file_dialog(text, callback, multiple_select, data=None, parent=None):
+def media_file_dialog(text, callback, multiple_select, data=None, parent=None, open_dir=None):
     if parent == None:
         parent = gui.editor_window.window
 
@@ -1267,6 +1267,9 @@ def media_file_dialog(text, callback, multiple_select, data=None, parent=None):
     if ((editorpersistance.prefs.open_in_last_opended_media_dir == True)
         and (editorpersistance.prefs.last_opened_media_dir != None)):
         file_select.set_current_folder(editorpersistance.prefs.last_opened_media_dir)
+
+    if open_dir != None:
+        file_select.set_current_folder(open_dir)
 
     if data == None:
         file_select.connect('response', callback)
