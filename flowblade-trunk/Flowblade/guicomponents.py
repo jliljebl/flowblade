@@ -1966,6 +1966,9 @@ def get_all_tracks_popup_menu(event, callback):
     menu.add(_get_menu_item(_("Maximize Audio Tracks"), callback, "maxaudio" ))
     _add_separetor(menu)
     menu.add(_get_menu_item(_("Minimize Tracks"), callback, "min" ))
+    _add_separetor(menu)
+    menu.add(_get_menu_item(_("Activate All Tracks"), callback, "allactive" ))
+    menu.add(_get_menu_item(_("Activate Only Current Top Active Track"), callback, "topactiveonly" ))
     menu.popup(None, None, None, None, event.button, event.time)
 
 def get_audio_levels_popup_menu(event, callback):

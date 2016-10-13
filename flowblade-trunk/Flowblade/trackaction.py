@@ -107,12 +107,33 @@ def _all_tracks_item_activated(widget, msg):
         current_sequence().maximize_audio_tracks_height(gui.tline_canvas.widget.get_allocation())
         _tracks_resize_update()
 
+    if msg == "allactive":
+        _activate_all_tracks()
+
+    if msg == "topactiveonly":
+        _activate_only_current_top_active()
+    
 def _tracks_resize_update():
     tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
     gui.tline_column.init_listeners()
     updater.repaint_tline()
     gui.tline_column.widget.queue_draw()
 
+def _activate_all_tracks():
+    for i in range(0, len(current_sequence().tracks) - 1):
+        current_sequence().tracks[i].active = True
+
+    gui.tline_column.widget.queue_draw()
+    
+def _activate_only_current_top_active():
+    for i in range(0, len(current_sequence().tracks) - 1):
+        if i == current_sequence().get_first_active_track().id:
+            current_sequence().tracks[i].active = True
+        else:
+            current_sequence().tracks[i].active = False
+
+    gui.tline_column.widget.queue_draw()
+    
 def audio_levels_menu_launch_pressed(widget, event):
     guicomponents.get_audio_levels_popup_menu(event, _audio_levels_item_activated)
 
