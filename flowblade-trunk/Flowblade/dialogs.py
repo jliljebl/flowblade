@@ -1141,6 +1141,7 @@ def keyboard_shortcuts_dialog(parent_window):
     geom_vbox.pack_start(_get_kb_row(_("Right Arrow"), _("Move Source Video Right")), False, False, 0)
     geom_vbox.pack_start(_get_kb_row(_("Up Arrow"), _("Move Source Video Up")), False, False, 0)
     geom_vbox.pack_start(_get_kb_row(_("Down Arrow"), _("Move Source Video Down")), False, False, 0)
+    geom_vbox.pack_start(_get_kb_row(_("Shift"), _("Snap to X or Y of drag start point")), False, False, 0)
     geom = guiutils.get_named_frame(_("Geometry Editor"), geom_vbox)
 
     panel = Gtk.VBox()
