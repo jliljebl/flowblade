@@ -567,6 +567,8 @@ def open_project(new_project):
         loaded_autosave_file = None
 
     editorstate.update_current_proxy_paths()
+    editorstate.fade_length = -1
+    editorstate.transition_length = -1
     audiomonitoring.init_for_project_load()
     updater.window_resized()
 

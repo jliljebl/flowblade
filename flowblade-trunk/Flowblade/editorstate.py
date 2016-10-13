@@ -106,8 +106,12 @@ display_clip_media_thumbnails = True
 # Flag for window being in fullscreen mode
 fullscreen = False
 
-# Flog for showing trim views
+# Trim view mode
 show_trim_view = appconsts.TRIM_VIEW_ON
+
+# Remember fade and transition lengths
+fade_length = -1
+transition_length = -1
 
 def current_is_move_mode():
     if ((edit_mode == INSERT_MOVE) or (edit_mode == OVERWRITE_MOVE) or (edit_mode == MULTI_MOVE)):

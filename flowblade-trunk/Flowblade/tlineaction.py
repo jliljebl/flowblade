@@ -682,6 +682,8 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                                  length) == False:
         return
     
+    editorstate.transition_length = length
+    
     # Get from in and out frames
     from_in = from_clip.clip_out - from_part + add_thingy
     from_out = from_in + length # or transition will include one frame too many
@@ -855,6 +857,9 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
                                  info_text,
                                  gui.editor_window.window)
         return
+
+
+    editorstate.fade_length = length
 
     # Edit clears selection, get track index before selection is cleared
     clip_index = movemodes.selected_range_in
