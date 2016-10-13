@@ -959,16 +959,30 @@ class MediaObjectWidget:
         if self.media_file == editorstate.MONITOR_MEDIA_FILE():
             cr.set_source_surface(self.indicator_icon, 29, 22)
             cr.paint()
+
+        cr.select_font_face ("sans-serif",
+                 cairo.FONT_SLANT_NORMAL,
+                 cairo.FONT_WEIGHT_NORMAL)
+        cr.set_font_size(9)
         if self.media_file.mark_in != -1 and self.media_file.mark_out != -1:
-            cr.set_source_rgb(1, 1, 1)
-            cr.select_font_face ("sans-serif",
-                     cairo.FONT_SLANT_NORMAL,
-                     cairo.FONT_WEIGHT_NORMAL)
-            cr.set_font_size(9)
-            cr.move_to(23, 80)
+            cr.set_source_rgba(0,0,0,0.5)
+            cr.rectangle(21,1,72,12)
+            cr.fill()
+            
+            cr.move_to(23, 10)
             clip_length = utils.get_tc_string(self.media_file.mark_out - self.media_file.mark_in + 1) #+1 out incl.
+            cr.set_source_rgb(1, 1, 1)
             cr.show_text("][ " + str(clip_length))
 
+        cr.set_source_rgba(0,0,0,0.5)
+        cr.rectangle(28,75,62,12)
+        cr.fill()
+            
+        cr.move_to(30, 84)
+        cr.set_source_rgb(1, 1, 1)
+        media_length = utils.get_tc_string(self.media_file.length)
+        cr.show_text(str(media_length))
+            
         if self.media_file.type != appconsts.PATTERN_PRODUCER:
             if self.media_file.is_proxy_file == True:
                 cr.set_source_surface(is_proxy_icon, 96, 6)
