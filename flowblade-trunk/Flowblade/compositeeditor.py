@@ -95,11 +95,9 @@ def set_compositor(new_compositor):
 
     set_enabled(True)
     _display_compositor_edit_box()
-    # ????? this is not used
+
     if editorpersistance.prefs.default_layout == True:
         gui.middle_notebook.set_current_page(3)
-    else:
-        gui.editor_window.right_notebook.set_current_page(2)
 
 def clear_compositor():
     global compositor

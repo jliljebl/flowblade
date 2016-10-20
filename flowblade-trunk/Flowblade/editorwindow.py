@@ -483,7 +483,6 @@ class EditorWindow:
         project_vbox = Gtk.VBox()
         project_vbox.pack_start(project_info_panel, False, True, 0)
         project_vbox.pack_start(seq_panel, True, True, 0)
-        
         project_panel = guiutils.set_margins(project_vbox, 0, 2, 6, 2)
         
         # Notebook
@@ -499,10 +498,6 @@ class EditorWindow:
         self.notebook.append_page(render_panel, Gtk.Label(label=_("Render")))
         self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
 
-        # Right notebook, used for Widescreen and Two row layouts
-        self.right_notebook = Gtk.Notebook()
-        self.right_notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
-
         # Position bar and decorative frame  for it
         self.pos_bar = PositionBar()
         pos_bar_frame = Gtk.Frame()
@@ -516,16 +511,19 @@ class EditorWindow:
         self._create_monitor_row_widgets()
         self.player_buttons = glassbuttons.PlayerButtons()
         self.player_buttons.widget.set_tooltip_text(_("Prev Frame - Arrow Left\nNext Frame - Arrow Right\nPlay - Space\nStop - Space\nMark In - I\nMark Out - O\nClear Marks\nTo Mark In\nTo Mark Out"))
-        self.monitor_source.modify_font(Pango.FontDescription("sans bold 8"))
         player_buttons_row = Gtk.HBox(False, 0)
-
         player_buttons_row.pack_start(self.player_buttons.widget, False, True, 0)
-        #player_buttons_row.pack_start(self.monitor_source, True, True, 0)
         player_buttons_row.pack_start(pos_bar_frame, True, True, 0)
         player_buttons_row.set_margin_bottom(2)
 
         # Creates monitor switch buttons
         self._create_monitor_buttons()
+
+        # Monitor top info row
+        monitor_info_row = Gtk.HBox(False, 1)
+        monitor_info_row.pack_start(self.monitor_source, False, False, 0)
+        monitor_info_row.pack_start(Gtk.Label(), True, False, 0)
+        monitor_info_row.pack_start(self.info1, False, False, 0)
 
         # Switch / pos bar row
         self.view_mode_select = guicomponents.get_monitor_view_select_combo(lambda w, e: tlineaction.view_mode_menu_lauched(w, e))
@@ -533,7 +531,6 @@ class EditorWindow:
         sw_pos_hbox = Gtk.HBox(False, 1)
         sw_pos_hbox.pack_start(self.sequence_editor_b, True, True, 0)
         sw_pos_hbox.pack_start(self.clip_editor_b, True, True, 0)
-        #sw_pos_hbox.pack_start(pos_bar_frame, True, True, 0)
         sw_pos_hbox.pack_start(self.trim_view_select.widget, False, False, 0)
         sw_pos_hbox.pack_start(self.view_mode_select.widget, False, False, 0)
         sw_pos_hbox.set_margin_top(4)
@@ -548,7 +545,7 @@ class EditorWindow:
 
         # Monitor
         monitor_vbox = Gtk.VBox(False, 1)
-        monitor_vbox.pack_start(self.monitor_source, False, True, 0)
+        monitor_vbox.pack_start(monitor_info_row, False, True, 0)
         monitor_vbox.pack_start(monitor_widget.widget, True, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
         monitor_vbox.pack_start(player_buttons_row, False, True, 0)
@@ -821,10 +818,8 @@ class EditorWindow:
     def _init_gui_to_prefs(self):
         if editorpersistance.prefs.tabs_on_top == True:
             self.notebook.set_tab_pos(Gtk.PositionType.TOP)
-            self.right_notebook.set_tab_pos(Gtk.PositionType.TOP)
         else:
             self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
-            self.right_notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
 
     def _show_tabs_up(self, widget):
         if widget.get_active() == False:
@@ -1073,8 +1068,10 @@ class EditorWindow:
         self.tc = guicomponents.MonitorTCDisplay()
         self.monitor_source = Gtk.Label(label="sequence1")
         self.monitor_source.set_ellipsize(Pango.EllipsizeMode.END)
-
-
+        self.monitor_source.modify_font(Pango.FontDescription("sans bold 8"))
+        self.info1 = Gtk.Label(label="--:--:--:--")
+        self.info1.set_ellipsize(Pango.EllipsizeMode.END)
+        self.info1.modify_font(Pango.FontDescription("sans bold 8"))
 
 def _this_is_not_used():
     print "THIS WAS USED!!!!!"

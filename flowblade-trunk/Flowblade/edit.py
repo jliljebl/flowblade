@@ -380,6 +380,7 @@ class EditAction:
             current_sequence().update_trim_hack_blank_length() # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
         PLAYER().display_inside_sequence_length(current_sequence().seq_len) # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
 
+        updater. update_seqence_info_text()
 
 # ---------------------------------------------------- SYNC DATA
 class SyncData:
