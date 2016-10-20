@@ -520,7 +520,8 @@ class EditorWindow:
         player_buttons_row = Gtk.HBox(False, 0)
 
         player_buttons_row.pack_start(self.player_buttons.widget, False, True, 0)
-        player_buttons_row.pack_start(self.monitor_source, True, True, 0)
+        #player_buttons_row.pack_start(self.monitor_source, True, True, 0)
+        player_buttons_row.pack_start(pos_bar_frame, True, True, 0)
         player_buttons_row.set_margin_bottom(2)
 
         # Creates monitor switch buttons
@@ -530,9 +531,9 @@ class EditorWindow:
         self.view_mode_select = guicomponents.get_monitor_view_select_combo(lambda w, e: tlineaction.view_mode_menu_lauched(w, e))
         self.trim_view_select = guicomponents.get_trim_view_select_combo(lambda w, e: monitorevent.trim_view_menu_launched(w, e))
         sw_pos_hbox = Gtk.HBox(False, 1)
-        sw_pos_hbox.pack_start(self.sequence_editor_b, False, True, 0)
-        sw_pos_hbox.pack_start(self.clip_editor_b, False, True, 0)
-        sw_pos_hbox.pack_start(pos_bar_frame, True, True, 0)
+        sw_pos_hbox.pack_start(self.sequence_editor_b, True, True, 0)
+        sw_pos_hbox.pack_start(self.clip_editor_b, True, True, 0)
+        #sw_pos_hbox.pack_start(pos_bar_frame, True, True, 0)
         sw_pos_hbox.pack_start(self.trim_view_select.widget, False, False, 0)
         sw_pos_hbox.pack_start(self.view_mode_select.widget, False, False, 0)
         sw_pos_hbox.set_margin_top(4)
@@ -547,6 +548,7 @@ class EditorWindow:
 
         # Monitor
         monitor_vbox = Gtk.VBox(False, 1)
+        monitor_vbox.pack_start(self.monitor_source, False, True, 0)
         monitor_vbox.pack_start(monitor_widget.widget, True, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
         monitor_vbox.pack_start(player_buttons_row, False, True, 0)
@@ -859,7 +861,7 @@ class EditorWindow:
         self.sequence_editor_b.connect("clicked", 
                         lambda w,e: self._monitor_switch_handler(w), 
                         None)
-        self.sequence_editor_b.set_size_request(100, 25)
+        #self.sequence_editor_b.set_size_request(100, 25)
 
         self.clip_editor_b = Gtk.RadioButton.new_from_widget(self.sequence_editor_b)#,_("Clip"))
         self.clip_editor_b.set_mode(False)
@@ -867,7 +869,7 @@ class EditorWindow:
         self.clip_editor_b.connect("clicked",
                         lambda w,e: self._monitor_switch_handler(w),
                         None)
-        self.clip_editor_b.set_size_request(100, 25)
+        #self.clip_editor_b.set_size_request(100, 25)
 
     def _monitor_switch_handler(self, widget):
         # We get two "clicked" events per toggle, send through only the one
