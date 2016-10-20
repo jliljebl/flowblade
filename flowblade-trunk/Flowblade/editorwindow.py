@@ -861,7 +861,6 @@ class EditorWindow:
         self.sequence_editor_b.connect("clicked", 
                         lambda w,e: self._monitor_switch_handler(w), 
                         None)
-        #self.sequence_editor_b.set_size_request(100, 25)
 
         self.clip_editor_b = Gtk.RadioButton.new_from_widget(self.sequence_editor_b)#,_("Clip"))
         self.clip_editor_b.set_mode(False)
@@ -869,7 +868,6 @@ class EditorWindow:
         self.clip_editor_b.connect("clicked",
                         lambda w,e: self._monitor_switch_handler(w),
                         None)
-        #self.clip_editor_b.set_size_request(100, 25)
 
     def _monitor_switch_handler(self, widget):
         # We get two "clicked" events per toggle, send through only the one
@@ -881,9 +879,6 @@ class EditorWindow:
         if ((self.clip_editor_b.get_active() == True) 
             and (widget == self.clip_editor_b)):
             updater.display_clip_in_monitor()
-
-    def layouts_pressed(self, widget, event):
-        print "kkkkkkkkkkkkkkkkkkk"
 
     def connect_player(self, mltplayer):
         # Buttons

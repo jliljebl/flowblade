@@ -514,6 +514,10 @@ class MonitorWidget:
         cr.rectangle(0, 0, w, h)
         cr.fill()
 
+        # if were minimized, stop
+        if h == 1:
+            return
+            
         # Draw screen indicators
         cr.set_source_rgb(*MONITOR_INDICATOR_COLOR)
         if self.view == START_TRIM_VIEW or self.view == ROLL_TRIM_RIGHT_ACTIVE_VIEW or self.view == SLIP_TRIM_RIGHT_ACTIVE_VIEW:
