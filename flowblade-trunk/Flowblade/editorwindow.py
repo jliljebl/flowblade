@@ -722,7 +722,7 @@ class EditorWindow:
         mb_menu = Gtk.Menu()
         tc_left = Gtk.RadioMenuItem()
         tc_left.set_label(_("Timecode Left").encode('utf-8'))
-        tc_left.set_active(True)
+        #tc_left.set_active(appconsts)
         tc_left.connect("activate", lambda w: middlebar._show_buttons_TC_LEFT_layout(w))
         mb_menu.append(tc_left)
 
@@ -730,7 +730,13 @@ class EditorWindow:
         tc_middle.connect("activate", lambda w: middlebar._show_buttons_TC_MIDDLE_layout(w))
         mb_menu.append(tc_middle)
 
-        if editorpersistance.prefs.midbar_tc_left == True:
+        components_centered = Gtk.RadioMenuItem.new_with_label([tc_left], _("Components Centered").encode('utf-8'))
+        components_centered.connect("activate", lambda w: middlebar._show_buttons_COMPONETS_CENTERED_layout(w))
+        mb_menu.append(components_centered)
+
+        if editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_COMPONENTS_CENTERED:
+            components_centered.set_active(True)
+        elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_LEFT:
             tc_left.set_active(True)
         else:
             tc_middle.set_active(True)
@@ -913,7 +919,9 @@ class EditorWindow:
         middlebar.create_edit_buttons_row_buttons(self, modes_pixbufs)
     
         buttons_row = Gtk.HBox(False, 1)
-        if editorpersistance.prefs.midbar_tc_left == True:
+        if editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_COMPONENTS_CENTERED:
+            middlebar.fill_with_COMPONETS_CENTERED_pattern(buttons_row, self)
+        elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_LEFT:
             middlebar.fill_with_TC_LEFT_pattern(buttons_row, self)
         else:
             middlebar.fill_with_TC_MIDDLE_pattern(buttons_row, self)

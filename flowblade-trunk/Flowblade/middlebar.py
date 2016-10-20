@@ -22,6 +22,7 @@ import cairo
 
 from gi.repository import Gtk
 
+import appconsts
 import audiomonitoring
 import batchrendering
 import editevent
@@ -62,7 +63,7 @@ def _show_buttons_TC_LEFT_layout(widget):
     fill_with_TC_LEFT_pattern(w.edit_buttons_row, w)
     w.window.show_all()
 
-    editorpersistance.prefs.midbar_tc_left = True
+    editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_TC_LEFT
     editorpersistance.save()
     
 def _show_buttons_TC_MIDDLE_layout(widget):
@@ -78,9 +79,25 @@ def _show_buttons_TC_MIDDLE_layout(widget):
     fill_with_TC_MIDDLE_pattern(w.edit_buttons_row, w)
     w.window.show_all()
 
-    editorpersistance.prefs.midbar_tc_left = False
+    editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_TC_CENTER
     editorpersistance.save()
 
+def _show_buttons_COMPONETS_CENTERED_layout(widget):
+    global w
+    w = gui.editor_window
+    if w == None:
+        return
+    if widget.get_active() == False:
+        return
+
+    _clear_container(w.edit_buttons_row)
+    _create_buttons(w)
+    fill_with_COMPONETS_CENTERED_pattern(w.edit_buttons_row, w)
+    w.window.show_all()
+
+    editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_COMPONENTS_CENTERED
+    editorpersistance.save()
+    
 def _show_monitor_info_toggled(widget):
     editorpersistance.prefs.show_sequence_profile = widget.get_active()
     editorpersistance.save()
@@ -152,40 +169,32 @@ def _create_buttons(editor_window):
 def fill_with_TC_LEFT_pattern(buttons_row, window):
     global w
     w = window
-    buttons_row.pack_start(Gtk.Label(), True, True, 0)
     buttons_row.pack_start(w.big_TC.widget, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     buttons_row.pack_start(w.modes_selector.widget, False, True, 0)
     if editorstate.SCREEN_WIDTH > 1279:
         buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
         buttons_row.pack_start(_get_tools_buttons(), False, True, 0)
-        #buttons_row.pack_start(guiutils.get_pad_label(120, 10), False, True, 0)
-        buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+        buttons_row.pack_start(guiutils.get_pad_label(120, 10), False, True, 0)
     else:
         buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
         
     buttons_row.pack_start(_get_undo_buttons_panel(), False, True, 0)
-    #buttons_row.pack_start(Gtk.Label(), True, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    buttons_row.pack_start(Gtk.Label(), True, True, 0)
         
     buttons_row.pack_start(_get_zoom_buttons_panel(),False, True, 0)
-    #buttons_row.pack_start(Gtk.Label(), True, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    buttons_row.pack_start(Gtk.Label(), True, True, 0)
     
     buttons_row.pack_start(_get_edit_buttons_panel(),False, True, 0)
-    #buttons_row.pack_start(Gtk.Label(), True, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    buttons_row.pack_start(Gtk.Label(), True, True, 0)
     
     buttons_row.pack_start(_get_edit_buttons_2_panel(),False, True, 0)
-    #buttons_row.pack_start(Gtk.Label(), True, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    buttons_row.pack_start(Gtk.Label(), True, True, 0)
     
     buttons_row.pack_start(_get_edit_buttons_3_panel(),False, True, 0)
-    #buttons_row.pack_start(Gtk.Label(), True, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    buttons_row.pack_start(Gtk.Label(), True, True, 0)
     
     buttons_row.pack_start(_get_monitor_insert_buttons(), False, True, 0)
-    buttons_row.pack_start(Gtk.Label(), True, True, 0)
     
 def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     global w
@@ -221,6 +230,39 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     buttons_row.pack_start(middle_panel, False, False, 0)
     buttons_row.pack_start(right_panel, True, True, 0)
 
+def fill_with_COMPONETS_CENTERED_pattern(buttons_row, window):
+    global w
+    w = window
+    buttons_row.pack_start(Gtk.Label(), True, True, 0)
+    buttons_row.pack_start(w.big_TC.widget, False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
+    buttons_row.pack_start(w.modes_selector.widget, False, True, 0)
+    if editorstate.SCREEN_WIDTH > 1279:
+        buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
+        buttons_row.pack_start(_get_tools_buttons(), False, True, 0)
+        #buttons_row.pack_start(guiutils.get_pad_label(120, 10), False, True, 0)
+        buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    else:
+        buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+        
+    buttons_row.pack_start(_get_undo_buttons_panel(), False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+        
+    buttons_row.pack_start(_get_zoom_buttons_panel(),False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    
+    buttons_row.pack_start(_get_edit_buttons_panel(),False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    
+    buttons_row.pack_start(_get_edit_buttons_2_panel(),False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    
+    buttons_row.pack_start(_get_edit_buttons_3_panel(),False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    
+    buttons_row.pack_start(_get_monitor_insert_buttons(), False, True, 0)
+    buttons_row.pack_start(Gtk.Label(), True, True, 0)
+    
 def _get_zoom_buttons_panel():    
     return w.zoom_buttons.widget
 
