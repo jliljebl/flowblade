@@ -919,11 +919,13 @@ class MediaObjectWidget:
         self.img.press_func = self._press
         self.img.dnd_media_widget_attr = True # this is used to identify widget at dnd drop
         self.img.set_can_focus(True)
+        self.img.set_tooltip_text(media_file.name)
 
         txt = Gtk.Label(label=media_file.name)
         txt.modify_font(Pango.FontDescription("sans 9"))
         txt.set_ellipsize(Pango.EllipsizeMode.END)
         txt.set_max_width_chars(13)
+        txt.set_tooltip_text(media_file.name)
 
         self.vbox.pack_start(self.img, True, True, 0)
         self.vbox.pack_start(txt, False, False, 0)
