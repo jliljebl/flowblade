@@ -103,7 +103,10 @@ def test_availablity():
         _gmic_found = True
     else:
         print "G'MIC NOT found"
-        
+
+def gmic_available():
+    return _gmic_found
+    
 def launch_gmic():
     if _gmic_found == False:
         primary_txt = _("G'Mic not found!")
