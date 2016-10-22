@@ -28,7 +28,7 @@ import editorstate
 from editorstate import current_sequence
 from editorstate import EDIT_MODE
 
-# These are monkeypatched to haev acces to tlinewidgets.py state  
+# These are monkeypatched to have access to tlinewidgets.py state  
 _get_frame_for_x_func = None
 _get_x_for_frame_func = None
 
@@ -143,7 +143,7 @@ def _overwrite_move_snap(x, track, frame, edit_data):
     first_clip_frame = first_clip_start + (frame - press_frame)
     first_clip_x = _get_x_for_frame_func(first_clip_frame)
 
-    snapped_x = -1 # if value stys same till end, no snapping has happened
+    snapped_x = -1 # if value stays same till end, no snapping has happened
     snapped_x = _three_track_snap(track, x, first_clip_frame, first_clip_x)
             
     # Return either original x or snapped x
@@ -155,7 +155,7 @@ def _object_end_drag_snap(x, track, frame, edit_data):
 
     frame_x = _get_x_for_frame_func(frame)
 
-    snapped_x = -1  # if value stays same till end no snapping happened.
+    snapped_x = -1  # if value stays same till end, no snapping happened.
     snapped_x = _three_track_snap(track, x, frame, frame_x)
         
     # Return either original or snapped x
@@ -165,7 +165,7 @@ def _compositor_move_snap(x, track, frame, edit_data):
     if edit_data == None:
         return x
 
-    snapped_x = -1 # if value stays same till end no snapping happened.
+    snapped_x = -1 # if value stays same till end, no snapping happened.
 
     comp_in_frame = edit_data["clip_in"] + (frame - edit_data["press_frame"])
     comp_in_x = _get_x_for_frame_func(comp_in_frame)

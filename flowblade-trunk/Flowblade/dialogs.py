@@ -1184,7 +1184,7 @@ def _get_kb_row(msg1, msg2):
 
 def watermark_dialog(add_callback, remove_callback):
     dialog = Gtk.Dialog(_("Sequence Watermark"),  gui.editor_window.window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Close").encode('utf-8'), Gtk.ResponseType.CLOSE))
 
     seq_label = guiutils.bold_label(_("Sequence:") + " ")
@@ -1230,7 +1230,7 @@ def watermark_dialog(add_callback, remove_callback):
     dialog.show_all()
 
 def watermark_file_dialog(callback, parent, widgets):
-    dialog = Gtk.FileChooserDialog(_("Select Watermark File"),  gui.editor_window.window,
+    dialog = Gtk.FileChooserDialog(_("Select Watermark File"), None,
                                    Gtk.FileChooserAction.OPEN,
                                    (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
                                     _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
