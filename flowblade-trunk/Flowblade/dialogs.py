@@ -1141,6 +1141,7 @@ def keyboard_shortcuts_dialog(parent_window):
     geom_vbox.pack_start(_get_kb_row(_("Right Arrow"), _("Move Source Video Right")), False, False, 0)
     geom_vbox.pack_start(_get_kb_row(_("Up Arrow"), _("Move Source Video Up")), False, False, 0)
     geom_vbox.pack_start(_get_kb_row(_("Down Arrow"), _("Move Source Video Down")), False, False, 0)
+    geom_vbox.pack_start(_get_kb_row(_("Shift"), _("Snap to X or Y of drag start point")), False, False, 0)
     geom = guiutils.get_named_frame(_("Geometry Editor"), geom_vbox)
 
     panel = Gtk.VBox()
@@ -1183,7 +1184,7 @@ def _get_kb_row(msg1, msg2):
 
 def watermark_dialog(add_callback, remove_callback):
     dialog = Gtk.Dialog(_("Sequence Watermark"),  gui.editor_window.window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Close").encode('utf-8'), Gtk.ResponseType.CLOSE))
 
     seq_label = guiutils.bold_label(_("Sequence:") + " ")
@@ -1229,7 +1230,7 @@ def watermark_dialog(add_callback, remove_callback):
     dialog.show_all()
 
 def watermark_file_dialog(callback, parent, widgets):
-    dialog = Gtk.FileChooserDialog(_("Select Watermark File"),  gui.editor_window.window,
+    dialog = Gtk.FileChooserDialog(_("Select Watermark File"), None,
                                    Gtk.FileChooserAction.OPEN,
                                    (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
                                     _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
@@ -1245,7 +1246,7 @@ def watermark_file_dialog(callback, parent, widgets):
     dialog.connect('response', callback, widgets)
     dialog.show()
 
-def media_file_dialog(text, callback, multiple_select, data=None, parent=None):
+def media_file_dialog(text, callback, multiple_select, data=None, parent=None, open_dir=None):
     if parent == None:
         parent = gui.editor_window.window
 
@@ -1266,6 +1267,9 @@ def media_file_dialog(text, callback, multiple_select, data=None, parent=None):
     if ((editorpersistance.prefs.open_in_last_opended_media_dir == True)
         and (editorpersistance.prefs.last_opened_media_dir != None)):
         file_select.set_current_folder(editorpersistance.prefs.last_opened_media_dir)
+
+    if open_dir != None:
+        file_select.set_current_folder(open_dir)
 
     if data == None:
         file_select.connect('response', callback)

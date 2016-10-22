@@ -106,8 +106,12 @@ display_clip_media_thumbnails = True
 # Flag for window being in fullscreen mode
 fullscreen = False
 
-# Flog for showing trim views
-show_trim_view = True
+# Trim view mode
+show_trim_view = appconsts.TRIM_VIEW_ON
+
+# Remember fade and transition lengths
+fade_length = -1
+transition_length = -1
 
 def current_is_move_mode():
     if ((edit_mode == INSERT_MOVE) or (edit_mode == OVERWRITE_MOVE) or (edit_mode == MULTI_MOVE)):
@@ -175,14 +179,23 @@ def get_copy_paste_objects():
     return _copy_paste_objects
 
 def screen_size_small_height():
-    if SCREEN_HEIGHT < 865:
+    if SCREEN_HEIGHT < 901:
+        return True
+    else:
+        if SCREEN_WIDTH < 1280:
+            return True
+            
+        return False
+
+def screen_size_small_width():
+    if SCREEN_WIDTH < 1368:
         return True
     else:
         return False
 
-def screen_size_small_width():
-    if SCREEN_WIDTH < 1200:
+def screen_size_small():
+    if screen_size_small_height() == True or screen_size_small_width() == True:
         return True
-    else:
-        return False
-        
+    
+    return False
+

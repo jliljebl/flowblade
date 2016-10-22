@@ -30,6 +30,7 @@ import os
 from operator import itemgetter
 
 import appconsts
+import clipeffectseditor
 import compositormodes
 import dialogs
 import dialogutils
@@ -193,6 +194,9 @@ def splice_out_button_pressed():
         dialogutils.info_message(_("Fade/Transition cover delete failed!"),
          _("There wasn't enough material available in adjacent clips.\nA normal Splice Out was done instead."),
          gui.editor_window.window)
+
+def delete_range_button_pressed():
+    print "range"
 
 def _attempt_clip_cover_delete(clip, track, index):
     if clip.rendered_type == appconsts.RENDERED_FADE_OUT:
@@ -368,6 +372,9 @@ def three_point_overwrite_pressed():
     action = edit.three_point_overwrite_action(data)
     action.do_edit()
 
+    if not editorstate.timeline_visible():
+        updater.display_sequence_in_monitor()
+    
     updater.display_tline_cut_frame(track, range_in)
 
 def range_overwrite_pressed():
@@ -416,6 +423,45 @@ def range_overwrite_pressed():
 
     updater.display_tline_cut_frame(track, track.get_clip_index_at(mark_in_frame))
 
+def delete_range_button_pressed():
+    # Get data
+    #track = current_sequence().get_first_active_track()
+    #if editevent.track_lock_check_and_user_info(track, range_overwrite_pressed, "range overwrite"):
+    #    return
+    tracks = []
+    for i in range(1, len(current_sequence().tracks) - 1):
+        track = current_sequence().tracks[i]
+        if track.edit_freedom != appconsts.LOCKED:
+            tracks.append(track)
+
+    if len(tracks) == 0:
+        # all tracks are locked!
+        return
+            
+    # tractor is has mark in and mark
+    mark_in_frame = current_sequence().tractor.mark_in
+    mark_out_frame = current_sequence().tractor.mark_out
+    range_length = mark_out_frame - mark_in_frame + 1 # end is incl.
+    if mark_in_frame == -1 or mark_out_frame == -1:
+        primary_txt = _("Timeline Range not set!")
+        secondary_txt = _("You need to set Timeline Range using Mark In and Mark Out buttons\nto perform this edit.")
+        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        return
+
+    movemodes.clear_selected_clips() # edit consumes selection
+
+    updater.save_monitor_frame = False # hack to not get wrong value saved in MediaFile.current_frame
+
+    data = {"tracks":tracks,
+            "mark_in_frame":mark_in_frame,
+            "mark_out_frame":mark_out_frame + 1} # +1 because mark is displayed and end of frame end this 
+                                                 # confirms to user expectation of
+                                                 # of how this should work
+    action = edit.range_delete_action(data)
+    action.do_edit()
+
+    PLAYER().seek_frame(mark_in_frame)
+    
 def resync_button_pressed():
     if movemodes.selected_track != -1:
         syncsplitevent.resync_selected()
@@ -636,6 +682,8 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                                  length) == False:
         return
     
+    editorstate.transition_length = length
+    
     # Get from in and out frames
     from_in = from_clip.clip_out - from_part + add_thingy
     from_out = from_in + length # or transition will include one frame too many
@@ -809,6 +857,9 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
                                  info_text,
                                  gui.editor_window.window)
         return
+
+
+    editorstate.fade_length = length
 
     # Edit clears selection, get track index before selection is cleared
     clip_index = movemodes.selected_range_in
@@ -1018,3 +1069,15 @@ def _marker_add_dialog_callback(dialog, response_id, name_entry):
     current_sequence().markers.append((name, current_frame))
     current_sequence().markers = sorted(current_sequence().markers, key=itemgetter(1))
     updater.repaint_tline()
+    
+
+# ---------------------------------------- timeline edits
+def all_filters_off():
+    current_sequence().set_all_filters_active_state(False)
+    clipeffectseditor.update_stack_view()
+
+def all_filters_on():
+    current_sequence().set_all_filters_active_state(True)
+    clipeffectseditor.update_stack_view()
+
+

@@ -380,6 +380,7 @@ class EditAction:
             current_sequence().update_trim_hack_blank_length() # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
         PLAYER().display_inside_sequence_length(current_sequence().seq_len) # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
 
+        updater. update_seqence_info_text()
 
 # ---------------------------------------------------- SYNC DATA
 class SyncData:
@@ -1348,12 +1349,68 @@ def _remove_filter_redo(self):
 
     self.filter_edit_done_func(self.clip, len(self.clip.filters) - 1)# updates effect stack gui
 
+#------------------- MOVE FILTER
+# "clip",""insert_index","delete_index"","filter_edit_done_func"
+# Moves filter in filter stack filter to clip.
+def move_filter_action(data):
+    action = EditAction(_move_filter_undo,_move_filter_redo, data)
+    return action
+
+def _move_filter_undo(self):
+    _detach_all(self.clip)
+
+    for i in range(0, len(self.filters_orig)):
+        self.clip.filters.pop(0)
+
+    for i in range(0, len(self.filters_orig)):
+        self.clip.filters.append(self.filters_orig[i])
+
+    if self.delete_index < self.insert_index:
+        active_index = self.delete_index
+    else:
+        active_index = self.delete_index - 1
+        
+    _attach_all(self.clip)
+
+    self.filter_edit_done_func(self.clip, active_index)
+
+def _move_filter_redo(self):
+    _detach_all(self.clip)
+    
+    # Copy filters in original order for undo
+    self.filters_orig = []
+    for i in range(0, len(self.clip.filters)):
+        self.filters_orig.append(self.clip.filters[i])
+        
+    if self.delete_index < self.insert_index:
+        # d < i, moved filter can be found at d
+        moved_filter = self.clip.filters[self.delete_index]
+        _filter_move_insert(self.clip.filters, moved_filter, self.insert_index)
+        self.clip.filters.pop(self.delete_index)
+        active_index = self.insert_index - 1
+    else:
+        # d > i, moved filter can be found at d - 1
+        moved_filter = self.clip.filters[self.delete_index - 1]
+        _filter_move_insert(self.clip.filters, moved_filter, self.insert_index)
+        self.clip.filters.pop(self.delete_index)
+        active_index = self.insert_index
+
+    _attach_all(self.clip)
+
+    self.filter_edit_done_func(self.clip, active_index)
+    
 def _detach_all(clip):
     mltfilters.detach_all_filters(clip)
 
 def _attach_all(clip):
     mltfilters.attach_all_filters(clip)
 
+def _filter_move_insert(filters_list, f, insert_index):
+    try:
+        filters_list.insert(insert_index, f)
+    except:
+        filters_list.append(insert_index, f)
+        
 #------------------- REMOVE MULTIPLE FILTERS
 # "clips"
 # Adds filter to clip.
@@ -2032,6 +2089,34 @@ def _range_over_redo(self):
     # HACK, see EditAction for details
     self.turn_on_stop_for_edit = True
 
+
+#----------------- RANGE DELETE 
+# "tracks","mark_in_frame","mark_out_frame"
+def range_delete_action(data):
+    action = EditAction(_range_delete_undo, _range_delete_redo, data)
+    action.stop_for_edit = True
+    return action
+
+def _range_delete_undo(self):
+    for i in range(0, len(self.tracks)): # -1 because hidden track, 1 because black track
+        track = self.tracks[i]
+        track_extract_data = self.tracks_extract_data[i]
+
+        _track_put_back_range(self.mark_in_frame, 
+                              track, 
+                              track_extract_data)
+    
+def _range_delete_redo(self):
+    self.tracks_extract_data = []
+    for track in self.tracks: # -1 because hidden track, 1 because black track
+        track_extracted = _track_extract_range(self.mark_in_frame, 
+                                               self.mark_out_frame, 
+                                               track)
+        self.tracks_extract_data.append(track_extracted)
+    
+    # HACK, see EditAction for details
+    self.turn_on_stop_for_edit = True
+    
 
 #------------------- ADD CENTERED TRANSITION
 # "transition_clip","transition_index", "from_clip","to_clip","track","from_in","to_out"

@@ -878,6 +878,12 @@ class AbstractScreenEditor:
         delta_x = x - self.mouse_start_x
         delta_y = y - self.mouse_start_y
         
+        if state & Gdk.ModifierType.SHIFT_MASK:
+            if abs(x - self.mouse_start_x) < abs(y - self.mouse_start_y):
+                delta_x = 0
+            else:
+                delta_y = 0
+        
         self._shape__motion_notify_event(delta_x, delta_y)
 
         self.parent_editor.queue_draw()
@@ -893,6 +899,12 @@ class AbstractScreenEditor:
         delta_x = event.x - self.mouse_start_x
         delta_y = event.y - self.mouse_start_y
 
+        if event.get_state() & Gdk.ModifierType.SHIFT_MASK:
+            if abs(event.x - self.mouse_start_x) < abs(event.y - self.mouse_start_y):
+                delta_x = 0
+            else:
+                delta_y = 0
+                
         self._shape_release_event(delta_x, delta_y)
             
         self.parent_editor.geometry_edit_finished()

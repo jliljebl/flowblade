@@ -18,6 +18,9 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
+import gi
+gi.require_version('Gtk', '3.0')
+
 from gi.repository import GObject, GLib
 from gi.repository import Gtk, Gdk, GdkPixbuf
 from gi.repository import GdkX11

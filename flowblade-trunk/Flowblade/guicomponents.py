@@ -89,6 +89,7 @@ profile_warning_icon = None
 markers_menu = Gtk.Menu.new()
 tracks_menu = Gtk.Menu.new()
 monitor_menu = Gtk.Menu.new()
+trim_view_menu = Gtk.Menu.new()
 tools_menu = Gtk.Menu.new()
 file_filter_menu = Gtk.Menu()
 column_count_menu = Gtk.Menu()
@@ -385,12 +386,14 @@ class FilterSwitchListView(Gtk.VBox):
     GUI component displaying list of filters applied to a clip.
     """
 
-    def __init__(self, selection_cb, toggle_cb):
+    def __init__(self, selection_cb, toggle_cb, row_deleted, row_inserted):
         GObject.GObject.__init__(self)
 
-       # Datamodel: icon, text, icon
+        # Datamodel: icon, text, icon
         self.storemodel = Gtk.ListStore(GdkPixbuf.Pixbuf, str, bool)
-
+        self.storemodel.connect("row-deleted", row_deleted)
+        self.storemodel.connect("row-inserted", row_inserted)
+        
         # Scroll container
         self.scroll = Gtk.ScrolledWindow()
         self.scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
@@ -400,6 +403,9 @@ class FilterSwitchListView(Gtk.VBox):
         self.treeview = Gtk.TreeView(self.storemodel)
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(False)
+        self.treeview.set_reorderable(True)
+
+        
         tree_sel = self.treeview.get_selection()
         tree_sel.set_mode(Gtk.SelectionMode.SINGLE)
 
@@ -913,11 +919,13 @@ class MediaObjectWidget:
         self.img.press_func = self._press
         self.img.dnd_media_widget_attr = True # this is used to identify widget at dnd drop
         self.img.set_can_focus(True)
+        self.img.set_tooltip_text(media_file.name)
 
         txt = Gtk.Label(label=media_file.name)
         txt.modify_font(Pango.FontDescription("sans 9"))
         txt.set_ellipsize(Pango.EllipsizeMode.END)
         txt.set_max_width_chars(13)
+        txt.set_tooltip_text(media_file.name)
 
         self.vbox.pack_start(self.img, True, True, 0)
         self.vbox.pack_start(txt, False, False, 0)
@@ -953,16 +961,30 @@ class MediaObjectWidget:
         if self.media_file == editorstate.MONITOR_MEDIA_FILE():
             cr.set_source_surface(self.indicator_icon, 29, 22)
             cr.paint()
+
+        cr.select_font_face ("sans-serif",
+                 cairo.FONT_SLANT_NORMAL,
+                 cairo.FONT_WEIGHT_NORMAL)
+        cr.set_font_size(9)
         if self.media_file.mark_in != -1 and self.media_file.mark_out != -1:
-            cr.set_source_rgb(1, 1, 1)
-            cr.select_font_face ("sans-serif",
-                     cairo.FONT_SLANT_NORMAL,
-                     cairo.FONT_WEIGHT_NORMAL)
-            cr.set_font_size(9)
-            cr.move_to(23, 80)
+            cr.set_source_rgba(0,0,0,0.5)
+            cr.rectangle(21,1,72,12)
+            cr.fill()
+            
+            cr.move_to(23, 10)
             clip_length = utils.get_tc_string(self.media_file.mark_out - self.media_file.mark_in + 1) #+1 out incl.
+            cr.set_source_rgb(1, 1, 1)
             cr.show_text("][ " + str(clip_length))
 
+        cr.set_source_rgba(0,0,0,0.5)
+        cr.rectangle(28,75,62,12)
+        cr.fill()
+            
+        cr.move_to(30, 84)
+        cr.set_source_rgb(1, 1, 1)
+        media_length = utils.get_tc_string(self.media_file.length)
+        cr.show_text(str(media_length))
+            
         if self.media_file.type != appconsts.PATTERN_PRODUCER:
             if self.media_file.is_proxy_file == True:
                 cr.set_source_surface(is_proxy_icon, 96, 6)
@@ -1028,6 +1050,12 @@ def get_monitor_view_select_combo(callback):
     menu_launch.surface_y = 10
     return menu_launch
 
+def get_trim_view_select_combo(callback):
+    surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "trim_view.png")
+    menu_launch = PressLaunch(callback, surface, w=24, h=20)
+    menu_launch.surface_y = 10
+    return menu_launch
+    
 def get_compositor_track_select_combo(source_track, target_track, callback):
     tracks_combo = Gtk.ComboBoxText()
     active_index = -1
@@ -1513,6 +1541,10 @@ def display_filter_stack_popup_menu(row, treeview, callback, event):
 
     filter_stack_menu.add(_get_menu_item(_("Toggle Active"), callback, ("toggle", row, treeview)))
     filter_stack_menu.add(_get_menu_item(_("Reset Values"), callback, ("reset", row, treeview)))
+    _add_separetor(filter_stack_menu)
+    filter_stack_menu.add(_get_menu_item(_("Move Up"), callback, ("moveup", row, treeview)))
+    filter_stack_menu.add(_get_menu_item(_("Move Down"), callback, ("movedown", row, treeview)))
+    
     filter_stack_menu.popup(None, None, None, None, event.button, event.time)
 
 def display_media_log_event_popup_menu(row, treeview, callback, event):
@@ -1936,6 +1968,9 @@ def get_all_tracks_popup_menu(event, callback):
     menu.add(_get_menu_item(_("Maximize Audio Tracks"), callback, "maxaudio" ))
     _add_separetor(menu)
     menu.add(_get_menu_item(_("Minimize Tracks"), callback, "min" ))
+    _add_separetor(menu)
+    menu.add(_get_menu_item(_("Activate All Tracks"), callback, "allactive" ))
+    menu.add(_get_menu_item(_("Activate Only Current Top Active Track"), callback, "topactiveonly" ))
     menu.popup(None, None, None, None, event.button, event.time)
 
 def get_audio_levels_popup_menu(event, callback):
@@ -2039,6 +2074,37 @@ def get_monitor_view_popupmenu(launcher, event, callback):
 
     menu.popup(None, None, None, None, event.button, event.time)
 
+def get_trim_view_popupmenu(launcher, event, callback):
+    menu = trim_view_menu
+    guiutils.remove_children(menu)
+
+    trim_view_all = Gtk.RadioMenuItem()
+    trim_view_all.set_label(_("Trim View On").encode('utf-8'))
+
+    trim_view_all.show()
+    menu.append(trim_view_all)
+    
+    trim_view_single = Gtk.RadioMenuItem.new_with_label([trim_view_all], _("Trim View Single Side Edits Only").encode('utf-8'))
+
+    trim_view_single.show()
+    menu.append(trim_view_single)
+
+    no_trim_view = Gtk.RadioMenuItem.new_with_label([trim_view_all], _("Trim View Off").encode('utf-8'))
+
+    no_trim_view.show()
+    menu.append(no_trim_view)
+
+    active_index = editorstate.show_trim_view # The values for this as defines in appconsts.py correspond to indexes here
+    items = [trim_view_all, trim_view_single, no_trim_view]
+    active_item = items[active_index]
+    active_item.set_active(True)
+
+    trim_view_all.connect("activate", callback, "trimon")
+    trim_view_single.connect("activate", callback, "trimsingle")
+    no_trim_view.connect("activate", callback, "trimoff")
+    
+    menu.popup(None, None, None, None, event.button, event.time)
+    
 def get_mode_selector_popup_menu(launcher, event, callback):
     menu = tools_menu
     guiutils.remove_children(menu)

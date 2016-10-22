@@ -432,12 +432,15 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         clip_start = trim_limits["from_start"]
 
     # Init trim view layout
-    if edit_data["to_side_being_edited"]:
-        gui.monitor_widget.set_start_trim_view(edit_data["from_clip"], clip_start)
+    if track.type == appconsts.VIDEO:
+        if edit_data["to_side_being_edited"]:
+            gui.monitor_widget.set_start_trim_view(edit_data["from_clip"], clip_start)
+        else:
+            gui.monitor_widget.set_end_trim_view(edit_data["to_clip"], clip_start)
+        gui.monitor_widget.set_edit_tline_frame(current_frame, current_frame - edit_frame)
     else:
-        gui.monitor_widget.set_end_trim_view(edit_data["to_clip"], clip_start)
-    gui.monitor_widget.set_edit_tline_frame(current_frame, current_frame - edit_frame)
-
+        gui.monitor_widget.set_default_view()
+    
     # Set interactive trimview on hidden track
     if clip.media_type != appconsts.PATTERN_PRODUCER:
         current_sequence().display_trim_clip(clip.path, clip_start) # file producer
@@ -722,12 +725,15 @@ def set_tworoll_mode(track, current_frame = -1):
         clip_start = trim_limits["from_start"]
 
     # Init two roll trim view layout
-    if edit_data["to_side_being_edited"]:
-        gui.monitor_widget.set_roll_trim_right_active_view(edit_data["from_clip"], clip_start)
+    if track.type == appconsts.VIDEO:
+        if edit_data["to_side_being_edited"]:
+            gui.monitor_widget.set_roll_trim_right_active_view(edit_data["from_clip"], clip_start)
+        else:
+            gui.monitor_widget.set_roll_trim_left_active_view(edit_data["to_clip"], clip_start)
+        gui.monitor_widget.set_edit_tline_frame(current_frame + current_frame_trim_view_fix, 
+                                                current_frame + current_frame_trim_view_fix - edit_frame)
     else:
-        gui.monitor_widget.set_roll_trim_left_active_view(edit_data["to_clip"], clip_start)
-    gui.monitor_widget.set_edit_tline_frame(current_frame + current_frame_trim_view_fix, 
-                                            current_frame + current_frame_trim_view_fix - edit_frame)
+        gui.monitor_widget.set_default_view()
 
     # Set interactive trim view clip on hidden track
     if clip.media_type != appconsts.PATTERN_PRODUCER:
@@ -987,15 +993,17 @@ def set_slide_mode(track, current_frame): # we need to change to to correct one 
     clip = edit_data["clip"]
     clip_start = 0 # we'll calculate the offset from actual position of clip on timeline to display the frame displayed after sliding
 
-
     # Init two roll trim view layout
-    if not start_frame_being_viewed:
-        gui.monitor_widget.set_slip_trim_right_active_view(edit_data["clip"], clip_start)
-        gui.monitor_widget.set_edit_tline_frame(clip.clip_out, 0)
+    if track.type == appconsts.VIDEO:
+        if not start_frame_being_viewed:
+            gui.monitor_widget.set_slip_trim_right_active_view(edit_data["clip"])
+            gui.monitor_widget.set_edit_tline_frame(clip.clip_out, 0)
+        else:
+            gui.monitor_widget.set_slip_trim_left_active_view(edit_data["clip"])
+            gui.monitor_widget.set_edit_tline_frame(clip.clip_in, 0)
     else:
-        gui.monitor_widget.set_slip_trim_left_active_view(edit_data["clip"], clip_start)
-        gui.monitor_widget.set_edit_tline_frame(clip.clip_in, 0)
-    
+        gui.monitor_widget.set_default_view()
+
     # Set interactive trim view clip on hidden track
     if clip.media_type != appconsts.PATTERN_PRODUCER:
         current_sequence().display_trim_clip(clip.path, clip_start) # File producer
@@ -1084,7 +1092,6 @@ def slide_trim_move(x, y, frame, state):
         return
 
     mouse_delta = edit_data["press_start"] - frame
-    #gui.monitor_widget.set_edit_tline_frame(frame, mouse_delta)
     gui.monitor_widget.set_slip_edit_tline_frame(edit_data["clip"], mouse_delta)
         
     display_frame = _update_slide_trim_for_mouse_frame(frame)

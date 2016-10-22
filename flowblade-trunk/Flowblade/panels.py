@@ -31,6 +31,7 @@ import gui
 import guicomponents
 import guiutils
 import editorpersistance
+import editorstate
 import mlttransitions
 import renderconsumer
 import respaths
@@ -347,7 +348,10 @@ def get_transition_panel(trans_data):
                               None)
                               
     length_entry = Gtk.Entry()
-    length_entry.set_text(str(30))    
+    trans_length = 30
+    if editorstate.transition_length > 0: # use last invocation length if available
+        trans_length = editorstate.transition_length
+    length_entry.set_text(str(trans_length))    
     length_row = get_two_column_box(Gtk.Label(label=_("Length:")), 
                                     length_entry)
 
@@ -417,7 +421,10 @@ def get_fade_panel(fade_data):
     color_row = get_two_column_box(color_label, color_button_box)
                               
     length_entry = Gtk.Entry()
-    length_entry.set_text(str(30))    
+    fade_length = 30
+    if editorstate.fade_length > 0: # use last invocation length if available
+        fade_length = editorstate.fade_length
+    length_entry.set_text(str(fade_length))    
     length_row = get_two_column_box(Gtk.Label(label=_("Length:")), 
                                     length_entry)
 

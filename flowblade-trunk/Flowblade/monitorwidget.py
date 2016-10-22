@@ -49,6 +49,7 @@ TC_HEIGHT = 27
 MATCH_FRAME = "match_frame.png"
 
 MONITOR_INDICATOR_COLOR = utils.get_cairo_color_tuple_255_rgb(71, 131, 169)
+MONITOR_INDICATOR_COLOR_MATCH = utils.get_cairo_color_tuple_255_rgb(21, 71, 105)
 
 # Continuos match frame update
 CONTINUOS_UPDATE_PAUSE = 0.2
@@ -73,6 +74,8 @@ class MonitorWidget:
         self.edit_tline_frame = -1
         self.edit_delta = None
         self.edit_clip_start_on_tline = -1
+        
+        self.slip_clip_media_length = -1
         self.slip_clip_length = -1
 
         # top row
@@ -116,6 +119,21 @@ class MonitorWidget:
     def get_monitor(self):
         return self.monitor
         
+    def is_active(self, attempting_trim=False):
+        if editorstate.show_trim_view == appconsts.TRIM_VIEW_ON:
+            return True
+            
+        if editorstate.show_trim_view == appconsts.TRIM_VIEW_OFF:
+            return False
+        
+        if editorstate.show_trim_view == appconsts.TRIM_VIEW_SINGLE and attempting_trim:
+            return True
+        
+        if (editorstate.show_trim_view == appconsts.TRIM_VIEW_SINGLE and 
+            (self.view == START_TRIM_VIEW or self.view == END_TRIM_VIEW)):
+                return True
+
+        return False
 
     # ------------------------------------------------------------------ SET VIEW TYPE
     def set_default_view(self):
@@ -148,12 +166,8 @@ class MonitorWidget:
         PLAYER().refresh()
         
     def set_start_trim_view(self, match_clip, edit_clip_start):
-        if editorstate.show_trim_view == False:
+        if self.is_active(True) == False:
             return
-
-        #if self.view == START_TRIM_VIEW:
-            # get trim match image
-            #return
 
         # Refreshing while rendering overwrites file on disk and loses 
         # previous rendered data. 
@@ -181,12 +195,8 @@ class MonitorWidget:
         match_frame_write_thread.start()
 
     def set_end_trim_view(self, match_clip, edit_clip_start):
-        if editorstate.show_trim_view == False:
+        if self.is_active(True) == False:
             return
-
-        #if self.view == END_TRIM_VIEW:
-            # get trim match image
-            #return
 
         # Refreshing while rendering overwrites file on disk and loses 
         # previous rendered data. 
@@ -214,12 +224,8 @@ class MonitorWidget:
         match_frame_write_thread.start()
 
     def set_roll_trim_right_active_view(self, match_clip, edit_clip_start):
-        if editorstate.show_trim_view == False:
+        if self.is_active() == False:
             return
-
-        #if self.view == ROLL_TRIM_RIGHT_ACTIVE_VIEW:
-            # get trim match image
-            #return
 
         # Refreshing while rendering overwrites file on disk and loses 
         # previous rendered data. 
@@ -247,13 +253,9 @@ class MonitorWidget:
         match_frame_write_thread.start()
 
     def set_roll_trim_left_active_view(self, match_clip, edit_clip_start):
-        if editorstate.show_trim_view == False:
+        if self.is_active() == False:
             return
-
-        #if self.view == ROLL_TRIM_RIGHT_ACTIVE_VIEW:
-            # get trim match image
-            #return
-
+            
         # Refreshing while rendering overwrites file on disk and loses 
         # previous rendered data. 
         if PLAYER().is_rendering:
@@ -279,26 +281,22 @@ class MonitorWidget:
                                                             MATCH_FRAME, self.match_frame_write_complete)
         match_frame_write_thread.start()
 
-    def set_slip_trim_right_active_view(self, match_clip, edit_clip_start):
-        if editorstate.show_trim_view == False:
+    def set_slip_trim_right_active_view(self, match_clip):
+        if self.is_active() == False:
             return
-
-        #if self.view == ROLL_TRIM_RIGHT_ACTIVE_VIEW:
-            # get trim match image
-            #return
 
         # Refreshing while rendering overwrites file on disk and loses 
         # previous rendered data. 
         if PLAYER().is_rendering:
             return
-        
-        print "RIGHT ACTIVE"
-        
+
         self.view = SLIP_TRIM_RIGHT_ACTIVE_VIEW
         self.match_frame_surface = None
-        self.edit_clip_start_on_tline = edit_clip_start
-        self.slip_clip_length = self._get_media_length(match_clip)
-
+        self.edit_clip_start_on_tline = 0 # We're using tiline frames just as units to get edit deltas and displayed clip tc
+        
+        self.slip_clip_media_length = match_clip.get_length() # This is media length
+        self.slip_clip_length = match_clip.clip_length() # this in-out range length
+        
         self._layout_match_frame_left()
         self._layout_expand_edge_panels()
         
@@ -311,32 +309,29 @@ class MonitorWidget:
         
         self.match_frame = match_clip.clip_in
         self.edit_delta = 0
-        print self.match_frame, self.edit_delta
         
         match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_in, 
                                                             MATCH_FRAME, self.match_frame_write_complete)
         match_frame_write_thread.start()
 
-    def set_slip_trim_left_active_view(self, match_clip, edit_clip_start):
-        if editorstate.show_trim_view == False:
+    def set_slip_trim_left_active_view(self, match_clip):
+        if self.is_active() == False:
             return
-
-        #if self.view == ROLL_TRIM_RIGHT_ACTIVE_VIEW:
-            # get trim match image
-            #return
 
         # Refreshing while rendering overwrites file on disk and loses 
         # previous rendered data. 
         if PLAYER().is_rendering:
             return
-        
-        print "LEFT ACTIVE"
-                
+    
         self.view = SLIP_TRIM_LEFT_ACTIVE_VIEW
         self.match_frame_surface = None
-        self.edit_clip_start_on_tline = edit_clip_start
-        self.slip_clip_length = self._get_media_length(match_clip)
-
+        self.edit_clip_start_on_tline = 0 # We're using tiline frames just as units to get edit deltas and displayed clip tc
+                                          # Computations here assume that clip media starts from frame = 0 and timeline frames are 
+                                          # are actually clip frames for this trim view mode
+                                          
+        self.slip_clip_media_length = match_clip.get_length() # This is media length
+        self.slip_clip_length = match_clip.clip_length() # this in-out range length
+        
         self._layout_match_frame_right()
         self._layout_expand_edge_panels()
         
@@ -353,9 +348,6 @@ class MonitorWidget:
                                                             MATCH_FRAME, self.match_frame_write_complete)
         match_frame_write_thread.start()
         
-    def _get_media_length(self, clip):
-        return PROJECT().get_media_file_for_path(clip.path).length
-
     # ------------------------------------------------------------------ LAYOUT
     def _layout_expand_edge_panels(self):
         self.top_edge_panel.set_pref_size(*self.get_edge_row_panel_size())
@@ -383,27 +375,52 @@ class MonitorWidget:
 
     # ----------------------------------------------------------------- MOUSE EVENTS
     def set_edit_tline_frame(self, edit_tline_frame, edit_delta):
-        if editorstate.show_trim_view == False:
+        if self.is_active() == False:
             return
-            
+
+        if self.view == DEFAULT_VIEW:
+            return
+
         self.edit_tline_frame = edit_tline_frame
         self.edit_delta = edit_delta
         self.bottom_edge_panel.queue_draw()
 
-    def set_slip_edit_tline_frame(self, clip, edit_delta):
-        if editorstate.show_trim_view == False:
+    def update_roll_match_frame(self):
+        if self.is_active() == False:
             return
 
+        if self.view == DEFAULT_VIEW:
+            return
+
+        match_frame = self.match_frame + self.edit_delta
+
+        match_surface_creator = MatchSurfaceCreator(match_frame)
+        match_surface_creator.start()
+
+    def set_slip_edit_tline_frame(self, clip, edit_delta):
+        if self.is_active() == False:
+            return
+
+        if self.view == DEFAULT_VIEW:
+            return
+        
         if self.view == SLIP_TRIM_RIGHT_ACTIVE_VIEW:
-            self.edit_tline_frame = clip.clip_out + edit_delta
+            mouse_clip_frame = clip.clip_out + edit_delta
         else:
-            self.edit_tline_frame = clip.clip_in + edit_delta
-            
+            mouse_clip_frame = clip.clip_in + edit_delta
+
+        self.edit_tline_frame = mouse_clip_frame
+    
         self.edit_delta = edit_delta
         self.bottom_edge_panel.queue_draw()
-        
+    
+        match_frame = self.match_frame + self.edit_delta
+
+        match_surface_creator = MatchSurfaceCreator(match_frame)
+        match_surface_creator.start()
+            
     def one_roll_mouse_release(self, edit_tline_frame, edit_delta):
-        if editorstate.show_trim_view == False:
+        if self.is_active() == False:
             return
             
         self.edit_tline_frame = edit_tline_frame
@@ -412,24 +429,6 @@ class MonitorWidget:
             self.edit_clip_start_on_tline = self.edit_clip_start_on_tline - edit_delta
         self.edit_delta = None
         self.bottom_edge_panel.queue_draw()
-
-    def update_roll_match_frame(self):
-        if editorstate.show_trim_view == False:
-            return
-        
-        """
-        global _last_render_time
-        current_time = time.time()
-        if current_time - CONTINUOS_UPDATE_PAUSE < _last_render_time:
-            print (current_time - CONTINUOS_UPDATE_PAUSE), _last_render_time
-            return
-        _last_render_time = current_time
-        _frame_write_on = True
-        """       
-        match_frame = self.match_frame + self.edit_delta
-
-        match_surface_creator = MatchSurfaceCreator(match_frame)
-        match_surface_creator.start()
         
     def _roll_frame_update_done(self):
         global _frame_write_on        
@@ -515,14 +514,27 @@ class MonitorWidget:
         cr.rectangle(0, 0, w, h)
         cr.fill()
 
-        # Draw active screen indicator
+        # if were minimized, stop
+        if h == 1:
+            return
+            
+        # Draw screen indicators
         cr.set_source_rgb(*MONITOR_INDICATOR_COLOR)
-        if self.view == START_TRIM_VIEW:
+        if self.view == START_TRIM_VIEW or self.view == ROLL_TRIM_RIGHT_ACTIVE_VIEW or self.view == SLIP_TRIM_RIGHT_ACTIVE_VIEW:
             cr.rectangle(w/2, h - 4, w/2, 4)
-        elif self.view == END_TRIM_VIEW: 
+            cr.fill()
+            if self.view != START_TRIM_VIEW:
+                cr.set_source_rgb(*MONITOR_INDICATOR_COLOR_MATCH)
+                cr.rectangle(0, h - 4, w/2, 4)
+                cr.fill()
+        else:
             cr.rectangle(0, h - 4, w/2, 4)
-        cr.fill()
-
+            cr.fill()
+            if self.view != END_TRIM_VIEW:
+                cr.set_source_rgb(*MONITOR_INDICATOR_COLOR_MATCH)
+                cr.rectangle(w/2, h - 4, w/2, 4)
+                cr.fill()
+            
     def _draw_bottom_panel(self, event, cr, allocation):
         x, y, w, h = allocation
 
@@ -599,19 +611,28 @@ class MonitorWidget:
         delta_frames_x = 0
         if self.view == ROLL_TRIM_RIGHT_ACTIVE_VIEW:
             cr.rectangle(w/2, 0, w/2, 4)
+            cr.fill()
+            cr.set_source_rgb(*MONITOR_INDICATOR_COLOR_MATCH)
+            cr.rectangle(0, 0, w/2, 4)
+            cr.fill()
+                                
             match_tc_x = (w/2) - TC_LEFT_SIDE_PAD
             edit_tc_x = (w/2) + TC_RIGHT_SIDE_PAD
             delta_frames_x = (w/2) + 8
         elif self.view == ROLL_TRIM_LEFT_ACTIVE_VIEW:
             cr.rectangle(0, 0, w/2, 4)
+            cr.fill()
+            cr.set_source_rgb(*MONITOR_INDICATOR_COLOR_MATCH)
+            cr.rectangle(w/2, 0, w/2, 4)
+            cr.fill()
+
             match_tc_x = (w/2) + TC_RIGHT_SIDE_PAD
             edit_tc_x = (w/2) - TC_LEFT_SIDE_PAD
             delta_frames_x = (w/2) - 20
             # move left for every additional digit after ones
             CHAR_WIDTH = 12
             delta_frames_x = delta_frames_x - ((len(str(self.edit_delta)) - 1) * CHAR_WIDTH)
-        cr.fill()
-        
+
         cr.set_source_rgb(0.9, 0.9, 0.9)
         cr.select_font_face ("monospace", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
         cr.set_font_size(21)
@@ -645,29 +666,43 @@ class MonitorWidget:
         delta_frames_x = 0
         if self.view == SLIP_TRIM_RIGHT_ACTIVE_VIEW:
             cr.rectangle(w/2, 0, w/2, 4)
+            cr.fill()
+            cr.set_source_rgb(*MONITOR_INDICATOR_COLOR_MATCH)
+            cr.rectangle(0, 0, w/2, 4)
+            cr.fill()
+                  
             match_tc_x = (w/2) - TC_LEFT_SIDE_PAD
             edit_tc_x = (w/2) + TC_RIGHT_SIDE_PAD
             delta_frames_x = (w/2) + 8
         elif self.view == SLIP_TRIM_LEFT_ACTIVE_VIEW:
             cr.rectangle(0, 0, w/2, 4)
+            cr.fill()
+            cr.set_source_rgb(*MONITOR_INDICATOR_COLOR_MATCH)
+            cr.rectangle(w/2, 0, w/2, 4)
+            cr.fill()
+            
             match_tc_x = (w/2) + TC_RIGHT_SIDE_PAD
             edit_tc_x = (w/2) - TC_LEFT_SIDE_PAD
             delta_frames_x = (w/2) - 20
             # move left for every additional digit after ones
             CHAR_WIDTH = 12
             delta_frames_x = delta_frames_x - ((len(str(self.edit_delta)) - 1) * CHAR_WIDTH)
-        cr.fill()
+
         
         cr.set_source_rgb(0.9, 0.9, 0.9)
         cr.select_font_face ("monospace", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
         cr.set_font_size(21)
 
+        delta_corr = 0
         if self.match_frame != -1:
             disp_match_frame = self.match_frame + self.edit_delta
             if disp_match_frame < 0:
+                delta_corr = disp_match_frame
                 disp_match_frame = 0
-            if disp_match_frame >= self.slip_clip_length:
-                disp_match_frame = self.slip_clip_length - 1
+
+            if disp_match_frame >= self.slip_clip_media_length:
+                delta_corr = disp_match_frame - self.slip_clip_media_length - 1
+                disp_match_frame = self.slip_clip_media_length - 1
             
             match_tc = utils.get_tc_string(disp_match_frame)
             cr.move_to(match_tc_x, TC_HEIGHT)
@@ -675,16 +710,29 @@ class MonitorWidget:
         
         if self.edit_tline_frame != -1 or self.edit_clip_start_on_tline != -1:
             clip_frame = self.edit_tline_frame - self.edit_clip_start_on_tline
+
+            if self.view == SLIP_TRIM_RIGHT_ACTIVE_VIEW:
+                if clip_frame > self.slip_clip_media_length - 1:
+                    clip_frame = self.slip_clip_media_length - 1
+                if clip_frame < self.slip_clip_length - 1:
+                    clip_frame = self.slip_clip_length - 1
+            else:
+                clip_frame = clip_frame + 1
+                if clip_frame > self.slip_clip_media_length - self.slip_clip_length + 2:
+                    clip_frame = self.slip_clip_media_length - self.slip_clip_length + 2
+                if clip_frame < 0:
+                    clip_frame = 0
+
             edit_tc = utils.get_tc_string(clip_frame)
             cr.move_to(edit_tc_x, TC_HEIGHT)
             cr.show_text(edit_tc)
         
         if self.edit_delta != None:
             cr.move_to(delta_frames_x, TC_HEIGHT + 30)
-            cr.show_text(str(self.edit_delta))
+            cr.show_text(str(-self.edit_delta + delta_corr))
 
-        self._draw_range_mark(cr,(w/2) - 10, 14, -1)
-        self._draw_range_mark(cr,(w/2) + 10, 14, 1)
+        self._draw_range_mark(cr,(w/2) - 10, 14, 1)
+        self._draw_range_mark(cr,(w/2) + 10, 14, -1)
         
     def _draw_black(self, event, cr, allocation):
         x, y, w, h = allocation  

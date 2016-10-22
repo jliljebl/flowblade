@@ -22,6 +22,7 @@ import cairo
 
 from gi.repository import Gtk
 
+import appconsts
 import audiomonitoring
 import batchrendering
 import editevent
@@ -62,7 +63,7 @@ def _show_buttons_TC_LEFT_layout(widget):
     fill_with_TC_LEFT_pattern(w.edit_buttons_row, w)
     w.window.show_all()
 
-    editorpersistance.prefs.midbar_tc_left = True
+    editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_TC_LEFT
     editorpersistance.save()
     
 def _show_buttons_TC_MIDDLE_layout(widget):
@@ -78,9 +79,25 @@ def _show_buttons_TC_MIDDLE_layout(widget):
     fill_with_TC_MIDDLE_pattern(w.edit_buttons_row, w)
     w.window.show_all()
 
-    editorpersistance.prefs.midbar_tc_left = False
+    editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_TC_CENTER
     editorpersistance.save()
 
+def _show_buttons_COMPONETS_CENTERED_layout(widget):
+    global w
+    w = gui.editor_window
+    if w == None:
+        return
+    if widget.get_active() == False:
+        return
+
+    _clear_container(w.edit_buttons_row)
+    _create_buttons(w)
+    fill_with_COMPONETS_CENTERED_pattern(w.edit_buttons_row, w)
+    w.window.show_all()
+
+    editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_COMPONENTS_CENTERED
+    editorpersistance.save()
+    
 def _show_monitor_info_toggled(widget):
     editorpersistance.prefs.show_sequence_profile = widget.get_active()
     editorpersistance.save()
@@ -108,38 +125,43 @@ def _create_buttons(editor_window):
     editor_window.zoom_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "zoom_out.png"), updater.zoom_out)
     editor_window.zoom_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "zoom_length.png"), updater.zoom_project_length)
     editor_window.zoom_buttons.widget.set_tooltip_text(_("Zoom In - Mouse Middle Scroll\n Zoom Out - Mouse Middle Scroll\n Zoom Length - Mouse Middle Click"))
-
+    
     editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
     editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "dissolve.png"), tlineaction.add_transition_pressed)
     editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "cut.png"), tlineaction.cut_pressed)
     editor_window.edit_buttons.widget.set_tooltip_text(_("Add Rendered Transition - 2 clips selected\nAdd Rendered Fade - 1 clip selected\nCut - X"))
+    
+    editor_window.edit_buttons_3 = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
+    editor_window.edit_buttons_3.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "splice_out.png"), tlineaction.splice_out_button_pressed)
+    editor_window.edit_buttons_3.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "lift.png"), tlineaction.lift_button_pressed)
+    editor_window.edit_buttons_3.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "delete_range.png"), tlineaction.delete_range_button_pressed)
+    editor_window.edit_buttons_3.widget.set_tooltip_text(_("Splice Out - Delete\nLift\nDelete Range"))
 
     editor_window.edit_buttons_2 = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
-    editor_window.edit_buttons_2.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "splice_out.png"), tlineaction.splice_out_button_pressed)
-    editor_window.edit_buttons_2.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "lift.png"), tlineaction.lift_button_pressed)
-    #editor_window.edit_buttons_2.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "delete_range.png"), tlineaction.append_button_pressed)
     editor_window.edit_buttons_2.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "resync.png"), tlineaction.resync_button_pressed)
     editor_window.edit_buttons_2.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "split_audio.png"), tlineaction.split_audio_button_pressed)
-    editor_window.edit_buttons_2.widget.set_tooltip_text(_("Splice Out - Delete\nLift\nResync Selected\nSplit Audio"))
-
+    editor_window.edit_buttons_2.widget.set_tooltip_text(_("Resync Selected\nSplit Audio"))
+    
     editor_window.monitor_insert_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
     editor_window.monitor_insert_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "overwrite_range.png"), tlineaction.range_overwrite_pressed)
     editor_window.monitor_insert_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "overwrite_clip.png"), tlineaction.three_point_overwrite_pressed)
     editor_window.monitor_insert_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "insert_clip.png"), tlineaction.insert_button_pressed)
     editor_window.monitor_insert_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "append_clip.png"), tlineaction.append_button_pressed)
     editor_window.monitor_insert_buttons.widget.set_tooltip_text(_("Overwrite Range\nOverwrite Clip - T\nInsert Clip - Y\nAppend Clip - U"))
-
+    
     editor_window.undo_redo = glassbuttons.GlassButtonsGroup(28, 23, 2, 2, 7)
     editor_window.undo_redo.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "undo.png"), undo.do_undo_and_repaint)
     editor_window.undo_redo.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "redo.png"), undo.do_redo_and_repaint)
     editor_window.undo_redo.widget.set_tooltip_text(_("Undo - Ctrl + Z\nRedo - Ctrl + Y"))
-
-    editor_window.tools_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 14, 7)
+    
+    editor_window.tools_buttons = glassbuttons.GlassButtonsGroup(30, 23, 2, 14, 7)
     editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_mixer.png"), audiomonitoring.show_audio_monitor)
     editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_titler.png"), titler.show_titler)
     editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_gmic.png"), gmic.launch_gmic)
     editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_renderqueue.png"), lambda :batchrendering.launch_batch_rendering())
     editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer\nTitler\nG'Mic Effects\nBatch Render Queue"))
+    editor_window.tools_buttons.no_decorations = True
+    
     if editorstate.audio_monitoring_available == False:
         editor_window.tools_buttons.sensitive[0] = False
         editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer(not available)\nTitler"))
@@ -150,20 +172,30 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     buttons_row.pack_start(w.big_TC.widget, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     buttons_row.pack_start(w.modes_selector.widget, False, True, 0)
-    buttons_row.pack_start(Gtk.Label(), True, True, 0)
     if editorstate.SCREEN_WIDTH > 1279:
+        buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
         buttons_row.pack_start(_get_tools_buttons(), False, True, 0)
-        buttons_row.pack_start(Gtk.Label(), True, True, 0)
+        buttons_row.pack_start(guiutils.get_pad_label(120, 10), False, True, 0)
+    else:
+        buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+        
     buttons_row.pack_start(_get_undo_buttons_panel(), False, True, 0)
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
+        
     buttons_row.pack_start(_get_zoom_buttons_panel(),False, True, 0)
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
+    
     buttons_row.pack_start(_get_edit_buttons_panel(),False, True, 0)
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
+    
     buttons_row.pack_start(_get_edit_buttons_2_panel(),False, True, 0)
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
+    
+    buttons_row.pack_start(_get_edit_buttons_3_panel(),False, True, 0)
+    buttons_row.pack_start(Gtk.Label(), True, True, 0)
+    
     buttons_row.pack_start(_get_monitor_insert_buttons(), False, True, 0)
-
+    
 def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     global w
     w = window
@@ -188,6 +220,8 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     right_panel.pack_start(Gtk.Label(), True, True, 0)
     right_panel.pack_start(_get_edit_buttons_panel(), False, True, 0)
     right_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
+    right_panel.pack_start(_get_edit_buttons_3_panel(),False, True, 0)
+    right_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
     right_panel.pack_start(_get_edit_buttons_2_panel(),False, True, 0)
     right_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
     right_panel.pack_start(_get_monitor_insert_buttons(), False, True, 0)
@@ -196,6 +230,39 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     buttons_row.pack_start(middle_panel, False, False, 0)
     buttons_row.pack_start(right_panel, True, True, 0)
 
+def fill_with_COMPONETS_CENTERED_pattern(buttons_row, window):
+    global w
+    w = window
+    buttons_row.pack_start(Gtk.Label(), True, True, 0)
+    buttons_row.pack_start(w.big_TC.widget, False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
+    buttons_row.pack_start(w.modes_selector.widget, False, True, 0)
+    if editorstate.SCREEN_WIDTH > 1279:
+        buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
+        buttons_row.pack_start(_get_tools_buttons(), False, True, 0)
+        #buttons_row.pack_start(guiutils.get_pad_label(120, 10), False, True, 0)
+        buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    else:
+        buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+        
+    buttons_row.pack_start(_get_undo_buttons_panel(), False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+        
+    buttons_row.pack_start(_get_zoom_buttons_panel(),False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    
+    buttons_row.pack_start(_get_edit_buttons_panel(),False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    
+    buttons_row.pack_start(_get_edit_buttons_2_panel(),False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    
+    buttons_row.pack_start(_get_edit_buttons_3_panel(),False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    
+    buttons_row.pack_start(_get_monitor_insert_buttons(), False, True, 0)
+    buttons_row.pack_start(Gtk.Label(), True, True, 0)
+    
 def _get_zoom_buttons_panel():    
     return w.zoom_buttons.widget
 
@@ -207,6 +274,9 @@ def _get_edit_buttons_panel():
 
 def _get_edit_buttons_2_panel():
     return w.edit_buttons_2.widget
+
+def _get_edit_buttons_3_panel():
+    return w.edit_buttons_3.widget
     
 def _get_monitor_insert_buttons():
     return w.monitor_insert_buttons.widget

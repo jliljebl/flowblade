@@ -42,6 +42,7 @@ import menuactions
 import monitorevent
 import mltrefhold
 import tlineaction
+import tlinewidgets
 import trimmodes
 import updater
 import projectaction
@@ -116,6 +117,7 @@ def key_down(widget, event):
         if PLAYER().is_playing():
             monitorevent.stop_pressed()
         PLAYER().seek_frame(0)
+        _move_to_beginning()
         return True
 
     # Select all with CTRL + A in media panel
@@ -346,6 +348,7 @@ def _handle_tline_key_event(event):
             if PLAYER().is_playing():
                 monitorevent.stop_pressed()
             PLAYER().seek_frame(0)
+            _move_to_beginning()
             return True
     else:
         # HOME
@@ -355,6 +358,7 @@ def _handle_tline_key_event(event):
             gui.editor_window.handle_insert_move_mode_button_press()
             gui.editor_window.set_mode_selector_to_mode()
             PLAYER().seek_frame(0)
+            _move_to_beginning()
             return True
 
     return False
@@ -601,3 +605,11 @@ def _get_focus_keyframe_editor(keyframe_editor_widgets):
         if kfeditor.get_focus_child() != None:
            return kfeditor
     return None
+
+def _move_to_beginning():
+    tlinewidgets.pos = 0
+    updater.repaint_tline()
+    updater.update_tline_scrollbar()
+    
+    
+    

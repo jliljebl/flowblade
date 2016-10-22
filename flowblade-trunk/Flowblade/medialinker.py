@@ -26,6 +26,9 @@ import subprocess
 import sys
 import threading
 
+import gi
+gi.require_version('Gtk', '3.0')
+gi.require_version('PangoCairo', '1.0')
 from gi.repository import Gtk, Gdk, GdkPixbuf
 from gi.repository import Pango, GObject
 
@@ -51,6 +54,7 @@ import utils
 
 linker_window = None
 target_project = None
+last_media_dir = None
 media_assets = []
 
 NO_PROJECT_AT_LAUNCH = "##&&noproject&&##"
@@ -85,6 +89,7 @@ class ProjectLoadThread(threading.Thread):
         linker_window.project_label.set_text(self.filename)
         linker_window.set_active_state()
         linker_window.update_files_info()
+        linker_window.load_button.set_sensitive(False)
         Gdk.threads_leave()
 
 
@@ -99,7 +104,7 @@ class MediaLinkerWindow(Gtk.Window):
         load_button = Gtk.Button(_("Load Project For Relinking"))
         load_button.connect("clicked",
                             lambda w: self.load_button_clicked())
-
+        self.load_button = load_button
         project_row = Gtk.HBox(False, 2)
         project_row.pack_start(load_button, False, False, 0)
         project_row.pack_start(Gtk.Label(), True, True, 0)
@@ -429,7 +434,7 @@ def _set_relink_path(media_asset):
     file_name = os.path.basename(media_asset.orig_path)
     dialogs.media_file_dialog(_("Select Media File To Relink To") + " " + file_name, 
                                 _select_relink_path_dialog_callback, False, 
-                                media_asset, linker_window)
+                                media_asset, linker_window, last_media_dir)
 
 def _select_relink_path_dialog_callback(file_select, response_id, media_asset):
     filenames = file_select.get_filenames()
@@ -441,14 +446,17 @@ def _select_relink_path_dialog_callback(file_select, response_id, media_asset):
         return
 
     media_asset.relink_path = filenames[0]
-
+    folder, file_name = os.path.split(filenames[0])
+        
+    global last_media_dir
+    last_media_dir = folder
+    
     if media_asset.media_type == appconsts.IMAGE_SEQUENCE: # img seqs need formatted path
         if editorstate.mlt_version_is_equal_or_greater("0.8.5"):
             new_style = True
         else:
             new_style = False
         resource_name_str = utils.get_img_seq_resource_name(filenames[0], new_style)
-        folder, file_name = os.path.split(filenames[0])
         media_asset.relink_path = folder + "/" + resource_name_str
 
     linker_window.relink_list.fill_data_model()

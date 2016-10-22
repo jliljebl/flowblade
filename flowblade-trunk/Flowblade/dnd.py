@@ -46,6 +46,7 @@ MEDIA_ICON_HEIGHT = 15
 
 MEDIA_FILES_DND_TARGET = Gtk.TargetEntry.new('media_file', Gtk.TargetFlags.SAME_APP, 0)
 EFFECTS_DND_TARGET = Gtk.TargetEntry.new('effect', Gtk.TargetFlags.SAME_APP, 0)
+#EFFECTS_STACK_DND_TARGET = Gtk.TargetEntry.new('effectstack', Gtk.TargetFlags.SAME_APP, 0)
 CLIPS_DND_TARGET = Gtk.TargetEntry.new('clip', Gtk.TargetFlags.SAME_APP, 0)
 RANGE_DND_TARGET = Gtk.TargetEntry.new('range', Gtk.TargetFlags.SAME_APP, 0)
 
@@ -108,7 +109,7 @@ def connect_effects_select_tree_view(tree_view):
                                        [EFFECTS_DND_TARGET], 
                                        Gdk.DragAction.COPY)
     tree_view.connect("drag_data_get", _effects_drag_data_get)
-
+  
 def connect_video_monitor(widget):
     widget.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
                          [MEDIA_FILES_DND_TARGET], 
@@ -121,13 +122,6 @@ def connect_video_monitor(widget):
                            [MEDIA_FILES_DND_TARGET], 
                            Gdk.DragAction.COPY)
     widget.drag_source_set_icon_pixbuf(clip_icon)
-
-def connect_stack_treeview(widget):
-    widget.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
-                         [EFFECTS_DND_TARGET], 
-                         Gdk.DragAction.COPY)
-                         
-    widget.connect("drag_drop", _on_effect_stack_drop)
 
 def connect_tline(widget, do_effect_drop_func, do_media_drop_func):
     widget.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
@@ -184,7 +178,7 @@ def _effects_drag_data_get(treeview, context, selection, target_id, timestamp):
     _save_treeview_selection(treeview)
     global drag_source
     drag_source = SOURCE_EFFECTS_TREE
-  
+
 def _on_monitor_drop(widget, context, x, y, timestamp):
     context.finish(True, False, timestamp)
     media_file = drag_data[0].media_file
@@ -201,7 +195,7 @@ def _bin_drag_data_received(treeview, context, x, y, selection, info, etime, mov
     for media_object in drag_data:
         moved_rows.append(media_object.bin_index)
     move_files_to_bin_func(max(bin_path), moved_rows)
-    
+
 def _save_treeview_selection(treeview):
     treeselection = treeview.get_selection()
     (model, rows) = treeselection.get_selected_rows()

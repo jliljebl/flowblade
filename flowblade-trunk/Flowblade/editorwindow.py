@@ -171,6 +171,9 @@ class EditorWindow:
             ('AddTransition', None, _('Add Single Track Transition'), None, None, lambda a:tlineaction.add_transition_menu_item_selected()),
             ('AddFade', None, _('Add Single Track Fade'), None, None, lambda a:tlineaction.add_fade_menu_item_selected()),
             ('ClearFilters', None, _('Clear Filters'), None, None, lambda a:clipmenuaction.clear_filters()),
+            ('Timeline', None, _('Timeline')),
+            ('FiltersOff', None, _('All Filters Off'), None, None, lambda a:tlineaction.all_filters_off()),
+            ('FiltersOn', None, _('All Filters On'), None, None, lambda a:tlineaction.all_filters_on()),
             ('SyncCompositors', None, _('Sync All Compositors'), None, None, lambda a:tlineaction.sync_all_compositors()),
             ('ChangeSequenceTracks', None, _('Change Sequence Tracks Count...'), None, None, lambda a:projectaction.change_sequence_track_count()),
             ('Watermark', None, _('Watermark...'), None, None, lambda a:menuactions.edit_watermark()),
@@ -258,6 +261,11 @@ class EditorWindow:
                     <menuitem action='ResyncSelected'/>
                     <menuitem action='SyncCompositors'/>
                     <menuitem action='ClearFilters'/>
+                    <separator/>
+                    <menu action='Timeline'>
+                        <menuitem action='FiltersOff'/>
+                        <menuitem action='FiltersOn'/>
+                    </menu>
                     <separator/>
                     <menuitem action='AddTransition'/>
                     <menuitem action='AddFade'/>
@@ -440,7 +448,10 @@ class EditorWindow:
             render_panel_right = rendergui.get_render_panel_right(render.widgets,
                                                                   lambda w,e: projectaction.do_rendering(),
                                                                   lambda w,e: projectaction.add_to_render_queue())
-            render_hbox = Gtk.HBox(True, 5)
+            if editorstate.screen_size_small_width() == False:
+                render_hbox = Gtk.HBox(True, 5)
+            else:
+                render_hbox = Gtk.HBox(False, 5)             
             render_hbox.pack_start(render_panel_left, True, True, 0)
             render_hbox.pack_start(render_panel_right, True, True, 0)
 
@@ -472,7 +483,6 @@ class EditorWindow:
         project_vbox = Gtk.VBox()
         project_vbox.pack_start(project_info_panel, False, True, 0)
         project_vbox.pack_start(seq_panel, True, True, 0)
-        
         project_panel = guiutils.set_margins(project_vbox, 0, 2, 6, 2)
         
         # Notebook
@@ -488,10 +498,6 @@ class EditorWindow:
         self.notebook.append_page(render_panel, Gtk.Label(label=_("Render")))
         self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
 
-        # Right notebook, used for Widescreen and Two row layouts
-        self.right_notebook = Gtk.Notebook()
-        self.right_notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
-
         # Position bar and decorative frame  for it
         self.pos_bar = PositionBar()
         pos_bar_frame = Gtk.Frame()
@@ -505,36 +511,32 @@ class EditorWindow:
         self._create_monitor_row_widgets()
         self.player_buttons = glassbuttons.PlayerButtons()
         self.player_buttons.widget.set_tooltip_text(_("Prev Frame - Arrow Left\nNext Frame - Arrow Right\nPlay - Space\nStop - Space\nMark In - I\nMark Out - O\nClear Marks\nTo Mark In\nTo Mark Out"))
-        self.monitor_source.modify_font(Pango.FontDescription("sans bold 8"))
         player_buttons_row = Gtk.HBox(False, 0)
-
         player_buttons_row.pack_start(self.player_buttons.widget, False, True, 0)
-        player_buttons_row.pack_start(self.monitor_source, True, True, 0)
+        player_buttons_row.pack_start(pos_bar_frame, True, True, 0)
         player_buttons_row.set_margin_bottom(2)
 
         # Creates monitor switch buttons
         self._create_monitor_buttons()
 
+        # Monitor top info row
+        monitor_info_row = Gtk.HBox(False, 1)
+        monitor_info_row.pack_start(self.monitor_source, False, False, 0)
+        monitor_info_row.pack_start(Gtk.Label(), True, False, 0)
+        monitor_info_row.pack_start(self.info1, False, False, 0)
+
         # Switch / pos bar row
         self.view_mode_select = guicomponents.get_monitor_view_select_combo(lambda w, e: tlineaction.view_mode_menu_lauched(w, e))
+        self.trim_view_select = guicomponents.get_trim_view_select_combo(lambda w, e: monitorevent.trim_view_menu_launched(w, e))
         sw_pos_hbox = Gtk.HBox(False, 1)
-        sw_pos_hbox.pack_start(self.sequence_editor_b, False, True, 0)
-        sw_pos_hbox.pack_start(self.clip_editor_b, False, True, 0)
-        sw_pos_hbox.pack_start(pos_bar_frame, True, True, 0)
+        sw_pos_hbox.pack_start(self.sequence_editor_b, True, True, 0)
+        sw_pos_hbox.pack_start(self.clip_editor_b, True, True, 0)
+        sw_pos_hbox.pack_start(self.trim_view_select.widget, False, False, 0)
         sw_pos_hbox.pack_start(self.view_mode_select.widget, False, False, 0)
         sw_pos_hbox.set_margin_top(4)
         sw_pos_hbox.set_margin_left(2)
         
         # Video display
-        """
-        black_box = Gtk.EventBox()
-        black_box.add(Gtk.Label())
-        bg_color = Gdk.Color(red=0.0, green=0.0, blue=0.0)
-        black_box.modify_bg(Gtk.StateType.NORMAL, bg_color)
-
-        self.tline_display = black_box # This could be any GTK+ widget (that is not "windowless"), only its XWindow draw rect 
-                                       # is used to position and scale SDL overlay that actually displays video.
-        """
         monitor_widget = monitorwidget.MonitorWidget()
         self.tline_display = monitor_widget.get_monitor()
         self.monitor_widget = monitor_widget
@@ -543,7 +545,7 @@ class EditorWindow:
 
         # Monitor
         monitor_vbox = Gtk.VBox(False, 1)
-        #monitor_vbox.pack_start(self.tline_display, True, True, 0)
+        monitor_vbox.pack_start(monitor_info_row, False, True, 0)
         monitor_vbox.pack_start(monitor_widget.widget, True, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
         monitor_vbox.pack_start(player_buttons_row, False, True, 0)
@@ -717,7 +719,7 @@ class EditorWindow:
         mb_menu = Gtk.Menu()
         tc_left = Gtk.RadioMenuItem()
         tc_left.set_label(_("Timecode Left").encode('utf-8'))
-        tc_left.set_active(True)
+        #tc_left.set_active(appconsts)
         tc_left.connect("activate", lambda w: middlebar._show_buttons_TC_LEFT_layout(w))
         mb_menu.append(tc_left)
 
@@ -725,7 +727,13 @@ class EditorWindow:
         tc_middle.connect("activate", lambda w: middlebar._show_buttons_TC_MIDDLE_layout(w))
         mb_menu.append(tc_middle)
 
-        if editorpersistance.prefs.midbar_tc_left == True:
+        components_centered = Gtk.RadioMenuItem.new_with_label([tc_left], _("Components Centered").encode('utf-8'))
+        components_centered.connect("activate", lambda w: middlebar._show_buttons_COMPONETS_CENTERED_layout(w))
+        mb_menu.append(components_centered)
+
+        if editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_COMPONENTS_CENTERED:
+            components_centered.set_active(True)
+        elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_LEFT:
             tc_left.set_active(True)
         else:
             tc_middle.set_active(True)
@@ -810,10 +818,8 @@ class EditorWindow:
     def _init_gui_to_prefs(self):
         if editorpersistance.prefs.tabs_on_top == True:
             self.notebook.set_tab_pos(Gtk.PositionType.TOP)
-            self.right_notebook.set_tab_pos(Gtk.PositionType.TOP)
         else:
             self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
-            self.right_notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
 
     def _show_tabs_up(self, widget):
         if widget.get_active() == False:
@@ -856,7 +862,6 @@ class EditorWindow:
         self.sequence_editor_b.connect("clicked", 
                         lambda w,e: self._monitor_switch_handler(w), 
                         None)
-        self.sequence_editor_b.set_size_request(100, 25)
 
         self.clip_editor_b = Gtk.RadioButton.new_from_widget(self.sequence_editor_b)#,_("Clip"))
         self.clip_editor_b.set_mode(False)
@@ -864,7 +869,6 @@ class EditorWindow:
         self.clip_editor_b.connect("clicked",
                         lambda w,e: self._monitor_switch_handler(w),
                         None)
-        self.clip_editor_b.set_size_request(100, 25)
 
     def _monitor_switch_handler(self, widget):
         # We get two "clicked" events per toggle, send through only the one
@@ -876,9 +880,6 @@ class EditorWindow:
         if ((self.clip_editor_b.get_active() == True) 
             and (widget == self.clip_editor_b)):
             updater.display_clip_in_monitor()
-
-    def layouts_pressed(self, widget, event):
-        print "kkkkkkkkkkkkkkkkkkk"
 
     def connect_player(self, mltplayer):
         # Buttons
@@ -913,7 +914,9 @@ class EditorWindow:
         middlebar.create_edit_buttons_row_buttons(self, modes_pixbufs)
     
         buttons_row = Gtk.HBox(False, 1)
-        if editorpersistance.prefs.midbar_tc_left == True:
+        if editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_COMPONENTS_CENTERED:
+            middlebar.fill_with_COMPONETS_CENTERED_pattern(buttons_row, self)
+        elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_LEFT:
             middlebar.fill_with_TC_LEFT_pattern(buttons_row, self)
         else:
             middlebar.fill_with_TC_MIDDLE_pattern(buttons_row, self)
@@ -1065,8 +1068,10 @@ class EditorWindow:
         self.tc = guicomponents.MonitorTCDisplay()
         self.monitor_source = Gtk.Label(label="sequence1")
         self.monitor_source.set_ellipsize(Pango.EllipsizeMode.END)
-
-
+        self.monitor_source.modify_font(Pango.FontDescription("sans bold 8"))
+        self.info1 = Gtk.Label(label="--:--:--:--")
+        self.info1.set_ellipsize(Pango.EllipsizeMode.END)
+        self.info1.modify_font(Pango.FontDescription("sans bold 8"))
 
 def _this_is_not_used():
     print "THIS WAS USED!!!!!"
