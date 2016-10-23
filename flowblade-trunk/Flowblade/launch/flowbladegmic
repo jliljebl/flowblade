@@ -26,5 +26,4 @@ except Exception, err:
     sys.exit(1)
     
 
-
 gmic.main(modules_path)

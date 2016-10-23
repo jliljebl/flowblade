@@ -1416,7 +1416,7 @@ def _get_tool_integration_menu_item(event, clip, track, callback):
     for integrator in export_tools:
         export_item = Gtk.MenuItem(copy.copy(integrator.tool_name))
         sub_menu.append(export_item)
-        export_item.connect("activate", integrator.get_export_callback, (clip, track))
+        export_item.connect("activate", integrator.export_callback, (clip, track))
         export_item.show()
 
     menu_item.show()

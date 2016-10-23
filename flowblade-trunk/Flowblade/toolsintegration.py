@@ -33,7 +33,7 @@ def init():
 def get_export_integrators():
     export_integrators = []
     for tool_integrator in _tools:
-        if tool_integrator.export_target == True:
+        if tool_integrator.is_export_target == True:
             export_integrators.append(tool_integrator)
     
     return export_integrators
@@ -41,22 +41,34 @@ def get_export_integrators():
 # --------------------------------------------------- integrator classes
 class ToolIntegrator:
     
-    
-    def __init__(self, tool_name, export_target):
+    def __init__(self, tool_name, is_export_target):
         self.tool_name = tool_name
-        self.export_target = export_target
-
+        self.is_export_target = is_export_target
+        self.data = None
+         
     def activate(self):
         _active_integrators.append(self)
     
     def deactivate(self):
         _active_integrators.remove(self)
 
-    def get_export_callback(self, widget, data):
-        print data
-
+    def export_callback(self, widget, data):
+        new_instance = copy.deepcopy(self)
+        new_instance.data = data
+        new_instance.activate()
+        new_instance.do_export()
+        
+    def do_export(self):
+        print self.__class__.__name__ + " does not implement do_export()"
+         
 
 class GMICIntegrator(ToolIntegrator):
     
     def __init__(self):
         ToolIntegrator.__init__(self, "G'MIC Effects", True)
+        
+    def do_export(self):
+        gmic.launch_gmic(self.data) # tuple (clip, track)
+              
+                
+                
