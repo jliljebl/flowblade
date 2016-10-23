@@ -23,6 +23,7 @@ Module contains classes and build methods to create GUI objects.
 """
 
 import cairo
+import copy
 import math
 import time
 
@@ -49,6 +50,7 @@ import mltprofiles
 import mlttransitions
 import respaths
 import snapping
+import toolsintegration
 import translations
 import utils
 
@@ -1191,6 +1193,10 @@ def display_clip_popup_menu(event, clip, track, callback):
 
     if track.type == appconsts.VIDEO:
         _add_separetor(clip_menu)
+        clip_menu.add(_get_tool_integration_menu_item(event, clip, track, callback))
+        
+    if track.type == appconsts.VIDEO:
+        _add_separetor(clip_menu)
         clip_menu.add(_get_match_frame_menu_item(event, clip, track, callback))
             
     clip_menu.popup(None, None, None, None, event.button, event.time)
@@ -1398,6 +1404,21 @@ def _get_match_frame_menu_item(event, clip, track, callback):
     clear_item.show()
     
     menu_item.set_sensitive(True)
+    menu_item.show()
+    return menu_item
+
+def _get_tool_integration_menu_item(event, clip, track, callback):
+    menu_item = Gtk.MenuItem(_("Export To Tool"))
+    sub_menu = Gtk.Menu()
+    menu_item.set_submenu(sub_menu)
+
+    export_tools = toolsintegration.get_export_integrators()
+    for integrator in export_tools:
+        export_item = Gtk.MenuItem(copy.copy(integrator.tool_name))
+        sub_menu.append(export_item)
+        export_item.connect("activate", integrator.get_export_callback, (clip, track))
+        export_item.show()
+
     menu_item.show()
     return menu_item
 

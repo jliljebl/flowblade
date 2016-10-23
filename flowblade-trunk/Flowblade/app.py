@@ -72,7 +72,6 @@ import mltprofiles
 import mlttransitions
 import movemodes
 import persistance
-import phantomcompositor
 import positionbar
 import preferenceswindow
 import projectaction
@@ -87,6 +86,7 @@ import sequence
 import snapping
 import titler
 import tlinewidgets
+import toolsintegration
 import trimmodes
 import translations
 import undo
@@ -259,9 +259,10 @@ def main(root_path):
     # Audiomonitoring being available needs to be known before GUI creation
     audiomonitoring.init(editorstate.project.profile)
 
-    # Check for tools
+    # Check for tools and init tools integration
     gmic.test_availablity()
-    #phantomcompositor.test_availablity()
+
+    toolsintegration.init()
     
     # Create player object
     create_player()
