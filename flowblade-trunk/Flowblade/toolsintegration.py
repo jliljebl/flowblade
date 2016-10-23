@@ -19,7 +19,9 @@
 """
 import copy
 
+from editorstate import PROJECT
 import gmic
+import render
 
 _tools = []
 _active_integrators = []
@@ -30,6 +32,8 @@ def init():
     if gmic.gmic_available():
         _tools.append(GMICIntegrator())
 
+    _tools.append(SlowMoIntegrator())
+        
 def get_export_integrators():
     export_integrators = []
     for tool_integrator in _tools:
@@ -69,6 +73,18 @@ class GMICIntegrator(ToolIntegrator):
         
     def do_export(self):
         gmic.launch_gmic(self.data) # tuple (clip, track)
-              
-                
+            
+
+
+class SlowMoIntegrator(ToolIntegrator):
+    
+    def __init__(self):
+        ToolIntegrator.__init__(self, "Slow/Fast Motion", True)
+        
+    def do_export(self):
+        clip, track = self.data
+        media_file = PROJECT().get_media_file_for_path(clip.path)
+        media_file.mark_in = clip.clip_in
+        media_file.mark_out = clip.clip_out
+        render.render_frame_buffer_clip(media_file, True)
                 
