@@ -352,15 +352,15 @@ def _match_frame_end(data):
 
 def _match_frame_start_monitor(data):
     clip, track, item_id, item_data = data
-    _set_match_frame(clip, clip.clip_in, track, False, False)
+    gui.monitor_widget.set_frame_match_view(clip, clip.clip_in)
 
 def _match_frame_end_monitor(data):
     clip, track, item_id, item_data = data
-    _set_match_frame(clip, clip.clip_out, track, False, False)
+    gui.monitor_widget.set_frame_match_view(clip, clip.clip_out)
      
-def _set_match_frame(clip, frame, track, display_on_right, timeline_match_frame=True):
+def _set_match_frame(clip, frame, track, display_on_right):
     global _match_frame_writer
-    _match_frame_writer = MatchFrameWriter(clip, frame, track, display_on_right, timeline_match_frame)
+    _match_frame_writer = MatchFrameWriter(clip, frame, track, display_on_right)
     
     GLib.idle_add(_write_match_frame)
 
@@ -372,12 +372,11 @@ def _match_frame_close(data):
     updater.repaint_tline()
         
 class MatchFrameWriter:
-    def __init__(self, clip, clip_frame, track, display_on_right, timeline_match_frame):
+    def __init__(self, clip, clip_frame, track, display_on_right):
         self.clip = clip
         self.clip_frame = clip_frame
         self.track = track
         self.display_on_right = display_on_right
-        self.timeline_match_frame = timeline_match_frame
         
     def write_image(self):
         """
@@ -416,13 +415,10 @@ class MatchFrameWriter:
 
         # Update timeline data           
         # Get frame of clip.clip_in_in on timeline.
-        if self.timeline_match_frame == True:
-            clip_index = self.track.clips.index(self.clip)
-            clip_start_in_tline = self.track.clip_start(clip_index)
-            tline_match_frame = clip_start_in_tline + self.clip.clip_out - (self.clip.clip_out - self.clip_frame)
-            tlinewidgets.set_match_frame(tline_match_frame, self.track.id, self.display_on_right)
-        else:
-            print "vhallelujaa"
+        clip_index = self.track.clips.index(self.clip)
+        clip_start_in_tline = self.track.clip_start(clip_index)
+        tline_match_frame = clip_start_in_tline + self.clip.clip_out - (self.clip.clip_out - self.clip_frame)
+        tlinewidgets.set_match_frame(tline_match_frame, self.track.id, self.display_on_right)
 
         # Update view
         updater.repaint_tline()
