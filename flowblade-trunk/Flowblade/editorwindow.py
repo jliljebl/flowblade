@@ -129,6 +129,11 @@ class EditorWindow:
         self.window.set_icon_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
         self.window.set_border_width(5)
 
+        if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
+            self.window2 = Gtk.Window(Gtk.WindowType.TOPLEVEL)
+            self.window2.set_icon_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
+            self.window2.set_border_width(5)
+        
         # To ask confirmation for shutdown 
         self.window.connect("delete-event", lambda w, e:app.shutdown())
 
@@ -488,7 +493,8 @@ class EditorWindow:
         self.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH, appconsts.TOP_ROW_HEIGHT)
         media_label = Gtk.Label(label=_("Media"))
         media_label.no_dark_bg = True
-        self.notebook.append_page(mm_panel, media_label)
+        if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+            self.notebook.append_page(mm_panel, media_label)
         self.notebook.append_page(media_log_panel, Gtk.Label(label=_("Range Log")))
         self.notebook.append_page(self.effects_panel, Gtk.Label(label=_("Filters")))
         self.notebook.append_page(self.compositors_panel, Gtk.Label(label=_("Compositors")))
@@ -562,9 +568,13 @@ class EditorWindow:
 
         # Top row paned
         self.top_paned = Gtk.HPaned()
-        self.top_paned.pack1(notebook_vbox, resize=False, shrink=False)
-        self.top_paned.pack2(monitor_frame, resize=True, shrink=False)
-
+        if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+            self.top_paned.pack1(notebook_vbox, resize=False, shrink=False)
+            self.top_paned.pack2(monitor_frame, resize=True, shrink=False)
+        else:
+            self.top_paned.pack1(mm_panel, resize=False, shrink=False)
+            self.top_paned.pack2(notebook_vbox, resize=True, shrink=False)
+            
         # Top row
         self.top_row_hbox = Gtk.HBox(False, 0)
         self.top_row_hbox.pack_start(self.top_paned, True, True, 0)
@@ -700,7 +710,18 @@ class EditorWindow:
                 
         # Show window and all of its components
         self.window.show_all()
-        
+
+        # Show monitor Window in two window mode
+        if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
+            pane2 = Gtk.VBox(False, 1)
+            pane2.pack_start(monitor_frame, True, True, 0)
+            
+            # Set pane and show window
+            self.window2.add(pane2)
+            self.window2.set_title("Flowblade")
+            
+            self.window2.show_all()
+                        
         # Set paned positions
         self.mm_paned.set_position(editorpersistance.prefs.mm_paned_position)
         self.top_paned.set_position(editorpersistance.prefs.top_paned_position)
