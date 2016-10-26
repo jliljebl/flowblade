@@ -87,6 +87,7 @@ import snapping
 import titler
 import tlinewidgets
 import toolsintegration
+import toolnatron
 import trimmodes
 import translations
 import undo
@@ -172,6 +173,8 @@ def main(root_path):
         os.mkdir(user_dir + appconsts.MATCH_FRAME_DIR)
     if not os.path.exists(user_dir + appconsts.TRIM_VIEW_DIR):
         os.mkdir(user_dir + appconsts.TRIM_VIEW_DIR)
+    if not os.path.exists(user_dir + appconsts.NATRON_DIR):
+        os.mkdir(user_dir + appconsts.NATRON_DIR)
         
     # Set paths.
     respaths.set_paths(root_path)
@@ -261,7 +264,7 @@ def main(root_path):
 
     # Check for tools and init tools integration
     gmic.test_availablity()
-
+    toolnatron.init()
     toolsintegration.init()
     
     # Create player object

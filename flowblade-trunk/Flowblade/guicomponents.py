@@ -1386,18 +1386,31 @@ def _get_match_frame_menu_item(event, clip, track, callback):
     sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
 
-    start_item = Gtk.MenuItem(_("First frame"))
+    start_item_monitor = Gtk.MenuItem(_("First Frame in Monitor"))
+    sub_menu.append(start_item_monitor)
+    start_item_monitor.connect("activate", callback, (clip, track, "match_frame_start_monitor", None))
+    start_item_monitor.show()
+
+    end_item_monitor = Gtk.MenuItem(_("Last Frame in Monitor"))
+    sub_menu.append(end_item_monitor)
+    end_item_monitor.connect("activate", callback, (clip, track, "match_frame_end_monitor", None))
+    end_item_monitor.show()
+    
+    _add_separetor(sub_menu)
+    
+    start_item = Gtk.MenuItem(_("First Frame on Timeline"))
     sub_menu.append(start_item)
     start_item.connect("activate", callback, (clip, track, "match_frame_start", None))
     start_item.show()
 
-    end_item = Gtk.MenuItem(_("Last frame"))
+    end_item = Gtk.MenuItem(_("Last Frame on Timeline"))
     sub_menu.append(end_item)
     end_item.connect("activate", callback, (clip, track, "match_frame_end", None))
     end_item.show()
 
+
     _add_separetor(sub_menu)
-    
+        
     clear_item = Gtk.MenuItem(_("Clear Match Frame"))
     sub_menu.append(clear_item)
     clear_item.connect("activate", callback, (clip, track, "match_frame_close", None))

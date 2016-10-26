@@ -21,6 +21,7 @@ import copy
 
 from editorstate import PROJECT
 import gmic
+import toolnatron
 import render
 
 _tools = []
@@ -32,6 +33,9 @@ def init():
     if gmic.gmic_available():
         _tools.append(GMICIntegrator())
 
+    if toolnatron.natron_avavilable():
+        _tools.append(NatronIntegrator())
+        
     _tools.append(SlowMoIntegrator())
         
 def get_export_integrators():
@@ -66,6 +70,7 @@ class ToolIntegrator:
         print self.__class__.__name__ + " does not implement do_export()"
          
 
+
 class GMICIntegrator(ToolIntegrator):
     
     def __init__(self):
@@ -74,6 +79,14 @@ class GMICIntegrator(ToolIntegrator):
     def do_export(self):
         gmic.launch_gmic(self.data) # tuple (clip, track)
             
+
+class NatronIntegrator(ToolIntegrator):
+    def __init__(self):
+        ToolIntegrator.__init__(self, "Natron", True)
+
+    def do_export(self):
+        clip, track = self.data
+        toolnatron.export_clip(clip)
 
 
 class SlowMoIntegrator(ToolIntegrator):

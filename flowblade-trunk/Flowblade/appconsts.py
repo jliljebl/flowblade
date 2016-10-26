@@ -153,6 +153,7 @@ MATCH_FRAME_DIR = "match_frame"
 MATCH_FRAME = MATCH_FRAME_DIR + "/match_frame.png"
 MATCH_FRAME_NEW = MATCH_FRAME_DIR + "/match_frame_new.png"
 TRIM_VIEW_DIR = "trim_view"
+NATRON_DIR = "natron"
 
 # Luma bands
 SHADOWS = 0
