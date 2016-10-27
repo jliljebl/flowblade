@@ -62,6 +62,8 @@ stack_dnd_state = NOT_ON
 stack_dnd_event_time = 0.0
 stack_dnd_event_info = None
 
+filters_notebook_index = 2
+
 def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     """
     Use components created at clipeffectseditor.py.
@@ -140,7 +142,7 @@ def set_clip(new_clip, new_track, new_index):
     set_enabled(True)
     update_stack_view()
     effect_selection_changed() # This may get called twice
-    gui.middle_notebook.set_current_page(2) # 2 == index of clipeditor page in notebook
+    gui.middle_notebook.set_current_page(filters_notebook_index) # 2 == index of clipeditor page in notebook
 
 def clip_removed_during_edit(removed_clip):
     """

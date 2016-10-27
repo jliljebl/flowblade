@@ -56,6 +56,7 @@ COMMENT_SORT = appconsts.COMMENT_SORT
 
 sorting_order = TIME_SORT
 
+range_log_notebook_index = 1 # this is set 0 for 2 window mode
                 
 class MediaLogEvent:
     def __init__(self, event_type, mark_in, mark_out, name, path):
@@ -143,7 +144,7 @@ def log_range_clicked():
 def _update_list_view(log_event):
     widgets.media_log_view.fill_data_model()
     max_val = widgets.media_log_view.treeview.get_vadjustment().get_upper()
-    gui.middle_notebook.set_current_page(1)
+    gui.middle_notebook.set_current_page(range_log_notebook_index)
     view_group = get_current_filtered_events()
     event_index = view_group.index(log_event)
     widgets.media_log_view.treeview.get_selection().select_path(str(event_index))
