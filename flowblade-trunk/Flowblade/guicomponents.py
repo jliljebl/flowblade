@@ -1408,7 +1408,6 @@ def _get_match_frame_menu_item(event, clip, track, callback):
     end_item.connect("activate", callback, (clip, track, "match_frame_end", None))
     end_item.show()
 
-
     _add_separetor(sub_menu)
         
     clear_item = Gtk.MenuItem(_("Clear Match Frame"))

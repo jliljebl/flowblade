@@ -417,7 +417,7 @@ class MatchFrameWriter:
         # Get frame of clip.clip_in_in on timeline.
         clip_index = self.track.clips.index(self.clip)
         clip_start_in_tline = self.track.clip_start(clip_index)
-        tline_match_frame = clip_start_in_tline + self.clip.clip_out - (self.clip.clip_out - self.clip_frame)
+        tline_match_frame = clip_start_in_tline + (self.clip_frame - self.clip.clip_in)
         tlinewidgets.set_match_frame(tline_match_frame, self.track.id, self.display_on_right)
 
         # Update view
