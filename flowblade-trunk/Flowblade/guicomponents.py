@@ -48,6 +48,7 @@ import guiutils
 import mltfilters
 import mltprofiles
 import mlttransitions
+import monitorwidget
 import respaths
 import snapping
 import toolsintegration
@@ -2135,6 +2136,20 @@ def get_trim_view_popupmenu(launcher, event, callback):
     trim_view_all.connect("activate", callback, "trimon")
     trim_view_single.connect("activate", callback, "trimsingle")
     no_trim_view.connect("activate", callback, "trimoff")
+    
+    _add_separetor(menu)
+
+    menu_item = _get_menu_item(_("Set Current Clip Frame Match Frame"), callback, "clipframematch" )
+    if editorstate.timeline_visible() == True:
+        menu_item.set_sensitive(False)
+    menu.add(menu_item)
+    
+    
+    menu_item = _get_menu_item(_("Clear Match Frame"), callback, "matchclear" )
+    if gui.monitor_widget.view != monitorwidget.FRAME_MATCH_VIEW:
+        menu_item.set_sensitive(False)
+    menu.add(menu_item)
+
     
     menu.popup(None, None, None, None, event.button, event.time)
     

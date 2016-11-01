@@ -33,6 +33,7 @@ from editorstate import MONITOR_MEDIA_FILE
 import gui
 import guicomponents
 import movemodes
+import tlineaction
 import trimmodes
 import updater
 
@@ -83,26 +84,11 @@ def stop_pressed():
 def next_pressed():
     if current_is_move_mode():
         movemodes.next_pressed()
-    """ This is highly fucking suspect, it does an edit immediately
-    commented out at 6-1-16  and lets see if anyone complains
-    elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
-        trimmodes.oneroll_next_pressed()
-    elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
-        trimmodes.tworoll_next_pressed()
-    elif EDIT_MODE() == editorstate.SLIDE_TRIM:
-        trimmodes.slide_next_pressed()
-    """
+
 def prev_pressed():
     if current_is_move_mode():
         movemodes.prev_pressed()
-    """
-    elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
-        trimmodes.oneroll_prev_pressed()
-    elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
-        trimmodes.tworoll_prev_pressed()
-    elif EDIT_MODE() == editorstate.SLIDE_TRIM:
-        trimmodes.slide_prev_pressed()
-    """
+
 def j_pressed():
     if timeline_visible():
         trimmodes.set_no_edit_trim_mode()
@@ -277,6 +263,17 @@ def trim_view_menu_launched(launcher, event):
     
 
 def _trim_view_menu_item_activated(widget, msg):
+    if msg == "matchclear":
+        gui.monitor_widget.set_default_view_force()
+        return
+    if msg == "clipframematch":
+        clip = tlineaction._get_new_clip_from_clip_monitor()
+        if clip == None:
+            return
+        frame = PLAYER().current_frame()
+        gui.monitor_widget.set_frame_match_view(clip, frame)
+        return
+    
     if widget.get_active() == False:
         return
     
@@ -286,3 +283,5 @@ def _trim_view_menu_item_activated(widget, msg):
         editorstate.show_trim_view = appconsts.TRIM_VIEW_SINGLE
     if msg == "trimoff":
         editorstate.show_trim_view = appconsts.TRIM_VIEW_OFF
+
+        
