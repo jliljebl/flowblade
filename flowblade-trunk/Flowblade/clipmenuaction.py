@@ -369,6 +369,7 @@ def _write_match_frame():
 
 def _match_frame_close(data):
     tlinewidgets.set_match_frame(-1, -1, True)
+    gui.monitor_widget.set_default_view_force()
     updater.repaint_tline()
         
 class MatchFrameWriter:

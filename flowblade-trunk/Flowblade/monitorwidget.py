@@ -88,6 +88,7 @@ class MonitorWidget:
         self.top_row = Gtk.HBox()
         
         self.top_edge_panel = cairoarea.CairoDrawableArea2(1, 1, self._draw_top_panel, use_widget_bg=False)
+        self.top_edge_panel.press_func = self._press_event
         self.top_row.pack_start(self.top_edge_panel, True, True,0)
         
         # mid row
@@ -143,11 +144,14 @@ class MonitorWidget:
         return False
 
     # ------------------------------------------------------------------ SET VIEW TYPE
-    def set_default_view(self):
+    def set_default_view_force(self):
+        self.set_default_view(True)
+
+    def set_default_view(self, force_default_mode=False):
         if self.view == DEFAULT_VIEW:
             return
 
-        if self.view == FRAME_MATCH_VIEW:
+        if self.view == FRAME_MATCH_VIEW and force_default_mode==False:
             return
             
         # Refreshing while rendering overwrites file on disk and loses 
@@ -471,7 +475,15 @@ class MonitorWidget:
         global _frame_write_on        
         _frame_write_on = False
         self.match_frame_write_complete(MATCH_FRAME)
-        
+
+    def _press_event(self, event):
+        """
+        Mouse button callback
+        """
+        if self.view == FRAME_MATCH_VIEW:
+           if  event.x > 4 and event.y > 4 and event.x < 28 and event.y < 28:
+                self.set_default_view_force()
+            
     # ------------------------------------------------------------------ MATCH FRAME
     def match_frame_write_complete(self, frame_name):
         self.match_frame_surface = self.create_match_frame_image_surface(frame_name)
