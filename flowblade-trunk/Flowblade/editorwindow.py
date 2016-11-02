@@ -711,7 +711,7 @@ class EditorWindow:
         # Show window and all of its components
         self.window.show_all()
 
-        # Show monitor Window in two window mode
+        # Show Monitor Window in two window mode
         if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
             pane2 = Gtk.VBox(False, 1)
             pane2.pack_start(monitor_frame, True, True, 0)

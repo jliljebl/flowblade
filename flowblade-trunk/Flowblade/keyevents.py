@@ -148,7 +148,7 @@ def _timeline_has_focus():
        or gui.tline_scale.widget.is_focus()
        or glassbuttons.focus_group_has_focus(glassbuttons.DEFAULT_FOCUS_GROUP)):
         return True
-
+    
     return False
     
 def _handle_tline_key_event(event):
