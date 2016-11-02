@@ -113,10 +113,16 @@ def init(profile):
 
     global CONTROL_SLOT_H, METER_SLOT_H, METER_LIGHTS, METER_HEIGHT
     if editorstate.screen_size_small_height() == True:
-        METER_SLOT_H = 275
-        CONTROL_SLOT_H = 240
-        METER_LIGHTS = 82
-        METER_HEIGHT = METER_LIGHTS * DASH_INK + (METER_LIGHTS - 1) * DASH_SKIP
+        if editorstate.SCREEN_HEIGHT > 898:
+            METER_SLOT_H = 400
+            CONTROL_SLOT_H = 240
+            METER_LIGHTS = 123
+            METER_HEIGHT = METER_LIGHTS * DASH_INK + (METER_LIGHTS - 1) * DASH_SKIP
+        else:
+            METER_SLOT_H = 275
+            CONTROL_SLOT_H = 240
+            METER_LIGHTS = 82
+            METER_HEIGHT = METER_LIGHTS * DASH_INK + (METER_LIGHTS - 1) * DASH_SKIP
 
     # We want this to be always present when closing app or we'll need to handle it being missing.
     global _update_ticker
