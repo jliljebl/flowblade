@@ -782,20 +782,18 @@ class EditorWindow:
         sep = Gtk.SeparatorMenuItem()
         menu.append(sep)
 
-        if not (editorstate.screen_size_small_height() == True or editorstate.screen_size_small_height() == True):
-            
-            show_monitor_info_item = Gtk.CheckMenuItem(_("Show Monitor Sequence Profile").encode('utf-8'))
-            show_monitor_info_item.set_active(editorpersistance.prefs.show_sequence_profile)
-            show_monitor_info_item.connect("toggled", lambda w: middlebar._show_monitor_info_toggled(w))
-            menu.append(show_monitor_info_item)
+        show_monitor_info_item = Gtk.CheckMenuItem(_("Show Monitor Sequence Profile").encode('utf-8'))
+        show_monitor_info_item.set_active(editorpersistance.prefs.show_sequence_profile)
+        show_monitor_info_item.connect("toggled", lambda w: middlebar._show_monitor_info_toggled(w))
+        menu.append(show_monitor_info_item)
 
-            show_vu_item = Gtk.CheckMenuItem(_("Show Master Volume Meter").encode('utf-8'))
-            show_vu_item.set_active(editorpersistance.prefs.show_vu_meter)
-            show_vu_item.connect("toggled", lambda w: self._show_vu_meter(w))
-            menu.append(show_vu_item)
+        show_vu_item = Gtk.CheckMenuItem(_("Show Master Volume Meter").encode('utf-8'))
+        show_vu_item.set_active(editorpersistance.prefs.show_vu_meter)
+        show_vu_item.connect("toggled", lambda w: self._show_vu_meter(w))
+        menu.append(show_vu_item)
 
-            sep = Gtk.SeparatorMenuItem()
-            menu.append(sep)
+        sep = Gtk.SeparatorMenuItem()
+        menu.append(sep)
 
         interp_menu_item = Gtk.MenuItem(_("Monitor Playback Interpolation").encode('utf-8'))
         interp_menu = Gtk.Menu()
@@ -861,7 +859,7 @@ class EditorWindow:
         self._update_top_row(True)
 
     def _update_top_row(self, show_all=False):
-        if editorpersistance.prefs.show_vu_meter and editorstate.screen_size_small_height() == False:
+        if editorpersistance.prefs.show_vu_meter:
             if len(self.top_row_hbox) == 1:
                 self.top_row_hbox.pack_end(audiomonitoring.get_master_meter(), False, False, 0)
         else:
