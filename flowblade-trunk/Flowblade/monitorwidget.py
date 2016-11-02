@@ -33,6 +33,7 @@ import cairoarea
 import editorstate
 from editorstate import PLAYER
 from editorstate import PROJECT
+import respaths
 
 DEFAULT_VIEW = 0
 START_TRIM_VIEW = 1
@@ -41,6 +42,7 @@ ROLL_TRIM_RIGHT_ACTIVE_VIEW = 3
 ROLL_TRIM_LEFT_ACTIVE_VIEW = 4
 SLIP_TRIM_RIGHT_ACTIVE_VIEW = 5
 SLIP_TRIM_LEFT_ACTIVE_VIEW = 6
+FRAME_MATCH_VIEW = 7
 
 TC_LEFT_SIDE_PAD = 172
 TC_RIGHT_SIDE_PAD = 28
@@ -50,6 +52,8 @@ MATCH_FRAME = "match_frame.png"
 
 MONITOR_INDICATOR_COLOR = utils.get_cairo_color_tuple_255_rgb(71, 131, 169)
 MONITOR_INDICATOR_COLOR_MATCH = utils.get_cairo_color_tuple_255_rgb(21, 71, 105)
+
+FRAME_MATCH_VIEW_COLOR = (0.3, 0.3, 0.3)
 
 # Continuos match frame update
 CONTINUOS_UPDATE_PAUSE = 0.2
@@ -78,10 +82,13 @@ class MonitorWidget:
         self.slip_clip_media_length = -1
         self.slip_clip_length = -1
 
+        self.clip_name = "clip name"
+    
         # top row
         self.top_row = Gtk.HBox()
         
         self.top_edge_panel = cairoarea.CairoDrawableArea2(1, 1, self._draw_top_panel, use_widget_bg=False)
+        self.top_edge_panel.press_func = self._press_event
         self.top_row.pack_start(self.top_edge_panel, True, True,0)
         
         # mid row
@@ -111,6 +118,7 @@ class MonitorWidget:
         self.widget.pack_start(self.mid_row , True, True,0)
         self.widget.pack_start(self.bottom_row, False, False,0)
 
+        self.CLOSE_MATCH_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "close_match.png")
 
         global _widget
         _widget = self
@@ -136,10 +144,16 @@ class MonitorWidget:
         return False
 
     # ------------------------------------------------------------------ SET VIEW TYPE
-    def set_default_view(self):
+    def set_default_view_force(self):
+        self.set_default_view(True)
+
+    def set_default_view(self, force_default_mode=False):
         if self.view == DEFAULT_VIEW:
             return
-        
+
+        if self.view == FRAME_MATCH_VIEW and force_default_mode==False:
+            return
+            
         # Refreshing while rendering overwrites file on disk and loses 
         # previous rendered data. 
         if PLAYER().is_rendering:
@@ -164,6 +178,33 @@ class MonitorWidget:
         
         self.widget.queue_draw()
         PLAYER().refresh()
+
+    def set_frame_match_view(self, match_clip, frame):        
+        # Refreshing while rendering overwrites file on disk and loses 
+        # previous rendered data. 
+        if PLAYER().is_rendering:
+            return
+
+        # Delete match frame
+        try:
+            os.remove(_get_match_frame_path())
+        except:
+            # This fails when done first time ever  
+            pass
+        
+        self.match_frame_surface = None
+                
+        self.view = FRAME_MATCH_VIEW
+        
+        self._layout_match_frame_left()
+        self._layout_expand_edge_panels()
+        
+        cpath, cname = os.path.split(match_clip.path)
+        self.clip_name = cname
+        self.match_frame = frame
+        match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, frame, 
+                                                            MATCH_FRAME, self.match_frame_write_complete)
+        match_frame_write_thread.start()
         
     def set_start_trim_view(self, match_clip, edit_clip_start):
         if self.is_active(True) == False:
@@ -434,7 +475,15 @@ class MonitorWidget:
         global _frame_write_on        
         _frame_write_on = False
         self.match_frame_write_complete(MATCH_FRAME)
-        
+
+    def _press_event(self, event):
+        """
+        Mouse button callback
+        """
+        if self.view == FRAME_MATCH_VIEW:
+           if  event.x > 4 and event.y > 4 and event.x < 28 and event.y < 28:
+                self.set_default_view_force()
+            
     # ------------------------------------------------------------------ MATCH FRAME
     def match_frame_write_complete(self, frame_name):
         self.match_frame_surface = self.create_match_frame_image_surface(frame_name)
@@ -511,6 +560,8 @@ class MonitorWidget:
 
         # Draw bg
         cr.set_source_rgb(0.0, 0.0, 0.0)
+        if self.view == FRAME_MATCH_VIEW:
+            cr.set_source_rgb(*FRAME_MATCH_VIEW_COLOR)
         cr.rectangle(0, 0, w, h)
         cr.fill()
 
@@ -518,7 +569,7 @@ class MonitorWidget:
         if h == 1:
             return
             
-        # Draw screen indicators
+        # Draw screen info 
         cr.set_source_rgb(*MONITOR_INDICATOR_COLOR)
         if self.view == START_TRIM_VIEW or self.view == ROLL_TRIM_RIGHT_ACTIVE_VIEW or self.view == SLIP_TRIM_RIGHT_ACTIVE_VIEW:
             cr.rectangle(w/2, h - 4, w/2, 4)
@@ -527,6 +578,13 @@ class MonitorWidget:
                 cr.set_source_rgb(*MONITOR_INDICATOR_COLOR_MATCH)
                 cr.rectangle(0, h - 4, w/2, 4)
                 cr.fill()
+        elif self.view == FRAME_MATCH_VIEW:
+            cr.select_font_face ("monospace", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+            cr.set_font_size(21)
+            cr.move_to(5, h - 20)
+            cr.show_text(str(self.clip_name))
+            cr.set_source_surface(self.CLOSE_MATCH_ICON, 5, 5)
+            cr.paint()
         else:
             cr.rectangle(0, h - 4, w/2, 4)
             cr.fill()
@@ -540,6 +598,8 @@ class MonitorWidget:
 
         # Draw bg
         cr.set_source_rgb(0.0, 0.0, 0.0)
+        if self.view == FRAME_MATCH_VIEW:
+            cr.set_source_rgb(*FRAME_MATCH_VIEW_COLOR)
         cr.rectangle(0, 0, w, h)
         cr.fill()
 
@@ -553,7 +613,13 @@ class MonitorWidget:
             self._draw_bottom_panel_two_roll(event, cr, allocation)
         elif self.view == SLIP_TRIM_RIGHT_ACTIVE_VIEW or self.view == SLIP_TRIM_LEFT_ACTIVE_VIEW:
             self._draw_bottom_panel_slip(event, cr, allocation)
-            
+        elif self.view == FRAME_MATCH_VIEW:
+            cr.set_source_rgb(*MONITOR_INDICATOR_COLOR)
+            cr.select_font_face ("monospace", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+            cr.set_font_size(21)
+            cr.move_to(5, 35)
+            cr.show_text(utils.get_tc_string(self.match_frame))
+
     def _draw_bottom_panel_one_roll(self, event, cr, allocation):
         x, y, w, h = allocation
 

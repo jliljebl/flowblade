@@ -571,8 +571,9 @@ def set_transition_render_edit_menu_items_sensitive(range_start, range_end):
         render_transition.set_sensitive(False)
         render_fade.set_sensitive(False)
 
+"""
 # ------------------------------------------------ notebook
 def switch_notebook_panel(index):
     gui.middle_notebook.set_current_page(index)
 
-
+"""

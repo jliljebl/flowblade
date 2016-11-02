@@ -69,7 +69,7 @@ def _get_new_clip_from_clip_monitor():
     """
     if MONITOR_MEDIA_FILE() == None:
         # Info window here
-        return
+        return None
     
     if MONITOR_MEDIA_FILE().type != appconsts.PATTERN_PRODUCER:
         new_clip = current_sequence().create_file_producer_clip(MONITOR_MEDIA_FILE().path)

@@ -58,7 +58,6 @@ DASH_SKIP = 1.0
 DASHES = [DASH_INK, DASH_SKIP, DASH_INK, DASH_SKIP]
 
 METER_LIGHTS = 143 #57
-#METER_HEIGHT = METER_LIGHTS * DASH_INK + (METER_LIGHTS - 1) * DASH_SKIP
 METER_HEIGHT = METER_LIGHTS * DASH_INK + (METER_LIGHTS - 1) * DASH_SKIP
 METER_WIDTH = 10
 
@@ -112,11 +111,19 @@ def init(profile):
         MONITORING_AVAILABLE = False
         editorstate.audio_monitoring_available = False
 
-    global CONTROL_SLOT_H, METER_SLOT_H
+    global CONTROL_SLOT_H, METER_SLOT_H, METER_LIGHTS, METER_HEIGHT
     if editorstate.screen_size_small_height() == True:
-        METER_SLOT_H = 400
-        CONTROL_SLOT_H = 220
-            
+        if editorstate.SCREEN_HEIGHT > 898:
+            METER_SLOT_H = 400
+            CONTROL_SLOT_H = 240
+            METER_LIGHTS = 123
+            METER_HEIGHT = METER_LIGHTS * DASH_INK + (METER_LIGHTS - 1) * DASH_SKIP
+        else:
+            METER_SLOT_H = 275
+            CONTROL_SLOT_H = 240
+            METER_LIGHTS = 82
+            METER_HEIGHT = METER_LIGHTS * DASH_INK + (METER_LIGHTS - 1) * DASH_SKIP
+
     # We want this to be always present when closing app or we'll need to handle it being missing.
     global _update_ticker
     _update_ticker = utils.Ticker(_audio_monitor_update, 0.04)
@@ -334,10 +341,7 @@ class AudioMonitorWindow(Gtk.Window):
             else:
                 name = utils.get_track_name(seq.tracks[i], seq)
                 gain = GainControl(name, seq, seq.tracks[i])
-            #if i == 0:
-            #    tmp = gain # for bg color ?
-            #    gain = Gtk.EventBox() # for bg color ?
-            #    gain.add(tmp) # for bg color ?
+
             self.gain_controls.append(gain)
             gain_control_area.pack_start(gain, False, False, 0)
 

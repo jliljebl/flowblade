@@ -87,6 +87,7 @@ import snapping
 import titler
 import tlinewidgets
 import toolsintegration
+import toolnatron
 import trimmodes
 import translations
 import undo
@@ -172,6 +173,8 @@ def main(root_path):
         os.mkdir(user_dir + appconsts.MATCH_FRAME_DIR)
     if not os.path.exists(user_dir + appconsts.TRIM_VIEW_DIR):
         os.mkdir(user_dir + appconsts.TRIM_VIEW_DIR)
+    if not os.path.exists(user_dir + appconsts.NATRON_DIR):
+        os.mkdir(user_dir + appconsts.NATRON_DIR)
         
     # Set paths.
     respaths.set_paths(root_path)
@@ -261,7 +264,7 @@ def main(root_path):
 
     # Check for tools and init tools integration
     gmic.test_availablity()
-
+    toolnatron.init()
     toolsintegration.init()
     
     # Create player object
@@ -391,6 +394,12 @@ def create_gui():
     updater.set_clip_edit_mode_callback = editevent.set_clip_monitor_edit_mode
     updater.load_icons()
 
+    # Notebook indexes are differn for 1 and 2 window layouts
+    if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
+        medialog.range_log_notebook_index = 0
+        compositeeditor.compositor_notebook_index = 2
+        clipeffectseditor.filters_notebook_index = 1
+
     # Create window and all child components
     editor_window = editorwindow.EditorWindow()
     
@@ -404,7 +413,9 @@ def create_gui():
     
     # Connect window global key listener
     gui.editor_window.window.connect("key-press-event", keyevents.key_down)
-    
+    if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
+        gui.editor_window.window2.connect("key-press-event", keyevents.key_down)
+
     # Give undo a reference to uimanager for menuitem state changes
     undo.set_menu_items(gui.editor_window.uimanager)
     

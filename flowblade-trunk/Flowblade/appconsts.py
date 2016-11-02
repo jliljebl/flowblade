@@ -153,6 +153,7 @@ MATCH_FRAME_DIR = "match_frame"
 MATCH_FRAME = MATCH_FRAME_DIR + "/match_frame.png"
 MATCH_FRAME_NEW = MATCH_FRAME_DIR + "/match_frame_new.png"
 TRIM_VIEW_DIR = "trim_view"
+NATRON_DIR = "natron"
 
 # Luma bands
 SHADOWS = 0
@@ -186,3 +187,8 @@ TRIM_VIEW_OFF = 2
 MIDBAR_TC_LEFT = 0
 MIDBAR_TC_CENTER = 1
 MIDBAR_COMPONENTS_CENTERED = 2
+
+# IWndoes mode
+SINGLE_WINDOW = 1
+TWO_WINDOWS = 2
+

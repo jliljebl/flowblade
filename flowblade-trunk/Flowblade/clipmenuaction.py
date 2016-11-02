@@ -349,7 +349,15 @@ def _match_frame_start(data):
 def _match_frame_end(data):
     clip, track, item_id, item_data = data
     _set_match_frame(clip, clip.clip_out, track, False)
-    
+
+def _match_frame_start_monitor(data):
+    clip, track, item_id, item_data = data
+    gui.monitor_widget.set_frame_match_view(clip, clip.clip_in)
+
+def _match_frame_end_monitor(data):
+    clip, track, item_id, item_data = data
+    gui.monitor_widget.set_frame_match_view(clip, clip.clip_out)
+     
 def _set_match_frame(clip, frame, track, display_on_right):
     global _match_frame_writer
     _match_frame_writer = MatchFrameWriter(clip, frame, track, display_on_right)
@@ -361,6 +369,7 @@ def _write_match_frame():
 
 def _match_frame_close(data):
     tlinewidgets.set_match_frame(-1, -1, True)
+    gui.monitor_widget.set_default_view_force()
     updater.repaint_tline()
         
 class MatchFrameWriter:
@@ -409,9 +418,9 @@ class MatchFrameWriter:
         # Get frame of clip.clip_in_in on timeline.
         clip_index = self.track.clips.index(self.clip)
         clip_start_in_tline = self.track.clip_start(clip_index)
-        tline_match_frame = clip_start_in_tline + self.clip.clip_out - (self.clip.clip_out - self.clip_frame)
+        tline_match_frame = clip_start_in_tline + (self.clip_frame - self.clip.clip_in)
         tlinewidgets.set_match_frame(tline_match_frame, self.track.id, self.display_on_right)
-        
+
         # Update view
         updater.repaint_tline()
 
@@ -442,4 +451,6 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "clear_filters": _clear_filters,
                   "match_frame_close":_match_frame_close,
                   "match_frame_start":_match_frame_start,
-                  "match_frame_end":_match_frame_end}
+                  "match_frame_end":_match_frame_end,
+                  "match_frame_start_monitor":_match_frame_start_monitor,
+                  "match_frame_end_monitor":_match_frame_end_monitor}

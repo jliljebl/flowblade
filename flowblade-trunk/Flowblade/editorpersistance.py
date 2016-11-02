@@ -178,7 +178,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     auto_play_in_clip_monitor_check, auto_center_check, grfx_insert_length_spin, \
     trim_exit_click, trim_quick_enter, remember_clip_frame, overwrite_clip_drop, cover_delete, play_pause_button = edit_prefs_widgets
     
-    use_english, disp_splash, buttons_style, dark_theme, theme_combo, audio_levels_combo = view_prefs_widgets
+    use_english, disp_splash, buttons_style, dark_theme, theme_combo, audio_levels_combo, window_mode_combo = view_prefs_widgets
 
     global prefs
     prefs.open_in_last_opended_media_dir = open_in_last_opened_check.get_active()
@@ -204,6 +204,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.dark_theme = (dark_theme.get_active() == 1)
     prefs.theme_fallback_colors = theme_combo.get_active() 
     prefs.display_all_audio_levels = (audio_levels_combo.get_active() == 0)
+    prefs.global_layout = window_mode_combo.get_active() + 1 # +1 'cause values are 1 and 2
 
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
@@ -268,10 +269,13 @@ class EditorPreferences:
         self.jack_output_type = appconsts.JACK_OUT_AUDIO # not used
         self.media_load_order = appconsts.LOAD_ABSOLUTE_FIRST
         self.use_english_always = False
-        self.theme_fallback_colors = 0 # index oc gui._THEME_COLORS
+        self.theme_fallback_colors = 0 # index of gui._THEME_COLORS
         self.display_all_audio_levels = True
         self.overwrite_clip_drop = True
         self.trans_cover_delete = True
         # Jul-2016 - SvdB - For play/pause button
         self.play_pause = False
         self.midbar_layout = appconsts.MIDBAR_COMPONENTS_CENTERED
+        self.global_layout = appconsts.SINGLE_WINDOW
+        
+        

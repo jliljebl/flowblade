@@ -48,6 +48,8 @@ compositor = None # Compositor being edited.
 # Used to update kfeditors with external tline frame position changes
 keyframe_editor_widgets = []
 
+compositor_notebook_index = 3 # this is set 2 for 2 window mode
+
 def create_widgets():
     """
     Widgets for editing compositing properties.
@@ -97,7 +99,7 @@ def set_compositor(new_compositor):
     _display_compositor_edit_box()
 
     if editorpersistance.prefs.default_layout == True:
-        gui.middle_notebook.set_current_page(3)
+        gui.middle_notebook.set_current_page(compositor_notebook_index)
 
 def clear_compositor():
     global compositor

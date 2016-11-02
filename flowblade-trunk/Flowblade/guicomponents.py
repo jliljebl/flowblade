@@ -48,6 +48,7 @@ import guiutils
 import mltfilters
 import mltprofiles
 import mlttransitions
+import monitorwidget
 import respaths
 import snapping
 import toolsintegration
@@ -1386,18 +1387,30 @@ def _get_match_frame_menu_item(event, clip, track, callback):
     sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
 
-    start_item = Gtk.MenuItem(_("First frame"))
+    start_item_monitor = Gtk.MenuItem(_("First Frame in Monitor"))
+    sub_menu.append(start_item_monitor)
+    start_item_monitor.connect("activate", callback, (clip, track, "match_frame_start_monitor", None))
+    start_item_monitor.show()
+
+    end_item_monitor = Gtk.MenuItem(_("Last Frame in Monitor"))
+    sub_menu.append(end_item_monitor)
+    end_item_monitor.connect("activate", callback, (clip, track, "match_frame_end_monitor", None))
+    end_item_monitor.show()
+    
+    _add_separetor(sub_menu)
+    
+    start_item = Gtk.MenuItem(_("First Frame on Timeline"))
     sub_menu.append(start_item)
     start_item.connect("activate", callback, (clip, track, "match_frame_start", None))
     start_item.show()
 
-    end_item = Gtk.MenuItem(_("Last frame"))
+    end_item = Gtk.MenuItem(_("Last Frame on Timeline"))
     sub_menu.append(end_item)
     end_item.connect("activate", callback, (clip, track, "match_frame_end", None))
     end_item.show()
 
     _add_separetor(sub_menu)
-    
+        
     clear_item = Gtk.MenuItem(_("Clear Match Frame"))
     sub_menu.append(clear_item)
     clear_item.connect("activate", callback, (clip, track, "match_frame_close", None))
@@ -1416,7 +1429,7 @@ def _get_tool_integration_menu_item(event, clip, track, callback):
     for integrator in export_tools:
         export_item = Gtk.MenuItem(copy.copy(integrator.tool_name))
         sub_menu.append(export_item)
-        export_item.connect("activate", integrator.get_export_callback, (clip, track))
+        export_item.connect("activate", integrator.export_callback, (clip, track))
         export_item.show()
 
     menu_item.show()
@@ -2123,6 +2136,20 @@ def get_trim_view_popupmenu(launcher, event, callback):
     trim_view_all.connect("activate", callback, "trimon")
     trim_view_single.connect("activate", callback, "trimsingle")
     no_trim_view.connect("activate", callback, "trimoff")
+    
+    _add_separetor(menu)
+
+    menu_item = _get_menu_item(_("Set Current Clip Frame Match Frame"), callback, "clipframematch" )
+    if editorstate.timeline_visible() == True:
+        menu_item.set_sensitive(False)
+    menu.add(menu_item)
+    
+    
+    menu_item = _get_menu_item(_("Clear Match Frame"), callback, "matchclear" )
+    if gui.monitor_widget.view != monitorwidget.FRAME_MATCH_VIEW:
+        menu_item.set_sensitive(False)
+    menu.add(menu_item)
+
     
     menu.popup(None, None, None, None, event.button, event.time)
     

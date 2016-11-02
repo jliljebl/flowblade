@@ -20,6 +20,7 @@
 
 from gi.repository import Gtk
 
+import appconsts
 import dialogs
 import dialogutils
 import editorpersistance
@@ -256,15 +257,25 @@ def _view_prefs_panel():
     else:
         audio_levels_combo.set_active(1)
 
+    window_mode_combo = Gtk.ComboBoxText()
+    window_mode_combo.append_text(_("Single Window"))
+    window_mode_combo.append_text(_("Two Windows"))
+    if prefs.global_layout == appconsts.SINGLE_WINDOW:
+        window_mode_combo.set_active(0)
+    else:
+        window_mode_combo.set_active(1)
+        
     # Layout
+    row00 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Application window mode:")), window_mode_combo, PREFERENCES_LEFT))
     row0 =  _row(guiutils.get_checkbox_row_box(force_english_check, Gtk.Label(label=_("Use English texts on localized OS"))))
     row1 =  _row(guiutils.get_checkbox_row_box(display_splash_check, Gtk.Label(label=_("Display splash screen"))))
     row2 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Buttons style:")), buttons_combo, PREFERENCES_LEFT))
-    row3 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Icons and color optimized for:")), dark_combo, PREFERENCES_LEFT))
+    row3 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme request, icons and colors:")), dark_combo, PREFERENCES_LEFT))
     row4 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme detection fail fallback colors:")), theme_combo, PREFERENCES_LEFT))
     row5 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Default audio levels display:")), audio_levels_combo, PREFERENCES_LEFT))
 
     vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(row00, False, False, 0)
     vbox.pack_start(row0, False, False, 0)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
@@ -275,7 +286,7 @@ def _view_prefs_panel():
 
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
-    return vbox, (force_english_check, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo)
+    return vbox, (force_english_check, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo, window_mode_combo)
 
 def _row(row_cont):
     row_cont.set_size_request(10, 26)

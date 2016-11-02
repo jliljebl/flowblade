@@ -20,6 +20,7 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
+gi.require_version('PangoCairo', '1.0')
 
 from gi.repository import GObject, GLib
 from gi.repository import Gtk, Gdk, GdkPixbuf
@@ -89,7 +90,9 @@ _current_fps = None
 _current_profile_index = None
 _render_data = None
 _last_load_file = None
-    
+
+_startup_data = None
+
 _encoding_panel = None
 
 # GTK3 requires this to be created outside of callback
@@ -107,20 +110,37 @@ def test_availablity():
 def gmic_available():
     return _gmic_found
     
-def launch_gmic():
+def launch_gmic(launch_data=None):
     if _gmic_found == False:
         primary_txt = _("G'Mic not found!")
         secondary_txt = _("G'Mic binary was not present at <b>/usr/bin/gmic</b>.\nInstall G'MIC to use this tool.")
         dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return
 
-    print "Launch gmic..."
     gui.save_current_colors()
-    
+
+    # Handle launching with clip data
+    args = None
+    if launch_data != None:
+        clip, track = launch_data # from guicomponwnts._get_tool_integration_menu_item()
+        args = ("path:" + str(clip.path), "clip_in:" + str(clip.clip_in), "clip_out:" + str(clip.clip_out))
+        
+    print "Launch gmic..."
     FLOG = open(utils.get_hidden_user_dir_path() + "log_gmic", 'w')
-    subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladegmic"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
+    if args == None:
+        subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladegmic"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
+    else:
+        subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladegmic", args[0], args[1], args[2]], stdin=FLOG, stdout=FLOG, stderr=FLOG)
 
-
+def _get_arg_value(args, key_str):
+    for arg in sys.argv:
+        parts = arg.split(":")
+        if len(parts) > 1:
+            if parts[0] == key_str:
+                return parts[1]
+    
+    return None
+        
 def main(root_path, force_launch=False):
        
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
@@ -189,10 +209,33 @@ def main(root_path, force_launch=False):
 
     os.putenv('SDL_WINDOWID', str(_window.monitor.get_window().get_xid()))
     Gdk.flush()
+
+    # Start with a clip loaded if data provided
+    if len(sys.argv) > 1:
+        path = _get_arg_value(sys.argv, "path")
+        mark_in = int(_get_arg_value(sys.argv, "clip_in"))
+        mark_out = int(_get_arg_value(sys.argv, "clip_out"))
+        global _startup_data
+        _startup_data = (path, mark_in, mark_out)
+        GLib.idle_add(_load_startup_data)
         
     Gtk.main()
     Gdk.threads_leave()
 
+def _load_startup_data():
+    path, mark_in, mark_out = _startup_data
+    _do_file_load(path)
+    GLib.idle_add(_finish_load_startup_data)
+
+def _finish_load_startup_data():
+    path, mark_in, mark_out = _startup_data
+    _player.producer.mark_in = mark_in
+    _player.producer.mark_out = mark_out
+
+    _window.update_marks_display()
+    _window.pos_bar.update_display_from_producer(_player.producer)
+    _window.update_render_status_info()
+    
 def init_frames_dirs():
     os.mkdir(get_clip_frames_dir())
     os.mkdir(get_render_frames_dir())
@@ -251,9 +294,12 @@ def _open_files_dialog_cb(file_select, response_id):
     if utils.get_file_type(filenames[0]) != "video":
         return
 
-    global _last_load_file
-    _last_load_file = filenames[0]
+    _do_file_load(filenames[0])
 
+def _do_file_load(file_path):
+    global _last_load_file
+    _last_load_file = file_path
+    
     global _current_path, _render_data
 
     # if another clip has already been opened then we need to shutdown players.
@@ -265,7 +311,7 @@ def _open_files_dialog_cb(file_select, response_id):
         if _effect_renderer != None:
             _effect_renderer.shutdown()
 
-    _current_path = filenames[0]
+    _current_path = file_path
     
     # Finish clip open when dialog has been destroyed
     GLib.idle_add(_finish_clip_open)
