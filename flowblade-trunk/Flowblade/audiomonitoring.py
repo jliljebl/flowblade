@@ -518,8 +518,6 @@ class GainControl(Gtk.Frame):
     def __init__(self, name, seq, producer, is_master=False):
         GObject.GObject.__init__(self)
 
-
-
         self.seq = seq
         self.producer = producer
         self.is_master = is_master

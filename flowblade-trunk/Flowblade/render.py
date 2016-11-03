@@ -36,6 +36,7 @@ import time
 import threading
 
 import dialogutils
+import editorstate
 from editorstate import current_sequence
 from editorstate import PROJECT
 from editorstate import PLAYER
@@ -141,9 +142,13 @@ def create_widgets():
     widgets.render_type_panel = rendergui.RenderTypePanel(_render_type_changed, _preset_selection_changed)
     widgets.profile_panel = rendergui.RenderProfilePanel(_out_profile_changed)
     widgets.encoding_panel = rendergui.RenderEncodingPanel(widgets.file_panel.extension_label)
-    widgets.args_panel = rendergui.RenderArgsPanel(_save_opts_pressed, _load_opts_pressed,
-                                                   _display_selection_in_opts_view)
-
+    if (editorstate.SCREEN_HEIGHT > 898):
+        widgets.args_panel = rendergui.RenderArgsPanel(_save_opts_pressed, _load_opts_pressed,
+                                                       _display_selection_in_opts_view)
+    else:
+        widgets.args_panel = rendergui.RenderArgsPanelSmall(_save_opts_pressed, _load_opts_pressed,
+                                                            _display_selection_in_opts_view)
+        
     # Range, Render, Reset, Render Queue
     widgets.render_button = guiutils.get_render_button()
     widgets.range_cb = rendergui.get_range_selection_combo()
