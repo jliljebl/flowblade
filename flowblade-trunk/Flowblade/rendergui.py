@@ -818,17 +818,16 @@ class RenderArgsPanelSmall():
         self.text_buffer = Gtk.TextBuffer()
         self.text_buffer.set_text(text)
 
-        
-        #self.opts_view.set_buffer(text_buffer)
-        
         self.args_info.set_text(info_text)
         self.ext = encoding_option.extension
-        #self.ext_entry.set_text(encoding_option.extension)
+            
+        if self.args_edit_window != None:
+            self.args_edit_window.opts_view.set_buffer(self.text_buffer)        
+            self.args_edit_window.ext_entry.set_text(encoding_option.extension)
 
     def open_edit_window(self):
         self.args_edit_window = RenderArgsEditWindow(self)
 
-        
     def use_args_toggled(self, checkbutton):
         active = checkbutton.get_active()
         #self.opts_view.set_sensitive(active)
@@ -872,7 +871,7 @@ class RenderArgsEditWindow(Gtk.Window):
 
         self.load_selection_button = Gtk.Button(_("Load Selection"))
         #self.load_selection_button.set_sensitive(False)
-        self.load_selection_button.connect("clicked", lambda w: self.display_selection_callback())
+        self.load_selection_button.connect("clicked", lambda w: self.args_panel.display_selection_callback())
 
         self.ext_label = Gtk.Label(label=_("Ext.:"))
         self.ext_label.set_sensitive(False)
@@ -913,7 +912,7 @@ class RenderArgsEditWindow(Gtk.Window):
 
         # Set pane and show window
         self.add(align)
-        #self.set_title(_("Audio Mixer"))
+        self.set_title(_("Render Args"))
         self.show_all()
         self.set_resizable(False)
         self.set_keep_above(True) # Perhaps configurable later
