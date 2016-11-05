@@ -845,7 +845,23 @@ class RenderArgsPanelSmall():
             #self.opts_view.set_buffer(Gtk.TextBuffer())
             #self.ext_entry.set_text("")
             self.args_info.set_text("")
-            
+
+    def cancel_args_edit(self):
+        self.args_edit_window.set_visible(False)
+        self.args_edit_window.destroy()
+
+    def do_args_edit(self):
+        self.text_buffer = self.args_edit_window.opts_view.get_buffer()
+
+        buf_text = self.text_buffer.get_text(self.text_buffer.get_start_iter(), 
+                                             self.text_buffer.get_end_iter(), 
+                                             include_hidden_chars=True)
+        info_text = buf_text.replace("\n", ", ")
+        self.args_info.set_text(info_text)
+        
+        self.args_edit_window.set_visible(False)
+        self.args_edit_window.destroy()
+
 
 class RenderArgsEditWindow(Gtk.Window):
     def __init__(self, args_panel):
@@ -855,7 +871,7 @@ class RenderArgsEditWindow(Gtk.Window):
         self.args_panel = args_panel
         
         self.opts_view = Gtk.TextView()
-        self.opts_view.set_sensitive(False)
+        self.opts_view.set_sensitive(True)
         self.opts_view.set_pixels_above_lines(2)
         self.opts_view.set_left_margin(2)
         self.opts_view.set_buffer(self.args_panel.text_buffer)
@@ -892,9 +908,9 @@ class RenderArgsEditWindow(Gtk.Window):
         opts_buttons_row.pack_start(self.ext_entry, False, False, 0)
 
         cancel_b = guiutils.get_sized_button(_("Cancel"), 150, 32)
-        #cancel_b.connect("clicked", lambda w:close_titler())
+        cancel_b.connect("clicked", lambda w: self.args_panel.cancel_args_edit())
         set_args_b = guiutils.get_sized_button(_("Set Args"), 150, 32)
-        #set_args_b.connect("clicked", lambda w:self._save_title_pressed())
+        set_args_b.connect("clicked", lambda w:self.args_panel.do_args_edit())
         
         editor_buttons_row = Gtk.HBox()
         editor_buttons_row.pack_start(Gtk.Label(), True, True, 0)
