@@ -816,6 +816,9 @@ def _shutdown_dialog_callback(dialog, response_id):
     # Block reconnecting consumer before setting window not visible
     updater.player_refresh_enabled = False
     gui.editor_window.window.set_visible(False)
+    if gui.editor_window.window2 != None:
+        gui.editor_window.window2.set_visible(False)
+
     # Close and destroy app when gtk finds time to do it after hiding window
     GLib.idle_add(_app_destroy)
 
