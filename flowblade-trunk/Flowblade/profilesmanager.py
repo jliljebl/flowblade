@@ -38,7 +38,7 @@ import respaths
 import utils
 
 PROFILES_WIDTH = 480
-PROFILES_HEIGHT = 690
+PROFILES_HEIGHT = 600
 PROFILE_MANAGER_LEFT = 265 # label column of profile manager panel
 
 def profiles_manager_dialog():
