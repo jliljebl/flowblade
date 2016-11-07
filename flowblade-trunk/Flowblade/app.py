@@ -733,6 +733,7 @@ def _set_draw_params():
         
     if editorstate.screen_size_small_height() == True:
         appconsts.TOP_ROW_HEIGHT = 10
+        projectinfogui.PROJECT_INFO_PANEL_HEIGHT = 140
 
 def _too_small_screen_exit():
     global exit_timeout_id
