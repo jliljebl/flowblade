@@ -112,7 +112,12 @@ def get_args_vals_list_for_current_selections():
                                                                                             quality_option_index)
         args_vals_list.append(("ar", str(widgets.encoding_panel.sample_rate_selector.get_selected_rate())))
     else: # Manual args encodings
-        buf = widgets.args_panel.opts_view.get_buffer()
+        if widgets.args_panel.text_buffer == None:
+            # Normal height args panel
+            buf = widgets.args_panel.opts_view.get_buffer()
+        else:
+            # Small heights with dialog for setting args
+            buf = widgets.args_panel.text_buffer
         args_vals_list, error = renderconsumer.get_ffmpeg_opts_args_vals_tuples_list(buf)
     
         if error != None:
@@ -128,8 +133,16 @@ def get_file_path():
     if  widgets.args_panel.use_args_check.get_active() == False:
         extension = widgets.file_panel.extension_label.get_text()
     else:
-        extension = "." +  widgets.args_panel.ext_entry.get_text()
-
+        if widgets.args_panel.text_buffer == None:
+            extension = "." +  widgets.args_panel.ext_entry.get_text()
+        else:
+            # Small height with dialog args setting
+            ext_str = widgets.args_panel.args_edit_window.ext_entry.get_text()
+            if ext_str == "":
+                # dialog is closed
+                print "yyyyyyyyy"
+                ext_str = widgets.args_panel.ext
+            extension = "." + ext_str
     return folder + "/" + filename + extension
 
 

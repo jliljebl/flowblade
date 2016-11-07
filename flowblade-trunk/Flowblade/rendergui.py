@@ -641,7 +641,8 @@ class RenderArgsPanel():
         
         self.use_project_label = Gtk.Label(label=_("Use Project Profile:"))
         self.use_args_label = Gtk.Label(label=_("Render using args:"))
-    
+        self.text_buffer = None # only used for small screen heights with dialog for setting agrs, but this value is tested to determine where to get agrs if set
+        
         self.use_args_check = Gtk.CheckButton()
         self.use_args_check.connect("toggled", self.use_args_toggled)
 
@@ -751,7 +752,9 @@ class RenderArgsPanelSmall():
         self.display_selection_callback = display_selection_callback
         
         self.args_edit_window = None
-        
+        self.text_buffer = None # only used here for small screen heights with dialog for setting agrs, but this value is always tested to determine where to get agrs if set
+        self.ext = ""
+                
         self.use_project_label = Gtk.Label(label=_("Use Project Profile:"))
         self.use_args_label = Gtk.Label(label=_("Render using args:"))
     
@@ -830,20 +833,14 @@ class RenderArgsPanelSmall():
 
     def use_args_toggled(self, checkbutton):
         active = checkbutton.get_active()
-        #self.opts_view.set_sensitive(active)
-        #self.load_selection_button.set_sensitive(active)
         self.opts_save_button.set_sensitive(active)
         self.opts_load_button.set_sensitive(active)
         self.open_args_editor_button.set_sensitive(active)
         self.args_info.set_sensitive(active)
-        #self.ext_label.set_sensitive(active)
-        #self.ext_entry.set_sensitive(active)
         
         if active == True:
             self.display_selection_callback()
         else:
-            #self.opts_view.set_buffer(Gtk.TextBuffer())
-            #self.ext_entry.set_text("")
             self.args_info.set_text("")
 
     def cancel_args_edit(self):
@@ -869,7 +866,7 @@ class RenderArgsEditWindow(Gtk.Window):
         #self.connect("delete-event", lambda w, e:close_audio_monitor())
         
         self.args_panel = args_panel
-        
+
         self.opts_view = Gtk.TextView()
         self.opts_view.set_sensitive(True)
         self.opts_view.set_pixels_above_lines(2)
@@ -886,7 +883,6 @@ class RenderArgsEditWindow(Gtk.Window):
         scroll_frame.set_size_request(400, 300)
 
         self.load_selection_button = Gtk.Button(_("Load Selection"))
-        #self.load_selection_button.set_sensitive(False)
         self.load_selection_button.connect("clicked", lambda w: self.args_panel.display_selection_callback())
 
         self.ext_label = Gtk.Label(label=_("Ext.:"))
@@ -895,7 +891,6 @@ class RenderArgsEditWindow(Gtk.Window):
         self.ext_entry = Gtk.Entry()
         self.ext_entry.set_width_chars(5)
         self.ext_entry.set_text(self.args_panel.ext)   
-        #self.ext_entry.set_sensitive(False)
         
         self.load_selection_button.set_tooltip_text(_("Load render options from currently selected encoding"))
         self.opts_view.set_tooltip_text(_("Edit render options"))
@@ -917,15 +912,13 @@ class RenderArgsEditWindow(Gtk.Window):
         editor_buttons_row.pack_start(cancel_b, False, False, 0)
         editor_buttons_row.pack_start(set_args_b, False, False, 0)
         
-        #self.vbox.pack_start(opts_buttons_row, False, False, 0)
         pane = Gtk.VBox(False, 1)
         pane.pack_start(scroll_frame, True, True, 0)
         pane.pack_start(opts_buttons_row, False, True, 0)
         pane.pack_start(guiutils.get_pad_label(4, 12), False, True, 0)
         pane.pack_start(editor_buttons_row, False, True, 0)
 
-        align = guiutils.set_margins(pane, 12, 12, 4, 4)
-
+        align = guiutils.set_margins(pane, 12, 12, 12, 12)
         # Set pane and show window
         self.add(align)
         self.set_title(_("Render Args"))
