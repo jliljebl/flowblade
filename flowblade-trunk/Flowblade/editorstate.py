@@ -113,6 +113,9 @@ show_trim_view = appconsts.TRIM_VIEW_ON
 fade_length = -1
 transition_length = -1
 
+# Trim clips cache for quicker inits, path -> clip
+_trim_clips_cache = {}
+
 def current_is_move_mode():
     if ((edit_mode == INSERT_MOVE) or (edit_mode == OVERWRITE_MOVE) or (edit_mode == MULTI_MOVE)):
         return True
@@ -199,3 +202,15 @@ def screen_size_small():
     
     return False
 
+def get_cached_trim_clip(path):
+    try:
+        return _trim_clips_cache[path]
+    except:
+        return None 
+
+def add_cached_trim_clip(clip):
+     _trim_clips_cache[clip.path] = clip
+
+def clear_trim_clip_cache():
+    global _trim_clips_cache
+    _trim_clips_cache = {}

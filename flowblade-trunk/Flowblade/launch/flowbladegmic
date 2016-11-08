@@ -23,6 +23,6 @@ except Exception, err:
     print "ERROR:", err
     print "Installation was assumed to be at:", modules_path
     sys.exit(1)
-    
+
 
 gmic.main(modules_path)

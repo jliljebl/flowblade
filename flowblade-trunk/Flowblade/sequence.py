@@ -366,12 +366,14 @@ class Sequence:
         return True
 
     # -------------------------------------------------- clips
-    def create_file_producer_clip(self, path, new_clip_name=None):
+    def create_file_producer_clip(self, path, new_clip_name=None, novalidate=False):
         """
         Creates MLT Producer and adds attributes to it, but does 
         not add it to track/playlist object.
         """
         producer = mlt.Producer(self.profile, str(path)) # this runs 0.5s+ on some clips
+        if novalidate == True:
+            producer.set("mlt_service", "avformat-novalidate")
         mltrefhold.hold_ref(producer)
         producer.path = path
         producer.filters = []
@@ -642,19 +644,29 @@ class Sequence:
         """
         Adds clip to hidden track for trim editing display.
         """
+        utils.elapsed_time("before track clear")
         track = self.tracks[-1] # Always last track
         track.clear() # # TRIM INIT CRASH HACK, see clear_hidden_track there may be blank clip here
         track.clips = []
 
+        utils.elapsed_time("after track clear")
+    
         # Display trimmmed clip on hidden track by creating copy of it.
         # File producer
         if path != None:
-            clip = self.create_file_producer_clip(path)
+            clip = editorstate.get_cached_trim_clip(path)
+            if clip == None:
+                clip = self.create_file_producer_clip(path, None, True)
+                editorstate.add_cached_trim_clip(clip)
+                print "not cached"
+    
+            utils.elapsed_time("after create_file_producer_clip")
             if clip_start_pos > 0:
                 edit._insert_blank(track, 0, clip_start_pos)
                 edit._insert_clip(track, clip, 1, 0, clip.get_length() - 1)
             else:
                 edit._insert_clip(track, clip, 1, -clip_start_pos, clip.get_length() - 1) # insert index 1 ?
+            utils.elapsed_time("after insert")
         # Pattern producer (FIX ME: does not allow for keyframes in pattern producer)
         else:
             clip = self.create_pattern_producer(patter_producer_data)

@@ -21,7 +21,7 @@
 """
 Helper functions and data
 """
-
+import time
 
 from gi.repository import Gtk
 
@@ -33,6 +33,8 @@ import threading
 
 import appconsts
 import editorstate
+
+_start_time = 0.0
 
 # ---------------------------------- CLASSES
 class EmptyClass:
@@ -555,3 +557,20 @@ _video_file_extensions = [  "avi",
                             "xvid",
                             "y4m",
                             "yuv"]
+                            
+                            
+def start_timing(msg="start timing"):
+    global _start_time
+    _start_time = time.time()
+    print msg
+
+def elapsed_time(msg="elapsed: ", show_in_millis=True):
+    elapsed_time = time.time() - _start_time
+    if show_in_millis:
+        elapsed_time = round(elapsed_time * 1000.0, 1)
+        unit = "ms"
+    else:
+        unit = "s"
+    
+    print msg + " " + str(elapsed_time) + " " + unit
+

@@ -581,6 +581,7 @@ def open_project(new_project):
     editorstate.update_current_proxy_paths()
     editorstate.fade_length = -1
     editorstate.transition_length = -1
+    editorstate.clear_trim_clip_cache()
     audiomonitoring.init_for_project_load()
     updater.window_resized()
 
