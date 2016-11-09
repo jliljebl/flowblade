@@ -74,7 +74,7 @@ class ToolIntegrator:
 class GMICIntegrator(ToolIntegrator):
     
     def __init__(self):
-        ToolIntegrator.__init__(self, "G'MIC Effects", True)
+        ToolIntegrator.__init__(self, _("G'MIC Effects"), True)
         
     def do_export(self):
         gmic.launch_gmic(self.data) # tuple (clip, track)
@@ -82,7 +82,7 @@ class GMICIntegrator(ToolIntegrator):
 
 class NatronIntegrator(ToolIntegrator):
     def __init__(self):
-        ToolIntegrator.__init__(self, "Natron", True)
+        ToolIntegrator.__init__(self, _("Natron"), True)
 
     def do_export(self):
         clip, track = self.data
@@ -92,7 +92,7 @@ class NatronIntegrator(ToolIntegrator):
 class SlowMoIntegrator(ToolIntegrator):
     
     def __init__(self):
-        ToolIntegrator.__init__(self, "Slow/Fast Motion", True)
+        ToolIntegrator.__init__(self, _("Slow/Fast Motion"), True)
         
     def do_export(self):
         clip, track = self.data
