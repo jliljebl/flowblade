@@ -30,6 +30,7 @@ import utils
 
 widgets = utils.EmptyClass()
 
+PROJECT_INFO_PANEL_HEIGHT = 200
 
 def get_project_info_panel():
     project_name_label = Gtk.Label(label=PROJECT().name)
@@ -51,7 +52,7 @@ def get_project_info_panel():
     project_info_vbox = Gtk.VBox()
     project_info_vbox.pack_start(name_panel, False, True, 0)
     project_info_vbox.pack_start(profile_panel, False, True, 0)
-    project_info_vbox.set_size_request(250, 200)
+    project_info_vbox.set_size_request(250, PROJECT_INFO_PANEL_HEIGHT)
     
     project_info_hbox = Gtk.HBox()
     project_info_hbox.pack_start(project_info_vbox, False, False, 0)

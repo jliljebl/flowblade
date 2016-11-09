@@ -581,6 +581,7 @@ def open_project(new_project):
     editorstate.update_current_proxy_paths()
     editorstate.fade_length = -1
     editorstate.transition_length = -1
+    editorstate.clear_trim_clip_cache()
     audiomonitoring.init_for_project_load()
     updater.window_resized()
 
@@ -733,6 +734,7 @@ def _set_draw_params():
         
     if editorstate.screen_size_small_height() == True:
         appconsts.TOP_ROW_HEIGHT = 10
+        projectinfogui.PROJECT_INFO_PANEL_HEIGHT = 140
 
 def _too_small_screen_exit():
     global exit_timeout_id
@@ -815,6 +817,9 @@ def _shutdown_dialog_callback(dialog, response_id):
     # Block reconnecting consumer before setting window not visible
     updater.player_refresh_enabled = False
     gui.editor_window.window.set_visible(False)
+    if gui.editor_window.window2 != None:
+        gui.editor_window.window2.set_visible(False)
+
     # Close and destroy app when gtk finds time to do it after hiding window
     GLib.idle_add(_app_destroy)
 

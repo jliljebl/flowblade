@@ -36,6 +36,7 @@ import time
 import threading
 
 import dialogutils
+import editorstate
 from editorstate import current_sequence
 from editorstate import PROJECT
 from editorstate import PLAYER
@@ -111,7 +112,12 @@ def get_args_vals_list_for_current_selections():
                                                                                             quality_option_index)
         args_vals_list.append(("ar", str(widgets.encoding_panel.sample_rate_selector.get_selected_rate())))
     else: # Manual args encodings
-        buf = widgets.args_panel.opts_view.get_buffer()
+        if widgets.args_panel.text_buffer == None:
+            # Normal height args panel
+            buf = widgets.args_panel.opts_view.get_buffer()
+        else:
+            # Small heights with dialog for setting args
+            buf = widgets.args_panel.text_buffer
         args_vals_list, error = renderconsumer.get_ffmpeg_opts_args_vals_tuples_list(buf)
     
         if error != None:
@@ -127,8 +133,16 @@ def get_file_path():
     if  widgets.args_panel.use_args_check.get_active() == False:
         extension = widgets.file_panel.extension_label.get_text()
     else:
-        extension = "." +  widgets.args_panel.ext_entry.get_text()
-
+        if widgets.args_panel.text_buffer == None:
+            extension = "." +  widgets.args_panel.ext_entry.get_text()
+        else:
+            # Small height with dialog args setting
+            ext_str = widgets.args_panel.args_edit_window.ext_entry.get_text()
+            if ext_str == "":
+                # dialog is closed
+                print "yyyyyyyyy"
+                ext_str = widgets.args_panel.ext
+            extension = "." + ext_str
     return folder + "/" + filename + extension
 
 
@@ -141,9 +155,13 @@ def create_widgets():
     widgets.render_type_panel = rendergui.RenderTypePanel(_render_type_changed, _preset_selection_changed)
     widgets.profile_panel = rendergui.RenderProfilePanel(_out_profile_changed)
     widgets.encoding_panel = rendergui.RenderEncodingPanel(widgets.file_panel.extension_label)
-    widgets.args_panel = rendergui.RenderArgsPanel(_save_opts_pressed, _load_opts_pressed,
-                                                   _display_selection_in_opts_view)
-
+    if (editorstate.SCREEN_HEIGHT > 898):
+        widgets.args_panel = rendergui.RenderArgsPanel(_save_opts_pressed, _load_opts_pressed,
+                                                       _display_selection_in_opts_view)
+    else:
+        widgets.args_panel = rendergui.RenderArgsPanelSmall(_save_opts_pressed, _load_opts_pressed,
+                                                            _display_selection_in_opts_view)
+        
     # Range, Render, Reset, Render Queue
     widgets.render_button = guiutils.get_render_button()
     widgets.range_cb = rendergui.get_range_selection_combo()

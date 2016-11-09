@@ -10,7 +10,6 @@ sys.path.insert(0, modules_path)
 sys.path.insert(0, modules_path + "/vieweditor")
 sys.path.insert(0, modules_path + "/tools")
 
-# Get app.py module and set info which type of installation is running
 try:
     import gmic
     import editorstate # Used to decide which translations from file system are used
@@ -24,6 +23,6 @@ except Exception, err:
     print "ERROR:", err
     print "Installation was assumed to be at:", modules_path
     sys.exit(1)
-    
+
 
 gmic.main(modules_path)

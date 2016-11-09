@@ -18,7 +18,7 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 from gi.repository import Gdk
-from gi.repository import Gtk
+from gi.repository import Gtk, GLib
 
 import cairo
 import mlt
@@ -34,6 +34,7 @@ import editorstate
 from editorstate import PLAYER
 from editorstate import PROJECT
 import respaths
+import utils
 
 DEFAULT_VIEW = 0
 START_TRIM_VIEW = 1
@@ -231,10 +232,15 @@ class MonitorWidget:
         
         self.match_frame = match_clip.clip_out
         
+        data = (match_clip.path, match_clip.clip_out, MATCH_FRAME, self.match_frame_write_complete)
+        GLib.idle_add(_launch_match_frame_writer, data)
+        
+        """
         match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_out, 
                                                             MATCH_FRAME, self.match_frame_write_complete)
         match_frame_write_thread.start()
-
+        """
+        
     def set_end_trim_view(self, match_clip, edit_clip_start):
         if self.is_active(True) == False:
             return
@@ -259,11 +265,15 @@ class MonitorWidget:
             return
         
         self.match_frame = match_clip.clip_in
-                
+
+        data = (match_clip.path, match_clip.clip_in, MATCH_FRAME, self.match_frame_write_complete)
+        GLib.idle_add(_launch_match_frame_writer, data)
+        """
         match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_in, 
                                                             MATCH_FRAME, self.match_frame_write_complete)
         match_frame_write_thread.start()
-
+        """
+        
     def set_roll_trim_right_active_view(self, match_clip, edit_clip_start):
         if self.is_active() == False:
             return
@@ -288,11 +298,15 @@ class MonitorWidget:
             return
         
         self.match_frame = match_clip.clip_out
-                       
+
+        data = (match_clip.path, match_clip.clip_out, MATCH_FRAME, self.match_frame_write_complete)
+        GLib.idle_add(_launch_match_frame_writer, data)
+        """
         match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_out, 
                                                             MATCH_FRAME, self.match_frame_write_complete)
         match_frame_write_thread.start()
-
+        """
+        
     def set_roll_trim_left_active_view(self, match_clip, edit_clip_start):
         if self.is_active() == False:
             return
@@ -317,11 +331,16 @@ class MonitorWidget:
             return
         
         self.match_frame = match_clip.clip_in
-        
+
+        data = (match_clip.path, match_clip.clip_in, MATCH_FRAME, self.match_frame_write_complete)
+        GLib.idle_add(_launch_match_frame_writer, data)
+                                 
+        """
         match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_in, 
                                                             MATCH_FRAME, self.match_frame_write_complete)
         match_frame_write_thread.start()
-
+        """
+        
     def set_slip_trim_right_active_view(self, match_clip):
         if self.is_active() == False:
             return
@@ -350,11 +369,14 @@ class MonitorWidget:
         
         self.match_frame = match_clip.clip_in
         self.edit_delta = 0
-        
+
+        data = (match_clip.path, match_clip.clip_in, MATCH_FRAME, self.match_frame_write_complete)
+        GLib.idle_add(_launch_match_frame_writer, data)
+        """
         match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_in, 
                                                             MATCH_FRAME, self.match_frame_write_complete)
         match_frame_write_thread.start()
-
+        """
     def set_slip_trim_left_active_view(self, match_clip):
         if self.is_active() == False:
             return
@@ -384,10 +406,14 @@ class MonitorWidget:
             return
         
         self.match_frame = match_clip.clip_out
-        
+
+        data = (match_clip.path, match_clip.clip_out, MATCH_FRAME, self.match_frame_write_complete)
+        GLib.idle_add(_launch_match_frame_writer, data)
+        """
         match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_out, 
                                                             MATCH_FRAME, self.match_frame_write_complete)
         match_frame_write_thread.start()
+        """
         
     # ------------------------------------------------------------------ LAYOUT
     def _layout_expand_edge_panels(self):
@@ -828,6 +854,16 @@ class MonitorWidget:
         
         
 
+
+    
+# ---------------------------------------------------------------------------------- match frame cration
+def _launch_match_frame_writer(data):
+    match_clip_path, clip_frame, frame_name, callback = data        
+
+    match_frame_write_thread = MonitorMatchFrameWriter(match_clip_path, clip_frame, frame_name, callback)
+    match_frame_write_thread.start()
+
+
 class MonitorMatchFrameWriter(threading.Thread):
     def __init__(self, clip_path, clip_frame, frame_name, completion_callback):
         self.clip_path = clip_path
@@ -872,6 +908,8 @@ class MonitorMatchFrameWriter(threading.Thread):
         while os.path.isfile(matchframe_path) != True:
             time.sleep(0.1)
 
+        utils.elapsed_time("MonitorMatchFrameWriter frame done")
+    
         # Do completion callback
         self.completion_callback(self.frame_name)
 

@@ -1,8 +1,6 @@
 
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
-**NEW VERSION 1.8 AVAILABLE. Go to [release notes](./flowblade-trunk/docs/RELEASE_NOTES.md) to see what's new. Installing information available [here](./flowblade-trunk/docs/INSTALLING.md).**
-
 **Contents:**
   1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
   1. [Features](https://github.com/jliljebl/flowblade#features)

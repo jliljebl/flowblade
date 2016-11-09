@@ -33,7 +33,6 @@ from editorstate import MONITOR_MEDIA_FILE
 import gui
 import guicomponents
 import movemodes
-import tlineaction
 import trimmodes
 import updater
 
@@ -267,6 +266,7 @@ def _trim_view_menu_item_activated(widget, msg):
         gui.monitor_widget.set_default_view_force()
         return
     if msg == "clipframematch":
+        import tlineaction  # if this is on top level gmic tool get circular import
         clip = tlineaction._get_new_clip_from_clip_monitor()
         if clip == None:
             return

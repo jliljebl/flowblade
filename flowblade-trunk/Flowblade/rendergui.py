@@ -20,6 +20,7 @@
 
 from gi.repository import Gtk
 from gi.repository import GObject
+from gi.repository import Pango
 
 import math
 import os
@@ -426,7 +427,7 @@ def get_range_selection_combo():
 
 # ------------------------------------------------------------ panels
 def get_render_panel_left(render_widgets):
-    small_height = editorstate.screen_size_small_height()
+    small_height = (editorstate.SCREEN_HEIGHT < 898)
     
     file_opts_panel = guiutils.get_named_frame(_("File"), render_widgets.file_panel.vbox, 4)         
     profile_panel = guiutils.get_named_frame(_("Render Profile"), render_widgets.profile_panel.vbox, 4)
@@ -447,11 +448,11 @@ def get_render_panel_left(render_widgets):
     return render_panel
 
 def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_cb):
-    small_height = editorstate.screen_size_small_height()
+    small_height = (editorstate.SCREEN_HEIGHT < 898)
 
     if small_height:
         encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
-                
+           
     opts_panel = guiutils.get_named_frame(_("Render Args"), render_widgets.args_panel.vbox, 4)
     
     bin_row = Gtk.HBox()
@@ -463,7 +464,7 @@ def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_c
 
     range_row = Gtk.HBox()
     range_row.pack_start(guiutils.get_pad_label(10, 8),  False, False, 0)
-    if not  editorstate.screen_size_small_width():
+    if not editorstate.screen_size_small_width():
         range_row.pack_start(Gtk.Label(label=_("Render Range:")),  False, False, 0)
         range_row.pack_start(guiutils.get_pad_label(10, 2),  False, False, 0)
     range_row.pack_start(render_widgets.range_cb,  True, True, 0)
@@ -488,15 +489,21 @@ def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_c
     render_panel = Gtk.VBox()
     if small_height:
         render_panel.pack_start(encoding_panel, False, False, 0)
-        render_panel.pack_start(Gtk.Label(), True, True, 0)
+        render_panel.pack_start(opts_panel, True, True, 0)
+        #render_panel.pack_start(Gtk.Label(), True, True, 0)
     else:
         render_panel.pack_start(opts_panel, True, True, 0)
     if small_height == False:
         render_panel.pack_start(guiutils.get_pad_label(10, 22), False, False, 0)
         render_panel.pack_start(bin_row, False, False, 0)
+    else:
+        render_panel.pack_start(Gtk.Label(), True, True, 0)
+    
     render_panel.pack_start(range_row, False, False, 0)
     if small_height == False:
         render_panel.pack_start(guiutils.get_pad_label(10, 12), False, False, 0)
+    else:
+        render_panel.pack_start(guiutils.get_pad_label(10, 4), False, False, 0)
     render_panel.pack_start(buttons_panel, False, False, 0)
 
     return render_panel
@@ -634,7 +641,8 @@ class RenderArgsPanel():
         
         self.use_project_label = Gtk.Label(label=_("Use Project Profile:"))
         self.use_args_label = Gtk.Label(label=_("Render using args:"))
-    
+        self.text_buffer = None # only used for small screen heights with dialog for setting agrs, but this value is tested to determine where to get agrs if set
+        
         self.use_args_check = Gtk.CheckButton()
         self.use_args_check.connect("toggled", self.use_args_toggled)
 
@@ -737,3 +745,185 @@ class RenderArgsPanel():
             self.ext_entry.set_text("")
 
 
+class RenderArgsPanelSmall():
+
+    def __init__(self, save_args_callback, 
+                 load_args_callback, display_selection_callback):
+        self.display_selection_callback = display_selection_callback
+        
+        self.args_edit_window = None
+        self.text_buffer = None # only used here for small screen heights with dialog for setting agrs, but this value is always tested to determine where to get agrs if set
+        self.ext = ""
+                
+        self.use_project_label = Gtk.Label(label=_("Use Project Profile:"))
+        self.use_args_label = Gtk.Label(label=_("Render using args:"))
+    
+        self.use_args_check = Gtk.CheckButton()
+        self.use_args_check.connect("toggled", self.use_args_toggled)
+
+        self.opts_save_button = Gtk.Button()
+        icon = Gtk.Image.new_from_stock(Gtk.STOCK_SAVE, Gtk.IconSize.MENU)
+        self.opts_save_button.set_image(icon)
+        self.opts_save_button.connect("clicked", lambda w: save_args_callback())
+        self.opts_save_button.set_sensitive(False)
+    
+        self.opts_load_button = Gtk.Button()
+        icon = Gtk.Image.new_from_stock(Gtk.STOCK_OPEN, Gtk.IconSize.MENU)
+        self.opts_load_button.set_image(icon)
+        self.opts_load_button.connect("clicked", lambda w: load_args_callback())
+
+        self.open_in_bin = Gtk.CheckButton()
+
+        self.open_args_editor_button = Gtk.Button(_("Edit Args:"))
+        self.open_args_editor_button.connect("clicked", lambda w: self.open_edit_window())
+        self.open_args_editor_button.set_sensitive(False)
+
+        self.args_info = Gtk.Label()
+        self.args_info.set_sensitive(False)
+        self.args_info.set_ellipsize(Pango.EllipsizeMode.END)
+        
+        use_opts_row = Gtk.HBox()
+        use_opts_row.pack_start(self.use_args_label,  False, False, 0)
+        use_opts_row.pack_start(self.use_args_check,  False, False, 0)
+        use_opts_row.pack_start(Gtk.Label(), True, True, 0)
+        use_opts_row.pack_start(self.opts_load_button,  False, False, 0)
+        use_opts_row.pack_start(self.opts_save_button,  False, False, 0)
+
+        args_edit_row = Gtk.HBox(False)
+        args_edit_row.pack_start(self.open_args_editor_button, False, False, 0)
+        args_edit_row.pack_start(guiutils.get_pad_label(4, 2), False, False, 0)
+        args_edit_row.pack_start(self.args_info, True, True, 0)
+
+        self.use_args_check.set_tooltip_text(_("Render using key=value rendering options"))
+
+        self.opts_save_button.set_tooltip_text(_("Save Render Args into a text file"))
+        self.opts_load_button.set_tooltip_text(_("Load Render Args from a text file"))
+    
+        self.vbox = Gtk.VBox(False, 2)
+        self.vbox.pack_start(use_opts_row , False, False, 0)
+        self.vbox.pack_start(args_edit_row, False, False, 0)
+
+    def set_sensitive(self, value):
+        self.use_args_check.set_sensitive(value)
+        self.use_args_label.set_sensitive(value)
+    
+    def display_encoding_args(self, profile, enc_index, qual_index):
+        encoding_option = renderconsumer.encoding_options[enc_index]
+        quality_option = encoding_option.quality_options[qual_index]
+        args_vals_list = encoding_option.get_args_vals_tuples_list(profile, quality_option)
+        text = ""
+        info_text = ""
+        for arg_val in args_vals_list:
+            k, v = arg_val
+            line = str(k) + "=" + str(v) 
+            text = text + line + "\n"
+            info_text = info_text + line + ", "
+        self.text_buffer = Gtk.TextBuffer()
+        self.text_buffer.set_text(text)
+
+        self.args_info.set_text(info_text)
+        self.ext = encoding_option.extension
+            
+        if self.args_edit_window != None:
+            self.args_edit_window.opts_view.set_buffer(self.text_buffer)        
+            self.args_edit_window.ext_entry.set_text(encoding_option.extension)
+
+    def open_edit_window(self):
+        self.args_edit_window = RenderArgsEditWindow(self)
+
+    def use_args_toggled(self, checkbutton):
+        active = checkbutton.get_active()
+        self.opts_save_button.set_sensitive(active)
+        self.opts_load_button.set_sensitive(active)
+        self.open_args_editor_button.set_sensitive(active)
+        self.args_info.set_sensitive(active)
+        
+        if active == True:
+            self.display_selection_callback()
+        else:
+            self.args_info.set_text("")
+
+    def cancel_args_edit(self):
+        self.args_edit_window.set_visible(False)
+        self.args_edit_window.destroy()
+
+    def do_args_edit(self):
+        self.text_buffer = self.args_edit_window.opts_view.get_buffer()
+
+        buf_text = self.text_buffer.get_text(self.text_buffer.get_start_iter(), 
+                                             self.text_buffer.get_end_iter(), 
+                                             include_hidden_chars=True)
+        info_text = buf_text.replace("\n", ", ")
+        self.args_info.set_text(info_text)
+        
+        self.args_edit_window.set_visible(False)
+        self.args_edit_window.destroy()
+
+
+class RenderArgsEditWindow(Gtk.Window):
+    def __init__(self, args_panel):
+        GObject.GObject.__init__(self)
+        #self.connect("delete-event", lambda w, e:close_audio_monitor())
+        
+        self.args_panel = args_panel
+
+        self.opts_view = Gtk.TextView()
+        self.opts_view.set_sensitive(True)
+        self.opts_view.set_pixels_above_lines(2)
+        self.opts_view.set_left_margin(2)
+        self.opts_view.set_buffer(self.args_panel.text_buffer)
+
+        sw = Gtk.ScrolledWindow()
+        sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        sw.add(self.opts_view)
+        sw.set_size_request(*FFMPEG_VIEW_SIZE)
+
+        scroll_frame = Gtk.Frame()
+        scroll_frame.add(sw)
+        scroll_frame.set_size_request(400, 300)
+
+        self.load_selection_button = Gtk.Button(_("Load Selection"))
+        self.load_selection_button.connect("clicked", lambda w: self.args_panel.display_selection_callback())
+
+        self.ext_label = Gtk.Label(label=_("Ext.:"))
+        self.ext_label.set_sensitive(False)
+
+        self.ext_entry = Gtk.Entry()
+        self.ext_entry.set_width_chars(5)
+        self.ext_entry.set_text(self.args_panel.ext)   
+        
+        self.load_selection_button.set_tooltip_text(_("Load render options from currently selected encoding"))
+        self.opts_view.set_tooltip_text(_("Edit render options"))
+        
+        opts_buttons_row = Gtk.HBox(False)
+        opts_buttons_row.pack_start(self.load_selection_button, False, False, 0)
+        opts_buttons_row.pack_start(guiutils.get_pad_label(4, 2), False, False, 0)
+        opts_buttons_row.pack_start(self.ext_label, False, False, 0)
+        opts_buttons_row.pack_start(guiutils.get_pad_label(4, 2), False, False, 0)
+        opts_buttons_row.pack_start(self.ext_entry, False, False, 0)
+
+        cancel_b = guiutils.get_sized_button(_("Cancel"), 150, 32)
+        cancel_b.connect("clicked", lambda w: self.args_panel.cancel_args_edit())
+        set_args_b = guiutils.get_sized_button(_("Set Args"), 150, 32)
+        set_args_b.connect("clicked", lambda w:self.args_panel.do_args_edit())
+        
+        editor_buttons_row = Gtk.HBox()
+        editor_buttons_row.pack_start(Gtk.Label(), True, True, 0)
+        editor_buttons_row.pack_start(cancel_b, False, False, 0)
+        editor_buttons_row.pack_start(set_args_b, False, False, 0)
+        
+        pane = Gtk.VBox(False, 1)
+        pane.pack_start(scroll_frame, True, True, 0)
+        pane.pack_start(opts_buttons_row, False, True, 0)
+        pane.pack_start(guiutils.get_pad_label(4, 12), False, True, 0)
+        pane.pack_start(editor_buttons_row, False, True, 0)
+
+        align = guiutils.set_margins(pane, 12, 12, 12, 12)
+        # Set pane and show window
+        self.add(align)
+        self.set_title(_("Render Args"))
+        self.show_all()
+        self.set_resizable(False)
+        self.set_keep_above(True) # Perhaps configurable later
+    
+    

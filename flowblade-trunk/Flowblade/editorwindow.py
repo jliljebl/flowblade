@@ -129,11 +129,13 @@ class EditorWindow:
         self.window.set_icon_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
         self.window.set_border_width(5)
 
+        self.window2 = None
         if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
             self.window2 = Gtk.Window(Gtk.WindowType.TOPLEVEL)
             self.window2.set_icon_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
             self.window2.set_border_width(5)
-        
+            self.window2.connect("delete-event", lambda w, e:app.shutdown())
+
         # To ask confirmation for shutdown 
         self.window.connect("delete-event", lambda w, e:app.shutdown())
 
