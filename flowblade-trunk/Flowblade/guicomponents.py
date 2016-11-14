@@ -1455,6 +1455,8 @@ def _get_tool_integration_menu_item(event, clip, track, callback):
         export_item = Gtk.MenuItem(copy.copy(integrator.tool_name))
         sub_menu.append(export_item)
         export_item.connect("activate", integrator.export_callback, (clip, track))
+        if integrator.supports_clip_media(clip) == False:
+            export_item.set_sensitive(False)
         export_item.show()
 
     menu_item.show()

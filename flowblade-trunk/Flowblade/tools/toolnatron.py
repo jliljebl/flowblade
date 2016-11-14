@@ -38,7 +38,7 @@ def init():
         _natron_found = False
         print "Natron not found"
 
-def natron_avavilable():
+def natron_available():
     return _natron_found
 
 def export_clip(clip):
