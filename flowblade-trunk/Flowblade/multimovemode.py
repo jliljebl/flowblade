@@ -48,9 +48,9 @@ class MultimoveData:
         self._build_move_data()
 
     def _build_move_data(self):
-        # Look at all tracks exept
         tracks = current_sequence().tracks
 
+        # Look at all tracks exept hidden and black
         # Get per track:
         # * maximum length edit can be done backwards before an overwrite happens
         # * indexes of blanks that are trimmed and/or added/removed,
@@ -146,14 +146,17 @@ class MultimoveData:
         self.trim_blank_indexes[self.pressed_track_id - 1] = trim_index
         
         # Smallest track delta is the max number of frames 
-        # the edit can be done backwards 
-        smallest_max_delta = MAX_DELTA
-        for i in range(1, len(tracks) - 1):
-            d = track_max_deltas[i - 1]
-            if d < smallest_max_delta:
-                smallest_max_delta = d
-        self.max_backwards = smallest_max_delta
-        
+        # the edit can be done backwards
+        if self.move_all_tracks:
+            smallest_max_delta = MAX_DELTA
+            for i in range(1, len(tracks) - 1):
+                d = track_max_deltas[i - 1]
+                if d < smallest_max_delta:
+                    smallest_max_delta = d
+            self.max_backwards = smallest_max_delta
+        else: # Single track moved with CTRL
+            self.max_backwards = track_max_deltas[self.pressed_track_id - 1] # - 1 because black track
+  
         # Track have different ways the edit will need to be applied
         # make a list of those
         track_edit_ops = []
