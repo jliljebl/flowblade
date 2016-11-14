@@ -342,6 +342,16 @@ def _clear_filters(data):
     clip, track, item_id, item_data = data
     clear_filters()
 
+def _select_all_after(data):
+    clip, track, item_id, item_data = data
+    movemodes._select_multiple_clips(track.id, track.clips.index(clip), len(track.clips) - 1)
+    updater.repaint_tline()
+
+def _select_all_before(data):
+    clip, track, item_id, item_data = data
+    movemodes._select_multiple_clips(track.id, 0, track.clips.index(clip))
+    updater.repaint_tline()
+
 def _match_frame_start(data):
     clip, track, item_id, item_data = data
     _set_match_frame(clip, clip.clip_in, track, True)
@@ -453,4 +463,6 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "match_frame_start":_match_frame_start,
                   "match_frame_end":_match_frame_end,
                   "match_frame_start_monitor":_match_frame_start_monitor,
-                  "match_frame_end_monitor":_match_frame_end_monitor}
+                  "match_frame_end_monitor":_match_frame_end_monitor,
+                  "select_all_after": _select_all_after,
+                  "select_all_before":_select_all_before}
