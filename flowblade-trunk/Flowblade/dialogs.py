@@ -362,7 +362,7 @@ def rendered_clips_no_home_folder_dialog():
                             os.path.expanduser("~") + _("\' as render clips folder"),
                             gui.editor_window.window)
 
-def exit_confirm_dialog(callback, msg, parent_window, project_name):
+def exit_confirm_dialog(callback, msg, parent_window, project_name, data=None):
     title = _("Save project '") + project_name + _("' before exiting?")
     content = dialogutils.get_warning_message_dialog_panel(title, msg, False, Gtk.STOCK_QUIT)
 
@@ -377,7 +377,10 @@ def exit_confirm_dialog(callback, msg, parent_window, project_name):
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
-    dialog.connect('response', callback)
+    if data == None:
+        dialog.connect('response', callback)
+    else:
+        dialog.connect('response', callback, data)
     dialog.show_all()
 
 def close_confirm_dialog(callback, msg, parent_window, project_name):

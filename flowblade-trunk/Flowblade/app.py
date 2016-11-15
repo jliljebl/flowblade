@@ -775,18 +775,7 @@ def shutdown():
     return True # Signal that event is handled, otherwise it'll destroy window anyway
 
 def get_save_time_msg():
-    if projectaction.save_time == None:
-        return _("Project has not been saved since it was opened.")
-    
-    save_ago = (time.clock() - projectaction.save_time) / 60.0
-
-    if save_ago < 1:
-        return _("Project was saved less than a minute ago.")
-
-    if save_ago < 2:
-        return _("Project was saved one minute ago.")
-    
-    return _("Project was saved ") + str(int(save_ago)) + _(" minutes ago.")
+    return projectaction.get_save_time_msg()
 
 def _shutdown_dialog_callback(dialog, response_id):
     dialog.destroy()
