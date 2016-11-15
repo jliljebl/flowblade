@@ -736,6 +736,10 @@ def _set_draw_params():
         appconsts.TOP_ROW_HEIGHT = 10
         projectinfogui.PROJECT_INFO_PANEL_HEIGHT = 140
 
+    if editorstate.SCREEN_WIDTH < 1153 and editorstate.SCREEN_HEIGHT < 865:
+        editorwindow.MONITOR_AREA_WIDTH = 400
+        positionbar.BAR_WIDTH = 100
+
 def _too_small_screen_exit():
     global exit_timeout_id
     exit_timeout_id = GObject.timeout_add(200, _show_too_small_info)
