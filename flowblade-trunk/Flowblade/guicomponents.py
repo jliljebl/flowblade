@@ -2173,13 +2173,11 @@ def get_trim_view_popupmenu(launcher, event, callback):
         menu_item.set_sensitive(False)
     menu.add(menu_item)
     
-    
     menu_item = _get_menu_item(_("Clear Match Frame"), callback, "matchclear" )
     if gui.monitor_widget.view != monitorwidget.FRAME_MATCH_VIEW:
         menu_item.set_sensitive(False)
     menu.add(menu_item)
 
-    
     menu.popup(None, None, None, None, event.button, event.time)
     
 def get_mode_selector_popup_menu(launcher, event, callback):

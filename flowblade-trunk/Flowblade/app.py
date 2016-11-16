@@ -262,6 +262,9 @@ def main(root_path):
     # Audiomonitoring being available needs to be known before GUI creation
     audiomonitoring.init(editorstate.project.profile)
 
+    # Set trim view mode to current default value
+    editorstate.show_trim_view = editorpersistance.prefs.trim_view_default
+
     # Check for tools and init tools integration
     gmic.test_availablity()
     toolnatron.init()
