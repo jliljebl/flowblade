@@ -617,7 +617,7 @@ def clip_properties_dialog(data):
     _default_behaviour(dialog)
     dialog.connect('response', _dialog_destroy)
     dialog.show_all()
-
+   
 def _dialog_destroy(dialog, response):
     dialog.destroy()
 
