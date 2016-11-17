@@ -203,8 +203,10 @@ class MonitorWidget:
         cpath, cname = os.path.split(match_clip.path)
         self.clip_name = cname
         self.match_frame = frame
+        
         match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, frame, 
                                                             MATCH_FRAME, self.match_frame_write_complete)
+                                        
         match_frame_write_thread.start()
         
     def set_start_trim_view(self, match_clip, edit_clip_start):
@@ -235,12 +237,6 @@ class MonitorWidget:
         data = (match_clip.path, match_clip.clip_out, MATCH_FRAME, self.match_frame_write_complete)
         GLib.idle_add(_launch_match_frame_writer, data)
         
-        """
-        match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_out, 
-                                                            MATCH_FRAME, self.match_frame_write_complete)
-        match_frame_write_thread.start()
-        """
-        
     def set_end_trim_view(self, match_clip, edit_clip_start):
         if self.is_active(True) == False:
             return
@@ -268,11 +264,6 @@ class MonitorWidget:
 
         data = (match_clip.path, match_clip.clip_in, MATCH_FRAME, self.match_frame_write_complete)
         GLib.idle_add(_launch_match_frame_writer, data)
-        """
-        match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_in, 
-                                                            MATCH_FRAME, self.match_frame_write_complete)
-        match_frame_write_thread.start()
-        """
         
     def set_roll_trim_right_active_view(self, match_clip, edit_clip_start):
         if self.is_active() == False:
@@ -301,11 +292,6 @@ class MonitorWidget:
 
         data = (match_clip.path, match_clip.clip_out, MATCH_FRAME, self.match_frame_write_complete)
         GLib.idle_add(_launch_match_frame_writer, data)
-        """
-        match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_out, 
-                                                            MATCH_FRAME, self.match_frame_write_complete)
-        match_frame_write_thread.start()
-        """
         
     def set_roll_trim_left_active_view(self, match_clip, edit_clip_start):
         if self.is_active() == False:
@@ -334,12 +320,6 @@ class MonitorWidget:
 
         data = (match_clip.path, match_clip.clip_in, MATCH_FRAME, self.match_frame_write_complete)
         GLib.idle_add(_launch_match_frame_writer, data)
-                                 
-        """
-        match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_in, 
-                                                            MATCH_FRAME, self.match_frame_write_complete)
-        match_frame_write_thread.start()
-        """
         
     def set_slip_trim_right_active_view(self, match_clip):
         if self.is_active() == False:
@@ -372,11 +352,7 @@ class MonitorWidget:
 
         data = (match_clip.path, match_clip.clip_in, MATCH_FRAME, self.match_frame_write_complete)
         GLib.idle_add(_launch_match_frame_writer, data)
-        """
-        match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_in, 
-                                                            MATCH_FRAME, self.match_frame_write_complete)
-        match_frame_write_thread.start()
-        """
+
     def set_slip_trim_left_active_view(self, match_clip):
         if self.is_active() == False:
             return
@@ -409,11 +385,6 @@ class MonitorWidget:
 
         data = (match_clip.path, match_clip.clip_out, MATCH_FRAME, self.match_frame_write_complete)
         GLib.idle_add(_launch_match_frame_writer, data)
-        """
-        match_frame_write_thread = MonitorMatchFrameWriter(match_clip.path, match_clip.clip_out, 
-                                                            MATCH_FRAME, self.match_frame_write_complete)
-        match_frame_write_thread.start()
-        """
         
     # ------------------------------------------------------------------ LAYOUT
     def _layout_expand_edge_panels(self):
@@ -908,8 +879,6 @@ class MonitorMatchFrameWriter(threading.Thread):
         while os.path.isfile(matchframe_path) != True:
             time.sleep(0.1)
 
-        utils.elapsed_time("MonitorMatchFrameWriter frame done")
-    
         # Do completion callback
         self.completion_callback(self.frame_name)
 

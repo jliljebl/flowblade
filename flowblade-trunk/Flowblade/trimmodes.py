@@ -374,7 +374,6 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     """
     Sets one roll mode
     """
-    utils.start_timing("set_oneroll_mode....")
     if track == None:
         return False
 
@@ -404,9 +403,6 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
 
     _set_edit_data(track, edit_frame, True)
 
-    utils.elapsed_time("after _set_edit_data")
-    
-    
     global edit_data
     # Set side being edited to default to-side
     edit_data["to_side_being_edited"] = to_side_being_edited
@@ -426,8 +422,6 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     tlinewidgets.set_edit_mode(edit_data,
                                tlinewidgets.draw_one_roll_overlay)
 
-    utils.elapsed_time("after tlinewidgets.set_edit_mode")
-    
     # Set clip as special producer on hidden track and display current frame 
     # from it.
     trim_limits = edit_data["trim_limits"]
@@ -447,17 +441,13 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         gui.monitor_widget.set_edit_tline_frame(current_frame, current_frame - edit_frame)
     else:
         gui.monitor_widget.set_default_view()
-
-    utils.elapsed_time("after # Init trim view layout")
-    
+   
     # Set interactive trimview on hidden track
     if clip.media_type != appconsts.PATTERN_PRODUCER:
         current_sequence().display_trim_clip(clip.path, clip_start) # file producer
     else:
         current_sequence().display_trim_clip(None, clip_start, clip.create_data) # pattern producer
 
-    utils.elapsed_time("# after Set interactive trimview on hidden track")
-    
     PLAYER().seek_frame(edit_frame)
     return True
 

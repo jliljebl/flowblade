@@ -703,7 +703,6 @@ def draw_two_roll_overlay(cr, data):
     _draw_kb_trim_indicator(cr, selection_frame_x, track_y)
     
 def draw_one_roll_overlay(cr, data):
-    utils.elapsed_time("at draw_one_roll_overlay")
     track_height = current_sequence().tracks[data["track"]].height
     track_y = _get_track_y(data["track"])
     
@@ -763,8 +762,6 @@ def draw_one_roll_overlay(cr, data):
     cr.stroke()
 
     _draw_kb_trim_indicator(cr, selection_frame_x, track_y)
-    
-    utils.elapsed_time("DONE draw_one_roll_overlay")
     
 def draw_slide_overlay(cr, data):
     track_height = current_sequence().tracks[data["track"]].height
