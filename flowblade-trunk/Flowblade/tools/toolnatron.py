@@ -53,7 +53,5 @@ def export_clip(clip):
 
     # Launch Natron
     print "Launch Natron..."
-    #FLOG = open(utils.get_hidden_user_dir_path() + "log_natron", 'w')
-    #subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "natron_clip_export_start.sh", respaths.LAUNCH_DIR], stdin=FLOG, stdout=FLOG, stderr=FLOG)
     args = [str(respaths.LAUNCH_DIR + "natron_clip_export_start.sh"), str(respaths.LAUNCH_DIR)]
     subprocess.Popen(args)
