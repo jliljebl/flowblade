@@ -37,9 +37,12 @@ def createInstance(app,group):
     viewerNode.connectInput(0, readerNode)
     reader = app.Read1
     reader.filename.set(clip_path)
+    reader.getParam("firstFrame").set(int(mark_in))
+    reader.getParam("lastFrame").set(int(mark_out) + 1)
+    reader.getParam("startingTime").set(0)
     readerNode.setPosition(300.0, 100.0)
     viewerNode.setPosition(315.0, 300.0)
-
+    app.getProjectParam("frameRange").set(1, int(mark_out) - int(mark_in) + 1)
 
 # ---------------------------------------------------- helper funcs
 def get_hidden_user_dir_path():
