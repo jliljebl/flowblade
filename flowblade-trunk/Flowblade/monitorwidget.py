@@ -870,7 +870,7 @@ class MonitorMatchFrameWriter(threading.Thread):
         if _widget.view != START_TRIM_VIEW and _widget.view != END_TRIM_VIEW:
             _producer = producer
             _consumer = consumer
-            
+
         # Connect and write image
         consumer.connect(producer)
         consumer.run()
@@ -890,6 +890,10 @@ class MatchSurfaceCreator(threading.Thread):
         
     def run(self):
         # Create new producer to get mlt frame data
+        while _producer == None:
+            print "MatchSurfaceCreator: waiting for _producer"
+            time.sleep(0.01)
+            
         image_producer = _producer.cut(int(self.match_frame), int(self.match_frame))
         image_producer.set_speed(0)
         image_producer.seek(0)
