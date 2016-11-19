@@ -346,7 +346,10 @@ def _slide_trim_left(delta):
             trim_limits = edit_data["trim_limits"]
             edit_data["press_start"] = trim_limits["clip_start"] + 1 # this can be anything the relevant thing here is mouse delta
             edit_data["keyboard_selected_frame"] = edit_data["press_start"] - delta
-
+    
+    total_delta = edit_data["press_start"] - edit_data["keyboard_selected_frame"]
+    gui.monitor_widget.set_slip_edit_tline_frame(edit_data["clip"], total_delta)
+        
     display_frame = _update_slide_trim_for_mouse_frame(edit_data["keyboard_selected_frame"])
     PLAYER().seek_frame(display_frame)
 
@@ -362,6 +365,9 @@ def _slide_trim_right(delta):
             trim_limits = edit_data["trim_limits"]
             edit_data["press_start"] = trim_limits["clip_start"] + 1 # this can be anything the relevant thing here is mouse delta
             edit_data["keyboard_selected_frame"] = edit_data["press_start"] + delta
+
+    total_delta = edit_data["press_start"] - edit_data["keyboard_selected_frame"]
+    gui.monitor_widget.set_slip_edit_tline_frame(edit_data["clip"], total_delta)
 
     display_frame = _update_slide_trim_for_mouse_frame(edit_data["keyboard_selected_frame"])
     PLAYER().seek_frame(display_frame)
