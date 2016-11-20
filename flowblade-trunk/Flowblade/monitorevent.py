@@ -298,7 +298,7 @@ def _trim_view_menu_item_activated(widget, msg):
 def _show_trimview_info():
     editorpersistance.prefs.trim_view_message_shown = True
     editorpersistance.save()
-    primary_txt = "On some systems Trim View may update slowly"
+    primary_txt = _("On some systems Trim View may update slowly")
     secondary_txt = _("<b>Trim View</b> works best with SSDs and relatively powerful processors.\n\n") + \
                     _("Select <b>'Trim View Off'</b> or<b>'Trim View Single Side Edits Only'</b> options\nif performance is not satisfactory.")
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
