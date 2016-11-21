@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-20 16:22+0200\n"
+"POT-Creation-Date: 2016-11-21 10:56+0200\n"
 "PO-Revision-Date: 2014-11-23 14:22+0100\n"
 "Last-Translator: Mario Dejanovic <mario.dejanovic@gmx.at>\n"
 "Language-Team: German\n"
@@ -5968,6 +5968,23 @@ msgstr "Rendern gestoppt!"
 #: tools/toolsencoding.py:90
 msgid "Use Default Profile:"
 msgstr "Verwende Standard-Profil:"
+
+#: monitorevent.py:301
+msgid "On some systems Trim View may update slowly"
+msgstr ""
+
+#: monitorevent.py:302
+msgid ""
+"<b>Trim View</b> works best with SSDs and relatively powerful processors.\n"
+"\n"
+msgstr ""
+
+#: monitorevent.py:303
+msgid ""
+"Select <b>'Trim View Off'</b> or<b>'Trim View Single Side Edits Only'</b> "
+"options\n"
+"if performance is not satisfactory."
+msgstr ""
 
 #, fuzzy
 #~ msgid "Icons and color optimized for:"
