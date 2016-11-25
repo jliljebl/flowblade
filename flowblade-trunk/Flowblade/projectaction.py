@@ -619,6 +619,25 @@ def remove_save_icon():
 
 def open_recent_project(widget, index):
     path = editorpersistance.recent_projects.projects[index]
+    dialogs.exit_confirm_dialog(_open_recent_shutdown_dialog_callback, get_save_time_msg(), gui.editor_window.window, editorstate.PROJECT().name, path)
+
+def _open_recent_shutdown_dialog_callback(dialog, response_id, path):
+    dialog.destroy()
+    
+    # Handle poroject close responses
+    if response_id == Gtk.ResponseType.CLOSE:# "Don't Save"
+        pass
+    elif response_id ==  Gtk.ResponseType.YES:# "Save"
+        if editorstate.PROJECT().last_save_path != None:
+            persistance.save_project(editorstate.PROJECT(), editorstate.PROJECT().last_save_path)
+        else:
+            dialogutils.warning_message(_("Project has not been saved previously"), 
+                                    _("Save project with File -> Save As before closing."),
+                                    gui.editor_window.window)
+            return
+    else: # "Cancel"
+        return
+        
     if not os.path.exists(path):
         editorpersistance.recent_projects.projects.pop(index)
         editorpersistance.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
@@ -629,6 +648,20 @@ def open_recent_project(widget, index):
 
     actually_load_project(path)
 
+def get_save_time_msg():
+    if save_time == None:
+        return _("Project has not been saved since it was opened.")
+    
+    save_ago = (time.clock() - save_time) / 60.0
+
+    if save_ago < 1:
+        return _("Project was saved less than a minute ago.")
+
+    if save_ago < 2:
+        return _("Project was saved one minute ago.")
+    
+    return _("Project was saved ") + str(int(save_ago)) + _(" minutes ago.")
+    
 # ---------------------------------- rendering
 def do_rendering():
     success = _write_out_render_item(True)

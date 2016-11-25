@@ -1135,6 +1135,10 @@ def display_clip_popup_menu(event, clip, track, callback):
     _add_separetor(clip_menu)
 
     if track.type == appconsts.VIDEO:
+        clip_menu.add(_get_tool_integration_menu_item(event, clip, track, callback))
+        _add_separetor(clip_menu)
+        
+    if track.type == appconsts.VIDEO:
 
         clip_menu.add(_get_menu_item(_("Split Audio"), callback,\
                       (clip, track, "split_audio", event.x), True))
@@ -1192,9 +1196,8 @@ def display_clip_popup_menu(event, clip, track, callback):
     clip_menu.add(_get_menu_item(_("Clip Info"), callback,\
                   (clip, track, "clip_info", event.x)))
 
-    if track.type == appconsts.VIDEO:
-        _add_separetor(clip_menu)
-        clip_menu.add(_get_tool_integration_menu_item(event, clip, track, callback))
+    _add_separetor(clip_menu)
+    clip_menu.add(_get_select_menu_item(event, clip, track, callback))
         
     if track.type == appconsts.VIDEO:
         _add_separetor(clip_menu)
@@ -1287,6 +1290,9 @@ def display_audio_clip_popup_menu(event, clip, track, callback):
     clip_menu.add(_get_menu_item(_("Clip Info"), callback,\
                   (clip, track, "clip_info", event.x)))
 
+    _add_separetor(clip_menu)
+    clip_menu.add(_get_select_menu_item(event, clip, track, callback))
+    
     clip_menu.popup(None, None, None, None, event.button, event.time)
 
 def display_compositor_popup_menu(event, compositor, callback):
@@ -1420,6 +1426,25 @@ def _get_match_frame_menu_item(event, clip, track, callback):
     menu_item.show()
     return menu_item
 
+def _get_select_menu_item(event, clip, track, callback):
+    menu_item = Gtk.MenuItem(_("Select"))
+    sub_menu = Gtk.Menu()
+    menu_item.set_submenu(sub_menu)
+
+    all_after = Gtk.MenuItem(_("All Clips After"))
+    sub_menu.append(all_after)
+    all_after.connect("activate", callback, (clip, track, "select_all_after", None))
+    all_after.show()
+
+    all_before = Gtk.MenuItem(_("All Clips Before"))
+    sub_menu.append(all_before)
+    all_before.connect("activate", callback, (clip, track, "select_all_before", None))
+    all_before.show()
+
+    menu_item.set_sensitive(True)
+    menu_item.show()
+    return menu_item
+    
 def _get_tool_integration_menu_item(event, clip, track, callback):
     menu_item = Gtk.MenuItem(_("Export To Tool"))
     sub_menu = Gtk.Menu()
@@ -1430,6 +1455,8 @@ def _get_tool_integration_menu_item(event, clip, track, callback):
         export_item = Gtk.MenuItem(copy.copy(integrator.tool_name))
         sub_menu.append(export_item)
         export_item.connect("activate", integrator.export_callback, (clip, track))
+        if integrator.supports_clip_media(clip) == False:
+            export_item.set_sensitive(False)
         export_item.show()
 
     menu_item.show()
@@ -2146,13 +2173,11 @@ def get_trim_view_popupmenu(launcher, event, callback):
         menu_item.set_sensitive(False)
     menu.add(menu_item)
     
-    
     menu_item = _get_menu_item(_("Clear Match Frame"), callback, "matchclear" )
     if gui.monitor_widget.view != monitorwidget.FRAME_MATCH_VIEW:
         menu_item.set_sensitive(False)
     menu.add(menu_item)
 
-    
     menu.popup(None, None, None, None, event.button, event.time)
     
 def get_mode_selector_popup_menu(launcher, event, callback):

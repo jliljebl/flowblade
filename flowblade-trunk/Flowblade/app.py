@@ -262,6 +262,9 @@ def main(root_path):
     # Audiomonitoring being available needs to be known before GUI creation
     audiomonitoring.init(editorstate.project.profile)
 
+    # Set trim view mode to current default value
+    editorstate.show_trim_view = editorpersistance.prefs.trim_view_default
+
     # Check for tools and init tools integration
     gmic.test_availablity()
     toolnatron.init()
@@ -736,6 +739,10 @@ def _set_draw_params():
         appconsts.TOP_ROW_HEIGHT = 10
         projectinfogui.PROJECT_INFO_PANEL_HEIGHT = 140
 
+    if editorstate.SCREEN_WIDTH < 1153 and editorstate.SCREEN_HEIGHT < 865:
+        editorwindow.MONITOR_AREA_WIDTH = 400
+        positionbar.BAR_WIDTH = 100
+
 def _too_small_screen_exit():
     global exit_timeout_id
     exit_timeout_id = GObject.timeout_add(200, _show_too_small_info)
@@ -771,18 +778,7 @@ def shutdown():
     return True # Signal that event is handled, otherwise it'll destroy window anyway
 
 def get_save_time_msg():
-    if projectaction.save_time == None:
-        return _("Project has not been saved since it was opened.")
-    
-    save_ago = (time.clock() - projectaction.save_time) / 60.0
-
-    if save_ago < 1:
-        return _("Project was saved less than a minute ago.")
-
-    if save_ago < 2:
-        return _("Project was saved one minute ago.")
-    
-    return _("Project was saved ") + str(int(save_ago)) + _(" minutes ago.")
+    return projectaction.get_save_time_msg()
 
 def _shutdown_dialog_callback(dialog, response_id):
     dialog.destroy()

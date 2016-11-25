@@ -195,9 +195,6 @@ def splice_out_button_pressed():
          _("There wasn't enough material available in adjacent clips.\nA normal Splice Out was done instead."),
          gui.editor_window.window)
 
-def delete_range_button_pressed():
-    print "range"
-
 def _attempt_clip_cover_delete(clip, track, index):
     if clip.rendered_type == appconsts.RENDERED_FADE_OUT:
         if index != 0:
@@ -496,7 +493,6 @@ def split_audio_button_pressed():
     for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
         
         clip = track.clips[i]
-        print i, clip
         if clip.is_blanck_clip == False:
             clips.append(clip)
 
@@ -721,7 +717,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                                         window_text)
 
 def _transition_render_complete(clip_path):
-    print "render complete"
+    print "Render complete"
 
     global transition_render_data
     transition_index, from_clip, to_clip, track, from_in, to_out, transition_type = transition_render_data

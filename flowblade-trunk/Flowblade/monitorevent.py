@@ -23,6 +23,8 @@ Module handles button presses from monitor control buttons row.
 """
 
 import appconsts
+import dialogutils
+import editorpersistance
 import editorstate
 from editorstate import PLAYER
 from editorstate import current_sequence
@@ -260,7 +262,6 @@ def set_monitor_playback_interpolation(new_interpolation):
 def trim_view_menu_launched(launcher, event):
     guicomponents.get_trim_view_popupmenu(launcher, event, _trim_view_menu_item_activated)
     
-
 def _trim_view_menu_item_activated(widget, msg):
     if msg == "matchclear":
         gui.monitor_widget.set_default_view_force()
@@ -279,9 +280,26 @@ def _trim_view_menu_item_activated(widget, msg):
     
     if msg == "trimon":
         editorstate.show_trim_view = appconsts.TRIM_VIEW_ON
+        editorpersistance.prefs.trim_view_default = appconsts.TRIM_VIEW_ON
+        editorpersistance.save()
+        if editorpersistance.prefs.trim_view_message_shown == False:
+            _show_trimview_info()
     if msg == "trimsingle":
         editorstate.show_trim_view = appconsts.TRIM_VIEW_SINGLE
+        editorpersistance.prefs.trim_view_default = appconsts.TRIM_VIEW_SINGLE
+        editorpersistance.save()
+        if editorpersistance.prefs.trim_view_message_shown == False:
+            _show_trimview_info()
     if msg == "trimoff":
         editorstate.show_trim_view = appconsts.TRIM_VIEW_OFF
+        editorpersistance.prefs.trim_view_default = appconsts.TRIM_VIEW_OFF
+        editorpersistance.save()
 
-        
+def _show_trimview_info():
+    editorpersistance.prefs.trim_view_message_shown = True
+    editorpersistance.save()
+    primary_txt = _("On some systems Trim View may update slowly")
+    secondary_txt = _("<b>Trim View</b> works best with SSDs and relatively powerful processors.\n\n") + \
+                    _("Select <b>'Trim View Off'</b> or<b>'Trim View Single Side Edits Only'</b> options\nif performance is not satisfactory.")
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+    

@@ -107,7 +107,7 @@ display_clip_media_thumbnails = True
 fullscreen = False
 
 # Trim view mode
-show_trim_view = appconsts.TRIM_VIEW_ON
+show_trim_view = appconsts.TRIM_VIEW_OFF
 
 # Remember fade and transition lengths
 fade_length = -1

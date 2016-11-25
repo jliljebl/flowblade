@@ -346,7 +346,10 @@ def _slide_trim_left(delta):
             trim_limits = edit_data["trim_limits"]
             edit_data["press_start"] = trim_limits["clip_start"] + 1 # this can be anything the relevant thing here is mouse delta
             edit_data["keyboard_selected_frame"] = edit_data["press_start"] - delta
-
+    
+    total_delta = edit_data["press_start"] - edit_data["keyboard_selected_frame"]
+    gui.monitor_widget.set_slip_edit_tline_frame(edit_data["clip"], total_delta)
+        
     display_frame = _update_slide_trim_for_mouse_frame(edit_data["keyboard_selected_frame"])
     PLAYER().seek_frame(display_frame)
 
@@ -363,6 +366,9 @@ def _slide_trim_right(delta):
             edit_data["press_start"] = trim_limits["clip_start"] + 1 # this can be anything the relevant thing here is mouse delta
             edit_data["keyboard_selected_frame"] = edit_data["press_start"] + delta
 
+    total_delta = edit_data["press_start"] - edit_data["keyboard_selected_frame"]
+    gui.monitor_widget.set_slip_edit_tline_frame(edit_data["clip"], total_delta)
+
     display_frame = _update_slide_trim_for_mouse_frame(edit_data["keyboard_selected_frame"])
     PLAYER().seek_frame(display_frame)
 
@@ -374,7 +380,6 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     """
     Sets one roll mode
     """
-    utils.start_timing("set_oneroll_mode....")
     if track == None:
         return False
 
@@ -404,9 +409,6 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
 
     _set_edit_data(track, edit_frame, True)
 
-    utils.elapsed_time("after _set_edit_data")
-    
-    
     global edit_data
     # Set side being edited to default to-side
     edit_data["to_side_being_edited"] = to_side_being_edited
@@ -426,8 +428,6 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     tlinewidgets.set_edit_mode(edit_data,
                                tlinewidgets.draw_one_roll_overlay)
 
-    utils.elapsed_time("after tlinewidgets.set_edit_mode")
-    
     # Set clip as special producer on hidden track and display current frame 
     # from it.
     trim_limits = edit_data["trim_limits"]
@@ -447,17 +447,13 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         gui.monitor_widget.set_edit_tline_frame(current_frame, current_frame - edit_frame)
     else:
         gui.monitor_widget.set_default_view()
-
-    utils.elapsed_time("after # Init trim view layout")
-    
+   
     # Set interactive trimview on hidden track
     if clip.media_type != appconsts.PATTERN_PRODUCER:
         current_sequence().display_trim_clip(clip.path, clip_start) # file producer
     else:
         current_sequence().display_trim_clip(None, clip_start, clip.create_data) # pattern producer
 
-    utils.elapsed_time("# after Set interactive trimview on hidden track")
-    
     PLAYER().seek_frame(edit_frame)
     return True
 

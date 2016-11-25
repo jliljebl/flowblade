@@ -19,6 +19,7 @@
 """
 import copy
 
+import appconsts
 from editorstate import PROJECT
 import gmic
 import toolnatron
@@ -33,7 +34,7 @@ def init():
     if gmic.gmic_available():
         _tools.append(GMICIntegrator())
 
-    if toolnatron.natron_avavilable():
+    if toolnatron.natron_available():
         _tools.append(NatronIntegrator())
         
     _tools.append(SlowMoIntegrator())
@@ -49,16 +50,23 @@ def get_export_integrators():
 # --------------------------------------------------- integrator classes
 class ToolIntegrator:
     
-    def __init__(self, tool_name, is_export_target):
+    def __init__(self, tool_name, supported_media_types,is_export_target):
         self.tool_name = tool_name
         self.is_export_target = is_export_target
-        self.data = None
+        self.supported_media_types = supported_media_types
+        self.data = None # Used at call sites to give needed info for exports
          
     def activate(self):
         _active_integrators.append(self)
     
     def deactivate(self):
         _active_integrators.remove(self)
+
+    def supports_clip_media(self, clip):
+        if clip.media_type in self.supported_media_types:
+            return True
+        else:
+            return False
 
     def export_callback(self, widget, data):
         new_instance = copy.deepcopy(self)
@@ -74,7 +82,7 @@ class ToolIntegrator:
 class GMICIntegrator(ToolIntegrator):
     
     def __init__(self):
-        ToolIntegrator.__init__(self, "G'MIC Effects", True)
+        ToolIntegrator.__init__(self, _("G'MIC Effects"), [appconsts.VIDEO], True)
         
     def do_export(self):
         gmic.launch_gmic(self.data) # tuple (clip, track)
@@ -82,7 +90,7 @@ class GMICIntegrator(ToolIntegrator):
 
 class NatronIntegrator(ToolIntegrator):
     def __init__(self):
-        ToolIntegrator.__init__(self, "Natron", True)
+        ToolIntegrator.__init__(self, _("Natron"), [appconsts.VIDEO], True)
 
     def do_export(self):
         clip, track = self.data
@@ -92,7 +100,7 @@ class NatronIntegrator(ToolIntegrator):
 class SlowMoIntegrator(ToolIntegrator):
     
     def __init__(self):
-        ToolIntegrator.__init__(self, "Slow/Fast Motion", True)
+        ToolIntegrator.__init__(self, _("Slow/Fast Motion"), [appconsts.VIDEO], True)
         
     def do_export(self):
         clip, track = self.data
