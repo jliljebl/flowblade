@@ -216,6 +216,7 @@ def main(root_path):
     editorstate.SCREEN_WIDTH = scr_w
     editorstate.SCREEN_HEIGHT = scr_h
 
+    print scr_w, scr_h
     print "Small height:", editorstate.screen_size_small_height()
     print "Small width:",  editorstate.screen_size_small_width()
 
@@ -805,6 +806,10 @@ def _shutdown_dialog_callback(dialog, response_id):
     alloc = gui.editor_window.window.get_allocation()
     x, y, w, h = alloc.x, alloc.y, alloc.width, alloc.height 
     editorpersistance.prefs.exit_allocation = (w, h)
+    if gui.editor_window.window2 != None:
+        alloc = gui.editor_window.window2.get_allocation()
+        pos_x, pos_y = gui.editor_window.window2.get_position()
+        editorpersistance.prefs.exit_allocation_window_2 = (alloc.width, alloc.height, pos_x, pos_y)       
     editorpersistance.prefs.app_v_paned_position = gui.editor_window.app_v_paned.get_position()
     editorpersistance.prefs.top_paned_position = gui.editor_window.top_paned.get_position()
     editorpersistance.prefs.mm_paned_position = gui.editor_window.mm_paned.get_position()

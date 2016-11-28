@@ -279,3 +279,6 @@ class EditorPreferences:
         self.global_layout = appconsts.SINGLE_WINDOW
         self.trim_view_default = appconsts.TRIM_VIEW_OFF
         self.trim_view_message_shown = False
+        self.exit_allocation_window_2 = (0, 0, 0, 0)
+        
+        
