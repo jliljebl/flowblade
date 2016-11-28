@@ -349,10 +349,10 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
             MONITOR_MEDIA_FILE().mark_in = mark_in
             MONITOR_MEDIA_FILE().mark_out = mark_out
 
-    display_monitor_clip_name()
-
     # Display frame, marks and pos
     gui.pos_bar.update_display_from_producer(clip_producer)
+    
+    display_monitor_clip_name()
 
     if MONITOR_MEDIA_FILE().type == appconsts.IMAGE or \
         MONITOR_MEDIA_FILE().type == appconsts.PATTERN_PRODUCER:
@@ -373,8 +373,8 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     
     repaint_tline()
 
-def display_monitor_clip_name():#we're displaying length and range length also 
-    tc_info = utils.get_tc_string(PLAYER().producer.get_length() - 1) 
+def display_monitor_clip_name():#we're displaying length and range length also
+    tc_info = utils.get_tc_string(gui.pos_bar.producer.get_length()) 
     if  MONITOR_MEDIA_FILE().mark_in != -1 and MONITOR_MEDIA_FILE().mark_out != -1:
         clip_length = utils.get_tc_string(MONITOR_MEDIA_FILE().mark_out - MONITOR_MEDIA_FILE().mark_in + 1) #+1 out incl.
         tc_info = tc_info + "  ][ " + str(clip_length)

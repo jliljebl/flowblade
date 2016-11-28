@@ -26,6 +26,7 @@ Load, save, add media file, etc...
 import datetime
 import glob
 import md5
+import mlt
 import os
 from os import listdir
 from os.path import isfile, join
@@ -73,7 +74,6 @@ import utils
 
 save_time = None
 save_icon_remove_event_id = None
-
 
 #--------------------------------------- worker threads
 class LoadThread(threading.Thread):
@@ -170,14 +170,14 @@ class LoadThread(threading.Thread):
         Gdk.threads_leave()
         ticker.stop_ticker()
 
-
     def _missing_file_dialog_callback(self, dialog, response_id):
         if self.open_check.get_active() == True:
             medialinker.display_linker(self.filename)
             dialog.destroy()
         else:
             dialog.destroy()
-    
+
+
 class AddMediaFilesThread(threading.Thread):
     
     def __init__(self, filenames):
@@ -234,6 +234,41 @@ class AddMediaFilesThread(threading.Thread):
             
         audiowaveformrenderer.launch_audio_levels_rendering(filenames)
 
+
+class UpdateMediaLengthsThread(threading.Thread):
+    
+    def __init__(self):
+        threading.Thread.__init__(self)
+
+    def run(self):
+        print "Updating media lengths:"
+        Gdk.threads_enter()
+        dialog = dialogs.update_media_lengths_progress_dialog()
+        time.sleep(0.1)
+        Gdk.threads_leave()
+
+        for key, media_file in PROJECT().media_files.iteritems():
+            print media_file.name
+            if media_file.type == appconsts.VIDEO or media_file.type == appconsts.IMAGE_SEQUENCE:
+                print media_file.name
+                Gdk.threads_enter()
+                dialog.info.set_text(media_file.name)
+                Gdk.threads_leave()
+        
+                producer = mlt.Producer(PROJECT().profile, str(media_file.path))
+                if producer.is_valid() == False:
+                    print "not valid producer"
+                    continue
+
+                length = producer.get_length()
+                media_file.length = length
+                
+        PROJECT().update_media_lengths_on_load = False
+        
+        Gdk.threads_enter()
+        dialog.destroy()
+        Gdk.threads_leave()
+        
 def _duplicates_info(duplicates):
     primary_txt = _("Media files already present in project were opened!")
     MAX_DISPLAYED_ITEMS = 3
@@ -269,7 +304,8 @@ def _not_matching_media_info_callback(dialog, response_id, media_file):
         profile = mltprofiles.get_profile_for_index(match_profile_index)
 
         path = utils.get_hidden_user_dir_path() + "/" + PROJECT().name
-
+        PROJECT().update_media_lengths_on_load = True
+        
         persistance.save_project(PROJECT(), path, profile.description()) #<----- HERE
         
         actually_load_project(path)
@@ -457,6 +493,10 @@ def _do_snapshot_save(root_folder_path, project_name):
     save_thread = SnaphotSaveThread(root_folder_path, project_name)
     save_thread.start()
 
+def update_media_lengths():
+    update_thread = UpdateMediaLengthsThread()
+    update_thread.start()
+    
 def change_project_profile():
     dialogs.change_profile_project_dialog(PROJECT(), _change_project_profile_callback)
 
@@ -482,8 +522,12 @@ def _change_project_profile_to_match_media_callback(dialog, response_id, match_p
         name = project_name_entry.get_text()
         profile = mltprofiles.get_profile_for_index(match_profile_index)
         path = folder + "/" + name
-
+        
+        PROJECT().update_media_lengths_on_load = True # saved version needs to do this
+        
         persistance.save_project(PROJECT(), path, profile.description()) #<----- HERE
+
+        PROJECT().update_media_lengths_on_load = False
 
         dialog.destroy()
     else:

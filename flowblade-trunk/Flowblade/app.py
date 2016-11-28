@@ -593,6 +593,9 @@ def open_project(new_project):
     gui.editor_window.window.handler_unblock(window_state_id)
     start_autosave()
 
+    if new_project.update_media_lengths_on_load == True:
+        projectaction.update_media_lengths()
+
     #editorstate.project.c_seq.print_all()
         
 def change_current_sequence(index):

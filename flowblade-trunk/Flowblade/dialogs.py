@@ -661,8 +661,14 @@ def load_dialog():
     return dialog
 
 def recreate_icons_progress_dialog():
+    return _text_info_prograss_dialog(_("Recreating icons"))
+
+def update_media_lengths_progress_dialog():
+    return _text_info_prograss_dialog(_("Update media lengths data"))
+    
+def _text_info_prograss_dialog(title):
     dialog = Gtk.Window(Gtk.WindowType.TOPLEVEL)
-    dialog.set_title(_("Recreating icons"))
+    dialog.set_title(title)
 
     info_label = Gtk.Label(label="")
     status_box = Gtk.HBox(False, 2)
@@ -688,6 +694,8 @@ def recreate_icons_progress_dialog():
     dialog.set_position(Gtk.WindowPosition.CENTER)
     dialog.show_all()
 
+    dialog.set_keep_above(True) # Perhaps configurable later
+    
     # Make refs available for updates
     dialog.progress_bar = progress_bar
     dialog.info = info_label
