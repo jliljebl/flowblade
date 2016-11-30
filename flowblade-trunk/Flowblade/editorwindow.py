@@ -703,7 +703,6 @@ class EditorWindow:
         if w != 0: # non-existing prefs file causes w and h to be 0
             if (float(w) / editorstate.SCREEN_WIDTH > 0.95) and (float(h) / editorstate.SCREEN_HEIGHT > 0.95):
                 self.window.maximize()
-                print "maximize" 
             else:
                 self.window.resize(w, h)
                 self.window.set_position(Gtk.WindowPosition.CENTER)
@@ -721,7 +720,17 @@ class EditorWindow:
             # Set pane and show window
             self.window2.add(pane2)
             self.window2.set_title("Flowblade")
+
+            # Maximize if it seems that we exited maximized, else set size
+            w, h, x, y = editorpersistance.prefs.exit_allocation_window_2
+                
+            if w != 0: # non-existing prefs file causes w and h to be 0
+                if (float(w) / editorstate.SCREEN_WIDTH > 0.95) and (float(h) / editorstate.SCREEN_HEIGHT > 0.95):
+                    self.window2.maximize()
+                else:
+                    self.window2.resize(w, h)
             
+            self.window2.move(x, y)
             self.window2.show_all()
                         
         # Set paned positions

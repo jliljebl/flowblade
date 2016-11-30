@@ -84,6 +84,9 @@ class Project:
         self.media_log = []
         self.media_log_groups = []
         self.proxy_data = miscdataobjects.ProjectProxyEditingData()
+        self.update_media_lengths_on_load = False # old projects < 1.10 had wrong media length data which just was never used.
+                                                  # 1.10 needed that data for the first time and required recreating it correctly for older projects
+
         self.SAVEFILE_VERSION = SAVEFILE_VERSION
         
         # c_seq is the currently edited Sequence
@@ -98,9 +101,8 @@ class Project:
     
     def init_thumbnailer(self):
         global thumbnailer
-        if thumbnailer == None:
-            thumbnailer = Thumbnailer()
-            thumbnailer.set_context(self.profile)
+        thumbnailer = Thumbnailer()
+        thumbnailer.set_context(self.profile)
 
     def add_image_sequence_media_object(self, resource_path, name, length):
         media_object = self.add_media_file(resource_path)
