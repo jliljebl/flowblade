@@ -628,13 +628,11 @@ class MonitorWidget:
         delta_frames_x = 0
         if self.view == START_TRIM_VIEW:
             cr.rectangle(w/2, 0, w/2, 4)
-            match_tc_x = (w/2) - TC_LEFT_SIDE_PAD
-            edit_tc_x = (w/2) + TC_RIGHT_SIDE_PAD
+
             delta_frames_x = (w/2) + 8
         elif self.view == END_TRIM_VIEW:
             cr.rectangle(0, 0, w/2, 4)
-            match_tc_x = (w/2) + TC_RIGHT_SIDE_PAD
-            edit_tc_x = (w/2) - TC_LEFT_SIDE_PAD
+
             delta_frames_x = (w/2) - 20
             # move left for every additional digit after ones
             CHAR_WIDTH = 12
@@ -644,17 +642,6 @@ class MonitorWidget:
         cr.set_source_rgb(0.9, 0.9, 0.9)
         cr.select_font_face ("monospace", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
         cr.set_font_size(21)
-
-        if self.match_frame != -1:
-            match_tc = utils.get_tc_string(self.match_frame)
-            cr.move_to(match_tc_x, TC_HEIGHT)
-            cr.show_text(match_tc)
-        
-        if self.edit_tline_frame != -1 or self.edit_clip_start_on_tline != -1:
-            clip_frame = self.edit_tline_frame - self.edit_clip_start_on_tline
-            edit_tc = utils.get_tc_string(clip_frame)
-            cr.move_to(edit_tc_x, TC_HEIGHT)
-            cr.show_text(edit_tc)
         
         if self.edit_delta != None:
             cr.move_to(delta_frames_x, TC_HEIGHT + 30)
@@ -679,8 +666,6 @@ class MonitorWidget:
             cr.rectangle(0, 0, w/2, 4)
             cr.fill()
                                 
-            match_tc_x = (w/2) - TC_LEFT_SIDE_PAD
-            edit_tc_x = (w/2) + TC_RIGHT_SIDE_PAD
             delta_frames_x = (w/2) + 8
         elif self.view == ROLL_TRIM_LEFT_ACTIVE_VIEW:
             cr.rectangle(0, 0, w/2, 4)
@@ -689,8 +674,6 @@ class MonitorWidget:
             cr.rectangle(w/2, 0, w/2, 4)
             cr.fill()
 
-            match_tc_x = (w/2) + TC_RIGHT_SIDE_PAD
-            edit_tc_x = (w/2) - TC_LEFT_SIDE_PAD
             delta_frames_x = (w/2) - 20
             # move left for every additional digit after ones
             CHAR_WIDTH = 12
@@ -700,17 +683,6 @@ class MonitorWidget:
         cr.select_font_face ("monospace", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
         cr.set_font_size(21)
 
-        if self.match_frame != -1:
-            match_tc = utils.get_tc_string(self.match_frame + self.edit_delta)
-            cr.move_to(match_tc_x, TC_HEIGHT)
-            cr.show_text(match_tc)
-        
-        if self.edit_tline_frame != -1 or self.edit_clip_start_on_tline != -1:
-            clip_frame = self.edit_tline_frame - self.edit_clip_start_on_tline
-            edit_tc = utils.get_tc_string(clip_frame)
-            cr.move_to(edit_tc_x, TC_HEIGHT)
-            cr.show_text(edit_tc)
-        
         if self.edit_delta != None:
             cr.move_to(delta_frames_x, TC_HEIGHT + 30)
             cr.show_text(str(self.edit_delta))
@@ -733,9 +705,7 @@ class MonitorWidget:
             cr.set_source_rgb(*MONITOR_INDICATOR_COLOR_MATCH)
             cr.rectangle(0, 0, w/2, 4)
             cr.fill()
-                  
-            match_tc_x = (w/2) - TC_LEFT_SIDE_PAD
-            edit_tc_x = (w/2) + TC_RIGHT_SIDE_PAD
+
             delta_frames_x = (w/2) + 8
         elif self.view == SLIP_TRIM_LEFT_ACTIVE_VIEW:
             cr.rectangle(0, 0, w/2, 4)
@@ -743,15 +713,12 @@ class MonitorWidget:
             cr.set_source_rgb(*MONITOR_INDICATOR_COLOR_MATCH)
             cr.rectangle(w/2, 0, w/2, 4)
             cr.fill()
-            
-            match_tc_x = (w/2) + TC_RIGHT_SIDE_PAD
-            edit_tc_x = (w/2) - TC_LEFT_SIDE_PAD
+
             delta_frames_x = (w/2) - 20
             # move left for every additional digit after ones
             CHAR_WIDTH = 12
             delta_frames_x = delta_frames_x - ((len(str(self.edit_delta)) - 1) * CHAR_WIDTH)
 
-        
         cr.set_source_rgb(0.9, 0.9, 0.9)
         cr.select_font_face ("monospace", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
         cr.set_font_size(21)
@@ -766,30 +733,7 @@ class MonitorWidget:
             if disp_match_frame >= self.slip_clip_media_length:
                 delta_corr = disp_match_frame - self.slip_clip_media_length - 1
                 disp_match_frame = self.slip_clip_media_length - 1
-            
-            match_tc = utils.get_tc_string(disp_match_frame)
-            cr.move_to(match_tc_x, TC_HEIGHT)
-            cr.show_text(match_tc)
-        
-        if self.edit_tline_frame != -1 or self.edit_clip_start_on_tline != -1:
-            clip_frame = self.edit_tline_frame - self.edit_clip_start_on_tline
 
-            if self.view == SLIP_TRIM_RIGHT_ACTIVE_VIEW:
-                if clip_frame > self.slip_clip_media_length - 1:
-                    clip_frame = self.slip_clip_media_length - 1
-                if clip_frame < self.slip_clip_length - 1:
-                    clip_frame = self.slip_clip_length - 1
-            else:
-                clip_frame = clip_frame + 1
-                if clip_frame > self.slip_clip_media_length - self.slip_clip_length + 2:
-                    clip_frame = self.slip_clip_media_length - self.slip_clip_length + 2
-                if clip_frame < 0:
-                    clip_frame = 0
-
-            edit_tc = utils.get_tc_string(clip_frame)
-            cr.move_to(edit_tc_x, TC_HEIGHT)
-            cr.show_text(edit_tc)
-        
         if self.edit_delta != None:
             cr.move_to(delta_frames_x, TC_HEIGHT + 30)
             cr.show_text(str(-self.edit_delta + delta_corr))
