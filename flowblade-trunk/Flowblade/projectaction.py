@@ -671,8 +671,18 @@ def remove_save_icon():
 
 def open_recent_project(widget, index):
     path = editorpersistance.recent_projects.projects[index]
-    dialogs.exit_confirm_dialog(_open_recent_shutdown_dialog_callback, get_save_time_msg(), gui.editor_window.window, editorstate.PROJECT().name, path)
+    if _project_empty() == True:
+        _actually_open_recent(path)
+    else:
+        dialogs.exit_confirm_dialog(_open_recent_shutdown_dialog_callback, get_save_time_msg(), gui.editor_window.window, editorstate.PROJECT().name, path)
 
+def _project_empty():
+    for seq in PROJECT().sequences:
+        if not seq.is_empty():
+            return False
+    
+    return True
+    
 def _open_recent_shutdown_dialog_callback(dialog, response_id, path):
     dialog.destroy()
     
@@ -689,7 +699,10 @@ def _open_recent_shutdown_dialog_callback(dialog, response_id, path):
             return
     else: # "Cancel"
         return
-        
+    
+    _actually_open_recent(path)
+
+def _actually_open_recent(path):
     if not os.path.exists(path):
         editorpersistance.recent_projects.projects.pop(index)
         editorpersistance.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)

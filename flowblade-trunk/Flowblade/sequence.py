@@ -365,6 +365,14 @@ class Sequence:
                 return False
         return True
 
+    def is_empty(self):
+        for i in range (1, len(self.tracks) - 1):
+            track = self.tracks[i]
+            if len(track.clips) > 0:
+                return False
+        
+        return True
+
     # -------------------------------------------------- clips
     def create_file_producer_clip(self, path, new_clip_name=None, novalidate=False):
         """
