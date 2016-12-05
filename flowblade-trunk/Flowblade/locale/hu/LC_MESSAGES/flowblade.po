@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-30 11:16+0200\n"
+"POT-Creation-Date: 2016-12-05 10:12+0200\n"
 "PO-Revision-Date: 2016-08-04 21:35+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
@@ -29,11 +29,11 @@ msgstr "A minimális képernyőfelbontás ezen alkalmazás számára 1152 x 768.
 msgid "Your screen dimensions are "
 msgstr "Az ön képernyőjének felbontása "
 
-#: app.py:795 projectaction.py:363 projectaction.py:678
+#: app.py:795 projectaction.py:366 projectaction.py:696
 msgid "Project has not been saved previously"
 msgstr "A projekt korábban még nem volt mentve"
 
-#: app.py:796 projectaction.py:364 projectaction.py:679
+#: app.py:796 projectaction.py:367 projectaction.py:697
 msgid "Save project with File -> Save As before closing."
 msgstr ""
 "Mentse a projektet a Fájl -> Mentés másként menüpont használatával mielőtt "
@@ -101,11 +101,11 @@ msgstr ""
 msgid "Opening"
 msgstr "Megnyitás"
 
-#: projectaction.py:273
+#: projectaction.py:276
 msgid "Media files already present in project were opened!"
 msgstr "A projektben már jelenlévő fájlok lettek megnyitva!"
 
-#: projectaction.py:279
+#: projectaction.py:282
 msgid ""
 "Files already present:\n"
 "\n"
@@ -113,11 +113,11 @@ msgstr ""
 "Már jelenlévő fájlok:\n"
 "\n"
 
-#: projectaction.py:478
+#: projectaction.py:481
 msgid "Selected folder contains files"
 msgstr "A választott könyvtár fájlokat tartalmaz"
 
-#: projectaction.py:479
+#: projectaction.py:482
 msgid ""
 "When saving a back-up snapshot of the project, the selected folder\n"
 "has to be empty."
@@ -125,72 +125,72 @@ msgstr ""
 "Egy projekt állapotának mentésekor a választott mappának\n"
 "üresnek kell lennie."
 
-#: projectaction.py:545
+#: projectaction.py:553
 msgid "Copying project media assets"
 msgstr "A projekt média összetevőinek másolása"
 
-#: projectaction.py:546
+#: projectaction.py:554
 msgid "Saving project file"
 msgstr "Projekt fájl mentése"
 
-#: projectaction.py:688
+#: projectaction.py:709
 msgid "Project not found on disk"
 msgstr "A projekt nem található a lemezen"
 
-#: projectaction.py:689
+#: projectaction.py:710
 msgid "Project can't be loaded."
 msgstr "A projekt nem tölthető be."
 
-#: projectaction.py:697
+#: projectaction.py:718
 msgid "Project has not been saved since it was opened."
 msgstr "A projekt még nem volt mentve a megnyitás óta."
 
-#: projectaction.py:702
+#: projectaction.py:723
 msgid "Project was saved less than a minute ago."
 msgstr "A projekt kevesebb mint egy perce volt mentve"
 
-#: projectaction.py:705
+#: projectaction.py:726
 msgid "Project was saved one minute ago."
 msgstr "A projekt egy perce volt mentve."
 
-#: projectaction.py:707
+#: projectaction.py:728
 msgid "Project was saved "
 msgstr "A projekt mentése "
 
-#: projectaction.py:707
+#: projectaction.py:728
 msgid " minutes ago."
 msgstr " perce történt."
 
-#: projectaction.py:761
+#: projectaction.py:782
 msgid "Render launch failed!"
 msgstr "Nem sikerült elindítani a renderelést!"
 
-#: projectaction.py:762 projectaction.py:776 tools/batchrendering.py:299
+#: projectaction.py:783 projectaction.py:797 tools/batchrendering.py:299
 msgid "Error message: "
 msgstr "Hibaüzenet: "
 
-#: projectaction.py:775
+#: projectaction.py:796
 msgid "Adding item to render queue failed!"
 msgstr "Nem sikerült hozzáadni az elemet a renderelés várólistájához!"
 
-#: projectaction.py:794
+#: projectaction.py:815
 msgid "Open.."
 msgstr "Megnyitás..."
 
-#: projectaction.py:824
+#: projectaction.py:845
 msgid "No file was selected"
 msgstr "Nem lett fájl kiválasztva"
 
-#: projectaction.py:824
+#: projectaction.py:845
 msgid "Select a numbered file to add an Image Sequence to Project."
 msgstr ""
 "Válasszon egy sorszámozott fájlt, hogy képsorozatot adjon a projekthez."
 
-#: projectaction.py:832
+#: projectaction.py:853
 msgid "Not a sequence file!"
 msgstr "Nem jelenetfájl!"
 
-#: projectaction.py:832
+#: projectaction.py:853
 msgid ""
 "Selected file does not have a number part in it,\n"
 "so it can't be an image sequence file."
@@ -198,52 +198,52 @@ msgstr ""
 "A kiválasztott fájl nem tartalmaz számot a nevében,\n"
 "így nem is lehet képsorozat része."
 
-#: projectaction.py:883
+#: projectaction.py:904
 msgid "Can't make home folder thumbnails folder"
 msgstr "A \"Saját mappa\" nem állítható be a bélyegképek mappájaként"
 
-#: projectaction.py:884 dialogs.py:361
+#: projectaction.py:905 dialogs.py:361
 msgid "Please create and select some other folder then '"
 msgstr "Hozzon létre és válasszon egy másik mappát e helyett '"
 
-#: projectaction.py:885
+#: projectaction.py:906
 msgid "' as thumbnails folder"
 msgstr "' a bélyegképek számára"
 
-#: projectaction.py:1002 projectaction.py:1004 projectaction.py:1013
-#: projectaction.py:1021 projectaction.py:1028
+#: projectaction.py:1023 projectaction.py:1025 projectaction.py:1034
+#: projectaction.py:1042 projectaction.py:1049
 msgid "N/A"
 msgstr "N/A"
 
-#: projectaction.py:1017 guicomponents.py:1745
+#: projectaction.py:1038 guicomponents.py:1745
 msgid "Yes"
 msgstr "Igen"
 
-#: projectaction.py:1019 guicomponents.py:1747
+#: projectaction.py:1040 guicomponents.py:1747
 msgid "No"
 msgstr "Nem"
 
-#: projectaction.py:1090
+#: projectaction.py:1111
 msgid "Can't remove a non-empty bin"
 msgstr "Nem üres rekeszek nem törölhetők"
 
-#: projectaction.py:1091
+#: projectaction.py:1112
 msgid "You must remove all files from the bin before deleting it."
 msgstr "Törölnie kell minden fájlt a rekeszből a rekesz törlése előtt."
 
-#: projectaction.py:1099
+#: projectaction.py:1120
 msgid "Can't remove last bin"
 msgstr "Az utolsó rekesz nem törölhető"
 
-#: projectaction.py:1100
+#: projectaction.py:1121
 msgid "There must always exist at least one bin."
 msgstr "Legalább egy rekesznek léteznie kell."
 
-#: projectaction.py:1186
+#: projectaction.py:1207
 msgid "Selected sequence is already being edited"
 msgstr "A kiválasztott jelenet már szerkesztés alatt áll"
 
-#: projectaction.py:1187
+#: projectaction.py:1208
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
@@ -251,11 +251,11 @@ msgstr ""
 "Válasszon egy másik jelenetet. Kattintson a hozzáadás gombra\n"
 "új jelenet létrehozásához."
 
-#: projectaction.py:1197 projectaction.py:1214 projectdata.py:196
+#: projectaction.py:1218 projectaction.py:1235 projectdata.py:196
 msgid "sequence_"
 msgstr "jelenet_"
 
-#: projectaction.py:1247
+#: projectaction.py:1268
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
@@ -263,19 +263,19 @@ msgstr ""
 "Biztosan törölni akarja\n"
 "a jelenetet: '"
 
-#: projectaction.py:1247
+#: projectaction.py:1268
 msgid "'?"
 msgstr "'?"
 
-#: projectaction.py:1248
+#: projectaction.py:1269
 msgid "This operation can not be undone. Sequence will be permanently lost."
 msgstr "Ez a művelet nem vonható vissza. A jelenet véglegesen elvész."
 
-#: projectaction.py:1263
+#: projectaction.py:1284
 msgid "Can't remove last sequence"
 msgstr "Az utolsó jelenet nem törölhető"
 
-#: projectaction.py:1264
+#: projectaction.py:1285
 msgid "There must always exist at least one sequence."
 msgstr "Mindig kell léteznie legalább egy jelenetnek."
 
