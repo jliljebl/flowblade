@@ -45,7 +45,7 @@ def export_clip(clip):
     # Write export data file
     natron_dir = utils.get_hidden_user_dir_path() + appconsts.NATRON_DIR + "/"
     file_path = natron_dir + "clipexport_" + md5.new(str(os.urandom(32))).hexdigest()
-    data_text = clip.path + " " + str(clip.clip_in) + " " + str(clip.clip_out)
+    data_text = clip.path + " " + str(clip.clip_in) + " " + str(clip.clip_out + 1)
     
     export_data_file = open(file_path, "w")
     export_data_file.write(data_text)

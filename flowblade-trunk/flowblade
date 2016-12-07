@@ -23,8 +23,8 @@
 import os
 import sys
 
-print "FLOWBLADE MOVIE EDITOR repository 1.9 repository"
-print "-------------------------------------"
+print "FLOWBLADE MOVIE EDITOR 1.10"
+print "---------------------------"
 
 
 # Get launch script dir

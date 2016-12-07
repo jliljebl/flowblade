@@ -1199,7 +1199,7 @@ def display_clip_popup_menu(event, clip, track, callback):
     _add_separetor(clip_menu)
     clip_menu.add(_get_select_menu_item(event, clip, track, callback))
         
-    if track.type == appconsts.VIDEO:
+    if track.type == appconsts.VIDEO and clip.media_type != appconsts.PATTERN_PRODUCER:
         _add_separetor(clip_menu)
         clip_menu.add(_get_match_frame_menu_item(event, clip, track, callback))
             

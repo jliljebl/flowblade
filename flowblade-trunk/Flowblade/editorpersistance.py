@@ -275,7 +275,7 @@ class EditorPreferences:
         self.trans_cover_delete = True
         # Jul-2016 - SvdB - For play/pause button
         self.play_pause = False
-        self.midbar_layout = appconsts.MIDBAR_COMPONENTS_CENTERED
+        self.midbar_layout = appconsts.MIDBAR_TC_LEFT
         self.global_layout = appconsts.SINGLE_WINDOW
         self.trim_view_default = appconsts.TRIM_VIEW_OFF
         self.trim_view_message_shown = False

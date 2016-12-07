@@ -439,7 +439,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         clip_start = trim_limits["from_start"]
 
     # Init trim view layout
-    if track.type == appconsts.VIDEO:
+    if track.type == appconsts.VIDEO and clip.media_type != appconsts.PATTERN_PRODUCER:
         if edit_data["to_side_being_edited"]:
             gui.monitor_widget.set_start_trim_view(edit_data["from_clip"], clip_start)
         else:
@@ -732,7 +732,7 @@ def set_tworoll_mode(track, current_frame = -1):
         clip_start = trim_limits["from_start"]
 
     # Init two roll trim view layout
-    if track.type == appconsts.VIDEO:
+    if track.type == appconsts.VIDEO and clip.media_type != appconsts.PATTERN_PRODUCER:
         if edit_data["to_side_being_edited"]:
             gui.monitor_widget.set_roll_trim_right_active_view(edit_data["from_clip"], clip_start)
         else:
@@ -1001,7 +1001,7 @@ def set_slide_mode(track, current_frame): # we need to change to to correct one 
     clip_start = 0 # we'll calculate the offset from actual position of clip on timeline to display the frame displayed after sliding
 
     # Init two roll trim view layout
-    if track.type == appconsts.VIDEO:
+    if track.type == appconsts.VIDEO and clip.media_type != appconsts.PATTERN_PRODUCER:
         if not start_frame_being_viewed:
             gui.monitor_widget.set_slip_trim_right_active_view(edit_data["clip"])
             gui.monitor_widget.set_edit_tline_frame(clip.clip_out, 0)

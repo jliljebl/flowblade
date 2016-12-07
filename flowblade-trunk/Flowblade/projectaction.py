@@ -242,6 +242,7 @@ class UpdateMediaLengthsThread(threading.Thread):
 
     def run(self):
         print "Updating media lengths:"
+
         Gdk.threads_enter()
         dialog = dialogs.update_media_lengths_progress_dialog()
         time.sleep(0.1)
@@ -268,6 +269,8 @@ class UpdateMediaLengthsThread(threading.Thread):
         Gdk.threads_enter()
         dialog.destroy()
         Gdk.threads_leave()
+        
+        print "Updating media lengths done."
         
 def _duplicates_info(duplicates):
     primary_txt = _("Media files already present in project were opened!")
@@ -506,13 +509,18 @@ def _change_project_profile_callback(dialog, response_id, profile_combo, out_fol
         name = project_name_entry.get_text()
         profile = mltprofiles.get_profile_for_index(profile_combo.get_active())
         path = folder + "/" + name
+
+        PROJECT().update_media_lengths_on_load = True # saved version needs to do this
         
         persistance.save_project(PROJECT(), path, profile.description()) #<----- HERE
+
+        PROJECT().update_media_lengths_on_load = False
 
         dialog.destroy()
     else:
         dialog.destroy()
-
+        
+""" Feature disabled, maybe reactivated later
 def change_profile_to_match_media(media_file):
     dialogs.change_profile_project_to_match_media_dialog(PROJECT(), media_file, _change_project_profile_to_match_media_callback)
 
@@ -532,7 +540,7 @@ def _change_project_profile_to_match_media_callback(dialog, response_id, match_p
         dialog.destroy()
     else:
         dialog.destroy()
-
+"""
 
 class SnaphotSaveThread(threading.Thread):
     
@@ -663,8 +671,18 @@ def remove_save_icon():
 
 def open_recent_project(widget, index):
     path = editorpersistance.recent_projects.projects[index]
-    dialogs.exit_confirm_dialog(_open_recent_shutdown_dialog_callback, get_save_time_msg(), gui.editor_window.window, editorstate.PROJECT().name, path)
+    if _project_empty() == True:
+        _actually_open_recent(path)
+    else:
+        dialogs.exit_confirm_dialog(_open_recent_shutdown_dialog_callback, get_save_time_msg(), gui.editor_window.window, editorstate.PROJECT().name, path)
 
+def _project_empty():
+    for seq in PROJECT().sequences:
+        if not seq.is_empty():
+            return False
+    
+    return True
+    
 def _open_recent_shutdown_dialog_callback(dialog, response_id, path):
     dialog.destroy()
     
@@ -681,7 +699,10 @@ def _open_recent_shutdown_dialog_callback(dialog, response_id, path):
             return
     else: # "Cancel"
         return
-        
+    
+    _actually_open_recent(path)
+
+def _actually_open_recent(path):
     if not os.path.exists(path):
         editorpersistance.recent_projects.projects.pop(index)
         editorpersistance.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
@@ -1326,8 +1347,8 @@ def media_file_menu_item_selected(widget, data):
         delete_media_files()
     if item_id == "Render Proxy File":
         proxyediting.create_proxy_menu_item_selected(media_file)
-    if item_id == "Project Profile":
-        change_profile_to_match_media(media_file)
+    #if item_id == "Project Profile":
+    #    change_profile_to_match_media(media_file)
 
 def _select_treeview_on_pos_and_return_row_and_column_title(event, treeview):
     selection = treeview.get_selection()

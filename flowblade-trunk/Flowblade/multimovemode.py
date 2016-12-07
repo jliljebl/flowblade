@@ -86,8 +86,8 @@ class MultimoveData:
                             track_max_deltas.append(0)
                             trim_blank_indexes.append(clip_index)
                         else:
-                            blank_clip_start_frame = track.clip_start(clip_index + 1)
-                            moved_clip_start_frame = track.clip_start(clip_index + 2)
+                            blank_clip_start_frame = track.clip_start(clip_index - 1)
+                            moved_clip_start_frame = track.clip_start(clip_index)
                             track_max_deltas.append(moved_clip_start_frame - blank_clip_start_frame)
                             trim_blank_indexes.append(clip_index - 1) 
                     continue
@@ -144,7 +144,7 @@ class MultimoveData:
         
         track_max_deltas[self.pressed_track_id - 1] = max_d
         self.trim_blank_indexes[self.pressed_track_id - 1] = trim_index
-        
+    
         # Smallest track delta is the max number of frames 
         # the edit can be done backwards
         if self.move_all_tracks:
