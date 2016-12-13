@@ -1,6 +1,6 @@
 # Flowblade Package Dependencies #
 
-| **Debian/Ubuntu package name** | **Description** | **Archlinux** |
+| **Debian/Ubuntu package name** | **Description** | **Archlinux packages** |
 |:-------------------------------|:----------------|:--------------|
 | python-gi | GTK3 Python bindings | pygtk |
 | python-mlt | MLT python bindings, this pulls in MLT | mlt-python-bindings |
