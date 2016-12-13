@@ -16,7 +16,7 @@ Appimage for this will release will become available in January and for all subs
 
 ###Trim View###
 
-Trim View is feature available in most commercial packages and now also in Flowblade, probably as the first FLOSS video editor. It is maybe best described just by a [screenshot.](./flowblade-trunk/docs/1-10_trimview.jpg). The advantages are clear: user is provided with more information when doing a trim and is thus able to better assess the correct cut frame within a single edit action.
+Trim View is feature available in most commercial packages and now also in Flowblade, probably as the first FLOSS video editor. It is maybe best described just by a [screenshot.](https://raw.githubusercontent.com/jliljebl/flowblade/master/flowblade-trunk/docs/1-10_trimview.jpg). The advantages are clear: user is provided with more information when doing a trim and is thus able to better assess the correct cut frame within a single edit action.
 
 Points on Trim View performance
 - for "Trim" tool the trim tool should mostly work quite well
@@ -30,8 +30,8 @@ For these reasons the **Trim View is off by default and needs to activated from 
 ###Frame Matching###
 
 Trim view layout also addresses a fundamental restriction of a single monitor layout: user is unable to compare video material to other material when deciding on a clip to add to a sequence. We now provide two mechanisms to help with this use case:
-- monitor frame matching, shown [here.](./flowblade-trunk/docs/1-10_trimview.jpg)
-- timeline frame matching, shown [here.](./flowblade-trunk/docs/1-10_trimview.jpg)
+- monitor frame matching, shown [here.](https://raw.githubusercontent.com/jliljebl/flowblade/master/flowblade-trunk/docs/1-10_monitor_match_frame.jpg)
+- timeline frame matching, shown [here.](https://raw.githubusercontent.com/jliljebl/flowblade/master/flowblade-trunk/docs/1-10-timeline_match_frame.jpg)
 
 ###Editing Improvements###
 
