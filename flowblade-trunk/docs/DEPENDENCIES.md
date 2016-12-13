@@ -1,23 +1,23 @@
 # Flowblade Package Dependencies #
 
-| **Debian/Ubuntu package name** | **Description** |
-|:-------------------------------|:----------------|
-| python-gi | GTK3 Python bindings |
-| python-mlt | MLT python bindings, this pulls in MLT |
-| python-dbus | dbus python bindings |
-| libmlt-data | Some image and text resources for MLT |
-| python 2.7 >=| Language and interpreter |
-| frei0r-plugins | Additional video filters |
-| swh-plugins | Additional audio filters |
-| python-gi-cairo | Gi Cairo bindings |
-| python-numpy | Math and arrays library |
-| python-pil | PIL image manipulation library |
-| librsvg2-common | svg support |
-| gmic | framework for image processing |
-| gir1.2-glib-2.0 | Glib |
-| gir1.2-gtk-3.0 | Gtk toolkit |
-| gir1.2-pango-1.0 | Pango text lib |
-| gir1.2-gdkpixbuf-2.0 | Image support |
+| **Debian/Ubuntu package name** | **Description** | **Archlinux** |
+|:-------------------------------|:----------------|:--------------|
+| python-gi | GTK3 Python bindings | pygtk |
+| python-mlt | MLT python bindings, this pulls in MLT | mlt-python-bindings |
+| python-dbus | dbus python bindings | python2-dbus |
+| libmlt-data | Some image and text resources for MLT | mlt |
+| python 2.7 >=| Language and interpreter | python2 |
+| frei0r-plugins | Additional video filters | movit, frei0r-plugins |
+| swh-plugins | Additional audio filters | sox, swh-plugins |
+| python-gi-cairo | Gi Cairo bindings | python2-gobject |
+| python-numpy | Math and arrays library | python2-numpy |
+| python-pil | PIL image manipulation library | python2-pillow |
+| librsvg2-common | svg support | python2-rsvg |
+| gmic | framework for image processing | gmic |
+| gir1.2-glib-2.0 | Glib | dbus-glib |
+| gir1.2-gtk-3.0 | Gtk toolkit | gtk3 |
+| gir1.2-pango-1.0 | Pango text lib | pango |
+| gir1.2-gdkpixbuf-2.0 | Image support | gdk-pixbuf2 |
 
 # Dropped  Dependencies #
 
