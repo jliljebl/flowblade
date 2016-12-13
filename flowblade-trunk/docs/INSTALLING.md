@@ -29,6 +29,8 @@ You may need to give some additional commands on terminal:
 
 Release has been install tested on: <b>Ubuntu 16.04</b>. <b>Linux Mint 18</b>. It should work on all recent Debian based distributions.
 
+<b>NOTE: Running a KDEnlive PPA on Ubuntu may cause an uncompatible MLT to be installed and prevent Flowblade from running, more <a href="https://plus.google.com/105369302467641615295/posts/QSKQoPtbLKg">here.</a></b> 
+
 ### Installing from your OS repository
 
 The easiest way to install Flowblade is using the version in your OS repository. The downside is that **the version available may not be the current latest release**. Contact your OS to get latest Flowblade included in repositories if not already available.
