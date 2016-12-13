@@ -1,5 +1,79 @@
 # Release Notes #
 
+##Flowblade 1.10##
+
+Date: December 13, 2016
+
+**Flowblade 1.10** is the thirteenth release of Flowblade.
+
+This cycle was a nice change in the sense that not much time was needed on project structural issues such as porting to GTK3 or creating a website.
+
+The main feature in this release is the new Trim View, with the additional features being focused on editing and some GUI updates.
+
+Next release cycle will focus on improved tool integration with the goal of providing more convenient and efficient ways to manipulate and create media within Flowblade in concert with other existing FLOSS tools. Some new editing tools and options will also be worked on, as well as bug fixes and feature requests in the Issues list.
+
+Appimage for this will release will become available in January and for all subsequent releases it will be available at release date.
+
+###Trim View###
+
+Trim View is feature available in most commercial packages and now also in Flowblade, probably as the first FLOSS video editor. It is maybe best described just by a [screenshot.](./flowblade-trunk/docs/1-10_trimview.jpg). The advantages are clear: user is provided with more information when doing a trim and is thus able to better assess the correct cut frame within a single edit action.
+
+Points on Trim View performance
+- for "Trim" tool the trim tool should mostly work quite well
+- for "Roll" and "Slip" tools there is no getting around the fact that two video streams need to be displayed in real time. The following performance considerations apply:
+    - SSDs perform better the spinning hard disks
+    - faster processors improve playback
+    - video streams like image sequences consisting fully of I-frames perform better than streams with a lot of B- and P-frames
+
+For these reasons the **Trim View is off by default and needs to activated from menu below the monitor**. Users are advised to assess for themselves if performance is satisfactory for system and media they are working on
+
+###Frame Matching###
+
+Trim view layout also addresses a fundamental restriction of a single monitor layout: user is unable to compare video material to other material when deciding on a clip to add to a sequence. We now provide two mechanisms to help with this use case:
+- monitor frame matching, shown [here.](./flowblade-trunk/docs/1-10_trimview.jpg)
+- timeline frame matching, shown [here.](./flowblade-trunk/docs/1-10_trimview.jpg)
+
+###Editing Improvements###
+
+- a "Delete Range" button is now provided to cut and lift material inside selected range on all tracks
+- Filters in filter stack can now be rearranged
+- Spacer tool got some bug fixes improving its usabily
+- User can now select all clips before or after a clip on timeline using a popup menu option.
+
+
+###Export from timeline to tools###
+- timeline clips can be now exported with frame range preserved to G'MIX Effects Tool, Slow/Fast Motion renderer and Natron if it is installed in the system.
+
+###Dualmonitor and small screens improvements###
+- dual monitor support has been improved by providing a to window layout shown [here.](https://raw.githubusercontent.com/jliljebl/flowblade/master/flowblade-trunk/docs/1-10_dual_monitor.jpg)
+- small screen sizes support has been updated with multiple bug fixes and feature additions.
+
+###GUI updates###
+- Monitor area layout was updated with the main goal of providing clearer visual cues wheather Timeline or Clip is displayed in the monitor by making the selection buttons much bigger.
+- Middlebar got some minor visual updates
+
+###German translation update###
+- German translation received an updatae from Mario Dejanovic.
+
+###Other bugfixes and improvements###
+- Make render args available for small screen heights
+- Make Master Audio Meter available for small screen heights 
+- Fix displayed media lengths for old and changed profile projects
+- Ask for exit confirmation when opening non-empty projects from recents list
+- Add 7/2 and 2/7 track configurations whencreating new projects
+- Trim init optimization
+- Fix adding watermark dialog freeze
+- Show file name in media item tooltip
+- Add track active set actions to all tracks menu
+- Make Media Relinker remember last folder
+- Make Media Icons display length at bottom and range at top
+- Remember fade/transition lengths between dialog invocations
+- Make holding down Shift key snap to X or Y in compositor editors
+- Update track lock icon
+- Menu actions to turn all filters in timeline on/off
+- Make Home key move to timeline start
+
+
 ## Flowblade 1.8 ##
 
 **Date: September 19, 2016**
