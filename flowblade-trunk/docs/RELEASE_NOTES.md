@@ -53,7 +53,7 @@ Trim view layout also addresses a fundamental restriction of a single monitor la
 - Middlebar got some minor visual updates
 
 ###German translation update###
-- German translation received an updatae from Mario Dejanovic.
+- German translation received an update from Mario Dejanovic.
 
 ###Other bugfixes and improvements###
 - Make render args available for small screen heights
