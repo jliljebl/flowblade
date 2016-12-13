@@ -44,7 +44,7 @@ Trim view layout also addresses a fundamental restriction of a single monitor la
 ###Export from timeline to tools###
 - timeline clips can be now exported with frame range preserved to G'MIX Effects Tool, Slow/Fast Motion renderer and Natron if it is installed in the system.
 
-###Dualmonitor and small screens improvements###
+###Dual monitor and small screens improvements###
 - dual monitor support has been improved by providing a to window layout shown [here.](https://raw.githubusercontent.com/jliljebl/flowblade/master/flowblade-trunk/docs/1-10_dual_monitor.jpg)
 - small screen sizes support has been updated with multiple bug fixes and feature additions.
 
