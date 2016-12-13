@@ -29,7 +29,7 @@ You may need to give some additional commands on terminal:
 
 Release has been install tested on: <b>Ubuntu 16.04</b>. <b>Linux Mint 18</b>. It should work on all recent Debian based distributions.
 
-<b>NOTE: Running a KDEnlive PPA on Ubuntu may cause an uncompatible MLT to be installed and prevent Flowblade from running, more <a href="https://plus.google.com/u/0/102624418925189345577/posts/7ANDDW3hzHB?sfc=true">here.</a></b> 
+<b>NOTE: Running a KDEnlive PPA on Ubuntu may cause an uncompatible MLT to be installed and prevent Flowblade from running, more <a href="https://plus.google.com/u/0/102624418925189345577/posts/7ANDDW3hzHB?sfc=true">here.</a> Update to MLT 6.4.1 or remove KDEnlive PPA.</b> 
 
 ### Installing from your OS repository
 
