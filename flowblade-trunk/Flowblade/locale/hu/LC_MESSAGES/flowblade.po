@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-07 11:35+0100\n"
-"PO-Revision-Date: 2016-11-30 08:12+0100\n"
+"POT-Creation-Date: 2016-12-16 08:22+0100\n"
+"PO-Revision-Date: 2016-12-16 08:22+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
 "Language: hu-HU\n"
@@ -1043,7 +1043,7 @@ msgstr "Ikonok ismételt létrehozása"
 
 #: dialogs.py:667
 msgid "Update media lengths data"
-msgstr ""
+msgstr "Médiahossz adatok frissítése"
 
 #: dialogs.py:706
 msgid "Are you sure you want to delete these media files?"
@@ -1853,19 +1853,16 @@ msgid "Clear Match Frame"
 msgstr "Érintkező képkocka elrejtése"
 
 #: guicomponents.py:1430
-#, fuzzy
 msgid "Select"
 msgstr "Kiválasztás"
 
 #: guicomponents.py:1434
-#, fuzzy
 msgid "All Clips After"
-msgstr "Minden rákövetkező klip"
+msgstr "Minden klip utána"
 
 #: guicomponents.py:1439
-#, fuzzy
 msgid "All Clips Before"
-msgstr "Minden megelőző klip"
+msgstr "Minden klip előtte"
 
 #: guicomponents.py:1449
 msgid "Export To Tool"
@@ -3887,7 +3884,7 @@ msgstr "Fényesség"
 
 #: translations.py:569
 msgid "Add Constant"
-msgstr ""
+msgstr "Állandó hozzáadása"
 
 #: translations.py:570
 msgid "Change Gamma"
@@ -5815,15 +5812,3 @@ msgid ""
 "options\n"
 "if performance is not satisfactory."
 msgstr ""
-
-#~ msgid "First frame"
-#~ msgstr "Első képkocka"
-
-#~ msgid "Last frame"
-#~ msgstr "Utolsó képkocka"
-
-#~ msgid "Icons and color optimized for:"
-#~ msgstr "Ikonok és színek igazítása ehhez:"
-
-#~ msgid "Phantom2D"
-#~ msgstr "Phantom2D"

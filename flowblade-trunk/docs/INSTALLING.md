@@ -4,7 +4,7 @@
 ### Installing using .deb package
 
 #### Step 1. Download and install .deb 
-**First download .deb file** for Flowblade 1.8 from <a href="https://www.dropbox.com/s/onrdoivia6t0rjd/flowblade-1.8.0-1_all.deb?dl=0">here.</a>
+**First download .deb file** for Flowblade 1.10 from <a href="https://github.com/jliljebl/flowblade/releases">here.</a>
 
 Double click on <b>.deb</b> file to install it. 
 
@@ -14,10 +14,10 @@ On some systems double clicking may not work (on Ubuntu it has sometimes istalle
 	<li>	<p>Open terminal in the directory you saved the  downloaded <b>.deb</b> file. Give command:	</li>
 </ul>
 ```bash
-sudo dpkg -i ./flowblade-1.8.0-1_all.deb
+sudo dpkg -i ./flowblade-1.10.0-1_all.deb
 ```
 
-#### Step 2. Give some additional commands on terminal
+#### OPTIONAL Step 2. Give some additional commands on terminal
 
 You may need to give some additional commands on terminal:
 <ul>
@@ -27,16 +27,9 @@ You may need to give some additional commands on terminal:
 	sudo apt-get install -f
 ```
 
-Release has been install tested on: <b>Ubuntu 16.04</b>. <b>Linux Mint 18</b> and <b>Debian 8</b>. It should work on all recent Debian based distributions.
+Release has been install tested on: <b>Ubuntu 16.04</b>. <b>Linux Mint 18</b>. It should work on all recent Debian based distributions.
 
-<b>NOTE: Running a KDEnlive PPA on Ubuntu may cause an uncompatible MLT to be installed and prevent Flowblade from running, more <a href="https://plus.google.com/105369302467641615295/posts/QSKQoPtbLKg">here.</a></b> 
-
-*Please note these issues with Dropbox download:*
-<ul>
- <li> <i>The download button may appear grayed out and you have to press it twice.</i></li>
- <li> <i>A window may appear that asks you to create an account, but you can close it and press Download button again.</i></li> 
- <li> <i>The .deb file is in a Dropbox Public folder and may go over download limit, please contact Project Owner if this happens.</i></li>
-</ul>
+<b>NOTE: Running a KDEnlive PPA on Ubuntu may cause an uncompatible MLT to be installed and prevent Flowblade from running, more <a href="https://plus.google.com/u/0/102624418925189345577/posts/7ANDDW3hzHB?sfc=true">here.</a> Update to MLT 6.4.1 or remove KDEnlive PPA.</b> 
 
 ### Installing from your OS repository
 
@@ -65,12 +58,12 @@ yaourt -S flowblade-git
 
 Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install and run Flowblade without compiling anything.
 
-**First download 1.8 tar.gz** source archive file from <a href="https://www.dropbox.com/s/j0f1uzl2grsivzw/flowblade-1.8.0.tar.gz?dl=0">here.</a> 
+**First download tar.gz** source archive file from <a href="https://github.com/jliljebl/flowblade/releases">here.</a> 
 
   * Extract archive into a folder of your choosing
   * Install dependencies. See [Dependencies](DEPENDENCIES.md) doc for more information.
   * If you have Flowblade installed in your system, you probably have the dependencies installed, unless some new ones have been added.
-  * Launch by running script *.../flowblade-1.8.0/flowblade* that was created in the folder where archive was unpacked.
+  * Launch by running script *.../flowblade-1.10.0/flowblade* that was created in the folder where archive was unpacked.
   * Note that if you have Flowblade installed yu will need use full path to repository version or navigate to the folder containing launch script and use command "./flowblade" to launch repository version instead of installed version.
 
 *Please note these issues with Dropbox download:*
