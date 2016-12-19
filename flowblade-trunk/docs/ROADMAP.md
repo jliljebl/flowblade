@@ -36,7 +36,7 @@ Last updated: Dec. 2016
 - dedicated masking keying tool
 
 ## Tool integration
-- **Timeline Contaier Clips** with data on original media, tool program data, rendered media and rendered media offset known and saved. Combine with polling for automatic prompts for update on render completion.
+- **Timeline Container Clips** with data on original media, tool program data, rendered media and rendered media offset known and saved. Combine with polling for automatic prompts for update on render completion.
 - **Media Item creation** from ready made programs for e.g. text animations with Natron
 - Gimp, Inkscape, Audacity, Krita examined as **Timeline Container Clip** media creator programs
 
