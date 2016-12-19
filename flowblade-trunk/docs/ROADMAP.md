@@ -33,7 +33,7 @@ Last updated: Dec. 2016
 
 - multispeed reversed clips tool
 - Titler tool improvements: drop shadow with blur color outline.
-- dedicated masking keying tool
+- dedicated masking/keying tool
 
 ## Tool integration
 - **Timeline Container Clips** with data on original media, tool program data, rendered media and rendered media offset known and saved. Combine with polling for automatic prompts for update on render completion.
