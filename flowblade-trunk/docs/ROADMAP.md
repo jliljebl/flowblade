@@ -4,7 +4,7 @@ Last updated: Dec. 2016
 
 ## Timeline Tools
 
-- **Sequence or Box Move Tool** Moves all clips contained in selected range or as defined by box selection as one group from multiple track. This will be the only multitrack edit tool available in Flowblade.
+- **Sequence or Box Move Tool** Moves all clips contained in selected range or as defined by box selection as one group from multiple tracks. This will be the only multitrack edit tool available in Flowblade.
 - **Ripple mode for trim tool** Moves all clips and compositors after trim point as long as no overwrites happen. This is *mode* for Trim tool and is to be toggled on and off.
 
 ## Animation
