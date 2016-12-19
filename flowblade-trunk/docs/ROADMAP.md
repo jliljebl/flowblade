@@ -16,7 +16,7 @@ Last updated: Dec. 2016
 
 ## Filters
 - **AVFilters** These are availaBLe in MLT 6.2.0. Color Channels Mixer and 3dLUT are the most interesting filters available
-- Contribute **Cairo filters for MLT**. Spotligt, animated producer, animated averlay filter, animated alpha and affine transform filter seem most interesting. Frei0r is not an adequate platform for some of these.
+- Contribute **Cairo filters for MLT**. Spotligt, animated producer, animated overlay filter, animated alpha and affine transform filter seem most interesting. Frei0r is not an adequate platform for some of these.
 - **Selective Filter Application**, this function allows user to apply any filter only inside an area defined by alpha filters. This can currently be simulated with two clips. Requires MLT contribution.
 
 ## Compositing
