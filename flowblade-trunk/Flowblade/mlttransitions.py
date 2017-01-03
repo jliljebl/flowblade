@@ -243,6 +243,7 @@ class CompositorTransition:
 
     def _set_affine_service_default_values(self):
         self.mlt_transition.set("distort",0)
+        #self.mlt_transition.set("fill",0)
         self.mlt_transition.set("automatic",1)
         self.mlt_transition.set("keyed",1)
    
