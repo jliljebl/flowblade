@@ -350,6 +350,14 @@ def _handle_tline_key_event(event):
             PLAYER().seek_frame(0)
             _move_to_beginning()
             return True
+
+        # END
+        if event.keyval == Gdk.KEY_End:
+            if PLAYER().is_playing():
+                monitorevent.stop_pressed()
+            PLAYER().seek_end()
+            _move_to_end()
+            return True
     else:
         # HOME
         if event.keyval == Gdk.KEY_Home:
@@ -359,6 +367,16 @@ def _handle_tline_key_event(event):
             gui.editor_window.set_mode_selector_to_mode()
             PLAYER().seek_frame(0)
             _move_to_beginning()
+            return True
+
+        # END
+        if event.keyval == Gdk.KEY_End:
+            if PLAYER().is_playing():
+                monitorevent.stop_pressed()
+            gui.editor_window.handle_insert_move_mode_button_press()
+            gui.editor_window.set_mode_selector_to_mode()
+            PLAYER().seek_end()
+            _move_to_end()
             return True
 
     return False
@@ -611,5 +629,7 @@ def _move_to_beginning():
     updater.repaint_tline()
     updater.update_tline_scrollbar()
     
-    
-    
+def _move_to_end():
+    updater.repaint_tline()
+    updater.update_tline_scrollbar()
+

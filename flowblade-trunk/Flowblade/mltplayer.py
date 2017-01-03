@@ -204,6 +204,11 @@ class Player:
         if update_gui:
             updater.update_frame_displayers(frame)
 
+    def seek_end(self, update_gui=True):
+        length = self.get_active_length()
+        last_frame = length - 1
+        self.seek_frame(last_frame, update_gui)
+
     def seek_and_get_rgb_frame(self, frame, update_gui=True):
         # Force range
         length = self.get_active_length()
