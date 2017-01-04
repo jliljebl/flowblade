@@ -120,6 +120,14 @@ def key_down(widget, event):
         _move_to_beginning()
         return True
 
+    # End
+    if event.keyval == Gdk.KEY_End:
+        if PLAYER().is_playing():
+            monitorevent.stop_pressed()
+        PLAYER().seek_end()
+        _move_to_end()
+        return True
+
     # Select all with CTRL + A in media panel
     if event.keyval == Gdk.KEY_a:
         if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
