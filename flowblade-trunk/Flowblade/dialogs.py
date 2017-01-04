@@ -1134,6 +1134,7 @@ def keyboard_shortcuts_dialog(parent_window):
     play_vbox.pack_start(_get_kb_row(_("Up Arrow"), _("Next Edit/Mark")), False, False, 0)
     play_vbox.pack_start(_get_kb_row(_("Down Arrow"), _("Prev Edit/Mark")), False, False, 0)
     play_vbox.pack_start(_get_kb_row(_("HOME"), _("Go To Start")), False, False, 0)
+    play_vbox.pack_start(_get_kb_row(_("END"), _("Go To End")), False, False, 0)
     play_vbox.pack_start(_get_kb_row(_("Shift + I"), _("To Mark In")), False, False, 0)
     play_vbox.pack_start(_get_kb_row(_("Shift + O"), _("To Mark Out")), False, False, 0)
     play = guiutils.get_named_frame(_("Playback"), play_vbox)
