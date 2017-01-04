@@ -264,7 +264,15 @@ def zoom_project_length():
     update_tline_scrollbar()
 
 def mouse_scroll_zoom(event):
-    if event.get_state() & Gdk.ModifierType.CONTROL_MASK:
+    do_zoom = True
+    if editorpersistance.prefs.mouse_scroll_action_is_zoom == False:
+        if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+            do_zoom = False
+    else:
+        if not(event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+            do_zoom = False
+
+    if do_zoom == True:
         adj = gui.tline_scroll.get_adjustment()
         incr = adj.get_step_increment()
         if event.direction == Gdk.ScrollDirection.UP:
