@@ -964,6 +964,7 @@ def delete_media_files(force_delete=False):
     bin_indexes.reverse()
     for i in bin_indexes:
         current_bin().file_ids.pop(i)
+    update_current_bin_files_count()
         
     # Delete from project
     for file_id in file_ids:
