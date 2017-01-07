@@ -176,7 +176,8 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     
     # Jul-2016 - SvdB - Added play_pause_button
     auto_play_in_clip_monitor_check, auto_center_check, grfx_insert_length_spin, \
-    trim_exit_click, trim_quick_enter, remember_clip_frame, overwrite_clip_drop, cover_delete, play_pause_button, mouse_scroll_action = edit_prefs_widgets
+        trim_exit_click, trim_quick_enter, remember_clip_frame, overwrite_clip_drop, cover_delete, \
+        play_pause_button, mouse_scroll_action, hide_file_ext_button = edit_prefs_widgets
     
     use_english, disp_splash, buttons_style, dark_theme, theme_combo, audio_levels_combo, window_mode_combo = view_prefs_widgets
 
@@ -197,6 +198,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.trans_cover_delete = cover_delete.get_active()
     # Jul-2016 - SvdB - For play/pause button
     prefs.play_pause = play_pause_button.get_active()
+    prefs.hide_file_ext = hide_file_ext_button.get_active()
     prefs.mouse_scroll_action_is_zoom = (mouse_scroll_action.get_active() == 0)
     
     prefs.use_english_always = use_english.get_active()

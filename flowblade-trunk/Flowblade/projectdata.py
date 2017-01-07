@@ -127,9 +127,14 @@ class Project:
         else: # For non-audio we need write a thumbbnail file and get file lengh while we're at it
              (icon_path, length, info) = thumbnailer.write_image(file_path)
 
+        # Hide file extension if enabled in user preferences
+        clip_name = file_name
+        if editorpersistance.prefs.hide_file_ext == True:
+            clip_name = name
+
         # Create media file object
         media_object = MediaFile(self.next_media_file_id, file_path, 
-                               file_name, media_type, length, icon_path, info)
+                                 clip_name, media_type, length, icon_path, info)
 
         self._add_media_object(media_object)
         
