@@ -117,6 +117,10 @@ def get_tc_string(frame):
     return get_tc_string_with_fps(frame, fps())
 
 def get_tc_string_with_fps(frame, frames_per_sec):
+    # convert fractional frame rates (like 23.976) into integers,
+    # otherwise the timeline will slowly drift over time
+    frames_per_sec = int(round(frames_per_sec))
+
     fr = frame % frames_per_sec
     sec = frame / frames_per_sec
     mins = sec / 60
