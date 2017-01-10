@@ -29,7 +29,7 @@ import guiutils
 import mltprofiles
 
 PREFERENCES_WIDTH = 730
-PREFERENCES_HEIGHT = 380
+PREFERENCES_HEIGHT = 440
 PREFERENCES_LEFT = 410
 
 select_thumbnail_dir_callback = None # app.py sets at start up
@@ -194,7 +194,11 @@ def _edit_prefs_panel():
     mouse_scroll_action.append_text(_("Zoom, Control to Scroll Horizontal"))
     mouse_scroll_action.append_text(_("Scroll Horizontal, Control to Zoom"))
     mouse_scroll_action.set_active(active)
-    
+
+    hide_file_ext_button = Gtk.CheckButton()
+    if hasattr(prefs, 'hide_file_ext'):
+        hide_file_ext_button.set_active(prefs.hide_file_ext)
+
     # Layout
     row1 = _row(guiutils.get_checkbox_row_box(auto_play_in_clip_monitor, Gtk.Label(label=_("Autoplay new Clips in Clip Monitor"))))
     row2 = _row(guiutils.get_checkbox_row_box(auto_center_on_stop, Gtk.Label(label=_("Center Current Frame on Playback Stop"))))
@@ -207,6 +211,7 @@ def _edit_prefs_panel():
     # Jul-2016 - SvdB - For play_pause button
     row10 = _row(guiutils.get_checkbox_row_box(play_pause_button, Gtk.Label(label=_("Enable single Play/Pause button"))))
     row11 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Mouse Middle Button Scroll Action")), mouse_scroll_action, PREFERENCES_LEFT))
+    row12 = _row(guiutils.get_checkbox_row_box(hide_file_ext_button, Gtk.Label(label=_("Hide file extensions when importing Clips"))))
     
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row5, False, False, 0)
@@ -220,13 +225,15 @@ def _edit_prefs_panel():
     # Jul-2016 - SvdB - For play_pause button
     vbox.pack_start(row10, False, False, 0)
     vbox.pack_start(row11, False, False, 0)
+    vbox.pack_start(row12, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
 
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     # Jul-2016 - SvdB - Added play_pause_button
     return vbox, (auto_play_in_clip_monitor, auto_center_on_stop, gfx_length_spin,
-                   trim_exit_on_empty, quick_enter_trim, remember_clip_frame, overwrite_clip_drop, cover_delete, play_pause_button, mouse_scroll_action)
+                  trim_exit_on_empty, quick_enter_trim, remember_clip_frame, overwrite_clip_drop, cover_delete,
+                  play_pause_button, mouse_scroll_action, hide_file_ext_button)
 
 def _view_prefs_panel():
     prefs = editorpersistance.prefs
