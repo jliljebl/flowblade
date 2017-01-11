@@ -1,4 +1,4 @@
-#/usr/bin/bash
+#!/bin/bash
 
 # Get language
 LANG=$1

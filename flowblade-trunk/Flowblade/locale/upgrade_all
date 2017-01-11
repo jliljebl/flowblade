@@ -1,4 +1,4 @@
-#/usr/bin/bash
+#!/bin/bash
 
 LANGUAGES=("fi" "cs" "fr" "es" "it" "de" "hu")
 
