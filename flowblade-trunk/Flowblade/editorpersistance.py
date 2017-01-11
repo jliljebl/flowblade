@@ -235,6 +235,9 @@ class EditorPreferences:
     """
 
     def __init__(self):
+        
+        # Every peference needs to have its default value set in this constuctor
+        
         self.open_in_last_opended_media_dir = True
         self.last_opened_media_dir = None
         self.img_length = 2000
