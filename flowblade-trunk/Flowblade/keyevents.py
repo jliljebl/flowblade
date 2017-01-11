@@ -247,6 +247,10 @@ def _handle_tline_key_event(event):
         medialog.log_range_clicked()
         return True
 
+    # R
+    if event.keyval == Gdk.KEY_r:
+        gui.editor_window.toggle_trim_ripple_mode()
+        return True
 
     # Key bindings for keyboard trimming
     if editorstate.current_is_active_trim_mode() == True:
@@ -339,8 +343,8 @@ def _handle_tline_key_event(event):
                 monitorevent.l_pressed()
             return True
 
-        # R
-        if event.keyval == Gdk.KEY_r:
+        # S
+        if event.keyval == Gdk.KEY_s:
             tlineaction.resync_button_pressed()
             return True
             

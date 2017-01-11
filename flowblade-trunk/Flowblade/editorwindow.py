@@ -87,7 +87,9 @@ TWOROLL_NO_EDIT_CURSOR = None
 SLIDE_CURSOR = None
 SLIDE_NO_EDIT_CURSOR = None
 MULTIMOVE_CURSOR = None
+ONEROLL_RIPPLE_CURSOR = None
 
+ONEROLL_TOOL = None
 
 def _b(button, icon, remove_relief=False):
     button.set_image(icon)
@@ -112,7 +114,8 @@ class EditorWindow:
         # Read cursors
         global INSERTMOVE_CURSOR, OVERWRITE_CURSOR, TWOROLL_CURSOR, ONEROLL_CURSOR, \
         ONEROLL_NO_EDIT_CURSOR, TWOROLL_NO_EDIT_CURSOR, SLIDE_CURSOR, SLIDE_NO_EDIT_CURSOR, \
-        MULTIMOVE_CURSOR, MULTIMOVE_NO_EDIT_CURSOR
+        MULTIMOVE_CURSOR, MULTIMOVE_NO_EDIT_CURSOR, ONEROLL_RIPPLE_CURSOR, ONEROLL_TOOL
+        
         INSERTMOVE_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insertmove_cursor.png")
         OVERWRITE_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "overwrite_cursor.png")
         TWOROLL_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "tworoll_cursor.png")
@@ -123,7 +126,9 @@ class EditorWindow:
         SLIDE_NO_EDIT_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "slide_noedit_cursor.png")
         MULTIMOVE_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "multimove_cursor.png")
         MULTIMOVE_NO_EDIT_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "multimove_cursor.png")
-
+        ONEROLL_RIPPLE_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "oneroll_cursor_ripple.png")
+        ONEROLL_TOOL = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "oneroll_tool.png")
+        
         # Window
         self.window = Gtk.Window(Gtk.WindowType.TOPLEVEL)
         self.window.set_icon_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
@@ -161,6 +166,7 @@ class EditorWindow:
             ('EditMenu', None, _('_Edit')),
             ('Undo', None, _('_Undo'), '<control>Z', None, undo.do_undo_and_repaint),
             ('Redo', None, _('_Redo'), '<control>Y', None, undo.do_redo_and_repaint),
+            ('RippleToggle', None, _('Trim Tool Ripple Mode On/Off'), 'R', None, lambda a:self.toggle_trim_ripple_mode()),
             ('Copy', None, _('Copy'), '<control>C', None, lambda a:tlineaction.do_timeline_objects_copy()),
             ('Paste', None, _('Paste'), '<control>V', None, lambda a:tlineaction.do_timeline_objects_paste()),
             ('PasteFilters', None, _('Paste Filters'), '<control><alt>V', None, lambda a:tlineaction.do_timeline_filters_paste()),
@@ -258,6 +264,8 @@ class EditorWindow:
                         <menuitem action='ThreepointOverWriteClip'/>
                         <menuitem action='RangeOverWriteClip'/>
                     </menu>
+                    <separator/>
+                    <menuitem action='RippleToggle'/>
                     <separator/>
                     <menuitem action='CutClip'/>
                     <separator/>
@@ -938,7 +946,7 @@ class EditorWindow:
         self.pos_bar.set_listener(mltplayer.seek_position_normalized)
 
     def _get_edit_buttons_row(self):
-        modes_pixbufs = [INSERTMOVE_CURSOR, OVERWRITE_CURSOR, ONEROLL_CURSOR, TWOROLL_CURSOR, SLIDE_CURSOR, MULTIMOVE_CURSOR]
+        modes_pixbufs = [INSERTMOVE_CURSOR, OVERWRITE_CURSOR, ONEROLL_CURSOR, ONEROLL_RIPPLE_CURSOR, TWOROLL_CURSOR, SLIDE_CURSOR, MULTIMOVE_CURSOR]
         middlebar.create_edit_buttons_row_buttons(self, modes_pixbufs)
     
         buttons_row = Gtk.HBox(False, 1)
@@ -992,6 +1000,11 @@ class EditorWindow:
         editevent.multi_mode_pressed()
         self.set_cursor_to_mode()
 
+    def toggle_trim_ripple_mode(self):
+        editorstate.trim_mode_ripple = (editorstate.trim_mode_ripple == False)
+        self.set_mode_selector_to_mode()
+        self.set_tline_cursor(editorstate.EDIT_MODE())
+        
     def mode_selector_pressed(self, selector, event):
         guicomponents.get_mode_selector_popup_menu(selector, event, self.mode_selector_item_activated)
     
@@ -1036,9 +1049,16 @@ class EditorWindow:
         elif mode == editorstate.TWO_ROLL_TRIM_NO_EDIT:
             cursor = self.get_own_cursor(display, TWOROLL_NO_EDIT_CURSOR, 11, 9)
         elif mode == editorstate.ONE_ROLL_TRIM:
-            cursor = self.get_own_cursor(display, ONEROLL_CURSOR, 9, 9)
+            if editorstate.trim_mode_ripple == False:
+                cursor = self.get_own_cursor(display, ONEROLL_CURSOR, 9, 9)
+            else:
+                cursor = self.get_own_cursor(display, ONEROLL_RIPPLE_CURSOR, 9, 9)
         elif mode == editorstate.ONE_ROLL_TRIM_NO_EDIT:
-            cursor = self.get_own_cursor(display, ONEROLL_NO_EDIT_CURSOR, 9, 9)
+            #cursor = self.get_own_cursor(display, ONEROLL_NO_EDIT_CURSOR, 9, 9)
+            if editorstate.trim_mode_ripple == False:
+                cursor = self.get_own_cursor(display, ONEROLL_NO_EDIT_CURSOR, 9, 9)
+            else:
+                cursor = self.get_own_cursor(display, ONEROLL_RIPPLE_CURSOR, 9, 9)
         elif mode == editorstate.SLIDE_TRIM:
             cursor = self.get_own_cursor(display, SLIDE_CURSOR, 9, 9)
         elif mode == editorstate.SLIDE_TRIM_NO_EDIT:
@@ -1059,20 +1079,21 @@ class EditorWindow:
             self.modes_selector.set_pixbuf(0)
         elif editorstate.EDIT_MODE() == editorstate.OVERWRITE_MOVE:
             self.modes_selector.set_pixbuf(1)
-        elif editorstate.EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
-            self.modes_selector.set_pixbuf(2)
-        elif editorstate.EDIT_MODE() == editorstate.ONE_ROLL_TRIM_NO_EDIT:
-            self.modes_selector.set_pixbuf(2)
+        elif editorstate.EDIT_MODE() == editorstate.ONE_ROLL_TRIM or editorstate.EDIT_MODE() == editorstate.ONE_ROLL_TRIM_NO_EDIT:
+            if editorstate.trim_mode_ripple == False:
+                self.modes_selector.set_pixbuf(2)
+            else:
+                self.modes_selector.set_pixbuf(3)
         elif editorstate.EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
-            self.modes_selector.set_pixbuf(3)
+            self.modes_selector.set_pixbuf(4)
         elif editorstate.EDIT_MODE() == editorstate.TWO_ROLL_TRIM_NO_EDIT:
-            self.modes_selector.set_pixbuf(3)
+            self.modes_selector.set_pixbuf(4)
         elif editorstate.EDIT_MODE() == editorstate.SLIDE_TRIM:
-            self.modes_selector.set_pixbuf(4)
-        elif editorstate.EDIT_MODE() == editorstate.SLIDE_TRIM_NO_EDIT:
-            self.modes_selector.set_pixbuf(4)
-        elif editorstate.EDIT_MODE() == editorstate.MULTI_MOVE:
             self.modes_selector.set_pixbuf(5)
+        elif editorstate.EDIT_MODE() == editorstate.SLIDE_TRIM_NO_EDIT:
+            self.modes_selector.set_pixbuf(5)
+        elif editorstate.EDIT_MODE() == editorstate.MULTI_MOVE:
+            self.modes_selector.set_pixbuf(6)
 
     def tline_cursor_leave(self, event):
         cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR)

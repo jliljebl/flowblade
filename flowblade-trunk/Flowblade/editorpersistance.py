@@ -284,4 +284,4 @@ class EditorPreferences:
         self.trim_view_message_shown = False
         self.exit_allocation_window_2 = (0, 0, 0, 0)
         self.mouse_scroll_action_is_zoom = True
-        
+        self.hide_file_ext = False
