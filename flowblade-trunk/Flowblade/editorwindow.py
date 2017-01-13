@@ -166,7 +166,6 @@ class EditorWindow:
             ('EditMenu', None, _('_Edit')),
             ('Undo', None, _('_Undo'), '<control>Z', None, undo.do_undo_and_repaint),
             ('Redo', None, _('_Redo'), '<control>Y', None, undo.do_redo_and_repaint),
-            ('RippleToggle', None, _('Trim Tool Ripple Mode On/Off'), None, None, lambda a:self.toggle_trim_ripple_mode()),
             ('Copy', None, _('Copy'), '<control>C', None, lambda a:tlineaction.do_timeline_objects_copy()),
             ('Paste', None, _('Paste'), '<control>V', None, lambda a:tlineaction.do_timeline_objects_paste()),
             ('PasteFilters', None, _('Paste Filters'), '<control><alt>V', None, lambda a:tlineaction.do_timeline_filters_paste()),
@@ -264,8 +263,6 @@ class EditorWindow:
                         <menuitem action='ThreepointOverWriteClip'/>
                         <menuitem action='RangeOverWriteClip'/>
                     </menu>
-                    <separator/>
-                    <menuitem action='RippleToggle'/>
                     <separator/>
                     <menuitem action='CutClip'/>
                     <separator/>
