@@ -410,10 +410,16 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
 
     _set_edit_data(track, edit_frame, True)
 
-    ripple_data = RippleData( track, edit_frame)
-    print ripple_data.__dict__
+    # Init ripple data if needed
+    ripple_data = None
+    if editorstate.trim_mode_ripple == True:
+        ripple_data = RippleData( track, edit_frame)
+        print ripple_data.__dict__
 
     global edit_data
+    # Add ripple data 
+    edit_data["ripple_data"] = ripple_data
+    
     # Set side being edited to default to-side
     edit_data["to_side_being_edited"] = to_side_being_edited
 
@@ -429,8 +435,12 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         return False
         
     # Give timeline widget needed data
-    tlinewidgets.set_edit_mode(edit_data,
-                               tlinewidgets.draw_one_roll_overlay)
+    if editorstate.trim_mode_ripple == False:
+        tlinewidgets.set_edit_mode(edit_data,
+                                   tlinewidgets.draw_one_roll_overlay)
+    else:
+        tlinewidgets.set_edit_mode(edit_data,
+                                   tlinewidgets.draw_one_roll_overlay_ripple)
 
     # Set clip as special producer on hidden track and display current frame 
     # from it.
@@ -680,6 +690,7 @@ class RippleData:
         self.trim_blank_indexes = []
         self.track_edit_ops = []
         self.track_affected = []
+        self.track_blank_end_offset = []
         self.legal_edit = True
         self._build_ripple_data()
 
@@ -706,10 +717,12 @@ class RippleData:
             if len(track.clips) < 2:
                 track_max_deltas.append(MAX_DELTA)
                 trim_blank_indexes.append(-1)
+                self.track_blank_end_offset.append(-1)
             else:
                 # Case: 2 - n clips
                 clip_index = current_sequence().get_clip_index(track, self.trim_frame)
                 first_frame_clip = track.clips[clip_index]
+                
                 #trim_frame = track.clip_start(clip_index)
                 #clip_last_frame = clip_first_frame + first_frame_clip
                 
@@ -717,12 +730,14 @@ class RippleData:
                 if clip_index == -1:
                     track_max_deltas.append(MAX_DELTA)
                     trim_blank_indexes.append(-1)
+                    self.track_blank_end_offset.append(-1)
                     continue
 
                 # Case: frame is on blank 
                 if first_frame_clip.is_blanck_clip:
                     track_max_deltas.append(track.clips[clip_index].clip_length())
                     trim_blank_indexes.append(clip_index)
+                    self.track_blank_end_offset.append(self.get_track_blank_end_offset(track, clip_index))
                 else:
                     # Case: frame is on media clip
                     
@@ -756,11 +771,12 @@ class RippleData:
                     if closest_blank_index == -1:
                         track_max_deltas.append(0)
                         trim_blank_indexes.append(clip_index)
+                        self.track_blank_end_offset.append(self.get_track_blank_end_offset(track, clip_index - 1))
                     # Case closet blank found
                     else:
                         track_max_deltas.append(track.clips[closest_blank_index].clip_length())
                         trim_blank_indexes.append(closest_blank_index)
-                        
+                        self.track_blank_end_offset.append(self.get_track_blank_end_offset(track, closest_blank_index))
 
         self.trim_blank_indexes = trim_blank_indexes
 
@@ -797,6 +813,11 @@ class RippleData:
         for i in range(1, len(tracks) - 1):
             self.track_affected.append(True)
         self.track_affected[self.pressed_track_id - 1] = True
+
+
+    def get_track_blank_end_offset(self, track, blank_index):
+        blank_end_frame = track.clip_start(blank_index + 1)
+        return blank_end_frame - self.trim_frame
 
 #---------------------------------------- TWO ROLL TRIM EVENTS
 def set_tworoll_mode(track, current_frame = -1):
