@@ -101,7 +101,9 @@ def _get_trim_limits(cut_frame, from_clip, to_clip):
     - clip handles on both sides of cut
     - clip ends on both sides of cut
     """
-    # This too complex now that roll is handled separately, could be reworked
+    # This is too complex now that roll is handled separately, could be reworked.
+    # "both_start", and "both_end" are no longer correct names for range variables since only one clip is
+    # needed taken into account when calculating legel trim range.
     trim_limits = {}
 
     if from_clip == None:
@@ -423,6 +425,19 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     # Set side being edited to default to-side
     edit_data["to_side_being_edited"] = to_side_being_edited
 
+    # Set start fframe bound for ripple mode edit
+    if editorstate.trim_mode_ripple == True:
+        ripple_start_bound = edit_frame - ripple_data.max_backwards
+
+        # Case: editing to-clip
+        if edit_data["to_side_being_edited"]:
+            if edit_data["trim_limits"]["to_start"] < ripple_start_bound:
+                edit_data["trim_limits"]["to_start"] = ripple_start_bound
+        # Case: editing from-clip
+        else:
+            if edit_data["trim_limits"]["both_start"] < ripple_start_bound: # name "both_start"] is artifact fromearlier when trimlimits were used for bot "trim and "roll" edits
+                edit_data["trim_limits"]["both_start"] = ripple_start_bound
+                
     current_sequence().clear_hidden_track()
 
     # Cant't trim a blank clip. Blank clips are special in MLT and can't be

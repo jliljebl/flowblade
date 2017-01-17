@@ -776,10 +776,10 @@ def draw_one_roll_overlay_ripple(cr, data):
     for i in range(1, len(current_sequence().tracks) - 1):
         offset = ripple_data.track_blank_end_offset[i-1]
         if offset == None:
-            #print "offset None"
+            print "offset None"
             continue
-        else: 
-            #print "offset not None"
+        #else: 
+        ##print "offset not None"
 
         indicator_frame = data["selected_frame"] + offset
         indicator_x = _get_frame_x(indicator_frame)
