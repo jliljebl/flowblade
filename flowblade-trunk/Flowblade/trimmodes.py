@@ -717,7 +717,7 @@ class RippleData:
             if len(track.clips) < 2:
                 track_max_deltas.append(MAX_DELTA)
                 trim_blank_indexes.append(-1)
-                self.track_blank_end_offset.append(-1)
+                self.track_blank_end_offset.append(None)
             else:
                 # Case: 2 - n clips
                 clip_index = current_sequence().get_clip_index(track, self.trim_frame)
@@ -730,7 +730,7 @@ class RippleData:
                 if clip_index == -1:
                     track_max_deltas.append(MAX_DELTA)
                     trim_blank_indexes.append(-1)
-                    self.track_blank_end_offset.append(-1)
+                    self.track_blank_end_offset.append(None)
                     continue
 
                 # Case: frame is on blank 
