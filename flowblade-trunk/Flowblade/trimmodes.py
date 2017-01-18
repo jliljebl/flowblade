@@ -45,6 +45,7 @@ loop_half_length = DEFAULT_LOOP_HALF_LENGTH
 
 # Data/state for ongoing edit.
 edit_data = None
+ripple_data = None
 
 # Flag for disabling mouse event
 mouse_disabled = False
@@ -413,6 +414,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     _set_edit_data(track, edit_frame, True)
 
     # Init ripple data if needed
+    global ripple_data
     ripple_data = None
     if editorstate.trim_mode_ripple == True:
         ripple_data = RippleData( track, edit_frame)
@@ -425,7 +427,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     # Set side being edited to default to-side
     edit_data["to_side_being_edited"] = to_side_being_edited
 
-    # Set start fframe bound for ripple mode edit
+    # Set start frame bound for ripple mode edits
     if editorstate.trim_mode_ripple == True:
         ripple_start_bound = edit_frame - ripple_data.max_backwards
 
@@ -585,39 +587,73 @@ def _do_one_roll_trim_edit(frame):
     # case: editing from-side of last clip
     global last_from_trimmed
     if last_from_trimmed:
-        data = {"track":edit_data["track_object"],
-                "index":edit_data["index"],
-                "clip":edit_data["from_clip"],
-                "delta":delta,
-                "undo_done_callback":clip_end_first_do_done,
-                "first_do":True}
-        action = edit.trim_last_clip_end_action(data)
         last_from_trimmed = False
-        action.do_edit()
+        if editorstate.trim_mode_ripple == False:
+            data = {"track":edit_data["track_object"],
+                    "index":edit_data["index"],
+                    "clip":edit_data["from_clip"],
+                    "delta":delta,
+                    "undo_done_callback":clip_end_first_do_done,
+                    "first_do":True}
+            action = edit.trim_last_clip_end_action(data)
+            last_from_trimmed = False
+            action.do_edit()
+        else:
+            data = {"track":edit_data["track_object"],
+                    "index":edit_data["index"],
+                    "clip":edit_data["from_clip"],
+                    "edit_delta":delta,
+                    "undo_done_callback":clip_end_first_do_done,
+                    "first_do":True,
+                    "multi_data":ripple_data}
+            action = edit.ripple_trim_last_clip_end_action(data)
+            action.do_edit()
         # Edit is reinitialized in callback from edit action one_roll_trim_undo_done
     # case: editing to-side of cut
     elif edit_data["to_side_being_edited"]:
-        data = {"track":edit_data["track_object"],
-                "index":edit_data["index"],
-                "clip":edit_data["to_clip"],
-                "delta":delta,
-                "undo_done_callback":one_roll_trim_undo_done,
-                "first_do":True}
-        action = edit.trim_start_action(data)
-        action.do_edit()
-        # Edit is reinitialized in callback from edit action one_roll_trim_undo_done
+        if editorstate.trim_mode_ripple == False:
+            data = {"track":edit_data["track_object"],
+                    "index":edit_data["index"],
+                    "clip":edit_data["to_clip"],
+                    "delta":delta,
+                    "undo_done_callback":one_roll_trim_undo_done,
+                    "first_do":True}
+            action = edit.trim_start_action(data)
+            action.do_edit()
+            # Edit is reinitialized in callback from edit action one_roll_trim_undo_done
+        else:
+            data = {"track":edit_data["track_object"],
+                    "index":edit_data["index"],
+                    "clip":edit_data["from_clip"],
+                    "edit_delta":delta,
+                    "undo_done_callback":one_roll_trim_undo_done,
+                    "first_do":True,
+                    "multi_data":ripple_data}
+            action = edit.ripple_trim_start_action(data)
+            action.do_edit()
     # case: editing from-side of cut
     else:
-        data = {"track":edit_data["track_object"],
-                "index":edit_data["index"] - 1,
-                "clip":edit_data["from_clip"],
-                "delta":delta,
-                "undo_done_callback":one_roll_trim_undo_done,
-                "first_do":True}
-        action = edit.trim_end_action(data)
-        action.do_edit()
-        # Edit is reinitialized in callback from edit action one_roll_trim_undo_done
-
+        if editorstate.trim_mode_ripple == False:
+            data = {"track":edit_data["track_object"],
+                    "index":edit_data["index"] - 1,
+                    "clip":edit_data["from_clip"],
+                    "delta":delta,
+                    "undo_done_callback":one_roll_trim_undo_done,
+                    "first_do":True}
+            action = edit.trim_end_action(data)
+            action.do_edit()
+            # Edit is reinitialized in callback from edit action one_roll_trim_undo_done
+        else:
+            data = {"track":edit_data["track_object"],
+                    "index":edit_data["index"] - 1,
+                    "clip":edit_data["from_clip"],
+                    "edit_delta":delta,
+                    "undo_done_callback":one_roll_trim_undo_done,
+                    "first_do":True,
+                    "multi_data":ripple_data}
+            action = edit.ripple_trim_end_action(data)
+            action.do_edit()
+            
 def oneroll_play_pressed():
     # Start trim preview playback loop
     current_sequence().hide_hidden_clips()

@@ -1120,6 +1120,168 @@ def _get_tracks_compositors_list():
     
     return tracks_list
 
+#-------------------------------------------- RIPPLE TRIM END
+# "track","clip","index","edit_delta","first_do","multi_data"
+# self.multi_data is trimmodes.RippleData
+def ripple_trim_end_action(data):
+    action = EditAction(_ripple_trim_end_undo, _ripple_trim_end_redo, data)
+    action.exit_active_trimmode_on_edit = False
+    action.update_hidden_track_blank = False
+    return action
+
+def _ripple_trim_end_undo(self):
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.clip, self.index,
+                 self.clip.clip_in, self.clip.clip_out - self.delta)
+    
+    _ripple_trim_blanks_undo(self)
+        
+def _ripple_trim_end_redo(self):
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.clip, self.index,
+                 self.clip.clip_in, self.clip.clip_out + self.edit_delta)
+
+    _ripple_trim_blanks_redo(self)
+     
+    # Reinit one roll trim
+    if self.first_do == True:
+        self.first_do = False
+        self.undo_done_callback(self.track, self.index + 1, False)
+
+#-------------------------------------------- RIPPLE TRIM START
+# "track","clip","index","edit_delta","first_do","multi_data"
+# self.multi_data is trimmodes.RippleData
+def ripple_trim_start_action(data):
+    action = EditAction(_ripple_trim_start_undo,_ripple_trim_start_redo, data)
+    action.exit_active_trimmode_on_edit = False
+    action.update_hidden_track_blank = False
+    return action
+
+def _ripple_trim_start_undo(self):
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.clip, self.index,
+                 self.clip.clip_in - self.edit_delta, self.clip.clip_out)
+
+    _ripple_trim_blanks_undo(self)
+
+def _ripple_trim_start_redo(self):
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.clip, self.index,
+                 self.clip.clip_in + self.edit_delta, self.clip.clip_out)
+
+    _ripple_trim_blanks_redo(self)
+    
+    # Reinit one roll trim, when used with clip start drag this is not needed
+    if  hasattr(self, "first_do") and self.first_do == True:
+        self.first_do = False
+        self.undo_done_callback(self.track, self.index, True)
+
+#------------------ RIPPLE TRIM LAST CLIP END
+# "track","clip","index","edit_delta","first_do","multi_data"
+# self.multi_data is trimmodes.RippleData
+def ripple_trim_last_clip_end_action(data): 
+    action = EditAction(_ripple_trim_last_clip_end_undo,_ripple_trim_last_clip_end_redo, data)
+    action.exit_active_trimmode_on_edit = False
+    action.update_hidden_track_blank = False
+    return action
+
+def _ripple_trim_last_clip_end_undo(self):
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.clip, self.index,
+                 self.clip.clip_in, self.clip.clip_out - self.edit_delta)
+
+    _ripple_trim_blanks_undo(self)
+
+def _ripple_trim_last_clip_end_redo(self):
+    print self.__dict__
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.clip, self.index,
+                 self.clip.clip_in, self.clip.clip_out + self.edit_delta)
+
+    _ripple_trim_blanks_redo(self)
+    
+    # Reinit one roll trim for continued trim mode, whenused with clip end drag this is not needed
+    if hasattr(self, "first_do") and self.first_do == True:
+        self.first_do = False
+        self.undo_done_callback(self.track)
+        
+# ----------------------------- RIPPLE TRIM BLANK UPDATE METHODS
+def _ripple_trim_blanks_undo(self):
+    track_moved = self.multi_data.track_affected    
+    tracks = current_sequence().tracks
+    for i in range(1, len(tracks) - 1):
+        if not track_moved[i - 1]:
+            continue
+        if self.track.id == i:
+            continue
+
+        track = tracks[i]
+        edit_op = self.multi_data.track_edit_ops[i - 1]        
+        trim_blank_index = self.multi_data.trim_blank_indexes[i - 1]
+        
+        if edit_op == appconsts.MULTI_NOOP:
+            continue
+        elif edit_op == appconsts.MULTI_TRIM:
+            blank_length = track.clips[trim_blank_index].clip_length()
+            _remove_clip(track, trim_blank_index) 
+            _insert_blank(track, trim_blank_index, blank_length - self.edit_delta)
+        elif edit_op == appconsts.MULTI_ADD_TRIM:
+            _remove_clip(track, trim_blank_index) 
+        elif edit_op == appconsts.MULTI_TRIM_REMOVE:
+            if self.edit_delta != -self.multi_data.max_backwards:
+                _remove_clip(track, trim_blank_index) 
+                
+            _insert_blank(track, trim_blank_index, self.orig_length)
+
+    tracks_compositors = _get_tracks_compositors_list()
+    for i in range(1, len(tracks) - 1):
+        if not track_moved[i - 1]:
+            continue
+        track_comp = tracks_compositors[i - 1]
+        for comp in track_comp:
+            if comp.clip_in >= self.multi_data.first_moved_frame + self.edit_delta:
+                comp.move(-self.edit_delta)
+
+def _ripple_trim_blanks_redo(self):
+    tracks = current_sequence().tracks
+    track_moved = self.multi_data.track_affected
+
+    # Move clips          
+    for i in range(1, len(tracks) - 1):
+        if not track_moved[i - 1]:
+            continue
+        if self.track.id == i:
+            continue
+            
+        track = tracks[i]
+        edit_op = self.multi_data.track_edit_ops[i - 1]        
+        trim_blank_index = self.multi_data.trim_blank_indexes[i - 1]
+        
+        if edit_op == appconsts.MULTI_NOOP:
+            continue
+        elif edit_op == appconsts.MULTI_TRIM:
+            blank_length = track.clips[trim_blank_index].clip_length()
+            _remove_clip(track, trim_blank_index) 
+            _insert_blank(track, trim_blank_index, blank_length + self.edit_delta)
+        elif edit_op == appconsts.MULTI_ADD_TRIM:
+            _insert_blank(track, trim_blank_index, self.edit_delta)
+        elif edit_op == appconsts.MULTI_TRIM_REMOVE:
+            self.orig_length = track.clips[trim_blank_index].clip_length()
+            _remove_clip(track, trim_blank_index) 
+            if self.edit_delta != -self.multi_data.max_backwards:
+                _insert_blank(track, trim_blank_index, self.orig_length + self.edit_delta)
+
+    # Move compositors
+    tracks_compositors = _get_tracks_compositors_list()
+    for i in range(1, len(tracks) - 1):
+        if not track_moved[i - 1]:
+            continue
+        track_comp = tracks_compositors[i - 1]
+        for comp in track_comp:
+            if comp.clip_in >= self.multi_data.first_moved_frame:
+                comp.move(self.edit_delta)
+
+
 #------------------ TRIM CLIP START
 # "track","clip","index","delta","first_do"
 # "undo_done_callback" <- THIS IS REALLY BADLY NAMED, IT SHOULD BE FIRST DO CALLBACK
