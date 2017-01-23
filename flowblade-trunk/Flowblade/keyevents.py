@@ -118,6 +118,17 @@ def key_down(widget, event):
             monitorevent.stop_pressed()
         PLAYER().seek_frame(0)
         _move_to_beginning()
+<<<<<<< HEAD
+=======
+        return True
+
+    # End
+    if event.keyval == Gdk.KEY_End:
+        if PLAYER().is_playing():
+            monitorevent.stop_pressed()
+        PLAYER().seek_end()
+        _move_to_end()
+>>>>>>> f543ab477c38c30102d2fd2c70c5fc597f930f88
         return True
 
     # Select all with CTRL + A in media panel
@@ -239,6 +250,10 @@ def _handle_tline_key_event(event):
         medialog.log_range_clicked()
         return True
 
+    # R
+    if event.keyval == Gdk.KEY_r:
+        gui.editor_window.toggle_trim_ripple_mode()
+        return True
 
     # Key bindings for keyboard trimming
     if editorstate.current_is_active_trim_mode() == True:
@@ -331,8 +346,8 @@ def _handle_tline_key_event(event):
                 monitorevent.l_pressed()
             return True
 
-        # R
-        if event.keyval == Gdk.KEY_r:
+        # S
+        if event.keyval == Gdk.KEY_s:
             tlineaction.resync_button_pressed()
             return True
             
@@ -349,6 +364,17 @@ def _handle_tline_key_event(event):
                 monitorevent.stop_pressed()
             PLAYER().seek_frame(0)
             _move_to_beginning()
+<<<<<<< HEAD
+=======
+            return True
+
+        # END
+        if event.keyval == Gdk.KEY_End:
+            if PLAYER().is_playing():
+                monitorevent.stop_pressed()
+            PLAYER().seek_end()
+            _move_to_end()
+>>>>>>> f543ab477c38c30102d2fd2c70c5fc597f930f88
             return True
     else:
         # HOME
@@ -359,6 +385,19 @@ def _handle_tline_key_event(event):
             gui.editor_window.set_mode_selector_to_mode()
             PLAYER().seek_frame(0)
             _move_to_beginning()
+<<<<<<< HEAD
+=======
+            return True
+
+        # END
+        if event.keyval == Gdk.KEY_End:
+            if PLAYER().is_playing():
+                monitorevent.stop_pressed()
+            gui.editor_window.handle_insert_move_mode_button_press()
+            gui.editor_window.set_mode_selector_to_mode()
+            PLAYER().seek_end()
+            _move_to_end()
+>>>>>>> f543ab477c38c30102d2fd2c70c5fc597f930f88
             return True
 
     return False
@@ -611,5 +650,12 @@ def _move_to_beginning():
     updater.repaint_tline()
     updater.update_tline_scrollbar()
     
+<<<<<<< HEAD
     
     
+=======
+def _move_to_end():
+    updater.repaint_tline()
+    updater.update_tline_scrollbar()
+
+>>>>>>> f543ab477c38c30102d2fd2c70c5fc597f930f88

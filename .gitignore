@@ -18,5 +18,8 @@ mlt.py
 *.jar
 
 # Phantom 2D contents
+/flowblade-trunk/Flowblade/phantom2d
 /flowblade-trunk/Flowblade/phantom2d/res
+/flowblade-trunk/Flowblade/phantom2d/phantom_build
+/flowblade-trunk/Flowblade/phantom2d/src
 

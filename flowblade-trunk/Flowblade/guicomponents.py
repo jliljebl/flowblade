@@ -2200,7 +2200,7 @@ def get_mode_selector_popup_menu(launcher, event, callback):
     menu_items.append(menu_item)
 
     menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "oneroll_cursor.png"), _("Trim"), callback, 2)
+        respaths.IMAGE_PATH + "oneroll_tool.png"), _("Trim"), callback, 2)
     menu_item.set_accel_path("<Actions>/WindowActions/OneRollMode")
     menu.add(menu_item)
     menu_items.append(menu_item)

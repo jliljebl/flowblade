@@ -762,7 +762,43 @@ def draw_one_roll_overlay(cr, data):
     cr.stroke()
 
     _draw_kb_trim_indicator(cr, selection_frame_x, track_y)
+
+def draw_one_roll_overlay_ripple(cr, data):
+    # Trim overlay
+    draw_one_roll_overlay(cr, data)
     
+    # Blanks indicators
+    ripple_data = data["ripple_data"]
+    
+    cr.set_line_width(2.0)
+    cr.set_source_rgb(*OVERLAY_COLOR)
+    
+    for i in range(1, len(current_sequence().tracks) - 1):
+        offset = ripple_data.track_blank_end_offset[i-1]
+        if offset == None:
+            print "offset None"
+            continue
+        #else: 
+        ##print "offset not None"
+
+        indicator_frame = data["selected_frame"] + offset
+        indicator_x = _get_frame_x(indicator_frame)
+        
+        track_height = current_sequence().tracks[i].height
+        track_y = _get_track_y(i)
+
+        cr.move_to(indicator_x, track_y)
+        cr.line_to(indicator_x, track_y + track_height)
+        cr.stroke()
+ 
+        draw_y = track_y + track_height / 2
+        cr.move_to(indicator_x - 2, draw_y)
+        cr.line_to(indicator_x - 2, draw_y - 5)
+        cr.line_to(indicator_x - 7, draw_y)
+        cr.line_to(indicator_x - 2, draw_y + 5)
+        cr.close_path()
+        cr.fill()
+
 def draw_slide_overlay(cr, data):
     track_height = current_sequence().tracks[data["track"]].height
     track_y = _get_track_y(data["track"])
@@ -1178,7 +1214,7 @@ class TimeLineCanvas:
         # Get clip indexes for clips overlapping first and last displayed frame.
         start = track.get_clip_index_at(int(pos))
         end = track.get_clip_index_at(int(pos + width / pix_per_frame))
-
+        print start, end
         width_frames = float(width) / pix_per_frame
 
         # Add 1 to end because range() last index exclusive 
@@ -1206,7 +1242,7 @@ class TimeLineCanvas:
                 
         # Draw clips in draw range
         for i in range(start, end):
-
+            print "track :", track.id, "index:", i
             clip = track.clips[i]
 
             # Get clip frame values
@@ -1715,6 +1751,7 @@ class TimeLineCanvas:
         cr.move_to(int(scale_in), 0, )
         cr.line_to(int(scale_in), int(match_frame_height) + 42)
         cr.stroke()
+<<<<<<< HEAD
 
         start_y = _get_track_y(match_frame_track_index)
         end_y = _get_track_y(match_frame_track_index - 1)
@@ -1745,6 +1782,38 @@ class TimeLineCanvas:
         cr = cairo.Context(scaled_icon)
         cr.scale(float(match_frame_width) / float(icon.get_width()), float(match_frame_height) / float(icon.get_height()))
 
+=======
+
+        start_y = _get_track_y(match_frame_track_index)
+        end_y = _get_track_y(match_frame_track_index - 1)
+        
+        cr.move_to (int(scale_in) + 8 * dir_mult, start_y)
+        cr.line_to (int(scale_in), start_y)
+        cr.line_to (int(scale_in), end_y + 1)
+        cr.line_to (int(scale_in) + 8 * dir_mult, end_y + 1)
+        cr.set_source_rgb(0.2, 0.2, 0.2)
+        cr.set_line_width(4.0)
+        cr.stroke()
+        
+    def create_match_frame_image_surface(self):
+        # Create non-scaled icon
+        matchframe_path = utils.get_hidden_user_dir_path() + appconsts.MATCH_FRAME
+        icon = cairo.ImageSurface.create_from_png(matchframe_path)
+
+        # Create and return scaled icon
+        allocation = canvas_widget.widget.get_allocation()
+        x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
+        profile_screen_ratio = float(PROJECT().profile.width()) / float(PROJECT().profile.height())
+        
+        global match_frame_width, match_frame_height
+        match_frame_height = h - 40
+        match_frame_width = match_frame_height * profile_screen_ratio
+    
+        scaled_icon = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(match_frame_width), int(match_frame_height))
+        cr = cairo.Context(scaled_icon)
+        cr.scale(float(match_frame_width) / float(icon.get_width()), float(match_frame_height) / float(icon.get_height()))
+
+>>>>>>> f543ab477c38c30102d2fd2c70c5fc597f930f88
         cr.set_source_surface(icon, 0, 0)
         cr.paint()
         

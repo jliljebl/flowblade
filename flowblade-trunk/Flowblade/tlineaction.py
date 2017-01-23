@@ -262,12 +262,12 @@ def _splice_out_done_update():
 def lift_button_pressed():
     """
     Removes 1 - n long continuous clip range from track and fills
-    the created gap with a black clip
+    the created gap with a blank clip
     """
     if movemodes.selected_track == -1:
         return
 
-    # Edit consumes selection, set clips seletion attr to false
+    # Edit consumes selection, set clips seletion attr to False
     movemodes.set_range_selection(movemodes.selected_track, 
                                   movemodes.selected_range_in,
                                   movemodes.selected_range_out, 

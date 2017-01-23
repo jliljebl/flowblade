@@ -45,6 +45,7 @@ loop_half_length = DEFAULT_LOOP_HALF_LENGTH
 
 # Data/state for ongoing edit.
 edit_data = None
+ripple_data = None
 
 # Flag for disabling mouse event
 mouse_disabled = False
@@ -70,6 +71,7 @@ KEYB_EDIT_ON = 2
 
 submode = NOTHING_ON
 
+MAX_DELTA = 100000000
 
 # ------------------------------------ module functions       
 def _get_trim_edit(track, frame):
@@ -100,7 +102,9 @@ def _get_trim_limits(cut_frame, from_clip, to_clip):
     - clip handles on both sides of cut
     - clip ends on both sides of cut
     """
-    # This too complex now that roll is handled separately, could be reworked
+    # This is too complex now that roll is handled separately, could be reworked.
+    # "both_start", and "both_end" are no longer correct names for range variables since only one clip is
+    # needed taken into account when calculating legel trim range.
     trim_limits = {}
 
     if from_clip == None:
@@ -409,10 +413,33 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
 
     _set_edit_data(track, edit_frame, True)
 
+    # Init ripple data if needed
+    global ripple_data
+    ripple_data = None
+    if editorstate.trim_mode_ripple == True:
+        ripple_data = RippleData( track, edit_frame)
+        print ripple_data.__dict__
+
     global edit_data
+    # Add ripple data 
+    edit_data["ripple_data"] = ripple_data
+    
     # Set side being edited to default to-side
     edit_data["to_side_being_edited"] = to_side_being_edited
 
+    # Set start frame bound for ripple mode edits
+    if editorstate.trim_mode_ripple == True:
+        ripple_start_bound = edit_frame - ripple_data.max_backwards
+
+        # Case: editing to-clip
+        if edit_data["to_side_being_edited"]:
+            if edit_data["trim_limits"]["to_start"] < ripple_start_bound:
+                edit_data["trim_limits"]["to_start"] = ripple_start_bound
+        # Case: editing from-clip
+        else:
+            if edit_data["trim_limits"]["both_start"] < ripple_start_bound: # name "both_start"] is artifact fromearlier when trimlimits were used for bot "trim and "roll" edits
+                edit_data["trim_limits"]["both_start"] = ripple_start_bound
+                
     current_sequence().clear_hidden_track()
 
     # Cant't trim a blank clip. Blank clips are special in MLT and can't be
@@ -425,8 +452,12 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         return False
         
     # Give timeline widget needed data
-    tlinewidgets.set_edit_mode(edit_data,
-                               tlinewidgets.draw_one_roll_overlay)
+    if editorstate.trim_mode_ripple == False:
+        tlinewidgets.set_edit_mode(edit_data,
+                                   tlinewidgets.draw_one_roll_overlay)
+    else:
+        tlinewidgets.set_edit_mode(edit_data,
+                                   tlinewidgets.draw_one_roll_overlay_ripple)
 
     # Set clip as special producer on hidden track and display current frame 
     # from it.
@@ -556,39 +587,73 @@ def _do_one_roll_trim_edit(frame):
     # case: editing from-side of last clip
     global last_from_trimmed
     if last_from_trimmed:
-        data = {"track":edit_data["track_object"],
-                "index":edit_data["index"],
-                "clip":edit_data["from_clip"],
-                "delta":delta,
-                "undo_done_callback":clip_end_first_do_done,
-                "first_do":True}
-        action = edit.trim_last_clip_end_action(data)
         last_from_trimmed = False
-        action.do_edit()
+        if editorstate.trim_mode_ripple == False:
+            data = {"track":edit_data["track_object"],
+                    "index":edit_data["index"],
+                    "clip":edit_data["from_clip"],
+                    "delta":delta,
+                    "undo_done_callback":clip_end_first_do_done,
+                    "first_do":True}
+            action = edit.trim_last_clip_end_action(data)
+            last_from_trimmed = False
+            action.do_edit()
+        else:
+            data = {"track":edit_data["track_object"],
+                    "index":edit_data["index"],
+                    "clip":edit_data["from_clip"],
+                    "edit_delta":delta,
+                    "undo_done_callback":clip_end_first_do_done,
+                    "first_do":True,
+                    "multi_data":ripple_data}
+            action = edit.ripple_trim_last_clip_end_action(data)
+            action.do_edit()
         # Edit is reinitialized in callback from edit action one_roll_trim_undo_done
     # case: editing to-side of cut
     elif edit_data["to_side_being_edited"]:
-        data = {"track":edit_data["track_object"],
-                "index":edit_data["index"],
-                "clip":edit_data["to_clip"],
-                "delta":delta,
-                "undo_done_callback":one_roll_trim_undo_done,
-                "first_do":True}
-        action = edit.trim_start_action(data)
-        action.do_edit()
-        # Edit is reinitialized in callback from edit action one_roll_trim_undo_done
+        if editorstate.trim_mode_ripple == False:
+            data = {"track":edit_data["track_object"],
+                    "index":edit_data["index"],
+                    "clip":edit_data["to_clip"],
+                    "delta":delta,
+                    "undo_done_callback":one_roll_trim_undo_done,
+                    "first_do":True}
+            action = edit.trim_start_action(data)
+            action.do_edit()
+            # Edit is reinitialized in callback from edit action one_roll_trim_undo_done
+        else:
+            data = {"track":edit_data["track_object"],
+                    "index":edit_data["index"],
+                    "clip":edit_data["from_clip"],
+                    "edit_delta":delta,
+                    "undo_done_callback":one_roll_trim_undo_done,
+                    "first_do":True,
+                    "multi_data":ripple_data}
+            action = edit.ripple_trim_start_action(data)
+            action.do_edit()
     # case: editing from-side of cut
     else:
-        data = {"track":edit_data["track_object"],
-                "index":edit_data["index"] - 1,
-                "clip":edit_data["from_clip"],
-                "delta":delta,
-                "undo_done_callback":one_roll_trim_undo_done,
-                "first_do":True}
-        action = edit.trim_end_action(data)
-        action.do_edit()
-        # Edit is reinitialized in callback from edit action one_roll_trim_undo_done
-
+        if editorstate.trim_mode_ripple == False:
+            data = {"track":edit_data["track_object"],
+                    "index":edit_data["index"] - 1,
+                    "clip":edit_data["from_clip"],
+                    "delta":delta,
+                    "undo_done_callback":one_roll_trim_undo_done,
+                    "first_do":True}
+            action = edit.trim_end_action(data)
+            action.do_edit()
+            # Edit is reinitialized in callback from edit action one_roll_trim_undo_done
+        else:
+            data = {"track":edit_data["track_object"],
+                    "index":edit_data["index"] - 1,
+                    "clip":edit_data["from_clip"],
+                    "edit_delta":delta,
+                    "undo_done_callback":one_roll_trim_undo_done,
+                    "first_do":True,
+                    "multi_data":ripple_data}
+            action = edit.ripple_trim_end_action(data)
+            action.do_edit()
+            
 def oneroll_play_pressed():
     # Start trim preview playback loop
     current_sequence().hide_hidden_clips()
@@ -661,6 +726,149 @@ def _pressed_on_one_roll_active_area(frame):
             return False
     
     return True
+
+
+
+class RippleData:
+    """
+    This class collects and saves data needed for ripple mode trims.
+    """
+    def __init__(self, pressed_track, trim_frame):
+        
+        self.trim_frame = trim_frame
+        self.pressed_track_id = pressed_track.id
+        self.max_backwards = 0
+        self.trim_blank_indexes = []
+        self.track_edit_ops = []
+        self.track_affected = []
+        self.track_blank_end_offset = []
+        self.legal_edit = True
+        self._build_ripple_data()
+
+    def _build_ripple_data(self):
+        tracks = current_sequence().tracks
+
+        # Look at all tracks exept hidden and black
+        # Get per track:
+        # * maximum length trim can be done backwards before an overwrite happens
+        # * indexes of blanks that are trimmed and/or added/removed,
+        #   -1 when no blanks are altered on that track
+        #
+        # Method for setting moved clips and max deltas:
+        # * if track has 0 or 1 clip(s) and no blanks, track is ignored
+        # * if track length < first_moved_frame, track is ignored
+        # * if track has no blanks but track length > first_moved_frame, max delta is 0
+        # * if track has blanks, max delta is closest blank length
+        
+        track_max_deltas = []
+        trim_blank_indexes = []
+        for i in range(1, len(tracks) - 1):
+            track = tracks[i]
+            # Case: 0 or 1 clips
+            if len(track.clips) < 2:
+                track_max_deltas.append(MAX_DELTA)
+                trim_blank_indexes.append(-1)
+                self.track_blank_end_offset.append(None)
+            else:
+                # Case: 2 - n clips
+                clip_index = current_sequence().get_clip_index(track, self.trim_frame)
+                first_frame_clip = track.clips[clip_index]
+                
+                #trim_frame = track.clip_start(clip_index)
+                #clip_last_frame = clip_first_frame + first_frame_clip
+                
+                # Case: frame after track last clip
+                if clip_index == -1:
+                    track_max_deltas.append(MAX_DELTA)
+                    trim_blank_indexes.append(-1)
+                    self.track_blank_end_offset.append(None)
+                    continue
+
+                # Case: frame is on blank 
+                if first_frame_clip.is_blanck_clip:
+                    track_max_deltas.append(track.clips[clip_index].clip_length())
+                    trim_blank_indexes.append(clip_index)
+                    self.track_blank_end_offset.append(self.get_track_blank_end_offset(track, clip_index))
+                else:
+                    # Case: frame is on media clip
+                    
+                    # Get closest blank clip index
+                    closest_blank_index = -1
+                    closest_blank_distance = MAX_DELTA
+                    for i in range(0, len(track.clips)):
+                        blank =  track.clips[i]
+                        if blank.is_blanck_clip == False:
+                            continue #  Clip is media clip, we're looking for closest blank
+                        
+                        blank_first_frame = track.clip_start(i)
+                        blank_last_frame = blank_first_frame + blank.clip_length()
+                        
+                        # Clip before trimmed timeline frame, distance is from blank last frame
+                        if blank_last_frame < self.trim_frame:
+                            if self.trim_frame - blank_last_frame < closest_blank_distance:
+                                closest_blank_distance = self.trim_frame - blank_last_frame
+                                closest_blank_index = i
+
+                        # Clip after trimmed timeline frame, distance is from blank first frame
+                        elif blank_first_frame > self.trim_frame: 
+                            if blank_last_frame - self.trim_frame < closest_blank_distance:
+                                closest_blank_distance = blank_last_frame - self.trim_frame 
+                                closest_blank_index = i
+                        else:
+                            print "_build_ripple_data(): supposedly unreachable case hit"
+                        
+                    
+                    # Case: no blanks found on track
+                    if closest_blank_index == -1:
+                        track_max_deltas.append(0)
+                        trim_blank_indexes.append(clip_index)
+                        self.track_blank_end_offset.append(self.get_track_blank_end_offset(track, clip_index - 1))
+                    # Case closet blank found
+                    else:
+                        track_max_deltas.append(track.clips[closest_blank_index].clip_length())
+                        trim_blank_indexes.append(closest_blank_index)
+                        self.track_blank_end_offset.append(self.get_track_blank_end_offset(track, closest_blank_index))
+
+        self.trim_blank_indexes = trim_blank_indexes
+
+        # Pressed track does not ripple, pressed track trim edit defines ripple direction and amount
+        track_max_deltas[self.pressed_track_id - 1] = MAX_DELTA
+        self.trim_blank_indexes[self.pressed_track_id - 1] = -1
+    
+        # Smallest track delta is the max number of frames 
+        # the edit can be done backwards
+        smallest_max_delta = MAX_DELTA
+        for i in range(1, len(tracks) - 1):
+            d = track_max_deltas[i - 1]
+            if d < smallest_max_delta:
+                smallest_max_delta = d
+        self.max_backwards = smallest_max_delta
+
+        # Track have different ways the edit will need to be applied
+        # make a list of those
+        track_edit_ops = []
+        for i in range(1, len(tracks) - 1):
+            track = tracks[i]
+            track_delta = track_max_deltas[i - 1]
+            if track_delta == 0:
+                track_edit_ops.append(appconsts.MULTI_ADD_TRIM)
+            elif track_delta == MAX_DELTA:
+                track_edit_ops.append(appconsts.MULTI_NOOP)
+            elif self.max_backwards > 0 and track_delta == self.max_backwards:
+                track_edit_ops.append(appconsts.MULTI_TRIM_REMOVE)
+            else:
+                track_edit_ops.append(appconsts.MULTI_TRIM)
+        self.track_edit_ops = track_edit_ops
+
+        # Make list of boolean values of tracks affected by the edit
+        for i in range(1, len(tracks) - 1):
+            self.track_affected.append(True)
+        self.track_affected[self.pressed_track_id - 1] = True
+
+
+    def get_track_blank_end_offset(self, track, blank_index):
+        blank_end_frame = track.clip_start(blank_index + 1)
+        return blank_end_frame - self.trim_frame
 
 #---------------------------------------- TWO ROLL TRIM EVENTS
 def set_tworoll_mode(track, current_frame = -1):

@@ -176,7 +176,12 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     
     # Jul-2016 - SvdB - Added play_pause_button
     auto_play_in_clip_monitor_check, auto_center_check, grfx_insert_length_spin, \
+<<<<<<< HEAD
     trim_exit_click, trim_quick_enter, remember_clip_frame, overwrite_clip_drop, cover_delete, play_pause_button = edit_prefs_widgets
+=======
+        trim_exit_click, trim_quick_enter, remember_clip_frame, overwrite_clip_drop, cover_delete, \
+        play_pause_button, mouse_scroll_action, hide_file_ext_button = edit_prefs_widgets
+>>>>>>> f543ab477c38c30102d2fd2c70c5fc597f930f88
     
     use_english, disp_splash, buttons_style, dark_theme, theme_combo, audio_levels_combo, window_mode_combo = view_prefs_widgets
 
@@ -197,6 +202,11 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.trans_cover_delete = cover_delete.get_active()
     # Jul-2016 - SvdB - For play/pause button
     prefs.play_pause = play_pause_button.get_active()
+<<<<<<< HEAD
+=======
+    prefs.hide_file_ext = hide_file_ext_button.get_active()
+    prefs.mouse_scroll_action_is_zoom = (mouse_scroll_action.get_active() == 0)
+>>>>>>> f543ab477c38c30102d2fd2c70c5fc597f930f88
     
     prefs.use_english_always = use_english.get_active()
     prefs.display_splash_screen = disp_splash.get_active()
@@ -232,6 +242,9 @@ class EditorPreferences:
     """
 
     def __init__(self):
+        
+        # Every peference needs to have its default value set in this constructor
+        
         self.open_in_last_opended_media_dir = True
         self.last_opened_media_dir = None
         self.img_length = 2000
@@ -280,5 +293,10 @@ class EditorPreferences:
         self.trim_view_default = appconsts.TRIM_VIEW_OFF
         self.trim_view_message_shown = False
         self.exit_allocation_window_2 = (0, 0, 0, 0)
+<<<<<<< HEAD
         
         
+=======
+        self.mouse_scroll_action_is_zoom = True
+        self.hide_file_ext = False
+>>>>>>> f543ab477c38c30102d2fd2c70c5fc597f930f88

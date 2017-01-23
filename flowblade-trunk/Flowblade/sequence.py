@@ -130,7 +130,7 @@ class Sequence:
         if self.master_audio_pan != NO_PAN:
             self.add_track_pan_filter(self.tractor, self.master_audio_pan)
 
-        # Create and ad gain filter
+        # Create and add gain filter
         gain_filter = mlt.Filter(self.profile, "volume")
         mltrefhold.hold_ref(gain_filter)
         gain_filter.set("gain", str(self.master_audio_gain))
