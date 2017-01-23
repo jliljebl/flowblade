@@ -1751,7 +1751,6 @@ class TimeLineCanvas:
         cr.move_to(int(scale_in), 0, )
         cr.line_to(int(scale_in), int(match_frame_height) + 42)
         cr.stroke()
-<<<<<<< HEAD
 
         start_y = _get_track_y(match_frame_track_index)
         end_y = _get_track_y(match_frame_track_index - 1)
@@ -1782,38 +1781,6 @@ class TimeLineCanvas:
         cr = cairo.Context(scaled_icon)
         cr.scale(float(match_frame_width) / float(icon.get_width()), float(match_frame_height) / float(icon.get_height()))
 
-=======
-
-        start_y = _get_track_y(match_frame_track_index)
-        end_y = _get_track_y(match_frame_track_index - 1)
-        
-        cr.move_to (int(scale_in) + 8 * dir_mult, start_y)
-        cr.line_to (int(scale_in), start_y)
-        cr.line_to (int(scale_in), end_y + 1)
-        cr.line_to (int(scale_in) + 8 * dir_mult, end_y + 1)
-        cr.set_source_rgb(0.2, 0.2, 0.2)
-        cr.set_line_width(4.0)
-        cr.stroke()
-        
-    def create_match_frame_image_surface(self):
-        # Create non-scaled icon
-        matchframe_path = utils.get_hidden_user_dir_path() + appconsts.MATCH_FRAME
-        icon = cairo.ImageSurface.create_from_png(matchframe_path)
-
-        # Create and return scaled icon
-        allocation = canvas_widget.widget.get_allocation()
-        x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
-        profile_screen_ratio = float(PROJECT().profile.width()) / float(PROJECT().profile.height())
-        
-        global match_frame_width, match_frame_height
-        match_frame_height = h - 40
-        match_frame_width = match_frame_height * profile_screen_ratio
-    
-        scaled_icon = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(match_frame_width), int(match_frame_height))
-        cr = cairo.Context(scaled_icon)
-        cr.scale(float(match_frame_width) / float(icon.get_width()), float(match_frame_height) / float(icon.get_height()))
-
->>>>>>> f543ab477c38c30102d2fd2c70c5fc597f930f88
         cr.set_source_surface(icon, 0, 0)
         cr.paint()
         

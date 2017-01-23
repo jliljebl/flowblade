@@ -118,8 +118,6 @@ def key_down(widget, event):
             monitorevent.stop_pressed()
         PLAYER().seek_frame(0)
         _move_to_beginning()
-<<<<<<< HEAD
-=======
         return True
 
     # End
@@ -128,7 +126,6 @@ def key_down(widget, event):
             monitorevent.stop_pressed()
         PLAYER().seek_end()
         _move_to_end()
->>>>>>> f543ab477c38c30102d2fd2c70c5fc597f930f88
         return True
 
     # Select all with CTRL + A in media panel
@@ -364,8 +361,6 @@ def _handle_tline_key_event(event):
                 monitorevent.stop_pressed()
             PLAYER().seek_frame(0)
             _move_to_beginning()
-<<<<<<< HEAD
-=======
             return True
 
         # END
@@ -374,7 +369,6 @@ def _handle_tline_key_event(event):
                 monitorevent.stop_pressed()
             PLAYER().seek_end()
             _move_to_end()
->>>>>>> f543ab477c38c30102d2fd2c70c5fc597f930f88
             return True
     else:
         # HOME
@@ -385,8 +379,6 @@ def _handle_tline_key_event(event):
             gui.editor_window.set_mode_selector_to_mode()
             PLAYER().seek_frame(0)
             _move_to_beginning()
-<<<<<<< HEAD
-=======
             return True
 
         # END
@@ -397,7 +389,6 @@ def _handle_tline_key_event(event):
             gui.editor_window.set_mode_selector_to_mode()
             PLAYER().seek_end()
             _move_to_end()
->>>>>>> f543ab477c38c30102d2fd2c70c5fc597f930f88
             return True
 
     return False
@@ -650,12 +641,7 @@ def _move_to_beginning():
     updater.repaint_tline()
     updater.update_tline_scrollbar()
     
-<<<<<<< HEAD
-    
-    
-=======
 def _move_to_end():
     updater.repaint_tline()
     updater.update_tline_scrollbar()
 
->>>>>>> f543ab477c38c30102d2fd2c70c5fc597f930f88
