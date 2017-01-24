@@ -1011,7 +1011,10 @@ class EditorWindow:
         if mode == 1:
             self.handle_over_move_mode_button_press()
         if mode == 2:
-            self.handle_one_roll_mode_button_press()
+            if editorstate.edit_mode != editorstate.ONE_ROLL_TRIM and editorstate.edit_mode != editorstate.ONE_ROLL_TRIM_NO_EDIT:
+                self.handle_one_roll_mode_button_press()
+            else:
+                self.toggle_trim_ripple_mode()
         if mode == 3:
             self.handle_two_roll_mode_button_press()
         if mode == 4:
