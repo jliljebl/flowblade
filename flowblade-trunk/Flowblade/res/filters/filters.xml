@@ -747,8 +747,39 @@
         <property name="rows" args="range_in=1,20 displayname=Rows">0.1</property>
         <property name="columns" args="range_in=1,20 displayname=Columns">0.1</property>
     </filter>
-
-
+    <filter id="avfilter.lenscorrection">
+        <name>Lens Correction AV</name>
+        <group>Distort</group>
+        <property name="av.cx" args="range_in=0,SCREENSIZE_WIDTH range_out=0,1 displayname=Center!X">0.5</property>
+        <property name="av.cy" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,1 displayname=Center!Y">0.5</property>
+        <property name="av.k1" args="range_in=0,100 range_out=-1,1 displayname=Quad!Distortion">0</property>
+        <property name="av.k2" args="range_in=0,100 range_out=-1,1 displayname=Double!Quad!Distortion">10</property>
+    </filter>
+    
+    <!-- for some reason avfilter.perspective gives errors:
+            [filter avfilter.perspective] Unexpected return format
+            [filter avfilter.perspective] Cannot get frame from buffer sink
+        if initialized with SCREENSIZE_WIDTH and SCREENSIZE_HEIGHT.
+        
+        However, if set to these values later it works.
+        
+        Workaround is that we initilize it with hard coded values
+    -->
+    <filter id="avfilter.perspective">
+        <name>Perpective</name>
+        <group>Distort</group>
+        <property name="av.x0" args="range_in=0,SCREENSIZE_WIDTH range_out=0,SCREENSIZE_WIDTH displayname=x0">10</property>
+        <property name="av.y0" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,SCREENSIZE_HEIGHT displayname=y0">10</property>
+        <property name="av.x1" args="range_in=0,SCREENSIZE_WIDTH range_out=0,SCREENSIZE_WIDTH displayname=x1">500</property>
+        <property name="av.y1" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,SCREENSIZE_HEIGHT displayname=y1">0</property>
+        <property name="av.x2" args="range_in=0,SCREENSIZE_WIDTH range_out=0,SCREENSIZE_WIDTH displayname=x2">0</property>
+        <property name="av.y2" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,SCREENSIZE_HEIGHT displayname=y2">400</property>
+        <property name="av.x3" args="range_in=0,SCREENSIZE_WIDTH range_out=0,SCREENSIZE_WIDTH displayname=x3">550</property>
+        <property name="av.y3" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,SCREENSIZE_HEIGHT displayname=y3">420</property>
+    </filter>
+    
+    
+    
     <!-- EDGE -->
     <filter id="frei0r.edgeglow">
         <name>Edge Glow</name>
@@ -847,6 +878,14 @@
         <property name="transition.fix_rotate_x" args="range_in=-180,180 range_out=-180,180 displayname=Angle">0</property>
         <property name="transition.fix_shear_x" args="range_in=-180,180 range_out=-180,180 displayname=Shear!X">0</property>
         <property name="transition.fix_shear_y" args="range_in=-180,180 range_out=-180,180 displayname=Shear!Y">0</property>
+    </filter>
+    <filter id="avfilter.zoompan">
+        <name>Zoom Pan</name>
+        <group>Transform</group>
+        <property name="av.zoom" args="range_in=100,500 range_out=1,5 displayname=Zoom">1</property>
+        <property name="av.x" args="range_in=0,SCREENSIZE_WIDTH range_out=0,SCREENSIZE_WIDTH displayname=x">0</property>
+        <property name="av.y" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,SCREENSIZE_HEIGHT displayname=y">0</property>
+        <property name="av.d" args="editor=no_editor">1</property>
     </filter>
 
 
