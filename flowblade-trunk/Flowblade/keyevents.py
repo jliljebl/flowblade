@@ -217,8 +217,11 @@ def _handle_tline_key_event(event):
         gui.editor_window.set_mode_selector_to_mode()
         return True
     if event.keyval == Gdk.KEY_2:
-        gui.editor_window.handle_over_move_mode_button_press()
-        gui.editor_window.set_mode_selector_to_mode()
+        if editorstate.edit_mode != editorstate.OVERWRITE_MOVE:
+            gui.editor_window.handle_over_move_mode_button_press()
+            gui.editor_window.set_mode_selector_to_mode()
+        else:
+            gui.editor_window.toggle_overwrite_box_mode()
         return True
     if event.keyval == Gdk.KEY_3:
         if editorstate.edit_mode != editorstate.ONE_ROLL_TRIM and editorstate.edit_mode != editorstate.ONE_ROLL_TRIM_NO_EDIT:
@@ -455,9 +458,11 @@ def _handle_extended_tline_focus_events(event):
         gui.editor_window.set_mode_selector_to_mode()
         return True
     if event.keyval == Gdk.KEY_2:
-        gui.editor_window.handle_over_move_mode_button_press()
-        gui.editor_window.set_mode_selector_to_mode()
-        return True
+        if editorstate.edit_mode != editorstate.OVERWRITE_MOVE:
+            gui.editor_window.handle_over_move_mode_button_press()
+            gui.editor_window.set_mode_selector_to_mode()
+        else:
+            gui.editor_window.toggle_overwrite_box_mode()
     if event.keyval == Gdk.KEY_3:
         if editorstate.edit_mode != editorstate.ONE_ROLL_TRIM and editorstate.edit_mode != editorstate.ONE_ROLL_TRIM_NO_EDIT:
             gui.editor_window.handle_one_roll_mode_button_press()

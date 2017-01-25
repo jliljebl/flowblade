@@ -53,8 +53,11 @@ player = None
 # Current edit mode
 edit_mode = INSERT_MOVE
 
-# Trim tool reiiple mode is expressed as a flag
+# Trim tool ripple mode is expressed as a flag
 trim_mode_ripple = False
+
+# Ovewrite tool box mode is expressed as a flag
+overwrite_mode_box = False
 
 # Media files view filter for selecting displayed media objects in bin
 media_view_filter = appconsts.SHOW_ALL_FILES
