@@ -1132,7 +1132,7 @@ def ripple_trim_end_action(data):
 def _ripple_trim_end_undo(self):
     _remove_clip(self.track, self.index)
     _insert_clip(self.track, self.clip, self.index,
-                 self.clip.clip_in, self.clip.clip_out - self.delta)
+                 self.clip.clip_in, self.clip.clip_out - self.edit_delta)
     
     _ripple_trim_blanks_undo(self)
         
@@ -1169,7 +1169,7 @@ def _ripple_trim_start_redo(self):
     _insert_clip(self.track, self.clip, self.index,
                  self.clip.clip_in + self.edit_delta, self.clip.clip_out)
 
-    _ripple_trim_blanks_redo(self)
+    _ripple_trim_blanks_redo(self, True)
     
     # Reinit one roll trim, when used with clip start drag this is not needed
     if  hasattr(self, "first_do") and self.first_do == True:
@@ -1206,9 +1206,15 @@ def _ripple_trim_last_clip_end_redo(self):
         self.undo_done_callback(self.track)
         
 # ----------------------------- RIPPLE TRIM BLANK UPDATE METHODS
-def _ripple_trim_blanks_undo(self):
+def _ripple_trim_blanks_undo(self, reverse_delta=False):
     track_moved = self.multi_data.track_affected    
     tracks = current_sequence().tracks
+
+    applied_delta = self.edit_delta
+    if reverse_delta:
+        print "reverse delta"
+        applied_delta = -applied_delta
+        
     for i in range(1, len(tracks) - 1):
         if not track_moved[i - 1]:
             continue
@@ -1224,7 +1230,7 @@ def _ripple_trim_blanks_undo(self):
         elif edit_op == appconsts.MULTI_TRIM:
             blank_length = track.clips[trim_blank_index].clip_length()
             _remove_clip(track, trim_blank_index) 
-            _insert_blank(track, trim_blank_index, blank_length - self.edit_delta)
+            _insert_blank(track, trim_blank_index, blank_length - applied_delta)
         elif edit_op == appconsts.MULTI_ADD_TRIM:
             _remove_clip(track, trim_blank_index) 
         elif edit_op == appconsts.MULTI_TRIM_REMOVE:
@@ -1240,13 +1246,17 @@ def _ripple_trim_blanks_undo(self):
         track_comp = tracks_compositors[i - 1]
         for comp in track_comp:
             if comp.clip_in >= self.multi_data.first_moved_frame + self.edit_delta:
-                comp.move(-self.edit_delta)
+                comp.move(-applied_delta)
 
-def _ripple_trim_blanks_redo(self):
+def _ripple_trim_blanks_redo(self, reverse_delta=False):
     tracks = current_sequence().tracks
     track_moved = self.multi_data.track_affected
-
-    # Move clips          
+    
+    applied_delta = self.edit_delta
+    if reverse_delta:
+        print "reverse delta"
+        applied_delta = -applied_delta
+               
     for i in range(1, len(tracks) - 1):
         if not track_moved[i - 1]:
             continue
@@ -1262,14 +1272,14 @@ def _ripple_trim_blanks_redo(self):
         elif edit_op == appconsts.MULTI_TRIM:
             blank_length = track.clips[trim_blank_index].clip_length()
             _remove_clip(track, trim_blank_index) 
-            _insert_blank(track, trim_blank_index, blank_length + self.edit_delta)
+            _insert_blank(track, trim_blank_index, blank_length + applied_delta)
         elif edit_op == appconsts.MULTI_ADD_TRIM:
-            _insert_blank(track, trim_blank_index, self.edit_delta)
+            _insert_blank(track, trim_blank_index, applied_delta)
         elif edit_op == appconsts.MULTI_TRIM_REMOVE:
             self.orig_length = track.clips[trim_blank_index].clip_length()
             _remove_clip(track, trim_blank_index) 
             if self.edit_delta != -self.multi_data.max_backwards:
-                _insert_blank(track, trim_blank_index, self.orig_length + self.edit_delta)
+                _insert_blank(track, trim_blank_index, self.orig_length + applied_delta)
 
     # Move compositors
     tracks_compositors = _get_tracks_compositors_list()
@@ -1279,7 +1289,7 @@ def _ripple_trim_blanks_redo(self):
         track_comp = tracks_compositors[i - 1]
         for comp in track_comp:
             if comp.clip_in >= self.multi_data.first_moved_frame:
-                comp.move(self.edit_delta)
+                comp.move(applied_delta)
 
 
 #------------------ TRIM CLIP START
@@ -1351,7 +1361,7 @@ def _trim_last_clip_end_redo(self):
     _insert_clip(self.track, self.clip, self.index,
                  self.clip.clip_in, self.clip.clip_out + self.delta)
 
-    # Reinit one roll trim for continued trim mode, whenused with clip end drag this is not needed
+    # Reinit one roll trim for continued trim mode
     if hasattr(self, "first_do") and self.first_do == True:
         self.first_do = False
         self.undo_done_callback(self.track)

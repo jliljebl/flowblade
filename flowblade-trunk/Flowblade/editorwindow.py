@@ -1038,7 +1038,7 @@ class EditorWindow:
 
     def set_tline_cursor(self, mode):
         display = Gdk.Display.get_default()
-        gdk_window = self.window.get_window()#gui.tline_display.get_window()
+        gdk_window = self.window.get_window()
 
         if mode == editorstate.INSERT_MOVE:
             cursor = self.get_own_cursor(display, INSERTMOVE_CURSOR, 0, 0)
@@ -1054,7 +1054,6 @@ class EditorWindow:
             else:
                 cursor = self.get_own_cursor(display, ONEROLL_RIPPLE_CURSOR, 9, 9)
         elif mode == editorstate.ONE_ROLL_TRIM_NO_EDIT:
-            #cursor = self.get_own_cursor(display, ONEROLL_NO_EDIT_CURSOR, 9, 9)
             if editorstate.trim_mode_ripple == False:
                 cursor = self.get_own_cursor(display, ONEROLL_NO_EDIT_CURSOR, 9, 9)
             else:

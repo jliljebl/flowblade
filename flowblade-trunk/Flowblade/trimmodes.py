@@ -622,9 +622,10 @@ def _do_one_roll_trim_edit(frame):
             action.do_edit()
             # Edit is reinitialized in callback from edit action one_roll_trim_undo_done
         else:
+            print "trim start:", edit_data["index"]
             data = {"track":edit_data["track_object"],
                     "index":edit_data["index"],
-                    "clip":edit_data["from_clip"],
+                    "clip":edit_data["to_clip"],
                     "edit_delta":delta,
                     "undo_done_callback":one_roll_trim_undo_done,
                     "first_do":True,
@@ -644,6 +645,7 @@ def _do_one_roll_trim_edit(frame):
             action.do_edit()
             # Edit is reinitialized in callback from edit action one_roll_trim_undo_done
         else:
+            print "trim end:", edit_data["index"] - 1
             data = {"track":edit_data["track_object"],
                     "index":edit_data["index"] - 1,
                     "clip":edit_data["from_clip"],
