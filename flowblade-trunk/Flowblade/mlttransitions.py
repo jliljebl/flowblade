@@ -309,7 +309,7 @@ class CompositorObject:
         self.origin_clip_id = None
         
         self.destroy_id = os.urandom(16) # HACK, HACK, HACK - find a way to remove this stuff  
-                                         # Objects are recreated often in Sequence.restack_compositors()
+                                         # Compositors are recreated often in Sequence.restack_compositors()
                                          # and cannot be destroyd in undo/redo with object identidy.
                                          # This is cloned in clone_properties
 

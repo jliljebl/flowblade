@@ -744,6 +744,7 @@ class RippleData:
         self.track_edit_ops = []
         self.track_affected = []
         self.track_blank_end_offset = []
+        self.moved_compositors_destroy_ids = [] # we cannot rely on object identies with compositors because they get destroyd and recreated in undo/redo actions
         self.legal_edit = True
         self._build_ripple_data()
 
@@ -867,11 +868,44 @@ class RippleData:
             self.track_affected.append(True)
         self.track_affected[self.pressed_track_id - 1] = True
 
+        # Make list compositors that are moved with ripple edit
+        tracks_compositors = self.get_tracks_compositors_list()
+        affected_compositors_destroy_ids = []
+        for i in range(1, len(tracks) - 1):
+            if self.trim_blank_indexes[i - 1] == -1:
+                continue # This track is not affected by edit
+            
+            # Get affect compositors on this track
+            track = tracks[i]
+            compositors = tracks_compositors[i - 1]
+            for j in range(0, len(compositors)):
+                comp = compositors[j]
+                first_affected_blank_index = self.trim_blank_indexes[i - 1]
+                first_affected_frame = tracks[i].clip_start(first_affected_blank_index + 1)
+                if comp.clip_in >= first_affected_frame:
+                    affected_compositors_destroy_ids.append(comp.destroy_id)
+        
+        self.moved_compositors_destroy_ids = affected_compositors_destroy_ids
+        
 
     def get_track_blank_end_offset(self, track, blank_index):
         blank_end_frame = track.clip_start(blank_index + 1)
         return blank_end_frame - self.trim_frame
 
+    def get_tracks_compositors_list(self):
+        tracks_list = []
+        tracks = current_sequence().tracks
+        compositors = current_sequence().compositors
+        for track_index in range(1, len(tracks) - 1):
+            track_compositors = []
+            for j in range(0, len(compositors)):
+                comp = compositors[j]
+                if comp.transition.b_track == track_index:
+                    track_compositors.append(comp)
+            tracks_list.append(track_compositors)
+        
+        return tracks_list
+    
 #---------------------------------------- TWO ROLL TRIM EVENTS
 def set_tworoll_mode(track, current_frame = -1):
     """

@@ -1162,7 +1162,7 @@ def _ripple_trim_start_undo(self):
     _insert_clip(self.track, self.clip, self.index,
                  self.clip.clip_in - self.edit_delta, self.clip.clip_out)
 
-    _ripple_trim_blanks_undo(self)
+    _ripple_trim_blanks_undo(self, True)
 
 def _ripple_trim_start_redo(self):
     _remove_clip(self.track, self.index)
@@ -1206,14 +1206,11 @@ def _ripple_trim_last_clip_end_redo(self):
         self.undo_done_callback(self.track)
         
 # ----------------------------- RIPPLE TRIM BLANK UPDATE METHODS
-def _ripple_trim_blanks_undo(self, reverse_delta=False):
+def _ripple_trim_blanks_undo(self, reverse_comp_delta=False):
     track_moved = self.multi_data.track_affected    
     tracks = current_sequence().tracks
 
     applied_delta = self.edit_delta
-    if reverse_delta:
-        print "reverse delta"
-        applied_delta = -applied_delta
         
     for i in range(1, len(tracks) - 1):
         if not track_moved[i - 1]:
@@ -1239,14 +1236,9 @@ def _ripple_trim_blanks_undo(self, reverse_delta=False):
                 
             _insert_blank(track, trim_blank_index, self.orig_length)
 
-    tracks_compositors = _get_tracks_compositors_list()
-    for i in range(1, len(tracks) - 1):
-        if not track_moved[i - 1]:
-            continue
-        track_comp = tracks_compositors[i - 1]
-        for comp in track_comp:
-            if comp.clip_in >= self.multi_data.first_moved_frame + self.edit_delta:
-                comp.move(-applied_delta)
+    if reverse_comp_delta:
+        applied_delta = -applied_delta
+    _ripple_trim_compositors_move(self, -applied_delta)
 
 def _ripple_trim_blanks_redo(self, reverse_delta=False):
     tracks = current_sequence().tracks
@@ -1254,7 +1246,6 @@ def _ripple_trim_blanks_redo(self, reverse_delta=False):
     
     applied_delta = self.edit_delta
     if reverse_delta:
-        print "reverse delta"
         applied_delta = -applied_delta
                
     for i in range(1, len(tracks) - 1):
@@ -1281,15 +1272,20 @@ def _ripple_trim_blanks_redo(self, reverse_delta=False):
             if self.edit_delta != -self.multi_data.max_backwards:
                 _insert_blank(track, trim_blank_index, self.orig_length + applied_delta)
 
-    # Move compositors
+    _ripple_trim_compositors_move(self, applied_delta)
+
+def _ripple_trim_compositors_move(self, delta):
+    comp_ids = self.multi_data.moved_compositors_destroy_ids
     tracks_compositors = _get_tracks_compositors_list()
-    for i in range(1, len(tracks) - 1):
+    track_moved = self.multi_data.track_affected
+
+    for i in range(1, len(current_sequence().tracks) - 1):
         if not track_moved[i - 1]:
             continue
-        track_comp = tracks_compositors[i - 1]
-        for comp in track_comp:
-            if comp.clip_in >= self.multi_data.first_moved_frame:
-                comp.move(applied_delta)
+        track_comps = tracks_compositors[i - 1]
+        for comp in track_comps:
+            if comp.destroy_id in comp_ids:
+                comp.move(delta)
 
 
 #------------------ TRIM CLIP START

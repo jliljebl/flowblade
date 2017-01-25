@@ -599,7 +599,6 @@ class Sequence:
         self.compositors.append(compositor)
 
     def remove_compositor(self, old_compositor):
-        #edit.old_compositors.append(old_compositor)# HACK. Garbage collecting compositors causes crashes.
         try:
             self.compositors.remove(old_compositor)
         except ValueError: # has been restacked since creation, needs to looked up using destroy_id
