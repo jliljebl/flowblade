@@ -544,7 +544,49 @@ def draw_overwrite_overlay(cr, data):
     _draw_mode_arrow(cr, arrow_x, y, OVERWRITE_MODE_COLOR)
     
     _draw_snap(cr, y)
-     
+
+def draw_overwrite_box_overlay(cr, data):
+    # Only draw if were moving
+    if data == None:
+        return
+    if data["action_on"] == False:
+        return
+
+    if data["box_selection_data"] == None: # mouse action selection
+        x1, y1 = data["press_point"]
+        x2, y2 = data["mouse_point"]
+
+        cr.set_line_width(2.0)
+        cr.set_source_rgb(*OVERLAY_COLOR)
+        cr.move_to(x1, y1)
+        cr.line_to(x1, y2)
+        cr.line_to(x2, y2)
+        cr.line_to(x2, y1)
+        cr.close_path()
+        cr.stroke()
+    else: # mouse action move
+        # Draw clips in draw range
+        cr.set_line_width(MOVE_CLIPS_LINE_WIDTH)
+        cr.set_source_rgb(*OVERLAY_COLOR)
+        
+        s_data = data["box_selection_data"]
+
+        # Draw moved clips
+        for i in range(0, len(s_data.track_selections)):
+            track_selection = s_data.track_selections[i]
+            y = _get_track_y(track_selection.track_id)
+            clip_start_frame = track_selection.range_frame_in - pos
+            track_height = current_sequence().tracks[track_selection.track_id].height
+            
+            for i in range(0, len(track_selection.clip_lengths)):
+                clip_length = track_selection.clip_lengths[i]
+
+                scale_length = clip_length * pix_per_frame
+                scale_in = clip_start_frame * pix_per_frame
+                cr.rectangle(scale_in, y + 1.5, scale_length, track_height - 2.0)
+                cr.stroke()
+                clip_start_frame += clip_length
+
 def _draw_move_overlay(cr, data, y):
     # Get data
     press_frame = data["press_frame"]

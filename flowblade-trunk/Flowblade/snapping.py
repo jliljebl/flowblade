@@ -50,6 +50,8 @@ def get_snapped_x(x, track, edit_data):
 
     # Do snaps for relevant edit modes.
     if EDIT_MODE() == editorstate.OVERWRITE_MOVE:
+        if editorstate.overwrite_mode_box == True:
+            return x
         return _overwrite_move_snap(x, track, frame, edit_data)
     elif EDIT_MODE() == editorstate.CLIP_END_DRAG:
         return _object_end_drag_snap(x, track, frame, edit_data)

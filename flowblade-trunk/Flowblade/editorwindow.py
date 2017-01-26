@@ -32,6 +32,7 @@ import app
 import appconsts
 import audiomonitoring
 import batchrendering
+import boxmove
 import clipeffectseditor
 import clipmenuaction
 import compositeeditor
@@ -1009,6 +1010,7 @@ class EditorWindow:
 
     def toggle_overwrite_box_mode(self):
         editorstate.overwrite_mode_box = (editorstate.overwrite_mode_box == False)
+        boxmove.clear_data()
         self.set_mode_selector_to_mode()
         self.set_tline_cursor(editorstate.EDIT_MODE())
         

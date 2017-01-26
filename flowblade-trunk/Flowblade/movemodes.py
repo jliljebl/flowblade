@@ -27,8 +27,10 @@ from gi.repository import Gtk, Gdk
 
 
 import appconsts
+import boxmove
 import dialogutils
 import editorpersistance # Jul-2016 - SvdB - For play/pause button
+import editorstate
 import dnd
 import edit
 from editorstate import current_sequence
@@ -271,6 +273,10 @@ def overwrite_move_press(event, frame):
     """
     User presses mouse when in overwrite move mode.
     """
+    if editorstate.overwrite_mode_box == True:
+        boxmove.mouse_press(event, frame)
+        return
+        
     _move_mode_pressed(event, frame)
     
     global edit_data
@@ -289,6 +295,10 @@ def overwrite_move_move(x, y, frame, state):
     """
     User moves mouse when in overwrite move mode.
     """
+    if editorstate.overwrite_mode_box == True:
+        boxmove.mouse_move(x, y, frame)
+        return
+        
     global edit_data, drag_disabled    
     if drag_disabled:
         return 
@@ -319,6 +329,10 @@ def overwrite_move_release(x, y, frame, state):
     """
     User releases mouse when in overwrite move mode.
     """
+    if editorstate.overwrite_mode_box == True:
+        boxmove.mouse_release(x, y, frame)
+        return
+        
     global edit_data, drag_disabled    
     if drag_disabled:
         drag_disabled = False
