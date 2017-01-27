@@ -57,12 +57,13 @@ def mouse_move(x, y, frame):
     global edit_data
     if box_selection_data == None: # mouse action to select
         edit_data["mouse_point"] = (x, y)
-        
-        tlinewidgets.set_edit_mode_data(edit_data)
-        
+       
     else: # mouse move to move
-        pass
+        print "moooooooooooove"
+        delta = frame - edit_data["press_frame"]
+        edit_data["delta"] = delta
 
+    tlinewidgets.set_edit_mode_data(edit_data)
     updater.repaint_tline()
     
 def mouse_release(x, y, frame):
@@ -85,7 +86,8 @@ def mouse_release(x, y, frame):
         tlinewidgets.set_edit_mode_data(edit_data)
         
     else: # mouse action to move
-        pass
+        delta = frame - edit_data["press_frame"]
+        edit_data["delta"] = delta
 
     updater.repaint_tline()
 

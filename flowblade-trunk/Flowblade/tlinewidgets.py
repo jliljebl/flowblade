@@ -575,7 +575,7 @@ def draw_overwrite_box_overlay(cr, data):
         for i in range(0, len(s_data.track_selections)):
             track_selection = s_data.track_selections[i]
             y = _get_track_y(track_selection.track_id)
-            clip_start_frame = track_selection.range_frame_in - pos
+            clip_start_frame = track_selection.range_frame_in - pos + data["delta"]
             track_height = current_sequence().tracks[track_selection.track_id].height
             
             for i in range(0, len(track_selection.clip_lengths)):
