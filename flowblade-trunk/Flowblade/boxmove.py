@@ -36,7 +36,7 @@ def clear_data():
     edit_data = None
      
 def mouse_press(event, frame):
-    global edit_data
+    global edit_data, box_selection_data
     if box_selection_data == None: # mouse action to select
         press_point = (event.x, event.y)
         
@@ -45,16 +45,23 @@ def mouse_press(event, frame):
                      "mouse_point":press_point,
                      "box_selection_data":None}
     else: # mouse action to move
-        edit_data = {"action_on":True,
-                     "press_frame":frame,
-                     "delta":0,
-                     "box_selection_data":box_selection_data}
+        if box_selection_data.is_hit(event.x, event.y) == False:
+            # Back to start state
+            edit_data = None
+            box_selection_data = None
+        else:
+            edit_data = {"action_on":True,
+                         "press_frame":frame,
+                         "delta":0,
+                         "box_selection_data":box_selection_data}
     
     tlinewidgets.set_edit_mode(edit_data, tlinewidgets.draw_overwrite_box_overlay)
     updater.repaint_tline()
     
 def mouse_move(x, y, frame):
     global edit_data
+    if edit_data == None:
+        return
     if box_selection_data == None: # mouse action to select
         edit_data["mouse_point"] = (x, y)
        
@@ -68,6 +75,9 @@ def mouse_move(x, y, frame):
     
 def mouse_release(x, y, frame):
     global box_selection_data, edit_data
+    if edit_data == None:
+        return
+        
     if box_selection_data == None: # mouse action to select
         box_selection_data = BoxMoveData(edit_data["press_point"], (x, y))
         if box_selection_data.is_empty() == False:
@@ -81,14 +91,14 @@ def mouse_release(x, y, frame):
                          "press_frame":-1,
                          "delta":0,
                          "box_selection_data":box_selection_data}
-
-                     
-        tlinewidgets.set_edit_mode_data(edit_data)
-        
     else: # mouse action to move
         delta = frame - edit_data["press_frame"]
         edit_data["delta"] = delta
-
+        # Back to start state
+        edit_data = None
+        box_selection_data = None
+    
+    tlinewidgets.set_edit_mode_data(edit_data)
     updater.repaint_tline()
 
 
@@ -145,6 +155,16 @@ class BoxMoveData:
     def is_empty(self):
         return False 
 
+    def is_hit(self, x, y):
+        hit_frame = tlinewidgets.get_frame(x)
+        hit_track = tlinewidgets.get_track(y).id
+
+        if ((hit_frame >= self.topleft_frame and hit_frame < self.topleft_frame + self.width_frames) and
+            (hit_track <= self.topleft_track and hit_track > self.topleft_track - self.height_tracks)):
+                return True
+                
+        return False
+        
 class BoxTrackSelection:
     """
     This class collects data on track's box selected clips.
