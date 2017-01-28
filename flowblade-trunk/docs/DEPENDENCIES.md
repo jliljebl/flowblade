@@ -12,7 +12,7 @@
 | python-gi-cairo | Gi Cairo bindings | python2-gobject |
 | python-numpy | Math and arrays library | python2-numpy |
 | python-pil | PIL image manipulation library | python2-pillow |
-| librsvg2-common | svg support | python2-rsvg |
+| librsvg2-common | svg support | librsvg |
 | gmic | framework for image processing | gmic |
 | gir1.2-glib-2.0 | Glib | dbus-glib |
 | gir1.2-gtk-3.0 | Gtk toolkit | gtk3 |
