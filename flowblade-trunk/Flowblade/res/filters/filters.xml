@@ -453,6 +453,8 @@
         <property name="noise" args="range_in=0,100 range_out=0,1.0 displayname=Amount">0.2</property>
    </filter>
 
+
+
     <!-- COLOR -->
     <filter id="greyscale">
         <name>Grayscale</name>
@@ -640,7 +642,14 @@
         <property name="av.bg" args="range_in=0,200 range_out=0.0,2.0 displayname=Blue!Ch.!Green!Gain">0</property>
         <property name="av.bb" args="range_in=0,200 range_out=0.0,2.0 displayname=Blue!Ch.!Blue!Gain">1</property>
    </filter>
-
+    <filter id="avfilter.lut3d">
+        <name>Lut3D</name>
+        <group>Color</group>
+        <property name="av.file" args="editor=no_editor exptype=not_parsed">/home/janne/Downloads/tmax.cube</property>
+   </filter>
+   
+   
+   
     <!-- COLOR EFFECT -->
     <filter id="frei0r.cluster">
         <name>Color Clustering</name>
@@ -721,7 +730,8 @@
         <property name="lightness" args="range_in=-100,100 range_out=0,1 displayname=Lightness">0.5</property>
    </filter>
    
-   
+
+
     <!-- DISTORT -->
     <filter id="frei0r.distort0r">
         <name>Waves</name>

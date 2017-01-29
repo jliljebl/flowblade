@@ -23,6 +23,7 @@ Handles Overwrite Box tool functionality.
 """
 
 import editorstate
+from editorstate import current_sequence
 import tlinewidgets
 import updater
 
@@ -130,13 +131,13 @@ class BoxMoveData:
         start_frame = tlinewidgets.get_frame(x1)
         end_frame = tlinewidgets.get_frame(x2) 
         
-        track_top = tlinewidgets.get_track(y1).id
-        track_bottom = tlinewidgets.get_track(y2).id
+        track_top_index = self.get_bounding_track_index(y1, tlinewidgets.get_track(y1))
+        track_bottom_index = self.get_bounding_track_index(y2, tlinewidgets.get_track(y2))
 
-        self.topleft_track = track_top
-        self.height_tracks = track_top - track_bottom + 1
+        self.topleft_track = track_top_index - 1
+        self.height_tracks = self.topleft_track - track_bottom_index # self.topleft_track is inclusive to height, track_bottom_index is eclusive to height
  
-        for i in range(track_bottom, track_top + 1):
+        for i in range(track_bottom_index + 1, track_top_index):
             self.track_selections.append(BoxTrackSelection(i, start_frame, end_frame))
 
         # Get selection bounding box
@@ -151,6 +152,15 @@ class BoxMoveData:
                 last_frame = track_selection.range_frame_out
         
         self.width_frames = last_frame - self.topleft_frame
+    
+    def get_bounding_track_index(self, mouse_y, tline_track):
+        if tline_track == None:
+            if mouse_y < tlinewidgets.REF_LINE_Y:
+                return len(current_sequence().tracks) # mouse pressed above all tracks
+            else:
+                return 0 # mouse pressed below all tracks
+        else:
+            return tline_track.id
 
     def is_empty(self):
         return False 
@@ -179,18 +189,36 @@ class BoxTrackSelection:
         
         track = editorstate.current_sequence().tracks[i]
         
-        # Get range indexes
-        self.selected_range_in = editorstate.current_sequence().get_clip_index(track, start_frame)
+        # Get start range index, outer selection required
+        start_bound_index = editorstate.current_sequence().get_clip_index(track, start_frame)
         
-        index_range_out = editorstate.current_sequence().get_clip_index(track, end_frame)
-        if index_range_out != -1:
-            self.selected_range_out = index_range_out
+        if start_bound_index == -1:
+            return # Selection starts after end of track contens, selection is empty
+
+        if start_bound_index != 0:
+            self.selected_range_in = start_bound_index + 1
+            if self.selected_range_in == len(current_sequence().tracks):
+                return # box selection was on last clip, nothing is elected
+        else:
+            if start_frame == 0:
+                self.selected_range_in = 0 # first clip on timeline can be selected by selecting frame 0
+            else:
+                self.selected_range_in = start_bound_index + 1
+                if self.selected_range_in == len(current_sequence().tracks):
+                    return # box selection was on last clip, nothing is elected
+        
+        # Get end range index, outer selection required
+        end_bound_index = editorstate.current_sequence().get_clip_index(track, end_frame)
+        if end_bound_index != -1:
+            self.selected_range_out = end_bound_index - 1
+            if self.selected_range_out  < 0:
+                return # range end was on first clip, nothing was selected
         else:
             if self.selected_range_in == -1:
                 return # track is empty
             # Range ends on last clip
             self.selected_range_out = len(track.clips) - 1
-            
+
         # Get clip lengths
         for i in range(self.selected_range_in, self.selected_range_out + 1):
             clip = track.clips[i]
@@ -199,7 +227,11 @@ class BoxTrackSelection:
         # Get bounding frames
         self.range_frame_in  = track.clip_start(self.selected_range_in)
         self.range_frame_out =  track.clip_start(self.selected_range_out) + self.clip_lengths[-1]
-        
-        
-        
-        
+
+    def is_empty(self):
+        if len(self.clip_lengths) == 0:
+            return True
+
+        return False
+
+
