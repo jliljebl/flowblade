@@ -276,7 +276,9 @@ def overwrite_move_press(event, frame):
     if editorstate.overwrite_mode_box == True:
         boxmove.mouse_press(event, frame)
         return
-        
+
+    tlinewidgets.set_edit_mode(None, tlinewidgets.draw_overwrite_overlay) # if we were in box mode draw func needs to be reset here
+    
     _move_mode_pressed(event, frame)
     
     global edit_data
@@ -304,7 +306,7 @@ def overwrite_move_move(x, y, frame, state):
         return 
     if edit_data == None:
         return
-
+    
     _move_mode_move(frame, x, y)
 
     # Calculate overwrite area if moving

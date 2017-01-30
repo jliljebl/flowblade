@@ -67,7 +67,6 @@ def mouse_move(x, y, frame):
         edit_data["mouse_point"] = (x, y)
        
     else: # mouse move to move
-        print "moooooooooooove"
         delta = frame - edit_data["press_frame"]
         edit_data["delta"] = delta
 
@@ -135,11 +134,30 @@ class BoxMoveData:
         track_bottom_index = self.get_bounding_track_index(y2, tlinewidgets.get_track(y2))
 
         self.topleft_track = track_top_index - 1
-        self.height_tracks = self.topleft_track - track_bottom_index # self.topleft_track is inclusive to height, track_bottom_index is eclusive to height
+
  
         for i in range(track_bottom_index + 1, track_top_index):
             self.track_selections.append(BoxTrackSelection(i, start_frame, end_frame))
 
+        # Drop empty tracks from bottom up
+        while len(self.track_selections) > 0:
+            if self.track_selections[0].is_empty() == True:
+                self.track_selections.pop(0)
+            else:
+                track_bottom_index = self.track_selections[0].track_id
+                break
+                
+        # Drop empty tracks from top down
+        while len(self.track_selections) > 0:
+            if self.track_selections[-1].is_empty() == True:
+                self.track_selections.pop(-1)
+            else:
+                self.topleft_track = self.track_selections[-1].track_id
+                break
+
+        self.height_tracks = self.topleft_track - track_bottom_index + 1# self.topleft_track is inclusive to height, track_bottom_index is eclusive to height
+        
+        
         # Get selection bounding box
         self.topleft_frame = 1000000000000
         for track_selection in self.track_selections:
@@ -163,7 +181,10 @@ class BoxMoveData:
             return tline_track.id
 
     def is_empty(self):
-        return False 
+        if len(self.track_selections) == 0:
+            return True
+        
+        return False
 
     def is_hit(self, x, y):
         hit_frame = tlinewidgets.get_frame(x)
@@ -174,7 +195,8 @@ class BoxMoveData:
                 return True
                 
         return False
-        
+
+
 class BoxTrackSelection:
     """
     This class collects data on track's box selected clips.
@@ -186,6 +208,7 @@ class BoxTrackSelection:
         self.range_frame_in  = -1
         self.range_frame_out = -1
         self.clip_lengths = []
+        self.clip_is_media = []
         
         track = editorstate.current_sequence().tracks[i]
         
@@ -193,7 +216,7 @@ class BoxTrackSelection:
         start_bound_index = editorstate.current_sequence().get_clip_index(track, start_frame)
         
         if start_bound_index == -1:
-            return # Selection starts after end of track contens, selection is empty
+            return # Selection starts after end of track contents, selection is empty
 
         if start_bound_index != 0:
             self.selected_range_in = start_bound_index + 1
@@ -219,11 +242,32 @@ class BoxTrackSelection:
             # Range ends on last clip
             self.selected_range_out = len(track.clips) - 1
 
+        # Drop blanks from start
+        blanks_stripped_start = self.selected_range_in
+        for i in range(self.selected_range_in, self.selected_range_out + 1):
+            if track.clips[i].is_blanck_clip == True:
+                blanks_stripped_start = i + 1
+            else:
+                break
+        self.selected_range_in = blanks_stripped_start
+        if self.selected_range_in > self.selected_range_out:
+            return # the 1 cli in selection range is blank
+
+        # Drop blanks from end
+        blanks_stripped_end = self.selected_range_out
+        for i in range(self.selected_range_out, self.selected_range_in - 1, - 1):
+            if track.clips[i].is_blanck_clip == True:
+                blanks_stripped_end = i - 1
+            else:
+                break
+        self.selected_range_out = blanks_stripped_end
+            
         # Get clip lengths
         for i in range(self.selected_range_in, self.selected_range_out + 1):
             clip = track.clips[i]
             self.clip_lengths.append(clip.clip_out - clip.clip_in + 1)
-        
+            self.clip_is_media.append(clip.is_blanck_clip == False)
+
         # Get bounding frames
         self.range_frame_in  = track.clip_start(self.selected_range_in)
         self.range_frame_out =  track.clip_start(self.selected_range_out) + self.clip_lengths[-1]

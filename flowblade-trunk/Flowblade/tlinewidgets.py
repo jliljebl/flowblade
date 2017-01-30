@@ -580,12 +580,27 @@ def draw_overwrite_box_overlay(cr, data):
             
             for i in range(0, len(track_selection.clip_lengths)):
                 clip_length = track_selection.clip_lengths[i]
-
-                scale_length = clip_length * pix_per_frame
-                scale_in = clip_start_frame * pix_per_frame
-                cr.rectangle(scale_in, y + 1.5, scale_length, track_height - 2.0)
-                cr.stroke()
+                if track_selection.clip_is_media[i] == True:
+                    scale_length = clip_length * pix_per_frame
+                    scale_in = clip_start_frame * pix_per_frame
+                    cr.rectangle(scale_in, y + 1.5, scale_length, track_height - 2.0)
+                    cr.stroke()
                 clip_start_frame += clip_length
+
+        # Draw bounding box
+        cr.set_line_width(2.0)
+        cr.set_source_rgb(*OVERLAY_COLOR)
+        x = (s_data.topleft_frame  - pos) * pix_per_frame
+        w = s_data.width_frames * pix_per_frame
+        y = _get_track_y(s_data.topleft_track)
+        bottom_track = s_data.topleft_track - s_data.height_tracks + 1
+        y2 = _get_track_y(bottom_track) + current_sequence().tracks[bottom_track].height
+        cr.move_to(x, y)
+        cr.line_to(x + w, y)
+        cr.line_to(x + w, y2)
+        cr.line_to(x, y2)
+        cr.close_path()
+        cr.stroke()
 
 def _draw_move_overlay(cr, data, y):
     # Get data
