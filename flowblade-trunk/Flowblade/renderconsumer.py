@@ -30,6 +30,8 @@ import time
 import threading
 import xml.dom.minidom
 import os
+# Jan-2017 - SvdB
+import editorpersistance
 
 import mltenv
 import respaths
@@ -269,7 +271,12 @@ def get_img_seq_render_consumer(file_path, profile, encoding_option):
     render_path = os.path.dirname(file_path) + "/" + os.path.basename(file_path).split(".")[0] + "_%05d." + encoding_option.extension
     
     consumer = mlt.Consumer(profile, "avformat", str(render_path))
-    consumer.set("real_time", -1)
+    # Jan-2017 - SvdB - perf_value instead of -1
+    if editorpersistance.prefs.perf_drop_frames == True:
+        perf_value = 1 * editorpersistance.prefs.perf_render_threads
+    else:
+        perf_value = -1 * editorpersistance.prefs.perf_render_threads
+    consumer.set("real_time", perf_value)
     consumer.set("rescale", "bicubic")
     consumer.set("vcodec", str(vcodec))
     print "img seq render consumer created, path:" +  str(render_path) #+ ", args: " + args_msg
@@ -277,7 +284,12 @@ def get_img_seq_render_consumer(file_path, profile, encoding_option):
     
 def get_mlt_render_consumer(file_path, profile, args_vals_list):
     consumer = mlt.Consumer(profile, "avformat", str(file_path))
-    consumer.set("real_time", -1)
+    # Jan-2017 - SvdB - perf_value instead of -1
+    if editorpersistance.prefs.perf_drop_frames == True:
+        perf_value = 1 * editorpersistance.prefs.perf_render_threads
+    else:
+        perf_value = -1 * editorpersistance.prefs.perf_render_threads
+    consumer.set("real_time", perf_value)
     consumer.set("rescale", "bicubic")
 
     args_msg = ""

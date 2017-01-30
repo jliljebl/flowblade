@@ -27,6 +27,8 @@ import editorpersistance
 import gui
 import guiutils
 import mltprofiles
+# Jan-2017 - SvdB - To get the number of CPU cores
+import multiprocessing
 
 PREFERENCES_WIDTH = 730
 PREFERENCES_HEIGHT = 440
@@ -46,15 +48,18 @@ def preferences_dialog():
     gen_opts_panel, gen_opts_widgets = _general_options_panel(_thumbs_select_clicked, _renders_select_clicked)
     edit_prefs_panel, edit_prefs_widgets = _edit_prefs_panel()
     view_pres_panel, view_pref_widgets = _view_prefs_panel()
+    # Jan-2017 - SvdB
+    performance_panel, performance_widgets = _performance_panel()
 
     notebook = Gtk.Notebook()
     notebook.set_size_request(PREFERENCES_WIDTH, PREFERENCES_HEIGHT)
     notebook.append_page(gen_opts_panel, Gtk.Label(label=_("General")))
     notebook.append_page(edit_prefs_panel, Gtk.Label(label=_("Editing")))
     notebook.append_page(view_pres_panel, Gtk.Label(label=_("View")))
+    notebook.append_page(performance_panel, Gtk.Label(label=_("Performance")))
     guiutils.set_margins(notebook, 4, 24, 6, 0)
 
-    dialog.connect('response', _preferences_dialog_callback, (gen_opts_widgets, edit_prefs_widgets, view_pref_widgets))
+    dialog.connect('response', _preferences_dialog_callback, (gen_opts_widgets, edit_prefs_widgets, view_pref_widgets, performance_widgets))
     dialog.vbox.pack_start(notebook, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     dialogutils.default_behaviour(dialog)
@@ -304,6 +309,41 @@ def _view_prefs_panel():
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     return vbox, (force_english_check, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo, window_mode_combo)
+
+def _performance_panel():
+    # Jan-2017 - SvdB
+    # Add a panel for performance settings. The first setting is allowing multiple threads to render
+    # the files. This is used for the real_time parameter to mlt in renderconsumer.py.
+    # The effect depends on the computer running the program.
+    # Max. number of threads is set to number of CPU cores. Default is 1.
+    # Allow Frame Dropping should help getting real time output on low performance computers.
+    prefs = editorpersistance.prefs
+
+    # Widgets
+    spin_adj = Gtk.Adjustment(prefs.perf_render_threads, 1, multiprocessing.cpu_count(), 1)
+    perf_render_threads = Gtk.SpinButton()
+    perf_render_threads.set_adjustment(spin_adj)
+    perf_render_threads.set_numeric(True)
+
+    perf_drop_frames = Gtk.CheckButton()
+    perf_drop_frames.set_active(prefs.perf_drop_frames)
+
+    # Tooltips
+    perf_render_threads.set_tooltip_text(_("Between 1 and the number of CPU Cores"))
+    perf_drop_frames.set_tooltip_text(_("Allow Frame Dropping for real-time rendering, when needed"))
+
+    # Layout
+    row1 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Render Threads:")), perf_render_threads, PREFERENCES_LEFT))
+    row2 = _row(guiutils.get_checkbox_row_box(perf_drop_frames, Gtk.Label(label=_("Allow Frame Dropping"))))
+
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(row1, False, False, 0)
+    vbox.pack_start(row2, False, False, 0)
+    vbox.pack_start(Gtk.Label(), True, True, 0)
+
+    guiutils.set_margins(vbox, 12, 0, 12, 12)
+
+    return vbox, (perf_render_threads, perf_drop_frames)
 
 def _row(row_cont):
     row_cont.set_size_request(10, 26)

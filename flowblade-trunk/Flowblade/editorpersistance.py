@@ -170,7 +170,7 @@ def get_recent_projects():
 
 def update_prefs_from_widgets(widgets_tuples_tuple):
     # Unpack widgets
-    gen_opts_widgets, edit_prefs_widgets, view_prefs_widgets = widgets_tuples_tuple
+    gen_opts_widgets, edit_prefs_widgets, view_prefs_widgets, performance_widgets = widgets_tuples_tuple
 
     default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo = gen_opts_widgets
     
@@ -180,6 +180,9 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
         play_pause_button, mouse_scroll_action, hide_file_ext_button = edit_prefs_widgets
     
     use_english, disp_splash, buttons_style, dark_theme, theme_combo, audio_levels_combo, window_mode_combo = view_prefs_widgets
+
+    # Jan-2017 - SvdB
+    perf_render_threads, perf_drop_frames = performance_widgets
 
     global prefs
     prefs.open_in_last_opended_media_dir = open_in_last_opened_check.get_active()
@@ -208,6 +211,9 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.theme_fallback_colors = theme_combo.get_active() 
     prefs.display_all_audio_levels = (audio_levels_combo.get_active() == 0)
     prefs.global_layout = window_mode_combo.get_active() + 1 # +1 'cause values are 1 and 2
+    # Jan-2017 - SvdB
+    prefs.perf_render_threads = int(perf_render_threads.get_adjustment().get_value())
+    prefs.perf_drop_frames = perf_drop_frames.get_active()
 
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
@@ -236,7 +242,7 @@ class EditorPreferences:
 
     def __init__(self):
         
-        # Every peference needs to have its default value set in this constructor
+        # Every preference needs to have its default value set in this constructor
         
         self.open_in_last_opended_media_dir = True
         self.last_opened_media_dir = None
@@ -288,3 +294,6 @@ class EditorPreferences:
         self.exit_allocation_window_2 = (0, 0, 0, 0)
         self.mouse_scroll_action_is_zoom = True
         self.hide_file_ext = False
+        # Jan-2017 - SvdB
+        # self.perf_render_threads = 1
+        # self.perf_drop_frames = False
