@@ -38,7 +38,7 @@ import utils
 
 EDITOR = "editor"
 
-# editor types                                              editor component
+# editor types and agrs                                     editor component or arg description
 SLIDER = "slider"                                           # Gtk.HScale                              
 BOOLEAN_CHECK_BOX = "booleancheckbox"                       # Gtk.CheckButton
 COMBO_BOX = "combobox"                                      # Gtk.Combobox
@@ -57,6 +57,8 @@ COLOR_CORRECTOR = "color_corrector"                         # 3 band color corre
 CR_CURVES = "crcurves"                                      # Curves color editor with Catmull-Rom curve
 COLOR_BOX = "colorbox"                                      # One band color editor with color box interface
 COLOR_LGG = "colorlgg"                                      # Editor for ColorLGG filter
+FILE_SELECTOR = "file_select"                               # File selector button for selecting single files from
+FILE_TYPES = "file_types"                                   # list of files types with "." chracters, like ".png.tga.bmp"
 NO_EDITOR = "no_editor"                                     # No editor displayed for property
 
 COMPOSITE_EDITOR_BUILDER = "composite_properties"           # Creates a single row editor for multiple properties of composite transition
@@ -462,6 +464,40 @@ def _wipe_lumafile_dialog_response(dialog, response_id, ep, widgets):
     if file_name != None:
         ep.write_value(file_name)
 
+def _get_file_select_editor(editable_property):
+    """
+    Returns GUI component for selecting wipe type.
+    """
+    dialog = Gtk.FileChooserDialog(_("Select File"), None, 
+                                   Gtk.FileChooserAction.OPEN, 
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+    dialog.set_action(Gtk.FileChooserAction.OPEN)
+    dialog.set_select_multiple(False)
+
+    file_types_args_list = editable_property.args[FILE_TYPES].split(".")
+    file_types_args_list = file_types_args_list[1:len(file_types_args_list)]
+    file_filter = Gtk.FileFilter()
+    for file_type in file_types_args_list:
+        file_filter.add_pattern("*." + file_type)
+    file_filter.set_name("Accepted Files")
+    
+    dialog.add_filter(file_filter)
+        
+    file_select_button = Gtk.FileChooserButton.new_with_dialog(dialog)
+    file_select_button.set_size_request(210, 28)
+    
+    file_select_label = Gtk.Label(editable_property.get_display_name())
+
+    editor_row = Gtk.HBox(False, 2)
+    editor_row.pack_start(file_select_label, False, False, 2)
+    editor_row.pack_start(guiutils.get_pad_label(3, 5), False, False, 2)
+    editor_row.pack_start(file_select_button, False, False, 0)
+
+    dialog.connect('response', editable_property.dialog_response_callback)
+    
+    return editor_row
+    
 def _create_composite_editor(clip, editable_properties):
     aligned = filter(lambda ep: ep.name == "aligned", editable_properties)[0]
     distort = filter(lambda ep: ep.name == "distort", editable_properties)[0]
@@ -730,6 +766,7 @@ EDITOR_ROW_CREATORS = { \
     WIPE_SELECT: lambda ep: _get_wipe_selector(ep),
     LADSPA_SLIDER: lambda ep: _get_ladspa_slider_row(ep),
     CLIP_FRAME_SLIDER: lambda ep: _get_clip_frame_slider(ep),
+    FILE_SELECTOR: lambda ep: _get_file_select_editor(ep),
     NO_EDITOR: lambda ep: _get_no_editor(),
     COMPOSITE_EDITOR_BUILDER: lambda comp, editable_properties: _create_composite_editor(comp, editable_properties),
     REGION_EDITOR_BUILDER: lambda comp, editable_properties: _create_region_editor(comp, editable_properties),

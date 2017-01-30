@@ -68,6 +68,7 @@ FREI_GEOM_HCS_TRANSITION = "frei_geom_hcs";                 # time=x:y:x_scale:y
 COLOR = "color"                                             # #rrggbb
 LUT_TABLE = "lut_table"                                     # val;val;val;val;...;val
 WIPE_RESOURCE = "wipe_resource"                             # /path/to/resource.pgm
+FILE_RESOURCE = "file_resource"                             # /path/to/somefile
 NOT_PARSED = "not_parsed"                                   # A write out value is not parsed from value
 NOT_PARSED_TRANSITION = "not_parsed_transition"             # A write out value is not parsed from value in transition object
 
@@ -124,6 +125,9 @@ def _create_editable_property(p_type, args_str, params):
         creator_func = EDITABLE_PROPERTY_CREATORS[exp_type]
         ep = creator_func(params)
     else:
+        """
+        Properties with single numerical values (int or float) can be handled with objects of EditableProperty class.
+        """
         ep = EditableProperty(params)
 
     return ep
@@ -709,11 +713,22 @@ class WipeResourceProperty(TransitionEditableProperty):
         res_path = mlttransitions.get_wipe_resource_path(key)
         self.write_value(str(res_path))
         
-
+class FileResourceProperty(EditableProperty):
+    """
+    Converts user combobox selections to absolute paths containing wipe
+    resource images.
+    """
+    def dialog_response_callback(self, dialog, response_id):
+        res_path = dialog.get_filename()
+        if response_id == Gtk.ResponseType.ACCEPT and res_path != None:
+            self.write_value(unicode(str(res_path), "utf-8"))
+        else:
+            self.write_value(unicode(str(""), "utf-8"))
+        
 class MultipartKeyFrameProperty(AbstractProperty):
     
     def __init__(self, params):
-        clip, filter_index, property, property_index, args_str = params
+        clip, filter_index, property, property_index, args_str = paramsg
         AbstractProperty.__init__(self, args_str)
         self.name, self.value, self.type = property
         self.clip = clip
@@ -806,6 +821,7 @@ EDITABLE_PROPERTY_CREATORS = { \
     GEOM_IN_AFFINE_FILTER: lambda params : AffineFilterGeomProperty(params),
     GEOM_IN_AFFINE_FILTER_V2: lambda params :AffineFilterGeomPropertyV2(params),
     WIPE_RESOURCE : lambda params : WipeResourceProperty(params),
+    FILE_RESOURCE : lambda params :FileResourceProperty(params),
     LUT_TABLE : lambda params  : LUTTableProperty(params),
     NOT_PARSED : lambda params : EditableProperty(params), # This should only be used with params that have editor=NO_EDITOR
     NOT_PARSED_TRANSITION : lambda params : TransitionEditableProperty(params), # This should only be used with params that have editor=NO_EDITOR
