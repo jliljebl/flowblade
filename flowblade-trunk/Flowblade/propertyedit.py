@@ -715,8 +715,7 @@ class WipeResourceProperty(TransitionEditableProperty):
         
 class FileResourceProperty(EditableProperty):
     """
-    Converts user combobox selections to absolute paths containing wipe
-    resource images.
+    A file path as property value set from file chooser dialog callback.
     """
     def dialog_response_callback(self, dialog, response_id):
         res_path = dialog.get_filename()

@@ -517,6 +517,7 @@ def load_filters_translations():
     param_names["Rows"] = _("Rows")
     param_names["Columns"] = _("Columns")
     param_names["Color Temperature"] = _("Color Temperature")
+    param_names["Select .cube file"] = _("Select .cube file")
 
     # param names for compositors
     param_names["Opacity"] = _("Opacity")
