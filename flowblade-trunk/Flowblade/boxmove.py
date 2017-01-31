@@ -22,6 +22,7 @@
 Handles Overwrite Box tool functionality.
 """
 
+import edit
 import editorstate
 from editorstate import current_sequence
 import tlinewidgets
@@ -94,6 +95,13 @@ def mouse_release(x, y, frame):
     else: # mouse action to move
         delta = frame - edit_data["press_frame"]
         edit_data["delta"] = delta
+
+        # Do edit
+        data = {"box_selection_data":box_selection_data,
+                "delta":delta}
+        action = edit.box_overwrite_move_action(data)
+        action.do_edit()
+        
         # Back to start state
         edit_data = None
         box_selection_data = None

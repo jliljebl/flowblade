@@ -233,6 +233,7 @@ OVERWRITE_OVERLAY_COLOR = (0.2, 0.2, 0.2, 0.5)
 INSERT_MODE_COLOR = (0.9,0.9,0.0)
 OVERWRITE_MODE_COLOR = (0.9,0.0,0.0)
 OVERLAY_TRIM_COLOR = (0.81, 0.82, 0.3)
+BOX_BOUND_COLOR =(0.137, 0.80, 0.85)
 
 POINTER_TRIANGLE_COLOR = (0.6, 0.7, 0.8, 0.7)
 SHADOW_POINTER_COLOR = (0.5, 0.5, 0.5)
@@ -588,9 +589,9 @@ def draw_overwrite_box_overlay(cr, data):
                 clip_start_frame += clip_length
 
         # Draw bounding box
-        cr.set_line_width(2.0)
-        cr.set_source_rgb(*OVERLAY_COLOR)
-        x = (s_data.topleft_frame  - pos) * pix_per_frame
+        cr.set_line_width(4.0)
+        cr.set_source_rgb(*BOX_BOUND_COLOR)
+        x = (s_data.topleft_frame  - pos + data["delta"]) * pix_per_frame
         w = s_data.width_frames * pix_per_frame
         y = _get_track_y(s_data.topleft_track)
         bottom_track = s_data.topleft_track - s_data.height_tracks + 1

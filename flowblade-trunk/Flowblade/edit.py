@@ -937,7 +937,47 @@ def _overwrite_move_redo(self):
     # HACK, see EditAction for details
     self.turn_on_stop_for_edit = True
 
-      
+
+#----------------- BOX OVERWRITE MOVE
+# "box_selection_data","delta"
+# Lifts clips from track and overwrites part of track with them for multple tracks
+# Move  compositors contained by selection too.
+def box_overwrite_move_action(data):
+    action = EditAction(_box_overwrite_move_undo, _box_overwrite_move_redo, data)
+    action.turn_on_stop_for_edit = True
+    return action
+
+def _box_overwrite_move_undo(self):
+    # Do track move edits
+    for move_data in self.track_moves:
+        action_object = utils.EmptyClass
+        action_object.__dict__.update(move_data)
+        print action_object.__dict__
+        _overwrite_move_undo(action_object)
+
+def _box_overwrite_move_redo(self):
+    print "_box_overwrite_move_redo"
+    # Create data for track overwite moves
+    if not hasattr(self, "track_moves"):
+        self.track_moves = []
+        for track_selection in self.box_selection_data.track_selections:
+            
+            track_move_data = {"track":current_sequence().tracks[track_selection.track_id],
+                                "over_in":track_selection.range_frame_in + self.delta,
+                                "over_out":track_selection.range_frame_out + self.delta,
+                                "selected_range_in":track_selection.selected_range_in,
+                                "selected_range_out":track_selection.selected_range_out,
+                                "move_edit_done_func":None}
+            print track_move_data
+            self.track_moves.append(track_move_data)
+            
+    # Do track move edits
+    for move_data in self.track_moves:
+        action_object = utils.EmptyClass
+        action_object.__dict__.update(move_data)
+        print action_object.__dict__
+        _overwrite_move_redo(action_object)
+    
 #----------------- MULTITRACK OVERWRITE MOVE
 # "track","to_track","over_in","over_out","selected_range_in"
 # "selected_range_out","move_edit_done_func"
