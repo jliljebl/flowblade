@@ -295,5 +295,5 @@ class EditorPreferences:
         self.mouse_scroll_action_is_zoom = True
         self.hide_file_ext = False
         # Jan-2017 - SvdB
-        # self.perf_render_threads = 1
-        # self.perf_drop_frames = False
+        self.perf_render_threads = 1
+        self.perf_drop_frames = False
