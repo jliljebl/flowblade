@@ -944,7 +944,7 @@ def _overwrite_move_redo(self):
 # Move  compositors contained by selection too.
 def box_overwrite_move_action(data):
     action = EditAction(_box_overwrite_move_undo, _box_overwrite_move_redo, data)
-    action.turn_on_stop_for_edit = True
+    # action.turn_on_stop_for_edit = True
     return action
 
 def _box_overwrite_move_undo(self):
@@ -952,7 +952,7 @@ def _box_overwrite_move_undo(self):
     for move_data in self.track_moves:
         action_object = utils.EmptyClass
         action_object.__dict__.update(move_data)
-        print action_object.__dict__
+
         _overwrite_move_undo(action_object)
 
 def _box_overwrite_move_redo(self):
@@ -968,16 +968,18 @@ def _box_overwrite_move_redo(self):
                                 "selected_range_in":track_selection.selected_range_in,
                                 "selected_range_out":track_selection.selected_range_out,
                                 "move_edit_done_func":None}
-            print track_move_data
+
             self.track_moves.append(track_move_data)
             
     # Do track move edits
     for move_data in self.track_moves:
         action_object = utils.EmptyClass
         action_object.__dict__.update(move_data)
-        print action_object.__dict__
+
         _overwrite_move_redo(action_object)
-    
+        
+        move_data["removed_clips"] = action_object.removed_clips
+
 #----------------- MULTITRACK OVERWRITE MOVE
 # "track","to_track","over_in","over_out","selected_range_in"
 # "selected_range_out","move_edit_done_func"
