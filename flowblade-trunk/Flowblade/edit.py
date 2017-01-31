@@ -944,7 +944,7 @@ def _overwrite_move_redo(self):
 # Move  compositors contained by selection too.
 def box_overwrite_move_action(data):
     action = EditAction(_box_overwrite_move_undo, _box_overwrite_move_redo, data)
-    # action.turn_on_stop_for_edit = True
+    action.turn_on_stop_for_edit = True
     return action
 
 def _box_overwrite_move_undo(self):
@@ -955,8 +955,11 @@ def _box_overwrite_move_undo(self):
 
         _overwrite_move_undo(action_object)
 
+    # Move compositors
+    for comp in self.box_selection_data.selected_compositors:
+        comp.move(-self.delta)
+        
 def _box_overwrite_move_redo(self):
-    print "_box_overwrite_move_redo"
     # Create data for track overwite moves
     if not hasattr(self, "track_moves"):
         self.track_moves = []
@@ -979,6 +982,10 @@ def _box_overwrite_move_redo(self):
         _overwrite_move_redo(action_object)
         
         move_data["removed_clips"] = action_object.removed_clips
+
+    # Move compositors
+    for comp in self.box_selection_data.selected_compositors:
+        comp.move(self.delta)
 
 #----------------- MULTITRACK OVERWRITE MOVE
 # "track","to_track","over_in","over_out","selected_range_in"

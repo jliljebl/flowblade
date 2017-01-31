@@ -587,7 +587,24 @@ def draw_overwrite_box_overlay(cr, data):
                     cr.rectangle(scale_in, y + 1.5, scale_length, track_height - 2.0)
                     cr.stroke()
                 clip_start_frame += clip_length
-
+        
+        # Draw moved compositors
+        for comp in s_data.selected_compositors:
+            comp_in = comp.clip_in - pos + data["delta"]
+            comp_out = comp.clip_out - pos + data["delta"]
+            track = current_sequence().tracks[comp.transition.b_track]
+            y = _get_track_y(comp.transition.b_track) + track.height - COMPOSITOR_HEIGHT_OFF
+            track_height = current_sequence().tracks[comp.transition.b_track].height
+            scale_length = (comp_out - comp_in) * pix_per_frame
+            scale_in = comp_in * pix_per_frame
+            target_track = current_sequence().tracks[comp.transition.a_track]
+            target_y = _get_track_y(target_track.id) + target_track.height - COMPOSITOR_HEIGHT_OFF
+                
+            _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y)
+    
+            cr.set_source_rgb(*BOX_BOUND_COLOR)
+            cr.stroke()
+                    
         # Draw bounding box
         cr.set_line_width(4.0)
         cr.set_source_rgb(*BOX_BOUND_COLOR)

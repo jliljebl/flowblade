@@ -626,6 +626,13 @@ class Sequence:
         """
         self.compositors.sort(_sort_compositors_comparator)
 
+    def get_track_compositors(self, track_index):
+        track_compositors = []
+        for comp in self.compositors:
+            if comp.transition.b_track == track_index:
+                track_compositors.append(comp)
+        return track_compositors
+            
     # -------------------------- monitor clip, trimming display, output mode and hidden track
     def display_monitor_clip(self, path, pattern_producer_data=None):
         """

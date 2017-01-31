@@ -893,18 +893,11 @@ class RippleData:
         return blank_end_frame - self.trim_frame
 
     def get_tracks_compositors_list(self):
-        tracks_list = []
-        tracks = current_sequence().tracks
-        compositors = current_sequence().compositors
-        for track_index in range(1, len(tracks) - 1):
-            track_compositors = []
-            for j in range(0, len(compositors)):
-                comp = compositors[j]
-                if comp.transition.b_track == track_index:
-                    track_compositors.append(comp)
-            tracks_list.append(track_compositors)
+        tracks_compositors_list = []
+        for track_index in range(1, len(current_sequence().tracks) - 1):
+            tracks_compositors_list.append(current_sequence().get_track_compositors(track_index))
         
-        return tracks_list
+        return tracks_compositors_list
     
 #---------------------------------------- TWO ROLL TRIM EVENTS
 def set_tworoll_mode(track, current_frame = -1):

@@ -123,9 +123,7 @@ class BoxMoveData:
         self.selected_compositors = []
         
         self._get_selection_data(p1, p2)
-    
-        print self.__dict__
-        
+
     def _get_selection_data(self,  p1, p2):
         x1, y1 = p1
         x2, y2 = p2
@@ -143,7 +141,14 @@ class BoxMoveData:
 
         self.topleft_track = track_top_index - 1
 
- 
+        # Get compositors
+        for i in range(track_bottom_index + 1, track_top_index):
+            track_compositors = current_sequence().get_track_compositors(i)
+            for comp in track_compositors:
+                if comp.clip_in >= start_frame and comp.clip_out < end_frame:
+                    self.selected_compositors.append(comp)
+        
+        # Get BoxTrackSelection objects
         for i in range(track_bottom_index + 1, track_top_index):
             self.track_selections.append(BoxTrackSelection(i, start_frame, end_frame))
 
@@ -164,7 +169,6 @@ class BoxMoveData:
                 break
 
         self.height_tracks = self.topleft_track - track_bottom_index + 1# self.topleft_track is inclusive to height, track_bottom_index is eclusive to height
-        
         
         # Get selection bounding box
         self.topleft_frame = 1000000000000
