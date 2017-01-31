@@ -220,6 +220,11 @@ DARK_FRAME_SCALE_SELECTED_COLOR_GRAD_L = get_multiplied_grad(1, 1, FRAME_SCALE_S
 
 ICON_SELECTED_OVERLAY_COLOR = (0.8, 0.8, 1.0, 0.3)
 
+# Dash pattern used to create "LED"s
+BOX_DASH_INK = 12.0
+BOX_DASH_SKIP = 3.0
+BOX_DASHES = [BOX_DASH_INK, BOX_DASH_SKIP, BOX_DASH_INK, BOX_DASH_SKIP]
+
 FRAME_SCALE_LINES = (0, 0, 0)
 
 BG_COLOR = (0.5, 0.5, 0.55)#(0.6, 0.6, 0.65)
@@ -606,7 +611,7 @@ def draw_overwrite_box_overlay(cr, data):
             cr.stroke()
                     
         # Draw bounding box
-        cr.set_line_width(4.0)
+        cr.set_line_width(6.0)
         cr.set_source_rgb(*BOX_BOUND_COLOR)
         x = (s_data.topleft_frame  - pos + data["delta"]) * pix_per_frame
         w = s_data.width_frames * pix_per_frame
@@ -618,6 +623,7 @@ def draw_overwrite_box_overlay(cr, data):
         cr.line_to(x + w, y2)
         cr.line_to(x, y2)
         cr.close_path()
+        cr.set_dash(BOX_DASHES, 0) 
         cr.stroke()
 
 def _draw_move_overlay(cr, data, y):
