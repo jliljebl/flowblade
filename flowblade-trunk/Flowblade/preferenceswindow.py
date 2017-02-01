@@ -250,6 +250,10 @@ def _view_prefs_panel():
     display_splash_check = Gtk.CheckButton()
     display_splash_check.set_active(prefs.display_splash_screen)
 
+    # Feb-2017 - SvdB - For full file names
+    show_full_file_names = Gtk.CheckButton()
+    show_full_file_names.set_active(prefs.show_full_file_names)
+
     buttons_combo = Gtk.ComboBoxText()
     buttons_combo.append_text(_("Glass"))
     buttons_combo.append_text(_("Simple"))
@@ -295,6 +299,8 @@ def _view_prefs_panel():
     row3 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme request, icons and colors:")), dark_combo, PREFERENCES_LEFT))
     row4 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme detection fail fallback colors:")), theme_combo, PREFERENCES_LEFT))
     row5 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Default audio levels display:")), audio_levels_combo, PREFERENCES_LEFT))
+    # Feb-2017 - SvdB - For full file names
+    row6 =  _row(guiutils.get_checkbox_row_box(show_full_file_names, Gtk.Label(label=_("Show Full File names"))))
 
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row00, False, False, 0)
@@ -304,11 +310,15 @@ def _view_prefs_panel():
     vbox.pack_start(row3, False, False, 0)
     vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row5, False, False, 0)
+    # Feb-2017 - SvdB - For full file names
+    vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
 
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
-    return vbox, (force_english_check, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo, window_mode_combo)
+    # Feb-2017 - SvdB - Added code for full file names
+    return vbox, (force_english_check, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo, 
+                  window_mode_combo, show_full_file_names)
 
 def _performance_panel():
     # Jan-2017 - SvdB

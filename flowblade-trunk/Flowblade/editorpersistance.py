@@ -179,7 +179,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
         trim_exit_click, trim_quick_enter, remember_clip_frame, overwrite_clip_drop, cover_delete, \
         play_pause_button, mouse_scroll_action, hide_file_ext_button = edit_prefs_widgets
     
-    use_english, disp_splash, buttons_style, dark_theme, theme_combo, audio_levels_combo, window_mode_combo = view_prefs_widgets
+    use_english, disp_splash, buttons_style, dark_theme, theme_combo, audio_levels_combo, window_mode_combo, full_names = view_prefs_widgets
 
     # Jan-2017 - SvdB
     perf_render_threads, perf_drop_frames = performance_widgets
@@ -214,6 +214,8 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     # Jan-2017 - SvdB
     prefs.perf_render_threads = int(perf_render_threads.get_adjustment().get_value())
     prefs.perf_drop_frames = perf_drop_frames.get_active()
+    # Feb-2017 - SvdB - for full file names
+    prefs.show_full_file_names = full_names.get_active()
 
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
@@ -297,3 +299,5 @@ class EditorPreferences:
         # Jan-2017 - SvdB
         self.perf_render_threads = 1
         self.perf_drop_frames = False
+        # Feb-2017 - SvdB - for full file names
+        self.show_full_file_names = False
