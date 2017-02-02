@@ -1102,15 +1102,15 @@ class BoxGeometryScreenEditor(AbstractScreenEditor):
             self.source_edit_rect.edit_point_drag(delta_x, delta_y)
             self.source_edit_rect.clear_projection_point()
 
-    def handle_arrow_edit(self, keyval):
+    def handle_arrow_edit(self, keyval, delta):
         if keyval == Gdk.KEY_Left:
-            self.source_edit_rect.x -= 1
+            self.source_edit_rect.x -= delta
         if keyval == Gdk.KEY_Right:
-            self.source_edit_rect.x += 1
+            self.source_edit_rect.x += delta
         if keyval == Gdk.KEY_Up:
-            self.source_edit_rect.y -= 1
+            self.source_edit_rect.y -= delta
         if keyval == Gdk.KEY_Down:                         
-            self.source_edit_rect.y += 1
+            self.source_edit_rect.y += delta
             
     def print_keyframes(self):
         for i in range(0, len(self.keyframes)):
@@ -1257,15 +1257,15 @@ class RotatingScreenEditor(AbstractScreenEditor):
         r = r1 + (r2 - r1) * fract
         return (x, y, xs, ys, r)
 
-    def handle_arrow_edit(self, keyval):
+    def handle_arrow_edit(self, keyval, delta):
         if keyval == Gdk.KEY_Left:
-            self.shape_x -= 1
+            self.shape_x -= delta
         if keyval == Gdk.KEY_Right:
-            self.shape_x += 1
+            self.shape_x += delta
         if keyval == Gdk.KEY_Up:
-            self.shape_y -= 1
+            self.shape_y -= delta
         if keyval == Gdk.KEY_Down:                         
-            self.shape_y += 1
+            self.shape_y += delta
             
     # --------------------------------------------------------- mouse events
     def _shape_press_event(self):
@@ -1882,8 +1882,12 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.update_property_value()
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
 
-    def arrow_edit(self, keyval):
-        self.geom_kf_edit.handle_arrow_edit(keyval)
+    def arrow_edit(self, keyval, CTRL_DOWN):
+        if CTRL_DOWN:
+            delta = 10
+        else:
+            delta = 1
+        self.geom_kf_edit.handle_arrow_edit(keyval, delta)
         self.geom_kf_edit.set_keyframe_to_edit_shape(self.clip_editor.active_kf_index)
         self.update_editor_view_with_frame(self.clip_editor.current_clip_frame)
         self.update_property_value()

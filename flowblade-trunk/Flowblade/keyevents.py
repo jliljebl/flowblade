@@ -615,7 +615,7 @@ def _handle_geometry_editor_keys(event):
                         or (event.keyval == Gdk.KEY_Right)
                         or (event.keyval == Gdk.KEY_Up)
                         or (event.keyval == Gdk.KEY_Down)):
-                        kfeditor.arrow_edit(event.keyval)
+                        kfeditor.arrow_edit(event.keyval, (event.get_state() & Gdk.ModifierType.CONTROL_MASK))
                         return True
                     if event.keyval == Gdk.KEY_plus:
                         pass # not impl
