@@ -31,6 +31,7 @@ from operator import itemgetter
 
 import appconsts
 import clipeffectseditor
+import compositeeditor
 import compositormodes
 import dialogs
 import dialogutils
@@ -56,6 +57,11 @@ import respaths
 import syncsplitevent
 import updater
 import utils
+
+
+# values for differentiating copy paste data
+COPY_PASTA_DATA_CLIPS = 1
+COPY_PASTA_DATA_COMPOSITOR_PROPERTIES = 2
 
 # Used to store transition render data to be used at render complete callback
 transition_render_data = None
@@ -945,6 +951,10 @@ def do_timeline_objects_copy():
 
         return 
 
+    if compositormodes.compositor != None and compositormodes.compositor.selected == True:
+        editorstate.set_copy_paste_objects((COPY_PASTA_DATA_COMPOSITOR_PROPERTIES, compositormodes.compositor.get_copy_paste_objects()))
+        return
+        
     if movemodes.selected_track != -1:
         # copying clips
         track = current_sequence().tracks[movemodes.selected_track]
@@ -952,7 +962,7 @@ def do_timeline_objects_copy():
         for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
             clone_clip = current_sequence().clone_track_clip(track, i)
             clone_clips.append(clone_clip)
-        editorstate.set_copy_paste_objects(clone_clips)
+        editorstate.set_copy_paste_objects((COPY_PASTA_DATA_CLIPS, clone_clips))
         return
 
 def do_timeline_objects_paste():
@@ -965,17 +975,22 @@ def do_timeline_objects_paste():
     paste_objs = editorstate.get_copy_paste_objects()
     if paste_objs == None:
         return 
+    
+    data_type, paste_clips = paste_objs
+    if data_type != COPY_PASTA_DATA_CLIPS:
+        do_compositor_data_paste(paste_objs)
+        return
 
     tline_pos = editorstate.current_tline_frame()
 
     new_clips = []
-    for clip in paste_objs:
+    for clip in paste_clips:
         new_clip = current_sequence().create_clone_clip(clip)
         new_clips.append(new_clip)
-    editorstate.set_copy_paste_objects(new_clips)
+    editorstate.set_copy_paste_objects((COPY_PASTA_DATA_CLIPS, new_clips))
 
     # Paste clips
-    editevent.do_multiple_clip_insert(track, paste_objs, tline_pos)
+    editevent.do_multiple_clip_insert(track, paste_clips, tline_pos)
 
 def do_timeline_filters_paste():
     if _timeline_has_focus() == False:
@@ -989,6 +1004,11 @@ def do_timeline_filters_paste():
     if paste_objs == None:
         return 
 
+    data_type, paste_clips = paste_objs
+    if data_type != COPY_PASTA_DATA_CLIPS:
+        do_compositor_data_paste(paste_objs)
+        return
+        
     if movemodes.selected_track == -1:
         return
         
@@ -998,7 +1018,7 @@ def do_timeline_filters_paste():
         target_clips.append(track.clips[i])
 
     # First clip of selection is used as filters source
-    source_clip = paste_objs[0]
+    source_clip = paste_clips[0]
 
     # Currently selected clips are target clips
     target_clips = []
@@ -1010,6 +1030,17 @@ def do_timeline_filters_paste():
         data = {"clip":target_clip,"clone_source_clip":source_clip}
         action = edit.paste_filters_action(data)
         action.do_edit()
+
+def do_compositor_data_paste(paste_objs):
+    data_type, paste_data = paste_objs
+    if data_type != COPY_PASTA_DATA_COMPOSITOR_PROPERTIES:
+        print "supposed unreahcable if in do_compositor_data_paste"
+        return
+        
+    if compositormodes.compositor != None and compositormodes.compositor.selected == True:
+        compositormodes.compositor.do_values_copy_paste(paste_data)
+        compositeeditor.set_compositor(compositormodes.compositor)
+        return
 
 def _timeline_has_focus(): # copied from keyevents.by. maybe put in utils?
     if(gui.tline_canvas.widget.is_focus()

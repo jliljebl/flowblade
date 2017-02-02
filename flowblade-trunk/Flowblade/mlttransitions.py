@@ -338,6 +338,20 @@ class CompositorObject:
         self.transition.properties = copy.deepcopy(source_compositor.transition.properties)
         self.transition.update_editable_mlt_properties()
 
+    def get_copy_paste_objects(self):
+        # Copy-paste is handled with tuple data (properties, mlt_service_id)
+        return (copy.deepcopy(self.transition.properties), self.transition.info.mlt_service_id)
+
+    def do_values_copy_paste(self, copy_paste_data):
+        # Copy-paste is handled with tuple data (properties, mlt_service_id)
+        properties, mlt_service_id = copy_paste_data
+    
+        # Only allow copy paste between same types of compositors
+        if mlt_service_id == self.transition.info.mlt_service_id:
+            self.transition.properties = copy.deepcopy(properties)
+            self.transition.update_editable_mlt_properties()
+        
+        
 # -------------------------------------------------- compositor interface methods
 def load_compositors_xml(transitions):
     """
