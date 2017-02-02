@@ -843,7 +843,8 @@ def draw_one_roll_overlay(cr, data):
     cr.stroke()
 
     _draw_kb_trim_indicator(cr, selection_frame_x, track_y)
-
+    #_draw_snap(cr, track_y)
+    
 def draw_one_roll_overlay_ripple(cr, data):
     # Trim overlay
     draw_one_roll_overlay(cr, data)
