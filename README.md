@@ -13,9 +13,9 @@
 
 # Introduction
 
-Flowblade is a **multitrack non-linear video editor** for Linux released under **GPL 3 license**.
+Flowblade is a **multitrack non-linear video editor** for Linux released under **GPL 3 license**, that does not yet support 4K video editing.
 
-Flowblade is designed to provide a fast, precise and robust editing experience. Flowblade employs a film-style insert editing model as workflow. In insert editing clips are generally placed tightly after other clips when they are inserted on the timeline. Edits are fine tuned by trimming in and out points of clips or by cutting and deleting parts of clips.
+Flowblade is designed to provide a fast, precise and robust editing experience. Flowblade employs a film-style insert editing model as workflow. In insert editing clips are generally placed tightly after other clips when they are inserted on the timeline. Edits are fine tuned by trimming in and out points of clips or by cutting and deleting parts of clips. Please note that this project does not yet support 4K export, but it will allow you to edit 4k files. Which might cause you to waste hours of your time editing a video, only to find out at the end that the best you can do with rendering is HD. So to save you some frustration, we are now telling you that right here in the introduction!
 
 Flowblade provides powerful tools to mix and filter video and audio.
 
