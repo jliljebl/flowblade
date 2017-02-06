@@ -926,8 +926,14 @@ class MediaObjectWidget:
 
         txt = Gtk.Label(label=media_file.name)
         txt.modify_font(Pango.FontDescription("sans 9"))
-        txt.set_ellipsize(Pango.EllipsizeMode.END)
         txt.set_max_width_chars(13)
+        # Feb-2017 - SvdB - For full file names. First part shows the original code for short file names        
+        if editorpersistance.prefs.show_full_file_names == False:
+            txt.set_ellipsize(Pango.EllipsizeMode.END)
+        else:
+            txt.set_line_wrap_mode(Pango.WrapMode.CHAR)
+            txt.set_line_wrap(True)
+        # end SvdB
         txt.set_tooltip_text(media_file.name)
 
         self.vbox.pack_start(self.img, True, True, 0)
