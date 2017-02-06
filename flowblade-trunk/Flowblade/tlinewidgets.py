@@ -782,7 +782,8 @@ def draw_two_roll_overlay(cr, data):
     cr.stroke()
 
     _draw_kb_trim_indicator(cr, selection_frame_x, track_y)
-    
+    _draw_snap(cr, track_y)
+
 def draw_one_roll_overlay(cr, data):
     track_height = current_sequence().tracks[data["track"]].height
     track_y = _get_track_y(data["track"])
@@ -843,7 +844,7 @@ def draw_one_roll_overlay(cr, data):
     cr.stroke()
 
     _draw_kb_trim_indicator(cr, selection_frame_x, track_y)
-    #_draw_snap(cr, track_y)
+    _draw_snap(cr, track_y)
     
 def draw_one_roll_overlay_ripple(cr, data):
     # Trim overlay
@@ -1183,7 +1184,7 @@ class TimeLineCanvas:
         track = get_track(y)
         x = snapping.get_snapped_x(x, track, self.edit_mode_data)
             
-        self.move_listener(x, y, get_frame(x), button, state)
+        self.move_listener(x, y, get_frame(x), button, state) # -> editevent.tline_canvas_mouse_pressed(...)
         
     def _release_event(self, event):
         """

@@ -61,8 +61,8 @@ def get_snapped_x(x, track, edit_data):
             return _object_end_drag_snap(x, track, frame, edit_data)
         elif compositormodes.sub_mode == compositormodes.MOVE_EDIT:
             return _compositor_move_snap(x, track, frame, edit_data)
-    #elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM or  EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
-    #    return _trimming_snap(x, track, frame, edit_data)
+    elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM or  EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
+        return _trimming_snap(x, track, frame, edit_data)
 
     # Many edit modes do not have snapping even if snapping is on
     return x
@@ -187,13 +187,16 @@ def _trimming_snap(x, track, frame, edit_data):
     if edit_data == None:
         return x
 
-    selected_frame = edit_data["selected_frame"]
+    selected_frame = _get_frame_for_x_func(x)
     selected_frame_x = _get_x_for_frame_func(selected_frame)
 
     snapped_x = -1 # if value stays same till end, no snapping has happened
     snapped_x = _three_track_snap(track, x, selected_frame, selected_frame_x)
+    
+    return_x = return_snapped_x_or_x(snapped_x, x)
+    edit_data["selected_frame"] = _get_frame_for_x_func(return_x)
 
     # Return either original x or snapped x
-    return return_snapped_x_or_x(snapped_x, x)
+    return return_x
     
     
