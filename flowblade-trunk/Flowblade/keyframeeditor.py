@@ -883,12 +883,14 @@ class AbstractScreenEditor:
                 delta_x = 0
             else:
                 delta_y = 0
-        
-        self._shape__motion_notify_event(delta_x, delta_y)
+        #elif state & Gdk.ModifierType.CONTROL_MASK:
+        #    print "control"
+                
+        self._shape__motion_notify_event(delta_x, delta_y, (state & Gdk.ModifierType.CONTROL_MASK))
 
         self.parent_editor.queue_draw()
     
-    def _shape__motion_notify_event(self, delta_x, delta_y):
+    def _shape__motion_notify_event(self, delta_x, delta_y, CTRL_DOWN):
         print "_shape__motion_notify_event not impl"
 
     
@@ -905,11 +907,11 @@ class AbstractScreenEditor:
             else:
                 delta_y = 0
                 
-        self._shape_release_event(delta_x, delta_y)
+        self._shape_release_event(delta_x, delta_y, (event.get_state() & Gdk.ModifierType.CONTROL_MASK))
             
         self.parent_editor.geometry_edit_finished()
 
-    def _shape_release_event(self, delta_x, delta_y):
+    def _shape_release_event(self, delta_x, delta_y, CTRL_DOWN):
         print "_shape_release_event not impl"
 
     def _mouse_scroll_listener(self, event):
@@ -1089,13 +1091,13 @@ class BoxGeometryScreenEditor(AbstractScreenEditor):
         else:
             self.source_edit_rect.edit_point_drag_started(self.current_mouse_hit)
 
-    def _shape__motion_notify_event(self, delta_x, delta_y):
+    def _shape__motion_notify_event(self, delta_x, delta_y, CTRL_DOWN):
         if self.current_mouse_hit == AREA_HIT:
             self.source_edit_rect.move_drag(delta_x, delta_y)
         else:
             self.source_edit_rect.edit_point_drag(delta_x, delta_y)
 
-    def _shape_release_event(self, delta_x, delta_y):
+    def _shape_release_event(self, delta_x, delta_y, CTRL_DOWN):
         if self.current_mouse_hit == AREA_HIT:
             self.source_edit_rect.move_drag(delta_x, delta_y)
         else:
@@ -1286,13 +1288,13 @@ class RotatingScreenEditor(AbstractScreenEditor):
             self.start_shape_x = self.shape_x 
             self.start_shape_y = self.shape_y
             
-    def _shape__motion_notify_event(self, delta_x, delta_y):
-        self._update_values_for_mouse_delta(delta_x, delta_y)
+    def _shape__motion_notify_event(self, delta_x, delta_y, CTRL_DOWN):
+        self._update_values_for_mouse_delta(delta_x, delta_y, CTRL_DOWN)
 
-    def _shape_release_event(self, delta_x, delta_y):
-        self._update_values_for_mouse_delta(delta_x, delta_y)
+    def _shape_release_event(self, delta_x, delta_y, CTRL_DOWN):
+        self._update_values_for_mouse_delta(delta_x, delta_y, CTRL_DOWN)
     
-    def _update_values_for_mouse_delta(self, delta_x, delta_y):
+    def _update_values_for_mouse_delta(self, delta_x, delta_y, CTRL_DOWN):
         if self.current_mouse_hit == POS_HANDLE or self.current_mouse_hit == AREA_HIT:
             dx = self.get_screen_x(self.coords.orig_x + delta_x)
             dy = self.get_screen_y(self.coords.orig_y + delta_y)
@@ -1305,6 +1307,8 @@ class RotatingScreenEditor(AbstractScreenEditor):
             dist = viewgeom.distance(self.edit_points[POS_HANDLE], pp)
             orig_dist = viewgeom.distance(self.untrans_points[POS_HANDLE], self.untrans_points[X_SCALE_HANDLE])
             self.x_scale = dist / orig_dist
+            if CTRL_DOWN:
+                self.y_scale = self.x_scale
             self._update_edit_points()
         elif self.current_mouse_hit == Y_SCALE_HANDLE:
             dp = self.get_delta_point(delta_x, delta_y, self.edit_points[Y_SCALE_HANDLE])
@@ -1312,6 +1316,8 @@ class RotatingScreenEditor(AbstractScreenEditor):
             dist = viewgeom.distance(self.edit_points[POS_HANDLE], pp)
             orig_dist = viewgeom.distance(self.untrans_points[POS_HANDLE], self.untrans_points[Y_SCALE_HANDLE])
             self.y_scale = dist / orig_dist
+            if CTRL_DOWN:
+                self.x_scale = self.y_scale
             self._update_edit_points()
         elif self.current_mouse_hit == ROTATION_HANDLE:
             ax, ay = self.edit_points[POS_HANDLE]
