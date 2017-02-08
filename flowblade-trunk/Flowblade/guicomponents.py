@@ -1951,6 +1951,54 @@ class TimeLineLeftBottom:
         self.widget.queue_draw()
 
 
+class TracksNumbersSelect:
+    def __init__(self, v_tracks, a_tracks):
+        
+        self.MAX_TRACKS = appconsts.MAX_TRACKS
+        
+        self.widget = Gtk.HBox()
+        self.video_label = Gtk.Label(_("Video:"))
+        self.video_tracks = Gtk.SpinButton.new_with_range(1, 8, 1)
+        self.video_tracks.set_value(v_tracks)
+        #self.video_tracks.set_editable(False)
+        self.video_tracks.connect("value-changed", self.video_tracks_changed)
+        self.audio_label = Gtk.Label(_("Audio:"))
+        self.audio_tracks = Gtk.SpinButton.new_with_range(1, 8, 1)
+        self.audio_tracks.set_value(a_tracks)
+        #self.audio_tracks.set_editable(False)
+        self.audio_tracks.connect("value-changed", self.audio_tracks_changed)
+        self.label = Gtk.Label(_("Number of Tracks:"))
+        self.tracks_amount_info = Gtk.Label()
+        self.set_total_tracks_info()
+
+        self.widget.pack_start(self.label, False, False, 0)
+        self.widget.pack_start(guiutils.pad_label(22,2), False, False, 0)
+        self.widget.pack_start(self.video_label, False, False, 0)
+        self.widget.pack_start(self.video_tracks, False, False, 0)
+        self.widget.pack_start(guiutils.pad_label(22,2), False, False, 0)
+        self.widget.pack_start(self.audio_label, False, False, 0)
+        self.widget.pack_start(self.audio_tracks, False, False, 0)
+        self.widget.pack_start(guiutils.pad_label(22,2), False, False, 0)
+        self.widget.pack_start(self.tracks_amount_info, False, False, 0)
+        self.widget.pack_start(Gtk.Label(), True, True, 0)
+
+    def video_tracks_changed(self, adjustment):
+        if self.video_tracks.get_value() + self.audio_tracks.get_value() > self.MAX_TRACKS:
+            self.audio_tracks.set_value(self.MAX_TRACKS - self.video_tracks.get_value())
+        self.set_total_tracks_info()
+
+    def audio_tracks_changed(self, adjustment):
+        if self.video_tracks.get_value() + self.audio_tracks.get_value() > self.MAX_TRACKS:
+            self.video_tracks.set_value(self.MAX_TRACKS - self.audio_tracks.get_value())
+        self.set_total_tracks_info()
+        
+    def set_total_tracks_info(self):
+        self.tracks_amount_info.set_text(str(int(self.video_tracks.get_value() + self.audio_tracks.get_value())) + " / 9")
+        self.tracks_amount_info.queue_draw ()
+
+    def get_tracks(self):
+        return (int(self.video_tracks.get_value()), int(self.audio_tracks.get_value()))
+
 def get_gpl3_scroll_widget(size):
     license_file = open(respaths.GPL_3_DOC)
     license_text = license_file.read()
@@ -1983,20 +2031,6 @@ def get_text_scroll_widget(text, size):
     sw.set_size_request(*size)
 
     return sw
-    
-def get_track_counts_combo_and_values_list():
-    tracks_combo = Gtk.ComboBoxText()
-    tracks_combo.append_text(_("5 video, 4 audio"))
-    tracks_combo.append_text(_("4 video, 3 audio"))
-    tracks_combo.append_text(_("3 video, 2 audio"))
-    tracks_combo.append_text(_("2 video, 1 audio"))
-    tracks_combo.append_text(_("7 video, 2 audio"))
-    tracks_combo.append_text(_("2 video, 7 audio"))
-    tracks_combo.append_text(_("8 video, 1 audio"))
-    tracks_combo.append_text(_("1 video, 8 audio"))
-    tracks_combo.set_active(0)
-    tracks_combo_values_list = appconsts.TRACK_CONFIGURATIONS
-    return (tracks_combo, tracks_combo_values_list)
 
 def get_markers_menu_launcher(callback, pixbuf):
     m_launch = PressLaunch(callback, pixbuf)

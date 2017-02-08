@@ -71,10 +71,9 @@ def new_project_dialog(callback):
     profiles_vbox = guiutils.get_vbox([profile_select,profile_info_box], False)
     profiles_frame = panels.get_named_frame(_("Profile"), profiles_vbox)
 
-    tracks_combo, tracks_combo_values_list = guicomponents.get_track_counts_combo_and_values_list()
-    tracks_select = panels.get_two_column_box(Gtk.Label(label=_("Number of tracks:")),
-                                               tracks_combo, 250)
-    tracks_vbox = guiutils.get_vbox([tracks_select], False)
+    tracks_select = guicomponents.TracksNumbersSelect(5, 4)
+    
+    tracks_vbox = guiutils.get_vbox([tracks_select.widget], False)
 
     tracks_frame = panels.get_named_frame(_("Tracks"), tracks_vbox)
 
@@ -84,8 +83,7 @@ def new_project_dialog(callback):
     dialogutils.set_outer_margins(dialog.vbox)
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, out_profile_combo, tracks_combo,
-                   tracks_combo_values_list)
+    dialog.connect('response', callback, out_profile_combo, tracks_select)
                    
     out_profile_combo.connect('changed', lambda w: _new_project_profile_changed(w, profile_info_box))
     dialog.show_all()
@@ -850,11 +848,9 @@ def tracks_count_change_dialog(callback):
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
                         _("Change Tracks").encode('utf-8'), Gtk.ResponseType.ACCEPT))
-
-    tracks_combo, tracks_combo_values_list = guicomponents.get_track_counts_combo_and_values_list()
-    tracks_select = panels.get_two_column_box(Gtk.Label(label=_("New Number of Tracks:")),
-                                               tracks_combo,
-                                               250)
+    
+    tracks_select = guicomponents.TracksNumbersSelect(5, 4)
+        
     info_text = _("Please note:\n") + \
                 u"\u2022" + _(" It is recommended that you save Project before completing this operation\n") + \
                 u"\u2022" + _(" There is no Undo for this operation\n") + \
@@ -869,14 +865,14 @@ def tracks_count_change_dialog(callback):
     tracks_vbox = Gtk.VBox(False, 2)
     tracks_vbox.pack_start(info_box, False, False, 0)
     tracks_vbox.pack_start(pad, False, False, 0)
-    tracks_vbox.pack_start(tracks_select, False, False, 0)
+    tracks_vbox.pack_start(tracks_select.widget, False, False, 0)
 
     alignment = dialogutils.get_alignment2(tracks_vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, tracks_combo)
+    dialog.connect('response', callback, tracks_select)
     dialog.show_all()
 
 def new_sequence_dialog(callback, default_name):
@@ -893,12 +889,9 @@ def new_sequence_dialog(callback, default_name):
     name_select = panels.get_two_column_box(Gtk.Label(label=_("Sequence Name:")),
                                                name_entry,
                                                250)
-
-    tracks_combo, tracks_combo_values_list = guicomponents.get_track_counts_combo_and_values_list()
-    tracks_select = panels.get_two_column_box(Gtk.Label(label=_("Number of Tracks:")),
-                                               tracks_combo,
-                                               250)
-
+   
+    tracks_select = guicomponents.TracksNumbersSelect(5, 4)
+    
     open_check = Gtk.CheckButton()
     open_check.set_active(True)
     open_label = Gtk.Label(label=_("Open For Editing:"))
@@ -910,7 +903,8 @@ def new_sequence_dialog(callback, default_name):
 
     tracks_vbox = Gtk.VBox(False, 2)
     tracks_vbox.pack_start(name_select, False, False, 0)
-    tracks_vbox.pack_start(tracks_select, False, False, 0)
+    tracks_vbox.pack_start(guiutils.get_pad_label(12, 2), False, False, 0)
+    tracks_vbox.pack_start(tracks_select.widget, False, False, 0)
     tracks_vbox.pack_start(guiutils.get_pad_label(12, 12), False, False, 0)
     tracks_vbox.pack_start(open_hbox, False, False, 0)
 
@@ -919,7 +913,7 @@ def new_sequence_dialog(callback, default_name):
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, (name_entry, tracks_combo, open_check))
+    dialog.connect('response', callback, (name_entry, tracks_select, open_check))
     dialog.show_all()
 
 def new_media_name_dialog(callback, media_file):
