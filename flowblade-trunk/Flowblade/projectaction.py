@@ -329,10 +329,10 @@ def _enable_save():
 def new_project():
     dialogs.new_project_dialog(_new_project_dialog_callback)
 
-def _new_project_dialog_callback(dialog, response_id, profile_combo, tracks_combo, 
-                                 tracks_combo_values_list):
+def _new_project_dialog_callback(dialog, response_id, profile_combo, tracks_select):
 
-    v_tracks, a_tracks = tracks_combo_values_list[tracks_combo.get_active()]
+    v_tracks, a_tracks = tracks_select.get_tracks()
+    
     if response_id == Gtk.ResponseType.ACCEPT:
         app.new_project(profile_combo.get_active(), v_tracks, a_tracks)
         dialog.destroy()
@@ -1227,14 +1227,14 @@ def _add_new_sequence_dialog_callback(dialog, response_id, widgets):
         dialog.destroy()
         return
     
-    name_entry, tracks_combo, open_check = widgets
+    name_entry, tracks_select, open_check = widgets
     
     # Get dialog data 
     name = name_entry.get_text()
 
     if len(name) == 0:
         name = _("sequence_") + str(PROJECT().next_seq_number)
-    v_tracks, a_tracks = appconsts.TRACK_CONFIGURATIONS[tracks_combo.get_active()]
+    v_tracks, a_tracks = tracks_select.get_tracks()
     open_right_away = open_check.get_active()
     
     # Get index for selected sequence
@@ -1318,12 +1318,12 @@ def sequence_name_edited(cell, path, new_text, user_data):
 def change_sequence_track_count():
     dialogs.tracks_count_change_dialog(_change_track_count_dialog_callback)
 
-def _change_track_count_dialog_callback(dialog, response_id, tracks_combo):
+def _change_track_count_dialog_callback(dialog, response_id, tracks_select):
     if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
         return
     
-    v_tracks, a_tracks = appconsts.TRACK_CONFIGURATIONS[tracks_combo.get_active()]
+    v_tracks, a_tracks = tracks_select.get_tracks()
     dialog.destroy()
 
     cur_seq_index = PROJECT().sequences.index(PROJECT().c_seq)

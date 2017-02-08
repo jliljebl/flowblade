@@ -260,7 +260,7 @@ class EditorPreferences:
         self.display_splash_screen = True
         self.auto_move_after_edit = False
         self.default_grfx_length = 250 # value is in frames
-        self.track_configuration = 0 # this is index on list appconsts.TRACK_CONFIGURATIONS
+        self.track_configuration = 0 # DEPRECATED
         self.AUTO_SAVE_OPTS = None # not used, these are cerated and translated else where
         self.tabs_on_top = False
         self.midbar_tc_left = True

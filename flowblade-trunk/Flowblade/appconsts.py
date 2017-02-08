@@ -99,8 +99,8 @@ NON_MLT_PROPERTY = "propertynonmlt"
 MLT_SERVICE = "mlt_service"
 EXTRA_EDITOR = "extraeditor"
 
-# Available tracks configurations for flowblade
-TRACK_CONFIGURATIONS = [(5,4),(4,3),(3,2),(2,1),(7,2),(2,7),(8,1),(1,8)]
+# Available tracks max for flowblade
+MAX_TRACKS = 9
 
 # Thumbnail image dimensions
 THUMB_WIDTH = 116
