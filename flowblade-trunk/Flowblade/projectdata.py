@@ -305,7 +305,7 @@ class MediaFile:
 
         # Set default length for graphics files
         (f_name, ext) = os.path.splitext(self.name)
-        if utils.file_extension_is_graphics_file(ext):
+        if utils.file_extension_is_graphics_file(ext) and self.type != appconsts.IMAGE_SEQUENCE:
             in_fr, out_fr, l = editorpersistance.get_graphics_default_in_out_length()
             self.mark_in = in_fr
             self.mark_out = out_fr

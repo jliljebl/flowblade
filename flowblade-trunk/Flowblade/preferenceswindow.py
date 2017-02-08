@@ -204,9 +204,13 @@ def _edit_prefs_panel():
     if hasattr(prefs, 'hide_file_ext'):
         hide_file_ext_button.set_active(prefs.hide_file_ext)
 
+    auto_center_on_updown = Gtk.CheckButton()
+    auto_center_on_updown.set_active(prefs.center_on_arrow_move)
+    
     # Layout
     row1 = _row(guiutils.get_checkbox_row_box(auto_play_in_clip_monitor, Gtk.Label(label=_("Autoplay new Clips in Clip Monitor"))))
     row2 = _row(guiutils.get_checkbox_row_box(auto_center_on_stop, Gtk.Label(label=_("Center Current Frame on Playback Stop"))))
+    row13 = _row(guiutils.get_checkbox_row_box(auto_center_on_updown, Gtk.Label(label=_("Center Current Frame after Up/Down Arrow"))))
     row4 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Graphics default length:")), gfx_length_spin, PREFERENCES_LEFT))
     row5 = _row(guiutils.get_checkbox_row_box(trim_exit_on_empty, Gtk.Label(label=_("Trim Modes exit on empty click"))))
     row6 = _row(guiutils.get_checkbox_row_box(quick_enter_trim, Gtk.Label(label=_("Quick enter Trim Modes"))))
@@ -223,6 +227,7 @@ def _edit_prefs_panel():
     vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
+    vbox.pack_start(row13, False, False, 0)
     vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row7, False, False, 0)
     vbox.pack_start(row8, False, False, 0)
@@ -238,7 +243,7 @@ def _edit_prefs_panel():
     # Jul-2016 - SvdB - Added play_pause_button
     return vbox, (auto_play_in_clip_monitor, auto_center_on_stop, gfx_length_spin,
                   trim_exit_on_empty, quick_enter_trim, remember_clip_frame, overwrite_clip_drop, cover_delete,
-                  play_pause_button, mouse_scroll_action, hide_file_ext_button)
+                  play_pause_button, mouse_scroll_action, hide_file_ext_button, auto_center_on_updown)
 
 def _view_prefs_panel():
     prefs = editorpersistance.prefs
@@ -249,6 +254,10 @@ def _view_prefs_panel():
 
     display_splash_check = Gtk.CheckButton()
     display_splash_check.set_active(prefs.display_splash_screen)
+
+    # Feb-2017 - SvdB - For full file names
+    show_full_file_names = Gtk.CheckButton()
+    show_full_file_names.set_active(prefs.show_full_file_names)
 
     buttons_combo = Gtk.ComboBoxText()
     buttons_combo.append_text(_("Glass"))
@@ -295,6 +304,8 @@ def _view_prefs_panel():
     row3 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme request, icons and colors:")), dark_combo, PREFERENCES_LEFT))
     row4 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme detection fail fallback colors:")), theme_combo, PREFERENCES_LEFT))
     row5 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Default audio levels display:")), audio_levels_combo, PREFERENCES_LEFT))
+    # Feb-2017 - SvdB - For full file names
+    row6 =  _row(guiutils.get_checkbox_row_box(show_full_file_names, Gtk.Label(label=_("Show Full File names"))))
 
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row00, False, False, 0)
@@ -304,11 +315,15 @@ def _view_prefs_panel():
     vbox.pack_start(row3, False, False, 0)
     vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row5, False, False, 0)
+    # Feb-2017 - SvdB - For full file names
+    vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
 
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
-    return vbox, (force_english_check, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo, window_mode_combo)
+    # Feb-2017 - SvdB - Added code for full file names
+    return vbox, (force_english_check, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo, 
+                  window_mode_combo, show_full_file_names)
 
 def _performance_panel():
     # Jan-2017 - SvdB

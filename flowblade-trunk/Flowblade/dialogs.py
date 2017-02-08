@@ -456,6 +456,44 @@ def about_dialog(parent_window):
     alignment3 = dialogutils.get_default_alignment(license_view)
     alignment3.set_size_request(450, 370)
 
+    lead_label = Gtk.Label(label="Lead Developer:")
+    lead_label.modify_font(Pango.FontDescription("sans bold 12"))
+    lead_info = Gtk.Label(label="Janne Liljeblad")
+    developers_label = Gtk.Label("Developers:")
+    developers_label.modify_font(Pango.FontDescription("sans bold 12"))
+
+    devs_file = open(respaths.DEVELOPERS_DOC)
+    devs_text = devs_file.read()
+    devs_info = Gtk.Label(label=devs_text)
+
+    contributos_label = Gtk.Label(label="Contributors:")
+    contributos_label.modify_font(Pango.FontDescription("sans bold 12"))
+    
+    contributors_file = open(respaths.CONTRIBUTORS_DOC)
+    contributors_text = contributors_file.read()
+
+    contributors_view = Gtk.TextView()
+    contributors_view.set_editable(False)
+    contributors_view.set_pixels_above_lines(2)
+    contributors_view.set_left_margin(2)
+    contributors_view.set_wrap_mode(Gtk.WrapMode.WORD)
+    contributors_view.get_buffer().set_text(contributors_text)
+    guiutils.set_margins(contributors_view, 0, 0, 30, 30)
+    
+    vbox3 = Gtk.VBox(False, 4)
+    vbox3.pack_start(guiutils.get_pad_label(30, 12), False, False, 0)
+    vbox3.pack_start(lead_label, False, False, 0)
+    vbox3.pack_start(lead_info, False, False, 0)
+    vbox3.pack_start(guiutils.get_pad_label(30, 22), False, False, 0)
+    vbox3.pack_start(developers_label, False, False, 0)
+    vbox3.pack_start(guiutils.get_centered_box([devs_info]), False, False, 0)
+    vbox3.pack_start(guiutils.get_pad_label(30, 22), False, False, 0)
+    vbox3.pack_start(contributos_label, False, False, 0)
+    vbox3.pack_start(contributors_view, False, False, 0)
+    
+    alignment5 = dialogutils.get_default_alignment(vbox3)
+    alignment5.set_size_request(450, 370)
+    
     translations_view = guicomponents.get_translations_scroll_widget((450, 370))
     alignment4 = dialogutils.get_default_alignment(translations_view)
     alignment4.set_size_request(450, 370)
@@ -465,6 +503,7 @@ def about_dialog(parent_window):
     notebook.append_page(alignment, Gtk.Label(label=_("Application")))
     notebook.append_page(alignment2, Gtk.Label(label=_("Thanks")))
     notebook.append_page(alignment3, Gtk.Label(label=_("License")))
+    notebook.append_page(alignment5, Gtk.Label(label=_("Developers")))
     notebook.append_page(alignment4, Gtk.Label(label=_("Translations")))
     guiutils.set_margins(notebook, 6, 6, 6, 0)
 
@@ -1154,7 +1193,8 @@ def keyboard_shortcuts_dialog(parent_window):
     geom_vbox.pack_start(_get_kb_row(_("Right Arrow"), _("Move Source Video Right 1px")), False, False, 0)
     geom_vbox.pack_start(_get_kb_row(_("Up Arrow"), _("Move Source Video Up 1px")), False, False, 0)
     geom_vbox.pack_start(_get_kb_row(_("Down Arrow"), _("Move Source Video Down 1px")), False, False, 0)
-    geom_vbox.pack_start(_get_kb_row(_("Control + Arrow"), _("Move Source Video 10px")), False, False, 0) 
+    geom_vbox.pack_start(_get_kb_row(_("Control + Arrow"), _("Move Source Video 10px")), False, False, 0)
+    geom_vbox.pack_start(_get_kb_row(_("Control + Mouse Drag"), _("Keep Aspect Ratio in Affine Blend scaling")), False, False, 0) 
     geom_vbox.pack_start(_get_kb_row(_("Shift"), _("Snap to X or Y of drag start point")), False, False, 0)
     geom = guiutils.get_named_frame(_("Geometry Editor"), geom_vbox)
 

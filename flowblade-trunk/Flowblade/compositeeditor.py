@@ -48,7 +48,7 @@ compositor = None # Compositor being edited.
 # Used to update kfeditors with external tline frame position changes
 keyframe_editor_widgets = []
 
-compositor_notebook_index = 3 # this is set 2 for 2 window mode
+compositor_notebook_index = 3 # this is set 2 for the 2 window mode
 
 def create_widgets():
     """
@@ -63,7 +63,6 @@ def create_widgets():
     
     # Right side
     widgets.empty_label = Gtk.Label(label=_("No Compositor"))
-    #gui.label = widgets.empty_label
     widgets.value_edit_box = Gtk.VBox()
     widgets.value_edit_box.pack_start(widgets.empty_label, True, True, 0)
     widgets.value_edit_frame = Gtk.Frame()

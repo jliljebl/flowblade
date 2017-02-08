@@ -926,8 +926,14 @@ class MediaObjectWidget:
 
         txt = Gtk.Label(label=media_file.name)
         txt.modify_font(Pango.FontDescription("sans 9"))
-        txt.set_ellipsize(Pango.EllipsizeMode.END)
         txt.set_max_width_chars(13)
+        # Feb-2017 - SvdB - For full file names. First part shows the original code for short file names        
+        if editorpersistance.prefs.show_full_file_names == False:
+            txt.set_ellipsize(Pango.EllipsizeMode.END)
+        else:
+            txt.set_line_wrap_mode(Pango.WrapMode.CHAR)
+            txt.set_line_wrap(True)
+        # end SvdB
         txt.set_tooltip_text(media_file.name)
 
         self.vbox.pack_start(self.img, True, True, 0)
@@ -1963,16 +1969,13 @@ def get_gpl3_scroll_widget(size):
 
     return sw
 
-def get_translations_scroll_widget(size):
-    trans_file = open(respaths.TRANSLATIONS_DOC)
-    trans_text = trans_file.read()
-
+def get_text_scroll_widget(text, size):
     view = Gtk.TextView()
     view.set_editable(False)
     view.set_pixels_above_lines(2)
     view.set_left_margin(2)
     view.set_wrap_mode(Gtk.WrapMode.WORD)
-    view.get_buffer().set_text(trans_text)
+    view.get_buffer().set_text(text)
 
     sw = Gtk.ScrolledWindow()
     sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
@@ -1980,7 +1983,7 @@ def get_translations_scroll_widget(size):
     sw.set_size_request(*size)
 
     return sw
-
+    
 def get_track_counts_combo_and_values_list():
     tracks_combo = Gtk.ComboBoxText()
     tracks_combo.append_text(_("5 video, 4 audio"))

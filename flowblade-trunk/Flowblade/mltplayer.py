@@ -32,7 +32,6 @@ import os
 import time
 
 import gui
-#import editorpersistance
 from editorstate import timeline_visible
 import editorstate
 import utils
