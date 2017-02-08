@@ -32,6 +32,7 @@ import compositormodes
 import glassbuttons
 import gui
 import editevent
+import editorpersistance
 import editorstate
 from editorstate import current_sequence
 from editorstate import PLAYER
@@ -283,6 +284,8 @@ def _handle_tline_key_event(event):
                 frame = current_sequence().find_next_cut_frame(tline_frame)
                 if frame != -1:
                     PLAYER().seek_frame(frame)
+                    if editorpersistance.prefs.center_on_arrow_move == True:
+                        updater.center_tline_to_current_frame()
                     return True
             else:
                 monitorevent.up_arrow_seek_on_monitor_clip()
@@ -294,6 +297,8 @@ def _handle_tline_key_event(event):
                 frame = current_sequence().find_prev_cut_frame(tline_frame)
                 if frame != -1:
                     PLAYER().seek_frame(frame)
+                    if editorpersistance.prefs.center_on_arrow_move == True:
+                        updater.center_tline_to_current_frame()
                     return True
             else:
                  monitorevent.down_arrow_seek_on_monitor_clip()
@@ -511,6 +516,8 @@ def _handle_clip_key_event(event):
                 frame = current_sequence().find_next_cut_frame(tline_frame)
                 if frame != -1:
                     PLAYER().seek_frame(frame)
+                    if editorpersistance.prefs.center_on_arrow_move == True:
+                        updater.center_tline_to_current_frame()
                     return True
             else:
                  monitorevent.up_arrow_seek_on_monitor_clip()
@@ -523,6 +530,8 @@ def _handle_clip_key_event(event):
                 frame = current_sequence().find_prev_cut_frame(tline_frame)
                 if frame != -1:
                     PLAYER().seek_frame(frame)
+                    if editorpersistance.prefs.center_on_arrow_move == True:
+                        updater.center_tline_to_current_frame()  
                     return True
             else:
                  monitorevent.down_arrow_seek_on_monitor_clip()

@@ -177,7 +177,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     # Jul-2016 - SvdB - Added play_pause_button
     auto_play_in_clip_monitor_check, auto_center_check, grfx_insert_length_spin, \
         trim_exit_click, trim_quick_enter, remember_clip_frame, overwrite_clip_drop, cover_delete, \
-        play_pause_button, mouse_scroll_action, hide_file_ext_button = edit_prefs_widgets
+        play_pause_button, mouse_scroll_action, hide_file_ext_button, auto_center_on_updown = edit_prefs_widgets
     
     use_english, disp_splash, buttons_style, dark_theme, theme_combo, audio_levels_combo, window_mode_combo, full_names = view_prefs_widgets
 
@@ -216,6 +216,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.perf_drop_frames = perf_drop_frames.get_active()
     # Feb-2017 - SvdB - for full file names
     prefs.show_full_file_names = full_names.get_active()
+    prefs.center_on_arrow_move = auto_center_on_updown.get_active()
 
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
@@ -301,3 +302,4 @@ class EditorPreferences:
         self.perf_drop_frames = False
         # Feb-2017 - SvdB - for full file names
         self.show_full_file_names = False
+        self.center_on_arrow_move = False

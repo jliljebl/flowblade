@@ -204,9 +204,13 @@ def _edit_prefs_panel():
     if hasattr(prefs, 'hide_file_ext'):
         hide_file_ext_button.set_active(prefs.hide_file_ext)
 
+    auto_center_on_updown = Gtk.CheckButton()
+    auto_center_on_updown.set_active(prefs.center_on_arrow_move)
+    
     # Layout
     row1 = _row(guiutils.get_checkbox_row_box(auto_play_in_clip_monitor, Gtk.Label(label=_("Autoplay new Clips in Clip Monitor"))))
     row2 = _row(guiutils.get_checkbox_row_box(auto_center_on_stop, Gtk.Label(label=_("Center Current Frame on Playback Stop"))))
+    row13 = _row(guiutils.get_checkbox_row_box(auto_center_on_updown, Gtk.Label(label=_("Center Current Frame after Up/Down Arrow"))))
     row4 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Graphics default length:")), gfx_length_spin, PREFERENCES_LEFT))
     row5 = _row(guiutils.get_checkbox_row_box(trim_exit_on_empty, Gtk.Label(label=_("Trim Modes exit on empty click"))))
     row6 = _row(guiutils.get_checkbox_row_box(quick_enter_trim, Gtk.Label(label=_("Quick enter Trim Modes"))))
@@ -223,6 +227,7 @@ def _edit_prefs_panel():
     vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
+    vbox.pack_start(row13, False, False, 0)
     vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row7, False, False, 0)
     vbox.pack_start(row8, False, False, 0)
@@ -238,7 +243,7 @@ def _edit_prefs_panel():
     # Jul-2016 - SvdB - Added play_pause_button
     return vbox, (auto_play_in_clip_monitor, auto_center_on_stop, gfx_length_spin,
                   trim_exit_on_empty, quick_enter_trim, remember_clip_frame, overwrite_clip_drop, cover_delete,
-                  play_pause_button, mouse_scroll_action, hide_file_ext_button)
+                  play_pause_button, mouse_scroll_action, hide_file_ext_button, auto_center_on_updown)
 
 def _view_prefs_panel():
     prefs = editorpersistance.prefs

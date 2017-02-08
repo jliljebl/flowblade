@@ -471,11 +471,7 @@ def about_dialog(parent_window):
     
     contributors_file = open(respaths.CONTRIBUTORS_DOC)
     contributors_text = contributors_file.read()
-    #contributors_info = Gtk.Label(label=contributors_text)
-    #guiutils.set_margins(contributors_info, 0, 0, 30, 30)
-    #contributors_info.set_line_wrap(True)
-    #contributors_info.set_size_request(200,100)
-    
+
     contributors_view = Gtk.TextView()
     contributors_view.set_editable(False)
     contributors_view.set_pixels_above_lines(2)
@@ -483,10 +479,6 @@ def about_dialog(parent_window):
     contributors_view.set_wrap_mode(Gtk.WrapMode.WORD)
     contributors_view.get_buffer().set_text(contributors_text)
     guiutils.set_margins(contributors_view, 0, 0, 30, 30)
-    
-    #contributors_view = guicomponents.get_contributors_scroll_widget((300, 250))
-    #alignment5 = dialogutils.get_default_alignment(contributors_view)
-    #alignment5.set_size_request(300, 250)
     
     vbox3 = Gtk.VBox(False, 4)
     vbox3.pack_start(guiutils.get_pad_label(30, 12), False, False, 0)

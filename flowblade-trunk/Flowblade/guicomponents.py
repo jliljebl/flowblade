@@ -1969,16 +1969,6 @@ def get_gpl3_scroll_widget(size):
 
     return sw
 
-def get_translations_scroll_widget(size):
-    trans_file = open(respaths.TRANSLATIONS_DOC)
-    trans_text = trans_file.read()
-    return get_text_scroll_widget(trans_text, size)
-
-def get_contributors_scroll_widget(size):
-    devs_file = open(respaths.CONTRIBUTORS_DOC)
-    devs_text = devs_file.read()
-    return get_text_scroll_widget(devs_text, size)
-
 def get_text_scroll_widget(text, size):
     view = Gtk.TextView()
     view.set_editable(False)
