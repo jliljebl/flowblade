@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-08 19:06+0100\n"
+"POT-Creation-Date: 2017-02-09 16:59+0100\n"
 "PO-Revision-Date: 2017-02-08 19:08+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
@@ -363,7 +363,7 @@ msgstr "A monitoron lévő klip hozzáadása"
 msgid "Append"
 msgstr "Hozzáfűzés"
 
-#: editorwindow.py:180 dialogs.py:1143 dialogs.py:1177 guicomponents.py:2228
+#: editorwindow.py:180 dialogs.py:1143 dialogs.py:1177 guicomponents.py:2234
 msgid "Insert"
 msgstr "Beszúrás"
 
@@ -1248,7 +1248,7 @@ msgstr ""
 msgid "New Marker"
 msgstr "Új jelző"
 
-#: dialogs.py:1019 guicomponents.py:2055
+#: dialogs.py:1019 guicomponents.py:2061
 msgid "Add Marker"
 msgstr "Jelző hozzáadása"
 
@@ -1565,23 +1565,23 @@ msgstr "\"B\" jelzőhöz"
 msgid "Playback"
 msgstr "Lejátszás"
 
-#: dialogs.py:1178 guicomponents.py:2234 translations.py:557
+#: dialogs.py:1178 guicomponents.py:2240 translations.py:557
 msgid "Overwrite"
 msgstr "Felülírás"
 
-#: dialogs.py:1179 guicomponents.py:2240
+#: dialogs.py:1179 guicomponents.py:2246
 msgid "Trim"
 msgstr "Levágás (trim)"
 
-#: dialogs.py:1180 guicomponents.py:2246
+#: dialogs.py:1180 guicomponents.py:2252
 msgid "Roll"
 msgstr "Görgetés"
 
-#: dialogs.py:1181 guicomponents.py:2252
+#: dialogs.py:1181 guicomponents.py:2258
 msgid "Slip"
 msgstr "Csúsztatás"
 
-#: dialogs.py:1182 guicomponents.py:2258
+#: dialogs.py:1182 guicomponents.py:2264
 msgid "Spacer"
 msgstr "Távtartó"
 
@@ -1872,7 +1872,7 @@ msgstr "Első képkocka az idővonalon"
 msgid "Last Frame on Timeline"
 msgstr "Utolsó képkocka az idővonalon"
 
-#: guicomponents.py:1426 guicomponents.py:2213
+#: guicomponents.py:1426 guicomponents.py:2219
 msgid "Clear Match Frame"
 msgstr "Érintkező képkocka elrejtése"
 
@@ -2055,159 +2055,159 @@ msgstr "Hang:"
 msgid "Number of Tracks:"
 msgstr "Sávok száma:"
 
-#: guicomponents.py:2052
+#: guicomponents.py:2058
 msgid "No Markers"
 msgstr "Nincsenek jelzők"
 
-#: guicomponents.py:2056
+#: guicomponents.py:2062
 msgid "Delete Marker"
 msgstr "Jelző törlése"
 
-#: guicomponents.py:2058
+#: guicomponents.py:2064
 msgid "Delete All Markers"
 msgstr "Összes jelző törlése"
 
-#: guicomponents.py:2066
+#: guicomponents.py:2072
 msgid "Maximize Tracks"
 msgstr "Sávok maximalizálása"
 
-#: guicomponents.py:2067
+#: guicomponents.py:2073
 msgid "Maximize Video Tracks"
 msgstr "Videosávok maximalizálása"
 
-#: guicomponents.py:2068
+#: guicomponents.py:2074
 msgid "Maximize Audio Tracks"
 msgstr "Hangsávok maximalizálása"
 
-#: guicomponents.py:2070
+#: guicomponents.py:2076
 msgid "Minimize Tracks"
 msgstr "Sávok minimalizálása"
 
-#: guicomponents.py:2072
+#: guicomponents.py:2078
 msgid "Activate All Tracks"
 msgstr "Minden sáv aktiválása"
 
-#: guicomponents.py:2073
+#: guicomponents.py:2079
 msgid "Activate Only Current Top Active Track"
 msgstr "Csak a legfelső aktív sáv legyen aktiválva"
 
-#: guicomponents.py:2081
+#: guicomponents.py:2087
 msgid "Display Clip Media Thumbnails"
 msgstr "Média klipek bélyegképeinek megjelenítése"
 
-#: guicomponents.py:2090
+#: guicomponents.py:2096
 msgid "Snapping On"
 msgstr "Igazítás bekapcsolása"
 
-#: guicomponents.py:2097
+#: guicomponents.py:2103
 msgid "Show Magnet Icon"
 msgstr "Mágnes ikon megjelenítése"
 
-#: guicomponents.py:2106
+#: guicomponents.py:2112
 msgid "Display All Audio Levels"
 msgstr "Összes hang szintjének megjelenítése"
 
-#: guicomponents.py:2109
+#: guicomponents.py:2115
 msgid "Display Audio Levels On Request"
 msgstr "Hangok szintjének megjelenítése kérésre"
 
-#: guicomponents.py:2129
+#: guicomponents.py:2135
 msgid "Image"
 msgstr "Kép"
 
-#: guicomponents.py:2131
+#: guicomponents.py:2137
 msgid "Vectorscope"
 msgstr "Vektorszkóp"
 
-#: guicomponents.py:2133
+#: guicomponents.py:2139
 msgid "RGB Parade"
 msgstr "RGB parádé"
 
-#: guicomponents.py:2137
+#: guicomponents.py:2143
 msgid "Overlay Opacity"
 msgstr "Rávetítés átlátszatlansága"
 
-#: guicomponents.py:2142
+#: guicomponents.py:2148
 msgid "100%"
 msgstr "100%"
 
-#: guicomponents.py:2147
+#: guicomponents.py:2153
 msgid "80%"
 msgstr "80%"
 
-#: guicomponents.py:2152
+#: guicomponents.py:2158
 msgid "50%"
 msgstr "50%"
 
-#: guicomponents.py:2157
+#: guicomponents.py:2163
 msgid "20%"
 msgstr "20%"
 
-#: guicomponents.py:2162
+#: guicomponents.py:2168
 msgid "0%"
 msgstr "0%"
 
-#: guicomponents.py:2182
+#: guicomponents.py:2188
 msgid "Trim View On"
 msgstr ""
 
-#: guicomponents.py:2187
+#: guicomponents.py:2193
 msgid "Trim View Single Side Edits Only"
 msgstr ""
 
-#: guicomponents.py:2192
+#: guicomponents.py:2198
 msgid "Trim View Off"
 msgstr ""
 
-#: guicomponents.py:2208
+#: guicomponents.py:2214
 msgid "Set Current Clip Frame Match Frame"
 msgstr ""
 
-#: guicomponents.py:2278
+#: guicomponents.py:2284
 msgid "All Files"
 msgstr "Minden fájl"
 
-#: guicomponents.py:2282
+#: guicomponents.py:2288
 msgid "Video Files"
 msgstr "Videofájlok"
 
-#: guicomponents.py:2286
+#: guicomponents.py:2292
 msgid "Audio Files"
 msgstr "Hangfájlok"
 
-#: guicomponents.py:2290
+#: guicomponents.py:2296
 msgid "Graphics Files"
 msgstr "Grafikus fájlok"
 
-#: guicomponents.py:2294
+#: guicomponents.py:2300
 msgid "Image Sequences"
 msgstr "Képsorozatok"
 
-#: guicomponents.py:2298
+#: guicomponents.py:2304
 msgid "Pattern Producers"
 msgstr "Minta előállítók"
 
-#: guicomponents.py:2311
+#: guicomponents.py:2317
 msgid "2 Columns"
 msgstr "2 oszlop"
 
-#: guicomponents.py:2316
+#: guicomponents.py:2322
 msgid "3 Columns"
 msgstr "3 oszlop"
 
-#: guicomponents.py:2321
+#: guicomponents.py:2327
 msgid "4 Columns"
 msgstr "4 oszlop"
 
-#: guicomponents.py:2326
+#: guicomponents.py:2332
 msgid "5 Columns"
 msgstr "5 oszlop"
 
-#: guicomponents.py:2331
+#: guicomponents.py:2337
 msgid "6 Columns"
 msgstr "6 oszlop"
 
-#: guicomponents.py:2336
+#: guicomponents.py:2342
 msgid "7 Columns"
 msgstr "7 oszlop"
 
