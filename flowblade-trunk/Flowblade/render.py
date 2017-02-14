@@ -35,6 +35,9 @@ import os
 import time
 import threading
 
+# SvdB - Render Folder from Preferences is not copied to Render panel #337
+# SvdB - Added appconsts for the RENDERED_CLIPS_DIR value
+import appconsts
 import dialogutils
 import editorstate
 from editorstate import current_sequence
@@ -181,7 +184,13 @@ def set_default_values_for_widgets(movie_name_too=False):
     widgets.encoding_panel.encoding_selector.widget.set_active(0)
     if movie_name_too == True:
         widgets.file_panel.movie_name.set_text("movie")
-    widgets.file_panel.out_folder.set_current_folder(os.path.expanduser("~") + "/")
+    # SvdB - Render Folder from Preferences is not copied to Render panel #337
+    # Default render path is ~/.flowblade/rendered_clips. If this is not changed by the user
+    # we will use the HOME directory
+    if editorpersistance.prefs.render_folder != str(utils.get_hidden_user_dir_path()) + appconsts.RENDERED_CLIPS_DIR:
+        widgets.file_panel.out_folder.set_current_folder(editorpersistance.prefs.render_folder)
+    else:
+        widgets.file_panel.out_folder.set_current_folder(os.path.expanduser("~") + "/")
     widgets.args_panel.use_args_check.set_active(False)
     widgets.profile_panel.use_project_profile_check.set_active(True)
 
