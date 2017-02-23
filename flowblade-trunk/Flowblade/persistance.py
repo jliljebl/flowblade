@@ -352,7 +352,8 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
 
     if(not hasattr(project, "SAVEFILE_VERSION")):
         project.SAVEFILE_VERSION = 1 # first save files did not have this
-    print "Loading " + project.name + ", SAVEFILE_VERSION:", project.SAVEFILE_VERSION
+    # SvdB - Feb-2017 - Removed project.name from print. It causes problems with non-latin characters, in some cases. Not sure why, yet.
+    print "Loading Project, SAVEFILE_VERSION:", project.SAVEFILE_VERSION
 
     # Set MLT profile. NEEDS INFO USER ON MISSING PROFILE!!!!!
     project.profile = mltprofiles.get_profile(project.profile_desc)

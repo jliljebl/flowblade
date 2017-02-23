@@ -1807,8 +1807,11 @@ class BigTCDisplay:
         cr.stroke()
 
         # Get current TIMELINE frame str
-        frame = PLAYER().tracktor_producer.frame()
-        frame_str = utils.get_tc_string(frame)
+        try:
+            frame = PLAYER().tracktor_producer.frame()
+            frame_str = utils.get_tc_string(frame)
+        except:
+            frame_str = "00:00:00:00"
 
         # Text
         layout = PangoCairo.create_layout(cr)
