@@ -864,7 +864,11 @@ def draw_one_roll_overlay_ripple(cr, data):
         #else: 
         ##print "offset not None"
 
-        indicator_frame = data["selected_frame"] + offset
+        if data["to_side_being_edited"]:
+            delta = data["selected_frame"] - data["edit_frame"]
+            indicator_frame = data["edit_frame"] - delta + offset
+        else:
+            indicator_frame = data["selected_frame"] + offset
         indicator_x = _get_frame_x(indicator_frame)
         
         track_height = current_sequence().tracks[i].height
