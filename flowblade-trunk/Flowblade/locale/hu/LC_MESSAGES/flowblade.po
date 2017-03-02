@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-09 16:59+0100\n"
-"PO-Revision-Date: 2017-02-08 19:08+0100\n"
+"POT-Creation-Date: 2017-03-02 18:39+0100\n"
+"PO-Revision-Date: 2017-03-02 20:16+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
 "Language: hu-HU\n"
@@ -363,7 +363,7 @@ msgstr "A monitoron lévő klip hozzáadása"
 msgid "Append"
 msgstr "Hozzáfűzés"
 
-#: editorwindow.py:180 dialogs.py:1143 dialogs.py:1177 guicomponents.py:2234
+#: editorwindow.py:180 dialogs.py:1143 dialogs.py:1177 guicomponents.py:2237
 msgid "Insert"
 msgstr "Beszúrás"
 
@@ -750,7 +750,7 @@ msgstr "Minden szűrő be-/kikapcsolása"
 msgid "No editable parameters"
 msgstr "Nincsenek szerkeszthető paraméterek"
 
-#: compositeeditor.py:61 render.py:168
+#: compositeeditor.py:61 render.py:171
 msgid "Reset"
 msgstr "Alaphelyzet"
 
@@ -1248,7 +1248,7 @@ msgstr ""
 msgid "New Marker"
 msgstr "Új jelző"
 
-#: dialogs.py:1019 guicomponents.py:2061
+#: dialogs.py:1019 guicomponents.py:2064
 msgid "Add Marker"
 msgstr "Jelző hozzáadása"
 
@@ -1423,7 +1423,7 @@ msgstr "R"
 
 #: dialogs.py:1149
 msgid "Trim Tool Ripple Mode On/Off"
-msgstr ""
+msgstr "Vágás eszköz visszatoldás módjának be-/kikapcsolása"
 
 #: dialogs.py:1150
 msgid "S"
@@ -1565,23 +1565,23 @@ msgstr "\"B\" jelzőhöz"
 msgid "Playback"
 msgstr "Lejátszás"
 
-#: dialogs.py:1178 guicomponents.py:2240 translations.py:557
-msgid "Overwrite"
-msgstr "Felülírás"
+#: dialogs.py:1178 guicomponents.py:2243
+msgid "Overwrite / Box"
+msgstr "Felülírás / Doboz"
 
-#: dialogs.py:1179 guicomponents.py:2246
-msgid "Trim"
-msgstr "Levágás (trim)"
+#: dialogs.py:1179 guicomponents.py:2249
+msgid "Trim / Ripple"
+msgstr "Vágás / Visszatoldás"
 
-#: dialogs.py:1180 guicomponents.py:2252
+#: dialogs.py:1180 guicomponents.py:2255
 msgid "Roll"
 msgstr "Görgetés"
 
-#: dialogs.py:1181 guicomponents.py:2258
+#: dialogs.py:1181 guicomponents.py:2261
 msgid "Slip"
 msgstr "Csúsztatás"
 
-#: dialogs.py:1182 guicomponents.py:2264
+#: dialogs.py:1182 guicomponents.py:2267
 msgid "Spacer"
 msgstr "Távtartó"
 
@@ -1872,7 +1872,7 @@ msgstr "Első képkocka az idővonalon"
 msgid "Last Frame on Timeline"
 msgstr "Utolsó képkocka az idővonalon"
 
-#: guicomponents.py:1426 guicomponents.py:2219
+#: guicomponents.py:1426 guicomponents.py:2222
 msgid "Clear Match Frame"
 msgstr "Érintkező képkocka elrejtése"
 
@@ -2043,171 +2043,171 @@ msgstr "Képpontméretarány:"
 msgid "Progressive:"
 msgstr "Progresszív:"
 
-#: guicomponents.py:1960
+#: guicomponents.py:1963
 msgid "Video:"
 msgstr "Videó:"
 
-#: guicomponents.py:1965
+#: guicomponents.py:1968
 msgid "Audio:"
 msgstr "Hang:"
 
-#: guicomponents.py:1970
+#: guicomponents.py:1973
 msgid "Number of Tracks:"
 msgstr "Sávok száma:"
 
-#: guicomponents.py:2058
+#: guicomponents.py:2061
 msgid "No Markers"
 msgstr "Nincsenek jelzők"
 
-#: guicomponents.py:2062
+#: guicomponents.py:2065
 msgid "Delete Marker"
 msgstr "Jelző törlése"
 
-#: guicomponents.py:2064
+#: guicomponents.py:2067
 msgid "Delete All Markers"
 msgstr "Összes jelző törlése"
 
-#: guicomponents.py:2072
+#: guicomponents.py:2075
 msgid "Maximize Tracks"
 msgstr "Sávok maximalizálása"
 
-#: guicomponents.py:2073
+#: guicomponents.py:2076
 msgid "Maximize Video Tracks"
 msgstr "Videosávok maximalizálása"
 
-#: guicomponents.py:2074
+#: guicomponents.py:2077
 msgid "Maximize Audio Tracks"
 msgstr "Hangsávok maximalizálása"
 
-#: guicomponents.py:2076
+#: guicomponents.py:2079
 msgid "Minimize Tracks"
 msgstr "Sávok minimalizálása"
 
-#: guicomponents.py:2078
+#: guicomponents.py:2081
 msgid "Activate All Tracks"
 msgstr "Minden sáv aktiválása"
 
-#: guicomponents.py:2079
+#: guicomponents.py:2082
 msgid "Activate Only Current Top Active Track"
 msgstr "Csak a legfelső aktív sáv legyen aktiválva"
 
-#: guicomponents.py:2087
+#: guicomponents.py:2090
 msgid "Display Clip Media Thumbnails"
 msgstr "Média klipek bélyegképeinek megjelenítése"
 
-#: guicomponents.py:2096
+#: guicomponents.py:2099
 msgid "Snapping On"
 msgstr "Igazítás bekapcsolása"
 
-#: guicomponents.py:2103
+#: guicomponents.py:2106
 msgid "Show Magnet Icon"
 msgstr "Mágnes ikon megjelenítése"
 
-#: guicomponents.py:2112
+#: guicomponents.py:2115
 msgid "Display All Audio Levels"
 msgstr "Összes hang szintjének megjelenítése"
 
-#: guicomponents.py:2115
+#: guicomponents.py:2118
 msgid "Display Audio Levels On Request"
 msgstr "Hangok szintjének megjelenítése kérésre"
 
-#: guicomponents.py:2135
+#: guicomponents.py:2138
 msgid "Image"
 msgstr "Kép"
 
-#: guicomponents.py:2137
+#: guicomponents.py:2140
 msgid "Vectorscope"
 msgstr "Vektorszkóp"
 
-#: guicomponents.py:2139
+#: guicomponents.py:2142
 msgid "RGB Parade"
 msgstr "RGB parádé"
 
-#: guicomponents.py:2143
+#: guicomponents.py:2146
 msgid "Overlay Opacity"
 msgstr "Rávetítés átlátszatlansága"
 
-#: guicomponents.py:2148
+#: guicomponents.py:2151
 msgid "100%"
 msgstr "100%"
 
-#: guicomponents.py:2153
+#: guicomponents.py:2156
 msgid "80%"
 msgstr "80%"
 
-#: guicomponents.py:2158
+#: guicomponents.py:2161
 msgid "50%"
 msgstr "50%"
 
-#: guicomponents.py:2163
+#: guicomponents.py:2166
 msgid "20%"
 msgstr "20%"
 
-#: guicomponents.py:2168
+#: guicomponents.py:2171
 msgid "0%"
 msgstr "0%"
 
-#: guicomponents.py:2188
+#: guicomponents.py:2191
 msgid "Trim View On"
-msgstr ""
+msgstr "Vágás nézete bekapcsolva"
 
-#: guicomponents.py:2193
+#: guicomponents.py:2196
 msgid "Trim View Single Side Edits Only"
-msgstr ""
+msgstr "Vágás nézete egy sávos szerkesztés esetén"
 
-#: guicomponents.py:2198
+#: guicomponents.py:2201
 msgid "Trim View Off"
-msgstr ""
+msgstr "Vágás nézete kikapcsolva"
 
-#: guicomponents.py:2214
+#: guicomponents.py:2217
 msgid "Set Current Clip Frame Match Frame"
-msgstr ""
+msgstr "A klip aktuális képkockája legyen az érintkező"
 
-#: guicomponents.py:2284
+#: guicomponents.py:2287
 msgid "All Files"
 msgstr "Minden fájl"
 
-#: guicomponents.py:2288
+#: guicomponents.py:2291
 msgid "Video Files"
 msgstr "Videofájlok"
 
-#: guicomponents.py:2292
+#: guicomponents.py:2295
 msgid "Audio Files"
 msgstr "Hangfájlok"
 
-#: guicomponents.py:2296
+#: guicomponents.py:2299
 msgid "Graphics Files"
 msgstr "Grafikus fájlok"
 
-#: guicomponents.py:2300
+#: guicomponents.py:2303
 msgid "Image Sequences"
 msgstr "Képsorozatok"
 
-#: guicomponents.py:2304
+#: guicomponents.py:2307
 msgid "Pattern Producers"
 msgstr "Minta előállítók"
 
-#: guicomponents.py:2317
+#: guicomponents.py:2320
 msgid "2 Columns"
 msgstr "2 oszlop"
 
-#: guicomponents.py:2322
+#: guicomponents.py:2325
 msgid "3 Columns"
 msgstr "3 oszlop"
 
-#: guicomponents.py:2327
+#: guicomponents.py:2330
 msgid "4 Columns"
 msgstr "4 oszlop"
 
-#: guicomponents.py:2332
+#: guicomponents.py:2335
 msgid "5 Columns"
 msgstr "5 oszlop"
 
-#: guicomponents.py:2337
+#: guicomponents.py:2340
 msgid "6 Columns"
 msgstr "6 oszlop"
 
-#: guicomponents.py:2342
+#: guicomponents.py:2345
 msgid "7 Columns"
 msgstr "7 oszlop"
 
@@ -2427,11 +2427,11 @@ msgstr "Eltűnés"
 msgid "Color:"
 msgstr "Szín:"
 
-#: persistance.py:371
+#: persistance.py:372
 msgid "Building sequence "
 msgstr "Jelenet építése: "
 
-#: persistance.py:408
+#: persistance.py:409
 msgid "Loading icons"
 msgstr "Ikonok betöltése"
 
@@ -2467,55 +2467,55 @@ msgstr "Renderelve "
 msgid "Saved backup snapshot"
 msgstr "Mentett állapot"
 
-#: render.py:170
+#: render.py:173
 msgid "To Queue"
 msgstr "Várólistára helyezés"
 
-#: render.py:171
+#: render.py:174
 msgid "Save Project in Render Queue"
 msgstr "Projekt mentése a renderelés várólistájára"
 
-#: render.py:174
+#: render.py:177
 msgid "Select render range"
 msgstr "Renderelendő tartomány kijelölése"
 
-#: render.py:175
+#: render.py:178
 msgid "Reset all render options to defaults"
 msgstr "Renderelés beállításainak alapértelmezettre állítása"
 
-#: render.py:176
+#: render.py:179
 msgid "Begin Rendering"
 msgstr "Renderelés indítása"
 
-#: render.py:195
+#: render.py:204
 msgid "<b>Output File: </b>"
 msgstr "<b>Kimeneti fájl: </b>"
 
-#: render.py:197
+#: render.py:206
 msgid "<b>Estimated time left: </b>"
 msgstr "<b>Becsült hátralévő idő: </b>"
 
-#: render.py:199
+#: render.py:208
 msgid "<b>Render time: </b>"
 msgstr "<b>Renderelés ideje: </b>"
 
-#: render.py:216 render.py:242
+#: render.py:225 render.py:251
 msgid "<b>Render Time: </b>"
 msgstr "<b>Renderelés ideje: </b>"
 
-#: render.py:222 render.py:240
+#: render.py:231 render.py:249
 msgid "<b>Estimated Time Left: </b>"
 msgstr "<b>Estimated time left: </b>"
 
-#: render.py:244
+#: render.py:253
 msgid "Render Complete!"
 msgstr "Renderelés kész!"
 
-#: render.py:360
+#: render.py:369
 msgid "A File with given path exists!"
 msgstr "Egy fájl már létezik az adott útvonallal!"
 
-#: render.py:361
+#: render.py:370
 msgid ""
 "It is not allowed to render Motion Files with same paths as existing files.\n"
 "Select another name for file."
@@ -2524,11 +2524,11 @@ msgstr ""
 "útvonallal.\n"
 "Válasszon másik nevet a fájlnak."
 
-#: render.py:420
+#: render.py:429
 msgid "Rendering Motion Clip"
 msgstr "Mozgás klip renderelése"
 
-#: render.py:470
+#: render.py:479
 msgid "Rendering Transition Clip"
 msgstr "Átmenet klip renderelése"
 
@@ -3873,6 +3873,10 @@ msgstr "Vékony"
 #: translations.py:555
 msgid "Ellipsoid"
 msgstr "Ellipszoid"
+
+#: translations.py:557
+msgid "Overwrite"
+msgstr "Felülírás"
 
 #: translations.py:561 mlttransitions.py:151
 msgid "Subtract"
@@ -5855,13 +5859,16 @@ msgstr "Alapértelmezett profil használata:"
 
 #: monitorevent.py:301
 msgid "On some systems Trim View may update slowly"
-msgstr ""
+msgstr "Egyes rendszereken a vágás nézete lassan frissülhet"
 
 #: monitorevent.py:302
 msgid ""
 "<b>Trim View</b> works best with SSDs and relatively powerful processors.\n"
 "\n"
 msgstr ""
+"A <b>vágás nézete</b> SSD-vel és viszonylag erős processzorral működik a "
+"legjobban.\n"
+"\n"
 
 #: monitorevent.py:303
 msgid ""
@@ -5869,3 +5876,9 @@ msgid ""
 "options\n"
 "if performance is not satisfactory."
 msgstr ""
+"Válassza a <b>Vágás nézete kikapcsolva</b> vagy a <b>Vágás nézete egysávos "
+"szerkesztés esetén</b> lehetőséget\n"
+"ha a teljesítmény nem megfelelő."
+
+#~ msgid "Trim"
+#~ msgstr "Levágás (trim)"
