@@ -417,7 +417,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     global ripple_data
     ripple_data = None
     if editorstate.trim_mode_ripple == True:
-        ripple_data = RippleData( track, edit_frame)
+        ripple_data = RippleData(track, edit_frame)
         print ripple_data.__dict__
 
     global edit_data

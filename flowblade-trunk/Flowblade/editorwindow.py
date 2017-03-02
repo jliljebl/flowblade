@@ -1005,9 +1005,13 @@ class EditorWindow:
 
     def toggle_trim_ripple_mode(self):
         editorstate.trim_mode_ripple = (editorstate.trim_mode_ripple == False)
+        editevent.stop_looping()
+        editorstate.edit_mode = editorstate.ONE_ROLL_TRIM_NO_EDIT
+        tlinewidgets.set_edit_mode(None, None)
         self.set_mode_selector_to_mode()
         self.set_tline_cursor(editorstate.EDIT_MODE())
-
+        updater.set_trim_mode_gui()
+    
     def toggle_overwrite_box_mode(self):
         editorstate.overwrite_mode_box = (editorstate.overwrite_mode_box == False)
         boxmove.clear_data()

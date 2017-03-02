@@ -2240,13 +2240,13 @@ def get_mode_selector_popup_menu(launcher, event, callback):
     menu_items.append(menu_item)
 
     menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "overwrite_tool.png"),    _("Overwrite"), callback, 1)
+        respaths.IMAGE_PATH + "overwrite_tool.png"),    _("Overwrite / Box"), callback, 1)
     menu_item.set_accel_path("<Actions>/WindowActions/OverMode")
     menu.add(menu_item)
     menu_items.append(menu_item)
 
     menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "oneroll_tool.png"), _("Trim"), callback, 2)
+        respaths.IMAGE_PATH + "oneroll_tool.png"), _("Trim / Ripple"), callback, 2)
     menu_item.set_accel_path("<Actions>/WindowActions/OneRollMode")
     menu.add(menu_item)
     menu_items.append(menu_item)
