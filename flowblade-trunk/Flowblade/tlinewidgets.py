@@ -859,10 +859,7 @@ def draw_one_roll_overlay_ripple(cr, data):
     for i in range(1, len(current_sequence().tracks) - 1):
         offset = ripple_data.track_blank_end_offset[i-1]
         if offset == None:
-            #print "offset None"
             continue
-        #else: 
-        ##print "offset not None"
 
         if data["to_side_being_edited"]:
             delta = data["selected_frame"] - data["edit_frame"]

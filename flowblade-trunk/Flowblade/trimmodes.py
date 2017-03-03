@@ -433,10 +433,12 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
 
         # Case: editing to-clip
         if edit_data["to_side_being_edited"]:
-            if edit_data["trim_limits"]["to_start"] < ripple_start_bound:
-                edit_data["trim_limits"]["to_start"] = ripple_start_bound
+            ripple_end_bound = edit_frame + ripple_data.max_backwards
+            if edit_data["trim_limits"]["both_end"] > ripple_end_bound:
+                edit_data["trim_limits"]["both_end"] = ripple_end_bound
         # Case: editing from-clip
         else:
+            ripple_start_bound = edit_frame - ripple_data.max_backwards
             if edit_data["trim_limits"]["both_start"] < ripple_start_bound: # name "both_start"] is artifact fromearlier when trimlimits were used for bot "trim and "roll" edits
                 edit_data["trim_limits"]["both_start"] = ripple_start_bound
                 
@@ -753,7 +755,7 @@ class RippleData:
 
         # Look at all tracks exept hidden and black
         # Get per track:
-        # * maximum length trim can be done backwards before an overwrite happens
+        # * maximum length trim can be done backwards or forwards before an overwrite happens
         # * indexes of blanks that are trimmed and/or added/removed,
         #   -1 when no blanks are altered on that track
         #
@@ -776,9 +778,6 @@ class RippleData:
                 # Case: 2 - n clips
                 clip_index = current_sequence().get_clip_index(track, self.trim_frame)
                 first_frame_clip = track.clips[clip_index]
-                
-                #trim_frame = track.clip_start(clip_index)
-                #clip_last_frame = clip_first_frame + first_frame_clip
                 
                 # Case: frame after track last clip
                 if clip_index == -1:
