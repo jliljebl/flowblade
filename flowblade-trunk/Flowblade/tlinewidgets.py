@@ -239,6 +239,7 @@ INSERT_MODE_COLOR = (0.9,0.9,0.0)
 OVERWRITE_MODE_COLOR = (0.9,0.0,0.0)
 OVERLAY_TRIM_COLOR = (0.81, 0.82, 0.3)
 BOX_BOUND_COLOR =(0.137, 0.80, 0.85)
+TRIM_MAX_RED = (1.0,0.1,0.1)
 
 POINTER_TRIANGLE_COLOR = (0.6, 0.7, 0.8, 0.7)
 SHADOW_POINTER_COLOR = (0.5, 0.5, 0.5)
@@ -861,8 +862,8 @@ def draw_one_roll_overlay_ripple(cr, data):
         if offset == None:
             continue
 
+        delta = data["selected_frame"] - data["edit_frame"]
         if data["to_side_being_edited"]:
-            delta = data["selected_frame"] - data["edit_frame"]
             indicator_frame = data["edit_frame"] - delta + offset
         else:
             indicator_frame = data["selected_frame"] + offset
@@ -871,18 +872,35 @@ def draw_one_roll_overlay_ripple(cr, data):
         track_height = current_sequence().tracks[i].height
         track_y = _get_track_y(i)
 
+        max_trim = False
+        if delta == ripple_data.max_backwards and ripple_data.track_edit_ops[i-1] == appconsts.MULTI_TRIM_REMOVE:
+            max_trim = True
+        
+        if max_trim:
+            cr.set_source_rgb(*TRIM_MAX_RED)
+        else:
+            cr.set_source_rgb(*OVERLAY_COLOR)
+    
         cr.move_to(indicator_x, track_y)
         cr.line_to(indicator_x, track_y + track_height)
         cr.stroke()
  
         draw_y = track_y + track_height / 2
-        cr.move_to(indicator_x - 2, draw_y)
-        cr.line_to(indicator_x - 2, draw_y - 5)
-        cr.line_to(indicator_x - 7, draw_y)
-        cr.line_to(indicator_x - 2, draw_y + 5)
+        if not max_trim:
+            cr.move_to(indicator_x - 2, draw_y)
+            cr.line_to(indicator_x - 2, draw_y - 5)
+            cr.line_to(indicator_x - 7, draw_y)
+            cr.line_to(indicator_x - 2, draw_y + 5)
+            cr.close_path()
+            cr.fill()
+
+        cr.move_to(indicator_x + 2, draw_y)
+        cr.line_to(indicator_x + 2, draw_y - 5)
+        cr.line_to(indicator_x + 7, draw_y)
+        cr.line_to(indicator_x + 2, draw_y + 5)
         cr.close_path()
         cr.fill()
-
+            
 def draw_slide_overlay(cr, data):
     track_height = current_sequence().tracks[data["track"]].height
     track_y = _get_track_y(data["track"])
