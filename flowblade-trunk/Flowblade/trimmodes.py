@@ -806,13 +806,13 @@ class RippleData:
                         blank_last_frame = blank_first_frame + blank.clip_length()
                         
                         # Clip before trimmed timeline frame, distance is from blank last frame
-                        if blank_last_frame < self.trim_frame:
+                        if blank_last_frame <= self.trim_frame:
                             if self.trim_frame - blank_last_frame < closest_blank_distance:
                                 closest_blank_distance = self.trim_frame - blank_last_frame
                                 closest_blank_index = i
 
                         # Clip after trimmed timeline frame, distance is from blank first frame
-                        elif blank_first_frame > self.trim_frame: 
+                        elif blank_first_frame >= self.trim_frame: 
                             if blank_last_frame - self.trim_frame < closest_blank_distance:
                                 closest_blank_distance = blank_last_frame - self.trim_frame 
                                 closest_blank_index = i
