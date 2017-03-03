@@ -1280,8 +1280,13 @@ def _ripple_trim_blanks_undo(self, reverse_comp_delta=False):
         elif edit_op == appconsts.MULTI_ADD_TRIM:
             _remove_clip(track, trim_blank_index) 
         elif edit_op == appconsts.MULTI_TRIM_REMOVE:
-            if self.edit_delta != -self.multi_data.max_backwards:
-                _remove_clip(track, trim_blank_index) 
+            #print "MULTI_TRIM_REMOVE for track", track.id, "values: ", self.edit_delta, applied_delta, -self.multi_data.max_backwards
+            if reverse_comp_delta:
+                if -self.edit_delta != -self.multi_data.max_backwards:
+                    _remove_clip(track, trim_blank_index) 
+            else:
+                if self.edit_delta != -self.multi_data.max_backwards:
+                    _remove_clip(track, trim_blank_index) 
                 
             _insert_blank(track, trim_blank_index, self.orig_length)
 
@@ -1307,18 +1312,19 @@ def _ripple_trim_blanks_redo(self, reverse_delta=False):
         edit_op = self.multi_data.track_edit_ops[i - 1]        
         trim_blank_index = self.multi_data.trim_blank_indexes[i - 1]
         
-        if edit_op == appconsts.MULTI_NOOP:
+        if edit_op == appconsts.MULTI_NOOP: # no blank clip on this track is not changed
             continue
-        elif edit_op == appconsts.MULTI_TRIM:
+        elif edit_op == appconsts.MULTI_TRIM: #longer available blank than max_backwards, lenth is changed
             blank_length = track.clips[trim_blank_index].clip_length()
             _remove_clip(track, trim_blank_index) 
             _insert_blank(track, trim_blank_index, blank_length + applied_delta)
-        elif edit_op == appconsts.MULTI_ADD_TRIM:
+        elif edit_op == appconsts.MULTI_ADD_TRIM:# no blank to trim available, only possibnle edit is to add blank
             _insert_blank(track, trim_blank_index, applied_delta)
-        elif edit_op == appconsts.MULTI_TRIM_REMOVE:
+        elif edit_op == appconsts.MULTI_TRIM_REMOVE: # blank is trimmed if not max length triom, if so, blank is removed
             self.orig_length = track.clips[trim_blank_index].clip_length()
-            _remove_clip(track, trim_blank_index) 
-            if self.edit_delta != -self.multi_data.max_backwards:
+            _remove_clip(track, trim_blank_index)
+            #print "MULTI_TRIM_REMOVE for track", track.id, "values: ", applied_delta, -self.multi_data.max_backwards
+            if applied_delta != -self.multi_data.max_backwards:
                 _insert_blank(track, trim_blank_index, self.orig_length + applied_delta)
 
     _ripple_trim_compositors_move(self, applied_delta)

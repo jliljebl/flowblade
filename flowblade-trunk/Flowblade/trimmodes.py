@@ -825,7 +825,7 @@ class RippleData:
                         track_max_deltas.append(0)
                         trim_blank_indexes.append(clip_index)
                         self.track_blank_end_offset.append(self.get_track_blank_end_offset(track, clip_index - 1))
-                    # Case closet blank found
+                    # Case closest blank found
                     else:
                         track_max_deltas.append(track.clips[closest_blank_index].clip_length())
                         trim_blank_indexes.append(closest_blank_index)
