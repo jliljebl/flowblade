@@ -950,7 +950,7 @@ class EditorWindow:
         self.pos_bar.set_listener(mltplayer.seek_position_normalized)
 
     def _get_edit_buttons_row(self):
-        modes_pixbufs = [INSERTMOVE_CURSOR, OVERWRITE_CURSOR, OVERWRITE_BOX_CURSOR, ONEROLL_CURSOR, ONEROLL_RIPPLE_CURSOR, TWOROLL_CURSOR, SLIDE_CURSOR, MULTIMOVE_CURSOR]
+        modes_pixbufs = [INSERTMOVE_CURSOR, OVERWRITE_CURSOR, ONEROLL_CURSOR, ONEROLL_RIPPLE_CURSOR, TWOROLL_CURSOR, SLIDE_CURSOR, MULTIMOVE_CURSOR, OVERWRITE_BOX_CURSOR]
         middlebar.create_edit_buttons_row_buttons(self, modes_pixbufs)
     
         buttons_row = Gtk.HBox(False, 1)
@@ -982,6 +982,10 @@ class EditorWindow:
 
     def handle_over_move_mode_button_press(self):
         editevent.overwrite_move_mode_pressed()
+        self.set_cursor_to_mode()
+
+    def handle_box_mode_button_press(self):
+        editevent.box_mode_pressed()
         self.set_cursor_to_mode()
 
     def handle_insert_move_mode_button_press(self):
@@ -1026,10 +1030,7 @@ class EditorWindow:
         if mode == 0:
             self.handle_insert_move_mode_button_press()
         if mode == 1:
-            if editorstate.edit_mode != editorstate.OVERWRITE_MOVE:
-                self.handle_over_move_mode_button_press()
-            else:
-                self.toggle_overwrite_box_mode()
+            self.handle_over_move_mode_button_press()
         if mode == 2:
             if editorstate.edit_mode != editorstate.ONE_ROLL_TRIM and editorstate.edit_mode != editorstate.ONE_ROLL_TRIM_NO_EDIT:
                 self.handle_one_roll_mode_button_press()
@@ -1041,7 +1042,9 @@ class EditorWindow:
             self.handle_slide_mode_button_press()
         if mode == 5:
             self.handle_multi_mode_button_press()
-        
+        if mode == 6:
+            self.handle_box_mode_button_press()
+                
         self.set_cursor_to_mode()
         self.set_mode_selector_to_mode()
         
@@ -1103,22 +1106,22 @@ class EditorWindow:
             if editorstate.overwrite_mode_box == False:
                 self.modes_selector.set_pixbuf(1)
             else:
-                self.modes_selector.set_pixbuf(2)
+                self.modes_selector.set_pixbuf(7)
         elif editorstate.EDIT_MODE() == editorstate.ONE_ROLL_TRIM or editorstate.EDIT_MODE() == editorstate.ONE_ROLL_TRIM_NO_EDIT:
             if editorstate.trim_mode_ripple == False:
-                self.modes_selector.set_pixbuf(3)
+                self.modes_selector.set_pixbuf(2)
             else:
-                self.modes_selector.set_pixbuf(4)
+                self.modes_selector.set_pixbuf(3)
         elif editorstate.EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
-            self.modes_selector.set_pixbuf(5)
+            self.modes_selector.set_pixbuf(4)
         elif editorstate.EDIT_MODE() == editorstate.TWO_ROLL_TRIM_NO_EDIT:
-            self.modes_selector.set_pixbuf(5)
+            self.modes_selector.set_pixbuf(4)
         elif editorstate.EDIT_MODE() == editorstate.SLIDE_TRIM:
-            self.modes_selector.set_pixbuf(6)
+            self.modes_selector.set_pixbuf(5)
         elif editorstate.EDIT_MODE() == editorstate.SLIDE_TRIM_NO_EDIT:
-            self.modes_selector.set_pixbuf(6)
+            self.modes_selector.set_pixbuf(5)
         elif editorstate.EDIT_MODE() == editorstate.MULTI_MOVE:
-            self.modes_selector.set_pixbuf(7)
+            self.modes_selector.set_pixbuf(6)
 
     def tline_cursor_leave(self, event):
         cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR)

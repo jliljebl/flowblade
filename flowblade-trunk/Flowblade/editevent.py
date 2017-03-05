@@ -31,6 +31,7 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 
 import appconsts
+import boxmove
 import clipeffectseditor
 import clipenddragmode
 import compositeeditor
@@ -277,7 +278,7 @@ def stop_looping():
 # -------------------------------------------------------------- move modes
 def insert_move_mode_pressed():
     """
-    User selects insert move mode.
+    User selects Insert tool.
     """
     stop_looping()
     current_sequence().clear_hidden_track()
@@ -289,17 +290,38 @@ def insert_move_mode_pressed():
 
 def overwrite_move_mode_pressed():
     """
-    User selects overwrite move mode.
+    User selects Overwrite tool.
     """
     stop_looping()
     current_sequence().clear_hidden_track()
 
     editorstate.edit_mode = editorstate.OVERWRITE_MOVE
+    # Box tool is implemeted as sub mode of OVERWRITE_MOVE so this false
+    editorstate.overwrite_mode_box = False
     tlinewidgets.set_edit_mode(None, tlinewidgets.draw_overwrite_overlay)
 
     _set_move_mode()
 
+def box_mode_pressed():
+    """
+    User selects Box tool.
+    """
+    stop_looping()
+    current_sequence().clear_hidden_track()
+    
+    # Box tool is implemeted as sub mode of OVERWRITE_MOVE
+    editorstate.edit_mode = editorstate.OVERWRITE_MOVE
+    editorstate.overwrite_mode_box = True
+    boxmove.clear_data()
+        
+    tlinewidgets.set_edit_mode(None, None) # these get set later for box move
+        
+    _set_move_mode()
+    
 def multi_mode_pressed():
+    """
+    User selects Spacer tool.
+    """
     stop_looping()
     current_sequence().clear_hidden_track()
 
