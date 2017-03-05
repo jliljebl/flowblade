@@ -720,6 +720,9 @@ def draw_multi_overlay(cr, data):
             cr.close_path()
             cr.fill()
 
+    y = _get_track_y(current_sequence().first_video_index)
+    _draw_snap(cr, y)
+    
 def draw_two_roll_overlay(cr, data):
     edit_frame = data["edit_frame"]
     frame_x = _get_frame_x(edit_frame)
