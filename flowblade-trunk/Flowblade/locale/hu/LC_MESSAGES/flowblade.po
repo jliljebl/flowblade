@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-02 18:39+0100\n"
-"PO-Revision-Date: 2017-03-02 20:16+0100\n"
+"POT-Creation-Date: 2017-03-03 19:00+0100\n"
+"PO-Revision-Date: 2017-03-04 22:52+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
 "Language: hu-HU\n"
@@ -1423,7 +1423,7 @@ msgstr "R"
 
 #: dialogs.py:1149
 msgid "Trim Tool Ripple Mode On/Off"
-msgstr "Vágás eszköz visszatoldás módjának be-/kikapcsolása"
+msgstr "Vágás eszköz együttes vágás módjának be-/kikapcsolása"
 
 #: dialogs.py:1150
 msgid "S"
@@ -1475,7 +1475,7 @@ msgstr "ENTER"
 
 #: dialogs.py:1156
 msgid "Complete Keyboard Trim Edit"
-msgstr "Vágás végrehajtása billenytűzettel"
+msgstr "Vágás végrehajtása billentyűzettel"
 
 #: dialogs.py:1160
 msgid "SPACE"
@@ -1567,11 +1567,11 @@ msgstr "Lejátszás"
 
 #: dialogs.py:1178 guicomponents.py:2243
 msgid "Overwrite / Box"
-msgstr "Felülírás / Doboz"
+msgstr "Felülírás / Többsávos felülírás"
 
 #: dialogs.py:1179 guicomponents.py:2249
 msgid "Trim / Ripple"
-msgstr "Vágás / Visszatoldás"
+msgstr "Vágás / Együttes vágás"
 
 #: dialogs.py:1180 guicomponents.py:2255
 msgid "Roll"
@@ -2152,6 +2152,7 @@ msgid "Trim View On"
 msgstr "Vágás nézete bekapcsolva"
 
 #: guicomponents.py:2196
+#, fuzzy
 msgid "Trim View Single Side Edits Only"
 msgstr "Vágás nézete egy sávos szerkesztés esetén"
 
@@ -4312,7 +4313,7 @@ msgid ""
 msgstr ""
 "Renderelt átmenet hozzáadása - 2 klip kijelölve\n"
 "Renderelt halványodás hozzáadása - 1 klip kijelölve\n"
-"Vágás - X"
+"Elvágás - X"
 
 #: middlebar.py:138
 msgid ""
@@ -4972,11 +4973,11 @@ msgstr "Grafika alapértelmezett hossza:"
 
 #: preferenceswindow.py:215
 msgid "Trim Modes exit on empty click"
-msgstr "Kilépés a levágás (trim) módból üres helyre kattintáskor"
+msgstr "Kilépés a vágás módból üres helyre kattintáskor"
 
 #: preferenceswindow.py:216
 msgid "Quick enter Trim Modes"
-msgstr "Gyors belépés a levágás (trim) módba"
+msgstr "Gyors belépés a vágás módba"
 
 #: preferenceswindow.py:217
 msgid "Remember Monitor Clip Frame"
@@ -5871,6 +5872,7 @@ msgstr ""
 "\n"
 
 #: monitorevent.py:303
+#, fuzzy
 msgid ""
 "Select <b>'Trim View Off'</b> or<b>'Trim View Single Side Edits Only'</b> "
 "options\n"
