@@ -233,7 +233,8 @@ class EditorWindow:
             ('OneRollMode', None, None, '3', None, lambda a:_this_is_not_used()),
             ('TwoRollMode', None, None, '4', None, lambda a:_this_is_not_used()),
             ('SlideMode', None, None, '5', None, lambda a:_this_is_not_used()),
-            ('MultiMode', None, None, '6', None, lambda a:_this_is_not_used())
+            ('MultiMode', None, None, '6', None, lambda a:_this_is_not_used()),
+            ('BoxMode', None, None, '7', None, lambda a:_this_is_not_used())
             ]
 
         menu_string = """<ui>
