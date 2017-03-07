@@ -1175,11 +1175,13 @@ def keyboard_shortcuts_dialog(parent_window):
 
     tools_vbox = Gtk.VBox()
     tools_vbox.pack_start(_get_kb_row("1", _("Insert")), False, False, 0)
-    tools_vbox.pack_start(_get_kb_row("2", _("Overwrite / Box")), False, False, 0)
-    tools_vbox.pack_start(_get_kb_row("3", _("Trim / Ripple")), False, False, 0)
+    tools_vbox.pack_start(_get_kb_row("2", _("Overwrite")), False, False, 0)
+    tools_vbox.pack_start(_get_kb_row("3", _("Trim")), False, False, 0)
     tools_vbox.pack_start(_get_kb_row("4", _("Roll")), False, False, 0)
     tools_vbox.pack_start(_get_kb_row("5", _("Slip")), False, False, 0)
     tools_vbox.pack_start(_get_kb_row("6", _("Spacer")), False, False, 0)
+    tools_vbox.pack_start(_get_kb_row("7", _("Box")), False, False, 0)
+    tools_vbox.pack_start(_get_kb_row(_("R"), _("Trim Tool Ripple Mode On/Off")), False, False, 0)
     tools = guiutils.get_named_frame(_("Tools"), tools_vbox)
 
     geom_vbox = Gtk.VBox()
