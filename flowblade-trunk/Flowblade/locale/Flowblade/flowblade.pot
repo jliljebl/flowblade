@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-03 19:00+0100\n"
+"POT-Creation-Date: 2017-03-06 18:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -425,7 +425,7 @@ msgstr ""
 msgid "Fullscreen"
 msgstr ""
 
-#: editorwindow.py:201 editorwindow.py:514
+#: editorwindow.py:201 editorwindow.py:515
 msgid "Project"
 msgstr ""
 
@@ -489,7 +489,7 @@ msgstr ""
 msgid "Project Info"
 msgstr ""
 
-#: editorwindow.py:217 editorwindow.py:515 rendergui.py:172
+#: editorwindow.py:217 editorwindow.py:516 rendergui.py:172
 #: tools/batchrendering.py:865 tools/gmic.py:771
 msgid "Render"
 msgstr ""
@@ -546,23 +546,23 @@ msgstr ""
 msgid "About"
 msgstr ""
 
-#: editorwindow.py:507
+#: editorwindow.py:508
 msgid "Media"
 msgstr ""
 
-#: editorwindow.py:511
+#: editorwindow.py:512
 msgid "Range Log"
 msgstr ""
 
-#: editorwindow.py:512
+#: editorwindow.py:513
 msgid "Filters"
 msgstr ""
 
-#: editorwindow.py:513
+#: editorwindow.py:514
 msgid "Compositors"
 msgstr ""
 
-#: editorwindow.py:530
+#: editorwindow.py:531
 msgid ""
 "Prev Frame - Arrow Left\n"
 "Next Frame - Arrow Right\n"
@@ -575,99 +575,99 @@ msgid ""
 "To Mark Out"
 msgstr ""
 
-#: editorwindow.py:759
+#: editorwindow.py:760
 msgid "Middlebar Layout"
 msgstr ""
 
-#: editorwindow.py:762
+#: editorwindow.py:763
 msgid "Timecode Left"
 msgstr ""
 
-#: editorwindow.py:767
+#: editorwindow.py:768
 msgid "Timecode Center"
 msgstr ""
 
-#: editorwindow.py:771
+#: editorwindow.py:772
 msgid "Components Centered"
 msgstr ""
 
-#: editorwindow.py:785
+#: editorwindow.py:786
 msgid "Tabs Position"
 msgstr ""
 
-#: editorwindow.py:788
+#: editorwindow.py:789
 msgid "Up"
 msgstr ""
 
-#: editorwindow.py:792
+#: editorwindow.py:793
 msgid "Down"
 msgstr ""
 
-#: editorwindow.py:807
+#: editorwindow.py:808
 msgid "Show Monitor Sequence Profile"
 msgstr ""
 
-#: editorwindow.py:812
+#: editorwindow.py:813
 msgid "Show Master Volume Meter"
 msgstr ""
 
-#: editorwindow.py:820
+#: editorwindow.py:821
 msgid "Monitor Playback Interpolation"
 msgstr ""
 
-#: editorwindow.py:824
+#: editorwindow.py:825
 msgid "Nearest Neighbour (fast)"
 msgstr ""
 
-#: editorwindow.py:828
+#: editorwindow.py:829
 msgid "Bilinear (good)"
 msgstr ""
 
-#: editorwindow.py:832
+#: editorwindow.py:833
 msgid "Bicubic (better)"
 msgstr ""
 
-#: editorwindow.py:837
+#: editorwindow.py:838
 msgid "Hyper/Lanczos (best)"
 msgstr ""
 
-#: editorwindow.py:847
+#: editorwindow.py:848
 msgid "Zoom In"
 msgstr ""
 
-#: editorwindow.py:850
+#: editorwindow.py:851
 msgid "Zoom Out"
 msgstr ""
 
-#: editorwindow.py:853
+#: editorwindow.py:854
 msgid "Zoom Fit"
 msgstr ""
 
-#: editorwindow.py:970
+#: editorwindow.py:971
 msgid "Timeline current frame timecode"
 msgstr ""
 
-#: editorwindow.py:972
+#: editorwindow.py:973
 msgid "Select view mode: Video/Vectorscope/RGBParade"
 msgstr ""
 
-#: editorwindow.py:974
+#: editorwindow.py:975
 msgid "Monitor Sequence/Media current frame timecode"
 msgstr ""
 
-#: editorwindow.py:975
+#: editorwindow.py:976
 msgid "Current Monitor Sequence/Media name"
 msgstr ""
 
-#: editorwindow.py:977
+#: editorwindow.py:978
 msgid "Monitor Sequence/Media current position"
 msgstr ""
 
-#: editorwindow.py:979
+#: editorwindow.py:980
 msgid "Display Current Sequence on Timeline"
 msgstr ""
 
-#: editorwindow.py:980
+#: editorwindow.py:981
 msgid "Display Monitor Clip"
 msgstr ""
 
@@ -738,13 +738,13 @@ msgstr ""
 #: dialogs.py:55 dialogs.py:110 dialogs.py:168 dialogs.py:221 dialogs.py:261
 #: dialogs.py:278 dialogs.py:299 dialogs.py:313 dialogs.py:324 dialogs.py:340
 #: dialogs.py:371 dialogs.py:393 dialogs.py:754 dialogs.py:849 dialogs.py:881
-#: dialogs.py:922 dialogs.py:950 dialogs.py:978 dialogs.py:1039
-#: dialogs.py:1078 dialogs.py:1092 dialogs.py:1106 dialogs.py:1283
-#: propertyeditorbuilder.py:403 propertyeditorbuilder.py:473 rendergui.py:48
-#: rendergui.py:103 rendergui.py:117 rendergui.py:134 rendergui.py:905
-#: preferenceswindow.py:45 tools/batchrendering.py:962 proxyediting.py:429
-#: patternproducer.py:319 patternproducer.py:352 patternproducer.py:383
-#: tools/gmic.py:357 tools/gmic.py:381 tools/gmic.py:511
+#: dialogs.py:922 dialogs.py:950 dialogs.py:978 dialogs.py:1039 dialogs.py:1078
+#: dialogs.py:1092 dialogs.py:1106 dialogs.py:1283 propertyeditorbuilder.py:403
+#: propertyeditorbuilder.py:473 rendergui.py:48 rendergui.py:103
+#: rendergui.py:117 rendergui.py:134 rendergui.py:905 preferenceswindow.py:45
+#: tools/batchrendering.py:962 proxyediting.py:429 patternproducer.py:319
+#: patternproducer.py:352 patternproducer.py:383 tools/gmic.py:357
+#: tools/gmic.py:381 tools/gmic.py:511
 msgid "Cancel"
 msgstr ""
 
@@ -846,8 +846,8 @@ msgstr ""
 msgid "Save Project As"
 msgstr ""
 
-#: dialogs.py:279 dialogs.py:314 dialogs.py:372 dialogs.py:394
-#: rendergui.py:118 tools/batchrendering.py:963 tools/gmic.py:358
+#: dialogs.py:279 dialogs.py:314 dialogs.py:372 dialogs.py:394 rendergui.py:118
+#: tools/batchrendering.py:963 tools/gmic.py:358
 msgid "Save"
 msgstr ""
 
@@ -1508,11 +1508,11 @@ msgstr ""
 msgid "Playback"
 msgstr ""
 
-#: dialogs.py:1178 guicomponents.py:2243
+#: dialogs.py:1178
 msgid "Overwrite / Box"
 msgstr ""
 
-#: dialogs.py:1179 guicomponents.py:2249
+#: dialogs.py:1179
 msgid "Trim / Ripple"
 msgstr ""
 
@@ -1635,23 +1635,23 @@ msgid ""
 "This message is only displayed on first media load for Project."
 msgstr ""
 
-#: editevent.py:225
+#: editevent.py:226
 msgid "Can't put an audio clip on a video track."
 msgstr ""
 
-#: editevent.py:226 editevent.py:817 movemodes.py:607
+#: editevent.py:227 editevent.py:839 movemodes.py:607
 msgid "Track "
 msgstr ""
 
-#: editevent.py:226
+#: editevent.py:227
 msgid " is a video track and can't display audio only material."
 msgstr ""
 
-#: editevent.py:816
+#: editevent.py:838
 msgid "Can't edit a locked track"
 msgstr ""
 
-#: editevent.py:817
+#: editevent.py:839
 msgid " is locked. Unlock track to edit it."
 msgstr ""
 
@@ -2102,51 +2102,63 @@ msgstr ""
 msgid "Set Current Clip Frame Match Frame"
 msgstr ""
 
-#: guicomponents.py:2287
+#: guicomponents.py:2243 translations.py:557
+msgid "Overwrite"
+msgstr ""
+
+#: guicomponents.py:2249
+msgid "Trim"
+msgstr ""
+
+#: guicomponents.py:2273
+msgid "Box"
+msgstr ""
+
+#: guicomponents.py:2293
 msgid "All Files"
 msgstr ""
 
-#: guicomponents.py:2291
+#: guicomponents.py:2297
 msgid "Video Files"
 msgstr ""
 
-#: guicomponents.py:2295
+#: guicomponents.py:2301
 msgid "Audio Files"
 msgstr ""
 
-#: guicomponents.py:2299
+#: guicomponents.py:2305
 msgid "Graphics Files"
 msgstr ""
 
-#: guicomponents.py:2303
+#: guicomponents.py:2309
 msgid "Image Sequences"
 msgstr ""
 
-#: guicomponents.py:2307
+#: guicomponents.py:2313
 msgid "Pattern Producers"
 msgstr ""
 
-#: guicomponents.py:2320
+#: guicomponents.py:2326
 msgid "2 Columns"
 msgstr ""
 
-#: guicomponents.py:2325
+#: guicomponents.py:2331
 msgid "3 Columns"
 msgstr ""
 
-#: guicomponents.py:2330
+#: guicomponents.py:2336
 msgid "4 Columns"
 msgstr ""
 
-#: guicomponents.py:2335
+#: guicomponents.py:2341
 msgid "5 Columns"
 msgstr ""
 
-#: guicomponents.py:2340
+#: guicomponents.py:2346
 msgid "6 Columns"
 msgstr ""
 
-#: guicomponents.py:2345
+#: guicomponents.py:2351
 msgid "7 Columns"
 msgstr ""
 
@@ -3800,10 +3812,6 @@ msgstr ""
 msgid "Ellipsoid"
 msgstr ""
 
-#: translations.py:557
-msgid "Overwrite"
-msgstr ""
-
 #: translations.py:561 mlttransitions.py:151
 msgid "Subtract"
 msgstr ""
@@ -5043,8 +5051,7 @@ msgstr ""
 msgid "Current Render:"
 msgstr ""
 
-#: tools/batchrendering.py:626 tools/batchrendering.py:1243
-#: proxyediting.py:364
+#: tools/batchrendering.py:626 tools/batchrendering.py:1243 proxyediting.py:364
 msgid "Elapsed:"
 msgstr ""
 

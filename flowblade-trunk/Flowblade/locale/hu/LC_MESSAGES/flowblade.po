@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-03 19:00+0100\n"
-"PO-Revision-Date: 2017-03-04 22:52+0100\n"
+"POT-Creation-Date: 2017-03-07 06:40+0100\n"
+"PO-Revision-Date: 2017-03-07 06:58+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
 "Language: hu-HU\n"
@@ -447,7 +447,7 @@ msgstr "Nézet"
 msgid "Fullscreen"
 msgstr "Teljes képernyő"
 
-#: editorwindow.py:201 editorwindow.py:514
+#: editorwindow.py:201 editorwindow.py:515
 msgid "Project"
 msgstr "Projekt"
 
@@ -511,7 +511,7 @@ msgstr "Helyettesítés kezelő"
 msgid "Project Info"
 msgstr "Projekt adatai"
 
-#: editorwindow.py:217 editorwindow.py:515 rendergui.py:172
+#: editorwindow.py:217 editorwindow.py:516 rendergui.py:172
 #: tools/batchrendering.py:865 tools/gmic.py:771
 msgid "Render"
 msgstr "Renderelés"
@@ -568,23 +568,23 @@ msgstr "Gyorsbillentyűk"
 msgid "About"
 msgstr "Névjegy"
 
-#: editorwindow.py:507
+#: editorwindow.py:508
 msgid "Media"
 msgstr "Média"
 
-#: editorwindow.py:511
+#: editorwindow.py:512
 msgid "Range Log"
 msgstr "Tartományok"
 
-#: editorwindow.py:512
+#: editorwindow.py:513
 msgid "Filters"
 msgstr "Szűrők"
 
-#: editorwindow.py:513
+#: editorwindow.py:514
 msgid "Compositors"
 msgstr "Kompozitorok"
 
-#: editorwindow.py:530
+#: editorwindow.py:531
 msgid ""
 "Prev Frame - Arrow Left\n"
 "Next Frame - Arrow Right\n"
@@ -606,99 +606,99 @@ msgstr ""
 "\"A\" jelzőhöz\n"
 "\"B\" jelzőhöz"
 
-#: editorwindow.py:759
+#: editorwindow.py:760
 msgid "Middlebar Layout"
 msgstr "Középső eszköztár elrendezése"
 
-#: editorwindow.py:762
+#: editorwindow.py:763
 msgid "Timecode Left"
 msgstr "Időkód a bal oldalon"
 
-#: editorwindow.py:767
+#: editorwindow.py:768
 msgid "Timecode Center"
 msgstr "Időkód középen"
 
-#: editorwindow.py:771
+#: editorwindow.py:772
 msgid "Components Centered"
 msgstr "Elemek középen"
 
-#: editorwindow.py:785
+#: editorwindow.py:786
 msgid "Tabs Position"
 msgstr "Fülek elhelyezése"
 
-#: editorwindow.py:788
+#: editorwindow.py:789
 msgid "Up"
 msgstr "Fel"
 
-#: editorwindow.py:792
+#: editorwindow.py:793
 msgid "Down"
 msgstr "Le"
 
-#: editorwindow.py:807
+#: editorwindow.py:808
 msgid "Show Monitor Sequence Profile"
 msgstr "Monitoron lévő jelenet profiljának megjelenítése"
 
-#: editorwindow.py:812
+#: editorwindow.py:813
 msgid "Show Master Volume Meter"
 msgstr "Főhangerő kijelzőjének megjelenítése"
 
-#: editorwindow.py:820
+#: editorwindow.py:821
 msgid "Monitor Playback Interpolation"
 msgstr "Interpoláció módja a lejátszó monitoron"
 
-#: editorwindow.py:824
+#: editorwindow.py:825
 msgid "Nearest Neighbour (fast)"
 msgstr "Legközelebbi szomszéd (leggyorsabb)"
 
-#: editorwindow.py:828
+#: editorwindow.py:829
 msgid "Bilinear (good)"
 msgstr "Bilineáris (jó)"
 
-#: editorwindow.py:832
+#: editorwindow.py:833
 msgid "Bicubic (better)"
 msgstr "Bikubikus (jobb)"
 
-#: editorwindow.py:837
+#: editorwindow.py:838
 msgid "Hyper/Lanczos (best)"
 msgstr "Hyper/Lanczos (legjobb)"
 
-#: editorwindow.py:847
+#: editorwindow.py:848
 msgid "Zoom In"
 msgstr "Nagyítás"
 
-#: editorwindow.py:850
+#: editorwindow.py:851
 msgid "Zoom Out"
 msgstr "Kicsinyítés"
 
-#: editorwindow.py:853
+#: editorwindow.py:854
 msgid "Zoom Fit"
 msgstr "Helykitöltés"
 
-#: editorwindow.py:970
+#: editorwindow.py:971
 msgid "Timeline current frame timecode"
 msgstr "Az aktuális képkocka időkódja az idővonalon"
 
-#: editorwindow.py:972
+#: editorwindow.py:973
 msgid "Select view mode: Video/Vectorscope/RGBParade"
 msgstr "Megjelenítési mód váltása: Videó / Vektorszkóp / RGB Parádé"
 
-#: editorwindow.py:974
+#: editorwindow.py:975
 msgid "Monitor Sequence/Media current frame timecode"
 msgstr "A monitoron lévő jelenet/média képkockájának aktuális időkódja"
 
-#: editorwindow.py:975
+#: editorwindow.py:976
 msgid "Current Monitor Sequence/Media name"
 msgstr "A jelenleg monitoron lévő jelenet/média neve"
 
-#: editorwindow.py:977
+#: editorwindow.py:978
 msgid "Monitor Sequence/Media current position"
 msgstr "A monitoron lévő jelenet/média aktuális időkódja"
 
-#: editorwindow.py:979
+#: editorwindow.py:980
 msgid "Display Current Sequence on Timeline"
 msgstr "Aktuális jelenet megjelenítése az idővonalon"
 
-#: editorwindow.py:980
+#: editorwindow.py:981
 msgid "Display Monitor Clip"
 msgstr "A monitoron lévő klip megjelenítése"
 
@@ -1565,11 +1565,11 @@ msgstr "\"B\" jelzőhöz"
 msgid "Playback"
 msgstr "Lejátszás"
 
-#: dialogs.py:1178 guicomponents.py:2243
+#: dialogs.py:1178
 msgid "Overwrite / Box"
-msgstr "Felülírás / Többsávos felülírás"
+msgstr "Felülírás / Téglalap"
 
-#: dialogs.py:1179 guicomponents.py:2249
+#: dialogs.py:1179
 msgid "Trim / Ripple"
 msgstr "Vágás / Együttes vágás"
 
@@ -1696,23 +1696,23 @@ msgstr ""
 "\n"
 "Ez az üzenet csak az első média betöltésekor jelenik meg a projekteknél."
 
-#: editevent.py:225
+#: editevent.py:226
 msgid "Can't put an audio clip on a video track."
 msgstr "Hangklipet nem lehet videosávra helyezni."
 
-#: editevent.py:226 editevent.py:817 movemodes.py:607
+#: editevent.py:227 editevent.py:839 movemodes.py:607
 msgid "Track "
 msgstr "A sáv "
 
-#: editevent.py:226
+#: editevent.py:227
 msgid " is a video track and can't display audio only material."
 msgstr " egy videosáv és hanganyagot önmagában nem tud megjeleníteni."
 
-#: editevent.py:816
+#: editevent.py:838
 msgid "Can't edit a locked track"
 msgstr "Zárolt sáv nem szerkeszthető"
 
-#: editevent.py:817
+#: editevent.py:839
 msgid " is locked. Unlock track to edit it."
 msgstr " zárolva van. Fel kell oldani a zárolást a szerkesztéshez."
 
@@ -2164,51 +2164,63 @@ msgstr "Vágás nézete kikapcsolva"
 msgid "Set Current Clip Frame Match Frame"
 msgstr "A klip aktuális képkockája legyen az érintkező"
 
-#: guicomponents.py:2287
+#: guicomponents.py:2243 translations.py:557
+msgid "Overwrite"
+msgstr "Felülírás"
+
+#: guicomponents.py:2249
+msgid "Trim"
+msgstr "Vágás"
+
+#: guicomponents.py:2273
+msgid "Box"
+msgstr "Téglalap"
+
+#: guicomponents.py:2293
 msgid "All Files"
 msgstr "Minden fájl"
 
-#: guicomponents.py:2291
+#: guicomponents.py:2297
 msgid "Video Files"
 msgstr "Videofájlok"
 
-#: guicomponents.py:2295
+#: guicomponents.py:2301
 msgid "Audio Files"
 msgstr "Hangfájlok"
 
-#: guicomponents.py:2299
+#: guicomponents.py:2305
 msgid "Graphics Files"
 msgstr "Grafikus fájlok"
 
-#: guicomponents.py:2303
+#: guicomponents.py:2309
 msgid "Image Sequences"
 msgstr "Képsorozatok"
 
-#: guicomponents.py:2307
+#: guicomponents.py:2313
 msgid "Pattern Producers"
 msgstr "Minta előállítók"
 
-#: guicomponents.py:2320
+#: guicomponents.py:2326
 msgid "2 Columns"
 msgstr "2 oszlop"
 
-#: guicomponents.py:2325
+#: guicomponents.py:2331
 msgid "3 Columns"
 msgstr "3 oszlop"
 
-#: guicomponents.py:2330
+#: guicomponents.py:2336
 msgid "4 Columns"
 msgstr "4 oszlop"
 
-#: guicomponents.py:2335
+#: guicomponents.py:2341
 msgid "5 Columns"
 msgstr "5 oszlop"
 
-#: guicomponents.py:2340
+#: guicomponents.py:2346
 msgid "6 Columns"
 msgstr "6 oszlop"
 
-#: guicomponents.py:2345
+#: guicomponents.py:2351
 msgid "7 Columns"
 msgstr "7 oszlop"
 
@@ -3875,10 +3887,6 @@ msgstr "Vékony"
 msgid "Ellipsoid"
 msgstr "Ellipszoid"
 
-#: translations.py:557
-msgid "Overwrite"
-msgstr "Felülírás"
-
 #: translations.py:561 mlttransitions.py:151
 msgid "Subtract"
 msgstr "Kivonás"
@@ -4313,7 +4321,7 @@ msgid ""
 msgstr ""
 "Renderelt átmenet hozzáadása - 2 klip kijelölve\n"
 "Renderelt halványodás hozzáadása - 1 klip kijelölve\n"
-"Elvágás - X"
+"Vágás - X"
 
 #: middlebar.py:138
 msgid ""
@@ -4977,7 +4985,7 @@ msgstr "Kilépés a vágás módból üres helyre kattintáskor"
 
 #: preferenceswindow.py:216
 msgid "Quick enter Trim Modes"
-msgstr "Gyors belépés a vágás módba"
+msgstr "Gyors belépés a vágás módokba"
 
 #: preferenceswindow.py:217
 msgid "Remember Monitor Clip Frame"
@@ -5881,6 +5889,3 @@ msgstr ""
 "Válassza a <b>Vágás nézete kikapcsolva</b> vagy a <b>Vágás nézete egysávos "
 "szerkesztés esetén</b> lehetőséget\n"
 "ha a teljesítmény nem megfelelő."
-
-#~ msgid "Trim"
-#~ msgstr "Levágás (trim)"

@@ -627,6 +627,26 @@ def draw_overwrite_box_overlay(cr, data):
         cr.set_dash(BOX_DASHES, 0) 
         cr.stroke()
 
+        # Draw move arrows
+        draw_x = x - 6
+        draw_y = y + (y2 - y) / 2.0
+        size = 9
+        cr.set_source_rgb(*OVERLAY_COLOR)
+        cr.move_to(draw_x, draw_y)
+        cr.line_to(draw_x, draw_y - size)
+        cr.line_to(draw_x - size, draw_y)
+        cr.line_to(draw_x, draw_y + size)
+        cr.close_path()
+        cr.fill()
+
+        draw_x = x + w + 6
+        cr.move_to(draw_x, draw_y)
+        cr.line_to(draw_x, draw_y - size)
+        cr.line_to(draw_x + size, draw_y)
+        cr.line_to(draw_x, draw_y + size)
+        cr.close_path()
+        cr.fill()
+        
 def _draw_move_overlay(cr, data, y):
     # Get data
     press_frame = data["press_frame"]
