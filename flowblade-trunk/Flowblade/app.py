@@ -596,6 +596,8 @@ def open_project(new_project):
     if new_project.update_media_lengths_on_load == True:
         projectaction.update_media_lengths()
 
+    gui.editor_window.handle_insert_move_mode_button_press()
+    
     #editorstate.project.c_seq.print_all()
         
 def change_current_sequence(index):
