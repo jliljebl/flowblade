@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-07 06:40+0100\n"
-"PO-Revision-Date: 2017-03-07 06:58+0100\n"
+"POT-Creation-Date: 2017-03-08 07:53+0100\n"
+"PO-Revision-Date: 2017-03-08 08:05+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
 "Language: hu-HU\n"
@@ -528,7 +528,7 @@ msgstr "Kötegelt renderelés várólistája"
 msgid "Render Timeline"
 msgstr "Idővonal renderelése"
 
-#: editorwindow.py:221 dialogs.py:1183
+#: editorwindow.py:221 dialogs.py:1185
 msgid "Tools"
 msgstr "Eszközök"
 
@@ -770,7 +770,7 @@ msgstr "Új projekt"
 #: dialogs.py:278 dialogs.py:299 dialogs.py:313 dialogs.py:324 dialogs.py:340
 #: dialogs.py:371 dialogs.py:393 dialogs.py:754 dialogs.py:849 dialogs.py:881
 #: dialogs.py:922 dialogs.py:950 dialogs.py:978 dialogs.py:1039
-#: dialogs.py:1078 dialogs.py:1092 dialogs.py:1106 dialogs.py:1283
+#: dialogs.py:1078 dialogs.py:1092 dialogs.py:1106 dialogs.py:1285
 #: propertyeditorbuilder.py:403 propertyeditorbuilder.py:473 rendergui.py:48
 #: rendergui.py:103 rendergui.py:117 rendergui.py:134 rendergui.py:905
 #: preferenceswindow.py:45 tools/batchrendering.py:962 proxyediting.py:429
@@ -780,7 +780,7 @@ msgid "Cancel"
 msgstr "Mégsem"
 
 #: dialogs.py:56 dialogs.py:222 dialogs.py:262 dialogs.py:405 dialogs.py:516
-#: dialogs.py:635 dialogs.py:648 dialogs.py:1284 propertyeditorbuilder.py:404
+#: dialogs.py:635 dialogs.py:648 dialogs.py:1286 propertyeditorbuilder.py:404
 #: propertyeditorbuilder.py:474 rendergui.py:104 preferenceswindow.py:46
 #: tools/batchrendering.py:394 tools/gmic.py:382
 msgid "OK"
@@ -836,7 +836,7 @@ msgstr "Projekt neve:"
 msgid "New Project File"
 msgstr "Új projekt fájl"
 
-#: dialogs.py:177 dialogs.py:1366 tools/batchrendering.py:1242
+#: dialogs.py:177 dialogs.py:1368 tools/batchrendering.py:1242
 msgid "File:"
 msgstr "Fájl:"
 
@@ -1288,7 +1288,7 @@ msgstr "Alkalmazás"
 msgid "Add Fade"
 msgstr "Halványodás hozzáadása"
 
-#: dialogs.py:1121 dialogs.py:1236 tools/titler.py:416 proxyediting.py:420
+#: dialogs.py:1121 dialogs.py:1238 tools/titler.py:416 proxyediting.py:420
 #: medialinker.py:154 tools/gmic.py:802 tools/gmic.py:893
 msgid "Close"
 msgstr "Bezárás"
@@ -1417,13 +1417,13 @@ msgstr "Ctrl + V"
 msgid "Paste Clips"
 msgstr "Klipek beillesztése"
 
-#: dialogs.py:1149
+#: dialogs.py:1149 dialogs.py:1184
 msgid "R"
 msgstr "R"
 
-#: dialogs.py:1149
+#: dialogs.py:1149 dialogs.py:1184
 msgid "Trim Tool Ripple Mode On/Off"
-msgstr "Vágás eszköz együttes vágás módjának be-/kikapcsolása"
+msgstr "Vágás eszköz kiterjesztett módjának be-/kikapcsolása"
 
 #: dialogs.py:1150
 msgid "S"
@@ -1437,7 +1437,7 @@ msgstr "A kijelölt klip vagy kompozitor újraszinkronizálása"
 msgid "G"
 msgstr "G"
 
-#: dialogs.py:1152 dialogs.py:1164 dialogs.py:1186
+#: dialogs.py:1152 dialogs.py:1164 dialogs.py:1188
 msgid "Left Arrow "
 msgstr "Balra nyíl"
 
@@ -1445,7 +1445,7 @@ msgstr "Balra nyíl"
 msgid "Prev Frame Trim Edit"
 msgstr "Vágásjel az előző képkockára"
 
-#: dialogs.py:1153 dialogs.py:1165 dialogs.py:1187
+#: dialogs.py:1153 dialogs.py:1165 dialogs.py:1189
 msgid "Right Arrow"
 msgstr "Jobbra nyíl"
 
@@ -1513,7 +1513,7 @@ msgstr "Vissza 10 képkockával"
 msgid "Move Forward 10 Frames"
 msgstr "Előre 10 képkockával"
 
-#: dialogs.py:1168 dialogs.py:1188
+#: dialogs.py:1168 dialogs.py:1190
 msgid "Up Arrow"
 msgstr "Felfelé nyíl"
 
@@ -1521,7 +1521,7 @@ msgstr "Felfelé nyíl"
 msgid "Next Edit/Mark"
 msgstr "Következő vágás"
 
-#: dialogs.py:1169 dialogs.py:1189
+#: dialogs.py:1169 dialogs.py:1191
 msgid "Down Arrow"
 msgstr "Lefelé nyíl"
 
@@ -1565,13 +1565,13 @@ msgstr "\"B\" jelzőhöz"
 msgid "Playback"
 msgstr "Lejátszás"
 
-#: dialogs.py:1178
-msgid "Overwrite / Box"
-msgstr "Felülírás / Téglalap"
+#: dialogs.py:1178 guicomponents.py:2243 translations.py:557
+msgid "Overwrite"
+msgstr "Felülírás"
 
-#: dialogs.py:1179
-msgid "Trim / Ripple"
-msgstr "Vágás / Együttes vágás"
+#: dialogs.py:1179 guicomponents.py:2249
+msgid "Trim"
+msgstr "Vágás"
 
 #: dialogs.py:1180 guicomponents.py:2255
 msgid "Roll"
@@ -1585,108 +1585,112 @@ msgstr "Csúsztatás"
 msgid "Spacer"
 msgstr "Távtartó"
 
-#: dialogs.py:1186
+#: dialogs.py:1183 guicomponents.py:2273
+msgid "Box"
+msgstr "Téglalap"
+
+#: dialogs.py:1188
 msgid "Move Source Video Left 1px"
 msgstr "Forrásvideó mozgatása balra 1 képponttal"
 
-#: dialogs.py:1187
+#: dialogs.py:1189
 msgid "Move Source Video Right 1px"
 msgstr "Forrásvideó mozgatása jobbra 1 képponttal"
 
-#: dialogs.py:1188
+#: dialogs.py:1190
 msgid "Move Source Video Up 1px"
 msgstr "Forrásvideó mozgatása feljebb 1 képponttal"
 
-#: dialogs.py:1189
+#: dialogs.py:1191
 msgid "Move Source Video Down 1px"
 msgstr "Forrásvideó mozgatása lejjebb 1 képponttal"
 
-#: dialogs.py:1190
+#: dialogs.py:1192
 msgid "Control + Arrow"
 msgstr "Ctrl + Nyíl"
 
-#: dialogs.py:1190
+#: dialogs.py:1192
 msgid "Move Source Video 10px"
 msgstr "Forrásvideó mozgatása 10 képponttal"
 
-#: dialogs.py:1191
+#: dialogs.py:1193
 msgid "Control + Mouse Drag"
 msgstr "Ctrl + Húzás egérrel"
 
-#: dialogs.py:1191
+#: dialogs.py:1193
 msgid "Keep Aspect Ratio in Affine Blend scaling"
 msgstr "Képarány megtartása az \"Összetett vegyítés (Affin)\" közben"
 
-#: dialogs.py:1192
+#: dialogs.py:1194
 msgid "Shift"
 msgstr "Shift"
 
-#: dialogs.py:1192
+#: dialogs.py:1194
 msgid "Snap to X or Y of drag start point"
 msgstr "Igazítás a húzás kezdetének X vagy Y pozíciójához"
 
-#: dialogs.py:1193
+#: dialogs.py:1195
 msgid "Geometry Editor"
 msgstr "Geometria szerkesztő"
 
-#: dialogs.py:1234
+#: dialogs.py:1236
 msgid "Sequence Watermark"
 msgstr "Jelenet vízjele"
 
-#: dialogs.py:1238
+#: dialogs.py:1240
 msgid "Sequence:"
 msgstr "Jelenet:"
 
-#: dialogs.py:1242
+#: dialogs.py:1244
 msgid "Watermark:"
 msgstr "Vízjel:"
 
-#: dialogs.py:1244
+#: dialogs.py:1246
 msgid "Set Watermark File"
 msgstr "Vízjel fájl megadása"
 
-#: dialogs.py:1245
+#: dialogs.py:1247
 msgid "Remove Watermark"
 msgstr "Vízjel eltávolítása"
 
-#: dialogs.py:1281
+#: dialogs.py:1283
 msgid "Select Watermark File"
 msgstr "Vízjelfájl kiválasztása"
 
-#: dialogs.py:1310
+#: dialogs.py:1312
 msgid "All files"
 msgstr "Minden fájl"
 
-#: dialogs.py:1332
+#: dialogs.py:1334
 msgid "Saving project snapshot"
 msgstr "Projekt állapotának mentése"
 
-#: dialogs.py:1354
+#: dialogs.py:1356
 msgid "Loaded Media Profile Mismatch"
 msgstr "A betöltött médiaprofil eltérő"
 
-#: dialogs.py:1356
+#: dialogs.py:1358
 msgid "Keep Current Profile"
 msgstr "Jelenlegi profil megtartása"
 
-#: dialogs.py:1357
+#: dialogs.py:1359
 msgid "Change To File Profile"
 msgstr "Váltás a fájl profiljára"
 
-#: dialogs.py:1359
+#: dialogs.py:1361
 msgid "A video file was loaded that does not match the Project Profile!"
 msgstr ""
 "A betöltött videó fájl formátuma nem illeszkedik a projekt profiljához!"
 
-#: dialogs.py:1367
+#: dialogs.py:1369
 msgid "File Profile:"
 msgstr "A fájl profilja:"
 
-#: dialogs.py:1368
+#: dialogs.py:1370
 msgid "Project Profile:"
 msgstr "A projekt profilja:"
 
-#: dialogs.py:1369
+#: dialogs.py:1371
 msgid ""
 "Using a matching profile is recommended.\n"
 "\n"
@@ -2163,18 +2167,6 @@ msgstr "Vágás nézete kikapcsolva"
 #: guicomponents.py:2217
 msgid "Set Current Clip Frame Match Frame"
 msgstr "A klip aktuális képkockája legyen az érintkező"
-
-#: guicomponents.py:2243 translations.py:557
-msgid "Overwrite"
-msgstr "Felülírás"
-
-#: guicomponents.py:2249
-msgid "Trim"
-msgstr "Vágás"
-
-#: guicomponents.py:2273
-msgid "Box"
-msgstr "Téglalap"
 
 #: guicomponents.py:2293
 msgid "All Files"
@@ -5889,3 +5881,9 @@ msgstr ""
 "Válassza a <b>Vágás nézete kikapcsolva</b> vagy a <b>Vágás nézete egysávos "
 "szerkesztés esetén</b> lehetőséget\n"
 "ha a teljesítmény nem megfelelő."
+
+#~ msgid "Overwrite / Box"
+#~ msgstr "Felülírás / Téglalap"
+
+#~ msgid "Trim / Ripple"
+#~ msgstr "Vágás / Együttes vágás"
