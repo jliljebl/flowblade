@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-06 18:43+0200\n"
+"POT-Creation-Date: 2017-03-08 15:52+0200\n"
 "PO-Revision-Date: 2011-12-13 23:55+0200\n"
 "Last-Translator: Janne Liljeblad <janne@janne-kx557aa-uuw-a6521-sc>\n"
 "Language-Team: Finnish\n"
@@ -522,7 +522,7 @@ msgstr "Renderöintijono"
 msgid "Render Timeline"
 msgstr "Renderöi"
 
-#: editorwindow.py:221 dialogs.py:1183
+#: editorwindow.py:221 dialogs.py:1185
 msgid "Tools"
 msgstr "Työkalut"
 
@@ -764,7 +764,7 @@ msgstr "Uusi projekti"
 #: dialogs.py:278 dialogs.py:299 dialogs.py:313 dialogs.py:324 dialogs.py:340
 #: dialogs.py:371 dialogs.py:393 dialogs.py:754 dialogs.py:849 dialogs.py:881
 #: dialogs.py:922 dialogs.py:950 dialogs.py:978 dialogs.py:1039 dialogs.py:1078
-#: dialogs.py:1092 dialogs.py:1106 dialogs.py:1283 propertyeditorbuilder.py:403
+#: dialogs.py:1092 dialogs.py:1106 dialogs.py:1285 propertyeditorbuilder.py:403
 #: propertyeditorbuilder.py:473 rendergui.py:48 rendergui.py:103
 #: rendergui.py:117 rendergui.py:134 rendergui.py:905 preferenceswindow.py:45
 #: tools/batchrendering.py:962 proxyediting.py:429 patternproducer.py:319
@@ -774,7 +774,7 @@ msgid "Cancel"
 msgstr "Peruuta"
 
 #: dialogs.py:56 dialogs.py:222 dialogs.py:262 dialogs.py:405 dialogs.py:516
-#: dialogs.py:635 dialogs.py:648 dialogs.py:1284 propertyeditorbuilder.py:404
+#: dialogs.py:635 dialogs.py:648 dialogs.py:1286 propertyeditorbuilder.py:404
 #: propertyeditorbuilder.py:474 rendergui.py:104 preferenceswindow.py:46
 #: tools/batchrendering.py:394 tools/gmic.py:382
 msgid "OK"
@@ -829,7 +829,7 @@ msgstr "Projekti tiedoston nimi:"
 msgid "New Project File"
 msgstr "Avaa projektitiedosto"
 
-#: dialogs.py:177 dialogs.py:1366 tools/batchrendering.py:1242
+#: dialogs.py:177 dialogs.py:1368 tools/batchrendering.py:1242
 msgid "File:"
 msgstr "Tiedosto:"
 
@@ -1269,7 +1269,7 @@ msgstr "Aseta"
 msgid "Add Fade"
 msgstr "Lisää häivytys"
 
-#: dialogs.py:1121 dialogs.py:1236 tools/titler.py:416 proxyediting.py:420
+#: dialogs.py:1121 dialogs.py:1238 tools/titler.py:416 proxyediting.py:420
 #: medialinker.py:154 tools/gmic.py:802 tools/gmic.py:893
 msgid "Close"
 msgstr "Sulje"
@@ -1398,11 +1398,11 @@ msgstr "Control + V"
 msgid "Paste Clips"
 msgstr "Liitä klipit"
 
-#: dialogs.py:1149
+#: dialogs.py:1149 dialogs.py:1184
 msgid "R"
 msgstr ""
 
-#: dialogs.py:1149
+#: dialogs.py:1149 dialogs.py:1184
 msgid "Trim Tool Ripple Mode On/Off"
 msgstr ""
 
@@ -1418,7 +1418,7 @@ msgstr "Synkronoi valitut leikkeet ja yhdistäjät"
 msgid "G"
 msgstr ""
 
-#: dialogs.py:1152 dialogs.py:1164 dialogs.py:1186
+#: dialogs.py:1152 dialogs.py:1164 dialogs.py:1188
 msgid "Left Arrow "
 msgstr "Nuoli vasen"
 
@@ -1426,7 +1426,7 @@ msgstr "Nuoli vasen"
 msgid "Prev Frame Trim Edit"
 msgstr "Edellinen ruutu"
 
-#: dialogs.py:1153 dialogs.py:1165 dialogs.py:1187
+#: dialogs.py:1153 dialogs.py:1165 dialogs.py:1189
 msgid "Right Arrow"
 msgstr "Nuoli oikea"
 
@@ -1494,7 +1494,7 @@ msgstr ""
 msgid "Move Forward 10 Frames"
 msgstr "Eteenpäin nopeammin"
 
-#: dialogs.py:1168 dialogs.py:1188
+#: dialogs.py:1168 dialogs.py:1190
 msgid "Up Arrow"
 msgstr "Nuoli ylös"
 
@@ -1502,7 +1502,7 @@ msgstr "Nuoli ylös"
 msgid "Next Edit/Mark"
 msgstr "Seuraava leikkaus"
 
-#: dialogs.py:1169 dialogs.py:1189
+#: dialogs.py:1169 dialogs.py:1191
 msgid "Down Arrow"
 msgstr "Nuoli alas"
 
@@ -1547,14 +1547,13 @@ msgstr "Siirry loppu merkkiin"
 msgid "Playback"
 msgstr "Toista"
 
-#: dialogs.py:1178
-#, fuzzy
-msgid "Overwrite / Box"
-msgstr "Ylikirjoitus siirto"
+#: dialogs.py:1178 guicomponents.py:2243 translations.py:557
+msgid "Overwrite"
+msgstr "Ylikirjoitus"
 
-#: dialogs.py:1179
-msgid "Trim / Ripple"
-msgstr ""
+#: dialogs.py:1179 guicomponents.py:2249
+msgid "Trim"
+msgstr "Trimmi"
 
 #: dialogs.py:1180 guicomponents.py:2255
 msgid "Roll"
@@ -1568,114 +1567,118 @@ msgstr "Luisto"
 msgid "Spacer"
 msgstr "Siirto"
 
-#: dialogs.py:1186
+#: dialogs.py:1183 guicomponents.py:2273
+msgid "Box"
+msgstr ""
+
+#: dialogs.py:1188
 #, fuzzy
 msgid "Move Source Video Left 1px"
 msgstr "Siirrä lähde video vasemmalle"
 
-#: dialogs.py:1187
+#: dialogs.py:1189
 #, fuzzy
 msgid "Move Source Video Right 1px"
 msgstr "Siirrä lähde video oikealle"
 
-#: dialogs.py:1188
+#: dialogs.py:1190
 #, fuzzy
 msgid "Move Source Video Up 1px"
 msgstr "Siirrä lähde video ylös"
 
-#: dialogs.py:1189
+#: dialogs.py:1191
 #, fuzzy
 msgid "Move Source Video Down 1px"
 msgstr "Siirrä lähde video alas"
 
-#: dialogs.py:1190
+#: dialogs.py:1192
 #, fuzzy
 msgid "Control + Arrow"
 msgstr "Control + o"
 
-#: dialogs.py:1190
+#: dialogs.py:1192
 #, fuzzy
 msgid "Move Source Video 10px"
 msgstr "Siirrä lähde video ylös"
 
-#: dialogs.py:1191
+#: dialogs.py:1193
 #, fuzzy
 msgid "Control + Mouse Drag"
 msgstr "Control + o"
 
-#: dialogs.py:1191
+#: dialogs.py:1193
 msgid "Keep Aspect Ratio in Affine Blend scaling"
 msgstr ""
 
-#: dialogs.py:1192
+#: dialogs.py:1194
 msgid "Shift"
 msgstr "Vaihto"
 
-#: dialogs.py:1192
+#: dialogs.py:1194
 msgid "Snap to X or Y of drag start point"
 msgstr ""
 
-#: dialogs.py:1193
+#: dialogs.py:1195
 msgid "Geometry Editor"
 msgstr "Yhdistäjäeditori"
 
-#: dialogs.py:1234
+#: dialogs.py:1236
 msgid "Sequence Watermark"
 msgstr "Ohjelma vesileima"
 
-#: dialogs.py:1238
+#: dialogs.py:1240
 msgid "Sequence:"
 msgstr "Ohjelma:"
 
-#: dialogs.py:1242
+#: dialogs.py:1244
 msgid "Watermark:"
 msgstr "Vesileima:"
 
-#: dialogs.py:1244
+#: dialogs.py:1246
 msgid "Set Watermark File"
 msgstr "Valitse vesileima tiedosto"
 
-#: dialogs.py:1245
+#: dialogs.py:1247
 msgid "Remove Watermark"
 msgstr "Poista vesileima"
 
-#: dialogs.py:1281
+#: dialogs.py:1283
 msgid "Select Watermark File"
 msgstr "Valitse vesileima tiedosto"
 
-#: dialogs.py:1310
+#: dialogs.py:1312
 msgid "All files"
 msgstr "Kaikki tiedostot"
 
-#: dialogs.py:1332
+#: dialogs.py:1334
 msgid "Saving project snapshot"
 msgstr "Tallennetaan projekti ja media"
 
-#: dialogs.py:1354
+#: dialogs.py:1356
 msgid "Loaded Media Profile Mismatch"
 msgstr "Median profiili eri kuin projektin"
 
-#: dialogs.py:1356
+#: dialogs.py:1358
 msgid "Keep Current Profile"
 msgstr "Pidä profiili"
 
-#: dialogs.py:1357
+#: dialogs.py:1359
 msgid "Change To File Profile"
 msgstr "Muuta tiedoston profiiliksi"
 
-#: dialogs.py:1359
+#: dialogs.py:1361
 msgid "A video file was loaded that does not match the Project Profile!"
 msgstr "Video tiedoston profiili ei vastaa projektin profiilia!"
 
-#: dialogs.py:1367
+#: dialogs.py:1369
 msgid "File Profile:"
 msgstr "Tiedoston profiili:"
 
-#: dialogs.py:1368
+#: dialogs.py:1370
 msgid "Project Profile:"
 msgstr "Projektin profiili:"
 
-#: dialogs.py:1369
+#: dialogs.py:1371
 msgid ""
 "Using a matching profile is recommended.\n"
 "\n"
@@ -2152,18 +2155,6 @@ msgstr "Trimmi näyttö pois päältä"
 #: guicomponents.py:2217
 msgid "Set Current Clip Frame Match Frame"
 msgstr "Asete valittu ruutu vertailuruuduksi"
-
-#: guicomponents.py:2243 translations.py:557
-msgid "Overwrite"
-msgstr "Ylikirjoitus"
-
-#: guicomponents.py:2249
-msgid "Trim"
-msgstr "Trimmi"
-
-#: guicomponents.py:2273
-msgid "Box"
-msgstr ""
 
 #: guicomponents.py:2293
 msgid "All Files"
@@ -5861,6 +5852,10 @@ msgid ""
 "options\n"
 "if performance is not satisfactory."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Overwrite / Box"
+#~ msgstr "Ylikirjoitus siirto"
 
 #~ msgid "Number of tracks:"
 #~ msgstr "Raitojen lukumäärä:"
