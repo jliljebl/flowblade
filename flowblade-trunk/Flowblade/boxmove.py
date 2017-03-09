@@ -182,7 +182,7 @@ class BoxMoveData:
                 last_frame = track_selection.range_frame_out
         
         self.width_frames = last_frame - self.topleft_frame
-    
+                   
     def get_bounding_track_index(self, mouse_y, tline_track):
         if tline_track == None:
             if mouse_y < tlinewidgets.REF_LINE_Y:

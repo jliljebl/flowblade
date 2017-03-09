@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-08 07:53+0100\n"
+"POT-Creation-Date: 2017-03-09 06:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,23 +17,23 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: app.py:758
+#: app.py:760
 msgid "Too small screen for this application."
 msgstr ""
 
-#: app.py:761
+#: app.py:763
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr ""
 
-#: app.py:762
+#: app.py:764
 msgid "Your screen dimensions are "
 msgstr ""
 
-#: app.py:795 projectaction.py:366 projectaction.py:696
+#: app.py:797 projectaction.py:366 projectaction.py:696
 msgid "Project has not been saved previously"
 msgstr ""
 
-#: app.py:796 projectaction.py:367 projectaction.py:697
+#: app.py:798 projectaction.py:367 projectaction.py:697
 msgid "Save project with File -> Save As before closing."
 msgstr ""
 

@@ -25,6 +25,7 @@ and sequence state changes as output.
 Edits, undos and redos are done by creating and calling methods on these 
 EditAction objects and placing them on the undo/redo stack.
 """
+
 import audiowaveform
 import appconsts
 import compositeeditor
@@ -948,6 +949,7 @@ def box_overwrite_move_action(data):
     return action
 
 def _box_overwrite_move_undo(self):
+    
     # Do track move edits
     for move_data in self.track_moves:
         action_object = utils.EmptyClass
@@ -973,7 +975,12 @@ def _box_overwrite_move_redo(self):
                                 "move_edit_done_func":None}
 
             self.track_moves.append(track_move_data)
-            
+
+    else:
+        # This may not be necessery...but its going in to make sure move_data is always same
+        for move_data in self.track_moves:
+            move_data.pop("removed_clips")
+
     # Do track move edits
     for move_data in self.track_moves:
         action_object = utils.EmptyClass
@@ -981,8 +988,15 @@ def _box_overwrite_move_redo(self):
 
         _overwrite_move_redo(action_object)
         
+        # Copy data created in _overwrite_move_redo() and needed in _overwrite_move_undo
         move_data["removed_clips"] = action_object.removed_clips
-
+        move_data["moved_clips"] = action_object.moved_clips
+        move_data["in_clip_out"] = action_object.in_clip_out
+        move_data["out_clip_in"] = action_object.out_clip_in
+        move_data["starts_after_end"] = action_object.starts_after_end
+        move_data["out_clip_length"] = action_object.out_clip_length
+        move_data["orig_out_clip"] = action_object.orig_out_clip
+                
     # Move compositors
     for comp in self.box_selection_data.selected_compositors:
         comp.move(self.delta)
@@ -2440,7 +2454,6 @@ def _append_media_log_redo(self):
 
 
 # --------------------------------------------- help funcs for "range over" and "range splice out" edits
-# NOTE: RANGE SPLICE OUT NOT IMPLEMENTED YET; SO THIS IS CURRENTLY DEAD CODE
 def _track_put_back_range(over_in, track, track_extract_data):
     # get index for first clip that was removed
     moved_index = track.get_clip_index_at(over_in)
@@ -2483,8 +2496,6 @@ def _track_put_back_range(over_in, track, track_extract_data):
                      
     #_remove_trailing_blanks(track)
 
-# NOTE: RANGE SPLICE OUT NOT IMPLEMENTED YET; SO THIS IS BASICALLY UNNECESSARY METHOD CAUSING 
-# CODE DUPLICATION WITH OTHER OVERWRITE METHODS
 def _track_extract_range(over_in, over_out, track):
     track_extract_data = utils.EmptyClass()
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-06 18:44+0200\n"
+"POT-Creation-Date: 2017-03-08 15:52+0200\n"
 "PO-Revision-Date: 2014-02-21 12:08+0200\n"
 "Last-Translator: David Gámiz Jiménez <david.gamiz@gmail.com>\n"
 "Language-Team: David Gamiz Jimenez\n"
@@ -536,7 +536,7 @@ msgstr "Cola de procesamiento por lotes"
 msgid "Render Timeline"
 msgstr "Linea del tiempo de Renderizado"
 
-#: editorwindow.py:221 dialogs.py:1183
+#: editorwindow.py:221 dialogs.py:1185
 msgid "Tools"
 msgstr "Herramientas"
 
@@ -784,7 +784,7 @@ msgstr "Nuevo Proyecto"
 #: dialogs.py:278 dialogs.py:299 dialogs.py:313 dialogs.py:324 dialogs.py:340
 #: dialogs.py:371 dialogs.py:393 dialogs.py:754 dialogs.py:849 dialogs.py:881
 #: dialogs.py:922 dialogs.py:950 dialogs.py:978 dialogs.py:1039 dialogs.py:1078
-#: dialogs.py:1092 dialogs.py:1106 dialogs.py:1283 propertyeditorbuilder.py:403
+#: dialogs.py:1092 dialogs.py:1106 dialogs.py:1285 propertyeditorbuilder.py:403
 #: propertyeditorbuilder.py:473 rendergui.py:48 rendergui.py:103
 #: rendergui.py:117 rendergui.py:134 rendergui.py:905 preferenceswindow.py:45
 #: tools/batchrendering.py:962 proxyediting.py:429 patternproducer.py:319
@@ -794,7 +794,7 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: dialogs.py:56 dialogs.py:222 dialogs.py:262 dialogs.py:405 dialogs.py:516
-#: dialogs.py:635 dialogs.py:648 dialogs.py:1284 propertyeditorbuilder.py:404
+#: dialogs.py:635 dialogs.py:648 dialogs.py:1286 propertyeditorbuilder.py:404
 #: propertyeditorbuilder.py:474 rendergui.py:104 preferenceswindow.py:46
 #: tools/batchrendering.py:394 tools/gmic.py:382
 msgid "OK"
@@ -852,7 +852,7 @@ msgstr "Exportar archivos"
 msgid "New Project File"
 msgstr "Nuevo Proyecto"
 
-#: dialogs.py:177 dialogs.py:1366 tools/batchrendering.py:1242
+#: dialogs.py:177 dialogs.py:1368 tools/batchrendering.py:1242
 #, fuzzy
 msgid "File:"
 msgstr "Archivo: "
@@ -1323,7 +1323,7 @@ msgstr "Aplicar"
 msgid "Add Fade"
 msgstr "Añadir fundido"
 
-#: dialogs.py:1121 dialogs.py:1236 tools/titler.py:416 proxyediting.py:420
+#: dialogs.py:1121 dialogs.py:1238 tools/titler.py:416 proxyediting.py:420
 #: medialinker.py:154 tools/gmic.py:802 tools/gmic.py:893
 msgid "Close"
 msgstr "Cerrar"
@@ -1460,11 +1460,11 @@ msgstr "Control + N"
 msgid "Paste Clips"
 msgstr "Pegar los Clips"
 
-#: dialogs.py:1149
+#: dialogs.py:1149 dialogs.py:1184
 msgid "R"
 msgstr ""
 
-#: dialogs.py:1149
+#: dialogs.py:1149 dialogs.py:1184
 msgid "Trim Tool Ripple Mode On/Off"
 msgstr ""
 
@@ -1481,7 +1481,7 @@ msgstr "Compositores"
 msgid "G"
 msgstr ""
 
-#: dialogs.py:1152 dialogs.py:1164 dialogs.py:1186
+#: dialogs.py:1152 dialogs.py:1164 dialogs.py:1188
 msgid "Left Arrow "
 msgstr "Flecha izquierda"
 
@@ -1490,7 +1490,7 @@ msgstr "Flecha izquierda"
 msgid "Prev Frame Trim Edit"
 msgstr "Fotograma anterior"
 
-#: dialogs.py:1153 dialogs.py:1165 dialogs.py:1187
+#: dialogs.py:1153 dialogs.py:1165 dialogs.py:1189
 msgid "Right Arrow"
 msgstr "Flecha derecha"
 
@@ -1563,7 +1563,7 @@ msgstr ""
 msgid "Move Forward 10 Frames"
 msgstr "Adelantar Rápido"
 
-#: dialogs.py:1168 dialogs.py:1188
+#: dialogs.py:1168 dialogs.py:1190
 msgid "Up Arrow"
 msgstr "Flecha arriba"
 
@@ -1571,7 +1571,7 @@ msgstr "Flecha arriba"
 msgid "Next Edit/Mark"
 msgstr "Siguiente Editar / Marcos"
 
-#: dialogs.py:1169 dialogs.py:1189
+#: dialogs.py:1169 dialogs.py:1191
 msgid "Down Arrow"
 msgstr "Flecha abajo"
 
@@ -1616,14 +1616,13 @@ msgstr "A la Marca de salida"
 msgid "Playback"
 msgstr "Reproducir"
 
-#: dialogs.py:1178
-#, fuzzy
-msgid "Overwrite / Box"
+#: dialogs.py:1178 guicomponents.py:2243 translations.py:557
+msgid "Overwrite"
 msgstr "Sobreescribir"
 
-#: dialogs.py:1179
-msgid "Trim / Ripple"
-msgstr ""
+#: dialogs.py:1179 guicomponents.py:2249
+msgid "Trim"
+msgstr "Recortar"
 
 #: dialogs.py:1180 guicomponents.py:2255
 msgid "Roll"
@@ -1638,121 +1637,125 @@ msgstr "Deslizamiento"
 msgid "Spacer"
 msgstr "Espacio"
 
-#: dialogs.py:1186
+#: dialogs.py:1183 guicomponents.py:2273
+msgid "Box"
+msgstr ""
+
+#: dialogs.py:1188
 #, fuzzy
 msgid "Move Source Video Left 1px"
 msgstr "Mueva la fuente de vídeo Izquierda"
 
-#: dialogs.py:1187
+#: dialogs.py:1189
 #, fuzzy
 msgid "Move Source Video Right 1px"
 msgstr "Mueva Fuente Video ahora"
 
-#: dialogs.py:1188
+#: dialogs.py:1190
 #, fuzzy
 msgid "Move Source Video Up 1px"
 msgstr "Mueva la fuente de vídeo hasta"
 
-#: dialogs.py:1189
+#: dialogs.py:1191
 #, fuzzy
 msgid "Move Source Video Down 1px"
 msgstr "Mueva la fuente de vídeo de Down"
 
-#: dialogs.py:1190
+#: dialogs.py:1192
 #, fuzzy
 msgid "Control + Arrow"
 msgstr "Control + N"
 
-#: dialogs.py:1190
+#: dialogs.py:1192
 #, fuzzy
 msgid "Move Source Video 10px"
 msgstr "Mueva la fuente de vídeo hasta"
 
-#: dialogs.py:1191
+#: dialogs.py:1193
 #, fuzzy
 msgid "Control + Mouse Drag"
 msgstr "Control + N"
 
-#: dialogs.py:1191
+#: dialogs.py:1193
 msgid "Keep Aspect Ratio in Affine Blend scaling"
 msgstr ""
 
-#: dialogs.py:1192
+#: dialogs.py:1194
 #, fuzzy
 msgid "Shift"
 msgstr "Shift + I"
 
-#: dialogs.py:1192
+#: dialogs.py:1194
 msgid "Snap to X or Y of drag start point"
 msgstr ""
 
-#: dialogs.py:1193
+#: dialogs.py:1195
 msgid "Geometry Editor"
 msgstr "Editor de geometria"
 
-#: dialogs.py:1234
+#: dialogs.py:1236
 msgid "Sequence Watermark"
 msgstr "Secuencia de filigrana"
 
-#: dialogs.py:1238
+#: dialogs.py:1240
 msgid "Sequence:"
 msgstr "Secuencia:"
 
-#: dialogs.py:1242
+#: dialogs.py:1244
 msgid "Watermark:"
 msgstr "Filigrana:"
 
-#: dialogs.py:1244
+#: dialogs.py:1246
 msgid "Set Watermark File"
 msgstr "Configura archivo de filigrana"
 
-#: dialogs.py:1245
+#: dialogs.py:1247
 msgid "Remove Watermark"
 msgstr "Elimina la filigra"
 
-#: dialogs.py:1281
+#: dialogs.py:1283
 msgid "Select Watermark File"
 msgstr "Selecciona archivo de filigrana"
 
-#: dialogs.py:1310
+#: dialogs.py:1312
 msgid "All files"
 msgstr "Todos los archivos"
 
-#: dialogs.py:1332
+#: dialogs.py:1334
 #, fuzzy
 msgid "Saving project snapshot"
 msgstr "¿Guardar proyecto '"
 
-#: dialogs.py:1354
+#: dialogs.py:1356
 #, fuzzy
 msgid "Loaded Media Profile Mismatch"
 msgstr "Trayectoria del papel:"
 
-#: dialogs.py:1356
+#: dialogs.py:1358
 #, fuzzy
 msgid "Keep Current Profile"
 msgstr "Eliminar grupo actual"
 
-#: dialogs.py:1357
+#: dialogs.py:1359
 #, fuzzy
 msgid "Change To File Profile"
 msgstr "Guardar elemento de proyecto como ..."
 
-#: dialogs.py:1359
+#: dialogs.py:1361
 msgid "A video file was loaded that does not match the Project Profile!"
 msgstr ""
 
-#: dialogs.py:1367
+#: dialogs.py:1369
 #, fuzzy
 msgid "File Profile:"
 msgstr "Guardar Nuevo Perfil"
 
-#: dialogs.py:1368
+#: dialogs.py:1370
 #, fuzzy
 msgid "Project Profile:"
 msgstr "Perfil del proyecto:"
 
-#: dialogs.py:1369
+#: dialogs.py:1371
 msgid ""
 "Using a matching profile is recommended.\n"
 "\n"
@@ -2237,18 +2240,6 @@ msgstr ""
 
 #: guicomponents.py:2217
 msgid "Set Current Clip Frame Match Frame"
-msgstr ""
-
-#: guicomponents.py:2243 translations.py:557
-msgid "Overwrite"
-msgstr "Sobreescribir"
-
-#: guicomponents.py:2249
-msgid "Trim"
-msgstr "Recortar"
-
-#: guicomponents.py:2273
-msgid "Box"
 msgstr ""
 
 #: guicomponents.py:2293
@@ -6070,6 +6061,10 @@ msgid ""
 "options\n"
 "if performance is not satisfactory."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Overwrite / Box"
+#~ msgstr "Sobreescribir"
 
 #~ msgid "Number of tracks:"
 #~ msgstr "Número de pistas"

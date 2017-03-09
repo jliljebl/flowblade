@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-08 07:53+0100\n"
-"PO-Revision-Date: 2017-03-08 08:05+0100\n"
+"POT-Creation-Date: 2017-03-09 06:58+0100\n"
+"PO-Revision-Date: 2017-03-09 06:58+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
 "Language: hu-HU\n"
@@ -17,23 +17,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: app.py:758
+#: app.py:760
 msgid "Too small screen for this application."
 msgstr "Túl kicsi a képernyő az alkalmazás számára."
 
-#: app.py:761
+#: app.py:763
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "A minimális képernyőfelbontás ezen alkalmazás számára 1152 x 768.\n"
 
-#: app.py:762
+#: app.py:764
 msgid "Your screen dimensions are "
 msgstr "Az ön képernyőjének felbontása "
 
-#: app.py:795 projectaction.py:366 projectaction.py:696
+#: app.py:797 projectaction.py:366 projectaction.py:696
 msgid "Project has not been saved previously"
 msgstr "A projekt korábban még nem volt mentve"
 
-#: app.py:796 projectaction.py:367 projectaction.py:697
+#: app.py:798 projectaction.py:367 projectaction.py:697
 msgid "Save project with File -> Save As before closing."
 msgstr ""
 "Mentse a projektet a Fájl -> Mentés másként menüpont használatával mielőtt "
@@ -5881,9 +5881,3 @@ msgstr ""
 "Válassza a <b>Vágás nézete kikapcsolva</b> vagy a <b>Vágás nézete egysávos "
 "szerkesztés esetén</b> lehetőséget\n"
 "ha a teljesítmény nem megfelelő."
-
-#~ msgid "Overwrite / Box"
-#~ msgstr "Felülírás / Téglalap"
-
-#~ msgid "Trim / Ripple"
-#~ msgstr "Vágás / Együttes vágás"
