@@ -989,13 +989,7 @@ def _box_overwrite_move_redo(self):
         _overwrite_move_redo(action_object)
         
         # Copy data created in _overwrite_move_redo() and needed in _overwrite_move_undo
-        move_data["removed_clips"] = action_object.removed_clips
-        move_data["moved_clips"] = action_object.moved_clips
-        move_data["in_clip_out"] = action_object.in_clip_out
-        move_data["out_clip_in"] = action_object.out_clip_in
-        move_data["starts_after_end"] = action_object.starts_after_end
-        move_data["out_clip_length"] = action_object.out_clip_length
-        move_data["orig_out_clip"] = action_object.orig_out_clip
+        move_data.update(action_object.__dict__)
                 
     # Move compositors
     for comp in self.box_selection_data.selected_compositors:
