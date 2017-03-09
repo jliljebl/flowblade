@@ -988,7 +988,7 @@ def _box_overwrite_move_redo(self):
 
         _overwrite_move_redo(action_object)
         
-        # Copy data created in _overwrite_move_redo() and needed in _overwrite_move_undo
+        # Copy data created in _overwrite_move_redo() that is needed in _overwrite_move_undo
         move_data.update(action_object.__dict__)
                 
     # Move compositors

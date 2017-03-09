@@ -89,7 +89,7 @@ class MonitorWidget:
 
         self.clip_name = "clip name"
     
-        self.match_is_pattern_producer = False # Roll and Slip need this flag to know if surface updates needed
+        self.match_not_updateble = False # Roll and Slip need this flag to know if surface updates needed
         
         # top row
         self.top_row = Gtk.HBox()
@@ -127,7 +127,8 @@ class MonitorWidget:
 
         self.CLOSE_MATCH_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "close_match.png")
         self.PATTERN_PRODUCER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "pattern_producer_trim_view.png")
-
+        self.BLANK_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "blank_trim_view.png")
+    
         global _widget
         _widget = self
 
@@ -239,13 +240,17 @@ class MonitorWidget:
             self.match_frame = -1
             return
         
-        if match_clip.media_type == appconsts.PATTERN_PRODUCER:
-            self.match_is_pattern_producer = True
+        if match_clip.is_blanck_clip == True:
+            self.match_not_updateble = True
+            self.create_blank_match_frame()
+            return
+        elif match_clip.media_type == appconsts.PATTERN_PRODUCER:
+            self.match_not_updateble = True
             self.create_pattern_producer_match_frame()
             return
 
         self.match_frame = match_clip.clip_out
-        self.match_is_pattern_producer = False
+        self.match_not_updateble = False
         data = (match_clip.path, match_clip.clip_out, MATCH_FRAME, self.match_frame_write_complete)
         GLib.idle_add(_launch_match_frame_writer, data)
         
@@ -272,13 +277,17 @@ class MonitorWidget:
             self.match_frame = -1
             return
 
-        if match_clip.media_type == appconsts.PATTERN_PRODUCER:
-            self.match_is_pattern_producer = True
+        if match_clip.is_blanck_clip == True:
+            self.match_not_updateble = True
+            self.create_blank_match_frame()
+            return
+        elif match_clip.media_type == appconsts.PATTERN_PRODUCER:
+            self.match_not_updateble = True
             self.create_pattern_producer_match_frame()
             return
             
         self.match_frame = match_clip.clip_in
-        self.match_is_pattern_producer = False
+        self.match_not_updateble = False
         data = (match_clip.path, match_clip.clip_in, MATCH_FRAME, self.match_frame_write_complete)
         GLib.idle_add(_launch_match_frame_writer, data)
         
@@ -304,14 +313,18 @@ class MonitorWidget:
         if match_clip == None: # track last end trim and track first start trim
             self.match_frame = -1
             return
-
-        if match_clip.media_type == appconsts.PATTERN_PRODUCER:
-            self.match_is_pattern_producer = True
+            
+        if match_clip.is_blanck_clip == True:
+            self.match_not_updateble = True
+            self.create_blank_match_frame()
+            return
+        elif match_clip.media_type == appconsts.PATTERN_PRODUCER:
+            self.match_not_updateble = True
             self.create_pattern_producer_match_frame()
             return
             
         self.match_frame = match_clip.clip_out
-        self.match_is_pattern_producer = False
+        self.match_not_updateble = False
         data = (match_clip.path, match_clip.clip_out, MATCH_FRAME, self.match_frame_write_complete)
         GLib.idle_add(_launch_match_frame_writer, data)
         
@@ -338,13 +351,17 @@ class MonitorWidget:
             self.match_frame = -1
             return
     
-        if match_clip.media_type == appconsts.PATTERN_PRODUCER:
-            self.match_is_pattern_producer = True
+        if match_clip.is_blanck_clip == True:
+            self.match_not_updateble = True
+            self.create_blank_match_frame()
+            return
+        elif match_clip.media_type == appconsts.PATTERN_PRODUCER:
+            self.match_not_updateble = True
             self.create_pattern_producer_match_frame()
             return
             
         self.match_frame = match_clip.clip_in
-        self.match_is_pattern_producer = False
+        self.match_not_updateble = False
         data = (match_clip.path, match_clip.clip_in, MATCH_FRAME, self.match_frame_write_complete)
         GLib.idle_add(_launch_match_frame_writer, data)
         
@@ -378,11 +395,11 @@ class MonitorWidget:
         self.edit_delta = 0
 
         if match_clip.media_type == appconsts.PATTERN_PRODUCER:
-            self.match_is_pattern_producer = True
+            self.match_not_updateble = True
             self.create_pattern_producer_match_frame()
             return
 
-        self.match_is_pattern_producer = False
+        self.match_not_updateble = False
         data = (match_clip.path, match_clip.clip_in, MATCH_FRAME, self.match_frame_write_complete)
         GLib.idle_add(_launch_match_frame_writer, data)
 
@@ -417,11 +434,11 @@ class MonitorWidget:
         self.match_frame = match_clip.clip_out
 
         if match_clip.media_type == appconsts.PATTERN_PRODUCER:
-            self.match_is_pattern_producer = True
+            self.match_not_updateble = True
             self.create_pattern_producer_match_frame()
             return
 
-        self.match_is_pattern_producer = False
+        self.match_not_updateble = False
         data = (match_clip.path, match_clip.clip_out, MATCH_FRAME, self.match_frame_write_complete)
         GLib.idle_add(_launch_match_frame_writer, data)
         
@@ -471,7 +488,7 @@ class MonitorWidget:
 
         match_frame = self.match_frame + self.edit_delta
 
-        if self.match_is_pattern_producer == True:
+        if self.match_not_updateble == True:
             return
         
         match_surface_creator = MatchSurfaceCreator(match_frame)
@@ -496,7 +513,7 @@ class MonitorWidget:
     
         match_frame = self.match_frame + self.edit_delta
 
-        if self.match_is_pattern_producer == True:
+        if self.match_not_updateble == True:
             return
             
         match_surface_creator = MatchSurfaceCreator(match_frame)
@@ -513,13 +530,6 @@ class MonitorWidget:
         self.edit_delta = None
         self.bottom_edge_panel.queue_draw()
     
-    """
-    def _roll_frame_update_done(self):
-        global _frame_write_on        
-        _frame_write_on = False
-        self.match_frame_write_complete(MATCH_FRAME)
-    """
-
     def _press_event(self, event):
         """
         Mouse button callback
@@ -550,7 +560,21 @@ class MonitorWidget:
 
         self.left_display.queue_draw()
         self.right_display.queue_draw()
-            
+
+    def create_blank_match_frame(self):        
+        w, h = self.get_match_frame_panel_size()
+        
+        scaled_icon = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+        cr = cairo.Context(scaled_icon)
+        cr.scale(float(w) / float(self.BLANK_ICON.get_width()), float(h) / float(self.BLANK_ICON.get_height()))
+        cr.set_source_surface(self.BLANK_ICON, 0, 0)
+        cr.paint()
+        
+        self.match_frame_surface = scaled_icon
+
+        self.left_display.queue_draw()
+        self.right_display.queue_draw()
+        
     def create_match_frame_image_surface(self, frame_name):
         # Create non-scaled surface
         matchframe_path = utils.get_hidden_user_dir_path() + appconsts.TRIM_VIEW_DIR + "/" + frame_name 
