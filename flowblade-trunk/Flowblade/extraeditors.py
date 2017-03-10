@@ -37,6 +37,7 @@ import glassbuttons
 import lutfilter
 import respaths
 import viewgeom
+import translations
 
 SHADOW = 0
 MID = 1
@@ -46,7 +47,7 @@ NO_HIT = 99
 
 SELECT_CIRCLE = 0
 SELECT_LINE = 1
-    
+
 ACTIVE_RING_COLOR = (0.0, 0.0, 0.0)
 DEACTIVE_RING_COLOR = (0.6, 0.6, 0.6)
 
@@ -87,6 +88,11 @@ CIRCLE_GRAD_2 = (0, 0.8, 0.8, 0.8, 1)
 FX_GRAD_1 = (0, 1.0, 1.0, 1.0, 0.4)
 FX_GRAD_2 = (1, 0.3, 0.3, 0.3, 0.4)
 
+def _p(name):
+    try:
+        return translations.param_names[name]
+    except KeyError:
+        return name
 
 def _draw_select_circle(cr, x, y, main_color, radius, small_radius, pad, x_off=0, y_off=0):
     degrees = math.pi / 180.0
@@ -114,7 +120,7 @@ def _draw_select_circle(cr, x, y, main_color, radius, small_radius, pad, x_off=0
 
     x = x + x_off
     y = y + y_off
- 
+
     cr.set_source_rgb(0.4,0.4,0.4)
     cr.set_line_width(1.0)
     cr.move_to(x + radius - 0.5, y)
@@ -144,23 +150,23 @@ def _draw_select_line(cr, x, y):
     cr.set_source_rgb(0.7,0.7,0.7)
     cr.rectangle(x - 2.0, y, 4, height)
     cr.fill()
-        
+
     cr.set_source_rgb(0.3,0.3,0.3)
     cr.set_line_width(1.0)
     cr.move_to(x - 0.5, y)
     cr.line_to(x - 0.5, y + height)
     cr.stroke()
-    
+
     cr.set_source_rgb(0.95,0.95,0.95)
     cr.move_to(x + 0.5, y)
     cr.line_to(x + 0.5, y + height)
     cr.stroke()
-    
-            
+
+
 def _draw_cursor_indicator(cr, x, y, radius):
     degrees = math.pi / 180.0
 
-    pad = radius    
+    pad = radius
     cr.set_source_rgba(0.9, 0.9, 0.9, 0.6)
     cr.set_line_width(3.0)
     cr.arc (x + pad, y + pad, radius, 0.0 * degrees, 360.0 * degrees)
@@ -168,12 +174,12 @@ def _draw_cursor_indicator(cr, x, y, radius):
 
 
 class ColorBox:
-    
+
     def __init__(self, edit_listener, width=260, height=260):
         self.W = width
         self.H = height
-        self.widget = cairoarea.CairoDrawableArea2( self.W, 
-                                                    self.H, 
+        self.widget = cairoarea.CairoDrawableArea2( self.W,
+                                                    self.H,
                                                     self._draw)
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
@@ -206,7 +212,7 @@ class ColorBox:
 
     def _y_for_saturation(self, saturation):
         return self.Y_PAD + (1.0 - saturation) * (self.H - self.Y_PAD *2)
-        
+
     def _press_event(self, event):
         self.cursor_x, self.cursor_y = self._get_legal_point(event.x, event.y)
         self._save_values()
@@ -218,13 +224,13 @@ class ColorBox:
         self._save_values()
         self.edit_listener()
         self.widget.queue_draw()
-        
+
     def _release_event(self, event):
         self.cursor_x, self.cursor_y = self._get_legal_point(event.x, event.y)
         self._save_values()
         self.edit_listener()
         self.widget.queue_draw()
-        
+
     def _get_legal_point(self, x, y):
         if x < self.X_PAD:
             x = self.X_PAD
@@ -235,9 +241,9 @@ class ColorBox:
             y = self.Y_PAD
         elif y > self.H - self.Y_PAD:
             y = self.H - self.Y_PAD
-        
+
         return (x, y)
-        
+
     def _draw(self, event, cr, allocation):
         """
         Callback for repaint from CairoDrawableArea.
@@ -286,9 +292,9 @@ class ThreeBandColorBox(ColorBox):
     def __init__(self, edit_listener, band_change_listerner, width=260, height=260):
         ColorBox.__init__(self, edit_listener, width, height)
         self.band = SHADOW
-        self.shadow_x = self.cursor_x 
+        self.shadow_x = self.cursor_x
         self.shadow_y = self.cursor_y
-        self.mid_x = self.cursor_x 
+        self.mid_x = self.cursor_x
         self.mid_y = self.cursor_y
         self.hi_x = self.cursor_x
         self.hi_y = self.cursor_y
@@ -297,7 +303,7 @@ class ThreeBandColorBox(ColorBox):
     def set_cursors(self, s_h, s_s, m_h, m_s, h_h, h_s):
         self.shadow_x = self._x_for_hue(s_h)
         self.shadow_y = self._y_for_saturation(s_s)
-        self.mid_x = self._x_for_hue(m_h) 
+        self.mid_x = self._x_for_hue(m_h)
         self.mid_y = self._y_for_saturation(m_s)
         self.hi_x = self._x_for_hue(h_h)
         self.hi_y = self._y_for_saturation(h_s)
@@ -317,7 +323,7 @@ class ThreeBandColorBox(ColorBox):
         self._save_values()
         self.edit_listener()
         self.widget.queue_draw()
-        
+
     def _release_event(self, event):
         self.cursor_x, self.cursor_y = self._get_legal_point(event.x, event.y)
         self._save_values()
@@ -333,7 +339,7 @@ class ThreeBandColorBox(ColorBox):
             return HI
         else:
             return NO_HIT
-            
+
     def _control_point_hit(self, x, y, cx, cy):
         if x >= cx - self.CIRCLE_HALF and x <= cx + self.CIRCLE_HALF:
             if y >= cy - self.CIRCLE_HALF and y <= cy + self.CIRCLE_HALF:
@@ -344,10 +350,10 @@ class ThreeBandColorBox(ColorBox):
         self.hue = float((self.cursor_x - self.X_PAD)) / float((self.W - 2 * self.X_PAD))
         self.saturation = float(abs(self.cursor_y - self.H + self.Y_PAD)) / float((self.H - 2 * self.Y_PAD))
         if self.band == SHADOW:
-            self.shadow_x = self.cursor_x 
+            self.shadow_x = self.cursor_x
             self.shadow_y = self.cursor_y
         elif self.band == MID:
-            self.mid_x = self.cursor_x 
+            self.mid_x = self.cursor_x
             self.mid_y = self.cursor_y
         else:
             self.hi_x = self.cursor_x
@@ -386,7 +392,7 @@ class ThreeBandColorBox(ColorBox):
         grey_grad.add_color_stop_rgba(*MID_GREY_GRAD_1)
         grey_grad.add_color_stop_rgba(*MID_GREY_GRAD_2)
         grey_grad.add_color_stop_rgba(*MID_GREY_GRAD_3)
-        
+
         cr.set_source(grey_grad)
         cr.rectangle(self.X_PAD, self.Y_PAD, x_out - x_in, y_out - y_in)
         cr.fill()
@@ -406,7 +412,7 @@ class ThreeBandColorBox(ColorBox):
 
 
 class ColorBoxFilterEditor:
-    
+
     def __init__(self, editable_properties):
         self.SAT_MAX = 0.5
         self.widget = Gtk.VBox()
@@ -417,10 +423,10 @@ class ColorBoxFilterEditor:
         self.R = filter(lambda ep: ep.name == "R", editable_properties)[0]
         self.G = filter(lambda ep: ep.name == "G", editable_properties)[0]
         self.B = filter(lambda ep: ep.name == "B", editable_properties)[0]
-            
+
         self.color_box = ColorBox(self.color_box_values_changed)
         self.color_box.set_cursor(self.hue.get_float_value(), self.saturation.get_float_value())
-    
+
         box_row = Gtk.HBox()
         box_row.pack_start(Gtk.Label(), True, True, 0)
         box_row.pack_start(self.color_box.widget, False, False, 0)
@@ -438,20 +444,20 @@ class ColorBoxFilterEditor:
         info_row.pack_start(Gtk.Label(), True, True, 0)
         info_row.pack_start(info_box, False, False, 0)
         info_row.pack_start(Gtk.Label(), True, True, 0)
-        
+
         self.widget.pack_start(box_row, False, False, 0)
         self.widget.pack_start(info_row, False, False, 0)
         self.widget.pack_start(Gtk.Label(), True, True, 0)
 
         self._display_values(self.hue.get_float_value(), self.saturation.get_float_value())
-        
+
     def color_box_values_changed(self):
         hue_val, sat_val = self.color_box.get_hue_saturation()
         self.hue.write_property_value(str(hue_val))
         self.saturation.write_property_value(str(sat_val))
         self._display_values(hue_val, sat_val)
         r, g, b = lutfilter.get_RGB_for_angle_saturation_and_value(hue_val * 360, sat_val * self.SAT_MAX, 0.5)
-            
+
         self.R.write_value("0=" + str(r))
         self.G.write_value("0=" + str(g))
         self.B.write_value("0=" + str(b))
@@ -468,7 +474,7 @@ class ColorLGGFilterEditor:
 
     def __init__(self, editable_properties):
         self.widget = Gtk.VBox()
-        
+
         # Get MLT properties
         self.lift_r = filter(lambda ep: ep.name == "lift_r", editable_properties)[0]
         self.lift_g = filter(lambda ep: ep.name == "lift_g", editable_properties)[0]
@@ -540,20 +546,21 @@ class ColorLGGFilterEditor:
         return color_box
 
     def get_name_row(self, name):
+        name = _p(name)
         name_label = Gtk.Label(label=name + ":")
-            
+
         hbox = Gtk.HBox(False, 4)
         hbox.pack_start(name_label, False, False, 4)
         hbox.pack_start(Gtk.Label(), True, True, 0)
-        
+
         return hbox
-        
-    def get_hue_row(self, color_box, value_label):          
+
+    def get_hue_row(self, color_box, value_label):
         hbox = Gtk.HBox(False, 4)
         hbox.pack_start(color_box, False, False, 0)
         hbox.pack_start(value_label, False, False, 4)
         hbox.pack_start(Gtk.Label(), False, False, 0)
-        
+
         return hbox
 
     def get_slider_row(self, adjustment):#, name):
@@ -567,12 +574,12 @@ class ColorLGGFilterEditor:
 
         hslider.set_digits(0)
         spin.set_digits(0)
-            
+
         hbox = Gtk.HBox(False, 4)
         #hbox.pack_start(name_label, False, False, 4)
         hbox.pack_start(hslider, True, True, 0)
         hbox.pack_start(spin, False, False, 4)
-        
+
         return hbox
 
     # --------------------------------------- gui updating
@@ -602,7 +609,7 @@ class ColorLGGFilterEditor:
     def lift_hue_edited(self):
         hue, sat = self.lift_hue_selector.get_hue_saturation()
         self.set_hue_label_value(hue, self.lift_hue_value_label)
-        
+
         self.update_lift_property_values()
 
     def gamma_hue_edited(self):
@@ -678,10 +685,10 @@ class ColorLGGFilterEditor:
 
 
 class BoxEditor:
-    
+
     def __init__(self, pix_size):
         self.value_size = 1.0 # Box editor works in 0-1 normalized space
-        
+
         self.pix_size = pix_size;
         self.pix_per_val = self.value_size / pix_size
         self.off_x = 0.5
@@ -711,7 +718,7 @@ class BoxEditor:
 
     def draw_box(self, cr, allocation):
         x, y, w, h = allocation
-        
+
         if editorpersistance.prefs.dark_theme == False:
             cr.set_source_rgb(*BOX_BG_COLOR )
             cr.rectangle(0, 0, self.pix_size + 1, self.pix_size + 1)
@@ -722,12 +729,12 @@ class BoxEditor:
         step = self.pix_size / 8
         cr.set_line_width(1.0)
         for i in range(0, 9):
-            cr.move_to(0.5 + step * i, 0.5) 
+            cr.move_to(0.5 + step * i, 0.5)
             cr.line_to(step * i, self.pix_size + 0.5)
             cr.stroke()
 
         for i in range(0, 9):
-            cr.move_to(0.5, step * i + 0.5) 
+            cr.move_to(0.5, step * i + 0.5)
             cr.line_to(self.pix_size + 0.5, step * i + 0.5)
             cr.stroke()
 
@@ -737,18 +744,18 @@ class CatmullRomFilterEditor:
     R = 1
     G = 2
     B = 3
-    
+
     def __init__(self, editable_properties):
         self.widget = Gtk.VBox()
-        
+
         # These properties hold the values that are writtenout to MLT to do the filtering
         self.cr_filter = lutfilter.CatmullRomFilter(editable_properties)
         default_curve = self.cr_filter.value_cr_curve
         self.current_edit_curve = CatmullRomFilterEditor.RGB
-        
+
         # This is used to edit points of currently active curve
         self.curve_editor = CurvesBoxEditor(256.0, default_curve, self)
-        
+
         # This is used to change currently active curve
         self.channel_buttons = glassbuttons.GlassButtonsToggleGroup(32, 19, 2, 2, 5)
         self.channel_buttons.add_button(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "rgb_channel.png"), self.channel_changed)
@@ -768,9 +775,9 @@ class CatmullRomFilterEditor:
         button_hbox.pack_start(self.channel_buttons.widget, False, False, 0)
         button_hbox.pack_start(guiutils.get_pad_label(4, 4), False, False, 0)
         button_hbox.pack_start(self.curve_buttons.widget, False, False, 0)
-        
+
         buttons_row = guiutils.get_in_centering_alignment(button_hbox)
-        
+
         box_row = Gtk.HBox()
         box_row.pack_start(Gtk.Label(), True, True, 0)
         box_row.pack_start(self.curve_editor.widget, False, False, 0)
@@ -781,7 +788,7 @@ class CatmullRomFilterEditor:
         self.widget.pack_start(guiutils.get_pad_label(12, 8), False, False, 0)
         self.widget.pack_start(buttons_row, False, False, 0)
         self.widget.pack_start(Gtk.Label(), True, True, 0)
-        
+
     def channel_changed(self):
         channel = self.channel_buttons.pressed_button # indexes match
         self.update_editors_to_channel(channel)
@@ -791,15 +798,15 @@ class CatmullRomFilterEditor:
         if channel == CatmullRomFilterEditor.RGB:
             self.current_edit_curve = CatmullRomFilterEditor.RGB
             self.curve_editor.set_curve(self.cr_filter.value_cr_curve, CURVE_COLOR)
-            
+
         elif channel == CatmullRomFilterEditor.R:
             self.current_edit_curve = CatmullRomFilterEditor.R
             self.curve_editor.set_curve(self.cr_filter.r_cr_curve, R_CURVE_COLOR)
-            
+
         elif channel == CatmullRomFilterEditor.G:
             self.current_edit_curve = CatmullRomFilterEditor.G
             self.curve_editor.set_curve(self.cr_filter.g_cr_curve, G_CURVE_COLOR)
-            
+
         else:
             self.current_edit_curve = CatmullRomFilterEditor.B
             self.curve_editor.set_curve(self.cr_filter.b_cr_curve, B_CURVE_COLOR)
@@ -807,14 +814,14 @@ class CatmullRomFilterEditor:
     def do_curve_reset_pressed(self):
         button_index = self.curve_buttons.pressed_button
         channel = self.current_edit_curve
-        
+
         if button_index == 0: # Linear
             new_points_str = "0/0;255/255"
         elif button_index == 1: # Default add gamma
             new_points_str = "0/0;64/48;192/208;255/255"
-        elif button_index == 2: # Default remove gamma 
+        elif button_index == 2: # Default remove gamma
             new_points_str = "0/0;64/80;192/176;255/255"
-   
+
         if channel == CatmullRomFilterEditor.RGB:
             self.cr_filter.value_cr_curve.set_points_from_str(new_points_str)
         elif channel == CatmullRomFilterEditor.R:
@@ -834,13 +841,13 @@ class CatmullRomFilterEditor:
     def write_points_to_current_curve(self, points_str):
         if self.current_edit_curve == CatmullRomFilterEditor.RGB:
             self.cr_filter.value_points_prop.write_property_value(points_str)
-            
+
         elif self.current_edit_curve == CatmullRomFilterEditor.R:
             self.cr_filter.r_points_prop.write_property_value(points_str)
-            
+
         elif self.current_edit_curve == CatmullRomFilterEditor.G:
             self.cr_filter.g_points_prop.write_property_value(points_str)
-            
+
         else: # CatmullRomFilterEditor.G
             self.cr_filter.b_points_prop.write_property_value(points_str)
 
@@ -856,8 +863,8 @@ class CurvesBoxEditor(BoxEditor):
         self.curve_color = CURVE_COLOR
         self.edit_listener = edit_listener # Needs to implement "curve_edit_done()"
 
-        self.widget = cairoarea.CairoDrawableArea2( self.pix_size + 2, 
-                                                    self.pix_size + 2, 
+        self.widget = cairoarea.CairoDrawableArea2( self.pix_size + 2,
+                                                    self.pix_size + 2,
                                                     self._draw)
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
@@ -936,11 +943,11 @@ class CurvesBoxEditor(BoxEditor):
             px, py = BoxEditor.get_box_panel_point(self, p.x, p.y, 255.0)
             _draw_select_circle(cr, px, py, (1,1,1), 4, 2, 0, -4, -4)
 
-     
+
 class ColorGrader:
-    
+
     DEGREE_CHAR = u'\u00B0'
-    
+
     def __init__(self, editable_properties):
         # Initial active band
         self.band = SHADOW
@@ -949,7 +956,7 @@ class ColorGrader:
         # HUE and SAT are both handled in editor using range (0,1)
         # Saved and editor ranges are the same.
         # ColorGradeBandCorrection objects handle ranges differently
-        # - saturation values 0-1 converted to range (-1, 1) 
+        # - saturation values 0-1 converted to range (-1, 1)
         # - saturation value 0.5 is converted to 0 and means no correction applied
         # - converted range(-1, 0) means negative correction applied
         # - negative correction is interpreted as positive correction of complimentary color
@@ -961,14 +968,14 @@ class ColorGrader:
         self.mid_saturation = filter(lambda ep: ep.name == "mid_saturation", editable_properties)[0]
         self.hi_hue = filter(lambda ep: ep.name == "hi_hue", editable_properties)[0]
         self.hi_saturation = filter(lambda ep: ep.name == "hi_saturation", editable_properties)[0]
-        
+
         # Create filter and init values
         self.filt = lutfilter.ColorGradeFilter(editable_properties)
-        self.filt.shadow_band.set_hue_and_saturation(self.shadow_hue.get_float_value(), 
+        self.filt.shadow_band.set_hue_and_saturation(self.shadow_hue.get_float_value(),
                                                      self.shadow_saturation.get_float_value())
-        self.filt.mid_band.set_hue_and_saturation(self.mid_hue.get_float_value(), 
+        self.filt.mid_band.set_hue_and_saturation(self.mid_hue.get_float_value(),
                                                      self.mid_saturation.get_float_value())
-        self.filt.hi_band.set_hue_and_saturation(self.hi_hue.get_float_value(), 
+        self.filt.hi_band.set_hue_and_saturation(self.hi_hue.get_float_value(),
                                                      self.hi_saturation.get_float_value())
         self.filt.update_all_corrections()
         self.filt.update_rgb_lookups()
@@ -1020,19 +1027,19 @@ class ColorGrader:
         self._display_values(SHADOW, self.shadow_hue.get_float_value(), self.shadow_saturation.get_float_value())
         self._display_values(MID, self.mid_hue.get_float_value(), self.mid_saturation.get_float_value())
         self._display_values(HI, self.hi_hue.get_float_value(), self.hi_saturation.get_float_value())
-        
+
         info_row = Gtk.HBox()
         info_row.pack_start(Gtk.Label(), True, True, 0)
         info_row.pack_start(shadow_box, False, False, 0)
         info_row.pack_start(midtone_box, False, False, 0)
         info_row.pack_start(highlight_box, False, False, 0)
         info_row.pack_start(Gtk.Label(), True, True, 0)
-                
+
         self.widget = Gtk.VBox()
         self.widget.pack_start(box_row, False, False, 0)
         self.widget.pack_start(info_row, False, False, 0)
         self.widget.pack_start(Gtk.Label(), True, True, 0)
-        
+
     def band_changed(self, band):
         self.band = band
 
@@ -1096,8 +1103,8 @@ def value_changed(self, ep, value):
 class AbstractColorWheel:
 
     def __init__(self, edit_listener):
-        self.widget = cairoarea.CairoDrawableArea2( 260, 
-                                                    260, 
+        self.widget = cairoarea.CairoDrawableArea2( 260,
+                                                    260,
                                                     self._draw)
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
@@ -1127,13 +1134,13 @@ class AbstractColorWheel:
         self.cursor_x, self.cursor_y = self._get_legal_point(x, y)
         self._save_point()
         self.widget.queue_draw()
-        
+
     def _release_event(self, event):
         self.cursor_x, self.cursor_y = self._get_legal_point(event.x, event.y)
         self._save_point()
         self.edit_listener()
         self.widget.queue_draw()
-        
+
     def _get_legal_point(self, x, y):
         vec = viewgeom.get_vec_for_points((self.CENTER_X, self.CENTER_Y), (x, y))
         dist = vec.get_length()
@@ -1149,7 +1156,7 @@ class AbstractColorWheel:
 
         if clockwise:
              angle = 360.0 - angle;
-        
+
         # Color circle starts from 11 o'clock
         angle = angle - 30.0
         if angle  < 0.0:
@@ -1197,11 +1204,11 @@ class SimpleColorWheel(AbstractColorWheel):
 
     def __init__(self, edit_listener):
         AbstractColorWheel.__init__(self, edit_listener)
-        self.value_x = self.cursor_x 
+        self.value_x = self.cursor_x
         self.value_y = self.cursor_y
 
     def _save_point(self):
-        self.value_x = self.cursor_x 
+        self.value_x = self.cursor_x
         self.value_y = self.cursor_y
 
     def get_angle_and_distance(self):
@@ -1221,9 +1228,9 @@ class SMHColorWheel(AbstractColorWheel):
     def __init__(self, edit_listener):
         AbstractColorWheel.__init__(self, edit_listener)
         self.band = SHADOW
-        self.shadow_x = self.cursor_x 
+        self.shadow_x = self.cursor_x
         self.shadow_y = self.cursor_y
-        self.mid_x = self.cursor_x 
+        self.mid_x = self.cursor_x
         self.mid_y = self.cursor_y
         self.hi_x = self.cursor_x
         self.hi_y = self.cursor_y
@@ -1238,14 +1245,14 @@ class SMHColorWheel(AbstractColorWheel):
             self.cursor_y = self.mid_y
         else:
             self.cursor_x = self.hi_x
-            self.cursor_y = self.hi_y 
+            self.cursor_y = self.hi_y
 
     def _save_point(self):
         if self.band == SHADOW:
-            self.shadow_x = self.cursor_x 
+            self.shadow_x = self.cursor_x
             self.shadow_y = self.cursor_y
         elif self.band == MID:
-            self.mid_x = self.cursor_x 
+            self.mid_x = self.cursor_x
             self.mid_y = self.cursor_y
         else:
             self.hi_x = self.cursor_x
@@ -1268,14 +1275,14 @@ class SMHColorWheel(AbstractColorWheel):
 
     def _draw(self, event, cr, allocation):
         AbstractColorWheel._draw(self, event, cr, allocation)
-        
+
         if self.band == SHADOW:
             band_color = ACTIVE_SHADOW_COLOR
         elif self.band == MID:
             band_color = ACTIVE_MID_COLOR
         else:
             band_color = ACTIVE_HI_COLOR
-        
+
         _draw_select_circle(cr, self.cursor_x - self.CIRCLE_HALF, self.cursor_y - self.CIRCLE_HALF, band_color, ACTIVE_RING_COLOR)
 """
 
@@ -1283,21 +1290,21 @@ class ColorBandSelector:
     def __init__(self):
         self.band = SHADOW
 
-        self.widget = cairoarea.CairoDrawableArea2( 42, 
-                                                    18, 
+        self.widget = cairoarea.CairoDrawableArea2( 42,
+                                                    18,
                                                     self._draw)
 
         self.widget.press_func = self._press_event
         self.SHADOW_X = 0
         self.MID_X = 15
         self.HI_X = 30
-        
+
         self.band_change_listener = None # monkey patched in at creation site
-    
+
     def _press_event(self, event):
         x = event.x
         y = event.y
-        
+
         if self._circle_hit(self.SHADOW_X, x, y):
             self.band_change_listener(SHADOW)
         elif self._circle_hit(self.MID_X, x, y):
@@ -1309,7 +1316,7 @@ class ColorBandSelector:
         if x >= band_x and x < band_x + 12:
             if y > 0 and y < 12:
                 return True
-        
+
         return False
 
     def _draw(self, event, cr, allocation):
@@ -1318,14 +1325,14 @@ class ColorBandSelector:
         We get cairo context and allocation.
         """
         x, y, w, h = allocation
-        
+
         ring_color = (0.0, 0.0, 0.0)
         _draw_select_circle(cr, self.SHADOW_X, 0, (0.1, 0.1, 0.1), ring_color)
         _draw_select_circle(cr, self.MID_X, 0, (0.5, 0.5, 0.5), ring_color)
         _draw_select_circle(cr, self.HI_X, 0, (1.0, 1.0, 1.0), ring_color)
 
         self._draw_active_indicator(cr)
-    
+
     def _draw_active_indicator(self, cr):
         y = 14.5
         HALF = 4.5
