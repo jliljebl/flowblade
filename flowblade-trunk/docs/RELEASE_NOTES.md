@@ -52,10 +52,10 @@ Trim view layout also addresses a fundamental restriction of a single monitor la
 - Monitor area layout was updated with the main goal of providing clearer visual cues wheather Timeline or Clip is displayed in the monitor by making the selection buttons much bigger.
 - Middlebar got some minor visual updates
 
-### German translation update###
+### German translation update ###
 - German translation received an update from Mario Dejanovic.
 
-### Other bugfixes and improvements###
+### Other bugfixes and improvements ###
 - Make render args available for small screen heights
 - Make Master Audio Meter available for small screen heights 
 - Fix displayed media lengths for old and changed profile projects
