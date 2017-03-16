@@ -788,7 +788,7 @@
         Workaround is that we initilize it with hard coded values
     -->
     <filter id="avfilter.perspective">
-        <name>Perpective</name>
+        <name>Perspective</name>
         <group>Distort</group>
         <property name="av.x0" args="range_in=0,SCREENSIZE_WIDTH range_out=0,SCREENSIZE_WIDTH displayname=x0">10</property>
         <property name="av.y0" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,SCREENSIZE_HEIGHT displayname=y0">10</property>
