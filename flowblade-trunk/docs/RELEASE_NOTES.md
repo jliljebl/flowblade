@@ -1,6 +1,6 @@
 # Release Notes #
 
-##Flowblade 1.10##
+## Flowblade 1.10 ##
 
 Date: December 13, 2016
 
@@ -14,7 +14,7 @@ Next release cycle will focus on improved tool integration with the goal of prov
 
 Appimage for this will release will become available in January and for all subsequent releases it will be available at release date.
 
-###Trim View###
+### Trim View ###
 
 Trim View is feature available in most commercial packages and now also in Flowblade, probably as the first FLOSS video editor. It is maybe best described just by a [screenshot.](https://raw.githubusercontent.com/jliljebl/flowblade/master/flowblade-trunk/docs/1-10_trimview.jpg). The advantages are clear: user is provided with more information when doing a trim and is thus able to better assess the correct cut frame within a single edit action.
 
@@ -27,13 +27,13 @@ Points on Trim View performance
 
 For these reasons the **Trim View is off by default and needs to activated from menu below the monitor**. Users are advised to assess for themselves if performance is satisfactory for system and media they are working on
 
-###Frame Matching###
+### Frame Matching ###
 
 Trim view layout also addresses a fundamental restriction of a single monitor layout: user is unable to compare video material to other material when deciding on a clip to add to a sequence. We now provide two mechanisms to help with this use case:
 - monitor frame matching, shown [here.](https://raw.githubusercontent.com/jliljebl/flowblade/master/flowblade-trunk/docs/1-10_monitor_match_frame.jpg)
 - timeline frame matching, shown [here.](https://raw.githubusercontent.com/jliljebl/flowblade/master/flowblade-trunk/docs/1-10-timeline_match_frame.jpg)
 
-###Editing Improvements###
+### Editing Improvements ###
 
 - a "Delete Range" button is now provided to cut and lift material inside selected range on all tracks
 - Filters in filter stack can now be rearranged
@@ -41,21 +41,21 @@ Trim view layout also addresses a fundamental restriction of a single monitor la
 - User can now select all clips before or after a clip on timeline using a popup menu option.
 
 
-###Export from timeline to tools###
+### xport from timeline to tools ###
 - timeline clips can be now exported with frame range preserved to G'MIX Effects Tool, Slow/Fast Motion renderer and Natron if it is installed in the system.
 
-###Dual monitor and small screens improvements###
+### Dual monitor and small screens improvements ###
 - dual monitor support has been improved by providing a to window layout shown [here.](https://raw.githubusercontent.com/jliljebl/flowblade/master/flowblade-trunk/docs/1-10_dual_monitor.jpg)
 - small screen sizes support has been updated with multiple bug fixes and feature additions.
 
-###GUI updates###
+### GUI updates ###
 - Monitor area layout was updated with the main goal of providing clearer visual cues wheather Timeline or Clip is displayed in the monitor by making the selection buttons much bigger.
 - Middlebar got some minor visual updates
 
-###German translation update###
+### German translation update ###
 - German translation received an update from Mario Dejanovic.
 
-###Other bugfixes and improvements###
+### Other bugfixes and improvements ###
 - Make render args available for small screen heights
 - Make Master Audio Meter available for small screen heights 
 - Fix displayed media lengths for old and changed profile projects
