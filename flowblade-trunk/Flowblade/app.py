@@ -597,7 +597,8 @@ def open_project(new_project):
         projectaction.update_media_lengths()
 
     gui.editor_window.handle_insert_move_mode_button_press()
-    
+    editorstate.trim_mode_ripple = False
+
     #editorstate.project.c_seq.print_all()
         
 def change_current_sequence(index):
