@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flowblade\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-08 15:52+0200\n"
+"POT-Creation-Date: 2017-03-17 12:05+0200\n"
 "PO-Revision-Date: 2017-03-07 21:29+0300\n"
 "Last-Translator: Николай Смольянинов <smolianinow.colya2016@yandex.ru>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -18,23 +18,23 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Lokalize 2.0\n"
 
-#: app.py:758
+#: app.py:761
 msgid "Too small screen for this application."
 msgstr "Недостаточное разрешение экрана."
 
-#: app.py:761
+#: app.py:764
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "Разрешение экрана должно быть не ниже 1152 х 768.\n"
 
-#: app.py:762
+#: app.py:765
 msgid "Your screen dimensions are "
 msgstr "Ваше разрешение экрана"
 
-#: app.py:795 projectaction.py:366 projectaction.py:696
+#: app.py:798 projectaction.py:366 projectaction.py:696
 msgid "Project has not been saved previously"
 msgstr "Проект не был сохранён"
 
-#: app.py:796 projectaction.py:367 projectaction.py:697
+#: app.py:799 projectaction.py:367 projectaction.py:697
 msgid "Save project with File -> Save As before closing."
 msgstr "Сохраните проект перед закрытием (Файл ⇨ Сохранить как...)."
 
@@ -377,7 +377,7 @@ msgstr "Перезаписать участок"
 msgid "Cut Clip"
 msgstr "Разрезать клип"
 
-#: editorwindow.py:184 translations.py:511
+#: editorwindow.py:184 translations.py:513
 msgid "Lift"
 msgstr "Уровень"
 
@@ -713,7 +713,7 @@ msgid "Quit editing Clip in editor"
 msgstr "Завершить редактирование клипа"
 
 #: clipeffectseditor.py:236 panels.py:51 panels.py:96 panels.py:114
-#: translations.py:560 mlttransitions.py:134 tools/titler.py:198
+#: translations.py:563 mlttransitions.py:134 tools/titler.py:198
 msgid "Add"
 msgstr "Добавить"
 
@@ -1565,7 +1565,7 @@ msgstr "В конец участка"
 msgid "Playback"
 msgstr "Воспроизведение"
 
-#: dialogs.py:1178 guicomponents.py:2243 translations.py:557
+#: dialogs.py:1178 guicomponents.py:2243 translations.py:560
 msgid "Overwrite"
 msgstr "Перезапись"
 
@@ -1585,7 +1585,7 @@ msgstr "Скольжение"
 msgid "Spacer"
 msgstr "Распорка"
 
-#: dialogs.py:1183 guicomponents.py:2273
+#: dialogs.py:1183 guicomponents.py:2273 translations.py:544
 msgid "Box"
 msgstr "Группировка и перенос"
 
@@ -1935,17 +1935,17 @@ msgstr "Цвет клипа"
 msgid "Default"
 msgstr "По умолчанию"
 
-#: guicomponents.py:1555 translations.py:496 translations.py:567
+#: guicomponents.py:1555 translations.py:498 translations.py:570
 msgid "Red"
 msgstr "Красный"
 
-#: guicomponents.py:1556 translations.py:497 translations.py:562
-#: translations.py:568
+#: guicomponents.py:1556 translations.py:499 translations.py:565
+#: translations.py:571
 msgid "Green"
 msgstr "Зелёный"
 
-#: guicomponents.py:1557 translations.py:498 translations.py:563
-#: translations.py:569
+#: guicomponents.py:1557 translations.py:500 translations.py:566
+#: translations.py:572
 msgid "Blue"
 msgstr "Синий"
 
@@ -2574,7 +2574,7 @@ msgstr "Звуковые эффекты"
 msgid "Blur"
 msgstr "Размывание"
 
-#: translations.py:116 translations.py:526 propertyeditorbuilder.py:523
+#: translations.py:116 translations.py:528 propertyeditorbuilder.py:523
 #: propertyeditorbuilder.py:618
 msgid "Distort"
 msgstr "Искажения"
@@ -2591,7 +2591,7 @@ msgstr "Движение"
 msgid "Transform"
 msgstr "Трансформация"
 
-#: translations.py:120 translations.py:476
+#: translations.py:120 translations.py:477
 msgid "Edge"
 msgstr "Контур"
 
@@ -2772,7 +2772,7 @@ msgid "Saturation"
 msgstr "Насыщенность"
 
 #: translations.py:174 translations.py:380 translations.py:432
-#: translations.py:457 translations.py:529 translations.py:533
+#: translations.py:457 translations.py:531 translations.py:535
 msgid "Invert"
 msgstr "Инвертировать"
 
@@ -2785,7 +2785,7 @@ msgstr "Цветовой тон"
 msgid "Brightness"
 msgstr "Яркость"
 
-#: translations.py:177 translations.py:575
+#: translations.py:177 translations.py:578
 msgid "Sepia"
 msgstr "Сепия"
 
@@ -2797,7 +2797,7 @@ msgstr "Тонирование"
 msgid "White Balance"
 msgstr "Баланс белого"
 
-#: translations.py:180 translations.py:481
+#: translations.py:180 translations.py:482
 msgid "Levels"
 msgstr "Уровни"
 
@@ -2865,7 +2865,7 @@ msgstr "Собель"
 msgid "Denoise"
 msgstr "Подавление шума"
 
-#: translations.py:201 translations.py:503
+#: translations.py:201 translations.py:505
 msgid "Sharpness"
 msgstr "Резкость"
 
@@ -3021,11 +3021,11 @@ msgstr "Ширина перехода"
 msgid "Tilt"
 msgstr "Наклон"
 
-#: translations.py:253 translations.py:559
+#: translations.py:253 translations.py:562
 msgid "Min"
 msgstr "Мин."
 
-#: translations.py:254 translations.py:558
+#: translations.py:254 translations.py:561
 msgid "Max"
 msgstr "Макс."
 
@@ -3590,16 +3590,16 @@ msgstr "Угол"
 msgid "transition.geometry"
 msgstr "Геометрия перехода"
 
-#: translations.py:449 translations.py:524
+#: translations.py:449 translations.py:526
 msgid "Shear X"
 msgstr "Скос по X"
 
-#: translations.py:450 translations.py:525
+#: translations.py:450 translations.py:527
 msgid "Shear Y"
 msgstr "Скос по Y"
 
-#: translations.py:459 translations.py:460 translations.py:523
-#: translations.py:527
+#: translations.py:459 translations.py:460 translations.py:525
+#: translations.py:529
 msgid "Opacity"
 msgstr "Непрозрачность"
 
@@ -3627,323 +3627,332 @@ msgstr "Форма"
 msgid "Operation"
 msgstr "Операция"
 
-#: translations.py:468 translations.py:551
+#: translations.py:468 translations.py:554
 msgid "Hard"
 msgstr "Жёсткий"
 
 #: translations.py:469
+msgid "Selection subspace"
+msgstr ""
+
+#: translations.py:470
 msgid "R/A/Hue"
 msgstr "R/A/Цветовой тон"
 
-#: translations.py:470
+#: translations.py:471
 msgid "G/B/Chroma"
 msgstr "G/B/Цветность"
 
-#: translations.py:471
+#: translations.py:472
 msgid "B/I/I"
 msgstr "B/I/I"
 
-#: translations.py:472
+#: translations.py:473
 msgid "Supress"
 msgstr "Задержка цвета"
 
-#: translations.py:473 translations.py:581
+#: translations.py:474 translations.py:584
 msgid "Horizontal"
 msgstr "Горизонтально"
 
-#: translations.py:474 translations.py:582
+#: translations.py:475 translations.py:585
 msgid "Vertical"
 msgstr "Вертикально"
 
-#: translations.py:475
+#: translations.py:476
 msgid "Type"
 msgstr "Тип"
 
-#: translations.py:477
+#: translations.py:478
 msgid "Dot Radius"
 msgstr "Точка радиуса"
 
-#: translations.py:478
+#: translations.py:479
 msgid "Cyan Angle"
 msgstr "Угол бирюзового"
 
-#: translations.py:479
+#: translations.py:480
 msgid "Magenta Angle"
 msgstr "Угол пурпурного"
 
-#: translations.py:480
+#: translations.py:481
 msgid "Yellow Angle"
 msgstr "Угол жёлтого"
 
-#: translations.py:482
+#: translations.py:483
 msgid "Matrix Type"
 msgstr "Тип матрицы"
 
-#: translations.py:483
+#: translations.py:484
 msgid "Aspect"
 msgstr "Аспект"
 
-#: translations.py:484
+#: translations.py:485
 msgid "Center Size"
 msgstr "Средний размер"
 
-#: translations.py:485
+#: translations.py:486
 msgid "Azimuth"
 msgstr "Азимут"
 
-#: translations.py:486 translations.py:491
+#: translations.py:487 translations.py:492
 msgid "Lightness"
 msgstr "Свет"
 
-#: translations.py:487
+#: translations.py:488
 msgid "Bump Height"
 msgstr "Выпирание"
 
-#: translations.py:488
+#: translations.py:489
 msgid "Gray"
 msgstr "Серый"
 
-#: translations.py:489
+#: translations.py:490
 msgid "Split Preview"
 msgstr "Разделение предпросмотра"
 
-#: translations.py:490
+#: translations.py:491
 msgid "Source on Left"
 msgstr "Источник слева"
 
-#: translations.py:492
+#: translations.py:493
+#, fuzzy
+msgid "Channel"
+msgstr "Поменять каналы местами"
+
+#: translations.py:494
 msgid "Input black level"
 msgstr "Уровень чёрного на входе"
 
-#: translations.py:493
+#: translations.py:495
 msgid "Input white level"
 msgstr "Уровень белого на входе"
 
-#: translations.py:494
+#: translations.py:496
 msgid "Black output"
 msgstr "Уровень чёрного на выходе"
 
-#: translations.py:495
+#: translations.py:497
 msgid "White output"
 msgstr "Уровень белого на выходе"
 
-#: translations.py:499
+#: translations.py:501
 msgid "Action"
 msgstr "Действие"
 
-#: translations.py:500
+#: translations.py:502
 msgid "Keep Luma"
 msgstr "Сохранить яркость"
 
-#: translations.py:501
+#: translations.py:503
 msgid "Luma Formula"
 msgstr "Формула яркости"
 
-#: translations.py:502
+#: translations.py:504
 msgid "Effect"
 msgstr "Эффект"
 
-#: translations.py:504
+#: translations.py:506
 msgid "Blend Type"
 msgstr "\\Тип слоя"
 
-#: translations.py:506
+#: translations.py:508
 msgid "Key Color"
 msgstr "Ключевой цвет"
 
-#: translations.py:507
+#: translations.py:509
 msgid "Pre-Level"
 msgstr "Низкий уровень"
 
-#: translations.py:508
+#: translations.py:510
 msgid "Post-Level"
 msgstr "Высокий уровень"
 
-#: translations.py:509
+#: translations.py:511
 msgid "Slope"
 msgstr "Крутизна "
 
-#: translations.py:510
+#: translations.py:512
 msgid "Luma Band"
 msgstr "Диапазон"
 
-#: translations.py:512
+#: translations.py:514
 msgid "Gain"
 msgstr "Усиление"
 
-#: translations.py:513
+#: translations.py:515
 msgid "Input White Level"
 msgstr "Белый на входе"
 
-#: translations.py:514
+#: translations.py:516
 msgid "Input Black Level"
 msgstr "Чёрный на входе"
 
-#: translations.py:515
+#: translations.py:517
 msgid "Black Output"
 msgstr "Чёрный на выходе"
 
-#: translations.py:516
+#: translations.py:518
 msgid "White Output"
 msgstr "Белый на выходе"
 
-#: translations.py:517
+#: translations.py:519
 msgid "Rows"
 msgstr "Строки"
 
-#: translations.py:518
+#: translations.py:520
 msgid "Columns"
 msgstr "Столбцы"
 
-#: translations.py:519
+#: translations.py:521
 msgid "Color Temperature"
 msgstr "Температура цвета"
 
-#: translations.py:520
+#: translations.py:522
 msgid "Select .cube file"
 msgstr "Выберите .cube файл"
 
-#: translations.py:528 translations.py:532
+#: translations.py:530 translations.py:534
 msgid "Wipe Type"
 msgstr "Тип вытеснения"
 
-#: translations.py:530 translations.py:534
+#: translations.py:532 translations.py:536
 msgid "Softness"
 msgstr "Мягкость"
 
-#: translations.py:531
+#: translations.py:533
 msgid "Wipe Amount"
 msgstr "Сумма"
 
-#: translations.py:538 translations.py:543
+#: translations.py:540 translations.py:546
 msgid "Shave"
 msgstr "Сохранить"
 
-#: translations.py:539
+#: translations.py:541
 msgid "Rectangle"
 msgstr "Прямоугольник"
 
-#: translations.py:540
+#: translations.py:542
 msgid "Ellipse"
 msgstr "Эллипс"
 
-#: translations.py:541
+#: translations.py:543
 msgid "Triangle"
 msgstr "Треугольник"
 
-#: translations.py:542 translations.py:556
+#: translations.py:545 translations.py:559
 msgid "Diamond"
 msgstr "Ромб"
 
-#: translations.py:544
+#: translations.py:547
 msgid "Shrink Hard"
 msgstr "Жёсткое сжатие"
 
-#: translations.py:545
+#: translations.py:548
 msgid "Shrink Soft"
 msgstr "Мягкое сжатие"
 
-#: translations.py:546
+#: translations.py:549
 msgid "Grow Hard"
 msgstr "Жёсткое увеличение"
 
-#: translations.py:547
+#: translations.py:550
 msgid "Grow Soft"
 msgstr "Мягкое увеличение"
 
-#: translations.py:548
+#: translations.py:551
 msgid "RGB"
 msgstr "RGB"
 
-#: translations.py:549
+#: translations.py:552
 msgid "ABI"
 msgstr "ABI"
 
-#: translations.py:550
+#: translations.py:553
 msgid "HCI"
 msgstr "HCI"
 
-#: translations.py:552
+#: translations.py:555
 msgid "Fat"
 msgstr "Толстый"
 
-#: translations.py:553
+#: translations.py:556
 msgid "Normal"
 msgstr "Обычный"
 
-#: translations.py:554
+#: translations.py:557
 msgid "Skinny"
 msgstr "Тонкий"
 
-#: translations.py:555
+#: translations.py:558
 msgid "Ellipsoid"
 msgstr "Эллипс"
 
-#: translations.py:561 mlttransitions.py:151
+#: translations.py:564 mlttransitions.py:151
 msgid "Subtract"
 msgstr "Вычесть"
 
-#: translations.py:564
+#: translations.py:567
 msgid "Sharper"
 msgstr "Шулер"
 
-#: translations.py:565
+#: translations.py:568
 msgid "Fuzzier"
 msgstr "Нечёткий"
 
-#: translations.py:566
+#: translations.py:569
 msgid "Luma"
 msgstr "Яркостный канал"
 
-#: translations.py:570
+#: translations.py:573
 msgid "Add Constant"
 msgstr "Добавить константу"
 
-#: translations.py:571
+#: translations.py:574
 msgid "Change Gamma"
 msgstr "Сменить гамму"
 
-#: translations.py:572 mlttransitions.py:146
+#: translations.py:575 mlttransitions.py:146
 msgid "Multiply"
 msgstr "Умножение"
 
-#: translations.py:573
+#: translations.py:576
 msgid "XPro"
 msgstr "Винтаж (высококонтрастный)"
 
-#: translations.py:574
+#: translations.py:577
 msgid "OldPhoto"
 msgstr "Винтаж"
 
-#: translations.py:576
+#: translations.py:579
 msgid "Heat"
 msgstr "Зной"
 
-#: translations.py:577
+#: translations.py:580
 msgid "XRay"
 msgstr "Рентген"
 
-#: translations.py:578
+#: translations.py:581
 msgid "RedGreen"
 msgstr "Красно-зелёный"
 
-#: translations.py:579
+#: translations.py:582
 msgid "YellowBlue"
 msgstr "Жёлто-синий"
 
-#: translations.py:580
+#: translations.py:583
 msgid "Esses"
 msgstr "Эссе"
 
-#: translations.py:583
+#: translations.py:586
 msgid "Shadows"
 msgstr "Тени"
 
-#: translations.py:584
+#: translations.py:587
 msgid "Midtones"
 msgstr "Полутона"
 
-#: translations.py:585
+#: translations.py:588
 msgid "Highlights"
 msgstr "Блики"
 
