@@ -105,7 +105,7 @@ class LoadThread(threading.Thread):
             editorstate.project_is_loading = False
 
         except persistance.FileProducerNotFoundError as e:
-            print "did not find file:", e
+            print "did not find a file"
             self._error_stop(dialog, ticker)
             Gdk.threads_enter()
             primary_txt = _("Media asset was missing!")
@@ -251,7 +251,6 @@ class UpdateMediaLengthsThread(threading.Thread):
         for key, media_file in PROJECT().media_files.iteritems():
             print media_file.name
             if media_file.type == appconsts.VIDEO or media_file.type == appconsts.IMAGE_SEQUENCE:
-                print media_file.name
                 Gdk.threads_enter()
                 dialog.info.set_text(media_file.name)
                 Gdk.threads_leave()
