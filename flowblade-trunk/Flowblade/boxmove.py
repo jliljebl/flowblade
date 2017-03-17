@@ -173,13 +173,15 @@ class BoxMoveData:
         # Get selection bounding box
         self.topleft_frame = 1000000000000
         for track_selection in self.track_selections:
-            if track_selection.range_frame_in < self.topleft_frame:
-                self.topleft_frame = track_selection.range_frame_in
+            if track_selection.range_frame_in != -1:
+                if track_selection.range_frame_in < self.topleft_frame:
+                    self.topleft_frame = track_selection.range_frame_in
                 
         last_frame = 0
         for track_selection in self.track_selections:
-            if track_selection.range_frame_out > last_frame:
-                last_frame = track_selection.range_frame_out
+            if track_selection.range_frame_out != -1:
+                if track_selection.range_frame_out > last_frame:
+                    last_frame = track_selection.range_frame_out
         
         self.width_frames = last_frame - self.topleft_frame
                    

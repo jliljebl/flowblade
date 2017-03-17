@@ -966,15 +966,15 @@ def _box_overwrite_move_redo(self):
     if not hasattr(self, "track_moves"):
         self.track_moves = []
         for track_selection in self.box_selection_data.track_selections:
-            
-            track_move_data = {"track":current_sequence().tracks[track_selection.track_id],
-                                "over_in":track_selection.range_frame_in + self.delta,
-                                "over_out":track_selection.range_frame_out + self.delta,
-                                "selected_range_in":track_selection.selected_range_in,
-                                "selected_range_out":track_selection.selected_range_out,
-                                "move_edit_done_func":None}
+            if track_selection.range_frame_in != -1:
+                track_move_data = {"track":current_sequence().tracks[track_selection.track_id],
+                                    "over_in":track_selection.range_frame_in + self.delta,
+                                    "over_out":track_selection.range_frame_out + self.delta,
+                                    "selected_range_in":track_selection.selected_range_in,
+                                    "selected_range_out":track_selection.selected_range_out,
+                                    "move_edit_done_func":None}
 
-            self.track_moves.append(track_move_data)
+                self.track_moves.append(track_move_data)
 
     else:
         # This may not be necessery...but its going in to make sure move_data is always same
