@@ -1,5 +1,96 @@
 # Release Notes #
 
+
+## Coming shortly, Flowblade 1.12 ##
+
+Date: March xx, 2016
+
+**Flowblade 1.12** is the fourteenth release of Flowblade.
+
+In this cycle the main developments were the adding of new tools for the first time since 0.14, and the increased level contributions the project received.
+
+Much time was spend on creating an AppImage for the project but unfortunately no satisfactory end result was reached, so there will not be an AppImage with latest dependencies available for Flowblade yet.
+
+Even with this and some redesign related delays we were able to advance the project at a reasonably pace.
+
+### Box tool ###
+
+New Box tool is provided to help withthe use case of moving a range containing media on multiple tracks to another point in the sequence. This has previously required multiple edit steps to achieve. The Box tool will reduce the number required edit actions.
+
+The main intended use case is probably best explained with a video: https://vimeo.com/207310517
+
+### Trim tool Ripple mode ###
+
+Every use of Trim tool will cause the edited track to lose sync with other tracks after the trim point. The Ripple mode enables in most cases doing trims while maintaining sync with other tracks. Some points on Trim Ripple mode:
+- Sync is maintained by changing the lengths of the closest blank on other tracks. This might not produce the edit you wish to achieve, in that case you will need to use Trim tool in default mode and do the edit in multiple steps.
+- No overwrites are allowed to happen so the available trim length is constrained by blank lengths on other tracks.
+- This tool is not provided as a separate tool and it is not given a GUI top level representation because it became clear that the resulting multitrack edit can be found confusing by many users
+- The tool can be accessed by toggling the Trim tool mode using 'R' key when timeline has keyboard focus.
+
+
+### Contributions ###
+
+We added a new category 'Developers' in the About dialog for contributors producing multiple patches and taking part in development discussions. The first developers that were added to this category were Steven van de Beek and Nathan Rosenquist.
+
+*Steven van de Beek*
+
+- Fix loading of projects with unicode names.
+- Fix "Size/height" for multiple filters in "Transform" group
+- Fix Render Folder from Preferences not being copied to Render panel
+- Change .xml file to associate Flowblade logo to .flb files.
+- Optionally Show Full Filenames in Media items
+- Render with multiple threads and allow drop frames in playback.
+
+*Nathan Rosenquist*
+
+- Add option to hide file extensions during import for cleaner media names
+- Round FPS to whole numbers for NTSC time code to get NTSC timocode correct
+- Fix updating bin file count after deleting files
+- Make 'End' key and move playhead to the end of sequence.
+- Explain video gamma problem on certain systems.
+
+
+
+### AVFilters ###
+MLT 6.2.0 added AVFilters support. Flowblade now offers additional filters if you have MLT > 6.2.0 with AVFilters module installed.
+- *Lut3D* This makes possible to and similar film emulation filters that are available in G'Mic by *.cube* files. 
+- *Zoom/Pan* Similar functionality current "affine" filter but the performance is much better
+- *Color Channels Mixer* This makes possiböle to use color data of one chhel to determine color output of another channel. Basic exmple would be making green shirt blue by using green color data to display blue color.
+- *Perspective* Stech image in way that can enable changing perspective
+- *Lens correction AV* Filter that corrects typical lens errors.
+
+
+### Translations ###
+
+We got a new Russian translation by Nikolai Smoljaninov. There are over 100 million Russian spekers in the world and most use localised applications, so this widens the potential user base  in a big way.
+
+Hungarian and German translations got updates by Péter Gábor and Mario Dejanovic.
+
+### Future directions ###
+*Move to 2 releases per year instead of 3.* The release overhead and assosiated project slowdown has been getting bigger lately and with container formats possibly added to release requirements it is better to make the development cycles a bit longer to get overall better development throughput. 
+
+*Container formats and Wayland support* These technologies are still beinge developed and adopted. Solutions here are being worked on will be made available when ready.
+
+*Focus areas for next cycle include* continued work on Issue list and Roadmap, Clip Compositors that automatically follow clips even across tracks will be attempted, tool integration hopefully finally gets a bit of attention and small website update would be good too.
+
+### Other bugfixes and improvements ###
+- Fix extraraeditors.py translation problems (Péter Gábor)
+- Add missing params for translations (Péter Gábor)
+- Fix trim view for blank match frames
+- Set insert tool active after project load
+- Make marker graphic a bit more visible in dark theme
+- Make Trin and Roll edits snap
+- Make Spacer tool snap
+- Add higher bitrates for h264 and Theora codes for 4K encoding
+- Add 4K profiles for projects and rendering
+- Makes tracks number selection free with max. 9 tracks available
+- Add center playhead on arrow move preference
+- Make Control key keep aspect ratio when scaling with Affine Blend GUI editor
+- Fix adding graphics default length in and out to Image Sequences media
+- Add Compositor values copy-paste feature
+- Make Control key move image 10px for every arrow key press in Geometry editors
+- Make Mouse scroll zoom/scroll by selecting a preference.
+
 ## Flowblade 1.10 ##
 
 Date: December 13, 2016
