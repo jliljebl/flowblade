@@ -315,7 +315,7 @@ class MLTXMLToEDLParse:
                 prog_in += src_len
 
                 
-        print ''.join(str_list).strip("\n")
+        #print ''.join(str_list).strip("\n")
         return ''.join(str_list).strip("\n")
 
     def frames_to_tc(self, frame):

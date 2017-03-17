@@ -250,7 +250,7 @@ def add_render_item(flowblade_project, render_path, args_vals_list, mark_in, mar
     else:
         launch_batch_rendering()
 
-    print "Render queue item for rendering file into " + render_path + " with identifier " + identifier + " added."
+    #print "Render queue item for rendering file into " + render_path + " with identifier " + identifier + " added."
 
 # ------------------------------------------------------- file utils
 def init_dirs_if_needed():

@@ -1145,7 +1145,7 @@ class GmicEffectRendererer(threading.Thread):
         # Refuse to render into user home folder
         out_folder = _window.out_folder.get_filenames()[0] + "/"
         if out_folder == (os.path.expanduser("~") + "/"):
-            print "home folder"
+            #print "home folder"
             return
             
         start_time = time.time()

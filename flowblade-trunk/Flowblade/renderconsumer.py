@@ -221,7 +221,7 @@ def load_render_profiles():
         else:
             msg = "...NOT available, " + encoding_option.err_msg + " missing"
             not_supported_encoding_options.append(encoding_option)
-            print encoding_option.name + msg
+            #print encoding_option.name + msg
 
     # Proxy encoding
     proxy_encoding_nodes = render_encoding_doc.getElementsByTagName(PROXY_ENCODING_OPTION)
@@ -233,7 +233,7 @@ def load_render_profiles():
             found_proxy_encodings.append(proxy_encoding_option)
         else:
             msg = " ...NOT available, " + encoding_option.err_msg + " missing"
-        print "Proxy encoding " + proxy_encoding_option.name + msg
+        #print "Proxy encoding " + proxy_encoding_option.name + msg
     global proxy_encodings
     proxy_encodings = found_proxy_encodings
 
@@ -279,7 +279,7 @@ def get_img_seq_render_consumer(file_path, profile, encoding_option):
     consumer.set("real_time", perf_value)
     consumer.set("rescale", "bicubic")
     consumer.set("vcodec", str(vcodec))
-    print "img seq render consumer created, path:" +  str(render_path) #+ ", args: " + args_msg
+    #print "img seq render consumer created, path:" +  str(render_path) #+ ", args: " + args_msg
     return consumer
     
 def get_mlt_render_consumer(file_path, profile, args_vals_list):
@@ -299,7 +299,7 @@ def get_mlt_render_consumer(file_path, profile, args_vals_list):
         args_msg = args_msg + str(k) + "="+ str(v) + ", "
         
     args_msg = args_msg.strip(", ")
-    print "render consumer created, path:" +  str(file_path) + ", args: " + args_msg
+    #print "render consumer created, path:" +  str(file_path) + ", args: " + args_msg
     return consumer
 
 def get_args_vals_tuples_list_for_encoding_and_quality(profile, enc_opt_index, quality_opt_index):
