@@ -8,14 +8,14 @@
 
 Double click on <b>.deb</b> file to install it. 
 
-On some systems double clicking may not work (on Ubuntu it has sometimes istalled old version from repository), and you need to install <b>.deb</b> file using terminal:
+On some systems double clicking may not work and you need to install <b>.deb</b> file using terminal:
 
 <ul>
 	<li>	<p>Open terminal in the directory you saved the  downloaded <b>.deb</b> file. Give command:	</li>
 </ul>
-```bash
+
     sudo dpkg -i ./flowblade-1.10.0-1_all.deb
-```
+
 
 #### OPTIONAL Step 2. Give some additional commands on terminal
 
@@ -23,13 +23,13 @@ You may need to give some additional commands on terminal:
 <ul>
 	<li>Force install all dependencies with command:</li>
 </ul>
-```bash
-	sudo apt-get install -f
-```
+
+    sudo apt-get install -f
+
 
 Release has been install tested on: <b>Ubuntu 16.10</b>, <b>Ubuntu 16.04</b>. <b>Linux Mint 18</b>. It should work on all recent Debian based distributions.
 
-<b>NOTE: Running a KDEnlive PPA on Ubuntu may cause an uncompatible MLT to be installed and prevent Flowblade from running, more <a href="https://plus.google.com/u/0/102624418925189345577/posts/7ANDDW3hzHB?sfc=true">here.</a> Update to MLT 6.4.1 or remove KDEnlive PPA.</b> 
+<i>NOTE: Running a KDEnlive PPA on Ubuntu may cause an uncompatible MLT to be installed and prevent Flowblade from running, more <a href="https://plus.google.com/u/0/102624418925189345577/posts/7ANDDW3hzHB?sfc=true">here.</a> Update to MLT 6.4.1 or remove KDEnlive PPA.</i> 
 
 ### Installing from your OS repository
 
