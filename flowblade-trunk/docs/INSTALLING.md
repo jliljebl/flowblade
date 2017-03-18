@@ -4,7 +4,7 @@
 ### Installing using .deb package
 
 #### Step 1. Download and install .deb 
-**First download .deb file** for Flowblade 1.10 from <a href="https://github.com/jliljebl/flowblade/releases">here.</a>
+**First download .deb file** for Flowblade 1.12 from <a href="https://github.com/jliljebl/flowblade/releases">here.</a>
 
 Double click on <b>.deb</b> file to install it. 
 
@@ -14,7 +14,7 @@ On some systems double clicking may not work (on Ubuntu it has sometimes istalle
 	<li>	<p>Open terminal in the directory you saved the  downloaded <b>.deb</b> file. Give command:	</li>
 </ul>
 ```bash
-sudo dpkg -i ./flowblade-1.10.0-1_all.deb
+    sudo dpkg -i ./flowblade-1.10.0-1_all.deb
 ```
 
 #### OPTIONAL Step 2. Give some additional commands on terminal
@@ -27,7 +27,7 @@ You may need to give some additional commands on terminal:
 	sudo apt-get install -f
 ```
 
-Release has been install tested on: <b>Ubuntu 16.04</b>. <b>Linux Mint 18</b>. It should work on all recent Debian based distributions.
+Release has been install tested on: <b>Ubuntu 16.10</b>, <b>Ubuntu 16.04</b>. <b>Linux Mint 18</b>. It should work on all recent Debian based distributions.
 
 <b>NOTE: Running a KDEnlive PPA on Ubuntu may cause an uncompatible MLT to be installed and prevent Flowblade from running, more <a href="https://plus.google.com/u/0/102624418925189345577/posts/7ANDDW3hzHB?sfc=true">here.</a> Update to MLT 6.4.1 or remove KDEnlive PPA.</b> 
 
