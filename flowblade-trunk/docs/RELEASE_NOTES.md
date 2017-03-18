@@ -15,14 +15,14 @@ Even with this and some redesign related delays we were able to advance the proj
 
 ### Box tool ###
 
-New Box tool is provided to help with the use case of moving a range containing media on multiple tracks to another point in the sequence. This has previously required multiple edit steps to achieve. The Box tool will reduce the number required edit actions.
+New Box tool is provided to help with the use case of moving a range containing media on multiple tracks to another point in the sequence. This has previously required multiple edit steps to achieve. The Box tool will reduce the number of required edit actions.
 
 The main intended use case is probably best explained with a video: https://vimeo.com/207310517
 
 ### Trim tool Ripple mode ###
 
 Every use of Trim tool will cause the edited track to lose sync with other tracks after the trim point. The Ripple mode enables in most cases doing trims while maintaining sync with other tracks. Some points on Trim Ripple mode:
-- Sync is maintained by changing the lengths of the closest blank on other tracks. This might not produce the edit you wish to achieve, in that case you will need to use Trim tool in default mode and do the edit in multiple steps.
+- Sync is maintained by changing the lengths of the closest blanks on other tracks. This might not produce the edit you wish to achieve, in that case you will need to use Trim tool in default mode and do the edit in multiple steps.
 - No overwrites are allowed to happen so the available trim length is constrained by blank lengths on other tracks.
 - This tool is not provided as a separate tool and it is not given a GUI top level representation because it became clear that the resulting multitrack edit can be found confusing by many users
 - The tool can be accessed by toggling the Trim tool mode using 'R' key when timeline has keyboard focus.
@@ -53,10 +53,10 @@ We added a new category 'Developers' in the About dialog for contributors produc
 
 ### AVFilters ###
 MLT 6.2.0 added AVFilters support. Flowblade now offers additional filters if you have MLT > 6.2.0 with AVFilters module installed.
-- *Lut3D* This makes possible to and similar film emulation filters that are available in G'Mic by *.cube* files. 
-- *Zoom/Pan* Similar functionality current "affine" filter but the performance is much better
-- *Color Channels Mixer* This makes possiböle to use color data of one chhel to determine color output of another channel. Basic exmple would be making green shirt blue by using green color data to display blue color.
-- *Perspective* Stech image in way that can enable changing perspective
+- *Lut3D* This makes possible to add similar film emulation filters that are available in G'Mic by using **.cube** files. 
+- *Zoom/Pan* Similar functionality current "Affine" filter but the performance is much better
+- *Color Channels Mixer* This makes possible to use color data of one chanel to determine color output of another channel. Basic exmple would be making green shirt blue by using green color data to display blue color.
+- *Perspective* Strech image in way that can enable changing perspective.
 - *Lens correction AV* Filter that corrects typical lens errors.
 
 
@@ -69,7 +69,7 @@ Hungarian and German translations got updates by Péter Gábor and Mario Dejanov
 ### Future directions ###
 *Move to 2 releases per year instead of 3.* The release overhead and assosiated project slowdown has been getting bigger lately and with container formats possibly added to release requirements it is better to make the development cycles a bit longer to get overall better development throughput. 
 
-*Container formats and Wayland support* These technologies are still beinge developed and adopted. Solutions here are being worked on will be made available when ready.
+*Container formats and Wayland support* These technologies are still being developed and adopted. Solutions here are worked on will be made available when ready.
 
 *Focus areas for next cycle include* continued work on Issue list and Roadmap, Clip Compositors that automatically follow clips even across tracks will be attempted, tool integration hopefully gets a bit of attention, small website update and more tutorial videos will be done.
 
