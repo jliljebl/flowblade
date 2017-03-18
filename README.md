@@ -26,7 +26,7 @@ Flowblade provides powerful tools to mix and filter video and audio.
 
 **Editing:**
 
-  * 3 move tools
+  * 4 move tools
   * 3 trim tools
   * 4 methods to insert / overwrite / append clips on the timeline
   * Drag'n'Drop clips on the timeline
