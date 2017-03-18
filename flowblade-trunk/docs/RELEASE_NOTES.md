@@ -1,9 +1,9 @@
 # Release Notes #
 
 
-## Coming shortly, Flowblade 1.12 ##
+## Flowblade 1.12 ##
 
-Date: March xx, 2016
+Date: March 18, 2016
 
 **Flowblade 1.12** is the fourteenth release of Flowblade.
 
@@ -15,7 +15,7 @@ Even with this and some redesign related delays we were able to advance the proj
 
 ### Box tool ###
 
-New Box tool is provided to help withthe use case of moving a range containing media on multiple tracks to another point in the sequence. This has previously required multiple edit steps to achieve. The Box tool will reduce the number required edit actions.
+New Box tool is provided to help with the use case of moving a range containing media on multiple tracks to another point in the sequence. This has previously required multiple edit steps to achieve. The Box tool will reduce the number required edit actions.
 
 The main intended use case is probably best explained with a video: https://vimeo.com/207310517
 
@@ -71,7 +71,7 @@ Hungarian and German translations got updates by Péter Gábor and Mario Dejanov
 
 *Container formats and Wayland support* These technologies are still beinge developed and adopted. Solutions here are being worked on will be made available when ready.
 
-*Focus areas for next cycle include* continued work on Issue list and Roadmap, Clip Compositors that automatically follow clips even across tracks will be attempted, tool integration hopefully finally gets a bit of attention and small website update would be good too.
+*Focus areas for next cycle include* continued work on Issue list and Roadmap, Clip Compositors that automatically follow clips even across tracks will be attempted, tool integration hopefully gets a bit of attention, small website update and more tutorial videos will be done.
 
 ### Other bugfixes and improvements ###
 - Fix extraraeditors.py translation problems (Péter Gábor)
