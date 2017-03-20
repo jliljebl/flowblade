@@ -316,7 +316,7 @@ class Titler(Gtk.Window):
         buttons_box.pack_start(guiutils.pad_label(15, 5), False, False, 0)
         buttons_box.pack_start(self.color_button, False, False, 0)
         buttons_box.pack_start(guiutils.pad_label(2, 1), False, False, 0)
-        buttons_box.pack_start(self.fill_on, False, False, 0)
+        #buttons_box.pack_start(self.fill_on, False, False, 0)
         buttons_box.pack_start(Gtk.Label(), True, True, 0)
 
         outline_label = Gtk.Label(_("Outline"))
