@@ -27,7 +27,7 @@ Last updated: March. 2017
 ## Tools development
 
 - multispeed reversed clips tool
-- Titler tool improvements: drop shadow with blur color outline.
+- Titler tool improvements: drop shadow with blur, color outline.
 - dedicated masking/keying tool
 
 ## Tool integration
