@@ -727,7 +727,7 @@ class FileResourceProperty(EditableProperty):
 class MultipartKeyFrameProperty(AbstractProperty):
     
     def __init__(self, params):
-        clip, filter_index, property, property_index, args_str = paramsg
+        clip, filter_index, property, property_index, args_str = params
         AbstractProperty.__init__(self, args_str)
         self.name, self.value, self.type = property
         self.clip = clip

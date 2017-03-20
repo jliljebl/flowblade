@@ -934,15 +934,15 @@ class PangoTextLayout:
     
         self.pixel_size = layout.get_pixel_size()
 
-        if True:
-            cr.save()
-            cr.set_source_rgba(0,1,0,1)
-            cr.move_to(x + 5, y + 5)
-            cr.scale(xscale, yscale)
-            cr.rotate(rotation)
-            PangoCairo.update_layout(cr, layout)
-            PangoCairo.show_layout(cr, layout)
-            cr.restore()
+        #if True:
+        #    cr.save()
+        #    cr.set_source_rgba(0,1,0,1)
+        #    cr.move_to(x + 5, y + 5)
+        #    cr.scale(xscale, yscale)
+        #    cr.rotate(rotation)
+        #    PangoCairo.update_layout(cr, layout)
+        #    PangoCairo.show_layout(cr, layout)
+        #    cr.restore()
         
         cr.set_source_rgba(*self.color_rgba)
         cr.move_to(x, y)
@@ -951,10 +951,12 @@ class PangoTextLayout:
         
         PangoCairo.update_layout(cr, layout)
         PangoCairo.show_layout(cr, layout)
+        
         #PangoCairo.layout_path(cr, layout)
         #cr.set_source_rgba(0,1,0,1)
         #cr.set_line_width(5.0)
         #cr.stroke()
+        
         cr.restore()
 
     def _get_pango_alignment_for_layer(self, layer):
