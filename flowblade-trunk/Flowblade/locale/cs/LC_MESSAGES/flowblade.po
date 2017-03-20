@@ -1,13 +1,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Pavel Fric <pavelfric@seznam.cz>, 2013, 2014, 2015, 2016.
+# Pavel Fric <pavelfric@seznam.cz>, 2013, 2014, 2015, 2016, 2017.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-17 17:18+0200\n"
-"PO-Revision-Date: 2016-03-05 13:35+0100\n"
+"POT-Creation-Date: 2017-03-20 09:48+0200\n"
+"PO-Revision-Date: 2017-03-19 20:35+0100\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "Language: cs\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Lokalize 2.0\n"
 "X-Language: cs_CZ\n"
 "X-Source-Language: C\n"
 
@@ -209,7 +209,7 @@ msgstr "' jako složku pro náhledy"
 #: projectaction.py:1023 projectaction.py:1025 projectaction.py:1034
 #: projectaction.py:1042 projectaction.py:1049
 msgid "N/A"
-msgstr ""
+msgstr "NEDOSTUPNÉ"
 
 #: projectaction.py:1038 guicomponents.py:1751
 msgid "Yes"
@@ -313,7 +313,7 @@ msgstr "MLT XML"
 
 #: editorwindow.py:168
 msgid "EDL"
-msgstr ""
+msgstr "EDL"
 
 #: editorwindow.py:169
 msgid "Current Frame"
@@ -353,7 +353,7 @@ msgstr "Vložit filtry"
 
 #: editorwindow.py:178
 msgid "Add Monitor Clip"
-msgstr "Přidat záběr v okně pro sledování"
+msgstr "Přidat náhled záběru"
 
 #: editorwindow.py:179 dialogs.py:1144
 msgid "Append"
@@ -408,14 +408,12 @@ msgid "Timeline"
 msgstr "Časová osa"
 
 #: editorwindow.py:192
-#, fuzzy
 msgid "All Filters Off"
-msgstr "Všechny soubory"
+msgstr "Všechny filtry vypnuty"
 
 #: editorwindow.py:193
-#, fuzzy
 msgid "All Filters On"
-msgstr "Všechny soubory"
+msgstr "Všechny filtry zapnuty"
 
 #: editorwindow.py:194
 msgid "Sync All Compositors"
@@ -618,7 +616,7 @@ msgstr "Časový kód ve středu"
 
 #: editorwindow.py:772
 msgid "Components Centered"
-msgstr ""
+msgstr "Součástky vystředěny"
 
 #: editorwindow.py:786
 msgid "Tabs Position"
@@ -698,7 +696,7 @@ msgstr "Zobrazit nynější sekvenci na časové ose"
 
 #: editorwindow.py:981
 msgid "Display Monitor Clip"
-msgstr "Zobrazit záběr v okně pro sledování"
+msgstr "Zobrazit náhled záběru"
 
 #: clipeffectseditor.py:122
 msgid "Select Filter Group"
@@ -797,9 +795,8 @@ msgid "Tracks"
 msgstr "Skladby"
 
 #: dialogs.py:108 dialogs.py:166
-#, fuzzy
 msgid "Change Project Profile"
-msgstr "Změnit profil projektu..."
+msgstr "Změnit profil projektu"
 
 #: dialogs.py:111 dialogs.py:169
 msgid "Save With Changed Profile"
@@ -839,19 +836,16 @@ msgid "File:"
 msgstr "Soubor:"
 
 #: dialogs.py:178
-#, fuzzy
 msgid "File Best Match Profile:"
-msgstr "Použít výchozí profil:"
+msgstr "Nejlépe se hodící profil k souboru:"
 
 #: dialogs.py:179
-#, fuzzy
 msgid "Project Current Profile:"
-msgstr "Profil projektu:"
+msgstr "Nynější profil projektu:"
 
 #: dialogs.py:205
-#, fuzzy
 msgid "Project will be saved with profile: "
-msgstr "Profil projektu:"
+msgstr "Projekt bude uložen s profilem:"
 
 #: dialogs.py:219
 msgid "Save Project Backup Snapshot"
@@ -939,9 +933,8 @@ msgid "License"
 msgstr "Povolení"
 
 #: dialogs.py:504
-#, fuzzy
 msgid "Developers"
-msgstr "Doba trvání vyvolání"
+msgstr "Vývojáři"
 
 #: dialogs.py:505
 msgid "Translations"
@@ -1045,7 +1038,7 @@ msgstr "Znovu se vytvářejí ikony"
 
 #: dialogs.py:704
 msgid "Update media lengths data"
-msgstr ""
+msgstr "Aktualizovat data o délce záznamu"
 
 #: dialogs.py:743
 msgid "Are you sure you want to delete these media files?"
@@ -1314,7 +1307,7 @@ msgstr "Uložit projekt"
 
 #: dialogs.py:1126 dialogs.py:1142
 msgid "DELETE"
-msgstr ""
+msgstr "SMAZAT"
 
 #: dialogs.py:1126
 msgid "Delete Selected Item"
@@ -1322,7 +1315,7 @@ msgstr "Smazat vybranou položku"
 
 #: dialogs.py:1127
 msgid "ESCAPE"
-msgstr ""
+msgstr "UNIKNOUT"
 
 #: dialogs.py:1127
 msgid "Stop Rendering Audio Levels"
@@ -1381,18 +1374,16 @@ msgid "Set Mark Out"
 msgstr "Nastavit značku pro konec záběru"
 
 #: dialogs.py:1139
-#, fuzzy
 msgid "Alt + I"
-msgstr "Shift+I"
+msgstr "Alt+I"
 
 #: dialogs.py:1139
 msgid "Go To Mark In"
 msgstr "Jít na značku pro začátek záběru"
 
 #: dialogs.py:1140
-#, fuzzy
 msgid "Alt + O"
-msgstr "Shift+O"
+msgstr "Alt+O"
 
 #: dialogs.py:1140
 msgid "Go To Mark Out"
@@ -1407,18 +1398,16 @@ msgid "Add Mark"
 msgstr "Přidat značku"
 
 #: dialogs.py:1147
-#, fuzzy
 msgid "Control + C"
-msgstr "Ctrl+N"
+msgstr "Ctrl+C"
 
 #: dialogs.py:1147
 msgid "Copy Clips"
 msgstr "Kopírovat záběry"
 
 #: dialogs.py:1148
-#, fuzzy
 msgid "Control + V"
-msgstr "Ctrl+N"
+msgstr "Ctrl+V"
 
 #: dialogs.py:1148
 msgid "Paste Clips"
@@ -1426,20 +1415,19 @@ msgstr "Vložit záběry"
 
 #: dialogs.py:1149 dialogs.py:1184
 msgid "R"
-msgstr ""
+msgstr "R"
 
 #: dialogs.py:1149 dialogs.py:1184
 msgid "Trim Tool Ripple Mode On/Off"
-msgstr ""
+msgstr "Režim zkrácení tažením a posunutí nástrojem na ořezávání zapnut/vypnut"
 
 #: dialogs.py:1150
 msgid "S"
-msgstr ""
+msgstr "S"
 
 #: dialogs.py:1150
-#, fuzzy
 msgid "Resync selected Clip or Compositor"
-msgstr "Seřídit znovu vybrané záběry"
+msgstr "Seřídit znovu vybraný záběr nebo skladbu"
 
 #: dialogs.py:1151
 msgid "G"
@@ -1450,48 +1438,44 @@ msgid "Left Arrow "
 msgstr "Šipka vlevo "
 
 #: dialogs.py:1152
-#, fuzzy
 msgid "Prev Frame Trim Edit"
-msgstr "Předchozí snímek"
+msgstr "Ořezat/Upravit předchozí snímek"
 
 #: dialogs.py:1153 dialogs.py:1165 dialogs.py:1189
 msgid "Right Arrow"
 msgstr "Šipka vpravo"
 
 #: dialogs.py:1153
-#, fuzzy
 msgid "Next Frame Trim Edit"
-msgstr "Další snímek"
+msgstr "Ořezat/Upravit další snímek"
 
 #: dialogs.py:1154 dialogs.py:1166
 msgid "Control + Left Arrow "
 msgstr "Ctrl +šipka vlevo"
 
 #: dialogs.py:1154
-#, fuzzy
 msgid "Back 10 Frames Trim Edit"
-msgstr "Posunout zpět o 10 snímků"
+msgstr "Ořezat/Upravit 10 snímků zpět"
 
 #: dialogs.py:1155 dialogs.py:1167
 msgid "Control + Right Arrow"
 msgstr "Ctrl +šipka vpravo"
 
 #: dialogs.py:1155
-#, fuzzy
 msgid "Forward 10 Frames Trim Edit"
-msgstr "Posunout vpřed o  snímků"
+msgstr "Ořezat/Upravit 10 snímků vpřed"
 
 #: dialogs.py:1156
 msgid "ENTER"
-msgstr ""
+msgstr "ENTER"
 
 #: dialogs.py:1156
 msgid "Complete Keyboard Trim Edit"
-msgstr ""
+msgstr "Ořezat/Upravit skončit klávesnici"
 
 #: dialogs.py:1160
 msgid "SPACE"
-msgstr ""
+msgstr "MEZERNÍK"
 
 #: dialogs.py:1160
 msgid "Start / Stop Playback"
@@ -1543,7 +1527,7 @@ msgstr "Předchozí úprava/značka"
 
 #: dialogs.py:1170
 msgid "HOME"
-msgstr ""
+msgstr "Poloha 1"
 
 #: dialogs.py:1170
 msgid "Go To Start"
@@ -1551,12 +1535,11 @@ msgstr "Jít na začátek"
 
 #: dialogs.py:1171
 msgid "END"
-msgstr ""
+msgstr "Poloha 2"
 
 #: dialogs.py:1171
-#, fuzzy
 msgid "Go To End"
-msgstr "Jít na značku pro začátek záběru"
+msgstr "Jít na konec"
 
 #: dialogs.py:1172
 msgid "Shift + I"
@@ -1592,63 +1575,55 @@ msgstr "Posun bodu úprav"
 
 #: dialogs.py:1181 guicomponents.py:2261
 msgid "Slip"
-msgstr "Změna zobrazené oblasti"
+msgstr "Klouzání"
 
 #: dialogs.py:1182 guicomponents.py:2267
 msgid "Spacer"
-msgstr "Rozmístit"
+msgstr "Odstup"
 
 #: dialogs.py:1183 guicomponents.py:2273 translations.py:544
 msgid "Box"
-msgstr ""
+msgstr "Box"
 
 #: dialogs.py:1188
-#, fuzzy
 msgid "Move Source Video Left 1px"
-msgstr "Přesunout zdrojový obrazový záznam doleva"
+msgstr "Posunout zdrojový obrazový záznam o 1 obrazový bod doleva"
 
 #: dialogs.py:1189
-#, fuzzy
 msgid "Move Source Video Right 1px"
-msgstr "Přesunout zdrojový obrazový záznam doprava"
+msgstr "Posunout zdrojový obrazový záznam o 1 obrazový bod doprava"
 
 #: dialogs.py:1190
-#, fuzzy
 msgid "Move Source Video Up 1px"
-msgstr "Přesunout zdrojový obrazový záznam nahoru"
+msgstr "Posunout zdrojový obrazový záznam o 1 obrazový bod nahoru"
 
 #: dialogs.py:1191
-#, fuzzy
 msgid "Move Source Video Down 1px"
-msgstr "Přesunout zdrojový obrazový záznam dolů"
+msgstr "Posunout zdrojový obrazový záznam o 1 obrazový bod dolů"
 
 #: dialogs.py:1192
-#, fuzzy
 msgid "Control + Arrow"
-msgstr "Ctrl +šipka vlevo"
+msgstr "Ctrl+šipka"
 
 #: dialogs.py:1192
-#, fuzzy
 msgid "Move Source Video 10px"
-msgstr "Přesunout zdrojový obrazový záznam nahoru"
+msgstr "Posunout zdrojový obrazový záznam o 10 obrazových bodů"
 
 #: dialogs.py:1193
-#, fuzzy
 msgid "Control + Mouse Drag"
-msgstr "Ctrl+N"
+msgstr "Ctrl+tažení myší"
 
 #: dialogs.py:1193
 msgid "Keep Aspect Ratio in Affine Blend scaling"
-msgstr ""
+msgstr "Zachovat poměr stran ve škálování afinního smíchání"
 
 #: dialogs.py:1194
-#, fuzzy
 msgid "Shift"
-msgstr "Shift+I"
+msgstr "Shift"
 
 #: dialogs.py:1194
 msgid "Snap to X or Y of drag start point"
-msgstr ""
+msgstr "Přichytit k X nebo Y nebo táhnout začáteční bod"
 
 #: dialogs.py:1195
 msgid "Geometry Editor"
@@ -1687,31 +1662,27 @@ msgid "Saving project snapshot"
 msgstr "Ukládá se snímek s projektem"
 
 #: dialogs.py:1356
-#, fuzzy
 msgid "Loaded Media Profile Mismatch"
-msgstr "Cesta k nalezenému souboru záznamu"
+msgstr "Nahraný profil záznamu neodpovídá"
 
 #: dialogs.py:1358
-#, fuzzy
 msgid "Keep Current Profile"
-msgstr "Smazat nynější skupinu"
+msgstr "Zachovat nynější profil"
 
 #: dialogs.py:1359
-#, fuzzy
 msgid "Change To File Profile"
-msgstr "Změnit profil projektu..."
+msgstr "Změnit na profil souboru"
 
 #: dialogs.py:1361
 msgid "A video file was loaded that does not match the Project Profile!"
 msgstr ""
+"Byl nahrán soubor s obrazovým záznamem, který neodpovídá profilu projektu!"
 
 #: dialogs.py:1369
-#, fuzzy
 msgid "File Profile:"
-msgstr "Nový profil"
+msgstr "Profil souboru:"
 
 #: dialogs.py:1370
-#, fuzzy
 msgid "Project Profile:"
 msgstr "Profil projektu:"
 
@@ -1721,6 +1692,9 @@ msgid ""
 "\n"
 "This message is only displayed on first media load for Project."
 msgstr ""
+"Doporučuje se používat odpovídající profil.\n"
+"\n"
+"Tato zpráva je zobrazena pouze při prvním nahrání záznamu pro projekt."
 
 #: editevent.py:226
 msgid "Can't put an audio clip on a video track."
@@ -1820,7 +1794,7 @@ msgstr "Otevřít v editoru filtrů"
 
 #: guicomponents.py:1138 guicomponents.py:1263 guicomponents.py:1577
 msgid "Open in Clip Monitor"
-msgstr "Otevřít v okně pro sledování záběrů"
+msgstr "Otevřít v náhledu záběrů"
 
 #: guicomponents.py:1149
 msgid "Split Audio"
@@ -1880,50 +1854,43 @@ msgstr "Přidat přechod"
 
 #: guicomponents.py:1398
 msgid "Show Match Frame"
-msgstr ""
+msgstr "Ukázat věrný obraz"
 
 #: guicomponents.py:1402
-#, fuzzy
 msgid "First Frame in Monitor"
-msgstr "V okně pro sledování obrazového záznamu není nahrán žádný záběr"
+msgstr "První snímek v okně pro sledování záběrů"
 
 #: guicomponents.py:1407
 msgid "Last Frame in Monitor"
-msgstr ""
+msgstr "Poslední snímek v okně pro sledování záběrů"
 
 #: guicomponents.py:1414
-#, fuzzy
 msgid "First Frame on Timeline"
-msgstr "Vložit vybrané rozsahy do časové osy"
+msgstr "Vložit první snímek do časové osy"
 
 #: guicomponents.py:1419
-#, fuzzy
 msgid "Last Frame on Timeline"
-msgstr "Vložit vybrané rozsahy do časové osy"
+msgstr "Vložit poslední snímek do časové osy"
 
 #: guicomponents.py:1426 guicomponents.py:2222
-#, fuzzy
 msgid "Clear Match Frame"
-msgstr "Smazat značky"
+msgstr "Smazat výběr"
 
 #: guicomponents.py:1436
-#, fuzzy
 msgid "Select"
-msgstr "Výběr barvy"
+msgstr "Vybrat"
 
 #: guicomponents.py:1440
 msgid "All Clips After"
-msgstr ""
+msgstr "Všechny záběry po"
 
 #: guicomponents.py:1445
-#, fuzzy
 msgid "All Clips Before"
-msgstr "Informace o záběru"
+msgstr "Všechny záběry před"
 
 #: guicomponents.py:1455
-#, fuzzy
 msgid "Export To Tool"
-msgstr "Vyvést jako EDL"
+msgstr "Vyvést do nástroje"
 
 #: guicomponents.py:1472
 msgid "Clone Filters"
@@ -2008,18 +1975,16 @@ msgid "Reset Values"
 msgstr "Nastavit hodnoty znovu"
 
 #: guicomponents.py:1612
-#, fuzzy
 msgid "Move Up"
-msgstr "Pohyb 1:"
+msgstr "Posunout nahoru"
 
 #: guicomponents.py:1613
-#, fuzzy
 msgid "Move Down"
-msgstr "Pohyb 1:"
+msgstr "Posunout dolů"
 
 #: guicomponents.py:1621
 msgid "Display In Clip Monitor"
-msgstr "Zobrazit v okně pro sledování záběrů"
+msgstr "Zobrazit v náhledu záběrů"
 
 #: guicomponents.py:1623
 msgid "Toggle Star"
@@ -2079,9 +2044,8 @@ msgid "Progressive:"
 msgstr "Progresivní"
 
 #: guicomponents.py:1963
-#, fuzzy
 msgid "Video:"
-msgstr "Kodek obrazu:"
+msgstr "Obraz:"
 
 #: guicomponents.py:1968
 msgid "Audio:"
@@ -2121,24 +2085,23 @@ msgstr "Zmenšit stopy"
 
 #: guicomponents.py:2081
 msgid "Activate All Tracks"
-msgstr ""
+msgstr "Zapnout všechny stopy"
 
 #: guicomponents.py:2082
 msgid "Activate Only Current Top Active Track"
-msgstr ""
+msgstr "Zapnout pouze nyní činnou stopu"
 
 #: guicomponents.py:2090
-#, fuzzy
 msgid "Display Clip Media Thumbnails"
-msgstr "Zobrazit chybějící soubory záznamů"
+msgstr "Zobrazit náhledy na záznamy se záběry"
 
 #: guicomponents.py:2099
 msgid "Snapping On"
-msgstr ""
+msgstr "Přichytávání zapnuto"
 
 #: guicomponents.py:2106
 msgid "Show Magnet Icon"
-msgstr ""
+msgstr "Ukázat symbol magnetu"
 
 #: guicomponents.py:2115
 msgid "Display All Audio Levels"
@@ -2161,45 +2124,44 @@ msgid "RGB Parade"
 msgstr "Přehlídka RGB"
 
 #: guicomponents.py:2146
-#, fuzzy
 msgid "Overlay Opacity"
-msgstr "Neprůhlednost"
+msgstr "Průhlednost"
 
 #: guicomponents.py:2151
 msgid "100%"
-msgstr ""
+msgstr "100 %"
 
 #: guicomponents.py:2156
 msgid "80%"
-msgstr ""
+msgstr "80 %"
 
 #: guicomponents.py:2161
 msgid "50%"
-msgstr ""
+msgstr "50 %"
 
 #: guicomponents.py:2166
 msgid "20%"
-msgstr ""
+msgstr "20 %"
 
 #: guicomponents.py:2171
 msgid "0%"
-msgstr ""
+msgstr "0 %"
 
 #: guicomponents.py:2191
 msgid "Trim View On"
-msgstr ""
+msgstr "Pohled na oříznutí zapnut"
 
 #: guicomponents.py:2196
 msgid "Trim View Single Side Edits Only"
-msgstr ""
+msgstr "Režim úprav s jedním oknem v pohledu na oříznutí"
 
 #: guicomponents.py:2201
 msgid "Trim View Off"
-msgstr ""
+msgstr "Pohled na oříznutí vypnut"
 
 #: guicomponents.py:2217
 msgid "Set Current Clip Frame Match Frame"
-msgstr ""
+msgstr "Nastavit snímek s nynějším záběrem jako věrný obraz"
 
 #: guicomponents.py:2293
 msgid "All Files"
@@ -2226,34 +2188,28 @@ msgid "Pattern Producers"
 msgstr "Výrobci vzorů"
 
 #: guicomponents.py:2326
-#, fuzzy
 msgid "2 Columns"
-msgstr "Sloupce"
+msgstr "2 sloupce"
 
 #: guicomponents.py:2331
-#, fuzzy
 msgid "3 Columns"
-msgstr "Sloupce"
+msgstr "3 sloupce"
 
 #: guicomponents.py:2336
-#, fuzzy
 msgid "4 Columns"
-msgstr "Sloupce"
+msgstr "4 sloupce"
 
 #: guicomponents.py:2341
-#, fuzzy
 msgid "5 Columns"
-msgstr "Sloupce"
+msgstr "5 sloupců"
 
 #: guicomponents.py:2346
-#, fuzzy
 msgid "6 Columns"
-msgstr "Sloupce"
+msgstr "6 sloupců"
 
 #: guicomponents.py:2351
-#, fuzzy
 msgid "7 Columns"
-msgstr "Sloupce"
+msgstr "7 sloupců"
 
 #: movemodes.py:606
 msgid "Can't do edit on a locked track"
@@ -2393,12 +2349,10 @@ msgid "Audio Sample Rate:"
 msgstr "Vzorkovací kmitočet zvuku:"
 
 #: panels.py:251
-#, fuzzy
 msgid "Best Profile:"
-msgstr "Cílový profil:"
+msgstr "Nejlepší profil:"
 
 #: panels.py:252
-#, fuzzy
 msgid "Matches Project Profile:"
 msgstr "Použít profil projektu:"
 
@@ -2439,7 +2393,6 @@ msgid "Length:"
 msgstr "Délka:"
 
 #: panels.py:361
-#, fuzzy
 msgid "First Clip Out Handle:"
 msgstr "Od úchopu záběru:"
 
@@ -2448,7 +2401,6 @@ msgid " frame(s)"
 msgstr " snímek(y)"
 
 #: panels.py:364
-#, fuzzy
 msgid "Second Clip In Handle:"
 msgstr "Do úchopu záběru:"
 
@@ -2461,9 +2413,8 @@ msgid "Encoding"
 msgstr "Kódování"
 
 #: panels.py:403
-#, fuzzy
 msgid "Media Overlap info"
-msgstr "Znovuspojovač záznamů"
+msgstr "Údaje o překrývání se záznamů"
 
 #: panels.py:411 mlttransitions.py:166
 msgid "Fade In"
@@ -3044,7 +2995,7 @@ msgstr "Křivky"
 
 #: translations.py:240
 msgid "Lift Gain Gamma"
-msgstr "Gama zesílení pozvednutí"
+msgstr "Zvýšit hodnotu gamy"
 
 #: translations.py:241
 msgid "Image Grid"
@@ -3052,7 +3003,7 @@ msgstr "Mřížka obrázku"
 
 #: translations.py:244
 msgid "Color Lift Gain Gamma"
-msgstr ""
+msgstr "Zvýšit hodnotu barvy gamy"
 
 #: translations.py:250 translations.py:433
 msgid "Position"
@@ -3678,7 +3629,7 @@ msgstr "Tvrdý"
 
 #: translations.py:469
 msgid "Selection subspace"
-msgstr ""
+msgstr "Podprostor výběru"
 
 #: translations.py:470
 msgid "R/A/Hue"
@@ -3761,9 +3712,8 @@ msgid "Source on Left"
 msgstr "Zdroj nalevo"
 
 #: translations.py:493
-#, fuzzy
 msgid "Channel"
-msgstr "Prohození kanálů"
+msgstr "Kanál"
 
 #: translations.py:494
 msgid "Input black level"
@@ -3854,13 +3804,12 @@ msgid "Color Temperature"
 msgstr "Teplota barvy"
 
 #: translations.py:522
-#, fuzzy
 msgid "Select .cube file"
-msgstr "Vybrat soubor se svítivostí"
+msgstr "Vybrat soubor .cube (luma)"
 
 #: translations.py:530 translations.py:534
 msgid "Wipe Type"
-msgstr "Typ stírání"
+msgstr "Typ papíru (stírání)"
 
 #: translations.py:532 translations.py:536
 msgid "Softness"
@@ -4295,9 +4244,8 @@ msgid "Luma File:"
 msgstr "Soubor se svítivostí:"
 
 #: propertyeditorbuilder.py:471
-#, fuzzy
 msgid "Select File"
-msgstr "Vybrat složku"
+msgstr "Vybrat soubor"
 
 #: propertyeditorbuilder.py:508 propertyeditorbuilder.py:603
 msgid "Nothing"
@@ -4372,27 +4320,22 @@ msgstr ""
 "Rozdělit záběr (stříhat) - X"
 
 #: middlebar.py:138
-#, fuzzy
 msgid ""
 "Splice Out - Delete\n"
 "Lift\n"
 "Delete Range"
 msgstr ""
-"Smazat záběr a spojit předcházející záběr s následujícím - Delete\n"
-"Vyzvednout záběr\n"
-"Seřídit znovu vybrané\n"
-"Seřídit znovu vybrané záběry"
+"Smazat záběr - Delete\n"
+"Vyzvednout\n"
+"Smazat rozsah"
 
 #: middlebar.py:143
-#, fuzzy
 msgid ""
 "Resync Selected\n"
 "Split Audio"
 msgstr ""
-"Smazat záběr a spojit předcházející záběr s následujícím - Delete\n"
-"Vyzvednout záběr\n"
 "Seřídit znovu vybrané\n"
-"Seřídit znovu vybrané záběry"
+"Rozdělit zvuk"
 
 #: middlebar.py:150
 msgid ""
@@ -4801,12 +4744,11 @@ msgstr "Nahrát argumenty pro zpracování z textového souboru"
 
 #: rendergui.py:777
 msgid "Edit Args:"
-msgstr ""
+msgstr "Upravit argumenty:"
 
 #: rendergui.py:907
-#, fuzzy
 msgid "Set Args"
-msgstr "Argumenty pro zpracování"
+msgstr "Nastavit argumenty"
 
 #: profilesmanager.py:47 proxyediting.py:218
 msgid "Close Manager"
@@ -4929,9 +4871,8 @@ msgid "Editing"
 msgstr "Úpravy"
 
 #: preferenceswindow.py:59
-#, fuzzy
 msgid "Performance"
-msgstr "Rezonance"
+msgstr "Výkon"
 
 #: preferenceswindow.py:81
 msgid "Restart required for some setting changes to take effect."
@@ -4960,15 +4901,15 @@ msgstr "5 min"
 
 #: preferenceswindow.py:124
 msgid "Absolute paths first, relative second"
-msgstr ""
+msgstr "Nejprve absolutní cesty, pak relativní"
 
 #: preferenceswindow.py:125
 msgid "Relative paths first, absolute second"
-msgstr ""
+msgstr "Nejprve relativní cesty, pak absolutní"
 
 #: preferenceswindow.py:126
 msgid "Absolute paths only"
-msgstr ""
+msgstr "Pouze absolutní cesty"
 
 #: preferenceswindow.py:130
 msgid "Default Profile:"
@@ -5012,24 +4953,23 @@ msgstr "Vložit vždy"
 
 #: preferenceswindow.py:199
 msgid "Zoom, Control to Scroll Horizontal"
-msgstr ""
+msgstr "Zvětšení, Ctrl pro vodorovný posun"
 
 #: preferenceswindow.py:200
 msgid "Scroll Horizontal, Control to Zoom"
-msgstr ""
+msgstr "Posunovat vodorovně, Ctrl pro zvětšení"
 
 #: preferenceswindow.py:211
 msgid "Autoplay new Clips in Clip Monitor"
-msgstr "Nové záběry přehrát automaticky ve sledování záběrů"
+msgstr "Nové záběry přehrát automaticky v náhledu záběrů"
 
 #: preferenceswindow.py:212
 msgid "Center Current Frame on Playback Stop"
 msgstr "Vystředit nynější snímek při zastavení přehrávání"
 
 #: preferenceswindow.py:213
-#, fuzzy
 msgid "Center Current Frame after Up/Down Arrow"
-msgstr "Vystředit nynější snímek při zastavení přehrávání"
+msgstr "Vystředit nynější snímek po šipce nahoru/dolů"
 
 #: preferenceswindow.py:214
 msgid "Graphics default length:"
@@ -5045,7 +4985,7 @@ msgstr "Rychlé vstoupení do režimu ořezávání"
 
 #: preferenceswindow.py:217
 msgid "Remember Monitor Clip Frame"
-msgstr "Zapamatovat si snímek záběru v okně pro sledování"
+msgstr "Zapamatovat si snímek náhledu záběru"
 
 #: preferenceswindow.py:218
 msgid "Media drag'n'drop action on non-V1 tracks"
@@ -5057,31 +4997,31 @@ msgstr "Zakrýt záběry s přechody/prolínáním při smazání, je-li to mož
 
 #: preferenceswindow.py:221
 msgid "Enable single Play/Pause button"
-msgstr ""
+msgstr "Povolit jednoduché tlačítko Přehrát/Pozastavit"
 
 #: preferenceswindow.py:222
 msgid "Mouse Middle Button Scroll Action"
-msgstr ""
+msgstr "Činnost posunování pomocí prostředního tlačítka myši"
 
 #: preferenceswindow.py:223
 msgid "Hide file extensions when importing Clips"
-msgstr ""
+msgstr "Skrýt při zavádění záběrů souborové přípony"
 
 #: preferenceswindow.py:263
 msgid "Glass"
-msgstr "Skleněná"
+msgstr "Skleněný"
 
 #: preferenceswindow.py:264
 msgid "Simple"
-msgstr "Jednoduchá"
+msgstr "Jednoduchý"
 
 #: preferenceswindow.py:271
 msgid "Light Theme"
-msgstr "Světlý motiv"
+msgstr "Světlý vzhled"
 
 #: preferenceswindow.py:272
 msgid "Dark Theme"
-msgstr "Tmavý motiv"
+msgstr "Tmavý vzhled"
 
 #: preferenceswindow.py:284
 msgid "Display All Levels"
@@ -5093,16 +5033,15 @@ msgstr "Zobrazit úrovně na požádání"
 
 #: preferenceswindow.py:292
 msgid "Single Window"
-msgstr ""
+msgstr "Jedno okno"
 
 #: preferenceswindow.py:293
 msgid "Two Windows"
-msgstr ""
+msgstr "Dvě okna"
 
 #: preferenceswindow.py:300
-#, fuzzy
 msgid "Application window mode:"
-msgstr "Program"
+msgstr "Okenní režim programu:"
 
 #: preferenceswindow.py:301
 msgid "Use English texts on localized OS"
@@ -5117,39 +5056,37 @@ msgid "Buttons style:"
 msgstr "Styl tlačítek:"
 
 #: preferenceswindow.py:304
-#, fuzzy
 msgid "Theme request, icons and colors:"
-msgstr "Záložná barvy při selhání rozpoznání motivu:"
+msgstr "Požadavek na vzhled, ikony a barvy:"
 
 #: preferenceswindow.py:305
 msgid "Theme detection fail fallback colors:"
-msgstr "Záložná barvy při selhání rozpoznání motivu:"
+msgstr "Záložní barvy při selhání rozpoznání vzhledu:"
 
 #: preferenceswindow.py:306
 msgid "Default audio levels display:"
 msgstr "Výchozí zobrazení úrovní hlasitosti:"
 
 #: preferenceswindow.py:308
-#, fuzzy
 msgid "Show Full File names"
-msgstr "Ukázat úplné cesty"
+msgstr "Ukázat úplné názvy souborů"
 
 #: preferenceswindow.py:347
 msgid "Between 1 and the number of CPU Cores"
-msgstr ""
+msgstr "Mezi 1 a počtem procesorových jader"
 
 #: preferenceswindow.py:348
 msgid "Allow Frame Dropping for real-time rendering, when needed"
 msgstr ""
+"Povolit zahazování snímků pro vykreslování ve skutečném čase, když je potřeba"
 
 #: preferenceswindow.py:351
-#, fuzzy
 msgid "Render Threads:"
-msgstr "Zpracování započato:"
+msgstr "Vlákna zpracování:"
 
 #: preferenceswindow.py:352
 msgid "Allow Frame Dropping"
-msgstr ""
+msgstr "Povolit zahazování snímků"
 
 #: tools/batchrendering.py:298
 msgid "Render Item Project File Copy failed!"
@@ -5512,9 +5449,8 @@ msgstr ""
 "časové osy, aby se tato úprava provedla."
 
 #: tlineaction.py:482
-#, fuzzy
 msgid "Origin clip not found!"
-msgstr "G'Mic nenalezen!"
+msgstr "Původní záběr nenalezen!"
 
 #: tlineaction.py:483
 msgid ""
@@ -5534,51 +5470,49 @@ msgid ""
 "clips!\n"
 "\n"
 msgstr ""
+"Pro vytvoření vykresleného přechodu potřebujete dostatečné překrytí záznamů "
+"u obou záběrů!\n"
+"\n"
 
 #: tlineaction.py:753
 msgid "<b>FIRST CLIP MEDIA OVERLAP:</b>  "
-msgstr ""
+msgstr "<b>PŘEKRYTÍ ZÁZNAMU PRVNÍHO ZÁBĚRU:</b>  "
 
 #: tlineaction.py:754 tlineaction.py:762
-#, fuzzy
 msgid "Available <b>"
-msgstr "<b>Dostupné: </b> "
+msgstr "Dostupné <b>"
 
 #: tlineaction.py:754 tlineaction.py:762
-#, fuzzy
 msgid "</b> frame(s), "
-msgstr " snímek(y),"
+msgstr "</b> snímek(y),"
 
 #: tlineaction.py:755 tlineaction.py:763
-#, fuzzy
 msgid "Required <b>"
-msgstr "<b>Požadováno: </b> "
+msgstr "Požadováno </b> "
 
 #: tlineaction.py:755
-#, fuzzy
 msgid "</b> frame(s)"
-msgstr " snímek(y)"
+msgstr "</b> snímek(y)"
 
 #: tlineaction.py:761
 msgid "<b>SECOND CLIP MEDIA OVERLAP:</b> "
-msgstr ""
+msgstr "<b>PŘEKRYTÍ ZÁZNAMU DRUHÉHO ZÁBĚRU:</b>  "
 
 #: tlineaction.py:763
-#, fuzzy
 msgid "</b> frame(s) "
-msgstr " snímek(y)"
+msgstr "</b> snímek(y) "
 
 #: tlineaction.py:770
 msgid "Current situation, not enought media overlap:"
-msgstr ""
+msgstr "Nynější situace, nedostatečné překrývání se záznamů:"
 
 #: tlineaction.py:772
 msgid "You need more media overlap:"
-msgstr ""
+msgstr "Je potřeba větší překrývání se záznamů:"
 
 #: tlineaction.py:801
 msgid "More media overlap needed to create transition!"
-msgstr ""
+msgstr "Pro vytvoření přechodu je potřeba větší překrývání se záznamů!"
 
 #: tlineaction.py:820
 msgid "Only Video Track mix / fades available"
@@ -5628,9 +5562,7 @@ msgstr ""
 
 #: tlineaction.py:932
 msgid "Defined range in Monitor Clip is too short"
-msgstr ""
-"Stanovený rozsah záběru v okně pro sledování obrazového záznamu je příliš "
-"krátký"
+msgstr "Stanovený rozsah záběru v náhledu záběru je příliš krátký"
 
 #: tlineaction.py:933
 msgid ""
@@ -5933,13 +5865,16 @@ msgstr "Použít výchozí profil:"
 
 #: monitorevent.py:301
 msgid "On some systems Trim View may update slowly"
-msgstr ""
+msgstr "Na některých systémech se pohled na oříznutí může aktualizovat pomalu"
 
 #: monitorevent.py:302
 msgid ""
 "<b>Trim View</b> works best with SSDs and relatively powerful processors.\n"
 "\n"
 msgstr ""
+"<b>Pohled na oříznutí</b> pracuje nejlépe s SSD a poměrně silnými "
+"procesory.\n"
+"\n"
 
 #: monitorevent.py:303
 msgid ""
@@ -5947,6 +5882,9 @@ msgid ""
 "options\n"
 "if performance is not satisfactory."
 msgstr ""
+"Vyberte volby <b>Pohled na oříznutí vypnut</b> nebo<b>Režim úprav s jedním "
+"oknem v pohledu na oříznutí</b\n"
+"pokud není výkon uspokojivý."
 
 #, fuzzy
 #~ msgid "Overwrite / Box"
