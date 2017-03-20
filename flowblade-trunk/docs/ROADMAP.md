@@ -1,11 +1,7 @@
 # FLOWBLADE ROADMAP
 
-Last updated: Dec. 2016
+Last updated: March. 2017
 
-## Timeline Tools
-
-- **Sequence or Box Move Tool** Moves all clips contained in selected range or as defined by box selection as one group from multiple tracks. This will be the only multitrack edit tool available in Flowblade.
-- **Ripple mode for trim tool** Moves all clips and compositors after trim point as long as no overwrites happen. This is *mode* for Trim tool and is to be toggled on and off.
 
 ## Animation
 - MLT keyframe types *bezier* and *step* to be made available in addition to current linear type keyframes for all keyframe editors
@@ -15,7 +11,6 @@ Last updated: Dec. 2016
 - **Track filters stack** for both video and audio tracks.
 
 ## Filters
-- **AVFilters** These are availaBLe in MLT 6.2.0. Color Channels Mixer and 3dLUT are the most interesting filters available
 - Contribute **Cairo filters for MLT**. Spotligt, animated producer, animated overlay filter, animated alpha and affine transform filter seem most interesting. Frei0r is not an adequate platform for some of these.
 - **Selective Filter Application**, this function allows user to apply any filter only inside an area defined by alpha filters. This can currently be simulated with two clips. Requires MLT contribution.
 
