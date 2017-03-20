@@ -22,7 +22,7 @@ Last updated: March. 2017
 
 ## Multiclip functonality
 - create Compound clips from selections and full sequences
-- make possible to combinen sequences with insett and append functions
+- make possible to combinen sequences with insert and append functions
 
 ## Tools development
 
