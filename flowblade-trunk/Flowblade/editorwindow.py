@@ -207,6 +207,7 @@ class EditorWindow:
             ('CreateBarsClip', None, _('EBU Bars'), None, None, lambda a:patternproducer.create_bars_clip()),
             ('CreateIsingClip', None, _('Ising'), None, None, lambda a:patternproducer.create_icing_clip()),
             ('CreateColorPulseClip', None, _('Color Pulse'), None, None, lambda a:patternproducer.create_color_pulse_clip()),
+            ('ImportProjectMedia', None, _('Import Media From Project...'), None, None, lambda a:projectaction.import_project_media()),
             ('LogClipRange', None, _('Log Marked Clip Range'), '<control>L', None, lambda a:medialog.log_range_clicked()),
             ('RecreateMediaIcons', None, _('Recreate Media Icons...'), None, None, lambda a:menuactions.recreate_media_file_icons()),
             ('RemoveUnusedMedia', None, _('Remove Unused Media...'), None, None, lambda a:projectaction.remove_unused_media()),
@@ -299,6 +300,8 @@ class EditorWindow:
                 <menu action='ProjectMenu'>
                     <menuitem action='AddMediaClip'/>
                     <menuitem action='AddImageSequence'/>
+                    <separator/>
+                    <menuitem action='ImportProjectMedia'/>
                     <separator/>
                     <menuitem action='CreateColorClip'/>
                     <menu action='PatternProducersMenu'>

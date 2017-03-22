@@ -63,6 +63,7 @@ import mltprofiles
 import persistance
 import projectdata
 import projectinfogui
+import projectmediaimport
 import propertyparse
 import proxyediting
 import render
@@ -249,7 +250,6 @@ class UpdateMediaLengthsThread(threading.Thread):
         Gdk.threads_leave()
 
         for key, media_file in PROJECT().media_files.iteritems():
-            print media_file.name
             if media_file.type == appconsts.VIDEO or media_file.type == appconsts.IMAGE_SEQUENCE:
                 Gdk.threads_enter()
                 dialog.info.set_text(media_file.name)
@@ -1091,6 +1091,21 @@ def columns_count_launch_pressed(widget, event):
 def _columns_count_item_selected(w, data):
     gui.editor_window.media_list_view.columns_changed(data)
  
+def import_project_media():
+    dialogs.load_project_dialog(_media_import_project_select_dialog_callback, None, _("Select Project for Media Import"))
+    
+def _media_import_project_select_dialog_callback(dialog, response_id):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        filenames = dialog.get_filenames()
+        dialog.destroy()
+        projectmediaimport.import_media_files(filenames[0], _media_import_data_ready)
+    else:
+        dialog.destroy()
+
+def _media_import_data_ready():
+    files_list = projectmediaimport.get_imported_media()
+    open_file_names(files_list)
+
 # ------------------------------------ bins
 def add_new_bin():
     """
