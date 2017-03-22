@@ -37,6 +37,7 @@ import clipeffectseditor
 import clipmenuaction
 import compositeeditor
 import dialogs
+import dialogutils
 import dnd
 import editevent
 import editorpersistance
@@ -760,6 +761,28 @@ class EditorWindow:
         sep = Gtk.SeparatorMenuItem()
         menu.append(sep)
 
+        windows_menu_item = Gtk.MenuItem(_("Window Mode").encode('utf-8'))
+        windows_menu =  Gtk.Menu()
+        one_window = Gtk.RadioMenuItem()
+        one_window.set_label( _("Single Window").encode('utf-8'))
+
+        windows_menu.append(one_window)
+        
+        two_windows = Gtk.RadioMenuItem.new_with_label([one_window], _("Two Windows").encode('utf-8'))
+
+
+        if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+            one_window.set_active(True)
+        else:
+            two_windows.set_active(True)
+
+        one_window.connect("activate", lambda w: self._change_windows_preference(w, appconsts.SINGLE_WINDOW))
+        two_windows.connect("activate", lambda w: self._change_windows_preference(w, appconsts.TWO_WINDOWS))
+        
+        windows_menu.append(two_windows)
+        windows_menu_item.set_submenu(windows_menu)
+        menu.append(windows_menu_item)
+        
         mb_menu_item = Gtk.MenuItem(_("Middlebar Layout").encode('utf-8'))
         mb_menu = Gtk.Menu()
         tc_left = Gtk.RadioMenuItem()
@@ -864,6 +887,18 @@ class EditorWindow:
         else:
             self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
 
+    def _change_windows_preference(self, widget, new_window_layout):
+        if widget.get_active() == False:
+            return
+
+        editorpersistance.prefs.global_layout = new_window_layout
+        editorpersistance.save()
+        
+        primary_txt = _("Global Window Mode changed")
+        secondary_txt = _("Application restart required for the new layout choice to take effect.")
+        
+        dialogutils.info_message(primary_txt, secondary_txt, self.window)
+        
     def _show_tabs_up(self, widget):
         if widget.get_active() == False:
             return
