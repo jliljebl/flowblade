@@ -1419,10 +1419,12 @@ def combine_sequences_dialog(callback):
     action_select.set_active(0)
 
     seq_select = Gtk.ComboBoxText()
+    selectable_seqs = []
     for seq in editorstate.PROJECT().sequences:
         if seq != editorstate.current_sequence():
             seq_select.append_text(seq.name)
-
+            selectable_seqs.append(seq)
+            
     seq_select.set_active(0)
 
     row1 = Gtk.HBox(False, 2)
@@ -1441,6 +1443,6 @@ def combine_sequences_dialog(callback):
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, action_select, seq_select )
+    dialog.connect('response', callback, action_select, seq_select, selectable_seqs)
     dialog.show_all()
     

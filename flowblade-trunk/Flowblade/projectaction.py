@@ -50,6 +50,7 @@ import dialogutils
 import gui
 import guicomponents
 import guiutils
+import edit
 import editevent
 import editorstate
 from editorstate import current_sequence
@@ -1349,14 +1350,79 @@ def _change_track_count_dialog_callback(dialog, response_id, tracks_select):
 def combine_sequences():
     dialogs.combine_sequences_dialog(_combine_sequences_dialog_callback)
 
-def _combine_sequences_dialog_callback(dialog, response_id, action_select, seq_select):
+def _combine_sequences_dialog_callback(dialog, response_id, action_select, seq_select, selectable_seqs):
     if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
         return
     
+    action = action_select.get_active()
+    seq = selectable_seqs[seq_select.get_active()]
+    
     dialog.destroy()
-    print "hhhhh"
+    
+    if action == 0:
+        _append_sequence(seq)
+    else:
+        _insert_sequencece(seq)
 
+def _append_sequence(import_seq):
+    
+    print "Append"
+    start_track_range, end_track_range = _get_sequence_import_range(import_seq)
+    
+    tracks_off = current_sequence().first_video_index - import_seq.first_video_index
+    
+    # Justify end
+    for i in range(start_track_range, end_track_range):
+        track = current_sequence().tracks[i]
+        
+        # Add pad blank
+        blank_length = current_sequence().get_length() - track.get_length()
+        if blank_length > 0:
+            edit._insert_blank(track, len(track.clips), blank_length)
+
+    # Copy clips
+    for i in range(start_track_range, end_track_range):
+        track = current_sequence().tracks[i]
+        
+        import_track = import_seq.tracks[i + tracks_off]
+        insert_start_index = len(track.clips)
+        for j in range(0, len(import_track.clips)):
+            import_clip = import_track.clips[j]
+            if import_clip.is_blanck_clip != True:
+                import_clip_clone = current_sequence().create_clone_clip(import_clip)
+                edit.append_clip(track, import_clip_clone, import_clip_clone.clip_in, import_clip_clone.clip_out)
+            else:
+                edit._insert_blank(track, insert_start_index + j, import_clip.clip_out - import_clip.clip_in + 1)
+        
+    # Remove unneeded blanks
+    for i in range(start_track_range, end_track_range):
+        track = current_sequence().tracks[i]
+        if len(track.clips) == 1:
+            if track.clips[0].is_blanck_clip == True:
+                edit._remove_clip(track, 0)
+
+    updater.repaint_tline()
+
+def _insert_sequence(seq):
+    pass
+
+def _get_sequence_import_range(import_seq):
+    # Compute corresponding tracks, import sequence may have less audio and/or video tracks
+    first_video_off = current_sequence().first_video_index - import_seq.first_video_index
+    if first_video_off > 0:
+        start_track_range = 1 + first_video_off # import_seq has less audio tracks
+    else:
+        start_track_range = 1
+    
+    video_tracks_count_diff = (len(current_sequence().tracks) - current_sequence().first_video_index) - (len(import_seq.tracks) - import_seq.first_video_index)
+    if video_tracks_count_diff > 0:
+        end_track_range = len(current_sequence().tracks) - 1 - video_tracks_count_diff
+    else:
+        end_track_range = len(current_sequence().tracks) - 1
+
+    return (start_track_range, end_track_range)
+    
 # --------------------------------------------------------- pop-up menus
 def media_file_menu_item_selected(widget, data):
     item_id, media_file, event = data
