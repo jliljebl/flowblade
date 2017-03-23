@@ -1390,3 +1390,57 @@ def not_matching_media_info_dialog(project, media_file, callback):
     _default_behaviour(dialog)
     dialog.connect('response', callback, media_file)
     dialog.show_all()
+    
+    
+def combine_sequences_dialog(callback):
+    
+    if len(editorstate.PROJECT().sequences) < 2:
+        primary_txt = _("Cannot import sequence!")
+        secondary_txt = _("There are no other sequences in the Project.")
+        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        return
+    
+    dialog = Gtk.Dialog(_("Import Sequence"),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                         _("Import").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+    
+    info_text = _("<b>Please note:</b>\n") + \
+                u"\u2022" + _(" It is recommended that you save Project before completing this operation\n") + \
+                u"\u2022" + _(" There is no Undo for this operation\n") + \
+                u"\u2022" + _(" Current Undo Stack will be destroyed\n")
+    info_label = Gtk.Label(label=info_text)
+    info_label.set_use_markup(True)
+    info_box = guiutils.get_left_justified_box([info_label])
+    
+    action_select = Gtk.ComboBoxText()
+    action_select.append_text(_("Append Sequence"))
+    action_select.append_text(_("Insert Sequence at Playhead position"))
+    action_select.set_active(0)
+
+    seq_select = Gtk.ComboBoxText()
+    for seq in editorstate.PROJECT().sequences:
+        if seq != editorstate.current_sequence():
+            seq_select.append_text(seq.name)
+
+    seq_select.set_active(0)
+
+    row1 = Gtk.HBox(False, 2)
+    row1.pack_start(Gtk.Label(_("Action:")), False, False, 0)
+    row1.pack_start(action_select, False, False, 0)
+    row1.pack_start(guiutils.pad_label(12,2), False, False, 0)
+    row1.pack_start(Gtk.Label(_("Import:")), False, False, 0)
+    row1.pack_start(seq_select, False, False, 0)
+
+    panel = Gtk.VBox(False, 2)
+    panel.pack_start(info_box, False, False, 0)
+    panel.pack_start(row1, False, False, 0)
+    
+    alignment = dialogutils.get_default_alignment(panel)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, action_select, seq_select )
+    dialog.show_all()
+    

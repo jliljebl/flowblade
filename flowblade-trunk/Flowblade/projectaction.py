@@ -1346,6 +1346,17 @@ def _change_track_count_dialog_callback(dialog, response_id, tracks_select):
     PROJECT().sequences.pop(cur_seq_index + 1)
     app.change_current_sequence(cur_seq_index)
 
+def combine_sequences():
+    dialogs.combine_sequences_dialog(_combine_sequences_dialog_callback)
+
+def _combine_sequences_dialog_callback(dialog, response_id, action_select, seq_select):
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+    
+    dialog.destroy()
+    print "hhhhh"
+
 # --------------------------------------------------------- pop-up menus
 def media_file_menu_item_selected(widget, data):
     item_id, media_file, event = data
