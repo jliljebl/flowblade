@@ -98,13 +98,17 @@ def check_available_features(repo):
 def render_profile_supported(frmt, vcodec, acodec):
     if environment_detection_success == False:
         return (True, "")
-
+        
     if acodec in acodecs or acodec == None: # some encoding options do not specify audio codecs
         if vcodec in vcodecs or vcodec == None: # some encoding options do not specify video codecs
             if frmt in formats or frmt == None: # some encoding options do not specify formats
                 return (True, "")
+            elif frmt == "mkv" and "matroska" in formats:
+                # "matroska" format means that "mkv" files can created
+                return (True, "")
             else:
                 err_msg = "format " + frmt
+                print err_msg
         else:
             err_msg = "video codec " + vcodec
     else:

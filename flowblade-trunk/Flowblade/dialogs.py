@@ -411,7 +411,7 @@ def about_dialog(parent_window):
     flow_label = Gtk.Label(label="Flowblade Movie Editor")
     ver_label = Gtk.Label(label="1.12.0")
     janne_label = Gtk.Label(label="Copyright 2016 Janne Liljeblad and contributors")
-    page_label = Gtk.Label(label="Project page: https://github.com/jliljebl/flowblade")
+    page_label = Gtk.Label(label=_("Project page:") + " " + "https://github.com/jliljebl/flowblade")
     flow_label.modify_font(Pango.FontDescription("sans bold 14"))
     janne_label.modify_font(Pango.FontDescription("sans 8"))
     page_label.modify_font(Pango.FontDescription("sans 8"))
@@ -430,10 +430,10 @@ def about_dialog(parent_window):
     alignment =  dialogutils.get_default_alignment(vbox)
     alignment.set_size_request(450, 370)
 
-    up_label = Gtk.Label(label="Upstream:")
+    up_label = Gtk.Label(label=_("Upstream:"))
     up_projs = Gtk.Label(label="MLT")
     up_projs2 = Gtk.Label("FFMpeg, Frei0r, LADSPA, Cairo, Gnome, Linux")
-    tools_label = Gtk.Label(label="Tools:")
+    tools_label = Gtk.Label(label=_("Tools:"))
     tools_list = Gtk.Label("Geany, Inkscape, Gimp, ack-grep")
 
     up_label.modify_font(Pango.FontDescription("sans bold 12"))
@@ -457,17 +457,17 @@ def about_dialog(parent_window):
     alignment3 = dialogutils.get_default_alignment(license_view)
     alignment3.set_size_request(450, 370)
 
-    lead_label = Gtk.Label(label="Lead Developer:")
+    lead_label = Gtk.Label(label=_("Lead Developer:"))
     lead_label.modify_font(Pango.FontDescription("sans bold 12"))
     lead_info = Gtk.Label(label="Janne Liljeblad")
-    developers_label = Gtk.Label("Developers:")
+    developers_label = Gtk.Label(_("Developers:"))
     developers_label.modify_font(Pango.FontDescription("sans bold 12"))
 
     devs_file = open(respaths.DEVELOPERS_DOC)
     devs_text = devs_file.read()
     devs_info = Gtk.Label(label=devs_text)
 
-    contributos_label = Gtk.Label(label="Contributors:")
+    contributos_label = Gtk.Label(label=_("Contributors:"))
     contributos_label.modify_font(Pango.FontDescription("sans bold 12"))
     
     contributors_file = open(respaths.CONTRIBUTORS_DOC)
@@ -1390,3 +1390,59 @@ def not_matching_media_info_dialog(project, media_file, callback):
     _default_behaviour(dialog)
     dialog.connect('response', callback, media_file)
     dialog.show_all()
+    
+    
+def combine_sequences_dialog(callback):
+    
+    if len(editorstate.PROJECT().sequences) < 2:
+        primary_txt = _("Cannot import sequence!")
+        secondary_txt = _("There are no other sequences in the Project.")
+        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        return
+    
+    dialog = Gtk.Dialog(_("Import Sequence"),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                         _("Import").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+    
+    info_text = _("<b>Please note:</b>\n") + \
+                u"\u2022" + _(" It is recommended that you save Project before completing this operation\n") + \
+                u"\u2022" + _(" There is no Undo for this operation\n") + \
+                u"\u2022" + _(" Current Undo Stack will be destroyed\n")
+    info_label = Gtk.Label(label=info_text)
+    info_label.set_use_markup(True)
+    info_box = guiutils.get_left_justified_box([info_label])
+    
+    action_select = Gtk.ComboBoxText()
+    action_select.append_text(_("Append Sequence"))
+    action_select.append_text(_("Insert Sequence at Playhead position"))
+    action_select.set_active(0)
+
+    seq_select = Gtk.ComboBoxText()
+    selectable_seqs = []
+    for seq in editorstate.PROJECT().sequences:
+        if seq != editorstate.current_sequence():
+            seq_select.append_text(seq.name)
+            selectable_seqs.append(seq)
+            
+    seq_select.set_active(0)
+
+    row1 = Gtk.HBox(False, 2)
+    row1.pack_start(Gtk.Label(_("Action:")), False, False, 0)
+    row1.pack_start(action_select, False, False, 0)
+    row1.pack_start(guiutils.pad_label(12,2), False, False, 0)
+    row1.pack_start(Gtk.Label(_("Import:")), False, False, 0)
+    row1.pack_start(seq_select, False, False, 0)
+
+    panel = Gtk.VBox(False, 2)
+    panel.pack_start(info_box, False, False, 0)
+    panel.pack_start(row1, False, False, 0)
+    
+    alignment = dialogutils.get_default_alignment(panel)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, action_select, seq_select, selectable_seqs)
+    dialog.show_all()
+    

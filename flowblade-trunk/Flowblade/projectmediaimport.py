@@ -177,6 +177,7 @@ def _create_info_dialog():
 
 # ----------------------------------------------------------- main
 def main(root_path, filename):
+    # This the main for launched process, this is reached via 'flowblademediaimport' laucher file
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
     print "GTK+ version:", gtk_version
     editorstate.gtk_version = gtk_version
