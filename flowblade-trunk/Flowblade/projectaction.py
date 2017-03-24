@@ -68,6 +68,7 @@ import projectmediaimport
 import propertyparse
 import proxyediting
 import render
+import renderconsumer
 import rendergui
 import sequence
 import undo
@@ -77,6 +78,8 @@ import utils
 
 save_time = None
 save_icon_remove_event_id = None
+
+#_xml_render_player = None
 
 #--------------------------------------- worker threads
 class LoadThread(threading.Thread):
@@ -1108,6 +1111,53 @@ def _media_import_data_ready():
     files_list = projectmediaimport.get_imported_media()
     open_file_names(files_list)
 
+
+
+
+def create_selection_compound_clip():
+    if movemodes.selected_track == -1:
+        # info woindow no clips selected?
+        return
+
+    dialogs.export_xml_compound_clip_dialog(_do_create_selection_compound_clip, "twesss.xml", _("Save selection Compound Clip XML"))
+
+
+def _do_create_selection_compound_clip(dialog, response_id):
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+
+    filenames = dialog.get_filenames()
+    dialog.destroy()
+
+
+    track = current_sequence().tracks[movemodes.selected_track]
+    
+    clips = []
+    for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1): # + 1 == to_index inclusive
+        clips.append(current_sequence().create_clone_clip(track.clips[i]))
+        
+    # Create tractor
+    tractor = mlt.Tractor()
+    multitrack = tractor.multitrack()
+    track0 = mlt.Playlist()
+    multitrack.connect(track0, 0)
+    for i in range(0, len(clips)):
+        clip = clips[i]
+        track0.append(clip, clip.clip_in, clip.clip_out)
+
+    render_player = renderconsumer.XMLCompoundRenderPlayer(filenames[0], _xml_compound_render_done_callback, tractor)
+    render_player.start()
+
+def _xml_compound_render_done_callback(filename):
+    print filename
+    add_media_thread = AddMediaFilesThread([filename])
+    add_media_thread.start()
+
+def create_sequence_compound_clip():
+    pass
+
+        
 # ------------------------------------ bins
 def add_new_bin():
     """

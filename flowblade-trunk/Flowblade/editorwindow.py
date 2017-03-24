@@ -208,6 +208,9 @@ class EditorWindow:
             ('CreateBarsClip', None, _('EBU Bars'), None, None, lambda a:patternproducer.create_bars_clip()),
             ('CreateIsingClip', None, _('Ising'), None, None, lambda a:patternproducer.create_icing_clip()),
             ('CreateColorPulseClip', None, _('Color Pulse'), None, None, lambda a:patternproducer.create_color_pulse_clip()),
+            ('CompoundClipsMenu', None, _('Create Compound Clip')),
+            ('CreateSelectionCompound', None, _('Selection'), None, None, lambda a:projectaction.create_selection_compound_clip()),
+            ('CreateSequenceCompound', None, _('Sequence'), None, None, lambda a:projectaction.create_sequence_compound_clip()),
             ('ImportProjectMedia', None, _('Import Media From Project...'), None, None, lambda a:projectaction.import_project_media()),
             ('CombineSequences', None, _('Import Sequence...'), None, None, lambda a:projectaction.combine_sequences()),
             ('LogClipRange', None, _('Log Marked Clip Range'), '<control>L', None, lambda a:medialog.log_range_clicked()),
@@ -309,6 +312,10 @@ class EditorWindow:
                         <menuitem action='CreateColorPulseClip'/>
                         <menuitem action='CreateIsingClip'/>
                         <menuitem action='CreateBarsClip'/>    
+                    </menu>
+                    <menu action='CompoundClipsMenu'>
+                        <menuitem action='CreateSelectionCompound'/>
+                        <menuitem action='CreateSequenceCompound'/>  
                     </menu>
                     <separator/>
                     <menuitem action='ImportProjectMedia'/>

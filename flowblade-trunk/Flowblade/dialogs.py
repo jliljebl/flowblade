@@ -310,6 +310,19 @@ def _export_file_name_dialog(callback, project_name, dialog_title):
     dialog.connect('response', callback)
     dialog.show()
 
+def export_xml_compound_clip_dialog(callback, default_name, dialog_title):
+    dialog = Gtk.FileChooserDialog(dialog_title,  gui.editor_window.window,
+                                   Gtk.FileChooserAction.SAVE,
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                                   _("Create").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+    dialog.set_action(Gtk.FileChooserAction.SAVE)
+    dialog.set_current_name(default_name)
+    dialog.set_do_overwrite_confirmation(True)
+
+    dialog.set_select_multiple(False)
+    dialog.connect('response', callback)
+    dialog.show()
+    
 def save_env_data_dialog(callback):
     dialog = Gtk.FileChooserDialog(_("Save Runtime Environment Data"),  gui.editor_window.window,
                                    Gtk.FileChooserAction.SAVE,
