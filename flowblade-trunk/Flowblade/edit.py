@@ -368,7 +368,7 @@ class EditAction:
         if do_gui_update:
             self._update_gui()
 
-    def _update_gui(self):
+    def _update_gui(self): # This copied  with small modifications into projectaction.py for sequence imports, update there too if needed...yeah.
         updater.update_tline_scrollbar() # Slider needs to adjust to possily new program length.
                                          # This REPAINTS TIMELINE as a side effect.
         if self.clear_effects_editor_for_multitrack_edit == False:

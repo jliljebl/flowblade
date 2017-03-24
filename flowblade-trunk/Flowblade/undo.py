@@ -45,7 +45,10 @@ save_item = None
 undo_item = None 
 redo_item = None
 
-
+def clear_undos():
+    global undo_stack, index
+    undo_stack = []
+    index = 0
 
 def set_post_undo_redo_callback(undo_redo_callback):
     global set_post_undo_redo_edit_mode
@@ -90,7 +93,6 @@ def do_redo_and_repaint(widget=None, data=None):
     
 def do_undo():
     global index
-    
     if index == 0:
         return
     

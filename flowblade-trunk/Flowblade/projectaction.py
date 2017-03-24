@@ -70,6 +70,7 @@ import proxyediting
 import render
 import rendergui
 import sequence
+import undo
 import updater
 import utils
 
@@ -1366,11 +1367,10 @@ def _combine_sequences_dialog_callback(dialog, response_id, action_select, seq_s
         _insert_sequencece(seq)
 
 def _append_sequence(import_seq):
-    
-    print "Append"
     start_track_range, end_track_range = _get_sequence_import_range(import_seq)
     
     tracks_off = current_sequence().first_video_index - import_seq.first_video_index
+    orig_length = current_sequence().get_length()
     
     # Justify end
     for i in range(start_track_range, end_track_range):
@@ -1394,13 +1394,27 @@ def _append_sequence(import_seq):
                 edit.append_clip(track, import_clip_clone, import_clip_clone.clip_in, import_clip_clone.clip_out)
             else:
                 edit._insert_blank(track, insert_start_index + j, import_clip.clip_out - import_clip.clip_in + 1)
-        
+
+    # Import compositors
+    for import_compositor in import_seq.compositors:
+        if import_compositor.transition.b_track + tracks_off < len(current_sequence().tracks) - 1:
+            clone_compositor = current_sequence()._create_and_plant_clone_compositor_for_sequnce_clone(import_compositor, tracks_off)
+            clone_compositor.move(orig_length)
+            current_sequence().compositors.append(clone_compositor)
+    current_sequence().restack_compositors()
+
     # Remove unneeded blanks
     for i in range(start_track_range, end_track_range):
         track = current_sequence().tracks[i]
         if len(track.clips) == 1:
             if track.clips[0].is_blanck_clip == True:
                 edit._remove_clip(track, 0)
+    # This method just needs some class to save data for undo which we are not using
+    edit._consolidate_all_blanks_redo(utils.EmptyClass)
+    
+    _update_gui_after_sequence_import()
+
+    undo.clear_undos()
 
     updater.repaint_tline()
 
@@ -1422,7 +1436,18 @@ def _get_sequence_import_range(import_seq):
         end_track_range = len(current_sequence().tracks) - 1
 
     return (start_track_range, end_track_range)
-    
+
+def _update_gui_after_sequence_import(): # This copied  with small modifications into projectaction.py for sequence imports, update there too if needed...yeah.
+    updater.update_tline_scrollbar() # Slider needs to adjust to possily new program length.
+                                     # This REPAINTS TIMELINE as a side effect.
+    updater.clear_kf_editor()
+
+    current_sequence().update_edit_tracks_length() # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
+    current_sequence().update_trim_hack_blank_length() # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
+    editorstate.PLAYER().display_inside_sequence_length(current_sequence().seq_len) # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
+
+    updater. update_seqence_info_text()
+        
 # --------------------------------------------------------- pop-up menus
 def media_file_menu_item_selected(widget, data):
     item_id, media_file, event = data

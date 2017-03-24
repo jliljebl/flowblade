@@ -537,6 +537,8 @@ def init_editor_state():
 
     proxyediting.set_menu_to_proxy_state()
 
+    undo.clear_undos()
+
     # Enable edit action GUI updates
     edit.do_gui_update = True
 
