@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-24 08:08+0100\n"
-"PO-Revision-Date: 2017-03-24 08:36+0100\n"
+"POT-Creation-Date: 2017-03-24 08:40+0100\n"
+"PO-Revision-Date: 2017-03-24 08:40+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
 "Language: hu-HU\n"
@@ -952,15 +952,11 @@ msgstr "' kilépés előtt?"
 
 #: dialogs.py:373 dialogs.py:395
 msgid "Don't Save"
-msgstr "Nem kell menteni"
+msgstr "Nincs mentés"
 
 #: dialogs.py:388
 msgid "' before closing project?"
 msgstr "' a projekt bezárása előtt?"
-
-#: dialogs.py:413
-msgid "and contributors"
-msgstr "és a közreműködők"
 
 #: dialogs.py:414
 msgid "Project page:"
@@ -5994,6 +5990,9 @@ msgstr ""
 "Válassza a <b>Vágás nézete kikapcsolva</b> vagy a <b>Vágás nézete egysávos "
 "szerkesztés esetén</b> lehetőséget\n"
 "ha a teljesítmény nem megfelelő."
+
+#~ msgid "and contributors"
+#~ msgstr "és a közreműködők"
 
 #, fuzzy
 #~ msgid "MLT"
