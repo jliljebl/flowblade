@@ -411,7 +411,7 @@ def about_dialog(parent_window):
     flow_label = Gtk.Label(label="Flowblade Movie Editor")
     ver_label = Gtk.Label(label="1.12.0")
     janne_label = Gtk.Label(label="Copyright 2016 Janne Liljeblad and contributors")
-    page_label = Gtk.Label(label="Project page: https://github.com/jliljebl/flowblade")
+    page_label = Gtk.Label(label=_("Project page:") + " " + "https://github.com/jliljebl/flowblade")
     flow_label.modify_font(Pango.FontDescription("sans bold 14"))
     janne_label.modify_font(Pango.FontDescription("sans 8"))
     page_label.modify_font(Pango.FontDescription("sans 8"))
@@ -430,10 +430,10 @@ def about_dialog(parent_window):
     alignment =  dialogutils.get_default_alignment(vbox)
     alignment.set_size_request(450, 370)
 
-    up_label = Gtk.Label(label="Upstream:")
+    up_label = Gtk.Label(label=_("Upstream:"))
     up_projs = Gtk.Label(label="MLT")
     up_projs2 = Gtk.Label("FFMpeg, Frei0r, LADSPA, Cairo, Gnome, Linux")
-    tools_label = Gtk.Label(label="Tools:")
+    tools_label = Gtk.Label(label=_("Tools:"))
     tools_list = Gtk.Label("Geany, Inkscape, Gimp, ack-grep")
 
     up_label.modify_font(Pango.FontDescription("sans bold 12"))
@@ -457,17 +457,17 @@ def about_dialog(parent_window):
     alignment3 = dialogutils.get_default_alignment(license_view)
     alignment3.set_size_request(450, 370)
 
-    lead_label = Gtk.Label(label="Lead Developer:")
+    lead_label = Gtk.Label(label=_("Lead Developer:"))
     lead_label.modify_font(Pango.FontDescription("sans bold 12"))
     lead_info = Gtk.Label(label="Janne Liljeblad")
-    developers_label = Gtk.Label("Developers:")
+    developers_label = Gtk.Label(_("Developers:"))
     developers_label.modify_font(Pango.FontDescription("sans bold 12"))
 
     devs_file = open(respaths.DEVELOPERS_DOC)
     devs_text = devs_file.read()
     devs_info = Gtk.Label(label=devs_text)
 
-    contributos_label = Gtk.Label(label="Contributors:")
+    contributos_label = Gtk.Label(label=_("Contributors:"))
     contributos_label.modify_font(Pango.FontDescription("sans bold 12"))
     
     contributors_file = open(respaths.CONTRIBUTORS_DOC)
