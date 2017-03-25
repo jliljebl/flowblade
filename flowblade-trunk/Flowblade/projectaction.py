@@ -1111,9 +1111,6 @@ def _media_import_data_ready():
     files_list = projectmediaimport.get_imported_media()
     open_file_names(files_list)
 
-
-
-
 def create_selection_compound_clip():
     if movemodes.selected_track == -1:
         # info window no clips selected?
@@ -1131,7 +1128,6 @@ def _do_create_selection_compound_clip(dialog, response_id):
 
     filenames = dialog.get_filenames()
     dialog.destroy()
-
 
     track = current_sequence().tracks[movemodes.selected_track]
     
@@ -1152,12 +1148,24 @@ def _do_create_selection_compound_clip(dialog, response_id):
     render_player.start()
 
 def _xml_compound_render_done_callback(filename):
-    print filename
     add_media_thread = AddMediaFilesThread([filename])
     add_media_thread.start()
 
 def create_sequence_compound_clip():
-    pass
+    # lets's just set something unique-ish 
+    default_name = _("sequence_") + _get_compound_clip_default_name_date_str() + ".xml"
+    dialogs.export_xml_compound_clip_dialog(_do_create_sequence_compound_clip, default_name, _("Save selection Compound Clip XML"))
+
+def _do_create_sequence_compound_clip(dialog, response_id):
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+
+    filenames = dialog.get_filenames()
+    dialog.destroy()
+
+    render_player = renderconsumer.XMLRenderPlayer(filenames[0], _xml_compound_render_done_callback, filenames[0])
+    render_player.start()
 
 def _get_compound_clip_default_name_date_str():
     return str(datetime.date.today()) + "_" + time.strftime("%H%M%S")
