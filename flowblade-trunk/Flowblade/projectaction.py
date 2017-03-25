@@ -1116,10 +1116,12 @@ def _media_import_data_ready():
 
 def create_selection_compound_clip():
     if movemodes.selected_track == -1:
-        # info woindow no clips selected?
+        # info window no clips selected?
         return
 
-    dialogs.export_xml_compound_clip_dialog(_do_create_selection_compound_clip, "twesss.xml", _("Save selection Compound Clip XML"))
+    # lets's just set something unique-ish 
+    default_name = _("selection_") + _get_compound_clip_default_name_date_str() + ".xml"
+    dialogs.export_xml_compound_clip_dialog(_do_create_selection_compound_clip, default_name, _("Save selection Compound Clip XML"))
 
 
 def _do_create_selection_compound_clip(dialog, response_id):
@@ -1157,7 +1159,10 @@ def _xml_compound_render_done_callback(filename):
 def create_sequence_compound_clip():
     pass
 
-        
+def _get_compound_clip_default_name_date_str():
+    return str(datetime.date.today()) + "_" + time.strftime("%H%M%S")
+
+
 # ------------------------------------ bins
 def add_new_bin():
     """
