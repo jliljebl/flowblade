@@ -189,6 +189,7 @@ def get_media_source_file_filter(include_audio=True):
     f.add_mime_type("video/annodex")
     f.add_mime_type("video/3gpp")
     f.add_mime_type("video/webm")
+    f.add_mime_type("text/xml")
     
     if include_audio == True:
         f.add_mime_type("audio/aac")
@@ -532,6 +533,7 @@ _video_file_extensions = [  "avi",
                             "m2ts",
                             "m2v",
                             "m4e",
+                            "mlt",
                             "mjpg",
                             "mp4v",
                             "mts",
@@ -560,7 +562,8 @@ _video_file_extensions = [  "avi",
                             "wmv",
                             "xvid",
                             "y4m",
-                            "yuv"]
+                            "yuv",
+                            "xml"]
                             
                             
 def start_timing(msg="start timing"):
