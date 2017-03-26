@@ -1584,6 +1584,8 @@ def media_file_menu_item_selected(widget, data):
         updater.set_and_display_monitor_media_file(media_file)
     if item_id == "Render Slow/Fast Motion File":
         render.render_frame_buffer_clip(media_file)
+    if item_id == "Render Reverse Motion File":
+        render.render_reverse_clip(media_file)
     if item_id == "Rename":
         display_media_file_rename_dialog(media_file)
     if item_id == "Delete":

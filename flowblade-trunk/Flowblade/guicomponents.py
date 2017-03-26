@@ -1582,6 +1582,8 @@ def display_media_file_popup_menu(media_file, callback, event):
         _add_separetor(media_file_menu)
         if media_file.type != appconsts.IMAGE_SEQUENCE:
             media_file_menu.add(_get_menu_item(_("Render Slow/Fast Motion File"), callback, ("Render Slow/Fast Motion File", media_file, event)))
+        if media_file.type != appconsts.IMAGE_SEQUENCE:
+            media_file_menu.add(_get_menu_item(_("Render Reverse Motion File"), callback, ("Render Reverse Motion File", media_file, event)))
     if media_file.type == appconsts.VIDEO or media_file.type == appconsts.IMAGE_SEQUENCE:
         item = _get_menu_item(_("Render Proxy File"), callback, ("Render Proxy File", media_file, event))
         media_file_menu.add(item)
