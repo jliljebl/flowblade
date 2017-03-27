@@ -38,7 +38,8 @@ def init():
         _tools.append(NatronIntegrator())
         
     _tools.append(SlowMoIntegrator())
-        
+    _tools.append(ReverseIntegrator())
+    
 def get_export_integrators():
     export_integrators = []
     for tool_integrator in _tools:
@@ -108,4 +109,15 @@ class SlowMoIntegrator(ToolIntegrator):
         media_file.mark_in = clip.clip_in
         media_file.mark_out = clip.clip_out
         render.render_frame_buffer_clip(media_file, True)
-                
+
+class ReverseIntegrator(ToolIntegrator):
+    
+    def __init__(self):
+        ToolIntegrator.__init__(self, _("Reverse"), [appconsts.VIDEO], True)
+        
+    def do_export(self):
+        clip, track = self.data
+        media_file = PROJECT().get_media_file_for_path(clip.path)
+        media_file.mark_in = clip.clip_in
+        media_file.mark_out = clip.clip_out
+        render.render_reverse_clip(media_file, True)

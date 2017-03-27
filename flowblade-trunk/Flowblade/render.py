@@ -411,8 +411,8 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
         wait_for_producer_stop = True
         if range_selection == 1:
             start_frame = int(float(media_file.mark_in) * (1.0 / speed))
-            end_frame = int(float(media_file.mark_out + 1) * (1.0 / speed)) + int(1.0 / speed) #+ 40 # I'm unable to get this frame perfect.
-                                                                                                    # +40 is to make sure rendering stops after mark out.
+            end_frame = int(float(media_file.mark_out + 1) * (1.0 / speed)) + int(1.0 / speed)
+            
             if end_frame > motion_producer.get_length() - 1:
                 end_frame = motion_producer.get_length() - 1
             
@@ -487,10 +487,7 @@ def _render_reverse_clip_dialog_callback(dialog, response_id, fb_widgets, media_
         if media_file.is_proxy_file == True:
             source_path = media_file.second_file_path
 
-        #fr_path = "framebuffer:" + source_path + "?" + str(speed)
-        #twarp_path = "timewarp:-1:" + source_path 
-        motion_producer = mlt.Producer(profile, None, str("timewarp:-1.0:" + source_path))
-        #motion_producer.set("resource", str("-1.0:" + source_path ))
+        motion_producer = mlt.Producer(profile, None, str("timewarp:" + str(speed) + ":" + str(source_path)))
         mltrefhold.hold_ref(motion_producer)
         
         # Create sequence and add motion producer into it
@@ -508,11 +505,13 @@ def _render_reverse_clip_dialog_callback(dialog, response_id, fb_widgets, media_
         end_frame = motion_producer.get_length() - 1
         wait_for_producer_stop = True
         if range_selection == 1:
-            start_frame = int(float(media_file.mark_in) * (1.0 / speed))
-            end_frame = int(float(media_file.mark_out + 1) * (1.0 / speed)) + int(1.0 / speed) #+ 40 # I'm unable to get this frame perfect.
-                                                                                                    # +40 is to make sure rendering stops after mark out.
+            start_frame = int(float(media_file.length - media_file.mark_out - 1) * (1.0 / -speed))
+            end_frame = int(float(media_file.length - media_file.mark_out + (media_file.mark_out - media_file.mark_in) + 1) * (1.0 / -speed)) + int(1.0 / -speed)
+
             if end_frame > motion_producer.get_length() - 1:
                 end_frame = motion_producer.get_length() - 1
+            if start_frame < 0:
+                start_frame = 0
             
             wait_for_producer_stop = False # consumer wont stop automatically and needs to stopped explicitly
 
@@ -522,7 +521,7 @@ def _render_reverse_clip_dialog_callback(dialog, response_id, fb_widgets, media_
         motion_renderer.wait_for_producer_end_stop = wait_for_producer_stop
         motion_renderer.start()
 
-        title = _("Rendering Motion Clip")
+        title = _("Rendering Reverse Clip")
         text = "<b>Motion Clip File: </b>" + write_file
         progress_bar = Gtk.ProgressBar()
         dialog = rendergui.clip_render_progress_dialog(_FB_render_stop, title, text, progress_bar, gui.editor_window.window)
