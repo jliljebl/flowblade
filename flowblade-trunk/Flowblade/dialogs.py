@@ -310,7 +310,7 @@ def _export_file_name_dialog(callback, project_name, dialog_title):
     dialog.connect('response', callback)
     dialog.show()
 
-def export_xml_compound_clip_dialog(callback, default_name, dialog_title):
+def export_xml_compound_clip_dialog(callback, default_name, dialog_title, data=None):
     dialog = Gtk.FileChooserDialog(dialog_title,  gui.editor_window.window,
                                    Gtk.FileChooserAction.SAVE,
                                    (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
@@ -320,7 +320,10 @@ def export_xml_compound_clip_dialog(callback, default_name, dialog_title):
     dialog.set_do_overwrite_confirmation(True)
 
     dialog.set_select_multiple(False)
-    dialog.connect('response', callback)
+    if data == None:
+        dialog.connect('response', callback)
+    else:
+        dialog.connect('response', callback, data)
     dialog.show()
     
 def save_env_data_dialog(callback):

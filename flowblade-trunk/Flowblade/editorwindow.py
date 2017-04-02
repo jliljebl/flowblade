@@ -31,6 +31,7 @@ from gi.repository import Pango
 import app
 import appconsts
 import audiomonitoring
+import audiosync
 import batchrendering
 import boxmove
 import clipeffectseditor
@@ -211,6 +212,9 @@ class EditorWindow:
             ('CompoundClipsMenu', None, _('Create Compound Clip')),
             ('CreateSelectionCompound', None, _('Selection'), None, None, lambda a:projectaction.create_selection_compound_clip()),
             ('CreateSequenceCompound', None, _('Sequence'), None, None, lambda a:projectaction.create_sequence_compound_clip()),
+            ('MediaAudioSyncMenu', None, _('Media Audio Sync')),
+            ('AudioSyncGroup', None, _('Create Audio Sync Group'), None, None, lambda a:audiosync.create_audio_sync_group()),
+            ('AudioSyncCompoundClip', None, _('Create Audio Sync Merge Clip'), None, None, lambda a:audiosync.create_audio_sync_compound_clip()),
             ('ImportProjectMedia', None, _('Import Media From Project...'), None, None, lambda a:projectaction.import_project_media()),
             ('CombineSequences', None, _('Import Sequence...'), None, None, lambda a:projectaction.combine_sequences()),
             ('LogClipRange', None, _('Log Marked Clip Range'), '<control>L', None, lambda a:medialog.log_range_clicked()),
@@ -316,6 +320,10 @@ class EditorWindow:
                     <menu action='CompoundClipsMenu'>
                         <menuitem action='CreateSelectionCompound'/>
                         <menuitem action='CreateSequenceCompound'/>  
+                    </menu>
+                    <menu action='MediaAudioSyncMenu'>
+                        <menuitem action='AudioSyncGroup'/>  
+                        <menuitem action='AudioSyncCompoundClip'/>
                     </menu>
                     <separator/>
                     <menuitem action='ImportProjectMedia'/>

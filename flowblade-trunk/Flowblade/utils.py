@@ -30,6 +30,7 @@ import md5
 import os
 import re
 import threading
+import xml.dom.minidom
 
 import appconsts
 import editorstate
@@ -357,12 +358,17 @@ def get_unique_name_for_audio_levels_file(media_file_path, profile):
     return file_name
     
 def get_hidden_user_dir_path():
+    """ 
+    this is nit for now, reactiva if flatpack snadboxing is tried.
+    
     if editorstate.use_xdg:
         return os.path.join( 
                             os.getenv("XDG_CONFIG_HOME", os.path.join(os.getenv("HOME"),".config")),
                             "flowblade/")
     else:
-        return os.getenv("HOME") + "/.flowblade/"
+    """
+    
+    return os.getenv("HOME") + "/.flowblade/"
 
 def get_phantom_disk_cache_folder():
     return get_hidden_user_dir_path() +  appconsts.NODE_COMPOSITORS_DIR + "/" + appconsts.PHANTOM_DISK_CACHE_DIR
@@ -428,8 +434,36 @@ def get_file_producer_info(file_producer):
     info["progressive"] = frame.get_int("meta.media.progressive") == 1
     info["top_field_first"] = frame.get_int("meta.media.top_field_first") == 1
     
+    #try:
+    resource = clip.get("resource")
+    print "resource", resource
+    name, ext = os.path.splitext(resource)
+    ext = ext.lstrip(".")
+    ext = ext.lower()
+    if ext == "xml" or ext =="mlt":
+        update_xml_file_producer_info(resource, info)
+    #except:
+        #print "getting file resource dailed in utils.get_file_producer_info()"
+        
     return info
 
+def update_xml_file_producer_info(resource, info):
+    # xml and mlt files require reading xml file to determine producer info
+    mlt_doc = xml.dom.minidom.parse(resource)
+
+    print "adasdasd..."
+    mlt_node = mlt_doc.getElementsByTagName("mlt").item(0)
+    profile_node = mlt_node.getElementsByTagName("profile").item(0)
+
+    info["width"] = int(profile_node.getAttribute("width"))
+    info["height"] = int(profile_node.getAttribute("height"))
+    info["fps_num"] = float(profile_node.getAttribute("frame_rate_num"))
+    info["fps_den"] = float(profile_node.getAttribute("frame_rate_den"))
+    info["progressive"] = int(profile_node.getAttribute("progressive"))
+    
+    print info
+    #  <profile description="HD 720p 29.97 fps" width="1280" height="720" progressive="1" sample_aspect_num="1" sample_aspect_den="1" display_aspect_num="16" display_aspect_den="9" frame_rate_num="30000" frame_rate_den="1001" colorspace="0"/>
+    
 def is_media_file(file_path):
     file_type = get_file_type(file_path)
     if file_type == "unknown":

@@ -124,6 +124,7 @@ def save_project(project, file_path, changed_profile_desc=None):
     global _fps_conv_mult
     _fps_conv_mult = 1.0
     if changed_profile_desc != None:
+        print mltprofiles.get_profile(changed_profile_desc), mltprofiles.get_profile(s_proj.profile_desc), s_proj.profile_desc
         _fps_conv_mult = mltprofiles.get_profile(changed_profile_desc).fps() / mltprofiles.get_profile(s_proj.profile_desc).fps()
         s_proj.profile_desc = changed_profile_desc
         print "Saving changed profile project: ", changed_profile_desc
