@@ -109,7 +109,7 @@ class Project:
         media_object.length = length
         media_object.name = name
 
-    def add_media_file(self, file_path):
+    def add_media_file(self, file_path, compound_clip_name=None):
         """
         Adds media file to project if exists and file is of right type.
         """
@@ -131,6 +131,11 @@ class Project:
         clip_name = file_name
         if editorpersistance.prefs.hide_file_ext == True:
             clip_name = name
+        
+        # Media objects from compound clips need this to display to users instead of md5 hash.
+        # Underlying reason, XML clip creation overwrites existing profile objects property values, https://github.com/mltframework/mlt/issues/212
+        if compound_clip_name != None:
+            clip_name = compound_clip_name
 
         # Create media file object
         media_object = MediaFile(self.next_media_file_id, file_path, 

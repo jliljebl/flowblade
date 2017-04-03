@@ -504,8 +504,9 @@ class XMLRenderPlayer(threading.Thread):
 
 
 class XMLCompoundRenderPlayer(threading.Thread):
-    def __init__(self, file_name, callback, tractor):
+    def __init__(self, file_name, media_name, callback, tractor):
         self.file_name = file_name
+        self.media_name = media_name
         self.render_done_callback = callback
         self.tractor = tractor
 
@@ -519,7 +520,6 @@ class XMLCompoundRenderPlayer(threading.Thread):
         # Wait until producer is at start
         while tractor.frame() != 0:
             time.sleep(0.1)
-
 
         # Get render consumer
         xml_consumer = mlt.Consumer(PROJECT().profile, "xml", str(self.file_name))
@@ -536,7 +536,7 @@ class XMLCompoundRenderPlayer(threading.Thread):
     
         print "XML compound clip render done"
 
-        self.render_done_callback(self.file_name)
+        self.render_done_callback(self.file_name, self.media_name)
 
 
 class ProgressWindowThread(threading.Thread):

@@ -186,10 +186,11 @@ class LoadThread(threading.Thread):
 
 class AddMediaFilesThread(threading.Thread):
     
-    def __init__(self, filenames):
+    def __init__(self, filenames, compound_clip_name=None):
         threading.Thread.__init__(self)
         self.filenames = filenames
-
+        self.compound_clip_name = compound_clip_name # Compound clips saved in hidden folder need this name displayed to user, not the md5 hash.
+                                                     # Underlying reason, XML clip creation overwrites existing profile objects property values, https://github.com/mltframework/mlt/issues/212
     def run(self): 
         Gdk.threads_enter()
         watch = Gdk.Cursor.new(Gdk.CursorType.WATCH)
@@ -206,7 +207,7 @@ class AddMediaFilesThread(threading.Thread):
                 duplicates.append(file_name)
             else:
                 try:
-                    PROJECT().add_media_file(new_file)
+                    PROJECT().add_media_file(new_file, self.compound_clip_name)
                     succes_new_file = new_file
                 except projectdata.ProducerNotValidError as err:
                     print err.__str__()
@@ -218,7 +219,7 @@ class AddMediaFilesThread(threading.Thread):
             gui.editor_window.media_scroll_window.get_vadjustment().set_value(max_val)
             Gdk.threads_leave()
 
-        if succes_new_file != None:
+        if succes_new_file != None and self.compound_clip_name == None: # hidden rendered files folder for compound clips is not a last_opened_media_dir
             editorpersistance.prefs.last_opened_media_dir = os.path.dirname(succes_new_file)
             editorpersistance.save()
 
@@ -1124,18 +1125,23 @@ def create_selection_compound_clip():
         return
 
     # lets's just set something unique-ish 
-    default_name = _("selection_") + _get_compound_clip_default_name_date_str() + ".xml"
-    dialogs.export_xml_compound_clip_dialog(_do_create_selection_compound_clip, default_name, _("Save selection Compound Clip XML"))
+    default_name = _("selection_") + _get_compound_clip_default_name_date_str()
+    dialogs.compound_clip_name_dialog(_do_create_selection_compound_clip, default_name, _("Save Selection Compound Clip"))
 
 
-def _do_create_selection_compound_clip(dialog, response_id):
+def _do_create_selection_compound_clip(dialog, response_id, name_entry):
     if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
         return
 
-    filenames = dialog.get_filenames()
-    dialog.destroy()
+    media_name = name_entry.get_text()
+    
+    folder = editorpersistance.prefs.render_folder
+    uuid_str = md5.new(str(os.urandom(32))).hexdigest()
+    write_file = folder + "/"+ uuid_str + ".xml"
 
+    dialog.destroy()
+    
     track = current_sequence().tracks[movemodes.selected_track]
     
     clips = []
@@ -1151,27 +1157,31 @@ def _do_create_selection_compound_clip(dialog, response_id):
         clip = clips[i]
         track0.append(clip, clip.clip_in, clip.clip_out)
 
-    render_player = renderconsumer.XMLCompoundRenderPlayer(filenames[0], _xml_compound_render_done_callback, tractor)
+    render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, _xml_compound_render_done_callback, tractor)
     render_player.start()
 
-def _xml_compound_render_done_callback(filename):
-    add_media_thread = AddMediaFilesThread([filename])
+def _xml_compound_render_done_callback(filename, media_name):
+    add_media_thread = AddMediaFilesThread([filename], media_name)
     add_media_thread.start()
 
 def create_sequence_compound_clip():
     # lets's just set something unique-ish 
     default_name = _("sequence_") + _get_compound_clip_default_name_date_str() + ".xml"
-    dialogs.export_xml_compound_clip_dialog(_do_create_sequence_compound_clip, default_name, _("Save selection Compound Clip XML"))
+    dialogs.compound_clip_name_dialog(_do_create_sequence_compound_clip, default_name, _("Save Sequence Compound Clip"))
 
-def _do_create_sequence_compound_clip(dialog, response_id):
+def _do_create_sequence_compound_clip(dialog, response_id, name_entry):
     if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
         return
 
-    filenames = dialog.get_filenames()
+    filename = name_entry.get_text()
+    folder = editorpersistance.prefs.render_folder
+    #file_name = md5.new(str(os.urandom(32))).hexdigest()
+    write_file = folder + "/"+ filename + ".xml"
+
     dialog.destroy()
 
-    render_player = renderconsumer.XMLRenderPlayer(filenames[0], _xml_compound_render_done_callback, filenames[0])
+    render_player = renderconsumer.XMLRenderPlayer(write_file, _xml_compound_render_done_callback, write_file)
     render_player.start()
 
 def _get_compound_clip_default_name_date_str():

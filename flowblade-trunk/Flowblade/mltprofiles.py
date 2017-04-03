@@ -184,10 +184,7 @@ def get_closest_matching_profile_index(producer_info):
             current_match_score = match_score
             current_match_index = i
 
-        print  i, "d:", profile.description(), "\tn:", name, match_score
-
     if current_match_index == -1:
-        print "kkadkadskadskadskadskadskadskads"
         return get_default_profile_index()
     
     print "current_match_index:", current_match_index
