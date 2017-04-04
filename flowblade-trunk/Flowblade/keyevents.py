@@ -275,7 +275,18 @@ def _handle_tline_key_event(event):
 
     # Key bindings for MOVE MODES and _NO_EDIT modes
     if editorstate.current_is_move_mode() or editorstate.current_is_active_trim_mode() == False:
-         # UP ARROW, next cut
+
+        # MINUS, zoom out
+        if event.keyval == Gdk.KEY_minus:
+            updater.zoom_out()
+
+        # EQUAL (PLUS), zoom in
+        if event.keyval == Gdk.KEY_equal:
+            updater.zoom_in()
+
+
+
+        # UP ARROW, next cut
         if event.keyval == Gdk.KEY_Down:
             if editorstate.timeline_visible():
                 tline_frame = PLAYER().tracktor_producer.frame()
