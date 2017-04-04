@@ -445,8 +445,8 @@ def about_dialog(parent_window):
     janne_label = Gtk.Label(label="Copyright 2016 Janne Liljeblad and contributors")
     page_label = Gtk.Label(label=_("Project page:") + " " + "https://github.com/jliljebl/flowblade")
     flow_label.modify_font(Pango.FontDescription("sans bold 14"))
-    janne_label.modify_font(Pango.FontDescription("sans 8"))
-    page_label.modify_font(Pango.FontDescription("sans 8"))
+    janne_label.modify_font(Pango.FontDescription("sans 10"))
+    page_label.modify_font(Pango.FontDescription("sans 10"))
 
     vbox = Gtk.VBox(False, 4)
     vbox.pack_start(guiutils.get_pad_label(30, 12), False, False, 0)
