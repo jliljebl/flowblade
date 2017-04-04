@@ -88,7 +88,7 @@ black_track_clip = None
 AUDIO_MIX_DOWN_TRACK = 0
 
 # Vectorscop and RGB Parade
-SCOPE_MIX_VALUES = [1.0, 0.8, 0.5, 0.2, 0.0]
+SCOPE_MIX_VALUES = [0.0, 0.2, 0.5, 0.8, 1.0]
 _scope_over_lay_mix = 2
 
 class Sequence:
