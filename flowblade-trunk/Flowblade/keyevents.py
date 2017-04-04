@@ -276,7 +276,7 @@ def _handle_tline_key_event(event):
     # Key bindings for MOVE MODES and _NO_EDIT modes
     if editorstate.current_is_move_mode() or editorstate.current_is_active_trim_mode() == False:
          # UP ARROW, next cut
-        if event.keyval == Gdk.KEY_Up:
+        if event.keyval == Gdk.KEY_Down:
             if editorstate.timeline_visible():
                 tline_frame = PLAYER().tracktor_producer.frame()
                 frame = current_sequence().find_next_cut_frame(tline_frame)
@@ -289,7 +289,7 @@ def _handle_tline_key_event(event):
                 monitorevent.up_arrow_seek_on_monitor_clip()
         
         # DOWN ARROW, prev cut
-        if event.keyval == Gdk.KEY_Down:
+        if event.keyval == Gdk.KEY_Up:
             if editorstate.timeline_visible():
                 tline_frame = PLAYER().tracktor_producer.frame()
                 frame = current_sequence().find_prev_cut_frame(tline_frame)
