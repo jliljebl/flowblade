@@ -1136,14 +1136,15 @@ def _do_create_selection_compound_clip(dialog, response_id, name_entry):
 
     media_name = name_entry.get_text()
     
+    # Create unique file path in hidden render folder
     folder = editorpersistance.prefs.render_folder
     uuid_str = md5.new(str(os.urandom(32))).hexdigest()
     write_file = folder + "/"+ uuid_str + ".xml"
 
     dialog.destroy()
     
+    # Create clones of selected clips
     track = current_sequence().tracks[movemodes.selected_track]
-    
     clips = []
     for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1): # + 1 == to_index inclusive
         clips.append(current_sequence().create_clone_clip(track.clips[i]))
@@ -1157,6 +1158,7 @@ def _do_create_selection_compound_clip(dialog, response_id, name_entry):
         clip = clips[i]
         track0.append(clip, clip.clip_in, clip.clip_out)
 
+    # Render compound clip as MLT XML file
     render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, _xml_compound_render_done_callback, tractor)
     render_player.start()
 

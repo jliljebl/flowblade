@@ -180,6 +180,14 @@ def _handle_tline_key_event(event):
         monitorevent.to_mark_in_pressed()
         return True
 
+    # Minus
+    if event.keyval == Gdk.KEY_minus:
+        updater.zoom_out()
+    
+    # Plus
+    if event.keyval == Gdk.KEY_plus:
+        updater.zoom_in()
+
     # O
     if event.keyval == Gdk.KEY_o:
         if (event.get_state() & Gdk.ModifierType.MOD1_MASK):

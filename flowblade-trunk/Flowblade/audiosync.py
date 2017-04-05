@@ -25,7 +25,9 @@ Handles application initialization, shutdown, opening projects, autosave and cha
 sequences.
 """
 import datetime
+import md5
 import mlt
+import os
 import subprocess
 import sys
 import time
@@ -40,6 +42,7 @@ from gi.repository import Gtk, Gdk, GdkPixbuf
 import appconsts
 import clapperless
 import dialogs
+import editorpersistance
 from editorstate import PROJECT
 import gui
 import projectaction
@@ -76,10 +79,10 @@ def create_audio_sync_compound_clip():
     elif video_file.type == appconsts.AUDIO and audio_file.type == appconsts.VIDEO:
         video_file, audio_file = audio_file, video_file
     else:
+        # 2 video files???
         # INFOWINDOW
         return
 
-    print "kkkkkkk"
     # This or GUI freezes, we really can't do Popen.wait() in a Gtk thread
     clapperless_thread = ClapperlesLaunchThread(video_file.path, audio_file.path, _compound_offsets_complete)
     clapperless_thread.start()
@@ -88,17 +91,19 @@ def create_audio_sync_group():
     pass
 
 
-# ------------------------------------------------------- modiule funcs
+# ------------------------------------------------------- module funcs
 def _write_offsets(video_file, audio_file, completed_callback):
     print "Starting clapperless analysis..."
     fps = str(int(utils.fps() + 0.5))
     print fps
     FLOG = open(utils.get_hidden_user_dir_path() + "log_clapperless", 'w')
+    
+    # clapperless.py computes offsets and writes them to file clapperless.OFFSETS_DATA_FILE
     p = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladeclapperless", video_file, audio_file, "--rate", fps], stdin=FLOG, stdout=FLOG, stderr=FLOG)
     p.wait()
     
+    # Offsets are now available
     GLib.idle_add(completed_callback, (video_file, audio_file))
-
 
 def _read_offsets():
     offsets_file = utils.get_hidden_user_dir_path() + clapperless.OFFSETS_DATA_FILE
@@ -112,62 +117,67 @@ def _read_offsets():
         tokens = line.split(" ")
         _files_offsets[tokens[0]] = tokens[1]
     
-    print _files_offsets
+    #print _files_offsets
 
 def _compound_offsets_complete(data):
     print "Clapperless done"
-    
 
-    
     _read_offsets()
 
-    # lets's just set something unique-ish 
+    # lets's just set name to something unique-ish 
     default_name = _("SYNC_CLIP_") +  str(datetime.date.today()) + "_" + time.strftime("%H%M%S") + ".xml"
-    dialogs.export_xml_compound_clip_dialog(_do_create_sync_compound_clip, default_name, _("Save Sync Compound Clip XML"), data)
-
+    dialogs.compound_clip_name_dialog(_do_create_sync_compound_clip, default_name, _("Save Sync Compound Clip XML"), data)
 
 def _do_create_sync_compound_clip(dialog, response_id, data):
     if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
         return
 
-    video_file, audio_file = data
+    clips, name_entry = data
+    video_file, audio_file = clips
+    media_name = name_entry.get_text()
     
-    filenames = dialog.get_filenames()
     dialog.destroy()
     
-    print filenames[0]
-        
+    # Create unique file path in hidden render folder
+    folder = editorpersistance.prefs.render_folder
+    uuid_str = md5.new(str(os.urandom(32))).hexdigest()
+    write_file = folder + "/"+ uuid_str + ".xml"
+    
     # Create tractor
     tractor = mlt.Tractor()
     multitrack = tractor.multitrack()
     track_video = mlt.Playlist()
     track_audio = mlt.Playlist()
-    multitrack.connect(track_video, 0)
+    track_audio.set("hide", 1) # video off, audio on as mlt "hide" value
     multitrack.connect(track_audio, 0)
-    
-    offset = _files_offsets[audio_file]
+    multitrack.connect(track_video, 0)
+
+    # Create clips
     video_clip = mlt.Producer(PROJECT().profile, str(video_file)) 
-    audio_clip = mlt.Producer(PROJECT().profile, str(audio_file)) 
+    audio_clip = mlt.Producer(PROJECT().profile, str(audio_file))
+    
+    # Get offset
+    offset = _files_offsets[audio_file]
     print audio_file, offset
     
-    """
-    # Add video clip 
+    # Add clips
     if offset > 0:
-        track_video.append(clip, clip.clip_in, clip.clip_out)
-    elif < 0:
-        
+        offset_frames = int(float(offset) + 0.5)
+        print "plus"
+        track_video.append(video_clip, 0, video_clip.get_length() - 1)
+        track_audio.insert_blank(0, offset_frames)
+        track_audio.append(audio_clip, 0, audio_clip.get_length() - 1)
+    elif offset < 0:
+        offset_frames = int(float(offset) - 0.5)
+        print "miinus"
+        track_video.insert_blank(0, offset_frames)
+        track_video.append(video_clip, 0, video_clip.get_length() - 1)
+        track_audio.append(audio_clip, 0, audio_clip.get_length() - 1)
     else:
-    """
-    
-    track_video.append(video_clip, 0, video_clip.get_length() - 1)
-    track_audio.append(audio_clip, 0, audio_clip.get_length() - 1)
-    
-    
-    render_player = renderconsumer.XMLCompoundRenderPlayer(filenames[0], _sync_compound_clip_render_done_callback, tractor)
+        track_video.append(video_clip, 0, video_clip.get_length() - 1)
+        track_audio.append(audio_clip, 0, audio_clip.get_length() - 1)
+
+    # render MLT XML, callback in projectaction.py creates media object
+    render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, projectaction._xml_compound_render_done_callback, tractor)
     render_player.start()
-
-def _sync_compound_clip_render_done_callback(filename):
-    print filename, "iiiiiiiii"
-    #projectaction.open_file_names([filename])
-
