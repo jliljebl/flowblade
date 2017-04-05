@@ -185,7 +185,7 @@ def _handle_tline_key_event(event):
         updater.zoom_out()
     
     # Plus
-    if event.keyval == Gdk.KEY_plus:
+    if event.keyval == Gdk.KEY_equal:
         updater.zoom_in()
 
     # O
