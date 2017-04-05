@@ -439,6 +439,8 @@ def about_dialog(parent_window):
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
 
+    ## Application tab
+
     img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
     flow_label = Gtk.Label(label="Flowblade Movie Editor")
     ver_label = Gtk.Label(label="1.12.0")
@@ -463,6 +465,8 @@ def about_dialog(parent_window):
     alignment =  dialogutils.get_default_alignment(vbox)
     alignment.set_size_request(450, 370)
 
+    ## Thanks tab
+
     up_label = Gtk.Label(label=_("Upstream:"))
     up_projs = Gtk.Label(label="MLT")
     up_projs2 = Gtk.Label("FFMpeg, Frei0r, LADSPA, Cairo, Gnome, Linux")
@@ -486,9 +490,13 @@ def about_dialog(parent_window):
     alignment2 = dialogutils.get_default_alignment(vbox2)
     alignment2.set_size_request(450, 370)
 
+    ## Licence tab
+
     license_view = guicomponents.get_gpl3_scroll_widget((450, 370))
     alignment3 = dialogutils.get_default_alignment(license_view)
     alignment3.set_size_request(450, 370)
+
+    ## Developers tab
 
     lead_label = Gtk.Label(label=_("Lead Developer:"))
     lead_label.modify_font(Pango.FontDescription("sans bold 12"))
@@ -528,9 +536,18 @@ def about_dialog(parent_window):
     
     alignment5 = dialogutils.get_default_alignment(vbox3)
     alignment5.set_size_request(450, 370)
-    
+
+    ## Translations tab
+
+    translations_label = Gtk.Label(label=_("Translations by:"))
+    translations_label.modify_font(Pango.FontDescription("sans bold 12"))
     translations_view = guicomponents.get_translations_scroll_widget((450, 370))
-    alignment4 = dialogutils.get_default_alignment(translations_view)
+
+    vbox4 = Gtk.VBox(False, 4)
+    vbox4.pack_start(translations_label, False, False, 0)
+    vbox4.pack_start(translations_view, False, False, 0)
+
+    alignment4 = dialogutils.get_default_alignment(vbox4)
     alignment4.set_size_request(450, 370)
 
     notebook = Gtk.Notebook()
