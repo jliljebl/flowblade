@@ -544,6 +544,7 @@ def about_dialog(parent_window):
     translations_view = guicomponents.get_translations_scroll_widget((450, 370))
 
     vbox4 = Gtk.VBox(False, 4)
+    vbox4.pack_start(guiutils.get_pad_label(30, 12), False, False, 0)
     vbox4.pack_start(translations_label, False, False, 0)
     vbox4.pack_start(translations_view, False, False, 0)
 
