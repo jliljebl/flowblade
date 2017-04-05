@@ -512,6 +512,7 @@ def about_dialog(parent_window):
     contributors_view.set_left_margin(2)
     contributors_view.set_wrap_mode(Gtk.WrapMode.WORD)
     contributors_view.get_buffer().set_text(contributors_text)
+    contributors_view.set_justification(2) # Centered
     guiutils.set_margins(contributors_view, 0, 0, 30, 30)
     
     vbox3 = Gtk.VBox(False, 4)
