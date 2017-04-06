@@ -62,7 +62,7 @@ def _load_profiles_list(dir_path):
     file_list = os.listdir(dir_path)
     for fname in file_list:
         ## Feb-2017 - SvdB - Filter out duplicate profiles based on profile name
-        #found_duplicate = False
+        found_duplicate = False
         
         file_path = dir_path + fname
         profile = mlt.Profile(file_path)
@@ -70,12 +70,12 @@ def _load_profiles_list(dir_path):
         load_profiles.append([profile.description(), profile])
         
         # Feb-2017 - SvdB - Filter out duplicate profiles based on profile name
-        #for enu_count, prof in enumerate(load_profiles):
-        #    for prof_idx, prof_name in enumerate(prof):
-        #        if prof_name == profile.description():
-        #            found_duplicate = True
-        #if found_duplicate == False:
-        #    load_profiles.append([profile.description(), profile])
+        for enu_count, prof in enumerate(load_profiles):
+            for prof_idx, prof_name in enumerate(prof):
+                if prof_name == profile.description():
+                    found_duplicate = True
+        if found_duplicate == False:
+            load_profiles.append([profile.description(), profile])
     
     return load_profiles
 
