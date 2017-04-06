@@ -385,16 +385,6 @@ def range_overwrite_pressed():
     track = current_sequence().get_first_active_track()
     if editevent.track_lock_check_and_user_info(track, range_overwrite_pressed, "range overwrite"):
         return
-    
-    # tractor is has mark in and mark
-    mark_in_frame = current_sequence().tractor.mark_in
-    mark_out_frame = current_sequence().tractor.mark_out
-    range_length = mark_out_frame - mark_in_frame + 1 # end is incl.
-    if mark_in_frame == -1 or mark_out_frame == -1:
-        primary_txt = _("Timeline Range not set!")
-        secondary_txt = _("You need to set Timeline Range using Mark In and Mark Out buttons\nto perform this edit.")
-        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
-        return
 
     # Get over clip and check it overwrite range area
     over_clip = _get_new_clip_from_clip_monitor()
@@ -402,13 +392,46 @@ def range_overwrite_pressed():
         no_monitor_clip_info(gui.editor_window.window)
         return
 
-    over_length = over_clip.mark_out - over_clip.mark_in + 1 # + 1 out incl
-    if over_length < range_length:
-        monitor_clip_too_short(gui.editor_window.window)
+    # tractor is has mark in and mark
+    mark_in_frame = current_sequence().tractor.mark_in
+    mark_out_frame = current_sequence().tractor.mark_out
+    
+    # Case timeline marked
+    if mark_in_frame != -1 and mark_out_frame != -1:
+        range_length = mark_out_frame - mark_in_frame + 1 # end is incl.
+        if over_clip.mark_in == -1:
+            # This actually never hit because mark in and mark out seem to first and last frame if nothing set
+            show_three_point_edit_not_defined()
+            return
+
+        over_length = over_clip.mark_out - over_clip.mark_in + 1 # + 1 out incl
+        if over_length < range_length:
+            monitor_clip_too_short(gui.editor_window.window)
+            return
+
+        over_clip_out = over_clip.mark_in + range_length - 1
+        
+    # Case clip marked
+    elif over_clip.mark_out != -1 and over_clip.mark_in != -1:
+        range_length = over_clip.mark_out - over_clip.mark_in + 1 # end is incl.
+        
+        if mark_in_frame == -1:
+            show_three_point_edit_not_defined()
+            return
+
+        over_length = track.get_length() - mark_in_frame + 1 # + 1 out incl
+        if over_length < range_length:
+            monitor_clip_too_short(gui.editor_window.window)
+            return
+            
+        over_clip_out = over_clip.mark_out
+        mark_out_frame = mark_in_frame + range_length - 1 # -1 because it gets readded later
+        
+    # case neither clip or timeline has both in and out points
+    else:
+        show_three_point_edit_not_defined()
         return
-
-    over_clip_out = over_clip.mark_in + range_length - 1
-
+        
     movemodes.clear_selected_clips() # edit consumes selection
 
     updater.save_monitor_frame = False # hack to not get wrong value saved in MediaFile.current_frame
@@ -426,6 +449,11 @@ def range_overwrite_pressed():
 
     updater.display_tline_cut_frame(track, track.get_clip_index_at(mark_in_frame))
 
+def _show_three_poimt_edit_not_defined():
+    primary_txt = _("3 point edit not defoned!")
+    secondary_txt = _("You need to set Timeline Range using Mark In and Mark Out buttons\nto perform this edit.")
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+            
 def delete_range_button_pressed():
     # Get data
     #track = current_sequence().get_first_active_track()
@@ -933,6 +961,11 @@ def monitor_clip_too_short(parent_window):
     secondary_txt = _("Can't do the requested edit because Mark In -> Mark Out Range or Clip is too short.")
     dialogutils.info_message(primary_txt, secondary_txt, parent_window)
 
+def show_three_point_edit_not_defined():
+    primary_txt = _("3 point edit not defined!")
+    secondary_txt = _("You need to set Mark In and Mark Out on Timeline or Clip and\nadditional Mark In on Timeline or Clip to perform this edit.")
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+            
 
 # ------------------------------------------------- clip to range log d'n'd
 def mouse_dragged_out(event):
