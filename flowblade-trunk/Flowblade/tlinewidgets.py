@@ -56,7 +56,7 @@ M_PI = math.pi
 REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is recalculated on initilization, so value here is irrelevent.
 
 WIDTH = 430 # this has no effect if smaller then editorwindow.NOTEBOOK_WIDTH + editorwindow.MONITOR_AREA_WIDTH
-HEIGHT = 260 # defines window min height together with editorwindow.TOP_ROW_HEIGHT
+HEIGHT = appconsts.TLINE_HEIGHT # defines window min height together with editorwindow.TOP_ROW_HEIGHT
 
 # Timeline draw constants
 # Other elements than black outline are not drawn if clip screen size

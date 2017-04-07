@@ -61,6 +61,7 @@ EVENT_SAVED_SNAPSHOT = 5
 
 thumbnailer = None
 
+_project_properties_default_values = {"tline_shrink_vertical":False}
 
 class Project:
     """
@@ -283,7 +284,16 @@ class Project:
         
         return True
 
+    def get_project_property(self, property_name):
+        try:
+            return self.project_properties[property_name]
+        except:
+            try:
+                return _project_properties_default_values[property_name]
+            except:
+                print "Unknown project property ", property_name
 
+            
 class MediaFile:
     """
     Media file that can added to and edited in Sequence.

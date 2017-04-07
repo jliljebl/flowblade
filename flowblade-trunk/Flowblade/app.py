@@ -601,7 +601,7 @@ def open_project(new_project):
     gui.editor_window.handle_insert_move_mode_button_press()
     editorstate.trim_mode_ripple = False
 
-    #editorstate.project.c_seq.print_all()
+    updater.set_timeline_height()
         
 def change_current_sequence(index):
     stop_autosave()
@@ -625,6 +625,8 @@ def change_current_sequence(index):
     selected_index = editorstate.project.sequences.index(editorstate.current_sequence())
     selection.select_path(str(selected_index))
     start_autosave()
+
+    updater.set_timeline_height()
 
 def display_current_sequence():
     # Get shorter alias.

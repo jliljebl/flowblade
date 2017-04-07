@@ -1140,4 +1140,9 @@ def all_filters_on():
     current_sequence().set_all_filters_active_state(True)
     clipeffectseditor.update_stack_view()
 
+def set_track_small_height(track_index):
+    track = get_track(track_index)
+    track.height = appconsts.TRACK_HEIGHT_SMALL
+    if editorstate.SCREEN_HEIGHT < 863:
+        track.height = appconsts.TRACK_HEIGHT_SMALLEST
 

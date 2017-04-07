@@ -65,10 +65,11 @@ PROP_INT = 0
 PROP_FLOAT = 1
 PROP_EXPRESSION = 2
 
-# Display heights for tracks.
+# Display heights for tracks and timeline.
 TRACK_HEIGHT_NORMAL = 50 # track height in canvas and column
 TRACK_HEIGHT_SMALL = 25 # track height in canvas and column
 TRACK_HEIGHT_SMALLEST = 25 # maybe remove as it is no longer meaningful
+TLINE_HEIGHT = 260
 
 # Notebook widths
 NOTEBOOK_WIDTH = 600 # defines app min width with MONITOR_AREA_WIDTH

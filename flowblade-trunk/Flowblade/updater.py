@@ -290,6 +290,20 @@ def maybe_autocenter():
         if editorpersistance.prefs.auto_center_on_play_stop == True:
             center_tline_to_current_frame()
 
+# ------------------------------------------ timeline shrinking
+def set_timeline_height():
+    if len(current_sequence().tracks) == 11 or PROJECT().get_project_property("tline_shrink_vertical") == False:
+        tlinewidgets.HEIGHT = appconsts.TLINE_HEIGHT
+    else:
+        tlinewidgets.HEIGHT = current_sequence().get_shrunk_tline_height_min()
+
+    gui.tline_canvas.widget.set_size_request(tlinewidgets.WIDTH, tlinewidgets.HEIGHT)
+    gui.tline_column.widget.set_size_request(tlinewidgets.COLUMN_WIDTH, tlinewidgets.HEIGHT)
+    
+    current_sequence().resize_tracks_to_fit(gui.tline_canvas.widget.get_allocation())
+    tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
+    gui.tline_column.init_listeners()
+    repaint_tline()
 
 # ----------------------------------------- monitor
 def display_clip_in_monitor(clip_monitor_currently_active=False):

@@ -29,6 +29,7 @@ import guicomponents
 import editorstate
 from editorstate import get_track
 from editorstate import current_sequence
+from editorstate import PROJECT
 import snapping
 import tlinewidgets
 import updater
@@ -113,11 +114,18 @@ def _all_tracks_item_activated(widget, msg):
     if msg == "topactiveonly":
         _activate_only_current_top_active()
     
+    if msg == "shrink":
+         _tline_vertical_shrink_changed(widget)
+        
 def _tracks_resize_update():
     tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
     gui.tline_column.init_listeners()
     updater.repaint_tline()
     gui.tline_column.widget.queue_draw()
+
+def _tline_vertical_shrink_changed(widget):
+    PROJECT().project_properties["tline_shrink_vertical"] = widget.get_active()
+    updater.set_timeline_height()
 
 def _activate_all_tracks():
     for i in range(0, len(current_sequence().tracks) - 1):

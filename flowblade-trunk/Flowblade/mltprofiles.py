@@ -187,8 +187,6 @@ def get_closest_matching_profile_index(producer_info):
     if current_match_index == -1:
         return get_default_profile_index()
     
-    print "current_match_index:", current_match_index
-
     return current_match_index
 
 def _sort_profiles(a, b):

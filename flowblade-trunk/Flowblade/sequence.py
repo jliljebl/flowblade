@@ -325,6 +325,12 @@ class Sequence:
             h += track.height
         return  h
 
+    def get_shrunk_tline_height_min(self):
+        UNSHRUNK_HEIGHT = appconsts.TLINE_HEIGHT
+        THREE_TRACK_MIN_HEIGHT = 3 * appconsts.TRACK_HEIGHT_NORMAL
+        PER_TRACK_ADD = ((UNSHRUNK_HEIGHT - THREE_TRACK_MIN_HEIGHT) / 6.0) * (len(self.tracks) - 5)
+        return int(THREE_TRACK_MIN_HEIGHT + PER_TRACK_ADD)
+
     def set_track_gain(self, track, gain):
         track.gain_filter.set("gain", str(gain))
         track.audio_gain = gain
