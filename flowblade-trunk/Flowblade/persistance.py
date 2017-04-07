@@ -728,6 +728,9 @@ def FIX_MISSING_PROJECT_ATTRS(project):
     if (not(hasattr(project, "media_log_groups"))):
         project.media_log_groups = []
 
+    if (not(hasattr(project, "project_properties"))):
+        project.project_properties = {}
+        
 def _fix_wipe_relative_path(compositor):
     if compositor.type_id == "##wipe": # Wipe may have user luma and needs to be looked up relatively
         _set_wipe_res_path(compositor, "resource")
