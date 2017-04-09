@@ -56,6 +56,16 @@ def create_widgets():
     """
     # Left side
     widgets.compositor_info = guicomponents.CompositorInfoPanel()
+    widgets.fade_in_b = Gtk.Button(_("Fade In"))
+    widgets.fade_out_b = Gtk.Button(_("Fade Out"))
+    widgets.auto_fades_b = Gtk.Button(_("Auto Fades"))
+
+    widgets.fade_in_spin = Gtk.SpinButton.new_with_range(0, 150, 1)
+    widgets.fade_in_spin.set_value(10)
+    
+    widgets.fade_out_spin = Gtk.SpinButton.new_with_range(0, 150, 1)
+    widgets.fade_out_spin.set_value(10)
+    
     widgets.delete_b = Gtk.Button(_("Delete"))
     widgets.delete_b.connect("clicked", lambda w,e: _delete_compositor_pressed(), None)
     widgets.reset_b = Gtk.Button(_("Reset"))
@@ -74,6 +84,14 @@ def get_compositor_clip_panel():
     
     compositor_vbox = Gtk.VBox(False, 2)
     compositor_vbox.pack_start(widgets.compositor_info, False, False, 0)
+    compositor_vbox.pack_start(guiutils.get_pad_label(5, 24), False, False, 0)
+    compositor_vbox.pack_start(widgets.fade_in_b, False, False, 0)
+    compositor_vbox.pack_start(widgets.fade_in_spin, False, False, 0)
+    compositor_vbox.pack_start(guiutils.get_pad_label(5, 12), False, False, 0)
+    compositor_vbox.pack_start(widgets.fade_out_b, False, False, 0)
+    compositor_vbox.pack_start(widgets.fade_out_spin, False, False, 0)
+    compositor_vbox.pack_start(guiutils.get_pad_label(5, 24), False, False, 0)
+    compositor_vbox.pack_start(widgets.auto_fades_b, False, False, 0)
     compositor_vbox.pack_start(Gtk.Label(), True, True, 0)
     compositor_vbox.pack_start(widgets.reset_b, False, False, 0)
     compositor_vbox.pack_start(widgets.delete_b, False, False, 0)
@@ -112,6 +130,11 @@ def set_enabled(value):
     widgets.compositor_info.set_enabled(value)
     widgets.delete_b.set_sensitive(value)
     widgets.reset_b.set_sensitive(value)
+    widgets.fade_in_b.set_sensitive(value)
+    widgets.fade_out_b.set_sensitive(value)
+    widgets.auto_fades_b.set_sensitive(value)
+    widgets.fade_in_spin.set_sensitive(value)
+    widgets.fade_out_spin.set_sensitive(value)
 
 def maybe_clear_editor(killed_compositor):
     if killed_compositor.destroy_id == compositor.destroy_id:

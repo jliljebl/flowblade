@@ -194,6 +194,7 @@ class EditorWindow:
             ('FiltersOff', None, _('All Filters Off'), None, None, lambda a:tlineaction.all_filters_off()),
             ('FiltersOn', None, _('All Filters On'), None, None, lambda a:tlineaction.all_filters_on()),
             ('SyncCompositors', None, _('Sync All Compositors'), None, None, lambda a:tlineaction.sync_all_compositors()),
+            ('CompositorsFadesDefaults', None, _('Set Compositor Auto Fades...'), None, None, lambda a:tlineaction.set_compositors_fades_defaults()),
             ('ChangeSequenceTracks', None, _('Change Sequence Tracks Count...'), None, None, lambda a:projectaction.change_sequence_track_count()),
             ('Watermark', None, _('Watermark...'), None, None, lambda a:menuactions.edit_watermark()),
             ('ProfilesManager', None, _('Profiles Manager'), None, None, lambda a:menuactions.profiles_manager()),
@@ -287,6 +288,7 @@ class EditorWindow:
                     <menuitem action='DeleteClip'/>
                     <menuitem action='ResyncSelected'/>
                     <menuitem action='SyncCompositors'/>
+                    <menuitem action='CompositorsFadesDefaults'/>
                     <menuitem action='ClearFilters'/>
                     <separator/>
                     <menu action='Timeline'>

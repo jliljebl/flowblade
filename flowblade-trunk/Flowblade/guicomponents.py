@@ -1962,16 +1962,17 @@ class TracksNumbersSelect:
         self.MAX_TRACKS = appconsts.MAX_TRACKS
         
         self.widget = Gtk.HBox()
+        
         self.video_label = Gtk.Label(_("Video:"))
         self.video_tracks = Gtk.SpinButton.new_with_range(1, 8, 1)
         self.video_tracks.set_value(v_tracks)
-        #self.video_tracks.set_editable(False)
         self.video_tracks.connect("value-changed", self.video_tracks_changed)
+        
         self.audio_label = Gtk.Label(_("Audio:"))
         self.audio_tracks = Gtk.SpinButton.new_with_range(1, 8, 1)
         self.audio_tracks.set_value(a_tracks)
-        #self.audio_tracks.set_editable(False)
         self.audio_tracks.connect("value-changed", self.audio_tracks_changed)
+        
         self.label = Gtk.Label(_("Number of Tracks:"))
         self.tracks_amount_info = Gtk.Label()
         self.set_total_tracks_info()

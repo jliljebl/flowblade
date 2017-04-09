@@ -517,7 +517,13 @@ def sync_compositor(compositor):
     data = {"compositor":compositor,"clip_in":clip_start,"clip_out":clip_end}
     action = edit.move_compositor_action(data)
     action.do_edit()
-    
+
+def set_compositors_fades_defaults():
+    dialogs.set_fades_defaults_dialog(_compositors_fades_defaults_callback)
+
+def _compositors_fades_defaults_callback(dialog, response_id):
+    dialog.destroy()
+        
 def split_audio_button_pressed():
     if movemodes.selected_track == -1:
         return

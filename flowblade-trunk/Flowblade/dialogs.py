@@ -1500,3 +1500,54 @@ def combine_sequences_dialog(callback):
     dialog.connect('response', callback, action_select, seq_select, selectable_seqs)
     dialog.show_all()
     
+def set_fades_defaults_dialog(callback):
+
+    dialog = Gtk.Dialog(_("Compositors Auto Fades"), gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                         _("Set Group Defaults").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+
+
+
+    group_select = Gtk.ComboBoxText()
+    group_select.append_text("Dissolve, Blend")
+    group_select.append_text("Affine Blend,  Picture-In-Picture, Region")
+    group_select.set_active(0)
+    
+    groups_vbox = guiutils.get_vbox([group_select], False)
+    group_frame = panels.get_named_frame(_("Compositor Auto Fades Group"), groups_vbox)
+    
+    fade_in_row = Gtk.HBox()
+    fade_in_length_label = Gtk.Label(_("Length:"))
+    fade_in_check = Gtk.CheckButton.new_with_label (_("Add Fade In on Creation"))
+    fade_in_spin = Gtk.SpinButton.new_with_range(0, 150, 1)
+    fade_in_spin.set_value(0)
+
+    fade_in_row.pack_start(fade_in_check, False, False, 0)
+    fade_in_row.pack_start(guiutils.pad_label(12,2), False, False, 0)
+    fade_in_row.pack_start(fade_in_length_label, False, False, 0)
+    fade_in_row.pack_start(fade_in_spin, False, False, 0)
+
+    fade_out_row = Gtk.HBox()
+    fade_out_length_label = Gtk.Label(_("Length:"))
+    fade_out_check = Gtk.CheckButton.new_with_label (_("Add Fade Out on Creation"))
+    fade_out_spin = Gtk.SpinButton.new_with_range(0, 150, 1)
+    fade_out_spin.set_value(0)
+
+    fade_out_row.pack_start(fade_out_check, False, False, 0)
+    fade_out_row.pack_start(guiutils.pad_label(12,2), False, False, 0)
+    fade_out_row.pack_start(fade_out_length_label, False, False, 0)
+    fade_out_row.pack_start(fade_out_spin, False, False, 0)
+
+    fades_vbox = guiutils.get_vbox([fade_in_row, fade_out_row], False)
+    fades_frame = panels.get_named_frame(_("Group Auto Fades"), fades_vbox)
+    
+    vbox = guiutils.get_vbox([group_frame, fades_frame], False)
+
+    alignment = dialogutils.get_default_alignment(vbox)
+    dialogutils.set_outer_margins(dialog.vbox)
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback)
+
+    dialog.show_all()
