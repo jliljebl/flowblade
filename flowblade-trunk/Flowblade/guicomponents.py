@@ -1128,6 +1128,12 @@ def display_clip_popup_menu(event, clip, track, callback):
 
     clip_menu = clip_popup_menu
     guiutils.remove_children(clip_menu)
+    
+    # Menu items
+    clip_menu.add(_get_edit_menu_item(event, clip, track, callback))
+
+    _add_separetor(clip_menu)
+    
     clip_menu.add(_get_menu_item(_("Open in Filters Editor"), callback, (clip, track, "open_in_editor", event.x)))
     # Only make opening in compositor editor for video tracks V2 and higher
     if track.id <= current_sequence().first_video_index:
@@ -1468,6 +1474,32 @@ def _get_tool_integration_menu_item(event, clip, track, callback):
     menu_item.show()
     return menu_item
 
+def _get_edit_menu_item(event, clip, track, callback):
+    menu_item = Gtk.MenuItem(_("Edit"))
+    sub_menu = Gtk.Menu()
+    menu_item.set_submenu(sub_menu)
+
+    del_item = _get_menu_item(_("Delete"), callback, (clip, track))
+    sub_menu.append(del_item)
+
+    lift_item = _get_menu_item(_("Lift"), callback, (clip, track))
+    sub_menu.append(lift_item)
+    
+    _add_separetor(sub_menu)
+
+    length_item = _get_menu_item(_("Set Clip Length..."), callback, (clip, track))
+    sub_menu.append(length_item)
+
+    stretch_next_item = _get_menu_item(_("Stretch Over Next Blank"), callback, (clip, track))
+    sub_menu.append(stretch_next_item)
+
+
+    stretch_prev_item = _get_menu_item(_("Stretch Over Prev Blank"), callback, (clip, track))
+    sub_menu.append(stretch_prev_item)
+    
+    menu_item.show()
+    return menu_item
+    
 def _get_clone_filters_menu_item(event, clip, track, callback):
     menu_item = Gtk.MenuItem(_("Clone Filters"))
     sub_menu = Gtk.Menu()
