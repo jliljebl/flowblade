@@ -166,6 +166,10 @@ def _handle_tline_key_event(event):
     Returns True for handled key presses to stop those
     keyevents from going forward.
     """
+    
+    # Apr-2017 - SvdB - For ffwd / rev speeds
+    prefs = editorpersistance.prefs
+
     # I
     if event.keyval == Gdk.KEY_i:
         if (event.get_state() & Gdk.ModifierType.MOD1_MASK):
@@ -310,6 +314,26 @@ def _handle_tline_key_event(event):
                  monitorevent.down_arrow_seek_on_monitor_clip()
                  return True
             
+        # Apr-2017 - SvdB - Add different speeds for different modifiers
+        # Allow user to select what speed belongs to what modifier, knowing that a combo of mods
+        # will MULTIPLY all speeds
+        # Available: SHIFT_MASK META_MASK - There are others available but it is not clear what the mappings
+        # for these keys are.
+        # For now: Harcoding = SHIFT = 2x, CTRL = 5x, CapsLock = 4x
+        if event.keyval == Gdk.KEY_Left or event.keyval == Gdk.KEY_Right:
+            if event.keyval == Gdk.KEY_Left:
+                seek_amount = -1
+            else:
+                seek_amount = 1
+            if (event.get_state() & Gdk.ModifierType.SHIFT_MASK):
+                seek_amount = seek_amount * prefs.ffwd_rev_shift
+            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+                seek_amount = seek_amount * prefs.ffwd_rev_ctrl
+            if (event.get_state() & Gdk.ModifierType.LOCK_MASK):
+                seek_amount = seek_amount * prefs.ffwd_rev_caps
+            PLAYER().seek_delta(seek_amount)
+            return True
+        """ Commented out for ffwd / rev speed
         # LEFT ARROW, prev frame
         if event.keyval == Gdk.KEY_Left:
             if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
@@ -325,7 +349,7 @@ def _handle_tline_key_event(event):
             else:
                 PLAYER().seek_delta(1)
             return True
-            
+        """    
         # T
         if event.keyval == Gdk.KEY_t:
             tlineaction.three_point_overwrite_pressed()
@@ -499,6 +523,29 @@ def _handle_clip_key_event(event):
     # Key bindings for MOVE MODES
     if editorstate.current_is_move_mode():                  
         # LEFT ARROW, prev frame
+        # Apr-2017 - SvdB - Add different speeds for different modifiers
+        # Allow user to select what speed belongs to what modifier, knowing that a combo of mods
+        # will MULTIPLY all speeds
+        # Available: SHIFT_MASK META_MASK - There are others available but it is not clear what the mappings
+        # for these keys are.
+        # For now: Harcoding = SHIFT = 2x, CTRL = 5x, CapsLock = 4x
+        
+        prefs = editorpersistance.prefs
+        if event.keyval == Gdk.KEY_Left or event.keyval == Gdk.KEY_Right:
+            if event.keyval == Gdk.KEY_Left:
+                seek_amount = -1
+            else:
+                seek_amount = 1
+            if (event.get_state() & Gdk.ModifierType.SHIFT_MASK):
+                seek_amount = seek_amount * prefs.ffwd_rev_shift
+            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+                seek_amount = seek_amount * prefs.ffwd_rev_ctrl
+            if (event.get_state() & Gdk.ModifierType.LOCK_MASK):
+                seek_amount = seek_amount * prefs.ffwd_rev_caps
+            PLAYER().seek_delta(seek_amount)
+            return True
+        """ Commented out for ffwd / rev speed   
+        # LEFT ARROW, prev frame
         if event.keyval == Gdk.KEY_Left:
             if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 PLAYER().seek_delta(-10)
@@ -513,8 +560,8 @@ def _handle_clip_key_event(event):
             else:
                 PLAYER().seek_delta(1)
             return True
-
-         # UP ARROW
+        """
+        # UP ARROW
         if event.keyval == Gdk.KEY_Up:
             if editorstate.timeline_visible():
                 tline_frame = PLAYER().tracktor_producer.frame()

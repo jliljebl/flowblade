@@ -207,6 +207,31 @@ def _edit_prefs_panel():
     auto_center_on_updown = Gtk.CheckButton()
     auto_center_on_updown.set_active(prefs.center_on_arrow_move)
     
+    # Apr-2017 - SvdB - For FF/Rev speed options
+    if hasattr(prefs, 'ffwd_rev_shift'):
+        spin_adj = Gtk.Adjustment(prefs.ffwd_rev_shift, 1, 10, 1)
+    else:
+        spin_adj = Gtk.Adjustment(1, 1, 10, 1)
+    ffwd_rev_shift_spin = Gtk.SpinButton()
+    ffwd_rev_shift_spin.set_adjustment(spin_adj)
+    ffwd_rev_shift_spin.set_numeric(True)
+
+    if hasattr(prefs, 'ffwd_rev_ctrl'):
+        spin_adj = Gtk.Adjustment(prefs.ffwd_rev_ctrl, 1, 10, 1)
+    else:
+        spin_adj = Gtk.Adjustment(10, 1, 10, 1)
+    ffwd_rev_ctrl_spin = Gtk.SpinButton()
+    ffwd_rev_ctrl_spin.set_adjustment(spin_adj)
+    ffwd_rev_ctrl_spin.set_numeric(True)
+    
+    if hasattr(prefs, 'ffwd_rev_caps'):
+        spin_adj = Gtk.Adjustment(prefs.ffwd_rev_caps, 1, 10, 1)
+    else:
+        spin_adj = Gtk.Adjustment(1, 1, 10, 1)
+    ffwd_rev_caps_spin = Gtk.SpinButton()
+    ffwd_rev_caps_spin.set_adjustment(spin_adj)
+    ffwd_rev_caps_spin.set_numeric(True)
+    
     # Layout
     row1 = _row(guiutils.get_checkbox_row_box(auto_play_in_clip_monitor, Gtk.Label(label=_("Autoplay new Clips in Clip Monitor"))))
     row2 = _row(guiutils.get_checkbox_row_box(auto_center_on_stop, Gtk.Label(label=_("Center Current Frame on Playback Stop"))))
@@ -221,6 +246,17 @@ def _edit_prefs_panel():
     row10 = _row(guiutils.get_checkbox_row_box(play_pause_button, Gtk.Label(label=_("Enable single Play/Pause button"))))
     row11 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Mouse Middle Button Scroll Action")), mouse_scroll_action, PREFERENCES_LEFT))
     row12 = _row(guiutils.get_checkbox_row_box(hide_file_ext_button, Gtk.Label(label=_("Hide file extensions when importing Clips"))))
+    # Apr-2017 - SvdB - For Fast Forward / Reverse options
+    row14 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Fast Forward / Reverse Speed for Shift Key:")), ffwd_rev_shift_spin, PREFERENCES_LEFT))
+    row14.set_tooltip_text(_("Speed of Forward / Reverse will be multiplied by this value if Shift Key is held (Only using KEYS).\n" \
+        "Enabling multiple modifier keys will multiply the set values.\n" \
+        "E.g. if Shift is set to " + str(prefs.ffwd_rev_shift) + " and Ctrl to " + str(prefs.ffwd_rev_ctrl) + \
+        ", holding Shift + Ctrl will result in up to " + str(prefs.ffwd_rev_shift * prefs.ffwd_rev_ctrl) + "x speed.\n" \
+        "(Effective maximum speed depends on underlying software and/or hardware limitations)"))
+    row15 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Fast Forward / Reverse Speed for Control Key:")), ffwd_rev_ctrl_spin, PREFERENCES_LEFT))
+    row15.set_tooltip_text(_("Speed of Forward / Reverse will be multiplied by this value if Ctrl Key is held (Only using KEYS)."))
+    row16 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Fast Forward / Reverse Speed for Caps Lock Key:")), ffwd_rev_caps_spin, PREFERENCES_LEFT))
+    row16.set_tooltip_text(_("Speed of Forward / Reverse will be multiplied by this value if Caps Lock is set (Only using KEYS)."))
     
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row5, False, False, 0)
@@ -236,14 +272,20 @@ def _edit_prefs_panel():
     vbox.pack_start(row10, False, False, 0)
     vbox.pack_start(row11, False, False, 0)
     vbox.pack_start(row12, False, False, 0)
+    # Apr-2017 - SvdB - For ffwd / rev speed
+    vbox.pack_start(row14, False, False, 0)
+    vbox.pack_start(row15, False, False, 0)
+    vbox.pack_start(row16, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
 
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     # Jul-2016 - SvdB - Added play_pause_button
+    # Apr-2017 - SvdB - Added ffwd / rev values
     return vbox, (auto_play_in_clip_monitor, auto_center_on_stop, gfx_length_spin,
                   trim_exit_on_empty, quick_enter_trim, remember_clip_frame, overwrite_clip_drop, cover_delete,
-                  play_pause_button, mouse_scroll_action, hide_file_ext_button, auto_center_on_updown)
+                  play_pause_button, mouse_scroll_action, hide_file_ext_button, auto_center_on_updown,
+                  ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin)
 
 def _view_prefs_panel():
     prefs = editorpersistance.prefs
