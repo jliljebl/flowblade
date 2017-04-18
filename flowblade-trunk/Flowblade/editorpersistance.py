@@ -175,9 +175,11 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo = gen_opts_widgets
     
     # Jul-2016 - SvdB - Added play_pause_button
+    # Apr-2017 - SvdB - Added ffwd / rev values
     auto_play_in_clip_monitor_check, auto_center_check, grfx_insert_length_spin, \
         trim_exit_click, trim_quick_enter, remember_clip_frame, overwrite_clip_drop, cover_delete, \
-        play_pause_button, mouse_scroll_action, hide_file_ext_button, auto_center_on_updown = edit_prefs_widgets
+        play_pause_button, mouse_scroll_action, hide_file_ext_button, auto_center_on_updown, \
+        ffwd_rev_shift, ffwd_rev_ctrl, ffwd_rev_caps = edit_prefs_widgets
     
     use_english, disp_splash, buttons_style, dark_theme, theme_combo, audio_levels_combo, window_mode_combo, full_names = view_prefs_widgets
 
@@ -203,6 +205,10 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.play_pause = play_pause_button.get_active()
     prefs.hide_file_ext = hide_file_ext_button.get_active()
     prefs.mouse_scroll_action_is_zoom = (mouse_scroll_action.get_active() == 0)
+    # Apr-2017 - SvdB - ffwd / rev values
+    prefs.ffwd_rev_shift = int(ffwd_rev_shift.get_adjustment().get_value())
+    prefs.ffwd_rev_ctrl = int(ffwd_rev_ctrl.get_adjustment().get_value())
+    prefs.ffwd_rev_caps = int(ffwd_rev_caps.get_adjustment().get_value())
     
     prefs.use_english_always = use_english.get_active()
     prefs.display_splash_screen = disp_splash.get_active()
@@ -303,3 +309,8 @@ class EditorPreferences:
         # Feb-2017 - SvdB - for full file names
         self.show_full_file_names = False
         self.center_on_arrow_move = False
+        # Apr-2017 - SvdB - Using these values we maintain the original hardcoded speed
+        self.ffwd_rev_shift = 1
+        self.ffwd_rev_ctrl = 10
+        self.ffwd_rev_caps = 1
+
