@@ -54,6 +54,8 @@ import snapping
 import toolsintegration
 import translations
 import utils
+# Apr-2017 - SvdB - for Issue #377 - See get_markers_popup_menu
+import sys
 
 SEPARATOR_HEIGHT = 5
 SEPARATOR_WIDTH = 250
@@ -2081,6 +2083,9 @@ def get_markers_menu_launcher(callback, pixbuf):
     return m_launch
 
 def get_markers_popup_menu(event, callback):
+    # Apr-2017 - SvdB - next 2 lines for issue #377
+    reload(sys)
+    sys.setdefaultencoding('utf8')
     seq = current_sequence()
     markers_exist = len(seq.markers) != 0
     menu = markers_menu
