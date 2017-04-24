@@ -22,8 +22,8 @@
 Module handles saving and loading data that is related to the editor and not any particular project.
 """
 
-
 from gi.repository import Gtk
+from gi.repository import Gdk
 
 import os
 import pickle
@@ -31,6 +31,9 @@ import pickle
 import appconsts
 import mltprofiles
 import utils
+
+# Apr-2017 - SvdB
+import shortcuts
 
 PREFS_DOC = "prefs"
 RECENT_DOC = "recent"
@@ -170,7 +173,7 @@ def get_recent_projects():
 
 def update_prefs_from_widgets(widgets_tuples_tuple):
     # Unpack widgets
-    gen_opts_widgets, edit_prefs_widgets, view_prefs_widgets, performance_widgets = widgets_tuples_tuple
+    gen_opts_widgets, edit_prefs_widgets, view_prefs_widgets, performance_widgets, shortcuts_widgets = widgets_tuples_tuple
 
     default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo = gen_opts_widgets
     
@@ -185,6 +188,9 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
 
     # Jan-2017 - SvdB
     perf_render_threads, perf_drop_frames = performance_widgets
+
+    # Apr-2017 - SvdB
+    shortcuts_combo = shortcuts_widgets
 
     global prefs
     prefs.open_in_last_opended_media_dir = open_in_last_opened_check.get_active()
@@ -223,6 +229,14 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     # Feb-2017 - SvdB - for full file names
     prefs.show_full_file_names = full_names.get_active()
     prefs.center_on_arrow_move = auto_center_on_updown.get_active()
+    # Apr-2017 - Svdb - Get the newly selected shortcuts and load the appropriate file
+    if shortcuts_combo.get_active() > 0: # 0 is Flowblade Default
+        if prefs.shortcuts != shortcuts.shortcut_files[shortcuts_combo.get_active()-1]:
+            prefs.shortcuts = shortcuts.shortcut_files[shortcuts_combo.get_active()-1]
+            shortcuts.load_shortcuts()
+    else:
+        prefs.shortcuts = 'Flowblade Default'
+        shortcuts.load_shortcuts()
 
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
@@ -242,7 +256,6 @@ def create_rendered_clips_folder_if_needed(user_dir):
         if not os.path.exists(render_folder + "/"):
             os.mkdir(render_folder + "/")
         prefs.render_folder = render_folder
-
 
 class EditorPreferences:
     """
@@ -313,4 +326,5 @@ class EditorPreferences:
         self.ffwd_rev_shift = 1
         self.ffwd_rev_ctrl = 10
         self.ffwd_rev_caps = 1
+        self.shortcuts = 'Flowblade Default'
 

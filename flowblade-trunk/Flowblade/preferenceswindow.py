@@ -29,6 +29,8 @@ import guiutils
 import mltprofiles
 # Jan-2017 - SvdB - To get the number of CPU cores
 import multiprocessing
+# Apr-2017 - SvdB
+import shortcuts
 
 PREFERENCES_WIDTH = 730
 PREFERENCES_HEIGHT = 440
@@ -50,6 +52,8 @@ def preferences_dialog():
     view_pres_panel, view_pref_widgets = _view_prefs_panel()
     # Jan-2017 - SvdB
     performance_panel, performance_widgets = _performance_panel()
+    # Apr-2017 - SvdB
+    shortcuts_panel, shortcuts_widgets = _shortcuts_panel()
 
     notebook = Gtk.Notebook()
     notebook.set_size_request(PREFERENCES_WIDTH, PREFERENCES_HEIGHT)
@@ -57,9 +61,11 @@ def preferences_dialog():
     notebook.append_page(edit_prefs_panel, Gtk.Label(label=_("Editing")))
     notebook.append_page(view_pres_panel, Gtk.Label(label=_("View")))
     notebook.append_page(performance_panel, Gtk.Label(label=_("Performance")))
+    notebook.append_page(shortcuts_panel, Gtk.Label(label=_("Shortcuts")))
     guiutils.set_margins(notebook, 4, 24, 6, 0)
 
-    dialog.connect('response', _preferences_dialog_callback, (gen_opts_widgets, edit_prefs_widgets, view_pref_widgets, performance_widgets))
+    dialog.connect('response', _preferences_dialog_callback, (gen_opts_widgets, edit_prefs_widgets, view_pref_widgets, \
+        performance_widgets, shortcuts_widgets))
     dialog.vbox.pack_start(notebook, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     dialogutils.default_behaviour(dialog)
@@ -401,6 +407,34 @@ def _performance_panel():
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     return vbox, (perf_render_threads, perf_drop_frames)
+
+def _shortcuts_panel():
+    # Apr-2017 - SvdB
+    # Add a panel for keyboard shortcuts
+    prefs = editorpersistance.prefs
+    count = 0
+    shortcut_found = 0
+    # Widgets
+    shortcuts_combo = Gtk.ComboBoxText()
+    shortcuts_combo.append_text('Flowblade Default')
+    for shortcut_file in shortcuts.shortcut_files:
+        shortcuts_combo.append_text(shortcut_file)
+        count = count + 1
+        if hasattr(prefs, 'shortcuts'):
+            if shortcut_file == prefs.shortcuts:
+                shortcut_found = count
+    shortcuts_combo.set_active(shortcut_found)    
+
+    # Layout
+    row1 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Shortcuts File")), shortcuts_combo, PREFERENCES_LEFT))
+
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(row1, False, False, 0)
+    vbox.pack_start(Gtk.Label(), True, True, 0)
+
+    guiutils.set_margins(vbox, 12, 0, 12, 12)
+
+    return vbox, (shortcuts_combo)
 
 def _row(row_cont):
     row_cont.set_size_request(10, 26)
