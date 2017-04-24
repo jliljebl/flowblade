@@ -246,10 +246,32 @@ def _set_length(data):
     
 def _stretch_next(data):
     clip, track, item_id, item_data = data
-    
+    try:
+        next_index = track.clips.index(clip) + 1
+        if next_index >= len( track.clips):
+            return # clip is last clip
+        if track.clips[next_index].is_blanck_clip == True:
+            # Next clip is blank so we can do this.
+            clip = track.clips[next_index]
+            data = (clip, track, item_id, item_data)
+            _cover_blank_from_prev(data, True)
+    except:
+        pass # any error means that this can't be done
+        
 def _stretch_prev(data):
     clip, track, item_id, item_data = data
-
+    try:
+        prev_index = track.clips.index(clip) - 1
+        if prev_index < 0:
+            return # clip is first clip
+        if track.clips[prev_index].is_blanck_clip == True:
+            # Next clip is blank so we can do this.
+            clip = track.clips[prev_index]
+            data = (clip, track, item_id, item_data)
+            _cover_blank_from_next(data, True)
+    except:
+        pass # any error means that this can't be done
+        
 def _delete_blank(data):
     clip, track, item_id, x = data
     movemodes.select_blank_range(track, clip)
@@ -260,13 +282,17 @@ def _delete_blank(data):
     action = edit.remove_multiple_action(data)
     action.do_edit()
 
-def _cover_blank_from_prev(data):
+def _cover_blank_from_prev(data, called_from_prev_clip=False):
     clip, track, item_id, item_data = data
-    clip_index = movemodes.selected_range_in - 1
-    if clip_index < 0: # we're not getting legal clip index
-        return 
-    cover_clip = track.clips[clip_index]
-
+    if not called_from_prev_clip:
+        clip_index = movemodes.selected_range_in - 1
+        if clip_index < 0: # we're not getting legal clip index
+            return 
+        cover_clip = track.clips[clip_index]
+    else:
+        clip_index = track.clips.index(clip) - 1
+        cover_clip = track.clips[clip_index]
+        
     # Check that clip covers blank area
     total_length = 0
     for i in range(movemodes.selected_range_in,  movemodes.selected_range_out + 1):
@@ -284,14 +310,19 @@ def _cover_blank_from_prev(data):
     action = edit.trim_end_over_blanks(data)
     action.do_edit()
 
-def _cover_blank_from_next(data):
+def _cover_blank_from_next(data, called_from_next_clip=False):
     clip, track, item_id, item_data = data
-    clip_index = movemodes.selected_range_out + 1
-    blank_index = movemodes.selected_range_in
-    if clip_index < 0: # we're not getting legal clip index
-        return
-    cover_clip = track.clips[clip_index]
-    
+    if not called_from_next_clip:
+        clip_index = movemodes.selected_range_out + 1
+        blank_index = movemodes.selected_range_in
+        if clip_index < 0: # we're not getting legal clip index
+            return
+        cover_clip = track.clips[clip_index]
+    else:
+        clip_index = track.clips.index(clip) + 1
+        blank_index = clip_index - 1
+        cover_clip = track.clips[clip_index]
+        
     # Check that clip covers blank area
     total_length = 0
     for i in range(movemodes.selected_range_in,  movemodes.selected_range_out + 1):

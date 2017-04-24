@@ -162,7 +162,7 @@ class Sequence:
         0                                               black bg track
         1 - (self.first_video_index - 1)                audio tracks    
         self.first_video_index - (len(self.tracks) - 2) video tracks
-        (len(self.tracks) - 1)                          hidden track
+        (len(self.tracks) - 1)                          hidden track for trimmming
         
         Tracks are never changed after creation, changing tracks count feature is
         achieved by creating a new sequence.
