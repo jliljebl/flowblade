@@ -235,6 +235,21 @@ def _mute_clip(data):
         action = edit.unmute_clip(data)
         action.do_edit()
 
+def _delete_clip(data):
+    tlineaction.splice_out_button_pressed()
+    
+def _lift(data):
+    tlineaction.lift_button_pressed()
+    
+def _set_length(data):
+    clip, track, item_id, item_data = data
+    
+def _stretch_next(data):
+    clip, track, item_id, item_data = data
+    
+def _stretch_prev(data):
+    clip, track, item_id, item_data = data
+
 def _delete_blank(data):
     clip, track, item_id, x = data
     movemodes.select_blank_range(track, clip)
@@ -465,4 +480,9 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "match_frame_start_monitor":_match_frame_start_monitor,
                   "match_frame_end_monitor":_match_frame_end_monitor,
                   "select_all_after": _select_all_after,
-                  "select_all_before":_select_all_before}
+                  "select_all_before":_select_all_before,
+                  "delete":_delete_clip,
+                  "lift":_lift, 
+                  "length":_set_length,
+                  "stretch_next":_stretch_next, 
+                  "stretch_prev":_stretch_prev}

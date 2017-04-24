@@ -175,7 +175,7 @@ def main(root_path):
         os.mkdir(user_dir + appconsts.TRIM_VIEW_DIR)
     if not os.path.exists(user_dir + appconsts.NATRON_DIR):
         os.mkdir(user_dir + appconsts.NATRON_DIR)
-        
+       
     # Set paths.
     respaths.set_paths(root_path)
 

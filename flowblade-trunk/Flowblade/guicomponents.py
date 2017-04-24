@@ -1479,22 +1479,21 @@ def _get_edit_menu_item(event, clip, track, callback):
     sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
 
-    del_item = _get_menu_item(_("Delete"), callback, (clip, track))
+    del_item = _get_menu_item(_("Delete"), callback, (clip, track, "delete", event.x))
     sub_menu.append(del_item)
 
-    lift_item = _get_menu_item(_("Lift"), callback, (clip, track))
+    lift_item = _get_menu_item(_("Lift"), callback, (clip, track, "lift", event.x))
     sub_menu.append(lift_item)
     
     _add_separetor(sub_menu)
 
-    length_item = _get_menu_item(_("Set Clip Length..."), callback, (clip, track))
+    length_item = _get_menu_item(_("Set Clip Length..."), callback, (clip, track, "length", event.x))
     sub_menu.append(length_item)
 
-    stretch_next_item = _get_menu_item(_("Stretch Over Next Blank"), callback, (clip, track))
+    stretch_next_item = _get_menu_item(_("Stretch Over Next Blank"), callback, (clip, track, "stretch_next", event.x))
     sub_menu.append(stretch_next_item)
 
-
-    stretch_prev_item = _get_menu_item(_("Stretch Over Prev Blank"), callback, (clip, track))
+    stretch_prev_item = _get_menu_item(_("Stretch Over Prev Blank"), callback, (clip, track, "stretch_prev", event.x))
     sub_menu.append(stretch_prev_item)
     
     menu_item.show()
