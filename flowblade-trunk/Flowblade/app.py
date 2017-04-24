@@ -93,6 +93,8 @@ import translations
 import undo
 import updater
 import utils
+# Apr-2017 - SvdB
+import shortcuts
 
 import jackaudio
 
@@ -189,6 +191,9 @@ def main(root_path):
     editorpersistance.create_rendered_clips_folder_if_needed(user_dir)
 
     editorpersistance.save()
+    # Apr-2017 - SvdB - Keyboard shortcuts
+    shortcuts.load_shortcut_files()
+    shortcuts.load_shortcuts()
 
     # Init translations module with translations data
     translations.init_languages()

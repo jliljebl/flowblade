@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--
+  Shortcut configuration file for Flowblade.
+  Apr-2017 - SvdB
+  Each config file should contain a single set of shortcuts
+
+  The attribute 'name' in the <flowblade> tag should be the same as the file name.
+  The filename will be displayed in the application preferences screen.
+
+  The author tag is optional.
+
+  The shortcuts tag is mandatory.
+
+  There must be at least one event tag. Missing event tags will use the default
+  Flowblade values.
+
+  The code attribute is used internally. Unknown code values will be ignored.
+
+  The name attribute is optional but used for clarity.
+
+  There can be multiple event lines for the same code. The defined shortcuts
+  will all be usable. 
+  The modifiers attribute can contain any combination of modifiers and are
+  applied together with the key. The format is Ctrl+Alt, i.e. separated by +
+  If no modifiers attribute is given then no modifier will be needed or allowed.
+
+  The modifiers are defined as follows:
+  Ctrl, Alt, Meta (Typically Windows key), Shift, Any
+  'Any' is a special case where modifier states are not actually checked
+  to determine the action. This is used for ffwd / rev where the modifiers ARE
+  used, but hardcoded in the application.
+  If you have CapsLock engaged on your keyboard it will equate to SHIFT.
+  Others may be added later.
+  Case is not important for the modifiers, so ALT and Alt and alt are all the same.
+  Case IS important for the code attribute.
+  
+  At the moment there is no difference between left/right Shift or Ctrl.
+  Non alpha-numerical keys can be referenced by their key name:
+  insert delete home space end page_up page_down up down left right
+  f1..f12 kp_divide kp_multiply kp_subtract kp_add kp_enter kp_decimal
+  kp_0..kp_9
+  NB: The Keypad numbers have a different assignment to the 'normal' numbers.
+  If you want a shortcut for the Keypad numbers, use kp_0..kp_9 instead of 0..9
+
+  The keys used can be typed normally in this file. Alphabetical keys MUST be
+  lower case. If you want to use upper case, then use the Shift
+  modifier.
+-->
+<flowblade file='shortcuts' name='Flowblade' comment='Default values'>
+  <author name='me'>
+    <name>Steven van de Beek</name>
+    <date format='dd-Mmm-yyyy'>16-Apr-2017</date>
+  </author>
+  <shortcuts>
+    <event code='mark_in' name='Mark In'>i</event>
+    <event code='mark_out' name='Mark Out'>o</event>
+    <event code='to_mark_in' name='Go To Mark In' modifiers='ALT'>i</event>
+    <event code='to_mark_in' name='Go To Mark In' modifiers='SHIFT'>i</event>
+    <event code='to_mark_in' name='Go To Mark In' modifiers='ALT+SHIFT'>i</event>
+    <event code='to_mark_out' name='Go To Mark Out' modifiers='ALT'>o</event>
+    <event code='to_mark_out' name='Go To Mark Out' modifiers='SHIFT'>o</event>
+    <event code='to_mark_out' name='Go To Mark Out' modifiers='ALT+SHIFT'>o</event>
+    <event code='play_pause' name='Play / Pause'>space</event>
+    <event code='prev_cut' name='Go To Previous Cut'>down</event>
+    <event code='next_cut' name='Go To Next Cut'>up</event>
+    <event code='prev_frame' name='Go To Previous Frame' modifiers='Any'>left</event>
+    <event code='next_frame' name='Go To Next Frame' modifiers='Any'>right</event>
+    <event code='insert' name='Insert'>y</event>
+    <event code='insert' name='Insert' modifiers='SHIFT'>y</event>
+    <event code='append' name='Append'>u</event>
+    <event code='append' name='Append' modifiers='SHIFT'>u</event>
+    <event code='slower' name='Slower'>j</event>
+    <event code='stop' name='Stop'>k</event>
+    <event code='faster' name='Faster'>l</event>
+    <event code='log_range' name='Log Range' modifiers='CTRL'>l</event>
+    <event code='log_range' name='Log Range'>g</event>
+    <event code='resync' name='Resynchronization'>s</event>
+    <event code='delete' name='Delete'>delete</event>
+    <event code='to_start' name='Go To Start'>home</event>
+    <event code='to_end' name='Go To End'>end</event>
+    <event code='3_point_overwrite' name='Three Point Overwrite'>t</event>
+    <event code='toggle_ripple' name='Toggle Ripple Mode'>r</event>
+    <event code='cut' name='Cut'>x</event>
+    <event code='edit_mode_insert' name='Change Edit Mode to Insert'>1</event>
+    <event code='edit_mode_insert' name='Change Edit Mode to Insert'>kp_1</event>
+    <event code='edit_mode_overwrite' name='Change Edit Mode to Overwrite'>2</event>
+    <event code='edit_mode_overwrite' name='Change Edit Mode to Overwrite'>kp_2</event>
+    <event code='edit_mode_trim' name='Change Edit Mode to Trim'>3</event>
+    <event code='edit_mode_trim' name='Change Edit Mode to Trim'>kp_3</event>
+    <event code='edit_mode_roll' name='Change Edit Mode to Roll'>4</event>
+    <event code='edit_mode_roll' name='Change Edit Mode to Roll'>kp_4</event>
+    <event code='edit_mode_slip' name='Change Edit Mode to Slip'>5</event>
+    <event code='edit_mode_slip' name='Change Edit Mode to Slip'>kp_5</event>
+    <event code='edit_mode_spacer' name='Change Edit Mode to Spacer'>6</event>
+    <event code='edit_mode_spacer' name='Change Edit Mode to Spacer'>kp_6</event>
+    <event code='edit_mode_box' name='Change Edit Mode to Box'>7</event>
+    <event code='edit_mode_box' name='Change Edit Mode to Box'>kp_7</event>
+    <event code='zoom_out' name='Zoom Out'>-</event>
+    <event code='zoom_in' name='Zoom In'>=</event>
+    <event code='switch_monitor' name='Switch Monitor Display'>tab</event>
+    <event code='add_marker' name='Add Marker'>m</event>
+    <event code='enter_edit' name='Enter Editing Mode'>enter</event>
+  </shortcuts>
+</flowblade>
