@@ -2089,7 +2089,7 @@ def get_markers_popup_menu(event, callback):
             marker = seq.markers[i]
             name, frame = marker
             item_str  = utils.get_tc_string(frame) + " " + name
-            menu.add(_get_menu_item(_(item_str), callback, str(i) ))
+            menu.add(_get_menu_item(item_str, callback, str(i) ))
         _add_separetor(menu)
     else:
         no_markers_item = _get_menu_item(_("No Markers"), callback, "dummy", False)
