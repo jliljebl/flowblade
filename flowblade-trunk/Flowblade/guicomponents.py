@@ -2150,7 +2150,7 @@ def get_all_tracks_popup_menu(event, callback):
     menu.add(_get_menu_item(_("Activate Only Current Top Active Track"), callback, "topactiveonly" ))
     _add_separetor(menu)
     shrink_tline_item = Gtk.CheckMenuItem(_("Vertical Shrink Timeline").encode('utf-8'))
-    shrink_tline_item.set_active(PROJECT().get_project_property("tline_shrink_vertical"))
+    shrink_tline_item.set_active(PROJECT().get_project_property(appconsts.P_PROP_TLINE_SHRINK_VERTICAL))
     shrink_tline_item.show()
     shrink_tline_item.connect("toggled", callback, "shrink" )
     if len(current_sequence().tracks) == 11:

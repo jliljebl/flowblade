@@ -124,7 +124,7 @@ def _tracks_resize_update():
     gui.tline_column.widget.queue_draw()
 
 def _tline_vertical_shrink_changed(widget):
-    PROJECT().project_properties["tline_shrink_vertical"] = widget.get_active()
+    PROJECT().project_properties[appconsts.P_PROP_TLINE_SHRINK_VERTICAL] = widget.get_active()
     updater.set_timeline_height()
 
 def _activate_all_tracks():

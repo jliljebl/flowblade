@@ -46,6 +46,7 @@ import editorstate
 from editorstate import get_track
 from editorstate import current_sequence
 from editorstate import PLAYER
+from editorstate import PROJECT
 from editorstate import timeline_visible
 from editorstate import MONITOR_MEDIA_FILE
 from editorstate import EDIT_MODE
@@ -521,9 +522,35 @@ def sync_compositor(compositor):
 def set_compositors_fades_defaults():
     dialogs.set_fades_defaults_dialog(_compositors_fades_defaults_callback)
 
-def _compositors_fades_defaults_callback(dialog, response_id):
+def _compositors_fades_defaults_callback(dialog, response_id, widgets):
+    group_select, fade_in_check, fade_in_spin, fade_out_check, fade_out_spin = widgets
+    
+    group = group_select.get_active()
+    fade_in_on = fade_in_check.get_active()
+    fade_in_length = int(fade_in_spin.get_value())
+    fade_out_on = fade_out_check.get_active()
+    fade_out_length = int(fade_out_spin.get_value())
+
     dialog.destroy()
+    
+    if group == 0:
+        fade_in_key = appconsts.P_PROP_DISSOLVE_GROUP_FADE_IN
+        fade_out_key = appconsts.P_PROP_DISSOLVE_GROUP_FADE_OUT
+    else:
+        fade_in_key = appconsts.P_PROP_ANIM_GROUP_FADE_IN
+        fade_out_key = appconsts.P_PROP_ANIM_GROUP_FADE_OUT
+
+    if fade_in_on == False or fade_in_length == 0:
+        PROJECT().set_project_property(fade_in_key, -1)
+    else:
+        PROJECT().set_project_property(fade_in_key, fade_in_length)
         
+    if fade_out_on == False or fade_out_length == 0:
+        PROJECT().set_project_property(fade_out_key, -1)
+    else:
+        PROJECT().set_project_property(fade_out_key, fade_out_length)
+
+
 def split_audio_button_pressed():
     if movemodes.selected_track == -1:
         return

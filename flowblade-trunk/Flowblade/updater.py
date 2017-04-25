@@ -292,7 +292,7 @@ def maybe_autocenter():
 
 # ------------------------------------------ timeline shrinking
 def set_timeline_height():
-    if len(current_sequence().tracks) == 11 or PROJECT().get_project_property("tline_shrink_vertical") == False:
+    if len(current_sequence().tracks) == 11 or PROJECT().get_project_property(appconsts.P_PROP_TLINE_SHRINK_VERTICAL) == False:
         tlinewidgets.HEIGHT = appconsts.TLINE_HEIGHT
     else:
         tlinewidgets.HEIGHT = current_sequence().get_shrunk_tline_height_min()

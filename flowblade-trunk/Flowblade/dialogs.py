@@ -1561,6 +1561,8 @@ def set_fades_defaults_dialog(callback):
     fade_out_row.pack_start(fade_out_length_label, False, False, 0)
     fade_out_row.pack_start(fade_out_spin, False, False, 0)
 
+    widgets = (group_select, fade_in_check, fade_in_spin, fade_out_check, fade_out_spin)
+
     fades_vbox = guiutils.get_vbox([fade_in_row, fade_out_row], False)
     fades_frame = panels.get_named_frame(_("Group Auto Fades"), fades_vbox)
     
@@ -1570,6 +1572,6 @@ def set_fades_defaults_dialog(callback):
     dialogutils.set_outer_margins(dialog.vbox)
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
-    dialog.connect('response', callback)
+    dialog.connect('response', callback, widgets)
 
     dialog.show_all()
