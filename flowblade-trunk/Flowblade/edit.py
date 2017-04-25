@@ -1425,6 +1425,24 @@ def _trim_last_clip_end_redo(self):
         self.first_do = False
         self.undo_done_callback(self.track)
 
+#------------------ SET CLIP LENGTH
+# "track","clip","index","length"
+# Trims end of clip
+def set_clip_length_action(data):
+    action = EditAction(_set_clip_length_undo,_set_clip_length_redo, data)
+    return action
+
+def _set_clip_length_undo(self):
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.clip, self.index,
+                 self.clip.clip_in, self.orig_clip_out)
+    
+def _set_clip_length_redo(self):
+    self.orig_clip_out = self.clip.clip_out
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.clip, self.index,
+                 self.clip.clip_in,  self.clip.clip_in + self.length - 1) # -1, out is inclusive and we're usin length here
+
 # ----------------------------------- CLIP END DRAG ON BLANK
 # "track","index","clip","blank_clip_length","delta"
 def clip_end_drag_on_blank_action(data):

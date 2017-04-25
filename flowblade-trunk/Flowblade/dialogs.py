@@ -930,6 +930,28 @@ def tracks_count_change_dialog(callback):
     dialog.connect('response', callback, tracks_select)
     dialog.show_all()
 
+
+def clip_length_change_dialog(callback, clip, track):
+    dialog = Gtk.Dialog(_("Change Clip Length"),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                        _("Ok").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+    
+    length_changer = guicomponents.ClipLengthChanger(clip)
+
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(length_changer.widget, False, False, 0)
+    vbox.pack_start(guiutils.get_pad_label(24, 24), False, False, 0)
+
+    alignment = dialogutils.get_alignment2(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, clip, track, length_changer)
+    dialog.show_all()
+
+
 def new_sequence_dialog(callback, default_name):
     dialog = Gtk.Dialog(_("Create New Sequence"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
