@@ -561,7 +561,7 @@ def _create_rotion_geometry_editor(clip, editable_properties):
     ep.profile_width = current_sequence().profile.width()
     ep.profile_height = current_sequence().profile.height()
     # duck type methods, using opacity is not meaningful, any property with clip member could do
-    ep.get_clip_tline_pos = lambda : ep.opacity.clip.clip_in # clip is compositor, compositor in and out points staright in timeline frames
+    ep.get_clip_tline_pos = lambda : ep.opacity.clip.clip_in # clip is compositor, compositor in and out points straight in timeline frames
     ep.get_clip_length = lambda : ep.opacity.clip.clip_out - ep.opacity.clip.clip_in + 1
     ep.get_input_range_adjustment = lambda : Gtk.Adjustment(float(100), float(0), float(100), float(1))
     ep.get_display_name = lambda : "Opacity"

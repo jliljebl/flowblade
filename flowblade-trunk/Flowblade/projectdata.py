@@ -61,7 +61,11 @@ EVENT_SAVED_SNAPSHOT = 5
 
 thumbnailer = None
 
-_project_properties_default_values = {appconsts.P_PROP_TLINE_SHRINK_VERTICAL:False}
+_project_properties_default_values = {appconsts.P_PROP_TLINE_SHRINK_VERTICAL:False,
+                                      appconsts.P_PROP_DISSOLVE_GROUP_FADE_IN:-1,
+                                      appconsts.P_PROP_DISSOLVE_GROUP_FADE_OUT:-1,
+                                      appconsts.P_PROP_ANIM_GROUP_FADE_IN:-1,
+                                      appconsts.P_PROP_ANIM_GROUP_FADE_OUT:-1}
 
 class Project:
     """

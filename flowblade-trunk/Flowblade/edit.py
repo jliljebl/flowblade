@@ -29,6 +29,7 @@ EditAction objects and placing them on the undo/redo stack.
 import audiowaveform
 import appconsts
 import compositeeditor
+import compositorfades
 from editorstate import current_sequence
 from editorstate import get_track
 from editorstate import PLAYER
@@ -1755,6 +1756,8 @@ def _add_compositor_redo(self):
 
     current_sequence().add_compositor(self.compositor)
     current_sequence().restack_compositors()
+
+    compositorfades.add_default_fades(self.compositor)
 
     compositeeditor.set_compositor(self.compositor)
 

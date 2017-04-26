@@ -1535,6 +1535,7 @@ def set_fades_defaults_dialog(callback):
     group_select.append_text("Dissolve, Blend")
     group_select.append_text("Affine Blend,  Picture-In-Picture, Region")
     group_select.set_active(0)
+
     
     groups_vbox = guiutils.get_vbox([group_select], False)
     group_frame = panels.get_named_frame(_("Compositor Auto Fades Group"), groups_vbox)
@@ -1562,6 +1563,8 @@ def set_fades_defaults_dialog(callback):
     fade_out_row.pack_start(fade_out_spin, False, False, 0)
 
     widgets = (group_select, fade_in_check, fade_in_spin, fade_out_check, fade_out_spin)
+    group_select.connect('changed', _fades_group_changed, widgets)
+    _fades_group_changed(group_select, widgets)
 
     fades_vbox = guiutils.get_vbox([fade_in_row, fade_out_row], False)
     fades_frame = panels.get_named_frame(_("Group Auto Fades"), fades_vbox)
@@ -1575,3 +1578,32 @@ def set_fades_defaults_dialog(callback):
     dialog.connect('response', callback, widgets)
 
     dialog.show_all()
+
+def _fades_group_changed(combo, widgets):
+
+    group_select, fade_in_check, fade_in_spin, fade_out_check, fade_out_spin = widgets
+    
+    if group_select.get_active() == 0:
+        fade_in_key = appconsts.P_PROP_DISSOLVE_GROUP_FADE_IN
+        fade_out_key = appconsts.P_PROP_DISSOLVE_GROUP_FADE_OUT
+    else:
+        fade_in_key = appconsts.P_PROP_ANIM_GROUP_FADE_IN
+        fade_out_key = appconsts.P_PROP_ANIM_GROUP_FADE_OUT
+    
+    fade_in = editorstate.PROJECT().get_project_property(fade_in_key)
+    fade_out = editorstate.PROJECT().get_project_property(fade_out_key)
+    
+    if fade_in < 1:
+        fade_in_check.set_active(False)
+        fade_in_spin.set_value(0)
+    else:
+        fade_in_check.set_active(True)
+        fade_in_spin.set_value(fade_in)
+    
+    if fade_out < 1:
+        fade_out_check.set_active(False)
+        fade_out_spin.set_value(0)
+    else:
+        fade_out_check.set_active(True)
+        fade_out_spin.set_value(fade_out)
+
