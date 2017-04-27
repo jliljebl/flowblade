@@ -31,6 +31,24 @@ be used for adding fade-ins and fade outs, so this dedicated module is needed.
 
 def add_default_fades(compositor):
 
+    keyframe_property, klass, keyframes = _get_kfproperty_klass_and_keyframes(compositor)
+
+    fade_in_length = editorstate.PROJECT().get_project_property(appconsts.P_PROP_DISSOLVE_GROUP_FADE_IN)
+    fade_out_length = editorstate.PROJECT().get_project_property(appconsts.P_PROP_DISSOLVE_GROUP_FADE_OUT) 
+    
+    print fade_in_length, fade_out_length
+    
+    frame, value  = keyframes.pop(0)
+    keyframes.append((frame, 0))
+    if fade_in_length > 0: # > 1 means no auto is applied
+        keyframes.append((frame + fade_in_length, 100))
+    
+    keyframe_property.write_out_keyframes(keyframes)
+
+
+
+def _get_kfproperty_klass_and_keyframes(compositor):
+
     # Create editable properties list for compositor.
     t_editable_properties = propertyedit.get_transition_editable_properties(compositor)
     
@@ -42,7 +60,9 @@ def add_default_fades(compositor):
         if klass == "OpacityInGeomKeyframeProperty":
             keyframe_property = ep
             break
-        
+        if klass == "KeyFrameHCSTransitionProperty":
+            keyframe_property = ep
+            break
         try:
             print ep
             print ep.__class__.__name__
@@ -54,23 +74,20 @@ def add_default_fades(compositor):
     
     if keyframe_property == None:
         print "add_default_fades failed"
-        return
+        return None
     
     # Get keyframes list
     keyframes = None
     if klass == "OpacityInGeomKeyframeProperty":
         keyframes = propertyparse.geom_keyframes_value_string_to_opacity_kf_array(keyframe_property.value, keyframe_property.get_in_value)
+    elif klass == "KeyFrameHCSTransitionProperty":
+        keyframes = propertyparse.single_value_keyframes_string_to_kf_array(keyframe_property.value, keyframe_property.get_in_value)
         
+    print keyframe_property.value
     print keyframes
+
+    return (keyframe_property, klass, keyframes)
     
-    
-    fade_in = editorstate.PROJECT().get_project_property(appconsts.P_PROP_DISSOLVE_GROUP_FADE_IN)
-    fade_out = editorstate.PROJECT().get_project_property(appconsts.P_PROP_DISSOLVE_GROUP_FADE_OUT) 
-    
-    print fade_in, fade_out
-    
-    
-    
-    
+
     
     
