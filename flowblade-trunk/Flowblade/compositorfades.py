@@ -18,6 +18,8 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 import appconsts
+import dialogutils
+import gui
 import editorstate
 from editorstate import current_sequence
 import propertyedit
@@ -40,19 +42,19 @@ def add_default_fades(compositor, clip):
         return
         
     fade_in_length, fade_out_length = _get_default_fades_lengths(property_klass)
-    
+    print fade_in_length, 
     if fade_in_length > 0:
-        if fade_in_length <= clip.clip_length:
+        if fade_in_length <= clip.clip_length():
             keyframes = _add_default_fade_in(keyframe_property, property_klass, keyframes, fade_in_length)
         else:
-            _show_length_error_dialog()
+            _show_defaults_length_error_dialog()
             return
             
     if fade_out_length > 0:
-        if fade_out_length + fade_in_length + 1 <= clip.clip_length:
+        if fade_out_length + fade_in_length + 1 <= clip.clip_length():
             keyframes = _add_default_fade_out(keyframe_property, property_klass, keyframes, fade_out_length, clip)
         else:
-            _show_length_error_dialog()
+            _show_defaults_length_error_dialog()
             return
 
     keyframe_property.write_out_keyframes(keyframes)
@@ -62,7 +64,7 @@ def add_fade_in(compositor, fade_in_length):
     keyframe_property, property_klass, keyframes = _get_kfproperty_klass_and_keyframes(compositor, clip)
     
     if fade_in_length > 0:
-        if fade_in_length <= clip.clip_length:
+        if fade_in_length <= clip.clip_length():
             _do_user_add_fade_in(keyframe_property, property_klass, keyframes, fade_in_length)
         else:
             _show_length_error_dialog()
@@ -72,7 +74,7 @@ def add_fade_out(compositor, fade_out_length):
     keyframe_property, property_klass, keyframes = _get_kfproperty_klass_and_keyframes(compositor, clip)
     
     if fade_out_length > 0:
-        if fade_out_length + 1 <= clip.clip_length:
+        if fade_out_length + 1 <= clip.clip_length():
             _do_user_add_fade_out(keyframe_property, property_klass, keyframes, fade_out_length, clip)
         else:
             _show_length_error_dialog()
@@ -132,9 +134,6 @@ def _get_default_fades_lengths(property_klass):
         fade_out_length = editorstate.PROJECT().get_project_property(appconsts.P_PROP_ANIM_GROUP_FADE_OUT)
     
     return (fade_in_length, fade_out_length)
-
-def _show_length_error_dialog():
-    pass
 
 def _add_default_fade_in(keyframe_property, property_klass, keyframes, fade_in_length):
     if property_klass in _dissolve_property_klasses:
@@ -231,6 +230,18 @@ def _do_user_add_fade_out(keyframe_property, property_klass, keyframes, fade_out
 
     keyframe_property.write_out_keyframes(keyframes)
 
+
+def _show_length_error_dialog():
+    parent_window = gui.editor_window.window
+    primary_txt = _("Clip too short!")
+    secondary_txt = _("The Clip is too short to add the requested fade.")
+    dialogutils.info_message(primary_txt, secondary_txt, parent_window)
+    
+def _show_defaults_length_error_dialog():
+    parent_window = gui.editor_window.window
+    primary_txt = _("Clip too short for Auto Fades!")
+    secondary_txt = _("The Clip is too short to add the user set default fades on Compositor creation.")
+    dialogutils.info_message(primary_txt, secondary_txt, parent_window)
             
             
             
