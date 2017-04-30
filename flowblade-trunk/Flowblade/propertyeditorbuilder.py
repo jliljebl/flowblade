@@ -33,6 +33,7 @@ import guiutils
 import keyframeeditor
 import mltfilters
 import mlttransitions
+import propertyparse
 import translations
 import utils
 
@@ -547,49 +548,9 @@ def _compositor_editor_force_combo_box_callback(combo_box, data):
         deinterlace.write_value("1")
         progressive.write_value("1")
 
-def _create_rotion_geometry_editor(clip, editable_properties):
-    # Build a custom object that duck types for TransitionEditableProperty to use in editor
-    ep = utils.EmptyClass()
-    # pack real properties to go
-    ep.x = filter(lambda ep: ep.name == "x", editable_properties)[0]
-    ep.y = filter(lambda ep: ep.name == "y", editable_properties)[0]
-    ep.x_scale = filter(lambda ep: ep.name == "x scale", editable_properties)[0]
-    ep.y_scale = filter(lambda ep: ep.name == "y scale", editable_properties)[0]
-    ep.rotation = filter(lambda ep: ep.name == "rotation", editable_properties)[0]
-    ep.opacity = filter(lambda ep: ep.name == "opacity", editable_properties)[0]
-    # Screen width and height are needeed for frei0r conversions
-    ep.profile_width = current_sequence().profile.width()
-    ep.profile_height = current_sequence().profile.height()
-    # duck type methods, using opacity is not meaningful, any property with clip member could do
-    ep.get_clip_tline_pos = lambda : ep.opacity.clip.clip_in # clip is compositor, compositor in and out points straight in timeline frames
-    ep.get_clip_length = lambda : ep.opacity.clip.clip_out - ep.opacity.clip.clip_in + 1
-    ep.get_input_range_adjustment = lambda : Gtk.Adjustment(float(100), float(0), float(100), float(1))
-    ep.get_display_name = lambda : "Opacity"
-    ep.get_pixel_aspect_ratio = lambda : (float(current_sequence().profile.sample_aspect_num()) / current_sequence().profile.sample_aspect_den())
-    ep.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
-    ep.write_out_keyframes = lambda w_kf : keyframeeditor.rotating_ge_write_out_keyframes(ep, w_kf)
-    # duck type members
-    x_tokens = ep.x.value.split(";")
-    y_tokens = ep.y.value.split(";")
-    x_scale_tokens = ep.x_scale.value.split(";")
-    y_scale_tokens = ep.y_scale.value.split(";")
-    rotation_tokens = ep.rotation.value.split(";")
-    opacity_tokens = ep.opacity.value.split(";")
+def _create_rotion_geometry_editor(clip, editable_properties):   
+    ep = propertyparse.create_editable_property_for_affine_blend(clip, editable_properties)
     
-    value = ""
-    for i in range(0, len(x_tokens)): # these better match, same number of keyframes for all values, or this will not work
-        frame, x = x_tokens[i].split("=")
-        frame, y = y_tokens[i].split("=")
-        frame, x_scale = x_scale_tokens[i].split("=")
-        frame, y_scale = y_scale_tokens[i].split("=")
-        frame, rotation = rotation_tokens[i].split("=")
-        frame, opacity = opacity_tokens[i].split("=")
-        
-        frame_str = str(frame) + "=" + str(x) + ":" + str(y) + ":" + str(x_scale) + ":" + str(y_scale) + ":" + str(rotation) + ":" + str(opacity)
-        value += frame_str + ";"
-
-    ep.value = value.strip(";")
-
     kf_edit = keyframeeditor.RotatingGeometryEditor(ep, False)
     return kf_edit
 

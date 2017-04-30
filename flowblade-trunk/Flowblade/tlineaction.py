@@ -523,7 +523,7 @@ def set_compositors_fades_defaults():
     dialogs.set_fades_defaults_dialog(_compositors_fades_defaults_callback)
 
 def _compositors_fades_defaults_callback(dialog, response_id, widgets):
-    group_select, fade_in_check, fade_in_spin, fade_out_check, fade_out_spin = widgets
+    group_select, fade_in_check, fade_in_spin, fade_out_check, fade_out_spin, fade_in_length_label, fade_out_length_label = widgets
     
     group = group_select.get_active()
     fade_in_on = fade_in_check.get_active()

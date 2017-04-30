@@ -19,75 +19,219 @@
 """
 import appconsts
 import editorstate
+from editorstate import current_sequence
 import propertyedit
 import propertyparse
 
 """
 This module handles adding fade-ins and fade-outs to compositors.
 
-Creating and managing keyframes is mostly handled by editor GUI components which cannot reasonbly 
+Creating and managing keyframes is mostly handled by editor GUI components which cannot easily 
 be used for adding fade-ins and fade outs, so this dedicated module is needed.
 """
 
-def add_default_fades(compositor):
+# Dissolve default fades group ("Dissolve", "Blend") keyframe property class names
+_dissolve_property_klasses = ["OpacityInGeomKeyframeProperty", "KeyFrameHCSTransitionProperty"]
 
-    keyframe_property, klass, keyframes = _get_kfproperty_klass_and_keyframes(compositor)
+def add_default_fades(compositor, clip):
+    keyframe_property, property_klass, keyframes = _get_kfproperty_klass_and_keyframes(compositor, clip)
 
-    fade_in_length = editorstate.PROJECT().get_project_property(appconsts.P_PROP_DISSOLVE_GROUP_FADE_IN)
-    fade_out_length = editorstate.PROJECT().get_project_property(appconsts.P_PROP_DISSOLVE_GROUP_FADE_OUT) 
+    if keyframe_property == None:
+        return
+        
+    fade_in_length, fade_out_length = _get_default_fades_lengths(property_klass)
     
-    print fade_in_length, fade_out_length
-    
-    frame, value  = keyframes.pop(0)
-    keyframes.append((frame, 0))
-    if fade_in_length > 0: # > 1 means no auto is applied
-        keyframes.append((frame + fade_in_length, 100))
-    
+    if fade_in_length > 0:
+        if fade_in_length <= clip.clip_length:
+            keyframes = _add_default_fade_in(keyframe_property, property_klass, keyframes, fade_in_length)
+        else:
+            _show_length_error_dialog()
+            return
+            
+    if fade_out_length > 0:
+        if fade_out_length + fade_in_length + 1 <= clip.clip_length:
+            keyframes = _add_default_fade_out(keyframe_property, property_klass, keyframes, fade_out_length, clip)
+        else:
+            _show_length_error_dialog()
+            return
+
     keyframe_property.write_out_keyframes(keyframes)
 
+def add_fade_in(compositor, fade_in_length):
+    clip = _get_compositor_clip(compositor)
+    keyframe_property, property_klass, keyframes = _get_kfproperty_klass_and_keyframes(compositor, clip)
+    
+    if fade_in_length > 0:
+        if fade_in_length <= clip.clip_length:
+            _do_user_add_fade_in(keyframe_property, property_klass, keyframes, fade_in_length)
+        else:
+            _show_length_error_dialog()
 
-
-def _get_kfproperty_klass_and_keyframes(compositor):
-
-    # Create editable properties list for compositor.
+def add_fade_out(compositor, fade_out_length):
+    clip = _get_compositor_clip(compositor)
+    keyframe_property, property_klass, keyframes = _get_kfproperty_klass_and_keyframes(compositor, clip)
+    
+    if fade_out_length > 0:
+        if fade_out_length + 1 <= clip.clip_length:
+            _do_user_add_fade_out(keyframe_property, property_klass, keyframes, fade_out_length, clip)
+        else:
+            _show_length_error_dialog()
+            
+def _get_kfproperty_klass_and_keyframes(compositor, clip):
+    # Create editable properties from compositor properties.
     t_editable_properties = propertyedit.get_transition_editable_properties(compositor)
-    
-    # Find keyframe property and its class.
-    keyframe_property = None
-    klass = None
-    for ep in t_editable_properties:
-        klass = ep.__class__.__name__
-        if klass == "OpacityInGeomKeyframeProperty":
-            keyframe_property = ep
-            break
-        if klass == "KeyFrameHCSTransitionProperty":
-            keyframe_property = ep
-            break
-        try:
-            print ep
-            print ep.__class__.__name__
-            print ep.name
-            print ep.args
-            print ep.value
-        except:
-            print "in except#"
-    
-    if keyframe_property == None:
-        print "add_default_fades failed"
-        return None
-    
-    # Get keyframes list
-    keyframes = None
-    if klass == "OpacityInGeomKeyframeProperty":
-        keyframes = propertyparse.geom_keyframes_value_string_to_opacity_kf_array(keyframe_property.value, keyframe_property.get_in_value)
-    elif klass == "KeyFrameHCSTransitionProperty":
-        keyframes = propertyparse.single_value_keyframes_string_to_kf_array(keyframe_property.value, keyframe_property.get_in_value)
+
+    # Find keyframe property, its class and create keyframes list
+    if compositor.transition.info.mlt_service_id == "frei0r.cairoaffineblend": # Affine Blend
+        # Because of frei0r's forced value 0.0-1.0 range "Affine Blend" is handled in a more complex way compared to other compositors
+        keyframe_property = propertyparse.create_editable_property_for_affine_blend(clip, t_editable_properties)
+        keyframes = propertyparse.rotating_geom_keyframes_value_string_to_geom_kf_array(keyframe_property.value, keyframe_property.get_in_value)
+        property_klass = keyframe_property.__class__.__name__
+        return (keyframe_property, property_klass, keyframes)
         
-    print keyframe_property.value
-    print keyframes
+    else: # Dissolve, Blend, Picture-in-Picture, Region
+        keyframe_property = None
+        property_klass = None
+        for ep in t_editable_properties:
+            property_klass = ep.__class__.__name__
+            if property_klass == "OpacityInGeomKeyframeProperty": # Dissolve
+                keyframe_property = ep
+                keyframes = propertyparse.geom_keyframes_value_string_to_opacity_kf_array(keyframe_property.value, keyframe_property.get_in_value)
+                break
+            if property_klass == "KeyFrameHCSTransitionProperty": # Blend
+                keyframe_property = ep
+                keyframes = propertyparse.single_value_keyframes_string_to_kf_array(keyframe_property.value, keyframe_property.get_in_value)
+                break
+            if property_klass == "KeyFrameGeometryOpacityProperty": # Picture-in-Picture, Region
+                keyframe_property = ep
+                keyframes = propertyparse.geom_keyframes_value_string_to_geom_kf_array(keyframe_property.value, keyframe_property.get_in_value)
+                break
 
-    return (keyframe_property, klass, keyframes)
-    
+        if keyframe_property == None:
+            print "didn't find keyframe_property in _get_kfproperty_klass_and_keyframes"
+            return (None, None, None)
 
+        return (keyframe_property, property_klass, keyframes)
+
+def _get_compositor_clip(compositor):
+    for i in range(current_sequence().first_video_index, len(current_sequence().tracks) - 1): # -1, there is a topmost hidden track 
+        track = current_sequence().tracks[i] # b_track is source track where origin clip is
+        for j in range(0, len(track.clips)):
+            clip = track.clips[j]
+            if clip.id == compositor.origin_clip_id:
+                return clip
     
+    return None
+
+def _get_default_fades_lengths(property_klass):
+    if property_klass in _dissolve_property_klasses:
+        fade_in_length = editorstate.PROJECT().get_project_property(appconsts.P_PROP_DISSOLVE_GROUP_FADE_IN)
+        fade_out_length = editorstate.PROJECT().get_project_property(appconsts.P_PROP_DISSOLVE_GROUP_FADE_OUT) 
+    else:
+        fade_in_length = editorstate.PROJECT().get_project_property(appconsts.P_PROP_ANIM_GROUP_FADE_IN)
+        fade_out_length = editorstate.PROJECT().get_project_property(appconsts.P_PROP_ANIM_GROUP_FADE_OUT)
     
+    return (fade_in_length, fade_out_length)
+
+def _show_length_error_dialog():
+    pass
+
+def _add_default_fade_in(keyframe_property, property_klass, keyframes, fade_in_length):
+    if property_klass in _dissolve_property_klasses:
+        frame, opacity  = keyframes.pop(0)
+        keyframes.append((frame, 0))
+        keyframes.append((frame + fade_in_length, 100))
+        return keyframes
+    else:
+        # (0, [0, 0, 1280, 720], 100.0) or (0, [640.0, 360.0, 1.0, 1.0, 0.0], 100.0) e.g.
+        frame, geom, opacity = keyframes.pop(0)
+        keyframes.append((frame, geom, 0))
+        keyframes.append((frame + fade_in_length, geom, 100))
+        return keyframes
+
+def _add_default_fade_out(keyframe_property, property_klass, keyframes, fade_out_length, clip, kf_before_fade_out_index=0):
+    if property_klass in _dissolve_property_klasses:
+        keyframes.append((clip.clip_length() - fade_out_length - 1, 100))
+        keyframes.append((clip.clip_length() - 1, 0))
+        return keyframes
+    else:
+        # (0, [0, 0, 1280, 720], 100.0) or (0, [640.0, 360.0, 1.0, 1.0, 0.0], 100.0) e.g.
+        frame, geom, opacity = keyframes[kf_before_fade_out_index]
+        keyframes.append((clip.clip_length() - fade_out_length - 1, geom, 100))
+        keyframes.append((clip.clip_length() - 1, geom, 0))
+        return keyframes
+
+def _do_user_add_fade_in(keyframe_property, property_klass, keyframes, fade_in_length):
+    
+    # Get index of first keyframe after fade_in_length
+    kf_after_fade_in_index = -1
+    for i in range (0, len(keyframes)):
+        kf = keyframes[i]
+        if property_klass in _dissolve_property_klasses:
+            frame, opacity  = kf
+        else:
+            frame, geom, opacity = kf
+        
+        if frame > fade_in_length:
+            kf_after_fade_in_index = i
+            break
+
+    # Case no keyframes after fade in length
+    if kf_after_fade_in_index == -1:
+        # Remove all but first keyframe
+        for i in range(0, len(keyframes) - 1):
+            keyframes.pop(1)
+        # nOw this the same action as addin default keyframe on creation
+        keyframes = _add_default_fade_in(keyframe_property, property_klass, keyframes, fade_in_length)
+    # Case keyframes exists after fade in length
+    else:
+        # Remove keyframes in range 0 - kf_after_fade_in_index
+        for i in range(0, kf_after_fade_in_index - 1):
+            keyframes.pop(1)
+        if property_klass in _dissolve_property_klasses:
+            frame, opacity  = keyframes.pop(0)
+            keyframes.insert(0, (frame, 0))
+            keyframes.pop(1)
+            keyframes.insert(1,(frame + fade_in_length, 100))
+        else:
+            # (0, [0, 0, 1280, 720], 100.0) or (0, [640.0, 360.0, 1.0, 1.0, 0.0], 100.0) e.g.
+            frame, geom, opacity = keyframes.pop(0)
+            keyframes.insert(0, (frame, geom, 0))
+            keyframes.pop(1)
+            keyframes.insert(1, (frame + fade_in_length, geom, 100))
+
+    keyframe_property.write_out_keyframes(keyframes)
+
+def _do_user_add_fade_out(keyframe_property, property_klass, keyframes, fade_out_length, clip):
+    # Get index of first keyframe before fade out begins
+    fade_out_frame = clip.clip_length() - fade_out_length
+    kf_after_fade_out_index = -1
+    for i in range (0, len(keyframes)):
+        kf = keyframes[i]
+        if property_klass in _dissolve_property_klasses:
+            frame, opacity  = kf
+        else:
+            frame, geom, opacity = kf
+        
+        if frame >= fade_out_frame:
+            kf_after_fade_out_index = i
+            break
+
+    # Case no keyframes after fade out start
+    if kf_after_fade_out_index == -1:
+        keyframes = _add_default_fade_out(keyframe_property, property_klass, keyframes, fade_out_length, clip, 0)
+
+    # Case keyframes exists after  fade out start
+    else:
+        # Remove keyframes in range 0 - kf_after_fade_in_index
+        for i in range(kf_after_fade_out_index, len(keyframes)):
+            keyframes.pop(-1) # pop last
+            
+        keyframes = _add_default_fade_out(keyframe_property, property_klass, keyframes, fade_out_length, clip, len(keyframes) - 1)
+
+    keyframe_property.write_out_keyframes(keyframes)
+
+            
+            
+            
+            

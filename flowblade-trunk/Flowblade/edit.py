@@ -1723,7 +1723,7 @@ def _paste_filters_redo(self):
     _attach_all(self.clip)
     
 # -------------------------------------- ADD COMPOSITOR ACTION
-# "origin_clip_id",in_frame","out_frame","compositor_type","a_track","b_track"
+# "origin_clip_id",in_frame","out_frame","compositor_type","a_track","b_track", "clip"
 def add_compositor_action(data):
     action = EditAction(_add_compositor_undo, _add_compositor_redo, data)
     action.first_do = True
@@ -1757,7 +1757,7 @@ def _add_compositor_redo(self):
     current_sequence().add_compositor(self.compositor)
     current_sequence().restack_compositors()
 
-    compositorfades.add_default_fades(self.compositor)
+    compositorfades.add_default_fades(self.compositor, self.clip)
 
     compositeeditor.set_compositor(self.compositor)
 
@@ -1792,12 +1792,7 @@ def _delete_compositor_redo(self):
         
     current_sequence().remove_compositor(self.compositor)
     current_sequence().restack_compositors()
-    
-    # Hack!!! Some filters don't seem to handle setting compositors None (and the
-    # following gc) and crash, so we'll hold references to them forever.
-    #global old_compositors
-    #old_compositors.append(self.compositor)
-    
+        
     compositeeditor.maybe_clear_editor(self.compositor)
 
 #--------------------------------------------------- MOVE COMPOSITOR

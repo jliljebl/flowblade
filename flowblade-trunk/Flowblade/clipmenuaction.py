@@ -216,7 +216,8 @@ def _add_compositor(data):
                 "out_frame":compositor_out,
                 "a_track":target_track_index,
                 "b_track":track.id,
-                "compositor_type":compositor_type}
+                "compositor_type":compositor_type,
+                "clip":clip}
     action = edit.add_compositor_action(edit_data)
     action.do_edit()
     

@@ -26,6 +26,7 @@ import copy
 
 from gi.repository import Gtk
 
+import compositorfades
 import gui
 import guicomponents
 import guiutils
@@ -57,8 +58,9 @@ def create_widgets():
     # Left side
     widgets.compositor_info = guicomponents.CompositorInfoPanel()
     widgets.fade_in_b = Gtk.Button(_("Fade In"))
+    widgets.fade_in_b.connect("clicked", lambda w,e: _add_fade_in_pressed(), None)
     widgets.fade_out_b = Gtk.Button(_("Fade Out"))
-    widgets.auto_fades_b = Gtk.Button(_("Auto Fades"))
+    widgets.fade_out_b.connect("clicked", lambda w,e: _add_fade_out_pressed(), None)
 
     widgets.fade_in_spin = Gtk.SpinButton.new_with_range(0, 150, 1)
     widgets.fade_in_spin.set_value(10)
@@ -91,7 +93,6 @@ def get_compositor_clip_panel():
     compositor_vbox.pack_start(widgets.fade_out_b, False, False, 0)
     compositor_vbox.pack_start(widgets.fade_out_spin, False, False, 0)
     compositor_vbox.pack_start(guiutils.get_pad_label(5, 24), False, False, 0)
-    compositor_vbox.pack_start(widgets.auto_fades_b, False, False, 0)
     compositor_vbox.pack_start(Gtk.Label(), True, True, 0)
     compositor_vbox.pack_start(widgets.reset_b, False, False, 0)
     compositor_vbox.pack_start(widgets.delete_b, False, False, 0)
@@ -132,13 +133,22 @@ def set_enabled(value):
     widgets.reset_b.set_sensitive(value)
     widgets.fade_in_b.set_sensitive(value)
     widgets.fade_out_b.set_sensitive(value)
-    widgets.auto_fades_b.set_sensitive(value)
     widgets.fade_in_spin.set_sensitive(value)
     widgets.fade_out_spin.set_sensitive(value)
 
 def maybe_clear_editor(killed_compositor):
     if killed_compositor.destroy_id == compositor.destroy_id:
         clear_compositor()
+
+def _add_fade_in_pressed():
+    compositorfades.add_fade_in(compositor, int(widgets.fade_in_spin.get_value()))
+    # We need GUI reload to show results
+    set_compositor(compositor)
+
+def _add_fade_out_pressed():
+    compositorfades.add_fade_out(compositor, int(widgets.fade_out_spin.get_value()))
+    # We need GUI reload to show results
+    set_compositor(compositor)
 
 def _delete_compositor_pressed():
     data = {"compositor":compositor}
@@ -164,7 +174,7 @@ def _display_compositor_edit_box():
 
     vbox = Gtk.VBox()
 
-    # case: Empty edit frame
+    # Case: Empty edit frame
     global compositor
     if compositor == None:
         widgets.empty_label = Gtk.Label(label=_("No Compositor"))
@@ -175,7 +185,8 @@ def _display_compositor_edit_box():
         widgets.value_edit_box = vbox
         widgets.value_edit_frame.add(vbox)
         return 
-    
+
+    # Case: Filled frame
     compositor_name_label = Gtk.Label(label= "<b>" + compositor.name + "</b>")
     compositor_name_label.set_use_markup(True)
     vbox.pack_start(compositor_name_label, False, False, 0)

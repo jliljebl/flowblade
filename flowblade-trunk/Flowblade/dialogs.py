@@ -1562,8 +1562,11 @@ def set_fades_defaults_dialog(callback):
     fade_out_row.pack_start(fade_out_length_label, False, False, 0)
     fade_out_row.pack_start(fade_out_spin, False, False, 0)
 
-    widgets = (group_select, fade_in_check, fade_in_spin, fade_out_check, fade_out_spin)
+    widgets = (group_select, fade_in_check, fade_in_spin, fade_out_check, fade_out_spin, fade_in_length_label, fade_out_length_label)
     group_select.connect('changed', _fades_group_changed, widgets)
+    fade_in_check.connect("toggled", _fade_on_off_changed, widgets)
+    fade_out_check.connect("toggled", _fade_on_off_changed, widgets)
+
     _fades_group_changed(group_select, widgets)
 
     fades_vbox = guiutils.get_vbox([fade_in_row, fade_out_row], False)
@@ -1581,7 +1584,7 @@ def set_fades_defaults_dialog(callback):
 
 def _fades_group_changed(combo, widgets):
 
-    group_select, fade_in_check, fade_in_spin, fade_out_check, fade_out_spin = widgets
+    group_select, fade_in_check, fade_in_spin, fade_out_check, fade_out_spin, fade_in_length_label, fade_out_length_label = widgets
     
     if group_select.get_active() == 0:
         fade_in_key = appconsts.P_PROP_DISSOLVE_GROUP_FADE_IN
@@ -1596,14 +1599,44 @@ def _fades_group_changed(combo, widgets):
     if fade_in < 1:
         fade_in_check.set_active(False)
         fade_in_spin.set_value(0)
+        fade_in_spin.set_sensitive(False)
+        fade_in_length_label.set_sensitive(False)
     else:
         fade_in_check.set_active(True)
         fade_in_spin.set_value(fade_in)
-    
+        fade_in_spin.set_sensitive(True)
+        fade_in_length_label.set_sensitive(True)
+        
     if fade_out < 1:
         fade_out_check.set_active(False)
         fade_out_spin.set_value(0)
+        fade_out_spin.set_sensitive(False)
+        fade_out_length_label.set_sensitive(False)
     else:
         fade_out_check.set_active(True)
         fade_out_spin.set_value(fade_out)
+        fade_out_spin.set_sensitive(True)
+        fade_out_length_label.set_sensitive(True)
+        
 
+def _fade_on_off_changed(check_widget, widgets):
+    group_select, fade_in_check, fade_in_spin, fade_out_check, fade_out_spin, fade_in_length_label, fade_out_length_label = widgets
+    if check_widget == fade_in_check:
+        fade_in_spin.set_value(0)
+        if fade_in_check.get_active() == True:
+            fade_in_spin.set_sensitive(True)
+            fade_in_length_label.set_sensitive(True)
+        else:
+            fade_in_spin.set_sensitive(False)
+            fade_in_length_label.set_sensitive(False)
+        
+    if check_widget == fade_out_check:
+        fade_out_spin.set_value(0)
+        if fade_out_check.get_active() == True:
+            fade_out_spin.set_sensitive(True)
+            fade_out_length_label.set_sensitive(True)
+        else:
+            fade_out_spin.set_sensitive(False)
+            fade_out_length_label.set_sensitive(False)
+
+        

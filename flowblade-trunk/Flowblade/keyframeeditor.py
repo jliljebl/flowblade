@@ -2000,37 +2000,6 @@ class RotatingGeometryEditor(GeometryEditor):
         self.geom_kf_edit.keyframe_parser = propertyparse.rotating_geom_keyframes_value_string_to_geom_kf_array
         self.geom_kf_edit.set_keyframes(editable_property.value, editable_property.get_in_value)
 
-def rotating_ge_write_out_keyframes(ep, keyframes):
-    x_val = ""
-    y_val = ""
-    x_scale_val = ""
-    y_scale_val = ""
-    rotation_val = ""
-    opacity_val = ""
-    
-    for kf in keyframes:
-        frame, transf, opacity = kf
-        x, y, x_scale, y_scale, rotation = transf
-        x_val += str(frame) + "=" + str(propertyparse.get_frei0r_cairo_position(x, ep.profile_width)) + ";"
-        y_val += str(frame) + "=" + str(propertyparse.get_frei0r_cairo_position(y, ep.profile_height)) + ";"
-        x_scale_val += str(frame) + "=" + str(propertyparse.get_frei0r_cairo_scale(x_scale)) + ";"
-        y_scale_val += str(frame) + "=" + str(propertyparse.get_frei0r_cairo_scale(y_scale)) + ";"
-        rotation_val += str(frame) + "=" + str(rotation / 360.0) + ";"
-        opacity_val += str(frame) + "=" + str(opacity / 100.0) + ";"
-
-    x_val = x_val.strip(";")
-    y_val = y_val.strip(";")
-    x_scale_val = x_scale_val.strip(";")
-    y_scale_val = y_scale_val.strip(";")
-    rotation_val = rotation_val.strip(";")
-    opacity_val = opacity_val.strip(";")
-   
-    ep.x.write_value(x_val)
-    ep.y.write_value(y_val)
-    ep.x_scale.write_value(x_scale_val)
-    ep.y_scale.write_value(y_scale_val)
-    ep.rotation.write_value(rotation_val)
-    ep.opacity.write_value(opacity_val)
 
 # ----------------------------------------------------------------- linear interpolation
 def _get_frame_value(frame, keyframes):
