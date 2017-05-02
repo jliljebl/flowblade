@@ -190,7 +190,6 @@ def get_media_source_file_filter(include_audio=True):
     f.add_mime_type("video/annodex")
     f.add_mime_type("video/3gpp")
     f.add_mime_type("video/webm")
-    f.add_mime_type("text/xml")
     
     if include_audio == True:
         f.add_mime_type("audio/aac")

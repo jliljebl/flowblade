@@ -815,7 +815,7 @@ def add_media_files(this_call_is_retry=False):
     """
     User selects a media file to added to current bin.
     """
-    # User neds to select thumbnail folder when promted to complete action
+    # User needs to select thumbnail folder when promted to complete action
     if editorpersistance.prefs.thumbnail_folder == None:
         if this_call_is_retry == True:
             return
@@ -832,9 +832,28 @@ def _open_files_dialog_cb(file_select, response_id):
         return
     if len(filenames) == 0:
         return
-        
+    
+    # We're disallowing opening .mlt or .xml files as media beause MLTs behaviour of overwriten project profile properties
+    # when opening MLT XML files as nedia
+    # Underlying reason: https://github.com/mltframework/mlt/issues/212
+    mlt_files_deleted = False
+    for i in range(len(filenames) - 1, -1, -1):
+        file_path = filenames[i]
+        name, ext = os.path.splitext(file_path)
+        ext = ext.lstrip(".")
+        ext = ext.lower()
+        if ext == "xml" or ext == "mlt":
+            filenames.pop(i)
+            mlt_files_deleted = True
+    
     open_file_names(filenames)
 
+    # Info on dis allowed files
+    if mlt_files_deleted == True:
+        primary_txt = _("Opening .mlt or .xml file as media was disallowed!")
+        secondary_txt = _("Because of current MLT behaviour of overwriting projct properties when opening MLT XML files\nit is not allowed to open these files as media.")
+        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        
 def open_file_names(filenames):
     add_media_thread = AddMediaFilesThread(filenames)
     add_media_thread.start()
