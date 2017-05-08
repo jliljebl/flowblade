@@ -124,7 +124,7 @@ def _compound_offsets_complete(data):
 
     _read_offsets()
 
-    # lets's just set name to something unique-ish 
+    # lets's just set default name to something unique-ish 
     default_name = _("SYNC_CLIP_") +  str(datetime.date.today()) + "_" + time.strftime("%H%M%S") + ".xml"
     dialogs.compound_clip_name_dialog(_do_create_sync_compound_clip, default_name, _("Save Sync Compound Clip XML"), data)
 

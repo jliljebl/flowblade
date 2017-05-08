@@ -275,6 +275,7 @@ def main(root_path):
     gmic.test_availablity()
     toolnatron.init()
     toolsintegration.init()
+    toolsintegration.test()
     
     # Create player object
     create_player()

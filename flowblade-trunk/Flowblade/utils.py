@@ -47,8 +47,8 @@ class Ticker:
     Calls function repeatedly with given delay between calls.
     """
     def __init__(self, action, delay):
-        self.action = action
-        self.delay = delay
+        self.action = action # callback function
+        self.delay = delay # in seconds
         self.running = False
         self.exited = False
     
@@ -82,7 +82,15 @@ class Ticker:
             event.wait(delay)
         self.exited = True
 
+
+class LaunchThread(threading.Thread):
+    def __init__(self, data, callback):
+        threading.Thread.__init__(self)
+        self.data = data
+        self.callback = callback
         
+    def run(self):
+        self.callback(self.data)
         
 # -------------------------------- UTIL FUNCTIONS
 def fps():
@@ -433,16 +441,12 @@ def get_file_producer_info(file_producer):
     info["progressive"] = frame.get_int("meta.media.progressive") == 1
     info["top_field_first"] = frame.get_int("meta.media.top_field_first") == 1
     
-    #try:
     resource = clip.get("resource")
-    print "resource", resource
     name, ext = os.path.splitext(resource)
     ext = ext.lstrip(".")
     ext = ext.lower()
     if ext == "xml" or ext =="mlt":
         update_xml_file_producer_info(resource, info)
-    #except:
-        #print "getting file resource dailed in utils.get_file_producer_info()"
         
     return info
 
