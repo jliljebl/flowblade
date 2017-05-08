@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-27 19:27+0300\n"
+"POT-Creation-Date: 2017-05-08 12:07+0300\n"
 "PO-Revision-Date: 2017-03-24 08:40+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
@@ -17,23 +17,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: app.py:770
+#: app.py:771
 msgid "Too small screen for this application."
 msgstr "Túl kicsi a képernyő az alkalmazás számára."
 
-#: app.py:773
+#: app.py:774
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "A minimális képernyőfelbontás ezen alkalmazás számára 1152 x 768.\n"
 
-#: app.py:774
+#: app.py:775
 msgid "Your screen dimensions are "
 msgstr "Az ön képernyőjének felbontása "
 
-#: app.py:807 projectaction.py:376 projectaction.py:706
+#: app.py:808 projectaction.py:376 projectaction.py:706
 msgid "Project has not been saved previously"
 msgstr "A projekt korábban még nem volt mentve"
 
-#: app.py:808 projectaction.py:377 projectaction.py:707
+#: app.py:809 projectaction.py:377 projectaction.py:707
 msgid "Save project with File -> Save As before closing."
 msgstr ""
 "Mentse a projektet a Fájl -> Mentés másként menüpont használatával mielőtt "
@@ -177,20 +177,31 @@ msgstr "Nem sikerült hozzáadni az elemet a renderelés várólistájához!"
 msgid "Open.."
 msgstr "Megnyitás..."
 
-#: projectaction.py:855
+#: projectaction.py:853
+msgid "Opening .mlt or .xml file as media was disallowed!"
+msgstr ""
+
+#: projectaction.py:854
+msgid ""
+"Because of current MLT behaviour of overwriting projct properties when "
+"opening MLT XML files\n"
+"it is not allowed to open these files as media."
+msgstr ""
+
+#: projectaction.py:874
 msgid "No file was selected"
 msgstr "Nem lett fájl kiválasztva"
 
-#: projectaction.py:855
+#: projectaction.py:874
 msgid "Select a numbered file to add an Image Sequence to Project."
 msgstr ""
 "Válasszon egy sorszámozott fájlt, hogy képsorozatot adjon a projekthez."
 
-#: projectaction.py:863
+#: projectaction.py:882
 msgid "Not a sequence file!"
 msgstr "Nem jelenetfájl!"
 
-#: projectaction.py:863
+#: projectaction.py:882
 msgid ""
 "Selected file does not have a number part in it,\n"
 "so it can't be an image sequence file."
@@ -198,75 +209,75 @@ msgstr ""
 "A kiválasztott fájl nem tartalmaz számot a nevében,\n"
 "így nem is lehet képsorozat része."
 
-#: projectaction.py:914
+#: projectaction.py:933
 msgid "Can't make home folder thumbnails folder"
 msgstr "A \"Saját mappa\" nem állítható be a bélyegképek mappájaként"
 
-#: projectaction.py:915 dialogs.py:394
+#: projectaction.py:934 dialogs.py:394
 msgid "Please create and select some other folder then '"
 msgstr "Hozzon létre és válasszon egy másik mappát e helyett '"
 
-#: projectaction.py:916
+#: projectaction.py:935
 msgid "' as thumbnails folder"
 msgstr "' a bélyegképek számára"
 
-#: projectaction.py:1034 projectaction.py:1036 projectaction.py:1047
-#: projectaction.py:1055 projectaction.py:1062
+#: projectaction.py:1053 projectaction.py:1055 projectaction.py:1066
+#: projectaction.py:1074 projectaction.py:1081
 msgid "N/A"
 msgstr "N/A"
 
-#: projectaction.py:1051 guicomponents.py:1788
+#: projectaction.py:1070 guicomponents.py:1788
 msgid "Yes"
 msgstr "Igen"
 
-#: projectaction.py:1053 guicomponents.py:1790
+#: projectaction.py:1072 guicomponents.py:1790
 msgid "No"
 msgstr "Nem"
 
-#: projectaction.py:1108
+#: projectaction.py:1127
 msgid "Select Project for Media Import"
 msgstr "Projektfájl kiválasztása média importálásához"
 
-#: projectaction.py:1128
+#: projectaction.py:1147
 #, fuzzy
 msgid "selection_"
 msgstr "Kiválasztott betöltése"
 
-#: projectaction.py:1129
+#: projectaction.py:1148
 msgid "Save Selection Compound Clip"
 msgstr ""
 
-#: projectaction.py:1171 projectaction.py:1317 projectaction.py:1334
+#: projectaction.py:1190 projectaction.py:1336 projectaction.py:1353
 #: projectdata.py:212
 msgid "sequence_"
 msgstr "jelenet_"
 
-#: projectaction.py:1172
+#: projectaction.py:1191
 #, fuzzy
 msgid "Save Sequence Compound Clip"
 msgstr "Képsorozatból álló klip hozzáadása"
 
-#: projectaction.py:1210
+#: projectaction.py:1229
 msgid "Can't remove a non-empty bin"
 msgstr "Nem üres rekeszek nem törölhetők"
 
-#: projectaction.py:1211
+#: projectaction.py:1230
 msgid "You must remove all files from the bin before deleting it."
 msgstr "Törölnie kell minden fájlt a rekeszből a rekesz törlése előtt."
 
-#: projectaction.py:1219
+#: projectaction.py:1238
 msgid "Can't remove last bin"
 msgstr "Az utolsó rekesz nem törölhető"
 
-#: projectaction.py:1220
+#: projectaction.py:1239
 msgid "There must always exist at least one bin."
 msgstr "Legalább egy rekesznek léteznie kell."
 
-#: projectaction.py:1306
+#: projectaction.py:1325
 msgid "Selected sequence is already being edited"
 msgstr "A kiválasztott jelenet már szerkesztés alatt áll"
 
-#: projectaction.py:1307
+#: projectaction.py:1326
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
@@ -274,7 +285,7 @@ msgstr ""
 "Válasszon egy másik jelenetet. Kattintson a hozzáadás gombra\n"
 "új jelenet létrehozásához."
 
-#: projectaction.py:1367
+#: projectaction.py:1386
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
@@ -282,19 +293,19 @@ msgstr ""
 "Biztosan törölni akarja\n"
 "a jelenetet: '"
 
-#: projectaction.py:1367
+#: projectaction.py:1386
 msgid "'?"
 msgstr "'?"
 
-#: projectaction.py:1368
+#: projectaction.py:1387
 msgid "This operation can not be undone. Sequence will be permanently lost."
 msgstr "Ez a művelet nem vonható vissza. A jelenet véglegesen elvész."
 
-#: projectaction.py:1383
+#: projectaction.py:1402
 msgid "Can't remove last sequence"
 msgstr "Az utolsó jelenet nem törölhető"
 
-#: projectaction.py:1384
+#: projectaction.py:1403
 msgid "There must always exist at least one sequence."
 msgstr "Mindig kell léteznie legalább egy jelenetnek."
 
@@ -799,7 +810,7 @@ msgstr "Klip szerkesztésének befejezése"
 msgid "Add"
 msgstr "Hozzáadás"
 
-#: clipeffectseditor.py:237 compositeeditor.py:69 guicomponents.py:1256
+#: clipeffectseditor.py:237 compositeeditor.py:71 guicomponents.py:1256
 #: guicomponents.py:1322 guicomponents.py:1486 guicomponents.py:1610
 #: guicomponents.py:1661 panels.py:52 panels.py:97 panels.py:115
 #: tools/titler.py:210 tools/batchrendering.py:1030
@@ -830,28 +841,23 @@ msgstr "Minden szűrő be-/kikapcsolása"
 msgid "No editable parameters"
 msgstr "Nincsenek szerkeszthető paraméterek"
 
-#: compositeeditor.py:59 panels.py:411 mlttransitions.py:166
+#: compositeeditor.py:60 panels.py:411 mlttransitions.py:166
 msgid "Fade In"
 msgstr "Előtűnés"
 
-#: compositeeditor.py:60 panels.py:412 mlttransitions.py:167
+#: compositeeditor.py:62 panels.py:412 mlttransitions.py:167
 msgid "Fade Out"
 msgstr "Eltűnés"
 
-#: compositeeditor.py:61
-#, fuzzy
-msgid "Auto Fades"
-msgstr "Halványodás hozzáadása"
-
-#: compositeeditor.py:71 render.py:169
+#: compositeeditor.py:73 render.py:169
 msgid "Reset"
 msgstr "Alaphelyzet"
 
-#: compositeeditor.py:75 compositeeditor.py:170
+#: compositeeditor.py:77 compositeeditor.py:180
 msgid "No Compositor"
 msgstr "Nincs kompozitor"
 
-#: compositeeditor.py:192
+#: compositeeditor.py:203
 msgid "Destination Track:"
 msgstr "Cél sáv:"
 
@@ -864,8 +870,8 @@ msgstr "Új projekt"
 #: dialogs.py:375 dialogs.py:406 dialogs.py:428 dialogs.py:809 dialogs.py:904
 #: dialogs.py:937 dialogs.py:958 dialogs.py:999 dialogs.py:1027 dialogs.py:1055
 #: dialogs.py:1116 dialogs.py:1155 dialogs.py:1169 dialogs.py:1183
-#: dialogs.py:1364 dialogs.py:1481 dialogs.py:1529 propertyeditorbuilder.py:403
-#: propertyeditorbuilder.py:473 rendergui.py:48 rendergui.py:103
+#: dialogs.py:1364 dialogs.py:1481 dialogs.py:1529 propertyeditorbuilder.py:404
+#: propertyeditorbuilder.py:474 rendergui.py:48 rendergui.py:103
 #: rendergui.py:117 rendergui.py:134 rendergui.py:1053 preferenceswindow.py:47
 #: tools/batchrendering.py:962 proxyediting.py:429 patternproducer.py:319
 #: patternproducer.py:352 patternproducer.py:383 tools/gmic.py:357
@@ -874,8 +880,8 @@ msgid "Cancel"
 msgstr "Mégsem"
 
 #: dialogs.py:56 dialogs.py:222 dialogs.py:265 dialogs.py:440 dialogs.py:571
-#: dialogs.py:690 dialogs.py:703 dialogs.py:1365 propertyeditorbuilder.py:404
-#: propertyeditorbuilder.py:474 rendergui.py:104 preferenceswindow.py:48
+#: dialogs.py:690 dialogs.py:703 dialogs.py:1365 propertyeditorbuilder.py:405
+#: propertyeditorbuilder.py:475 rendergui.py:104 preferenceswindow.py:48
 #: tools/batchrendering.py:394 tools/gmic.py:382
 msgid "OK"
 msgstr "Rendben"
@@ -1902,7 +1908,7 @@ msgstr ""
 msgid "Add Fade Out on Creation"
 msgstr ""
 
-#: dialogs.py:1570
+#: dialogs.py:1573
 msgid "Group Auto Fades"
 msgstr ""
 
@@ -2234,8 +2240,8 @@ msgstr "A fájl újracsatolási útvonalának törlése"
 msgid "Show Full Paths"
 msgstr "Teljes útvonalak megjelenítése"
 
-#: guicomponents.py:1737 propertyeditorbuilder.py:508
-#: propertyeditorbuilder.py:603 tools/toolsencoding.py:343
+#: guicomponents.py:1737 propertyeditorbuilder.py:509
+#: propertyeditorbuilder.py:564 tools/toolsencoding.py:343
 msgid "Progressive"
 msgstr "Progresszív"
 
@@ -2801,8 +2807,8 @@ msgstr "Hangszűrő"
 msgid "Blur"
 msgstr "Elmosás"
 
-#: translations.py:116 translations.py:528 propertyeditorbuilder.py:523
-#: propertyeditorbuilder.py:618
+#: translations.py:116 translations.py:528 propertyeditorbuilder.py:524
+#: propertyeditorbuilder.py:579
 msgid "Distort"
 msgstr "Torzítás"
 
@@ -4446,55 +4452,55 @@ msgstr "Áttolás"
 msgid "Color Dip"
 msgstr "Színcsökkentés"
 
-#: propertyeditorbuilder.py:249
+#: propertyeditorbuilder.py:250
 msgid "Size/Height"
 msgstr "Méret/Magasság"
 
-#: propertyeditorbuilder.py:285
+#: propertyeditorbuilder.py:286
 msgid "Width"
 msgstr "Szélesség"
 
-#: propertyeditorbuilder.py:398
+#: propertyeditorbuilder.py:399
 msgid "Preset Luma"
 msgstr "Előre beállított fényesség"
 
-#: propertyeditorbuilder.py:399
+#: propertyeditorbuilder.py:400
 msgid "User Luma"
 msgstr "Felhasználói fényesség"
 
-#: propertyeditorbuilder.py:401
+#: propertyeditorbuilder.py:402
 msgid "Select Luma File"
 msgstr "Fényesség fájl választása"
 
-#: propertyeditorbuilder.py:410
+#: propertyeditorbuilder.py:411
 msgid "Wipe Luma files"
 msgstr "Fényesség áttolás fájlok"
 
-#: propertyeditorbuilder.py:416
+#: propertyeditorbuilder.py:417
 msgid "Luma File:"
 msgstr "Fényesség fájl:"
 
-#: propertyeditorbuilder.py:471
+#: propertyeditorbuilder.py:472
 msgid "Select File"
 msgstr "Fájl választása"
 
-#: propertyeditorbuilder.py:508 propertyeditorbuilder.py:603
+#: propertyeditorbuilder.py:509 propertyeditorbuilder.py:564
 msgid "Nothing"
 msgstr "Semmi"
 
-#: propertyeditorbuilder.py:508 propertyeditorbuilder.py:603
+#: propertyeditorbuilder.py:509 propertyeditorbuilder.py:564
 msgid "Deinterlace"
 msgstr "Váltottsorosság megszüntetése"
 
-#: propertyeditorbuilder.py:508 propertyeditorbuilder.py:603
+#: propertyeditorbuilder.py:509 propertyeditorbuilder.py:564
 msgid "Both"
 msgstr "Mindkettő"
 
-#: propertyeditorbuilder.py:517 propertyeditorbuilder.py:612
+#: propertyeditorbuilder.py:518 propertyeditorbuilder.py:573
 msgid "Force"
 msgstr "Kényszerítés"
 
-#: propertyeditorbuilder.py:522 propertyeditorbuilder.py:617
+#: propertyeditorbuilder.py:523 propertyeditorbuilder.py:578
 msgid "Align"
 msgstr "Igazítás"
 
@@ -6185,6 +6191,33 @@ msgstr ""
 "Válassza a <b>Vágás nézete kikapcsolva</b> vagy a <b>Vágás nézete egysávos "
 "szerkesztés esetén</b> lehetőséget\n"
 "ha a teljesítmény nem megfelelő."
+
+#: compositorfades.py:236
+#, fuzzy
+msgid "Clip too short!"
+msgstr "A klip túl rövid!"
+
+#: compositorfades.py:237
+#, fuzzy
+msgid "The Clip is too short to add the requested fade."
+msgstr ""
+"A klip túl rövid a kért halványodáshoz:\n"
+"\n"
+
+#: compositorfades.py:242
+#, fuzzy
+msgid "Clip too short for Auto Fades!"
+msgstr "Kompozitorok"
+
+#: compositorfades.py:243
+msgid ""
+"The Clip is too short to add the user set default fades on Compositor "
+"creation."
+msgstr ""
+
+#, fuzzy
+#~ msgid "Auto Fades"
+#~ msgstr "Halványodás hozzáadása"
 
 #~ msgid "and contributors"
 #~ msgstr "és a közreműködők"

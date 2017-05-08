@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Floblade Italian Translation 0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-27 19:27+0300\n"
+"POT-Creation-Date: 2017-05-08 12:07+0300\n"
 "PO-Revision-Date: 2014-09-15 23:42+0100\n"
 "Last-Translator: Massimo Stella <info@massimostella.it>\n"
 "Language-Team: Italiano\n"
@@ -18,23 +18,23 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: app.py:770
+#: app.py:771
 msgid "Too small screen for this application."
 msgstr "Lo schermo è troppo piccolo per questa applicazione."
 
-#: app.py:773
+#: app.py:774
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "La risoluzione minima per questa applicazione è 1152 x 768.\n"
 
-#: app.py:774
+#: app.py:775
 msgid "Your screen dimensions are "
 msgstr "La risoluzione corrente è"
 
-#: app.py:807 projectaction.py:376 projectaction.py:706
+#: app.py:808 projectaction.py:376 projectaction.py:706
 msgid "Project has not been saved previously"
 msgstr "Il progetto non è mai stato salvato"
 
-#: app.py:808 projectaction.py:377 projectaction.py:707
+#: app.py:809 projectaction.py:377 projectaction.py:707
 msgid "Save project with File -> Save As before closing."
 msgstr "Salva il progetto da File -> Salva con nome"
 
@@ -171,19 +171,30 @@ msgstr "Aggiunta alla coda dei render fallita!"
 msgid "Open.."
 msgstr "Apri..."
 
-#: projectaction.py:855
+#: projectaction.py:853
+msgid "Opening .mlt or .xml file as media was disallowed!"
+msgstr ""
+
+#: projectaction.py:854
+msgid ""
+"Because of current MLT behaviour of overwriting projct properties when "
+"opening MLT XML files\n"
+"it is not allowed to open these files as media."
+msgstr ""
+
+#: projectaction.py:874
 msgid "No file was selected"
 msgstr "Nessun file selezionato"
 
-#: projectaction.py:855
+#: projectaction.py:874
 msgid "Select a numbered file to add an Image Sequence to Project."
 msgstr "Selezionare un file numerato per aggiungere una sequenza di immagini"
 
-#: projectaction.py:863
+#: projectaction.py:882
 msgid "Not a sequence file!"
 msgstr "Questa non è una sequenza!"
 
-#: projectaction.py:863
+#: projectaction.py:882
 msgid ""
 "Selected file does not have a number part in it,\n"
 "so it can't be an image sequence file."
@@ -191,76 +202,76 @@ msgstr ""
 "Il file selezionato non è numerato, \n"
 "quindi non può essere una sequenza di immagini."
 
-#: projectaction.py:914
+#: projectaction.py:933
 msgid "Can't make home folder thumbnails folder"
 msgstr "Non si può usare la carella Home per le miniature"
 
-#: projectaction.py:915 dialogs.py:394
+#: projectaction.py:934 dialogs.py:394
 msgid "Please create and select some other folder then '"
 msgstr "Creare e selezionare una cartella differente da '"
 
-#: projectaction.py:916
+#: projectaction.py:935
 msgid "' as thumbnails folder"
 msgstr "' per le miniature"
 
-#: projectaction.py:1034 projectaction.py:1036 projectaction.py:1047
-#: projectaction.py:1055 projectaction.py:1062
+#: projectaction.py:1053 projectaction.py:1055 projectaction.py:1066
+#: projectaction.py:1074 projectaction.py:1081
 msgid "N/A"
 msgstr ""
 
-#: projectaction.py:1051 guicomponents.py:1788
+#: projectaction.py:1070 guicomponents.py:1788
 msgid "Yes"
 msgstr "Si"
 
-#: projectaction.py:1053 guicomponents.py:1790
+#: projectaction.py:1072 guicomponents.py:1790
 msgid "No"
 msgstr "No"
 
-#: projectaction.py:1108
+#: projectaction.py:1127
 #, fuzzy
 msgid "Select Project for Media Import"
 msgstr "Seleziona un File di Progetto"
 
-#: projectaction.py:1128
+#: projectaction.py:1147
 #, fuzzy
 msgid "selection_"
 msgstr "Carica Selezione"
 
-#: projectaction.py:1129
+#: projectaction.py:1148
 msgid "Save Selection Compound Clip"
 msgstr ""
 
-#: projectaction.py:1171 projectaction.py:1317 projectaction.py:1334
+#: projectaction.py:1190 projectaction.py:1336 projectaction.py:1353
 #: projectdata.py:212
 msgid "sequence_"
 msgstr "sequenza_"
 
-#: projectaction.py:1172
+#: projectaction.py:1191
 #, fuzzy
 msgid "Save Sequence Compound Clip"
 msgstr "Aggiungi una Sequenza di Immagini"
 
-#: projectaction.py:1210
+#: projectaction.py:1229
 msgid "Can't remove a non-empty bin"
 msgstr "Impossibile eliminare un bin pieno"
 
-#: projectaction.py:1211
+#: projectaction.py:1230
 msgid "You must remove all files from the bin before deleting it."
 msgstr "È necessario eliminare tutti i file dal bin prima di cancellarlo."
 
-#: projectaction.py:1219
+#: projectaction.py:1238
 msgid "Can't remove last bin"
 msgstr "Impossibile eliminare il bin"
 
-#: projectaction.py:1220
+#: projectaction.py:1239
 msgid "There must always exist at least one bin."
 msgstr "Deve esserci  almeno un bin."
 
-#: projectaction.py:1306
+#: projectaction.py:1325
 msgid "Selected sequence is already being edited"
 msgstr "La sequenza selezionata è già in fase di modifica"
 
-#: projectaction.py:1307
+#: projectaction.py:1326
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
@@ -268,7 +279,7 @@ msgstr ""
 "Selezionare una sequenza diversa. Fare clic su Aggiungi per creare \n"
 "una nuova sequenza se necessario."
 
-#: projectaction.py:1367
+#: projectaction.py:1386
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
@@ -276,21 +287,21 @@ msgstr ""
 "Sei sicuro di voler eliminare \n"
 "la sequenza '"
 
-#: projectaction.py:1367
+#: projectaction.py:1386
 msgid "'?"
 msgstr "'?"
 
-#: projectaction.py:1368
+#: projectaction.py:1387
 msgid "This operation can not be undone. Sequence will be permanently lost."
 msgstr ""
 "Questa operazione non può essere annullata. La sequenza non potrà essere "
 "recuperata."
 
-#: projectaction.py:1383
+#: projectaction.py:1402
 msgid "Can't remove last sequence"
 msgstr "Impossibile eliminare la sequenza"
 
-#: projectaction.py:1384
+#: projectaction.py:1403
 msgid "There must always exist at least one sequence."
 msgstr "Deve esserci  almeno una sequenza."
 
@@ -812,7 +823,7 @@ msgstr "Chiudere la modifica della Clip"
 msgid "Add"
 msgstr "Aggiungi"
 
-#: clipeffectseditor.py:237 compositeeditor.py:69 guicomponents.py:1256
+#: clipeffectseditor.py:237 compositeeditor.py:71 guicomponents.py:1256
 #: guicomponents.py:1322 guicomponents.py:1486 guicomponents.py:1610
 #: guicomponents.py:1661 panels.py:52 panels.py:97 panels.py:115
 #: tools/titler.py:210 tools/batchrendering.py:1030
@@ -843,28 +854,23 @@ msgstr "Attiva/Disattiva tutti i Filtri"
 msgid "No editable parameters"
 msgstr "Parametri non modificabili"
 
-#: compositeeditor.py:59 panels.py:411 mlttransitions.py:166
+#: compositeeditor.py:60 panels.py:411 mlttransitions.py:166
 msgid "Fade In"
 msgstr "Assolvenza"
 
-#: compositeeditor.py:60 panels.py:412 mlttransitions.py:167
+#: compositeeditor.py:62 panels.py:412 mlttransitions.py:167
 msgid "Fade Out"
 msgstr "Dissolvenza"
 
-#: compositeeditor.py:61
-#, fuzzy
-msgid "Auto Fades"
-msgstr "Aggiungi Dissolvenza"
-
-#: compositeeditor.py:71 render.py:169
+#: compositeeditor.py:73 render.py:169
 msgid "Reset"
 msgstr "Resetta"
 
-#: compositeeditor.py:75 compositeeditor.py:170
+#: compositeeditor.py:77 compositeeditor.py:180
 msgid "No Compositor"
 msgstr "Nessun Compositing"
 
-#: compositeeditor.py:192
+#: compositeeditor.py:203
 msgid "Destination Track:"
 msgstr "Traccia di destinazione:"
 
@@ -877,8 +883,8 @@ msgstr "Nuovo Progetto"
 #: dialogs.py:375 dialogs.py:406 dialogs.py:428 dialogs.py:809 dialogs.py:904
 #: dialogs.py:937 dialogs.py:958 dialogs.py:999 dialogs.py:1027 dialogs.py:1055
 #: dialogs.py:1116 dialogs.py:1155 dialogs.py:1169 dialogs.py:1183
-#: dialogs.py:1364 dialogs.py:1481 dialogs.py:1529 propertyeditorbuilder.py:403
-#: propertyeditorbuilder.py:473 rendergui.py:48 rendergui.py:103
+#: dialogs.py:1364 dialogs.py:1481 dialogs.py:1529 propertyeditorbuilder.py:404
+#: propertyeditorbuilder.py:474 rendergui.py:48 rendergui.py:103
 #: rendergui.py:117 rendergui.py:134 rendergui.py:1053 preferenceswindow.py:47
 #: tools/batchrendering.py:962 proxyediting.py:429 patternproducer.py:319
 #: patternproducer.py:352 patternproducer.py:383 tools/gmic.py:357
@@ -887,8 +893,8 @@ msgid "Cancel"
 msgstr "Annulla"
 
 #: dialogs.py:56 dialogs.py:222 dialogs.py:265 dialogs.py:440 dialogs.py:571
-#: dialogs.py:690 dialogs.py:703 dialogs.py:1365 propertyeditorbuilder.py:404
-#: propertyeditorbuilder.py:474 rendergui.py:104 preferenceswindow.py:48
+#: dialogs.py:690 dialogs.py:703 dialogs.py:1365 propertyeditorbuilder.py:405
+#: propertyeditorbuilder.py:475 rendergui.py:104 preferenceswindow.py:48
 #: tools/batchrendering.py:394 tools/gmic.py:382
 msgid "OK"
 msgstr "OK"
@@ -1970,7 +1976,7 @@ msgstr ""
 msgid "Add Fade Out on Creation"
 msgstr ""
 
-#: dialogs.py:1570
+#: dialogs.py:1573
 msgid "Group Auto Fades"
 msgstr ""
 
@@ -2310,8 +2316,8 @@ msgstr ""
 msgid "Show Full Paths"
 msgstr ""
 
-#: guicomponents.py:1737 propertyeditorbuilder.py:508
-#: propertyeditorbuilder.py:603 tools/toolsencoding.py:343
+#: guicomponents.py:1737 propertyeditorbuilder.py:509
+#: propertyeditorbuilder.py:564 tools/toolsencoding.py:343
 msgid "Progressive"
 msgstr "Progressivo"
 
@@ -2898,8 +2904,8 @@ msgstr "Filtri audio"
 msgid "Blur"
 msgstr "Sfocatura"
 
-#: translations.py:116 translations.py:528 propertyeditorbuilder.py:523
-#: propertyeditorbuilder.py:618
+#: translations.py:116 translations.py:528 propertyeditorbuilder.py:524
+#: propertyeditorbuilder.py:579
 msgid "Distort"
 msgstr "Distorsione"
 
@@ -4561,57 +4567,57 @@ msgstr "Tendina"
 msgid "Color Dip"
 msgstr "Immersione Colore"
 
-#: propertyeditorbuilder.py:249
+#: propertyeditorbuilder.py:250
 msgid "Size/Height"
 msgstr "Ingrandimento"
 
-#: propertyeditorbuilder.py:285
+#: propertyeditorbuilder.py:286
 #, fuzzy
 msgid "Width"
 msgstr "Larghezza:"
 
-#: propertyeditorbuilder.py:398
+#: propertyeditorbuilder.py:399
 msgid "Preset Luma"
 msgstr "Luma Preset"
 
-#: propertyeditorbuilder.py:399
+#: propertyeditorbuilder.py:400
 msgid "User Luma"
 msgstr "Luma Utente"
 
-#: propertyeditorbuilder.py:401
+#: propertyeditorbuilder.py:402
 msgid "Select Luma File"
 msgstr "Selezione File Luma"
 
-#: propertyeditorbuilder.py:410
+#: propertyeditorbuilder.py:411
 msgid "Wipe Luma files"
 msgstr "File per Tendine Luma"
 
-#: propertyeditorbuilder.py:416
+#: propertyeditorbuilder.py:417
 msgid "Luma File:"
 msgstr "File Luma:"
 
-#: propertyeditorbuilder.py:471
+#: propertyeditorbuilder.py:472
 #, fuzzy
 msgid "Select File"
 msgstr "Seleziona Cartella"
 
-#: propertyeditorbuilder.py:508 propertyeditorbuilder.py:603
+#: propertyeditorbuilder.py:509 propertyeditorbuilder.py:564
 msgid "Nothing"
 msgstr "Niente"
 
-#: propertyeditorbuilder.py:508 propertyeditorbuilder.py:603
+#: propertyeditorbuilder.py:509 propertyeditorbuilder.py:564
 msgid "Deinterlace"
 msgstr "Deinterlaccia"
 
-#: propertyeditorbuilder.py:508 propertyeditorbuilder.py:603
+#: propertyeditorbuilder.py:509 propertyeditorbuilder.py:564
 msgid "Both"
 msgstr "Entrambi"
 
-#: propertyeditorbuilder.py:517 propertyeditorbuilder.py:612
+#: propertyeditorbuilder.py:518 propertyeditorbuilder.py:573
 msgid "Force"
 msgstr "Forza"
 
-#: propertyeditorbuilder.py:522 propertyeditorbuilder.py:617
+#: propertyeditorbuilder.py:523 propertyeditorbuilder.py:578
 msgid "Align"
 msgstr "Allinea"
 
@@ -6370,6 +6376,33 @@ msgid ""
 "options\n"
 "if performance is not satisfactory."
 msgstr ""
+
+#: compositorfades.py:236
+#, fuzzy
+msgid "Clip too short!"
+msgstr "Clip troppo corta!"
+
+#: compositorfades.py:237
+#, fuzzy
+msgid "The Clip is too short to add the requested fade."
+msgstr ""
+"La Clip è troppo corta per la dissolvenza richiesta:\n"
+"\n"
+
+#: compositorfades.py:242
+#, fuzzy
+msgid "Clip too short for Auto Fades!"
+msgstr "Compositing"
+
+#: compositorfades.py:243
+msgid ""
+"The Clip is too short to add the user set default fades on Compositor "
+"creation."
+msgstr ""
+
+#, fuzzy
+#~ msgid "Auto Fades"
+#~ msgstr "Aggiungi Dissolvenza"
 
 #, fuzzy
 #~ msgid "Overwrite / Box"
