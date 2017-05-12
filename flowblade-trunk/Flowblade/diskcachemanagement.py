@@ -20,12 +20,20 @@
 
 from gi.repository import Gtk
 
+from os import listdir
+from os.path import isfile, join
+import os
+
 import dialogutils
+import gui
 import guiutils
+import utils
+
 
 NO_WARNING = 0
 RECREATE_WARNING = 1
 PROJECT_DATA_WARNING = 2
+
 
 class DiskFolderManagementPanel:
     
@@ -34,26 +42,93 @@ class DiskFolderManagementPanel:
         self.warning_level = warning_level
                 
         self.destroy_button = Gtk.Button(_("Destroy data"))
-        
-        
-        toprow = Gtk.HBox(True, 2)
-        toprow.pack_start(guiutils.get_left_justified_box([guiutils.bold_label(info_text)]), True, True, 0)
-        toprow.pack_start(guiutils.get_left_justified_box([guiutils.pad_label(12, 12), Gtk.Label("/" + folder)]), True, True, 0)
-        toprow.pack_start(guiutils.get_left_justified_box([guiutils.pad_label(12, 12), Gtk.Label("26 MB")]), True, True, 0)
-        toprow.pack_start(self.destroy_button, False, False, 0)
+        self.destroy_button .connect("clicked", self.destroy_pressed)
+        self.size_info = Gtk.Label()
+        self.size_info.set_text(self.get_folder_size_str())
+
+        info = Gtk.HBox(True, 2)
+        info.pack_start(guiutils.get_left_justified_box([guiutils.bold_label(info_text)]), True, True, 0)
+        info.pack_start(guiutils.get_left_justified_box([guiutils.pad_label(12, 12), Gtk.Label("/" + folder)]), True, True, 0)
+        info.pack_start(guiutils.get_left_justified_box([guiutils.pad_label(12, 12), self.size_info]), True, True, 0)
+
+        button_area = Gtk.HBox(False, 2)
+        button_area.pack_start(self.destroy_button, True, True, 0)
+        if self.warning_level == PROJECT_DATA_WARNING:
+            warning_icon = Gtk.Image.new_from_stock(Gtk.STOCK_DIALOG_WARNING, Gtk.IconSize.SMALL_TOOLBAR)
+            warning_icon.set_tooltip_text("jkjkjkjkjkjkjkjk")
+            button_area.pack_start(warning_icon, False, False, 0)
+        else:
+            button_area.pack_start(guiutils.pad_label(16, 16), False, False, 0)
+        button_area.set_size_request(100, 24)
+
+        row = Gtk.HBox(False, 2)
+        row.pack_start(info, True, True, 0)
+        row.pack_start(button_area, False, False, 0)
         
         self.vbox = Gtk.VBox(False, 2)
-        self.vbox.pack_start(toprow, False, False, 0)
+        self.vbox.pack_start(row, False, False, 0)
 
+    def get_cache_folder(self):
+        return utils.get_hidden_user_dir_path() + "/" + self.folder
+
+    def get_folder_files(self):
+        cache_folder = self.get_cache_folder()
+        return [f for f in listdir(cache_folder) if isfile(join(cache_folder, f))]
+    
+    def get_folder_size(self):
+        files = self.get_folder_files()
+        size = 0
+        for f in files:
+            size += os.path.getsize(self.get_cache_folder() +"/" + f)
+        return size
+
+    def get_folder_size_str(self):
+        size = self.get_folder_size()
+        if size > 1000000:
+            return str(int((size + 500000) / 1000000)) + _(" MB")
+        elif size > 1000:
+            return str(int((size + 500) / 1000)) + _(" kB")
+        else:
+            return str(int(size)) + " B"
+
+    def destroy_pressed(self, widget):
+        if self.warning_level == NO_WARNING:
+            # Delete data
+            self.destroy_data()
+            return
+            
+        primaty_text = _("Confirm Destroying Cached Data!")
+        if self.warning_level == PROJECT_DATA_WARNING:
+            secondary_text = _("Destroying this data may change contents of existing\nprojects and make some projects unopenable.")
+        else:
+            secondary_text = _("Destroying thia data may require parts of it to be recreated later.")
+            
+        dialogutils. warning_confirmation(self.warning_confirmation, primaty_text, secondary_text, gui.editor_window.window, None, True, True)
+     
+    def warning_confirmation(self, dialog, response_id):
+        dialog.destroy()
+
+        if response_id != Gtk.ResponseType.ACCEPT:
+            return
+    
+        self.destroy_data()
+    
+    def destroy_data(self):
+        print "deleting ", self.folder
         
+        files = self.get_folder_files()
+        for f in files:
+            os.remove(self.get_cache_folder() +"/" + f)
 
+        self.size_info.set_text(self.get_folder_size_str())
+        self.size_info.queue_draw()
+            
 def show_disk_management_dialog():
-    dialog = Gtk.Dialog(_("Profiles Manager"), None,
+    dialog = Gtk.Dialog(_("Disk Cache Manager"), None,
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                    (_("Close Manager").encode('utf-8'), Gtk.ResponseType.CLOSE))
+                    (_("Close").encode('utf-8'), Gtk.ResponseType.CLOSE))
 
     panels = _get_disk_dir_panels()
-
 
     pane = Gtk.VBox(True, 2)
     for panel in panels:
@@ -71,11 +146,11 @@ def show_disk_management_dialog():
 
 def _get_disk_dir_panels():
     panels = []
-    panels.append(DiskFolderManagementPanel("audiolevels", _("Audio Leveld Data"), RECREATE_WARNING))
-    panels.append(DiskFolderManagementPanel("gmic", _("G'Mic tool old session data"), NO_WARNING))
-    panels.append(DiskFolderManagementPanel("natron", _("Natron Clip Export data"), NO_WARNING))
-    panels.append(DiskFolderManagementPanel("rendered_clips", _("Natron Clip Export data"), PROJECT_DATA_WARNING))
-    panels.append(DiskFolderManagementPanel("thumbnails", _("Natron Clip Export data"), RECREATE_WARNING))
+    panels.append(DiskFolderManagementPanel("audiolevels", _("Audio Levels Data"), RECREATE_WARNING))
+    panels.append(DiskFolderManagementPanel("gmic", _("G'Mic tool Session Data"), NO_WARNING))
+    panels.append(DiskFolderManagementPanel("natron", _("Natron Clip Export Data"), NO_WARNING))
+    panels.append(DiskFolderManagementPanel("rendered_clips", _("Rendered Files"), PROJECT_DATA_WARNING))
+    panels.append(DiskFolderManagementPanel("thumbnails", _("Thumbnails"), RECREATE_WARNING))
     panels.append(DiskFolderManagementPanel("user_profiles", _("User Created Custom Profiles"), PROJECT_DATA_WARNING))
 
     return panels
