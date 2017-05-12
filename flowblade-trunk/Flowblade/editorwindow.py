@@ -39,6 +39,7 @@ import clipmenuaction
 import compositeeditor
 import dialogs
 import dialogutils
+import diskcachemanagement
 import dnd
 import editevent
 import editorpersistance
@@ -197,6 +198,7 @@ class EditorWindow:
             ('CompositorsFadesDefaults', None, _('Set Compositor Auto Fades...'), None, None, lambda a:tlineaction.set_compositors_fades_defaults()),
             ('ChangeSequenceTracks', None, _('Change Sequence Tracks Count...'), None, None, lambda a:projectaction.change_sequence_track_count()),
             ('Watermark', None, _('Watermark...'), None, None, lambda a:menuactions.edit_watermark()),
+            ('DiskCacheManager', None, _('Disk Cache Manager'), None, None, lambda a:diskcachemanagement.show_disk_management_dialog()),
             ('ProfilesManager', None, _('Profiles Manager'), None, None, lambda a:menuactions.profiles_manager()),
             ('Preferences', None, _('Preferences'), None, None, lambda a:preferenceswindow.preferences_dialog()),
             ('ViewMenu', None, _('View')),
@@ -303,6 +305,7 @@ class EditorWindow:
                     <menuitem action='Watermark'/>
                     <separator/>
                     <menuitem action='ProfilesManager'/>
+                    <menuitem action='DiskCacheManager'/>
                     <menuitem action='Preferences'/>
                 </menu>
                 <menu action='ViewMenu'>
