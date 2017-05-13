@@ -57,6 +57,6 @@ Last updated: May. 2017
 
 *Changelog*
 - *13-5-17 Remove undoable items related to animating property values in in MLT, require too large MLt controinutions for the time being*
-- *13-5-17 Remove completed iems and items that will be in 1.14*
+- *13-5-17 Remove completed items and items that will be in 1.14*
 - *13-5-17 Add change log*
 	
