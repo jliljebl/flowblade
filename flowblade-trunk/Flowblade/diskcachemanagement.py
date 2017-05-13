@@ -42,24 +42,34 @@ class DiskFolderManagementPanel:
         self.warning_level = warning_level
                 
         self.destroy_button = Gtk.Button(_("Destroy data"))
-        self.destroy_button .connect("clicked", self.destroy_pressed)
+        self.destroy_button.connect("clicked", self.destroy_pressed)
+        self.destroy_guard_check = Gtk.CheckButton()
+        self.destroy_guard_check.set_active(False)
+        self.destroy_guard_check.connect("toggled", self.destroy_guard_toggled)
+        
         self.size_info = Gtk.Label()
         self.size_info.set_text(self.get_folder_size_str())
 
+        folder_label = Gtk.Label("/<i>" + folder + "</i>")
+        folder_label.set_use_markup(True)
+
         info = Gtk.HBox(True, 2)
         info.pack_start(guiutils.get_left_justified_box([guiutils.bold_label(info_text)]), True, True, 0)
-        info.pack_start(guiutils.get_left_justified_box([guiutils.pad_label(12, 12), Gtk.Label("/" + folder)]), True, True, 0)
+        info.pack_start(guiutils.get_left_justified_box([guiutils.pad_label(40, 12), folder_label]), True, True, 0)
         info.pack_start(guiutils.get_left_justified_box([guiutils.pad_label(12, 12), self.size_info]), True, True, 0)
 
         button_area = Gtk.HBox(False, 2)
+        if self.warning_level == PROJECT_DATA_WARNING:
+            button_area.pack_start(self.destroy_guard_check, True, True, 0)
+            self.destroy_button.set_sensitive(False)
         button_area.pack_start(self.destroy_button, True, True, 0)
         if self.warning_level == PROJECT_DATA_WARNING:
             warning_icon = Gtk.Image.new_from_stock(Gtk.STOCK_DIALOG_WARNING, Gtk.IconSize.SMALL_TOOLBAR)
-            warning_icon.set_tooltip_text("jkjkjkjkjkjkjkjk")
+            warning_icon.set_tooltip_text( _("Destroying this data may change contents of existing\nprojects and make some projects unopenable."))
             button_area.pack_start(warning_icon, False, False, 0)
         else:
             button_area.pack_start(guiutils.pad_label(16, 16), False, False, 0)
-        button_area.set_size_request(100, 24)
+        button_area.set_size_request(150, 24)
 
         row = Gtk.HBox(False, 2)
         row.pack_start(info, True, True, 0)
@@ -99,12 +109,20 @@ class DiskFolderManagementPanel:
             
         primaty_text = _("Confirm Destroying Cached Data!")
         if self.warning_level == PROJECT_DATA_WARNING:
-            secondary_text = _("Destroying this data may change contents of existing\nprojects and make some projects unopenable.")
+            secondary_text = _("Destroying this data may <b>change contents</b> of existing\nprojects or <b>make some projects unopenable!</b>")
+            secondary_text += "\n\n"
+            secondary_text += _("You can use 'File->Save Backup Snapshot...' functionality to backup projects\nso that they can be opened later before destroying this data.")
         else:
-            secondary_text = _("Destroying thia data may require parts of it to be recreated later.")
+            secondary_text = _("Destroying this data may require parts of it to be recreated later.")
             
-        dialogutils. warning_confirmation(self.warning_confirmation, primaty_text, secondary_text, gui.editor_window.window, None, True, True)
-     
+        dialogutils. warning_confirmation(self.warning_confirmation, primaty_text, secondary_text, gui.editor_window.window, None, False, True)
+
+    def destroy_guard_toggled(self, check_button):
+        if check_button.get_active() == True:
+            self.destroy_button.set_sensitive(True)
+        else:
+            self.destroy_button.set_sensitive(False)
+         
     def warning_confirmation(self, dialog, response_id):
         dialog.destroy()
 
@@ -147,7 +165,7 @@ def show_disk_management_dialog():
 def _get_disk_dir_panels():
     panels = []
     panels.append(DiskFolderManagementPanel("audiolevels", _("Audio Levels Data"), RECREATE_WARNING))
-    panels.append(DiskFolderManagementPanel("gmic", _("G'Mic tool Session Data"), NO_WARNING))
+    panels.append(DiskFolderManagementPanel("gmic", _("G'Mic Tool Session Data"), NO_WARNING))
     panels.append(DiskFolderManagementPanel("natron", _("Natron Clip Export Data"), NO_WARNING))
     panels.append(DiskFolderManagementPanel("rendered_clips", _("Rendered Files"), PROJECT_DATA_WARNING))
     panels.append(DiskFolderManagementPanel("thumbnails", _("Thumbnails"), RECREATE_WARNING))
