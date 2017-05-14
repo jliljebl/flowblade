@@ -378,7 +378,7 @@ def get_hidden_user_dir_path():
     return os.getenv("HOME") + "/.flowblade/"
 
 def get_phantom_disk_cache_folder():
-    return get_hidden_user_dir_path() +  appconsts.NODE_COMPOSITORS_DIR + "/" + appconsts.PHANTOM_DISK_CACHE_DIR
+    return get_hidden_user_dir_path() +  appconsts.PHANTOM_DIR + "/" + appconsts.PHANTOM_DISK_CACHE_DIR
 
 def get_hidden_screenshot_dir_path():
     return get_hidden_user_dir_path() + "screenshot/"
