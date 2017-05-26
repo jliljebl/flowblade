@@ -162,6 +162,9 @@ class LoadThread(threading.Thread):
         Gdk.threads_leave()
         
         Gdk.threads_enter()
+        selections = project.get_project_property(appconsts.P_PROP_LAST_RENDER_SELECTIONS)
+        if selections != None:
+            render.set_saved_gui_selections(selections)
         updater.set_info_icon(None)
         dialog.destroy()
         Gdk.threads_leave()
@@ -741,6 +744,8 @@ def get_save_time_msg():
 def do_rendering():
     success = _write_out_render_item(True)
     if success:
+        render_selections = render.get_current_gui_selections()
+        PROJECT().set_project_property(appconsts.P_PROP_LAST_RENDER_SELECTIONS, render_selections)
         batchrendering.launch_single_rendering()
 
 def add_to_render_queue():
