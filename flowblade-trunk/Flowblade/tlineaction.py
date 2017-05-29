@@ -451,7 +451,7 @@ def range_overwrite_pressed():
     updater.display_tline_cut_frame(track, track.get_clip_index_at(mark_in_frame))
 
 def _show_three_poimt_edit_not_defined():
-    primary_txt = _("3 point edit not defoned!")
+    primary_txt = _("3 point edit not defined!")
     secondary_txt = _("You need to set Timeline Range using Mark In and Mark Out buttons\nto perform this edit.")
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
             
