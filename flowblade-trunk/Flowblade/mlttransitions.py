@@ -28,6 +28,7 @@ import os
 import xml.dom.minidom
 
 import appconsts
+import compositorfades
 import mltrefhold
 import patternproducer
 import propertyparse
@@ -40,6 +41,7 @@ PROPERTY = appconsts.PROPERTY
 EXTRA_EDITOR = appconsts.EXTRA_EDITOR
 MLT_SERVICE = appconsts.MLT_SERVICE
 COMPOSITOR = "compositortransition"
+AUTO_FADE_COMPOSITOR = "autofadecompositor"
 
 # Property types.
 PROP_INT = appconsts.PROP_INT
@@ -68,11 +70,12 @@ not_found_transitions = []
 wipe_lumas = None # User displayed name -> resource image
 compositors = None
 blenders = None
+autofades = None
 
 def init_module():
 
     # translations and module load order make us do this in method instead of at module load
-    global wipe_lumas, compositors, blenders, name_for_type, rendered_transitions, single_track_render_type_names
+    global wipe_lumas, compositors, blenders, name_for_type, rendered_transitions, single_track_render_type_names, autofades
     wipe_lumas = { \
                 _("Vertical From Center"):"bi-linear_x.pgm",
                 _("Vertical Top to Bottom"):"wipe_top_to_bottom.svg",
@@ -151,6 +154,9 @@ def init_module():
                 (_("Subtract"),"##subtract"),
                 (_("Value"),"##value")]
 
+    autofades = [(_("Fade In"),"##auto_fade_in"),
+                (_("Fade Out"),"##auto_fade_out")]
+    
     for comp in compositors:
         name, comp_type = comp
         name_for_type[comp_type] = name
@@ -158,7 +164,11 @@ def init_module():
     for blend in blenders:
         name, comp_type = blend
         name_for_type[comp_type] = name
-    
+
+    for fade in autofades:
+        name, comp_type = fade
+        name_for_type[comp_type] = name
+        
     # change this, tuples are not need we only need list of translatd names
     rendered_transitions = [  (_("Dissolve"), RENDERED_DISSOLVE), 
                               (_("Wipe"), RENDERED_WIPE),
@@ -174,6 +184,11 @@ class CompositorTransitionInfo:
     """
     def __init__(self, compositor_node):
         self.mlt_service_id = compositor_node.getAttribute(MLT_SERVICE)
+        if compositor_node.hasAttribute(AUTO_FADE_COMPOSITOR):
+            self.auto_fade_compositor = bool(compositor_node.getAttribute(AUTO_FADE_COMPOSITOR))
+        else:
+            self.auto_fade_compositor = False
+
         self.xml = compositor_node.toxml()
         self.name = compositor_node.getElementsByTagName(NAME).item(0).firstChild.nodeValue
         
@@ -273,6 +288,7 @@ class CompositorTransition:
         self.mlt_transition.set("a_track", str(a_track))
         self.mlt_transition.set("b_track", str(b_track))
 
+
     def set_target_track(self, a_track, force_track):
         self.a_track = a_track
         self.mlt_transition.set("a_track", str(a_track))
@@ -351,6 +367,15 @@ class CompositorObject:
             self.transition.properties = copy.deepcopy(properties)
             self.transition.update_editable_mlt_properties()
         
+    def update_autofade_keyframes(self):
+        if self.transition.info.auto_fade_compositor == False:
+            return
+        
+        if self.transition.info.name == "##auto_fade_in":
+            print "yyyy"
+            compositorfades.set_auto_fade_in_keyframes(self)
+        else:
+            print "ee"
         
 # -------------------------------------------------- compositor interface methods
 def load_compositors_xml(transitions):
@@ -369,6 +394,7 @@ def load_compositors_xml(transitions):
             global not_found_transitions
             not_found_transitions.append(compositor_info)
             continue
+
         mlt_compositor_transition_infos[compositor_info.name] = compositor_info
 
 def get_wipe_resource_path_for_sorted_keys_index(sorted_keys_index):

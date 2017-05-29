@@ -35,7 +35,12 @@ be used for adding fade-ins and fade outs, so this dedicated module is needed.
 # Dissolve default fades group ("Dissolve", "Blend") keyframe property class names
 _dissolve_property_klasses = ["OpacityInGeomKeyframeProperty", "KeyFrameHCSTransitionProperty"]
 
+# -------------------------------------------------------------- module interface
 def add_default_fades(compositor, clip):
+    # Default fades are not aplied to auto fade compositors
+    if compositor.transition.info.auto_fade_compositor == True:
+        return
+        
     keyframe_property, property_klass, keyframes = _get_kfproperty_klass_and_keyframes(compositor, clip)
 
     if keyframe_property == None:
@@ -78,7 +83,26 @@ def add_fade_out(compositor, fade_out_length):
             _do_user_add_fade_out(keyframe_property, property_klass, keyframes, fade_out_length, clip)
         else:
             _show_length_error_dialog()
-            
+
+def set_auto_fade_in_keyframes(compositor):
+    print "hhhhhhhhhhhh"
+    clip = _get_compositor_clip(compositor)
+    keyframe_property, property_klass, keyframes = _get_kfproperty_klass_and_keyframes(compositor, clip)
+
+    # Pop first keyframe to get frame
+    #frame, geom, opacity = keyframes.pop(0)
+    
+    # Remove all key frames, there exists 2 or 1, 0 when created 1 always after that
+    while len(keyframes) > 0: 
+        keyframes.pop()
+    
+    # Set in fade in keyframes
+    keyframes.append((0, 0))
+    keyframes.append((compositor.get_length() - 1, 100))
+
+    keyframe_property.write_out_keyframes(keyframes)
+
+# ---------------------------------------------------------------------- module finctions
 def _get_kfproperty_klass_and_keyframes(compositor, clip):
     # Create editable properties from compositor properties.
     t_editable_properties = propertyedit.get_transition_editable_properties(compositor)

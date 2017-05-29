@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Floblade Italian Translation 0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-28 18:32+0300\n"
+"POT-Creation-Date: 2017-05-29 18:30+0300\n"
 "PO-Revision-Date: 2014-09-15 23:42+0100\n"
 "Last-Translator: Massimo Stella <info@massimostella.it>\n"
 "Language-Team: Italiano\n"
@@ -219,11 +219,11 @@ msgstr "' per le miniature"
 msgid "N/A"
 msgstr ""
 
-#: projectaction.py:1075 guicomponents.py:1788
+#: projectaction.py:1075 guicomponents.py:1809
 msgid "Yes"
 msgstr "Si"
 
-#: projectaction.py:1077 guicomponents.py:1790
+#: projectaction.py:1077 guicomponents.py:1811
 msgid "No"
 msgstr "No"
 
@@ -392,7 +392,7 @@ msgstr "Apri la Clip nel Monitor"
 msgid "Append"
 msgstr "Accoda"
 
-#: editorwindow.py:183 dialogs.py:1222 dialogs.py:1256 guicomponents.py:2314
+#: editorwindow.py:183 dialogs.py:1222 dialogs.py:1256 guicomponents.py:2335
 msgid "Insert"
 msgstr "Inserisci"
 
@@ -408,7 +408,7 @@ msgstr "Area di Sovrascrittura"
 msgid "Cut Clip"
 msgstr "Taglia la Clip"
 
-#: editorwindow.py:187 guicomponents.py:1489 translations.py:513
+#: editorwindow.py:187 guicomponents.py:1510 translations.py:513
 msgid "Lift"
 msgstr "Solleva"
 
@@ -416,7 +416,7 @@ msgstr "Solleva"
 msgid "Splice Out"
 msgstr "Estrai"
 
-#: editorwindow.py:189 guicomponents.py:1174 guicomponents.py:1275
+#: editorwindow.py:189 guicomponents.py:1174 guicomponents.py:1276
 msgid "Resync"
 msgstr "Risincronizza"
 
@@ -432,7 +432,7 @@ msgstr "Aggiungi una Transizione  su Traccia Singola"
 msgid "Add Single Track Fade"
 msgstr "Aggiungi una Dissolvenza su Traccia Singola"
 
-#: editorwindow.py:193 guicomponents.py:1197 guicomponents.py:1246
+#: editorwindow.py:193 guicomponents.py:1198 guicomponents.py:1247
 msgid "Clear Filters"
 msgstr "Elimina i Filtri"
 
@@ -824,13 +824,13 @@ msgid "Quit editing Clip in editor"
 msgstr "Chiudere la modifica della Clip"
 
 #: clipeffectseditor.py:236 panels.py:51 panels.py:96 panels.py:114
-#: translations.py:563 mlttransitions.py:134 tools/titler.py:209
+#: translations.py:563 mlttransitions.py:137 tools/titler.py:209
 msgid "Add"
 msgstr "Aggiungi"
 
-#: clipeffectseditor.py:237 compositeeditor.py:71 guicomponents.py:1256
-#: guicomponents.py:1322 guicomponents.py:1486 guicomponents.py:1610
-#: guicomponents.py:1661 panels.py:52 panels.py:97 panels.py:115
+#: clipeffectseditor.py:237 compositeeditor.py:71 guicomponents.py:1257
+#: guicomponents.py:1323 guicomponents.py:1507 guicomponents.py:1631
+#: guicomponents.py:1682 panels.py:52 panels.py:97 panels.py:115
 #: tools/titler.py:210 tools/batchrendering.py:1030
 msgid "Delete"
 msgstr "Elimina"
@@ -859,11 +859,13 @@ msgstr "Attiva/Disattiva tutti i Filtri"
 msgid "No editable parameters"
 msgstr "Parametri non modificabili"
 
-#: compositeeditor.py:60 panels.py:411 mlttransitions.py:166
+#: compositeeditor.py:60 panels.py:411 mlttransitions.py:157
+#: mlttransitions.py:176
 msgid "Fade In"
 msgstr "Assolvenza"
 
-#: compositeeditor.py:62 panels.py:412 mlttransitions.py:167
+#: compositeeditor.py:62 panels.py:412 mlttransitions.py:158
+#: mlttransitions.py:177
 msgid "Fade Out"
 msgstr "Dissolvenza"
 
@@ -1198,7 +1200,7 @@ msgstr "Formati"
 msgid "Render Options"
 msgstr "Opzioni di Calcolo"
 
-#: dialogs.py:688 guicomponents.py:1614
+#: dialogs.py:688 guicomponents.py:1635
 msgid "File Properties"
 msgstr "Proprietà dei File"
 
@@ -1377,7 +1379,7 @@ msgstr "Apri per modificare:"
 msgid "Rename New Media Object"
 msgstr "Rinomina i Nuovi Media"
 
-#: dialogs.py:1000 dialogs.py:1028 dialogs.py:1082 guicomponents.py:1609
+#: dialogs.py:1000 dialogs.py:1028 dialogs.py:1082 guicomponents.py:1630
 msgid "Rename"
 msgstr "Rinomina"
 
@@ -1385,7 +1387,7 @@ msgstr "Rinomina"
 msgid "New Name:"
 msgstr "Nuovo Nome:"
 
-#: dialogs.py:1025 guicomponents.py:1201 guicomponents.py:1299
+#: dialogs.py:1025 guicomponents.py:1202 guicomponents.py:1300
 msgid "Rename Clip"
 msgstr "Rinomina la Clip"
 
@@ -1425,7 +1427,7 @@ msgstr ""
 msgid "New Marker"
 msgstr "Nuovo Marcatore"
 
-#: dialogs.py:1096 guicomponents.py:2132
+#: dialogs.py:1096 guicomponents.py:2153
 msgid "Add Marker"
 msgstr "Aggiungi un Marcatore"
 
@@ -1462,7 +1464,7 @@ msgstr "Aggiungi Transizione"
 msgid "Apply"
 msgstr "Applica"
 
-#: dialogs.py:1181
+#: dialogs.py:1181 guicomponents.py:1409
 msgid "Add Fade"
 msgstr "Aggiungi Dissolvenza"
 
@@ -1766,27 +1768,27 @@ msgstr "Vai a OUT"
 msgid "Playback"
 msgstr "Riproduci"
 
-#: dialogs.py:1257 guicomponents.py:2320 translations.py:560
+#: dialogs.py:1257 guicomponents.py:2341 translations.py:560
 msgid "Overwrite"
 msgstr "Sovrascrivi"
 
-#: dialogs.py:1258 guicomponents.py:2326
+#: dialogs.py:1258 guicomponents.py:2347
 msgid "Trim"
 msgstr ""
 
-#: dialogs.py:1259 guicomponents.py:2332
+#: dialogs.py:1259 guicomponents.py:2353
 msgid "Roll"
 msgstr ""
 
-#: dialogs.py:1260 guicomponents.py:2338
+#: dialogs.py:1260 guicomponents.py:2359
 msgid "Slip"
 msgstr ""
 
-#: dialogs.py:1261 guicomponents.py:2344
+#: dialogs.py:1261 guicomponents.py:2365
 msgid "Spacer"
 msgstr "Spaziatore"
 
-#: dialogs.py:1262 guicomponents.py:2350 translations.py:544
+#: dialogs.py:1262 guicomponents.py:2371 translations.py:544
 msgid "Box"
 msgstr ""
 
@@ -2077,11 +2079,11 @@ msgstr "Altezza Estesa"
 msgid "Normal Height"
 msgstr "Altezza Normale"
 
-#: guicomponents.py:1133 guicomponents.py:1225 guicomponents.py:1267
+#: guicomponents.py:1133 guicomponents.py:1226 guicomponents.py:1268
 msgid "Open in Filters Editor"
 msgstr "Apri Filtro nella Finestra di Modifica"
 
-#: guicomponents.py:1140 guicomponents.py:1269 guicomponents.py:1612
+#: guicomponents.py:1140 guicomponents.py:1270 guicomponents.py:1633
 msgid "Open in Clip Monitor"
 msgstr "Apri nel Monitor"
 
@@ -2093,466 +2095,466 @@ msgstr "Separa l'Audio"
 msgid "Split Audio Synched"
 msgstr "Separa l'Audio Sincronizzato"
 
-#: guicomponents.py:1164 guicomponents.py:1283
+#: guicomponents.py:1164 guicomponents.py:1284
 msgid "Display Audio Level"
 msgstr "Mostra Livelli Audio"
 
-#: guicomponents.py:1167 guicomponents.py:1286
+#: guicomponents.py:1167 guicomponents.py:1287
 msgid "Clear Waveform"
 msgstr "Nascondi Livelli Audio"
 
-#: guicomponents.py:1175 guicomponents.py:1276
+#: guicomponents.py:1175 guicomponents.py:1277
 msgid "Clear Sync Relation"
 msgstr "Rimuovi la Sincronia"
 
-#: guicomponents.py:1177 guicomponents.py:1278
+#: guicomponents.py:1177 guicomponents.py:1279
 msgid "Select Sync Parent Clip..."
 msgstr "Selezionare la Clip di Riferimento per la Sincronizzazione..."
 
-#: guicomponents.py:1204 guicomponents.py:1302
+#: guicomponents.py:1205 guicomponents.py:1303
 msgid "Clip Info"
 msgstr "Informazioni sulla Clip"
 
-#: guicomponents.py:1253
+#: guicomponents.py:1254
 msgid "Strech Prev Clip to Cover"
 msgstr "Allunga la Clip Precedente a Copertura"
 
-#: guicomponents.py:1254
+#: guicomponents.py:1255
 msgid "Strech Next Clip to Cover"
 msgstr "Allunga la Clip Successiva a Copertura"
 
-#: guicomponents.py:1318
+#: guicomponents.py:1319
 msgid "Open In Compositor Editor"
 msgstr "Apri nella Finestra di Composting"
 
-#: guicomponents.py:1320
+#: guicomponents.py:1321
 msgid "Sync with Origin Clip"
 msgstr "Sincronizza con la Clip d'Origine"
 
-#: guicomponents.py:1326 guicomponents.py:1347
+#: guicomponents.py:1327 guicomponents.py:1348
 msgid "Add Filter"
 msgstr "Aggiungi Filtro"
 
-#: guicomponents.py:1369
+#: guicomponents.py:1370
 msgid "Add Compositor"
 msgstr "Aggiungi Compositing"
 
-#: guicomponents.py:1392
+#: guicomponents.py:1393
 msgid "Add Blend"
 msgstr "Aggiungi Fusione"
 
-#: guicomponents.py:1408
+#: guicomponents.py:1429
 msgid "Show Match Frame"
 msgstr ""
 
-#: guicomponents.py:1412
+#: guicomponents.py:1433
 #, fuzzy
 msgid "First Frame in Monitor"
 msgstr "Nessuna Clip caricata nel Monitor"
 
-#: guicomponents.py:1417
+#: guicomponents.py:1438
 msgid "Last Frame in Monitor"
 msgstr ""
 
-#: guicomponents.py:1424
+#: guicomponents.py:1445
 #, fuzzy
 msgid "First Frame on Timeline"
 msgstr "Inserisci Sub-Clip nella Timeline"
 
-#: guicomponents.py:1429
+#: guicomponents.py:1450
 #, fuzzy
 msgid "Last Frame on Timeline"
 msgstr "Inserisci Sub-Clip nella Timeline"
 
-#: guicomponents.py:1436 guicomponents.py:2299
+#: guicomponents.py:1457 guicomponents.py:2320
 #, fuzzy
 msgid "Clear Match Frame"
 msgstr "Fotogramma Successivo"
 
-#: guicomponents.py:1446
+#: guicomponents.py:1467
 #, fuzzy
 msgid "Select"
 msgstr "Selezione Colore"
 
-#: guicomponents.py:1450
+#: guicomponents.py:1471
 msgid "All Clips After"
 msgstr ""
 
-#: guicomponents.py:1455
+#: guicomponents.py:1476
 #, fuzzy
 msgid "All Clips Before"
 msgstr "Informazioni sulla Clip"
 
-#: guicomponents.py:1465
+#: guicomponents.py:1486
 #, fuzzy
 msgid "Export To Tool"
 msgstr "Esporta"
 
-#: guicomponents.py:1482 panels.py:116
+#: guicomponents.py:1503 panels.py:116
 msgid "Edit"
 msgstr "Modifica"
 
-#: guicomponents.py:1494
+#: guicomponents.py:1515
 #, fuzzy
 msgid "Set Clip Length..."
 msgstr "Tendina"
 
-#: guicomponents.py:1497
+#: guicomponents.py:1518
 msgid "Stretch Over Next Blank"
 msgstr ""
 
-#: guicomponents.py:1500
+#: guicomponents.py:1521
 msgid "Stretch Over Prev Blank"
 msgstr ""
 
-#: guicomponents.py:1507
+#: guicomponents.py:1528
 msgid "Clone Filters"
 msgstr "Clona il Filtro"
 
-#: guicomponents.py:1511
+#: guicomponents.py:1532
 msgid "From Next Clip"
 msgstr "Dalla Clip Successiva"
 
-#: guicomponents.py:1516
+#: guicomponents.py:1537
 msgid "From Previous Clip"
 msgstr "Dalla Clip Precedente"
 
-#: guicomponents.py:1525 guicomponents.py:1545
+#: guicomponents.py:1546 guicomponents.py:1566
 msgid "Mute"
 msgstr "Silenzia"
 
-#: guicomponents.py:1529 guicomponents.py:1549
+#: guicomponents.py:1550 guicomponents.py:1570
 msgid "Unmute"
 msgstr "Riattiva"
 
-#: guicomponents.py:1535 guicomponents.py:1566
+#: guicomponents.py:1556 guicomponents.py:1587
 msgid "Mute Audio"
 msgstr "Disattiva Audio"
 
-#: guicomponents.py:1560
+#: guicomponents.py:1581
 msgid "Mute Video"
 msgstr "Disattiva Video"
 
-#: guicomponents.py:1577
+#: guicomponents.py:1598
 msgid "Mute All"
 msgstr "Disattiva Tutto"
 
-#: guicomponents.py:1587
+#: guicomponents.py:1608
 msgid "Clip Color"
 msgstr "Clip Colore"
 
-#: guicomponents.py:1589
+#: guicomponents.py:1610
 msgid "Default"
 msgstr "Predefinito"
 
-#: guicomponents.py:1590 translations.py:498 translations.py:570
+#: guicomponents.py:1611 translations.py:498 translations.py:570
 msgid "Red"
 msgstr "Rosso"
 
-#: guicomponents.py:1591 translations.py:499 translations.py:565
+#: guicomponents.py:1612 translations.py:499 translations.py:565
 #: translations.py:571
 msgid "Green"
 msgstr "Verde"
 
-#: guicomponents.py:1592 translations.py:500 translations.py:566
+#: guicomponents.py:1613 translations.py:500 translations.py:566
 #: translations.py:572
 msgid "Blue"
 msgstr "Blu"
 
-#: guicomponents.py:1593
+#: guicomponents.py:1614
 msgid "Orange"
 msgstr "Arancione"
 
-#: guicomponents.py:1594
+#: guicomponents.py:1615
 msgid "Brown"
 msgstr "Marrone"
 
-#: guicomponents.py:1595
+#: guicomponents.py:1616
 msgid "Olive"
 msgstr "Oliva"
 
-#: guicomponents.py:1619 guicomponents.py:1659
+#: guicomponents.py:1640 guicomponents.py:1680
 msgid "Render Slow/Fast Motion File"
 msgstr "Calcola Clip Rallentata/Accelerata"
 
-#: guicomponents.py:1621
+#: guicomponents.py:1642
 #, fuzzy
 msgid "Render Reverse Motion File"
 msgstr "Calcola Clip Rallentata/Accelerata"
 
-#: guicomponents.py:1623
+#: guicomponents.py:1644
 msgid "Render Proxy File"
 msgstr "Calcola File Proxy"
 
-#: guicomponents.py:1646
+#: guicomponents.py:1667
 msgid "Toggle Active"
 msgstr "Attiva/Disattiva"
 
-#: guicomponents.py:1647
+#: guicomponents.py:1668
 msgid "Reset Values"
 msgstr "Resetta"
 
-#: guicomponents.py:1649
+#: guicomponents.py:1670
 msgid "Move Up"
 msgstr ""
 
-#: guicomponents.py:1650
+#: guicomponents.py:1671
 #, fuzzy
 msgid "Move Down"
 msgstr "Basso"
 
-#: guicomponents.py:1658
+#: guicomponents.py:1679
 msgid "Display In Clip Monitor"
 msgstr "Mostra nel Monitor delle Clip"
 
-#: guicomponents.py:1660
+#: guicomponents.py:1681
 msgid "Toggle Star"
 msgstr "Attiva/Disattiva Preferito"
 
-#: guicomponents.py:1668 medialinker.py:134
+#: guicomponents.py:1689 medialinker.py:134
 msgid "Set File Relink Path"
 msgstr ""
 
-#: guicomponents.py:1669 medialinker.py:136
+#: guicomponents.py:1690 medialinker.py:136
 msgid "Delete File Relink Path"
 msgstr ""
 
-#: guicomponents.py:1671
+#: guicomponents.py:1692
 msgid "Show Full Paths"
 msgstr ""
 
-#: guicomponents.py:1737 propertyeditorbuilder.py:509
+#: guicomponents.py:1758 propertyeditorbuilder.py:509
 #: propertyeditorbuilder.py:564 tools/toolsencoding.py:343
 msgid "Progressive"
 msgstr "Progressivo"
 
-#: guicomponents.py:1739 tools/toolsencoding.py:345
+#: guicomponents.py:1760 tools/toolsencoding.py:345
 msgid "Interlaced"
 msgstr "Interlacciato"
 
-#: guicomponents.py:1742 tools/toolsencoding.py:348
+#: guicomponents.py:1763 tools/toolsencoding.py:348
 msgid "Fps: "
 msgstr "Fps: "
 
-#: guicomponents.py:1745 tools/toolsencoding.py:351
+#: guicomponents.py:1766 tools/toolsencoding.py:351
 msgid "Pixel Aspect: "
 msgstr "Formato Pixel:"
 
-#: guicomponents.py:1752
+#: guicomponents.py:1773
 msgid "Description:"
 msgstr "Descrizione:"
 
-#: guicomponents.py:1754
+#: guicomponents.py:1775
 msgid "Dimensions:"
 msgstr "Dimensione:"
 
-#: guicomponents.py:1756
+#: guicomponents.py:1777
 msgid "Frames per second:"
 msgstr "Fotogrammi al secondo:"
 
-#: guicomponents.py:1758
+#: guicomponents.py:1779
 msgid "Size:"
 msgstr "Risoluzione:"
 
-#: guicomponents.py:1760
+#: guicomponents.py:1781
 msgid "Pixel aspect ratio: "
 msgstr "Proporzione del Pixel:"
 
-#: guicomponents.py:1762 profilesmanager.py:138
+#: guicomponents.py:1783 profilesmanager.py:138
 msgid "Progressive:"
 msgstr "Progressivo:"
 
-#: guicomponents.py:2001
+#: guicomponents.py:2022
 #, fuzzy
 msgid "Video:"
 msgstr "Codec Video:"
 
-#: guicomponents.py:2006
+#: guicomponents.py:2027
 #, fuzzy
 msgid "Audio:"
 msgstr "Audio"
 
-#: guicomponents.py:2011
+#: guicomponents.py:2032
 msgid "Number of Tracks:"
 msgstr "Numero delle Tracce:"
 
-#: guicomponents.py:2054
+#: guicomponents.py:2075
 #, fuzzy
 msgid "Frames:"
 msgstr " fotogramma(i)"
 
-#: guicomponents.py:2129
+#: guicomponents.py:2150
 msgid "No Markers"
 msgstr "Nessun Marcatore"
 
-#: guicomponents.py:2133
+#: guicomponents.py:2154
 msgid "Delete Marker"
 msgstr "Elimina Marcatore"
 
-#: guicomponents.py:2135
+#: guicomponents.py:2156
 msgid "Delete All Markers"
 msgstr "Elimina Tutti i Marcatori"
 
-#: guicomponents.py:2143
+#: guicomponents.py:2164
 msgid "Maximize Tracks"
 msgstr "Massimizza Tracce"
 
-#: guicomponents.py:2144
+#: guicomponents.py:2165
 msgid "Maximize Video Tracks"
 msgstr "Massimizza Tracce Video"
 
-#: guicomponents.py:2145
+#: guicomponents.py:2166
 msgid "Maximize Audio Tracks"
 msgstr "Massimizza Tracce Audio"
 
-#: guicomponents.py:2147
+#: guicomponents.py:2168
 msgid "Minimize Tracks"
 msgstr "Minimizza Tracce"
 
-#: guicomponents.py:2149
+#: guicomponents.py:2170
 msgid "Activate All Tracks"
 msgstr ""
 
-#: guicomponents.py:2150
+#: guicomponents.py:2171
 msgid "Activate Only Current Top Active Track"
 msgstr ""
 
-#: guicomponents.py:2152
+#: guicomponents.py:2173
 #, fuzzy
 msgid "Vertical Shrink Timeline"
 msgstr "Verticale Dal Centro"
 
-#: guicomponents.py:2167
+#: guicomponents.py:2188
 #, fuzzy
 msgid "Display Clip Media Thumbnails"
 msgstr "Mostra nel Monitor delle Clip"
 
-#: guicomponents.py:2176
+#: guicomponents.py:2197
 msgid "Snapping On"
 msgstr ""
 
-#: guicomponents.py:2183
+#: guicomponents.py:2204
 msgid "Show Magnet Icon"
 msgstr ""
 
-#: guicomponents.py:2192
+#: guicomponents.py:2213
 #, fuzzy
 msgid "Display All Audio Levels"
 msgstr "Mostra Livelli Audio"
 
-#: guicomponents.py:2195
+#: guicomponents.py:2216
 #, fuzzy
 msgid "Display Audio Levels On Request"
 msgstr "Mostra Livelli Audio"
 
-#: guicomponents.py:2215
+#: guicomponents.py:2236
 msgid "Image"
 msgstr "Immagine"
 
-#: guicomponents.py:2217
+#: guicomponents.py:2238
 msgid "Vectorscope"
 msgstr "Vettorscopio"
 
-#: guicomponents.py:2219
+#: guicomponents.py:2240
 msgid "RGB Parade"
 msgstr "Oscilloscopio RGB"
 
-#: guicomponents.py:2223
+#: guicomponents.py:2244
 #, fuzzy
 msgid "Overlay Opacity"
 msgstr "Opacità"
 
-#: guicomponents.py:2228
+#: guicomponents.py:2249
 msgid "100%"
 msgstr ""
 
-#: guicomponents.py:2233
+#: guicomponents.py:2254
 msgid "80%"
 msgstr ""
 
-#: guicomponents.py:2238
+#: guicomponents.py:2259
 msgid "50%"
 msgstr ""
 
-#: guicomponents.py:2243
+#: guicomponents.py:2264
 msgid "20%"
 msgstr ""
 
-#: guicomponents.py:2248
+#: guicomponents.py:2269
 msgid "0%"
 msgstr ""
 
-#: guicomponents.py:2268
+#: guicomponents.py:2289
 msgid "Trim View On"
 msgstr ""
 
-#: guicomponents.py:2273
+#: guicomponents.py:2294
 msgid "Trim View Single Side Edits Only"
 msgstr ""
 
-#: guicomponents.py:2278
+#: guicomponents.py:2299
 msgid "Trim View Off"
 msgstr ""
 
-#: guicomponents.py:2294
+#: guicomponents.py:2315
 msgid "Set Current Clip Frame Match Frame"
 msgstr ""
 
-#: guicomponents.py:2370
+#: guicomponents.py:2391
 #, fuzzy
 msgid "All Files"
 msgstr "Tutti i file"
 
-#: guicomponents.py:2374
+#: guicomponents.py:2395
 #, fuzzy
 msgid "Video Files"
 msgstr " File Video"
 
-#: guicomponents.py:2378
+#: guicomponents.py:2399
 #, fuzzy
 msgid "Audio Files"
 msgstr "Filtri audio"
 
-#: guicomponents.py:2382
+#: guicomponents.py:2403
 msgid "Graphics Files"
 msgstr ""
 
-#: guicomponents.py:2386
+#: guicomponents.py:2407
 #, fuzzy
 msgid "Image Sequences"
 msgstr "Aggiungi Sequenza d'Immagini ..."
 
-#: guicomponents.py:2390
+#: guicomponents.py:2411
 #, fuzzy
 msgid "Pattern Producers"
 msgstr "Crea Pattern di Produzione"
 
-#: guicomponents.py:2403
+#: guicomponents.py:2424
 #, fuzzy
 msgid "2 Columns"
 msgstr "Volume"
 
-#: guicomponents.py:2408
+#: guicomponents.py:2429
 #, fuzzy
 msgid "3 Columns"
 msgstr "Volume"
 
-#: guicomponents.py:2413
+#: guicomponents.py:2434
 #, fuzzy
 msgid "4 Columns"
 msgstr "Volume"
 
-#: guicomponents.py:2418
+#: guicomponents.py:2439
 #, fuzzy
 msgid "5 Columns"
 msgstr "Volume"
 
-#: guicomponents.py:2423
+#: guicomponents.py:2444
 #, fuzzy
 msgid "6 Columns"
 msgstr "Volume"
 
-#: guicomponents.py:2428
+#: guicomponents.py:2449
 #, fuzzy
 msgid "7 Columns"
 msgstr "Volume"
@@ -3102,7 +3104,7 @@ msgstr "Scala di Grigi"
 msgid "Contrast"
 msgstr "Contrasto"
 
-#: translations.py:173 translations.py:399 mlttransitions.py:148
+#: translations.py:173 translations.py:399 mlttransitions.py:151
 msgid "Saturation"
 msgstr "Saturazione"
 
@@ -3111,7 +3113,7 @@ msgstr "Saturazione"
 msgid "Invert"
 msgstr "Negativo"
 
-#: translations.py:175 translations.py:400 mlttransitions.py:144
+#: translations.py:175 translations.py:400 mlttransitions.py:147
 msgid "Hue"
 msgstr "Tonalità"
 
@@ -3318,7 +3320,7 @@ msgstr "File Luma:"
 msgid "Chroma Key"
 msgstr "Preserva Colore"
 
-#: translations.py:236 mlttransitions.py:123
+#: translations.py:236 mlttransitions.py:126
 msgid "Affine"
 msgstr "Movimento"
 
@@ -4239,7 +4241,7 @@ msgstr "Magro"
 msgid "Ellipsoid"
 msgstr "Ellissoide"
 
-#: translations.py:564 mlttransitions.py:151
+#: translations.py:564 mlttransitions.py:154
 msgid "Subtract"
 msgstr "Sottrai"
 
@@ -4263,7 +4265,7 @@ msgstr "Aggiungi Costante"
 msgid "Change Gamma"
 msgstr "Modifica Gamma"
 
-#: translations.py:575 mlttransitions.py:146
+#: translations.py:575 mlttransitions.py:149
 msgid "Multiply"
 msgstr "Moltiplica"
 
@@ -4308,267 +4310,267 @@ msgstr ""
 msgid "Highlights"
 msgstr "Luce Forte"
 
-#: mlttransitions.py:77
+#: mlttransitions.py:80
 msgid "Vertical From Center"
 msgstr "Verticale Dal Centro"
 
-#: mlttransitions.py:78
+#: mlttransitions.py:81
 msgid "Vertical Top to Bottom"
 msgstr "Verticale Dall'Alto al Basso"
 
-#: mlttransitions.py:79
+#: mlttransitions.py:82
 msgid "Vertical Bottom to Top"
 msgstr "Verticale Dal Basso all'Alto"
 
-#: mlttransitions.py:80
+#: mlttransitions.py:83
 msgid "Horizontal From Center"
 msgstr "Orizzontale Dal Centro"
 
-#: mlttransitions.py:81
+#: mlttransitions.py:84
 msgid "Horizontal Left to Right"
 msgstr "Orizzontale Da Sinistra a Destra"
 
-#: mlttransitions.py:82
+#: mlttransitions.py:85
 msgid "Horizontal Right to Left"
 msgstr "Orizzontale Da Destra a Sinistra"
 
-#: mlttransitions.py:83
+#: mlttransitions.py:86
 msgid "Clock Left To Right"
 msgstr "Orologio da sinistra a destra"
 
-#: mlttransitions.py:84
+#: mlttransitions.py:87
 msgid "Clock Right to Left"
 msgstr "Orologio Da Destra a Sinistra"
 
-#: mlttransitions.py:85
+#: mlttransitions.py:88
 msgid "Clock Symmetric"
 msgstr "Orologio Simmetrico"
 
-#: mlttransitions.py:86
+#: mlttransitions.py:89
 msgid "Stripes Horizontal"
 msgstr "Strisce Orizzontali"
 
-#: mlttransitions.py:87
+#: mlttransitions.py:90
 msgid "Stripes Horizontal Big"
 msgstr "Strisce Orizzontali Grandi"
 
-#: mlttransitions.py:88
+#: mlttransitions.py:91
 msgid "Stripes Horizontal Moving"
 msgstr "Strisce Orizzontali in Movimento"
 
-#: mlttransitions.py:89
+#: mlttransitions.py:92
 msgid "Stripes Vertical"
 msgstr "Strisce Verticali"
 
-#: mlttransitions.py:90
+#: mlttransitions.py:93
 msgid "Stripes Vertical Big"
 msgstr "Strisce Verticali Grandi"
 
-#: mlttransitions.py:91
+#: mlttransitions.py:94
 msgid "Burst"
 msgstr "Rompi"
 
-#: mlttransitions.py:92
+#: mlttransitions.py:95
 msgid "Circle From In"
 msgstr "Cerchio Da Dentro"
 
-#: mlttransitions.py:93
+#: mlttransitions.py:96
 msgid "Circle From Out"
 msgstr "Cerchio Da Fuori"
 
-#: mlttransitions.py:94
+#: mlttransitions.py:97
 msgid "Cloud"
 msgstr "Nuvola"
 
-#: mlttransitions.py:95
+#: mlttransitions.py:98
 msgid "Hatched 1"
 msgstr "Tratteggio 1"
 
-#: mlttransitions.py:96
+#: mlttransitions.py:99
 msgid "Hatched 2"
 msgstr "Tratteggio 2"
 
-#: mlttransitions.py:97
+#: mlttransitions.py:100
 msgid "Hourglass"
 msgstr "Clessidra"
 
-#: mlttransitions.py:98
+#: mlttransitions.py:101
 msgid "Puddles"
 msgstr "Pozzanghere"
 
-#: mlttransitions.py:99
+#: mlttransitions.py:102
 msgid "Rings"
 msgstr "Anelli"
 
-#: mlttransitions.py:100
+#: mlttransitions.py:103
 msgid "Rectangle From In"
 msgstr "Rettangolo Da Dentro"
 
-#: mlttransitions.py:101
+#: mlttransitions.py:104
 msgid "Rectangle From Out"
 msgstr "Rettangolo Da Fuori"
 
-#: mlttransitions.py:102
+#: mlttransitions.py:105
 msgid "Rectangle Bars"
 msgstr "Barre Rettangolari"
 
-#: mlttransitions.py:103
+#: mlttransitions.py:106
 msgid "Sand"
 msgstr "Sabbia"
 
-#: mlttransitions.py:104
+#: mlttransitions.py:107
 msgid "Sphere"
 msgstr "Sfera"
 
-#: mlttransitions.py:105
+#: mlttransitions.py:108
 msgid "Spiral Abstract"
 msgstr "Spirale Astratta"
 
-#: mlttransitions.py:106
+#: mlttransitions.py:109
 msgid "Spiral"
 msgstr "Spirale"
 
-#: mlttransitions.py:107
+#: mlttransitions.py:110
 msgid "Spiral Galaxy"
 msgstr "Spirale Galattica"
 
-#: mlttransitions.py:108
+#: mlttransitions.py:111
 msgid "Spiral Big"
 msgstr "Spirale Grande"
 
-#: mlttransitions.py:109
+#: mlttransitions.py:112
 msgid "Spiral Medium"
 msgstr "Spirale Media"
 
-#: mlttransitions.py:110
+#: mlttransitions.py:113
 msgid "Spots"
 msgstr "Macchie"
 
-#: mlttransitions.py:111 medialog.py:535
+#: mlttransitions.py:114 medialog.py:535
 msgid "Star"
 msgstr "Stella"
 
-#: mlttransitions.py:112
+#: mlttransitions.py:115
 msgid "Arch"
 msgstr "Svolazzi"
 
-#: mlttransitions.py:113
+#: mlttransitions.py:116
 msgid "Patches"
 msgstr "Pezze"
 
-#: mlttransitions.py:114
+#: mlttransitions.py:117
 msgid "Free Stripes"
 msgstr "Strisce Libere"
 
-#: mlttransitions.py:115
+#: mlttransitions.py:118
 msgid "Free Curves"
 msgstr "Curve Libere"
 
-#: mlttransitions.py:116
+#: mlttransitions.py:119
 msgid "Diagonal 1"
 msgstr "Diagonale 1"
 
-#: mlttransitions.py:117
+#: mlttransitions.py:120
 msgid "Diagonal 2"
 msgstr "Diagonale 2"
 
-#: mlttransitions.py:118
+#: mlttransitions.py:121
 msgid "Diagonal 3"
 msgstr "Diagonale 3"
 
-#: mlttransitions.py:119
+#: mlttransitions.py:122
 msgid "Diagonal 4"
 msgstr "Diagonale 3"
 
-#: mlttransitions.py:120
+#: mlttransitions.py:123
 msgid "Checkerboard"
 msgstr "Scacchiera"
 
-#: mlttransitions.py:124 mlttransitions.py:163
+#: mlttransitions.py:127 mlttransitions.py:173
 msgid "Dissolve"
 msgstr "Opacità"
 
-#: mlttransitions.py:125
+#: mlttransitions.py:128
 msgid "Picture in Picture"
 msgstr ""
 
-#: mlttransitions.py:126
+#: mlttransitions.py:129
 msgid "Region"
 msgstr "Regione"
 
-#: mlttransitions.py:127
+#: mlttransitions.py:130
 msgid "Affine Blend"
 msgstr "Fusione per Affinità"
 
-#: mlttransitions.py:128
+#: mlttransitions.py:131
 msgid "Blend"
 msgstr "Fusione"
 
-#: mlttransitions.py:129
+#: mlttransitions.py:132
 msgid "Wipe Clip Length"
 msgstr "Tendina"
 
-#: mlttransitions.py:135
+#: mlttransitions.py:138
 msgid "Burn"
 msgstr "Brucia"
 
-#: mlttransitions.py:136
+#: mlttransitions.py:139
 msgid "Color only"
 msgstr "Solo Colore"
 
-#: mlttransitions.py:137
+#: mlttransitions.py:140
 msgid "Darken"
 msgstr "Scherma"
 
-#: mlttransitions.py:138
+#: mlttransitions.py:141
 msgid "Difference"
 msgstr "Differenza"
 
-#: mlttransitions.py:139
+#: mlttransitions.py:142
 msgid "Divide"
 msgstr "Dividi"
 
-#: mlttransitions.py:140
+#: mlttransitions.py:143
 msgid "Dodge"
 msgstr "Differenza"
 
-#: mlttransitions.py:141
+#: mlttransitions.py:144
 msgid "Grain extract"
 msgstr "Estrazione Grana"
 
-#: mlttransitions.py:142
+#: mlttransitions.py:145
 msgid "Grain merge"
 msgstr "Fusione grana"
 
-#: mlttransitions.py:143
+#: mlttransitions.py:146
 msgid "Hardlight"
 msgstr "Luce Forte"
 
-#: mlttransitions.py:145
+#: mlttransitions.py:148
 msgid "Lighten"
 msgstr "Luminosità"
 
-#: mlttransitions.py:147
+#: mlttransitions.py:150
 msgid "Overlay"
 msgstr "Sovrapposto"
 
-#: mlttransitions.py:149
+#: mlttransitions.py:152
 msgid "Screen"
 msgstr "Schermo"
 
-#: mlttransitions.py:150
+#: mlttransitions.py:153
 msgid "Softlight"
 msgstr "Luce Debole"
 
-#: mlttransitions.py:152
+#: mlttransitions.py:155
 msgid "Value"
 msgstr "Valore"
 
-#: mlttransitions.py:164
+#: mlttransitions.py:174
 msgid "Wipe"
 msgstr "Tendina"
 
-#: mlttransitions.py:165
+#: mlttransitions.py:175
 msgid "Color Dip"
 msgstr "Immersione Colore"
 
@@ -6382,24 +6384,24 @@ msgid ""
 "if performance is not satisfactory."
 msgstr ""
 
-#: compositorfades.py:236
+#: compositorfades.py:260
 #, fuzzy
 msgid "Clip too short!"
 msgstr "Clip troppo corta!"
 
-#: compositorfades.py:237
+#: compositorfades.py:261
 #, fuzzy
 msgid "The Clip is too short to add the requested fade."
 msgstr ""
 "La Clip è troppo corta per la dissolvenza richiesta:\n"
 "\n"
 
-#: compositorfades.py:242
+#: compositorfades.py:266
 #, fuzzy
 msgid "Clip too short for Auto Fades!"
 msgstr "Compositing"
 
-#: compositorfades.py:243
+#: compositorfades.py:267
 msgid ""
 "The Clip is too short to add the user set default fades on Compositor "
 "creation."

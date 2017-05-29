@@ -82,6 +82,37 @@
         <property name="opacity" args="editor=keyframe_editor_clip range_in=0,100 range_out=0,1 exptype=keyframe_hcs_transition displayname=Opacity">0=1.0</property>
     </compositortransition>
 
+
+
+    <!-- AUTOFADES -->
+    <compositortransition mlt_service="composite" autofadecompositor="True">
+        <name>##auto_fade_in</name>
+        <property name="force_track" args="editor=no_editor">0</property>
+        <property name="geometry" args="editor=no_editor exptype=opacity_in_geom_kf">0=0/0:SCREENSIZE:100</property>
+        <property name="aligned" args="editor=no_editor">0</property>
+        <property name="distort" args="editor=no_editor">0</property>
+        <property name="fill" args="editor=no_editor">1</property>        
+        <property name="operator" args="editor=no_editor exptype=not_parsed_transition">over</property>
+        <property name="deinterlace" args="editor=no_editor">0</property>
+        <property name="progressive" args="editor=no_editor">1</property>
+        <extraeditor name="composite_properties"></extraeditor>
+    </compositortransition>
+
+    <compositortransition mlt_service="composite" autofadecompositor="True">
+        <name>##auto_fade_out</name>
+        <property name="force_track" args="editor=no_editor">0</property>
+        <property name="geometry" args="editor=no_editor exptype=opacity_in_geom_kf">0=0/0:SCREENSIZE:100</property>
+        <property name="aligned" args="editor=no_editor">0</property>
+        <property name="distort" args="editor=no_editor">0</property>
+        <property name="fill" args="editor=no_editor">1</property>        
+        <property name="operator" args="editor=no_editor exptype=not_parsed_transition">over</property>
+        <property name="deinterlace" args="editor=no_editor">0</property>
+        <property name="progressive" args="editor=no_editor">1</property>
+        <extraeditor name="composite_properties"></extraeditor>
+    </compositortransition>
+    
+    
+    
     <!-- BLENDS -->
     <compositortransition mlt_service="frei0r.darken">
         <name>##darken</name>

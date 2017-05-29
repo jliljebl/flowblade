@@ -1190,6 +1190,7 @@ def display_clip_popup_menu(event, clip, track, callback):
     else:
         active = True
     clip_menu.add(_get_compositors_add_menu_item(event, clip, track, callback, active))
+    clip_menu.add(_get_auto_fade_compositors_add_menu_item(event, clip, track, callback, active))
     clip_menu.add(_get_blenders_add_menu_item(event, clip, track, callback, active))
 
     _add_separetor(clip_menu)
@@ -1404,6 +1405,26 @@ def _get_blenders_add_menu_item(event, clip, track, callback, sensitive):
     menu_item.show()
     return menu_item
 
+def _get_auto_fade_compositors_add_menu_item(event, clip, track, callback, sensitive):
+    menu_item = Gtk.MenuItem(_("Add Fade"))
+    sub_menu = Gtk.Menu()
+    menu_item.set_submenu(sub_menu)
+
+    for i in range(0, len(mlttransitions.autofades)):
+        auto_fade_compositor = mlttransitions.autofades[i]
+        name, compositor_type = auto_fade_compositor
+        try:
+            info = mlttransitions.mlt_compositor_transition_infos[compositor_type]
+        except:
+            continue
+        compositor_item = Gtk.MenuItem(name)
+        sub_menu.append(compositor_item)
+        compositor_item.connect("activate", callback, (clip, track, "add_autofade", (event.x, compositor_type)))
+        compositor_item.show()
+    menu_item.set_sensitive(sensitive)
+    menu_item.show()
+    return menu_item
+    
 def _get_match_frame_menu_item(event, clip, track, callback):
     menu_item = Gtk.MenuItem(_("Show Match Frame"))
     sub_menu = Gtk.Menu()

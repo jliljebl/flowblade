@@ -223,6 +223,39 @@ def _add_compositor(data):
     
     updater.repaint_tline()
 
+def _add_autofade(data):
+    print "autofade"
+    clip, track, item_id, item_data = data
+    x, compositor_type = item_data
+
+    print compositor_type
+
+    frame = tlinewidgets.get_frame(x)
+    clip_index = track.get_clip_index_at(frame)
+
+    target_track_index = track.id - 1
+
+    clip_length = clip.clip_out - clip.clip_in
+    if compositor_type == "##auto_fade_in":
+        compositor_in = current_sequence().tracks[track.id].clip_start(clip_index)
+        compositor_out = compositor_in + 30
+    else:
+        clip_start = current_sequence().tracks[track.id].clip_start(clip_index)
+        compositor_out = compositor_in + clip_length
+        compositor_in = compositor_out - 30
+
+    edit_data = {"origin_clip_id":clip.id,
+                "in_frame":compositor_in,
+                "out_frame":compositor_out,
+                "a_track":target_track_index,
+                "b_track":track.id,
+                "compositor_type":compositor_type,
+                "clip":clip}
+    action = edit.add_compositor_action(edit_data)
+    action.do_edit()
+    
+    updater.repaint_tline()
+    
 def _mute_clip(data):
     clip, track, item_id, item_data = data
     set_clip_muted = item_data
@@ -536,4 +569,5 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "lift":_lift, 
                   "length":_set_length,
                   "stretch_next":_stretch_next, 
-                  "stretch_prev":_stretch_prev}
+                  "stretch_prev":_stretch_prev,
+                  "add_autofade":_add_autofade}

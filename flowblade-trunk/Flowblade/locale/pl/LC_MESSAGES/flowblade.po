@@ -1,82 +1,84 @@
-# French translations for PACKAGE package.
-# Copyright (C) 2013 THE PACKAGE'S COPYRIGHT HOLDER
+# Polish translations for PACKAGE package.
+# Copyright (C) 2017 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Loïc Vanderstichelen <lv@loicvanderstichelen.com>, 2013.
-#
+# Stanisław Polak <polak@icsr.agh.edu.pl>, 2017.
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-29 18:30+0300\n"
-"PO-Revision-Date: 2013-09-20 18:54+0200\n"
-"Last-Translator: Loïc Vanderstichelen <lv@loicvanderstichelen.com>\n"
-"Language-Team: French\n"
-"Language: fr\n"
+"PO-Revision-Date: 2017-05-27 08:50+0200\n"
+"Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
+"Language-Team: Polish\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
 
 #: app.py:771
 msgid "Too small screen for this application."
-msgstr "Votre écran est trop petit pour cette application."
+msgstr "Zbyt mały ekran dla tej aplikacji."
 
 #: app.py:774
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
-msgstr "La résolution minimum pour cet application est de 1152 x 768.\n"
+msgstr "Minimalne wymiary ekranu dla tej aplikacji to 1152 x 768.\n"
 
 #: app.py:775
 msgid "Your screen dimensions are "
-msgstr "Votre résolution actuelle est "
+msgstr "Wymiary twojego ekranu to "
 
 #: app.py:808 projectaction.py:379 projectaction.py:709
 msgid "Project has not been saved previously"
-msgstr "Le projet n'a jamais été sauvegardé"
+msgstr "Projekt nie został wcześniej zapisany"
 
 #: app.py:809 projectaction.py:380 projectaction.py:710
 msgid "Save project with File -> Save As before closing."
-msgstr "Sauvegardez le projet avec Fichier -> Enregistrer sous."
+msgstr "Przed zamknięciem, zapisz projekt za pomocą Plik -> Zapisz jako."
 
 #: projectaction.py:117
 msgid "Media asset was missing!"
-msgstr ""
+msgstr "Brak zasobów multimedialnych!"
 
 #: projectaction.py:118
 msgid "Path of missing asset:"
-msgstr ""
+msgstr "Ścieżka brakującego zasobu:"
 
 #: projectaction.py:119
 msgid ""
 "Relative search for replacement file in sub folders of project file failed."
 msgstr ""
+"Względne wyszukiwanie plików zastępczych w podfolderach pliku projektu nie "
+"powiodło się."
 
 #: projectaction.py:120
 msgid "To load the project you will need to either:"
-msgstr ""
+msgstr "Aby załadować projekt, musisz również:"
 
 #: projectaction.py:121
 msgid ""
 "Open project in 'Media Relinker' tool to relink media assets to new files, or"
 msgstr ""
+"Otwórz projekt w narzędziu 'Relinker multimediów', aby powiązać "
+"zasobymultimedialne z nowymi plikami, lub"
 
 #: projectaction.py:122
-#, fuzzy
 msgid "Place a file with the same exact name and path on the hard drive"
-msgstr "Créez un fichier de même nom au contenu similaire pour pouvoir"
+msgstr "Umieść plik o tej samej nazwie i ścieżce na dysku twardym"
 
 #: projectaction.py:123
 msgid "Open project in Media Relinker tool"
-msgstr ""
+msgstr "Otwórz projekt w narzędziu Relinker multimediów"
 
 #: projectaction.py:142
-#, fuzzy
 msgid "Profile with Description: '"
-msgstr "Description:"
+msgstr "Profil z Opisem: '"
 
 #: projectaction.py:142
-#, fuzzy
 msgid "' was not found on load!"
-msgstr " n'a pas été trouvé!"
+msgstr "' nie został znaleziony podczas ładowania!"
 
 #: projectaction.py:143
 msgid ""
@@ -84,95 +86,98 @@ msgid ""
 "the same Description\n"
 "as the missing profile. "
 msgstr ""
+"Możliwe jest załadowanie projektu poprzez utworzenie Profilu Użytkownika z "
+"dokładnie tym samym opisem \n"
+"jak w przypadku brakującego profilu."
 
 #: projectaction.py:144
 msgid "User Profiles can be created by selecting 'Edit->Profiles Manager'."
 msgstr ""
+"Profile Użytkowników można tworzyć, wybierając 'Edytuj -> Manager Profili'."
 
 #: projectaction.py:151
 msgid "Opening"
-msgstr "Ouverture"
+msgstr "Otwieranie"
 
 #: projectaction.py:284
 msgid "Media files already present in project were opened!"
-msgstr ""
+msgstr "Otwarto pliki multimedialne, które już występują w projekcie!"
 
 #: projectaction.py:290
-#, fuzzy
 msgid ""
 "Files already present:\n"
 "\n"
-msgstr " existe déjà!"
+msgstr ""
+"Pliki, które już występują:\n"
+"\n"
 
 #: projectaction.py:494
-#, fuzzy
 msgid "Selected folder contains files"
-msgstr "Sélectionner un dossier pour les nouvelles miniatures"
+msgstr "Wybrany folder zawiera pliki"
 
 #: projectaction.py:495
 msgid ""
 "When saving a back-up snapshot of the project, the selected folder\n"
 "has to be empty."
 msgstr ""
+"Podczas zapisywania kopii migawkowej projektu, wybrany folder\n"
+"musi być pusty."
 
 #: projectaction.py:566
 msgid "Copying project media assets"
-msgstr ""
+msgstr "Kopiowanie zasobów multimedialnych projektu"
 
 #: projectaction.py:567
-#, fuzzy
 msgid "Saving project file"
-msgstr "Sauvegarder le projet '"
+msgstr "Zapisywanie pliku projektu"
 
 #: projectaction.py:722
 msgid "Project not found on disk"
-msgstr "Le projet n'a pas été trouvé sur le disque"
+msgstr "Nie znaleziono projektu na dysku"
 
 #: projectaction.py:723
 msgid "Project can't be loaded."
-msgstr "Le projet ne peut pas être chargé."
+msgstr "Nie można załadować projektu."
 
 #: projectaction.py:731
 msgid "Project has not been saved since it was opened."
-msgstr "Ce projet n'a pas été enregistré depuis qu'il a été ouvert."
+msgstr "Od czasu jego otwarcia projekt nie został zapisany."
 
 #: projectaction.py:736
 msgid "Project was saved less than a minute ago."
-msgstr "Le projet a été sauvegardé il y a moins d'une minute."
+msgstr "Projekt został zapisany mniej niż minutę temu."
 
 #: projectaction.py:739
 msgid "Project was saved one minute ago."
-msgstr "Le projet a été sauvegardé il y a une minute."
+msgstr "Projekt został zapisany minutę temu."
 
 #: projectaction.py:741
 msgid "Project was saved "
-msgstr "Le projet a été sauvegardé il y a "
+msgstr "Projekt został zapisany "
 
 #: projectaction.py:741
 msgid " minutes ago."
-msgstr " minutes."
+msgstr " minut temu."
 
 #: projectaction.py:797
-#, fuzzy
 msgid "Render launch failed!"
-msgstr "Zone de rendu non définie!"
+msgstr "Renderowanie nie powiodło się!"
 
 #: projectaction.py:798 projectaction.py:812 tools/batchrendering.py:299
-#, fuzzy
 msgid "Error message: "
-msgstr "Message d'erreur: "
+msgstr "Komunikat o błędzie: "
 
 #: projectaction.py:811
 msgid "Adding item to render queue failed!"
-msgstr "Echec de l'ajout d'élément à la liste de rendu!"
+msgstr "Dodawanie elementu do kolejki renderowania nie powiodło się!"
 
 #: projectaction.py:830
 msgid "Open.."
-msgstr "Ouvrir..."
+msgstr "Otwórz.."
 
 #: projectaction.py:858
 msgid "Opening .mlt or .xml file as media was disallowed!"
-msgstr ""
+msgstr "Otwarcie pliku .mlt lub .xml jako multimediów było niedozwolone!"
 
 #: projectaction.py:859
 msgid ""
@@ -180,492 +185,473 @@ msgid ""
 "opening MLT XML files\n"
 "it is not allowed to open these files as media."
 msgstr ""
+"Ze względu na obecne zachowanie MLT jakim jest nadpisywanie właściwości "
+"projektu, podczas otwierania plików MLT XML\n"
+"nie wolno otwierać tych plików jako multimediów."
 
 #: projectaction.py:879
 msgid "No file was selected"
-msgstr "Aucun fichier sélectionné"
+msgstr "Nie wybrano żadnego pliku"
 
 #: projectaction.py:879
 msgid "Select a numbered file to add an Image Sequence to Project."
-msgstr ""
-"Sélectionnez un fichier numéroté pour ajouter une séquence d'images au "
-"projet."
+msgstr "Wybierz numerowany plik, aby dodać sekwencję obrazów do projektu."
 
 #: projectaction.py:887
 msgid "Not a sequence file!"
-msgstr "Ce n'est pas un fichier de séquence!"
+msgstr "Nie jest plikem sekwencji!"
 
 #: projectaction.py:887
 msgid ""
 "Selected file does not have a number part in it,\n"
 "so it can't be an image sequence file."
 msgstr ""
-"Le fichier sélectionné ne contient pas de numérotation,\n"
-"il ne peut donc pas constituer une séquence d'images."
+"Wybrany plik nie posiada numerów,\n"
+"więc nie może on być plikiem sekwencji obrazów."
 
 #: projectaction.py:938
 msgid "Can't make home folder thumbnails folder"
-msgstr "Le dossier home ne peut pas être le dossier des miniatures"
+msgstr "Nie można utworzyć folderu miniatur"
 
 #: projectaction.py:939 dialogs.py:394
 msgid "Please create and select some other folder then '"
-msgstr "Créez et sélectionnez un autre dossier '"
+msgstr "Proszę utworzyć i wybrać inny folder niż '"
 
 #: projectaction.py:940
 msgid "' as thumbnails folder"
-msgstr "' comme dossier de miniatures"
+msgstr "' jako folder miniatur"
 
 #: projectaction.py:1058 projectaction.py:1060 projectaction.py:1071
 #: projectaction.py:1079 projectaction.py:1086
 msgid "N/A"
-msgstr ""
+msgstr "Niedostępne"
 
 #: projectaction.py:1075 guicomponents.py:1809
 msgid "Yes"
-msgstr "Oui"
+msgstr "Tak"
 
 #: projectaction.py:1077 guicomponents.py:1811
 msgid "No"
-msgstr "Non"
+msgstr "Nie"
 
 #: projectaction.py:1132
-#, fuzzy
 msgid "Select Project for Media Import"
-msgstr "Sélectionnez un projet"
+msgstr "Wybierz Projekt dla importu multimediów"
 
 #: projectaction.py:1152
-#, fuzzy
 msgid "selection_"
-msgstr "Charger la sélection"
+msgstr "wybór_"
 
 #: projectaction.py:1153
 msgid "Save Selection Compound Clip"
-msgstr ""
+msgstr "Zapisz zaznaczony klip złożony"
 
 #: projectaction.py:1195 projectaction.py:1341 projectaction.py:1358
 #: projectdata.py:213
 msgid "sequence_"
-msgstr "séquence_"
+msgstr "sekwencja_"
 
 #: projectaction.py:1196
-#, fuzzy
 msgid "Save Sequence Compound Clip"
-msgstr "Ajouter un clip de séquence d'images"
+msgstr "Zapisz sekwencję klipów złożonych"
 
 #: projectaction.py:1234
 msgid "Can't remove a non-empty bin"
-msgstr "Impossible de supprimer un bin contenant des éléments"
+msgstr "Nie można usunąć niepustego pojemnika"
 
 #: projectaction.py:1235
 msgid "You must remove all files from the bin before deleting it."
-msgstr "Vous devez supprimer tous les fichiers du bin pour pouvoir l'effacer."
+msgstr ""
+"Przed usunięciem pojemnika należy usunąćwszystkie znajdujące się w nim pliki."
 
 #: projectaction.py:1243
 msgid "Can't remove last bin"
-msgstr "Impossible de supprimer le dernier bin"
+msgstr "Nie można usunąć ostatniego pojemnika"
 
 #: projectaction.py:1244
 msgid "There must always exist at least one bin."
-msgstr "Il doit toujours y avoir au moins un bin."
+msgstr "Zawsze musi istnieć, co najmniej, jeden pojemnik."
 
 #: projectaction.py:1330
 msgid "Selected sequence is already being edited"
-msgstr "La séquence sélectionnée est déjà en cours d'édition"
+msgstr "Wybrana sekwencja jest już edytowana"
 
 #: projectaction.py:1331
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
 msgstr ""
-"Sélectionnez une autre séquence. Cliquez sur Ajouter pour créer\n"
-"une nouvelle séquence si nécéssaire."
+"Wybierz inną sekwencję. Naciśnij przycisk Dodaj, aby utworzyć \n"
+"nową sekwencję, w razie potrzeby."
 
 #: projectaction.py:1391
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
 msgstr ""
-"Êtes-vous certain de vouloir effacer\n"
-"la séquence '"
+"Jesteś pewny, że chcesz usunąć\n"
+"sekwencję '"
 
 #: projectaction.py:1391
 msgid "'?"
-msgstr "'?"
+msgstr "?"
 
 #: projectaction.py:1392
 msgid "This operation can not be undone. Sequence will be permanently lost."
-msgstr ""
-"Cette opération ne peut être annulée. La séquence sera perdue définitivement."
+msgstr "Tej operacji nie można cofnąć. Sekwencja będzie trwale usunięta."
 
 #: projectaction.py:1407
 msgid "Can't remove last sequence"
-msgstr "Impossible de supprimer la dernière séquence"
+msgstr "Nie można usunąć ostatniej sekwencji"
 
 #: projectaction.py:1408
 msgid "There must always exist at least one sequence."
-msgstr "Il doit toujours y avoit au moins une séquence."
+msgstr "Zawsze musi istnieć, co najmniej, jedna sekwencja."
 
 #: editorwindow.py:162
 msgid "_File"
-msgstr "_Fichier"
+msgstr "_Plik"
 
 #: editorwindow.py:163
 msgid "_New..."
-msgstr "_Nouveau"
+msgstr "_Nowy..."
 
 #: editorwindow.py:164
 msgid "_Open..."
-msgstr "_Ouvrir"
+msgstr "_Otwórz..."
 
 #: editorwindow.py:165
 msgid "Open Recent"
-msgstr "Projets récents"
+msgstr "Otwórz ostatni"
 
 #: editorwindow.py:166
 msgid "_Save"
-msgstr "_Enregistrer"
+msgstr "_Zapisz"
 
 #: editorwindow.py:167
 msgid "_Save As..."
-msgstr "_Enregistrer sous..."
+msgstr "_Zapisz jako ..."
 
 #: editorwindow.py:168
 msgid "Save Backup Snapshot..."
-msgstr ""
+msgstr "Zapisz kopię migawkową..."
 
 #: editorwindow.py:169 dialogs.py:303 dialogs.py:1156
 msgid "Export"
-msgstr "Exporter"
+msgstr "Eksport"
 
 #: editorwindow.py:170
 msgid "MLT XML"
-msgstr ""
+msgstr "MLT XML"
 
 #: editorwindow.py:171
 msgid "EDL"
-msgstr ""
+msgstr "Decyzyjna lista edycji (EDL)"
 
 #: editorwindow.py:172
-#, fuzzy
 msgid "Current Frame"
-msgstr "Image suivante"
+msgstr "Aktualna klatka"
 
 #: editorwindow.py:173
 msgid "_Close"
-msgstr "_Fermer"
+msgstr "_Zamknij"
 
 #: editorwindow.py:174
 msgid "_Quit"
-msgstr "_Quitter"
+msgstr "_Wyjdź"
 
 #: editorwindow.py:175
 msgid "_Edit"
-msgstr "_Edition"
+msgstr "_Edycja"
 
 #: editorwindow.py:176
 msgid "_Undo"
-msgstr "_Annuler"
+msgstr "_Cofnij"
 
 #: editorwindow.py:177
 msgid "_Redo"
-msgstr "_Rétablir"
+msgstr "_Powtórz"
 
 #: editorwindow.py:178
 msgid "Copy"
-msgstr ""
+msgstr "Kopiuj"
 
 #: editorwindow.py:179
-#, fuzzy
 msgid "Paste"
-msgstr "Coller clips"
+msgstr "Wklej"
 
 #: editorwindow.py:180
-#, fuzzy
 msgid "Paste Filters"
-msgstr "Filtres"
+msgstr "Wklej filtry"
 
 #: editorwindow.py:181
 msgid "Add Monitor Clip"
-msgstr "Placer le clip du moniteur"
+msgstr "Dodaj klip monitora"
 
 #: editorwindow.py:182 dialogs.py:1223
 msgid "Append"
-msgstr "Ajouter"
+msgstr "Dołącz"
 
 #: editorwindow.py:183 dialogs.py:1222 dialogs.py:1256 guicomponents.py:2335
 msgid "Insert"
-msgstr "Insérer"
+msgstr "Wstaw"
 
 #: editorwindow.py:184
 msgid "Three Point Overwrite"
-msgstr "Écrasement à trois points"
+msgstr "Trójpunktowe nadpisanie"
 
 #: editorwindow.py:185
 msgid "Range Overwrite"
-msgstr "Écrasement par zone"
+msgstr "Nadpisanie zakresu"
 
 #: editorwindow.py:186 dialogs.py:1220
 msgid "Cut Clip"
-msgstr "Couper le clip"
+msgstr "Wytnij klip"
 
 #: editorwindow.py:187 guicomponents.py:1510 translations.py:513
 msgid "Lift"
-msgstr "Supprimer"
+msgstr "Podnieś"
 
 #: editorwindow.py:188 dialogs.py:1221
 msgid "Splice Out"
-msgstr "Supprimer et raccorder"
+msgstr "Usuń i scal"
 
 #: editorwindow.py:189 guicomponents.py:1174 guicomponents.py:1276
 msgid "Resync"
-msgstr "Resynchroniser"
+msgstr "Resynchronizuj"
 
 #: editorwindow.py:190
 msgid "Set Sync Parent"
-msgstr "Synchroniser à un parent"
+msgstr "Ustaw synchronizację nadrzędną"
 
 #: editorwindow.py:191
 msgid "Add Single Track Transition"
-msgstr "Ajouter une transition"
+msgstr "Dodaj pojedynczą ścieżkę przejścia"
 
 #: editorwindow.py:192
 msgid "Add Single Track Fade"
-msgstr "Ajouter un fondu"
+msgstr "Dodaj pojedynczą ścieżkę zanikania"
 
 #: editorwindow.py:193 guicomponents.py:1198 guicomponents.py:1247
 msgid "Clear Filters"
-msgstr "Supprimer les filtres"
+msgstr "Wyczyść filtry"
 
 #: editorwindow.py:194 dialogs.py:1236
 msgid "Timeline"
-msgstr "Montage"
+msgstr "Oś czasu"
 
 #: editorwindow.py:195
-#, fuzzy
 msgid "All Filters Off"
-msgstr "Tous les fichiers"
+msgstr "Wszystkie filtry wyłączone"
 
 #: editorwindow.py:196
-#, fuzzy
 msgid "All Filters On"
-msgstr "Tous les fichiers"
+msgstr "Wszystkie filtry włączone"
 
 #: editorwindow.py:197
-#, fuzzy
 msgid "Sync All Compositors"
-msgstr "Compositions"
+msgstr "Synchronizuj wszystkie kompozytory"
 
 #: editorwindow.py:198
 msgid "Set Compositor Auto Fades..."
-msgstr ""
+msgstr "Ustaw auto zanikania kompozytora..."
 
 #: editorwindow.py:199
 msgid "Change Sequence Tracks Count..."
-msgstr "Modifier le nombre de pistes..."
+msgstr "Zmień ilość ścieżek sekwencji ..."
 
 #: editorwindow.py:200
 msgid "Watermark..."
-msgstr ""
+msgstr "Znak wodny..."
 
 #: editorwindow.py:201
-#, fuzzy
 msgid "Disk Cache Manager"
-msgstr "Fermer le gestionnaire"
+msgstr "Menedżer pamięci podręcznej dysku"
 
 #: editorwindow.py:202 profilesmanager.py:45
 msgid "Profiles Manager"
-msgstr "Gestionnaire de profils"
+msgstr "Menedżer profili"
 
 #: editorwindow.py:203
 msgid "Preferences"
-msgstr "Préférences"
+msgstr "Preferencje"
 
 #: editorwindow.py:204 preferenceswindow.py:62
 msgid "View"
-msgstr "Affichage"
+msgstr "Widok"
 
 #: editorwindow.py:205
-#, fuzzy
 msgid "Fullscreen"
-msgstr "Écran"
+msgstr "Pełny ekran"
 
 #: editorwindow.py:206 editorwindow.py:541
 msgid "Project"
-msgstr "Projet"
+msgstr "Projekt"
 
 #: editorwindow.py:207
 msgid "Add Media Clip..."
-msgstr "Ajouter un clip..."
+msgstr "Dodaj klip multimedialny..."
 
 #: editorwindow.py:208
 msgid "Add Image Sequence..."
-msgstr "Ajouter une séquence d'images..."
+msgstr "Dodaj sekwencję zdjęć..."
 
 #: editorwindow.py:209
 msgid "Create Color Clip..."
-msgstr "Créer un clip couleur"
+msgstr "Utwórz klip koloru..."
 
 #: editorwindow.py:210
 msgid "Create Pattern Producer"
-msgstr "Générer un motif de production"
+msgstr "Utwórz producenta wzorców"
 
 #: editorwindow.py:211 translations.py:395 patternproducer.py:67
 msgid "Noise"
-msgstr "Bruit"
+msgstr "Szum"
 
 #: editorwindow.py:212 patternproducer.py:72
 msgid "EBU Bars"
-msgstr "Barres couleur"
+msgstr "Pasek EBU"
 
 #: editorwindow.py:213 patternproducer.py:81
 msgid "Ising"
-msgstr ""
+msgstr "Model Isinga"
 
 #: editorwindow.py:214 patternproducer.py:98
-#, fuzzy
 msgid "Color Pulse"
-msgstr "Sélection couleur"
+msgstr "Kolorowy impuls"
 
 #: editorwindow.py:215
-#, fuzzy
 msgid "Create Compound Clip"
-msgstr "Créer clip de couleur"
+msgstr "Utwórz klip złożony"
 
 #: editorwindow.py:216
-#, fuzzy
 msgid "Selection"
-msgstr "Sélection couleur"
+msgstr "Wybór"
 
 #: editorwindow.py:217
-#, fuzzy
 msgid "Sequence"
-msgstr "Séquence:"
+msgstr "Sekwencja"
 
 #: editorwindow.py:218
-#, fuzzy
 msgid "Media Audio Sync"
-msgstr "Scinder le son synchronisé"
+msgstr "Synchronizacja dźwięku multimediów"
 
 #: editorwindow.py:219
 msgid "Create Audio Sync Group"
-msgstr ""
+msgstr "Utwórz grupę synchronizacji dźwięku"
 
 #: editorwindow.py:220
-#, fuzzy
 msgid "Create Audio Sync Merge Clip"
-msgstr "Créer clip de couleur"
+msgstr "Utwórz klip scalony synchronizacji dźwięku"
 
 #: editorwindow.py:221
 msgid "Import Media From Project..."
-msgstr ""
+msgstr "Importowanie multimediów z projektu..."
 
 #: editorwindow.py:222
-#, fuzzy
 msgid "Import Sequence..."
-msgstr "Ajouter une séquence d'images..."
+msgstr "Importuj sekwencję..."
 
 #: editorwindow.py:223 dialogs.py:1210 dialogs.py:1230
 msgid "Log Marked Clip Range"
-msgstr "Mémoriser la zone de sélection du clip"
+msgstr "Umieść zaznaczony zakres klipu w rejestrze"
 
 #: editorwindow.py:224
 msgid "Recreate Media Icons..."
-msgstr "Recréer les icônes de médias..."
+msgstr "Odtwórz ikony multimediów..."
 
 #: editorwindow.py:225
 msgid "Remove Unused Media..."
-msgstr "Supprimer les médias inutilisés..."
+msgstr "Usuń niewykorzystane multimedia..."
 
 #: editorwindow.py:226
 msgid "JACK Audio..."
-msgstr ""
+msgstr "JACK Audio..."
 
 #: editorwindow.py:227
-#, fuzzy
 msgid "Change Project Profile..."
-msgstr "Enregistrer le projet sous..."
+msgstr "Zmień profil projektu ..."
 
 #: editorwindow.py:228 proxyediting.py:216
 msgid "Proxy Manager"
-msgstr "Gestionnaire de proxy"
+msgstr "Menedżer Proxy"
 
 #: editorwindow.py:229
 msgid "Project Info"
-msgstr "Détail du projet"
+msgstr "Informacje o projekcie"
 
 #: editorwindow.py:230 editorwindow.py:542 rendergui.py:172 rendergui.py:320
 #: tools/batchrendering.py:865 tools/gmic.py:771
 msgid "Render"
-msgstr "Rendu"
+msgstr "Renderowanie"
 
 #: editorwindow.py:231
 msgid "Add To Batch Render Queue..."
-msgstr "Ajouter à la file de rendu..."
+msgstr "Dodaj do kolejki renderowania wsadowego..."
 
 #: editorwindow.py:232
 msgid "Batch Render Queue"
-msgstr "File de rendu"
+msgstr "Kolejka renderowania wsadowego"
 
 #: editorwindow.py:233
 msgid "Render Timeline"
-msgstr "Rendu du montage"
+msgstr "Renderowanie osi czasu"
 
 #: editorwindow.py:234 dialogs.py:1264
 msgid "Tools"
-msgstr "Outils"
+msgstr "Narzędzia"
 
 #: editorwindow.py:235 tools/titler.py:189
 msgid "Titler"
-msgstr "Titreuse"
+msgstr "Edytor tytułów"
 
 #: editorwindow.py:236
 msgid "Audio Mixer"
-msgstr "Mixeur audio"
+msgstr "Mikser dźwięku"
 
 #: editorwindow.py:237 tools/gmic.py:831
-#, fuzzy
 msgid "G'MIC Effects"
-msgstr "Effet de couleur"
+msgstr "Efekty G'MIC"
 
 #: editorwindow.py:238 medialinker.py:178
 msgid "Media Relinker"
-msgstr ""
+msgstr "Relinker multimediów"
 
 #: editorwindow.py:239
 msgid "_Help"
-msgstr "_Aide"
+msgstr "_Pomoc"
 
 #: editorwindow.py:240
 msgid "Contents"
-msgstr "Contenus"
+msgstr "Treść"
 
 #: editorwindow.py:241 dialogs.py:569
 msgid "Runtime Environment"
-msgstr "Informations système"
+msgstr "Środowisko wykonawcze"
 
 #: editorwindow.py:242 dialogs.py:1195
 msgid "Keyboard Shortcuts"
-msgstr "Raccourcis clavier"
+msgstr "Skróty klawiszowe"
 
 #: editorwindow.py:243 dialogs.py:438
 msgid "About"
-msgstr "À propos"
+msgstr "O"
 
 #: editorwindow.py:534
 msgid "Media"
-msgstr "Médias"
+msgstr "Multimedia"
 
 #: editorwindow.py:538
 msgid "Range Log"
-msgstr "Sous-clips"
+msgstr "Rejestr zakresu"
 
 #: editorwindow.py:539
 msgid "Filters"
-msgstr "Filtres"
+msgstr "Filtry"
 
 #: editorwindow.py:540
 msgid "Compositors"
-msgstr "Compositions"
+msgstr "Kompozytory"
 
 #: editorwindow.py:557
 msgid ""
@@ -679,209 +665,207 @@ msgid ""
 "To Mark In\n"
 "To Mark Out"
 msgstr ""
-"Image suiv (flèche gauche)\n"
-"Image préc (flèche droite)\n"
-"Lecture (espace)\n"
-"Stop (espace)\n"
-"Point d'entrée (I)\n"
-"Point de sortie (O)\n"
-"Effacer les points\n"
-"Aller au point d'entrée\n"
-"Aller au point de sortie"
+"Poprzednia klatka - strzałka w lewo\n"
+"Następna klatka - strzałka w prawo\n"
+"Odtwarzaj - spacja\n"
+"Zatrzymaj - spacja\n"
+"Znacznik początkowy - I\n"
+"Znacznik końcowy - O\n"
+"Usuń znaczniki\n"
+"Idź do znacznika początkowego\n"
+"Idź do znacznika końcowego"
 
 #: editorwindow.py:786
 msgid "Window Mode"
-msgstr ""
+msgstr "Tryb okna"
 
 #: editorwindow.py:789 preferenceswindow.py:340
 msgid "Single Window"
-msgstr ""
+msgstr "Pojedyncze okno"
 
 #: editorwindow.py:793 preferenceswindow.py:341
 msgid "Two Windows"
-msgstr ""
+msgstr "Dwa okna"
 
 #: editorwindow.py:808
 msgid "Middlebar Layout"
-msgstr "Placement barre centrale"
+msgstr "Wygląd paska środkowego"
 
 #: editorwindow.py:811
 msgid "Timecode Left"
-msgstr "Timecode à gauche"
+msgstr "Czas po lewej stronie"
 
 #: editorwindow.py:816
 msgid "Timecode Center"
-msgstr "Timecode au centre"
+msgstr "Czas na środku"
 
 #: editorwindow.py:820
 msgid "Components Centered"
-msgstr ""
+msgstr "Komponenty wypośrodkowane"
 
 #: editorwindow.py:834
 msgid "Tabs Position"
-msgstr "Position des onglets"
+msgstr "Umiejscowienie zakładek"
 
 #: editorwindow.py:837
 msgid "Up"
-msgstr "Haut"
+msgstr "W górze"
 
 #: editorwindow.py:841
 msgid "Down"
-msgstr "Bas"
+msgstr "W dole"
 
 #: editorwindow.py:856
 msgid "Show Monitor Sequence Profile"
-msgstr "Afficher le profil de séquence dans le moniteur"
+msgstr "Pokaż profil monitora sekwencji"
 
 #: editorwindow.py:861
 msgid "Show Master Volume Meter"
-msgstr ""
+msgstr "Pokaż miernik poziomu głośności"
 
 #: editorwindow.py:869
 msgid "Monitor Playback Interpolation"
-msgstr "Type d'interpolation du moniteur"
+msgstr "Monitoruj interpolację odtwarzania"
 
 #: editorwindow.py:873
-#, fuzzy
 msgid "Nearest Neighbour (fast)"
-msgstr "Interpolation de proximité"
+msgstr "Najbliższy sąsiad (szybka)"
 
 #: editorwindow.py:877
-#, fuzzy
 msgid "Bilinear (good)"
-msgstr "Bilinéaire"
+msgstr "Dwuliniowa (dobra)"
 
 #: editorwindow.py:881
-#, fuzzy
 msgid "Bicubic (better)"
-msgstr "Bicubique"
+msgstr "Dwusześcienna (lepsza)"
 
 #: editorwindow.py:886
 msgid "Hyper/Lanczos (best)"
-msgstr ""
+msgstr "Hyper/Lanczos (najlepsza)"
 
 #: editorwindow.py:896 dialogs.py:1211
 msgid "Zoom In"
-msgstr "Zoom avant"
+msgstr "Zbliżenie"
 
 #: editorwindow.py:899 dialogs.py:1212
 msgid "Zoom Out"
-msgstr "Zoom arrière"
+msgstr "Oddalenie"
 
 #: editorwindow.py:902
 msgid "Zoom Fit"
-msgstr "Taille idéale"
+msgstr "Dopasuj powiększenie"
 
 #: editorwindow.py:919
 msgid "Global Window Mode changed"
-msgstr ""
+msgstr "Zmieniono tryb globalnego okna"
 
 #: editorwindow.py:920
-#, fuzzy
 msgid "Application restart required for the new layout choice to take effect."
-msgstr "Relancez l'application pour prendre en compte les modifications"
+msgstr ""
+"Wymagane jest ponowne uruchomienie aplikacji, aby wybór nowego "
+"układuprzyniósł efekt."
 
 #: editorwindow.py:1031
 msgid "Timeline current frame timecode"
-msgstr "Timecode de l'image actuelle sur le montage"
+msgstr "Czas bieżącej klatki na osi czasu"
 
 #: editorwindow.py:1033
 msgid "Select view mode: Video/Vectorscope/RGBParade"
-msgstr "Mode de prévisualisation: Vidéo/Vectorscope/RVB"
+msgstr "Wybierz tryb wyświetlania: Wideo/Wektorscop/Parada RGB"
 
 #: editorwindow.py:1035
 msgid "Monitor Sequence/Media current frame timecode"
-msgstr "Timecode de l'image actuelle de séquence/média du moniteur"
+msgstr "Monitoruj czas bieżącej sekwencji klatek/multimediów"
 
 #: editorwindow.py:1036
 msgid "Current Monitor Sequence/Media name"
-msgstr "Nom du média/de la séquence du moniteur"
+msgstr "Nazwa bieżąco monitorowanej sekwencji/multimediów"
 
 #: editorwindow.py:1038
 msgid "Monitor Sequence/Media current position"
-msgstr "Position actuelle de séquence/média du moniteur"
+msgstr "Aktualna pozycja monitorowanej sekwencji/multimediów"
 
 #: editorwindow.py:1040
 msgid "Display Current Sequence on Timeline"
-msgstr "Afficher le montage en cours"
+msgstr "Wyświetl bieżącą sekwencję na osi czasu"
 
 #: editorwindow.py:1041
 msgid "Display Monitor Clip"
-msgstr "Afficher le clip"
+msgstr "Pokaż monitorowany klip"
 
 #: clipeffectseditor.py:122
 msgid "Select Filter Group"
-msgstr "Sélectionnez un groupe de filtres"
+msgstr "Wybierz grupę filtrów"
 
 #: clipeffectseditor.py:123
 msgid "Current group Filters"
-msgstr "Groupe de filtres actuel"
+msgstr "Aktualna grupa filtrów"
 
 #: clipeffectseditor.py:223
 msgid "Quit editing Clip in editor"
-msgstr "Quitter l'édition du clip du moniteur"
+msgstr "Zakończ edycję klipu w edytorze"
 
 #: clipeffectseditor.py:236 panels.py:51 panels.py:96 panels.py:114
 #: translations.py:563 mlttransitions.py:137 tools/titler.py:209
 msgid "Add"
-msgstr "Ajouter"
+msgstr "Dodaj"
 
 #: clipeffectseditor.py:237 compositeeditor.py:71 guicomponents.py:1257
 #: guicomponents.py:1323 guicomponents.py:1507 guicomponents.py:1631
 #: guicomponents.py:1682 panels.py:52 panels.py:97 panels.py:115
 #: tools/titler.py:210 tools/batchrendering.py:1030
 msgid "Delete"
-msgstr "Supprimer"
+msgstr "Usuń"
 
 #: clipeffectseditor.py:249
 msgid "Clip being edited"
-msgstr "Clip en cours d'édition"
+msgstr "Edytowany klip"
 
 #: clipeffectseditor.py:250
 msgid "Clip Filter Stack"
-msgstr "Liste des filtres du clip"
+msgstr "Stos filtrów klipu"
 
 #: clipeffectseditor.py:251
 msgid "Add Filter to Clip Filter Stack"
-msgstr "Ajouter un filtre à la liste des filtres du clip"
+msgstr "Dodaj filtr do stosu filtrów klipu"
 
 #: clipeffectseditor.py:252
 msgid "Delete Filter from Clip Filter Stack"
-msgstr "Supprimer un filtre de la liste des filtres du clip"
+msgstr "Usuń filtr ze stosu filtrów klipu"
 
 #: clipeffectseditor.py:253
 msgid "Toggle all Filters On/Off"
-msgstr "Activer/désactiver les filtres"
+msgstr "Przełącz wszystkie filtry w pozycję włącz/wyłącz"
 
 #: clipeffectseditor.py:523
 msgid "No editable parameters"
-msgstr "Paramètres non modifiable"
+msgstr "Brak edytowalnych parametrów"
 
 #: compositeeditor.py:60 panels.py:411 mlttransitions.py:157
 #: mlttransitions.py:176
 msgid "Fade In"
-msgstr "Fondu à l'ouverture"
+msgstr "Rozjaśnianie"
 
 #: compositeeditor.py:62 panels.py:412 mlttransitions.py:158
 #: mlttransitions.py:177
 msgid "Fade Out"
-msgstr "Fondu en fermeture"
+msgstr "Ściemnianie"
 
 #: compositeeditor.py:73 render.py:188
 msgid "Reset"
-msgstr "Réinitialiser"
+msgstr "Resetuj"
 
 #: compositeeditor.py:77 compositeeditor.py:180
 msgid "No Compositor"
-msgstr "Pas de composition"
+msgstr "Brak kompozytorów"
 
 #: compositeeditor.py:203
 msgid "Destination Track:"
-msgstr "Piste de destination:"
+msgstr "Ścieżka docelowa:"
 
 #: dialogs.py:53
 msgid "New Project"
-msgstr "Nouveau projet"
+msgstr "Nowy projekt"
 
 #: dialogs.py:55 dialogs.py:110 dialogs.py:168 dialogs.py:221 dialogs.py:264
 #: dialogs.py:281 dialogs.py:302 dialogs.py:317 dialogs.py:348 dialogs.py:359
@@ -895,18 +879,18 @@ msgstr "Nouveau projet"
 #: patternproducer.py:352 patternproducer.py:383 tools/gmic.py:357
 #: tools/gmic.py:381 tools/gmic.py:511
 msgid "Cancel"
-msgstr "Annuler"
+msgstr "Anuluj"
 
 #: dialogs.py:56 dialogs.py:222 dialogs.py:265 dialogs.py:440 dialogs.py:571
 #: dialogs.py:690 dialogs.py:703 dialogs.py:1365 propertyeditorbuilder.py:405
 #: propertyeditorbuilder.py:475 rendergui.py:104 preferenceswindow.py:48
 #: tools/batchrendering.py:394 tools/gmic.py:382
 msgid "OK"
-msgstr "Valider"
+msgstr "OK"
 
 #: dialogs.py:64 dialogs.py:121
 msgid "Project profile:"
-msgstr "Profil du projet:"
+msgstr "Profil projektu:"
 
 #: dialogs.py:72 projectinfogui.py:46
 msgid "Profile"
@@ -914,313 +898,294 @@ msgstr "Profil"
 
 #: dialogs.py:78
 msgid "Tracks"
-msgstr "Pistes"
+msgstr "Ścieżki"
 
 #: dialogs.py:108 dialogs.py:166
-#, fuzzy
 msgid "Change Project Profile"
-msgstr "Enregistrer le projet sous..."
+msgstr "Zmień profil projektu"
 
 #: dialogs.py:111 dialogs.py:169
-#, fuzzy
 msgid "Save With Changed Profile"
-msgstr "Sauvegarder le nouveau profil"
+msgstr "Zapisz ze zmienionym profilem"
 
 #: dialogs.py:113 dialogs.py:171
 msgid ""
 "Project Profile can only changed by saving a version\n"
 "with different profile."
 msgstr ""
+"Profil projektu można zmienić tylko przez zapisanie wersji\n"
+"z innym profilem."
 
 #: dialogs.py:129
-#, fuzzy
 msgid "New Profile"
-msgstr "Sauvegarder le nouveau profil"
+msgstr "Nowy profil"
 
 #: dialogs.py:131 dialogs.py:186 rendergui.py:665 preferenceswindow.py:115
 #: preferenceswindow.py:118 tools/gmic.py:716 tools/toolsencoding.py:40
 msgid "Select Folder"
-msgstr "Sélectionnez un répertoire"
+msgstr "Wybierz folder"
 
 #: dialogs.py:135 dialogs.py:190 rendergui.py:669 tools/toolsencoding.py:44
 msgid "Folder:"
-msgstr "Répertoire:"
+msgstr ""
 
 #: dialogs.py:144 dialogs.py:199
-#, fuzzy
 msgid "Project Name:"
-msgstr "Exporter fichiers"
+msgstr "Nazwa projektu:"
 
 #: dialogs.py:148 dialogs.py:203
-#, fuzzy
 msgid "New Project File"
-msgstr "Nouveau projet"
+msgstr "Nowy plik projektu"
 
 #: dialogs.py:177 dialogs.py:1447 tools/batchrendering.py:1242
-#, fuzzy
 msgid "File:"
-msgstr "Le fichier: "
+msgstr "Plik:"
 
 #: dialogs.py:178
-#, fuzzy
 msgid "File Best Match Profile:"
-msgstr "Profil par défaut"
+msgstr "Plik najlepszego dopasowania do profilu:"
 
 #: dialogs.py:179
-#, fuzzy
 msgid "Project Current Profile:"
-msgstr "Profil du projet:"
+msgstr "Profil bieżącego projektu:"
 
 #: dialogs.py:205
-#, fuzzy
 msgid "Project will be saved with profile: "
-msgstr "Profil du projet:"
+msgstr "Projekt zostanie zapisany z profilem: "
 
 #: dialogs.py:219
-#, fuzzy
 msgid "Save Project Backup Snapshot"
-msgstr "Enregistrer le projet sous"
+msgstr "Zapisz kopię migawkową projektu"
 
 #: dialogs.py:224
-#, fuzzy
 msgid "Select Snapshot Project Folder"
-msgstr "Sélectionnez un projet"
+msgstr "Wybierz folder dla kopii migawkowej projektu"
 
 #: dialogs.py:228
-#, fuzzy
 msgid "Snapshot Folder:"
-msgstr "Exporter fichiers"
+msgstr "Folder dla kopii migawkowej"
 
 #: dialogs.py:236
-#, fuzzy
 msgid "Project File Name:"
-msgstr "Exporter fichiers"
+msgstr "Nazwa pliku projektu:"
 
 #: dialogs.py:260
 msgid "Select Project File"
-msgstr "Sélectionnez un projet"
+msgstr "Wybierz plik projektu"
 
 #: dialogs.py:269
-#, fuzzy
 msgid "Flowblade Projects"
-msgstr "Enregistrer le projet sous"
+msgstr "Projekty Flowblade"
 
 #: dialogs.py:279
 msgid "Save Project As"
-msgstr "Enregistrer le projet sous"
+msgstr "Zapisz projekt jako"
 
 #: dialogs.py:282 dialogs.py:349 dialogs.py:407 dialogs.py:429 rendergui.py:118
 #: tools/batchrendering.py:963 tools/gmic.py:358
 msgid "Save"
-msgstr "Enregistrer"
+msgstr "Zapisz"
 
 #: dialogs.py:297
 msgid "Export Project as XML to"
-msgstr "Exporter XML du projet vers"
+msgstr "Eksportuj projekt jako XML do"
 
 #: dialogs.py:318 dialogs.py:1056 patternproducer.py:320 patternproducer.py:353
 #: patternproducer.py:384
 msgid "Create"
-msgstr "Créer"
+msgstr "Utwórz"
 
 #: dialogs.py:325 patternproducer.py:331
-#, fuzzy
 msgid "Clip Name:"
-msgstr "Nom du clip"
+msgstr "Nazwa klipu:"
 
 #: dialogs.py:346
 msgid "Save Runtime Environment Data"
-msgstr "Enregistrer les informations système"
+msgstr "Zapisz dane środowiska wykonawczego"
 
 #: dialogs.py:360 dialogs.py:376 dialogs.py:938 dialogs.py:1117
 msgid "Ok"
-msgstr "Ok"
+msgstr ""
 
 #: dialogs.py:361 dialogs.py:377
 msgid "Select Thumbnail Folder"
-msgstr "Sélectionner le dossier de miniatures"
+msgstr "Wybierz folder miniatur"
 
 #: dialogs.py:393
 msgid "Can't make home folder render clips folder"
-msgstr "Le dossier Home ne peut être utilisé pour les rendus"
+msgstr "Nie można utworzyć folderu miniatur w katalogu domowym"
 
 #: dialogs.py:395
 msgid "' as render clips folder"
-msgstr "' comme dossier de rendus"
+msgstr "' jako folderu renderowania klipów"
 
 #: dialogs.py:399 dialogs.py:420
 msgid "Save project '"
-msgstr "Sauvegarder le projet '"
+msgstr "Zapisz projekt '"
 
 #: dialogs.py:399
 msgid "' before exiting?"
-msgstr "' avant de quitter?"
+msgstr "' przed wyjściem?"
 
 #: dialogs.py:405 dialogs.py:427
 msgid "Don't Save"
-msgstr "Ne pas enregister"
+msgstr "Nie zapisuj"
 
 #: dialogs.py:420
 msgid "' before closing project?"
-msgstr "' avant de fermer le projet"
+msgstr "' przed zamknięciem projektu?"
 
 #: dialogs.py:448
-#, fuzzy
 msgid "Project page:"
-msgstr "Exporter fichiers"
+msgstr "Strona projektu:"
 
 #: dialogs.py:470
 msgid "Upstream:"
 msgstr ""
 
 #: dialogs.py:473
-#, fuzzy
 msgid "Tools:"
-msgstr "Outils"
+msgstr "Narzędzia:"
 
 #: dialogs.py:501
-#, fuzzy
 msgid "Lead Developer:"
-msgstr "Niveaux"
+msgstr "Główny programista:"
 
 #: dialogs.py:504
-#, fuzzy
 msgid "Developers:"
-msgstr "Niveaux"
+msgstr "Programiści"
 
 #: dialogs.py:511
 msgid "Contributors:"
-msgstr ""
+msgstr "Współtwórcy"
 
 #: dialogs.py:542
-#, fuzzy
 msgid "Translations by:"
-msgstr "Traductions"
+msgstr "Tłumacze:"
 
 #: dialogs.py:556
 msgid "Application"
-msgstr "Application"
+msgstr "Aplikacja"
 
 #: dialogs.py:557
 msgid "Thanks"
-msgstr "Remerciements"
+msgstr "Podziękowania"
 
 #: dialogs.py:558
 msgid "License"
-msgstr "Licence"
+msgstr "Licencja"
 
 #: dialogs.py:559
-#, fuzzy
 msgid "Developers"
-msgstr "Niveaux"
+msgstr "Programiści"
 
 #: dialogs.py:560
 msgid "Translations"
-msgstr "Traductions"
+msgstr "Tłumaczenia"
 
 #: dialogs.py:575
 msgid "MLT version: "
-msgstr "Version MLT: "
+msgstr "Wersja MLT: "
 
 #: dialogs.py:581
 msgid "GTK version: "
-msgstr "Version GTK: "
+msgstr "Wersja GTK: "
 
 #: dialogs.py:583
 msgid "Locale: "
-msgstr "Locale: "
+msgstr "Ustawienia regionalne: "
 
 #: dialogs.py:586
 msgid "INSTALLATION"
-msgstr "INSTALLATION"
+msgstr "INSTALACJA"
 
 #: dialogs.py:588
 msgid "DEVELOPER VERSION"
-msgstr "VERSION DE DEVELOPPEMENT"
+msgstr "WERSJA ROZWOJOWA"
 
 #: dialogs.py:590
 msgid "Running from: "
-msgstr "Lancé à partir de: "
+msgstr "Uruchomione z: "
 
 #: dialogs.py:618
 msgid " AVAILABLE"
-msgstr " DISPONIBLE"
+msgstr " DOSTĘPNE"
 
 #: dialogs.py:620
 msgid " NOT AVAILABLE, "
-msgstr " NON DISPONIBLE"
+msgstr " NIEDOSTĘPNE"
 
 #: dialogs.py:620
 msgid " MISSING"
-msgstr " MANQUANT"
+msgstr " BRAKUJĄCY"
 
 #: dialogs.py:626
 msgid " FOR FILTER "
-msgstr " POUR FILTRE"
+msgstr " DO FILTRA "
 
 #: dialogs.py:626 dialogs.py:629
 msgid " NOT FOUND"
-msgstr " PAS TROUVÉ"
+msgstr " NIE ZNALEZIONO"
 
 #: dialogs.py:629
 msgid " FOR TRANSITION "
-msgstr " POUR TRANSITION "
+msgstr " DLA PRZEJŚCIA "
 
 #: dialogs.py:633 dialogs.py:1213 preferenceswindow.py:60
 msgid "General"
-msgstr "Général"
+msgstr "Ogólne"
 
 #: dialogs.py:634
 msgid "MLT Filters"
-msgstr "Filtres MLT"
+msgstr "Filtry MLT"
 
 #: dialogs.py:635
 msgid "MLT Transitions"
-msgstr "Transitions MLT"
+msgstr "Przejścia MLT"
 
 #: dialogs.py:636
 msgid "Missing MLT Services"
-msgstr "Services MLT manquants"
+msgstr "Brakujące usługi MLT"
 
 #: dialogs.py:639
 msgid "Video Codecs"
-msgstr "Codecs vidéo"
+msgstr "Kodeki obrazu"
 
 #: dialogs.py:640
 msgid "Audio Codecs"
-msgstr "Codecs audio"
+msgstr "Kodeki dźwięku"
 
 #: dialogs.py:641
 msgid "Formats"
-msgstr "Formats"
+msgstr "Formaty"
 
 #: dialogs.py:642
 msgid "Render Options"
-msgstr "Options de rendu"
+msgstr "Opcje renderowania"
 
 #: dialogs.py:688 guicomponents.py:1635
 msgid "File Properties"
-msgstr "Propriétés du fichier"
+msgstr "Właściwości pliku"
 
 #: dialogs.py:701
 msgid "Clip Properties"
-msgstr "Propriétés du clip"
+msgstr "Właściwości klipu"
 
 #: dialogs.py:722
 msgid "Loading project"
-msgstr "Charge le projet"
+msgstr "Wczytywanie projektu"
 
 #: dialogs.py:756
 msgid "Recreating icons"
-msgstr "Recréer les icônes"
+msgstr "Odtwarzenie ikon"
 
 #: dialogs.py:759
 msgid "Update media lengths data"
-msgstr ""
+msgstr "Aktualizuj dane o długości multimediów"
 
 #: dialogs.py:798
 msgid "Are you sure you want to delete these media files?"
-msgstr "Confirmer la suppression de ces médias?"
+msgstr "Czy na pewno chcesz usunąć te pliki multimedialne?"
 
 #: dialogs.py:799
 msgid ""
@@ -1228,8 +1193,9 @@ msgid ""
 "either <b>have proxy files or are proxy files.</b>\n"
 "\n"
 msgstr ""
-"Un ou plusieurs médias que vous désirer supprimer du projet\n"
-"sont <b>liés à des fichiers proxy ou sont des fichiers proxy.</b>\n"
+"Jeden lub więcej plików multimedialnych, które usuwasz z projektu\n"
+"albo <b>mają pliki proxy albo są plikami proxy.</b>\n"
+"\n"
 
 #: dialogs.py:800
 msgid ""
@@ -1237,23 +1203,25 @@ msgid ""
 "using proxy files and using original media.\n"
 "\n"
 msgstr ""
-"Supprimer ces fichiers pourrait <b>empêcher la conversion</b>\n"
-"les fichiers proxy et les médias d'origine.\n"
+"Usunięcie tych plików może <b>zapobiec konwersji</b> pomiędzy\n"
+"używanymi plikami proxy, a używanymi oryginalnymi multimediami.\n"
+"\n"
 
 #: dialogs.py:810
 msgid "Force Delete"
-msgstr "Supprimer"
+msgstr "Wymuszenie usunięcie"
 
 #: dialogs.py:821
 msgid "Open last autosave?"
-msgstr "Ouvrir la dernière sauvegarde automatique?"
+msgstr "Otwórzyć ostatni plik autozapisu?"
 
 #: dialogs.py:822
 msgid ""
 "It seems that Flowblade exited abnormally last time.\n"
 "\n"
 msgstr ""
-"Il semblerait que Flowblade ne se soit pas arrêté correctement.\n"
+"Wygląda na to, że ostatnio Flowblade zakończył swoje działanie w\n"
+"nieoczekiwany sposób.\n"
 "\n"
 
 #: dialogs.py:823
@@ -1262,32 +1230,32 @@ msgid ""
 "this dialog has probably detected its autosave file.\n"
 "\n"
 msgstr ""
-"Si il y a une autre instance Flowblade en cours,\n"
-"cette boîte de dialogue à probablement détécté sa sauvegarde automatique.\n"
+"Jeśli działa inna instacja Flowblade, to\n"
+"to okno dialogowe prawdopodobnie wykryło jej plik autozapisu.\n"
+"\n"
 
 #: dialogs.py:824
 msgid "It is NOT possible to open this autosaved version later."
-msgstr ""
-"Il n'est PAS possible d'ouvrir cette sauvegarde automatique ultérieurement."
+msgstr "Nie będzie można później otworzyć tej automatycznie zapisanej wersji"
 
 #: dialogs.py:832 dialogs.py:876
 msgid "Continue with default 'untitled' project"
-msgstr "Continuer avec le projet par défaut 'sans titre'"
+msgstr "Kontynuuj z domyślnym projektem 'bez_nazwy'"
 
 #: dialogs.py:833
 msgid "Open Autosaved Project"
-msgstr "Ouvrir la sauvegarde automatique"
+msgstr "Otwórz automatycznie zapisany projekt"
 
 #: dialogs.py:843
 msgid "Open a autosave file?"
-msgstr "Ouvrir une sauvegarde automatique?"
+msgstr "Otwórzyc plik autozapisu? "
 
 #: dialogs.py:844
 msgid ""
 "There are <b>multiple autosave files</b> from application crashes.\n"
 "\n"
 msgstr ""
-"Il y a <b>plusieurs sauvegardes automatiques</b> lors du plantage.\n"
+"Istnieje <b>wiele plików autozapisu</b> od czasu awarii aplikacji.\n"
 "\n"
 
 #: dialogs.py:845
@@ -1297,124 +1265,114 @@ msgid ""
 "to continue working.\n"
 "\n"
 msgstr ""
-"S'il y a eu un plantage, <b>sélectionnez la dernière sauvegarde automatique</"
-"b>\n"
-"pour continuer à travailler.\n"
-"\n"
+"Jeśli właśnie <b>wystąpiła awaria programu</b>, w celu kontynuacji pracy,\n"
+"<b>wybierz ostatnio utworzony plik autozapisu</b>\n"
 
 #: dialogs.py:846
 msgid ""
 "If you see this at application start without a recent crash,\n"
 "you should probably delete all autosave files to stop seeing this dialog."
 msgstr ""
-"Si vous voyez ce message au démarrage de l'application sans plantage "
-"récent,\n"
-"vous devriez supprimer toutes les sauvegardes automatiques pour ne plus le "
-"voir."
+"Jeśli widzisz to przy starcie aplikacji, a ostatnio nie wystąpiła awaria "
+"programu,\n"
+"najprawdopodobniej powinieneś usunąć wszystkie pliki autouzapisu, aby to "
+"okno dialogowe się już nie wyświetlało."
 
 #: dialogs.py:877
-#, fuzzy
 msgid "Open Selected Autosave"
-msgstr "Ouvrir la sauvegarde automatique sélectionnée"
+msgstr "Otwórz wybrany plik autozapisu"
 
 #: dialogs.py:902
 msgid "Change Sequence Tracks Count"
-msgstr "Modifier le nombre de pistes"
+msgstr "Zmień liczbę ścieżek sekwencji"
 
 #: dialogs.py:905
 msgid "Change Tracks"
-msgstr "Modifier les pistes"
+msgstr "Zmiana ścieżek"
 
 #: dialogs.py:909
 msgid "Please note:\n"
-msgstr "Attention:\n"
+msgstr "Uwaga:\n"
 
 #: dialogs.py:910 dialogs.py:1485
-#, fuzzy
 msgid ""
 " It is recommended that you save Project before completing this operation\n"
-msgstr ""
-"* Il est recommandé de sauver le projet avant de lancer cette opération\n"
+msgstr " Przed zakończeniem tej operacji zaleca się zapisanie projektu\n"
 
 #: dialogs.py:911 dialogs.py:1486
-#, fuzzy
 msgid " There is no Undo for this operation\n"
-msgstr "* Il n'y a pas d'annulation possible\n"
+msgstr " Tej operacji nie można cofnąć\n"
 
 #: dialogs.py:912 dialogs.py:1487
-#, fuzzy
 msgid " Current Undo Stack will be destroyed\n"
-msgstr "* Les points d'annulation seront effacés\n"
+msgstr " Bieżący stos operacji 'cofnij' zostanie zniszczony\n"
 
 #: dialogs.py:913
-#, fuzzy
 msgid ""
 " All Clips and Compositors on deleted Tracks will be permanently destroyed"
 msgstr ""
-"* Tous les clips et compositions des pistes supprimées seront détruits de "
-"façon permanante"
+"Wszystkie klipy i kompozytory znajdujące się na usuwanych ścieżkach zostaną "
+"trwale zniszczone"
 
 #: dialogs.py:935
-#, fuzzy
 msgid "Change Clip Length"
-msgstr "Durée du clip:"
+msgstr "Zmień długość klipu"
 
 #: dialogs.py:956
 msgid "Create New Sequence"
-msgstr "Créer une nouvelle séquence"
+msgstr "Utwórz nową sekwencję"
 
 #: dialogs.py:959
 msgid "Create Sequence"
-msgstr "Créer une séquence"
+msgstr "Utwórz sekwencję"
 
 #: dialogs.py:966
 msgid "Sequence Name:"
-msgstr "Nom de la séquence:"
+msgstr "Nazwa sekwencji:"
 
 #: dialogs.py:974
 msgid "Open For Editing:"
-msgstr "Ouvrir pour éditer:"
+msgstr "Otwórz do edycji:"
 
 #: dialogs.py:997
 msgid "Rename New Media Object"
-msgstr "Renommer le nouveau média"
+msgstr "Zmiana nazwy nowego obiektu multimedialnego"
 
 #: dialogs.py:1000 dialogs.py:1028 dialogs.py:1082 guicomponents.py:1630
 msgid "Rename"
-msgstr "Renommer"
+msgstr "Zmień nazwę"
 
 #: dialogs.py:1007 dialogs.py:1035
 msgid "New Name:"
-msgstr "Nouveau nom:"
+msgstr "Nowa nazwa:"
 
 #: dialogs.py:1025 guicomponents.py:1202 guicomponents.py:1300
 msgid "Rename Clip"
-msgstr "Renommer le clip"
+msgstr "Zmień nazwę klipu"
 
 #: dialogs.py:1053
 msgid "New Range Item Group"
-msgstr "Nouveau groupe de sous-clips"
+msgstr "Grupa nowego zakresu pozycji"
 
 #: dialogs.py:1060
-#, fuzzy
 msgid "User Group "
-msgstr "Utilisateur"
+msgstr "Grupa użytkownika "
 
 #: dialogs.py:1063 dialogs.py:1083
 msgid "New Group Name:"
-msgstr "Nouveau groupe:"
+msgstr "Nowa nazwa grupy:"
 
 #: dialogs.py:1081
 msgid "Rename Range Log Item Group"
-msgstr "Renommer le groupe de sous-clips"
+msgstr "Zmień nazwę grupy elementów rejestru zakresu"
 
 #: dialogs.py:1089
 msgid "Can't open non-valid media"
-msgstr "Impossible d'ouvrir un média non valide"
+msgstr "Nie można otworzyć nieprawidłowego zbioru multimedialnego"
 
 #: dialogs.py:1090
 msgid "File: "
-msgstr "Le fichier: "
+msgstr "Plik: "
 
 #: dialogs.py:1090
 msgid ""
@@ -1422,73 +1380,72 @@ msgid ""
 "is not a valid media file."
 msgstr ""
 "\n"
-"n'est pas un fichier valide."
+"Nie jest prawidłowym plikiem multimedialnym."
 
 #: dialogs.py:1094
 msgid "New Marker"
-msgstr "Nouveau marqueur"
+msgstr "Nowy znacznik"
 
 #: dialogs.py:1096 guicomponents.py:2153
 msgid "Add Marker"
-msgstr "Ajouter un marqueur"
+msgstr "Dodaj znacznik"
 
 #: dialogs.py:1103
 msgid "Name for marker at "
-msgstr "Nom du marqueur"
+msgstr "Nazwa znacznika na "
 
 #: dialogs.py:1118
 msgid "Add Image Sequence Clip"
-msgstr "Ajouter un clip de séquence d'images"
+msgstr "Dodaj klip sekwencji obrazów"
 
 #: dialogs.py:1124
 msgid "Select First Frame"
-msgstr "Sélectionner la première image"
+msgstr "Wybierz pierwszą klatkę"
 
 #: dialogs.py:1134
 msgid "First frame:"
-msgstr "Première image:"
+msgstr "Pierwsza klatka:"
 
 #: dialogs.py:1138
 msgid "Frames per Source Image:"
-msgstr "Images par image source"
+msgstr "Klatek na obraz źródłowy:"
 
 #: dialogs.py:1153
-#, fuzzy
 msgid "Export EDL"
-msgstr "Exporter"
+msgstr "Eksportuj decyzyjną listę edycji (EDL)"
 
 #: dialogs.py:1167
 msgid "Add Transition"
-msgstr "Ajouter une transition"
+msgstr "Dodaj przejście"
 
 #: dialogs.py:1170 dialogs.py:1184
 msgid "Apply"
-msgstr "Appliquer"
+msgstr "Zastosuj"
 
 #: dialogs.py:1181 guicomponents.py:1409
 msgid "Add Fade"
-msgstr "Ajouter un fondu"
+msgstr "Dodaj zanikanie"
 
 #: dialogs.py:1198 dialogs.py:1317 tools/titler.py:514 proxyediting.py:420
 #: medialinker.py:154 tools/gmic.py:802 tools/gmic.py:893
 msgid "Close"
-msgstr "Fermer"
+msgstr "Zamknij"
 
 #: dialogs.py:1201
 msgid "Control + N"
-msgstr "Contrôle + N"
+msgstr "Ctrl + N"
 
 #: dialogs.py:1201
 msgid "Create New Project"
-msgstr "Créer un nouveau projet"
+msgstr "Utwórz nowy projekt"
 
 #: dialogs.py:1202
 msgid "Control + S"
-msgstr "Contrôle + S"
+msgstr "Ctrl + S"
 
 #: dialogs.py:1202
 msgid "Save Project"
-msgstr "Enregistrer le projet"
+msgstr "Zapisz projekt"
 
 #: dialogs.py:1203 dialogs.py:1221
 msgid "DELETE"
@@ -1496,7 +1453,7 @@ msgstr ""
 
 #: dialogs.py:1203
 msgid "Delete Selected Item"
-msgstr "Supprimer l'élément sélectionné"
+msgstr "Usuń zaznaczony element"
 
 #: dialogs.py:1204
 msgid "ESCAPE"
@@ -1504,52 +1461,51 @@ msgstr ""
 
 #: dialogs.py:1204
 msgid "Stop Rendering Audio Levels"
-msgstr "Stopper le rendu des niveaux audio"
+msgstr "Zatrzymaj renderowanie poziomów dźwięku"
 
 #: dialogs.py:1205
 msgid "Control + Q"
-msgstr "Contrôle + Q"
+msgstr "Ctrl + Q"
 
 #: dialogs.py:1205
 msgid "Quit"
-msgstr "Quitter"
+msgstr "Zakończ"
 
 #: dialogs.py:1206
 msgid "Control + Z"
-msgstr "Contrôle + Z"
+msgstr "Ctrl + Z"
 
 #: dialogs.py:1206
 msgid "Undo"
-msgstr "Annuler"
+msgstr "Cofnij"
 
 #: dialogs.py:1207
 msgid "Control + Y"
-msgstr "Contrôle + Y"
+msgstr "Ctrl + Y"
 
 #: dialogs.py:1207
 msgid "Redo"
-msgstr "Rétablir"
+msgstr "Powtórz"
 
 #: dialogs.py:1208
 msgid "Control + O"
-msgstr "Contrôle + O"
+msgstr "Ctrl + O"
 
 #: dialogs.py:1208
 msgid "Open Project"
-msgstr "Ouvrir un projet"
+msgstr "Otwórz projekt"
 
 #: dialogs.py:1209
 msgid "TAB"
-msgstr "TAB"
+msgstr ""
 
 #: dialogs.py:1209
 msgid "Switch Monitor Source"
-msgstr "Changer la source du moniteur"
+msgstr "Przełącz źródło monitora"
 
 #: dialogs.py:1210
-#, fuzzy
 msgid "Control + L"
-msgstr "Contrôle + N"
+msgstr "Ctrl + L"
 
 #: dialogs.py:1211
 msgid "="
@@ -1561,57 +1517,51 @@ msgstr ""
 
 #: dialogs.py:1216
 msgid "Set Mark In"
-msgstr "Placer un point d'entrée"
+msgstr "Ustaw znacznik początkowy"
 
 #: dialogs.py:1217
 msgid "Set Mark Out"
-msgstr "Placer un point de sortie"
+msgstr "Ustaw znacznik końcowy"
 
 #: dialogs.py:1218
-#, fuzzy
 msgid "Alt + I"
-msgstr "Shift + I"
+msgstr ""
 
 #: dialogs.py:1218
-#, fuzzy
 msgid "Go To Mark In"
-msgstr "Aller au point d'entrée"
+msgstr "Idź do znacznika początkowego"
 
 #: dialogs.py:1219
-#, fuzzy
 msgid "Alt + O"
-msgstr "Shift + O"
+msgstr ""
 
 #: dialogs.py:1219
-#, fuzzy
 msgid "Go To Mark Out"
-msgstr "Aller au point de sortie"
+msgstr "Idź do znacznika końcowego"
 
 #: dialogs.py:1224
 msgid "3 Point Overwrite Insert"
-msgstr "Ecrasement en 3 points"
+msgstr "Wstaw 3-punktowe nadpisanie"
 
 #: dialogs.py:1225
 msgid "Add Mark"
-msgstr "Ajouter un marqueur"
+msgstr "Dodaj znacznik"
 
 #: dialogs.py:1226
-#, fuzzy
 msgid "Control + C"
-msgstr "Contrôle + N"
+msgstr "Ctrl + C"
 
 #: dialogs.py:1226
 msgid "Copy Clips"
-msgstr "Copier clips"
+msgstr "Kopiuj klipy"
 
 #: dialogs.py:1227
-#, fuzzy
 msgid "Control + V"
-msgstr "Contrôle + N"
+msgstr "Ctrl + V"
 
 #: dialogs.py:1227
 msgid "Paste Clips"
-msgstr "Coller clips"
+msgstr "Wklej klipy"
 
 #: dialogs.py:1228 dialogs.py:1263
 msgid "R"
@@ -1619,16 +1569,15 @@ msgstr ""
 
 #: dialogs.py:1228 dialogs.py:1263
 msgid "Trim Tool Ripple Mode On/Off"
-msgstr ""
+msgstr "Włącz/wyłącz tryb wypełniania przerw dla narzędzia przycinania"
 
 #: dialogs.py:1229
 msgid "S"
 msgstr ""
 
 #: dialogs.py:1229
-#, fuzzy
 msgid "Resync selected Clip or Compositor"
-msgstr "Compositions"
+msgstr "Resynchronizuj wybrany klip lub kompozytor"
 
 #: dialogs.py:1230
 msgid "G"
@@ -1636,40 +1585,35 @@ msgstr ""
 
 #: dialogs.py:1231 dialogs.py:1243 dialogs.py:1267
 msgid "Left Arrow "
-msgstr "Flèche gauche"
+msgstr "Strzałka w lewo"
 
 #: dialogs.py:1231
-#, fuzzy
 msgid "Prev Frame Trim Edit"
-msgstr "Image précédente"
+msgstr "Przycinanie poprzedniej klatki"
 
 #: dialogs.py:1232 dialogs.py:1244 dialogs.py:1268
 msgid "Right Arrow"
-msgstr "Flèche droite"
+msgstr "Strzałka w prawo"
 
 #: dialogs.py:1232
-#, fuzzy
 msgid "Next Frame Trim Edit"
-msgstr "Image suivante"
+msgstr "Przycinanie następnej klatki"
 
 #: dialogs.py:1233 dialogs.py:1245
-#, fuzzy
 msgid "Control + Left Arrow "
-msgstr "Contrôle + N"
+msgstr "Ctl + strzałka w lewo"
 
 #: dialogs.py:1233
 msgid "Back 10 Frames Trim Edit"
-msgstr ""
+msgstr "Przycinanie 10 klatek wstecz"
 
 #: dialogs.py:1234 dialogs.py:1246
-#, fuzzy
 msgid "Control + Right Arrow"
-msgstr "Flèche droite"
+msgstr "Ctrl + strzałka w prawo"
 
 #: dialogs.py:1234
-#, fuzzy
 msgid "Forward 10 Frames Trim Edit"
-msgstr "Avance rapide"
+msgstr "Przycinanie 10 klatek w przód"
 
 #: dialogs.py:1235
 msgid "ENTER"
@@ -1677,60 +1621,59 @@ msgstr ""
 
 #: dialogs.py:1235
 msgid "Complete Keyboard Trim Edit"
-msgstr ""
+msgstr "Pełna klawiatura (przycinania i edycji)"
 
 #: dialogs.py:1239
 msgid "SPACE"
-msgstr ""
+msgstr "SPACJA"
 
 #: dialogs.py:1239
 msgid "Start / Stop Playback"
-msgstr "Démarrer / Arrêter la lecture"
+msgstr "Uruchom / Zatrzymaj odtwarzanie"
 
 #: dialogs.py:1240
 msgid "Backwards Faster"
-msgstr "Retour rapide"
+msgstr "Szybciej do tyłu"
 
 #: dialogs.py:1241 proxyediting.py:353 tools/gmic.py:769
 msgid "Stop"
-msgstr "Stop"
+msgstr "Zatrzymaj"
 
 #: dialogs.py:1242
 msgid "Forward Faster"
-msgstr "Avance rapide"
+msgstr "Szybciej do przodu"
 
 #: dialogs.py:1243
 msgid "Prev Frame"
-msgstr "Image précédente"
+msgstr "Poprzednia klatka"
 
 #: dialogs.py:1244
 msgid "Next Frame"
-msgstr "Image suivante"
+msgstr "Następna klatka"
 
 #: dialogs.py:1245
 msgid "Move Back 10 Frames"
-msgstr ""
+msgstr "Wstecz o 10 klatek"
 
 #: dialogs.py:1246
-#, fuzzy
 msgid "Move Forward 10 Frames"
-msgstr "Avance rapide"
+msgstr "W przód o 10 klatek"
 
 #: dialogs.py:1247 dialogs.py:1269
 msgid "Up Arrow"
-msgstr "Flèche haut"
+msgstr "Strzałka w górę"
 
 #: dialogs.py:1247
 msgid "Next Edit/Mark"
-msgstr "Coupe/Marqueur suivant"
+msgstr "Następne Edytuj/Zaznacz"
 
 #: dialogs.py:1248 dialogs.py:1270
 msgid "Down Arrow"
-msgstr "Flèche bas"
+msgstr "Strzałka w dół"
 
 #: dialogs.py:1248
 msgid "Prev Edit/Mark"
-msgstr "Coupe/Marqueur précédent"
+msgstr "Poprzednie Edytuj/Zaznacz"
 
 #: dialogs.py:1249
 msgid "HOME"
@@ -1738,178 +1681,159 @@ msgstr ""
 
 #: dialogs.py:1249
 msgid "Go To Start"
-msgstr "Retour au début"
+msgstr "Przejdź do początku"
 
 #: dialogs.py:1250
 msgid "END"
 msgstr ""
 
 #: dialogs.py:1250
-#, fuzzy
 msgid "Go To End"
-msgstr "Aller au point d'entrée"
+msgstr "Przejdź do końca"
 
 #: dialogs.py:1251
 msgid "Shift + I"
-msgstr "Shift + I"
+msgstr ""
 
 #: dialogs.py:1251
 msgid "To Mark In"
-msgstr "Aller au point d'entrée"
+msgstr "Do znacznika początkowego"
 
 #: dialogs.py:1252
 msgid "Shift + O"
-msgstr "Shift + O"
+msgstr ""
 
 #: dialogs.py:1252
 msgid "To Mark Out"
-msgstr "Aller au point de sortie"
+msgstr "Do znacznika końcowego"
 
 #: dialogs.py:1253
 msgid "Playback"
-msgstr "Lecture"
+msgstr "Odtwarzanie"
 
 #: dialogs.py:1257 guicomponents.py:2341 translations.py:560
 msgid "Overwrite"
-msgstr "Ecraser"
+msgstr "Nadpisz"
 
 #: dialogs.py:1258 guicomponents.py:2347
 msgid "Trim"
-msgstr "Prolonger"
+msgstr "Przytnij"
 
 #: dialogs.py:1259 guicomponents.py:2353
 msgid "Roll"
-msgstr "Etendre"
+msgstr "Rolka"
 
 #: dialogs.py:1260 guicomponents.py:2359
 msgid "Slip"
-msgstr ""
+msgstr "Poślizg"
 
 #: dialogs.py:1261 guicomponents.py:2365
 msgid "Spacer"
-msgstr "Espacer"
+msgstr "Rozpórka"
 
 #: dialogs.py:1262 guicomponents.py:2371 translations.py:544
 msgid "Box"
-msgstr ""
+msgstr "Pudełko"
 
 #: dialogs.py:1267
-#, fuzzy
 msgid "Move Source Video Left 1px"
-msgstr "Déplacer la source vidéo à gauche"
+msgstr "Przesuń film źródłowy w lewo o 1px"
 
 #: dialogs.py:1268
-#, fuzzy
 msgid "Move Source Video Right 1px"
-msgstr "Déplacer la source vidéo à droite"
+msgstr "Przesuń film źródłowy w prawo o 1px"
 
 #: dialogs.py:1269
-#, fuzzy
 msgid "Move Source Video Up 1px"
-msgstr "Déplacer la source vidéo en haut"
+msgstr "Przesuń film źródłowy w górę o 1px"
 
 #: dialogs.py:1270
-#, fuzzy
 msgid "Move Source Video Down 1px"
-msgstr "Déplacer la source vidéo en bas"
+msgstr "Przesuń film źródłowy w dół o 1px"
 
 #: dialogs.py:1271
-#, fuzzy
 msgid "Control + Arrow"
-msgstr "Contrôle + N"
+msgstr "Ctrl + strzałka"
 
 #: dialogs.py:1271
-#, fuzzy
 msgid "Move Source Video 10px"
-msgstr "Déplacer la source vidéo en haut"
+msgstr "Przesuń film źródłowy o 10px"
 
 #: dialogs.py:1272
-#, fuzzy
 msgid "Control + Mouse Drag"
-msgstr "Contrôle + N"
+msgstr "Ctrl + ciągnięcie myszy"
 
 #: dialogs.py:1272
 msgid "Keep Aspect Ratio in Affine Blend scaling"
-msgstr ""
+msgstr "Zachowaj proporcje obrazu podczas skalowania przenikania afinicznego"
 
 #: dialogs.py:1273
-#, fuzzy
 msgid "Shift"
-msgstr "Shift + I"
+msgstr ""
 
 #: dialogs.py:1273
 msgid "Snap to X or Y of drag start point"
-msgstr ""
+msgstr "Przyciągaj do X lub Y punktu początkowego przeciągania"
 
 #: dialogs.py:1274
 msgid "Geometry Editor"
-msgstr "Éditeur de géométrie"
+msgstr "Edytor Geometrii"
 
 #: dialogs.py:1315
-#, fuzzy
 msgid "Sequence Watermark"
-msgstr "Watermark de la séquence"
+msgstr "Sekwencja znaków wodnych"
 
 #: dialogs.py:1319
-#, fuzzy
 msgid "Sequence:"
-msgstr "Séquence:"
+msgstr "Sekwencja:"
 
 #: dialogs.py:1323
 msgid "Watermark:"
-msgstr ""
+msgstr "Zank wodny:"
 
 #: dialogs.py:1325
-#, fuzzy
 msgid "Set Watermark File"
-msgstr "Définir un fichier de Watermark"
+msgstr "Ustaw plik znaku wodnego"
 
 #: dialogs.py:1326
 msgid "Remove Watermark"
-msgstr "Supprimer le Watermark"
+msgstr "Usuń znak wodny"
 
 #: dialogs.py:1362
-#, fuzzy
 msgid "Select Watermark File"
-msgstr "Sélectionnez un fichier de Watermark"
+msgstr "Wybierz plik znaku wodnego"
 
 #: dialogs.py:1391
 msgid "All files"
-msgstr "Tous les fichiers"
+msgstr "Wszystkie pliki"
 
 #: dialogs.py:1413
-#, fuzzy
 msgid "Saving project snapshot"
-msgstr "Sauvegarder le projet '"
+msgstr "Zapisywanie migawki projektu"
 
 #: dialogs.py:1435
-#, fuzzy
 msgid "Loaded Media Profile Mismatch"
-msgstr "Chemin du média:"
+msgstr "Niedopasowany profil multimediów"
 
 #: dialogs.py:1437
-#, fuzzy
 msgid "Keep Current Profile"
-msgstr "Supprimer le groupe en cours"
+msgstr "Zachowaj bieżący profil"
 
 #: dialogs.py:1438
-#, fuzzy
 msgid "Change To File Profile"
-msgstr "Enregistrer le projet sous..."
+msgstr "Zmień na profil pliku"
 
 #: dialogs.py:1440
 msgid "A video file was loaded that does not match the Project Profile!"
-msgstr ""
+msgstr "Załadowano plik wideo, który nie pasuje do profilu projektu!"
 
 #: dialogs.py:1448
-#, fuzzy
 msgid "File Profile:"
-msgstr "Sauvegarder le nouveau profil"
+msgstr "Profil pliku:"
 
 #: dialogs.py:1449
-#, fuzzy
 msgid "Project Profile:"
-msgstr "Profil du projet:"
+msgstr "Profil projektu:"
 
 #: dialogs.py:1450
 msgid ""
@@ -1917,555 +1841,534 @@ msgid ""
 "\n"
 "This message is only displayed on first media load for Project."
 msgstr ""
+"Zaleca się użycie dopasowanego profilu.\n"
+"\n"
+"Ten komunikat jest wyświetlany tylko przy pierwszym ładowaniu danych "
+"multimedialnych do projektu."
 
 #: dialogs.py:1474
-#, fuzzy
 msgid "Cannot import sequence!"
-msgstr "Impossible de supprimer la dernière séquence"
+msgstr "Nie można zaimportować sekwencji!"
 
 #: dialogs.py:1475
 msgid "There are no other sequences in the Project."
-msgstr ""
+msgstr "Nie ma innych sekwencji w projekcie."
 
 #: dialogs.py:1479
-#, fuzzy
 msgid "Import Sequence"
-msgstr "Créer une séquence"
+msgstr "Importuj sekwencję"
 
 #: dialogs.py:1482
-#, fuzzy
 msgid "Import"
-msgstr "Exporter"
+msgstr "Importuj"
 
 #: dialogs.py:1484
-#, fuzzy
 msgid "<b>Please note:</b>\n"
-msgstr "Attention:\n"
+msgstr "<b>Uwaga:</b>\n"
 
 #: dialogs.py:1493
-#, fuzzy
 msgid "Append Sequence"
-msgstr "Créer une séquence"
+msgstr "Dołącz sekwencję"
 
 #: dialogs.py:1494
-#, fuzzy
 msgid "Insert Sequence at Playhead position"
-msgstr "Position actuelle de séquence/média du moniteur"
+msgstr "Wstaw sekwencję na pozycji głowicy"
 
 #: dialogs.py:1507
-#, fuzzy
 msgid "Action:"
-msgstr "Application"
+msgstr "Akcja:"
 
 #: dialogs.py:1510
-#, fuzzy
 msgid "Import:"
-msgstr "Exporter"
+msgstr "Importuj:"
 
 #: dialogs.py:1527
-#, fuzzy
 msgid "Compositors Auto Fades"
-msgstr "Compositions"
+msgstr "Kompozytory autozanikania"
 
 #: dialogs.py:1530
 msgid "Set Group Defaults"
-msgstr ""
+msgstr "Ustaw domyślne ustawienia grupowe"
 
 #: dialogs.py:1541
 msgid "Compositor Auto Fades Group"
-msgstr ""
+msgstr "Kompozytor grupy autozanikania"
 
 #: dialogs.py:1544 dialogs.py:1555 panels.py:355 panels.py:428
 #: tools/gmic.py:701
 msgid "Length:"
-msgstr "Longueur:"
+msgstr "Długość:"
 
 #: dialogs.py:1545
 msgid "Add Fade In on Creation"
-msgstr ""
+msgstr "Dodaj efekt rozjaśniania podczas tworzenia"
 
 #: dialogs.py:1556
 msgid "Add Fade Out on Creation"
-msgstr ""
+msgstr "Dodaj efekt zciemniania podczas tworzenia"
 
 #: dialogs.py:1573
 msgid "Group Auto Fades"
-msgstr ""
+msgstr "Grupa autozanikania"
 
 #: editevent.py:226
 msgid "Can't put an audio clip on a video track."
-msgstr "Impossible de place un clip audio sur une piste vidéo"
+msgstr "Nie można umieścić klipu dźwiekowego na ścieżce wideo."
 
 #: editevent.py:227 editevent.py:839 movemodes.py:607
 msgid "Track "
-msgstr "La piste "
+msgstr "Ścieżka "
 
 #: editevent.py:227
 msgid " is a video track and can't display audio only material."
-msgstr " est une piste vidéo et ne peut afficher uniquement du son"
+msgstr " jest ścieżką wideo i nie może wyświetlać materiału dźwiękowego."
 
 #: editevent.py:838
 msgid "Can't edit a locked track"
-msgstr "Impossible de modifier une piste verrouillée"
+msgstr "Nie można edytować zablokowanej ścieżki"
 
 #: editevent.py:839
 msgid " is locked. Unlock track to edit it."
-msgstr " est verrouillée. Déverrouillez la piste."
+msgstr " jest zablokowana, odblokuj ścieżkę, aby ją edytować."
 
 #: editorpersistance.py:159
 msgid "Empty"
-msgstr "Vide"
+msgstr "Pusty"
 
 #: guicomponents.py:283
 msgid "active"
-msgstr ""
+msgstr "aktywny"
 
 #: guicomponents.py:560
 msgid "default"
-msgstr "défaut"
+msgstr "domyślny"
 
 #: guicomponents.py:589
 msgid "Clip:"
-msgstr "Clip:"
+msgstr "Klip:"
 
 #: guicomponents.py:594
 msgid "Track:"
-msgstr "Piste:"
+msgstr "Ścieżka"
 
 #: guicomponents.py:597
 msgid "Pos:"
-msgstr "Pos:"
+msgstr "Poz:"
 
 #: guicomponents.py:624
 msgid "<b>Clip: </b>"
-msgstr "<b>Clip: </b>"
+msgstr "<b>Klip: </b>"
 
 #: guicomponents.py:626
 msgid "<b>Track: </b>"
-msgstr "<b>Piste: </b>"
+msgstr "<b>Ścieżka: </b>"
 
 #: guicomponents.py:628 guicomponents.py:639 guicomponents.py:721
 msgid "<b>Position:</b>"
-msgstr "<b>Position:</b>"
+msgstr "<b>Pozycja:</b>"
 
 #: guicomponents.py:635
 msgid "<b>Clip:</b>"
-msgstr "<b>Clip:</b>"
+msgstr "<b>Klip:</b>"
 
 #: guicomponents.py:637
 msgid "<b>Track:</b>"
-msgstr "<b>Piste:</b>"
+msgstr "<b>Ścieżka:</b>"
 
 #: guicomponents.py:715
 msgid "<b>Source Track:</b>"
-msgstr "<b>Piste source:</b>"
+msgstr "<b>Ścieżka źródłowa:</b>"
 
 #: guicomponents.py:718
 msgid "<b>Destination Track:</b>"
-msgstr "<b>Piste destination:</b>"
+msgstr "<b>Ścieżka docelowa:</b>"
 
 #: guicomponents.py:724
 msgid "<b>Length:</b>"
-msgstr "<b>Longueur:</b>"
+msgstr "<b>Długość:</b>"
 
 #: guicomponents.py:1092 guicomponents.py:1096
 msgid "Lock Track"
-msgstr "Verrouiller la piste"
+msgstr "Zablokuj ścieżkę"
 
 #: guicomponents.py:1093 guicomponents.py:1097
 msgid "Unlock Track"
-msgstr "Déverrouiller la piste"
+msgstr "Odblokuj ścieżkę"
 
 #: guicomponents.py:1102
 msgid "Large Height"
-msgstr "Hauteur étendue"
+msgstr "Duża wysokość"
 
 #: guicomponents.py:1107
 msgid "Normal Height"
-msgstr "Hauteur normale"
+msgstr "Normalna wysokość"
 
 #: guicomponents.py:1133 guicomponents.py:1226 guicomponents.py:1268
 msgid "Open in Filters Editor"
-msgstr "Ouvrir dans l'éditeur de filtres"
+msgstr "Otwórz w edytorze filtrów"
 
 #: guicomponents.py:1140 guicomponents.py:1270 guicomponents.py:1633
 msgid "Open in Clip Monitor"
-msgstr "Ouvrir dans le moniteur"
+msgstr "Otwórz w monitorze klipu"
 
 #: guicomponents.py:1151
 msgid "Split Audio"
-msgstr "Scinder le son"
+msgstr "Wyodrębnij dźwięk"
 
 #: guicomponents.py:1157
 msgid "Split Audio Synched"
-msgstr "Scinder le son synchronisé"
+msgstr "Wyodrębnij synchronizowany dźwięk"
 
 #: guicomponents.py:1164 guicomponents.py:1284
 msgid "Display Audio Level"
-msgstr "Afficher les niveaux de son"
+msgstr "Wyświetl poziom dźwięku"
 
 #: guicomponents.py:1167 guicomponents.py:1287
 msgid "Clear Waveform"
-msgstr "Supprimer la Waveform"
+msgstr "Oczyść przebieg"
 
 #: guicomponents.py:1175 guicomponents.py:1277
 msgid "Clear Sync Relation"
-msgstr "Supprimer la synchro"
+msgstr "Usuń powiązania synchronizacji"
 
 #: guicomponents.py:1177 guicomponents.py:1279
 msgid "Select Sync Parent Clip..."
-msgstr "Sélectionner le clip parent de synchronisation..."
+msgstr "Wybierz synchroniczny klip..."
 
 #: guicomponents.py:1205 guicomponents.py:1303
 msgid "Clip Info"
-msgstr "Info du clip"
+msgstr "Informacje o klipie"
 
 #: guicomponents.py:1254
 msgid "Strech Prev Clip to Cover"
-msgstr "Étirer le clip précédent pour couvrir"
+msgstr "Rozciągnij poprzedni klip aż do pokrycia"
 
 #: guicomponents.py:1255
 msgid "Strech Next Clip to Cover"
-msgstr "Étirer le clip suivant pour couvrir"
+msgstr "Rozciągnij następny klip aż do pokrycia"
 
 #: guicomponents.py:1319
 msgid "Open In Compositor Editor"
-msgstr "Ouvrir dans l'éditeur de composition"
+msgstr "Otwórz w Edytorze kompozytorów"
 
 #: guicomponents.py:1321
 msgid "Sync with Origin Clip"
-msgstr "Synchroniser avec le clip d'origine"
+msgstr "Synchronizuj z oryginalnym klipem"
 
 #: guicomponents.py:1327 guicomponents.py:1348
 msgid "Add Filter"
-msgstr "Ajouter un filtre"
+msgstr "Dodaj filtr"
 
 #: guicomponents.py:1370
 msgid "Add Compositor"
-msgstr "Ajouter composition"
+msgstr "Dodaj kompozytora"
 
 #: guicomponents.py:1393
 msgid "Add Blend"
-msgstr "Ajouter une fusion"
+msgstr "Dodaj przenikanie"
 
 #: guicomponents.py:1429
 msgid "Show Match Frame"
-msgstr ""
+msgstr "Pokaż pasującą klatkę"
 
 #: guicomponents.py:1433
 msgid "First Frame in Monitor"
-msgstr ""
+msgstr "Pierwsza klatka w monitorze"
 
 #: guicomponents.py:1438
 msgid "Last Frame in Monitor"
-msgstr ""
+msgstr "Ostatnia klatka w monitorze"
 
 #: guicomponents.py:1445
-#, fuzzy
 msgid "First Frame on Timeline"
-msgstr "Insérer la sélection dans le montage"
+msgstr "Pierwsza klatka na osi czasu"
 
 #: guicomponents.py:1450
-#, fuzzy
 msgid "Last Frame on Timeline"
-msgstr "Insérer la sélection dans le montage"
+msgstr "Ostatnia klatka na osi czasu"
 
 #: guicomponents.py:1457 guicomponents.py:2320
-#, fuzzy
 msgid "Clear Match Frame"
-msgstr "Image suivante"
+msgstr "Usuń pasującą klatkę"
 
 #: guicomponents.py:1467
-#, fuzzy
 msgid "Select"
-msgstr "Sélection couleur"
+msgstr "Wybierz"
 
 #: guicomponents.py:1471
 msgid "All Clips After"
-msgstr ""
+msgstr "Wszystkie klipy po"
 
 #: guicomponents.py:1476
-#, fuzzy
 msgid "All Clips Before"
-msgstr "Informations sur le clip"
+msgstr "Wszystkie klipy przed"
 
 #: guicomponents.py:1486
-#, fuzzy
 msgid "Export To Tool"
-msgstr "Exporter"
+msgstr "Eksportuj do narzędzia"
 
 #: guicomponents.py:1503 panels.py:116
 msgid "Edit"
-msgstr "Édition"
+msgstr "Edytuj"
 
 #: guicomponents.py:1515
-#, fuzzy
 msgid "Set Clip Length..."
-msgstr "Durée du clip:"
+msgstr "Ustaw długość klipu ..."
 
 #: guicomponents.py:1518
 msgid "Stretch Over Next Blank"
-msgstr ""
+msgstr "Rozciągnij ponad następnym pustym miejscem"
 
 #: guicomponents.py:1521
 msgid "Stretch Over Prev Blank"
-msgstr ""
+msgstr "Rozciągnij ponad poprzednim pustym miejscem"
 
 #: guicomponents.py:1528
 msgid "Clone Filters"
-msgstr "Duppliquer les filtres"
+msgstr "Klonuj filtry"
 
 #: guicomponents.py:1532
 msgid "From Next Clip"
-msgstr "À partir du clip suivant"
+msgstr "Z następnego klipu"
 
 #: guicomponents.py:1537
 msgid "From Previous Clip"
-msgstr "À partir du clip précédent"
+msgstr "Z poprzedniego klipu"
 
 #: guicomponents.py:1546 guicomponents.py:1566
 msgid "Mute"
-msgstr "Muet"
+msgstr "Wycisz"
 
 #: guicomponents.py:1550 guicomponents.py:1570
 msgid "Unmute"
-msgstr "Annuler muet"
+msgstr "Wyłącz wyciszenie"
 
 #: guicomponents.py:1556 guicomponents.py:1587
 msgid "Mute Audio"
-msgstr "Désactiver le son"
+msgstr "Wycisz dźwięk"
 
 #: guicomponents.py:1581
 msgid "Mute Video"
-msgstr "Désactiver la vidéo"
+msgstr "Wycisz wideo"
 
 #: guicomponents.py:1598
 msgid "Mute All"
-msgstr "Désactiver tout"
+msgstr "Wycisz wszystkie"
 
 #: guicomponents.py:1608
 msgid "Clip Color"
-msgstr "Couleur du clip"
+msgstr "Kolor klipu"
 
 #: guicomponents.py:1610
 msgid "Default"
-msgstr "Défaut"
+msgstr "Domyślny"
 
 #: guicomponents.py:1611 translations.py:498 translations.py:570
 msgid "Red"
-msgstr "Rouge"
+msgstr "Czerwony"
 
 #: guicomponents.py:1612 translations.py:499 translations.py:565
 #: translations.py:571
 msgid "Green"
-msgstr "Vert"
+msgstr "Zielony"
 
 #: guicomponents.py:1613 translations.py:500 translations.py:566
 #: translations.py:572
 msgid "Blue"
-msgstr "Bleu"
+msgstr "Niebieski"
 
 #: guicomponents.py:1614
 msgid "Orange"
-msgstr "Orange"
+msgstr "Pomarańczowy"
 
 #: guicomponents.py:1615
 msgid "Brown"
-msgstr "Brun"
+msgstr "Brązowy"
 
 #: guicomponents.py:1616
 msgid "Olive"
-msgstr "Olive"
+msgstr "Oliwkowy"
 
 #: guicomponents.py:1640 guicomponents.py:1680
 msgid "Render Slow/Fast Motion File"
-msgstr "Calculer un ralenti/un accéléré"
+msgstr "Renderuj pliku ruchu spowolnionego/przyśpieszonego"
 
 #: guicomponents.py:1642
-#, fuzzy
 msgid "Render Reverse Motion File"
-msgstr "Calculer un ralenti/un accéléré"
+msgstr "Renderuj pliku ruchu wstecznego"
 
 #: guicomponents.py:1644
 msgid "Render Proxy File"
-msgstr "Convertir en fichier proxy"
+msgstr "Renderuj plik Proxy"
 
 #: guicomponents.py:1667
 msgid "Toggle Active"
-msgstr "Basculer"
+msgstr "Przełącz aktywne"
 
 #: guicomponents.py:1668
 msgid "Reset Values"
-msgstr "Réinitialiser"
+msgstr "Zresetuj wartości"
 
 #: guicomponents.py:1670
 msgid "Move Up"
-msgstr ""
+msgstr "Podnieś"
 
 #: guicomponents.py:1671
-#, fuzzy
 msgid "Move Down"
-msgstr "Bas"
+msgstr "Opuść"
 
 #: guicomponents.py:1679
 msgid "Display In Clip Monitor"
-msgstr "Afficher dans le moniteur"
+msgstr "Wyświetl w monitorze klipu"
 
 #: guicomponents.py:1681
 msgid "Toggle Star"
-msgstr "Inverser étoile"
+msgstr "Przełącz oznaczone gwiazdką"
 
 #: guicomponents.py:1689 medialinker.py:134
 msgid "Set File Relink Path"
-msgstr ""
+msgstr "Ustaw ścieżkę relinkowanego pliku"
 
 #: guicomponents.py:1690 medialinker.py:136
 msgid "Delete File Relink Path"
-msgstr ""
+msgstr "Usuń ścieżkę relinkowanego pliku"
 
 #: guicomponents.py:1692
 msgid "Show Full Paths"
-msgstr ""
+msgstr "Pokaż pełne ścieżki"
 
 #: guicomponents.py:1758 propertyeditorbuilder.py:509
 #: propertyeditorbuilder.py:564 tools/toolsencoding.py:343
 msgid "Progressive"
-msgstr "Progressif"
+msgstr "Progresywny"
 
 #: guicomponents.py:1760 tools/toolsencoding.py:345
 msgid "Interlaced"
-msgstr "Entrelacé"
+msgstr "Z przeplotem"
 
 #: guicomponents.py:1763 tools/toolsencoding.py:348
 msgid "Fps: "
-msgstr "Ips: "
+msgstr "Klatek na sekundę: "
 
 #: guicomponents.py:1766 tools/toolsencoding.py:351
 msgid "Pixel Aspect: "
-msgstr "Proportions: "
+msgstr "Aspekt piksela: "
 
 #: guicomponents.py:1773
 msgid "Description:"
-msgstr "Description:"
+msgstr "Opis:"
 
 #: guicomponents.py:1775
 msgid "Dimensions:"
-msgstr "Dimensions"
+msgstr "Proporcje:"
 
 #: guicomponents.py:1777
 msgid "Frames per second:"
-msgstr "Images par seconde:"
+msgstr "Liczba klatek na sekundę:"
 
 #: guicomponents.py:1779
 msgid "Size:"
-msgstr "Taille:"
+msgstr "Rozmiar:"
 
 #: guicomponents.py:1781
 msgid "Pixel aspect ratio: "
-msgstr "Proportions"
+msgstr "Współczynnik kształtu piksela: "
 
 #: guicomponents.py:1783 profilesmanager.py:138
 msgid "Progressive:"
-msgstr "Progressif:"
+msgstr "Progresywny:"
 
 #: guicomponents.py:2022
-#, fuzzy
 msgid "Video:"
-msgstr "Codec vidéo:"
+msgstr "Wideo:"
 
 #: guicomponents.py:2027
-#, fuzzy
 msgid "Audio:"
-msgstr "Audio"
+msgstr ""
 
 #: guicomponents.py:2032
 msgid "Number of Tracks:"
-msgstr "Nombre de pistes:"
+msgstr "Liczba ścieżek:"
 
 #: guicomponents.py:2075
-#, fuzzy
 msgid "Frames:"
-msgstr "Tous les fichiers"
+msgstr "Klatki:"
 
 #: guicomponents.py:2150
 msgid "No Markers"
-msgstr "Pas de marqueurs"
+msgstr "Brak znaczników"
 
 #: guicomponents.py:2154
 msgid "Delete Marker"
-msgstr "Supprimer le marqueur"
+msgstr "Usuń znacznik"
 
 #: guicomponents.py:2156
 msgid "Delete All Markers"
-msgstr "Supprimer tous les marqueurs"
+msgstr "Usuń wszystkie znaczniki"
 
 #: guicomponents.py:2164
 msgid "Maximize Tracks"
-msgstr "Étendre les pistes"
+msgstr "Maksymalizuj ścieżki"
 
 #: guicomponents.py:2165
 msgid "Maximize Video Tracks"
-msgstr "Étendre les pistes vidéo"
+msgstr "Maksymalizuj ścieżki wideo"
 
 #: guicomponents.py:2166
 msgid "Maximize Audio Tracks"
-msgstr "Étendre les pistes audio"
+msgstr "Maksymalizuj ścieżki dźwiękowe"
 
 #: guicomponents.py:2168
 msgid "Minimize Tracks"
-msgstr "Réduire les pistes"
+msgstr "Zminimalizuj ścieżki"
 
 #: guicomponents.py:2170
 msgid "Activate All Tracks"
-msgstr ""
+msgstr "Aktywuj wszystkie ściezki"
 
 #: guicomponents.py:2171
 msgid "Activate Only Current Top Active Track"
-msgstr ""
+msgstr "Aktywuj tylko bieżąco aktywną ścieżkę"
 
 #: guicomponents.py:2173
 msgid "Vertical Shrink Timeline"
-msgstr ""
+msgstr "Zcieśnij w pionie oś czasu"
 
 #: guicomponents.py:2188
-#, fuzzy
 msgid "Display Clip Media Thumbnails"
-msgstr "Afficher dans le moniteur"
+msgstr "Pokazuj miniatury multimediów"
 
 #: guicomponents.py:2197
 msgid "Snapping On"
-msgstr ""
+msgstr "Zablokuj"
 
 #: guicomponents.py:2204
 msgid "Show Magnet Icon"
-msgstr ""
+msgstr "Pokaż ikonę magnesu"
 
 #: guicomponents.py:2213
-#, fuzzy
 msgid "Display All Audio Levels"
-msgstr "Afficher les niveaux de son"
+msgstr "Wyświetl wszystkie poziomy dźwięku"
 
 #: guicomponents.py:2216
-#, fuzzy
 msgid "Display Audio Levels On Request"
-msgstr "Afficher les niveaux de son"
+msgstr "Wyświetl poziomy dźwięku na żądanie"
 
 #: guicomponents.py:2236
 msgid "Image"
-msgstr "Image"
+msgstr "Obraz"
 
 #: guicomponents.py:2238
 msgid "Vectorscope"
-msgstr "Vectorscope"
+msgstr "Wektorskop"
 
 #: guicomponents.py:2240
 msgid "RGB Parade"
-msgstr "RVB Parade"
+msgstr "Parada RGB"
 
 #: guicomponents.py:2244
-#, fuzzy
 msgid "Overlay Opacity"
-msgstr "Opacité"
+msgstr "Przeźroczystość nakładania"
 
 #: guicomponents.py:2249
 msgid "100%"
@@ -2489,142 +2392,131 @@ msgstr ""
 
 #: guicomponents.py:2289
 msgid "Trim View On"
-msgstr ""
+msgstr "Włącz przycinanie widoku"
 
 #: guicomponents.py:2294
 msgid "Trim View Single Side Edits Only"
-msgstr ""
+msgstr "Przycinanie widoku tylko pojedynczych edycji"
 
 #: guicomponents.py:2299
 msgid "Trim View Off"
-msgstr ""
+msgstr "Wyłącz przycinanie widoku"
 
 #: guicomponents.py:2315
 msgid "Set Current Clip Frame Match Frame"
-msgstr ""
+msgstr "Dopasuj bieżącą klatkę do klatki klipu"
 
 #: guicomponents.py:2391
-#, fuzzy
 msgid "All Files"
-msgstr "Tous les fichiers"
+msgstr "Wszystkie pliki"
 
 #: guicomponents.py:2395
-#, fuzzy
 msgid "Video Files"
-msgstr " fichier(s) vidéo"
+msgstr "Pliki wideo"
 
 #: guicomponents.py:2399
-#, fuzzy
 msgid "Audio Files"
-msgstr "Filtres audio"
+msgstr "Pliki dźwiękowe"
 
 #: guicomponents.py:2403
 msgid "Graphics Files"
-msgstr ""
+msgstr "Pliki graficzne"
 
 #: guicomponents.py:2407
-#, fuzzy
 msgid "Image Sequences"
-msgstr "Ajouter une séquence d'images..."
+msgstr "Sekwencje obrazów"
 
 #: guicomponents.py:2411
-#, fuzzy
 msgid "Pattern Producers"
-msgstr "Générer un motif de production"
+msgstr "Producenci wzorów"
 
 #: guicomponents.py:2424
-#, fuzzy
 msgid "2 Columns"
-msgstr "Volume"
+msgstr "2 kolumny"
 
 #: guicomponents.py:2429
-#, fuzzy
 msgid "3 Columns"
-msgstr "Volume"
+msgstr "3 kolumny"
 
 #: guicomponents.py:2434
-#, fuzzy
 msgid "4 Columns"
-msgstr "Volume"
+msgstr "4 kolumny"
 
 #: guicomponents.py:2439
-#, fuzzy
 msgid "5 Columns"
-msgstr "Volume"
+msgstr "5 kolumn"
 
 #: guicomponents.py:2444
-#, fuzzy
 msgid "6 Columns"
-msgstr "Volume"
+msgstr "6 kolumn"
 
 #: guicomponents.py:2449
-#, fuzzy
 msgid "7 Columns"
-msgstr "Volume"
+msgstr "7 kolumn"
 
 #: movemodes.py:606
 msgid "Can't do edit on a locked track"
-msgstr "Impossible de modifier une piste verrouillée"
+msgstr "Nie można edytować zablokowanej ścieżki"
 
 #: movemodes.py:607
 msgid " is locked. Unlock track to edit it.\n"
-msgstr " est verrouillée. Déverrouillez la piste.\n"
+msgstr " jest zablokowana, odblokuj ścieżkę, aby móc ją edytować.\n"
 
 #: panels.py:55
 msgid "Add Media File to Bin"
-msgstr "Ajouter un média au bin"
+msgstr "Dodaj plik multimedialny do pojemnika"
 
 #: panels.py:56
 msgid "Delete Media File from Bin"
-msgstr "Supprimer un média du bin"
+msgstr "Usuń plik multimedialny z pojemnika"
 
 #: panels.py:61
 msgid "Render Proxy Files For Selected Media"
-msgstr "Créer des fichiers proxy pour les médias sélectionnés"
+msgstr "Renderuj pliki Proxy dla wybranych multimediów"
 
 #: panels.py:100
 msgid "Add Bin to Project"
-msgstr "Ajouter un bin au projet"
+msgstr "Dodaj pojemnik do projektu"
 
 #: panels.py:101
 msgid "Delete Bin from Project"
-msgstr "Supprimer un bin du projet"
+msgstr "Usuń pojemnik z projektu"
 
 #: panels.py:110
 msgid "Bins"
-msgstr "Bins"
+msgstr "Pojemniki"
 
 #: panels.py:117
 msgid "Add new Sequence to Project"
-msgstr "Ajouter une nouvelle séquence au projet"
+msgstr "Dodaj nową sekwencję do projektu"
 
 #: panels.py:118
 msgid "Delete Sequence from Project"
-msgstr "Supprimer une séquence du projet"
+msgstr "Usuń sekwencję z projektu"
 
 #: panels.py:119
 msgid "Start editing Sequence"
-msgstr "Commencer le montage de la séquence"
+msgstr "Rozpocznij edytowanie sekwencji"
 
 #: panels.py:133
 msgid "Sequences"
-msgstr "Séquences"
+msgstr "Sekwencje"
 
 #: panels.py:136
 msgid "Select folder for new thumbnails."
-msgstr "Sélectionner un dossier pour les nouvelles miniatures"
+msgstr "Wybierz folder dla nowych miniatur."
 
 #: panels.py:137
 msgid "Old thumbnails in this or other projects will"
-msgstr "Les anciennes miniatures des projets seront"
+msgstr "Stare miniatury w tym lub innych projektach będą"
 
 #: panels.py:138
 msgid ""
 " still be available,\n"
 "this only affects thumnails that are created for new media.\n"
 msgstr ""
-" toujours accessibles,\n"
-"ça affecte seulement les miniatures crées pour les nouveaux médias.\n"
+"nadal dostępne,\n"
+"dotyczy to tylko miniatur, utworzonych dla nowych multimediów.\n"
 
 #: panels.py:139
 msgid ""
@@ -2632,23 +2524,23 @@ msgid ""
 "Setting your home folder as thumbnails folder is not allowed."
 msgstr ""
 "\n"
-"Le répertoire home ne peut pas être celui destiné aux miniatures."
+"Ustawianie folderu domowego jako folderu miniatur nie jest dozwolone."
 
 #: panels.py:155
 msgid "Select folder for rendered clips."
-msgstr "Sélectionnez un dossier pour les clips de rendu."
+msgstr "Wybierz folder dla renderowanych klipów."
 
 #: panels.py:156
 msgid "Old rendered clips in this or other projects will"
-msgstr "Les anciens clips de rendu des projets seront"
+msgstr "Poprzednio wyrenderowane klipy w tym czy innym projekcie będą"
 
 #: panels.py:157
 msgid ""
 " still be available,\n"
 "this only affects rendered files that are created from now on.\n"
 msgstr ""
-" toujours accessibles,\n"
-"ça affecte seulement les fichiers de rendu crées à partir de maintenant.\n"
+" nadal dostępne,\n"
+"to dotyczy tylko renderowanych plików, które będą tworzone od teraz.\n"
 
 #: panels.py:158
 msgid ""
@@ -2656,235 +2548,229 @@ msgid ""
 "Setting your home folder as folder for rendered clips is not allowed."
 msgstr ""
 "\n"
-"Le répertoire home ne peut pas être celui destiné aux clips de rendu"
+"Ustawianie folderu domowego jako folderu dla renderowanych klipów jest "
+"niedozwolone."
 
 #: panels.py:242 rendergui.py:679 tools/toolsencoding.py:54
 msgid "Name:"
-msgstr "Nom:"
+msgstr "Nazwa:"
 
 #: panels.py:243
 msgid "Path:"
-msgstr "Chemin:"
+msgstr "Ścieżka:"
 
 #: panels.py:244 panels.py:278
 msgid "Image Size:"
-msgstr "Taille de l'image:"
+msgstr "Rozmiar obrazu:"
 
 #: panels.py:245 tools/batchrendering.py:1002
 msgid "Frames Per Second:"
-msgstr "Images par seconde:"
+msgstr "Liczba klatek na sekundę:"
 
 #: panels.py:246
 msgid "Playtime:"
-msgstr "Durée:"
+msgstr "Czas odtwarzania:"
 
 #: panels.py:247 panels.py:280
 msgid "Video Codec:"
-msgstr "Codec vidéo:"
+msgstr "Kodek obrazu:"
 
 #: panels.py:248 panels.py:281
 msgid "Audio Codec:"
-msgstr "Codec audio:"
+msgstr "Kodek dźwięku:"
 
 #: panels.py:249
 msgid "Audio Channels:"
-msgstr "Canaux audio:"
+msgstr "Kanały dźwiękowe:"
 
 #: panels.py:250
 msgid "Audio Sample Rate:"
-msgstr "Fréquence d'échantillonage:"
+msgstr "Częstotliwość próbkowania dźwięku:"
 
 #: panels.py:251
-#, fuzzy
 msgid "Best Profile:"
-msgstr "Profil de sortie:"
+msgstr "Najlepszy profil:"
 
 #: panels.py:252
-#, fuzzy
 msgid "Matches Project Profile:"
-msgstr "Utiliser le profil du projet:"
+msgstr "Dopasowany plik projektu:"
 
 #: panels.py:275 tools/gmic.py:699
-#, fuzzy
 msgid "Mark In:"
-msgstr "Point d'entrée"
+msgstr "Znacznik początkowy:"
 
 #: panels.py:276 tools/gmic.py:700
-#, fuzzy
 msgid "Mark Out:"
-msgstr "Point de sortie"
+msgstr "Znacznik końcowy:"
 
 #: panels.py:277
 msgid "Clip Length:"
-msgstr "Durée du clip:"
+msgstr "Długość klipu:"
 
 #: panels.py:279
 msgid "Media Path:"
-msgstr "Chemin du média:"
+msgstr "Ścieżka multimediów:"
 
 #: panels.py:309
 msgid "Composite clip on:"
-msgstr "Clip de composition sur:"
+msgstr "Klip złożony na:"
 
 #: panels.py:322 panels.py:415 rendergui.py:692 tools/toolsencoding.py:67
 msgid "Type:"
-msgstr "Type:"
+msgstr "Typ:"
 
 #: panels.py:331
 msgid "Wipe Pattern:"
-msgstr ""
+msgstr "Wzorzec wytarcia:"
 
 #: panels.py:337
 msgid "Dip Color:"
-msgstr ""
+msgstr "Kolor skąpania:"
 
 #: panels.py:361
-#, fuzzy
 msgid "First Clip Out Handle:"
-msgstr "À partir des poignées du clip:"
+msgstr "Pierwszy klip w uchwycie:"
 
 #: panels.py:362 panels.py:365
-#, fuzzy
 msgid " frame(s)"
-msgstr "Tous les fichiers"
+msgstr " klatki(ek)"
 
 #: panels.py:364
-#, fuzzy
 msgid "Second Clip In Handle:"
-msgstr "Jusqu'au poignées du clip:"
+msgstr "Drugi klip w uchwycie:"
 
 #: panels.py:401 panels.py:455
 msgid "Transition Options"
-msgstr "Options de transition"
+msgstr "Opcje przejścia"
 
 #: panels.py:402 panels.py:456
 msgid "Encoding"
-msgstr "Encodage"
+msgstr "Kodowanie"
 
 #: panels.py:403
 msgid "Media Overlap info"
-msgstr ""
+msgstr "Informacje o nakładających się multimediach"
 
 #: panels.py:420
 msgid "Color:"
-msgstr "Couleur:"
+msgstr "Kolor:"
 
 #: persistance.py:373
 msgid "Building sequence "
-msgstr "Construction de la séquence "
+msgstr "Tworzenie sekwencji "
 
 #: persistance.py:410
 msgid "Loading icons"
-msgstr "Chargement des icônes"
+msgstr "Wczytywanie ikon"
 
 #: projectdata.py:79
 msgid "untitled"
-msgstr "sans titre"
+msgstr "bez_nazwy"
 
 #: projectdata.py:205
 msgid "bin_"
-msgstr "bin_"
+msgstr "pojemnik_"
 
 #: projectdata.py:512
 msgid "Created using dialog"
-msgstr "Crée en utilisant le dialogue"
+msgstr "Utworzono za pomocą okna dialogowego"
 
 #: projectdata.py:514
 msgid "Created using Save As... "
-msgstr "Crér en utilisant Enregister sous..."
+msgstr "Utworzono przy użyciu Zapisz jako..."
 
 #: projectdata.py:516
 msgid "Saved "
-msgstr "Sauvegardé "
+msgstr "Zapisano "
 
 #: projectdata.py:519
 msgid "Saved as "
-msgstr "Sauvegardé sous "
+msgstr "Zapisano jako "
 
 #: projectdata.py:521
 msgid "Rendered "
-msgstr "Rendu terminé"
+msgstr "Wyrenderowano "
 
 #: projectdata.py:523
 msgid "Saved backup snapshot"
-msgstr ""
+msgstr "Zapisano kopię migawkową"
 
 #: render.py:190
 msgid "To Queue"
-msgstr "File de rendu"
+msgstr "Do kolejki"
 
 #: render.py:191
 msgid "Save Project in Render Queue"
-msgstr "Enregistrer le projet dans la file de rendu"
+msgstr "Zapisz projekt w kolejce renderowania"
 
 #: render.py:194
 msgid "Select render range"
-msgstr "Sélectionnez la zone de rendu"
+msgstr "Wybierz zakres renderowania"
 
 #: render.py:195
 msgid "Reset all render options to defaults"
-msgstr "Réinitialisez les options de rendu"
+msgstr "Zresetuj wszystkie opcje renderowania do wartości domyślnych"
 
 #: render.py:196
 msgid "Begin Rendering"
-msgstr "Démarrer le rendu"
+msgstr "Rozpocznij renderowanie"
 
 #: render.py:221
 msgid "<b>Output File: </b>"
-msgstr "<b>Fichier de sortie: </b>"
+msgstr "<b>Plik wyjściowy: </b>"
 
 #: render.py:223
 msgid "<b>Estimated time left: </b>"
-msgstr "<b>Estimation du temps restant: </b>"
+msgstr "<b>Przewidywany czas: </b>"
 
 #: render.py:225
 msgid "<b>Render time: </b>"
-msgstr "<b>Durée du rendu: </b>"
+msgstr "<b>Czas renderowania: </b>"
 
 #: render.py:242 render.py:268
 msgid "<b>Render Time: </b>"
-msgstr "<b>Durée du rendu: </b>"
+msgstr "<b>Czas Renderowania: </b>"
 
 #: render.py:248 render.py:266
 msgid "<b>Estimated Time Left: </b>"
-msgstr "<b>Estimation temps restant: </b>"
+msgstr "<b>Przewidywany czas: </b>"
 
 #: render.py:270
 msgid "Render Complete!"
-msgstr "Rendu terminé!"
+msgstr "Zakończono renderowanie!"
 
 #: render.py:386 render.py:482
 msgid "A File with given path exists!"
-msgstr "Un fichier avec ce chemin existe!"
+msgstr "Plik o podanej ścieżce już istnieje!"
 
 #: render.py:387 render.py:483
 msgid ""
 "It is not allowed to render Motion Files with same paths as existing files.\n"
 "Select another name for file."
 msgstr ""
-"Vous ne pouvez pas utiliser le même chemin que ceux des fichiers existants.\n"
-"Choisissez une autre nom de fichier."
+"Nie można renderować plików ruchu z takimi samymi ścieżkami, jak dla "
+"istniejących plików.\n"
+"Wybierz inną nazwę pliku."
 
 #: render.py:446
 msgid "Rendering Motion Clip"
-msgstr "Rendre un clip"
+msgstr "Renderowanie klipu ruchu"
 
 #: render.py:543
-#, fuzzy
 msgid "Rendering Reverse Clip"
-msgstr "Rendre un clip de transition"
+msgstr "Renderowanie klipu wstecznego"
 
 #: render.py:593
 msgid "Rendering Transition Clip"
-msgstr "Rendre un clip de transition"
+msgstr "Renderowanie klipu przejść"
 
 #: syncsplitevent.py:136
 msgid "Sync parent clips must be on track V1"
-msgstr "Les parents de synchos doivent être sur la piste V1"
+msgstr "Synchronizowane klipy nadrzędne muszą się znajdować na ścieżce V1"
 
 #: syncsplitevent.py:137
 msgid "Selected sync parent clip is on track "
-msgstr "Les parents de synchro sélectionnés sont sur la piste "
+msgstr "Wybrany do synchronizacji klip nadrzędny znajduje się na ścieżce "
 
 #: syncsplitevent.py:137
 msgid ""
@@ -2892,532 +2778,527 @@ msgid ""
 "You can only sync to clips that are on track V1."
 msgstr ""
 ".\n"
-"Vous ne pouvez synchroniser que des clips se trouvant sur la piste V1."
+"Można synchronizować tylko z klipami znajdującymi się na ścieżce V1."
 
 #: translations.py:111 translations.py:416
 msgid "Color"
-msgstr "Couleur"
+msgstr "Kolor"
 
 #: translations.py:112
 msgid "Color Effect"
-msgstr "Effet de couleur"
+msgstr "Efekt koloru"
 
 #: translations.py:113
 msgid "Audio"
-msgstr "Audio"
+msgstr ""
 
 #: translations.py:114
 msgid "Audio Filter"
-msgstr "Filtres audio"
+msgstr "Filtr dźwięku"
 
 #: translations.py:115 translations.py:168 translations.py:381
 #: translations.py:458
 msgid "Blur"
-msgstr "Flou"
+msgstr "Rozmycie"
 
 #: translations.py:116 translations.py:528 propertyeditorbuilder.py:524
 #: propertyeditorbuilder.py:579
 msgid "Distort"
-msgstr "Distortion"
+msgstr "Zniekształcenie"
 
 #: translations.py:117
 msgid "Alpha"
-msgstr "Alpha"
+msgstr "Alfa"
 
 #: translations.py:118
 msgid "Movement"
-msgstr "Mouvement"
+msgstr "Ruch"
 
 #: translations.py:119
 msgid "Transform"
-msgstr "Transformation"
+msgstr "Przekształć"
 
 #: translations.py:120 translations.py:477
 msgid "Edge"
-msgstr "Bordure"
+msgstr "Kontur"
 
 #: translations.py:121
 msgid "Fix"
-msgstr "Amélioration"
+msgstr "Korekta"
 
 #: translations.py:122
 msgid "Artistic"
-msgstr "Artistique"
+msgstr "Artystyczne"
 
 #: translations.py:126
 msgid "Alpha Gradient"
-msgstr "Dégradé alpha"
+msgstr "Gradient alfa"
 
 #: translations.py:127
 msgid "Crop"
-msgstr "Recouper"
+msgstr "Przycinanie"
 
 #: translations.py:128
 msgid "Alpha Shape"
-msgstr "Masque alpha"
+msgstr "Kształt alfa"
 
 #: translations.py:130 translations.py:266
 msgid "Volume"
-msgstr "Volume"
+msgstr "Głośność"
 
 #: translations.py:131
 msgid "Pan"
-msgstr "Pan"
+msgstr "Panorama"
 
 #: translations.py:132
 msgid "Pan Keyframed"
-msgstr "Point clef de Pan"
+msgstr "Panorama względem klatki kluczowej"
 
 #: translations.py:133
 msgid "Mono to Stereo"
-msgstr "Mono vers stéréo"
+msgstr "Mono na stereo"
 
 #: translations.py:134
 msgid "Swap Channels"
-msgstr "Inverser les canaux"
+msgstr "Zamień kanały"
 
 #: translations.py:136
 msgid "Pitchshifter"
-msgstr "Modifier la hauteur"
+msgstr "Przesuwak skokowy"
 
 #: translations.py:137
 msgid "Distort - Barry's Satan"
-msgstr "Distortion - Barry's Satan"
+msgstr "Zniekształcaj - szatan Barry'ego"
 
 #: translations.py:138
 msgid "Frequency Shift - Bode/Moog"
-msgstr "Modifier la fréquence - Bode/moog"
+msgstr "Przesunięcie częstotliwości - Bode / Moog"
 
 #: translations.py:139
 msgid "Equalize - DJ 3-band"
-msgstr "Egaliseur - DJ 3-bandes"
+msgstr "Wyrównanie - DJ 3-pasmowe"
 
 #: translations.py:140
 msgid "Flanger - DJ"
-msgstr "Flanger - DJ"
+msgstr ""
 
 #: translations.py:141
 msgid "Declipper"
-msgstr "Declipper"
+msgstr "Trzaski"
 
 #: translations.py:142
 msgid "Delayorama"
-msgstr "Delayorama"
+msgstr ""
 
 #: translations.py:143
 msgid "Distort - Diode Processor"
-msgstr "Distortion - Diode Processor"
+msgstr "Zniekształcaj - procesor diodowy"
 
 #: translations.py:144
 msgid "Distort - Foldover"
-msgstr "Distortion - Foldover"
+msgstr "Zniekształcaj - Foldover"
 
 #: translations.py:145
 msgid "Highpass - Butterworth"
-msgstr "Filtre passe-haut - Butterworth"
+msgstr "Wysokopasmowy - Butterworth"
 
 #: translations.py:146
 msgid "Lowpass - Butterworth"
-msgstr "Filtre passe-bas - Butterworth"
+msgstr "Niskopasmowy - Butterworth"
 
 #: translations.py:147
 msgid "GSM Simulator"
-msgstr "Simulation de GSM"
+msgstr "Symulator GSM"
 
 #: translations.py:148
 msgid "Reverb - GVerb"
-msgstr "Réverbération - GVerb"
+msgstr "Pogłos - GVerb"
 
 #: translations.py:149
 msgid "Noise Gate"
-msgstr "Noise Gate"
+msgstr "Brama hałasu"
 
 #: translations.py:150
 msgid "Bandpass"
-msgstr "Filtre passe-bande"
+msgstr "Pasmowy"
 
 #: translations.py:151
 msgid "Pitchscaler - High Quality"
-msgstr "Etalonner la hauteur - HQ"
+msgstr "Pitchscaler - wysoka jakość"
 
 #: translations.py:152
 msgid "Equalize - Multiband"
-msgstr "Égaliseur multibandes"
+msgstr "Wyrównanie - wielozakresowe"
 
 #: translations.py:153
 msgid "Reverb - Plate"
-msgstr "Réverbération - Plate"
+msgstr "Pogłos - płyta"
 
 #: translations.py:154
 msgid "Distort - Pointer cast"
-msgstr "Distortion - Pointeur"
+msgstr "Zniekształcenie - wskaźnik rzutowania"
 
 #: translations.py:155
 msgid "Rate Shifter"
-msgstr "Modifier le débit"
+msgstr "Zmiana prędkości"
 
 #: translations.py:156
 msgid "Signal Shifter"
-msgstr "Modifier le signal"
+msgstr "Zmiana sygnału"
 
 #: translations.py:157
 msgid "Distort - Sinus Wavewrap"
-msgstr "Distortion - Sinus Wavewrap"
+msgstr "Zniekształcenie - Sinus Wavewra"
 
 #: translations.py:158
 msgid "Vinyl Effect"
-msgstr "Effet vinyle"
+msgstr "Efekt winylowy"
 
 #: translations.py:159
 msgid "Chorus - Multivoice"
-msgstr "Choeur - Multivoix"
+msgstr "Chorus - wielogłos"
 
 #: translations.py:161
 msgid "Charcoal"
-msgstr "Fusain"
+msgstr "Węgiel drzewny"
 
 #: translations.py:162
 msgid "Glow"
-msgstr "Flou lumineux"
+msgstr "Poświata"
 
 #: translations.py:163
 msgid "Old Film"
-msgstr "Vieux film"
+msgstr "Stary film"
 
 #: translations.py:164
 msgid "Scanlines"
-msgstr "Lignes de balayage"
+msgstr "Skanowanie"
 
 #: translations.py:165
 msgid "Cartoon"
-msgstr "Dessin animé"
+msgstr "Rysunek"
 
 #: translations.py:167
 msgid "Pixelize"
-msgstr "Pixéliser"
+msgstr "Pikselizacja"
 
 #: translations.py:169
 msgid "Grain"
-msgstr "Grain"
+msgstr "Ziarno"
 
 #: translations.py:171
 msgid "Grayscale"
-msgstr "Niveau de gris"
+msgstr "Skala szarości"
 
 #: translations.py:172 translations.py:396 translations.py:398
 msgid "Contrast"
-msgstr "Contraste"
+msgstr "Kontrast"
 
 #: translations.py:173 translations.py:399 mlttransitions.py:151
 msgid "Saturation"
-msgstr "Saturation"
+msgstr "Nasycenie"
 
 #: translations.py:174 translations.py:380 translations.py:432
 #: translations.py:457 translations.py:531 translations.py:535
 msgid "Invert"
-msgstr "Inverser"
+msgstr "Odwróć"
 
 #: translations.py:175 translations.py:400 mlttransitions.py:147
 msgid "Hue"
-msgstr "Teinte"
+msgstr "Odcień"
 
 #: translations.py:176 translations.py:397 translations.py:401
 #: translations.py:402
 msgid "Brightness"
-msgstr "Luminosité"
+msgstr "Jasność"
 
 #: translations.py:177 translations.py:578
 msgid "Sepia"
-msgstr "Sépia"
+msgstr ""
 
 #: translations.py:178
 msgid "Tint"
-msgstr "Teinte"
+msgstr "Zabarwienie"
 
 #: translations.py:179
 msgid "White Balance"
-msgstr "Balance des blancs"
+msgstr "Balans bieli"
 
 #: translations.py:180 translations.py:482
 msgid "Levels"
-msgstr "Niveaux"
+msgstr "Poziomy"
 
 #: translations.py:182
 msgid "Color Clustering"
-msgstr "Regroupement couleur"
+msgstr "Klasteryzacja kolorów"
 
 #: translations.py:183
 msgid "Chroma Hold"
-msgstr "Maintenir chroma"
+msgstr "Zachowanie chrominancji"
 
 #: translations.py:184
 msgid "Three Layer"
-msgstr "Trois couches"
+msgstr "Trójwarstwowy"
 
 #: translations.py:185
 msgid "Threshold0r"
-msgstr "Seuil - Frei0r"
+msgstr "Próg0r"
 
 #: translations.py:186
 msgid "Technicolor"
-msgstr "Technicolor"
+msgstr ""
 
 #: translations.py:187
 msgid "Primaries"
-msgstr "Primaires"
+msgstr "Podstawowe kolory"
 
 #: translations.py:188
 msgid "Color Distance"
-msgstr "Distance colorimétrique"
+msgstr "Odległość barw"
 
 #: translations.py:189 translations.py:418 translations.py:423
 msgid "Threshold"
-msgstr "Seuil"
+msgstr "Próg"
 
 #: translations.py:191
 msgid "Waves"
-msgstr "Vagues"
+msgstr "Fale"
 
 #: translations.py:192
 msgid "Lens Correction"
-msgstr "Correction optique"
+msgstr "Korekcja obiektywu"
 
 #: translations.py:193 translations.py:430
 msgid "Flip"
-msgstr "Retournement"
+msgstr "Odwróć"
 
 #: translations.py:194
 msgid "Mirror"
-msgstr "Mirroir"
+msgstr "Lustro"
 
 #: translations.py:195
 msgid "V Sync"
-msgstr "Synchro verticale"
+msgstr "Synchronizacja V"
 
 #: translations.py:197
 msgid "Edge Glow"
-msgstr "Bords diffus"
+msgstr "Krawędź blasku"
 
 #: translations.py:198
 msgid "Sobel"
-msgstr "Sobel"
+msgstr ""
 
 #: translations.py:200
 msgid "Denoise"
-msgstr "Réduction du bruit"
+msgstr "Usuwanie szumu"
 
 #: translations.py:201 translations.py:505
 msgid "Sharpness"
-msgstr "Netteté"
+msgstr "Ostrość"
 
 #: translations.py:202
 msgid "Letterbox"
-msgstr "Letterbox"
+msgstr ""
 
 #: translations.py:204
 msgid "Baltan"
-msgstr "Baltan"
+msgstr ""
 
 #: translations.py:205
 msgid "Vertigo"
-msgstr "Vertigo"
+msgstr "Zawrót głowy"
 
 #: translations.py:206
 msgid "Nervous"
-msgstr "Nerveux"
+msgstr "Nerwowy"
 
 #: translations.py:207
 msgid "Freeze"
-msgstr "Geler"
+msgstr "Zamrażanie"
 
 #: translations.py:209 translations.py:426
 msgid "Rotate"
-msgstr "Rotation"
+msgstr "Obracanie"
 
 #: translations.py:210
 msgid "Shear"
-msgstr "Cisaillement"
+msgstr "Ścinanie"
 
 #: translations.py:211
 msgid "Translate"
-msgstr "Translation"
+msgstr "Translacja"
 
 #: translations.py:214
 msgid "Color Select"
-msgstr "Sélection couleur"
+msgstr "Wybór koloru"
 
 #: translations.py:215
 msgid "Alpha Modify"
-msgstr "Modifier aplha"
+msgstr "Modyfikacja alfa"
 
 #: translations.py:216
 msgid "Spill Supress"
-msgstr "Nettoyage de masque"
+msgstr "Tłumienie wycieku"
 
 #: translations.py:217
 msgid "RGB Noise"
-msgstr "Bruit RVB"
+msgstr "Hałas RGB"
 
 #: translations.py:218
 msgid "Box Blur"
-msgstr "Flou encadré"
+msgstr "Rozmycie polowe"
 
 #: translations.py:219
 msgid "IRR Blur"
-msgstr "Flou IRR"
+msgstr "Rozmycie IRR"
 
 #: translations.py:220
 msgid "Color Halftone"
-msgstr "Demi-teintes"
+msgstr "Kolor półtonów"
 
 #: translations.py:221
 msgid "Dither"
-msgstr "Tremblement"
+msgstr "Dygotanie"
 
 #: translations.py:222
 msgid "Vignette"
-msgstr "Vignettage"
+msgstr "Winieta"
 
 #: translations.py:223
 msgid "Emboss"
-msgstr "Estampage"
+msgstr "Wyrycie"
 
 #: translations.py:224
 msgid "3 Point Balance"
-msgstr "Balance à 3 points"
+msgstr "3-punktowa równowaga"
 
 #: translations.py:225
 msgid "Colorize"
-msgstr "Colorier"
+msgstr "Koloryzacja"
 
 #: translations.py:226
 msgid "Brightness Keyframed"
-msgstr "Luminosité par images-clef"
+msgstr "Jasność względem klatki kluczowej"
 
 #: translations.py:227
 msgid "RGB Adjustment"
-msgstr "Ajuster RVB"
+msgstr "Dostosowanie RGB"
 
 #: translations.py:228
 msgid "Color Tap"
-msgstr "Color Tap"
+msgstr "Kolorowy kran"
 
 #: translations.py:229
 msgid "Posterize"
-msgstr "Postérisation"
+msgstr "Posteryzacja"
 
 #: translations.py:230
 msgid "Soft Glow"
-msgstr "Diffusion douce"
+msgstr "Miękki blask"
 
 #: translations.py:231
 msgid "Newspaper"
-msgstr "Newspaper"
+msgstr "Gazeta"
 
 #: translations.py:234
-#, fuzzy
 msgid "Luma Key"
-msgstr "Fichier Luma:"
+msgstr "Klucz luminancji"
 
 #: translations.py:235
-#, fuzzy
 msgid "Chroma Key"
-msgstr "Maintenir chroma"
+msgstr "Klucz chrominancji"
 
 #: translations.py:236 mlttransitions.py:126
 msgid "Affine"
-msgstr "Affiner"
+msgstr "Afiniczne"
 
 #: translations.py:237
-#, fuzzy
 msgid "Color Adjustment"
-msgstr "Ajuster RVB"
+msgstr "Dostosowanie barw"
 
 #: translations.py:238
-#, fuzzy
 msgid "Color Grading"
-msgstr "Regroupement couleur"
+msgstr "Kolorystyka"
 
 #: translations.py:239
 msgid "Curves"
-msgstr ""
+msgstr "Krzywe"
 
 #: translations.py:240
 msgid "Lift Gain Gamma"
-msgstr ""
+msgstr "Podnoszenie wzmocnienia gamma"
 
 #: translations.py:241
-#, fuzzy
 msgid "Image Grid"
-msgstr "Taille de l'image:"
+msgstr "Siatka obrazu"
 
 #: translations.py:244
 msgid "Color Lift Gain Gamma"
-msgstr ""
+msgstr "Wzmocnienie barwy Gamma"
 
 #: translations.py:250 translations.py:433
 msgid "Position"
-msgstr "Position"
+msgstr "Pozycja"
 
 #: translations.py:251
 msgid "Grad width"
-msgstr "Grad width"
+msgstr "Szerokość przejścia"
 
 #: translations.py:252 translations.py:264 translations.py:427
 msgid "Tilt"
-msgstr "Incliner"
+msgstr "Przechylenie"
 
 #: translations.py:253 translations.py:562
 msgid "Min"
-msgstr "Min"
+msgstr ""
 
 #: translations.py:254 translations.py:561
 msgid "Max"
-msgstr "Max"
+msgstr ""
 
 #: translations.py:255 translations.py:453
 msgid "Left"
-msgstr "Gauche"
+msgstr "Lewo"
 
 #: translations.py:256 translations.py:454
 msgid "Right"
-msgstr "Droite"
+msgstr "Prawo"
 
 #: translations.py:257 translations.py:455
 msgid "Top"
-msgstr "Haut"
+msgstr "Góra"
 
 #: translations.py:258 translations.py:456
 msgid "Bottom"
-msgstr "Bas"
+msgstr "Dół"
 
 #: translations.py:259
 msgid "Shape"
-msgstr "Forme"
+msgstr "Kształt"
 
 #: translations.py:260
 msgid "Pos X"
-msgstr "Pos X"
+msgstr "Poz X"
 
 #: translations.py:261
 msgid "Pos Y"
-msgstr "Pos Y"
+msgstr "Poz Y"
 
 #: translations.py:262
 msgid "Size X"
-msgstr "Taille X"
+msgstr "Rozmiar X"
 
 #: translations.py:263
 msgid "Size Y"
-msgstr "Taille Y"
+msgstr "Rozmiar Y"
 
 #: translations.py:265
 msgid "Trans. Width"
-msgstr "Trans. largeur"
+msgstr "Szerokość przejścia"
 
 #: translations.py:267 translations.py:268
 msgid "Left/Right"
-msgstr "Gauche/Droite"
+msgstr "Lewo/Prawo"
 
 #: translations.py:269 translations.py:272 translations.py:275
 #: translations.py:277 translations.py:281 translations.py:285
@@ -3429,384 +3310,384 @@ msgstr "Gauche/Droite"
 #: translations.py:360 translations.py:362 translations.py:368
 #: translations.py:375
 msgid "Dry/Wet"
-msgstr "Dry/Wet"
+msgstr "Suche/Mokre"
 
 #: translations.py:270
 msgid "Pitch Shift"
-msgstr "Pitch shifter"
+msgstr "Przesunięcie wysokości tonu"
 
 #: translations.py:271
 msgid "Buffer Size"
-msgstr "Taille du tampon"
+msgstr "Rozmiar bufora"
 
 #: translations.py:273
 msgid "Decay Time(samples)"
-msgstr "Temps de décroissance (echantillons)"
+msgstr "Czas zaniku (próbki)"
 
 #: translations.py:274
 msgid "Knee Point(dB)"
-msgstr "Knee point (dB)"
+msgstr "Punkt kolanowy (dB)"
 
 #: translations.py:276
 msgid "Frequency shift"
-msgstr "Modifer la fréquence"
+msgstr "Zmiana częstotliwości"
 
 #: translations.py:278
 msgid "Low Gain(dB)"
-msgstr "Gain faible (dB)"
+msgstr "Niskie wzmocnienie (dB)"
 
 #: translations.py:279
 msgid "Mid Gain(dB)"
-msgstr "Gain moyen (dB)"
+msgstr "Średnie wzmocnienie (dB)"
 
 #: translations.py:280
 msgid "High Gain(dB)"
-msgstr "Gain élevé (dB)"
+msgstr "Wysokie wzmocnienie (dB)"
 
 #: translations.py:282
 msgid "Oscillation period(s)"
-msgstr "Période(s) d'oscillation"
+msgstr "Okres(y) oscylacji"
 
 #: translations.py:283
 msgid "Oscillation depth(ms)"
-msgstr "Profondeur d'oscillation(ms)"
+msgstr "Głębokość oscylacji (ms)"
 
 #: translations.py:284
 msgid "Feedback%"
-msgstr "Feedback%"
+msgstr "Informacje zwrotne%"
 
 #: translations.py:287
 msgid "Random seed"
-msgstr "Aléatoire"
+msgstr "Losowe ziarno"
 
 #: translations.py:288
 msgid "Input Gain(dB)"
-msgstr "Gain d'entrée(dB)"
+msgstr "Wzmocnienie wejściowe (dB)"
 
 #: translations.py:289
 msgid "Feedback(%)"
-msgstr "Feedback(%)"
+msgstr "Informacja zwrotna(%)"
 
 #: translations.py:290
 msgid "Number of taps"
-msgstr "Nombre d'entailles"
+msgstr "Liczba kranów"
 
 #: translations.py:291
 msgid "First Delay(s)"
-msgstr ""
+msgstr "Pierwsze opóźnienie (s)"
 
 #: translations.py:292
 msgid "Delay Range(s)"
-msgstr ""
+msgstr "Zakresy opóźnienia (s)"
 
 #: translations.py:293
 msgid "Delay Change"
-msgstr ""
+msgstr "Zmiana opóźnienia"
 
 #: translations.py:294
 msgid "Delay Random(%)"
-msgstr ""
+msgstr "Opóźnienie losowe(%)"
 
 #: translations.py:295
 msgid "Amplitude Change"
-msgstr ""
+msgstr "Zmiana amplitudy"
 
 #: translations.py:296
 msgid "Amplitude Random(%)"
-msgstr ""
+msgstr "Amplituda losowa(%)"
 
 #: translations.py:298 translations.py:361 translations.py:407
 #: translations.py:439
 msgid "Amount"
-msgstr "Quantité"
+msgstr "Ilość"
 
 #: translations.py:300
 msgid "Drive"
-msgstr ""
+msgstr "Dysk"
 
 #: translations.py:301
 msgid "Skew"
-msgstr ""
+msgstr "Krzywy"
 
 #: translations.py:303 translations.py:306
 msgid "Cutoff Frequency(Hz)"
-msgstr ""
+msgstr "Częstotliwość odcięcia (Hz)"
 
 #: translations.py:304 translations.py:307
 msgid "Resonance"
-msgstr ""
+msgstr "Rezonans"
 
 #: translations.py:309
 msgid "Passes"
-msgstr ""
+msgstr "Przejścia"
 
 #: translations.py:310
 msgid "Error Rate"
-msgstr "Taux d'erreur"
+msgstr "Liczba błędów"
 
 #: translations.py:312
 msgid "Roomsize"
-msgstr "Taille de la pièce"
+msgstr "Rozmiar"
 
 #: translations.py:313
 msgid "Reverb time(s)"
-msgstr ""
+msgstr "Czas pogłosu(s)"
 
 #: translations.py:314 translations.py:351
 msgid "Damping"
-msgstr ""
+msgstr "Tłumienie"
 
 #: translations.py:315
 msgid "Input bandwith"
-msgstr "Bande passante en entrée"
+msgstr "Pasmo wejściowe"
 
 #: translations.py:316
 msgid "Dry signal level(dB)"
-msgstr ""
+msgstr "Poziom suchego sygnału(dB)"
 
 #: translations.py:317
 msgid "Early reflection level(dB)"
-msgstr ""
+msgstr "Poziom wczesnego odbicia (dB)"
 
 #: translations.py:318
 msgid "Tail level(dB)"
-msgstr ""
+msgstr "Poziom obcięcia(dB)"
 
 #: translations.py:320
 msgid "LF keyfilter(Hz)"
-msgstr ""
+msgstr "Filtr kluczowy LF(Hz)"
 
 #: translations.py:321
 msgid "HF keyfilter(Hz)"
-msgstr ""
+msgstr "Filtr kluczowy HF(Hz)"
 
 #: translations.py:322
 msgid "Threshold(dB)"
-msgstr "Seuil(dB)"
+msgstr "Próg (dB)"
 
 #: translations.py:323
 msgid "Attack(ms)"
-msgstr "Attaque(ms)"
+msgstr "Czas narastania(ms)"
 
 #: translations.py:324
 msgid "Hold(ms)"
-msgstr "Maintien(ms)"
+msgstr "Czas opadania(ms)"
 
 #: translations.py:325
 msgid "Decay(ms)"
-msgstr ""
+msgstr "Zanik(ms)"
 
 #: translations.py:326
 msgid "Range(dB)"
-msgstr ""
+msgstr "Zakres(dB)"
 
 #: translations.py:328
 msgid "Center Frequency(Hz)"
-msgstr ""
+msgstr "Częstotliwość środkowa(Hz)"
 
 #: translations.py:329
 msgid "Bandwidth(Hz)"
-msgstr "Bande passante(Hz)"
+msgstr "Szerokość pasma(Hz)"
 
 #: translations.py:330
 msgid "Stages"
-msgstr ""
+msgstr "Etapy"
 
 #: translations.py:332
 msgid "Pitch-coefficient"
-msgstr ""
+msgstr "Współczynnik pochylenia"
 
 #: translations.py:334
 msgid "50Hz gain"
-msgstr ""
+msgstr "Wzmocnienie 50Hz"
 
 #: translations.py:335
 msgid "100Hz gain"
-msgstr ""
+msgstr "Wzmocnienie 100Hz"
 
 #: translations.py:336
 msgid "156Hz gain"
-msgstr ""
+msgstr "Wzmocnienie 156Hz"
 
 #: translations.py:337
 msgid "220Hz gain"
-msgstr ""
+msgstr "Wzmocnienie 220Hz"
 
 #: translations.py:338
 msgid "311Hz gain"
-msgstr ""
+msgstr "Wzmocnienie 311Hz"
 
 #: translations.py:339
 msgid "440Hz gain"
-msgstr ""
+msgstr "Wzmocnienie 440Hz"
 
 #: translations.py:340
 msgid "622Hz gain"
-msgstr ""
+msgstr "Wzmocnienie 622Hz"
 
 #: translations.py:341
 msgid "880Hz gain"
-msgstr ""
+msgstr "Wzmocnienie 880Hz"
 
 #: translations.py:342
 msgid "1250Hz gain"
-msgstr ""
+msgstr "Wzmocnienie 1250Hz"
 
 #: translations.py:343
 msgid "1750Hz gain"
-msgstr ""
+msgstr "Wzmocnienie 1750Hz"
 
 #: translations.py:344
 msgid "2500Hz gain"
-msgstr ""
+msgstr "Wzmocnienie 2500Hz"
 
 #: translations.py:345
 msgid "3500Hz gain"
-msgstr ""
+msgstr "Wzmocnienie 3500Hz"
 
 #: translations.py:346
 msgid "5000Hz gain"
-msgstr ""
+msgstr "Wzmocnienie 5000Hz"
 
 #: translations.py:347
 msgid "100000Hz gain"
-msgstr ""
+msgstr "Wzmocnienie 100000Hz"
 
 #: translations.py:348
 msgid "200000Hz gain"
-msgstr ""
+msgstr "Wzmocnienie 200000Hz"
 
 #: translations.py:350
 msgid "Reverb time"
-msgstr "Temps de réverbération"
+msgstr "Czas pogłosu"
 
 #: translations.py:352 translations.py:355
 msgid "Dry/Wet mix"
-msgstr ""
+msgstr "Mieszanka Sucho/Mokro"
 
 #: translations.py:354
 msgid "Effect cutoff(Hz)"
-msgstr ""
+msgstr "Odcięcie efektów(Hz)"
 
 #: translations.py:357
 msgid "Rate"
-msgstr ""
+msgstr "Stosunek"
 
 #: translations.py:359
 msgid "Sift"
-msgstr ""
+msgstr "Odsianie"
 
 #: translations.py:363
 msgid "Year"
-msgstr "Année"
+msgstr "Rok"
 
 #: translations.py:364
 msgid "RPM"
-msgstr ""
+msgstr "Obr./min"
 
 #: translations.py:365
 msgid "Surface warping"
-msgstr ""
+msgstr "Zginanie powierzchni"
 
 #: translations.py:366
 msgid "Cracle"
-msgstr "Craquement"
+msgstr "Bazgranina"
 
 #: translations.py:367
 msgid "Wear"
-msgstr ""
+msgstr "Nosić"
 
 #: translations.py:369
 msgid "Number of voices"
-msgstr "Nombre de voix"
+msgstr "Liczba głosów"
 
 #: translations.py:370
 msgid "Delay base(ms)"
-msgstr ""
+msgstr "Baza opóźnienia(ms)"
 
 #: translations.py:371
 msgid "Voice separation(ms)"
-msgstr ""
+msgstr "Separacja głosu (ms)"
 
 #: translations.py:372
 msgid "Detune(%)"
-msgstr ""
+msgstr "Detonacja(%)"
 
 #: translations.py:373
 msgid "Oscillation frequency(Hz)"
-msgstr ""
+msgstr "Częstotliwość drgań(Hz)"
 
 #: translations.py:374
 msgid "Output attenuation(dB)"
-msgstr ""
+msgstr "Tłumienie wyjściowe (dB)"
 
 #: translations.py:376
 msgid "X Scatter"
-msgstr "Dispersion X"
+msgstr "Rozproszenie X"
 
 #: translations.py:377
 msgid "Y Scatter"
-msgstr "Dispersion Y"
+msgstr "Rozproszenie Y"
 
 #: translations.py:378
 msgid "Scale"
-msgstr "Échelle"
+msgstr "Skaluj"
 
 #: translations.py:379
 msgid "Mix"
-msgstr "Mix"
+msgstr "Mieszanka"
 
 #: translations.py:382
 msgid "Delta"
-msgstr "Delta"
+msgstr ""
 
 #: translations.py:383
 msgid "Duration"
-msgstr "Durée"
+msgstr "Czas trwania"
 
 #: translations.py:384
 msgid "Bright. up"
-msgstr ""
+msgstr "Zwiększenie jasności"
 
 #: translations.py:385
 msgid "Bright. down"
-msgstr ""
+msgstr "Zmniejszenie jasności"
 
 #: translations.py:386
 msgid "Bright. dur."
-msgstr ""
+msgstr "Czas jasności"
 
 #: translations.py:387
 msgid "Develop up"
-msgstr ""
+msgstr "Rozwijaj"
 
 #: translations.py:388
 msgid "Develop down"
-msgstr ""
+msgstr "Zwijaj"
 
 #: translations.py:389
 msgid "Develop dur."
-msgstr ""
+msgstr "Czas trwania rozwijania"
 
 #: translations.py:390
 msgid "Triplevel"
-msgstr ""
+msgstr "poziom wyzwalania"
 
 #: translations.py:391
 msgid "Difference Space"
-msgstr ""
+msgstr "Różnica przestrzeni"
 
 #: translations.py:392
 msgid "Block width"
-msgstr ""
+msgstr "Szerokość bloku"
 
 #: translations.py:393
 msgid "Block height"
-msgstr ""
+msgstr "Wysokość bloku"
 
 #: translations.py:394 translations.py:440 tools/titler.py:335
 msgid "Size"
-msgstr "Taille"
+msgstr "Rozmiar"
 
 #: translations.py:403
 msgid "U"
@@ -3818,23 +3699,23 @@ msgstr ""
 
 #: translations.py:405 translations.py:412
 msgid "Black"
-msgstr "Noir"
+msgstr "Czarny"
 
 #: translations.py:406 translations.py:413
 msgid "White"
-msgstr "Blanc"
+msgstr "Biały"
 
 #: translations.py:408
 msgid "Neutral Color"
-msgstr "Couleur neutre"
+msgstr "Kolor neutralny"
 
 #: translations.py:409 translations.py:410
 msgid "Input"
-msgstr "Entrée"
+msgstr "Wejście"
 
 #: translations.py:411
 msgid "Gamma"
-msgstr "Gamma"
+msgstr ""
 
 #: translations.py:414
 msgid "Num"
@@ -3842,75 +3723,75 @@ msgstr ""
 
 #: translations.py:415
 msgid "Dist. weight"
-msgstr ""
+msgstr "Waga dystansu"
 
 #: translations.py:417
 msgid "Variance"
-msgstr ""
+msgstr "Wariancja"
 
 #: translations.py:419
 msgid "Red Saturation"
-msgstr "Saturation rouge"
+msgstr "Nasycenie czerwonego"
 
 #: translations.py:420
 msgid "Yellow Saturation"
-msgstr "Saturation jaune"
+msgstr "Nasycenie żółtego"
 
 #: translations.py:421
 msgid "Factor"
-msgstr "Facteur"
+msgstr "Współczynnik"
 
 #: translations.py:422
 msgid "Source color"
-msgstr "Couleur source"
+msgstr "Kolor źródłowy"
 
 #: translations.py:424
 msgid "Amplitude"
-msgstr "Amplitude"
+msgstr "Amplituda"
 
 #: translations.py:425
 msgid "Frequency"
-msgstr "Fréquence"
+msgstr "Częstotliwość"
 
 #: translations.py:428
 msgid "Center Correct"
-msgstr ""
+msgstr "Korekta środka"
 
 #: translations.py:429
 msgid "Edges Correct"
-msgstr "Corrections des bords"
+msgstr "Korekcja krawędzi"
 
 #: translations.py:431
 msgid "Axis"
-msgstr "Axes"
+msgstr "Oś"
 
 #: translations.py:434
 msgid "Edge Lightning"
-msgstr ""
+msgstr "Oświetlenie krawędzi"
 
 #: translations.py:435
 msgid "Edge Brightness"
-msgstr ""
+msgstr "Jasność krawędziowa"
 
 #: translations.py:436
 msgid "Non-Edge Brightness"
-msgstr ""
+msgstr "Jasność niekrawędziowa"
 
 #: translations.py:437
 msgid "Spatial"
-msgstr ""
+msgstr "Przestrzenny"
 
 #: translations.py:438
 msgid "Temporal"
-msgstr "Temporalité"
+msgstr "Czasowy"
 
 #: translations.py:441
 msgid "Border width"
-msgstr ""
+msgstr "Szerokość obramowania"
 
 #: translations.py:442
 msgid "Phase Incr."
-msgstr ""
+msgstr "Zwiększenie fazy"
 
 #: translations.py:443
 msgid "Zoom"
@@ -3918,76 +3799,76 @@ msgstr ""
 
 #: translations.py:444
 msgid "Freeze Frame"
-msgstr ""
+msgstr "Zamroź klatkę"
 
 #: translations.py:445
 msgid "Freeze After"
-msgstr ""
+msgstr "Zamroź po"
 
 #: translations.py:446
 msgid "Freeze Before"
-msgstr ""
+msgstr "Zamroź przed"
 
 #: translations.py:447
 msgid "Angle"
-msgstr ""
+msgstr "Kąt"
 
 #: translations.py:448 translations.py:451 translations.py:452
 msgid "transition.geometry"
-msgstr ""
+msgstr "przejście.geometria"
 
 #: translations.py:449 translations.py:526
 msgid "Shear X"
-msgstr ""
+msgstr "Ścinanie X"
 
 #: translations.py:450 translations.py:527
 msgid "Shear Y"
-msgstr ""
+msgstr "Ścinanie Y"
 
 #: translations.py:459 translations.py:460 translations.py:525
 #: translations.py:529 tools/titler.py:363
 msgid "Opacity"
-msgstr "Opacité"
+msgstr "Nieprzeźroczystość"
 
 #: translations.py:461
 msgid "Rotate X"
-msgstr "Rotation X"
+msgstr "Obróć X"
 
 #: translations.py:462
 msgid "Rotate Y"
-msgstr "Rotation Y"
+msgstr "Obróć Y"
 
 #: translations.py:463
 msgid "Rotate Z"
-msgstr "Rotation Z"
+msgstr "Obróć Z"
 
 #: translations.py:465
 msgid "Edge Mode"
-msgstr ""
+msgstr "Tryb krawędzi"
 
 #: translations.py:466
 msgid "Sel. Space"
-msgstr ""
+msgstr "Wyb. miejsce"
 
 #: translations.py:467
 msgid "Operation"
-msgstr ""
+msgstr "Działanie"
 
 #: translations.py:468 translations.py:554
 msgid "Hard"
-msgstr ""
+msgstr "Ciężki"
 
 #: translations.py:469
 msgid "Selection subspace"
-msgstr ""
+msgstr "Wybór podprzestrzeni"
 
 #: translations.py:470
 msgid "R/A/Hue"
-msgstr ""
+msgstr "R/A/Odcień"
 
 #: translations.py:471
 msgid "G/B/Chroma"
-msgstr ""
+msgstr "G/B/Chrominancja"
 
 #: translations.py:472
 msgid "B/I/I"
@@ -3995,226 +3876,215 @@ msgstr ""
 
 #: translations.py:473
 msgid "Supress"
-msgstr "Suppression"
+msgstr "Tłumienie"
 
 #: translations.py:474 translations.py:584
 msgid "Horizontal"
-msgstr ""
+msgstr "Poziomy"
 
 #: translations.py:475 translations.py:585
 msgid "Vertical"
-msgstr ""
+msgstr "Pionowy"
 
 #: translations.py:476
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #: translations.py:478
 msgid "Dot Radius"
-msgstr ""
+msgstr "Promień"
 
 #: translations.py:479
 msgid "Cyan Angle"
-msgstr ""
+msgstr "Kąt błękit"
 
 #: translations.py:480
 msgid "Magenta Angle"
-msgstr ""
+msgstr "Kąt purpura"
 
 #: translations.py:481
 msgid "Yellow Angle"
-msgstr ""
+msgstr "Kąt żółć"
 
 #: translations.py:483
 msgid "Matrix Type"
-msgstr ""
+msgstr "Typ matrycy"
 
 #: translations.py:484
 msgid "Aspect"
-msgstr ""
+msgstr "Aspekt"
 
 #: translations.py:485
 msgid "Center Size"
-msgstr ""
+msgstr "Rozmiar środka"
 
 #: translations.py:486
 msgid "Azimuth"
-msgstr ""
+msgstr "Azymut"
 
 #: translations.py:487 translations.py:492
 msgid "Lightness"
-msgstr ""
+msgstr "Lekkość"
 
 #: translations.py:488
 msgid "Bump Height"
-msgstr ""
+msgstr "Wysokość zagłębienia"
 
 #: translations.py:489
 msgid "Gray"
-msgstr ""
+msgstr "Szary"
 
 #: translations.py:490
 msgid "Split Preview"
-msgstr ""
+msgstr "Podgląd dzielony"
 
 #: translations.py:491
 msgid "Source on Left"
-msgstr ""
+msgstr "Źródło po lewej"
 
 #: translations.py:493
-#, fuzzy
 msgid "Channel"
-msgstr "Inverser les canaux"
+msgstr "Kanał"
 
 #: translations.py:494
 msgid "Input black level"
-msgstr "Niveau de noir en entrée"
+msgstr "Wejściowy poziom czerni"
 
 #: translations.py:495
 msgid "Input white level"
-msgstr "Niveau de blanc en entrée"
+msgstr "Wejściowy poziom bieli"
 
 #: translations.py:496
 msgid "Black output"
-msgstr "Niveau de noir en sortie"
+msgstr "Wyjściowa czerń"
 
 #: translations.py:497
 msgid "White output"
-msgstr "Niveau de blanc en sortie"
+msgstr "Wyjściowa biel"
 
 #: translations.py:501
 msgid "Action"
-msgstr ""
+msgstr "Działanie"
 
 #: translations.py:502
 msgid "Keep Luma"
-msgstr "Conserver Luma"
+msgstr "Zachowaj luminancję"
 
 #: translations.py:503
 msgid "Luma Formula"
-msgstr ""
+msgstr "Formuła luminancji"
 
 #: translations.py:504
 msgid "Effect"
-msgstr ""
+msgstr "Efekt"
 
 #: translations.py:506
 msgid "Blend Type"
-msgstr ""
+msgstr "Typ przenikania"
 
 #: translations.py:508
-#, fuzzy
 msgid "Key Color"
-msgstr "Couleur"
+msgstr "Kolor kluczowy"
 
 #: translations.py:509
-#, fuzzy
 msgid "Pre-Level"
-msgstr "Niveaux"
+msgstr "Poprzedni poziom"
 
 #: translations.py:510
-#, fuzzy
 msgid "Post-Level"
-msgstr "Postérisation"
+msgstr "Następny poziom"
 
 #: translations.py:511
 msgid "Slope"
-msgstr ""
+msgstr "Nachylenie"
 
 #: translations.py:512
 msgid "Luma Band"
-msgstr ""
+msgstr "Pasmo luminancji"
 
 #: translations.py:514
 msgid "Gain"
-msgstr ""
+msgstr "Wzrost"
 
 #: translations.py:515
-#, fuzzy
 msgid "Input White Level"
-msgstr "Niveau de blanc en entrée"
+msgstr "Wejściowy poziom bieli"
 
 #: translations.py:516
-#, fuzzy
 msgid "Input Black Level"
-msgstr "Niveau de noir en entrée"
+msgstr "Wejściowy poziom czerni"
 
 #: translations.py:517
-#, fuzzy
 msgid "Black Output"
-msgstr "Niveau de noir en sortie"
+msgstr "Wyjściowa czerń"
 
 #: translations.py:518
-#, fuzzy
 msgid "White Output"
-msgstr "Niveau de blanc en sortie"
+msgstr "Wyjściowa biel"
 
 #: translations.py:519
 msgid "Rows"
-msgstr ""
+msgstr "Wiersze"
 
 #: translations.py:520
-#, fuzzy
 msgid "Columns"
-msgstr "Volume"
+msgstr "Kolumny"
 
 #: translations.py:521
-#, fuzzy
 msgid "Color Temperature"
-msgstr "Sélection couleur"
+msgstr "Temperatura barwy"
 
 #: translations.py:522
-#, fuzzy
 msgid "Select .cube file"
-msgstr "Sélectionnez un titre"
+msgstr "Wybierz plik .cube"
 
 #: translations.py:530 translations.py:534
 msgid "Wipe Type"
-msgstr ""
+msgstr "Typ wytarcia"
 
 #: translations.py:532 translations.py:536
 msgid "Softness"
-msgstr "Adoucir"
+msgstr "Miekkość"
 
 #: translations.py:533
 msgid "Wipe Amount"
-msgstr ""
+msgstr "Ilość wytarć"
 
 #: translations.py:540 translations.py:546
 msgid "Shave"
-msgstr ""
+msgstr "Struganie"
 
 #: translations.py:541
 msgid "Rectangle"
-msgstr ""
+msgstr "Prostokąt"
 
 #: translations.py:542
 msgid "Ellipse"
-msgstr "Ellipse"
+msgstr "Elipsa"
 
 #: translations.py:543
 msgid "Triangle"
-msgstr ""
+msgstr "Trójkąt"
 
 #: translations.py:545 translations.py:559
 msgid "Diamond"
-msgstr "Diamant"
+msgstr "Romb"
 
 #: translations.py:547
 msgid "Shrink Hard"
-msgstr ""
+msgstr "Zmniejszyj mocno"
 
 #: translations.py:548
 msgid "Shrink Soft"
-msgstr ""
+msgstr "Zmniejszyj słabo"
 
 #: translations.py:549
 msgid "Grow Hard"
-msgstr ""
+msgstr "Zwiększyj mocno"
 
 #: translations.py:550
 msgid "Grow Soft"
-msgstr ""
+msgstr "Zwiększyj słabo"
 
 #: translations.py:551
 msgid "RGB"
@@ -4230,47 +4100,47 @@ msgstr ""
 
 #: translations.py:555
 msgid "Fat"
-msgstr ""
+msgstr "Gruby"
 
 #: translations.py:556
 msgid "Normal"
-msgstr ""
+msgstr "Normalny"
 
 #: translations.py:557
 msgid "Skinny"
-msgstr ""
+msgstr "Chudy"
 
 #: translations.py:558
 msgid "Ellipsoid"
-msgstr ""
+msgstr "Elipsoida"
 
 #: translations.py:564 mlttransitions.py:154
 msgid "Subtract"
-msgstr ""
+msgstr "Odejmij"
 
 #: translations.py:567
 msgid "Sharper"
-msgstr ""
+msgstr "Ostrzejszy"
 
 #: translations.py:568
 msgid "Fuzzier"
-msgstr ""
+msgstr "Zamazany"
 
 #: translations.py:569
 msgid "Luma"
-msgstr ""
+msgstr "Luminancja"
 
 #: translations.py:573
 msgid "Add Constant"
-msgstr ""
+msgstr "Dodaj stałą"
 
 #: translations.py:574
 msgid "Change Gamma"
-msgstr ""
+msgstr "Zmień gamma"
 
 #: translations.py:575 mlttransitions.py:149
 msgid "Multiply"
-msgstr ""
+msgstr "Mnóż"
 
 #: translations.py:576
 msgid "XPro"
@@ -4278,390 +4148,387 @@ msgstr ""
 
 #: translations.py:577
 msgid "OldPhoto"
-msgstr "Vieille Photo"
+msgstr "Stare zdjęcie"
 
 #: translations.py:579
 msgid "Heat"
-msgstr ""
+msgstr "Ciepło"
 
 #: translations.py:580
 msgid "XRay"
-msgstr "Rayons X"
+msgstr "Promieniowanie X"
 
 #: translations.py:581
 msgid "RedGreen"
-msgstr ""
+msgstr "Czerwony zielony"
 
 #: translations.py:582
 msgid "YellowBlue"
-msgstr ""
+msgstr "Żółty niebieki"
 
 #: translations.py:583
 msgid "Esses"
-msgstr ""
+msgstr "Esy"
 
 #: translations.py:586
 msgid "Shadows"
-msgstr ""
+msgstr "Cienie"
 
 #: translations.py:587
 msgid "Midtones"
-msgstr ""
+msgstr "Półtony"
 
 #: translations.py:588
 msgid "Highlights"
-msgstr ""
+msgstr "Podświetlenia"
 
 #: mlttransitions.py:80
 msgid "Vertical From Center"
-msgstr ""
+msgstr "Pionowe ze środka"
 
 #: mlttransitions.py:81
 msgid "Vertical Top to Bottom"
-msgstr ""
+msgstr "Pionowy z góry na dół"
 
 #: mlttransitions.py:82
 msgid "Vertical Bottom to Top"
-msgstr ""
+msgstr "Pionowy z dołu do góry"
 
 #: mlttransitions.py:83
 msgid "Horizontal From Center"
-msgstr ""
+msgstr "Poziomy od środka"
 
 #: mlttransitions.py:84
 msgid "Horizontal Left to Right"
-msgstr ""
+msgstr "Poziomy od lewej do prawej"
 
 #: mlttransitions.py:85
 msgid "Horizontal Right to Left"
-msgstr ""
+msgstr "Poziomy od prawej do lewej"
 
 #: mlttransitions.py:86
 msgid "Clock Left To Right"
-msgstr ""
+msgstr "Zegar od lewej do prawej"
 
 #: mlttransitions.py:87
 msgid "Clock Right to Left"
-msgstr ""
+msgstr "Zegar od prawej do lewej"
 
 #: mlttransitions.py:88
 msgid "Clock Symmetric"
-msgstr ""
+msgstr "Zegar symetryczny"
 
 #: mlttransitions.py:89
 msgid "Stripes Horizontal"
-msgstr ""
+msgstr "Pasy poziome"
 
 #: mlttransitions.py:90
 msgid "Stripes Horizontal Big"
-msgstr ""
+msgstr "Duże pasy poziome"
 
 #: mlttransitions.py:91
 msgid "Stripes Horizontal Moving"
-msgstr ""
+msgstr "Ruchome pasy poziome"
 
 #: mlttransitions.py:92
 msgid "Stripes Vertical"
-msgstr ""
+msgstr "Pasy pionowe"
 
 #: mlttransitions.py:93
 msgid "Stripes Vertical Big"
-msgstr ""
+msgstr "Duże pasy pionowe"
 
 #: mlttransitions.py:94
 msgid "Burst"
-msgstr ""
+msgstr "Pęknięcie"
 
 #: mlttransitions.py:95
 msgid "Circle From In"
-msgstr ""
+msgstr "Koło z wewnątrz"
 
 #: mlttransitions.py:96
 msgid "Circle From Out"
-msgstr ""
+msgstr "Koło z zewnątrz"
 
 #: mlttransitions.py:97
 msgid "Cloud"
-msgstr ""
+msgstr "Chmura"
 
 #: mlttransitions.py:98
 msgid "Hatched 1"
-msgstr ""
+msgstr "Kreskowany 1"
 
 #: mlttransitions.py:99
 msgid "Hatched 2"
-msgstr ""
+msgstr "Kreskowany 2"
 
 #: mlttransitions.py:100
 msgid "Hourglass"
-msgstr ""
+msgstr "Klepsydra"
 
 #: mlttransitions.py:101
 msgid "Puddles"
-msgstr ""
+msgstr "Kałuże"
 
 #: mlttransitions.py:102
 msgid "Rings"
-msgstr ""
+msgstr "Pierścienie"
 
 #: mlttransitions.py:103
 msgid "Rectangle From In"
-msgstr ""
+msgstr "Prostokąt od wewnątrz"
 
 #: mlttransitions.py:104
 msgid "Rectangle From Out"
-msgstr ""
+msgstr "Prostokąt z zewnątrz"
 
 #: mlttransitions.py:105
 msgid "Rectangle Bars"
-msgstr ""
+msgstr "Prostokątne pasy"
 
 #: mlttransitions.py:106
 msgid "Sand"
-msgstr ""
+msgstr "Piasek"
 
 #: mlttransitions.py:107
 msgid "Sphere"
-msgstr ""
+msgstr "Sfera"
 
 #: mlttransitions.py:108
 msgid "Spiral Abstract"
-msgstr ""
+msgstr "Abstrakcyjna spirala"
 
 #: mlttransitions.py:109
 msgid "Spiral"
-msgstr ""
+msgstr "Spirala"
 
 #: mlttransitions.py:110
 msgid "Spiral Galaxy"
-msgstr ""
+msgstr "Spiralna galaktyczna"
 
 #: mlttransitions.py:111
 msgid "Spiral Big"
-msgstr ""
+msgstr "Duża spirala"
 
 #: mlttransitions.py:112
 msgid "Spiral Medium"
-msgstr ""
+msgstr "Średnia spirala"
 
 #: mlttransitions.py:113
 msgid "Spots"
-msgstr ""
+msgstr "Miejsca"
 
 #: mlttransitions.py:114 medialog.py:535
 msgid "Star"
-msgstr ""
+msgstr "Gwiazda"
 
 #: mlttransitions.py:115
 msgid "Arch"
-msgstr ""
+msgstr "Łuk"
 
 #: mlttransitions.py:116
 msgid "Patches"
-msgstr ""
+msgstr "Łaty"
 
 #: mlttransitions.py:117
 msgid "Free Stripes"
-msgstr ""
+msgstr "Wolne pasy"
 
 #: mlttransitions.py:118
 msgid "Free Curves"
-msgstr ""
+msgstr "Wolne krzywe"
 
 #: mlttransitions.py:119
 msgid "Diagonal 1"
-msgstr ""
+msgstr "Przekątna 1"
 
 #: mlttransitions.py:120
 msgid "Diagonal 2"
-msgstr ""
+msgstr "Przekątna 2"
 
 #: mlttransitions.py:121
 msgid "Diagonal 3"
-msgstr ""
+msgstr "Przekątna 3"
 
 #: mlttransitions.py:122
 msgid "Diagonal 4"
-msgstr ""
+msgstr "Przekątna 4"
 
 #: mlttransitions.py:123
 msgid "Checkerboard"
-msgstr ""
+msgstr "Szachownica"
 
 #: mlttransitions.py:127 mlttransitions.py:173
 msgid "Dissolve"
-msgstr "Dissoudre"
+msgstr "Rozpuszczanie"
 
 #: mlttransitions.py:128
 msgid "Picture in Picture"
-msgstr "Image dans l'image"
+msgstr "Obraz w obrazie"
 
 #: mlttransitions.py:129
 msgid "Region"
-msgstr "Région"
+msgstr "Obszar"
 
 #: mlttransitions.py:130
 msgid "Affine Blend"
-msgstr ""
+msgstr "Przenikanie afiniczne"
 
 #: mlttransitions.py:131
 msgid "Blend"
-msgstr ""
+msgstr "Przenikanie"
 
 #: mlttransitions.py:132
 msgid "Wipe Clip Length"
-msgstr ""
+msgstr "Wytarcie o długości klipu"
 
 #: mlttransitions.py:138
 msgid "Burn"
-msgstr "Brûler"
+msgstr "Ściemnianie"
 
 #: mlttransitions.py:139
 msgid "Color only"
-msgstr ""
+msgstr "Tylko kolor"
 
 #: mlttransitions.py:140
 msgid "Darken"
-msgstr "Assombrir"
+msgstr "Ciemniej"
 
 #: mlttransitions.py:141
 msgid "Difference"
-msgstr "Différence"
+msgstr "Różnica"
 
 #: mlttransitions.py:142
 msgid "Divide"
-msgstr "Diviser"
+msgstr "Podziel"
 
 #: mlttransitions.py:143
 msgid "Dodge"
-msgstr ""
+msgstr "Rozjaśnianie"
 
 #: mlttransitions.py:144
 msgid "Grain extract"
-msgstr "Extraction de grain"
+msgstr "Ekstrakcja ziarna"
 
 #: mlttransitions.py:145
 msgid "Grain merge"
-msgstr ""
+msgstr "Łączenie ziarna"
 
 #: mlttransitions.py:146
 msgid "Hardlight"
-msgstr ""
+msgstr "Ostre światło"
 
 #: mlttransitions.py:148
 msgid "Lighten"
-msgstr ""
+msgstr "Jaśniej"
 
 #: mlttransitions.py:150
 msgid "Overlay"
-msgstr ""
+msgstr "Nakładka"
 
 #: mlttransitions.py:152
 msgid "Screen"
-msgstr "Écran"
+msgstr "Ekran"
 
 #: mlttransitions.py:153
 msgid "Softlight"
-msgstr ""
+msgstr "Łagodne światło"
 
 #: mlttransitions.py:155
 msgid "Value"
-msgstr "Valeur"
+msgstr "Wartość"
 
 #: mlttransitions.py:174
 msgid "Wipe"
-msgstr ""
+msgstr "Wytarcie"
 
 #: mlttransitions.py:175
 msgid "Color Dip"
-msgstr ""
+msgstr "Skąpanie w kolorze"
 
 #: propertyeditorbuilder.py:250
 msgid "Size/Height"
-msgstr "Taille/Hauteur"
+msgstr "Rozmiar/Wysokość"
 
 #: propertyeditorbuilder.py:286
-#, fuzzy
 msgid "Width"
-msgstr "Largeur:"
+msgstr "Szerokość"
 
 #: propertyeditorbuilder.py:399
 msgid "Preset Luma"
-msgstr "Présélection Luma:"
+msgstr "Wstępnie określona luminancja"
 
 #: propertyeditorbuilder.py:400
 msgid "User Luma"
-msgstr "Utilisateur Luma"
+msgstr "Luminancja użytkownika"
 
 #: propertyeditorbuilder.py:402
 msgid "Select Luma File"
-msgstr "Sélectionnez un titre"
+msgstr "Wybierz plik luminancji"
 
 #: propertyeditorbuilder.py:411
 msgid "Wipe Luma files"
-msgstr ""
+msgstr "Wyczyść plik luminancji"
 
 #: propertyeditorbuilder.py:417
-#, fuzzy
 msgid "Luma File:"
-msgstr "Fichier Luma:"
+msgstr "Plik luminancji:"
 
 #: propertyeditorbuilder.py:472
-#, fuzzy
 msgid "Select File"
-msgstr "Sélectionnez un répertoire"
+msgstr "Wybierz plik"
 
 #: propertyeditorbuilder.py:509 propertyeditorbuilder.py:564
 msgid "Nothing"
-msgstr "Rien"
+msgstr "Nic"
 
 #: propertyeditorbuilder.py:509 propertyeditorbuilder.py:564
 msgid "Deinterlace"
-msgstr "Désentrelacer"
+msgstr "Usuń przeplot"
 
 #: propertyeditorbuilder.py:509 propertyeditorbuilder.py:564
 msgid "Both"
-msgstr ""
+msgstr "Oba"
 
 #: propertyeditorbuilder.py:518 propertyeditorbuilder.py:573
 msgid "Force"
-msgstr "Force"
+msgstr "Wymuś"
 
 #: propertyeditorbuilder.py:523 propertyeditorbuilder.py:578
 msgid "Align"
-msgstr "Aligner"
+msgstr "Wyrównaj"
 
 #: keyframeeditor.py:1550
 msgid "View:"
-msgstr "Vue:"
+msgstr "Widok:"
 
 #: keyframeeditor.py:1556
 msgid "Large"
-msgstr "Large"
+msgstr "Duży"
 
 #: keyframeeditor.py:1557
 msgid "Medium"
-msgstr "Moyen"
+msgstr "Średni"
 
 #: keyframeeditor.py:1558
 msgid "Small"
-msgstr "Petit"
+msgstr "Mały"
 
 #: keyframeeditor.py:1578
 msgid "Reset Geometry"
-msgstr "Réinitialiser géométrie"
+msgstr "Zresetuj geometrię"
 
 #: keyframeeditor.py:1579
 msgid "Geometry to Original Aspect Ratio"
-msgstr ""
+msgstr "Geometria do pierwotnego współczynnika proporcji"
 
 #: keyframeeditor.py:1580
 msgid "Center Horizontal"
-msgstr "Centrer Horizontalement"
+msgstr "Centruj w poziomie"
 
 #: keyframeeditor.py:1581
 msgid "Center Vertical"
-msgstr "Centrer Verticalement"
+msgstr "Centruj w pionie"
 
 #: middlebar.py:127
 msgid ""
@@ -4669,42 +4536,37 @@ msgid ""
 " Zoom Out - Mouse Middle Scroll\n"
 " Zoom Length - Mouse Middle Click"
 msgstr ""
-"Zoom avant - Roulette de la souris\n"
-" Zoom arrière - Roulette de la souris\n"
-" Longueur du zoom - Clic du milieu"
+"Powiększanie - przewijanie środkowym p. myszy\n"
+"Pomniejszanie - przewijanie środkowym p. myszy\n"
+"Długość powiększenia - kliknięcie środkowym p. myszy"
 
 #: middlebar.py:132
-#, fuzzy
 msgid ""
 "Add Rendered Transition - 2 clips selected\n"
 "Add Rendered Fade - 1 clip selected\n"
 "Cut - X"
 msgstr ""
-"Ajouter une transition précalculée - 2 clips sélectionnés\n"
-"Ajouter un fondu précalculé - 1 clip sélectionné"
+"Dodanie wyrenderowanego przejścia - wybrane 2 klipy\n"
+"Dodanie wyrenderowanego blednięcia - wybrany 1 klip\n"
+"Cięcie - X"
 
 #: middlebar.py:138
-#, fuzzy
 msgid ""
 "Splice Out - Delete\n"
 "Lift\n"
 "Delete Range"
 msgstr ""
-"Couper (X)\n"
-"Supprimer et raccorder (del)\n"
-"Supprimer\n"
-"Resynchroniser sélection"
+"Usunięcie sklejki - Delete\n"
+"Przeniesienie w górę\n"
+"Usuń zakres"
 
 #: middlebar.py:143
-#, fuzzy
 msgid ""
 "Resync Selected\n"
 "Split Audio"
 msgstr ""
-"Couper (X)\n"
-"Supprimer et raccorder (del)\n"
-"Supprimer\n"
-"Resynchroniser sélection"
+"Resynchronizacja wybranej\n"
+"Oddziel dźwięk"
 
 #: middlebar.py:150
 msgid ""
@@ -4713,19 +4575,18 @@ msgid ""
 "Insert Clip - Y\n"
 "Append Clip - U"
 msgstr ""
-"Écraser zone\n"
-"Écraser clip - T\n"
-"Insérer clip - Y\n"
-"Ajouter clip - U"
+"Zastąp zakres\n"
+"Zastąp klip - T\n"
+"Wstaw klip - Y \n"
+"Dołącz klip - U"
 
 #: middlebar.py:155
-#, fuzzy
 msgid ""
 "Undo - Ctrl + Z\n"
 "Redo - Ctrl + Y"
 msgstr ""
-"Annuler - Ctrl + X\n"
-"Rétablir - Ctrl + Y"
+"Cofnij - Ctrl + Z\n"
+"Ponów - Ctrl + Y"
 
 #: middlebar.py:162
 msgid ""
@@ -4734,552 +4595,551 @@ msgid ""
 "G'Mic Effects\n"
 "Batch Render Queue"
 msgstr ""
+"Mikser dźwięku\n"
+"Edytor tytułów\n"
+"Efekty G'Mic\n"
+"Kolejka renderowania wsadowego"
 
 #: middlebar.py:167
 msgid ""
 "Audio Mixer(not available)\n"
 "Titler"
 msgstr ""
-"Mixeur audio(non disponible)\n"
-"Titreuse"
+"Mikser dźwięku (niedostępny)\n"
+"Edytor tytułów"
 
 #: medialog.py:304
 msgid "New Group..."
-msgstr "Nouveau groupe"
+msgstr "Nowa grupa..."
 
 #: medialog.py:305
 msgid "New Group From Selected..."
-msgstr "Nouveau groupe à partir de la sélection..."
+msgstr "Nowa grupa z wybranego..."
 
 #: medialog.py:309
 msgid "Rename Current Group..."
-msgstr "Renommer le groupe en cours..."
+msgstr "Zmień nazwę bieżącej grupy..."
 
 #: medialog.py:315
 msgid "Move Selected Items To Group"
-msgstr "Déplacer la sélection vers groupe"
+msgstr "Przenieś wybrane pozycje do grupy"
 
 #: medialog.py:318
 msgid "No Groups"
-msgstr "Pas de groupes"
+msgstr "Brak grup"
 
 #: medialog.py:331
 msgid "Delete Current Group"
-msgstr "Supprimer le groupe en cours"
+msgstr "Usuń bieżącą grupę"
 
 #: medialog.py:337
 msgid "Sort by"
-msgstr ""
+msgstr "Sortuj według"
 
 #: medialog.py:340
-#, fuzzy
 msgid "Time"
-msgstr "Montage"
+msgstr "Czas"
 
 #: medialog.py:346 medialog.py:541
 msgid "File Name"
-msgstr "Nom du fichier"
+msgstr "Nazwa pliku"
 
 #: medialog.py:351 medialog.py:539
 msgid "Comment"
-msgstr "Commentaire"
+msgstr "Komentarz"
 
 #: medialog.py:465
 msgid "Group "
-msgstr "Groupe "
+msgstr "Grupa"
 
 #: medialog.py:537 projectinfogui.py:100
 msgid "Event"
-msgstr "Événement"
+msgstr "Zdarzenie"
 
 #: medialog.py:543
 msgid "Mark In"
-msgstr "Point d'entrée"
+msgstr "Początek zaznaczenia"
 
 #: medialog.py:545
 msgid "Mark Out"
-msgstr "Point de sortie"
+msgstr "Koniec zaznaczenia"
 
 #: medialog.py:547 projectinfogui.py:98
 msgid "Date"
-msgstr "Date"
+msgstr "Data"
 
 #: medialog.py:702
 msgid "Use Comments as Clip Names"
-msgstr "Commentaires comme nom de clip"
+msgstr "Używaj komentarzy jako nazw klipów"
 
 #: medialog.py:733
 msgid "Display starred ranges"
-msgstr "Afficher les sous-clips étoilés"
+msgstr "Wyświetl używane zakresy"
 
 #: medialog.py:734
 msgid "Display non-starred ranges"
-msgstr "Afficher les sous-clips non-étoilés"
+msgstr "Wyświetl nieużywane zakresy"
 
 #: medialog.py:735
 msgid "Set selected ranges starred"
-msgstr "Définir comme sous-clips étoilé"
+msgstr "Ustaw wybrane zakresy jako używane"
 
 #: medialog.py:736
 msgid "Set selected ranges non-starred"
-msgstr "Définir comme sous-clips non-étoilé"
+msgstr "Ustaw wybrane zakresy jako nieużywane"
 
 #: medialog.py:737
 msgid "Log current marked range"
-msgstr "Mémoriser la sélection en cours"
+msgstr "Umieść zaznaczony zakres w rejestrze"
 
 #: medialog.py:738
 msgid "Delete selected ranges"
-msgstr "Supprimer la sélection"
+msgstr "Usuń wybrane zakresy"
 
 #: medialog.py:739
 msgid "Insert selected ranges on Timeline"
-msgstr "Insérer la sélection dans le montage"
+msgstr "Wstaw wybrane zakresy na oś czasu"
 
 #: medialog.py:740
 msgid "Append displayed ranges on Timeline"
-msgstr "Ajouter la sélection au montage"
+msgstr "Dołącz wyświetlone zakresy do osi czasu"
 
 #: medialog.py:757
 msgid "All Items"
-msgstr "Tous les éléments"
+msgstr "Wszystkie elementy"
 
 #: medialog.py:764
 msgid "Select viewed Range Log Items Group"
-msgstr "Sélectionner les groupes de sous-clips vus"
+msgstr "Wybierz przeglądaną grupę elementów z rejestru zakresu"
 
 #: projectinfogui.py:38
 msgid "Name"
-msgstr "Nom"
+msgstr "Nazwa"
 
 #: projectinfogui.py:50
 msgid "Project Events"
-msgstr "Evénement du projet"
+msgstr "Zdarzenia projektu"
 
 #: projectinfogui.py:102
 msgid "Path"
-msgstr "Chemin"
+msgstr "Ścieżka"
 
 #: tools/titler.py:85
-#, fuzzy
 msgid "Titler is already open"
-msgstr " existe déjà!"
+msgstr "Edytor tytułów jest już otwarty"
 
 #: tools/titler.py:86
 msgid "Only single instance of Titler can be opened."
-msgstr ""
+msgstr "Można otworzyć tylko jedną instancję edytora tytułów"
 
 #: tools/titler.py:334
 msgid "Outline"
-msgstr ""
+msgstr "Obrys"
 
 #: tools/titler.py:362
 msgid "Shadow"
-msgstr ""
+msgstr "Cień"
 
 #: tools/titler.py:364
 msgid "X Off"
-msgstr ""
+msgstr "Przesunięcie X"
 
 #: tools/titler.py:365
 msgid "Y Off"
-msgstr ""
+msgstr "Przesunięcie Y"
 
 #: tools/titler.py:411
 msgid "Load Layers"
-msgstr "Charger un calque"
+msgstr "Wczytaj warstwy"
 
 #: tools/titler.py:413
 msgid "Save Layers"
-msgstr "Enregistrer un calque"
+msgstr "Zapisz warstwy"
 
 #: tools/titler.py:415
 msgid "Clear All"
-msgstr "Tout réinitaliser"
+msgstr "Wyczyść wszystko"
 
 #: tools/titler.py:497
 msgid "Active Layer"
-msgstr "Calque actif"
+msgstr "Aktywna warstwa"
 
 #: tools/titler.py:498
 msgid "Layers"
-msgstr "Calques"
+msgstr "Warstwy"
 
 #: tools/titler.py:504
 msgid "Keep Layers When Closed"
-msgstr "Conserver les calques après fermenture"
+msgstr "Zachowaj warstwy po zamknięciu"
 
 #: tools/titler.py:509
 msgid "Open Saved Title In Bin"
-msgstr "Ouvrir un titre sauvegardé dans le bin"
+msgstr "Otwórz zapisany tytuł w pojemniku"
 
 #: tools/titler.py:516
 msgid "Save Title Graphic"
-msgstr "Sauvegarder le titre"
+msgstr "Zapisz grafikę tytułową"
 
 #: rendergui.py:45
 msgid "Render Progress"
-msgstr "Progression du rendu"
+msgstr "Postęp procesu renderowania"
 
 #: rendergui.py:69
 msgid ""
 "Project and Render Profile FPS values are not same. Rendered file may have A/"
 "V sync issues."
 msgstr ""
-"La cadence du projet et du profil de rendu sont différents. Le rendu "
-"pourrait être désynchronisé."
+"Wartości FPS projektu i profilu renderowania nie są takie same. Renderowany "
+"plik może mieć wartość A/Problemy synchronizacji V."
 
 #: rendergui.py:96
 msgid "Render range not defined!"
-msgstr "Zone de rendu non définie!"
+msgstr "Niezdefiniowany zakres renderowania"
 
 #: rendergui.py:97
 msgid ""
 "Define render range using Mark In and Mark Out points\n"
 "or select range option 'Sequence length' to start rendering."
 msgstr ""
-"Définissez une zone de rendu avec un point d'entrée et un point de sortie\n"
-"ou sélectionnez l'option 'durée de séquence' pour démarrer le rendu."
+"Zdefiniuj zakres renderowania za pomocą znacznika początkowego oraz "
+"końcowego\n"
+"lub wybierz opcję zakresu 'Długość sekwencji', aby rozpocząć renderowanie."
 
 #: rendergui.py:101
 msgid "Load Render Args File"
-msgstr "Charger les paramètres de rendu"
+msgstr "Załaduj plik z argumentami dla renderera"
 
 #: rendergui.py:115
 msgid "Save Render Args As"
-msgstr "Enregister les paramètres de rendu sous"
+msgstr "Zapisz plik z argumentami renderera jako"
 
 #: rendergui.py:169
 msgid "Render Slow/Fast Motion Video File"
-msgstr "Calculer un fichier de ralenti/acceleré"
+msgstr "Renderuj plik wideo ruchu spowolnionego/przyśpieszonego"
 
 #: rendergui.py:174 rendergui.py:322
 msgid "Source Media File: "
-msgstr "Fichier source: "
+msgstr "Plik źródłowy multimediów: "
 
 #: rendergui.py:181 rendergui.py:182 rendergui.py:329 rendergui.py:330
 msgid "<b>not set</b>"
-msgstr "<b>non défini</b>"
+msgstr "<b>nie ustawiony</b>"
 
 #: rendergui.py:202 rendergui.py:350
 msgid "Select Target Folder"
-msgstr "Sélectionnez le dossier cible"
+msgstr "Wybierz folder docelowy"
 
 #: rendergui.py:206 rendergui.py:354
 msgid "Speed %:"
-msgstr "Vitesse %:"
+msgstr "Szybkość %:"
 
 #: rendergui.py:244 rendergui.py:392
 msgid "Full Source Length"
-msgstr "Longueur totale de la source"
+msgstr "Pełna długość źródła"
 
 #: rendergui.py:249 rendergui.py:397
 msgid "Source Mark In to Mark Out"
-msgstr "Du point d'entrée au point de sortie"
+msgstr "Źródło od znacznika początkowego do końcowego"
 
 #: rendergui.py:272 rendergui.py:420
 msgid "Source Mark In: "
-msgstr "Point d'entrée: "
+msgstr "Znacznik początkowy źródła: "
 
 #: rendergui.py:273 rendergui.py:421
-#, fuzzy
 msgid "Source Mark Out: "
-msgstr "Point de sortie: "
+msgstr "Znacznik końcowy źródła: "
 
 #: rendergui.py:277 rendergui.py:425
 msgid "Target File:"
-msgstr "Fichier de destination:"
+msgstr "Plik docelowy:"
 
 #: rendergui.py:278 rendergui.py:426
 msgid "Target Folder:"
-msgstr "Répertoire de destination:"
+msgstr "Folder docelowy:"
 
 #: rendergui.py:279 rendergui.py:427
 msgid "Target Profile:"
-msgstr "Profil de sortie:"
+msgstr "Profil docelowy:"
 
 #: rendergui.py:280 rendergui.py:428
 msgid "Target Encoding:"
-msgstr "Paramètres d'encodage:"
+msgstr "Kodowanie docelowe:"
 
 #: rendergui.py:281 rendergui.py:429
 msgid "Target Quality:"
-msgstr "Qualité de sortie:"
+msgstr "Jakość docelowa:"
 
 #: rendergui.py:283 rendergui.py:431 rendergui.py:616
 msgid "Render Range:"
-msgstr "Plage de rendu:"
+msgstr "Zakres renderowania:"
 
 #: rendergui.py:284 rendergui.py:432
 msgid "Rendered Clip Length:"
-msgstr "Durée du clip rendu:"
+msgstr "Długość renderowanego klipu:"
 
 #: rendergui.py:317
-#, fuzzy
 msgid "Render Reverse Motion Video File"
-msgstr "Calculer un fichier de ralenti/acceleré"
+msgstr "Renderuj plik wideo ruchu wstecznego"
 
 #: rendergui.py:465 tools/toolsencoding.py:172
 msgid "Select Render quality"
-msgstr "Qualité de rendu"
+msgstr "Wybierz jakość renderowania"
 
 #: rendergui.py:483
 msgid "Select audio sample frequency"
-msgstr ""
+msgstr "Wybierz częstotliwość próbkowania dźwięku"
 
 #: rendergui.py:507 tools/toolsencoding.py:231
 msgid "Select Render encoding"
-msgstr "Encodage du rendu"
+msgstr "Wybierz kodowanie dla renderera"
 
 #: rendergui.py:544 tools/toolsencoding.py:155
 msgid "Select render profile"
-msgstr "Sélectionner profil de rendu"
+msgstr "Wybierz profil renderowania"
 
 #: rendergui.py:571
 msgid "Full Length"
-msgstr "Projet complet"
+msgstr "Pełna długość"
 
 #: rendergui.py:572
 msgid "Marked Range"
-msgstr "Plage de rendu"
+msgstr "Zaznaczony zakres"
 
 #: rendergui.py:580 tools/toolsencoding.py:270
 msgid "File"
-msgstr "Fichier"
+msgstr "Plik"
 
 #: rendergui.py:581 tools/toolsencoding.py:271
 msgid "Render Profile"
-msgstr "Profil de rendu"
+msgstr "Profil renderownia"
 
 #: rendergui.py:584 rendergui.py:602 tools/toolsencoding.py:272
 msgid "Encoding Format"
-msgstr "Format d'encodage"
+msgstr "Format kodowania"
 
 #: rendergui.py:586 tools/toolsencoding.py:273
 msgid "Render Type"
-msgstr "Type de rendu"
+msgstr "Typ renderowania"
 
 #: rendergui.py:604 rendergui.py:1072
 msgid "Render Args"
-msgstr "Paramètres de rendu"
+msgstr "Argumenty renderera"
 
 #: rendergui.py:608
 msgid "Open File in Bin:"
-msgstr "Ouvrir le fichier dans un bin"
+msgstr "Otwórz plik w pojemniku: "
 
 #: rendergui.py:685 tools/toolsencoding.py:60
 msgid "Select folder to place rendered file in"
-msgstr "Réperoire des fichiers de rendu"
+msgstr "Wybierz folder, w którym chcesz umieścić wyrenderowany plik w"
 
 #: rendergui.py:686 tools/toolsencoding.py:61
 msgid "Give name for rendered file"
-msgstr "Nommer le fichier de rendu"
+msgstr "Nadaj nazwę renderowanemu plikowi"
 
 #: rendergui.py:693 tools/toolsencoding.py:68
 msgid "Presets:"
-msgstr "Présélection:"
+msgstr "Ustawienia wstępne:"
 
 #: rendergui.py:696 tools/toolsencoding.py:71
 msgid "User Defined"
-msgstr "Défini par l'utilisateur"
+msgstr "Zdefiniowany przez użytkownika"
 
 #: rendergui.py:697 tools/toolsencoding.py:72
 msgid "Preset File type"
-msgstr "Type de fichier de présélection"
+msgstr "Wstępnie określony typ pliku"
 
 #: rendergui.py:714 rendergui.py:790 rendergui.py:906
 msgid "Use Project Profile:"
-msgstr "Utiliser le profil du projet:"
+msgstr "Użyj profil projektu:"
 
 #: rendergui.py:715 rendergui.py:791 rendergui.py:907
 msgid "Render using args:"
-msgstr "Rendu personnalisé:"
+msgstr "Renderowanie przy użyciu argumentów:"
 
 #: rendergui.py:730
 msgid "Select used project profile for rendering"
-msgstr "Sélectionnez un profil précédent pour le rendu"
+msgstr "Wybierz profil projektu do renderowania"
 
 #: rendergui.py:731
 msgid "Render profile info"
-msgstr "Infos sur le profil de rendu"
+msgstr "Informacje o profilu renderowania"
 
 #: rendergui.py:808 rendergui.py:1033
 msgid "Load Selection"
-msgstr "Charger la sélection"
+msgstr "Załaduj wybór"
 
 #: rendergui.py:813 rendergui.py:1036
 msgid "Ext.:"
-msgstr "Ext.:"
+msgstr "Rozsz.:"
 
 #: rendergui.py:848 rendergui.py:945
 msgid "Render using key=value rendering options"
-msgstr "Rendre en utilisant les options key=value"
+msgstr "Renderowanie przy użyciu opcji renderowania klucz = wartość"
 
 #: rendergui.py:849 rendergui.py:1043
 msgid "Load render options from currently selected encoding"
-msgstr "Charger les options de rendu à partir du codage en cours"
+msgstr "Załaduj opcje renderowania z aktualnie wybranego kodowania"
 
 #: rendergui.py:850 rendergui.py:1044
 msgid "Edit render options"
-msgstr "Éditer les options de rendu"
+msgstr "Edytuj opcje renderowania"
 
 #: rendergui.py:851 rendergui.py:947
 msgid "Save Render Args into a text file"
-msgstr "Sauvegarder les paramètres de rendu dans un fichier texte "
+msgstr "Zapisz argumenty renderowania w pliku tekstowym"
 
 #: rendergui.py:852 rendergui.py:948
 msgid "Load Render Args from a text file"
-msgstr "Charger les paramètres de rendu à partir d'un fichier texte"
+msgstr "Załaduj argumenty renderowania z pliku tekstowego"
 
 #: rendergui.py:925
 msgid "Edit Args:"
-msgstr ""
+msgstr "Edytuj argumenty:"
 
 #: rendergui.py:1055
-#, fuzzy
 msgid "Set Args"
-msgstr "Paramètres de rendu"
+msgstr "Ustaw argumenty"
 
 #: profilesmanager.py:47 proxyediting.py:218
 msgid "Close Manager"
-msgstr "Fermer le gestionnaire"
+msgstr "Zamknij menedżera"
 
 #: profilesmanager.py:72 tools/batchrendering.py:649
 msgid "Delete Selected"
-msgstr "Supprimer la sélection"
+msgstr "Usuń wybrane"
 
 #: profilesmanager.py:82
 msgid "Load Profile Values"
-msgstr "Charger les paramètres du profil"
+msgstr "Ładowanie wartości profilu"
 
 #: profilesmanager.py:117
 msgid "Save New Profile"
-msgstr "Sauvegarder le nouveau profil"
+msgstr "Zapisz nowy profil"
 
 #: profilesmanager.py:129
 msgid "Description.:"
-msgstr "Description.:"
+msgstr "Opis:"
 
 #: profilesmanager.py:130
 msgid "Frame rate num.:"
-msgstr "Cadence (num.):"
+msgstr "Liczba klatek na sekundę:"
 
 #: profilesmanager.py:131
 msgid "Frame rate den.:"
-msgstr "Cadence (den.):"
+msgstr "Częstość klatek:"
 
 #: profilesmanager.py:132
 msgid "Width:"
-msgstr "Largeur:"
+msgstr "Szerokość:"
 
 #: profilesmanager.py:133
 msgid "Height:"
-msgstr "Hauteur:"
+msgstr "Wysokość:"
 
 #: profilesmanager.py:134
 msgid "Sample aspect num.:"
-msgstr "Proportions réelles num.:"
+msgstr "Liczba przykładowych aspektów:"
 
 #: profilesmanager.py:135
 msgid "Sample aspect den.:"
-msgstr "Proportion réelles den.:"
+msgstr "Częstość przykładowych aspektów"
 
 #: profilesmanager.py:136
 msgid "Display aspect num.:"
-msgstr "Proportions affichées num.:"
+msgstr "Wyświetl numer aspektu:"
 
 #: profilesmanager.py:137
 msgid "Display aspect den.:"
-msgstr "Proportions affichés den.:"
+msgstr "Wyświetl szybkość apektu:"
 
 #: profilesmanager.py:166
 msgid "Create User Profile"
-msgstr "Créer profil d'utilisateur"
+msgstr "Utwórz profil użytkownika"
 
 #: profilesmanager.py:167
 msgid "User Profiles"
-msgstr "Profils d'utilisateur"
+msgstr "Profile użytkowników"
 
 #: profilesmanager.py:175
 msgid "Visible"
-msgstr "Visible"
+msgstr "Widoczny"
 
 #: profilesmanager.py:177
 msgid "Hide Selected"
-msgstr "Masquer la sélection"
+msgstr "Ukryj wybrane"
 
 #: profilesmanager.py:179
 msgid "Hidden"
-msgstr "Masqué"
+msgstr "Ukryty"
 
 #: profilesmanager.py:181
 msgid "Unhide Selected"
-msgstr "Réafficher la sélection"
+msgstr "Pokaż wybrane"
 
 #: profilesmanager.py:210
 msgid "Factory Profiles"
-msgstr "Restaurer profils"
+msgstr "Profile fabryczne"
 
 #: profilesmanager.py:216
 msgid "User "
-msgstr "Utilisateur"
+msgstr "Użytkownik "
 
 #: profilesmanager.py:258 profilesmanager.py:266
 msgid "Profile '"
-msgstr "Le profil '"
+msgstr "Profil '"
 
 #: profilesmanager.py:258
 msgid "' already exists!"
-msgstr "' existe déjà!"
+msgstr "'już istnieje!"
 
 #: profilesmanager.py:259
 msgid "Delete profile and save again."
-msgstr "Supprimez le profil et sauvegardez à nouveau."
+msgstr "Usuń profil i zapisz ponownie."
 
 #: profilesmanager.py:266
 msgid "' saved."
-msgstr "' sauvegardé."
+msgstr "' zapisano."
 
 #: profilesmanager.py:267
 msgid "You can now create a new project using the new profile."
-msgstr "Vous pouvez créer un nouveau projet utilisant le nouveau profil."
+msgstr "Można teraz utworzyć nowy projekt za pomocą nowego profilu."
 
 #: profilesmanager.py:279
 msgid "Confirm user profile delete"
-msgstr "Confirmez la suppression du profil utilisateur"
+msgstr "Potwierdź usunięcie profilu użytkownika"
 
 #: profilesmanager.py:280 tools/batchrendering.py:732
 msgid "This operation cannot be undone."
-msgstr "Cette opération ne peut pas être annulée."
+msgstr "Ta operacja nie może zostać cofnięta."
 
 #: preferenceswindow.py:45
 msgid "Editor Preferences"
-msgstr "Préférences d'édition"
+msgstr "Preferencje edytora"
 
 #: preferenceswindow.py:61
 msgid "Editing"
-msgstr "Édition"
+msgstr "Edytowanie"
 
 #: preferenceswindow.py:63
 msgid "Performance"
-msgstr ""
+msgstr "Wydajność"
 
 #: preferenceswindow.py:64
-#, fuzzy
 msgid "Shortcuts"
-msgstr "Raccourcis clavier"
+msgstr "Skróty"
 
 #: preferenceswindow.py:87
 msgid "Restart required for some setting changes to take effect."
-msgstr "Relancez l'application pour prendre en compte les modifications"
+msgstr "Uruchom ponownie, aby niektóre zmiany ustawień zaczęły obowiązywać."
 
 #: preferenceswindow.py:88
 msgid "If requested change is not in effect, restart application."
-msgstr "Si la modification désirée n'est pas effective, relancez l'application"
+msgstr "Jeśli wymagana zmiana nie zadziała, to zrestartuj aplikację."
 
 #: preferenceswindow.py:122
 msgid "No Autosave"
-msgstr "Pas de sauvegarde automatique"
+msgstr "Brak autozapisu"
 
 #: preferenceswindow.py:122
 msgid "1 min"
@@ -5295,123 +5155,116 @@ msgstr ""
 
 #: preferenceswindow.py:130
 msgid "Absolute paths first, relative second"
-msgstr ""
+msgstr "Najpierw ścieżki bezwzględne, potem względne"
 
 #: preferenceswindow.py:131
 msgid "Relative paths first, absolute second"
-msgstr ""
+msgstr "Najpierw ścieżki względne, potem bezwzględne"
 
 #: preferenceswindow.py:132
 msgid "Absolute paths only"
-msgstr ""
+msgstr "Tylko ścieżki bezwzględne"
 
 #: preferenceswindow.py:136
-#, fuzzy
 msgid "Default Profile:"
-msgstr "Profil par défaut"
+msgstr "Profil domyślny:"
 
 #: preferenceswindow.py:137
 msgid "Remember last media directory"
-msgstr "Se souvenir du dernier réperoire de médias"
+msgstr "Pamiętaj ostatni katalog multimediów"
 
 #: preferenceswindow.py:138
-#, fuzzy
 msgid "Undo stack size:"
-msgstr "Nombre d'annulations possibles"
+msgstr "Unieważnij rozmiar stosu:"
 
 #: preferenceswindow.py:139
-#, fuzzy
 msgid "Thumbnail folder:"
-msgstr "Répertoire des miniatures"
+msgstr "Folder miniatur:"
 
 #: preferenceswindow.py:140
 msgid "Remember last render directory"
-msgstr "Se souvenir du dernier réperoire de rendus"
+msgstr "Zapamiętaj ostatni katalog renderowania"
 
 #: preferenceswindow.py:141
-#, fuzzy
 msgid "Autosave for crash recovery every:"
-msgstr "Sauvegarde automatique chaque"
+msgstr "Automatyczne zapisywanie pliku odtwarzania po awarii co:"
 
 #: preferenceswindow.py:142
-#, fuzzy
 msgid "Rendered Clips folder:"
-msgstr "Répertoire des clips de rendu"
+msgstr "Folder dla wyrenderowanych plików:"
 
 #: preferenceswindow.py:143
 msgid "Media look-up order on load:"
-msgstr ""
+msgstr "Kolejność wyszukiwania materiałów w czasie ładowania:"
 
 #: preferenceswindow.py:188
-#, fuzzy
 msgid "Overwrite blanks"
-msgstr "Ecraser"
+msgstr "Nadpisywanie pustych miejsc"
 
 #: preferenceswindow.py:189
 msgid "Always insert"
-msgstr ""
+msgstr "Zawsze wstaw"
 
 #: preferenceswindow.py:205
 msgid "Zoom, Control to Scroll Horizontal"
-msgstr ""
+msgstr "Powiększ, Ctrl aby przewijać w poziomie"
 
 #: preferenceswindow.py:206
 msgid "Scroll Horizontal, Control to Zoom"
-msgstr ""
+msgstr "Przewijaj w poziomie, Ctrl aby powiększać"
 
 #: preferenceswindow.py:242
 msgid "Autoplay new Clips in Clip Monitor"
-msgstr "Lire automatiquement les nouveaux clips dans le moniteur"
+msgstr "Automatyczne odtwarzanie nowych klipów w monitorze klipu"
 
 #: preferenceswindow.py:243
 msgid "Center Current Frame on Playback Stop"
-msgstr ""
+msgstr "Wypośrodkuj bieżącą klatkę przy odtwarzaniu"
 
 #: preferenceswindow.py:244
 msgid "Center Current Frame after Up/Down Arrow"
-msgstr ""
+msgstr "Wypośrodkuj bieżącą klatkę po naciśnięciu strzałki w górę/w dół"
 
 #: preferenceswindow.py:245
-#, fuzzy
 msgid "Graphics default length:"
-msgstr "Durée par défaut des graphiques"
+msgstr "Domyślna długość grafiki:"
 
 #: preferenceswindow.py:246
 msgid "Trim Modes exit on empty click"
-msgstr ""
+msgstr "Wyłącz tryb przycinania po pustym kliknięciu"
 
 #: preferenceswindow.py:247
 msgid "Quick enter Trim Modes"
-msgstr ""
+msgstr "Szybkie wejście do trybu przycinania"
 
 #: preferenceswindow.py:248
-#, fuzzy
 msgid "Remember Monitor Clip Frame"
-msgstr "Placer le clip du moniteur"
+msgstr "Zapamiętaj klatkę monitora klipu"
 
 #: preferenceswindow.py:249
 msgid "Media drag'n'drop action on non-V1 tracks"
 msgstr ""
+"Wykonywanie akcji przeciąg i upuść multimedia, na ścieżkach innych niż V1"
 
 #: preferenceswindow.py:250
 msgid "Cover Transition/Fade clips on delete if possible"
-msgstr ""
+msgstr "Jeśli to możliwe, ukryj klipy przejść/blednięcia podczas kasowania"
 
 #: preferenceswindow.py:252
 msgid "Enable single Play/Pause button"
-msgstr ""
+msgstr "Włącz pojedynczy przycisk Odtwarzaj/Pauza"
 
 #: preferenceswindow.py:253
 msgid "Mouse Middle Button Scroll Action"
-msgstr ""
+msgstr "Działanie środkowego przycisku przewijania"
 
 #: preferenceswindow.py:254
 msgid "Hide file extensions when importing Clips"
-msgstr ""
+msgstr "Ukryj rozszerzenia plików podczas importowania klipów"
 
 #: preferenceswindow.py:256
 msgid "Fast Forward / Reverse Speed for Shift Key:"
-msgstr ""
+msgstr "Szybkość przewijania do przodu/do tyłu dla klawisza Shift:"
 
 #: preferenceswindow.py:257
 msgid ""
@@ -5420,486 +5273,494 @@ msgid ""
 "Enabling multiple modifier keys will multiply the set values.\n"
 "E.g. if Shift is set to "
 msgstr ""
+"Prędkość przewijania do przodu / do tyłu będzie mnożona przez tę wartość, "
+"jeśli klawisz Shift jest trzymany (tylko przy użyciu klawiszy).\n"
+"Włączenie kilku klawiszy modyfikatorów spowoduje pomnożenie ustawionych "
+"wartości.\n"
+"Np. Jeśli opcja Shift jest ustawiona na "
 
 #: preferenceswindow.py:262
 msgid "Fast Forward / Reverse Speed for Control Key:"
-msgstr ""
+msgstr "Szybkość przewijania do przodu / do tyłu dla klawisza Ctrl:"
 
 #: preferenceswindow.py:263
 msgid ""
 "Speed of Forward / Reverse will be multiplied by this value if Ctrl Key is "
 "held (Only using KEYS)."
 msgstr ""
+"Prędkość przewijania do przodu / do tyłu będzie mnożona przez tę wartość, "
+"jeśli klawisz Ctrl jest trzymany (tylko przy użyciu klawiszy)."
 
 #: preferenceswindow.py:264
 msgid "Fast Forward / Reverse Speed for Caps Lock Key:"
-msgstr ""
+msgstr "Szybkość przewijania do przodu / do tyłu dla klawisza Caps Lock:"
 
 #: preferenceswindow.py:265
 msgid ""
 "Speed of Forward / Reverse will be multiplied by this value if Caps Lock is "
 "set (Only using KEYS)."
 msgstr ""
+"Prędkość przewijania do przodu / do tyłu będzie mnożona przez tę wartość, "
+"jeśli klawisz Caps Lock jest włączony (tylko przy użyciu klawiszy)."
 
 #: preferenceswindow.py:311
 msgid "Glass"
-msgstr "Brillant"
+msgstr "Szkło"
 
 #: preferenceswindow.py:312
 msgid "Simple"
-msgstr "Simple"
+msgstr "Prosty"
 
 #: preferenceswindow.py:319
 msgid "Light Theme"
-msgstr "Thème clair"
+msgstr "Jasny motyw"
 
 #: preferenceswindow.py:320
 msgid "Dark Theme"
-msgstr "Thème sombre"
+msgstr "Ciemny motyw"
 
 #: preferenceswindow.py:332
-#, fuzzy
 msgid "Display All Levels"
-msgstr "Afficher les niveaux de son"
+msgstr "Wyświetl wszystkie poziomy"
 
 #: preferenceswindow.py:333
 msgid "Display Levels On Request"
-msgstr ""
+msgstr "Wyświetl poziomy na żądanie"
 
 #: preferenceswindow.py:348
-#, fuzzy
 msgid "Application window mode:"
-msgstr "Application"
+msgstr "Tryb okna aplikacji:"
 
 #: preferenceswindow.py:349
 msgid "Use English texts on localized OS"
-msgstr ""
+msgstr "Użyj angielskich tekstów na zlokalizowanym systemie operacyjnym"
 
 #: preferenceswindow.py:350
 msgid "Display splash screen"
-msgstr "Afficher l'écran de démarrage"
+msgstr "Wyświetl ekran powitalny"
 
 #: preferenceswindow.py:351
-#, fuzzy
 msgid "Buttons style:"
-msgstr "Style des boutons"
+msgstr "Styl przycisków:"
 
 #: preferenceswindow.py:352
 msgid "Theme request, icons and colors:"
-msgstr ""
+msgstr "Żądane motywy, ikony i kolory:"
 
 #: preferenceswindow.py:353
 msgid "Theme detection fail fallback colors:"
-msgstr ""
+msgstr "Wykrywanie motywów nie powiodło się:"
 
 #: preferenceswindow.py:354
 msgid "Default audio levels display:"
-msgstr ""
+msgstr "Domyślne poziomy dźwięku:"
 
 #: preferenceswindow.py:356
 msgid "Show Full File names"
-msgstr ""
+msgstr "Pokaż pełne nazwy plików"
 
 #: preferenceswindow.py:395
 msgid "Between 1 and the number of CPU Cores"
-msgstr ""
+msgstr "Pomiędzy 1 a liczbą rdzeni procesora"
 
 #: preferenceswindow.py:396
 msgid "Allow Frame Dropping for real-time rendering, when needed"
 msgstr ""
+"Zezwalaj na wyrzucanie klatek podczas renderowania w czasie rzeczywistym, o "
+"ile jest to konieczne"
 
 #: preferenceswindow.py:399
-#, fuzzy
 msgid "Render Threads:"
-msgstr "Rendu démarré:"
+msgstr "Wątki renderowania:"
 
 #: preferenceswindow.py:400
 msgid "Allow Frame Dropping"
-msgstr ""
+msgstr "Zezwolenie na wyrzucanie klatek"
 
 #: preferenceswindow.py:429
-#, fuzzy
 msgid "Shortcuts File"
-msgstr "Sélectionnez un répertoire"
+msgstr "Plik skrótów"
 
 #: tools/batchrendering.py:298
 msgid "Render Item Project File Copy failed!"
-msgstr ""
+msgstr "Kopiowanie pliku z wyrenderowanym elementem nie powiodło się!"
 
 #: tools/batchrendering.py:365 tools/batchrendering.py:749
 msgid "Error loading render queue items!"
-msgstr "Echec du chargement des éléments de la file de rendu!"
+msgstr "Błąd podczas ładowania elementów kolejki renderowania!"
 
 #: tools/batchrendering.py:366 tools/batchrendering.py:750
 msgid "Message:\n"
-msgstr ""
+msgstr "Wiadomość:\n"
 
 #: tools/batchrendering.py:384
-#, fuzzy
 msgid "Batch Render Queue already running!"
-msgstr "File de rendu"
+msgstr "Kolejka renderowania wsadowego już działa!"
 
 #: tools/batchrendering.py:386
 msgid "Batch Render Queue application was detected in session dbus."
-msgstr ""
+msgstr "Aplikacja kolejki renderowania wsadowego została wykryta w sesji dbus."
 
 #: tools/batchrendering.py:408
 msgid "Application is rendering and cannot be closed!"
-msgstr ""
+msgstr "Aplikacja jest w trakcie renderowani i nie może być zamknięta!"
 
 #: tools/batchrendering.py:409
 msgid "Stop rendering before closing the application."
-msgstr "Arrêter le rendu avant de fermer l'application."
+msgstr "Zatrzymaj renderowanie przed zamknięciem aplikacji."
 
 #: tools/batchrendering.py:441
 msgid " datafile load failed with "
-msgstr " échec du chargement des données avec "
+msgstr " ładowanie pliku danych nie powiodło się z powodu "
 
 #: tools/batchrendering.py:447
 msgid " project file load failed with "
-msgstr ""
+msgstr " ładowanie pliku projektu nie powiodło się z powodu "
 
 #: tools/batchrendering.py:561
 msgid "Queued"
-msgstr "File d'attente"
+msgstr "Skolejkowany"
 
 #: tools/batchrendering.py:563
 msgid "Rendering"
-msgstr "Rendu"
+msgstr "Renderowanie"
 
 #: tools/batchrendering.py:565
 msgid "Finished"
-msgstr "Terminé"
+msgstr "Zakończono"
 
 #: tools/batchrendering.py:567
 msgid "Unqueued"
-msgstr ""
+msgstr "Nieskolejkowany"
 
 #: tools/batchrendering.py:569
 msgid "Aborted"
-msgstr "Interrompu"
+msgstr "Przerwano"
 
 #: tools/batchrendering.py:624 tools/batchrendering.py:1241
 msgid "Estimated Left:"
-msgstr "Temps restant:"
+msgstr "Szacunkowy pozostały czas:"
 
 #: tools/batchrendering.py:625
 msgid "Current Render:"
-msgstr "Rendu en cours:"
+msgstr "Bieżący render:"
 
 #: tools/batchrendering.py:626 tools/batchrendering.py:1243 proxyediting.py:364
 msgid "Elapsed:"
-msgstr "Ecoulé:"
+msgstr "Upłynąło:"
 
 #: tools/batchrendering.py:637
 msgid "Items Rendered:"
-msgstr "Elements rendus:"
+msgstr "Renderowane elementy:"
 
 #: tools/batchrendering.py:639
 msgid "Render Started:"
-msgstr "Rendu démarré:"
+msgstr "Rozpoczęto renderowanie:"
 
 #: tools/batchrendering.py:645
 msgid "Not Rendering"
-msgstr "N'a pas été rendu"
+msgstr "Nie renderuję"
 
 #: tools/batchrendering.py:653
 msgid "Delete Finished"
-msgstr "Supprimer les rendus terminés"
+msgstr "Usuwanie zakończone"
 
 #: tools/batchrendering.py:658
 msgid "Reload Queue"
-msgstr "Recharger la file"
+msgstr "Przeładuj kolejkę"
 
 #: tools/batchrendering.py:669 tools/batchrendering.py:1253
 msgid "Stop Render"
-msgstr "Interrompre le rendu"
+msgstr "Zatrzymaj renderowanie"
 
 #: tools/batchrendering.py:705
 msgid "Flowblade Batch Render"
-msgstr "Flowblade Batch Render"
+msgstr "Render wsadowy Flowblade'a"
 
 #: tools/batchrendering.py:731
 msgid "Delete "
-msgstr "Supprimer"
+msgstr "Usuń"
 
 #: tools/batchrendering.py:731
 msgid " item(s) from render queue?"
-msgstr " élément(s) de la file de rendus?"
+msgstr " pozycje(i) z kolejki renderowania?"
 
 #: tools/batchrendering.py:762
 msgid "Multiple items with same render target file!"
-msgstr "Plusieurs éléments ont le même fichier cible!"
+msgstr "Wiele elementów z tym samym plikiem docelowym renderowania!"
 
 #: tools/batchrendering.py:764
 msgid ""
 "Later items will render on top of earlier items if this queue is rendered.\n"
 msgstr ""
+"Późniejsze elementy będą renderowane przed wcześniejszymi elementami, jeśli "
+"kolejka będzie renderowana.\n"
 
 #: tools/batchrendering.py:765
 msgid ""
 "Delete or unqueue some items with same paths:\n"
 "\n"
 msgstr ""
+"Usuń lub wyrzuć z kolejki niektóre elementy z tymi samymi ścieżkami:\n"
+"\n"
 
 #: tools/batchrendering.py:767
 msgid " items with path: "
-msgstr ""
+msgstr " pozycje ze ścieżką: "
 
 #: tools/batchrendering.py:866
 msgid "Project/Sequence"
-msgstr "Projet/Séquence"
+msgstr "Projekt/Sekwencja"
 
 #: tools/batchrendering.py:867
 msgid "Status"
-msgstr "Statuts"
+msgstr ""
 
 #: tools/batchrendering.py:868
 msgid "Render File"
-msgstr "Fichier de rendu"
+msgstr "Renderowany plik"
 
 #: tools/batchrendering.py:869
 msgid "Render Time"
-msgstr "Temps de rendu"
+msgstr "Czas renderowania"
 
 #: tools/batchrendering.py:960
-#, fuzzy
 msgid "Save Render Item Project As"
-msgstr "Enregistrer le projet sous"
+msgstr "Zapisz renderowane elementy projektu jako"
 
 #: tools/batchrendering.py:996
 msgid "Encoding:"
-msgstr "Encodage:"
+msgstr "Kodowanie:"
 
 #: tools/batchrendering.py:997
 msgid "Quality:"
-msgstr "Qualité:"
+msgstr "Jakość:"
 
 #: tools/batchrendering.py:998
 msgid "Audio Encoding:"
-msgstr "Encodage audio:"
+msgstr "Kodowanie dźwięku:"
 
 #: tools/batchrendering.py:999
-#, fuzzy
 msgid "Use User Args:"
-msgstr "Utiliser paramètres perso:"
+msgstr "Użyj argumentów użytkownika:"
 
 #: tools/batchrendering.py:1000
 msgid "Start:"
-msgstr "Démarrage:"
+msgstr ""
 
 #: tools/batchrendering.py:1001
 msgid "End:"
-msgstr "Fin:"
+msgstr "Koniec:"
 
 #: tools/batchrendering.py:1003
 msgid "Render Profile Name:"
-msgstr "Nom du profil de rendu:"
+msgstr "Nazwa profilu renderowania:"
 
 #: tools/batchrendering.py:1004
 msgid "Render Profile:"
-msgstr "Profil de rendu:"
+msgstr "Profil renderowania:"
 
 #: tools/batchrendering.py:1020 tools/batchrendering.py:1028
 msgid "Render Properties"
-msgstr "Propriétés du rendu"
+msgstr "Właściwości renderowania"
 
 #: tools/batchrendering.py:1027
 msgid "Save Item Project As..."
-msgstr "Enregistrer le projet sous..."
+msgstr "Zapisz element projektu jako..."
 
 #: tools/batchrendering.py:1278
-#, fuzzy
 msgid "Flowblade Timeline Render"
-msgstr "Flowblade Batch Render"
+msgstr "Renderowanie osi czasu Flowblade'a"
 
 #: proxyediting.py:239
 msgid "Project Image Size"
-msgstr "Résolution du projet"
+msgstr "Rozmiar obrazu projektu"
 
 #: proxyediting.py:240
 msgid "Half Project Image Size"
-msgstr "Moitié de résolution"
+msgstr "Połowa rozmiaru obrazu projektu"
 
 #: proxyediting.py:241
 msgid "Quarter Project Image Size"
-msgstr "Quart de résolution"
+msgstr "Jedna czwarta rozmiaru obrazu projektu"
 
 #: proxyediting.py:257
 msgid "Proxy Encoding"
-msgstr "Encodage proxy"
+msgstr "Kodowanie Proxy"
 
 #: proxyediting.py:269
 msgid "Proxy Stats:"
-msgstr "Infos proxy:"
+msgstr "Statystyki Proxy:"
 
 #: proxyediting.py:270
 msgid " proxy file(s) for "
-msgstr " fichier(s) proxy pour "
+msgstr " pliki(ów) proxy dla "
 
 #: proxyediting.py:270
 msgid " video file(s)"
-msgstr " fichier(s) vidéo"
+msgstr " pliki(ów) wideo"
 
 #: proxyediting.py:273
 msgid "Current Proxy Mode:"
-msgstr "Mode proxy actuel:"
+msgstr "Obecny tryb Proxy:"
 
 #: proxyediting.py:280 proxyediting.py:344
 msgid "Press Button to Change Mode"
-msgstr ""
+msgstr "Naciśnij przycisk, aby zmienić tryb"
 
 #: proxyediting.py:282
 msgid "Use Proxy Media"
-msgstr "Utiliser proxy"
+msgstr "Użyj multimediów Proxy"
 
 #: proxyediting.py:283
 msgid "Use Original Media"
-msgstr "Utiliser originaux"
+msgstr "Użyj oryginalnych multimediów"
 
 #: proxyediting.py:304
 msgid "Project Proxy Mode"
-msgstr "Mode proxy du projet"
+msgstr "Tryb projektu Proxy"
 
 #: proxyediting.py:330
 msgid "Using Proxy Media"
-msgstr "Utiliser proxy"
+msgstr "Używanie multimediów Proxy"
 
 #: proxyediting.py:332
 msgid "Using Original Media"
-msgstr "Utiliser originaux"
+msgstr "Używanie oryginalnych multimediów"
 
 #: proxyediting.py:350
 msgid "Creating Proxy Files"
-msgstr "Créer fichiers proxy"
+msgstr "Tworzenie plików Proxy"
 
 #: proxyediting.py:365
 msgid "Current Media File:"
-msgstr "Média en cours: "
+msgstr "Aktualny plik multimedialny:"
 
 #: proxyediting.py:366
 msgid "Rendering Item:"
-msgstr "Rendu de l'élément:"
+msgstr "Renderowany element:"
 
 #: proxyediting.py:406
 msgid "Proxy Render Info"
-msgstr "Infos rendu proxy"
+msgstr "Informacje o renderze Proxy"
 
 #: proxyediting.py:421
 msgid "Nothing will be rendered"
-msgstr "Rien ne sera calculé"
+msgstr "Nic nie zostanie wyrenderowane"
 
 #: proxyediting.py:422
 msgid ""
 "No video files were selected.\n"
 "Only video files can have proxy files."
 msgstr ""
+"Nie wybrano plików wideo.\n"
+"Tylko pliki wideo mogą posiadać pliki proxy."
 
 #: proxyediting.py:430
 msgid "Do Render Action"
-msgstr ""
+msgstr "Wykonywana akcja renderowania"
 
 #: proxyediting.py:435
 msgid "Proxies exist that were created by this and other projects for "
-msgstr ""
+msgstr "Istnieją Proxy, które zostały utworzone przez te i inne projekty dla "
 
 #: proxyediting.py:435 proxyediting.py:438 proxyediting.py:441
-#, fuzzy
 msgid " file(s).\n"
-msgstr "Tous les fichiers"
+msgstr " pliki(ów).\n"
 
 #: proxyediting.py:438
 msgid "Proxies have already been created for "
-msgstr ""
+msgstr "Proxy zostały już utworzone dla "
 
 #: proxyediting.py:441
 msgid "Proxies exist that were created by other projects for "
-msgstr ""
+msgstr "Istnieją Proxy, które zostały utworzone przez inne projekty dla "
 
 #: proxyediting.py:444 proxyediting.py:447
 msgid "You are trying to create proxies for "
-msgstr ""
+msgstr "Próbujesz utworzyć proxy dla "
 
 #: proxyediting.py:444
 msgid " non-video file(s).\n"
-msgstr ""
+msgstr " pliki(ów) nie-wideo.\n"
 
 #: proxyediting.py:447
 msgid " proxy file(s).\n"
-msgstr ""
+msgstr " pliki(ów) proxy.\n"
 
 #: proxyediting.py:454
 msgid "Render Unrendered Possible & Use existing"
-msgstr ""
+msgstr "Renderowanie niewyrenderownych mozliwe & Użyj istniejących"
 
 #: proxyediting.py:455
-#, fuzzy
 msgid "Rerender All Possible"
-msgstr "Profile de rendu"
+msgstr "Renderowanie wszystkich możliwych"
 
 #: proxyediting.py:457
-#, fuzzy
 msgid "Select Render Action: "
-msgstr "Encodage du rendu"
+msgstr "Wybierz działanie renderera: "
 
 #: proxyediting.py:678
 msgid "Converting Project to Use Proxy Media"
-msgstr ""
+msgstr "Konwertowanie projektu aby mógł używać multimediów Proxy"
 
 #: proxyediting.py:688
 msgid "Converting to Use Original Media"
-msgstr ""
+msgstr "Konwertowanie w celu skorzystania z oryginalnych multimediów"
 
 #: tlineaction.py:201
 msgid "Fade/Transition cover delete failed!"
-msgstr ""
+msgstr "Usunięcie okładki bleknięcia/przejścia nie powiodło się!"
 
 #: tlineaction.py:202
 msgid ""
 "There wasn't enough material available in adjacent clips.\n"
 "A normal Splice Out was done instead."
 msgstr ""
+"Za mało materiałów dostępnych w sąsiednich klipach.\n"
+"Zamiast tego dokonano normalnego usuń i scal."
 
 #: tlineaction.py:335
-#, fuzzy
 msgid "No Clips are selected!"
-msgstr "Aucun fichier sélectionné"
+msgstr "Nie wybrano klipów!"
 
 #: tlineaction.py:336
 msgid "You need to select clips to overwrite to perform this edit."
 msgstr ""
+"Musisz wybrać klipy, które mają zostać zastąpione, aby wykonać tę edycję."
 
 #: tlineaction.py:454
-#, fuzzy
 msgid "3 point edit not defoned!"
-msgstr "Zone de rendu non définie!"
+msgstr "3-punktowa edycja nie została zdefiniowana!"
 
 #: tlineaction.py:455 tlineaction.py:479
 msgid ""
 "You need to set Timeline Range using Mark In and Mark Out buttons\n"
 "to perform this edit."
 msgstr ""
+"Musisz ustawić zakres na osi czasu przy użyciu znacznika początkowego oraz "
+"końcowego\n"
+"aby wykonać tę edycję."
 
 #: tlineaction.py:478
 msgid "Timeline Range not set!"
-msgstr "Zone de rendu non définie!"
+msgstr "Nie ustawiono zakresu na osi czasu!"
 
 #: tlineaction.py:511
-#, fuzzy
 msgid "Origin clip not found!"
-msgstr "Clip d'origine n'a pas été trouvé!"
+msgstr "Nie znaleziono oryginalnego klipu!"
 
 #: tlineaction.py:512
 msgid ""
 "Clip used to create this Compositor has been removed\n"
 "or moved to different track."
 msgstr ""
-"Le clip utilisé pour créer cette composition a été supprimé\n"
-"ou déplacé sur une autre piste."
+"Klip użyty do utworzenia tego kompozytora został usunięty\n"
+"lub został przeniesiony do innej ścieżki."
 
 #: tlineaction.py:777 tlineaction.py:947
 msgid "Rendering "
-msgstr "Rendu en cours"
+msgstr "Renderowanie "
 
 #: tlineaction.py:809
 msgid ""
@@ -5907,450 +5768,419 @@ msgid ""
 "clips!\n"
 "\n"
 msgstr ""
+"Aby utworzyć renderowane przejście, potrzebujesz odpowiedni dużo "
+"nakładających się multimediów z obu klipów!\n"
+"\n"
 
 #: tlineaction.py:814
 msgid "<b>FIRST CLIP MEDIA OVERLAP:</b>  "
-msgstr ""
+msgstr "<b>PIERWSZY NAKŁADAJĄCY SIĘ KLIP MULTIMEDIÓW</b> "
 
 #: tlineaction.py:815 tlineaction.py:823
-#, fuzzy
 msgid "Available <b>"
-msgstr "<b>Clip:</b>"
+msgstr "Dostępne <b>"
 
 #: tlineaction.py:815 tlineaction.py:823
-#, fuzzy
 msgid "</b> frame(s), "
-msgstr "Tous les fichiers"
+msgstr "</b> klatki(ek), "
 
 #: tlineaction.py:816 tlineaction.py:824
-#, fuzzy
 msgid "Required <b>"
-msgstr "<b>Durée du rendu: </b>"
+msgstr "Wymagane <b>"
 
 #: tlineaction.py:816
-#, fuzzy
 msgid "</b> frame(s)"
-msgstr "Tous les fichiers"
+msgstr "</b> klatki(ek)"
 
 #: tlineaction.py:822
 msgid "<b>SECOND CLIP MEDIA OVERLAP:</b> "
-msgstr ""
+msgstr "<b>DRUGI NAKŁADAJĄCY SIĘ KLIP MULTIMEDIÓW</b> "
 
 #: tlineaction.py:824
-#, fuzzy
 msgid "</b> frame(s) "
-msgstr "Tous les fichiers"
+msgstr "</b> klatki(ek) "
 
 #: tlineaction.py:831
 msgid "Current situation, not enought media overlap:"
-msgstr ""
+msgstr "Obecna sytuacja, zbyt mało nakładających się multimediów:"
 
 #: tlineaction.py:833
 msgid "You need more media overlap:"
-msgstr ""
+msgstr "Potrzebujesz więcej nakładających się multimediów:"
 
 #: tlineaction.py:862
 msgid "More media overlap needed to create transition!"
 msgstr ""
+"Potrzebujesz więcej nakładających się multimediów aby utworzyć przejście!"
 
 #: tlineaction.py:881
 msgid "Only Video Track mix / fades available"
-msgstr ""
+msgstr "Dostępna tylko mieszanka ścieżek wideo/zanikania"
 
 #: tlineaction.py:882
 msgid ""
 "Unfortunately rendered mixes and fades can currently\n"
 "only be applied on clips on Video Tracks."
 msgstr ""
+"Niestety renderowane mieszanki i zanikania\n"
+"mogą być obecnie zastosowane tylko do klipów na ścieżkach wideo."
 
 #: tlineaction.py:916
 msgid ""
 "Clip is too short for the requested fade:\n"
 "\n"
 msgstr ""
+"Klip jest zbyt krótki dla żądanego zaniku:\n"
+"\n"
 
 #: tlineaction.py:917
-#, fuzzy
 msgid "<b>Clip Length:</b> "
-msgstr "<b>Longueur:</b>"
+msgstr "<b>Długość klipu:</b> "
 
 #: tlineaction.py:917 tlineaction.py:918
-#, fuzzy
 msgid " frame(s)\n"
-msgstr "Tous les fichiers"
+msgstr " klatki(ek)\n"
 
 #: tlineaction.py:918
-#, fuzzy
 msgid "<b>Fade Length:</b> "
-msgstr "<b>Longueur:</b>"
+msgstr "<b>Długość zaniku:</b> "
 
 #: tlineaction.py:919
 msgid "Clip is too short!"
-msgstr ""
+msgstr "Klip jest za krótki!"
 
 #: tlineaction.py:988
 msgid "No Clip loaded into Monitor"
-msgstr ""
+msgstr "Do monitora nie załadowano żadnego klipu"
 
 #: tlineaction.py:989
 msgid "Can't do the requested edit because there is no Clip in Monitor."
-msgstr ""
+msgstr "Nie można wykonać żądanej edycji, ponieważ nie ma klipu w monitorze."
 
 #: tlineaction.py:993
 msgid "Defined range in Monitor Clip is too short"
-msgstr ""
+msgstr "Zdefiniowany, w monitorze klipu, zakres jest zbyt krótki"
 
 #: tlineaction.py:994
 msgid ""
 "Can't do the requested edit because Mark In -> Mark Out Range or Clip is too "
 "short."
 msgstr ""
+"Nie można wykonać żądanej edycji, ponieważ zakres pomiędzy znacznikiem "
+"początkowym a końcowym jest zbyt krótki."
 
 #: tlineaction.py:998
-#, fuzzy
 msgid "3 point edit not defined!"
-msgstr "Zone de rendu non définie!"
+msgstr "3-punktowa edycja nie została zdefiniowana!"
 
 #: tlineaction.py:999
 msgid ""
 "You need to set Mark In and Mark Out on Timeline or Clip and\n"
 "additional Mark In on Timeline or Clip to perform this edit."
 msgstr ""
+"Musisz umieścić znacznik początkowy oraz końcowy na osi czasu lub klipie i\n"
+"dodatkowo znacznik początkowy na osi czasu lub klipie, aby wykonać tę edycję."
 
 #: trackaction.py:66
 msgid "Not enough vertical space on Timeline to expand track"
-msgstr "L'espace vertical n'est pas suffisant pour étendre la piste"
+msgstr ""
+"Brak wystarczającej przestrzeni pionowej na osi czasu, aby rozwinąć ścieżkę"
 
 #: trackaction.py:67
 msgid ""
 "Maximize or resize application window to get more\n"
 "space for tracks if possible."
 msgstr ""
-"Agrandissez la fenêtre du programme pour obtenir\n"
-"plus d'espace pour l'affichage des pistes."
+"Zmaksymalizuj lub zmień rozmiar okna aplikacji, aby uzyskać więcej\n"
+"miejsce na ścieżki, jeśli to możliwe"
 
 #: medialinker.py:104
 msgid "Load Project For Relinking"
-msgstr ""
+msgstr "Wczytaj projekt do relinkowania"
 
 #: medialinker.py:112
-#, fuzzy
 msgid "Original Media Missing:"
-msgstr "Utiliser originaux"
+msgstr "Brakujące oryginalne media:"
 
 #: medialinker.py:113
-#, fuzzy
 msgid "Original Media Found:"
-msgstr "Utiliser originaux"
+msgstr "Znalezione oryginalne media:"
 
 #: medialinker.py:116
-#, fuzzy
 msgid "Project:"
-msgstr "Projet"
+msgstr "Projekt:"
 
 #: medialinker.py:117
 msgid "<not loaded>"
-msgstr ""
+msgstr "<nie załadowany>"
 
 #: medialinker.py:140
 msgid "Display Missing Media Files"
-msgstr ""
+msgstr "Wyświetl brakujące pliki multimedialne"
 
 #: medialinker.py:141
 msgid "Display Found Media Files"
-msgstr ""
+msgstr "Pokaż znalezione pliki multimedialne"
 
 #: medialinker.py:152
-#, fuzzy
 msgid "Save Relinked Project As..."
-msgstr "Enregistrer le projet sous..."
+msgstr "Zapisz relinkowany projekt jako..."
 
 #: medialinker.py:269
-#, fuzzy
 msgid "Missing Media File Path"
-msgstr "Chemin du média:"
+msgstr "Brakująca ścieżka pliku multimediów"
 
 #: medialinker.py:270
-#, fuzzy
 msgid "Found Media File Path"
-msgstr "Chemin du média:"
+msgstr "Znaleziona ścieżka pliku multimediów"
 
 #: medialinker.py:274
 msgid "Media File Re-link Path"
-msgstr ""
+msgstr "Wybierz ścieżkę do relinkowanego pliku multimedialnego"
 
 #: medialinker.py:435
-#, fuzzy
 msgid "Select Media File To Relink To"
-msgstr "Supprimer un média du bin"
+msgstr "Wybierz plik multimedialny do relinkowania do"
 
 #: medialinker.py:475
-#, fuzzy
 msgid "<b>Original path:</b> "
-msgstr "<b>Longueur:</b>"
+msgstr "<b>Oryginalna ścieżka:</b> "
 
 #: medialinker.py:478
-#, fuzzy
 msgid "<b>Relink path:</b> "
-msgstr "<b>Longueur:</b>"
+msgstr "<b>Ścieżka relinkowania:</b> "
 
 #: medialinker.py:524
 msgid "Relinked version of the Project saved!"
-msgstr ""
+msgstr "Zrelinkowana wersja projektu została zapisana!"
 
 #: medialinker.py:525
 msgid ""
 "To test the project, close this tool and open the relinked version in "
 "Flowblade."
 msgstr ""
+"Aby przetestować projekt, zamknij to narzędzie i otwórz ponownie "
+"zrelinkowaną wersję za pomocą programu Flowblade"
 
 #: patternproducer.py:317
 msgid "Create Color Clip"
-msgstr "Créer clip de couleur"
+msgstr "Tworzenie klipu koloru"
 
 #: patternproducer.py:323
-#, fuzzy
 msgid "Color Clip"
-msgstr "Créer clip de couleur"
+msgstr "Klip koloru"
 
 #: patternproducer.py:332
-#, fuzzy
 msgid "Select Color:"
-msgstr "Choisir une couleur"
+msgstr "Wybierz kolor:"
 
 #: patternproducer.py:350
-#, fuzzy
 msgid "Create Ising Clip"
-msgstr "Créer clip de couleur"
+msgstr "Tworzenie klipu modelu Isinga"
 
 #: patternproducer.py:359
-#, fuzzy
 msgid "Noise temperature:"
-msgstr "Sélection couleur"
+msgstr "Temperatura zakłócenia:"
 
 #: patternproducer.py:360
 msgid "Border growth:"
-msgstr ""
+msgstr "Rozrost granic:"
 
 #: patternproducer.py:361
 msgid "Spontanious growth:"
-msgstr ""
+msgstr "Spontaniczny rozrost:"
 
 #: patternproducer.py:381
-#, fuzzy
 msgid "Create Color Pulse Clip"
-msgstr "Créer clip de couleur"
+msgstr "Utwórz klip kolorowego impulsu"
 
 #: patternproducer.py:393
-#, fuzzy
 msgid "Speed 1:"
-msgstr "Vitesse %:"
+msgstr "Szybkość 1:"
 
 #: patternproducer.py:394
-#, fuzzy
 msgid "Speed 2:"
-msgstr "Vitesse %:"
+msgstr "Szybkość 2:"
 
 #: patternproducer.py:395
-#, fuzzy
 msgid "Speed 3:"
-msgstr "Vitesse %:"
+msgstr "Szybkość 3:"
 
 #: patternproducer.py:396
-#, fuzzy
 msgid "Speed 4:"
-msgstr "Vitesse %:"
+msgstr "Szybkość 3:"
 
 #: patternproducer.py:397
 msgid "Move 1:"
-msgstr ""
+msgstr "Ruch 1:"
 
 #: patternproducer.py:398
 msgid "Move 2:"
-msgstr ""
+msgstr "Ruch 2:"
 
 #: tools/gmic.py:115
-#, fuzzy
 msgid "G'Mic not found!"
-msgstr "Clip d'origine n'a pas été trouvé!"
+msgstr "Nie znaleziono G'Mic!"
 
 #: tools/gmic.py:116
 msgid ""
 "G'Mic binary was not present at <b>/usr/bin/gmic</b>.\n"
 "Install G'MIC to use this tool."
 msgstr ""
+"Binarny G'Mic nie jest obecny w <b>/usr/bin/gmic</b>.\n"
+"Zainstaluj G'MIC, aby móc użyć tego narzędzia."
 
 #: tools/gmic.py:262
-#, fuzzy
 msgid "Select Video Media"
-msgstr "Sélectionnez un titre"
+msgstr "Wybierz multimedia wideo"
 
 #: tools/gmic.py:337 tools/gmic.py:738
-#, fuzzy
 msgid "not set"
-msgstr "<b>non défini</b>"
+msgstr "nie ustawiono"
 
 #: tools/gmic.py:355
 msgid "Save Gmic Script As"
-msgstr ""
+msgstr "Zapisz skrypt Gmic jako"
 
 #: tools/gmic.py:379
 msgid "Load Gmic Script"
-msgstr ""
+msgstr "Załaduj skrypt Gmic"
 
 #: tools/gmic.py:508
-#, fuzzy
 msgid "Video Encoding Settings"
-msgstr "Encodage"
+msgstr "Ustawienia kodowania obrazu"
 
 #: tools/gmic.py:512
-#, fuzzy
 msgid "Set Encoding"
-msgstr "Encodage"
+msgstr "Ustaw kodowanie"
 
 #: tools/gmic.py:557 tools/gmic.py:890
-#, fuzzy
 msgid "Load Clip"
-msgstr "Copier clips"
+msgstr "Załaduj klip"
 
 #: tools/gmic.py:561
-#, fuzzy
 msgid "no clip loaded"
-msgstr "Jusqu'au poignées du clip:"
+msgstr "nie załadowano klipu"
 
 #: tools/gmic.py:586
 msgid "no preview"
-msgstr ""
+msgstr "Bez podglądu"
 
 #: tools/gmic.py:633
 msgid "Preview"
-msgstr ""
+msgstr "Podgląd"
 
 #: tools/gmic.py:659
-#, fuzzy
 msgid "Add to Script"
-msgstr "Placer le clip du moniteur"
+msgstr "Dodaj do skryptu"
 
 #: tools/gmic.py:719
-#, fuzzy
 msgid "Frames Folder:"
-msgstr "Répertoire de destination:"
+msgstr "Folder klatek:"
 
 #: tools/gmic.py:730
-#, fuzzy
 msgid "Encode Video"
-msgstr "Désactiver la vidéo"
+msgstr "Koduj wideo"
 
 #: tools/gmic.py:735
-#, fuzzy
 msgid "Encoding settings"
-msgstr "Encodage"
+msgstr "Ustawienia kodowania"
 
 #: tools/gmic.py:754
 msgid "Set Mark In, Mark Out and Frames Folder for valid render"
 msgstr ""
+"Aby renderowanie było prawidłowe, wstaw znacznik początkowy, końcowy oraz "
+"określ folder klatek"
 
 #: tools/gmic.py:797
-#, fuzzy
 msgid "Load Script"
-msgstr "Charger la sélection"
+msgstr "Wczytaj skrypt"
 
 #: tools/gmic.py:799
-#, fuzzy
 msgid "Save Script"
-msgstr "Enregistrer le projet"
+msgstr "Zapisz skrypt"
 
 #: tools/gmic.py:858
-#, fuzzy
 msgid "frames"
-msgstr "Tous les fichiers"
+msgstr "klatek"
 
 #: tools/gmic.py:876
-#, fuzzy
 msgid " no video file"
-msgstr " fichier(s) vidéo"
+msgstr " brak pliku wideo"
 
 #: tools/gmic.py:878
-#, fuzzy
 msgid " render video file"
-msgstr " fichier(s) vidéo"
+msgstr " renderuj plik wideo"
 
 #: tools/gmic.py:879
-#, fuzzy
 msgid " frame(s),"
-msgstr "Tous les fichiers"
+msgstr " klatki(ek),"
 
 #: tools/gmic.py:891
 msgid "G'Mic Webpage"
-msgstr ""
+msgstr "Strona G'Mic"
 
 #: tools/gmic.py:1095
-#, fuzzy
 msgid "Rendering preview..."
-msgstr "Rendu en cours"
+msgstr "Podgląd renderowania..."
 
 #: tools/gmic.py:1127
-#, fuzzy
 msgid "Preview for frame: "
-msgstr "Image précédente"
+msgstr "Podgląd dla klatki:"
 
 #: tools/gmic.py:1128
-#, fuzzy
 msgid ", render time: "
-msgstr "Temps de rendu"
+msgstr ", czas renderowania: "
 
 #: tools/gmic.py:1196
 msgid "Waiting for frames write to complete..."
-msgstr ""
+msgstr "Oczekiwanie na zakończenie zapisywania klatek..."
 
 #: tools/gmic.py:1209
-#, fuzzy
 msgid "Rendering frame: "
-msgstr "Rendu de l'élément:"
+msgstr "Renderowanie klatki:"
 
 #: tools/gmic.py:1239
-#, fuzzy
 msgid "Render error!"
-msgstr "Progression du rendu"
+msgstr "Błąd renderowania!"
 
 #: tools/gmic.py:1281
-#, fuzzy
 msgid "Rendering video, "
-msgstr "Rendu en cours"
+msgstr "Renderowanie wideo, "
 
 #: tools/gmic.py:1281
 #, python-format
 msgid "% done"
-msgstr ""
+msgstr "% gotowe"
 
 #: tools/gmic.py:1291
-#, fuzzy
 msgid "Render complete!"
-msgstr "Rendu terminé!"
+msgstr "Renderowanie zakończone!"
 
 #: tools/gmic.py:1301
 msgid "Writing clip frame: "
-msgstr ""
+msgstr "Zapis klatki klipu: "
 
 #: tools/gmic.py:1313
-#, fuzzy
 msgid "Render stopped!"
-msgstr "Rendu terminé!"
+msgstr "Renderowanie zatrzymało się!"
 
 #: tools/toolsencoding.py:90
-#, fuzzy
 msgid "Use Default Profile:"
-msgstr "Profil par défaut"
+msgstr "Użyj profilu domyślnego:"
 
 #: monitorevent.py:301
 msgid "On some systems Trim View may update slowly"
-msgstr ""
+msgstr "W niektórych systemach przycinanie widoku może się aktualizować powoli"
 
 #: monitorevent.py:302
 msgid ""
 "<b>Trim View</b> works best with SSDs and relatively powerful processors.\n"
 "\n"
 msgstr ""
+"<b>Przycinanie widoku</b> najlepiej sprawdza się w przypadku dysków SSD i "
+"stosunkowo mocnych procesorów.\n"
+"\n"
 
 #: monitorevent.py:303
 msgid ""
@@ -6358,270 +6188,25 @@ msgid ""
 "options\n"
 "if performance is not satisfactory."
 msgstr ""
+"Wybierz opcję <b>'Wyłącz przycinanie widoku'</b> lub <b>'Przycinanie widoku "
+"tylko pojedyncze edycje'</b>, jeśli wydajność nie jest zadowalająca."
 
 #: compositorfades.py:260
-#, fuzzy
 msgid "Clip too short!"
-msgstr "Jusqu'au poignées du clip:"
+msgstr "Klip zbyt krótki!"
 
 #: compositorfades.py:261
 msgid "The Clip is too short to add the requested fade."
-msgstr ""
+msgstr "Klip jest za krótki, aby dodać pożądany efekt zanikania."
 
 #: compositorfades.py:266
-#, fuzzy
 msgid "Clip too short for Auto Fades!"
-msgstr "Compositions"
+msgstr "Klip jest za krótki do autozanikania!"
 
 #: compositorfades.py:267
 msgid ""
 "The Clip is too short to add the user set default fades on Compositor "
 "creation."
 msgstr ""
-
-#, fuzzy
-#~ msgid "Auto Fades"
-#~ msgstr "Ajouter un fondu"
-
-#, fuzzy
-#~ msgid "Overwrite / Box"
-#~ msgstr "Mode écrasement"
-
-#~ msgid "Number of tracks:"
-#~ msgstr "Nombre de pistes:"
-
-#~ msgid "New Number of Tracks:"
-#~ msgstr "Entrez un nombre de pistes"
-
-#, fuzzy
-#~ msgid "Icons and color optimized for:"
-#~ msgstr "Icônes et couleur optimisées pour:"
-
-#, fuzzy
-#~ msgid "Export file name:"
-#~ msgstr "Exporter fichiers"
-
-#, fuzzy
-#~ msgid "Select target folder"
-#~ msgstr "Sélectionnez le dossier cible"
-
-#, fuzzy
-#~ msgid "Export folder:"
-#~ msgstr "Exporter fichiers"
-
-#, fuzzy
-#~ msgid "Exported video track:"
-#~ msgstr "Exporter fichiers"
-
-#, fuzzy
-#~ msgid "Cascade video tracks"
-#~ msgstr "Étendre les pistes vidéo"
-
-#, fuzzy
-#~ msgid "Audio From Video"
-#~ msgstr "Filtres audio"
-
-#, fuzzy
-#~ msgid "Separate Audio Track"
-#~ msgstr "Étendre les pistes audio"
-
-#, fuzzy
-#~ msgid "No Audio"
-#~ msgstr "Audio"
-
-#, fuzzy
-#~ msgid "Audio export:"
-#~ msgstr "Mixeur audio"
-
-#, fuzzy
-#~ msgid "Change Project Profile To Match..."
-#~ msgstr "Enregistrer le projet sous..."
-
-#, fuzzy
-#~ msgid ""
-#~ " frame(s)\n"
-#~ "\n"
-#~ msgstr "Tous les fichiers"
-
-#, fuzzy
-#~ msgid "Cut "
-#~ msgstr "Couper le clip"
-
-#, fuzzy
-#~ msgid "Save To Change Project Profile"
-#~ msgstr "Sauvegarder le projet '"
-
-#~ msgid "Escape"
-#~ msgstr "ESC"
-
-#~ msgid "Space"
-#~ msgstr "Espace"
-
-#~ msgid "Home"
-#~ msgstr "Home"
-
-#~ msgid "Max. Transition Length:"
-#~ msgstr "Longueur max. de transition"
-
-#~ msgid "Write Environment Data to File"
-#~ msgstr "Enregistrer les données système"
-
-#~ msgid ""
-#~ "Audio Mixer\n"
-#~ "Titler"
-#~ msgstr ""
-#~ "Mixeur audio\n"
-#~ "Titreuse"
-
-#~ msgid "Render file name entry is empty"
-#~ msgstr "Le fichier de rendu n'a pas de nom"
-
-#~ msgid "You have to provide a name for the file to be rendered."
-#~ msgstr "Vous devez donner un nom au fichier pour faire le rendu."
-
-#~ msgid " already exists!"
-#~ msgstr " existe déjà!"
-
-#~ msgid "Do you want to overwrite existing file?"
-#~ msgstr "Voulez-vous écraser le fichier existant?"
-
-#~ msgid "Composite Target Track"
-#~ msgstr "Piste pour la composition"
-
-#~ msgid "Delete Group and Items?"
-#~ msgstr "Supprimer groupe et éléments?"
-
-#~ msgid "Are you sure you want to delete group "
-#~ msgstr "Certain de vouloir effacer le groupe "
-
-#~ msgid " and "
-#~ msgstr " et "
-
-#~ msgid " items it contains?\n"
-#~ msgstr " les éléments qu'il contient?\n"
-
-#~ msgid "Another instance of Flowblade already running."
-#~ msgstr "Une autre session Flowblade est déjà lancée."
-
-#~ msgid "Only one instance of Flowblade is allowed to run at a time."
-#~ msgstr "Vous ne pouvez qu'une seule session Flowblade à la fois."
-
-#~ msgid "project load. "
-#~ msgstr "charger le projet. "
-
-#~ msgid "Doing so does not guarantee succesful load"
-#~ msgstr "Procéder de cette manière ne garanti pas le chargement du projet"
-
-#~ msgid "if files have different properties."
-#~ msgstr "si les fichiers ont différentes propriétés."
-
-#, fuzzy
-#~ msgid "Compact Project Folder:"
-#~ msgstr "Sélectionnez un projet"
-
-#, fuzzy
-#~ msgid "Project Type"
-#~ msgstr "Projet"
-
-#, fuzzy
-#~ msgid "Change Project Type"
-#~ msgstr "Enregistrer le projet sous"
-
-#, fuzzy
-#~ msgid "Change Type"
-#~ msgstr "Modifier les pistes"
-
-#, fuzzy
-#~ msgid "Current Project Type:"
-#~ msgstr "Mode proxy actuel:"
-
-#, fuzzy
-#~ msgid "New Project Type:"
-#~ msgstr "Nouveau projet"
-
-#, fuzzy
-#~ msgid "Normal Project"
-#~ msgstr "Nouveau projet"
-
-#, fuzzy
-#~ msgid "Compact Project"
-#~ msgstr "Créer un nouveau projet"
-
-#, fuzzy
-#~ msgid "JACK Audio Manager"
-#~ msgstr "Fermer le gestionnaire"
-
-#, fuzzy
-#~ msgid "Properties"
-#~ msgstr "Propriétés du fichier"
-
-#, fuzzy
-#~ msgid "Output Status"
-#~ msgstr "Statuts"
-
-#~ msgid "Export DVDAuthor Files"
-#~ msgstr "Exporter en fichiers DVDAuthor"
-
-#~ msgid "Use Markers as Chapter Starts:"
-#~ msgstr "Utiliser les marqueurs comme chapitres:"
-
-#~ msgid "Select Work Folder:"
-#~ msgstr "Sélectionner le répertoire de travail:"
-
-#~ msgid "XML File Name:"
-#~ msgstr "Nom du fichier XML:"
-
-#~ msgid "Render MPEG File:"
-#~ msgstr "Créer un fichier MPEG:"
-
-#~ msgid "MPEG File for DVD Type:"
-#~ msgstr "Créer un fichier MPEG pour DVD:"
-
-#~ msgid "MPEG File Name:"
-#~ msgstr "Nom du fichier MPEG:"
-
-#~ msgid "Flowblade Batch Render PID file found!"
-#~ msgstr "Le fichier PID n'a pas été trouvé!"
-
-#~ msgid "Force Launch"
-#~ msgstr "Forcer démarrage"
-
-#~ msgid "Consolidate Selected Blanks"
-#~ msgstr "Consolider les vides sélectionnés"
-
-#~ msgid "Consolidate All Blanks"
-#~ msgstr "Consolider tous les vides"
-
-#~ msgid "Previous clip does not have enough material to cover blank area"
-#~ msgstr ""
-#~ "La durée du clip précédent n'est pas suffisante pour couvrir le vide"
-
-#~ msgid "Requested edit can't be done."
-#~ msgstr "La requête d'edition ne peut être effectuée."
-
-#~ msgid "Next clip does not have enough material to cover blank area"
-#~ msgstr "La durée du clip suivant n'est suffisante pour couvrir le vide"
-
-#~ msgid "Consolidate"
-#~ msgstr "Consolider"
-
-#~ msgid "Delete Current Group and Items"
-#~ msgstr "Supprimer groupe et éléments en cours"
-
-#~ msgid "Insert Move"
-#~ msgstr "Mode insertion"
-
-#~ msgid "One Roll Trim"
-#~ msgstr "Prolongation"
-
-#~ msgid "Two Roll Trim"
-#~ msgstr "Propagation"
-
-#~ msgid "DVDAuthor files"
-#~ msgstr "Fichiers DVDAuthor"
-
-#~ msgid "Save Titler Graphic As"
-#~ msgstr "Enregistrer le titre sous"
-
-#~ msgid "Save Titler Layers As"
-#~ msgstr "Enregistrer le titre sous"
+"Klip jest za krótki, aby dodać domyślnie ustawione przez użytkownika "
+"zanikanie podczas tworzenia kompozytora."

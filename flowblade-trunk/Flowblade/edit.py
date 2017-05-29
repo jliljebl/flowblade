@@ -1747,7 +1747,7 @@ def _add_compositor_redo(self):
     self.compositor.origin_clip_id = self.origin_clip_id
 
     # Compositors are recreated continually in sequence.restack_compositors() and cannot be identified for undo/redo using object identity 
-    # so these ids must be  preserved for all succesive versions of a compositor
+    # so these ids must be  preserved for all successive versions of a compositor
     if self.first_do == True:
         self.destroy_id = self.compositor.destroy_id
         self.first_do = False
@@ -1758,7 +1758,8 @@ def _add_compositor_redo(self):
     current_sequence().restack_compositors()
 
     compositorfades.add_default_fades(self.compositor, self.clip)
-
+    self.compositor.update_autofade_keyframes()
+    
     compositeeditor.set_compositor(self.compositor)
 
 # -------------------------------------- DELETE COMPOSITOR ACTION
