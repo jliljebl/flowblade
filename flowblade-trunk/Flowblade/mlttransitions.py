@@ -344,6 +344,7 @@ class CompositorObject:
         self.clip_out = out_frame
         self.transition.mlt_transition.set("in", str(in_frame))
         self.transition.mlt_transition.set("out", str(out_frame))
+        self.update_autofade_keyframes()
 
     def create_mlt_objects(self, mlt_profile):
         self.transition.create_mlt_transition(mlt_profile)
@@ -372,11 +373,10 @@ class CompositorObject:
             return
         
         if self.transition.info.name == "##auto_fade_in":
-            print "yyyy"
             compositorfades.set_auto_fade_in_keyframes(self)
         else:
-            print "ee"
-        
+            compositorfades.set_auto_fade_out_keyframes(self)
+            
 # -------------------------------------------------- compositor interface methods
 def load_compositors_xml(transitions):
     """

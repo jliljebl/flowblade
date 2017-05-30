@@ -85,12 +85,8 @@ def add_fade_out(compositor, fade_out_length):
             _show_length_error_dialog()
 
 def set_auto_fade_in_keyframes(compositor):
-    print "hhhhhhhhhhhh"
     clip = _get_compositor_clip(compositor)
     keyframe_property, property_klass, keyframes = _get_kfproperty_klass_and_keyframes(compositor, clip)
-
-    # Pop first keyframe to get frame
-    #frame, geom, opacity = keyframes.pop(0)
     
     # Remove all key frames, there exists 2 or 1, 0 when created 1 always after that
     while len(keyframes) > 0: 
@@ -102,6 +98,23 @@ def set_auto_fade_in_keyframes(compositor):
 
     keyframe_property.write_out_keyframes(keyframes)
 
+def set_auto_fade_out_keyframes(compositor):
+    clip = _get_compositor_clip(compositor)
+    keyframe_property, property_klass, keyframes = _get_kfproperty_klass_and_keyframes(compositor, clip)
+
+    # Pop first keyframe to get frame
+    #frame, geom, opacity = keyframes.pop(0)
+    
+    # Remove all key frames, there exists 2 or 1, 0 when created 1 always after that
+    while len(keyframes) > 0: 
+        keyframes.pop()
+    
+    # Set in fade in keyframes
+    keyframes.append((0, 100))
+    keyframes.append((compositor.get_length() - 1, 0))
+
+    keyframe_property.write_out_keyframes(keyframes)
+    
 # ---------------------------------------------------------------------- module finctions
 def _get_kfproperty_klass_and_keyframes(compositor, clip):
     # Create editable properties from compositor properties.

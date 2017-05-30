@@ -241,7 +241,7 @@ def _add_autofade(data):
         compositor_out = compositor_in + 30
     else:
         clip_start = current_sequence().tracks[track.id].clip_start(clip_index)
-        compositor_out = compositor_in + clip_length
+        compositor_out = clip_start + clip_length
         compositor_in = compositor_out - 30
 
     edit_data = {"origin_clip_id":clip.id,
