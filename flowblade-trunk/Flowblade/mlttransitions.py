@@ -346,6 +346,16 @@ class CompositorObject:
         self.transition.mlt_transition.set("out", str(out_frame))
         self.update_autofade_keyframes()
 
+    def set_length_from_in(self, length):
+        self.clip_out = self.clip_in + length - 1
+        self.transition.mlt_transition.set("out", str(self.clip_out))
+        self.update_autofade_keyframes()
+
+    def set_length_from_out(self, length):
+        self.clip_in = self.clip_out - length + 1
+        self.transition.mlt_transition.set("in", str(self.clip_in))
+        self.update_autofade_keyframes()
+        
     def create_mlt_objects(self, mlt_profile):
         self.transition.create_mlt_transition(mlt_profile)
     

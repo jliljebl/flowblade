@@ -22,7 +22,7 @@
 Module creates GUI editors for editable mlt properties.
 """
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, GObject
 
 import appconsts
 from editorstate import PROJECT
@@ -35,6 +35,7 @@ import mltfilters
 import mlttransitions
 import propertyparse
 import translations
+import updater
 import utils
 
 EDITOR = "editor"
@@ -60,6 +61,7 @@ COLOR_BOX = "colorbox"                                      # One band color edi
 COLOR_LGG = "colorlgg"                                      # Editor for ColorLGG filter
 FILE_SELECTOR = "file_select"                               # File selector button for selecting single files from
 FILE_TYPES = "file_types"                                   # list of files types with "." chracters, like ".png.tga.bmp"
+FADE_LENGTH = "fade_length"                                 # Autofade composiyots fade length
 NO_EDITOR = "no_editor"                                     # No editor displayed for property
 
 COMPOSITE_EDITOR_BUILDER = "composite_properties"           # Creates a single row editor for multiple properties of composite transition
@@ -444,6 +446,49 @@ def _get_wipe_selector(editable_property):
     
     return editor_pane
 
+class FadeLengthEditor(Gtk.HBox):
+    def __init__(self, editable_property):
+
+        GObject.GObject.__init__(self)
+        self.set_homogeneous(False)
+        self.set_spacing(2)
+        
+        self.editable_property = editable_property
+        length = self.editable_property.clip.clip_out - self.editable_property.clip.clip_in + 1
+        
+        name = editable_property.get_display_name()
+        name = _p(name)
+        name_label = Gtk.Label(label=name + ":")
+        
+        label_box = Gtk.HBox()
+        label_box.pack_start(name_label, False, False, 0)
+        label_box.pack_start(Gtk.Label(), True, True, 0)
+        label_box.set_size_request(appconsts.PROPERTY_NAME_WIDTH, appconsts.PROPERTY_ROW_HEIGHT)
+           
+        self.spin = Gtk.SpinButton.new_with_range (1, 1000, 1)
+        self.spin.set_numeric(True)
+        self.spin.set_value(length)
+        self.spin.connect("value-changed", self.spin_value_changed)
+
+        self.pack_start(guiutils.pad_label(4,4), False, False, 0)
+        self.pack_start(label_box, False, False, 0)
+        self.pack_start(self.spin, False, False, 0)
+        self.pack_start(Gtk.Label(), True, True, 0)
+        
+    def spin_value_changed(self, spin):
+        if self.editable_property.clip.transition.info.name == "##auto_fade_in":
+            self.editable_property.clip.set_length_from_in(int(spin.get_value()))
+        else:
+            self.editable_property.clip.set_length_from_out(int(spin.get_value()))
+
+        updater.repaint_tline()
+    
+    def display_tline_frame(self, frame):
+        pass # we don't seem to need this afte all, panel gets recreated after cpompositor length change
+        
+def _get_fade_length_editor(editable_property):
+    return FadeLengthEditor(editable_property)
+
 def _wipe_preset_combo_changed(widget, ep, widgets):
     combo_box, use_preset_luma_combo, user_luma_select, user_luma_label, keys = widgets
     if widget.get_active() == 1:
@@ -728,6 +773,7 @@ EDITOR_ROW_CREATORS = { \
     LADSPA_SLIDER: lambda ep: _get_ladspa_slider_row(ep),
     CLIP_FRAME_SLIDER: lambda ep: _get_clip_frame_slider(ep),
     FILE_SELECTOR: lambda ep: _get_file_select_editor(ep),
+    FADE_LENGTH: lambda ep: _get_fade_length_editor(ep),
     NO_EDITOR: lambda ep: _get_no_editor(),
     COMPOSITE_EDITOR_BUILDER: lambda comp, editable_properties: _create_composite_editor(comp, editable_properties),
     REGION_EDITOR_BUILDER: lambda comp, editable_properties: _create_region_editor(comp, editable_properties),

@@ -230,6 +230,7 @@ def _display_compositor_edit_box():
         if ((editor_type == propertyeditorbuilder.KEYFRAME_EDITOR)
             or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_RELEASE)
             or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_CLIP)
+            or (editor_type == propertyeditorbuilder.FADE_LENGTH)
             or (editor_type == propertyeditorbuilder.GEOMETRY_EDITOR)):
                 keyframe_editor_widgets.append(editor_row)
     

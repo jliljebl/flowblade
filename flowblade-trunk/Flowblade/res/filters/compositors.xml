@@ -88,7 +88,7 @@
     <compositortransition mlt_service="composite" autofadecompositor="True">
         <name>##auto_fade_in</name>
         <property name="force_track" args="editor=no_editor">0</property>
-        <property name="geometry" args="editor=no_editor exptype=opacity_in_geom_kf">0=0/0:SCREENSIZE:100</property>
+        <property name="geometry" args="editor=fade_length exptype=opacity_in_geom_kf displayname=Fade!In!Length">0=0/0:SCREENSIZE:100</property>
         <property name="aligned" args="editor=no_editor">0</property>
         <property name="distort" args="editor=no_editor">0</property>
         <property name="fill" args="editor=no_editor">1</property>        
@@ -101,7 +101,7 @@
     <compositortransition mlt_service="composite" autofadecompositor="True">
         <name>##auto_fade_out</name>
         <property name="force_track" args="editor=no_editor">0</property>
-        <property name="geometry" args="editor=no_editor exptype=opacity_in_geom_kf">0=0/0:SCREENSIZE:100</property>
+        <property name="geometry" args="editor=fade_length exptype=opacity_in_geom_kf displayname=Fade!Out!Length">0=0/0:SCREENSIZE:100</property>
         <property name="aligned" args="editor=no_editor">0</property>
         <property name="distort" args="editor=no_editor">0</property>
         <property name="fill" args="editor=no_editor">1</property>        
