@@ -271,6 +271,9 @@ def _mute_clip(data):
 
 def _delete_clip(data):
     tlineaction.splice_out_button_pressed()
+
+def _cut_clip(data):
+    tlineaction.cut_pressed()
     
 def _lift(data):
     tlineaction.lift_button_pressed()
@@ -566,6 +569,7 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "select_all_after": _select_all_after,
                   "select_all_before":_select_all_before,
                   "delete":_delete_clip,
+                  "cut":_cut_clip,
                   "lift":_lift, 
                   "length":_set_length,
                   "stretch_next":_stretch_next, 
