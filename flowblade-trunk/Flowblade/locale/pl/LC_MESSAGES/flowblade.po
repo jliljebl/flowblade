@@ -2316,7 +2316,7 @@ msgstr "Maksymalizuj ścieżki wideo"
 
 #: guicomponents.py:2166
 msgid "Maximize Audio Tracks"
-msgstr "Maksymalizuj ścieżki dźwiękowe"
+msgstr "Maksymalizuj ścieżki audio"
 
 #: guicomponents.py:2168
 msgid "Minimize Tracks"
@@ -2332,7 +2332,7 @@ msgstr "Aktywuj tylko bieżąco aktywną ścieżkę"
 
 #: guicomponents.py:2173
 msgid "Vertical Shrink Timeline"
-msgstr "Zcieśnij w pionie oś czasu"
+msgstr "Ścieśnij w pionie oś czasu"
 
 #: guicomponents.py:2188
 msgid "Display Clip Media Thumbnails"
@@ -2794,7 +2794,7 @@ msgstr ""
 
 #: translations.py:114
 msgid "Audio Filter"
-msgstr "Filtr dźwiękowy"
+msgstr "Filtr audio"
 
 #: translations.py:115 translations.py:168 translations.py:381
 #: translations.py:458
