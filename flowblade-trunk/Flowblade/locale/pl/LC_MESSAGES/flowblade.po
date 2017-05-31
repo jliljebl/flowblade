@@ -2324,7 +2324,7 @@ msgstr "Zminimalizuj ścieżki"
 
 #: guicomponents.py:2170
 msgid "Activate All Tracks"
-msgstr "Aktywuj wszystkie ściezki"
+msgstr "Aktywuj wszystkie ścieżki"
 
 #: guicomponents.py:2171
 msgid "Activate Only Current Top Active Track"
