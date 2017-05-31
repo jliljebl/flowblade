@@ -2191,11 +2191,11 @@ msgstr "Oliwkowy"
 
 #: guicomponents.py:1640 guicomponents.py:1680
 msgid "Render Slow/Fast Motion File"
-msgstr "Renderuj pliku ruchu spowolnionego/przyśpieszonego"
+msgstr "Renderuj plik ruchu spowolnionego/przyśpieszonego"
 
 #: guicomponents.py:1642
 msgid "Render Reverse Motion File"
-msgstr "Renderuj pliku ruchu wstecznego"
+msgstr "Renderuj plik ruchu wstecznego"
 
 #: guicomponents.py:1644
 msgid "Render Proxy File"
@@ -2223,7 +2223,7 @@ msgstr "Wyświetl w podglądzie klipu"
 
 #: guicomponents.py:1681
 msgid "Toggle Star"
-msgstr "Przełącz oznaczone gwiazdką"
+msgstr "Przełącz oznaczenie gwiazdką"
 
 #: guicomponents.py:1689 medialinker.py:134
 msgid "Set File Relink Path"
@@ -2344,7 +2344,7 @@ msgstr "Zablokuj"
 
 #: guicomponents.py:2204
 msgid "Show Magnet Icon"
-msgstr "Pokaż ikonę magnesu"
+msgstr "Pokazuj ikonę magnesu"
 
 #: guicomponents.py:2213
 msgid "Display All Audio Levels"
@@ -2593,7 +2593,7 @@ msgstr "Najlepszy profil:"
 
 #: panels.py:252
 msgid "Matches Project Profile:"
-msgstr "Dopasowany plik projektu:"
+msgstr "Pasuje do profilu projektu:"
 
 #: panels.py:275 tools/gmic.py:699
 msgid "Mark In:"
@@ -3246,7 +3246,7 @@ msgstr "Szerokość przejścia"
 
 #: translations.py:252 translations.py:264 translations.py:427
 msgid "Tilt"
-msgstr "Przechylenie"
+msgstr "Przechył"
 
 #: translations.py:253 translations.py:562
 msgid "Min"
@@ -4674,19 +4674,19 @@ msgstr "Używaj komentarzy jako nazw klipów"
 
 #: medialog.py:733
 msgid "Display starred ranges"
-msgstr "Wyświetl używane zakresy"
+msgstr "Wyświetl zakresy oznaczone gwiazdką"
 
 #: medialog.py:734
 msgid "Display non-starred ranges"
-msgstr "Wyświetl nieużywane zakresy"
+msgstr "Wyświetl zakresy nie oznaczone gwiazdką"
 
 #: medialog.py:735
 msgid "Set selected ranges starred"
-msgstr "Ustaw wybrane zakresy jako używane"
+msgstr "Oznacz wybrane zakresy gwiazdką"
 
 #: medialog.py:736
 msgid "Set selected ranges non-starred"
-msgstr "Ustaw wybrane zakresy jako nieużywane"
+msgstr "Usuń oznaczenie gwiazdką dla wybranych zakresów"
 
 #: medialog.py:737
 msgid "Log current marked range"
@@ -4702,7 +4702,7 @@ msgstr "Wstaw wybrane zakresy na oś czasu"
 
 #: medialog.py:740
 msgid "Append displayed ranges on Timeline"
-msgstr "Dołącz wyświetlone zakresy do osi czasu"
+msgstr "Dołącz wyświetlane zakresy do osi czasu"
 
 #: medialog.py:757
 msgid "All Items"
@@ -4819,7 +4819,7 @@ msgstr "Renderuj plik wideo ruchu spowolnionego/przyśpieszonego"
 
 #: rendergui.py:174 rendergui.py:322
 msgid "Source Media File: "
-msgstr "Plik źródłowy multimediów: "
+msgstr "Źródłowy plik multimedialny: "
 
 #: rendergui.py:181 rendergui.py:182 rendergui.py:329 rendergui.py:330
 msgid "<b>not set</b>"
@@ -4835,7 +4835,7 @@ msgstr "Szybkość %:"
 
 #: rendergui.py:244 rendergui.py:392
 msgid "Full Source Length"
-msgstr "Pełna długość źródła"
+msgstr "Cała długość źródła"
 
 #: rendergui.py:249 rendergui.py:397
 msgid "Source Mark In to Mark Out"
@@ -5894,15 +5894,15 @@ msgstr ""
 
 #: medialinker.py:104
 msgid "Load Project For Relinking"
-msgstr "Wczytaj projekt do relinkowania"
+msgstr "Wczytaj projekt dla operacji relinkowania"
 
 #: medialinker.py:112
 msgid "Original Media Missing:"
-msgstr "Brakujące oryginalne media:"
+msgstr "Brakujących pierwotnych multimediów:"
 
 #: medialinker.py:113
 msgid "Original Media Found:"
-msgstr "Znalezione oryginalne media:"
+msgstr "Znalezionych pierwotnych multimediów:"
 
 #: medialinker.py:116
 msgid "Project:"
@@ -5926,15 +5926,15 @@ msgstr "Zapisz relinkowany projekt jako..."
 
 #: medialinker.py:269
 msgid "Missing Media File Path"
-msgstr "Brakująca ścieżka pliku multimediów"
+msgstr "Ścieżka  brakującego pliku multimedialnego"
 
 #: medialinker.py:270
 msgid "Found Media File Path"
-msgstr "Znaleziona ścieżka pliku multimediów"
+msgstr "Ścieżka znalezionego pliku multimedialnego"
 
 #: medialinker.py:274
 msgid "Media File Re-link Path"
-msgstr "Wybierz ścieżkę do relinkowanego pliku multimedialnego"
+msgstr "Ścieżka relinkowanego pliku multimedialnego"
 
 #: medialinker.py:435
 msgid "Select Media File To Relink To"
