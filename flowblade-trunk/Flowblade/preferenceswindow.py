@@ -417,8 +417,9 @@ def _shortcuts_panel():
     # Widgets
     shortcuts_combo = Gtk.ComboBoxText()
     shortcuts_combo.append_text('Flowblade Default')
-    for shortcut_file in shortcuts.shortcut_files:
-        shortcuts_combo.append_text(shortcut_file)
+    for i in range(0, len(shortcuts.shortcut_files)):
+        shortcut_file = shortcuts.shortcut_files[i]
+        shortcuts_combo.append_text(shortcuts.shortcut_files_display_names[i])
         count = count + 1
         if hasattr(prefs, 'shortcuts'):
             if shortcut_file == prefs.shortcuts:

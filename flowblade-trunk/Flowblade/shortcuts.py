@@ -27,10 +27,11 @@ import editorpersistance
 import re
 
 shortcut_files = []
+shortcut_files_display_names = []
 _keyboard_actions = {}
 
 def load_shortcut_files():
-    global shortcut_files
+    global shortcut_files, shortcut_files_display_names
     try:
         for file in os.listdir(respaths.SHORTCUTS_PATH):
             format_error = True
@@ -47,8 +48,10 @@ def load_shortcut_files():
                         if root.get('file') == appconsts.SHORTCUTS_TAG:
                             # Get name and comments
                             file_len = len(file) - 4
+                            # We're requiring files names to match displayed name
                             if root.get('name').lower() == file[:file_len].lower(): 
                                 shortcut_files.append(file)
+                                shortcut_files_display_names.append(root.get('name'))
                                 format_error = False
                 else:
                     format_error = False
@@ -63,13 +66,13 @@ def load_shortcut_files():
 def load_shortcuts():
     global _keyboard_actions
     prefs = editorpersistance.prefs
-        
+
     _modifier_dict = {}
     # Load hardcoded defaults
     _keyboard_actions_defaults()
     # Check if a shortcut preference is set
     if prefs.shortcuts == appconsts.SHORTCUTS_DEFAULT:
-        # We have a default setting, so we don't need to load a file
+        # We have a default setting, so we don't need to load a file, we are using hardcoded.
         return
     # Make sure that whatever is in preferences is a valid file. If it's not in shortcut_files it's not valid
     if not prefs.shortcuts in shortcut_files:
@@ -86,7 +89,8 @@ def load_shortcuts():
             if root.get('file') == appconsts.SHORTCUTS_TAG:
                 # Get name and comments
                 print "Loading shortcuts: " + root.get('name')
-                print root.get('comment')
+                # We have good shortcuts file, destroy hardcoded defaults
+                _keyboard_actions = {}
                 # Now loop through all the events and assign them
                 events = root.getiterator('event')
                 for event in events:
@@ -152,8 +156,8 @@ def _keyboard_actions_defaults():
     _keyboard_actions['5'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_slip'}
     _keyboard_actions['6'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_spacer'}
     _keyboard_actions['7'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_box'}
-    _keyboard_actions['-'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'zoom_out'}
-    _keyboard_actions['='] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'zoom_in'}
+    _keyboard_actions['minus'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'zoom_out'}
+    _keyboard_actions['plus'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'zoom_in'}
     _keyboard_actions['tab'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'switch_monitor'}
     _keyboard_actions['m'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'add_marker'}
     _keyboard_actions['enter'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'enter_edit'}

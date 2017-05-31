@@ -1208,7 +1208,7 @@ def keyboard_shortcuts_dialog(parent_window):
     general_vbox.pack_start(_get_kb_row(_("Control + O"), _("Open Project")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("TAB"), _("Switch Monitor Source")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Control + L"), _("Log Marked Clip Range")), False, False, 0)
-    general_vbox.pack_start(_get_kb_row(_("="), _("Zoom In")), False, False, 0)
+    general_vbox.pack_start(_get_kb_row(_("+"), _("Zoom In")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("-"), _("Zoom Out")), False, False, 0)
     general = guiutils.get_named_frame(_("General"), general_vbox)
 
