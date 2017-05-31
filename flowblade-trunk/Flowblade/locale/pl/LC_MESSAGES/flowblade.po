@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-29 18:30+0300\n"
+"POT-Creation-Date: 2017-05-30 20:31+0200\n"
 "PO-Revision-Date: 2017-05-27 08:50+0200\n"
 "Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -60,8 +60,8 @@ msgstr "Aby załadować projekt, musisz również:"
 msgid ""
 "Open project in 'Media Relinker' tool to relink media assets to new files, or"
 msgstr ""
-"Otwórz projekt w narzędziu 'Relinker multimediów', aby powiązać "
-"zasoby multimedialne z nowymi plikami, lub"
+"Otwórz projekt w narzędziu 'Relinker multimediów', aby powiązać zasoby "
+"multimedialne z nowymi plikami, lub"
 
 #: projectaction.py:122
 msgid "Place a file with the same exact name and path on the hard drive"
@@ -261,8 +261,8 @@ msgstr "Nie można usunąć niepustego pojemnika"
 #: projectaction.py:1235
 msgid "You must remove all files from the bin before deleting it."
 msgstr ""
-"Przed usunięciem pojemnika należy usunąć "
-"wszystkie znajdujące się w nim pliki."
+"Przed usunięciem pojemnika należy usunąć wszystkie znajdujące się w nim "
+"pliki."
 
 #: projectaction.py:1243
 msgid "Can't remove last bin"
@@ -762,8 +762,8 @@ msgstr "Zmieniono tryb globalnego okna"
 #: editorwindow.py:920
 msgid "Application restart required for the new layout choice to take effect."
 msgstr ""
-"Wymagane jest ponowne uruchomienie aplikacji, aby wybór nowego "
-"układu przyniósł efekt."
+"Wymagane jest ponowne uruchomienie aplikacji, aby wybór nowego układu "
+"przyniósł efekt."
 
 #: editorwindow.py:1031
 msgid "Timeline current frame timecode"
@@ -5227,7 +5227,7 @@ msgstr "Wyśrodkuj bieżącą klatkę po naciśnięciu strzałki w górę/w dó�
 
 #: preferenceswindow.py:245
 msgid "Graphics default length:"
-msgstr "Domyślna długość grafiki:"
+msgstr "Domyślna długość klipu z grafiką:"
 
 #: preferenceswindow.py:246
 msgid "Trim Modes exit on empty click"
@@ -5349,7 +5349,9 @@ msgstr "Żądany motyw, ikony oraz kolory:"
 
 #: preferenceswindow.py:353
 msgid "Theme detection fail fallback colors:"
-msgstr "Alternatywny schemat kolorystyczny, gdy nie jest możliwe użycie żądanego motywu:"
+msgstr ""
+"Alternatywny schemat kolorystyczny, gdy nie jest możliwe użycie żądanego "
+"motywu:"
 
 #: preferenceswindow.py:354
 msgid "Default audio levels display:"
@@ -5729,8 +5731,8 @@ msgid "You need to select clips to overwrite to perform this edit."
 msgstr ""
 "Musisz wybrać klipy, które mają zostać zastąpione, aby wykonać tę edycję."
 
-#: tlineaction.py:454
-msgid "3 point edit not defoned!"
+#: tlineaction.py:454 tlineaction.py:998
+msgid "3 point edit not defined!"
 msgstr "3-punktowa edycja nie została zdefiniowana!"
 
 #: tlineaction.py:455 tlineaction.py:479
@@ -5868,10 +5870,6 @@ msgid ""
 msgstr ""
 "Nie można wykonać żądanej edycji, ponieważ zakres pomiędzy znacznikiem "
 "początkowym a końcowym jest zbyt krótki."
-
-#: tlineaction.py:998
-msgid "3 point edit not defined!"
-msgstr "3-punktowa edycja nie została zdefiniowana!"
 
 #: tlineaction.py:999
 msgid ""
@@ -6210,3 +6208,6 @@ msgid ""
 msgstr ""
 "Klip jest za krótki, aby dodać domyślnie ustawione przez użytkownika "
 "blaknięcie podczas tworzenia kompozytora."
+
+#~ msgid "3 point edit not defoned!"
+#~ msgstr "3-punktowa edycja nie została zdefiniowana!"
