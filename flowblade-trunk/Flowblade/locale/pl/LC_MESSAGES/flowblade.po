@@ -434,7 +434,7 @@ msgstr "Dodaj blaknięcie na pojedynczej ścieżce"
 
 #: editorwindow.py:193 guicomponents.py:1198 guicomponents.py:1247
 msgid "Clear Filters"
-msgstr "Wyczyść filtry"
+msgstr "Usuń filtry"
 
 #: editorwindow.py:194 dialogs.py:1236
 msgid "Timeline"
@@ -2089,7 +2089,7 @@ msgstr "Ostatnia klatka na osi czasu"
 
 #: guicomponents.py:1457 guicomponents.py:2320
 msgid "Clear Match Frame"
-msgstr "Wyczyść dopasowywanie klatki"
+msgstr "Usuń dopasowywanie klatki"
 
 #: guicomponents.py:1467
 msgid "Select"
