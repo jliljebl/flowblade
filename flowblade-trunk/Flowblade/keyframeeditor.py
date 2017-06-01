@@ -1988,6 +1988,7 @@ class GeometryEditor(AbstractKeyFrameEditor):
             view_size_index = 2
         self.geom_buttons_row.size_select.set_active(view_size_index)
 
+
 class RotatingGeometryEditor(GeometryEditor):
     
     def init_geom_gui(self, editable_property):
@@ -1999,6 +2000,9 @@ class RotatingGeometryEditor(GeometryEditor):
         editable_property.value.strip('"')
         self.geom_kf_edit.keyframe_parser = propertyparse.rotating_geom_keyframes_value_string_to_geom_kf_array
         self.geom_kf_edit.set_keyframes(editable_property.value, editable_property.get_in_value)
+
+
+
 
 
 # ----------------------------------------------------------------- linear interpolation

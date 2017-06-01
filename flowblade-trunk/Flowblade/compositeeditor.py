@@ -131,10 +131,16 @@ def set_enabled(value):
     widgets.compositor_info.set_enabled(value)
     widgets.delete_b.set_sensitive(value)
     widgets.reset_b.set_sensitive(value)
-    widgets.fade_in_b.set_sensitive(value)
-    widgets.fade_out_b.set_sensitive(value)
-    widgets.fade_in_spin.set_sensitive(value)
-    widgets.fade_out_spin.set_sensitive(value)
+    if compositor == None or compositor.transition.info.auto_fade_compositor == False:
+        widgets.fade_in_b.set_sensitive(value)
+        widgets.fade_out_b.set_sensitive(value)
+        widgets.fade_in_spin.set_sensitive(value)
+        widgets.fade_out_spin.set_sensitive(value)
+    else: # Autofade compositors don't use these buttons
+        widgets.fade_in_b.set_sensitive(False)
+        widgets.fade_out_b.set_sensitive(False)
+        widgets.fade_in_spin.set_sensitive(False)
+        widgets.fade_out_spin.set_sensitive(False)
 
 def maybe_clear_editor(killed_compositor):
     if killed_compositor.destroy_id == compositor.destroy_id:
@@ -224,6 +230,7 @@ def _display_compositor_edit_box():
         if ((editor_type == propertyeditorbuilder.KEYFRAME_EDITOR)
             or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_RELEASE)
             or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_CLIP)
+            or (editor_type == propertyeditorbuilder.FADE_LENGTH)
             or (editor_type == propertyeditorbuilder.GEOMETRY_EDITOR)):
                 keyframe_editor_widgets.append(editor_row)
     

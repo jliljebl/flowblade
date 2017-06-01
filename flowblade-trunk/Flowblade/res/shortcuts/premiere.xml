@@ -46,7 +46,7 @@
   lower case. If you want to use upper case, then use the Shift
   modifier.
 -->
-<flowblade file='shortcuts' name='Flowblade' comment='Default values'>
+<flowblade file='shortcuts' name='Premiere' comment='Default values'>
   <author name='me'>
     <name>Steven van de Beek</name>
     <date format='dd-Mmm-yyyy'>16-Apr-2017</date>
@@ -61,8 +61,8 @@
     <event code='to_mark_out' name='Go To Mark Out' modifiers='SHIFT'>o</event>
     <event code='to_mark_out' name='Go To Mark Out' modifiers='ALT+SHIFT'>o</event>
     <event code='play_pause' name='Play / Pause'>space</event>
-    <event code='prev_cut' name='Go To Previous Cut'>down</event>
-    <event code='next_cut' name='Go To Next Cut'>up</event>
+    <event code='prev_cut' name='Go To Previous Cut'>up</event>
+    <event code='next_cut' name='Go To Next Cut'>down</event>
     <event code='prev_frame' name='Go To Previous Frame' modifiers='Any'>left</event>
     <event code='next_frame' name='Go To Next Frame' modifiers='Any'>right</event>
     <event code='insert' name='Insert'>y</event>
@@ -96,7 +96,8 @@
     <event code='edit_mode_box' name='Change Edit Mode to Box'>7</event>
     <event code='edit_mode_box' name='Change Edit Mode to Box'>kp_7</event>
     <event code='zoom_out' name='Zoom Out'>minus</event>
-    <event code='zoom_in' name='Zoom In'>plus</event>
+    <event code='zoom_in' name='Zoom In'>equal</event>
+    <event code='zoom_in' name='Zoom In' modifiers='SHIFT'>equal</event>
     <event code='switch_monitor' name='Switch Monitor Display'>tab</event>
     <event code='add_marker' name='Add Marker'>m</event>
     <event code='enter_edit' name='Enter Editing Mode'>enter</event>

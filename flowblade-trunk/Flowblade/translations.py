@@ -534,6 +534,8 @@ def load_filters_translations():
     param_names["Wipe Type"] = _("Wipe Type")
     param_names["Invert"] = _("Invert")
     param_names["Softness"] = _("Softness")
+    param_names["Fade Out Length"] = _("Fade Out Length")
+    param_names["Fade In Length"] = _("Fade In Length")
 
     # Combo options
     global combo_options

@@ -515,10 +515,18 @@ def sync_compositor(compositor):
     clip_index = track.clips.index(origin_clip)
     clip_start = track.clip_start(clip_index)
     clip_end = clip_start + origin_clip.clip_out - origin_clip.clip_in
+    
+    # Auto fades need to go to start or end of clips and maintain their lengths
+    if compositor.transition.info.auto_fade_compositor == True:
+        if compositor.transition.info.name == "##auto_fade_in":
+            clip_end = clip_start + compositor.get_length() - 1
+        else:
+            clip_start = clip_end - compositor.get_length() + 1
+            
     data = {"compositor":compositor,"clip_in":clip_start,"clip_out":clip_end}
     action = edit.move_compositor_action(data)
     action.do_edit()
-
+        
 def set_compositors_fades_defaults():
     dialogs.set_fades_defaults_dialog(_compositors_fades_defaults_callback)
 
@@ -566,30 +574,44 @@ def split_audio_button_pressed():
     syncsplitevent.split_audio_from_clips_list(clips, track)
 
 def sync_all_compositors():
-    # Pair all compositors with their origin clips and clip data
+    # Pair all compositors with their origin clips ids
     comp_clip_pairings = {}
     for compositor in current_sequence().compositors:
-        comp_clip_pairings[compositor.origin_clip_id] = compositor
+        if compositor.origin_clip_id in comp_clip_pairings:
+            comp_clip_pairings[compositor.origin_clip_id].append(compositor)
+        else:
+            comp_clip_pairings[compositor.origin_clip_id] = [compositor]
     
+    # Create resync list
+    resync_list = []
     for i in range(current_sequence().first_video_index, len(current_sequence().tracks) - 1): # -1, there is a topmost hidden track 
         track = current_sequence().tracks[i] # b_track is source track where origin clip is
         for j in range(0, len(track.clips)):
             clip = track.clips[j]
             if clip.id in comp_clip_pairings:
-                compositor = comp_clip_pairings[clip.id]
-                comp_clip_pairings[clip.id] = (clip, track, j, compositor)
-
+                compositor_list = comp_clip_pairings[clip.id]
+                for compositor in compositor_list:
+                    resync_list.append((clip, track, j, compositor))
+                    
     # Do sync
-    for origin_clip_id in comp_clip_pairings:
+    for resync_item in resync_list:
         try:
-            clip, track, clip_index, compositor = comp_clip_pairings[origin_clip_id]
+            clip, track, clip_index, compositor = resync_item
             clip_start = track.clip_start(clip_index)
             clip_end = clip_start + clip.clip_out - clip.clip_in
+            
+            # Auto fades need to go to start or end of clips and maintain their lengths
+            if compositor.transition.info.auto_fade_compositor == True:
+                if compositor.transition.info.name == "##auto_fade_in":
+                    clip_end = clip_start + compositor.get_length() - 1
+                else:
+                    clip_start = clip_end - compositor.get_length() + 1
+            
             data = {"compositor":compositor,"clip_in":clip_start,"clip_out":clip_end}
             action = edit.move_compositor_action(data)
             action.do_edit()
         except:
-            # Clip is probably  already deleted
+            # Clip is probably deleted
             pass
 
 def add_transition_menu_item_selected():

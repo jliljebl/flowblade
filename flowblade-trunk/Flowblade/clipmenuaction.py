@@ -224,11 +224,8 @@ def _add_compositor(data):
     updater.repaint_tline()
 
 def _add_autofade(data):
-    print "autofade"
     clip, track, item_id, item_data = data
     x, compositor_type = item_data
-
-    print compositor_type
 
     frame = tlinewidgets.get_frame(x)
     clip_index = track.get_clip_index_at(frame)
@@ -238,11 +235,11 @@ def _add_autofade(data):
     clip_length = clip.clip_out - clip.clip_in
     if compositor_type == "##auto_fade_in":
         compositor_in = current_sequence().tracks[track.id].clip_start(clip_index)
-        compositor_out = compositor_in + 30
+        compositor_out = compositor_in + int(utils.fps()) - 1
     else:
         clip_start = current_sequence().tracks[track.id].clip_start(clip_index)
-        compositor_out = compositor_in + clip_length
-        compositor_in = compositor_out - 30
+        compositor_out = clip_start + clip_length
+        compositor_in = compositor_out - int(utils.fps()) + 1
 
     edit_data = {"origin_clip_id":clip.id,
                 "in_frame":compositor_in,

@@ -166,6 +166,7 @@ def save_project(project, file_path, changed_profile_desc=None):
                 s_media_file.path = snapshot_paths[s_media_file.path] 
 
         media_files[s_media_file.id] = s_media_file
+
     s_proj.media_files = media_files
 
     # Replace sequences with pickleable objects
@@ -302,6 +303,7 @@ def get_p_compositors(compositors):
         s_compositor.transition.mlt_transition = None
         if _fps_conv_mult != 1.0:
             _update_compositor_in_out_for_fps_change(s_compositor)
+
         s_compositors.append(s_compositor)
 
     return s_compositors
@@ -461,6 +463,7 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
             compositor.transition.set_tracks(py_compositor.transition.a_track, py_compositor.transition.b_track)
             compositor.set_in_and_out(py_compositor.clip_in, py_compositor.clip_out)
             compositor.origin_clip_id = py_compositor.origin_clip_id
+           
             mlt_compositors.append(compositor)
 
     seq.compositors = mlt_compositors

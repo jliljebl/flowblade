@@ -83,6 +83,7 @@ import renderconsumer
 import respaths
 import resync
 import sequence
+import shortcuts
 import snapping
 import titler
 import tlinewidgets
@@ -93,8 +94,7 @@ import translations
 import undo
 import updater
 import utils
-# Apr-2017 - SvdB
-import shortcuts
+
 
 import jackaudio
 
@@ -333,7 +333,7 @@ def main(root_path):
             print "Launch assoc file:", assoc_file_path
             global assoc_timeout_id
             assoc_timeout_id = GObject.timeout_add(10, open_assoc_file)
-            
+        
     # Launch gtk+ main loop
     Gtk.main()
 

@@ -309,16 +309,13 @@ def _first_load_profile_check():
 def _not_matching_media_info_callback(dialog, response_id, media_file):
     dialog.destroy()
     
-    print media_file.info
     match_profile_index = mltprofiles.get_closest_matching_profile_index(media_file.info)
     profile = mltprofiles.get_profile_for_index(match_profile_index)
-    print profile,  profile.description()
         
     if response_id == Gtk.ResponseType.ACCEPT:
         # Save in hidden and open
         match_profile_index = mltprofiles.get_closest_matching_profile_index(media_file.info)
         profile = mltprofiles.get_profile_for_index(match_profile_index)
-        print profile,  profile.description()
         path = utils.get_hidden_user_dir_path() + "/" + PROJECT().name
         PROJECT().update_media_lengths_on_load = True
         
