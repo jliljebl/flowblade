@@ -4184,27 +4184,27 @@ msgstr "Podświetlenia"
 
 #: mlttransitions.py:80
 msgid "Vertical From Center"
-msgstr "Pionowy ze środka"
+msgstr "Pionowo ze środka"
 
 #: mlttransitions.py:81
 msgid "Vertical Top to Bottom"
-msgstr "Pionowy z góry na dół"
+msgstr "Pionowo z góry na dół"
 
 #: mlttransitions.py:82
 msgid "Vertical Bottom to Top"
-msgstr "Pionowy z dołu do góry"
+msgstr "Pionowo z dołu do góry"
 
 #: mlttransitions.py:83
 msgid "Horizontal From Center"
-msgstr "Poziomy od środka"
+msgstr "Poziomo od środka"
 
 #: mlttransitions.py:84
 msgid "Horizontal Left to Right"
-msgstr "Poziomy od lewej do prawej"
+msgstr "Poziomo od lewej do prawej"
 
 #: mlttransitions.py:85
 msgid "Horizontal Right to Left"
-msgstr "Poziomy od prawej do lewej"
+msgstr "Poziomo od prawej do lewej"
 
 #: mlttransitions.py:86
 msgid "Clock Left To Right"
@@ -4340,19 +4340,19 @@ msgstr "Swobodne krzywe"
 
 #: mlttransitions.py:119
 msgid "Diagonal 1"
-msgstr "Przekątna 1"
+msgstr "Ukośnie 1"
 
 #: mlttransitions.py:120
 msgid "Diagonal 2"
-msgstr "Przekątna 2"
+msgstr "Ukośnie 2"
 
 #: mlttransitions.py:121
 msgid "Diagonal 3"
-msgstr "Przekątna 3"
+msgstr "Ukośnie 3"
 
 #: mlttransitions.py:122
 msgid "Diagonal 4"
-msgstr "Przekątna 4"
+msgstr "Ukośnie 4"
 
 #: mlttransitions.py:123
 msgid "Checkerboard"
