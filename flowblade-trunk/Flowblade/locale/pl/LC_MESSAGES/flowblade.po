@@ -4256,11 +4256,11 @@ msgstr "Chmura"
 
 #: mlttransitions.py:98
 msgid "Hatched 1"
-msgstr "Kreskowany 1"
+msgstr "Kreskowane 1"
 
 #: mlttransitions.py:99
 msgid "Hatched 2"
-msgstr "Kreskowany 2"
+msgstr "Kreskowane 2"
 
 #: mlttransitions.py:100
 msgid "Hourglass"
