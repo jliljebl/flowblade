@@ -422,7 +422,7 @@ msgstr "Resynchronizuj"
 
 #: editorwindow.py:190
 msgid "Set Sync Parent"
-msgstr "Ustaw synchronizację nadrzędną"
+msgstr "Określ synchronizację nadrzędną"
 
 #: editorwindow.py:191
 msgid "Add Single Track Transition"
@@ -430,7 +430,7 @@ msgstr "Dodaj przejście na pojedynczej ścieżce"
 
 #: editorwindow.py:192
 msgid "Add Single Track Fade"
-msgstr "Dodaj blaknięcie na pojedynczej ścieżce"
+msgstr "Dodaj zanikanie na pojedynczej ścieżce"
 
 #: editorwindow.py:193 guicomponents.py:1198 guicomponents.py:1247
 msgid "Clear Filters"
@@ -450,11 +450,11 @@ msgstr "Włącz wszystkie filtry"
 
 #: editorwindow.py:197
 msgid "Sync All Compositors"
-msgstr "Zsynchronizuj wszystkie kompozytory"
+msgstr "Synchronizuj wszystkie kompozytory"
 
 #: editorwindow.py:198
 msgid "Set Compositor Auto Fades..."
-msgstr "Ustaw autoblaknięcie kompozytora..."
+msgstr "Parametry automatycznego pojawiania się/zanikania kompozytorów..."
 
 #: editorwindow.py:199
 msgid "Change Sequence Tracks Count..."
@@ -1424,7 +1424,7 @@ msgstr "Zastosuj"
 
 #: dialogs.py:1181 guicomponents.py:1409
 msgid "Add Fade"
-msgstr "Dodawanie blaknięcia"
+msgstr "Dodaj zanikanie"
 
 #: dialogs.py:1198 dialogs.py:1317 tools/titler.py:514 proxyediting.py:420
 #: medialinker.py:154 tools/gmic.py:802 tools/gmic.py:893
@@ -1793,7 +1793,7 @@ msgstr "Zank wodny:"
 
 #: dialogs.py:1325
 msgid "Set Watermark File"
-msgstr "Ustaw plik znaku wodnego"
+msgstr "Określ plik znaku wodnego"
 
 #: dialogs.py:1326
 msgid "Remove Watermark"
@@ -1884,15 +1884,15 @@ msgstr "Importuj:"
 
 #: dialogs.py:1527
 msgid "Compositors Auto Fades"
-msgstr "Kompozytory autoblaknięcia"
+msgstr "Automatyczne pojawianie się/zanikanie kompozytorów"
 
 #: dialogs.py:1530
 msgid "Set Group Defaults"
-msgstr "Ustaw domyślne ustawienia grupowe"
+msgstr "Przypisz grupie jako ustawienia domyślne"
 
 #: dialogs.py:1541
 msgid "Compositor Auto Fades Group"
-msgstr "Grupy autoblaknięcia kompozytora"
+msgstr "Grupa kompozytorów dla automatycznego pojawiania się/zanikania"
 
 #: dialogs.py:1544 dialogs.py:1555 panels.py:355 panels.py:428
 #: tools/gmic.py:701
@@ -1901,15 +1901,15 @@ msgstr "Długość:"
 
 #: dialogs.py:1545
 msgid "Add Fade In on Creation"
-msgstr "Dodaj efekt płynnego pojawiania się obrazu podczas tworzenia"
+msgstr "Dodaj efekt ich płynnego pojawiania się podczas kreowania"
 
 #: dialogs.py:1556
 msgid "Add Fade Out on Creation"
-msgstr "Dodaj efekt płynnego zanikania obrazu podczas tworzenia"
+msgstr "Dodaj efekt ich płynnego zanikania podczas kreowania"
 
 #: dialogs.py:1573
 msgid "Group Auto Fades"
-msgstr "Grupa autoblaknięcia"
+msgstr "Grupa automatycznego pojawiania się/zanikania"
 
 #: editevent.py:226
 msgid "Can't put an audio clip on a video track."
@@ -2113,7 +2113,7 @@ msgstr "Edytuj"
 
 #: guicomponents.py:1515
 msgid "Set Clip Length..."
-msgstr "Ustaw długość klipu ..."
+msgstr "Określ długość klipu ..."
 
 #: guicomponents.py:1518
 msgid "Stretch Over Next Blank"
@@ -2227,7 +2227,7 @@ msgstr "Przełącz oznaczenie gwiazdką"
 
 #: guicomponents.py:1689 medialinker.py:134
 msgid "Set File Relink Path"
-msgstr "Ustaw ścieżkę relinkowanego pliku"
+msgstr "Określ ścieżkę relinkowanego pliku"
 
 #: guicomponents.py:1690 medialinker.py:136
 msgid "Delete File Relink Path"
@@ -4053,12 +4053,12 @@ msgstr "Ilość wytarć"
 #: translations.py:537
 #, fuzzy
 msgid "Fade Out Length"
-msgstr "Płynne zanikanie obrazu"
+msgstr "Długość płynnego zanikania"
 
 #: translations.py:538
 #, fuzzy
 msgid "Fade In Length"
-msgstr "Płynne pojawianie się obrazu"
+msgstr "Długość płynneego pojawiania się"
 
 #: translations.py:542 translations.py:548
 msgid "Shave"
@@ -4557,7 +4557,7 @@ msgid ""
 "Cut - X"
 msgstr ""
 "Dodanie wyrenderowanego przejścia - wybrane 2 klipy\n"
-"Dodanie wyrenderowanego blaknięcia - wybrany 1 klip\n"
+"Dodanie wyrenderowanego zanikania - wybrany 1 klip\n"
 "Cięcie - X"
 
 #: middlebar.py:138
@@ -5009,7 +5009,7 @@ msgstr "Edytuj argumenty:"
 
 #: rendergui.py:1055
 msgid "Set Args"
-msgstr "Ustaw argumenty"
+msgstr "Określ argumenty"
 
 #: profilesmanager.py:47 proxyediting.py:218
 msgid "Close Manager"
@@ -5258,7 +5258,7 @@ msgstr ""
 
 #: preferenceswindow.py:250
 msgid "Cover Transition/Fade clips on delete if possible"
-msgstr "Jeśli to możliwe, zakryj klipy przejść/blaknięcia podczas kasowania"
+msgstr "Jeśli to możliwe, zakryj klipy przejścia/zanikania podczas kasowania"
 
 #: preferenceswindow.py:252
 msgid "Enable single Play/Pause button"
@@ -5722,7 +5722,7 @@ msgstr "Konwertowanie w celu skorzystania z oryginalnych multimediów"
 
 #: tlineaction.py:201
 msgid "Fade/Transition cover delete failed!"
-msgstr "Usunięcie powłoki blaknięcia/przejścia nie powiodło się!"
+msgstr "Usunięcie powłoki zanikania/przejścia nie powiodło się!"
 
 #: tlineaction.py:202
 msgid ""
@@ -5855,7 +5855,7 @@ msgstr " klatki(ek)\n"
 
 #: tlineaction.py:940
 msgid "<b>Fade Length:</b> "
-msgstr "<b>Długość blaknięcia:</b> "
+msgstr "<b>Długość zanikania:</b> "
 
 #: tlineaction.py:941
 msgid "Clip is too short!"
@@ -6061,7 +6061,7 @@ msgstr "Ustawienia kodowania obrazu"
 
 #: tools/gmic.py:512
 msgid "Set Encoding"
-msgstr "Ustaw kodowanie"
+msgstr "Określ kodowanie"
 
 #: tools/gmic.py:557 tools/gmic.py:890
 msgid "Load Clip"
@@ -6210,7 +6210,7 @@ msgstr "Klip jest za krótki, aby dodać pożądany efekt blaknięcia."
 
 #: compositorfades.py:279
 msgid "Clip too short for Auto Fades!"
-msgstr "Klip jest za krótki dla autoblaknięcia!"
+msgstr "Klip jest zbyt krótki do wykonania automatycznego pojawiania się/zanikania!"
 
 #: compositorfades.py:280
 msgid ""
