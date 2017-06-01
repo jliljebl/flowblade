@@ -1569,7 +1569,7 @@ msgstr ""
 
 #: dialogs.py:1228 dialogs.py:1263
 msgid "Trim Tool Ripple Mode On/Off"
-msgstr "Włącz/wyłącz tryb wypełniania przerw dla narzędzia przycinania"
+msgstr "Włącz/wyłącz tryb falowania dla narzędzia przycinania"
 
 #: dialogs.py:1229
 msgid "S"
@@ -2017,7 +2017,7 @@ msgstr "Wyodrębnij dźwięk"
 
 #: guicomponents.py:1157
 msgid "Split Audio Synched"
-msgstr "Wyodrębnij synchronizowany dźwięk"
+msgstr "Wyodrębnij i zsynchronizuj dźwięk"
 
 #: guicomponents.py:1164 guicomponents.py:1284
 msgid "Display Audio Level"
@@ -2029,11 +2029,11 @@ msgstr "Oczyść przebieg"
 
 #: guicomponents.py:1175 guicomponents.py:1277
 msgid "Clear Sync Relation"
-msgstr "Usuń powiązania synchronizacji"
+msgstr "Usuń powiązanie synchronizacji"
 
 #: guicomponents.py:1177 guicomponents.py:1279
 msgid "Select Sync Parent Clip..."
-msgstr "Wybierz synchroniczny klip nadrzędny..."
+msgstr "Wybierz nadrzędny klip synchronizacji..."
 
 #: guicomponents.py:1205 guicomponents.py:1303
 msgid "Clip Info"
@@ -2828,7 +2828,7 @@ msgstr "Korekta"
 
 #: translations.py:122
 msgid "Artistic"
-msgstr "Plastyczny"
+msgstr "Artystyczny"
 
 #: translations.py:126
 msgid "Alpha Gradient"
@@ -3234,7 +3234,7 @@ msgstr "Siatka obrazu"
 
 #: translations.py:244
 msgid "Color Lift Gain Gamma"
-msgstr "Wzmocnienie barwy Gamma"
+msgstr "Wzmocnienie barwy gamma"
 
 #: translations.py:250 translations.py:433
 msgid "Position"
@@ -4320,7 +4320,7 @@ msgstr "Miejsca"
 
 #: mlttransitions.py:114 medialog.py:535
 msgid "Star"
-msgstr "Gwiazda"
+msgstr "Gwiazdka"
 
 #: mlttransitions.py:115
 msgid "Arch"
