@@ -2794,7 +2794,7 @@ msgstr ""
 
 #: translations.py:114
 msgid "Audio Filter"
-msgstr "Filtr audio"
+msgstr "Filtr dźwięku"
 
 #: translations.py:115 translations.py:168 translations.py:381
 #: translations.py:458
@@ -4566,7 +4566,7 @@ msgid ""
 "Split Audio"
 msgstr ""
 "Resynchronizacja wybranego\n"
-"Oddziel dźwięk"
+"Wyodrębnij dźwięk"
 
 #: middlebar.py:150
 msgid ""
