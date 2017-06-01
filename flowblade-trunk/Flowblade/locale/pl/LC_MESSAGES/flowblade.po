@@ -4184,7 +4184,7 @@ msgstr "Podświetlenia"
 
 #: mlttransitions.py:80
 msgid "Vertical From Center"
-msgstr "Pionowe ze środka"
+msgstr "Pionowy ze środka"
 
 #: mlttransitions.py:81
 msgid "Vertical Top to Bottom"
@@ -4284,7 +4284,7 @@ msgstr "Prostokąt z zewnątrz"
 
 #: mlttransitions.py:105
 msgid "Rectangle Bars"
-msgstr "Prostokątne pasy"
+msgstr "Prostokątne listwy"
 
 #: mlttransitions.py:106
 msgid "Sand"
@@ -4304,7 +4304,7 @@ msgstr "Spirala"
 
 #: mlttransitions.py:110
 msgid "Spiral Galaxy"
-msgstr "Spiralna galaktyczna"
+msgstr "Spiralna galaktyka"
 
 #: mlttransitions.py:111
 msgid "Spiral Big"
@@ -4320,7 +4320,7 @@ msgstr "Miejsca"
 
 #: mlttransitions.py:114 medialog.py:535
 msgid "Star"
-msgstr "Gwiazdka"
+msgstr "Gwiazda"
 
 #: mlttransitions.py:115
 msgid "Arch"
@@ -4332,11 +4332,11 @@ msgstr "Łaty"
 
 #: mlttransitions.py:117
 msgid "Free Stripes"
-msgstr "Wolne pasy"
+msgstr "Swobodne pasy"
 
 #: mlttransitions.py:118
 msgid "Free Curves"
-msgstr "Wolne krzywe"
+msgstr "Swobodne krzywe"
 
 #: mlttransitions.py:119
 msgid "Diagonal 1"
