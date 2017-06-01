@@ -87,11 +87,12 @@ class ProxyRenderRunnerThread(threading.Thread):
             # Create render objects
             proxy_file_path = media_file.create_proxy_path(proxy_w, proxy_h, proxy_encoding.extension)
             self.current_render_file_path = proxy_file_path
+            renderconsumer.performance_settings_enabled = False
             consumer = renderconsumer.get_render_consumer_for_encoding(
                                                         proxy_file_path,
                                                         self.proxy_profile, 
                                                         proxy_encoding)
-
+            renderconsumer.performance_settings_enabled = True
             # Bit rates for proxy files are counted using 2500kbs for 
             # PAL size image as starting point.
             pal_pix_count = 720.0 * 576.0
