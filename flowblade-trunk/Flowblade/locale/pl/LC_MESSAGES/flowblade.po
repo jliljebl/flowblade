@@ -4456,7 +4456,7 @@ msgstr "Szerokość"
 
 #: propertyeditorbuilder.py:399
 msgid "Preset Luma"
-msgstr "Wstępnie ustawiona luminancja"
+msgstr "Ustalona luminancja"
 
 #: propertyeditorbuilder.py:400
 msgid "User Luma"
@@ -4947,7 +4947,7 @@ msgstr "Określony przez użytkownika"
 
 #: rendergui.py:697 tools/toolsencoding.py:72
 msgid "Preset File type"
-msgstr "Wstępnie ustawiony typ pliku"
+msgstr "Ustalony typ pliku"
 
 #: rendergui.py:714 rendergui.py:790 rendergui.py:906
 msgid "Use Project Profile:"
