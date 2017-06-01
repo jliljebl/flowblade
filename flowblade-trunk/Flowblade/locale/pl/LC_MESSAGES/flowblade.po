@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-30 20:31+0200\n"
+"POT-Creation-Date: 2017-06-01 14:42+0200\n"
 "PO-Revision-Date: 2017-05-27 08:50+0200\n"
 "Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -29,11 +29,11 @@ msgstr "Minimalne wymiary ekranu dla tej aplikacji to 1152 x 768.\n"
 msgid "Your screen dimensions are "
 msgstr "Wymiary twojego ekranu to "
 
-#: app.py:808 projectaction.py:379 projectaction.py:709
+#: app.py:808 projectaction.py:376 projectaction.py:706
 msgid "Project has not been saved previously"
 msgstr "Projekt nie został wcześniej zapisany"
 
-#: app.py:809 projectaction.py:380 projectaction.py:710
+#: app.py:809 projectaction.py:377 projectaction.py:707
 msgid "Save project with File -> Save As before closing."
 msgstr "Przed zamknięciem, zapisz projekt za pomocą Plik -> Zapisz jako."
 
@@ -110,11 +110,11 @@ msgstr ""
 "Pliki, które już występują:\n"
 "\n"
 
-#: projectaction.py:494
+#: projectaction.py:491
 msgid "Selected folder contains files"
 msgstr "Wybrany folder zawiera pliki"
 
-#: projectaction.py:495
+#: projectaction.py:492
 msgid ""
 "When saving a back-up snapshot of the project, the selected folder\n"
 "has to be empty."
@@ -122,63 +122,63 @@ msgstr ""
 "Podczas zapisywania kopii migawkowej projektu, wybrany folder\n"
 "musi być pusty."
 
-#: projectaction.py:566
+#: projectaction.py:563
 msgid "Copying project media assets"
 msgstr "Kopiowanie zasobów multimedialnych projektu"
 
-#: projectaction.py:567
+#: projectaction.py:564
 msgid "Saving project file"
 msgstr "Zapisywanie pliku projektu"
 
-#: projectaction.py:722
+#: projectaction.py:719
 msgid "Project not found on disk"
 msgstr "Nie znaleziono projektu na dysku"
 
-#: projectaction.py:723
+#: projectaction.py:720
 msgid "Project can't be loaded."
 msgstr "Nie można załadować projektu."
 
-#: projectaction.py:731
+#: projectaction.py:728
 msgid "Project has not been saved since it was opened."
 msgstr "Od czasu jego otwarcia projekt nie został zapisany."
 
-#: projectaction.py:736
+#: projectaction.py:733
 msgid "Project was saved less than a minute ago."
 msgstr "Projekt został zapisany mniej niż minutę temu."
 
-#: projectaction.py:739
+#: projectaction.py:736
 msgid "Project was saved one minute ago."
 msgstr "Projekt został zapisany minutę temu."
 
-#: projectaction.py:741
+#: projectaction.py:738
 msgid "Project was saved "
 msgstr "Projekt został zapisany "
 
-#: projectaction.py:741
+#: projectaction.py:738
 msgid " minutes ago."
 msgstr " minut temu."
 
-#: projectaction.py:797
+#: projectaction.py:794
 msgid "Render launch failed!"
 msgstr "Renderowanie nie powiodło się!"
 
-#: projectaction.py:798 projectaction.py:812 tools/batchrendering.py:299
+#: projectaction.py:795 projectaction.py:809 tools/batchrendering.py:299
 msgid "Error message: "
 msgstr "Komunikat o błędzie: "
 
-#: projectaction.py:811
+#: projectaction.py:808
 msgid "Adding item to render queue failed!"
 msgstr "Dodawanie elementu do kolejki renderowania nie powiodło się!"
 
-#: projectaction.py:830
+#: projectaction.py:827
 msgid "Open.."
 msgstr "Otwórz.."
 
-#: projectaction.py:858
+#: projectaction.py:855
 msgid "Opening .mlt or .xml file as media was disallowed!"
 msgstr "Otwarcie pliku .mlt lub .xml jako multimediów było niedozwolone!"
 
-#: projectaction.py:859
+#: projectaction.py:856
 msgid ""
 "Because of current MLT behaviour of overwriting projct properties when "
 "opening MLT XML files\n"
@@ -188,19 +188,19 @@ msgstr ""
 "projektu, podczas otwierania plików MLT XML\n"
 "nie wolno otwierać tych plików jako multimediów."
 
-#: projectaction.py:879
+#: projectaction.py:876
 msgid "No file was selected"
 msgstr "Nie wybrano żadnego pliku"
 
-#: projectaction.py:879
+#: projectaction.py:876
 msgid "Select a numbered file to add an Image Sequence to Project."
 msgstr "Wybierz numerowany plik, aby dodać sekwencję obrazów do projektu."
 
-#: projectaction.py:887
+#: projectaction.py:884
 msgid "Not a sequence file!"
 msgstr "Nie jest plikem sekwencji!"
 
-#: projectaction.py:887
+#: projectaction.py:884
 msgid ""
 "Selected file does not have a number part in it,\n"
 "so it can't be an image sequence file."
@@ -208,75 +208,75 @@ msgstr ""
 "Wybrany plik nie posiada numerów,\n"
 "więc nie może on być plikiem sekwencji obrazów."
 
-#: projectaction.py:938
+#: projectaction.py:935
 msgid "Can't make home folder thumbnails folder"
 msgstr "Nie można utworzyć folderu miniatur"
 
-#: projectaction.py:939 dialogs.py:394
+#: projectaction.py:936 dialogs.py:394
 msgid "Please create and select some other folder then '"
 msgstr "Proszę utworzyć i wybrać inny folder niż '"
 
-#: projectaction.py:940
+#: projectaction.py:937
 msgid "' as thumbnails folder"
 msgstr "' jako folder miniatur"
 
-#: projectaction.py:1058 projectaction.py:1060 projectaction.py:1071
-#: projectaction.py:1079 projectaction.py:1086
+#: projectaction.py:1055 projectaction.py:1057 projectaction.py:1068
+#: projectaction.py:1076 projectaction.py:1083
 msgid "N/A"
 msgstr "Niedostępne"
 
-#: projectaction.py:1075 guicomponents.py:1809
+#: projectaction.py:1072 guicomponents.py:1809
 msgid "Yes"
 msgstr "Tak"
 
-#: projectaction.py:1077 guicomponents.py:1811
+#: projectaction.py:1074 guicomponents.py:1811
 msgid "No"
 msgstr "Nie"
 
-#: projectaction.py:1132
+#: projectaction.py:1129
 msgid "Select Project for Media Import"
 msgstr "Wybierz projekt dla importu multimediów"
 
-#: projectaction.py:1152
+#: projectaction.py:1149
 msgid "selection_"
 msgstr "wybór_"
 
-#: projectaction.py:1153
+#: projectaction.py:1150
 msgid "Save Selection Compound Clip"
 msgstr "Zapisz zaznaczony klip złożony"
 
-#: projectaction.py:1195 projectaction.py:1341 projectaction.py:1358
+#: projectaction.py:1192 projectaction.py:1338 projectaction.py:1355
 #: projectdata.py:213
 msgid "sequence_"
 msgstr "sekwencja_"
 
-#: projectaction.py:1196
+#: projectaction.py:1193
 msgid "Save Sequence Compound Clip"
 msgstr "Zapisz sekwencję klipów złożonych"
 
-#: projectaction.py:1234
+#: projectaction.py:1231
 msgid "Can't remove a non-empty bin"
 msgstr "Nie można usunąć niepustego pojemnika"
 
-#: projectaction.py:1235
+#: projectaction.py:1232
 msgid "You must remove all files from the bin before deleting it."
 msgstr ""
 "Przed usunięciem pojemnika należy usunąć wszystkie znajdujące się w nim "
 "pliki."
 
-#: projectaction.py:1243
+#: projectaction.py:1240
 msgid "Can't remove last bin"
 msgstr "Nie można usunąć ostatniego pojemnika"
 
-#: projectaction.py:1244
+#: projectaction.py:1241
 msgid "There must always exist at least one bin."
 msgstr "Zawsze musi istnieć, co najmniej, jeden pojemnik."
 
-#: projectaction.py:1330
+#: projectaction.py:1327
 msgid "Selected sequence is already being edited"
 msgstr "Wybrana sekwencja jest już edytowana"
 
-#: projectaction.py:1331
+#: projectaction.py:1328
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
@@ -284,7 +284,7 @@ msgstr ""
 "Wybierz inną sekwencję. Naciśnij przycisk Dodaj, aby utworzyć \n"
 "nową sekwencję, w razie potrzeby."
 
-#: projectaction.py:1391
+#: projectaction.py:1388
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
@@ -292,19 +292,19 @@ msgstr ""
 "Jesteś pewny, że chcesz usunąć\n"
 "sekwencję '"
 
-#: projectaction.py:1391
+#: projectaction.py:1388
 msgid "'?"
 msgstr "?"
 
-#: projectaction.py:1392
+#: projectaction.py:1389
 msgid "This operation can not be undone. Sequence will be permanently lost."
 msgstr "Tej operacji nie można cofnąć. Sekwencja zostanie trwale usunięta."
 
-#: projectaction.py:1407
+#: projectaction.py:1404
 msgid "Can't remove last sequence"
 msgstr "Nie można usunąć ostatniej sekwencji"
 
-#: projectaction.py:1408
+#: projectaction.py:1405
 msgid "There must always exist at least one sequence."
 msgstr "Zawsze musi istnieć, co najmniej, jedna sekwencja."
 
@@ -806,7 +806,7 @@ msgid "Quit editing Clip in editor"
 msgstr "Zakończ edycję klipu w edytorze"
 
 #: clipeffectseditor.py:236 panels.py:51 panels.py:96 panels.py:114
-#: translations.py:563 mlttransitions.py:137 tools/titler.py:209
+#: translations.py:565 mlttransitions.py:137 tools/titler.py:209
 msgid "Add"
 msgstr "Dodaj"
 
@@ -855,11 +855,11 @@ msgstr "Płynne zanikanie obrazu"
 msgid "Reset"
 msgstr "Resetuj"
 
-#: compositeeditor.py:77 compositeeditor.py:180
+#: compositeeditor.py:77 compositeeditor.py:186
 msgid "No Compositor"
 msgstr "Brak kompozytorów"
 
-#: compositeeditor.py:203
+#: compositeeditor.py:209
 msgid "Destination Track:"
 msgstr "Ścieżka docelowa:"
 
@@ -872,8 +872,8 @@ msgstr "Nowy projekt"
 #: dialogs.py:375 dialogs.py:406 dialogs.py:428 dialogs.py:809 dialogs.py:904
 #: dialogs.py:937 dialogs.py:958 dialogs.py:999 dialogs.py:1027 dialogs.py:1055
 #: dialogs.py:1116 dialogs.py:1155 dialogs.py:1169 dialogs.py:1183
-#: dialogs.py:1364 dialogs.py:1481 dialogs.py:1529 propertyeditorbuilder.py:404
-#: propertyeditorbuilder.py:474 rendergui.py:48 rendergui.py:103
+#: dialogs.py:1364 dialogs.py:1481 dialogs.py:1529 propertyeditorbuilder.py:406
+#: propertyeditorbuilder.py:519 rendergui.py:48 rendergui.py:103
 #: rendergui.py:117 rendergui.py:134 rendergui.py:1053 preferenceswindow.py:47
 #: tools/batchrendering.py:962 proxyediting.py:429 patternproducer.py:319
 #: patternproducer.py:352 patternproducer.py:383 tools/gmic.py:357
@@ -882,8 +882,8 @@ msgid "Cancel"
 msgstr "Anuluj"
 
 #: dialogs.py:56 dialogs.py:222 dialogs.py:265 dialogs.py:440 dialogs.py:571
-#: dialogs.py:690 dialogs.py:703 dialogs.py:1365 propertyeditorbuilder.py:405
-#: propertyeditorbuilder.py:475 rendergui.py:104 preferenceswindow.py:48
+#: dialogs.py:690 dialogs.py:703 dialogs.py:1365 propertyeditorbuilder.py:407
+#: propertyeditorbuilder.py:520 rendergui.py:104 preferenceswindow.py:48
 #: tools/batchrendering.py:394 tools/gmic.py:382
 msgid "OK"
 msgstr "OK"
@@ -1508,7 +1508,7 @@ msgid "Control + L"
 msgstr "Ctrl + L"
 
 #: dialogs.py:1211
-msgid "="
+msgid "+"
 msgstr ""
 
 #: dialogs.py:1212
@@ -1711,7 +1711,7 @@ msgstr "Do znacznika końcowego"
 msgid "Playback"
 msgstr "Odtwarzanie"
 
-#: dialogs.py:1257 guicomponents.py:2341 translations.py:560
+#: dialogs.py:1257 guicomponents.py:2341 translations.py:562
 msgid "Overwrite"
 msgstr "Nadpisz"
 
@@ -1731,7 +1731,7 @@ msgstr "Poślizg"
 msgid "Spacer"
 msgstr "Rozpórka"
 
-#: dialogs.py:1262 guicomponents.py:2371 translations.py:544
+#: dialogs.py:1262 guicomponents.py:2371 translations.py:546
 msgid "Box"
 msgstr "Pudełko"
 
@@ -2069,7 +2069,7 @@ msgstr "Dodaj przenikanie"
 
 #: guicomponents.py:1429
 msgid "Show Match Frame"
-msgstr "Pokaż dopasowywanie klatki"
+msgstr "Pokaż dopasowanie klatki"
 
 #: guicomponents.py:1433
 msgid "First Frame in Monitor"
@@ -2089,7 +2089,7 @@ msgstr "Ostatnia klatka na osi czasu"
 
 #: guicomponents.py:1457 guicomponents.py:2320
 msgid "Clear Match Frame"
-msgstr "Usuń dopasowywanie klatki"
+msgstr "Usuń dopasowanie klatki"
 
 #: guicomponents.py:1467
 msgid "Select"
@@ -2163,17 +2163,17 @@ msgstr "Kolor klipu"
 msgid "Default"
 msgstr "Domyślny"
 
-#: guicomponents.py:1611 translations.py:498 translations.py:570
+#: guicomponents.py:1611 translations.py:498 translations.py:572
 msgid "Red"
 msgstr "Czerwony"
 
-#: guicomponents.py:1612 translations.py:499 translations.py:565
-#: translations.py:571
+#: guicomponents.py:1612 translations.py:499 translations.py:567
+#: translations.py:573
 msgid "Green"
 msgstr "Zielony"
 
-#: guicomponents.py:1613 translations.py:500 translations.py:566
-#: translations.py:572
+#: guicomponents.py:1613 translations.py:500 translations.py:568
+#: translations.py:574
 msgid "Blue"
 msgstr "Niebieski"
 
@@ -2237,8 +2237,8 @@ msgstr "Usuń ścieżkę relinkowanego pliku"
 msgid "Show Full Paths"
 msgstr "Pokaż pełne ścieżki"
 
-#: guicomponents.py:1758 propertyeditorbuilder.py:509
-#: propertyeditorbuilder.py:564 tools/toolsencoding.py:343
+#: guicomponents.py:1758 propertyeditorbuilder.py:554
+#: propertyeditorbuilder.py:609 tools/toolsencoding.py:343
 msgid "Progressive"
 msgstr "Progresywny"
 
@@ -2404,7 +2404,7 @@ msgstr "Wyłącz przycinanie widoku"
 
 #: guicomponents.py:2315
 msgid "Set Current Clip Frame Match Frame"
-msgstr "Ustaw dopasowywanie klatki do bieżącej klatki klipu"
+msgstr "Ustaw dopasowanie klatki do bieżącej klatki klipu"
 
 #: guicomponents.py:2391
 msgid "All Files"
@@ -2655,11 +2655,11 @@ msgstr "Informacje o nakładających się multimediach"
 msgid "Color:"
 msgstr "Kolor:"
 
-#: persistance.py:373
+#: persistance.py:375
 msgid "Building sequence "
 msgstr "Tworzenie sekwencji "
 
-#: persistance.py:410
+#: persistance.py:412
 msgid "Loading icons"
 msgstr "Wczytywanie ikon"
 
@@ -2801,8 +2801,8 @@ msgstr "Filtr dźwięku"
 msgid "Blur"
 msgstr "Rozmycie"
 
-#: translations.py:116 translations.py:528 propertyeditorbuilder.py:524
-#: propertyeditorbuilder.py:579
+#: translations.py:116 translations.py:528 propertyeditorbuilder.py:569
+#: propertyeditorbuilder.py:624
 msgid "Distort"
 msgstr "Zniekształcanie"
 
@@ -3012,7 +3012,7 @@ msgstr "Odcień"
 msgid "Brightness"
 msgstr "Jasność"
 
-#: translations.py:177 translations.py:578
+#: translations.py:177 translations.py:580
 msgid "Sepia"
 msgstr ""
 
@@ -3248,11 +3248,11 @@ msgstr "Szerokość przejścia"
 msgid "Tilt"
 msgstr "Przechył"
 
-#: translations.py:253 translations.py:562
+#: translations.py:253 translations.py:564
 msgid "Min"
 msgstr ""
 
-#: translations.py:254 translations.py:561
+#: translations.py:254 translations.py:563
 msgid "Max"
 msgstr ""
 
@@ -3854,7 +3854,7 @@ msgstr "Wyb. miejsce"
 msgid "Operation"
 msgstr "Działanie"
 
-#: translations.py:468 translations.py:554
+#: translations.py:468 translations.py:556
 msgid "Hard"
 msgstr "Ciężki"
 
@@ -3878,11 +3878,11 @@ msgstr ""
 msgid "Supress"
 msgstr "Tłumienie"
 
-#: translations.py:474 translations.py:584
+#: translations.py:474 translations.py:586
 msgid "Horizontal"
 msgstr "Poziomy"
 
-#: translations.py:475 translations.py:585
+#: translations.py:475 translations.py:587
 msgid "Vertical"
 msgstr "Pionowy"
 
@@ -4050,135 +4050,145 @@ msgstr "Miękkość"
 msgid "Wipe Amount"
 msgstr "Ilość wytarć"
 
-#: translations.py:540 translations.py:546
+#: translations.py:537
+#, fuzzy
+msgid "Fade Out Length"
+msgstr "Płynne zanikanie obrazu"
+
+#: translations.py:538
+#, fuzzy
+msgid "Fade In Length"
+msgstr "Płynne pojawianie się obrazu"
+
+#: translations.py:542 translations.py:548
 msgid "Shave"
 msgstr "Struganie"
 
-#: translations.py:541
+#: translations.py:543
 msgid "Rectangle"
 msgstr "Prostokąt"
 
-#: translations.py:542
+#: translations.py:544
 msgid "Ellipse"
 msgstr "Elipsa"
 
-#: translations.py:543
+#: translations.py:545
 msgid "Triangle"
 msgstr "Trójkąt"
 
-#: translations.py:545 translations.py:559
+#: translations.py:547 translations.py:561
 msgid "Diamond"
 msgstr "Romb"
 
-#: translations.py:547
+#: translations.py:549
 msgid "Shrink Hard"
 msgstr "Zmniejszyj mocno"
 
-#: translations.py:548
+#: translations.py:550
 msgid "Shrink Soft"
 msgstr "Zmniejszyj słabo"
 
-#: translations.py:549
+#: translations.py:551
 msgid "Grow Hard"
 msgstr "Zwiększyj mocno"
 
-#: translations.py:550
+#: translations.py:552
 msgid "Grow Soft"
 msgstr "Zwiększyj słabo"
 
-#: translations.py:551
+#: translations.py:553
 msgid "RGB"
 msgstr ""
 
-#: translations.py:552
+#: translations.py:554
 msgid "ABI"
 msgstr ""
 
-#: translations.py:553
+#: translations.py:555
 msgid "HCI"
 msgstr ""
 
-#: translations.py:555
+#: translations.py:557
 msgid "Fat"
 msgstr "Gruby"
 
-#: translations.py:556
+#: translations.py:558
 msgid "Normal"
 msgstr "Normalny"
 
-#: translations.py:557
+#: translations.py:559
 msgid "Skinny"
 msgstr "Chudy"
 
-#: translations.py:558
+#: translations.py:560
 msgid "Ellipsoid"
 msgstr "Elipsoida"
 
-#: translations.py:564 mlttransitions.py:154
+#: translations.py:566 mlttransitions.py:154
 msgid "Subtract"
 msgstr "Odejmij"
 
-#: translations.py:567
+#: translations.py:569
 msgid "Sharper"
 msgstr "Ostrzejszy"
 
-#: translations.py:568
+#: translations.py:570
 msgid "Fuzzier"
 msgstr "Zamazany"
 
-#: translations.py:569
+#: translations.py:571
 msgid "Luma"
 msgstr "Luminancja"
 
-#: translations.py:573
+#: translations.py:575
 msgid "Add Constant"
 msgstr "Dodaj stałą"
 
-#: translations.py:574
+#: translations.py:576
 msgid "Change Gamma"
 msgstr "Zmień gamma"
 
-#: translations.py:575 mlttransitions.py:149
+#: translations.py:577 mlttransitions.py:149
 msgid "Multiply"
 msgstr "Mnóż"
 
-#: translations.py:576
+#: translations.py:578
 msgid "XPro"
 msgstr ""
 
-#: translations.py:577
+#: translations.py:579
 msgid "OldPhoto"
 msgstr "Stare zdjęcie"
 
-#: translations.py:579
+#: translations.py:581
 msgid "Heat"
 msgstr "Ciepło"
 
-#: translations.py:580
+#: translations.py:582
 msgid "XRay"
 msgstr "Promieniowanie X"
 
-#: translations.py:581
+#: translations.py:583
 msgid "RedGreen"
 msgstr "Czerwony zielony"
 
-#: translations.py:582
+#: translations.py:584
 msgid "YellowBlue"
 msgstr "Żółty niebieki"
 
-#: translations.py:583
+#: translations.py:585
 msgid "Esses"
 msgstr "Esy"
 
-#: translations.py:586
+#: translations.py:588
 msgid "Shadows"
 msgstr "Cienie"
 
-#: translations.py:587
+#: translations.py:589
 msgid "Midtones"
 msgstr "Półtony"
 
-#: translations.py:588
+#: translations.py:590
 msgid "Highlights"
 msgstr "Podświetlenia"
 
@@ -4446,55 +4456,55 @@ msgstr "Wytarcie"
 msgid "Color Dip"
 msgstr "Skąpanie w kolorze"
 
-#: propertyeditorbuilder.py:250
+#: propertyeditorbuilder.py:252
 msgid "Size/Height"
 msgstr "Rozmiar/Wysokość"
 
-#: propertyeditorbuilder.py:286
+#: propertyeditorbuilder.py:288
 msgid "Width"
 msgstr "Szerokość"
 
-#: propertyeditorbuilder.py:399
+#: propertyeditorbuilder.py:401
 msgid "Preset Luma"
 msgstr "Ustalona luminancja"
 
-#: propertyeditorbuilder.py:400
+#: propertyeditorbuilder.py:402
 msgid "User Luma"
 msgstr "Luminancja użytkownika"
 
-#: propertyeditorbuilder.py:402
+#: propertyeditorbuilder.py:404
 msgid "Select Luma File"
 msgstr "Wybierz plik luminancji"
 
-#: propertyeditorbuilder.py:411
+#: propertyeditorbuilder.py:413
 msgid "Wipe Luma files"
 msgstr "Wyczyść plik luminancji"
 
-#: propertyeditorbuilder.py:417
+#: propertyeditorbuilder.py:419
 msgid "Luma File:"
 msgstr "Plik luminancji:"
 
-#: propertyeditorbuilder.py:472
+#: propertyeditorbuilder.py:517
 msgid "Select File"
 msgstr "Wybierz plik"
 
-#: propertyeditorbuilder.py:509 propertyeditorbuilder.py:564
+#: propertyeditorbuilder.py:554 propertyeditorbuilder.py:609
 msgid "Nothing"
 msgstr "Nic"
 
-#: propertyeditorbuilder.py:509 propertyeditorbuilder.py:564
+#: propertyeditorbuilder.py:554 propertyeditorbuilder.py:609
 msgid "Deinterlace"
 msgstr "Usuń przeplot"
 
-#: propertyeditorbuilder.py:509 propertyeditorbuilder.py:564
+#: propertyeditorbuilder.py:554 propertyeditorbuilder.py:609
 msgid "Both"
 msgstr "Oba"
 
-#: propertyeditorbuilder.py:518 propertyeditorbuilder.py:573
+#: propertyeditorbuilder.py:563 propertyeditorbuilder.py:618
 msgid "Force"
 msgstr "Wymuś"
 
-#: propertyeditorbuilder.py:523 propertyeditorbuilder.py:578
+#: propertyeditorbuilder.py:568 propertyeditorbuilder.py:623
 msgid "Align"
 msgstr "Wyrównanie"
 
@@ -5379,7 +5389,7 @@ msgstr "Ilość wątków renderujących:"
 msgid "Allow Frame Dropping"
 msgstr "Zezwalaj na wyrzucanie klatek"
 
-#: preferenceswindow.py:429
+#: preferenceswindow.py:430
 msgid "Shortcuts File"
 msgstr "Plik skrótów"
 
@@ -5731,7 +5741,7 @@ msgid "You need to select clips to overwrite to perform this edit."
 msgstr ""
 "Musisz wybrać klipy, które mają zostać zastąpione, aby wykonać tę edycję."
 
-#: tlineaction.py:454 tlineaction.py:998
+#: tlineaction.py:454 tlineaction.py:1020
 msgid "3 point edit not defined!"
 msgstr "3-punktowa edycja nie została zdefiniowana!"
 
@@ -5760,11 +5770,11 @@ msgstr ""
 "Klip użyty do utworzenia tego kompozytora został usunięty\n"
 "lub został przeniesiony do innej ścieżki."
 
-#: tlineaction.py:777 tlineaction.py:947
+#: tlineaction.py:799 tlineaction.py:969
 msgid "Rendering "
 msgstr "Renderowanie "
 
-#: tlineaction.py:809
+#: tlineaction.py:831
 msgid ""
 "To create a rendered transition you need enough media overlap from both "
 "clips!\n"
@@ -5774,52 +5784,52 @@ msgstr ""
 "nakładających się multimediów z obu klipów!\n"
 "\n"
 
-#: tlineaction.py:814
+#: tlineaction.py:836
 msgid "<b>FIRST CLIP MEDIA OVERLAP:</b>  "
 msgstr "<b>PIERWSZY NAKŁADAJĄCY SIĘ KLIP MULTIMEDIÓW</b> "
 
-#: tlineaction.py:815 tlineaction.py:823
+#: tlineaction.py:837 tlineaction.py:845
 msgid "Available <b>"
 msgstr "Dostępne <b>"
 
-#: tlineaction.py:815 tlineaction.py:823
+#: tlineaction.py:837 tlineaction.py:845
 msgid "</b> frame(s), "
 msgstr "</b> klatki(ek), "
 
-#: tlineaction.py:816 tlineaction.py:824
+#: tlineaction.py:838 tlineaction.py:846
 msgid "Required <b>"
 msgstr "Wymagane <b>"
 
-#: tlineaction.py:816
+#: tlineaction.py:838
 msgid "</b> frame(s)"
 msgstr "</b> klatki(ek)"
 
-#: tlineaction.py:822
+#: tlineaction.py:844
 msgid "<b>SECOND CLIP MEDIA OVERLAP:</b> "
 msgstr "<b>DRUGI NAKŁADAJĄCY SIĘ KLIP MULTIMEDIÓW</b> "
 
-#: tlineaction.py:824
+#: tlineaction.py:846
 msgid "</b> frame(s) "
 msgstr "</b> klatki(ek) "
 
-#: tlineaction.py:831
+#: tlineaction.py:853
 msgid "Current situation, not enought media overlap:"
 msgstr "Obecna sytuacja, zbyt mało nakładających się multimediów:"
 
-#: tlineaction.py:833
+#: tlineaction.py:855
 msgid "You need more media overlap:"
 msgstr "Potrzebujesz więcej nakładających się multimediów:"
 
-#: tlineaction.py:862
+#: tlineaction.py:884
 msgid "More media overlap needed to create transition!"
 msgstr ""
 "Potrzebujesz więcej nakładających się multimediów aby utworzyć przejście!"
 
-#: tlineaction.py:881
+#: tlineaction.py:903
 msgid "Only Video Track mix / fades available"
 msgstr "Dostępna tylko mieszanka ścieżek wideo / blaknięcia"
 
-#: tlineaction.py:882
+#: tlineaction.py:904
 msgid ""
 "Unfortunately rendered mixes and fades can currently\n"
 "only be applied on clips on Video Tracks."
@@ -5827,7 +5837,7 @@ msgstr ""
 "Niestety renderowane mieszanki i blaknięcia\n"
 "mogą być obecnie zastosowane tylko do klipów na ścieżkach wideo."
 
-#: tlineaction.py:916
+#: tlineaction.py:938
 msgid ""
 "Clip is too short for the requested fade:\n"
 "\n"
@@ -5835,35 +5845,36 @@ msgstr ""
 "Klip jest zbyt krótki dla żądanego blaknięcia:\n"
 "\n"
 
-#: tlineaction.py:917
+#: tlineaction.py:939
 msgid "<b>Clip Length:</b> "
 msgstr "<b>Długość klipu:</b> "
 
-#: tlineaction.py:917 tlineaction.py:918
+#: tlineaction.py:939 tlineaction.py:940
 msgid " frame(s)\n"
 msgstr " klatki(ek)\n"
 
-#: tlineaction.py:918
+#: tlineaction.py:940
 msgid "<b>Fade Length:</b> "
 msgstr "<b>Długość blaknięcia:</b> "
 
-#: tlineaction.py:919
+#: tlineaction.py:941
 msgid "Clip is too short!"
 msgstr "Klip jest za krótki!"
 
-#: tlineaction.py:988
+#: tlineaction.py:1010
 msgid "No Clip loaded into Monitor"
 msgstr "Nie załadowano żadnego klipu do monitora"
 
-#: tlineaction.py:989
+#: tlineaction.py:1011
 msgid "Can't do the requested edit because there is no Clip in Monitor."
-msgstr "Nie można wykonać żądanej edycji, ponieważ monitor nie zawiera żadnego klipu."
+msgstr ""
+"Nie można wykonać żądanej edycji, ponieważ monitor nie zawiera żadnego klipu."
 
-#: tlineaction.py:993
+#: tlineaction.py:1015
 msgid "Defined range in Monitor Clip is too short"
 msgstr "Określony, w monitorze klipu, zakres jest zbyt krótki"
 
-#: tlineaction.py:994
+#: tlineaction.py:1016
 msgid ""
 "Can't do the requested edit because Mark In -> Mark Out Range or Clip is too "
 "short."
@@ -5871,7 +5882,7 @@ msgstr ""
 "Nie można wykonać żądanej edycji, ponieważ zakres pomiędzy znacznikiem "
 "początkowym a końcowym jest zbyt krótki."
 
-#: tlineaction.py:999
+#: tlineaction.py:1021
 msgid ""
 "You need to set Mark In and Mark Out on Timeline or Clip and\n"
 "additional Mark In on Timeline or Clip to perform this edit."
@@ -6189,19 +6200,19 @@ msgstr ""
 "Wybierz opcję <b>'Wyłącz przycinanie widoku'</b> lub <b>'Przycinanie widoku "
 "tylko pojedyncze edycje'</b>, jeśli wydajność nie jest zadowalająca."
 
-#: compositorfades.py:260
+#: compositorfades.py:273
 msgid "Clip too short!"
 msgstr "Klip zbyt krótki!"
 
-#: compositorfades.py:261
+#: compositorfades.py:274
 msgid "The Clip is too short to add the requested fade."
 msgstr "Klip jest za krótki, aby dodać pożądany efekt blaknięcia."
 
-#: compositorfades.py:266
+#: compositorfades.py:279
 msgid "Clip too short for Auto Fades!"
 msgstr "Klip jest za krótki dla autoblaknięcia!"
 
-#: compositorfades.py:267
+#: compositorfades.py:280
 msgid ""
 "The Clip is too short to add the user set default fades on Compositor "
 "creation."
