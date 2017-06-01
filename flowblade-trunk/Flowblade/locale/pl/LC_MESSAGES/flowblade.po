@@ -4044,7 +4044,7 @@ msgstr "Typ wytarcia"
 
 #: translations.py:532 translations.py:536
 msgid "Softness"
-msgstr "Miekkość"
+msgstr "Miękkość"
 
 #: translations.py:533
 msgid "Wipe Amount"
