@@ -2972,11 +2972,11 @@ msgstr "Stary film"
 
 #: translations.py:164
 msgid "Scanlines"
-msgstr "Skanowanie"
+msgstr "Linie skanowania"
 
 #: translations.py:165
 msgid "Cartoon"
-msgstr "Rysunek"
+msgstr "Komiks"
 
 #: translations.py:167
 msgid "Pixelize"
@@ -3018,7 +3018,7 @@ msgstr ""
 
 #: translations.py:178
 msgid "Tint"
-msgstr "Zabarwienie"
+msgstr "Rozjaśnienie"
 
 #: translations.py:179
 msgid "White Balance"
@@ -3038,7 +3038,7 @@ msgstr "Zachowanie chrominancji"
 
 #: translations.py:184
 msgid "Three Layer"
-msgstr "Trójwarstwowy"
+msgstr "Trzy warstwy"
 
 #: translations.py:185
 msgid "Threshold0r"
@@ -3050,7 +3050,7 @@ msgstr ""
 
 #: translations.py:187
 msgid "Primaries"
-msgstr "Podstawowe kolory"
+msgstr "Barwy podstawowe"
 
 #: translations.py:188
 msgid "Color Distance"
@@ -3158,7 +3158,7 @@ msgstr "Kolor półtonów"
 
 #: translations.py:221
 msgid "Dither"
-msgstr "Dygotanie"
+msgstr "Kształtowanie widma szumu"
 
 #: translations.py:222
 msgid "Vignette"
@@ -3166,7 +3166,7 @@ msgstr "Winieta"
 
 #: translations.py:223
 msgid "Emboss"
-msgstr "Wyrycie"
+msgstr "Wytłoczenie"
 
 #: translations.py:224
 msgid "3 Point Balance"
@@ -3186,7 +3186,7 @@ msgstr "Dostosowanie RGB"
 
 #: translations.py:228
 msgid "Color Tap"
-msgstr "Kolorowy kran"
+msgstr "Przebarwienie"
 
 #: translations.py:229
 msgid "Posterize"
@@ -3194,7 +3194,7 @@ msgstr "Posteryzacja"
 
 #: translations.py:230
 msgid "Soft Glow"
-msgstr "Miękki blask"
+msgstr "Delikatna poświata"
 
 #: translations.py:231
 msgid "Newspaper"
@@ -3310,7 +3310,7 @@ msgstr "Lewo/Prawo"
 #: translations.py:360 translations.py:362 translations.py:368
 #: translations.py:375
 msgid "Dry/Wet"
-msgstr "Sucho/Mokro"
+msgstr "Suchy/Mokry"
 
 #: translations.py:270
 msgid "Pitch Shift"
@@ -3563,7 +3563,7 @@ msgstr "Czas pogłosu"
 
 #: translations.py:352 translations.py:355
 msgid "Dry/Wet mix"
-msgstr "Mieszanka Sucho/Mokro"
+msgstr "Mieszanka suchego/mokrego"
 
 #: translations.py:354
 msgid "Effect cutoff(Hz)"
@@ -3896,15 +3896,15 @@ msgstr "Promień"
 
 #: translations.py:479
 msgid "Cyan Angle"
-msgstr "Kąt błękit"
+msgstr "Kąt błękitu"
 
 #: translations.py:480
 msgid "Magenta Angle"
-msgstr "Kąt purpura"
+msgstr "Kąt purpury"
 
 #: translations.py:481
 msgid "Yellow Angle"
-msgstr "Kąt żółć"
+msgstr "Kąt żółci"
 
 #: translations.py:483
 msgid "Matrix Type"
