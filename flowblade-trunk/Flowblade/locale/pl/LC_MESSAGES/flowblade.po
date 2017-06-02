@@ -2804,7 +2804,7 @@ msgstr "Rozmycie"
 #: translations.py:116 translations.py:528 propertyeditorbuilder.py:569
 #: propertyeditorbuilder.py:624
 msgid "Distort"
-msgstr "Zniekształcanie"
+msgstr "Zniekształcenie"
 
 #: translations.py:117
 msgid "Alpha"
@@ -2868,7 +2868,7 @@ msgstr "Przesuwak skokowy"
 
 #: translations.py:137
 msgid "Distort - Barry's Satan"
-msgstr "Zniekształcaj - szatan Barry'ego"
+msgstr "Zniekształcenie - szatan Barry'ego"
 
 #: translations.py:138
 msgid "Frequency Shift - Bode/Moog"
@@ -2892,11 +2892,11 @@ msgstr ""
 
 #: translations.py:143
 msgid "Distort - Diode Processor"
-msgstr "Zniekształcaj - procesor diodowy"
+msgstr "Zniekształcenie - procesor diodowy"
 
 #: translations.py:144
 msgid "Distort - Foldover"
-msgstr "Zniekształcaj - Foldover"
+msgstr "Zniekształcenie - Foldover"
 
 #: translations.py:145
 msgid "Highpass - Butterworth"
@@ -3202,11 +3202,11 @@ msgstr "Gazeta"
 
 #: translations.py:234
 msgid "Luma Key"
-msgstr "Kluczowanie jasnością"
+msgstr "Kluczowanie luminancją"
 
 #: translations.py:235
 msgid "Chroma Key"
-msgstr "Kluczowanie kolorem"
+msgstr "Kluczowanie chrominancją"
 
 #: translations.py:236 mlttransitions.py:126
 msgid "Affine"
@@ -3246,7 +3246,7 @@ msgstr "Szerokość przejścia"
 
 #: translations.py:252 translations.py:264 translations.py:427
 msgid "Tilt"
-msgstr "Przechył"
+msgstr "Pochył"
 
 #: translations.py:253 translations.py:564
 msgid "Min"
@@ -3310,7 +3310,7 @@ msgstr "Lewo/Prawo"
 #: translations.py:360 translations.py:362 translations.py:368
 #: translations.py:375
 msgid "Dry/Wet"
-msgstr "Suche/Mokre"
+msgstr "Sucho/Mokro"
 
 #: translations.py:270
 msgid "Pitch Shift"
@@ -4048,7 +4048,7 @@ msgstr "Miękkość"
 
 #: translations.py:533
 msgid "Wipe Amount"
-msgstr "Ilość wytarć"
+msgstr "Poziom wytarcia"
 
 #: translations.py:537
 #, fuzzy
