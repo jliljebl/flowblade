@@ -745,6 +745,9 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
 
     dialog.destroy()
 
+    # Save encoding
+    PROJECT().set_project_property(appconsts.P_PROP_TRANSITION_ENCODING,(encoding_option_index,quality_option_index))
+
     from_clip = transition_data["from_clip"]
     to_clip = transition_data["to_clip"]
 
@@ -932,6 +935,9 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
     if length == 0:
         return
 
+    # Save encoding
+    PROJECT().set_project_property(appconsts.P_PROP_TRANSITION_ENCODING,(encoding_option_index,quality_option_index))
+    
     clip = transition_data["clip"]
     
     if length > clip.clip_length():

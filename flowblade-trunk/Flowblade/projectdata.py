@@ -66,7 +66,8 @@ _project_properties_default_values = {appconsts.P_PROP_TLINE_SHRINK_VERTICAL:Fal
                                       appconsts.P_PROP_DISSOLVE_GROUP_FADE_OUT:-1,
                                       appconsts.P_PROP_ANIM_GROUP_FADE_IN:-1,
                                       appconsts.P_PROP_ANIM_GROUP_FADE_OUT:-1,
-                                      appconsts.P_PROP_LAST_RENDER_SELECTIONS: None}
+                                      appconsts.P_PROP_LAST_RENDER_SELECTIONS: None,
+                                      appconsts.P_PROP_TRANSITION_ENCODING: None}
 
 class Project:
     """

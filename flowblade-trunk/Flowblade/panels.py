@@ -27,6 +27,7 @@ import cairo
 from gi.repository import Gtk, Gdk
 from gi.repository import GdkPixbuf
 
+import appconsts
 import gui
 import guicomponents
 import guiutils
@@ -382,6 +383,8 @@ def get_transition_panel(trans_data):
                               None)
     _fill_transition_quality_combo_box(transition_widgets)
     
+    _set_saved_encoding(transition_widgets)
+    
     # Build panel
     edit_vbox = Gtk.VBox(False, 2)
     edit_vbox.pack_start(type_row, False, False, 0)
@@ -441,6 +444,9 @@ def get_fade_panel(fade_data):
                               None)
     _fill_transition_quality_combo_box(transition_widgets)
     
+    _set_saved_encoding(transition_widgets)
+    
+    
     # Build panel
     edit_vbox = Gtk.VBox(False, 2)
     edit_vbox.pack_start(type_row, False, False, 0)
@@ -476,6 +482,14 @@ def _fill_transition_quality_combo_box(widgets):
     else:
         quality_cb.set_active(0)
 
+def _set_saved_encoding(transition_widgets):
+    saved_encoding = editorstate.PROJECT().get_project_property(appconsts.P_PROP_TRANSITION_ENCODING)
+    if saved_encoding != None:
+        encodings_cb, quality_cb = transition_widgets
+        enc_index, quality_index = saved_encoding
+        encodings_cb.set_active(enc_index)
+        quality_cb.set_active(quality_index)
+    
 def _transition_type_changed(transition_type_widgets):
     type_combo_box, wipe_luma_combo_box, color_button, wipe_label, color_label = transition_type_widgets
     if type_combo_box.get_active() == 0:
