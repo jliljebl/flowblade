@@ -454,7 +454,7 @@ msgstr "Synchronizuj wszystkie kompozytory"
 
 #: editorwindow.py:198
 msgid "Set Compositor Auto Fades..."
-msgstr "Parametry automatycznego pojawiania się/zanikania kompozytorów..."
+msgstr "Parametry automatycznego wyłaniania/zanikania kompozytorów..."
 
 #: editorwindow.py:199
 msgid "Change Sequence Tracks Count..."
@@ -844,12 +844,12 @@ msgstr "Brak edytowalnych parametrów"
 #: compositeeditor.py:60 panels.py:411 mlttransitions.py:157
 #: mlttransitions.py:176
 msgid "Fade In"
-msgstr "Płynne pojawianie się obrazu"
+msgstr "Płynne wyłanianie"
 
 #: compositeeditor.py:62 panels.py:412 mlttransitions.py:158
 #: mlttransitions.py:177
 msgid "Fade Out"
-msgstr "Płynne zanikanie obrazu"
+msgstr "Płynne zanikanie"
 
 #: compositeeditor.py:73 render.py:188
 msgid "Reset"
@@ -1884,7 +1884,7 @@ msgstr "Importuj:"
 
 #: dialogs.py:1527
 msgid "Compositors Auto Fades"
-msgstr "Automatyczne pojawianie się/zanikanie kompozytorów"
+msgstr "Automatyczne wyłanianie/zanikanie kompozytorów"
 
 #: dialogs.py:1530
 msgid "Set Group Defaults"
@@ -1892,7 +1892,7 @@ msgstr "Przypisz grupie jako ustawienia domyślne"
 
 #: dialogs.py:1541
 msgid "Compositor Auto Fades Group"
-msgstr "Grupa kompozytorów dla automatycznego pojawiania się/zanikania"
+msgstr "Grupa kompozytorów dla automatycznego wyłaniania/zanikania"
 
 #: dialogs.py:1544 dialogs.py:1555 panels.py:355 panels.py:428
 #: tools/gmic.py:701
@@ -1901,7 +1901,7 @@ msgstr "Długość:"
 
 #: dialogs.py:1545
 msgid "Add Fade In on Creation"
-msgstr "Dodaj efekt ich płynnego pojawiania się podczas kreowania"
+msgstr "Dodaj efekt ich płynnego wyłaniania podczas kreowania"
 
 #: dialogs.py:1556
 msgid "Add Fade Out on Creation"
@@ -1909,7 +1909,7 @@ msgstr "Dodaj efekt ich płynnego zanikania podczas kreowania"
 
 #: dialogs.py:1573
 msgid "Group Auto Fades"
-msgstr "Grupa automatycznego pojawiania się/zanikania"
+msgstr "Grupa automatycznego wyłaniania/zanikania"
 
 #: editevent.py:226
 msgid "Can't put an audio clip on a video track."
@@ -4058,7 +4058,7 @@ msgstr "Długość płynnego zanikania"
 #: translations.py:538
 #, fuzzy
 msgid "Fade In Length"
-msgstr "Długość płynneego pojawiania się"
+msgstr "Długość płynnego wyłaniania"
 
 #: translations.py:542 translations.py:548
 msgid "Shave"
@@ -6210,7 +6210,7 @@ msgstr "Klip jest za krótki, aby dodać pożądany efekt blaknięcia."
 
 #: compositorfades.py:279
 msgid "Clip too short for Auto Fades!"
-msgstr "Klip jest zbyt krótki do wykonania automatycznego pojawiania się/zanikania!"
+msgstr "Klip jest zbyt krótki do wykonania automatycznego wyłaniania/zanikania!"
 
 #: compositorfades.py:280
 msgid ""
