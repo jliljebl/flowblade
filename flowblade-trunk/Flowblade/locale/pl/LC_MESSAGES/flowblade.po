@@ -406,7 +406,7 @@ msgstr "Nadpisanie zakresu"
 
 #: editorwindow.py:186 dialogs.py:1220
 msgid "Cut Clip"
-msgstr "Rozetnij klip"
+msgstr "Przetnij klip"
 
 #: editorwindow.py:187 guicomponents.py:1510 translations.py:513
 msgid "Lift"
