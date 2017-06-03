@@ -526,7 +526,7 @@ msgstr "Utwórz klip złożony"
 
 #: editorwindow.py:216
 msgid "Selection"
-msgstr "Wybór"
+msgstr "Wybrane"
 
 #: editorwindow.py:217
 msgid "Sequence"
