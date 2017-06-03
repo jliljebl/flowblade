@@ -2782,11 +2782,11 @@ msgstr ""
 
 #: translations.py:111 translations.py:416
 msgid "Color"
-msgstr "Kolor"
+msgstr "Koloru"
 
 #: translations.py:112
 msgid "Color Effect"
-msgstr "Efekt kolorystyczny"
+msgstr "Efektu kolorystycznego"
 
 #: translations.py:113
 msgid "Audio"
@@ -2794,17 +2794,17 @@ msgstr ""
 
 #: translations.py:114
 msgid "Audio Filter"
-msgstr "Filtr dźwięku"
+msgstr "Filtr audio"
 
 #: translations.py:115 translations.py:168 translations.py:381
 #: translations.py:458
 msgid "Blur"
-msgstr "Rozmycie"
+msgstr "Rozmycia"
 
 #: translations.py:116 translations.py:528 propertyeditorbuilder.py:569
 #: propertyeditorbuilder.py:624
 msgid "Distort"
-msgstr "Zniekształcanie"
+msgstr "Zniekształcania"
 
 #: translations.py:117
 msgid "Alpha"
@@ -2812,19 +2812,19 @@ msgstr "Alfa"
 
 #: translations.py:118
 msgid "Movement"
-msgstr "Ruch"
+msgstr "Ruchu"
 
 #: translations.py:119
 msgid "Transform"
-msgstr "Przekształcanie"
+msgstr "Przekształcania"
 
 #: translations.py:120 translations.py:477
 msgid "Edge"
-msgstr "Kontur"
+msgstr "Konturu"
 
 #: translations.py:121
 msgid "Fix"
-msgstr "Korekcja"
+msgstr "Korekcji"
 
 #: translations.py:122
 msgid "Artistic"
@@ -3984,7 +3984,7 @@ msgstr "Typ przenikania"
 
 #: translations.py:508
 msgid "Key Color"
-msgstr "Kolor kluczowy"
+msgstr "Klucz koloru"
 
 #: translations.py:509
 msgid "Pre-Level"
@@ -4082,19 +4082,19 @@ msgstr "Romb"
 
 #: translations.py:549
 msgid "Shrink Hard"
-msgstr "Zmniejszyj mocno"
+msgstr "Twarde kurczenie"
 
 #: translations.py:550
 msgid "Shrink Soft"
-msgstr "Zmniejszyj słabo"
+msgstr "Miękkie kurczenie"
 
 #: translations.py:551
 msgid "Grow Hard"
-msgstr "Zwiększyj mocno"
+msgstr "Twarde rośnięcie"
 
 #: translations.py:552
 msgid "Grow Soft"
-msgstr "Zwiększyj słabo"
+msgstr "Miękkie rośnięcie"
 
 #: translations.py:553
 msgid "RGB"
