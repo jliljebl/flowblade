@@ -410,7 +410,7 @@ msgstr "Rozetnij klip"
 
 #: editorwindow.py:187 guicomponents.py:1510 translations.py:513
 msgid "Lift"
-msgstr "Usuń bez scalania"
+msgstr "Usuń bez scalania/Podnieś (Lift)"
 
 #: editorwindow.py:188 dialogs.py:1221
 msgid "Splice Out"
@@ -2211,11 +2211,11 @@ msgstr "Zresetuj wartości"
 
 #: guicomponents.py:1670
 msgid "Move Up"
-msgstr "Podnieś"
+msgstr "Przesuń w górę"
 
 #: guicomponents.py:1671
 msgid "Move Down"
-msgstr "Opuść"
+msgstr "Przesuń w dół"
 
 #: guicomponents.py:1679
 msgid "Display In Clip Monitor"
@@ -2804,7 +2804,7 @@ msgstr "Rozmycie"
 #: translations.py:116 translations.py:528 propertyeditorbuilder.py:569
 #: propertyeditorbuilder.py:624
 msgid "Distort"
-msgstr "Zniekształcenie"
+msgstr "Zniekształcanie"
 
 #: translations.py:117
 msgid "Alpha"
@@ -2824,7 +2824,7 @@ msgstr "Kontur"
 
 #: translations.py:121
 msgid "Fix"
-msgstr "Korekta"
+msgstr "Korekcja"
 
 #: translations.py:122
 msgid "Artistic"
@@ -2864,11 +2864,11 @@ msgstr "Zamień kanały"
 
 #: translations.py:136
 msgid "Pitchshifter"
-msgstr "Przesuwak skokowy"
+msgstr "Przesuwanie tonu"
 
 #: translations.py:137
 msgid "Distort - Barry's Satan"
-msgstr "Zniekształcenie - szatan Barry'ego"
+msgstr "Zniekształcenie - Szatan Barry'ego"
 
 #: translations.py:138
 msgid "Frequency Shift - Bode/Moog"
@@ -2876,7 +2876,7 @@ msgstr "Przesunięcie częstotliwości - Bode / Moog"
 
 #: translations.py:139
 msgid "Equalize - DJ 3-band"
-msgstr "Wyrównanie - DJ 3-pasmowe"
+msgstr "Korekta - 3-zakresowa DJ"
 
 #: translations.py:140
 msgid "Flanger - DJ"
@@ -2884,11 +2884,11 @@ msgstr ""
 
 #: translations.py:141
 msgid "Declipper"
-msgstr "Trzaski"
+msgstr "Usuwanie trzasków"
 
 #: translations.py:142
 msgid "Delayorama"
-msgstr ""
+msgstr "Opóźnienie (Delayorama)"
 
 #: translations.py:143
 msgid "Distort - Diode Processor"
@@ -2896,15 +2896,15 @@ msgstr "Zniekształcenie - procesor diodowy"
 
 #: translations.py:144
 msgid "Distort - Foldover"
-msgstr "Zniekształcenie - Foldover"
+msgstr "Zniekształcenie - efekt zaginania"
 
 #: translations.py:145
 msgid "Highpass - Butterworth"
-msgstr "Wysokopasmowy - Butterworth"
+msgstr "Górnoprzepustowy - Butterworth"
 
 #: translations.py:146
 msgid "Lowpass - Butterworth"
-msgstr "Niskopasmowy - Butterworth"
+msgstr "Dolnoprzepustowy - Butterworth"
 
 #: translations.py:147
 msgid "GSM Simulator"
@@ -2916,19 +2916,19 @@ msgstr "Pogłos - GVerb"
 
 #: translations.py:149
 msgid "Noise Gate"
-msgstr "Brama hałasu"
+msgstr "Bramka szumu"
 
 #: translations.py:150
 msgid "Bandpass"
-msgstr "Pasmowy"
+msgstr "Środkowo-przepustowy"
 
 #: translations.py:151
 msgid "Pitchscaler - High Quality"
-msgstr "Pitchscaler - wysoka jakość"
+msgstr "Przesuwanie tonu - wysoka jakość"
 
 #: translations.py:152
 msgid "Equalize - Multiband"
-msgstr "Wyrównanie - wielozakresowe"
+msgstr "Korekta - wielozakresowa"
 
 #: translations.py:153
 msgid "Reverb - Plate"
@@ -2936,27 +2936,27 @@ msgstr "Pogłos - płyta"
 
 #: translations.py:154
 msgid "Distort - Pointer cast"
-msgstr "Zniekształcenie - wskaźnik rzutowania"
+msgstr "Zniekształcenie - rzutowanie wskaźnika"
 
 #: translations.py:155
 msgid "Rate Shifter"
-msgstr "Zmiana prędkości"
+msgstr "Przesuwanie częstotliwości"
 
 #: translations.py:156
 msgid "Signal Shifter"
-msgstr "Zmiana sygnału"
+msgstr "Przesuwanie sygnału"
 
 #: translations.py:157
 msgid "Distort - Sinus Wavewrap"
-msgstr "Zniekształcenie - Sinus Wavewra"
+msgstr "Zniekształcenie - Sinus Wavewrap"
 
 #: translations.py:158
 msgid "Vinyl Effect"
-msgstr "Efekt winylowy"
+msgstr "Efekt winyla"
 
 #: translations.py:159
 msgid "Chorus - Multivoice"
-msgstr "Chorus - wielogłos"
+msgstr "Chór wielogłosowy"
 
 #: translations.py:161
 msgid "Charcoal"
@@ -3001,7 +3001,7 @@ msgstr "Nasycenie"
 #: translations.py:174 translations.py:380 translations.py:432
 #: translations.py:457 translations.py:531 translations.py:535
 msgid "Invert"
-msgstr "Odwróć"
+msgstr "Odwracanie"
 
 #: translations.py:175 translations.py:400 mlttransitions.py:147
 msgid "Hue"
@@ -3042,7 +3042,7 @@ msgstr "Trzy warstwy"
 
 #: translations.py:185
 msgid "Threshold0r"
-msgstr "Próg0r"
+msgstr "Próg0r zadziałania"
 
 #: translations.py:186
 msgid "Technicolor"
@@ -3058,7 +3058,7 @@ msgstr "Odległość barw"
 
 #: translations.py:189 translations.py:418 translations.py:423
 msgid "Threshold"
-msgstr "Próg"
+msgstr "Próg zadziałania"
 
 #: translations.py:191
 msgid "Waves"
@@ -3082,19 +3082,19 @@ msgstr "Synchronizacja V"
 
 #: translations.py:197
 msgid "Edge Glow"
-msgstr "Krawędź blasku"
+msgstr "Blask krawędzi"
 
 #: translations.py:198
 msgid "Sobel"
-msgstr ""
+msgstr "Filtr Sobela"
 
 #: translations.py:200
 msgid "Denoise"
-msgstr "Usuwanie szumu"
+msgstr "Redukcja szumów"
 
 #: translations.py:201 translations.py:505
 msgid "Sharpness"
-msgstr "Ostrość"
+msgstr "Wyostrzanie"
 
 #: translations.py:202
 msgid "Letterbox"
@@ -3114,7 +3114,7 @@ msgstr "Nerwowy"
 
 #: translations.py:207
 msgid "Freeze"
-msgstr "Zamrażanie"
+msgstr "Zamrożenie"
 
 #: translations.py:209 translations.py:426
 msgid "Rotate"
@@ -3142,7 +3142,7 @@ msgstr "Tłumienie wycieku"
 
 #: translations.py:217
 msgid "RGB Noise"
-msgstr "Hałas RGB"
+msgstr "Szum RGB"
 
 #: translations.py:218
 msgid "Box Blur"
@@ -3182,7 +3182,7 @@ msgstr "Jasność względem klatki kluczowej"
 
 #: translations.py:227
 msgid "RGB Adjustment"
-msgstr "Dostosowanie RGB"
+msgstr "Regulacja RGB"
 
 #: translations.py:228
 msgid "Color Tap"
@@ -3214,11 +3214,11 @@ msgstr "Afiniczne"
 
 #: translations.py:237
 msgid "Color Adjustment"
-msgstr "Dostosowanie barw"
+msgstr "Regulacja barw"
 
 #: translations.py:238
 msgid "Color Grading"
-msgstr "Kolorystyka"
+msgstr "Gradacja koloru"
 
 #: translations.py:239
 msgid "Curves"
@@ -3226,7 +3226,7 @@ msgstr "Krzywe"
 
 #: translations.py:240
 msgid "Lift Gain Gamma"
-msgstr "Podnoszenie wzmocnienia gamma"
+msgstr "Korekta odcieni"
 
 #: translations.py:241
 msgid "Image Grid"
@@ -3234,7 +3234,7 @@ msgstr "Siatka obrazu"
 
 #: translations.py:244
 msgid "Color Lift Gain Gamma"
-msgstr "Wzmocnienie barwy gamma"
+msgstr "Korekta odcieni oraz temperatury barw"
 
 #: translations.py:250 translations.py:433
 msgid "Position"
@@ -3326,7 +3326,7 @@ msgstr "Czas zaniku (próbki)"
 
 #: translations.py:274
 msgid "Knee Point(dB)"
-msgstr "Punkt kolanowy (dB)"
+msgstr "Kolano charakterystyki (dB)"
 
 #: translations.py:276
 msgid "Frequency shift"
@@ -3370,7 +3370,7 @@ msgstr "Informacja zwrotna(%)"
 
 #: translations.py:290
 msgid "Number of taps"
-msgstr "Liczba kranów"
+msgstr "Liczba stuknięć"
 
 #: translations.py:291
 msgid "First Delay(s)"
@@ -3467,11 +3467,11 @@ msgstr "Próg (dB)"
 
 #: translations.py:323
 msgid "Attack(ms)"
-msgstr "Czas narastania(ms)"
+msgstr "Czas ataku(ms)"
 
 #: translations.py:324
 msgid "Hold(ms)"
-msgstr "Czas opadania(ms)"
+msgstr "Czas podtrzymywania(ms)"
 
 #: translations.py:325
 msgid "Decay(ms)"
@@ -3759,7 +3759,7 @@ msgstr "Korekta środka"
 
 #: translations.py:429
 msgid "Edges Correct"
-msgstr "Korekcja krawędzi"
+msgstr "Korekta krawędzi"
 
 #: translations.py:431
 msgid "Axis"
@@ -3771,19 +3771,19 @@ msgstr "Oświetlenie krawędzi"
 
 #: translations.py:435
 msgid "Edge Brightness"
-msgstr "Jasność krawędziowa"
+msgstr "Jasność krawędzi"
 
 #: translations.py:436
 msgid "Non-Edge Brightness"
-msgstr "Jasność niekrawędziowa"
+msgstr "Jasność nie-krawędzi"
 
 #: translations.py:437
 msgid "Spatial"
-msgstr "Przestrzenny"
+msgstr "Przestrzenne"
 
 #: translations.py:438
 msgid "Temporal"
-msgstr "Czasowy"
+msgstr "Czasowe"
 
 #: translations.py:441
 msgid "Border width"
@@ -3795,7 +3795,7 @@ msgstr "Zwiększenie fazy"
 
 #: translations.py:443
 msgid "Zoom"
-msgstr "Transfokacja"
+msgstr "Transfokacja (zoom)"
 
 #: translations.py:444
 msgid "Freeze Frame"
@@ -3880,11 +3880,11 @@ msgstr "Tłumienie"
 
 #: translations.py:474 translations.py:586
 msgid "Horizontal"
-msgstr "Poziomy"
+msgstr "Poziomo"
 
 #: translations.py:475 translations.py:587
 msgid "Vertical"
-msgstr "Pionowy"
+msgstr "Pionowo"
 
 #: translations.py:476
 msgid "Type"
@@ -4004,7 +4004,7 @@ msgstr "Pasmo luminancji"
 
 #: translations.py:514
 msgid "Gain"
-msgstr "Wzrost"
+msgstr "Wzmocnienie (Gain)"
 
 #: translations.py:515
 msgid "Input White Level"
