@@ -6061,7 +6061,7 @@ msgstr "Ustawienia kodowania obrazu"
 
 #: tools/gmic.py:512
 msgid "Set Encoding"
-msgstr "Określ kodowanie"
+msgstr "Ustaw kodowanie"
 
 #: tools/gmic.py:557 tools/gmic.py:890
 msgid "Load Clip"
