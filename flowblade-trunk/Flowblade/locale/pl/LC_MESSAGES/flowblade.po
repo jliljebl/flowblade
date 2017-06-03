@@ -223,7 +223,7 @@ msgstr "' jako folder miniatur"
 #: projectaction.py:1055 projectaction.py:1057 projectaction.py:1068
 #: projectaction.py:1076 projectaction.py:1083
 msgid "N/A"
-msgstr "Niedostępne"
+msgstr "Niedostępny/e"
 
 #: projectaction.py:1072 guicomponents.py:1809
 msgid "Yes"
@@ -243,7 +243,7 @@ msgstr "wybór_"
 
 #: projectaction.py:1150
 msgid "Save Selection Compound Clip"
-msgstr "Zapisz zaznaczony klip złożony"
+msgstr "Zapisz klip złożony wybranych"
 
 #: projectaction.py:1192 projectaction.py:1338 projectaction.py:1355
 #: projectdata.py:214
@@ -252,7 +252,7 @@ msgstr "sekwencja_"
 
 #: projectaction.py:1193
 msgid "Save Sequence Compound Clip"
-msgstr "Zapisz sekwencję klipów złożonych"
+msgstr "Zapisz klip złożony sekwencji"
 
 #: projectaction.py:1231
 msgid "Can't remove a non-empty bin"
@@ -1284,11 +1284,11 @@ msgstr "Otwórz wybrany plik autozapisu"
 
 #: dialogs.py:902
 msgid "Change Sequence Tracks Count"
-msgstr "Zmień ilość ścieżek w obrębie sekwencji"
+msgstr "Zmiana ilości ścieżek w obrębie sekwencji"
 
 #: dialogs.py:905
 msgid "Change Tracks"
-msgstr "Zmiana ścieżek"
+msgstr "Zmień ścieżki"
 
 #: dialogs.py:909
 msgid "Please note:\n"
@@ -1316,7 +1316,7 @@ msgstr ""
 
 #: dialogs.py:935
 msgid "Change Clip Length"
-msgstr "Zmień długość klipu"
+msgstr "Zmiana długości klipu"
 
 #: dialogs.py:956
 msgid "Create New Sequence"
@@ -1348,7 +1348,7 @@ msgstr "Nowa nazwa:"
 
 #: dialogs.py:1025 guicomponents.py:1202 guicomponents.py:1300
 msgid "Rename Clip"
-msgstr "Zmień nazwę klipu"
+msgstr "Zmiana nazwy klipu"
 
 #: dialogs.py:1053
 msgid "New Range Item Group"
@@ -1937,7 +1937,7 @@ msgstr "Pusty"
 
 #: guicomponents.py:283
 msgid "active"
-msgstr "aktywny"
+msgstr "aktywny/a"
 
 #: guicomponents.py:560
 msgid "default"
@@ -2017,7 +2017,7 @@ msgstr "Wyodrębnij dźwięk"
 
 #: guicomponents.py:1157
 msgid "Split Audio Synched"
-msgstr "Wyodrębnij i zsynchronizuj dźwięk"
+msgstr "Wyodrębnij zsynchronizowany dźwięk"
 
 #: guicomponents.py:1164 guicomponents.py:1284
 msgid "Display Audio Level"
@@ -2029,7 +2029,7 @@ msgstr "Oczyść przebieg"
 
 #: guicomponents.py:1175 guicomponents.py:1277
 msgid "Clear Sync Relation"
-msgstr "Usuń powiązanie synchronizacji"
+msgstr "Usuń relację synchronizacji"
 
 #: guicomponents.py:1177 guicomponents.py:1279
 msgid "Select Sync Parent Clip..."
@@ -2113,7 +2113,7 @@ msgstr "Edytuj"
 
 #: guicomponents.py:1515
 msgid "Set Clip Length..."
-msgstr "Określ długość klipu ..."
+msgstr "Ustaw długość klipu..."
 
 #: guicomponents.py:1518
 msgid "Stretch Over Next Blank"
@@ -2125,7 +2125,7 @@ msgstr "Rozciągnij ponad poprzednim pustym miejscem"
 
 #: guicomponents.py:1528
 msgid "Clone Filters"
-msgstr "Klonuj filtry"
+msgstr "Sklonuj filtry"
 
 #: guicomponents.py:1532
 msgid "From Next Clip"
