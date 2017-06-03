@@ -787,11 +787,11 @@ msgstr "Aktualna pozycja oglądanej sekwencji/multimediów"
 
 #: editorwindow.py:1040
 msgid "Display Current Sequence on Timeline"
-msgstr "Wyświetl bieżącą sekwencję na osi czasu"
+msgstr "Wyświetlacz bieżącej sekwencji na osi czasu"
 
 #: editorwindow.py:1041
 msgid "Display Monitor Clip"
-msgstr "Wyświetl monitor klipu"
+msgstr "Wyświetlacz monitora klipu"
 
 #: clipeffectseditor.py:122
 msgid "Select Filter Group"
