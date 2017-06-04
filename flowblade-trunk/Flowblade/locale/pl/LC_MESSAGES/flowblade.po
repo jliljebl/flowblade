@@ -223,7 +223,7 @@ msgstr "' jako folder miniatur"
 #: projectaction.py:1055 projectaction.py:1057 projectaction.py:1068
 #: projectaction.py:1076 projectaction.py:1083
 msgid "N/A"
-msgstr "Niedostępny/e"
+msgstr "Niedostępny"
 
 #: projectaction.py:1072 guicomponents.py:1809
 msgid "Yes"
@@ -1109,11 +1109,11 @@ msgstr "Uruchomione z: "
 
 #: dialogs.py:618
 msgid " AVAILABLE"
-msgstr " DOSTĘPNE"
+msgstr " DOSTĘPNY"
 
 #: dialogs.py:620
 msgid " NOT AVAILABLE, "
-msgstr " NIEDOSTĘPNE"
+msgstr " NIEDOSTĘPNY"
 
 #: dialogs.py:620
 msgid " MISSING"
@@ -5790,7 +5790,7 @@ msgstr "<b>PIERWSZY NAKŁADAJĄCY SIĘ KLIP MULTIMEDIÓW</b> "
 
 #: tlineaction.py:840 tlineaction.py:848
 msgid "Available <b>"
-msgstr "Dostępne <b>"
+msgstr "Dostępny <b>"
 
 #: tlineaction.py:840 tlineaction.py:848
 msgid "</b> frame(s), "
