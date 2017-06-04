@@ -534,7 +534,7 @@ msgstr "Sekwencja"
 
 #: editorwindow.py:218
 msgid "Media Audio Sync"
-msgstr "Synchronizacja dźwięku multimediów"
+msgstr "Synchronizowanie dźwięku multimediów"
 
 #: editorwindow.py:219
 msgid "Create Audio Sync Group"
@@ -542,7 +542,7 @@ msgstr "Utwórz grupę synchronizacji dźwięku"
 
 #: editorwindow.py:220
 msgid "Create Audio Sync Merge Clip"
-msgstr "Utwórz scalony klip synchronizacji dźwięku"
+msgstr "Utwórz klip scalony synchronizacji dźwięku"
 
 #: editorwindow.py:221
 msgid "Import Media From Project..."
