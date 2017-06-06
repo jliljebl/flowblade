@@ -771,7 +771,7 @@ msgstr "Czas bieżącej klatki na osi czasu"
 
 #: editorwindow.py:1033
 msgid "Select view mode: Video/Vectorscope/RGBParade"
-msgstr "Wybierz tryb wyświetlania: Wideo/Wektorscop/Parada RGB"
+msgstr "Wybierz tryb wyświetlania: Wideo/Wektoroskop/Parada RGB"
 
 #: editorwindow.py:1035
 msgid "Monitor Sequence/Media current frame timecode"
@@ -2360,7 +2360,7 @@ msgstr "Obraz"
 
 #: guicomponents.py:2238
 msgid "Vectorscope"
-msgstr "Wektorskop"
+msgstr "Wektoroskop"
 
 #: guicomponents.py:2240
 msgid "RGB Parade"
