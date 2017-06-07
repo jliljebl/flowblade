@@ -118,6 +118,7 @@ def create_edit_buttons_row_buttons(editor_window, modes_pixbufs):
 def _create_buttons(editor_window):
     IMG_PATH = respaths.IMAGE_PATH
     editor_window.big_TC = guicomponents.BigTCDisplay()
+    gui.big_tc = editor_window.big_TC 
     editor_window.modes_selector = guicomponents.ToolSelector(editor_window.mode_selector_pressed, m_pixbufs, 40, 22)
 
     editor_window.zoom_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
