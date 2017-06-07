@@ -319,7 +319,7 @@ class ClipKeyFrameEditor:
                     next_frame, val = self.keyframes[hit_kf + 1]
                     self.drag_max = next_frame - 1
                 except:
-                    self.drag_max = self.clip_length - 1
+                    self.drag_max = self.clip_length
             self.widget.queue_draw()
 
     def _motion_notify_event(self, x, y, state):
@@ -332,9 +332,6 @@ class ClipKeyFrameEditor:
             self._set_clip_frame(lx)
             self.parent_editor.clip_editor_frame_changed(self.current_clip_frame)
         elif self.current_mouse_action == KF_DRAG:
-            if abs(lx - self.drag_start_x) < KF_DRAG_THRESHOLD:
-                return
-            
             frame = self._get_drag_frame(lx)
             self.set_active_kf_frame(frame)
             self.current_clip_frame = frame
@@ -354,8 +351,6 @@ class ClipKeyFrameEditor:
             self.parent_editor.clip_editor_frame_changed(self.current_clip_frame)
             self.parent_editor.update_slider_value_display(self.current_clip_frame)
         elif self.current_mouse_action == KF_DRAG:
-            if abs(lx - self.drag_start_x) < KF_DRAG_THRESHOLD:
-                return
             frame = self._get_drag_frame(lx)
             self.set_active_kf_frame(frame)
             self.current_clip_frame = frame
@@ -805,7 +800,6 @@ class AbstractScreenEditor:
         self.keyframes.sort(key=_geom_kf_sort)
         
     def delete_active_keyframe(self, keyframe_index):
-        #print keyframe_index
         if keyframe_index == 0:
             # keyframe frame 0 cannot be removed
             return
@@ -883,8 +877,6 @@ class AbstractScreenEditor:
                 delta_x = 0
             else:
                 delta_y = 0
-        #elif state & Gdk.ModifierType.CONTROL_MASK:
-        #    print "control"
                 
         self._shape__motion_notify_event(delta_x, delta_y, (state & Gdk.ModifierType.CONTROL_MASK))
 
@@ -893,7 +885,6 @@ class AbstractScreenEditor:
     def _shape__motion_notify_event(self, delta_x, delta_y, CTRL_DOWN):
         print "_shape__motion_notify_event not impl"
 
-    
     def _release_event(self, event):
         if self.current_mouse_hit == NO_HIT:
             return
