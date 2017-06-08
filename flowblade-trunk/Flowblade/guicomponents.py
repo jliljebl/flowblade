@@ -1504,6 +1504,9 @@ def _get_edit_menu_item(event, clip, track, callback):
     sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
 
+    cut_item = _get_menu_item(_("Cut"), callback, (clip, track, "cut", event.x))
+    sub_menu.append(cut_item)
+
     del_item = _get_menu_item(_("Delete"), callback, (clip, track, "delete", event.x))
     sub_menu.append(del_item)
 
