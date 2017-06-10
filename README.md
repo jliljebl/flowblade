@@ -1,5 +1,6 @@
 
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
+[![Alt text for your video](https://img.youtube.com/vi/6CuZADWpQVA/0.jpg)](https://www.youtube.com/playlist?list=PLlOvf-mh5wJFCM_aSZOBFDLr30yjV_RwT)
 
 **NEW RELEASE 1.12 is out. Relesase notes [here](./flowblade-trunk/docs/RELEASE_NOTES.md).**
 
