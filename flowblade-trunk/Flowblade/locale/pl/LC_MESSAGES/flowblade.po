@@ -5582,7 +5582,7 @@ msgstr "Zapisz element projektu jako..."
 
 #: tools/batchrendering.py:1278
 msgid "Flowblade Timeline Render"
-msgstr "Renderuj oś czasu Flowblade'a"
+msgstr "Renderowanie osi czasu Flowblade'a"
 
 #: proxyediting.py:240
 msgid "Project Image Size"
