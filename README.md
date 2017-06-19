@@ -1,4 +1,6 @@
 
+![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
+
 **NEW RELEASE 1.12 is out. Relesase notes [here](./flowblade-trunk/docs/RELEASE_NOTES.md).**
 
 **Installing instructions are available [here](./flowblade-trunk/docs/INSTALLING.md).**
