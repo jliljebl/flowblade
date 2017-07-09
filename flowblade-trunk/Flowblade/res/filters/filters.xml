@@ -901,15 +901,16 @@
         <property name="transition.fix_shear_x" args="range_in=-180,180 range_out=-180,180 displayname=Shear!X">0</property>
         <property name="transition.fix_shear_y" args="range_in=-180,180 range_out=-180,180 displayname=Shear!Y">0</property>
     </filter>
+    <!---
     <filter id="avfilter.zoompan">
         <name>Zoom Pan</name>
         <group>Transform</group>
-        <property name="av.zoom" args="range_in=100,500 range_out=1,5 displayname=Zoom">1</property>
-        <property name="av.x" args="range_in=0,SCREENSIZE_WIDTH range_out=0,SCREENSIZE_WIDTH displayname=x">0</property>
-        <property name="av.y" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,SCREENSIZE_HEIGHT displayname=y">0</property>
+        <property name="av.zoom" args="range_in=100,500 range_out=1,5 displayname=Zoom">1.1</property>
+        <property name="av.x" args="range_in=0,SCREENSIZE_WIDTH range_out=0,SCREENSIZE_WIDTH displayname=x">10</property>
+        <property name="av.y" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,SCREENSIZE_HEIGHT displayname=y">10</property>
         <property name="av.d" args="editor=no_editor">1</property>
     </filter>
-
+    -->
 
     <!-- compositor filters that are not displayed to user, not used currently -->
     <filter id="frei0r.mask0mate">
