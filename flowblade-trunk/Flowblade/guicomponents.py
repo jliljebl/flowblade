@@ -1838,6 +1838,8 @@ class BigTCDisplay:
         self.TEXT_X = 18
         self.TEXT_Y = 1
 
+        self.widget.connect("button-press-event", self._button_press)
+
     def _draw(self, event, cr, allocation):
         """
         Callback for repaint from CairoDrawableArea.
@@ -1891,6 +1893,54 @@ class BigTCDisplay:
         cr.arc (x + radius, y + height - radius, radius, 90 * degrees, 180 * degrees)
         cr.arc (x + radius, y + radius, radius, 180 * degrees, 270 * degrees)
         cr.close_path ()
+
+    def _button_press(self, widget, event):
+        gui.big_tc.set_visible_child_name("BigTCEntry")
+        entry = gui.big_tc.get_visible_child()
+        entry.set_text(BigTCEntry().get_current_frame_text())
+        entry.grab_focus()
+
+    def _seek_frame(self, frame):
+        PLAYER().seek_frame(frame)
+
+class BigTCEntry:
+    """
+    Test class for replacement of BigTCDisplay, when Editing time position
+    """
+
+    def __init__(self):
+        self.widget = Gtk.Entry()
+        frame_str = self.get_current_frame_text()
+        self.widget.set_text(frame_str)
+        self.widget.connect("activate", self._enter_pressed)
+        self.widget.connect("focus-out-event", self._focus_lost)
+        self.widget.connect("focus", self._focus_received)
+
+    def get_current_frame_text(self):
+        try:
+            frame = PLAYER().tracktor_producer.frame()
+            frame_str = utils.get_tc_string(frame)
+        except:
+            frame_str = "00:00:00:00"
+        return frame_str
+
+    def _handle_set_time(self):
+        self.visible = False
+        frame_str = gui.big_tc.get_visible_child().get_text()
+        frame = utils.get_tc_frame(frame_str)
+        gui.big_tc.set_visible_child_name("BigTCDisplay")
+        PLAYER().seek_frame(int(frame))
+
+    def _enter_pressed(self, event):
+        self._handle_set_time()
+
+    def _focus_lost(self, widget, event):
+        if self.visible:
+            self._handle_set_time()
+
+    def _focus_received(self, widget, event):
+        self.visible = True
+
 
 
 class MonitorTCDisplay:

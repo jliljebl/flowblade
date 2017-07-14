@@ -125,6 +125,37 @@ def get_tc_string(frame):
     """
     return get_tc_string_with_fps(frame, fps())
 
+def get_tc_frame(frame_str):
+    """
+    Return timecode frame from string
+    """
+    return get_tc_frame_with_fps(frame_str, fps())
+
+def get_tc_frame_with_fps(frame_str, frames_per_sec):
+    # split time string hh:mm:ss:ff into integer and
+    # calculate corresponding frame
+    try:
+        times = frame_str.split(":", 4)
+    except expression as identifier:
+        return 0
+
+    # now we calculate the sum of frames that would sum up at corresponding
+    # time
+    sum = 0
+    for t in times:
+        num = int(t)
+        sum = sum * 60 + num
+
+    # but well, actually, calculated sum is wrong, because according
+    # to our calculation, that would give us 60 fps, we need to correct that
+    # last 'num' is frames already, no need to correct those
+    sum = sum - num
+    sum = sum / (60 / int(round(frames_per_sec)))
+    sum = sum + num
+
+    # and that is our frame, so we return sum
+    return sum
+
 def get_tc_string_with_fps(frame, frames_per_sec):
     # convert fractional frame rates (like 23.976) into integers,
     # otherwise the timeline will slowly drift over time
