@@ -527,7 +527,7 @@ def update_frame_displayers(frame):
 
     gui.tline_scale.widget.queue_draw()
     gui.tline_canvas.widget.queue_draw()
-    gui.big_tc.widget.queue_draw()
+    gui.big_tc.queue_draw()
     clipeffectseditor.display_kfeditors_tline_frame(frame)
     compositeeditor.display_kfeditors_tline_frame(frame)
 

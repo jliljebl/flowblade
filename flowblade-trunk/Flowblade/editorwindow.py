@@ -1028,7 +1028,7 @@ class EditorWindow:
         return buttons_row
 
     def _add_tool_tips(self):
-        self.big_TC.widget.set_tooltip_text(_("Timeline current frame timecode"))
+        self.big_TC.set_tooltip_text(_("Timeline current frame timecode"))
 
         self.view_mode_select.widget.set_tooltip_text(_("Select view mode: Video/Vectorscope/RGBParade"))
         
