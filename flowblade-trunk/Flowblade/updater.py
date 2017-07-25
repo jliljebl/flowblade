@@ -41,8 +41,8 @@ import utils
 import respaths
 import tlinewidgets
 
-page_size = 99.0 # Gtk.Adjustment.get_page_size() wasn't there
-                 # (wft?) so use this to have page size
+page_size = 99.0 # Gtk.Adjustment.get_page_size() wasn't there (wft?)
+                 # so use this to have page size
 
 # Scale constants
 PIX_PER_FRAME_MAX = 20.0
@@ -238,7 +238,7 @@ def zoom_in():
     repaint_tline()
     update_tline_scrollbar()
     center_tline_to_current_frame()
-    
+
 def zoom_out():
     """
     Zooms out in the timeline view.
@@ -248,8 +248,8 @@ def zoom_out():
         tlinewidgets.pix_per_frame = PIX_PER_FRAME_MIN
     repaint_tline()
     update_tline_scrollbar()
-    center_tline_to_current_frame()
-
+    tline_scrolled(gui.tline_scroll.get_adjustment())
+    
 def zoom_max():
     tlinewidgets.pix_per_frame = PIX_PER_FRAME_MAX
     repaint_tline()
