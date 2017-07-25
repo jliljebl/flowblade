@@ -169,11 +169,38 @@ def get_slider_row(editable_property, listener, slider_name=None):
         name = slider_name
     name = translations.get_param_name(name)
     
-    editable_property.value_changed_ID = adjustment.connect("value-changed", listener) # patching in to make available for disconnect
+    editable_property.value_changed_ID = adjustment.connect("value-changed", listener) # saving ID to make it available for disconnect
                                                                                        # This also needs to be after adjustment is set to not loose exiting value for build dummy value 
         
     return (get_two_column_editor_row(name, hbox), hslider)
 
+def get_slider_row_and_spin_widget(editable_property, listener, slider_name=None):
+    adjustment = editable_property.get_input_range_adjustment()
+    editable_property.adjustment = adjustment # patching in to make available for disconnect
+
+    hslider = Gtk.HScale()
+    hslider.set_adjustment(adjustment)
+    hslider.set_draw_value(False)
+    
+    spin = Gtk.SpinButton()
+    spin.set_numeric(True)
+    spin.set_adjustment(adjustment)
+
+    hbox = Gtk.HBox(False, 4)
+    hbox.pack_start(hslider, True, True, 0)
+    hbox.pack_start(spin, False, False, 4)
+    
+    if slider_name == None:
+        name = editable_property.get_display_name()
+    else:
+        name = slider_name
+    name = translations.get_param_name(name)
+    
+    editable_property.value_changed_ID = adjustment.connect("value-changed", listener) # saving ID to make it available for disconnect
+                                                                                       # This also needs to be available after adjustment is set to not lose exiting value for build dummy value 
+        
+    return (get_two_column_editor_row(name, hbox), hslider, spin)
+    
 def get_non_property_slider_row(lower, upper, step, value=0, listener=None):
     hslider = Gtk.HScale()
     hslider.set_draw_value(False)
