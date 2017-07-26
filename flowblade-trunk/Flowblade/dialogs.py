@@ -1260,6 +1260,7 @@ def keyboard_shortcuts_dialog(parent_window):
     tools_vbox.pack_start(_get_kb_row("5", _("Slip")), False, False, 0)
     tools_vbox.pack_start(_get_kb_row("6", _("Spacer")), False, False, 0)
     tools_vbox.pack_start(_get_kb_row("7", _("Box")), False, False, 0)
+    tools_vbox.pack_start(_get_kb_row(_("Keypad 1-7"), _("Same as 1-7")), False, False, 0)
     tools_vbox.pack_start(_get_kb_row(_("R"), _("Trim Tool Ripple Mode On/Off")), False, False, 0)
     tools = guiutils.get_named_frame(_("Tools"), tools_vbox)
 

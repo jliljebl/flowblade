@@ -83,18 +83,25 @@
     <event code='cut' name='Cut'>x</event>
     <event code='edit_mode_insert' name='Change Edit Mode to Insert'>1</event>
     <event code='edit_mode_insert' name='Change Edit Mode to Insert'>kp_1</event>
+    <event code='edit_mode_insert' name='Change Edit Mode to Insert'>kp_end</event>
     <event code='edit_mode_overwrite' name='Change Edit Mode to Overwrite'>2</event>
     <event code='edit_mode_overwrite' name='Change Edit Mode to Overwrite'>kp_2</event>
+    <event code='edit_mode_overwrite' name='Change Edit Mode to Overwrite'>kp_down</event>
     <event code='edit_mode_trim' name='Change Edit Mode to Trim'>3</event>
     <event code='edit_mode_trim' name='Change Edit Mode to Trim'>kp_3</event>
+    <event code='edit_mode_trim' name='Change Edit Mode to Trim'>kp_next</event>
     <event code='edit_mode_roll' name='Change Edit Mode to Roll'>4</event>
     <event code='edit_mode_roll' name='Change Edit Mode to Roll'>kp_4</event>
+    <event code='edit_mode_roll' name='Change Edit Mode to Roll'>kp_left</event>
     <event code='edit_mode_slip' name='Change Edit Mode to Slip'>5</event>
     <event code='edit_mode_slip' name='Change Edit Mode to Slip'>kp_5</event>
+    <event code='edit_mode_slip' name='Change Edit Mode to Slip'>kp_begin</event>
     <event code='edit_mode_spacer' name='Change Edit Mode to Spacer'>6</event>
     <event code='edit_mode_spacer' name='Change Edit Mode to Spacer'>kp_6</event>
+    <event code='edit_mode_spacer' name='Change Edit Mode to Spacer'>kp_right</event>
     <event code='edit_mode_box' name='Change Edit Mode to Box'>7</event>
     <event code='edit_mode_box' name='Change Edit Mode to Box'>kp_7</event>
+    <event code='edit_mode_box' name='Change Edit Mode to Box'>kp_home</event>
     <event code='zoom_out' name='Zoom Out'>minus</event>
     <event code='zoom_in' name='Zoom In'>equal</event>
     <event code='zoom_in' name='Zoom In' modifiers='SHIFT'>equal</event>

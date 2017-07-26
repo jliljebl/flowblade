@@ -1609,10 +1609,11 @@ class AbstractKeyFrameEditor(Gtk.VBox):
             self.clip_in = 0
 
         # Value slider
-        row, slider = guiutils.get_slider_row(editable_property, self.slider_value_changed)
+        row, slider, spin = guiutils.get_slider_row_and_spin_widget(editable_property, self.slider_value_changed)
         self.value_slider_row = row
         self.slider = slider
-        
+        self.spin = spin
+
         self.initializing = False # Hack against too early for on slider listner
 
     def display_tline_frame(self, tline_frame):
@@ -1760,12 +1761,21 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         self.queue_draw()
 
     def connect_to_update_on_release(self):
+        print "jjjjjj"
         self.editable_property.adjustment.disconnect(self.editable_property.value_changed_ID)
         self.editable_property.value_changed_ID = DISCONNECTED_SIGNAL_HANDLER
+        self.spin.connect("activate", lambda w:self.spin_value_changed(w))
+        self.spin.connect("button-release-event", lambda w, e:self.spin_value_changed(w))
         self.slider.connect("button-release-event", lambda w, e:self.slider_value_changed(w.get_adjustment()))
         
     def update_property_value(self):
         self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
+
+    def spin_value_changed(self, w):
+        adj = w.get_adjustment()
+        val = int(w.get_text())
+        adj.set_value(float(val))
+        self.slider_value_changed(adj)
 
 
 class GeometryEditor(AbstractKeyFrameEditor):

@@ -901,7 +901,7 @@
         <property name="transition.fix_shear_x" args="range_in=-180,180 range_out=-180,180 displayname=Shear!X">0</property>
         <property name="transition.fix_shear_y" args="range_in=-180,180 range_out=-180,180 displayname=Shear!Y">0</property>
     </filter>
-    <!---
+    <!--- Removed because didn't work on all media items.
     <filter id="avfilter.zoompan">
         <name>Zoom Pan</name>
         <group>Transform</group>

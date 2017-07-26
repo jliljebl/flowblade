@@ -19,6 +19,7 @@
 """
 
 import numpy as np
+print "numpy version:", np.version.version
 
 from gi.repository import Gtk, GObject
 
