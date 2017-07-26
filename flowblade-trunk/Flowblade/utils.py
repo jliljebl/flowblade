@@ -150,7 +150,7 @@ def get_tc_frame_with_fps(frame_str, frames_per_sec):
     # to our calculation, that would give us 60 fps, we need to correct that
     # last 'num' is frames already, no need to correct those
     sum = sum - num
-    sum = sum / (60 / int(round(frames_per_sec)))
+    sum = int(sum / (60.0 / round(frames_per_sec)))
     sum = sum + num
 
     # and that is our frame, so we return sum
