@@ -38,6 +38,7 @@ import gui
 import guiutils
 import mltrefhold
 import persistance
+import render
 import renderconsumer
 import sequence
 import utils
@@ -795,6 +796,9 @@ class ProxyProjectLoadThread(threading.Thread):
         persistance.show_messages = True
 
         Gdk.threads_enter()
+        selections = project.get_project_property(appconsts.P_PROP_LAST_RENDER_SELECTIONS)
+        if selections != None:
+            render.set_saved_gui_selections(selections)
         _converting_proxy_mode_done()
         Gdk.threads_leave()
 
