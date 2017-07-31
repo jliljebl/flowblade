@@ -842,7 +842,7 @@ class Sequence:
                 # This shold not happen because track heights should be set up so that minimized app 
                 # has enough space to display all tracks.
                 # Yet it happens sometimes, meh.
-                print "sequence.resize_tracks_to_fit (): could not make panels fit"
+                print "sequence.resize_tracks_to_fit (): could not make tracks fit in timeline vertical space"
                 fix_next = False
             else:
                 self.tracks[1 + count].height = TRACK_HEIGHT_SMALL

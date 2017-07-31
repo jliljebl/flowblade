@@ -335,6 +335,28 @@ def load_icons():
         BG_COLOR = (0.44, 0.44, 0.46)
         FRAME_SCALE_LINES = (0.8, 0.8, 0.8)
 
+def set_tracks_double_height_consts():
+    global ID_PAD_Y, ID_PAD_Y_SMALL, VIDEO_TRACK_V_ICON_POS, VIDEO_TRACK_A_ICON_POS, VIDEO_TRACK_V_ICON_POS_SMALL, VIDEO_TRACK_A_ICON_POS_SMALL, \
+    AUDIO_TRACK_ICON_POS, AUDIO_TRACK_ICON_POS_SMALL, MUTE_ICON_POS, MUTE_ICON_POS_NORMAL, LOCK_POS, INSRT_ICON_POS, INSRT_ICON_POS_SMALL, \
+    WAVEFORM_PAD_LARGE, WAVEFORM_PAD_SMALL, HEIGHT
+    
+    HEIGHT = appconsts.TLINE_HEIGHT
+    ID_PAD_Y = 41
+    ID_PAD_Y_SMALL = 16
+    VIDEO_TRACK_V_ICON_POS = (5, 41)
+    VIDEO_TRACK_A_ICON_POS = (5, 50)
+    VIDEO_TRACK_V_ICON_POS_SMALL = (5, 16)
+    VIDEO_TRACK_A_ICON_POS_SMALL = (5, 25) 
+    AUDIO_TRACK_ICON_POS = (5, 43)
+    AUDIO_TRACK_ICON_POS_SMALL = (5, 18)
+    MUTE_ICON_POS = (5, 14)
+    MUTE_ICON_POS_NORMAL = (5, 39)
+    LOCK_POS = (67, 2)
+    INSRT_ICON_POS = (81, 43)
+    INSRT_ICON_POS_SMALL =  (81, 18)
+    WAVEFORM_PAD_LARGE = 77
+    WAVEFORM_PAD_SMALL = 33
+
 def set_dark_bg_color():
     if editorpersistance.prefs.dark_theme == False:
         return
@@ -1620,9 +1642,10 @@ class TimeLineCanvas:
                 self.sync_children.append((clip, track, scale_in))
 
             # Draw audio level data, except for IMAGE_SEQUENCE clips
+            # Init data rendering if data needed and not available
             if clip.waveform_data == None and editorstate.display_all_audio_levels == True and clip.media_type != appconsts.IMAGE_SEQUENCE and clip.media_type != appconsts.PATTERN_PRODUCER:
                  clip.waveform_data = audiowaveformrenderer.get_waveform_data(clip)
-                 
+            # Draw data if available large enough scale
             if clip.waveform_data != None and scale_length > FILL_MIN:
                 r, g, b = clip_bg_col
                 cr.set_source_rgb(r * 0.9, g * 0.9, b * 0.9)

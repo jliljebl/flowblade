@@ -184,7 +184,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
         play_pause_button, mouse_scroll_action, hide_file_ext_button, auto_center_on_updown, \
         ffwd_rev_shift, ffwd_rev_ctrl, ffwd_rev_caps = edit_prefs_widgets
     
-    use_english, disp_splash, buttons_style, dark_theme, theme_combo, audio_levels_combo, window_mode_combo, full_names = view_prefs_widgets
+    use_english, disp_splash, buttons_style, dark_theme, theme_combo, audio_levels_combo, window_mode_combo, full_names, double_track_hights = view_prefs_widgets
 
     # Jan-2017 - SvdB
     perf_render_threads, perf_drop_frames = performance_widgets
@@ -229,6 +229,8 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     # Feb-2017 - SvdB - for full file names
     prefs.show_full_file_names = full_names.get_active()
     prefs.center_on_arrow_move = auto_center_on_updown.get_active()
+    prefs.double_track_hights = (double_track_hights.get_active() == 1)
+    
     # Apr-2017 - Svdb - Get the newly selected shortcuts and load the appropriate file
     if shortcuts_combo.get_active() > 0: # 0 is Flowblade Default
         if prefs.shortcuts != shortcuts.shortcut_files[shortcuts_combo.get_active()-1]:
@@ -327,4 +329,5 @@ class EditorPreferences:
         self.ffwd_rev_ctrl = 10
         self.ffwd_rev_caps = 1
         self.shortcuts = 'Flowblade Default'
+        self.double_track_hights = False
 

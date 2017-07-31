@@ -343,7 +343,12 @@ def _view_prefs_panel():
         window_mode_combo.set_active(0)
     else:
         window_mode_combo.set_active(1)
-        
+
+    tracks_combo = Gtk.ComboBoxText()
+    tracks_combo.append_text(_("Normal - 50px, 25px"))
+    tracks_combo.append_text(_("Double for HiDPI - 100px, 50px"))
+    tracks_combo.set_active(prefs.double_track_hights)
+
     # Layout
     row00 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Application window mode:")), window_mode_combo, PREFERENCES_LEFT))
     row0 =  _row(guiutils.get_checkbox_row_box(force_english_check, Gtk.Label(label=_("Use English texts on localized OS"))))
@@ -352,6 +357,8 @@ def _view_prefs_panel():
     row3 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme request, icons and colors:")), dark_combo, PREFERENCES_LEFT))
     row4 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme detection fail fallback colors:")), theme_combo, PREFERENCES_LEFT))
     row5 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Default audio levels display:")), audio_levels_combo, PREFERENCES_LEFT))
+    row7 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Tracks Heights:")), tracks_combo, PREFERENCES_LEFT))
+
     # Feb-2017 - SvdB - For full file names
     row6 =  _row(guiutils.get_checkbox_row_box(show_full_file_names, Gtk.Label(label=_("Show Full File names"))))
 
@@ -363,6 +370,7 @@ def _view_prefs_panel():
     vbox.pack_start(row3, False, False, 0)
     vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row5, False, False, 0)
+    vbox.pack_start(row7, False, False, 0)
     # Feb-2017 - SvdB - For full file names
     vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
@@ -371,7 +379,7 @@ def _view_prefs_panel():
 
     # Feb-2017 - SvdB - Added code for full file names
     return vbox, (force_english_check, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo, 
-                  window_mode_combo, show_full_file_names)
+                  window_mode_combo, show_full_file_names, tracks_combo)
 
 def _performance_panel():
     # Jan-2017 - SvdB
