@@ -31,6 +31,7 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 
 import appconsts
+import audiosync
 import boxmove
 import clipeffectseditor
 import clipenddragmode
@@ -540,6 +541,14 @@ def tline_canvas_mouse_pressed(event, frame):
         set_default_edit_mode()  
         return
 
+    # Handle and exit tline sync clip selecting
+    if EDIT_MODE() == editorstate.SELECT_TLINE_SYNC_CLIP:
+        audiosync.select_sync_clip_mouse_pressed(event, frame)
+        mouse_disabled = True
+        # Set INSERT_MODE
+        set_default_edit_mode()  
+        return
+        
     # Hitting timeline in clip display mode displays timeline in
     # default mode.
     if not timeline_visible():

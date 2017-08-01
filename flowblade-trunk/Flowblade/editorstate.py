@@ -42,7 +42,7 @@ SLIDE_TRIM = 8
 SLIDE_TRIM_NO_EDIT = 9
 MULTI_MOVE = 10
 CLIP_END_DRAG = 11
-
+SELECT_TLINE_SYNC_CLIP = 12
 
 # Project being edited
 project = None

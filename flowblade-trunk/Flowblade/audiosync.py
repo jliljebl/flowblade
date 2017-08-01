@@ -43,16 +43,21 @@ import appconsts
 import clapperless
 import dialogs
 import editorpersistance
+import editorstate
 from editorstate import PROJECT
+from editorstate import current_sequence
 import gui
+import movemodes
 import projectaction
 import renderconsumer
 import respaths
+import tlinewidgets
+import updater
 import utils
 
 
 _files_offsets = {}
-
+_parent_selection_data = None
 
 class ClapperlesLaunchThread(threading.Thread):
     def __init__(self, video_file, audio_file, completed_callback):
@@ -65,7 +70,7 @@ class ClapperlesLaunchThread(threading.Thread):
         _write_offsets(self.video_file, self.audio_file, self.completed_callback)
 
 
-# ------------------------------------------------ interface
+# ------------------------------------------------ compound clip interface
 def create_audio_sync_compound_clip():
     selection = gui.media_list_view.get_selected_media_objects()
     if len(selection) != 2:
@@ -90,7 +95,38 @@ def create_audio_sync_compound_clip():
 def create_audio_sync_group():
     pass
 
+# ------------------------------------------------ compound clip interface
+def init_select_tline_sync_clip(popup_data):
+    print "jdjdjdjdjd"
+    clip, track, item_id, x = popup_data
+    frame = tlinewidgets.get_frame(x)
+    child_index = current_sequence().get_clip_index(track, frame)
 
+    if not (track.clips[child_index] == clip):
+        # This should never happen 
+        print "big fu at _init_select_master_clip(...)"
+        return
+
+    gdk_window = gui.tline_display.get_parent_window();
+    gdk_window.set_cursor(Gdk.Cursor.new(Gdk.CursorType.TCROSS))
+    editorstate.edit_mode = editorstate.SELECT_TLINE_SYNC_CLIP
+    global _parent_selection_data
+    _parent_selection_data = (clip, child_index, track)
+
+def select_sync_clip_mouse_pressed(event, frame):
+    #_set_sync_parent_clip(event, frame)
+    
+    gdk_window = gui.tline_display.get_parent_window();
+    gdk_window.set_cursor(Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR))
+   
+    global _parent_selection_data
+    _parent_selection_data = None
+
+    # Edit consumes selection
+    movemodes.clear_selected_clips()
+
+    updater.repaint_tline()
+    
 # ------------------------------------------------------- module funcs
 def _write_offsets(video_file, audio_file, completed_callback):
     print "Starting clapperless analysis..."

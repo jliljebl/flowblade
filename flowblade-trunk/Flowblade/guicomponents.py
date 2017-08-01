@@ -1167,6 +1167,8 @@ def display_clip_popup_menu(event, clip, track, callback):
            clip_menu.add(_get_menu_item(_("Clear Waveform"), callback,\
               (clip, track, "clear_waveform", event.x), True))
 
+    clip_menu.add(_get_menu_item(_("Select Clip to Audio Sync With..."), callback, (clip, track, "set_audio_sync_clip", event.x)))
+            
     _add_separetor(clip_menu)
 
     if track.id != current_sequence().first_video_index:

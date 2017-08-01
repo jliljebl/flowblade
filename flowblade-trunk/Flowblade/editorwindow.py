@@ -326,10 +326,7 @@ class EditorWindow:
                         <menuitem action='CreateSelectionCompound'/>
                         <menuitem action='CreateSequenceCompound'/>  
                     </menu>
-                    <menu action='MediaAudioSyncMenu'>
-                        <menuitem action='AudioSyncGroup'/>  
-                        <menuitem action='AudioSyncCompoundClip'/>
-                    </menu>
+                    <menuitem action='AudioSyncCompoundClip'/>
                     <separator/>
                     <menuitem action='ImportProjectMedia'/>
                     <menuitem action='CombineSequences'/>
@@ -1149,6 +1146,8 @@ class EditorWindow:
         elif mode == editorstate.SLIDE_TRIM_NO_EDIT:
             cursor = self.get_own_cursor(display, SLIDE_NO_EDIT_CURSOR, 9, 9)
         elif mode == editorstate.SELECT_PARENT_CLIP:
+            cursor =  Gdk.Cursor.new(Gdk.CursorType.TCROSS)
+        elif mode == editorstate.SELECT_TLINE_SYNC_CLIP:
             cursor =  Gdk.Cursor.new(Gdk.CursorType.TCROSS)
         elif mode == editorstate.MULTI_MOVE:
             cursor = self.get_own_cursor(display, MULTIMOVE_CURSOR, 4, 8)

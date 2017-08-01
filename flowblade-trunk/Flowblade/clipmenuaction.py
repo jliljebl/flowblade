@@ -33,6 +33,7 @@ import shutil
 import time
 
 import audiowaveform
+import audiosync
 import appconsts
 import clipeffectseditor
 import compositeeditor
@@ -567,4 +568,5 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "length":_set_length,
                   "stretch_next":_stretch_next, 
                   "stretch_prev":_stretch_prev,
-                  "add_autofade":_add_autofade}
+                  "add_autofade":_add_autofade,
+                  "set_audio_sync_clip":audiosync.init_select_tline_sync_clip}
