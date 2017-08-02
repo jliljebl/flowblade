@@ -1619,7 +1619,6 @@ def _fades_group_changed(combo, widgets):
         fade_out_spin.set_sensitive(True)
         fade_out_length_label.set_sensitive(True)
         
-
 def _fade_on_off_changed(check_widget, widgets):
     group_select, fade_in_check, fade_in_spin, fade_out_check, fade_out_spin, fade_in_length_label, fade_out_length_label = widgets
     if check_widget == fade_in_check:
@@ -1640,4 +1639,42 @@ def _fade_on_off_changed(check_widget, widgets):
             fade_out_spin.set_sensitive(False)
             fade_out_length_label.set_sensitive(False)
 
+def tline_audio_sync_dialog(callback, data):
+    dialog = Gtk.Dialog(_("Timeline Audio Sync"),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                        _("Do Audio Sync Move Edit").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+    
+    files_offsets, clip_tline_media_offset, clips = data
+    file1, file2, idstr = clips
+    media_offset_frames = int(float(files_offsets[file2]) + 0.5)
+    
+    file_label_1 = Gtk.Label("<b>Action origin clip media file:</b> " + file1)
+    file_label_1.set_use_markup(True)
+    file_label_2 = Gtk.Label("<b>Sync clip media file:</b> " + file2)
+    file_label_2.set_use_markup(True)
+    
+    media_offsets_label = Gtk.Label("<b>Audio Sync Offset</b> between clips media is " + str(media_offset_frames) + " frames.")
+    media_offsets_label.set_use_markup(True)
+    tline_offsets_label = Gtk.Label("<b>Timeline Media Offset</b> between clips is " + str(clip_tline_media_offset) + " frames.")
+    tline_offsets_label.set_use_markup(True)
+    
+    action_label_text = _("To audio sync clips you need move action origin clip by ") + str(clip_tline_media_offset - media_offset_frames) + _(" frames.")
+    action_label = Gtk.Label(action_label_text)
+    
+    panel_vbox = Gtk.VBox(False, 2)
+    panel_vbox.pack_start(guiutils.get_left_justified_box([media_offsets_label]), False, False, 0)
+    panel_vbox.pack_start(guiutils.get_left_justified_box([tline_offsets_label]), False, False, 0)
+
+    panel_vbox.pack_start(guiutils.get_pad_label(24, 12), False, False, 0)
+    panel_vbox.pack_start(guiutils.get_left_justified_box([action_label]), False, False, 0)
+    panel_vbox.pack_start(guiutils.get_pad_label(24, 24), False, False, 0)
+
+    alignment = dialogutils.get_alignment2(panel_vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, data)
+    dialog.show_all()
         

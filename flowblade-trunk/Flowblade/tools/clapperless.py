@@ -30,6 +30,7 @@ import numpy
 import utils
 
 OFFSETS_DATA_FILE = "audio_offsets_data"
+OFFSETS_DATA_FILE_ID_DEFAULT = "idstr_default"
 
 __version__ = "0.99.8"
 
@@ -312,6 +313,8 @@ def cl_parser():
     parser.add_argument('files', nargs='+', help="FILE FILE [FILES]")
     parser.add_argument('-r', '--rate', default=25, type=int,
         help="should be equal to frames per second [default: 25]")
+    parser.add_argument('--idstr',  default="idstr_default", type=str,
+        help="id for file used to cimmunicate result [default: idstr_default]")
     parser.add_argument('-c', '--use-cache', action='store_true')
     parser.add_argument('--cache-dir', nargs=1,default=[tempfile.gettempdir()],
                         help="default: %s" % tempfile.gettempdir())
@@ -342,7 +345,8 @@ def process_files(args):
 
 def main():
     args = cl_parser()
-
+    print args.idstr
+    
     offsets_output = process_files(args)
 
     # Write out offsets data
@@ -351,7 +355,7 @@ def main():
         f, offset = file_offset
         out_str = out_str + f + " " + str(offset) + "\n"
     
-    output_file = utils.get_hidden_user_dir_path() + OFFSETS_DATA_FILE
+    output_file = utils.get_hidden_user_dir_path() + OFFSETS_DATA_FILE + "_"+ args.idstr
     f = open(output_file, 'w')
     f.write(out_str)
     f.close()
