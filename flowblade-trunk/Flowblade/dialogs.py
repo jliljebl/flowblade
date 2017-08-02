@@ -1645,21 +1645,21 @@ def tline_audio_sync_dialog(callback, data):
                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
                         _("Do Audio Sync Move Edit").encode('utf-8'), Gtk.ResponseType.ACCEPT))
     
-    files_offsets, clip_tline_media_offset, clips = data
-    file1, file2, idstr = clips
-    media_offset_frames = int(float(files_offsets[file2]) + 0.5)
+    #files_offsets, clip_tline_media_offset, clips = data
+    #file1, file2, idstr = clips
+    #media_offset_frames = int(float(files_offsets[file2]) + 0.5)
     
-    file_label_1 = Gtk.Label("<b>Action origin clip media file:</b> " + file1)
-    file_label_1.set_use_markup(True)
-    file_label_2 = Gtk.Label("<b>Sync clip media file:</b> " + file2)
-    file_label_2.set_use_markup(True)
+    #file_label_1 = Gtk.Label("<b>Action origin clip media file:</b> " + file1)
+    #file_label_1.set_use_markup(True)
+    #file_label_2 = Gtk.Label("<b>Sync clip media file:</b> " + file2)
+    #file_label_2.set_use_markup(True)
     
-    media_offsets_label = Gtk.Label("<b>Audio Sync Offset</b> between clips media is " + str(media_offset_frames) + " frames.")
+    media_offsets_label = Gtk.Label("<b>Audio Sync Offset</b> between clips media is " + str(data.media_offset_frames) + " frames.")
     media_offsets_label.set_use_markup(True)
-    tline_offsets_label = Gtk.Label("<b>Timeline Media Offset</b> between clips is " + str(clip_tline_media_offset) + " frames.")
+    tline_offsets_label = Gtk.Label("<b>Timeline Media Offset</b> between clips is " + str(data.clip_tline_media_offset) + " frames.")
     tline_offsets_label.set_use_markup(True)
     
-    action_label_text = _("To audio sync clips you need move action origin clip by ") + str(clip_tline_media_offset - media_offset_frames) + _(" frames.")
+    action_label_text = _("To audio sync clips you need move action origin clip by ") + str(data.clip_tline_media_offset - data.media_offset_frames) + _(" frames.")
     action_label = Gtk.Label(action_label_text)
     
     panel_vbox = Gtk.VBox(False, 2)

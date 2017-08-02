@@ -42,6 +42,7 @@ from gi.repository import Gtk, Gdk, GdkPixbuf
 import appconsts
 import clapperless
 import dialogs
+import edit
 import editorpersistance
 import editorstate
 from editorstate import PROJECT
@@ -55,7 +56,9 @@ import tlinewidgets
 import updater
 import utils
 
-_tline_sync_data = None # Compound clip and tline sync functions can't pass the same data througn clapperless so we use this global to save data for  tline sync that needs more data
+_tline_sync_data = None # Compound clip and tline clip sync functions can't pass the same data througn clapperless so 
+                         # we use this global to save data as needed for tline sync function.
+                         # The data flow is a bit haed to follow here, this needs tobe refactored.
 
 class ClapperlesLaunchThread(threading.Thread):
     def __init__(self, video_file, audio_file, completed_callback):
@@ -108,9 +111,9 @@ def init_select_tline_sync_clip(popup_data):
 
     clip, track, item_id, x = popup_data
     frame = tlinewidgets.get_frame(x)
-    child_index = current_sequence().get_clip_index(track, frame)
+    clip_index = current_sequence().get_clip_index(track, frame)
 
-    if not (track.clips[child_index] == clip):
+    if not (track.clips[clip_index] == clip):
         # This should never happen 
         print "big fu at init_select_tline_sync_clip(...)"
         return
@@ -120,16 +123,55 @@ def init_select_tline_sync_clip(popup_data):
     editorstate.edit_mode = editorstate.SELECT_TLINE_SYNC_CLIP
 
     global _tline_sync_data
-    _tline_sync_data = (clip, child_index, track)
+    _tline_sync_data = TLineSyncData()
+    _tline_sync_data.origin_clip = clip
+    _tline_sync_data.origin_track = track
+    _tline_sync_data.origin_clip_index = clip_index
+    
+    
+def select_sync_clip_mouse_pressed(event, frame):
+    sync_clip = _get_sync_tline_clip(event, frame)
+
+    if sync_clip == None:
+        return # selection wasn't good
+
+    sync_track =  tlinewidgets.get_track(event.y)
+    sync_clip_index = sync_track.clips.index(sync_clip)
+
+    _tline_sync_data.sync_clip = sync_clip
+    _tline_sync_data.sync_track = sync_track
+    _tline_sync_data.sync_clip_index = sync_clip_index
+
+    #global _tline_sync_data
+    #action_origin_clip, action_origin_clip_index, action_origin_clip_track = _tline_sync_data
+
+    # TImeline media offset for clips
+    sync_clip_start_in_tline = sync_track.clip_start(sync_clip_index)
+    _tline_sync_data.origin_clip_start_in_tline = _tline_sync_data.origin_track.clip_start(_tline_sync_data.origin_clip_index)
+    
+    _tline_sync_data.clip_tline_media_offset = (sync_clip_start_in_tline - sync_clip.clip_in) - (_tline_sync_data.origin_clip_start_in_tline - _tline_sync_data.origin_clip.clip_in)
+    
+    gdk_window = gui.tline_display.get_parent_window();
+    gdk_window.set_cursor(Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR))
+    
+    #_tline_sync_data = ((action_origin_clip, action_origin_clip_index, action_origin_clip_track), clip_tline_media_offset) # this keeps changing as different data is needed
+    
+    # This or GUI freezes, we really can't do Popen.wait() in a Gtk thread
+    clapperless_thread = ClapperlesLaunchThread(_tline_sync_data.origin_clip.path, sync_clip.path, _tline_sync_offsets_computed_callback)
+    clapperless_thread.start()
+
+    # Edit consumes selection
+    movemodes.clear_selected_clips()
+
+    updater.repaint_tline()
 
 def _get_sync_tline_clip(event, frame):
-    action_origin_clip, action_origin_clip_index, action_origin_clip_track = _tline_sync_data
     sync_track = tlinewidgets.get_track(event.y)
 
     if sync_track == None:
         return None
         
-    if sync_track == action_origin_clip_track:
+    if sync_track == _tline_sync_data.origin_track:
         dialogutils.warning_message(_("Audio Sync parent clips must be on differnt tracks "), 
                                 _("Selected audio sync clip is on the sametrack as the sync action origin clip."),
                                 gui.editor_window.window,
@@ -142,62 +184,70 @@ def _get_sync_tline_clip(event, frame):
 
     return sync_track.clips[sync_clip_index]
     
-def select_sync_clip_mouse_pressed(event, frame):
-    sync_clip = _get_sync_tline_clip(event, frame)
-
-    if sync_clip == None:
-        return # selection wasn't good
-
-    sync_track =  tlinewidgets.get_track(event.y)
-    sync_clip_index = sync_track.clips.index(sync_clip)
-
-    global _tline_sync_data
-    action_origin_clip, action_origin_clip_index, action_origin_clip_track = _tline_sync_data
-
-    # TImeline media offset for clips
-    sync_clip_start_in_tline = sync_track.clip_start(sync_clip_index)
-    action_origin_start_in_tline = action_origin_clip_track.clip_start(action_origin_clip_index)
-    
-    clip_tline_media_offset = (sync_clip_start_in_tline - sync_clip.clip_in) - (action_origin_start_in_tline - action_origin_clip.clip_in)
-    
-    gdk_window = gui.tline_display.get_parent_window();
-    gdk_window.set_cursor(Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR))
-    
-    _tline_sync_data = clip_tline_media_offset
-    
-    # This or GUI freezes, we really can't do Popen.wait() in a Gtk thread
-    clapperless_thread = ClapperlesLaunchThread(action_origin_clip.path, sync_clip.path, _tline_sync_offsets_complete)
-    clapperless_thread.start()
-    
-
-   
-    #global _sync_selection_data
-   # _sync_selection_data = None
-
-    # Edit consumes selection
-    movemodes.clear_selected_clips()
-
-    updater.repaint_tline()
-
-def _tline_sync_offsets_complete(data):
+def _tline_sync_offsets_computed_callback(clapperless_data):
     print "Clapperless done for tline sync"
 
-    global _tline_sync_data
-    clip_tline_media_offset = _tline_sync_data 
-    _tline_sync_data = None
-
-    file_path_1, file_path_2, idstr = data
-    files_offsets = _read_offsets(idstr)
-    sync_data = (files_offsets, clip_tline_media_offset, data)
+    #global _tline_sync_data
+    #origin_clip_data, clip_tline_media_offset = _tline_sync_data 
     
-    dialogs.tline_audio_sync_dialog(_do_tline_audio_sync, sync_data)
+    file_path_1, file_path_2, idstr = clapperless_data
+    files_offsets = _read_offsets(idstr)
+    
+    _tline_sync_data.media_offset_frames = int(float(files_offsets[file_path_2]) + 0.5)
+    
+    dialogs.tline_audio_sync_dialog(_tline_audio_sync_dialog_callback, _tline_sync_data)
 
-def _do_tline_audio_sync(dialog, response_id, data):
+def _tline_audio_sync_dialog_callback(dialog, response_id, data):
     if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
         return
         
     dialog.destroy()
+
+    sync_move_frames = _tline_sync_data.clip_tline_media_offset - _tline_sync_data.media_offset_frames + 1 # +1 uh, seems to work better
+    over_in = _tline_sync_data.origin_clip_start_in_tline + sync_move_frames
+    over_out = over_in + (_tline_sync_data.origin_clip.clip_out - _tline_sync_data.origin_clip.clip_in) + 1
+
+    # Moved lips are completely out of displayable track area, can't do edit.
+    if over_out  < 1:
+        # Info window
+        return
+        
+    # Autocorrect moved clips to be fully on displayable track area
+    if over_in  < 0:
+        over_out += abs(over_in)
+        over_in = 0
+        
+    data = {"track":_tline_sync_data.origin_track,
+            "over_in":over_in,
+            "over_out":over_out,
+            "selected_range_in":_tline_sync_data.origin_clip_index,
+            "selected_range_out":_tline_sync_data.origin_clip_index,
+            "move_edit_done_func":None}
+
+    action = edit.overwrite_move_action(data)
+    action.do_edit()
+
+
+class TLineSyncData:
+    def __init__(self):
+        # Origin clip
+        self.origin_clip = None 
+        self.origin_track = None
+        self.origin_clip_index = None
+
+        # Clip to sync origin clip
+        self.sync_clip = None
+        self.sync_track = None
+        self.sync_clip_index = None
+
+        # Timeline data
+        self.origin_clip_start_in_tline = None
+        self.clip_tline_media_offset = None
+    
+        # Media offset from clapperless
+        self.media_offset_frames = None
+        
         
 # ------------------------------------------------------- compound clip audio sync
 def create_audio_sync_compound_clip():
