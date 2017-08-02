@@ -42,6 +42,7 @@ from gi.repository import Gtk, Gdk, GdkPixbuf
 import appconsts
 import clapperless
 import dialogs
+import dialogutils
 import edit
 import editorpersistance
 import editorstate
@@ -142,9 +143,6 @@ def select_sync_clip_mouse_pressed(event, frame):
     _tline_sync_data.sync_track = sync_track
     _tline_sync_data.sync_clip_index = sync_clip_index
 
-    #global _tline_sync_data
-    #action_origin_clip, action_origin_clip_index, action_origin_clip_track = _tline_sync_data
-
     # TImeline media offset for clips
     sync_clip_start_in_tline = sync_track.clip_start(sync_clip_index)
     _tline_sync_data.origin_clip_start_in_tline = _tline_sync_data.origin_track.clip_start(_tline_sync_data.origin_clip_index)
@@ -153,8 +151,6 @@ def select_sync_clip_mouse_pressed(event, frame):
     
     gdk_window = gui.tline_display.get_parent_window();
     gdk_window.set_cursor(Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR))
-    
-    #_tline_sync_data = ((action_origin_clip, action_origin_clip_index, action_origin_clip_track), clip_tline_media_offset) # this keeps changing as different data is needed
     
     # This or GUI freezes, we really can't do Popen.wait() in a Gtk thread
     clapperless_thread = ClapperlesLaunchThread(_tline_sync_data.origin_clip.path, sync_clip.path, _tline_sync_offsets_computed_callback)
@@ -186,9 +182,6 @@ def _get_sync_tline_clip(event, frame):
     
 def _tline_sync_offsets_computed_callback(clapperless_data):
     print "Clapperless done for tline sync"
-
-    #global _tline_sync_data
-    #origin_clip_data, clip_tline_media_offset = _tline_sync_data 
     
     file_path_1, file_path_2, idstr = clapperless_data
     files_offsets = _read_offsets(idstr)
@@ -208,16 +201,14 @@ def _tline_audio_sync_dialog_callback(dialog, response_id, data):
     over_in = _tline_sync_data.origin_clip_start_in_tline + sync_move_frames
     over_out = over_in + (_tline_sync_data.origin_clip.clip_out - _tline_sync_data.origin_clip.clip_in) + 1
 
-    # Moved lips are completely out of displayable track area, can't do edit.
-    if over_out  < 1:
-        # Info window
-        return
-        
-    # Autocorrect moved clips to be fully on displayable track area
+    # We're not not supporting case where clip would start before timeline start.
     if over_in  < 0:
-        over_out += abs(over_in)
-        over_in = 0
-        
+        primary_txt = _("Audio sync move not possible")
+        secondary_txt = _("Clip starts ") + str(over_in) + _(" frames before timeline start if it is moved \nto be in audio sync with the specified clip.\n\n") + \
+                        _("You need to move forward or shorten the clips in question to make the operation succeed.")
+        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        return
+
     data = {"track":_tline_sync_data.origin_track,
             "over_in":over_in,
             "over_out":over_out,
@@ -268,7 +259,6 @@ def create_audio_sync_compound_clip():
         # INFOWINDOW
         print  "2 video file"
         #return
-
 
     # This or GUI freezes, we really can't do Popen.wait() in a Gtk thread
     clapperless_thread = ClapperlesLaunchThread(video_file.path, audio_file.path, _compound_offsets_complete)
