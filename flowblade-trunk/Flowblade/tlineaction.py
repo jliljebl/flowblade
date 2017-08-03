@@ -30,6 +30,7 @@ import os
 from operator import itemgetter
 
 import appconsts
+import boxmove
 import clipeffectseditor
 import compositeeditor
 import compositormodes
@@ -51,6 +52,7 @@ from editorstate import timeline_visible
 from editorstate import MONITOR_MEDIA_FILE
 from editorstate import EDIT_MODE
 import movemodes
+import multimovemode
 import mlttransitions
 import render
 import renderconsumer
@@ -102,16 +104,22 @@ def _current_tline_frame():
 # ---------------------------------- edit button events
 def cut_pressed():
     if not timeline_visible():
-        updater.display_sequence_in_monitor()
+        updater.display_sequence_in_monitor()   
 
-    if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
-        editevent.oneroll_trim_no_edit_init()
+    # Disable whencut action when it cut clash with ongoing edits
+    if EDIT_MODE() == editorstate.ONE_ROLL_TRIM or EDIT_MODE() == editorstate.TWO_ROLL_TRIM or EDIT_MODE() == editorstate.SLIDE_TRIM:
         return
 
-    if EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
-        editevent.tworoll_trim_no_edit_init()
+    if EDIT_MODE() == editorstate.MULTI_MOVE and multimovemode.edit_data != None:
+        return
+
+    if EDIT_MODE() == editorstate.MULTI_MOVE and multimovemode.edit_data != None:
         return
         
+    if boxmove.box_selection_data != None:
+        return
+    
+    # Get cut frame
     tline_frame = PLAYER().current_frame()
 
     movemodes.clear_selected_clips()
