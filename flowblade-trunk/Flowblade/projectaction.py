@@ -738,13 +738,26 @@ def get_save_time_msg():
     return _("Project was saved ") + str(int(save_ago)) + _(" minutes ago.")
     
 # ---------------------------------- rendering
-def do_rendering():
+def do_rendering(force_overwrite=False):
+    if force_overwrite == False:
+        render_path = render.get_file_path()
+        if os.path.isfile(render_path):
+            primary_txt = _("Render target file exists!")
+            secondary_txt = _("Confirm overwriting existing file.")
+            dialogutils.warning_confirmation(_overwrite_confirm_dialog_callback, primary_txt, secondary_txt, gui.editor_window.window, data=None, is_info=False, use_confirm_text=True)
+            return
+    
     success = _write_out_render_item(True)
     if success:
         render_selections = render.get_current_gui_selections()
         PROJECT().set_project_property(appconsts.P_PROP_LAST_RENDER_SELECTIONS, render_selections)
         batchrendering.launch_single_rendering()
 
+def _overwrite_confirm_dialog_callback(dialog, response_id):
+    dialog.destroy()
+    if response_id == Gtk.ResponseType.ACCEPT:
+        do_rendering(True)
+    
 def add_to_render_queue():
     _write_out_render_item(False)
 

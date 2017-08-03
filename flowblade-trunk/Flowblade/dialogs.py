@@ -1678,3 +1678,4 @@ def tline_audio_sync_dialog(callback, data):
     dialog.connect('response', callback, data)
     dialog.show_all()
         
+
