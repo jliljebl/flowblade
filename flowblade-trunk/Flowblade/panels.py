@@ -381,7 +381,7 @@ def get_transition_panel(trans_data):
     encodings_cb.connect("changed", 
                               lambda w,e: _transition_encoding_changed(transition_widgets), 
                               None)
-    _fill_transition_quality_combo_box(transition_widgets)
+    _fill_transition_quality_combo_box(transition_widgets, 10)
     
     _set_saved_encoding(transition_widgets)
     
@@ -442,8 +442,8 @@ def get_fade_panel(fade_data):
     encodings_cb.connect("changed", 
                               lambda w,e: _transition_encoding_changed(transition_widgets), 
                               None)
-    _fill_transition_quality_combo_box(transition_widgets)
-    
+
+    _fill_transition_quality_combo_box(transition_widgets, 10)
     _set_saved_encoding(transition_widgets)
     
     
@@ -468,7 +468,7 @@ def get_fade_panel(fade_data):
 def _transition_encoding_changed(widgets):
     _fill_transition_quality_combo_box(widgets)
  
-def _fill_transition_quality_combo_box(widgets):
+def _fill_transition_quality_combo_box(widgets, quality_index=-1):
     encodings_cb, quality_cb = widgets
     enc_index = encodings_cb.get_active()
     encoding = renderconsumer.encoding_options[enc_index]
@@ -477,11 +477,14 @@ def _fill_transition_quality_combo_box(widgets):
     for quality_option in encoding.quality_options:
         quality_cb.append_text(quality_option.name)
 
-    if encoding.quality_default_index != None:
-        quality_cb.set_active(encoding.quality_default_index)
+    if quality_index == -1:
+        if encoding.quality_default_index != None:
+            quality_cb.set_active(encoding.quality_default_index)
+        else:
+            quality_cb.set_active(0)
     else:
-        quality_cb.set_active(0)
-
+            quality_cb.set_active(quality_index)
+            
 def _set_saved_encoding(transition_widgets):
     saved_encoding = editorstate.PROJECT().get_project_property(appconsts.P_PROP_TRANSITION_ENCODING)
     if saved_encoding != None:
