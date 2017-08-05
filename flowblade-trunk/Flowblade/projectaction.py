@@ -79,6 +79,10 @@ import utils
 save_time = None
 save_icon_remove_event_id = None
 
+# Used to get some render confirmations
+force_overwrite = False
+force_proxy = False
+
 #_xml_render_player = None
 
 #--------------------------------------- worker threads
@@ -738,7 +742,7 @@ def get_save_time_msg():
     return _("Project was saved ") + str(int(save_ago)) + _(" minutes ago.")
     
 # ---------------------------------- rendering
-def do_rendering(force_overwrite=False):
+def do_rendering():
     if force_overwrite == False:
         render_path = render.get_file_path()
         if os.path.isfile(render_path):
@@ -746,6 +750,17 @@ def do_rendering(force_overwrite=False):
             secondary_txt = _("Confirm overwriting existing file.")
             dialogutils.warning_confirmation(_overwrite_confirm_dialog_callback, primary_txt, secondary_txt, gui.editor_window.window, data=None, is_info=False, use_confirm_text=True)
             return
+
+    if force_proxy == False:
+        if PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA:
+            primary_txt = _("Project is currently using proxy media!")
+            secondary_txt = _("Rendering from proxy media will produce worse quality than rendering from original media.\nConvert to using original media in Proxy Manager for best quality.\n\nSelect 'Confirm' to render from proxy media anyway.")
+            dialogutils.warning_confirmation(_proxy_confirm_dialog_callback, primary_txt, secondary_txt, gui.editor_window.window, data=None, is_info=False, use_confirm_text=True)
+            return
+            
+    global force_overwrite, force_proxy
+    force_overwrite = False
+    force_proxy = False
     
     success = _write_out_render_item(True)
     if success:
@@ -756,8 +771,20 @@ def do_rendering(force_overwrite=False):
 def _overwrite_confirm_dialog_callback(dialog, response_id):
     dialog.destroy()
     if response_id == Gtk.ResponseType.ACCEPT:
-        do_rendering(True)
-    
+        global force_overwrite
+        force_overwrite = True
+        do_rendering()
+
+def _proxy_confirm_dialog_callback(dialog, response_id):
+    dialog.destroy()
+    if response_id == Gtk.ResponseType.ACCEPT:
+        global force_proxy
+        force_proxy = True
+        do_rendering()
+    else:  # This could otherwise stay accepting overwrites until app close
+        global force_overwrite
+        force_overwrite = False
+        
 def add_to_render_queue():
     _write_out_render_item(False)
 
