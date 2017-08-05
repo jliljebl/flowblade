@@ -118,8 +118,12 @@ def create_edit_buttons_row_buttons(editor_window, modes_pixbufs):
 def _create_buttons(editor_window):
     IMG_PATH = respaths.IMAGE_PATH
     editor_window.big_TC = Gtk.Stack()
-    editor_window.big_TC.add_named(guicomponents.BigTCDisplay().widget, "BigTCDisplay")
-    editor_window.big_TC.add_named(guicomponents.BigTCEntry().widget, "BigTCEntry")
+    tc_disp = guicomponents.BigTCDisplay()
+    tc_entry = guicomponents.BigTCEntry()
+    tc_disp.widget.show()
+    tc_entry.widget.show()
+    editor_window.big_TC.add_named(tc_disp.widget, "BigTCDisplay")
+    editor_window.big_TC.add_named(tc_entry.widget, "BigTCEntry")
     editor_window.big_TC.set_visible_child_name("BigTCDisplay")
     gui.big_tc = editor_window.big_TC 
     editor_window.modes_selector = guicomponents.ToolSelector(editor_window.mode_selector_pressed, m_pixbufs, 40, 22)

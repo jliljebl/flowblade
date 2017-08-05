@@ -64,9 +64,11 @@ def key_down(widget, event):
         if audiowaveform.waveform_thread != None:
             audiowaveform.waveform_thread.abort_rendering()
             return True
-        else:
-            if editorstate.current_is_move_mode() == False:
-                editevent.set_default_edit_mode()
+        elif editorstate.current_is_move_mode() == False:
+            editevent.set_default_edit_mode()
+            return True
+        elif gui.big_tc.get_visible_child_name() == "BigTCEntry":
+            gui.big_tc.set_visible_child_name("BigTCDisplay")
             return True
 
     # Compositor editors keyevents
