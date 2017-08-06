@@ -127,6 +127,15 @@ def get_tc_string(frame):
     """
     return get_tc_string_with_fps(frame, fps())
 
+def get_tc_string_short(frame):
+    tc_str = get_tc_string(frame)
+    while len(tc_str) > 4:
+        if tc_str[0: 1] == "0" or tc_str[0: 1] == ":":
+            tc_str = tc_str[1: len(tc_str)]
+        else:
+            break
+    return tc_str
+            
 def get_tc_frame(frame_str):
     """
     Return timecode frame from string

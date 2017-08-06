@@ -2261,6 +2261,13 @@ def get_audio_levels_popup_menu(event, callback):
 
     menu.append(thumbs_item)
 
+    delta_overlay_item = Gtk.CheckMenuItem()
+    delta_overlay_item.set_label(_("Show Move/Trim Info Overlay"))
+    delta_overlay_item.set_active(editorpersistance.prefs.delta_overlay)
+    delta_overlay_item.connect("activate", callback, "delta_overlay")
+
+    menu.append(delta_overlay_item)
+    
     _add_separetor(menu)
 
     snapping_item = Gtk.CheckMenuItem()

@@ -330,4 +330,4 @@ class EditorPreferences:
         self.ffwd_rev_caps = 1
         self.shortcuts = 'Flowblade Default'
         self.double_track_hights = False
-
+        self.delta_overlay = True

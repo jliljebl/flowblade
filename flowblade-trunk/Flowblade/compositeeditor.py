@@ -57,9 +57,9 @@ def create_widgets():
     """
     # Left side
     widgets.compositor_info = guicomponents.CompositorInfoPanel()
-    widgets.fade_in_b = Gtk.Button(_("Fade In"))
+    widgets.fade_in_b = Gtk.Button(_("Add Fade In"))
     widgets.fade_in_b.connect("clicked", lambda w,e: _add_fade_in_pressed(), None)
-    widgets.fade_out_b = Gtk.Button(_("Fade Out"))
+    widgets.fade_out_b = Gtk.Button(_("Add Fade Out"))
     widgets.fade_out_b.connect("clicked", lambda w,e: _add_fade_out_pressed(), None)
 
     widgets.fade_in_spin = Gtk.SpinButton.new_with_range(0, 150, 1)
