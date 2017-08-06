@@ -1905,6 +1905,7 @@ class BigTCDisplay:
     def _seek_frame(self, frame):
         PLAYER().seek_frame(frame)
 
+
 class BigTCEntry:
     """
     Test class for replacement of BigTCDisplay, when Editing time position
@@ -2123,14 +2124,16 @@ class ClipLengthChanger:
         self.widget = Gtk.HBox()
         
         frames = clip.clip_length()
-        max_len = clip.get_length()
-        print frames, max_len
+        self.max_len = clip.get_length()
+
         self.frames_label = Gtk.Label(_("Frames:"))
-        self.frames_spin = Gtk.SpinButton.new_with_range(1, max_len, 1)
+        self.frames_spin = Gtk.SpinButton.new_with_range(1, self.max_len, 1)
         self.frames_spin.set_value(frames)
-        self.frames_spin.connect("value-changed", self.length_changed)
+        self.frames_spin.connect("value-changed", self._length_changed)
         
-        self.tc_length = Gtk.Label(utils.get_tc_string(frames))
+        self.tc_length = Gtk.Entry()
+        self.tc_length.set_text(utils.get_tc_string(frames))
+        self.tc_length.connect("activate", self._enter_pressed)
 
         self.widget.pack_start(self.frames_label, False, False, 0)
         self.widget.pack_start(self.frames_spin, False, False, 0)
@@ -2138,12 +2141,26 @@ class ClipLengthChanger:
         self.widget.pack_start(self.tc_length, False, False, 0)
         self.widget.pack_start(Gtk.Label(), True, True, 0)
 
-    def length_changed(self, adjustment):
+    def _length_changed(self, adjustment):
         self.tc_length.set_text(utils.get_tc_string(self.frames_spin.get_value()))
 
+    def _enter_pressed(self, event):
+        frame_str = self.tc_length.get_text()
+        frame = utils.get_tc_frame(frame_str)
+        
+        if frame > self.max_len:
+            frame = self.max_len
+            self.tc_length.set_text(utils.get_tc_string(frame))
+        if frame < 0:
+            frame = 0
+            self.tc_length.set_text(utils.get_tc_string(frame))
+        
+        self.frames_spin.set_value(frame)
+        
     def get_length(self):
         return int(self.frames_spin.get_value())
-        
+    
+
 def get_gpl3_scroll_widget(size):
     license_file = open(respaths.GPL_3_DOC)
     license_text = license_file.read()
