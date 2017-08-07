@@ -141,7 +141,7 @@ def mouse_release(x, y, frame, state):
                 action = edit.clip_end_drag_replace_blank_action(data)
                 action.do_edit()
     else:# Dragging clip start
-        delta =  frame - orig_in  - 1 # -1 because..uhh..inclusive exclusive something something
+        delta = frame - orig_in  - 1 # -1 because..uhh..inclusive exclusive something something
         # prev clip is not blank or first clip
         if ((clip_index == 0) or
             (track.clips[clip_index - 1].is_blanck_clip == False)):

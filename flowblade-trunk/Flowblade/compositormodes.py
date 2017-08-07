@@ -86,6 +86,7 @@ def mouse_press(event, frame):
         edit_data = {"clip_in":compositor.clip_in,
                      "clip_out":compositor.clip_out,
                      "trim_is_clip_in":True,
+                     "orig_clip_in":compositor.clip_in,
                      "compositor_y":  compositor_y,
                      "compositor": compositor}
         tlinewidgets.set_edit_mode(edit_data, tlinewidgets.draw_compositor_trim)
@@ -94,6 +95,7 @@ def mouse_press(event, frame):
         edit_data = {"clip_in":compositor.clip_in,
                      "clip_out":compositor.clip_out,
                      "trim_is_clip_in":False,
+                     "orig_clip_out":compositor.clip_out,
                      "compositor_y": compositor_y,
                      "compositor": compositor}
         tlinewidgets.set_edit_mode(edit_data, tlinewidgets.draw_compositor_trim)

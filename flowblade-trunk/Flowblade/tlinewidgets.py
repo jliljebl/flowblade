@@ -672,10 +672,7 @@ def draw_overwrite_box_overlay(cr, data):
         if editorpersistance.prefs.delta_overlay == True:
             delta = data["delta"]       
             tc_str = utils.get_tc_string_short(abs(delta))
-            if delta < 0:
-                tc_str = "-" + tc_str
-            elif  delta > 0:
-                tc_str = "+" + tc_str
+            tc_str = _get_signed_tc_str(tc_str, delta)
                 
             _draw_text_info_box(cr, x, y - 12, tc_str)
         
@@ -710,10 +707,7 @@ def _draw_move_overlay(cr, data, y):
         x = (draw_start - pos) * pix_per_frame
         
         tc_str = utils.get_tc_string_short(abs(delta))
-        if delta < 0:
-            tc_str = "-" + tc_str
-        elif  delta > 0:
-            tc_str = "+" + tc_str
+        tc_str = _get_signed_tc_str(tc_str, delta)
             
         _draw_text_info_box(cr, x, y - 12, tc_str)
 
@@ -789,10 +783,7 @@ def draw_multi_overlay(cr, data):
 
     if editorpersistance.prefs.delta_overlay == True:        
         tc_str = utils.get_tc_string_short(abs(delta))
-        if delta < 0:
-            tc_str = "-" + tc_str
-        elif  delta > 0:
-            tc_str = "+" + tc_str
+        tc_str = _get_signed_tc_str(tc_str, delta)
             
         _draw_text_info_box(cr, draw_x, y - 12, tc_str)
         
@@ -867,10 +858,7 @@ def draw_two_roll_overlay(cr, data):
     if editorpersistance.prefs.delta_overlay == True:
         delta = data["selected_frame"] - data["edit_frame"]        
         tc_str = utils.get_tc_string_short(abs(delta))
-        if delta < 0:
-            tc_str = "-" + tc_str
-        elif  delta > 0:
-            tc_str = "+" + tc_str
+        tc_str = _get_signed_tc_str(tc_str, delta)
             
         _draw_text_info_box(cr, selection_frame_x + 3, track_y - 12, tc_str)
         
@@ -939,10 +927,7 @@ def draw_one_roll_overlay(cr, data):
     if editorpersistance.prefs.delta_overlay == True:
         delta = data["selected_frame"] - data["edit_frame"]        
         tc_str = utils.get_tc_string_short(abs(delta))
-        if delta < 0:
-            tc_str = "-" + tc_str
-        elif  delta > 0:
-            tc_str = "+" + tc_str
+        tc_str = _get_signed_tc_str(tc_str, delta)
             
         _draw_text_info_box(cr, selection_frame_x + 3, track_y - 12, tc_str)
         
@@ -1065,10 +1050,7 @@ def draw_slide_overlay(cr, data):
     if editorpersistance.prefs.delta_overlay == True:
         delta = data["mouse_delta"]  
         tc_str = utils.get_tc_string_short(abs(delta))
-        if delta < 0:
-            tc_str = "-" + tc_str
-        elif  delta > 0:
-            tc_str = "+" + tc_str
+        tc_str = _get_signed_tc_str(tc_str, delta)
             
         _draw_text_info_box(cr, clip_start_frame_x + 3, track_y - 12, tc_str)
         
@@ -1095,7 +1077,20 @@ def draw_clip_end_drag_overlay(cr, data):
     cr.stroke()
 
     _draw_snap(cr, y)
-    
+
+    if editorpersistance.prefs.delta_overlay == True:
+        if data["editing_clip_end"] == True:
+            x = scale_in + scale_length
+            delta = data["frame"] - data["orig_out"]
+        else:
+            x = scale_in
+            delta = data["frame"] - data["orig_in"]  - 1
+            
+        tc_str = utils.get_tc_string_short(abs(delta))
+        tc_str = _get_signed_tc_str(tc_str, delta)
+
+        _draw_text_info_box(cr, x - 3, y - 12, tc_str)
+        
 def draw_compositor_move_overlay(cr, data):
     # Get data
     press_frame = data["press_frame"]
@@ -1121,6 +1116,13 @@ def draw_compositor_move_overlay(cr, data):
 
     _draw_snap(cr, y)
 
+    if editorpersistance.prefs.delta_overlay == True:
+        delta = current_frame - press_frame
+        tc_str = utils.get_tc_string_short(abs(delta))
+        tc_str = _get_signed_tc_str(tc_str, delta)
+            
+        _draw_text_info_box(cr, scale_in, y - 12, tc_str)
+        
 def draw_compositor_trim(cr, data):
     clip_in = data["clip_in"]
     clip_out = data["clip_out"]
@@ -1143,12 +1145,23 @@ def draw_compositor_trim(cr, data):
     
     if data["trim_is_clip_in"] == True:
         x = scale_in + 2
+        delta = data["clip_in"] - data["orig_clip_in"]
+        info_x = scale_in - 3
     else:
         x = scale_in + scale_length - 26
+        delta = data["clip_out"] - data["orig_clip_out"]
+        info_x = scale_in + + scale_length - 3
+
     _draw_two_arrows(cr, x, y + 4, 4)
 
     _draw_snap(cr, y)
-    
+
+    if editorpersistance.prefs.delta_overlay == True:
+        tc_str = utils.get_tc_string_short(abs(delta))
+        tc_str = _get_signed_tc_str(tc_str, delta)
+            
+        _draw_text_info_box(cr, info_x, y - 12, tc_str)
+        
 def _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y):
     scale_in = int(scale_in) + 0.5
     scale_length = int(scale_length)
@@ -1276,7 +1289,14 @@ def _draw_text_info_box(cr, x, y, text):
     cr.move_to(x, y)
     cr.set_source_rgb(0.8, 0.8, 0.8)
     cr.show_text(text) 
-    
+
+def _get_signed_tc_str(tc_str, delta):
+    if delta < 0:
+        tc_str = "-" + tc_str
+    elif  delta > 0:
+        tc_str = "+" + tc_str
+    return tc_str
+
 # ------------------------------- WIDGETS
 class TimeLineCanvas:
     """
