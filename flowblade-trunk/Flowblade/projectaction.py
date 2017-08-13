@@ -519,15 +519,19 @@ def change_project_profile():
 
 def _change_project_profile_callback(dialog, response_id, profile_combo, out_folder, project_name_entry):
     if response_id == Gtk.ResponseType.ACCEPT:
-        folder = "/" + out_folder.get_uri().lstrip("file:/")
-        name = project_name_entry.get_text()
+        ou = out_folder.get_filename().decode('utf-8')
+        folder = (u"/" + ou.lstrip(u"file:/"))
+        name = project_name_entry.get_text().decode('utf-8')
         profile = mltprofiles.get_profile_for_index(profile_combo.get_active())
-        path = folder + "/" + name
+        path = folder + u"/" + name
 
         PROJECT().update_media_lengths_on_load = True # saved version needs to do this
+        old_name = PROJECT().name
+        PROJECT().name  = name
         
         persistance.save_project(PROJECT(), path, profile.description()) #<----- HERE
 
+        PROJECT().name = old_name
         PROJECT().update_media_lengths_on_load = False
 
         dialog.destroy()
