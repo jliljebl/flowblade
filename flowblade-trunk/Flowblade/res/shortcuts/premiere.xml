@@ -107,6 +107,6 @@
     <event code='zoom_in' name='Zoom In' modifiers='SHIFT'>equal</event>
     <event code='switch_monitor' name='Switch Monitor Display'>tab</event>
     <event code='add_marker' name='Add Marker'>m</event>
-    <event code='enter_edit' name='Enter Editing Mode'>enter</event>
+    <event code='enter_edit' name='Enter Editing Mode'>return</event>
   </shortcuts>
 </flowblade>

@@ -174,4 +174,6 @@ def _keyboard_actions_defaults():
     _keyboard_actions['plus'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'zoom_in'}
     _keyboard_actions['tab'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'switch_monitor'}
     _keyboard_actions['m'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'add_marker'}
-    _keyboard_actions['enter'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'enter_edit'}
+    _keyboard_actions['return'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'enter_edit'}
+    
+    
