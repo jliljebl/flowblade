@@ -113,7 +113,9 @@ NON_ACTIVE_KF_ICON = None
 DISCONNECTED_SIGNAL_HANDLER = -9999999
 
 actions_menu = Gtk.Menu()
-        
+
+_shift_down = None
+
 # ----------------------------------------------------- editor objects
 class ClipKeyFrameEditor:
     """
@@ -872,11 +874,15 @@ class AbstractScreenEditor:
         delta_x = x - self.mouse_start_x
         delta_y = y - self.mouse_start_y
         
+        global _shift_down 
         if state & Gdk.ModifierType.SHIFT_MASK:
             if abs(x - self.mouse_start_x) < abs(y - self.mouse_start_y):
                 delta_x = 0
             else:
                 delta_y = 0
+            _shift_down = (self.mouse_start_x, self.mouse_start_y)
+        else:
+            _shift_down = None
                 
         self._shape__motion_notify_event(delta_x, delta_y, (state & Gdk.ModifierType.CONTROL_MASK))
 
@@ -886,6 +892,9 @@ class AbstractScreenEditor:
         print "_shape__motion_notify_event not impl"
 
     def _release_event(self, event):
+        global _shift_down 
+        _shift_down = None
+        
         if self.current_mouse_hit == NO_HIT:
             return
             
@@ -935,6 +944,17 @@ class AbstractScreenEditor:
                        self.coords.screen_w, self.coords.screen_h)
         cr.fill()
 
+        if _shift_down != None:
+            cr.set_source_rgb(0.0, 0.0, 0.77)
+            cr.set_line_width(1.0)
+            mx, my = _shift_down
+            cr.move_to(mx, 0)
+            cr.line_to(mx, h)
+            cr.stroke()
+            cr.move_to(0, my)
+            cr.line_to(w, my)
+            cr.stroke()
+            
         screen_rect = [self.coords.orig_x, self.coords.orig_y, 
                        self.coords.screen_w, self.coords.screen_h]
         self._draw_edge(cr, screen_rect)
@@ -1066,7 +1086,7 @@ class BoxGeometryScreenEditor(AbstractScreenEditor):
     def _draw_edit_shape(self, cr, allocation):
         # Edit rect is created here only when we're sure to have allocation
         if self.source_edit_rect == None:
-            self.source_edit_rect = EditRect(10, 10, 10, 10) # values are immediatyly overwritten
+            self.source_edit_rect = EditRect(10, 10, 10, 10) # values are immediately overwritten
             self._update_source_rect()
 
         # Draw source
