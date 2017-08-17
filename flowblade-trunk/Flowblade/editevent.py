@@ -749,6 +749,9 @@ def tline_canvas_double_click(frame, x, y):
         return
 
     clip = track.clips[clip_index]
+    if clip.is_blanck_clip == True:
+        return
+        
     data = (clip, track, None, x)
     updater.open_clip_in_effects_editor(data)
 
