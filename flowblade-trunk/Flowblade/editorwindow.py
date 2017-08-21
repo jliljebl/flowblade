@@ -304,6 +304,7 @@ class EditorWindow:
                     <separator/>
                     <menuitem action='ProfilesManager'/>
                     <menuitem action='DiskCacheManager'/>
+                    <menuitem action='KeyboardShortcuts'/>
                     <menuitem action='Preferences'/>
                 </menu>
                 <menu action='ViewMenu'>
@@ -354,7 +355,6 @@ class EditorWindow:
                 </menu>
                 <menu action='HelpMenu'>
                     <menuitem action='QuickReference'/>
-                    <menuitem action='KeyboardShortcuts'/>
                     <menuitem action='Environment'/>
                     <separator/>
                     <menuitem action='About'/>
