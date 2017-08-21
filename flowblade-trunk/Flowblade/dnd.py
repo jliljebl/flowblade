@@ -181,6 +181,8 @@ def _effects_drag_data_get(treeview, context, selection, target_id, timestamp):
 
 def _on_monitor_drop(widget, context, x, y, timestamp):
     context.finish(True, False, timestamp)
+    if drag_data == None: # A user error drag from monitor to monitor
+        return
     media_file = drag_data[0].media_file
     display_monitor_media_file(media_file)
     gui.pos_bar.widget.grab_focus()

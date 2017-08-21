@@ -191,15 +191,16 @@ def main(root_path):
     editorpersistance.create_rendered_clips_folder_if_needed(user_dir)
 
     editorpersistance.save()
-    # Apr-2017 - SvdB - Keyboard shortcuts
-    shortcuts.load_shortcut_files()
-    shortcuts.load_shortcuts()
 
     # Init translations module with translations data
     translations.init_languages()
     translations.load_filters_translations()
     mlttransitions.init_module()
 
+    # Apr-2017 - SvdB - Keyboard shortcuts
+    shortcuts.load_shortcut_files()
+    shortcuts.load_shortcuts()
+    
     # RHEL7/CentOS compatibility fix
     if gtk_version == "3.8.8":
         GObject.threads_init()

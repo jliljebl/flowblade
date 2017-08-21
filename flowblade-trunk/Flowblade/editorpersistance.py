@@ -230,15 +230,11 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.show_full_file_names = full_names.get_active()
     prefs.center_on_arrow_move = auto_center_on_updown.get_active()
     prefs.double_track_hights = (double_track_hights.get_active() == 1)
-    
-    # Apr-2017 - Svdb - Get the newly selected shortcuts and load the appropriate file
-    if shortcuts_combo.get_active() > 0: # 0 is Flowblade Default
-        if prefs.shortcuts != shortcuts.shortcut_files[shortcuts_combo.get_active()-1]:
-            prefs.shortcuts = shortcuts.shortcut_files[shortcuts_combo.get_active()-1]
-            shortcuts.load_shortcuts()
-    else:
-        prefs.shortcuts = 'Flowblade Default'
+
+    if prefs.shortcuts != shortcuts.shortcut_files[shortcuts_combo.get_active()]:
+        prefs.shortcuts = shortcuts.shortcut_files[shortcuts_combo.get_active()]
         shortcuts.load_shortcuts()
+
 
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
@@ -328,6 +324,6 @@ class EditorPreferences:
         self.ffwd_rev_shift = 1
         self.ffwd_rev_ctrl = 10
         self.ffwd_rev_caps = 1
-        self.shortcuts = 'Flowblade Default'
+        self.shortcuts = "flowblade.xml"
         self.double_track_hights = False
         self.delta_overlay = True

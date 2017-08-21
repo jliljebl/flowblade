@@ -46,7 +46,7 @@
   lower case. If you want to use upper case, then use the Shift
   modifier.
 -->
-<flowblade file='shortcuts' name='Premiere' comment='Default values'>
+<flowblade file='shortcuts' name='Premiere-ish/ US keyboard' comment='Default values'>
   <author name='me'>
     <name>Steven van de Beek</name>
     <date format='dd-Mmm-yyyy'>16-Apr-2017</date>

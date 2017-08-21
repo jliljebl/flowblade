@@ -237,7 +237,7 @@ class EditorWindow:
             ('HelpMenu', None, _('_Help')),
             ('QuickReference', None, _('Contents'), None, None, lambda a:menuactions.quick_reference()),
             ('Environment', None, _('Runtime Environment'), None, None, lambda a:menuactions.environment()),
-            ('KeyboardShortcuts', None, _('Keyboard Shortcuts'), None, None, lambda a:dialogs.keyboard_shortcuts_dialog(self.window)),
+            ('KeyboardShortcuts', None, _('Keyboard Shortcuts'), None, None, lambda a:dialogs.keyboard_shortcuts_dialog(self.window, menuactions.keyboard_shortcuts_callback)),
             ('About', None, _('About'), None, None, lambda a:menuactions.about()),
             ('InsertMode', None, None, '1', None, lambda a:_this_is_not_used()),
             ('OverMode', None, None, '2', None, lambda a:_this_is_not_used()),

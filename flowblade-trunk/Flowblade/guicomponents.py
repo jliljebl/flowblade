@@ -50,6 +50,7 @@ import mltprofiles
 import mlttransitions
 import monitorwidget
 import respaths
+import shortcuts
 import snapping
 import toolsintegration
 import translations
@@ -2531,6 +2532,25 @@ def get_columns_count_popup_menu(event, callback):
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
 
+def get_shorcuts_selector():
+    shortcuts_combo = Gtk.ComboBoxText()
+    current_pref_index = -1
+    
+    for i in range(0, len(shortcuts.shortcut_files)):
+        shortcut_file = shortcuts.shortcut_files[i]
+        shortcuts_combo.append_text(shortcuts.shortcut_files_display_names[i])
+        if editorpersistance.prefs.shortcuts == shortcut_file:
+            current_pref_index = i
+    
+    # Set current selection active
+    if current_pref_index != -1:
+        shortcuts_combo.set_active(current_pref_index)
+    else:
+        # Something is wrong, the pref shortcut file is not preset in the system.
+        print "Shortcut file in editprpersistance.pref.shortcuts not found!"
+        shortcuts_combo.set_active(0)
+
+    return shortcuts_combo
 
 class PressLaunch:
     def __init__(self, callback, surface, w=22, h=22):

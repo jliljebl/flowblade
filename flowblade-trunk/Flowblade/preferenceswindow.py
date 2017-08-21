@@ -26,6 +26,7 @@ import dialogutils
 import editorpersistance
 import gui
 import guiutils
+import guicomponents
 import mltprofiles
 # Jan-2017 - SvdB - To get the number of CPU cores
 import multiprocessing
@@ -419,21 +420,28 @@ def _performance_panel():
 def _shortcuts_panel():
     # Apr-2017 - SvdB
     # Add a panel for keyboard shortcuts
-    prefs = editorpersistance.prefs
-    count = 0
-    shortcut_found = 0
     # Widgets
+    shortcuts_combo = guicomponents.get_shorcuts_selector()
+    
+    """
     shortcuts_combo = Gtk.ComboBoxText()
-    shortcuts_combo.append_text('Flowblade Default')
+    current_pref_index = -1
+
     for i in range(0, len(shortcuts.shortcut_files)):
         shortcut_file = shortcuts.shortcut_files[i]
         shortcuts_combo.append_text(shortcuts.shortcut_files_display_names[i])
-        count = count + 1
-        if hasattr(prefs, 'shortcuts'):
-            if shortcut_file == prefs.shortcuts:
-                shortcut_found = count
-    shortcuts_combo.set_active(shortcut_found)    
-
+        if editorpersistance.prefs.shortcuts == shortcut_file:
+            current_pref_index = i
+    
+    # Set current selection active
+    if current_pref_index != -1:
+        shortcuts_combo.set_active(current_pref_index)
+    else:
+        # Something is wrong, the pref shortcut file is not preset in the system.
+        print "Shortcut file in editprpersistance.pref.shortcuts not found!"
+        shortcuts_combo.set_active(0)
+    """
+    
     # Layout
     row1 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Shortcuts File")), shortcuts_combo, PREFERENCES_LEFT))
 

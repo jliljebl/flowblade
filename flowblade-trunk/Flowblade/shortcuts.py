@@ -26,58 +26,75 @@ import xml.etree.ElementTree as etree
 import editorpersistance
 import re
 
+
+DEFAULT_SHORTCUTS_FILE = "flowblade.xml"
+    
 shortcut_files = []
 shortcut_files_display_names = []
 _keyboard_actions = {}
+_keyboard_action_names = {}
+_key_names = {}
+_mod_names = {}
+
 
 def load_shortcut_files():
     global shortcut_files, shortcut_files_display_names
-    try:
-        for file in os.listdir(respaths.SHORTCUTS_PATH):
-            format_error = True
-            # Don't allow selection of the sample file
-            if file[-4:] == '.xml':
-                if file != appconsts.SHORTCUTS_DEFAULT_XML + '.xml':
-                    # We have a valid file name. Now inspect the file for a valid format before loading it
-                    shortcuts = etree.parse(respaths.SHORTCUTS_PATH + file)
-                    # Verify if the file has the right format
-                    root = shortcuts.getroot()
-                    # Check the 'tag' is flowblade
-                    if root.tag == appconsts.SHORTCUTS_ROOT_TAG:
-                        # Check if this is a shortcuts file
-                        if root.get('file') == appconsts.SHORTCUTS_TAG:
-                            # Get name and comments
-                            file_len = len(file) - 4
-                            # We're requiring files names to match displayed name
-                            if root.get('name').lower() == file[:file_len].lower(): 
-                                shortcut_files.append(file)
-                                shortcut_files_display_names.append(root.get('name'))
-                                format_error = False
-                else:
-                    format_error = False
-                    print "Shortcuts file " + file + " found, but ignored."
-                if format_error:
-                    print "Shortcuts file " + file + " found, but has incorrect format."
-        print "Valid shortcut files found: " + str(shortcut_files)
-    except:
-        print "Could not open any shortcut files."
-        
+    default_shortcuts_file_found = False
+
+    for f in os.listdir(respaths.SHORTCUTS_PATH):
+        format_error = True
+
+        if f[-4:] == '.xml':
+            # We have a valid file name. Now inspect the file for a valid format before loading it
+            shortcuts = etree.parse(respaths.SHORTCUTS_PATH + f)
+            # Verify if the file has the right format
+            root = shortcuts.getroot()
+            # Check the 'tag' is flowblade
+            if root.tag == appconsts.SHORTCUTS_ROOT_TAG:
+                # Check if this is a shortcuts file
+                if root.get('file') == appconsts.SHORTCUTS_TAG:
+                    # Get name and comments
+                    file_len = len(f) - 4
+                    # Default file is added last to always be at index 0
+                    if f != DEFAULT_SHORTCUTS_FILE:
+                        shortcut_files.append(f)
+                        shortcut_files_display_names.append(root.get('name'))
+                        format_error = False
+                    else:
+                        # This is added below to index 0
+                        default_shortcuts_file_found = True
+                        format_error = False
+                        
+        else:
+            format_error = False
+            print "Shortcuts file " + f + " found, but ignored."
+
+        if format_error:
+            print "Shortcuts file " + f + " found, but has incorrect format."
+    
+    # Default shortcuts file always goes to index 0
+    if default_shortcuts_file_found == True:# this is a bit unneccceasy, it is there unless someone destroys it manually
+        shortcut_files.insert(0, DEFAULT_SHORTCUTS_FILE)
+        shortcut_files_display_names.insert(0, "Flowblade Default")
+
+    print "Valid shortcut files found: " + str(shortcut_files)
+
 # Apr-2017 - SvdB - keyboard shortcuts
 def load_shortcuts():
+    _set_keyboard_action_names()
+    _set_key_names()
+    set_keyboard_shortcuts()
+
+def set_keyboard_shortcuts():
     global _keyboard_actions
     prefs = editorpersistance.prefs
-
+    print "Keyboard shortcuts file:",  editorpersistance.prefs.shortcuts
     _modifier_dict = {}
-    # Load hardcoded defaults
-    _keyboard_actions_defaults()
-    # Check if a shortcut preference is set
-    if prefs.shortcuts == appconsts.SHORTCUTS_DEFAULT:
-        # We have a default setting, so we don't need to load a file, we are using hardcoded.
-        return
+
     # Make sure that whatever is in preferences is a valid file. If it's not in shortcut_files it's not valid
     if not prefs.shortcuts in shortcut_files:
-        print "The shortcuts file selected in preferences is not valid: " + prefs.shortcuts
-        print "Switching to defaults."
+        #print "The shortcuts file selected in preferences is not valid: " + prefs.shortcuts
+        # print "Switching to defaults."
         return
     try:
         shortcuts = etree.parse(respaths.SHORTCUTS_PATH + prefs.shortcuts)
@@ -116,64 +133,135 @@ def load_shortcuts():
     except:
         print "Error opening shortcuts file:" + prefs.shortcuts
 
-def _keyboard_actions_defaults():
-    global _keyboard_actions
+    #_print_shortcuts()
+
+def get_shortcuts_xml_root_node(xml_file):
+    try:
+        shortcuts = etree.parse(respaths.SHORTCUTS_PATH + xml_file)
+        return shortcuts.getroot()
+    except:
+        return None # This is handled at callsites
+
+def get_shortcut_info(root, code):
+    events = root.getiterator('event')
+    for event in events:
+        if event.get('code') == code:
+            return (_key_names[event.text], _get_mod_string(event) + _keyboard_action_names[code]) 
+    
+    return (None, None)
+
+def _get_mod_string(event):
+    mod = event.get("modifier")
+    if mod == "Any" or mod == None:
+        return ""
+    
+    return _mod_names[mod]
+ 
+def get_diff_to_defaults(xml_file):
+    diff_str = ""
+    test_root = get_shortcuts_xml_root_node(xml_file)
+    def_root = get_shortcuts_xml_root_node(DEFAULT_SHORTCUTS_FILE)
+    
+    for code, action_name in _keyboard_action_names.iteritems():
+        key_name_test, action_name = get_shortcut_info(test_root, code)
+        key_name_def, action_name = get_shortcut_info(def_root , code)
+    
+        if key_name_def != key_name_test:
+            diff_str = diff_str + action_name + " (" + key_name_test + ")    "
+    
+    return diff_str
+
+def _set_keyboard_action_names():
+    global _keyboard_action_names
     # Start with an empty slate
-    _keyboard_actions = {}
-    _keyboard_actions['i'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'mark_in', \
-                               ''.join(sorted(re.sub('[\s]','','ALT'.lower()))): 'to_mark_in', \
-                               ''.join(sorted(re.sub('[\s]','','SHIFT'.lower()))): 'to_mark_in', \
-                               ''.join(sorted(re.sub('[\s]','','ALT+SHIFT'.lower()))): 'to_mark_in'}
-    _keyboard_actions['o'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'mark_out', \
-                               ''.join(sorted(re.sub('[\s]','','ALT'.lower()))): 'to_mark_out', \
-                               ''.join(sorted(re.sub('[\s]','','SHIFT'.lower()))): 'to_mark_out', \
-                               ''.join(sorted(re.sub('[\s]','','ALT+SHIFT'.lower()))): 'to_mark_out'}
-    _keyboard_actions['space'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'play_pause'}
-    _keyboard_actions['down'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'prev_cut'}
-    _keyboard_actions['up'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'next_cut'}
-    _keyboard_actions['left'] = { ''.join(sorted(re.sub('[\s]','','Any'.lower()))): 'prev_frame'}
-    _keyboard_actions['right'] = { ''.join(sorted(re.sub('[\s]','','Any'.lower()))): 'next_frame'}
-    _keyboard_actions['y'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'insert', \
-                               ''.join(sorted(re.sub('[\s]','','SHIFT'.lower()))): 'insert'}
-    _keyboard_actions['u'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'append', \
-                               ''.join(sorted(re.sub('[\s]','','SHIFT'.lower()))): 'append'}
-    _keyboard_actions['j'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'slower'}
-    _keyboard_actions['k'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'stop'}
-    _keyboard_actions['l'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'faster'}
-    _keyboard_actions['g'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'log_range'}
-    _keyboard_actions['l'] = { ''.join(sorted(re.sub('[\s]','','CTRL'.lower()))): 'log_range'}
-    _keyboard_actions['s'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'resync'}
-    _keyboard_actions['delete'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'delete'}
-    _keyboard_actions['home'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'to_start'}
-    _keyboard_actions['end'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'to_end'}
-    _keyboard_actions['t'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): '3_point_overwrite'}
-    _keyboard_actions['r'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'toggle_ripple'}
-    _keyboard_actions['x'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'cut'}
-    _keyboard_actions['1'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_insert'}
-    _keyboard_actions['kp_end'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_insert'}
-    _keyboard_actions['kp_1'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_insert'}
-    _keyboard_actions['2'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_overwrite'}
-    _keyboard_actions['kp_2'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_overwrite'}
-    _keyboard_actions['kp_down'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_overwrite'}
-    _keyboard_actions['3'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_trim'}
-    _keyboard_actions['kp_3'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_trim'}
-    _keyboard_actions['kp_next'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_trim'}
-    _keyboard_actions['4'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_roll'}
-    _keyboard_actions['kp_4'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_roll'}
-    _keyboard_actions['kp_left'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_roll'}
-    _keyboard_actions['5'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_slip'}
-    _keyboard_actions['kp_5'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_slip'}
-    _keyboard_actions['kp_begin'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_slip'}
-    _keyboard_actions['6'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_spacer'}
-    _keyboard_actions['kp_6'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_spacer'}
-    _keyboard_actions['kp_right'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_spacer'}
-    _keyboard_actions['7'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_box'}
-    _keyboard_actions['kp_7'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_box'}
-    _keyboard_actions['kp_home'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'edit_mode_box'}
-    _keyboard_actions['minus'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'zoom_out'}
-    _keyboard_actions['plus'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'zoom_in'}
-    _keyboard_actions['tab'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'switch_monitor'}
-    _keyboard_actions['m'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'add_marker'}
-    _keyboard_actions['return'] = { ''.join(sorted(re.sub('[\s]','','None'.lower()))): 'enter_edit'}
-    
-    
+    _keyboard_action_names = {}
+    _keyboard_action_names['mark_in'] = _("Set Mark In")
+    _keyboard_action_names['mark_out'] =  _("Set Mark Out")
+    _keyboard_action_names['play_pause'] = _("Start / Stop Playback")
+    _keyboard_action_names['prev_cut'] = _("Prev Edit/Mark")
+    _keyboard_action_names['next_cut'] = _("Next Edit/Mark")
+    _keyboard_action_names['prev_frame'] =_("Prev Frame")
+    _keyboard_action_names['next_frame'] = _("Next Frame")
+    _keyboard_action_names['insert'] = _("Insert")
+    _keyboard_action_names['append'] =  _("Append")
+    _keyboard_action_names['slower'] = _("Backwards Faster")
+    _keyboard_action_names['stop'] = _("Stop")
+    _keyboard_action_names['faster'] =  _("Forward Faster")
+    _keyboard_action_names['log_range'] = _("Log Marked Clip Range")
+    _keyboard_action_names['resync'] = _("Resync selected Clip or Compositor")
+    _keyboard_action_names['delete'] = _("Delete Selected Item")
+    _keyboard_action_names['to_start'] = _("Go To Start")
+    _keyboard_action_names['to_end'] = _("Go To End")
+    _keyboard_action_names['3_point_overwrite'] = _("3 Point Overwrite")
+    _keyboard_action_names['toggle_ripple'] = _("Trim Tool Ripple Mode On/Off")
+    _keyboard_action_names['cut'] = _("Cut Clip")
+    _keyboard_action_names['edit_mode_insert'] = _("Insert")
+    _keyboard_action_names['edit_mode_overwrite'] =  _("Overwrite")
+    _keyboard_action_names['edit_mode_trim'] =  _("Trim")
+    _keyboard_action_names['edit_mode_roll'] = _("Roll")
+    _keyboard_action_names['edit_mode_slip'] = _("Slip")
+    _keyboard_action_names['edit_mode_spacer'] = _("Spacer")
+    _keyboard_action_names['edit_mode_box'] =  _("Box")
+    _keyboard_action_names['zoom_out'] = _("Zoom Out")
+    _keyboard_action_names['zoom_in'] =  _("Zoom In")
+    _keyboard_action_names['switch_monitor'] = _("Switch Monitor Source")
+    _keyboard_action_names['add_marker'] = _("Add Mark")
+    _keyboard_action_names['enter_edit'] =  _("Complete Keyboard Trim Edit")
+
+
+def _set_key_names():
+    global _key_names, _mod_names
+    # Start with an empty slate
+    _key_names = {}
+    _key_names['i'] = "I"
+    _key_names['o'] = "O"
+    _key_names['space'] = _("SPACE")
+    _key_names['down'] = _("Down Arrow")
+    _key_names['up'] = _("Up Arrow")
+    _key_names['left'] = _("Left Arrow")
+    _key_names['right'] = _("Right Arrow")
+    _key_names['y'] = "Y"
+    _key_names['u'] = "U"
+    _key_names['j'] = "J"
+    _key_names['k'] = "K"
+    _key_names['l'] = "L"
+    _key_names['g'] = "G"
+    _key_names['s'] = "S"
+    _key_names['delete'] = _("Delete")
+    _key_names['home'] = _("HOME")
+    _key_names['end'] = _("END")
+    _key_names['t'] = "T"
+    _key_names['r'] = "R"
+    _key_names['x'] = "X"
+    _key_names['1'] = "1"
+    _key_names['kp_end'] = _("Key Pad END")
+    _key_names['kp_1'] = _("Key Pad 1")
+    _key_names['2'] = "2"
+    _key_names['kp_2'] = _("Key Pad 2")
+    _key_names['kp_down'] = _("Key Pad Down Arrow")
+    _key_names['3'] = "3"
+    _key_names['kp_3'] = _("Key Pad 2")
+    _key_names['kp_next'] = _("Key Pad 2")
+    _key_names['4'] = "4"
+    _key_names['kp_4'] = _("Key Pad 4")
+    _key_names['kp_left'] = _("Key Pad Left Arrow")
+    _key_names['5'] = "5"
+    _key_names['kp_5'] = _("Key Pad 5")
+    _key_names['kp_begin'] = _("Key Pad Begin")
+    _key_names['6'] = "6"
+    _key_names['kp_6'] = _("Key Pad 6")
+    _key_names['kp_right'] =_("Key Pad Right Arrow")
+    _key_names['7'] = "7"
+    _key_names['kp_7'] = _("Key Pad 7")
+    _key_names['kp_home'] = _("Key Pad HOME")
+    _key_names['minus'] = "-"
+    _key_names['plus'] = "+"
+    _key_names['tab'] = _("TAB")
+    _key_names['m'] = "M"
+    _key_names['return'] = _("ENTER")
+    _key_names['equal'] = _("=")
+
+    _mod_names["ALT"] = _("Alt")
+    _mod_names["SHIFT"] =  _("Shift")
+    _mod_names["ALT+SHIFT"] = _("Alt + Shift")
+    _mod_names["CONTROL"] = _("Control")
