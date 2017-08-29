@@ -440,8 +440,7 @@ def about_dialog(parent_window):
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
 
-    ## Application tab
-
+    # Application tab
     img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
     flow_label = Gtk.Label(label="Flowblade Movie Editor")
     ver_label = Gtk.Label(label="1.14.0")
@@ -466,8 +465,7 @@ def about_dialog(parent_window):
     alignment =  dialogutils.get_default_alignment(vbox)
     alignment.set_size_request(450, 370)
 
-    ## Thanks tab
-
+    # Thanks tab
     up_label = Gtk.Label(label=_("Upstream:"))
     up_projs = Gtk.Label(label="MLT")
     up_projs2 = Gtk.Label("FFMpeg, Frei0r, LADSPA, Cairo, Gnome, Linux")
@@ -491,14 +489,12 @@ def about_dialog(parent_window):
     alignment2 = dialogutils.get_default_alignment(vbox2)
     alignment2.set_size_request(450, 370)
 
-    ## Licence tab
-
+    # Licence tab
     license_view = guicomponents.get_gpl3_scroll_widget((450, 370))
     alignment3 = dialogutils.get_default_alignment(license_view)
     alignment3.set_size_request(450, 370)
 
-    ## Developers tab
-
+    # Developers tab
     lead_label = Gtk.Label(label=_("Lead Developer:"))
     lead_label.modify_font(Pango.FontDescription("sans bold 12"))
     lead_info = Gtk.Label(label="Janne Liljeblad")
@@ -538,8 +534,7 @@ def about_dialog(parent_window):
     alignment5 = dialogutils.get_default_alignment(vbox3)
     alignment5.set_size_request(450, 370)
 
-    ## Translations tab
-
+    # Translations tab
     translations_label = Gtk.Label(label=_("Translations by:"))
     translations_label.modify_font(Pango.FontDescription("sans bold 12"))
     translations_view = guicomponents.get_translations_scroll_widget((450, 370))
@@ -1597,8 +1592,8 @@ def set_fades_defaults_dialog(callback):
 
 
     group_select = Gtk.ComboBoxText()
-    group_select.append_text("Dissolve, Blend")
-    group_select.append_text("Affine Blend,  Picture-In-Picture, Region")
+    group_select.append_text(_("Dissolve, Blend"))
+    group_select.append_text(_("Affine Blend,  Picture-In-Picture, Region"))
     group_select.set_active(0)
 
     
@@ -1708,19 +1703,10 @@ def tline_audio_sync_dialog(callback, data):
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
                         _("Do Audio Sync Move Edit").encode('utf-8'), Gtk.ResponseType.ACCEPT))
-    
-    #files_offsets, clip_tline_media_offset, clips = data
-    #file1, file2, idstr = clips
-    #media_offset_frames = int(float(files_offsets[file2]) + 0.5)
-    
-    #file_label_1 = Gtk.Label("<b>Action origin clip media file:</b> " + file1)
-    #file_label_1.set_use_markup(True)
-    #file_label_2 = Gtk.Label("<b>Sync clip media file:</b> " + file2)
-    #file_label_2.set_use_markup(True)
-    
-    media_offsets_label = Gtk.Label("<b>Audio Sync Offset</b> between clips media is " + str(data.media_offset_frames) + " frames.")
+        
+    media_offsets_label = Gtk.Label(_("<b>Audio Sync Offset</b> between clips media is ") + str(data.media_offset_frames) + _(" frames."))
     media_offsets_label.set_use_markup(True)
-    tline_offsets_label = Gtk.Label("<b>Timeline Media Offset</b> between clips is " + str(data.clip_tline_media_offset) + " frames.")
+    tline_offsets_label = Gtk.Label(_("<b>Timeline Media Offset</b> between clips is ") + str(data.clip_tline_media_offset) + _(" frames."))
     tline_offsets_label.set_use_markup(True)
     
     action_label_text = _("To audio sync clips you need move action origin clip by ") + str(data.clip_tline_media_offset - data.media_offset_frames) + _(" frames.")
