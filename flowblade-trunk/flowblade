@@ -23,7 +23,7 @@
 import os
 import sys
 
-print "FLOWBLADE MOVIE EDITOR 1.12"
+print "FLOWBLADE MOVIE EDITOR 1.14 - BETA"
 print "---------------------------"
 
 
