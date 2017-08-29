@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-03 18:14+0200\n"
+"POT-Creation-Date: 2017-08-29 16:11+0200\n"
 "PO-Revision-Date: 2017-05-27 08:50+0200\n"
 "Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -533,6 +533,7 @@ msgid "Sequence"
 msgstr "Sekwencja"
 
 #: editorwindow.py:218
+#, fuzzy
 msgid "Media Audio Sync"
 msgstr "Synchronizowanie dźwięku multimediów"
 
@@ -541,8 +542,9 @@ msgid "Create Audio Sync Group"
 msgstr "Utwórz grupę synchronizacji dźwięku"
 
 #: editorwindow.py:220
+#, fuzzy
 msgid "Create Audio Sync Merge Clip"
-msgstr "Utwórz klip scalony synchronizacji dźwięku"
+msgstr "Utwórz grupę synchronizacji dźwięku"
 
 #: editorwindow.py:221
 msgid "Import Media From Project..."
@@ -1684,8 +1686,9 @@ msgid "Go To Start"
 msgstr "Przejdź do początku"
 
 #: dialogs.py:1250
+#, fuzzy
 msgid "END"
-msgstr ""
+msgstr "Decyzyjna lista edycji (EDL)"
 
 #: dialogs.py:1250
 msgid "Go To End"
@@ -1913,7 +1916,7 @@ msgstr "Grupa automatycznego wyłaniania/zanikania"
 
 #: editevent.py:226
 msgid "Can't put an audio clip on a video track."
-msgstr "Nie można umieścić klipu dźwiekowego na ścieżce wideo."
+msgstr "Nie można umieścić klipu dźwiękowego na ścieżce wideo."
 
 #: editevent.py:227 editevent.py:839 movemodes.py:607
 msgid "Track "
@@ -4508,39 +4511,39 @@ msgstr "Wymuś"
 msgid "Align"
 msgstr "Wyrównanie"
 
-#: keyframeeditor.py:1550
+#: keyframeeditor.py:1541
 msgid "View:"
 msgstr "Widok:"
 
-#: keyframeeditor.py:1556
+#: keyframeeditor.py:1547
 msgid "Large"
 msgstr "Duży"
 
-#: keyframeeditor.py:1557
+#: keyframeeditor.py:1548
 msgid "Medium"
 msgstr "Średni"
 
-#: keyframeeditor.py:1558
+#: keyframeeditor.py:1549
 msgid "Small"
 msgstr "Mały"
 
-#: keyframeeditor.py:1578
+#: keyframeeditor.py:1569
 msgid "Reset Geometry"
 msgstr "Zresetuj geometrię"
 
-#: keyframeeditor.py:1579
+#: keyframeeditor.py:1570
 msgid "Geometry to Original Aspect Ratio"
 msgstr "Geometria do pierwotnego współczynnika proporcji"
 
-#: keyframeeditor.py:1580
+#: keyframeeditor.py:1571
 msgid "Center Horizontal"
 msgstr "Centruj w poziomie"
 
-#: keyframeeditor.py:1581
+#: keyframeeditor.py:1572
 msgid "Center Vertical"
 msgstr "Centruj w pionie"
 
-#: middlebar.py:127
+#: middlebar.py:128
 msgid ""
 "Zoom In - Mouse Middle Scroll\n"
 " Zoom Out - Mouse Middle Scroll\n"
@@ -4550,7 +4553,7 @@ msgstr ""
 "Pomniejszanie - przewijanie środkowym p. myszy\n"
 "Dopasowanie transfokacji (zoom) - kliknięcie środkowym p. myszy"
 
-#: middlebar.py:132
+#: middlebar.py:133
 msgid ""
 "Add Rendered Transition - 2 clips selected\n"
 "Add Rendered Fade - 1 clip selected\n"
@@ -4560,7 +4563,7 @@ msgstr ""
 "Dodanie wyrenderowanego zanikania - wybrany 1 klip\n"
 "Cięcie - X"
 
-#: middlebar.py:138
+#: middlebar.py:139
 msgid ""
 "Splice Out - Delete\n"
 "Lift\n"
@@ -4570,7 +4573,7 @@ msgstr ""
 "Usuń bez scalania\n"
 "Usuń zawartość zakresu"
 
-#: middlebar.py:143
+#: middlebar.py:144
 msgid ""
 "Resync Selected\n"
 "Split Audio"
@@ -4578,7 +4581,7 @@ msgstr ""
 "Resynchronizacja wybranego\n"
 "Wyodrębnij dźwięk"
 
-#: middlebar.py:150
+#: middlebar.py:151
 msgid ""
 "Overwrite Range\n"
 "Overwrite Clip - T\n"
@@ -4590,7 +4593,7 @@ msgstr ""
 "Wstaw klip - Y \n"
 "Dołącz klip - U"
 
-#: middlebar.py:155
+#: middlebar.py:156
 msgid ""
 "Undo - Ctrl + Z\n"
 "Redo - Ctrl + Y"
@@ -4598,7 +4601,7 @@ msgstr ""
 "Cofnij - Ctrl + Z\n"
 "Ponów - Ctrl + Y"
 
-#: middlebar.py:162
+#: middlebar.py:163
 msgid ""
 "Audio Mixer\n"
 "Titler\n"
@@ -4610,7 +4613,7 @@ msgstr ""
 "Efekty G'Mic\n"
 "Kolejka renderowania wsadowego"
 
-#: middlebar.py:167
+#: middlebar.py:168
 msgid ""
 "Audio Mixer(not available)\n"
 "Titler"
@@ -5390,8 +5393,9 @@ msgid "Allow Frame Dropping"
 msgstr "Zezwalaj na wyrzucanie klatek"
 
 #: preferenceswindow.py:430
+#, fuzzy
 msgid "Shortcuts File"
-msgstr "Plik skrótów"
+msgstr "Skróty"
 
 #: tools/batchrendering.py:298
 msgid "Render Item Project File Copy failed!"
@@ -6220,6 +6224,211 @@ msgid ""
 msgstr ""
 "Klip jest za krótki, aby dodać domyślnie ustawione przez użytkownika "
 "blaknięcie podczas tworzenia kompozytora."
+
+#, fuzzy
+#~ msgid "Render target file exists!"
+#~ msgstr "Niezdefiniowany zakres renderowania"
+
+#~ msgid "Confirm overwriting existing file."
+#~ msgstr "Potwierdź nadpisanie istniejącego pliku."
+
+#~ msgid "Project is currently using proxy media!"
+#~ msgstr "Projekt obecnie korzysta już z mediów proxy!"
+
+#~ msgid ""
+#~ "Rendering from proxy media will produce worse quality than rendering from "
+#~ "original media.\n"
+#~ "Convert to using original media in Proxy Manager for best quality.\n"
+#~ "\n"
+#~ "Select 'Confirm' to render from proxy media anyway."
+#~ msgstr ""
+#~ "Renderowanie z multimediów proxy, zamiast z oryginalnych multimediów,"
+#~ "spowoduje otrzymanie klipu wynikowego gorszej jakości.\n"
+#~ "Skonwertuj do oryginalnych multimediów w Menedżerze Proxy, aby otrzymać "
+#~ "klip wynikowy w najlepszej jakości.\n"
+#~ "\n"
+#~ "Wybierz 'Potwierdź', aby renderować z mediów proxy."
+
+#, fuzzy
+#~ msgid "From Selected Clips"
+#~ msgstr "Z następnego klipu"
+
+#, fuzzy
+#~ msgid "From Current Sequence"
+#~ msgstr "Utwórz sekwencję"
+
+#, fuzzy
+#~ msgid "Audio Sync Merge Clip From 2 Media Items "
+#~ msgstr "Utwórz klip scalony synchronizacji dźwięku"
+
+#~ msgid "Import Another Sequence Into This Sequence..."
+#~ msgstr "Importowanie kolejnej sekwencji do tej sekwencji ..."
+
+#, fuzzy
+#~ msgid "Add Fade In"
+#~ msgstr "Dodaj zanikanie"
+
+#, fuzzy
+#~ msgid "Add Fade Out"
+#~ msgstr "Płynne zanikanie"
+
+#, fuzzy
+#~ msgid "Shortcuts Presets:"
+#~ msgstr "Plik skrótów"
+
+#~ msgid "Diffence to 'Flowblade Default' Presets:"
+#~ msgstr "Różnice w stosunku do ustawień domyślnych 'Flowblade':"
+
+#~ msgid "Keypad 1-7"
+#~ msgstr "Blok klawiszy 1-7"
+
+#, fuzzy
+#~ msgid "Same as 1-7"
+#~ msgstr "Zapisano jako "
+
+#, fuzzy
+#~ msgid "Do Audio Sync Move Edit"
+#~ msgstr "Utwórz klip scalony synchronizacji dźwięku"
+
+#~ msgid "To audio sync clips you need move action origin clip by "
+#~ msgstr ""
+#~ "Aby dokonać synchronizacji dźwięku klipów musisz wykonać operację "
+#~ "przesunięcia źródłowego klipu o "
+
+#, fuzzy
+#~ msgid " frames."
+#~ msgstr " klatek."
+
+#, fuzzy
+#~ msgid "Select Clip to Audio Sync With..."
+#~ msgstr "Wyodrębnij zsynchronizowany dźwięk"
+
+#~ msgid "Show Move/Trim Info Overlay"
+#~ msgstr "Pokaż Przesuń/Przytnij nakładkę Info"
+
+#~ msgid "Normal - 50px, 25px"
+#~ msgstr "Normalny - 50px, 25px"
+
+#~ msgid "Double for HiDPI - 100px, 50px"
+#~ msgstr "Podwójny dla HiDPI - 100px, 50px"
+
+#, fuzzy
+#~ msgid "Tracks Heights:"
+#~ msgstr "Normalna wysokość"
+
+#~ msgid ""
+#~ "Changing these values may cause problems with playback and rendering.\n"
+#~ "The safe values are Render Threads:1, Allow Frame Dropping: No."
+#~ msgstr ""
+#~ "Zmiana tych wartości może powodować problemy z odtwarzaniem i "
+#~ "renderowaniem.\n"
+#~ "Bezpieczne wartości to: Ilość wątków renderujących: 1, Zezwalaj na "
+#~ "wyrzucanie klatek: Nie."
+
+#, fuzzy
+#~ msgid "Audio Sync parent clips must be on differnt tracks "
+#~ msgstr "Synchronizowane klipy nadrzędne muszą się znajdować na ścieżce V1"
+
+#~ msgid ""
+#~ "Selected audio sync clip is on the sametrack as the sync action origin "
+#~ "clip."
+#~ msgstr ""
+#~ "Wybrany klip synchronizacji dźwięku jest na tej samej ścieżce, co klip "
+#~ "źródłowy czynności synchronizacji."
+
+#~ msgid "Audio sync move not possible"
+#~ msgstr "Przeniesienie klipu synchronizacji nie jest możliwe"
+
+#, fuzzy
+#~ msgid "Clip starts "
+#~ msgstr "Klip jest za krótki!"
+
+#~ msgid ""
+#~ " frames before timeline start if it is moved \n"
+#~ "to be in audio sync with the specified clip.\n"
+#~ "\n"
+#~ msgstr ""
+#~ " ramek przed rozpoczęciem osi czasu, jeśli są przenoszone \n"
+#~ "do synchronizacji dźwięku z określonym klipem.\n"
+
+#~ msgid ""
+#~ "You need to move forward or shorten the clips in question to make the "
+#~ "operation succeed."
+#~ msgstr ""
+#~ "Musisz przesunąć do przodu lub skrócić sporne pliki aby operacja się "
+#~ "powiodła"
+
+#~ msgid "SYNC_CLIP_"
+#~ msgstr "SYNCH_KLIP_"
+
+#, fuzzy
+#~ msgid "Save Sync Compound Clip XML"
+#~ msgstr "Zapisz klip złożony sekwencji"
+
+#~ msgid "Destroy data"
+#~ msgstr "Zniszcz dane"
+
+#~ msgid ""
+#~ "Destroying this data may change contents of existing\n"
+#~ "projects and make some projects unopenable."
+#~ msgstr ""
+#~ "Zniszczenie tych danych może zmienić zawartość istniejących\n"
+#~ "projektów oraz spowodować, że niektóre z nich będą niemożliwe do otwarcia."
+
+#~ msgid "Confirm Destroying Cached Data!"
+#~ msgstr "Potwierdź zniszczenie danych w pamięci podręcznej!"
+
+#~ msgid ""
+#~ "Destroying this data may <b>change contents</b> of existing\n"
+#~ "projects or <b>make some projects unopenable!</b>"
+#~ msgstr ""
+#~ "Zniszczenie tych danych może <b>zmienić zawartość</b> istniejących\n"
+#~ "projektów oraz <b>spowodować, że niektóre z nich będą niemożliwe do "
+#~ "otwarcia!</b>"
+
+#~ msgid ""
+#~ "You can use 'File->Save Backup Snapshot...' functionality to backup "
+#~ "projects\n"
+#~ "so that they can be opened later before destroying this data."
+#~ msgstr ""
+#~ "Możesz użyć funkcjonalności 'Plik->Zapisz kopię migawkową...'w celu "
+#~ "wykonania kopii bezpieczeństwa projektów\n"
+#~ "aby mogły być potem otwarte, zanim te dane zostaną zniszczone"
+
+#~ msgid "Destroying this data may require parts of it to be recreated later."
+#~ msgstr ""
+#~ "Zniszczenie tych danych może wymagać odtworzenia części tego fragmentu "
+#~ "później."
+
+#, fuzzy
+#~ msgid "Audio Levels Data"
+#~ msgstr "Wyświetlaj poziom dźwięku"
+
+#~ msgid "G'Mic Tool Session Data"
+#~ msgstr "Dane sesji narzędzia G'Mic"
+
+#~ msgid "Natron Clip Export Data"
+#~ msgstr "Dane eksportu klipu Natron"
+
+#, fuzzy
+#~ msgid "Rendered Files"
+#~ msgstr "Renderowany plik"
+
+#, fuzzy
+#~ msgid "Thumbnails"
+#~ msgstr "Folder miniatur:"
+
+#, fuzzy
+#~ msgid "User Created Custom Profiles"
+#~ msgstr "Utwórz profil użytkownika"
+
+#, fuzzy
+#~ msgid "Slow/Fast Motion"
+#~ msgstr "Renderuj plik ruchu spowolnionego/przyśpieszonego"
+
+#, fuzzy
+#~ msgid "Reverse"
+#~ msgstr "Czas pogłosu"
 
 #~ msgid "3 point edit not defoned!"
 #~ msgstr "3-punktowa edycja nie została zdefiniowana!"
