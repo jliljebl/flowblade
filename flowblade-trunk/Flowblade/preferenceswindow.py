@@ -54,7 +54,7 @@ def preferences_dialog():
     # Jan-2017 - SvdB
     performance_panel, performance_widgets = _performance_panel()
     # Apr-2017 - SvdB
-    shortcuts_panel, shortcuts_widgets = _shortcuts_panel()
+    #shortcuts_panel, shortcuts_widgets = _shortcuts_panel()
 
     notebook = Gtk.Notebook()
     notebook.set_size_request(PREFERENCES_WIDTH, PREFERENCES_HEIGHT)
@@ -62,11 +62,11 @@ def preferences_dialog():
     notebook.append_page(edit_prefs_panel, Gtk.Label(label=_("Editing")))
     notebook.append_page(view_pres_panel, Gtk.Label(label=_("View")))
     notebook.append_page(performance_panel, Gtk.Label(label=_("Performance")))
-    notebook.append_page(shortcuts_panel, Gtk.Label(label=_("Shortcuts")))
+    #notebook.append_page(shortcuts_panel, Gtk.Label(label=_("Shortcuts")))
     guiutils.set_margins(notebook, 4, 24, 6, 0)
 
     dialog.connect('response', _preferences_dialog_callback, (gen_opts_widgets, edit_prefs_widgets, view_pref_widgets, \
-        performance_widgets, shortcuts_widgets))
+        performance_widgets))
     dialog.vbox.pack_start(notebook, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     dialogutils.default_behaviour(dialog)
@@ -391,6 +391,8 @@ def _performance_panel():
     # Allow Frame Dropping should help getting real time output on low performance computers.
     prefs = editorpersistance.prefs
 
+    warning_icon = Gtk.Image.new_from_stock(Gtk.STOCK_DIALOG_WARNING, Gtk.IconSize.DIALOG)
+    warning_label = Gtk.Label(label=_("Changing these values may cause problems with playback and rendering.\nThe safe values are Render Threads:1, Allow Frame Dropping: No."))
     # Widgets
     spin_adj = Gtk.Adjustment(prefs.perf_render_threads, 1, multiprocessing.cpu_count(), 1)
     perf_render_threads = Gtk.SpinButton()
@@ -405,10 +407,13 @@ def _performance_panel():
     perf_drop_frames.set_tooltip_text(_("Allow Frame Dropping for real-time rendering, when needed"))
 
     # Layout
+    row0 = _row(guiutils.get_left_justified_box([warning_icon, warning_label]))
     row1 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Render Threads:")), perf_render_threads, PREFERENCES_LEFT))
     row2 = _row(guiutils.get_checkbox_row_box(perf_drop_frames, Gtk.Label(label=_("Allow Frame Dropping"))))
 
     vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(row0, False, False, 0)
+    vbox.pack_start(guiutils.pad_label(12, 12), False, False, 0)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
@@ -417,13 +422,14 @@ def _performance_panel():
 
     return vbox, (perf_render_threads, perf_drop_frames)
 
+"""
 def _shortcuts_panel():
     # Apr-2017 - SvdB
     # Add a panel for keyboard shortcuts
     # Widgets
     shortcuts_combo = guicomponents.get_shorcuts_selector()
     
-    """
+
     shortcuts_combo = Gtk.ComboBoxText()
     current_pref_index = -1
 
@@ -440,7 +446,7 @@ def _shortcuts_panel():
         # Something is wrong, the pref shortcut file is not preset in the system.
         print "Shortcut file in editprpersistance.pref.shortcuts not found!"
         shortcuts_combo.set_active(0)
-    """
+
     
     # Layout
     row1 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Shortcuts File")), shortcuts_combo, PREFERENCES_LEFT))
@@ -452,6 +458,7 @@ def _shortcuts_panel():
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     return vbox, (shortcuts_combo)
+"""
 
 def _row(row_cont):
     row_cont.set_size_request(10, 26)
