@@ -161,7 +161,7 @@ msgstr " minut temu."
 #: projectaction.py:753
 #, fuzzy
 msgid "Render target file exists!"
-msgstr "Niezdefiniowany zakres renderowania"
+msgstr "Docelowy plik renderowania już istnieje!"
 
 #: projectaction.py:754
 msgid "Confirm overwriting existing file."
@@ -555,17 +555,17 @@ msgstr "Utwórz klip złożony"
 #: editorwindow.py:216
 #, fuzzy
 msgid "From Selected Clips"
-msgstr "Z następnego klipu"
+msgstr "Z wybranych klipów"
 
 #: editorwindow.py:217
 #, fuzzy
 msgid "From Current Sequence"
-msgstr "Utwórz sekwencję"
+msgstr "Z bieżącej sekwencji"
 
 #: editorwindow.py:218
 #, fuzzy
 msgid "Audio Sync Merge Clip From 2 Media Items "
-msgstr "Utwórz klip scalony synchronizacji dźwięku"
+msgstr "Klip scalony synchronizacji dźwięku z 2 elementów multimedialnych"
 
 #: editorwindow.py:219
 msgid "Import Media From Project..."
@@ -867,12 +867,12 @@ msgstr "Brak edytowalnych parametrów"
 #: compositeeditor.py:60
 #, fuzzy
 msgid "Add Fade In"
-msgstr "Dodaj zanikanie"
+msgstr "Dodaj efekt płynnego wyłaniania"
 
 #: compositeeditor.py:62
 #, fuzzy
 msgid "Add Fade Out"
-msgstr "Płynne zanikanie"
+msgstr "Dodaj efekt płynnego zanikania"
 
 #: compositeeditor.py:73 render.py:188
 msgid "Reset"
@@ -1022,6 +1022,10 @@ msgstr "Utwórz"
 msgid "Clip Name:"
 msgstr "Nazwa klipu:"
 
+#: dialogs.py:448
+msgid "Project page:"
+msgstr "Strona projektu:"
+
 #: dialogs.py:347
 msgid "Save Runtime Environment Data"
 msgstr "Zapisz dane środowiska wykonawczego"
@@ -1076,11 +1080,11 @@ msgstr "Główny programista:"
 
 #: dialogs.py:501
 msgid "Developers:"
-msgstr "Programiści"
+msgstr "Programiści:"
 
 #: dialogs.py:508
 msgid "Contributors:"
-msgstr "Współtwórcy"
+msgstr "Współtwórcy:"
 
 #: dialogs.py:538
 msgid "Translations by:"
@@ -1827,12 +1831,12 @@ msgstr "Dodaj efekt ich płynnego zanikania podczas kreowania"
 
 #: dialogs.py:1633
 msgid "Group Auto Fades"
-msgstr "Grupa automatycznego wyłaniania/zanikania"
+msgstr "Grupa płynnego wyłaniania/zanikania"
 
 #: dialogs.py:1702
 #, fuzzy
 msgid "Timeline Audio Sync"
-msgstr "Synchronizowanie dźwięku multimediów"
+msgstr "Synchronizowanie dźwięku multimediów osi czasu"
 
 #: dialogs.py:1705
 #, fuzzy
@@ -2746,12 +2750,12 @@ msgstr "Renderowanie klipu ruchu"
 
 #: render.py:543
 msgid "Rendering Reverse Clip"
-msgstr "Renderowanie klipu wstecznego"
+msgstr "Renderowanie klipu ruchu wstecznego"
 
 #: render.py:544
 #, fuzzy
 msgid "<b>Motion Clip File: </b>"
-msgstr "<b>Plik wyjściowy: </b>"
+msgstr "<b>Plik klipu ruchu: </b>"
 
 #: render.py:593
 msgid "Rendering Transition Clip"
@@ -4738,27 +4742,27 @@ msgstr "Można otworzyć tylko jedną instancję edytora tytułów"
 #: tools/titler.py:334
 #, fuzzy
 msgid "<b>Outline</b>"
-msgstr "<b>Plik wyjściowy: </b>"
+msgstr "<b>Zarys</b>"
 
 #: tools/titler.py:363
 #, fuzzy
 msgid "<b>Shadow</b>"
-msgstr "Cień"
+msgstr "<b>Cień</b>"
 
 #: tools/titler.py:365
 #, fuzzy
 msgid "Opacity:"
-msgstr "Nieprzezierność"
+msgstr "Nieprzezierność:"
 
 #: tools/titler.py:366
 #, fuzzy
 msgid "X Off:"
-msgstr "Przesunięcie X"
+msgstr "Przesunięcie X:"
 
 #: tools/titler.py:367
 #, fuzzy
 msgid "Y Off:"
-msgstr "Przesunięcie Y"
+msgstr "Przesunięcie Y:"
 
 #: tools/titler.py:413
 msgid "Load Layers"
@@ -6227,7 +6231,7 @@ msgstr "Klip zbyt krótki!"
 
 #: compositorfades.py:274
 msgid "The Clip is too short to add the requested fade."
-msgstr "Klip jest za krótki, aby dodać pożądany efekt blaknięcia."
+msgstr "Klip jest za krótki, aby dodać pożądany efekt wyłaniania/zanikania."
 
 #: compositorfades.py:279
 msgid "Clip too short for Auto Fades!"
@@ -6245,7 +6249,7 @@ msgstr ""
 #: audiosync.py:171
 #, fuzzy
 msgid "Audio Sync parent clips must be on differnt tracks "
-msgstr "Synchronizowane klipy nadrzędne muszą się znajdować na ścieżce V1"
+msgstr "Nadrzędne klipy synchronizacji dźwieku muszą się znajdować na różnych ścieżkach "
 
 #: audiosync.py:172
 msgid ""
@@ -6269,7 +6273,7 @@ msgid ""
 "to be in audio sync with the specified clip.\n"
 "\n"
 msgstr ""
-" klatek przed rozpoczęciem osi czasu, jeśli są przenoszone \n"
+" klatek przed początkiem osi czasu, jeśli są przenoszone \n"
 "do synchronizacji dźwięku z określonym klipem.\n"
 
 #: audiosync.py:208
@@ -6287,7 +6291,7 @@ msgstr "SYNCH_KLIP_"
 #: audiosync.py:276
 #, fuzzy
 msgid "Save Sync Compound Clip XML"
-msgstr "Zapisz klip złożony sekwencji"
+msgstr "Zapisz XML-owy klip złożony synchronizacji"
 
 #: diskcachemanagement.py:44
 msgid "Destroy data"
@@ -6341,7 +6345,7 @@ msgstr ""
 #: diskcachemanagement.py:167
 #, fuzzy
 msgid "Audio Levels Data"
-msgstr "Wyświetlaj poziom dźwięku"
+msgstr "Dane poziomu dźwięku"
 
 #: diskcachemanagement.py:168
 msgid "G'Mic Tool Session Data"
@@ -6364,7 +6368,7 @@ msgstr "Folder miniatur:"
 #: diskcachemanagement.py:172
 #, fuzzy
 msgid "User Created Custom Profiles"
-msgstr "Utwórz profil użytkownika"
+msgstr "Niestandardowe profile utworzone przez użytkownika"
 
 #: toolsintegration.py:132
 msgid "Natron"
@@ -6378,36 +6382,36 @@ msgstr "Renderuj plik ruchu spowolnionego/przyśpieszonego"
 #: toolsintegration.py:174
 #, fuzzy
 msgid "Reverse"
-msgstr "Czas pogłosu"
+msgstr "Wstecz"
 
 #: projectmediaimport.py:143
 #, fuzzy
 msgid "Loading Media Import Project"
 msgstr "Wczytywanie projektu"
 
-#~ msgid "Outline"
-#~ msgstr "Obrys"
+msgid "Outline"
+msgstr "Obrys"
 
-#~ msgid "Selection"
-#~ msgstr "Wybrane"
+msgid "Selection"
+msgstr "Wybrane"
 
-#~ msgid "Sequence"
-#~ msgstr "Sekwencja"
+msgid "Sequence"
+msgstr "Sekwencja"
 
-#~ msgid "Import Sequence..."
-#~ msgstr "Importuj sekwencję..."
+msgid "Import Sequence..."
+msgstr "Importuj sekwencję..."
 
-#~ msgid "Delete Selected Item"
-#~ msgstr "Usuń zaznaczony element"
+msgid "Delete Selected Item"
+msgstr "Usuń zaznaczony element"
 
-#~ msgid "Switch Monitor Source"
-#~ msgstr "Przełącz źródło monitora"
+msgid "Switch Monitor Source"
+msgstr "Przełącz źródło monitora"
 
-#~ msgid "Set Mark In"
-#~ msgstr "Ustaw znacznik początkowy"
+msgid "Set Mark In"
+msgstr "Ustaw znacznik początkowy"
 
-#~ msgid "Set Mark Out"
-#~ msgstr "Ustaw znacznik końcowy"
+msgid "Set Mark Out"
+msgstr "Ustaw znacznik końcowy"
 
 #~ msgid "3 Point Overwrite Insert"
 #~ msgstr "Wstaw 3-punktowe nadpisanie"
@@ -6415,47 +6419,47 @@ msgstr "Wczytywanie projektu"
 #~ msgid "Add Mark"
 #~ msgstr "Dodaj znacznik"
 
-#~ msgid "Resync selected Clip or Compositor"
-#~ msgstr "Resynchronizuj wybrany klip lub kompozytor"
+msgid "Resync selected Clip or Compositor"
+msgstr "Resynchronizuj wybrany klip lub kompozytor"
 
-#~ msgid "Complete Keyboard Trim Edit"
-#~ msgstr "Pełna klawiatura (przycinania i edycji)"
+msgid "Complete Keyboard Trim Edit"
+msgstr "Pełna klawiatura (przycinania i edycji)"
 
-#~ msgid "SPACE"
-#~ msgstr "SPACJA"
+msgid "SPACE"
+msgstr "SPACJA"
 
-#~ msgid "Start / Stop Playback"
-#~ msgstr "Uruchom / Zatrzymaj odtwarzanie"
+msgid "Start / Stop Playback"
+msgstr "Uruchom / Zatrzymaj odtwarzanie"
 
-#~ msgid "Backwards Faster"
-#~ msgstr "Szybciej do tyłu"
+msgid "Backwards Faster"
+msgstr "Szybciej do tyłu"
 
-#~ msgid "Forward Faster"
-#~ msgstr "Szybciej do przodu"
+msgid "Forward Faster"
+msgstr "Szybciej do przodu"
 
-#~ msgid "Prev Frame"
-#~ msgstr "Poprzednia klatka"
+msgid "Prev Frame"
+msgstr "Poprzednia klatka"
 
-#~ msgid "Next Frame"
-#~ msgstr "Następna klatka"
+msgid "Next Frame"
+msgstr "Następna klatka"
 
-#~ msgid "Next Edit/Mark"
-#~ msgstr "Następne Edytuj/Zaznacz"
+msgid "Next Edit/Mark"
+msgstr "Następne Edytuj/Zaznacz"
 
-#~ msgid "Prev Edit/Mark"
-#~ msgstr "Poprzednie Edytuj/Zaznacz"
+msgid "Prev Edit/Mark"
+msgstr "Poprzednie Edytuj/Zaznacz"
 
-#~ msgid "Go To Start"
-#~ msgstr "Przejdź do początku"
+msgid "Go To Start"
+msgstr "Przejdź do początku"
 
-#~ msgid "Go To End"
-#~ msgstr "Przejdź do końca"
+msgid "Go To End"
+msgstr "Przejdź do końca"
 
-#~ msgid "Shortcuts"
-#~ msgstr "Skróty"
+msgid "Shortcuts"
+msgstr "Skróty"
 
-#~ msgid "Create Audio Sync Group"
-#~ msgstr "Utwórz grupę synchronizacji dźwięku"
+msgid "Create Audio Sync Group"
+msgstr "Utwórz grupę synchronizacji dźwięku"
 
 #~ msgid "3 point edit not defoned!"
 #~ msgstr "3-punktowa edycja nie została zdefiniowana!"
