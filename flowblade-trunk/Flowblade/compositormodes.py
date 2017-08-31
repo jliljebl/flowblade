@@ -121,6 +121,8 @@ def mouse_move(x, y, frame, state):
     updater.repaint_tline()
     
 def mouse_release(x, y, frame, state):
+    global sub_mode
+    
     editorstate.edit_mode = prev_edit_mode
     if editorstate.edit_mode == editorstate.INSERT_MOVE:
         tlinewidgets.set_edit_mode(None, tlinewidgets.draw_insert_overlay)
@@ -155,7 +157,6 @@ def mouse_release(x, y, frame, state):
         action = edit.move_compositor_action(data)
         action.do_edit()
     
-    global sub_mode
     sub_mode = NO_COMPOSITOR_EDIT
     
     updater.repaint_tline()
