@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-29 19:00+0300\n"
+"POT-Creation-Date: 2017-08-31 11:44+0200\n"
 "PO-Revision-Date: 2017-05-27 08:50+0200\n"
 "Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -181,8 +181,8 @@ msgid ""
 msgstr ""
 "Renderowanie z multimediów proxy, zamiast z oryginalnych multimediów,"
 "spowoduje otrzymanie klipu wynikowego gorszej jakości.\n"
-"Skonwertuj do oryginalnych multimediów w Menedżerze Proxy, aby otrzymać "
-"klip wynikowy w najlepszej jakości.\n"
+"Skonwertuj do oryginalnych multimediów w Menedżerze Proxy, aby otrzymać klip "
+"wynikowy w najlepszej jakości.\n"
 "\n"
 "Wybierz 'Potwierdź', aby renderować z mediów proxy."
 
@@ -1022,10 +1022,6 @@ msgstr "Utwórz"
 msgid "Clip Name:"
 msgstr "Nazwa klipu:"
 
-#: dialogs.py:448
-msgid "Project page:"
-msgstr "Strona projektu:"
-
 #: dialogs.py:347
 msgid "Save Runtime Environment Data"
 msgstr "Zapisz dane środowiska wykonawczego"
@@ -1845,7 +1841,9 @@ msgstr "Utwórz klip scalony synchronizacji dźwięku"
 
 #: dialogs.py:1707
 msgid "<b>Audio Sync Offset</b> between clips media is "
-msgstr "<b>Przesunięcie synchronizacji dźwięku</b> pomiędzy multimediami klipów wynosi "
+msgstr ""
+"<b>Przesunięcie synchronizacji dźwięku</b> pomiędzy multimediami klipów "
+"wynosi "
 
 #: dialogs.py:1707 dialogs.py:1709 dialogs.py:1712
 #, fuzzy
@@ -6249,7 +6247,9 @@ msgstr ""
 #: audiosync.py:171
 #, fuzzy
 msgid "Audio Sync parent clips must be on differnt tracks "
-msgstr "Nadrzędne klipy synchronizacji dźwieku muszą się znajdować na różnych ścieżkach "
+msgstr ""
+"Nadrzędne klipy synchronizacji dźwieku muszą się znajdować na różnych "
+"ścieżkach "
 
 #: audiosync.py:172
 msgid ""
@@ -6281,8 +6281,7 @@ msgid ""
 "You need to move forward or shorten the clips in question to make the "
 "operation succeed."
 msgstr ""
-"Musisz przesunąć do przodu lub skrócić sporne pliki aby operacja się "
-"powiodła"
+"Musisz przesunąć do przodu lub skrócić sporne pliki aby operacja się powiodła"
 
 #: audiosync.py:275
 msgid "SYNC_CLIP_"
@@ -6323,8 +6322,8 @@ msgid ""
 "projects or <b>make some projects unopenable!</b>"
 msgstr ""
 "Zniszczenie tych danych może <b>zmienić zawartość</b> istniejących\n"
-"projektów oraz <b>spowodować, że niektóre z nich będą niemożliwe do "
-"otwarcia!</b>"
+"projektów oraz <b>spowodować, że niektóre z nich będą niemożliwe do otwarcia!"
+"</b>"
 
 #: diskcachemanagement.py:114
 msgid ""
@@ -6389,29 +6388,29 @@ msgstr "Wstecz"
 msgid "Loading Media Import Project"
 msgstr "Wczytywanie projektu"
 
-msgid "Outline"
-msgstr "Obrys"
+#~ msgid "Outline"
+#~ msgstr "Obrys"
 
-msgid "Selection"
-msgstr "Wybrane"
+#~ msgid "Selection"
+#~ msgstr "Wybrane"
 
-msgid "Sequence"
-msgstr "Sekwencja"
+#~ msgid "Sequence"
+#~ msgstr "Sekwencja"
 
-msgid "Import Sequence..."
-msgstr "Importuj sekwencję..."
+#~ msgid "Import Sequence..."
+#~ msgstr "Importuj sekwencję..."
 
-msgid "Delete Selected Item"
-msgstr "Usuń zaznaczony element"
+#~ msgid "Delete Selected Item"
+#~ msgstr "Usuń zaznaczony element"
 
-msgid "Switch Monitor Source"
-msgstr "Przełącz źródło monitora"
+#~ msgid "Switch Monitor Source"
+#~ msgstr "Przełącz źródło monitora"
 
-msgid "Set Mark In"
-msgstr "Ustaw znacznik początkowy"
+#~ msgid "Set Mark In"
+#~ msgstr "Ustaw znacznik początkowy"
 
-msgid "Set Mark Out"
-msgstr "Ustaw znacznik końcowy"
+#~ msgid "Set Mark Out"
+#~ msgstr "Ustaw znacznik końcowy"
 
 #~ msgid "3 Point Overwrite Insert"
 #~ msgstr "Wstaw 3-punktowe nadpisanie"
@@ -6419,47 +6418,47 @@ msgstr "Ustaw znacznik końcowy"
 #~ msgid "Add Mark"
 #~ msgstr "Dodaj znacznik"
 
-msgid "Resync selected Clip or Compositor"
-msgstr "Resynchronizuj wybrany klip lub kompozytor"
+#~ msgid "Resync selected Clip or Compositor"
+#~ msgstr "Resynchronizuj wybrany klip lub kompozytor"
 
-msgid "Complete Keyboard Trim Edit"
-msgstr "Pełna klawiatura (przycinania i edycji)"
+#~ msgid "Complete Keyboard Trim Edit"
+#~ msgstr "Pełna klawiatura (przycinania i edycji)"
 
-msgid "SPACE"
-msgstr "SPACJA"
+#~ msgid "SPACE"
+#~ msgstr "SPACJA"
 
-msgid "Start / Stop Playback"
-msgstr "Uruchom / Zatrzymaj odtwarzanie"
+#~ msgid "Start / Stop Playback"
+#~ msgstr "Uruchom / Zatrzymaj odtwarzanie"
 
-msgid "Backwards Faster"
-msgstr "Szybciej do tyłu"
+#~ msgid "Backwards Faster"
+#~ msgstr "Szybciej do tyłu"
 
-msgid "Forward Faster"
-msgstr "Szybciej do przodu"
+#~ msgid "Forward Faster"
+#~ msgstr "Szybciej do przodu"
 
-msgid "Prev Frame"
-msgstr "Poprzednia klatka"
+#~ msgid "Prev Frame"
+#~ msgstr "Poprzednia klatka"
 
-msgid "Next Frame"
-msgstr "Następna klatka"
+#~ msgid "Next Frame"
+#~ msgstr "Następna klatka"
 
-msgid "Next Edit/Mark"
-msgstr "Następne Edytuj/Zaznacz"
+#~ msgid "Next Edit/Mark"
+#~ msgstr "Następne Edytuj/Zaznacz"
 
-msgid "Prev Edit/Mark"
-msgstr "Poprzednie Edytuj/Zaznacz"
+#~ msgid "Prev Edit/Mark"
+#~ msgstr "Poprzednie Edytuj/Zaznacz"
 
-msgid "Go To Start"
-msgstr "Przejdź do początku"
+#~ msgid "Go To Start"
+#~ msgstr "Przejdź do początku"
 
-msgid "Go To End"
-msgstr "Przejdź do końca"
+#~ msgid "Go To End"
+#~ msgstr "Przejdź do końca"
 
-msgid "Shortcuts"
-msgstr "Skróty"
+#~ msgid "Shortcuts"
+#~ msgstr "Skróty"
 
-msgid "Create Audio Sync Group"
-msgstr "Utwórz grupę synchronizacji dźwięku"
+#~ msgid "Create Audio Sync Group"
+#~ msgstr "Utwórz grupę synchronizacji dźwięku"
 
 #~ msgid "3 point edit not defoned!"
 #~ msgstr "3-punktowa edycja nie została zdefiniowana!"
