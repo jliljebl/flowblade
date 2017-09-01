@@ -1170,9 +1170,18 @@ class SingleRenderThread(threading.Thread):
 
         producer = project.c_seq.tractor
         profile = mltprofiles.get_profile(render_item.render_data.profile_name)
-        consumer = renderconsumer.get_mlt_render_consumer(render_item.render_path, 
-                                                          profile,
-                                                          render_item.args_vals_list)
+        
+        vcodec = self.get_vcodec(render_item)
+        if self.is_frame_sequence_render(vcodec) == True:
+            # Frame sequence render
+            consumer = renderconsumer.get_img_seq_render_consumer_codec_ext(render_item.render_path,
+                                                                             profile,  
+                                                                             vcodec, 
+                                                                             self.get_frame_seq_ext(vcodec))
+        else: # All other renders
+            consumer = renderconsumer.get_mlt_render_consumer(render_item.render_path, 
+                                                              profile,
+                                                              render_item.args_vals_list)
 
         # Get render range
         start_frame, end_frame, wait_for_stop_render = get_render_range(render_item)
@@ -1221,7 +1230,27 @@ class SingleRenderThread(threading.Thread):
         single_render_thread = None
         # Update view for render end
         GLib.idle_add(_single_render_shutdown)
-                    
+
+    def is_frame_sequence_render(self, vcodec):
+        if vcodec in ["png","bmp","dpx","ppm","targa","tiff"]:
+            return True
+
+        return False
+
+    def get_vcodec(self, render_item):
+        for arg_val in render_item.args_vals_list:
+            arg, val = arg_val
+            if arg == "vcodec":
+                return val
+        
+        return None
+            
+    def get_frame_seq_ext(self, vcodec):
+        if vcodec == "targa":
+            return "tga"
+        else:
+            return vcodec
+
     def abort(self):
         self.running = False
 
