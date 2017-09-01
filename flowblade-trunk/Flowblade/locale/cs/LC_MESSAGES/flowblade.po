@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-08-29 19:00+0300\n"
-"PO-Revision-Date: 2017-05-27 14:19+0100\n"
+"PO-Revision-Date: 2017-08-31 20:56+0100\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "Language: cs\n"
@@ -37,7 +37,7 @@ msgstr "Projekt předtím byl uložen"
 
 #: app.py:819 projectaction.py:381 projectaction.py:715
 msgid "Save project with File -> Save As before closing."
-msgstr "Uložte projekt před zavření pomocí Soubor -> Uložit."
+msgstr "Uložte projekt před zavření pomocí Soubor → Uložit."
 
 #: projectaction.py:121
 msgid "Media asset was missing!"
@@ -93,7 +93,7 @@ msgstr ""
 
 #: projectaction.py:148
 msgid "User Profiles can be created by selecting 'Edit->Profiles Manager'."
-msgstr "Uživatelské profily lze vytvářet vybráním Úpravy -> Správce profilů."
+msgstr "Uživatelské profily lze vytvářet vybráním Úpravy → Správce profilů."
 
 #: projectaction.py:155
 msgid "Opening"
@@ -159,18 +159,16 @@ msgid " minutes ago."
 msgstr " minutami"
 
 #: projectaction.py:753
-#, fuzzy
 msgid "Render target file exists!"
-msgstr "Rozsah zpracování nestanoven!"
+msgstr "Cílový soubor se zpracováním existuje!!"
 
 #: projectaction.py:754
-#, fuzzy
 msgid "Confirm overwriting existing file."
-msgstr "Chcete přepsat stávající soubor?"
+msgstr "Potvrdit přepsání stávajícího souboru."
 
 #: projectaction.py:760
 msgid "Project is currently using proxy media!"
-msgstr ""
+msgstr "Projekt nyní používá náhradní záznam!"
 
 #: projectaction.py:761
 msgid ""
@@ -180,6 +178,12 @@ msgid ""
 "\n"
 "Select 'Confirm' to render from proxy media anyway."
 msgstr ""
+"Zpracování z náhradního záznamu vytvoří horší jakost než zpracování "
+"z původního záznamu.\n"
+"Převést za použití původního záznamu ve správci  náhradních záznamů pro lepší"
+" jakost.\n"
+"\n"
+"Vyberte Potvrdit, aby se přesto provedlo zpracování z náhradního záznamu."
 
 #: projectaction.py:838
 msgid "Render launch failed!"
@@ -217,11 +221,11 @@ msgstr "Nebyl vybrán žádný soubor"
 
 #: projectaction.py:920
 msgid "Select a numbered file to add an Image Sequence to Project."
-msgstr "Vyberte číslovaný soubor pro přidání obrazové řady do projektu."
+msgstr "Vyberte číslovaný soubor pro přidání obrázkové řady do projektu."
 
 #: projectaction.py:928
 msgid "Not a sequence file!"
-msgstr "Není řadovým souborem!"
+msgstr "Není souborem řady!"
 
 #: projectaction.py:928
 msgid ""
@@ -229,7 +233,7 @@ msgid ""
 "so it can't be an image sequence file."
 msgstr ""
 "Vybraný soubor nemá ve svém názvu část s číslem.\n"
-"Nemůže to tedy být soubor obrazové řady."
+"Nemůže to tedy být soubor obrázkové řady."
 
 #: projectaction.py:979
 msgid "Can't make home folder thumbnails folder"
@@ -486,9 +490,8 @@ msgid "Watermark..."
 msgstr "Vodoznak..."
 
 #: editorwindow.py:201 diskcachemanagement.py:145
-#, fuzzy
 msgid "Disk Cache Manager"
-msgstr "Zavřít správce"
+msgstr "Správce vyrovnávací paměti disku"
 
 #: editorwindow.py:202 profilesmanager.py:45
 msgid "Profiles Manager"
@@ -516,7 +519,7 @@ msgstr "Přidat multimediální záběr"
 
 #: editorwindow.py:208
 msgid "Add Image Sequence..."
-msgstr "Přidat obrazovou řadu..."
+msgstr "Přidat obrázkovou řadu..."
 
 #: editorwindow.py:209
 msgid "Create Color Clip..."
@@ -547,19 +550,16 @@ msgid "Create Compound Clip"
 msgstr "Vytvořit složený záběr"
 
 #: editorwindow.py:216
-#, fuzzy
 msgid "From Selected Clips"
-msgstr "Z dalšího záběru"
+msgstr "Z vybraných záběrů"
 
 #: editorwindow.py:217
-#, fuzzy
 msgid "From Current Sequence"
-msgstr "Vytvořit řadu"
+msgstr "Z nynější řady"
 
 #: editorwindow.py:218
-#, fuzzy
 msgid "Audio Sync Merge Clip From 2 Media Items "
-msgstr "Vytvořit sloučený záběr seřízení zvuku"
+msgstr "Seřízení zvuku sloučeného záběru ze dvou položek záznamů"
 
 #: editorwindow.py:219
 msgid "Import Media From Project..."
@@ -567,7 +567,7 @@ msgstr "Zavést záznam z projektu..."
 
 #: editorwindow.py:220
 msgid "Import Another Sequence Into This Sequence..."
-msgstr ""
+msgstr "Zavést další řadu do této řady..."
 
 #: editorwindow.py:221 dialogs.py:1280
 msgid "Log Marked Clip Range"
@@ -591,7 +591,7 @@ msgstr "Změnit profil projektu..."
 
 #: editorwindow.py:226 proxyediting.py:218
 msgid "Proxy Manager"
-msgstr "Správce proxy"
+msgstr "Správce náhradních záznamů"
 
 #: editorwindow.py:227
 msgid "Project Info"
@@ -857,18 +857,16 @@ msgid "No editable parameters"
 msgstr "Žádné upravitelné parametry"
 
 #: compositeeditor.py:60
-#, fuzzy
 msgid "Add Fade In"
-msgstr "Přidat prolínání"
+msgstr "Přidat postupné zesílení (postupný náběh)"
 
 #: compositeeditor.py:62
-#, fuzzy
 msgid "Add Fade Out"
-msgstr "Do ztracena"
+msgstr "Přidat postupné zeslabení (do ztracena)"
 
 #: compositeeditor.py:73 render.py:188
 msgid "Reset"
-msgstr "Výchozí"
+msgstr "Vrátit na výchozí"
 
 #: compositeeditor.py:77 compositeeditor.py:186
 msgid "No Compositor"
@@ -1423,7 +1421,7 @@ msgstr "První snímek"
 
 #: dialogs.py:1134
 msgid "Frames per Source Image:"
-msgstr "Snímků na vteřinu zdrojový obraz:"
+msgstr "Snímků na zdrojový obraz:"
 
 #: dialogs.py:1149
 msgid "Export EDL"
@@ -1442,13 +1440,12 @@ msgid "Add Fade"
 msgstr "Přidat prolínání"
 
 #: dialogs.py:1197
-#, fuzzy
 msgid "Shortcuts Presets:"
-msgstr "Soubor s klávesovými zkratkami"
+msgstr "Přednastavení klávesových zkratek:"
 
 #: dialogs.py:1206
 msgid "Diffence to 'Flowblade Default' Presets:"
-msgstr ""
+msgstr "Ochrana výchozího přednastavení Flowblade:"
 
 #: dialogs.py:1271
 msgid "Control + N"
@@ -1608,12 +1605,11 @@ msgstr "Přehrávání"
 
 #: dialogs.py:1333
 msgid "Keypad 1-7"
-msgstr ""
+msgstr "Tlačítkový ovladač (číselná klávesnice) 1-7"
 
 #: dialogs.py:1333
-#, fuzzy
 msgid "Same as 1-7"
-msgstr "Uloženo jako "
+msgstr "Stejné jako 1-7"
 
 #: dialogs.py:1334
 msgid "R"
@@ -1792,13 +1788,12 @@ msgid "Set Group Defaults"
 msgstr "Nastavit výchozí pro skupiny"
 
 #: dialogs.py:1595
-#, fuzzy
 msgid "Dissolve, Blend"
-msgstr "Prolínačka"
+msgstr "Prolínačka, přechod"
 
 #: dialogs.py:1596
 msgid "Affine Blend,  Picture-In-Picture, Region"
-msgstr ""
+msgstr "Afinní smíchání, obraz v obrazu, oblast"
 
 #: dialogs.py:1601
 msgid "Compositor Auto Fades Group"
@@ -1822,31 +1817,28 @@ msgid "Group Auto Fades"
 msgstr "Seskupit automatická prolínání"
 
 #: dialogs.py:1702
-#, fuzzy
 msgid "Timeline Audio Sync"
-msgstr "Seřízení zvuku záznamu"
+msgstr "Seřízení zvuku na časové ose"
 
 #: dialogs.py:1705
-#, fuzzy
 msgid "Do Audio Sync Move Edit"
-msgstr "Vytvořit sloučený záběr seřízení zvuku"
+msgstr "Udělat úpravu posunu seřízení zvuku"
 
 #: dialogs.py:1707
 msgid "<b>Audio Sync Offset</b> between clips media is "
-msgstr ""
+msgstr "<b>Posunu seřízení zvuku</b> mezi záznamy záběrů je "
 
 #: dialogs.py:1707 dialogs.py:1709 dialogs.py:1712
-#, fuzzy
 msgid " frames."
-msgstr "snímky"
+msgstr " snímků."
 
 #: dialogs.py:1709
 msgid "<b>Timeline Media Offset</b> between clips is "
-msgstr ""
+msgstr "<b>Posun záznamů na časové ose</b> mezi záběry je "
 
 #: dialogs.py:1712
 msgid "To audio sync clips you need move action origin clip by "
-msgstr ""
+msgstr "Pro seřízení zvuku záběrů potřebujete posunout původní záběr dění o "
 
 #: editevent.py:227
 msgid "Can't put an audio clip on a video track."
@@ -1965,9 +1957,8 @@ msgid "Clear Waveform"
 msgstr "Smazat časový průběh zvukového signálu"
 
 #: guicomponents.py:1171
-#, fuzzy
 msgid "Select Clip to Audio Sync With..."
-msgstr "Rozdělit zvuk seřízeně"
+msgstr "Vybrat záběr pro seřízení zvuku s..."
 
 #: guicomponents.py:1178 guicomponents.py:1280
 msgid "Clear Sync Relation"
@@ -1975,7 +1966,7 @@ msgstr "Smazat seřizovací vztah"
 
 #: guicomponents.py:1180 guicomponents.py:1282
 msgid "Select Sync Parent Clip..."
-msgstr "Vybrat seřizovací rodičovský záběr..."
+msgstr "Vybrat rodičovský záběr pro seřízení..."
 
 #: guicomponents.py:1208 guicomponents.py:1306
 msgid "Clip Info"
@@ -2282,7 +2273,7 @@ msgstr "Zobrazit náhledy na záznamy se záběry"
 
 #: guicomponents.py:2266
 msgid "Show Move/Trim Info Overlay"
-msgstr ""
+msgstr "Ukázat překrytí údajem o posunutí/zkrácení"
 
 #: guicomponents.py:2275
 msgid "Snapping On"
@@ -2739,9 +2730,8 @@ msgid "Rendering Reverse Clip"
 msgstr "Dělá se obrácený záběr"
 
 #: render.py:544
-#, fuzzy
 msgid "<b>Motion Clip File: </b>"
-msgstr "<b>Výstupní soubor: </b>"
+msgstr "<b>Soubor s pohybovým záběrem: </b>"
 
 #: render.py:593
 msgid "Rendering Transition Clip"
@@ -2749,11 +2739,11 @@ msgstr "Dělá se přechodový záběr"
 
 #: syncsplitevent.py:136
 msgid "Sync parent clips must be on track V1"
-msgstr "Seřizovací rodičovské záběry musí být na stopě V1"
+msgstr "Rodičovské záběry pro seřízení musí být na stopě V1"
 
 #: syncsplitevent.py:137
 msgid "Selected sync parent clip is on track "
-msgstr "Vybraný seřizovací rodičovský záběr je na stopě "
+msgstr "Vybraný rodičovský záběr pro seřízení je na stopě "
 
 #: syncsplitevent.py:137
 msgid ""
@@ -4034,14 +4024,12 @@ msgid "Wipe Amount"
 msgstr "Množství stírání"
 
 #: translations.py:537
-#, fuzzy
 msgid "Fade Out Length"
-msgstr "Do ztracena"
+msgstr "Délka postupného zeslabení (do ztracena)"
 
 #: translations.py:538
-#, fuzzy
 msgid "Fade In Length"
-msgstr "Postupný náběh"
+msgstr "Délka postupného zesílení (postupný náběh)"
 
 #: translations.py:542 translations.py:548
 msgid "Shave"
@@ -4726,29 +4714,24 @@ msgid "Only single instance of Titler can be opened."
 msgstr "Lze otevřít pouze jednu instanci popisovače."
 
 #: tools/titler.py:334
-#, fuzzy
 msgid "<b>Outline</b>"
-msgstr "<b>Výstupní soubor: </b>"
+msgstr "<b>Obrys </b>"
 
 #: tools/titler.py:363
-#, fuzzy
 msgid "<b>Shadow</b>"
-msgstr "Stín"
+msgstr "<b>Stín</b>"
 
 #: tools/titler.py:365
-#, fuzzy
 msgid "Opacity:"
-msgstr "Neprůhlednost"
+msgstr "Neprůhlednost:"
 
 #: tools/titler.py:366
-#, fuzzy
 msgid "X Off:"
-msgstr "X vypnuto"
+msgstr "X vypnuto:"
 
 #: tools/titler.py:367
-#, fuzzy
 msgid "Y Off:"
-msgstr "Y vypnuto"
+msgstr "Y vypnuto:"
 
 #: tools/titler.py:413
 msgid "Load Layers"
@@ -5326,11 +5309,11 @@ msgstr "Zobrazit úrovně na požádání"
 
 #: preferenceswindow.py:349
 msgid "Normal - 50px, 25px"
-msgstr ""
+msgstr "Obvyklá - 50 px, 25 px"
 
 #: preferenceswindow.py:350
 msgid "Double for HiDPI - 100px, 50px"
-msgstr ""
+msgstr "Dvojitá pro HiDPI - 100 px, 50 px"
 
 #: preferenceswindow.py:354
 msgid "Application window mode:"
@@ -5361,9 +5344,8 @@ msgid "Default audio levels display:"
 msgstr "Výchozí zobrazení úrovní hlasitosti:"
 
 #: preferenceswindow.py:361
-#, fuzzy
 msgid "Tracks Heights:"
-msgstr "Normální výška"
+msgstr "Výška stop:"
 
 #: preferenceswindow.py:364
 msgid "Show Full File names"
@@ -5374,6 +5356,8 @@ msgid ""
 "Changing these values may cause problems with playback and rendering.\n"
 "The safe values are Render Threads:1, Allow Frame Dropping: No."
 msgstr ""
+"Změna těchto hodnot může vést k potížím s přehráváním a zpracováním.\n"
+"Bezpečné hodnoty jsou zpracování vláken: 1, povolení zahazování snímků: ne."
 
 #: preferenceswindow.py:406
 msgid "Between 1 and the number of CPU Cores"
@@ -5621,7 +5605,7 @@ msgstr "Stiskněte tlačítko pro změnu režimu"
 
 #: proxyediting.py:284
 msgid "Use Proxy Media"
-msgstr "Použít náhradní multimédia"
+msgstr "Použít náhradní záznam"
 
 #: proxyediting.py:285
 msgid "Use Original Media"
@@ -5633,7 +5617,7 @@ msgstr "Náhradní režim projektu"
 
 #: proxyediting.py:332
 msgid "Using Proxy Media"
-msgstr "Používají se náhradní multimédia"
+msgstr "Používá se náhradní záznam"
 
 #: proxyediting.py:334
 msgid "Using Original Media"
@@ -5718,7 +5702,7 @@ msgstr "Vybrat činnost zpracování: "
 
 #: proxyediting.py:680
 msgid "Converting Project to Use Proxy Media"
-msgstr "Projekt se převádí, aby používal náhradní multimédia"
+msgstr "Projekt se převádí, aby používal náhradní záznam"
 
 #: proxyediting.py:693
 msgid "Converting to Use Original Media"
@@ -6224,23 +6208,23 @@ msgstr ""
 "prolínání při vytvoření skladby."
 
 #: audiosync.py:171
-#, fuzzy
 msgid "Audio Sync parent clips must be on differnt tracks "
-msgstr "Seřizovací rodičovské záběry musí být na stopě V1"
+msgstr "Rodičovské záběry pro seřízení zvuku musí být na různých stopách"
 
 #: audiosync.py:172
 msgid ""
 "Selected audio sync clip is on the sametrack as the sync action origin clip."
 msgstr ""
+"Vybraný záběr pro seřízení zvuku je na stejné stopě jako původní záběr pro"
+" seřízení dění."
 
 #: audiosync.py:206
 msgid "Audio sync move not possible"
-msgstr ""
+msgstr "Posun seřízení zvuku není možný"
 
 #: audiosync.py:207
-#, fuzzy
 msgid "Clip starts "
-msgstr "Záběr je příliš krátký!"
+msgstr "Záběr začíná "
 
 #: audiosync.py:207
 msgid ""
@@ -6248,49 +6232,58 @@ msgid ""
 "to be in audio sync with the specified clip.\n"
 "\n"
 msgstr ""
+" snímků před začátkem časové osy, pokud je posunut,\n"
+"aby byl v seřízení zvuku s určeným záběrem.\n"
+"\n"
 
 #: audiosync.py:208
 msgid ""
 "You need to move forward or shorten the clips in question to make the "
 "operation succeed."
 msgstr ""
+"Musíte provést posunutí dopředu nebo dotčené záběry zkrátit, "
+"aby operace uspěla."
 
 #: audiosync.py:275
 msgid "SYNC_CLIP_"
-msgstr ""
+msgstr "SEŘÍDIT_ZÁBĚR_"
 
 #: audiosync.py:276
-#, fuzzy
 msgid "Save Sync Compound Clip XML"
-msgstr "Uložit řadu složeného záběru"
+msgstr "Uložit XML se seřízením složeného záběru"
 
 #: diskcachemanagement.py:44
 msgid "Destroy data"
-msgstr ""
+msgstr "Zničit data"
 
 #: diskcachemanagement.py:68
 msgid ""
 "Destroying this data may change contents of existing\n"
 "projects and make some projects unopenable."
 msgstr ""
+"Zničení těchto dat může změnit obsah stávajících\n"
+"projektů a z některých projektů učinit projekt, které "
+"nepůjdou otevřít."
 
 #: diskcachemanagement.py:98
 msgid " MB"
-msgstr ""
+msgstr " MB"
 
 #: diskcachemanagement.py:100
 msgid " kB"
-msgstr ""
+msgstr " KB"
 
 #: diskcachemanagement.py:110
 msgid "Confirm Destroying Cached Data!"
-msgstr ""
+msgstr "Potvrdit zničení dat uložených do vyrovnávací paměti!"
 
 #: diskcachemanagement.py:112
 msgid ""
 "Destroying this data may <b>change contents</b> of existing\n"
 "projects or <b>make some projects unopenable!</b>"
 msgstr ""
+"Zničení těchto dat může vést ke <b>změně obsahu</b> stávajících\n"
+"projektů nebo <b>některé projekty udělat neotevíratelnými!</b>"
 
 #: diskcachemanagement.py:114
 msgid ""
@@ -6298,57 +6291,54 @@ msgid ""
 "projects\n"
 "so that they can be opened later before destroying this data."
 msgstr ""
+"Můžete použít funkci Soubor → Uložit snímek se zálohou... "
+"k zazálohování projektů,\n"
+"takže je půjde později otevřít, předtím než se provede zničení těchto dat."
 
 #: diskcachemanagement.py:116
 msgid "Destroying this data may require parts of it to be recreated later."
 msgstr ""
+"Zničení těchto dat může vyžadovat pozdější znovuvytvoření jejich částí."
 
 #: diskcachemanagement.py:167
-#, fuzzy
 msgid "Audio Levels Data"
-msgstr "Zobrazit úroveň hlasitosti"
+msgstr "Údaje o úrovních zvuku"
 
 #: diskcachemanagement.py:168
 msgid "G'Mic Tool Session Data"
-msgstr ""
+msgstr "Údaje o sezení nástroje G'Mic"
 
 #: diskcachemanagement.py:169
 msgid "Natron Clip Export Data"
-msgstr ""
+msgstr "Údaje o vyvedení záběru Natronem"
 
 #: diskcachemanagement.py:170
-#, fuzzy
 msgid "Rendered Files"
-msgstr "Zpracovat soubor"
+msgstr "Zpracované soubory"
 
 #: diskcachemanagement.py:171
-#, fuzzy
 msgid "Thumbnails"
-msgstr "Složka pro náhledy:"
+msgstr "Náhledy"
 
 #: diskcachemanagement.py:172
-#, fuzzy
 msgid "User Created Custom Profiles"
-msgstr "Vytvořit uživatelský profil"
+msgstr "Uživatelem vytvořené vlastní profily"
 
 #: toolsintegration.py:132
 msgid "Natron"
-msgstr ""
+msgstr "Natron"
 
 #: toolsintegration.py:161
-#, fuzzy
 msgid "Slow/Fast Motion"
-msgstr "Udělat soubor se zpomaleným/zrychleným pohybem"
+msgstr "Zpomalený/Zrychlený pohyb"
 
 #: toolsintegration.py:174
-#, fuzzy
 msgid "Reverse"
-msgstr "Délka dozvuku"
+msgstr "Puštění pozpátku"
 
 #: projectmediaimport.py:143
-#, fuzzy
 msgid "Loading Media Import Project"
-msgstr "Načítání projektu"
+msgstr "Nahrávání projektu se zavedením záznamu"
 
 #~ msgid "Outline"
 #~ msgstr "Obrys"
