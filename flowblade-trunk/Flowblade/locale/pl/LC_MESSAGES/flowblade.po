@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-29 19:00+0300\n"
+"POT-Creation-Date: 2017-09-04 12:55+0300\n"
 "PO-Revision-Date: 2017-05-27 08:50+0200\n"
 "Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -549,17 +549,17 @@ msgstr "Utwórz klip złożony"
 #: editorwindow.py:216
 #, fuzzy
 msgid "From Selected Clips"
-msgstr "Z następnego klipu"
+msgstr "Z wybranego klipu"
 
 #: editorwindow.py:217
 #, fuzzy
 msgid "From Current Sequence"
-msgstr "Utwórz sekwencję"
+msgstr "Z bieżącej sekwencji"
 
 #: editorwindow.py:218
 #, fuzzy
 msgid "Audio Sync Merge Clip From 2 Media Items "
-msgstr "Utwórz klip scalony synchronizacji dźwięku"
+msgstr "Scalony klip synchronizacji dźwieku z 2 elementów multimedialnych"
 
 #: editorwindow.py:219
 msgid "Import Media From Project..."
@@ -567,7 +567,7 @@ msgstr "Importowanie multimediów z projektu..."
 
 #: editorwindow.py:220
 msgid "Import Another Sequence Into This Sequence..."
-msgstr ""
+msgstr "Importuj inną sekwencję do tej sekwencji"
 
 #: editorwindow.py:221 dialogs.py:1280
 msgid "Log Marked Clip Range"
@@ -861,12 +861,12 @@ msgstr "Brak edytowalnych parametrów"
 #: compositeeditor.py:60
 #, fuzzy
 msgid "Add Fade In"
-msgstr "Dodaj zanikanie"
+msgstr "Dodaj płynne wyłanianie"
 
 #: compositeeditor.py:62
 #, fuzzy
 msgid "Add Fade Out"
-msgstr "Płynne zanikanie"
+msgstr "Dodaj płynne zanikanie"
 
 #: compositeeditor.py:73 render.py:188
 msgid "Reset"
@@ -954,7 +954,7 @@ msgstr "Nazwa projektu:"
 msgid "New Project File"
 msgstr "Nowy plik projektu"
 
-#: dialogs.py:178 dialogs.py:1507 tools/batchrendering.py:1242
+#: dialogs.py:178 dialogs.py:1507 tools/batchrendering.py:1271
 msgid "File:"
 msgstr "Plik:"
 
@@ -1226,7 +1226,7 @@ msgstr ""
 
 #: dialogs.py:806
 msgid "Force Delete"
-msgstr "Wymuszenie usunięcie"
+msgstr "Wymuszenie usunięcia"
 
 #: dialogs.py:817
 msgid "Open last autosave?"
@@ -4730,7 +4730,7 @@ msgstr "Można otworzyć tylko jedną instancję edytora tytułów"
 #: tools/titler.py:334
 #, fuzzy
 msgid "<b>Outline</b>"
-msgstr "<b>Plik wyjściowy: </b>"
+msgstr "<b>Obrys </b>"
 
 #: tools/titler.py:363
 #, fuzzy
@@ -5454,7 +5454,7 @@ msgstr "Nieskolejkowany"
 msgid "Aborted"
 msgstr "Przerwano"
 
-#: tools/batchrendering.py:624 tools/batchrendering.py:1241
+#: tools/batchrendering.py:624 tools/batchrendering.py:1270
 msgid "Estimated Left:"
 msgstr "Szacunkowy pozostały czas:"
 
@@ -5462,7 +5462,7 @@ msgstr "Szacunkowy pozostały czas:"
 msgid "Current Render:"
 msgstr "Aktualnie renderowany:"
 
-#: tools/batchrendering.py:626 tools/batchrendering.py:1243 proxyediting.py:366
+#: tools/batchrendering.py:626 tools/batchrendering.py:1272 proxyediting.py:366
 msgid "Elapsed:"
 msgstr "Upłynąło:"
 
@@ -5486,7 +5486,7 @@ msgstr "Usuń zakończone"
 msgid "Reload Queue"
 msgstr "Przeładuj kolejkę"
 
-#: tools/batchrendering.py:669 tools/batchrendering.py:1253
+#: tools/batchrendering.py:669 tools/batchrendering.py:1282
 msgid "Stop Render"
 msgstr "Zatrzymaj renderowanie"
 
@@ -5585,7 +5585,7 @@ msgstr "Właściwości renderowania"
 msgid "Save Item Project As..."
 msgstr "Zapisz element projektu jako..."
 
-#: tools/batchrendering.py:1278
+#: tools/batchrendering.py:1307
 msgid "Flowblade Timeline Render"
 msgstr "Renderowanie osi czasu Flowblade'a"
 

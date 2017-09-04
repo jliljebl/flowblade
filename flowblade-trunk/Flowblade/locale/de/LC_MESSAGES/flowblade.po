@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-29 19:00+0300\n"
+"POT-Creation-Date: 2017-09-04 12:55+0300\n"
 "PO-Revision-Date: 2014-11-23 14:22+0100\n"
 "Last-Translator: Mario Dejanovic <mario.dejanovic@gmx.at>\n"
 "Language-Team: German\n"
@@ -973,7 +973,7 @@ msgstr "Projekt-Name:"
 msgid "New Project File"
 msgstr "Neues Projekt"
 
-#: dialogs.py:178 dialogs.py:1507 tools/batchrendering.py:1242
+#: dialogs.py:178 dialogs.py:1507 tools/batchrendering.py:1271
 msgid "File:"
 msgstr "Datei:"
 
@@ -5650,7 +5650,7 @@ msgstr "Entfernt"
 msgid "Aborted"
 msgstr "Abgebrochen"
 
-#: tools/batchrendering.py:624 tools/batchrendering.py:1241
+#: tools/batchrendering.py:624 tools/batchrendering.py:1270
 msgid "Estimated Left:"
 msgstr "Verbleibend:"
 
@@ -5659,7 +5659,7 @@ msgid "Current Render:"
 msgstr "Rendere gerade:"
 
 # ???
-#: tools/batchrendering.py:626 tools/batchrendering.py:1243 proxyediting.py:366
+#: tools/batchrendering.py:626 tools/batchrendering.py:1272 proxyediting.py:366
 msgid "Elapsed:"
 msgstr "Verstrichen:"
 
@@ -5685,7 +5685,7 @@ msgstr "Beendete löschen"
 msgid "Reload Queue"
 msgstr "Warteschlange neu laden"
 
-#: tools/batchrendering.py:669 tools/batchrendering.py:1253
+#: tools/batchrendering.py:669 tools/batchrendering.py:1282
 msgid "Stop Render"
 msgstr "Rendern stoppen"
 
@@ -5786,7 +5786,7 @@ msgid "Save Item Project As..."
 msgstr "Sichere Element-Projekt als..."
 
 # ???
-#: tools/batchrendering.py:1278
+#: tools/batchrendering.py:1307
 msgid "Flowblade Timeline Render"
 msgstr "Flowblade Zeitlinien-Rendern"
 

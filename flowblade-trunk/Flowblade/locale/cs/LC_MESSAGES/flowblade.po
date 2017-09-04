@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-29 19:00+0300\n"
+"POT-Creation-Date: 2017-09-04 12:55+0300\n"
 "PO-Revision-Date: 2017-08-31 20:56+0100\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -178,10 +178,10 @@ msgid ""
 "\n"
 "Select 'Confirm' to render from proxy media anyway."
 msgstr ""
-"Zpracování z náhradního záznamu vytvoří horší jakost než zpracování "
-"z původního záznamu.\n"
-"Převést za použití původního záznamu ve správci  náhradních záznamů pro lepší"
-" jakost.\n"
+"Zpracování z náhradního záznamu vytvoří horší jakost než zpracování z "
+"původního záznamu.\n"
+"Převést za použití původního záznamu ve správci  náhradních záznamů pro "
+"lepší jakost.\n"
 "\n"
 "Vyberte Potvrdit, aby se přesto provedlo zpracování z náhradního záznamu."
 
@@ -950,7 +950,7 @@ msgstr "Název projektu:"
 msgid "New Project File"
 msgstr "Nový soubor s projektem"
 
-#: dialogs.py:178 dialogs.py:1507 tools/batchrendering.py:1242
+#: dialogs.py:178 dialogs.py:1507 tools/batchrendering.py:1271
 msgid "File:"
 msgstr "Soubor:"
 
@@ -5432,7 +5432,7 @@ msgstr "Vyřazeno"
 msgid "Aborted"
 msgstr "Zrušeno"
 
-#: tools/batchrendering.py:624 tools/batchrendering.py:1241
+#: tools/batchrendering.py:624 tools/batchrendering.py:1270
 msgid "Estimated Left:"
 msgstr "Zbývá odhadem:"
 
@@ -5440,7 +5440,7 @@ msgstr "Zbývá odhadem:"
 msgid "Current Render:"
 msgstr "Nyní se zpracovává:"
 
-#: tools/batchrendering.py:626 tools/batchrendering.py:1243 proxyediting.py:366
+#: tools/batchrendering.py:626 tools/batchrendering.py:1272 proxyediting.py:366
 msgid "Elapsed:"
 msgstr "Uplynulo:"
 
@@ -5464,7 +5464,7 @@ msgstr "Smazat dokončené"
 msgid "Reload Queue"
 msgstr "Nahrát řadu znovu"
 
-#: tools/batchrendering.py:669 tools/batchrendering.py:1253
+#: tools/batchrendering.py:669 tools/batchrendering.py:1282
 msgid "Stop Render"
 msgstr "Zastavit zpracování"
 
@@ -5563,7 +5563,7 @@ msgstr "Vlastnosti zpracování"
 msgid "Save Item Project As..."
 msgstr "Uložit projekt položky jako..."
 
-#: tools/batchrendering.py:1278
+#: tools/batchrendering.py:1307
 msgid "Flowblade Timeline Render"
 msgstr "Zpracování časové osy"
 
@@ -6215,8 +6215,8 @@ msgstr "Rodičovské záběry pro seřízení zvuku musí být na různých stop
 msgid ""
 "Selected audio sync clip is on the sametrack as the sync action origin clip."
 msgstr ""
-"Vybraný záběr pro seřízení zvuku je na stejné stopě jako původní záběr pro"
-" seřízení dění."
+"Vybraný záběr pro seřízení zvuku je na stejné stopě jako původní záběr pro "
+"seřízení dění."
 
 #: audiosync.py:206
 msgid "Audio sync move not possible"
@@ -6241,8 +6241,8 @@ msgid ""
 "You need to move forward or shorten the clips in question to make the "
 "operation succeed."
 msgstr ""
-"Musíte provést posunutí dopředu nebo dotčené záběry zkrátit, "
-"aby operace uspěla."
+"Musíte provést posunutí dopředu nebo dotčené záběry zkrátit, aby operace "
+"uspěla."
 
 #: audiosync.py:275
 msgid "SYNC_CLIP_"
@@ -6262,8 +6262,7 @@ msgid ""
 "projects and make some projects unopenable."
 msgstr ""
 "Zničení těchto dat může změnit obsah stávajících\n"
-"projektů a z některých projektů učinit projekt, které "
-"nepůjdou otevřít."
+"projektů a z některých projektů učinit projekt, které nepůjdou otevřít."
 
 #: diskcachemanagement.py:98
 msgid " MB"
@@ -6291,8 +6290,8 @@ msgid ""
 "projects\n"
 "so that they can be opened later before destroying this data."
 msgstr ""
-"Můžete použít funkci Soubor → Uložit snímek se zálohou... "
-"k zazálohování projektů,\n"
+"Můžete použít funkci Soubor → Uložit snímek se zálohou... k zazálohování "
+"projektů,\n"
 "takže je půjde později otevřít, předtím než se provede zničení těchto dat."
 
 #: diskcachemanagement.py:116

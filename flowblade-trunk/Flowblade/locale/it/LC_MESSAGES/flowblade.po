@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Floblade Italian Translation 0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-29 19:00+0300\n"
+"POT-Creation-Date: 2017-09-04 12:55+0300\n"
 "PO-Revision-Date: 2014-09-15 23:42+0100\n"
 "Last-Translator: Massimo Stella <info@massimostella.it>\n"
 "Language-Team: Italiano\n"
@@ -971,7 +971,7 @@ msgstr "Esporta File"
 msgid "New Project File"
 msgstr "Nuovo Progetto"
 
-#: dialogs.py:178 dialogs.py:1507 tools/batchrendering.py:1242
+#: dialogs.py:178 dialogs.py:1507 tools/batchrendering.py:1271
 #, fuzzy
 msgid "File:"
 msgstr "File: "
@@ -5592,7 +5592,7 @@ msgstr "Non in coda"
 msgid "Aborted"
 msgstr "Interrotto"
 
-#: tools/batchrendering.py:624 tools/batchrendering.py:1241
+#: tools/batchrendering.py:624 tools/batchrendering.py:1270
 msgid "Estimated Left:"
 msgstr "Tempo restante:"
 
@@ -5600,7 +5600,7 @@ msgstr "Tempo restante:"
 msgid "Current Render:"
 msgstr "Calcolo in corso:"
 
-#: tools/batchrendering.py:626 tools/batchrendering.py:1243 proxyediting.py:366
+#: tools/batchrendering.py:626 tools/batchrendering.py:1272 proxyediting.py:366
 msgid "Elapsed:"
 msgstr "Trascorso:"
 
@@ -5624,7 +5624,7 @@ msgstr "Elimina render completati"
 msgid "Reload Queue"
 msgstr "Ricarica la Coda"
 
-#: tools/batchrendering.py:669 tools/batchrendering.py:1253
+#: tools/batchrendering.py:669 tools/batchrendering.py:1282
 msgid "Stop Render"
 msgstr "Ferma il Calcolo"
 
@@ -5723,7 +5723,7 @@ msgstr "Proprietà del Render"
 msgid "Save Item Project As..."
 msgstr "Salva il Progetto con Nome..."
 
-#: tools/batchrendering.py:1278
+#: tools/batchrendering.py:1307
 #, fuzzy
 msgid "Flowblade Timeline Render"
 msgstr "Batch Render di Flowblade"

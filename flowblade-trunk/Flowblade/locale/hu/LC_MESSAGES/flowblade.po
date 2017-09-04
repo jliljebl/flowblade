@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-29 19:00+0300\n"
+"POT-Creation-Date: 2017-09-04 12:55+0300\n"
 "PO-Revision-Date: 2017-03-24 08:40+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
@@ -956,7 +956,7 @@ msgstr "Projekt neve:"
 msgid "New Project File"
 msgstr "Új projekt fájl"
 
-#: dialogs.py:178 dialogs.py:1507 tools/batchrendering.py:1242
+#: dialogs.py:178 dialogs.py:1507 tools/batchrendering.py:1271
 msgid "File:"
 msgstr "Fájl:"
 
@@ -5453,7 +5453,7 @@ msgstr "Várólistáról levéve"
 msgid "Aborted"
 msgstr "Megszakítva"
 
-#: tools/batchrendering.py:624 tools/batchrendering.py:1241
+#: tools/batchrendering.py:624 tools/batchrendering.py:1270
 msgid "Estimated Left:"
 msgstr "Becsült hátralévő idő:"
 
@@ -5461,7 +5461,7 @@ msgstr "Becsült hátralévő idő:"
 msgid "Current Render:"
 msgstr "Jelenleg renderelve:"
 
-#: tools/batchrendering.py:626 tools/batchrendering.py:1243 proxyediting.py:366
+#: tools/batchrendering.py:626 tools/batchrendering.py:1272 proxyediting.py:366
 msgid "Elapsed:"
 msgstr "Eltelt:"
 
@@ -5485,7 +5485,7 @@ msgstr "Elkészültek törlése"
 msgid "Reload Queue"
 msgstr "Várólista újratöltése"
 
-#: tools/batchrendering.py:669 tools/batchrendering.py:1253
+#: tools/batchrendering.py:669 tools/batchrendering.py:1282
 msgid "Stop Render"
 msgstr "Renderelés leállítása"
 
@@ -5584,7 +5584,7 @@ msgstr "Renderelés tulajdonságai"
 msgid "Save Item Project As..."
 msgstr "Projekt mentése másként..."
 
-#: tools/batchrendering.py:1278
+#: tools/batchrendering.py:1307
 msgid "Flowblade Timeline Render"
 msgstr "Flowblade idővonal renderelés"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-29 19:00+0300\n"
+"POT-Creation-Date: 2017-09-04 12:55+0300\n"
 "PO-Revision-Date: 2011-12-13 23:55+0200\n"
 "Last-Translator: Janne Liljeblad <janne@janne-kx557aa-uuw-a6521-sc>\n"
 "Language-Team: Finnish\n"
@@ -953,7 +953,7 @@ msgstr "Projekti tiedoston nimi:"
 msgid "New Project File"
 msgstr "Avaa projektitiedosto"
 
-#: dialogs.py:178 dialogs.py:1507 tools/batchrendering.py:1242
+#: dialogs.py:178 dialogs.py:1507 tools/batchrendering.py:1271
 msgid "File:"
 msgstr "Tiedosto:"
 
@@ -5452,7 +5452,7 @@ msgstr "Poissa jonosta"
 msgid "Aborted"
 msgstr "Pysäytetty"
 
-#: tools/batchrendering.py:624 tools/batchrendering.py:1241
+#: tools/batchrendering.py:624 tools/batchrendering.py:1270
 msgid "Estimated Left:"
 msgstr "Arvioitu aika:"
 
@@ -5460,7 +5460,7 @@ msgstr "Arvioitu aika:"
 msgid "Current Render:"
 msgstr "Tämänhetkinen renderöinti:"
 
-#: tools/batchrendering.py:626 tools/batchrendering.py:1243 proxyediting.py:366
+#: tools/batchrendering.py:626 tools/batchrendering.py:1272 proxyediting.py:366
 msgid "Elapsed:"
 msgstr "Kulunut:"
 
@@ -5484,7 +5484,7 @@ msgstr "Poista valmiit"
 msgid "Reload Queue"
 msgstr "Virkistä jono"
 
-#: tools/batchrendering.py:669 tools/batchrendering.py:1253
+#: tools/batchrendering.py:669 tools/batchrendering.py:1282
 msgid "Stop Render"
 msgstr "Pysäytä"
 
@@ -5580,7 +5580,7 @@ msgstr "Rederöinti ominaisuudet"
 msgid "Save Item Project As..."
 msgstr "Tallenna projekti nimellä..."
 
-#: tools/batchrendering.py:1278
+#: tools/batchrendering.py:1307
 msgid "Flowblade Timeline Render"
 msgstr "Flowblade Renderöinti"
 

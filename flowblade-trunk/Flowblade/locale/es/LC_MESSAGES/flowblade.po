@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-29 19:00+0300\n"
+"POT-Creation-Date: 2017-09-04 12:55+0300\n"
 "PO-Revision-Date: 2014-02-21 12:08+0200\n"
 "Last-Translator: David Gámiz Jiménez <david.gamiz@gmail.com>\n"
 "Language-Team: David Gamiz Jimenez\n"
@@ -977,7 +977,7 @@ msgstr "Exportar archivos"
 msgid "New Project File"
 msgstr "Nuevo Proyecto"
 
-#: dialogs.py:178 dialogs.py:1507 tools/batchrendering.py:1242
+#: dialogs.py:178 dialogs.py:1507 tools/batchrendering.py:1271
 #, fuzzy
 msgid "File:"
 msgstr "Archivo: "
@@ -5613,7 +5613,7 @@ msgstr "No en cola"
 msgid "Aborted"
 msgstr "Cancelado"
 
-#: tools/batchrendering.py:624 tools/batchrendering.py:1241
+#: tools/batchrendering.py:624 tools/batchrendering.py:1270
 msgid "Estimated Left:"
 msgstr "Izquierda estimado:"
 
@@ -5621,7 +5621,7 @@ msgstr "Izquierda estimado:"
 msgid "Current Render:"
 msgstr "Procesamiento actual:"
 
-#: tools/batchrendering.py:626 tools/batchrendering.py:1243 proxyediting.py:366
+#: tools/batchrendering.py:626 tools/batchrendering.py:1272 proxyediting.py:366
 msgid "Elapsed:"
 msgstr "Transcurrido:"
 
@@ -5645,7 +5645,7 @@ msgstr "Eliminar Finalizado"
 msgid "Reload Queue"
 msgstr "Actualizar Queue"
 
-#: tools/batchrendering.py:669 tools/batchrendering.py:1253
+#: tools/batchrendering.py:669 tools/batchrendering.py:1282
 msgid "Stop Render"
 msgstr "Deje de Render"
 
@@ -5742,7 +5742,7 @@ msgstr "Render Propiedades"
 msgid "Save Item Project As..."
 msgstr "Guardar elemento de proyecto como ..."
 
-#: tools/batchrendering.py:1278
+#: tools/batchrendering.py:1307
 #, fuzzy
 msgid "Flowblade Timeline Render"
 msgstr "Lotes Flowblade Render"
