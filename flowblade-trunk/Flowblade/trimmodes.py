@@ -1192,14 +1192,14 @@ def _get_two_roll_first_and_last():
     return (first, last)
 
 #---------------------------------------- SLIP ROLL TRIM EVENTS
-def set_slide_mode(track, current_frame): # we need to change to to correct one some time
+def set_slide_mode(track, current_frame):
     """
     Sets SLIP tool mode
     """
     if track == None:
         return None
 
-    if current_frame > track.get_length():
+    if current_frame > track.get_length() - 1:
         return False
 
     current_sequence().clear_hidden_track()
@@ -1264,6 +1264,9 @@ def _set_slide_mode_edit_data(track, edit_frame):
     Sets edit mode data used by both trim modes
     """
     index = current_sequence().get_clip_index(track, edit_frame)
+    if index == -1:
+        index = len(track.clips) - 1
+
     clip = track.clips[index]
 
     trim_limits = {}
