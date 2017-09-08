@@ -285,7 +285,7 @@ def get_img_seq_render_consumer(file_path, profile, encoding_option):
         consumer.set("real_time", -1)
     consumer.set("rescale", "bicubic")
     consumer.set("vcodec", str(vcodec))
-    #print "img seq render consumer created, path:" +  str(render_path) #+ ", args: " + args_msg
+
     return consumer
 
 def get_img_seq_render_consumer_codec_ext(file_path, profile, vcodec, ext):
@@ -303,7 +303,7 @@ def get_img_seq_render_consumer_codec_ext(file_path, profile, vcodec, ext):
         consumer.set("real_time", -1)
     consumer.set("rescale", "bicubic")
     consumer.set("vcodec", str(vcodec))
-    #print "img seq render consumer created, path:" +  str(render_path) #+ ", args: " + args_msg
+
     return consumer
     
 def get_mlt_render_consumer(file_path, profile, args_vals_list):

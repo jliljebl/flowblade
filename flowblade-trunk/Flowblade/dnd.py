@@ -46,7 +46,6 @@ MEDIA_ICON_HEIGHT = 15
 
 MEDIA_FILES_DND_TARGET = Gtk.TargetEntry.new('media_file', Gtk.TargetFlags.SAME_APP, 0)
 EFFECTS_DND_TARGET = Gtk.TargetEntry.new('effect', Gtk.TargetFlags.SAME_APP, 0)
-#EFFECTS_STACK_DND_TARGET = Gtk.TargetEntry.new('effectstack', Gtk.TargetFlags.SAME_APP, 0)
 CLIPS_DND_TARGET = Gtk.TargetEntry.new('clip', Gtk.TargetFlags.SAME_APP, 0)
 RANGE_DND_TARGET = Gtk.TargetEntry.new('range', Gtk.TargetFlags.SAME_APP, 0)
 

@@ -19,7 +19,7 @@
 """
 
 """
-Module handles clips compositing gui.
+Module handles Compositors edit panel.
 """
 
 import copy
