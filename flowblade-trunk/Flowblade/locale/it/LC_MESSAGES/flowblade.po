@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Floblade Italian Translation 0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-04 12:55+0300\n"
+"POT-Creation-Date: 2017-09-08 16:02+0300\n"
 "PO-Revision-Date: 2014-09-15 23:42+0100\n"
 "Last-Translator: Massimo Stella <info@massimostella.it>\n"
 "Language-Team: Italiano\n"
@@ -411,11 +411,11 @@ msgstr "Filtri"
 msgid "Add Monitor Clip"
 msgstr "Apri la Clip nel Monitor"
 
-#: editorwindow.py:182
+#: editorwindow.py:182 shortcuts.py:186
 msgid "Append"
 msgstr "Accoda"
 
-#: editorwindow.py:183 guicomponents.py:2413
+#: editorwindow.py:183 guicomponents.py:2413 shortcuts.py:185 shortcuts.py:198
 msgid "Insert"
 msgstr "Inserisci"
 
@@ -427,7 +427,7 @@ msgstr "Sovrascrivi a 3 Punti"
 msgid "Range Overwrite"
 msgstr "Area di Sovrascrittura"
 
-#: editorwindow.py:186
+#: editorwindow.py:186 shortcuts.py:197
 msgid "Cut Clip"
 msgstr "Taglia la Clip"
 
@@ -577,7 +577,7 @@ msgstr ""
 msgid "Import Another Sequence Into This Sequence..."
 msgstr ""
 
-#: editorwindow.py:221 dialogs.py:1280
+#: editorwindow.py:221 dialogs.py:1280 shortcuts.py:190
 msgid "Log Marked Clip Range"
 msgstr "Memorizza l'Area Segnata della Clip"
 
@@ -774,11 +774,11 @@ msgstr "Bicubica"
 msgid "Hyper/Lanczos (best)"
 msgstr ""
 
-#: editorwindow.py:891
+#: editorwindow.py:891 shortcuts.py:206
 msgid "Zoom In"
 msgstr "Zoom in Avanti"
 
-#: editorwindow.py:894
+#: editorwindow.py:894 shortcuts.py:205
 msgid "Zoom Out"
 msgstr "Zoom in Dietro"
 
@@ -844,7 +844,7 @@ msgstr "Aggiungi"
 #: clipeffectseditor.py:237 compositeeditor.py:71 guicomponents.py:1260
 #: guicomponents.py:1326 guicomponents.py:1510 guicomponents.py:1634
 #: guicomponents.py:1685 panels.py:53 panels.py:98 panels.py:116
-#: tools/titler.py:210 tools/batchrendering.py:1030
+#: tools/titler.py:210 tools/batchrendering.py:1030 shortcuts.py:230
 msgid "Delete"
 msgstr "Elimina"
 
@@ -1602,7 +1602,7 @@ msgstr "Freccia Sinistra"
 msgid "Prev Frame Trim Edit"
 msgstr "Fotogramma Precedente"
 
-#: dialogs.py:1302 dialogs.py:1339
+#: dialogs.py:1302 dialogs.py:1339 shortcuts.py:222
 msgid "Right Arrow"
 msgstr "Freccia Destra"
 
@@ -1672,7 +1672,7 @@ msgstr "Salvata con Nome"
 msgid "R"
 msgstr ""
 
-#: dialogs.py:1334
+#: dialogs.py:1334 shortcuts.py:196
 msgid "Trim Tool Ripple Mode On/Off"
 msgstr ""
 
@@ -1686,7 +1686,7 @@ msgstr "Muovi la Sorgente Video a sinistra"
 msgid "Move Source Video Right 1px"
 msgstr "Muovi la Sorgente Video a Destra"
 
-#: dialogs.py:1340
+#: dialogs.py:1340 shortcuts.py:220
 msgid "Up Arrow"
 msgstr "Freccia Su"
 
@@ -1695,7 +1695,7 @@ msgstr "Freccia Su"
 msgid "Move Source Video Up 1px"
 msgstr "Muovi la Sorgente Video in Alto"
 
-#: dialogs.py:1341
+#: dialogs.py:1341 shortcuts.py:219
 msgid "Down Arrow"
 msgstr "Freccia Giù"
 
@@ -1723,7 +1723,7 @@ msgstr "Control + N"
 msgid "Keep Aspect Ratio in Affine Blend scaling"
 msgstr ""
 
-#: dialogs.py:1344
+#: dialogs.py:1344 shortcuts.py:265
 #, fuzzy
 msgid "Shift"
 msgstr "Shift + I"
@@ -2442,27 +2442,27 @@ msgstr ""
 msgid "Set Current Clip Frame Match Frame"
 msgstr ""
 
-#: guicomponents.py:2419 translations.py:562
+#: guicomponents.py:2419 translations.py:562 shortcuts.py:199
 msgid "Overwrite"
 msgstr "Sovrascrivi"
 
-#: guicomponents.py:2425
+#: guicomponents.py:2425 shortcuts.py:200
 msgid "Trim"
 msgstr ""
 
-#: guicomponents.py:2431
+#: guicomponents.py:2431 shortcuts.py:201
 msgid "Roll"
 msgstr ""
 
-#: guicomponents.py:2437
+#: guicomponents.py:2437 shortcuts.py:202
 msgid "Slip"
 msgstr ""
 
-#: guicomponents.py:2443
+#: guicomponents.py:2443 shortcuts.py:203
 msgid "Spacer"
 msgstr "Spaziatore"
 
-#: guicomponents.py:2449 translations.py:546
+#: guicomponents.py:2449 translations.py:546 shortcuts.py:204
 msgid "Box"
 msgstr ""
 
@@ -5788,7 +5788,7 @@ msgstr "Usa Sorgenti"
 msgid "Creating Proxy Files"
 msgstr "Crea File Proxy"
 
-#: proxyediting.py:355 tools/gmic.py:769
+#: proxyediting.py:355 tools/gmic.py:769 shortcuts.py:188
 msgid "Stop"
 msgstr "Stop"
 
@@ -6538,6 +6538,172 @@ msgstr "Durata del riverbero"
 msgid "Loading Media Import Project"
 msgstr "Carica Progetto"
 
+#: shortcuts.py:178
+msgid "Set Mark In"
+msgstr "Inserisci punto di IN"
+
+#: shortcuts.py:179
+msgid "Set Mark Out"
+msgstr "Inserisci punto di OUT"
+
+#: shortcuts.py:180
+msgid "Start / Stop Playback"
+msgstr "Avvia/Arresta la Riproduzione"
+
+#: shortcuts.py:181
+msgid "Prev Edit/Mark"
+msgstr "Taglio/Marcatore Precedente"
+
+#: shortcuts.py:182
+msgid "Next Edit/Mark"
+msgstr "Taglio/Marcatore Successivo"
+
+#: shortcuts.py:183
+msgid "Prev Frame"
+msgstr "Fotogramma Precedente"
+
+#: shortcuts.py:184
+msgid "Next Frame"
+msgstr "Fotogramma Successivo"
+
+#: shortcuts.py:187
+msgid "Backwards Faster"
+msgstr "Indietro Veloce"
+
+#: shortcuts.py:189
+msgid "Forward Faster"
+msgstr "Avanti Veloce"
+
+#: shortcuts.py:191
+#, fuzzy
+msgid "Resync selected Clip or Compositor"
+msgstr "Compositing"
+
+#: shortcuts.py:192
+msgid "Delete Selected Item"
+msgstr "Elimina Oggetti Selezionati"
+
+#: shortcuts.py:193
+msgid "Go To Start"
+msgstr "Vai all'Inizio"
+
+#: shortcuts.py:194
+#, fuzzy
+msgid "Go To End"
+msgstr "Vai a IN"
+
+#: shortcuts.py:195
+#, fuzzy
+msgid "3 Point Overwrite"
+msgstr "Sovrascrivi a 3 Punti"
+
+#: shortcuts.py:207
+msgid "Switch Monitor Source"
+msgstr "Cambia la Sorgente del Monitor"
+
+#: shortcuts.py:208
+msgid "Add Mark"
+msgstr "Aggiungi un Marcatore"
+
+#: shortcuts.py:209
+msgid "Complete Keyboard Trim Edit"
+msgstr ""
+
+#: shortcuts.py:218
+msgid "SPACE"
+msgstr ""
+
+#: shortcuts.py:221
+#, fuzzy
+msgid "Left Arrow"
+msgstr "Freccia Sinistra"
+
+#: shortcuts.py:231
+msgid "HOME"
+msgstr ""
+
+#: shortcuts.py:232
+msgid "END"
+msgstr ""
+
+#: shortcuts.py:237
+msgid "Key Pad END"
+msgstr ""
+
+#: shortcuts.py:238
+msgid "Key Pad 1"
+msgstr ""
+
+#: shortcuts.py:240 shortcuts.py:243 shortcuts.py:244
+msgid "Key Pad 2"
+msgstr ""
+
+#: shortcuts.py:241
+#, fuzzy
+msgid "Key Pad Down Arrow"
+msgstr "Freccia Giù"
+
+#: shortcuts.py:246
+msgid "Key Pad 4"
+msgstr ""
+
+#: shortcuts.py:247
+#, fuzzy
+msgid "Key Pad Left Arrow"
+msgstr "Freccia Sinistra"
+
+#: shortcuts.py:249
+msgid "Key Pad 5"
+msgstr ""
+
+#: shortcuts.py:250
+msgid "Key Pad Begin"
+msgstr ""
+
+#: shortcuts.py:252
+msgid "Key Pad 6"
+msgstr ""
+
+#: shortcuts.py:253
+#, fuzzy
+msgid "Key Pad Right Arrow"
+msgstr "Freccia Destra"
+
+#: shortcuts.py:255
+msgid "Key Pad 7"
+msgstr ""
+
+#: shortcuts.py:256
+msgid "Key Pad HOME"
+msgstr ""
+
+#: shortcuts.py:259
+msgid "TAB"
+msgstr "TAB"
+
+#: shortcuts.py:261
+msgid "ENTER"
+msgstr ""
+
+#: shortcuts.py:262
+msgid "="
+msgstr ""
+
+#: shortcuts.py:264
+#, fuzzy
+msgid "Alt"
+msgstr "Shift + I"
+
+#: shortcuts.py:266
+#, fuzzy
+msgid "Alt + Shift"
+msgstr "Shift + I"
+
+#: shortcuts.py:267
+#, fuzzy
+msgid "Control"
+msgstr "Control + N"
+
 #, fuzzy
 #~ msgid "Selection"
 #~ msgstr "Selezione Colore"
@@ -6550,58 +6716,8 @@ msgstr "Carica Progetto"
 #~ msgid "Import Sequence..."
 #~ msgstr "Aggiungi Sequenza d'Immagini ..."
 
-#~ msgid "Delete Selected Item"
-#~ msgstr "Elimina Oggetti Selezionati"
-
-#~ msgid "TAB"
-#~ msgstr "TAB"
-
-#~ msgid "Switch Monitor Source"
-#~ msgstr "Cambia la Sorgente del Monitor"
-
-#~ msgid "Set Mark In"
-#~ msgstr "Inserisci punto di IN"
-
-#~ msgid "Set Mark Out"
-#~ msgstr "Inserisci punto di OUT"
-
 #~ msgid "3 Point Overwrite Insert"
 #~ msgstr "Sovrascrivi a 3 Punti"
-
-#~ msgid "Add Mark"
-#~ msgstr "Aggiungi un Marcatore"
-
-#, fuzzy
-#~ msgid "Resync selected Clip or Compositor"
-#~ msgstr "Compositing"
-
-#~ msgid "Start / Stop Playback"
-#~ msgstr "Avvia/Arresta la Riproduzione"
-
-#~ msgid "Backwards Faster"
-#~ msgstr "Indietro Veloce"
-
-#~ msgid "Forward Faster"
-#~ msgstr "Avanti Veloce"
-
-#~ msgid "Prev Frame"
-#~ msgstr "Fotogramma Precedente"
-
-#~ msgid "Next Frame"
-#~ msgstr "Fotogramma Successivo"
-
-#~ msgid "Next Edit/Mark"
-#~ msgstr "Taglio/Marcatore Successivo"
-
-#~ msgid "Prev Edit/Mark"
-#~ msgstr "Taglio/Marcatore Precedente"
-
-#~ msgid "Go To Start"
-#~ msgstr "Vai all'Inizio"
-
-#, fuzzy
-#~ msgid "Go To End"
-#~ msgstr "Vai a IN"
 
 #, fuzzy
 #~ msgid "Shortcuts"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-04 12:55+0300\n"
+"POT-Creation-Date: 2017-09-08 16:02+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -386,11 +386,11 @@ msgstr ""
 msgid "Add Monitor Clip"
 msgstr ""
 
-#: editorwindow.py:182
+#: editorwindow.py:182 shortcuts.py:186
 msgid "Append"
 msgstr ""
 
-#: editorwindow.py:183 guicomponents.py:2413
+#: editorwindow.py:183 guicomponents.py:2413 shortcuts.py:185 shortcuts.py:198
 msgid "Insert"
 msgstr ""
 
@@ -402,7 +402,7 @@ msgstr ""
 msgid "Range Overwrite"
 msgstr ""
 
-#: editorwindow.py:186
+#: editorwindow.py:186 shortcuts.py:197
 msgid "Cut Clip"
 msgstr ""
 
@@ -542,7 +542,7 @@ msgstr ""
 msgid "Import Another Sequence Into This Sequence..."
 msgstr ""
 
-#: editorwindow.py:221 dialogs.py:1280
+#: editorwindow.py:221 dialogs.py:1280 shortcuts.py:190
 msgid "Log Marked Clip Range"
 msgstr ""
 
@@ -724,11 +724,11 @@ msgstr ""
 msgid "Hyper/Lanczos (best)"
 msgstr ""
 
-#: editorwindow.py:891
+#: editorwindow.py:891 shortcuts.py:206
 msgid "Zoom In"
 msgstr ""
 
-#: editorwindow.py:894
+#: editorwindow.py:894 shortcuts.py:205
 msgid "Zoom Out"
 msgstr ""
 
@@ -792,7 +792,7 @@ msgstr ""
 #: clipeffectseditor.py:237 compositeeditor.py:71 guicomponents.py:1260
 #: guicomponents.py:1326 guicomponents.py:1510 guicomponents.py:1634
 #: guicomponents.py:1685 panels.py:53 panels.py:98 panels.py:116
-#: tools/titler.py:210 tools/batchrendering.py:1030
+#: tools/titler.py:210 tools/batchrendering.py:1030 shortcuts.py:230
 msgid "Delete"
 msgstr ""
 
@@ -1489,7 +1489,7 @@ msgstr ""
 msgid "Prev Frame Trim Edit"
 msgstr ""
 
-#: dialogs.py:1302 dialogs.py:1339
+#: dialogs.py:1302 dialogs.py:1339 shortcuts.py:222
 msgid "Right Arrow"
 msgstr ""
 
@@ -1553,7 +1553,7 @@ msgstr ""
 msgid "R"
 msgstr ""
 
-#: dialogs.py:1334
+#: dialogs.py:1334 shortcuts.py:196
 msgid "Trim Tool Ripple Mode On/Off"
 msgstr ""
 
@@ -1565,7 +1565,7 @@ msgstr ""
 msgid "Move Source Video Right 1px"
 msgstr ""
 
-#: dialogs.py:1340
+#: dialogs.py:1340 shortcuts.py:220
 msgid "Up Arrow"
 msgstr ""
 
@@ -1573,7 +1573,7 @@ msgstr ""
 msgid "Move Source Video Up 1px"
 msgstr ""
 
-#: dialogs.py:1341
+#: dialogs.py:1341 shortcuts.py:219
 msgid "Down Arrow"
 msgstr ""
 
@@ -1597,7 +1597,7 @@ msgstr ""
 msgid "Keep Aspect Ratio in Affine Blend scaling"
 msgstr ""
 
-#: dialogs.py:1344
+#: dialogs.py:1344 shortcuts.py:265
 msgid "Shift"
 msgstr ""
 
@@ -2277,27 +2277,27 @@ msgstr ""
 msgid "Set Current Clip Frame Match Frame"
 msgstr ""
 
-#: guicomponents.py:2419 translations.py:562
+#: guicomponents.py:2419 translations.py:562 shortcuts.py:199
 msgid "Overwrite"
 msgstr ""
 
-#: guicomponents.py:2425
+#: guicomponents.py:2425 shortcuts.py:200
 msgid "Trim"
 msgstr ""
 
-#: guicomponents.py:2431
+#: guicomponents.py:2431 shortcuts.py:201
 msgid "Roll"
 msgstr ""
 
-#: guicomponents.py:2437
+#: guicomponents.py:2437 shortcuts.py:202
 msgid "Slip"
 msgstr ""
 
-#: guicomponents.py:2443
+#: guicomponents.py:2443 shortcuts.py:203
 msgid "Spacer"
 msgstr ""
 
-#: guicomponents.py:2449 translations.py:546
+#: guicomponents.py:2449 translations.py:546 shortcuts.py:204
 msgid "Box"
 msgstr ""
 
@@ -5503,7 +5503,7 @@ msgstr ""
 msgid "Creating Proxy Files"
 msgstr ""
 
-#: proxyediting.py:355 tools/gmic.py:769
+#: proxyediting.py:355 tools/gmic.py:769 shortcuts.py:188
 msgid "Stop"
 msgstr ""
 
@@ -6159,4 +6159,160 @@ msgstr ""
 
 #: projectmediaimport.py:143
 msgid "Loading Media Import Project"
+msgstr ""
+
+#: shortcuts.py:178
+msgid "Set Mark In"
+msgstr ""
+
+#: shortcuts.py:179
+msgid "Set Mark Out"
+msgstr ""
+
+#: shortcuts.py:180
+msgid "Start / Stop Playback"
+msgstr ""
+
+#: shortcuts.py:181
+msgid "Prev Edit/Mark"
+msgstr ""
+
+#: shortcuts.py:182
+msgid "Next Edit/Mark"
+msgstr ""
+
+#: shortcuts.py:183
+msgid "Prev Frame"
+msgstr ""
+
+#: shortcuts.py:184
+msgid "Next Frame"
+msgstr ""
+
+#: shortcuts.py:187
+msgid "Backwards Faster"
+msgstr ""
+
+#: shortcuts.py:189
+msgid "Forward Faster"
+msgstr ""
+
+#: shortcuts.py:191
+msgid "Resync selected Clip or Compositor"
+msgstr ""
+
+#: shortcuts.py:192
+msgid "Delete Selected Item"
+msgstr ""
+
+#: shortcuts.py:193
+msgid "Go To Start"
+msgstr ""
+
+#: shortcuts.py:194
+msgid "Go To End"
+msgstr ""
+
+#: shortcuts.py:195
+msgid "3 Point Overwrite"
+msgstr ""
+
+#: shortcuts.py:207
+msgid "Switch Monitor Source"
+msgstr ""
+
+#: shortcuts.py:208
+msgid "Add Mark"
+msgstr ""
+
+#: shortcuts.py:209
+msgid "Complete Keyboard Trim Edit"
+msgstr ""
+
+#: shortcuts.py:218
+msgid "SPACE"
+msgstr ""
+
+#: shortcuts.py:221
+msgid "Left Arrow"
+msgstr ""
+
+#: shortcuts.py:231
+msgid "HOME"
+msgstr ""
+
+#: shortcuts.py:232
+msgid "END"
+msgstr ""
+
+#: shortcuts.py:237
+msgid "Key Pad END"
+msgstr ""
+
+#: shortcuts.py:238
+msgid "Key Pad 1"
+msgstr ""
+
+#: shortcuts.py:240 shortcuts.py:243 shortcuts.py:244
+msgid "Key Pad 2"
+msgstr ""
+
+#: shortcuts.py:241
+msgid "Key Pad Down Arrow"
+msgstr ""
+
+#: shortcuts.py:246
+msgid "Key Pad 4"
+msgstr ""
+
+#: shortcuts.py:247
+msgid "Key Pad Left Arrow"
+msgstr ""
+
+#: shortcuts.py:249
+msgid "Key Pad 5"
+msgstr ""
+
+#: shortcuts.py:250
+msgid "Key Pad Begin"
+msgstr ""
+
+#: shortcuts.py:252
+msgid "Key Pad 6"
+msgstr ""
+
+#: shortcuts.py:253
+msgid "Key Pad Right Arrow"
+msgstr ""
+
+#: shortcuts.py:255
+msgid "Key Pad 7"
+msgstr ""
+
+#: shortcuts.py:256
+msgid "Key Pad HOME"
+msgstr ""
+
+#: shortcuts.py:259
+msgid "TAB"
+msgstr ""
+
+#: shortcuts.py:261
+msgid "ENTER"
+msgstr ""
+
+#: shortcuts.py:262
+msgid "="
+msgstr ""
+
+#: shortcuts.py:264
+msgid "Alt"
+msgstr ""
+
+#: shortcuts.py:266
+msgid "Alt + Shift"
+msgstr ""
+
+#: shortcuts.py:267
+msgid "Control"
 msgstr ""

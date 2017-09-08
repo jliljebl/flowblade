@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flowblade\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-04 12:55+0300\n"
+"POT-Creation-Date: 2017-09-08 16:02+0300\n"
 "PO-Revision-Date: 2017-08-03 00:29+0300\n"
 "Last-Translator: Николай Смольянинов <smolianinow.colya2016@yandex.ru>\n"
 "Language-Team: Russian\n"
@@ -410,11 +410,11 @@ msgstr "Вставить эффекты"
 msgid "Add Monitor Clip"
 msgstr "Добавить клип из монитора"
 
-#: editorwindow.py:182
+#: editorwindow.py:182 shortcuts.py:186
 msgid "Append"
 msgstr "Склейка"
 
-#: editorwindow.py:183 guicomponents.py:2413
+#: editorwindow.py:183 guicomponents.py:2413 shortcuts.py:185 shortcuts.py:198
 msgid "Insert"
 msgstr "Вставка"
 
@@ -426,7 +426,7 @@ msgstr "Перезаписать трёхточечно"
 msgid "Range Overwrite"
 msgstr "Перезапись участка"
 
-#: editorwindow.py:186
+#: editorwindow.py:186 shortcuts.py:197
 msgid "Cut Clip"
 msgstr "Разрезать клип"
 
@@ -569,7 +569,7 @@ msgstr "Импорт медиа из проекта..."
 msgid "Import Another Sequence Into This Sequence..."
 msgstr ""
 
-#: editorwindow.py:221 dialogs.py:1280
+#: editorwindow.py:221 dialogs.py:1280 shortcuts.py:190
 msgid "Log Marked Clip Range"
 msgstr "Журнал выбранного участка клипа"
 
@@ -760,11 +760,11 @@ msgstr "Бикубическая (лучше)"
 msgid "Hyper/Lanczos (best)"
 msgstr "Гипер / Ланцош (лучшая)"
 
-#: editorwindow.py:891
+#: editorwindow.py:891 shortcuts.py:206
 msgid "Zoom In"
 msgstr "Увеличить"
 
-#: editorwindow.py:894
+#: editorwindow.py:894 shortcuts.py:205
 msgid "Zoom Out"
 msgstr "Уменьшить"
 
@@ -828,7 +828,7 @@ msgstr "Добавить"
 #: clipeffectseditor.py:237 compositeeditor.py:71 guicomponents.py:1260
 #: guicomponents.py:1326 guicomponents.py:1510 guicomponents.py:1634
 #: guicomponents.py:1685 panels.py:53 panels.py:98 panels.py:116
-#: tools/titler.py:210 tools/batchrendering.py:1030
+#: tools/titler.py:210 tools/batchrendering.py:1030 shortcuts.py:230
 msgid "Delete"
 msgstr "Удалить"
 
@@ -1553,7 +1553,7 @@ msgstr "Стрелка влево"
 msgid "Prev Frame Trim Edit"
 msgstr "Предыдущий кадр"
 
-#: dialogs.py:1302 dialogs.py:1339
+#: dialogs.py:1302 dialogs.py:1339 shortcuts.py:222
 msgid "Right Arrow"
 msgstr "Стрелка вправо"
 
@@ -1617,7 +1617,7 @@ msgstr "Аналогично 1-7"
 msgid "R"
 msgstr "R"
 
-#: dialogs.py:1334
+#: dialogs.py:1334 shortcuts.py:196
 msgid "Trim Tool Ripple Mode On/Off"
 msgstr "Включить/выключить режим обрезки"
 
@@ -1629,7 +1629,7 @@ msgstr "Перемещение источника видео влево 1px"
 msgid "Move Source Video Right 1px"
 msgstr "Перемещение источника видео вправо 1px"
 
-#: dialogs.py:1340
+#: dialogs.py:1340 shortcuts.py:220
 msgid "Up Arrow"
 msgstr "Стрелка вверх"
 
@@ -1637,7 +1637,7 @@ msgstr "Стрелка вверх"
 msgid "Move Source Video Up 1px"
 msgstr "Перемещение источника видео вверх 1px"
 
-#: dialogs.py:1341
+#: dialogs.py:1341 shortcuts.py:219
 msgid "Down Arrow"
 msgstr "Стрелка вниз"
 
@@ -1661,7 +1661,7 @@ msgstr "Ctrl + движение мышью"
 msgid "Keep Aspect Ratio in Affine Blend scaling"
 msgstr "Сохранять пропорции масштабирования в Аффинная смесь"
 
-#: dialogs.py:1344
+#: dialogs.py:1344 shortcuts.py:265
 msgid "Shift"
 msgstr "Shift"
 
@@ -2348,27 +2348,27 @@ msgstr "Выключить просмотр обрезки"
 msgid "Set Current Clip Frame Match Frame"
 msgstr "Набор кадров подходящих к текущему кадру клипа"
 
-#: guicomponents.py:2419 translations.py:562
+#: guicomponents.py:2419 translations.py:562 shortcuts.py:199
 msgid "Overwrite"
 msgstr "Перезапись"
 
-#: guicomponents.py:2425
+#: guicomponents.py:2425 shortcuts.py:200
 msgid "Trim"
 msgstr "Обрезка"
 
-#: guicomponents.py:2431
+#: guicomponents.py:2431 shortcuts.py:201
 msgid "Roll"
 msgstr "Прокрутка"
 
-#: guicomponents.py:2437
+#: guicomponents.py:2437 shortcuts.py:202
 msgid "Slip"
 msgstr "Скольжение"
 
-#: guicomponents.py:2443
+#: guicomponents.py:2443 shortcuts.py:203
 msgid "Spacer"
 msgstr "Распорка"
 
-#: guicomponents.py:2449 translations.py:546
+#: guicomponents.py:2449 translations.py:546 shortcuts.py:204
 msgid "Box"
 msgstr "Группировка и перенос"
 
@@ -5638,7 +5638,7 @@ msgstr "Использование оригинальных клипов"
 msgid "Creating Proxy Files"
 msgstr "Создание прокси-файлов"
 
-#: proxyediting.py:355 tools/gmic.py:769
+#: proxyediting.py:355 tools/gmic.py:769 shortcuts.py:188
 msgid "Stop"
 msgstr "Остановить"
 
@@ -6343,6 +6343,171 @@ msgstr "Клип в обратном направлении"
 msgid "Loading Media Import Project"
 msgstr "Загрузка импортированных файлов в проект"
 
+#: shortcuts.py:178
+msgid "Set Mark In"
+msgstr "Выбрать начало участка"
+
+#: shortcuts.py:179
+msgid "Set Mark Out"
+msgstr "Выбрать конец участка"
+
+#: shortcuts.py:180
+msgid "Start / Stop Playback"
+msgstr "Воспроизвести/остановить воспроизведение"
+
+#: shortcuts.py:181
+msgid "Prev Edit/Mark"
+msgstr "Перейти к предыдущему клипу"
+
+#: shortcuts.py:182
+msgid "Next Edit/Mark"
+msgstr "Перейти к следующему клипу"
+
+#: shortcuts.py:183
+msgid "Prev Frame"
+msgstr "Предыдущий кадр"
+
+#: shortcuts.py:184
+msgid "Next Frame"
+msgstr "Следующий кадр"
+
+#: shortcuts.py:187
+msgid "Backwards Faster"
+msgstr "Ускоренная перемотка назад"
+
+#: shortcuts.py:189
+msgid "Forward Faster"
+msgstr "Ускоренная перемотка вперёд"
+
+#: shortcuts.py:191
+msgid "Resync selected Clip or Compositor"
+msgstr "Повторно синхронизировать выбранный клип или слой композитинга"
+
+#: shortcuts.py:192
+msgid "Delete Selected Item"
+msgstr "Удалить выбранное"
+
+#: shortcuts.py:193
+msgid "Go To Start"
+msgstr "Перейти к началу редактирования"
+
+#: shortcuts.py:194
+msgid "Go To End"
+msgstr "перейти в конец"
+
+#: shortcuts.py:195
+#, fuzzy
+msgid "3 Point Overwrite"
+msgstr "Перезаписать трёхточечно"
+
+#: shortcuts.py:207
+msgid "Switch Monitor Source"
+msgstr "Переключение источника предпросмотра"
+
+#: shortcuts.py:208
+msgid "Add Mark"
+msgstr "Добавить участок"
+
+#: shortcuts.py:209
+msgid "Complete Keyboard Trim Edit"
+msgstr "Вся клавиатура (обрезка и редактирование)"
+
+#: shortcuts.py:218
+msgid "SPACE"
+msgstr "Пробел"
+
+#: shortcuts.py:221
+#, fuzzy
+msgid "Left Arrow"
+msgstr "Стрелка влево"
+
+#: shortcuts.py:231
+msgid "HOME"
+msgstr "HOME"
+
+#: shortcuts.py:232
+msgid "END"
+msgstr "END"
+
+#: shortcuts.py:237
+msgid "Key Pad END"
+msgstr ""
+
+#: shortcuts.py:238
+#, fuzzy
+msgid "Key Pad 1"
+msgstr "Клавиши 1-7"
+
+#: shortcuts.py:240 shortcuts.py:243 shortcuts.py:244
+msgid "Key Pad 2"
+msgstr ""
+
+#: shortcuts.py:241
+#, fuzzy
+msgid "Key Pad Down Arrow"
+msgstr "Стрелка вниз"
+
+#: shortcuts.py:246
+msgid "Key Pad 4"
+msgstr ""
+
+#: shortcuts.py:247
+#, fuzzy
+msgid "Key Pad Left Arrow"
+msgstr "Стрелка влево"
+
+#: shortcuts.py:249
+msgid "Key Pad 5"
+msgstr ""
+
+#: shortcuts.py:250
+msgid "Key Pad Begin"
+msgstr ""
+
+#: shortcuts.py:252
+msgid "Key Pad 6"
+msgstr ""
+
+#: shortcuts.py:253
+#, fuzzy
+msgid "Key Pad Right Arrow"
+msgstr "Стрелка вправо"
+
+#: shortcuts.py:255
+msgid "Key Pad 7"
+msgstr ""
+
+#: shortcuts.py:256
+msgid "Key Pad HOME"
+msgstr ""
+
+#: shortcuts.py:259
+msgid "TAB"
+msgstr "Tab"
+
+#: shortcuts.py:261
+msgid "ENTER"
+msgstr "ENTER"
+
+#: shortcuts.py:262
+msgid "="
+msgstr "="
+
+#: shortcuts.py:264
+#, fuzzy
+msgid "Alt"
+msgstr "Alt + I"
+
+#: shortcuts.py:266
+#, fuzzy
+msgid "Alt + Shift"
+msgstr "Alt + I"
+
+#: shortcuts.py:267
+#, fuzzy
+msgid "Control"
+msgstr "Ctrl + N"
+
 #~ msgid "Outline"
 #~ msgstr "Контур"
 
@@ -6355,83 +6520,20 @@ msgstr "Загрузка импортированных файлов в прое
 #~ msgid "Import Sequence..."
 #~ msgstr "Импортировать последовательность..."
 
-#~ msgid "Delete Selected Item"
-#~ msgstr "Удалить выбранное"
-
-#~ msgid "TAB"
-#~ msgstr "Tab"
-
-#~ msgid "Switch Monitor Source"
-#~ msgstr "Переключение источника предпросмотра"
-
 #~ msgid "+"
 #~ msgstr "+"
 
 #~ msgid "-"
 #~ msgstr "-"
 
-#~ msgid "Set Mark In"
-#~ msgstr "Выбрать начало участка"
-
-#~ msgid "Set Mark Out"
-#~ msgstr "Выбрать конец участка"
-
 #~ msgid "3 Point Overwrite Insert"
 #~ msgstr "Перезапись (трёхточечно)"
-
-#~ msgid "Add Mark"
-#~ msgstr "Добавить участок"
 
 #~ msgid "S"
 #~ msgstr "S"
 
-#~ msgid "Resync selected Clip or Compositor"
-#~ msgstr "Повторно синхронизировать выбранный клип или слой композитинга"
-
 #~ msgid "G"
 #~ msgstr "G"
-
-#~ msgid "ENTER"
-#~ msgstr "ENTER"
-
-#~ msgid "Complete Keyboard Trim Edit"
-#~ msgstr "Вся клавиатура (обрезка и редактирование)"
-
-#~ msgid "SPACE"
-#~ msgstr "Пробел"
-
-#~ msgid "Start / Stop Playback"
-#~ msgstr "Воспроизвести/остановить воспроизведение"
-
-#~ msgid "Backwards Faster"
-#~ msgstr "Ускоренная перемотка назад"
-
-#~ msgid "Forward Faster"
-#~ msgstr "Ускоренная перемотка вперёд"
-
-#~ msgid "Prev Frame"
-#~ msgstr "Предыдущий кадр"
-
-#~ msgid "Next Frame"
-#~ msgstr "Следующий кадр"
-
-#~ msgid "Next Edit/Mark"
-#~ msgstr "Перейти к следующему клипу"
-
-#~ msgid "Prev Edit/Mark"
-#~ msgstr "Перейти к предыдущему клипу"
-
-#~ msgid "HOME"
-#~ msgstr "HOME"
-
-#~ msgid "Go To Start"
-#~ msgstr "Перейти к началу редактирования"
-
-#~ msgid "END"
-#~ msgstr "END"
-
-#~ msgid "Go To End"
-#~ msgstr "перейти в конец"
 
 #~ msgid "Shortcuts"
 #~ msgstr "Ярлыки"
@@ -6551,6 +6653,3 @@ msgstr "Загрузка импортированных файлов в прое
 #~ msgstr ""
 #~ "Вы пытаетесь использовать инструмент ПРОКРУТКА в той\n"
 #~ " позиции на монтажном столе, где это невозможно."
-
-#~ msgid "="
-#~ msgstr "="

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-04 12:55+0300\n"
+"POT-Creation-Date: 2017-09-08 16:02+0300\n"
 "PO-Revision-Date: 2017-04-15 18:47+0800\n"
 "Last-Translator: wu <laowudebox@126.com>\n"
 "Language-Team: Language LANGUAGE\n"
@@ -398,11 +398,11 @@ msgstr "粘贴过滤器"
 msgid "Add Monitor Clip"
 msgstr "添加监视器视频切片"
 
-#: editorwindow.py:182
+#: editorwindow.py:182 shortcuts.py:186
 msgid "Append"
 msgstr "追加"
 
-#: editorwindow.py:183 guicomponents.py:2413
+#: editorwindow.py:183 guicomponents.py:2413 shortcuts.py:185 shortcuts.py:198
 msgid "Insert"
 msgstr "插入"
 
@@ -414,7 +414,7 @@ msgstr "3个点覆盖"
 msgid "Range Overwrite"
 msgstr "范围覆盖"
 
-#: editorwindow.py:186
+#: editorwindow.py:186 shortcuts.py:197
 msgid "Cut Clip"
 msgstr "剪切视频切片"
 
@@ -558,7 +558,7 @@ msgstr "从项目导入媒体..."
 msgid "Import Another Sequence Into This Sequence..."
 msgstr ""
 
-#: editorwindow.py:221 dialogs.py:1280
+#: editorwindow.py:221 dialogs.py:1280 shortcuts.py:190
 msgid "Log Marked Clip Range"
 msgstr "已标记的视频切片范围记录"
 
@@ -749,11 +749,11 @@ msgstr "两个立方（更好）"
 msgid "Hyper/Lanczos (best)"
 msgstr "亢奋/分块（最好）"
 
-#: editorwindow.py:891
+#: editorwindow.py:891 shortcuts.py:206
 msgid "Zoom In"
 msgstr "放大"
 
-#: editorwindow.py:894
+#: editorwindow.py:894 shortcuts.py:205
 msgid "Zoom Out"
 msgstr "缩小"
 
@@ -817,7 +817,7 @@ msgstr "添加"
 #: clipeffectseditor.py:237 compositeeditor.py:71 guicomponents.py:1260
 #: guicomponents.py:1326 guicomponents.py:1510 guicomponents.py:1634
 #: guicomponents.py:1685 panels.py:53 panels.py:98 panels.py:116
-#: tools/titler.py:210 tools/batchrendering.py:1030
+#: tools/titler.py:210 tools/batchrendering.py:1030 shortcuts.py:230
 msgid "Delete"
 msgstr "删除"
 
@@ -1540,7 +1540,7 @@ msgstr "左箭头"
 msgid "Prev Frame Trim Edit"
 msgstr "上一帧修剪编辑"
 
-#: dialogs.py:1302 dialogs.py:1339
+#: dialogs.py:1302 dialogs.py:1339 shortcuts.py:222
 msgid "Right Arrow"
 msgstr "右箭头"
 
@@ -1605,7 +1605,7 @@ msgstr "另存为"
 msgid "R"
 msgstr "R"
 
-#: dialogs.py:1334
+#: dialogs.py:1334 shortcuts.py:196
 msgid "Trim Tool Ripple Mode On/Off"
 msgstr "修剪工具波浪模式开/关"
 
@@ -1617,7 +1617,7 @@ msgstr "把源视频左移 1px"
 msgid "Move Source Video Right 1px"
 msgstr "把源视频右移 1px"
 
-#: dialogs.py:1340
+#: dialogs.py:1340 shortcuts.py:220
 msgid "Up Arrow"
 msgstr "上箭头"
 
@@ -1625,7 +1625,7 @@ msgstr "上箭头"
 msgid "Move Source Video Up 1px"
 msgstr "把源视频上移 1px"
 
-#: dialogs.py:1341
+#: dialogs.py:1341 shortcuts.py:219
 msgid "Down Arrow"
 msgstr "下箭头"
 
@@ -1649,7 +1649,7 @@ msgstr "Control + 鼠标拖拽"
 msgid "Keep Aspect Ratio in Affine Blend scaling"
 msgstr "保持纵横比例"
 
-#: dialogs.py:1344
+#: dialogs.py:1344 shortcuts.py:265
 msgid "Shift"
 msgstr "Shift"
 
@@ -2336,27 +2336,27 @@ msgstr "修剪查看开关"
 msgid "Set Current Clip Frame Match Frame"
 msgstr "设置与当前切片帧相匹配的帧"
 
-#: guicomponents.py:2419 translations.py:562
+#: guicomponents.py:2419 translations.py:562 shortcuts.py:199
 msgid "Overwrite"
 msgstr "覆盖"
 
-#: guicomponents.py:2425
+#: guicomponents.py:2425 shortcuts.py:200
 msgid "Trim"
 msgstr "修剪"
 
-#: guicomponents.py:2431
+#: guicomponents.py:2431 shortcuts.py:201
 msgid "Roll"
 msgstr "滚动"
 
-#: guicomponents.py:2437
+#: guicomponents.py:2437 shortcuts.py:202
 msgid "Slip"
 msgstr "滑动"
 
-#: guicomponents.py:2443
+#: guicomponents.py:2443 shortcuts.py:203
 msgid "Spacer"
 msgstr "间隔"
 
-#: guicomponents.py:2449 translations.py:546
+#: guicomponents.py:2449 translations.py:546 shortcuts.py:204
 msgid "Box"
 msgstr "盒子"
 
@@ -5614,7 +5614,7 @@ msgstr "使用中原始媒体"
 msgid "Creating Proxy Files"
 msgstr "创建中代理文件"
 
-#: proxyediting.py:355 tools/gmic.py:769
+#: proxyediting.py:355 tools/gmic.py:769 shortcuts.py:188
 msgid "Stop"
 msgstr "停止"
 
@@ -6311,6 +6311,170 @@ msgstr "混响时间"
 msgid "Loading Media Import Project"
 msgstr "加载项目中"
 
+#: shortcuts.py:178
+msgid "Set Mark In"
+msgstr "设置节点"
+
+#: shortcuts.py:179
+msgid "Set Mark Out"
+msgstr "设置出点"
+
+#: shortcuts.py:180
+msgid "Start / Stop Playback"
+msgstr "开始 / 停止 回放"
+
+#: shortcuts.py:181
+msgid "Prev Edit/Mark"
+msgstr "上一个编辑/标记"
+
+#: shortcuts.py:182
+msgid "Next Edit/Mark"
+msgstr "下一个编辑/标记"
+
+#: shortcuts.py:183
+msgid "Prev Frame"
+msgstr "上一帧"
+
+#: shortcuts.py:184
+msgid "Next Frame"
+msgstr "下一帧"
+
+#: shortcuts.py:187
+msgid "Backwards Faster"
+msgstr "快退"
+
+#: shortcuts.py:189
+msgid "Forward Faster"
+msgstr "快进"
+
+#: shortcuts.py:191
+msgid "Resync selected Clip or Compositor"
+msgstr "重新同步选择的视频切片或排字"
+
+#: shortcuts.py:192
+msgid "Delete Selected Item"
+msgstr "删除选择的条目"
+
+#: shortcuts.py:193
+msgid "Go To Start"
+msgstr "开始"
+
+#: shortcuts.py:194
+msgid "Go To End"
+msgstr "结束"
+
+#: shortcuts.py:195
+#, fuzzy
+msgid "3 Point Overwrite"
+msgstr "3个点覆盖"
+
+#: shortcuts.py:207
+msgid "Switch Monitor Source"
+msgstr "切换源监视器"
+
+#: shortcuts.py:208
+msgid "Add Mark"
+msgstr "添加标记"
+
+#: shortcuts.py:209
+msgid "Complete Keyboard Trim Edit"
+msgstr "完成键盘修剪编辑"
+
+#: shortcuts.py:218
+msgid "SPACE"
+msgstr "空格键"
+
+#: shortcuts.py:221
+#, fuzzy
+msgid "Left Arrow"
+msgstr "左箭头"
+
+#: shortcuts.py:231
+msgid "HOME"
+msgstr "HOME"
+
+#: shortcuts.py:232
+msgid "END"
+msgstr "结束"
+
+#: shortcuts.py:237
+msgid "Key Pad END"
+msgstr ""
+
+#: shortcuts.py:238
+msgid "Key Pad 1"
+msgstr ""
+
+#: shortcuts.py:240 shortcuts.py:243 shortcuts.py:244
+msgid "Key Pad 2"
+msgstr ""
+
+#: shortcuts.py:241
+#, fuzzy
+msgid "Key Pad Down Arrow"
+msgstr "下箭头"
+
+#: shortcuts.py:246
+msgid "Key Pad 4"
+msgstr ""
+
+#: shortcuts.py:247
+#, fuzzy
+msgid "Key Pad Left Arrow"
+msgstr "左箭头"
+
+#: shortcuts.py:249
+msgid "Key Pad 5"
+msgstr ""
+
+#: shortcuts.py:250
+msgid "Key Pad Begin"
+msgstr ""
+
+#: shortcuts.py:252
+msgid "Key Pad 6"
+msgstr ""
+
+#: shortcuts.py:253
+#, fuzzy
+msgid "Key Pad Right Arrow"
+msgstr "右箭头"
+
+#: shortcuts.py:255
+msgid "Key Pad 7"
+msgstr ""
+
+#: shortcuts.py:256
+msgid "Key Pad HOME"
+msgstr ""
+
+#: shortcuts.py:259
+msgid "TAB"
+msgstr "TAB"
+
+#: shortcuts.py:261
+msgid "ENTER"
+msgstr "回车键"
+
+#: shortcuts.py:262
+msgid "="
+msgstr "="
+
+#: shortcuts.py:264
+#, fuzzy
+msgid "Alt"
+msgstr "Alt + I"
+
+#: shortcuts.py:266
+#, fuzzy
+msgid "Alt + Shift"
+msgstr "Alt + I"
+
+#: shortcuts.py:267
+#, fuzzy
+msgid "Control"
+msgstr "Control + N"
+
 #~ msgid "Outline"
 #~ msgstr "梗概"
 
@@ -6323,89 +6487,23 @@ msgstr "加载项目中"
 #~ msgid "Import Sequence..."
 #~ msgstr "导入序列..."
 
-#~ msgid "Delete Selected Item"
-#~ msgstr "删除选择的条目"
-
-#~ msgid "TAB"
-#~ msgstr "TAB"
-
-#~ msgid "Switch Monitor Source"
-#~ msgstr "切换源监视器"
-
 #~ msgid "-"
 #~ msgstr "-"
-
-#~ msgid "Set Mark In"
-#~ msgstr "设置节点"
-
-#~ msgid "Set Mark Out"
-#~ msgstr "设置出点"
 
 #~ msgid "3 Point Overwrite Insert"
 #~ msgstr "3点覆盖插入"
 
-#~ msgid "Add Mark"
-#~ msgstr "添加标记"
-
 #~ msgid "S"
 #~ msgstr "S"
 
-#~ msgid "Resync selected Clip or Compositor"
-#~ msgstr "重新同步选择的视频切片或排字"
-
 #~ msgid "G"
 #~ msgstr "G"
-
-#~ msgid "ENTER"
-#~ msgstr "回车键"
-
-#~ msgid "Complete Keyboard Trim Edit"
-#~ msgstr "完成键盘修剪编辑"
-
-#~ msgid "SPACE"
-#~ msgstr "空格键"
-
-#~ msgid "Start / Stop Playback"
-#~ msgstr "开始 / 停止 回放"
-
-#~ msgid "Backwards Faster"
-#~ msgstr "快退"
-
-#~ msgid "Forward Faster"
-#~ msgstr "快进"
-
-#~ msgid "Prev Frame"
-#~ msgstr "上一帧"
-
-#~ msgid "Next Frame"
-#~ msgstr "下一帧"
-
-#~ msgid "Next Edit/Mark"
-#~ msgstr "下一个编辑/标记"
-
-#~ msgid "Prev Edit/Mark"
-#~ msgstr "上一个编辑/标记"
-
-#~ msgid "HOME"
-#~ msgstr "HOME"
-
-#~ msgid "Go To Start"
-#~ msgstr "开始"
-
-#~ msgid "END"
-#~ msgstr "结束"
-
-#~ msgid "Go To End"
-#~ msgstr "结束"
 
 #~ msgid "Shortcuts"
 #~ msgstr "键盘快捷键"
 
 #~ msgid "Create Audio Sync Group"
 #~ msgstr "创建音频同步组"
-
-#~ msgid "="
-#~ msgstr "="
 
 #~ msgid "3 point edit not defoned!"
 #~ msgstr "3点编辑未定义！"

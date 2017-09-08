@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-04 12:55+0300\n"
+"POT-Creation-Date: 2017-09-08 16:02+0300\n"
 "PO-Revision-Date: 2017-05-27 08:50+0200\n"
 "Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -410,11 +410,11 @@ msgstr "Wklej filtry"
 msgid "Add Monitor Clip"
 msgstr "Dodaj klip monitora"
 
-#: editorwindow.py:182
+#: editorwindow.py:182 shortcuts.py:186
 msgid "Append"
 msgstr "Dołącz"
 
-#: editorwindow.py:183 guicomponents.py:2413
+#: editorwindow.py:183 guicomponents.py:2413 shortcuts.py:185 shortcuts.py:198
 msgid "Insert"
 msgstr "Wstaw"
 
@@ -426,7 +426,7 @@ msgstr "Trójpunktowe nadpisanie"
 msgid "Range Overwrite"
 msgstr "Nadpisanie zakresu"
 
-#: editorwindow.py:186
+#: editorwindow.py:186 shortcuts.py:197
 msgid "Cut Clip"
 msgstr "Przetnij klip"
 
@@ -569,7 +569,7 @@ msgstr "Importowanie multimediów z projektu..."
 msgid "Import Another Sequence Into This Sequence..."
 msgstr "Importuj inną sekwencję do tej sekwencji"
 
-#: editorwindow.py:221 dialogs.py:1280
+#: editorwindow.py:221 dialogs.py:1280 shortcuts.py:190
 msgid "Log Marked Clip Range"
 msgstr "Umieść zaznaczony zakres klipu w rejestrze"
 
@@ -760,11 +760,11 @@ msgstr "Dwusześcienna (lepsza)"
 msgid "Hyper/Lanczos (best)"
 msgstr "Hyper/Lanczos (najlepsza)"
 
-#: editorwindow.py:891
+#: editorwindow.py:891 shortcuts.py:206
 msgid "Zoom In"
 msgstr "Przybliżenie"
 
-#: editorwindow.py:894
+#: editorwindow.py:894 shortcuts.py:205
 msgid "Zoom Out"
 msgstr "Oddalenie"
 
@@ -830,7 +830,7 @@ msgstr "Dodaj"
 #: clipeffectseditor.py:237 compositeeditor.py:71 guicomponents.py:1260
 #: guicomponents.py:1326 guicomponents.py:1510 guicomponents.py:1634
 #: guicomponents.py:1685 panels.py:53 panels.py:98 panels.py:116
-#: tools/titler.py:210 tools/batchrendering.py:1030
+#: tools/titler.py:210 tools/batchrendering.py:1030 shortcuts.py:230
 msgid "Delete"
 msgstr "Usuń"
 
@@ -1556,7 +1556,7 @@ msgstr "Strzałka w lewo"
 msgid "Prev Frame Trim Edit"
 msgstr "Przycinanie poprzedniej klatki"
 
-#: dialogs.py:1302 dialogs.py:1339
+#: dialogs.py:1302 dialogs.py:1339 shortcuts.py:222
 msgid "Right Arrow"
 msgstr "Strzałka w prawo"
 
@@ -1621,7 +1621,7 @@ msgstr "Zapisano jako "
 msgid "R"
 msgstr ""
 
-#: dialogs.py:1334
+#: dialogs.py:1334 shortcuts.py:196
 msgid "Trim Tool Ripple Mode On/Off"
 msgstr "Włącz/wyłącz tryb falowania dla narzędzia przycinania"
 
@@ -1633,7 +1633,7 @@ msgstr "Przesuń film źródłowy w lewo o 1px"
 msgid "Move Source Video Right 1px"
 msgstr "Przesuń film źródłowy w prawo o 1px"
 
-#: dialogs.py:1340
+#: dialogs.py:1340 shortcuts.py:220
 msgid "Up Arrow"
 msgstr "Strzałka w górę"
 
@@ -1641,7 +1641,7 @@ msgstr "Strzałka w górę"
 msgid "Move Source Video Up 1px"
 msgstr "Przesuń film źródłowy w górę o 1px"
 
-#: dialogs.py:1341
+#: dialogs.py:1341 shortcuts.py:219
 msgid "Down Arrow"
 msgstr "Strzałka w dół"
 
@@ -1665,7 +1665,7 @@ msgstr "Ctrl + ciągnięcie myszy"
 msgid "Keep Aspect Ratio in Affine Blend scaling"
 msgstr "Zachowaj proporcje obrazu podczas skalowania przenikania afinicznego"
 
-#: dialogs.py:1344
+#: dialogs.py:1344 shortcuts.py:265
 msgid "Shift"
 msgstr ""
 
@@ -2354,27 +2354,27 @@ msgstr "Wyłącz przycinanie widoku"
 msgid "Set Current Clip Frame Match Frame"
 msgstr "Ustaw dopasowanie klatki do bieżącej klatki klipu"
 
-#: guicomponents.py:2419 translations.py:562
+#: guicomponents.py:2419 translations.py:562 shortcuts.py:199
 msgid "Overwrite"
 msgstr "Nadpisz"
 
-#: guicomponents.py:2425
+#: guicomponents.py:2425 shortcuts.py:200
 msgid "Trim"
 msgstr "Przytnij"
 
-#: guicomponents.py:2431
+#: guicomponents.py:2431 shortcuts.py:201
 msgid "Roll"
 msgstr "Rolka"
 
-#: guicomponents.py:2437
+#: guicomponents.py:2437 shortcuts.py:202
 msgid "Slip"
 msgstr "Poślizg"
 
-#: guicomponents.py:2443
+#: guicomponents.py:2443 shortcuts.py:203
 msgid "Spacer"
 msgstr "Rozpórka"
 
-#: guicomponents.py:2449 translations.py:546
+#: guicomponents.py:2449 translations.py:546 shortcuts.py:204
 msgid "Box"
 msgstr "Pudełko"
 
@@ -5649,7 +5649,7 @@ msgstr "Używanie oryginalnych multimediów"
 msgid "Creating Proxy Files"
 msgstr "Tworzenie plików Proxy"
 
-#: proxyediting.py:355 tools/gmic.py:769
+#: proxyediting.py:355 tools/gmic.py:769 shortcuts.py:188
 msgid "Stop"
 msgstr "Zatrzymaj"
 
@@ -6357,6 +6357,170 @@ msgstr "Czas pogłosu"
 msgid "Loading Media Import Project"
 msgstr "Wczytywanie projektu"
 
+#: shortcuts.py:178
+msgid "Set Mark In"
+msgstr "Ustaw znacznik początkowy"
+
+#: shortcuts.py:179
+msgid "Set Mark Out"
+msgstr "Ustaw znacznik końcowy"
+
+#: shortcuts.py:180
+msgid "Start / Stop Playback"
+msgstr "Uruchom / Zatrzymaj odtwarzanie"
+
+#: shortcuts.py:181
+msgid "Prev Edit/Mark"
+msgstr "Poprzednie Edytuj/Zaznacz"
+
+#: shortcuts.py:182
+msgid "Next Edit/Mark"
+msgstr "Następne Edytuj/Zaznacz"
+
+#: shortcuts.py:183
+msgid "Prev Frame"
+msgstr "Poprzednia klatka"
+
+#: shortcuts.py:184
+msgid "Next Frame"
+msgstr "Następna klatka"
+
+#: shortcuts.py:187
+msgid "Backwards Faster"
+msgstr "Szybciej do tyłu"
+
+#: shortcuts.py:189
+msgid "Forward Faster"
+msgstr "Szybciej do przodu"
+
+#: shortcuts.py:191
+msgid "Resync selected Clip or Compositor"
+msgstr "Resynchronizuj wybrany klip lub kompozytor"
+
+#: shortcuts.py:192
+msgid "Delete Selected Item"
+msgstr "Usuń zaznaczony element"
+
+#: shortcuts.py:193
+msgid "Go To Start"
+msgstr "Przejdź do początku"
+
+#: shortcuts.py:194
+msgid "Go To End"
+msgstr "Przejdź do końca"
+
+#: shortcuts.py:195
+#, fuzzy
+msgid "3 Point Overwrite"
+msgstr "Trójpunktowe nadpisanie"
+
+#: shortcuts.py:207
+msgid "Switch Monitor Source"
+msgstr "Przełącz źródło monitora"
+
+#: shortcuts.py:208
+msgid "Add Mark"
+msgstr "Dodaj znacznik"
+
+#: shortcuts.py:209
+msgid "Complete Keyboard Trim Edit"
+msgstr "Pełna klawiatura (przycinania i edycji)"
+
+#: shortcuts.py:218
+msgid "SPACE"
+msgstr "SPACJA"
+
+#: shortcuts.py:221
+#, fuzzy
+msgid "Left Arrow"
+msgstr "Strzałka w lewo"
+
+#: shortcuts.py:231
+msgid "HOME"
+msgstr ""
+
+#: shortcuts.py:232
+#, fuzzy
+msgid "END"
+msgstr "Decyzyjna lista edycji (EDL)"
+
+#: shortcuts.py:237
+msgid "Key Pad END"
+msgstr ""
+
+#: shortcuts.py:238
+msgid "Key Pad 1"
+msgstr ""
+
+#: shortcuts.py:240 shortcuts.py:243 shortcuts.py:244
+msgid "Key Pad 2"
+msgstr ""
+
+#: shortcuts.py:241
+#, fuzzy
+msgid "Key Pad Down Arrow"
+msgstr "Strzałka w dół"
+
+#: shortcuts.py:246
+msgid "Key Pad 4"
+msgstr ""
+
+#: shortcuts.py:247
+#, fuzzy
+msgid "Key Pad Left Arrow"
+msgstr "Strzałka w lewo"
+
+#: shortcuts.py:249
+msgid "Key Pad 5"
+msgstr ""
+
+#: shortcuts.py:250
+msgid "Key Pad Begin"
+msgstr ""
+
+#: shortcuts.py:252
+msgid "Key Pad 6"
+msgstr ""
+
+#: shortcuts.py:253
+#, fuzzy
+msgid "Key Pad Right Arrow"
+msgstr "Strzałka w prawo"
+
+#: shortcuts.py:255
+msgid "Key Pad 7"
+msgstr ""
+
+#: shortcuts.py:256
+msgid "Key Pad HOME"
+msgstr ""
+
+#: shortcuts.py:259
+msgid "TAB"
+msgstr ""
+
+#: shortcuts.py:261
+msgid "ENTER"
+msgstr ""
+
+#: shortcuts.py:262
+msgid "="
+msgstr ""
+
+#: shortcuts.py:264
+msgid "Alt"
+msgstr ""
+
+#: shortcuts.py:266
+#, fuzzy
+msgid "Alt + Shift"
+msgstr "Przesunięcie wysokości tonu"
+
+#: shortcuts.py:267
+#, fuzzy
+msgid "Control"
+msgstr "Ctrl + N"
+
 #~ msgid "Outline"
 #~ msgstr "Obrys"
 
@@ -6369,59 +6533,8 @@ msgstr "Wczytywanie projektu"
 #~ msgid "Import Sequence..."
 #~ msgstr "Importuj sekwencję..."
 
-#~ msgid "Delete Selected Item"
-#~ msgstr "Usuń zaznaczony element"
-
-#~ msgid "Switch Monitor Source"
-#~ msgstr "Przełącz źródło monitora"
-
-#~ msgid "Set Mark In"
-#~ msgstr "Ustaw znacznik początkowy"
-
-#~ msgid "Set Mark Out"
-#~ msgstr "Ustaw znacznik końcowy"
-
 #~ msgid "3 Point Overwrite Insert"
 #~ msgstr "Wstaw 3-punktowe nadpisanie"
-
-#~ msgid "Add Mark"
-#~ msgstr "Dodaj znacznik"
-
-#~ msgid "Resync selected Clip or Compositor"
-#~ msgstr "Resynchronizuj wybrany klip lub kompozytor"
-
-#~ msgid "Complete Keyboard Trim Edit"
-#~ msgstr "Pełna klawiatura (przycinania i edycji)"
-
-#~ msgid "SPACE"
-#~ msgstr "SPACJA"
-
-#~ msgid "Start / Stop Playback"
-#~ msgstr "Uruchom / Zatrzymaj odtwarzanie"
-
-#~ msgid "Backwards Faster"
-#~ msgstr "Szybciej do tyłu"
-
-#~ msgid "Forward Faster"
-#~ msgstr "Szybciej do przodu"
-
-#~ msgid "Prev Frame"
-#~ msgstr "Poprzednia klatka"
-
-#~ msgid "Next Frame"
-#~ msgstr "Następna klatka"
-
-#~ msgid "Next Edit/Mark"
-#~ msgstr "Następne Edytuj/Zaznacz"
-
-#~ msgid "Prev Edit/Mark"
-#~ msgstr "Poprzednie Edytuj/Zaznacz"
-
-#~ msgid "Go To Start"
-#~ msgstr "Przejdź do początku"
-
-#~ msgid "Go To End"
-#~ msgstr "Przejdź do końca"
 
 #~ msgid "Shortcuts"
 #~ msgstr "Skróty"

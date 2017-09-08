@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-04 12:55+0300\n"
+"POT-Creation-Date: 2017-09-08 16:02+0300\n"
 "PO-Revision-Date: 2011-12-13 23:55+0200\n"
 "Last-Translator: Janne Liljeblad <janne@janne-kx557aa-uuw-a6521-sc>\n"
 "Language-Team: Finnish\n"
@@ -407,11 +407,11 @@ msgstr "liitä Suotimet"
 msgid "Add Monitor Clip"
 msgstr "Lisää monitorileike"
 
-#: editorwindow.py:182
+#: editorwindow.py:182 shortcuts.py:186
 msgid "Append"
 msgstr "Lisää viimeiseksi"
 
-#: editorwindow.py:183 guicomponents.py:2413
+#: editorwindow.py:183 guicomponents.py:2413 shortcuts.py:185 shortcuts.py:198
 msgid "Insert"
 msgstr "Insertti"
 
@@ -423,7 +423,7 @@ msgstr "Kolmen pisteen ylikirjoitus"
 msgid "Range Overwrite"
 msgstr "Ylikirjoitus alue"
 
-#: editorwindow.py:186
+#: editorwindow.py:186 shortcuts.py:197
 msgid "Cut Clip"
 msgstr "Leikkaa"
 
@@ -568,7 +568,7 @@ msgstr ""
 msgid "Import Another Sequence Into This Sequence..."
 msgstr ""
 
-#: editorwindow.py:221 dialogs.py:1280
+#: editorwindow.py:221 dialogs.py:1280 shortcuts.py:190
 msgid "Log Marked Clip Range"
 msgstr "Loggaaa merkitty alue"
 
@@ -760,11 +760,11 @@ msgstr "Bikuubinen"
 msgid "Hyper/Lanczos (best)"
 msgstr ""
 
-#: editorwindow.py:891
+#: editorwindow.py:891 shortcuts.py:206
 msgid "Zoom In"
 msgstr "Zoomaa sisään"
 
-#: editorwindow.py:894
+#: editorwindow.py:894 shortcuts.py:205
 msgid "Zoom Out"
 msgstr "Zoomaa ulos"
 
@@ -829,7 +829,7 @@ msgstr "Lisää"
 #: clipeffectseditor.py:237 compositeeditor.py:71 guicomponents.py:1260
 #: guicomponents.py:1326 guicomponents.py:1510 guicomponents.py:1634
 #: guicomponents.py:1685 panels.py:53 panels.py:98 panels.py:116
-#: tools/titler.py:210 tools/batchrendering.py:1030
+#: tools/titler.py:210 tools/batchrendering.py:1030 shortcuts.py:230
 msgid "Delete"
 msgstr "Poista"
 
@@ -1548,7 +1548,7 @@ msgstr "Nuoli vasen"
 msgid "Prev Frame Trim Edit"
 msgstr "Edellinen ruutu"
 
-#: dialogs.py:1302 dialogs.py:1339
+#: dialogs.py:1302 dialogs.py:1339 shortcuts.py:222
 msgid "Right Arrow"
 msgstr "Nuoli oikea"
 
@@ -1613,7 +1613,7 @@ msgstr "Tallenna"
 msgid "R"
 msgstr ""
 
-#: dialogs.py:1334
+#: dialogs.py:1334 shortcuts.py:196
 msgid "Trim Tool Ripple Mode On/Off"
 msgstr ""
 
@@ -1627,7 +1627,7 @@ msgstr "Siirrä lähde video vasemmalle"
 msgid "Move Source Video Right 1px"
 msgstr "Siirrä lähde video oikealle"
 
-#: dialogs.py:1340
+#: dialogs.py:1340 shortcuts.py:220
 msgid "Up Arrow"
 msgstr "Nuoli ylös"
 
@@ -1636,7 +1636,7 @@ msgstr "Nuoli ylös"
 msgid "Move Source Video Up 1px"
 msgstr "Siirrä lähde video ylös"
 
-#: dialogs.py:1341
+#: dialogs.py:1341 shortcuts.py:219
 msgid "Down Arrow"
 msgstr "Nuoli alas"
 
@@ -1664,7 +1664,7 @@ msgstr "Control + o"
 msgid "Keep Aspect Ratio in Affine Blend scaling"
 msgstr ""
 
-#: dialogs.py:1344
+#: dialogs.py:1344 shortcuts.py:265
 msgid "Shift"
 msgstr "Vaihto"
 
@@ -2366,27 +2366,27 @@ msgstr "Trimmi näyttö pois päältä"
 msgid "Set Current Clip Frame Match Frame"
 msgstr "Asete valittu ruutu vertailuruuduksi"
 
-#: guicomponents.py:2419 translations.py:562
+#: guicomponents.py:2419 translations.py:562 shortcuts.py:199
 msgid "Overwrite"
 msgstr "Ylikirjoitus"
 
-#: guicomponents.py:2425
+#: guicomponents.py:2425 shortcuts.py:200
 msgid "Trim"
 msgstr "Trimmi"
 
-#: guicomponents.py:2431
+#: guicomponents.py:2431 shortcuts.py:201
 msgid "Roll"
 msgstr "Rullaus"
 
-#: guicomponents.py:2437
+#: guicomponents.py:2437 shortcuts.py:202
 msgid "Slip"
 msgstr "Luisto"
 
-#: guicomponents.py:2443
+#: guicomponents.py:2443 shortcuts.py:203
 msgid "Spacer"
 msgstr "Siirto"
 
-#: guicomponents.py:2449 translations.py:546
+#: guicomponents.py:2449 translations.py:546 shortcuts.py:204
 msgid "Box"
 msgstr ""
 
@@ -5644,7 +5644,7 @@ msgstr "Käyttää alkuperäistiedostoja"
 msgid "Creating Proxy Files"
 msgstr "Luodaan proxytiedostot"
 
-#: proxyediting.py:355 tools/gmic.py:769
+#: proxyediting.py:355 tools/gmic.py:769 shortcuts.py:188
 msgid "Stop"
 msgstr "Pysäytä"
 
@@ -6343,6 +6343,171 @@ msgstr "Kaiku aika"
 msgid "Loading Media Import Project"
 msgstr "Ladataan projektia"
 
+#: shortcuts.py:178
+msgid "Set Mark In"
+msgstr "Alku merkki"
+
+#: shortcuts.py:179
+msgid "Set Mark Out"
+msgstr "Loppu merkki"
+
+#: shortcuts.py:180
+msgid "Start / Stop Playback"
+msgstr "Aloita/lopeta toisto"
+
+#: shortcuts.py:181
+msgid "Prev Edit/Mark"
+msgstr "Eddellinen leikkaus"
+
+#: shortcuts.py:182
+msgid "Next Edit/Mark"
+msgstr "Seuraava leikkaus"
+
+#: shortcuts.py:183
+msgid "Prev Frame"
+msgstr "Edellinen ruutu"
+
+#: shortcuts.py:184
+msgid "Next Frame"
+msgstr "Seuraava ruutu"
+
+#: shortcuts.py:187
+msgid "Backwards Faster"
+msgstr "Takaisisn nopeammin"
+
+#: shortcuts.py:189
+msgid "Forward Faster"
+msgstr "Eteenpäin nopeammin"
+
+#: shortcuts.py:191
+msgid "Resync selected Clip or Compositor"
+msgstr "Synkronoi valitut leikkeet ja yhdistäjät"
+
+#: shortcuts.py:192
+msgid "Delete Selected Item"
+msgstr "Poista valitut"
+
+#: shortcuts.py:193
+msgid "Go To Start"
+msgstr "Mene alkuun"
+
+#: shortcuts.py:194
+#, fuzzy
+msgid "Go To End"
+msgstr "Siirry alku merkkiin"
+
+#: shortcuts.py:195
+#, fuzzy
+msgid "3 Point Overwrite"
+msgstr "Kolmen pisteen ylikirjoitus"
+
+#: shortcuts.py:207
+msgid "Switch Monitor Source"
+msgstr "Vaihda monitori lähdettä"
+
+#: shortcuts.py:208
+msgid "Add Mark"
+msgstr "Lisää merkki"
+
+#: shortcuts.py:209
+msgid "Complete Keyboard Trim Edit"
+msgstr ""
+
+#: shortcuts.py:218
+msgid "SPACE"
+msgstr ""
+
+#: shortcuts.py:221
+#, fuzzy
+msgid "Left Arrow"
+msgstr "Nuoli vasen"
+
+#: shortcuts.py:231
+msgid "HOME"
+msgstr ""
+
+#: shortcuts.py:232
+msgid "END"
+msgstr ""
+
+#: shortcuts.py:237
+msgid "Key Pad END"
+msgstr ""
+
+#: shortcuts.py:238
+msgid "Key Pad 1"
+msgstr ""
+
+#: shortcuts.py:240 shortcuts.py:243 shortcuts.py:244
+msgid "Key Pad 2"
+msgstr ""
+
+#: shortcuts.py:241
+#, fuzzy
+msgid "Key Pad Down Arrow"
+msgstr "Nuoli alas"
+
+#: shortcuts.py:246
+msgid "Key Pad 4"
+msgstr ""
+
+#: shortcuts.py:247
+#, fuzzy
+msgid "Key Pad Left Arrow"
+msgstr "Nuoli vasen"
+
+#: shortcuts.py:249
+msgid "Key Pad 5"
+msgstr ""
+
+#: shortcuts.py:250
+msgid "Key Pad Begin"
+msgstr ""
+
+#: shortcuts.py:252
+msgid "Key Pad 6"
+msgstr ""
+
+#: shortcuts.py:253
+#, fuzzy
+msgid "Key Pad Right Arrow"
+msgstr "Nuoli oikea"
+
+#: shortcuts.py:255
+msgid "Key Pad 7"
+msgstr ""
+
+#: shortcuts.py:256
+msgid "Key Pad HOME"
+msgstr ""
+
+#: shortcuts.py:259
+msgid "TAB"
+msgstr "TAB"
+
+#: shortcuts.py:261
+msgid "ENTER"
+msgstr ""
+
+#: shortcuts.py:262
+msgid "="
+msgstr ""
+
+#: shortcuts.py:264
+#, fuzzy
+msgid "Alt"
+msgstr "Alt + I"
+
+#: shortcuts.py:266
+#, fuzzy
+msgid "Alt + Shift"
+msgstr "Alt + I"
+
+#: shortcuts.py:267
+#, fuzzy
+msgid "Control"
+msgstr "Control + N"
+
 #, fuzzy
 #~ msgid "Selection"
 #~ msgstr "Valitse"
@@ -6355,57 +6520,8 @@ msgstr "Ladataan projektia"
 #~ msgid "Import Sequence..."
 #~ msgstr "Lisää kuva sekvenssi..."
 
-#~ msgid "Delete Selected Item"
-#~ msgstr "Poista valitut"
-
-#~ msgid "TAB"
-#~ msgstr "TAB"
-
-#~ msgid "Switch Monitor Source"
-#~ msgstr "Vaihda monitori lähdettä"
-
-#~ msgid "Set Mark In"
-#~ msgstr "Alku merkki"
-
-#~ msgid "Set Mark Out"
-#~ msgstr "Loppu merkki"
-
 #~ msgid "3 Point Overwrite Insert"
 #~ msgstr "3 Piste Ylikirjoitus Insertointi"
-
-#~ msgid "Add Mark"
-#~ msgstr "Lisää merkki"
-
-#~ msgid "Resync selected Clip or Compositor"
-#~ msgstr "Synkronoi valitut leikkeet ja yhdistäjät"
-
-#~ msgid "Start / Stop Playback"
-#~ msgstr "Aloita/lopeta toisto"
-
-#~ msgid "Backwards Faster"
-#~ msgstr "Takaisisn nopeammin"
-
-#~ msgid "Forward Faster"
-#~ msgstr "Eteenpäin nopeammin"
-
-#~ msgid "Prev Frame"
-#~ msgstr "Edellinen ruutu"
-
-#~ msgid "Next Frame"
-#~ msgstr "Seuraava ruutu"
-
-#~ msgid "Next Edit/Mark"
-#~ msgstr "Seuraava leikkaus"
-
-#~ msgid "Prev Edit/Mark"
-#~ msgstr "Eddellinen leikkaus"
-
-#~ msgid "Go To Start"
-#~ msgstr "Mene alkuun"
-
-#, fuzzy
-#~ msgid "Go To End"
-#~ msgstr "Siirry alku merkkiin"
 
 #, fuzzy
 #~ msgid "Shortcuts"
