@@ -266,7 +266,7 @@ Also a project website will be developed during this cycle. The first version is
 
 The next cycle will be the longest since 0.16 because of the amount of coding and research needed. The target release date for 1.8 is September 2016.
 
-####Bugfixes and enhancements####
+#### Bugfixes and enhancements ####
 * Fix set parent clip functionality
 * Fix translation scripts (apienk)
 * Re-create all media icons always when requested
@@ -323,7 +323,7 @@ In 2016 there will probably be 3-4 releases, and the next release 1.6 is targete
 * **Filters can now be copy/pasted from one clip to another**. It has been possible to copy paste clips on timeline for quite a while, but now this feature was made more discovarable by adding menu items for the functionality.  
 
 
-####Other features and enhancements####
+#### Other features and enhancements ####
 * Fix media relinking for projects with SAVEFILE_VERSION < 4
 * Add 1080p 50fps profile
 * Fix keys 1-6 stopping working after tool selection
