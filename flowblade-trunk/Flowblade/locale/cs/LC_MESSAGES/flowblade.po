@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-08 16:02+0300\n"
+"POT-Creation-Date: 2017-09-09 19:19+0300\n"
 "PO-Revision-Date: 2017-08-31 20:56+0100\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -886,7 +886,7 @@ msgstr "Nový projekt"
 #: dialogs.py:933 dialogs.py:954 dialogs.py:995 dialogs.py:1023 dialogs.py:1051
 #: dialogs.py:1112 dialogs.py:1151 dialogs.py:1165 dialogs.py:1179
 #: dialogs.py:1194 dialogs.py:1424 dialogs.py:1541 dialogs.py:1589
-#: dialogs.py:1704 propertyeditorbuilder.py:406 propertyeditorbuilder.py:519
+#: dialogs.py:1704 propertyeditorbuilder.py:405 propertyeditorbuilder.py:518
 #: rendergui.py:48 rendergui.py:103 rendergui.py:117 rendergui.py:134
 #: rendergui.py:1053 preferenceswindow.py:48 tools/batchrendering.py:962
 #: proxyediting.py:431 patternproducer.py:319 patternproducer.py:352
@@ -895,8 +895,8 @@ msgid "Cancel"
 msgstr "Zrušit"
 
 #: dialogs.py:57 dialogs.py:223 dialogs.py:266 dialogs.py:441 dialogs.py:567
-#: dialogs.py:686 dialogs.py:699 dialogs.py:1425 propertyeditorbuilder.py:407
-#: propertyeditorbuilder.py:520 rendergui.py:104 preferenceswindow.py:49
+#: dialogs.py:686 dialogs.py:699 dialogs.py:1425 propertyeditorbuilder.py:406
+#: propertyeditorbuilder.py:519 rendergui.py:104 preferenceswindow.py:49
 #: tools/batchrendering.py:394 tools/gmic.py:382
 msgid "OK"
 msgstr "OK"
@@ -2170,8 +2170,8 @@ msgstr "Smazat cestu pro opětovné spojení souboru"
 msgid "Show Full Paths"
 msgstr "Ukázat úplné cesty"
 
-#: guicomponents.py:1761 propertyeditorbuilder.py:554
-#: propertyeditorbuilder.py:609 tools/toolsencoding.py:343
+#: guicomponents.py:1761 propertyeditorbuilder.py:553
+#: propertyeditorbuilder.py:608 tools/toolsencoding.py:343
 msgid "Progressive"
 msgstr "Progresivní"
 
@@ -2774,8 +2774,8 @@ msgstr "Zvukový filtr"
 msgid "Blur"
 msgstr "Rozostření"
 
-#: translations.py:116 translations.py:528 propertyeditorbuilder.py:569
-#: propertyeditorbuilder.py:624
+#: translations.py:116 translations.py:528 propertyeditorbuilder.py:568
+#: propertyeditorbuilder.py:623
 msgid "Distort"
 msgstr "Zkreslení"
 
@@ -4427,55 +4427,55 @@ msgstr "Stírání"
 msgid "Color Dip"
 msgstr "Ztlumení barvy"
 
-#: propertyeditorbuilder.py:252
+#: propertyeditorbuilder.py:251
 msgid "Size/Height"
 msgstr "Velikost/Výška"
 
-#: propertyeditorbuilder.py:288
+#: propertyeditorbuilder.py:287
 msgid "Width"
 msgstr "Šířka"
 
-#: propertyeditorbuilder.py:401
+#: propertyeditorbuilder.py:400
 msgid "Preset Luma"
 msgstr "Přednastavení pro svítivost"
 
-#: propertyeditorbuilder.py:402
+#: propertyeditorbuilder.py:401
 msgid "User Luma"
 msgstr "Uživatelská svítivost"
 
-#: propertyeditorbuilder.py:404
+#: propertyeditorbuilder.py:403
 msgid "Select Luma File"
 msgstr "Vybrat soubor se svítivostí"
 
-#: propertyeditorbuilder.py:413
+#: propertyeditorbuilder.py:412
 msgid "Wipe Luma files"
 msgstr "Vymazat soubory se svítivostí"
 
-#: propertyeditorbuilder.py:419
+#: propertyeditorbuilder.py:418
 msgid "Luma File:"
 msgstr "Soubor se svítivostí:"
 
-#: propertyeditorbuilder.py:517
+#: propertyeditorbuilder.py:516
 msgid "Select File"
 msgstr "Vybrat soubor"
 
-#: propertyeditorbuilder.py:554 propertyeditorbuilder.py:609
+#: propertyeditorbuilder.py:553 propertyeditorbuilder.py:608
 msgid "Nothing"
 msgstr "Nic"
 
-#: propertyeditorbuilder.py:554 propertyeditorbuilder.py:609
+#: propertyeditorbuilder.py:553 propertyeditorbuilder.py:608
 msgid "Deinterlace"
 msgstr "Odstranit prokládání"
 
-#: propertyeditorbuilder.py:554 propertyeditorbuilder.py:609
+#: propertyeditorbuilder.py:553 propertyeditorbuilder.py:608
 msgid "Both"
 msgstr "Oba"
 
-#: propertyeditorbuilder.py:563 propertyeditorbuilder.py:618
+#: propertyeditorbuilder.py:562 propertyeditorbuilder.py:617
 msgid "Force"
 msgstr "Síla"
 
-#: propertyeditorbuilder.py:568 propertyeditorbuilder.py:623
+#: propertyeditorbuilder.py:567 propertyeditorbuilder.py:622
 msgid "Align"
 msgstr "Zarovnání"
 

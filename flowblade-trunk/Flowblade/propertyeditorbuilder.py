@@ -109,7 +109,6 @@ def get_filter_extra_editor_rows(filt, editable_properties):
     """
     Returns list of extraeditors GUI components.
     """
-    #print editable_properties
     extra_editors = filt.info.extra_editors
     rows = []
     for editor_name in extra_editors:
