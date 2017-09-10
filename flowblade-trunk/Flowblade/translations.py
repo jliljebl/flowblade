@@ -76,7 +76,7 @@ def init_languages():
         lang = gettext.translation(APP_NAME, locale_path, languages=langs, fallback=True)
 
     # Un-comment for translations tests
-    #lang = gettext.translation(APP_NAME, locale_path, languages=["pl"], fallback=True)
+    #lang = gettext.translation(APP_NAME, locale_path, languages=["cs"], fallback=True)
 
     lang.install(APP_NAME) # makes _() a build-in available in all modules without imports
 

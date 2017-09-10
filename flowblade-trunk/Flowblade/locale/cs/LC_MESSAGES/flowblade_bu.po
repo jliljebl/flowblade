@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-10 12:34+0300\n"
-"PO-Revision-Date: 2017-09-09 21:07+0200\n"
+"POT-Creation-Date: 2017-09-09 19:19+0300\n"
+"PO-Revision-Date: 2017-08-31 20:56+0100\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "Language: cs\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Lokalize 2.0\n"
 "X-Language: cs_CZ\n"
 "X-Source-Language: C\n"
 
@@ -6392,6 +6392,7 @@ msgid "Go To End"
 msgstr "Jít na konec"
 
 #: shortcuts.py:195
+#, fuzzy
 msgid "3 Point Overwrite"
 msgstr "Tříbodové přepsání"
 
@@ -6412,6 +6413,7 @@ msgid "SPACE"
 msgstr "MEZERNÍK"
 
 #: shortcuts.py:221
+#, fuzzy
 msgid "Left Arrow"
 msgstr "Šipka vlevo "
 
@@ -6425,51 +6427,55 @@ msgstr "Poloha 2"
 
 #: shortcuts.py:237
 msgid "Key Pad END"
-msgstr "Klávesa konec (End)"
+msgstr ""
 
 #: shortcuts.py:238
+#, fuzzy
 msgid "Key Pad 1"
-msgstr "Klávesa 1"
+msgstr "Tlačítkový ovladač (číselná klávesnice) 1-7"
 
 #: shortcuts.py:240 shortcuts.py:243 shortcuts.py:244
 msgid "Key Pad 2"
-msgstr "Klávesa 2"
+msgstr ""
 
 #: shortcuts.py:241
+#, fuzzy
 msgid "Key Pad Down Arrow"
-msgstr "Klávesa šipka dolů"
+msgstr "Šipka dolů"
 
 #: shortcuts.py:246
 msgid "Key Pad 4"
-msgstr "Klávesa 4"
+msgstr ""
 
 #: shortcuts.py:247
+#, fuzzy
 msgid "Key Pad Left Arrow"
-msgstr "Klávesa šipka vlevo "
+msgstr "Šipka vlevo "
 
 #: shortcuts.py:249
 msgid "Key Pad 5"
-msgstr "Klávesa 5"
+msgstr ""
 
 #: shortcuts.py:250
 msgid "Key Pad Begin"
-msgstr "Klávesa začátek"
+msgstr ""
 
 #: shortcuts.py:252
 msgid "Key Pad 6"
-msgstr "Klávesa 6"
+msgstr ""
 
 #: shortcuts.py:253
+#, fuzzy
 msgid "Key Pad Right Arrow"
-msgstr "Klávesa šipka vpravo"
+msgstr "Šipka vpravo"
 
 #: shortcuts.py:255
 msgid "Key Pad 7"
-msgstr "Klávesa 7"
+msgstr ""
 
 #: shortcuts.py:256
 msgid "Key Pad HOME"
-msgstr "Klávesa Home"
+msgstr ""
 
 #: shortcuts.py:259
 msgid "TAB"
@@ -6477,23 +6483,26 @@ msgstr "Tab"
 
 #: shortcuts.py:261
 msgid "ENTER"
-msgstr "Enter"
+msgstr "ENTER"
 
 #: shortcuts.py:262
 msgid "="
 msgstr "="
 
 #: shortcuts.py:264
+#, fuzzy
 msgid "Alt"
-msgstr "Alt"
+msgstr "Vše"
 
 #: shortcuts.py:266
+#, fuzzy
 msgid "Alt + Shift"
-msgstr "Alt+Shift"
+msgstr "Alt+I"
 
 #: shortcuts.py:267
+#, fuzzy
 msgid "Control"
-msgstr "Ctrl"
+msgstr "Ctrl+N"
 
 #~ msgid "Outline"
 #~ msgstr "Obrys"
