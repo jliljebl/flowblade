@@ -1,6 +1,6 @@
 # FLOWBLADE ROADMAP
 
-Last updated: May. 2017
+Last updated: September. 2017
 
 
 
@@ -59,7 +59,7 @@ Last updated: May. 2017
 
 
 *Changelog*
-- *drop FFMpeg, Container clips are done, add Editing section*
+- *20-9-2017 drop FFMpeg, Container clips are done, add Editing section*
 - *13-5-17 Remove undoable items related to animating property values in in MLT, require too large MLt controinutions for the time being*
 - *13-5-17 Remove completed items and items that will be in 1.14*
 - *13-5-17 Add change log*
