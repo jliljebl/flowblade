@@ -288,7 +288,6 @@ class EditorWindow:
                     <menuitem action='DeleteClip'/>
                     <menuitem action='ResyncSelected'/>
                     <menuitem action='SyncCompositors'/>
-                    <menuitem action='CompositorsFadesDefaults'/>
                     <menuitem action='ClearFilters'/>
                     <separator/>
                     <menu action='Timeline'>
