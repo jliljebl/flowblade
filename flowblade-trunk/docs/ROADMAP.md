@@ -3,6 +3,11 @@
 Last updated: May. 2017
 
 
+
+## Editing
+- **Context sensitive Timeline tool cursor** This was originally part of non-features list of the design, but it seems that users prefer this, and we will look for a way to incoporate this with current design.
+- **Automatic Timeline Rendering** The only way to provide smooth playback in all circumstances is to do some form of timeline rendering. There are some ideas here that will be attempted, but cannot be quaranteed to work beforehand.
+
 ## Tracks
 - **Track filters stack** for both video and audio tracks.
 
@@ -18,10 +23,8 @@ Last updated: May. 2017
 
 ## Tools development
 - dedicated masking/keying tool
-- FFMPEG copy rendering tool
 
 ## Tool integration
-- **Timeline Container Clips** with data on original media, tool program data, rendered media and rendered media offset known and saved. Combine with polling for automatic prompts for update on render completion.
 - **Media Item creation** from ready made programs for e.g. text animations with Natron
 - Gimp, Inkscape, Audacity, Krita examined as **Timeline Container Clip** media creator programs
 
@@ -56,6 +59,7 @@ Last updated: May. 2017
 
 
 *Changelog*
+- *drop FFMpeg, Container clips are done, add Editing section*
 - *13-5-17 Remove undoable items related to animating property values in in MLT, require too large MLt controinutions for the time being*
 - *13-5-17 Remove completed items and items that will be in 1.14*
 - *13-5-17 Add change log*
