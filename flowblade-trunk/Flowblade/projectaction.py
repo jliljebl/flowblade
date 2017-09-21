@@ -1231,6 +1231,11 @@ def _xml_compound_render_done_callback(filename, media_name):
     add_media_thread = AddMediaFilesThread([filename], media_name)
     add_media_thread.start()
 
+def _sequence_xml_compound_render_done_callback(data):
+    filename, media_name = data
+    add_media_thread = AddMediaFilesThread([filename], media_name)
+    add_media_thread.start()
+
 def create_sequence_compound_clip():
     # lets's just set something unique-ish 
     default_name = _("sequence_") + _get_compound_clip_default_name_date_str() + ".xml"
@@ -1241,14 +1246,13 @@ def _do_create_sequence_compound_clip(dialog, response_id, name_entry):
         dialog.destroy()
         return
 
-    filename = name_entry.get_text()
+    media_name = name_entry.get_text()
     folder = editorpersistance.prefs.render_folder
-    #file_name = md5.new(str(os.urandom(32))).hexdigest()
-    write_file = folder + "/"+ filename + ".xml"
+    write_file = folder + "/"+ media_name + ".xml"
 
     dialog.destroy()
 
-    render_player = renderconsumer.XMLRenderPlayer(write_file, _xml_compound_render_done_callback, write_file)
+    render_player = renderconsumer.XMLRenderPlayer(write_file, _sequence_xml_compound_render_done_callback, (write_file, media_name))
     render_player.start()
 
 def _get_compound_clip_default_name_date_str():

@@ -496,7 +496,6 @@ def update_xml_file_producer_info(resource, info):
     # xml and mlt files require reading xml file to determine producer info
     mlt_doc = xml.dom.minidom.parse(resource)
 
-    print "adasdasd..."
     mlt_node = mlt_doc.getElementsByTagName("mlt").item(0)
     profile_node = mlt_node.getElementsByTagName("profile").item(0)
 
