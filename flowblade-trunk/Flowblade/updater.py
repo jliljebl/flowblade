@@ -292,13 +292,22 @@ def maybe_autocenter():
 
 # ------------------------------------------ timeline shrinking
 def set_timeline_height():
+    orig_pos = gui.editor_window.app_v_paned.get_position()
+    orig_height = tlinewidgets.HEIGHT 
+    
     if len(current_sequence().tracks) == 11 or PROJECT().get_project_property(appconsts.P_PROP_TLINE_SHRINK_VERTICAL) == False:
         tlinewidgets.HEIGHT = appconsts.TLINE_HEIGHT
+        set_v_paned = False
     else:
         tlinewidgets.HEIGHT = current_sequence().get_shrunk_tline_height_min()
+        set_v_paned = True
 
     gui.tline_canvas.widget.set_size_request(tlinewidgets.WIDTH, tlinewidgets.HEIGHT)
     gui.tline_column.widget.set_size_request(tlinewidgets.COLUMN_WIDTH, tlinewidgets.HEIGHT)
+    
+    if set_v_paned == True:
+        new_pos = orig_pos + orig_height - tlinewidgets.HEIGHT
+        gui.editor_window.app_v_paned.set_position(new_pos)
     
     current_sequence().resize_tracks_to_fit(gui.tline_canvas.widget.get_allocation())
     tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
