@@ -220,11 +220,10 @@ def show_slowmo_dialog(media_file, default_range_render, _response_callback):
     slider_hbox = Gtk.HBox(False, 4)
     slider_hbox.pack_start(fb_widgets.hslider, True, True, 0)
     slider_hbox.pack_start(spin, False, False, 4)
-    slider_hbox.set_size_request(350,35)
+    slider_hbox.set_size_request(450,35)
 
     hbox = Gtk.HBox(False, 2)
     hbox.pack_start(guiutils.pad_label(8, 8), False, False, 0)
-    hbox.pack_start(label, False, False, 0)
     hbox.pack_start(slider_hbox, False, False, 0)
 
     profile_selector = ProfileSelector()
@@ -272,6 +271,7 @@ def show_slowmo_dialog(media_file, default_range_render, _response_callback):
     vbox.pack_start(guiutils.get_left_justified_box([Gtk.Label(label=_("Source Mark In: ")), guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), mark_in]), False, False, 0)
     vbox.pack_start(guiutils.get_left_justified_box([Gtk.Label(label=_("Source Mark Out: ")), guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), mark_out]), False, False, 0)
     vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
+    vbox.pack_start(label, False, False, 0)
     vbox.pack_start(hbox, False, False, 0)
     vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target File:")), name_row, 120), False, False, 0)
@@ -368,11 +368,10 @@ def show_reverse_dialog(media_file, default_range_render, _response_callback):
     slider_hbox = Gtk.HBox(False, 4)
     slider_hbox.pack_start(fb_widgets.hslider, True, True, 0)
     slider_hbox.pack_start(spin, False, False, 4)
-    slider_hbox.set_size_request(350,35)
+    slider_hbox.set_size_request(450,35)
 
     hbox = Gtk.HBox(False, 2)
     hbox.pack_start(guiutils.pad_label(8, 8), False, False, 0)
-    hbox.pack_start(label, False, False, 0)
     hbox.pack_start(slider_hbox, False, False, 0)
 
     profile_selector = ProfileSelector()
@@ -420,6 +419,7 @@ def show_reverse_dialog(media_file, default_range_render, _response_callback):
     vbox.pack_start(guiutils.get_left_justified_box([Gtk.Label(label=_("Source Mark In: ")), guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), mark_in]), False, False, 0)
     vbox.pack_start(guiutils.get_left_justified_box([Gtk.Label(label=_("Source Mark Out: ")), guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), mark_out]), False, False, 0)
     vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
+    vbox.pack_start(label, False, False, 0)
     vbox.pack_start(hbox, False, False, 0)
     vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target File:")), name_row, 120), False, False, 0)
