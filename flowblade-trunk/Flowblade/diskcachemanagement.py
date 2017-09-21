@@ -36,6 +36,7 @@ PROJECT_DATA_WARNING = 2
 
 _panels = None
 
+
 class DiskFolderManagementPanel:
     
     def __init__(self, folder, info_text, warning_level):
