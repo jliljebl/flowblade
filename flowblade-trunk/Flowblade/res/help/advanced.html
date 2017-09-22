@@ -1,7 +1,7 @@
  <!DOCTYPE html>
 <html>
 <head>
-  <title>Clip Syncing</title>
+  <title>Advanced Editing</title>
   <link rel="stylesheet" href="style.css">
 <script src="toc.js" type="text/javascript"></script>
 </head>
@@ -21,8 +21,150 @@
 
 <div id="toc"></div>
 
+<h2>1. Advanced Project Actions </h2>
 
-<h2>1. Clip Syncing and Audio Split</h2>
+
+<h3>Combining Sequences</h3>
+<p>
+It is possible to import full contents of another Sequence into Sequence currently being edited.
+</p>
+
+<ol>
+<li> Select <b>Project->Import Another Sequence into this Sequnce..</b></li>
+<li> Select Import action.</li>
+<ul>
+<li> <b>Append Sequence</b> adds imported Sequence at the end of current Sequence</li>
+<li> <b>Insert Sequence at Playhead Position</b> creates a cut at playhead position and inserts imported Sequences at that position</li>
+</ul>
+<li> Select a Sequence to Import</li>
+<ul>
+<li> <b>Note that you obivously need atleast two Sequences to exist to do any import actions.</b></li>
+</ul>
+<li> Press <b>Import</b> button to execute import.</li>
+</ol>
+
+<h3>Importing Media from another Project</h3>
+
+<p>
+You can import Media Items from another Project.
+</p>
+
+<ol>
+<li> Select <b>Project->Import Media From Project...</b></li>
+<li> Select a Project file from file system.</li>
+<li> Media items that are not present in current Project will be opened in the current bin. Note that it takes a few seconds to load the project before new Media Items begin to appear.</li>
+</ol>
+
+
+
+<h2>2. Compound Clips </h2>
+
+<p>
+A <b>Compound Clip</b> is a single clip created by combining multiple clips and compositors in to a single media item.
+</p>
+
+<p>
+In Flowblade Compound Clips are <i>implemented by creating an MLT XML file</i> that is saved in a hidden folder. Note that it is currently not possible to unpack a Compound Clip back to its components.
+</p>
+
+<p>
+Compound Clips are useful when some complex sequence is more conveniently handled as a single unit.
+</p>
+
+<h3> Creating Compound Clip from Selection</h3>
+
+<ol>
+<li> Select 2 or more adjacent clips from a single track.</li>
+<li> Select <b>Project->Create Compound Clip->From Selected Clips</b></li>
+<li> Give a name for the new Media Item in the dialog.</li>
+<li> A new Media Item appears in the current Bin.</li>
+</ol>
+
+<h3> Creating Compound Clip from Sequence</h3>
+
+<ol>
+<li> Select <b>Project->Create Compound Clip->From Current Sequence</b></li>
+<li> Give a name for the new Media Item in the dialog.</li>
+<li> A new Media Item appears in the current Bin.</li>
+</ol>
+
+<h3> Creating audio synced Compound Clip from two Media Items</h3>
+
+<ol>
+<li> Select 2 Media Items in Media panel.</b></li>
+<ul>
+<li> The expected case is to select <b>1 Video and 1 Audio Clip</b>.</li>
+<li> If you select <b>2 Video Clips</b> then which is used as video depends on selection order.</li>
+<li> Audio from clip treated as video is muted.</li>
+</ul>
+<li> Select <b>Project->Create Compound Clip->Audio Sync Merge Clip From 2 Media Items</b></li>
+<li> If audio sync is successful a dialog  appers. Give a name for the new Media Item in the dialog.</li>
+<li> A new Media Item appears in the current Bin.</li>
+</ol>
+
+
+
+<h2>3. Timeline Audio Syncing</h2>
+
+<p>
+You can make a clip to move to a position in timeline in which its audio is in sync with audio of another clip on timeline.
+</p>
+
+<p>
+This enables you to do simplified version of multicam editing on the timeline.
+</p>
+
+<ol>
+<li> Open context menu with <b>Right Mouse</b> on Clip you wish to sync with some other clip.</li>
+<li> Select menu item <b>Select Clip to Audio Sync With...</b>. The cursor changes to a targeting cross.</li>
+<li> Click on Clip you wish to audio sync with.</li>
+<li> A dialog opens giving info on the sync action that is to be done to sync clips.</li>
+<li> Press <b>Do Audio Sync Move Edit</b> button to do the syncing edit.</li>
+<li> It is usually a good idea to mute one of the synched clips</li>
+</ol>
+
+
+
+<h2>4. Slow / Fast Motion and Reverse Clips</h2>
+
+<p>
+In Flowblade motion effects are achived by <b>rendering slow / fast motion  or reverse versions of video clips</b> and placing those on the timeline.
+</p>
+<h3> Creating Motion Clips </h3>
+<ol>
+<li> Right click on a Media File and select <b>Render Slow / Fast Motion File</b> from menu</li>
+<li>Edit parameters for the new motion Clip
+<ul>
+<li> Set speed</li>
+<li> Give name and location for motion Clip </li>
+<li> Select rendering parameters for motion Clip. It is probably a good idea to use a <b>lossless format</b> here to avoid any generational quality losses.</li>
+<li> Select render range, either:</li>
+<ul>
+<li> Full Source Clip</li>
+<li> From Source Clip Mark In to Mark Out</li>
+</ul>
+</ul>
+<li> Click <b>Render</b> button to create a new motion Clip</li>
+</ol>
+
+<h3> Creating Reverse Clips </h3>
+<ol>
+<li> Right click on a Media File and select <b>Render Reverse Motion File</b> from menu</li>
+<li>Edit parameters for the new motion Clip
+<ul>
+<li> Set speed</li>
+<li> Give name and location for reverse Clip </li>
+<li> Select rendering parameters for reverse Clip. It is probably a good idea to use a <b>lossless format</b> here to avoid any generational quality losses.</li>
+<li> Select render range, either:</li>
+<ul>
+<li> Full Source Clip</li>
+<li> From Source Clip Mark In to Mark Out</li>
+</ul>
+</ul>
+<li> Click <b>Render</b> button to create a new reverse Clip</li>
+</ol>
+
+<h2>5. Clip Parenting</h2>
 
 <p>
 In Flowblade Movie Editor you can <b>set a clip's positions to follow another clip's positions</b> on request.
@@ -73,30 +215,6 @@ In Flowblade Movie Editor you can <b>set a clip's positions to follow another cl
 <li> Edit audio split using Two Roll Trim mode to maintain sync with parent clip.</li>
 <li> Resync Audio as needed.</li>
 </ul>
-
-
-<h2>2. Slow / Fast Motion</h2>
-
-<p>
-In Flowblade motion effects are achived by <b>rendering slow / fast motion versions of video clips</b> and placing those on the timeline.
-</p>
-<h3> Creating Motion Clips </h3>
-<ol>
-<li> Right click on a Media File and select <b>Render Slow / Fast Motion File</b> from menu</li>
-<li>Edit parameters for the new motion Clip
-<ul>
-<li> Set speed</li>
-<li> Give name and location for motion Clip </li>
-<li> Select rendering parameters for motion Clip. It is probably a good idea to use a <b>lossless format</b> here to avoid any generational quality losses.</li>
-<li> Select render range, either:</li>
-<ul>
-<li> Full Source Clip</li>
-<li> From Source Clip Mark In to Mark Out</li>
-</ul>
-</ul>
-<li> Click <b>Render</b> button to create a new motion Clip</li>
-</ol>
-
 
 </div>
 </div>
