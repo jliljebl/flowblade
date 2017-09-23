@@ -34,6 +34,7 @@ import edit
 from editorstate import current_sequence
 import editorpersistance
 import keyframeeditor
+import mlttransitions
 import propertyeditorbuilder
 import propertyedit
 import propertyparse
@@ -131,12 +132,14 @@ def set_enabled(value):
     widgets.compositor_info.set_enabled(value)
     widgets.delete_b.set_sensitive(value)
     widgets.reset_b.set_sensitive(value)
-    if compositor == None or compositor.transition.info.auto_fade_compositor == False:
+
+    if compositor == None or (compositor.transition.info.auto_fade_compositor == False \
+        and mlttransitions.is_blender(compositor.transition.info.name) == False):
         widgets.fade_in_b.set_sensitive(value)
         widgets.fade_out_b.set_sensitive(value)
         widgets.fade_in_spin.set_sensitive(value)
         widgets.fade_out_spin.set_sensitive(value)
-    else: # Autofade compositors don't use these buttons
+    else: # Autofade compositors or blenders don't use these buttons
         widgets.fade_in_b.set_sensitive(False)
         widgets.fade_out_b.set_sensitive(False)
         widgets.fade_in_spin.set_sensitive(False)

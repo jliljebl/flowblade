@@ -210,7 +210,7 @@ class CompositorTransition:
     They wrap mlt.Transition objects that do the actual mixing.
     """
     def __init__(self, transition_info):
-        self.mlt_transition = None
+        self.mlt_transition = None # mlt.Transition object
         self.info = transition_info
         # Editable properties, usually a subset of all properties of 
         # mlt_serveice "composite", defined in compositors.xml
@@ -320,7 +320,7 @@ class CompositorObject:
         self.clip_out = -1 # ducktyping for clip for property editors
         self.planted = False
         self.compositor_index = None
-        self.name = None # ducktyping for clip for property editors
+        self.name = None # ducktyping as clip for property editors
         self.selected = False
         self.origin_clip_id = None
         
@@ -425,6 +425,13 @@ def create_compositor(compositor_type):
     compositor.type_id = compositor_type # this is a string like "##add", "##affineblend", in compositors.xml it is name element: <name>##affine</name> etc...
     return compositor
 
+def is_blender(compositor_type_test):
+    for blend in blenders:
+        name, compositor_type = blend
+        if compositor_type_test == compositor_type:
+            return True
+    
+    return False
 
 # ------------------------------------------------------ rendered transitions
 # These are tractor objects used to create rendered transitions.
