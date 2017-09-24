@@ -885,16 +885,13 @@ def _open_files_dialog_cb(file_select, response_id):
     mlt_files_deleted = False
     for i in range(len(filenames) - 1, -1, -1):
         file_path = filenames[i]
-        name, ext = os.path.splitext(file_path)
-        ext = ext.lstrip(".")
-        ext = ext.lower()
-        if ext == "xml" or ext == "mlt":
+        if utils.is_mlt_xml_file(file_path) == True:
             filenames.pop(i)
             mlt_files_deleted = True
     
     open_file_names(filenames)
 
-    # Info on dis allowed files
+    # Info on disallowed files
     if mlt_files_deleted == True:
         primary_txt = _("Opening .mlt or .xml file as media was disallowed!")
         secondary_txt = _("Because of current MLT behaviour of overwriting projct properties when opening MLT XML files\nit is not allowed to open these files as media.")

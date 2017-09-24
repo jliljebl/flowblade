@@ -353,6 +353,15 @@ def get_file_type(file_path):
     
     return "unknown"
 
+def is_mlt_xml_file(file_path):
+    name, ext = os.path.splitext(file_path)
+    ext = ext.lstrip(".")
+    ext = ext.lower()
+    if ext == "xml" or ext == "mlt":
+        return True
+    
+    return False
+        
 def hex_to_rgb(value):
     value = value.lstrip('#')
     lv = len(value)

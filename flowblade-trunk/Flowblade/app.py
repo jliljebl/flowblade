@@ -566,7 +566,6 @@ def open_project(new_project):
     audiowaveform.frames_cache = {}
 
     editorstate.project = new_project
-
     editorstate.media_view_filter = appconsts.SHOW_ALL_FILES
     
     # Inits widgets with project data

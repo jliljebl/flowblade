@@ -29,6 +29,7 @@ and then create MLT objects from pickled objects when project is loaded.
 import copy
 import glob
 import fnmatch
+import md5
 import os
 import pickle
 import time
@@ -83,20 +84,19 @@ snapshot_paths = None
 
 # Used to compute in/out points when saving to change profile
 _fps_conv_mult = 1.0
-    
+
+# A dict is put here when saving for profile change to contain paths to changed MLT XML files
+_xml_new_paths_for_profile_change = None
+
 class FileProducerNotFoundError(Exception):
-    """
-    We're only catching this, other errors we'll just crash on load
-    """
+
     def __init__(self, value):
         self.value = value
     def __str__(self):
         return repr(self.value)
 
 class ProjectProfileNotFoundError(Exception):
-    """
-    We're only catching this, other errors we'll just crash on load
-    """
+
     def __init__(self, value):
         self.value = value
     def __str__(self):
@@ -121,14 +121,17 @@ def save_project(project, file_path, changed_profile_desc=None):
     s_proj = copy.copy(project)
     
     # Implements "change profile" functionality
-    global _fps_conv_mult
+    global _fps_conv_mult, _xml_new_paths_for_profile_change
     _fps_conv_mult = 1.0
     if changed_profile_desc != None:
-        print mltprofiles.get_profile(changed_profile_desc), mltprofiles.get_profile(s_proj.profile_desc), s_proj.profile_desc
         _fps_conv_mult = mltprofiles.get_profile(changed_profile_desc).fps() / mltprofiles.get_profile(s_proj.profile_desc).fps()
         s_proj.profile_desc = changed_profile_desc
+        _xml_new_paths_for_profile_change = {} # dict acts also as a flag to show that profile change save is happening
+        new_profile = mltprofiles.get_profile(changed_profile_desc)
         print "Saving changed profile project: ", changed_profile_desc
         print "FPS conversion multiplier:", _fps_conv_mult
+    else:
+        _xml_new_paths_for_profile_change = None # None value acts also as a flag to show that profile change save is _not_ happening
 
     # Set current sequence index
     s_proj.c_seq_index = project.sequences.index(project.c_seq)
@@ -146,8 +149,19 @@ def save_project(project, file_path, changed_profile_desc=None):
     media_files = {}
     for k, v in s_proj.media_files.iteritems():
         s_media_file = copy.copy(v)
-        remove_attrs(s_media_file, MEDIA_FILE_REMOVE)
         
+        # Because of MLT misfeature of changing project profile when loading MLT XML files we need to create new modified XML files when
+        # saving to change profile.
+        # Underlying reason: https://github.com/mltframework/mlt/issues/212
+        if changed_profile_desc != None and s_media_file.path != None and utils.is_mlt_xml_file(s_media_file.path) == True:
+            new_xml_file_path = _save_changed_xml_file(s_media_file, new_profile)
+            _xml_new_paths_for_profile_change[s_media_file.path] = new_xml_file_path
+            s_media_file.path = new_xml_file_path
+            print "XML path replace for media:", s_media_file.path,  new_xml_file_path
+
+        # Remove unpicleable attrs
+        remove_attrs(s_media_file, MEDIA_FILE_REMOVE)
+
         # Convert media files between original and proxy files
         if project_proxy_mode == appconsts.CONVERTING_TO_USE_PROXY_MEDIA:
             if s_media_file.has_proxy_file:
@@ -229,7 +243,19 @@ def get_p_clip(clip):
     Creates pickleable version of MLT Producer object
     """
     s_clip = copy.copy(clip)
-     
+
+    # Because of MLT misfeature of changing project profile when loading MLT XML files we need to create new modified XML files when
+    # saving to change profile.
+    # Underlying reason: https://github.com/mltframework/mlt/issues/212
+    if _xml_new_paths_for_profile_change != None and hasattr(s_clip, "path") and s_clip.path != None and utils.is_mlt_xml_file(s_clip.path) == True:
+        try:
+            new_path = _xml_new_paths_for_profile_change[s_clip.path]
+            print "XML path replace for clip:", s_clip.path, new_path
+            s_clip.path = new_path
+        except:
+            # Something is really wrong, this should not be possible
+            print "Failed to find a new XML file for path:", s_clip.path
+
     # Set 'type' attribute for MLT object type
     # This IS NOT USED anywhere anymore and should be removed.
     s_clip.type = 'Mlt__Producer'
@@ -333,7 +359,29 @@ def _update_clip_in_out_for_fps_change(s_clip):
 def _update_compositor_in_out_for_fps_change(s_compositor):
     s_compositor.clip_in = int(s_compositor.clip_in * _fps_conv_mult)
     s_compositor.clip_out = int(s_compositor.clip_out * _fps_conv_mult)
- 
+
+# Needed for xml files when doing profile change saves
+def _save_changed_xml_file(s_media_file, new_profile):
+    xml_file = open(s_media_file.path)
+    xml_text = xml_file.read()
+        
+    new_profile_node = mltprofiles.get_profile_node(new_profile)
+    
+    in_index = xml_text.find("<profile")
+    out_index = xml_text.find("/>", in_index) + 2
+    
+    new_xml_text = xml_text[0:in_index] + new_profile_node + xml_text[out_index:len(xml_text)]
+
+    folder = editorpersistance.prefs.render_folder
+    uuid_str = md5.new(str(os.urandom(32))).hexdigest()
+    new_xml_file_path = folder + "/"+ uuid_str + ".xml"
+
+    new_xml_file = open(new_xml_file_path, "w")
+    new_xml_file.write(new_xml_text)
+    new_xml_file.close()
+    
+    return new_xml_file_path
+
 # -------------------------------------------------- LOAD
 def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
     _show_msg("Unpickling")
