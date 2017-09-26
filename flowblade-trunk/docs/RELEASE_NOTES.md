@@ -3,7 +3,7 @@
 
 ## Flowblade 1.12 ##
 
-Date: March 18, 2016
+Date: March 18, 2017
 
 **Flowblade 1.12** is the fourteenth release of Flowblade.
 
