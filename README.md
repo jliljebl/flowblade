@@ -1,7 +1,7 @@
 
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
-**Coming soon: Target date for release 1.14 is 29th September 2017.**
+**Coming soon: Target date for release 1.14 further post-poned to August 6th 2017.**
 
 **Contents:**
   1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
