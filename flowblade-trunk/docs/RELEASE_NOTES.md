@@ -17,7 +17,7 @@ Improved user feedback has also made possible to refine many areas of functional
 
 ### Audio Syncing ###
 
-Python module clapperless.py by Martin Schitter and Benjamin M. Schwartz has made it possible to offer functionality that syncs media items based on their audio data. We have two new features offering Audio Syncing functionality.
+Python module clapperless.py by *Martin Schitter* and *Benjamin M. Schwartz* has made it possible to offer functionality that syncs media items based on their audio data. We have two new features offering Audio Syncing functionality.
 
   * **Timeline Audio Syncing** Now you can select  two clips on timeline and request one of them to be moved so that clips' audio is suynced on timeline. This makes possible to do multicamera editing on timeline, one still needs to manually set video mute on/off on topmost tracks to see all tracks, but the workflow is possible now.
 
@@ -44,7 +44,7 @@ We have two new features addressing user requests for speeding up the process of
 
 ### User Selectable Keyboard shortcuts ###
 
-dvdlvr contributed the code that makes it possible to have user defined Keyboard shortcuts. In this release we offer a possibility to select between two predefined sets of shortcuts and fully configurable keyboard shortcuts will be made available in the future.
+*Steven van de Beek* contributed the code that makes it possible to have user defined Keyboard shortcuts. In this release we offer a possibility to select between two predefined sets of shortcuts and fully configurable keyboard shortcuts will be made available in the future.
 
 ### Tools development ###
 
@@ -74,84 +74,48 @@ Translations workflow update is definately in the plans. The current workflow is
 We will probably continue with the 6 month release cycle, but a shorter one is possible too if certain planned improvements come together quickly enough.
 
 ### Other new Features ###
-    	Import media items from another project feature, first working
-
-	Timeline edit length info overlay
-
-	Double track heights for HiDPI screens
-
-	Save render settings for proxy conversions
-
-   	Fix timelineline zoom issue #405
-
-	Support for manual entered time codes - contributd by
-
-	Allow user preferences for Fast Forward / Reverse speeds dvdlvr-patch-ffwd-rev-speeds
-
-    	Allow shrinking timeline vertically when fewer than maximum tracks used tracks
-
-    	Make Range Overwrite 3 point edit work with only In set on Timeline.
-
-    	Enable Volume filter to  bringing volume up too
-
-
-    	About menu visually impored by ahangarha.
+  * Import media items from another projec.
+  * Support for manually entered time codes/frame values in **by Bene81**.
+  * Timeline edit move delta info overlay.
+  * Save render settings for proxy conversions
+  * Add Lossless FFv1 profile **by lsde**.
+  * Fix timelineline zoom issue causing problems with scrolling.
+  * About menu visually impored by **Mostafa Ahangarha**.
+  * Allow user preferences for Fast Forward / Reverse speeds dvdlvr-patch-ffwd-rev-speeds
+  * Allow shrinking timeline vertically when fewer than maximum tracks used tracks
+  * Make Range Overwrite 3 point edit work with only In set on Timeline.
+  * Enable Volume filter to  bring volume up > 100%
 
 ### Feature Removals ###
-
-   	Dropped **Zoom Pan filter** because it does not work on all files.
+  * Dropped **Zoom Pan filter** because it does not work on all files.
 
 ### Other bugfixes and improvements ###
+  * Double track heights for HiDPI screens
+  * Fix frame sequence render issue.
+  * Fix wrong FPS on import for certain clips.
+  * Fix Slip tool bug for clips with index 0.
+  * Fix keyboard focus handling for 2 window layout.
+  * Add guide lines for shift down edits in geometry editors.
+  * Fix double click on blank crash.
+  * Fix trim view handling for roll and slide with TRIM_VIEW_SINGLE.
+  * Fix change profile unicode bug.
+  * Get confirmation when rendering from proxy media.
+  * Make default rate 8000kB for rendered transitions.
+  * Get overwrite confirmation when rendering, issue #286
+  * Disable cut action when it might interfere with ongoing edits
+  * Fix titler for 1.13 numpy
+  * Save mark in/out for proxy conversions
+  * Make keypad 1-7 change tools too
+  * Fix issue with Volume filter spin inputs.
+  * Fix keyframe drag to last frame bug.
+  * Fix not updating TC display after layout change.
+  * Fix unicode marker names.
+  * Add Clip Edit menu.
+  * Reverse order of SCOPE_MIX_VALUES.
+  * Add Window mode menu item.
+  * Fix duplicate profiles.
 
 
-
-	Fix frame sequence render issue.
-
-        Fix wrong FPS on import for certain clips.
-
-    	Fix Slip tool bug for clips with index 0.
-
-	Fix keyboard focus handling for 2 window layout.
-
-	Add guide lines for shift down edits in geometry editors.
-
-	Fix double click on blank crash.
-
-	Fix trim view handling for roll and slide with TRIM_VIEW_SINGLE.
-
-	Fix change profile unicode bug.
-
-    	Get confirmation when rendering from proxy media.
-
-	Make default rate 8000kB for rendered transitions.
-
-    	Get overwrite confirmation when rendering, issue #286
-
-    	Disable cut action when it might interfere with ongoing edits
-
-    	Fix titler for 1.13 numpy
-
-   	Save mark in/out for proxy conversions
-
-    	Make keypad 1-7 change tools too
-
-	Fix issue with Volume filter spin inputs.
-
-	Fix keyframe drag to last frame bug.
-
-    	Fix not updating TC display after layout change.
-
-    	Fix unicode marker names.
-
-	Add Clip Edit menu.
-
-   	Reverse order of SCOPE_MIX_VALUES.
-
-    	Add Window mode menu item.
-
-    	Fix duplicate profiles.
-
-   	Add Lossless FFv1 profile - conribution.
 
 
 
