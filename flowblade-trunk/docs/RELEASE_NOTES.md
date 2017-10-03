@@ -1,90 +1,55 @@
 # Release Notes #
 
 
-BIG FEATURES
-------------
-
 **COMING SOON**
 
 ## Flowblade 1.14 ##
 
 Date: August x, 2017
 
-**Flowblade 1.14** is the fourteenth release of Flowblade. This was the release with most new features since the initial release 0.6.
+**Flowblade 1.14** is the fourteenth release of Flowblade. This release had probably more new features then any release  since the initial release 0.6.
 
 The project made goood progress in this development cycle. New functionality like sequence combining, compound clips and audio syncing takes the application to the next level as a complete editing solution.
 
-Especially sequence combining feature together with existing features like Range Log make Flowblade easily the most advanced and featureful FLOSS tool for projects creating long complex edits from large amounts of media.
+Especially sequence combining feature together with existing features like Range Log make Flowblade easily the most advanced and featureful FLOSS tool for projects with long complex edits from large amounts of media.
 
 Improved user feedback has also made possible to refine many areas of functionality beoynd original design. 
-
 
 ### Audio Syncing ###
 
 Python module clapperless.py by Martin Schitter and Benjamin M. Schwartz has made it possible to offer functionality that syncs media items based on their audio data. We have two new features offering Audio Syncing functionality.
 
+  * **Timeline Audio Syncing** Now you can select  two clips on timeline and request one of them to be moved so that clips' audio is suynced on timeline. This makes possible to do multicamera editing on timeline, one still needs to manually set video mute on/off on topmost tracks to see all tracks, but the workflow is possible now.
 
-
-#### Timeline Audio Syncing ####
-Now you can select  two clips on timeline and request one of them to be moved so that clips' audio is suynced on timeline. This makes possible to do multicamera editing on timeline, one still needs to manually set video mute on/off on topmost tracks to see all tracks, but the workflow is possible now.
-
-#### Audio Synced Compound Clips ####
-User can select a video and audio clip and create an uudio synced compound clip media item from them. This useful e.g. when audio is recorded separately and video only has some help audio.
-
-
-
-
+* **Audio Synced Compound Clips** User can select a video and audio clip and create an uudio synced compound clip media item from them. This useful e.g. when audio is recorded separately and video only has some help audio.
 
 ### Combining Sequences ###
 
 It is possible to import full contents of another Sequence into Sequence currently being edited. There are two ways provided to combine sequences:
-  * Imported sequence can appended at the end of current sequence or spliced in at the playhead position.
-  * Imported sequence can be spliced in at the playhead position.
+  * Imported sequence can **appended at the end of current sequence** or spliced in at the playhead position.
+  * Imported sequence can be **spliced in at the playhead position**.
 
-
-This long overdue feature will make using multiple sequences per project a much more useful and flexible tool for building complex programs from smaller parts.
-
-
-
-
+This long overdue feature will make having multiple sequences per project a much more useful and flexible tool when building complex programs from smaller parts.
 
 ### Compound Clips ###
 
 A **Compound Clip** is a single clip created by combining multiple clips and compositors in to a single media item. Compound Clips are useful when some complex sequence is more conveniently handled as a single unit.
-
-**Compound Clip from Selection** feature creates a Compound Clip from currently selected clips into a Xompound Clip.
-
-**Compound Clip from Sequence** feature creates Compound Clip from current full contents of the timeline.
-
-
-
-
+  * **Compound Clip from Selection** feature creates a Compound Clip from currently selected clips into a Xompound Clip.
+  * **Compound Clip from Sequence** feature creates Compound Clip from current full contents of the timeline.
 
 ### Fade in/out ###
 We have two new features addressing user requests for speeding up the process of creating fade in and fade out transittions.
-
-** Fade Compositors ** 
-These are special new compositors that will automatically on creation place themselves at the beginning or end of clips and do not need any keyframe manipulation; lengths of fades are changed by changing the lehgs of compositors
-
-** Add Fade buttons **
-**Compositors** panel now *Add Fade In** and **Add Fade Out** buttons that will create keyframes at selectable postoins in the beginning and ends of clips that define fades.
-
-
-
+  * **Fade Compositors** These are special new compositors that will automatically on creation place themselves at the beginning or end of clips and do not need any keyframe manipulation; lengths of fades are changed by changing the lehgs of compositors
+  * **Add Fade buttons** **Compositors** panel now has **Add Fade In** and **Add Fade Out** buttons that will create keyframes at selectable postoins in the beginning and ends of clips that define fades.
 
 ### User Selectable Keyboard shortcuts ###
 
 dvdlvr contributed the code that makes it possible to have user defined Keyboard shortcuts. In this release we offer a possibility to select between two predefined sets of shortcuts and fully configurable keyboard shortcuts will be made available in the future.
 
-
-
-
-
 ### Tools development ###
 
 #### Reverse clips tool ####
 We now offer a new tool to create reverse clips of user selectable speed from media items.
-
 
 #### Titler ####
 
@@ -96,19 +61,11 @@ Titler got two new features
 
    Disk cache management window
 
-
-
-
-
 ### Translations ###
 
 We got fully up to date translation for Russian, Polish and Czezh by...
 
 A new CAnton Chinese translation was provided by....
-
-
-
-
 
 During next cycle work continues as outlined Roapmap and Issues list at Github. 
 
@@ -116,13 +73,7 @@ Translations workflow update is definately in the plans. The current workflow is
 
 We will probably continue with the 6 month release cycle, but a shorter one is possible too if certain planned improvements come together quickly enough.
 
-
-
-
-
-
-OTHER FEATURES
---------------
+### Other new Features ###
     	Import media items from another project feature, first working
 
 	Timeline edit length info overlay
@@ -144,25 +95,15 @@ OTHER FEATURES
     	Enable Volume filter to  bringing volume up too
 
 
-
-REMOVALS
---------
-   	Drop Zoom Pan filtre because it does not work on all files
-
-
-
-TRANSLATIONS
-----------------
-	Polish translation
-
-    	Chinese translations update
-
-
-
-BUG FIXES AND SMALL IMPROVEMENTS
---------------------------------
-
     	About menu visually impored by ahangarha.
+
+### Feature Removals ###
+
+   	Dropped **Zoom Pan filter** because it does not work on all files.
+
+### Other bugfixes and improvements ###
+
+
 
 	Fix frame sequence render issue.
 
