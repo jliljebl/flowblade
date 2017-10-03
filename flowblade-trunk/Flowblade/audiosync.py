@@ -135,6 +135,14 @@ def select_sync_clip_mouse_pressed(event, frame):
 
     if sync_clip == None:
         return # selection wasn't good
+    
+    if utils.is_mlt_xml_file(sync_clip.path) == True:
+        # This isn't translated because 1.14 translation window is close, translation coming for 1.16
+        dialogutils.warning_message("Cannot Timeline Audio Sync with Compound Clips!", 
+                                    "Audio syncing for Compound Clips is not supported.",
+                                    gui.editor_window.window,
+                                    True)
+        return
 
     sync_track =  tlinewidgets.get_track(event.y)
     sync_clip_index = sync_track.clips.index(sync_clip)
