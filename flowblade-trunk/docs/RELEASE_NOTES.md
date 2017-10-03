@@ -1,17 +1,15 @@
 # Release Notes #
 
 
-**COMING SOON**
+**COMING SOON...**
 
 ## Flowblade 1.14 ##
 
 Date: August x, 2017
 
-**Flowblade 1.14** is the fourteenth release of Flowblade. This release had probably more new features then any release  since the initial release 0.6.
+**Flowblade 1.14** is the fourteenth release of Flowblade. This release had probably more new features then any release  since the initial release 0.6. New functionality like sequence combining, compound clips and audio syncing take the application to the next level as a complete editing solution.
 
-The project made goood progress in this development cycle. New functionality like sequence combining, compound clips and audio syncing takes the application to the next level as a complete editing solution.
-
-Especially sequence combining feature together with existing features like Range Log make Flowblade easily the most advanced and featureful FLOSS tool for projects with long complex edits from large amounts of media.
+Especially sequence combining feature together with existing features like *Range Log* make Flowblade easily the most advanced and featureful FLOSS tool for projects with long complex edits and large amounts of media.
 
 Improved user feedback has also made possible to refine many areas of functionality beoynd original design. 
 
@@ -44,7 +42,7 @@ We have two new features addressing user requests for speeding up the process of
 
 ### User Selectable Keyboard shortcuts ###
 
-*Steven van de Beek* contributed the code that makes it possible to have user defined Keyboard shortcuts. In this release we offer a possibility to select between two predefined sets of shortcuts and fully configurable keyboard shortcuts will be made available in the future.
+**Steven van de Beek** contributed code that makes it possible to have user defined keyboard shortcuts. In this release we offer a possibility to select between two predefined sets of shortcuts, and fully configurable keyboard shortcuts will be made available in the future.
 
 ### Tools development ###
 
@@ -58,31 +56,35 @@ Titler got two new features
   * Text drop shadow 
   * Text outline features
 
-
-   Disk cache management window
+#### Disk cache management ####
+Disk cache management window provides GUI tool for deleting saved hidden files that could eventually consume noticable amounts of disk space.
 
 ### Translations ###
 
-We got fully up to date translation for Russian, Polish and Czezh by...
+We got a new new Cantonese translation by 老吴的BOX.
 
-A new CAnton Chinese translation was provided by....
+We got fully up to date translations for 1.14 in Russian, Polish and Czezh by Николай Смольянинов, Stanisław Polak and Pavel Fric respectively.
 
-During next cycle work continues as outlined Roapmap and Issues list at Github. 
+### Furure directions ###
+
+During next cycle work continues roughly as outlined in road map and Issues list at Github. 
 
 Translations workflow update is definately in the plans. The current workflow is difficult and outdated when there are several webbased solutions that are likely preferable to all translations contributors.
 
-We will probably continue with the 6 month release cycle, but a shorter one is possible too if certain planned improvements come together quickly enough.
+Next cycle will also see move to spending more development time on some upstream issues that can take a bit of time to come through as available features in the application, expecially on installationss from distro repositories.
+
+We will probably continue with the 6 month release cycle, but a shorter one is possible if certain planned improvements come together quickly enough.
 
 ### Other new Features ###
-  * Import media items from another projec.
+  * Import media items from another project.
   * Support for manually entered time codes/frame values in **by Bene81**.
   * Timeline edit move delta info overlay.
-  * Save render settings for proxy conversions
+  * Save render settings for proxy conversions.
   * Add Lossless FFv1 profile **by lsde**.
   * Fix timelineline zoom issue causing problems with scrolling.
-  * About menu visually impored by **Mostafa Ahangarha**.
-  * Allow user preferences for Fast Forward / Reverse speeds dvdlvr-patch-ffwd-rev-speeds
-  * Allow shrinking timeline vertically when fewer than maximum tracks used tracks
+  * About menu visually impored **by Mostafa Ahangarha**.
+  * Allow user preferences for Fast Forward / Reverse speeds **by Steven van de Beek**.
+  * Allow shrinking timeline vertically when fewer than maximum tracks used tracks.
   * Make Range Overwrite 3 point edit work with only In set on Timeline.
   * Enable Volume filter to  bring volume up > 100%
 
@@ -90,7 +92,7 @@ We will probably continue with the 6 month release cycle, but a shorter one is p
   * Dropped **Zoom Pan filter** because it does not work on all files.
 
 ### Other bugfixes and improvements ###
-  * Double track heights for HiDPI screens
+  * Double track heights for HiDPI screens.
   * Fix frame sequence render issue.
   * Fix wrong FPS on import for certain clips.
   * Fix Slip tool bug for clips with index 0.
@@ -101,11 +103,11 @@ We will probably continue with the 6 month release cycle, but a shorter one is p
   * Fix change profile unicode bug.
   * Get confirmation when rendering from proxy media.
   * Make default rate 8000kB for rendered transitions.
-  * Get overwrite confirmation when rendering, issue #286
-  * Disable cut action when it might interfere with ongoing edits
-  * Fix titler for 1.13 numpy
-  * Save mark in/out for proxy conversions
-  * Make keypad 1-7 change tools too
+  * Get overwrite confirmation when rendering.
+  * Disable cut action when it might interfere with ongoing edits.
+  * Fix titler for 1.13 numpy.
+  * Save mark in/out for proxy conversions.
+  * Make keypad 1-7 change tools too.
   * Fix issue with Volume filter spin inputs.
   * Fix keyframe drag to last frame bug.
   * Fix not updating TC display after layout change.
@@ -114,16 +116,6 @@ We will probably continue with the 6 month release cycle, but a shorter one is p
   * Reverse order of SCOPE_MIX_VALUES.
   * Add Window mode menu item.
   * Fix duplicate profiles.
-
-
-
-
-
-
-
-
-
-
 
 ## Flowblade 1.12 ##
 
