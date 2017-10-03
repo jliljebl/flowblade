@@ -1074,7 +1074,7 @@ def _display_file_info(media_file):
     # get info
     clip = current_sequence().create_file_producer_clip(media_file.path)
     info = utils.get_file_producer_info(clip)
-    print "_display_file_info", info
+
     width = info["width"]
     height = info["height"]
     if media_file.type == appconsts.IMAGE:
@@ -1102,9 +1102,7 @@ def _display_file_info(media_file):
 
     if media_file.type == appconsts.VIDEO:
         match_profile_index = mltprofiles.get_closest_matching_profile_index(info)
-        print match_profile_index
         match_profile_name =  mltprofiles.get_profile_name_for_index(match_profile_index)
-        print match_profile_name
     else:
         match_profile_name = _("N/A")
     

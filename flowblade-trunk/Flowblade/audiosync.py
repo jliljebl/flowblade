@@ -252,12 +252,21 @@ def create_audio_sync_compound_clip():
     # Can't sync coumpound clips
     if utils.is_mlt_xml_file(video_file.path) == True or utils.is_mlt_xml_file(audio_file.path) == True:
         # This isn't translated because 1.14 translation window is close, translation coming for 1.16
-        dialogutils.warning_message("Cannot sync Compound Clips!", 
+        dialogutils.warning_message("Cannot Create Audio Sync Compound Clip from Compound Clips!", 
                                     "Audio syncing Compound Clips is not supported.",
                                     gui.editor_window.window,
                                     True)
         return
 
+    # Can't sync 2 audio clips
+    if video_file.type == appconsts.AUDIO and audio_file.type == appconsts.AUDIO:
+        # This isn't translated because 1.14 translation window is close, translation coming for 1.16
+        dialogutils.warning_message("Cannot Create Audio Sync Compound Clip from 2 Audio Clips!", 
+                                    "One of the media items needs to be a video clip.",
+                                    gui.editor_window.window,
+                                    True)
+        return
+        
     if video_file.type == appconsts.VIDEO and audio_file.type == appconsts.AUDIO:
         pass
     elif video_file.type == appconsts.AUDIO and audio_file.type == appconsts.VIDEO:
