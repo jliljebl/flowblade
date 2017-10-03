@@ -197,7 +197,7 @@ def _tline_audio_sync_dialog_callback(dialog, response_id, data):
         
     dialog.destroy()
 
-    sync_move_frames = _tline_sync_data.clip_tline_media_offset - _tline_sync_data.media_offset_frames + 1 # +1 uh, seems to work better
+    sync_move_frames = _tline_sync_data.clip_tline_media_offset - _tline_sync_data.media_offset_frames
     over_in = _tline_sync_data.origin_clip_start_in_tline + sync_move_frames
     over_out = over_in + (_tline_sync_data.origin_clip.clip_out - _tline_sync_data.origin_clip.clip_in) + 1
 
