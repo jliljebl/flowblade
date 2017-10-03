@@ -76,7 +76,7 @@ def _write_offsets(video_file_path, audio_file_path, completed_callback):
     print "Starting clapperless analysis..."
     fps = str(int(utils.fps() + 0.5))
     idstr = _get_offset_file_idstr(video_file_path, audio_file_path)
-    print fps, idstr
+
     FLOG = open(utils.get_hidden_user_dir_path() + "log_clapperless", 'w')
     
     # clapperless.py computes offsets and writes them to file clapperless.OFFSETS_DATA_FILE
@@ -243,22 +243,27 @@ class TLineSyncData:
 # ------------------------------------------------------- compound clip audio sync
 def create_audio_sync_compound_clip():
     selection = gui.media_list_view.get_selected_media_objects()
-    print selection
     if len(selection) != 2:
         return
 
     video_file = selection[0].media_file
     audio_file = selection[1].media_file
     
+    # Can't sync coumpound clips
+    if utils.is_mlt_xml_file(video_file.path) == True or utils.is_mlt_xml_file(audio_file.path) == True:
+        # This isn't translated because 1.14 translation window is close, translation coming for 1.16
+        dialogutils.warning_message("Cannot sync Compound Clips!", 
+                                    "Audio syncing Compound Clips is not supported.",
+                                    gui.editor_window.window,
+                                    True)
+        return
+
     if video_file.type == appconsts.VIDEO and audio_file.type == appconsts.AUDIO:
         pass
     elif video_file.type == appconsts.AUDIO and audio_file.type == appconsts.VIDEO:
         video_file, audio_file = audio_file, video_file
     else:
-        # 2 video files???
-        # INFOWINDOW
-        print  "2 video file"
-        #return
+        print  "2 video files, video audio assignments determined by selection order"
 
     # This or GUI freezes, we really can't do Popen.wait() in a Gtk thread
     clapperless_thread = ClapperlesLaunchThread(video_file.path, audio_file.path, _compound_offsets_complete)
@@ -266,7 +271,7 @@ def create_audio_sync_compound_clip():
     
 def _compound_offsets_complete(data):
     print "Clapperless done for compound clip"
-    print data
+
     video_file_path, audio_file_path, idstr = data
     files_offsets = _read_offsets(idstr)
     sync_data = (files_offsets, data)
@@ -312,13 +317,11 @@ def _do_create_sync_compound_clip(dialog, response_id, data):
     # Add clips
     if offset > 0:
         offset_frames = int(float(offset) + 0.5)
-        print "plus"
         track_video.append(video_clip, 0, video_clip.get_length() - 1)
         track_audio.insert_blank(0, offset_frames)
         track_audio.append(audio_clip, 0, audio_clip.get_length() - 1)
     elif offset < 0:
         offset_frames = int(float(offset) - 0.5)
-        print "miinus"
         track_video.insert_blank(0, offset_frames)
         track_video.append(video_clip, 0, video_clip.get_length() - 1)
         track_audio.append(audio_clip, 0, audio_clip.get_length() - 1)
