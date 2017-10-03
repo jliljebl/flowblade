@@ -15,16 +15,16 @@ Improved user feedback has also made possible to refine many areas of functional
 
 ### Audio Syncing ###
 
-Python module clapperless.py by *Martin Schitter* and *Benjamin M. Schwartz* has made it possible to offer functionality that syncs media items based on their audio data. We have two new features offering Audio Syncing functionality.
+Python module *clapperless.py* by *Martin Schitter* and *Benjamin M. Schwartz* has made it possible to offer functionality that syncs media items based on their audio data. We have two new features offering Audio Syncing functionality.
 
-  * **Timeline Audio Syncing** Now you can select  two clips on timeline and request one of them to be moved so that clips' audio is suynced on timeline. This makes possible to do multicamera editing on timeline, one still needs to manually set video mute on/off on topmost tracks to see all tracks, but the workflow is possible now.
+  * **Timeline Audio Syncing** Now you can select  two clips on timeline and request one of them to be moved so that clips' audio is synced on timeline. This makes it possible to do multicamera editing on timeline, one needs to manually set video mute on/off on tracks to see all tracks, but the workflow is possible now.
 
-* **Audio Synced Compound Clips** User can select a video and audio clip and create an uudio synced compound clip media item from them. This useful e.g. when audio is recorded separately and video only has some help audio.
+* **Audio Synced Compound Clips** User can select a video and audio clip and create an audio synced compound clip media item from them. This is useful e.g. when audio is recorded separately and video clip only has some help audio.
 
 ### Combining Sequences ###
 
-It is possible to import full contents of another Sequence into Sequence currently being edited. There are two ways provided to combine sequences:
-  * Imported sequence can **appended at the end of current sequence** or spliced in at the playhead position.
+It is possible to import full contents of another Sequence into the Sequence currently being edited. There are two ways provided to combine sequences:
+  * Imported sequence can be **appended at the end of current sequence**.
   * Imported sequence can be **spliced in at the playhead position**.
 
 This long overdue feature will make having multiple sequences per project a much more useful and flexible tool when building complex programs from smaller parts.
@@ -33,12 +33,13 @@ This long overdue feature will make having multiple sequences per project a much
 
 A **Compound Clip** is a single clip created by combining multiple clips and compositors in to a single media item. Compound Clips are useful when some complex sequence is more conveniently handled as a single unit.
   * **Compound Clip from Selection** feature creates a Compound Clip from currently selected clips into a Xompound Clip.
-  * **Compound Clip from Sequence** feature creates Compound Clip from current full contents of the timeline.
-
+  * **Compound Clip from Sequence** feature creates a Compound Clip from current full contents of the timeline.
+  * **Audio Synced Compound Clips**, see above.
+  
 ### Fade in/out ###
 We have two new features addressing user requests for speeding up the process of creating fade in and fade out transittions.
-  * **Fade Compositors** These are special new compositors that will automatically on creation place themselves at the beginning or end of clips and do not need any keyframe manipulation; lengths of fades are changed by changing the lehgs of compositors
-  * **Add Fade buttons** **Compositors** panel now has **Add Fade In** and **Add Fade Out** buttons that will create keyframes at selectable postoins in the beginning and ends of clips that define fades.
+  * **Fade Compositors** These are special new compositors that will automatically on creation place themselves at the beginning or end of clips and do not need any keyframe manipulation; lengths of fades are changed by changing the lengths of compositors.
+  * **Add Fade buttons** *Compositors* panel now has **Add Fade In** and **Add Fade Out** buttons that will create keyframes that define a fade of desired length in a single click.
 
 ### User Selectable Keyboard shortcuts ###
 
@@ -65,11 +66,11 @@ We got a new new Cantonese translation by 老吴的BOX.
 
 We got fully up to date translations for 1.14 in Russian, Polish and Czezh by Николай Смольянинов, Stanisław Polak and Pavel Fric respectively.
 
-### Furure directions ###
+### Future directions ###
 
 During next cycle work continues roughly as outlined in road map and Issues list at Github. 
 
-Translations workflow update is definately in the plans. The current workflow is difficult and outdated when there are several webbased solutions that are likely preferable to all translations contributors.
+Translations workflow update is definately in the plans. The current workflow is difficult and outdated when there are several web solutions that are likely preferable to all translations contributors.
 
 Next cycle will also see move to spending more development time on some upstream issues that can take a bit of time to come through as available features in the application, expecially on installationss from distro repositories.
 
@@ -77,7 +78,7 @@ We will probably continue with the 6 month release cycle, but a shorter one is p
 
 ### Other new Features ###
   * Import media items from another project.
-  * Support for manually entered time codes/frame values in **by Bene81**.
+  * Support for manually entered time codes/frame values on clicked time code display  in **by Bene81**.
   * Timeline edit move delta info overlay.
   * Save render settings for proxy conversions.
   * Add Lossless FFv1 profile **by lsde**.
