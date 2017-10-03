@@ -1,90 +1,54 @@
 # Release Notes #
 
 
-BIG FEATURES
-------------
-
-**COMING SOON**
+**COMING SOON...**
 
 ## Flowblade 1.14 ##
 
 Date: August x, 2017
 
-**Flowblade 1.14** is the fourteenth release of Flowblade. This was the release with most new features since the initial release 0.6.
+**Flowblade 1.14** is the fourteenth release of Flowblade. This release had probably more new features then any release  since the initial release 0.6. New functionality like sequence combining, compound clips and audio syncing take the application to the next level as a complete editing solution.
 
-The project made goood progress in this development cycle. New functionality like sequence combining, compound clips and audio syncing takes the application to the next level as a complete editing solution.
-
-Especially sequence combining feature together with existing features like Range Log make Flowblade easily the most advanced and featureful FLOSS tool for projects creating long complex edits from large amounts of media.
+Especially sequence combining feature together with existing features like *Range Log* make Flowblade easily the most advanced and featureful FLOSS tool for projects with long complex edits and large amounts of media.
 
 Improved user feedback has also made possible to refine many areas of functionality beoynd original design. 
 
-
 ### Audio Syncing ###
 
-Python module clapperless.py by Martin Schitter and Benjamin M. Schwartz has made it possible to offer functionality that syncs media items based on their audio data. We have two new features offering Audio Syncing functionality.
+Python module *clapperless.py* by *Martin Schitter* and *Benjamin M. Schwartz* has made it possible to offer functionality that syncs media items based on their audio data. We have two new features offering Audio Syncing functionality.
 
+  * **Timeline Audio Syncing** Now you can select  two clips on timeline and request one of them to be moved so that clips' audio is synced on timeline. This makes it possible to do multicamera editing on timeline, one needs to manually set video mute on/off on tracks to see all tracks, but the workflow is possible now.
 
-
-#### Timeline Audio Syncing ####
-Now you can select  two clips on timeline and request one of them to be moved so that clips' audio is suynced on timeline. This makes possible to do multicamera editing on timeline, one still needs to manually set video mute on/off on topmost tracks to see all tracks, but the workflow is possible now.
-
-#### Audio Synced Compound Clips ####
-User can select a video and audio clip and create an uudio synced compound clip media item from them. This useful e.g. when audio is recorded separately and video only has some help audio.
-
-
-
-
+* **Audio Synced Compound Clips** User can select a video and audio clip and create an audio synced compound clip media item from them. This is useful e.g. when audio is recorded separately and video clip only has some help audio.
 
 ### Combining Sequences ###
 
-It is possible to import full contents of another Sequence into Sequence currently being edited. There are two ways provided to combine sequences:
-  * Imported sequence can appended at the end of current sequence or spliced in at the playhead position.
-  * Imported sequence can be spliced in at the playhead position.
+It is possible to import full contents of another Sequence into the Sequence currently being edited. There are two ways provided to combine sequences:
+  * Imported sequence can be **appended at the end of current sequence**.
+  * Imported sequence can be **spliced in at the playhead position**.
 
-
-This long overdue feature will make using multiple sequences per project a much more useful and flexible tool for building complex programs from smaller parts.
-
-
-
-
+This long overdue feature will make having multiple sequences per project a much more useful and flexible tool when building complex programs from smaller parts.
 
 ### Compound Clips ###
 
 A **Compound Clip** is a single clip created by combining multiple clips and compositors in to a single media item. Compound Clips are useful when some complex sequence is more conveniently handled as a single unit.
-
-**Compound Clip from Selection** feature creates a Compound Clip from currently selected clips into a Xompound Clip.
-
-**Compound Clip from Sequence** feature creates Compound Clip from current full contents of the timeline.
-
-
-
-
-
+  * **Compound Clip from Selection** feature creates a Compound Clip from currently selected clips into a Xompound Clip.
+  * **Compound Clip from Sequence** feature creates a Compound Clip from current full contents of the timeline.
+  * **Audio Synced Compound Clips**, see above.
+  
 ### Fade in/out ###
 We have two new features addressing user requests for speeding up the process of creating fade in and fade out transittions.
-
-** Fade Compositors ** 
-These are special new compositors that will automatically on creation place themselves at the beginning or end of clips and do not need any keyframe manipulation; lengths of fades are changed by changing the lehgs of compositors
-
-** Add Fade buttons **
-**Compositors** panel now *Add Fade In** and **Add Fade Out** buttons that will create keyframes at selectable postoins in the beginning and ends of clips that define fades.
-
-
-
+  * **Fade Compositors** These are special new compositors that will automatically on creation place themselves at the beginning or end of clips and do not need any keyframe manipulation; lengths of fades are changed by changing the lengths of compositors.
+  * **Add Fade buttons** *Compositors* panel now has **Add Fade In** and **Add Fade Out** buttons that will create keyframes that define a fade of desired length in a single click.
 
 ### User Selectable Keyboard shortcuts ###
 
-dvdlvr contributed the code that makes it possible to have user defined Keyboard shortcuts. In this release we offer a possibility to select between two predefined sets of shortcuts and fully configurable keyboard shortcuts will be made available in the future.
-
-
-
-
+**Steven van de Beek** contributed code that makes it possible to have user defined keyboard shortcuts. In this release we offer a possibility to select between two predefined sets of shortcuts, and fully configurable keyboard shortcuts will be made available in the future.
 
 ### Tools development ###
 
 #### Reverse clips tool ####
 We now offer a new tool to create reverse clips of user selectable speed from media items.
-
 
 #### Titler ####
 
@@ -93,132 +57,66 @@ Titler got two new features
   * Text drop shadow 
   * Text outline features
 
-
-   Disk cache management window
-
-
-
-
+#### Disk cache management ####
+Disk cache management window provides GUI tool for deleting saved hidden files that could eventually consume noticable amounts of disk space.
 
 ### Translations ###
 
-We got fully up to date translation for Russian, Polish and Czezh by...
-
-A new CAnton Chinese translation was provided by....
-
-
-
-
-
-During next cycle work continues as outlined Roapmap and Issues list at Github. 
-
-Translations workflow update is definately in the plans. The current workflow is difficult and outdated when there are several webbased solutions that are likely preferable to all translations contributors.
-
-We will probably continue with the 6 month release cycle, but a shorter one is possible too if certain planned improvements come together quickly enough.
-
-
-
-
-
-
-OTHER FEATURES
---------------
-    	Import media items from another project feature, first working
-
-	Timeline edit length info overlay
-
-	Double track heights for HiDPI screens
-
-	Save render settings for proxy conversions
-
-   	Fix timelineline zoom issue #405
-
-	Support for manual entered time codes - contributd by
-
-	Allow user preferences for Fast Forward / Reverse speeds dvdlvr-patch-ffwd-rev-speeds
-
-    	Allow shrinking timeline vertically when fewer than maximum tracks used tracks
-
-    	Make Range Overwrite 3 point edit work with only In set on Timeline.
-
-    	Enable Volume filter to  bringing volume up too
-
-
-
-REMOVALS
---------
-   	Drop Zoom Pan filtre because it does not work on all files
-
-
-
-TRANSLATIONS
-----------------
-	Polish translation
-
-    	Chinese translations update
-
-
-
-BUG FIXES AND SMALL IMPROVEMENTS
---------------------------------
-
-    	About menu visually impored by ahangarha.
-
-	Fix frame sequence render issue.
-
-        Fix wrong FPS on import for certain clips.
-
-    	Fix Slip tool bug for clips with index 0.
-
-	Fix keyboard focus handling for 2 window layout.
-
-	Add guide lines for shift down edits in geometry editors.
-
-	Fix double click on blank crash.
-
-	Fix trim view handling for roll and slide with TRIM_VIEW_SINGLE.
-
-	Fix change profile unicode bug.
-
-    	Get confirmation when rendering from proxy media.
-
-	Make default rate 8000kB for rendered transitions.
-
-    	Get overwrite confirmation when rendering, issue #286
-
-    	Disable cut action when it might interfere with ongoing edits
-
-    	Fix titler for 1.13 numpy
-
-   	Save mark in/out for proxy conversions
-
-    	Make keypad 1-7 change tools too
-
-	Fix issue with Volume filter spin inputs.
-
-	Fix keyframe drag to last frame bug.
-
-    	Fix not updating TC display after layout change.
-
-    	Fix unicode marker names.
-
-	Add Clip Edit menu.
-
-   	Reverse order of SCOPE_MIX_VALUES.
-
-    	Add Window mode menu item.
-
-    	Fix duplicate profiles.
-
-   	Add Lossless FFv1 profile - conribution.
-
-
-
-
-
-
-
-
+We got a new new Cantonese translation by 老吴的BOX.
+
+We got fully up to date translations for 1.14 in Russian, Polish and Czezh by Николай Смольянинов, Stanisław Polak and Pavel Fric respectively.
+
+### Future directions ###
+
+During next cycle work continues roughly as outlined in road map and Issues list at Github. 
+
+Translations workflow update is definately in the plans. The current workflow is difficult and outdated when there are several web solutions that are likely preferable to all translations contributors.
+
+Next cycle will also see move to spending more development time on some upstream issues that can take a bit of time to come through as available features in the application, expecially on installationss from distro repositories.
+
+We will probably continue with the 6 month release cycle, but a shorter one is possible if certain planned improvements come together quickly enough.
+
+### Other new Features ###
+  * Import media items from another project.
+  * Support for manually entered time codes/frame values on clicked time code display  in **by Bene81**.
+  * Timeline edit move delta info overlay.
+  * Save render settings for proxy conversions.
+  * Add Lossless FFv1 profile **by lsde**.
+  * Fix timelineline zoom issue causing problems with scrolling.
+  * About menu visually impored **by Mostafa Ahangarha**.
+  * Allow user preferences for Fast Forward / Reverse speeds **by Steven van de Beek**.
+  * Allow shrinking timeline vertically when fewer than maximum tracks used tracks.
+  * Make Range Overwrite 3 point edit work with only In set on Timeline.
+  * Enable Volume filter to  bring volume up > 100%
+
+### Feature Removals ###
+  * Dropped **Zoom Pan filter** because it does not work on all files.
+
+### Other bugfixes and improvements ###
+  * Double track heights for HiDPI screens.
+  * Fix frame sequence render issue.
+  * Fix wrong FPS on import for certain clips.
+  * Fix Slip tool bug for clips with index 0.
+  * Fix keyboard focus handling for 2 window layout.
+  * Add guide lines for shift down edits in geometry editors.
+  * Fix double click on blank crash.
+  * Fix trim view handling for roll and slide with TRIM_VIEW_SINGLE.
+  * Fix change profile unicode bug.
+  * Get confirmation when rendering from proxy media.
+  * Make default rate 8000kB for rendered transitions.
+  * Get overwrite confirmation when rendering.
+  * Disable cut action when it might interfere with ongoing edits.
+  * Fix titler for 1.13 numpy.
+  * Save mark in/out for proxy conversions.
+  * Make keypad 1-7 change tools too.
+  * Fix issue with Volume filter spin inputs.
+  * Fix keyframe drag to last frame bug.
+  * Fix not updating TC display after layout change.
+  * Fix unicode marker names.
+  * Add Clip Edit menu.
+  * Reverse order of SCOPE_MIX_VALUES.
+  * Add Window mode menu item.
+  * Fix duplicate profiles.
 
 ## Flowblade 1.12 ##
 
