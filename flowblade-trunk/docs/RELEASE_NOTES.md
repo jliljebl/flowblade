@@ -4,7 +4,7 @@
 
 Date: October 4, 2017
 
-**Flowblade 1.14** is the fifthteeth release of Flowblade. This release had probably more new features then any release  since the initial release 0.6. New functionality like sequence combining, compound clips and audio syncing take the application to the next level as a complete editing solution.
+**Flowblade 1.14** is the fifteenth release of Flowblade. This release had probably more new features then any release  since the initial release 0.6. New functionality like sequence combining, compound clips and audio syncing take the application to the next level as a complete editing solution.
 
 Especially sequence combining feature together with existing features like *Range Log* make Flowblade easily the most advanced and featureful FLOSS tool for projects with long complex edits and large amounts of media.
 
