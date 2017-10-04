@@ -31,7 +31,7 @@ This long overdue feature will make having multiple sequences per project a much
 A **Compound Clip** is a single clip created by combining multiple clips and compositors in to a single media item. Compound Clips are useful when some complex sequence is more conveniently handled as a single unit.
   * **Compound Clip from Selection** feature creates a Compound Clip from currently selected clips into a Compound Clip.
   * **Compound Clip from Sequence** feature creates a Compound Clip from current full contents of the timeline.
-  * **Audio Synced Compound Clips**, see above.
+  * **Audio Synced Compound Clip**, see above.
   
 ### Fade in/out ###
 We have two new features addressing user requests for speeding up the process of creating fade in and fade out transitions.
