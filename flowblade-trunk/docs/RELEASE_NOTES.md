@@ -29,12 +29,12 @@ This long overdue feature will make having multiple sequences per project a much
 ### Compound Clips ###
 
 A **Compound Clip** is a single clip created by combining multiple clips and compositors in to a single media item. Compound Clips are useful when some complex sequence is more conveniently handled as a single unit.
-  * **Compound Clip from Selection** feature creates a Compound Clip from currently selected clips into a Xompound Clip.
+  * **Compound Clip from Selection** feature creates a Compound Clip from currently selected clips into a Compound Clip.
   * **Compound Clip from Sequence** feature creates a Compound Clip from current full contents of the timeline.
   * **Audio Synced Compound Clips**, see above.
   
 ### Fade in/out ###
-We have two new features addressing user requests for speeding up the process of creating fade in and fade out transittions.
+We have two new features addressing user requests for speeding up the process of creating fade in and fade out transitions.
   * **Fade Compositors** These are special new compositors that will automatically on creation place themselves at the beginning or end of clips and do not need any keyframe manipulation; lengths of fades are changed by changing the lengths of compositors.
   * **Add Fade buttons** *Compositors* panel now has **Add Fade In** and **Add Fade Out** buttons that will create keyframes that define a fade of desired length in a single click.
 
@@ -80,7 +80,7 @@ We will probably continue with the 6 month release cycle, but a shorter one is p
   * Save render settings for proxy conversions.
   * Add Lossless FFv1 profile **by lsde**.
   * Fix timelineline zoom issue causing problems with scrolling.
-  * About menu visually impored **by Mostafa Ahangarha**.
+  * About menu visually improved **by Mostafa Ahangarha**.
   * Allow user preferences for Fast Forward / Reverse speeds **by Steven van de Beek**.
   * Allow shrinking timeline vertically when fewer than maximum tracks used tracks.
   * Make Range Overwrite 3 point edit work with only In set on Timeline.
