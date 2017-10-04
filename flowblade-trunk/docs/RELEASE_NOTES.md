@@ -1,11 +1,8 @@
 # Release Notes #
 
-
-**COMING SOON...**
-
 ## Flowblade 1.14 ##
 
-Date: August x, 2017
+Date: October 4, 2017
 
 **Flowblade 1.14** is the fourteenth release of Flowblade. This release had probably more new features then any release  since the initial release 0.6. New functionality like sequence combining, compound clips and audio syncing take the application to the next level as a complete editing solution.
 
