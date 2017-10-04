@@ -56,9 +56,9 @@ Flowblade provides powerful tools to mix and filter video and audio.
         
 # Releases
 
-**Latest release:** Flowblade Movie Editor 1.12 was released on March 2017.
+**Latest release:** Flowblade Movie Editor 1.14 was released on October 2017.
 
-**Next release:** Flowblade Movie Editor 1.14 will be out on August 2017.
+**Next release:** Flowblade Movie Editor 1.16 will be out on February 2018.
 
 # Installing Flowblade
 
