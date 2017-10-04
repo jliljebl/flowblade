@@ -49,10 +49,10 @@ We now offer a new tool to create reverse clips of user selectable speed from me
 
 #### Titler ####
 
-Titler got two new features
+Titler got two new features:
 
   * Text drop shadow 
-  * Text outline features
+  * Text outline
 
 #### Disk cache management ####
 Disk cache management window provides GUI tool for deleting saved hidden files that could eventually consume noticable amounts of disk space.
