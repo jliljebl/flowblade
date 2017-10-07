@@ -19,8 +19,8 @@
 """
 
 """
-Module contains CairoDrawableArea widget. You can draw onto it using 
-Cairo, and listen to its mouse and keyboard events.
+Module contains CairoDrawableArea2 widget. You can draw onto it using 
+Cairo by setting the raw function on ceation, and listen to its mouse and keyboard events.
 """
 
 from gi.repository import Gtk
@@ -78,9 +78,9 @@ class CairoDrawableArea2(Gtk.DrawingArea):
 
     def _draw_event(self, widget, cr):
         a = self.get_allocation()       
-        self._draw_func(None, cr, (a.x, a.y, a.width, a.height)) # 'None' is event object that was used to pass through here. Can be removed.
+        self._draw_func(None, cr, (a.x, a.y, a.width, a.height)) # 'None' is event object that was used to pass through here.
                                                                   # GTK2 used a tuple for allocation and all draw funcs expect it, so we provide
-                                                                  # allocation as tuple
+                                                                  # allocation as tuple.
         return False
 
     # ------------------------------------------------------------ Signal listeners 

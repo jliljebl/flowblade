@@ -35,7 +35,7 @@ SYNC_AUDIO = 6
 FILE_DOES_NOT_EXIST = 7
 IMAGE_SEQUENCE = 8
 
-# Mediaview filtering options
+# Media view filtering options
 SHOW_ALL_FILES = 0
 SHOW_VIDEO_FILES = 1
 SHOW_AUDIO_FILES = 2
@@ -43,7 +43,7 @@ SHOW_GRAPHICS_FILES = 3
 SHOW_IMAGE_SEQUENCES = 4
 SHOW_PATTERN_PRODUCERS = 5
 
-# Used to draw indicators that tell if more frames are available while trimming
+# These are used to draw indicators that tell if more frames are available while trimming
 ON_FIRST_FRAME = 0
 ON_LAST_FRAME = 1
 ON_BETWEEN_FRAME = 2
@@ -68,11 +68,11 @@ PROP_EXPRESSION = 2
 # Display heights for tracks and timeline.
 TRACK_HEIGHT_NORMAL = 50 # track height in canvas and column
 TRACK_HEIGHT_SMALL = 25 # track height in canvas and column
-TRACK_HEIGHT_SMALLEST = 25 # maybe remove as it is no longer meaningful
+TRACK_HEIGHT_SMALLEST = 25 # maybe remove this as it is no longer used
 TLINE_HEIGHT = 260
 
 # Notebook widths
-NOTEBOOK_WIDTH = 600 # defines app min width with MONITOR_AREA_WIDTH
+NOTEBOOK_WIDTH = 600 # defines app min width together with MONITOR_AREA_WIDTH
 NOTEBOOK_WIDTH_WIDESCREEN = 500
 TOP_ROW_HEIGHT = 500
 
@@ -100,7 +100,7 @@ NON_MLT_PROPERTY = "propertynonmlt"
 MLT_SERVICE = "mlt_service"
 EXTRA_EDITOR = "extraeditor"
 
-# Available tracks max for flowblade
+# Available tracks maximum for Flowblade
 MAX_TRACKS = 9
 
 # Thumbnail image dimensions
@@ -118,7 +118,7 @@ SAVEFILE_VERSION = -1
 MIDBAR_COLOR = "#bdbdbd"
 
 # Media log event types
-MEDIA_LOG_ALL = -1 # no MediaLogEvent has this type, this used when filtering events for display
+MEDIA_LOG_ALL = -1 # no MediaLogEvent has this type, this is used when filtering events for display
 MEDIA_LOG_INSERT = 0
 MEDIA_LOG_MARKS_SET = 1
 
@@ -170,7 +170,6 @@ MULTI_TRIM = 3
 # Jack options (not used currently)
 JACK_ON_START_UP_NO = 0
 JACK_ON_START_UP_YES = 1
-
 JACK_OUT_AUDIO = 0
 JACK_OUT_SYNC = 0
 
@@ -184,7 +183,7 @@ TRIM_VIEW_ON = 0
 TRIM_VIEW_SINGLE = 1
 TRIM_VIEW_OFF = 2
 
-# MIdbar layout
+# Midbar layout
 MIDBAR_TC_LEFT = 0
 MIDBAR_TC_CENTER = 1
 MIDBAR_COMPONENTS_CENTERED = 2

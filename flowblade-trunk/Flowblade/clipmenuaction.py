@@ -262,7 +262,7 @@ def _mute_clip(data):
         data = {"clip":clip}
         action = edit.mute_clip(data)
         action.do_edit()
-    else:# then we're stting clip unmuted
+    else:# then we're sitting clip unmuted
         data = {"clip":clip}
         action = edit.unmute_clip(data)
         action.do_edit()
@@ -366,7 +366,7 @@ def _cover_blank_from_next(data, called_from_next_clip=False):
     if not called_from_next_clip:
         clip_index = movemodes.selected_range_out + 1
         blank_index = movemodes.selected_range_in
-        if clip_index < 0: # we're not getting legal clip index
+        if clip_index < 0: # we are not getting a legal clip index
             return
         cover_clip = track.clips[clip_index]
     else:
