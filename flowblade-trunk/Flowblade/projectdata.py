@@ -61,13 +61,13 @@ EVENT_SAVED_SNAPSHOT = 5
 
 thumbnailer = None
 
-_project_properties_default_values = {appconsts.P_PROP_TLINE_SHRINK_VERTICAL:False,
-                                      appconsts.P_PROP_DISSOLVE_GROUP_FADE_IN:-1,
-                                      appconsts.P_PROP_DISSOLVE_GROUP_FADE_OUT:-1,
-                                      appconsts.P_PROP_ANIM_GROUP_FADE_IN:-1,
-                                      appconsts.P_PROP_ANIM_GROUP_FADE_OUT:-1,
-                                      appconsts.P_PROP_LAST_RENDER_SELECTIONS: None,
-                                      appconsts.P_PROP_TRANSITION_ENCODING: None}
+_project_properties_default_values = {appconsts.P_PROP_TLINE_SHRINK_VERTICAL:False, # Shink timeline max height if < 9 tracks
+                                      appconsts.P_PROP_DISSOLVE_GROUP_FADE_IN:-1, # not used, dropped feature (auto fades on creation)
+                                      appconsts.P_PROP_DISSOLVE_GROUP_FADE_OUT:-1, # not used, dropped feature (auto fades on creation)
+                                      appconsts.P_PROP_ANIM_GROUP_FADE_IN:-1, # not used, dropped feature (auto fades on creation)
+                                      appconsts.P_PROP_ANIM_GROUP_FADE_OUT:-1, # not used, dropped feature (auto fades on creation)
+                                      appconsts.P_PROP_LAST_RENDER_SELECTIONS: None, # tuple for last render selections data
+                                      appconsts.P_PROP_TRANSITION_ENCODING: None}  # tuple for last renderered transition render selections data
 
 class Project:
     """
