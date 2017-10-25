@@ -52,7 +52,7 @@ RANGE_DND_TARGET = Gtk.TargetEntry.new('range', Gtk.TargetFlags.SAME_APP, 0)
 URI_DND_TARGET = Gtk.TargetEntry.new('text/uri-list', 0, 0)
 
 
-# These used to hold data needed on drag drop instead of the API provided GtkSelectionData.
+# These are used to hold data needed on drag drop instead of the API provided by GtkSelectionData.
 drag_data = None 
 drag_source = None
 
