@@ -55,7 +55,7 @@ class AtomicFileWriter(object):
     previous state.
     """
 
-    def __init__(self, file_path):
+    def __init__(self, file_path, mode=None):
         """
         AtomicFileWriter constructor.
 
@@ -64,6 +64,13 @@ class AtomicFileWriter(object):
 
         # absolute path to the temp file used for writing
         self.tmp_file_path = None
+
+        if mode is None:
+            self.mode = "w"
+        elif (mode == "w") or (mode == "wb"):
+            self.mode = mode
+        else:
+            raise ValueError("AtomicFileWriter only accepts 'w' or 'wb' as valid modes")
 
         # absolute path to the file that the caller eventually wants to write
         self.dest_file_path = os.path.abspath(file_path)
