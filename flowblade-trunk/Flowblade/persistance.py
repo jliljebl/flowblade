@@ -37,6 +37,7 @@ import time
 from gi.repository import Gtk
 from gi.repository import Gdk
 
+import atomicfile
 import appconsts
 import editorstate
 import editorpersistance
@@ -194,8 +195,9 @@ def save_project(project, file_path, changed_profile_desc=None):
     remove_attrs(s_proj, PROJECT_REMOVE)
 
     # Write out file.
-    write_file = file(file_path, "wb")
-    pickle.dump(s_proj, write_file)
+    with atomicfile.AtomicFileWriter(file_path, "wb") as afw:
+        write_file = afw.get_file()
+        pickle.dump(s_proj, write_file)
 
 def get_p_sequence(sequence):
     """
