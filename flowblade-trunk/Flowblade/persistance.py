@@ -37,8 +37,8 @@ import time
 from gi.repository import Gtk
 from gi.repository import Gdk
 
-import atomicfile
 import appconsts
+import atomicfile
 import editorstate
 import editorpersistance
 import mltprofiles
