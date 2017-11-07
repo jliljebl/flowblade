@@ -122,13 +122,30 @@ class AtomicFileWriter(object):
         # return a reference to this instance so it can be used as a context manager
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, exception_type, exception_value, traceback):
         """
         Context manager cleanup.
 
         Flushes and closes the temp file (if necessary),
         and atomically renames it into place.
         """
+
+        # if we caught an exception from inside the context manager block,
+        # then remove the temp file and let the exception bubble up
+        if exception_type:
+            try:
+                # close the temp file if necessary
+                if not self.file_obj.closed:
+                    self.file_obj.close()
+
+                # remove the temp file
+                os.unlink(self.tmp_file_path)
+
+            except:
+                print "Error cleaning up temp file: " + self.tmp_file_path
+
+            # let the original exception that was passed into this method bubble up
+            return False
 
         # if the caller didn't already close the file
         if not self.file_obj.closed:
