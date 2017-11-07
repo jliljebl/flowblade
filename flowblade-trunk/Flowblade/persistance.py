@@ -378,9 +378,9 @@ def _save_changed_xml_file(s_media_file, new_profile):
     uuid_str = md5.new(str(os.urandom(32))).hexdigest()
     new_xml_file_path = folder + "/"+ uuid_str + ".xml"
 
-    new_xml_file = open(new_xml_file_path, "w")
-    new_xml_file.write(new_xml_text)
-    new_xml_file.close()
+    with atomicfile.AtomicFileWriter(new_xml_file_path, "w") as afw:
+        new_xml_file = afw.get_file()
+        new_xml_file.write(new_xml_text)
     
     return new_xml_file_path
 
