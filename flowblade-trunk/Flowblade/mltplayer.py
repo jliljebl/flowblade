@@ -76,8 +76,10 @@ class Player:
         """
         # SDL 2 consumer is created after
         if editorstate.get_sdl_version() == editorstate.SDL_2:
+            print "refuse SDL1 consumer"
             return
 
+        print "Create SDL1 consumer..."
         # Create consumer and set params
         self.consumer = mlt.Consumer(self.profile, "sdl")
         self.consumer.set("real_time", 1)
@@ -102,7 +104,7 @@ class Player:
         self.consumer.set("resize", 1)
         self.consumer.set("progressive", 1)
         self.consumer.set("window_id", str(self.xid))
-        alloc = gui.editor_window.tline_display,get_allocation()
+        alloc = gui.editor_window.tline_display.get_allocation()
         self.consumer.set("width", str(alloc.width))
         self.consumer.set("height", str(alloc.height))
         # Hold ref to switch back from rendering
@@ -133,7 +135,7 @@ class Player:
         if self.consumer == None:
             return 
         if editorstate.get_sdl_version() == editorstate.SDL_2:
-            alloc = gui.editor_window.tline_display,get_allocation()
+            alloc = gui.editor_window.tline_display.get_allocation()
             self.consumer.set("width", str(alloc.width))
             self.consumer.set("height", str(alloc.height))
         else:
@@ -279,6 +281,9 @@ class Player:
         return (self.producer.get_speed() != 0)
 
     def _ticker_event(self):
+        if self.consumer == None:
+            return 
+            
         # Stop ticker if playback has stopped.
         if (self.consumer.is_stopped() or self.producer.get_speed() == 0):
             self.ticker.stop_ticker()

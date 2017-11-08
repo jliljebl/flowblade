@@ -185,6 +185,21 @@ def mlt_version_is_equal_or_greater(test_version):
     
     return False
 
+def mlt_version_is_equal_or_greater_correct(test_version):
+    runtime_ver = mlt_version.split(".")
+    test_ver = test_version.split(".")
+    
+    if runtime_ver[0] > test_ver[0]:
+        return True
+    elif runtime_ver[0] == test_ver[0]:
+        if runtime_ver[1] >=test_ver[1]:
+            return True
+        elif runtime_ver[1] ==test_ver[1]:
+            if  runtime_ver[2] >= test_ver[2]:
+                return True
+    
+    return False
+    
 def set_copy_paste_objects(objs):
     global _copy_paste_objects
     _copy_paste_objects = objs
@@ -228,7 +243,9 @@ def clear_trim_clip_cache():
 
 
 def get_sdl_version():
-    if mlt_version_is_equal_or_greater("6.4.2"):
+    print mlt_version
+    print mlt_version.split(".")
+    if mlt_version_is_equal_or_greater_correct("6.4.2") == True:
         return SDL_2
     else:
         return SDL_1
