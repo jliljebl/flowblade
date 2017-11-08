@@ -499,6 +499,9 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
             if SAVEFILE_VERSION < 3:
                 FIX_N_TO_3_COMPOSITOR_COMPABILITY(py_compositor, SAVEFILE_VERSION)
         
+            if not hasattr(py_compositor, "obey_autofollow"): # "obey_autofollow" attr was added for 1.16
+                py_compositor.obey_autofollow = True
+                
             # Create new compositor object
             compositor = mlttransitions.create_compositor(py_compositor.type_id)                                        
             compositor.create_mlt_objects(seq.profile)

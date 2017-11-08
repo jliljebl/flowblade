@@ -293,6 +293,9 @@ class EditAction:
         # Grabs data as object members.
         self.__dict__.update(data)
         
+        # Compositor auto follow is saved with each edit and is computed on first do and later done on redo/undo
+        self.compositor_autofollow_data = None
+        
         # Other then actual trim edits, attempting all edits exits active trimodes and enters <X>_NO_EDIT trim mode.
         self.exit_active_trimmode_on_edit = True
         

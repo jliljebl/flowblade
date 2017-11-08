@@ -323,7 +323,8 @@ class CompositorObject:
         self.name = None # ducktyping as clip for property editors
         self.selected = False
         self.origin_clip_id = None
-        
+        self.obey_autofollow = True
+    
         self.destroy_id = os.urandom(16) # HACK, HACK, HACK - find a way to remove this stuff  
                                          # Compositors are recreated often in Sequence.restack_compositors()
                                          # and cannot be destroyd in undo/redo with object identidy.

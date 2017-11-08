@@ -44,6 +44,11 @@ MULTI_MOVE = 10
 CLIP_END_DRAG = 11
 SELECT_TLINE_SYNC_CLIP = 12
 
+
+# SDL version based on MLT version
+SDL_1 = 1
+SDL_2 = 2
+
 # Project being edited
 project = None
 
@@ -220,3 +225,13 @@ def add_cached_trim_clip(clip):
 def clear_trim_clip_cache():
     global _trim_clips_cache
     _trim_clips_cache = {}
+
+
+def get_sdl_version():
+    if mlt_version_is_equal_or_greater("6.4.2"):
+        return SDL_2
+    else:
+        return SDL_1
+    
+        
+         

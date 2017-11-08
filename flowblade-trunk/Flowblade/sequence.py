@@ -458,7 +458,7 @@ class Sequence:
         clip.clip_length = lambda: _clip_length(clip) # MLT get_length gives wrong values for blanks
         clip.waveform_data = None
         clip.color = None # None means that clip type default color is displayed
-
+        
     def clone_track_clip(self, track, index):
         orig_clip = track.clips[index]
         return self.create_clone_clip(orig_clip)

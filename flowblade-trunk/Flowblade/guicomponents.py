@@ -1325,6 +1325,15 @@ def display_compositor_popup_menu(event, compositor, callback):
     compositor_menu.add(_get_menu_item(_("Open In Compositor Editor"), callback, ("open in editor",compositor)))
     _add_separetor(compositor_menu)
     compositor_menu.add(_get_menu_item(_("Sync with Origin Clip"), callback, ("sync with origin",compositor)))
+
+    autofollow_item = Gtk.CheckMenuItem()
+    autofollow_item.set_label(_("Obey Auto Follow"))
+    autofollow_item.set_active(True)
+    autofollow_item.connect("activate", callback, ("set auto follow", compositor))
+    autofollow_item.show()
+
+    compositor_menu.append(autofollow_item)
+    
     _add_separetor(compositor_menu)
     compositor_menu.add(_get_menu_item(_("Delete"), callback, ("delete",compositor)))
     compositor_menu.popup(None, None, None, None, event.button, event.time)
@@ -1517,7 +1526,7 @@ def _get_edit_menu_item(event, clip, track, callback):
     sub_menu.append(lift_item)
     
     _add_separetor(sub_menu)
-
+    
     length_item = _get_menu_item(_("Set Clip Length..."), callback, (clip, track, "length", event.x))
     sub_menu.append(length_item)
 
@@ -2255,9 +2264,19 @@ def get_all_tracks_popup_menu(event, callback):
     menu.popup(None, None, None, None, event.button, event.time)
 
 def get_audio_levels_popup_menu(event, callback):
+    # needs renaming
     menu = levels_menu
     guiutils.remove_children(menu)
 
+    autofollow_item = Gtk.CheckMenuItem()
+    autofollow_item.set_label(_("Compositors Auto Follow"))
+    autofollow_item.set_active(True)
+    autofollow_item.connect("activate", callback, "autofollow")
+
+    menu.append(autofollow_item)
+    
+    _add_separetor(menu)
+    
     thumbs_item = Gtk.CheckMenuItem()
     thumbs_item.set_label(_("Display Clip Media Thumbnails"))
     thumbs_item.set_active(editorstate.display_clip_media_thumbnails)

@@ -105,6 +105,7 @@ PID_FILE = "flowbladepidfile"
 BATCH_DIR = "batchrender/"
 autosave_timeout_id = -1
 recovery_dialog_id = -1
+sdl2_timeout_id = -1
 loaded_autosave_file = None
 
 splash_screen = None
@@ -147,6 +148,9 @@ def main(root_path):
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
+
+    print "SDL version:", str(editorstate.get_sdl_version())
+    
     # passing -xdg as a flag will change the user_dir location with XDG_CONFIG_HOME
     # For full xdg-app support all the launch processes need to add this too, currently not impl.
 
@@ -329,12 +333,18 @@ def main(root_path):
     # maintain a simpler and/or non-circular import structure
     monkeypatch_callbacks()
 
+    # File in assoc_file_path is opened after very short delay
     if not(check_crash == True and len(autosave_files) > 0):
         if assoc_file_path != None:
             print "Launch assoc file:", assoc_file_path
             global assoc_timeout_id
             assoc_timeout_id = GObject.timeout_add(10, open_assoc_file)
-       
+
+    # SDL 2 consumer needs to created after Gtk.main() has run enough for window to be visble
+    if editorstate.get_sdl_version() == editorstate.SDL_2 and assoc_timeout_id == -1: # needs more state considerion still
+        global sdl2_timeout_id
+        sdl2_timeout_id = GObject.timeout_add(500, create_sdl_2_consumer)
+            
     # Launch gtk+ main loop
     Gtk.main()
 
@@ -375,6 +385,12 @@ def monkeypatch_callbacks():
     snapping._get_x_for_frame_func = tlinewidgets._get_frame_x
 
     # These provide clues for further module refactoring 
+
+# ---------------------------------- SDL2 consumer
+def create_sdl_2_consumer():
+    GObject.source_remove(sdl2_timeout_id)
+    print "Creating SDL2 consumer..."
+    editorstate.PLAYER().create_sdl2_video_consumer()
 
 # ---------------------------------- program, sequence and project init
 def get_assoc_file_path():
