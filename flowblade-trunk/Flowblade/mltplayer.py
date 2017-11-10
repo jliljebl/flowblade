@@ -105,8 +105,8 @@ class Player:
         self.consumer.set("progressive", 1)
         self.consumer.set("window_id", str(self.xid))
         alloc = gui.editor_window.tline_display.get_allocation()
-        self.consumer.set("width", str(alloc.width))
-        self.consumer.set("height", str(alloc.height))
+        self.consumer.set("window_width", str(alloc.width))
+        self.consumer.set("window_height", str(alloc.height))
         # Hold ref to switch back from rendering
         self.sdl_consumer = self.consumer 
         
@@ -136,8 +136,11 @@ class Player:
             return 
         if editorstate.get_sdl_version() == editorstate.SDL_2:
             alloc = gui.editor_window.tline_display.get_allocation()
-            self.consumer.set("width", str(alloc.width))
-            self.consumer.set("height", str(alloc.height))
+            self.consumer.set("window_width", str(alloc.width))
+            self.consumer.set("window_height", str(alloc.height))
+            
+            self.consumer.stop()
+            self.consumer.start()
         else:
             self.consumer.stop()
             self.consumer.start()
