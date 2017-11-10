@@ -107,6 +107,8 @@ class Player:
         alloc = gui.editor_window.tline_display.get_allocation()
         self.consumer.set("window_width", str(alloc.width))
         self.consumer.set("window_height", str(alloc.height))
+        self.consumer.set("window_type", "widget")
+        self.consumer.set("renderer_type", "software")
         # Hold ref to switch back from rendering
         self.sdl_consumer = self.consumer 
         
