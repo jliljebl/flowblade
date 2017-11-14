@@ -34,7 +34,7 @@ Last updated: September. 2017
 
 
 *Changelog*
-- *14-11-2017 Change doc focus 2.0 feature set
+- *14-11-2017 Change doc focus 2.0 feature set*
 - *20-9-2017 drop FFMpeg tool, Container clips are done, add Editing section*
 - *13-5-17 Remove undoable items related to animating property values in in MLT, require too large MLt controinutions for the time being*
 - *13-5-17 Remove completed items and items that will be in 1.14*
