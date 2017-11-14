@@ -4,7 +4,7 @@ Last updated: September. 2017
 
 ## The 2.0 FEATURE SET
 - **New display MLT service or method**. SDL1.2 will be eventually lost as SDL2 is made default on all distros
-- **Performance review and needed fixes** This needs some investigation and it needs tro be made sure that the new 
+- **Performance review and needed fixes** This needs some investigation and it needs to be made sure that the new display methods is as performant as possible
 - **Context sensitive Timeline tool cursor** This was originally part of non-features list of the design, but it seems that users prefer this, and we will look for a way to incoporate this with current design.
 - **Autofollow compositors** Compositors will be made to follow their origin clips automatically if user so chooses.
 - **Automatic Timeline Rendering** The only way to provide smooth playback in all circumstances is to do some form of timeline rendering. There are some ideas here that will be attempted, but cannot be quaranteed to work beforehand.
