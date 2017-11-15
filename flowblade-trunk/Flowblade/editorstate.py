@@ -243,8 +243,6 @@ def clear_trim_clip_cache():
 
 
 def get_sdl_version():
-    print mlt_version
-    print mlt_version.split(".")
     if mlt_version_is_equal_or_greater_correct("6.4.2") == True:
         return SDL_2
     else:

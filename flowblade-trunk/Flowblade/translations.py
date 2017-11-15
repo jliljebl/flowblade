@@ -536,6 +536,7 @@ def load_filters_translations():
     param_names["Softness"] = _("Softness")
     param_names["Fade Out Length"] = _("Fade Out Length")
     param_names["Fade In Length"] = _("Fade In Length")
+    param_names["Wipe Direction"] = _("Wipe Direction")
 
     # Combo options
     global combo_options
@@ -588,4 +589,5 @@ def load_filters_translations():
     combo_options["Shadows"] = _("Shadows")
     combo_options["Midtones"] = _("Midtones")
     combo_options["Highlights"] = _("Highlights")
-
+    combo_options["Forward"] = _("Forward")
+    combo_options["Backward"] = _("Backward")
