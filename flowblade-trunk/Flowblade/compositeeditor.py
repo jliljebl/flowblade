@@ -242,7 +242,7 @@ def _display_compositor_edit_box():
     editor_rows = propertyeditorbuilder.get_transition_extra_editor_rows(compositor, t_editable_properties)
     for editor_row in editor_rows:
         # These are added to keyframe editor based on editor type, not based on EditableProperty type as above
-        # because one editor set values for multiple EditableProperty objects
+        # because one editor sets values for multiple EditableProperty objects
         if editor_row.__class__ == keyframeeditor.RotatingGeometryEditor:
             keyframe_editor_widgets.append(editor_row)
         vbox.pack_start(editor_row, False, False, 0)

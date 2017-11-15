@@ -67,6 +67,7 @@ NO_EDITOR = "no_editor"                                     # No editor displaye
 COMPOSITE_EDITOR_BUILDER = "composite_properties"           # Creates a single row editor for multiple properties of composite transition
 REGION_EDITOR_BUILDER = "region_properties"                 # Creates a single row editor for multiple properties of region transition
 ROTATION_GEOMETRY_EDITOR_BUILDER = "rotation_geometry_editor" # Creates a single editor for multiple geometry values
+WIPE_DIRECTION = "direction_selector"                       # Selects Wipe direction for Wipe Clip Length compositor
 
 SCALE_DIGITS = "scale_digits"                               # Number of decimal digits displayed in a widget
 

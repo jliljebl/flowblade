@@ -47,6 +47,8 @@
         <property name="resource" args="editor=wipe_select exptype=wipe_resource displayname=Wipe!Type">WIPE_PATHbi-linear_y.pgm</property>
         <property name="invert" args="editor=booleancheckbox displayname=Invert">0</property>
         <property name="softness" args="range_in=0,100 displayname=Softness">0.0</property>
+        <property name="direction_forward" args="editor=no_editor exptype=not_parsed_transition">True</property>
+        <extraeditor name="direction_selector"></extraeditor>
     </compositortransition>
     <compositortransition mlt_service="region">
         <name>##region</name>

@@ -192,10 +192,10 @@ def mlt_version_is_equal_or_greater_correct(test_version):
     if runtime_ver[0] > test_ver[0]:
         return True
     elif runtime_ver[0] == test_ver[0]:
-        if runtime_ver[1] >=test_ver[1]:
+        if runtime_ver[1] > test_ver[1]:
             return True
-        elif runtime_ver[1] ==test_ver[1]:
-            if  runtime_ver[2] >= test_ver[2]:
+        elif runtime_ver[1] == test_ver[1]:
+            if  runtime_ver[2] >  test_ver[2]:
                 return True
     
     return False
