@@ -58,6 +58,9 @@ player = None
 # Current edit mode
 edit_mode = INSERT_MOVE
 
+# Compositor autofollow state. If true when edit is performed, all compositors are auto resynced on first do, redo and undo actions.
+auto_follow = True
+
 # Trim tool ripple mode is expressed as a flag
 trim_mode_ripple = False
 
@@ -168,6 +171,9 @@ def EDIT_MODE():
 def MONITOR_MEDIA_FILE():
     return _monitor_media_file
 
+def auto_follow_active():
+    return auto_follow
+
 def get_track(index):
     return project.c_seq.tracks[index]
 
@@ -240,7 +246,6 @@ def add_cached_trim_clip(clip):
 def clear_trim_clip_cache():
     global _trim_clips_cache
     _trim_clips_cache = {}
-
 
 def get_sdl_version():
     if mlt_version_is_equal_or_greater_correct("6.4.2") == True:

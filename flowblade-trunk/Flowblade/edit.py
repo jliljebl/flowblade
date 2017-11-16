@@ -33,6 +33,7 @@ import compositorfades
 from editorstate import current_sequence
 from editorstate import get_track
 from editorstate import PLAYER
+from editorstate import auto_follow_active
 import mltfilters
 import movemodes
 import resync
@@ -324,6 +325,16 @@ class EditAction:
         if self.turn_on_stop_for_edit:
             self.stop_for_edit = True
 
+        # Create autofollow data if needed and update GUI.
+        # If autofollow and no data, then GUI update happens in do_edit()
+        # Added complexity here is to avoid two GUI updates
+        if auto_follow_active() == True:
+            self.compositor_autofollow_data = get_full_compositor_sync_data()
+            self.redo_auto_follow()
+            # This wasn'rt done in redo() because no auto follow data available
+            if do_gui_update:
+                self._update_gui()
+
     def undo(self):
         PLAYER().stop_playback()
 
@@ -341,6 +352,9 @@ class EditAction:
 
         resync.calculate_and_set_child_clip_sync_states()
 
+        if self.compositor_autofollow_data != None:
+            self.undo_auto_follow()
+            
         # HACK, see above.
         if self.stop_for_edit:
             PLAYER().consumer.start()
@@ -363,15 +377,44 @@ class EditAction:
         _remove_trailing_blanks_redo(self)
         resync.calculate_and_set_child_clip_sync_states()
 
+        if self.compositor_autofollow_data != None:
+            self.redo_auto_follow()
+
         tlinewidgets.set_match_frame(-1, -1, True)
 
         # HACK, see above.
         if self.stop_for_edit:
             PLAYER().consumer.start()
 
-        if do_gui_update:
+        # Update GUI if no autofollow or if autofollow data is available.
+        # If autofollow and no data, then GUI update happens in do_edit()
+        # Added complexity here is to avoid two GUI updates
+        if ((do_gui_update and auto_follow_active() == False) or 
+           (do_gui_update and auto_follow_active() == True and self.compositor_autofollow_data != None)):
             self._update_gui()
 
+    def undo_auto_follow(self):
+        for sync_item in self.compositor_autofollow_data:
+            # real compositor objects get recreated and destroyed all the time and in redo/undo they need to identified by destroy_id
+            destroy_id, orig_in, orig_out, clip_start, clip_end = sync_item
+            try:
+                sync_compositor = current_sequence().get_compositor_for_destroy_id(destroy_id)
+                sync_compositor.set_in_and_out(clip_start, clip_end)   
+            except:
+                # Compositor or clip not found
+                pass
+
+    def redo_auto_follow(self):
+        for sync_item in self.compositor_autofollow_data:
+            # real compositor objects get recreated and destroyed all the time and in redo/undo they need to identified by destroy_id
+            destroy_id, orig_in, orig_out, clip_start, clip_end = sync_item
+            try:
+                sync_compositor = current_sequence().get_compositor_for_destroy_id(destroy_id)
+                sync_compositor.set_in_and_out(clip_start, clip_end)
+            except:
+                # Compositor or clip not found
+                pass
+                
     def _update_gui(self): # This copied  with small modifications into projectaction.py for sequence imports, update there too if needed...yeah.
         updater.update_tline_scrollbar() # Slider needs to adjust to possily new program length.
                                          # This REPAINTS TIMELINE as a side effect.
@@ -386,6 +429,57 @@ class EditAction:
         PLAYER().display_inside_sequence_length(current_sequence().seq_len) # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
 
         updater. update_seqence_info_text()
+
+# ---------------------------------------------------- compositor sync util methods
+def get_full_compositor_sync_data():
+    # Returns list of tuples in form (compositor, orig_in, orig_out, clip_start, clip_end)
+    # Pair all compositors with their origin clips ids
+    comp_clip_pairings = {}
+    for compositor in current_sequence().compositors:
+        if compositor.origin_clip_id in comp_clip_pairings:
+            comp_clip_pairings[compositor.origin_clip_id].append(compositor)
+        else:
+            comp_clip_pairings[compositor.origin_clip_id] = [compositor]
+    
+    # Create resync list
+    resync_list = []
+    for i in range(current_sequence().first_video_index, len(current_sequence().tracks) - 1): # -1, there is a topmost hidden track 
+        track = current_sequence().tracks[i] # b_track is source track where origin clip is
+        for j in range(0, len(track.clips)):
+            clip = track.clips[j]
+            if clip.id in comp_clip_pairings:
+                compositor_list = comp_clip_pairings[clip.id]
+                for compositor in compositor_list:
+                    resync_list.append((clip, track, j, compositor))
+                    
+    # Create full data
+    full_sync_data = []
+    for resync_item in resync_list:
+        try:
+            clip, track, clip_index, compositor = resync_item
+            clip_start = track.clip_start(clip_index)
+            clip_end = clip_start + clip.clip_out - clip.clip_in
+            
+            # Auto fades need to go to start or end of clips and maintain their lengths
+            if compositor.transition.info.auto_fade_compositor == True:
+                if compositor.transition.info.name == "##auto_fade_in":
+                    clip_end = clip_start + compositor.get_length() - 1
+                else:
+                    clip_start = clip_end - compositor.get_length() + 1
+            
+            orig_in = compositor.clip_in
+            orig_out = compositor.clip_out
+            
+            destroy_id = compositor.destroy_id
+            
+            full_sync_data_item = (destroy_id, orig_in, orig_out, clip_start, clip_end)
+            full_sync_data.append(full_sync_data_item)
+        except:
+            # Clip is probably deleted
+            pass
+            
+    return full_sync_data
+
 
 # ---------------------------------------------------- SYNC DATA
 class SyncData:

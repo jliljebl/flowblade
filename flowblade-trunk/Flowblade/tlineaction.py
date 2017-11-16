@@ -512,14 +512,17 @@ def resync_button_pressed():
 def sync_compositor(compositor):
     track = current_sequence().tracks[compositor.transition.b_track] # b_track is source track where origin clip is
     origin_clip = None
+    
     for clip in track.clips:
         if clip.id == compositor.origin_clip_id:
             origin_clip = clip
+            
     if origin_clip == None:
         dialogutils.info_message(_("Origin clip not found!"), 
                              _("Clip used to create this Compositor has been removed\nor moved to different track."), 
                              gui.editor_window.window)
         return
+        
     clip_index = track.clips.index(origin_clip)
     clip_start = track.clip_start(clip_index)
     clip_end = clip_start + origin_clip.clip_out - origin_clip.clip_in
@@ -582,6 +585,16 @@ def split_audio_button_pressed():
     syncsplitevent.split_audio_from_clips_list(clips, track)
 
 def sync_all_compositors():
+    full_sync_data = edit.get_full_compositor_sync_data()
+    
+    for sync_item in full_sync_data:
+        destroy_id, orig_in, orig_out, clip_start, clip_end = sync_item
+        compositor = current_sequence().get_compositor_for_destroy_id(destroy_id)
+        data = {"compositor":compositor,"clip_in":clip_start,"clip_out":clip_end}
+        action = edit.move_compositor_action(data)
+        action.do_edit()
+
+    """
     # Pair all compositors with their origin clips ids
     comp_clip_pairings = {}
     for compositor in current_sequence().compositors:
@@ -621,7 +634,8 @@ def sync_all_compositors():
         except:
             # Clip is probably deleted
             pass
-
+    """
+    
 def add_transition_menu_item_selected():
     if movemodes.selected_track == -1:
         # INFOWINDOW
