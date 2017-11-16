@@ -1908,8 +1908,12 @@ class TimeLineCanvas:
 
             scale_in = (comp.clip_in - pos) * pix_per_frame
             scale_length = (comp.clip_out - comp.clip_in + 1) * pix_per_frame # +1, out inclusive
+
             if comp.selected == False:
-                color = COMPOSITOR_CLIP
+                if editorstate.auto_follow_active() == True and comp.obey_autofollow == True:
+                    color = COMPOSITOR_CLIP_AUTO_FOLLOW
+                else:
+                    color = COMPOSITOR_CLIP
             else:
                 color = COMPOSITOR_CLIP_SELECTED
             cr.set_source_rgba(*color)

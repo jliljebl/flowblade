@@ -399,7 +399,8 @@ class EditAction:
             destroy_id, orig_in, orig_out, clip_start, clip_end = sync_item
             try:
                 sync_compositor = current_sequence().get_compositor_for_destroy_id(destroy_id)
-                sync_compositor.set_in_and_out(clip_start, clip_end)   
+                if sync_compositor.obey_autofollow == True:
+                    sync_compositor.set_in_and_out(orig_in, orig_out)   
             except:
                 # Compositor or clip not found
                 pass
@@ -410,7 +411,8 @@ class EditAction:
             destroy_id, orig_in, orig_out, clip_start, clip_end = sync_item
             try:
                 sync_compositor = current_sequence().get_compositor_for_destroy_id(destroy_id)
-                sync_compositor.set_in_and_out(clip_start, clip_end)
+                if sync_compositor.obey_autofollow == True:
+                    sync_compositor.set_in_and_out(clip_start, clip_end)
             except:
                 # Compositor or clip not found
                 pass

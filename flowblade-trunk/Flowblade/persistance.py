@@ -516,6 +516,8 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
             compositor.transition.set_tracks(py_compositor.transition.a_track, py_compositor.transition.b_track)
             compositor.set_in_and_out(py_compositor.clip_in, py_compositor.clip_out)
             compositor.origin_clip_id = py_compositor.origin_clip_id
+            print py_compositor.obey_autofollow
+            compositor.obey_autofollow = py_compositor.obey_autofollow
            
             mlt_compositors.append(compositor)
 

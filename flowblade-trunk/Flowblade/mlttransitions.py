@@ -288,7 +288,6 @@ class CompositorTransition:
         self.mlt_transition.set("a_track", str(a_track))
         self.mlt_transition.set("b_track", str(b_track))
 
-
     def set_target_track(self, a_track, force_track):
         self.a_track = a_track
         self.mlt_transition.set("a_track", str(a_track))

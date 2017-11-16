@@ -101,6 +101,9 @@ def _compositor_menu_item_activated(widget, data):
         action.do_edit()
     elif action_id == "sync with origin":
         tlineaction.sync_compositor(compositor)
+    elif action_id == "set auto follow":
+        compositor.obey_autofollow = widget.get_active()
+        updater.repaint_tline()
         
 def _open_clip_in_effects_editor(data):
     updater.open_clip_in_effects_editor(data)

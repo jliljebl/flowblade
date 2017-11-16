@@ -145,6 +145,7 @@ def _activate_only_current_top_active():
 def audio_levels_menu_launch_pressed(widget, event):
     guicomponents.get_audio_levels_popup_menu(event, _audio_levels_item_activated)
 
+# THIS HANDLES MUCH MORE NOW, NAME _audio_levels_item_activated needs changing
 def _audio_levels_item_activated(widget, msg):
     if msg == "all":
         editorstate.display_all_audio_levels = True
@@ -157,6 +158,11 @@ def _audio_levels_item_activated(widget, msg):
         snapping.snapping_on = widget.get_active()
     elif msg == "magnet":
         snapping.show_magnet_icon = widget.get_active()
+    elif msg == "autofollow":
+        active = widget.get_active()
+        editorstate.auto_follow = active
+        PROJECT().set_project_property(appconsts.P_PROP_AUTO_FOLLOW, active)
+        updater.repaint_tline()
     else: # media thumbnails
         editorstate.display_clip_media_thumbnails = widget.get_active()
         updater.repaint_tline()

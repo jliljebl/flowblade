@@ -67,7 +67,8 @@ _project_properties_default_values = {appconsts.P_PROP_TLINE_SHRINK_VERTICAL:Fal
                                       appconsts.P_PROP_ANIM_GROUP_FADE_IN:-1, # not used, dropped feature (auto fades on creation)
                                       appconsts.P_PROP_ANIM_GROUP_FADE_OUT:-1, # not used, dropped feature (auto fades on creation)
                                       appconsts.P_PROP_LAST_RENDER_SELECTIONS: None, # tuple for last render selections data
-                                      appconsts.P_PROP_TRANSITION_ENCODING: None}  # tuple for last renderered transition render selections data
+                                      appconsts.P_PROP_TRANSITION_ENCODING: None,  # tuple for last renderered transition render selections data
+                                      appconsts.P_PROP_AUTO_FOLLOW: True} # Globla compositor auto follow
 
 class Project:
     """
@@ -299,8 +300,8 @@ class Project:
             except:
                 return None # No default values for all properties exist, action value decided at callsite in that case
 
-    def set_project_property(self, key, value):
-        self.project_properties[key] = value
+    def set_project_property(self, property_name, value):
+        self.project_properties[property_name] = value
 
             
 class MediaFile:

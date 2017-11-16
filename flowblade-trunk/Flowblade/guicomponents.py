@@ -1328,7 +1328,7 @@ def display_compositor_popup_menu(event, compositor, callback):
 
     autofollow_item = Gtk.CheckMenuItem()
     autofollow_item.set_label(_("Obey Auto Follow"))
-    autofollow_item.set_active(True)
+    autofollow_item.set_active(compositor.obey_autofollow)
     autofollow_item.connect("activate", callback, ("set auto follow", compositor))
     autofollow_item.show()
 
@@ -2270,7 +2270,7 @@ def get_audio_levels_popup_menu(event, callback):
 
     autofollow_item = Gtk.CheckMenuItem()
     autofollow_item.set_label(_("Compositors Auto Follow"))
-    autofollow_item.set_active(True)
+    autofollow_item.set_active(editorstate.auto_follow_active())
     autofollow_item.connect("activate", callback, "autofollow")
 
     menu.append(autofollow_item)

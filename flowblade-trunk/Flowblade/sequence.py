@@ -576,6 +576,7 @@ class Sequence:
         compositor.clone_properties(old_compositor)
         compositor.set_in_and_out(old_compositor.clip_in, old_compositor.clip_out)
         compositor.transition.set_tracks(old_compositor.transition.a_track, old_compositor.transition.b_track)
+        compositor.obey_autofollow = old_compositor.obey_autofollow
         self._plant_compositor(compositor)
         return compositor
     
