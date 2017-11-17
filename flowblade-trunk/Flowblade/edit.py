@@ -765,7 +765,6 @@ def _gap_append_undo(self):
 def _gap_append_redo(self):
     pass
         
-
 #----------------- TWO_ROLL_TRIM
 # "track","index","from_clip","to_clip","delta","edit_done_callback"
 # "cut_frame"

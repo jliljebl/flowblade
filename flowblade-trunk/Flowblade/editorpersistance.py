@@ -173,16 +173,17 @@ def get_recent_projects():
 
 def update_prefs_from_widgets(widgets_tuples_tuple):
     # Unpack widgets
-    gen_opts_widgets, edit_prefs_widgets, view_prefs_widgets, performance_widgets = widgets_tuples_tuple
+    gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, view_prefs_widgets, performance_widgets = widgets_tuples_tuple
 
     default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo = gen_opts_widgets
     
     # Jul-2016 - SvdB - Added play_pause_button
     # Apr-2017 - SvdB - Added ffwd / rev values
-    auto_play_in_clip_monitor_check, auto_center_check, grfx_insert_length_spin, \
-        trim_exit_click, trim_quick_enter, remember_clip_frame, overwrite_clip_drop, cover_delete, \
-        play_pause_button, mouse_scroll_action, hide_file_ext_button, auto_center_on_updown, \
-        ffwd_rev_shift, ffwd_rev_ctrl, ffwd_rev_caps = edit_prefs_widgets
+    gfx_length_spin, trim_exit_on_empty, trim_quick_enter, remember_clip_frame, \
+    overwrite_clip_drop, cover_delete, mouse_scroll_action, hide_file_ext_button = edit_prefs_widgets
+    
+    auto_play_in_clip_monitor_check, auto_center_check, play_pause_button, auto_center_on_updown, \
+    ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin = playback_prefs_widgets
     
     use_english, disp_splash, buttons_style, dark_theme, theme_combo, audio_levels_combo, window_mode_combo, full_names, double_track_hights = view_prefs_widgets
 
@@ -201,8 +202,8 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
 
     prefs.auto_play_in_clip_monitor = auto_play_in_clip_monitor_check.get_active()
     prefs.auto_center_on_play_stop = auto_center_check.get_active()
-    prefs.default_grfx_length = int(grfx_insert_length_spin.get_adjustment().get_value())
-    prefs.empty_click_exits_trims = trim_exit_click.get_active()
+    prefs.default_grfx_length = int(gfx_length_spin.get_adjustment().get_value())
+    prefs.empty_click_exits_trims = trim_exit_on_empty.get_active()
     prefs.quick_enter_trims = trim_quick_enter.get_active()
     prefs.remember_monitor_clip_frame = remember_clip_frame.get_active()
     prefs.overwrite_clip_drop = (overwrite_clip_drop.get_active() == 0)
@@ -212,9 +213,9 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.hide_file_ext = hide_file_ext_button.get_active()
     prefs.mouse_scroll_action_is_zoom = (mouse_scroll_action.get_active() == 0)
     # Apr-2017 - SvdB - ffwd / rev values
-    prefs.ffwd_rev_shift = int(ffwd_rev_shift.get_adjustment().get_value())
-    prefs.ffwd_rev_ctrl = int(ffwd_rev_ctrl.get_adjustment().get_value())
-    prefs.ffwd_rev_caps = int(ffwd_rev_caps.get_adjustment().get_value())
+    prefs.ffwd_rev_shift = int(ffwd_rev_shift_spin.get_adjustment().get_value())
+    prefs.ffwd_rev_ctrl = int(ffwd_rev_ctrl_spin.get_adjustment().get_value())
+    prefs.ffwd_rev_caps = int(ffwd_rev_caps_spin.get_adjustment().get_value())
     
     prefs.use_english_always = use_english.get_active()
     prefs.display_splash_screen = disp_splash.get_active()
