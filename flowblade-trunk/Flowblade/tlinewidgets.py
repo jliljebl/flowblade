@@ -47,6 +47,7 @@ import gui
 import respaths
 import sequence
 import snapping
+import tlinesensitivity
 import trimmodes
 import utils
 import updater
@@ -269,6 +270,11 @@ draw_blank_borders = True
 # Draw state
 pix_per_frame = 5.0 # Current draw scale. This set set elsewhere on init so default value irrelevant.
 pos = 0 # Current left most frame in timeline display
+
+# A context defining action taken when mouse press happens based on edit mode and mouse position.
+# Cursor communicates current pointer contest to user.
+pointer_context = appconsts.POINTER_CONTEXT_NONE
+DRAG_SENSITIVITY_AREA_WIDTH_PIX = 10
 
 # ref to singleton TimeLineCanvas instance for mode setting and some position
 # calculations.
@@ -1308,6 +1314,8 @@ class TimeLineCanvas:
         self.widget = cairoarea.CairoDrawableArea2( WIDTH, 
                                                     HEIGHT, 
                                                     self._draw)
+        self.widget.add_pointer_motion_mask()
+        
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
@@ -1349,7 +1357,7 @@ class TimeLineCanvas:
         """
         Mouse move callback
         """
-        if not self.drag_on:
+        if (not self.drag_on) and editorstate.cursor_is_tline_sensitive == True:
             self.set_pointer_context(x, y)
             return
 
@@ -1378,26 +1386,46 @@ class TimeLineCanvas:
                               event.button, event.get_state())
 
     def set_pointer_context(self, x, y):
+        current_pointer_context = self.get_pointer_context(x, y)
+
+        # If pointer_context changed then save it and change cursor.
+        global pointer_context
+        if pointer_context != current_pointer_context:
+            pointer_context = current_pointer_context
+            if pointer_context == appconsts.POINTER_CONTEXT_NONE:
+                gui.editor_window.set_tline_cursor(EDIT_MODE()) # 
+            else:
+                gui.editor_window.set_tline_cursor_to_context(pointer_context)
+        
+    def get_pointer_context(self, x, y):
         frame = get_frame(x)
         hit_compositor = compositor_hit(frame, y, current_sequence().compositors)
         if hit_compositor != None:
-            return
+            #POINTER_CONTEXT_COMPOSITOR_MOVE = 3
+            #POINTER_CONTEXT_COMPOSITOR_END_DRAG_LEFT = 4
+            #POINTER_CONTEXT_COMPOSITOR_END_DRAG_RIGHT = 5
+            return appconsts.POINTER_CONTEXT_COMPOSITOR_MOVE
 
         track = get_track(y)  
         if track == None:
-            return    
+            return appconsts.POINTER_CONTEXT_NONE
 
         clip_index = current_sequence().get_clip_index(track, frame)
         if clip_index == -1:
-            return
+            # This gets none always afetr rack, which may not be what we want
+            return appconsts.POINTER_CONTEXT_NONE
 
         clip_start_frame = track.clip_start(clip_index) - pos
-        if abs(x - _get_frame_x(clip_start_frame)) < 5:
-            return
-
         clip_end_frame = track.clip_start(clip_index + 1) - pos
-        if abs(x - _get_frame_x(clip_end_frame)) < 5:
-            return
+        
+        if EDIT_MODE() == editorstate.INSERT_MOVE:
+            #OVERWRITE_MOVE = 1
+            if abs(x - _get_frame_x(clip_start_frame)) < DRAG_SENSITIVITY_AREA_WIDTH_PIX:
+                return appconsts.POINTER_CONTEXT_END_DRAG_LEFT
+            if abs(x - _get_frame_x(clip_end_frame)) < DRAG_SENSITIVITY_AREA_WIDTH_PIX:
+                return appconsts.POINTER_CONTEXT_END_DRAG_RIGHT
+            
+            return appconsts.POINTER_CONTEXT_NONE
 
     #----------------------------------------- DRAW
     def _draw(self, event, cr, allocation):

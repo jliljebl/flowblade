@@ -138,6 +138,10 @@ class EditorWindow:
         ONEROLL_TOOL = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "oneroll_tool.png")
         OVERWRITE_TOOL =  cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "overwrite_tool.png")
 
+        # Context cursors 
+        self.context_cursors = {appconsts.POINTER_CONTEXT_END_DRAG_LEFT:(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "ctx_drag_left.png"), 1, 7),
+                                appconsts.POINTER_CONTEXT_END_DRAG_RIGHT:(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "ctx_drag_right.png"), 12, 7)}
+                                
         # Window
         self.window = Gtk.Window(Gtk.WindowType.TOPLEVEL)
         self.window.set_icon_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
@@ -1154,7 +1158,15 @@ class EditorWindow:
             cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR)
         
         gdk_window.set_cursor(cursor)  
-            
+
+    def set_tline_cursor_to_context(self, pointer_context):
+        display = Gdk.Display.get_default()
+        gdk_window = self.window.get_window()
+        
+        surface, px, py = self.context_cursors[pointer_context]
+        cursor = self.get_own_cursor(display, surface, px, py)
+        gdk_window.set_cursor(cursor)
+
     def set_mode_selector_to_mode(self):
         if editorstate.EDIT_MODE() == editorstate.INSERT_MOVE:
             self.modes_selector.set_pixbuf(0)

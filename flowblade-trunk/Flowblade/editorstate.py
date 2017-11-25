@@ -102,8 +102,9 @@ audio_monitoring_available = False
 # Whether to let the user set their user_dir using XDG Base dir spec
 use_xdg = False
 
-# Cursor pos
+# Cursor positiona sensitivity
 cursor_on_tline = False
+cursor_is_tline_sensitive = True
 
 # Flag for running JACK audio server. If this is on when SDLConsumer created in mltplayer.py
 # jack rack filter will bw taached to it
