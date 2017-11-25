@@ -102,7 +102,7 @@ audio_monitoring_available = False
 # Whether to let the user set their user_dir using XDG Base dir spec
 use_xdg = False
 
-# Cursor positiona sensitivity
+# Cursor position and sensitivity
 cursor_on_tline = False
 cursor_is_tline_sensitive = True
 

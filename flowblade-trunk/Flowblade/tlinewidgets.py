@@ -47,7 +47,6 @@ import gui
 import respaths
 import sequence
 import snapping
-import tlinesensitivity
 import trimmodes
 import utils
 import updater
