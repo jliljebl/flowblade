@@ -605,8 +605,14 @@ def tline_canvas_mouse_pressed(event, frame):
     compositormodes.clear_compositor_selection()
 
     # Check if we should enter clip end drag mode.
+
     if (event.button == 3 and editorstate.current_is_move_mode()
         and timeline_visible() and (event.get_state() & Gdk.ModifierType.CONTROL_MASK)):
+        # with CTRL right mouse
+        clipenddragmode.maybe_init_for_mouse_press(event, frame)
+    elif (timeline_visible() and (EDIT_MODE() == editorstate.INSERT_MOVE or EDIT_MODE() == editorstate.OVERWRITE_MOVE)
+        and (tlinewidgets.pointer_context == appconsts.POINTER_CONTEXT_END_DRAG_LEFT or tlinewidgets.pointer_context == appconsts.POINTER_CONTEXT_END_DRAG_RIGHT)):
+        # with pointer context
         clipenddragmode.maybe_init_for_mouse_press(event, frame)
 
     # Handle mouse button presses depending which button was pressed and
@@ -618,8 +624,6 @@ def tline_canvas_mouse_pressed(event, frame):
                 success = display_clip_menu_pop_up(event.y, event, frame)
                 if not success:
                     PLAYER().seek_frame(frame)
-            #else:
-            #    PLAYER().seek_frame(frame) 
         else:
             # For trim modes set <X>_NO_EDIT edit mode and seek frame. and seek frame
             trimmodes.set_no_edit_trim_mode()

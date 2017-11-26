@@ -19,9 +19,11 @@
 """
 
 """
-Module handles clip effects editing logic and gui
+Module handles clip end dragging edits.
 """
 
+
+import appconsts
 import gui
 import edit
 from editorstate import current_sequence
@@ -174,7 +176,8 @@ def _exit_clip_end_drag():
     # Go back to enter mode
     editorstate.edit_mode = _enter_mode
     tlinewidgets.set_edit_mode(None, _enter_draw_func)
-        
+    tlinewidgets.pointer_context = appconsts.POINTER_CONTEXT_NONE
+    
     gui.editor_window.set_cursor_to_mode()
     updater.repaint_tline()
 

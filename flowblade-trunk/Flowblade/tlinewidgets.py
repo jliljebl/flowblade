@@ -1417,8 +1417,7 @@ class TimeLineCanvas:
         clip_start_frame = track.clip_start(clip_index) - pos
         clip_end_frame = track.clip_start(clip_index + 1) - pos
         
-        if EDIT_MODE() == editorstate.INSERT_MOVE:
-            #OVERWRITE_MOVE = 1
+        if EDIT_MODE() == editorstate.INSERT_MOVE or EDIT_MODE() == editorstate.OVERWRITE_MOVE:
             if abs(x - _get_frame_x(clip_start_frame)) < DRAG_SENSITIVITY_AREA_WIDTH_PIX:
                 return appconsts.POINTER_CONTEXT_END_DRAG_LEFT
             if abs(x - _get_frame_x(clip_end_frame)) < DRAG_SENSITIVITY_AREA_WIDTH_PIX:
@@ -1426,6 +1425,8 @@ class TimeLineCanvas:
             
             return appconsts.POINTER_CONTEXT_NONE
 
+        return appconsts.POINTER_CONTEXT_NONE
+            
     #----------------------------------------- DRAW
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
