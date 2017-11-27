@@ -1403,7 +1403,7 @@ class TimeLineCanvas:
             #POINTER_CONTEXT_COMPOSITOR_MOVE = 3
             #POINTER_CONTEXT_COMPOSITOR_END_DRAG_LEFT = 4
             #POINTER_CONTEXT_COMPOSITOR_END_DRAG_RIGHT = 5
-            return appconsts.POINTER_CONTEXT_COMPOSITOR_MOVE
+            return appconsts.POINTER_CONTEXT_NONE
 
         track = get_track(y)  
         if track == None:
@@ -1417,6 +1417,7 @@ class TimeLineCanvas:
         clip_start_frame = track.clip_start(clip_index) - pos
         clip_end_frame = track.clip_start(clip_index + 1) - pos
         
+        # INSERT, OVEWRITE
         if EDIT_MODE() == editorstate.INSERT_MOVE or EDIT_MODE() == editorstate.OVERWRITE_MOVE:
             if abs(x - _get_frame_x(clip_start_frame)) < DRAG_SENSITIVITY_AREA_WIDTH_PIX:
                 return appconsts.POINTER_CONTEXT_END_DRAG_LEFT
@@ -1424,7 +1425,15 @@ class TimeLineCanvas:
                 return appconsts.POINTER_CONTEXT_END_DRAG_RIGHT
             
             return appconsts.POINTER_CONTEXT_NONE
-
+        # TRIM
+        elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM or EDIT_MODE() == editorstate.ONE_ROLL_TRIM_NO_EDIT:
+            if abs(frame - clip_start_frame) < abs(frame - clip_end_frame):
+                return appconsts.POINTER_CONTEXT_TRIM_LEFT
+            else:
+                return appconsts.POINTER_CONTEXT_TRIM_RIGHT
+        
+        
+        
         return appconsts.POINTER_CONTEXT_NONE
             
     #----------------------------------------- DRAW

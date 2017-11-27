@@ -576,7 +576,8 @@ def oneroll_trim_release(x, y, frame, state):
         return
     
     gui.monitor_widget.one_roll_mouse_release(edit_data["edit_frame"], frame - edit_data["edit_frame"])
-    
+    tlinewidgets.pointer_context = appconsts.POINTER_CONTEXT_NONE
+
     _do_one_roll_trim_edit(frame)
 
 def _do_one_roll_trim_edit(frame):

@@ -630,9 +630,10 @@ def tline_canvas_mouse_pressed(event, frame):
             PLAYER().seek_frame(frame)
         return
     # LEFT BUTTON + CTRL: Select new trimmed clip in one roll trim mode
-    elif (event.button == 1 
+    elif ((event.button == 1 
           and (event.get_state() & Gdk.ModifierType.CONTROL_MASK)
-          and EDIT_MODE() == editorstate.ONE_ROLL_TRIM):
+          and EDIT_MODE() == editorstate.ONE_ROLL_TRIM) or 
+        (event.button == 1 and editorstate.cursor_is_tline_sensitive == True and EDIT_MODE() == editorstate.ONE_ROLL_TRIM)):
         track = tlinewidgets.get_track(event.y)
         if track == None:
             if editorpersistance.prefs.empty_click_exits_trims == True:
