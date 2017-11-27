@@ -36,6 +36,7 @@ import audiowaveformrenderer
 import boxmove
 import cairoarea
 import clipeffectseditor
+import compositormodes
 import editorpersistance
 from editorstate import current_sequence
 from editorstate import timeline_visible
@@ -1401,12 +1402,17 @@ class TimeLineCanvas:
         frame = get_frame(x)
         hit_compositor = compositor_hit(frame, y, current_sequence().compositors)
         if hit_compositor != None:
-            #POINTER_CONTEXT_COMPOSITOR_MOVE = 3
-            #POINTER_CONTEXT_COMPOSITOR_END_DRAG_LEFT = 4
-            #POINTER_CONTEXT_COMPOSITOR_END_DRAG_RIGHT = 5
-            return appconsts.POINTER_CONTEXT_NONE
+            if (editorstate.auto_follow_compositors_mouse_transparent == True and (editorstate.auto_follow == True and hit_compositor.obey_autofollow == True)):
+                # We get here if auto follow but compositors mouse transparent
+                # and move down the method to see if clip behind gets pointer context
+                pass
+            else:
+                if editorstate.auto_follow == False or (editorstate.auto_follow == True and hit_compositor.obey_autofollow == False):
+                    return compositormodes.get_pointer_context(hit_compositor, x)
+                else:
+                    return appconsts.POINTER_CONTEXT_NONE
 
-        track = get_track(y)  
+        track = get_track(y)
         if track == None:
             return appconsts.POINTER_CONTEXT_NONE
 

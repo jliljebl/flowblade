@@ -21,6 +21,7 @@
 """
 Module handles editing positions and clip ends of compositors on timeline.
 """
+import appconsts
 import gui
 import edit
 import editorstate
@@ -111,6 +112,14 @@ def mouse_press(event, frame):
         sub_mode = MOVE_EDIT
     updater.repaint_tline()
 
+def get_pointer_context(compositor, x):   
+    if abs(x - tlinewidgets._get_frame_x(compositor.clip_in)) < TRIM_HANDLE_WIDTH:
+        return appconsts.POINTER_CONTEXT_COMPOSITOR_END_DRAG_LEFT
+    elif abs(x - tlinewidgets._get_frame_x(compositor.clip_out + 1)) < TRIM_HANDLE_WIDTH:
+        return appconsts.POINTER_CONTEXT_COMPOSITOR_END_DRAG_RIGHT
+    else:
+        return appconsts.POINTER_CONTEXT_COMPOSITOR_MOVE
+        
 def mouse_move(x, y, frame, state):
     global edit_data
     if sub_mode == TRIM_EDIT:
@@ -122,7 +131,8 @@ def mouse_move(x, y, frame, state):
     
 def mouse_release(x, y, frame, state):
     global sub_mode
-    
+    tlinewidgets.pointer_context = appconsts.POINTER_CONTEXT_NONE
+
     editorstate.edit_mode = prev_edit_mode
     if editorstate.edit_mode == editorstate.INSERT_MOVE:
         tlinewidgets.set_edit_mode(None, tlinewidgets.draw_insert_overlay)
