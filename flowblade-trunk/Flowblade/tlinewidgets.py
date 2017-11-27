@@ -33,6 +33,7 @@ from gi.repository import PangoCairo
 
 import appconsts
 import audiowaveformrenderer
+import boxmove
 import cairoarea
 import clipeffectseditor
 import editorpersistance
@@ -1392,7 +1393,7 @@ class TimeLineCanvas:
         if pointer_context != current_pointer_context:
             pointer_context = current_pointer_context
             if pointer_context == appconsts.POINTER_CONTEXT_NONE:
-                gui.editor_window.set_tline_cursor(EDIT_MODE()) # 
+                gui.editor_window.set_tline_cursor(EDIT_MODE())
             else:
                 gui.editor_window.set_tline_cursor_to_context(pointer_context)
         
@@ -1418,7 +1419,7 @@ class TimeLineCanvas:
         clip_end_frame = track.clip_start(clip_index + 1) - pos
         
         # INSERT, OVEWRITE
-        if EDIT_MODE() == editorstate.INSERT_MOVE or EDIT_MODE() == editorstate.OVERWRITE_MOVE:
+        if (EDIT_MODE() == editorstate.INSERT_MOVE or EDIT_MODE() == editorstate.OVERWRITE_MOVE) and editorstate.overwrite_mode_box == False:
             if abs(x - _get_frame_x(clip_start_frame)) < DRAG_SENSITIVITY_AREA_WIDTH_PIX:
                 return appconsts.POINTER_CONTEXT_END_DRAG_LEFT
             if abs(x - _get_frame_x(clip_end_frame)) < DRAG_SENSITIVITY_AREA_WIDTH_PIX:
@@ -1431,9 +1432,12 @@ class TimeLineCanvas:
                 return appconsts.POINTER_CONTEXT_TRIM_LEFT
             else:
                 return appconsts.POINTER_CONTEXT_TRIM_RIGHT
-        
-        
-        
+        # BOX
+        elif (EDIT_MODE() == editorstate.OVERWRITE_MOVE and editorstate.overwrite_mode_box == True and 
+            boxmove.box_selection_data != None):
+            if boxmove.box_selection_data.is_hit(x, y):
+                return appconsts.POINTER_CONTEXT_BOX_SIDEWAYS
+                
         return appconsts.POINTER_CONTEXT_NONE
             
     #----------------------------------------- DRAW

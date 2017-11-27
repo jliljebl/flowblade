@@ -142,8 +142,9 @@ class EditorWindow:
         self.context_cursors = {appconsts.POINTER_CONTEXT_END_DRAG_LEFT:(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "ctx_drag_left.png"), 3, 7),
                                 appconsts.POINTER_CONTEXT_END_DRAG_RIGHT:(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "ctx_drag_right.png"), 14, 7),
                                 appconsts.POINTER_CONTEXT_TRIM_LEFT:(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "ctx_trim_left.png"), 9, 9),
-                                appconsts.POINTER_CONTEXT_TRIM_RIGHT:(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "ctx_trim_right.png"), 9, 9)}
-                                
+                                appconsts.POINTER_CONTEXT_TRIM_RIGHT:(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "ctx_trim_right.png"), 9, 9),
+                                appconsts.POINTER_CONTEXT_BOX_SIDEWAYS:(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "ctx_sideways.png"), 9, 9)}
+
         # Window
         self.window = Gtk.Window(Gtk.WindowType.TOPLEVEL)
         self.window.set_icon_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
