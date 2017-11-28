@@ -1135,12 +1135,12 @@ class EditorWindow:
             else:
                 cursor = self.get_own_cursor(display, OVERWRITE_BOX_CURSOR, 6, 15)
         elif mode == editorstate.TWO_ROLL_TRIM:
-            cursor = self.get_own_cursor(display, TWOROLL_CURSOR, 11, 9)
+            cursor = self.get_own_cursor(display, TWOROLL_NO_EDIT_CURSOR, 11, 9) 
         elif mode == editorstate.TWO_ROLL_TRIM_NO_EDIT:
             cursor = self.get_own_cursor(display, TWOROLL_NO_EDIT_CURSOR, 11, 9)
         elif mode == editorstate.ONE_ROLL_TRIM:
             if editorstate.trim_mode_ripple == False:
-                cursor = self.get_own_cursor(display, ONEROLL_CURSOR, 9, 9)
+                cursor = self.get_own_cursor(display, ONEROLL_NO_EDIT_CURSOR, 9, 9)
             else:
                 cursor = self.get_own_cursor(display, ONEROLL_RIPPLE_CURSOR, 9, 9)
         elif mode == editorstate.ONE_ROLL_TRIM_NO_EDIT:
@@ -1149,7 +1149,7 @@ class EditorWindow:
             else:
                 cursor = self.get_own_cursor(display, ONEROLL_RIPPLE_CURSOR, 9, 9)
         elif mode == editorstate.SLIDE_TRIM:
-            cursor = self.get_own_cursor(display, SLIDE_CURSOR, 9, 9)
+            cursor = self.get_own_cursor(display, SLIDE_NO_EDIT_CURSOR, 9, 9)
         elif mode == editorstate.SLIDE_TRIM_NO_EDIT:
             cursor = self.get_own_cursor(display, SLIDE_NO_EDIT_CURSOR, 9, 9)
         elif mode == editorstate.SELECT_PARENT_CLIP:
