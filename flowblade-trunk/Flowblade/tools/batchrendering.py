@@ -43,6 +43,7 @@ import sys
 import textwrap
 import time
 import threading
+import unicodedata
 
 import dialogutils
 import editorstate
@@ -227,6 +228,7 @@ def add_render_item(flowblade_project, render_path, args_vals_list, mark_in, mar
     project_name = flowblade_project.name
     sequence_name = flowblade_project.c_seq.name
     sequence_index = flowblade_project.sequences.index(flowblade_project.c_seq)
+
     length = flowblade_project.c_seq.get_length()
     render_item = BatchRenderItemData(project_name, sequence_name, render_path, \
                                       sequence_index, args_vals_list, timestamp, length, \
@@ -511,7 +513,13 @@ class BatchRenderItemData:
 
     def generate_identifier(self):
         id_str = self.project_name + self.timestamp.ctime()
-        return md5.new(id_str).hexdigest()
+        try:
+            idfier = md5.new(id_str).hexdigest()
+        except:
+            ascii_pname = unicodedata.normalize('NFKD', self.project_name).encode('ascii','ignore')
+            id_str = str(ascii_pname) + self.timestamp.ctime()
+            idfier = md5.new(id_str).hexdigest()
+        return idfier
 
     def matches_identifier(self, identifier):
         if self.generate_identifier() == identifier:
