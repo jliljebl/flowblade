@@ -22,8 +22,9 @@
 Atomic file write support.
 """
 
-import os
 import md5
+import os
+import shutil
 
 MAX_CREATE_FILE_ATTEMPTS = 10
 
@@ -156,7 +157,9 @@ class AtomicFileWriter(object):
             self.file_obj.close()
 
         # rename the temp file into the final destination
-        os.rename(self.tmp_file_path, self.dest_file_path)
+        # Issue 459, uncomment os.... if problems
+        #os.rename(self.tmp_file_path, self.dest_file_path)
+        shutil.move(self.tmp_file_path, self.dest_file_path)
 
     def get_file(self):
         """
