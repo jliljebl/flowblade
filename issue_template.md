@@ -1,7 +1,9 @@
-### Flowblade version (Help->About)
+Please include the following information.
 
-### MLT version (Help->Runtime Environment)
+1) Flowblade version (Help->About):
 
-### Your distribution
+2) MLT version (Help->Runtime Environment):
 
-### Terminal printout (run Flowblade from terminal with command 'flowblade')
+3) Your distribution 8Ubuntu, Debian, Mint etc.):
+
+
