@@ -654,7 +654,12 @@ def tline_canvas_mouse_pressed(event, frame):
         if (not success) and editorpersistance.prefs.empty_click_exits_trims == True:
             set_default_edit_mode(True)
             return
-        gui.editor_window.set_cursor_to_mode()
+            
+        if trimmodes.edit_data["to_side_being_edited"] == True:
+            pointer_context = appconsts.POINTER_CONTEXT_TRIM_LEFT
+        else:
+            pointer_context = appconsts.POINTER_CONTEXT_TRIM_RIGHT
+        gui.editor_window.set_tline_cursor_to_context(pointer_context)
         gui.editor_window.set_mode_selector_to_mode()
         if not editorpersistance.prefs.quick_enter_trims:
             mouse_disabled = True
