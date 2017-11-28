@@ -4,6 +4,6 @@ Please include the following information.
 
 2) MLT version (Help->Runtime Environment):
 
-3) Your distribution 8Ubuntu, Debian, Mint etc.):
+3) Your distribution (Ubuntu, Debian, Mint etc.):
 
 
