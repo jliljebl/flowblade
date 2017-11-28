@@ -2441,7 +2441,7 @@ class TimeLineFrameScale:
             x = math.floor(i * tc_draw_step * pix_per_frame \
                 - pos * pix_per_frame) + 0.5
             cr.move_to(x, TC_Y)
-            text = utils.get_tc_string(i * tc_draw_step)
+            text = utils.get_tc_string(int(round(float(i) * tc_draw_step)))
             cr.show_text(text);
 
         # Draw marks
