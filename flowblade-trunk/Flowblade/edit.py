@@ -2509,7 +2509,31 @@ def _add_centered_transition_redo(self):
     _insert_clip(track, transition_clip, 
                  self.transition_index, 1, # first frame is dropped as it is 100% from clip
                  transition_clip.get_length() - 1)
-   
+
+#------------------- REPLACE CENTERED TRANSITION
+# "track", "transition_clip","transition_index"
+def replace_centered_transition_action(data):
+    action = EditAction(_replace_centered_transition_undo, _replace_centered_transition_redo, data)
+    return action
+
+def _replace_centered_transition_undo(self):
+    # Remove new
+    _remove_clip(self.track, self.transition_index)
+
+    # Insert old 
+    _insert_clip(self.track, self.removed_clip, 
+                 self.transition_index, 1, # first frame is dropped as it is 100% from clip
+                 self.removed_clip.get_length() - 1)
+
+def _replace_centered_transition_redo(self):
+    # Remove old   
+    self.removed_clip = _remove_clip(self.track, self.transition_index)
+    
+    # Insert new 
+    _insert_clip(self.track, self.transition_clip, 
+                 self.transition_index, 1, # first frame is dropped as it is 100% from clip
+                 self.transition_clip.get_length() - 1)
+                    
 
 # -------------------------------------------------------- RENDERED FADE IN
 # "fade_clip", "clip_index", "track", "length"

@@ -1229,6 +1229,8 @@ def display_transition_clip_popup_menu(event, clip, track, callback):
     clip_menu = transition_clip_menu
     guiutils.remove_children(clip_menu)
 
+    clip_menu.add(_get_menu_item(_("Re-render"), callback, (clip, track, "re_render", event.x)))
+    
     clip_menu.add(_get_menu_item(_("Open in Filters Editor"), callback, (clip, track, "open_in_editor", event.x)))
 
     _add_separetor(clip_menu)

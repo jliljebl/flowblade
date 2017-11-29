@@ -966,7 +966,20 @@ class Sequence:
             return -1
         
         return index
-    
+
+    def get_clip_for_id(self, clip_id):
+        """
+        Returns clip or None if not found.
+        """
+        for i in range(1, len(self.tracks)):
+            track = self.tracks[i]
+            for j in range(0, len(track.clips)):
+                clip = track.clips[j]
+                if clip.id == clip_id:
+                    return clip
+
+        return None
+        
     def set_track_mute_state(self, track_index, mute_state):
         track = self.tracks[track_index]
         track.mute_state = mute_state

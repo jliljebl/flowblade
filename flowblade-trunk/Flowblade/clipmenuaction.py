@@ -256,6 +256,10 @@ def _add_autofade(data):
     action.do_edit()
     
     updater.repaint_tline()
+
+
+def _re_render_transition(data):
+    tlineaction.re_render_transition(data)
     
 def _mute_clip(data):
     clip, track, item_id, item_data = data
@@ -572,4 +576,5 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "stretch_next":_stretch_next, 
                   "stretch_prev":_stretch_prev,
                   "add_autofade":_add_autofade,
-                  "set_audio_sync_clip":audiosync.init_select_tline_sync_clip}
+                  "set_audio_sync_clip":audiosync.init_select_tline_sync_clip,
+                  "re_render":_re_render_transition}
