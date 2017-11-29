@@ -420,9 +420,10 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
 
     # Add MLT objects to sequences.
     global all_clips, sync_clips
+    seq_count = 1
     for seq in project.sequences:
         FIX_N_TO_3_SEQUENCE_COMPATIBILITY(seq)
-        _show_msg(_("Building sequence ") + seq.name)
+        _show_msg(_("Building sequence ") + str(seq_count))
         all_clips = {}
         sync_clips = []
                 
@@ -433,6 +434,8 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
 
         if not hasattr(seq, "seq_len"):
             seq.update_edit_tracks_length()
+
+        seq_count = seq_count + 1
 
     all_clips = {}
     sync_clips = []
