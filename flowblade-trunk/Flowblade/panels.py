@@ -418,17 +418,6 @@ def get_transition_re_render_panel(trans_data):
     transition_length_value = Gtk.Label(label=str(transition_length))
     transition_length_row = get_two_column_box(transition_length_label, transition_length_value)
 
-    out_clip_label = Gtk.Label(label=_("First Clip Out Handle:"))
-    out_clip_value = Gtk.Label(label=str(trans_data["from_handle"]) + _(" frame(s)"))
-    
-    in_clip_label = Gtk.Label(label=_("Second Clip In Handle:"))
-    in_clip_value = Gtk.Label(label=str(trans_data["to_handle"]) + _(" frame(s)"))
-    
-    out_handle_row = get_two_column_box(out_clip_label, 
-                                        out_clip_value)
-    in_handle_row = get_two_column_box(in_clip_label, 
-                                       in_clip_value)
-
     # Encoding widgets
     encodings_cb = Gtk.ComboBoxText()
     for encoding in renderconsumer.encoding_options:
@@ -444,14 +433,9 @@ def get_transition_re_render_panel(trans_data):
     
     _set_saved_encoding(transition_widgets)
 
-
     transition_vbox = Gtk.VBox(False, 2)
     transition_vbox.pack_start(transition_length_row, False, False, 0)
-
-    data_vbox = Gtk.VBox(False, 2)
-    data_vbox.pack_start(out_handle_row, False, False, 0)
-    data_vbox.pack_start(in_handle_row, False, False, 0)
-    
+   
     enconding_vbox = Gtk.VBox(False, 2)
     enconding_vbox.pack_start(encodings_cb, False, False, 0)
     enconding_vbox.pack_start(quality_cb, False, False, 0)
@@ -459,7 +443,6 @@ def get_transition_re_render_panel(trans_data):
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(get_named_frame(_("Transition"),  transition_vbox), True, True, 0)
     vbox.pack_start(get_named_frame(_("Encoding"),  enconding_vbox), True, True, 0)
-    vbox.pack_start(get_named_frame(_("Media Overlap info"),  data_vbox), True, True, 0)
 
     alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
     alignment.set_size_request(450, 200)

@@ -838,12 +838,12 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
     window_text, type_id = mlttransitions.rendered_transitions[transition_type_selection_index]
     window_text = _("Rendering ") + window_text
 
-    render.render_single_track_transition_clip(producer_tractor,
-                                        encoding_option_index,
-                                        quality_option_index, 
-                                        str(extension_text), 
-                                        _transition_render_complete,
-                                        window_text)
+    render.render_single_track_transition_clip( producer_tractor,
+                                                encoding_option_index,
+                                                quality_option_index, 
+                                                str(extension_text), 
+                                                _transition_render_complete,
+                                                window_text)
 
 def _transition_render_complete(clip_path):
     print "Render complete"
@@ -865,7 +865,6 @@ def _transition_render_complete(clip_path):
     action = edit.add_centered_transition_action(data)
     action.do_edit()
 
-
 def re_render_transition(data):
     clip, track, msg, x = data
     if not hasattr(clip, "creation_data"):
@@ -883,9 +882,11 @@ def re_render_transition(data):
         print "clip/s not found"
         return
 
+    transition_data = {"track":track,
+                        "clip":clip,
+                        "from_clip":from_clip,
+                        "to_clip":to_clip}
 
-    transition_data = get_transition_data_for_clips(track, from_clip, to_clip)
-    transition_data["clip"] = clip
     dialogs.transition_re_render_dialog(_transition_RE_render_dialog_callback, transition_data)
 
 def _transition_RE_render_dialog_callback(dialog, response_id, selection_widgets, transition_data):
@@ -907,7 +908,6 @@ def _transition_RE_render_dialog_callback(dialog, response_id, selection_widgets
     
     trans_index = track.clips.index(clip)
 
-                                        
     producer_tractor = mlttransitions.get_rendered_transition_tractor(  editorstate.current_sequence(),
                                                                         transition_data["from_clip"],
                                                                         transition_data["to_clip"],
@@ -922,25 +922,25 @@ def _transition_RE_render_dialog_callback(dialog, response_id, selection_widgets
 
     # Save transition data into global variable to be available at render complete callback
     global transition_render_data
-    transition_render_data = (trans_index, transition_data["from_clip"], transition_data["to_clip"], track, from_in, to_out, transition_type_selection_index, clip.creation_data)
+    transition_render_data = (trans_index, track, clip, transition_type_selection_index, clip.creation_data)
     window_text, type_id = mlttransitions.rendered_transitions[transition_type_selection_index]
-    window_text = _("Rendering ") + window_text
+    window_text = _("Rerendering ") + window_text
 
-    render.render_single_track_transition_clip(producer_tractor,
-                                        encoding_option_index,
-                                        quality_option_index, 
-                                        str(extension_text), 
-                                        _transition_RE_render_complete,
-                                        window_text)
+    render.render_single_track_transition_clip( producer_tractor,
+                                                encoding_option_index,
+                                                quality_option_index, 
+                                                str(extension_text), 
+                                                _transition_RE_render_complete,
+                                                window_text)
 
 def _transition_RE_render_complete(clip_path):
-    print clip_path
-
     global transition_render_data
-    transition_index, from_clip, to_clip, track, from_in, to_out, transition_type, creation_data = transition_render_data
+    transition_index, track, orig_clip, transition_type, creation_data = transition_render_data
 
     transition_clip = current_sequence().create_rendered_transition_clip(clip_path, transition_type)
     transition_clip.creation_data = creation_data
+    transition_clip.clip_in = orig_clip.clip_in
+    transition_clip.clip_out = orig_clip.clip_out
 
     data = {"track":track,
             "transition_clip":transition_clip,
