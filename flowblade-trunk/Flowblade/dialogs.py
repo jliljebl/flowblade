@@ -1186,6 +1186,20 @@ def transition_re_render_dialog(callback, transition_data):
     dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
     dialog.show_all()
+
+def fade_re_render_dialog(callback, fade_data):
+    dialog = Gtk.Dialog(_("Rerender Fade").encode('utf-8'),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                        _("Rerender").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+
+    alignment, encodings_cb, quality_cb = panels.get_fade_re_render_panel(fade_data)
+    widgets = (encodings_cb, quality_cb)
+    dialog.connect('response', callback, widgets, fade_data)
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.show_all()
     
 def fade_edit_dialog(callback, transition_data):
     dialog = Gtk.Dialog(_("Add Fade"),  gui.editor_window.window,

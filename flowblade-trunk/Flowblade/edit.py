@@ -2536,6 +2536,21 @@ def _replace_centered_transition_redo(self):
                  self.transition_clip.clip_out)
                     
 
+# -------------------------------------------------------- REPLACE RENDERED FADE
+# "fade_clip", "index", "track", "length"
+def replace_rendered_fade_action(data):
+    action = EditAction(_replace_rendered_fade_undo, _replace_rendered_fade_redo, data)
+    return action
+
+def _replace_rendered_fade_undo(self):
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track,  self.orig_fade, self.index, 0, self.length - 1)
+
+def _replace_rendered_fade_redo(self):
+    self.orig_fade = _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.fade_clip, self.index, 0, self.length - 1)
+
+
 # -------------------------------------------------------- RENDERED FADE IN
 # "fade_clip", "clip_index", "track", "length"
 def add_rendered_fade_in_action(data):
@@ -2552,6 +2567,7 @@ def _add_rendered_fade_in_redo(self):
     self.orig_clip_in = self.orig_clip.clip_in 
     _insert_clip(self.track, self.fade_clip, self.index, 0, self.length - 1)
     _insert_clip(self.track,  self.orig_clip, self.index + 1, self.orig_clip.clip_in + self.length, self.orig_clip.clip_out)
+
 
 # -------------------------------------------------------- RENDERED FADE OUT
 # "fade_clip", "clip_index", "track", "length"

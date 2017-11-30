@@ -169,7 +169,7 @@ def init_module():
         name, comp_type = fade
         name_for_type[comp_type] = name
         
-    # Tuples are not really needed we only need list of translated names
+    # Rendered transition names and types
     rendered_transitions = [  (_("Dissolve"), RENDERED_DISSOLVE), 
                               (_("Wipe"), RENDERED_WIPE),
                               (_("Color Dip"), RENDERED_COLOR_DIP),

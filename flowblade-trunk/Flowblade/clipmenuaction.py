@@ -46,6 +46,7 @@ import editevent
 from editorstate import current_sequence
 from editorstate import get_track
 from editorstate import PROJECT
+import mlttransitions
 import movemodes
 import syncsplitevent
 import tlinewidgets
@@ -258,9 +259,15 @@ def _add_autofade(data):
     updater.repaint_tline()
 
 
-def _re_render_transition(data):
-    tlineaction.re_render_transition(data)
-    
+def _re_render_transition_or_fade(data):
+    clip, track, item_id, item_data = data
+    from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index, color_str = clip.creation_data
+    name, type_id = mlttransitions.rendered_transitions[transition_type_index]
+    if type_id < appconsts.RENDERED_FADE_IN:
+        tlineaction.re_render_transition(data)
+    else:
+        tlineaction.re_render_fade(data)
+        
 def _mute_clip(data):
     clip, track, item_id, item_data = data
     set_clip_muted = item_data
@@ -577,4 +584,4 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "stretch_prev":_stretch_prev,
                   "add_autofade":_add_autofade,
                   "set_audio_sync_clip":audiosync.init_select_tline_sync_clip,
-                  "re_render":_re_render_transition}
+                  "re_render":_re_render_transition_or_fade}

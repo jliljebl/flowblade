@@ -410,9 +410,6 @@ def get_transition_panel(trans_data):
     return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button)
 
 def get_transition_re_render_panel(trans_data):
-    filler = Gtk.Label()
-    filler.set_size_request(10,10)
-
     transition_length = trans_data["clip"] .clip_out - trans_data["clip"].clip_in + 1 # +1 out inclusive
     transition_length_label = Gtk.Label(label=_("Length:"))
     transition_length_value = Gtk.Label(label=str(transition_length))
@@ -442,6 +439,43 @@ def get_transition_re_render_panel(trans_data):
     
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(get_named_frame(_("Transition"),  transition_vbox), True, True, 0)
+    vbox.pack_start(get_named_frame(_("Encoding"),  enconding_vbox), True, True, 0)
+
+    alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
+    alignment.set_size_request(450, 200)
+    
+    return (alignment, encodings_cb, quality_cb)
+
+def get_fade_re_render_panel(trans_data):
+    fade_length = trans_data["clip"] .clip_out - trans_data["clip"].clip_in + 1 # +1 out inclusive
+    fade_length_label = Gtk.Label(label=_("Length:"))
+    fade_length_value = Gtk.Label(label=str(fade_length))
+    fade_length_row = get_two_column_box(fade_length_label, fade_length_value)
+
+    # Encoding widgets
+    encodings_cb = Gtk.ComboBoxText()
+    for encoding in renderconsumer.encoding_options:
+        encodings_cb.append_text(encoding.name)
+    encodings_cb.set_active(0)
+
+    quality_cb = Gtk.ComboBoxText()
+    transition_widgets = (encodings_cb, quality_cb)
+    encodings_cb.connect("changed", 
+                              lambda w,e: _transition_encoding_changed(transition_widgets), 
+                              None)
+    _fill_transition_quality_combo_box(transition_widgets, 10)
+    
+    _set_saved_encoding(transition_widgets)
+
+    fade_vbox = Gtk.VBox(False, 2)
+    fade_vbox.pack_start(fade_length_row, False, False, 0)
+   
+    enconding_vbox = Gtk.VBox(False, 2)
+    enconding_vbox.pack_start(encodings_cb, False, False, 0)
+    enconding_vbox.pack_start(quality_cb, False, False, 0)
+    
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(get_named_frame(_("Fade"),  fade_vbox), True, True, 0)
     vbox.pack_start(get_named_frame(_("Encoding"),  enconding_vbox), True, True, 0)
 
     alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
