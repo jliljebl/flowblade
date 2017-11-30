@@ -1136,7 +1136,7 @@ def _fade_render_complete(clip_path):
 
 def re_render_fade(data):
     clip, track, msg, x = data
-    if hasattr(clip, "creation_data"):
+    if not hasattr(clip, "creation_data"):
         _no_creation_data_dialog()
         return
     
@@ -1188,7 +1188,6 @@ def _fade_RE_render_dialog_callback(dialog, response_id, selection_widgets, fade
     
     editorstate.fade_length = length #?????
 
-
     producer_tractor = mlttransitions.get_rendered_transition_tractor(  editorstate.current_sequence(),
                                                                         from_clone,
                                                                         None,
@@ -1215,9 +1214,7 @@ def _fade_RE_render_dialog_callback(dialog, response_id, selection_widgets, fade
                                                 _fade_RE_render_complete,
                                                 window_text)
 
-def _fade_RE_render_complete(clip_path):
-    print "pillumarallaa"
-    
+def _fade_RE_render_complete(clip_path):    
     global transition_render_data
     clip_index, fade_type, from_clone, track, length, creation_data = transition_render_data
 
