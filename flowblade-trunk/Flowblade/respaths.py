@@ -80,3 +80,8 @@ def set_paths(root_path):
 def apply_dark_theme():
     global IMAGE_PATH
     IMAGE_PATH = ROOT_PATH + "/res/darktheme/"
+
+def set_gmic2(root_path):
+    global GMIC_SCRIPTS_DOC
+    GMIC_SCRIPTS_DOC = root_path + "/res/gmic/gmic2scripts.xml"
+    
