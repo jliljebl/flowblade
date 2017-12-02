@@ -2,6 +2,7 @@
 
 **Contents**
 
+  1. [Alpha Filters do not work](./FAQ.md#alpha-filters-do-not-work)
   1. [Crop filter does not work](./FAQ.md#crop-filter-does-not-work)
   2. [How can I move clips around freely?](./FAQ.md#how-can-i-move-clips-around-freely)
   3. [Will there be Windows or OSX versions?](./FAQ.md#will-there-be-windows-or-osx-versions)
