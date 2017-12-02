@@ -7,6 +7,14 @@
   3. [Will there be Windows or OSX versions?](./FAQ.md#will-there-be-windows-or-osx-versions)
   4. [Rendering with a profile with different framerate changes video playback speed and loses audio sync](./FAQ.md#rendering-with-a-profile-with-different-framerate-changes-video-playback-speed-and-loses-audio-sync)
 
+#### Alpha Filters do not work
+
+In Flowblade Alpha filters write into images alpha channel and have no effect unless used in combination with Compositors to combine two images.
+
+Alpha channel in images exits for the sole purpose of compositing two images. If image is not part of a composite, the data in alpha channel has no purpose and does not affect output.
+
+**Select "Add Compositor" -> "Dissolve" from clip popup menu** to composite e.g. clip on track V2 on a clip on track V1 and add Alpha filter into clip on track V2 **to see Alpha filters working.**
+
 #### Crop filter does not work
 
 Are you trying zoom in a bit and use part of the image instead of the whole image?
