@@ -14,7 +14,7 @@ In Flowblade Alpha filters write into images alpha channel and have no effect un
 
 Alpha channel in images exits for the sole purpose of compositing two images. If image is not part of a composite, the data in alpha channel has no purpose and does not affect output.
 
-**Select "Add Compositor" -> "Dissolve" from clip popup menu** to composite e.g. clip on track V2 on a clip on track V1 and add Alpha filter into clip on track V2 **to see Alpha filters working.**
+**Select "Add Compositor" -> "Dissolve" from clip popup menu** to composite e.g. clip on track V2 on a clip on track V1 and add Alpha filter into clip on track V2 to see Alpha filters working.
 
 ### Crop filter does not work
 
