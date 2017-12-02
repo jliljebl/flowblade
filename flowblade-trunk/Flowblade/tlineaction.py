@@ -868,8 +868,7 @@ def _transition_render_complete(clip_path):
 def re_render_transition(data):
     clip, track, msg, x = data
     if not hasattr(clip, "creation_data"):
-        # INFOWINDOW
-        print "pre 1.16, no data"
+        _no_creation_data_dialog()
         return
     
     from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \
@@ -878,8 +877,7 @@ def re_render_transition(data):
     from_clip = editorstate.current_sequence().get_clip_for_id(from_clip_id)
     to_clip = editorstate.current_sequence().get_clip_for_id(to_clip_id)
     if from_clip == None or to_clip == None:
-        # INFOWINDOW
-        print "clip/s not found"
+        _source_clips_not_found_dialog()
         return
 
     transition_data = {"track":track,
@@ -1071,7 +1069,7 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
                                  gui.editor_window.window)
         return
 
-
+    # Remember fade and transition lengths for next invocation, users prefer this over one default value
     editorstate.fade_length = length
 
     # Edit clears selection, get track index before selection is cleared
@@ -1133,7 +1131,6 @@ def _fade_render_complete(clip_path):
         action = edit.add_rendered_fade_out_action(data)
         action.do_edit()
 
-
 def re_render_fade(data):
     clip, track, msg, x = data
     if not hasattr(clip, "creation_data"):
@@ -1145,8 +1142,7 @@ def re_render_fade(data):
     
     from_clip = editorstate.current_sequence().get_clip_for_id(from_clip_id)
     if from_clip == None:
-        # INFOWINDOW
-        print "clip/s not found"
+        _source_clips_not_found_dialog()
         return
 
     fade_data = {   "track":track,
@@ -1234,7 +1230,11 @@ def _no_creation_data_dialog():
     secondary_txt = _("This fade / transition was created with Flowblade <= 1.14 and does not have the necessary data embedded.\nRerendering works with fades/transitions created with Flowblade >= 1.16.")
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
 
-
+def _source_clips_not_found_dialog():
+    primary_txt = _("Can't rerender this fade / transition.")
+    secondary_txt = _("The clip/s used to create this fade / transition are no longer available on the timeline.")
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+    
 # --------------------------------------------------------- view move setting
 def view_mode_menu_lauched(launcher, event):
     guicomponents.get_monitor_view_popupmenu(launcher, event, _view_mode_menu_item_item_activated)
