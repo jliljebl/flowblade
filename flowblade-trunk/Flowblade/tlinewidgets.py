@@ -2402,6 +2402,13 @@ class TimeLineFrameScale:
             small_tick_step = int(view_length / NUMBER_OF_LINES)
             tc_draw_step = int(view_length / NUMBER_OF_LINES)
 
+        # Draw tc
+        cr.select_font_face ("sans-serif",
+                              cairo.FONT_SLANT_NORMAL,
+                              cairo.FONT_WEIGHT_NORMAL)
+
+        cr.set_font_size(11)
+        
         # Draw small tick lines
         # Get draw range in steps from 0
         start = int(view_start_frame / small_tick_step)
@@ -2413,37 +2420,42 @@ class TimeLineFrameScale:
             x = math.floor(i * small_tick_step * pix_per_frame - pos * pix_per_frame) + 0.5 
             cr.move_to(x, SCALE_HEIGHT)
             cr.line_to(x, SMALL_TICK_Y)
+            if tc_draw_step == small_tick_step:
+                cr.move_to(x, TC_Y)
+                text = utils.get_tc_string(int(round(float(i) * float(tc_draw_step))))
+                cr.show_text(text);
         cr.stroke()
+        
+        # 23.98 and 29.97 need this to get drawn on even seconds with big ticks and tcs
+        if round(fps) != fps:
+            to_seconds_fix_add = 1.0
+        else:
+            to_seconds_fix_add = 0.0
         
         # Draw big tick lines, if required
         if big_tick_step != -1:
             count = int(seq.get_length() / big_tick_step)
             for i in range(1, count):
-                x = math.floor(math.floor(i * big_tick_step) * pix_per_frame \
+                x = math.floor((math.floor(i * big_tick_step) + to_seconds_fix_add) * pix_per_frame \
                     - pos * pix_per_frame) + 0.5 
                 cr.move_to(x, SCALE_HEIGHT)
                 cr.line_to(x, BIG_TICK_Y)
                 cr.stroke()
 
-        # Draw tc
-        cr.select_font_face ("sans-serif",
-                              cairo.FONT_SLANT_NORMAL,
-                              cairo.FONT_WEIGHT_NORMAL)
-
-        cr.set_font_size(11)
-        start = int(view_start_frame / tc_draw_step)
-        # Get draw range in steps from 0
-        if start == pos:
-            start += 1 # don't draw line on first pixel of scale display
-        # +1 to ensure coverage
-        end = int(view_end_frame / tc_draw_step) + 1 
-        for i in range(start, end):
-            x = math.floor(i * tc_draw_step * pix_per_frame \
-                - pos * pix_per_frame) + 0.5
-            cr.move_to(x, TC_Y)
-            text = utils.get_tc_string(int(round(float(i) * tc_draw_step)))
-            cr.show_text(text);
-
+        if tc_draw_step != small_tick_step:
+            start = int(view_start_frame / tc_draw_step)
+            # Get draw range in steps from 0
+            if start == pos:
+                start += 1 # don't draw line on first pixel of scale display
+            # +1 to ensure coverage
+            end = int(view_end_frame / tc_draw_step) + 1 
+            for i in range(start, end):
+                x = math.floor((math.floor(i * tc_draw_step) + to_seconds_fix_add) * pix_per_frame \
+                    - pos * pix_per_frame) + 0.5
+                cr.move_to(x, TC_Y)
+                text = utils.get_tc_string(int(math.floor((float(i) * tc_draw_step) + to_seconds_fix_add)))
+                cr.show_text(text)
+        
         # Draw marks
         self.draw_mark_in(cr, h)
         self.draw_mark_out(cr, h)
