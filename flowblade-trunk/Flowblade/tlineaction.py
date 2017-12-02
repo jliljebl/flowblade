@@ -1225,6 +1225,17 @@ def _fade_RE_render_complete(clip_path):
     action = edit.replace_rendered_fade_action(data)
     action.do_edit()
 
+def rerender_all_rendered_transitions_and_fades():
+    dialogs.re_render_all_dialog(_RE_render_all_dialog_callback)
+
+def _RE_render_all_dialog_callback(dialog, response_id, selection_widgets):
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+    
+    encodings_cb, quality_cb = selection_widgets
+    dialog.destroy()
+
 def _no_creation_data_dialog():
     primary_txt = _("Can't rerender this fade / transition.")
     secondary_txt = _("This fade / transition was created with Flowblade <= 1.14 and does not have the necessary data embedded.\nRerendering works with fades/transitions created with Flowblade >= 1.16.")

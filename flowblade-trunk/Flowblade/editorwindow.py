@@ -238,6 +238,7 @@ class EditorWindow:
             ('RenderMenu', None, _('Render')),
             ('AddToQueue', None, _('Add To Batch Render Queue...'), None, None, lambda a:projectaction.add_to_render_queue()),
             ('BatchRender', None, _('Batch Render Queue'), None, None, lambda a:batchrendering.launch_batch_rendering()),
+            ('ReRenderTransitionsFades', None, _('Rerender All Rendered Transitions And Fades '), None, None, lambda a:tlineaction.rerender_all_rendered_transitions_and_fades()),
             ('Render', None, _('Render Timeline'), None, None, lambda a:projectaction.do_rendering()),
             ('ToolsMenu', None, _('Tools')),
             ('Titler', None, _('Titler'), None, None, lambda a:titler.show_titler()),
@@ -351,6 +352,8 @@ class EditorWindow:
                 <menu action='RenderMenu'>
                     <menuitem action='AddToQueue'/>
                     <menuitem action='BatchRender'/>
+                    <separator/>
+                    <menuitem action='ReRenderTransitionsFades'/>
                     <separator/>
                     <menuitem action='Render'/>
                 </menu>

@@ -482,6 +482,34 @@ def get_fade_re_render_panel(trans_data):
     alignment.set_size_request(450, 200)
     
     return (alignment, encodings_cb, quality_cb)
+
+def get_re_render_all_panel():
+    # Encoding widgets
+    encodings_cb = Gtk.ComboBoxText()
+    for encoding in renderconsumer.encoding_options:
+        encodings_cb.append_text(encoding.name)
+    encodings_cb.set_active(0)
+
+    quality_cb = Gtk.ComboBoxText()
+    transition_widgets = (encodings_cb, quality_cb)
+    encodings_cb.connect("changed", 
+                              lambda w,e: _transition_encoding_changed(transition_widgets), 
+                              None)
+    _fill_transition_quality_combo_box(transition_widgets, 10)
+    
+    _set_saved_encoding(transition_widgets)
+   
+    enconding_vbox = Gtk.VBox(False, 2)
+    enconding_vbox.pack_start(encodings_cb, False, False, 0)
+    enconding_vbox.pack_start(quality_cb, False, False, 0)
+    
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(get_named_frame(_("Encoding"),  enconding_vbox), True, True, 0)
+
+    alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
+    alignment.set_size_request(450, 120)
+    
+    return (alignment, encodings_cb, quality_cb)
     
 def get_fade_panel(fade_data):
     type_combo_box = Gtk.ComboBoxText()    
