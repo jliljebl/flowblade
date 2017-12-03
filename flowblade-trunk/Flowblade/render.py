@@ -585,7 +585,7 @@ def render_single_track_transition_clip(transition_producer, encoding_option_ind
     end_frame = transition_producer.get_length() - 1
         
     # Launch render
-    # TODO: fix naming this isn't motion renderer
+    # TODO: fix naming, this isn't motion renderer
     global motion_renderer, motion_progress_update
     motion_renderer = renderconsumer.FileRenderPlayer(write_file, transition_producer, consumer, start_frame, end_frame)
     motion_renderer.start()

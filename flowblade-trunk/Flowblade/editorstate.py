@@ -125,7 +125,7 @@ fullscreen = False
 # Trim view mode
 show_trim_view = appconsts.TRIM_VIEW_OFF
 
-# Remember fade and transition lengths for next invocation, users prefer this over one default value
+# Remember fade and transition lengths for next invocation, users prefer this over one default value.
 fade_length = -1
 transition_length = -1
 

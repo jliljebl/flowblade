@@ -1201,15 +1201,15 @@ def fade_re_render_dialog(callback, fade_data):
     _default_behaviour(dialog)
     dialog.show_all()
 
-def re_render_all_dialog(callback):
+def re_render_all_dialog(callback, rerender_list, unrenderable):
     dialog = Gtk.Dialog(_("Rerender All Transitions and Fades").encode('utf-8'),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
                         _("Rerender All").encode('utf-8'), Gtk.ResponseType.ACCEPT))
 
-    alignment, encodings_cb, quality_cb = panels.get_re_render_all_panel()
+    alignment, encodings_cb, quality_cb = panels.get_re_render_all_panel(rerender_list, unrenderable)
     widgets = (encodings_cb, quality_cb)
-    dialog.connect('response', callback, widgets)
+    dialog.connect('response', callback, widgets, rerender_list)
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)

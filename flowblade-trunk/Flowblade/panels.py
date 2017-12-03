@@ -483,7 +483,21 @@ def get_fade_re_render_panel(trans_data):
     
     return (alignment, encodings_cb, quality_cb)
 
-def get_re_render_all_panel():
+def get_re_render_all_panel(rerender_list, unrenderable):
+    rerendercount_label = Gtk.Label(label=_("Transitions / Fades to be rerendered:"))
+    rerendercount_value = Gtk.Label(label=str(len(rerender_list)))
+    rerendercount_row = get_two_column_box(rerendercount_label, rerendercount_value)
+    
+    if unrenderable > 0:
+        unrenderable_info = _("There are ") + str(unrenderable) + _(" Transitions / Fades that cannot be rerendered, either because they are\ncreated with Flowblade version <=1.14 or the source clips are no longer on timeline.")
+        unrenderable_info_label = Gtk.Label(unrenderable_info)
+        
+    info_vbox = Gtk.VBox(False, 2)
+    info_vbox.pack_start(rerendercount_row, False, False, 0)
+    if unrenderable > 0:
+        info_vbox.pack_start(guiutils.pad_label(12,12), False, False, 0)
+        info_vbox.pack_start(unrenderable_info_label, False, False, 0)
+    
     # Encoding widgets
     encodings_cb = Gtk.ComboBoxText()
     for encoding in renderconsumer.encoding_options:
@@ -504,6 +518,7 @@ def get_re_render_all_panel():
     enconding_vbox.pack_start(quality_cb, False, False, 0)
     
     vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(get_named_frame(_("Info"),  info_vbox), True, True, 0)
     vbox.pack_start(get_named_frame(_("Encoding"),  enconding_vbox), True, True, 0)
 
     alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
