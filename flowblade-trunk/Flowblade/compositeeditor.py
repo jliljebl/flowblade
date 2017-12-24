@@ -31,6 +31,7 @@ import gui
 import guicomponents
 import guiutils
 import edit
+import editorstate
 from editorstate import current_sequence
 import editorpersistance
 import keyframeeditor
@@ -84,20 +85,25 @@ def create_widgets():
 
 def get_compositor_clip_panel():
     create_widgets()
+    small = (editorstate.SCREEN_HEIGHT < 1000)
     
     compositor_vbox = Gtk.VBox(False, 2)
     compositor_vbox.pack_start(widgets.compositor_info, False, False, 0)
-    compositor_vbox.pack_start(guiutils.get_pad_label(5, 24), False, False, 0)
+    if not small:
+        compositor_vbox.pack_start(guiutils.get_pad_label(5, 24), False, False, 0)
     compositor_vbox.pack_start(widgets.fade_in_b, False, False, 0)
     compositor_vbox.pack_start(widgets.fade_in_spin, False, False, 0)
-    compositor_vbox.pack_start(guiutils.get_pad_label(5, 12), False, False, 0)
+    if not small:
+        compositor_vbox.pack_start(guiutils.get_pad_label(5, 12), False, False, 0)
     compositor_vbox.pack_start(widgets.fade_out_b, False, False, 0)
     compositor_vbox.pack_start(widgets.fade_out_spin, False, False, 0)
-    compositor_vbox.pack_start(guiutils.get_pad_label(5, 24), False, False, 0)
+    if not small:
+        compositor_vbox.pack_start(guiutils.get_pad_label(5, 24), False, False, 0)
     compositor_vbox.pack_start(Gtk.Label(), True, True, 0)
     compositor_vbox.pack_start(widgets.reset_b, False, False, 0)
-    compositor_vbox.pack_start(widgets.delete_b, False, False, 0)
-    compositor_vbox.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
+    if not small:
+        compositor_vbox.pack_start(widgets.delete_b, False, False, 0)
+        compositor_vbox.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
 
     set_enabled(False)
     
