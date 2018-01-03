@@ -3,11 +3,12 @@
 **Contents**
 
   1. [Alpha Filters do not work](./FAQ.md#alpha-filters-do-not-work)
-  1. [Crop filter does not work](./FAQ.md#crop-filter-does-not-work)
-  2. [How can I move clips around freely?](./FAQ.md#how-can-i-move-clips-around-freely)
-  3. [Will there be Windows or OSX versions?](./FAQ.md#will-there-be-windows-or-osx-versions)
-  4. [Rendering with a profile with different framerate changes video playback speed and loses audio sync](./FAQ.md#rendering-with-a-profile-with-different-framerate-changes-video-playback-speed-and-loses-audio-sync)
-
+  2. [Crop filter does not work](./FAQ.md#crop-filter-does-not-work)
+  3. [How can I move clips around freely?](./FAQ.md#how-can-i-move-clips-around-freely)
+  4. [Will there be Windows or OSX versions?](./FAQ.md#will-there-be-windows-or-osx-versions)
+  5. [Rendering with a profile with different framerate changes video playback speed and loses audio sync](./FAQ.md#rendering-with-a-profile-with-different-framerate-changes-video-playback-speed-and-loses-audio-sync)
+  2. [Wayland](./FAQ.md#wayland)
+  
 ### Alpha Filters do not work
 
 In Flowblade Alpha filters write into images alpha channel and have no effect unless used in combination with Compositors to combine two images.
@@ -41,3 +42,12 @@ Yes, this will happen. When rendering the video frames are just copied, no compl
 
 To maintain sync and playback both Project Profile and Render Profile both need to match the frame rate of original material.  
 
+### Wayland ###
+
+Flowblade does not run natively on Wayland yet, but there are fwe ways to get Flowblade running.
+
+1 . Start Flowblade from terminal with command:
+
+    GDK_BACKEND=x11 flowblade
+
+2. Use X11 session when running Flowblade
