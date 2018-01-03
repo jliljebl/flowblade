@@ -50,4 +50,5 @@ Flowblade does not run natively on Wayland yet, but there are fwe ways to get Fl
 
     GDK_BACKEND=x11 flowblade
 
+
 2. Use X11 session when running Flowblade
