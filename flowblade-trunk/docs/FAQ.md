@@ -46,7 +46,7 @@ To maintain sync and playback both Project Profile and Render Profile both need 
 
 Flowblade does not run natively on Wayland yet, but there are fwe ways to get Flowblade running.
 
-1 . Start Flowblade from terminal with command:
+1. Start Flowblade from terminal with command:
 
     GDK_BACKEND=x11 flowblade
 
