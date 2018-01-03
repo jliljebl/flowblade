@@ -547,7 +547,7 @@ def tline_canvas_mouse_pressed(event, frame):
         audiosync.select_sync_clip_mouse_pressed(event, frame)
         mouse_disabled = True
         # Set INSERT_MODE
-        set_default_edit_mode()  
+        set_default_edit_mode()
         return
         
     # Hitting timeline in clip display mode displays timeline in

@@ -33,6 +33,7 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import Pango
 from gi.repository import PangoCairo
+from gi.repository import GLib
 
 import appconsts
 import cairoarea
@@ -768,7 +769,12 @@ class MediaPanel():
     def media_object_selected(self, media_object, widget, event):
         if event.type == Gdk.EventType._2BUTTON_PRESS:
             widget.grab_focus()
-            self.double_click_cb(media_object.media_file)
+            self.clear_selection()
+            media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
+            self.selected_objects.append(media_object)
+            self.widget.queue_draw()
+            GLib.idle_add(self.double_click_cb, media_object.media_file)
+            return
 
         # HACK! We're using event times to exclude double events when icon is pressed
         now = time.time()
@@ -787,7 +793,7 @@ class MediaPanel():
                     self.selected_objects.remove(media_object)
                     bg_color = gui.get_bg_color()
                     media_object.widget.override_background_color(Gtk.StateType.NORMAL, bg_color)
-                    return True
+                    return
                 except:
                     self.selected_objects.append(media_object)
             else:
