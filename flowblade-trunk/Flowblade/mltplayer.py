@@ -75,9 +75,9 @@ class Player:
         Creates consumer with sdl output to a gtk+ widget.
         """
         # SDL 2 consumer is created after
-        if editorstate.get_sdl_version() == editorstate.SDL_2:
-            print "refuse SDL1 consumer"
-            return
+        #if editorstate.get_sdl_version() == editorstate.SDL_2:
+        #    print "refuse SDL1 consumer"
+        #    return
 
         print "Create SDL1 consumer..."
         # Create consumer and set params
