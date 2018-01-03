@@ -1180,7 +1180,9 @@ class SingleRenderThread(threading.Thread):
         profile = mltprofiles.get_profile(render_item.render_data.profile_name)
         
         vcodec = self.get_vcodec(render_item)
-        if self.is_frame_sequence_render(vcodec) == True:
+        vformat = self.get_argval(render_item, "f")
+        
+        if self.is_frame_sequence_render(vcodec) == True and vformat == None:
             # Frame sequence render
             consumer = renderconsumer.get_img_seq_render_consumer_codec_ext(render_item.render_path,
                                                                              profile,  
@@ -1245,14 +1247,17 @@ class SingleRenderThread(threading.Thread):
 
         return False
 
-    def get_vcodec(self, render_item):
+    def get_vcodec(self, render_item):       
+        return self.get_argval(render_item, "vcodec")
+
+    def get_argval(self, render_item, arg_key):
         for arg_val in render_item.args_vals_list:
             arg, val = arg_val
-            if arg == "vcodec":
+            if arg == arg_key:
                 return val
         
         return None
-            
+        
     def get_frame_seq_ext(self, vcodec):
         if vcodec == "targa":
             return "tga"
