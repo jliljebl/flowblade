@@ -388,10 +388,10 @@ def monkeypatch_callbacks():
     # These provide clues for further module refactoring 
 
 # ---------------------------------- SDL2 consumer
-def create_sdl_2_consumer():
-    GObject.source_remove(sdl2_timeout_id)
-    print "Creating SDL2 consumer..."
-    editorstate.PLAYER().create_sdl2_video_consumer()
+#def create_sdl_2_consumer():
+#    GObject.source_remove(sdl2_timeout_id)
+#    print "Creating SDL2 consumer..."
+#    editorstate.PLAYER().create_sdl2_video_consumer()
 
 # ---------------------------------- program, sequence and project init
 def get_assoc_file_path():

@@ -90,10 +90,9 @@ class Player:
         # Hold ref to switch back from rendering
         self.sdl_consumer = self.consumer 
 
+    """
     def create_sdl2_video_consumer(self):
-        """
-        Creates consumer with sdl output to a gtk+ widget, SDL2 only..
-        """
+
         widget = gui.editor_window.tline_display
         self.set_sdl_xwindow(widget)
         
@@ -113,7 +112,8 @@ class Player:
         self.sdl_consumer = self.consumer 
         
         self.connect_and_start()
-        
+    """
+    
     def set_sdl_xwindow(self, widget):
         """
         Connects SDL output to display widget's xwindow
