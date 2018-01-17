@@ -43,7 +43,7 @@ RENDER_TICKER_DELAY = 0.05
 class Player:
     
     def __init__(self, profile):
-        self.consumer = None
+        #self.consumer = None
 
         self.init_for_profile(profile)
         
@@ -134,6 +134,10 @@ class Player:
         self.connect_and_start()
 
     def refresh(self): # Window events need this to get picture back
+        self.consumer.stop()
+        self.consumer.start()
+   
+        """
         if self.consumer == None:
             return 
         if editorstate.get_sdl_version() == editorstate.SDL_2:
@@ -146,7 +150,8 @@ class Player:
         else:
             self.consumer.stop()
             self.consumer.start()
-
+        """
+        
     def is_stopped(self):
         return (self.producer.get_speed() == 0)
         
