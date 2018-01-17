@@ -163,8 +163,8 @@ class Player:
         """
         Connects current procer and consumer and
         """
-        if self.consumer == None:
-            return 
+        #if self.consumer == None:
+        #    return 
 
         self.consumer.purge()
         self.producer.set_speed(0)
