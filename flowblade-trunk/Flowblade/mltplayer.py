@@ -119,7 +119,7 @@ class Player:
         Connects SDL output to display widget's xwindow
         """
         os.putenv('SDL_WINDOWID', str(widget.get_window().get_xid()))
-        self.xid = widget.get_window().get_xid()
+        #self.xid = widget.get_window().get_xid()
         Gdk.flush()
 
     def set_tracktor_producer(self, tractor):
@@ -291,8 +291,8 @@ class Player:
         return (self.producer.get_speed() != 0)
 
     def _ticker_event(self):
-        if self.consumer == None:
-            return 
+        #if self.consumer == None:
+        #    return 
             
         # Stop ticker if playback has stopped.
         if (self.consumer.is_stopped() or self.producer.get_speed() == 0):
