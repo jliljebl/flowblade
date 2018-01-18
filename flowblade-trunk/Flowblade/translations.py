@@ -76,7 +76,7 @@ def init_languages():
         lang = gettext.translation(APP_NAME, locale_path, languages=langs, fallback=True)
 
     # Un-comment for translations tests
-    #lang = gettext.translation(APP_NAME, locale_path, languages=["cs"], fallback=True)
+    #lang = gettext.translation(APP_NAME, locale_path, languages=["fi"], fallback=True)
 
     lang.install(APP_NAME) # makes _() a build-in available in all modules without imports
 
@@ -591,3 +591,21 @@ def load_filters_translations():
     combo_options["Highlights"] = _("Highlights")
     combo_options["Forward"] = _("Forward")
     combo_options["Backward"] = _("Backward")
+    combo_options["Add"] = _("Add")
+    combo_options["Saturate"] = _("Saturate")
+    combo_options["Multiply"] = _("Multiply")    
+    combo_options["Screen"] = _("Screen")   
+    combo_options["Overlay"] = _("Overlay")
+    combo_options["Darken"] = _("Darken")
+    combo_options["Lighten"] = _("Lighten")
+    combo_options["ColorDodge"] = _("ColorDodge")
+    combo_options["Colorburn"] = _("Colorburn")
+    combo_options["Hardlight"] = _("Hardlight")
+    combo_options["Softlight"] = _("Softlight")
+    combo_options["Difference"] = _("Difference")
+    combo_options["Exclusion"] = _("Exclusion")
+    combo_options["HSLHue"] = _("HSLHue")
+    combo_options["HSLSaturation"] = _("HSLSaturation")
+    combo_options["HSLColor"] = _("HSLColor")
+    combo_options["HSLLuminosity"] = _("HSLLuminosity")
+     
