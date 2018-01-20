@@ -28,6 +28,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 import mlt
+from operator import itemgetter
 import os
 import shutil
 import time
@@ -46,6 +47,7 @@ import editevent
 from editorstate import current_sequence
 from editorstate import get_track
 from editorstate import PROJECT
+from editorstate import PLAYER
 import mlttransitions
 import movemodes
 import syncsplitevent
@@ -492,7 +494,8 @@ def _match_frame_close(data):
     tlinewidgets.set_match_frame(-1, -1, True)
     gui.monitor_widget.set_default_view_force()
     updater.repaint_tline()
-        
+
+
 class MatchFrameWriter:
     def __init__(self, clip, clip_frame, track, display_on_right):
         self.clip = clip
@@ -545,7 +548,79 @@ class MatchFrameWriter:
         # Update view
         updater.repaint_tline()
 
+
+def _add_clip_marker(data):
+    clip, track, item_id, item_data = data
+    current_frame = PLAYER().current_frame()
+
+    playhead_on_popup_clip = True
+    try:
+        current_frame_clip_index = track.get_clip_index_at(current_frame)
+        current_frame_clip = track.clips[current_frame_clip_index]
+    except:
+        current_frame_clip = None
     
+    if current_frame_clip != clip:
+        # Playhead is not on popup clip
+        
+        return
+
+    clip_start_in_tline = track.clip_start(current_frame_clip_index)
+    clip_frame = current_frame - clip_start_in_tline + clip.clip_in
+    
+    dialogs.clip_marker_name_dialog(utils.get_tc_string(clip_frame), utils.get_tc_string(current_frame), _clip_marker_add_dialog_callback, (clip, track, clip_frame))
+
+def _clip_marker_add_dialog_callback(dialog, response_id, name_entry, data):
+    clip, track, clip_frame = data
+    name = name_entry.get_text()
+    dialog.destroy()
+    
+    # remove older on same frame
+    dupl_index = -1
+    for i in range(0, len(clip.markers)):
+        marker_name, frame = clip.markers[i]
+        if frame == clip_frame:
+            dupl_index = i
+    if dupl_index != -1:
+        current_sequence().markers.pop(dupl_index)
+
+    clip.markers.append((name, clip_frame))
+    clip.markers = sorted(clip.markers, key=itemgetter(1))
+    updater.repaint_tline()
+
+def _go_to_clip_marker(data):
+    clip, track, item_id, item_data = data
+    marker = clip.markers[int(item_data)]
+    name, clip_frame = marker
+    
+    clip_start_in_tline = track.clip_start(track.clips.index(clip))
+    marker_frame = clip_start_in_tline + clip_frame - clip.clip_in
+
+    PLAYER().seek_frame(marker_frame)
+
+def _delete_clip_marker(data):
+    clip, track, item_id, item_data = data
+
+    clip_start_in_tline = track.clip_start(track.clips.index(clip))
+    current_frame = PLAYER().current_frame()
+
+    mrk_index = -1
+    for i in range(0, len(clip.markers)):
+        name, marker_clip_frame = clip.markers[i]
+        marker_tline_frame = clip_start_in_tline + marker_clip_frame - clip.clip_in
+        if marker_tline_frame == current_frame:
+            mrk_index = i
+    if mrk_index != -1:
+        clip.markers.pop(mrk_index)
+        updater.repaint_tline()
+
+def _delete_all_clip_markers(data):
+    clip, track, item_id, item_data = data
+    clip.markers = []
+    updater.repaint_tline()
+
+
+
 # Functions to handle popup menu selections for strings 
 # set as activation messages in guicomponents.py
 # activation_message -> _handler_func
@@ -584,4 +659,8 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "stretch_prev":_stretch_prev,
                   "add_autofade":_add_autofade,
                   "set_audio_sync_clip":audiosync.init_select_tline_sync_clip,
-                  "re_render":_re_render_transition_or_fade}
+                  "re_render":_re_render_transition_or_fade,
+                  "add_clip_marker":_add_clip_marker,
+                  "go_to_clip_marker":_go_to_clip_marker,
+                  "delete_clip_marker":_delete_clip_marker,
+                  "deleteall_clip_markers":_delete_all_clip_markers}

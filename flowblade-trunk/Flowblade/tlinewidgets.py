@@ -124,6 +124,7 @@ AUDIO_MUTE_ICON = None
 VIDEO_MUTE_ICON = None
 ALL_MUTE_ICON = None
 MARKER_ICON = None
+CLIP_MARKER_ICON = None
 LEVELS_RENDER_ICON = None
 SNAP_ICON = None
 KEYBOARD_ICON = None
@@ -310,7 +311,7 @@ def load_icons():
     COMPOSITOR_CLIP_ICON, INSERT_ARROW_ICON, AUDIO_MUTE_ICON, MARKER_ICON, \
     VIDEO_MUTE_ICON, ALL_MUTE_ICON, TRACK_BG_ICON, MUTE_AUDIO_ICON, MUTE_VIDEO_ICON, MUTE_ALL_ICON, \
     TRACK_ALL_ON_V_ICON, TRACK_ALL_ON_A_ICON, MUTE_AUDIO_A_ICON, TC_POINTER_HEAD, EDIT_INDICATOR, \
-    LEVELS_RENDER_ICON, SNAP_ICON, KEYBOARD_ICON, CLOSE_MATCH_ICON
+    LEVELS_RENDER_ICON, SNAP_ICON, KEYBOARD_ICON, CLOSE_MATCH_ICON, CLIP_MARKER_ICON
 
     FULL_LOCK_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "full_lock.png")
     FILTER_CLIP_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filter_clip_icon_sharp.png")
@@ -328,6 +329,7 @@ def load_icons():
     SNAP_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "snap_magnet.png")
     KEYBOARD_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "keyb_trim.png")
     CLOSE_MATCH_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "close_match.png")
+    CLIP_MARKER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "clip_marker.png")
 
     MARKER_ICON = _load_pixbuf("marker.png")
     TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V.png")
@@ -1933,6 +1935,15 @@ class TimeLineCanvas:
                     cr.set_source_surface(LEVELS_RENDER_ICON, int(scale_in) + 4, y + 8)
                     cr.paint()
 
+            # Clip markers
+            if len(clip.markers) > 0 and scale_length > TEXT_MIN:
+                for marker in clip.markers:
+                    name, clip_marker_frame = marker
+                    marker_x = (clip_start_frame + clip_marker_frame - clip.clip_in) * pix_per_frame
+                    cr.set_source_surface(CLIP_MARKER_ICON, int(marker_x) - 4, y)
+                    cr.paint()
+                    
+                    
             # Get next draw position
             clip_start_frame += clip_length
 
@@ -2099,7 +2110,9 @@ class TimeLineCanvas:
         
         global match_frame_image
         match_frame_image = scaled_icon
-        
+
+
+
 class TimeLineColumn:
     """
     GUI component for displaying and editing track parameters.

@@ -561,6 +561,10 @@ def fill_track_mlt(mlt_track, py_track):
         # Add color attribute if not found
         if not hasattr(clip, "color"):
             clip.color = None
+            
+        # Add markers list if not found
+        if not hasattr(clip, "markers"):
+            clip.markers = []
 
         # normal clip
         if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):

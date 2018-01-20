@@ -1108,6 +1108,36 @@ def marker_name_dialog(frame_str, callback):
     dialog.connect('response', callback, name_entry)
     dialog.show_all()
 
+def clip_marker_name_dialog(clip_frame_str, tline_frame_str, callback, data):
+    dialog = Gtk.Dialog(_("New Marker"),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Add Marker").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+
+    tline_frame_info = guiutils.get_left_justified_box([Gtk.Label(_("Timeline position: ") + tline_frame_str),Gtk.Label()])
+
+    name_entry = Gtk.Entry()
+    name_entry.set_width_chars(30)
+    name_entry.set_text("")
+    name_entry.set_activates_default(True)
+
+    name_select = panels.get_two_column_box(Gtk.Label(label=_("Name for clip marker at ") + clip_frame_str),
+                                               name_entry,
+                                               250)
+
+    rows_vbox = Gtk.VBox(False, 2)
+    rows_vbox.pack_start(tline_frame_info, False, False, 0)
+    rows_vbox.pack_start(name_select, False, False, 0)
+    #rows_vbox.pack_start(guiutils.get_pad_label(12, 2), False, False, 0)
+    
+    alignment = dialogutils.get_default_alignment(rows_vbox)
+        
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    dialog.set_default_response(Gtk.ResponseType.ACCEPT)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, name_entry, data)
+    dialog.show_all()
+    
 def open_image_sequence_dialog(callback, parent_window):
     cancel_str = _("Cancel").encode('utf-8')
     ok_str = _("Ok").encode('utf-8')
