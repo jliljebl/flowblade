@@ -410,9 +410,18 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
         if media_file.is_proxy_file == True:
             source_path = media_file.second_file_path
 
-        fr_path = "framebuffer:" + source_path + "?" + str(speed)
-        motion_producer = mlt.Producer(profile, None, str(fr_path))
+        motion_producer = mlt.Producer(profile, None, str("timewarp:" + str(speed) + ":" + str(source_path)))
+        if motion_producer.is_valid() == False:
+            print "Using framebuffer producer, no sound."
+            fr_path = "framebuffer:" + source_path + "?" + str(speed)
+            motion_producer = mlt.Producer(profile, None, str(fr_path))
+        else:
+            print "Using timewarp producer, sound available."
+
         mltrefhold.hold_ref(motion_producer)
+        
+        #motion_producer = mlt.Producer(profile, None, str(fr_path))
+        #mltrefhold.hold_ref(motion_producer)
         
         # Create sequence and add motion producer into it
         seq = sequence.Sequence(profile)
