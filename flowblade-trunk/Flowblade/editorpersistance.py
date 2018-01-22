@@ -328,3 +328,4 @@ class EditorPreferences:
         self.shortcuts = "flowblade.xml"
         self.double_track_hights = False
         self.delta_overlay = True
+        self.show_alpha_info_message = True

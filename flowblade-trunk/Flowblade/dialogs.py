@@ -1137,7 +1137,42 @@ def clip_marker_name_dialog(clip_frame_str, tline_frame_str, callback, data):
     _default_behaviour(dialog)
     dialog.connect('response', callback, name_entry, data)
     dialog.show_all()
+
+def alpha_info_msg(callback, filter_name):
+    dialog = Gtk.Dialog(_("Alpha Filters Info"),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Ok").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+
+    line_label = Gtk.Label(_("You are adding <b>Alpha Filter '") + filter_name + _("'</b> into a clip. Here is some info on how <b>Alpha Filters</b> work on Flowblade:"))
+    line_label.set_use_markup(True)
+    row1 = guiutils.get_left_justified_box([line_label])
     
+    info_text = u"\u2022" + _(" <b>Alpha Filters</b> work by modifying image's alpha channel.\n") + \
+                u"\u2022" + _(" To see the effect of <b>Alpha Filter</b> you need composite this clip on track below by adding a <b>Compositor like 'Dissolve'</b> into this clip.\n") + \
+                u"\u2022" + _(" <b>Alpha Filters</b> on clips on <b>Track V1</b> have no effect.")
+    info_label = Gtk.Label(label=info_text)
+    info_label.set_use_markup(True)
+    info_box = guiutils.get_left_justified_box([info_label])
+
+    dont_show_check = Gtk.CheckButton.new_with_label (_("Don't show this message again."))
+    row2 = guiutils.get_left_justified_box([dont_show_check])
+
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(row1, False, False, 0)
+    vbox.pack_start(guiutils.pad_label(24, 12), False, False, 0)
+    vbox.pack_start(info_box, False, False, 0)
+    vbox.pack_start(guiutils.pad_label(24, 24), False, False, 0)
+    vbox.pack_start(row2, False, False, 0)
+    
+    alignment = dialogutils.get_default_alignment(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    dialog.set_default_response(Gtk.ResponseType.ACCEPT)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, dont_show_check)
+    dialog.show_all()
+
 def open_image_sequence_dialog(callback, parent_window):
     cancel_str = _("Cancel").encode('utf-8')
     ok_str = _("Ok").encode('utf-8')

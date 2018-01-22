@@ -27,8 +27,10 @@ from gi.repository import GLib
 from gi.repository import Gtk
 import time
 
+import dialogs
 import dnd
 import edit
+import editorpersistance
 import editorstate
 from editorstate import PROJECT
 import gui
@@ -292,6 +294,10 @@ def add_currently_selected_effect():
 
 def get_filter_add_action(filter_info, target_clip):
     if filter_info.multipart_filter == False:
+        # Maybe show info on using alpha filters
+        if filter_info.group == "Alpha":
+            GLib.idle_add(_alpha_filter_add_maybe_info, filter_info)
+    
         data = {"clip":target_clip, 
                 "filter_info":filter_info,
                 "filter_edit_done_func":filter_edit_done}
@@ -302,6 +308,17 @@ def get_filter_add_action(filter_info, target_clip):
                 "filter_edit_done_func":filter_edit_done}
         action = edit.add_multipart_filter_action(data)
     return action
+
+def _alpha_filter_add_maybe_info(filter_info):
+    if editorpersistance.prefs.show_alpha_info_message == True:
+        dialogs.alpha_info_msg(_alpha_info_dialog_cb, translations.get_filter_name(filter_info.name))
+
+def _alpha_info_dialog_cb(dialog, response_id, dont_show_check):
+    if dont_show_check.get_active() == True:
+        editorpersistance.prefs.show_alpha_info_message = False
+        editorpersistance.save()
+
+    dialog.destroy()
 
 def get_selected_filter_info():
     # Get current selection on effects treeview - that's a vertical list.

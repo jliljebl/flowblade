@@ -417,11 +417,7 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
             motion_producer = mlt.Producer(profile, None, str(fr_path))
         else:
             print "Using timewarp producer, sound available."
-
         mltrefhold.hold_ref(motion_producer)
-        
-        #motion_producer = mlt.Producer(profile, None, str(fr_path))
-        #mltrefhold.hold_ref(motion_producer)
         
         # Create sequence and add motion producer into it
         seq = sequence.Sequence(profile)
@@ -429,7 +425,7 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
         track = seq.tracks[seq.first_video_index]
         track.append(motion_producer, 0, motion_producer.get_length() - 1)
 
-        print "motion clip render starting..."
+        print "Motion clip render starting..."
 
         consumer = renderconsumer.get_render_consumer_for_encoding_and_quality(write_file, profile, encoding_option_index, quality_option_index)
         

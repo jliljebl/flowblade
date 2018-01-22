@@ -20,8 +20,9 @@
 
 """
 Module handles creating mlt.Filter objects and their FilterObject python wrappers that
-are attached to mlt:Producer objects.
+are attached to mlt.Producer objects.
 """
+
 import copy
 
 from gi.repository import Gtk
