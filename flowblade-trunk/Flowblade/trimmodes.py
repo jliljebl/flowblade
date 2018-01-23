@@ -447,7 +447,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     # made to do things that are needed in trim.
     if _trimmed_clip_is_blank():
         set_exit_mode_func()
-        primary_txt = _("Cant ONE ROLL TRIM blank clips.")
+        primary_txt = _("Can't ONE ROLL TRIM blank clips.")
         secondary_txt = _("You can use MOVE OVERWRITE or TWO ROLL TRIM edits instead\nto get the desired change.")
         dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return False
