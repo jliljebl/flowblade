@@ -22,7 +22,7 @@
 Module handles clip effects editing logic and gui
 """
 
-
+import cairo
 from gi.repository import GLib
 from gi.repository import Gtk
 import time
@@ -534,8 +534,26 @@ def effect_selection_changed():
             vbox.pack_start(editor_row, False, False, 0)
             if not hasattr(editor_row, "no_separator"):
                 vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
+        vbox.pack_start(guiutils.pad_label(12,12), False, False, 0)
+        
+        #save_b = Gtk.Button(_("Save Params"))
+        #load_b = Gtk.Button(_("Load Params"))
+        
+        hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger_big.png")
+        hamburger_launcher = guicomponents.PressLaunch(_hamburger_launch_pressed, hamburger_launcher_surface, 24, 24)
+        
+        """
+        widgets.toggle_all = Gtk.Button()
+        widgets.toggle_all.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "filters_all_toggle.png"))
+
+        widgets.add_effect_b.connect("clicked", lambda w,e: add_effect_pressed(), None)
+        widgets.del_effect_b.connect("clicked", lambda w,e: delete_effect_pressed(), None)
+        """
+        sl_row = guiutils.get_right_justified_box([hamburger_launcher.widget])
+        vbox.pack_start(sl_row, False, False, 0)
         
         vbox.pack_start(Gtk.Label(), True, True, 0)
+
     else:
         vbox.pack_start(Gtk.Label(label=_("No editable parameters")), True, True, 0)
     vbox.show_all()
@@ -555,6 +573,12 @@ def clear_effects_edit_panel():
     label = Gtk.Label()
     widgets.value_edit_frame.add(label)
     widgets.value_edit_box = label
+
+def _hamburger_launch_pressed(widget, event):
+    guicomponents.get_clip_effects_editor_hamburger_menu(event, _clip_hamburger_item_activated)
+    
+def _clip_hamburger_item_activated(widget, msg):
+    print msg
 
 def filter_edit_done(edited_clip, index=-1):
     """

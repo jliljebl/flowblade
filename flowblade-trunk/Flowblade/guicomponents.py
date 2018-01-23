@@ -109,6 +109,7 @@ filter_stack_menu_popup_menu = Gtk.Menu()
 media_linker_popup_menu = Gtk.Menu()
 log_event_popup_menu = Gtk.Menu()
 levels_menu = Gtk.Menu()
+clip_effects_hamburger_menu = Gtk.Menu()
 
 # ------------------------------------------------- item lists
 class ImageTextTextListView(Gtk.VBox):
@@ -2371,6 +2372,22 @@ def get_audio_levels_popup_menu(event, callback):
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
 
+def get_clip_effects_editor_hamburger_menu(event, callback):
+    # needs renaming
+    menu = clip_effects_hamburger_menu
+    guiutils.remove_children(menu)
+
+    menu.add(_get_menu_item(_("Save Values"), callback, "save"))
+    menu.add(_get_menu_item(_("Load Values"), callback, "load"))
+    menu.add(_get_menu_item(_("Reset Values"), callback, "reset"))
+    
+    _add_separetor(menu)
+    
+    menu.add(_get_menu_item(_("Delete Effect"), callback, "delete"))
+
+    menu.show_all()
+    menu.popup(None, None, None, None, event.button, event.time)
+    
 def get_monitor_view_popupmenu(launcher, event, callback):
     menu = monitor_menu
     guiutils.remove_children(menu)
