@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flowblade\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-23 18:52+0200\n"
+"POT-Creation-Date: 2018-01-23 19:12+0200\n"
 "PO-Revision-Date: 2017-09-17 22:05+0300\n"
 "Last-Translator: Николай Смольянинов <smolianinow.colya2016@yandex.ru>\n"
 "Language-Team: Russian\n"
@@ -6809,6 +6809,30 @@ msgstr ""
 msgid "Confirm"
 msgstr "Подтвердить"
 
+#: trimmodes.py:450
+msgid "Cant ONE ROLL TRIM blank clips."
+msgstr "Нельзя выполнить обрезку в пустом месте."
+
+#: trimmodes.py:451
+msgid ""
+"You can use MOVE OVERWRITE or TWO ROLL TRIM edits instead\n"
+"to get the desired change."
+msgstr ""
+"Возможно вам помогут инструменты ПЕРЕЗАПИСЬ или ПРОКРУТКА\n"
+", для получения желаемого результата."
+
+#: trimmodes.py:991
+msgid "Initializing TWO ROLL TRIM failed"
+msgstr "Не удалось инициализировать инструмент ПРОКРУТКА"
+
+#: trimmodes.py:992
+msgid ""
+"You are attempting TWO ROLL TRIM at a position in the timeline\n"
+"where it can't be performed."
+msgstr ""
+"Вы пытаетесь использовать инструмент ПРОКРУТКА в той\n"
+" позиции на монтажном столе, где это невозможно."
+
 #~ msgid "Selection"
 #~ msgstr "Выбор"
 
@@ -6935,23 +6959,3 @@ msgstr "Подтвердить"
 
 #~ msgid "Save Titler Graphic As"
 #~ msgstr "Сохранить графику титров как..."
-
-#~ msgid "Cant ONE ROLL TRIM blank clips."
-#~ msgstr "Нельзя выполнить обрезку в пустом месте."
-
-#~ msgid ""
-#~ "You can use MOVE OVERWRITE or TWO ROLL TRIM edits instead\n"
-#~ "to get the desired change."
-#~ msgstr ""
-#~ "Возможно вам помогут инструменты ПЕРЕЗАПИСЬ или ПРОКРУТКА\n"
-#~ ", для получения желаемого результата."
-
-#~ msgid "Initializing TWO ROLL TRIM failed"
-#~ msgstr "Не удалось инициализировать инструмент ПРОКРУТКА"
-
-#~ msgid ""
-#~ "You are attempting TWO ROLL TRIM at a position in the timeline\n"
-#~ "where it can't be performed."
-#~ msgstr ""
-#~ "Вы пытаетесь использовать инструмент ПРОКРУТКА в той\n"
-#~ " позиции на монтажном столе, где это невозможно."

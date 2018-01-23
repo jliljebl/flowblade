@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-23 18:52+0200\n"
+"POT-Creation-Date: 2018-01-23 19:12+0200\n"
 "PO-Revision-Date: 2011-12-13 23:55+0200\n"
 "Last-Translator: Janne Liljeblad <janne@janne-kx557aa-uuw-a6521-sc>\n"
 "Language-Team: Finnish\n"
@@ -6818,6 +6818,26 @@ msgstr "Seuravalla leikkeellä ei tarpeeksi pituutta peittää tyhjä alue"
 
 #: dialogutils.py:87
 msgid "Confirm"
+msgstr ""
+
+#: trimmodes.py:450
+msgid "Cant ONE ROLL TRIM blank clips."
+msgstr ""
+
+#: trimmodes.py:451
+msgid ""
+"You can use MOVE OVERWRITE or TWO ROLL TRIM edits instead\n"
+"to get the desired change."
+msgstr ""
+
+#: trimmodes.py:991
+msgid "Initializing TWO ROLL TRIM failed"
+msgstr ""
+
+#: trimmodes.py:992
+msgid ""
+"You are attempting TWO ROLL TRIM at a position in the timeline\n"
+"where it can't be performed."
 msgstr ""
 
 #, fuzzy

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-23 18:52+0200\n"
+"POT-Creation-Date: 2018-01-23 19:12+0200\n"
 "PO-Revision-Date: 2013-09-20 18:54+0200\n"
 "Last-Translator: Loïc Vanderstichelen <lv@loicvanderstichelen.com>\n"
 "Language-Team: French\n"
@@ -6988,6 +6988,26 @@ msgstr "La durée du clip suivant n'est suffisante pour couvrir le vide"
 
 #: dialogutils.py:87
 msgid "Confirm"
+msgstr ""
+
+#: trimmodes.py:450
+msgid "Cant ONE ROLL TRIM blank clips."
+msgstr ""
+
+#: trimmodes.py:451
+msgid ""
+"You can use MOVE OVERWRITE or TWO ROLL TRIM edits instead\n"
+"to get the desired change."
+msgstr ""
+
+#: trimmodes.py:991
+msgid "Initializing TWO ROLL TRIM failed"
+msgstr ""
+
+#: trimmodes.py:992
+msgid ""
+"You are attempting TWO ROLL TRIM at a position in the timeline\n"
+"where it can't be performed."
 msgstr ""
 
 #, fuzzy
