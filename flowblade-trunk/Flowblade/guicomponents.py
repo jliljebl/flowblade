@@ -575,7 +575,7 @@ class AutoSavesListView(TextListView):
         self.storemodel.clear()
         for autosave_object in autosaves:
             since_time_str = utils.get_time_str_for_sec_float(autosave_object.age)
-            row_data = ["Autosave created " + since_time_str + " ago."]
+            row_data = [_("Autosave created ") + since_time_str + _(" ago.")]
             self.storemodel.append(row_data)
 
         self.treeview.set_cursor("0")

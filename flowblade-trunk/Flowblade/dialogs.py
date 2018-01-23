@@ -847,9 +847,9 @@ def autosaves_many_recovery_dialog(response_callback, autosaves, parent_window):
     autosaves_view.set_size_request(300, 300)
     autosaves_view.fill_data_model(autosaves)
 
-    delete_all = Gtk.Button("Delete all autosaves")
+    delete_all = Gtk.Button(_("Delete all autosaves"))
     delete_all.connect("clicked", lambda w : _autosaves_delete_all_clicked(autosaves, autosaves_view, dialog))
-    delete_all_but_selected = Gtk.Button("Delete all but selected autosave")
+    delete_all_but_selected = Gtk.Button(_("Delete all but selected autosave"))
     delete_all_but_selected.connect("clicked", lambda w : _autosaves_delete_unselected(autosaves, autosaves_view))
 
     delete_buttons_vbox = Gtk.HBox()
