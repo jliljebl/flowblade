@@ -1492,7 +1492,7 @@ def watermark_dialog(add_callback, remove_callback):
     add_button = Gtk.Button(_("Set Watermark File"))
     remove_button = Gtk.Button(_("Remove Watermark"))
     if editorstate.current_sequence().watermark_file_path == None:
-        file_path_value_label = Gtk.Label(label="Not Set")
+        file_path_value_label = Gtk.Label(label=_("Not Set"))
         add_button.set_sensitive(True)
         remove_button.set_sensitive(False)
     else:

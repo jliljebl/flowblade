@@ -240,9 +240,10 @@ def load_filters_translations():
     filter_names["Lift Gain Gamma"] = _("Lift Gain Gamma")
     filter_names["Image Grid"] = _("Image Grid")
 
-    # 0.18
     filter_names["Color Lift Gain Gamma"] = _("Color Lift Gain Gamma")
-
+    filter_names["Color Channel Mixer"] = _("Color Channel Mixer")
+    filter_names["Lens Correction AV"] = _("Lens Correction AV")
+   
     # param names
     global param_names
 
@@ -520,6 +521,19 @@ def load_filters_translations():
     param_names["Columns"] = _("Columns")
     param_names["Color Temperature"] = _("Color Temperature")
     param_names["Select .cube file"] = _("Select .cube file")
+    param_names["Red Ch. Red Gain"] = _("Red Ch. Red Gain")
+    param_names["Red Ch. Green Gain"] = _("Red Ch. Green Gain")
+    param_names["Red Ch. Blue Gain"] = _("Red Ch. Blue Gain")
+    param_names["Green Ch. Red Gain"] = _("Green Ch. Red Gain")
+    param_names["Green Ch. Green Gain"] = _("Green Ch. Green Gain")
+    param_names["Green Ch. Blue Gain"] = _("Green Ch. Blue Gain")
+    param_names["Blue Ch. Red Gain"] = _("Blue Ch. Red Gain")
+    param_names["Blue Ch. Green Gain"] = _("Blue Ch. Green Gain")
+    param_names["Blue Ch. Blue Gain"] = _("Blue Ch. Blue Gain")
+    param_names["Center X"] = _("Center X")
+    param_names["Center Y"] = _("Center Y"")
+    param_names["Quad Distortion"] = _("Quad Distortion")
+    param_names["Double Quad Distortion"] = _("Double Quad Distortion")
 
     # param names for compositors
     param_names["Opacity"] = _("Opacity")

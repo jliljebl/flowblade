@@ -154,7 +154,7 @@ def _watermark_remove_callback(button, widgets):
     add_button, remove_button, file_path_value_label = widgets
     add_button.set_sensitive(True)
     remove_button.set_sensitive(False)
-    file_path_value_label.set_text("Not Set")
+    file_path_value_label.set_text(_("Not Set"))
     current_sequence().remove_watermark()
       
 def jack_output_managing():
