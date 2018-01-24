@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-24 12:13+0200\n"
+"POT-Creation-Date: 2018-01-24 12:25+0200\n"
 "PO-Revision-Date: 2017-03-24 08:40+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
@@ -4284,6 +4284,11 @@ msgstr ""
 msgid "Center X"
 msgstr "Középső rész mérete"
 
+#: translations.py:534
+#, fuzzy
+msgid "Center Y"
+msgstr "Középső rész mérete"
+
 #: translations.py:535
 #, fuzzy
 msgid "Quad Distortion"
@@ -4526,11 +4531,6 @@ msgstr "Szín"
 #: translations.py:624
 msgid "HSLLuminosity"
 msgstr ""
-
-#: translations.py:534
-#, fuzzy
-msgid "Center Y)"
-msgstr "Középső rész mérete"
 
 #: mlttransitions.py:80
 msgid "Vertical From Center"

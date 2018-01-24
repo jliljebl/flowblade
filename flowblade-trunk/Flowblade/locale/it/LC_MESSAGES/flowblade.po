@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Floblade Italian Translation 0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-24 12:13+0200\n"
+"POT-Creation-Date: 2018-01-24 12:25+0200\n"
 "PO-Revision-Date: 2014-09-15 23:42+0100\n"
 "Last-Translator: Massimo Stella <info@massimostella.it>\n"
 "Language-Team: Italiano\n"
@@ -4396,6 +4396,11 @@ msgstr ""
 msgid "Center X"
 msgstr "Dimensione Centrale"
 
+#: translations.py:534
+#, fuzzy
+msgid "Center Y"
+msgstr "Dimensione Centrale"
+
 #: translations.py:535
 #, fuzzy
 msgid "Quad Distortion"
@@ -4639,11 +4644,6 @@ msgstr "Colore"
 #: translations.py:624
 msgid "HSLLuminosity"
 msgstr ""
-
-#: translations.py:534
-#, fuzzy
-msgid "Center Y)"
-msgstr "Dimensione Centrale"
 
 #: mlttransitions.py:80
 msgid "Vertical From Center"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-24 12:13+0200\n"
+"POT-Creation-Date: 2018-01-24 12:25+0200\n"
 "PO-Revision-Date: 2017-09-09 21:07+0200\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -4263,6 +4263,11 @@ msgstr ""
 msgid "Center X"
 msgstr "Velikost středu"
 
+#: translations.py:534
+#, fuzzy
+msgid "Center Y"
+msgstr "Velikost středu"
+
 #: translations.py:535
 #, fuzzy
 msgid "Quad Distortion"
@@ -4503,11 +4508,6 @@ msgstr "Barva"
 #: translations.py:624
 msgid "HSLLuminosity"
 msgstr ""
-
-#: translations.py:534
-#, fuzzy
-msgid "Center Y)"
-msgstr "Velikost středu"
 
 #: mlttransitions.py:80
 msgid "Vertical From Center"

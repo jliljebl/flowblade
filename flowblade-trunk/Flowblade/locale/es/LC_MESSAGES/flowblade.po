@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-24 12:13+0200\n"
+"POT-Creation-Date: 2018-01-24 12:25+0200\n"
 "PO-Revision-Date: 2014-02-21 12:08+0200\n"
 "Last-Translator: David Gámiz Jiménez <david.gamiz@gmail.com>\n"
 "Language-Team: David Gamiz Jimenez\n"
@@ -4412,6 +4412,11 @@ msgstr ""
 msgid "Center X"
 msgstr "Tamaño del centro"
 
+#: translations.py:534
+#, fuzzy
+msgid "Center Y"
+msgstr "Tamaño del centro"
+
 #: translations.py:535
 #, fuzzy
 msgid "Quad Distortion"
@@ -4654,11 +4659,6 @@ msgstr "Colorear"
 #: translations.py:624
 msgid "HSLLuminosity"
 msgstr ""
-
-#: translations.py:534
-#, fuzzy
-msgid "Center Y)"
-msgstr "Tamaño del centro"
 
 #: mlttransitions.py:80
 msgid "Vertical From Center"

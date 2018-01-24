@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-24 12:13+0200\n"
+"POT-Creation-Date: 2018-01-24 12:25+0200\n"
 "PO-Revision-Date: 2013-09-20 18:54+0200\n"
 "Last-Translator: Loïc Vanderstichelen <lv@loicvanderstichelen.com>\n"
 "Language-Team: French\n"
@@ -4398,6 +4398,11 @@ msgstr ""
 msgid "Center X"
 msgstr "Centrer Verticalement"
 
+#: translations.py:534
+#, fuzzy
+msgid "Center Y"
+msgstr "Centrer Verticalement"
+
 #: translations.py:535
 #, fuzzy
 msgid "Quad Distortion"
@@ -4639,10 +4644,6 @@ msgstr "Couleur"
 
 #: translations.py:624
 msgid "HSLLuminosity"
-msgstr ""
-
-#: translations.py:534
-msgid "Center Y)"
 msgstr ""
 
 #: mlttransitions.py:80

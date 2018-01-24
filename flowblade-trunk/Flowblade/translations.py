@@ -531,7 +531,7 @@ def load_filters_translations():
     param_names["Blue Ch. Green Gain"] = _("Blue Ch. Green Gain")
     param_names["Blue Ch. Blue Gain"] = _("Blue Ch. Blue Gain")
     param_names["Center X"] = _("Center X")
-    param_names["Center Y"] = _("Center Y"")
+    param_names["Center Y"] = _("Center Y")
     param_names["Quad Distortion"] = _("Quad Distortion")
     param_names["Double Quad Distortion"] = _("Double Quad Distortion")
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-24 12:13+0200\n"
+"POT-Creation-Date: 2018-01-24 12:25+0200\n"
 "PO-Revision-Date: 2017-05-27 08:50+0200\n"
 "Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -4275,6 +4275,11 @@ msgstr ""
 msgid "Center X"
 msgstr "Rozmiar środka"
 
+#: translations.py:534
+#, fuzzy
+msgid "Center Y"
+msgstr "Rozmiar środka"
+
 #: translations.py:535
 #, fuzzy
 msgid "Quad Distortion"
@@ -4517,11 +4522,6 @@ msgstr "Kolor"
 #: translations.py:624
 msgid "HSLLuminosity"
 msgstr ""
-
-#: translations.py:534
-#, fuzzy
-msgid "Center Y)"
-msgstr "Rozmiar środka"
 
 #: mlttransitions.py:80
 msgid "Vertical From Center"

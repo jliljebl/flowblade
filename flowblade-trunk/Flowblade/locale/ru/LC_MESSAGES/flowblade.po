@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flowblade\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-24 12:13+0200\n"
+"POT-Creation-Date: 2018-01-24 12:25+0200\n"
 "PO-Revision-Date: 2017-09-17 22:05+0300\n"
 "Last-Translator: Николай Смольянинов <smolianinow.colya2016@yandex.ru>\n"
 "Language-Team: Russian\n"
@@ -4263,6 +4263,11 @@ msgstr ""
 msgid "Center X"
 msgstr "Средний размер"
 
+#: translations.py:534
+#, fuzzy
+msgid "Center Y"
+msgstr "Средний размер"
+
 #: translations.py:535
 #, fuzzy
 msgid "Quad Distortion"
@@ -4503,11 +4508,6 @@ msgstr "Цвет"
 #: translations.py:624
 msgid "HSLLuminosity"
 msgstr ""
-
-#: translations.py:534
-#, fuzzy
-msgid "Center Y)"
-msgstr "Средний размер"
 
 #: mlttransitions.py:80
 msgid "Vertical From Center"
