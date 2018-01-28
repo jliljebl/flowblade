@@ -298,7 +298,7 @@ def _duplicates_info(duplicates):
     if len(duplicates) > MAX_DISPLAYED_ITEMS:
         secondary_txt = secondary_txt + "\n" + "and " + str(len(duplicates) - MAX_DISPLAYED_ITEMS) + " other items.\n"
     
-    secondary_txt = secondary_txt +  "\nNo duplicate media items were added to project."
+    secondary_txt = secondary_txt +  _("\nNo duplicate media items were added to project.")
     
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
     return False

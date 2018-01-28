@@ -484,7 +484,7 @@ def _show_paths(media_asset):
     panel.pack_start(guiutils.pad_label(12, 12), False, False, 0)
     panel.pack_start(relink_path, False, False, 0)
     
-    dialogutils.panel_ok_dialog("Media Asset Paths", panel)
+    dialogutils.panel_ok_dialog(_("Media Asset Paths"), panel)
         
 def _save_project_pressed():
     if  target_project.last_save_path != None:

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Floblade Italian Translation 0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-24 12:25+0200\n"
+"POT-Creation-Date: 2018-01-28 15:52+0200\n"
 "PO-Revision-Date: 2014-09-15 23:42+0100\n"
 "Last-Translator: Massimo Stella <info@massimostella.it>\n"
 "Language-Team: Italiano\n"
@@ -105,6 +105,12 @@ msgid ""
 msgstr ""
 "File già esistenti:\n"
 "\n"
+
+#: projectaction.py:301
+msgid ""
+"\n"
+"No duplicate media items were added to project."
+msgstr ""
 
 #: projectaction.py:495
 #, fuzzy
@@ -6468,6 +6474,11 @@ msgstr "<b>Lunghezza Clip:</b> "
 #, fuzzy
 msgid "<b>Relink path:</b> "
 msgstr "<b>Lunghezza:</b>"
+
+#: medialinker.py:487
+#, fuzzy
+msgid "Media Asset Paths"
+msgstr "Percorso:"
 
 #: medialinker.py:524
 msgid "Relinked version of the Project saved!"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-24 12:25+0200\n"
+"POT-Creation-Date: 2018-01-28 15:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -98,6 +98,12 @@ msgstr ""
 msgid ""
 "Files already present:\n"
 "\n"
+msgstr ""
+
+#: projectaction.py:301
+msgid ""
+"\n"
+"No duplicate media items were added to project."
 msgstr ""
 
 #: projectaction.py:495
@@ -6099,6 +6105,10 @@ msgstr ""
 
 #: medialinker.py:478
 msgid "<b>Relink path:</b> "
+msgstr ""
+
+#: medialinker.py:487
+msgid "Media Asset Paths"
 msgstr ""
 
 #: medialinker.py:524

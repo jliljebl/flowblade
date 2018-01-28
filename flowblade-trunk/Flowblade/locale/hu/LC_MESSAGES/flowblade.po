@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-24 12:25+0200\n"
+"POT-Creation-Date: 2018-01-28 15:52+0200\n"
 "PO-Revision-Date: 2017-03-24 08:40+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
@@ -112,6 +112,12 @@ msgid ""
 msgstr ""
 "Már jelenlévő fájlok:\n"
 "\n"
+
+#: projectaction.py:301
+msgid ""
+"\n"
+"No duplicate media items were added to project."
+msgstr ""
 
 #: projectaction.py:495
 msgid "Selected folder contains files"
@@ -6310,6 +6316,11 @@ msgstr "<b>Eredeti útvonal:</b> "
 #: medialinker.py:478
 msgid "<b>Relink path:</b> "
 msgstr "<b>Újracsatolás útvonala:</b> "
+
+#: medialinker.py:487
+#, fuzzy
+msgid "Media Asset Paths"
+msgstr "Média útvonala:"
 
 #: medialinker.py:524
 msgid "Relinked version of the Project saved!"

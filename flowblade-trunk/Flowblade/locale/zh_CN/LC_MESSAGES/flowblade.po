@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-24 12:25+0200\n"
+"POT-Creation-Date: 2018-01-28 15:52+0200\n"
 "PO-Revision-Date: 2017-04-15 18:47+0800\n"
 "Last-Translator: wu <laowudebox@126.com>\n"
 "Language-Team: Language LANGUAGE\n"
@@ -102,6 +102,12 @@ msgid ""
 msgstr ""
 "文件已经发送\n"
 "\n"
+
+#: projectaction.py:301
+msgid ""
+"\n"
+"No duplicate media items were added to project."
+msgstr ""
 
 #: projectaction.py:495
 msgid "Selected folder contains files"
@@ -6269,6 +6275,11 @@ msgstr "<b>原始路径:</b>"
 #: medialinker.py:478
 msgid "<b>Relink path:</b> "
 msgstr "<b>重新链接路径:</b>"
+
+#: medialinker.py:487
+#, fuzzy
+msgid "Media Asset Paths"
+msgstr "媒体路径:"
 
 #: medialinker.py:524
 msgid "Relinked version of the Project saved!"

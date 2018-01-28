@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-24 12:25+0200\n"
+"POT-Creation-Date: 2018-01-28 15:52+0200\n"
 "PO-Revision-Date: 2014-02-21 12:08+0200\n"
 "Last-Translator: David Gámiz Jiménez <david.gamiz@gmail.com>\n"
 "Language-Team: David Gamiz Jimenez\n"
@@ -106,6 +106,12 @@ msgid ""
 "Files already present:\n"
 "\n"
 msgstr " ya existe!"
+
+#: projectaction.py:301
+msgid ""
+"\n"
+"No duplicate media items were added to project."
+msgstr ""
 
 #: projectaction.py:495
 #, fuzzy
@@ -6474,6 +6480,11 @@ msgstr "<b>Duración:</b>"
 #, fuzzy
 msgid "<b>Relink path:</b> "
 msgstr "<b>Duración:</b>"
+
+#: medialinker.py:487
+#, fuzzy
+msgid "Media Asset Paths"
+msgstr "Trayectoria del papel:"
 
 #: medialinker.py:524
 msgid "Relinked version of the Project saved!"

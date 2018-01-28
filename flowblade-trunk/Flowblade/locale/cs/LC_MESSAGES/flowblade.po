@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-24 12:25+0200\n"
+"POT-Creation-Date: 2018-01-28 15:52+0200\n"
 "PO-Revision-Date: 2017-09-09 21:07+0200\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -110,6 +110,12 @@ msgid ""
 msgstr ""
 "Soubory již přítomné:\n"
 "\n"
+
+#: projectaction.py:301
+msgid ""
+"\n"
+"No duplicate media items were added to project."
+msgstr ""
 
 #: projectaction.py:495
 msgid "Selected folder contains files"
@@ -6293,6 +6299,11 @@ msgstr "<b>Původní cesta:</b>"
 #: medialinker.py:478
 msgid "<b>Relink path:</b> "
 msgstr "<b>Cesta pro opětovné spojení: </b>"
+
+#: medialinker.py:487
+#, fuzzy
+msgid "Media Asset Paths"
+msgstr "Cesta k multimédiím:"
 
 #: medialinker.py:524
 msgid "Relinked version of the Project saved!"
