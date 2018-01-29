@@ -538,27 +538,6 @@ def _change_project_profile_callback(dialog, response_id, profile_combo, out_fol
     else:
         dialog.destroy()
         
-""" Feature disabled, maybe reactivated later
-def change_profile_to_match_media(media_file):
-    dialogs.change_profile_project_to_match_media_dialog(PROJECT(), media_file, _change_project_profile_to_match_media_callback)
-
-def _change_project_profile_to_match_media_callback(dialog, response_id, match_profile_index, out_folder, project_name_entry):
-    if response_id == Gtk.ResponseType.ACCEPT:
-        folder = "/" + out_folder.get_uri().lstrip("file:/")
-        name = project_name_entry.get_text()
-        profile = mltprofiles.get_profile_for_index(match_profile_index)
-        path = folder + "/" + name
-        
-        PROJECT().update_media_lengths_on_load = True # saved version needs to do this
-        
-        persistance.save_project(PROJECT(), path, profile.description()) #<----- HERE
-
-        PROJECT().update_media_lengths_on_load = False
-
-        dialog.destroy()
-    else:
-        dialog.destroy()
-"""
 
 class SnaphotSaveThread(threading.Thread):
     

@@ -294,6 +294,43 @@ def save_project_as_dialog(callback, current_name, open_dir, parent=None):
     dialog.connect('response', callback)
     dialog.show()
 
+def save_effects_values(callback, default_name):
+    parent = gui.editor_window.window
+
+    dialog = Gtk.FileChooserDialog(_("Save Effect Values Data"), parent,
+                                   Gtk.FileChooserAction.SAVE,
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                                    _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+    dialog.set_action(Gtk.FileChooserAction.SAVE)
+    dialog.set_current_name(default_name)
+    dialog.set_do_overwrite_confirmation(True)
+
+    dialog.set_select_multiple(False)
+    file_filter = Gtk.FileFilter()
+    file_filter.set_name(_("Effect Values Data"))
+    file_filter.add_pattern("*" + "data")
+    dialog.add_filter(file_filter)
+    dialog.connect('response', callback)
+    dialog.show()
+
+def load_effects_values_dialog(callback):
+    parent = gui.editor_window.window
+
+    title_text = _("Load Effect Values Data")
+
+    dialog = Gtk.FileChooserDialog(title_text, parent,
+                                   Gtk.FileChooserAction.OPEN,
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+    dialog.set_action(Gtk.FileChooserAction.OPEN)
+    dialog.set_select_multiple(False)
+    file_filter = Gtk.FileFilter()
+    file_filter.set_name(_("Effect Values Data"))
+    file_filter.add_pattern("*" + "data")
+    dialog.add_filter(file_filter)
+    dialog.connect('response', callback)
+    dialog.show()
+    
 def export_xml_dialog(callback, project_name):
     _export_file_name_dialog(callback, project_name, _("Export Project as XML to"))
 

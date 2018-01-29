@@ -2377,9 +2377,9 @@ def get_clip_effects_editor_hamburger_menu(event, callback):
     menu = clip_effects_hamburger_menu
     guiutils.remove_children(menu)
 
-    menu.add(_get_menu_item(_("Save Values"), callback, "save"))
-    menu.add(_get_menu_item(_("Load Values"), callback, "load"))
-    menu.add(_get_menu_item(_("Reset Values"), callback, "reset"))
+    menu.add(_get_menu_item(_("Save Effect Values"), callback, "save"))
+    menu.add(_get_menu_item(_("Load Effect Values"), callback, "load"))
+    menu.add(_get_menu_item(_("Reset Effect Values"), callback, "reset"))
     
     _add_separetor(menu)
     

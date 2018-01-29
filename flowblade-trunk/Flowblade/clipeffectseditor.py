@@ -23,10 +23,13 @@ Module handles clip effects editing logic and gui
 """
 
 import cairo
+import copy
 from gi.repository import GLib
 from gi.repository import Gtk
+import pickle
 import time
 
+import atomicfile
 import dialogs
 import dnd
 import edit
@@ -50,6 +53,7 @@ clip = None # Clip being edited
 track = None # Track of the clip being editeds
 clip_index = None # Index of clip being edited
 block_changed_update = False # Used to block unwanted callback update from "changed", hack and a broken one, look to fix
+current_filter_index = -1 # Needed to find right filter object when saving/loading effect values
 
 # This is updated when filter panel is displayed and cleared when removed.
 # Used to update kfeditors with external tline frame position changes
@@ -341,7 +345,8 @@ def delete_effect_pressed():
     # Block updates until we have set selected row
     global edit_effect_update_blocked
     edit_effect_update_blocked = True
-
+    
+    """
     treeselection = widgets.effect_stack_view.treeview.get_selection()
     (model, rows) = treeselection.get_selected_rows()
     
@@ -349,10 +354,11 @@ def delete_effect_pressed():
         row = rows[0]
     except:
         return # This fails when there are filters but no rows are selected
-        
-    row_index = max(row)
+    """
+    
+    #row_index = current_filter_index
     data = {"clip":clip,
-            "index":row_index,
+            "index":current_filter_index,
             "filter_edit_done_func":filter_edit_done}
     action = edit.remove_filter_action(data)
     action.do_edit()
@@ -479,6 +485,9 @@ def effect_selection_changed():
 
     filter_object = clip.filters[filter_index]
     
+    global current_filter_index
+    current_filter_index = filter_index
+    
     # Create EditableProperty wrappers for properties
     editable_properties = propertyedit.get_filter_editable_properties(
                                                                clip, 
@@ -574,12 +583,6 @@ def clear_effects_edit_panel():
     widgets.value_edit_frame.add(label)
     widgets.value_edit_box = label
 
-def _hamburger_launch_pressed(widget, event):
-    guicomponents.get_clip_effects_editor_hamburger_menu(event, _clip_hamburger_item_activated)
-    
-def _clip_hamburger_item_activated(widget, msg):
-    print msg
-
 def filter_edit_done(edited_clip, index=-1):
     """
     EditAction object calls this after edits and undos and redos.
@@ -607,3 +610,96 @@ def update_kfeditors_positions():
         return
     for kf_widget in keyframe_editor_widgets:
         kf_widget.update_clip_pos()
+
+# ------------------------------------------------ SAVE; LOAD etc. from hamburger menu
+def _hamburger_launch_pressed(widget, event):
+    guicomponents.get_clip_effects_editor_hamburger_menu(event, _clip_hamburger_item_activated)
+    
+def _clip_hamburger_item_activated(widget, msg):
+    if msg == "save":
+        filter_object = clip.filters[current_filter_index]
+        default_name = filter_object.info.name + _("effect_values") + ".data"
+        dialogs.save_effects_values(_save_effect_values_dialog_callback, default_name)
+    elif msg == "load":
+        dialogs.load_effects_values_dialog(_load_effect_values_dialog_callback)
+    elif msg == "reset":
+        _reset_filter_values()
+    elif msg == "delete":
+        _delete_effect()
+        
+def _save_effect_values_dialog_callback(dialog, response_id):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        save_path = dialog.get_filenames()[0]
+        filter_object = clip.filters[current_filter_index]
+        effect_data = EffectValuesSaveData(filter_object)
+        effect_data.save(save_path)
+    
+    dialog.destroy()
+
+def _load_effect_values_dialog_callback(dialog, response_id):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        load_path = dialog.get_filenames()[0]
+        f = open(load_path)
+        effect_data = pickle.load(f)
+        
+        filter_object = clip.filters[current_filter_index]
+        
+        if effect_data.data_applicable(filter_object.info):
+            effect_data.set_effect_values(filter_object)
+            effect_selection_changed()
+        else:
+            print "nou"
+    
+    dialog.destroy()
+
+def _reset_filter_values():
+    filter_object = clip.filters[current_filter_index]
+    info = filter_object.info
+    if filter_object.info.multipart_filter == True:
+        filter_object.value = info.multipart_value
+
+    filter_object.properties = copy.deepcopy(info.properties)
+    filter_object.non_mlt_properties = copy.deepcopy(info.non_mlt_properties)
+        
+    effect_selection_changed()
+
+def _delete_effect():
+    delete_effect_pressed()
+
+
+class EffectValuesSaveData:
+    
+    def __init__(self, filter_object):
+        self.info = filter_object.info
+        self.multipart_filter = self.info.multipart_filter
+
+        # Values of these are edited by the user.
+        self.properties = copy.deepcopy(filter_object.properties)
+        try:
+            self.non_mlt_properties = copy.deepcopy(filter_object.non_mlt_properties)
+        except:
+            self.non_mlt_properties = [] # Versions prior 0.14 do not have non_mlt_properties and fail here on load
+
+        if self.multipart_filter == True:
+            self.value = filter_object.value
+        else:
+            self.value = None
+        
+    def save(self, save_path):
+        with atomicfile.AtomicFileWriter(save_path, "wb") as afw:
+            write_file = afw.get_file()
+            pickle.dump(self, write_file)
+        
+    def data_applicable(self, filter_info):
+        if isinstance(self.info, filter_info.__class__):
+            return self.info.__dict__ == filter_info.__dict__
+        return False
+        
+    def set_effect_values(self, filter_object):
+        if self.multipart_filter == True:
+            filter_object.value = self.value
+         
+        filter_object.properties = copy.deepcopy(self.properties)
+        filter_object.non_mlt_properties = copy.deepcopy(self.non_mlt_properties)
+         
+    
