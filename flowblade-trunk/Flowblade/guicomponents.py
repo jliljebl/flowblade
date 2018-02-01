@@ -2317,6 +2317,15 @@ def get_audio_levels_popup_menu(event, callback):
     autofollow_item.connect("activate", callback, "autofollow")
 
     menu.append(autofollow_item)
+
+    _add_separetor(menu)
+
+    ponter_sensitive_item = Gtk.CheckMenuItem()
+    ponter_sensitive_item.set_label(_("Tool Cursor Context Sensitive"))
+    ponter_sensitive_item.set_active(editorstate.cursor_is_tline_sensitive)
+    ponter_sensitive_item.connect("activate", callback, "pointer_sensitive_item")
+
+    menu.append(ponter_sensitive_item) 
     
     _add_separetor(menu)
     

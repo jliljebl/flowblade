@@ -59,7 +59,7 @@ player = None
 edit_mode = INSERT_MOVE
 
 # Compositor autofollow state. If true when edit is performed, all compositors are auto resynced on first do, redo and undo actions.
-auto_follow = True
+auto_follow = False
 auto_follow_compositors_mouse_transparent = False
 
 # Trim tool ripple mode is expressed as a flag

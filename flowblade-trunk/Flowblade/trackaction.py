@@ -163,6 +163,8 @@ def _audio_levels_item_activated(widget, msg):
         editorstate.auto_follow = active
         PROJECT().set_project_property(appconsts.P_PROP_AUTO_FOLLOW, active)
         updater.repaint_tline()
+    elif msg == "pointer_sensitive_item":
+        editorstate.cursor_is_tline_sensitive = widget.get_active()
     else: # media thumbnails
         editorstate.display_clip_media_thumbnails = widget.get_active()
         updater.repaint_tline()
