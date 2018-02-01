@@ -183,6 +183,7 @@ CLIP_COLOR_L = get_multiplied_color(CLIP_COLOR, GRAD_MULTIPLIER)
 CLIP_COLOR_GRAD = (1, 0.62, 0.38, 0.7, 1)
 CLIP_COLOR_GRAD_L = get_multiplied_grad(0, 1, CLIP_COLOR_GRAD, GRAD_MULTIPLIER) 
 CLIP_SELECTED_COLOR = get_multiplied_color_from_grad(CLIP_COLOR_GRAD, SELECTED_MULTIPLIER)
+CLIP_END_DRAG_OVERLAY_COLOR = (1,1,1,0.3)
 
 AUDIO_CLIP_COLOR_GRAD = (1, 0.23, 0.52, 0.23, 1)#(1, 0.79, 0.80, 0.18, 1)
 AUDIO_CLIP_COLOR_GRAD_L = get_multiplied_grad(0, 1, AUDIO_CLIP_COLOR_GRAD, GRAD_MULTIPLIER + 0.5)
@@ -1074,7 +1075,7 @@ def draw_clip_end_drag_overlay(cr, data):
     
     # Draw clips in draw range
     cr.set_line_width(MOVE_CLIPS_LINE_WIDTH)
-    cr.set_source_rgb(*OVERLAY_TRIM_COLOR)
+
 
     clip_length = end - start
     scale_length = clip_length * pix_per_frame
@@ -1082,6 +1083,9 @@ def draw_clip_end_drag_overlay(cr, data):
     track_height = data["track_height"]
 
     cr.rectangle(scale_in, int(y) + 1.5, int(scale_length), track_height - 2.0)
+    cr.set_source_rgba(*CLIP_END_DRAG_OVERLAY_COLOR)
+    cr.fill_preserve()
+    cr.set_source_rgb(*OVERLAY_TRIM_COLOR)
     cr.stroke()
 
     if editorpersistance.prefs.delta_overlay == True:
@@ -1423,8 +1427,8 @@ class TimeLineCanvas:
             # This gets none always afetr rack, which may not be what we want
             return appconsts.POINTER_CONTEXT_NONE
 
-        clip_start_frame = track.clip_start(clip_index) - pos
-        clip_end_frame = track.clip_start(clip_index + 1) - pos
+        clip_start_frame = track.clip_start(clip_index)
+        clip_end_frame = track.clip_start(clip_index + 1)
         
         # INSERT, OVEWRITE
         if (EDIT_MODE() == editorstate.INSERT_MOVE or EDIT_MODE() == editorstate.OVERWRITE_MOVE) and editorstate.overwrite_mode_box == False:
