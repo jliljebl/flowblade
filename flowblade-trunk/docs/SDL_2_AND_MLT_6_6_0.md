@@ -1,6 +1,6 @@
 # Flowblade, SDL 2 and MLT 6.6.0 and later
 
-**MLT 6.6.0 and later need to be compiled with SDL 1.2 support for Flowblade to work**
+**MLT 6.6.0 and later need to be compiled with SDL 1.2 support for Flowblade to work.**
 
 There were some developments with Flowblade, SDL and MLT from autumn 2017 onwards, here are the main points:
 
