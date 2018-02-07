@@ -1872,34 +1872,4 @@ def tline_audio_sync_dialog(callback, data):
     dialog.connect('response', callback, data)
     dialog.show_all()
 
-def autofollow_info_dialog(callback):
-    dialog = Gtk.Dialog("",  gui.editor_window.window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Ok").encode('utf-8'), Gtk.ResponseType.ACCEPT))
-
-    primary_txt = _("Can't move this Compositor!")
-    secondary_txt = _("Compositor Auto Follow is on and this Compositor Obeys it.\nTo free move this Compositor, uncheck 'Obey Auto Follow' from Compositor pop-up menu.")
-    info_panel = dialogutils.get_warning_message_dialog_panel(primary_txt, secondary_txt, True)
-      
-    open_check = Gtk.CheckButton()
-    open_check.set_active(False)
-    open_label = Gtk.Label(label=_("Make Auto Follow Compositors Left Mouse transparent."))
-
-    open_hbox = Gtk.HBox(False, 2)
-    open_hbox.pack_start(open_check, False, False, 0)
-    open_hbox.pack_start(guiutils.pad_label(4, 4), False, False, 0)
-    open_hbox.pack_start(open_label, False, False, 0)
-
-    open_hbox.pack_start(Gtk.Label(), True, True, 0)
-    panel_vbox = Gtk.VBox(False, 2)
-    panel_vbox.pack_start(info_panel, False, False, 0)
-    panel_vbox.pack_start(open_hbox, False, False, 0)
-    
-    alignment = dialogutils.get_alignment2(panel_vbox)
-
-    dialog.vbox.pack_start(alignment, True, True, 0)
-    dialogutils.set_outer_margins(dialog.vbox)
-    _default_behaviour(dialog)
-    dialog.connect('response', callback, (open_check))
-    dialog.show_all()
 

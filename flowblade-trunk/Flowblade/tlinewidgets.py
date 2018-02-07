@@ -1408,15 +1408,10 @@ class TimeLineCanvas:
         frame = get_frame(x)
         hit_compositor = compositor_hit(frame, y, current_sequence().compositors)
         if hit_compositor != None:
-            if (editorstate.auto_follow_compositors_mouse_transparent == True and (editorstate.auto_follow == True and hit_compositor.obey_autofollow == True)):
-                # We get here if auto follow but compositors mouse transparent
-                # and move down the method to see if clip behind gets pointer context
-                pass
+            if editorstate.auto_follow == False or (editorstate.auto_follow == True and hit_compositor.obey_autofollow == False):
+                return compositormodes.get_pointer_context(hit_compositor, x)
             else:
-                if editorstate.auto_follow == False or (editorstate.auto_follow == True and hit_compositor.obey_autofollow == False):
-                    return compositormodes.get_pointer_context(hit_compositor, x)
-                else:
-                    return appconsts.POINTER_CONTEXT_NONE
+                return appconsts.POINTER_CONTEXT_NONE
 
         track = get_track(y)
         if track == None:

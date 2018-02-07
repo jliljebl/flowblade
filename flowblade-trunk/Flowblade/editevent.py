@@ -587,12 +587,8 @@ def tline_canvas_mouse_pressed(event, frame):
     #  Check if compositor is hit and if so handle compositor editing
     if editorstate.current_is_move_mode() and timeline_visible():
         hit_compositor = tlinewidgets.compositor_hit(frame, event.y, current_sequence().compositors)
-        if hit_compositor != None:           
-            if editorstate.auto_follow_compositors_mouse_transparent == False and hit_compositor.obey_autofollow == True:
-                if editorstate.auto_follow == True and hit_compositor.obey_autofollow == True and event.button == 1:
-                    dialogs.autofollow_info_dialog(_autofollow_info_callback)
-                    return
-            elif editorstate.auto_follow == False or hit_compositor.obey_autofollow == False:
+        if hit_compositor != None:         
+            if editorstate.auto_follow == False or hit_compositor.obey_autofollow == False:
                 movemodes.clear_selected_clips()
                 if event.button == 1 or (event.button == 3 and event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                     compositormodes.set_compositor_mode(hit_compositor)
@@ -600,7 +596,6 @@ def tline_canvas_mouse_pressed(event, frame):
                     press_func = mode_funcs[TL_MOUSE_PRESS]
                     press_func(event, frame)
                     return
-            
             if event.button == 3:
                 mouse_disabled == True
                 compositormodes.set_compositor_selected(hit_compositor)
@@ -610,9 +605,6 @@ def tline_canvas_mouse_pressed(event, frame):
             elif event.button == 2:
                 updater.zoom_project_length()
                 return
-    
-            # NOTE: We continue down method if auto_follow == True and editorstate.auto_follow_compositors_mouse_transparent == False,
-            # making compositor mouse transparent.
 
     compositormodes.clear_compositor_selection()
 
@@ -777,12 +769,6 @@ def tline_canvas_double_click(frame, x, y):
     updater.open_clip_in_effects_editor(data)
 
 
-# -------------------------------------------------- info dialog callback
-def _autofollow_info_callback(dialog, resposnse_id, checkbox):
-    editorstate.auto_follow_compositors_mouse_transparent = checkbox.get_active()
-    
-    dialog.destroy()
-    
 # -------------------------------------------------- DND release event callbacks
 def tline_effect_drop(x, y):
     clip, track, index = tlinewidgets.get_clip_track_and_index_for_pos(x, y)
