@@ -92,7 +92,7 @@ def maybe_init_for_mouse_press(event, frame):
     tlinewidgets.set_edit_mode(_edit_data, tlinewidgets.draw_clip_end_drag_overlay)
 
     if tlinewidgets.pointer_context == appconsts.POINTER_CONTEXT_NONE:
-        # We did CTRL + Mouse Right to get, her we need to set pointer context to left or right
+        # We did CTRL + Mouse Right to get here, we need to set pointer context to left or right
         if editing_clip_end == True:
             tlinewidgets.pointer_context = appconsts.POINTER_CONTEXT_END_DRAG_RIGHT
         else:

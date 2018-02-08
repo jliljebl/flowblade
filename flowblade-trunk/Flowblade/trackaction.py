@@ -27,6 +27,7 @@ import dialogutils
 import gui
 import guicomponents
 import editorstate
+import edit
 from editorstate import get_track
 from editorstate import current_sequence
 from editorstate import PROJECT
@@ -162,6 +163,10 @@ def _audio_levels_item_activated(widget, msg):
         active = widget.get_active()
         editorstate.auto_follow = active
         PROJECT().set_project_property(appconsts.P_PROP_AUTO_FOLLOW, active)
+        if active == True:
+            # Do autofollow update if auto follow activated
+            compositor_autofollow_data = edit.get_full_compositor_sync_data()
+            edit.do_autofollow_redo(compositor_autofollow_data)
         updater.repaint_tline()
     elif msg == "pointer_sensitive_item":
         editorstate.cursor_is_tline_sensitive = widget.get_active()

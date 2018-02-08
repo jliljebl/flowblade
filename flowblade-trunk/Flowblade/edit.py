@@ -406,17 +406,8 @@ class EditAction:
                 pass
 
     def redo_auto_follow(self):
-        for sync_item in self.compositor_autofollow_data:
-            # real compositor objects get recreated and destroyed all the time and in redo/undo they need to identified by destroy_id
-            destroy_id, orig_in, orig_out, clip_start, clip_end = sync_item
-            try:
-                sync_compositor = current_sequence().get_compositor_for_destroy_id(destroy_id)
-                if sync_compositor.obey_autofollow == True:
-                    sync_compositor.set_in_and_out(clip_start, clip_end)
-            except:
-                # Compositor or clip not found
-                pass
-                
+        do_autofollow_redo(self.compositor_autofollow_data)
+        
     def _update_gui(self): # This copied  with small modifications into projectaction.py for sequence imports, update there too if needed...yeah.
         updater.update_tline_scrollbar() # Slider needs to adjust to possily new program length.
                                          # This REPAINTS TIMELINE as a side effect.
@@ -482,7 +473,18 @@ def get_full_compositor_sync_data():
             
     return full_sync_data
 
-
+def do_autofollow_redo(compositor_autofollow_data):
+    for sync_item in compositor_autofollow_data:
+        # real compositor objects get recreated and destroyed all the time and in redo/undo they need to identified by destroy_id
+        destroy_id, orig_in, orig_out, clip_start, clip_end = sync_item
+        try:
+            sync_compositor = current_sequence().get_compositor_for_destroy_id(destroy_id)
+            if sync_compositor.obey_autofollow == True:
+                sync_compositor.set_in_and_out(clip_start, clip_end)
+        except:
+            # Compositor or clip not found
+            pass
+                
 # ---------------------------------------------------- SYNC DATA
 class SyncData:
     """

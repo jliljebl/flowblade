@@ -1518,46 +1518,6 @@ class ReRenderRunnerThread(threading.Thread):
 
         self.rerender_window.exit_shutdown()
 
-"""
-def _render_fade_rerender_item(orig_fade_clip, track):
-    from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, \
-    sorted_wipe_luma_index, color_str = orig_fade_clip.creation_data
-    
-    from_clip = editorstate.current_sequence().get_clip_for_id(from_clip_id)
-    
-    length = orig_fade_clip.clip_out - orig_fade_clip.clip_in + 1
-    
-    # We need to change fade source clip in or out point and source clip is in timeline currently
-    from_clone = editorstate.current_sequence().create_clone_clip(from_clip)
-    if transition_type_index == appconsts.RENDERED_FADE_IN:
-        from_clone.clip_in = from_clone.clip_in - length
-    else:
-        from_clone.clip_out = from_clone.clip_out + length
-
-    producer_tractor = mlttransitions.get_rendered_transition_tractor(  editorstate.current_sequence(),
-                                                                        from_clone,
-                                                                        None,
-                                                                        length,
-                                                                        None,
-                                                                        None,
-                                                                        None,
-                                                                        transition_type_index,
-                                                                        None,
-                                                                        color_str)
-    fade_clip_index = track.clips.index(orig_fade_clip)
-    
-    # Save transition data into global variable to be available at render complete callback
-    global transition_render_data
-    transition_render_data = (fade_clip_index, transition_type_index, from_clone, track, length, orig_fade_clip.creation_data)
-
-    render.render_single_track_transition_clip( producer_tractor,
-                                                encoding_option_index,
-                                                quality_option_index, 
-                                                str(extension_text), 
-                                                _fade_RE_render_complete,
-                                                window_text)
-"""
-
 
 def _no_creation_data_dialog():
     primary_txt = _("Can't rerender this fade / transition.")

@@ -584,7 +584,7 @@ def tline_canvas_mouse_pressed(event, frame):
             updater.repaint_tline()
             return
 
-    #  Check if compositor is hit and if so handle compositor editing
+    #  Check if compositor is hit and if so, handle compositor editing
     if editorstate.current_is_move_mode() and timeline_visible():
         hit_compositor = tlinewidgets.compositor_hit(frame, event.y, current_sequence().compositors)
         if hit_compositor != None:         
