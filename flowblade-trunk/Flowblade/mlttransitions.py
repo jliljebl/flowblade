@@ -199,7 +199,7 @@ class CompositorTransitionInfo:
         # Property args saved in propertyname -> propertyargs_string dict
         self.property_args = propertyparse.node_list_to_args_dict(p_node_list)
         
-        #  Extra editors that handle properties that have been set "no_editor"
+        #  Extra editors handle properties that have been set "no_editor"
         e_node_list = compositor_node.getElementsByTagName(EXTRA_EDITOR)
         self.extra_editors = propertyparse.node_list_to_extraeditors_array(e_node_list)  
 
@@ -488,7 +488,7 @@ def get_rendered_transition_tractor(current_sequence,
             from_clip.clip_in = 0
             from_clip.clip_out = length
             
-    # Add clips to tracks and create keyframe string to contron mixing
+    # Add clips to tracks and create keyframe string for mixing
     if transition_type == RENDERED_DISSOLVE or transition_type == RENDERED_WIPE:
         # Add clips. Images and pattern producers always fill full track.
         if from_clip.media_type != appconsts.IMAGE and from_clip.media_type != appconsts.PATTERN_PRODUCER:

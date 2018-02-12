@@ -31,6 +31,7 @@ import time
 
 import atomicfile
 import dialogs
+import dialogutils
 import dnd
 import edit
 import editorpersistance
@@ -544,20 +545,10 @@ def effect_selection_changed():
             if not hasattr(editor_row, "no_separator"):
                 vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
         vbox.pack_start(guiutils.pad_label(12,12), False, False, 0)
-        
-        #save_b = Gtk.Button(_("Save Params"))
-        #load_b = Gtk.Button(_("Load Params"))
-        
+                
         hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger_big.png")
         hamburger_launcher = guicomponents.PressLaunch(_hamburger_launch_pressed, hamburger_launcher_surface, 24, 24)
         
-        """
-        widgets.toggle_all = Gtk.Button()
-        widgets.toggle_all.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "filters_all_toggle.png"))
-
-        widgets.add_effect_b.connect("clicked", lambda w,e: add_effect_pressed(), None)
-        widgets.del_effect_b.connect("clicked", lambda w,e: delete_effect_pressed(), None)
-        """
         sl_row = guiutils.get_right_justified_box([hamburger_launcher.widget])
         vbox.pack_start(sl_row, False, False, 0)
         
@@ -618,10 +609,10 @@ def _hamburger_launch_pressed(widget, event):
 def _clip_hamburger_item_activated(widget, msg):
     if msg == "save":
         filter_object = clip.filters[current_filter_index]
-        default_name = filter_object.info.name + _("effect_values") + ".data"
-        dialogs.save_effects_values(_save_effect_values_dialog_callback, default_name)
+        default_name = filter_object.info.name + _("_effect_values") + ".data"
+        dialogs.save_effects_compositors_values(_save_effect_values_dialog_callback, default_name)
     elif msg == "load":
-        dialogs.load_effects_values_dialog(_load_effect_values_dialog_callback)
+        dialogs.load_effects_compositors_values_dialog(_load_effect_values_dialog_callback)
     elif msg == "reset":
         _reset_filter_values()
     elif msg == "delete":
@@ -648,7 +639,12 @@ def _load_effect_values_dialog_callback(dialog, response_id):
             effect_data.set_effect_values(filter_object)
             effect_selection_changed()
         else:
-            print "nou"
+            # Info window
+            saved_effect_name = effect_data.info.name
+            current_effect_name = filter_object.info.name
+            primary_txt = _("Saved Filter data not applicaple for this Filter!")
+            secondary_txt = _("Saved data is for ") + saved_effect_name + " Filter,\n" + _("current edited Filter is ") + current_effect_name + "."
+            dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
     
     dialog.destroy()
 

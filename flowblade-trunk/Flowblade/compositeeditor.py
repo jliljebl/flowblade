@@ -22,11 +22,15 @@
 Module handles Compositors edit panel.
 """
 
+import cairo
 import copy
-
 from gi.repository import Gtk
+import pickle
 
+import atomicfile
 import compositorfades
+import dialogs
+import dialogutils
 import gui
 import guicomponents
 import guiutils
@@ -39,6 +43,7 @@ import mlttransitions
 import propertyeditorbuilder
 import propertyedit
 import propertyparse
+import respaths
 import utils
 
 COMPOSITOR_PANEL_LEFT_WIDTH = 160
@@ -253,7 +258,12 @@ def _display_compositor_edit_box():
             keyframe_editor_widgets.append(editor_row)
         vbox.pack_start(editor_row, False, False, 0)
         vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
-    
+
+    hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger_big.png")
+    hamburger_launcher = guicomponents.PressLaunch(_hamburger_launch_pressed, hamburger_launcher_surface, 24, 24)
+    sl_row = guiutils.get_right_justified_box([hamburger_launcher.widget])
+    vbox.pack_start(sl_row, False, False, 0)
+        
     vbox.pack_start(Gtk.Label(), True, True, 0)  
     vbox.show_all()
 
@@ -281,3 +291,67 @@ def display_kfeditors_tline_frame(frame):
 def update_kfeditors_positions():
     for kf_widget in keyframe_editor_widgets:
         kf_widget.update_clip_pos()
+
+# ----------------------------------------------------------- hamburger menu
+def _hamburger_launch_pressed(widget, event):
+    guicomponents.get_compositor_editor_hamburger_menu(event, _compositor_hamburger_item_activated)
+
+def _compositor_hamburger_item_activated(widget, msg):
+    if msg == "save":
+        comp_name = mlttransitions.name_for_type[compositor.transition.info.name]
+        default_name = comp_name.replace(" ", "_") + _("_compositor_values") + ".data"
+        dialogs.save_effects_compositors_values(_save_compositor_values_dialog_callback, default_name, False)
+    elif msg == "load":
+        dialogs.load_effects_compositors_values_dialog(_load_compositor_values_dialog_callback, False)
+    elif msg == "reset":
+        _reset_compositor_pressed()
+    elif msg == "delete":
+        _delete_compositor_pressed()
+
+def _save_compositor_values_dialog_callback(dialog, response_id):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        save_path = dialog.get_filenames()[0]
+        compositor_data = CompositorValuesSaveData(compositor.transition.info, compositor.transition.properties)
+        compositor_data.save(save_path)
+    
+    dialog.destroy()
+
+def _load_compositor_values_dialog_callback(dialog, response_id):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        load_path = dialog.get_filenames()[0]
+        f = open(load_path)
+        compositor_data = pickle.load(f)
+
+        if compositor_data.data_applicable(compositor.transition.info):
+            compositor_data.set_values(compositor)
+            set_compositor(compositor)
+        else:
+            saved_name_comp_name = mlttransitions.name_for_type[compositor_data.info.name]
+            current_comp_name = mlttransitions.name_for_type[compositor.transition.info.name]
+            primary_txt = _("Saved Compositor data not applicaple for this compositor!")
+            secondary_txt = _("Saved data is for ") + saved_name_comp_name + " compositor,\n" + _(", current compositor is ") + current_comp_name + "."
+            dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
+
+    dialog.destroy()
+
+
+class CompositorValuesSaveData:
+    
+    def __init__(self, info, properties):
+        self.info = info
+        self.properties = copy.deepcopy(properties)
+
+    def save(self, save_path):
+        with atomicfile.AtomicFileWriter(save_path, "wb") as afw:
+            write_file = afw.get_file()
+            pickle.dump(self, write_file)
+        
+    def data_applicable(self, compositor_info):        
+        if isinstance(self.info, compositor_info.__class__):
+            return self.info.__dict__ == compositor_info.__dict__
+        return False
+        
+    def set_values(self, compositor):
+        compositor.transition.properties = copy.deepcopy(self.properties)
+        compositor.transition.update_editable_mlt_properties()
+        

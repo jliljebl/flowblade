@@ -2396,6 +2396,22 @@ def get_clip_effects_editor_hamburger_menu(event, callback):
 
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
+
+def get_compositor_editor_hamburger_menu(event, callback):
+    # needs renaming
+    menu = clip_effects_hamburger_menu
+    guiutils.remove_children(menu)
+
+    menu.add(_get_menu_item(_("Save Compositor Values"), callback, "save"))
+    menu.add(_get_menu_item(_("Load Compositor Values"), callback, "load"))
+    menu.add(_get_menu_item(_("Reset Compositor Values"), callback, "reset"))
+    
+    _add_separetor(menu)
+    
+    menu.add(_get_menu_item(_("Delete Compositor"), callback, "delete"))
+
+    menu.show_all()
+    menu.popup(None, None, None, None, event.button, event.time)
     
 def get_monitor_view_popupmenu(launcher, event, callback):
     menu = monitor_menu

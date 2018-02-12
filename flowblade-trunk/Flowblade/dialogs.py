@@ -294,10 +294,15 @@ def save_project_as_dialog(callback, current_name, open_dir, parent=None):
     dialog.connect('response', callback)
     dialog.show()
 
-def save_effects_values(callback, default_name):
+def save_effects_compositors_values(callback, default_name, saving_effect=True):
     parent = gui.editor_window.window
 
-    dialog = Gtk.FileChooserDialog(_("Save Effect Values Data"), parent,
+    if saving_effect == True:
+        title = _("Save Effect Values Data")
+    else:
+        title = _("Save Compositor Values Data")
+        
+    dialog = Gtk.FileChooserDialog(title, parent,
                                    Gtk.FileChooserAction.SAVE,
                                    (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
                                     _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT))
@@ -307,16 +312,19 @@ def save_effects_values(callback, default_name):
 
     dialog.set_select_multiple(False)
     file_filter = Gtk.FileFilter()
-    file_filter.set_name(_("Effect Values Data"))
+    file_filter.set_name(_("Effect/Compositor Values Data"))
     file_filter.add_pattern("*" + "data")
     dialog.add_filter(file_filter)
     dialog.connect('response', callback)
     dialog.show()
 
-def load_effects_values_dialog(callback):
+def load_effects_compositors_values_dialog(callback, loading_effect=True):
     parent = gui.editor_window.window
 
-    title_text = _("Load Effect Values Data")
+    if loading_effect == True:
+        title_text = _("Load Effect Values Data")
+    else:
+        title_text = _("Load Compositor Values Data") 
 
     dialog = Gtk.FileChooserDialog(title_text, parent,
                                    Gtk.FileChooserAction.OPEN,
@@ -325,7 +333,7 @@ def load_effects_values_dialog(callback):
     dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
     file_filter = Gtk.FileFilter()
-    file_filter.set_name(_("Effect Values Data"))
+    file_filter.set_name(_("Effect/Compositor Values Data"))
     file_filter.add_pattern("*" + "data")
     dialog.add_filter(file_filter)
     dialog.connect('response', callback)
