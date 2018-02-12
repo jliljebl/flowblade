@@ -235,6 +235,12 @@ def screen_size_small():
     
     return False
 
+def screen_size_small_height():
+    if SCREEN_HEIGHT < 898:
+        return True
+    else:
+        return False
+
 def get_cached_trim_clip(path):
     try:
         return _trim_clips_cache[path]

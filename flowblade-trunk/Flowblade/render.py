@@ -312,9 +312,10 @@ def _render_type_changed():
         _preset_selection_changed()
         widgets.args_panel.opts_save_button.set_sensitive(False)
         widgets.args_panel.opts_load_button.set_sensitive(False)
-        widgets.args_panel.load_selection_button.set_sensitive(False)
-        widgets.args_panel.opts_view.set_sensitive(False)
-        widgets.args_panel.opts_view.get_buffer().set_text("")
+        if editorstate.screen_size_small_height() == False:
+            widgets.args_panel.load_selection_button.set_sensitive(False)
+            widgets.args_panel.opts_view.set_sensitive(False)
+            widgets.args_panel.opts_view.get_buffer().set_text("")
 
 def _out_profile_changed():
     selected_index = widgets.profile_panel.out_profile_combo.widget.get_active()

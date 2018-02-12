@@ -575,7 +575,7 @@ def get_range_selection_combo():
 
 # ------------------------------------------------------------ panels
 def get_render_panel_left(render_widgets):
-    small_height = (editorstate.SCREEN_HEIGHT < 898)
+    small_height = editorstate.screen_size_small_height()
     
     file_opts_panel = guiutils.get_named_frame(_("File"), render_widgets.file_panel.vbox, 4)         
     profile_panel = guiutils.get_named_frame(_("Render Profile"), render_widgets.profile_panel.vbox, 4)
