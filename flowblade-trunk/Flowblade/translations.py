@@ -243,7 +243,8 @@ def load_filters_translations():
     filter_names["Color Lift Gain Gamma"] = _("Color Lift Gain Gamma")
     filter_names["Color Channel Mixer"] = _("Color Channel Mixer")
     filter_names["Lens Correction AV"] = _("Lens Correction AV")
-   
+    filter_names["Perspective"] = _("Perspective")
+    
     # param names
     global param_names
 
