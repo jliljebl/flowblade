@@ -549,7 +549,7 @@ def effect_selection_changed():
         hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger_big.png")
         hamburger_launcher = guicomponents.PressLaunch(_hamburger_launch_pressed, hamburger_launcher_surface, 24, 24)
         
-        sl_row = guiutils.get_right_justified_box([hamburger_launcher.widget])
+        sl_row = guiutils.get_left_justified_box([hamburger_launcher.widget])
         vbox.pack_start(sl_row, False, False, 0)
         
         vbox.pack_start(Gtk.Label(), True, True, 0)
