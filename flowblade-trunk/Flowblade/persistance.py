@@ -116,7 +116,7 @@ def save_project(project, file_path, changed_profile_desc=None):
     """
     Creates pickleable project object
     """
-    print "Save project " + os.path.basename(file_path)
+    print "Saving project..."  # + os.path.basename(file_path)
     
     # Get shallow copy
     s_proj = copy.copy(project)
@@ -129,8 +129,8 @@ def save_project(project, file_path, changed_profile_desc=None):
         s_proj.profile_desc = changed_profile_desc
         _xml_new_paths_for_profile_change = {} # dict acts also as a flag to show that profile change save is happening
         new_profile = mltprofiles.get_profile(changed_profile_desc)
-        print "Saving changed profile project: ", changed_profile_desc
-        print "FPS conversion multiplier:", _fps_conv_mult
+        #print "Saving changed profile project: ", changed_profile_desc
+        #print "FPS conversion multiplier:", _fps_conv_mult
     else:
         _xml_new_paths_for_profile_change = None # None value acts also as a flag to show that profile change save is _not_ happening
 
@@ -158,7 +158,7 @@ def save_project(project, file_path, changed_profile_desc=None):
             new_xml_file_path = _save_changed_xml_file(s_media_file, new_profile)
             _xml_new_paths_for_profile_change[s_media_file.path] = new_xml_file_path
             s_media_file.path = new_xml_file_path
-            print "XML path replace for media:", s_media_file.path,  new_xml_file_path
+            #print "XML path replace for media:", s_media_file.path,  new_xml_file_path
 
         # Remove unpicleable attrs
         remove_attrs(s_media_file, MEDIA_FILE_REMOVE)
@@ -252,11 +252,12 @@ def get_p_clip(clip):
     if _xml_new_paths_for_profile_change != None and hasattr(s_clip, "path") and s_clip.path != None and utils.is_mlt_xml_file(s_clip.path) == True:
         try:
             new_path = _xml_new_paths_for_profile_change[s_clip.path]
-            print "XML path replace for clip:", s_clip.path, new_path
+            #print "XML path replace for clip:", s_clip.path, new_path
             s_clip.path = new_path
         except:
             # Something is really wrong, this should not be possible
-            print "Failed to find a new XML file for path:", s_clip.path
+            # print "Failed to find a new XML file for path:", s_clip.path
+            pass 
 
     # Set 'type' attribute for MLT object type
     # This IS NOT USED anywhere anymore and should be removed.
@@ -711,11 +712,11 @@ def get_relative_path(project_file_path, asset_path):
         for filename in fnmatch.filter(filenames, asset_file_name):
             matches.append(os.path.join(root, filename))
     if len(matches) == 1:
-        print "relative path for: ", asset_file_name
+        #print "relative path for: ", asset_file_name
         return matches[0]
     elif  len(matches) > 1:
         # some error handling may be needed?
-        print "relative path for: ", asset_file_name
+        #print "relative path for: ", asset_file_name
         return matches[0]
     else:
         return NOT_FOUND # no relative path found
@@ -733,7 +734,7 @@ def get_img_seq_relative_path(project_file_path, asset_path):
         look_up_path = root + "/" + look_up_file_name
         listing = glob.glob(look_up_path)
         if len(listing) > 0:
-            print "relative path for: ", asset_file_name
+            #print "relative path for: ", asset_file_name
             return root + "/" + asset_file_name
 
     return NOT_FOUND # no relative path found
