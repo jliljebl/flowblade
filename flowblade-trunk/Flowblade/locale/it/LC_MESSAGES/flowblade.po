@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Floblade Italian Translation 0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-22 14:42+0200\n"
+"POT-Creation-Date: 2018-02-24 17:54+0200\n"
 "PO-Revision-Date: 2014-09-15 23:42+0100\n"
 "Last-Translator: Massimo Stella <info@massimostella.it>\n"
 "Language-Team: Italiano\n"
@@ -3013,11 +3013,11 @@ msgstr "Dissolvenza"
 msgid "Color:"
 msgstr "Colore:"
 
-#: persistance.py:426
+#: persistance.py:427
 msgid "Building sequence "
 msgstr "Crea la Sequenza"
 
-#: persistance.py:465
+#: persistance.py:466
 msgid "Loading icons"
 msgstr "Carica icone"
 
@@ -6242,6 +6242,10 @@ msgstr ""
 
 #: proxyediting.py:449
 msgid " proxy file(s).\n"
+msgstr ""
+
+#: proxyediting.py:451
+msgid "There are some issues with proxy render request"
 msgstr ""
 
 #: proxyediting.py:457

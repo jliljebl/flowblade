@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-22 14:42+0200\n"
+"POT-Creation-Date: 2018-02-24 17:54+0200\n"
 "PO-Revision-Date: 2017-05-27 08:50+0200\n"
 "Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -2910,11 +2910,11 @@ msgstr "Płynne zanikanie"
 msgid "Color:"
 msgstr "Kolor:"
 
-#: persistance.py:426
+#: persistance.py:427
 msgid "Building sequence "
 msgstr "Tworzenie sekwencji "
 
-#: persistance.py:465
+#: persistance.py:466
 msgid "Loading icons"
 msgstr "Wczytywanie ikon"
 
@@ -6105,6 +6105,10 @@ msgstr " pliki(ów) nie-wideo.\n"
 #: proxyediting.py:449
 msgid " proxy file(s).\n"
 msgstr " pliki(ów) proxy.\n"
+
+#: proxyediting.py:451
+msgid "There are some issues with proxy render request"
+msgstr ""
 
 #: proxyediting.py:457
 msgid ""

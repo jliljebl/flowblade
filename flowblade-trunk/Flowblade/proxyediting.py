@@ -448,7 +448,7 @@ class ProxyRenderIssuesWindow:
             if is_proxy_file > 0:
                 text = _("You are trying to create proxies for ") + str(not_video_files) + _(" proxy file(s).\n")
                 rows = rows + self.issues_str() + text
-            issues_box = dialogutils.get_warning_message_dialog_panel("There are some issues with proxy render request", 
+            issues_box = dialogutils.get_warning_message_dialog_panel(_("There are some issues with proxy render request"), 
                                                                     rows,
                                                                     True)
   

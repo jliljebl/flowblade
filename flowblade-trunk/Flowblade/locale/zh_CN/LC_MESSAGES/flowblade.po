@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-22 14:42+0200\n"
+"POT-Creation-Date: 2018-02-24 17:54+0200\n"
 "PO-Revision-Date: 2017-04-15 18:47+0800\n"
 "Last-Translator: wu <laowudebox@126.com>\n"
 "Language-Team: Language LANGUAGE\n"
@@ -2891,11 +2891,11 @@ msgstr "淡出"
 msgid "Color:"
 msgstr "色彩:"
 
-#: persistance.py:426
+#: persistance.py:427
 msgid "Building sequence "
 msgstr "生成序列"
 
-#: persistance.py:465
+#: persistance.py:466
 msgid "Loading icons"
 msgstr "加载中的图标"
 
@@ -6070,6 +6070,10 @@ msgstr "非视频文件。\n"
 #: proxyediting.py:449
 msgid " proxy file(s).\n"
 msgstr "代理文件。\n"
+
+#: proxyediting.py:451
+msgid "There are some issues with proxy render request"
+msgstr ""
 
 #: proxyediting.py:457
 msgid ""

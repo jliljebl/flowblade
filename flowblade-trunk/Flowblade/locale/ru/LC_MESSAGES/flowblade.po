@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flowblade\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-22 14:42+0200\n"
+"POT-Creation-Date: 2018-02-24 17:54+0200\n"
 "PO-Revision-Date: 2017-09-17 22:05+0300\n"
 "Last-Translator: Николай Смольянинов <smolianinow.colya2016@yandex.ru>\n"
 "Language-Team: Russian\n"
@@ -2897,11 +2897,11 @@ msgstr "Уход в затемнение"
 msgid "Color:"
 msgstr "Цвет:"
 
-#: persistance.py:426
+#: persistance.py:427
 msgid "Building sequence "
 msgstr "Создать последовательность "
 
-#: persistance.py:465
+#: persistance.py:466
 msgid "Loading icons"
 msgstr "Загрузка значков"
 
@@ -6085,6 +6085,10 @@ msgstr " без видеофайла(ов).\n"
 #: proxyediting.py:449
 msgid " proxy file(s).\n"
 msgstr " прокси-файл(ов).\n"
+
+#: proxyediting.py:451
+msgid "There are some issues with proxy render request"
+msgstr ""
 
 #: proxyediting.py:457
 msgid ""

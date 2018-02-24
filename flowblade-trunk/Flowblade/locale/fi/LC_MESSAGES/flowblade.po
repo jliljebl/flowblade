@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-22 14:42+0200\n"
+"POT-Creation-Date: 2018-02-24 17:54+0200\n"
 "PO-Revision-Date: 2011-12-13 23:55+0200\n"
 "Last-Translator: Janne Liljeblad <janne@janne-kx557aa-uuw-a6521-sc>\n"
 "Language-Team: Finnish\n"
@@ -2920,11 +2920,11 @@ msgstr "Häive ulos"
 msgid "Color:"
 msgstr "Väri:"
 
-#: persistance.py:426
+#: persistance.py:427
 msgid "Building sequence "
 msgstr "Rakennetaan ohjelmaa "
 
-#: persistance.py:465
+#: persistance.py:466
 msgid "Loading icons"
 msgstr "Ladataan ikoneita"
 
@@ -6092,6 +6092,10 @@ msgstr " ei-video tiedostolle.\n"
 #: proxyediting.py:449
 msgid " proxy file(s).\n"
 msgstr " proxytiedostolle.\n"
+
+#: proxyediting.py:451
+msgid "There are some issues with proxy render request"
+msgstr ""
 
 #: proxyediting.py:457
 msgid ""

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-22 14:42+0200\n"
+"POT-Creation-Date: 2018-02-24 17:54+0200\n"
 "PO-Revision-Date: 2014-11-23 14:22+0100\n"
 "Last-Translator: Mario Dejanovic <mario.dejanovic@gmx.at>\n"
 "Language-Team: German\n"
@@ -2997,11 +2997,11 @@ msgstr "Ausblenden"
 msgid "Color:"
 msgstr "Farbe:"
 
-#: persistance.py:426
+#: persistance.py:427
 msgid "Building sequence "
 msgstr "Sequenz erstellen "
 
-#: persistance.py:465
+#: persistance.py:466
 msgid "Loading icons"
 msgstr "Lade Symbole"
 
@@ -6312,6 +6312,10 @@ msgstr " Nicht-Video-Datei(en).\n"
 #: proxyediting.py:449
 msgid " proxy file(s).\n"
 msgstr " Proxy-Datei(en).\n"
+
+#: proxyediting.py:451
+msgid "There are some issues with proxy render request"
+msgstr ""
 
 #: proxyediting.py:457
 msgid ""
