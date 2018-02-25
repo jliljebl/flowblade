@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-24 17:54+0200\n"
+"POT-Creation-Date: 2018-02-25 20:05+0200\n"
 "PO-Revision-Date: 2013-09-20 18:54+0200\n"
 "Last-Translator: Loïc Vanderstichelen <lv@loicvanderstichelen.com>\n"
 "Language-Team: French\n"
@@ -7181,6 +7181,15 @@ msgstr "Zone de rendu non définie!"
 msgid ""
 "Unfortunately the webresource containing help information\n"
 "for this application was not found."
+msgstr ""
+
+#: exporting.py:378
+#, fuzzy
+msgid "Sequence is too short"
+msgstr "Jusqu'au poignées du clip:"
+
+#: exporting.py:378
+msgid "Sequence needs to be at least 2 frames long to allow frame export."
 msgstr ""
 
 #: exporting.py:440

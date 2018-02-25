@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flowblade\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-24 17:54+0200\n"
+"POT-Creation-Date: 2018-02-25 20:05+0200\n"
 "PO-Revision-Date: 2017-09-17 22:05+0300\n"
 "Last-Translator: Николай Смольянинов <smolianinow.colya2016@yandex.ru>\n"
 "Language-Team: Russian\n"
@@ -7009,6 +7009,15 @@ msgid ""
 msgstr ""
 "К сожалению, источник веб-страниц, содержащий справочную\n"
 " информацию для этого приложения, не найден."
+
+#: exporting.py:378
+#, fuzzy
+msgid "Sequence is too short"
+msgstr "Слишком короткий клип!"
+
+#: exporting.py:378
+msgid "Sequence needs to be at least 2 frames long to allow frame export."
+msgstr ""
 
 #: exporting.py:440
 msgid "Export Image"

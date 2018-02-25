@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-24 17:54+0200\n"
+"POT-Creation-Date: 2018-02-25 20:05+0200\n"
 "PO-Revision-Date: 2011-12-13 23:55+0200\n"
 "Last-Translator: Janne Liljeblad <janne@janne-kx557aa-uuw-a6521-sc>\n"
 "Language-Team: Finnish\n"
@@ -7012,6 +7012,15 @@ msgstr "Renderöinti alue ei ole määritelty"
 msgid ""
 "Unfortunately the webresource containing help information\n"
 "for this application was not found."
+msgstr ""
+
+#: exporting.py:378
+#, fuzzy
+msgid "Sequence is too short"
+msgstr "Klippi on liian lyhyt!"
+
+#: exporting.py:378
+msgid "Sequence needs to be at least 2 frames long to allow frame export."
 msgstr ""
 
 #: exporting.py:440
