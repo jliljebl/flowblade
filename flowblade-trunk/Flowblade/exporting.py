@@ -375,7 +375,7 @@ class MLTXMLToEDLParse:
 def screenshot_export():
     length = current_sequence().tractor.get_length()
     if length < 2:
-        dialogutils.info_message("Sequence is too short", "Sequence needs to be at least 2 frames long to allow frame export.", None)
+        dialogutils.info_message(_("Sequence is too short"), _("Sequence needs to be at least 2 frames long to allow frame export."), None)
         return
     
     frame = PLAYER().current_frame()
