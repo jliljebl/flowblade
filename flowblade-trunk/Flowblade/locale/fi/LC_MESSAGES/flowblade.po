@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flowblade\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-25 20:14+0200\n"
+"POT-Creation-Date: 2018-03-04 11:43+0200\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -824,7 +824,7 @@ msgid "Quit editing Clip in editor"
 msgstr "Lopeta leikkeen editointi"
 
 #: clipeffectseditor.py:243 panels.py:52 panels.py:97 panels.py:115
-#: translations.py:581 translations.py:609 mlttransitions.py:137
+#: translations.py:582 translations.py:610 mlttransitions.py:137
 #: tools/titler.py:209
 msgid "Add"
 msgstr "Lisää"
@@ -2256,17 +2256,17 @@ msgstr "Leike väri"
 msgid "Default"
 msgstr "oletusvalinta"
 
-#: guicomponents.py:1642 translations.py:500 translations.py:588
+#: guicomponents.py:1642 translations.py:500 translations.py:589
 msgid "Red"
 msgstr "Punainen"
 
-#: guicomponents.py:1643 translations.py:501 translations.py:583
-#: translations.py:589
+#: guicomponents.py:1643 translations.py:501 translations.py:584
+#: translations.py:590
 msgid "Green"
 msgstr "Vihreä"
 
-#: guicomponents.py:1644 translations.py:502 translations.py:584
-#: translations.py:590
+#: guicomponents.py:1644 translations.py:502 translations.py:585
+#: translations.py:591
 msgid "Blue"
 msgstr "Sininen"
 
@@ -2573,7 +2573,7 @@ msgstr "Trimmi näyttö pois päältä"
 msgid "Set Current Clip Frame Match Frame"
 msgstr "Asete valittu ruutu vertailuruuduksi"
 
-#: guicomponents.py:2525 translations.py:578 shortcuts.py:199
+#: guicomponents.py:2525 translations.py:579 shortcuts.py:199
 msgid "Overwrite"
 msgstr "Ylikirjoitus"
 
@@ -2593,7 +2593,7 @@ msgstr "Luisto"
 msgid "Spacer"
 msgstr "Siirto"
 
-#: guicomponents.py:2555 translations.py:562 shortcuts.py:204
+#: guicomponents.py:2555 translations.py:563 shortcuts.py:204
 msgid "Box"
 msgstr ""
 
@@ -3243,7 +3243,7 @@ msgstr "Sävy"
 msgid "Brightness"
 msgstr "Valoisuus"
 
-#: translations.py:177 translations.py:596
+#: translations.py:177 translations.py:597
 msgid "Sepia"
 msgstr "Seepia"
 
@@ -3493,11 +3493,11 @@ msgstr "Liuku leveys"
 msgid "Tilt"
 msgstr "Kallistus"
 
-#: translations.py:255 translations.py:580
+#: translations.py:255 translations.py:581
 msgid "Min"
 msgstr "Min"
 
-#: translations.py:256 translations.py:579
+#: translations.py:256 translations.py:580
 msgid "Max"
 msgstr "Max"
 
@@ -4099,7 +4099,7 @@ msgstr "Val. avar."
 msgid "Operation"
 msgstr "Toiminto"
 
-#: translations.py:470 translations.py:572
+#: translations.py:470 translations.py:573
 msgid "Hard"
 msgstr "Kova"
 
@@ -4123,11 +4123,11 @@ msgstr ""
 msgid "Supress"
 msgstr "Vaimennus"
 
-#: translations.py:476 translations.py:602
+#: translations.py:476 translations.py:603
 msgid "Horizontal"
 msgstr "Vaakasuora"
 
-#: translations.py:477 translations.py:603
+#: translations.py:477 translations.py:604
 msgid "Vertical"
 msgstr "Pystysuora"
 
@@ -4368,203 +4368,207 @@ msgstr "Häive sisään"
 msgid "Wipe Direction"
 msgstr "Linssin korjaus"
 
-#: translations.py:558 translations.py:564
+#: translations.py:555
+msgid "Blend Mode"
+msgstr "Blend moodi"
+
+#: translations.py:559 translations.py:565
 msgid "Shave"
 msgstr "Höylää"
 
-#: translations.py:559
+#: translations.py:560
 msgid "Rectangle"
 msgstr "Suorakulmio"
 
-#: translations.py:560
+#: translations.py:561
 msgid "Ellipse"
 msgstr "Ellipsi"
 
-#: translations.py:561
+#: translations.py:562
 msgid "Triangle"
 msgstr "Kolmio"
 
-#: translations.py:563 translations.py:577
+#: translations.py:564 translations.py:578
 msgid "Diamond"
 msgstr "Vino neliö"
 
-#: translations.py:565
+#: translations.py:566
 msgid "Shrink Hard"
 msgstr "Kutista paljon"
 
-#: translations.py:566
+#: translations.py:567
 msgid "Shrink Soft"
 msgstr "Kutista vähän"
 
-#: translations.py:567
+#: translations.py:568
 msgid "Grow Hard"
 msgstr "Kasvata paljon"
 
-#: translations.py:568
+#: translations.py:569
 msgid "Grow Soft"
 msgstr "Kasvata vähän"
 
-#: translations.py:569
+#: translations.py:570
 msgid "RGB"
 msgstr ""
 
-#: translations.py:570
+#: translations.py:571
 msgid "ABI"
 msgstr ""
 
-#: translations.py:571
+#: translations.py:572
 msgid "HCI"
 msgstr ""
 
-#: translations.py:573
+#: translations.py:574
 msgid "Fat"
 msgstr "Lihava"
 
-#: translations.py:574
+#: translations.py:575
 msgid "Normal"
 msgstr "Normaali"
 
-#: translations.py:575
+#: translations.py:576
 msgid "Skinny"
 msgstr "Laiha"
 
-#: translations.py:576
+#: translations.py:577
 msgid "Ellipsoid"
 msgstr "Ellipsoidi"
 
-#: translations.py:582 mlttransitions.py:154
+#: translations.py:583 mlttransitions.py:154
 msgid "Subtract"
 msgstr "Vähennä"
 
-#: translations.py:585
+#: translations.py:586
 msgid "Sharper"
 msgstr "Terävävämpi"
 
-#: translations.py:586
+#: translations.py:587
 msgid "Fuzzier"
 msgstr "Pehmeämpi"
 
-#: translations.py:587
+#: translations.py:588
 msgid "Luma"
 msgstr "Valoisuus"
 
-#: translations.py:591
+#: translations.py:592
 msgid "Add Constant"
 msgstr "Lisää vakio"
 
-#: translations.py:592
+#: translations.py:593
 msgid "Change Gamma"
 msgstr "Muuta Gammaa"
 
-#: translations.py:593 translations.py:611 mlttransitions.py:149
+#: translations.py:594 translations.py:612 mlttransitions.py:149
 msgid "Multiply"
 msgstr "Kerro"
 
-#: translations.py:594
+#: translations.py:595
 msgid "XPro"
 msgstr ""
 
-#: translations.py:595
+#: translations.py:596
 msgid "OldPhoto"
 msgstr "VanhaValokuva"
 
-#: translations.py:597
+#: translations.py:598
 msgid "Heat"
 msgstr "Lämpökamera"
 
-#: translations.py:598
+#: translations.py:599
 msgid "XRay"
 msgstr "Röntgen"
 
-#: translations.py:599
+#: translations.py:600
 msgid "RedGreen"
 msgstr "VihreäPunainen"
 
-#: translations.py:600
+#: translations.py:601
 msgid "YellowBlue"
 msgstr "KeltaSininen"
 
-#: translations.py:601
+#: translations.py:602
 msgid "Esses"
 msgstr "Esses"
 
-#: translations.py:604
+#: translations.py:605
 msgid "Shadows"
 msgstr "Varjot"
 
-#: translations.py:605
+#: translations.py:606
 msgid "Midtones"
 msgstr "Keskisävyt"
 
-#: translations.py:606
+#: translations.py:607
 msgid "Highlights"
 msgstr "Kirkkaat"
 
-#: translations.py:607
+#: translations.py:608
 msgid "Forward"
 msgstr "Nopeasti eteenpäin"
 
-#: translations.py:608
+#: translations.py:609
 msgid "Backward"
 msgstr "Takaisin nopeammin"
 
-#: translations.py:610
+#: translations.py:611
 msgid "Saturate"
 msgstr "Värikylläisyys"
 
-#: translations.py:612 mlttransitions.py:152
+#: translations.py:613 mlttransitions.py:152
 msgid "Screen"
 msgstr "Näyttö"
 
-#: translations.py:613 mlttransitions.py:150
+#: translations.py:614 mlttransitions.py:150
 msgid "Overlay"
 msgstr "Peite"
 
-#: translations.py:614 mlttransitions.py:140
+#: translations.py:615 mlttransitions.py:140
 msgid "Darken"
 msgstr "Tummenna"
 
-#: translations.py:615 mlttransitions.py:148
+#: translations.py:616 mlttransitions.py:148
 msgid "Lighten"
 msgstr "Vaalenna"
 
-#: translations.py:616
+#: translations.py:617
 msgid "ColorDodge"
 msgstr "Väriväistö"
 
-#: translations.py:617
+#: translations.py:618
 msgid "Colorburn"
 msgstr "Väripoltto"
 
-#: translations.py:618 mlttransitions.py:146
+#: translations.py:619 mlttransitions.py:146
 msgid "Hardlight"
 msgstr "Kova valo"
 
-#: translations.py:619 mlttransitions.py:153
+#: translations.py:620 mlttransitions.py:153
 msgid "Softlight"
 msgstr "Pehmeä valo"
 
-#: translations.py:620 mlttransitions.py:141
+#: translations.py:621 mlttransitions.py:141
 msgid "Difference"
 msgstr "Erotus"
 
-#: translations.py:621
+#: translations.py:622
 msgid "Exclusion"
 msgstr "Ekskluusio"
 
-#: translations.py:622
+#: translations.py:623
 msgid "HSLHue"
 msgstr "HSLSävy"
 
-#: translations.py:623
+#: translations.py:624
 msgid "HSLSaturation"
 msgstr "HSLSaturaatio"
 
-#: translations.py:624
+#: translations.py:625
 msgid "HSLColor"
 msgstr "HSLVäri"
 
-#: translations.py:625
+#: translations.py:626
 msgid "HSLLuminosity"
 msgstr "HSLValoisuus"
 

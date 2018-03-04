@@ -76,7 +76,7 @@ def init_languages():
         lang = gettext.translation(APP_NAME, locale_path, languages=langs, fallback=True)
 
     # Un-comment for translations tests
-    #lang = gettext.translation(APP_NAME, locale_path, languages=["fi"], fallback=True)
+    lang = gettext.translation(APP_NAME, locale_path, languages=["fi"], fallback=True)
 
     lang.install(APP_NAME) # makes _() a build-in available in all modules without imports
 
@@ -552,7 +552,8 @@ def load_filters_translations():
     param_names["Fade Out Length"] = _("Fade Out Length")
     param_names["Fade In Length"] = _("Fade In Length")
     param_names["Wipe Direction"] = _("Wipe Direction")
-
+    param_names["Blend Mode"] = _("Blend Mode")
+    
     # Combo options
     global combo_options
     combo_options["Shave"] = _("Shave")

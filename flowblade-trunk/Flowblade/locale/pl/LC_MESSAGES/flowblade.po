@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-25 20:14+0200\n"
+"POT-Creation-Date: 2018-03-04 11:43+0200\n"
 "PO-Revision-Date: 2017-05-27 08:50+0200\n"
 "Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -834,7 +834,7 @@ msgid "Quit editing Clip in editor"
 msgstr "Zakończ edycję klipu w edytorze"
 
 #: clipeffectseditor.py:243 panels.py:52 panels.py:97 panels.py:115
-#: translations.py:581 translations.py:609 mlttransitions.py:137
+#: translations.py:582 translations.py:610 mlttransitions.py:137
 #: tools/titler.py:209
 msgid "Add"
 msgstr "Dodaj"
@@ -2279,17 +2279,17 @@ msgstr "Kolor klipu"
 msgid "Default"
 msgstr "Domyślny"
 
-#: guicomponents.py:1642 translations.py:500 translations.py:588
+#: guicomponents.py:1642 translations.py:500 translations.py:589
 msgid "Red"
 msgstr "Czerwony"
 
-#: guicomponents.py:1643 translations.py:501 translations.py:583
-#: translations.py:589
+#: guicomponents.py:1643 translations.py:501 translations.py:584
+#: translations.py:590
 msgid "Green"
 msgstr "Zielony"
 
-#: guicomponents.py:1644 translations.py:502 translations.py:584
-#: translations.py:590
+#: guicomponents.py:1644 translations.py:502 translations.py:585
+#: translations.py:591
 msgid "Blue"
 msgstr "Niebieski"
 
@@ -2599,7 +2599,7 @@ msgstr "Wyłącz przycinanie widoku"
 msgid "Set Current Clip Frame Match Frame"
 msgstr "Ustaw dopasowanie klatki do bieżącej klatki klipu"
 
-#: guicomponents.py:2525 translations.py:578 shortcuts.py:199
+#: guicomponents.py:2525 translations.py:579 shortcuts.py:199
 msgid "Overwrite"
 msgstr "Nadpisz"
 
@@ -2619,7 +2619,7 @@ msgstr "Poślizg"
 msgid "Spacer"
 msgstr "Rozpórka"
 
-#: guicomponents.py:2555 translations.py:562 shortcuts.py:204
+#: guicomponents.py:2555 translations.py:563 shortcuts.py:204
 msgid "Box"
 msgstr "Pudełko"
 
@@ -3272,7 +3272,7 @@ msgstr "Odcień"
 msgid "Brightness"
 msgstr "Jaskrawość"
 
-#: translations.py:177 translations.py:596
+#: translations.py:177 translations.py:597
 msgid "Sepia"
 msgstr ""
 
@@ -3522,11 +3522,11 @@ msgstr "Szerokość przejścia"
 msgid "Tilt"
 msgstr "Przechył"
 
-#: translations.py:255 translations.py:580
+#: translations.py:255 translations.py:581
 msgid "Min"
 msgstr ""
 
-#: translations.py:256 translations.py:579
+#: translations.py:256 translations.py:580
 msgid "Max"
 msgstr ""
 
@@ -4128,7 +4128,7 @@ msgstr "Wyb. przestrzeni"
 msgid "Operation"
 msgstr "Operacja"
 
-#: translations.py:470 translations.py:572
+#: translations.py:470 translations.py:573
 msgid "Hard"
 msgstr "Ciężki"
 
@@ -4152,11 +4152,11 @@ msgstr ""
 msgid "Supress"
 msgstr "Tłumienie"
 
-#: translations.py:476 translations.py:602
+#: translations.py:476 translations.py:603
 msgid "Horizontal"
 msgstr "Poziomo"
 
-#: translations.py:477 translations.py:603
+#: translations.py:477 translations.py:604
 msgid "Vertical"
 msgstr "Pionowo"
 
@@ -4395,210 +4395,215 @@ msgstr "Długość płynnego wyłaniania"
 msgid "Wipe Direction"
 msgstr "Korekcja obiektywu"
 
-#: translations.py:558 translations.py:564
+#: translations.py:555
+#, fuzzy
+msgid "Blend Mode"
+msgstr "Typ przenikania"
+
+#: translations.py:559 translations.py:565
 msgid "Shave"
 msgstr "Struganie"
 
-#: translations.py:559
+#: translations.py:560
 msgid "Rectangle"
 msgstr "Prostokąt"
 
-#: translations.py:560
+#: translations.py:561
 msgid "Ellipse"
 msgstr "Elipsa"
 
-#: translations.py:561
+#: translations.py:562
 msgid "Triangle"
 msgstr "Trójkąt"
 
-#: translations.py:563 translations.py:577
+#: translations.py:564 translations.py:578
 msgid "Diamond"
 msgstr "Romb"
 
-#: translations.py:565
+#: translations.py:566
 msgid "Shrink Hard"
 msgstr "Twarde kurczenie"
 
-#: translations.py:566
+#: translations.py:567
 msgid "Shrink Soft"
 msgstr "Miękkie kurczenie"
 
-#: translations.py:567
+#: translations.py:568
 msgid "Grow Hard"
 msgstr "Twarde rośnięcie"
 
-#: translations.py:568
+#: translations.py:569
 msgid "Grow Soft"
 msgstr "Miękkie rośnięcie"
 
-#: translations.py:569
+#: translations.py:570
 msgid "RGB"
 msgstr ""
 
-#: translations.py:570
+#: translations.py:571
 msgid "ABI"
 msgstr ""
 
-#: translations.py:571
+#: translations.py:572
 msgid "HCI"
 msgstr ""
 
-#: translations.py:573
+#: translations.py:574
 msgid "Fat"
 msgstr "Gruby"
 
-#: translations.py:574
+#: translations.py:575
 msgid "Normal"
 msgstr "Normalny"
 
-#: translations.py:575
+#: translations.py:576
 msgid "Skinny"
 msgstr "Chudy"
 
-#: translations.py:576
+#: translations.py:577
 msgid "Ellipsoid"
 msgstr "Elipsoida"
 
-#: translations.py:582 mlttransitions.py:154
+#: translations.py:583 mlttransitions.py:154
 msgid "Subtract"
 msgstr "Odejmij"
 
-#: translations.py:585
+#: translations.py:586
 msgid "Sharper"
 msgstr "Wyostrzanie"
 
-#: translations.py:586
+#: translations.py:587
 msgid "Fuzzier"
 msgstr "Rozmywanie"
 
-#: translations.py:587
+#: translations.py:588
 msgid "Luma"
 msgstr "Luminancja"
 
-#: translations.py:591
+#: translations.py:592
 msgid "Add Constant"
 msgstr "Dodaj stałą"
 
-#: translations.py:592
+#: translations.py:593
 msgid "Change Gamma"
 msgstr "Zmień gamma"
 
-#: translations.py:593 translations.py:611 mlttransitions.py:149
+#: translations.py:594 translations.py:612 mlttransitions.py:149
 msgid "Multiply"
 msgstr "Mnóż"
 
-#: translations.py:594
+#: translations.py:595
 msgid "XPro"
 msgstr ""
 
-#: translations.py:595
+#: translations.py:596
 msgid "OldPhoto"
 msgstr "Stare zdjęcie"
 
-#: translations.py:597
+#: translations.py:598
 msgid "Heat"
 msgstr "Ciepło"
 
-#: translations.py:598
+#: translations.py:599
 msgid "XRay"
 msgstr "Promieniowanie X"
 
-#: translations.py:599
+#: translations.py:600
 msgid "RedGreen"
 msgstr "Czerwony zielony"
 
-#: translations.py:600
+#: translations.py:601
 msgid "YellowBlue"
 msgstr "Żółty niebieki"
 
-#: translations.py:601
+#: translations.py:602
 msgid "Esses"
 msgstr "Esy"
 
-#: translations.py:604
+#: translations.py:605
 msgid "Shadows"
 msgstr "Cienie"
 
-#: translations.py:605
+#: translations.py:606
 msgid "Midtones"
 msgstr "Półtony"
 
-#: translations.py:606
+#: translations.py:607
 msgid "Highlights"
 msgstr "Podświetlenia"
 
-#: translations.py:607
+#: translations.py:608
 #, fuzzy
 msgid "Forward"
 msgstr "Szybciej do przodu"
 
-#: translations.py:608
+#: translations.py:609
 #, fuzzy
 msgid "Backward"
 msgstr "Szybciej do tyłu"
 
-#: translations.py:610
+#: translations.py:611
 #, fuzzy
 msgid "Saturate"
 msgstr "Nasycenie"
 
-#: translations.py:612 mlttransitions.py:152
+#: translations.py:613 mlttransitions.py:152
 msgid "Screen"
 msgstr "Ekran"
 
-#: translations.py:613 mlttransitions.py:150
+#: translations.py:614 mlttransitions.py:150
 msgid "Overlay"
 msgstr "Nakładka"
 
-#: translations.py:614 mlttransitions.py:140
+#: translations.py:615 mlttransitions.py:140
 msgid "Darken"
 msgstr "Ciemniej"
 
-#: translations.py:615 mlttransitions.py:148
+#: translations.py:616 mlttransitions.py:148
 msgid "Lighten"
 msgstr "Jaśniej"
 
-#: translations.py:616
+#: translations.py:617
 #, fuzzy
 msgid "ColorDodge"
 msgstr "Kolor"
 
-#: translations.py:617
+#: translations.py:618
 #, fuzzy
 msgid "Colorburn"
 msgstr "Kolor"
 
-#: translations.py:618 mlttransitions.py:146
+#: translations.py:619 mlttransitions.py:146
 msgid "Hardlight"
 msgstr "Ostre światło"
 
-#: translations.py:619 mlttransitions.py:153
+#: translations.py:620 mlttransitions.py:153
 msgid "Softlight"
 msgstr "Łagodne światło"
 
-#: translations.py:620 mlttransitions.py:141
+#: translations.py:621 mlttransitions.py:141
 msgid "Difference"
 msgstr "Różnica"
 
-#: translations.py:621
+#: translations.py:622
 msgid "Exclusion"
 msgstr ""
 
-#: translations.py:622
+#: translations.py:623
 msgid "HSLHue"
 msgstr ""
 
-#: translations.py:623
+#: translations.py:624
 #, fuzzy
 msgid "HSLSaturation"
 msgstr "Nasycenie"
 
-#: translations.py:624
+#: translations.py:625
 #, fuzzy
 msgid "HSLColor"
 msgstr "Kolor"
 
-#: translations.py:625
+#: translations.py:626
 msgid "HSLLuminosity"
 msgstr ""
 

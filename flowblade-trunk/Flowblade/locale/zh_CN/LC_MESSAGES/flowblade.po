@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-25 20:14+0200\n"
+"POT-Creation-Date: 2018-03-04 11:43+0200\n"
 "PO-Revision-Date: 2017-04-15 18:47+0800\n"
 "Last-Translator: wu <laowudebox@126.com>\n"
 "Language-Team: Language LANGUAGE\n"
@@ -821,7 +821,7 @@ msgid "Quit editing Clip in editor"
 msgstr "从编辑器退出视频切片编辑"
 
 #: clipeffectseditor.py:243 panels.py:52 panels.py:97 panels.py:115
-#: translations.py:581 translations.py:609 mlttransitions.py:137
+#: translations.py:582 translations.py:610 mlttransitions.py:137
 #: tools/titler.py:209
 msgid "Add"
 msgstr "添加"
@@ -2261,17 +2261,17 @@ msgstr "切片色彩"
 msgid "Default"
 msgstr "默认"
 
-#: guicomponents.py:1642 translations.py:500 translations.py:588
+#: guicomponents.py:1642 translations.py:500 translations.py:589
 msgid "Red"
 msgstr "红色"
 
-#: guicomponents.py:1643 translations.py:501 translations.py:583
-#: translations.py:589
+#: guicomponents.py:1643 translations.py:501 translations.py:584
+#: translations.py:590
 msgid "Green"
 msgstr "绿色"
 
-#: guicomponents.py:1644 translations.py:502 translations.py:584
-#: translations.py:590
+#: guicomponents.py:1644 translations.py:502 translations.py:585
+#: translations.py:591
 msgid "Blue"
 msgstr "蓝色"
 
@@ -2581,7 +2581,7 @@ msgstr "修剪查看开关"
 msgid "Set Current Clip Frame Match Frame"
 msgstr "设置与当前切片帧相匹配的帧"
 
-#: guicomponents.py:2525 translations.py:578 shortcuts.py:199
+#: guicomponents.py:2525 translations.py:579 shortcuts.py:199
 msgid "Overwrite"
 msgstr "覆盖"
 
@@ -2601,7 +2601,7 @@ msgstr "滑动"
 msgid "Spacer"
 msgstr "间隔"
 
-#: guicomponents.py:2555 translations.py:562 shortcuts.py:204
+#: guicomponents.py:2555 translations.py:563 shortcuts.py:204
 msgid "Box"
 msgstr "盒子"
 
@@ -3252,7 +3252,7 @@ msgstr "色调"
 msgid "Brightness"
 msgstr "亮度"
 
-#: translations.py:177 translations.py:596
+#: translations.py:177 translations.py:597
 msgid "Sepia"
 msgstr "颜料"
 
@@ -3502,11 +3502,11 @@ msgstr "梯度宽度"
 msgid "Tilt"
 msgstr "倾斜"
 
-#: translations.py:255 translations.py:580
+#: translations.py:255 translations.py:581
 msgid "Min"
 msgstr "最小化"
 
-#: translations.py:256 translations.py:579
+#: translations.py:256 translations.py:580
 msgid "Max"
 msgstr "最大化"
 
@@ -4108,7 +4108,7 @@ msgstr "Sel. Space"
 msgid "Operation"
 msgstr "操作"
 
-#: translations.py:470 translations.py:572
+#: translations.py:470 translations.py:573
 msgid "Hard"
 msgstr "坚硬的"
 
@@ -4132,11 +4132,11 @@ msgstr "B/I/I"
 msgid "Supress"
 msgstr "抑制"
 
-#: translations.py:476 translations.py:602
+#: translations.py:476 translations.py:603
 msgid "Horizontal"
 msgstr "水平的"
 
-#: translations.py:477 translations.py:603
+#: translations.py:477 translations.py:604
 msgid "Vertical"
 msgstr "垂直的"
 
@@ -4375,210 +4375,215 @@ msgstr "淡入"
 msgid "Wipe Direction"
 msgstr "镜头校正"
 
-#: translations.py:558 translations.py:564
+#: translations.py:555
+#, fuzzy
+msgid "Blend Mode"
+msgstr "混合型"
+
+#: translations.py:559 translations.py:565
 msgid "Shave"
 msgstr "修面"
 
-#: translations.py:559
+#: translations.py:560
 msgid "Rectangle"
 msgstr "矩形"
 
-#: translations.py:560
+#: translations.py:561
 msgid "Ellipse"
 msgstr "椭圆"
 
-#: translations.py:561
+#: translations.py:562
 msgid "Triangle"
 msgstr "三角形"
 
-#: translations.py:563 translations.py:577
+#: translations.py:564 translations.py:578
 msgid "Diamond"
 msgstr "菱形"
 
-#: translations.py:565
+#: translations.py:566
 msgid "Shrink Hard"
 msgstr "收缩硬"
 
-#: translations.py:566
+#: translations.py:567
 msgid "Shrink Soft"
 msgstr "收缩软"
 
-#: translations.py:567
+#: translations.py:568
 msgid "Grow Hard"
 msgstr "变硬"
 
-#: translations.py:568
+#: translations.py:569
 msgid "Grow Soft"
 msgstr "变软"
 
-#: translations.py:569
+#: translations.py:570
 msgid "RGB"
 msgstr "RGB"
 
-#: translations.py:570
+#: translations.py:571
 msgid "ABI"
 msgstr "ABI"
 
-#: translations.py:571
+#: translations.py:572
 msgid "HCI"
 msgstr "HCI"
 
-#: translations.py:573
+#: translations.py:574
 msgid "Fat"
 msgstr "厚的"
 
-#: translations.py:574
+#: translations.py:575
 msgid "Normal"
 msgstr "正常"
 
-#: translations.py:575
+#: translations.py:576
 msgid "Skinny"
 msgstr "极瘦的"
 
-#: translations.py:576
+#: translations.py:577
 msgid "Ellipsoid"
 msgstr "椭球"
 
-#: translations.py:582 mlttransitions.py:154
+#: translations.py:583 mlttransitions.py:154
 msgid "Subtract"
 msgstr "减去"
 
-#: translations.py:585
+#: translations.py:586
 msgid "Sharper"
 msgstr "锋利的"
 
-#: translations.py:586
+#: translations.py:587
 msgid "Fuzzier"
 msgstr "模糊的"
 
-#: translations.py:587
+#: translations.py:588
 msgid "Luma"
 msgstr "亮度"
 
-#: translations.py:591
+#: translations.py:592
 msgid "Add Constant"
 msgstr "添加常数"
 
-#: translations.py:592
+#: translations.py:593
 msgid "Change Gamma"
 msgstr "改变Gamma"
 
-#: translations.py:593 translations.py:611 mlttransitions.py:149
+#: translations.py:594 translations.py:612 mlttransitions.py:149
 msgid "Multiply"
 msgstr "乘以"
 
-#: translations.py:594
+#: translations.py:595
 msgid "XPro"
 msgstr "XPro"
 
-#: translations.py:595
+#: translations.py:596
 msgid "OldPhoto"
 msgstr "老照片"
 
-#: translations.py:597
+#: translations.py:598
 msgid "Heat"
 msgstr "激烈"
 
-#: translations.py:598
+#: translations.py:599
 msgid "XRay"
 msgstr "X射线"
 
-#: translations.py:599
+#: translations.py:600
 msgid "RedGreen"
 msgstr "红绿"
 
-#: translations.py:600
+#: translations.py:601
 msgid "YellowBlue"
 msgstr "黄蓝"
 
-#: translations.py:601
+#: translations.py:602
 msgid "Esses"
 msgstr "Esses"
 
-#: translations.py:604
+#: translations.py:605
 msgid "Shadows"
 msgstr "阴影"
 
-#: translations.py:605
+#: translations.py:606
 msgid "Midtones"
 msgstr "中间色调"
 
-#: translations.py:606
+#: translations.py:607
 msgid "Highlights"
 msgstr "亮点"
 
-#: translations.py:607
+#: translations.py:608
 #, fuzzy
 msgid "Forward"
 msgstr "快进"
 
-#: translations.py:608
+#: translations.py:609
 #, fuzzy
 msgid "Backward"
 msgstr "快退"
 
-#: translations.py:610
+#: translations.py:611
 #, fuzzy
 msgid "Saturate"
 msgstr "饱和"
 
-#: translations.py:612 mlttransitions.py:152
+#: translations.py:613 mlttransitions.py:152
 msgid "Screen"
 msgstr "屏幕"
 
-#: translations.py:613 mlttransitions.py:150
+#: translations.py:614 mlttransitions.py:150
 msgid "Overlay"
 msgstr "覆盖"
 
-#: translations.py:614 mlttransitions.py:140
+#: translations.py:615 mlttransitions.py:140
 msgid "Darken"
 msgstr "变暗"
 
-#: translations.py:615 mlttransitions.py:148
+#: translations.py:616 mlttransitions.py:148
 msgid "Lighten"
 msgstr "点亮"
 
-#: translations.py:616
+#: translations.py:617
 #, fuzzy
 msgid "ColorDodge"
 msgstr "色彩"
 
-#: translations.py:617
+#: translations.py:618
 #, fuzzy
 msgid "Colorburn"
 msgstr "色彩"
 
-#: translations.py:618 mlttransitions.py:146
+#: translations.py:619 mlttransitions.py:146
 msgid "Hardlight"
 msgstr "强光灯"
 
-#: translations.py:619 mlttransitions.py:153
+#: translations.py:620 mlttransitions.py:153
 msgid "Softlight"
 msgstr "柔光"
 
-#: translations.py:620 mlttransitions.py:141
+#: translations.py:621 mlttransitions.py:141
 msgid "Difference"
 msgstr "差异"
 
-#: translations.py:621
+#: translations.py:622
 msgid "Exclusion"
 msgstr ""
 
-#: translations.py:622
+#: translations.py:623
 msgid "HSLHue"
 msgstr ""
 
-#: translations.py:623
+#: translations.py:624
 #, fuzzy
 msgid "HSLSaturation"
 msgstr "饱和"
 
-#: translations.py:624
+#: translations.py:625
 #, fuzzy
 msgid "HSLColor"
 msgstr "色彩"
 
-#: translations.py:625
+#: translations.py:626
 msgid "HSLLuminosity"
 msgstr ""
 
