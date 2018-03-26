@@ -1336,6 +1336,7 @@ def display_compositor_popup_menu(event, compositor, callback):
     autofollow_item.set_label(_("Obey Auto Follow"))
     autofollow_item.set_active(compositor.obey_autofollow)
     autofollow_item.connect("activate", callback, ("set auto follow", compositor))
+    autofollow_item.set_sensitive(editorstate.auto_follow_active())
     autofollow_item.show()
 
     compositor_menu.append(autofollow_item)

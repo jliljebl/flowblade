@@ -254,11 +254,12 @@ def clear_trim_clip_cache():
     global _trim_clips_cache
     _trim_clips_cache = {}
 
-def get_sdl_version():
+"""
+def get_sdl_version(): # This ain't true anymore, 6.6.0 has both available
     if mlt_version_is_equal_or_greater_correct("6.4.2") == True:
         return SDL_2
     else:
         return SDL_1
-    
+"""
         
          
