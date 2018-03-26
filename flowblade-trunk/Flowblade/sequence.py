@@ -232,7 +232,7 @@ class Sequence:
         # Mix all audio to track 1 by combining them one after another 
         # using an always active field transition.
         if ((new_track.id > AUDIO_MIX_DOWN_TRACK) # black bg or track1 it's self does not need to be mixed
-            and (is_hidden == False)): # We actually do want hidden track to cover all audio below, which happens if it is not mixed.
+            and (is_hidden == False)): # We actually do want the hidden track to cover all audio below, which happens if it is not mixed.
             self._mix_audio_for_track(new_track)
         
         # Add method that returns track name
@@ -767,12 +767,15 @@ class Sequence:
             track.set("hide", 3)
     
     def _unmute_editable(self):
-        for i in range(1, len(self.tracks) - 1):
-            track = self.tracks[i]
-            track.set("hide", int(track.mute_state))
+        self.set_tracks_mute_state() # same thing
     
     def set_tracks_mute_state(self):
-        self._unmute_editable() # same thing, this method exists to declare purpose
+        # This only applied to editable tracks on project load
+        for i in range(1, len(self.tracks) - 1):
+            self.set_track_mute_state(i, self.tracks[i].mute_state)
+        
+        self.tracks[0].set("hide", 0) # Black bg track
+        self.tracks[-1].set("hide", 0) # Hidden track
         
     def set_output_mode(self, mode):
         if self.outputfilter != None:
@@ -984,8 +987,23 @@ class Sequence:
     def set_track_mute_state(self, track_index, mute_state):
         track = self.tracks[track_index]
         track.mute_state = mute_state
-        track.set("hide", int(track.mute_state))
-
+            
+        if mute_state == 2: # TRACK_MUTE_AUDIO
+            if track.id < self.first_video_index:
+                # Audio tracks
+                track.set("hide", 1)
+                track.gain_filter.set("gain", str(0))
+            else:
+                # Video tracks
+                track.set("hide", 0)
+                track.gain_filter.set("gain", str(0))
+        elif mute_state == 3: # TRACK_MUTE_ALL
+            track.set("hide", 1)
+            track.gain_filter.set("gain", str(0))
+        else: # TRACK_MUTE_NOTHING, TRACK_MUTE_VIDEO
+            track.set("hide", int(track.mute_state))
+            track.gain_filter.set("gain", str(track.audio_gain))
+            
     def drop_audio_levels(self):
         for i in range(1, len(self.tracks)):
             clips = self.tracks[i].clips

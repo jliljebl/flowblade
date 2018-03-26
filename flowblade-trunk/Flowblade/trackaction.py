@@ -23,6 +23,7 @@ This module handles track actions; mute, change active state, size change.
 """
 
 import appconsts
+import audiomonitoring
 import dialogutils
 import gui
 import guicomponents
@@ -85,7 +86,7 @@ def set_track_small_height(track_index):
     updater.repaint_tline()
     
 def mute_track(track, new_mute_state):
-    # NOTE: THIS IS A SAVED EDIT OF SEQUENCE, BUT IS NOT AN UNDOABLE EDIT
+    # NOTE: THIS IS A SAVED EDIT OF SEQUENCE, BUT IT IS NOT AN UNDOABLE EDIT.
     current_sequence().set_track_mute_state(track.id, new_mute_state)
     gui.tline_column.widget.queue_draw()
     
@@ -242,6 +243,8 @@ def track_center_pressed(data):
                     return 
             # Update track mute state
             current_sequence().set_track_mute_state(track.id, new_mute_state)
+            
+            audiomonitoring.update_mute_states()
             gui.tline_column.widget.queue_draw()
     
     if data.event.button == 3:

@@ -45,7 +45,7 @@ CLIP_END_DRAG = 11
 SELECT_TLINE_SYNC_CLIP = 12
 
 
-# SDL version based on MLT version
+# SDL version (Not used currently)
 SDL_1 = 1
 SDL_2 = 2
 

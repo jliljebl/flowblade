@@ -149,7 +149,7 @@ def main(root_path):
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
 
-    print "SDL version:", str(editorstate.get_sdl_version())
+    #print "SDL version:", str(editorstate.get_sdl_version())
     
     # passing -xdg as a flag will change the user_dir location with XDG_CONFIG_HOME
     # For full xdg-app support all the launch processes need to add this too, currently not impl.
