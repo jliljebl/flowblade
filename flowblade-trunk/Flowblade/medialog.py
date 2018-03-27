@@ -96,7 +96,7 @@ def clips_drop(clips):
                                         clip.clip_out,
                                         clip.name,
                                         clip.path)
-            log_event.tll = clip.ttl
+            log_event.ttl = clip.ttl
             editorstate.PROJECT().media_log.append(log_event)
     _update_list_view(log_event)
     
@@ -138,7 +138,7 @@ def log_range_clicked():
                                 media_file.mark_out,
                                 media_file.name,
                                 media_file.path)
-    log_event.tll = media_file.ttl
+    log_event.ttl = media_file.ttl
 
     editorstate.PROJECT().media_log.append(log_event)
     editorstate.PROJECT().add_to_group(_get_current_group_index(), [log_event])
