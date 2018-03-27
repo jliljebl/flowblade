@@ -450,7 +450,7 @@ def get_rendered_transition_tractor(current_sequence,
     
     # New from clip
     if orig_from.media_type != appconsts.PATTERN_PRODUCER:
-        from_clip = current_sequence.create_file_producer_clip(orig_from.path)# File producer
+        from_clip = current_sequence.create_file_producer_clip(orig_from.path, None, False, orig_from.ttl)# File producer
     else:
         from_clip = current_sequence.create_pattern_producer(orig_from.create_data) # pattern producer
     current_sequence.clone_clip_and_filters(orig_from, from_clip)
@@ -458,7 +458,7 @@ def get_rendered_transition_tractor(current_sequence,
     # New to clip
     if not(transition_type == RENDERED_FADE_IN or transition_type == RENDERED_FADE_OUT): # fades to not use to_clip
         if orig_to.media_type != appconsts.PATTERN_PRODUCER:
-            to_clip = current_sequence.create_file_producer_clip(orig_to.path)# File producer
+            to_clip = current_sequence.create_file_producer_clip(orig_to.path, None, False, orig_to.ttl)# File producer
         else:
             to_clip = current_sequence.create_pattern_producer(orig_to.create_data) # pattern producer
         current_sequence.clone_clip_and_filters(orig_to, to_clip)

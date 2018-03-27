@@ -482,9 +482,9 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
    
     # Set interactive trimview on hidden track
     if clip.media_type != appconsts.PATTERN_PRODUCER:
-        current_sequence().display_trim_clip(clip.path, clip_start) # file producer
+        current_sequence().display_trim_clip(clip.path, clip_start, None, clip.ttl) # file producer
     else:
-        current_sequence().display_trim_clip(None, clip_start, clip.create_data) # pattern producer
+        current_sequence().display_trim_clip(None, clip_start, clip.create_data, None) # pattern producer
 
     PLAYER().seek_frame(edit_frame)
     return True
@@ -978,9 +978,9 @@ def set_tworoll_mode(track, current_frame = -1):
 
     # Set interactive trim view clip on hidden track
     if clip.media_type != appconsts.PATTERN_PRODUCER:
-        current_sequence().display_trim_clip(clip.path, clip_start) # File producer
+        current_sequence().display_trim_clip(clip.path, clip_start, None, clip.ttl) # File producer
     else:
-        current_sequence().display_trim_clip(None, clip_start, clip.create_data) # pattern producer
+        current_sequence().display_trim_clip(None, clip_start, clip.create_data, None) # pattern producer
         
     PLAYER().seek_frame(edit_frame)
     updater.repaint_tline()
@@ -1247,9 +1247,9 @@ def set_slide_mode(track, current_frame):
 
     # Set interactive trim view clip on hidden track
     if clip.media_type != appconsts.PATTERN_PRODUCER:
-        current_sequence().display_trim_clip(clip.path, clip_start) # File producer
+        current_sequence().display_trim_clip(clip.path, clip_start, None, clip.ttl) # File producer
     else:
-        current_sequence().display_trim_clip(None, clip_start, clip.create_data) # pattern producer
+        current_sequence().display_trim_clip(None, clip_start, clip.create_data, None) # pattern producer
         
     if start_frame_being_viewed:
         PLAYER().seek_frame(clip.clip_in)

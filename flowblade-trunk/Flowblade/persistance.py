@@ -457,7 +457,10 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
         # This attr was added for 1.8. It is not computed for older projects.
         if (not hasattr(media_file, "info")):
             media_file.info = None
-    
+        # We need this in all media files, used only by img seq media
+        if not hasattr(media_file, "ttl"):
+            media_file.ttl = None
+                
     if(not hasattr(project, "update_media_lengths_on_load")):
         project.update_media_lengths_on_load = True # old projects < 1.10 had wrong media length data which just was never used.
                                                     # 1.10 needed that data for the first time and required recreating it correctly for older projects
@@ -567,6 +570,10 @@ def fill_track_mlt(mlt_track, py_track):
         if not hasattr(clip, "markers"):
             clip.markers = []
 
+        # Add img seq ttl value for all clips if not found, we need this present in every clip so we test for 'clip.ttl == None' to get stuff working
+        if not hasattr(clip, "ttl"):
+            clip.ttl = None
+            
         # normal clip
         if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
             orig_path = clip.path # Save the path for error message
@@ -576,7 +583,8 @@ def fill_track_mlt(mlt_track, py_track):
             else:
                 clip.path = get_img_seq_media_path(clip.path, _load_file_path)
                 
-            mlt_clip = sequence.create_file_producer_clip(clip.path)
+            mlt_clip = sequence.create_file_producer_clip(clip.path, None, False, clip.ttl)
+            
             if mlt_clip == None:
                 raise FileProducerNotFoundError(orig_path)
             mlt_clip.__dict__.update(clip.__dict__)

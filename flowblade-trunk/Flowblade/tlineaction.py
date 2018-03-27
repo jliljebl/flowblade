@@ -85,7 +85,7 @@ def _get_new_clip_from_clip_monitor():
         return None
     
     if MONITOR_MEDIA_FILE().type != appconsts.PATTERN_PRODUCER:
-        new_clip = current_sequence().create_file_producer_clip(MONITOR_MEDIA_FILE().path)
+        new_clip = current_sequence().create_file_producer_clip(MONITOR_MEDIA_FILE().path, None, False, MONITOR_MEDIA_FILE().ttl)
     else:
         new_clip = current_sequence().create_pattern_producer(MONITOR_MEDIA_FILE())
         

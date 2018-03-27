@@ -350,7 +350,11 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     # Create and display clip on hidden track
     if MONITOR_MEDIA_FILE().type == appconsts.PATTERN_PRODUCER or MONITOR_MEDIA_FILE().type == appconsts.IMAGE_SEQUENCE:
         # pattern producer or image sequence
-        clip_producer = current_sequence().display_monitor_clip(None, MONITOR_MEDIA_FILE())
+        if MONITOR_MEDIA_FILE().type == appconsts.PATTERN_PRODUCER:
+            ttl = None
+        else:
+            ttl =  MONITOR_MEDIA_FILE().ttl
+        clip_producer = current_sequence().display_monitor_clip(None, MONITOR_MEDIA_FILE(), ttl)
     else:
         # File producers
         clip_producer = current_sequence().display_monitor_clip(MONITOR_MEDIA_FILE().path)

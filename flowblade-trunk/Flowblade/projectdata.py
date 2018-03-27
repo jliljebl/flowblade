@@ -113,10 +113,12 @@ class Project:
         thumbnailer = Thumbnailer()
         thumbnailer.set_context(self.profile)
 
-    def add_image_sequence_media_object(self, resource_path, name, length):
+    def add_image_sequence_media_object(self, resource_path, name, length, ttl):
+        print resource_path
         media_object = self.add_media_file(resource_path)
         media_object.length = length
         media_object.name = name
+        media_object.ttl = ttl
 
     def add_media_file(self, file_path, compound_clip_name=None):
         """
@@ -149,6 +151,7 @@ class Project:
         # Create media file object
         media_object = MediaFile(self.next_media_file_id, file_path, 
                                  clip_name, media_type, length, icon_path, info)
+        media_object.ttl = None
 
         self._add_media_object(media_object)
         

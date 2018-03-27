@@ -173,7 +173,7 @@ def _remove_all_trailing_blanks(self=None):
 
 def _create_clip_clone(clip):
     if clip.media_type != appconsts.PATTERN_PRODUCER:
-        new_clip = current_sequence().create_file_producer_clip(clip.path)
+        new_clip = current_sequence().create_file_producer_clip(clip.path, None, False, clip.ttl)
     else:
         new_clip = current_sequence().create_pattern_producer(clip.create_data)
     new_clip.name = clip.name

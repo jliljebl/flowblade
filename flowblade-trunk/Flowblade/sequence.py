@@ -380,11 +380,11 @@ class Sequence:
         return True
 
     # -------------------------------------------------- clips
-    def create_file_producer_clip(self, path, new_clip_name=None, novalidate=False):
+    def create_file_producer_clip(self, path, new_clip_name=None, novalidate=False, ttl=None):
         """
         Creates MLT Producer and adds attributes to it, but does 
         not add it to track/playlist object.
-        """
+        """        
         producer = mlt.Producer(self.profile, str(path)) # this runs 0.5s+ on some clips
         if novalidate == True:
             producer.set("mlt_service", "avformat-novalidate")
@@ -398,12 +398,18 @@ class Sequence:
         if new_clip_name != None:
             producer.name = new_clip_name
         producer.media_type = get_media_type(path)
+
         if producer.media_type == FILE_DOES_NOT_EXIST:
             print "file does not exist"
             return None
 
         self.add_clip_attr(producer)
         
+        # Img seq ttl value
+        producer.ttl = ttl
+        if ttl != None:
+            producer.set("ttl", int(ttl))
+
         return producer
 
     def create_slowmotion_producer(self, path, speed):
@@ -437,7 +443,7 @@ class Sequence:
         return clip
 
     def create_rendered_transition_clip(self, path, rendered_type):
-        clip = self.create_file_producer_clip(path)
+        clip = self.create_file_producer_clip(path) # this can't have ttl so we can use simpler constructor
         clip.rendered_type = rendered_type
         return clip
     
@@ -466,7 +472,7 @@ class Sequence:
 
     def create_clone_clip(self, clip):
         if clip.media_type != appconsts.PATTERN_PRODUCER:
-            clone_clip = self.create_file_producer_clip(clip.path) # file producer
+            clone_clip = self.create_file_producer_clip(clip.path, None, False, clip.ttl) # file producer
         else:
             clone_clip = self.create_pattern_producer(clip.create_data) # pattern producer
         self.clone_clip_and_filters(clip, clone_clip)
@@ -642,7 +648,7 @@ class Sequence:
         return track_compositors
             
     # -------------------------- monitor clip, trimming display, output mode and hidden track
-    def display_monitor_clip(self, path, pattern_producer_data=None):
+    def display_monitor_clip(self, path, pattern_producer_data=None, ttl=None):
         """
         Adds media clip to hidden track for viewing and for setting mark
         in and mark out points.
@@ -650,10 +656,10 @@ class Sequence:
         """
         track = self.tracks[-1] # Always last track
         if pattern_producer_data == None:
-            self.monitor_clip = self.create_file_producer_clip(path)
+            self.monitor_clip = self.create_file_producer_clip(path, None, False, ttl)
         else:
             if pattern_producer_data.type == IMAGE_SEQUENCE:
-                self.monitor_clip = self.create_file_producer_clip(pattern_producer_data.path)
+                self.monitor_clip = self.create_file_producer_clip(pattern_producer_data.path, None, False, ttl)
             else:
                 self.monitor_clip = self.create_pattern_producer(pattern_producer_data)
         
@@ -662,7 +668,7 @@ class Sequence:
         self._mute_editable()
         return self.monitor_clip
 
-    def display_trim_clip(self, path, clip_start_pos, patter_producer_data=None):
+    def display_trim_clip(self, path, clip_start_pos, patter_producer_data=None, ttl=None):
         """
         Adds clip to hidden track for trim editing display.
         """
