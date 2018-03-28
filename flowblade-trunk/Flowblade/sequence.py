@@ -681,7 +681,7 @@ class Sequence:
         if path != None:
             clip = editorstate.get_cached_trim_clip(path)
             if clip == None:
-                clip = self.create_file_producer_clip(path, None, True)
+                clip = self.create_file_producer_clip(path, None, True, ttl)
                 editorstate.add_cached_trim_clip(clip)
     
             if clip_start_pos > 0:
