@@ -90,7 +90,7 @@ class MediaLogEvent:
 # ----------------------------------------------------------- dnd drop
 def clips_drop(clips):
     for clip in clips:
-        if clip.media_type == appconsts.VIDEO or clip.media_type == appconsts.AUDIO:
+        if clip.media_type == appconsts.VIDEO or clip.media_type == appconsts.AUDIO or clip.media_type == appconsts.IMAGE_SEQUENCE:
             log_event = MediaLogEvent(  appconsts.MEDIA_LOG_MARKS_SET,
                                         clip.clip_in,
                                         clip.clip_out,
