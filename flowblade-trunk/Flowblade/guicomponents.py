@@ -1155,12 +1155,16 @@ def display_clip_popup_menu(event, clip, track, callback):
         _add_separetor(clip_menu)
         
     if track.type == appconsts.VIDEO:
-
+        active = True
+        if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
+            active = False
         clip_menu.add(_get_menu_item(_("Split Audio"), callback,\
-                      (clip, track, "split_audio", event.x), True))
+                      (clip, track, "split_audio", event.x), active))
         if track.id == current_sequence().first_video_index:
             active = True
         else:
+            active = False
+        if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
             active = False
         clip_menu.add(_get_menu_item(_("Split Audio Synched"), callback,\
               (clip, track, "split_audio_synched", event.x), active))
@@ -1178,6 +1182,9 @@ def display_clip_popup_menu(event, clip, track, callback):
     audio_sync_item = _get_menu_item(_("Select Clip to Audio Sync With..."), callback, (clip, track, "set_audio_sync_clip", event.x))
     if utils.is_mlt_xml_file(clip.path) == True:
         audio_sync_item.set_sensitive(False)
+    if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
+        audio_sync_item.set_sensitive(False)
+ 
     clip_menu.add(audio_sync_item)
             
     _add_separetor(clip_menu)
