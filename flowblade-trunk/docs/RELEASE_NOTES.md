@@ -18,9 +18,9 @@ This is the biggest user visible change. Previously tool cursors didn't react in
 
 This feature was so far avoided by design based on the fact that it requires quite precise mouse positioning to initiate desired edits and larger target areas are easier and quicker to hit.
 
-However, it has become clear that users prefer context sensitive tool cursors, the main evidence being that almost every other edit program has them, so this was now addewd to Flowblade. This will probably help beginner users more easily to get going  with Flowblade.
+However, it has become clear that users prefer context sensitive tool cursors, the main evidence being that almost every other edit program has them, so this was now added to Flowblade. This will probably help beginner users more easily to get going with Flowblade.
 
-the feature in on by default, but can be disabled to return to previous behaviour.
+The feature in on by default, but can be disabled to return to previous behaviour.
 
 ### Tool cursors GUI update ###
 Tool cursors appearance got an update as part of the timeline sensitivity work. The biggest change was to Overwrite tool cursor, it is now otherwise the same as the Insert cursor, except that it is red.
@@ -47,7 +47,7 @@ Users can now add markers to clips, before markers could only be added to timeli
 
 **Timewarp producer** is used if available to **have sound on forward slow/fast motion clips.**
 
-**Compositors and Effects** can now save and load parameter values.
+**Compositors and Effects** can now save and load their parameter values.
 
 ### Flatpak ###
 Github user *eszlari* created a Flowblade 1.14 Flatpak which is already available on Flathub. Version 1.16 is coming there too in the coming weeks. We will post info on Google+ on that when it is done.
