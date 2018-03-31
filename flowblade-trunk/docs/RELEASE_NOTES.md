@@ -1,5 +1,90 @@
 # Release Notes #
 
+
+
+## Flowblade 1.16 ##
+
+Date: March 31, 2018
+
+**Flowblade 1.16** is the sixteenth release of Flowblade. This cycle we mostly had improvements, refinements and bug fixes building on existing features. A lot of time was spend on developing new video display code, but we didn't get any results there yet. Work on that front will continue, we have some issues that need to resolved eventually and the currently used technology is slowly on its way out.
+
+### Tool cursor timeline sensitivity ### 
+
+This is the biggest user visible change. Previously tool cursors didn't react in any way to the timeline contents, now they change appearence on appropriate positions to signal that some different edit actions are available.
+
+  * With **Insert tool** and **Overwite tool** the cursor now changes on clip and Compositor ends to indicate that the user can drag the ends to lengthen or shorten the clips or Compositors. On top of Compositors cursor changes to indicate that Compositor can be dragged to a new position.
+  * **Trim tool** now changes appearance to indicate which end of clip will be trimmed if Mouse Left is pressed and held.
+  * **Box tool** now changes when entering selected box to indicate that box contents can be dragged sideways.
+
+This feature was so far avoided by design based on the fact that it requires quite precise mouse positioning to initiate desired edits and larger target areas are easier and quicker to hit.
+
+However, it has become clear that users prefer context sensitive tool cursors, the main evidence being that almost every other edit program has them, so this was now addewd to Flowblade. This will probably help beginner users more easily to get going  with Flowblade.
+
+the feature in on by default, but can be disabled to return to previous behaviour.
+
+### Tool cursors GUI update ###
+Tool cursors appearance got an update as part of the timeline sensitivity work. The biggest change was to Overwrite tool cursor, it is now otherwise the same as the Insert cursor, except that it is red.
+
+### Compositor auto follow ###
+It is now possible to set Compositors to automatically to follow their origin clips as clips are moved or trimmed. It is possible to set individual clips to remain manually editable even if auto follow is set on. This feature can flexibly offer good sides of both clip embedded Compositors and free flowing Compositors.
+
+This mode is off by default and needs to activated from track popup menu.
+
+### Re-rendering rendered transitions ###
+Rendered transitions can now be re-rendered e.g. when the clips that were used to render the transition have had new filters added. 
+
+It is also possible to batch re-render all rendered transitions. This is useful e.g. after leaving proxy mode before doing final render as in proxymode rendered transitions are rendered from proxy clips, and therefore are of worse quality then rendered transitions created from original media.
+
+### Clip markers ###
+Users can now add markers to clips, before markers could only be added to timeline positions.
+
+### Some notable updates ###
+**Luma Wipe** can now be made to run in reverse directions, earlier it could only be made alpha inverted.
+
+**A 'Playback' panel** was added to Preferences dialog keep item count per panel low enough for quick discovery.
+
+**G'MIC Effects tool** now works with G'MIC version 2.
+
+**Timewarp producer** is used if available to **have sound on forward slow/fast motion clips.**
+
+**Compositors and Effects** can now save and load parameter values.
+
+### Flatpak ###
+Github user *eszlari* created a Flowblade 1.14 Flatpak which is already available on Flathub. Version 1.16 is coming there too in the coming weeks. We will post info on Google+ on that when it is done.
+
+### Contributions ###
+
+*atomicfile.py* module was added by *ratherlargerobot* to make saving data more robust.
+
+Николай Смольянинов provided a series of reports on missing translations strings, the coverage should now be close to 100%.
+
+### Future directions ###
+The focus areas of next release will be animations, masks and compositing. So far the focus has squarly been on Flowblade as an editing tool, but now we will look for ways to expand application's feature set in this direction.
+
+There are a number of approaches that can be tried here, and it is difficult beforehand to predict which will work out, so we will basically try everything and see how things turn out. The translations workflow update will deinately come too.
+
+We will keep the 6 month release cycle, so next release will be sometime in the autumn.
+
+
+### Other bugfixes and improvements ###
+
+  * Remove all prints with possible non-latin characters from save/load
+  * Fix Issue #478, crash on small screens
+  * Add info on rerendering proxies when in proxy mode telling user to change to original mode, issue #435
+  * Show some info on alpha filters add to help users understand that they need to add compositor too
+  * Make some missing blend modes available for translation, fix #461
+  * Fix Issue #465, rendering frame sequences with PNG codec
+  * Fix crash on media item double click, Issue #466
+  * Fix small screen regression caused by new fade buttons, Issue #467
+  * Fix Issue #436 with ruler marks in 23.98 and fractional framerates
+  * Fix Issue #456 with batchrendering and unicode
+  * Add audio sync error infos to translations
+  * Fix #483, frames per image in image sequences
+  * Fix audio muting bug #362
+  * Make selected blanks stand out better
+  * Make active keyframes stand out better
+  * Remove all prints with possible non-latin characters from save/load to fix possible issues
+  
 ## Flowblade 1.14 ##
 
 Date: October 4, 2017
