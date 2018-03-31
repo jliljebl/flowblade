@@ -1,7 +1,7 @@
 
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
-**New version 1.18 available [Installing](./flowblade-trunk/docs/INSTALLING.md), [Release notes](./flowblade-trunk/docs/RELEASE_NOTES.md)**
+**New version 1.16 available, [Installing](./flowblade-trunk/docs/INSTALLING.md), [Release notes](./flowblade-trunk/docs/RELEASE_NOTES.md).**
 
 **Updating to MLT 6.6.0 from 6.5.0 version fixes startup crashes, [more info](./flowblade-trunk/docs/SDL_2_AND_MLT_6_6_0.md).**
 
