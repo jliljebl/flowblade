@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-21 18:05+0200\n"
+"POT-Creation-Date: 2018-03-31 17:55+0300\n"
 "PO-Revision-Date: 2017-09-09 21:07+0200\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -259,11 +259,11 @@ msgstr "' jako složku pro náhledy"
 msgid "N/A"
 msgstr "NEDOSTUPNÉ"
 
-#: projectaction.py:1090 guicomponents.py:1867
+#: projectaction.py:1090 guicomponents.py:1875
 msgid "Yes"
 msgstr "Ano"
 
-#: projectaction.py:1092 guicomponents.py:1869
+#: projectaction.py:1092 guicomponents.py:1877
 msgid "No"
 msgstr "Ne"
 
@@ -280,7 +280,7 @@ msgid "Save Selection Compound Clip"
 msgstr "Uložit výběr složeného záběru"
 
 #: projectaction.py:1215 projectaction.py:1360 projectaction.py:1377
-#: projectdata.py:215
+#: projectdata.py:218
 msgid "sequence_"
 msgstr "řada_"
 
@@ -424,7 +424,7 @@ msgstr "Přidat náhled záběru"
 msgid "Append"
 msgstr "Připojit"
 
-#: editorwindow.py:193 guicomponents.py:2519 shortcuts.py:185 shortcuts.py:198
+#: editorwindow.py:193 guicomponents.py:2527 shortcuts.py:185 shortcuts.py:198
 msgid "Insert"
 msgstr "Vložení"
 
@@ -440,7 +440,7 @@ msgstr "Přepsání rozsahu"
 msgid "Cut Clip"
 msgstr "Rozdělit záběr"
 
-#: editorwindow.py:197 guicomponents.py:1531 translations.py:515
+#: editorwindow.py:197 guicomponents.py:1539 translations.py:515
 msgid "Lift"
 msgstr "Vyzvednout"
 
@@ -448,7 +448,7 @@ msgstr "Vyzvednout"
 msgid "Splice Out"
 msgstr "Smazat a spojit"
 
-#: editorwindow.py:199 guicomponents.py:1187 guicomponents.py:1288
+#: editorwindow.py:199 guicomponents.py:1194 guicomponents.py:1295
 msgid "Resync"
 msgstr "Seřídit znovu"
 
@@ -464,7 +464,7 @@ msgstr "Přidat přechod jedné stopy"
 msgid "Add Single Track Fade"
 msgstr "Přidat prolínání jedné stopy"
 
-#: editorwindow.py:203 guicomponents.py:1211 guicomponents.py:1259
+#: editorwindow.py:203 guicomponents.py:1218 guicomponents.py:1266
 msgid "Clear Filters"
 msgstr "Odstranit filtry"
 
@@ -837,9 +837,9 @@ msgstr "Ukončit upravování záběru v editoru"
 msgid "Add"
 msgstr "Přidat"
 
-#: clipeffectseditor.py:244 compositeeditor.py:78 guicomponents.py:1269
-#: guicomponents.py:1344 guicomponents.py:1528 guicomponents.py:1689
-#: guicomponents.py:1740 panels.py:53 panels.py:98 panels.py:116
+#: clipeffectseditor.py:244 compositeeditor.py:78 guicomponents.py:1276
+#: guicomponents.py:1352 guicomponents.py:1536 guicomponents.py:1697
+#: guicomponents.py:1748 panels.py:53 panels.py:98 panels.py:116
 #: tools/titler.py:210 tools/batchrendering.py:1038 shortcuts.py:230
 msgid "Delete"
 msgstr "Smazat"
@@ -1248,7 +1248,7 @@ msgstr "Formáty"
 msgid "Render Options"
 msgstr "Volby pro zpracování"
 
-#: dialogs.py:729 guicomponents.py:1693
+#: dialogs.py:729 guicomponents.py:1701
 msgid "File Properties"
 msgstr "Vlastnosti souboru"
 
@@ -1433,7 +1433,7 @@ msgstr "Otevřít pro úpravy:"
 msgid "Rename New Media Object"
 msgstr "Přejmenovat nový multimediální předmět"
 
-#: dialogs.py:1041 dialogs.py:1069 dialogs.py:1123 guicomponents.py:1688
+#: dialogs.py:1041 dialogs.py:1069 dialogs.py:1123 guicomponents.py:1696
 msgid "Rename"
 msgstr "Přejmenovat"
 
@@ -1441,7 +1441,7 @@ msgstr "Přejmenovat"
 msgid "New Name:"
 msgstr "Nový název:"
 
-#: dialogs.py:1066 guicomponents.py:1312 guicomponents.py:1631
+#: dialogs.py:1066 guicomponents.py:1319 guicomponents.py:1639
 msgid "Rename Clip"
 msgstr "Přejmenovat záběr"
 
@@ -1481,7 +1481,7 @@ msgstr ""
 msgid "New Marker"
 msgstr "Nová značka"
 
-#: dialogs.py:1137 dialogs.py:1159 guicomponents.py:2279
+#: dialogs.py:1137 dialogs.py:1159 guicomponents.py:2287
 msgid "Add Marker"
 msgstr "Přidat značku"
 
@@ -1565,7 +1565,7 @@ msgstr "Použít"
 msgid "Rerender Transition"
 msgstr "Dělá se přechodový záběr"
 
-#: dialogs.py:1290 dialogs.py:1304 guicomponents.py:1236
+#: dialogs.py:1290 dialogs.py:1304 guicomponents.py:1243
 #, fuzzy
 msgid "Rerender"
 msgstr "Zpracování"
@@ -1585,7 +1585,7 @@ msgstr "Dělá se přechodový záběr"
 msgid "Rerender All"
 msgstr "Zpracovat vše možné"
 
-#: dialogs.py:1329 guicomponents.py:1430
+#: dialogs.py:1329 guicomponents.py:1438
 msgid "Add Fade"
 msgstr "Přidat prolínání"
 
@@ -2095,568 +2095,568 @@ msgstr "Velká výška"
 msgid "Normal Height"
 msgstr "Normální výška"
 
-#: guicomponents.py:1141 guicomponents.py:1238 guicomponents.py:1280
+#: guicomponents.py:1141 guicomponents.py:1245 guicomponents.py:1287
 msgid "Open in Filters Editor"
 msgstr "Otevřít v editoru filtrů"
 
-#: guicomponents.py:1148 guicomponents.py:1282 guicomponents.py:1691
+#: guicomponents.py:1148 guicomponents.py:1289 guicomponents.py:1699
 msgid "Open in Clip Monitor"
 msgstr "Otevřít v náhledu záběrů"
 
-#: guicomponents.py:1159
+#: guicomponents.py:1161
 msgid "Split Audio"
 msgstr "Rozdělit zvuk"
 
-#: guicomponents.py:1165
+#: guicomponents.py:1169
 msgid "Split Audio Synched"
 msgstr "Rozdělit zvuk seřízeně"
 
-#: guicomponents.py:1172 guicomponents.py:1296
+#: guicomponents.py:1176 guicomponents.py:1303
 msgid "Display Audio Level"
 msgstr "Zobrazit úroveň hlasitosti"
 
-#: guicomponents.py:1175 guicomponents.py:1299
+#: guicomponents.py:1179 guicomponents.py:1306
 msgid "Clear Waveform"
 msgstr "Smazat časový průběh zvukového signálu"
 
-#: guicomponents.py:1178
+#: guicomponents.py:1182
 msgid "Select Clip to Audio Sync With..."
 msgstr "Vybrat záběr pro seřízení zvuku s..."
 
-#: guicomponents.py:1188 guicomponents.py:1289
+#: guicomponents.py:1195 guicomponents.py:1296
 msgid "Clear Sync Relation"
 msgstr "Smazat seřizovací vztah"
 
-#: guicomponents.py:1190 guicomponents.py:1291
+#: guicomponents.py:1197 guicomponents.py:1298
 msgid "Select Sync Parent Clip..."
 msgstr "Vybrat rodičovský záběr pro seřízení..."
 
-#: guicomponents.py:1216 guicomponents.py:1315
+#: guicomponents.py:1223 guicomponents.py:1322
 msgid "Clip Info"
 msgstr "Informace o záběru"
 
-#: guicomponents.py:1266
+#: guicomponents.py:1273
 msgid "Strech Prev Clip to Cover"
 msgstr "Protáhnout předchozí záběr pro pokrytí"
 
-#: guicomponents.py:1267
+#: guicomponents.py:1274
 msgid "Strech Next Clip to Cover"
 msgstr "Protáhnout další záběr pro pokrytí"
 
-#: guicomponents.py:1331
+#: guicomponents.py:1338
 msgid "Open In Compositor Editor"
 msgstr "Otevřít v editoru skladby"
 
-#: guicomponents.py:1333
+#: guicomponents.py:1340
 msgid "Sync with Origin Clip"
 msgstr "Seřídit s původním záběrem"
 
-#: guicomponents.py:1336
+#: guicomponents.py:1343
 msgid "Obey Auto Follow"
 msgstr ""
 
-#: guicomponents.py:1348 guicomponents.py:1369
+#: guicomponents.py:1356 guicomponents.py:1377
 msgid "Add Filter"
 msgstr "Přidat filtr"
 
-#: guicomponents.py:1391
+#: guicomponents.py:1399
 msgid "Add Compositor"
 msgstr "Přidat skladbu"
 
-#: guicomponents.py:1414
+#: guicomponents.py:1422
 msgid "Add Blend"
 msgstr "Přidat přechod"
 
-#: guicomponents.py:1450
+#: guicomponents.py:1458
 msgid "Show Match Frame"
 msgstr "Ukázat věrný obraz"
 
-#: guicomponents.py:1454
+#: guicomponents.py:1462
 msgid "First Frame in Monitor"
 msgstr "První snímek v okně pro sledování záběrů"
 
-#: guicomponents.py:1459
+#: guicomponents.py:1467
 msgid "Last Frame in Monitor"
 msgstr "Poslední snímek v okně pro sledování záběrů"
 
-#: guicomponents.py:1466
+#: guicomponents.py:1474
 msgid "First Frame on Timeline"
 msgstr "Vložit první snímek do časové osy"
 
-#: guicomponents.py:1471
+#: guicomponents.py:1479
 msgid "Last Frame on Timeline"
 msgstr "Vložit poslední snímek do časové osy"
 
-#: guicomponents.py:1478 guicomponents.py:2504
+#: guicomponents.py:1486 guicomponents.py:2512
 msgid "Clear Match Frame"
 msgstr "Smazat výběr"
 
-#: guicomponents.py:1488
+#: guicomponents.py:1496
 msgid "Select"
 msgstr "Vybrat"
 
-#: guicomponents.py:1492
+#: guicomponents.py:1500
 msgid "All Clips After"
 msgstr "Všechny záběry po"
 
-#: guicomponents.py:1497
+#: guicomponents.py:1505
 msgid "All Clips Before"
 msgstr "Všechny záběry před"
 
-#: guicomponents.py:1507
+#: guicomponents.py:1515
 msgid "Export To Tool"
 msgstr "Vyvést do nástroje"
 
-#: guicomponents.py:1524 panels.py:117
+#: guicomponents.py:1532 panels.py:117
 msgid "Edit"
 msgstr "Úpravy"
 
-#: guicomponents.py:1536
+#: guicomponents.py:1544
 msgid "Set Clip Length..."
 msgstr "Nastavit délku záběru..."
 
-#: guicomponents.py:1539
+#: guicomponents.py:1547
 msgid "Stretch Over Next Blank"
 msgstr "Protáhnout přes další prázdný"
 
-#: guicomponents.py:1542
+#: guicomponents.py:1550
 msgid "Stretch Over Prev Blank"
 msgstr "Protáhnout přes předchozí prázdný"
 
-#: guicomponents.py:1549
+#: guicomponents.py:1557
 msgid "Clone Filters"
 msgstr "Klonovat filtry"
 
-#: guicomponents.py:1553
+#: guicomponents.py:1561
 msgid "From Next Clip"
 msgstr "Z dalšího záběru"
 
-#: guicomponents.py:1558
+#: guicomponents.py:1566
 msgid "From Previous Clip"
 msgstr "Z předchozího záběru"
 
-#: guicomponents.py:1567 guicomponents.py:1587
+#: guicomponents.py:1575 guicomponents.py:1595
 msgid "Mute"
 msgstr "Ztlumit"
 
-#: guicomponents.py:1571 guicomponents.py:1591
+#: guicomponents.py:1579 guicomponents.py:1599
 msgid "Unmute"
 msgstr "Zrušit ztišení"
 
-#: guicomponents.py:1577 guicomponents.py:1608
+#: guicomponents.py:1585 guicomponents.py:1616
 msgid "Mute Audio"
 msgstr "Ztlumit zvuk"
 
-#: guicomponents.py:1602
+#: guicomponents.py:1610
 msgid "Mute Video"
 msgstr "Ztlumit obraz"
 
-#: guicomponents.py:1619
+#: guicomponents.py:1627
 msgid "Mute All"
 msgstr "Ztlumit vše"
 
-#: guicomponents.py:1629
+#: guicomponents.py:1637
 #, fuzzy
 msgid "Properties"
 msgstr "Vlastnosti souboru"
 
-#: guicomponents.py:1639
+#: guicomponents.py:1647
 msgid "Clip Color"
 msgstr "Barva záběru"
 
-#: guicomponents.py:1641
+#: guicomponents.py:1649
 msgid "Default"
 msgstr "Výchozí"
 
-#: guicomponents.py:1642 translations.py:500 translations.py:589
+#: guicomponents.py:1650 translations.py:500 translations.py:589
 msgid "Red"
 msgstr "Červená"
 
-#: guicomponents.py:1643 translations.py:501 translations.py:584
+#: guicomponents.py:1651 translations.py:501 translations.py:584
 #: translations.py:590
 msgid "Green"
 msgstr "Zelená"
 
-#: guicomponents.py:1644 translations.py:502 translations.py:585
+#: guicomponents.py:1652 translations.py:502 translations.py:585
 #: translations.py:591
 msgid "Blue"
 msgstr "Modrá"
 
-#: guicomponents.py:1645
+#: guicomponents.py:1653
 msgid "Orange"
 msgstr "Oranžová"
 
-#: guicomponents.py:1646
+#: guicomponents.py:1654
 msgid "Brown"
 msgstr "Hnědá"
 
-#: guicomponents.py:1647
+#: guicomponents.py:1655
 msgid "Olive"
 msgstr "Olivově zelená"
 
-#: guicomponents.py:1653
+#: guicomponents.py:1661
 #, fuzzy
 msgid "Markers"
 msgstr "Žádné značky"
 
-#: guicomponents.py:1666
+#: guicomponents.py:1674
 #, fuzzy
 msgid "No Clip Markers"
 msgstr "Žádné značky"
 
-#: guicomponents.py:1670
+#: guicomponents.py:1678
 msgid "Add Clip Marker At Playhead Position"
 msgstr ""
 
-#: guicomponents.py:1671
+#: guicomponents.py:1679
 #, fuzzy
 msgid "Delete Clip Marker At Playhead Position"
 msgstr "Vložit řadu v poloze hlavy přehrávání"
 
-#: guicomponents.py:1673
+#: guicomponents.py:1681
 #, fuzzy
 msgid "Delete All Clip Markers"
 msgstr "Odstranit všechny značky"
 
-#: guicomponents.py:1698 guicomponents.py:1738
+#: guicomponents.py:1706 guicomponents.py:1746
 msgid "Render Slow/Fast Motion File"
 msgstr "Udělat soubor se zpomaleným/zrychleným pohybem"
 
-#: guicomponents.py:1700
+#: guicomponents.py:1708
 msgid "Render Reverse Motion File"
 msgstr "Udělat soubor s obráceným pohybem"
 
-#: guicomponents.py:1702
+#: guicomponents.py:1710
 msgid "Render Proxy File"
 msgstr "Udělat soubor proxy"
 
-#: guicomponents.py:1725
+#: guicomponents.py:1733
 msgid "Toggle Active"
 msgstr "Přepnout činný"
 
-#: guicomponents.py:1726
+#: guicomponents.py:1734
 msgid "Reset Values"
 msgstr "Nastavit hodnoty znovu"
 
-#: guicomponents.py:1728
+#: guicomponents.py:1736
 msgid "Move Up"
 msgstr "Posunout nahoru"
 
-#: guicomponents.py:1729
+#: guicomponents.py:1737
 msgid "Move Down"
 msgstr "Posunout dolů"
 
-#: guicomponents.py:1737
+#: guicomponents.py:1745
 msgid "Display In Clip Monitor"
 msgstr "Zobrazit v náhledu záběrů"
 
-#: guicomponents.py:1739
+#: guicomponents.py:1747
 msgid "Toggle Star"
 msgstr "Přepnout označení hvězdou"
 
-#: guicomponents.py:1747 medialinker.py:134
+#: guicomponents.py:1755 medialinker.py:134
 msgid "Set File Relink Path"
 msgstr "Nastavit cestu pro opětovné spojení souboru"
 
-#: guicomponents.py:1748 medialinker.py:136
+#: guicomponents.py:1756 medialinker.py:136
 msgid "Delete File Relink Path"
 msgstr "Smazat cestu pro opětovné spojení souboru"
 
-#: guicomponents.py:1750
+#: guicomponents.py:1758
 msgid "Show Full Paths"
 msgstr "Ukázat úplné cesty"
 
-#: guicomponents.py:1816 propertyeditorbuilder.py:553
+#: guicomponents.py:1824 propertyeditorbuilder.py:553
 #: propertyeditorbuilder.py:608 tools/toolsencoding.py:343
 msgid "Progressive"
 msgstr "Progresivní"
 
-#: guicomponents.py:1818 tools/toolsencoding.py:345
+#: guicomponents.py:1826 tools/toolsencoding.py:345
 msgid "Interlaced"
 msgstr "Prokládaný"
 
-#: guicomponents.py:1821 tools/toolsencoding.py:348
+#: guicomponents.py:1829 tools/toolsencoding.py:348
 msgid "Fps: "
 msgstr "Snímků za vteřinu: "
 
-#: guicomponents.py:1824 tools/toolsencoding.py:351
+#: guicomponents.py:1832 tools/toolsencoding.py:351
 msgid "Pixel Aspect: "
 msgstr "Strana pixelu: "
 
-#: guicomponents.py:1831
+#: guicomponents.py:1839
 msgid "Description:"
 msgstr "Popis:"
 
-#: guicomponents.py:1833
+#: guicomponents.py:1841
 msgid "Dimensions:"
 msgstr "Rozměry:"
 
-#: guicomponents.py:1835
+#: guicomponents.py:1843
 msgid "Frames per second:"
 msgstr "Snímků za vteřinu:"
 
-#: guicomponents.py:1837 tools/titler.py:336
+#: guicomponents.py:1845 tools/titler.py:336
 msgid "Size:"
 msgstr "Velikost:"
 
-#: guicomponents.py:1839
+#: guicomponents.py:1847
 msgid "Pixel aspect ratio: "
 msgstr "Poměr stran pixelu: "
 
-#: guicomponents.py:1841 profilesmanager.py:138
+#: guicomponents.py:1849 profilesmanager.py:138
 msgid "Progressive:"
 msgstr "Progresivní"
 
-#: guicomponents.py:2132
+#: guicomponents.py:2140
 msgid "Video:"
 msgstr "Obraz:"
 
-#: guicomponents.py:2137
+#: guicomponents.py:2145
 msgid "Audio:"
 msgstr "Zvuk:"
 
-#: guicomponents.py:2142
+#: guicomponents.py:2150
 msgid "Number of Tracks:"
 msgstr "Počet stop:"
 
-#: guicomponents.py:2185
+#: guicomponents.py:2193
 msgid "Frames:"
 msgstr "Snímky:"
 
-#: guicomponents.py:2276
+#: guicomponents.py:2284
 msgid "No Markers"
 msgstr "Žádné značky"
 
-#: guicomponents.py:2280
+#: guicomponents.py:2288
 msgid "Delete Marker"
 msgstr "Odstranit značku"
 
-#: guicomponents.py:2282
+#: guicomponents.py:2290
 msgid "Delete All Markers"
 msgstr "Odstranit všechny značky"
 
-#: guicomponents.py:2290
+#: guicomponents.py:2298
 msgid "Maximize Tracks"
 msgstr "Zvětšit stopy"
 
-#: guicomponents.py:2291
+#: guicomponents.py:2299
 msgid "Maximize Video Tracks"
 msgstr "Zvětšit obrazové stopy"
 
-#: guicomponents.py:2292
+#: guicomponents.py:2300
 msgid "Maximize Audio Tracks"
 msgstr "Zvětšit zvukové stopy"
 
-#: guicomponents.py:2294
+#: guicomponents.py:2302
 msgid "Minimize Tracks"
 msgstr "Zmenšit stopy"
 
-#: guicomponents.py:2296
+#: guicomponents.py:2304
 msgid "Activate All Tracks"
 msgstr "Zapnout všechny stopy"
 
-#: guicomponents.py:2297
+#: guicomponents.py:2305
 msgid "Activate Only Current Top Active Track"
 msgstr "Zapnout pouze nyní činnou stopu"
 
-#: guicomponents.py:2299
+#: guicomponents.py:2307
 msgid "Vertical Shrink Timeline"
 msgstr "Zmenšit časovou osu svisle"
 
-#: guicomponents.py:2315
+#: guicomponents.py:2323
 #, fuzzy
 msgid "Compositors Auto Follow"
 msgstr "Automatická prolínání skladeb"
 
-#: guicomponents.py:2324
+#: guicomponents.py:2332
 msgid "Tool Cursor Context Sensitive"
 msgstr ""
 
-#: guicomponents.py:2333
+#: guicomponents.py:2341
 msgid "Display Clip Media Thumbnails"
 msgstr "Zobrazit náhledy na záznamy se záběry"
 
-#: guicomponents.py:2340
+#: guicomponents.py:2348
 msgid "Show Move/Trim Info Overlay"
 msgstr "Ukázat překrytí údajem o posunutí/zkrácení"
 
-#: guicomponents.py:2349
+#: guicomponents.py:2357
 msgid "Snapping On"
 msgstr "Přichytávání zapnuto"
 
-#: guicomponents.py:2356
+#: guicomponents.py:2364
 msgid "Show Magnet Icon"
 msgstr "Ukázat symbol magnetu"
 
-#: guicomponents.py:2365
+#: guicomponents.py:2373
 msgid "Display All Audio Levels"
 msgstr "Zobrazit všechny úrovně hlasitosti"
 
-#: guicomponents.py:2368
+#: guicomponents.py:2376
 msgid "Display Audio Levels On Request"
 msgstr "Zobrazit úrovně hlasitosti na požádání"
 
-#: guicomponents.py:2389
+#: guicomponents.py:2397
 #, fuzzy
 msgid "Save Effect Values"
 msgstr "Uložit vrstvy"
 
-#: guicomponents.py:2390
+#: guicomponents.py:2398
 #, fuzzy
 msgid "Load Effect Values"
 msgstr "Nahrát hodnoty profilu"
 
-#: guicomponents.py:2391
+#: guicomponents.py:2399
 #, fuzzy
 msgid "Reset Effect Values"
 msgstr "Nastavit hodnoty znovu"
 
-#: guicomponents.py:2395
+#: guicomponents.py:2403
 #, fuzzy
 msgid "Delete Effect"
 msgstr "Smazat vybrané"
 
-#: guicomponents.py:2405
+#: guicomponents.py:2413
 #, fuzzy
 msgid "Save Compositor Values"
 msgstr "Nastavit automatická prolínání skladeb..."
 
-#: guicomponents.py:2406
+#: guicomponents.py:2414
 #, fuzzy
 msgid "Load Compositor Values"
 msgstr "Žádná skladba"
 
-#: guicomponents.py:2407
+#: guicomponents.py:2415
 #, fuzzy
 msgid "Reset Compositor Values"
 msgstr "Nastavit hodnoty znovu"
 
-#: guicomponents.py:2411
+#: guicomponents.py:2419
 #, fuzzy
 msgid "Delete Compositor"
 msgstr "Směšovač"
 
-#: guicomponents.py:2420
+#: guicomponents.py:2428
 msgid "Image"
 msgstr "Obrázek"
 
-#: guicomponents.py:2422
+#: guicomponents.py:2430
 msgid "Vectorscope"
 msgstr "Vektorskop"
 
-#: guicomponents.py:2424
+#: guicomponents.py:2432
 msgid "RGB Parade"
 msgstr "Přehlídka RGB"
 
-#: guicomponents.py:2428
+#: guicomponents.py:2436
 msgid "Overlay Opacity"
 msgstr "Průhlednost"
 
-#: guicomponents.py:2433
+#: guicomponents.py:2441
 msgid "100%"
 msgstr "100 %"
 
-#: guicomponents.py:2438
+#: guicomponents.py:2446
 msgid "80%"
 msgstr "80 %"
 
-#: guicomponents.py:2443
+#: guicomponents.py:2451
 msgid "50%"
 msgstr "50 %"
 
-#: guicomponents.py:2448
+#: guicomponents.py:2456
 msgid "20%"
 msgstr "20 %"
 
-#: guicomponents.py:2453
+#: guicomponents.py:2461
 msgid "0%"
 msgstr "0 %"
 
-#: guicomponents.py:2473
+#: guicomponents.py:2481
 msgid "Trim View On"
 msgstr "Pohled na oříznutí zapnut"
 
-#: guicomponents.py:2478
+#: guicomponents.py:2486
 msgid "Trim View Single Side Edits Only"
 msgstr "Režim úprav s jedním oknem v pohledu na oříznutí"
 
-#: guicomponents.py:2483
+#: guicomponents.py:2491
 msgid "Trim View Off"
 msgstr "Pohled na oříznutí vypnut"
 
-#: guicomponents.py:2499
+#: guicomponents.py:2507
 msgid "Set Current Clip Frame Match Frame"
 msgstr "Nastavit snímek s nynějším záběrem jako věrný obraz"
 
-#: guicomponents.py:2525 translations.py:579 shortcuts.py:199
+#: guicomponents.py:2533 translations.py:579 shortcuts.py:199
 msgid "Overwrite"
 msgstr "Přepsání"
 
-#: guicomponents.py:2531 shortcuts.py:200
+#: guicomponents.py:2539 shortcuts.py:200
 msgid "Trim"
 msgstr "Oříznutí"
 
-#: guicomponents.py:2537 shortcuts.py:201
+#: guicomponents.py:2545 shortcuts.py:201
 msgid "Roll"
 msgstr "Posun bodu úprav"
 
-#: guicomponents.py:2543 shortcuts.py:202
+#: guicomponents.py:2551 shortcuts.py:202
 msgid "Slip"
 msgstr "Klouzání"
 
-#: guicomponents.py:2549 shortcuts.py:203
+#: guicomponents.py:2557 shortcuts.py:203
 msgid "Spacer"
 msgstr "Odstup"
 
-#: guicomponents.py:2555 translations.py:563 shortcuts.py:204
+#: guicomponents.py:2563 translations.py:563 shortcuts.py:204
 msgid "Box"
 msgstr "Box"
 
-#: guicomponents.py:2575
+#: guicomponents.py:2583
 msgid "All Files"
 msgstr "Všechny soubory"
 
-#: guicomponents.py:2579
+#: guicomponents.py:2587
 msgid "Video Files"
 msgstr "Obrazové soubory"
 
-#: guicomponents.py:2583
+#: guicomponents.py:2591
 msgid "Audio Files"
 msgstr "Zvukové soubory"
 
-#: guicomponents.py:2587
+#: guicomponents.py:2595
 msgid "Graphics Files"
 msgstr "Obrázkové soubory"
 
-#: guicomponents.py:2591
+#: guicomponents.py:2599
 msgid "Image Sequences"
 msgstr "Obrázkové řady"
 
-#: guicomponents.py:2595
+#: guicomponents.py:2603
 msgid "Pattern Producers"
 msgstr "Výrobci vzorů"
 
-#: guicomponents.py:2608
+#: guicomponents.py:2616
 msgid "2 Columns"
 msgstr "2 sloupce"
 
-#: guicomponents.py:2613
+#: guicomponents.py:2621
 msgid "3 Columns"
 msgstr "3 sloupce"
 
-#: guicomponents.py:2618
+#: guicomponents.py:2626
 msgid "4 Columns"
 msgstr "4 sloupce"
 
-#: guicomponents.py:2623
+#: guicomponents.py:2631
 msgid "5 Columns"
 msgstr "5 sloupců"
 
-#: guicomponents.py:2628
+#: guicomponents.py:2636
 msgid "6 Columns"
 msgstr "6 sloupců"
 
-#: guicomponents.py:2633
+#: guicomponents.py:2641
 msgid "7 Columns"
 msgstr "7 sloupců"
 
@@ -2903,7 +2903,7 @@ msgstr "Barva:"
 msgid "Building sequence "
 msgstr "Sestavuje se řada"
 
-#: persistance.py:466
+#: persistance.py:469
 msgid "Loading icons"
 msgstr "Nahrávají se ikony"
 
@@ -2911,31 +2911,31 @@ msgstr "Nahrávají se ikony"
 msgid "untitled"
 msgstr "Bez názvu"
 
-#: projectdata.py:207
+#: projectdata.py:210
 msgid "bin_"
 msgstr "zásobník_"
 
-#: projectdata.py:514
+#: projectdata.py:517
 msgid "Created using dialog"
 msgstr "Vytvořeno pomocí dialogu"
 
-#: projectdata.py:516
+#: projectdata.py:519
 msgid "Created using Save As... "
 msgstr "Vytvořeno pomocí Uložit jako... "
 
-#: projectdata.py:518
+#: projectdata.py:521
 msgid "Saved "
 msgstr "Uloženo"
 
-#: projectdata.py:521
+#: projectdata.py:524
 msgid "Saved as "
 msgstr "Uloženo jako "
 
-#: projectdata.py:523
+#: projectdata.py:526
 msgid "Rendered "
 msgstr "Zpracováno "
 
-#: projectdata.py:525
+#: projectdata.py:528
 msgid "Saved backup snapshot"
 msgstr "Uložený snímek se zálohou"
 
@@ -4729,7 +4729,7 @@ msgstr "Střední spirála"
 msgid "Spots"
 msgstr "Tečky"
 
-#: mlttransitions.py:114 medialog.py:535
+#: mlttransitions.py:114 medialog.py:542
 msgid "Star"
 msgstr "Hvězda"
 
@@ -4991,107 +4991,107 @@ msgstr ""
 "Zvukový směšovač (nedostupný)\n"
 "Popisovač"
 
-#: medialog.py:304
+#: medialog.py:311
 msgid "New Group..."
 msgstr "Nová skupina..."
 
-#: medialog.py:305
+#: medialog.py:312
 msgid "New Group From Selected..."
 msgstr "Nová skupina z vybraného..."
 
-#: medialog.py:309
+#: medialog.py:316
 msgid "Rename Current Group..."
 msgstr "Přejmenovat nynější skupinu..."
 
-#: medialog.py:315
+#: medialog.py:322
 msgid "Move Selected Items To Group"
 msgstr "Posunout vybrané položky do skupiny"
 
-#: medialog.py:318
+#: medialog.py:325
 msgid "No Groups"
 msgstr "Žádné skupiny"
 
-#: medialog.py:331
+#: medialog.py:338
 msgid "Delete Current Group"
 msgstr "Smazat nynější skupinu"
 
-#: medialog.py:337
+#: medialog.py:344
 msgid "Sort by"
 msgstr "Řadit dle"
 
-#: medialog.py:340
+#: medialog.py:347
 msgid "Time"
 msgstr "Čas"
 
-#: medialog.py:346 medialog.py:541
+#: medialog.py:353 medialog.py:548
 msgid "File Name"
 msgstr "Název souboru"
 
-#: medialog.py:351 medialog.py:539
+#: medialog.py:358 medialog.py:546
 msgid "Comment"
 msgstr "Poznámka"
 
-#: medialog.py:465
+#: medialog.py:472
 msgid "Group "
 msgstr "Skupina "
 
-#: medialog.py:537 projectinfogui.py:100
+#: medialog.py:544 projectinfogui.py:100
 msgid "Event"
 msgstr "Událost"
 
-#: medialog.py:543
+#: medialog.py:550
 msgid "Mark In"
 msgstr "Značka začátku záběru"
 
-#: medialog.py:545
+#: medialog.py:552
 msgid "Mark Out"
 msgstr "Značka konce záběru"
 
-#: medialog.py:547 projectinfogui.py:98
+#: medialog.py:554 projectinfogui.py:98
 msgid "Date"
 msgstr "Datum"
 
-#: medialog.py:702
+#: medialog.py:709
 msgid "Use Comments as Clip Names"
 msgstr "Použít poznámky jako názvy záběrů"
 
-#: medialog.py:733
+#: medialog.py:740
 msgid "Display starred ranges"
 msgstr "Zobrazit rozsahy označené hvězdičkou"
 
-#: medialog.py:734
+#: medialog.py:741
 msgid "Display non-starred ranges"
 msgstr "Zobrazit rozsahy neoznačené hvězdičkou"
 
-#: medialog.py:735
+#: medialog.py:742
 msgid "Set selected ranges starred"
 msgstr "Nastavit vybrané rozsahy označené hvězdičkou"
 
-#: medialog.py:736
+#: medialog.py:743
 msgid "Set selected ranges non-starred"
 msgstr "Nastavit vybrané rozsahy neoznačené hvězdičkou"
 
-#: medialog.py:737
+#: medialog.py:744
 msgid "Log current marked range"
 msgstr "Zapsat nyní označený rozsah"
 
-#: medialog.py:738
+#: medialog.py:745
 msgid "Delete selected ranges"
 msgstr "Smazat vybrané rozsahy"
 
-#: medialog.py:739
+#: medialog.py:746
 msgid "Insert selected ranges on Timeline"
 msgstr "Vložit vybrané rozsahy do časové osy"
 
-#: medialog.py:740
+#: medialog.py:747
 msgid "Append displayed ranges on Timeline"
 msgstr "Přidat zobrazené rozsahy do časové osy"
 
-#: medialog.py:757
+#: medialog.py:764
 msgid "All Items"
 msgstr "Všechny položky"
 
-#: medialog.py:764
+#: medialog.py:771
 msgid "Select viewed Range Log Items Group"
 msgstr "Vybrat zobrazenou skupinu položek se záznamy rozsahu"
 
@@ -6320,11 +6320,11 @@ msgstr ""
 "konec, a dodatečnou značku pro začátek na časové ose nebo na záběru, aby se "
 "tato úprava provedla."
 
-#: trackaction.py:67
+#: trackaction.py:68
 msgid "Not enough vertical space on Timeline to expand track"
 msgstr "Na časové ose není na výšku dostatek místa pro rozšíření stopy"
 
-#: trackaction.py:68
+#: trackaction.py:69
 msgid ""
 "Maximize or resize application window to get more\n"
 "space for tracks if possible."

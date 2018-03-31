@@ -3,7 +3,7 @@ Name=Flowblade Movie Editor
 GenericName=Movie Editor
 X-GNOME-FullName=Flowblade Movie Editor
 Comment=Edit media to create movies
-Exec=flowblade %f
+Exec=env GDK_BACKEND=x11 flowblade %f
 Terminal=false
 Type=Application
 Icon=flowblade
