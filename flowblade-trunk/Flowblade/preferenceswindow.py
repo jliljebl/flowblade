@@ -169,14 +169,17 @@ def _edit_prefs_panel():
     gfx_length_spin.set_adjustment(spin_adj)
     gfx_length_spin.set_numeric(True)
 
+    """
     trim_exit_on_empty = Gtk.CheckButton()
     trim_exit_on_empty.set_active(prefs.empty_click_exits_trims)
 
     quick_enter_trim = Gtk.CheckButton()
     quick_enter_trim.set_active(prefs.quick_enter_trims)
 
+    
     remember_clip_frame = Gtk.CheckButton()
     remember_clip_frame.set_active(prefs.remember_monitor_clip_frame)
+    """
 
     overwrite_clip_drop = Gtk.ComboBoxText()
     active = 0
@@ -203,9 +206,9 @@ def _edit_prefs_panel():
     
     # Layout
     row4 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Graphics default length:")), gfx_length_spin, PREFERENCES_LEFT))
-    row5 = _row(guiutils.get_checkbox_row_box(trim_exit_on_empty, Gtk.Label(label=_("Trim Modes exit on empty click"))))
-    row6 = _row(guiutils.get_checkbox_row_box(quick_enter_trim, Gtk.Label(label=_("Quick enter Trim Modes"))))
-    row7 = _row(guiutils.get_checkbox_row_box(remember_clip_frame, Gtk.Label(label=_("Remember Monitor Clip Frame"))))
+    #row5 = _row(guiutils.get_checkbox_row_box(trim_exit_on_empty, Gtk.Label(label=_("Trim Modes exit on empty click"))))
+    #row6 = _row(guiutils.get_checkbox_row_box(quick_enter_trim, Gtk.Label(label=_("Quick enter Trim Modes"))))
+    #row7 = _row(guiutils.get_checkbox_row_box(remember_clip_frame, Gtk.Label(label=_("Remember Monitor Clip Frame"))))
     row8 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Media drag'n'drop action on non-V1 tracks")), overwrite_clip_drop, PREFERENCES_LEFT))
     row9 = _row(guiutils.get_checkbox_row_box(cover_delete, Gtk.Label(label=_("Cover Transition/Fade clips on delete if possible"))))
     # Jul-2016 - SvdB - For play_pause button
@@ -214,10 +217,10 @@ def _edit_prefs_panel():
     # Apr-2017 - SvdB - For Fast Forward / Reverse options
     
     vbox = Gtk.VBox(False, 2)
-    vbox.pack_start(row5, False, False, 0)
-    vbox.pack_start(row6, False, False, 0)
+    #vbox.pack_start(row5, False, False, 0)
+    #vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(row4, False, False, 0)
-    vbox.pack_start(row7, False, False, 0)
+    #vbox.pack_start(row7, False, False, 0)
     vbox.pack_start(row9, False, False, 0)
     vbox.pack_start(row8, False, False, 0)
     vbox.pack_start(row11, False, False, 0)
@@ -228,7 +231,7 @@ def _edit_prefs_panel():
 
     # Jul-2016 - SvdB - Added play_pause_button
     # Apr-2017 - SvdB - Added ffwd / rev values
-    return vbox, (gfx_length_spin, trim_exit_on_empty, quick_enter_trim, remember_clip_frame, overwrite_clip_drop, cover_delete,
+    return vbox, (gfx_length_spin, overwrite_clip_drop, cover_delete,
                   mouse_scroll_action, hide_file_ext_button)
 
 def _playback_prefs_panel():
@@ -276,7 +279,7 @@ def _playback_prefs_panel():
     ffwd_rev_caps_spin.set_numeric(True)
     
     # Layout
-    row1 = _row(guiutils.get_checkbox_row_box(auto_play_in_clip_monitor, Gtk.Label(label=_("Autoplay new Clips in Clip Monitor"))))
+    #row1 = _row(guiutils.get_checkbox_row_box(auto_play_in_clip_monitor, Gtk.Label(label=_("Autoplay new Clips in Clip Monitor"))))
     row2 = _row(guiutils.get_checkbox_row_box(auto_center_on_stop, Gtk.Label(label=_("Center Current Frame on Playback Stop"))))
     row13 = _row(guiutils.get_checkbox_row_box(auto_center_on_updown, Gtk.Label(label=_("Center Current Frame after Up/Down Arrow"))))
     # Jul-2016 - SvdB - For play_pause button
@@ -294,7 +297,7 @@ def _playback_prefs_panel():
     row16.set_tooltip_text(_("Speed of Forward / Reverse will be multiplied by this value if Caps Lock is set (Only using KEYS)."))
     
     vbox = Gtk.VBox(False, 2)
-    vbox.pack_start(row1, False, False, 0)
+    #vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row13, False, False, 0)
     # Jul-2016 - SvdB - For play_pause button
@@ -309,7 +312,7 @@ def _playback_prefs_panel():
 
     # Jul-2016 - SvdB - Added play_pause_button
     # Apr-2017 - SvdB - Added ffwd / rev values
-    return vbox, (auto_play_in_clip_monitor, auto_center_on_stop, 
+    return vbox, (auto_center_on_stop, 
                   play_pause_button, auto_center_on_updown,
                   ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin)
                   
@@ -440,44 +443,6 @@ def _performance_panel():
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     return vbox, (perf_render_threads, perf_drop_frames)
-
-"""
-def _shortcuts_panel():
-    # Apr-2017 - SvdB
-    # Add a panel for keyboard shortcuts
-    # Widgets
-    shortcuts_combo = guicomponents.get_shorcuts_selector()
-    
-
-    shortcuts_combo = Gtk.ComboBoxText()
-    current_pref_index = -1
-
-    for i in range(0, len(shortcuts.shortcut_files)):
-        shortcut_file = shortcuts.shortcut_files[i]
-        shortcuts_combo.append_text(shortcuts.shortcut_files_display_names[i])
-        if editorpersistance.prefs.shortcuts == shortcut_file:
-            current_pref_index = i
-    
-    # Set current selection active
-    if current_pref_index != -1:
-        shortcuts_combo.set_active(current_pref_index)
-    else:
-        # Something is wrong, the pref shortcut file is not preset in the system.
-        print "Shortcut file in editprpersistance.pref.shortcuts not found!"
-        shortcuts_combo.set_active(0)
-
-    
-    # Layout
-    row1 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Shortcuts File")), shortcuts_combo, PREFERENCES_LEFT))
-
-    vbox = Gtk.VBox(False, 2)
-    vbox.pack_start(row1, False, False, 0)
-    vbox.pack_start(Gtk.Label(), True, True, 0)
-
-    guiutils.set_margins(vbox, 12, 0, 12, 12)
-
-    return vbox, (shortcuts_combo)
-"""
 
 def _row(row_cont):
     row_cont.set_size_request(10, 26)
