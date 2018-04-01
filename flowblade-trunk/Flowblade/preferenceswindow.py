@@ -169,18 +169,6 @@ def _edit_prefs_panel():
     gfx_length_spin.set_adjustment(spin_adj)
     gfx_length_spin.set_numeric(True)
 
-    """
-    trim_exit_on_empty = Gtk.CheckButton()
-    trim_exit_on_empty.set_active(prefs.empty_click_exits_trims)
-
-    quick_enter_trim = Gtk.CheckButton()
-    quick_enter_trim.set_active(prefs.quick_enter_trims)
-
-    
-    remember_clip_frame = Gtk.CheckButton()
-    remember_clip_frame.set_active(prefs.remember_monitor_clip_frame)
-    """
-
     overwrite_clip_drop = Gtk.ComboBoxText()
     active = 0
     if prefs.overwrite_clip_drop == False:
@@ -206,21 +194,15 @@ def _edit_prefs_panel():
     
     # Layout
     row4 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Graphics default length:")), gfx_length_spin, PREFERENCES_LEFT))
-    #row5 = _row(guiutils.get_checkbox_row_box(trim_exit_on_empty, Gtk.Label(label=_("Trim Modes exit on empty click"))))
-    #row6 = _row(guiutils.get_checkbox_row_box(quick_enter_trim, Gtk.Label(label=_("Quick enter Trim Modes"))))
-    #row7 = _row(guiutils.get_checkbox_row_box(remember_clip_frame, Gtk.Label(label=_("Remember Monitor Clip Frame"))))
-    row8 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Media drag'n'drop action on non-V1 tracks")), overwrite_clip_drop, PREFERENCES_LEFT))
+    row8 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Media drag'n'drop action on non-V1 tracks:")), overwrite_clip_drop, PREFERENCES_LEFT))
     row9 = _row(guiutils.get_checkbox_row_box(cover_delete, Gtk.Label(label=_("Cover Transition/Fade clips on delete if possible"))))
     # Jul-2016 - SvdB - For play_pause button
-    row11 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Mouse Middle Button Scroll Action")), mouse_scroll_action, PREFERENCES_LEFT))
+    row11 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Mouse Middle Button Scroll Action:")), mouse_scroll_action, PREFERENCES_LEFT))
     row12 = _row(guiutils.get_checkbox_row_box(hide_file_ext_button, Gtk.Label(label=_("Hide file extensions when importing Clips"))))
     # Apr-2017 - SvdB - For Fast Forward / Reverse options
     
     vbox = Gtk.VBox(False, 2)
-    #vbox.pack_start(row5, False, False, 0)
-    #vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(row4, False, False, 0)
-    #vbox.pack_start(row7, False, False, 0)
     vbox.pack_start(row9, False, False, 0)
     vbox.pack_start(row8, False, False, 0)
     vbox.pack_start(row11, False, False, 0)
@@ -238,9 +220,6 @@ def _playback_prefs_panel():
     prefs = editorpersistance.prefs
 
     # Widgets
-    auto_play_in_clip_monitor = Gtk.CheckButton()
-    auto_play_in_clip_monitor.set_active(prefs.auto_play_in_clip_monitor)
-
     auto_center_on_stop = Gtk.CheckButton()
     auto_center_on_stop.set_active(prefs.auto_center_on_play_stop)
     
@@ -297,7 +276,6 @@ def _playback_prefs_panel():
     row16.set_tooltip_text(_("Speed of Forward / Reverse will be multiplied by this value if Caps Lock is set (Only using KEYS)."))
     
     vbox = Gtk.VBox(False, 2)
-    #vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row13, False, False, 0)
     # Jul-2016 - SvdB - For play_pause button
