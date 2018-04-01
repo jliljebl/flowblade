@@ -61,7 +61,7 @@ Github user *eszlari* created a Flowblade 1.14 Flatpak which is already availabl
 ### Future directions ###
 The focus areas of next release will be animations, masks and compositing. So far the focus has squarly been on Flowblade as an editing tool, but now we will look for ways to expand application's feature set in this direction.
 
-There are a number of approaches that can be tried here, and it is difficult beforehand to predict which will work out, so we will basically try everything and see how things turn out. The translations workflow update will deinately come too.
+There are a number of approaches that can be tried here, and it is difficult beforehand to predict which will work out, so we will basically try everything and see how things turn out. The translations workflow update will definately come too.
 
 We will keep the 6 month release cycle, so next release will be sometime in the autumn.
 
