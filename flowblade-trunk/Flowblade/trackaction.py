@@ -158,8 +158,6 @@ def _audio_levels_item_activated(widget, msg):
         updater.repaint_tline()
     elif msg == "snapping":
         snapping.snapping_on = widget.get_active()
-    elif msg == "magnet":
-        snapping.show_magnet_icon = widget.get_active()
     elif msg == "autofollow":
         active = widget.get_active()
         editorstate.auto_follow = active

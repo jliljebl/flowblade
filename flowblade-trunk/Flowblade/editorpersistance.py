@@ -86,6 +86,10 @@ def load():
             recent_projects.projects.remove(proj_path)
         write_file = file(recents_file_path, "wb")
         pickle.dump(recent_projects, write_file)
+
+
+    # Override deprecated preferences to default values
+    self.delta_overlay = True
         
     # Versions of program may have different prefs objects and 
     # we may need to to update prefs on disk if user has e.g.
@@ -327,5 +331,5 @@ class EditorPreferences:
         self.ffwd_rev_caps = 1
         self.shortcuts = "flowblade.xml"
         self.double_track_hights = False
-        self.delta_overlay = True
+        self.delta_overlay = True # decrecated, NOT USER SETTABLE ANYMORE
         self.show_alpha_info_message = True

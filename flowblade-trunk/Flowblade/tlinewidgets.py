@@ -1261,7 +1261,7 @@ def _draw_view_icon(cr, x, y):
     cr.paint()
 
 def _draw_snap(cr, y):
-    if snapping.snap_active() == True and snapping.show_magnet_icon == True:
+    if snapping.snap_active() == True:
         cr.set_source_surface(SNAP_ICON, int(snapping.get_snap_x()) - 6, int(y) - 14)
         cr.paint()
 
