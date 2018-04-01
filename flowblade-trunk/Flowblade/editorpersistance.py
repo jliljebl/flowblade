@@ -66,6 +66,9 @@ def load():
         write_file = file(prefs_file_path, "wb")
         pickle.dump(prefs, write_file)
 
+    # Override deprecated preferences to default values.
+    prefs.delta_overlay = True
+    
     try:
         f = open(recents_file_path)
         recent_projects = pickle.load(f)
@@ -86,15 +89,12 @@ def load():
             recent_projects.projects.remove(proj_path)
         write_file = file(recents_file_path, "wb")
         pickle.dump(recent_projects, write_file)
-
-
-    # Override deprecated preferences to default values
-    self.delta_overlay = True
         
     # Versions of program may have different prefs objects and 
     # we may need to to update prefs on disk if user has e.g.
-    # installed later version of Flowblade
+    # installed later version of Flowblade.
     current_prefs = EditorPreferences()
+
     if len(prefs.__dict__) != len(current_prefs.__dict__):
         current_prefs.__dict__.update(prefs.__dict__)
         prefs = current_prefs
