@@ -14,9 +14,11 @@ Last updated: September. 2017
 - **Remove a number of preferences and options** We have so far only added options and preferences, now it is time look carefully what could be removed to simplify and clarify the UX.
 - **Translations workflow update** These need the easiest, most moders workflows available.
 - **Website update** Some existing features are missing, add *Contributing* text.
-- ~~**Binary packaging** At least one of Appimage, Snap, Flatpack. #453~~ **DONE, 1.16, we now have Flatpak, others can be added if we get contributions**
-- ~~**Autofollow compositors** Compositors will be made to follow their origin clips automatically if user so chooses.~~**DONE, 1.16**
-- ~~**Context sensitive Timeline tool cursor** This was originally part of non-features list of the design, but it seems that users prefer this, and we will look for a way to incoporate this with current design. #424~~ **DONE, 1.16**
+
+### 2.0 Completed items
+- **Binary packaging** At least one of Appimage, Snap, Flatpack. #453 **DONE, 1.16, we now have Flatpak, others can be added if we get contributions**
+- **Autofollow compositors** Compositors will be made to follow their origin clips automatically if user so chooses.**DONE, 1.16**
+- **Context sensitive Timeline tool cursor** This was originally part of non-features list of the design, but it seems that users prefer this, and we will look for a way to incoporate this with current design. #424 **DONE, 1.16**
 
 ### Other possible developments
 - **Track filters stack** for both video and audio tracks.
