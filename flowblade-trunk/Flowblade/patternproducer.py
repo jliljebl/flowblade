@@ -47,6 +47,7 @@ NOISE_CLIP = 2
 EBUBARS_CLIP = 3
 ISING_CLIP = 4
 COLOR_PULSE_CLIP = 5
+COUNT_CLIP = 6
 
 # ---------------------------------------------------- create callbacks
 def create_color_clip():
@@ -109,7 +110,12 @@ def _create_color_pulse_clip_callback(dialog, response_id, widgets):
         _update_gui_for_pattern_producer_media_object_add()
 
     dialog.destroy()
-    
+
+def create_count_clip():
+    media_object = BinCountClip(PROJECT().next_media_file_id, _("Count"))
+    PROJECT().add_pattern_producer_media_object(media_object)
+    _update_gui_for_pattern_producer_media_object_add()
+
 def _update_gui_for_pattern_producer_media_object_add():
     gui.media_list_view.fill_data_model()
     gui.bin_list_view.fill_data_model()
@@ -312,6 +318,36 @@ class BinColorPulseClip(AbstractBinClip):
         self.icon = cairo.ImageSurface.create_from_png(respaths.PATTERN_PRODUCER_PATH + "color_pulse_icon.png")
 
 
+class BinCountClip(AbstractBinClip):
+    def __init__(self, id, name):
+        AbstractBinClip.__init__(self, id, name)
+        self.patter_producer_type = COUNT_CLIP
+
+    def set_property_values(self):
+        pass
+        """
+        self.s1 = s1
+        self.s2 = s2
+        self.s3 = s3
+        self.s4 = s4
+        self.m1 = m1
+        self.m2 = m2
+        """
+        
+    def create_mlt_producer(self, profile):
+        producer = mlt.Producer(profile, "count")    
+        producer.set("direction", "down")
+        producer.set("style", "seconds")
+        producer.set("sound", "2pop")
+        producer.set("background", "clock")
+        producer.set("drop", "1")
+
+        mltrefhold.hold_ref(producer)
+        return producer
+
+    def create_icon(self):
+        self.icon = cairo.ImageSurface.create_from_png(respaths.PATTERN_PRODUCER_PATH + "color_pulse_icon.png")
+        
 # ----------------------------------------------------- dialogs
 def _color_clip_dialog(callback):
     dialog = Gtk.Dialog(_("Create Color Clip"), None,

@@ -222,6 +222,7 @@ class EditorWindow:
             ('CreateBarsClip', None, _('EBU Bars'), None, None, lambda a:patternproducer.create_bars_clip()),
             ('CreateIsingClip', None, _('Ising'), None, None, lambda a:patternproducer.create_icing_clip()),
             ('CreateColorPulseClip', None, _('Color Pulse'), None, None, lambda a:patternproducer.create_color_pulse_clip()),
+            ('CreateCountClip', None, _('Count'), None, None, lambda a:patternproducer.create_count_clip()),
             ('CompoundClipsMenu', None, _('Create Compound Clip')),
             ('CreateSelectionCompound', None, _('From Selected Clips'), None, None, lambda a:projectaction.create_selection_compound_clip()),
             ('CreateSequenceCompound', None, _('From Current Sequence'), None, None, lambda a:projectaction.create_sequence_compound_clip()),
@@ -328,7 +329,7 @@ class EditorWindow:
                     <menu action='PatternProducersMenu'>
                         <menuitem action='CreateNoiseClip'/>
                         <menuitem action='CreateColorPulseClip'/>
-                        <menuitem action='CreateIsingClip'/>
+                        <menuitem action='CreateIsingClip'/> 
                         <menuitem action='CreateBarsClip'/>    
                     </menu>
                     <menu action='CompoundClipsMenu'>
