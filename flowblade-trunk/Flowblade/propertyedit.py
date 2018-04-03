@@ -340,6 +340,8 @@ class EditableProperty(AbstractProperty):
         self.property_index = property_index # index of property in FilterObject.properties. This is the persistant object
         self.is_compositor_filter = False # This is after changed after creation if needed
 
+        self.used_create_params = create_params # for get_as_KeyFrameHCSFilterProperty functionality
+        
     def _get_filter_object(self):
         """
         Filter being edited is in different places for normal filters 
@@ -349,7 +351,16 @@ class EditableProperty(AbstractProperty):
             return self.clip.compositor.filter
         else:
             return self.clip.filters[self.filter_index]
-            
+
+    def get_as_KeyFrameHCSFilterProperty(self):
+        clone_ep = KeyFrameHCSFilterProperty(self.used_create_params)
+
+        clone_ep.is_compositor_filter = self.is_compositor_filter
+        clone_ep.track = self.track
+        clone_ep.clip_index = self.clip_index
+
+        return clone_ep
+        
     def write_value(self, str_value): # overrides ConvertingProperty.write_value(str_value)
         self.write_mlt_property_str_value(str_value)
         self.value = str_value

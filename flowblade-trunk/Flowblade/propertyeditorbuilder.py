@@ -24,7 +24,10 @@ Module creates GUI editors for editable mlt properties.
 
 from gi.repository import Gtk, Gdk, GObject
 
+import cairo
+
 import appconsts
+import cairoarea
 from editorstate import PROJECT
 from editorstate import PLAYER
 from editorstate import current_sequence
@@ -34,6 +37,7 @@ import keyframeeditor
 import mltfilters
 import mlttransitions
 import propertyparse
+import respaths
 import translations
 import updater
 import utils
@@ -69,6 +73,12 @@ REGION_EDITOR_BUILDER = "region_properties"                 # Creates a single r
 ROTATION_GEOMETRY_EDITOR_BUILDER = "rotation_geometry_editor" # Creates a single editor for multiple geometry values
 
 SCALE_DIGITS = "scale_digits"                               # Number of decimal digits displayed in a widget
+
+# We need to use globals to change slider -> kf editor and back because the data does not (can not) exist anywhere else. FilterObject.properties are just tuples and EditableProperty objects
+# are created deterministically from those and FilterObject.info.property_args data. So we need to save data here on change request to make the change happen.
+# This data needs to erased always after use.
+changing_slider_to_kf_property_name = None
+re_init_editors_for_slider_type_change_func = None # monkeypatched in
 
 def _p(name):
     try:
@@ -137,6 +147,15 @@ def _get_two_column_editor_row(name, editor_widget):
     return hbox
     
 def _get_slider_row(editable_property, slider_name=None, compact=False):
+    slider_editor = SliderEditor(editable_property, slider_name=None, compact=False)
+    
+    # This has been used if existed and has to be deleted.
+    global changing_slider_to_kf_property_name
+    changing_slider_to_kf_property_name = None
+    
+    return slider_editor.vbox
+    
+    """
     adjustment = editable_property.get_input_range_adjustment()
     adjustment.connect("value-changed", editable_property.adjustment_value_changed)
 
@@ -156,21 +175,123 @@ def _get_slider_row(editable_property, slider_name=None, compact=False):
         name = slider_name
     name = _p(name)
     
+    kfs_switcher = KeyframesToggler()
+            
     hbox = Gtk.HBox(False, 4)
     if compact:
         name_label = Gtk.Label(label=name + ":")
         hbox.pack_start(name_label, False, False, 4)
     hbox.pack_start(hslider, True, True, 0)
     hbox.pack_start(spin, False, False, 4)
+    hbox.pack_start(kfs_switcher.widget, False, False, 4)
 
     vbox = Gtk.VBox(False)
     if compact:
         vbox.pack_start(hbox, False, False, 0)
     else:
-        top_row = _get_two_column_editor_row(name, Gtk.HBox())
+        top_right_h = Gtk.HBox()
+        top_right_h.pack_start(Gtk.Label(), True, True, 0)
+        #top_right_h.pack_start(kfs_switcher.widget, False, False, 0)
+        
+        top_row = _get_two_column_editor_row(name, top_right_h)
         vbox.pack_start(top_row, True, True, 0)
         vbox.pack_start(hbox, False, False, 0)
+    
     return vbox
+    """
+    
+class SliderEditor:
+    def __init__(self, editable_property, slider_name=None, compact=False):
+
+        self.vbox = Gtk.VBox(False)
+        
+        if changing_slider_to_kf_property_name == editable_property.name:
+            editable_property = editable_property.get_as_KeyFrameHCSFilterProperty()
+            self.init_for_kf_editor(editable_property)
+        else:
+            self.init_for_slider(editable_property, slider_name, compact)
+        
+        self.editable_property = editable_property
+        
+    def init_for_slider(self, editable_property, slider_name=None, compact=False):
+        
+        adjustment = editable_property.get_input_range_adjustment()
+        adjustment.connect("value-changed", editable_property.adjustment_value_changed)
+
+        hslider = Gtk.HScale()
+        hslider.set_adjustment(adjustment)
+        hslider.set_draw_value(False)
+
+        spin = Gtk.SpinButton()
+        spin.set_numeric(True)
+        spin.set_adjustment(adjustment)
+
+        _set_digits(editable_property, hslider, spin)
+
+        if slider_name == None:
+            name = editable_property.get_display_name()
+        else:
+            name = slider_name
+        name = _p(name)
+        
+        kfs_switcher = KeyframesToggler(self)
+                
+        hbox = Gtk.HBox(False, 4)
+        if compact:
+            name_label = Gtk.Label(label=name + ":")
+            hbox.pack_start(name_label, False, False, 4)
+        hbox.pack_start(hslider, True, True, 0)
+        hbox.pack_start(spin, False, False, 4)
+        hbox.pack_start(kfs_switcher.widget, False, False, 4)
+
+        if compact:
+            self.vbox.pack_start(hbox, False, False, 0)
+        else:
+            top_right_h = Gtk.HBox()
+            top_right_h.pack_start(Gtk.Label(), True, True, 0)            
+            top_row = _get_two_column_editor_row(name, top_right_h)
+            
+            self.vbox.pack_start(top_row, True, True, 0)
+            self.vbox.pack_start(hbox, False, False, 0)
+
+        self.editor_type = SLIDER
+
+    def init_for_kf_editor(self, editable_property):
+        kfeditor = keyframeeditor.KeyFrameEditor(editable_property)
+        self.vbox.pack_start(kfeditor, False, False, 0)
+
+        self.editor_type = KEYFRAME_EDITOR
+        
+    def kfs_toggled(self):
+        print "iiiiii"
+        if self.editor_type == SLIDER:
+            print "kkkkkkkk"
+            global changing_slider_to_kf_property_name
+            changing_slider_to_kf_property_name = self.editable_property.name
+            re_init_editors_for_slider_type_change_func()
+        
+
+class KeyframesToggler:
+    def __init__(self, parent_editor):
+        w=16
+        h=22
+        self.widget = cairoarea.CairoDrawableArea2( w,
+                                                    h,
+                                                    self._draw)
+        self.widget.press_func = self._press_event
+        self.parent_editor = parent_editor
+
+        surface_kf_off = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active.png")
+        self.surface = surface_kf_off
+        self.surface_x  = 3
+        self.surface_y  = 8
+
+    def _draw(self, event, cr, allocation):
+        cr.set_source_surface(self.surface, self.surface_x, self.surface_y)
+        cr.paint()
+
+    def _press_event(self, event):
+        self.parent_editor.kfs_toggled()
 
 def _get_ladspa_slider_row(editable_property, slider_name=None):
     adjustment = editable_property.get_input_range_adjustment()

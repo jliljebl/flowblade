@@ -63,7 +63,7 @@ def render_program(render_folder, frame_name, project_file, writer, start_frame,
     #NatronRenderer -w Write2 1-10 /home/janne/test/natrontestout/frame###.png /home/janne/test/natrontest.ntp
     #NatronRenderer -w Write2 1-10 /home/janne/test/natrontestout/frame###.png /home/janne/test/natrontest.ntp
     
-        # Launch Natron
+    # Launch Natron
     print "Launch Natron render with ", writer, range_str, render_frame, project_file
     args = [str(respaths.LAUNCH_DIR + "natron_render.sh"), writer, range_str, render_frame, project_file]
     p = subprocess.Popen(args)
