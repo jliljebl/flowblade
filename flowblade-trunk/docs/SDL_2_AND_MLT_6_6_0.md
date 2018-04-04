@@ -2,6 +2,8 @@
 
 **MLT 6.6.0 and later need to be compiled with SDL 1.2 support for Flowblade to work.**
 
+**Updating to MLT 6.6.0 from 6.5.0 version fixes startup crashes.**
+
 There were some developments with Flowblade, SDL and MLT from autumn 2017 onwards, here are the main points:
 
 1. All releases of MLT up until 6.4.1 used SDL 1.2 in "sdl" module for Flowblade related video display.
