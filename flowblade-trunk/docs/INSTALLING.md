@@ -1,7 +1,12 @@
 # Installing Flowblade #
 
-
-### Installing using .deb package
+1. [Installing deb package](./INSTALLING#installing-deb-package)
+  1. [Installing Flatpak from Flathub](./INSTALLING.md#installing-flatpak-from-flathub)
+  1. [Installing from your OS repository](./INSTALLING.md#nstalling-from-your-os-repository)
+  1. [Installing Using Source Code Archive](./INSTALLING.md#installing-using-source-code-archive)
+  1. [Installing Using Development Repository Version](./INSTALLING.md#installing-using-development-repository-version)
+       
+### Installing deb package
 
 #### Step 1. Download and install .deb 
 **First download .deb file** for Flowblade 1.16 from <a href="https://github.com/jliljebl/flowblade/releases">here.</a>
@@ -26,8 +31,25 @@ You may need to give some additional commands on terminal:
 
     sudo apt-get install -f
 
+### Installing Flatpak from Flathub
 
-Release has been install tested on: <b>Ubuntu 17.10</b>,  <b>Linux Mint 18.2</b>, <b>Debisn Stretch</b>. It should work on all recent Debian based distributions.
+#### 1. Setup Flatpak and Flathub
+There is an official guide here: https://flatpak.org/setup/
+
+#### 2a. Install using Gnome SOFTWARE
+If your distribution has Gnome SOFTWARE application available you can install Flowblade with it.
+**NOTE: There can be two versions of Flowblade in  Gnome SOFTWARE, Flatpak version has text dl.flathub.org text**
+
+#### 2b. Install from commandline
+Give these commands in terminal:
+
+```bash
+flatpak install --from https://flathub.org/repo/appstream/io.github.jliljebl.Flowblade.flatpakref
+```
+
+```bash
+flatpak run io.github.jliljebl.Flowblade
+```
 
 ### Installing from your OS repository
 
