@@ -26,8 +26,25 @@ You may need to give some additional commands on terminal:
 
     sudo apt-get install -f
 
+### Installing Flatpak from Flathub
 
-Release has been install tested on: <b>Ubuntu 17.10</b>,  <b>Linux Mint 18.2</b>, <b>Debisn Stretch</b>. It should work on all recent Debian based distributions.
+#### 1. Setup Flatpak and Flathub
+There is an official guide here: https://flatpak.org/setup/
+
+#### 2a. Install using Gnome SOFTWARE
+If your distribution has Gnome SOFTWARE application available you can install Flowblade with it.
+**NOTE: There can be two versions of Flowblade in  Gnome SOFTWARE, Flatpak version has text dl.flathub.org text**
+
+#### 2b. Install from commandline
+Give these commands in terminal:
+
+```bash
+flatpak install --from https://flathub.org/repo/appstream/io.github.jliljebl.Flowblade.flatpakref
+```
+
+```bash
+flatpak run io.github.jliljebl.Flowblade
+```
 
 ### Installing from your OS repository
 
