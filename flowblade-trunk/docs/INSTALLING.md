@@ -1,10 +1,10 @@
 # Installing Flowblade #
 
-1. [Installing deb package](https://github.com/jliljebl/flowblade/flowblade-trunk/docs/INSTALLING#installing-deb-package)
+1. [Installing deb package](./INSTALLING#installing-deb-package)
   1. [Installing Flatpak from Flathub](./INSTALLING.md#installing-flatpak-from-flathub)
-  1. [Installing from your OS repository](https://github.com/jliljebl/flowblade/flowblade-trunk/docs/INSTALLING.md#nstalling-from-your-os-repository)
-  1. [Installing Using Source Code Archive](https://github.com/jliljebl/flowblade/flowblade-trunk/docs/INSTALLING.md#installing-using-source-code-archive)
-  1. [Installing Using Development Repository Version](https://github.com/jliljebl/flowblade/flowblade-trunk/docs/INSTALLING.md#installing-using-development-repository-version)
+  1. [Installing from your OS repository](./INSTALLING.md#nstalling-from-your-os-repository)
+  1. [Installing Using Source Code Archive](./INSTALLING.md#installing-using-source-code-archive)
+  1. [Installing Using Development Repository Version](./INSTALLING.md#installing-using-development-repository-version)
        
 ### Installing deb package
 
