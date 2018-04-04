@@ -1,7 +1,13 @@
 # Installing Flowblade #
 
 
-### Installing using .deb package
+  1. [Installing using .deb package](https://github.com/jliljeble/flowblad/flowblade-trunk/docs/installing#installing-using-deb-package)
+  1. [Installing Flatpak from Flathub](https://github.com/jliljeble/flowblad/flowblade-trunk/docs/installing#installing-flatpak-from-flathub)
+  1. [Installing from your OS repository](https://github.com/jliljeble/flowblad/flowblade-trunk/docs/installing#nstalling-from-your-os-repository)
+  1. [Installing Using Source Code Archive](https://github.com/jliljeble/flowblad/flowblade-trunk/docs/installing#installing-using-source-code-archive)
+  1. [Installing Using Development Repository Version](https://github.com/jliljeble/flowblad/flowblade-trunk/docs/installing#installing-using-development-repository-version)
+       
+### Installing using deb package
 
 #### Step 1. Download and install .deb 
 **First download .deb file** for Flowblade 1.16 from <a href="https://github.com/jliljebl/flowblade/releases">here.</a>
