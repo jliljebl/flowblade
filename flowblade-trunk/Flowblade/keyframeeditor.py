@@ -1607,7 +1607,7 @@ class AbstractKeyFrameEditor(Gtk.VBox):
     
     Extending editor also has slider for setting keyframe values.
     """
-    def __init__(self, editable_property, use_clip_in=True):
+    def __init__(self, editable_property, use_clip_in=True, slider_switcher=None):
         # editable_property is KeyFrameProperty
         GObject.GObject.__init__(self)
         self.initializing = True # Hack against too early for on slider listner
@@ -1630,6 +1630,13 @@ class AbstractKeyFrameEditor(Gtk.VBox):
 
         # Value slider
         row, slider, spin = guiutils.get_slider_row_and_spin_widget(editable_property, self.slider_value_changed)
+        
+        if slider_switcher != None:
+            hbox = Gtk.HBox(False, 4)
+            hbox.pack_start(row, True, True, 0)
+            hbox.pack_start(slider_switcher.widget, False, False, 4)
+            row = hbox
+    
         self.value_slider_row = row
         self.slider = slider
         self.spin = spin
@@ -1683,8 +1690,10 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
     control buttons to create keyframe editor for a single keyframed
     numerical value property. 
     """
-    def __init__(self, editable_property, use_clip_in=True):
-        AbstractKeyFrameEditor.__init__(self, editable_property, use_clip_in)
+    def __init__(self, editable_property, use_clip_in=True, slider_switcher=None):
+        AbstractKeyFrameEditor.__init__(self, editable_property, use_clip_in, slider_switcher)
+
+        self.slider_switcher = slider_switcher
 
         # default parser
         self.clip_editor.keyframe_parser = propertyparse.single_value_keyframes_string_to_kf_array

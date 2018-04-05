@@ -89,6 +89,7 @@ def get_filter_editable_properties(clip, filter_object, filter_index,
         args_str = filter_object.info.property_args[p_name]
         params = (clip, filter_index, (p_name, p_value, p_type), i, args_str)
 
+        print p_type, args_str, params
         ep = _create_editable_property(p_type, args_str, params)
 
         ep.is_compositor_filter = compositor_filter
@@ -353,15 +354,20 @@ class EditableProperty(AbstractProperty):
             return self.clip.filters[self.filter_index]
 
     def get_as_KeyFrameHCSFilterProperty(self):
+        # this is entirely for feature allowing user to change between slider and kf editing
         clone_ep = KeyFrameHCSFilterProperty(self.used_create_params)
 
+        clone_ep.prop_orig_type = self.type # we need this if user wants to get back slider editing
+        
+        clone_ep.value = self.value
+        clone_ep.type = appconsts.PROP_EXPRESSION
         clone_ep.is_compositor_filter = self.is_compositor_filter
         clone_ep.track = self.track
         clone_ep.clip_index = self.clip_index
 
         return clone_ep
         
-    def write_value(self, str_value): # overrides ConvertingProperty.write_value(str_value)
+    def write_value(self, str_value):
         self.write_mlt_property_str_value(str_value)
         self.value = str_value
         self.write_filter_object_property(str_value)
