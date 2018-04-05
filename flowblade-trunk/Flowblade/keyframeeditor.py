@@ -1790,7 +1790,6 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         self.queue_draw()
 
     def connect_to_update_on_release(self):
-        print "jjjjjj"
         self.editable_property.adjustment.disconnect(self.editable_property.value_changed_ID)
         self.editable_property.value_changed_ID = DISCONNECTED_SIGNAL_HANDLER
         self.spin.connect("activate", lambda w:self.spin_value_changed(w))

@@ -525,7 +525,11 @@ def effect_selection_changed():
                 or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_RELEASE)
                 or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_CLIP)):
                     keyframe_editor_widgets.append(editor_row)
-                    
+            
+            # if slider property is being dedited as keyrame property
+            if hasattr(editor_row, "is_kf_editor"):
+                keyframe_editor_widgets.append(editor_row)
+
             vbox.pack_start(editor_row, False, False, 0)
             if not hasattr(editor_row, "no_separator"):
                 vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
@@ -602,6 +606,7 @@ def update_kfeditors_positions():
     for kf_widget in keyframe_editor_widgets:
         kf_widget.update_clip_pos()
 
+        
 # ------------------------------------------------ SAVE; LOAD etc. from hamburger menu
 def _hamburger_launch_pressed(widget, event):
     guicomponents.get_clip_effects_editor_hamburger_menu(event, _clip_hamburger_item_activated)

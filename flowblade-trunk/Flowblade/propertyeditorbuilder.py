@@ -153,6 +153,12 @@ def _get_slider_row(editable_property, slider_name=None, compact=False):
     global changing_slider_to_kf_property_name
     changing_slider_to_kf_property_name = None
     
+    # We need to tag this somehow so that it can set to get ke editor frame updates
+    # in clipeffectseditor.py
+    if slider_editor.editor_type == KEYFRAME_EDITOR:
+        slider_editor.vbox.is_kf_editor = True      
+        slider_editor.vbox.display_tline_frame = lambda tline_frame:slider_editor.kfeditor.display_tline_frame(tline_frame)
+        
     return slider_editor.vbox
     
 
@@ -167,13 +173,10 @@ class SliderEditor:
             # create kf in frame 0 if value PROP_INT or PROP_FLOAT
             if eq_index == -1:
                 new_value = "0=" + editable_property.value
-                print "new_value", new_value
                 editable_property.value = new_value
                 editable_property.write_filter_object_property(new_value)
-                print "editable_property.value", editable_property.value
                             
             editable_property = editable_property.get_as_KeyFrameHCSFilterProperty()
-            print "editable_property.value", editable_property.value
             self.init_for_kf_editor(editable_property)
         else:
             self.init_for_slider(editable_property, slider_name, compact)
@@ -226,8 +229,8 @@ class SliderEditor:
         self.editor_type = KEYFRAME_EDITOR
         
         kfs_switcher = KeyframesToggler(self)
-        kfeditor = keyframeeditor.KeyFrameEditor(editable_property, True, kfs_switcher)
-        self.vbox.pack_start(kfeditor, False, False, 0)
+        self.kfeditor = keyframeeditor.KeyFrameEditor(editable_property, True, kfs_switcher)
+        self.vbox.pack_start(self.kfeditor, False, False, 0)
 
     def kfs_toggled(self):
         if self.editor_type == SLIDER: # slider -> kf editor
@@ -238,8 +241,6 @@ class SliderEditor:
             # Save value as single keyframe or PROP_INT or PROP_FLOAT and
             # drop all but first keyframe.
             # Going kf editor -> slider destroys all but first keyframe.
-            print self.editable_property.value
-            
             first_kf_index = self.editable_property.value.find(";")
             if first_kf_index == -1:
                 val = self.editable_property.value
@@ -251,16 +252,13 @@ class SliderEditor:
             
             #  We need to turn editable prperty value and type(original type) back to what it was before user selected to go kf editing
             if self.editable_property.prop_orig_type == appconsts.PROP_INT:
-                print "int"
                 self.editable_property.type = appconsts.PROP_INT 
                 self.editable_property.write_filter_object_property(str(int(first_kf_val)))
                 #self.editable_property.typ
             elif self.editable_property.prop_orig_type == appconsts.PROP_FLOAT:
-                print "float", first_kf_val, val
                 self.editable_property.type = appconsts.PROP_FLOAT 
                 self.editable_property.write_filter_object_property(str(float(first_kf_val)))
             else:
-                print "single kf"
                 self.editable_property.write_filter_object_property("0=" + str(float(first_kf_val)))
 
             re_init_editors_for_slider_type_change_func()

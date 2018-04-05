@@ -89,7 +89,6 @@ def get_filter_editable_properties(clip, filter_object, filter_index,
         args_str = filter_object.info.property_args[p_name]
         params = (clip, filter_index, (p_name, p_value, p_type), i, args_str)
 
-        print p_type, args_str, params
         ep = _create_editable_property(p_type, args_str, params)
 
         ep.is_compositor_filter = compositor_filter
@@ -122,7 +121,15 @@ def _create_editable_property(p_type, args_str, params):
         conversion so we need a extending class for expression type.
         """
         args = propertyparse.args_string_to_args_dict(args_str)
-        exp_type = args[EXPRESSION_TYPE] # 'exptype' arg missing?. if this fails, it's a bug in filters.xml
+        
+        try:
+            exp_type = args[EXPRESSION_TYPE] 
+        except:
+            # This fails PROP_INT and PROP_FLOAT properties that are edited as keyframe properties and 
+            # they will be treated as exptype = SINGLE_KEYFRAME properties.
+            # This will now hide 'exptype' args in filters.xml, so they must be there set correctly.
+            exp_type = SINGLE_KEYFRAME
+        
         creator_func = EDITABLE_PROPERTY_CREATORS[exp_type]
         ep = creator_func(params)
     else:
