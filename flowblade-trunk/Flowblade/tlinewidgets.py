@@ -2396,19 +2396,24 @@ class TimeLineFrameScale:
         view_end_frame = int(pos + w / pix_per_frame)
 
         # Get draw steps for marks and tc texts
+        if fps < 20:
+            spacer_mult = 2 # for fps like 15 this looks bad with out some help
+        else:
+            spacer_mult = 1
+            
         if pix_per_frame > DRAW_THRESHOLD_1:
             small_tick_step = 1
             big_tick_step = fps / 2
-            tc_draw_step = fps / 2
+            tc_draw_step = (fps * spacer_mult)  / 2
         elif pix_per_frame > DRAW_THRESHOLD_2:
-            small_tick_step = fps
-            tc_draw_step = fps
+            small_tick_step = fps * spacer_mult
+            tc_draw_step = fps * spacer_mult
         elif pix_per_frame > DRAW_THRESHOLD_3:
-            small_tick_step = fps * 2
-            tc_draw_step = fps * 2
+            small_tick_step = fps * 2 * spacer_mult
+            tc_draw_step = fps * 2 * spacer_mult
         elif pix_per_frame > DRAW_THRESHOLD_4:
-            small_tick_step = fps * 3
-            tc_draw_step = fps * 3
+            small_tick_step = fps * 3 * spacer_mult
+            tc_draw_step = fps * 3 * 2
         else:
             view_length = view_end_frame - view_start_frame
             small_tick_step = int(view_length / NUMBER_OF_LINES)

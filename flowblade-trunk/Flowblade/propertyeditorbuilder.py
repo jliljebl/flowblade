@@ -153,8 +153,8 @@ def _get_slider_row(editable_property, slider_name=None, compact=False):
     global changing_slider_to_kf_property_name
     changing_slider_to_kf_property_name = None
     
-    # We need to tag this somehow so that it can set to get ke editor frame updates
-    # in clipeffectseditor.py
+    # We need to tag this somehow and add lambda to pass frame events so that this can be to set get frame events
+    # in clipeffectseditor.py.
     if slider_editor.editor_type == KEYFRAME_EDITOR:
         slider_editor.vbox.is_kf_editor = True      
         slider_editor.vbox.display_tline_frame = lambda tline_frame:slider_editor.kfeditor.display_tline_frame(tline_frame)
