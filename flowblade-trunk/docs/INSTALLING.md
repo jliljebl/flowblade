@@ -3,9 +3,9 @@
 1. [Installing deb package](./INSTALLING#installing-deb-package)
   1. [Installing Flatpak from Flathub](./INSTALLING.md#installing-flatpak-from-flathub)
   1. [Installing from your OS repository](./INSTALLING.md#nstalling-from-your-os-repository)
-  1. [Installing Using Source Code Archive](./INSTALLING.md#installing-using-source-code-archive)
-  1. [Installing Using Development Repository Version](./INSTALLING.md#installing-using-development-repository-version)
-       
+  1. [Installing using Source Code Archive](./INSTALLING.md#installing-using-source-code-archive)
+  1. [Installing using Development Repository Version](./INSTALLING.md#installing-using-development-repository-version)
+  1. [Installing with setup.py no supported](./INSTALLING.md#installing-with-setup.py-not-supported)   
 ### Installing deb package
 
 #### Step 1. Download and install .deb 
@@ -74,7 +74,7 @@ yaourt -S flowblade-git
 
 
 
-### Installing Using Source Code Archive
+### Installing using Source Code Archive
 
 Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install and run Flowblade without compiling anything.
 
@@ -86,14 +86,8 @@ Flowblade is currently a 100% script application, and all the dependencies shoul
   * Launch by running script *.../flowblade-1.16.0/flowblade* that was created in the folder where archive was unpacked.
   * Note that if you have Flowblade installed yu will need use full path to repository version or navigate to the folder containing launch script and use command "./flowblade" to launch repository version instead of installed version.
 
-*Please note these issues with Dropbox download:*
-<ul>
- <li> <i>The download button may appear grayed out and you have to press it twice.</i></li>
- <li> <i>A window may appear that asks you to create an account, but you can close it and press Download button again..</i></li> 
- <li> <i>The .deb file is in a Dropbox Public folder and may go over download limit, please contact Project Owner if this happens.</i></li>
-</ul>
 
-### Installing Using Development Repository Version
+### Installing using Development Repository Version
 
 Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install and run Flowblade without compiling anything.
 
@@ -111,4 +105,6 @@ git clone https://github.com/jliljebl/flowblade.git
   * Launch by running script ``.../flowblade-trunk/flowblade`` that was created in the folder where clone command was done.
   * Note that if you have Flowblade installed you will need use full path to repository version or navigate to the folder containing launch script and use command "./flowblade" to launch repository version instead of installed version
  
-*Please note: Using the available setup.py script will NOT result in a successful installation, even if dependencies are installed, and may actually break the .deb install if attempted. It is only there to help .deb packaging.* 
+ 
+ ### Installing with setup.py not supported
+*Please note: Using the available setup.py script will probably NOT result in a successful installation, even if dependencies are installed, and may actually break the .deb install if attempted. It is only there to help .deb packaging.* 
