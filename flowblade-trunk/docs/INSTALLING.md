@@ -5,7 +5,7 @@
   1. [Installing from your OS repository](./INSTALLING.md#nstalling-from-your-os-repository)
   1. [Installing using Source Code Archive](./INSTALLING.md#installing-using-source-code-archive)
   1. [Installing using Development Repository Version](./INSTALLING.md#installing-using-development-repository-version)
-  1. [Installing with setup.py no supported](./INSTALLING.md#installing-with-setup.py-not-supported)   
+  1. [Installing with setup.py not supported](./INSTALLING.md#installing-with-setup.py-not-supported)   
 ### Installing deb package
 
 #### Step 1. Download and install .deb 
