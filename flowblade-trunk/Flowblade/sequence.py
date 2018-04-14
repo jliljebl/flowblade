@@ -993,7 +993,16 @@ class Sequence:
     def set_track_mute_state(self, track_index, mute_state):
         track = self.tracks[track_index]
         track.mute_state = mute_state
-            
+    
+        # Some older projects might get here without a track gain filter existing
+        if not hasattr(track, "gain_filter"):
+            # Create and add gain filter
+            gain_filter = mlt.Filter(self.profile, "volume")
+            mltrefhold.hold_ref(gain_filter)
+            gain_filter.set("gain", str(track.audio_gain))
+            track.attach(gain_filter)
+            track.gain_filter = gain_filter
+
         if mute_state == 2: # TRACK_MUTE_AUDIO
             if track.id < self.first_video_index:
                 # Audio tracks
