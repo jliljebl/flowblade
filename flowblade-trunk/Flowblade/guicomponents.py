@@ -2138,12 +2138,12 @@ class TracksNumbersSelect:
         self.widget = Gtk.HBox()
         
         self.video_label = Gtk.Label(_("Video:"))
-        self.video_tracks = Gtk.SpinButton.new_with_range(1, 8, 1)
+        self.video_tracks = Gtk.SpinButton.new_with_range(1, self.MAX_TRACKS, 1)
         self.video_tracks.set_value(v_tracks)
         self.video_tracks.connect("value-changed", self.video_tracks_changed)
         
         self.audio_label = Gtk.Label(_("Audio:"))
-        self.audio_tracks = Gtk.SpinButton.new_with_range(1, 8, 1)
+        self.audio_tracks = Gtk.SpinButton.new_with_range(0, self.MAX_TRACKS-1, 1)
         self.audio_tracks.set_value(a_tracks)
         self.audio_tracks.connect("value-changed", self.audio_tracks_changed)
         
@@ -2173,7 +2173,7 @@ class TracksNumbersSelect:
         self.set_total_tracks_info()
         
     def set_total_tracks_info(self):
-        self.tracks_amount_info.set_text(str(int(self.video_tracks.get_value() + self.audio_tracks.get_value())) + " / 9")
+        self.tracks_amount_info.set_text(str(int(self.video_tracks.get_value() + self.audio_tracks.get_value())) + " / " + str(self.MAX_TRACKS))
         self.tracks_amount_info.queue_draw ()
 
     def get_tracks(self):
