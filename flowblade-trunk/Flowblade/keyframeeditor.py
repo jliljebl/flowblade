@@ -705,7 +705,7 @@ class AbstractScreenEditor:
         self.current_clip_frame = 0
         
         # Keyframe tuples are of type (frame, rect, opacity)
-        self.keyframes = None # Set using set_keyframes() keyframes are in form [frame, shape, opacity]
+        self.keyframes = None # Set using function AbstractScreenEditor.set_keyframes(). Keyframes are in form [frame, shape, opacity]
         self.keyframe_parser = None # Function used to parse keyframes to tuples is different for different expressions
                                     # Parent editor sets this.
             
@@ -823,7 +823,10 @@ class AbstractScreenEditor:
         old_frame, shape, opacity = self.keyframes[active_kf_index]
         self.keyframes.pop(active_kf_index)
         self.keyframes.insert(active_kf_index, (frame, shape, opacity))    
-    
+
+    def get_keyframe(self, kf_index):
+        return self.keyframes[kf_index]
+
     # ---------------------------------------------------- editor menu actions
     def reset_active_keyframe_shape(self, active_kf_index):
         print "reset_active_keyframe_shape not impl"
@@ -1618,7 +1621,16 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         self.clip_tline_pos = editable_property.get_clip_tline_pos()
 
         self.clip_editor = ClipKeyFrameEditor(editable_property, self, use_clip_in)
-
+        """
+        Callbacks from ClipKeyFrameEditor:
+        def clip_editor_frame_changed(self, frame)
+        def active_keyframe_changed(self)
+        def keyframe_dragged(self, active_kf, frame)
+        def update_slider_value_display(self, frame)
+        
+        These may be implemedted here or in extending classes KeyframeEditor and GeometryEditor
+        """
+        
         # Some filters start keyframes from *MEDIA* frame 0
         # Some filters or compositors start keyframes from *CLIP* frame 0
         # Filters starting from *media* 0 need offset to clip start added to all values
@@ -1833,6 +1845,8 @@ class GeometryEditor(AbstractKeyFrameEditor):
         g_frame.add(self.geom_kf_edit.widget)
              
         self.buttons_row = ClipEditorButtonsRow(self)
+
+        self.pos_entries_row = PositionNumericalEntries()
         
         # Create clip editor keyframes from geom editor keyframes
         # that contain the property values when opening editor.
@@ -1847,6 +1861,7 @@ class GeometryEditor(AbstractKeyFrameEditor):
         # Build gui
         self.pack_start(self.geom_buttons_row, False, False, 0)
         self.pack_start(g_frame, False, False, 0)
+        self.pack_start(self.pos_entries_row, False, False, 0)
         self.pack_start(self.value_slider_row, False, False, 0)
         self.pack_start(self.clip_editor.widget, False, False, 0)
         self.pack_start(self.buttons_row, False, False, 0)
@@ -1856,6 +1871,8 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.queue_draw()
 
     def add_pressed(self):
+        # These two have different keyframe, clip_editor only deals with opacity.
+        # This because clip_editor is the same class used to keyframe edit single values
         self.clip_editor.add_keyframe(self.clip_editor.current_clip_frame)
         self.geom_kf_edit.add_keyframe(self.clip_editor.current_clip_frame)
 
@@ -1937,7 +1954,9 @@ class GeometryEditor(AbstractKeyFrameEditor):
         kf_frame = self.clip_editor.get_active_kf_frame()
         self.update_editor_view_with_frame(kf_frame)
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
-        
+        # we need active index from clip_editor and geometry values from geom_kf_edit to update numerical entries
+        self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+         
     def _reset_rect_pressed(self):
         self.geom_kf_edit.reset_active_keyframe_shape(self.clip_editor.active_kf_index)
         frame = self.clip_editor.get_active_kf_frame()
@@ -2019,7 +2038,7 @@ class GeometryEditor(AbstractKeyFrameEditor):
 
 
 class RotatingGeometryEditor(GeometryEditor):
-    
+
     def init_geom_gui(self, editable_property):
         self.geom_kf_edit = RotatingScreenEditor(editable_property, self)
         self.geom_kf_edit.init_editor(current_sequence().profile.width(),
@@ -2032,7 +2051,56 @@ class RotatingGeometryEditor(GeometryEditor):
 
 
 
+# ----------------------------------------------------------------- POSITION NUMERICAL ENTRY WIDGET
+class PositionNumericalEntries(Gtk.HBox):
+    
+    def __init__(self):
+        GObject.GObject.__init__(self)
+        x_label = Gtk.Label(_("x:"))
+        y_label = Gtk.Label(_("y:"))
+        w_label = Gtk.Label(_("w:"))
+        h_label = Gtk.Label(_("h:"))
+        
+        self.x_entry = Gtk.Entry.new()
+        self.y_entry = Gtk.Entry.new()
+        self.w_entry = Gtk.Entry.new()
+        self.h_entry = Gtk.Entry.new()
+        
+        self.prepare_entry(self.x_entry)
+        self.prepare_entry(self.y_entry)
+        self.prepare_entry(self.w_entry)
+        self.prepare_entry(self.h_entry)
+        
+        self.set_homogeneous(False)
+        self.set_spacing(2)
+        self.set_margin_top (4)
 
+        self.pack_start(Gtk.Label(), True, True, 0)
+        self.pack_start(x_label, False, False, 0)
+        self.pack_start(self.x_entry, False, False, 0)
+        self.pack_start(guiutils.pad_label(6, 6), False, False, 0)
+        self.pack_start(y_label, False, False, 0)
+        self.pack_start(self.y_entry, False, False, 0)
+        self.pack_start(guiutils.pad_label(6, 6), False, False, 0)
+        self.pack_start(w_label, False, False, 0)
+        self.pack_start(self.w_entry, False, False, 0)
+        self.pack_start(guiutils.pad_label(6, 6), False, False, 0)
+        self.pack_start(h_label, False, False, 0)
+        self.pack_start(self.h_entry, False, False, 0)
+        self.pack_start(Gtk.Label(), True, True, 0)
+    
+    def prepare_entry(self, entry):
+        entry.set_width_chars (4)
+        entry.set_max_length (4)
+        entry.set_max_width_chars (4)
+        entry.connect("activate", self.enter_pressed)
+    
+    def enter_pressed(self, entry):
+        print entry.get_text()
+        
+    def update_entry_values(self, active_kf):
+        frame, shape, opacity = active_kf
+        print shape
 
 # ----------------------------------------------------------------- linear interpolation
 def _get_frame_value(frame, keyframes):
