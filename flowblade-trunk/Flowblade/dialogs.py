@@ -947,7 +947,8 @@ def tracks_count_change_dialog(callback):
     
     tracks_select = guicomponents.TracksNumbersSelect(5, 4)
         
-    info_text = _("Please note:\n") + \
+    info_text = _("Please note:\n\n") + \
+                u"\u2022" + _(" When reducing the number of tracks the top Video track and/or bottom Audio track will be removed\n") + \
                 u"\u2022" + _(" It is recommended that you save Project before completing this operation\n") + \
                 u"\u2022" + _(" There is no Undo for this operation\n") + \
                 u"\u2022" + _(" Current Undo Stack will be destroyed\n") + \
