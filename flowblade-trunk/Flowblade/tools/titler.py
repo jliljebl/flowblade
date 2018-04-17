@@ -59,7 +59,7 @@ VIEW_EDITOR_WIDTH = 815
 VIEW_EDITOR_HEIGHT = 620
 
 TEXT_LAYER_LIST_WIDTH = 300
-TEXT_LAYER_LIST_HEIGHT = 250
+TEXT_LAYER_LIST_HEIGHT = 150
 
 TEXT_VIEW_WIDTH = 300
 TEXT_VIEW_HEIGHT = 275
@@ -123,15 +123,26 @@ class TextLayer:
         self.font_family = "Times New Roman"
         self.font_face = FACE_REGULAR
         self.font_size = 15
+        self.fill_on = True
         self.color_rgba = (1.0, 1.0, 1.0, 1.0) 
         self.alignment = ALIGN_LEFT
         self.pixel_size = (100, 100)
         self.spacing = 5
+        
+        self.outline_on = False
+        self.outline_color_rgba = (0.3, 0.3, 0.3, 1.0) 
+        self.outline_width = 2
+
+        self.shadow_on = False
+        self.shadow_color_rgb = (0.0, 0.0, 0.0) 
+        self.shadow_opacity = 100
+        self.shadow_xoff = 3
+        self.shadow_yoff = 3
+        self.shadow_blur = 0.0 # not impl yet, for future so that we don't need to break save format again
+        
         self.pango_layout = None # PangoTextLayout(self)
 
-        self.drop_shadow = None # future feature, here to keep file compat once added
-        self.animation = None # future feature
-        self.layer_attributes = None # future feature (kerning etc. go here, we're not using all pango features)
+        self.layer_attributes = None # future feature 
         self.visible = True
 
     def get_font_desc_str(self):
@@ -302,6 +313,9 @@ class Titler(Gtk.Window):
         
         self.color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=1.0, green=1.0, blue=1.0, alpha=1.0))
         self.color_button.connect("color-set", self._edit_value_changed)
+        self.fill_on = Gtk.CheckButton()
+        self.fill_on.set_active(True)
+        self.fill_on.connect("toggled", self._edit_value_changed)
 
         buttons_box = Gtk.HBox()
         buttons_box.pack_start(Gtk.Label(), True, True, 0)
@@ -311,10 +325,91 @@ class Titler(Gtk.Window):
         buttons_box.pack_start(self.left_align, False, False, 0)
         buttons_box.pack_start(self.center_align, False, False, 0)
         buttons_box.pack_start(self.right_align, False, False, 0)
-        buttons_box.pack_start(guiutils.pad_label(5, 5), False, False, 0)
+        buttons_box.pack_start(guiutils.pad_label(15, 5), False, False, 0)
         buttons_box.pack_start(self.color_button, False, False, 0)
+        buttons_box.pack_start(guiutils.pad_label(2, 1), False, False, 0)
+        buttons_box.pack_start(self.fill_on, False, False, 0)
         buttons_box.pack_start(Gtk.Label(), True, True, 0)
 
+        outline_label = Gtk.Label(_("<b>Outline</b>"))
+        outline_label.set_use_markup(True)
+        outline_size = Gtk.Label(_("Size:"))
+        
+        self.out_line_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.3, green=0.3, blue=0.3, alpha=1.0))
+        self.out_line_color_button.connect("color-set", self._edit_value_changed)
+        
+        adj2 = Gtk.Adjustment(float(3), float(1), float(50), float(1))
+        self.out_line_size_spin = Gtk.SpinButton()
+        self.out_line_size_spin.set_adjustment(adj2)
+        self.out_line_size_spin.connect("changed", self._edit_value_changed)
+        self.out_line_size_spin.connect("key-press-event", self._key_pressed_on_widget)
+
+        self.outline_on = Gtk.CheckButton()
+        self.outline_on.set_active(False)
+        self.outline_on.connect("toggled", self._edit_value_changed)
+        
+        outline_box = Gtk.HBox()
+        outline_box.pack_start(outline_label, False, False, 0)
+        outline_box.pack_start(guiutils.pad_label(15, 1), False, False, 0)
+        outline_box.pack_start(outline_size, False, False, 0)
+        outline_box.pack_start(guiutils.pad_label(2, 1), False, False, 0)
+        outline_box.pack_start(self.out_line_size_spin, False, False, 0)
+        outline_box.pack_start(guiutils.pad_label(15, 1), False, False, 0)
+        outline_box.pack_start(self.out_line_color_button, False, False, 0)
+        outline_box.pack_start(guiutils.pad_label(2, 1), False, False, 0)
+        outline_box.pack_start(self.outline_on, False, False, 0)
+        outline_box.pack_start(Gtk.Label(), True, True, 0)
+
+        shadow_label = Gtk.Label(_("<b>Shadow</b>"))
+        shadow_label.set_use_markup(True)
+        shadow_opacity_label = Gtk.Label(_("Opacity:"))
+        shadow_xoff = Gtk.Label(_("X Off:"))
+        shadow_yoff = Gtk.Label(_("Y Off:"))
+        
+        self.shadow_opa_spin = Gtk.SpinButton()
+        adj3 = Gtk.Adjustment(float(100), float(1), float(100), float(1))
+        self.shadow_opa_spin.set_adjustment(adj3)
+        self.shadow_opa_spin.connect("changed", self._edit_value_changed)
+        self.shadow_opa_spin.connect("key-press-event", self._key_pressed_on_widget)
+
+        self.shadow_xoff_spin = Gtk.SpinButton()
+        adj4 = Gtk.Adjustment(float(3), float(1), float(100), float(1))
+        self.shadow_xoff_spin.set_adjustment(adj4)
+        self.shadow_xoff_spin.connect("changed", self._edit_value_changed)
+        self.shadow_xoff_spin.connect("key-press-event", self._key_pressed_on_widget)
+
+        self.shadow_yoff_spin = Gtk.SpinButton()
+        adj5 = Gtk.Adjustment(float(3), float(1), float(100), float(1))
+        self.shadow_yoff_spin.set_adjustment(adj5)
+        self.shadow_yoff_spin.connect("changed", self._edit_value_changed)
+        self.shadow_yoff_spin.connect("key-press-event", self._key_pressed_on_widget)
+
+        self.shadow_on = Gtk.CheckButton()
+        self.shadow_on.set_active(False)
+        self.shadow_on.connect("toggled", self._edit_value_changed)
+        
+        self.shadow_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.3, green=0.3, blue=0.3, alpha=1.0))
+        self.shadow_color_button.connect("color-set", self._edit_value_changed)
+
+        shadow_box_1 = Gtk.HBox()
+        shadow_box_1.pack_start(shadow_label, False, False, 0)
+        shadow_box_1.pack_start(guiutils.pad_label(15, 1), False, False, 0)
+        shadow_box_1.pack_start(shadow_opacity_label, False, False, 0)
+        shadow_box_1.pack_start(self.shadow_opa_spin, False, False, 0)
+        shadow_box_1.pack_start(guiutils.pad_label(15, 1), False, False, 0)
+        shadow_box_1.pack_start(self.shadow_color_button, False, False, 0)
+        shadow_box_1.pack_start(guiutils.pad_label(2, 1), False, False, 0)
+        shadow_box_1.pack_start(self.shadow_on, False, False, 0)
+        shadow_box_1.pack_start(Gtk.Label(), True, True, 0)
+
+        shadow_box_2 = Gtk.HBox()
+        shadow_box_2.pack_start(shadow_xoff, False, False, 0)
+        shadow_box_2.pack_start(self.shadow_xoff_spin, False, False, 0)
+        shadow_box_2.pack_start(guiutils.pad_label(15, 1), False, False, 0)
+        shadow_box_2.pack_start(shadow_yoff, False, False, 0)
+        shadow_box_2.pack_start(self.shadow_yoff_spin, False, False, 0)
+        shadow_box_2.pack_start(Gtk.Label(), True, True, 0)
+        
         load_layers = Gtk.Button(_("Load Layers"))
         load_layers.connect("clicked", lambda w:self._load_layers_pressed())
         save_layers = Gtk.Button(_("Save Layers"))
@@ -394,6 +489,11 @@ class Titler(Gtk.Window):
         controls_panel_2.pack_start(scroll_frame, True, True, 0)
         controls_panel_2.pack_start(font_main_row, False, False, 0)
         controls_panel_2.pack_start(buttons_box, False, False, 0)
+        controls_panel_2.pack_start(guiutils.pad_label(40, 1), False, False, 0)
+        controls_panel_2.pack_start(outline_box, False, False, 0)
+        controls_panel_2.pack_start(guiutils.pad_label(40, 1), False, False, 0)
+        controls_panel_2.pack_start(shadow_box_1, False, False, 0)
+        controls_panel_2.pack_start(shadow_box_2, False, False, 0)
         
         controls_panel = Gtk.VBox()
         controls_panel.pack_start(guiutils.get_named_frame(_("Active Layer"),controls_panel_2), True, True, 0)
@@ -763,7 +863,28 @@ class Titler(Gtk.Window):
         r, g, b = utils.hex_to_rgb(color.to_string())
         new_color = (r/65535.0, g/65535.0, b/65535.0, 1.0)        
         _titler_data.active_layer.color_rgba = new_color
+        _titler_data.active_layer.fill_on = self.fill_on.get_active()
+        
+        # OUTLINE
+        color = self.out_line_color_button.get_color()
+        r, g, b = utils.hex_to_rgb(color.to_string())
+        new_color2 = (r/65535.0, g/65535.0, b/65535.0, 1.0)    
+        _titler_data.active_layer.outline_color_rgba = new_color2
+        _titler_data.active_layer.outline_on = self.outline_on.get_active()
+        _titler_data.active_layer.outline_width = self.out_line_size_spin.get_value()
 
+        
+        # SHADOW
+        color = self.shadow_color_button.get_color()
+        r, g, b = utils.hex_to_rgb(color.to_string())
+        a = self.shadow_opa_spin.get_value() / 100.0
+        new_color3 = (r/65535.0, g/65535.0, b/65535.0)  
+        _titler_data.active_layer.shadow_color_rgb = new_color3
+        _titler_data.active_layer.shadow_on = self.shadow_on.get_active()
+        _titler_data.active_layer.shadow_opacity = self.shadow_opa_spin.get_value()
+        _titler_data.active_layer.shadow_xoff = self.shadow_xoff_spin.get_value()
+        _titler_data.active_layer.shadow_yoff = self.shadow_yoff_spin.get_value()
+                
         self.view_editor.active_layer.update_rect = True
         _titler_data.active_layer.update_pango_layout()
 
@@ -781,6 +902,7 @@ class Titler(Gtk.Window):
         # gui events from being added to queue would be nice.
         self.block_updates = True
         
+        # TEXT
         layer = _titler_data.active_layer
         self.text_view.get_buffer().set_text(layer.text)
 
@@ -822,6 +944,24 @@ class Titler(Gtk.Window):
         self.y_pos_spin.set_value(layer.y)
         self.rotation_spin.set_value(layer.angle)
         
+        self.fill_on.set_active(layer.fill_on)
+                
+        # OUTLINE
+        r, g, b, a = layer.outline_color_rgba
+        button_color = Gdk.RGBA(r, g, b, 1.0)
+        self.out_line_color_button.set_rgba(button_color)
+        self.out_line_size_spin.set_value(layer.outline_width)
+        self.outline_on.set_active(layer.outline_on)
+        
+        # SHADOW
+        r, g, b = layer.shadow_color_rgb
+        button_color = Gdk.RGBA(r, g, b, 1.0)
+        self.shadow_color_button.set_rgba(button_color)
+        self.shadow_opa_spin.set_value(layer.shadow_opacity)
+        self.shadow_xoff_spin.set_value(layer.shadow_xoff)
+        self.shadow_yoff_spin.set_value(layer.shadow_yoff)
+        self.shadow_on.set_active(layer.shadow_on)
+        
         self.block_updates = False
 
 
@@ -843,7 +983,18 @@ class PangoTextLayout:
         self.color_rgba = layer.color_rgba
         self.alignment = self._get_pango_alignment_for_layer(layer)
         self.pixel_size = layer.pixel_size
-    
+        self.fill_on = layer.fill_on
+        
+        self.outline_color_rgba = layer.outline_color_rgba
+        self.outline_on = layer.outline_on
+        self.outline_width = layer.outline_width
+
+        self.shadow_on = layer.shadow_on
+        self.shadow_color_rgb = layer.shadow_color_rgb
+        self.shadow_opacity = layer.shadow_opacity
+        self.shadow_xoff = layer.shadow_xoff
+        self.shadow_yoff = layer.shadow_yoff
+
     # called from vieweditor draw vieweditor-> editorlayer->here
     def draw_layout(self, cr, x, y, rotation, xscale, yscale):
         cr.save()
@@ -852,16 +1003,43 @@ class PangoTextLayout:
         layout.set_text(self.text, -1)
         layout.set_font_description(self.font_desc)
         layout.set_alignment(self.alignment)
-        
+    
         self.pixel_size = layout.get_pixel_size()
-        cr.set_source_rgba(*self.color_rgba)
-        cr.move_to(x, y)
-        cr.scale(xscale, yscale)
-        cr.rotate(rotation)
-        
-        PangoCairo.update_layout(cr, layout)
-        PangoCairo.show_layout(cr, layout)
 
+        # Shadow
+        if self.shadow_on:
+            cr.save()
+            r, g, b = self.shadow_color_rgb
+            a = self.shadow_opacity / 100.0
+            cr.set_source_rgba(r, g, b, a)
+            cr.move_to(x + self.shadow_xoff, y + self.shadow_yoff)
+            cr.scale(xscale, yscale)
+            cr.rotate(rotation)
+            PangoCairo.update_layout(cr, layout)
+            PangoCairo.show_layout(cr, layout)
+            cr.restore()
+        
+        # Text
+        if self.fill_on:
+            cr.set_source_rgba(*self.color_rgba)
+            cr.move_to(x, y)
+            cr.scale(xscale, yscale)
+            cr.rotate(rotation)
+            
+            PangoCairo.update_layout(cr, layout)
+            PangoCairo.show_layout(cr, layout)
+        
+        # Outline
+        if self.outline_on:
+            if self.fill_on == False: # case when user only wants outline we need to transform here
+                cr.move_to(x, y)
+                cr.scale(xscale, yscale)
+                cr.rotate(rotation)
+            PangoCairo.layout_path(cr, layout)
+            cr.set_source_rgba(*self.outline_color_rgba)
+            cr.set_line_width(self.outline_width)
+            cr.stroke()
+        
         cr.restore()
 
     def _get_pango_alignment_for_layer(self, layer):

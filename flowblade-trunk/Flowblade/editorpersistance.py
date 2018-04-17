@@ -22,8 +22,8 @@
 Module handles saving and loading data that is related to the editor and not any particular project.
 """
 
-
 from gi.repository import Gtk
+from gi.repository import Gdk
 
 import os
 import pickle
@@ -31,6 +31,9 @@ import pickle
 import appconsts
 import mltprofiles
 import utils
+
+# Apr-2017 - SvdB
+import shortcuts
 
 PREFS_DOC = "prefs"
 RECENT_DOC = "recent"
@@ -63,6 +66,13 @@ def load():
         write_file = file(prefs_file_path, "wb")
         pickle.dump(prefs, write_file)
 
+    # Override deprecated preferences to default values.
+    prefs.delta_overlay = True
+    prefs.auto_play_in_clip_monitor = False
+    prefs.empty_click_exits_trims = True
+    prefs.quick_enter_trims = True
+    prefs.remember_monitor_clip_frame = True
+
     try:
         f = open(recents_file_path)
         recent_projects = pickle.load(f)
@@ -86,8 +96,9 @@ def load():
         
     # Versions of program may have different prefs objects and 
     # we may need to to update prefs on disk if user has e.g.
-    # installed later version of Flowblade
+    # installed later version of Flowblade.
     current_prefs = EditorPreferences()
+
     if len(prefs.__dict__) != len(current_prefs.__dict__):
         current_prefs.__dict__.update(prefs.__dict__)
         prefs = current_prefs
@@ -170,16 +181,24 @@ def get_recent_projects():
 
 def update_prefs_from_widgets(widgets_tuples_tuple):
     # Unpack widgets
-    gen_opts_widgets, edit_prefs_widgets, view_prefs_widgets = widgets_tuples_tuple
+    gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, view_prefs_widgets, performance_widgets = widgets_tuples_tuple
 
     default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo = gen_opts_widgets
     
     # Jul-2016 - SvdB - Added play_pause_button
-    auto_play_in_clip_monitor_check, auto_center_check, grfx_insert_length_spin, \
-        trim_exit_click, trim_quick_enter, remember_clip_frame, overwrite_clip_drop, cover_delete, \
-        play_pause_button, mouse_scroll_action, hide_file_ext_button = edit_prefs_widgets
+    # Apr-2017 - SvdB - Added ffwd / rev values
+    gfx_length_spin, overwrite_clip_drop, cover_delete, mouse_scroll_action, hide_file_ext_button = edit_prefs_widgets
     
-    use_english, disp_splash, buttons_style, dark_theme, theme_combo, audio_levels_combo, window_mode_combo = view_prefs_widgets
+    auto_center_check, play_pause_button, auto_center_on_updown, \
+    ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin = playback_prefs_widgets
+    
+    use_english, disp_splash, buttons_style, dark_theme, theme_combo, audio_levels_combo, window_mode_combo, full_names, double_track_hights = view_prefs_widgets
+
+    # Jan-2017 - SvdB
+    perf_render_threads, perf_drop_frames = performance_widgets
+
+    # Apr-2017 - SvdB
+    #shortcuts_combo = shortcuts_widgets
 
     global prefs
     prefs.open_in_last_opended_media_dir = open_in_last_opened_check.get_active()
@@ -188,18 +207,18 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.undos_max = undo_max_spin.get_adjustment().get_value()
     prefs.media_load_order = load_order_combo.get_active()
 
-    prefs.auto_play_in_clip_monitor = auto_play_in_clip_monitor_check.get_active()
     prefs.auto_center_on_play_stop = auto_center_check.get_active()
-    prefs.default_grfx_length = int(grfx_insert_length_spin.get_adjustment().get_value())
-    prefs.empty_click_exits_trims = trim_exit_click.get_active()
-    prefs.quick_enter_trims = trim_quick_enter.get_active()
-    prefs.remember_monitor_clip_frame = remember_clip_frame.get_active()
+    prefs.default_grfx_length = int(gfx_length_spin.get_adjustment().get_value())
     prefs.overwrite_clip_drop = (overwrite_clip_drop.get_active() == 0)
     prefs.trans_cover_delete = cover_delete.get_active()
     # Jul-2016 - SvdB - For play/pause button
     prefs.play_pause = play_pause_button.get_active()
     prefs.hide_file_ext = hide_file_ext_button.get_active()
     prefs.mouse_scroll_action_is_zoom = (mouse_scroll_action.get_active() == 0)
+    # Apr-2017 - SvdB - ffwd / rev values
+    prefs.ffwd_rev_shift = int(ffwd_rev_shift_spin.get_adjustment().get_value())
+    prefs.ffwd_rev_ctrl = int(ffwd_rev_ctrl_spin.get_adjustment().get_value())
+    prefs.ffwd_rev_caps = int(ffwd_rev_caps_spin.get_adjustment().get_value())
     
     prefs.use_english_always = use_english.get_active()
     prefs.display_splash_screen = disp_splash.get_active()
@@ -208,6 +227,18 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.theme_fallback_colors = theme_combo.get_active() 
     prefs.display_all_audio_levels = (audio_levels_combo.get_active() == 0)
     prefs.global_layout = window_mode_combo.get_active() + 1 # +1 'cause values are 1 and 2
+    # Jan-2017 - SvdB
+    prefs.perf_render_threads = int(perf_render_threads.get_adjustment().get_value())
+    prefs.perf_drop_frames = perf_drop_frames.get_active()
+    # Feb-2017 - SvdB - for full file names
+    prefs.show_full_file_names = full_names.get_active()
+    prefs.center_on_arrow_move = auto_center_on_updown.get_active()
+    prefs.double_track_hights = (double_track_hights.get_active() == 1)
+
+    #if prefs.shortcuts != shortcuts.shortcut_files[shortcuts_combo.get_active()]:
+    #    prefs.shortcuts = shortcuts.shortcut_files[shortcuts_combo.get_active()]
+    #    shortcuts.load_shortcuts()
+
 
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
@@ -228,7 +259,6 @@ def create_rendered_clips_folder_if_needed(user_dir):
             os.mkdir(render_folder + "/")
         prefs.render_folder = render_folder
 
-
 class EditorPreferences:
     """
     Class holds data of persistant user preferences for editor.
@@ -236,7 +266,7 @@ class EditorPreferences:
 
     def __init__(self):
         
-        # Every peference needs to have its default value set in this constructor
+        # Every preference needs to have its default value set in this constructor
         
         self.open_in_last_opended_media_dir = True
         self.last_opened_media_dir = None
@@ -244,14 +274,14 @@ class EditorPreferences:
         self.auto_save_delay_value_index = 1 # value is index of AUTO_SAVE_OPTS in preferenceswindow._general_options_panel()
         self.undos_max = UNDO_STACK_DEFAULT
         self.default_profile_name = 10 # index of default profile
-        self.auto_play_in_clip_monitor = False
+        self.auto_play_in_clip_monitor = False  # DEPRECATED, NOT USER SETTABLE ANYMORE
         self.auto_center_on_play_stop = False
         self.thumbnail_folder = None
         self.hidden_profile_names = []
         self.display_splash_screen = True
         self.auto_move_after_edit = False
         self.default_grfx_length = 250 # value is in frames
-        self.track_configuration = 0 # this is index on list appconsts.TRACK_CONFIGURATIONS
+        self.track_configuration = 0 # DEPRECATED
         self.AUTO_SAVE_OPTS = None # not used, these are cerated and translated else where
         self.tabs_on_top = False
         self.midbar_tc_left = True
@@ -266,10 +296,10 @@ class EditorPreferences:
         self.buttons_style = GLASS_STYLE
         self.dark_theme = False
         self.remember_last_render_dir = True
-        self.empty_click_exits_trims = True
-        self.quick_enter_trims = True
+        self.empty_click_exits_trims = True # DEPRECATED, NOT USER SETTABLE ANYMORE
+        self.quick_enter_trims = True # DEPRECATED, NOT USER SETTABLE ANYMORE
         self.show_vu_meter = True
-        self.remember_monitor_clip_frame = True
+        self.remember_monitor_clip_frame = True # DEPRECATED, NOT USER SETTABLE ANYMORE
         self.jack_start_up_op = appconsts.JACK_ON_START_UP_NO # not used
         self.jack_frequency = 48000 # not used 
         self.jack_output_type = appconsts.JACK_OUT_AUDIO # not used
@@ -288,3 +318,17 @@ class EditorPreferences:
         self.exit_allocation_window_2 = (0, 0, 0, 0)
         self.mouse_scroll_action_is_zoom = True
         self.hide_file_ext = False
+        # Jan-2017 - SvdB
+        self.perf_render_threads = 1
+        self.perf_drop_frames = False
+        # Feb-2017 - SvdB - for full file names
+        self.show_full_file_names = False
+        self.center_on_arrow_move = False
+        # Apr-2017 - SvdB - Using these values we maintain the original hardcoded speed
+        self.ffwd_rev_shift = 1
+        self.ffwd_rev_ctrl = 10
+        self.ffwd_rev_caps = 1
+        self.shortcuts = "flowblade.xml"
+        self.double_track_hights = False
+        self.delta_overlay = True # DEPRECATED, NOT USER SETTABLE ANYMORE
+        self.show_alpha_info_message = True

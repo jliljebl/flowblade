@@ -34,6 +34,7 @@ import time
 import appconsts
 import dialogs
 import dialogutils
+import editorpersistance
 from editorstate import PROJECT
 from editorstate import PLAYER
 from editorstate import current_sequence
@@ -46,6 +47,7 @@ import mlttransitions
 import projectdata
 import patternproducer
 import profilesmanager
+import shortcuts
 import renderconsumer
 import respaths
 
@@ -112,14 +114,12 @@ def show_project_info():
 def _show_project_info_callback(dialog, response_id):
     dialog.destroy()
 
-# ------------------------------------------------------ help menu
 def about():
     dialogs.about_dialog(gui.editor_window)
 
 def environment():
     dialogs.environment_dialog(gui.editor_window)
-
-# ----------------------------------------------------- environment data        
+    
 def quick_reference():
     try:
         url = "file://" + respaths.HELP_DOC
@@ -154,7 +154,7 @@ def _watermark_remove_callback(button, widgets):
     add_button, remove_button, file_path_value_label = widgets
     add_button.set_sensitive(True)
     remove_button.set_sensitive(False)
-    file_path_value_label.set_text("Not Set")
+    file_path_value_label.set_text(_("Not Set"))
     current_sequence().remove_watermark()
       
 def jack_output_managing():
@@ -170,3 +170,17 @@ def toggle_fullscreen():
     else:
        gui.editor_window.window.unfullscreen()
        editorstate.fullscreen = False
+
+def keyboard_shortcuts_callback(dialog, response_id, presets_combo):
+    selected_shortcuts_index = presets_combo.get_active()
+    dialog.destroy()
+    
+    if response_id == Gtk.ResponseType.REJECT:
+        return
+    
+    selected_xml = shortcuts.shortcut_files[selected_shortcuts_index]
+    if selected_xml == editorpersistance.prefs.shortcuts:
+        return
+
+    editorpersistance.prefs.shortcuts = selected_xml
+    shortcuts.set_keyboard_shortcuts()

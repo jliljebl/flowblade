@@ -220,11 +220,10 @@ def show_slowmo_dialog(media_file, default_range_render, _response_callback):
     slider_hbox = Gtk.HBox(False, 4)
     slider_hbox.pack_start(fb_widgets.hslider, True, True, 0)
     slider_hbox.pack_start(spin, False, False, 4)
-    slider_hbox.set_size_request(350,35)
+    slider_hbox.set_size_request(450,35)
 
     hbox = Gtk.HBox(False, 2)
     hbox.pack_start(guiutils.pad_label(8, 8), False, False, 0)
-    hbox.pack_start(label, False, False, 0)
     hbox.pack_start(slider_hbox, False, False, 0)
 
     profile_selector = ProfileSelector()
@@ -272,6 +271,7 @@ def show_slowmo_dialog(media_file, default_range_render, _response_callback):
     vbox.pack_start(guiutils.get_left_justified_box([Gtk.Label(label=_("Source Mark In: ")), guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), mark_in]), False, False, 0)
     vbox.pack_start(guiutils.get_left_justified_box([Gtk.Label(label=_("Source Mark Out: ")), guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), mark_out]), False, False, 0)
     vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
+    vbox.pack_start(label, False, False, 0)
     vbox.pack_start(hbox, False, False, 0)
     vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target File:")), name_row, 120), False, False, 0)
@@ -306,6 +306,154 @@ def _get_rendered_slomo_clip_length(media_file, range_combo, speed):
         orig_len = media_file.length
 
     return int((float(orig_len) * 100.0) / float(speed))
+    
+def show_reverse_dialog(media_file, default_range_render, _response_callback):
+    folder, file_name = os.path.split(media_file.path)
+    if media_file.is_proxy_file:
+        folder, file_name = os.path.split(media_file.second_file_path)
+
+    name, ext = os.path.splitext(file_name)
+        
+    dialog = Gtk.Dialog(_("Render Reverse Motion Video File"), gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (Gtk.STOCK_CANCEL, Gtk.ResponseType.REJECT,
+                        _("Render").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+
+    media_file_label = Gtk.Label(label=_("Source Media File: "))
+    media_name = Gtk.Label(label="<b>" + media_file.name + "</b>")
+    media_name.set_use_markup(True)
+    SOURCE_PAD = 8
+    SOURCE_HEIGHT = 20
+    mf_row = guiutils.get_left_justified_box([media_file_label,  guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), media_name])
+    
+    mark_in = Gtk.Label(label=_("<b>not set</b>"))
+    mark_out = Gtk.Label(label=_("<b>not set</b>"))
+    if media_file.mark_in != -1:
+        mark_in = Gtk.Label(label="<b>" + utils.get_tc_string(media_file.mark_in) + "</b>")
+    if media_file.mark_out != -1:
+        mark_out = Gtk.Label(label="<b>" + utils.get_tc_string(media_file.mark_out) + "</b>")
+    mark_in.set_use_markup(True)
+    mark_out.set_use_markup(True)
+    
+    fb_widgets = utils.EmptyClass()
+
+    fb_widgets.file_name = Gtk.Entry()
+    fb_widgets.file_name.set_text(name + "_REVERSE")
+    
+    fb_widgets.extension_label = Gtk.Label()
+    fb_widgets.extension_label.set_size_request(45, 20)
+
+    name_row = Gtk.HBox(False, 4)
+    name_row.pack_start(fb_widgets.file_name, True, True, 0)
+    name_row.pack_start(fb_widgets.extension_label, False, False, 4)
+    
+    fb_widgets.out_folder = Gtk.FileChooserButton(_("Select Target Folder"))
+    fb_widgets.out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
+    fb_widgets.out_folder.set_current_folder(folder)
+    
+    label = Gtk.Label(label=_("Speed %:"))
+
+    adjustment = Gtk.Adjustment(float(-100), float(-600), float(-1), float(1))
+    fb_widgets.hslider = Gtk.HScale()
+    fb_widgets.hslider.set_adjustment(adjustment)
+    fb_widgets.hslider.set_draw_value(False)
+
+    spin = Gtk.SpinButton()
+    spin.set_numeric(True)
+    spin.set_adjustment(adjustment)
+
+    fb_widgets.hslider.set_digits(0)
+    spin.set_digits(0)
+
+    slider_hbox = Gtk.HBox(False, 4)
+    slider_hbox.pack_start(fb_widgets.hslider, True, True, 0)
+    slider_hbox.pack_start(spin, False, False, 4)
+    slider_hbox.set_size_request(450,35)
+
+    hbox = Gtk.HBox(False, 2)
+    hbox.pack_start(guiutils.pad_label(8, 8), False, False, 0)
+    hbox.pack_start(slider_hbox, False, False, 0)
+
+    profile_selector = ProfileSelector()
+    profile_selector.fill_options()
+    profile_selector.widget.set_sensitive(True)
+    fb_widgets.out_profile_combo = profile_selector.widget
+
+    quality_selector = RenderQualitySelector()
+    fb_widgets.quality_cb = quality_selector.widget
+    
+    # Encoding
+    encoding_selector = RenderEncodingSelector(quality_selector, fb_widgets.extension_label, None)
+    encoding_selector.encoding_selection_changed()
+    fb_widgets.encodings_cb = encoding_selector.widget
+    
+    objects_list = Gtk.TreeStore(str, bool)
+    objects_list.append(None, [_("Full Source Length"), True])
+    if media_file.mark_in != -1 and media_file.mark_out != -1:
+        range_available = True
+    else:
+        range_available = False
+    objects_list.append(None, [_("Source Mark In to Mark Out"), range_available])
+    
+    fb_widgets.render_range = Gtk.ComboBox.new_with_model(objects_list)
+    
+    renderer_text = Gtk.CellRendererText()
+    fb_widgets.render_range.pack_start(renderer_text, True)
+    fb_widgets.render_range.add_attribute(renderer_text, "text", 0)
+    fb_widgets.render_range.add_attribute(renderer_text, 'sensitive', 1)
+    if default_range_render == False:
+        fb_widgets.render_range.set_active(0)
+    else:
+        fb_widgets.render_range.set_active(1)
+    fb_widgets.render_range.show()
+
+    # To update rendered length display
+    clip_length = _get_rendered_slomo_clip_length(media_file, fb_widgets.render_range, 100)
+    clip_length_label = Gtk.Label(label=utils.get_tc_string(clip_length))
+    fb_widgets.hslider.connect("value-changed", _reverse_speed_changed, media_file, fb_widgets.render_range, clip_length_label)
+    fb_widgets.render_range.connect("changed", _reverse_range_changed,  media_file, fb_widgets.hslider,  clip_length_label)
+
+    # Build gui
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(mf_row, False, False, 0)
+    vbox.pack_start(guiutils.get_left_justified_box([Gtk.Label(label=_("Source Mark In: ")), guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), mark_in]), False, False, 0)
+    vbox.pack_start(guiutils.get_left_justified_box([Gtk.Label(label=_("Source Mark Out: ")), guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), mark_out]), False, False, 0)
+    vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
+    vbox.pack_start(label, False, False, 0)
+    vbox.pack_start(hbox, False, False, 0)
+    vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target File:")), name_row, 120), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Folder:")), fb_widgets.out_folder, 120), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Profile:")), fb_widgets.out_profile_combo, 200), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Encoding:")), fb_widgets.encodings_cb, 200), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Quality:")), fb_widgets.quality_cb, 200), False, False, 0)
+    vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Render Range:")), fb_widgets.render_range, 180), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Rendered Clip Length:")), clip_length_label, 180), False, False, 0)
+    
+    alignment = guiutils.set_margins(vbox, 6, 24, 24, 24)
+    
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    dialogutils.default_behaviour(dialog)
+    dialog.connect('response', _response_callback, fb_widgets, media_file)
+    dialog.show_all()
+
+def _reverse_speed_changed(slider, media_file, range_combo, length_label):
+    clip_length = _get_rendered_reverse_clip_length(media_file, range_combo, slider.get_adjustment().get_value())
+    length_label.set_text(utils.get_tc_string(clip_length))
+
+def _reverse_range_changed(range_combo, media_file, slider, length_label):
+    clip_length = _get_rendered_reverse_clip_length(media_file, range_combo, slider.get_adjustment().get_value())
+    length_label.set_text(utils.get_tc_string(clip_length))
+
+def _get_rendered_reverse_clip_length(media_file, range_combo, speed):
+    if range_combo.get_active() == 1:
+        orig_len = media_file.mark_out -  media_file.mark_in + 1 # +1 mark out incl
+    else:
+        orig_len = media_file.length
+
+    return int((float(orig_len) * 100.0) / float(-speed))
 
 # ----------------------------------------------------------- widgets
 class RenderQualitySelector():
@@ -427,7 +575,7 @@ def get_range_selection_combo():
 
 # ------------------------------------------------------------ panels
 def get_render_panel_left(render_widgets):
-    small_height = (editorstate.SCREEN_HEIGHT < 898)
+    small_height = editorstate.screen_size_small_height()
     
     file_opts_panel = guiutils.get_named_frame(_("File"), render_widgets.file_panel.vbox, 4)         
     profile_panel = guiutils.get_named_frame(_("Render Profile"), render_widgets.profile_panel.vbox, 4)

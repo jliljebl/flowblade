@@ -417,8 +417,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     global ripple_data
     ripple_data = None
     if editorstate.trim_mode_ripple == True:
-        ripple_data = RippleData( track, edit_frame)
-        print ripple_data.__dict__
+        ripple_data = RippleData(track, edit_frame)
 
     global edit_data
     # Add ripple data 
@@ -433,10 +432,12 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
 
         # Case: editing to-clip
         if edit_data["to_side_being_edited"]:
-            if edit_data["trim_limits"]["to_start"] < ripple_start_bound:
-                edit_data["trim_limits"]["to_start"] = ripple_start_bound
+            ripple_end_bound = edit_frame + ripple_data.max_backwards
+            if edit_data["trim_limits"]["both_end"] > ripple_end_bound:
+                edit_data["trim_limits"]["both_end"] = ripple_end_bound
         # Case: editing from-clip
         else:
+            ripple_start_bound = edit_frame - ripple_data.max_backwards
             if edit_data["trim_limits"]["both_start"] < ripple_start_bound: # name "both_start"] is artifact fromearlier when trimlimits were used for bot "trim and "roll" edits
                 edit_data["trim_limits"]["both_start"] = ripple_start_bound
                 
@@ -446,7 +447,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     # made to do things that are needed in trim.
     if _trimmed_clip_is_blank():
         set_exit_mode_func()
-        primary_txt = _("Cant ONE ROLL TRIM blank clips.")
+        primary_txt = _("Can't ONE ROLL TRIM blank clips.")
         secondary_txt = _("You can use MOVE OVERWRITE or TWO ROLL TRIM edits instead\nto get the desired change.")
         dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return False
@@ -481,9 +482,9 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
    
     # Set interactive trimview on hidden track
     if clip.media_type != appconsts.PATTERN_PRODUCER:
-        current_sequence().display_trim_clip(clip.path, clip_start) # file producer
+        current_sequence().display_trim_clip(clip.path, clip_start, None, clip.ttl) # file producer
     else:
-        current_sequence().display_trim_clip(None, clip_start, clip.create_data) # pattern producer
+        current_sequence().display_trim_clip(None, clip_start, clip.create_data, None) # pattern producer
 
     PLAYER().seek_frame(edit_frame)
     return True
@@ -575,7 +576,8 @@ def oneroll_trim_release(x, y, frame, state):
         return
     
     gui.monitor_widget.one_roll_mouse_release(edit_data["edit_frame"], frame - edit_data["edit_frame"])
-    
+    tlinewidgets.pointer_context = appconsts.POINTER_CONTEXT_NONE
+
     _do_one_roll_trim_edit(frame)
 
 def _do_one_roll_trim_edit(frame):
@@ -622,7 +624,6 @@ def _do_one_roll_trim_edit(frame):
             action.do_edit()
             # Edit is reinitialized in callback from edit action one_roll_trim_undo_done
         else:
-            print "trim start:", edit_data["index"]
             data = {"track":edit_data["track_object"],
                     "index":edit_data["index"],
                     "clip":edit_data["to_clip"],
@@ -645,7 +646,6 @@ def _do_one_roll_trim_edit(frame):
             action.do_edit()
             # Edit is reinitialized in callback from edit action one_roll_trim_undo_done
         else:
-            print "trim end:", edit_data["index"] - 1
             data = {"track":edit_data["track_object"],
                     "index":edit_data["index"] - 1,
                     "clip":edit_data["from_clip"],
@@ -753,7 +753,7 @@ class RippleData:
 
         # Look at all tracks exept hidden and black
         # Get per track:
-        # * maximum length trim can be done backwards before an overwrite happens
+        # * maximum length trim can be done backwards or forwards before an overwrite happens
         # * indexes of blanks that are trimmed and/or added/removed,
         #   -1 when no blanks are altered on that track
         #
@@ -776,9 +776,6 @@ class RippleData:
                 # Case: 2 - n clips
                 clip_index = current_sequence().get_clip_index(track, self.trim_frame)
                 first_frame_clip = track.clips[clip_index]
-                
-                #trim_frame = track.clip_start(clip_index)
-                #clip_last_frame = clip_first_frame + first_frame_clip
                 
                 # Case: frame after track last clip
                 if clip_index == -1:
@@ -807,13 +804,13 @@ class RippleData:
                         blank_last_frame = blank_first_frame + blank.clip_length()
                         
                         # Clip before trimmed timeline frame, distance is from blank last frame
-                        if blank_last_frame < self.trim_frame:
+                        if blank_last_frame <= self.trim_frame:
                             if self.trim_frame - blank_last_frame < closest_blank_distance:
                                 closest_blank_distance = self.trim_frame - blank_last_frame
                                 closest_blank_index = i
 
                         # Clip after trimmed timeline frame, distance is from blank first frame
-                        elif blank_first_frame > self.trim_frame: 
+                        elif blank_first_frame >= self.trim_frame: 
                             if blank_last_frame - self.trim_frame < closest_blank_distance:
                                 closest_blank_distance = blank_last_frame - self.trim_frame 
                                 closest_blank_index = i
@@ -826,7 +823,7 @@ class RippleData:
                         track_max_deltas.append(0)
                         trim_blank_indexes.append(clip_index)
                         self.track_blank_end_offset.append(self.get_track_blank_end_offset(track, clip_index - 1))
-                    # Case closet blank found
+                    # Case closest blank found
                     else:
                         track_max_deltas.append(track.clips[closest_blank_index].clip_length())
                         trim_blank_indexes.append(closest_blank_index)
@@ -893,18 +890,11 @@ class RippleData:
         return blank_end_frame - self.trim_frame
 
     def get_tracks_compositors_list(self):
-        tracks_list = []
-        tracks = current_sequence().tracks
-        compositors = current_sequence().compositors
-        for track_index in range(1, len(tracks) - 1):
-            track_compositors = []
-            for j in range(0, len(compositors)):
-                comp = compositors[j]
-                if comp.transition.b_track == track_index:
-                    track_compositors.append(comp)
-            tracks_list.append(track_compositors)
+        tracks_compositors_list = []
+        for track_index in range(1, len(current_sequence().tracks) - 1):
+            tracks_compositors_list.append(current_sequence().get_track_compositors(track_index))
         
-        return tracks_list
+        return tracks_compositors_list
     
 #---------------------------------------- TWO ROLL TRIM EVENTS
 def set_tworoll_mode(track, current_frame = -1):
@@ -976,7 +966,7 @@ def set_tworoll_mode(track, current_frame = -1):
         clip_start = trim_limits["from_start"]
 
     # Init two roll trim view layout
-    if track.type == appconsts.VIDEO and clip.media_type != appconsts.PATTERN_PRODUCER:
+    if track.type == appconsts.VIDEO and clip.media_type != appconsts.PATTERN_PRODUCER and editorstate.show_trim_view == appconsts.TRIM_VIEW_ON:
         if edit_data["to_side_being_edited"]:
             gui.monitor_widget.set_roll_trim_right_active_view(edit_data["from_clip"], clip_start)
         else:
@@ -988,9 +978,9 @@ def set_tworoll_mode(track, current_frame = -1):
 
     # Set interactive trim view clip on hidden track
     if clip.media_type != appconsts.PATTERN_PRODUCER:
-        current_sequence().display_trim_clip(clip.path, clip_start) # File producer
+        current_sequence().display_trim_clip(clip.path, clip_start, None, clip.ttl) # File producer
     else:
-        current_sequence().display_trim_clip(None, clip_start, clip.create_data) # pattern producer
+        current_sequence().display_trim_clip(None, clip_start, clip.create_data, None) # pattern producer
         
     PLAYER().seek_frame(edit_frame)
     updater.repaint_tline()
@@ -1203,14 +1193,14 @@ def _get_two_roll_first_and_last():
     return (first, last)
 
 #---------------------------------------- SLIP ROLL TRIM EVENTS
-def set_slide_mode(track, current_frame): # we need to change to to correct one some time
+def set_slide_mode(track, current_frame):
     """
     Sets SLIP tool mode
     """
     if track == None:
         return None
 
-    if current_frame > track.get_length():
+    if current_frame > track.get_length() - 1:
         return False
 
     current_sequence().clear_hidden_track()
@@ -1245,7 +1235,7 @@ def set_slide_mode(track, current_frame): # we need to change to to correct one 
     clip_start = 0 # we'll calculate the offset from actual position of clip on timeline to display the frame displayed after sliding
 
     # Init two roll trim view layout
-    if track.type == appconsts.VIDEO and clip.media_type != appconsts.PATTERN_PRODUCER:
+    if track.type == appconsts.VIDEO and clip.media_type != appconsts.PATTERN_PRODUCER and editorstate.show_trim_view == appconsts.TRIM_VIEW_ON:
         if not start_frame_being_viewed:
             gui.monitor_widget.set_slip_trim_right_active_view(edit_data["clip"])
             gui.monitor_widget.set_edit_tline_frame(clip.clip_out, 0)
@@ -1257,9 +1247,9 @@ def set_slide_mode(track, current_frame): # we need to change to to correct one 
 
     # Set interactive trim view clip on hidden track
     if clip.media_type != appconsts.PATTERN_PRODUCER:
-        current_sequence().display_trim_clip(clip.path, clip_start) # File producer
+        current_sequence().display_trim_clip(clip.path, clip_start, None, clip.ttl) # File producer
     else:
-        current_sequence().display_trim_clip(None, clip_start, clip.create_data) # pattern producer
+        current_sequence().display_trim_clip(None, clip_start, clip.create_data, None) # pattern producer
         
     if start_frame_being_viewed:
         PLAYER().seek_frame(clip.clip_in)
@@ -1275,6 +1265,9 @@ def _set_slide_mode_edit_data(track, edit_frame):
     Sets edit mode data used by both trim modes
     """
     index = current_sequence().get_clip_index(track, edit_frame)
+    if index == -1:
+        index = len(track.clips) - 1
+
     clip = track.clips[index]
 
     trim_limits = {}

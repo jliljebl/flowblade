@@ -43,4 +43,9 @@ Problem is described in Issue #258.
 
 **Status:** Some fix may be attempted later.
 
+#### 7. MLT 6.4.0 crashes with terminal output: "ERROR: /usr/lib/python2.7/dist-packages/_mlt.x86_64-linux-gnu.so: undefined symbol: _ZNK3Mlt7Profile8is_validEv"
+
+In systems running MLT 6.4.0 Flowblade does not start, more info on issue here: https://plus.google.com/u/0/102624418925189345577/posts/7ANDDW3hzHB?sfc=true
+
+**Status:** This is fixed upstream, make sure to use MLT 6.4.1 or higher.
 

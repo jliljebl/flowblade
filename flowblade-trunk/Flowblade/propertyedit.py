@@ -68,6 +68,7 @@ FREI_GEOM_HCS_TRANSITION = "frei_geom_hcs";                 # time=x:y:x_scale:y
 COLOR = "color"                                             # #rrggbb
 LUT_TABLE = "lut_table"                                     # val;val;val;val;...;val
 WIPE_RESOURCE = "wipe_resource"                             # /path/to/resource.pgm
+FILE_RESOURCE = "file_resource"                             # /path/to/somefile
 NOT_PARSED = "not_parsed"                                   # A write out value is not parsed from value
 NOT_PARSED_TRANSITION = "not_parsed_transition"             # A write out value is not parsed from value in transition object
 
@@ -120,10 +121,21 @@ def _create_editable_property(p_type, args_str, params):
         conversion so we need a extending class for expression type.
         """
         args = propertyparse.args_string_to_args_dict(args_str)
-        exp_type = args[EXPRESSION_TYPE] # 'exptype' arg missing?. if this fails, it's a bug in filters.xml
+        
+        try:
+            exp_type = args[EXPRESSION_TYPE] 
+        except:
+            # This fails PROP_INT and PROP_FLOAT properties that are edited as keyframe properties and 
+            # they will be treated as exptype = SINGLE_KEYFRAME properties.
+            # This will now hide 'exptype' args in filters.xml, so they must be there set correctly.
+            exp_type = SINGLE_KEYFRAME
+        
         creator_func = EDITABLE_PROPERTY_CREATORS[exp_type]
         ep = creator_func(params)
     else:
+        """
+        Properties with single numerical values (int or float) can be handled with objects of EditableProperty class.
+        """
         ep = EditableProperty(params)
 
     return ep
@@ -336,6 +348,8 @@ class EditableProperty(AbstractProperty):
         self.property_index = property_index # index of property in FilterObject.properties. This is the persistant object
         self.is_compositor_filter = False # This is after changed after creation if needed
 
+        self.used_create_params = create_params # for get_as_KeyFrameHCSFilterProperty functionality
+        
     def _get_filter_object(self):
         """
         Filter being edited is in different places for normal filters 
@@ -345,8 +359,22 @@ class EditableProperty(AbstractProperty):
             return self.clip.compositor.filter
         else:
             return self.clip.filters[self.filter_index]
-            
-    def write_value(self, str_value): # overrides ConvertingProperty.write_value(str_value)
+
+    def get_as_KeyFrameHCSFilterProperty(self):
+        # this is entirely for feature allowing user to change between slider and kf editing
+        clone_ep = KeyFrameHCSFilterProperty(self.used_create_params)
+
+        clone_ep.prop_orig_type = self.type # we need this if user wants to get back slider editing
+        
+        clone_ep.value = self.value
+        clone_ep.type = appconsts.PROP_EXPRESSION
+        clone_ep.is_compositor_filter = self.is_compositor_filter
+        clone_ep.track = self.track
+        clone_ep.clip_index = self.clip_index
+
+        return clone_ep
+        
+    def write_value(self, str_value):
         self.write_mlt_property_str_value(str_value)
         self.value = str_value
         self.write_filter_object_property(str_value)
@@ -709,7 +737,17 @@ class WipeResourceProperty(TransitionEditableProperty):
         res_path = mlttransitions.get_wipe_resource_path(key)
         self.write_value(str(res_path))
         
-
+class FileResourceProperty(EditableProperty):
+    """
+    A file path as property value set from file chooser dialog callback.
+    """
+    def dialog_response_callback(self, dialog, response_id):
+        res_path = dialog.get_filename()
+        if response_id == Gtk.ResponseType.ACCEPT and res_path != None:
+            self.write_value(unicode(str(res_path), "utf-8"))
+        else:
+            self.write_value(unicode(str(""), "utf-8"))
+        
 class MultipartKeyFrameProperty(AbstractProperty):
     
     def __init__(self, params):
@@ -806,6 +844,7 @@ EDITABLE_PROPERTY_CREATORS = { \
     GEOM_IN_AFFINE_FILTER: lambda params : AffineFilterGeomProperty(params),
     GEOM_IN_AFFINE_FILTER_V2: lambda params :AffineFilterGeomPropertyV2(params),
     WIPE_RESOURCE : lambda params : WipeResourceProperty(params),
+    FILE_RESOURCE : lambda params :FileResourceProperty(params),
     LUT_TABLE : lambda params  : LUTTableProperty(params),
     NOT_PARSED : lambda params : EditableProperty(params), # This should only be used with params that have editor=NO_EDITOR
     NOT_PARSED_TRANSITION : lambda params : TransitionEditableProperty(params), # This should only be used with params that have editor=NO_EDITOR

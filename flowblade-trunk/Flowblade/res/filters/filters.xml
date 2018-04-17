@@ -88,7 +88,7 @@
     <filter id="volume" multipart="true">
         <name>Volume</name>
         <group>Audio</group>
-        <multipartproperty multistartprop="gain" multiendprop="end" args="editor=keyframe_editor_release range_in=0,100 exptype=multipart_keyframe displayname=Volume">"0=1.0"</multipartproperty>
+        <multipartproperty multistartprop="gain" multiendprop="end" args="editor=keyframe_editor_release range_in=0,200 range_out=0.0,2.0 exptype=multipart_keyframe displayname=Volume">"0=1.0"</multipartproperty>
         <property name="max_gain" args="editor=no_editor exptype=not_parsed">20dB</property>
         <property name="track" args="editor=no_editor">0</property>
         <property name="gain" args="editor=no_editor">1</property> <!-- Volume at start of filter --> 
@@ -453,6 +453,8 @@
         <property name="noise" args="range_in=0,100 range_out=0,1.0 displayname=Amount">0.2</property>
    </filter>
 
+
+
     <!-- COLOR -->
     <filter id="greyscale">
         <name>Grayscale</name>
@@ -627,8 +629,27 @@
         <property name="Neutral Color" args="editor=color_select exptype=color">#888888</property>
         <property name="Color Temperature" args="range_in=1000,15000 range_out=0.067,1">0.5</property>
     </filter>
-
-
+   <filter id="avfilter.colorchannelmixer">
+        <name>Color Channel Mixer</name>
+        <group>Color</group>
+        <property name="av.rr" args="range_in=0,200 range_out=0.0,2.0 displayname=Red!Ch.!Red!Gain">1</property>
+        <property name="av.rg" args="range_in=0,200 range_out=0.0,2.0 displayname=Red!Ch.!Green!Gain">0</property>
+        <property name="av.rb" args="range_in=0,200 range_out=0.0,2.0 displayname=Red!Ch.!Blue!Gain">0</property>
+        <property name="av.gr" args="range_in=0,200 range_out=0.0,2.0 displayname=Green!Ch.!Red!Gain">0</property>
+        <property name="av.gg" args="range_in=0,200 range_out=0.0,2.0 displayname=Green!Ch.!Green!Gain">1</property>
+        <property name="av.gb" args="range_in=0,200 range_out=0.0,2.0 displayname=Green!Ch.!Blue!Gain">0</property>
+        <property name="av.br" args="range_in=0,200 range_out=0.0,2.0 displayname=Blue!Ch.!Red!Gain">0</property>
+        <property name="av.bg" args="range_in=0,200 range_out=0.0,2.0 displayname=Blue!Ch.!Green!Gain">0</property>
+        <property name="av.bb" args="range_in=0,200 range_out=0.0,2.0 displayname=Blue!Ch.!Blue!Gain">1</property>
+   </filter>
+    <filter id="avfilter.lut3d">
+        <name>Lut3D</name>
+        <group>Color</group>
+        <property name="av.file" args="editor=file_select exptype=file_resource file_types=.cube displayname=Select!.cube!file">/home/janne/Downloads/tmax.cube</property>
+   </filter>
+   
+   
+   
     <!-- COLOR EFFECT -->
     <filter id="frei0r.cluster">
         <name>Color Clustering</name>
@@ -709,7 +730,8 @@
         <property name="lightness" args="range_in=-100,100 range_out=0,1 displayname=Lightness">0.5</property>
    </filter>
    
-   
+
+
     <!-- DISTORT -->
     <filter id="frei0r.distort0r">
         <name>Waves</name>
@@ -766,7 +788,7 @@
         Workaround is that we initilize it with hard coded values
     -->
     <filter id="avfilter.perspective">
-        <name>Perpective</name>
+        <name>Perspective</name>
         <group>Distort</group>
         <property name="av.x0" args="range_in=0,SCREENSIZE_WIDTH range_out=0,SCREENSIZE_WIDTH displayname=x0">10</property>
         <property name="av.y0" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,SCREENSIZE_HEIGHT displayname=y0">10</property>
@@ -857,37 +879,38 @@
         <group>Transform</group>
         <property name="transition.fix_rotate_x" args="range_in=-180,180 range_out=-180,180 displayname=Angle">0</property>
         <property name="transition.use_normalised" args="editor=no_editor">0</property>
-        <property name="transition.geometry" args="editor=affine_filt_geom_slider_2 exptype=geom_in_affine_filt_v2">0=0/0:SCREENSIZE:100</property>
+        <property name="transition.geometry" args="editor=affine_filt_geom_slider exptype=geom_in_affine_filt">0=0/0:SCREENSIZE:100</property>
     </filter>
    <filter id="affine">
         <name>Shear</name>
         <group>Transform</group>
         <property name="transition.fix_shear_x" args="range_in=-180,180 range_out=-180,180 displayname=Shear!X">0</property>
         <property name="transition.fix_shear_y" args="range_in=-180,180 range_out=-180,180 displayname=Shear!Y">0</property>
-        <property name="transition.geometry" args="editor=affine_filt_geom_slider_2 exptype=geom_in_affine_filt_v2">0=0/0:SCREENSIZE:100</property>
+        <property name="transition.geometry" args="editor=affine_filt_geom_slider exptype=geom_in_affine_filt">0=0/0:SCREENSIZE:100</property>
    </filter>
     <filter id="affine">
         <name>Translate</name>
         <group>Transform</group>
-        <property name="transition.geometry" args="editor=affine_filt_geom_slider_2 exptype=geom_in_affine_filt_v2">0=0/0:SCREENSIZE:100</property>
+        <property name="transition.geometry" args="editor=affine_filt_geom_slider exptype=geom_in_affine_filt">0=0/0:SCREENSIZE:100</property>
     </filter>
     <filter id="affine">
         <name>Affine</name>
         <group>Transform</group>
-        <property name="transition.geometry" args="editor=affine_filt_geom_slider_2 exptype=geom_in_affine_filt_v2">0=0/0:SCREENSIZE:100</property>
+        <property name="transition.geometry" args="editor=affine_filt_geom_slider exptype=geom_in_affine_filt">0=0/0:SCREENSIZE:100</property>
         <property name="transition.fix_rotate_x" args="range_in=-180,180 range_out=-180,180 displayname=Angle">0</property>
         <property name="transition.fix_shear_x" args="range_in=-180,180 range_out=-180,180 displayname=Shear!X">0</property>
         <property name="transition.fix_shear_y" args="range_in=-180,180 range_out=-180,180 displayname=Shear!Y">0</property>
     </filter>
+    <!--- Removed because didn't work on all media items.
     <filter id="avfilter.zoompan">
         <name>Zoom Pan</name>
         <group>Transform</group>
-        <property name="av.zoom" args="range_in=100,500 range_out=1,5 displayname=Zoom">1</property>
-        <property name="av.x" args="range_in=0,SCREENSIZE_WIDTH range_out=0,SCREENSIZE_WIDTH displayname=x">0</property>
-        <property name="av.y" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,SCREENSIZE_HEIGHT displayname=y">0</property>
+        <property name="av.zoom" args="range_in=100,500 range_out=1,5 displayname=Zoom">1.1</property>
+        <property name="av.x" args="range_in=0,SCREENSIZE_WIDTH range_out=0,SCREENSIZE_WIDTH displayname=x">10</property>
+        <property name="av.y" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,SCREENSIZE_HEIGHT displayname=y">10</property>
         <property name="av.d" args="editor=no_editor">1</property>
     </filter>
-
+    -->
 
     <!-- compositor filters that are not displayed to user, not used currently -->
     <filter id="frei0r.mask0mate">

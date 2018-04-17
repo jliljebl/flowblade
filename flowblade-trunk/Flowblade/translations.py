@@ -62,7 +62,7 @@ def init_languages():
         else:
             print "Translations at " + locale_file + " were not found, using /usr/share/locale translations."
             locale_path = "/usr/share/locale/"
-            
+
     gettext.bindtextdomain(APP_NAME, locale_path)
     gettext.textdomain(APP_NAME)
 
@@ -77,7 +77,7 @@ def init_languages():
 
     # Un-comment for translations tests
     #lang = gettext.translation(APP_NAME, locale_path, languages=["fi"], fallback=True)
-    
+
     lang.install(APP_NAME) # makes _() a build-in available in all modules without imports
 
 def get_filter_name(f_name):
@@ -103,7 +103,7 @@ def get_combo_option(c_opt):
         return combo_options[c_opt]
     except KeyError:
         return c_opt
-        
+
 def load_filters_translations():
 
     # filter group names
@@ -126,7 +126,7 @@ def load_filters_translations():
     filter_names["Alpha Gradient"] = _("Alpha Gradient")
     filter_names["Crop"] = _("Crop")
     filter_names["Alpha Shape"]= _("Alpha Shape")
-    
+
     filter_names["Volume"]= _("Volume")
     filter_names["Pan"]= _("Pan")
     filter_names["Pan Keyframed"]= _("Pan Keyframed")
@@ -163,11 +163,11 @@ def load_filters_translations():
     filter_names["Old Film"]= _("Old Film")
     filter_names["Scanlines"]= _("Scanlines")
     filter_names["Cartoon"]= _("Cartoon")
-    
+
     filter_names["Pixelize"]= _("Pixelize")
     filter_names["Blur"]= _("Blur")
     filter_names["Grain"]= _("Grain")
-    
+
     filter_names["Grayscale"]= _("Grayscale")
     filter_names["Contrast"]= _("Contrast")
     filter_names["Saturation"]= _("Saturation")
@@ -239,9 +239,11 @@ def load_filters_translations():
     filter_names["Curves"] = _("Curves")
     filter_names["Lift Gain Gamma"] = _("Lift Gain Gamma")
     filter_names["Image Grid"] = _("Image Grid")
-    
-    # 0.18
+
     filter_names["Color Lift Gain Gamma"] = _("Color Lift Gain Gamma")
+    filter_names["Color Channel Mixer"] = _("Color Channel Mixer")
+    filter_names["Lens Correction AV"] = _("Lens Correction AV")
+    filter_names["Perspective"] = _("Perspective")
     
     # param names
     global param_names
@@ -466,8 +468,9 @@ def load_filters_translations():
     param_names["Sel. Space"] = _("Sel. Space")
     param_names["Operation"] = _("Operation")
     param_names["Hard"] = _("Hard")
+    param_names["Selection subspace"] = _("Selection subspace")
     param_names["R/A/Hue"] = _("R/A/Hue")
-    param_names["G/B/Chromae"] = _("G/B/Chroma")
+    param_names["G/B/Chroma"] = _("G/B/Chroma")
     param_names["B/I/I"] = _("B/I/I")
     param_names["Supress"] = _("Supress")
     param_names["Horizontal"] = _("Horizontal")
@@ -489,6 +492,7 @@ def load_filters_translations():
     param_names["Split Preview"] = _("Split Preview")
     param_names["Source on Left"] = _("Source on Left")
     param_names["Lightness"] = _("Lightness")
+    param_names["Channel"] = _("Channel")
     param_names["Input black level"] = _("Input black level")
     param_names["Input white level"] = _("Input white level")
     param_names["Black output"] = _("Black output")
@@ -517,6 +521,20 @@ def load_filters_translations():
     param_names["Rows"] = _("Rows")
     param_names["Columns"] = _("Columns")
     param_names["Color Temperature"] = _("Color Temperature")
+    param_names["Select .cube file"] = _("Select .cube file")
+    param_names["Red Ch. Red Gain"] = _("Red Ch. Red Gain")
+    param_names["Red Ch. Green Gain"] = _("Red Ch. Green Gain")
+    param_names["Red Ch. Blue Gain"] = _("Red Ch. Blue Gain")
+    param_names["Green Ch. Red Gain"] = _("Green Ch. Red Gain")
+    param_names["Green Ch. Green Gain"] = _("Green Ch. Green Gain")
+    param_names["Green Ch. Blue Gain"] = _("Green Ch. Blue Gain")
+    param_names["Blue Ch. Red Gain"] = _("Blue Ch. Red Gain")
+    param_names["Blue Ch. Green Gain"] = _("Blue Ch. Green Gain")
+    param_names["Blue Ch. Blue Gain"] = _("Blue Ch. Blue Gain")
+    param_names["Center X"] = _("Center X")
+    param_names["Center Y"] = _("Center Y")
+    param_names["Quad Distortion"] = _("Quad Distortion")
+    param_names["Double Quad Distortion"] = _("Double Quad Distortion")
 
     # param names for compositors
     param_names["Opacity"] = _("Opacity")
@@ -531,13 +549,18 @@ def load_filters_translations():
     param_names["Wipe Type"] = _("Wipe Type")
     param_names["Invert"] = _("Invert")
     param_names["Softness"] = _("Softness")
-
+    param_names["Fade Out Length"] = _("Fade Out Length")
+    param_names["Fade In Length"] = _("Fade In Length")
+    param_names["Wipe Direction"] = _("Wipe Direction")
+    param_names["Blend Mode"] = _("Blend Mode")
+    
     # Combo options
     global combo_options
     combo_options["Shave"] = _("Shave")
     combo_options["Rectangle"] = _("Rectangle")
     combo_options["Ellipse"] = _("Ellipse")
     combo_options["Triangle"] = _("Triangle")
+    combo_options["Box"] = _("Box")
     combo_options["Diamond"] = _("Diamond")
     combo_options["Shave"] = _("Shave")
     combo_options["Shrink Hard"] = _("Shrink Hard")
@@ -582,4 +605,23 @@ def load_filters_translations():
     combo_options["Shadows"] = _("Shadows")
     combo_options["Midtones"] = _("Midtones")
     combo_options["Highlights"] = _("Highlights")
-    
+    combo_options["Forward"] = _("Forward")
+    combo_options["Backward"] = _("Backward")
+    combo_options["Add"] = _("Add")
+    combo_options["Saturate"] = _("Saturate")
+    combo_options["Multiply"] = _("Multiply")    
+    combo_options["Screen"] = _("Screen")   
+    combo_options["Overlay"] = _("Overlay")
+    combo_options["Darken"] = _("Darken")
+    combo_options["Lighten"] = _("Lighten")
+    combo_options["ColorDodge"] = _("ColorDodge")
+    combo_options["Colorburn"] = _("Colorburn")
+    combo_options["Hardlight"] = _("Hardlight")
+    combo_options["Softlight"] = _("Softlight")
+    combo_options["Difference"] = _("Difference")
+    combo_options["Exclusion"] = _("Exclusion")
+    combo_options["HSLHue"] = _("HSLHue")
+    combo_options["HSLSaturation"] = _("HSLSaturation")
+    combo_options["HSLColor"] = _("HSLColor")
+    combo_options["HSLLuminosity"] = _("HSLLuminosity")
+     

@@ -146,6 +146,12 @@ body {
 	margin-bottom:10px;
 }
 
+#advtoc {
+	margin-top:50px;
+	margin-bottom:30px;
+}
+
+
 /* Otsikot 1 */
 h1, h2, h3, h4, h5, h6{
 	text-transform: uppercase;
@@ -160,6 +166,7 @@ h1{
 	color: #000000;
 }
 h2{
+	margin-top: 80px;
 	font-size:26px;
 }
 h3{

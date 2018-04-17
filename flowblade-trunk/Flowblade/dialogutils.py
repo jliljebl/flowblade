@@ -79,15 +79,20 @@ def warning_message_with_panels(primary_txt, secondary_txt, parent_window, is_in
     dialog.connect('response', callback)
     dialog.show_all()
     
-def warning_confirmation(callback, primary_txt, secondary_txt, parent_window, data=None, is_info=False):
+def warning_confirmation(callback, primary_txt, secondary_txt, parent_window, data=None, is_info=False, use_confirm_text=False):
     content = get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info)
     align = get_default_alignment(content)
+    
+    if use_confirm_text == True:
+        accept_text = _("Confirm").encode('utf-8')
+    else:
+        accept_text = _("OK").encode('utf-8')
     
     dialog = Gtk.Dialog("",
                         parent_window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                         _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                         accept_text, Gtk.ResponseType.ACCEPT))
     dialog.vbox.pack_start(align, True, True, 0)
     set_outer_margins(dialog.vbox)
     dialog.set_resizable(False)

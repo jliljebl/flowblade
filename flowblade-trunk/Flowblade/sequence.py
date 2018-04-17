@@ -88,7 +88,7 @@ black_track_clip = None
 AUDIO_MIX_DOWN_TRACK = 0
 
 # Vectorscop and RGB Parade
-SCOPE_MIX_VALUES = [1.0, 0.8, 0.5, 0.2, 0.0]
+SCOPE_MIX_VALUES = [0.0, 0.2, 0.5, 0.8, 1.0]
 _scope_over_lay_mix = 2
 
 class Sequence:
@@ -162,7 +162,7 @@ class Sequence:
         0                                               black bg track
         1 - (self.first_video_index - 1)                audio tracks    
         self.first_video_index - (len(self.tracks) - 2) video tracks
-        (len(self.tracks) - 1)                          hidden track
+        (len(self.tracks) - 1)                          hidden track for trimmming
         
         Tracks are never changed after creation, changing tracks count feature is
         achieved by creating a new sequence.
@@ -232,7 +232,7 @@ class Sequence:
         # Mix all audio to track 1 by combining them one after another 
         # using an always active field transition.
         if ((new_track.id > AUDIO_MIX_DOWN_TRACK) # black bg or track1 it's self does not need to be mixed
-            and (is_hidden == False)): # We actually do want hidden track to cover all audio below, which happens if it is not mixed.
+            and (is_hidden == False)): # We actually do want the hidden track to cover all audio below, which happens if it is not mixed.
             self._mix_audio_for_track(new_track)
         
         # Add method that returns track name
@@ -325,6 +325,12 @@ class Sequence:
             h += track.height
         return  h
 
+    def get_shrunk_tline_height_min(self):
+        UNSHRUNK_HEIGHT = appconsts.TLINE_HEIGHT
+        THREE_TRACK_MIN_HEIGHT = 3 * appconsts.TRACK_HEIGHT_NORMAL
+        PER_TRACK_ADD = ((UNSHRUNK_HEIGHT - THREE_TRACK_MIN_HEIGHT) / 6.0) * (len(self.tracks) - 5)
+        return int(THREE_TRACK_MIN_HEIGHT + PER_TRACK_ADD)
+
     def set_track_gain(self, track, gain):
         track.gain_filter.set("gain", str(gain))
         track.audio_gain = gain
@@ -374,11 +380,11 @@ class Sequence:
         return True
 
     # -------------------------------------------------- clips
-    def create_file_producer_clip(self, path, new_clip_name=None, novalidate=False):
+    def create_file_producer_clip(self, path, new_clip_name=None, novalidate=False, ttl=None):
         """
         Creates MLT Producer and adds attributes to it, but does 
         not add it to track/playlist object.
-        """
+        """        
         producer = mlt.Producer(self.profile, str(path)) # this runs 0.5s+ on some clips
         if novalidate == True:
             producer.set("mlt_service", "avformat-novalidate")
@@ -392,12 +398,18 @@ class Sequence:
         if new_clip_name != None:
             producer.name = new_clip_name
         producer.media_type = get_media_type(path)
+
         if producer.media_type == FILE_DOES_NOT_EXIST:
             print "file does not exist"
             return None
 
         self.add_clip_attr(producer)
         
+        # Img seq ttl value
+        producer.ttl = ttl
+        if ttl != None:
+            producer.set("ttl", int(ttl))
+
         return producer
 
     def create_slowmotion_producer(self, path, speed):
@@ -431,7 +443,7 @@ class Sequence:
         return clip
 
     def create_rendered_transition_clip(self, path, rendered_type):
-        clip = self.create_file_producer_clip(path)
+        clip = self.create_file_producer_clip(path) # this can't have ttl so we can use simpler constructor
         clip.rendered_type = rendered_type
         return clip
     
@@ -452,14 +464,15 @@ class Sequence:
         clip.clip_length = lambda: _clip_length(clip) # MLT get_length gives wrong values for blanks
         clip.waveform_data = None
         clip.color = None # None means that clip type default color is displayed
-
+        clip.markers = []
+        
     def clone_track_clip(self, track, index):
         orig_clip = track.clips[index]
         return self.create_clone_clip(orig_clip)
 
     def create_clone_clip(self, clip):
         if clip.media_type != appconsts.PATTERN_PRODUCER:
-            clone_clip = self.create_file_producer_clip(clip.path) # file producer
+            clone_clip = self.create_file_producer_clip(clip.path, None, False, clip.ttl) # file producer
         else:
             clone_clip = self.create_pattern_producer(clip.create_data) # pattern producer
         self.clone_clip_and_filters(clip, clone_clip)
@@ -570,6 +583,7 @@ class Sequence:
         compositor.clone_properties(old_compositor)
         compositor.set_in_and_out(old_compositor.clip_in, old_compositor.clip_out)
         compositor.transition.set_tracks(old_compositor.transition.a_track, old_compositor.transition.b_track)
+        compositor.obey_autofollow = old_compositor.obey_autofollow
         self._plant_compositor(compositor)
         return compositor
     
@@ -626,8 +640,15 @@ class Sequence:
         """
         self.compositors.sort(_sort_compositors_comparator)
 
+    def get_track_compositors(self, track_index):
+        track_compositors = []
+        for comp in self.compositors:
+            if comp.transition.b_track == track_index:
+                track_compositors.append(comp)
+        return track_compositors
+            
     # -------------------------- monitor clip, trimming display, output mode and hidden track
-    def display_monitor_clip(self, path, pattern_producer_data=None):
+    def display_monitor_clip(self, path, pattern_producer_data=None, ttl=None):
         """
         Adds media clip to hidden track for viewing and for setting mark
         in and mark out points.
@@ -635,10 +656,10 @@ class Sequence:
         """
         track = self.tracks[-1] # Always last track
         if pattern_producer_data == None:
-            self.monitor_clip = self.create_file_producer_clip(path)
+            self.monitor_clip = self.create_file_producer_clip(path, None, False, ttl)
         else:
             if pattern_producer_data.type == IMAGE_SEQUENCE:
-                self.monitor_clip = self.create_file_producer_clip(pattern_producer_data.path)
+                self.monitor_clip = self.create_file_producer_clip(pattern_producer_data.path, None, False, ttl)
             else:
                 self.monitor_clip = self.create_pattern_producer(pattern_producer_data)
         
@@ -647,7 +668,7 @@ class Sequence:
         self._mute_editable()
         return self.monitor_clip
 
-    def display_trim_clip(self, path, clip_start_pos, patter_producer_data=None):
+    def display_trim_clip(self, path, clip_start_pos, patter_producer_data=None, ttl=None):
         """
         Adds clip to hidden track for trim editing display.
         """
@@ -660,7 +681,7 @@ class Sequence:
         if path != None:
             clip = editorstate.get_cached_trim_clip(path)
             if clip == None:
-                clip = self.create_file_producer_clip(path, None, True)
+                clip = self.create_file_producer_clip(path, None, True, ttl)
                 editorstate.add_cached_trim_clip(clip)
     
             if clip_start_pos > 0:
@@ -752,12 +773,15 @@ class Sequence:
             track.set("hide", 3)
     
     def _unmute_editable(self):
-        for i in range(1, len(self.tracks) - 1):
-            track = self.tracks[i]
-            track.set("hide", int(track.mute_state))
+        self.set_tracks_mute_state() # same thing
     
     def set_tracks_mute_state(self):
-        self._unmute_editable() # same thing, this method exists to declare purpose
+        # This only applied to editable tracks on project load
+        for i in range(1, len(self.tracks) - 1):
+            self.set_track_mute_state(i, self.tracks[i].mute_state)
+        
+        self.tracks[0].set("hide", 0) # Black bg track
+        self.tracks[-1].set("hide", 0) # Hidden track
         
     def set_output_mode(self, mode):
         if self.outputfilter != None:
@@ -829,7 +853,7 @@ class Sequence:
                 # This shold not happen because track heights should be set up so that minimized app 
                 # has enough space to display all tracks.
                 # Yet it happens sometimes, meh.
-                print "sequence.resize_tracks_to_fit (): could not make panels fit"
+                print "sequence.resize_tracks_to_fit (): could not make tracks fit in timeline vertical space"
                 fix_next = False
             else:
                 self.tracks[1 + count].height = TRACK_HEIGHT_SMALL
@@ -952,12 +976,49 @@ class Sequence:
             return -1
         
         return index
-    
+
+    def get_clip_for_id(self, clip_id):
+        """
+        Returns clip or None if not found.
+        """
+        for i in range(1, len(self.tracks)):
+            track = self.tracks[i]
+            for j in range(0, len(track.clips)):
+                clip = track.clips[j]
+                if clip.id == clip_id:
+                    return clip
+
+        return None
+        
     def set_track_mute_state(self, track_index, mute_state):
         track = self.tracks[track_index]
         track.mute_state = mute_state
-        track.set("hide", int(track.mute_state))
+    
+        # Some older projects might get here without a track gain filter existing
+        if not hasattr(track, "gain_filter"):
+            # Create and add gain filter
+            gain_filter = mlt.Filter(self.profile, "volume")
+            mltrefhold.hold_ref(gain_filter)
+            gain_filter.set("gain", str(track.audio_gain))
+            track.attach(gain_filter)
+            track.gain_filter = gain_filter
 
+        if mute_state == 2: # TRACK_MUTE_AUDIO
+            if track.id < self.first_video_index:
+                # Audio tracks
+                track.set("hide", 1)
+                track.gain_filter.set("gain", str(0))
+            else:
+                # Video tracks
+                track.set("hide", 0)
+                track.gain_filter.set("gain", str(0))
+        elif mute_state == 3: # TRACK_MUTE_ALL
+            track.set("hide", 1)
+            track.gain_filter.set("gain", str(0))
+        else: # TRACK_MUTE_NOTHING, TRACK_MUTE_VIDEO
+            track.set("hide", int(track.mute_state))
+            track.gain_filter.set("gain", str(track.audio_gain))
+            
     def drop_audio_levels(self):
         for i in range(1, len(self.tracks)):
             clips = self.tracks[i].clips

@@ -240,8 +240,9 @@ class TextEditLayer(SimpleRectEditLayer):
         rotation = self.edit_point_shape.get_first_two_points_rotation_angle()
         xscale = self.view_editor.scale #* self.view_editor.aspect_ratio
         yscale = self.view_editor.scale
-        # x fo write out image is on different place because computer screen has box pixels, 
+        # x for write out image is on different place because computer screen has box pixels, 
         # some video formats do not
+        # were not getting pixel perfect results here but its mostly ok
         if write_out_layers == True:
             x = x / self.view_editor.aspect_ratio
             

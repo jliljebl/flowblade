@@ -519,7 +519,7 @@ class GlassButtonsToggleGroup(GlassButtonsGroup):
 def focus_group_has_focus(focus_group):
     group = focus_groups[focus_group]
     for widget in group:
-        if widget.is_focus():
+        if widget.has_focus():
             return True
     
     return False

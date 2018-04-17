@@ -77,12 +77,14 @@ import preferenceswindow
 import projectaction
 import projectdata
 import projectinfogui
+import propertyeditorbuilder
 import proxyediting
 import render
 import renderconsumer
 import respaths
 import resync
 import sequence
+import shortcuts
 import snapping
 import titler
 import tlinewidgets
@@ -94,6 +96,7 @@ import undo
 import updater
 import utils
 
+
 import jackaudio
 
 AUTOSAVE_DIR = appconsts.AUTOSAVE_DIR
@@ -103,6 +106,7 @@ PID_FILE = "flowbladepidfile"
 BATCH_DIR = "batchrender/"
 autosave_timeout_id = -1
 recovery_dialog_id = -1
+sdl2_timeout_id = -1
 loaded_autosave_file = None
 
 splash_screen = None
@@ -145,6 +149,9 @@ def main(root_path):
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
+
+    #print "SDL version:", str(editorstate.get_sdl_version())
+    
     # passing -xdg as a flag will change the user_dir location with XDG_CONFIG_HOME
     # For full xdg-app support all the launch processes need to add this too, currently not impl.
 
@@ -175,7 +182,7 @@ def main(root_path):
         os.mkdir(user_dir + appconsts.TRIM_VIEW_DIR)
     if not os.path.exists(user_dir + appconsts.NATRON_DIR):
         os.mkdir(user_dir + appconsts.NATRON_DIR)
-        
+       
     # Set paths.
     respaths.set_paths(root_path)
 
@@ -195,6 +202,10 @@ def main(root_path):
     translations.load_filters_translations()
     mlttransitions.init_module()
 
+    # Apr-2017 - SvdB - Keyboard shortcuts
+    shortcuts.load_shortcut_files()
+    shortcuts.load_shortcuts()
+    
     # RHEL7/CentOS compatibility fix
     if gtk_version == "3.8.8":
         GObject.threads_init()
@@ -270,6 +281,7 @@ def main(root_path):
     gmic.test_availablity()
     toolnatron.init()
     toolsintegration.init()
+    #toolsintegration.test()
     
     # Create player object
     create_player()
@@ -322,11 +334,18 @@ def main(root_path):
     # maintain a simpler and/or non-circular import structure
     monkeypatch_callbacks()
 
+    # File in assoc_file_path is opened after very short delay
     if not(check_crash == True and len(autosave_files) > 0):
         if assoc_file_path != None:
             print "Launch assoc file:", assoc_file_path
             global assoc_timeout_id
             assoc_timeout_id = GObject.timeout_add(10, open_assoc_file)
+
+    # SDL 2 consumer needs to created after Gtk.main() has run enough for window to be visble
+    #if editorstate.get_sdl_version() == editorstate.SDL_2: # needs more state considerion still
+    #    print "SDL2 timeout launch"
+    #    global sdl2_timeout_id
+    #    sdl2_timeout_id = GObject.timeout_add(1500, create_sdl_2_consumer)
             
     # Launch gtk+ main loop
     Gtk.main()
@@ -367,7 +386,16 @@ def monkeypatch_callbacks():
     snapping._get_frame_for_x_func = tlinewidgets.get_frame
     snapping._get_x_for_frame_func = tlinewidgets._get_frame_x
 
+    # Callback to reinit to change slider <-> kf editor
+    propertyeditorbuilder.re_init_editors_for_slider_type_change_func = clipeffectseditor.effect_selection_changed
+
     # These provide clues for further module refactoring 
+
+# ---------------------------------- SDL2 consumer
+#def create_sdl_2_consumer():
+#    GObject.source_remove(sdl2_timeout_id)
+#    print "Creating SDL2 consumer..."
+#    editorstate.PLAYER().create_sdl2_video_consumer()
 
 # ---------------------------------- program, sequence and project init
 def get_assoc_file_path():
@@ -537,6 +565,8 @@ def init_editor_state():
 
     proxyediting.set_menu_to_proxy_state()
 
+    undo.clear_undos()
+
     # Enable edit action GUI updates
     edit.do_gui_update = True
 
@@ -557,9 +587,9 @@ def open_project(new_project):
     audiowaveform.frames_cache = {}
 
     editorstate.project = new_project
-
     editorstate.media_view_filter = appconsts.SHOW_ALL_FILES
-    
+    editorstate.auto_follow = editorstate.project.get_project_property(appconsts.P_PROP_AUTO_FOLLOW)
+
     # Inits widgets with project data
     init_project_gui()
     
@@ -596,7 +626,10 @@ def open_project(new_project):
     if new_project.update_media_lengths_on_load == True:
         projectaction.update_media_lengths()
 
-    #editorstate.project.c_seq.print_all()
+    gui.editor_window.handle_insert_move_mode_button_press()
+    editorstate.trim_mode_ripple = False
+
+    updater.set_timeline_height()
         
 def change_current_sequence(index):
     stop_autosave()
@@ -620,6 +653,8 @@ def change_current_sequence(index):
     selected_index = editorstate.project.sequences.index(editorstate.current_sequence())
     selection.select_path(str(selected_index))
     start_autosave()
+
+    updater.set_timeline_height()
 
 def display_current_sequence():
     # Get shorter alias.
@@ -747,6 +782,15 @@ def _set_draw_params():
         editorwindow.MONITOR_AREA_WIDTH = 400
         positionbar.BAR_WIDTH = 100
 
+    if editorpersistance.prefs.double_track_hights == True:
+        appconsts.TRACK_HEIGHT_NORMAL = 100 # track height in canvas and column
+        appconsts.TRACK_HEIGHT_SMALL = 50 # track height in canvas and column
+        appconsts.TRACK_HEIGHT_SMALLEST = 50 # maybe remove as it is no longer meaningful
+        appconsts.TLINE_HEIGHT = 520
+        sequence.TRACK_HEIGHT_NORMAL = appconsts.TRACK_HEIGHT_NORMAL # track height in canvas and column
+        sequence.TRACK_HEIGHT_SMALL = appconsts.TRACK_HEIGHT_SMALL # track height in canvas and column
+        tlinewidgets.set_tracks_double_height_consts()
+        
 def _too_small_screen_exit():
     global exit_timeout_id
     exit_timeout_id = GObject.timeout_add(200, _show_too_small_info)

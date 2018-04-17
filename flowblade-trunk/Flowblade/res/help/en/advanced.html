@@ -1,0 +1,230 @@
+ <!DOCTYPE html>
+<html>
+<head>
+  <title>Advanced Editing</title>
+  <link rel="stylesheet" href="style.css">
+<script src="toc.js" type="text/javascript"></script>
+</head>
+
+<body>
+
+<div id="content">
+<img src="header_text_5.png" >
+
+<script src="tocgen.js"></script>
+
+<div id="toccontent">
+
+<div id="advtoc">
+<div class="subject-header">Advanced Editing</div>
+</div>
+
+<div id="toc"></div>
+
+<h2>1. Advanced Project Actions </h2>
+
+
+<h3>Combining Sequences</h3>
+<p>
+It is possible to import full contents of another Sequence into Sequence currently being edited.
+</p>
+
+<ol>
+<li> Select <b>Project->Import Another Sequence into this Sequnce..</b></li>
+<li> Select Import action.</li>
+<ul>
+<li> <b>Append Sequence</b> adds imported Sequence at the end of current Sequence</li>
+<li> <b>Insert Sequence at Playhead Position</b> creates a cut at playhead position and inserts imported Sequences at that position</li>
+</ul>
+<li> Select a Sequence to Import</li>
+<ul>
+<li> <b>Note that you obivously need atleast two Sequences to exist to do any import actions.</b></li>
+</ul>
+<li> Press <b>Import</b> button to execute import.</li>
+</ol>
+
+<h3>Importing Media from another Project</h3>
+
+<p>
+You can import Media Items from another Project.
+</p>
+
+<ol>
+<li> Select <b>Project->Import Media From Project...</b></li>
+<li> Select a Project file from file system.</li>
+<li> Media items that are not present in current Project will be opened in the current bin. Note that it takes a few seconds to load the project before new Media Items begin to appear.</li>
+</ol>
+
+
+
+<h2>2. Compound Clips </h2>
+
+<p>
+A <b>Compound Clip</b> is a single clip created by combining multiple clips and compositors in to a single media item.
+</p>
+
+<p>
+In Flowblade Compound Clips are <i>implemented by creating an MLT XML file</i> that is saved in a hidden folder. Note that it is currently not possible to unpack a Compound Clip back to its components.
+</p>
+
+<p>
+Compound Clips are useful when some complex sequence is more conveniently handled as a single unit.
+</p>
+
+<h3> Creating Compound Clip from Selection</h3>
+
+<ol>
+<li> Select 2 or more adjacent clips from a single track.</li>
+<li> Select <b>Project->Create Compound Clip->From Selected Clips</b></li>
+<li> Give a name for the new Media Item in the dialog.</li>
+<li> A new Media Item appears in the current Bin.</li>
+</ol>
+
+<h3> Creating Compound Clip from Sequence</h3>
+
+<ol>
+<li> Select <b>Project->Create Compound Clip->From Current Sequence</b></li>
+<li> Give a name for the new Media Item in the dialog.</li>
+<li> A new Media Item appears in the current Bin.</li>
+</ol>
+
+<h3> Creating audio synced Compound Clip from two Media Items</h3>
+
+<ol>
+<li> Select 2 Media Items in Media panel.</b></li>
+<ul>
+<li> The expected case is to select <b>1 Video and 1 Audio Clip</b>.</li>
+<li> If you select <b>2 Video Clips</b> then which is used as video depends on selection order.</li>
+<li> Audio from clip treated as video is muted.</li>
+</ul>
+<li> Select <b>Project->Create Compound Clip->Audio Sync Merge Clip From 2 Media Items</b></li>
+<li> If audio sync is successful a dialog  appers. Give a name for the new Media Item in the dialog.</li>
+<li> A new Media Item appears in the current Bin.</li>
+</ol>
+
+<div class="note">
+Audio synching looks for best matemathical match between two audio waveforms, so <b>audio syncing non-matching audio will produce random results.</b>
+</div>
+
+<h2>3. Timeline Audio Syncing</h2>
+
+<p>
+You can make a clip to move to a position in timeline in which its audio is in sync with audio of another clip on timeline.
+</p>
+
+<p>
+This enables you to do simplified version of multicam editing on the timeline.
+</p>
+
+<ol>
+<li> Open context menu with <b>Right Mouse</b> on Clip you wish to sync with some other clip.</li>
+<li> Select menu item <b>Select Clip to Audio Sync With...</b>. The cursor changes to a targeting cross.</li>
+<li> Click on Clip you wish to audio sync with.</li>
+<li> A dialog opens giving info on the sync action that is to be done to sync clips.</li>
+<li> Press <b>Do Audio Sync Move Edit</b> button to do the syncing edit.</li>
+<li> It is usually a good idea to mute one of the synched clips</li>
+</ol>
+
+<div class="note">
+Audio synching looks for best matemathical match between two audio waveforms, so <b>audio syncing non-matching audio will produce random results.</b>
+</div>
+
+
+<h2>4. Slow / Fast Motion and Reverse Clips</h2>
+
+<p>
+In Flowblade motion effects are achived by <b>rendering slow / fast motion  or reverse versions of video clips</b> and placing those on the timeline.
+</p>
+<h3> Creating Motion Clips </h3>
+<ol>
+<li> Right click on a Media File and select <b>Render Slow / Fast Motion File</b> from menu</li>
+<li>Edit parameters for the new motion Clip
+<ul>
+<li> Set speed</li>
+<li> Give name and location for motion Clip </li>
+<li> Select rendering parameters for motion Clip. It is probably a good idea to use a <b>lossless format</b> here to avoid any generational quality losses.</li>
+<li> Select render range, either:</li>
+<ul>
+<li> Full Source Clip</li>
+<li> From Source Clip Mark In to Mark Out</li>
+</ul>
+</ul>
+<li> Click <b>Render</b> button to create a new motion Clip</li>
+</ol>
+
+<h3> Creating Reverse Clips </h3>
+<ol>
+<li> Right click on a Media File and select <b>Render Reverse Motion File</b> from menu</li>
+<li>Edit parameters for the new motion Clip
+<ul>
+<li> Set speed</li>
+<li> Give name and location for reverse Clip </li>
+<li> Select rendering parameters for reverse Clip. It is probably a good idea to use a <b>lossless format</b> here to avoid any generational quality losses.</li>
+<li> Select render range, either:</li>
+<ul>
+<li> Full Source Clip</li>
+<li> From Source Clip Mark In to Mark Out</li>
+</ul>
+</ul>
+<li> Click <b>Render</b> button to create a new reverse Clip</li>
+</ol>
+
+<h2>5. Clip Parenting</h2>
+
+<p>
+In Flowblade Movie Editor you can <b>set a clip's positions to follow another clip's positions</b> on request.
+</p>
+
+<h3>Main points</h3>
+<ul>
+<li>Sync relations are set up by selecting a <b>Sync Parent Clip</b> for a <b>Sync Child Clip</b>.</li>
+<li><b>Only clips on track V1 can be Sync Parent Clips</b>. This is done to encourage edit style in which the main body of the Sequence is on track V1 and composites and audio split edits are done relative to the clip sequence on track V1.</li>
+<li><b>Sync feature helps preserve earlier work</b> an multitrack composites and audio split edits when clips are no longer in correct positions relative to each other, because of edits elsewhere on the Sequence.</li>
+<li><b>Resyncs are only done on request</b> to avoid jumping of clips on the timeline while editing. Explicit resyncs are also better from the point of view of avoiding side effects when doing edits.
+</li>
+</ul>
+<h3>Setting Sync Parent</h3>
+<ol>
+<li> Click <b>Right Mouse</b> on clip and select Select Sync Parent Clip... on any clip NOT on track V1.</li>
+<li> Cursor turns into a Target Cross. Click on clip on track V1 to select it as Sync Parent Clip.</li>
+<li> Sync Relation is established between the two clips. Cursor turns back into a default pointer.</li>
+<li> Sync State Stripe appers on the Sync Child Clip. Sync State Indicator Stripes on Clips:</li>
+<ul>
+<li> Green means that clip is in sync with parent.</li>
+<li> Red means that clip is NOT in sync with parent.</li>
+<li> Gray means that Sync Parent Clip is no longer on track V1.</li>
+</ul>
+</ol>
+
+<h3>Resyncing Sync Child Clips</h3>
+<ul>
+<li> Select <b>Edit -> Resync All to resync</b> from application menu all Sync Child Clips.</li>
+<li> Select <b>Edit - >Resync Selected to resync</b> from application menu selected Sync Child Clips.</li>
+<li> Click <b>Right Mouse</b> on Sync Child Clip and select <b>Resync</b> from popoup menu to resync single clip.</li>
+<li> Press <b>Resync Selected</b> Bbtton to resync selected Sync Child Clips.</li>
+</ul>
+
+<h3> Clearing Sync Parent Relations </h3>
+<ul>
+<li> Click <b>Right Mouse</b> on Sync Child Clip and select Clear Sync Relation.</li>
+</ul>
+
+<h3>Syncing Composited Clips</h3>
+<ul>
+<li> If appropriate set all clips that are part of a multitrack composite synched to the same clip.</li>
+</ul>
+
+<h3>Audio Split Syncing</h3>
+<ul>
+<li> Click <b>Right Mouse</b> on clip in track V1 and select Split Audio Synched.</li>
+<li> Edit audio split using Two Roll Trim mode to maintain sync with parent clip.</li>
+<li> Resync Audio as needed.</li>
+</ul>
+
+</div>
+</div>
+
+
+</body>
+
+</html> 

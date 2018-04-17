@@ -35,6 +35,8 @@ REPLACEMENTS_XML_DOC = None
 HELP_DOC = None
 GPL_3_DOC = None
 TRANSLATIONS_DOC = None
+DEVELOPERS_DOC = None
+CONTRIBUTORS_DOC = None
 LOCALE_PATH = None
 ROOT_PARENT = None
 PATTERN_PRODUCER_PATH = None
@@ -43,12 +45,14 @@ GMIC_SCRIPTS_DOC = None
 PHANTOM_JAR = None
 
 def set_paths(root_path):
+    # Apr-2017 - SvdB - Added SHORTCUTS_PATH for keyboard shortcuts files
     global ROOT_PATH, IMAGE_PATH, THUMBNAIL_PATH, PROFILE_PATH,\
     BLACK_IMAGE_PATH, FILTERS_XML_DOC, COMPOSITORS_XML_DOC, \
     WIPE_RESOURCES_PATH, PREFS_PATH, HELP_DOC, LOCALE_PATH, \
     GPL_3_DOC, ROOT_PARENT, PATTERN_PRODUCER_PATH, TRANSLATIONS_DOC, \
     LAUNCH_DIR, REPLACEMENTS_XML_DOC, GMIC_SCRIPTS_DOC,  \
-    PHANTOM_JAR, PHANTOM_DIR
+    PHANTOM_JAR, PHANTOM_DIR, DEVELOPERS_DOC, CONTRIBUTORS_DOC, \
+    SHORTCUTS_PATH
     
     ROOT_PATH = root_path
     IMAGE_PATH = root_path + "/res/img/"
@@ -63,12 +67,21 @@ def set_paths(root_path):
     LOCALE_PATH = root_path + "/locale/"
     GPL_3_DOC = root_path + "/res/help/gpl3"
     TRANSLATIONS_DOC = root_path + "/res/help/translations"
+    DEVELOPERS_DOC = root_path + "/res/help/developers"
+    CONTRIBUTORS_DOC = root_path + "/res/help/contributors"
     ROOT_PARENT = ROOT_PATH.strip("Flowblade")
     PATTERN_PRODUCER_PATH = root_path + "/res/patternproducer/"
     LAUNCH_DIR = root_path + "/launch/"
     GMIC_SCRIPTS_DOC = root_path + "/res/gmic/gmicscripts.xml"
     PHANTOM_JAR = root_path + "/phantom2d/Phantom2D.jar"
+    # Apr-2017 - SvdB
+    SHORTCUTS_PATH = root_path + "/res/shortcuts/"
 
 def apply_dark_theme():
     global IMAGE_PATH
     IMAGE_PATH = ROOT_PATH + "/res/darktheme/"
+
+def set_gmic2(root_path):
+    global GMIC_SCRIPTS_DOC
+    GMIC_SCRIPTS_DOC = root_path + "/res/gmic/gmic2scripts.xml"
+    

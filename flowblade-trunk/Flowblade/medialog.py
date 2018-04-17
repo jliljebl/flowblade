@@ -90,12 +90,13 @@ class MediaLogEvent:
 # ----------------------------------------------------------- dnd drop
 def clips_drop(clips):
     for clip in clips:
-        if clip.media_type == appconsts.VIDEO or clip.media_type == appconsts.AUDIO:
+        if clip.media_type == appconsts.VIDEO or clip.media_type == appconsts.AUDIO or clip.media_type == appconsts.IMAGE_SEQUENCE:
             log_event = MediaLogEvent(  appconsts.MEDIA_LOG_MARKS_SET,
                                         clip.clip_in,
                                         clip.clip_out,
                                         clip.name,
                                         clip.path)
+            log_event.ttl = clip.ttl
             editorstate.PROJECT().media_log.append(log_event)
     _update_list_view(log_event)
     
@@ -137,6 +138,8 @@ def log_range_clicked():
                                 media_file.mark_out,
                                 media_file.name,
                                 media_file.path)
+    log_event.ttl = media_file.ttl
+
     editorstate.PROJECT().media_log.append(log_event)
     editorstate.PROJECT().add_to_group(_get_current_group_index(), [log_event])
     _update_list_view(log_event)
@@ -270,8 +273,12 @@ def insert_selected_log_events():
     do_multiple_clip_insert_func(track, clips, tline_pos)
 
 def get_log_event_clip(log_event):
-    # currently quarateed not to be a pattern producer
-    new_clip = editorstate.current_sequence().create_file_producer_clip(log_event.path)
+    # pre versions 1.16 do not have this attr in log_event objects
+    if not hasattr(log_event, "ttl"):
+        log_event.ttl = None
+
+    # currently quaranteed not to be a pattern producer
+    new_clip = editorstate.current_sequence().create_file_producer_clip(log_event.path, None, False, log_event.ttl)
         
     # Set clip in and out points
     new_clip.clip_in = log_event.mark_in

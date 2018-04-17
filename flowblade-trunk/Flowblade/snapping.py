@@ -33,7 +33,6 @@ _get_frame_for_x_func = None
 _get_x_for_frame_func = None
 
 snapping_on = True
-show_magnet_icon = True
 
 _snap_threshold = 6 # in pixels
 
@@ -61,6 +60,10 @@ def get_snapped_x(x, track, edit_data):
             return _object_end_drag_snap(x, track, frame, edit_data)
         elif compositormodes.sub_mode == compositormodes.MOVE_EDIT:
             return _compositor_move_snap(x, track, frame, edit_data)
+    elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM or  EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
+        return _trimming_snap(x, track, frame, edit_data)
+    elif EDIT_MODE() ==  editorstate.MULTI_MOVE:
+        return _spacer_move_snap(x, track, frame, edit_data)
 
     # Many edit modes do not have snapping even if snapping is on
     return x
@@ -123,6 +126,17 @@ def _three_track_snap(track, x, frame, frame_x):
 
     return snapped_x
 
+def _all_tracks_snap(track, x, frame, frame_x):
+    snapped_x = -1
+    
+    for i in range(1, len(current_sequence().tracks) - 1):
+        track = current_sequence().tracks[i]
+        snapped_x = _get_track_snapped_x(track, x, frame, frame_x)
+        if snapped_x != -1:
+            return snapped_x
+
+    return snapped_x
+    
 def return_snapped_x_or_x(snapped_x, x):
     # Return either original or snapped x
     global _snap_happened
@@ -137,8 +151,6 @@ def return_snapped_x_or_x(snapped_x, x):
 def _overwrite_move_snap(x, track, frame, edit_data):
     if edit_data == None:
         return x
-
-    snapped_x = -1 # if value stays same till end no snapping happened.
 
     press_frame = edit_data["press_frame"]
     first_clip_start = edit_data["first_clip_start"]
@@ -182,3 +194,37 @@ def _compositor_move_snap(x, track, frame, edit_data):
     
     # Return either original x or snapped x
     return return_snapped_x_or_x(snapped_x, x)
+
+def _trimming_snap(x, track, frame, edit_data):
+    if edit_data == None:
+        return x
+
+    selected_frame = _get_frame_for_x_func(x)
+    selected_frame_x = _get_x_for_frame_func(selected_frame)
+
+    snapped_x = -1 # if value stays same till end, no snapping has happened
+    snapped_x = _three_track_snap(track, x, selected_frame, selected_frame_x)
+    
+    return_x = return_snapped_x_or_x(snapped_x, x)
+    edit_data["selected_frame"] = _get_frame_for_x_func(return_x) # we need to put snapped frame back into edit data because that is what is used by code elsewhere
+
+    # Return either original x or snapped x
+    return return_x
+
+def _spacer_move_snap(x, track, frame, edit_data):
+    if edit_data == None:
+        return x
+
+    press_frame = edit_data["press_frame"]
+    delta = frame - press_frame
+    first_moved_frame = edit_data["first_moved_frame"]
+    
+    move_frame = first_moved_frame + delta
+    move_frame_x = _get_x_for_frame_func(move_frame)
+
+    snapped_x = -1 # if value stays same till end, no snapping has happened
+    snapped_x = _all_tracks_snap(track, x, move_frame, move_frame_x)
+    
+    # Return either original or snapped x
+    return return_snapped_x_or_x(snapped_x, x)
+    

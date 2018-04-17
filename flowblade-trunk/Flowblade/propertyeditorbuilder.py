@@ -22,9 +22,12 @@
 Module creates GUI editors for editable mlt properties.
 """
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, GObject
+
+import cairo
 
 import appconsts
+import cairoarea
 from editorstate import PROJECT
 from editorstate import PLAYER
 from editorstate import current_sequence
@@ -33,12 +36,15 @@ import guiutils
 import keyframeeditor
 import mltfilters
 import mlttransitions
+import propertyparse
+import respaths
 import translations
+import updater
 import utils
 
 EDITOR = "editor"
 
-# editor types                                              editor component
+# editor types and agrs                                     editor component or arg description
 SLIDER = "slider"                                           # Gtk.HScale                              
 BOOLEAN_CHECK_BOX = "booleancheckbox"                       # Gtk.CheckButton
 COMBO_BOX = "combobox"                                      # Gtk.Combobox
@@ -57,6 +63,9 @@ COLOR_CORRECTOR = "color_corrector"                         # 3 band color corre
 CR_CURVES = "crcurves"                                      # Curves color editor with Catmull-Rom curve
 COLOR_BOX = "colorbox"                                      # One band color editor with color box interface
 COLOR_LGG = "colorlgg"                                      # Editor for ColorLGG filter
+FILE_SELECTOR = "file_select"                               # File selector button for selecting single files from
+FILE_TYPES = "file_types"                                   # list of files types with "." chracters, like ".png.tga.bmp"
+FADE_LENGTH = "fade_length"                                 # Autofade composiyots fade length
 NO_EDITOR = "no_editor"                                     # No editor displayed for property
 
 COMPOSITE_EDITOR_BUILDER = "composite_properties"           # Creates a single row editor for multiple properties of composite transition
@@ -64,6 +73,12 @@ REGION_EDITOR_BUILDER = "region_properties"                 # Creates a single r
 ROTATION_GEOMETRY_EDITOR_BUILDER = "rotation_geometry_editor" # Creates a single editor for multiple geometry values
 
 SCALE_DIGITS = "scale_digits"                               # Number of decimal digits displayed in a widget
+
+# We need to use globals to change slider -> kf editor and back because the data does not (can not) exist anywhere else. FilterObject.properties are just tuples and EditableProperty objects
+# are created deterministically from those and FilterObject.info.property_args data. So we need to save data here on change request to make the change happen.
+# This data needs to erased always after use.
+changing_slider_to_kf_property_name = None
+re_init_editors_for_slider_type_change_func = None # monkeypatched in
 
 def _p(name):
     try:
@@ -104,7 +119,6 @@ def get_filter_extra_editor_rows(filt, editable_properties):
     """
     Returns list of extraeditors GUI components.
     """
-    #print editable_properties
     extra_editors = filt.info.extra_editors
     rows = []
     for editor_name in extra_editors:
@@ -133,40 +147,146 @@ def _get_two_column_editor_row(name, editor_widget):
     return hbox
     
 def _get_slider_row(editable_property, slider_name=None, compact=False):
-    adjustment = editable_property.get_input_range_adjustment()
-    adjustment.connect("value-changed", editable_property.adjustment_value_changed)
-
-    hslider = Gtk.HScale()
-    hslider.set_adjustment(adjustment)
-    hslider.set_draw_value(False)
-
-    spin = Gtk.SpinButton()
-    spin.set_numeric(True)
-    spin.set_adjustment(adjustment)
-
-    _set_digits(editable_property, hslider, spin)
-
-    if slider_name == None:
-        name = editable_property.get_display_name()
-    else:
-        name = slider_name
-    name = _p(name)
+    slider_editor = SliderEditor(editable_property, slider_name=None, compact=False)
     
-    hbox = Gtk.HBox(False, 4)
-    if compact:
-        name_label = Gtk.Label(label=name + ":")
-        hbox.pack_start(name_label, False, False, 4)
-    hbox.pack_start(hslider, True, True, 0)
-    hbox.pack_start(spin, False, False, 4)
+    # This has now already been used if existed and has to be deleted.
+    global changing_slider_to_kf_property_name
+    changing_slider_to_kf_property_name = None
+    
+    # We need to tag this somehow and add lambda to pass frame events so that this can be to set get frame events
+    # in clipeffectseditor.py.
+    if slider_editor.editor_type == KEYFRAME_EDITOR:
+        slider_editor.vbox.is_kf_editor = True      
+        slider_editor.vbox.display_tline_frame = lambda tline_frame:slider_editor.kfeditor.display_tline_frame(tline_frame)
+        
+    return slider_editor.vbox
+    
 
-    vbox = Gtk.VBox(False)
-    if compact:
-        vbox.pack_start(hbox, False, False, 0)
-    else:
-        top_row = _get_two_column_editor_row(name, Gtk.HBox())
-        vbox.pack_start(top_row, True, True, 0)
-        vbox.pack_start(hbox, False, False, 0)
-    return vbox
+class SliderEditor:
+    def __init__(self, editable_property, slider_name=None, compact=False):
+
+        self.vbox = Gtk.VBox(False)
+        is_multi_kf = (editable_property.value.find(";") != -1)
+        if changing_slider_to_kf_property_name == editable_property.name or is_multi_kf == True:
+            eq_index = editable_property.value.find("=")
+            
+            # create kf in frame 0 if value PROP_INT or PROP_FLOAT
+            if eq_index == -1:
+                new_value = "0=" + editable_property.value
+                editable_property.value = new_value
+                editable_property.write_filter_object_property(new_value)
+                            
+            editable_property = editable_property.get_as_KeyFrameHCSFilterProperty()
+            self.init_for_kf_editor(editable_property)
+        else:
+            self.init_for_slider(editable_property, slider_name, compact)
+        
+        self.editable_property = editable_property
+        
+    def init_for_slider(self, editable_property, slider_name=None, compact=False):
+        self.editor_type = SLIDER
+        
+        adjustment = editable_property.get_input_range_adjustment()
+        adjustment.connect("value-changed", editable_property.adjustment_value_changed)
+
+        hslider = Gtk.HScale()
+        hslider.set_adjustment(adjustment)
+        hslider.set_draw_value(False)
+
+        spin = Gtk.SpinButton()
+        spin.set_numeric(True)
+        spin.set_adjustment(adjustment)
+
+        _set_digits(editable_property, hslider, spin)
+
+        if slider_name == None:
+            name = editable_property.get_display_name()
+        else:
+            name = slider_name
+        name = _p(name)
+        
+        kfs_switcher = KeyframesToggler(self)
+                
+        hbox = Gtk.HBox(False, 4)
+        if compact:
+            name_label = Gtk.Label(label=name + ":")
+            hbox.pack_start(name_label, False, False, 4)
+        hbox.pack_start(hslider, True, True, 0)
+        hbox.pack_start(spin, False, False, 4)
+        hbox.pack_start(kfs_switcher.widget, False, False, 4)
+
+        if compact:
+            self.vbox.pack_start(hbox, False, False, 0)
+        else:
+            top_right_h = Gtk.HBox()
+            top_right_h.pack_start(Gtk.Label(), True, True, 0)            
+            top_row = _get_two_column_editor_row(name, top_right_h)
+            
+            self.vbox.pack_start(top_row, True, True, 0)
+            self.vbox.pack_start(hbox, False, False, 0)
+
+    def init_for_kf_editor(self, editable_property):
+        self.editor_type = KEYFRAME_EDITOR
+        
+        kfs_switcher = KeyframesToggler(self)
+        self.kfeditor = keyframeeditor.KeyFrameEditor(editable_property, True, kfs_switcher)
+        self.vbox.pack_start(self.kfeditor, False, False, 0)
+
+    def kfs_toggled(self):
+        if self.editor_type == SLIDER: # slider -> kf editor
+            global changing_slider_to_kf_property_name
+            changing_slider_to_kf_property_name = self.editable_property.name
+            re_init_editors_for_slider_type_change_func()
+        else: # kf editor -> slider
+            # Save value as single keyframe or PROP_INT or PROP_FLOAT and
+            # drop all but first keyframe.
+            # Going kf editor -> slider destroys all but first keyframe.
+            first_kf_index = self.editable_property.value.find(";")
+            if first_kf_index == -1:
+                val = self.editable_property.value
+            else:
+                val = self.editable_property.value[0:first_kf_index]
+            
+            eq_index = self.editable_property.value.find("=")  + 1
+            first_kf_val = val[eq_index:len(val)]
+            
+            #  We need to turn editable prperty value and type(original type) back to what it was before user selected to go kf editing
+            if self.editable_property.prop_orig_type == appconsts.PROP_INT:
+                self.editable_property.type = appconsts.PROP_INT 
+                self.editable_property.write_filter_object_property(str(int(first_kf_val)))
+                #self.editable_property.typ
+            elif self.editable_property.prop_orig_type == appconsts.PROP_FLOAT:
+                self.editable_property.type = appconsts.PROP_FLOAT 
+                self.editable_property.write_filter_object_property(str(float(first_kf_val)))
+            else:
+                self.editable_property.write_filter_object_property("0=" + str(float(first_kf_val)))
+
+            re_init_editors_for_slider_type_change_func()
+
+
+class KeyframesToggler:
+    def __init__(self, parent_editor):
+        w=16
+        h=22
+        self.widget = cairoarea.CairoDrawableArea2( w,
+                                                    h,
+                                                    self._draw)
+        self.widget.press_func = self._press_event
+        self.parent_editor = parent_editor
+        if parent_editor.editor_type == KEYFRAME_EDITOR:
+            self.surface  = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "slider_icon.png")
+        else:
+            self.surface  = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active.png")
+
+        self.surface_x  = 3
+        self.surface_y  = 8
+
+    def _draw(self, event, cr, allocation):
+        cr.set_source_surface(self.surface, self.surface_x, self.surface_y)
+        cr.paint()
+
+    def _press_event(self, event):
+        self.parent_editor.kfs_toggled()
 
 def _get_ladspa_slider_row(editable_property, slider_name=None):
     adjustment = editable_property.get_input_range_adjustment()
@@ -441,6 +561,49 @@ def _get_wipe_selector(editable_property):
     
     return editor_pane
 
+class FadeLengthEditor(Gtk.HBox):
+    def __init__(self, editable_property):
+
+        GObject.GObject.__init__(self)
+        self.set_homogeneous(False)
+        self.set_spacing(2)
+        
+        self.editable_property = editable_property
+        length = self.editable_property.clip.clip_out - self.editable_property.clip.clip_in + 1
+        
+        name = editable_property.get_display_name()
+        name = _p(name)
+        name_label = Gtk.Label(label=name + ":")
+        
+        label_box = Gtk.HBox()
+        label_box.pack_start(name_label, False, False, 0)
+        label_box.pack_start(Gtk.Label(), True, True, 0)
+        label_box.set_size_request(appconsts.PROPERTY_NAME_WIDTH, appconsts.PROPERTY_ROW_HEIGHT)
+           
+        self.spin = Gtk.SpinButton.new_with_range (1, 1000, 1)
+        self.spin.set_numeric(True)
+        self.spin.set_value(length)
+        self.spin.connect("value-changed", self.spin_value_changed)
+
+        self.pack_start(guiutils.pad_label(4,4), False, False, 0)
+        self.pack_start(label_box, False, False, 0)
+        self.pack_start(self.spin, False, False, 0)
+        self.pack_start(Gtk.Label(), True, True, 0)
+        
+    def spin_value_changed(self, spin):
+        if self.editable_property.clip.transition.info.name == "##auto_fade_in":
+            self.editable_property.clip.set_length_from_in(int(spin.get_value()))
+        else:
+            self.editable_property.clip.set_length_from_out(int(spin.get_value()))
+
+        updater.repaint_tline()
+    
+    def display_tline_frame(self, frame):
+        pass # we don't seem to need this afte all, panel gets recreated after cpompositor length change
+        
+def _get_fade_length_editor(editable_property):
+    return FadeLengthEditor(editable_property)
+
 def _wipe_preset_combo_changed(widget, ep, widgets):
     combo_box, use_preset_luma_combo, user_luma_select, user_luma_label, keys = widgets
     if widget.get_active() == 1:
@@ -462,6 +625,40 @@ def _wipe_lumafile_dialog_response(dialog, response_id, ep, widgets):
     if file_name != None:
         ep.write_value(file_name)
 
+def _get_file_select_editor(editable_property):
+    """
+    Returns GUI component for selecting wipe type.
+    """
+    dialog = Gtk.FileChooserDialog(_("Select File"), None, 
+                                   Gtk.FileChooserAction.OPEN, 
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+    dialog.set_action(Gtk.FileChooserAction.OPEN)
+    dialog.set_select_multiple(False)
+
+    file_types_args_list = editable_property.args[FILE_TYPES].split(".")
+    file_types_args_list = file_types_args_list[1:len(file_types_args_list)]
+    file_filter = Gtk.FileFilter()
+    for file_type in file_types_args_list:
+        file_filter.add_pattern("*." + file_type)
+    file_filter.set_name("Accepted Files")
+    
+    dialog.add_filter(file_filter)
+        
+    file_select_button = Gtk.FileChooserButton.new_with_dialog(dialog)
+    file_select_button.set_size_request(210, 28)
+    
+    file_select_label = Gtk.Label(editable_property.get_display_name())
+
+    editor_row = Gtk.HBox(False, 2)
+    editor_row.pack_start(file_select_label, False, False, 2)
+    editor_row.pack_start(guiutils.get_pad_label(3, 5), False, False, 2)
+    editor_row.pack_start(file_select_button, False, False, 0)
+
+    dialog.connect('response', editable_property.dialog_response_callback)
+    
+    return editor_row
+    
 def _create_composite_editor(clip, editable_properties):
     aligned = filter(lambda ep: ep.name == "aligned", editable_properties)[0]
     distort = filter(lambda ep: ep.name == "distort", editable_properties)[0]
@@ -511,49 +708,9 @@ def _compositor_editor_force_combo_box_callback(combo_box, data):
         deinterlace.write_value("1")
         progressive.write_value("1")
 
-def _create_rotion_geometry_editor(clip, editable_properties):
-    # Build a custom object that duck types for TransitionEditableProperty to use in editor
-    ep = utils.EmptyClass()
-    # pack real properties to go
-    ep.x = filter(lambda ep: ep.name == "x", editable_properties)[0]
-    ep.y = filter(lambda ep: ep.name == "y", editable_properties)[0]
-    ep.x_scale = filter(lambda ep: ep.name == "x scale", editable_properties)[0]
-    ep.y_scale = filter(lambda ep: ep.name == "y scale", editable_properties)[0]
-    ep.rotation = filter(lambda ep: ep.name == "rotation", editable_properties)[0]
-    ep.opacity = filter(lambda ep: ep.name == "opacity", editable_properties)[0]
-    # Screen width and height are needeed for frei0r conversions
-    ep.profile_width = current_sequence().profile.width()
-    ep.profile_height = current_sequence().profile.height()
-    # duck type methods, using opacity is not meaningful, any property with clip member could do
-    ep.get_clip_tline_pos = lambda : ep.opacity.clip.clip_in # clip is compositor, compositor in and out points staright in timeline frames
-    ep.get_clip_length = lambda : ep.opacity.clip.clip_out - ep.opacity.clip.clip_in + 1
-    ep.get_input_range_adjustment = lambda : Gtk.Adjustment(float(100), float(0), float(100), float(1))
-    ep.get_display_name = lambda : "Opacity"
-    ep.get_pixel_aspect_ratio = lambda : (float(current_sequence().profile.sample_aspect_num()) / current_sequence().profile.sample_aspect_den())
-    ep.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
-    ep.write_out_keyframes = lambda w_kf : keyframeeditor.rotating_ge_write_out_keyframes(ep, w_kf)
-    # duck type members
-    x_tokens = ep.x.value.split(";")
-    y_tokens = ep.y.value.split(";")
-    x_scale_tokens = ep.x_scale.value.split(";")
-    y_scale_tokens = ep.y_scale.value.split(";")
-    rotation_tokens = ep.rotation.value.split(";")
-    opacity_tokens = ep.opacity.value.split(";")
+def _create_rotion_geometry_editor(clip, editable_properties):   
+    ep = propertyparse.create_editable_property_for_affine_blend(clip, editable_properties)
     
-    value = ""
-    for i in range(0, len(x_tokens)): # these better match, same number of keyframes for all values, or this will not work
-        frame, x = x_tokens[i].split("=")
-        frame, y = y_tokens[i].split("=")
-        frame, x_scale = x_scale_tokens[i].split("=")
-        frame, y_scale = y_scale_tokens[i].split("=")
-        frame, rotation = rotation_tokens[i].split("=")
-        frame, opacity = opacity_tokens[i].split("=")
-        
-        frame_str = str(frame) + "=" + str(x) + ":" + str(y) + ":" + str(x_scale) + ":" + str(y_scale) + ":" + str(rotation) + ":" + str(opacity)
-        value += frame_str + ";"
-
-    ep.value = value.strip(";")
-
     kf_edit = keyframeeditor.RotatingGeometryEditor(ep, False)
     return kf_edit
 
@@ -730,6 +887,8 @@ EDITOR_ROW_CREATORS = { \
     WIPE_SELECT: lambda ep: _get_wipe_selector(ep),
     LADSPA_SLIDER: lambda ep: _get_ladspa_slider_row(ep),
     CLIP_FRAME_SLIDER: lambda ep: _get_clip_frame_slider(ep),
+    FILE_SELECTOR: lambda ep: _get_file_select_editor(ep),
+    FADE_LENGTH: lambda ep: _get_fade_length_editor(ep),
     NO_EDITOR: lambda ep: _get_no_editor(),
     COMPOSITE_EDITOR_BUILDER: lambda comp, editable_properties: _create_composite_editor(comp, editable_properties),
     REGION_EDITOR_BUILDER: lambda comp, editable_properties: _create_region_editor(comp, editable_properties),

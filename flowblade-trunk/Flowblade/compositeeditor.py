@@ -19,23 +19,31 @@
 """
 
 """
-Module handles clips compositing gui.
+Module handles Compositors edit panel.
 """
 
+import cairo
 import copy
-
 from gi.repository import Gtk
+import pickle
 
+import atomicfile
+import compositorfades
+import dialogs
+import dialogutils
 import gui
 import guicomponents
 import guiutils
 import edit
+import editorstate
 from editorstate import current_sequence
 import editorpersistance
 import keyframeeditor
+import mlttransitions
 import propertyeditorbuilder
 import propertyedit
 import propertyparse
+import respaths
 import utils
 
 COMPOSITOR_PANEL_LEFT_WIDTH = 160
@@ -48,7 +56,7 @@ compositor = None # Compositor being edited.
 # Used to update kfeditors with external tline frame position changes
 keyframe_editor_widgets = []
 
-compositor_notebook_index = 3 # this is set 2 for 2 window mode
+compositor_notebook_index = 3 # this is set 2 for the 2 window mode
 
 def create_widgets():
     """
@@ -56,6 +64,17 @@ def create_widgets():
     """
     # Left side
     widgets.compositor_info = guicomponents.CompositorInfoPanel()
+    widgets.fade_in_b = Gtk.Button(_("Add Fade In"))
+    widgets.fade_in_b.connect("clicked", lambda w,e: _add_fade_in_pressed(), None)
+    widgets.fade_out_b = Gtk.Button(_("Add Fade Out"))
+    widgets.fade_out_b.connect("clicked", lambda w,e: _add_fade_out_pressed(), None)
+
+    widgets.fade_in_spin = Gtk.SpinButton.new_with_range(0, 150, 1)
+    widgets.fade_in_spin.set_value(10)
+    
+    widgets.fade_out_spin = Gtk.SpinButton.new_with_range(0, 150, 1)
+    widgets.fade_out_spin.set_value(10)
+    
     widgets.delete_b = Gtk.Button(_("Delete"))
     widgets.delete_b.connect("clicked", lambda w,e: _delete_compositor_pressed(), None)
     widgets.reset_b = Gtk.Button(_("Reset"))
@@ -63,7 +82,6 @@ def create_widgets():
     
     # Right side
     widgets.empty_label = Gtk.Label(label=_("No Compositor"))
-    #gui.label = widgets.empty_label
     widgets.value_edit_box = Gtk.VBox()
     widgets.value_edit_box.pack_start(widgets.empty_label, True, True, 0)
     widgets.value_edit_frame = Gtk.Frame()
@@ -72,13 +90,25 @@ def create_widgets():
 
 def get_compositor_clip_panel():
     create_widgets()
+    small = (editorstate.SCREEN_HEIGHT < 1000)
     
     compositor_vbox = Gtk.VBox(False, 2)
     compositor_vbox.pack_start(widgets.compositor_info, False, False, 0)
+    if not small:
+        compositor_vbox.pack_start(guiutils.get_pad_label(5, 24), False, False, 0)
+    compositor_vbox.pack_start(widgets.fade_in_b, False, False, 0)
+    compositor_vbox.pack_start(widgets.fade_in_spin, False, False, 0)
+    if not small:
+        compositor_vbox.pack_start(guiutils.get_pad_label(5, 12), False, False, 0)
+    compositor_vbox.pack_start(widgets.fade_out_b, False, False, 0)
+    compositor_vbox.pack_start(widgets.fade_out_spin, False, False, 0)
+    if not small:
+        compositor_vbox.pack_start(guiutils.get_pad_label(5, 24), False, False, 0)
     compositor_vbox.pack_start(Gtk.Label(), True, True, 0)
     compositor_vbox.pack_start(widgets.reset_b, False, False, 0)
-    compositor_vbox.pack_start(widgets.delete_b, False, False, 0)
-    compositor_vbox.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
+    if not small:
+        compositor_vbox.pack_start(widgets.delete_b, False, False, 0)
+        compositor_vbox.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
 
     set_enabled(False)
     
@@ -114,9 +144,31 @@ def set_enabled(value):
     widgets.delete_b.set_sensitive(value)
     widgets.reset_b.set_sensitive(value)
 
+    if compositor == None or (compositor.transition.info.auto_fade_compositor == False \
+        and mlttransitions.is_blender(compositor.transition.info.name) == False):
+        widgets.fade_in_b.set_sensitive(value)
+        widgets.fade_out_b.set_sensitive(value)
+        widgets.fade_in_spin.set_sensitive(value)
+        widgets.fade_out_spin.set_sensitive(value)
+    else: # Autofade compositors or blenders don't use these buttons
+        widgets.fade_in_b.set_sensitive(False)
+        widgets.fade_out_b.set_sensitive(False)
+        widgets.fade_in_spin.set_sensitive(False)
+        widgets.fade_out_spin.set_sensitive(False)
+
 def maybe_clear_editor(killed_compositor):
     if killed_compositor.destroy_id == compositor.destroy_id:
         clear_compositor()
+
+def _add_fade_in_pressed():
+    compositorfades.add_fade_in(compositor, int(widgets.fade_in_spin.get_value()))
+    # We need GUI reload to show results
+    set_compositor(compositor)
+
+def _add_fade_out_pressed():
+    compositorfades.add_fade_out(compositor, int(widgets.fade_out_spin.get_value()))
+    # We need GUI reload to show results
+    set_compositor(compositor)
 
 def _delete_compositor_pressed():
     data = {"compositor":compositor}
@@ -142,7 +194,7 @@ def _display_compositor_edit_box():
 
     vbox = Gtk.VBox()
 
-    # case: Empty edit frame
+    # Case: Empty edit frame
     global compositor
     if compositor == None:
         widgets.empty_label = Gtk.Label(label=_("No Compositor"))
@@ -153,7 +205,8 @@ def _display_compositor_edit_box():
         widgets.value_edit_box = vbox
         widgets.value_edit_frame.add(vbox)
         return 
-    
+
+    # Case: Filled frame
     compositor_name_label = Gtk.Label(label= "<b>" + compositor.name + "</b>")
     compositor_name_label.set_use_markup(True)
     vbox.pack_start(compositor_name_label, False, False, 0)
@@ -191,6 +244,7 @@ def _display_compositor_edit_box():
         if ((editor_type == propertyeditorbuilder.KEYFRAME_EDITOR)
             or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_RELEASE)
             or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_CLIP)
+            or (editor_type == propertyeditorbuilder.FADE_LENGTH)
             or (editor_type == propertyeditorbuilder.GEOMETRY_EDITOR)):
                 keyframe_editor_widgets.append(editor_row)
     
@@ -199,12 +253,17 @@ def _display_compositor_edit_box():
     editor_rows = propertyeditorbuilder.get_transition_extra_editor_rows(compositor, t_editable_properties)
     for editor_row in editor_rows:
         # These are added to keyframe editor based on editor type, not based on EditableProperty type as above
-        # because one editor set values for multiple EditableProperty objects
+        # because one editor sets values for multiple EditableProperty objects
         if editor_row.__class__ == keyframeeditor.RotatingGeometryEditor:
             keyframe_editor_widgets.append(editor_row)
         vbox.pack_start(editor_row, False, False, 0)
         vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
-    
+
+    hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger_big.png")
+    hamburger_launcher = guicomponents.PressLaunch(_hamburger_launch_pressed, hamburger_launcher_surface, 24, 24)
+    sl_row = guiutils.get_left_justified_box([hamburger_launcher.widget])
+    vbox.pack_start(sl_row, False, False, 0)
+        
     vbox.pack_start(Gtk.Label(), True, True, 0)  
     vbox.show_all()
 
@@ -232,3 +291,67 @@ def display_kfeditors_tline_frame(frame):
 def update_kfeditors_positions():
     for kf_widget in keyframe_editor_widgets:
         kf_widget.update_clip_pos()
+
+# ----------------------------------------------------------- hamburger menu
+def _hamburger_launch_pressed(widget, event):
+    guicomponents.get_compositor_editor_hamburger_menu(event, _compositor_hamburger_item_activated)
+
+def _compositor_hamburger_item_activated(widget, msg):
+    if msg == "save":
+        comp_name = mlttransitions.name_for_type[compositor.transition.info.name]
+        default_name = comp_name.replace(" ", "_") + _("_compositor_values") + ".data"
+        dialogs.save_effects_compositors_values(_save_compositor_values_dialog_callback, default_name, False)
+    elif msg == "load":
+        dialogs.load_effects_compositors_values_dialog(_load_compositor_values_dialog_callback, False)
+    elif msg == "reset":
+        _reset_compositor_pressed()
+    elif msg == "delete":
+        _delete_compositor_pressed()
+
+def _save_compositor_values_dialog_callback(dialog, response_id):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        save_path = dialog.get_filenames()[0]
+        compositor_data = CompositorValuesSaveData(compositor.transition.info, compositor.transition.properties)
+        compositor_data.save(save_path)
+    
+    dialog.destroy()
+
+def _load_compositor_values_dialog_callback(dialog, response_id):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        load_path = dialog.get_filenames()[0]
+        f = open(load_path)
+        compositor_data = pickle.load(f)
+
+        if compositor_data.data_applicable(compositor.transition.info):
+            compositor_data.set_values(compositor)
+            set_compositor(compositor)
+        else:
+            saved_name_comp_name = mlttransitions.name_for_type[compositor_data.info.name]
+            current_comp_name = mlttransitions.name_for_type[compositor.transition.info.name]
+            primary_txt = _("Saved Compositor data not applicaple for this compositor!")
+            secondary_txt = _("Saved data is for ") + saved_name_comp_name + " compositor,\n" + _(", current compositor is ") + current_comp_name + "."
+            dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
+
+    dialog.destroy()
+
+
+class CompositorValuesSaveData:
+    
+    def __init__(self, info, properties):
+        self.info = info
+        self.properties = copy.deepcopy(properties)
+
+    def save(self, save_path):
+        with atomicfile.AtomicFileWriter(save_path, "wb") as afw:
+            write_file = afw.get_file()
+            pickle.dump(self, write_file)
+        
+    def data_applicable(self, compositor_info):        
+        if isinstance(self.info, compositor_info.__class__):
+            return self.info.__dict__ == compositor_info.__dict__
+        return False
+        
+    def set_values(self, compositor):
+        compositor.transition.properties = copy.deepcopy(self.properties)
+        compositor.transition.update_editable_mlt_properties()
+        

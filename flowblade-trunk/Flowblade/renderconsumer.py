@@ -30,6 +30,8 @@ import time
 import threading
 import xml.dom.minidom
 import os
+# Jan-2017 - SvdB
+import editorpersistance
 
 import mltenv
 import respaths
@@ -73,6 +75,9 @@ quality_option_groups = {}
 quality_option_groups_default_index = {}
 non_user_encodings = []
 proxy_encodings = None
+
+# This is used to turn performance settings off for proxy rendering
+performance_settings_enabled = True
 
 # replace empty strings with None values
 def _get_attribute(node, attr_name):
@@ -219,7 +224,7 @@ def load_render_profiles():
         else:
             msg = "...NOT available, " + encoding_option.err_msg + " missing"
             not_supported_encoding_options.append(encoding_option)
-            print encoding_option.name + msg
+            #print encoding_option.name + msg
 
     # Proxy encoding
     proxy_encoding_nodes = render_encoding_doc.getElementsByTagName(PROXY_ENCODING_OPTION)
@@ -231,7 +236,7 @@ def load_render_profiles():
             found_proxy_encodings.append(proxy_encoding_option)
         else:
             msg = " ...NOT available, " + encoding_option.err_msg + " missing"
-        print "Proxy encoding " + proxy_encoding_option.name + msg
+        #print "Proxy encoding " + proxy_encoding_option.name + msg
     global proxy_encodings
     proxy_encodings = found_proxy_encodings
 
@@ -269,15 +274,49 @@ def get_img_seq_render_consumer(file_path, profile, encoding_option):
     render_path = os.path.dirname(file_path) + "/" + os.path.basename(file_path).split(".")[0] + "_%05d." + encoding_option.extension
     
     consumer = mlt.Consumer(profile, "avformat", str(render_path))
-    consumer.set("real_time", -1)
+    # Jan-2017 - SvdB - perf_value instead of -1
+    if performance_settings_enabled == True:
+        if editorpersistance.prefs.perf_drop_frames == True:
+            perf_value = 1 * editorpersistance.prefs.perf_render_threads
+        else:
+            perf_value = -1 * editorpersistance.prefs.perf_render_threads
+        consumer.set("real_time", perf_value)
+    else:
+        consumer.set("real_time", -1)
     consumer.set("rescale", "bicubic")
     consumer.set("vcodec", str(vcodec))
-    print "img seq render consumer created, path:" +  str(render_path) #+ ", args: " + args_msg
+
+    return consumer
+
+def get_img_seq_render_consumer_codec_ext(file_path, profile, vcodec, ext):
+    render_path = os.path.dirname(file_path) + "/" + os.path.basename(file_path).split(".")[0] + "_%05d." + ext
+    
+    consumer = mlt.Consumer(profile, "avformat", str(render_path))
+    # Jan-2017 - SvdB - perf_value instead of -1
+    if performance_settings_enabled == True:
+        if editorpersistance.prefs.perf_drop_frames == True:
+            perf_value = 1 * editorpersistance.prefs.perf_render_threads
+        else:
+            perf_value = -1 * editorpersistance.prefs.perf_render_threads
+        consumer.set("real_time", perf_value)
+    else:
+        consumer.set("real_time", -1)
+    consumer.set("rescale", "bicubic")
+    consumer.set("vcodec", str(vcodec))
+
     return consumer
     
 def get_mlt_render_consumer(file_path, profile, args_vals_list):
     consumer = mlt.Consumer(profile, "avformat", str(file_path))
-    consumer.set("real_time", -1)
+    # Jan-2017 - SvdB - perf_value instead of -1
+    if performance_settings_enabled == True:
+        if editorpersistance.prefs.perf_drop_frames == True:
+            perf_value = 1 * editorpersistance.prefs.perf_render_threads
+        else:
+            perf_value = -1 * editorpersistance.prefs.perf_render_threads
+        consumer.set("real_time", perf_value)
+    else:
+        consumer.set("real_time", -1)
     consumer.set("rescale", "bicubic")
 
     args_msg = ""
@@ -287,7 +326,7 @@ def get_mlt_render_consumer(file_path, profile, args_vals_list):
         args_msg = args_msg + str(k) + "="+ str(v) + ", "
         
     args_msg = args_msg.strip(", ")
-    print "render consumer created, path:" +  str(file_path) + ", args: " + args_msg
+    #print "render consumer created, path:" +  str(file_path) + ", args: " + args_msg
     return consumer
 
 def get_args_vals_tuples_list_for_encoding_and_quality(profile, enc_opt_index, quality_opt_index):
@@ -489,6 +528,42 @@ class XMLRenderPlayer(threading.Thread):
         player.seek_frame(0)
 
         self.render_done_callback(self.data)
+
+
+class XMLCompoundRenderPlayer(threading.Thread):
+    def __init__(self, file_name, media_name, callback, tractor):
+        self.file_name = file_name
+        self.media_name = media_name
+        self.render_done_callback = callback
+        self.tractor = tractor
+
+        threading.Thread.__init__(self)
+
+    def run(self):
+        tractor = self.tractor
+        tractor.set_speed(0)
+        tractor.seek(0)
+        
+        # Wait until producer is at start
+        while tractor.frame() != 0:
+            time.sleep(0.1)
+
+        # Get render consumer
+        xml_consumer = mlt.Consumer(PROJECT().profile, "xml", str(self.file_name))
+
+        # Connect and start rendering
+        xml_consumer.connect(tractor)
+        xml_consumer.start()
+        tractor.set_speed(1)
+
+        # Wait until done
+        while xml_consumer.is_stopped() == False:
+            print "In XML render wait loop..."
+            time.sleep(0.1)
+    
+        print "XML compound clip render done"
+
+        self.render_done_callback(self.file_name, self.media_name)
 
 
 class ProgressWindowThread(threading.Thread):

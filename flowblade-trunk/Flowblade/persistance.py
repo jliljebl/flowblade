@@ -29,6 +29,7 @@ and then create MLT objects from pickled objects when project is loaded.
 import copy
 import glob
 import fnmatch
+import md5
 import os
 import pickle
 import time
@@ -37,6 +38,7 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 
 import appconsts
+import atomicfile
 import editorstate
 import editorpersistance
 import mltprofiles
@@ -83,20 +85,19 @@ snapshot_paths = None
 
 # Used to compute in/out points when saving to change profile
 _fps_conv_mult = 1.0
-    
+
+# A dict is put here when saving for profile change to contain paths to changed MLT XML files
+_xml_new_paths_for_profile_change = None
+
 class FileProducerNotFoundError(Exception):
-    """
-    We're only catching this, other errors we'll just crash on load
-    """
+
     def __init__(self, value):
         self.value = value
     def __str__(self):
         return repr(self.value)
 
 class ProjectProfileNotFoundError(Exception):
-    """
-    We're only catching this, other errors we'll just crash on load
-    """
+
     def __init__(self, value):
         self.value = value
     def __str__(self):
@@ -115,19 +116,23 @@ def save_project(project, file_path, changed_profile_desc=None):
     """
     Creates pickleable project object
     """
-    print "Save project " + os.path.basename(file_path)
+    print "Saving project..."  # + os.path.basename(file_path)
     
     # Get shallow copy
     s_proj = copy.copy(project)
     
     # Implements "change profile" functionality
-    global _fps_conv_mult
+    global _fps_conv_mult, _xml_new_paths_for_profile_change
     _fps_conv_mult = 1.0
     if changed_profile_desc != None:
         _fps_conv_mult = mltprofiles.get_profile(changed_profile_desc).fps() / mltprofiles.get_profile(s_proj.profile_desc).fps()
         s_proj.profile_desc = changed_profile_desc
-        print "Saving changed profile project: ", changed_profile_desc
-        print "FPS conversion multiplier:", _fps_conv_mult
+        _xml_new_paths_for_profile_change = {} # dict acts also as a flag to show that profile change save is happening
+        new_profile = mltprofiles.get_profile(changed_profile_desc)
+        #print "Saving changed profile project: ", changed_profile_desc
+        #print "FPS conversion multiplier:", _fps_conv_mult
+    else:
+        _xml_new_paths_for_profile_change = None # None value acts also as a flag to show that profile change save is _not_ happening
 
     # Set current sequence index
     s_proj.c_seq_index = project.sequences.index(project.c_seq)
@@ -145,8 +150,19 @@ def save_project(project, file_path, changed_profile_desc=None):
     media_files = {}
     for k, v in s_proj.media_files.iteritems():
         s_media_file = copy.copy(v)
-        remove_attrs(s_media_file, MEDIA_FILE_REMOVE)
         
+        # Because of MLT misfeature of changing project profile when loading MLT XML files we need to create new modified XML files when
+        # saving to change profile.
+        # Underlying reason: https://github.com/mltframework/mlt/issues/212
+        if changed_profile_desc != None and s_media_file.path != None and utils.is_mlt_xml_file(s_media_file.path) == True:
+            new_xml_file_path = _save_changed_xml_file(s_media_file, new_profile)
+            _xml_new_paths_for_profile_change[s_media_file.path] = new_xml_file_path
+            s_media_file.path = new_xml_file_path
+            #print "XML path replace for media:", s_media_file.path,  new_xml_file_path
+
+        # Remove unpicleable attrs
+        remove_attrs(s_media_file, MEDIA_FILE_REMOVE)
+
         # Convert media files between original and proxy files
         if project_proxy_mode == appconsts.CONVERTING_TO_USE_PROXY_MEDIA:
             if s_media_file.has_proxy_file:
@@ -165,6 +181,7 @@ def save_project(project, file_path, changed_profile_desc=None):
                 s_media_file.path = snapshot_paths[s_media_file.path] 
 
         media_files[s_media_file.id] = s_media_file
+
     s_proj.media_files = media_files
 
     # Replace sequences with pickleable objects
@@ -178,8 +195,9 @@ def save_project(project, file_path, changed_profile_desc=None):
     remove_attrs(s_proj, PROJECT_REMOVE)
 
     # Write out file.
-    write_file = file(file_path, "wb")
-    pickle.dump(s_proj, write_file)
+    with atomicfile.AtomicFileWriter(file_path, "wb") as afw:
+        write_file = afw.get_file()
+        pickle.dump(s_proj, write_file)
 
 def get_p_sequence(sequence):
     """
@@ -227,7 +245,20 @@ def get_p_clip(clip):
     Creates pickleable version of MLT Producer object
     """
     s_clip = copy.copy(clip)
-     
+
+    # Because of MLT misfeature of changing project profile when loading MLT XML files we need to create new modified XML files when
+    # saving to change profile.
+    # Underlying reason: https://github.com/mltframework/mlt/issues/212
+    if _xml_new_paths_for_profile_change != None and hasattr(s_clip, "path") and s_clip.path != None and utils.is_mlt_xml_file(s_clip.path) == True:
+        try:
+            new_path = _xml_new_paths_for_profile_change[s_clip.path]
+            #print "XML path replace for clip:", s_clip.path, new_path
+            s_clip.path = new_path
+        except:
+            # Something is really wrong, this should not be possible
+            # print "Failed to find a new XML file for path:", s_clip.path
+            pass 
+
     # Set 'type' attribute for MLT object type
     # This IS NOT USED anywhere anymore and should be removed.
     s_clip.type = 'Mlt__Producer'
@@ -301,6 +332,7 @@ def get_p_compositors(compositors):
         s_compositor.transition.mlt_transition = None
         if _fps_conv_mult != 1.0:
             _update_compositor_in_out_for_fps_change(s_compositor)
+
         s_compositors.append(s_compositor)
 
     return s_compositors
@@ -330,7 +362,29 @@ def _update_clip_in_out_for_fps_change(s_clip):
 def _update_compositor_in_out_for_fps_change(s_compositor):
     s_compositor.clip_in = int(s_compositor.clip_in * _fps_conv_mult)
     s_compositor.clip_out = int(s_compositor.clip_out * _fps_conv_mult)
- 
+
+# Needed for xml files when doing profile change saves
+def _save_changed_xml_file(s_media_file, new_profile):
+    xml_file = open(s_media_file.path)
+    xml_text = xml_file.read()
+        
+    new_profile_node = mltprofiles.get_profile_node(new_profile)
+    
+    in_index = xml_text.find("<profile")
+    out_index = xml_text.find("/>", in_index) + 2
+    
+    new_xml_text = xml_text[0:in_index] + new_profile_node + xml_text[out_index:len(xml_text)]
+
+    folder = editorpersistance.prefs.render_folder
+    uuid_str = md5.new(str(os.urandom(32))).hexdigest()
+    new_xml_file_path = folder + "/"+ uuid_str + ".xml"
+
+    with atomicfile.AtomicFileWriter(new_xml_file_path, "w") as afw:
+        new_xml_file = afw.get_file()
+        new_xml_file.write(new_xml_text)
+    
+    return new_xml_file_path
+
 # -------------------------------------------------- LOAD
 def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
     _show_msg("Unpickling")
@@ -352,7 +406,8 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
 
     if(not hasattr(project, "SAVEFILE_VERSION")):
         project.SAVEFILE_VERSION = 1 # first save files did not have this
-    print "Loading " + project.name + ", SAVEFILE_VERSION:", project.SAVEFILE_VERSION
+    # SvdB - Feb-2017 - Removed project.name from print. It causes problems with non-latin characters, in some cases. Not sure why, yet.
+    print "Loading Project, SAVEFILE_VERSION:", project.SAVEFILE_VERSION
 
     # Set MLT profile. NEEDS INFO USER ON MISSING PROFILE!!!!!
     project.profile = mltprofiles.get_profile(project.profile_desc)
@@ -366,9 +421,10 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
 
     # Add MLT objects to sequences.
     global all_clips, sync_clips
+    seq_count = 1
     for seq in project.sequences:
         FIX_N_TO_3_SEQUENCE_COMPATIBILITY(seq)
-        _show_msg(_("Building sequence ") + seq.name)
+        _show_msg(_("Building sequence ") + str(seq_count))
         all_clips = {}
         sync_clips = []
                 
@@ -379,6 +435,8 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
 
         if not hasattr(seq, "seq_len"):
             seq.update_edit_tracks_length()
+
+        seq_count = seq_count + 1
 
     all_clips = {}
     sync_clips = []
@@ -399,7 +457,10 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
         # This attr was added for 1.8. It is not computed for older projects.
         if (not hasattr(media_file, "info")):
             media_file.info = None
-    
+        # We need this in all media files, used only by img seq media
+        if not hasattr(media_file, "ttl"):
+            media_file.ttl = None
+                
     if(not hasattr(project, "update_media_lengths_on_load")):
         project.update_media_lengths_on_load = True # old projects < 1.10 had wrong media length data which just was never used.
                                                     # 1.10 needed that data for the first time and required recreating it correctly for older projects
@@ -446,7 +507,9 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
             # Keeping backwards compability
             if SAVEFILE_VERSION < 3:
                 FIX_N_TO_3_COMPOSITOR_COMPABILITY(py_compositor, SAVEFILE_VERSION)
-        
+            if not hasattr(py_compositor, "obey_autofollow"): # "obey_autofollow" attr was added for 1.16
+                py_compositor.obey_autofollow = True
+                
             # Create new compositor object
             compositor = mlttransitions.create_compositor(py_compositor.type_id)                                        
             compositor.create_mlt_objects(seq.profile)
@@ -459,6 +522,8 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
             compositor.transition.set_tracks(py_compositor.transition.a_track, py_compositor.transition.b_track)
             compositor.set_in_and_out(py_compositor.clip_in, py_compositor.clip_out)
             compositor.origin_clip_id = py_compositor.origin_clip_id
+            compositor.obey_autofollow = py_compositor.obey_autofollow
+           
             mlt_compositors.append(compositor)
 
     seq.compositors = mlt_compositors
@@ -500,7 +565,15 @@ def fill_track_mlt(mlt_track, py_track):
         # Add color attribute if not found
         if not hasattr(clip, "color"):
             clip.color = None
+            
+        # Add markers list if not found
+        if not hasattr(clip, "markers"):
+            clip.markers = []
 
+        # Add img seq ttl value for all clips if not found, we need this present in every clip so we test for 'clip.ttl == None' to get stuff working
+        if not hasattr(clip, "ttl"):
+            clip.ttl = None
+            
         # normal clip
         if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
             orig_path = clip.path # Save the path for error message
@@ -510,7 +583,8 @@ def fill_track_mlt(mlt_track, py_track):
             else:
                 clip.path = get_img_seq_media_path(clip.path, _load_file_path)
                 
-            mlt_clip = sequence.create_file_producer_clip(clip.path)
+            mlt_clip = sequence.create_file_producer_clip(clip.path, None, False, clip.ttl)
+            
             if mlt_clip == None:
                 raise FileProducerNotFoundError(orig_path)
             mlt_clip.__dict__.update(clip.__dict__)
@@ -646,11 +720,11 @@ def get_relative_path(project_file_path, asset_path):
         for filename in fnmatch.filter(filenames, asset_file_name):
             matches.append(os.path.join(root, filename))
     if len(matches) == 1:
-        print "relative path for: ", asset_file_name
+        #print "relative path for: ", asset_file_name
         return matches[0]
     elif  len(matches) > 1:
         # some error handling may be needed?
-        print "relative path for: ", asset_file_name
+        #print "relative path for: ", asset_file_name
         return matches[0]
     else:
         return NOT_FOUND # no relative path found
@@ -668,7 +742,7 @@ def get_img_seq_relative_path(project_file_path, asset_path):
         look_up_path = root + "/" + look_up_file_name
         listing = glob.glob(look_up_path)
         if len(listing) > 0:
-            print "relative path for: ", asset_file_name
+            #print "relative path for: ", asset_file_name
             return root + "/" + asset_file_name
 
     return NOT_FOUND # no relative path found
@@ -726,6 +800,9 @@ def FIX_MISSING_PROJECT_ATTRS(project):
     if (not(hasattr(project, "media_log_groups"))):
         project.media_log_groups = []
 
+    if (not(hasattr(project, "project_properties"))):
+        project.project_properties = {}
+        
 def _fix_wipe_relative_path(compositor):
     if compositor.type_id == "##wipe": # Wipe may have user luma and needs to be looked up relatively
         _set_wipe_res_path(compositor, "resource")

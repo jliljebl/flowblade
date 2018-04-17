@@ -31,10 +31,13 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 
 import appconsts
+import audiosync
+import boxmove
 import clipeffectseditor
 import clipenddragmode
 import compositeeditor
 import compositormodes
+import dialogs
 import dialogutils
 import edit
 import editorstate
@@ -277,7 +280,7 @@ def stop_looping():
 # -------------------------------------------------------------- move modes
 def insert_move_mode_pressed():
     """
-    User selects insert move mode.
+    User selects Insert tool.
     """
     stop_looping()
     current_sequence().clear_hidden_track()
@@ -289,17 +292,38 @@ def insert_move_mode_pressed():
 
 def overwrite_move_mode_pressed():
     """
-    User selects overwrite move mode.
+    User selects Overwrite tool.
     """
     stop_looping()
     current_sequence().clear_hidden_track()
 
     editorstate.edit_mode = editorstate.OVERWRITE_MOVE
+    # Box tool is implemeted as sub mode of OVERWRITE_MOVE so this false
+    editorstate.overwrite_mode_box = False
     tlinewidgets.set_edit_mode(None, tlinewidgets.draw_overwrite_overlay)
 
     _set_move_mode()
 
+def box_mode_pressed():
+    """
+    User selects Box tool.
+    """
+    stop_looping()
+    current_sequence().clear_hidden_track()
+    
+    # Box tool is implemeted as sub mode of OVERWRITE_MOVE
+    editorstate.edit_mode = editorstate.OVERWRITE_MOVE
+    editorstate.overwrite_mode_box = True
+    boxmove.clear_data()
+        
+    tlinewidgets.set_edit_mode(None, None) # these get set later for box move
+        
+    _set_move_mode()
+    
 def multi_mode_pressed():
+    """
+    User selects Spacer tool.
+    """
     stop_looping()
     current_sequence().clear_hidden_track()
 
@@ -518,6 +542,14 @@ def tline_canvas_mouse_pressed(event, frame):
         set_default_edit_mode()  
         return
 
+    # Handle and exit tline sync clip selecting
+    if EDIT_MODE() == editorstate.SELECT_TLINE_SYNC_CLIP:
+        audiosync.select_sync_clip_mouse_pressed(event, frame)
+        mouse_disabled = True
+        # Set INSERT_MODE
+        set_default_edit_mode()
+        return
+        
     # Hitting timeline in clip display mode displays timeline in
     # default mode.
     if not timeline_visible():
@@ -552,30 +584,38 @@ def tline_canvas_mouse_pressed(event, frame):
             updater.repaint_tline()
             return
 
-    #  Check if compositor is hit and if so handle compositor editing
+    #  Check if compositor is hit and if so, handle compositor editing
     if editorstate.current_is_move_mode() and timeline_visible():
         hit_compositor = tlinewidgets.compositor_hit(frame, event.y, current_sequence().compositors)
-        if hit_compositor != None:
-            movemodes.clear_selected_clips()
-            if event.button == 1 or (event.button == 3 and event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-                compositormodes.set_compositor_mode(hit_compositor)
-                mode_funcs = EDIT_MODE_FUNCS[editorstate.COMPOSITOR_EDIT]
-                press_func = mode_funcs[TL_MOUSE_PRESS]
-                press_func(event, frame)
-            elif event.button == 3:
+        if hit_compositor != None:         
+            if editorstate.auto_follow == False or hit_compositor.obey_autofollow == False:
+                movemodes.clear_selected_clips()
+                if event.button == 1 or (event.button == 3 and event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+                    compositormodes.set_compositor_mode(hit_compositor)
+                    mode_funcs = EDIT_MODE_FUNCS[editorstate.COMPOSITOR_EDIT]
+                    press_func = mode_funcs[TL_MOUSE_PRESS]
+                    press_func(event, frame)
+                    return
+            if event.button == 3:
                 mouse_disabled == True
                 compositormodes.set_compositor_selected(hit_compositor)
                 guicomponents.display_compositor_popup_menu(event, hit_compositor,
                                                             compositor_menu_item_activated)
+                return
             elif event.button == 2:
                 updater.zoom_project_length()
-            return
+                return
 
     compositormodes.clear_compositor_selection()
 
-    # Check if we should enter clip end drag mode.
+    # Check if we should enter clip end drag mode
     if (event.button == 3 and editorstate.current_is_move_mode()
         and timeline_visible() and (event.get_state() & Gdk.ModifierType.CONTROL_MASK)):
+        # with CTRL right mouse
+        clipenddragmode.maybe_init_for_mouse_press(event, frame)
+    elif (timeline_visible() and (EDIT_MODE() == editorstate.INSERT_MOVE or EDIT_MODE() == editorstate.OVERWRITE_MOVE)
+        and (tlinewidgets.pointer_context == appconsts.POINTER_CONTEXT_END_DRAG_LEFT or tlinewidgets.pointer_context == appconsts.POINTER_CONTEXT_END_DRAG_RIGHT)):
+        # with pointer context
         clipenddragmode.maybe_init_for_mouse_press(event, frame)
 
     # Handle mouse button presses depending which button was pressed and
@@ -587,17 +627,16 @@ def tline_canvas_mouse_pressed(event, frame):
                 success = display_clip_menu_pop_up(event.y, event, frame)
                 if not success:
                     PLAYER().seek_frame(frame)
-            #else:
-            #    PLAYER().seek_frame(frame) 
         else:
             # For trim modes set <X>_NO_EDIT edit mode and seek frame. and seek frame
             trimmodes.set_no_edit_trim_mode()
             PLAYER().seek_frame(frame)
         return
     # LEFT BUTTON + CTRL: Select new trimmed clip in one roll trim mode
-    elif (event.button == 1 
+    elif ((event.button == 1 
           and (event.get_state() & Gdk.ModifierType.CONTROL_MASK)
-          and EDIT_MODE() == editorstate.ONE_ROLL_TRIM):
+          and EDIT_MODE() == editorstate.ONE_ROLL_TRIM) or 
+        (event.button == 1 and editorstate.cursor_is_tline_sensitive == True and EDIT_MODE() == editorstate.ONE_ROLL_TRIM)):
         track = tlinewidgets.get_track(event.y)
         if track == None:
             if editorpersistance.prefs.empty_click_exits_trims == True:
@@ -607,7 +646,12 @@ def tline_canvas_mouse_pressed(event, frame):
         if (not success) and editorpersistance.prefs.empty_click_exits_trims == True:
             set_default_edit_mode(True)
             return
-        gui.editor_window.set_cursor_to_mode()
+            
+        if trimmodes.edit_data["to_side_being_edited"] == True:
+            pointer_context = appconsts.POINTER_CONTEXT_TRIM_LEFT
+        else:
+            pointer_context = appconsts.POINTER_CONTEXT_TRIM_RIGHT
+        gui.editor_window.set_tline_cursor_to_context(pointer_context)
         gui.editor_window.set_mode_selector_to_mode()
         if not editorpersistance.prefs.quick_enter_trims:
             mouse_disabled = True
@@ -718,8 +762,12 @@ def tline_canvas_double_click(frame, x, y):
         return
 
     clip = track.clips[clip_index]
+    if clip.is_blanck_clip == True:
+        return
+        
     data = (clip, track, None, x)
     updater.open_clip_in_effects_editor(data)
+
 
 # -------------------------------------------------- DND release event callbacks
 def tline_effect_drop(x, y):
@@ -755,7 +803,7 @@ def tline_media_drop(media_file, x, y, use_marks=False):
     
     # Create new clip.
     if media_file.type != appconsts.PATTERN_PRODUCER:
-        new_clip = current_sequence().create_file_producer_clip(media_file.path, media_file.name)
+        new_clip = current_sequence().create_file_producer_clip(media_file.path, media_file.name, False, media_file.ttl)
     else:
         new_clip = current_sequence().create_pattern_producer(media_file)
 

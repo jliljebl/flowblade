@@ -6,6 +6,10 @@ Files: all, except ones separately listed below
 Copyright: 2012 Janne Liljeblad <janne.liljeblad@gmail.com>
 License: GPL-3.0+
 
+Files: clapperless.py
+Copyright: 2013 Benjamin M. Schwartz
+License: GPL-3.0+
+
 Files: bi-linear_x.pgm bi-linear_y.pgm burtst.pgm checkerboard_small.pgm cloud.pgm radial-bars.pgm spiral.pgm spiral2.pgm square.pgm square2.pgm square2-bars.pgm symmetric_clock.pgm
 Copyright: 2012 (files are from Kdenlive http://www.kdenlive.org. Project AUTHORS file contents are prosumed to be copyright holders)
     Jean-Baptiste Mardelle

@@ -61,6 +61,14 @@ EVENT_SAVED_SNAPSHOT = 5
 
 thumbnailer = None
 
+_project_properties_default_values = {appconsts.P_PROP_TLINE_SHRINK_VERTICAL:False, # Shink timeline max height if < 9 tracks
+                                      appconsts.P_PROP_DISSOLVE_GROUP_FADE_IN:-1, # not used, dropped feature (auto fades on creation)
+                                      appconsts.P_PROP_DISSOLVE_GROUP_FADE_OUT:-1, # not used, dropped feature (auto fades on creation)
+                                      appconsts.P_PROP_ANIM_GROUP_FADE_IN:-1, # not used, dropped feature (auto fades on creation)
+                                      appconsts.P_PROP_ANIM_GROUP_FADE_OUT:-1, # not used, dropped feature (auto fades on creation)
+                                      appconsts.P_PROP_LAST_RENDER_SELECTIONS: None, # tuple for last render selections data
+                                      appconsts.P_PROP_TRANSITION_ENCODING: None,  # tuple for last renderered transition render selections data
+                                      appconsts.P_PROP_AUTO_FOLLOW: False} # Global compositor auto follow
 
 class Project:
     """
@@ -86,6 +94,7 @@ class Project:
         self.proxy_data = miscdataobjects.ProjectProxyEditingData()
         self.update_media_lengths_on_load = False # old projects < 1.10 had wrong media length data which just was never used.
                                                   # 1.10 needed that data for the first time and required recreating it correctly for older projects
+        self.project_properties = {} # Key value pair for misc persistent properties, dict is used that we can add thesse without worrying loading
 
         self.SAVEFILE_VERSION = SAVEFILE_VERSION
         
@@ -104,12 +113,14 @@ class Project:
         thumbnailer = Thumbnailer()
         thumbnailer.set_context(self.profile)
 
-    def add_image_sequence_media_object(self, resource_path, name, length):
+    def add_image_sequence_media_object(self, resource_path, name, length, ttl):
+        print resource_path
         media_object = self.add_media_file(resource_path)
         media_object.length = length
         media_object.name = name
+        media_object.ttl = ttl
 
-    def add_media_file(self, file_path):
+    def add_media_file(self, file_path, compound_clip_name=None):
         """
         Adds media file to project if exists and file is of right type.
         """
@@ -131,10 +142,16 @@ class Project:
         clip_name = file_name
         if editorpersistance.prefs.hide_file_ext == True:
             clip_name = name
+        
+        # Media objects from compound clips need this to display to users instead of md5 hash.
+        # Underlying reason, XML clip creation overwrites existing profile objects property values, https://github.com/mltframework/mlt/issues/212
+        if compound_clip_name != None:
+            clip_name = compound_clip_name
 
         # Create media file object
         media_object = MediaFile(self.next_media_file_id, file_path, 
                                  clip_name, media_type, length, icon_path, info)
+        media_object.ttl = None
 
         self._add_media_object(media_object)
         
@@ -277,7 +294,19 @@ class Project:
         
         return True
 
+    def get_project_property(self, property_name):
+        try:
+            return self.project_properties[property_name]
+        except:
+            try:
+                return _project_properties_default_values[property_name]
+            except:
+                return None # No default values for all properties exist, action value decided at callsite in that case
 
+    def set_project_property(self, property_name, value):
+        self.project_properties[property_name] = value
+
+            
 class MediaFile:
     """
     Media file that can added to and edited in Sequence.
@@ -305,7 +334,7 @@ class MediaFile:
 
         # Set default length for graphics files
         (f_name, ext) = os.path.splitext(self.name)
-        if utils.file_extension_is_graphics_file(ext):
+        if utils.file_extension_is_graphics_file(ext) and self.type != appconsts.IMAGE_SEQUENCE:
             in_fr, out_fr, l = editorpersistance.get_graphics_default_in_out_length()
             self.mark_in = in_fr
             self.mark_out = out_fr

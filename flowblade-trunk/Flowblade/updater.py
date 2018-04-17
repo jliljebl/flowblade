@@ -41,8 +41,8 @@ import utils
 import respaths
 import tlinewidgets
 
-page_size = 99.0 # Gtk.Adjustment.get_page_size() wasn't there
-                 # (wft?) so use this to have page size
+page_size = 99.0 # Gtk.Adjustment.get_page_size() wasn't there (wft?)
+                 # so use this to have page size
 
 # Scale constants
 PIX_PER_FRAME_MAX = 20.0
@@ -238,7 +238,7 @@ def zoom_in():
     repaint_tline()
     update_tline_scrollbar()
     center_tline_to_current_frame()
-    
+
 def zoom_out():
     """
     Zooms out in the timeline view.
@@ -248,8 +248,8 @@ def zoom_out():
         tlinewidgets.pix_per_frame = PIX_PER_FRAME_MIN
     repaint_tline()
     update_tline_scrollbar()
-    center_tline_to_current_frame()
-
+    tline_scrolled(gui.tline_scroll.get_adjustment())
+    
 def zoom_max():
     tlinewidgets.pix_per_frame = PIX_PER_FRAME_MAX
     repaint_tline()
@@ -290,6 +290,29 @@ def maybe_autocenter():
         if editorpersistance.prefs.auto_center_on_play_stop == True:
             center_tline_to_current_frame()
 
+# ------------------------------------------ timeline shrinking
+def set_timeline_height():
+    orig_pos = gui.editor_window.app_v_paned.get_position()
+    orig_height = tlinewidgets.HEIGHT 
+    
+    if len(current_sequence().tracks) == 11 or PROJECT().get_project_property(appconsts.P_PROP_TLINE_SHRINK_VERTICAL) == False:
+        tlinewidgets.HEIGHT = appconsts.TLINE_HEIGHT
+        set_v_paned = False
+    else:
+        tlinewidgets.HEIGHT = current_sequence().get_shrunk_tline_height_min()
+        set_v_paned = True
+
+    gui.tline_canvas.widget.set_size_request(tlinewidgets.WIDTH, tlinewidgets.HEIGHT)
+    gui.tline_column.widget.set_size_request(tlinewidgets.COLUMN_WIDTH, tlinewidgets.HEIGHT)
+    
+    if set_v_paned == True:
+        new_pos = orig_pos + orig_height - tlinewidgets.HEIGHT
+        gui.editor_window.app_v_paned.set_position(new_pos)
+    
+    current_sequence().resize_tracks_to_fit(gui.tline_canvas.widget.get_allocation())
+    tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
+    gui.tline_column.init_listeners()
+    repaint_tline()
 
 # ----------------------------------------- monitor
 def display_clip_in_monitor(clip_monitor_currently_active=False):
@@ -327,7 +350,11 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     # Create and display clip on hidden track
     if MONITOR_MEDIA_FILE().type == appconsts.PATTERN_PRODUCER or MONITOR_MEDIA_FILE().type == appconsts.IMAGE_SEQUENCE:
         # pattern producer or image sequence
-        clip_producer = current_sequence().display_monitor_clip(None, MONITOR_MEDIA_FILE())
+        if MONITOR_MEDIA_FILE().type == appconsts.PATTERN_PRODUCER:
+            ttl = None
+        else:
+            ttl =  MONITOR_MEDIA_FILE().ttl
+        clip_producer = current_sequence().display_monitor_clip(None, MONITOR_MEDIA_FILE(), ttl)
     else:
         # File producers
         clip_producer = current_sequence().display_monitor_clip(MONITOR_MEDIA_FILE().path)
@@ -513,7 +540,7 @@ def update_frame_displayers(frame):
 
     gui.tline_scale.widget.queue_draw()
     gui.tline_canvas.widget.queue_draw()
-    gui.big_tc.widget.queue_draw()
+    gui.big_tc.queue_draw()
     clipeffectseditor.display_kfeditors_tline_frame(frame)
     compositeeditor.display_kfeditors_tline_frame(frame)
 

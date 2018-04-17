@@ -83,7 +83,7 @@ def _do_split_audio_edit(popup_data):
     index = current_sequence().get_clip_index(track, press_frame)
     frame = track.clip_start(index)
 
-    audio_clip = current_sequence().create_file_producer_clip(clip.path)
+    audio_clip = current_sequence().create_file_producer_clip(clip.path, None, False, clip.ttl)
     audio_clip.media_type = appconsts.AUDIO
     split_length = clip.clip_out - clip.clip_in + 1 # +1 out is inclusive and we're looking for length
     data = { "parent_clip":clip,

@@ -19,10 +19,12 @@
 """
 
 """
-Handles Overwrite Box tool functionality.
+Handles Box tool functionality.
 """
 
+import edit
 import editorstate
+from editorstate import current_sequence
 import tlinewidgets
 import updater
 
@@ -30,23 +32,23 @@ box_selection_data = None
 edit_data = None
 
 def clear_data():
-    # these need to cleared when box move tool is activated
+    # These need to cleared when box tool is activated
     global box_selection_data, edit_data
     box_selection_data = None
     edit_data = None
      
 def mouse_press(event, frame):
     global edit_data, box_selection_data
-    if box_selection_data == None: # mouse action to select
+    if box_selection_data == None: # mouse action is to select
         press_point = (event.x, event.y)
         
         edit_data = {"action_on":True,
                      "press_point":press_point,
                      "mouse_point":press_point,
                      "box_selection_data":None}
-    else: # mouse action to move
+    else: # mouse action is to move
         if box_selection_data.is_hit(event.x, event.y) == False:
-            # Back to start state
+            # Back to start state if selection box missed
             edit_data = None
             box_selection_data = None
         else:
@@ -62,11 +64,10 @@ def mouse_move(x, y, frame):
     global edit_data
     if edit_data == None:
         return
-    if box_selection_data == None: # mouse action to select
+    if box_selection_data == None: # mouse action is to select
         edit_data["mouse_point"] = (x, y)
        
-    else: # mouse move to move
-        print "moooooooooooove"
+    else: # mouse action is to move
         delta = frame - edit_data["press_frame"]
         edit_data["delta"] = delta
 
@@ -78,7 +79,7 @@ def mouse_release(x, y, frame):
     if edit_data == None:
         return
         
-    if box_selection_data == None: # mouse action to select
+    if box_selection_data == None: # mouse action is to select
         box_selection_data = BoxMoveData(edit_data["press_point"], (x, y))
         if box_selection_data.is_empty() == False:
             edit_data = {"action_on":True,
@@ -91,9 +92,16 @@ def mouse_release(x, y, frame):
                          "press_frame":-1,
                          "delta":0,
                          "box_selection_data":box_selection_data}
-    else: # mouse action to move
+    else: # mouse action is to move
         delta = frame - edit_data["press_frame"]
         edit_data["delta"] = delta
+
+        # Do edit
+        data = {"box_selection_data":box_selection_data,
+                "delta":delta}
+        action = edit.box_overwrite_move_action(data)
+        action.do_edit()
+        
         # Back to start state
         edit_data = None
         box_selection_data = None
@@ -104,7 +112,7 @@ def mouse_release(x, y, frame):
 
 class BoxMoveData:
     """
-    This class collects and data needed for boxovewrite moves.
+    This class collects data needed for Box tool edits.
     """
     def __init__(self, p1, p2):
         self.topleft_frame = -1
@@ -115,9 +123,7 @@ class BoxMoveData:
         self.selected_compositors = []
         
         self._get_selection_data(p1, p2)
-    
-        print self.__dict__
-        
+
     def _get_selection_data(self,  p1, p2):
         x1, y1 = p1
         x2, y2 = p2
@@ -130,30 +136,69 @@ class BoxMoveData:
         start_frame = tlinewidgets.get_frame(x1)
         end_frame = tlinewidgets.get_frame(x2) 
         
-        track_top = tlinewidgets.get_track(y1).id
-        track_bottom = tlinewidgets.get_track(y2).id
+        track_top_index = self.get_bounding_track_index(y1, tlinewidgets.get_track(y1))
+        track_bottom_index = self.get_bounding_track_index(y2, tlinewidgets.get_track(y2))
 
-        self.topleft_track = track_top
-        self.height_tracks = track_top - track_bottom + 1
- 
-        for i in range(track_bottom, track_top + 1):
+        self.topleft_track = track_top_index - 1
+
+        # Get compositors
+        for i in range(track_bottom_index + 1, track_top_index):
+            track_compositors = current_sequence().get_track_compositors(i)
+            for comp in track_compositors:
+                if comp.clip_in >= start_frame and comp.clip_out < end_frame:
+                    self.selected_compositors.append(comp)
+        
+        # Get BoxTrackSelection objects
+        for i in range(track_bottom_index + 1, track_top_index):
             self.track_selections.append(BoxTrackSelection(i, start_frame, end_frame))
 
+        # Drop empty tracks from bottom up
+        while len(self.track_selections) > 0:
+            if self.track_selections[0].is_empty() == True:
+                self.track_selections.pop(0)
+            else:
+                track_bottom_index = self.track_selections[0].track_id
+                break
+                
+        # Drop empty tracks from top down
+        while len(self.track_selections) > 0:
+            if self.track_selections[-1].is_empty() == True:
+                self.track_selections.pop(-1)
+            else:
+                self.topleft_track = self.track_selections[-1].track_id
+                break
+
+        self.height_tracks = self.topleft_track - track_bottom_index + 1# self.topleft_track is inclusive to height, track_bottom_index is eclusive to height
+        
         # Get selection bounding box
         self.topleft_frame = 1000000000000
         for track_selection in self.track_selections:
-            if track_selection.range_frame_in < self.topleft_frame:
-                self.topleft_frame = track_selection.range_frame_in
+            if track_selection.range_frame_in != -1:
+                if track_selection.range_frame_in < self.topleft_frame:
+                    self.topleft_frame = track_selection.range_frame_in
                 
         last_frame = 0
         for track_selection in self.track_selections:
-            if track_selection.range_frame_out > last_frame:
-                last_frame = track_selection.range_frame_out
+            if track_selection.range_frame_out != -1:
+                if track_selection.range_frame_out > last_frame:
+                    last_frame = track_selection.range_frame_out
         
         self.width_frames = last_frame - self.topleft_frame
+                   
+    def get_bounding_track_index(self, mouse_y, tline_track):
+        if tline_track == None:
+            if mouse_y < tlinewidgets.REF_LINE_Y:
+                return len(current_sequence().tracks) # mouse pressed above all tracks
+            else:
+                return 0 # mouse pressed below all tracks
+        else:
+            return tline_track.id
 
     def is_empty(self):
-        return False 
+        if len(self.track_selections) == 0:
+            return True
+        
+        return False
 
     def is_hit(self, x, y):
         hit_frame = tlinewidgets.get_frame(x)
@@ -164,10 +209,11 @@ class BoxMoveData:
                 return True
                 
         return False
-        
+
+
 class BoxTrackSelection:
     """
-    This class collects data on track's box selected clips.
+    This class collects data on track's Box selected clips.
     """
     def __init__(self, i, start_frame, end_frame):
         self.track_id = i
@@ -176,30 +222,74 @@ class BoxTrackSelection:
         self.range_frame_in  = -1
         self.range_frame_out = -1
         self.clip_lengths = []
+        self.clip_is_media = []
         
         track = editorstate.current_sequence().tracks[i]
         
-        # Get range indexes
-        self.selected_range_in = editorstate.current_sequence().get_clip_index(track, start_frame)
+        # Get start range index, outer selection required
+        start_bound_index = editorstate.current_sequence().get_clip_index(track, start_frame)
         
-        index_range_out = editorstate.current_sequence().get_clip_index(track, end_frame)
-        if index_range_out != -1:
-            self.selected_range_out = index_range_out
+        if start_bound_index == -1:
+            return # Selection starts after end of track contents, selection is empty
+
+        if start_bound_index != 0:
+            self.selected_range_in = start_bound_index + 1
+            if self.selected_range_in == len(current_sequence().tracks):
+                return # box selection was on last clip, nothing is elected
+        else:
+            if start_frame == 0:
+                self.selected_range_in = 0 # first clip on timeline can be selected by selecting frame 0, no outer selection required here
+            else:
+                self.selected_range_in = start_bound_index + 1
+                if self.selected_range_in == len(current_sequence().tracks):
+                    return # box selection was on last clip, nothing is elected
+        
+        # Get end range index, outer selection required
+        end_bound_index = editorstate.current_sequence().get_clip_index(track, end_frame)
+        if end_bound_index != -1:
+            self.selected_range_out = end_bound_index - 1
+            if self.selected_range_out  < 0:
+                return # range end was on first clip, nothing was selected
         else:
             if self.selected_range_in == -1:
                 return # track is empty
             # Range ends on last clip
             self.selected_range_out = len(track.clips) - 1
+
+        # Drop blanks from start
+        blanks_stripped_start = self.selected_range_in
+        for i in range(self.selected_range_in, self.selected_range_out + 1):
+            if track.clips[i].is_blanck_clip == True:
+                blanks_stripped_start = i + 1
+            else:
+                break
+        self.selected_range_in = blanks_stripped_start
+        if self.selected_range_in > self.selected_range_out:
+            return # the 1 cli in selection range is blank
+
+        # Drop blanks from end
+        blanks_stripped_end = self.selected_range_out
+        for i in range(self.selected_range_out, self.selected_range_in - 1, - 1):
+            if track.clips[i].is_blanck_clip == True:
+                blanks_stripped_end = i - 1
+            else:
+                break
+        self.selected_range_out = blanks_stripped_end
             
         # Get clip lengths
         for i in range(self.selected_range_in, self.selected_range_out + 1):
             clip = track.clips[i]
             self.clip_lengths.append(clip.clip_out - clip.clip_in + 1)
-        
+            self.clip_is_media.append(clip.is_blanck_clip == False)
+
         # Get bounding frames
         self.range_frame_in  = track.clip_start(self.selected_range_in)
         self.range_frame_out =  track.clip_start(self.selected_range_out) + self.clip_lengths[-1]
-        
-        
-        
-        
+
+    def is_empty(self):
+        if len(self.clip_lengths) == 0:
+            return True
+
+        return False
+
+

@@ -1,21 +1,26 @@
 # Installing Flowblade #
 
-
-### Installing using .deb package
+1. [Installing deb package](./INSTALLING#installing-deb-package)
+  1. [Installing Flatpak from Flathub](./INSTALLING.md#installing-flatpak-from-flathub)
+  1. [Installing from your OS repository](./INSTALLING.md#nstalling-from-your-os-repository)
+  1. [Installing using Source Code Archive](./INSTALLING.md#installing-using-source-code-archive)
+  1. [Installing using Development Repository Version](./INSTALLING.md#installing-using-development-repository-version)
+  1. [Installing with setup.py not supported](./INSTALLING.md#installing-with-setup.py-not-supported)   
+### Installing deb package
 
 #### Step 1. Download and install .deb 
-**First download .deb file** for Flowblade 1.10 from <a href="https://github.com/jliljebl/flowblade/releases">here.</a>
+**First download .deb file** for Flowblade 1.16 from <a href="https://github.com/jliljebl/flowblade/releases">here.</a>
 
 Double click on <b>.deb</b> file to install it. 
 
-On some systems double clicking may not work (on Ubuntu it has sometimes istalled old version from repository), and you need to install <b>.deb</b> file using terminal:
+On some systems double clicking may not work and you need to install <b>.deb</b> file using terminal:
 
 <ul>
 	<li>	<p>Open terminal in the directory you saved the  downloaded <b>.deb</b> file. Give command:	</li>
 </ul>
-```bash
-sudo dpkg -i ./flowblade-1.10.0-1_all.deb
-```
+
+    sudo dpkg -i ./flowblade-1.16.0-1_all.deb
+
 
 #### OPTIONAL Step 2. Give some additional commands on terminal
 
@@ -23,13 +28,28 @@ You may need to give some additional commands on terminal:
 <ul>
 	<li>Force install all dependencies with command:</li>
 </ul>
+
+    sudo apt-get install -f
+
+### Installing Flatpak from Flathub
+
+#### 1. Setup Flatpak and Flathub
+There is an official guide here: https://flatpak.org/setup/
+
+#### 2a. Install using Gnome SOFTWARE
+If your distribution has Gnome SOFTWARE application available you can install Flowblade with it.
+**NOTE: There can be two versions of Flowblade in  Gnome SOFTWARE, Flatpak version has text dl.flathub.org text**
+
+#### 2b. Install from commandline
+Give these commands in terminal:
+
 ```bash
-	sudo apt-get install -f
+flatpak install --from https://flathub.org/repo/appstream/io.github.jliljebl.Flowblade.flatpakref
 ```
 
-Release has been install tested on: <b>Ubuntu 16.04</b>. <b>Linux Mint 18</b>. It should work on all recent Debian based distributions.
-
-<b>NOTE: Running a KDEnlive PPA on Ubuntu may cause an uncompatible MLT to be installed and prevent Flowblade from running, more <a href="https://plus.google.com/u/0/102624418925189345577/posts/7ANDDW3hzHB?sfc=true">here.</a> Update to MLT 6.4.1 or remove KDEnlive PPA.</b> 
+```bash
+flatpak run io.github.jliljebl.Flowblade
+```
 
 ### Installing from your OS repository
 
@@ -54,7 +74,7 @@ yaourt -S flowblade-git
 
 
 
-### Installing Using Source Code Archive
+### Installing using Source Code Archive
 
 Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install and run Flowblade without compiling anything.
 
@@ -63,17 +83,11 @@ Flowblade is currently a 100% script application, and all the dependencies shoul
   * Extract archive into a folder of your choosing
   * Install dependencies. See [Dependencies](DEPENDENCIES.md) doc for more information.
   * If you have Flowblade installed in your system, you probably have the dependencies installed, unless some new ones have been added.
-  * Launch by running script *.../flowblade-1.10.0/flowblade* that was created in the folder where archive was unpacked.
+  * Launch by running script *.../flowblade-1.16.0/flowblade* that was created in the folder where archive was unpacked.
   * Note that if you have Flowblade installed yu will need use full path to repository version or navigate to the folder containing launch script and use command "./flowblade" to launch repository version instead of installed version.
 
-*Please note these issues with Dropbox download:*
-<ul>
- <li> <i>The download button may appear grayed out and you have to press it twice.</i></li>
- <li> <i>A window may appear that asks you to create an account, but you can close it and press Download button again..</i></li> 
- <li> <i>The .deb file is in a Dropbox Public folder and may go over download limit, please contact Project Owner if this happens.</i></li>
-</ul>
 
-### Installing Using Development Repository Version
+### Installing using Development Repository Version
 
 Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install and run Flowblade without compiling anything.
 
@@ -91,4 +105,6 @@ git clone https://github.com/jliljebl/flowblade.git
   * Launch by running script ``.../flowblade-trunk/flowblade`` that was created in the folder where clone command was done.
   * Note that if you have Flowblade installed you will need use full path to repository version or navigate to the folder containing launch script and use command "./flowblade" to launch repository version instead of installed version
  
-*Please note: Using the available setup.py script will NOT result in a successful installation, even if dependencies are installed, and may actually break the .deb install if attempted. It is only there to help .deb packaging.* 
+ 
+ ### Installing with setup.py not supported
+*Please note: Using the available setup.py script will probably NOT result in a successful installation, even if dependencies are installed, and may actually break the .deb install if attempted. It is only there to help .deb packaging.* 
