@@ -268,6 +268,13 @@ class Sequence:
         # Tracks may be FREE or LOCKED
         track.edit_freedom = FREE
 
+    def get_track_counts(self):
+        """returns (video track count, audio track count)"""
+        nv = len(self.tracks) - self.first_video_index - 1
+        na = self.first_video_index - 1
+        print ("get_tracks_count", self.first_video_index, len(self.tracks), nv, na)
+        return (nv, na)
+
     def _mix_audio_for_track(self, track):
         # Create and add transition to combine track audios
         transition = mlt.Transition(self.profile, "mix")

@@ -1457,7 +1457,8 @@ def sequence_name_edited(cell, path, new_text, user_data):
     _enable_save()
 
 def change_sequence_track_count():
-    dialogs.tracks_count_change_dialog(_change_track_count_dialog_callback)
+    nv, na = PROJECT().c_seq.get_track_counts()
+    dialogs.tracks_count_change_dialog(_change_track_count_dialog_callback, nv, na)
 
 def _change_track_count_dialog_callback(dialog, response_id, tracks_select):
     if response_id != Gtk.ResponseType.ACCEPT:

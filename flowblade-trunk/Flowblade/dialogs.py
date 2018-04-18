@@ -939,14 +939,14 @@ def _autosaves_delete_unselected(autosaves, autosaves_view):
     autosaves.append(selected_autosave)
     autosaves_view.fill_data_model(autosaves)
 
-def tracks_count_change_dialog(callback):
+def tracks_count_change_dialog(callback, v_tracks, a_tracks):
     dialog = Gtk.Dialog(_("Change Sequence Tracks Count"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
                         _("Change Tracks").encode('utf-8'), Gtk.ResponseType.ACCEPT))
-    
-    tracks_select = guicomponents.TracksNumbersSelect(5, 4)
-        
+
+    tracks_select = guicomponents.TracksNumbersSelect(v_tracks, a_tracks)
+
     info_text = _("Please note:\n\n") + \
                 u"\u2022" + _(" When reducing the number of tracks the top Video track and/or bottom Audio track will be removed\n") + \
                 u"\u2022" + _(" It is recommended that you save Project before completing this operation\n") + \
