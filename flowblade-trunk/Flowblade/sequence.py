@@ -68,8 +68,8 @@ MLT_FILTER = 2
 # NOTE: These are set from other modules (and this one when cloning) when creating or loading projects
 # and used in Sequence.__init__(...) when creating sequences.
 # Weak design, tracks count should be provided via constructor at creation time.
-AUDIO_TRACKS_COUNT = 4
-VIDEO_TRACKS_COUNT = 5
+AUDIO_TRACKS_COUNT = appconsts.INIT_A_TRACKS
+VIDEO_TRACKS_COUNT = appconsts.INIT_V_TRACKS
 
 def set_track_counts(project):
     global AUDIO_TRACKS_COUNT, VIDEO_TRACKS_COUNT

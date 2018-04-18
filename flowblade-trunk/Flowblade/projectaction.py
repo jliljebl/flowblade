@@ -385,8 +385,8 @@ def _close_dialog_callback(dialog, response_id):
         return
         
     # This is the same as opening default project
-    sequence.AUDIO_TRACKS_COUNT = 4
-    sequence.VIDEO_TRACKS_COUNT = 5
+    sequence.AUDIO_TRACKS_COUNT = appconsts.INIT_A_TRACKS
+    sequence.VIDEO_TRACKS_COUNT = appconsts.INIT_V_TRACKS
 
     new_project = projectdata.get_default_project()
     app.open_project(new_project)

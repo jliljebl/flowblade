@@ -72,8 +72,8 @@ def new_project_dialog(callback):
     profiles_vbox = guiutils.get_vbox([profile_select,profile_info_box], False)
     profiles_frame = panels.get_named_frame(_("Profile"), profiles_vbox)
 
-    tracks_select = guicomponents.TracksNumbersSelect(5, 4)
-    
+    tracks_select = guicomponents.TracksNumbersSelect(appconsts.INIT_V_TRACKS, appconsts.INIT_A_TRACKS)
+
     tracks_vbox = guiutils.get_vbox([tracks_select.widget], False)
 
     tracks_frame = panels.get_named_frame(_("Tracks"), tracks_vbox)
@@ -1008,9 +1008,9 @@ def new_sequence_dialog(callback, default_name):
     name_select = panels.get_two_column_box(Gtk.Label(label=_("Sequence Name:")),
                                                name_entry,
                                                250)
-   
-    tracks_select = guicomponents.TracksNumbersSelect(5, 4)
-    
+
+    tracks_select = guicomponents.TracksNumbersSelect(appconsts.INIT_V_TRACKS, appconsts.INIT_A_TRACKS)
+
     open_check = Gtk.CheckButton()
     open_check.set_active(True)
     open_label = Gtk.Label(label=_("Open For Editing:"))
