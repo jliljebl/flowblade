@@ -5,7 +5,7 @@
 | python-gi | GTK3 Python bindings | pygtk |
 | python-mlt | MLT python bindings, this pulls in MLT | mlt-python-bindings |
 | python-dbus | dbus python bindings | python2-dbus |
-| libmlt-data | Some image and text resources for MLT | mlt |
+| libmlt-data | Some image and text resources for MLT | mlt, sdl_image |
 | python 2.7 >=| Language and interpreter | python2 |
 | frei0r-plugins | Additional video filters | movit, frei0r-plugins |
 | swh-plugins | Additional audio filters | sox, swh-plugins |
