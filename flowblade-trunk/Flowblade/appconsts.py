@@ -102,6 +102,8 @@ EXTRA_EDITOR = "extraeditor"
 
 # Available tracks maximum for Flowblade
 MAX_TRACKS = 9
+INIT_V_TRACKS = 5
+INIT_A_TRACKS = 4
 
 # Thumbnail image dimensions
 THUMB_WIDTH = 116

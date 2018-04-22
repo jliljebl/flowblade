@@ -68,8 +68,8 @@ MLT_FILTER = 2
 # NOTE: These are set from other modules (and this one when cloning) when creating or loading projects
 # and used in Sequence.__init__(...) when creating sequences.
 # Weak design, tracks count should be provided via constructor at creation time.
-AUDIO_TRACKS_COUNT = 4
-VIDEO_TRACKS_COUNT = 5
+AUDIO_TRACKS_COUNT = appconsts.INIT_A_TRACKS
+VIDEO_TRACKS_COUNT = appconsts.INIT_V_TRACKS
 
 def set_track_counts(project):
     global AUDIO_TRACKS_COUNT, VIDEO_TRACKS_COUNT
@@ -267,6 +267,13 @@ class Sequence:
         
         # Tracks may be FREE or LOCKED
         track.edit_freedom = FREE
+
+    def get_track_counts(self):
+        """returns (video track count, audio track count)"""
+        nv = len(self.tracks) - self.first_video_index - 1
+        na = self.first_video_index - 1
+        print ("get_tracks_count", self.first_video_index, len(self.tracks), nv, na)
+        return (nv, na)
 
     def _mix_audio_for_track(self, track):
         # Create and add transition to combine track audios

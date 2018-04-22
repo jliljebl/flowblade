@@ -385,8 +385,8 @@ def _close_dialog_callback(dialog, response_id):
         return
         
     # This is the same as opening default project
-    sequence.AUDIO_TRACKS_COUNT = 4
-    sequence.VIDEO_TRACKS_COUNT = 5
+    sequence.AUDIO_TRACKS_COUNT = appconsts.INIT_A_TRACKS
+    sequence.VIDEO_TRACKS_COUNT = appconsts.INIT_V_TRACKS
 
     new_project = projectdata.get_default_project()
     app.open_project(new_project)
@@ -1457,7 +1457,8 @@ def sequence_name_edited(cell, path, new_text, user_data):
     _enable_save()
 
 def change_sequence_track_count():
-    dialogs.tracks_count_change_dialog(_change_track_count_dialog_callback)
+    nv, na = PROJECT().c_seq.get_track_counts()
+    dialogs.tracks_count_change_dialog(_change_track_count_dialog_callback, nv, na)
 
 def _change_track_count_dialog_callback(dialog, response_id, tracks_select):
     if response_id != Gtk.ResponseType.ACCEPT:

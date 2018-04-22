@@ -72,8 +72,8 @@ def new_project_dialog(callback):
     profiles_vbox = guiutils.get_vbox([profile_select,profile_info_box], False)
     profiles_frame = panels.get_named_frame(_("Profile"), profiles_vbox)
 
-    tracks_select = guicomponents.TracksNumbersSelect(5, 4)
-    
+    tracks_select = guicomponents.TracksNumbersSelect(appconsts.INIT_V_TRACKS, appconsts.INIT_A_TRACKS)
+
     tracks_vbox = guiutils.get_vbox([tracks_select.widget], False)
 
     tracks_frame = panels.get_named_frame(_("Tracks"), tracks_vbox)
@@ -939,14 +939,14 @@ def _autosaves_delete_unselected(autosaves, autosaves_view):
     autosaves.append(selected_autosave)
     autosaves_view.fill_data_model(autosaves)
 
-def tracks_count_change_dialog(callback):
+def tracks_count_change_dialog(callback, v_tracks, a_tracks):
     dialog = Gtk.Dialog(_("Change Sequence Tracks Count"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
                         _("Change Tracks").encode('utf-8'), Gtk.ResponseType.ACCEPT))
-    
-    tracks_select = guicomponents.TracksNumbersSelect(5, 4)
-        
+
+    tracks_select = guicomponents.TracksNumbersSelect(v_tracks, a_tracks)
+
     info_text = _("Please note:\n\n") + \
                 u"\u2022" + _(" When reducing the number of tracks the top Video track and/or bottom Audio track will be removed\n") + \
                 u"\u2022" + _(" It is recommended that you save Project before completing this operation\n") + \
@@ -1008,9 +1008,9 @@ def new_sequence_dialog(callback, default_name):
     name_select = panels.get_two_column_box(Gtk.Label(label=_("Sequence Name:")),
                                                name_entry,
                                                250)
-   
-    tracks_select = guicomponents.TracksNumbersSelect(5, 4)
-    
+
+    tracks_select = guicomponents.TracksNumbersSelect(appconsts.INIT_V_TRACKS, appconsts.INIT_A_TRACKS)
+
     open_check = Gtk.CheckButton()
     open_check.set_active(True)
     open_label = Gtk.Label(label=_("Open For Editing:"))
