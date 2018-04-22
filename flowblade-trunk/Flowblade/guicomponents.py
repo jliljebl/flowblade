@@ -1211,7 +1211,7 @@ def display_clip_popup_menu(event, clip, track, callback):
         active = True
     clip_menu.add(_get_compositors_add_menu_item(event, clip, track, callback, active))
     clip_menu.add(_get_auto_fade_compositors_add_menu_item(event, clip, track, callback, active))
-    clip_menu.add(_get_blenders_add_menu_item(event, clip, track, callback, active))
+    #clip_menu.add(_get_blenders_add_menu_item(event, clip, track, callback, active))
 
     _add_separetor(clip_menu)
     clip_menu.add(_get_clone_filters_menu_item(event, clip, track, callback))
@@ -1414,12 +1414,20 @@ def _get_compositors_add_menu_item(event, clip, track, callback, sensitive):
         sub_menu.append(compositor_item)
         compositor_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type)))
         compositor_item.show()
+ 
+    _add_separetor(sub_menu)
+     
+    alpha_combiners_menu_item = _get_alpha_combiners_add_menu_item(event, clip, track, callback, sensitive)
+    sub_menu.append(alpha_combiners_menu_item)
+    blenders_menu_item  = _get_blenders_add_menu_item(event, clip, track, callback, sensitive)
+    sub_menu.append(blenders_menu_item)
+    
     menu_item.set_sensitive(sensitive)
     menu_item.show()
     return menu_item
 
 def _get_blenders_add_menu_item(event, clip, track, callback, sensitive):
-    menu_item = Gtk.MenuItem(_("Add Blend"))
+    menu_item = Gtk.MenuItem(_("Blenders"))
     sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
 
@@ -1434,6 +1442,22 @@ def _get_blenders_add_menu_item(event, clip, track, callback, sensitive):
     menu_item.show()
     return menu_item
 
+def _get_alpha_combiners_add_menu_item(event, clip, track, callback, sensitive):
+    menu_item = Gtk.MenuItem(_("Alpha Combiners"))
+    sub_menu = Gtk.Menu()
+    menu_item.set_submenu(sub_menu)
+
+    for i in range(0, len(mlttransitions.alpha_combiners)):
+        alpha_combiner = mlttransitions.alpha_combiners[i]
+        name, compositor_type = alpha_combiner
+        alpha_combiner_item = Gtk.MenuItem(name)
+        sub_menu.append(alpha_combiner_item)
+        alpha_combiner_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type)))
+        alpha_combiner_item.show()
+    menu_item.set_sensitive(sensitive)
+    menu_item.show()
+    return menu_item
+    
 def _get_auto_fade_compositors_add_menu_item(event, clip, track, callback, sensitive):
     menu_item = Gtk.MenuItem(_("Add Fade"))
     sub_menu = Gtk.Menu()

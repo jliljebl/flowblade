@@ -173,4 +173,25 @@
         <name>##value</name>
     </compositortransition>
 
+    <compositortransition mlt_service="frei0r.alphaxor">
+        <name>##alphaxor</name>
+    </compositortransition>
+
+    <compositortransition mlt_service="frei0r.alphain">
+        <name>##alphain</name>
+    </compositortransition>
+
+    <compositortransition mlt_service="frei0r.alphaout">
+        <name>##alphaout</name>
+    </compositortransition>
+
+    <!-- If these two supposedly Porter-Duff ops they ain't doing the right thing
+    <compositortransition mlt_service="frei0r.alphaatop">
+        <name>##alphaatop</name>
+    </compositortransition>
+    <compositortransition mlt_service="frei0r.alphaover">
+        <name>##alphaover</name>
+    </compositortransition>
+    -->
+    
 </compositors>
