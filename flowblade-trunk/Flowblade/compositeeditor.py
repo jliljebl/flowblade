@@ -146,7 +146,7 @@ def set_enabled(value):
 
     if compositor == None or (compositor.transition.info.auto_fade_compositor == False \
         and mlttransitions.is_blender(compositor.transition.info.name) == False \
-        and mlttransitions.is_alpha_combiner(compositor.transition.info.name) == False ):
+        and mlttransitions.is_alpha_combiner(compositor.transition.info.name) == False):
         widgets.fade_in_b.set_sensitive(value)
         widgets.fade_out_b.set_sensitive(value)
         widgets.fade_in_spin.set_sensitive(value)

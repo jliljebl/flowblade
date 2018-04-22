@@ -272,7 +272,6 @@ class Sequence:
         """returns (video track count, audio track count)"""
         nv = len(self.tracks) - self.first_video_index - 1
         na = self.first_video_index - 1
-        print ("get_tracks_count", self.first_video_index, len(self.tracks), nv, na)
         return (nv, na)
 
     def _mix_audio_for_track(self, track):
