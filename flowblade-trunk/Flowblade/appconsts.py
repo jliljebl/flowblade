@@ -67,7 +67,7 @@ PROP_EXPRESSION = 2
 
 # Display heights for tracks and timeline.
 TRACK_HEIGHT_NORMAL = 50 # track height in canvas and column
-TRACK_HEIGHT_SMALL = 25 # track height in canvas and column
+TRACK_HEIGHT_SMALL = 25  # track height in canvas and column
 TRACK_HEIGHT_SMALLEST = 25 # maybe remove this as it is no longer used
 TLINE_HEIGHT = 260
 

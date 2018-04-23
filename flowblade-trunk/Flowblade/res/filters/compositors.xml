@@ -21,12 +21,12 @@
     <compositortransition mlt_service="affine">
         <name>##affine</name>
         <property name="force_track" args="editor=no_editor">0</property>
-        <property name="rotate_x" args="range_in=-180,180 range_out=-180,180 editor=keyframe_editor exptype=keyframe_hcs_transition displayname=Rotate!X">0=0</property>
-        <property name="rotate_y" args="range_in=-180,180 range_out=-180,180 editor=keyframe_editor exptype=keyframe_hcs_transition displayname=Rotate!Y">0=0</property>
-        <property name="rotate_z" args="range_in=-180,180 range_out=-180,180 editor=keyframe_editor exptype=keyframe_hcs_transition displayname=Rotate!Z">0=0</property>
+        <property name="rotate_x" args="range_in=-180,180 range_out=-180,180 editor=keyframe_editor_clip exptype=keyframe_hcs_transition displayname=Rotate!X">0=0.0</property>
+        <property name="rotate_y" args="range_in=-180,180 range_out=-180,180 editor=keyframe_editor_clip exptype=keyframe_hcs_transition displayname=Rotate!Y">0=0.0</property>
+        <property name="rotate_z" args="range_in=-180,180 range_out=-180,180 editor=keyframe_editor_clip exptype=keyframe_hcs_transition displayname=Rotate!Z">0=0.0</property>
         <property name="geometry" args="editor=geometry_editor range_in=0,100 range_out=0,100 exptype=geom_opac_kf displayname=Opacity">"0=0/0:SCREENSIZE:100"</property>
-        <property name="shear_x" args="editor=slider range_in=0,360 range_out=0,360 displayname=Shear!X">0</property>
-        <property name="shear_y" args="editor=slider range_in=0,360 range_out=0,360 displayname=Shear!Y">0</property>
+        <property name="shear_x" args="editor=keyframe_editor_clip exptype=keyframe_hcs_transition range_in=0,360 range_out=0,360 displayname=Shear!X">0=0.0</property>
+        <property name="shear_y" args="editor=keyframe_editor_clip exptype=keyframe_hcs_transition range_in=0,360 range_out=0,360 displayname=Shear!Y">0=0.0</property>
         <property name="distort" args="editor=booleancheckbox displayname=Distort">0</property>
     </compositortransition>
     <compositortransition mlt_service="composite">

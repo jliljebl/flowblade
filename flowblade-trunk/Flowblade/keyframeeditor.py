@@ -1716,8 +1716,9 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
             self.clip_editor.keyframe_parser = propertyparse.geom_keyframes_value_string_to_opacity_kf_array
             
         editable_property.value.strip('"')
-        self.clip_editor.set_keyframes(editable_property.value, editable_property.get_in_value)
         
+        self.clip_editor.set_keyframes(editable_property.value, editable_property.get_in_value)
+
         self.buttons_row = ClipEditorButtonsRow(self)
         
         self.pack_start(self.value_slider_row, False, False, 0)
@@ -1748,7 +1749,7 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         self.buttons_row.set_frame(frame)
         self.seek_tline_frame(frame)
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
-        
+
     def clip_editor_frame_changed(self, clip_frame):
         self.seek_tline_frame(clip_frame)
         self.buttons_row.set_frame(clip_frame)

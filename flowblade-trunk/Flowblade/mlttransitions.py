@@ -124,13 +124,13 @@ def init_module():
                 _("Checkerboard"):"checkerboard_small.pgm"}
 
     # name -> mlt_compositor_transition_infos key dict.
-    unsorted_compositors = [ (_("Affine"),"##affine"),
-                             (_("Dissolve"),"##opacity_kf"),
+    unsorted_compositors = [ (_("Dissolve"),"##opacity_kf"),
                              (_("Picture in Picture"),"##pict_in_pict"),
                              (_("Region"), "##region"),
                              (_("Affine Blend"), "##affineblend"),
                              (_("Blend"), "##blend"),
-                             (_("Wipe Clip Length"),"##wipe")]
+                             (_("Wipe Clip Length"),"##wipe"),
+                             (_("Transform"),"##affine")]
 
     compositors = sorted(unsorted_compositors, key=lambda comp: comp[0])   
 

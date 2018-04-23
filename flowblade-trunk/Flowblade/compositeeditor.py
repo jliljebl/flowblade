@@ -232,6 +232,7 @@ def _display_compositor_edit_box():
     t_editable_properties = propertyedit.get_transition_editable_properties(compositor)
     for ep in t_editable_properties:
         editor_row = propertyeditorbuilder.get_editor_row(ep)
+            
         if editor_row != None: # Some properties don't have editors
             vbox.pack_start(editor_row, False, False, 0)
             vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
