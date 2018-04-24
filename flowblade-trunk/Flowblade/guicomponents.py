@@ -1912,7 +1912,7 @@ class BigTCDisplay:
                                                     22,
                                                     self._draw)
         self.font_desc = Pango.FontDescription("Bitstream Vera Sans Mono Condensed 15")
-
+        
         # Draw consts
         x = 2
         y = 2
@@ -1973,7 +1973,7 @@ class BigTCDisplay:
 
         PangoCairo.update_layout(cr, layout)
         PangoCairo.show_layout(cr, layout)
-
+                
     def _round_rect_path(self, cr):
         x, y, width, height, aspect, corner_radius, radius, degrees = self._draw_consts
 

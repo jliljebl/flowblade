@@ -1222,13 +1222,18 @@ class EditorWindow:
         print self.mm_paned.get_position()
 
     def _create_monitor_row_widgets(self):
+        if editorstate.screen_size_small_height() == True:
+            font_desc = "sans bold 8"
+        else:
+            font_desc = "sans bold 9"
+
         self.tc = guicomponents.MonitorTCDisplay()
         self.monitor_source = Gtk.Label(label="sequence1")
         self.monitor_source.set_ellipsize(Pango.EllipsizeMode.END)
-        self.monitor_source.modify_font(Pango.FontDescription("sans bold 8"))
+        self.monitor_source.modify_font(Pango.FontDescription(font_desc))
         self.info1 = Gtk.Label(label="--:--:--:--")
         self.info1.set_ellipsize(Pango.EllipsizeMode.END)
-        self.info1.modify_font(Pango.FontDescription("sans bold 8"))
+        self.info1.modify_font(Pango.FontDescription(font_desc))
 
 def _this_is_not_used():
     print "THIS WAS USED!!!!!"

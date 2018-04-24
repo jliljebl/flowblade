@@ -409,15 +409,11 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     repaint_tline()
 
 def display_monitor_clip_name():#we're displaying length and range length also
-    tc_info = utils.get_tc_string(gui.pos_bar.producer.get_length()) 
-    if  MONITOR_MEDIA_FILE().mark_in != -1 and MONITOR_MEDIA_FILE().mark_out != -1:
-        clip_length = utils.get_tc_string(MONITOR_MEDIA_FILE().mark_out - MONITOR_MEDIA_FILE().mark_in + 1) #+1 out incl.
-        tc_info = tc_info + "  ][ " + str(clip_length)
-    else:
-        tc_info = tc_info + "  ][ --:--:--:--" 
+    clip_len = utils.get_tc_string(gui.pos_bar.producer.get_length())
+    range_info = _get_marks_range_info_text(MONITOR_MEDIA_FILE().mark_in, MONITOR_MEDIA_FILE().mark_out)
 
-    gui.editor_window.monitor_source.set_text(MONITOR_MEDIA_FILE().name)
-    gui.editor_window.info1.set_text(tc_info)
+    gui.editor_window.monitor_source.set_text(MONITOR_MEDIA_FILE().name + " - " + clip_len)
+    gui.editor_window.info1.set_text(range_info)
 
 def display_sequence_in_monitor():
     """
@@ -455,24 +451,41 @@ def display_sequence_in_monitor():
 def update_seqence_info_text():
     name = editorstate.current_sequence().name
     profile_desc = editorstate.current_sequence().profile.description()
-    
-    if editorpersistance.prefs.show_sequence_profile:
-        gui.editor_window.monitor_source.set_text(name + "  -  " + profile_desc)
-    else:
-        gui.editor_window.monitor_source.set_text(name)
-    
+
     prog_len = PLAYER().producer.get_length()
     if prog_len < 2: # # to 'fix' the single frame black frame at start, will bug for actual 1 frame sequences
         prog_len = 0
-    
-    range_len = PLAYER().producer.mark_out - PLAYER().producer.mark_in + 1 # +1, out incl.
     tc_info = utils.get_tc_string(prog_len)
-    if PLAYER().producer.mark_in != -1 and PLAYER().producer.mark_out != -1:
-        tc_info = tc_info + "  ][ " + utils.get_tc_string(range_len)
-    else:
-        tc_info = tc_info + "  ][ --:--:--:--" 
         
-    gui.editor_window.info1.set_text(tc_info)
+    if editorpersistance.prefs.show_sequence_profile:
+        gui.editor_window.monitor_source.set_text(name + "  -  " + profile_desc + "  -  " + tc_info)
+    else:
+        gui.editor_window.monitor_source.set_text(name + "  -  " + tc_info)
+
+    range_info = _get_marks_range_info_text(PLAYER().producer.mark_in, PLAYER().producer.mark_out)
+    gui.editor_window.info1.set_text(range_info)
+
+def _get_marks_range_info_text(mark_in, mark_out):
+    if editorstate.screen_size_small_width() == False:
+        if mark_in != -1:
+            range_info = "] " + utils.get_tc_string(mark_in)
+        else:
+            range_info = "] --:--:--:--" 
+
+        if mark_out != -1:
+            range_info = range_info + "   [ " + utils.get_tc_string(mark_out) + "   "
+        else:
+            range_info = range_info + "   [ --:--:--:--"  + "   "
+    else:
+        range_info = ""
+
+    range_len = mark_out - mark_in + 1 # +1, out incl.
+    if mark_in != -1 and mark_out != -1:
+        range_info = range_info + "][ " + utils.get_tc_string(range_len)
+    else:
+        range_info = range_info + "][ --:--:--:--" 
+    
+    return range_info
 
 def switch_monitor_display():
     monitorevent.stop_pressed()
