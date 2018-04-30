@@ -207,6 +207,7 @@ def _set_keyboard_action_names():
     _keyboard_action_names['switch_monitor'] = _("Switch Monitor Source")
     _keyboard_action_names['add_marker'] = _("Add Mark")
     _keyboard_action_names['enter_edit'] =  _("Complete Keyboard Trim Edit")
+    _keyboard_action_names['sequence_split'] = ("Sequence Split")
 
 
 def _set_key_names():
@@ -259,6 +260,7 @@ def _set_key_names():
     _key_names['tab'] = _("TAB")
     _key_names['m'] = "M"
     _key_names['return'] = _("ENTER")
+    _key_names['y'] = ("Y")
     _key_names['equal'] = _("=")
 
     _mod_names["ALT"] = _("Alt")

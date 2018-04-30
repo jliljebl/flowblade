@@ -33,6 +33,7 @@ from operator import itemgetter
 import threading
 import time
 
+import app
 import appconsts
 import boxmove
 import clipeffectseditor
@@ -61,6 +62,7 @@ import mlttransitions
 import render
 import renderconsumer
 import respaths
+import sequence
 import syncsplitevent
 import updater
 import utils
@@ -165,6 +167,86 @@ def cut_pressed():
         action.do_edit()
    
     updater.repaint_tline()
+
+def sequence_split_pressed():
+    """
+    Intention of this method is to split a sequence at the current position,
+    reduce it to the the clips on the left side of the cut and move the remains
+    on the right side of the cut to a newly created sequence that is then
+    opened.
+    """
+    # We start with actually cutting the sequence
+    # actually this poses performance loss, as we do the track loop twice
+    # one in cut_pressed and one in this method
+    # also other operations are repeated
+    cut_pressed()
+
+    # we determine the frame position
+    tline_frame = PLAYER().current_frame()
+
+    # prepare a data structure that will receive our clips we want to move to
+    # another sequence plus all the information to actually put them at the same
+    # relative position
+    clips_to_move = []
+
+    # now we iterate over all tracks and collect the ones that provide content
+    # after the cut position
+    for i in range(1, len(current_sequence().tracks)):
+        track = get_track(i)
+
+        # Get index and clip - so basically this means, all clips in this
+        # track with this index and above are left of the cut position,
+        # so we gather required information for our new sequence
+        index = track.get_clip_index_at(int(tline_frame))
+        for j in range(index, len(track.clips)):
+            clip = track.clips[j]
+            data = {
+                "track_index": i,
+                "clip": clip,
+                "clip_in": clip.clip_in,
+                "clip_out": clip.clip_out
+            }
+
+            clips_to_move.append(data)
+            # okay, we processed this clip, go on to the next one
+
+    # so we collected all the data for this sequence, now we need to remove
+    # all the clips right hand of the current position
+    data = {
+        "tracks":current_sequence().tracks,
+        "mark_in_frame":tline_frame,
+        "mark_out_frame":PLAYER().get_active_length()
+    }
+
+    action = edit.range_delete_action(data)
+    action.do_edit()
+
+    # so we collected all the data for all tracks
+    # now we create a new sequence and will open that very sequence
+    name = _("sequence_") + str(PROJECT().next_seq_number)
+    sequence.AUDIO_TRACKS_COUNT, sequence.VIDEO_TRACKS_COUNT = current_sequence().get_track_counts()
+    PROJECT().add_named_sequence(name)
+    app.change_current_sequence(len(PROJECT().sequences) - 1)
+
+    # and now, we nee to iterate over the collected clips and add them to
+    # our newly created sequence
+    for i in range(0, len(clips_to_move)):
+        collected = clips_to_move[i]
+
+        # determine the track we need to put the clip in
+        index = collected["track_index"]
+
+        #prepare the date and append it to the sequence
+        data = {
+            "track": get_track(index),
+            "clip": collected["clip"],
+            "clip_in": collected["clip_in"],
+            "clip_out": collected["clip_out"]
+        }
+
+        action = edit.append_action(data)
+        action.do_edit()
+
 
 def splice_out_button_pressed():
     """
