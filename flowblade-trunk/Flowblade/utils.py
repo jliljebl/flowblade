@@ -23,6 +23,8 @@ Helper functions and data
 """
 import time
 
+import gi
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 import math
@@ -125,6 +127,15 @@ def get_tc_string(frame):
     """
     return get_tc_string_with_fps(frame, fps())
 
+def get_tc_string_short(frame):
+    tc_str = get_tc_string(frame)
+    while len(tc_str) > 4:
+        if tc_str[0: 1] == "0" or tc_str[0: 1] == ":":
+            tc_str = tc_str[1: len(tc_str)]
+        else:
+            break
+    return tc_str
+            
 def get_tc_frame(frame_str):
     """
     Return timecode frame from string
@@ -342,6 +353,15 @@ def get_file_type(file_path):
     
     return "unknown"
 
+def is_mlt_xml_file(file_path):
+    name, ext = os.path.splitext(file_path)
+    ext = ext.lstrip(".")
+    ext = ext.lower()
+    if ext == "xml" or ext == "mlt":
+        return True
+    
+    return False
+        
 def hex_to_rgb(value):
     value = value.lstrip('#')
     lv = len(value)
@@ -356,7 +376,10 @@ def int_to_hex_str(n):
 
 def int_to_hex(n):
     # Input value range 0 - 255, 00 - ff
-    return hex(n)[2:]
+    val_str = hex(n)[2:]
+    if len(val_str) == 1:
+        val_str = "0" + val_str
+    return val_str
 
 def gdk_color_str_to_mlt_color_str(gdk_color_str):
     raw_r, raw_g, raw_b = hex_to_rgb(gdk_color_str)
@@ -485,7 +508,6 @@ def update_xml_file_producer_info(resource, info):
     # xml and mlt files require reading xml file to determine producer info
     mlt_doc = xml.dom.minidom.parse(resource)
 
-    print "adasdasd..."
     mlt_node = mlt_doc.getElementsByTagName("mlt").item(0)
     profile_node = mlt_node.getElementsByTagName("profile").item(0)
 

@@ -331,8 +331,9 @@ class Titler(Gtk.Window):
         buttons_box.pack_start(self.fill_on, False, False, 0)
         buttons_box.pack_start(Gtk.Label(), True, True, 0)
 
-        outline_label = Gtk.Label(_("Outline"))
-        outline_size = Gtk.Label(_("Size"))
+        outline_label = Gtk.Label(_("<b>Outline</b>"))
+        outline_label.set_use_markup(True)
+        outline_size = Gtk.Label(_("Size:"))
         
         self.out_line_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.3, green=0.3, blue=0.3, alpha=1.0))
         self.out_line_color_button.connect("color-set", self._edit_value_changed)
@@ -359,10 +360,11 @@ class Titler(Gtk.Window):
         outline_box.pack_start(self.outline_on, False, False, 0)
         outline_box.pack_start(Gtk.Label(), True, True, 0)
 
-        shadow_label = Gtk.Label(_("Shadow"))
-        shadow_opacity_label = Gtk.Label(_("Opacity"))
-        shadow_xoff = Gtk.Label(_("X Off"))
-        shadow_yoff = Gtk.Label(_("Y Off"))
+        shadow_label = Gtk.Label(_("<b>Shadow</b>"))
+        shadow_label.set_use_markup(True)
+        shadow_opacity_label = Gtk.Label(_("Opacity:"))
+        shadow_xoff = Gtk.Label(_("X Off:"))
+        shadow_yoff = Gtk.Label(_("Y Off:"))
         
         self.shadow_opa_spin = Gtk.SpinButton()
         adj3 = Gtk.Adjustment(float(100), float(1), float(100), float(1))

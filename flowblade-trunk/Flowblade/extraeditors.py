@@ -1353,5 +1353,3 @@ class ColorBandSelector:
         cr.close_path()
         cr.fill()
 
-
-

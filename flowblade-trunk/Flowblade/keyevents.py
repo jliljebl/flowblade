@@ -25,6 +25,7 @@ Module handles keyevents.
 from gi.repository import Gtk
 from gi.repository import Gdk
 
+import appconsts
 import audiowaveform
 import clipeffectseditor
 import compositeeditor
@@ -64,9 +65,11 @@ def key_down(widget, event):
         if audiowaveform.waveform_thread != None:
             audiowaveform.waveform_thread.abort_rendering()
             return True
-        else:
-            if editorstate.current_is_move_mode() == False:
-                editevent.set_default_edit_mode()
+        elif editorstate.current_is_move_mode() == False:
+            editevent.set_default_edit_mode()
+            return True
+        elif gui.big_tc.get_visible_child_name() == "BigTCEntry":
+            gui.big_tc.set_visible_child_name("BigTCDisplay")
             return True
 
     # Compositor editors keyevents
@@ -153,14 +156,14 @@ def key_down(widget, event):
     return False
     
 def _timeline_has_focus():
-    if(gui.tline_canvas.widget.is_focus()
-       or gui.tline_column.widget.is_focus()
-       or gui.editor_window.modes_selector.widget.is_focus()
-       or (gui.pos_bar.widget.is_focus() and timeline_visible())
-       or gui.tline_scale.widget.is_focus()
+    if(gui.tline_canvas.widget.has_focus()
+       or gui.tline_column.widget.has_focus()
+       or gui.editor_window.modes_selector.widget.has_focus()
+       or (gui.pos_bar.widget.has_focus() and timeline_visible())
+       or gui.tline_scale.widget.has_focus()
        or glassbuttons.focus_group_has_focus(glassbuttons.DEFAULT_FOCUS_GROUP)):
         return True
-    
+        
     return False
     
 def _handle_tline_key_event(event):
@@ -240,7 +243,8 @@ def _handle_tline_key_event(event):
     if action == 'toggle_ripple':
         gui.editor_window.toggle_trim_ripple_mode()
         return True
-
+    
+    
     # Key bindings for keyboard trimming
     if editorstate.current_is_active_trim_mode() == True:
         if action == 'prev_frame':
@@ -287,6 +291,7 @@ def _handle_tline_key_event(event):
                 seek_amount = -1
             else:
                 seek_amount = 1
+                
             if (event.get_state() & Gdk.ModifierType.SHIFT_MASK):
                 seek_amount = seek_amount * prefs.ffwd_rev_shift
             if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
@@ -359,12 +364,13 @@ def _handle_tline_key_event(event):
 
 
 def _handle_extended_tline_focus_events(event):
+    # This function was added to fix to a bug long time ago but the rationale for "extended_tline_focus_events" has been forgotten, but probably still exists
     # Apr-2017 - SvdB - For keyboard shortcuts
     action = _get_shortcut_action(event)
-    
-    # This was added to fix to a bug long time ago but the rationale for "extended_tline_focus_events" has been forgotten, but probably still exists
+
+    # We're dropping monitor window in 2 window mode as part of timeline focus
     if not(_timeline_has_focus() or
-            gui.pos_bar.widget.is_focus() or
+            gui.pos_bar.widget.has_focus() or
             gui.sequence_editor_b.has_focus() or
             gui.clip_editor_b.has_focus()):
         return False
@@ -477,7 +483,7 @@ def _handle_clip_key_event(event):
         # Available: SHIFT_MASK LOCK_MASK CONTROL_MASK
         
         prefs = editorpersistance.prefs
-        if action == 'prev_frame' or action == 'right_frame':
+        if action == 'prev_frame' or action == 'next_frame':
             if action == 'prev_frame':
                 seek_amount = -1
             else:

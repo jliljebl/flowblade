@@ -1,0 +1,18 @@
+<natronprojects>
+
+    <!-- See propertyparse.py, propertyedit.py and propertyeditorbuilder.py modules for attr and argument keys and values explanations-->
+    <!-- NOTE: 'displayname' args values have spaces encoded as ! character so "X Scatter" becomes "X!Scatter" -->
+    <!-- NOTE: extra spaces (more than 1) between key=value pairs crash when opening filter in editor -->
+
+    <!-- -->
+    <animation>
+        <name>Test Ball</name>
+        <group>Background</group>
+        <projectfile>flowbladetext.ntp</projectfile>
+        <property name="Color1" args="editor=color_select exptype=color displayname=Text">#00ff00</property>
+        <property name="Color2" args="editor=color_select exptype=color displayname=BG">#ff0000</property>
+        <propertyinterpretation name="Color1" nodename="Text1_3" natronpropertyname="color">color_hex_to_tuple</propertyinterpretation>
+        <propertyinterpretation name="Color2" nodename="Solid2" natronpropertyname="color">color_hex_to_tuple</propertyinterpretation>
+    </animation>
+
+</natronprojects>

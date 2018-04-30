@@ -54,6 +54,12 @@ def node_list_to_properties_array(node_list):
         properties.append((p_name, p_value, p_type))
     return properties
 
+def node_to_property(node):
+        p_name = node.getAttribute(NAME)
+        p_value = node.firstChild.nodeValue
+        p_type = _property_type(p_value)
+        return (p_name, p_value, p_type)
+
 def node_list_to_non_mlt_properties_array(node_list):
     """
     Returns list of property tuples of type (name, value, type)
@@ -130,7 +136,6 @@ def get_args_num_value(val_str):
 
 # ------------------------------------------ kf editor values strings to kfs funcs
 def single_value_keyframes_string_to_kf_array(keyframes_str, out_to_in_func):
-    #print "keyframes_str", keyframes_str
     new_keyframes = []
     keyframes_str = keyframes_str.strip('"') # expression have sometimes quotes that need to go away
     kf_tokens = keyframes_str.split(";")

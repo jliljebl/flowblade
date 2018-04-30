@@ -24,6 +24,7 @@ import subprocess
 import sys
 
 import appconsts
+import natronanimations
 import respaths
 import utils
 
@@ -33,6 +34,7 @@ def init():
     global _natron_found
     if utils.program_is_installed("Natron"):
         _natron_found = True
+        natronanimations.load_animations_projects_xml()
         print "Natron found"
     else:
         _natron_found = False
@@ -63,7 +65,7 @@ def render_program(render_folder, frame_name, project_file, writer, start_frame,
     #NatronRenderer -w Write2 1-10 /home/janne/test/natrontestout/frame###.png /home/janne/test/natrontest.ntp
     #NatronRenderer -w Write2 1-10 /home/janne/test/natrontestout/frame###.png /home/janne/test/natrontest.ntp
     
-        # Launch Natron
+    # Launch Natron
     print "Launch Natron render with ", writer, range_str, render_frame, project_file
     args = [str(respaths.LAUNCH_DIR + "natron_render.sh"), writer, range_str, render_frame, project_file]
     p = subprocess.Popen(args)

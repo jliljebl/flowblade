@@ -71,11 +71,12 @@ wipe_lumas = None # User displayed name -> resource image
 compositors = None
 blenders = None
 autofades = None
+alpha_combiners = None
 
 def init_module():
 
     # translations and module load order make us do this in method instead of at module load
-    global wipe_lumas, compositors, blenders, name_for_type, rendered_transitions, single_track_render_type_names, autofades
+    global wipe_lumas, compositors, blenders, name_for_type, rendered_transitions, single_track_render_type_names, autofades, alpha_combiners
     wipe_lumas = { \
                 _("Vertical From Center"):"bi-linear_x.pgm",
                 _("Vertical Top to Bottom"):"wipe_top_to_bottom.svg",
@@ -123,13 +124,13 @@ def init_module():
                 _("Checkerboard"):"checkerboard_small.pgm"}
 
     # name -> mlt_compositor_transition_infos key dict.
-    unsorted_compositors = [ (_("Affine"),"##affine"),
-                             (_("Dissolve"),"##opacity_kf"),
+    unsorted_compositors = [ (_("Dissolve"),"##opacity_kf"),
                              (_("Picture in Picture"),"##pict_in_pict"),
                              (_("Region"), "##region"),
                              (_("Affine Blend"), "##affineblend"),
                              (_("Blend"), "##blend"),
-                             (_("Wipe Clip Length"),"##wipe")]
+                             (_("Wipe Clip Length"),"##wipe"),
+                             (_("Transform"),"##affine")]
 
     compositors = sorted(unsorted_compositors, key=lambda comp: comp[0])   
 
@@ -157,6 +158,15 @@ def init_module():
     autofades = [(_("Fade In"),"##auto_fade_in"),
                 (_("Fade Out"),"##auto_fade_out")]
     
+    alpha_combiners = [ (_("Alpha XOR"),"##alphaxor"),
+                        (_("Alpha Out"),"##alphaout"),
+                        (_("Alpha In"),"##alphain")]
+
+    """ These ain't doing correct Porter-Duff
+                        (_("Alpha Over"),"##alphaover"),
+                        (_("Alpha Atop"),"##alphaatop")]
+    """
+                        
     for comp in compositors:
         name, comp_type = comp
         name_for_type[comp_type] = name
@@ -168,8 +178,12 @@ def init_module():
     for fade in autofades:
         name, comp_type = fade
         name_for_type[comp_type] = name
+
+    for acomb in alpha_combiners:
+        name, comp_type = acomb
+        name_for_type[comp_type] = name
         
-    # change this, tuples are not need we only need list of translatd names
+    # Rendered transition names and types
     rendered_transitions = [  (_("Dissolve"), RENDERED_DISSOLVE), 
                               (_("Wipe"), RENDERED_WIPE),
                               (_("Color Dip"), RENDERED_COLOR_DIP),
@@ -199,7 +213,7 @@ class CompositorTransitionInfo:
         # Property args saved in propertyname -> propertyargs_string dict
         self.property_args = propertyparse.node_list_to_args_dict(p_node_list)
         
-        #  Extra editors that handle properties that have been set "no_editor"
+        #  Extra editors handle properties that have been set "no_editor"
         e_node_list = compositor_node.getElementsByTagName(EXTRA_EDITOR)
         self.extra_editors = propertyparse.node_list_to_extraeditors_array(e_node_list)  
 
@@ -210,7 +224,7 @@ class CompositorTransition:
     They wrap mlt.Transition objects that do the actual mixing.
     """
     def __init__(self, transition_info):
-        self.mlt_transition = None
+        self.mlt_transition = None # mlt.Transition object
         self.info = transition_info
         # Editable properties, usually a subset of all properties of 
         # mlt_serveice "composite", defined in compositors.xml
@@ -288,7 +302,6 @@ class CompositorTransition:
         self.mlt_transition.set("a_track", str(a_track))
         self.mlt_transition.set("b_track", str(b_track))
 
-
     def set_target_track(self, a_track, force_track):
         self.a_track = a_track
         self.mlt_transition.set("a_track", str(a_track))
@@ -296,7 +309,7 @@ class CompositorTransition:
             fval = 1
         else:
             fval = 0
-        self.mlt_transition.set("force_track",str(fval))
+        self.mlt_transition.set("force_track", str(fval))
 
     def update_editable_mlt_properties(self):
         for prop in self.properties:
@@ -320,10 +333,11 @@ class CompositorObject:
         self.clip_out = -1 # ducktyping for clip for property editors
         self.planted = False
         self.compositor_index = None
-        self.name = None # ducktyping for clip for property editors
+        self.name = None # ducktyping as clip for property editors
         self.selected = False
         self.origin_clip_id = None
-        
+        self.obey_autofollow = True
+    
         self.destroy_id = os.urandom(16) # HACK, HACK, HACK - find a way to remove this stuff  
                                          # Compositors are recreated often in Sequence.restack_compositors()
                                          # and cannot be destroyd in undo/redo with object identidy.
@@ -425,6 +439,22 @@ def create_compositor(compositor_type):
     compositor.type_id = compositor_type # this is a string like "##add", "##affineblend", in compositors.xml it is name element: <name>##affine</name> etc...
     return compositor
 
+def is_blender(compositor_type_test):
+    for blend in blenders:
+        name, compositor_type = blend
+        if compositor_type_test == compositor_type:
+            return True
+    
+    return False
+
+def is_alpha_combiner(compositor_type_test):
+    for acomb in alpha_combiners:
+        name, compositor_type = acomb
+        if compositor_type_test == compositor_type:
+            return True
+    
+    return False
+
 
 # ------------------------------------------------------ rendered transitions
 # These are tractor objects used to create rendered transitions.
@@ -443,7 +473,7 @@ def get_rendered_transition_tractor(current_sequence,
     
     # New from clip
     if orig_from.media_type != appconsts.PATTERN_PRODUCER:
-        from_clip = current_sequence.create_file_producer_clip(orig_from.path)# File producer
+        from_clip = current_sequence.create_file_producer_clip(orig_from.path, None, False, orig_from.ttl)# File producer
     else:
         from_clip = current_sequence.create_pattern_producer(orig_from.create_data) # pattern producer
     current_sequence.clone_clip_and_filters(orig_from, from_clip)
@@ -451,7 +481,7 @@ def get_rendered_transition_tractor(current_sequence,
     # New to clip
     if not(transition_type == RENDERED_FADE_IN or transition_type == RENDERED_FADE_OUT): # fades to not use to_clip
         if orig_to.media_type != appconsts.PATTERN_PRODUCER:
-            to_clip = current_sequence.create_file_producer_clip(orig_to.path)# File producer
+            to_clip = current_sequence.create_file_producer_clip(orig_to.path, None, False, orig_to.ttl)# File producer
         else:
             to_clip = current_sequence.create_pattern_producer(orig_to.create_data) # pattern producer
         current_sequence.clone_clip_and_filters(orig_to, to_clip)
@@ -481,7 +511,7 @@ def get_rendered_transition_tractor(current_sequence,
             from_clip.clip_in = 0
             from_clip.clip_out = length
             
-    # Add clips to tracks and create keyframe string to contron mixing
+    # Add clips to tracks and create keyframe string for mixing
     if transition_type == RENDERED_DISSOLVE or transition_type == RENDERED_WIPE:
         # Add clips. Images and pattern producers always fill full track.
         if from_clip.media_type != appconsts.IMAGE and from_clip.media_type != appconsts.PATTERN_PRODUCER:

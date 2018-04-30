@@ -163,7 +163,7 @@ class MonitorWidget:
         if self.view == FRAME_MATCH_VIEW and force_default_mode==False:
             return
             
-        # Refreshing while rendering overwrites file on disk and loses 
+        # Refreshing player while rendering overwrites file on disk and loses 
         # previous rendered data. 
         if PLAYER().is_rendering:
             return

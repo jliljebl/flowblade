@@ -33,7 +33,6 @@ _get_frame_for_x_func = None
 _get_x_for_frame_func = None
 
 snapping_on = True
-show_magnet_icon = True
 
 _snap_threshold = 6 # in pixels
 

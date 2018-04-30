@@ -448,18 +448,30 @@ class ProxyRenderIssuesWindow:
             if is_proxy_file > 0:
                 text = _("You are trying to create proxies for ") + str(not_video_files) + _(" proxy file(s).\n")
                 rows = rows + self.issues_str() + text
-            issues_box = dialogutils.get_warning_message_dialog_panel("There are some issues with proxy render request", 
+            issues_box = dialogutils.get_warning_message_dialog_panel(_("There are some issues with proxy render request"), 
                                                                     rows,
                                                                     True)
+  
+            proxy_mode = editorstate.PROJECT().proxy_data.proxy_mode
+            if proxy_mode == appconsts.USE_PROXY_MEDIA:
+                info_label = Gtk.Label(_("<b>Rerendering proxies currently not possible!</b>\nChange to 'Use Original Media' mode to rerender proxies."))
+                info_label.set_use_markup(True)
+                info_row = guiutils.get_left_justified_box([guiutils.get_pad_label(24, 10), info_label])
+
             self.action_select = Gtk.ComboBoxText()
 
             self.action_select.append_text(_("Render Unrendered Possible & Use existing"))
-            self.action_select.append_text(_("Rerender All Possible" ))
+            if proxy_mode != appconsts.USE_PROXY_MEDIA:
+                self.action_select.append_text(_("Rerender All Possible" ))
             self.action_select.set_active(0)
+                            
             action_row = guiutils.get_left_justified_box([guiutils.get_pad_label(24, 10), Gtk.Label(label=_("Select Render Action: ")), self.action_select])
 
             info_box = Gtk.VBox()
             info_box.pack_start(issues_box, False, False, 0)
+            if proxy_mode == appconsts.USE_PROXY_MEDIA:
+                info_box.pack_start(info_row, False, False, 0)
+                info_box.pack_start(guiutils.get_pad_label(12, 24), False, False, 0)
             info_box.pack_start(action_row, False, False, 0)
 
         guiutils.set_margins(info_box, 12, 48, 12, 0)

@@ -42,7 +42,12 @@ SLIDE_TRIM = 8
 SLIDE_TRIM_NO_EDIT = 9
 MULTI_MOVE = 10
 CLIP_END_DRAG = 11
+SELECT_TLINE_SYNC_CLIP = 12
 
+
+# SDL version (Not used currently)
+SDL_1 = 1
+SDL_2 = 2
 
 # Project being edited
 project = None
@@ -52,6 +57,9 @@ player = None
 
 # Current edit mode
 edit_mode = INSERT_MOVE
+
+# Compositor autofollow state. If true when edit is performed, all compositors are auto resynced on first do, redo and undo actions.
+auto_follow = False
 
 # Trim tool ripple mode is expressed as a flag
 trim_mode_ripple = False
@@ -94,8 +102,9 @@ audio_monitoring_available = False
 # Whether to let the user set their user_dir using XDG Base dir spec
 use_xdg = False
 
-# Cursor pos
+# Cursor position and sensitivity
 cursor_on_tline = False
+cursor_is_tline_sensitive = True
 
 # Flag for running JACK audio server. If this is on when SDLConsumer created in mltplayer.py
 # jack rack filter will bw taached to it
@@ -115,7 +124,7 @@ fullscreen = False
 # Trim view mode
 show_trim_view = appconsts.TRIM_VIEW_OFF
 
-# Remember fade and transition lengths
+# Remember fade and transition lengths for next invocation, users prefer this over one default value.
 fade_length = -1
 transition_length = -1
 
@@ -163,6 +172,9 @@ def EDIT_MODE():
 def MONITOR_MEDIA_FILE():
     return _monitor_media_file
 
+def auto_follow_active():
+    return auto_follow
+
 def get_track(index):
     return project.c_seq.tracks[index]
 
@@ -180,6 +192,21 @@ def mlt_version_is_equal_or_greater(test_version):
     
     return False
 
+def mlt_version_is_equal_or_greater_correct(test_version):
+    runtime_ver = mlt_version.split(".")
+    test_ver = test_version.split(".")
+    
+    if runtime_ver[0] > test_ver[0]:
+        return True
+    elif runtime_ver[0] == test_ver[0]:
+        if runtime_ver[1] > test_ver[1]:
+            return True
+        elif runtime_ver[1] == test_ver[1]:
+            if  runtime_ver[2] >  test_ver[2]:
+                return True
+    
+    return False
+    
 def set_copy_paste_objects(objs):
     global _copy_paste_objects
     _copy_paste_objects = objs
@@ -208,6 +235,12 @@ def screen_size_small():
     
     return False
 
+def screen_size_small_height():
+    if SCREEN_HEIGHT < 898:
+        return True
+    else:
+        return False
+
 def get_cached_trim_clip(path):
     try:
         return _trim_clips_cache[path]
@@ -220,3 +253,13 @@ def add_cached_trim_clip(clip):
 def clear_trim_clip_cache():
     global _trim_clips_cache
     _trim_clips_cache = {}
+
+"""
+def get_sdl_version(): # This ain't true anymore, 6.6.0 has both available
+    if mlt_version_is_equal_or_greater_correct("6.4.2") == True:
+        return SDL_2
+    else:
+        return SDL_1
+"""
+        
+         

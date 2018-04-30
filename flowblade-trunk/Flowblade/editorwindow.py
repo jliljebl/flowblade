@@ -56,6 +56,7 @@ import menuactions
 import middlebar
 import monitorevent
 import monitorwidget
+import natronanimationswindow
 import respaths
 import render
 import rendergui
@@ -138,6 +139,16 @@ class EditorWindow:
         ONEROLL_TOOL = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "oneroll_tool.png")
         OVERWRITE_TOOL =  cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "overwrite_tool.png")
 
+        # Context cursors 
+        self.context_cursors = {appconsts.POINTER_CONTEXT_END_DRAG_LEFT:(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "ctx_drag_left.png"), 3, 7),
+                                appconsts.POINTER_CONTEXT_END_DRAG_RIGHT:(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "ctx_drag_right.png"), 14, 7),
+                                appconsts.POINTER_CONTEXT_TRIM_LEFT:(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "ctx_trim_left.png"), 9, 9),
+                                appconsts.POINTER_CONTEXT_TRIM_RIGHT:(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "ctx_trim_right.png"), 9, 9),
+                                appconsts.POINTER_CONTEXT_BOX_SIDEWAYS:(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "ctx_sideways.png"), 9, 9),
+                                appconsts.POINTER_CONTEXT_COMPOSITOR_MOVE:(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "ctx_sideways.png"), 9, 9),
+                                appconsts.POINTER_CONTEXT_COMPOSITOR_END_DRAG_LEFT:(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "ctx_drag_left.png"), 9, 9),
+                                appconsts.POINTER_CONTEXT_COMPOSITOR_END_DRAG_RIGHT:(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "ctx_drag_right.png"), 9, 9)}
+
         # Window
         self.window = Gtk.Window(Gtk.WindowType.TOPLEVEL)
         self.window.set_icon_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
@@ -212,14 +223,13 @@ class EditorWindow:
             ('CreateBarsClip', None, _('EBU Bars'), None, None, lambda a:patternproducer.create_bars_clip()),
             ('CreateIsingClip', None, _('Ising'), None, None, lambda a:patternproducer.create_icing_clip()),
             ('CreateColorPulseClip', None, _('Color Pulse'), None, None, lambda a:patternproducer.create_color_pulse_clip()),
+            ('CreateCountClip', None, _('Count'), None, None, lambda a:patternproducer.create_count_clip()),
             ('CompoundClipsMenu', None, _('Create Compound Clip')),
-            ('CreateSelectionCompound', None, _('Selection'), None, None, lambda a:projectaction.create_selection_compound_clip()),
-            ('CreateSequenceCompound', None, _('Sequence'), None, None, lambda a:projectaction.create_sequence_compound_clip()),
-            ('MediaAudioSyncMenu', None, _('Media Audio Sync')),
-            ('AudioSyncGroup', None, _('Create Audio Sync Group'), None, None, lambda a:audiosync.create_audio_sync_group()),
-            ('AudioSyncCompoundClip', None, _('Create Audio Sync Merge Clip'), None, None, lambda a:audiosync.create_audio_sync_compound_clip()),
+            ('CreateSelectionCompound', None, _('From Selected Clips'), None, None, lambda a:projectaction.create_selection_compound_clip()),
+            ('CreateSequenceCompound', None, _('From Current Sequence'), None, None, lambda a:projectaction.create_sequence_compound_clip()),
+            ('AudioSyncCompoundClip', None, _('Audio Sync Merge Clip From 2 Media Items '), None, None, lambda a:audiosync.create_audio_sync_compound_clip()),
             ('ImportProjectMedia', None, _('Import Media From Project...'), None, None, lambda a:projectaction.import_project_media()),
-            ('CombineSequences', None, _('Import Sequence...'), None, None, lambda a:projectaction.combine_sequences()),
+            ('CombineSequences', None, _('Import Another Sequence Into This Sequence...'), None, None, lambda a:projectaction.combine_sequences()),
             ('LogClipRange', None, _('Log Marked Clip Range'), '<control>L', None, lambda a:medialog.log_range_clicked()),
             ('RecreateMediaIcons', None, _('Recreate Media Icons...'), None, None, lambda a:menuactions.recreate_media_file_icons()),
             ('RemoveUnusedMedia', None, _('Remove Unused Media...'), None, None, lambda a:projectaction.remove_unused_media()),
@@ -230,16 +240,18 @@ class EditorWindow:
             ('RenderMenu', None, _('Render')),
             ('AddToQueue', None, _('Add To Batch Render Queue...'), None, None, lambda a:projectaction.add_to_render_queue()),
             ('BatchRender', None, _('Batch Render Queue'), None, None, lambda a:batchrendering.launch_batch_rendering()),
+            ('ReRenderTransitionsFades', None, _('Rerender All Rendered Transitions And Fades '), None, None, lambda a:tlineaction.rerender_all_rendered_transitions_and_fades()),
             ('Render', None, _('Render Timeline'), None, None, lambda a:projectaction.do_rendering()),
             ('ToolsMenu', None, _('Tools')),
             ('Titler', None, _('Titler'), None, None, lambda a:titler.show_titler()),
             ('AudioMix', None, _('Audio Mixer'), None, None, lambda a:audiomonitoring.show_audio_monitor()),
             ('GMIC', None, _("G'MIC Effects"), None, None, lambda a:gmic.launch_gmic()),
+            ('NatronAnimations', None, _("Natron Animations Tool"),None, None, lambda a:natronanimationswindow.launch_tool_window()),
             ('MediaLink', None, _('Media Relinker'), None, None, lambda a:medialinker.display_linker()),
             ('HelpMenu', None, _('_Help')),
             ('QuickReference', None, _('Contents'), None, None, lambda a:menuactions.quick_reference()),
             ('Environment', None, _('Runtime Environment'), None, None, lambda a:menuactions.environment()),
-            ('KeyboardShortcuts', None, _('Keyboard Shortcuts'), None, None, lambda a:dialogs.keyboard_shortcuts_dialog(self.window)),
+            ('KeyboardShortcuts', None, _('Keyboard Shortcuts'), None, None, lambda a:dialogs.keyboard_shortcuts_dialog(self.window, menuactions.keyboard_shortcuts_callback)),
             ('About', None, _('About'), None, None, lambda a:menuactions.about()),
             ('InsertMode', None, None, '1', None, lambda a:_this_is_not_used()),
             ('OverMode', None, None, '2', None, lambda a:_this_is_not_used()),
@@ -290,7 +302,6 @@ class EditorWindow:
                     <menuitem action='DeleteClip'/>
                     <menuitem action='ResyncSelected'/>
                     <menuitem action='SyncCompositors'/>
-                    <menuitem action='CompositorsFadesDefaults'/>
                     <menuitem action='ClearFilters'/>
                     <separator/>
                     <menu action='Timeline'>
@@ -306,6 +317,7 @@ class EditorWindow:
                     <separator/>
                     <menuitem action='ProfilesManager'/>
                     <menuitem action='DiskCacheManager'/>
+                    <menuitem action='KeyboardShortcuts'/>
                     <menuitem action='Preferences'/>
                 </menu>
                 <menu action='ViewMenu'>
@@ -319,15 +331,12 @@ class EditorWindow:
                     <menu action='PatternProducersMenu'>
                         <menuitem action='CreateNoiseClip'/>
                         <menuitem action='CreateColorPulseClip'/>
-                        <menuitem action='CreateIsingClip'/>
+                        <menuitem action='CreateIsingClip'/> 
                         <menuitem action='CreateBarsClip'/>    
                     </menu>
                     <menu action='CompoundClipsMenu'>
                         <menuitem action='CreateSelectionCompound'/>
-                        <menuitem action='CreateSequenceCompound'/>  
-                    </menu>
-                    <menu action='MediaAudioSyncMenu'>
-                        <menuitem action='AudioSyncGroup'/>  
+                        <menuitem action='CreateSequenceCompound'/>
                         <menuitem action='AudioSyncCompoundClip'/>
                     </menu>
                     <separator/>
@@ -347,6 +356,8 @@ class EditorWindow:
                     <menuitem action='AddToQueue'/>
                     <menuitem action='BatchRender'/>
                     <separator/>
+                    <menuitem action='ReRenderTransitionsFades'/>
+                    <separator/>
                     <menuitem action='Render'/>
                 </menu>
                 <menu action='ToolsMenu'>
@@ -354,12 +365,12 @@ class EditorWindow:
                     <separator/>
                     <menuitem action='Titler'/>
                     <menuitem action='GMIC'/>
+                    <menuitem action='NatronAnimations'/>
                     <separator/>
                     <menuitem action='MediaLink'/>
                 </menu>
                 <menu action='HelpMenu'>
                     <menuitem action='QuickReference'/>
-                    <menuitem action='KeyboardShortcuts'/>
                     <menuitem action='Environment'/>
                     <separator/>
                     <menuitem action='About'/>
@@ -1127,16 +1138,16 @@ class EditorWindow:
             cursor = self.get_own_cursor(display, INSERTMOVE_CURSOR, 0, 0)
         elif mode == editorstate.OVERWRITE_MOVE:
             if editorstate.overwrite_mode_box == False:
-                cursor = self.get_own_cursor(display, OVERWRITE_CURSOR, 6, 15)
+                cursor = self.get_own_cursor(display, OVERWRITE_CURSOR, 0, 0)
             else:
                 cursor = self.get_own_cursor(display, OVERWRITE_BOX_CURSOR, 6, 15)
         elif mode == editorstate.TWO_ROLL_TRIM:
-            cursor = self.get_own_cursor(display, TWOROLL_CURSOR, 11, 9)
+            cursor = self.get_own_cursor(display, TWOROLL_NO_EDIT_CURSOR, 11, 9) 
         elif mode == editorstate.TWO_ROLL_TRIM_NO_EDIT:
             cursor = self.get_own_cursor(display, TWOROLL_NO_EDIT_CURSOR, 11, 9)
         elif mode == editorstate.ONE_ROLL_TRIM:
             if editorstate.trim_mode_ripple == False:
-                cursor = self.get_own_cursor(display, ONEROLL_CURSOR, 9, 9)
+                cursor = self.get_own_cursor(display, ONEROLL_NO_EDIT_CURSOR, 9, 9)
             else:
                 cursor = self.get_own_cursor(display, ONEROLL_RIPPLE_CURSOR, 9, 9)
         elif mode == editorstate.ONE_ROLL_TRIM_NO_EDIT:
@@ -1145,20 +1156,32 @@ class EditorWindow:
             else:
                 cursor = self.get_own_cursor(display, ONEROLL_RIPPLE_CURSOR, 9, 9)
         elif mode == editorstate.SLIDE_TRIM:
-            cursor = self.get_own_cursor(display, SLIDE_CURSOR, 9, 9)
+            cursor = self.get_own_cursor(display, SLIDE_NO_EDIT_CURSOR, 9, 9)
         elif mode == editorstate.SLIDE_TRIM_NO_EDIT:
             cursor = self.get_own_cursor(display, SLIDE_NO_EDIT_CURSOR, 9, 9)
         elif mode == editorstate.SELECT_PARENT_CLIP:
             cursor =  Gdk.Cursor.new(Gdk.CursorType.TCROSS)
+        elif mode == editorstate.SELECT_TLINE_SYNC_CLIP:
+            cursor =  Gdk.Cursor.new(Gdk.CursorType.TCROSS)
         elif mode == editorstate.MULTI_MOVE:
             cursor = self.get_own_cursor(display, MULTIMOVE_CURSOR, 4, 8)
         elif mode == editorstate.CLIP_END_DRAG:
-            cursor = Gdk.Cursor.new(Gdk.CursorType.SB_H_DOUBLE_ARROW)
+            surface, px, py = self.context_cursors[tlinewidgets.pointer_context]
+            cursor = self.get_own_cursor(display, surface, px, py)
+            #cursor = Gdk.Cursor.new(Gdk.CursorType.SB_H_DOUBLE_ARROW)
         else:
             cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR)
         
         gdk_window.set_cursor(cursor)  
-            
+
+    def set_tline_cursor_to_context(self, pointer_context):
+        display = Gdk.Display.get_default()
+        gdk_window = self.window.get_window()
+        
+        surface, px, py = self.context_cursors[pointer_context]
+        cursor = self.get_own_cursor(display, surface, px, py)
+        gdk_window.set_cursor(cursor)
+
     def set_mode_selector_to_mode(self):
         if editorstate.EDIT_MODE() == editorstate.INSERT_MOVE:
             self.modes_selector.set_pixbuf(0)
@@ -1202,13 +1225,18 @@ class EditorWindow:
         print self.mm_paned.get_position()
 
     def _create_monitor_row_widgets(self):
+        if editorstate.screen_size_small_height() == True:
+            font_desc = "sans bold 8"
+        else:
+            font_desc = "sans bold 9"
+
         self.tc = guicomponents.MonitorTCDisplay()
         self.monitor_source = Gtk.Label(label="sequence1")
         self.monitor_source.set_ellipsize(Pango.EllipsizeMode.END)
-        self.monitor_source.modify_font(Pango.FontDescription("sans bold 8"))
+        self.monitor_source.modify_font(Pango.FontDescription(font_desc))
         self.info1 = Gtk.Label(label="--:--:--:--")
         self.info1.set_ellipsize(Pango.EllipsizeMode.END)
-        self.info1.modify_font(Pango.FontDescription("sans bold 8"))
+        self.info1.modify_font(Pango.FontDescription(font_desc))
 
 def _this_is_not_used():
     print "THIS WAS USED!!!!!"

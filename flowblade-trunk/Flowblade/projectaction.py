@@ -79,6 +79,10 @@ import utils
 save_time = None
 save_icon_remove_event_id = None
 
+# Used to get some render confirmations
+force_overwrite = False
+force_proxy = False
+
 #_xml_render_player = None
 
 #--------------------------------------- worker threads
@@ -294,7 +298,7 @@ def _duplicates_info(duplicates):
     if len(duplicates) > MAX_DISPLAYED_ITEMS:
         secondary_txt = secondary_txt + "\n" + "and " + str(len(duplicates) - MAX_DISPLAYED_ITEMS) + " other items.\n"
     
-    secondary_txt = secondary_txt +  "\nNo duplicate media items were added to project."
+    secondary_txt = secondary_txt +  _("\nNo duplicate media items were added to project.")
     
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
     return False
@@ -381,8 +385,8 @@ def _close_dialog_callback(dialog, response_id):
         return
         
     # This is the same as opening default project
-    sequence.AUDIO_TRACKS_COUNT = 4
-    sequence.VIDEO_TRACKS_COUNT = 5
+    sequence.AUDIO_TRACKS_COUNT = appconsts.INIT_A_TRACKS
+    sequence.VIDEO_TRACKS_COUNT = appconsts.INIT_V_TRACKS
 
     new_project = projectdata.get_default_project()
     app.open_project(new_project)
@@ -515,42 +519,25 @@ def change_project_profile():
 
 def _change_project_profile_callback(dialog, response_id, profile_combo, out_folder, project_name_entry):
     if response_id == Gtk.ResponseType.ACCEPT:
-        folder = "/" + out_folder.get_uri().lstrip("file:/")
-        name = project_name_entry.get_text()
+        ou = out_folder.get_filename().decode('utf-8')
+        folder = (u"/" + ou.lstrip(u"file:/"))
+        name = project_name_entry.get_text().decode('utf-8')
         profile = mltprofiles.get_profile_for_index(profile_combo.get_active())
-        path = folder + "/" + name
+        path = folder + u"/" + name
 
         PROJECT().update_media_lengths_on_load = True # saved version needs to do this
+        old_name = PROJECT().name
+        PROJECT().name  = name
         
         persistance.save_project(PROJECT(), path, profile.description()) #<----- HERE
 
+        PROJECT().name = old_name
         PROJECT().update_media_lengths_on_load = False
 
         dialog.destroy()
     else:
         dialog.destroy()
         
-""" Feature disabled, maybe reactivated later
-def change_profile_to_match_media(media_file):
-    dialogs.change_profile_project_to_match_media_dialog(PROJECT(), media_file, _change_project_profile_to_match_media_callback)
-
-def _change_project_profile_to_match_media_callback(dialog, response_id, match_profile_index, out_folder, project_name_entry):
-    if response_id == Gtk.ResponseType.ACCEPT:
-        folder = "/" + out_folder.get_uri().lstrip("file:/")
-        name = project_name_entry.get_text()
-        profile = mltprofiles.get_profile_for_index(match_profile_index)
-        path = folder + "/" + name
-        
-        PROJECT().update_media_lengths_on_load = True # saved version needs to do this
-        
-        persistance.save_project(PROJECT(), path, profile.description()) #<----- HERE
-
-        PROJECT().update_media_lengths_on_load = False
-
-        dialog.destroy()
-    else:
-        dialog.destroy()
-"""
 
 class SnaphotSaveThread(threading.Thread):
     
@@ -739,12 +726,48 @@ def get_save_time_msg():
     
 # ---------------------------------- rendering
 def do_rendering():
+    if force_overwrite == False:
+        render_path = render.get_file_path()
+        if os.path.isfile(render_path):
+            primary_txt = _("Render target file exists!")
+            secondary_txt = _("Confirm overwriting existing file.")
+            dialogutils.warning_confirmation(_overwrite_confirm_dialog_callback, primary_txt, secondary_txt, gui.editor_window.window, data=None, is_info=False, use_confirm_text=True)
+            return
+
+    if force_proxy == False:
+        if PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA:
+            primary_txt = _("Project is currently using proxy media!")
+            secondary_txt = _("Rendering from proxy media will produce worse quality than rendering from original media.\nConvert to using original media in Proxy Manager for best quality.\n\nSelect 'Confirm' to render from proxy media anyway.")
+            dialogutils.warning_confirmation(_proxy_confirm_dialog_callback, primary_txt, secondary_txt, gui.editor_window.window, data=None, is_info=False, use_confirm_text=True)
+            return
+            
+    global force_overwrite, force_proxy
+    force_overwrite = False
+    force_proxy = False
+    
     success = _write_out_render_item(True)
     if success:
         render_selections = render.get_current_gui_selections()
         PROJECT().set_project_property(appconsts.P_PROP_LAST_RENDER_SELECTIONS, render_selections)
         batchrendering.launch_single_rendering()
 
+def _overwrite_confirm_dialog_callback(dialog, response_id):
+    dialog.destroy()
+    if response_id == Gtk.ResponseType.ACCEPT:
+        global force_overwrite
+        force_overwrite = True
+        do_rendering()
+
+def _proxy_confirm_dialog_callback(dialog, response_id):
+    dialog.destroy()
+    if response_id == Gtk.ResponseType.ACCEPT:
+        global force_proxy
+        force_proxy = True
+        do_rendering()
+    else:  # This could otherwise stay accepting overwrites until app close
+        global force_overwrite
+        force_overwrite = False
+        
 def add_to_render_queue():
     _write_out_render_item(False)
 
@@ -841,16 +864,13 @@ def _open_files_dialog_cb(file_select, response_id):
     mlt_files_deleted = False
     for i in range(len(filenames) - 1, -1, -1):
         file_path = filenames[i]
-        name, ext = os.path.splitext(file_path)
-        ext = ext.lstrip(".")
-        ext = ext.lower()
-        if ext == "xml" or ext == "mlt":
+        if utils.is_mlt_xml_file(file_path) == True:
             filenames.pop(i)
             mlt_files_deleted = True
     
     open_file_names(filenames)
 
-    # Info on dis allowed files
+    # Info on disallowed files
     if mlt_files_deleted == True:
         primary_txt = _("Opening .mlt or .xml file as media was disallowed!")
         secondary_txt = _("Because of current MLT behaviour of overwriting projct properties when opening MLT XML files\nit is not allowed to open these files as media.")
@@ -870,7 +890,7 @@ def _add_image_sequence_callback(dialog, response_id, data):
 
     file_chooser, spin = data
     frame_file = file_chooser.get_filename()
-    dialog.destroy()
+    ttl = int(spin.get_value())
     
     if frame_file == None:
         dialogutils.info_message(_("No file was selected"), _("Select a numbered file to add an Image Sequence to Project."), gui.editor_window.window)
@@ -912,9 +932,9 @@ def _add_image_sequence_callback(dialog, response_id, data):
     dialog.destroy()
 
     resource_path = folder + "/" + resource_name_str
-    length = highest_number_part - int(number_part)
+    length = (highest_number_part - int(number_part)) * ttl
 
-    PROJECT().add_image_sequence_media_object(resource_path, file_name + "(img_seq)", length)
+    PROJECT().add_image_sequence_media_object(resource_path, file_name + "(img_seq)", length, ttl)
 
     gui.media_list_view.fill_data_model()
     gui.bin_list_view.fill_data_model()
@@ -1031,9 +1051,9 @@ def media_file_name_edited(dialog, response_id, data):
 
 def _display_file_info(media_file):
     # get info
-    clip = current_sequence().create_file_producer_clip(media_file.path)
+    clip = current_sequence().create_file_producer_clip(media_file.path, None, False, media_file.ttl)
     info = utils.get_file_producer_info(clip)
-    print "_display_file_info", info
+
     width = info["width"]
     height = info["height"]
     if media_file.type == appconsts.IMAGE:
@@ -1061,9 +1081,7 @@ def _display_file_info(media_file):
 
     if media_file.type == appconsts.VIDEO:
         match_profile_index = mltprofiles.get_closest_matching_profile_index(info)
-        print match_profile_index
         match_profile_name =  mltprofiles.get_profile_name_for_index(match_profile_index)
-        print match_profile_name
     else:
         match_profile_name = _("N/A")
     
@@ -1187,6 +1205,11 @@ def _xml_compound_render_done_callback(filename, media_name):
     add_media_thread = AddMediaFilesThread([filename], media_name)
     add_media_thread.start()
 
+def _sequence_xml_compound_render_done_callback(data):
+    filename, media_name = data
+    add_media_thread = AddMediaFilesThread([filename], media_name)
+    add_media_thread.start()
+
 def create_sequence_compound_clip():
     # lets's just set something unique-ish 
     default_name = _("sequence_") + _get_compound_clip_default_name_date_str() + ".xml"
@@ -1197,14 +1220,13 @@ def _do_create_sequence_compound_clip(dialog, response_id, name_entry):
         dialog.destroy()
         return
 
-    filename = name_entry.get_text()
+    media_name = name_entry.get_text()
     folder = editorpersistance.prefs.render_folder
-    #file_name = md5.new(str(os.urandom(32))).hexdigest()
-    write_file = folder + "/"+ filename + ".xml"
+    write_file = folder + "/"+ media_name + ".xml"
 
     dialog.destroy()
 
-    render_player = renderconsumer.XMLRenderPlayer(write_file, _xml_compound_render_done_callback, write_file)
+    render_player = renderconsumer.XMLRenderPlayer(write_file, _sequence_xml_compound_render_done_callback, (write_file, media_name))
     render_player.start()
 
 def _get_compound_clip_default_name_date_str():
@@ -1435,7 +1457,8 @@ def sequence_name_edited(cell, path, new_text, user_data):
     _enable_save()
 
 def change_sequence_track_count():
-    dialogs.tracks_count_change_dialog(_change_track_count_dialog_callback)
+    nv, na = PROJECT().c_seq.get_track_counts()
+    dialogs.tracks_count_change_dialog(_change_track_count_dialog_callback, nv, na)
 
 def _change_track_count_dialog_callback(dialog, response_id, tracks_select):
     if response_id != Gtk.ResponseType.ACCEPT:

@@ -33,7 +33,7 @@ install_data = [('share/applications', ['installdata/flowblade.desktop']),
 flowblade_package_data = ['res/filters/*.xml','res/filters/wipes/*','res/img/*',
                           'res/profiles/*','res/render/renderencoding.xml',
                           'res/patternproducer/*','res/help/*','locale/Flowblade/*',
-                          'res/proxyprofiles/*','res/darktheme/*','launch/*','res/gmic/*']
+                          'res/proxyprofiles/*','res/darktheme/*','launch/*','res/gmic/*','res/shortcuts/*']
 
 locale_files = []
 for filepath in glob.glob("Flowblade/locale/*/LC_MESSAGES/*"):
@@ -41,7 +41,7 @@ for filepath in glob.glob("Flowblade/locale/*/LC_MESSAGES/*"):
     locale_files.append(filepath)
 
 setup(  name='flowblade',
-        version='1.12.0',
+        version='1.16.0',
         author='Janne Liljeblad',
         author_email='janne.liljeblad at gmail dot com',
         description='Non-linear video editor',

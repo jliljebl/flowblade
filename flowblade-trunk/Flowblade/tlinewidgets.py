@@ -33,8 +33,10 @@ from gi.repository import PangoCairo
 
 import appconsts
 import audiowaveformrenderer
+import boxmove
 import cairoarea
 import clipeffectseditor
+import compositormodes
 import editorpersistance
 from editorstate import current_sequence
 from editorstate import timeline_visible
@@ -122,6 +124,7 @@ AUDIO_MUTE_ICON = None
 VIDEO_MUTE_ICON = None
 ALL_MUTE_ICON = None
 MARKER_ICON = None
+CLIP_MARKER_ICON = None
 LEVELS_RENDER_ICON = None
 SNAP_ICON = None
 KEYBOARD_ICON = None
@@ -180,6 +183,7 @@ CLIP_COLOR_L = get_multiplied_color(CLIP_COLOR, GRAD_MULTIPLIER)
 CLIP_COLOR_GRAD = (1, 0.62, 0.38, 0.7, 1)
 CLIP_COLOR_GRAD_L = get_multiplied_grad(0, 1, CLIP_COLOR_GRAD, GRAD_MULTIPLIER) 
 CLIP_SELECTED_COLOR = get_multiplied_color_from_grad(CLIP_COLOR_GRAD, SELECTED_MULTIPLIER)
+CLIP_END_DRAG_OVERLAY_COLOR = (1,1,1,0.3)
 
 AUDIO_CLIP_COLOR_GRAD = (1, 0.23, 0.52, 0.23, 1)#(1, 0.79, 0.80, 0.18, 1)
 AUDIO_CLIP_COLOR_GRAD_L = get_multiplied_grad(0, 1, AUDIO_CLIP_COLOR_GRAD, GRAD_MULTIPLIER + 0.5)
@@ -190,13 +194,14 @@ IMAGE_CLIP_COLOR_GRAD = (1, 0.33, 0.65, 0.69, 1)
 IMAGE_CLIP_COLOR_GRAD_L = get_multiplied_grad(0, 1, IMAGE_CLIP_COLOR_GRAD, GRAD_MULTIPLIER) 
 
 COMPOSITOR_CLIP = (0.3, 0.3, 0.3, 0.8)
+COMPOSITOR_CLIP_AUTO_FOLLOW = (0.33, 0.05, 0.52, 0.65)
 COMPOSITOR_CLIP_SELECTED = (0.5, 0.5, 0.7, 0.8)
 
 BLANK_CLIP_COLOR_GRAD = (1, 0.6, 0.6, 0.65, 1)
 BLANK_CLIP_COLOR_GRAD_L = (0, 0.6, 0.6, 0.65, 1)
 
-BLANK_CLIP_COLOR_SELECTED_GRAD = (1, 0.7, 0.7, 0.75, 1)
-BLANK_CLIP_COLOR_SELECTED_GRAD_L = (0, 0.7, 0.7, 0.75, 1)
+BLANK_CLIP_COLOR_SELECTED_GRAD = (1, 0.80, 0.80, 0.80, 1)
+BLANK_CLIP_COLOR_SELECTED_GRAD_L = (0, 0.80, 0.80, 0.80, 1)
 
 SINGLE_TRACK_TRANSITION_SELECTED = (0.8, 0.8, 1.0)
 
@@ -220,7 +225,7 @@ DARK_FRAME_SCALE_SELECTED_COLOR_GRAD_L = get_multiplied_grad(1, 1, FRAME_SCALE_S
 
 ICON_SELECTED_OVERLAY_COLOR = (0.8, 0.8, 1.0, 0.3)
 
-# Dash pattern used to create "LED"s
+# Dash pattern used by Box tool
 BOX_DASH_INK = 12.0
 BOX_DASH_SKIP = 3.0
 BOX_DASHES = [BOX_DASH_INK, BOX_DASH_SKIP, BOX_DASH_INK, BOX_DASH_SKIP]
@@ -269,6 +274,11 @@ draw_blank_borders = True
 pix_per_frame = 5.0 # Current draw scale. This set set elsewhere on init so default value irrelevant.
 pos = 0 # Current left most frame in timeline display
 
+# A context defining action taken when mouse press happens based on edit mode and mouse position.
+# Cursor communicates current pointer contest to user.
+pointer_context = appconsts.POINTER_CONTEXT_NONE
+DRAG_SENSITIVITY_AREA_WIDTH_PIX = 10
+
 # ref to singleton TimeLineCanvas instance for mode setting and some position
 # calculations.
 canvas_widget = None
@@ -302,7 +312,7 @@ def load_icons():
     COMPOSITOR_CLIP_ICON, INSERT_ARROW_ICON, AUDIO_MUTE_ICON, MARKER_ICON, \
     VIDEO_MUTE_ICON, ALL_MUTE_ICON, TRACK_BG_ICON, MUTE_AUDIO_ICON, MUTE_VIDEO_ICON, MUTE_ALL_ICON, \
     TRACK_ALL_ON_V_ICON, TRACK_ALL_ON_A_ICON, MUTE_AUDIO_A_ICON, TC_POINTER_HEAD, EDIT_INDICATOR, \
-    LEVELS_RENDER_ICON, SNAP_ICON, KEYBOARD_ICON, CLOSE_MATCH_ICON
+    LEVELS_RENDER_ICON, SNAP_ICON, KEYBOARD_ICON, CLOSE_MATCH_ICON, CLIP_MARKER_ICON
 
     FULL_LOCK_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "full_lock.png")
     FILTER_CLIP_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filter_clip_icon_sharp.png")
@@ -320,6 +330,7 @@ def load_icons():
     SNAP_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "snap_magnet.png")
     KEYBOARD_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "keyb_trim.png")
     CLOSE_MATCH_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "close_match.png")
+    CLIP_MARKER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "clip_marker.png")
 
     MARKER_ICON = _load_pixbuf("marker.png")
     TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V.png")
@@ -334,6 +345,28 @@ def load_icons():
         FRAME_SCALE_COLOR_GRAD_L = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, GRAD_MULTIPLIER)
         BG_COLOR = (0.44, 0.44, 0.46)
         FRAME_SCALE_LINES = (0.8, 0.8, 0.8)
+
+def set_tracks_double_height_consts():
+    global ID_PAD_Y, ID_PAD_Y_SMALL, VIDEO_TRACK_V_ICON_POS, VIDEO_TRACK_A_ICON_POS, VIDEO_TRACK_V_ICON_POS_SMALL, VIDEO_TRACK_A_ICON_POS_SMALL, \
+    AUDIO_TRACK_ICON_POS, AUDIO_TRACK_ICON_POS_SMALL, MUTE_ICON_POS, MUTE_ICON_POS_NORMAL, LOCK_POS, INSRT_ICON_POS, INSRT_ICON_POS_SMALL, \
+    WAVEFORM_PAD_LARGE, WAVEFORM_PAD_SMALL, HEIGHT
+    
+    HEIGHT = appconsts.TLINE_HEIGHT
+    ID_PAD_Y = 41
+    ID_PAD_Y_SMALL = 16
+    VIDEO_TRACK_V_ICON_POS = (5, 41)
+    VIDEO_TRACK_A_ICON_POS = (5, 50)
+    VIDEO_TRACK_V_ICON_POS_SMALL = (5, 16)
+    VIDEO_TRACK_A_ICON_POS_SMALL = (5, 25) 
+    AUDIO_TRACK_ICON_POS = (5, 43)
+    AUDIO_TRACK_ICON_POS_SMALL = (5, 18)
+    MUTE_ICON_POS = (5, 14)
+    MUTE_ICON_POS_NORMAL = (5, 39)
+    LOCK_POS = (67, 2)
+    INSRT_ICON_POS = (81, 43)
+    INSRT_ICON_POS_SMALL =  (81, 18)
+    WAVEFORM_PAD_LARGE = 77
+    WAVEFORM_PAD_SMALL = 33
 
 def set_dark_bg_color():
     if editorpersistance.prefs.dark_theme == False:
@@ -646,6 +679,13 @@ def draw_overwrite_box_overlay(cr, data):
         cr.line_to(draw_x, draw_y + size)
         cr.close_path()
         cr.fill()
+
+        if editorpersistance.prefs.delta_overlay == True:
+            delta = data["delta"]       
+            tc_str = utils.get_tc_string_short(abs(delta))
+            tc_str = _get_signed_tc_str(tc_str, delta)
+                
+            _draw_text_info_box(cr, x, y - 12, tc_str)
         
 def _draw_move_overlay(cr, data, y):
     # Get data
@@ -656,7 +696,8 @@ def _draw_move_overlay(cr, data, y):
     track_height = data["to_track_object"].height
 
     # Get first frame for drawing shadow clips
-    draw_start = first_clip_start + (current_frame - press_frame)
+    delta = current_frame - press_frame
+    draw_start = first_clip_start + delta
     clip_start_frame = draw_start - pos
         
     # Draw clips in draw range
@@ -672,6 +713,14 @@ def _draw_move_overlay(cr, data, y):
         
         # Start frame for next clip
         clip_start_frame += clip_length
+
+    if editorpersistance.prefs.delta_overlay == True:
+        x = (draw_start - pos) * pix_per_frame
+        
+        tc_str = utils.get_tc_string_short(abs(delta))
+        tc_str = _get_signed_tc_str(tc_str, delta)
+            
+        _draw_text_info_box(cr, x, y - 12, tc_str)
 
 def draw_multi_overlay(cr, data):
     if data == None:
@@ -741,6 +790,13 @@ def draw_multi_overlay(cr, data):
             cr.fill()
 
     y = _get_track_y(current_sequence().first_video_index)
+
+    if editorpersistance.prefs.delta_overlay == True:        
+        tc_str = utils.get_tc_string_short(abs(delta))
+        tc_str = _get_signed_tc_str(tc_str, delta)
+            
+        _draw_text_info_box(cr, draw_x, y - 12, tc_str)
+    
     _draw_snap(cr, y)
     
 def draw_two_roll_overlay(cr, data):
@@ -805,9 +861,16 @@ def draw_two_roll_overlay(cr, data):
     cr.line_to(selection_frame_x - radius - bit, track_y + track_height)
     cr.stroke()
 
+    if editorpersistance.prefs.delta_overlay == True:
+        delta = data["selected_frame"] - data["edit_frame"]        
+        tc_str = utils.get_tc_string_short(abs(delta))
+        tc_str = _get_signed_tc_str(tc_str, delta)
+            
+        _draw_text_info_box(cr, selection_frame_x + 3, track_y - 12, tc_str)
+
     _draw_kb_trim_indicator(cr, selection_frame_x, track_y)
     _draw_snap(cr, track_y)
-
+    
 def draw_one_roll_overlay(cr, data):
     track_height = current_sequence().tracks[data["track"]].height
     track_y = _get_track_y(data["track"])
@@ -866,6 +929,13 @@ def draw_one_roll_overlay(cr, data):
         cr.arc (selection_frame_x - radius, track_y + track_height - radius, radius, 0 * degrees, 90.0 * degrees)
         cr.line_to(selection_frame_x - radius - bit, track_y + track_height)
     cr.stroke()
+
+    if editorpersistance.prefs.delta_overlay == True:
+        delta = data["selected_frame"] - data["edit_frame"]        
+        tc_str = utils.get_tc_string_short(abs(delta))
+        tc_str = _get_signed_tc_str(tc_str, delta)
+            
+        _draw_text_info_box(cr, selection_frame_x + 3, track_y - 12, tc_str)
 
     _draw_kb_trim_indicator(cr, selection_frame_x, track_y)
     _draw_snap(cr, track_y)
@@ -985,7 +1055,14 @@ def draw_slide_overlay(cr, data):
     cr.paint()
 
     _draw_kb_trim_indicator(cr, x, track_y)
-    
+
+    if editorpersistance.prefs.delta_overlay == True:
+        delta = data["mouse_delta"]  
+        tc_str = utils.get_tc_string_short(abs(delta))
+        tc_str = _get_signed_tc_str(tc_str, delta)
+            
+        _draw_text_info_box(cr, clip_start_frame_x + 3, track_y - 12, tc_str)
+        
 def draw_clip_end_drag_overlay(cr, data):
     if data["editing_clip_end"] == True:
         end = data["frame"]  - pos
@@ -998,7 +1075,7 @@ def draw_clip_end_drag_overlay(cr, data):
     
     # Draw clips in draw range
     cr.set_line_width(MOVE_CLIPS_LINE_WIDTH)
-    cr.set_source_rgb(*OVERLAY_TRIM_COLOR)
+
 
     clip_length = end - start
     scale_length = clip_length * pix_per_frame
@@ -1006,10 +1083,26 @@ def draw_clip_end_drag_overlay(cr, data):
     track_height = data["track_height"]
 
     cr.rectangle(scale_in, int(y) + 1.5, int(scale_length), track_height - 2.0)
+    cr.set_source_rgba(*CLIP_END_DRAG_OVERLAY_COLOR)
+    cr.fill_preserve()
+    cr.set_source_rgb(*OVERLAY_TRIM_COLOR)
     cr.stroke()
 
-    _draw_snap(cr, y)
+    if editorpersistance.prefs.delta_overlay == True:
+        if data["editing_clip_end"] == True:
+            x = scale_in + scale_length
+            delta = data["frame"] - data["orig_out"]
+        else:
+            x = scale_in
+            delta = data["frame"] - data["orig_in"]  - 1
+            
+        tc_str = utils.get_tc_string_short(abs(delta))
+        tc_str = _get_signed_tc_str(tc_str, delta)
+
+        _draw_text_info_box(cr, x - 3, y - 12, tc_str)
     
+    _draw_snap(cr, y)
+            
 def draw_compositor_move_overlay(cr, data):
     # Get data
     press_frame = data["press_frame"]
@@ -1033,8 +1126,15 @@ def draw_compositor_move_overlay(cr, data):
     cr.set_source_rgb(*OVERLAY_COLOR)
     cr.stroke()
 
+    if editorpersistance.prefs.delta_overlay == True:
+        delta = current_frame - press_frame
+        tc_str = utils.get_tc_string_short(abs(delta))
+        tc_str = _get_signed_tc_str(tc_str, delta)
+            
+        _draw_text_info_box(cr, scale_in, y - 12, tc_str)
+    
     _draw_snap(cr, y)
-
+        
 def draw_compositor_trim(cr, data):
     clip_in = data["clip_in"]
     clip_out = data["clip_out"]
@@ -1057,9 +1157,20 @@ def draw_compositor_trim(cr, data):
     
     if data["trim_is_clip_in"] == True:
         x = scale_in + 2
+        delta = data["clip_in"] - data["orig_clip_in"]
+        info_x = scale_in - 3
     else:
         x = scale_in + scale_length - 26
+        delta = data["clip_out"] - data["orig_clip_out"]
+        info_x = scale_in + + scale_length - 3
+
     _draw_two_arrows(cr, x, y + 4, 4)
+
+    if editorpersistance.prefs.delta_overlay == True:
+        tc_str = utils.get_tc_string_short(abs(delta))
+        tc_str = _get_signed_tc_str(tc_str, delta)
+            
+        _draw_text_info_box(cr, info_x, y - 12, tc_str)
 
     _draw_snap(cr, y)
     
@@ -1150,7 +1261,7 @@ def _draw_view_icon(cr, x, y):
     cr.paint()
 
 def _draw_snap(cr, y):
-    if snapping.snap_active() == True and snapping.show_magnet_icon == True:
+    if snapping.snap_active() == True:
         cr.set_source_surface(SNAP_ICON, int(snapping.get_snap_x()) - 6, int(y) - 14)
         cr.paint()
 
@@ -1159,6 +1270,44 @@ def _draw_kb_trim_indicator(cr, x, y):
         cr.set_source_surface(KEYBOARD_ICON, int(x) - 9, int(y) - 16)
         cr.paint()
 
+def _draw_text_info_box(cr, x, y, text):
+    x = int(x)
+    y = int(y)
+    cr.set_source_rgb(1, 1, 1)
+    cr.select_font_face ("sans-serif",
+                     cairo.FONT_SLANT_NORMAL,
+                     cairo.FONT_WEIGHT_NORMAL)
+    cr.set_font_size(13)
+
+    x_bearing, y_bearing, width, height, x_advance, y_advance = cr.text_extents(text)
+    
+    x1 = x - 3.5
+    y1 = y + 4.5
+    x2 = x + width + 5.5
+    y2 = y - height - 4.5
+    
+    cr.move_to(x1, y1)
+    cr.line_to(x1, y2)
+    cr.line_to(x2, y2)
+    cr.line_to(x2, y1)
+    cr.close_path()
+    cr.set_source_rgb(0.1, 0.1, 0.1)
+    cr.fill_preserve()
+    
+    cr.set_line_width(1.0)
+    cr.set_source_rgb(0.7, 0.7, 0.7)
+    cr.stroke()
+    
+    cr.move_to(x, y)
+    cr.set_source_rgb(0.8, 0.8, 0.8)
+    cr.show_text(text) 
+
+def _get_signed_tc_str(tc_str, delta):
+    if delta < 0:
+        tc_str = "-" + tc_str
+    elif  delta > 0:
+        tc_str = "+" + tc_str
+    return tc_str
 
 # ------------------------------- WIDGETS
 class TimeLineCanvas:
@@ -1172,6 +1321,8 @@ class TimeLineCanvas:
         self.widget = cairoarea.CairoDrawableArea2( WIDTH, 
                                                     HEIGHT, 
                                                     self._draw)
+        self.widget.add_pointer_motion_mask()
+        
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
@@ -1213,7 +1364,7 @@ class TimeLineCanvas:
         """
         Mouse move callback
         """
-        if not self.drag_on:
+        if (not self.drag_on) and editorstate.cursor_is_tline_sensitive == True:
             self.set_pointer_context(x, y)
             return
 
@@ -1242,27 +1393,60 @@ class TimeLineCanvas:
                               event.button, event.get_state())
 
     def set_pointer_context(self, x, y):
+        current_pointer_context = self.get_pointer_context(x, y)
+
+        # If pointer_context changed then save it and change cursor.
+        global pointer_context
+        if pointer_context != current_pointer_context:
+            pointer_context = current_pointer_context
+            if pointer_context == appconsts.POINTER_CONTEXT_NONE:
+                gui.editor_window.set_tline_cursor(EDIT_MODE())
+            else:
+                gui.editor_window.set_tline_cursor_to_context(pointer_context)
+        
+    def get_pointer_context(self, x, y):
         frame = get_frame(x)
         hit_compositor = compositor_hit(frame, y, current_sequence().compositors)
         if hit_compositor != None:
-            return
+            if editorstate.auto_follow == False or (editorstate.auto_follow == True and hit_compositor.obey_autofollow == False):
+                return compositormodes.get_pointer_context(hit_compositor, x)
+            else:
+                return appconsts.POINTER_CONTEXT_NONE
 
-        track = get_track(y)  
+        track = get_track(y)
         if track == None:
-            return    
+            return appconsts.POINTER_CONTEXT_NONE
 
         clip_index = current_sequence().get_clip_index(track, frame)
         if clip_index == -1:
-            return
+            # This gets none always afetr rack, which may not be what we want
+            return appconsts.POINTER_CONTEXT_NONE
 
-        clip_start_frame = track.clip_start(clip_index) - pos
-        if abs(x - _get_frame_x(clip_start_frame)) < 5:
-            return
-
-        clip_end_frame = track.clip_start(clip_index + 1) - pos
-        if abs(x - _get_frame_x(clip_end_frame)) < 5:
-            return
-
+        clip_start_frame = track.clip_start(clip_index)
+        clip_end_frame = track.clip_start(clip_index + 1)
+        
+        # INSERT, OVEWRITE
+        if (EDIT_MODE() == editorstate.INSERT_MOVE or EDIT_MODE() == editorstate.OVERWRITE_MOVE) and editorstate.overwrite_mode_box == False:
+            if abs(x - _get_frame_x(clip_start_frame)) < DRAG_SENSITIVITY_AREA_WIDTH_PIX:
+                return appconsts.POINTER_CONTEXT_END_DRAG_LEFT
+            if abs(x - _get_frame_x(clip_end_frame)) < DRAG_SENSITIVITY_AREA_WIDTH_PIX:
+                return appconsts.POINTER_CONTEXT_END_DRAG_RIGHT
+            
+            return appconsts.POINTER_CONTEXT_NONE
+        # TRIM
+        elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM or EDIT_MODE() == editorstate.ONE_ROLL_TRIM_NO_EDIT:
+            if abs(frame - clip_start_frame) < abs(frame - clip_end_frame):
+                return appconsts.POINTER_CONTEXT_TRIM_LEFT
+            else:
+                return appconsts.POINTER_CONTEXT_TRIM_RIGHT
+        # BOX
+        elif (EDIT_MODE() == editorstate.OVERWRITE_MOVE and editorstate.overwrite_mode_box == True and 
+            boxmove.box_selection_data != None):
+            if boxmove.box_selection_data.is_hit(x, y):
+                return appconsts.POINTER_CONTEXT_BOX_SIDEWAYS
+                
+        return appconsts.POINTER_CONTEXT_NONE
+            
     #----------------------------------------- DRAW
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
@@ -1620,9 +1804,10 @@ class TimeLineCanvas:
                 self.sync_children.append((clip, track, scale_in))
 
             # Draw audio level data, except for IMAGE_SEQUENCE clips
+            # Init data rendering if data needed and not available
             if clip.waveform_data == None and editorstate.display_all_audio_levels == True and clip.media_type != appconsts.IMAGE_SEQUENCE and clip.media_type != appconsts.PATTERN_PRODUCER:
                  clip.waveform_data = audiowaveformrenderer.get_waveform_data(clip)
-                 
+            # Draw data if available large enough scale
             if clip.waveform_data != None and scale_length > FILL_MIN:
                 r, g, b = clip_bg_col
                 cr.set_source_rgb(r * 0.9, g * 0.9, b * 0.9)
@@ -1749,6 +1934,15 @@ class TimeLineCanvas:
                     cr.set_source_surface(LEVELS_RENDER_ICON, int(scale_in) + 4, y + 8)
                     cr.paint()
 
+            # Clip markers
+            if len(clip.markers) > 0 and scale_length > TEXT_MIN:
+                for marker in clip.markers:
+                    name, clip_marker_frame = marker
+                    marker_x = (clip_start_frame + clip_marker_frame - clip.clip_in) * pix_per_frame
+                    cr.set_source_surface(CLIP_MARKER_ICON, int(marker_x) - 4, y)
+                    cr.paint()
+                    
+                    
             # Get next draw position
             clip_start_frame += clip_length
 
@@ -1771,8 +1965,12 @@ class TimeLineCanvas:
 
             scale_in = (comp.clip_in - pos) * pix_per_frame
             scale_length = (comp.clip_out - comp.clip_in + 1) * pix_per_frame # +1, out inclusive
+
             if comp.selected == False:
-                color = COMPOSITOR_CLIP
+                if editorstate.auto_follow_active() == True and comp.obey_autofollow == True:
+                    color = COMPOSITOR_CLIP_AUTO_FOLLOW
+                else:
+                    color = COMPOSITOR_CLIP
             else:
                 color = COMPOSITOR_CLIP_SELECTED
             cr.set_source_rgba(*color)
@@ -1911,7 +2109,9 @@ class TimeLineCanvas:
         
         global match_frame_image
         match_frame_image = scaled_icon
-        
+
+
+
 class TimeLineColumn:
     """
     GUI component for displaying and editing track parameters.
@@ -2196,24 +2396,36 @@ class TimeLineFrameScale:
         view_end_frame = int(pos + w / pix_per_frame)
 
         # Get draw steps for marks and tc texts
+        if fps < 20:
+            spacer_mult = 2 # for fps like 15 this looks bad with out some help
+        else:
+            spacer_mult = 1
+            
         if pix_per_frame > DRAW_THRESHOLD_1:
             small_tick_step = 1
             big_tick_step = fps / 2
-            tc_draw_step = fps / 2
+            tc_draw_step = (fps * spacer_mult)  / 2
         elif pix_per_frame > DRAW_THRESHOLD_2:
-            small_tick_step = fps
-            tc_draw_step = fps
+            small_tick_step = fps * spacer_mult
+            tc_draw_step = fps * spacer_mult
         elif pix_per_frame > DRAW_THRESHOLD_3:
-            small_tick_step = fps * 2
-            tc_draw_step = fps * 2
+            small_tick_step = fps * 2 * spacer_mult
+            tc_draw_step = fps * 2 * spacer_mult
         elif pix_per_frame > DRAW_THRESHOLD_4:
-            small_tick_step = fps * 3
-            tc_draw_step = fps * 3
+            small_tick_step = fps * 3 * spacer_mult
+            tc_draw_step = fps * 3 * 2
         else:
             view_length = view_end_frame - view_start_frame
             small_tick_step = int(view_length / NUMBER_OF_LINES)
             tc_draw_step = int(view_length / NUMBER_OF_LINES)
 
+        # Draw tc
+        cr.select_font_face ("sans-serif",
+                              cairo.FONT_SLANT_NORMAL,
+                              cairo.FONT_WEIGHT_NORMAL)
+
+        cr.set_font_size(11)
+        
         # Draw small tick lines
         # Get draw range in steps from 0
         start = int(view_start_frame / small_tick_step)
@@ -2225,37 +2437,42 @@ class TimeLineFrameScale:
             x = math.floor(i * small_tick_step * pix_per_frame - pos * pix_per_frame) + 0.5 
             cr.move_to(x, SCALE_HEIGHT)
             cr.line_to(x, SMALL_TICK_Y)
+            if tc_draw_step == small_tick_step:
+                cr.move_to(x, TC_Y)
+                text = utils.get_tc_string(int(round(float(i) * float(tc_draw_step))))
+                cr.show_text(text);
         cr.stroke()
+        
+        # 23.98 and 29.97 need this to get drawn on even seconds with big ticks and tcs
+        if round(fps) != fps:
+            to_seconds_fix_add = 1.0
+        else:
+            to_seconds_fix_add = 0.0
         
         # Draw big tick lines, if required
         if big_tick_step != -1:
             count = int(seq.get_length() / big_tick_step)
             for i in range(1, count):
-                x = math.floor(math.floor(i * big_tick_step) * pix_per_frame \
+                x = math.floor((math.floor(i * big_tick_step) + to_seconds_fix_add) * pix_per_frame \
                     - pos * pix_per_frame) + 0.5 
                 cr.move_to(x, SCALE_HEIGHT)
                 cr.line_to(x, BIG_TICK_Y)
                 cr.stroke()
 
-        # Draw tc
-        cr.select_font_face ("sans-serif",
-                              cairo.FONT_SLANT_NORMAL,
-                              cairo.FONT_WEIGHT_NORMAL)
-
-        cr.set_font_size(11)
-        start = int(view_start_frame / tc_draw_step)
-        # Get draw range in steps from 0
-        if start == pos:
-            start += 1 # don't draw line on first pixel of scale display
-        # +1 to ensure coverage
-        end = int(view_end_frame / tc_draw_step) + 1 
-        for i in range(start, end):
-            x = math.floor(i * tc_draw_step * pix_per_frame \
-                - pos * pix_per_frame) + 0.5
-            cr.move_to(x, TC_Y)
-            text = utils.get_tc_string(i * tc_draw_step)
-            cr.show_text(text);
-
+        if tc_draw_step != small_tick_step:
+            start = int(view_start_frame / tc_draw_step)
+            # Get draw range in steps from 0
+            if start == pos:
+                start += 1 # don't draw line on first pixel of scale display
+            # +1 to ensure coverage
+            end = int(view_end_frame / tc_draw_step) + 1 
+            for i in range(start, end):
+                x = math.floor((math.floor(i * tc_draw_step) + to_seconds_fix_add) * pix_per_frame \
+                    - pos * pix_per_frame) + 0.5
+                cr.move_to(x, TC_Y)
+                text = utils.get_tc_string(int(math.floor((float(i) * tc_draw_step) + to_seconds_fix_add)))
+                cr.show_text(text)
+        
         # Draw marks
         self.draw_mark_in(cr, h)
         self.draw_mark_out(cr, h)

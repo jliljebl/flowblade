@@ -1,6 +1,9 @@
 
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
+**New version 1.16 available, [Installing](./flowblade-trunk/docs/INSTALLING.md), [Release notes](./flowblade-trunk/docs/RELEASE_NOTES.md).**
+
+**Updating to MLT 6.6.0 from 6.5.0 version fixes startup crashes, [more info](./flowblade-trunk/docs/SDL_2_AND_MLT_6_6_0.md).**
 
 **Contents:**
   1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
@@ -55,9 +58,9 @@ Flowblade provides powerful tools to mix and filter video and audio.
         
 # Releases
 
-**Latest release:** Flowblade Movie Editor 1.12 was released on March 2017.
+**Latest release:** Flowblade Movie Editor 1.16 was released on March 2018.
 
-**Next release:** Flowblade Movie Editor 1.14 will be out on August 2017.
+**Next release:** Flowblade Movie Editor 1.18 will be out on autumn 2018, "when it is done".
 
 # Installing Flowblade
 

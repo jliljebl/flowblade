@@ -46,14 +46,13 @@ MEDIA_ICON_HEIGHT = 15
 
 MEDIA_FILES_DND_TARGET = Gtk.TargetEntry.new('media_file', Gtk.TargetFlags.SAME_APP, 0)
 EFFECTS_DND_TARGET = Gtk.TargetEntry.new('effect', Gtk.TargetFlags.SAME_APP, 0)
-#EFFECTS_STACK_DND_TARGET = Gtk.TargetEntry.new('effectstack', Gtk.TargetFlags.SAME_APP, 0)
 CLIPS_DND_TARGET = Gtk.TargetEntry.new('clip', Gtk.TargetFlags.SAME_APP, 0)
 RANGE_DND_TARGET = Gtk.TargetEntry.new('range', Gtk.TargetFlags.SAME_APP, 0)
 
 URI_DND_TARGET = Gtk.TargetEntry.new('text/uri-list', 0, 0)
 
 
-# These used to hold data needed on drag drop instead of the API provided GtkSelectionData.
+# These are used to hold data needed on drag drop instead of the API provided by GtkSelectionData.
 drag_data = None 
 drag_source = None
 
@@ -181,6 +180,8 @@ def _effects_drag_data_get(treeview, context, selection, target_id, timestamp):
 
 def _on_monitor_drop(widget, context, x, y, timestamp):
     context.finish(True, False, timestamp)
+    if drag_data == None: # A user error drag from monitor to monitor
+        return
     media_file = drag_data[0].media_file
     display_monitor_media_file(media_file)
     gui.pos_bar.widget.grab_focus()

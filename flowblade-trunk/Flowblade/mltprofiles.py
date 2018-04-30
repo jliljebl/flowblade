@@ -19,7 +19,7 @@
 """
 
 """
-MLT framework profiles. 
+MLT framework profiles.
 """
 import os
 import mlt
@@ -37,7 +37,6 @@ _profile_list = []
 _factory_profiles = []
 _hidden_factory_profiles = []
 _user_profiles = []
-
 
 def load_profile_list():
     """ 
@@ -68,7 +67,7 @@ def _load_profiles_list(dir_path):
         profile = mlt.Profile(file_path)
         profile.file_path = file_path
         load_profiles.append([profile.description(), profile])
-        
+
         # Feb-2017 - SvdB - Filter out duplicate profiles based on profile name
         for enu_count, prof in enumerate(load_profiles):
             for prof_idx, prof_name in enumerate(prof):
@@ -149,14 +148,34 @@ def get_index_for_name(lookup_profile_name):
             return i
     return -1
 
+def get_profile_node(profile):
+    node_str = '<profile description="' +  profile.description() + '" '
+    node_str += 'width="' + str(profile.width()) + '" '
+    node_str += 'height="' +  str(profile.height()) + '" '
+    if profile.progressive() == True:
+        prog_val = "1"
+    else:
+        prog_val = "0"
+    node_str += 'progressive="' + prog_val + '" '
+    node_str += 'sample_aspect_num="' + str(profile.sample_aspect_num()) + '" '
+    node_str += 'sample_aspect_den="' + str(profile.sample_aspect_den()) + '" '
+    node_str += 'display_aspect_num="' + str(profile.display_aspect_num()) + '" '
+    node_str += 'display_aspect_den="' + str(profile.display_aspect_den()) + '" '
+    node_str += 'frame_rate_num="' + str(profile.frame_rate_num()) + '" '
+    node_str += 'frame_rate_den="' + str(profile.frame_rate_den()) + '" '
+    node_str += 'colorspace="' + str(profile.colorspace()) + '"/>'
+
+    return node_str
+
 def get_closest_matching_profile_index(producer_info):
     # producer_info is dict from utils.get_file_producer_info
     width = producer_info["width"]
-    height= producer_info["height"]
+    height = producer_info["height"]
     fps_num =  producer_info["fps_num"]
     fps_den = producer_info["fps_den"]
     progressive = producer_info["progressive"]
     fps = round(float(float(fps_num)/float(fps_den)), 1)
+    fps_2 = round(float(float(fps_num)/float(fps_den)), 2) # We added as a fix later for #290, fix might have been done some other way
     
     # We calculate match score for all available profiles and return 
     # the one with the highest score
@@ -172,14 +191,16 @@ def get_closest_matching_profile_index(producer_info):
         prof_fps_den = profile.frame_rate_den()
         prof_progressive = profile.progressive()
         prof_fps = round(float(float(prof_fps_num)/float(prof_fps_den)), 1)
-
+        prof_fps_2 = round(float(float(prof_fps_num)/float(prof_fps_den)), 2) # We added this as a fix later for #290, fix might have been done some other way
+        
         if width == prof_width and height == prof_height:
             match_score = match_score + 1000
         if fps == prof_fps:
             match_score = match_score + 100
+        if fps_2 == prof_fps_2: # We added this as a fix later for #290, fix might have been done some other way
+            match_score = match_score + 5
         if prof_progressive: # prefer progressive always
             match_score = match_score + 10
-
         if match_score > current_match_score:
             current_match_score = match_score
             current_match_index = i

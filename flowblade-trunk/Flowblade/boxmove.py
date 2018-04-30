@@ -19,7 +19,7 @@
 """
 
 """
-Handles Overwrite Box tool functionality.
+Handles Box tool functionality.
 """
 
 import edit
@@ -32,23 +32,23 @@ box_selection_data = None
 edit_data = None
 
 def clear_data():
-    # these need to cleared when box move tool is activated
+    # These need to cleared when box tool is activated
     global box_selection_data, edit_data
     box_selection_data = None
     edit_data = None
      
 def mouse_press(event, frame):
     global edit_data, box_selection_data
-    if box_selection_data == None: # mouse action to select
+    if box_selection_data == None: # mouse action is to select
         press_point = (event.x, event.y)
         
         edit_data = {"action_on":True,
                      "press_point":press_point,
                      "mouse_point":press_point,
                      "box_selection_data":None}
-    else: # mouse action to move
+    else: # mouse action is to move
         if box_selection_data.is_hit(event.x, event.y) == False:
-            # Back to start state
+            # Back to start state if selection box missed
             edit_data = None
             box_selection_data = None
         else:
@@ -64,10 +64,10 @@ def mouse_move(x, y, frame):
     global edit_data
     if edit_data == None:
         return
-    if box_selection_data == None: # mouse action to select
+    if box_selection_data == None: # mouse action is to select
         edit_data["mouse_point"] = (x, y)
        
-    else: # mouse move to move
+    else: # mouse action is to move
         delta = frame - edit_data["press_frame"]
         edit_data["delta"] = delta
 
@@ -79,7 +79,7 @@ def mouse_release(x, y, frame):
     if edit_data == None:
         return
         
-    if box_selection_data == None: # mouse action to select
+    if box_selection_data == None: # mouse action is to select
         box_selection_data = BoxMoveData(edit_data["press_point"], (x, y))
         if box_selection_data.is_empty() == False:
             edit_data = {"action_on":True,
@@ -92,7 +92,7 @@ def mouse_release(x, y, frame):
                          "press_frame":-1,
                          "delta":0,
                          "box_selection_data":box_selection_data}
-    else: # mouse action to move
+    else: # mouse action is to move
         delta = frame - edit_data["press_frame"]
         edit_data["delta"] = delta
 
@@ -112,7 +112,7 @@ def mouse_release(x, y, frame):
 
 class BoxMoveData:
     """
-    This class collects and data needed for boxovewrite moves.
+    This class collects data needed for Box tool edits.
     """
     def __init__(self, p1, p2):
         self.topleft_frame = -1
@@ -213,7 +213,7 @@ class BoxMoveData:
 
 class BoxTrackSelection:
     """
-    This class collects data on track's box selected clips.
+    This class collects data on track's Box selected clips.
     """
     def __init__(self, i, start_frame, end_frame):
         self.track_id = i
@@ -238,7 +238,7 @@ class BoxTrackSelection:
                 return # box selection was on last clip, nothing is elected
         else:
             if start_frame == 0:
-                self.selected_range_in = 0 # first clip on timeline can be selected by selecting frame 0
+                self.selected_range_in = 0 # first clip on timeline can be selected by selecting frame 0, no outer selection required here
             else:
                 self.selected_range_in = start_bound_index + 1
                 if self.selected_range_in == len(current_sequence().tracks):

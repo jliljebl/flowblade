@@ -73,7 +73,7 @@ PREVIEW_FILE = "preview.png"
 NO_PREVIEW_FILE = "fallback_thumb.png"
 
 _gmic_found = False
-
+_gmic_version = 1
 _session_id = None
 
 _window = None
@@ -156,14 +156,33 @@ def main(root_path, force_launch=False):
     # Set paths.
     respaths.set_paths(root_path)
 
+    # Check G'MIC version
+    cmd = "gmic -version"
+    process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
+    output, error = process.communicate()
+    tokens = output.split()
+    clended = []
+    for token in tokens:
+        str1 = token.replace('.','')
+        str2 = str1.replace(',','')
+        if str2.isdigit(): # this is based on assumtion that str2 ends up being number like "175" or 215" etc. only for version number token
+            if str2[0] == '2':
+                global _gmic_version
+                _gmic_version = 2
+                respaths.set_gmic2(root_path)
+
+    # Write stdout to log file
+    sys.stdout = open(utils.get_hidden_user_dir_path() + "log_gmic", 'w')
+    print "G'MIC version:", str(_gmic_version)
+        
     # Init gmic tool session dirs
     if os.path.exists(get_session_folder()):
         shutil.rmtree(get_session_folder())
         
     os.mkdir(get_session_folder())
-    
+
     init_frames_dirs()
-    
+
     # Load editor prefs and list of recent projects
     editorpersistance.load()
     if editorpersistance.prefs.dark_theme == True:
@@ -645,7 +664,8 @@ class GmicWindow(Gtk.Window):
         preview_panel.pack_start(control_panel, False, False, 0)
         preview_panel.set_margin_bottom(8)
 
-        # Script area
+        # Script area 
+        # Script selector menu launcher
         self.preset_label = Gtk.Label()
         self.present_event_box = Gtk.EventBox()
         self.present_event_box.add(self.preset_label)

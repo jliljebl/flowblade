@@ -33,6 +33,7 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import Pango
 from gi.repository import PangoCairo
+from gi.repository import GLib
 
 import appconsts
 import cairoarea
@@ -50,6 +51,7 @@ import mltprofiles
 import mlttransitions
 import monitorwidget
 import respaths
+import shortcuts
 import snapping
 import toolsintegration
 import translations
@@ -107,6 +109,7 @@ filter_stack_menu_popup_menu = Gtk.Menu()
 media_linker_popup_menu = Gtk.Menu()
 log_event_popup_menu = Gtk.Menu()
 levels_menu = Gtk.Menu()
+clip_effects_hamburger_menu = Gtk.Menu()
 
 # ------------------------------------------------- item lists
 class ImageTextTextListView(Gtk.VBox):
@@ -572,7 +575,7 @@ class AutoSavesListView(TextListView):
         self.storemodel.clear()
         for autosave_object in autosaves:
             since_time_str = utils.get_time_str_for_sec_float(autosave_object.age)
-            row_data = ["Autosave created " + since_time_str + " ago."]
+            row_data = [_("Autosave created ") + since_time_str + _(" ago.")]
             self.storemodel.append(row_data)
 
         self.treeview.set_cursor("0")
@@ -767,7 +770,12 @@ class MediaPanel():
     def media_object_selected(self, media_object, widget, event):
         if event.type == Gdk.EventType._2BUTTON_PRESS:
             widget.grab_focus()
-            self.double_click_cb(media_object.media_file)
+            self.clear_selection()
+            media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
+            self.selected_objects.append(media_object)
+            self.widget.queue_draw()
+            GLib.idle_add(self.double_click_cb, media_object.media_file)
+            return
 
         # HACK! We're using event times to exclude double events when icon is pressed
         now = time.time()
@@ -786,7 +794,7 @@ class MediaPanel():
                     self.selected_objects.remove(media_object)
                     bg_color = gui.get_bg_color()
                     media_object.widget.override_background_color(Gtk.StateType.NORMAL, bg_color)
-                    return True
+                    return
                 except:
                     self.selected_objects.append(media_object)
             else:
@@ -1147,12 +1155,16 @@ def display_clip_popup_menu(event, clip, track, callback):
         _add_separetor(clip_menu)
         
     if track.type == appconsts.VIDEO:
-
+        active = True
+        if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
+            active = False
         clip_menu.add(_get_menu_item(_("Split Audio"), callback,\
-                      (clip, track, "split_audio", event.x), True))
+                      (clip, track, "split_audio", event.x), active))
         if track.id == current_sequence().first_video_index:
             active = True
         else:
+            active = False
+        if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
             active = False
         clip_menu.add(_get_menu_item(_("Split Audio Synched"), callback,\
               (clip, track, "split_audio_synched", event.x), active))
@@ -1167,6 +1179,14 @@ def display_clip_popup_menu(event, clip, track, callback):
            clip_menu.add(_get_menu_item(_("Clear Waveform"), callback,\
               (clip, track, "clear_waveform", event.x), True))
 
+    audio_sync_item = _get_menu_item(_("Select Clip to Audio Sync With..."), callback, (clip, track, "set_audio_sync_clip", event.x))
+    if utils.is_mlt_xml_file(clip.path) == True:
+        audio_sync_item.set_sensitive(False)
+    if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
+        audio_sync_item.set_sensitive(False)
+ 
+    clip_menu.add(audio_sync_item)
+            
     _add_separetor(clip_menu)
 
     if track.id != current_sequence().first_video_index:
@@ -1191,17 +1211,15 @@ def display_clip_popup_menu(event, clip, track, callback):
         active = True
     clip_menu.add(_get_compositors_add_menu_item(event, clip, track, callback, active))
     clip_menu.add(_get_auto_fade_compositors_add_menu_item(event, clip, track, callback, active))
-    clip_menu.add(_get_blenders_add_menu_item(event, clip, track, callback, active))
+    #clip_menu.add(_get_blenders_add_menu_item(event, clip, track, callback, active))
 
     _add_separetor(clip_menu)
     clip_menu.add(_get_clone_filters_menu_item(event, clip, track, callback))
     clip_menu.add(_get_menu_item(_("Clear Filters"), callback, (clip, track, "clear_filters", event.x)))
 
     _add_separetor(clip_menu)
-
-    clip_menu.add(_get_menu_item(_("Rename Clip"), callback,\
-                      (clip, track, "rename_clip", event.x)))
-    clip_menu.add(_get_color_menu_item(clip, track, callback))
+    clip_menu.add(_get_clip_properties_menu_item(event, clip, track, callback))
+    clip_menu.add(_get_clip_markers_menu_item(event, clip, track, callback))
     clip_menu.add(_get_menu_item(_("Clip Info"), callback,\
                   (clip, track, "clip_info", event.x)))
 
@@ -1218,11 +1236,12 @@ def display_clip_popup_menu(event, clip, track, callback):
 
     clip_menu.popup(None, None, None, None, event.button, event.time)
 
-
 def display_transition_clip_popup_menu(event, clip, track, callback):
     clip_menu = transition_clip_menu
     guiutils.remove_children(clip_menu)
 
+    clip_menu.add(_get_menu_item(_("Rerender"), callback, (clip, track, "re_render", event.x)))
+    
     clip_menu.add(_get_menu_item(_("Open in Filters Editor"), callback, (clip, track, "open_in_editor", event.x)))
 
     _add_separetor(clip_menu)
@@ -1319,6 +1338,16 @@ def display_compositor_popup_menu(event, compositor, callback):
     compositor_menu.add(_get_menu_item(_("Open In Compositor Editor"), callback, ("open in editor",compositor)))
     _add_separetor(compositor_menu)
     compositor_menu.add(_get_menu_item(_("Sync with Origin Clip"), callback, ("sync with origin",compositor)))
+
+    autofollow_item = Gtk.CheckMenuItem()
+    autofollow_item.set_label(_("Obey Auto Follow"))
+    autofollow_item.set_active(compositor.obey_autofollow)
+    autofollow_item.connect("activate", callback, ("set auto follow", compositor))
+    autofollow_item.set_sensitive(editorstate.auto_follow_active())
+    autofollow_item.show()
+
+    compositor_menu.append(autofollow_item)
+    
     _add_separetor(compositor_menu)
     compositor_menu.add(_get_menu_item(_("Delete"), callback, ("delete",compositor)))
     compositor_menu.popup(None, None, None, None, event.button, event.time)
@@ -1374,8 +1403,8 @@ def _get_compositors_add_menu_item(event, clip, track, callback, sensitive):
     for i in range(0, len(mlttransitions.compositors)):
         compositor = mlttransitions.compositors[i]
         name, compositor_type = compositor
-        if compositor_type == "##affine":
-            continue
+        #if compositor_type == "##affine":
+        #    continue
         # Continue if compositor_type not present in system
         try:
             info = mlttransitions.mlt_compositor_transition_infos[compositor_type]
@@ -1385,12 +1414,20 @@ def _get_compositors_add_menu_item(event, clip, track, callback, sensitive):
         sub_menu.append(compositor_item)
         compositor_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type)))
         compositor_item.show()
+ 
+    _add_separetor(sub_menu)
+     
+    alpha_combiners_menu_item = _get_alpha_combiners_add_menu_item(event, clip, track, callback, sensitive)
+    sub_menu.append(alpha_combiners_menu_item)
+    blenders_menu_item  = _get_blenders_add_menu_item(event, clip, track, callback, sensitive)
+    sub_menu.append(blenders_menu_item)
+    
     menu_item.set_sensitive(sensitive)
     menu_item.show()
     return menu_item
 
 def _get_blenders_add_menu_item(event, clip, track, callback, sensitive):
-    menu_item = Gtk.MenuItem(_("Add Blend"))
+    menu_item = Gtk.MenuItem(_("Blenders"))
     sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
 
@@ -1405,6 +1442,22 @@ def _get_blenders_add_menu_item(event, clip, track, callback, sensitive):
     menu_item.show()
     return menu_item
 
+def _get_alpha_combiners_add_menu_item(event, clip, track, callback, sensitive):
+    menu_item = Gtk.MenuItem(_("Alpha Combiners"))
+    sub_menu = Gtk.Menu()
+    menu_item.set_submenu(sub_menu)
+
+    for i in range(0, len(mlttransitions.alpha_combiners)):
+        alpha_combiner = mlttransitions.alpha_combiners[i]
+        name, compositor_type = alpha_combiner
+        alpha_combiner_item = Gtk.MenuItem(name)
+        sub_menu.append(alpha_combiner_item)
+        alpha_combiner_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type)))
+        alpha_combiner_item.show()
+    menu_item.set_sensitive(sensitive)
+    menu_item.show()
+    return menu_item
+    
 def _get_auto_fade_compositors_add_menu_item(event, clip, track, callback, sensitive):
     menu_item = Gtk.MenuItem(_("Add Fade"))
     sub_menu = Gtk.Menu()
@@ -1511,7 +1564,7 @@ def _get_edit_menu_item(event, clip, track, callback):
     sub_menu.append(lift_item)
     
     _add_separetor(sub_menu)
-
+    
     length_item = _get_menu_item(_("Set Clip Length..."), callback, (clip, track, "length", event.x))
     sub_menu.append(length_item)
 
@@ -1604,6 +1657,16 @@ def _get_track_mute_menu_item(event, track, callback):
     menu_item.show()
     return menu_item
 
+def _get_clip_properties_menu_item(event, clip, track, callback):
+    properties_menu_item = Gtk.MenuItem(_("Properties"))
+    properties_menu =  Gtk.Menu()
+    properties_menu.add(_get_menu_item(_("Rename Clip"), callback,\
+                      (clip, track, "rename_clip", event.x)))
+    properties_menu.add(_get_color_menu_item(clip, track, callback))
+    properties_menu_item.set_submenu(properties_menu)
+    properties_menu_item.show_all()
+    return properties_menu_item
+
 def _get_color_menu_item(clip, track, callback):
     color_menu_item = Gtk.MenuItem(_("Clip Color"))
     color_menu =  Gtk.Menu()
@@ -1617,6 +1680,33 @@ def _get_color_menu_item(clip, track, callback):
     color_menu_item.set_submenu(color_menu)
     color_menu_item.show_all()
     return color_menu_item
+
+def _get_clip_markers_menu_item(event, clip, track, callback):
+    markers_menu_item = Gtk.MenuItem(_("Markers"))
+    markers_menu =  Gtk.Menu()
+    markers_exist = len(clip.markers) != 0
+    #menu = markers_menu
+    #guiutils.remove_children(menu)
+    if markers_exist:
+        for i in range(0, len(clip.markers)):
+            marker = clip.markers[i]
+            name, frame = marker
+            item_str = utils.get_tc_string(frame) + " " + name
+            markers_menu.add(_get_menu_item(item_str, callback, (clip, track, "go_to_clip_marker", str(i))))
+        _add_separetor(markers_menu)
+    else:
+        no_markers_item = _get_menu_item(_("No Clip Markers"), callback, "dummy", False)
+        markers_menu.add(no_markers_item)
+        _add_separetor(markers_menu)
+        
+    markers_menu.add(_get_menu_item(_("Add Clip Marker At Playhead Position"), callback, (clip, track, "add_clip_marker", None)))
+    del_item = _get_menu_item(_("Delete Clip Marker At Playhead Position"), callback, (clip, track, "delete_clip_marker", None), markers_exist==True)
+    markers_menu.add(del_item)
+    del_all_item = _get_menu_item(_("Delete All Clip Markers"), callback, (clip, track, "deleteall_clip_markers", None), markers_exist==True)
+    markers_menu.add(del_all_item)
+    markers_menu_item.set_submenu(markers_menu)
+    markers_menu_item.show_all()
+    return markers_menu_item
 
 def _set_non_sensitive_if_state_matches(mutable, item, state):
     if mutable.mute_state == state:
@@ -1822,7 +1912,7 @@ class BigTCDisplay:
                                                     22,
                                                     self._draw)
         self.font_desc = Pango.FontDescription("Bitstream Vera Sans Mono Condensed 15")
-
+        
         # Draw consts
         x = 2
         y = 2
@@ -1883,7 +1973,7 @@ class BigTCDisplay:
 
         PangoCairo.update_layout(cr, layout)
         PangoCairo.show_layout(cr, layout)
-
+                
     def _round_rect_path(self, cr):
         x, y, width, height, aspect, corner_radius, radius, degrees = self._draw_consts
 
@@ -1903,6 +1993,7 @@ class BigTCDisplay:
     def _seek_frame(self, frame):
         PLAYER().seek_frame(frame)
 
+
 class BigTCEntry:
     """
     Test class for replacement of BigTCDisplay, when Editing time position
@@ -1912,6 +2003,7 @@ class BigTCEntry:
         self.widget = Gtk.Entry()
         frame_str = self.get_current_frame_text()
         self.widget.set_text(frame_str)
+        self.visible = False
         self.widget.connect("activate", self._enter_pressed)
         self.widget.connect("focus-out-event", self._focus_lost)
         
@@ -2065,12 +2157,12 @@ class TracksNumbersSelect:
         self.widget = Gtk.HBox()
         
         self.video_label = Gtk.Label(_("Video:"))
-        self.video_tracks = Gtk.SpinButton.new_with_range(1, 8, 1)
+        self.video_tracks = Gtk.SpinButton.new_with_range(1, self.MAX_TRACKS, 1)
         self.video_tracks.set_value(v_tracks)
         self.video_tracks.connect("value-changed", self.video_tracks_changed)
         
         self.audio_label = Gtk.Label(_("Audio:"))
-        self.audio_tracks = Gtk.SpinButton.new_with_range(1, 8, 1)
+        self.audio_tracks = Gtk.SpinButton.new_with_range(0, self.MAX_TRACKS-1, 1)
         self.audio_tracks.set_value(a_tracks)
         self.audio_tracks.connect("value-changed", self.audio_tracks_changed)
         
@@ -2100,7 +2192,7 @@ class TracksNumbersSelect:
         self.set_total_tracks_info()
         
     def set_total_tracks_info(self):
-        self.tracks_amount_info.set_text(str(int(self.video_tracks.get_value() + self.audio_tracks.get_value())) + " / 9")
+        self.tracks_amount_info.set_text(str(int(self.video_tracks.get_value() + self.audio_tracks.get_value())) + " / " + str(self.MAX_TRACKS))
         self.tracks_amount_info.queue_draw ()
 
     def get_tracks(self):
@@ -2115,14 +2207,16 @@ class ClipLengthChanger:
         self.widget = Gtk.HBox()
         
         frames = clip.clip_length()
-        max_len = clip.get_length()
-        print frames, max_len
+        self.max_len = clip.get_length()
+
         self.frames_label = Gtk.Label(_("Frames:"))
-        self.frames_spin = Gtk.SpinButton.new_with_range(1, max_len, 1)
+        self.frames_spin = Gtk.SpinButton.new_with_range(1, self.max_len, 1)
         self.frames_spin.set_value(frames)
-        self.frames_spin.connect("value-changed", self.length_changed)
+        self.frames_spin.connect("value-changed", self._length_changed)
         
-        self.tc_length = Gtk.Label(utils.get_tc_string(frames))
+        self.tc_length = Gtk.Entry()
+        self.tc_length.set_text(utils.get_tc_string(frames))
+        self.tc_length.connect("activate", self._enter_pressed)
 
         self.widget.pack_start(self.frames_label, False, False, 0)
         self.widget.pack_start(self.frames_spin, False, False, 0)
@@ -2130,12 +2224,26 @@ class ClipLengthChanger:
         self.widget.pack_start(self.tc_length, False, False, 0)
         self.widget.pack_start(Gtk.Label(), True, True, 0)
 
-    def length_changed(self, adjustment):
+    def _length_changed(self, adjustment):
         self.tc_length.set_text(utils.get_tc_string(self.frames_spin.get_value()))
 
+    def _enter_pressed(self, event):
+        frame_str = self.tc_length.get_text()
+        frame = utils.get_tc_frame(frame_str)
+        
+        if frame > self.max_len:
+            frame = self.max_len
+            self.tc_length.set_text(utils.get_tc_string(frame))
+        if frame < 0:
+            frame = 0
+            self.tc_length.set_text(utils.get_tc_string(frame))
+        
+        self.frames_spin.set_value(frame)
+        
     def get_length(self):
         return int(self.frames_spin.get_value())
-        
+    
+
 def get_gpl3_scroll_widget(size):
     license_file = open(respaths.GPL_3_DOC)
     license_text = license_file.read()
@@ -2226,16 +2334,35 @@ def get_all_tracks_popup_menu(event, callback):
     menu.popup(None, None, None, None, event.button, event.time)
 
 def get_audio_levels_popup_menu(event, callback):
+    # needs renaming
     menu = levels_menu
     guiutils.remove_children(menu)
 
+    autofollow_item = Gtk.CheckMenuItem()
+    autofollow_item.set_label(_("Compositors Auto Follow"))
+    autofollow_item.set_active(editorstate.auto_follow_active())
+    autofollow_item.connect("activate", callback, "autofollow")
+
+    menu.append(autofollow_item)
+
+    _add_separetor(menu)
+
+    ponter_sensitive_item = Gtk.CheckMenuItem()
+    ponter_sensitive_item.set_label(_("Tool Cursor Context Sensitive"))
+    ponter_sensitive_item.set_active(editorstate.cursor_is_tline_sensitive)
+    ponter_sensitive_item.connect("activate", callback, "pointer_sensitive_item")
+
+    menu.append(ponter_sensitive_item) 
+    
+    _add_separetor(menu)
+    
     thumbs_item = Gtk.CheckMenuItem()
     thumbs_item.set_label(_("Display Clip Media Thumbnails"))
     thumbs_item.set_active(editorstate.display_clip_media_thumbnails)
     thumbs_item.connect("activate", callback, "thumbs")
 
     menu.append(thumbs_item)
-
+    
     _add_separetor(menu)
 
     snapping_item = Gtk.CheckMenuItem()
@@ -2244,14 +2371,7 @@ def get_audio_levels_popup_menu(event, callback):
     snapping_item.connect("activate", callback, "snapping")
 
     menu.append(snapping_item)
-
-    show_magnet_item = Gtk.CheckMenuItem()
-    show_magnet_item.set_label(_("Show Magnet Icon"))
-    show_magnet_item.set_active(snapping.show_magnet_icon)
-    show_magnet_item.connect("activate", callback, "magnet")
-
-    menu.append(show_magnet_item)
-
+    
     _add_separetor(menu)
 
     allways_item = Gtk.RadioMenuItem()
@@ -2274,6 +2394,38 @@ def get_audio_levels_popup_menu(event, callback):
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
 
+def get_clip_effects_editor_hamburger_menu(event, callback):
+    # needs renaming
+    menu = clip_effects_hamburger_menu
+    guiutils.remove_children(menu)
+
+    menu.add(_get_menu_item(_("Save Effect Values"), callback, "save"))
+    menu.add(_get_menu_item(_("Load Effect Values"), callback, "load"))
+    menu.add(_get_menu_item(_("Reset Effect Values"), callback, "reset"))
+    
+    _add_separetor(menu)
+    
+    menu.add(_get_menu_item(_("Delete Effect"), callback, "delete"))
+
+    menu.show_all()
+    menu.popup(None, None, None, None, event.button, event.time)
+
+def get_compositor_editor_hamburger_menu(event, callback):
+    # needs renaming
+    menu = clip_effects_hamburger_menu
+    guiutils.remove_children(menu)
+
+    menu.add(_get_menu_item(_("Save Compositor Values"), callback, "save"))
+    menu.add(_get_menu_item(_("Load Compositor Values"), callback, "load"))
+    menu.add(_get_menu_item(_("Reset Compositor Values"), callback, "reset"))
+    
+    _add_separetor(menu)
+    
+    menu.add(_get_menu_item(_("Delete Compositor"), callback, "delete"))
+
+    menu.show_all()
+    menu.popup(None, None, None, None, event.button, event.time)
+    
 def get_monitor_view_popupmenu(launcher, event, callback):
     menu = monitor_menu
     guiutils.remove_children(menu)
@@ -2499,6 +2651,25 @@ def get_columns_count_popup_menu(event, callback):
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
 
+def get_shorcuts_selector():
+    shortcuts_combo = Gtk.ComboBoxText()
+    current_pref_index = -1
+    
+    for i in range(0, len(shortcuts.shortcut_files)):
+        shortcut_file = shortcuts.shortcut_files[i]
+        shortcuts_combo.append_text(shortcuts.shortcut_files_display_names[i])
+        if editorpersistance.prefs.shortcuts == shortcut_file:
+            current_pref_index = i
+    
+    # Set current selection active
+    if current_pref_index != -1:
+        shortcuts_combo.set_active(current_pref_index)
+    else:
+        # Something is wrong, the pref shortcut file is not preset in the system.
+        print "Shortcut file in editprpersistance.pref.shortcuts not found!"
+        shortcuts_combo.set_active(0)
+
+    return shortcuts_combo
 
 class PressLaunch:
     def __init__(self, callback, surface, w=22, h=22):

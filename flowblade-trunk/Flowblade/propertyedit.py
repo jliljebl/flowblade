@@ -121,7 +121,15 @@ def _create_editable_property(p_type, args_str, params):
         conversion so we need a extending class for expression type.
         """
         args = propertyparse.args_string_to_args_dict(args_str)
-        exp_type = args[EXPRESSION_TYPE] # 'exptype' arg missing?. if this fails, it's a bug in filters.xml
+        
+        try:
+            exp_type = args[EXPRESSION_TYPE] 
+        except:
+            # This fails PROP_INT and PROP_FLOAT properties that are edited as keyframe properties and 
+            # they will be treated as exptype = SINGLE_KEYFRAME properties.
+            # This will now hide 'exptype' args in filters.xml, so they must be there set correctly.
+            exp_type = SINGLE_KEYFRAME
+        
         creator_func = EDITABLE_PROPERTY_CREATORS[exp_type]
         ep = creator_func(params)
     else:
@@ -336,10 +344,12 @@ class EditableProperty(AbstractProperty):
         
         self.name, self.value, self.type = prop
         self.clip = clip
-        self.filter_index = filter_index #index of param in clip.filters, clip created in sequence.py
+        self.filter_index = filter_index #index of param in clip.filters, clip created in sequence.py 
         self.property_index = property_index # index of property in FilterObject.properties. This is the persistant object
         self.is_compositor_filter = False # This is after changed after creation if needed
 
+        self.used_create_params = create_params # for get_as_KeyFrameHCSFilterProperty functionality
+        
     def _get_filter_object(self):
         """
         Filter being edited is in different places for normal filters 
@@ -349,8 +359,22 @@ class EditableProperty(AbstractProperty):
             return self.clip.compositor.filter
         else:
             return self.clip.filters[self.filter_index]
-            
-    def write_value(self, str_value): # overrides ConvertingProperty.write_value(str_value)
+
+    def get_as_KeyFrameHCSFilterProperty(self):
+        # this is entirely for feature allowing user to change between slider and kf editing
+        clone_ep = KeyFrameHCSFilterProperty(self.used_create_params)
+
+        clone_ep.prop_orig_type = self.type # we need this if user wants to get back slider editing
+        
+        clone_ep.value = self.value
+        clone_ep.type = appconsts.PROP_EXPRESSION
+        clone_ep.is_compositor_filter = self.is_compositor_filter
+        clone_ep.track = self.track
+        clone_ep.clip_index = self.clip_index
+
+        return clone_ep
+        
+    def write_value(self, str_value):
         self.write_mlt_property_str_value(str_value)
         self.value = str_value
         self.write_filter_object_property(str_value)
@@ -698,7 +722,6 @@ class ColorProperty(EditableProperty):
                         utils.int_to_hex_str(int(raw_g * 255.0)) + \
                         utils.int_to_hex_str(int(raw_b * 255.0))
         self.write_value(val_str)
-
 
 class WipeResourceProperty(TransitionEditableProperty):
     """

@@ -447,7 +447,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     # made to do things that are needed in trim.
     if _trimmed_clip_is_blank():
         set_exit_mode_func()
-        primary_txt = _("Cant ONE ROLL TRIM blank clips.")
+        primary_txt = _("Can't ONE ROLL TRIM blank clips.")
         secondary_txt = _("You can use MOVE OVERWRITE or TWO ROLL TRIM edits instead\nto get the desired change.")
         dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return False
@@ -482,9 +482,9 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
    
     # Set interactive trimview on hidden track
     if clip.media_type != appconsts.PATTERN_PRODUCER:
-        current_sequence().display_trim_clip(clip.path, clip_start) # file producer
+        current_sequence().display_trim_clip(clip.path, clip_start, None, clip.ttl) # file producer
     else:
-        current_sequence().display_trim_clip(None, clip_start, clip.create_data) # pattern producer
+        current_sequence().display_trim_clip(None, clip_start, clip.create_data, None) # pattern producer
 
     PLAYER().seek_frame(edit_frame)
     return True
@@ -576,7 +576,8 @@ def oneroll_trim_release(x, y, frame, state):
         return
     
     gui.monitor_widget.one_roll_mouse_release(edit_data["edit_frame"], frame - edit_data["edit_frame"])
-    
+    tlinewidgets.pointer_context = appconsts.POINTER_CONTEXT_NONE
+
     _do_one_roll_trim_edit(frame)
 
 def _do_one_roll_trim_edit(frame):
@@ -965,7 +966,7 @@ def set_tworoll_mode(track, current_frame = -1):
         clip_start = trim_limits["from_start"]
 
     # Init two roll trim view layout
-    if track.type == appconsts.VIDEO and clip.media_type != appconsts.PATTERN_PRODUCER:
+    if track.type == appconsts.VIDEO and clip.media_type != appconsts.PATTERN_PRODUCER and editorstate.show_trim_view == appconsts.TRIM_VIEW_ON:
         if edit_data["to_side_being_edited"]:
             gui.monitor_widget.set_roll_trim_right_active_view(edit_data["from_clip"], clip_start)
         else:
@@ -977,9 +978,9 @@ def set_tworoll_mode(track, current_frame = -1):
 
     # Set interactive trim view clip on hidden track
     if clip.media_type != appconsts.PATTERN_PRODUCER:
-        current_sequence().display_trim_clip(clip.path, clip_start) # File producer
+        current_sequence().display_trim_clip(clip.path, clip_start, None, clip.ttl) # File producer
     else:
-        current_sequence().display_trim_clip(None, clip_start, clip.create_data) # pattern producer
+        current_sequence().display_trim_clip(None, clip_start, clip.create_data, None) # pattern producer
         
     PLAYER().seek_frame(edit_frame)
     updater.repaint_tline()
@@ -1192,14 +1193,14 @@ def _get_two_roll_first_and_last():
     return (first, last)
 
 #---------------------------------------- SLIP ROLL TRIM EVENTS
-def set_slide_mode(track, current_frame): # we need to change to to correct one some time
+def set_slide_mode(track, current_frame):
     """
     Sets SLIP tool mode
     """
     if track == None:
         return None
 
-    if current_frame > track.get_length():
+    if current_frame > track.get_length() - 1:
         return False
 
     current_sequence().clear_hidden_track()
@@ -1234,7 +1235,7 @@ def set_slide_mode(track, current_frame): # we need to change to to correct one 
     clip_start = 0 # we'll calculate the offset from actual position of clip on timeline to display the frame displayed after sliding
 
     # Init two roll trim view layout
-    if track.type == appconsts.VIDEO and clip.media_type != appconsts.PATTERN_PRODUCER:
+    if track.type == appconsts.VIDEO and clip.media_type != appconsts.PATTERN_PRODUCER and editorstate.show_trim_view == appconsts.TRIM_VIEW_ON:
         if not start_frame_being_viewed:
             gui.monitor_widget.set_slip_trim_right_active_view(edit_data["clip"])
             gui.monitor_widget.set_edit_tline_frame(clip.clip_out, 0)
@@ -1246,9 +1247,9 @@ def set_slide_mode(track, current_frame): # we need to change to to correct one 
 
     # Set interactive trim view clip on hidden track
     if clip.media_type != appconsts.PATTERN_PRODUCER:
-        current_sequence().display_trim_clip(clip.path, clip_start) # File producer
+        current_sequence().display_trim_clip(clip.path, clip_start, None, clip.ttl) # File producer
     else:
-        current_sequence().display_trim_clip(None, clip_start, clip.create_data) # pattern producer
+        current_sequence().display_trim_clip(None, clip_start, clip.create_data, None) # pattern producer
         
     if start_frame_being_viewed:
         PLAYER().seek_frame(clip.clip_in)
@@ -1264,6 +1265,9 @@ def _set_slide_mode_edit_data(track, edit_frame):
     Sets edit mode data used by both trim modes
     """
     index = current_sequence().get_clip_index(track, edit_frame)
+    if index == -1:
+        index = len(track.clips) - 1
+
     clip = track.clips[index]
 
     trim_limits = {}

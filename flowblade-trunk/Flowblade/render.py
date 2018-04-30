@@ -312,9 +312,10 @@ def _render_type_changed():
         _preset_selection_changed()
         widgets.args_panel.opts_save_button.set_sensitive(False)
         widgets.args_panel.opts_load_button.set_sensitive(False)
-        widgets.args_panel.load_selection_button.set_sensitive(False)
-        widgets.args_panel.opts_view.set_sensitive(False)
-        widgets.args_panel.opts_view.get_buffer().set_text("")
+        if editorstate.screen_size_small_height() == False:
+            widgets.args_panel.load_selection_button.set_sensitive(False)
+            widgets.args_panel.opts_view.set_sensitive(False)
+            widgets.args_panel.opts_view.get_buffer().set_text("")
 
 def _out_profile_changed():
     selected_index = widgets.profile_panel.out_profile_combo.widget.get_active()
@@ -410,8 +411,13 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
         if media_file.is_proxy_file == True:
             source_path = media_file.second_file_path
 
-        fr_path = "framebuffer:" + source_path + "?" + str(speed)
-        motion_producer = mlt.Producer(profile, None, str(fr_path))
+        motion_producer = mlt.Producer(profile, None, str("timewarp:" + str(speed) + ":" + str(source_path)))
+        if motion_producer.is_valid() == False:
+            print "Using framebuffer producer, no sound."
+            fr_path = "framebuffer:" + source_path + "?" + str(speed)
+            motion_producer = mlt.Producer(profile, None, str(fr_path))
+        else:
+            print "Using timewarp producer, sound available."
         mltrefhold.hold_ref(motion_producer)
         
         # Create sequence and add motion producer into it
@@ -420,7 +426,7 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
         track = seq.tracks[seq.first_video_index]
         track.append(motion_producer, 0, motion_producer.get_length() - 1)
 
-        print "motion clip render starting..."
+        print "Motion clip render starting..."
 
         consumer = renderconsumer.get_render_consumer_for_encoding_and_quality(write_file, profile, encoding_option_index, quality_option_index)
         
@@ -444,7 +450,7 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
         motion_renderer.start()
 
         title = _("Rendering Motion Clip")
-        text = "<b>Motion Clip File: </b>" + write_file
+        text = _("<b>Motion Clip File: </b>") + write_file
         progress_bar = Gtk.ProgressBar()
         dialog = rendergui.clip_render_progress_dialog(_FB_render_stop, title, text, progress_bar, gui.editor_window.window)
 
@@ -541,7 +547,7 @@ def _render_reverse_clip_dialog_callback(dialog, response_id, fb_widgets, media_
         motion_renderer.start()
 
         title = _("Rendering Reverse Clip")
-        text = "<b>Motion Clip File: </b>" + write_file
+        text = _("<b>Motion Clip File: </b>") + write_file
         progress_bar = Gtk.ProgressBar()
         dialog = rendergui.clip_render_progress_dialog(_FB_render_stop, title, text, progress_bar, gui.editor_window.window)
 
@@ -585,7 +591,7 @@ def render_single_track_transition_clip(transition_producer, encoding_option_ind
     end_frame = transition_producer.get_length() - 1
         
     # Launch render
-    # TODO: fix naming this isn't motion renderer
+    # TODO: fix naming, this isn't motion renderer
     global motion_renderer, motion_progress_update
     motion_renderer = renderconsumer.FileRenderPlayer(write_file, transition_producer, consumer, start_frame, end_frame)
     motion_renderer.start()

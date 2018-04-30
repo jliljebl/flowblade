@@ -115,6 +115,7 @@ def get_two_column_box_right_pad(widget1, widget2, left_width, right_pad):
 def get_checkbox_row_box(checkbox, widget2):
     hbox = Gtk.HBox()
     hbox.pack_start(checkbox, False, False, 0)
+    hbox.pack_start(get_pad_label(4, 1), False, False, 0)
     hbox.pack_start(widget2, False, False, 0)
     hbox.pack_start(Gtk.Label(), True, True, 0)
     return hbox

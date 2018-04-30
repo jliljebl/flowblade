@@ -34,6 +34,8 @@ NO_WARNING = 0
 RECREATE_WARNING = 1
 PROJECT_DATA_WARNING = 2
 
+_panels = None
+
 
 class DiskFolderManagementPanel:
     
@@ -146,10 +148,11 @@ def show_disk_management_dialog():
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                     (_("Close").encode('utf-8'), Gtk.ResponseType.CLOSE))
 
-    panels = _get_disk_dir_panels()
+    global _panels
+    _panels = _get_disk_dir_panels()
 
     pane = Gtk.VBox(True, 2)
-    for panel in panels:
+    for panel in _panels:
         pane.pack_start(panel.vbox, True, True, 0)
 
     guiutils.set_margins(pane, 12, 24, 12, 12)

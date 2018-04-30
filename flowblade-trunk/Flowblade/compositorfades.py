@@ -101,9 +101,6 @@ def set_auto_fade_in_keyframes(compositor):
 def set_auto_fade_out_keyframes(compositor):
     clip = _get_compositor_clip(compositor)
     keyframe_property, property_klass, keyframes = _get_kfproperty_klass_and_keyframes(compositor, clip)
-
-    # Pop first keyframe to get frame
-    #frame, geom, opacity = keyframes.pop(0)
     
     # Remove all key frames, there exists 2 or 1, 0 when created 1 always after that
     while len(keyframes) > 0: 
@@ -115,7 +112,7 @@ def set_auto_fade_out_keyframes(compositor):
 
     keyframe_property.write_out_keyframes(keyframes)
     
-# ---------------------------------------------------------------------- module finctions
+# ---------------------------------------------------------------------- module functions
 def _get_kfproperty_klass_and_keyframes(compositor, clip):
     # Create editable properties from compositor properties.
     t_editable_properties = propertyedit.get_transition_editable_properties(compositor)
@@ -147,7 +144,7 @@ def _get_kfproperty_klass_and_keyframes(compositor, clip):
                 break
 
         if keyframe_property == None:
-            print "didn't find keyframe_property in _get_kfproperty_klass_and_keyframes"
+            #print "didn't find keyframe_property in _get_kfproperty_klass_and_keyframes"
             return (None, None, None)
 
         return (keyframe_property, property_klass, keyframes)

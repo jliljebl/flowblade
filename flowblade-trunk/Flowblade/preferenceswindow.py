@@ -26,6 +26,7 @@ import dialogutils
 import editorpersistance
 import gui
 import guiutils
+import guicomponents
 import mltprofiles
 # Jan-2017 - SvdB - To get the number of CPU cores
 import multiprocessing
@@ -49,23 +50,25 @@ def preferences_dialog():
 
     gen_opts_panel, gen_opts_widgets = _general_options_panel(_thumbs_select_clicked, _renders_select_clicked)
     edit_prefs_panel, edit_prefs_widgets = _edit_prefs_panel()
+    playback_prefs_panel, playback_prefs_widgets  = _playback_prefs_panel()
     view_pres_panel, view_pref_widgets = _view_prefs_panel()
     # Jan-2017 - SvdB
     performance_panel, performance_widgets = _performance_panel()
     # Apr-2017 - SvdB
-    shortcuts_panel, shortcuts_widgets = _shortcuts_panel()
+    #shortcuts_panel, shortcuts_widgets = _shortcuts_panel()
 
     notebook = Gtk.Notebook()
     notebook.set_size_request(PREFERENCES_WIDTH, PREFERENCES_HEIGHT)
     notebook.append_page(gen_opts_panel, Gtk.Label(label=_("General")))
     notebook.append_page(edit_prefs_panel, Gtk.Label(label=_("Editing")))
+    notebook.append_page(playback_prefs_panel, Gtk.Label(label=_("Playback")))
     notebook.append_page(view_pres_panel, Gtk.Label(label=_("View")))
     notebook.append_page(performance_panel, Gtk.Label(label=_("Performance")))
-    notebook.append_page(shortcuts_panel, Gtk.Label(label=_("Shortcuts")))
+    #notebook.append_page(shortcuts_panel, Gtk.Label(label=_("Shortcuts")))
     guiutils.set_margins(notebook, 4, 24, 6, 0)
 
-    dialog.connect('response', _preferences_dialog_callback, (gen_opts_widgets, edit_prefs_widgets, view_pref_widgets, \
-        performance_widgets, shortcuts_widgets))
+    dialog.connect('response', _preferences_dialog_callback, (gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, view_pref_widgets, \
+        performance_widgets))
     dialog.vbox.pack_start(notebook, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     dialogutils.default_behaviour(dialog)
@@ -161,25 +164,10 @@ def _edit_prefs_panel():
     prefs = editorpersistance.prefs
 
     # Widgets
-    auto_play_in_clip_monitor = Gtk.CheckButton()
-    auto_play_in_clip_monitor.set_active(prefs.auto_play_in_clip_monitor)
-
-    auto_center_on_stop = Gtk.CheckButton()
-    auto_center_on_stop.set_active(prefs.auto_center_on_play_stop)
-
     spin_adj = Gtk.Adjustment(prefs.default_grfx_length, 1, 15000, 1)
     gfx_length_spin = Gtk.SpinButton()
     gfx_length_spin.set_adjustment(spin_adj)
     gfx_length_spin.set_numeric(True)
-
-    trim_exit_on_empty = Gtk.CheckButton()
-    trim_exit_on_empty.set_active(prefs.empty_click_exits_trims)
-
-    quick_enter_trim = Gtk.CheckButton()
-    quick_enter_trim.set_active(prefs.quick_enter_trims)
-
-    remember_clip_frame = Gtk.CheckButton()
-    remember_clip_frame.set_active(prefs.remember_monitor_clip_frame)
 
     overwrite_clip_drop = Gtk.ComboBoxText()
     active = 0
@@ -192,12 +180,6 @@ def _edit_prefs_panel():
     cover_delete = Gtk.CheckButton()
     cover_delete.set_active(prefs.trans_cover_delete)
     
-    # Jul-2016 - SvdB - For play_pause button
-    play_pause_button = Gtk.CheckButton()
-    # The following test is to make sure play_pause can be used for the initial value. If not found, then leave uninitialized
-    if hasattr(prefs, 'play_pause'):
-        play_pause_button.set_active(prefs.play_pause)    
-    
     active = 0
     if prefs.mouse_scroll_action_is_zoom == False:
         active = 1
@@ -209,7 +191,44 @@ def _edit_prefs_panel():
     hide_file_ext_button = Gtk.CheckButton()
     if hasattr(prefs, 'hide_file_ext'):
         hide_file_ext_button.set_active(prefs.hide_file_ext)
+    
+    # Layout
+    row4 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Graphics default length:")), gfx_length_spin, PREFERENCES_LEFT))
+    row8 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Media drag'n'drop action on non-V1 tracks:")), overwrite_clip_drop, PREFERENCES_LEFT))
+    row9 = _row(guiutils.get_checkbox_row_box(cover_delete, Gtk.Label(label=_("Cover Transition/Fade clips on delete if possible"))))
+    # Jul-2016 - SvdB - For play_pause button
+    row11 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Mouse Middle Button Scroll Action:")), mouse_scroll_action, PREFERENCES_LEFT))
+    row12 = _row(guiutils.get_checkbox_row_box(hide_file_ext_button, Gtk.Label(label=_("Hide file extensions when importing Clips"))))
+    # Apr-2017 - SvdB - For Fast Forward / Reverse options
+    
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(row4, False, False, 0)
+    vbox.pack_start(row9, False, False, 0)
+    vbox.pack_start(row8, False, False, 0)
+    vbox.pack_start(row11, False, False, 0)
+    vbox.pack_start(row12, False, False, 0)
+    vbox.pack_start(Gtk.Label(), True, True, 0)
 
+    guiutils.set_margins(vbox, 12, 0, 12, 12)
+
+    # Jul-2016 - SvdB - Added play_pause_button
+    # Apr-2017 - SvdB - Added ffwd / rev values
+    return vbox, (gfx_length_spin, overwrite_clip_drop, cover_delete,
+                  mouse_scroll_action, hide_file_ext_button)
+
+def _playback_prefs_panel():
+    prefs = editorpersistance.prefs
+
+    # Widgets
+    auto_center_on_stop = Gtk.CheckButton()
+    auto_center_on_stop.set_active(prefs.auto_center_on_play_stop)
+    
+    # Jul-2016 - SvdB - For play_pause button
+    play_pause_button = Gtk.CheckButton()
+    # The following test is to make sure play_pause can be used for the initial value. If not found, then leave uninitialized
+    if hasattr(prefs, 'play_pause'):
+        play_pause_button.set_active(prefs.play_pause)    
+    
     auto_center_on_updown = Gtk.CheckButton()
     auto_center_on_updown.set_active(prefs.center_on_arrow_move)
     
@@ -239,19 +258,11 @@ def _edit_prefs_panel():
     ffwd_rev_caps_spin.set_numeric(True)
     
     # Layout
-    row1 = _row(guiutils.get_checkbox_row_box(auto_play_in_clip_monitor, Gtk.Label(label=_("Autoplay new Clips in Clip Monitor"))))
+    #row1 = _row(guiutils.get_checkbox_row_box(auto_play_in_clip_monitor, Gtk.Label(label=_("Autoplay new Clips in Clip Monitor"))))
     row2 = _row(guiutils.get_checkbox_row_box(auto_center_on_stop, Gtk.Label(label=_("Center Current Frame on Playback Stop"))))
     row13 = _row(guiutils.get_checkbox_row_box(auto_center_on_updown, Gtk.Label(label=_("Center Current Frame after Up/Down Arrow"))))
-    row4 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Graphics default length:")), gfx_length_spin, PREFERENCES_LEFT))
-    row5 = _row(guiutils.get_checkbox_row_box(trim_exit_on_empty, Gtk.Label(label=_("Trim Modes exit on empty click"))))
-    row6 = _row(guiutils.get_checkbox_row_box(quick_enter_trim, Gtk.Label(label=_("Quick enter Trim Modes"))))
-    row7 = _row(guiutils.get_checkbox_row_box(remember_clip_frame, Gtk.Label(label=_("Remember Monitor Clip Frame"))))
-    row8 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Media drag'n'drop action on non-V1 tracks")), overwrite_clip_drop, PREFERENCES_LEFT))
-    row9 = _row(guiutils.get_checkbox_row_box(cover_delete, Gtk.Label(label=_("Cover Transition/Fade clips on delete if possible"))))
     # Jul-2016 - SvdB - For play_pause button
     row10 = _row(guiutils.get_checkbox_row_box(play_pause_button, Gtk.Label(label=_("Enable single Play/Pause button"))))
-    row11 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Mouse Middle Button Scroll Action")), mouse_scroll_action, PREFERENCES_LEFT))
-    row12 = _row(guiutils.get_checkbox_row_box(hide_file_ext_button, Gtk.Label(label=_("Hide file extensions when importing Clips"))))
     # Apr-2017 - SvdB - For Fast Forward / Reverse options
     row14 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Fast Forward / Reverse Speed for Shift Key:")), ffwd_rev_shift_spin, PREFERENCES_LEFT))
     row14.set_tooltip_text(_("Speed of Forward / Reverse will be multiplied by this value if Shift Key is held (Only using KEYS).\n" \
@@ -265,19 +276,10 @@ def _edit_prefs_panel():
     row16.set_tooltip_text(_("Speed of Forward / Reverse will be multiplied by this value if Caps Lock is set (Only using KEYS)."))
     
     vbox = Gtk.VBox(False, 2)
-    vbox.pack_start(row5, False, False, 0)
-    vbox.pack_start(row6, False, False, 0)
-    vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row13, False, False, 0)
-    vbox.pack_start(row4, False, False, 0)
-    vbox.pack_start(row7, False, False, 0)
-    vbox.pack_start(row8, False, False, 0)
-    vbox.pack_start(row9, False, False, 0)
     # Jul-2016 - SvdB - For play_pause button
     vbox.pack_start(row10, False, False, 0)
-    vbox.pack_start(row11, False, False, 0)
-    vbox.pack_start(row12, False, False, 0)
     # Apr-2017 - SvdB - For ffwd / rev speed
     vbox.pack_start(row14, False, False, 0)
     vbox.pack_start(row15, False, False, 0)
@@ -288,11 +290,10 @@ def _edit_prefs_panel():
 
     # Jul-2016 - SvdB - Added play_pause_button
     # Apr-2017 - SvdB - Added ffwd / rev values
-    return vbox, (auto_play_in_clip_monitor, auto_center_on_stop, gfx_length_spin,
-                  trim_exit_on_empty, quick_enter_trim, remember_clip_frame, overwrite_clip_drop, cover_delete,
-                  play_pause_button, mouse_scroll_action, hide_file_ext_button, auto_center_on_updown,
+    return vbox, (auto_center_on_stop, 
+                  play_pause_button, auto_center_on_updown,
                   ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin)
-
+                  
 def _view_prefs_panel():
     prefs = editorpersistance.prefs
 
@@ -343,7 +344,12 @@ def _view_prefs_panel():
         window_mode_combo.set_active(0)
     else:
         window_mode_combo.set_active(1)
-        
+
+    tracks_combo = Gtk.ComboBoxText()
+    tracks_combo.append_text(_("Normal - 50px, 25px"))
+    tracks_combo.append_text(_("Double for HiDPI - 100px, 50px"))
+    tracks_combo.set_active(prefs.double_track_hights)
+
     # Layout
     row00 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Application window mode:")), window_mode_combo, PREFERENCES_LEFT))
     row0 =  _row(guiutils.get_checkbox_row_box(force_english_check, Gtk.Label(label=_("Use English texts on localized OS"))))
@@ -352,6 +358,8 @@ def _view_prefs_panel():
     row3 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme request, icons and colors:")), dark_combo, PREFERENCES_LEFT))
     row4 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme detection fail fallback colors:")), theme_combo, PREFERENCES_LEFT))
     row5 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Default audio levels display:")), audio_levels_combo, PREFERENCES_LEFT))
+    row7 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Tracks Heights:")), tracks_combo, PREFERENCES_LEFT))
+
     # Feb-2017 - SvdB - For full file names
     row6 =  _row(guiutils.get_checkbox_row_box(show_full_file_names, Gtk.Label(label=_("Show Full File names"))))
 
@@ -363,6 +371,7 @@ def _view_prefs_panel():
     vbox.pack_start(row3, False, False, 0)
     vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row5, False, False, 0)
+    vbox.pack_start(row7, False, False, 0)
     # Feb-2017 - SvdB - For full file names
     vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
@@ -371,7 +380,7 @@ def _view_prefs_panel():
 
     # Feb-2017 - SvdB - Added code for full file names
     return vbox, (force_english_check, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo, 
-                  window_mode_combo, show_full_file_names)
+                  window_mode_combo, show_full_file_names, tracks_combo)
 
 def _performance_panel():
     # Jan-2017 - SvdB
@@ -382,6 +391,8 @@ def _performance_panel():
     # Allow Frame Dropping should help getting real time output on low performance computers.
     prefs = editorpersistance.prefs
 
+    warning_icon = Gtk.Image.new_from_stock(Gtk.STOCK_DIALOG_WARNING, Gtk.IconSize.DIALOG)
+    warning_label = Gtk.Label(label=_("Changing these values may cause problems with playback and rendering.\nThe safe values are Render Threads:1, Allow Frame Dropping: No."))
     # Widgets
     spin_adj = Gtk.Adjustment(prefs.perf_render_threads, 1, multiprocessing.cpu_count(), 1)
     perf_render_threads = Gtk.SpinButton()
@@ -396,10 +407,13 @@ def _performance_panel():
     perf_drop_frames.set_tooltip_text(_("Allow Frame Dropping for real-time rendering, when needed"))
 
     # Layout
+    row0 = _row(guiutils.get_left_justified_box([warning_icon, warning_label]))
     row1 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Render Threads:")), perf_render_threads, PREFERENCES_LEFT))
     row2 = _row(guiutils.get_checkbox_row_box(perf_drop_frames, Gtk.Label(label=_("Allow Frame Dropping"))))
 
     vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(row0, False, False, 0)
+    vbox.pack_start(guiutils.pad_label(12, 12), False, False, 0)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
@@ -407,35 +421,6 @@ def _performance_panel():
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     return vbox, (perf_render_threads, perf_drop_frames)
-
-def _shortcuts_panel():
-    # Apr-2017 - SvdB
-    # Add a panel for keyboard shortcuts
-    prefs = editorpersistance.prefs
-    count = 0
-    shortcut_found = 0
-    # Widgets
-    shortcuts_combo = Gtk.ComboBoxText()
-    shortcuts_combo.append_text('Flowblade Default')
-    for i in range(0, len(shortcuts.shortcut_files)):
-        shortcut_file = shortcuts.shortcut_files[i]
-        shortcuts_combo.append_text(shortcuts.shortcut_files_display_names[i])
-        count = count + 1
-        if hasattr(prefs, 'shortcuts'):
-            if shortcut_file == prefs.shortcuts:
-                shortcut_found = count
-    shortcuts_combo.set_active(shortcut_found)    
-
-    # Layout
-    row1 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Shortcuts File")), shortcuts_combo, PREFERENCES_LEFT))
-
-    vbox = Gtk.VBox(False, 2)
-    vbox.pack_start(row1, False, False, 0)
-    vbox.pack_start(Gtk.Label(), True, True, 0)
-
-    guiutils.set_margins(vbox, 12, 0, 12, 12)
-
-    return vbox, (shortcuts_combo)
 
 def _row(row_cont):
     row_cont.set_size_request(10, 26)
