@@ -376,7 +376,10 @@ def int_to_hex_str(n):
 
 def int_to_hex(n):
     # Input value range 0 - 255, 00 - ff
-    return hex(n)[2:]
+    val_str = hex(n)[2:]
+    if len(val_str) == 1:
+        val_str = "0" + val_str
+    return val_str
 
 def gdk_color_str_to_mlt_color_str(gdk_color_str):
     raw_r, raw_g, raw_b = hex_to_rgb(gdk_color_str)

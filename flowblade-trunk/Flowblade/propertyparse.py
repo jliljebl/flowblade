@@ -54,6 +54,12 @@ def node_list_to_properties_array(node_list):
         properties.append((p_name, p_value, p_type))
     return properties
 
+def node_to_property(node):
+        p_name = node.getAttribute(NAME)
+        p_value = node.firstChild.nodeValue
+        p_type = _property_type(p_value)
+        return (p_name, p_value, p_type)
+
 def node_list_to_non_mlt_properties_array(node_list):
     """
     Returns list of property tuples of type (name, value, type)

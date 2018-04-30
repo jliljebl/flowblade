@@ -344,7 +344,7 @@ class EditableProperty(AbstractProperty):
         
         self.name, self.value, self.type = prop
         self.clip = clip
-        self.filter_index = filter_index #index of param in clip.filters, clip created in sequence.py
+        self.filter_index = filter_index #index of param in clip.filters, clip created in sequence.py 
         self.property_index = property_index # index of property in FilterObject.properties. This is the persistant object
         self.is_compositor_filter = False # This is after changed after creation if needed
 
@@ -722,7 +722,6 @@ class ColorProperty(EditableProperty):
                         utils.int_to_hex_str(int(raw_g * 255.0)) + \
                         utils.int_to_hex_str(int(raw_b * 255.0))
         self.write_value(val_str)
-
 
 class WipeResourceProperty(TransitionEditableProperty):
     """

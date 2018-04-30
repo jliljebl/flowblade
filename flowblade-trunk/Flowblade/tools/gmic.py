@@ -664,7 +664,8 @@ class GmicWindow(Gtk.Window):
         preview_panel.pack_start(control_panel, False, False, 0)
         preview_panel.set_margin_bottom(8)
 
-        # Script area
+        # Script area 
+        # Script selector menu launcher
         self.preset_label = Gtk.Label()
         self.present_event_box = Gtk.EventBox()
         self.present_event_box.add(self.preset_label)

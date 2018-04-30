@@ -346,7 +346,7 @@ def main(root_path):
     #    print "SDL2 timeout launch"
     #    global sdl2_timeout_id
     #    sdl2_timeout_id = GObject.timeout_add(1500, create_sdl_2_consumer)
-            
+    
     # Launch gtk+ main loop
     Gtk.main()
 

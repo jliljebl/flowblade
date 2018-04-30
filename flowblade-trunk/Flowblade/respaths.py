@@ -43,6 +43,7 @@ PATTERN_PRODUCER_PATH = None
 LAUNCH_DIR = None
 GMIC_SCRIPTS_DOC = None
 PHANTOM_JAR = None
+NATRON_PROJECTS_XML_DOC = None
 
 def set_paths(root_path):
     # Apr-2017 - SvdB - Added SHORTCUTS_PATH for keyboard shortcuts files
@@ -52,7 +53,7 @@ def set_paths(root_path):
     GPL_3_DOC, ROOT_PARENT, PATTERN_PRODUCER_PATH, TRANSLATIONS_DOC, \
     LAUNCH_DIR, REPLACEMENTS_XML_DOC, GMIC_SCRIPTS_DOC,  \
     PHANTOM_JAR, PHANTOM_DIR, DEVELOPERS_DOC, CONTRIBUTORS_DOC, \
-    SHORTCUTS_PATH
+    SHORTCUTS_PATH, NATRON_PROJECTS_XML_DOC
     
     ROOT_PATH = root_path
     IMAGE_PATH = root_path + "/res/img/"
@@ -76,6 +77,7 @@ def set_paths(root_path):
     PHANTOM_JAR = root_path + "/phantom2d/Phantom2D.jar"
     # Apr-2017 - SvdB
     SHORTCUTS_PATH = root_path + "/res/shortcuts/"
+    NATRON_PROJECTS_XML_DOC = root_path + "/res/natron/natronprojects.xml"
 
 def apply_dark_theme():
     global IMAGE_PATH

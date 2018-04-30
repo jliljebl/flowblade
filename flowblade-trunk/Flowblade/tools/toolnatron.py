@@ -24,6 +24,7 @@ import subprocess
 import sys
 
 import appconsts
+import natronanimations
 import respaths
 import utils
 
@@ -33,6 +34,7 @@ def init():
     global _natron_found
     if utils.program_is_installed("Natron"):
         _natron_found = True
+        natronanimations.load_animations_projects_xml()
         print "Natron found"
     else:
         _natron_found = False
