@@ -318,7 +318,6 @@ class NatronRenderLaunchThread(threading.Thread):
 
         print "NatronRenderer ", b_switch, w_switch , writer, range_str, render_frame, l_switch, param_mod_script, natron_project
         
-        #NatronRenderer -b -w Write1 /home/janne/test/natrontestout/frame###.png -l /home/janne/test/natron/NatronRenderParams.py /home/janne/test/flowbladetext.ntp
         render_command = "NatronRenderer " + b_switch  + " " +  w_switch + " " + writer + " " + \
                          range_str  + " " +  render_frame + " " +  l_switch + " " +  param_mod_script + " " +  natron_project
 
