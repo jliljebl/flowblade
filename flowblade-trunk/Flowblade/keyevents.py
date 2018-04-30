@@ -237,6 +237,9 @@ def _handle_tline_key_event(event):
     if action == 'cut':
         tlineaction.cut_pressed()
         return True
+    if action == 'sequence_split':
+        tlineaction.sequence_split_pressed()
+        return True
     if action == 'log_range':
         medialog.log_range_clicked()
         return True

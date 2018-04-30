@@ -2006,8 +2006,7 @@ class BigTCEntry:
         self.visible = False
         self.widget.connect("activate", self._enter_pressed)
         self.widget.connect("focus-out-event", self._focus_lost)
-        self.widget.connect("focus", self._focus_received)
-
+        
     def get_current_frame_text(self):
         try:
             frame = PLAYER().tracktor_producer.frame()
@@ -2017,7 +2016,6 @@ class BigTCEntry:
         return frame_str
 
     def _handle_set_time(self):
-        self.visible = False
         frame_str = gui.big_tc.get_visible_child().get_text()
         frame = utils.get_tc_frame(frame_str)
         gui.big_tc.set_visible_child_name("BigTCDisplay")
@@ -2025,14 +2023,11 @@ class BigTCEntry:
 
     def _enter_pressed(self, event):
         self._handle_set_time()
+        gui.pos_bar.widget.grab_focus()
 
     def _focus_lost(self, widget, event):
-        if self.visible:
+        if gui.big_tc.get_visible_child_name() == "BigTCEntry":
             self._handle_set_time()
-
-    def _focus_received(self, widget, event):
-        self.visible = True
-
 
 
 class MonitorTCDisplay:
