@@ -28,8 +28,9 @@ from gi.repository import Gtk, Gdk, GdkPixbuf
 from gi.repository import GdkX11
 from gi.repository import Pango
 
-import threading
 import subprocess
+import threading
+import time
 
 import guicomponents
 import guiutils
@@ -39,6 +40,9 @@ import propertyeditorbuilder
 import respaths
 import toolguicomponents
 import utils
+
+EDIT_PANEL_WIDTH = 400
+EDIT_PANEL_HEIGHT = 250
 
 _animation_instance = None
 _window = None
@@ -68,7 +72,7 @@ class NatronAnimatationsToolWindow(Gtk.Window):
         selector_row.pack_start(self.script_menu.widget, False, False, 0)
         
         self.edit_panel = Gtk.VBox(False, 2)
-        self.edit_panel.pack_start(Gtk.Label("Hello, Natron"), False, False, 0)
+        self.edit_panel.set_size_request(EDIT_PANEL_WIDTH, EDIT_PANEL_HEIGHT)
 
         # Build window
         left_panel = Gtk.VBox(False, 2)
@@ -217,6 +221,7 @@ class NatronAnimatationsToolWindow(Gtk.Window):
                 if not hasattr(editor_row, "no_separator"):
                     self.edit_panel.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
         
+        self.edit_panel.pack_start(Gtk.Label(), True, True, 0)
         self.edit_panel.show_all()
         
     def folder_selection_changed(self, chooser):
@@ -296,9 +301,14 @@ def show_menu(event, callback):
 def render_output():
     # Write data used to modyfy rendered notron animation
     _animation_instance.write_out_modify_data(_window.editable_properties)
+    _window.render_percentage.set_markup("<small>" + _("Render starting...") + "</small>")
     
     launch_thread = NatronRenderLaunchThread()
     launch_thread.start()
+
+    global _progress_updater
+    _progress_updater = ProgressUpdaterThread()
+    _progress_updater.start()
 
 #------------------------------------------------- render threads
 class NatronRenderLaunchThread(threading.Thread):
@@ -321,16 +331,62 @@ class NatronRenderLaunchThread(threading.Thread):
         render_command = "NatronRenderer " + b_switch  + " " +  w_switch + " " + writer + " " + \
                          range_str  + " " +  render_frame + " " +  l_switch + " " +  param_mod_script + " " +  natron_project
 
-        
- 
- 
+
         print "Starting Natron render, command:", render_command
-        
-        
+
         FLOG = open(utils.get_hidden_user_dir_path() + "log_natron_render", 'w')
         p = subprocess.Popen(render_command, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
         p.wait()
         FLOG.close()
 
+        if _progress_updater != None:
+            _progress_updater.stop_thread()
+
+        Gdk.threads_enter()
+        _window.render_percentage.set_markup("<small>" + _("Render complete.") + "</small>")
+        Gdk.threads_leave()
         print "Natron render done."
+
+
+class ProgressUpdaterThread(threading.Thread):
     
+    def __init__(self):
+        threading.Thread.__init__(self)
+        
+
+    def run(self):
+        self.running = True
+        self.length = _animation_instance.get_length()
+
+        # This is a mucho hacky, see if we can get some events somehow
+        render_ongoing = False # the method we're using needs 
+        while self.running == True:
+            try:
+                count = self.file_lines() - 7
+                if count > 0:
+                    if count < 8: # if we get more then 8 frames before first update were f...cked
+                        render_ongoing = True
+                    
+                    if render_ongoing == True:
+                        update_info = _("Writing clip frame: ") + str(count) + "/" +  str(self.length)
+
+                        Gdk.threads_enter()
+                        _window.render_percentage.set_markup("<small>" + update_info + "</small>")
+                        _window.render_progress_bar.set_fraction(float(count + 1)/float(self.length))
+                        Gdk.threads_leave()
+                
+                time.sleep(0.3)
+            except:
+                print "Except"
+        print "ProgressUpdaterThread stpped"
+
+    def file_lines(self):
+        with open(utils.get_hidden_user_dir_path() + "log_natron_render", "r") as f:
+            for i, l in enumerate(f):
+                pass
+        return i + 1
+    
+    def stop_thread(self):
+        self.running = False
+        global _progress_updater
+        _progress_updater = None # disconnect this

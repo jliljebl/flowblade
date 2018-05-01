@@ -224,7 +224,7 @@ def sequence_split_pressed():
     # so we collected all the data for all tracks
     # now we create a new sequence and will open that very sequence
     name = _("sequence_") + str(PROJECT().next_seq_number)
-    sequence.VIDEO_TRACKS_COUNT , sequence.AUDIO_TRACKS_COUNT = current_sequence().get_track_counts()
+    sequence.VIDEO_TRACKS_COUNT, sequence.AUDIO_TRACKS_COUNT = current_sequence().get_track_counts()
     PROJECT().add_named_sequence(name)
     app.change_current_sequence(len(PROJECT().sequences) - 1)
 

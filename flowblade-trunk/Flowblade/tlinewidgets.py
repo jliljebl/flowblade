@@ -1532,7 +1532,7 @@ class TimeLineCanvas:
         if len(track.clips) != end:
             end = end + 1
             
-        # Get frame of clip.clip_in_in on timeline.
+        # Get frame of clip.clip_in on timeline.
         clip_start_in_tline = track.clip_start(start)
 
         # Pos is the first drawn frame.

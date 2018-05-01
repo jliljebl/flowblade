@@ -33,6 +33,7 @@ import utils
 ANIMATION_NODE = "animation"
 NAME_NODE = "name"
 NATRON_PROJECT_FILE_NODE = "projectfile"
+LENGTH_NODE = "length"
 NAME_ATTR = "name"
 GROUP_NODE = "group"
 INTERPRETATION = "propertyinterpretation"
@@ -58,6 +59,8 @@ class NatronAnimationInfo:
 
         self.properties = propertyparse.node_list_to_properties_array(self.property_node_list)
         self.property_args = propertyparse.node_list_to_args_dict(self.property_node_list)
+
+        self.length = anim_node.getElementsByTagName(LENGTH_NODE).item(0).firstChild.nodeValue
 
         # property name -> natron node, interpretation
         self.interpretations = {}
@@ -123,6 +126,10 @@ class NatronAnimationInstance:
             exec_str = exec_str + property_modify_str
         
         return exec_str
+
+    def get_length(self):
+        # dis gonna get more complicated
+        return self.info.length
 
     def get_frame_range(self):
         return "1-250"

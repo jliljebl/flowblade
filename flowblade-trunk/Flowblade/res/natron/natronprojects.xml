@@ -6,13 +6,16 @@
 
     <!-- -->
     <animation>
-        <name>Test Ball</name>
-        <group>Background</group>
+        <name>A to B</name>
+        <group>Text Animation</group>
         <projectfile>flowbladetext.ntp</projectfile>
-        <property name="Color1" args="editor=color_select exptype=color displayname=Text">#00ff00</property>
-        <property name="Color2" args="editor=color_select exptype=color displayname=BG">#ff0000</property>
+        <length>250</length>
+        <property name="Color1" args="editor=color_select exptype=color displayname=Text!Color">#00ff00</property>
+        <property name="Color2" args="editor=color_select exptype=color displayname=BG!Color">#ff0000</property>
+        <property name="Text" args="editor=text_entry exptype=plain_string displayname=Text">Flowblade</property>
         <propertyinterpretation name="Color1" nodename="Text1_3" natronpropertyname="color">color_hex_to_tuple</propertyinterpretation>
         <propertyinterpretation name="Color2" nodename="Solid2" natronpropertyname="color">color_hex_to_tuple</propertyinterpretation>
+        <propertyinterpretation name="Text" nodename="Text1_3" natronpropertyname="text">quoted_string</propertyinterpretation>
     </animation>
 
 </natronprojects>

@@ -65,7 +65,8 @@ COLOR_BOX = "colorbox"                                      # One band color edi
 COLOR_LGG = "colorlgg"                                      # Editor for ColorLGG filter
 FILE_SELECTOR = "file_select"                               # File selector button for selecting single files from
 FILE_TYPES = "file_types"                                   # list of files types with "." chracters, like ".png.tga.bmp"
-FADE_LENGTH = "fade_length"                                 # Autofade composiyots fade length
+FADE_LENGTH = "fade_length"                                 # Autofade compositors fade length
+TEXT_ENTRY = "text_entry"                                   # Text editor
 NO_EDITOR = "no_editor"                                     # No editor displayed for property
 
 COMPOSITE_EDITOR_BUILDER = "composite_properties"           # Creates a single row editor for multiple properties of composite transition
@@ -439,7 +440,23 @@ def _get_affine_slider(name, adjustment):
     hbox.pack_start(spin, False, False, 4)
 
     return (hslider, spin, _get_two_column_editor_row(name, hbox))
-    
+
+
+def _get_text_entry(editable_property):
+    entry = Gtk.Entry.new()
+    entry.set_text(editable_property.value)
+    entry.connect("changed", lambda w: _entry_contentents_changed(w, editable_property))
+
+    hbox = Gtk.HBox(False, 4)
+    hbox.pack_start(entry, True, True, 0)
+    #hbox.pack_start(Gtk.Label(), False, False, 4)
+
+
+    return _get_two_column_editor_row(editable_property.get_display_name(), hbox)
+
+def _entry_contentents_changed(entry, editable_property):
+     editable_property.value = entry.get_text()
+ 
 def _get_boolean_check_box_row(editable_property):
     check_button = Gtk.CheckButton()
     check_button.set_active(editable_property.value == "1")
@@ -896,7 +913,8 @@ EDITOR_ROW_CREATORS = { \
     COLOR_CORRECTOR: lambda filt, editable_properties: _create_color_grader(filt, editable_properties),
     CR_CURVES: lambda filt, editable_properties:_create_crcurves_editor(filt, editable_properties),
     COLOR_BOX: lambda filt, editable_properties:_create_colorbox_editor(filt, editable_properties),
-    COLOR_LGG: lambda filt, editable_properties:_create_color_lgg_editor(filt, editable_properties)
+    COLOR_LGG: lambda filt, editable_properties:_create_color_lgg_editor(filt, editable_properties),
+    TEXT_ENTRY: lambda ep: _get_text_entry(ep),
     }
 
 """

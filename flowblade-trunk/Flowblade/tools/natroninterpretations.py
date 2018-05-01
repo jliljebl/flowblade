@@ -24,6 +24,7 @@ import utils
 NEWLINE = "\n"
 
 NOOP = "noop"
+QUOTED_STRING = "quoted_string"
 COLOR_TO_HEX_TUPLE = "color_hex_to_tuple"
 
 
@@ -40,7 +41,9 @@ def _get_modification_target(natron_node, natron_property_name):
 def _noop(value, natron_node, natron_property_name):
     return _get_modification_target(natron_node, natron_property_name) + ".set(" + value + ")" + NEWLINE
 
-
+def _str_to_quoted_str(value, natron_node, natron_property_name):
+    return _get_modification_target(natron_node, natron_property_name) + ".set(" + "\"" + value + "\"" + ")" + NEWLINE
+    
 def _color_hex_to_tuple(value, natron_node, natron_property_name):    
     r, g, b = utils.hex_to_rgb(value)
     interpreted_value = ".set(" + str(float(r)/255.0) + ", " + str(float(g)/255.0)  + ", " + str(float(b)/255.0)  + ", 1.0)"
@@ -51,4 +54,5 @@ def _color_hex_to_tuple(value, natron_node, natron_property_name):
 # interpretation name -> interpretation func
 INTERPRETATION_FUNCS = { \
     NOOP:_noop,
+    QUOTED_STRING: _str_to_quoted_str,
     COLOR_TO_HEX_TUPLE:_color_hex_to_tuple}
