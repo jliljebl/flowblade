@@ -26,33 +26,38 @@ NEWLINE = "\n"
 NOOP = "noop"
 QUOTED_STRING = "quoted_string"
 COLOR_TO_HEX_TUPLE = "color_hex_to_tuple"
-
+CREATE_READER = "create_reader"
 
 # --------------------------------------------------------- interface
-def get_property_modyfying_str(value, natron_node, natron_property_name, interpretation):
+def get_property_modyfying_str(value, natron_node, natron_property_name, interpretation, args):
     interpretation_func = INTERPRETATION_FUNCS[interpretation]
-    return interpretation_func(value, natron_node, natron_property_name)
+    return interpretation_func(value, natron_node, natron_property_name, args)
 
 # --------------------------------------------------------- module funcs
 def _get_modification_target(natron_node, natron_property_name):
     return "app." + natron_node +"." + natron_property_name
 
 # --------------------------------------------------------- interpretations
-def _noop(value, natron_node, natron_property_name):
+def _noop(value, natron_node, natron_property_name, args):
     return _get_modification_target(natron_node, natron_property_name) + ".set(" + value + ")" + NEWLINE
 
-def _str_to_quoted_str(value, natron_node, natron_property_name):
+def _str_to_quoted_str(value, natron_node, natron_property_name, args):
     return _get_modification_target(natron_node, natron_property_name) + ".set(" + "\"" + value + "\"" + ")" + NEWLINE
     
-def _color_hex_to_tuple(value, natron_node, natron_property_name):    
+def _color_hex_to_tuple(value, natron_node, natron_property_name, args):    
     r, g, b = utils.hex_to_rgb(value)
     interpreted_value = ".set(" + str(float(r)/255.0) + ", " + str(float(g)/255.0)  + ", " + str(float(b)/255.0)  + ", 1.0)"
     return _get_modification_target(natron_node, natron_property_name) + interpreted_value + NEWLINE
 
+def _create_reader(value, natron_node, natron_property_name, args):
+    exec_str = "readerNode = app.createReader(\"" + value + "\")" + NEWLINE
+    exec_str += "app." + args["target_node"] + ".connectInput(0, readerNode)" + NEWLINE
+    return exec_str
 
 
 # interpretation name -> interpretation func
 INTERPRETATION_FUNCS = { \
     NOOP:_noop,
     QUOTED_STRING: _str_to_quoted_str,
+    CREATE_READER: _create_reader,
     COLOR_TO_HEX_TUPLE:_color_hex_to_tuple}

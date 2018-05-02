@@ -18,4 +18,13 @@
         <propertyinterpretation name="Text" nodename="Text1_3" natronpropertyname="text">quoted_string</propertyinterpretation>
     </animation>
 
+    <animation>
+        <name>Media Test</name>
+        <group>Effect</group>
+        <projectfile>color_correct.ntp</projectfile>
+        <length>250</length>
+        <property name="FileRead1" args="editor=image_media_file_select exptype=file_resource displayname=File">##value_not_set##</property>
+        <propertyinterpretation name="FileRead1" nodename="Read1" natronpropertyname="filename" args="target_node=ColorCorrect2">create_reader</propertyinterpretation>
+    </animation>
+    
 </natronprojects>

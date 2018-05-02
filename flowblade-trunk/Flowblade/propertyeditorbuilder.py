@@ -64,6 +64,7 @@ CR_CURVES = "crcurves"                                      # Curves color edito
 COLOR_BOX = "colorbox"                                      # One band color editor with color box interface
 COLOR_LGG = "colorlgg"                                      # Editor for ColorLGG filter
 FILE_SELECTOR = "file_select"                               # File selector button for selecting single files from
+IMAGE_MEDIA_FILE_SELECTOR = "image_media_file_select"       # File selector button for selecting single files from
 FILE_TYPES = "file_types"                                   # list of files types with "." chracters, like ".png.tga.bmp"
 FADE_LENGTH = "fade_length"                                 # Autofade compositors fade length
 TEXT_ENTRY = "text_entry"                                   # Text editor
@@ -644,7 +645,7 @@ def _wipe_lumafile_dialog_response(dialog, response_id, ep, widgets):
 
 def _get_file_select_editor(editable_property):
     """
-    Returns GUI component for selecting wipe type.
+    Returns GUI component for selecting file of determined type
     """
     dialog = Gtk.FileChooserDialog(_("Select File"), None, 
                                    Gtk.FileChooserAction.OPEN, 
@@ -660,6 +661,34 @@ def _get_file_select_editor(editable_property):
         file_filter.add_pattern("*." + file_type)
     file_filter.set_name("Accepted Files")
     
+    dialog.add_filter(file_filter)
+        
+    file_select_button = Gtk.FileChooserButton.new_with_dialog(dialog)
+    file_select_button.set_size_request(210, 28)
+    
+    file_select_label = Gtk.Label(editable_property.get_display_name())
+
+    editor_row = Gtk.HBox(False, 2)
+    editor_row.pack_start(file_select_label, False, False, 2)
+    editor_row.pack_start(guiutils.get_pad_label(3, 5), False, False, 2)
+    editor_row.pack_start(file_select_button, False, False, 0)
+
+    dialog.connect('response', editable_property.dialog_response_callback)
+    
+    return editor_row
+    
+def _get_image_file_select_editor(editable_property):
+    """
+    Returns GUI component for selecting image producing file
+    """
+    dialog = Gtk.FileChooserDialog(_("Select Image Producing File"), None, 
+                                   Gtk.FileChooserAction.OPEN, 
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+    dialog.set_action(Gtk.FileChooserAction.OPEN)
+    dialog.set_select_multiple(False)
+
+    file_filter = utils.get_media_source_file_filter(False)    
     dialog.add_filter(file_filter)
         
     file_select_button = Gtk.FileChooserButton.new_with_dialog(dialog)
@@ -905,6 +934,7 @@ EDITOR_ROW_CREATORS = { \
     LADSPA_SLIDER: lambda ep: _get_ladspa_slider_row(ep),
     CLIP_FRAME_SLIDER: lambda ep: _get_clip_frame_slider(ep),
     FILE_SELECTOR: lambda ep: _get_file_select_editor(ep),
+    IMAGE_MEDIA_FILE_SELECTOR: lambda ep: _get_image_file_select_editor(ep),
     FADE_LENGTH: lambda ep: _get_fade_length_editor(ep),
     NO_EDITOR: lambda ep: _get_no_editor(),
     COMPOSITE_EDITOR_BUILDER: lambda comp, editable_properties: _create_composite_editor(comp, editable_properties),

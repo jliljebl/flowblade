@@ -303,13 +303,15 @@ def render_output():
     _animation_instance.write_out_modify_data(_window.editable_properties)
     _window.render_percentage.set_markup("<small>" + _("Render starting...") + "</small>")
     
+    
     launch_thread = NatronRenderLaunchThread()
     launch_thread.start()
 
     global _progress_updater
     _progress_updater = ProgressUpdaterThread()
     _progress_updater.start()
-
+    
+    
 #------------------------------------------------- render threads
 class NatronRenderLaunchThread(threading.Thread):
 
@@ -377,7 +379,8 @@ class ProgressUpdaterThread(threading.Thread):
                 
                 time.sleep(0.3)
             except:
-                print "Except"
+                pass
+                #print "Except"
         print "ProgressUpdaterThread stpped"
 
     def file_lines(self):

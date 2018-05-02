@@ -35,6 +35,7 @@ NAME_NODE = "name"
 NATRON_PROJECT_FILE_NODE = "projectfile"
 LENGTH_NODE = "length"
 NAME_ATTR = "name"
+ARGS_ATTR = "args"
 GROUP_NODE = "group"
 INTERPRETATION = "propertyinterpretation"
 PROPERTY = appconsts.PROPERTY
@@ -62,14 +63,20 @@ class NatronAnimationInfo:
 
         self.length = anim_node.getElementsByTagName(LENGTH_NODE).item(0).firstChild.nodeValue
 
-        # property name -> natron node, interpretation
+        # property name -> natron_node, natron_property, interpretation, args
         self.interpretations = {}
         for i_node in self.interpretation_node_list:
             natron_node = i_node.getAttribute(NATRON_NODE_NAME_ATTR)
             natron_property = i_node.getAttribute(NATRON_PROPERTY_NAME_ATTR)
+            args_str = i_node.getAttribute(ARGS_ATTR)
+            if len(args_str) == 0:
+                args = None
+            else:
+                args = propertyparse.args_string_to_args_dict(args_str)
+             
             interpretation = i_node.firstChild.nodeValue
             
-            self.interpretations[i_node.getAttribute(NAME_ATTR)] = (natron_node, natron_property, interpretation)
+            self.interpretations[i_node.getAttribute(NAME_ATTR)] = (natron_node, natron_property, interpretation, args)
 
     def get_instance(self):
         instance = NatronAnimationInstance(self)
@@ -101,7 +108,7 @@ class NatronAnimationInstance:
         
     def write_out_modify_data(self, editable_properties):
         exec_str = self._get_natron_modifying_exec_string(editable_properties)
-        
+        print exec_str
         export_data_file = open(self.get_modify_exec_data_file_path(), "w")
         export_data_file.write(exec_str)
         export_data_file.close()
@@ -121,8 +128,8 @@ class NatronAnimationInstance:
     def _get_natron_modifying_exec_string(self, editable_properties):
         exec_str = ""
         for ep in editable_properties:
-            natron_node, natron_property, interpretation = self.info.interpretations[ep.name]
-            property_modify_str = natroninterpretations.get_property_modyfying_str(ep.value, natron_node, natron_property, interpretation)
+            natron_node, natron_property, interpretation, args = self.info.interpretations[ep.name]
+            property_modify_str = natroninterpretations.get_property_modyfying_str(ep.value, natron_node, natron_property, interpretation, args)
             exec_str = exec_str + property_modify_str
         
         return exec_str
