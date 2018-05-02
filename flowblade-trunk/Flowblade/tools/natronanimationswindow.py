@@ -32,6 +32,7 @@ import subprocess
 import threading
 import time
 
+import cairoarea
 import guicomponents
 import guiutils
 import natronanimations
@@ -41,14 +42,27 @@ import respaths
 import toolguicomponents
 import utils
 
+
+# draw params
 EDIT_PANEL_WIDTH = 400
 EDIT_PANEL_HEIGHT = 250
 
+MONITOR_WIDTH = 500
+MONITOR_HEIGHT = 300
+
+# module global data
 _animation_instance = None
 _window = None
 _animations_menu = Gtk.Menu()
 
 def launch_tool_window():
+    # This is single instance tool
+    if _window != None:
+        return
+        
+    global _animation_instance
+    _animation_instance = natronanimations.get_default_animation_instance() # This duck types for mltfilters.FilterObject
+        
     global _window
     _window = NatronAnimatationsToolWindow()
 
@@ -60,8 +74,8 @@ class NatronAnimatationsToolWindow(Gtk.Window):
         app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowbladetoolicon.png")
         self.set_icon(app_icon)
 
-        # Animation selector menu launcher
-        self.animation_label = Gtk.Label(natronanimations.get_default_animation_instance().info.name)
+        # Animation selector menu launcher row
+        self.animation_label = Gtk.Label(_animation_instance.info.name)
         self.present_event_box = Gtk.EventBox()
         self.present_event_box.add(self.animation_label)
         self.present_event_box.connect("button-press-event", animations_menu_launched)
@@ -70,15 +84,17 @@ class NatronAnimatationsToolWindow(Gtk.Window):
         selector_row = Gtk.HBox(False, 2)
         selector_row.pack_start(self.present_event_box, False, False, 0)
         selector_row.pack_start(self.script_menu.widget, False, False, 0)
-        
-        self.edit_panel = Gtk.VBox(False, 2)
-        self.edit_panel.set_size_request(EDIT_PANEL_WIDTH, EDIT_PANEL_HEIGHT)
 
-        # Build window
-        left_panel = Gtk.VBox(False, 2)
-        left_panel.pack_start(selector_row, False, False, 0)
-        #left_panel.pack_start(self.script_menu.widget, False, False, 0)
-        left_panel.pack_start(self.edit_panel, False, False, 0)
+        # Edit area
+        self.value_edit_frame = Gtk.Frame()
+        self.value_edit_frame.set_shadow_type(Gtk.ShadowType.IN)
+        self.value_edit_frame.set_size_request(EDIT_PANEL_WIDTH+ 10, EDIT_PANEL_HEIGHT + 10)
+        self.value_edit_box = None
+        
+        # Monitor 
+        self.preview_monitor = cairoarea.CairoDrawableArea2(MONITOR_WIDTH, MONITOR_HEIGHT, self._draw_preview)
+
+
         
         # Render panel
         self.out_folder = Gtk.FileChooserButton(_("Select Folder"))
@@ -155,9 +171,18 @@ class NatronAnimatationsToolWindow(Gtk.Window):
         render_vbox.pack_start(guiutils.pad_label(24, 24), False, False, 0)
 
         # Build window
+        left_panel = Gtk.VBox(False, 2)
+        left_panel.pack_start(selector_row, False, False, 0)
+        left_panel.pack_start(self.value_edit_frame, True, True, 0)
+
+        right_panel = Gtk.VBox(False, 2)
+        right_panel.pack_start(self.preview_monitor, False, False, 0)
+        right_panel.pack_start(render_vbox, True, True, 0)
+        #right_panel.pack_start(self.edit_panel, False, False, 0)
+        
         pane = Gtk.HBox(False, 2)
         pane.pack_start(left_panel, False, False, 0)
-        pane.pack_start(render_vbox, False, False, 0)
+        pane.pack_start(right_panel, False, False, 0)
         
         align = guiutils.set_margins(pane, 12, 12, 12, 12)
 
@@ -181,6 +206,9 @@ class NatronAnimatationsToolWindow(Gtk.Window):
 
     def change_animation(self):
 
+        # global _animation_instance has been set elsewhere
+        self.animation_label.set_text(_animation_instance.info.name)
+
         # We are using existing property edit code to create value editors.
         # We will need present a lot of dummy data and monkeypatch objects to make that 
         # pipeline do our bidding for natron animations value editing.
@@ -188,15 +216,16 @@ class NatronAnimatationsToolWindow(Gtk.Window):
         filter_index = -1
         track = None
         clip_index = -1
-        
-        global _animation_instance
-        _animation_instance = natronanimations.get_default_animation_instance() # This duck types for mltfilters.FilterObject
-        
+
         editable_properties = propertyedit.get_filter_editable_properties(clip, _animation_instance, filter_index, 
                                    track, clip_index, compositor_filter=False)
         
         self.editable_properties = editable_properties
-        
+
+        edit_panel = Gtk.VBox(False, 2)
+        edit_panel.set_size_request(EDIT_PANEL_WIDTH, EDIT_PANEL_HEIGHT)
+        guiutils.set_margins(edit_panel, 4, 4, 4, 4)
+
         if len(editable_properties) > 0:
             # Create editor row for each editable property
             for ep in editable_properties:
@@ -217,13 +246,24 @@ class NatronAnimatationsToolWindow(Gtk.Window):
                 except KeyError:
                     editor_type = propertyeditorbuilder.SLIDER # this is the default value
 
-                self.edit_panel.pack_start(editor_row, False, False, 0)
+                edit_panel.pack_start(editor_row, False, False, 0)
                 if not hasattr(editor_row, "no_separator"):
-                    self.edit_panel.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
+                    edit_panel.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
         
-        self.edit_panel.pack_start(Gtk.Label(), True, True, 0)
-        self.edit_panel.show_all()
-        
+        edit_panel.pack_start(Gtk.Label(), True, True, 0)
+        edit_panel.show_all()
+    
+        scroll_window = Gtk.ScrolledWindow()
+        scroll_window.add_with_viewport(edit_panel)
+        scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        scroll_window.show_all()
+
+        if self.value_edit_box != None:
+            self.value_edit_frame.remove(self.value_edit_box)
+        self.value_edit_frame.add(scroll_window)
+
+        self.value_edit_box = scroll_window
+    
     def folder_selection_changed(self, chooser):
         self.update_render_status_info()
 
@@ -266,14 +306,25 @@ class NatronAnimatationsToolWindow(Gtk.Window):
     def _no_op(self, str_value):
         pass
  
+    def _draw_preview(self, event, cr, allocation):
+        x, y, w, h = allocation
+
+        cr.set_source_rgb(0.0, 0.0, 0.0)
+        cr.rectangle(0, 0, w, h)
+        cr.fill()
+            
 #-------------------------------------------------- script setting and save/load
 def animations_menu_launched(launcher, event):
     show_menu(event, animations_menu_item_selected)
 
 def animations_menu_item_selected(item, animation):
-
-    _window.preset_label.set_text(script.name)
+    #_window.preset_label.set_text(animation.name)
     
+    global _animation_instance
+    _animation_instance = animation.get_instance()
+
+    _window.change_animation()
+
 def show_menu(event, callback):
     # Remove current items
     items = _animations_menu.get_children()
