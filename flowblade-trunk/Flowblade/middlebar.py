@@ -38,6 +38,7 @@ import titler
 import tlineaction
 import updater
 import undo
+import workflow
 
 # editor window object
 # This needs to be set here because gui.py module ref is not available at init time
@@ -126,6 +127,10 @@ def _create_buttons(editor_window):
     editor_window.big_TC.add_named(tc_entry.widget, "BigTCEntry")
     editor_window.big_TC.set_visible_child_name("BigTCDisplay")
     gui.big_tc = editor_window.big_TC 
+
+    surface = cairo.ImageSurface.create_from_png(IMG_PATH + "workflow.png")
+    editor_window.worflow_launch = guicomponents.PressLaunch(workflow.menu_launched, surface, w=22, h=22)
+
     editor_window.modes_selector = guicomponents.ToolSelector(editor_window.mode_selector_pressed, m_pixbufs, 40, 22)
 
     editor_window.zoom_buttons = glassbuttons.GlassButtonsGroup(46, 23, 2, 4, 5)
@@ -177,6 +182,8 @@ def _create_buttons(editor_window):
 def fill_with_TC_LEFT_pattern(buttons_row, window):
     global w
     w = window
+    buttons_row.pack_start(w.worflow_launch.widget, False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) 
     buttons_row.pack_start(w.big_TC, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     buttons_row.pack_start(w.modes_selector.widget, False, True, 0)
