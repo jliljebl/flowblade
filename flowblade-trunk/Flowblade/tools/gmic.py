@@ -174,7 +174,7 @@ def main(root_path, force_launch=False):
     # Write stdout to log file
     sys.stdout = open(utils.get_hidden_user_dir_path() + "log_gmic", 'w')
     print "G'MIC version:", str(_gmic_version)
-        
+
     # Init gmic tool session dirs
     if os.path.exists(get_session_folder()):
         shutil.rmtree(get_session_folder())
@@ -195,11 +195,22 @@ def main(root_path, force_launch=False):
 
     # Load preset gmic scripts
     gmicscript.load_preset_scripts_xml()
-    
+
+        
     # Init gtk threads
     Gdk.threads_init()
     Gdk.threads_enter()
 
+    # Set monitor sizes
+    scr_w = Gdk.Screen.width()
+    scr_h = Gdk.Screen.height()
+    editorstate.SCREEN_WIDTH = scr_w
+    editorstate.SCREEN_HEIGHT = scr_h
+    if editorstate.screen_size_large_height() == True and editorstate.screen_size_small_width() == False:
+        global MONITOR_WIDTH, MONITOR_HEIGHT
+        MONITOR_WIDTH = 650
+        MONITOR_HEIGHT = 400 # initial value, this gets changed when material is loaded
+        
     # Request dark them if so desired
     if editorpersistance.prefs.dark_theme == True:
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)

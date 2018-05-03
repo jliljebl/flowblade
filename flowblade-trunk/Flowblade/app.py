@@ -790,7 +790,7 @@ def _set_draw_params():
         sequence.TRACK_HEIGHT_NORMAL = appconsts.TRACK_HEIGHT_NORMAL # track height in canvas and column
         sequence.TRACK_HEIGHT_SMALL = appconsts.TRACK_HEIGHT_SMALL # track height in canvas and column
         tlinewidgets.set_tracks_double_height_consts()
-        
+
 def _too_small_screen_exit():
     global exit_timeout_id
     exit_timeout_id = GObject.timeout_add(200, _show_too_small_info)
