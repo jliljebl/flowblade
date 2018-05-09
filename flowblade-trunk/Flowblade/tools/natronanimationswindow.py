@@ -28,6 +28,7 @@ from gi.repository import Gtk, Gdk, GdkPixbuf
 from gi.repository import GdkX11
 from gi.repository import Pango
 
+import cairo
 import subprocess
 import threading
 import time
@@ -36,6 +37,7 @@ import cairoarea
 import guicomponents
 import guiutils
 import natronanimations
+import positionbar
 import propertyedit
 import propertyeditorbuilder
 import respaths
@@ -44,16 +46,17 @@ import utils
 
 
 # draw params
-EDIT_PANEL_WIDTH = 400
+EDIT_PANEL_WIDTH = 500
 EDIT_PANEL_HEIGHT = 250
 
-MONITOR_WIDTH = 500
-MONITOR_HEIGHT = 300
+MONITOR_WIDTH = 700
+MONITOR_HEIGHT = 400
 
 # module global data
 _animation_instance = None
 _window = None
 _animations_menu = Gtk.Menu()
+
 
 def launch_tool_window():
     # This is single instance tool
@@ -66,6 +69,7 @@ def launch_tool_window():
     global _window
     _window = NatronAnimatationsToolWindow()
 
+
 class NatronAnimatationsToolWindow(Gtk.Window):
     def __init__(self):
         GObject.GObject.__init__(self)
@@ -73,6 +77,12 @@ class NatronAnimatationsToolWindow(Gtk.Window):
 
         app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowbladetoolicon.png")
         self.set_icon(app_icon)
+
+
+        #---- LEFT PANEL
+        hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger.png")
+        self.hamburger_launcher = guicomponents.PressLaunch(self.hamburger_launch_pressed, hamburger_launcher_surface)
+        guiutils.set_margins(self.hamburger_launcher.widget, 0, 8, 0, 8)
 
         # Animation selector menu launcher row
         self.animation_label = Gtk.Label(_animation_instance.info.name)
@@ -82,20 +92,80 @@ class NatronAnimatationsToolWindow(Gtk.Window):
         self.script_menu = toolguicomponents.PressLaunch(animations_menu_launched)
 
         selector_row = Gtk.HBox(False, 2)
+        selector_row.pack_start(self.hamburger_launcher.widget, False, False, 0)
         selector_row.pack_start(self.present_event_box, False, False, 0)
         selector_row.pack_start(self.script_menu.widget, False, False, 0)
-
+        selector_row.set_margin_top(2)
         # Edit area
         self.value_edit_frame = Gtk.Frame()
         self.value_edit_frame.set_shadow_type(Gtk.ShadowType.IN)
         self.value_edit_frame.set_size_request(EDIT_PANEL_WIDTH+ 10, EDIT_PANEL_HEIGHT + 10)
         self.value_edit_box = None
         
+        
+        #---- RIGHT PANEL
+        self.preview_info = Gtk.Label()
+        self.preview_info.set_markup("<small>" + _("no preview") + "</small>" )
+        preview_info_row = Gtk.HBox()
+        preview_info_row.pack_start(self.preview_info, False, False, 0)
+        preview_info_row.pack_start(Gtk.Label(), True, True, 0)
+        preview_info_row.set_margin_top(6)
+        preview_info_row.set_margin_bottom(8)
+        preview_info_row.set_size_request(200, 10)
+        
         # Monitor 
         self.preview_monitor = cairoarea.CairoDrawableArea2(MONITOR_WIDTH, MONITOR_HEIGHT, self._draw_preview)
 
-
+        # Position control panel
+        self.pos_bar = positionbar.PositionBar(False)
+        self.pos_bar.set_listener(self.position_listener)
+        pos_bar_frame = Gtk.Frame()
+        pos_bar_frame.add(self.pos_bar.widget)
+        pos_bar_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
+        pos_bar_frame.set_margin_top(5)
+        pos_bar_frame.set_margin_bottom(4)
+        pos_bar_frame.set_margin_left(6)
+        pos_bar_frame.set_margin_right(2)
         
+        """
+        self.control_buttons = glassbuttons.GmicButtons()
+        pressed_callback_funcs = [prev_pressed,
+                                  next_pressed]
+                                  
+        self.control_buttons.set_callbacks(pressed_callback_funcs)
+        """
+        
+        self.preview_button = Gtk.Button(_("Preview Frame"))
+        self.preview_button.connect("clicked", lambda w: render_preview_frame())
+                            
+        control_panel = Gtk.HBox(False, 2)
+        control_panel.pack_start(pos_bar_frame, True, True, 0)
+        #control_panel.pack_start(self.control_buttons.widget, False, False, 0)
+        control_panel.pack_start(guiutils.pad_label(2, 2), False, False, 0)
+        control_panel.pack_start(self.preview_button, False, False, 0)
+        
+        # Range setting
+        in_label = Gtk.Label(_("In:"))
+        self.range_in = Gtk.SpinButton.new_with_range(1, 249, 1)
+        out_label = Gtk.Label(_("Out:"))
+        self.range_out = Gtk.SpinButton.new_with_range(2, 250, 1)
+        self.range_in.set_value(1)
+        self.range_out.set_value(250)
+        pos_label = Gtk.Label(_("Pos:"))
+        self.pos_info = Gtk.Label(_("1"))
+
+        range_row = Gtk.HBox(False, 2)
+        range_row.pack_start(in_label, False, False, 0)
+        range_row.pack_start(self.range_in, False, False, 0)
+        range_row.pack_start(Gtk.Label(), True, True, 0)
+        range_row.pack_start(pos_label, False, False, 0)
+        range_row.pack_start(self.pos_info, False, False, 0)
+        range_row.pack_start(Gtk.Label(), True, True, 0)
+        range_row.pack_start(out_label, False, False, 0)
+        range_row.pack_start(self.range_out, False, False, 0)
+        range_row.set_margin_bottom(24)
+        range_row.set_margin_left(5)
+
         # Render panel
         self.out_folder = Gtk.FileChooserButton(_("Select Folder"))
         self.out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
@@ -169,22 +239,45 @@ class NatronAnimatationsToolWindow(Gtk.Window):
         render_vbox.pack_start(render_status_row, False, False, 0)
         render_vbox.pack_start(render_row, False, False, 0)
         render_vbox.pack_start(guiutils.pad_label(24, 24), False, False, 0)
+        render_vbox.set_margin_left(8)
 
+        # Bottomrow
+        self.load_anim = Gtk.Button(_("Load Animation"))
+        self.load_anim.connect("clicked", lambda w:load_script_dialog(_load_script_dialog_callback))
+        self.save_anim = Gtk.Button(_("Save Animation"))
+        self.save_anim.connect("clicked", lambda w:save_script_dialog(_save_script_dialog_callback))
+
+        exit_b = guiutils.get_sized_button(_("Close"), 150, 32)
+        exit_b.connect("clicked", lambda w:_shutdown())
+        
+        editor_buttons_row = Gtk.HBox()
+        editor_buttons_row.pack_start(self.load_anim, False, False, 0)
+        editor_buttons_row.pack_start(self.save_anim, False, False, 0)
+        editor_buttons_row.pack_start(Gtk.Label(), True, True, 0)
+        editor_buttons_row.pack_start(exit_b, False, False, 0)
+        
         # Build window
         left_panel = Gtk.VBox(False, 2)
         left_panel.pack_start(selector_row, False, False, 0)
         left_panel.pack_start(self.value_edit_frame, True, True, 0)
 
-        right_panel = Gtk.VBox(False, 2)
+        right_panel = Gtk.VBox(False, 0)
+        right_panel.pack_start(preview_info_row, False, False, 0)
         right_panel.pack_start(self.preview_monitor, False, False, 0)
+        right_panel.pack_start(control_panel, False, False, 0)
+        right_panel.pack_start(range_row, False, False, 0)
         right_panel.pack_start(render_vbox, True, True, 0)
-        #right_panel.pack_start(self.edit_panel, False, False, 0)
+        right_panel.set_margin_left(4)
         
-        pane = Gtk.HBox(False, 2)
-        pane.pack_start(left_panel, False, False, 0)
-        pane.pack_start(right_panel, False, False, 0)
+        sides_pane = Gtk.HBox(False, 2)
+        sides_pane.pack_start(left_panel, False, False, 0)
+        sides_pane.pack_start(right_panel, False, False, 0)
+
+        pane = Gtk.VBox(False, 2)
+        pane.pack_start(sides_pane, False, False, 0)
+        pane.pack_start(editor_buttons_row, False, False, 0)
         
-        align = guiutils.set_margins(pane, 12, 12, 12, 12)
+        align = guiutils.set_margins(pane, 2, 12, 12, 12)
 
 
 
@@ -203,6 +296,16 @@ class NatronAnimatationsToolWindow(Gtk.Window):
         self.update_render_status_info()
         self.change_animation()
 
+    def hamburger_launch_pressed(self, widget, event):
+        menu = _hamburger_menu
+        guiutils.remove_children(menu)
+        
+        menu.add(_get_menu_item(_("Load Clip") + "...", _hamburger_menu_callback, "load" ))
+        menu.add(_get_menu_item(_("G'Mic Webpage"), _hamburger_menu_callback, "docs" ))
+        _add_separetor(menu)
+        menu.add(_get_menu_item(_("Close"), _hamburger_menu_callback, "close" ))
+        
+        menu.popup(None, None, None, None, event.button, event.time)
 
     def change_animation(self):
 
@@ -312,7 +415,13 @@ class NatronAnimatationsToolWindow(Gtk.Window):
         cr.set_source_rgb(0.0, 0.0, 0.0)
         cr.rectangle(0, 0, w, h)
         cr.fill()
-            
+
+    def position_listener(self, normalized_pos, length):
+        frame = int(normalized_pos * length)
+        self.tc_display.set_frame(frame)
+        _player.seek_frame(frame)
+        self.pos_bar.widget.queue_draw()
+        
 #-------------------------------------------------- script setting and save/load
 def animations_menu_launched(launcher, event):
     show_menu(event, animations_menu_item_selected)

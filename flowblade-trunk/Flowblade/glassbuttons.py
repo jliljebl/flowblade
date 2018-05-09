@@ -55,6 +55,7 @@ MB_BUTTON_Y = 4
 MB_BUTTON_IMAGE_Y = 6
 
 GMIC_BUTTONS_WIDTH = 250
+NATRON_BUTTONS_WIDTH = 100
 
 M_PI = math.pi
 
@@ -444,6 +445,8 @@ class GmicButtons(AbstractGlassButtons):
         buttons_width = self.button_width * len(self.icons)
         self.button_x = mid_x - (buttons_width / 2)
         self._draw_buttons(cr, w, h)
+
+
 
 class GlassButtonsGroup(AbstractGlassButtons):
 
