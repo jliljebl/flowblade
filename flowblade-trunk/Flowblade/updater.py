@@ -187,7 +187,21 @@ def tline_scrolled(adjustment):
     else:
         tlinewidgets.pos = 0
     repaint_tline()
+
+def maybe_move_playback_tline_range(current_frame):
+    # Prefs check
+    if editorpersistance.prefs.playback_follow_move_tline_range == False:
+        return False
     
+    moved = False
+    last_frame = tlinewidgets.get_last_tline_view_frame()
+    if current_frame > last_frame:
+        moved = True
+        adj_value = float(last_frame + 1) / float(current_sequence().get_length()) * 100.0
+        gui.tline_scroll.set_value(adj_value)
+    
+    return moved
+ 
 def center_tline_to_current_frame():
     """
     Sets scroll widget adjustment to place current frame in the middle of display.

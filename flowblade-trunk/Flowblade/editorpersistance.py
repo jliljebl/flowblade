@@ -190,7 +190,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     gfx_length_spin, overwrite_clip_drop, cover_delete, mouse_scroll_action, hide_file_ext_button = edit_prefs_widgets
     
     auto_center_check, play_pause_button, auto_center_on_updown, \
-    ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin = playback_prefs_widgets
+    ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range = playback_prefs_widgets
     
     use_english, disp_splash, buttons_style, dark_theme, theme_combo, audio_levels_combo, window_mode_combo, full_names, double_track_hights = view_prefs_widgets
 
@@ -234,6 +234,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.show_full_file_names = full_names.get_active()
     prefs.center_on_arrow_move = auto_center_on_updown.get_active()
     prefs.double_track_hights = (double_track_hights.get_active() == 1)
+    prefs.playback_follow_move_tline_range = follow_move_range.get_active()
 
     #if prefs.shortcuts != shortcuts.shortcut_files[shortcuts_combo.get_active()]:
     #    prefs.shortcuts = shortcuts.shortcut_files[shortcuts_combo.get_active()]
@@ -332,3 +333,4 @@ class EditorPreferences:
         self.double_track_hights = False
         self.delta_overlay = True # DEPRECATED, NOT USER SETTABLE ANYMORE
         self.show_alpha_info_message = True
+        self.playback_follow_move_tline_range = True
