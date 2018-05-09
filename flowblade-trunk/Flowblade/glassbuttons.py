@@ -492,6 +492,7 @@ class GlassButtonsGroup(AbstractGlassButtons):
         self.widget.queue_draw()
 
 
+
 class GlassButtonsToggleGroup(GlassButtonsGroup):    
     def set_pressed_button(self, pressed_button_index, fire_clicked_cb=False):
         self.pressed_button = pressed_button_index
