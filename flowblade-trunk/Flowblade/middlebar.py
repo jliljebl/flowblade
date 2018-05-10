@@ -33,6 +33,7 @@ import gmic
 import gui
 import guicomponents
 import guiutils
+import natronanimationswindow
 import respaths
 import titler
 import tlineaction
@@ -171,8 +172,9 @@ def _create_buttons(editor_window):
     editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_mixer.png"), audiomonitoring.show_audio_monitor)
     editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_titler.png"), titler.show_titler)
     editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_gmic.png"), gmic.launch_gmic)
+    editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_natron.png"), natronanimationswindow.launch_tool_window)
     editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_renderqueue.png"), lambda :batchrendering.launch_batch_rendering())
-    editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer\nTitler\nG'Mic Effects\nBatch Render Queue"))
+    editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer\nTitler\nG'Mic Effects\nNatron Animations\nBatch Render Queue"))
     editor_window.tools_buttons.no_decorations = True
     
     if editorstate.audio_monitoring_available == False:
