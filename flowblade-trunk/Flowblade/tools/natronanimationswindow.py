@@ -59,6 +59,7 @@ _window = None
 _animations_menu = Gtk.Menu()
 _current_preview_surface = None
 
+
 def launch_tool_window():
     # This is single instance tool
     if _window != None:
@@ -310,9 +311,6 @@ class NatronAnimatationsToolWindow(Gtk.Window):
 
     def change_animation(self):
 
-        # global _animation_instance has been set elsewhere
-        self.animation_label.set_text(_animation_instance.info.name)
-
         # ---------------- PROPERTY EDITING
         # We are using existing property edit code to create value editors.
         # We will need present a lot of dummy data and monkeypatch objects to make that 
@@ -370,11 +368,17 @@ class NatronAnimatationsToolWindow(Gtk.Window):
         self.value_edit_box = scroll_window
     
         # ---------------- GUI UPDATES
+        global _current_preview_surface
+        _current_preview_surface = None
+        
+        self.animation_label.set_text(_animation_instance.info.name)
+        self.render_status_info.set_markup("<small>" + self.status_no_render  + "</small>")
         self.pos_bar.update_display_from_producer(_animation_instance) # duck typing as mlt.Producer for pos bar, need data methods are in NatronAnimationInstance
         self.range_in.set_value(_animation_instance.range_in)
         self.range_out.set_value(_animation_instance.range_out)
         _animation_instance.current_frame = _animation_instance.range_in
         self.set_position(_animation_instance.range_in)
+        self.preview_monitor.queue_draw()
 
     def position_listener(self, normalized_pos, length):
         new_pos = int(normalized_pos * (length - 1)) + _animation_instance.range_in # -1 to compensate that Natron animations start from frame 1, not frame 0, and we need to keep doing the same here
@@ -517,8 +521,7 @@ def render_output():
     # Write data used to modyfy rendered notron animation
     _animation_instance.write_out_modify_data(_window.editable_properties)
     _window.render_percentage.set_markup("<small>" + _("Render starting...") + "</small>")
-    
-    
+
     launch_thread = NatronRenderLaunchThread()
     launch_thread.start()
 
@@ -530,6 +533,8 @@ def render_preview_frame():
     global _progress_updater
     _progress_updater = None
 
+    _animation_instance.write_out_modify_data(_window.editable_properties)
+    
     launch_thread = NatronRenderLaunchThread(True)
     launch_thread.start()
     
@@ -590,7 +595,6 @@ class NatronRenderLaunchThread(threading.Thread):
 
             global _current_preview_surface
             preview_frame_path = utils.get_hidden_user_dir_path() + appconsts.NATRON_DIR + "/preview" + str(_animation_instance.frame()).zfill(4) +  ".png"
-            print preview_frame_path
             _current_preview_surface = cairo.ImageSurface.create_from_png(preview_frame_path)
             _window.preview_monitor.queue_draw()
         Gdk.threads_leave()
