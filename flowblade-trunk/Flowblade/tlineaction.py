@@ -246,6 +246,9 @@ def sequence_split_pressed():
 
         action = edit.append_action(data)
         action.do_edit()
+    
+    # update time line to show whole range of new sequence
+    updater.zoom_project_length()
 
 
 def splice_out_button_pressed():
