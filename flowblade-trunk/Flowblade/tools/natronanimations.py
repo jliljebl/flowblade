@@ -88,18 +88,14 @@ class NatronAnimationInstance:
         self.uid = md5.new(os.urandom(16)).hexdigest()
         self.info = natron_animation_info
         self.properties = copy.deepcopy(natron_animation_info.properties)
-        """
-        try:
-            self.non_mlt_properties = copy.deepcopy(natron_animation_info.non_mlt_properties)
-        except:
-            self.non_mlt_properties = [] # Versions prior 0.14 do not have non_mlt_properties and fail here on load
-        """
-        #self.mlt_filter = None # reference to MLT C-object
-        #self.active = True 
 
-        #         <propertyinterpretation propertyname="Color1" nodename="solid1">string_to_color</propertyinterpretation>
+        self.range_in = 1
+        self.range_out = int(self.info.length)
 
-
+        self.current_frame = 1
+        self.mark_in = -1
+        self.mark_out =-1
+        
         # PROP_EXPR values may have keywords that need to be replaced with
         # numerical values that depend on the profile we have. These need
         # to be replaced now that we have profile and we are ready to connect this.
@@ -135,15 +131,17 @@ class NatronAnimationInstance:
         return exec_str
 
     def get_length(self):
-        # dis gonna get more complicated
-        return self.info.length
+        return self.range_out - self.range_in + 1 # # +1 out incl.
 
-    def get_frame_range(self):
-        return "1-250"
+    def get_frame_range_str(self):
+        return str(self.range_in) + "-" + str(self.range_out)
 
     def get_project_file_path(self):
         return respaths.ROOT_PATH + "/res/natron/project_files/" + self.info.project_file
-        
+
+    def frame(self):
+        return self.current_frame
+
 # --------------------------------------------------------- load data
 def load_animations_projects_xml():
     print "Loading Natron animations..."

@@ -56,7 +56,7 @@ MONITOR_HEIGHT = 400
 _animation_instance = None
 _window = None
 _animations_menu = Gtk.Menu()
-
+_pos = 1
 
 def launch_tool_window():
     # This is single instance tool
@@ -145,13 +145,15 @@ class NatronAnimatationsToolWindow(Gtk.Window):
         control_panel.pack_start(self.preview_button, False, False, 0)
         
         # Range setting
-        in_label = Gtk.Label(_("In:"))
+        in_label = Gtk.Label(_("Start:"))
         self.range_in = Gtk.SpinButton.new_with_range(1, 249, 1)
-        out_label = Gtk.Label(_("Out:"))
+        out_label = Gtk.Label(_("End:"))
         self.range_out = Gtk.SpinButton.new_with_range(2, 250, 1)
         self.range_in.set_value(1)
         self.range_out.set_value(250)
-        pos_label = Gtk.Label(_("Pos:"))
+        self.range_in.connect("value-changed", self.range_changed)
+        self.range_out.connect("value-changed", self.range_changed)
+        pos_label = Gtk.Label(_("Frame:"))
         self.pos_info = Gtk.Label(_("1"))
 
         range_row = Gtk.HBox(False, 2)
@@ -279,8 +281,6 @@ class NatronAnimatationsToolWindow(Gtk.Window):
         
         align = guiutils.set_margins(pane, 2, 12, 12, 12)
 
-
-
         # Connect global key listener
         #self.connect("key-press-event", _global_key_down_listener)
 
@@ -312,6 +312,7 @@ class NatronAnimatationsToolWindow(Gtk.Window):
         # global _animation_instance has been set elsewhere
         self.animation_label.set_text(_animation_instance.info.name)
 
+        # ---------------- PROPERTY EDITING
         # We are using existing property edit code to create value editors.
         # We will need present a lot of dummy data and monkeypatch objects to make that 
         # pipeline do our bidding for natron animations value editing.
@@ -367,6 +368,42 @@ class NatronAnimatationsToolWindow(Gtk.Window):
 
         self.value_edit_box = scroll_window
     
+        # ---------------- GUI UPDATES
+        self.pos_bar.update_display_from_producer(_animation_instance) # duck typing as mlt.Producer for pos bar, need data methods are in NatronAnimationInstance
+        self.range_in.set_value(_animation_instance.range_in)
+        self.range_out.set_value(_animation_instance.range_out)
+        _animation_instance.current_frame = _animation_instance.range_in
+        self.set_position(_animation_instance.range_in)
+
+    def position_listener(self, normalized_pos, length):
+        new_pos = int(normalized_pos * (length - 1)) + _animation_instance.range_in # -1 to compensate that Natron animations start from frame 1, not frame 0, and we need to keep doing the same here
+        self.set_position(new_pos)
+        self.pos_bar.widget.queue_draw()
+        
+    def set_position(self, new_pos):
+        _animation_instance.current_frame = new_pos
+        self.pos_info.set_text(str(_animation_instance.current_frame))
+
+    def range_changed(self, widget):
+        if widget == self.range_in:
+            _animation_instance.range_in = int(widget.get_value())
+        else:
+            _animation_instance.range_out = int(widget.get_value())
+            
+        if _animation_instance.range_in > _animation_instance.range_out:
+            _animation_instance.range_out = _animation_instance.range_in + 1
+            self.range_out.set_value(_animation_instance.range_out) 
+
+        self.pos_bar.update_display_from_producer(_animation_instance)
+        
+        if _animation_instance.current_frame < _animation_instance.range_in:
+            _animation_instance.current_frame = _animation_instance.range_in
+        
+        norm_pos = float(_animation_instance.current_frame - _animation_instance.range_in) / float(_animation_instance.get_length())
+        self.pos_bar.set_normalized_pos(norm_pos)
+        
+        self.set_position(_animation_instance.current_frame)
+            
     def folder_selection_changed(self, chooser):
         self.update_render_status_info()
 
@@ -416,11 +453,7 @@ class NatronAnimatationsToolWindow(Gtk.Window):
         cr.rectangle(0, 0, w, h)
         cr.fill()
 
-    def position_listener(self, normalized_pos, length):
-        frame = int(normalized_pos * length)
-        self.tc_display.set_frame(frame)
-        _player.seek_frame(frame)
-        self.pos_bar.widget.queue_draw()
+
         
 #-------------------------------------------------- script setting and save/load
 def animations_menu_launched(launcher, event):
@@ -482,7 +515,7 @@ class NatronRenderLaunchThread(threading.Thread):
         b_switch = "-b"
         w_switch = "-w"
         writer = "Write1"
-        range_str = _animation_instance.get_frame_range()
+        range_str = _animation_instance.get_frame_range_str()
         render_frame = _window.get_render_frame() #/home/janne/test/natrontestout/frame###.png
         l_switch = "-l"
         param_mod_script = respaths.ROOT_PATH + "/tools/NatronRenderModify.py"
