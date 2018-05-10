@@ -33,6 +33,7 @@ import subprocess
 import threading
 import time
 
+import appconsts
 import cairoarea
 import guicomponents
 import guiutils
@@ -56,7 +57,7 @@ MONITOR_HEIGHT = 400
 _animation_instance = None
 _window = None
 _animations_menu = Gtk.Menu()
-_pos = 1
+_current_preview_surface = None
 
 def launch_tool_window():
     # This is single instance tool
@@ -452,6 +453,27 @@ class NatronAnimatationsToolWindow(Gtk.Window):
         cr.set_source_rgb(0.0, 0.0, 0.0)
         cr.rectangle(0, 0, w, h)
         cr.fill()
+            
+        if _current_preview_surface != None:
+            sw = _current_preview_surface.get_width()
+            sh = _current_preview_surface.get_height()
+            s_aspect = float(sw) / float(sh)
+            monitor_aspect = float(w) / float(h)
+            
+            if s_aspect > monitor_aspect: # letterbox
+                scale = float(w) / float(sw)
+                mx = 0
+                my = h / 2.0 - (scale * sh) / 2.0
+            else: # pillarbox
+                scale = float(h) / float(sh)
+                mx =  w / 2.0 - (scale * sw) / 2.0
+                my = 0
+
+            cr.scale(scale, scale)  # uhh... pixel aspect ratios ?
+            cr.set_source_surface(_current_preview_surface, mx, my)
+            cr.paint()
+
+
 
 
         
@@ -503,31 +525,50 @@ def render_output():
     global _progress_updater
     _progress_updater = ProgressUpdaterThread()
     _progress_updater.start()
+
+def render_preview_frame():
+    global _progress_updater
+    _progress_updater = None
+
+    launch_thread = NatronRenderLaunchThread(True)
+    launch_thread.start()
     
-    
+
+
+
+
 #------------------------------------------------- render threads
 class NatronRenderLaunchThread(threading.Thread):
 
-    def __init__(self):
+    def __init__(self, is_preview=False):
         threading.Thread.__init__(self)
+        self.is_preview = is_preview
 
     def run(self):
+        start_time = time.time()
+        
         b_switch = "-b"
         w_switch = "-w"
         writer = "Write1"
-        range_str = _animation_instance.get_frame_range_str()
-        render_frame = _window.get_render_frame() #/home/janne/test/natrontestout/frame###.png
+        if self.is_preview == False:
+            range_str = _animation_instance.get_frame_range_str()
+            render_frame = _window.get_render_frame()
+        else:
+            range_str = str(_animation_instance.frame())
+            render_frame = utils.get_hidden_user_dir_path() + appconsts.NATRON_DIR + "/preview####.png"
+            Gdk.threads_enter()
+            _window.preview_info.set_markup("<small>" + _("Rendering preview for frame ") + range_str + "..." + "</small>") 
+            Gdk.threads_leave()
+                    
         l_switch = "-l"
         param_mod_script = respaths.ROOT_PATH + "/tools/NatronRenderModify.py"
         natron_project = _animation_instance.get_project_file_path()
-
-        print "NatronRenderer ", b_switch, w_switch , writer, range_str, render_frame, l_switch, param_mod_script, natron_project
         
         render_command = "NatronRenderer " + b_switch  + " " +  w_switch + " " + writer + " " + \
                          range_str  + " " +  render_frame + " " +  l_switch + " " +  param_mod_script + " " +  natron_project
 
 
-        print "Starting Natron render, command:", render_command
+        print "Starting Natron render, command: ", render_command
 
         FLOG = open(utils.get_hidden_user_dir_path() + "log_natron_render", 'w')
         p = subprocess.Popen(render_command, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
@@ -537,9 +578,23 @@ class NatronRenderLaunchThread(threading.Thread):
         if _progress_updater != None:
             _progress_updater.stop_thread()
 
+        # Render complete GUI updates
         Gdk.threads_enter()
-        _window.render_percentage.set_markup("<small>" + _("Render complete.") + "</small>")
+        if self.is_preview == False:
+            _window.render_percentage.set_markup("<small>" + _("Render complete.") + "</small>")
+        else:
+            render_time = time.time() - start_time
+            time_str = "{0:.2f}".format(round(render_time,2))
+            _window.preview_info.set_markup("<small>" + _("Preview for frame: ") + range_str + \
+                _(", render time: ") + time_str +  "</small>" )
+
+            global _current_preview_surface
+            preview_frame_path = utils.get_hidden_user_dir_path() + appconsts.NATRON_DIR + "/preview" + str(_animation_instance.frame()).zfill(4) +  ".png"
+            print preview_frame_path
+            _current_preview_surface = cairo.ImageSurface.create_from_png(preview_frame_path)
+            _window.preview_monitor.queue_draw()
         Gdk.threads_leave()
+        
         print "Natron render done."
 
 
@@ -547,7 +602,6 @@ class ProgressUpdaterThread(threading.Thread):
     
     def __init__(self):
         threading.Thread.__init__(self)
-        
 
     def run(self):
         self.running = True
