@@ -25,6 +25,7 @@ import sys
 
 import appconsts
 import dialogutils
+from editorstate import PROJECT
 import gui
 import natronanimations
 import respaths
@@ -51,10 +52,11 @@ def launch_natron_animations_tool():
 
     gui.save_current_colors()
 
-        
+    current_profile_name = PROJECT().profile.description().replace(" ", "_")
+    print current_profile_name
     print "Launch Natron tool..."
     FLOG = open(utils.get_hidden_user_dir_path() + "log_natron_tool", 'w')
-    subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladenatron", "humppa"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
+    subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladenatron", current_profile_name], stdin=FLOG, stdout=FLOG, stderr=FLOG)
     #subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladenatron", args[0], args[1], args[2]], stdin=FLOG, stdout=FLOG, stderr=FLOG)
         
 def natron_available():

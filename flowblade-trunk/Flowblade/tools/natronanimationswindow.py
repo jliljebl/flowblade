@@ -34,6 +34,7 @@ import mlt
 import os
 import shutil
 import subprocess
+import sys
 import threading
 import time
 
@@ -72,7 +73,7 @@ _window = None
 _animations_menu = Gtk.Menu()
 _hamburger_menu = Gtk.Menu()
 _current_preview_surface = None
-
+_profile = None
 
 # ------------------------------------------ launch, close
 def launch_tool_window():
@@ -175,8 +176,14 @@ def main(root_path, force_launch=False):
 
     gui.load_current_colors()
     
+    # Set launch profile
+    profile_name = sys.argv[1].replace("_", " ") # we had underscores to pass as single arg
+    print profile_name
+    global _profile
+    _profile = mltprofiles.get_profile(profile_name)
+    
     global _animation_instance
-    _animation_instance = natronanimations.get_default_animation_instance() # This duck types for mltfilters.FilterObject
+    _animation_instance = natronanimations.get_default_animation_instance(_profile) # This duck types for mltfilters.FilterObject
         
     global _window
     _window = NatronAnimatationsToolWindow()
@@ -610,7 +617,7 @@ def animations_menu_item_selected(item, animation):
     #_window.preset_label.set_text(animation.name)
     
     global _animation_instance
-    _animation_instance = animation.get_instance()
+    _animation_instance = animation.get_instance(_profile)
 
     _window.change_animation()
 

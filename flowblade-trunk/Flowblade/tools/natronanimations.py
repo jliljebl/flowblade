@@ -78,15 +78,16 @@ class NatronAnimationInfo:
             
             self.interpretations[i_node.getAttribute(NAME_ATTR)] = (natron_node, natron_property, interpretation, args)
 
-    def get_instance(self):
-        instance = NatronAnimationInstance(self)
+    def get_instance(self, profile):
+        instance = NatronAnimationInstance(self, profile)
         return instance
 
 
 class NatronAnimationInstance:
-    def __init__(self, natron_animation_info):
+    def __init__(self, natron_animation_info, profile):
         self.uid = md5.new(os.urandom(16)).hexdigest()
         self.info = natron_animation_info
+        self.profile = profile
         self.properties = copy.deepcopy(natron_animation_info.properties)
 
         self.range_in = 1
@@ -100,7 +101,7 @@ class NatronAnimationInstance:
         # numerical values that depend on the profile we have. These need
         # to be replaced now that we have profile and we are ready to connect this.
         # For example default values of some properties depend on the screen size of the project
-        propertyparse.replace_value_keywords(self.properties, PROJECT().profile)
+        propertyparse.replace_value_keywords(self.properties, self.profile)
         
     def write_out_modify_data(self, editable_properties):
         exec_str = self._get_natron_modifying_exec_string(editable_properties)
@@ -188,9 +189,9 @@ def load_animations_projects_xml():
 def get_animations_groups():
     return _animations_groups
 
-def get_default_animation_instance():
+def get_default_animation_instance(profile):
     key, group = _animations_groups[0]
-    return group[0].get_instance()
+    return group[0].get_instance(profile)
         
 def get_animation_instance(groups_index, group_animations_index):
     key, group = _animations_groups[groups_index]
