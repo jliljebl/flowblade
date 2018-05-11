@@ -29,20 +29,33 @@ from gi.repository import GdkX11
 from gi.repository import Pango
 
 import cairo
+import locale
+import mlt
+import os
+import shutil
 import subprocess
 import threading
 import time
 
 import appconsts
 import cairoarea
+import editorstate
+import editorpersistance
+import gui
 import guicomponents
 import guiutils
+import mltenv
+import mltprofiles
+import mlttransitions
+import mltfilters
 import natronanimations
 import positionbar
 import propertyedit
 import propertyeditorbuilder
+import renderconsumer
 import respaths
 import toolguicomponents
+import translations
 import utils
 
 
@@ -57,9 +70,11 @@ MONITOR_HEIGHT = 400
 _animation_instance = None
 _window = None
 _animations_menu = Gtk.Menu()
+_hamburger_menu = Gtk.Menu()
 _current_preview_surface = None
 
 
+# ------------------------------------------ launch, close
 def launch_tool_window():
     # This is single instance tool
     if _window != None:
@@ -71,19 +86,136 @@ def launch_tool_window():
     global _window
     _window = NatronAnimatationsToolWindow()
 
+def _shutdown():
+    
+    _window.set_visible(False)
+    _window.destroy()
 
+    global _window
+    _window = None
+
+# ------------------------------------------ process main
+def main(root_path, force_launch=False):
+    
+    print "Pillumarallaaaaa"
+    
+    gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
+    editorstate.gtk_version = gtk_version
+    try:
+        editorstate.mlt_version = mlt.LIBMLT_VERSION
+    except:
+        editorstate.mlt_version = "0.0.99" # magic string for "not found"
+
+    global _session_id
+    _session_id = int(time.time() * 1000) # good enough
+
+    # Set paths.
+    respaths.set_paths(root_path)
+
+    # Write stdout to log file
+    #sys.stdout = open(utils.get_hidden_user_dir_path() + "log_gmic", 'w')
+    #print "G'MIC version:", str(_gmic_version)
+
+    # Init session folders
+    if os.path.exists(get_session_folder()):
+        shutil.rmtree(get_session_folder())
+        
+    os.mkdir(get_session_folder())
+
+    # Load editor prefs and list of recent projects
+    editorpersistance.load()
+    if editorpersistance.prefs.dark_theme == True:
+        respaths.apply_dark_theme()
+
+    # Init translations module with translations data
+    translations.init_languages()
+    translations.load_filters_translations()
+    mlttransitions.init_module()
+
+    # Load aniamtions data
+    natronanimations.load_animations_projects_xml()
+
+        
+    # Init gtk threads
+    Gdk.threads_init()
+    Gdk.threads_enter()
+
+    # Set monitor sizes
+    """
+    scr_w = Gdk.Screen.width()
+    scr_h = Gdk.Screen.height()
+    editorstate.SCREEN_WIDTH = scr_w
+    editorstate.SCREEN_HEIGHT = scr_h
+    if editorstate.screen_size_large_height() == True and editorstate.screen_size_small_width() == False:
+        global MONITOR_WIDTH, MONITOR_HEIGHT
+        MONITOR_WIDTH = 650
+        MONITOR_HEIGHT = 400 # initial value, this gets changed when material is loaded
+    """
+    
+    # Request dark them if so desired
+    if editorpersistance.prefs.dark_theme == True:
+        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
+
+    # We need mlt fpr profiles handling
+    repo = mlt.Factory().init()
+
+    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
+    locale.setlocale(locale.LC_NUMERIC, 'C')
+
+    # Check for codecs and formats on the system
+    mltenv.check_available_features(repo)
+    renderconsumer.load_render_profiles()
+
+    # Load filter and compositor descriptions from xml files.
+    mltfilters.load_filters_xml(mltenv.services)
+    mlttransitions.load_compositors_xml(mltenv.transitions)
+
+    # Create list of available mlt profiles
+    mltprofiles.load_profile_list()
+
+    gui.load_current_colors()
+    
+    global _animation_instance
+    _animation_instance = natronanimations.get_default_animation_instance() # This duck types for mltfilters.FilterObject
+        
+    global _window
+    _window = NatronAnimatationsToolWindow()
+    _window.pos_bar.set_dark_bg_color()
+
+    Gtk.main()
+    Gdk.threads_leave()
+
+
+#----------------------------------------------- session folders and files
+def get_session_folder():
+    return utils.get_hidden_user_dir_path() + appconsts.NATRON_DIR + "/session_" + str(_session_id)
+    
+"""
+def get_clip_frames_dir():
+    return get_session_folder() + CLIP_FRAMES_DIR
+
+def get_render_frames_dir():
+    return get_session_folder() + RENDER_FRAMES_DIR
+    
+def get_current_frame_file():
+    return get_clip_frames_dir() + "/frame" + str(_player.current_frame()) + ".png"
+
+def get_preview_file():
+    return get_session_folder() + "/" + PREVIEW_FILE
+"""
+
+# ----------------------------------------------------- tool window
 class NatronAnimatationsToolWindow(Gtk.Window):
     def __init__(self):
         GObject.GObject.__init__(self)
-        #self.connect("delete-event", lambda w, e:_shutdown())
+        self.connect("delete-event", lambda w, e:_shutdown())
 
         app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowbladetoolicon.png")
         self.set_icon(app_icon)
 
-
         #---- LEFT PANEL
         hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger.png")
-        self.hamburger_launcher = guicomponents.PressLaunch(self.hamburger_launch_pressed, hamburger_launcher_surface)
+        self.hamburger_launcher = guicomponents.PressLaunch(_hamburger_launch_pressed, hamburger_launcher_surface)
         guiutils.set_margins(self.hamburger_launcher.widget, 0, 8, 0, 8)
 
         # Animation selector menu launcher row
@@ -298,16 +430,7 @@ class NatronAnimatationsToolWindow(Gtk.Window):
         self.update_render_status_info()
         self.change_animation()
 
-    def hamburger_launch_pressed(self, widget, event):
-        menu = _hamburger_menu
-        guiutils.remove_children(menu)
-        
-        menu.add(_get_menu_item(_("Load Clip") + "...", _hamburger_menu_callback, "load" ))
-        menu.add(_get_menu_item(_("G'Mic Webpage"), _hamburger_menu_callback, "docs" ))
-        _add_separetor(menu)
-        menu.add(_get_menu_item(_("Close"), _hamburger_menu_callback, "close" ))
-        
-        menu.popup(None, None, None, None, event.button, event.time)
+
 
     def change_animation(self):
 
@@ -479,9 +602,7 @@ class NatronAnimatationsToolWindow(Gtk.Window):
 
 
 
-
-        
-#-------------------------------------------------- script setting and save/load
+#-------------------------------------------------- GUI actions
 def animations_menu_launched(launcher, event):
     show_menu(event, animations_menu_item_selected)
 
@@ -515,7 +636,28 @@ def show_menu(event, callback):
 
     _animations_menu.show_all()
     _animations_menu.popup(None, None, None, None, event.button, event.time)
+
+def _hamburger_launch_pressed(self, widget, event):
+    menu = _hamburger_menu
+    guiutils.remove_children(menu)
     
+    menu.add(_get_menu_item(_("Load Clip") + "...", _hamburger_menu_callback, "load" ))
+    menu.add(_get_menu_item(_("G'Mic Webpage"), _hamburger_menu_callback, "docs" ))
+    _add_separetor(menu)
+    menu.add(_get_menu_item(_("Close"), _hamburger_menu_callback, "close" ))
+    
+    menu.popup(None, None, None, None, event.button, event.time)
+        
+def _hamburger_menu_callback(widget, msg):
+    if msg == "load":
+        open_clip_dialog()
+    elif msg == "close":
+        _shutdown()
+    elif msg == "docs":
+        webbrowser.open(url="http://gmic.eu/", new=0, autoraise=True)
+
+
+
 # ------------------------------------------------ rendering
 def render_output():
     # Write data used to modyfy rendered notron animation
@@ -538,8 +680,6 @@ def render_preview_frame():
     launch_thread = NatronRenderLaunchThread(True)
     launch_thread.start()
     
-
-
 
 
 #------------------------------------------------- render threads

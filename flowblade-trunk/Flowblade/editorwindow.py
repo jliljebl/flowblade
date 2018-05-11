@@ -56,7 +56,6 @@ import menuactions
 import middlebar
 import monitorevent
 import monitorwidget
-import natronanimationswindow
 import respaths
 import render
 import rendergui
@@ -71,6 +70,7 @@ import titler
 import tlineaction
 import tlinewidgets
 import trackaction
+import toolnatron
 import updater
 import undo
 
@@ -247,7 +247,7 @@ class EditorWindow:
             ('Titler', None, _('Titler'), None, None, lambda a:titler.show_titler()),
             ('AudioMix', None, _('Audio Mixer'), None, None, lambda a:audiomonitoring.show_audio_monitor()),
             ('GMIC', None, _("G'MIC Effects"), None, None, lambda a:gmic.launch_gmic()),
-            ('NatronAnimations', None, _("Natron Animations"),None, None, lambda a:natronanimationswindow.launch_tool_window()),
+            ('NatronAnimations', None, _("Natron Animations"),None, None, lambda a:toolnatron.launch_natron_animations_tool()),
             ('MediaLink', None, _('Media Relinker'), None, None, lambda a:medialinker.display_linker()),
             ('HelpMenu', None, _('_Help')),
             ('QuickReference', None, _('Contents'), None, None, lambda a:menuactions.quick_reference()),
