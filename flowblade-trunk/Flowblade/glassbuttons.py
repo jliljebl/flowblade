@@ -65,8 +65,7 @@ NO_HIT = -1
 DEFAULT_FOCUS_GROUP = "default_focus_group"
 focus_groups = {DEFAULT_FOCUS_GROUP:[]}
 
-#FLAT_COLOR_LIGHT = (0.9, 0.9, 0.9)
-#FLAT_COLOR_DARK = (0.25, 0.25, 0.25)
+
 
 class AbstractGlassButtons:
 
