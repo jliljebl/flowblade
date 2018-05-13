@@ -30,6 +30,7 @@ from gi.repository import Pango
 
 import cairo
 import locale
+import md5
 import mlt
 import os
 import shutil
@@ -74,32 +75,23 @@ _animations_menu = Gtk.Menu()
 _hamburger_menu = Gtk.Menu()
 _current_preview_surface = None
 _profile = None
+_session_id = None
 
 # ------------------------------------------ launch, close
-def launch_tool_window():
-    # This is single instance tool
-    if _window != None:
-        return
-        
-    global _animation_instance
-    _animation_instance = natronanimations.get_default_animation_instance() # This duck types for mltfilters.FilterObject
-        
-    global _window
-    _window = NatronAnimatationsToolWindow()
-
 def _shutdown():
+
+    global _window
     
     _window.set_visible(False)
     _window.destroy()
-
-    global _window
     _window = None
 
+    # Delete session folder
+    shutil.rmtree(get_session_folder())
+    
 # ------------------------------------------ process main
 def main(root_path, force_launch=False):
-    
-    print "Pillumarallaaaaa"
-    
+
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
     editorstate.gtk_version = gtk_version
     try:
@@ -108,14 +100,10 @@ def main(root_path, force_launch=False):
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
     global _session_id
-    _session_id = int(time.time() * 1000) # good enough
+    _session_id = md5.new(os.urandom(16)).hexdigest()
 
     # Set paths.
     respaths.set_paths(root_path)
-
-    # Write stdout to log file
-    #sys.stdout = open(utils.get_hidden_user_dir_path() + "log_gmic", 'w')
-    #print "G'MIC version:", str(_gmic_version)
 
     # Init session folders
     if os.path.exists(get_session_folder()):
@@ -136,7 +124,6 @@ def main(root_path, force_launch=False):
     # Load aniamtions data
     natronanimations.load_animations_projects_xml()
 
-        
     # Init gtk threads
     Gdk.threads_init()
     Gdk.threads_enter()
@@ -177,13 +164,13 @@ def main(root_path, force_launch=False):
     gui.load_current_colors()
     
     # Set launch profile
-    profile_name = sys.argv[1].replace("_", " ") # we had underscores to pass as single arg
+    profile_name = sys.argv[1].replace("_", " ") # we had underscores put in to pass as single arg
     print profile_name
     global _profile
     _profile = mltprofiles.get_profile(profile_name)
     
     global _animation_instance
-    _animation_instance = natronanimations.get_default_animation_instance(_profile) # This duck types for mltfilters.FilterObject
+    _animation_instance = natronanimations.get_default_animation_instance(_profile)
         
     global _window
     _window = NatronAnimatationsToolWindow()
@@ -668,7 +655,7 @@ def _hamburger_menu_callback(widget, msg):
 # ------------------------------------------------ rendering
 def render_output():
     # Write data used to modyfy rendered notron animation
-    _animation_instance.write_out_modify_data(_window.editable_properties)
+    _animation_instance.write_out_modify_data(_window.editable_properties, _session_id)
     _window.render_percentage.set_markup("<small>" + _("Render starting...") + "</small>")
 
     launch_thread = NatronRenderLaunchThread()
@@ -682,7 +669,7 @@ def render_preview_frame():
     global _progress_updater
     _progress_updater = None
 
-    _animation_instance.write_out_modify_data(_window.editable_properties)
+    _animation_instance.write_out_modify_data(_window.editable_properties, _session_id)
     
     launch_thread = NatronRenderLaunchThread(True)
     launch_thread.start()
@@ -707,7 +694,8 @@ class NatronRenderLaunchThread(threading.Thread):
             render_frame = _window.get_render_frame()
         else:
             range_str = str(_animation_instance.frame())
-            render_frame = utils.get_hidden_user_dir_path() + appconsts.NATRON_DIR + "/preview####.png"
+            render_frame = utils.get_hidden_user_dir_path() + appconsts.NATRON_DIR + "/session_" + _session_id + "/preview####.png"
+            print render_frame
             Gdk.threads_enter()
             _window.preview_info.set_markup("<small>" + _("Rendering preview for frame ") + range_str + "..." + "</small>") 
             Gdk.threads_leave()
@@ -732,6 +720,7 @@ class NatronRenderLaunchThread(threading.Thread):
 
         # Render complete GUI updates
         Gdk.threads_enter()
+        
         if self.is_preview == False:
             _window.render_percentage.set_markup("<small>" + _("Render complete.") + "</small>")
         else:
@@ -741,9 +730,10 @@ class NatronRenderLaunchThread(threading.Thread):
                 _(", render time: ") + time_str +  "</small>" )
 
             global _current_preview_surface
-            preview_frame_path = utils.get_hidden_user_dir_path() + appconsts.NATRON_DIR + "/preview" + str(_animation_instance.frame()).zfill(4) +  ".png"
+            preview_frame_path = utils.get_hidden_user_dir_path() + appconsts.NATRON_DIR + "/session_" + _session_id + "/preview" + str(_animation_instance.frame()).zfill(4) +  ".png"
             _current_preview_surface = cairo.ImageSurface.create_from_png(preview_frame_path)
             _window.preview_monitor.queue_draw()
+            
         Gdk.threads_leave()
         
         print "Natron render done."

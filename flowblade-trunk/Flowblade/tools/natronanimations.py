@@ -19,7 +19,6 @@
 """
 
 import copy
-import md5
 import os
 import xml.dom.minidom
 
@@ -85,7 +84,6 @@ class NatronAnimationInfo:
 
 class NatronAnimationInstance:
     def __init__(self, natron_animation_info, profile):
-        self.uid = md5.new(os.urandom(16)).hexdigest()
         self.info = natron_animation_info
         self.profile = profile
         self.properties = copy.deepcopy(natron_animation_info.properties)
@@ -103,21 +101,21 @@ class NatronAnimationInstance:
         # For example default values of some properties depend on the screen size of the project
         propertyparse.replace_value_keywords(self.properties, self.profile)
         
-    def write_out_modify_data(self, editable_properties):
+    def write_out_modify_data(self, editable_properties, uid):
         exec_str = self._get_natron_modifying_exec_string(editable_properties)
         print exec_str
-        export_data_file = open(self.get_modify_exec_data_file_path(), "w")
+        export_data_file = open(self.get_modify_exec_data_file_path(uid), "w")
         export_data_file.write(exec_str)
         export_data_file.close()
 
         # NOTE: THIS CAN BREAK IF 2 ANIMATION RENDERS ARE STARTED VERY CLOSELY TO EACH OTHER AND WE READ WRONG SESSION FROM THIS FILE
         # IN PRACTICE WE CAN GET AWAY WITH IT, BUT LOOK BETTER STUFF
         render_session_id_file = open(self.get_render_session_id_file_path(), "w")
-        render_session_id_file.write(self.uid)
+        render_session_id_file.write(uid)
         render_session_id_file.close()
 
-    def get_modify_exec_data_file_path(self):
-        return utils.get_hidden_user_dir_path() + appconsts.NATRON_DIR + "/mod_data_" +  self.uid
+    def get_modify_exec_data_file_path(self, uid):
+        return utils.get_hidden_user_dir_path() + appconsts.NATRON_DIR + "/session_" + uid + "/mod_data"
 
     def get_render_session_id_file_path(self):
         return utils.get_hidden_user_dir_path() + appconsts.NATRON_DIR + "/LATEST_RENDER_INSTANCE_ID"
