@@ -182,6 +182,76 @@ class ImageTextTextListView(Gtk.VBox):
         model, rows = self.treeview.get_selection().get_selected_rows()
         return rows
 
+# ------------------------------------------------- item lists
+class ImageTextTextTreeView(Gtk.VBox):
+    """
+    GUI component displaying list with columns: img, text, text
+    Middle column expands.
+    """
+
+    def __init__(self):
+        GObject.GObject.__init__(self)
+
+       # Datamodel: icon, text, text
+        self.storemodel = Gtk.TreeStore(GdkPixbuf.Pixbuf, str, str)
+
+        # Scroll container
+        self.scroll = Gtk.ScrolledWindow()
+        self.scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
+
+        # View
+        self.treeview = Gtk.TreeView(self.storemodel)
+        self.treeview.set_property("rules_hint", True)
+        self.treeview.set_headers_visible(False)
+        tree_sel = self.treeview.get_selection()
+        tree_sel.set_mode(Gtk.SelectionMode.SINGLE)
+
+        # Column views
+        self.icon_col = Gtk.TreeViewColumn("Icon")
+        self.text_col_1 = Gtk.TreeViewColumn("text1")
+        self.text_col_2 = Gtk.TreeViewColumn("text2")
+
+        # Cell renderers
+        self.icon_rend = Gtk.CellRendererPixbuf()
+        self.icon_rend.props.xpad = 6
+
+        self.text_rend_1 = Gtk.CellRendererText()
+        self.text_rend_1.set_property("ellipsize", Pango.EllipsizeMode.END)
+
+        self.text_rend_2 = Gtk.CellRendererText()
+        self.text_rend_2.set_property("yalign", 0.0)
+
+        # Build column views
+        self.icon_col.set_expand(False)
+        self.icon_col.set_spacing(5)
+        self.icon_col.pack_start(self.icon_rend, False)
+        self.icon_col.add_attribute(self.icon_rend, 'pixbuf', 0)
+
+        self.text_col_1.set_expand(True)
+        self.text_col_1.set_spacing(5)
+        self.text_col_1.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
+        self.text_col_1.set_min_width(150)
+        self.text_col_1.pack_start(self.text_rend_1, True)
+        self.text_col_1.add_attribute(self.text_rend_1, "text", 1)
+
+        self.text_col_2.set_expand(False)
+        self.text_col_2.pack_start(self.text_rend_2, True)
+        self.text_col_2.add_attribute(self.text_rend_2, "text", 2)
+
+        # Add column views to view
+        self.treeview.append_column(self.icon_col)
+        self.treeview.append_column(self.text_col_1)
+        self.treeview.append_column(self.text_col_2)
+
+        # Build widget graph and display
+        self.scroll.add(self.treeview)
+        self.pack_start(self.scroll, True, True, 0)
+        self.scroll.show_all()
+
+    def get_selected_rows_list(self):
+        model, rows = self.treeview.get_selection().get_selected_rows()
+        return rows
 
 # ------------------------------------------------- item lists
 class ImageTextImageListView(Gtk.VBox):
@@ -363,6 +433,44 @@ class BinListView(ImageTextTextListView):
             except GObject.GError, exc:
                 print "can't load icon", exc
 
+class BinTreeView(ImageTextTextTreeView):
+    """
+    GUI component displaying list of media files.
+    """
+
+    def __init__(self, bin_selection_cb, bin_name_edit_cb):
+        ImageTextTextTreeView.__init__(self)
+
+        self.text_col_1.set_min_width(10)
+
+        # Connect selection 'changed' signal
+        tree_sel = self.treeview.get_selection()
+        tree_sel.connect("changed", bin_selection_cb)
+
+        # Set bin name editable and connect 'edited' signal
+        self.text_rend_1.set_property("editable", True)
+        self.text_rend_1.connect("edited",
+                                 bin_name_edit_cb,
+                                 (self.storemodel, 1))
+
+    def fill_data_model(self):
+        self.storemodel.clear()
+
+        # Root object
+        row_data = [None, "Project Media", ""]
+        self.storemodel.append(None, row_data)
+        root_iter = self.storemodel.get_iter_first ()
+
+        for media_bin in PROJECT().bins:
+            try:
+                pixbuf = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "bin_5.png")
+                row_data = [pixbuf,
+                            media_bin.name,
+                            str(len(media_bin.file_ids))]
+                self.storemodel.append(root_iter, row_data)
+                self.scroll.queue_draw()
+            except GObject.GError, exc:
+                print "can't load icon", exc
 
 class FilterListView(ImageTextImageListView):
     """

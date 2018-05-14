@@ -410,16 +410,32 @@ class EditorWindow:
         menu_vbox.pack_start(self.menubar, False, True, 0)
 
         # Media panel
-        self.bin_list_view = guicomponents.BinListView(
-                                        projectaction.bin_selection_changed, 
-                                        projectaction.bin_name_edited)
-        dnd.connect_bin_tree_view(self.bin_list_view.treeview, projectaction.move_files_to_bin)
-        self.bin_list_view.set_property("can-focus",  True)
-        bins_panel = panels.get_bins_panel(self.bin_list_view,
-                                           lambda w,e: projectaction.add_new_bin(),
-                                           lambda w,e: projectaction.delete_selected_bin())
-        bins_panel.set_size_request(MEDIA_MANAGER_WIDTH, 10) # this component is always expanded, so 10 for minimum size ok
-        bins_panel.set_margin_right(4)
+        tree_view = False # Testing if we get this working
+        if tree_view == False:
+            self.bin_list_view = guicomponents.BinListView(
+                                            projectaction.bin_selection_changed, 
+                                            projectaction.bin_name_edited)
+            dnd.connect_bin_tree_view(self.bin_list_view.treeview, projectaction.move_files_to_bin)
+            self.bin_list_view.set_property("can-focus",  True)
+            
+
+            bins_panel = panels.get_bins_panel(self.bin_list_view,
+                                               lambda w,e: projectaction.add_new_bin(),
+                                               lambda w,e: projectaction.delete_selected_bin())
+            bins_panel.set_size_request(MEDIA_MANAGER_WIDTH, 10) # this component is always expanded, so 10 for minimum size ok
+            bins_panel.set_margin_right(4)
+        else:
+            self.bin_list_view = guicomponents.BinTreeView(
+                                            projectaction.bin_selection_changed, 
+                                            projectaction.bin_name_edited)
+            dnd.connect_bin_tree_view(self.bin_list_view.treeview, projectaction.move_files_to_bin)
+            self.bin_list_view.set_property("can-focus",  True)
+            
+
+            bins_panel = panels.get_bins_tree_panel(self.bin_list_view)
+            bins_panel.set_size_request(MEDIA_MANAGER_WIDTH, 10) # this component is always expanded, so 10 for minimum size ok
+            #bins_panel.set_margin_right(4)
+
         self.media_list_view = guicomponents.MediaPanel(projectaction.media_file_menu_item_selected,
                                                         updater.set_and_display_monitor_media_file)
     

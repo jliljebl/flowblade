@@ -110,6 +110,12 @@ def get_bins_panel(bin_list_view, add_cb, delete_cb):
 
     return get_named_frame(_("Bins"), panel, 0, 0, 0)
 
+def get_bins_tree_panel(bin_list_view):   
+    panel = Gtk.VBox()
+    panel.pack_start(bin_list_view, True, True, 0)
+
+    return panel
+    
 def get_sequences_panel(sequence_list_view, edit_seq_cb, add_seq_cb, del_seq_cb):
     # Create buttons and connect signals
     add_b = Gtk.Button(_("Add"))
