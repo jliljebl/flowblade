@@ -135,7 +135,6 @@ def _create_buttons(editor_window):
     editor_window.modes_selector = guicomponents.ToolSelector(editor_window.mode_selector_pressed, m_pixbufs, 40, 22)
 
     if editorpersistance.prefs.buttons_style == 2: # NO_DECORATIONS
-        print "no decs"
         no_decorations = True
     else:
         no_decorations = False
