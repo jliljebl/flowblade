@@ -45,6 +45,7 @@ UNDO_STACK_MAX = 100
 
 GLASS_STYLE = 0
 SIMPLE_STYLE = 1
+NO_DECORATIONS = 2
 
 prefs = None
 recent_projects = None

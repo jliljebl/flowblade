@@ -33,13 +33,16 @@ import locale
 import md5
 import mlt
 import os
+import pickle
 import shutil
 import subprocess
 import sys
 import threading
 import time
+import webbrowser
 
 import appconsts
+import atomicfile
 import cairoarea
 import editorstate
 import editorpersistance
@@ -254,21 +257,12 @@ class NatronAnimatationsToolWindow(Gtk.Window):
         pos_bar_frame.set_margin_bottom(4)
         pos_bar_frame.set_margin_left(6)
         pos_bar_frame.set_margin_right(2)
-        
-        """
-        self.control_buttons = glassbuttons.GmicButtons()
-        pressed_callback_funcs = [prev_pressed,
-                                  next_pressed]
-                                  
-        self.control_buttons.set_callbacks(pressed_callback_funcs)
-        """
-        
+                
         self.preview_button = Gtk.Button(_("Preview Frame"))
         self.preview_button.connect("clicked", lambda w: render_preview_frame())
                             
         control_panel = Gtk.HBox(False, 2)
         control_panel.pack_start(pos_bar_frame, True, True, 0)
-        #control_panel.pack_start(self.control_buttons.widget, False, False, 0)
         control_panel.pack_start(guiutils.pad_label(2, 2), False, False, 0)
         control_panel.pack_start(self.preview_button, False, False, 0)
         
@@ -423,8 +417,6 @@ class NatronAnimatationsToolWindow(Gtk.Window):
 
         self.update_render_status_info()
         self.change_animation()
-
-
 
     def change_animation(self):
 
@@ -631,25 +623,88 @@ def show_menu(event, callback):
     _animations_menu.show_all()
     _animations_menu.popup(None, None, None, None, event.button, event.time)
 
-def _hamburger_launch_pressed(self, widget, event):
+def _hamburger_launch_pressed(widget, event):
     menu = _hamburger_menu
     guiutils.remove_children(menu)
     
-    menu.add(_get_menu_item(_("Load Clip") + "...", _hamburger_menu_callback, "load" ))
-    menu.add(_get_menu_item(_("G'Mic Webpage"), _hamburger_menu_callback, "docs" ))
+    menu.add(_get_menu_item(_("Load Animation") + "...", _hamburger_menu_callback, "load" ))
+    menu.add(_get_menu_item(_("Save Animation") + "...", _hamburger_menu_callback, "save" ))
+    _add_separetor(menu)
+    menu.add(_get_menu_item(_("Natron Webpage"), _hamburger_menu_callback, "web" ))
     _add_separetor(menu)
     menu.add(_get_menu_item(_("Close"), _hamburger_menu_callback, "close" ))
     
     menu.popup(None, None, None, None, event.button, event.time)
-        
+
+def _get_menu_item(text, callback, data, sensitive=True):
+    item = Gtk.MenuItem.new_with_label(text)
+    item.connect("activate", callback, data)
+    item.show()
+    item.set_sensitive(sensitive)
+    return item
+
+def _add_separetor(menu):
+    sep = Gtk.SeparatorMenuItem()
+    sep.show()
+    menu.add(sep)
+    
 def _hamburger_menu_callback(widget, msg):
     if msg == "load":
-        open_clip_dialog()
+        _load_script_dialog(_load_animation_dialog_callback)
+    elif msg == "save":     
+        _save_animation_dialog(_save_animation_dialog_callback)
     elif msg == "close":
         _shutdown()
-    elif msg == "docs":
-        webbrowser.open(url="http://gmic.eu/", new=0, autoraise=True)
+    elif msg == "web":
+        webbrowser.open(url="https://natron.fr/", new=0, autoraise=True)
 
+
+
+def _save_animation_dialog(callback):
+    dialog = Gtk.FileChooserDialog(_("Save Natron Animation Values As"), None, 
+                                   Gtk.FileChooserAction.SAVE, 
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                                   _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+    dialog.set_action(Gtk.FileChooserAction.SAVE)
+    dialog.set_current_name("animation")
+    dialog.set_do_overwrite_confirmation(True)
+    dialog.set_select_multiple(False)
+    dialog.connect('response', callback)
+    dialog.show()
+
+def _save_animation_dialog_callback(dialog, response_id):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        file_path = dialog.get_filenames()[0]
+        # Write out file.
+        with atomicfile.AtomicFileWriter(file_path, "wb") as afw:
+            write_file = afw.get_file()
+            pickle.dump(_animation_instance, write_file)
+        dialog.destroy()
+    else:
+        dialog.destroy()
+
+def _load_script_dialog(callback):
+    dialog = Gtk.FileChooserDialog(_("Load Animation Data"), None, 
+                                   Gtk.FileChooserAction.OPEN, 
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+    dialog.set_action(Gtk.FileChooserAction.OPEN)
+    dialog.set_select_multiple(False)
+    dialog.connect('response', callback)
+    dialog.show()
+    
+def _load_animation_dialog_callback(dialog, response_id):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        filename = dialog.get_filenames()[0]
+        # Load project object
+        f = open(filename)
+        load_instance = pickle.load(f)
+        global _animation_instance
+        _animation_instance = load_instance
+        _window.change_animation()
+        dialog.destroy()
+    else:
+        dialog.destroy()
 
 
 # ------------------------------------------------ rendering

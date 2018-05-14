@@ -568,6 +568,9 @@ class EditorWindow:
         self._create_monitor_row_widgets()
         self.player_buttons = glassbuttons.PlayerButtons()
         self.player_buttons.widget.set_tooltip_text(_("Prev Frame - Arrow Left\nNext Frame - Arrow Right\nPlay - Space\nStop - Space\nMark In - I\nMark Out - O\nClear Marks\nTo Mark In\nTo Mark Out"))
+        if editorpersistance.prefs.buttons_style == 2: # NO_DECORATIONS
+            self.player_buttons.no_decorations = True
+        
         player_buttons_row = Gtk.HBox(False, 0)
         player_buttons_row.pack_start(self.player_buttons.widget, False, True, 0)
         player_buttons_row.pack_start(pos_bar_frame, True, True, 0)

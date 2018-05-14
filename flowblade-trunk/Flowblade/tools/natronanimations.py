@@ -85,7 +85,7 @@ class NatronAnimationInfo:
 class NatronAnimationInstance:
     def __init__(self, natron_animation_info, profile):
         self.info = natron_animation_info
-        self.profile = profile
+        self.profile_desc = profile.description()
         self.properties = copy.deepcopy(natron_animation_info.properties)
 
         self.range_in = 1
@@ -99,7 +99,7 @@ class NatronAnimationInstance:
         # numerical values that depend on the profile we have. These need
         # to be replaced now that we have profile and we are ready to connect this.
         # For example default values of some properties depend on the screen size of the project
-        propertyparse.replace_value_keywords(self.properties, self.profile)
+        propertyparse.replace_value_keywords(self.properties, profile)
         
     def write_out_modify_data(self, editable_properties, uid):
         exec_str = self._get_natron_modifying_exec_string(editable_properties)

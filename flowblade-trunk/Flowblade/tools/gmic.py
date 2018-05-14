@@ -415,7 +415,6 @@ def load_script_dialog(callback):
     dialog.connect('response', callback)
     dialog.show()
 
-
 def _load_script_dialog_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         filename = dialog.get_filenames()[0]

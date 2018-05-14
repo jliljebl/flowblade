@@ -317,10 +317,8 @@ def _view_prefs_panel():
     buttons_combo = Gtk.ComboBoxText()
     buttons_combo.append_text(_("Glass"))
     buttons_combo.append_text(_("Simple"))
-    if prefs.buttons_style == editorpersistance.GLASS_STYLE:
-        buttons_combo.set_active(0)
-    else:
-        buttons_combo.set_active(1)
+    buttons_combo.append_text(_("No Decorations"))
+    buttons_combo.set_active( prefs.buttons_style )
 
     dark_combo = Gtk.ComboBoxText()
     dark_combo.append_text(_("Light Theme"))
