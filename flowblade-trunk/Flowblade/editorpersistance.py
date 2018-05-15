@@ -335,3 +335,4 @@ class EditorPreferences:
         self.delta_overlay = True # DEPRECATED, NOT USER SETTABLE ANYMORE
         self.show_alpha_info_message = True
         self.playback_follow_move_tline_range = True
+        self.active_tools = [1, 2, 3, 4, 5, 6, 7]

@@ -464,8 +464,11 @@ class EditorWindow:
         self.mm_paned.pack1(bins_panel, resize=True, shrink=True)
         self.mm_paned.pack2(media_panel, resize=True, shrink=False)
 
-        mm_panel = guiutils.set_margins(self.mm_paned, 2, 2, 6, 2)
-
+        if tree_view == False:
+            mm_panel = guiutils.set_margins(self.mm_paned, 2, 2, 6, 2)
+        else:
+            mm_panel = guiutils.set_margins(self.mm_paned, 0, 0, 0, 0)
+        
         # Effects panel
         self.effect_select_list_view = guicomponents.FilterListView()
         self.effect_select_combo_box = Gtk.ComboBoxText()

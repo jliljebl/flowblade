@@ -95,6 +95,7 @@ import translations
 import undo
 import updater
 import utils
+import workflow
 
 
 import jackaudio
@@ -197,6 +198,8 @@ def main(root_path):
 
     editorpersistance.save()
 
+
+
     # Init translations module with translations data
     translations.init_languages()
     translations.load_filters_translations()
@@ -205,6 +208,9 @@ def main(root_path):
     # Apr-2017 - SvdB - Keyboard shortcuts
     shortcuts.load_shortcut_files()
     shortcuts.load_shortcuts()
+
+    # We respaths and translations data available so we need to init in a function.
+    workflow.init_data()
     
     # RHEL7/CentOS compatibility fix
     if gtk_version == "3.8.8":

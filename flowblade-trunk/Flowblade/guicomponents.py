@@ -198,7 +198,7 @@ class ImageTextTextTreeView(Gtk.VBox):
         # Scroll container
         self.scroll = Gtk.ScrolledWindow()
         self.scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
+        self.scroll.set_shadow_type(Gtk.ShadowType.NONE)
 
         # View
         self.treeview = Gtk.TreeView(self.storemodel)
@@ -208,36 +208,40 @@ class ImageTextTextTreeView(Gtk.VBox):
         tree_sel.set_mode(Gtk.SelectionMode.SINGLE)
 
         # Column views
-        self.icon_col = Gtk.TreeViewColumn("Icon")
-        self.text_col_1 = Gtk.TreeViewColumn("text1")
-        self.text_col_2 = Gtk.TreeViewColumn("text2")
+
+
+
 
         # Cell renderers
         self.icon_rend = Gtk.CellRendererPixbuf()
-        self.icon_rend.props.xpad = 6
+        #self.icon_rend.props.xpad = 6
 
         self.text_rend_1 = Gtk.CellRendererText()
-        self.text_rend_1.set_property("ellipsize", Pango.EllipsizeMode.END)
+        #self.text_rend_1.set_property("ellipsize", Pango.EllipsizeMode.END)
 
         self.text_rend_2 = Gtk.CellRendererText()
-        self.text_rend_2.set_property("yalign", 0.0)
+        #self.text_rend_2.set_property("yalign", 0.0)
 
         # Build column views
-        self.icon_col.set_expand(False)
-        self.icon_col.set_spacing(5)
-        self.icon_col.pack_start(self.icon_rend, False)
-        self.icon_col.add_attribute(self.icon_rend, 'pixbuf', 0)
+        self.icon_col = Gtk.TreeViewColumn("", self.icon_rend)
+        #self.icon_col.set_expand(False)
+        #self.icon_col.set_spacing(5)
+        #self.icon_col.pack_start(self.icon_rend, False)
+        #self.icon_col.add_attribute(self.icon_rend, 'pixbuf', 0)
 
+        self.text_col_1 = Gtk.TreeViewColumn("", self.text_rend_1, text=1)
         self.text_col_1.set_expand(True)
-        self.text_col_1.set_spacing(5)
-        self.text_col_1.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
-        self.text_col_1.set_min_width(150)
-        self.text_col_1.pack_start(self.text_rend_1, True)
-        self.text_col_1.add_attribute(self.text_rend_1, "text", 1)
+        #self.text_col_1.set_spacing(5)
+        #self.text_col_1.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
+        #self.text_col_1.set_min_width(60)
+        #self.text_col_1.pack_start(self.text_rend_1, True)
+        #self.text_col_1.add_attribute(self.text_rend_1, "text", 1)
 
-        self.text_col_2.set_expand(False)
-        self.text_col_2.pack_start(self.text_rend_2, True)
-        self.text_col_2.add_attribute(self.text_rend_2, "text", 2)
+        self.text_col_2 = Gtk.TreeViewColumn("", self.text_rend_2, text=2)
+        
+        #self.text_col_2.set_expand(False)
+        #self.text_col_2.pack_start(self.text_rend_2, True)
+        #self.text_col_2.add_attribute(self.text_rend_2, "text", 2)
 
         # Add column views to view
         self.treeview.append_column(self.icon_col)

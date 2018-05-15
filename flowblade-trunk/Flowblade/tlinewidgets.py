@@ -80,7 +80,7 @@ MARK_LINE_WIDTH = 4
 COLUMN_WIDTH = 96 # column area width
 SCALE_HEIGHT = 25
 SCROLL_HEIGHT = 20
-COLUMN_LEFT_PAD = 4 # as mute switch no longer exists this is now essentially left pad width 
+COLUMN_LEFT_PAD = 0 # as mute switch no longer exists this is now essentially left pad width 
 ACTIVE_SWITCH_WIDTH = 18
 COMPOSITOR_HEIGHT_OFF = 10
 COMPOSITOR_HEIGHT = 20
@@ -235,7 +235,7 @@ FRAME_SCALE_LINES = (0, 0, 0)
 BG_COLOR = (0.5, 0.5, 0.55)#(0.6, 0.6, 0.65)
 
 #COLUMN_NOT_ACTIVE_COLOR = (0.65, 0.65, 0.65)
-COLUMN_NOT_ACTIVE_COLOR = (0.28, 0.28, 0.3)
+COLUMN_NOT_ACTIVE_COLOR = (0.32, 0.32, 0.34)
 
 OVERLAY_COLOR = (0.9,0.9,0.9)
 OVERLAY_SELECTION_COLOR = (0.9,0.9,0.0)
@@ -254,12 +254,15 @@ MATCH_FRAME_LINES_COLOR = (0.78, 0.31, 0.31)
 
 BLANK_SELECTED = (0.68, 0.68, 0.74)
 
+TRACK_NAME_COLOR = (0.0,0.0,0.0) # 
+#TRACK_NAME_COLOR = (0.9,0.9,0.9)
+
 TRACK_GRAD_STOP1 = (1, 0.5, 0.5, 0.55, 1) #0.93, 0.93, 0.93, 1)
 TRACK_GRAD_STOP3 = (0, 0.5, 0.5, 0.55, 1) #0.58, 0.58, 0.58, 1) #(0, 0.84, 0.84, 0.84, 1)
 
 """
 TRACK_GRAD_STOP1 = (1, 0.68, 0.68, 0.68, 1) #0.93, 0.93, 0.93, 1)
-TRACK_GRAD_STOP3 = (0, 0.93, 0.93, 0.93, 1) #0.58, 0.58, 0.58, 1) #(0, 0.84, 0.84, 0.84, 1)
+TRACK_GRAD_STOP3 = (0, 0.93, 0.93, 0.93, 1) #0.58, 0.58, 0.58, 1) 
 """
 
 TRACK_GRAD_ORANGE_STOP1 = (1, 0.65, 0.65, 0.65, 1)
@@ -353,6 +356,13 @@ def load_icons():
         FRAME_SCALE_COLOR_GRAD_L = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, GRAD_MULTIPLIER)
         BG_COLOR = (0.44, 0.44, 0.46)
         FRAME_SCALE_LINES = (0.8, 0.8, 0.8)
+    else:
+        global TRACK_GRAD_ORANGE_STOP1,TRACK_GRAD_ORANGE_STOP3,TRACK_GRAD_STOP1,TRACK_GRAD_STOP3
+        TRACK_GRAD_ORANGE_STOP1 = (1,  0.4, 0.4, 0.4, 1)
+        TRACK_GRAD_ORANGE_STOP3 = (0,  0.68, 0.68, 0.68, 1)
+
+        TRACK_GRAD_STOP1 = (1, 0.68, 0.68, 0.68, 1) #0.93, 0.93, 0.93, 1)
+        TRACK_GRAD_STOP3 = (0, 0.93, 0.93, 0.93, 1) #0.58, 0.58, 0.58, 1) 
 
 def set_tracks_double_height_consts():
     global ID_PAD_Y, ID_PAD_Y_SMALL, VIDEO_TRACK_V_ICON_POS, VIDEO_TRACK_A_ICON_POS, VIDEO_TRACK_V_ICON_POS_SMALL, VIDEO_TRACK_A_ICON_POS_SMALL, \
@@ -2242,7 +2252,7 @@ class TimeLineColumn:
         layout.set_text(text, -1)
         layout.set_font_description(desc)
 
-        cr.set_source_rgb(0.0, 0.0, 0.0)
+        cr.set_source_rgb(*TRACK_NAME_COLOR)
         if track.height == sequence.TRACK_HEIGHT_NORMAL:
             text_y = ID_PAD_Y
         else:
