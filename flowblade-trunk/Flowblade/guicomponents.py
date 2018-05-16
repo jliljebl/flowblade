@@ -2354,7 +2354,6 @@ class ClipLengthChanger:
         
     def get_length(self):
         return int(self.frames_spin.get_value())
-    
 
 def get_gpl3_scroll_widget(size):
     license_file = open(respaths.GPL_3_DOC)
