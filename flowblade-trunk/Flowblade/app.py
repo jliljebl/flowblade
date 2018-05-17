@@ -563,7 +563,7 @@ def init_editor_state():
     movemodes.clear_selection_values()
 
     # Set initial edit mode
-    gui.editor_window.modes_selector.set_pixbuf(0)
+    gui.editor_window.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_INSERT)
     editevent.insert_move_mode_pressed()
 
     # Create array needed to update compositors after all edits

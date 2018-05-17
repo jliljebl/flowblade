@@ -158,7 +158,7 @@ def key_down(widget, event):
 def _timeline_has_focus():
     if(gui.tline_canvas.widget.has_focus()
        or gui.tline_column.widget.has_focus()
-       or gui.editor_window.modes_selector.widget.has_focus()
+       or gui.editor_window.tool_selector.widget.has_focus()
        or (gui.pos_bar.widget.has_focus() and timeline_visible())
        or gui.tline_scale.widget.has_focus()
        or glassbuttons.focus_group_has_focus(glassbuttons.DEFAULT_FOCUS_GROUP)):
@@ -208,31 +208,31 @@ def _handle_tline_key_event(event):
         return True
     if action == 'edit_mode_insert':
         gui.editor_window.handle_insert_move_mode_button_press()
-        gui.editor_window.set_mode_selector_to_mode()
+        gui.editor_window.set_tool_selector_to_mode()
         return True
     if action == 'edit_mode_overwrite':
         gui.editor_window.handle_over_move_mode_button_press()
-        gui.editor_window.set_mode_selector_to_mode()
+        gui.editor_window.set_tool_selector_to_mode()
         return True
     if action == 'edit_mode_trim':
         gui.editor_window.handle_one_roll_mode_button_press()
-        gui.editor_window.set_mode_selector_to_mode()
+        gui.editor_window.set_tool_selector_to_mode()
         return True
     if action == 'edit_mode_roll':
         gui.editor_window.handle_two_roll_mode_button_press()
-        gui.editor_window.set_mode_selector_to_mode()
+        gui.editor_window.set_tool_selector_to_mode()
         return True
     if action == 'edit_mode_slip':
         gui.editor_window.handle_slide_mode_button_press()
-        gui.editor_window.set_mode_selector_to_mode()
+        gui.editor_window.set_tool_selector_to_mode()
         return True
     if action == 'edit_mode_spacer':
         gui.editor_window.handle_multi_mode_button_press()
-        gui.editor_window.set_mode_selector_to_mode()
+        gui.editor_window.set_tool_selector_to_mode()
         return True
     if action == 'edit_mode_box':
         gui.editor_window.handle_box_mode_button_press()
-        gui.editor_window.set_mode_selector_to_mode()
+        gui.editor_window.set_tool_selector_to_mode()
         return True
     if action == 'cut':
         tlineaction.cut_pressed()
@@ -350,7 +350,7 @@ def _handle_tline_key_event(event):
             if PLAYER().is_playing():
                 monitorevent.stop_pressed()
             gui.editor_window.handle_insert_move_mode_button_press()
-            gui.editor_window.set_mode_selector_to_mode()
+            gui.editor_window.set_tool_selector_to_mode()
             PLAYER().seek_frame(0)
             _move_to_beginning()
             return True
@@ -358,7 +358,7 @@ def _handle_tline_key_event(event):
             if PLAYER().is_playing():
                 monitorevent.stop_pressed()
             gui.editor_window.handle_insert_move_mode_button_press()
-            gui.editor_window.set_mode_selector_to_mode()
+            gui.editor_window.set_tool_selector_to_mode()
             PLAYER().seek_end()
             _move_to_end()
             return True
@@ -404,31 +404,31 @@ def _handle_extended_tline_focus_events(event):
         return True
     if action == 'edit_mode_insert':
         gui.editor_window.handle_insert_move_mode_button_press()
-        gui.editor_window.set_mode_selector_to_mode()
+        gui.editor_window.set_tool_selector_to_mode()
         return True
     if action == 'edit_mode_overwrite':
         gui.editor_window.handle_over_move_mode_button_press()
-        gui.editor_window.set_mode_selector_to_mode()
+        gui.editor_window.set_tool_selector_to_mode()
         return True
     if action == 'edit_mode_trim':
         gui.editor_window.handle_one_roll_mode_button_press()
-        gui.editor_window.set_mode_selector_to_mode()
+        gui.editor_window.set_tool_selector_to_mode()
         return True
     if action == 'edit_mode_roll':
         gui.editor_window.handle_two_roll_mode_button_press()
-        gui.editor_window.set_mode_selector_to_mode()
+        gui.editor_window.set_tool_selector_to_mode()
         return True
     if action == 'edit_mode_slip':
         gui.editor_window.handle_slide_mode_button_press()
-        gui.editor_window.set_mode_selector_to_mode()
+        gui.editor_window.set_tool_selector_to_mode()
         return True
     if action == 'edit_mode_spacer':
         gui.editor_window.handle_multi_mode_button_press()
-        gui.editor_window.set_mode_selector_to_mode()
+        gui.editor_window.set_tool_selector_to_mode()
         return True
     if action == 'edit_mode_box':
         gui.editor_window.handle_box_mode_button_press()
-        gui.editor_window.set_mode_selector_to_mode()
+        gui.editor_window.set_tool_selector_to_mode()
         return True
 
     return False

@@ -1752,7 +1752,7 @@ def do_compositor_data_paste(paste_objs):
 def _timeline_has_focus(): # copied from keyevents.by. maybe put in utils?
     if(gui.tline_canvas.widget.is_focus()
        or gui.tline_column.widget.is_focus()
-       or gui.editor_window.modes_selector.widget.is_focus()
+       or gui.editor_window.tool_selector.widget.is_focus()
        or (gui.pos_bar.widget.is_focus() and timeline_visible())
        or gui.tline_scale.widget.is_focus()
        or glassbuttons.focus_group_has_focus(glassbuttons.DEFAULT_FOCUS_GROUP)):

@@ -2631,7 +2631,8 @@ def get_trim_view_popupmenu(launcher, event, callback):
     menu.add(menu_item)
 
     menu.popup(None, None, None, None, event.button, event.time)
-    
+
+"""
 def get_mode_selector_popup_menu(launcher, event, callback):
     menu = tools_menu
     guiutils.remove_children(menu)
@@ -2689,6 +2690,7 @@ def _tools_menu_hidden(tools_menu, menu_items):
     # needed to make number 1-6 work elsewhere in the application
     for menu_item in menu_items:
         menu_item.set_accel_path(None)
+"""
 
 def get_file_filter_popup_menu(launcher, event, callback):
     menu = file_filter_menu
@@ -2813,6 +2815,23 @@ class ImageMenuLaunch(PressLaunch):
 
 
 class ToolSelector(ImageMenuLaunch):
+    def __init__(self, callback, surface_list, w, h):
+        ImageMenuLaunch.__init__(self, callback, surface_list, w, h)
+        # surface_list indexes and tool ids need hardcoded mapping, tool_ids and surface indexes cannot easily be made to correspond 
+        self.TOOL_ID_TO_SURFACE_INDEX = {   appconsts.TLINE_TOOL_INSERT: 0,
+                                            appconsts.TLINE_TOOL_OVERWRITE: 1,
+                                            appconsts.TLINE_TOOL_TRIM: 2,
+                                            appconsts.TLINE_TOOL_ROLL: 4,
+                                            appconsts.TLINE_TOOL_SLIP: 5,
+                                            appconsts.TLINE_TOOL_SPACER: 6,
+                                            appconsts.TLINE_TOOL_BOX: 7,
+                                            appconsts.TLINE_TOOL_RIPPLE_TRIM: 3
+                                     }
+   
+    def set_tool_pixbuf(self, tool_id):
+        surface_index = self.TOOL_ID_TO_SURFACE_INDEX[tool_id]
+        self.set_pixbuf(surface_index)
+        
     def _draw(self, event, cr, allocation):
         PressLaunch._draw(self, event, cr, allocation)
 

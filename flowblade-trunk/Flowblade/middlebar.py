@@ -130,9 +130,9 @@ def _create_buttons(editor_window):
     gui.big_tc = editor_window.big_TC 
 
     surface = cairo.ImageSurface.create_from_png(IMG_PATH + "workflow.png")
-    editor_window.worflow_launch = guicomponents.PressLaunch(workflow.menu_launched, surface, w=22, h=22)
+    editor_window.worflow_launch = guicomponents.PressLaunch(workflow.workflow_menu_launched, surface, w=22, h=22)
 
-    editor_window.modes_selector = guicomponents.ToolSelector(editor_window.mode_selector_pressed, m_pixbufs, 40, 22)
+    editor_window.tool_selector = guicomponents.ToolSelector(editor_window.mode_selector_pressed, m_pixbufs, 40, 22)
 
     if editorpersistance.prefs.buttons_style == 2: # NO_DECORATIONS
         no_decorations = True
@@ -199,7 +199,7 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) 
     buttons_row.pack_start(w.big_TC, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
-    buttons_row.pack_start(w.modes_selector.widget, False, True, 0)
+    buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
     if editorstate.SCREEN_WIDTH > 1279:
         buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
         buttons_row.pack_start(_get_tools_buttons(), False, True, 0)
@@ -242,7 +242,7 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     middle_panel = Gtk.HBox(False, 0) 
     middle_panel.pack_start(w.big_TC, False, True, 0)
     middle_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
-    middle_panel.pack_start(w.modes_selector.widget, False, True, 0)
+    middle_panel.pack_start(w.tool_selector.widget, False, True, 0)
     
     right_panel = Gtk.HBox(False, 0) 
     right_panel.pack_start(Gtk.Label(), True, True, 0)
@@ -264,7 +264,7 @@ def fill_with_COMPONETS_CENTERED_pattern(buttons_row, window):
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
     buttons_row.pack_start(w.big_TC, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
-    buttons_row.pack_start(w.modes_selector.widget, False, True, 0)
+    buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
     if editorstate.SCREEN_WIDTH > 1279:
         buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
         buttons_row.pack_start(_get_tools_buttons(), False, True, 0)

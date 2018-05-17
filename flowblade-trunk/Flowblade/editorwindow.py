@@ -73,6 +73,7 @@ import trackaction
 import toolnatron
 import updater
 import undo
+import workflow
 
 # GUI size params
 MEDIA_MANAGER_WIDTH = 250
@@ -254,13 +255,15 @@ class EditorWindow:
             ('Environment', None, _('Runtime Environment'), None, None, lambda a:menuactions.environment()),
             ('KeyboardShortcuts', None, _('Keyboard Shortcuts'), None, None, lambda a:dialogs.keyboard_shortcuts_dialog(self.window, menuactions.keyboard_shortcuts_callback)),
             ('About', None, _('About'), None, None, lambda a:menuactions.about()),
-            ('InsertMode', None, None, '1', None, lambda a:_this_is_not_used()),
-            ('OverMode', None, None, '2', None, lambda a:_this_is_not_used()),
-            ('OneRollMode', None, None, '3', None, lambda a:_this_is_not_used()),
-            ('TwoRollMode', None, None, '4', None, lambda a:_this_is_not_used()),
-            ('SlideMode', None, None, '5', None, lambda a:_this_is_not_used()),
-            ('MultiMode', None, None, '6', None, lambda a:_this_is_not_used()),
-            ('BoxMode', None, None, '7', None, lambda a:_this_is_not_used())
+            ('TOOL_ACTION_KEY_1', None, None, '1', None, lambda a:_this_is_not_used()),
+            ('TOOL_ACTION_KEY_2', None, None, '2', None, lambda a:_this_is_not_used()),
+            ('TOOL_ACTION_KEY_3', None, None, '3', None, lambda a:_this_is_not_used()),
+            ('TOOL_ACTION_KEY_4', None, None, '4', None, lambda a:_this_is_not_used()),
+            ('TOOL_ACTION_KEY_5', None, None, '5', None, lambda a:_this_is_not_used()),
+            ('TOOL_ACTION_KEY_6', None, None, '6', None, lambda a:_this_is_not_used()),
+            ('TOOL_ACTION_KEY_7', None, None, '7', None, lambda a:_this_is_not_used()),
+            ('TOOL_ACTION_KEY_8', None, None, '8', None, lambda a:_this_is_not_used()),
+            ('TOOL_ACTION_KEY_9', None, None, '9', None, lambda a:_this_is_not_used())
             ]
 
         menu_string = """<ui>
@@ -1045,8 +1048,8 @@ class EditorWindow:
         self.pos_bar.set_listener(mltplayer.seek_position_normalized)
 
     def _get_edit_buttons_row(self):
-        modes_pixbufs = [INSERTMOVE_CURSOR, OVERWRITE_CURSOR, ONEROLL_CURSOR, ONEROLL_RIPPLE_CURSOR, TWOROLL_CURSOR, SLIDE_CURSOR, MULTIMOVE_CURSOR, OVERWRITE_BOX_CURSOR]
-        middlebar.create_edit_buttons_row_buttons(self, modes_pixbufs)
+        tools_pixbufs = [INSERTMOVE_CURSOR, OVERWRITE_CURSOR, ONEROLL_CURSOR, ONEROLL_RIPPLE_CURSOR, TWOROLL_CURSOR, SLIDE_CURSOR, MULTIMOVE_CURSOR, OVERWRITE_BOX_CURSOR]
+        middlebar.create_edit_buttons_row_buttons(self, tools_pixbufs)
     
         buttons_row = Gtk.HBox(False, 1)
         if editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_COMPONENTS_CENTERED:
@@ -1108,40 +1111,40 @@ class EditorWindow:
         editevent.stop_looping()
         editorstate.edit_mode = editorstate.ONE_ROLL_TRIM_NO_EDIT
         tlinewidgets.set_edit_mode(None, None)
-        self.set_mode_selector_to_mode()
+        self.set_tool_selector_to_mode()
         self.set_tline_cursor(editorstate.EDIT_MODE())
         updater.set_trim_mode_gui()
     
     def toggle_overwrite_box_mode(self):
         editorstate.overwrite_mode_box = (editorstate.overwrite_mode_box == False)
         boxmove.clear_data()
-        self.set_mode_selector_to_mode()
+        self.set_tool_selector_to_mode()
         self.set_tline_cursor(editorstate.EDIT_MODE())
         
     def mode_selector_pressed(self, selector, event):
-        guicomponents.get_mode_selector_popup_menu(selector, event, self.mode_selector_item_activated)
+        workflow.get_mode_selector_popup_menu(selector, event, self.tool_selector_item_activated)
     
-    def mode_selector_item_activated(self, selector, mode):
-        if mode == 0:
+    def tool_selector_item_activated(self, selector, tool):
+        if tool == appconsts.TLINE_TOOL_INSERT:
             self.handle_insert_move_mode_button_press()
-        if mode == 1:
+        if tool == appconsts.TLINE_TOOL_OVERWRITE:
             self.handle_over_move_mode_button_press()
-        if mode == 2:
+        if tool ==  appconsts.TLINE_TOOL_TRIM:
             if editorstate.edit_mode != editorstate.ONE_ROLL_TRIM and editorstate.edit_mode != editorstate.ONE_ROLL_TRIM_NO_EDIT:
                 self.handle_one_roll_mode_button_press()
             else:
                 self.toggle_trim_ripple_mode()
-        if mode == 3:
+        if tool == appconsts.TLINE_TOOL_ROLL:
             self.handle_two_roll_mode_button_press()
-        if mode == 4:
+        if tool == appconsts.TLINE_TOOL_SLIP:
             self.handle_slide_mode_button_press()
-        if mode == 5:
+        if tool == appconsts.TLINE_TOOL_SPACER:
             self.handle_multi_mode_button_press()
-        if mode == 6:
+        if tool == appconsts.TLINE_TOOL_BOX:
             self.handle_box_mode_button_press()
                 
         self.set_cursor_to_mode()
-        self.set_mode_selector_to_mode()
+        self.set_tool_selector_to_mode()
         
     def set_cursor_to_mode(self):
         if editorstate.cursor_on_tline == True:
@@ -1206,29 +1209,29 @@ class EditorWindow:
         cursor = self.get_own_cursor(display, surface, px, py)
         gdk_window.set_cursor(cursor)
 
-    def set_mode_selector_to_mode(self):
+    def set_tool_selector_to_mode(self):
         if editorstate.EDIT_MODE() == editorstate.INSERT_MOVE:
-            self.modes_selector.set_pixbuf(0)
+            self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_INSERT)
         elif editorstate.EDIT_MODE() == editorstate.OVERWRITE_MOVE:
             if editorstate.overwrite_mode_box == False:
-                self.modes_selector.set_pixbuf(1)
+                self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_OVERWRITE)
             else:
-                self.modes_selector.set_pixbuf(7)
+                self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_BOX)
         elif editorstate.EDIT_MODE() == editorstate.ONE_ROLL_TRIM or editorstate.EDIT_MODE() == editorstate.ONE_ROLL_TRIM_NO_EDIT:
             if editorstate.trim_mode_ripple == False:
-                self.modes_selector.set_pixbuf(2)
+                self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_TRIM)
             else:
-                self.modes_selector.set_pixbuf(3)
+                self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_RIPPLE_TRIM)
         elif editorstate.EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
-            self.modes_selector.set_pixbuf(4)
+            self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_ROLL)
         elif editorstate.EDIT_MODE() == editorstate.TWO_ROLL_TRIM_NO_EDIT:
-            self.modes_selector.set_pixbuf(4)
+            self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_ROLL)
         elif editorstate.EDIT_MODE() == editorstate.SLIDE_TRIM:
-            self.modes_selector.set_pixbuf(5)
+            self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_SLIP)
         elif editorstate.EDIT_MODE() == editorstate.SLIDE_TRIM_NO_EDIT:
-            self.modes_selector.set_pixbuf(5)
+            self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_SLIP)
         elif editorstate.EDIT_MODE() == editorstate.MULTI_MOVE:
-            self.modes_selector.set_pixbuf(6)
+            self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_SPACER)
 
     def tline_cursor_leave(self, event):
         cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR)

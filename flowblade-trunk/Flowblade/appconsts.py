@@ -221,8 +221,7 @@ POINTER_CONTEXT_TRIM_LEFT = 6
 POINTER_CONTEXT_TRIM_RIGHT = 7
 POINTER_CONTEXT_BOX_SIDEWAYS = 8
 
-
-# Timeline tool ids
+# Timeline tool ids. NOTE: a tool can map to 1 or more editmodes and even module specified submodes, depending on complexity of edit actions.
 TLINE_TOOL_INSERT = 1
 TLINE_TOOL_OVERWRITE = 2
 TLINE_TOOL_TRIM = 3
@@ -230,5 +229,5 @@ TLINE_TOOL_ROLL = 4
 TLINE_TOOL_SLIP = 5
 TLINE_TOOL_SPACER = 6
 TLINE_TOOL_BOX = 7
-
+TLINE_TOOL_RIPPLE_TRIM = 8
 

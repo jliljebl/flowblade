@@ -18,20 +18,29 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+"""
+Modeule handles displaying tool meni, tool keyboard shortuts and workflow configuration activating and moving tools,
+and setting relevant timeline behaviours.
+
+"""
+
 import gi
 gi.require_version('Gtk', '3.0')
 
 from gi.repository import Gtk
 
 import appconsts
+import editevent
 import editorpersistance
+import gui
 import guiutils
 import respaths
 
 # Timeline tools data
 _TOOLS_DATA = None
 
-_menu = Gtk.Menu()
+_tools_menu = Gtk.Menu()
+_workflow_menu = Gtk.Menu()
 
 def init_data():
     global _TOOLS_DATA
@@ -44,25 +53,24 @@ def init_data():
                     appconsts.TLINE_TOOL_BOX:       (_("Box"), Gtk.Image.new_from_file(respaths.IMAGE_PATH + "overwrite_cursor_box.png")) 
                   }
 
-def menu_launched(widget, event):
-    guiutils.remove_children(_menu)
+#----------------------------------------------------- workflow presets
+def _set_workflow_SIMPLIFIED():
+    pass
 
+def _set_workflow_STANDARD():
+    pass
 
+def _set_workflow_FILM_STYLE():
+    editorpersistance.prefs.active_tools = [1, 2, 3, 4, 5, 6, 7]
+    editorpersistance.save()
 
+    editevent.set_default_edit_mode()
 
-
-    """
-    _menu.add(_get_check_tool_menu_item(_menu_callback, "kkkkk"))
-    _menu.add(guiutils.get_menu_item(_("Save Animation") + "...", _menu_callback, "save" ))
-    guiutils.add_separetor(_menu)
-    _menu.add(guiutils.get_menu_item(_("Natron Webpage"), _menu_callback, "web" ))
-    guiutils.add_separetor(_menu)
-    _menu.add(guiutils.get_menu_item(_("Close"), _menu_callback, "close" ))
-    """
+# ---------------------------------------------------- workflow menu
+def workflow_menu_launched(widget, event):
+    guiutils.remove_children(_workflow_menu)
 
     # ---- preset
-
-
     presets_item = Gtk.MenuItem.new_with_label(_("Workflow Presets"))
     presets_item.show()
 
@@ -81,10 +89,10 @@ def menu_launched(widget, event):
     presets_menu.add(standart)
     
     presets_item.set_submenu(presets_menu)
-    _menu.add(presets_item)
+    _workflow_menu.add(presets_item)
 
     # --- behaviours
-    guiutils.add_separetor(_menu)
+    guiutils.add_separetor(_workflow_menu)
 
     behaviours_item = Gtk.MenuItem.new_with_label(_("Edit Behaviours"))
     behaviours_item.show()
@@ -114,16 +122,16 @@ def menu_launched(widget, event):
     behaviours_menu.add(dnd_item)
     
     behaviours_item.set_submenu(behaviours_menu)
-    _menu.add(behaviours_item)
+    _workflow_menu.add(behaviours_item)
 
     # --- tools
-    guiutils.add_separetor(_menu)
+    guiutils.add_separetor(_workflow_menu)
     
     for tool_id in _TOOLS_DATA:
         name, icon = _TOOLS_DATA[tool_id]
-        _menu.add(_get_workflow_tool_menu_item(_workflow_menu_callback, tool_id, name, icon))
+        _workflow_menu.add(_get_workflow_tool_menu_item(_workflow_menu_callback, tool_id, name, icon))
         
-    _menu.popup(None, None, None, None, event.button, event.time)
+    _workflow_menu.popup(None, None, None, None, event.button, event.time)
 
 def _get_workflow_tool_menu_item(callback, tool_id, tool_name, tool_icon):
 
@@ -166,16 +174,10 @@ def _get_radio_menu_item_group(menu, labels, msgs, callback, active_index):
             radio_item.set_active(True)
         radio_item.connect("activate", callback, msgs[i])
 
-        
-def _tool_active_toggled(widget, tool_id):
-    print widget.get_active(), tool_id
-
-
 def _get_workflow_tool_submenu(callback, tool_id):
     sub_menu = Gtk.Menu()
     
     tool_active = (tool_id in editorpersistance.prefs.active_tools)
-    print tool_id, tool_active
     activity_item = Gtk.CheckMenuItem(_("Tool Active").encode('utf-8'))
     activity_item.set_active(tool_active)
     activity_item.connect("toggled", callback, (tool_id, "activity"))
@@ -200,7 +202,7 @@ def _workflow_menu_callback(widget, data):
     print editorpersistance.prefs.active_tools
     tool_id, msg = data
 
-    if msg ==  "activity":
+    if msg == "activity":
         if widget.get_active() == False:
             editorpersistance.prefs.active_tools.remove(tool_id)
         else:
@@ -215,3 +217,103 @@ def _workflow_menu_callback(widget, data):
                         return 
 
             editorpersistance.prefs.active_tools.append(tool_id)
+    elif msg == "preset simplified":
+        _set_workflow_SIMPLIFIED()
+    elif msg == "preset standart":
+        _set_workflow_STANDARD()
+    elif msg == "preset filmstyle":
+        _set_workflow_FILM_STYLE()
+
+# --------------------------------------------------------------- tools menu
+
+def get_tline_tool_popup_menu(launcher, event, callback):
+    menu = _tools_menu
+    guiutils.remove_children(menu)
+
+    menu.set_accel_group(gui.editor_window.accel_group)
+    menu.set_take_focus(False)
+    menu_items = []
+    
+    kb_shortcut_number = 1
+    for tool_id in editorpersistance.prefs.active_tools:
+        tool_name, tool_icon = _TOOLS_DATA[tool_id]
+
+        menu_item = _get_image_menu_item(Gtk.Image.new_from_file(tool_icon), tool_name, callback, tool_id)
+        accel_path = "<Actions>/WindowActions/TOOL_ACTION_KEY_" + str(kb_shortcut_number)
+        menu_item.set_accel_path(accel_path)
+        menu.add(menu_item)
+        menu_items.append(menu_item)
+        
+        kb_shortcut_number = kb_shortcut_number + 1
+
+    menu.connect("hide", lambda w : _tools_menu_hidden(w,menu_items))
+    menu.show_all()
+    menu.popup(None, None, None, None, event.button, event.time)
+
+def get_mode_selector_popup_menu(launcher, event, callback):
+    menu = _tools_menu
+    guiutils.remove_children(menu)
+    menu.set_accel_group(gui.editor_window.accel_group)
+    menu.set_take_focus(False)
+    menu_items = []
+
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
+        respaths.IMAGE_PATH + "insertmove_cursor.png"), _("Insert"), callback, appconsts.TLINE_TOOL_INSERT)
+    menu_item.set_accel_path("<Actions>/WindowActions/TOOL_ACTION_KEY_1")
+    menu.add(menu_item)
+    menu_items.append(menu_item)
+
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
+        respaths.IMAGE_PATH + "overwrite_cursor.png"),    _("Overwrite"), callback, appconsts.TLINE_TOOL_OVERWRITE)
+    menu_item.set_accel_path("<Actions>/WindowActions/TOOL_ACTION_KEY_2")
+    menu.add(menu_item)
+    menu_items.append(menu_item)
+
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
+        respaths.IMAGE_PATH + "oneroll_cursor.png"), _("Trim"), callback, appconsts.TLINE_TOOL_TRIM)
+    menu_item.set_accel_path("<Actions>/WindowActions/TOOL_ACTION_KEY_3")
+    menu.add(menu_item)
+    menu_items.append(menu_item)
+
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
+        respaths.IMAGE_PATH + "tworoll_cursor.png"), _("Roll"), callback, appconsts.TLINE_TOOL_ROLL)
+    menu_item.set_accel_path("<Actions>/WindowActions/TOOL_ACTION_KEY_4")
+    menu.add(menu_item)
+    menu_items.append(menu_item)
+
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
+        respaths.IMAGE_PATH + "slide_cursor.png"), _("Slip"), callback, appconsts.TLINE_TOOL_SLIP)
+    menu_item.set_accel_path("<Actions>/WindowActions/TOOL_ACTION_KEY_5")
+    menu.add(menu_item)
+    menu_items.append(menu_item)
+
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
+        respaths.IMAGE_PATH + "multimove_cursor.png"), _("Spacer"), callback, appconsts.TLINE_TOOL_SPACER)
+    menu_item.set_accel_path("<Actions>/WindowActions/TOOL_ACTION_KEY_6")
+    menu.add(menu_item)
+    menu_items.append(menu_item)
+
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
+        respaths.IMAGE_PATH + "overwrite_cursor_box.png"), _("Box"), callback, appconsts.TLINE_TOOL_BOX)
+    menu_item.set_accel_path("<Actions>/WindowActions/TOOL_ACTION_KEY_7")
+    menu.add(menu_item)
+    menu_items.append(menu_item)
+    
+    menu.connect("hide", lambda w : _tools_menu_hidden(w,menu_items))
+    menu.show_all()
+    menu.popup(None, None, None, None, event.button, event.time)
+
+def _tools_menu_hidden(tools_menu, menu_items):
+    # needed to make number 1-6 work elsewhere in the application
+    for menu_item in menu_items:
+        menu_item.set_accel_path(None)
+
+def _get_image_menu_item(img, text, callback, data):
+    item = Gtk.ImageMenuItem()
+    item.set_image(img)
+    item.connect("activate", callback, data)
+    item.set_always_show_image(True)
+    item.set_use_stock(False)
+    item.set_label(text)
+    item.show()
+    return item
