@@ -28,6 +28,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 
 from gi.repository import Gtk
+from gi.repository import Gdk
 
 import appconsts
 import editevent
@@ -44,13 +45,13 @@ _workflow_menu = Gtk.Menu()
 
 def init_data():
     global _TOOLS_DATA
-    _TOOLS_DATA = { appconsts.TLINE_TOOL_INSERT:    (_("Insert"), Gtk.Image.new_from_file(respaths.IMAGE_PATH + "insertmove_cursor.png")),
-                    appconsts.TLINE_TOOL_OVERWRITE: (_("Overwrite"), Gtk.Image.new_from_file(respaths.IMAGE_PATH + "overwrite_cursor.png")),
-                    appconsts.TLINE_TOOL_TRIM:      (_("Trim"), Gtk.Image.new_from_file(respaths.IMAGE_PATH + "oneroll_cursor.png")),
-                    appconsts.TLINE_TOOL_ROLL:      (_("Roll"), Gtk.Image.new_from_file(respaths.IMAGE_PATH + "tworoll_cursor.png")),
-                    appconsts.TLINE_TOOL_SLIP:      (_("Slip"), Gtk.Image.new_from_file(respaths.IMAGE_PATH + "slide_cursor.png")),
-                    appconsts.TLINE_TOOL_SPACER:    (_("Spacer"), Gtk.Image.new_from_file(respaths.IMAGE_PATH + "multimove_cursor.png")),
-                    appconsts.TLINE_TOOL_BOX:       (_("Box"), Gtk.Image.new_from_file(respaths.IMAGE_PATH + "overwrite_cursor_box.png")) 
+    _TOOLS_DATA = { appconsts.TLINE_TOOL_INSERT:    (_("Insert"), "insertmove_cursor.png"),
+                    appconsts.TLINE_TOOL_OVERWRITE: (_("Overwrite"), "overwrite_cursor.png"),
+                    appconsts.TLINE_TOOL_TRIM:      (_("Trim"), "oneroll_cursor.png"),
+                    appconsts.TLINE_TOOL_ROLL:      (_("Roll"), "tworoll_cursor.png"),
+                    appconsts.TLINE_TOOL_SLIP:      (_("Slip"), "slide_cursor.png"),
+                    appconsts.TLINE_TOOL_SPACER:    (_("Spacer"), "multimove_cursor.png"),
+                    appconsts.TLINE_TOOL_BOX:       (_("Box"), "overwrite_cursor_box.png") 
                   }
 
 #----------------------------------------------------- workflow presets
@@ -128,29 +129,27 @@ def workflow_menu_launched(widget, event):
     guiutils.add_separetor(_workflow_menu)
     
     for tool_id in _TOOLS_DATA:
-        name, icon = _TOOLS_DATA[tool_id]
-        _workflow_menu.add(_get_workflow_tool_menu_item(_workflow_menu_callback, tool_id, name, icon))
+        tool_name, tool_icon_file = _TOOLS_DATA[tool_id]
+        _workflow_menu.add(_get_workflow_tool_menu_item(_workflow_menu_callback, tool_id, tool_name, tool_icon_file))
         
     _workflow_menu.popup(None, None, None, None, event.button, event.time)
 
-def _get_workflow_tool_menu_item(callback, tool_id, tool_name, tool_icon):
+def _get_workflow_tool_menu_item(callback, tool_id, tool_name, tool_icon_file):
 
     tool_active = (tool_id in editorpersistance.prefs.active_tools)
 
-    tool_img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "overwrite_cursor.png")
+    tool_img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + tool_icon_file)
     tool_name_label = Gtk.Label(tool_name)
     
     hbox = Gtk.HBox()
-    #hbox.pack_start(is_active_check_box, False, False, 0)
     hbox.pack_start(guiutils.pad_label(4, 4), False, False, 0)
-    hbox.pack_start(tool_icon, False, False, 0)
+    hbox.pack_start(tool_img, False, False, 0)
     hbox.pack_start(guiutils.pad_label(4, 4), False, False, 0)
     hbox.pack_start(tool_name_label, False, False, 0)
     hbox.show_all()
     hbox.set_sensitive(tool_active)
     item = Gtk.MenuItem()
     item.add(hbox)
-    #item.connect("activate", callback, tool_id)
     item.show()
     
     item.set_submenu(_get_workflow_tool_submenu(callback, tool_id))
@@ -236,70 +235,16 @@ def get_tline_tool_popup_menu(launcher, event, callback):
     
     kb_shortcut_number = 1
     for tool_id in editorpersistance.prefs.active_tools:
-        tool_name, tool_icon = _TOOLS_DATA[tool_id]
+        tool_name, tool_icon_file = _TOOLS_DATA[tool_id]
 
-        menu_item = _get_image_menu_item(Gtk.Image.new_from_file(tool_icon), tool_name, callback, tool_id)
+        menu_item = _get_image_menu_item(tool_icon_file, tool_name, callback, tool_id)
         accel_path = "<Actions>/WindowActions/TOOL_ACTION_KEY_" + str(kb_shortcut_number)
         menu_item.set_accel_path(accel_path)
         menu.add(menu_item)
         menu_items.append(menu_item)
-        
         kb_shortcut_number = kb_shortcut_number + 1
 
-    menu.connect("hide", lambda w : _tools_menu_hidden(w,menu_items))
-    menu.show_all()
-    menu.popup(None, None, None, None, event.button, event.time)
-
-def get_mode_selector_popup_menu(launcher, event, callback):
-    menu = _tools_menu
-    guiutils.remove_children(menu)
-    menu.set_accel_group(gui.editor_window.accel_group)
-    menu.set_take_focus(False)
-    menu_items = []
-
-    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "insertmove_cursor.png"), _("Insert"), callback, appconsts.TLINE_TOOL_INSERT)
-    menu_item.set_accel_path("<Actions>/WindowActions/TOOL_ACTION_KEY_1")
-    menu.add(menu_item)
-    menu_items.append(menu_item)
-
-    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "overwrite_cursor.png"),    _("Overwrite"), callback, appconsts.TLINE_TOOL_OVERWRITE)
-    menu_item.set_accel_path("<Actions>/WindowActions/TOOL_ACTION_KEY_2")
-    menu.add(menu_item)
-    menu_items.append(menu_item)
-
-    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "oneroll_cursor.png"), _("Trim"), callback, appconsts.TLINE_TOOL_TRIM)
-    menu_item.set_accel_path("<Actions>/WindowActions/TOOL_ACTION_KEY_3")
-    menu.add(menu_item)
-    menu_items.append(menu_item)
-
-    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "tworoll_cursor.png"), _("Roll"), callback, appconsts.TLINE_TOOL_ROLL)
-    menu_item.set_accel_path("<Actions>/WindowActions/TOOL_ACTION_KEY_4")
-    menu.add(menu_item)
-    menu_items.append(menu_item)
-
-    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "slide_cursor.png"), _("Slip"), callback, appconsts.TLINE_TOOL_SLIP)
-    menu_item.set_accel_path("<Actions>/WindowActions/TOOL_ACTION_KEY_5")
-    menu.add(menu_item)
-    menu_items.append(menu_item)
-
-    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "multimove_cursor.png"), _("Spacer"), callback, appconsts.TLINE_TOOL_SPACER)
-    menu_item.set_accel_path("<Actions>/WindowActions/TOOL_ACTION_KEY_6")
-    menu.add(menu_item)
-    menu_items.append(menu_item)
-
-    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "overwrite_cursor_box.png"), _("Box"), callback, appconsts.TLINE_TOOL_BOX)
-    menu_item.set_accel_path("<Actions>/WindowActions/TOOL_ACTION_KEY_7")
-    menu.add(menu_item)
-    menu_items.append(menu_item)
-    
-    menu.connect("hide", lambda w : _tools_menu_hidden(w,menu_items))
+    menu.connect("hide", lambda w : _tools_menu_hidden(w, menu_items))
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
 
@@ -308,12 +253,28 @@ def _tools_menu_hidden(tools_menu, menu_items):
     for menu_item in menu_items:
         menu_item.set_accel_path(None)
 
-def _get_image_menu_item(img, text, callback, data):
+def _get_image_menu_item(tool_icon_file, text, callback, data):
     item = Gtk.ImageMenuItem()
-    item.set_image(img)
+    tool_img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + tool_icon_file)
+        
+    item.set_image(tool_img)
     item.connect("activate", callback, data)
     item.set_always_show_image(True)
     item.set_use_stock(False)
     item.set_label(text)
     item.show()
     return item
+
+# ------------------------------------------------------------- keyboard shortcuts
+def tline_tool_keyboard_selected(event):
+  
+    try:
+        keyboard_number = int(Gdk.keyval_name(event.keyval).lower())
+        tool_id = editorpersistance.prefs.active_tools[keyboard_number - 1]
+        gui.editor_window.change_tool(tool_id)
+        return True
+    except:
+        # This fails if not a valid number was pressed, so probably most times.
+        pass
+        
+    return False

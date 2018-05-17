@@ -27,6 +27,7 @@ from gi.repository import Gdk
 
 import appconsts
 import audiowaveform
+import audiowaveformrenderer
 import clipeffectseditor
 import compositeeditor
 import compositormodes
@@ -51,8 +52,8 @@ import tlinewidgets
 import trimmodes
 import updater
 import projectaction
+import workflow
 
-import audiowaveformrenderer
 
 
 # ------------------------------------- keyboard events
@@ -172,10 +173,12 @@ def _handle_tline_key_event(event):
     Returns True for handled key presses to stop those
     keyevents from going forward.
     """
-    # Apr-2017 - SvdB - For keyboard shortcuts
-    action = _get_shortcut_action(event)
+
+    tool_was_selected = workflow.tline_tool_keyboard_selected(event)
+    if tool_was_selected == True:
+        return True
     
-    # Apr-2017 - SvdB - For ffwd / rev speeds
+    action = _get_shortcut_action(event)
     prefs = editorpersistance.prefs
 
     if action == 'mark_in':
@@ -205,35 +208,7 @@ def _handle_tline_key_event(event):
         return True
     if action == 'add_marker':
         tlineaction.add_marker()
-        return True
-    if action == 'edit_mode_insert':
-        gui.editor_window.handle_insert_move_mode_button_press()
-        gui.editor_window.set_tool_selector_to_mode()
-        return True
-    if action == 'edit_mode_overwrite':
-        gui.editor_window.handle_over_move_mode_button_press()
-        gui.editor_window.set_tool_selector_to_mode()
-        return True
-    if action == 'edit_mode_trim':
-        gui.editor_window.handle_one_roll_mode_button_press()
-        gui.editor_window.set_tool_selector_to_mode()
-        return True
-    if action == 'edit_mode_roll':
-        gui.editor_window.handle_two_roll_mode_button_press()
-        gui.editor_window.set_tool_selector_to_mode()
-        return True
-    if action == 'edit_mode_slip':
-        gui.editor_window.handle_slide_mode_button_press()
-        gui.editor_window.set_tool_selector_to_mode()
-        return True
-    if action == 'edit_mode_spacer':
-        gui.editor_window.handle_multi_mode_button_press()
-        gui.editor_window.set_tool_selector_to_mode()
-        return True
-    if action == 'edit_mode_box':
-        gui.editor_window.handle_box_mode_button_press()
-        gui.editor_window.set_tool_selector_to_mode()
-        return True
+        return True    
     if action == 'cut':
         tlineaction.cut_pressed()
         return True
@@ -349,22 +324,19 @@ def _handle_tline_key_event(event):
         if action == 'to_start':
             if PLAYER().is_playing():
                 monitorevent.stop_pressed()
-            gui.editor_window.handle_insert_move_mode_button_press()
-            gui.editor_window.set_tool_selector_to_mode()
+            gui.editor_window.set_default_edit_tool()
             PLAYER().seek_frame(0)
             _move_to_beginning()
             return True
         if action == 'to_end':
             if PLAYER().is_playing():
                 monitorevent.stop_pressed()
-            gui.editor_window.handle_insert_move_mode_button_press()
-            gui.editor_window.set_tool_selector_to_mode()
+            gui.editor_window.set_default_edit_tool()
             PLAYER().seek_end()
             _move_to_end()
             return True
 
     return False
-
 
 def _handle_extended_tline_focus_events(event):
     # This function was added to fix to a bug long time ago but the rationale for "extended_tline_focus_events" has been forgotten, but probably still exists
@@ -402,33 +374,9 @@ def _handle_extended_tline_focus_events(event):
     if action == 'switch_monitor':
         updater.switch_monitor_display()
         return True
-    if action == 'edit_mode_insert':
-        gui.editor_window.handle_insert_move_mode_button_press()
-        gui.editor_window.set_tool_selector_to_mode()
-        return True
-    if action == 'edit_mode_overwrite':
-        gui.editor_window.handle_over_move_mode_button_press()
-        gui.editor_window.set_tool_selector_to_mode()
-        return True
-    if action == 'edit_mode_trim':
-        gui.editor_window.handle_one_roll_mode_button_press()
-        gui.editor_window.set_tool_selector_to_mode()
-        return True
-    if action == 'edit_mode_roll':
-        gui.editor_window.handle_two_roll_mode_button_press()
-        gui.editor_window.set_tool_selector_to_mode()
-        return True
-    if action == 'edit_mode_slip':
-        gui.editor_window.handle_slide_mode_button_press()
-        gui.editor_window.set_tool_selector_to_mode()
-        return True
-    if action == 'edit_mode_spacer':
-        gui.editor_window.handle_multi_mode_button_press()
-        gui.editor_window.set_tool_selector_to_mode()
-        return True
-    if action == 'edit_mode_box':
-        gui.editor_window.handle_box_mode_button_press()
-        gui.editor_window.set_tool_selector_to_mode()
+    
+    tool_was_selected = workflow.tline_tool_keyboard_selected(event)
+    if tool_was_selected == True:
         return True
 
     return False

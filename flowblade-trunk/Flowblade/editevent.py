@@ -239,8 +239,7 @@ def set_default_edit_mode(disable_mouse=False):
     NOTE: As this uses 'programmed click', this method does nothing if insert mode button
     is already down.
     """
-    gui.editor_window.handle_insert_move_mode_button_press()
-    gui.editor_window.set_tool_selector_to_mode()
+    gui.editor_window.set_default_edit_tool()
     if disable_mouse:
         global mouse_disabled
         mouse_disabled = True
@@ -258,7 +257,7 @@ def set_clip_monitor_edit_mode():
     elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM_NO_EDIT:
         pass
     else:
-        gui.editor_window.handle_insert_move_mode_button_press()
+        gui.editor_window.set_default_edit_tool()
         
     gui.editor_window.set_tool_selector_to_mode()
 

@@ -1078,6 +1078,33 @@ class EditorWindow:
         self.sequence_editor_b.set_tooltip_text(_("Display Current Sequence on Timeline"))
         self.clip_editor_b.set_tooltip_text(_("Display Monitor Clip"))
 
+    def set_default_edit_tool(self):
+        # First active tool is the default tool. So we need to always have atleast one tool available.
+        self.change_tool(editorpersistance.prefs.active_tools[0])
+        pass
+
+    def change_tool(self, tool_id):
+        if tool_id == appconsts.TLINE_TOOL_INSERT:
+            gui.editor_window.handle_insert_move_mode_button_press()
+        elif tool_id == appconsts.TLINE_TOOL_OVERWRITE:
+            gui.editor_window.handle_over_move_mode_button_press()
+        elif tool_id == appconsts.TLINE_TOOL_TRIM:
+            gui.editor_window.handle_one_roll_mode_button_press()
+        elif tool_id == appconsts.TLINE_TOOL_ROLL:
+            gui.editor_window.handle_two_roll_mode_button_press()
+        elif tool_id == appconsts.TLINE_TOOL_SLIP:
+            gui.editor_window.handle_slide_mode_button_press()
+        elif tool_id == appconsts.TLINE_TOOL_SPACER:
+            gui.editor_window.handle_multi_mode_button_press()
+        elif tool_id == appconsts.TLINE_TOOL_BOX:
+            gui.editor_window.handle_box_mode_button_press()
+        else:
+            # We should not hit this
+            print "editorwindow.change_tool() else: hit!"
+            return 
+        
+        gui.editor_window.set_tool_selector_to_mode()
+        
     def handle_over_move_mode_button_press(self):
         editevent.overwrite_move_mode_pressed()
         self.set_cursor_to_mode()
@@ -1122,7 +1149,7 @@ class EditorWindow:
         self.set_tline_cursor(editorstate.EDIT_MODE())
         
     def mode_selector_pressed(self, selector, event):
-        workflow.get_mode_selector_popup_menu(selector, event, self.tool_selector_item_activated)
+        workflow.get_tline_tool_popup_menu(selector, event, self.tool_selector_item_activated)
     
     def tool_selector_item_activated(self, selector, tool):
         if tool == appconsts.TLINE_TOOL_INSERT:
