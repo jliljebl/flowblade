@@ -275,14 +275,14 @@ def _workflow_menu_callback(widget, data):
         _set_workflow_STANDARD()
     elif msg == "preset filmstyle":
         _set_workflow_FILM_STYLE()
-        
-    try:
-        pos = int(msg)
-        current_index = editorpersistance.prefs.active_tools.index(tool_id)
-        editorpersistance.prefs.active_tools.remove(tool_id)
-        editorpersistance.prefs.active_tools.insert(pos - 1, tool_id)
-    except:
-        pass
+    else:
+        try:
+            pos = int(msg)
+            current_index = editorpersistance.prefs.active_tools.index(tool_id)
+            editorpersistance.prefs.active_tools.remove(tool_id)
+            editorpersistance.prefs.active_tools.insert(pos - 1, tool_id)
+        except:
+            pass
 
 
 # ------------------------------------------------------------- keyboard shortcuts

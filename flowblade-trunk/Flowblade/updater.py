@@ -464,18 +464,22 @@ def display_sequence_in_monitor():
 
 def update_seqence_info_text():
     name = editorstate.current_sequence().name
-    profile_desc = editorstate.current_sequence().profile.description()
-
     prog_len = PLAYER().producer.get_length()
     if prog_len < 2: # # to 'fix' the single frame black frame at start, will bug for actual 1 frame sequences
         prog_len = 0
     tc_info = utils.get_tc_string(prog_len)
+
+    """
+    profile_desc = editorstate.current_sequence().profile.description()
+
+
         
     if editorpersistance.prefs.show_sequence_profile:
         gui.editor_window.monitor_source.set_text(name + "  -  " + profile_desc + "  -  " + tc_info)
     else:
         gui.editor_window.monitor_source.set_text(name + "  -  " + tc_info)
-
+    """
+    gui.editor_window.monitor_source.set_text(name + "  -  " + tc_info)
     range_info = _get_marks_range_info_text(PLAYER().producer.mark_in, PLAYER().producer.mark_out)
     gui.editor_window.info1.set_text(range_info)
 

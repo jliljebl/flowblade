@@ -228,7 +228,13 @@ def screen_size_small_width():
         return True
     else:
         return False
-
+"""
+def screen_size_smallest_width():
+    if SCREEN_WIDTH < 1279:
+        return True
+    else:
+        return False
+"""
 def screen_size_small():
     if screen_size_small_height() == True or screen_size_small_width() == True:
         return True

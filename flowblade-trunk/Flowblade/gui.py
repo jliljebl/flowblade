@@ -38,6 +38,7 @@ editmenu = None
 # Project data lists
 media_list_view = None
 bin_list_view = None
+bin_panel = None
 sequence_list_view = None
 effect_stack_list_view = None
 
@@ -101,12 +102,13 @@ def capture_references(new_editor_window):
     tc, tline_display, tline_scale, tline_canvas, tline_scroll, tline_v_scroll, tline_info, \
     tline_column, play_b, clip_editor_b, sequence_editor_b, \
     effect_select_list_view, effect_select_combo_box, project_info_vbox, middle_notebook, big_tc, editmenu, notebook_buttons, tline_left_corner, \
-    monitor_widget
+    monitor_widget, bin_panel
 
     editor_window = new_editor_window
 
     media_list_view = editor_window.media_list_view
     bin_list_view = editor_window.bin_list_view
+    bin_panel = editor_window.bins_panel
     sequence_list_view = editor_window.sequence_list_view
 
     middle_notebook = editor_window.notebook
@@ -218,7 +220,7 @@ def load_current_colors():
 
 def _colors_data_path():
     return utils.get_hidden_user_dir_path() + _CURRENT_THEME_COLORS_FILE
-
+  
 def _print_widget(widget): # debug
     path_str = widget.get_path().to_string()
     path_str = path_str.replace("GtkWindow:dir-ltr.background","")
@@ -229,3 +231,21 @@ def _print_widget(widget): # debug
     path_str = path_str.replace("GtkVBox:. GtkVPaned:[2/2]. GtkHBox:. GtkHPaned:. GtkVBox:. GtkNotebook:[1/1]","notebook:")
     print path_str
 
+"""
+TESTING
+def apply_gtk_css():
+    provider = Gtk.CssProvider.new()
+    display = Gdk.Display.get_default()
+    screen = display.get_default_screen()
+    Gtk.StyleContext.add_provider_for_screen (screen, provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+    
+    data = "* {\n" + \
+           "   background-color: rgb (28, 29, 33);\n" + \
+           "}\n" + \
+           "*:selected {\n" + \
+           "color: darker (@selected_fg_color);\n" + \
+           "background-color: lighter (rgba (50%, 32%, 35%, 0.9));\n" + \
+           "}"
+
+    provider.load_from_data(data)
+"""

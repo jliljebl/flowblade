@@ -300,7 +300,7 @@ class EditorPreferences:
         self.remember_last_render_dir = True
         self.empty_click_exits_trims = True # DEPRECATED, NOT USER SETTABLE ANYMORE
         self.quick_enter_trims = True # DEPRECATED, NOT USER SETTABLE ANYMORE
-        self.show_vu_meter = True
+        self.show_vu_meter = True  # DEPRECATED, NOT USER SETTABLE ANYMORE
         self.remember_monitor_clip_frame = True # DEPRECATED, NOT USER SETTABLE ANYMORE
         self.jack_start_up_op = appconsts.JACK_ON_START_UP_NO # not used
         self.jack_frequency = 48000 # not used 
@@ -336,3 +336,4 @@ class EditorPreferences:
         self.show_alpha_info_message = True
         self.playback_follow_move_tline_range = True
         self.active_tools = [1, 2, 3, 4, 5, 6, 7]
+        self.top_level_project_panel = True

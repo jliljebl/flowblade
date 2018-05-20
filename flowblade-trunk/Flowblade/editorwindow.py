@@ -76,7 +76,7 @@ import undo
 import workflow
 
 # GUI size params
-MEDIA_MANAGER_WIDTH = 250
+MEDIA_MANAGER_WIDTH = 110
 MONITOR_AREA_WIDTH = 600 # defines app min width with NOTEBOOK_WIDTH 400 for small
 
 IMG_PATH = None
@@ -111,6 +111,12 @@ def _toggle_image_switch(widget, icons):
         widget.set_image(pressed)
     else:
         widget.set_image(not_pressed)
+
+def top_level_project_panel():
+    if editorpersistance.prefs.top_level_project_panel == True and editorstate.screen_size_small_width() == False and editorstate.screen_size_large_height() == True:
+        return True
+    
+    return False
 
 
 class EditorWindow:
@@ -407,13 +413,9 @@ class EditorWindow:
         # Disable audio mixer if not available
         if editorstate.audio_monitoring_available == False:
             ui.get_widget('/MenuBar/ToolsMenu/AudioMix').set_sensitive(False)
-            
-        # Menu box
-        menu_vbox = Gtk.VBox(False, 0)
-        menu_vbox.pack_start(self.menubar, False, True, 0)
 
         # Media panel
-        tree_view = False # Testing if we get this working
+        tree_view = True # Testing if we get this working
         if tree_view == False:
             self.bin_list_view = guicomponents.BinListView(
                                             projectaction.bin_selection_changed, 
@@ -430,17 +432,19 @@ class EditorWindow:
         else:
             self.bin_list_view = guicomponents.BinTreeView(
                                             projectaction.bin_selection_changed, 
-                                            projectaction.bin_name_edited)
+                                            projectaction.bin_name_edited,
+                                            projectaction.bins_panel_popup_requested)
             dnd.connect_bin_tree_view(self.bin_list_view.treeview, projectaction.move_files_to_bin)
             self.bin_list_view.set_property("can-focus",  True)
             
 
-            bins_panel = panels.get_bins_tree_panel(self.bin_list_view)
-            bins_panel.set_size_request(MEDIA_MANAGER_WIDTH, 10) # this component is always expanded, so 10 for minimum size ok
+            self.bins_panel = panels.get_bins_tree_panel(self.bin_list_view)
+            self.bins_panel.set_size_request(MEDIA_MANAGER_WIDTH, 10) # this component is always expanded, so 10 for minimum size ok
             #bins_panel.set_margin_right(4)
 
         self.media_list_view = guicomponents.MediaPanel(projectaction.media_file_menu_item_selected,
-                                                        updater.set_and_display_monitor_media_file)
+                                                        updater.set_and_display_monitor_media_file,
+                                                        projectaction.media_panel_popup_requested)
     
     
         view = Gtk.Viewport()
@@ -463,9 +467,15 @@ class EditorWindow:
         guiutils.set_margins(media_panel, 6, 6, 4, 6)
         self.media_panel = media_panel
 
-        self.mm_paned = Gtk.HPaned()
-        self.mm_paned.pack1(bins_panel, resize=True, shrink=True)
-        self.mm_paned.pack2(media_panel, resize=True, shrink=False)
+        # Smallest screens always get bins in same panel as media, others get top level project panel if selected
+        if top_level_project_panel() == True:
+            self.mm_paned = Gtk.HBox()
+            self.mm_paned.add(media_panel)
+        else:
+            self.mm_paned = Gtk.HPaned()
+            self.mm_paned.pack1(self.bins_panel, resize=True, shrink=True)
+            self.mm_paned.pack2(media_panel, resize=True, shrink=False)
+        #self.mm_paned.set_position(10)
 
         if tree_view == False:
             mm_panel = guiutils.set_margins(self.mm_paned, 2, 2, 6, 2)
@@ -545,6 +555,7 @@ class EditorWindow:
         media_log_panel = guiutils.set_margins(media_log_vbox, 6, 6, 6, 6)
         self.media_log_events_list_view = media_log_events_list_view
 
+        # Project Panel / Pop Level Project pane
         # Sequence list
         self.sequence_list_view = guicomponents.SequenceListView(
                                         projectaction.sequence_name_edited)
@@ -554,14 +565,29 @@ class EditorWindow:
                              lambda w,e: projectaction.add_new_sequence(), 
                              lambda w,e: projectaction.delete_selected_sequence())
 
-        # Project info
-        project_info_panel = projectinfogui.get_project_info_panel()
-    
-        # Project vbox and panel
-        project_vbox = Gtk.VBox()
-        project_vbox.pack_start(project_info_panel, False, True, 0)
-        project_vbox.pack_start(seq_panel, True, True, 0)
-        project_panel = guiutils.set_margins(project_vbox, 0, 2, 6, 2)
+        if top_level_project_panel() == True:
+            # Project info
+            project_info_panel = projectinfogui.get_top_level_project_info_panel()
+            PANEL_WIDTH = 250
+            PANEL_HEIGHT = 150
+            top_project_vbox = Gtk.VBox()
+            top_project_vbox.pack_start(project_info_panel, False, False, 0)
+            top_project_vbox.pack_start(self.bins_panel, True, True, 0)
+            top_project_vbox.pack_start(seq_panel, True, True, 0)
+            
+            top_project_vbox.set_size_request(PANEL_WIDTH, PANEL_HEIGHT)
+            top_project_panel = guiutils.set_margins(top_project_vbox, 0, 2, 6, 2)
+        else:
+
+            # Notebook project panel for smallest screens
+            # Project info
+            project_info_panel = projectinfogui.get_project_info_panel()
+            
+            # Project vbox and panel
+            project_vbox = Gtk.VBox()
+            project_vbox.pack_start(project_info_panel, False, True, 0)
+            project_vbox.pack_start(seq_panel, True, True, 0)
+            project_panel = guiutils.set_margins(project_vbox, 0, 2, 6, 2)
         
         # Notebook
         self.notebook = Gtk.Notebook()
@@ -573,7 +599,8 @@ class EditorWindow:
         self.notebook.append_page(media_log_panel, Gtk.Label(label=_("Range Log")))
         self.notebook.append_page(self.effects_panel, Gtk.Label(label=_("Filters")))
         self.notebook.append_page(self.compositors_panel, Gtk.Label(label=_("Compositors")))
-        self.notebook.append_page(project_panel, Gtk.Label(label=_("Project")))
+        if top_level_project_panel() == False:
+            self.notebook.append_page(project_panel, Gtk.Label(label=_("Project")))
         self.notebook.append_page(render_panel, Gtk.Label(label=_("Render")))
         self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
 
@@ -602,15 +629,17 @@ class EditorWindow:
         self._create_monitor_buttons()
 
         # Monitor top info row
-        monitor_info_row = Gtk.HBox(False, 1)
-        monitor_info_row.pack_start(self.monitor_source, False, False, 0)
-        monitor_info_row.pack_start(Gtk.Label(), True, False, 0)
-        monitor_info_row.pack_start(self.info1, False, False, 0)
+        #monitor_info_row = Gtk.HBox(False, 1)
+        #monitor_info_row.pack_start(self.monitor_source, False, False, 0)
+        #monitor_info_row.pack_start(guiutils.pad_label(32, 10), False, False, 0)
+        #monitor_info_row.pack_start(self.info1, False, False, 0)
 
         # Switch / pos bar row
         self.view_mode_select = guicomponents.get_monitor_view_select_combo(lambda w, e: tlineaction.view_mode_menu_lauched(w, e))
         self.trim_view_select = guicomponents.get_trim_view_select_combo(lambda w, e: monitorevent.trim_view_menu_launched(w, e))
         sw_pos_hbox = Gtk.HBox(False, 1)
+        sw_pos_hbox.pack_start(self.monitor_switch.widget, False, False, 0)
+        
         sw_pos_hbox.pack_start(self.sequence_editor_b, True, True, 0)
         sw_pos_hbox.pack_start(self.clip_editor_b, True, True, 0)
         sw_pos_hbox.pack_start(self.trim_view_select.widget, False, False, 0)
@@ -627,7 +656,7 @@ class EditorWindow:
 
         # Monitor
         monitor_vbox = Gtk.VBox(False, 1)
-        monitor_vbox.pack_start(monitor_info_row, False, True, 0)
+        #monitor_vbox.pack_start(monitor_info_row, False, True, 0)
         monitor_vbox.pack_start(monitor_widget.widget, True, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
         monitor_vbox.pack_start(player_buttons_row, False, True, 0)
@@ -652,9 +681,11 @@ class EditorWindow:
         else:
             self.top_paned.pack1(mm_panel, resize=False, shrink=False)
             self.top_paned.pack2(notebook_vbox, resize=True, shrink=False)
-            
+
         # Top row
         self.top_row_hbox = Gtk.HBox(False, 0)
+        if top_level_project_panel() == True:
+            self.top_row_hbox.pack_start(top_project_panel, False, False, 0)
         self.top_row_hbox.pack_start(self.top_paned, True, True, 0)
         self._update_top_row()
 
@@ -756,6 +787,18 @@ class EditorWindow:
         self.app_v_paned.pack2(tline_pane, resize=True, shrink=False)
         self.app_v_paned.no_dark_bg = True
 
+
+        # Menu box
+        # menubar size 348, 28 if w want to center someting her with set_size_request
+        self.menubar.set_margin_bottom(4)
+        menu_vbox = Gtk.HBox(False, 0)
+        menu_vbox.pack_start(guiutils.get_right_justified_box([self.menubar]), False, False, 0)
+        menu_vbox.pack_start(Gtk.Label(), True, True, 0)
+        menu_vbox.pack_start(self.monitor_source, False, False, 0)
+        menu_vbox.pack_start(guiutils.pad_label(24, 10), False, False, 0)
+        menu_vbox.pack_start(self.info1, False, False, 0)
+        #menu_vbox.pack_start(guiutils.pad_label(32, 10), False, False, 0)
+        
         # Pane
         pane = Gtk.VBox(False, 1)
         pane.pack_start(menu_vbox, False, True, 0)
@@ -810,7 +853,13 @@ class EditorWindow:
             self.window2.show_all()
                         
         # Set paned positions
-        self.mm_paned.set_position(editorpersistance.prefs.mm_paned_position)
+        bin_w = editorpersistance.prefs.mm_paned_position
+        if bin_w < MEDIA_MANAGER_WIDTH + 2:
+            bin_w = 0
+        
+        if top_level_project_panel() == False:
+            self.mm_paned.set_position(bin_w)
+            
         self.top_paned.set_position(editorpersistance.prefs.top_paned_position)
         self.app_v_paned.set_position(editorpersistance.prefs.app_v_paned_position)
 
@@ -829,7 +878,6 @@ class EditorWindow:
         windows_menu.append(one_window)
         
         two_windows = Gtk.RadioMenuItem.new_with_label([one_window], _("Two Windows").encode('utf-8'))
-
 
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
             one_window.set_active(True)
@@ -891,16 +939,13 @@ class EditorWindow:
         sep = Gtk.SeparatorMenuItem()
         menu.append(sep)
 
+        """
         show_monitor_info_item = Gtk.CheckMenuItem(_("Show Monitor Sequence Profile").encode('utf-8'))
         show_monitor_info_item.set_active(editorpersistance.prefs.show_sequence_profile)
         show_monitor_info_item.connect("toggled", lambda w: middlebar._show_monitor_info_toggled(w))
         menu.append(show_monitor_info_item)
-
-        show_vu_item = Gtk.CheckMenuItem(_("Show Master Volume Meter").encode('utf-8'))
-        show_vu_item.set_active(editorpersistance.prefs.show_vu_meter)
-        show_vu_item.connect("toggled", lambda w: self._show_vu_meter(w))
-        menu.append(show_vu_item)
-
+        """
+        
         sep = Gtk.SeparatorMenuItem()
         menu.append(sep)
 
@@ -980,21 +1025,16 @@ class EditorWindow:
         self._update_top_row(True)
 
     def _update_top_row(self, show_all=False):
-        if editorpersistance.prefs.show_vu_meter:
-            if len(self.top_row_hbox) == 1:
-                self.top_row_hbox.pack_end(audiomonitoring.get_master_meter(), False, False, 0)
-        else:
-            if len(self.top_row_hbox) == 2:
-                meter = self.top_row_hbox.get_children()[1]
-                self.top_row_hbox.remove(meter)
-            audiomonitoring.close_master_meter()
+        self.top_row_hbox.pack_end(audiomonitoring.get_master_meter(), False, False, 0)
+
 
         if show_all:
             self.window.show_all()
         
     def _create_monitor_buttons(self):
+        self.monitor_switch = guicomponents.MonitorSwitch(self._monitor_switch_handler)
         # Monitor switch buttons
-        self.sequence_editor_b = Gtk.RadioButton(None) #, _("Timeline"))
+        self.sequence_editor_b = Gtk.RadioButton(None)
         self.sequence_editor_b.set_mode(False)
         self.sequence_editor_b.set_image(Gtk.Image.new_from_file(IMG_PATH + "timeline_button.png"))
         self.sequence_editor_b.connect("clicked", 
@@ -1288,10 +1328,12 @@ class EditorWindow:
         self.monitor_source = Gtk.Label(label="sequence1")
         self.monitor_source.set_ellipsize(Pango.EllipsizeMode.END)
         self.monitor_source.modify_font(Pango.FontDescription(font_desc))
+        self.monitor_source.set_sensitive(False)
         self.info1 = Gtk.Label(label="--:--:--:--")
         self.info1.set_ellipsize(Pango.EllipsizeMode.END)
         self.info1.modify_font(Pango.FontDescription(font_desc))
-
+        self.info1.set_sensitive(False)
+        
 def _this_is_not_used():
     print "THIS WAS USED!!!!!"
 

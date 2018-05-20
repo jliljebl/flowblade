@@ -110,6 +110,8 @@ media_linker_popup_menu = Gtk.Menu()
 log_event_popup_menu = Gtk.Menu()
 levels_menu = Gtk.Menu()
 clip_effects_hamburger_menu = Gtk.Menu()
+bin_popup_menu = Gtk.Menu()
+
 
 # ------------------------------------------------- item lists
 class ImageTextTextListView(Gtk.VBox):
@@ -183,16 +185,18 @@ class ImageTextTextListView(Gtk.VBox):
         return rows
 
 # ------------------------------------------------- item lists
-class ImageTextTextTreeView(Gtk.VBox):
+class BinTreeView(Gtk.VBox):
     """
     GUI component displaying list with columns: img, text, text
     Middle column expands.
     """
 
-    def __init__(self):
+    def __init__(self, bin_selection_cb, bin_name_edit_cb, bins_popup_cb):
         GObject.GObject.__init__(self)
 
-       # Datamodel: icon, text, text
+        self.bins_popup_cb = bins_popup_cb
+
+       # Datamodel: icon, text, text (folder, name, item count)
         self.storemodel = Gtk.TreeStore(GdkPixbuf.Pixbuf, str, str)
 
         # Scroll container
@@ -200,62 +204,72 @@ class ImageTextTextTreeView(Gtk.VBox):
         self.scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         self.scroll.set_shadow_type(Gtk.ShadowType.NONE)
 
-        # View
+        # TreeView
         self.treeview = Gtk.TreeView(self.storemodel)
+        self.treeview.connect('button-press-event', self._button_press_event)
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(False)
         tree_sel = self.treeview.get_selection()
         tree_sel.set_mode(Gtk.SelectionMode.SINGLE)
-
-        # Column views
-
-
-
-
+        tree_sel.connect("changed", bin_selection_cb)
+        
         # Cell renderers
         self.icon_rend = Gtk.CellRendererPixbuf()
-        #self.icon_rend.props.xpad = 6
-
         self.text_rend_1 = Gtk.CellRendererText()
-        #self.text_rend_1.set_property("ellipsize", Pango.EllipsizeMode.END)
-
+        self.text_rend_1.connect("edited",
+                                 bin_name_edit_cb,
+                                 (self.storemodel, 1))
+        self.text_rend_1.set_property("ellipsize", Pango.EllipsizeMode.END)
         self.text_rend_2 = Gtk.CellRendererText()
-        #self.text_rend_2.set_property("yalign", 0.0)
 
-        # Build column views
-        self.icon_col = Gtk.TreeViewColumn("", self.icon_rend)
-        #self.icon_col.set_expand(False)
-        #self.icon_col.set_spacing(5)
-        #self.icon_col.pack_start(self.icon_rend, False)
-        #self.icon_col.add_attribute(self.icon_rend, 'pixbuf', 0)
+        # Column views
+        self.bin_col = Gtk.TreeViewColumn("")
+        self.bin_col.set_expand(True)
+        self.bin_col.pack_start(self.icon_rend, False)
+        self.bin_col.add_attribute(self.icon_rend, 'pixbuf', 0)
+        self.bin_col.pack_start(self.text_rend_1, True)
+        self.bin_col.add_attribute(self.text_rend_1, 'text', 1)
 
-        self.text_col_1 = Gtk.TreeViewColumn("", self.text_rend_1, text=1)
-        self.text_col_1.set_expand(True)
-        #self.text_col_1.set_spacing(5)
-        #self.text_col_1.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
-        #self.text_col_1.set_min_width(60)
-        #self.text_col_1.pack_start(self.text_rend_1, True)
-        #self.text_col_1.add_attribute(self.text_rend_1, "text", 1)
-
-        self.text_col_2 = Gtk.TreeViewColumn("", self.text_rend_2, text=2)
-        
-        #self.text_col_2.set_expand(False)
-        #self.text_col_2.pack_start(self.text_rend_2, True)
-        #self.text_col_2.add_attribute(self.text_rend_2, "text", 2)
+        self.item_count_col = Gtk.TreeViewColumn("", self.text_rend_2, text=2)
+        self.item_count_col.set_expand(False)
 
         # Add column views to view
-        self.treeview.append_column(self.icon_col)
-        self.treeview.append_column(self.text_col_1)
-        self.treeview.append_column(self.text_col_2)
+        self.treeview.append_column(self.bin_col)
+        self.treeview.append_column(self.item_count_col)
 
         # Build widget graph and display
         self.scroll.add(self.treeview)
         self.pack_start(self.scroll, True, True, 0)
         self.scroll.show_all()
 
+        self.scroll.connect('button-press-event', self._button_press_event)
+
     def get_selected_rows_list(self):
         model, rows = self.treeview.get_selection().get_selected_rows()
         return rows
+
+    def fill_data_model(self):
+        self.storemodel.clear()
+
+        for media_bin in PROJECT().bins:
+            try:
+                #Gtk.Image.new_from_stock(Gtk.STOCK_OPEN, Gtk.IconSize.MENU)
+                pixbuf = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "bin_5.png")
+                row_data = [pixbuf,
+                            media_bin.name,
+                            str(len(media_bin.file_ids))]
+                self.storemodel.append(None, row_data)
+                
+            except GObject.GError, exc:
+                print "can't load icon", exc
+        
+        self.scroll.queue_draw()
+        
+    def _button_press_event(self, widget, event):
+        if event.button == 3:
+            self.bins_popup_cb(event)
+
+
 
 # ------------------------------------------------- item lists
 class ImageTextImageListView(Gtk.VBox):
@@ -437,10 +451,9 @@ class BinListView(ImageTextTextListView):
             except GObject.GError, exc:
                 print "can't load icon", exc
 
+"""
 class BinTreeView(ImageTextTextTreeView):
-    """
-    GUI component displaying list of media files.
-    """
+
 
     def __init__(self, bin_selection_cb, bin_name_edit_cb):
         ImageTextTextTreeView.__init__(self)
@@ -475,6 +488,7 @@ class BinTreeView(ImageTextTextTreeView):
                 self.scroll.queue_draw()
             except GObject.GError, exc:
                 print "can't load icon", exc
+"""
 
 class FilterListView(ImageTextImageListView):
     """
@@ -857,12 +871,13 @@ class CompositorInfoPanel(Gtk.VBox):
 # -------------------------------------------- media select panel
 class MediaPanel():
 
-    def __init__(self, media_file_popup_cb, double_click_cb):
+    def __init__(self, media_file_popup_cb, double_click_cb, panel_menu_cb):
         self.widget = Gtk.VBox()
         self.row_widgets = []
         self.selected_objects = []
         self.columns = editorpersistance.prefs.media_columns
         self.media_file_popup_cb = media_file_popup_cb
+        self.panel_menu_cb = panel_menu_cb
         self.double_click_cb = double_click_cb
         self.monitor_indicator = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "monitor_indicator.png")
         self.last_event_time = 0.0
@@ -932,6 +947,8 @@ class MediaPanel():
 
     def empty_pressed(self, widget, event):
         self.clear_selection()
+        if event.button == 3:
+            self.panel_menu_cb(event)
 
     def select_all(self):
         self.clear_selection()
@@ -959,6 +976,27 @@ class MediaPanel():
         self.row_widgets = []
         self.widget_for_mediafile = {}
         self.selected_objects = []
+
+        # info with text for empty panel
+        if len(current_bin().file_ids) == 0:
+            filler = self._get_empty_filler()
+            dnd.connect_media_drop_widget(filler)
+            self.row_widgets.append(filler)
+            self.widget.pack_start(filler, True, True, 0)
+            
+            info = Gtk.Label(_("Right Click to Add Media."))
+            info.set_sensitive(False)
+            dnd.connect_media_drop_widget(info)
+            filler = self._get_empty_filler(info)
+            self.widget.pack_start(filler, False, False, 0)
+            self.row_widgets.append(filler)
+            
+            filler = self._get_empty_filler()
+            dnd.connect_media_drop_widget(filler)
+            self.row_widgets.append(filler)
+            self.widget.pack_start(filler, True, True, 0)
+            self.widget.show_all()
+            return
 
         column = 0
         bin_index = 0
@@ -1014,10 +1052,13 @@ class MediaPanel():
 
         self.widget.show_all()
 
-    def _get_empty_filler(self):
+    def _get_empty_filler(self, widget=None):
         filler = Gtk.EventBox()
         filler.connect("button-press-event", lambda w,e: self.empty_pressed(w,e))
-        filler.add(Gtk.Label())
+        if widget == None:
+            filler.add(Gtk.Label())
+        else:
+            filler.add(widget)
         return filler
 
 
@@ -2784,3 +2825,31 @@ class ToolSelector(ImageMenuLaunch):
         else:
             cr.set_source_rgb(0.66, 0.66, 0.66)
         cr.fill()
+
+class MonitorSwitch:
+    def __init__(self, callback):
+        self.WIDTH = 100
+        self.HEIGHT = 22
+        self.widget = cairoarea.CairoDrawableArea2( self.WIDTH ,
+                                                    self.HEIGHT,
+                                                    self._draw)
+        self.widget.press_func = self._press_event
+
+        self.tline_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "timeline_button.png")
+        self.tline_active_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "timeline_button_active.png")
+        self.clip_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "clip_button.png")
+        
+        self.callback = callback
+        self.surface_x  = 6
+        self.surface_y  = 6
+
+    def _draw(self, event, cr, allocation):
+        cr.set_source_surface(self.tline_active_surface, 10, 5)
+        cr.paint()
+
+        cr.set_source_surface(self.clip_surface, 60, 7)
+        cr.paint()
+        
+    def _press_event(self, event):
+        self.callback(self.widget, event)
+        

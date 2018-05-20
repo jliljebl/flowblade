@@ -778,7 +778,7 @@ def _set_draw_params():
     if editorstate.screen_size_small_width() == True:
         appconsts.NOTEBOOK_WIDTH = 450
         editorwindow.MONITOR_AREA_WIDTH = 450
-        editorwindow.MEDIA_MANAGER_WIDTH = 220
+        editorwindow.MEDIA_MANAGER_WIDTH = 100
         
     if editorstate.screen_size_small_height() == True:
         appconsts.TOP_ROW_HEIGHT = 10
@@ -865,7 +865,10 @@ def _shutdown_dialog_callback(dialog, response_id):
         editorpersistance.prefs.exit_allocation_window_2 = (alloc.width, alloc.height, pos_x, pos_y)       
     editorpersistance.prefs.app_v_paned_position = gui.editor_window.app_v_paned.get_position()
     editorpersistance.prefs.top_paned_position = gui.editor_window.top_paned.get_position()
-    editorpersistance.prefs.mm_paned_position = gui.editor_window.mm_paned.get_position()
+    if editorwindow.top_level_project_panel() == True:
+        editorpersistance.prefs.mm_paned_position = 200  # This is not used until user sets preference to not have top level project panel
+    else:
+        editorpersistance.prefs.mm_paned_position = gui.editor_window.mm_paned.get_position()
     editorpersistance.save()
 
     # Block reconnecting consumer before setting window not visible

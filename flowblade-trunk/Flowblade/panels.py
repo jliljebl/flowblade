@@ -79,16 +79,18 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, proxy
     gui.media_view_filter_selector = files_filter_launcher
 
     buttons_box = Gtk.HBox(False,1)
-    buttons_box.pack_start(add_media_b, True, True, 0)
-    buttons_box.pack_start(del_media_b, True, True, 0)
+    #buttons_box.pack_start(add_media_b, True, True, 0)
+    #buttons_box.pack_start(del_media_b, True, True, 0)
     buttons_box.pack_start(proxy_b, False, False, 0)
     buttons_box.pack_start(guiutils.get_pad_label(4, 4), False, False, 0)
     buttons_box.pack_start(columns_launcher.widget, False, False, 0)
     buttons_box.pack_start(files_filter_launcher.widget, False, False, 0)
+    buttons_box.pack_start(Gtk.Label(), True, True, 0)
 
     panel = Gtk.VBox()
-    panel.pack_start(buttons_box, False, True, 0)
     panel.pack_start(media_list_view, True, True, 0)
+    panel.pack_start(buttons_box, False, True, 0)
+
     
     return panel
 
