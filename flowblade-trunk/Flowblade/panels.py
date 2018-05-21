@@ -116,7 +116,7 @@ def get_bins_tree_panel(bin_list_view):
     panel = Gtk.VBox()
     panel.pack_start(bin_list_view, True, True, 0)
 
-    return panel
+    return get_named_frame(_("Bins"), panel, 0, 0, 0)
     
 def get_sequences_panel(sequence_list_view, edit_seq_cb, add_seq_cb, del_seq_cb):
     # Create buttons and connect signals
@@ -136,10 +136,10 @@ def get_sequences_panel(sequence_list_view, edit_seq_cb, add_seq_cb, del_seq_cb)
     buttons_box.pack_start(del_b, True, True, 0)
     
     panel = Gtk.VBox()
-    panel.pack_start(buttons_box, False, True, 0)
+    #panel.pack_start(buttons_box, False, True, 0)
     panel.pack_start(sequence_list_view, True, True, 0)
 
-    return get_named_frame(_("Sequences"), panel, 4)
+    return get_named_frame(_("Sequences"), panel, 0)
 
 def get_thumbnail_select_panel(current_folder_path):    
     texts_panel = get_two_text_panel(_("Select folder for new thumbnails."), 

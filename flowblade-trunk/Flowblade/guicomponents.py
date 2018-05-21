@@ -351,6 +351,7 @@ class SequenceListView(ImageTextTextListView):
 
     def __init__(self, seq_name_edited_cb):
         ImageTextTextListView.__init__(self)
+        self.scroll.set_shadow_type(Gtk.ShadowType.NONE)
 
         # Icon path
         self.icon_path = respaths.IMAGE_PATH + "sequence.png"
@@ -451,44 +452,6 @@ class BinListView(ImageTextTextListView):
             except GObject.GError, exc:
                 print "can't load icon", exc
 
-"""
-class BinTreeView(ImageTextTextTreeView):
-
-
-    def __init__(self, bin_selection_cb, bin_name_edit_cb):
-        ImageTextTextTreeView.__init__(self)
-
-        self.text_col_1.set_min_width(10)
-
-        # Connect selection 'changed' signal
-        tree_sel = self.treeview.get_selection()
-        tree_sel.connect("changed", bin_selection_cb)
-
-        # Set bin name editable and connect 'edited' signal
-        self.text_rend_1.set_property("editable", True)
-        self.text_rend_1.connect("edited",
-                                 bin_name_edit_cb,
-                                 (self.storemodel, 1))
-
-    def fill_data_model(self):
-        self.storemodel.clear()
-
-        # Root object
-        row_data = [None, "Project Media", ""]
-        self.storemodel.append(None, row_data)
-        root_iter = self.storemodel.get_iter_first ()
-
-        for media_bin in PROJECT().bins:
-            try:
-                pixbuf = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "bin_5.png")
-                row_data = [pixbuf,
-                            media_bin.name,
-                            str(len(media_bin.file_ids))]
-                self.storemodel.append(root_iter, row_data)
-                self.scroll.queue_draw()
-            except GObject.GError, exc:
-                print "can't load icon", exc
-"""
 
 class FilterListView(ImageTextImageListView):
     """
@@ -1100,7 +1063,7 @@ class MediaObjectWidget:
         self.vbox.pack_start(self.img, True, True, 0)
         self.vbox.pack_start(txt, False, False, 0)
 
-        self.align = guiutils.set_margins(self.vbox, 3, 2, 3, 2)
+        self.align = guiutils.set_margins(self.vbox, 6, 6, 6, 6)
 
         self.widget.add(self.align)
 

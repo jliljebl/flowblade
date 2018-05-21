@@ -568,7 +568,7 @@ class EditorWindow:
         if top_level_project_panel() == True:
             # Project info
             project_info_panel = projectinfogui.get_top_level_project_info_panel()
-            PANEL_WIDTH = 250
+            PANEL_WIDTH = 10
             PANEL_HEIGHT = 150
             top_project_vbox = Gtk.VBox()
             top_project_vbox.pack_start(project_info_panel, False, False, 0)
@@ -614,19 +614,27 @@ class EditorWindow:
         pos_bar_frame.set_margin_left(6)
     
         # Play buttons row
+        self._create_monitor_buttons()
         self._create_monitor_row_widgets()
+        
         self.player_buttons = glassbuttons.PlayerButtons()
         self.player_buttons.widget.set_tooltip_text(_("Prev Frame - Arrow Left\nNext Frame - Arrow Right\nPlay - Space\nStop - Space\nMark In - I\nMark Out - O\nClear Marks\nTo Mark In\nTo Mark Out"))
         if editorpersistance.prefs.buttons_style == 2: # NO_DECORATIONS
             self.player_buttons.no_decorations = True
+
+        self.view_mode_select = guicomponents.get_monitor_view_select_combo(lambda w, e: tlineaction.view_mode_menu_lauched(w, e))
+        self.trim_view_select = guicomponents.get_trim_view_select_combo(lambda w, e: monitorevent.trim_view_menu_launched(w, e))
         
         player_buttons_row = Gtk.HBox(False, 0)
-        player_buttons_row.pack_start(self.player_buttons.widget, False, True, 0)
-        player_buttons_row.pack_start(pos_bar_frame, True, True, 0)
+        player_buttons_row.pack_start(self.monitor_switch.widget, False, False, 0)
+        player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
+        player_buttons_row.pack_start(self.player_buttons.widget, False, False, 0)
+        player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
+        player_buttons_row.pack_start(self.trim_view_select.widget, False, False, 0)
+        player_buttons_row.pack_start(self.view_mode_select.widget, False, False, 0)
         player_buttons_row.set_margin_bottom(2)
 
-        # Creates monitor switch buttons
-        self._create_monitor_buttons()
+
 
         # Monitor top info row
         #monitor_info_row = Gtk.HBox(False, 1)
@@ -635,15 +643,11 @@ class EditorWindow:
         #monitor_info_row.pack_start(self.info1, False, False, 0)
 
         # Switch / pos bar row
-        self.view_mode_select = guicomponents.get_monitor_view_select_combo(lambda w, e: tlineaction.view_mode_menu_lauched(w, e))
-        self.trim_view_select = guicomponents.get_trim_view_select_combo(lambda w, e: monitorevent.trim_view_menu_launched(w, e))
+
         sw_pos_hbox = Gtk.HBox(False, 1)
-        sw_pos_hbox.pack_start(self.monitor_switch.widget, False, False, 0)
-        
-        sw_pos_hbox.pack_start(self.sequence_editor_b, True, True, 0)
-        sw_pos_hbox.pack_start(self.clip_editor_b, True, True, 0)
-        sw_pos_hbox.pack_start(self.trim_view_select.widget, False, False, 0)
-        sw_pos_hbox.pack_start(self.view_mode_select.widget, False, False, 0)
+        #sw_pos_hbox.pack_start(self.sequence_editor_b, True, True, 0)
+        #sw_pos_hbox.pack_start(self.clip_editor_b, True, True, 0)
+        sw_pos_hbox.pack_start(pos_bar_frame, True, True, 0)
         sw_pos_hbox.set_margin_top(4)
         sw_pos_hbox.set_margin_left(2)
         

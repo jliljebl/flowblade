@@ -219,8 +219,8 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
     # buttons_row.pack_start(Gtk.Label(), True, True, 0)
     
-    buttons_row.pack_start(_get_edit_buttons_2_panel(),False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    #buttons_row.pack_start(_get_edit_buttons_2_panel(),False, True, 0)
+    #buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
     #buttons_row.pack_start(Gtk.Label(), True, True, 0)
     
     buttons_row.pack_start(_get_edit_buttons_3_panel(),False, True, 0)

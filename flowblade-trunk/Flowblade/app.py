@@ -198,8 +198,6 @@ def main(root_path):
 
     editorpersistance.save()
 
-
-
     # Init translations module with translations data
     translations.init_languages()
     translations.load_filters_translations()
@@ -223,7 +221,8 @@ def main(root_path):
     # Request dark theme if so desired
     if editorpersistance.prefs.dark_theme == True:
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-
+        gui.apply_gtk_css() # we have some dark theme fixes, no light theme
+    
     # Load drag'n'drop images
     dnd.init()
 
@@ -346,6 +345,8 @@ def main(root_path):
             print "Launch assoc file:", assoc_file_path
             global assoc_timeout_id
             assoc_timeout_id = GObject.timeout_add(10, open_assoc_file)
+
+
 
     # SDL 2 consumer needs to created after Gtk.main() has run enough for window to be visble
     #if editorstate.get_sdl_version() == editorstate.SDL_2: # needs more state considerion still

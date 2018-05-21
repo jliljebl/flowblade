@@ -27,6 +27,7 @@ from gi.repository import Gtk, Gdk
 import pickle
 
 import editorpersistance
+import respaths
 import utils
 
 # Editor window
@@ -231,21 +232,13 @@ def _print_widget(widget): # debug
     path_str = path_str.replace("GtkVBox:. GtkVPaned:[2/2]. GtkHBox:. GtkHPaned:. GtkVBox:. GtkNotebook:[1/1]","notebook:")
     print path_str
 
-"""
-TESTING
+
+# TESTING
 def apply_gtk_css():
     provider = Gtk.CssProvider.new()
     display = Gdk.Display.get_default()
     screen = display.get_default_screen()
     Gtk.StyleContext.add_provider_for_screen (screen, provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
     
-    data = "* {\n" + \
-           "   background-color: rgb (28, 29, 33);\n" + \
-           "}\n" + \
-           "*:selected {\n" + \
-           "color: darker (@selected_fg_color);\n" + \
-           "background-color: lighter (rgba (50%, 32%, 35%, 0.9));\n" + \
-           "}"
+    provider.load_from_path(respaths.ROOT_PATH + "/res/css/gtk-dark-fix.css")
 
-    provider.load_from_data(data)
-"""

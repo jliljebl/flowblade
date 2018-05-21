@@ -50,7 +50,7 @@ CORNER_DIVIDER = 5
 MB_BUTTONS_WIDTH = 317
 MB_BUTTONS_HEIGHT = 30
 MB_BUTTON_HEIGHT = 22
-MB_BUTTON_WIDTH = 35
+MB_BUTTON_WIDTH = 30
 MB_BUTTON_Y = 4
 MB_BUTTON_IMAGE_Y = 6
 
@@ -301,12 +301,12 @@ class PlayerButtons(AbstractGlassButtons):
             self.icons = [prev_icon, next_icon, play_pause_icon,
                           mark_in_icon, mark_out_icon, 
                           marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
-            self.image_x = [8, 10, 8, 6, 14, 5, 10, 9]
+            self.image_x = [5, 7, 5, 3, 11, 2, 7, 6]
         else:
             self.icons = [prev_icon, next_icon, play_icon, stop_icon, 
                           mark_in_icon, mark_out_icon, 
                           marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
-            self.image_x = [8, 10, 13, 13, 6, 14, 5, 10, 9]
+            self.image_x = [5, 7, 10, 10, 3, 11, 2, 7, 6]
 
         for i in range(0, len(self.icons)):
             self.image_y.append(MB_BUTTON_IMAGE_Y)
