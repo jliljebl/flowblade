@@ -113,12 +113,26 @@ def key_down(widget, event):
     """
     
     # Clip button or posbar focus with clip displayed leaves playback keyshortcuts available
-    if (gui.clip_editor_b.has_focus() 
+    """
+    if (gui.clip_editor_b.has_focus()
+        TODO: this needs something
         or (gui.pos_bar.widget.is_focus() and (not timeline_visible()))):
         _handle_clip_key_event(event)
         # Stop event handling here
         return True
+    """
+    if gui.monitor_switch.widget.has_focus() and timeline_visible():
+        _handle_tline_key_event(event)
+        return True
 
+    if gui.monitor_switch.widget.has_focus() and (not timeline_visible()):
+        _handle_clip_key_event(event)
+        return True
+        
+    if gui.pos_bar.widget.is_focus() and (not timeline_visible()):
+        _handle_clip_key_event(event)
+        return True
+        
     #  Handle non-timeline delete 
     if event.keyval == Gdk.KEY_Delete:
         return _handle_delete()
@@ -347,10 +361,10 @@ def _handle_extended_tline_focus_events(event):
     action = _get_shortcut_action(event)
 
     # We're dropping monitor window in 2 window mode as part of timeline focus
-    if not(_timeline_has_focus() or
-            gui.pos_bar.widget.has_focus() or
-            gui.sequence_editor_b.has_focus() or
-            gui.clip_editor_b.has_focus()):
+    #    TODO:        gui.sequence_editor_b.has_focus() or
+    #        gui.clip_editor_b.has_focus()):
+    if not(_timeline_has_focus() or gui.monitor_switch.widget.has_focus() or
+            gui.pos_bar.widget.has_focus()):
         return False
 
     if action == '3_point_overwrite':

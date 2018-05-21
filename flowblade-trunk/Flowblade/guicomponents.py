@@ -2055,7 +2055,10 @@ class BigTCDisplay:
 
         # Draw round rect with gradient and stroke around for thin bezel
         self._round_rect_path(cr)
-        cr.set_source_rgb(0.2, 0.2, 0.2)
+        if editorpersistance.prefs.dark_theme == False:
+            cr.set_source_rgb(0.2, 0.2, 0.2)
+        else:
+            cr.set_source_rgb(0.1, 0.1, 0.1)
         cr.fill_preserve()
 
         if editorpersistance.prefs.dark_theme == False:
