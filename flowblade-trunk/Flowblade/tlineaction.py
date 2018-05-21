@@ -198,13 +198,26 @@ def sequence_split_pressed():
         # track with this index and above are left of the cut position,
         # so we gather required information for our new sequence
         index = track.get_clip_index_at(int(tline_frame))
+
+        # we need to check whether the first clip at cut is a blank clip
+        blank_length = 0
+        if index < len(track.clips):
+            first_clip = track.clips[index]
+            if first_clip.is_blanck_clip == True:
+                # yes, it is a blank clip, therefore we need to modify its length
+                # but only if the clip_start lies before the current frame
+                clip_start = track.clip_start(index)
+                if tline_frame > clip_start:
+                    blank_length = first_clip.clip_out - (tline_frame - clip_start)
+
         for j in range(index, len(track.clips)):
             clip = track.clips[j]
             data = {
                 "track_index": i,
                 "clip": clip,
                 "clip_in": clip.clip_in,
-                "clip_out": clip.clip_out
+                "clip_out": clip.clip_out,
+                "blank_length": blank_length
             }
 
             clips_to_move.append(data)
@@ -232,13 +245,18 @@ def sequence_split_pressed():
     # our newly created sequence
     for i in range(0, len(clips_to_move)):
         collected = clips_to_move[i]
+        track_index = collected["track_index"]
 
         # determine the track we need to put the clip in
-        index = collected["track_index"]
+        clip = collected["clip"]
+        if clip.is_blanck_clip == True:
+            length = collected["blank_length"]
+            current_sequence().append_blank(length, get_track(track_index))
+            continue
 
         #prepare the date and append it to the sequence
         data = {
-            "track": get_track(index),
+            "track": get_track(track_index),
             "clip": collected["clip"],
             "clip_in": collected["clip_in"],
             "clip_out": collected["clip_out"]
