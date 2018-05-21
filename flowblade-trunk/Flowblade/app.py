@@ -458,8 +458,7 @@ def create_gui():
     # Give undo a reference to uimanager for menuitem state changes
     undo.set_menu_items(gui.editor_window.uimanager)
     
-    # Set button to display sequence in toggled state.
-    gui.sequence_editor_b.set_active(True)
+    updater.display_sequence_in_monitor()
 
 def create_player():
     """
@@ -541,7 +540,6 @@ def init_editor_state():
 
     gui.media_view_filter_selector.set_pixbuf(editorstate.media_view_filter)
 
-    gui.clip_editor_b.set_sensitive(False)
     gui.editor_window.window.set_title(editorstate.project.name + " - Flowblade")
     gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(False)
     gui.editor_window.uimanager.get_widget("/MenuBar/EditMenu/Undo").set_sensitive(False)

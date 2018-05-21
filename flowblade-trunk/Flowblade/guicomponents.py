@@ -2791,7 +2791,7 @@ class ToolSelector(ImageMenuLaunch):
 
 class MonitorSwitch:
     def __init__(self, callback):
-        self.WIDTH = 100
+        self.WIDTH = 84
         self.HEIGHT = 22
         self.widget = cairoarea.CairoDrawableArea2( self.WIDTH ,
                                                     self.HEIGHT,
@@ -2801,18 +2801,29 @@ class MonitorSwitch:
         self.tline_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "timeline_button.png")
         self.tline_active_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "timeline_button_active.png")
         self.clip_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "clip_button.png")
+        self.clip_active_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "clip_button_active.png")
         
         self.callback = callback
         self.surface_x  = 6
         self.surface_y  = 6
 
     def _draw(self, event, cr, allocation):
-        cr.set_source_surface(self.tline_active_surface, 10, 5)
+        if editorstate.timeline_visible():
+            tline_draw_surface = self.tline_active_surface 
+            clip_draw_surface = self.clip_surface
+        else:
+            tline_draw_surface = self.tline_surface 
+            clip_draw_surface = self.clip_active_surface
+            
+        cr.set_source_surface(tline_draw_surface, 10, 5)
         cr.paint()
 
-        cr.set_source_surface(self.clip_surface, 60, 7)
+        cr.set_source_surface(clip_draw_surface, 60, 7)
         cr.paint()
         
     def _press_event(self, event):
-        self.callback(self.widget, event)
+        if event.x < self.WIDTH / 2 and editorstate.timeline_visible() == False:
+            self.callback(appconsts.MONITOR_TLINE_BUTTON_PRESSED)
+        elif editorstate.timeline_visible() == True:
+            self.callback(appconsts.MONITOR_CLIP_BUTTON_PRESSED)
         

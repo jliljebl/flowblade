@@ -1037,6 +1037,7 @@ class EditorWindow:
         
     def _create_monitor_buttons(self):
         self.monitor_switch = guicomponents.MonitorSwitch(self._monitor_switch_handler)
+        """
         # Monitor switch buttons
         self.sequence_editor_b = Gtk.RadioButton(None)
         self.sequence_editor_b.set_mode(False)
@@ -1051,16 +1052,13 @@ class EditorWindow:
         self.clip_editor_b.connect("clicked",
                         lambda w,e: self._monitor_switch_handler(w),
                         None)
-
-    def _monitor_switch_handler(self, widget):
-        # We get two "clicked" events per toggle, send through only the one
-        # from activated button
-        if ((self.sequence_editor_b.get_active() == True) 
-            and (widget == self.sequence_editor_b)):
+        """
+        
+    def _monitor_switch_handler(self, action):
+        if action == appconsts.MONITOR_TLINE_BUTTON_PRESSED:
             updater.display_sequence_in_monitor() 
 
-        if ((self.clip_editor_b.get_active() == True) 
-            and (widget == self.clip_editor_b)):
+        if action == appconsts.MONITOR_CLIP_BUTTON_PRESSED:
             updater.display_clip_in_monitor()
 
     def connect_player(self, mltplayer):
@@ -1119,8 +1117,8 @@ class EditorWindow:
     
         self.pos_bar.widget.set_tooltip_text(_("Monitor Sequence/Media current position"))
         
-        self.sequence_editor_b.set_tooltip_text(_("Display Current Sequence on Timeline"))
-        self.clip_editor_b.set_tooltip_text(_("Display Monitor Clip"))
+        #self.sequence_editor_b.set_tooltip_text(_("Display Current Sequence on Timeline"))
+        #self.clip_editor_b.set_tooltip_text(_("Display Monitor Clip"))
 
     def set_default_edit_tool(self):
         # First active tool is the default tool. So we need to always have atleast one tool available.

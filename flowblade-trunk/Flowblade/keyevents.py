@@ -104,11 +104,14 @@ def key_down(widget, event):
 
     # Pressing timeline button obivously leaves user expecting
     # to have focus in timeline
+    """
+    TODO: this needs something
     if gui.sequence_editor_b.has_focus():
         _handle_tline_key_event(event)
         # Stop event handling here
         return True
-
+    """
+    
     # Clip button or posbar focus with clip displayed leaves playback keyshortcuts available
     if (gui.clip_editor_b.has_focus() 
         or (gui.pos_bar.widget.is_focus() and (not timeline_visible()))):

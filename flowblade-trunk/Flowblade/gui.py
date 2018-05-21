@@ -70,12 +70,10 @@ tline_left_corner = None
 big_tc = None
 
 monitor_widget = None
-
+monitor_switch = None
 # indexes match editmode values in editorstate.py
 notebook_buttons = None
 
-play_b = None
-clip_editor_b = None
 sequence_editor_b = None
 
 
@@ -101,9 +99,9 @@ def capture_references(new_editor_window):
     """
     global editor_window, media_list_view, bin_list_view, sequence_list_view, pos_bar, \
     tc, tline_display, tline_scale, tline_canvas, tline_scroll, tline_v_scroll, tline_info, \
-    tline_column, play_b, clip_editor_b, sequence_editor_b, \
+    tline_column, play_b, \
     effect_select_list_view, effect_select_combo_box, project_info_vbox, middle_notebook, big_tc, editmenu, notebook_buttons, tline_left_corner, \
-    monitor_widget, bin_panel
+    monitor_widget, bin_panel, monitor_switch
 
     editor_window = new_editor_window
 
@@ -121,7 +119,8 @@ def capture_references(new_editor_window):
     tc = editor_window.tc
 
     monitor_widget = editor_window.monitor_widget
-
+    monitor_switch = editor_window.monitor_switch
+    
     tline_display = editor_window.tline_display
     tline_scale = editor_window.tline_scale
     tline_canvas = editor_window.tline_canvas
@@ -129,9 +128,6 @@ def capture_references(new_editor_window):
     tline_info = editor_window.tline_info
     tline_column = editor_window.tline_column
     tline_left_corner = editor_window.left_corner
-
-    clip_editor_b = editor_window.clip_editor_b
-    sequence_editor_b = editor_window.sequence_editor_b
 
     big_tc = editor_window.big_TC
 
@@ -179,6 +175,8 @@ def set_theme_colors():
     # Try to detect bg color and set frow fallback if fails
     style = editor_window.window.get_style_context()
     bg_color = style.get_background_color(Gtk.StateFlags.NORMAL)
+    bg_color = Gdk.RGBA(red=(30.0/255.0), green=(35.0/255.0), blue=(51.0/255.0), alpha=1.0)
+    #(30, 35, 51)
     r, g, b, a = unpack_gdk_color(bg_color)
 
     if r == 0.0 and g == 0.0 and b == 0.0:
