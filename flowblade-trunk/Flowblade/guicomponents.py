@@ -844,7 +844,8 @@ class MediaPanel():
         self.double_click_cb = double_click_cb
         self.monitor_indicator = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "monitor_indicator.png")
         self.last_event_time = 0.0
-
+        self.last_ctrl_selected_media_object = None
+        
         global has_proxy_icon, is_proxy_icon, graphics_icon, imgseq_icon, audio_icon, pattern_icon, profile_warning_icon
         has_proxy_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "has_proxy_indicator.png")
         is_proxy_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "is_proxy_indicator.png")
@@ -878,17 +879,19 @@ class MediaPanel():
         if event.button == 1:
             if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 
-                # add to selected if not already there, otherwise remove
+                # add to selected if not there
                 try:
                     index = self.selected_objects.index(media_object)
                 except:
                     self.selected_objects.append(media_object)
                     media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
+                    self.last_ctrl_selected_media_object = media_object
                     return                
             else:
                 self.clear_selection()
                 media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
                 self.selected_objects.append(media_object)
+
         elif event.button == 3:
             self.clear_selection()
             display_media_file_popup_menu(media_object.media_file,
@@ -897,6 +900,22 @@ class MediaPanel():
 
         self.widget.queue_draw()
 
+    def release_on_media_object(self, media_object, widget, event):
+        if self.last_ctrl_selected_media_object == media_object:
+            self.last_ctrl_selected_media_object = None
+            return
+            
+        widget.grab_focus()
+        if event.button == 1:
+            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+                # remove from selected if already there
+                try:
+                    index = self.selected_objects.index(media_object)
+                    self.selected_objects.remove(media_object)
+                    media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_bg_color())
+                except:
+                    pass
+                    
     def select_media_file(self, media_file):
         self.clear_selection()
         self.selected_objects.append(self.widget_for_mediafile[media_file])
@@ -984,7 +1003,7 @@ class MediaPanel():
                 and (media_file.type != appconsts.PATTERN_PRODUCER)):
                 continue
 
-            media_object = MediaObjectWidget(media_file, self.media_object_selected, bin_index, self.monitor_indicator)
+            media_object = MediaObjectWidget(media_file, self.media_object_selected, self.release_on_media_object, bin_index, self.monitor_indicator)
             dnd.connect_media_files_object_widget(media_object.widget)
             dnd.connect_media_files_object_cairo_widget(media_object.img)
             self.widget_for_mediafile[media_file] = media_object
@@ -1025,7 +1044,7 @@ class MediaPanel():
 
 class MediaObjectWidget:
 
-    def __init__(self, media_file, selected_callback, bin_index, indicator_icon):
+    def __init__(self, media_file, selected_callback, release_callback, bin_index, indicator_icon):
         self.media_file = media_file
         self.selected_callback = selected_callback
         self.bin_index = bin_index
@@ -1035,6 +1054,7 @@ class MediaObjectWidget:
 
         self.widget = Gtk.EventBox()
         self.widget.connect("button-press-event", lambda w,e: selected_callback(self, w, e))
+        self.widget.connect("button-release-event", lambda w,e: release_callback(self, w, e))
         self.widget.dnd_media_widget_attr = True # this is used to identify widget at dnd drop
         self.widget.set_can_focus(True)
         self.widget.add_events(Gdk.EventMask.KEY_PRESS_MASK)
