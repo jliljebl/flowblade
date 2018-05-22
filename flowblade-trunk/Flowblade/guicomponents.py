@@ -197,7 +197,7 @@ class BinTreeView(Gtk.VBox):
         self.bins_popup_cb = bins_popup_cb
 
        # Datamodel: icon, text, text (folder, name, item count)
-        self.storemodel = Gtk.TreeStore(GdkPixbuf.Pixbuf, str, str)
+        self.storemodel = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str)
 
         # Scroll container
         self.scroll = Gtk.ScrolledWindow()
@@ -258,7 +258,7 @@ class BinTreeView(Gtk.VBox):
                 row_data = [pixbuf,
                             media_bin.name,
                             str(len(media_bin.file_ids))]
-                self.storemodel.append(None, row_data)
+                self.storemodel.append(row_data)
                 
             except GObject.GError, exc:
                 print "can't load icon", exc
@@ -877,16 +877,14 @@ class MediaPanel():
         widget.grab_focus()
         if event.button == 1:
             if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-                media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
+                
                 # add to selected if not already there, otherwise remove
                 try:
-                    self.selected_objects.index(media_object)
-                    self.selected_objects.remove(media_object)
-                    bg_color = gui.get_bg_color()
-                    media_object.widget.override_background_color(Gtk.StateType.NORMAL, bg_color)
-                    return
+                    index = self.selected_objects.index(media_object)
                 except:
                     self.selected_objects.append(media_object)
+                    media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
+                    return                
             else:
                 self.clear_selection()
                 media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
