@@ -557,8 +557,8 @@ class EditorWindow:
 
         # Project Panel / Pop Level Project pane
         # Sequence list
-        self.sequence_list_view = guicomponents.SequenceListView(
-                                        projectaction.sequence_name_edited)
+        self.sequence_list_view = guicomponents.SequenceListView(   projectaction.sequence_name_edited,
+                                                                    projectaction.sequence_panel_popup_requested)
         seq_panel = panels.get_sequences_panel(
                              self.sequence_list_view,
                              lambda w,e: projectaction.change_edit_sequence(),

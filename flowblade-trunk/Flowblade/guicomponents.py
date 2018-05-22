@@ -349,8 +349,10 @@ class SequenceListView(ImageTextTextListView):
     GUI component displaying list of sequences in project
     """
 
-    def __init__(self, seq_name_edited_cb):
+    def __init__(self, seq_name_edited_cb, sequence_popup_cb):
         ImageTextTextListView.__init__(self)
+        self.sequence_popup_cb = sequence_popup_cb
+        self.treeview.connect('button-press-event', self._button_press_event)
         self.scroll.set_shadow_type(Gtk.ShadowType.NONE)
 
         # Icon path
@@ -362,6 +364,8 @@ class SequenceListView(ImageTextTextListView):
                                  seq_name_edited_cb,
                                  (self.storemodel, 1))
 
+        self.scroll.connect('button-press-event', self._button_press_event)
+        
     def fill_data_model(self):
         """
         Creates displayed data.
@@ -378,6 +382,10 @@ class SequenceListView(ImageTextTextListView):
                         active]
             self.storemodel.append(row_data)
             self.scroll.queue_draw()
+
+    def _button_press_event(self, widget, event):
+        if event.button == 3:
+            self.sequence_popup_cb(event)
 
 
 class MediaListView(ImageTextTextListView):
