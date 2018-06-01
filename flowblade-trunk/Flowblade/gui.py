@@ -26,6 +26,7 @@ from gi.repository import Gtk, Gdk
 
 import pickle
 
+import appconsts
 import editorpersistance
 import respaths
 import utils
@@ -163,7 +164,7 @@ def set_theme_colors():
     r, g, b, a = unpack_gdk_color(sel_bg_color)
     if r == 0.0 and g == 0.0 and b == 0.0:
         print "Selected color NOT detected"
-        if editorpersistance.prefs.dark_theme == False:
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
             c = theme_colors[2]
         else:
             c = theme_colors[3]
@@ -181,7 +182,7 @@ def set_theme_colors():
 
     if r == 0.0 and g == 0.0 and b == 0.0:
         print "BG color NOT detected"
-        if editorpersistance.prefs.dark_theme == False:
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
             c = theme_colors[0]
         else:
             c = theme_colors[1]

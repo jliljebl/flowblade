@@ -28,6 +28,7 @@ import cairo
 from gi.repository import Gtk
 from gi.repository import Gdk
 
+import appconsts
 from cairoarea import CairoDrawableArea2
 import editorpersistance
 import editorstate
@@ -82,7 +83,7 @@ class PositionBar:
 
         self.handle_trimmodes = handle_trimmodes
 
-        if editorpersistance.prefs.dark_theme == True:
+        if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
             global LINE_COLOR, DISABLED_BG_COLOR, SELECTED_RANGE_COLOR, MARK_COLOR
             LINE_COLOR = DARK_LINE_COLOR
             DISABLED_BG_COLOR = DARK_DISABLED_BG_COLOR
@@ -116,7 +117,7 @@ class PositionBar:
         self.widget.queue_draw()
 
     def set_dark_bg_color(self):
-        if editorpersistance.prefs.dark_theme == False:
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
             return
 
         r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())

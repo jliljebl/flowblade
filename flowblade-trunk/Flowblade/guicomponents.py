@@ -2081,13 +2081,13 @@ class BigTCDisplay:
 
         # Draw round rect with gradient and stroke around for thin bezel
         self._round_rect_path(cr)
-        if editorpersistance.prefs.dark_theme == False:
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
             cr.set_source_rgb(0.2, 0.2, 0.2)
         else:
             cr.set_source_rgb(0.1, 0.1, 0.1)
         cr.fill_preserve()
 
-        if editorpersistance.prefs.dark_theme == False:
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
             grad = cairo.LinearGradient (0, 0, 0, h)
             for stop in BIG_TC_GRAD_STOPS:
                 grad.add_color_stop_rgba(*stop)
@@ -2228,7 +2228,7 @@ class MonitorTCDisplay:
         cr.set_source_rgb(0.2, 0.2, 0.2)
         cr.fill_preserve()
 
-        if editorpersistance.prefs.dark_theme == False:
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
             grad = cairo.LinearGradient (0, 0, 0, h)
             for stop in BIG_TC_GRAD_STOPS:
                 grad.add_color_stop_rgba(*stop)
@@ -2812,7 +2812,7 @@ class ToolSelector(ImageMenuLaunch):
         cr.line_to(32, 18)
         cr.line_to(37, 13)
         cr.close_path()
-        if editorpersistance.prefs.dark_theme == False:
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
             cr.set_source_rgb(0, 0, 0)
         else:
             cr.set_source_rgb(0.66, 0.66, 0.66)

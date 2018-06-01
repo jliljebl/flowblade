@@ -695,7 +695,7 @@ class EditorWindow:
 
         # Edit buttons rows
         self.edit_buttons_row = self._get_edit_buttons_row()
-        if editorpersistance.prefs.dark_theme == False:
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
             self.edit_buttons_frame = Gtk.Frame()
             self.edit_buttons_frame.add(self.edit_buttons_row)
             self.edit_buttons_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)

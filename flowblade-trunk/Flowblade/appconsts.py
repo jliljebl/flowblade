@@ -234,3 +234,8 @@ TLINE_TOOL_RIPPLE_TRIM = 8
 # Monitor switch events
 MONITOR_TLINE_BUTTON_PRESSED = 1
 MONITOR_CLIP_BUTTON_PRESSED = 2
+
+# Appliation thmes and colors preference
+FLOWBLADE_THEME  = 0
+DARK_THEME  = 1
+LIGHT_THEME  = 1

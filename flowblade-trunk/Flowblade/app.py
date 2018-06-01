@@ -189,7 +189,7 @@ def main(root_path):
 
     # Load editor prefs and list of recent projects
     editorpersistance.load()
-    if editorpersistance.prefs.dark_theme == True:
+    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
         respaths.apply_dark_theme()
     if editorpersistance.prefs.display_all_audio_levels == False:
         editorstate.display_all_audio_levels = False
@@ -218,10 +218,11 @@ def main(root_path):
     Gdk.threads_init()
     Gdk.threads_enter()
 
-    # Request dark theme if so desired
-    if editorpersistance.prefs.dark_theme == True:
+    # Themes
+    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-        gui.apply_gtk_css() # we have some dark theme fixes, no light theme
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+            gui.apply_gtk_css()
     
     # Load drag'n'drop images
     dnd.init()

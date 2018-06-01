@@ -193,7 +193,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     auto_center_check, play_pause_button, auto_center_on_updown, \
     ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range = playback_prefs_widgets
     
-    use_english, disp_splash, buttons_style, dark_theme, theme_combo, audio_levels_combo, window_mode_combo, full_names, double_track_hights = view_prefs_widgets
+    use_english, disp_splash, buttons_style, theme, theme_combo, audio_levels_combo, window_mode_combo, full_names, double_track_hights = view_prefs_widgets
 
     # Jan-2017 - SvdB
     perf_render_threads, perf_drop_frames = performance_widgets
@@ -224,7 +224,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.use_english_always = use_english.get_active()
     prefs.display_splash_screen = disp_splash.get_active()
     prefs.buttons_style = buttons_style.get_active() # styles enum values and widget indexes correspond
-    prefs.dark_theme = (dark_theme.get_active() == 1)
+    #prefs.dark_theme = (dark_theme.get_active() == 1) # depercated, prefs.theme used instead
     prefs.theme_fallback_colors = theme_combo.get_active() 
     prefs.display_all_audio_levels = (audio_levels_combo.get_active() == 0)
     prefs.global_layout = window_mode_combo.get_active() + 1 # +1 'cause values are 1 and 2
@@ -236,6 +236,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.center_on_arrow_move = auto_center_on_updown.get_active()
     prefs.double_track_hights = (double_track_hights.get_active() == 1)
     prefs.playback_follow_move_tline_range = follow_move_range.get_active()
+    prefs.theme = theme.get_active()
 
     #if prefs.shortcuts != shortcuts.shortcut_files[shortcuts_combo.get_active()]:
     #    prefs.shortcuts = shortcuts.shortcut_files[shortcuts_combo.get_active()]
@@ -337,3 +338,4 @@ class EditorPreferences:
         self.playback_follow_move_tline_range = True
         self.active_tools = [1, 2, 3, 4, 5, 6, 7]
         self.top_level_project_panel = True
+        self.theme = appconsts.FLOWBLADE_THEME

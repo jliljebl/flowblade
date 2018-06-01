@@ -321,12 +321,11 @@ def _view_prefs_panel():
     buttons_combo.set_active( prefs.buttons_style )
 
     dark_combo = Gtk.ComboBoxText()
-    dark_combo.append_text(_("Light Theme"))
+    dark_combo.append_text(_("Flowblade Theme"))
     dark_combo.append_text(_("Dark Theme"))
-    if prefs.dark_theme == True:
-        dark_combo.set_active(1)
-    else:
-        dark_combo.set_active(0)
+    dark_combo.append_text(_("Light Theme"))
+    dark_combo.set_active(prefs.theme)
+
 
     theme_combo = Gtk.ComboBoxText()
     for theme in gui._THEME_COLORS:

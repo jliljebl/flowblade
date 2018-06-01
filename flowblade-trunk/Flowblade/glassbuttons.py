@@ -23,6 +23,7 @@ import math
 
 from gi.repository import Gtk
 
+import appconsts
 import cairoarea
 import editorpersistance
 import gui
@@ -104,7 +105,7 @@ class AbstractGlassButtons:
         
         # Dark theme comes with flat buttons
         self.dark_theme = False
-        if editorpersistance.prefs.dark_theme == True:
+        if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
             self.glass_style = False
             self.dark_theme = True
 
