@@ -202,7 +202,7 @@ class EditorWindow:
             ('ThreepointOverWriteClip', None, _('Three Point Overwrite'), None, None, lambda a:tlineaction.three_point_overwrite_pressed()),
             ('RangeOverWriteClip', None, _('Range Overwrite'), None, None, lambda a:tlineaction.range_overwrite_pressed()),
             ('CutClip', None, _('Cut Clip'), None, None, lambda a:tlineaction.cut_pressed()),
-            ('SequenceSplit', None, _('Sequence Split'), None, None, lambda a:tlineaction.sequence_split_pressed()),
+            ('SequenceSplit', None, _('Split to new Sequence at Playhead Position'), None, None, lambda a:tlineaction.sequence_split_pressed()),
             ('DeleteClip', None, _('Lift'), None, None, lambda a:tlineaction.lift_button_pressed()),
             ('SpliceOutClip', None, _('Splice Out'), None, None, lambda a:tlineaction.splice_out_button_pressed()),
             ('ResyncSelected', None, _('Resync'), None, None, lambda a:tlineaction.resync_button_pressed()),
@@ -307,7 +307,6 @@ class EditorWindow:
                     </menu>
                     <separator/>
                     <menuitem action='CutClip'/>
-                    <menuitem action='SequenceSplit'/>
                     <separator/>
                     <menuitem action='SpliceOutClip'/>
                     <menuitem action='DeleteClip'/>
@@ -355,6 +354,8 @@ class EditorWindow:
                     <menuitem action='CombineSequences'/>
                     <separator/>
                     <menuitem action='LogClipRange'/>
+                    <separator/>
+                    <menuitem action='SequenceSplit'/>
                     <separator/>
                     <menuitem action='RecreateMediaIcons'/>
                     <menuitem action='RemoveUnusedMedia'/>
