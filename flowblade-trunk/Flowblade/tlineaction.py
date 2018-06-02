@@ -336,6 +336,8 @@ def _add_compositors_to_split(new_compositors):
     for index in range(0, len(new_compositors)):
         new_compositor = new_compositors[index]
         current_sequence()._plant_compositor(new_compositor)
+        current_sequence().compositors.append(new_compositor)
+    current_sequence().restack_compositors()
 
 def splice_out_button_pressed():
     """
