@@ -116,8 +116,7 @@ def main(root_path, force_launch=False):
 
     # Load editor prefs and list of recent projects
     editorpersistance.load()
-    if editorpersistance.prefs.dark_theme == True:
-        respaths.apply_dark_theme()
+
 
     # Init translations module with translations data
     translations.init_languages()
@@ -143,9 +142,11 @@ def main(root_path, force_launch=False):
         MONITOR_HEIGHT = 400 # initial value, this gets changed when material is loaded
     """
     
-    # Request dark them if so desired
-    if editorpersistance.prefs.dark_theme == True:
+    # Request dark theme if so desired
+    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+            gui.apply_gtk_css()
 
     # We need mlt fpr profiles handling
     repo = mlt.Factory().init()
