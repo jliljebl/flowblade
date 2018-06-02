@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <mime-info xmlns='http://www.freedesktop.org/standards/shared-mime-info'>
-  <mime-type type="application/flowblade">
+  <mime-type type="application/vnd.flowblade-project">
     <comment>Flowblade project</comment>
     <glob pattern="*.flb"/>
   </mime-type>
