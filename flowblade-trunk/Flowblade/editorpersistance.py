@@ -224,7 +224,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.use_english_always = use_english.get_active()
     prefs.display_splash_screen = disp_splash.get_active()
     prefs.buttons_style = buttons_style.get_active() # styles enum values and widget indexes correspond
-    #prefs.dark_theme = (dark_theme.get_active() == 1) # depercated, prefs.theme used instead
+
     prefs.theme_fallback_colors = theme_combo.get_active() 
     prefs.display_all_audio_levels = (audio_levels_combo.get_active() == 0)
     prefs.global_layout = window_mode_combo.get_active() + 1 # +1 'cause values are 1 and 2

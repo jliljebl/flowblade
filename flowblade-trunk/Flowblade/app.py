@@ -223,7 +223,7 @@ def main(root_path):
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
         if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
             gui.apply_gtk_css()
-    
+        
     # Load drag'n'drop images
     dnd.init()
 

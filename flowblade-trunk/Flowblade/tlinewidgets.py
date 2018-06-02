@@ -350,7 +350,7 @@ def load_icons():
     TC_POINTER_HEAD = _load_pixbuf("tc_pointer_head.png")
     EDIT_INDICATOR = _load_pixbuf("clip_edited.png")
 
-    if editorpersistance.prefs.dark_theme == True:
+    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
         global FRAME_SCALE_COLOR_GRAD, FRAME_SCALE_COLOR_GRAD_L, BG_COLOR, FRAME_SCALE_LINES
         FRAME_SCALE_COLOR_GRAD = (1, 0.3, 0.3, 0.3, 1)
         FRAME_SCALE_COLOR_GRAD_L = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, GRAD_MULTIPLIER)
@@ -387,7 +387,7 @@ def set_tracks_double_height_consts():
     WAVEFORM_PAD_SMALL = 33
 
 def set_dark_bg_color():
-    if editorpersistance.prefs.dark_theme == False:
+    if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
         return
 
     r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())
@@ -2328,7 +2328,7 @@ class TimeLineFrameScale:
         self.drag_on = False
         self.set_default_callback = set_default_callback
 
-        if editorpersistance.prefs.dark_theme == True:
+        if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
             global FRAME_SCALE_SELECTED_COLOR_GRAD, FRAME_SCALE_SELECTED_COLOR_GRAD_L 
             FRAME_SCALE_SELECTED_COLOR_GRAD = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD
             FRAME_SCALE_SELECTED_COLOR_GRAD_L = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD_L
@@ -2367,7 +2367,7 @@ class TimeLineFrameScale:
 
         # Draw grad bg
         grad = cairo.LinearGradient (0, 0, 0, h)
-        if editorpersistance.prefs.dark_theme == True:
+        if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
             grad = self._get_dark_theme_grad(h)
         else:
             grad = cairo.LinearGradient (0, 0, 0, h)

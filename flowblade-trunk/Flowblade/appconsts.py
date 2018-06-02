@@ -238,4 +238,4 @@ MONITOR_CLIP_BUTTON_PRESSED = 2
 # Appliation thmes and colors preference
 FLOWBLADE_THEME  = 0
 DARK_THEME  = 1
-LIGHT_THEME  = 1
+LIGHT_THEME  = 2

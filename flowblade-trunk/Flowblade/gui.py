@@ -176,7 +176,8 @@ def set_theme_colors():
     # Try to detect bg color and set frow fallback if fails
     style = editor_window.window.get_style_context()
     bg_color = style.get_background_color(Gtk.StateFlags.NORMAL)
-    bg_color = Gdk.RGBA(red=(30.0/255.0), green=(35.0/255.0), blue=(51.0/255.0), alpha=1.0)
+    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+        bg_color = Gdk.RGBA(red=(30.0/255.0), green=(35.0/255.0), blue=(51.0/255.0), alpha=1.0)
     #(30, 35, 51)
     r, g, b, a = unpack_gdk_color(bg_color)
 
@@ -231,9 +232,14 @@ def _print_widget(widget): # debug
     path_str = path_str.replace("GtkVBox:. GtkVPaned:[2/2]. GtkHBox:. GtkHPaned:. GtkVBox:. GtkNotebook:[1/1]","notebook:")
     print path_str
 
-
-# TESTING
 def apply_gtk_css():
+    gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
+    if Gtk.get_major_version() != 3 and Gtk.get_minor_version() != 22:
+        print "Gtk version is " + gtk_version + ", Flowblade theme only available for Gtk 3.22"
+        return
+    else:
+        print "Gtk version is " + gtk_version + ", Flowblade theme is available."
+        
     provider = Gtk.CssProvider.new()
     display = Gdk.Display.get_default()
     screen = display.get_default_screen()
