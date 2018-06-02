@@ -158,6 +158,8 @@ def set_enabled(value):
         widgets.fade_out_spin.set_sensitive(False)
 
 def maybe_clear_editor(killed_compositor):
+    if compositor == None:
+        return
     if killed_compositor.destroy_id == compositor.destroy_id:
         clear_compositor()
 
