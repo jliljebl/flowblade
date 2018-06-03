@@ -75,6 +75,9 @@ import undo
 import updater
 import utils
 
+media_panel_popup_menu = Gtk.Menu()
+bin_popup_menu = Gtk.Menu()
+sequence_popup_menu = Gtk.Menu()
 
 save_time = None
 save_icon_remove_event_id = None
@@ -836,6 +839,22 @@ def _write_out_render_item(single_render_item_item):
     return True
 
 # ----------------------------------- media files
+def media_panel_popup_requested(event):
+    panel_menu = media_panel_popup_menu
+    
+    guiutils.remove_children(panel_menu)
+
+    panel_menu.add(guiutils.get_menu_item(_("Add Media Clip..."), _media_panel_menu_item_selected, "add media", ))
+    panel_menu.add(guiutils.get_menu_item(_("Add Image Sequence..."), _media_panel_menu_item_selected, "add image sequence"))
+    
+    panel_menu.popup(None, None, None, None, event.button, event.time)
+
+def _media_panel_menu_item_selected(widget, msg):
+    if msg == "add media":
+        add_media_files()
+    elif msg == "add image sequence":
+        add_image_sequence()
+    
 def add_media_files(this_call_is_retry=False):
     """
     User selects a media file to added to current bin.
@@ -1234,6 +1253,23 @@ def _get_compound_clip_default_name_date_str():
 
 
 # ------------------------------------ bins
+def bins_panel_popup_requested(event):
+    bin_menu = bin_popup_menu
+    
+    guiutils.remove_children(bin_menu)
+
+    bin_menu.add(guiutils.get_menu_item(_("Add Bin"), _bin_menu_item_selected, ("add bin", None)))
+    bin_menu.add(guiutils.get_menu_item(_("Delete Selected Bin"), _bin_menu_item_selected, ("delete bin", None)))
+    
+    bin_menu.popup(None, None, None, None, event.button, event.time)    
+
+def _bin_menu_item_selected(widget, data):
+    msg, bin_obj = data
+    if msg == "add bin":
+        add_new_bin()
+    elif msg == "delete bin":
+        delete_selected_bin()
+
 def add_new_bin():
     """
     Adds new unnamed bin and sets it selected 
@@ -1355,6 +1391,26 @@ def change_edit_sequence():
     movemodes.clear_selected_clips()
     
     app.change_current_sequence(row)
+
+def sequence_panel_popup_requested(event):
+    sequence_menu = sequence_popup_menu
+    
+    guiutils.remove_children(sequence_menu)
+
+    sequence_menu.add(guiutils.get_menu_item(_("Add New Sequence"), _sequece_menu_item_selected, ("add sequence", None)))
+    sequence_menu.add(guiutils.get_menu_item(_("Edit Selected Sequence"), _sequece_menu_item_selected, ("edit sequence", None)))
+    sequence_menu.add(guiutils.get_menu_item(_("Delete Selected Sequence"), _sequece_menu_item_selected, ("delete sequence", None)))
+    
+    sequence_menu.popup(None, None, None, None, event.button, event.time)    
+
+def _sequece_menu_item_selected(widget, data):
+    msg, bin_obj = data
+    if msg == "add sequence":
+        add_new_sequence()
+    elif msg == "delete sequence":
+        delete_selected_sequence()
+    elif msg == "edit sequence":
+        change_edit_sequence()
 
 def add_new_sequence():
     default_name = _("sequence_") + str(PROJECT().next_seq_number)

@@ -719,7 +719,7 @@ class BoxEditor:
     def draw_box(self, cr, allocation):
         x, y, w, h = allocation
 
-        if editorpersistance.prefs.dark_theme == False:
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
             cr.set_source_rgb(*BOX_BG_COLOR )
             cr.rectangle(0, 0, self.pix_size + 1, self.pix_size + 1)
             cr.fill()
@@ -873,7 +873,7 @@ class CurvesBoxEditor(BoxEditor):
         self.last_point = None
         self.edit_on = False
 
-        if editorpersistance.prefs.dark_theme == True:
+        if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
             BOX_LINE_COLOR = (0.8, 0.8, 0.8)
             CURVE_COLOR = (0.8, 0.8, 0.8)
             self.curve_color = CURVE_COLOR

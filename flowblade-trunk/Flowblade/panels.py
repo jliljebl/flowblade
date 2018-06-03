@@ -79,16 +79,18 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, proxy
     gui.media_view_filter_selector = files_filter_launcher
 
     buttons_box = Gtk.HBox(False,1)
-    buttons_box.pack_start(add_media_b, True, True, 0)
-    buttons_box.pack_start(del_media_b, True, True, 0)
+    #buttons_box.pack_start(add_media_b, True, True, 0)
+    #buttons_box.pack_start(del_media_b, True, True, 0)
     buttons_box.pack_start(proxy_b, False, False, 0)
     buttons_box.pack_start(guiutils.get_pad_label(4, 4), False, False, 0)
     buttons_box.pack_start(columns_launcher.widget, False, False, 0)
     buttons_box.pack_start(files_filter_launcher.widget, False, False, 0)
+    buttons_box.pack_start(Gtk.Label(), True, True, 0)
 
     panel = Gtk.VBox()
-    panel.pack_start(buttons_box, False, True, 0)
     panel.pack_start(media_list_view, True, True, 0)
+    panel.pack_start(buttons_box, False, True, 0)
+
     
     return panel
 
@@ -110,6 +112,12 @@ def get_bins_panel(bin_list_view, add_cb, delete_cb):
 
     return get_named_frame(_("Bins"), panel, 0, 0, 0)
 
+def get_bins_tree_panel(bin_list_view):   
+    panel = Gtk.VBox()
+    panel.pack_start(bin_list_view, True, True, 0)
+
+    return get_named_frame(_("Bins"), panel, 0, 0, 0)
+    
 def get_sequences_panel(sequence_list_view, edit_seq_cb, add_seq_cb, del_seq_cb):
     # Create buttons and connect signals
     add_b = Gtk.Button(_("Add"))
@@ -128,10 +136,10 @@ def get_sequences_panel(sequence_list_view, edit_seq_cb, add_seq_cb, del_seq_cb)
     buttons_box.pack_start(del_b, True, True, 0)
     
     panel = Gtk.VBox()
-    panel.pack_start(buttons_box, False, True, 0)
+    #panel.pack_start(buttons_box, False, True, 0)
     panel.pack_start(sequence_list_view, True, True, 0)
 
-    return get_named_frame(_("Sequences"), panel, 4)
+    return get_named_frame(_("Sequences"), panel, 0)
 
 def get_thumbnail_select_panel(current_folder_path):    
     texts_panel = get_two_text_panel(_("Select folder for new thumbnails."), 

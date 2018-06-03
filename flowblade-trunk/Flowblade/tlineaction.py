@@ -242,7 +242,7 @@ def sequence_split_pressed():
     # so we collected all the data for all tracks
     # now we create a new sequence and will open that very sequence
     name = _("sequence_") + str(PROJECT().next_seq_number)
-    sequence.AUDIO_TRACKS_COUNT, sequence.VIDEO_TRACKS_COUNT = current_sequence().get_track_counts()
+    sequence.VIDEO_TRACKS_COUNT, sequence.AUDIO_TRACKS_COUNT = current_sequence().get_track_counts()
     PROJECT().add_named_sequence(name)
     app.change_current_sequence(len(PROJECT().sequences) - 1)
 
@@ -274,6 +274,9 @@ def sequence_split_pressed():
     
     # also, we need to add the compositors from our collection
     _add_compositors_to_split(compositors_to_move)
+    
+    # update time line to show whole range of new sequence
+    updater.zoom_project_length()
 
 def _collect_compositors_for_split(playhead):
     # there are basically three cases we need to take into consideration
@@ -1843,7 +1846,7 @@ def do_compositor_data_paste(paste_objs):
 def _timeline_has_focus(): # copied from keyevents.by. maybe put in utils?
     if(gui.tline_canvas.widget.is_focus()
        or gui.tline_column.widget.is_focus()
-       or gui.editor_window.modes_selector.widget.is_focus()
+       or gui.editor_window.tool_selector.widget.is_focus()
        or (gui.pos_bar.widget.is_focus() and timeline_visible())
        or gui.tline_scale.widget.is_focus()
        or glassbuttons.focus_group_has_focus(glassbuttons.DEFAULT_FOCUS_GROUP)):

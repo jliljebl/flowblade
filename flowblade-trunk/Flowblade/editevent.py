@@ -239,8 +239,7 @@ def set_default_edit_mode(disable_mouse=False):
     NOTE: As this uses 'programmed click', this method does nothing if insert mode button
     is already down.
     """
-    gui.editor_window.handle_insert_move_mode_button_press()
-    gui.editor_window.set_mode_selector_to_mode()
+    gui.editor_window.set_default_edit_tool()
     if disable_mouse:
         global mouse_disabled
         mouse_disabled = True
@@ -258,9 +257,9 @@ def set_clip_monitor_edit_mode():
     elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM_NO_EDIT:
         pass
     else:
-        gui.editor_window.handle_insert_move_mode_button_press()
+        gui.editor_window.set_default_edit_tool()
         
-    gui.editor_window.set_mode_selector_to_mode()
+    gui.editor_window.set_tool_selector_to_mode()
 
 def set_post_undo_redo_edit_mode():
     if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
@@ -652,7 +651,7 @@ def tline_canvas_mouse_pressed(event, frame):
         else:
             pointer_context = appconsts.POINTER_CONTEXT_TRIM_RIGHT
         gui.editor_window.set_tline_cursor_to_context(pointer_context)
-        gui.editor_window.set_mode_selector_to_mode()
+        gui.editor_window.set_tool_selector_to_mode()
         if not editorpersistance.prefs.quick_enter_trims:
             mouse_disabled = True
         else:
