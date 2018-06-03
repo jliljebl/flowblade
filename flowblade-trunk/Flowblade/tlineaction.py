@@ -189,6 +189,9 @@ def sequence_split_pressed():
     # relative position
     clips_to_move = []
 
+    # we collect the compositors that need to be moved
+    compositors_to_move = _collect_compositors_for_split(tline_frame)
+
     # now we iterate over all tracks and collect the ones that provide content
     # after the cut position
     for i in range(1, len(current_sequence().tracks)):
@@ -245,7 +248,7 @@ def sequence_split_pressed():
 
     # and now, we nee to iterate over the collected clips and add them to
     # our newly created sequence
-    for i in range(0, len(clips_to_move)):
+    for i in range(0, len(clips_to_move) - 1):
         collected = clips_to_move[i]
         track_index = collected["track_index"]
 
@@ -269,9 +272,75 @@ def sequence_split_pressed():
         action = edit.append_action(data)
         action.do_edit()
     
+    # also, we need to add the compositors from our collection
+    _add_compositors_to_split(compositors_to_move)
+    
     # update time line to show whole range of new sequence
     updater.zoom_project_length()
 
+def _collect_compositors_for_split(playhead):
+    # there are basically three cases we need to take into consideration
+    # when dealing with compositors.
+    # first: the compositor lies completely before the playhead position
+    # we do not have to deal with those and leave them untouched
+    # compositor.clip_out < playhead position
+    # second: the compositor lies completly behind the playhead position
+    # the compositor needs to be removed from the split sequence and needs to
+    # be moved to the newly created one. we need to create a duplicate and modify
+    # its clip_in and clip_out properties. basically this formula should apply:
+    # new_compositor.clip_in = old_compositor.clip_in - playhead position (same
+    # for clip_out)
+    # third: the playhead position is on a compositor. In this case we need to
+    # split the compositor in two, move one part to the new sequence and leave
+    # the first part in the old one. This can probably be done by simply
+    # modifying the clip_out property of the old compositor.
+    # the new compositor will have clip_in == 0 and
+    # clip_out = oc.clip_out - playhead position.
+
+    # result structure
+    new_compositors = []
+    compositors_to_remove = []
+
+    #  we start with analyzing and collecting the compositors
+    old_compositors = current_sequence().get_compositors()
+    for index in range(0, len(old_compositors)):
+        old_compositor = old_compositors[index]
+        if old_compositor.clip_out < playhead:
+            continue
+        
+        new_compositor = current_sequence().create_compositor(old_compositor.type_id)
+        new_compositor.clone_properties(old_compositor)
+        if old_compositor.clip_in < playhead:
+            new_compositor.set_in_and_out(0, old_compositor.clip_out - playhead)
+            old_compositor.set_in_and_out(old_compositor.clip_in, playhead)
+        else:
+            new_compositor.set_in_and_out(old_compositor.clip_in - playhead, old_compositor.clip_out - playhead)
+            compositors_to_remove.append(old_compositor)
+
+        new_compositor.transition.set_tracks(old_compositor.transition.a_track, old_compositor.transition.b_track)
+        new_compositor.obey_autofollow = old_compositor.obey_autofollow
+        new_compositors.append(new_compositor)
+    
+    # done with collecting all new necessary compositors
+    # now we remove the compositors that are completly after playhead positions
+    # cut compositors have already been reduces in length
+    for index in range(0, len(compositors_to_remove)):
+        old_compositor = compositors_to_remove[index]
+        old_compositor.selected = False
+        data = {"compositor":old_compositor}
+        action = edit.delete_compositor_action(data)
+        action.do_edit()
+    
+    return new_compositors
+
+def _add_compositors_to_split(new_compositors):
+    # now we basically just need to add the compositors in the list to the
+    # right track
+    for index in range(0, len(new_compositors)):
+        new_compositor = new_compositors[index]
+        current_sequence()._plant_compositor(new_compositor)
+        current_sequence().compositors.append(new_compositor)
+    current_sequence().restack_compositors()
 
 def splice_out_button_pressed():
     """
