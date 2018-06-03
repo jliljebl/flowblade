@@ -209,6 +209,8 @@ def sequence_split_pressed():
                 clip_start = track.clip_start(index)
                 if tline_frame > clip_start:
                     blank_length = first_clip.clip_out - (tline_frame - clip_start)
+                else:
+                    blank_length = first_clip.clip_out - clip_start
 
         for j in range(index, len(track.clips)):
             clip = track.clips[j]
@@ -251,6 +253,8 @@ def sequence_split_pressed():
         clip = collected["clip"]
         if clip.is_blanck_clip == True:
             length = collected["blank_length"]
+            if length == 0:
+                length = clip.clip_length()
             current_sequence().append_blank(length, get_track(track_index))
             continue
 
