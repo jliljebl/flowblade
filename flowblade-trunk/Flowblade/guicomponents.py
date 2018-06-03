@@ -110,6 +110,8 @@ media_linker_popup_menu = Gtk.Menu()
 log_event_popup_menu = Gtk.Menu()
 levels_menu = Gtk.Menu()
 clip_effects_hamburger_menu = Gtk.Menu()
+bin_popup_menu = Gtk.Menu()
+
 
 # ------------------------------------------------- item lists
 class ImageTextTextListView(Gtk.VBox):
@@ -181,6 +183,92 @@ class ImageTextTextListView(Gtk.VBox):
     def get_selected_rows_list(self):
         model, rows = self.treeview.get_selection().get_selected_rows()
         return rows
+
+# ------------------------------------------------- item lists
+class BinTreeView(Gtk.VBox):
+    """
+    GUI component displaying list with columns: img, text, text
+    Middle column expands.
+    """
+
+    def __init__(self, bin_selection_cb, bin_name_edit_cb, bins_popup_cb):
+        GObject.GObject.__init__(self)
+
+        self.bins_popup_cb = bins_popup_cb
+
+       # Datamodel: icon, text, text (folder, name, item count)
+        self.storemodel = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str)
+
+        # Scroll container
+        self.scroll = Gtk.ScrolledWindow()
+        self.scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        self.scroll.set_shadow_type(Gtk.ShadowType.NONE)
+
+        # TreeView
+        self.treeview = Gtk.TreeView(self.storemodel)
+        self.treeview.connect('button-press-event', self._button_press_event)
+        self.treeview.set_property("rules_hint", True)
+        self.treeview.set_headers_visible(False)
+        tree_sel = self.treeview.get_selection()
+        tree_sel.set_mode(Gtk.SelectionMode.SINGLE)
+        tree_sel.connect("changed", bin_selection_cb)
+        
+        # Cell renderers
+        self.icon_rend = Gtk.CellRendererPixbuf()
+        self.text_rend_1 = Gtk.CellRendererText()
+        self.text_rend_1.connect("edited",
+                                 bin_name_edit_cb,
+                                 (self.storemodel, 1))
+        self.text_rend_1.set_property("ellipsize", Pango.EllipsizeMode.END)
+        self.text_rend_2 = Gtk.CellRendererText()
+
+        # Column views
+        self.bin_col = Gtk.TreeViewColumn("")
+        self.bin_col.set_expand(True)
+        self.bin_col.pack_start(self.icon_rend, False)
+        self.bin_col.add_attribute(self.icon_rend, 'pixbuf', 0)
+        self.bin_col.pack_start(self.text_rend_1, True)
+        self.bin_col.add_attribute(self.text_rend_1, 'text', 1)
+
+        self.item_count_col = Gtk.TreeViewColumn("", self.text_rend_2, text=2)
+        self.item_count_col.set_expand(False)
+
+        # Add column views to view
+        self.treeview.append_column(self.bin_col)
+        self.treeview.append_column(self.item_count_col)
+
+        # Build widget graph and display
+        self.scroll.add(self.treeview)
+        self.pack_start(self.scroll, True, True, 0)
+        self.scroll.show_all()
+
+        self.scroll.connect('button-press-event', self._button_press_event)
+
+    def get_selected_rows_list(self):
+        model, rows = self.treeview.get_selection().get_selected_rows()
+        return rows
+
+    def fill_data_model(self):
+        self.storemodel.clear()
+
+        for media_bin in PROJECT().bins:
+            try:
+                #Gtk.Image.new_from_stock(Gtk.STOCK_OPEN, Gtk.IconSize.MENU)
+                pixbuf = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "bin_5.png")
+                row_data = [pixbuf,
+                            media_bin.name,
+                            str(len(media_bin.file_ids))]
+                self.storemodel.append(row_data)
+                
+            except GObject.GError, exc:
+                print "can't load icon", exc
+        
+        self.scroll.queue_draw()
+        
+    def _button_press_event(self, widget, event):
+        if event.button == 3:
+            self.bins_popup_cb(event)
+
 
 
 # ------------------------------------------------- item lists
@@ -261,8 +349,11 @@ class SequenceListView(ImageTextTextListView):
     GUI component displaying list of sequences in project
     """
 
-    def __init__(self, seq_name_edited_cb):
+    def __init__(self, seq_name_edited_cb, sequence_popup_cb):
         ImageTextTextListView.__init__(self)
+        self.sequence_popup_cb = sequence_popup_cb
+        self.treeview.connect('button-press-event', self._button_press_event)
+        self.scroll.set_shadow_type(Gtk.ShadowType.NONE)
 
         # Icon path
         self.icon_path = respaths.IMAGE_PATH + "sequence.png"
@@ -273,6 +364,8 @@ class SequenceListView(ImageTextTextListView):
                                  seq_name_edited_cb,
                                  (self.storemodel, 1))
 
+        self.scroll.connect('button-press-event', self._button_press_event)
+        
     def fill_data_model(self):
         """
         Creates displayed data.
@@ -289,6 +382,10 @@ class SequenceListView(ImageTextTextListView):
                         active]
             self.storemodel.append(row_data)
             self.scroll.queue_draw()
+
+    def _button_press_event(self, widget, event):
+        if event.button == 3:
+            self.sequence_popup_cb(event)
 
 
 class MediaListView(ImageTextTextListView):
@@ -745,16 +842,18 @@ class CompositorInfoPanel(Gtk.VBox):
 # -------------------------------------------- media select panel
 class MediaPanel():
 
-    def __init__(self, media_file_popup_cb, double_click_cb):
+    def __init__(self, media_file_popup_cb, double_click_cb, panel_menu_cb):
         self.widget = Gtk.VBox()
         self.row_widgets = []
         self.selected_objects = []
         self.columns = editorpersistance.prefs.media_columns
         self.media_file_popup_cb = media_file_popup_cb
+        self.panel_menu_cb = panel_menu_cb
         self.double_click_cb = double_click_cb
         self.monitor_indicator = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "monitor_indicator.png")
         self.last_event_time = 0.0
-
+        self.last_ctrl_selected_media_object = None
+        
         global has_proxy_icon, is_proxy_icon, graphics_icon, imgseq_icon, audio_icon, pattern_icon, profile_warning_icon
         has_proxy_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "has_proxy_indicator.png")
         is_proxy_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "is_proxy_indicator.png")
@@ -787,20 +886,20 @@ class MediaPanel():
         widget.grab_focus()
         if event.button == 1:
             if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-                media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
-                # add to selected if not already there, otherwise remove
+                
+                # add to selected if not there
                 try:
-                    self.selected_objects.index(media_object)
-                    self.selected_objects.remove(media_object)
-                    bg_color = gui.get_bg_color()
-                    media_object.widget.override_background_color(Gtk.StateType.NORMAL, bg_color)
-                    return
+                    index = self.selected_objects.index(media_object)
                 except:
                     self.selected_objects.append(media_object)
+                    media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
+                    self.last_ctrl_selected_media_object = media_object
+                    return                
             else:
                 self.clear_selection()
                 media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
                 self.selected_objects.append(media_object)
+
         elif event.button == 3:
             self.clear_selection()
             display_media_file_popup_menu(media_object.media_file,
@@ -809,6 +908,22 @@ class MediaPanel():
 
         self.widget.queue_draw()
 
+    def release_on_media_object(self, media_object, widget, event):
+        if self.last_ctrl_selected_media_object == media_object:
+            self.last_ctrl_selected_media_object = None
+            return
+            
+        widget.grab_focus()
+        if event.button == 1:
+            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+                # remove from selected if already there
+                try:
+                    index = self.selected_objects.index(media_object)
+                    self.selected_objects.remove(media_object)
+                    media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_bg_color())
+                except:
+                    pass
+                    
     def select_media_file(self, media_file):
         self.clear_selection()
         self.selected_objects.append(self.widget_for_mediafile[media_file])
@@ -820,6 +935,8 @@ class MediaPanel():
 
     def empty_pressed(self, widget, event):
         self.clear_selection()
+        if event.button == 3:
+            self.panel_menu_cb(event)
 
     def select_all(self):
         self.clear_selection()
@@ -848,6 +965,27 @@ class MediaPanel():
         self.widget_for_mediafile = {}
         self.selected_objects = []
 
+        # info with text for empty panel
+        if len(current_bin().file_ids) == 0:
+            filler = self._get_empty_filler()
+            dnd.connect_media_drop_widget(filler)
+            self.row_widgets.append(filler)
+            self.widget.pack_start(filler, True, True, 0)
+            
+            info = Gtk.Label(_("Right Click to Add Media."))
+            info.set_sensitive(False)
+            dnd.connect_media_drop_widget(info)
+            filler = self._get_empty_filler(info)
+            self.widget.pack_start(filler, False, False, 0)
+            self.row_widgets.append(filler)
+            
+            filler = self._get_empty_filler()
+            dnd.connect_media_drop_widget(filler)
+            self.row_widgets.append(filler)
+            self.widget.pack_start(filler, True, True, 0)
+            self.widget.show_all()
+            return
+
         column = 0
         bin_index = 0
         row_box = Gtk.HBox()
@@ -873,7 +1011,7 @@ class MediaPanel():
                 and (media_file.type != appconsts.PATTERN_PRODUCER)):
                 continue
 
-            media_object = MediaObjectWidget(media_file, self.media_object_selected, bin_index, self.monitor_indicator)
+            media_object = MediaObjectWidget(media_file, self.media_object_selected, self.release_on_media_object, bin_index, self.monitor_indicator)
             dnd.connect_media_files_object_widget(media_object.widget)
             dnd.connect_media_files_object_cairo_widget(media_object.img)
             self.widget_for_mediafile[media_file] = media_object
@@ -902,16 +1040,19 @@ class MediaPanel():
 
         self.widget.show_all()
 
-    def _get_empty_filler(self):
+    def _get_empty_filler(self, widget=None):
         filler = Gtk.EventBox()
         filler.connect("button-press-event", lambda w,e: self.empty_pressed(w,e))
-        filler.add(Gtk.Label())
+        if widget == None:
+            filler.add(Gtk.Label())
+        else:
+            filler.add(widget)
         return filler
 
 
 class MediaObjectWidget:
 
-    def __init__(self, media_file, selected_callback, bin_index, indicator_icon):
+    def __init__(self, media_file, selected_callback, release_callback, bin_index, indicator_icon):
         self.media_file = media_file
         self.selected_callback = selected_callback
         self.bin_index = bin_index
@@ -921,6 +1062,7 @@ class MediaObjectWidget:
 
         self.widget = Gtk.EventBox()
         self.widget.connect("button-press-event", lambda w,e: selected_callback(self, w, e))
+        self.widget.connect("button-release-event", lambda w,e: release_callback(self, w, e))
         self.widget.dnd_media_widget_attr = True # this is used to identify widget at dnd drop
         self.widget.set_can_focus(True)
         self.widget.add_events(Gdk.EventMask.KEY_PRESS_MASK)
@@ -947,7 +1089,7 @@ class MediaObjectWidget:
         self.vbox.pack_start(self.img, True, True, 0)
         self.vbox.pack_start(txt, False, False, 0)
 
-        self.align = guiutils.set_margins(self.vbox, 3, 2, 3, 2)
+        self.align = guiutils.set_margins(self.vbox, 6, 6, 6, 6)
 
         self.widget.add(self.align)
 
@@ -1939,10 +2081,13 @@ class BigTCDisplay:
 
         # Draw round rect with gradient and stroke around for thin bezel
         self._round_rect_path(cr)
-        cr.set_source_rgb(0.2, 0.2, 0.2)
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
+            cr.set_source_rgb(0.2, 0.2, 0.2)
+        else:
+            cr.set_source_rgb(0.1, 0.1, 0.1)
         cr.fill_preserve()
 
-        if editorpersistance.prefs.dark_theme == False:
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
             grad = cairo.LinearGradient (0, 0, 0, h)
             for stop in BIG_TC_GRAD_STOPS:
                 grad.add_color_stop_rgba(*stop)
@@ -2083,7 +2228,7 @@ class MonitorTCDisplay:
         cr.set_source_rgb(0.2, 0.2, 0.2)
         cr.fill_preserve()
 
-        if editorpersistance.prefs.dark_theme == False:
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
             grad = cairo.LinearGradient (0, 0, 0, h)
             for stop in BIG_TC_GRAD_STOPS:
                 grad.add_color_stop_rgba(*stop)
@@ -2242,7 +2387,6 @@ class ClipLengthChanger:
         
     def get_length(self):
         return int(self.frames_spin.get_value())
-    
 
 def get_gpl3_scroll_widget(size):
     license_file = open(respaths.GPL_3_DOC)
@@ -2520,64 +2664,6 @@ def get_trim_view_popupmenu(launcher, event, callback):
     menu.add(menu_item)
 
     menu.popup(None, None, None, None, event.button, event.time)
-    
-def get_mode_selector_popup_menu(launcher, event, callback):
-    menu = tools_menu
-    guiutils.remove_children(menu)
-    menu.set_accel_group(gui.editor_window.accel_group)
-    menu.set_take_focus(False)
-    menu_items = []
-
-    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "insertmove_cursor.png"), _("Insert"), callback, 0)
-    menu_item.set_accel_path("<Actions>/WindowActions/InsertMode")
-    menu.add(menu_item)
-    menu_items.append(menu_item)
-
-    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "overwrite_cursor.png"),    _("Overwrite"), callback, 1)
-    menu_item.set_accel_path("<Actions>/WindowActions/OverMode")
-    menu.add(menu_item)
-    menu_items.append(menu_item)
-
-    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "oneroll_cursor.png"), _("Trim"), callback, 2)
-    menu_item.set_accel_path("<Actions>/WindowActions/OneRollMode")
-    menu.add(menu_item)
-    menu_items.append(menu_item)
-
-    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "tworoll_cursor.png"), _("Roll"), callback, 3)
-    menu_item.set_accel_path("<Actions>/WindowActions/TwoRollMode")
-    menu.add(menu_item)
-    menu_items.append(menu_item)
-
-    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "slide_cursor.png"), _("Slip"), callback, 4)
-    menu_item.set_accel_path("<Actions>/WindowActions/SlideMode")
-    menu.add(menu_item)
-    menu_items.append(menu_item)
-
-    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "multimove_cursor.png"), _("Spacer"), callback, 5)
-    menu_item.set_accel_path("<Actions>/WindowActions/MultiMode")
-    menu.add(menu_item)
-    menu_items.append(menu_item)
-
-    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "overwrite_cursor_box.png"), _("Box"), callback, 6)
-    menu_item.set_accel_path("<Actions>/WindowActions/BoxMode")
-    menu.add(menu_item)
-    menu_items.append(menu_item)
-    
-    menu.connect("hide", lambda w : _tools_menu_hidden(w,menu_items))
-    menu.show_all()
-    menu.popup(None, None, None, None, event.button, event.time)
-
-def _tools_menu_hidden(tools_menu, menu_items):
-    # needed to make number 1-6 work elsewhere in the application
-    for menu_item in menu_items:
-        menu_item.set_accel_path(None)
 
 def get_file_filter_popup_menu(launcher, event, callback):
     menu = file_filter_menu
@@ -2702,6 +2788,23 @@ class ImageMenuLaunch(PressLaunch):
 
 
 class ToolSelector(ImageMenuLaunch):
+    def __init__(self, callback, surface_list, w, h):
+        ImageMenuLaunch.__init__(self, callback, surface_list, w, h)
+        # surface_list indexes and tool ids need hardcoded mapping, tool_ids and surface indexes cannot easily be made to correspond 
+        self.TOOL_ID_TO_SURFACE_INDEX = {   appconsts.TLINE_TOOL_INSERT: 0,
+                                            appconsts.TLINE_TOOL_OVERWRITE: 1,
+                                            appconsts.TLINE_TOOL_TRIM: 2,
+                                            appconsts.TLINE_TOOL_ROLL: 4,
+                                            appconsts.TLINE_TOOL_SLIP: 5,
+                                            appconsts.TLINE_TOOL_SPACER: 6,
+                                            appconsts.TLINE_TOOL_BOX: 7,
+                                            appconsts.TLINE_TOOL_RIPPLE_TRIM: 3
+                                     }
+   
+    def set_tool_pixbuf(self, tool_id):
+        surface_index = self.TOOL_ID_TO_SURFACE_INDEX[tool_id]
+        self.set_pixbuf(surface_index)
+        
     def _draw(self, event, cr, allocation):
         PressLaunch._draw(self, event, cr, allocation)
 
@@ -2709,8 +2812,47 @@ class ToolSelector(ImageMenuLaunch):
         cr.line_to(32, 18)
         cr.line_to(37, 13)
         cr.close_path()
-        if editorpersistance.prefs.dark_theme == False:
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
             cr.set_source_rgb(0, 0, 0)
         else:
             cr.set_source_rgb(0.66, 0.66, 0.66)
         cr.fill()
+
+class MonitorSwitch:
+    def __init__(self, callback):
+        self.WIDTH = 84
+        self.HEIGHT = 22
+        self.widget = cairoarea.CairoDrawableArea2( self.WIDTH ,
+                                                    self.HEIGHT,
+                                                    self._draw)
+        self.widget.press_func = self._press_event
+
+        self.tline_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "timeline_button.png")
+        self.tline_active_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "timeline_button_active.png")
+        self.clip_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "clip_button.png")
+        self.clip_active_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "clip_button_active.png")
+        
+        self.callback = callback
+        self.surface_x  = 6
+        self.surface_y  = 6
+
+    def _draw(self, event, cr, allocation):
+        if editorstate.timeline_visible():
+            tline_draw_surface = self.tline_active_surface 
+            clip_draw_surface = self.clip_surface
+        else:
+            tline_draw_surface = self.tline_surface 
+            clip_draw_surface = self.clip_active_surface
+            
+        cr.set_source_surface(tline_draw_surface, 10, 5)
+        cr.paint()
+
+        cr.set_source_surface(clip_draw_surface, 60, 7)
+        cr.paint()
+        
+    def _press_event(self, event):
+        if event.x < self.WIDTH / 2 and editorstate.timeline_visible() == False:
+            self.callback(appconsts.MONITOR_TLINE_BUTTON_PRESSED)
+        elif editorstate.timeline_visible() == True:
+            self.callback(appconsts.MONITOR_CLIP_BUTTON_PRESSED)
+        

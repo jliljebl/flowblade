@@ -24,6 +24,9 @@ import subprocess
 import sys
 
 import appconsts
+import dialogutils
+from editorstate import PROJECT
+import gui
 import natronanimations
 import respaths
 import utils
@@ -34,12 +37,28 @@ def init():
     global _natron_found
     if utils.program_is_installed("Natron"):
         _natron_found = True
-        natronanimations.load_animations_projects_xml()
+
         print "Natron found"
     else:
         _natron_found = False
         print "Natron not found"
 
+def launch_natron_animations_tool():
+    if _natron_found == False:
+        primary_txt = _("Natron not found!")
+        secondary_txt = _("Natron was not present in the system.") # TODO: more info
+        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        return
+
+    gui.save_current_colors()
+
+    current_profile_name = PROJECT().profile.description().replace(" ", "_")
+    print current_profile_name
+    print "Launch Natron tool..."
+    FLOG = open(utils.get_hidden_user_dir_path() + "log_natron_tool", 'w')
+    subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladenatron", current_profile_name], stdin=FLOG, stdout=FLOG, stderr=FLOG)
+    #subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladenatron", args[0], args[1], args[2]], stdin=FLOG, stdout=FLOG, stderr=FLOG)
+        
 def natron_available():
     return _natron_found
 

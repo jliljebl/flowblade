@@ -32,16 +32,17 @@ def createInstance(app,group):
     clip_path, mark_in, mark_out = get_export_data(exportfile)
 
     # Create Natron graph
-    readerNode = app.createReader("")
-    viewerNode = app.createNode("fr.inria.built-in.Viewer")
-    viewerNode.connectInput(0, readerNode)
-    reader = app.Read1
-    reader.filename.set(clip_path)
-    reader.getParam("firstFrame").set(int(mark_in))
-    reader.getParam("lastFrame").set(int(mark_out) + 1)
-    reader.getParam("startingTime").set(0)
+    readerNode = app.createReader(clip_path)
+    readerNode.getParam("firstFrame").set(int(mark_in))
+    readerNode.getParam("lastFrame").set(int(mark_out) + 1)
+    readerNode.getParam("startingTime").set(0)
+    
+    #viewerNode = app.createNode("fr.inria.built-in.Viewer")
+    #viewerNode.connectInput(0, readerNode)
+
     readerNode.setPosition(300.0, 100.0)
-    viewerNode.setPosition(315.0, 300.0)
+    #viewerNode.setPosition(315.0, 300.0)
+
     app.getProjectParam("frameRange").set(1, int(mark_out) - int(mark_in) + 1)
 
 # ---------------------------------------------------- helper funcs

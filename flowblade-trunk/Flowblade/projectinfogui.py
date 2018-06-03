@@ -31,6 +31,7 @@ import utils
 widgets = utils.EmptyClass()
 
 PROJECT_INFO_PANEL_HEIGHT = 200
+PROJECT_TOP_LEVEL_PANE_HEIGHT = 150
 
 def get_project_info_panel():
     project_name_label = Gtk.Label(label=PROJECT().name)
@@ -65,13 +66,49 @@ def get_project_info_panel():
 
     return project_info_hbox
 
+def get_top_level_project_info_panel():
+
+    project_name_label = Gtk.Label(label=PROJECT().name)
+    name_row = guiutils.get_left_justified_box([project_name_label])
+    name_panel = guiutils.get_named_frame(_("Project"), name_row, 0)
+    
+    profile = PROJECT().profile
+    desc_label = Gtk.Label(label=profile.description())
+    info_box = guicomponents.get_profile_info_small_box(profile)
+    vbox = Gtk.VBox()
+    vbox.pack_start(guiutils.get_left_justified_box([desc_label]), False, True, 0)
+    vbox.pack_start(info_box, False, True, 0)
+    profile_panel = guiutils.get_named_frame(_("Profile"), vbox, 0)
+
+    events_list = ProjectEventListView()
+    events_list.fill_data_model()
+    events_panel = guiutils.get_named_frame(_("Project Events"), events_list, 0)
+
+    project_info_vbox = Gtk.VBox()
+    project_info_vbox.pack_start(name_panel, False, True, 0)
+    project_info_vbox.pack_start(profile_panel, False, True, 0)
+    guiutils.set_margins(project_info_vbox, 4,4,4,4)
+    #project_info_vbox.set_size_request(250, PROJECT_INFO_PANEL_HEIGHT)
+    
+    #project_info_hbox = Gtk.HBox()
+    #project_info_hbox.pack_start(project_info_vbox, False, False, 0)
+    #project_info_hbox.pack_start(events_panel, True, True, 0)
+
+    widgets.project_name_label = project_name_label
+    widgets.desc_label = desc_label
+    widgets.info_box = info_box
+    widgets.events_list = events_list
+
+    return project_info_vbox
+    
 def update_project_info():
     profile = PROJECT().profile
-    widgets.project_name_label.set_text(PROJECT().name)
+    widgets.project_name_label.set_markup(guiutils.bold_text(PROJECT().name))
     widgets.desc_label.set_text(profile.description())
     profile_info_text = guicomponents.get_profile_info_text(profile)
     widgets.info_box.get_children()[0].set_text(profile_info_text)
     widgets.events_list.fill_data_model()
+
 
 class ProjectEventListView(Gtk.VBox):
 

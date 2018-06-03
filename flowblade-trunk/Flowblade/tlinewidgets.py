@@ -80,7 +80,7 @@ MARK_LINE_WIDTH = 4
 COLUMN_WIDTH = 96 # column area width
 SCALE_HEIGHT = 25
 SCROLL_HEIGHT = 20
-COLUMN_LEFT_PAD = 4 # as mute switch no longer exists this is now essentially left pad width 
+COLUMN_LEFT_PAD = 0 # as mute switch no longer exists this is now essentially left pad width 
 ACTIVE_SWITCH_WIDTH = 18
 COMPOSITOR_HEIGHT_OFF = 10
 COMPOSITOR_HEIGHT = 20
@@ -234,7 +234,8 @@ FRAME_SCALE_LINES = (0, 0, 0)
 
 BG_COLOR = (0.5, 0.5, 0.55)#(0.6, 0.6, 0.65)
 
-COLUMN_NOT_ACTIVE_COLOR = (0.65, 0.65, 0.65)
+#COLUMN_NOT_ACTIVE_COLOR = (0.65, 0.65, 0.65)
+COLUMN_NOT_ACTIVE_COLOR = (0.32, 0.32, 0.34)
 
 OVERLAY_COLOR = (0.9,0.9,0.9)
 OVERLAY_SELECTION_COLOR = (0.9,0.9,0.0)
@@ -253,14 +254,24 @@ MATCH_FRAME_LINES_COLOR = (0.78, 0.31, 0.31)
 
 BLANK_SELECTED = (0.68, 0.68, 0.74)
 
+TRACK_NAME_COLOR = (0.0,0.0,0.0) # 
+#TRACK_NAME_COLOR = (0.9,0.9,0.9)
+
+TRACK_GRAD_STOP1 = (1, 0.5, 0.5, 0.55, 1) #0.93, 0.93, 0.93, 1)
+TRACK_GRAD_STOP3 = (0, 0.5, 0.5, 0.55, 1) #0.58, 0.58, 0.58, 1) #(0, 0.84, 0.84, 0.84, 1)
+
+"""
 TRACK_GRAD_STOP1 = (1, 0.68, 0.68, 0.68, 1) #0.93, 0.93, 0.93, 1)
-TRACK_GRAD_STOP2 = (0.5, 0.93, 0.93, 0.93, 1) # (0.5, 0.58, 0.58, 0.58, 1)
-TRACK_GRAD_STOP3 = (0, 0.93, 0.93, 0.93, 1) #0.58, 0.58, 0.58, 1) #(0, 0.84, 0.84, 0.84, 1)
+TRACK_GRAD_STOP3 = (0, 0.93, 0.93, 0.93, 1) #0.58, 0.58, 0.58, 1) 
+"""
 
+TRACK_GRAD_ORANGE_STOP1 = (1, 0.65, 0.65, 0.65, 1)
+TRACK_GRAD_ORANGE_STOP3 = (0, 0.65, 0.65, 0.65, 1)
+
+"""
 TRACK_GRAD_ORANGE_STOP1 = (1,  0.4, 0.4, 0.4, 1)
-TRACK_GRAD_ORANGE_STOP2 = (1, 0.93, 0.62, 0.53, 1) #(0.5, 0.58, 0.34, 0.34, 1)
 TRACK_GRAD_ORANGE_STOP3 = (0,  0.68, 0.68, 0.68, 1)
-
+"""
 LIGHT_MULTILPLIER = 1.14
 DARK_MULTIPLIER = 0.74
 
@@ -339,12 +350,19 @@ def load_icons():
     TC_POINTER_HEAD = _load_pixbuf("tc_pointer_head.png")
     EDIT_INDICATOR = _load_pixbuf("clip_edited.png")
 
-    if editorpersistance.prefs.dark_theme == True:
+    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
         global FRAME_SCALE_COLOR_GRAD, FRAME_SCALE_COLOR_GRAD_L, BG_COLOR, FRAME_SCALE_LINES
         FRAME_SCALE_COLOR_GRAD = (1, 0.3, 0.3, 0.3, 1)
         FRAME_SCALE_COLOR_GRAD_L = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, GRAD_MULTIPLIER)
         BG_COLOR = (0.44, 0.44, 0.46)
         FRAME_SCALE_LINES = (0.8, 0.8, 0.8)
+    else:
+        global TRACK_GRAD_ORANGE_STOP1,TRACK_GRAD_ORANGE_STOP3,TRACK_GRAD_STOP1,TRACK_GRAD_STOP3
+        TRACK_GRAD_ORANGE_STOP1 = (1,  0.4, 0.4, 0.4, 1)
+        TRACK_GRAD_ORANGE_STOP3 = (0,  0.68, 0.68, 0.68, 1)
+
+        TRACK_GRAD_STOP1 = (1, 0.68, 0.68, 0.68, 1) #0.93, 0.93, 0.93, 1)
+        TRACK_GRAD_STOP3 = (0, 0.93, 0.93, 0.93, 1) #0.58, 0.58, 0.58, 1) 
 
 def set_tracks_double_height_consts():
     global ID_PAD_Y, ID_PAD_Y_SMALL, VIDEO_TRACK_V_ICON_POS, VIDEO_TRACK_A_ICON_POS, VIDEO_TRACK_V_ICON_POS_SMALL, VIDEO_TRACK_A_ICON_POS_SMALL, \
@@ -369,7 +387,7 @@ def set_tracks_double_height_consts():
     WAVEFORM_PAD_SMALL = 33
 
 def set_dark_bg_color():
-    if editorpersistance.prefs.dark_theme == False:
+    if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
         return
 
     r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())
@@ -434,6 +452,12 @@ def get_pos_for_tline_centered_to_current_frame():
         return 0
     else:
         return current_frame - (frames_in_panel / 2)
+
+def get_last_tline_view_frame():
+    allocation = canvas_widget.widget.get_allocation()
+    x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
+    frames_in_panel = w / pix_per_frame
+    return int(pos + frames_in_panel)
 
 def get_frame(panel_x):
     """
@@ -1532,7 +1556,7 @@ class TimeLineCanvas:
         if len(track.clips) != end:
             end = end + 1
             
-        # Get frame of clip.clip_in_in on timeline.
+        # Get frame of clip.clip_in on timeline.
         clip_start_in_tline = track.clip_start(start)
 
         # Pos is the first drawn frame.
@@ -2228,7 +2252,7 @@ class TimeLineColumn:
         layout.set_text(text, -1)
         layout.set_font_description(desc)
 
-        cr.set_source_rgb(0.0, 0.0, 0.0)
+        cr.set_source_rgb(*TRACK_NAME_COLOR)
         if track.height == sequence.TRACK_HEIGHT_NORMAL:
             text_y = ID_PAD_Y
         else:
@@ -2304,7 +2328,7 @@ class TimeLineFrameScale:
         self.drag_on = False
         self.set_default_callback = set_default_callback
 
-        if editorpersistance.prefs.dark_theme == True:
+        if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
             global FRAME_SCALE_SELECTED_COLOR_GRAD, FRAME_SCALE_SELECTED_COLOR_GRAD_L 
             FRAME_SCALE_SELECTED_COLOR_GRAD = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD
             FRAME_SCALE_SELECTED_COLOR_GRAD_L = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD_L
@@ -2343,7 +2367,7 @@ class TimeLineFrameScale:
 
         # Draw grad bg
         grad = cairo.LinearGradient (0, 0, 0, h)
-        if editorpersistance.prefs.dark_theme == True:
+        if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
             grad = self._get_dark_theme_grad(h)
         else:
             grad = cairo.LinearGradient (0, 0, 0, h)

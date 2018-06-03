@@ -228,7 +228,13 @@ def screen_size_small_width():
         return True
     else:
         return False
-
+"""
+def screen_size_smallest_width():
+    if SCREEN_WIDTH < 1279:
+        return True
+    else:
+        return False
+"""
 def screen_size_small():
     if screen_size_small_height() == True or screen_size_small_width() == True:
         return True
@@ -241,6 +247,12 @@ def screen_size_small_height():
     else:
         return False
 
+def screen_size_large_height():
+    if SCREEN_HEIGHT > 1050:
+        return True
+    else:
+        return False
+        
 def get_cached_trim_clip(path):
     try:
         return _trim_clips_cache[path]

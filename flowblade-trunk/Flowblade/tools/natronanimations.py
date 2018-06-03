@@ -19,7 +19,6 @@
 """
 
 import copy
-import md5
 import os
 import xml.dom.minidom
 
@@ -33,7 +32,9 @@ import utils
 ANIMATION_NODE = "animation"
 NAME_NODE = "name"
 NATRON_PROJECT_FILE_NODE = "projectfile"
+LENGTH_NODE = "length"
 NAME_ATTR = "name"
+ARGS_ATTR = "args"
 GROUP_NODE = "group"
 INTERPRETATION = "propertyinterpretation"
 PROPERTY = appconsts.PROPERTY
@@ -59,58 +60,62 @@ class NatronAnimationInfo:
         self.properties = propertyparse.node_list_to_properties_array(self.property_node_list)
         self.property_args = propertyparse.node_list_to_args_dict(self.property_node_list)
 
-        # property name -> natron node, interpretation
+        self.length = anim_node.getElementsByTagName(LENGTH_NODE).item(0).firstChild.nodeValue
+
+        # property name -> natron_node, natron_property, interpretation, args
         self.interpretations = {}
         for i_node in self.interpretation_node_list:
             natron_node = i_node.getAttribute(NATRON_NODE_NAME_ATTR)
             natron_property = i_node.getAttribute(NATRON_PROPERTY_NAME_ATTR)
+            args_str = i_node.getAttribute(ARGS_ATTR)
+            if len(args_str) == 0:
+                args = None
+            else:
+                args = propertyparse.args_string_to_args_dict(args_str)
+             
             interpretation = i_node.firstChild.nodeValue
             
-            self.interpretations[i_node.getAttribute(NAME_ATTR)] = (natron_node, natron_property, interpretation)
+            self.interpretations[i_node.getAttribute(NAME_ATTR)] = (natron_node, natron_property, interpretation, args)
 
-    def get_instance(self):
-        instance = NatronAnimationInstance(self)
+    def get_instance(self, profile):
+        instance = NatronAnimationInstance(self, profile)
         return instance
 
 
 class NatronAnimationInstance:
-    def __init__(self, natron_animation_info):
-        self.uid = md5.new(os.urandom(16)).hexdigest()
+    def __init__(self, natron_animation_info, profile):
         self.info = natron_animation_info
+        self.profile_desc = profile.description()
         self.properties = copy.deepcopy(natron_animation_info.properties)
-        """
-        try:
-            self.non_mlt_properties = copy.deepcopy(natron_animation_info.non_mlt_properties)
-        except:
-            self.non_mlt_properties = [] # Versions prior 0.14 do not have non_mlt_properties and fail here on load
-        """
-        #self.mlt_filter = None # reference to MLT C-object
-        #self.active = True 
 
-        #         <propertyinterpretation propertyname="Color1" nodename="solid1">string_to_color</propertyinterpretation>
+        self.range_in = 1
+        self.range_out = int(self.info.length)
 
-
+        self.current_frame = 1
+        self.mark_in = -1
+        self.mark_out =-1
+        
         # PROP_EXPR values may have keywords that need to be replaced with
         # numerical values that depend on the profile we have. These need
         # to be replaced now that we have profile and we are ready to connect this.
         # For example default values of some properties depend on the screen size of the project
-        propertyparse.replace_value_keywords(self.properties, PROJECT().profile)
+        propertyparse.replace_value_keywords(self.properties, profile)
         
-    def write_out_modify_data(self, editable_properties):
+    def write_out_modify_data(self, editable_properties, uid):
         exec_str = self._get_natron_modifying_exec_string(editable_properties)
-        
-        export_data_file = open(self.get_modify_exec_data_file_path(), "w")
+        print exec_str
+        export_data_file = open(self.get_modify_exec_data_file_path(uid), "w")
         export_data_file.write(exec_str)
         export_data_file.close()
 
         # NOTE: THIS CAN BREAK IF 2 ANIMATION RENDERS ARE STARTED VERY CLOSELY TO EACH OTHER AND WE READ WRONG SESSION FROM THIS FILE
         # IN PRACTICE WE CAN GET AWAY WITH IT, BUT LOOK BETTER STUFF
         render_session_id_file = open(self.get_render_session_id_file_path(), "w")
-        render_session_id_file.write(self.uid)
+        render_session_id_file.write(uid)
         render_session_id_file.close()
 
-    def get_modify_exec_data_file_path(self):
-        return utils.get_hidden_user_dir_path() + appconsts.NATRON_DIR + "/mod_data_" +  self.uid
+    def get_modify_exec_data_file_path(self, uid):
+        return utils.get_hidden_user_dir_path() + appconsts.NATRON_DIR + "/session_" + uid + "/mod_data"
 
     def get_render_session_id_file_path(self):
         return utils.get_hidden_user_dir_path() + appconsts.NATRON_DIR + "/LATEST_RENDER_INSTANCE_ID"
@@ -118,18 +123,24 @@ class NatronAnimationInstance:
     def _get_natron_modifying_exec_string(self, editable_properties):
         exec_str = ""
         for ep in editable_properties:
-            natron_node, natron_property, interpretation = self.info.interpretations[ep.name]
-            property_modify_str = natroninterpretations.get_property_modyfying_str(ep.value, natron_node, natron_property, interpretation)
+            natron_node, natron_property, interpretation, args = self.info.interpretations[ep.name]
+            property_modify_str = natroninterpretations.get_property_modyfying_str(ep.value, natron_node, natron_property, interpretation, args)
             exec_str = exec_str + property_modify_str
         
         return exec_str
 
-    def get_frame_range(self):
-        return "1-250"
+    def get_length(self):
+        return self.range_out - self.range_in + 1 # # +1 out incl.
+
+    def get_frame_range_str(self):
+        return str(self.range_in) + "-" + str(self.range_out)
 
     def get_project_file_path(self):
         return respaths.ROOT_PATH + "/res/natron/project_files/" + self.info.project_file
-        
+
+    def frame(self):
+        return self.current_frame
+
 # --------------------------------------------------------- load data
 def load_animations_projects_xml():
     print "Loading Natron animations..."
@@ -176,9 +187,9 @@ def load_animations_projects_xml():
 def get_animations_groups():
     return _animations_groups
 
-def get_default_animation_instance():
+def get_default_animation_instance(profile):
     key, group = _animations_groups[0]
-    return group[0].get_instance()
+    return group[0].get_instance(profile)
         
 def get_animation_instance(groups_index, group_animations_index):
     key, group = _animations_groups[groups_index]
