@@ -639,19 +639,8 @@ class EditorWindow:
         player_buttons_row.pack_start(self.view_mode_select.widget, False, False, 0)
         player_buttons_row.set_margin_bottom(2)
 
-
-
-        # Monitor top info row
-        #monitor_info_row = Gtk.HBox(False, 1)
-        #monitor_info_row.pack_start(self.monitor_source, False, False, 0)
-        #monitor_info_row.pack_start(guiutils.pad_label(32, 10), False, False, 0)
-        #monitor_info_row.pack_start(self.info1, False, False, 0)
-
         # Switch / pos bar row
-
         sw_pos_hbox = Gtk.HBox(False, 1)
-        #sw_pos_hbox.pack_start(self.sequence_editor_b, True, True, 0)
-        #sw_pos_hbox.pack_start(self.clip_editor_b, True, True, 0)
         sw_pos_hbox.pack_start(pos_bar_frame, True, True, 0)
         sw_pos_hbox.set_margin_top(4)
         sw_pos_hbox.set_margin_left(2)
@@ -665,7 +654,6 @@ class EditorWindow:
 
         # Monitor
         monitor_vbox = Gtk.VBox(False, 1)
-        #monitor_vbox.pack_start(monitor_info_row, False, True, 0)
         monitor_vbox.pack_start(monitor_widget.widget, True, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
         monitor_vbox.pack_start(player_buttons_row, False, True, 0)

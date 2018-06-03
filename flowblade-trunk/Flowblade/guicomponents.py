@@ -686,18 +686,30 @@ class ClipInfoPanel(Gtk.HBox):
     def __init__(self):
         GObject.GObject.__init__(self)
 
+        if editorstate.screen_size_small_height() == True:
+            font_desc = "sans bold 8"
+        else:
+            font_desc = "sans bold 9"
+
         self.name_label = guiutils.bold_label(_("Clip:"))
+
         self.name_value = Gtk.Label()
         self.name_value.set_ellipsize(Pango.EllipsizeMode.END)
         self.name_value.set_max_width_chars(15)
+
         self.name_label.set_sensitive(False)
         self.name_value.set_sensitive(False)
+        self.name_value.modify_font(Pango.FontDescription(font_desc))
+        self.name_label.modify_font(Pango.FontDescription(font_desc))
         
         self.track = guiutils.bold_label(_("Track:"))
         self.track_value = Gtk.Label()
+        
         self.track.set_sensitive(False)
         self.track_value.set_sensitive(False)
-
+        self.track.modify_font(Pango.FontDescription(font_desc))
+        self.track_value.modify_font(Pango.FontDescription(font_desc))
+        
         info_row_1 = Gtk.HBox()
         info_row_1.pack_start(self.name_label, False, True, 0)
         info_row_1.pack_start(self.name_value, True, True, 0)
@@ -712,9 +724,9 @@ class ClipInfoPanel(Gtk.HBox):
         
     def display_clip_info(self, clip, track, index):
         self.name_label.set_text(_("<b>Clip: </b>"))
-        self.name_value.set_text(clip.name)
+        self.name_value.set_text("<b>" + clip.name + "</b>")
         self.track.set_text(_("<b>Track: </b>"))
-        self.track_value.set_text(track.get_name())
+        self.track_value.set_text("<b>" + track.get_name() + "</b>")
         self._set_use_mark_up()
 
     def set_no_clip_info(self):
@@ -727,6 +739,8 @@ class ClipInfoPanel(Gtk.HBox):
     def _set_use_mark_up(self):
         self.name_label.set_use_markup(True)
         self.track.set_use_markup(True)
+        self.name_value.set_use_markup(True)
+        self.track_value.set_use_markup(True)
 
     def set_enabled(self, value):
         pass
