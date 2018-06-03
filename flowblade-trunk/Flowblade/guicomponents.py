@@ -681,7 +681,7 @@ class AutoSavesListView(TextListView):
 
 
 # -------------------------------------------- clip info
-class ClipInfoPanel(Gtk.VBox):
+class ClipInfoPanel(Gtk.HBox):
 
     def __init__(self):
         GObject.GObject.__init__(self)
@@ -690,12 +690,13 @@ class ClipInfoPanel(Gtk.VBox):
         self.name_value = Gtk.Label()
         self.name_value.set_ellipsize(Pango.EllipsizeMode.END)
         self.name_value.set_max_width_chars(15)
-
+        self.name_label.set_sensitive(False)
+        self.name_value.set_sensitive(False)
+        
         self.track = guiutils.bold_label(_("Track:"))
         self.track_value = Gtk.Label()
-
-        self.position = guiutils.bold_label(_("Pos:"))
-        self.position_value = Gtk.Label()
+        self.track.set_sensitive(False)
+        self.track_value.set_sensitive(False)
 
         info_row_1 = Gtk.HBox()
         info_row_1.pack_start(self.name_label, False, True, 0)
@@ -705,51 +706,30 @@ class ClipInfoPanel(Gtk.VBox):
         info_row_2.pack_start(self.track, False, False, 0)
         info_row_2.pack_start(self.track_value, True, True, 0)
 
-        info_row_3 = Gtk.HBox()
-        info_row_3.pack_start(self.position, False, False, 0)
-        info_row_3.pack_start(self.position_value, True, True, 0)
-
         self.pack_start(info_row_1, False, False, 0)
+        self.pack_start(guiutils.pad_label(24,12), False, False, 0)
         self.pack_start(info_row_2, False, False, 0)
-        self.pack_start(info_row_3, False, False, 0)
-
-        self.set_spacing(4)
-
-        if editorstate.screen_size_small_height():
-            self.set_size_request(CLIP_EDITOR_LEFT_WIDTH, 10)
-        else:
-            self.set_size_request(CLIP_EDITOR_LEFT_WIDTH, 56)
-
+        
     def display_clip_info(self, clip, track, index):
         self.name_label.set_text(_("<b>Clip: </b>"))
         self.name_value.set_text(clip.name)
         self.track.set_text(_("<b>Track: </b>"))
         self.track_value.set_text(track.get_name())
-        self.position.set_text(_("<b>Position:</b>"))
-        clip_start_in_tline = track.clip_start(index)
-        tc_str = utils.get_tc_string(clip_start_in_tline)
-        self.position_value.set_text(tc_str)
         self._set_use_mark_up()
 
     def set_no_clip_info(self):
-        self.name_label.set_text(_("<b>Clip:</b>"))
+        self.name_label.set_text("")
         self.name_value.set_text("")
-        self.track.set_text(_("<b>Track:</b>"))
+        self.track.set_text("")
         self.track_value.set_text("")
-        self.position.set_text(_("<b>Position:</b>"))
-        self.position_value.set_text("")
         self._set_use_mark_up()
 
     def _set_use_mark_up(self):
         self.name_label.set_use_markup(True)
         self.track.set_use_markup(True)
-        self.position.set_use_markup(True)
 
     def set_enabled(self, value):
-        self.name_label.set_sensitive(value)
-        self.track.set_sensitive(value)
-        self.position.set_sensitive(value)
-
+        pass
 
 class CompositorInfoPanel(Gtk.VBox):
     def __init__(self):

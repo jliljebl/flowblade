@@ -103,11 +103,12 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     
     exit_button_vbox = Gtk.VBox(False, 2)
     exit_button_vbox.pack_start(widgets.exit_button, False, False, 0)
-    exit_button_vbox.pack_start(Gtk.Label(), True, True, 0)
 
     info_row = Gtk.HBox(False, 2)
+    info_row.pack_start(widgets.hamburger_launcher.widget, False, False, 0)
+    info_row.pack_start(Gtk.Label(), True, True, 0)
     info_row.pack_start(widgets.clip_info, False, False, 0)
-    info_row.pack_start(exit_button_vbox, True, True, 0)
+    info_row.pack_start(Gtk.Label(), True, True, 0)
     
     combo_row = Gtk.HBox(False, 2)
     combo_row.pack_start(group_combo_box, True, True, 0)
@@ -118,9 +119,6 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     effects_list_view.treeview.get_selection().select_path("0")
     
     effects_vbox = Gtk.VBox(False, 2)
-    effects_vbox.pack_start(info_row, False, False, 0)
-    if editorstate.screen_size_small_height() == False:
-        effects_vbox.pack_start(guiutils.get_pad_label(2, 2), False, False, 0)
     effects_vbox.pack_start(stack_buttons_box, False, False, 0)
     effects_vbox.pack_start(effect_stack, True, True, 0)
     effects_vbox.pack_start(combo_row, False, False, 0)
@@ -129,7 +127,7 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     widgets.group_combo.set_tooltip_text(_("Select Filter Group"))
     widgets.effect_list_view.set_tooltip_text(_("Current group Filters"))
 
-    return effects_vbox
+    return effects_vbox, info_row
 
 def _group_selection_changed(group_combo, filters_list_view):
     group_name, filters_array = mltfilters.groups[group_combo.get_active()]
@@ -248,7 +246,10 @@ def create_widgets():
     widgets.add_effect_b.connect("clicked", lambda w,e: add_effect_pressed(), None)
     widgets.del_effect_b.connect("clicked", lambda w,e: delete_effect_pressed(), None)
     widgets.toggle_all.connect("clicked", lambda w: toggle_all_pressed())
-    
+
+    hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger_big.png")
+    widgets.hamburger_launcher = guicomponents.PressLaunch(_hamburger_launch_pressed, hamburger_launcher_surface, 24, 24)
+    guiutils.set_margins(widgets.hamburger_launcher.widget, 2, 8, 0, 0)    
     # These are created elsewhere and then monkeypatched here
     widgets.group_combo = None
     widgets.effect_list_view = None
@@ -266,6 +267,7 @@ def set_enabled(value):
     widgets.effect_stack_view.treeview.set_sensitive(value)
     widgets.exit_button.set_sensitive(value)
     widgets.toggle_all.set_sensitive(value)
+    widgets.hamburger_launcher.widget.set_sensitive(value)
 
 def update_stack_view():
     if clip != None:
@@ -549,12 +551,6 @@ def effect_selection_changed():
             if not hasattr(editor_row, "no_separator"):
                 vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
         vbox.pack_start(guiutils.pad_label(12,12), False, False, 0)
-                
-        hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger_big.png")
-        hamburger_launcher = guicomponents.PressLaunch(_hamburger_launch_pressed, hamburger_launcher_surface, 24, 24)
-        
-        sl_row = guiutils.get_left_justified_box([hamburger_launcher.widget])
-        vbox.pack_start(sl_row, False, False, 0)
         
         vbox.pack_start(Gtk.Label(), True, True, 0)
 

@@ -489,21 +489,25 @@ class EditorWindow:
         self.effect_select_list_view.treeview.connect("row-activated", clipeffectseditor.effect_select_row_double_clicked)
         dnd.connect_effects_select_tree_view(self.effect_select_list_view.treeview)
 
-        clip_editor_panel = clipeffectseditor.get_clip_effects_editor_panel(
-                                    self.effect_select_combo_box,
-                                    self.effect_select_list_view)
+        clip_editor_panel, info_row = clipeffectseditor.get_clip_effects_editor_panel(
+                                        self.effect_select_combo_box,
+                                        self.effect_select_list_view)
 
         clipeffectseditor.widgets.effect_stack_view.treeview.connect("button-press-event",
                                               clipeffectseditor.filter_stack_button_press)
                                               
-        effects_editor_panel = guiutils.set_margins(clipeffectseditor.widgets.value_edit_frame, 0, 0, 4, 0)
+        effects_editor_panel = guiutils.set_margins(clipeffectseditor.widgets.value_edit_frame, 0, 0, 8, 0)
         
         effects_hbox = Gtk.HBox()
-        effects_hbox.set_border_width(5)
+        effects_hbox.set_border_width(0)
         effects_hbox.pack_start(clip_editor_panel, False, False, 0)
         effects_hbox.pack_start(effects_editor_panel, True, True, 0)
 
-        self.effects_panel = guiutils.set_margins(effects_hbox, 2, 2, 2, 2)
+        effects_vbox = Gtk.VBox()
+        effects_vbox.pack_start(effects_hbox, True, True, 0)
+        effects_vbox.pack_start(info_row, False, False, 0)
+        
+        self.effects_panel = guiutils.set_margins(effects_vbox, 8, 0, 7, 2)
         
         # Compositors panel
         compositor_clip_panel = compositeeditor.get_compositor_clip_panel()
