@@ -47,7 +47,7 @@ MEDIA_PANEL_MAX_ROWS = 8
 MEDIA_PANEL_DEFAULT_ROWS = 2
 
 
-def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, proxy_cb, filtering_cb):
+def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hamburger_launch_pressed, filtering_cb):
     # Create buttons and connect signals
     add_media_b = Gtk.Button(_("Add"))
     del_media_b = Gtk.Button(_("Delete"))    
@@ -56,11 +56,14 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, proxy
     add_media_b.set_tooltip_text(_("Add Media File to Bin"))
     del_media_b.set_tooltip_text(_("Delete Media File from Bin"))
 
-    proxy_b = Gtk.Button()
-    proxy_b.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "proxy_button.png"))
-    proxy_b.connect("clicked", proxy_cb, None)
-    proxy_b.set_tooltip_text(_("Render Proxy Files For Selected Media"))
-    gui.proxy_button = proxy_b
+    hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger_big.png")
+    hamburger_launcher = guicomponents.PressLaunch(hamburger_launch_pressed, hamburger_launcher_surface, 24, 24)
+    
+    #proxy_b = Gtk.Button()
+    #proxy_b.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "proxy_button.png"))
+    #proxy_b.connect("clicked", proxy_cb, None)
+    #proxy_b.set_tooltip_text(_("Render Proxy Files For Selected Media"))
+    #gui.proxy_button = proxy_b
 
     columns_img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "columns.png")
     columns_launcher = guicomponents.PressLaunch(col_changed_cb, columns_img, w=22, h=22)
@@ -81,7 +84,8 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, proxy
     buttons_box = Gtk.HBox(False,1)
     #buttons_box.pack_start(add_media_b, True, True, 0)
     #buttons_box.pack_start(del_media_b, True, True, 0)
-    buttons_box.pack_start(proxy_b, False, False, 0)
+    buttons_box.pack_start(hamburger_launcher.widget, False, False, 0)
+    #buttons_box.pack_start(proxy_b, False, False, 0)
     buttons_box.pack_start(guiutils.get_pad_label(4, 4), False, False, 0)
     buttons_box.pack_start(columns_launcher.widget, False, False, 0)
     buttons_box.pack_start(files_filter_launcher.widget, False, False, 0)

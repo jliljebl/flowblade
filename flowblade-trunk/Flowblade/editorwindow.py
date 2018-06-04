@@ -463,7 +463,7 @@ class EditorWindow:
                                 lambda w,e: projectaction.add_media_files(), 
                                 lambda w,e: projectaction.delete_media_files(),
                                 projectaction.columns_count_launch_pressed,
-                                lambda w,e: proxyediting.create_proxy_files_pressed(),
+                                projectaction.media_panel_hamburger_pressed,  # lambda w,e: proxyediting.create_proxy_files_pressed(),
                                 projectaction.media_filtering_select_pressed)
         guiutils.set_margins(media_panel, 6, 6, 4, 6)
         self.media_panel = media_panel
@@ -510,15 +510,18 @@ class EditorWindow:
         self.effects_panel = guiutils.set_margins(effects_vbox, 8, 0, 7, 2)
         
         # Compositors panel
-        compositor_clip_panel = compositeeditor.get_compositor_clip_panel()
+        action_row = compositeeditor.get_compositor_clip_panel()
         compositor_editor_panel = guiutils.set_margins(compositeeditor.widgets.value_edit_frame, 0, 0, 4, 0)
 
         compositors_hbox = Gtk.HBox()
-        compositors_hbox.set_border_width(5)
-        compositors_hbox.pack_start(compositor_clip_panel, False, False, 0)
+        #compositors_hbox.set_border_width(5)
         compositors_hbox.pack_start(compositor_editor_panel, True, True, 0)
 
-        self.compositors_panel = guiutils.set_margins(compositors_hbox, 2, 2, 2, 2) 
+        compositors_vbox = Gtk.VBox()
+        compositors_vbox.pack_start(compositors_hbox, True, True, 0)
+        compositors_vbox.pack_start(action_row, False, False, 0)
+        
+        self.compositors_panel = guiutils.set_margins(compositors_vbox, 2, 2, 2, 2) 
 
         # Render panel
         try:

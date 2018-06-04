@@ -649,7 +649,7 @@ class MediaLogListView(Gtk.VBox):
 def get_media_log_events_panel(events_list_view):
     global widgets
 
-    actions_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "media_log_action.png")
+    actions_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger_big.png")
     group_actions_menu = guicomponents.PressLaunch(_group_action_pressed, actions_surface, 38, 22)
 
     star_check = Gtk.CheckButton()
@@ -682,7 +682,6 @@ def get_media_log_events_panel(events_list_view):
     
     row1 = Gtk.HBox()
     row1.pack_start(guiutils.get_pad_label(6, 12), False, True, 0)
-    row1.pack_start(group_actions_menu.widget, False, True, 0)
     row1.pack_start(guiutils.get_pad_label(6, 12), False, True, 0)
     row1.pack_start(widgets.group_box, False, True, 0)
     row1.pack_start(guiutils.get_pad_label(6, 12), False, True, 0)
@@ -722,6 +721,7 @@ def get_media_log_events_panel(events_list_view):
     append_displayed.connect("clicked", lambda w:append_log_events())
 
     row2 =  Gtk.HBox()
+    row2.pack_start(group_actions_menu.widget, False, True, 0)
     row2.pack_start(widgets.log_range, False, True, 0)
     row2.pack_start(delete_button, False, True, 0)
     row2.pack_start(Gtk.Label(), True, True, 0)

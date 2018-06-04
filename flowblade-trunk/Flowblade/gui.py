@@ -54,7 +54,7 @@ render_out_folder = None
 
 # Media tab
 media_view_filter_selector = None
-proxy_button = None
+#proxy_button = None
 
 # Monitor
 pos_bar = None

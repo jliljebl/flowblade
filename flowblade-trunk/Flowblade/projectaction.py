@@ -839,6 +839,9 @@ def _write_out_render_item(single_render_item_item):
     return True
 
 # ----------------------------------- media files
+def media_panel_hamburger_pressed(widget, event):
+    print "pressed"
+
 def media_panel_popup_requested(event):
     panel_menu = media_panel_popup_menu
     
