@@ -56,19 +56,14 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
     add_media_b.set_tooltip_text(_("Add Media File to Bin"))
     del_media_b.set_tooltip_text(_("Delete Media File from Bin"))
 
-    #hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger.png")
     hamburger_launcher = guicomponents.HamburgerPressLaunch(hamburger_launch_pressed)
-    guiutils.set_margins(hamburger_launcher.widget, 5, 0,0,0)
-    #proxy_b = Gtk.Button()
-    #proxy_b.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "proxy_button.png"))
-    #proxy_b.connect("clicked", proxy_cb, None)
-    #proxy_b.set_tooltip_text(_("Render Proxy Files For Selected Media"))
-    #gui.proxy_button = proxy_b
+    guiutils.set_margins(hamburger_launcher.widget, 2, 0, 4, 12)
 
     columns_img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "columns.png")
     columns_launcher = guicomponents.PressLaunch(col_changed_cb, columns_img, w=22, h=22)
-    columns_launcher.surface_y = 9
-
+    columns_launcher.surface_y = 6
+    #guiutils.set_margins(columns_launcher.widget, 0, 4, 0, 0)    
+    
     all_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_all_files.png")
     audio_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_audio_files.png")
     graphics_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_graphics_files.png")
@@ -78,14 +73,12 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
 
     files_filter_launcher = guicomponents.ImageMenuLaunch(filtering_cb, [all_pixbuf, video_pixbuf, audio_pixbuf, graphics_pixbuf, imgseq_pixbuf, pattern_pixbuf], 24, 22)
     files_filter_launcher.surface_x  = 3
-    files_filter_launcher.surface_y  = 8
+    files_filter_launcher.surface_y  = 4
     gui.media_view_filter_selector = files_filter_launcher
-
+    #guiutils.set_margins(files_filter_launcher.widget, 0, 4, 0, 0)
+    
     buttons_box = Gtk.HBox(False,1)
-    #buttons_box.pack_start(add_media_b, True, True, 0)
-    #buttons_box.pack_start(del_media_b, True, True, 0)
     buttons_box.pack_start(hamburger_launcher.widget, False, False, 0)
-    #buttons_box.pack_start(proxy_b, False, False, 0)
     buttons_box.pack_start(guiutils.get_pad_label(4, 4), False, False, 0)
     buttons_box.pack_start(columns_launcher.widget, False, False, 0)
     buttons_box.pack_start(files_filter_launcher.widget, False, False, 0)
