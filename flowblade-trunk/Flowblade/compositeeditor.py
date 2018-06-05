@@ -159,13 +159,30 @@ def _display_compositor_edit_box():
     # Case: Empty edit frame
     global compositor
     if compositor == None:
-        widgets.empty_label = Gtk.Label(label=_("No Compositor"))
-        vbox.pack_start(widgets.empty_label, True, True, 0)
+        #widgets.empty_label = Gtk.Label(label=_("No Compositor"))
 
-        vbox.pack_start(Gtk.Label(), True, True, 0)  
+        filler = Gtk.EventBox()
+        filler.add(Gtk.Label())
+        vbox.pack_start(filler, True, True, 0)
+        
+        info = Gtk.Label(label=_("No Compositor"))
+        info.set_sensitive(False)
+        filler = Gtk.EventBox()
+        filler.add(info)
+        vbox.pack_start(filler, False, False, 0)
+        
+        filler = Gtk.EventBox()
+        filler.add(Gtk.Label())
+        vbox.pack_start(filler, True, True, 0)
         vbox.show_all()
-        widgets.value_edit_box = vbox
-        widgets.value_edit_frame.add(vbox)
+
+        scroll_window = Gtk.ScrolledWindow()
+        scroll_window.add_with_viewport(vbox)
+        scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        scroll_window.show_all()
+
+        widgets.value_edit_box = scroll_window
+        widgets.value_edit_frame.add(scroll_window)
         return 
 
     # Case: Filled frame

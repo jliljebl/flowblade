@@ -112,7 +112,6 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     
     combo_row = Gtk.HBox(False, 2)
     combo_row.pack_start(group_combo_box, True, True, 0)
-    combo_row.pack_start(guiutils.get_pad_label(8, 2), False, False, 0)
 
     group_name, filters_array = mltfilters.groups[0]
     effects_list_view.fill_data_model(filters_array)
@@ -208,7 +207,7 @@ def clear_clip():
     global clip
     clip = None
     _set_no_clip_info()
-    clear_effects_edit_panel()
+    effect_selection_changed()
     update_stack_view()
     set_enabled(False)
 
@@ -238,8 +237,10 @@ def create_widgets():
     widgets.value_edit_frame.set_shadow_type(Gtk.ShadowType.NONE)
     widgets.value_edit_frame.add(widgets.value_edit_box)
 
-    widgets.add_effect_b = Gtk.Button(_("Add"))
-    widgets.del_effect_b = Gtk.Button(_("Delete"))
+    widgets.add_effect_b = Gtk.Button()#_("Add"))
+    widgets.add_effect_b.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "filter_add.png"))
+    widgets.del_effect_b = Gtk.Button() #_("Delete"))
+    widgets.del_effect_b.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "filter_delete.png"))
     widgets.toggle_all = Gtk.Button()
     widgets.toggle_all.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "filters_all_toggle.png"))
 
@@ -371,6 +372,7 @@ def delete_effect_pressed():
     # Set last filter selected and display in editor
     edit_effect_update_blocked = False
     if len(clip.filters) == 0:
+        effect_selection_changed() # to display info text
         return
     path = str(len(clip.filters) - 1)
     # Causes edit_effect_selected() called as it is the "change" listener
@@ -454,17 +456,13 @@ def effect_selection_changed():
     # Check we have clip
     if clip == None:
         keyframe_editor_widgets = []
+        show_text_in_edit_area(_("No Clip"))
         return
     
     # Check we actually have filters so we can display one.
     # If not, clear previous filters from view.
     if len(clip.filters) == 0:
-        vbox = Gtk.VBox(False, 0)
-        vbox.pack_start(Gtk.Label(), False, False, 0)
-        widgets.value_edit_frame.remove(widgets.value_edit_box)
-        widgets.value_edit_frame.add(vbox)
-        vbox.show_all()
-        widgets.value_edit_box = vbox
+        show_text_in_edit_area(_("Clip Has No Filters"))
         keyframe_editor_widgets = []
         return
     
@@ -568,6 +566,36 @@ def effect_selection_changed():
 
     widgets.value_edit_box = scroll_window
 
+def show_text_in_edit_area(text):
+    vbox = Gtk.VBox(False, 0)
+
+    filler = Gtk.EventBox()
+    filler.add(Gtk.Label())
+    vbox.pack_start(filler, True, True, 0)
+    
+    info = Gtk.Label(label=text)
+    info.set_sensitive(False)
+    filler = Gtk.EventBox()
+    filler.add(info)
+    vbox.pack_start(filler, False, False, 0)
+    
+    filler = Gtk.EventBox()
+    filler.add(Gtk.Label())
+    vbox.pack_start(filler, True, True, 0)
+
+    vbox.show_all()
+
+    scroll_window = Gtk.ScrolledWindow()
+    scroll_window.add_with_viewport(vbox)
+    scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+    scroll_window.show_all()
+
+    widgets.value_edit_frame.remove(widgets.value_edit_box)
+    widgets.value_edit_frame.add(scroll_window)
+
+    widgets.value_edit_box = scroll_window
+    
+        
 def clear_effects_edit_panel():
     widgets.value_edit_frame.remove(widgets.value_edit_box)
     label = Gtk.Label()

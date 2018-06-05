@@ -54,6 +54,7 @@ import medialinker
 import medialog
 import menuactions
 import middlebar
+import mltfilters
 import monitorevent
 import monitorwidget
 import respaths
@@ -416,32 +417,16 @@ class EditorWindow:
             ui.get_widget('/MenuBar/ToolsMenu/AudioMix').set_sensitive(False)
 
         # Media panel
-        tree_view = True # Testing if we get this working
-        if tree_view == False:
-            self.bin_list_view = guicomponents.BinListView(
-                                            projectaction.bin_selection_changed, 
-                                            projectaction.bin_name_edited)
-            dnd.connect_bin_tree_view(self.bin_list_view.treeview, projectaction.move_files_to_bin)
-            self.bin_list_view.set_property("can-focus",  True)
-            
+        self.bin_list_view = guicomponents.BinTreeView(
+                                        projectaction.bin_selection_changed, 
+                                        projectaction.bin_name_edited,
+                                        projectaction.bins_panel_popup_requested)
+        dnd.connect_bin_tree_view(self.bin_list_view.treeview, projectaction.move_files_to_bin)
+        self.bin_list_view.set_property("can-focus",  True)
+        
 
-            bins_panel = panels.get_bins_panel(self.bin_list_view,
-                                               lambda w,e: projectaction.add_new_bin(),
-                                               lambda w,e: projectaction.delete_selected_bin())
-            bins_panel.set_size_request(MEDIA_MANAGER_WIDTH, 10) # this component is always expanded, so 10 for minimum size ok
-            bins_panel.set_margin_right(4)
-        else:
-            self.bin_list_view = guicomponents.BinTreeView(
-                                            projectaction.bin_selection_changed, 
-                                            projectaction.bin_name_edited,
-                                            projectaction.bins_panel_popup_requested)
-            dnd.connect_bin_tree_view(self.bin_list_view.treeview, projectaction.move_files_to_bin)
-            self.bin_list_view.set_property("can-focus",  True)
-            
-
-            self.bins_panel = panels.get_bins_tree_panel(self.bin_list_view)
-            self.bins_panel.set_size_request(MEDIA_MANAGER_WIDTH, 10) # this component is always expanded, so 10 for minimum size ok
-            #bins_panel.set_margin_right(4)
+        self.bins_panel = panels.get_bins_tree_panel(self.bin_list_view)
+        self.bins_panel.set_size_request(MEDIA_MANAGER_WIDTH, 10) # this component is always expanded, so 10 for minimum size ok
 
         self.media_list_view = guicomponents.MediaPanel(projectaction.media_file_menu_item_selected,
                                                         updater.set_and_display_monitor_media_file,
@@ -478,16 +463,15 @@ class EditorWindow:
             self.mm_paned.pack2(media_panel, resize=True, shrink=False)
         #self.mm_paned.set_position(10)
 
-        if tree_view == False:
-            mm_panel = guiutils.set_margins(self.mm_paned, 2, 2, 6, 2)
-        else:
-            mm_panel = guiutils.set_margins(self.mm_paned, 0, 0, 0, 0)
+        mm_panel = guiutils.set_margins(self.mm_paned, 0, 0, 0, 0)
         
         # Effects panel
         self.effect_select_list_view = guicomponents.FilterListView()
         self.effect_select_combo_box = Gtk.ComboBoxText()
         self.effect_select_list_view.treeview.connect("row-activated", clipeffectseditor.effect_select_row_double_clicked)
         dnd.connect_effects_select_tree_view(self.effect_select_list_view.treeview)
+
+
 
         clip_editor_panel, info_row = clipeffectseditor.get_clip_effects_editor_panel(
                                         self.effect_select_combo_box,

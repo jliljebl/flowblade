@@ -554,6 +554,7 @@ def init_editor_state():
 
     # Clear editors 
     clipeffectseditor.clear_clip()
+    clipeffectseditor.effect_selection_changed() # to get No Clip text
     compositeeditor.clear_compositor()
 
     # Show first pages on notebooks
