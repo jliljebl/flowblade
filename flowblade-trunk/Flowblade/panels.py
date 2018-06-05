@@ -56,9 +56,9 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
     add_media_b.set_tooltip_text(_("Add Media File to Bin"))
     del_media_b.set_tooltip_text(_("Delete Media File from Bin"))
 
-    hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger_big.png")
-    hamburger_launcher = guicomponents.PressLaunch(hamburger_launch_pressed, hamburger_launcher_surface, 24, 24)
-    
+    #hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger.png")
+    hamburger_launcher = guicomponents.HamburgerPressLaunch(hamburger_launch_pressed)
+    guiutils.set_margins(hamburger_launcher.widget, 5, 0,0,0)
     #proxy_b = Gtk.Button()
     #proxy_b.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "proxy_button.png"))
     #proxy_b.connect("clicked", proxy_cb, None)

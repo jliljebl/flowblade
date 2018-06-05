@@ -367,13 +367,6 @@ def _group_action_pressed(widget, event):
         name_item.set_active(True)
     else:# "comment"
         comment_item.set_active(True)
-        
-    """
-    if editorpersistance.prefs.midbar_tc_left == True:
-        tc_left.set_active(True)
-    else:
-        tc_middle.set_active(True)
-    """
 
     sort_item.set_submenu(sort_menu)
     sort_item.show()
@@ -649,8 +642,7 @@ class MediaLogListView(Gtk.VBox):
 def get_media_log_events_panel(events_list_view):
     global widgets
 
-    actions_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger_big.png")
-    group_actions_menu = guicomponents.PressLaunch(_group_action_pressed, actions_surface, 38, 22)
+    group_actions_menu = guicomponents.HamburgerPressLaunch(_group_action_pressed)
 
     star_check = Gtk.CheckButton()
     star_check.set_active(True)

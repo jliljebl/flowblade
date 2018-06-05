@@ -247,8 +247,7 @@ def create_widgets():
     widgets.del_effect_b.connect("clicked", lambda w,e: delete_effect_pressed(), None)
     widgets.toggle_all.connect("clicked", lambda w: toggle_all_pressed())
 
-    hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger_big.png")
-    widgets.hamburger_launcher = guicomponents.PressLaunch(_hamburger_launch_pressed, hamburger_launcher_surface, 24, 24)
+    widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
     guiutils.set_margins(widgets.hamburger_launcher.widget, 2, 8, 0, 0)    
     # These are created elsewhere and then monkeypatched here
     widgets.group_combo = None
@@ -267,7 +266,8 @@ def set_enabled(value):
     widgets.effect_stack_view.treeview.set_sensitive(value)
     widgets.exit_button.set_sensitive(value)
     widgets.toggle_all.set_sensitive(value)
-    widgets.hamburger_launcher.widget.set_sensitive(value)
+    widgets.hamburger_launcher.set_sensitive(value)
+    widgets.hamburger_launcher.widget.queue_draw()
 
 def update_stack_view():
     if clip != None:

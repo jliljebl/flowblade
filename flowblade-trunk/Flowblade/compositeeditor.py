@@ -63,16 +63,9 @@ def create_widgets():
     Widgets for editing compositing properties.
     """
     widgets.compositor_info = guicomponents.CompositorInfoPanel()
+    widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
     
-    #widgets.delete_b = Gtk.Button(_("Delete"))
-    #widgets.delete_b.connect("clicked", lambda w,e: _delete_compositor_pressed(), None)
-    #widgets.reset_b = Gtk.Button(_("Reset"))
-    #widgets.reset_b.connect("clicked", lambda w,e: _reset_compositor_pressed(), None)
-
-    hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger_big.png")
-    widgets.hamburger_launcher = guicomponents.PressLaunch(_hamburger_launch_pressed, hamburger_launcher_surface, 24, 24)
-    
-    # Right side
+    # Edit area
     widgets.empty_label = Gtk.Label(label=_("No Compositor"))
     widgets.value_edit_box = Gtk.VBox()
     widgets.value_edit_box.pack_start(widgets.empty_label, True, True, 0)
@@ -82,27 +75,6 @@ def create_widgets():
 
 def get_compositor_clip_panel():
     create_widgets()
-    """
-    small = (editorstate.SCREEN_HEIGHT < 1000)
-    
-    compositor_vbox = Gtk.VBox(False, 2)
-    #compositor_vbox.pack_start(widgets.compositor_info, False, False, 0)
-    if not small:
-        compositor_vbox.pack_start(guiutils.get_pad_label(5, 24), False, False, 0)
-    compositor_vbox.pack_start(widgets.fade_in_b, False, False, 0)
-    compositor_vbox.pack_start(widgets.fade_in_spin, False, False, 0)
-    if not small:
-        compositor_vbox.pack_start(guiutils.get_pad_label(5, 12), False, False, 0)
-    compositor_vbox.pack_start(widgets.fade_out_b, False, False, 0)
-    compositor_vbox.pack_start(widgets.fade_out_spin, False, False, 0)
-    if not small:
-        compositor_vbox.pack_start(guiutils.get_pad_label(5, 24), False, False, 0)
-    compositor_vbox.pack_start(Gtk.Label(), True, True, 0)
-    #compositor_vbox.pack_start(widgets.reset_b, False, False, 0)
-    if not small:
-        #compositor_vbox.pack_start(widgets.delete_b, False, False, 0)
-        compositor_vbox.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
-    """
     
     # Action row
     action_row = Gtk.HBox(False, 2)
@@ -142,23 +114,7 @@ def clear_compositor():
 def set_enabled(value):
     widgets.empty_label.set_sensitive(value)
     widgets.compositor_info.set_enabled(value)
-    #widgets.delete_b.set_sensitive(value)
-    #widgets.reset_b.set_sensitive(value)
-
-    """
-    if compositor == None or (compositor.transition.info.auto_fade_compositor == False \
-        and mlttransitions.is_blender(compositor.transition.info.name) == False \
-        and mlttransitions.is_alpha_combiner(compositor.transition.info.name) == False):
-        widgets.fade_in_b.set_sensitive(value)
-        widgets.fade_out_b.set_sensitive(value)
-        widgets.fade_in_spin.set_sensitive(value)
-        widgets.fade_out_spin.set_sensitive(value)
-    else: # Autofade compositors, alpha combiners or blenders don't use these buttons
-        widgets.fade_in_b.set_sensitive(False)
-        widgets.fade_out_b.set_sensitive(False)
-        widgets.fade_in_spin.set_sensitive(False)
-        widgets.fade_out_spin.set_sensitive(False)
-    """
+    widgets.hamburger_launcher.set_sensitive(value)
 
 def maybe_clear_editor(killed_compositor):
     if compositor == None:

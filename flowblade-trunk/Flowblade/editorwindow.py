@@ -463,7 +463,7 @@ class EditorWindow:
                                 lambda w,e: projectaction.add_media_files(), 
                                 lambda w,e: projectaction.delete_media_files(),
                                 projectaction.columns_count_launch_pressed,
-                                projectaction.media_panel_hamburger_pressed,  # lambda w,e: proxyediting.create_proxy_files_pressed(),
+                                projectaction.hamburger_pressed,  # lambda w,e: proxyediting.create_proxy_files_pressed(),
                                 projectaction.media_filtering_select_pressed)
         guiutils.set_margins(media_panel, 6, 6, 4, 6)
         self.media_panel = media_panel

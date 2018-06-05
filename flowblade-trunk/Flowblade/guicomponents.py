@@ -2827,6 +2827,38 @@ class ToolSelector(ImageMenuLaunch):
             cr.set_source_rgb(0.66, 0.66, 0.66)
         cr.fill()
 
+
+class HamburgerPressLaunch:
+    def __init__(self, callback):
+        self.widget = cairoarea.CairoDrawableArea2( 18,
+                                                    18,
+                                                    self._draw)
+        self.widget.press_func = self._press_event
+        self.sensitive = True
+        self.callback = callback
+        
+        self.surface_active = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger.png")
+        self.surface_not_active = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger_not_active.png")
+        self.surface_x  = 0
+        self.surface_y  = 0
+    
+    def set_sensitive(self, sensitive):
+        self.sensitive = sensitive
+        self.widget.queue_draw()
+
+    def _draw(self, event, cr, allocation):
+        if self.sensitive == True:
+            surface = self.surface_active
+        else:
+            surface = self.surface_not_active
+            
+        cr.set_source_surface(surface, self.surface_x, self.surface_y)
+        cr.paint()
+
+    def _press_event(self, event):
+        if self.sensitive == True:
+            self.callback(self.widget, event)
+        
 class MonitorSwitch:
     def __init__(self, callback):
         self.WIDTH = 84

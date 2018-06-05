@@ -198,7 +198,6 @@ def main(root_path, force_launch=False):
     # Load preset gmic scripts
     gmicscript.load_preset_scripts_xml()
 
-        
     # Init gtk threads
     Gdk.threads_init()
     Gdk.threads_enter()
