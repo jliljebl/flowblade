@@ -77,6 +77,11 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     """
     create_widgets()
 
+    stack_label = guiutils.bold_label(_("Clip Filters Stack"))
+    
+    label_row = guiutils.get_left_justified_box([stack_label])
+    guiutils.set_margins(label_row, 0, 4, 0, 0)
+    
     ad_buttons_box = Gtk.HBox(True,1)
     ad_buttons_box.pack_start(widgets.add_effect_b, True, True, 0)
     ad_buttons_box.pack_start(widgets.del_effect_b, True, True, 0)
@@ -118,6 +123,7 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     effects_list_view.treeview.get_selection().select_path("0")
     
     effects_vbox = Gtk.VBox(False, 2)
+    effects_vbox.pack_start(label_row, False, False, 0)
     effects_vbox.pack_start(stack_buttons_box, False, False, 0)
     effects_vbox.pack_start(effect_stack, True, True, 0)
     effects_vbox.pack_start(combo_row, False, False, 0)
