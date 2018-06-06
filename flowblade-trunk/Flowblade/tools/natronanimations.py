@@ -41,6 +41,8 @@ PROPERTY = appconsts.PROPERTY
 NATRON_NODE_NAME_ATTR = "nodename"
 NATRON_PROPERTY_NAME_ATTR = "natronpropertyname"
 
+NEWLINE = "\n"
+QUOTE = "\""
 
 _scripts = None
 _animations_groups = []
@@ -101,8 +103,9 @@ class NatronAnimationInstance:
         # For example default values of some properties depend on the screen size of the project
         propertyparse.replace_value_keywords(self.properties, profile)
         
-    def write_out_modify_data(self, editable_properties, uid):
-        exec_str = self._get_natron_modifying_exec_string(editable_properties)
+    def write_out_modify_data(self, editable_properties, uid, format_index):
+        exec_str = self._get_profile_setting_exec_str(format_index)
+        exec_str += self._get_natron_modifying_exec_string(editable_properties)
         print exec_str
         export_data_file = open(self.get_modify_exec_data_file_path(uid), "w")
         export_data_file.write(exec_str)
@@ -129,6 +132,14 @@ class NatronAnimationInstance:
         
         return exec_str
 
+    def _get_profile_setting_exec_str(self, format_index):
+        exec_str = "formatType = app.Write1.getParam(" + QUOTE + "formatType" + QUOTE +  ")"  + NEWLINE 
+        exec_str += "formatType.setValue(2)"  + NEWLINE 
+        exec_str += "formatParam = app.Write1.getParam(" + QUOTE + "NatronParamFormatChoice" + QUOTE +  ")"  + NEWLINE 
+        exec_str += "formatParam.setValue(" + str(format_index) + ")"  + NEWLINE   
+        
+        return exec_str
+        
     def get_length(self):
         return self.range_out - self.range_in + 1 # # +1 out incl.
 
