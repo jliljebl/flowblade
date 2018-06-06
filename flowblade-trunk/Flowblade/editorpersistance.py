@@ -188,7 +188,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     
     # Jul-2016 - SvdB - Added play_pause_button
     # Apr-2017 - SvdB - Added ffwd / rev values
-    gfx_length_spin, overwrite_clip_drop, cover_delete, mouse_scroll_action, hide_file_ext_button = edit_prefs_widgets
+    gfx_length_spin, cover_delete, mouse_scroll_action, hide_file_ext_button = edit_prefs_widgets
     
     auto_center_check, play_pause_button, auto_center_on_updown, \
     ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range = playback_prefs_widgets
@@ -210,7 +210,6 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
 
     prefs.auto_center_on_play_stop = auto_center_check.get_active()
     prefs.default_grfx_length = int(gfx_length_spin.get_adjustment().get_value())
-    prefs.overwrite_clip_drop = (overwrite_clip_drop.get_active() == 0)
     prefs.trans_cover_delete = cover_delete.get_active()
     # Jul-2016 - SvdB - For play/pause button
     prefs.play_pause = play_pause_button.get_active()
@@ -297,7 +296,7 @@ class EditorPreferences:
         self.render_folder = None
         self.show_sequence_profile = True
         self.buttons_style = GLASS_STYLE
-        self.dark_theme = False
+        self.dark_theme = False # DEPRECATED, "theme" used instead
         self.remember_last_render_dir = True
         self.empty_click_exits_trims = True # DEPRECATED, NOT USER SETTABLE ANYMORE
         self.quick_enter_trims = True # DEPRECATED, NOT USER SETTABLE ANYMORE
@@ -310,7 +309,7 @@ class EditorPreferences:
         self.use_english_always = False
         self.theme_fallback_colors = 0 # index of gui._THEME_COLORS
         self.display_all_audio_levels = True
-        self.overwrite_clip_drop = True
+        self.overwrite_clip_drop = True # DEPRECATED, "dnd_action" used instead
         self.trans_cover_delete = True
         # Jul-2016 - SvdB - For play/pause button
         self.play_pause = False
@@ -339,3 +338,5 @@ class EditorPreferences:
         self.active_tools = [1, 2, 3, 4, 5, 6, 7]
         self.top_level_project_panel = True
         self.theme = appconsts.FLOWBLADE_THEME
+        self.dnd_action = appconsts.DND_OVERWRITE_NON_V1
+    

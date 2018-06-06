@@ -831,12 +831,17 @@ def tline_media_drop(media_file, x, y, use_marks=False):
         new_clip.mark_in = in_fr
         new_clip.mark_out = out_fr
 
-    if editorpersistance.prefs.overwrite_clip_drop == True:
+    # Non-insert DND actions
+    if editorpersistance.prefs.dnd_action == appconsts.DND_OVERWRITE_NON_V1:
         if track.id != current_sequence().first_video_track().id:
             drop_done = _attempt_dnd_overwrite(track, new_clip, frame)
             if drop_done == True:
                 return
-
+    elif editorpersistance.prefs.dnd_action == appconsts.DND_ALWAYS_OVERWRITE:
+        drop_done = _attempt_dnd_overwrite(track, new_clip, frame)
+        if drop_done == True:
+            return
+            
     do_clip_insert(track, new_clip, frame)
 
 def tline_range_item_drop(rows, x, y):

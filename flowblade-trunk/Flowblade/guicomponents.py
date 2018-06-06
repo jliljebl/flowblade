@@ -2491,15 +2491,8 @@ def get_audio_levels_popup_menu(event, callback):
     menu = levels_menu
     guiutils.remove_children(menu)
 
-    autofollow_item = Gtk.CheckMenuItem()
-    autofollow_item.set_label(_("Compositors Auto Follow"))
-    autofollow_item.set_active(editorstate.auto_follow_active())
-    autofollow_item.connect("activate", callback, "autofollow")
 
-    menu.append(autofollow_item)
-
-    _add_separetor(menu)
-
+    """
     ponter_sensitive_item = Gtk.CheckMenuItem()
     ponter_sensitive_item.set_label(_("Tool Cursor Context Sensitive"))
     ponter_sensitive_item.set_active(editorstate.cursor_is_tline_sensitive)
@@ -2508,7 +2501,8 @@ def get_audio_levels_popup_menu(event, callback):
     menu.append(ponter_sensitive_item) 
     
     _add_separetor(menu)
-    
+    """
+
     thumbs_item = Gtk.CheckMenuItem()
     thumbs_item.set_label(_("Display Clip Media Thumbnails"))
     thumbs_item.set_active(editorstate.display_clip_media_thumbnails)
