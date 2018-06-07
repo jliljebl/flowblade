@@ -49,18 +49,19 @@ _workflow_menu = Gtk.Menu()
 
 def init_data():
     global _TOOLS_DATA
-    _TOOLS_DATA = { appconsts.TLINE_TOOL_INSERT:    (_("Insert"), "insertmove_cursor.png"),
-                    appconsts.TLINE_TOOL_OVERWRITE: (_("Overwrite"), "overwrite_cursor.png"),
-                    appconsts.TLINE_TOOL_TRIM:      (_("Trim"), "oneroll_cursor.png"),
-                    appconsts.TLINE_TOOL_ROLL:      (_("Roll"), "tworoll_cursor.png"),
-                    appconsts.TLINE_TOOL_SLIP:      (_("Slip"), "slide_cursor.png"),
-                    appconsts.TLINE_TOOL_SPACER:    (_("Spacer"), "multimove_cursor.png"),
-                    appconsts.TLINE_TOOL_BOX:       (_("Box"), "overwrite_cursor_box.png") 
+    _TOOLS_DATA = { appconsts.TLINE_TOOL_INSERT:        (_("Insert"), "insertmove_cursor.png"),
+                    appconsts.TLINE_TOOL_OVERWRITE:     (_("Overwrite"), "overwrite_cursor.png"),
+                    appconsts.TLINE_TOOL_TRIM:          (_("Trim"), "oneroll_cursor.png"),
+                    appconsts.TLINE_TOOL_ROLL:          (_("Roll"), "tworoll_cursor.png"),
+                    appconsts.TLINE_TOOL_SLIP:          (_("Slip"), "slide_cursor.png"),
+                    appconsts.TLINE_TOOL_SPACER:        (_("Spacer"), "multimove_cursor.png"),
+                    appconsts.TLINE_TOOL_BOX:           (_("Box"), "overwrite_cursor_box.png"),
+                    appconsts.TLINE_TOOL_RIPPLE_TRIM:   (_("Ripple Trim"), "oneroll_cursor_ripple.png") 
                   }
 
 #----------------------------------------------------- workflow presets
 def _set_workflow_STANDARD():
-    editorpersistance.prefs.active_tools = [2, 3, 4, 6, 7]
+    editorpersistance.prefs.active_tools = [2, 6, 8, 4, 5, 7]
     editorpersistance.prefs.dnd_action = appconsts.DND_ALWAYS_OVERWRITE
     editorpersistance.save()
 
@@ -188,7 +189,10 @@ def workflow_menu_launched(widget, event):
         tool_id = editorpersistance.prefs.active_tools[i]
         tool_name, tool_icon_file = _TOOLS_DATA[tool_id]
         _workflow_menu.add(_get_workflow_tool_menu_item(_workflow_menu_callback, tool_id, tool_name, tool_icon_file, i+1))
-        non_active_tools.remove(tool_id)
+        try: # needed when manually changing preset tools, remove when those are decided upon
+            non_active_tools.remove(tool_id)
+        except:
+            pass
 
     guiutils.add_separetor(_workflow_menu)
     

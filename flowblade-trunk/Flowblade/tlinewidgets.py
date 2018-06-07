@@ -905,15 +905,19 @@ def draw_one_roll_overlay(cr, data):
     if data["to_side_being_edited"]:
         # Case: editing to-clip
         first = data["selected_frame"]
-        last = trim_limits["both_end"] + 1 # +1, end is allowed trim area, we cant clip
+        last = trim_limits["both_end"] + 1
+        if trim_limits["ripple_display_end"] != -1:
+            last = trim_limits["ripple_display_end"]
         x = _get_frame_x(last)
 
     else:
         # Case: editing from-clip
-        first = trim_limits["both_start"] - 1 # -1, start is allowed trim area, we cant clip
+        first = trim_limits["both_start"] - 1
+        if trim_limits["ripple_display_start"] != -1:
+            first = trim_limits["ripple_display_start"]
         last = data["selected_frame"]
         x = _get_frame_x(first)
-        
+
     cr.set_line_width(1.0)
     cr.set_source_rgb(*OVERLAY_COLOR)
     cr.move_to(x, track_y - 6.5)
@@ -978,45 +982,62 @@ def draw_one_roll_overlay_ripple(cr, data):
         offset = ripple_data.track_blank_end_offset[i-1]
         if offset == None:
             continue
-
+        
         delta = data["selected_frame"] - data["edit_frame"]
         if data["to_side_being_edited"]:
             indicator_frame = data["edit_frame"] - delta + offset
         else:
             indicator_frame = data["selected_frame"] + offset
+        
+        # Trimmed track needs different position
+        if i == data["track"]:
+            indicator_frame = data["edit_frame"] + delta + offset
+            
         indicator_x = _get_frame_x(indicator_frame)
         
         track_height = current_sequence().tracks[i].height
         track_y = _get_track_y(i)
 
-        max_trim = False
-        if delta == ripple_data.max_backwards and ripple_data.track_edit_ops[i-1] == appconsts.MULTI_TRIM_REMOVE:
-            max_trim = True
+        # Max edit hint len on edit track
+        if i == data["track"]:
+            
+            if data["to_side_being_edited"] == False:
+                max_edit_frame = data["trim_limits"]["both_start"] 
+            else:
+                max_edit_frame = data["trim_limits"]["both_end"] 
         
-        if max_trim:
+            max_x = _get_frame_x(max_edit_frame)
+        
+            cr.save()
+            cr.move_to(max_x, track_y)
+            cr.line_to(max_x, track_y + track_height)
+            cr.set_dash(BOX_DASHES, 0) 
+            cr.stroke()
+            cr.restore() # to get rid of dashes
+            continue
+            
+        # Red indicators
+        max_trim = False
+        if delta == ripple_data.max_backwards:# and ripple_data.track_edit_ops[i-1] == appconsts.MULTI_TRIM_REMOVE:
+            max_trim = True
+        elif data["to_side_being_edited"] == False and delta == -ripple_data.max_backwards:
+            max_trim = True
+            
+        if max_trim and i != data["track"]:
             cr.set_source_rgb(*TRIM_MAX_RED)
-        else:
-            cr.set_source_rgb(*OVERLAY_COLOR)
-    
-        cr.move_to(indicator_x, track_y)
-        cr.line_to(indicator_x, track_y + track_height)
-        cr.stroke()
- 
-        draw_y = track_y + track_height / 2
-        if not max_trim:
-            cr.move_to(indicator_x - 2, draw_y)
-            cr.line_to(indicator_x - 2, draw_y - 5)
-            cr.line_to(indicator_x - 7, draw_y)
-            cr.line_to(indicator_x - 2, draw_y + 5)
+
+            cr.move_to(indicator_x, track_y)
+            cr.line_to(indicator_x, track_y + track_height)
+            cr.stroke()
+     
+            draw_y = track_y + track_height / 2
+
+            cr.move_to(indicator_x + 2, draw_y)
+            cr.line_to(indicator_x + 2, draw_y - 5)
+            cr.line_to(indicator_x + 7, draw_y)
+            cr.line_to(indicator_x + 2, draw_y + 5)
             cr.close_path()
             cr.fill()
-
-        cr.move_to(indicator_x + 2, draw_y)
-        cr.line_to(indicator_x + 2, draw_y - 5)
-        cr.line_to(indicator_x + 7, draw_y)
-        cr.line_to(indicator_x + 2, draw_y + 5)
-        cr.close_path()
-        cr.fill()
             
 def draw_slide_overlay(cr, data):
     track_height = current_sequence().tracks[data["track"]].height

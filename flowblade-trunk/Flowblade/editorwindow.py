@@ -1107,19 +1107,21 @@ class EditorWindow:
 
     def change_tool(self, tool_id):
         if tool_id == appconsts.TLINE_TOOL_INSERT:
-            gui.editor_window.handle_insert_move_mode_button_press()
+            self.handle_insert_move_mode_button_press()
         elif tool_id == appconsts.TLINE_TOOL_OVERWRITE:
-            gui.editor_window.handle_over_move_mode_button_press()
+            self.handle_over_move_mode_button_press()
         elif tool_id == appconsts.TLINE_TOOL_TRIM:
-            gui.editor_window.handle_one_roll_mode_button_press()
+            self.handle_one_roll_mode_button_press()
         elif tool_id == appconsts.TLINE_TOOL_ROLL:
-            gui.editor_window.handle_two_roll_mode_button_press()
+            self.handle_two_roll_mode_button_press()
         elif tool_id == appconsts.TLINE_TOOL_SLIP:
-            gui.editor_window.handle_slide_mode_button_press()
+            self.handle_slide_mode_button_press()
         elif tool_id == appconsts.TLINE_TOOL_SPACER:
-            gui.editor_window.handle_multi_mode_button_press()
+            self.handle_multi_mode_button_press()
         elif tool_id == appconsts.TLINE_TOOL_BOX:
-            gui.editor_window.handle_box_mode_button_press()
+            self.handle_box_mode_button_press()
+        elif tool_id == appconsts.TLINE_TOOL_RIPPLE_TRIM:
+            self.handle_one_roll_ripple_mode_button_press()
         else:
             # We should not hit this
             print "editorwindow.change_tool() else: hit!"
@@ -1140,9 +1142,15 @@ class EditorWindow:
         self.set_cursor_to_mode()
 
     def handle_one_roll_mode_button_press(self):
+        editorstate.trim_mode_ripple = False
         editevent.oneroll_trim_no_edit_init()
         self.set_cursor_to_mode()
 
+    def handle_one_roll_ripple_mode_button_press(self):
+        editorstate.trim_mode_ripple = True
+        editevent.oneroll_trim_no_edit_init()
+        self.set_cursor_to_mode()
+        
     def handle_two_roll_mode_button_press(self):
         editevent.tworoll_trim_no_edit_init()
         self.set_cursor_to_mode()
@@ -1178,11 +1186,16 @@ class EditorWindow:
             self.handle_insert_move_mode_button_press()
         if tool == appconsts.TLINE_TOOL_OVERWRITE:
             self.handle_over_move_mode_button_press()
-        if tool ==  appconsts.TLINE_TOOL_TRIM:
+        if tool == appconsts.TLINE_TOOL_TRIM:
+            self.handle_one_roll_mode_button_press()
+        if tool == appconsts.TLINE_TOOL_RIPPLE_TRIM:
+            self.handle_one_roll_ripple_mode_button_press()
+        """
             if editorstate.edit_mode != editorstate.ONE_ROLL_TRIM and editorstate.edit_mode != editorstate.ONE_ROLL_TRIM_NO_EDIT:
                 self.handle_one_roll_mode_button_press()
             else:
                 self.toggle_trim_ripple_mode()
+        """
         if tool == appconsts.TLINE_TOOL_ROLL:
             self.handle_two_roll_mode_button_press()
         if tool == appconsts.TLINE_TOOL_SLIP:

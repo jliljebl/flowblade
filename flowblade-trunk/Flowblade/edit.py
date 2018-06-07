@@ -1351,7 +1351,6 @@ def _ripple_trim_last_clip_end_undo(self):
     _ripple_trim_blanks_undo(self)
 
 def _ripple_trim_last_clip_end_redo(self):
-    print self.__dict__
     _remove_clip(self.track, self.index)
     _insert_clip(self.track, self.clip, self.index,
                  self.clip.clip_in, self.clip.clip_out + self.edit_delta)

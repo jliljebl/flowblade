@@ -138,7 +138,7 @@ class ClipKeyFrameEditor:
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
 
-        self.clip_length = editable_property.get_clip_length() - 1 # -1 added to get correct results, yeah...
+        self.clip_length = editable_property.get_clip_length() - 1
         
         # Some filters start keyframes from *MEDIA* frame 0
         # Some filters or compositors start keyframes from *CLIP* frame 0
@@ -1606,10 +1606,11 @@ class GeometryEditorButtonsRow(Gtk.HBox):
 
 class AbstractKeyFrameEditor(Gtk.VBox):
     """
-    Extending editor is parent editor for ClipKeyFrameEditor and is updated
-    from timeline posion changes.
+    AbstractKeyFrameEditor is parent editor for ClipKeyFrameEditor and is updated with callbacks
+    from there for timeline position changes keyframe changes. Extending classes KeyframeEditor and GeometryEditor
+    handles some of the  ClipKeyFrameEditor callbacks.
     
-    Extending editor also has slider for setting keyframe values.
+    AbstractKeyFrameEditor editor also has slider for setting keyframe values.
     """
     def __init__(self, editable_property, use_clip_in=True, slider_switcher=None):
         # editable_property is KeyFrameProperty
@@ -1629,7 +1630,7 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         def keyframe_dragged(self, active_kf, frame)
         def update_slider_value_display(self, frame)
         
-        These may be implemedted here or in extending classes KeyframeEditor and GeometryEditor
+        These may be implemented here or in extending classes KeyframeEditor and GeometryEditor
         """
         
         # Some filters start keyframes from *MEDIA* frame 0
