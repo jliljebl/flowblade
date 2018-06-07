@@ -37,6 +37,7 @@ import clipeffectseditor
 import clipenddragmode
 import compositeeditor
 import compositormodes
+import cutmode
 import dialogs
 import dialogutils
 import edit
@@ -318,7 +319,7 @@ def box_mode_pressed():
     tlinewidgets.set_edit_mode(None, None) # these get set later for box move
         
     _set_move_mode()
-    
+
 def multi_mode_pressed():
     """
     User selects Spacer tool.
@@ -516,6 +517,19 @@ def slide_trim_mode_init(x, y):
     success = trimmodes.set_slide_mode(track, press_frame)
     return success
 
+# -------------------------------------- misc modes
+def cut_mode_pressed():
+    print "cut_mode_pressed"
+    stop_looping()
+    current_sequence().clear_hidden_track()
+
+    # Box tool is implemeted as sub mode of OVERWRITE_MOVE
+    editorstate.edit_mode = editorstate.CUT
+        
+    tlinewidgets.set_edit_mode(None, tlinewidgets.draw_cut_overlay)
+    movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
+    
+    #_set_move_mode()
 
 # ------------------------------------ timeline mouse events
 def tline_canvas_mouse_pressed(event, frame):
@@ -913,7 +927,10 @@ MULTI_MOVE_FUNCS = [multimovemode.mouse_press,
 CLIP_END_DRAG_FUNCS = [clipenddragmode.mouse_press,
                        clipenddragmode.mouse_move,
                        clipenddragmode.mouse_release]
-                    
+CUT_FUNCS = [cutmode.mouse_press,
+             cutmode.mouse_move,
+             cutmode.mouse_release]
+
 # (mode -> mouse handler function list) table
 EDIT_MODE_FUNCS = {editorstate.INSERT_MOVE:INSERT_MOVE_FUNCS,
                    editorstate.OVERWRITE_MOVE:OVERWRITE_MOVE_FUNCS,
@@ -925,5 +942,6 @@ EDIT_MODE_FUNCS = {editorstate.INSERT_MOVE:INSERT_MOVE_FUNCS,
                    editorstate.SLIDE_TRIM:SLIDE_TRIM_FUNCS,
                    editorstate.SLIDE_TRIM_NO_EDIT:SLIDE_TRIM_NO_EDIT_FUNCS,
                    editorstate.MULTI_MOVE:MULTI_MOVE_FUNCS,
-                   editorstate.CLIP_END_DRAG:CLIP_END_DRAG_FUNCS}
+                   editorstate.CLIP_END_DRAG:CLIP_END_DRAG_FUNCS,
+                   editorstate.CUT:CUT_FUNCS}
 

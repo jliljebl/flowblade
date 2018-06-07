@@ -2801,7 +2801,8 @@ class ToolSelector(ImageMenuLaunch):
                                             appconsts.TLINE_TOOL_SLIP: 5,
                                             appconsts.TLINE_TOOL_SPACER: 6,
                                             appconsts.TLINE_TOOL_BOX: 7,
-                                            appconsts.TLINE_TOOL_RIPPLE_TRIM: 3
+                                            appconsts.TLINE_TOOL_RIPPLE_TRIM: 3,
+                                            appconsts.TLINE_TOOL_CUT: 8
                                      }
    
     def set_tool_pixbuf(self, tool_id):

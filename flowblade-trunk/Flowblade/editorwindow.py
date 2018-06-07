@@ -96,6 +96,7 @@ SLIDE_CURSOR = None
 SLIDE_NO_EDIT_CURSOR = None
 MULTIMOVE_CURSOR = None
 ONEROLL_RIPPLE_CURSOR = None
+CUT_CURSOR = None
 
 ONEROLL_TOOL = None
 OVERWRITE_TOOL = None
@@ -130,7 +131,7 @@ class EditorWindow:
         global INSERTMOVE_CURSOR, OVERWRITE_CURSOR, TWOROLL_CURSOR, ONEROLL_CURSOR, \
         ONEROLL_NO_EDIT_CURSOR, TWOROLL_NO_EDIT_CURSOR, SLIDE_CURSOR, SLIDE_NO_EDIT_CURSOR, \
         MULTIMOVE_CURSOR, MULTIMOVE_NO_EDIT_CURSOR, ONEROLL_RIPPLE_CURSOR, ONEROLL_TOOL, \
-        OVERWRITE_BOX_CURSOR, OVERWRITE_TOOL
+        OVERWRITE_BOX_CURSOR, OVERWRITE_TOOL, CUT_CURSOR
         
         INSERTMOVE_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insertmove_cursor.png")
         OVERWRITE_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "overwrite_cursor.png")
@@ -145,8 +146,9 @@ class EditorWindow:
         MULTIMOVE_NO_EDIT_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "multimove_cursor.png")
         ONEROLL_RIPPLE_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "oneroll_cursor_ripple.png")
         ONEROLL_TOOL = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "oneroll_tool.png")
-        OVERWRITE_TOOL =  cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "overwrite_tool.png")
-
+        OVERWRITE_TOOL = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "overwrite_tool.png")
+        CUT_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "cut_cursor.png")
+        
         # Context cursors 
         self.context_cursors = {appconsts.POINTER_CONTEXT_END_DRAG_LEFT:(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "ctx_drag_left.png"), 3, 7),
                                 appconsts.POINTER_CONTEXT_END_DRAG_RIGHT:(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "ctx_drag_right.png"), 14, 7),
@@ -1017,22 +1019,6 @@ class EditorWindow:
         
     def _create_monitor_buttons(self):
         self.monitor_switch = guicomponents.MonitorSwitch(self._monitor_switch_handler)
-        """
-        # Monitor switch buttons
-        self.sequence_editor_b = Gtk.RadioButton(None)
-        self.sequence_editor_b.set_mode(False)
-        self.sequence_editor_b.set_image(Gtk.Image.new_from_file(IMG_PATH + "timeline_button.png"))
-        self.sequence_editor_b.connect("clicked", 
-                        lambda w,e: self._monitor_switch_handler(w), 
-                        None)
-
-        self.clip_editor_b = Gtk.RadioButton.new_from_widget(self.sequence_editor_b)#,_("Clip"))
-        self.clip_editor_b.set_mode(False)
-        self.clip_editor_b.set_image(Gtk.Image.new_from_file(IMG_PATH + "clip_button.png"))
-        self.clip_editor_b.connect("clicked",
-                        lambda w,e: self._monitor_switch_handler(w),
-                        None)
-        """
         
     def _monitor_switch_handler(self, action):
         if action == appconsts.MONITOR_TLINE_BUTTON_PRESSED:
@@ -1070,7 +1056,7 @@ class EditorWindow:
         self.pos_bar.set_listener(mltplayer.seek_position_normalized)
 
     def _get_edit_buttons_row(self):
-        tools_pixbufs = [INSERTMOVE_CURSOR, OVERWRITE_CURSOR, ONEROLL_CURSOR, ONEROLL_RIPPLE_CURSOR, TWOROLL_CURSOR, SLIDE_CURSOR, MULTIMOVE_CURSOR, OVERWRITE_BOX_CURSOR]
+        tools_pixbufs = [INSERTMOVE_CURSOR, OVERWRITE_CURSOR, ONEROLL_CURSOR, ONEROLL_RIPPLE_CURSOR, TWOROLL_CURSOR, SLIDE_CURSOR, MULTIMOVE_CURSOR, OVERWRITE_BOX_CURSOR, CUT_CURSOR]
         middlebar.create_edit_buttons_row_buttons(self, tools_pixbufs)
     
         buttons_row = Gtk.HBox(False, 1)
@@ -1122,6 +1108,8 @@ class EditorWindow:
             self.handle_box_mode_button_press()
         elif tool_id == appconsts.TLINE_TOOL_RIPPLE_TRIM:
             self.handle_one_roll_ripple_mode_button_press()
+        elif tool_id == appconsts.TLINE_TOOL_CUT:
+            self.handle_cut_mode_button_press()
         else:
             # We should not hit this
             print "editorwindow.change_tool() else: hit!"
@@ -1163,6 +1151,10 @@ class EditorWindow:
         editevent.multi_mode_pressed()
         self.set_cursor_to_mode()
 
+    def handle_cut_mode_button_press(self):
+        editevent.cut_mode_pressed()
+        self.set_cursor_to_mode()
+        
     def toggle_trim_ripple_mode(self):
         editorstate.trim_mode_ripple = (editorstate.trim_mode_ripple == False)
         editevent.stop_looping()
@@ -1177,7 +1169,7 @@ class EditorWindow:
         boxmove.clear_data()
         self.set_tool_selector_to_mode()
         self.set_tline_cursor(editorstate.EDIT_MODE())
-        
+
     def mode_selector_pressed(self, selector, event):
         workflow.get_tline_tool_popup_menu(selector, event, self.tool_selector_item_activated)
     
@@ -1204,7 +1196,9 @@ class EditorWindow:
             self.handle_multi_mode_button_press()
         if tool == appconsts.TLINE_TOOL_BOX:
             self.handle_box_mode_button_press()
-                
+        if tool == appconsts.TLINE_TOOL_CUT:
+            self.handle_cut_mode_button_press()
+            
         self.set_cursor_to_mode()
         self.set_tool_selector_to_mode()
         
@@ -1257,7 +1251,8 @@ class EditorWindow:
         elif mode == editorstate.CLIP_END_DRAG:
             surface, px, py = self.context_cursors[tlinewidgets.pointer_context]
             cursor = self.get_own_cursor(display, surface, px, py)
-            #cursor = Gdk.Cursor.new(Gdk.CursorType.SB_H_DOUBLE_ARROW)
+        elif mode == editorstate.CUT:
+            cursor = self.get_own_cursor(display, CUT_CURSOR, 1, 8)
         else:
             cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR)
         

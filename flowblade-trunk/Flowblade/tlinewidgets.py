@@ -1179,7 +1179,10 @@ def draw_compositor_move_overlay(cr, data):
         _draw_text_info_box(cr, scale_in, y - 12, tc_str)
     
     _draw_snap(cr, y)
-        
+
+def draw_cut_overlay(cr, data):
+    pass
+
 def draw_compositor_trim(cr, data):
     clip_in = data["clip_in"]
     clip_out = data["clip_out"]
@@ -1409,6 +1412,9 @@ class TimeLineCanvas:
         """
         Mouse move callback
         """
+        #if EDIT_MODE() == editorstate.CUT:
+        #    cutmode.
+        
         if (not self.drag_on) and editorstate.cursor_is_tline_sensitive == True:
             self.set_pointer_context(x, y)
             return

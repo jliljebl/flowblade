@@ -56,7 +56,8 @@ def init_data():
                     appconsts.TLINE_TOOL_SLIP:          (_("Slip"), "slide_cursor.png"),
                     appconsts.TLINE_TOOL_SPACER:        (_("Spacer"), "multimove_cursor.png"),
                     appconsts.TLINE_TOOL_BOX:           (_("Box"), "overwrite_cursor_box.png"),
-                    appconsts.TLINE_TOOL_RIPPLE_TRIM:   (_("Ripple Trim"), "oneroll_cursor_ripple.png") 
+                    appconsts.TLINE_TOOL_RIPPLE_TRIM:   (_("Ripple Trim"), "oneroll_cursor_ripple.png"),
+                    appconsts.TLINE_TOOL_CUT:           (_("Cut"), "cut_cursor.png")
                   }
 
 #----------------------------------------------------- workflow presets
@@ -127,7 +128,7 @@ def workflow_menu_launched(widget, event):
 
     presets_menu = Gtk.Menu()
     
-    standart = guiutils.get_menu_item(_("Standard"), _workflow_menu_callback, (None, "preset standart"))
+    standart = guiutils.get_menu_item(_("Standard"), _workflow_menu_callback, (None, "preset standard"))
     standart.show()
     presets_menu.add(standart)
 
@@ -184,7 +185,7 @@ def workflow_menu_launched(widget, event):
     guiutils.add_separetor(_workflow_menu)
     
     # Active tools
-    non_active_tools = range(1, 8) # we have 7 tools currently
+    non_active_tools = range(1, 10) # we have 9 tools currently
     for i in range(0, len(editorpersistance.prefs.active_tools)):#  tool_id in _TOOLS_DATA:
         tool_id = editorpersistance.prefs.active_tools[i]
         tool_name, tool_icon_file = _TOOLS_DATA[tool_id]
@@ -285,7 +286,7 @@ def _workflow_menu_callback(widget, data):
             editorpersistance.prefs.active_tools.remove(tool_id)
         else:
             editorpersistance.prefs.active_tools.append(tool_id)
-    elif msg == "preset standart":
+    elif msg == "preset standard":
         _set_workflow_STANDARD()
     elif msg == "preset filmstyle":
         _set_workflow_FILM_STYLE()
