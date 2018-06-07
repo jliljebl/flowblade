@@ -19,47 +19,76 @@
 """
 
 """
-Module handles cut tool funcktionality
+Module handles cut tool functionality
 """
 
+from gi.repository import Gdk
+
 import edit
+from editorstate import current_sequence
 import tlinewidgets
 import updater
 
+ 
+# ---------------------------------------------- mouse events
 def mouse_press(event, frame):
-    track = tlinewidgets.get_track(event.y)
-
-    # Get index and clip
-    index = track.get_clip_index_at(int(frame))
-    try:
-        clip = track.clips[index]            
-        # don't cut blanck clip
-        if clip.is_blanck_clip:
-            return
-    except Exception:
-        return # Frame after last clip in track, 
-
-    # Get cut frame in clip frames
-    clip_start_in_tline = track.clip_start(index)
-    clip_frame = frame - clip_start_in_tline + clip.clip_in
-
-    # Dont edit if frame on cut.
-    if clip_frame == clip.clip_in:
-        return
-
-    # Do edit
-    data = {"track":track,
-            "index":index,
-            "clip":clip,
-            "clip_cut_frame":clip_frame}
-    action = edit.cut_action(data)
-    action.do_edit()
-
-    updater.repaint_tline()
-    
+    if not (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+        cut_single_track(event, frame)
+    else:
+        cut_all_tracks(frame)
+        
 def mouse_move(x, y, frame, state):
     pass
     
 def mouse_release(x, y, frame, state):
     pass
 
+# ---------------------------------------------- cut actions
+def cut_single_track(event, frame):
+    track = tlinewidgets.get_track(event.y)
+    data = get_cut_data(track, frame)
+    if data == None:
+        return
+
+    action = edit.cut_action(data)
+    action.do_edit()
+
+    updater.repaint_tline()
+
+def cut_all_tracks(frame):
+    tracks_cut_data = []
+
+    for i in range(1, len(current_sequence().tracks) - 1):
+        tracks_cut_data.append(get_cut_data(current_sequence().tracks[i], frame))
+
+    data = {"tracks_cut_data":tracks_cut_data}
+    action = edit.cut_all_action(data)
+    action.do_edit()
+
+    updater.repaint_tline()
+
+def get_cut_data(track, frame):
+    # Get index and clip
+    index = track.get_clip_index_at(int(frame))
+    try:
+        clip = track.clips[index]            
+        # don't cut blanck clip
+        if clip.is_blanck_clip:
+            return None
+    except Exception:
+        return None
+
+    # Get cut frame in clip frames
+    clip_start_in_tline = track.clip_start(index)
+    clip_frame = frame - clip_start_in_tline + clip.clip_in
+
+    # No data if frame on cut.
+    if clip_frame == clip.clip_in:
+        return None
+
+    data = {"track":track,
+            "index":index,
+            "clip":clip,
+            "clip_cut_frame":clip_frame}
+    
+    return data
