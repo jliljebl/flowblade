@@ -1089,7 +1089,6 @@ class EditorWindow:
     def set_default_edit_tool(self):
         # First active tool is the default tool. So we need to always have atleast one tool available.
         self.change_tool(editorpersistance.prefs.active_tools[0])
-        pass
 
     def change_tool(self, tool_id):
         if tool_id == appconsts.TLINE_TOOL_INSERT:

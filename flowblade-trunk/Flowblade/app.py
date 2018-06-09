@@ -70,6 +70,7 @@ import mltfilters
 import mltplayer
 import mltprofiles
 import mlttransitions
+import modesetting
 import movemodes
 import persistance
 import positionbar
@@ -209,7 +210,7 @@ def main(root_path):
 
     # We respaths and translations data available so we need to init in a function.
     workflow.init_data()
-    
+
     # RHEL7/CentOS compatibility fix
     if gtk_version == "3.8.8":
         GObject.threads_init()

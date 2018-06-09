@@ -19,12 +19,7 @@
 """
 
 """
-Module contains GUI widgets used to edit keyframed properties in filters and
-compositors.
-
-NOTE: All the editors are composites of smaller objects (so that similar 
-but slighly different editors can be made in the future). There are a lots 
-of callbacks to parent objects, this makes the design difficult to follow.
+Module contains GUI widgets used edit geometries on canvas with a mouse.
 """
 
 import copy

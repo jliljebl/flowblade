@@ -62,7 +62,7 @@ import utils
 
 # module state
 mouse_disabled = False # Used to ignore drag and release events when press doesn't start an action that can handle those events.
-repeat_event = None
+#repeat_event = None
 parent_selection_data = None # Held here until user presses tline again
 
 # functions are monkeypatched in at app.py 
@@ -519,7 +519,7 @@ def slide_trim_mode_init(x, y):
 
 # -------------------------------------- misc modes
 def cut_mode_pressed():
-    print "cut_mode_pressed"
+    #print "cut_mode_pressed"
     stop_looping()
     current_sequence().clear_hidden_track()
 

@@ -107,7 +107,7 @@ cursor_on_tline = False
 cursor_is_tline_sensitive = True
 
 # Flag for running JACK audio server. If this is on when SDLConsumer created in mltplayer.py
-# jack rack filter will bw taached to it
+# jack rack filter will bw attached to it
 # NOT USED CURRENTLY.
 attach_jackrack = False
 
@@ -165,7 +165,7 @@ def PROJECT():
     
 def PLAYER():
     return player
-    
+
 def EDIT_MODE():
     return edit_mode
     
