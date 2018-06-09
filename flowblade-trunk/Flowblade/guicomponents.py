@@ -681,22 +681,35 @@ class AutoSavesListView(TextListView):
 
 
 # -------------------------------------------- clip info
-class ClipInfoPanel(Gtk.VBox):
+class ClipInfoPanel(Gtk.HBox):
 
     def __init__(self):
         GObject.GObject.__init__(self)
 
+        if editorstate.screen_size_small_height() == True:
+            font_desc = "sans bold 8"
+        else:
+            font_desc = "sans bold 9"
+
         self.name_label = guiutils.bold_label(_("Clip:"))
+
         self.name_value = Gtk.Label()
         self.name_value.set_ellipsize(Pango.EllipsizeMode.END)
         self.name_value.set_max_width_chars(15)
 
+        self.name_label.set_sensitive(False)
+        self.name_value.set_sensitive(False)
+        self.name_value.modify_font(Pango.FontDescription(font_desc))
+        self.name_label.modify_font(Pango.FontDescription(font_desc))
+        
         self.track = guiutils.bold_label(_("Track:"))
         self.track_value = Gtk.Label()
-
-        self.position = guiutils.bold_label(_("Pos:"))
-        self.position_value = Gtk.Label()
-
+        
+        self.track.set_sensitive(False)
+        self.track_value.set_sensitive(False)
+        self.track.modify_font(Pango.FontDescription(font_desc))
+        self.track_value.modify_font(Pango.FontDescription(font_desc))
+        
         info_row_1 = Gtk.HBox()
         info_row_1.pack_start(self.name_label, False, True, 0)
         info_row_1.pack_start(self.name_value, True, True, 0)
@@ -705,69 +718,69 @@ class ClipInfoPanel(Gtk.VBox):
         info_row_2.pack_start(self.track, False, False, 0)
         info_row_2.pack_start(self.track_value, True, True, 0)
 
-        info_row_3 = Gtk.HBox()
-        info_row_3.pack_start(self.position, False, False, 0)
-        info_row_3.pack_start(self.position_value, True, True, 0)
-
         self.pack_start(info_row_1, False, False, 0)
+        self.pack_start(guiutils.pad_label(24,12), False, False, 0)
         self.pack_start(info_row_2, False, False, 0)
-        self.pack_start(info_row_3, False, False, 0)
-
-        self.set_spacing(4)
-
-        if editorstate.screen_size_small_height():
-            self.set_size_request(CLIP_EDITOR_LEFT_WIDTH, 10)
-        else:
-            self.set_size_request(CLIP_EDITOR_LEFT_WIDTH, 56)
-
+        
     def display_clip_info(self, clip, track, index):
         self.name_label.set_text(_("<b>Clip: </b>"))
-        self.name_value.set_text(clip.name)
+        self.name_value.set_text("<b>" + clip.name + "</b>")
         self.track.set_text(_("<b>Track: </b>"))
-        self.track_value.set_text(track.get_name())
-        self.position.set_text(_("<b>Position:</b>"))
-        clip_start_in_tline = track.clip_start(index)
-        tc_str = utils.get_tc_string(clip_start_in_tline)
-        self.position_value.set_text(tc_str)
+        self.track_value.set_text("<b>" + track.get_name() + "</b>")
         self._set_use_mark_up()
 
     def set_no_clip_info(self):
-        self.name_label.set_text(_("<b>Clip:</b>"))
+        self.name_label.set_text("")
         self.name_value.set_text("")
-        self.track.set_text(_("<b>Track:</b>"))
+        self.track.set_text("")
         self.track_value.set_text("")
-        self.position.set_text(_("<b>Position:</b>"))
-        self.position_value.set_text("")
         self._set_use_mark_up()
 
     def _set_use_mark_up(self):
         self.name_label.set_use_markup(True)
         self.track.set_use_markup(True)
-        self.position.set_use_markup(True)
+        self.name_value.set_use_markup(True)
+        self.track_value.set_use_markup(True)
 
     def set_enabled(self, value):
-        self.name_label.set_sensitive(value)
-        self.track.set_sensitive(value)
-        self.position.set_sensitive(value)
+        pass
 
 
-class CompositorInfoPanel(Gtk.VBox):
+# -------------------------------------------- compositor info
+class CompositorInfoPanel(Gtk.HBox):
     def __init__(self):
         GObject.GObject.__init__(self)
         self.set_homogeneous(False)
 
+        if editorstate.screen_size_small_height() == True:
+            font_desc = "sans bold 8"
+        else:
+            font_desc = "sans bold 9"
+            
         self.source_track = Gtk.Label()
         self.source_track_value = Gtk.Label()
 
+        self.source_track.modify_font(Pango.FontDescription(font_desc))
+        self.source_track_value.modify_font(Pango.FontDescription(font_desc))
+        self.source_track.set_sensitive(False)
+        self.source_track_value.set_sensitive(False)
+                       
         self.destination_track = Gtk.Label()
         self.destination_track_value = Gtk.Label()
 
-        self.position = Gtk.Label()
-        self.position_value = Gtk.Label()
-
+        self.destination_track.modify_font(Pango.FontDescription(font_desc))
+        self.destination_track_value.modify_font(Pango.FontDescription(font_desc))
+        self.destination_track.set_sensitive(False)
+        self.destination_track_value.set_sensitive(False)
+        
         self.length = Gtk.Label()
         self.length_value = Gtk.Label()
 
+        self.length.modify_font(Pango.FontDescription(font_desc))
+        self.length_value.modify_font(Pango.FontDescription(font_desc))
+        self.length.set_sensitive(False)
+        self.length_value.set_sensitive(False)
+        
         info_row_2 = Gtk.HBox()
         info_row_2.pack_start(self.source_track, False, True, 0)
         info_row_2.pack_start(self.source_track_value, False, False, 0)
@@ -778,11 +791,6 @@ class CompositorInfoPanel(Gtk.VBox):
         info_row_3.pack_start(self.destination_track_value, False, False, 0)
         info_row_3.pack_start(Gtk.Label(), True, True, 0)
 
-        info_row_4 = Gtk.HBox()
-        info_row_4.pack_start(self.position, False, False, 0)
-        info_row_4.pack_start(self.position_value, False, False, 0)
-        info_row_4.pack_start(Gtk.Label(), True, True, 0)
-
         info_row_5 = Gtk.HBox()
         info_row_5.pack_start(self.length, False, False, 0)
         info_row_5.pack_start(self.length_value, False, False, 0)
@@ -791,7 +799,6 @@ class CompositorInfoPanel(Gtk.VBox):
         PAD_HEIGHT = 2
         self.pack_start(info_row_2, False, False, 0)
         self.pack_start(info_row_3, False, False, 0)
-        self.pack_start(info_row_4, False, False, 0)
         self.pack_start(info_row_5, False, False, 0)
 
         self.set_spacing(4)
@@ -799,29 +806,29 @@ class CompositorInfoPanel(Gtk.VBox):
         self.set_enabled(False)
 
     def display_compositor_info(self, compositor):
+        self.source_track.set_text(_("<b>Source:</b>") + " ")
+        self.destination_track.set_text(_("<b>Destination:</b>") + " ")
+        self.length.set_text(_("<b>Length:</b>") + " ")
+        
         src_track = utils.get_track_name(current_sequence().tracks[compositor.transition.b_track],current_sequence())
-        self.source_track_value.set_text(src_track)
+        self.source_track_value.set_text("<b>" + src_track + "</b>")
 
         dest_track = utils.get_track_name(current_sequence().tracks[compositor.transition.a_track], current_sequence())
-        self.destination_track_value.set_text(dest_track)
-
-        pos = utils.get_tc_string(compositor.clip_in)
-        self.position_value.set_text(pos)
+        self.destination_track_value.set_text("<b>" + dest_track + "</b>")
 
         length = utils.get_tc_string(compositor.clip_out - compositor.clip_in)
-        self.length_value.set_text(length)
+        self.length_value.set_text("<b>" + length + "</b>")
 
+        self._set_use_mark_up()
+        
     def set_no_compositor_info(self):
-        self.source_track.set_text(_("<b>Source Track:</b>") + " ")
+        self.source_track.set_text("")
         self.source_track_value.set_text("")
 
-        self.destination_track.set_text(_("<b>Destination Track:</b>") + " ")
+        self.destination_track.set_text("")
         self.destination_track_value.set_text("")
 
-        self.position.set_text(_("<b>Position:</b>") + " ")
-        self.position_value.set_text("")
-
-        self.length.set_text(_("<b>Length:</b>") + " ")
+        self.length.set_text("")
         self.length_value.set_text("")
 
         self._set_use_mark_up()
@@ -829,14 +836,16 @@ class CompositorInfoPanel(Gtk.VBox):
     def _set_use_mark_up(self):
         self.source_track.set_use_markup(True)
         self.destination_track.set_use_markup(True)
-        self.position.set_use_markup(True)
         self.length.set_use_markup(True)
+        self.length_value.set_use_markup(True)
+        self.destination_track_value.set_use_markup(True)
+        self.source_track_value.set_use_markup(True)
 
     def set_enabled(self, value):
-        self.source_track.set_sensitive(value)
-        self.destination_track.set_sensitive(value)
-        self.position.set_sensitive(value)
-        self.length.set_sensitive(value)
+        pass
+        #self.source_track.set_sensitive(value)
+        #self.destination_track.set_sensitive(value)
+        #self.length.set_sensitive(value)
 
 
 # -------------------------------------------- media select panel
@@ -2482,15 +2491,8 @@ def get_audio_levels_popup_menu(event, callback):
     menu = levels_menu
     guiutils.remove_children(menu)
 
-    autofollow_item = Gtk.CheckMenuItem()
-    autofollow_item.set_label(_("Compositors Auto Follow"))
-    autofollow_item.set_active(editorstate.auto_follow_active())
-    autofollow_item.connect("activate", callback, "autofollow")
 
-    menu.append(autofollow_item)
-
-    _add_separetor(menu)
-
+    """
     ponter_sensitive_item = Gtk.CheckMenuItem()
     ponter_sensitive_item.set_label(_("Tool Cursor Context Sensitive"))
     ponter_sensitive_item.set_active(editorstate.cursor_is_tline_sensitive)
@@ -2499,7 +2501,8 @@ def get_audio_levels_popup_menu(event, callback):
     menu.append(ponter_sensitive_item) 
     
     _add_separetor(menu)
-    
+    """
+
     thumbs_item = Gtk.CheckMenuItem()
     thumbs_item.set_label(_("Display Clip Media Thumbnails"))
     thumbs_item.set_active(editorstate.display_clip_media_thumbnails)
@@ -2798,7 +2801,8 @@ class ToolSelector(ImageMenuLaunch):
                                             appconsts.TLINE_TOOL_SLIP: 5,
                                             appconsts.TLINE_TOOL_SPACER: 6,
                                             appconsts.TLINE_TOOL_BOX: 7,
-                                            appconsts.TLINE_TOOL_RIPPLE_TRIM: 3
+                                            appconsts.TLINE_TOOL_RIPPLE_TRIM: 3,
+                                            appconsts.TLINE_TOOL_CUT: 8
                                      }
    
     def set_tool_pixbuf(self, tool_id):
@@ -2818,6 +2822,38 @@ class ToolSelector(ImageMenuLaunch):
             cr.set_source_rgb(0.66, 0.66, 0.66)
         cr.fill()
 
+
+class HamburgerPressLaunch:
+    def __init__(self, callback):
+        self.widget = cairoarea.CairoDrawableArea2( 18,
+                                                    18,
+                                                    self._draw)
+        self.widget.press_func = self._press_event
+        self.sensitive = True
+        self.callback = callback
+        
+        self.surface_active = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger.png")
+        self.surface_not_active = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger_not_active.png")
+        self.surface_x  = 0
+        self.surface_y  = 0
+    
+    def set_sensitive(self, sensitive):
+        self.sensitive = sensitive
+        self.widget.queue_draw()
+
+    def _draw(self, event, cr, allocation):
+        if self.sensitive == True:
+            surface = self.surface_active
+        else:
+            surface = self.surface_not_active
+            
+        cr.set_source_surface(surface, self.surface_x, self.surface_y)
+        cr.paint()
+
+    def _press_event(self, event):
+        if self.sensitive == True:
+            self.callback(self.widget, event)
+        
 class MonitorSwitch:
     def __init__(self, callback):
         self.WIDTH = 84

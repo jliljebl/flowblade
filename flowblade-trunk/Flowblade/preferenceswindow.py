@@ -169,6 +169,7 @@ def _edit_prefs_panel():
     gfx_length_spin.set_adjustment(spin_adj)
     gfx_length_spin.set_numeric(True)
 
+    """
     overwrite_clip_drop = Gtk.ComboBoxText()
     active = 0
     if prefs.overwrite_clip_drop == False:
@@ -176,7 +177,8 @@ def _edit_prefs_panel():
     overwrite_clip_drop.append_text(_("Overwrite blanks"))
     overwrite_clip_drop.append_text(_("Always insert"))
     overwrite_clip_drop.set_active(active)
-
+    """
+    
     cover_delete = Gtk.CheckButton()
     cover_delete.set_active(prefs.trans_cover_delete)
     
@@ -194,7 +196,7 @@ def _edit_prefs_panel():
     
     # Layout
     row4 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Graphics default length:")), gfx_length_spin, PREFERENCES_LEFT))
-    row8 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Media drag'n'drop action on non-V1 tracks:")), overwrite_clip_drop, PREFERENCES_LEFT))
+    #row8 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Media drag'n'drop action on non-V1 tracks:")), overwrite_clip_drop, PREFERENCES_LEFT))
     row9 = _row(guiutils.get_checkbox_row_box(cover_delete, Gtk.Label(label=_("Cover Transition/Fade clips on delete if possible"))))
     # Jul-2016 - SvdB - For play_pause button
     row11 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Mouse Middle Button Scroll Action:")), mouse_scroll_action, PREFERENCES_LEFT))
@@ -204,7 +206,7 @@ def _edit_prefs_panel():
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row9, False, False, 0)
-    vbox.pack_start(row8, False, False, 0)
+    #vbox.pack_start(row8, False, False, 0)
     vbox.pack_start(row11, False, False, 0)
     vbox.pack_start(row12, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
@@ -213,7 +215,7 @@ def _edit_prefs_panel():
 
     # Jul-2016 - SvdB - Added play_pause_button
     # Apr-2017 - SvdB - Added ffwd / rev values
-    return vbox, (gfx_length_spin, overwrite_clip_drop, cover_delete,
+    return vbox, (gfx_length_spin, cover_delete,
                   mouse_scroll_action, hide_file_ext_button)
 
 def _playback_prefs_panel():

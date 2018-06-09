@@ -43,7 +43,7 @@ SLIDE_TRIM_NO_EDIT = 9
 MULTI_MOVE = 10
 CLIP_END_DRAG = 11
 SELECT_TLINE_SYNC_CLIP = 12
-
+CUT = 13
 
 # SDL version (Not used currently)
 SDL_1 = 1

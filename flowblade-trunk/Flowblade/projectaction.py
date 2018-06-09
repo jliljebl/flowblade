@@ -78,6 +78,7 @@ import utils
 media_panel_popup_menu = Gtk.Menu()
 bin_popup_menu = Gtk.Menu()
 sequence_popup_menu = Gtk.Menu()
+hamburger_popup_menu = Gtk.Menu()
 
 save_time = None
 save_icon_remove_event_id = None
@@ -839,6 +840,57 @@ def _write_out_render_item(single_render_item_item):
     return True
 
 # ----------------------------------- media files
+def hamburger_pressed(widget, event):
+    hamburger_menu = hamburger_popup_menu
+    
+    guiutils.remove_children(hamburger_menu)
+
+    hamburger_menu.add(guiutils.get_menu_item(_("Render Proxy Files For Selected Media"), _hamburger_menu_item_selected, "render proxies", ))
+    guiutils.add_separetor(hamburger_menu)
+    hamburger_menu.add(guiutils.get_menu_item(_("Select All"), _hamburger_menu_item_selected, "select all"))
+    hamburger_menu.add(guiutils.get_menu_item(_("Select None"), _hamburger_menu_item_selected, "select none"))
+
+    move_menu_item = Gtk.MenuItem(_("Move Selected Media To Bin").encode('utf-8'))
+    move_menu = Gtk.Menu()
+    if len(PROJECT().bins) == 1:
+        item = guiutils.get_menu_item(_("No Target Bins"), _hamburger_menu_item_selected, "dummy")
+        item.set_sensitive(False)
+        move_menu.add(item)
+    else:
+        index = 0
+        for media_bin in PROJECT().bins:
+            if media_bin == PROJECT().c_bin:
+                index = index + 1
+                continue
+            name = media_bin
+            item = guiutils.get_menu_item(media_bin.name, _hamburger_menu_item_selected, str(index))
+            move_menu.add(item)
+            item.show()
+            index = index + 1
+    move_menu_item.set_submenu(move_menu)
+    hamburger_menu.add(move_menu_item)
+    move_menu_item.show()
+    
+    hamburger_menu.popup(None, None, None, None, event.button, event.time)
+
+
+def _hamburger_menu_item_selected(widget, msg):
+    if msg == "render proxies":
+        proxyediting.create_proxy_files_pressed()
+    elif msg == "select all":
+        gui.media_list_view.select_all()
+    elif msg == "select none":
+        gui.media_list_view.clear_selection()
+    else:
+        target_bin_index = int(msg)
+        
+        media_bin_indexes = []
+        for selected_object in gui.media_list_view.selected_objects:
+            media_bin_indexes.append(selected_object.bin_index)
+        
+        move_files_to_bin(target_bin_index, media_bin_indexes)
+        #print target_bin_inxdex, media_bin_indexes
+
 def media_panel_popup_requested(event):
     panel_menu = media_panel_popup_menu
     

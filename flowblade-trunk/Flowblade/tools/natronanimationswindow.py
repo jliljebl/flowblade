@@ -71,6 +71,29 @@ EDIT_PANEL_HEIGHT = 250
 MONITOR_WIDTH = 700
 MONITOR_HEIGHT = 400
 
+# Indexes here correspond to "NatronParamFormatChoice" Param values
+NATRON_DEFAULT_RENDER_FORMAT = 6
+NATRON_RENDER_FORMATS = [   "PC_Video 640x480 (PC_Video)",
+                            "NTSC 720x486 0.91 (NTSC)",
+                            "PAL 720x576 1.09 (PAL)",
+                            "NTSC_16:9 720x486 1.21 (NTSC_16:9)",
+                            "PAL_16:9 720x576 1.46 (PAL_16:9)",
+                            "HD_720 1280x720 (HD_720)",
+                            "HD 1920x1080 (HD)",
+                            "UHD_4K 3840x2160 (UHD_4K)",
+                            "1K_Super_35(full-ap) 1024x778 (1K_Super_35(full-ap))",
+                            "1K_Cinemascope 914x778 2.00 (1K_Cinemascope)",
+                            "2K_Super_35(full-ap) 2048x1556 (2K_Super_35(full-ap))",
+                            "2K_Cinemascope 1828x1556 2.00 (2K_Cinemascope)",
+                            "2K_DCP 2048x1080 (2K_DCP)",
+                            "4K_Super_35(full-ap) 4096x3112 (4K_Super_35(full-ap))",
+                            "4K_Cinemascope 3656x3112 2.00 (4K_Cinemascope)",
+                            "4K_DCP 4096x2160 (4K_DCP)",
+                            "square_256 256x256 (square_256)",
+                            "square_512 512x512 (square_512)",
+                            "square_1K 1024x1024 (square_1K)",
+                            "square_2K 2048x2048 (square_2K)" ]
+        
 # module global data
 _animation_instance = None
 _window = None
@@ -328,6 +351,18 @@ class NatronAnimatationsToolWindow(Gtk.Window):
         encode_row.pack_start(Gtk.Label(), True, True, 0)
         encode_row.set_margin_bottom(6)
 
+        format_label = Gtk.Label(_("Natron Render Format:"))
+        self.format_selector = Gtk.ComboBoxText() # filled later when current sequence known
+        for format_desc in NATRON_RENDER_FORMATS:
+            self.format_selector.append_text(format_desc)
+        self.format_selector.set_active(NATRON_DEFAULT_RENDER_FORMAT)
+
+        format_select_row = Gtk.HBox(False, 2)
+        format_select_row.pack_start(format_label, False, False, 0)
+        format_select_row.pack_start(guiutils.pad_label(12, 2), False, False, 0)
+        format_select_row.pack_start(self.format_selector, False, False, 0)
+        format_select_row.set_margin_top(24)
+
         self.render_percentage = Gtk.Label("")
         
         self.status_no_render = _("Set Frames Folder for valid render")
@@ -346,7 +381,7 @@ class NatronAnimatationsToolWindow(Gtk.Window):
         self.render_progress_bar.set_valign(Gtk.Align.CENTER)
 
         self.stop_button = guiutils.get_sized_button(_("Stop"), 100, 32)
-        self.stop_button.connect("clicked", lambda w:abort_render())
+        #self.stop_button.connect("clicked", lambda w:abort_render())
         self.render_button = guiutils.get_sized_button(_("Render"), 100, 32)
         self.render_button.connect("clicked", lambda w:render_output())
 
@@ -360,6 +395,7 @@ class NatronAnimatationsToolWindow(Gtk.Window):
         render_vbox.pack_start(encode_row, False, False, 0)
         render_vbox.pack_start(Gtk.Label(), True, True, 0)
         render_vbox.pack_start(out_folder_row, False, False, 0)
+        render_vbox.pack_start(format_select_row, False, False, 0)
         render_vbox.pack_start(Gtk.Label(), True, True, 0)
         render_vbox.pack_start(render_status_row, False, False, 0)
         render_vbox.pack_start(render_row, False, False, 0)
@@ -392,6 +428,7 @@ class NatronAnimatationsToolWindow(Gtk.Window):
         right_panel.pack_start(control_panel, False, False, 0)
         right_panel.pack_start(range_row, False, False, 0)
         right_panel.pack_start(render_vbox, True, True, 0)
+    
         right_panel.set_margin_left(4)
         
         sides_pane = Gtk.HBox(False, 2)
@@ -711,7 +748,7 @@ def _load_animation_dialog_callback(dialog, response_id):
 # ------------------------------------------------ rendering
 def render_output():
     # Write data used to modyfy rendered notron animation
-    _animation_instance.write_out_modify_data(_window.editable_properties, _session_id)
+    _animation_instance.write_out_modify_data(_window.editable_properties, _session_id, _window.format_selector.get_active())
     _window.render_percentage.set_markup("<small>" + _("Render starting...") + "</small>")
 
     launch_thread = NatronRenderLaunchThread()
@@ -725,12 +762,11 @@ def render_preview_frame():
     global _progress_updater
     _progress_updater = None
 
-    _animation_instance.write_out_modify_data(_window.editable_properties, _session_id)
+    _animation_instance.write_out_modify_data(_window.editable_properties, _session_id, _window.format_selector.get_active())
     
     launch_thread = NatronRenderLaunchThread(True)
     launch_thread.start()
     
-
 
 #------------------------------------------------- render threads
 class NatronRenderLaunchThread(threading.Thread):

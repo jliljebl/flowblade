@@ -41,6 +41,8 @@ PROPERTY = appconsts.PROPERTY
 NATRON_NODE_NAME_ATTR = "nodename"
 NATRON_PROPERTY_NAME_ATTR = "natronpropertyname"
 
+NEWLINE = "\n"
+QUOTE = "\""
 
 _scripts = None
 _animations_groups = []
@@ -62,7 +64,7 @@ class NatronAnimationInfo:
 
         self.length = anim_node.getElementsByTagName(LENGTH_NODE).item(0).firstChild.nodeValue
 
-        # property name -> natron_node, natron_property, interpretation, args
+        # Create dict for interpretations for each property: property name -> (natron_node, natron_property, interpretation, args)
         self.interpretations = {}
         for i_node in self.interpretation_node_list:
             natron_node = i_node.getAttribute(NATRON_NODE_NAME_ATTR)
@@ -101,8 +103,11 @@ class NatronAnimationInstance:
         # For example default values of some properties depend on the screen size of the project
         propertyparse.replace_value_keywords(self.properties, profile)
         
-    def write_out_modify_data(self, editable_properties, uid):
-        exec_str = self._get_natron_modifying_exec_string(editable_properties)
+    def write_out_modify_data(self, editable_properties, uid, format_index):
+        exec_str = self._get_profile_setting_exec_str(format_index)
+        exec_str += self._get_natron_modifying_exec_string(editable_properties)
+        #exec_str += self._get_test_exec_str()
+        
         print exec_str
         export_data_file = open(self.get_modify_exec_data_file_path(uid), "w")
         export_data_file.write(exec_str)
@@ -129,6 +134,20 @@ class NatronAnimationInstance:
         
         return exec_str
 
+    def _get_profile_setting_exec_str(self, format_index):
+        exec_str = "formatType = app.Write1.getParam(" + QUOTE + "formatType" + QUOTE +  ")"  + NEWLINE 
+        exec_str += "formatType.setValue(2)"  + NEWLINE 
+        exec_str += "formatParam = app.Write1.getParam(" + QUOTE + "NatronParamFormatChoice" + QUOTE +  ")"  + NEWLINE 
+        exec_str += "formatParam.setValue(" + str(format_index) + ")"  + NEWLINE   
+        
+        return exec_str
+
+    # used for quick'n'dirty testing during dev
+    def _get_test_exec_str(self):
+        exec_str = "app.Text1_3.center.set(100, 100, 0)" + NEWLINE   
+        exec_str += "app.Text1_3.center.set(400, 400, 100)" + NEWLINE   
+        return exec_str
+        
     def get_length(self):
         return self.range_out - self.range_in + 1 # # +1 out incl.
 

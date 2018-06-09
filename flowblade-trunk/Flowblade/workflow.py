@@ -31,11 +31,15 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 
 import appconsts
+import edit
 import editevent
 import editorpersistance
+import editorstate
+from editorstate import PROJECT
 import gui
 import guiutils
 import respaths
+import updater
 
 # Timeline tools data
 _TOOLS_DATA = None
@@ -45,24 +49,28 @@ _workflow_menu = Gtk.Menu()
 
 def init_data():
     global _TOOLS_DATA
-    _TOOLS_DATA = { appconsts.TLINE_TOOL_INSERT:    (_("Insert"), "insertmove_cursor.png"),
-                    appconsts.TLINE_TOOL_OVERWRITE: (_("Overwrite"), "overwrite_cursor.png"),
-                    appconsts.TLINE_TOOL_TRIM:      (_("Trim"), "oneroll_cursor.png"),
-                    appconsts.TLINE_TOOL_ROLL:      (_("Roll"), "tworoll_cursor.png"),
-                    appconsts.TLINE_TOOL_SLIP:      (_("Slip"), "slide_cursor.png"),
-                    appconsts.TLINE_TOOL_SPACER:    (_("Spacer"), "multimove_cursor.png"),
-                    appconsts.TLINE_TOOL_BOX:       (_("Box"), "overwrite_cursor_box.png") 
+    _TOOLS_DATA = { appconsts.TLINE_TOOL_INSERT:        (_("Insert"), "insertmove_cursor.png"),
+                    appconsts.TLINE_TOOL_OVERWRITE:     (_("Overwrite"), "overwrite_cursor.png"),
+                    appconsts.TLINE_TOOL_TRIM:          (_("Trim"), "oneroll_cursor.png"),
+                    appconsts.TLINE_TOOL_ROLL:          (_("Roll"), "tworoll_cursor.png"),
+                    appconsts.TLINE_TOOL_SLIP:          (_("Slip"), "slide_cursor.png"),
+                    appconsts.TLINE_TOOL_SPACER:        (_("Spacer"), "multimove_cursor.png"),
+                    appconsts.TLINE_TOOL_BOX:           (_("Box"), "overwrite_cursor_box.png"),
+                    appconsts.TLINE_TOOL_RIPPLE_TRIM:   (_("Ripple Trim"), "oneroll_cursor_ripple.png"),
+                    appconsts.TLINE_TOOL_CUT:           (_("Cut"), "cut_cursor.png")
                   }
 
 #----------------------------------------------------- workflow presets
-def _set_workflow_SIMPLIFIED():
-    pass
-
 def _set_workflow_STANDARD():
-    pass
+    editorpersistance.prefs.active_tools = [2, 6, 8, 4, 5, 7]
+    editorpersistance.prefs.dnd_action = appconsts.DND_ALWAYS_OVERWRITE
+    editorpersistance.save()
+
+    editevent.set_default_edit_mode()
 
 def _set_workflow_FILM_STYLE():
     editorpersistance.prefs.active_tools = [1, 2, 3, 4, 5, 6, 7]
+    editorpersistance.prefs.dnd_action = appconsts.DND_OVERWRITE_NON_V1
     editorpersistance.save()
 
     editevent.set_default_edit_mode()
@@ -120,11 +128,7 @@ def workflow_menu_launched(widget, event):
 
     presets_menu = Gtk.Menu()
     
-    simplified = guiutils.get_menu_item(_("Simplified"), _workflow_menu_callback, (None, "preset simplified"))
-    simplified.show()
-    presets_menu.add(simplified)
-
-    standart = guiutils.get_menu_item(_("Standard"), _workflow_menu_callback, (None, "preset standart"))
+    standart = guiutils.get_menu_item(_("Standard"), _workflow_menu_callback, (None, "preset standard"))
     standart.show()
     presets_menu.add(standart)
 
@@ -149,7 +153,7 @@ def workflow_menu_launched(widget, event):
     delete_menu = Gtk.Menu()
     labels = [_("Lift"), _("Splice Out")]
     msgs = ["delete lift", "delete splice"]
-    guiutils.get_radio_menu_items_group(delete_menu, labels, msgs, _workflow_menu_callback, 0)
+    _build_radio_menu_items_group(delete_menu, labels, msgs, _workflow_menu_callback, 0)
 
     delete_item.set_submenu(delete_menu)
     behaviours_menu.add(delete_item)
@@ -158,12 +162,21 @@ def workflow_menu_launched(widget, event):
     dnd_item.show()
     
     dnd_menu = Gtk.Menu()
-    labels = [_("Always Overwrite"), _("Overwrite on non-V1"), _("Always Insert")]
-    msgs = ["always overwrite", "verwrite nonV1", "always insert"]
-    guiutils.get_radio_menu_items_group(dnd_menu, labels, msgs, _workflow_menu_callback, 0)
+    labels = [_("Always Overwrite Blanks"), _("Overwrite Blanks on non-V1 Tracks"), _("Always Insert")]
+    msgs = ["always overwrite", "overwrite nonV1", "always insert"]
+    active_index =  editorpersistance.prefs.dnd_action  #appconsts values corrspond with order here
+    _build_radio_menu_items_group(dnd_menu, labels, msgs, _workflow_menu_callback, active_index)
 
     dnd_item.set_submenu(dnd_menu)
     behaviours_menu.add(dnd_item)
+
+    autofollow_item = Gtk.CheckMenuItem()
+    autofollow_item.set_label(_("Compositors Auto Follow"))
+    autofollow_item.set_active(editorstate.auto_follow_active())
+    autofollow_item.connect("activate", _workflow_menu_callback, (None, "autofollow"))
+    autofollow_item.show()
+
+    behaviours_menu.append(autofollow_item)
     
     behaviours_item.set_submenu(behaviours_menu)
     _workflow_menu.add(behaviours_item)
@@ -172,12 +185,15 @@ def workflow_menu_launched(widget, event):
     guiutils.add_separetor(_workflow_menu)
     
     # Active tools
-    non_active_tools = range(1, 8) # we have 7 tools currently
+    non_active_tools = range(1, 10) # we have 9 tools currently
     for i in range(0, len(editorpersistance.prefs.active_tools)):#  tool_id in _TOOLS_DATA:
         tool_id = editorpersistance.prefs.active_tools[i]
         tool_name, tool_icon_file = _TOOLS_DATA[tool_id]
         _workflow_menu.add(_get_workflow_tool_menu_item(_workflow_menu_callback, tool_id, tool_name, tool_icon_file, i+1))
-        non_active_tools.remove(tool_id)
+        try: # needed when manually changing preset tools, remove when those are decided upon
+            non_active_tools.remove(tool_id)
+        except:
+            pass
 
     guiutils.add_separetor(_workflow_menu)
     
@@ -210,14 +226,14 @@ def _get_workflow_tool_menu_item(callback, tool_id, tool_name, tool_icon_file, p
 
     return item
 
-def _get_radio_menu_item_group(menu, labels, msgs, callback, active_index):
+def _build_radio_menu_items_group(menu, labels, msgs, callback, active_index):
     first_item = Gtk.RadioMenuItem()
     first_item.set_label(labels[0])
     first_item.show()
     menu.append(first_item)
     if active_index == 0:
         first_item.set_active(True)
-    first_item.connect("activate", callback, msgs[0])
+    first_item.connect("activate", callback, (None,msgs[0]))
     
     for i in range(1, len(labels)):
         radio_item = Gtk.RadioMenuItem.new_with_label([first_item], labels[i])
@@ -225,7 +241,8 @@ def _get_radio_menu_item_group(menu, labels, msgs, callback, active_index):
         radio_item.show()
         if active_index == i:
             radio_item.set_active(True)
-        radio_item.connect("activate", callback, msgs[i])
+        
+        radio_item.connect("activate", callback, (None, msgs[i]))
 
 def _get_workflow_tool_submenu(callback, tool_id, position):
     sub_menu = Gtk.Menu()
@@ -269,12 +286,25 @@ def _workflow_menu_callback(widget, data):
             editorpersistance.prefs.active_tools.remove(tool_id)
         else:
             editorpersistance.prefs.active_tools.append(tool_id)
-    elif msg == "preset simplified":
-        _set_workflow_SIMPLIFIED()
-    elif msg == "preset standart":
+    elif msg == "preset standard":
         _set_workflow_STANDARD()
     elif msg == "preset filmstyle":
         _set_workflow_FILM_STYLE()
+    elif msg == "autofollow":
+        active = widget.get_active()
+        editorstate.auto_follow = active
+        PROJECT().set_project_property(appconsts.P_PROP_AUTO_FOLLOW, active)
+        if active == True:
+            # Do autofollow update if auto follow activated
+            compositor_autofollow_data = edit.get_full_compositor_sync_data()
+            edit.do_autofollow_redo(compositor_autofollow_data)
+        updater.repaint_tline()
+    elif  msg == "always overwrite":
+        editorpersistance.prefs.dnd_action = appconsts.DND_ALWAYS_OVERWRITE
+    elif  msg == "overwrite nonV1":
+        editorpersistance.prefs.dnd_action = appconsts.DND_OVERWRITE_NON_V1
+    elif  msg == "always insert":
+        editorpersistance.prefs.dnd_action = appconsts.DND_ALWAYS_INSERT
     else:
         try:
             pos = int(msg)
@@ -283,7 +313,12 @@ def _workflow_menu_callback(widget, data):
             editorpersistance.prefs.active_tools.insert(pos - 1, tool_id)
         except:
             pass
-
+    
+    editorpersistance.save()
+    """ MAYBE ADD BACK
+    elif msg == "pointer_sensitive_item":
+        editorstate.cursor_is_tline_sensitive = widget.get_active()
+    """
 
 # ------------------------------------------------------------- keyboard shortcuts
 def tline_tool_keyboard_selected(event):

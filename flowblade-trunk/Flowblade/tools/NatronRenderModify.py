@@ -4,7 +4,7 @@ import NatronEngine
 
 import os
 
-# This run by Natron after render is started
+# This is run by Natron after render is started
 user_natron_dir = os.getenv("HOME") + "/.flowblade/natron/"
 instance_id_path = user_natron_dir + "LATEST_RENDER_INSTANCE_ID"
 instance_id_file = open(instance_id_path, "r")
