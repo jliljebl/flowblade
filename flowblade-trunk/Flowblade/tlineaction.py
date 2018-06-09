@@ -212,9 +212,9 @@ def sequence_split_pressed():
                 # but only if the clip_start lies before the current frame
                 clip_start = track.clip_start(index)
                 if tline_frame > clip_start:
-                    blank_length = first_clip.clip_out - (tline_frame - clip_start)
+                    blank_length = first_clip.clip_out - (tline_frame - clip_start) + 1
                 else:
-                    blank_length = first_clip.clip_out - clip_start
+                    blank_length = first_clip.clip_out - clip_start + 1
 
         for j in range(index, len(track.clips)):
             clip = track.clips[j]
