@@ -234,11 +234,11 @@ def _print_widget(widget): # debug
 
 def apply_gtk_css():
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
-    if Gtk.get_major_version() != 3 and Gtk.get_minor_version() != 22:
+    if Gtk.get_major_version() == 3 and Gtk.get_minor_version() == 22:
+        print "Gtk version is " + gtk_version + ", Flowblade theme is available."
+    else:
         print "Gtk version is " + gtk_version + ", Flowblade theme only available for Gtk 3.22"
         return
-    else:
-        print "Gtk version is " + gtk_version + ", Flowblade theme is available."
         
     provider = Gtk.CssProvider.new()
     display = Gdk.Display.get_default()
