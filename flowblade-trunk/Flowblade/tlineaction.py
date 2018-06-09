@@ -39,6 +39,7 @@ import boxmove
 import clipeffectseditor
 import compositeeditor
 import compositormodes
+import cutmode
 import dialogs
 import dialogutils
 import glassbuttons
@@ -175,14 +176,14 @@ def sequence_split_pressed():
     on the right side of the cut to a newly created sequence that is then
     opened.
     """
+    # we determine the frame position
+    tline_frame = PLAYER().current_frame()
+
     # We start with actually cutting the sequence
     # actually this poses performance loss, as we do the track loop twice
     # one in cut_pressed and one in this method
     # also other operations are repeated
-    cut_pressed()
-
-    # we determine the frame position
-    tline_frame = PLAYER().current_frame()
+    cutmode.cut_all_tracks(tline_frame)
 
     # prepare a data structure that will receive our clips we want to move to
     # another sequence plus all the information to actually put them at the same
