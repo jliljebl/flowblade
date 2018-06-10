@@ -22,7 +22,7 @@
 Module handles events related to audiosplits and setting clip sync relationships.
 """
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gdk
 
 import appconsts
 import dialogutils

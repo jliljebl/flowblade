@@ -26,7 +26,6 @@ Edits, undos and redos are done by creating and calling methods on these
 EditAction objects and placing them on the undo/redo stack.
 """
 
-import audiowaveform
 import appconsts
 import compositeeditor
 import compositorfades

@@ -31,7 +31,6 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 
 import appconsts
-import audiosync
 import boxmove
 import clipeffectseditor
 import clipenddragmode

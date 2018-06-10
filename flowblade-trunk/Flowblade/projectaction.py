@@ -704,7 +704,7 @@ def _open_recent_shutdown_dialog_callback(dialog, response_id, path):
 
 def _actually_open_recent(path):
     if not os.path.exists(path):
-        editorpersistance.recent_projects.projects.pop(index)
+        editorpersistance.remove_non_existing_recent_projects()
         editorpersistance.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
         primary_txt = _("Project not found on disk")
         secondary_txt = _("Project can't be loaded.")

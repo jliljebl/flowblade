@@ -25,7 +25,6 @@ class PositionBar - Displays position on a clip or a sequence
 
 import cairo
 
-from gi.repository import Gtk
 from gi.repository import Gdk
 
 import appconsts

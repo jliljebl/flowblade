@@ -141,7 +141,21 @@ def add_recent_project_path(path):
     
     recent_projects.projects.insert(0, path)    
     save()
-    
+
+def remove_non_existing_recent_projects():
+    # Remove non-existing projects from recents list
+    recents_file_path = utils.get_hidden_user_dir_path() + RECENT_DOC
+    remove_list = []
+    for proj_path in recent_projects.projects:
+        if os.path.isfile(proj_path) == False:
+            remove_list.append(proj_path)
+
+    if len(remove_list) > 0:
+        for proj_path in remove_list:
+            recent_projects.projects.remove(proj_path)
+        write_file = file(recents_file_path, "wb")
+        pickle.dump(recent_projects, write_file)
+        
 def fill_recents_menu_widget(menu_item, callback):
     """
     Fills menu item with menuitems to open recent projects.
@@ -158,7 +172,6 @@ def fill_recents_menu_widget(menu_item, callback):
     if len(recent_proj_names) != 0:
         for i in range (0, len(recent_proj_names)):
             proj_name = recent_proj_names[i]
-            proj_name = proj_name.replace("_","__") # to display names with underscored correctly
             new_item = Gtk.MenuItem(proj_name)
             new_item.connect("activate", callback, i)
             menu.append(new_item)
