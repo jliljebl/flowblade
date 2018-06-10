@@ -23,7 +23,6 @@ NOTE: THIS SCRIPT IS RUN BY NATRON WHEN LAUNCHING IT AND HAS NO ACCES TO
 OTHER PYTHON MODULES IN FLOWBLADE.
 """
 import os
-import NatronEngine
 
 def createInstance(app,group):
     # Get export data

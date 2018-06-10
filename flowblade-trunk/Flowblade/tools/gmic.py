@@ -30,7 +30,6 @@ from gi.repository import Pango
 import cairo
 import locale
 import mlt
-import numpy as np
 import os
 import re
 import shutil
@@ -53,7 +52,6 @@ import mltprofiles
 import mlttransitions
 import mltfilters
 import positionbar
-import render
 import respaths
 import renderconsumer
 import toolguicomponents

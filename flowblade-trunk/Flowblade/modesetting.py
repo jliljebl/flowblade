@@ -24,39 +24,17 @@ Handles or passes on mouse edit events from timeline.
 Handles edit mode setting.
 """
 
-import os
-import time
-
-from gi.repository import Gtk
-from gi.repository import Gdk
-
-import appconsts
 import boxmove
-import clipeffectseditor
-import clipenddragmode
-import compositeeditor
-import compositormodes
-import cutmode
-import dialogs
-import dialogutils
-import edit
 import editorstate
 from editorstate import current_sequence
 from editorstate import PLAYER
-from editorstate import timeline_visible
 from editorstate import EDIT_MODE
 import editorpersistance
 import gui
-import guicomponents
-import medialog
 import movemodes
-import multimovemode
-import syncsplitevent
 import tlinewidgets
 import trimmodes
-import undo
 import updater
-import utils
 
 
 # ------------------------------------- edit mode setting

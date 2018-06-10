@@ -22,7 +22,6 @@
 Module handles Compositors edit panel.
 """
 
-import cairo
 import copy
 from gi.repository import Gtk
 import pickle
@@ -35,7 +34,6 @@ import gui
 import guicomponents
 import guiutils
 import edit
-import editorstate
 from editorstate import current_sequence
 import editorpersistance
 import keyframeeditor
@@ -43,7 +41,6 @@ import mlttransitions
 import propertyeditorbuilder
 import propertyedit
 import propertyparse
-import respaths
 import utils
 
 COMPOSITOR_PANEL_LEFT_WIDTH = 160

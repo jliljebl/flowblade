@@ -25,20 +25,16 @@ Handles edit mode setting.
 """
 
 import os
-import time
 
-from gi.repository import Gtk
 from gi.repository import Gdk
 
 import appconsts
 import audiosync
-import boxmove
 import clipeffectseditor
 import clipenddragmode
 import compositeeditor
 import compositormodes
 import cutmode
-import dialogs
 import dialogutils
 import edit
 import editorstate
@@ -56,7 +52,6 @@ import multimovemode
 import syncsplitevent
 import tlinewidgets
 import trimmodes
-import undo
 import updater
 import utils
 

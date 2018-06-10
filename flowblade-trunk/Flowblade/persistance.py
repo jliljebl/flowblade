@@ -34,7 +34,6 @@ import os
 import pickle
 import time
 
-from gi.repository import Gtk
 from gi.repository import Gdk
 
 import appconsts

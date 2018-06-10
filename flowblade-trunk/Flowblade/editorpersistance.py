@@ -23,7 +23,6 @@ Module handles saving and loading data that is related to the editor and not any
 """
 
 from gi.repository import Gtk
-from gi.repository import Gdk
 
 import os
 import pickle
@@ -31,9 +30,6 @@ import pickle
 import appconsts
 import mltprofiles
 import utils
-
-# Apr-2017 - SvdB
-import shortcuts
 
 PREFS_DOC = "prefs"
 RECENT_DOC = "recent"
@@ -210,9 +206,6 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
 
     # Jan-2017 - SvdB
     perf_render_threads, perf_drop_frames = performance_widgets
-
-    # Apr-2017 - SvdB
-    #shortcuts_combo = shortcuts_widgets
 
     global prefs
     prefs.open_in_last_opended_media_dir = open_in_last_opened_check.get_active()

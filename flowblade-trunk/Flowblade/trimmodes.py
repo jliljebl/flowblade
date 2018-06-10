@@ -22,8 +22,6 @@
 Module handles user edit events for trim, roll and slip trim modes. 
 """
 
-import traceback
-
 import appconsts
 import dialogutils
 import edit
@@ -35,7 +33,7 @@ from editorstate import EDIT_MODE
 import gui
 import tlinewidgets
 import updater
-import utils
+
 
 # Default value for pre- and post roll in loop playback
 DEFAULT_LOOP_HALF_LENGTH = 25

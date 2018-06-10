@@ -30,7 +30,6 @@ import appconsts
 import cairoarea
 from editorstate import PROJECT
 from editorstate import PLAYER
-from editorstate import current_sequence
 import extraeditors
 import guiutils
 import keyframeeditor

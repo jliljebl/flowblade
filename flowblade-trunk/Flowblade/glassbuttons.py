@@ -21,8 +21,6 @@
 import cairo
 import math
 
-from gi.repository import Gtk
-
 import appconsts
 import cairoarea
 import editorpersistance

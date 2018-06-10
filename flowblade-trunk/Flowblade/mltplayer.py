@@ -23,9 +23,7 @@ Module contains an object that is used to do playback from mlt.Producers to
 a Xwindow of a GTK+ widget and os audiosystem using a SDL consumer.
 """
 
-from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GdkX11
 
 import mlt
 import os
@@ -33,7 +31,6 @@ import time
 
 import gui
 from editorstate import timeline_visible
-import editorstate
 import utils
 import updater
 

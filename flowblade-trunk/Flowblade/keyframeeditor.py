@@ -29,8 +29,8 @@ of callbacks to parent objects, this makes the design difficult to follow.
 
 import cairo
 
-from gi.repository import Gtk, Gdk, GObject
-from gi.repository import Pango, GdkPixbuf
+from gi.repository import Gtk, GObject
+from gi.repository import Pango
 
 import cairoarea
 from editorstate import PLAYER

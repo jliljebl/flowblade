@@ -22,12 +22,9 @@
 Module handles keyevents.
 """
 
-from gi.repository import Gtk
 from gi.repository import Gdk
 
-import appconsts
 import audiowaveform
-import audiowaveformrenderer
 import clipeffectseditor
 import compositeeditor
 import compositormodes
@@ -43,7 +40,6 @@ import medialog
 import menuactions
 import modesetting
 import monitorevent
-import mltrefhold
 # Apr-2017 - SvdB
 import shortcuts
 import re

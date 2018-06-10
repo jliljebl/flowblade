@@ -26,20 +26,14 @@ import datetime
 import mlt
 import md5
 import os
-import shutil
-import time
 
-from gi.repository import Gtk
 from gi.repository import GdkPixbuf
 
 import appconsts
 import editorpersistance
-from editorstate import PLAYER
 from editorstate import PROJECT
 import mltprofiles
-import mltrefhold
 import patternproducer
-import projectaction
 import miscdataobjects
 import respaths
 import sequence

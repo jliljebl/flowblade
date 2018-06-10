@@ -25,13 +25,11 @@ are used to build gui at callsites.
 import cairo
 
 from gi.repository import Gtk, Gdk
-from gi.repository import GdkPixbuf
 
 import appconsts
 import gui
 import guicomponents
 import guiutils
-import editorpersistance
 import editorstate
 import mlttransitions
 import renderconsumer

@@ -21,11 +21,9 @@
 
 
 from gi.repository import Gtk
-from gi.repository import GLib
-import os, sys
+import os
 from xml.dom import minidom
-from decimal import Decimal,getcontext,ROUND_DOWN
-from math import modf, floor
+from math import floor
 import mlt
 import time
 import md5

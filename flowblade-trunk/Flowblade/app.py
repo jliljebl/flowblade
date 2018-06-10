@@ -64,7 +64,6 @@ import gmic
 import gui
 import keyevents
 import medialog
-import mlt
 import mltenv
 import mltfilters
 import mltplayer

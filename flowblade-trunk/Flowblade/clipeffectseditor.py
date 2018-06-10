@@ -22,7 +22,6 @@
 Module handles clip effects editing logic and gui
 """
 
-import cairo
 import copy
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -32,10 +31,8 @@ import time
 import atomicfile
 import dialogs
 import dialogutils
-import dnd
 import edit
 import editorpersistance
-import editorstate
 from editorstate import PROJECT
 import gui
 import guicomponents

@@ -32,9 +32,7 @@ from gi.repository import PangoCairo
 
 import toolsdialogs
 from editorstate import PLAYER
-from editorstate import PROJECT
 import editorstate
-import editorpersistance
 import gui
 import guicomponents
 import guiutils

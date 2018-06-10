@@ -46,7 +46,6 @@ from editorstate import EDIT_MODE
 from editorstate import current_proxy_media_paths
 import editorstate
 import gui
-import modesetting
 import respaths
 import sequence
 import snapping

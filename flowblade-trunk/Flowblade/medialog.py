@@ -18,7 +18,6 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
-import cairo
 import datetime
 
 from gi.repository import Gtk
@@ -28,7 +27,6 @@ from gi.repository import Pango
 
 import appconsts
 import dialogs
-import dialogutils
 import dnd
 import edit
 import gui

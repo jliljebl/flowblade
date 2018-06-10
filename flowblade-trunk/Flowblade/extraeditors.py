@@ -26,17 +26,15 @@ import math
 
 from gi.repository import Gtk
 
+import appconsts
 import cairo
 import cairoarea
 import editorpersistance
-from editorstate import PLAYER
-import gui
 import guiutils
 import guicomponents
 import glassbuttons
 import lutfilter
 import respaths
-import viewgeom
 import translations
 
 SHADOW = 0

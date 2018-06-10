@@ -26,12 +26,9 @@ import dialogutils
 import editorpersistance
 import gui
 import guiutils
-import guicomponents
 import mltprofiles
 # Jan-2017 - SvdB - To get the number of CPU cores
 import multiprocessing
-# Apr-2017 - SvdB
-import shortcuts
 
 PREFERENCES_WIDTH = 730
 PREFERENCES_HEIGHT = 440

@@ -26,7 +26,6 @@ import numpy as np
 import os
 import threading
 import time
-import utils
 
 import appconsts
 import cairoarea
