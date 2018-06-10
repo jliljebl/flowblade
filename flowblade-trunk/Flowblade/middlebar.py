@@ -25,7 +25,6 @@ from gi.repository import Gtk
 import appconsts
 import audiomonitoring
 import batchrendering
-import editevent
 import editorpersistance
 import editorstate
 import glassbuttons

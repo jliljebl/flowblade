@@ -51,7 +51,6 @@ import gui
 import guicomponents
 import guiutils
 import edit
-import editevent
 import editorstate
 from editorstate import current_sequence
 from editorstate import current_bin

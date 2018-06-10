@@ -33,7 +33,6 @@ import compositeeditor
 import compositormodes
 import glassbuttons
 import gui
-import editevent
 import editorpersistance
 import editorstate
 from editorstate import current_sequence
@@ -42,6 +41,7 @@ from editorstate import timeline_visible
 import keyframeeditor
 import medialog
 import menuactions
+import modesetting
 import monitorevent
 import mltrefhold
 # Apr-2017 - SvdB
@@ -67,7 +67,7 @@ def key_down(widget, event):
             audiowaveform.waveform_thread.abort_rendering()
             return True
         elif editorstate.current_is_move_mode() == False:
-            editevent.set_default_edit_mode()
+            modesetting.set_default_edit_mode()
             return True
         elif gui.big_tc.get_visible_child_name() == "BigTCEntry":
             gui.big_tc.set_visible_child_name("BigTCDisplay")

@@ -55,6 +55,7 @@ import medialog
 import menuactions
 import middlebar
 import mltfilters
+import modesetting
 import monitorevent
 import monitorwidget
 import respaths
@@ -685,7 +686,7 @@ class EditorWindow:
             self.edit_buttons_frame  = self.edit_buttons_row
 
         # Timeline scale
-        self.tline_scale = tlinewidgets.TimeLineFrameScale(editevent.insert_move_mode_pressed,  
+        self.tline_scale = tlinewidgets.TimeLineFrameScale(modesetting.set_default_edit_mode,  
                                                            updater.mouse_scroll_zoom)
 
         self.tline_info = Gtk.HBox()
@@ -1117,46 +1118,46 @@ class EditorWindow:
         gui.editor_window.set_tool_selector_to_mode()
         
     def handle_over_move_mode_button_press(self):
-        editevent.overwrite_move_mode_pressed()
+        modesetting.overwrite_move_mode_pressed()
         self.set_cursor_to_mode()
 
     def handle_box_mode_button_press(self):
-        editevent.box_mode_pressed()
+        modesetting.box_mode_pressed()
         self.set_cursor_to_mode()
 
     def handle_insert_move_mode_button_press(self):
-        editevent.insert_move_mode_pressed()
+        modesetting.insert_move_mode_pressed()
         self.set_cursor_to_mode()
 
     def handle_one_roll_mode_button_press(self):
         editorstate.trim_mode_ripple = False
-        editevent.oneroll_trim_no_edit_init()
+        modesetting.oneroll_trim_no_edit_init()
         self.set_cursor_to_mode()
 
     def handle_one_roll_ripple_mode_button_press(self):
         editorstate.trim_mode_ripple = True
-        editevent.oneroll_trim_no_edit_init()
+        modesetting.oneroll_trim_no_edit_init()
         self.set_cursor_to_mode()
         
     def handle_two_roll_mode_button_press(self):
-        editevent.tworoll_trim_no_edit_init()
+        modesetting.tworoll_trim_no_edit_init()
         self.set_cursor_to_mode()
 
     def handle_slide_mode_button_press(self):
-        editevent.slide_trim_no_edit_init()
+        modesetting.slide_trim_no_edit_init()
         self.set_cursor_to_mode()
 
     def handle_multi_mode_button_press(self):
-        editevent.multi_mode_pressed()
+        modesetting.multi_mode_pressed()
         self.set_cursor_to_mode()
 
     def handle_cut_mode_button_press(self):
-        editevent.cut_mode_pressed()
+        modesetting.cut_mode_pressed()
         self.set_cursor_to_mode()
         
     def toggle_trim_ripple_mode(self):
         editorstate.trim_mode_ripple = (editorstate.trim_mode_ripple == False)
-        editevent.stop_looping()
+        modesetting.stop_looping()
         editorstate.edit_mode = editorstate.ONE_ROLL_TRIM_NO_EDIT
         tlinewidgets.set_edit_mode(None, None)
         self.set_tool_selector_to_mode()

@@ -32,12 +32,12 @@ from gi.repository import Gdk
 
 import appconsts
 import edit
-import editevent
 import editorpersistance
 import editorstate
 from editorstate import PROJECT
 import gui
 import guiutils
+import modesetting
 import respaths
 import updater
 
@@ -66,14 +66,14 @@ def _set_workflow_STANDARD():
     editorpersistance.prefs.dnd_action = appconsts.DND_ALWAYS_OVERWRITE
     editorpersistance.save()
 
-    editevent.set_default_edit_mode()
+    modesetting.set_default_edit_mode()
 
 def _set_workflow_FILM_STYLE():
     editorpersistance.prefs.active_tools = [1, 2, 3, 4, 5, 6, 7]
     editorpersistance.prefs.dnd_action = appconsts.DND_OVERWRITE_NON_V1
     editorpersistance.save()
 
-    editevent.set_default_edit_mode()
+    modesetting.set_default_edit_mode()
 
 
 # --------------------------------------------------------------- tools menu

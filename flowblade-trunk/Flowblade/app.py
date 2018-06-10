@@ -372,7 +372,7 @@ def monkeypatch_callbacks():
     render.open_media_file_callback = projectaction.open_rendered_file
 
     # Set callback for undo/redo ops, batcherrender app does not need this 
-    undo.set_post_undo_redo_callback(editevent.set_post_undo_redo_edit_mode)
+    undo.set_post_undo_redo_callback(modesetting.set_post_undo_redo_edit_mode)
     undo.repaint_tline = updater.repaint_tline
 
     # # Drag'n'drop callbacks
@@ -432,7 +432,7 @@ def create_gui():
     """
     tlinewidgets.load_icons()
 
-    updater.set_clip_edit_mode_callback = editevent.set_clip_monitor_edit_mode
+    updater.set_clip_edit_mode_callback = modesetting.set_clip_monitor_edit_mode
     updater.load_icons()
 
     # Notebook indexes are differn for 1 and 2 window layouts
@@ -565,9 +565,8 @@ def init_editor_state():
     movemodes.clear_selection_values()
 
     # Set initial edit mode
-    gui.editor_window.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_INSERT)
-    editevent.insert_move_mode_pressed()
-
+    modesetting.set_default_edit_mode()
+    
     # Create array needed to update compositors after all edits
     editorstate.current_sequence().restack_compositors()
 

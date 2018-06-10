@@ -18,6 +18,12 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+"""
+Handles or passes on mouse edit events from timeline.
+
+Handles edit mode setting.
+"""
+
 import os
 import time
 
@@ -53,27 +59,6 @@ import undo
 import updater
 import utils
 
-# module state
-mouse_disabled = False # Used to ignore drag and release events when press doesn't start an action that can handle those events.
-repeat_event = None
-parent_selection_data = None # Held here until user presses tline again
-
-# functions are monkeypatched in at app.py 
-display_clip_menu_pop_up = None
-compositor_menu_item_activated = None
-
-# -------------------------------------- state changing helper functions
-def stop_looping():
-    # Stop trim mode looping using trimmodes.py methods for it
-    # Called when entering move modes.
-    if PLAYER().looping():
-        if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
-            trimmodes.oneroll_stop_pressed()
-        if EDIT_MODE() == editorstate.TWO_ROLL_TRIM: 
-            trimmodes.tworoll_stop_pressed()
-
-def set_cursor_to_mode():
-    gui.editor_window.set_cursor_to_mode()
 
 # ------------------------------------- edit mode setting
 def set_default_edit_mode(disable_mouse=False):
@@ -87,8 +72,7 @@ def set_default_edit_mode(disable_mouse=False):
     """
     gui.editor_window.set_default_edit_tool()
     if disable_mouse:
-        global mouse_disabled
-        mouse_disabled = True
+        editorstate.timeline_mouse_disabled = True
 
 def set_clip_monitor_edit_mode():
     """
@@ -207,9 +191,8 @@ def oneroll_trim_no_edit_press(event, frame):
     if success:
         # If not quick enter, disable edit until mouse released
         if not editorpersistance.prefs.quick_enter_trims:
-            global mouse_disabled
             tlinewidgets.trim_mode_in_non_active_state = True
-            mouse_disabled = True
+            editorstate.timeline_mouse_disabled = True
          # If preference is quick enter, call mouse move handler immediately 
          # to move edit point to where mouse is
         else:
@@ -236,9 +219,10 @@ def oneroll_trim_mode_init(x, y):
     if track == None:
         return False
 
-    if track_lock_check_and_user_info(track, oneroll_trim_mode_init, "one roll trim mode"):
-        set_default_edit_mode()
-        return False
+    # Feature disabled for now
+    #if track_lock_check_and_user_info(track, oneroll_trim_mode_init, "one roll trim mode"):
+    #    set_default_edit_mode()
+    #    return False
 
     stop_looping() 
     editorstate.edit_mode = editorstate.ONE_ROLL_TRIM
@@ -266,9 +250,8 @@ def tworoll_trim_no_edit_press(event, frame):
     success = tworoll_trim_mode_init(event.x, event.y)
     if success:
         if not editorpersistance.prefs.quick_enter_trims:
-            global mouse_disabled
             tlinewidgets.trim_mode_in_non_active_state = True
-            mouse_disabled = True
+            editorstate.timeline_mouse_disabled = True
         else:
             trimmodes.tworoll_trim_move(event.x, event.y, frame, None)
     else:
@@ -291,9 +274,9 @@ def tworoll_trim_mode_init(x, y):
     if track == None:
         return False
     
-    if track_lock_check_and_user_info(track, tworoll_trim_mode_init, "two roll trim mode",):
-        set_default_edit_mode()
-        return False
+    #if track_lock_check_and_user_info(track, tworoll_trim_mode_init, "two roll trim mode",):
+    #    set_default_edit_mode()
+    #    return False
 
     stop_looping()
     editorstate.edit_mode = editorstate.TWO_ROLL_TRIM
@@ -309,7 +292,7 @@ def tworoll_trim_mode_init(x, y):
 
 # ----------------------------------------------------- slide trim
 def slide_trim_no_edit_init():
-    stop_looping() # Stops looping 
+    stop_looping()
     editorstate.edit_mode = editorstate.SLIDE_TRIM_NO_EDIT
     gui.editor_window.set_cursor_to_mode()
     tlinewidgets.set_edit_mode(None, None) # No overlays are drawn in this edit mode
@@ -320,9 +303,8 @@ def slide_trim_no_edit_press(event, frame):
     success = slide_trim_mode_init(event.x, event.y)
     if success:
         if not editorpersistance.prefs.quick_enter_trims:
-            global mouse_disabled
             tlinewidgets.trim_mode_in_non_active_state = True
-            mouse_disabled = True
+            editorstate.timeline_mouse_disabled = True
         else:
             trimmodes.edit_data["press_start"] = frame
             trimmodes.slide_trim_move(event.x, event.y, frame, None)
@@ -346,9 +328,9 @@ def slide_trim_mode_init(x, y):
     if track == None:
         return False
     
-    if track_lock_check_and_user_info(track, tworoll_trim_mode_init, "two roll trim mode"):
-        set_default_edit_mode()
-        return False
+    #if track_lock_check_and_user_info(track, tworoll_trim_mode_init, "two roll trim mode"):
+    #    set_default_edit_mode()
+    #    return False
 
     stop_looping()
     editorstate.edit_mode = editorstate.SLIDE_TRIM
@@ -362,9 +344,9 @@ def slide_trim_mode_init(x, y):
     success = trimmodes.set_slide_mode(track, press_frame)
     return success
 
-# -------------------------------------- cut mode
+# -------------------------------------- misc modes
 def cut_mode_pressed():
-    print "cut_mode_pressed"
+    #print "cut_mode_pressed"
     stop_looping()
     current_sequence().clear_hidden_track()
 
@@ -374,67 +356,4 @@ def cut_mode_pressed():
     tlinewidgets.set_edit_mode(None, tlinewidgets.draw_cut_overlay)
     movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
     
-    #_set_move_mode()  cjeck if nneded after trim
-
-    set_cursor_to_mode()
-
-# ------------------------------------ function tables
-# mouse event indexes
-TL_MOUSE_PRESS = 0
-TL_MOUSE_MOVE = 1
-TL_MOUSE_RELEASE = 2
-
-# mouse event handler function lists for mode
-INSERT_MOVE_FUNCS = [movemodes.insert_move_press, 
-                     movemodes.insert_move_move,
-                     movemodes.insert_move_release]
-OVERWRITE_MOVE_FUNCS = [movemodes.overwrite_move_press,
-                        movemodes.overwrite_move_move,
-                        movemodes.overwrite_move_release]
-ONE_ROLL_TRIM_FUNCS = [trimmodes.oneroll_trim_press, 
-                       trimmodes.oneroll_trim_move,
-                       trimmodes.oneroll_trim_release]
-ONE_ROLL_TRIM_NO_EDIT_FUNCS = [oneroll_trim_no_edit_press, 
-                               oneroll_trim_no_edit_move,
-                               oneroll_trim_no_edit_release]
-TWO_ROLL_TRIM_FUNCS = [trimmodes.tworoll_trim_press,
-                       trimmodes.tworoll_trim_move,
-                       trimmodes.tworoll_trim_release]
-TWO_ROLL_TRIM_NO_EDIT_FUNCS = [tworoll_trim_no_edit_press,
-                               tworoll_trim_no_edit_move,
-                               tworoll_trim_no_edit_release]
-COMPOSITOR_EDIT_FUNCS = [compositormodes.mouse_press,
-                         compositormodes.mouse_move,
-                         compositormodes.mouse_release]
-SLIDE_TRIM_FUNCS = [trimmodes.slide_trim_press,
-                    trimmodes.slide_trim_move,
-                    trimmodes.slide_trim_release]
-SLIDE_TRIM_NO_EDIT_FUNCS = [slide_trim_no_edit_press,
-                            slide_trim_no_edit_move,
-                            slide_trim_no_edit_release]
-MULTI_MOVE_FUNCS = [multimovemode.mouse_press,
-                    multimovemode.mouse_move,
-                    multimovemode.mouse_release]
-CLIP_END_DRAG_FUNCS = [clipenddragmode.mouse_press,
-                       clipenddragmode.mouse_move,
-                       clipenddragmode.mouse_release]
-CUT_FUNCS = [cutmode.mouse_press,
-             cutmode.mouse_move,
-             cutmode.mouse_release]
-
-# (mode -> mouse handler function list) table
-EDIT_MODE_FUNCS = {editorstate.INSERT_MOVE:INSERT_MOVE_FUNCS,
-                   editorstate.OVERWRITE_MOVE:OVERWRITE_MOVE_FUNCS,
-                   editorstate.ONE_ROLL_TRIM:ONE_ROLL_TRIM_FUNCS,
-                   editorstate.TWO_ROLL_TRIM:TWO_ROLL_TRIM_FUNCS,
-                   editorstate.COMPOSITOR_EDIT:COMPOSITOR_EDIT_FUNCS,
-                   editorstate.ONE_ROLL_TRIM_NO_EDIT:ONE_ROLL_TRIM_NO_EDIT_FUNCS,
-                   editorstate.TWO_ROLL_TRIM_NO_EDIT:TWO_ROLL_TRIM_NO_EDIT_FUNCS,
-                   editorstate.SLIDE_TRIM:SLIDE_TRIM_FUNCS,
-                   editorstate.SLIDE_TRIM_NO_EDIT:SLIDE_TRIM_NO_EDIT_FUNCS,
-                   editorstate.MULTI_MOVE:MULTI_MOVE_FUNCS,
-                   editorstate.CLIP_END_DRAG:CLIP_END_DRAG_FUNCS,
-                   editorstate.CUT:CUT_FUNCS}
-
-
-
+    #_set_move_mode()

@@ -61,10 +61,10 @@ edit_mode = INSERT_MOVE
 # Compositor autofollow state. If true when edit is performed, all compositors are auto resynced on first do, redo and undo actions.
 auto_follow = False
 
-# Trim tool ripple mode is expressed as a flag
+# Ripple Trim tool is ONE_ROLL_TRIM mode + True on this flag
 trim_mode_ripple = False
 
-# Ovewrite tool box mode is expressed as a flag
+# Box tool OVERWRITE_MOVE tool mode + True on this flag
 overwrite_mode_box = False
 
 # Media files view filter for selecting displayed media objects in bin
@@ -75,6 +75,9 @@ _monitor_media_file = None
 
 # Flag for timeline/clip display in monitor
 _timeline_displayed = True
+
+# Used to ignore drag and release events when press doesn't start an action that can/should handle those events.
+timeline_mouse_disabled = False
 
 # Timeline current frame is saved here while clip is being displayed in monitor
 # and PLAYER() current frame is not timeline frame 
