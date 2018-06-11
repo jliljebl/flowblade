@@ -90,7 +90,7 @@ COMPOSITOR_TRACK_X_PAD = 4
 COMPOSITOR_TRACK_ARROW_WIDTH = 6
 COMPOSITOR_TRACK_ARROW_HEAD_WIDTH = 10
 COMPOSITOR_TRACK_ARROW_HEAD_WIDTH_HEIGHT = 5
-ID_PAD_X = 29 # track id text pos
+ID_PAD_X = 35 # track id text pos
 ID_PAD_Y = 16 # track id text pos
 ID_PAD_Y_SMALL = 4 # track id text pos for small track
 VIDEO_TRACK_V_ICON_POS = (5, 16)
@@ -232,7 +232,7 @@ BOX_DASHES = [BOX_DASH_INK, BOX_DASH_SKIP, BOX_DASH_INK, BOX_DASH_SKIP]
 
 FRAME_SCALE_LINES = (0, 0, 0)
 
-BG_COLOR = (0.5, 0.5, 0.55)#(0.6, 0.6, 0.65)
+BG_COLOR = (0.5, 0.5, 0.55)
 
 #COLUMN_NOT_ACTIVE_COLOR = (0.65, 0.65, 0.65)
 COLUMN_NOT_ACTIVE_COLOR = (0.32, 0.32, 0.34)
@@ -352,10 +352,11 @@ def load_icons():
 
     if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
         global FRAME_SCALE_COLOR_GRAD, FRAME_SCALE_COLOR_GRAD_L, BG_COLOR, FRAME_SCALE_LINES, TRACK_GRAD_STOP1, TRACK_GRAD_STOP3, TRACK_NAME_COLOR,  \
-                TRACK_GRAD_ORANGE_STOP1, TRACK_GRAD_ORANGE_STOP3
+                TRACK_GRAD_ORANGE_STOP1, TRACK_GRAD_ORANGE_STOP3, BLANK_CLIP_COLOR_GRAD, BLANK_CLIP_COLOR_GRAD_L
         FRAME_SCALE_COLOR_GRAD = (1, 0.3, 0.3, 0.3, 1)
         FRAME_SCALE_COLOR_GRAD_L = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, GRAD_MULTIPLIER)
         BG_COLOR = (0.44, 0.44, 0.46)
+
         FRAME_SCALE_LINES = (0.8, 0.8, 0.8)
         if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
             TRACK_GRAD_STOP1 = (1,  0.12, 0.14, 0.2, 1)
@@ -370,6 +371,8 @@ def load_icons():
             MUTE_ALL_ICON = _load_pixbuf("track_all_mute_fb.png")
             MUTE_AUDIO_A_ICON = _load_pixbuf("track_audio_mute_A_fb.png")
             INSERT_ARROW_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_fb.png")
+            BLANK_CLIP_COLOR_GRAD = (1, 0.12, 0.14, 0.2, 1)
+            BLANK_CLIP_COLOR_GRAD_L = (0, 0.12, 0.14, 0.2, 1)
     else:
         global TRACK_GRAD_ORANGE_STOP1,TRACK_GRAD_ORANGE_STOP3,TRACK_GRAD_STOP1,TRACK_GRAD_STOP3
         TRACK_GRAD_ORANGE_STOP1 = (1,  0.4, 0.4, 0.4, 1) # V1
@@ -2299,7 +2302,7 @@ class TimeLineColumn:
         # Draw track name
         layout = PangoCairo.create_layout(cr)
         text = utils.get_track_name(track, current_sequence())
-        desc = Pango.FontDescription("Sans Bold 11")
+        desc = Pango.FontDescription("Sans Bold 10")
         layout.set_text(text, -1)
         layout.set_font_description(desc)
 
