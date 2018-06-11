@@ -269,8 +269,8 @@ TRACK_GRAD_ORANGE_STOP1 = (1, 0.65, 0.65, 0.65, 1)
 TRACK_GRAD_ORANGE_STOP3 = (0, 0.65, 0.65, 0.65, 1)
 
 """
-TRACK_GRAD_ORANGE_STOP1 = (1,  0.4, 0.4, 0.4, 1)
-TRACK_GRAD_ORANGE_STOP3 = (0,  0.68, 0.68, 0.68, 1)
+TRACK_GRAD_STOP1 = (1,  0.12, 0.14, 0.2, 1)
+TRACK_GRAD_STOP1 = (1,  0.12, 0.14, 0.2, 1)
 """
 LIGHT_MULTILPLIER = 1.14
 DARK_MULTIPLIER = 0.74
@@ -351,15 +351,29 @@ def load_icons():
     EDIT_INDICATOR = _load_pixbuf("clip_edited.png")
 
     if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-        global FRAME_SCALE_COLOR_GRAD, FRAME_SCALE_COLOR_GRAD_L, BG_COLOR, FRAME_SCALE_LINES
+        global FRAME_SCALE_COLOR_GRAD, FRAME_SCALE_COLOR_GRAD_L, BG_COLOR, FRAME_SCALE_LINES, TRACK_GRAD_STOP1, TRACK_GRAD_STOP3, TRACK_NAME_COLOR,  \
+                TRACK_GRAD_ORANGE_STOP1, TRACK_GRAD_ORANGE_STOP3
         FRAME_SCALE_COLOR_GRAD = (1, 0.3, 0.3, 0.3, 1)
         FRAME_SCALE_COLOR_GRAD_L = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, GRAD_MULTIPLIER)
         BG_COLOR = (0.44, 0.44, 0.46)
         FRAME_SCALE_LINES = (0.8, 0.8, 0.8)
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+            TRACK_GRAD_STOP1 = (1,  0.12, 0.14, 0.2, 1)
+            TRACK_GRAD_STOP3 = (1,  0.12, 0.14, 0.2, 1)
+            TRACK_GRAD_ORANGE_STOP1 = (1,  0.20, 0.22, 0.28, 1) # V1
+            TRACK_GRAD_ORANGE_STOP3 = (1,  0.20, 0.22, 0.28, 1) # V1
+            TRACK_NAME_COLOR = (0.68, 0.68, 0.68)
+            TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V_fb.png")
+            TRACK_ALL_ON_A_ICON = _load_pixbuf("track_all_on_A_fb.png")
+            MUTE_AUDIO_ICON = _load_pixbuf("track_audio_mute_fb.png")
+            MUTE_VIDEO_ICON = _load_pixbuf("track_video_mute_fb.png")
+            MUTE_ALL_ICON = _load_pixbuf("track_all_mute_fb.png")
+            MUTE_AUDIO_A_ICON = _load_pixbuf("track_audio_mute_A_fb.png")
+            INSERT_ARROW_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_fb.png")
     else:
         global TRACK_GRAD_ORANGE_STOP1,TRACK_GRAD_ORANGE_STOP3,TRACK_GRAD_STOP1,TRACK_GRAD_STOP3
-        TRACK_GRAD_ORANGE_STOP1 = (1,  0.4, 0.4, 0.4, 1)
-        TRACK_GRAD_ORANGE_STOP3 = (0,  0.68, 0.68, 0.68, 1)
+        TRACK_GRAD_ORANGE_STOP1 = (1,  0.4, 0.4, 0.4, 1) # V1
+        TRACK_GRAD_ORANGE_STOP3 = (0,  0.68, 0.68, 0.68, 1) # V1
 
         TRACK_GRAD_STOP1 = (1, 0.68, 0.68, 0.68, 1) #0.93, 0.93, 0.93, 1)
         TRACK_GRAD_STOP3 = (0, 0.93, 0.93, 0.93, 1) #0.58, 0.58, 0.58, 1) 
@@ -2231,9 +2245,19 @@ class TimeLineColumn:
         x, y, w, h = allocation
         
         # Draw bg
-        cr.set_source_rgb(*BG_COLOR)
-        cr.rectangle(0, 0, w, h)
-        cr.fill()
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+            stop, r,g,b, a = TRACK_GRAD_STOP1
+            cr.set_source_rgb(r,g,b)
+            cr.rectangle(0, 0, w, h)
+            cr.fill()
+            cr.set_line_width(1.0)
+            cr.set_source_rgb(0, 0, 0)
+            cr.rectangle(0.5, 0.5, w, h - 1)
+            #cr.stroke()
+        else:
+            cr.set_source_rgb(*BG_COLOR)
+            cr.rectangle(0, 0, w, h)
+            cr.fill()
 
         # This can get called during loads by expose events.
         if editorstate.project_is_loading == True:
@@ -2317,6 +2341,9 @@ class TimeLineColumn:
             cr.paint()
         
         # Draw insert arrow
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+            stop, r,g,b, a = TRACK_GRAD_STOP1
+            cr.set_source_rgb(r,g,b)
         if is_insert_track == True:
             ix, iy = INSRT_ICON_POS
             if track.height == sequence.TRACK_HEIGHT_SMALL:
