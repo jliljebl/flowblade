@@ -145,7 +145,7 @@ def _create_buttons(editor_window):
     editor_window.zoom_buttons.widget.set_tooltip_text(_("Zoom In - Mouse Middle Scroll\n Zoom Out - Mouse Middle Scroll\n Zoom Length - Mouse Middle Click"))
     editor_window.zoom_buttons.no_decorations = no_decorations
     
-    editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(34, 23, 2, 5, 5)
+    editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(32, 23, 2, 5, 5)
     editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "dissolve.png"), tlineaction.add_transition_pressed)
     editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "cut.png"), tlineaction.cut_pressed)
     editor_window.edit_buttons.widget.set_tooltip_text(_("Add Rendered Transition - 2 clips selected\nAdd Rendered Fade - 1 clip selected\nCut - X"))
@@ -202,20 +202,21 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     if editorstate.SCREEN_WIDTH > 1279:
         buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
         buttons_row.pack_start(_get_tools_buttons(), False, True, 0)
-        buttons_row.pack_start(guiutils.get_pad_label(120, 10), False, True, 0)
+        buttons_row.pack_start(guiutils.get_pad_label(150, 10), False, True, 0)
     else:
-        buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
-        
+        buttons_row.pack_start(guiutils.get_pad_label(30, 10), False, True, 0)
+    
+    
     buttons_row.pack_start(_get_undo_buttons_panel(), False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(30, 10), False, True, 0)
     #buttons_row.pack_start(Gtk.Label(), True, True, 0)
         
     buttons_row.pack_start(_get_zoom_buttons_panel(),False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(30, 10), False, True, 0)
     #buttons_row.pack_start(Gtk.Label(), True, True, 0)
     
     buttons_row.pack_start(_get_edit_buttons_panel(),False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(30, 10), False, True, 0)
     # buttons_row.pack_start(Gtk.Label(), True, True, 0)
     
     #buttons_row.pack_start(_get_edit_buttons_2_panel(),False, True, 0)
@@ -223,7 +224,7 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     #buttons_row.pack_start(Gtk.Label(), True, True, 0)
     
     buttons_row.pack_start(_get_edit_buttons_3_panel(),False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(30, 10), False, True, 0)
     #buttons_row.pack_start(Gtk.Label(), True, True, 0)
     
     buttons_row.pack_start(_get_monitor_insert_buttons(), False, True, 0)
