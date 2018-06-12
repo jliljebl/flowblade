@@ -1684,7 +1684,8 @@ class TimeLineCanvas:
                         cr.set_source_rgb(*AUDIO_CLIP_SELECTED_COLOR)
                 
                 # Clip bg
-                cr.rectangle(scale_in, y, scale_length, track_height)
+                #cr.rectangle(scale_in, y, scale_length, track_height)
+                self.create_round_rect_path(cr, scale_in, y, scale_length, track_height)
                 cr.fill()
 
             # Draw transition clip image 
@@ -1857,9 +1858,15 @@ class TimeLineCanvas:
                 cr.set_source_rgb(0, 0, 0)
             else:    
                 cr.set_source_rgb(0.3, 0.3, 0.3)
+                
+            self.create_round_rect_path(cr, scale_in,
+                                         y, scale_length, 
+                                         track_height)
+            """
             cr.rectangle(scale_in + 0.5,
                          y + 0.5, scale_length, 
                          track_height)
+            """
             cr.stroke()
         
             # No further drawing for blank clips
@@ -1880,6 +1887,12 @@ class TimeLineCanvas:
                 r, g, b = clip_bg_col
                 cr.set_source_rgb(r * 0.9, g * 0.9, b * 0.9)
 
+                cr.save()
+                self.create_round_rect_path(cr, scale_in,
+                                             y, scale_length - 1, 
+                                             track_height)
+                cr.clip()
+                                         
                 # Get level bar height and position for track height
                 if track.height == sequence.TRACK_HEIGHT_NORMAL:
                     y_pad = WAVEFORM_PAD_LARGE
@@ -1923,7 +1936,9 @@ class TimeLineCanvas:
                         break
 
                 cr.fill()
-
+                cr.restore()
+    
+            """
             # Emboss
             if scale_length > EMBOSS_MIN:
                 # Corner points
@@ -1950,7 +1965,8 @@ class TimeLineCanvas:
                 cr.move_to(right, down)
                 cr.line_to(left, down)
                 cr.stroke()
-
+            """
+            
             # Draw text and filter, sync icons
             if scale_length > TEXT_MIN:
                 if not hasattr(clip, "rendered_type"):
@@ -2153,7 +2169,18 @@ class TimeLineCanvas:
         cr.set_source_rgb(0.2, 0.2, 0.2)
         cr.set_line_width(4.0)
         cr.stroke()
-        
+
+    def create_round_rect_path(self, cr, x, y, width, height):
+        radius = 4.0
+        degrees = M_PI / 180.0
+
+        cr.new_sub_path()
+        cr.arc(x + width - radius, y + radius, radius, -90 * degrees, 0 * degrees)
+        cr.arc(x + width - radius, y + height - radius, radius, 0 * degrees, 90 * degrees)
+        cr.arc(x + radius, y + height - radius, radius, 90 * degrees, 180 * degrees)
+        cr.arc(x + radius, y + radius, radius, 180 * degrees, 270 * degrees)
+        cr.close_path()
+
     def create_match_frame_image_surface(self):
         # Create non-scaled icon
         matchframe_path = utils.get_hidden_user_dir_path() + appconsts.MATCH_FRAME
