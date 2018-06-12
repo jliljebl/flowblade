@@ -178,19 +178,22 @@ def get_multiplied_color_from_grad(grad_color, m):
 GRAD_MULTIPLIER = 1.3
 SELECTED_MULTIPLIER = 1.52
 
-CLIP_COLOR = (0.62, 0.38, 0.7)
-CLIP_COLOR_L = get_multiplied_color(CLIP_COLOR, GRAD_MULTIPLIER)
-CLIP_COLOR_GRAD = (1, 0.62, 0.38, 0.7, 1)
+#CLIP_COLOR = (0.62, 0.38, 0.7) 0.18, 0.11 0.21
+#CLIP_COLOR_L = get_multiplied_color(CLIP_COLOR, GRAD_MULTIPLIER)
+CLIP_COLOR_GRAD = (1,  0.18, 0.11, 0.21, 1)  #(1, 0.62, 0.38, 0.7, 1) 
 CLIP_COLOR_GRAD_L = get_multiplied_grad(0, 1, CLIP_COLOR_GRAD, GRAD_MULTIPLIER) 
 CLIP_SELECTED_COLOR = get_multiplied_color_from_grad(CLIP_COLOR_GRAD, SELECTED_MULTIPLIER)
 CLIP_END_DRAG_OVERLAY_COLOR = (1,1,1,0.3)
 
-AUDIO_CLIP_COLOR_GRAD = (1, 0.23, 0.52, 0.23, 1)#(1, 0.79, 0.80, 0.18, 1)
-AUDIO_CLIP_COLOR_GRAD_L = get_multiplied_grad(0, 1, AUDIO_CLIP_COLOR_GRAD, GRAD_MULTIPLIER + 0.5)
+AUDIO_CLIP_COLOR_GRAD = (1, 0.09, 0.21, 0.09, 1)#(1, 0.23, 0.52, 0.23, 1)#(1, 0.79, 0.80, 0.18, 1)
+AUDIO_CLIP_COLOR_GRAD_L = get_multiplied_grad(0, 1, AUDIO_CLIP_COLOR_GRAD, GRAD_MULTIPLIER)
 AUDIO_CLIP_SELECTED_COLOR = (0.53, 0.85, 0.53)
 
+0.1
+0.20
+0.21
 IMAGE_CLIP_SELECTED_COLOR = (0.45, 0.90, 0.93)
-IMAGE_CLIP_COLOR_GRAD = (1, 0.33, 0.65, 0.69, 1)
+IMAGE_CLIP_COLOR_GRAD = (1, 0.1, 0.20, 0.21, 1) #(1, 0.33, 0.65, 0.69, 1)
 IMAGE_CLIP_COLOR_GRAD_L = get_multiplied_grad(0, 1, IMAGE_CLIP_COLOR_GRAD, GRAD_MULTIPLIER) 
 
 COMPOSITOR_CLIP = (0.3, 0.3, 0.3, 0.8)
@@ -1885,8 +1888,10 @@ class TimeLineCanvas:
             # Draw data if available large enough scale
             if clip.waveform_data != None and scale_length > FILL_MIN:
                 r, g, b = clip_bg_col
-                cr.set_source_rgb(r * 0.9, g * 0.9, b * 0.9)
-
+                #r, g, b =  (0.62, 0.38, 0.7)
+                #cr.set_source_rgb(r * 0.9, g * 0.9, b * 0.9)
+                cr.set_source_rgb(r * 1.9, g * 1.9, b * 1.9)
+                
                 cr.save()
                 self.create_round_rect_path(cr, scale_in,
                                              y, scale_length - 1, 
