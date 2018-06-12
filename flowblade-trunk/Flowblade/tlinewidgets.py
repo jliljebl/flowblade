@@ -180,6 +180,9 @@ SELECTED_MULTIPLIER = 1.52
 
 #CLIP_COLOR = (0.62, 0.38, 0.7) 0.18, 0.11 0.21
 #CLIP_COLOR_L = get_multiplied_color(CLIP_COLOR, GRAD_MULTIPLIER)
+CLIP_TEXT_COLOR = (0, 0, 0)
+CLIP_TEXT_COLOR_OVERLAY = (0.78, 0.78, 0.78, 0.5)
+
 CLIP_COLOR_GRAD = (1,  0.18, 0.11, 0.21, 1)  #(1, 0.62, 0.38, 0.7, 1) 
 CLIP_COLOR_GRAD_L = get_multiplied_grad(0, 1, CLIP_COLOR_GRAD, GRAD_MULTIPLIER) 
 CLIP_SELECTED_COLOR = get_multiplied_color_from_grad(CLIP_COLOR_GRAD, SELECTED_MULTIPLIER)
@@ -1976,11 +1979,12 @@ class TimeLineCanvas:
             if scale_length > TEXT_MIN:
                 if not hasattr(clip, "rendered_type"):
                     # Text
-                    cr.set_source_rgb(0, 0, 0)
+                    cr.set_source_rgba(*CLIP_TEXT_COLOR_OVERLAY)
+                    #cr.set_source_rgb(0, 0, 0)
                     cr.select_font_face ("sans-serif",
                                          cairo.FONT_SLANT_NORMAL,
-                                         cairo.FONT_WEIGHT_NORMAL)
-                    cr.set_font_size(11)
+                                         cairo.FONT_WEIGHT_BOLD)
+                    cr.set_font_size(10)
                     cr.move_to(scale_in + TEXT_X + text_x_add, y + text_y)
                     cr.show_text(clip.name.upper())
                 
