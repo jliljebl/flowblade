@@ -77,7 +77,7 @@ MARK_PAD = 6
 MARK_LINE_WIDTH = 4
 
 # tracks column consts
-COLUMN_WIDTH = 96 # column area width
+COLUMN_WIDTH = 124 # column area width
 SCALE_HEIGHT = 25
 SCROLL_HEIGHT = 20
 COLUMN_LEFT_PAD = 0 # as mute switch no longer exists this is now essentially left pad width 
@@ -90,7 +90,7 @@ COMPOSITOR_TRACK_X_PAD = 4
 COMPOSITOR_TRACK_ARROW_WIDTH = 6
 COMPOSITOR_TRACK_ARROW_HEAD_WIDTH = 10
 COMPOSITOR_TRACK_ARROW_HEAD_WIDTH_HEIGHT = 5
-ID_PAD_X = 35 # track id text pos
+ID_PAD_X = 48 # track id text pos
 ID_PAD_Y = 16 # track id text pos
 ID_PAD_Y_SMALL = 4 # track id text pos for small track
 VIDEO_TRACK_V_ICON_POS = (5, 16)
@@ -101,8 +101,8 @@ AUDIO_TRACK_ICON_POS = (5, 18)
 AUDIO_TRACK_ICON_POS_SMALL = (5, 6)
 MUTE_ICON_POS = (5, 4)
 MUTE_ICON_POS_NORMAL = (5, 14)
-LOCK_POS = (67, 2)
-INSRT_ICON_POS = (81, 18)
+LOCK_POS = (90, 5)
+INSRT_ICON_POS = (109, 18)
 INSRT_ICON_POS_SMALL = (81, 6)
 
 # tracks column icons
@@ -2367,13 +2367,17 @@ class TimeLineColumn:
             ix, iy = MUTE_ICON_POS
             if track.height > sequence.TRACK_HEIGHT_SMALL:
                 ix, iy = MUTE_ICON_POS_NORMAL
-            cr.set_source_surface(mute_icon, ix, y + iy)
+            cr.set_source_surface(mute_icon, int(ix), int(y + iy))
             cr.paint()
 
         # Draw locked icon
         if track.edit_freedom == sequence.LOCKED:
             ix, iy = LOCK_POS
-            cr.set_source_surface(FULL_LOCK_ICON, ix, y + iy)
+            if track.height == sequence.TRACK_HEIGHT_NORMAL:
+                iy = ID_PAD_Y + 4
+            else:
+                iy = ID_PAD_Y_SMALL + 4
+            cr.set_source_surface(FULL_LOCK_ICON, ix, int(y + iy))
             cr.paint()
         
         # Draw insert arrow
