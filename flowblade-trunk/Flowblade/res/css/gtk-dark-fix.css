@@ -2724,7 +2724,7 @@ tooltip {
   border-radius: 2px;
   box-shadow: none; }
   tooltip.background {
-    background-color: rgba(75, 81, 98, 0.95);
+    background-color: rgba(0, 0, 0, 0.65);
     background-clip: padding-box; }
     tooltip.background label {
       padding: 4px; }

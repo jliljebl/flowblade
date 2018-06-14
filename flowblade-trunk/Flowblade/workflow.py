@@ -115,6 +115,7 @@ def _get_image_menu_item(tool_icon_file, text, callback, data):
     item.set_always_show_image(True)
     item.set_use_stock(False)
     item.set_label(text)
+    #item.set_tooltip_markup("<b>ladsladsladsladsl</b>adsladsldal")
     item.show()
     return item
     
