@@ -96,6 +96,7 @@ SLIDE_NO_EDIT_CURSOR = None
 MULTIMOVE_CURSOR = None
 ONEROLL_RIPPLE_CURSOR = None
 CUT_CURSOR = None
+KF_TOOL_CURSOR = None
 
 ONEROLL_TOOL = None
 OVERWRITE_TOOL = None
@@ -130,7 +131,7 @@ class EditorWindow:
         global INSERTMOVE_CURSOR, OVERWRITE_CURSOR, TWOROLL_CURSOR, ONEROLL_CURSOR, \
         ONEROLL_NO_EDIT_CURSOR, TWOROLL_NO_EDIT_CURSOR, SLIDE_CURSOR, SLIDE_NO_EDIT_CURSOR, \
         MULTIMOVE_CURSOR, MULTIMOVE_NO_EDIT_CURSOR, ONEROLL_RIPPLE_CURSOR, ONEROLL_TOOL, \
-        OVERWRITE_BOX_CURSOR, OVERWRITE_TOOL, CUT_CURSOR
+        OVERWRITE_BOX_CURSOR, OVERWRITE_TOOL, CUT_CURSOR, KF_TOOL_CURSOR
         
         INSERTMOVE_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insertmove_cursor.png")
         OVERWRITE_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "overwrite_cursor.png")
@@ -147,7 +148,8 @@ class EditorWindow:
         ONEROLL_TOOL = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "oneroll_tool.png")
         OVERWRITE_TOOL = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "overwrite_tool.png")
         CUT_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "cut_cursor.png")
-        
+        KF_TOOL_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kftool_cursor.png")
+
         # Context cursors 
         self.context_cursors = {appconsts.POINTER_CONTEXT_END_DRAG_LEFT:(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "ctx_drag_left.png"), 3, 7),
                                 appconsts.POINTER_CONTEXT_END_DRAG_RIGHT:(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "ctx_drag_right.png"), 14, 7),
@@ -1055,7 +1057,8 @@ class EditorWindow:
         self.pos_bar.set_listener(mltplayer.seek_position_normalized)
 
     def _get_edit_buttons_row(self):
-        tools_pixbufs = [INSERTMOVE_CURSOR, OVERWRITE_CURSOR, ONEROLL_CURSOR, ONEROLL_RIPPLE_CURSOR, TWOROLL_CURSOR, SLIDE_CURSOR, MULTIMOVE_CURSOR, OVERWRITE_BOX_CURSOR, CUT_CURSOR]
+        tools_pixbufs = [INSERTMOVE_CURSOR, OVERWRITE_CURSOR, ONEROLL_CURSOR, ONEROLL_RIPPLE_CURSOR, \
+                         TWOROLL_CURSOR, SLIDE_CURSOR, MULTIMOVE_CURSOR, OVERWRITE_BOX_CURSOR, CUT_CURSOR, KF_TOOL_CURSOR]
         middlebar.create_edit_buttons_row_buttons(self, tools_pixbufs)
     
         buttons_row = Gtk.HBox(False, 1)
@@ -1108,6 +1111,8 @@ class EditorWindow:
             self.handle_one_roll_ripple_mode_button_press()
         elif tool_id == appconsts.TLINE_TOOL_CUT:
             self.handle_cut_mode_button_press()
+        elif tool_id == appconsts.TLINE_TOOL_KFTOOL:
+            self.handle_kftool_mode_button_press()
         else:
             # We should not hit this
             print "editorwindow.change_tool() else: hit!"
@@ -1153,6 +1158,10 @@ class EditorWindow:
         modesetting.cut_mode_pressed()
         self.set_cursor_to_mode()
         
+    def handle_kftool_mode_button_press(self):
+        modesetting.kftool_mode_pressed()
+        self.set_cursor_to_mode()
+
     def toggle_trim_ripple_mode(self):
         editorstate.trim_mode_ripple = (editorstate.trim_mode_ripple == False)
         modesetting.stop_looping()
@@ -1196,6 +1205,8 @@ class EditorWindow:
             self.handle_box_mode_button_press()
         if tool == appconsts.TLINE_TOOL_CUT:
             self.handle_cut_mode_button_press()
+        if tool == appconsts.TLINE_TOOL_KFTOOL:
+            self.handle_kftool_mode_button_press()
             
         self.set_cursor_to_mode()
         self.set_tool_selector_to_mode()
@@ -1251,6 +1262,8 @@ class EditorWindow:
             cursor = self.get_own_cursor(display, surface, px, py)
         elif mode == editorstate.CUT:
             cursor = self.get_own_cursor(display, CUT_CURSOR, 1, 8)
+        elif mode == editorstate.KF_TOOL:
+            cursor = self.get_own_cursor(display, KF_TOOL_CURSOR, 1, 8)
         else:
             cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR)
         
@@ -1287,7 +1300,11 @@ class EditorWindow:
             self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_SLIP)
         elif editorstate.EDIT_MODE() == editorstate.MULTI_MOVE:
             self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_SPACER)
-
+        elif editorstate.EDIT_MODE() == editorstate.CUT:
+            self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_CUT)
+        elif editorstate.EDIT_MODE() == editorstate.KF_TOOL:
+            self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_KFTOOL)
+            
     def tline_cursor_leave(self, event):
         cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR)
         gdk_window = self.window.get_window()

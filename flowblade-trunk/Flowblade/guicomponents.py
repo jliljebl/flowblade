@@ -2802,7 +2802,8 @@ class ToolSelector(ImageMenuLaunch):
                                             appconsts.TLINE_TOOL_SPACER: 6,
                                             appconsts.TLINE_TOOL_BOX: 7,
                                             appconsts.TLINE_TOOL_RIPPLE_TRIM: 3,
-                                            appconsts.TLINE_TOOL_CUT: 8
+                                            appconsts.TLINE_TOOL_CUT: 8,
+                                            appconsts.TLINE_TOOL_KFTOOL: 9
                                      }
    
     def set_tool_pixbuf(self, tool_id):
@@ -2853,7 +2854,8 @@ class HamburgerPressLaunch:
     def _press_event(self, event):
         if self.sensitive == True:
             self.callback(self.widget, event)
-        
+
+
 class MonitorSwitch:
     def __init__(self, callback):
         self.WIDTH = 84

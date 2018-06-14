@@ -486,6 +486,10 @@ def lift_button_pressed():
 
     updater.repaint_tline()
 
+
+def ripple_delete_button_pressed():
+    print "Ripple delete"
+
 def insert_button_pressed():
     track = current_sequence().get_first_active_track()
 

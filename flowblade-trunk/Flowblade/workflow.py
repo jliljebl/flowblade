@@ -57,7 +57,8 @@ def init_data():
                     appconsts.TLINE_TOOL_SPACER:        (_("Spacer"), "multimove_cursor.png"),
                     appconsts.TLINE_TOOL_BOX:           (_("Box"), "overwrite_cursor_box.png"),
                     appconsts.TLINE_TOOL_RIPPLE_TRIM:   (_("Ripple Trim"), "oneroll_cursor_ripple.png"),
-                    appconsts.TLINE_TOOL_CUT:           (_("Cut"), "cut_cursor.png")
+                    appconsts.TLINE_TOOL_CUT:           (_("Cut"), "cut_cursor.png"),
+                    appconsts.TLINE_TOOL_KFTOOL:        (_("Keyframe"), "kftool_cursor.png")
                   }
 
 #----------------------------------------------------- workflow presets
@@ -128,13 +129,13 @@ def workflow_menu_launched(widget, event):
 
     presets_menu = Gtk.Menu()
     
-    standart = guiutils.get_menu_item(_("Standard"), _workflow_menu_callback, (None, "preset standard"))
-    standart.show()
-    presets_menu.add(standart)
+    standard = guiutils.get_menu_item(_("Standard"), _workflow_menu_callback, (None, "preset standard"))
+    standard.show()
+    presets_menu.add(standard)
 
-    standart = guiutils.get_menu_item(_("Film Style"), _workflow_menu_callback, (None, "preset filmstyle"))
-    standart.show()
-    presets_menu.add(standart)
+    film_style = guiutils.get_menu_item(_("Film Style"), _workflow_menu_callback, (None, "preset filmstyle"))
+    film_style.show()
+    presets_menu.add(film_style)
     
     presets_item.set_submenu(presets_menu)
     _workflow_menu.add(presets_item)
@@ -185,7 +186,7 @@ def workflow_menu_launched(widget, event):
     guiutils.add_separetor(_workflow_menu)
     
     # Active tools
-    non_active_tools = range(1, 10) # we have 9 tools currently
+    non_active_tools = range(1, 11) # we have 10 tools currently
     for i in range(0, len(editorpersistance.prefs.active_tools)):#  tool_id in _TOOLS_DATA:
         tool_id = editorpersistance.prefs.active_tools[i]
         tool_name, tool_icon_file = _TOOLS_DATA[tool_id]

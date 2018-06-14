@@ -321,7 +321,7 @@ def slide_trim_mode_init(x, y):
     success = trimmodes.set_slide_mode(track, press_frame)
     return success
 
-# -------------------------------------- misc modes
+# -------------------------------------- cut mode
 def cut_mode_pressed():
     #print "cut_mode_pressed"
     stop_looping()
@@ -334,3 +334,15 @@ def cut_mode_pressed():
     movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
     
     #_set_move_mode()
+
+# -------------------------------------- cut mode
+def kftool_mode_pressed():
+    print "kftool_mode_pressed"
+    stop_looping()
+    current_sequence().clear_hidden_track()
+
+    # Box tool is implemeted as sub mode of OVERWRITE_MOVE
+    editorstate.edit_mode = editorstate.KF_TOOL
+        
+    tlinewidgets.set_edit_mode(None, tlinewidgets.draw_kftool_overlay)
+    movemodes.clear_selected_clips() # Entering trim edit mode clears selection 

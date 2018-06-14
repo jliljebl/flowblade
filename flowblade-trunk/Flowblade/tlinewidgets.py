@@ -102,7 +102,7 @@ AUDIO_TRACK_ICON_POS_SMALL = (5, 6)
 MUTE_ICON_POS = (5, 4)
 MUTE_ICON_POS_NORMAL = (5, 14)
 LOCK_POS = (90, 5)
-INSRT_ICON_POS = (109, 18)
+INSRT_ICON_POS = (108, 18)
 INSRT_ICON_POS_SMALL = (81, 6)
 
 # tracks column icons
@@ -1203,6 +1203,9 @@ def draw_compositor_move_overlay(cr, data):
 def draw_cut_overlay(cr, data):
     pass
 
+def draw_kftool_overlay(cr, data):
+    pass
+    
 def draw_compositor_trim(cr, data):
     clip_in = data["clip_in"]
     clip_out = data["clip_out"]

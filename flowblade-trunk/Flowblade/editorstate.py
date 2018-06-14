@@ -44,6 +44,7 @@ MULTI_MOVE = 10
 CLIP_END_DRAG = 11
 SELECT_TLINE_SYNC_CLIP = 12
 CUT = 13
+KF_TOOL = 14
 
 # SDL version (Not used currently)
 SDL_1 = 1

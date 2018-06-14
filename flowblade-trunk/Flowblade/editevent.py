@@ -45,6 +45,7 @@ from editorstate import EDIT_MODE
 import editorpersistance
 import gui
 import guicomponents
+import kftoolmode
 import medialog
 import modesetting
 import movemodes
@@ -617,6 +618,9 @@ CLIP_END_DRAG_FUNCS = [clipenddragmode.mouse_press,
 CUT_FUNCS = [cutmode.mouse_press,
              cutmode.mouse_move,
              cutmode.mouse_release]
+KFTOOL_FUNCS = [kftoolmode.mouse_press,
+                kftoolmode.mouse_move,
+                kftoolmode.mouse_release]
 
 # (mode -> mouse handler function list) table
 EDIT_MODE_FUNCS = {editorstate.INSERT_MOVE:INSERT_MOVE_FUNCS,
@@ -630,5 +634,6 @@ EDIT_MODE_FUNCS = {editorstate.INSERT_MOVE:INSERT_MOVE_FUNCS,
                    editorstate.SLIDE_TRIM_NO_EDIT:SLIDE_TRIM_NO_EDIT_FUNCS,
                    editorstate.MULTI_MOVE:MULTI_MOVE_FUNCS,
                    editorstate.CLIP_END_DRAG:CLIP_END_DRAG_FUNCS,
-                   editorstate.CUT:CUT_FUNCS}
+                   editorstate.CUT:CUT_FUNCS,
+                   editorstate.KF_TOOL:KFTOOL_FUNCS}
 

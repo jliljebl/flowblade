@@ -153,9 +153,10 @@ def _create_buttons(editor_window):
         
     editor_window.edit_buttons_3 = glassbuttons.GlassButtonsGroup(46, 23, 2, 3, 5)
     editor_window.edit_buttons_3.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "splice_out.png"), tlineaction.splice_out_button_pressed)
+    editor_window.edit_buttons_3.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "ripple_delete.png"), tlineaction.ripple_delete_button_pressed)
     editor_window.edit_buttons_3.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "lift.png"), tlineaction.lift_button_pressed)
     editor_window.edit_buttons_3.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "delete_range.png"), tlineaction.delete_range_button_pressed)
-    editor_window.edit_buttons_3.widget.set_tooltip_text(_("Splice Out - Delete\nLift\nDelete Range"))
+    editor_window.edit_buttons_3.widget.set_tooltip_text(_("Splice Out - Delete\nRipple Delete\nLift\nDelete Range"))
     editor_window.edit_buttons_3.no_decorations = no_decorations
 
     editor_window.edit_buttons_2 = glassbuttons.GlassButtonsGroup(44, 23, 2, 3, 5)
