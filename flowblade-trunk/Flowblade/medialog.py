@@ -18,7 +18,6 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
-import cairo
 import datetime
 
 from gi.repository import Gtk
@@ -28,7 +27,6 @@ from gi.repository import Pango
 
 import appconsts
 import dialogs
-import dialogutils
 import dnd
 import edit
 import gui
@@ -367,13 +365,6 @@ def _group_action_pressed(widget, event):
         name_item.set_active(True)
     else:# "comment"
         comment_item.set_active(True)
-        
-    """
-    if editorpersistance.prefs.midbar_tc_left == True:
-        tc_left.set_active(True)
-    else:
-        tc_middle.set_active(True)
-    """
 
     sort_item.set_submenu(sort_menu)
     sort_item.show()
@@ -649,8 +640,8 @@ class MediaLogListView(Gtk.VBox):
 def get_media_log_events_panel(events_list_view):
     global widgets
 
-    actions_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "media_log_action.png")
-    group_actions_menu = guicomponents.PressLaunch(_group_action_pressed, actions_surface, 38, 22)
+    group_actions_menu = guicomponents.HamburgerPressLaunch(_group_action_pressed)
+    guiutils.set_margins(group_actions_menu.widget, 10, 0, 2, 18)
 
     star_check = Gtk.CheckButton()
     star_check.set_active(True)
@@ -682,7 +673,6 @@ def get_media_log_events_panel(events_list_view):
     
     row1 = Gtk.HBox()
     row1.pack_start(guiutils.get_pad_label(6, 12), False, True, 0)
-    row1.pack_start(group_actions_menu.widget, False, True, 0)
     row1.pack_start(guiutils.get_pad_label(6, 12), False, True, 0)
     row1.pack_start(widgets.group_box, False, True, 0)
     row1.pack_start(guiutils.get_pad_label(6, 12), False, True, 0)
@@ -722,6 +712,7 @@ def get_media_log_events_panel(events_list_view):
     append_displayed.connect("clicked", lambda w:append_log_events())
 
     row2 =  Gtk.HBox()
+    row2.pack_start(group_actions_menu.widget, False, True, 0)
     row2.pack_start(widgets.log_range, False, True, 0)
     row2.pack_start(delete_button, False, True, 0)
     row2.pack_start(Gtk.Label(), True, True, 0)

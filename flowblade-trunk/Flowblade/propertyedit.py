@@ -69,6 +69,7 @@ COLOR = "color"                                             # #rrggbb
 LUT_TABLE = "lut_table"                                     # val;val;val;val;...;val
 WIPE_RESOURCE = "wipe_resource"                             # /path/to/resource.pgm
 FILE_RESOURCE = "file_resource"                             # /path/to/somefile
+PLAIN_STRING = "plain_string"                               # String is just string, for text input
 NOT_PARSED = "not_parsed"                                   # A write out value is not parsed from value
 NOT_PARSED_TRANSITION = "not_parsed_transition"             # A write out value is not parsed from value in transition object
 
@@ -829,6 +830,7 @@ class AffineScaleProperty(EditableProperty):
 # Note: HCS means half comma separated
 EDITABLE_PROPERTY_CREATORS = { \
     DEFAULT:lambda params : EditableProperty(params),
+    PLAIN_STRING:lambda params : EditableProperty(params),
     DEFAULT_TRANSITION:lambda params : TransitionEditableProperty(params),
     SINGLE_KEYFRAME:lambda params: SingleKeyFrameProperty(params),
     OPACITY_IN_GEOM_SINGLE_KF: lambda params : OpacityInGeomSKFProperty(params),

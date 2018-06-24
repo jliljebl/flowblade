@@ -22,7 +22,6 @@
 This module handles snapping to clip ends while mouse dragging on timeline.
 """
 
-import appconsts
 import compositormodes
 import editorstate
 from editorstate import current_sequence

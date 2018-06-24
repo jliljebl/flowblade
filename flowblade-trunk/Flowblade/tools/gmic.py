@@ -30,7 +30,6 @@ from gi.repository import Pango
 import cairo
 import locale
 import mlt
-import numpy as np
 import os
 import re
 import shutil
@@ -53,7 +52,6 @@ import mltprofiles
 import mlttransitions
 import mltfilters
 import positionbar
-import render
 import respaths
 import renderconsumer
 import toolguicomponents
@@ -174,7 +172,7 @@ def main(root_path, force_launch=False):
     # Write stdout to log file
     sys.stdout = open(utils.get_hidden_user_dir_path() + "log_gmic", 'w')
     print "G'MIC version:", str(_gmic_version)
-        
+
     # Init gmic tool session dirs
     if os.path.exists(get_session_folder()):
         shutil.rmtree(get_session_folder())
@@ -183,11 +181,13 @@ def main(root_path, force_launch=False):
 
     init_frames_dirs()
 
-    # Load editor prefs and list of recent projects
+    # Load editor prefs and apply themes
     editorpersistance.load()
-    if editorpersistance.prefs.dark_theme == True:
-        respaths.apply_dark_theme()
-
+    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
+        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+            gui.apply_gtk_css()
+            
     # Init translations module with translations data
     translations.init_languages()
     translations.load_filters_translations()
@@ -195,14 +195,29 @@ def main(root_path, force_launch=False):
 
     # Load preset gmic scripts
     gmicscript.load_preset_scripts_xml()
-    
+
     # Init gtk threads
     Gdk.threads_init()
     Gdk.threads_enter()
 
-    # Request dark them if so desired
-    if editorpersistance.prefs.dark_theme == True:
+    # Set monitor sizes
+    scr_w = Gdk.Screen.width()
+    scr_h = Gdk.Screen.height()
+    editorstate.SCREEN_WIDTH = scr_w
+    editorstate.SCREEN_HEIGHT = scr_h
+    if editorstate.screen_size_large_height() == True and editorstate.screen_size_small_width() == False:
+        global MONITOR_WIDTH, MONITOR_HEIGHT
+        MONITOR_WIDTH = 650
+        MONITOR_HEIGHT = 400 # initial value, this gets changed when material is loaded
+
+    # Themes
+    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+            gui.apply_gtk_css()
+            
+    # Request dark them if so desired
+
 
     repo = mlt.Factory().init()
 
@@ -403,7 +418,6 @@ def load_script_dialog(callback):
     dialog.set_select_multiple(False)
     dialog.connect('response', callback)
     dialog.show()
-
 
 def _load_script_dialog_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
@@ -1003,36 +1017,6 @@ class GmicWindow(Gtk.Window):
  
         self.update_encode_sensitive()
 
-"""
-class PressLaunch:
-    def __init__(self, callback, w=22, h=22):
-        self.widget = cairoarea.CairoDrawableArea2( w, 
-                                                    h, 
-                                                    self._draw)
-        self.widget.press_func = self._press_event
-        self.callback = callback
-        self.sensitive = True
-
-    def set_sensitive(self, value):
-        self.sensitive = value
-        
-    def _draw(self, event, cr, allocation):      
-        cr.move_to(7, 13)
-        cr.line_to(12, 18)
-        cr.line_to(17, 13)
-        cr.close_path()
-        if editorpersistance.prefs.dark_theme == False:
-            cr.set_source_rgb(0, 0, 0)
-        else:
-            cr.set_source_rgb(0.66, 0.66, 0.66)
-        cr.fill()
-        
-    def _press_event(self, event):
-        if self.sensitive == False:
-           return 
-
-        self.callback(self.widget, event)
-"""
 
 #------------------------------------------------- global key listener
 def _global_key_down_listener(widget, event):

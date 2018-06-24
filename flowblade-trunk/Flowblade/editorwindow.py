@@ -25,7 +25,6 @@ import cairo
 
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GdkPixbuf
 from gi.repository import Pango
 
 import app
@@ -54,9 +53,9 @@ import medialinker
 import medialog
 import menuactions
 import middlebar
+import modesetting
 import monitorevent
 import monitorwidget
-import natronanimationswindow
 import respaths
 import render
 import rendergui
@@ -71,11 +70,13 @@ import titler
 import tlineaction
 import tlinewidgets
 import trackaction
+import toolnatron
 import updater
 import undo
+import workflow
 
 # GUI size params
-MEDIA_MANAGER_WIDTH = 250
+MEDIA_MANAGER_WIDTH = 110
 MONITOR_AREA_WIDTH = 600 # defines app min width with NOTEBOOK_WIDTH 400 for small
 
 IMG_PATH = None
@@ -94,6 +95,8 @@ SLIDE_CURSOR = None
 SLIDE_NO_EDIT_CURSOR = None
 MULTIMOVE_CURSOR = None
 ONEROLL_RIPPLE_CURSOR = None
+CUT_CURSOR = None
+KF_TOOL_CURSOR = None
 
 ONEROLL_TOOL = None
 OVERWRITE_TOOL = None
@@ -111,6 +114,12 @@ def _toggle_image_switch(widget, icons):
     else:
         widget.set_image(not_pressed)
 
+def top_level_project_panel():
+    if editorpersistance.prefs.top_level_project_panel == True and editorstate.screen_size_small_width() == False and editorstate.screen_size_large_height() == True:
+        return True
+    
+    return False
+
 
 class EditorWindow:
 
@@ -122,7 +131,7 @@ class EditorWindow:
         global INSERTMOVE_CURSOR, OVERWRITE_CURSOR, TWOROLL_CURSOR, ONEROLL_CURSOR, \
         ONEROLL_NO_EDIT_CURSOR, TWOROLL_NO_EDIT_CURSOR, SLIDE_CURSOR, SLIDE_NO_EDIT_CURSOR, \
         MULTIMOVE_CURSOR, MULTIMOVE_NO_EDIT_CURSOR, ONEROLL_RIPPLE_CURSOR, ONEROLL_TOOL, \
-        OVERWRITE_BOX_CURSOR, OVERWRITE_TOOL
+        OVERWRITE_BOX_CURSOR, OVERWRITE_TOOL, CUT_CURSOR, KF_TOOL_CURSOR
         
         INSERTMOVE_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insertmove_cursor.png")
         OVERWRITE_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "overwrite_cursor.png")
@@ -137,7 +146,9 @@ class EditorWindow:
         MULTIMOVE_NO_EDIT_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "multimove_cursor.png")
         ONEROLL_RIPPLE_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "oneroll_cursor_ripple.png")
         ONEROLL_TOOL = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "oneroll_tool.png")
-        OVERWRITE_TOOL =  cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "overwrite_tool.png")
+        OVERWRITE_TOOL = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "overwrite_tool.png")
+        CUT_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "cut_cursor.png")
+        KF_TOOL_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kftool_cursor.png")
 
         # Context cursors 
         self.context_cursors = {appconsts.POINTER_CONTEXT_END_DRAG_LEFT:(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "ctx_drag_left.png"), 3, 7),
@@ -195,7 +206,7 @@ class EditorWindow:
             ('ThreepointOverWriteClip', None, _('Three Point Overwrite'), None, None, lambda a:tlineaction.three_point_overwrite_pressed()),
             ('RangeOverWriteClip', None, _('Range Overwrite'), None, None, lambda a:tlineaction.range_overwrite_pressed()),
             ('CutClip', None, _('Cut Clip'), None, None, lambda a:tlineaction.cut_pressed()),
-            ('SequenceSplit', None, _('Sequence Split'), None, None, lambda a:tlineaction.sequence_split_pressed()),
+            ('SequenceSplit', None, _('Split to new Sequence at Playhead Position'), None, None, lambda a:tlineaction.sequence_split_pressed()),
             ('DeleteClip', None, _('Lift'), None, None, lambda a:tlineaction.lift_button_pressed()),
             ('SpliceOutClip', None, _('Splice Out'), None, None, lambda a:tlineaction.splice_out_button_pressed()),
             ('ResyncSelected', None, _('Resync'), None, None, lambda a:tlineaction.resync_button_pressed()),
@@ -247,20 +258,22 @@ class EditorWindow:
             ('Titler', None, _('Titler'), None, None, lambda a:titler.show_titler()),
             ('AudioMix', None, _('Audio Mixer'), None, None, lambda a:audiomonitoring.show_audio_monitor()),
             ('GMIC', None, _("G'MIC Effects"), None, None, lambda a:gmic.launch_gmic()),
-            ('NatronAnimations', None, _("Natron Animations Tool"),None, None, lambda a:natronanimationswindow.launch_tool_window()),
+            ('NatronAnimations', None, _("Natron Animations"),None, None, lambda a:toolnatron.launch_natron_animations_tool()),
             ('MediaLink', None, _('Media Relinker'), None, None, lambda a:medialinker.display_linker()),
             ('HelpMenu', None, _('_Help')),
             ('QuickReference', None, _('Contents'), None, None, lambda a:menuactions.quick_reference()),
             ('Environment', None, _('Runtime Environment'), None, None, lambda a:menuactions.environment()),
             ('KeyboardShortcuts', None, _('Keyboard Shortcuts'), None, None, lambda a:dialogs.keyboard_shortcuts_dialog(self.window, menuactions.keyboard_shortcuts_callback)),
             ('About', None, _('About'), None, None, lambda a:menuactions.about()),
-            ('InsertMode', None, None, '1', None, lambda a:_this_is_not_used()),
-            ('OverMode', None, None, '2', None, lambda a:_this_is_not_used()),
-            ('OneRollMode', None, None, '3', None, lambda a:_this_is_not_used()),
-            ('TwoRollMode', None, None, '4', None, lambda a:_this_is_not_used()),
-            ('SlideMode', None, None, '5', None, lambda a:_this_is_not_used()),
-            ('MultiMode', None, None, '6', None, lambda a:_this_is_not_used()),
-            ('BoxMode', None, None, '7', None, lambda a:_this_is_not_used())
+            ('TOOL_ACTION_KEY_1', None, None, '1', None, lambda a:_this_is_not_used()),
+            ('TOOL_ACTION_KEY_2', None, None, '2', None, lambda a:_this_is_not_used()),
+            ('TOOL_ACTION_KEY_3', None, None, '3', None, lambda a:_this_is_not_used()),
+            ('TOOL_ACTION_KEY_4', None, None, '4', None, lambda a:_this_is_not_used()),
+            ('TOOL_ACTION_KEY_5', None, None, '5', None, lambda a:_this_is_not_used()),
+            ('TOOL_ACTION_KEY_6', None, None, '6', None, lambda a:_this_is_not_used()),
+            ('TOOL_ACTION_KEY_7', None, None, '7', None, lambda a:_this_is_not_used()),
+            ('TOOL_ACTION_KEY_8', None, None, '8', None, lambda a:_this_is_not_used()),
+            ('TOOL_ACTION_KEY_9', None, None, '9', None, lambda a:_this_is_not_used())
             ]
 
         menu_string = """<ui>
@@ -298,7 +311,6 @@ class EditorWindow:
                     </menu>
                     <separator/>
                     <menuitem action='CutClip'/>
-                    <menuitem action='SequenceSplit'/>
                     <separator/>
                     <menuitem action='SpliceOutClip'/>
                     <menuitem action='DeleteClip'/>
@@ -346,6 +358,8 @@ class EditorWindow:
                     <menuitem action='CombineSequences'/>
                     <separator/>
                     <menuitem action='LogClipRange'/>
+                    <separator/>
+                    <menuitem action='SequenceSplit'/>
                     <separator/>
                     <menuitem action='RecreateMediaIcons'/>
                     <menuitem action='RemoveUnusedMedia'/>
@@ -404,24 +418,22 @@ class EditorWindow:
         # Disable audio mixer if not available
         if editorstate.audio_monitoring_available == False:
             ui.get_widget('/MenuBar/ToolsMenu/AudioMix').set_sensitive(False)
-            
-        # Menu box
-        menu_vbox = Gtk.VBox(False, 0)
-        menu_vbox.pack_start(self.menubar, False, True, 0)
 
         # Media panel
-        self.bin_list_view = guicomponents.BinListView(
+        self.bin_list_view = guicomponents.BinTreeView(
                                         projectaction.bin_selection_changed, 
-                                        projectaction.bin_name_edited)
+                                        projectaction.bin_name_edited,
+                                        projectaction.bins_panel_popup_requested)
         dnd.connect_bin_tree_view(self.bin_list_view.treeview, projectaction.move_files_to_bin)
         self.bin_list_view.set_property("can-focus",  True)
-        bins_panel = panels.get_bins_panel(self.bin_list_view,
-                                           lambda w,e: projectaction.add_new_bin(),
-                                           lambda w,e: projectaction.delete_selected_bin())
-        bins_panel.set_size_request(MEDIA_MANAGER_WIDTH, 10) # this component is always expanded, so 10 for minimum size ok
-        bins_panel.set_margin_right(4)
+        
+
+        self.bins_panel = panels.get_bins_tree_panel(self.bin_list_view)
+        self.bins_panel.set_size_request(MEDIA_MANAGER_WIDTH, 10) # this component is always expanded, so 10 for minimum size ok
+
         self.media_list_view = guicomponents.MediaPanel(projectaction.media_file_menu_item_selected,
-                                                        updater.set_and_display_monitor_media_file)
+                                                        updater.set_and_display_monitor_media_file,
+                                                        projectaction.media_panel_popup_requested)
     
     
         view = Gtk.Viewport()
@@ -439,49 +451,64 @@ class EditorWindow:
                                 lambda w,e: projectaction.add_media_files(), 
                                 lambda w,e: projectaction.delete_media_files(),
                                 projectaction.columns_count_launch_pressed,
-                                lambda w,e: proxyediting.create_proxy_files_pressed(),
+                                projectaction.hamburger_pressed,  # lambda w,e: proxyediting.create_proxy_files_pressed(),
                                 projectaction.media_filtering_select_pressed)
         guiutils.set_margins(media_panel, 6, 6, 4, 6)
         self.media_panel = media_panel
 
-        self.mm_paned = Gtk.HPaned()
-        self.mm_paned.pack1(bins_panel, resize=True, shrink=True)
-        self.mm_paned.pack2(media_panel, resize=True, shrink=False)
+        # Smallest screens always get bins in same panel as media, others get top level project panel if selected
+        if top_level_project_panel() == True:
+            self.mm_paned = Gtk.HBox()
+            self.mm_paned.add(media_panel)
+        else:
+            self.mm_paned = Gtk.HPaned()
+            self.mm_paned.pack1(self.bins_panel, resize=True, shrink=True)
+            self.mm_paned.pack2(media_panel, resize=True, shrink=False)
+        #self.mm_paned.set_position(10)
 
-        mm_panel = guiutils.set_margins(self.mm_paned, 2, 2, 6, 2)
-
+        mm_panel = guiutils.set_margins(self.mm_paned, 0, 0, 0, 0)
+        
         # Effects panel
         self.effect_select_list_view = guicomponents.FilterListView()
         self.effect_select_combo_box = Gtk.ComboBoxText()
         self.effect_select_list_view.treeview.connect("row-activated", clipeffectseditor.effect_select_row_double_clicked)
         dnd.connect_effects_select_tree_view(self.effect_select_list_view.treeview)
 
-        clip_editor_panel = clipeffectseditor.get_clip_effects_editor_panel(
-                                    self.effect_select_combo_box,
-                                    self.effect_select_list_view)
+
+
+        clip_editor_panel, info_row = clipeffectseditor.get_clip_effects_editor_panel(
+                                        self.effect_select_combo_box,
+                                        self.effect_select_list_view)
 
         clipeffectseditor.widgets.effect_stack_view.treeview.connect("button-press-event",
                                               clipeffectseditor.filter_stack_button_press)
                                               
-        effects_editor_panel = guiutils.set_margins(clipeffectseditor.widgets.value_edit_frame, 0, 0, 4, 0)
+        effects_editor_panel = guiutils.set_margins(clipeffectseditor.widgets.value_edit_frame, 0, 0, 8, 0)
         
         effects_hbox = Gtk.HBox()
-        effects_hbox.set_border_width(5)
+        effects_hbox.set_border_width(0)
         effects_hbox.pack_start(clip_editor_panel, False, False, 0)
         effects_hbox.pack_start(effects_editor_panel, True, True, 0)
 
-        self.effects_panel = guiutils.set_margins(effects_hbox, 2, 2, 2, 2)
+        effects_vbox = Gtk.VBox()
+        effects_vbox.pack_start(effects_hbox, True, True, 0)
+        effects_vbox.pack_start(info_row, False, False, 0)
+        
+        self.effects_panel = guiutils.set_margins(effects_vbox, 8, 0, 7, 2)
         
         # Compositors panel
-        compositor_clip_panel = compositeeditor.get_compositor_clip_panel()
+        action_row = compositeeditor.get_compositor_clip_panel()
         compositor_editor_panel = guiutils.set_margins(compositeeditor.widgets.value_edit_frame, 0, 0, 4, 0)
 
         compositors_hbox = Gtk.HBox()
-        compositors_hbox.set_border_width(5)
-        compositors_hbox.pack_start(compositor_clip_panel, False, False, 0)
+        #compositors_hbox.set_border_width(5)
         compositors_hbox.pack_start(compositor_editor_panel, True, True, 0)
 
-        self.compositors_panel = guiutils.set_margins(compositors_hbox, 2, 2, 2, 2) 
+        compositors_vbox = Gtk.VBox()
+        compositors_vbox.pack_start(compositors_hbox, True, True, 0)
+        compositors_vbox.pack_start(action_row, False, False, 0)
+        
+        self.compositors_panel = guiutils.set_margins(compositors_vbox, 2, 2, 2, 2) 
 
         # Render panel
         try:
@@ -523,23 +550,39 @@ class EditorWindow:
         media_log_panel = guiutils.set_margins(media_log_vbox, 6, 6, 6, 6)
         self.media_log_events_list_view = media_log_events_list_view
 
+        # Project Panel / Pop Level Project pane
         # Sequence list
-        self.sequence_list_view = guicomponents.SequenceListView(
-                                        projectaction.sequence_name_edited)
+        self.sequence_list_view = guicomponents.SequenceListView(   projectaction.sequence_name_edited,
+                                                                    projectaction.sequence_panel_popup_requested)
         seq_panel = panels.get_sequences_panel(
                              self.sequence_list_view,
                              lambda w,e: projectaction.change_edit_sequence(),
                              lambda w,e: projectaction.add_new_sequence(), 
                              lambda w,e: projectaction.delete_selected_sequence())
 
-        # Project info
-        project_info_panel = projectinfogui.get_project_info_panel()
-    
-        # Project vbox and panel
-        project_vbox = Gtk.VBox()
-        project_vbox.pack_start(project_info_panel, False, True, 0)
-        project_vbox.pack_start(seq_panel, True, True, 0)
-        project_panel = guiutils.set_margins(project_vbox, 0, 2, 6, 2)
+        if top_level_project_panel() == True:
+            # Project info
+            project_info_panel = projectinfogui.get_top_level_project_info_panel()
+            PANEL_WIDTH = 10
+            PANEL_HEIGHT = 150
+            top_project_vbox = Gtk.VBox()
+            top_project_vbox.pack_start(project_info_panel, False, False, 0)
+            top_project_vbox.pack_start(self.bins_panel, True, True, 0)
+            top_project_vbox.pack_start(seq_panel, True, True, 0)
+            
+            top_project_vbox.set_size_request(PANEL_WIDTH, PANEL_HEIGHT)
+            top_project_panel = guiutils.set_margins(top_project_vbox, 0, 2, 6, 2)
+        else:
+
+            # Notebook project panel for smallest screens
+            # Project info
+            project_info_panel = projectinfogui.get_project_info_panel()
+            
+            # Project vbox and panel
+            project_vbox = Gtk.VBox()
+            project_vbox.pack_start(project_info_panel, False, True, 0)
+            project_vbox.pack_start(seq_panel, True, True, 0)
+            project_panel = guiutils.set_margins(project_vbox, 0, 2, 6, 2)
         
         # Notebook
         self.notebook = Gtk.Notebook()
@@ -551,7 +594,8 @@ class EditorWindow:
         self.notebook.append_page(media_log_panel, Gtk.Label(label=_("Range Log")))
         self.notebook.append_page(self.effects_panel, Gtk.Label(label=_("Filters")))
         self.notebook.append_page(self.compositors_panel, Gtk.Label(label=_("Compositors")))
-        self.notebook.append_page(project_panel, Gtk.Label(label=_("Project")))
+        if top_level_project_panel() == False:
+            self.notebook.append_page(project_panel, Gtk.Label(label=_("Project")))
         self.notebook.append_page(render_panel, Gtk.Label(label=_("Render")))
         self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
 
@@ -565,31 +609,29 @@ class EditorWindow:
         pos_bar_frame.set_margin_left(6)
     
         # Play buttons row
+        self._create_monitor_buttons()
         self._create_monitor_row_widgets()
+        
         self.player_buttons = glassbuttons.PlayerButtons()
         self.player_buttons.widget.set_tooltip_text(_("Prev Frame - Arrow Left\nNext Frame - Arrow Right\nPlay - Space\nStop - Space\nMark In - I\nMark Out - O\nClear Marks\nTo Mark In\nTo Mark Out"))
-        player_buttons_row = Gtk.HBox(False, 0)
-        player_buttons_row.pack_start(self.player_buttons.widget, False, True, 0)
-        player_buttons_row.pack_start(pos_bar_frame, True, True, 0)
-        player_buttons_row.set_margin_bottom(2)
+        if editorpersistance.prefs.buttons_style == 2: # NO_DECORATIONS
+            self.player_buttons.no_decorations = True
 
-        # Creates monitor switch buttons
-        self._create_monitor_buttons()
-
-        # Monitor top info row
-        monitor_info_row = Gtk.HBox(False, 1)
-        monitor_info_row.pack_start(self.monitor_source, False, False, 0)
-        monitor_info_row.pack_start(Gtk.Label(), True, False, 0)
-        monitor_info_row.pack_start(self.info1, False, False, 0)
-
-        # Switch / pos bar row
         self.view_mode_select = guicomponents.get_monitor_view_select_combo(lambda w, e: tlineaction.view_mode_menu_lauched(w, e))
         self.trim_view_select = guicomponents.get_trim_view_select_combo(lambda w, e: monitorevent.trim_view_menu_launched(w, e))
+        
+        player_buttons_row = Gtk.HBox(False, 0)
+        player_buttons_row.pack_start(self.monitor_switch.widget, False, False, 0)
+        player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
+        player_buttons_row.pack_start(self.player_buttons.widget, False, False, 0)
+        player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
+        player_buttons_row.pack_start(self.trim_view_select.widget, False, False, 0)
+        player_buttons_row.pack_start(self.view_mode_select.widget, False, False, 0)
+        player_buttons_row.set_margin_bottom(2)
+
+        # Switch / pos bar row
         sw_pos_hbox = Gtk.HBox(False, 1)
-        sw_pos_hbox.pack_start(self.sequence_editor_b, True, True, 0)
-        sw_pos_hbox.pack_start(self.clip_editor_b, True, True, 0)
-        sw_pos_hbox.pack_start(self.trim_view_select.widget, False, False, 0)
-        sw_pos_hbox.pack_start(self.view_mode_select.widget, False, False, 0)
+        sw_pos_hbox.pack_start(pos_bar_frame, True, True, 0)
         sw_pos_hbox.set_margin_top(4)
         sw_pos_hbox.set_margin_left(2)
         
@@ -602,7 +644,6 @@ class EditorWindow:
 
         # Monitor
         monitor_vbox = Gtk.VBox(False, 1)
-        monitor_vbox.pack_start(monitor_info_row, False, True, 0)
         monitor_vbox.pack_start(monitor_widget.widget, True, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
         monitor_vbox.pack_start(player_buttons_row, False, True, 0)
@@ -627,15 +668,17 @@ class EditorWindow:
         else:
             self.top_paned.pack1(mm_panel, resize=False, shrink=False)
             self.top_paned.pack2(notebook_vbox, resize=True, shrink=False)
-            
+
         # Top row
         self.top_row_hbox = Gtk.HBox(False, 0)
+        if top_level_project_panel() == True:
+            self.top_row_hbox.pack_start(top_project_panel, False, False, 0)
         self.top_row_hbox.pack_start(self.top_paned, True, True, 0)
         self._update_top_row()
 
         # Edit buttons rows
         self.edit_buttons_row = self._get_edit_buttons_row()
-        if editorpersistance.prefs.dark_theme == False:
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
             self.edit_buttons_frame = Gtk.Frame()
             self.edit_buttons_frame.add(self.edit_buttons_row)
             self.edit_buttons_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
@@ -643,7 +686,7 @@ class EditorWindow:
             self.edit_buttons_frame  = self.edit_buttons_row
 
         # Timeline scale
-        self.tline_scale = tlinewidgets.TimeLineFrameScale(editevent.insert_move_mode_pressed,  
+        self.tline_scale = tlinewidgets.TimeLineFrameScale(modesetting.set_default_edit_mode,  
                                                            updater.mouse_scroll_zoom)
 
         self.tline_info = Gtk.HBox()
@@ -731,6 +774,18 @@ class EditorWindow:
         self.app_v_paned.pack2(tline_pane, resize=True, shrink=False)
         self.app_v_paned.no_dark_bg = True
 
+
+        # Menu box
+        # menubar size 348, 28 if w want to center someting her with set_size_request
+        self.menubar.set_margin_bottom(4)
+        menu_vbox = Gtk.HBox(False, 0)
+        menu_vbox.pack_start(guiutils.get_right_justified_box([self.menubar]), False, False, 0)
+        menu_vbox.pack_start(Gtk.Label(), True, True, 0)
+        menu_vbox.pack_start(self.monitor_source, False, False, 0)
+        menu_vbox.pack_start(guiutils.pad_label(24, 10), False, False, 0)
+        menu_vbox.pack_start(self.info1, False, False, 0)
+        #menu_vbox.pack_start(guiutils.pad_label(32, 10), False, False, 0)
+        
         # Pane
         pane = Gtk.VBox(False, 1)
         pane.pack_start(menu_vbox, False, True, 0)
@@ -785,7 +840,13 @@ class EditorWindow:
             self.window2.show_all()
                         
         # Set paned positions
-        self.mm_paned.set_position(editorpersistance.prefs.mm_paned_position)
+        bin_w = editorpersistance.prefs.mm_paned_position
+        if bin_w < MEDIA_MANAGER_WIDTH + 2:
+            bin_w = 0
+        
+        if top_level_project_panel() == False:
+            self.mm_paned.set_position(bin_w)
+            
         self.top_paned.set_position(editorpersistance.prefs.top_paned_position)
         self.app_v_paned.set_position(editorpersistance.prefs.app_v_paned_position)
 
@@ -804,7 +865,6 @@ class EditorWindow:
         windows_menu.append(one_window)
         
         two_windows = Gtk.RadioMenuItem.new_with_label([one_window], _("Two Windows").encode('utf-8'))
-
 
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
             one_window.set_active(True)
@@ -866,16 +926,13 @@ class EditorWindow:
         sep = Gtk.SeparatorMenuItem()
         menu.append(sep)
 
+        """
         show_monitor_info_item = Gtk.CheckMenuItem(_("Show Monitor Sequence Profile").encode('utf-8'))
         show_monitor_info_item.set_active(editorpersistance.prefs.show_sequence_profile)
         show_monitor_info_item.connect("toggled", lambda w: middlebar._show_monitor_info_toggled(w))
         menu.append(show_monitor_info_item)
-
-        show_vu_item = Gtk.CheckMenuItem(_("Show Master Volume Meter").encode('utf-8'))
-        show_vu_item.set_active(editorpersistance.prefs.show_vu_meter)
-        show_vu_item.connect("toggled", lambda w: self._show_vu_meter(w))
-        menu.append(show_vu_item)
-
+        """
+        
         sep = Gtk.SeparatorMenuItem()
         menu.append(sep)
 
@@ -955,43 +1012,20 @@ class EditorWindow:
         self._update_top_row(True)
 
     def _update_top_row(self, show_all=False):
-        if editorpersistance.prefs.show_vu_meter:
-            if len(self.top_row_hbox) == 1:
-                self.top_row_hbox.pack_end(audiomonitoring.get_master_meter(), False, False, 0)
-        else:
-            if len(self.top_row_hbox) == 2:
-                meter = self.top_row_hbox.get_children()[1]
-                self.top_row_hbox.remove(meter)
-            audiomonitoring.close_master_meter()
+        self.top_row_hbox.pack_end(audiomonitoring.get_master_meter(), False, False, 0)
+
 
         if show_all:
             self.window.show_all()
         
     def _create_monitor_buttons(self):
-        # Monitor switch buttons
-        self.sequence_editor_b = Gtk.RadioButton(None) #, _("Timeline"))
-        self.sequence_editor_b.set_mode(False)
-        self.sequence_editor_b.set_image(Gtk.Image.new_from_file(IMG_PATH + "timeline_button.png"))
-        self.sequence_editor_b.connect("clicked", 
-                        lambda w,e: self._monitor_switch_handler(w), 
-                        None)
-
-        self.clip_editor_b = Gtk.RadioButton.new_from_widget(self.sequence_editor_b)#,_("Clip"))
-        self.clip_editor_b.set_mode(False)
-        self.clip_editor_b.set_image(Gtk.Image.new_from_file(IMG_PATH + "clip_button.png"))
-        self.clip_editor_b.connect("clicked",
-                        lambda w,e: self._monitor_switch_handler(w),
-                        None)
-
-    def _monitor_switch_handler(self, widget):
-        # We get two "clicked" events per toggle, send through only the one
-        # from activated button
-        if ((self.sequence_editor_b.get_active() == True) 
-            and (widget == self.sequence_editor_b)):
+        self.monitor_switch = guicomponents.MonitorSwitch(self._monitor_switch_handler)
+        
+    def _monitor_switch_handler(self, action):
+        if action == appconsts.MONITOR_TLINE_BUTTON_PRESSED:
             updater.display_sequence_in_monitor() 
 
-        if ((self.clip_editor_b.get_active() == True) 
-            and (widget == self.clip_editor_b)):
+        if action == appconsts.MONITOR_CLIP_BUTTON_PRESSED:
             updater.display_clip_in_monitor()
 
     def connect_player(self, mltplayer):
@@ -1023,8 +1057,9 @@ class EditorWindow:
         self.pos_bar.set_listener(mltplayer.seek_position_normalized)
 
     def _get_edit_buttons_row(self):
-        modes_pixbufs = [INSERTMOVE_CURSOR, OVERWRITE_CURSOR, ONEROLL_CURSOR, ONEROLL_RIPPLE_CURSOR, TWOROLL_CURSOR, SLIDE_CURSOR, MULTIMOVE_CURSOR, OVERWRITE_BOX_CURSOR]
-        middlebar.create_edit_buttons_row_buttons(self, modes_pixbufs)
+        tools_pixbufs = [INSERTMOVE_CURSOR, OVERWRITE_CURSOR, ONEROLL_CURSOR, ONEROLL_RIPPLE_CURSOR, \
+                         TWOROLL_CURSOR, SLIDE_CURSOR, MULTIMOVE_CURSOR, OVERWRITE_BOX_CURSOR, CUT_CURSOR, KF_TOOL_CURSOR]
+        middlebar.create_edit_buttons_row_buttons(self, tools_pixbufs)
     
         buttons_row = Gtk.HBox(False, 1)
         if editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_COMPONENTS_CENTERED:
@@ -1050,76 +1085,131 @@ class EditorWindow:
     
         self.pos_bar.widget.set_tooltip_text(_("Monitor Sequence/Media current position"))
         
-        self.sequence_editor_b.set_tooltip_text(_("Display Current Sequence on Timeline"))
-        self.clip_editor_b.set_tooltip_text(_("Display Monitor Clip"))
+        #self.sequence_editor_b.set_tooltip_text(_("Display Current Sequence on Timeline"))
+        #self.clip_editor_b.set_tooltip_text(_("Display Monitor Clip"))
 
+    def set_default_edit_tool(self):
+        # First active tool is the default tool. So we need to always have atleast one tool available.
+        self.change_tool(editorpersistance.prefs.active_tools[0])
+
+    def change_tool(self, tool_id):
+        if tool_id == appconsts.TLINE_TOOL_INSERT:
+            self.handle_insert_move_mode_button_press()
+        elif tool_id == appconsts.TLINE_TOOL_OVERWRITE:
+            self.handle_over_move_mode_button_press()
+        elif tool_id == appconsts.TLINE_TOOL_TRIM:
+            self.handle_one_roll_mode_button_press()
+        elif tool_id == appconsts.TLINE_TOOL_ROLL:
+            self.handle_two_roll_mode_button_press()
+        elif tool_id == appconsts.TLINE_TOOL_SLIP:
+            self.handle_slide_mode_button_press()
+        elif tool_id == appconsts.TLINE_TOOL_SPACER:
+            self.handle_multi_mode_button_press()
+        elif tool_id == appconsts.TLINE_TOOL_BOX:
+            self.handle_box_mode_button_press()
+        elif tool_id == appconsts.TLINE_TOOL_RIPPLE_TRIM:
+            self.handle_one_roll_ripple_mode_button_press()
+        elif tool_id == appconsts.TLINE_TOOL_CUT:
+            self.handle_cut_mode_button_press()
+        elif tool_id == appconsts.TLINE_TOOL_KFTOOL:
+            self.handle_kftool_mode_button_press()
+        else:
+            # We should not hit this
+            print "editorwindow.change_tool() else: hit!"
+            return 
+        
+        gui.editor_window.set_tool_selector_to_mode()
+        
     def handle_over_move_mode_button_press(self):
-        editevent.overwrite_move_mode_pressed()
+        modesetting.overwrite_move_mode_pressed()
         self.set_cursor_to_mode()
 
     def handle_box_mode_button_press(self):
-        editevent.box_mode_pressed()
+        modesetting.box_mode_pressed()
         self.set_cursor_to_mode()
 
     def handle_insert_move_mode_button_press(self):
-        editevent.insert_move_mode_pressed()
+        modesetting.insert_move_mode_pressed()
         self.set_cursor_to_mode()
 
     def handle_one_roll_mode_button_press(self):
-        editevent.oneroll_trim_no_edit_init()
+        editorstate.trim_mode_ripple = False
+        modesetting.oneroll_trim_no_edit_init()
         self.set_cursor_to_mode()
 
+    def handle_one_roll_ripple_mode_button_press(self):
+        editorstate.trim_mode_ripple = True
+        modesetting.oneroll_trim_no_edit_init()
+        self.set_cursor_to_mode()
+        
     def handle_two_roll_mode_button_press(self):
-        editevent.tworoll_trim_no_edit_init()
+        modesetting.tworoll_trim_no_edit_init()
         self.set_cursor_to_mode()
 
     def handle_slide_mode_button_press(self):
-        editevent.slide_trim_no_edit_init()
+        modesetting.slide_trim_no_edit_init()
         self.set_cursor_to_mode()
 
     def handle_multi_mode_button_press(self):
-        editevent.multi_mode_pressed()
+        modesetting.multi_mode_pressed()
+        self.set_cursor_to_mode()
+
+    def handle_cut_mode_button_press(self):
+        modesetting.cut_mode_pressed()
+        self.set_cursor_to_mode()
+        
+    def handle_kftool_mode_button_press(self):
+        modesetting.kftool_mode_pressed()
         self.set_cursor_to_mode()
 
     def toggle_trim_ripple_mode(self):
         editorstate.trim_mode_ripple = (editorstate.trim_mode_ripple == False)
-        editevent.stop_looping()
+        modesetting.stop_looping()
         editorstate.edit_mode = editorstate.ONE_ROLL_TRIM_NO_EDIT
         tlinewidgets.set_edit_mode(None, None)
-        self.set_mode_selector_to_mode()
+        self.set_tool_selector_to_mode()
         self.set_tline_cursor(editorstate.EDIT_MODE())
         updater.set_trim_mode_gui()
     
     def toggle_overwrite_box_mode(self):
         editorstate.overwrite_mode_box = (editorstate.overwrite_mode_box == False)
         boxmove.clear_data()
-        self.set_mode_selector_to_mode()
+        self.set_tool_selector_to_mode()
         self.set_tline_cursor(editorstate.EDIT_MODE())
-        
+
     def mode_selector_pressed(self, selector, event):
-        guicomponents.get_mode_selector_popup_menu(selector, event, self.mode_selector_item_activated)
+        workflow.get_tline_tool_popup_menu(selector, event, self.tool_selector_item_activated)
     
-    def mode_selector_item_activated(self, selector, mode):
-        if mode == 0:
+    def tool_selector_item_activated(self, selector, tool):
+        if tool == appconsts.TLINE_TOOL_INSERT:
             self.handle_insert_move_mode_button_press()
-        if mode == 1:
+        if tool == appconsts.TLINE_TOOL_OVERWRITE:
             self.handle_over_move_mode_button_press()
-        if mode == 2:
+        if tool == appconsts.TLINE_TOOL_TRIM:
+            self.handle_one_roll_mode_button_press()
+        if tool == appconsts.TLINE_TOOL_RIPPLE_TRIM:
+            self.handle_one_roll_ripple_mode_button_press()
+        """
             if editorstate.edit_mode != editorstate.ONE_ROLL_TRIM and editorstate.edit_mode != editorstate.ONE_ROLL_TRIM_NO_EDIT:
                 self.handle_one_roll_mode_button_press()
             else:
                 self.toggle_trim_ripple_mode()
-        if mode == 3:
+        """
+        if tool == appconsts.TLINE_TOOL_ROLL:
             self.handle_two_roll_mode_button_press()
-        if mode == 4:
+        if tool == appconsts.TLINE_TOOL_SLIP:
             self.handle_slide_mode_button_press()
-        if mode == 5:
+        if tool == appconsts.TLINE_TOOL_SPACER:
             self.handle_multi_mode_button_press()
-        if mode == 6:
+        if tool == appconsts.TLINE_TOOL_BOX:
             self.handle_box_mode_button_press()
-                
+        if tool == appconsts.TLINE_TOOL_CUT:
+            self.handle_cut_mode_button_press()
+        if tool == appconsts.TLINE_TOOL_KFTOOL:
+            self.handle_kftool_mode_button_press()
+            
         self.set_cursor_to_mode()
-        self.set_mode_selector_to_mode()
+        self.set_tool_selector_to_mode()
         
     def set_cursor_to_mode(self):
         if editorstate.cursor_on_tline == True:
@@ -1170,7 +1260,10 @@ class EditorWindow:
         elif mode == editorstate.CLIP_END_DRAG:
             surface, px, py = self.context_cursors[tlinewidgets.pointer_context]
             cursor = self.get_own_cursor(display, surface, px, py)
-            #cursor = Gdk.Cursor.new(Gdk.CursorType.SB_H_DOUBLE_ARROW)
+        elif mode == editorstate.CUT:
+            cursor = self.get_own_cursor(display, CUT_CURSOR, 1, 8)
+        elif mode == editorstate.KF_TOOL:
+            cursor = self.get_own_cursor(display, KF_TOOL_CURSOR, 1, 8)
         else:
             cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR)
         
@@ -1184,30 +1277,34 @@ class EditorWindow:
         cursor = self.get_own_cursor(display, surface, px, py)
         gdk_window.set_cursor(cursor)
 
-    def set_mode_selector_to_mode(self):
+    def set_tool_selector_to_mode(self):
         if editorstate.EDIT_MODE() == editorstate.INSERT_MOVE:
-            self.modes_selector.set_pixbuf(0)
+            self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_INSERT)
         elif editorstate.EDIT_MODE() == editorstate.OVERWRITE_MOVE:
             if editorstate.overwrite_mode_box == False:
-                self.modes_selector.set_pixbuf(1)
+                self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_OVERWRITE)
             else:
-                self.modes_selector.set_pixbuf(7)
+                self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_BOX)
         elif editorstate.EDIT_MODE() == editorstate.ONE_ROLL_TRIM or editorstate.EDIT_MODE() == editorstate.ONE_ROLL_TRIM_NO_EDIT:
             if editorstate.trim_mode_ripple == False:
-                self.modes_selector.set_pixbuf(2)
+                self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_TRIM)
             else:
-                self.modes_selector.set_pixbuf(3)
+                self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_RIPPLE_TRIM)
         elif editorstate.EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
-            self.modes_selector.set_pixbuf(4)
+            self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_ROLL)
         elif editorstate.EDIT_MODE() == editorstate.TWO_ROLL_TRIM_NO_EDIT:
-            self.modes_selector.set_pixbuf(4)
+            self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_ROLL)
         elif editorstate.EDIT_MODE() == editorstate.SLIDE_TRIM:
-            self.modes_selector.set_pixbuf(5)
+            self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_SLIP)
         elif editorstate.EDIT_MODE() == editorstate.SLIDE_TRIM_NO_EDIT:
-            self.modes_selector.set_pixbuf(5)
+            self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_SLIP)
         elif editorstate.EDIT_MODE() == editorstate.MULTI_MOVE:
-            self.modes_selector.set_pixbuf(6)
-
+            self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_SPACER)
+        elif editorstate.EDIT_MODE() == editorstate.CUT:
+            self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_CUT)
+        elif editorstate.EDIT_MODE() == editorstate.KF_TOOL:
+            self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_KFTOOL)
+            
     def tline_cursor_leave(self, event):
         cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR)
         gdk_window = self.window.get_window()
@@ -1236,10 +1333,12 @@ class EditorWindow:
         self.monitor_source = Gtk.Label(label="sequence1")
         self.monitor_source.set_ellipsize(Pango.EllipsizeMode.END)
         self.monitor_source.modify_font(Pango.FontDescription(font_desc))
+        self.monitor_source.set_sensitive(False)
         self.info1 = Gtk.Label(label="--:--:--:--")
         self.info1.set_ellipsize(Pango.EllipsizeMode.END)
         self.info1.modify_font(Pango.FontDescription(font_desc))
-
+        self.info1.set_sensitive(False)
+        
 def _this_is_not_used():
     print "THIS WAS USED!!!!!"
 

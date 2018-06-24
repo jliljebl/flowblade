@@ -22,8 +22,6 @@
 Module handles user edit events for trim, roll and slip trim modes. 
 """
 
-import traceback
-
 import appconsts
 import dialogutils
 import edit
@@ -35,7 +33,7 @@ from editorstate import EDIT_MODE
 import gui
 import tlinewidgets
 import updater
-import utils
+
 
 # Default value for pre- and post roll in loop playback
 DEFAULT_LOOP_HALF_LENGTH = 25
@@ -433,14 +431,19 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         # Case: editing to-clip
         if edit_data["to_side_being_edited"]:
             ripple_end_bound = edit_frame + ripple_data.max_backwards
+            edit_data["trim_limits"]["ripple_display_end"] = edit_data["trim_limits"]["both_end"] 
             if edit_data["trim_limits"]["both_end"] > ripple_end_bound:
                 edit_data["trim_limits"]["both_end"] = ripple_end_bound
         # Case: editing from-clip
         else:
             ripple_start_bound = edit_frame - ripple_data.max_backwards
-            if edit_data["trim_limits"]["both_start"] < ripple_start_bound: # name "both_start"] is artifact fromearlier when trimlimits were used for bot "trim and "roll" edits
+            edit_data["trim_limits"]["ripple_display_start"] = edit_data["trim_limits"]["both_start"] 
+            if edit_data["trim_limits"]["both_start"] < ripple_start_bound: # name "both_start"] is artifact fromearlier when trimlimits were used for both "trim and "roll" edits
                 edit_data["trim_limits"]["both_start"] = ripple_start_bound
-                
+    else:
+        edit_data["trim_limits"]["ripple_display_end"] = -1
+        edit_data["trim_limits"]["ripple_display_start"] = -1
+            
     current_sequence().clear_hidden_track()
 
     # Cant't trim a blank clip. Blank clips are special in MLT and can't be

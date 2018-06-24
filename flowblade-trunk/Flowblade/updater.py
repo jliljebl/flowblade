@@ -187,7 +187,21 @@ def tline_scrolled(adjustment):
     else:
         tlinewidgets.pos = 0
     repaint_tline()
+
+def maybe_move_playback_tline_range(current_frame):
+    # Prefs check
+    if editorpersistance.prefs.playback_follow_move_tline_range == False:
+        return False
     
+    moved = False
+    last_frame = tlinewidgets.get_last_tline_view_frame()
+    if current_frame > last_frame:
+        moved = True
+        adj_value = float(last_frame + 1) / float(current_sequence().get_length()) * 100.0
+        gui.tline_scroll.set_value(adj_value)
+    
+    return moved
+ 
 def center_tline_to_current_frame():
     """
     Sets scroll widget adjustment to place current frame in the middle of display.
@@ -320,7 +334,6 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     Sets mltplayer producer to be video file clip and updates GUI.
     """
     if MONITOR_MEDIA_FILE() == None:
-        gui.editor_window.clip_editor_b.set_active(False)
         return
 
     global save_monitor_frame
@@ -330,7 +343,6 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     if not editorstate.current_is_move_mode():
         set_clip_edit_mode_callback()
 
-    gui.clip_editor_b.set_sensitive(True)
     editorstate._timeline_displayed = False
 
     # Save timeline pos if so directed.
@@ -403,9 +415,11 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     gui.pos_bar.widget.grab_focus()
     gui.media_list_view.widget.queue_draw()
     
-    if editorpersistance.prefs.auto_play_in_clip_monitor == True:
-        PLAYER().start_playback()
+    # feature removed curently
+    #if editorpersistance.prefs.auto_play_in_clip_monitor == True:
+    #    PLAYER().start_playback()
     
+    gui.monitor_switch.widget.queue_draw()
     repaint_tline()
 
 def display_monitor_clip_name():#we're displaying length and range length also
@@ -425,9 +439,9 @@ def display_sequence_in_monitor():
     
     # If this gets called without user having pressed 'Timeline' button we'll 
     # programmatically press it to recall this method to have the correct button down.
-    if gui.sequence_editor_b.get_active() == False:
-        gui.sequence_editor_b.set_active(True)
-        return
+    #if gui.sequence_editor_b.get_active() == False:
+    #    gui.sequence_editor_b.set_active(True)
+    #    return
         
     editorstate._timeline_displayed = True
 
@@ -446,22 +460,27 @@ def display_sequence_in_monitor():
     gui.pos_bar.update_display_from_producer(PLAYER().producer)
     display_marks_tc()
 
+    gui.monitor_switch.widget.queue_draw()
     repaint_tline()
 
 def update_seqence_info_text():
     name = editorstate.current_sequence().name
-    profile_desc = editorstate.current_sequence().profile.description()
-
     prog_len = PLAYER().producer.get_length()
     if prog_len < 2: # # to 'fix' the single frame black frame at start, will bug for actual 1 frame sequences
         prog_len = 0
     tc_info = utils.get_tc_string(prog_len)
+
+    """
+    profile_desc = editorstate.current_sequence().profile.description()
+
+
         
     if editorpersistance.prefs.show_sequence_profile:
         gui.editor_window.monitor_source.set_text(name + "  -  " + profile_desc + "  -  " + tc_info)
     else:
         gui.editor_window.monitor_source.set_text(name + "  -  " + tc_info)
-
+    """
+    gui.editor_window.monitor_source.set_text(name + "  -  " + tc_info)
     range_info = _get_marks_range_info_text(PLAYER().producer.mark_in, PLAYER().producer.mark_out)
     gui.editor_window.info1.set_text(range_info)
 
@@ -492,9 +511,7 @@ def switch_monitor_display():
     if editorstate.MONITOR_MEDIA_FILE() == None:
         return
     if editorstate._timeline_displayed == True:
-        gui.editor_window.clip_editor_b.set_active(True)
-    else:
-        gui.editor_window.sequence_editor_b.set_active(True)
+        gui.monitor_switch.widget.queue_draw()
 
 def display_tline_cut_frame(track, index):
     """
@@ -524,16 +541,20 @@ def set_and_display_monitor_media_file(media_file):
     selected for display by double clicking or drag'n'drop
     """
     editorstate._monitor_media_file = media_file
+    #display_clip_in_monitor(clip_monitor_currently_active = True)
     
+    # !!???!! I'm not understandung this after new monitor switch, see if we have problems here
     # If we're already displaying clip monitor, then already button is down we call display_clip_in_monitor(..)
     # directly, but dont save position because we're not displaying now.
     #
     # If we're displaying sequence we do programmatical click on "Clip" button 
-    # to display clip via it's signal listener. 
-    if gui.editor_window.clip_editor_b.get_active() == True:
+    # to display clip via it's signal listener.
+    
+    if editorstate.timeline_visible() == True: # This was changed
         display_clip_in_monitor(clip_monitor_currently_active = True)
     else:
-        gui.editor_window.clip_editor_b.set_active(True)
+        display_clip_in_monitor()
+
 
 # --------------------------------------- frame displayes
 def update_frame_displayers(frame):

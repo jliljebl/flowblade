@@ -24,7 +24,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging, time, struct, subprocess, sys, os, array, argparse
-import stat, tempfile, hashlib, re
+import tempfile, hashlib, re
 import numpy
 
 import utils

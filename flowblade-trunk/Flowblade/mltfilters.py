@@ -25,7 +25,6 @@ are attached to mlt.Producer objects.
 
 import copy
 
-from gi.repository import Gtk
 from gi.repository import GdkPixbuf
 
 import mlt

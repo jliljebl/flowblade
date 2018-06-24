@@ -64,12 +64,12 @@ import gmic
 import gui
 import keyevents
 import medialog
-import mlt
 import mltenv
 import mltfilters
 import mltplayer
 import mltprofiles
 import mlttransitions
+import modesetting
 import movemodes
 import persistance
 import positionbar
@@ -95,6 +95,7 @@ import translations
 import undo
 import updater
 import utils
+import workflow
 
 
 import jackaudio
@@ -188,7 +189,7 @@ def main(root_path):
 
     # Load editor prefs and list of recent projects
     editorpersistance.load()
-    if editorpersistance.prefs.dark_theme == True:
+    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
         respaths.apply_dark_theme()
     if editorpersistance.prefs.display_all_audio_levels == False:
         editorstate.display_all_audio_levels = False
@@ -205,7 +206,10 @@ def main(root_path):
     # Apr-2017 - SvdB - Keyboard shortcuts
     shortcuts.load_shortcut_files()
     shortcuts.load_shortcuts()
-    
+
+    # We respaths and translations data available so we need to init in a function.
+    workflow.init_data()
+
     # RHEL7/CentOS compatibility fix
     if gtk_version == "3.8.8":
         GObject.threads_init()
@@ -214,10 +218,12 @@ def main(root_path):
     Gdk.threads_init()
     Gdk.threads_enter()
 
-    # Request dark theme if so desired
-    if editorpersistance.prefs.dark_theme == True:
+    # Themes
+    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+            gui.apply_gtk_css()
+        
     # Load drag'n'drop images
     dnd.init()
 
@@ -341,6 +347,8 @@ def main(root_path):
             global assoc_timeout_id
             assoc_timeout_id = GObject.timeout_add(10, open_assoc_file)
 
+
+
     # SDL 2 consumer needs to created after Gtk.main() has run enough for window to be visble
     #if editorstate.get_sdl_version() == editorstate.SDL_2: # needs more state considerion still
     #    print "SDL2 timeout launch"
@@ -363,7 +371,7 @@ def monkeypatch_callbacks():
     render.open_media_file_callback = projectaction.open_rendered_file
 
     # Set callback for undo/redo ops, batcherrender app does not need this 
-    undo.set_post_undo_redo_callback(editevent.set_post_undo_redo_edit_mode)
+    undo.set_post_undo_redo_callback(modesetting.set_post_undo_redo_edit_mode)
     undo.repaint_tline = updater.repaint_tline
 
     # # Drag'n'drop callbacks
@@ -423,7 +431,7 @@ def create_gui():
     """
     tlinewidgets.load_icons()
 
-    updater.set_clip_edit_mode_callback = editevent.set_clip_monitor_edit_mode
+    updater.set_clip_edit_mode_callback = modesetting.set_clip_monitor_edit_mode
     updater.load_icons()
 
     # Notebook indexes are differn for 1 and 2 window layouts
@@ -451,8 +459,7 @@ def create_gui():
     # Give undo a reference to uimanager for menuitem state changes
     undo.set_menu_items(gui.editor_window.uimanager)
     
-    # Set button to display sequence in toggled state.
-    gui.sequence_editor_b.set_active(True)
+    updater.display_sequence_in_monitor()
 
 def create_player():
     """
@@ -534,7 +541,6 @@ def init_editor_state():
 
     gui.media_view_filter_selector.set_pixbuf(editorstate.media_view_filter)
 
-    gui.clip_editor_b.set_sensitive(False)
     gui.editor_window.window.set_title(editorstate.project.name + " - Flowblade")
     gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(False)
     gui.editor_window.uimanager.get_widget("/MenuBar/EditMenu/Undo").set_sensitive(False)
@@ -548,6 +554,7 @@ def init_editor_state():
 
     # Clear editors 
     clipeffectseditor.clear_clip()
+    clipeffectseditor.effect_selection_changed() # to get No Clip text
     compositeeditor.clear_compositor()
 
     # Show first pages on notebooks
@@ -557,9 +564,8 @@ def init_editor_state():
     movemodes.clear_selection_values()
 
     # Set initial edit mode
-    gui.editor_window.modes_selector.set_pixbuf(0)
-    editevent.insert_move_mode_pressed()
-
+    modesetting.set_default_edit_mode()
+    
     # Create array needed to update compositors after all edits
     editorstate.current_sequence().restack_compositors()
 
@@ -626,7 +632,7 @@ def open_project(new_project):
     if new_project.update_media_lengths_on_load == True:
         projectaction.update_media_lengths()
 
-    gui.editor_window.handle_insert_move_mode_button_press()
+    gui.editor_window.set_default_edit_tool()
     editorstate.trim_mode_ripple = False
 
     updater.set_timeline_height()
@@ -772,7 +778,7 @@ def _set_draw_params():
     if editorstate.screen_size_small_width() == True:
         appconsts.NOTEBOOK_WIDTH = 450
         editorwindow.MONITOR_AREA_WIDTH = 450
-        editorwindow.MEDIA_MANAGER_WIDTH = 220
+        editorwindow.MEDIA_MANAGER_WIDTH = 100
         
     if editorstate.screen_size_small_height() == True:
         appconsts.TOP_ROW_HEIGHT = 10
@@ -790,7 +796,7 @@ def _set_draw_params():
         sequence.TRACK_HEIGHT_NORMAL = appconsts.TRACK_HEIGHT_NORMAL # track height in canvas and column
         sequence.TRACK_HEIGHT_SMALL = appconsts.TRACK_HEIGHT_SMALL # track height in canvas and column
         tlinewidgets.set_tracks_double_height_consts()
-        
+
 def _too_small_screen_exit():
     global exit_timeout_id
     exit_timeout_id = GObject.timeout_add(200, _show_too_small_info)
@@ -859,7 +865,10 @@ def _shutdown_dialog_callback(dialog, response_id):
         editorpersistance.prefs.exit_allocation_window_2 = (alloc.width, alloc.height, pos_x, pos_y)       
     editorpersistance.prefs.app_v_paned_position = gui.editor_window.app_v_paned.get_position()
     editorpersistance.prefs.top_paned_position = gui.editor_window.top_paned.get_position()
-    editorpersistance.prefs.mm_paned_position = gui.editor_window.mm_paned.get_position()
+    if editorwindow.top_level_project_panel() == True:
+        editorpersistance.prefs.mm_paned_position = 200  # This is not used until user sets preference to not have top level project panel
+    else:
+        editorpersistance.prefs.mm_paned_position = gui.editor_window.mm_paned.get_position()
     editorpersistance.save()
 
     # Block reconnecting consumer before setting window not visible

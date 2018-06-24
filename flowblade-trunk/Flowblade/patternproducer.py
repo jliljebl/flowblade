@@ -24,10 +24,8 @@ corresponding mlt.Producers for timeline.
 import cairo
 import copy
 import md5
-import traceback
 
 from gi.repository import Gtk, Gdk
-from gi.repository import GdkPixbuf
 
 import mlt
 

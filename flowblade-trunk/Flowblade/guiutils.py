@@ -311,6 +311,23 @@ def get_menu_item(text, callback, data, sensitive=True):
     item.set_sensitive(sensitive)
     return item
 
+def get_radio_menu_items_group(menu, labels, msgs, callback, active_index):
+    first_item = Gtk.RadioMenuItem()
+    first_item.set_label(labels[0])
+    first_item.show()
+    menu.append(first_item)
+    if active_index == 0:
+        first_item.set_active(True)
+    first_item.connect("activate", callback, msgs[0])
+    
+    for i in range(1, len(labels)):
+        radio_item = Gtk.RadioMenuItem.new_with_label([first_item], labels[i])
+        menu.append(radio_item)
+        radio_item.show()
+        if active_index == i:
+            radio_item.set_active(True)
+        radio_item.connect("activate", callback, msgs[i])
+        
 def add_separetor(menu):
     sep = Gtk.SeparatorMenuItem()
     sep.show()

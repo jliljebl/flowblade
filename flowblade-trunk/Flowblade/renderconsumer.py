@@ -23,7 +23,7 @@ Module contains objects and methods needed to create render consumers.
 """
 
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gdk
 
 import mlt
 import time

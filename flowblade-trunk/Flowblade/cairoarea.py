@@ -24,10 +24,7 @@ Cairo by setting the raw function on ceation, and listen to its mouse and keyboa
 """
 
 from gi.repository import Gtk
-from gi.repository import GObject
 from gi.repository import Gdk
-
-import gui
 
 bg_color = None
 

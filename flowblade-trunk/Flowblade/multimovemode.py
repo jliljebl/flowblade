@@ -18,7 +18,7 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gdk
 
 import appconsts
 import edit

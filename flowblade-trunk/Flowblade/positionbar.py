@@ -25,9 +25,9 @@ class PositionBar - Displays position on a clip or a sequence
 
 import cairo
 
-from gi.repository import Gtk
 from gi.repository import Gdk
 
+import appconsts
 from cairoarea import CairoDrawableArea2
 import editorpersistance
 import editorstate
@@ -38,8 +38,8 @@ trimmodes_set_no_edit_trim_mode = None # This monkey patched in app.py to avoid 
 
 
 # Draw params
-BAR_WIDTH = 200 # NOTE: DOES NOT HAVE ANY EFFECT IF OTHER WIDTHS MAKE MONITOR AREA MIN WIDTH BIGGER, AS THIS EXPANDS TO FILL
-BAR_HEIGHT = 20 # component height
+BAR_WIDTH = 200 # NOTE: DOES NOT HAVE ANY EFFECT IF OTHER WIDTHS MAKE MONITOR AREA MIN WIDTH BIGGER, THIS EXPANDS TO FILL
+BAR_HEIGHT = 10 # component height
 LINE_WIDTH = 3
 LINE_HEIGHT = 6
 LINE_COLOR = (0.3, 0.3, 0.3)
@@ -82,7 +82,7 @@ class PositionBar:
 
         self.handle_trimmodes = handle_trimmodes
 
-        if editorpersistance.prefs.dark_theme == True:
+        if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
             global LINE_COLOR, DISABLED_BG_COLOR, SELECTED_RANGE_COLOR, MARK_COLOR
             LINE_COLOR = DARK_LINE_COLOR
             DISABLED_BG_COLOR = DARK_DISABLED_BG_COLOR
@@ -116,7 +116,7 @@ class PositionBar:
         self.widget.queue_draw()
 
     def set_dark_bg_color(self):
-        if editorpersistance.prefs.dark_theme == False:
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
             return
 
         r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())

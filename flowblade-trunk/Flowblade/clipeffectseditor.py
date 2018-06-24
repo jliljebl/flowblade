@@ -22,7 +22,6 @@
 Module handles clip effects editing logic and gui
 """
 
-import cairo
 import copy
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -32,10 +31,8 @@ import time
 import atomicfile
 import dialogs
 import dialogutils
-import dnd
 import edit
 import editorpersistance
-import editorstate
 from editorstate import PROJECT
 import gui
 import guicomponents
@@ -77,6 +74,11 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     """
     create_widgets()
 
+    stack_label = guiutils.bold_label(_("Clip Filters Stack"))
+    
+    label_row = guiutils.get_left_justified_box([stack_label])
+    guiutils.set_margins(label_row, 0, 4, 0, 0)
+    
     ad_buttons_box = Gtk.HBox(True,1)
     ad_buttons_box.pack_start(widgets.add_effect_b, True, True, 0)
     ad_buttons_box.pack_start(widgets.del_effect_b, True, True, 0)
@@ -103,24 +105,22 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     
     exit_button_vbox = Gtk.VBox(False, 2)
     exit_button_vbox.pack_start(widgets.exit_button, False, False, 0)
-    exit_button_vbox.pack_start(Gtk.Label(), True, True, 0)
 
     info_row = Gtk.HBox(False, 2)
+    info_row.pack_start(widgets.hamburger_launcher.widget, False, False, 0)
+    info_row.pack_start(Gtk.Label(), True, True, 0)
     info_row.pack_start(widgets.clip_info, False, False, 0)
-    info_row.pack_start(exit_button_vbox, True, True, 0)
+    info_row.pack_start(Gtk.Label(), True, True, 0)
     
     combo_row = Gtk.HBox(False, 2)
     combo_row.pack_start(group_combo_box, True, True, 0)
-    combo_row.pack_start(guiutils.get_pad_label(8, 2), False, False, 0)
 
     group_name, filters_array = mltfilters.groups[0]
     effects_list_view.fill_data_model(filters_array)
     effects_list_view.treeview.get_selection().select_path("0")
     
     effects_vbox = Gtk.VBox(False, 2)
-    effects_vbox.pack_start(info_row, False, False, 0)
-    if editorstate.screen_size_small_height() == False:
-        effects_vbox.pack_start(guiutils.get_pad_label(2, 2), False, False, 0)
+    effects_vbox.pack_start(label_row, False, False, 0)
     effects_vbox.pack_start(stack_buttons_box, False, False, 0)
     effects_vbox.pack_start(effect_stack, True, True, 0)
     effects_vbox.pack_start(combo_row, False, False, 0)
@@ -129,7 +129,7 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     widgets.group_combo.set_tooltip_text(_("Select Filter Group"))
     widgets.effect_list_view.set_tooltip_text(_("Current group Filters"))
 
-    return effects_vbox
+    return effects_vbox, info_row
 
 def _group_selection_changed(group_combo, filters_list_view):
     group_name, filters_array = mltfilters.groups[group_combo.get_active()]
@@ -210,7 +210,7 @@ def clear_clip():
     global clip
     clip = None
     _set_no_clip_info()
-    clear_effects_edit_panel()
+    effect_selection_changed()
     update_stack_view()
     set_enabled(False)
 
@@ -240,15 +240,19 @@ def create_widgets():
     widgets.value_edit_frame.set_shadow_type(Gtk.ShadowType.NONE)
     widgets.value_edit_frame.add(widgets.value_edit_box)
 
-    widgets.add_effect_b = Gtk.Button(_("Add"))
-    widgets.del_effect_b = Gtk.Button(_("Delete"))
+    widgets.add_effect_b = Gtk.Button()#_("Add"))
+    widgets.add_effect_b.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "filter_add.png"))
+    widgets.del_effect_b = Gtk.Button() #_("Delete"))
+    widgets.del_effect_b.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "filter_delete.png"))
     widgets.toggle_all = Gtk.Button()
     widgets.toggle_all.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "filters_all_toggle.png"))
 
     widgets.add_effect_b.connect("clicked", lambda w,e: add_effect_pressed(), None)
     widgets.del_effect_b.connect("clicked", lambda w,e: delete_effect_pressed(), None)
     widgets.toggle_all.connect("clicked", lambda w: toggle_all_pressed())
-    
+
+    widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
+    guiutils.set_margins(widgets.hamburger_launcher.widget, 6, 8, 1, 0)    
     # These are created elsewhere and then monkeypatched here
     widgets.group_combo = None
     widgets.effect_list_view = None
@@ -266,6 +270,8 @@ def set_enabled(value):
     widgets.effect_stack_view.treeview.set_sensitive(value)
     widgets.exit_button.set_sensitive(value)
     widgets.toggle_all.set_sensitive(value)
+    widgets.hamburger_launcher.set_sensitive(value)
+    widgets.hamburger_launcher.widget.queue_draw()
 
 def update_stack_view():
     if clip != None:
@@ -369,6 +375,7 @@ def delete_effect_pressed():
     # Set last filter selected and display in editor
     edit_effect_update_blocked = False
     if len(clip.filters) == 0:
+        effect_selection_changed() # to display info text
         return
     path = str(len(clip.filters) - 1)
     # Causes edit_effect_selected() called as it is the "change" listener
@@ -452,17 +459,13 @@ def effect_selection_changed():
     # Check we have clip
     if clip == None:
         keyframe_editor_widgets = []
+        show_text_in_edit_area(_("No Clip"))
         return
     
     # Check we actually have filters so we can display one.
     # If not, clear previous filters from view.
     if len(clip.filters) == 0:
-        vbox = Gtk.VBox(False, 0)
-        vbox.pack_start(Gtk.Label(), False, False, 0)
-        widgets.value_edit_frame.remove(widgets.value_edit_box)
-        widgets.value_edit_frame.add(vbox)
-        vbox.show_all()
-        widgets.value_edit_box = vbox
+        show_text_in_edit_area(_("Clip Has No Filters"))
         keyframe_editor_widgets = []
         return
     
@@ -549,12 +552,6 @@ def effect_selection_changed():
             if not hasattr(editor_row, "no_separator"):
                 vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
         vbox.pack_start(guiutils.pad_label(12,12), False, False, 0)
-                
-        hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger_big.png")
-        hamburger_launcher = guicomponents.PressLaunch(_hamburger_launch_pressed, hamburger_launcher_surface, 24, 24)
-        
-        sl_row = guiutils.get_left_justified_box([hamburger_launcher.widget])
-        vbox.pack_start(sl_row, False, False, 0)
         
         vbox.pack_start(Gtk.Label(), True, True, 0)
 
@@ -572,6 +569,36 @@ def effect_selection_changed():
 
     widgets.value_edit_box = scroll_window
 
+def show_text_in_edit_area(text):
+    vbox = Gtk.VBox(False, 0)
+
+    filler = Gtk.EventBox()
+    filler.add(Gtk.Label())
+    vbox.pack_start(filler, True, True, 0)
+    
+    info = Gtk.Label(label=text)
+    info.set_sensitive(False)
+    filler = Gtk.EventBox()
+    filler.add(info)
+    vbox.pack_start(filler, False, False, 0)
+    
+    filler = Gtk.EventBox()
+    filler.add(Gtk.Label())
+    vbox.pack_start(filler, True, True, 0)
+
+    vbox.show_all()
+
+    scroll_window = Gtk.ScrolledWindow()
+    scroll_window.add_with_viewport(vbox)
+    scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+    scroll_window.show_all()
+
+    widgets.value_edit_frame.remove(widgets.value_edit_box)
+    widgets.value_edit_frame.add(scroll_window)
+
+    widgets.value_edit_box = scroll_window
+    
+        
 def clear_effects_edit_panel():
     widgets.value_edit_frame.remove(widgets.value_edit_box)
     label = Gtk.Label()

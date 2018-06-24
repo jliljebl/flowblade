@@ -26,7 +26,6 @@ Edits, undos and redos are done by creating and calling methods on these
 EditAction objects and placing them on the undo/redo stack.
 """
 
-import audiowaveform
 import appconsts
 import compositeeditor
 import compositorfades
@@ -655,6 +654,50 @@ def _cut_redo(self):
     
     _cut(self.track, self.index, self.clip_cut_frame, self.clip, \
          self.new_clip)
+
+#----------------- CUT ALL TRACKS
+# "tracks_cut_data" which is a list of [{"track","clip","index","clip_cut_frame"}] objects, list of cut data for all tracks
+def cut_all_action(data):
+    action = EditAction(_cut_all_undo,_cut_all_redo, data)
+    return action
+
+def _cut_all_undo(self):    
+    for i in range(0, len(self.tracks_cut_data)):
+        track_cut_data = self.tracks_cut_data[i]
+        if track_cut_data == None: # not all tracks are cut
+            continue
+        new_clip = self.new_clips[i]
+        _remove_clip(track_cut_data["track"], track_cut_data["index"])
+        _remove_clip(track_cut_data["track"], track_cut_data["index"])
+        _insert_clip(track_cut_data["track"], track_cut_data["clip"],  
+                     track_cut_data["index"], track_cut_data["clip"].clip_in,
+                     new_clip.clip_out)
+
+def _cut_all_redo(self):
+    # Create new second clips list if does not exist
+    if(not hasattr(self, "new_clips")):
+        self.new_clips = []
+        first_redo = True
+    else:
+        first_redo = False
+
+    for i in range(0, len(self.tracks_cut_data)):
+        track_cut_data = self.tracks_cut_data[i]
+        
+        if track_cut_data == None: # not all tracks are cut
+            if first_redo == True:
+                self.new_clips.append(None)
+            continue
+                
+        if first_redo == True:
+            new_clip = _create_clip_clone(track_cut_data["clip"])
+            self.new_clips.append(new_clip)
+        else:
+            new_clip = self.new_clips[i]
+            
+        _cut(track_cut_data["track"], track_cut_data["index"],
+             track_cut_data["clip_cut_frame"], track_cut_data["clip"],
+             new_clip)
 
 
 #----------------- INSERT CLIP
@@ -1351,7 +1394,6 @@ def _ripple_trim_last_clip_end_undo(self):
     _ripple_trim_blanks_undo(self)
 
 def _ripple_trim_last_clip_end_redo(self):
-    print self.__dict__
     _remove_clip(self.track, self.index)
     _insert_clip(self.track, self.clip, self.index,
                  self.clip.clip_in, self.clip.clip_out + self.edit_delta)

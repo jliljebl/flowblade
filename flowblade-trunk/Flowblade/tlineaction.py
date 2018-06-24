@@ -39,6 +39,7 @@ import boxmove
 import clipeffectseditor
 import compositeeditor
 import compositormodes
+import cutmode
 import dialogs
 import dialogutils
 import glassbuttons
@@ -191,19 +192,22 @@ def split_confirmed(dialog, response_id):
     # first we destroy the dialog and then we carry out our task
     dialog.destroy()
 
+    # we determine the frame position
+    tline_frame = PLAYER().current_frame()
+
     # We start with actually cutting the sequence
     # actually this poses performance loss, as we do the track loop twice
     # one in cut_pressed and one in this method
     # also other operations are repeated
-    cut_pressed()
-
-    # we determine the frame position
-    tline_frame = PLAYER().current_frame()
+    cutmode.cut_all_tracks(tline_frame)
 
     # prepare a data structure that will receive our clips we want to move to
     # another sequence plus all the information to actually put them at the same
     # relative position
     clips_to_move = []
+
+    # we collect the compositors that need to be moved
+    compositors_to_move = _collect_compositors_for_split(tline_frame)
 
     # now we iterate over all tracks and collect the ones that provide content
     # after the cut position
@@ -214,13 +218,28 @@ def split_confirmed(dialog, response_id):
         # track with this index and above are left of the cut position,
         # so we gather required information for our new sequence
         index = track.get_clip_index_at(int(tline_frame))
+
+        # we need to check whether the first clip at cut is a blank clip
+        blank_length = 0
+        if index < len(track.clips):
+            first_clip = track.clips[index]
+            if first_clip.is_blanck_clip == True:
+                # yes, it is a blank clip, therefore we need to modify its length
+                # but only if the clip_start lies before the current frame
+                clip_start = track.clip_start(index)
+                if tline_frame > clip_start:
+                    blank_length = first_clip.clip_out - (tline_frame - clip_start) + 1
+                else:
+                    blank_length = first_clip.clip_out - clip_start + 1
+
         for j in range(index, len(track.clips)):
             clip = track.clips[j]
             data = {
                 "track_index": i,
                 "clip": clip,
                 "clip_in": clip.clip_in,
-                "clip_out": clip.clip_out
+                "clip_out": clip.clip_out,
+                "blank_length": blank_length
             }
 
             clips_to_move.append(data)
@@ -240,21 +259,28 @@ def split_confirmed(dialog, response_id):
     # so we collected all the data for all tracks
     # now we create a new sequence and will open that very sequence
     name = _("sequence_") + str(PROJECT().next_seq_number)
-    sequence.AUDIO_TRACKS_COUNT, sequence.VIDEO_TRACKS_COUNT = current_sequence().get_track_counts()
+    sequence.VIDEO_TRACKS_COUNT, sequence.AUDIO_TRACKS_COUNT = current_sequence().get_track_counts()
     PROJECT().add_named_sequence(name)
     app.change_current_sequence(len(PROJECT().sequences) - 1)
 
     # and now, we nee to iterate over the collected clips and add them to
     # our newly created sequence
-    for i in range(0, len(clips_to_move)):
+    for i in range(0, len(clips_to_move) - 1):
         collected = clips_to_move[i]
+        track_index = collected["track_index"]
 
         # determine the track we need to put the clip in
-        index = collected["track_index"]
+        clip = collected["clip"]
+        if clip.is_blanck_clip == True:
+            length = collected["blank_length"]
+            if length == 0:
+                length = clip.clip_length()
+            current_sequence().append_blank(length, get_track(track_index))
+            continue
 
         #prepare the date and append it to the sequence
         data = {
-            "track": get_track(index),
+            "track": get_track(track_index),
             "clip": collected["clip"],
             "clip_in": collected["clip_in"],
             "clip_out": collected["clip_out"]
@@ -262,7 +288,76 @@ def split_confirmed(dialog, response_id):
 
         action = edit.append_action(data)
         action.do_edit()
+    
+    # also, we need to add the compositors from our collection
+    _add_compositors_to_split(compositors_to_move)
+    
+    # update time line to show whole range of new sequence
+    updater.zoom_project_length()
 
+def _collect_compositors_for_split(playhead):
+    # there are basically three cases we need to take into consideration
+    # when dealing with compositors.
+    # first: the compositor lies completely before the playhead position
+    # we do not have to deal with those and leave them untouched
+    # compositor.clip_out < playhead position
+    # second: the compositor lies completly behind the playhead position
+    # the compositor needs to be removed from the split sequence and needs to
+    # be moved to the newly created one. we need to create a duplicate and modify
+    # its clip_in and clip_out properties. basically this formula should apply:
+    # new_compositor.clip_in = old_compositor.clip_in - playhead position (same
+    # for clip_out)
+    # third: the playhead position is on a compositor. In this case we need to
+    # split the compositor in two, move one part to the new sequence and leave
+    # the first part in the old one. This can probably be done by simply
+    # modifying the clip_out property of the old compositor.
+    # the new compositor will have clip_in == 0 and
+    # clip_out = oc.clip_out - playhead position.
+
+    # result structure
+    new_compositors = []
+    compositors_to_remove = []
+
+    #  we start with analyzing and collecting the compositors
+    old_compositors = current_sequence().get_compositors()
+    for index in range(0, len(old_compositors)):
+        old_compositor = old_compositors[index]
+        if old_compositor.clip_out < playhead:
+            continue
+        
+        new_compositor = current_sequence().create_compositor(old_compositor.type_id)
+        new_compositor.clone_properties(old_compositor)
+        if old_compositor.clip_in < playhead:
+            new_compositor.set_in_and_out(0, old_compositor.clip_out - playhead)
+            old_compositor.set_in_and_out(old_compositor.clip_in, playhead)
+        else:
+            new_compositor.set_in_and_out(old_compositor.clip_in - playhead, old_compositor.clip_out - playhead)
+            compositors_to_remove.append(old_compositor)
+
+        new_compositor.transition.set_tracks(old_compositor.transition.a_track, old_compositor.transition.b_track)
+        new_compositor.obey_autofollow = old_compositor.obey_autofollow
+        new_compositors.append(new_compositor)
+    
+    # done with collecting all new necessary compositors
+    # now we remove the compositors that are completly after playhead positions
+    # cut compositors have already been reduces in length
+    for index in range(0, len(compositors_to_remove)):
+        old_compositor = compositors_to_remove[index]
+        old_compositor.selected = False
+        data = {"compositor":old_compositor}
+        action = edit.delete_compositor_action(data)
+        action.do_edit()
+    
+    return new_compositors
+
+def _add_compositors_to_split(new_compositors):
+    # now we basically just need to add the compositors in the list to the
+    # right track
+    for index in range(0, len(new_compositors)):
+        new_compositor = new_compositors[index]
+        current_sequence()._plant_compositor(new_compositor)
+        current_sequence().compositors.append(new_compositor)
+    current_sequence().restack_compositors()
 
 def splice_out_button_pressed():
     """
@@ -406,6 +501,10 @@ def lift_button_pressed():
     movemodes.clear_selection_values()
 
     updater.repaint_tline()
+
+
+def ripple_delete_button_pressed():
+    print "Ripple delete"
 
 def insert_button_pressed():
     track = current_sequence().get_first_active_track()
@@ -1768,7 +1867,7 @@ def do_compositor_data_paste(paste_objs):
 def _timeline_has_focus(): # copied from keyevents.by. maybe put in utils?
     if(gui.tline_canvas.widget.is_focus()
        or gui.tline_column.widget.is_focus()
-       or gui.editor_window.modes_selector.widget.is_focus()
+       or gui.editor_window.tool_selector.widget.is_focus()
        or (gui.pos_bar.widget.is_focus() and timeline_visible())
        or gui.tline_scale.widget.is_focus()
        or glassbuttons.focus_group_has_focus(glassbuttons.DEFAULT_FOCUS_GROUP)):

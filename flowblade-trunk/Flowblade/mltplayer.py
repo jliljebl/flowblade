@@ -23,9 +23,7 @@ Module contains an object that is used to do playback from mlt.Producers to
 a Xwindow of a GTK+ widget and os audiosystem using a SDL consumer.
 """
 
-from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GdkX11
 
 import mlt
 import os
@@ -33,7 +31,6 @@ import time
 
 import gui
 from editorstate import timeline_visible
-import editorstate
 import utils
 import updater
 
@@ -291,8 +288,6 @@ class Player:
         return (self.producer.get_speed() != 0)
 
     def _ticker_event(self):
-        #if self.consumer == None:
-        #    return 
             
         # Stop ticker if playback has stopped.
         if (self.consumer.is_stopped() or self.producer.get_speed() == 0):
@@ -333,9 +328,13 @@ class Player:
             or (current_frame >= self.get_active_length()))):
             self.seek_frame(self.loop_start, False) #NOTE: False==GUI not updated
             self.producer.set_speed(1)
-
+        
         Gdk.threads_enter()
-        updater.update_frame_displayers(current_frame)
+        # If prefs set and frame out tline view, move tline view
+        range_moved = updater.maybe_move_playback_tline_range(current_frame) # range_moved given just to avoid two updates
+        if range_moved == False:
+            # Just display tline
+            updater.update_frame_displayers(current_frame)
         Gdk.threads_leave()
         
     def get_active_length(self):

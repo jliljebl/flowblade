@@ -26,7 +26,9 @@ from gi.repository import Gtk, Gdk
 
 import pickle
 
+import appconsts
 import editorpersistance
+import respaths
 import utils
 
 # Editor window
@@ -38,6 +40,7 @@ editmenu = None
 # Project data lists
 media_list_view = None
 bin_list_view = None
+bin_panel = None
 sequence_list_view = None
 effect_stack_list_view = None
 
@@ -51,7 +54,7 @@ render_out_folder = None
 
 # Media tab
 media_view_filter_selector = None
-proxy_button = None
+#proxy_button = None
 
 # Monitor
 pos_bar = None
@@ -68,12 +71,10 @@ tline_left_corner = None
 big_tc = None
 
 monitor_widget = None
-
+monitor_switch = None
 # indexes match editmode values in editorstate.py
 notebook_buttons = None
 
-play_b = None
-clip_editor_b = None
 sequence_editor_b = None
 
 
@@ -99,14 +100,15 @@ def capture_references(new_editor_window):
     """
     global editor_window, media_list_view, bin_list_view, sequence_list_view, pos_bar, \
     tc, tline_display, tline_scale, tline_canvas, tline_scroll, tline_v_scroll, tline_info, \
-    tline_column, play_b, clip_editor_b, sequence_editor_b, \
+    tline_column, play_b, \
     effect_select_list_view, effect_select_combo_box, project_info_vbox, middle_notebook, big_tc, editmenu, notebook_buttons, tline_left_corner, \
-    monitor_widget
+    monitor_widget, bin_panel, monitor_switch
 
     editor_window = new_editor_window
 
     media_list_view = editor_window.media_list_view
     bin_list_view = editor_window.bin_list_view
+    bin_panel = editor_window.bins_panel
     sequence_list_view = editor_window.sequence_list_view
 
     middle_notebook = editor_window.notebook
@@ -118,7 +120,8 @@ def capture_references(new_editor_window):
     tc = editor_window.tc
 
     monitor_widget = editor_window.monitor_widget
-
+    monitor_switch = editor_window.monitor_switch
+    
     tline_display = editor_window.tline_display
     tline_scale = editor_window.tline_scale
     tline_canvas = editor_window.tline_canvas
@@ -126,9 +129,6 @@ def capture_references(new_editor_window):
     tline_info = editor_window.tline_info
     tline_column = editor_window.tline_column
     tline_left_corner = editor_window.left_corner
-
-    clip_editor_b = editor_window.clip_editor_b
-    sequence_editor_b = editor_window.sequence_editor_b
 
     big_tc = editor_window.big_TC
 
@@ -164,7 +164,7 @@ def set_theme_colors():
     r, g, b, a = unpack_gdk_color(sel_bg_color)
     if r == 0.0 and g == 0.0 and b == 0.0:
         print "Selected color NOT detected"
-        if editorpersistance.prefs.dark_theme == False:
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
             c = theme_colors[2]
         else:
             c = theme_colors[3]
@@ -176,11 +176,14 @@ def set_theme_colors():
     # Try to detect bg color and set frow fallback if fails
     style = editor_window.window.get_style_context()
     bg_color = style.get_background_color(Gtk.StateFlags.NORMAL)
+    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+        bg_color = Gdk.RGBA(red=(30.0/255.0), green=(35.0/255.0), blue=(51.0/255.0), alpha=1.0)
+    #(30, 35, 51)
     r, g, b, a = unpack_gdk_color(bg_color)
 
     if r == 0.0 and g == 0.0 and b == 0.0:
         print "BG color NOT detected"
-        if editorpersistance.prefs.dark_theme == False:
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
             c = theme_colors[0]
         else:
             c = theme_colors[1]
@@ -218,7 +221,7 @@ def load_current_colors():
 
 def _colors_data_path():
     return utils.get_hidden_user_dir_path() + _CURRENT_THEME_COLORS_FILE
-
+  
 def _print_widget(widget): # debug
     path_str = widget.get_path().to_string()
     path_str = path_str.replace("GtkWindow:dir-ltr.background","")
@@ -228,4 +231,19 @@ def _print_widget(widget): # debug
     path_str = path_str.replace("[1/2]","")
     path_str = path_str.replace("GtkVBox:. GtkVPaned:[2/2]. GtkHBox:. GtkHPaned:. GtkVBox:. GtkNotebook:[1/1]","notebook:")
     print path_str
+
+def apply_gtk_css():
+    gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
+    if Gtk.get_major_version() == 3 and Gtk.get_minor_version() == 22:
+        print "Gtk version is " + gtk_version + ", Flowblade theme is available."
+    else:
+        print "Gtk version is " + gtk_version + ", Flowblade theme only available for Gtk 3.22"
+        return
+        
+    provider = Gtk.CssProvider.new()
+    display = Gdk.Display.get_default()
+    screen = display.get_default_screen()
+    Gtk.StyleContext.add_provider_for_screen (screen, provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+    
+    provider.load_from_path(respaths.ROOT_PATH + "/res/css/gtk-dark-fix.css")
 

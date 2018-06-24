@@ -51,7 +51,6 @@ import gui
 import guicomponents
 import guiutils
 import edit
-import editevent
 import editorstate
 from editorstate import current_sequence
 from editorstate import current_bin
@@ -75,6 +74,10 @@ import undo
 import updater
 import utils
 
+media_panel_popup_menu = Gtk.Menu()
+bin_popup_menu = Gtk.Menu()
+sequence_popup_menu = Gtk.Menu()
+hamburger_popup_menu = Gtk.Menu()
 
 save_time = None
 save_icon_remove_event_id = None
@@ -701,7 +704,7 @@ def _open_recent_shutdown_dialog_callback(dialog, response_id, path):
 
 def _actually_open_recent(path):
     if not os.path.exists(path):
-        editorpersistance.recent_projects.projects.pop(index)
+        editorpersistance.remove_non_existing_recent_projects()
         editorpersistance.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
         primary_txt = _("Project not found on disk")
         secondary_txt = _("Project can't be loaded.")
@@ -836,6 +839,73 @@ def _write_out_render_item(single_render_item_item):
     return True
 
 # ----------------------------------- media files
+def hamburger_pressed(widget, event):
+    hamburger_menu = hamburger_popup_menu
+    
+    guiutils.remove_children(hamburger_menu)
+
+    hamburger_menu.add(guiutils.get_menu_item(_("Render Proxy Files For Selected Media"), _hamburger_menu_item_selected, "render proxies", ))
+    guiutils.add_separetor(hamburger_menu)
+    hamburger_menu.add(guiutils.get_menu_item(_("Select All"), _hamburger_menu_item_selected, "select all"))
+    hamburger_menu.add(guiutils.get_menu_item(_("Select None"), _hamburger_menu_item_selected, "select none"))
+
+    move_menu_item = Gtk.MenuItem(_("Move Selected Media To Bin").encode('utf-8'))
+    move_menu = Gtk.Menu()
+    if len(PROJECT().bins) == 1:
+        item = guiutils.get_menu_item(_("No Target Bins"), _hamburger_menu_item_selected, "dummy")
+        item.set_sensitive(False)
+        move_menu.add(item)
+    else:
+        index = 0
+        for media_bin in PROJECT().bins:
+            if media_bin == PROJECT().c_bin:
+                index = index + 1
+                continue
+            name = media_bin
+            item = guiutils.get_menu_item(media_bin.name, _hamburger_menu_item_selected, str(index))
+            move_menu.add(item)
+            item.show()
+            index = index + 1
+    move_menu_item.set_submenu(move_menu)
+    hamburger_menu.add(move_menu_item)
+    move_menu_item.show()
+    
+    hamburger_menu.popup(None, None, None, None, event.button, event.time)
+
+
+def _hamburger_menu_item_selected(widget, msg):
+    if msg == "render proxies":
+        proxyediting.create_proxy_files_pressed()
+    elif msg == "select all":
+        gui.media_list_view.select_all()
+    elif msg == "select none":
+        gui.media_list_view.clear_selection()
+    else:
+        target_bin_index = int(msg)
+        
+        media_bin_indexes = []
+        for selected_object in gui.media_list_view.selected_objects:
+            media_bin_indexes.append(selected_object.bin_index)
+        
+        move_files_to_bin(target_bin_index, media_bin_indexes)
+        #print target_bin_inxdex, media_bin_indexes
+
+def media_panel_popup_requested(event):
+    panel_menu = media_panel_popup_menu
+    
+    guiutils.remove_children(panel_menu)
+
+    panel_menu.add(guiutils.get_menu_item(_("Add Media Clip..."), _media_panel_menu_item_selected, "add media", ))
+    panel_menu.add(guiutils.get_menu_item(_("Add Image Sequence..."), _media_panel_menu_item_selected, "add image sequence"))
+    
+    panel_menu.popup(None, None, None, None, event.button, event.time)
+
+def _media_panel_menu_item_selected(widget, msg):
+    if msg == "add media":
+        add_media_files()
+    elif msg == "add image sequence":
+        add_image_sequence()
+    
 def add_media_files(this_call_is_retry=False):
     """
     User selects a media file to added to current bin.
@@ -1234,6 +1304,23 @@ def _get_compound_clip_default_name_date_str():
 
 
 # ------------------------------------ bins
+def bins_panel_popup_requested(event):
+    bin_menu = bin_popup_menu
+    
+    guiutils.remove_children(bin_menu)
+
+    bin_menu.add(guiutils.get_menu_item(_("Add Bin"), _bin_menu_item_selected, ("add bin", None)))
+    bin_menu.add(guiutils.get_menu_item(_("Delete Selected Bin"), _bin_menu_item_selected, ("delete bin", None)))
+    
+    bin_menu.popup(None, None, None, None, event.button, event.time)    
+
+def _bin_menu_item_selected(widget, data):
+    msg, bin_obj = data
+    if msg == "add bin":
+        add_new_bin()
+    elif msg == "delete bin":
+        delete_selected_bin()
+
 def add_new_bin():
     """
     Adds new unnamed bin and sets it selected 
@@ -1355,6 +1442,26 @@ def change_edit_sequence():
     movemodes.clear_selected_clips()
     
     app.change_current_sequence(row)
+
+def sequence_panel_popup_requested(event):
+    sequence_menu = sequence_popup_menu
+    
+    guiutils.remove_children(sequence_menu)
+
+    sequence_menu.add(guiutils.get_menu_item(_("Add New Sequence"), _sequece_menu_item_selected, ("add sequence", None)))
+    sequence_menu.add(guiutils.get_menu_item(_("Edit Selected Sequence"), _sequece_menu_item_selected, ("edit sequence", None)))
+    sequence_menu.add(guiutils.get_menu_item(_("Delete Selected Sequence"), _sequece_menu_item_selected, ("delete sequence", None)))
+    
+    sequence_menu.popup(None, None, None, None, event.button, event.time)    
+
+def _sequece_menu_item_selected(widget, data):
+    msg, bin_obj = data
+    if msg == "add sequence":
+        add_new_sequence()
+    elif msg == "delete sequence":
+        delete_selected_sequence()
+    elif msg == "edit sequence":
+        change_edit_sequence()
 
 def add_new_sequence():
     default_name = _("sequence_") + str(PROJECT().next_seq_number)

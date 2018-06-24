@@ -43,7 +43,8 @@ SLIDE_TRIM_NO_EDIT = 9
 MULTI_MOVE = 10
 CLIP_END_DRAG = 11
 SELECT_TLINE_SYNC_CLIP = 12
-
+CUT = 13
+KF_TOOL = 14
 
 # SDL version (Not used currently)
 SDL_1 = 1
@@ -61,10 +62,10 @@ edit_mode = INSERT_MOVE
 # Compositor autofollow state. If true when edit is performed, all compositors are auto resynced on first do, redo and undo actions.
 auto_follow = False
 
-# Trim tool ripple mode is expressed as a flag
+# Ripple Trim tool is ONE_ROLL_TRIM mode + True on this flag
 trim_mode_ripple = False
 
-# Ovewrite tool box mode is expressed as a flag
+# Box tool OVERWRITE_MOVE tool mode + True on this flag
 overwrite_mode_box = False
 
 # Media files view filter for selecting displayed media objects in bin
@@ -75,6 +76,9 @@ _monitor_media_file = None
 
 # Flag for timeline/clip display in monitor
 _timeline_displayed = True
+
+# Used to ignore drag and release events when press doesn't start an action that can/should handle those events.
+timeline_mouse_disabled = False
 
 # Timeline current frame is saved here while clip is being displayed in monitor
 # and PLAYER() current frame is not timeline frame 
@@ -107,7 +111,7 @@ cursor_on_tline = False
 cursor_is_tline_sensitive = True
 
 # Flag for running JACK audio server. If this is on when SDLConsumer created in mltplayer.py
-# jack rack filter will bw taached to it
+# jack rack filter will bw attached to it
 # NOT USED CURRENTLY.
 attach_jackrack = False
 
@@ -165,7 +169,7 @@ def PROJECT():
     
 def PLAYER():
     return player
-    
+
 def EDIT_MODE():
     return edit_mode
     
@@ -228,7 +232,13 @@ def screen_size_small_width():
         return True
     else:
         return False
-
+"""
+def screen_size_smallest_width():
+    if SCREEN_WIDTH < 1279:
+        return True
+    else:
+        return False
+"""
 def screen_size_small():
     if screen_size_small_height() == True or screen_size_small_width() == True:
         return True
@@ -241,6 +251,12 @@ def screen_size_small_height():
     else:
         return False
 
+def screen_size_large_height():
+    if SCREEN_HEIGHT > 1050:
+        return True
+    else:
+        return False
+        
 def get_cached_trim_clip(path):
     try:
         return _trim_clips_cache[path]

@@ -22,10 +22,8 @@
 Clip player used to select frames for preview and range selection.
 """
 
-from gi.repository import Gdk
 
 import mlt
-import os
 import time
 
 import mltprofiles

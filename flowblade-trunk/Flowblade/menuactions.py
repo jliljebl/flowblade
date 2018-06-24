@@ -26,7 +26,6 @@ This module handles the less central actions inited by user from menu.
 
 from gi.repository import Gtk, Gdk
 
-import platform
 import threading
 import webbrowser
 import time
@@ -36,19 +35,14 @@ import dialogs
 import dialogutils
 import editorpersistance
 from editorstate import PROJECT
-from editorstate import PLAYER
 from editorstate import current_sequence
 import editorstate
 import gui
 import jackaudio
-import mltenv
-import mltfilters
-import mlttransitions
 import projectdata
 import patternproducer
 import profilesmanager
 import shortcuts
-import renderconsumer
 import respaths
 
 profile_manager_dialog = None
