@@ -176,6 +176,22 @@ def sequence_split_pressed():
     on the right side of the cut to a newly created sequence that is then
     opened.
     """
+    # before we start we will ask the user whether he really wants to do, what he
+    # just asked for. The intention of this is to provide some more background
+    # information
+    heading = _("Split to new Sequence at Playhead Position")
+    info = _("Do you realy want to split this sequence into two?\nThis will create a new sequence receiving righthand content of your currently active sequence. Also the same content will be removed from your currently active sequence.\nThe newly created sequence will be opened.\n\n Continue?")
+    dialogutils.warning_confirmation(split_confirmed, heading, info, gui.editor_window.window)
+
+def split_confirmed(dialog, response_id):
+    # so, does the user really want to split the sequence?
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+
+    # first we destroy the dialog and then we carry out our task
+    dialog.destroy()
+
     # we determine the frame position
     tline_frame = PLAYER().current_frame()
 
