@@ -22,14 +22,62 @@
 Module handles Keyframe tool functionality
 """
 
+from editorstate import current_sequence
+import tlinewidgets
+import updater
+
+edit_data = None
+
 # ---------------------------------------------- mouse events
 def mouse_press(event, frame):
-    pass
+
+    x = event.x
+    y = event.y
+
+    global edit_data#, pressed_on_selected, drag_disabled
+
+    # Clear edit data in gui module
+    edit_data = None
+    tlinewidgets.set_edit_mode_data(edit_data)
+    
+    # Get pressed track
+    track = tlinewidgets.get_track(y)  
+
+    # Selecting empty clears selection
+    if track == None:
+        #clear_selected_clips()
+        #pressed_on_selected = False
+        updater.repaint_tline()
+        return    
+    
+    # Get pressed clip index
+    clip_index = current_sequence().get_clip_index(track, frame)
+
+    # Selecting empty clears selection
+    if clip_index == -1:
+        #clear_selected_clips()
+        #pressed_on_selected = False
+        updater.repaint_tline()
+        return
+        
+    edit_data = {"draw_function":_tline_overlay,
+                 "clip_index":track.id,
+                 "track":track,
+                 "mouse_start_x":x,
+                 "mouse_start_y":y}
+                 
+    tlinewidgets.set_edit_mode_data(edit_data)
+    updater.repaint_tline()
+    
         
 def mouse_move(x, y, frame, state):
     pass
     
 def mouse_release(x, y, frame, state):
-    pass
+    global edit_data#, pressed_on_selected, drag_disabled
+    edit_data = None
     
 
+# ----------------------------------------------------------------------- Edit overlay
+def _tline_overlay(cr, pos):
+    print "tline overlay:", pos

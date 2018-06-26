@@ -1204,7 +1204,8 @@ def draw_cut_overlay(cr, data):
     pass
 
 def draw_kftool_overlay(cr, data):
-    pass
+    draw_function = data["draw_function"]
+    draw_function(cr, pos)
     
 def draw_compositor_trim(cr, data):
     clip_in = data["clip_in"]

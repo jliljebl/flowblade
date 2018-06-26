@@ -276,7 +276,7 @@ def tline_canvas_mouse_pressed(event, frame):
 
     # If clip end drag mode is for some reason still active, exit to default edit mode
     if EDIT_MODE() == editorstate.CLIP_END_DRAG:
-        editorstate.edit_mode = editorstate.INSERT_MOVE
+        modesetting.set_default_edit_mode()
         # This shouldn't happen unless for some reason mouse release didn't hit clipenddragmode listener.
         print "EDIT_MODE() == editorstate.CLIP_END_DRAG at mouse press!"
 
@@ -335,6 +335,7 @@ def tline_canvas_mouse_pressed(event, frame):
             PLAYER().seek_frame(frame)
         return
     # LEFT BUTTON + CTRL: Select new trimmed clip in one roll trim mode
+    #  This is not that relevant anymore with context sensitive cursor, look to remove.
     elif ((event.button == 1 
           and (event.get_state() & Gdk.ModifierType.CONTROL_MASK)
           and EDIT_MODE() == editorstate.ONE_ROLL_TRIM) or 
@@ -360,6 +361,7 @@ def tline_canvas_mouse_pressed(event, frame):
         else:
             trimmodes.oneroll_trim_move(event.x, event.y, frame, None)
     # LEFT BUTTON + CTRL: Select new trimmed clip in two roll trim mode
+    # This is not that relevant anymore with context sensitive cursor, look to remove.
     elif (event.button == 1 
           and (event.get_state() & Gdk.ModifierType.CONTROL_MASK)
           and EDIT_MODE() == editorstate.TWO_ROLL_TRIM):
