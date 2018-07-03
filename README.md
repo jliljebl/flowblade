@@ -1,9 +1,9 @@
 
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
-**New version 1.16 available, [Installing](./flowblade-trunk/docs/INSTALLING.md), [Release notes](./flowblade-trunk/docs/RELEASE_NOTES.md).**
+**Project on summer break until August.**
 
-**Updating to MLT 6.6.0 from 6.5.0 version fixes startup crashes, [more info](./flowblade-trunk/docs/SDL_2_AND_MLT_6_6_0.md).**
+**Please file Issues and comments if needed, action will be taken on those when activity resumes after the break.**
 
 **Contents:**
   1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
