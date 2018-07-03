@@ -26,19 +26,23 @@ from editorstate import current_sequence
 import tlinewidgets
 import updater
 
+OVERLAY_BG = (0.0, 0.0, 0.0, 0.8)
+OVERLAY_DRAW_COLOR = (0.0, 0.0, 0.0, 0.8)
+EDIT_AREA_HEIGHT = 200
+
 edit_data = None
 
 # ---------------------------------------------- mouse events
 def mouse_press(event, frame):
 
+    print "gggg"
     x = event.x
     y = event.y
 
-    global edit_data#, pressed_on_selected, drag_disabled
-
-    # Clear edit data in gui module
-    edit_data = None
-    tlinewidgets.set_edit_mode_data(edit_data)
+    # If we have clip being edited and its edit area is hit, we do not need to init data.
+    if _clip_is_being_edited() and _clip_edit_area_hit(x, y):
+        print "ooooooooooooooooooo"
+        return
     
     # Get pressed track
     track = tlinewidgets.get_track(y)  
@@ -47,6 +51,7 @@ def mouse_press(event, frame):
     if track == None:
         #clear_selected_clips()
         #pressed_on_selected = False
+        _set_no_clip_edit_data()
         updater.repaint_tline()
         return    
     
@@ -57,11 +62,15 @@ def mouse_press(event, frame):
     if clip_index == -1:
         #clear_selected_clips()
         #pressed_on_selected = False
+        _set_no_clip_edit_data()
         updater.repaint_tline()
         return
-        
+    
+    print "kkkkkk"
+
+    global edit_data #, pressed_on_selected, drag_disabled
     edit_data = {"draw_function":_tline_overlay,
-                 "clip_index":track.id,
+                 "clip_index":clip_index,
                  "track":track,
                  "mouse_start_x":x,
                  "mouse_start_y":y}
@@ -74,10 +83,46 @@ def mouse_move(x, y, frame, state):
     pass
     
 def mouse_release(x, y, frame, state):
-    global edit_data#, pressed_on_selected, drag_disabled
-    edit_data = None
-    
+    #global edit_data#, pressed_on_selected, drag_disabled
+    #edit_data = None
+    pass
 
+# -------------------------------------------- EDIT FUNCTIONS
+def _clip_is_being_edited():
+    if edit_data == None:
+        return False
+    if edit_data["clip_index"] == -1:
+        return False
+    
+    return True
+
+def _clip_edit_area_hit(x, y):
+    return False
+
+def _set_no_clip_edit_data():
+    # set edit data to reflect that no clip is being edited currently.
+    global edit_data 
+    edit_data = {"draw_function":_tline_overlay,
+                 "clip_index":-1,
+                 "track":None,
+                 "mouse_start_x":-1,
+                 "mouse_start_y":-1}
+
+    tlinewidgets.set_edit_mode_data(edit_data)
+    
 # ----------------------------------------------------------------------- Edit overlay
 def _tline_overlay(cr, pos):
-    print "tline overlay:", pos
+    if _clip_is_being_edited() == False:
+        return
+        
+    track = edit_data["track"]
+    ty = tlinewidgets._get_track_y(track.id)
+    cx_start = tlinewidgets._get_frame_x(track.clip_start(edit_data["clip_index"]))
+    clip = track.clips[edit_data["clip_index"]]
+    cx_end = tlinewidgets._get_frame_x(track.clip_start(edit_data["clip_index"]) + clip.clip_out - clip.clip_in + 1)  # +1 because out inclusive
+
+    height = EDIT_AREA_HEIGHT
+
+    cr.set_source_rgba(*OVERLAY_BG)
+    cr.rectangle(cx_start, ty - height/2, cx_end - cx_start, height)
+    cr.fill()

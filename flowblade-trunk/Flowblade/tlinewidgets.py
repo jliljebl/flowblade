@@ -1580,7 +1580,7 @@ class TimeLineCanvas:
 
         # Draw edit mode overlay
         if self.edit_mode_overlay_draw_func != None:
-            self.edit_mode_overlay_draw_func(cr,self.edit_mode_data)
+            self.edit_mode_overlay_draw_func(cr, self.edit_mode_data)
         
         audiowaveformrenderer.launch_queued_renders()
 
