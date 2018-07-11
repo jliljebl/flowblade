@@ -250,6 +250,9 @@ def main(root_path):
 
     # Init MLT framework
     repo = mlt.Factory().init()
+    repo.producers().set('qimage', None, 0)
+    repo.producers().set('qtext', None, 0)
+    repo.producers().set('kdenlivetitle', None, 0)
 
     # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
     locale.setlocale(locale.LC_NUMERIC, 'C')
