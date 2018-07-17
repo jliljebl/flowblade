@@ -252,7 +252,8 @@ def create_widgets():
     widgets.toggle_all.connect("clicked", lambda w: toggle_all_pressed())
 
     widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
-    guiutils.set_margins(widgets.hamburger_launcher.widget, 6, 8, 1, 0)    
+    guiutils.set_margins(widgets.hamburger_launcher.widget, 6, 8, 1, 0)
+
     # These are created elsewhere and then monkeypatched here
     widgets.group_combo = None
     widgets.effect_list_view = None

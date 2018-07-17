@@ -22,9 +22,15 @@
 Module handles Keyframe tool functionality
 """
 
+import cairo
+
 from editorstate import current_sequence
+import respaths
 import tlinewidgets
 import updater
+
+CLOSE_ICON = None
+HAMBURGER_ICON = None
 
 OVERLAY_BG = (0.0, 0.0, 0.0, 0.8)
 OVERLAY_DRAW_COLOR = (0.0, 0.0, 0.0, 0.8)
@@ -32,16 +38,21 @@ EDIT_AREA_HEIGHT = 200
 
 edit_data = None
 
+# -------------------------------------------------- module funcs
+def load_icons():
+    global CLOSE_ICON, HAMBURGER_ICON
+    CLOSE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "close_match.png")
+    HAMBURGER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger.png")
+
+
 # ---------------------------------------------- mouse events
 def mouse_press(event, frame):
 
-    print "gggg"
     x = event.x
     y = event.y
 
     # If we have clip being edited and its edit area is hit, we do not need to init data.
     if _clip_is_being_edited() and _clip_edit_area_hit(x, y):
-        print "ooooooooooooooooooo"
         return
     
     # Get pressed track
@@ -65,16 +76,33 @@ def mouse_press(event, frame):
         _set_no_clip_edit_data()
         updater.repaint_tline()
         return
-    
-    print "kkkkkk"
 
+    clip = track.clips[clip_index]
+    
+    # Save data needed to do the keyframe edits.
     global edit_data #, pressed_on_selected, drag_disabled
     edit_data = {"draw_function":_tline_overlay,
                  "clip_index":clip_index,
+                 "clip":clip,
                  "track":track,
                  "mouse_start_x":x,
                  "mouse_start_y":y}
-                 
+
+
+    # Init for volume editing if volume filter available
+    for i in range(0, len(clip.filters)):
+        filter_object = clip.filters[i]
+        if filter_object.info.mlt_service_id == "volume":
+            editable_properties = propertyedit.get_filter_editable_properties(
+                                                           clip, 
+                                                           filter_object,
+                                                           i,
+                                                           track,
+                                                           clip_index)
+            for ep in editable_properties:
+                if ep.name == "gain":
+                    _init_for_editable_property(ep)
+            
     tlinewidgets.set_edit_mode_data(edit_data)
     updater.repaint_tline()
     
@@ -87,7 +115,7 @@ def mouse_release(x, y, frame, state):
     #edit_data = None
     pass
 
-# -------------------------------------------- EDIT FUNCTIONS
+# -------------------------------------------- edit funcs
 def _clip_is_being_edited():
     if edit_data == None:
         return False
@@ -109,8 +137,16 @@ def _set_no_clip_edit_data():
                  "mouse_start_y":-1}
 
     tlinewidgets.set_edit_mode_data(edit_data)
+
+
+def _init_for_editable_property(editable_property):
+    edit_data["editable_property"] = editable_property
+    adjustment = editable_property.get_input_range_adjustment()
+    edit_data["lower"] = adjustment.get_lower()
+    edit_data["upper"] = adjustment.get_upper ()
     
-# ----------------------------------------------------------------------- Edit overlay
+    
+# ----------------------------------------------------------------------- draw
 def _tline_overlay(cr, pos):
     if _clip_is_being_edited() == False:
         return
@@ -120,9 +156,30 @@ def _tline_overlay(cr, pos):
     cx_start = tlinewidgets._get_frame_x(track.clip_start(edit_data["clip_index"]))
     clip = track.clips[edit_data["clip_index"]]
     cx_end = tlinewidgets._get_frame_x(track.clip_start(edit_data["clip_index"]) + clip.clip_out - clip.clip_in + 1)  # +1 because out inclusive
-
     height = EDIT_AREA_HEIGHT
-
+    cy_start = ty - height/2
+    
+    # Draw bg
     cr.set_source_rgba(*OVERLAY_BG)
-    cr.rectangle(cx_start, ty - height/2, cx_end - cx_start, height)
+    cr.rectangle(cx_start, cy_start, cx_end - cx_start, height)
     cr.fill()
+
+    # Top row
+    cr.set_source_surface(HAMBURGER_ICON, cx_start, cy_start)
+    cr.paint()
+    cr.set_source_surface(CLOSE_ICON, cx_start +  (cx_end - cx_start) - 14, cy_start + 2)
+    cr.paint()
+
+    try:
+        ep = edit_data["editable_property"]
+        _draw_edit_area_borders(cr, cx_start, cy_start, cx_end - cx_start, height)
+    except:
+        _draw_edit_area_borders(cr, cx_start, cy_start, cx_end - cx_start, height)
+
+def _draw_edit_area_borders(cr, x, y, w, h):
+    cr.set_source_rgba(1,1,1,1)
+    cr.rectangle(x + 4, y + 18, w - 8, h - 24)
+    cr.stroke()
+
+
+

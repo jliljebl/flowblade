@@ -63,6 +63,7 @@ import editorwindow
 import gmic
 import gui
 import keyevents
+import kftoolmode
 import medialog
 import mltenv
 import mltfilters
@@ -433,6 +434,7 @@ def create_gui():
     Called at app start to create gui objects and handles for them.
     """
     tlinewidgets.load_icons()
+    kftoolmode.load_icons()
 
     updater.set_clip_edit_mode_callback = modesetting.set_clip_monitor_edit_mode
     updater.load_icons()
