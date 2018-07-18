@@ -2554,6 +2554,10 @@ def get_clip_effects_editor_hamburger_menu(event, callback):
     
     menu.add(_get_menu_item(_("Delete Effect"), callback, "delete"))
 
+    _add_separetor(menu)
+    
+    menu.add(_get_menu_item(_("Close Editor"), callback, "close"))
+
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
 
@@ -2570,6 +2574,10 @@ def get_compositor_editor_hamburger_menu(event, callback):
     
     menu.add(_get_menu_item(_("Delete Compositor"), callback, "delete"))
 
+    _add_separetor(menu)
+    
+    menu.add(_get_menu_item(_("Close Editor"), callback, "close"))
+    
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
     

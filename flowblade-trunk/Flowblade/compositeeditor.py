@@ -326,7 +326,9 @@ def _compositor_hamburger_item_activated(widget, msg):
         _reset_compositor_pressed()
     elif msg == "delete":
         _delete_compositor_pressed()
-
+    elif msg == "close":
+        clear_compositor()
+        
 def _save_compositor_values_dialog_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         save_path = dialog.get_filenames()[0]

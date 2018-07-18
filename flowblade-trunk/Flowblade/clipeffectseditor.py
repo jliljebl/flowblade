@@ -650,6 +650,8 @@ def _clip_hamburger_item_activated(widget, msg):
         _reset_filter_values()
     elif msg == "delete":
         _delete_effect()
+    elif msg == "close":
+        clear_clip()
         
 def _save_effect_values_dialog_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
