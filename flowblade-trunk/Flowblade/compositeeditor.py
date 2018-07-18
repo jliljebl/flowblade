@@ -212,22 +212,23 @@ def _display_compositor_edit_box():
     fade_out_b = Gtk.Button(_("Add Fade Out"))
     fade_out_b.connect("clicked", lambda w,e: _add_fade_out_pressed(), None)
 
-    fade_in_spin = Gtk.SpinButton.new_with_range(0, 150, 1)
-    fade_in_spin.set_value(10)
+    widgets.fade_in_spin = Gtk.SpinButton.new_with_range(0, 150, 1)
+    widgets.fade_in_spin.set_value(10)
     
-    fade_out_spin = Gtk.SpinButton.new_with_range(0, 150, 1)
-    fade_out_spin.set_value(10)
+    widgets.fade_out_spin = Gtk.SpinButton.new_with_range(0, 150, 1)
+    widgets.fade_out_spin.set_value(10)
     
     fades_row = Gtk.HBox()
     fades_row.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
     fades_row.pack_start(fade_in_b, False, False, 0)
-    fades_row.pack_start(fade_in_spin, False, False, 0)
+    fades_row.pack_start(widgets.fade_in_spin, False, False, 0)
     fades_row.pack_start(fade_out_b, False, False, 0)
-    fades_row.pack_start(fade_out_spin, False, False, 0)
+    fades_row.pack_start(widgets.fade_out_spin, False, False, 0)
     fades_row.pack_start(Gtk.Label(), True, True, 0)
     
-    vbox.pack_start(fades_row, False, False, 0)
-    vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
+    if _compositor_uses_fade_buttons(compositor) == True:
+        vbox.pack_start(fades_row, False, False, 0)
+        vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
     
     # Transition editors
     t_editable_properties = propertyedit.get_transition_editable_properties(compositor)
@@ -262,8 +263,6 @@ def _display_compositor_edit_box():
         vbox.pack_start(editor_row, False, False, 0)
         vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
 
-
-        
     vbox.pack_start(Gtk.Label(), True, True, 0)  
     vbox.show_all()
 
@@ -292,6 +291,26 @@ def update_kfeditors_positions():
     for kf_widget in keyframe_editor_widgets:
         kf_widget.update_clip_pos()
 
+
+def _compositor_uses_fade_buttons(compositor):
+    # we hard coded compositors using fade buttons here because adding data in compostors.xml may have had some backwards compatiblity issues.
+    if compositor.transition.info.name  == "##opacity":
+        return True
+    elif compositor.transition.info.name  == "##pict_in_pict":
+        return True
+    elif compositor.transition.info.name  == "##affine":
+        return True
+    elif compositor.transition.info.name  == "##opacity_kf":
+        return True
+    elif compositor.transition.info.name  == "##region":
+        return True
+    elif compositor.transition.info.name  == "##affineblend":
+        return True
+    elif compositor.transition.info.name  == "##blend":
+        return True
+        
+        
+    return False
 # ----------------------------------------------------------- hamburger menu
 def _hamburger_launch_pressed(widget, event):
     guicomponents.get_compositor_editor_hamburger_menu(event, _compositor_hamburger_item_activated)
