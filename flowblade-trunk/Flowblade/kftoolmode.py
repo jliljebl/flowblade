@@ -38,7 +38,7 @@ EDIT_AREA_HEIGHT = 200
 
 edit_data = None
 
-# -------------------------------------------------- module funcs
+# -------------------------------------------------- init
 def load_icons():
     global CLOSE_ICON, HAMBURGER_ICON
     CLOSE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "close_match.png")
@@ -115,7 +115,7 @@ def mouse_release(x, y, frame, state):
     #edit_data = None
     pass
 
-# -------------------------------------------- edit funcs
+# -------------------------------------------- edit 
 def _clip_is_being_edited():
     if edit_data == None:
         return False

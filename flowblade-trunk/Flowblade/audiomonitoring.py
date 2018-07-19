@@ -391,7 +391,10 @@ class MetersArea:
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
 
-        cr.set_source_rgb(*METER_BG_COLOR)
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
+            cr.set_source_rgb(*METER_BG_COLOR)
+        else:
+            cr.set_source_rgb(0.0, 0.0, 0.0)
         cr.rectangle(0, 0, w, h)
         cr.fill()
 
@@ -651,7 +654,11 @@ class MasterVolumeMeter:
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
 
-        cr.set_source_rgb(*METER_BG_COLOR)
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
+            cr.set_source_rgb(*METER_BG_COLOR)
+        else:
+            cr.set_source_rgb(0.0, 0.0, 0.0)
+        cr.fill_preserve()
         cr.rectangle(0, 0, w, h)
         cr.fill()
 
