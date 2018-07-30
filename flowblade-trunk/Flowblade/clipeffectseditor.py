@@ -69,9 +69,6 @@ stack_dnd_event_info = None
 filters_notebook_index = 2
 
 def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
-    """
-    Use components created at clipeffectseditor.py.
-    """
     create_widgets()
 
     stack_label = guiutils.bold_label(_("Clip Filters Stack"))
@@ -240,9 +237,9 @@ def create_widgets():
     widgets.value_edit_frame.set_shadow_type(Gtk.ShadowType.NONE)
     widgets.value_edit_frame.add(widgets.value_edit_box)
 
-    widgets.add_effect_b = Gtk.Button()#_("Add"))
+    widgets.add_effect_b = Gtk.Button()
     widgets.add_effect_b.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "filter_add.png"))
-    widgets.del_effect_b = Gtk.Button() #_("Delete"))
+    widgets.del_effect_b = Gtk.Button()
     widgets.del_effect_b.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "filter_delete.png"))
     widgets.toggle_all = Gtk.Button()
     widgets.toggle_all.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "filters_all_toggle.png"))
@@ -353,18 +350,7 @@ def delete_effect_pressed():
     # Block updates until we have set selected row
     global edit_effect_update_blocked
     edit_effect_update_blocked = True
-    
-    """
-    treeselection = widgets.effect_stack_view.treeview.get_selection()
-    (model, rows) = treeselection.get_selected_rows()
-    
-    try:
-        row = rows[0]
-    except:
-        return # This fails when there are filters but no rows are selected
-    """
-    
-    #row_index = current_filter_index
+
     data = {"clip":clip,
             "index":current_filter_index,
             "filter_edit_done_func":filter_edit_done}
