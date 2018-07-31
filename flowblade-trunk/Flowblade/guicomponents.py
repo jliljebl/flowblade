@@ -2870,6 +2870,7 @@ class MonitorSwitch:
         self.widget = cairoarea.CairoDrawableArea2( self.WIDTH ,
                                                     self.HEIGHT,
                                                     self._draw)
+        self.widget.set_tooltip_text(_("Display Timeline / Clip on Monitor"))
         self.widget.press_func = self._press_event
 
         self.tline_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "timeline_button.png")
@@ -2892,7 +2893,7 @@ class MonitorSwitch:
         cr.set_source_surface(tline_draw_surface, 10, 5)
         cr.paint()
 
-        cr.set_source_surface(clip_draw_surface, 60, 7)
+        cr.set_source_surface(clip_draw_surface, 54, 6)
         cr.paint()
         
     def _press_event(self, event):
