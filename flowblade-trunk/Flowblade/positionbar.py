@@ -56,10 +56,10 @@ POINTER_COLOR = (1, 0.3, 0.3)
 END_PAD = 6 # empty area at both ends in pixels
 MARK_CURVE = 5
 MARK_LINE_WIDTH = 4
-MARK_PAD = 4
+MARK_PAD = -1
 
 MARK_COLOR = (0.3, 0.3, 0.3)
-DARK_MARK_COLOR = (0.1, 0.1, 0.1)
+DARK_MARK_COLOR = (0.0, 0.0, 0.0)
 
 
 class PositionBar:
@@ -88,7 +88,9 @@ class PositionBar:
             DISABLED_BG_COLOR = DARK_DISABLED_BG_COLOR
             SELECTED_RANGE_COLOR = DARK_SELECTED_RANGE_COLOR
             MARK_COLOR = DARK_MARK_COLOR
-
+            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+                MARK_COLOR = (0.9, 0.9, 0.9) # This needs to be light for contrast
+    
     def set_listener(self, listener):
         self.position_listener = listener
 

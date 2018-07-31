@@ -40,7 +40,7 @@ import updater
 import undo
 import workflow
 
-# editor window object
+# editorwindow.EditorWindow object.
 # This needs to be set here because gui.py module ref is not available at init time
 w = None
 

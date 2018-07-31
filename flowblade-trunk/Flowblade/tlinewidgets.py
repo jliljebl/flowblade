@@ -2427,10 +2427,12 @@ class TimeLineFrameScale:
         self.set_default_callback = set_default_callback
 
         if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-            global FRAME_SCALE_SELECTED_COLOR_GRAD, FRAME_SCALE_SELECTED_COLOR_GRAD_L 
+            global FRAME_SCALE_SELECTED_COLOR_GRAD, FRAME_SCALE_SELECTED_COLOR_GRAD_L, MARK_COLOR 
             FRAME_SCALE_SELECTED_COLOR_GRAD = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD
             FRAME_SCALE_SELECTED_COLOR_GRAD_L = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD_L
-
+            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+                MARK_COLOR = (0.9, 0.9, 0.9) # This needs to be light for contrast
+                
     def _press_event(self, event):
         if event.button == 1 or event.button == 3:
             if not timeline_visible():
