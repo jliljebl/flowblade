@@ -43,12 +43,13 @@ import updater
 
 # Timeline tools data
 _TOOLS_DATA = None
+_TOOL_TIPS = None
 
 _tools_menu = Gtk.Menu()
 _workflow_menu = Gtk.Menu()
 
 def init_data():
-    global _TOOLS_DATA
+    global _TOOLS_DATA, _TOOL_TIPS
     _TOOLS_DATA = { appconsts.TLINE_TOOL_INSERT:        (_("Insert"), "insertmove_cursor.png"),
                     appconsts.TLINE_TOOL_OVERWRITE:     (_("Overwrite"), "overwrite_cursor.png"),
                     appconsts.TLINE_TOOL_TRIM:          (_("Trim"), "oneroll_cursor.png"),
@@ -60,7 +61,18 @@ def init_data():
                     appconsts.TLINE_TOOL_CUT:           (_("Cut"), "cut_cursor.png"),
                     appconsts.TLINE_TOOL_KFTOOL:        (_("Keyframe"), "kftool_cursor.png")
                   }
-
+                  
+    _TOOL_TIPS =  { appconsts.TLINE_TOOL_INSERT:        _("Insert"),
+                    appconsts.TLINE_TOOL_OVERWRITE:     _("<b>ladsladsladsladsl</b>   adsladsldal"),
+                    appconsts.TLINE_TOOL_TRIM:          _("<b>ladsladsladsladsl</b>   adsladsldal"), 
+                    appconsts.TLINE_TOOL_ROLL:          _("Roll"), 
+                    appconsts.TLINE_TOOL_SLIP:          _("Slip"), 
+                    appconsts.TLINE_TOOL_SPACER:        _("Spacer"), 
+                    appconsts.TLINE_TOOL_BOX:           _("Box"), 
+                    appconsts.TLINE_TOOL_RIPPLE_TRIM:   _("Ripple Trim"), 
+                    appconsts.TLINE_TOOL_CUT:           _("Cut"), 
+                    appconsts.TLINE_TOOL_KFTOOL:        _("Keyframe")
+                  }
 #----------------------------------------------------- workflow presets
 def _set_workflow_STANDARD():
     editorpersistance.prefs.active_tools = [2, 6, 8, 4, 5, 7]
@@ -106,16 +118,16 @@ def _tools_menu_hidden(tools_menu, menu_items):
     for menu_item in menu_items:
         menu_item.set_accel_path(None)
 
-def _get_image_menu_item(tool_icon_file, text, callback, data):
+def _get_image_menu_item(tool_icon_file, text, callback, tool_id):
     item = Gtk.ImageMenuItem()
     tool_img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + tool_icon_file)
         
     item.set_image(tool_img)
-    item.connect("activate", callback, data)
+    item.connect("activate", callback, tool_id)
     item.set_always_show_image(True)
     item.set_use_stock(False)
     item.set_label(text)
-    #item.set_tooltip_markup("<b>ladsladsladsladsl</b>adsladsldal")
+    item.set_tooltip_markup(_TOOL_TIPS[tool_id])#"<b>ladsladsladsladsl</b>   adsladsldal")
     item.show()
     return item
     
@@ -192,7 +204,7 @@ def workflow_menu_launched(widget, event):
         tool_id = editorpersistance.prefs.active_tools[i]
         tool_name, tool_icon_file = _TOOLS_DATA[tool_id]
         _workflow_menu.add(_get_workflow_tool_menu_item(_workflow_menu_callback, tool_id, tool_name, tool_icon_file, i+1))
-        try: # needed when manually changing preset tools, remove when those are decided upon
+        try: # needed to prevent crashes when manually changing preset tools during dev, remove when those are decided upon
             non_active_tools.remove(tool_id)
         except:
             pass
