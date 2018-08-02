@@ -51,7 +51,7 @@ _workflow_menu = Gtk.Menu()
 def init_data():
     global _TOOLS_DATA, _TOOL_TIPS
     _TOOLS_DATA = { appconsts.TLINE_TOOL_INSERT:        (_("Insert"), "insertmove_cursor.png"),
-                    appconsts.TLINE_TOOL_OVERWRITE:     (_("Overwrite"), "overwrite_cursor.png"),
+                    appconsts.TLINE_TOOL_OVERWRITE:     (_("Move"), "overwrite_cursor.png"),
                     appconsts.TLINE_TOOL_TRIM:          (_("Trim"), "oneroll_cursor.png"),
                     appconsts.TLINE_TOOL_ROLL:          (_("Roll"), "tworoll_cursor.png"),
                     appconsts.TLINE_TOOL_SLIP:          (_("Slip"), "slide_cursor.png"),
@@ -62,15 +62,15 @@ def init_data():
                     appconsts.TLINE_TOOL_KFTOOL:        (_("Keyframe"), "kftool_cursor.png")
                   }
                   
-    _TOOL_TIPS =  { appconsts.TLINE_TOOL_INSERT:        _("Insert"),
-                    appconsts.TLINE_TOOL_OVERWRITE:     _("<b>ladsladsladsladsl</b>   adsladsldal"),
-                    appconsts.TLINE_TOOL_TRIM:          _("<b>ladsladsladsladsl</b>   adsladsldal"), 
-                    appconsts.TLINE_TOOL_ROLL:          _("Roll"), 
-                    appconsts.TLINE_TOOL_SLIP:          _("Slip"), 
+    _TOOL_TIPS =  { appconsts.TLINE_TOOL_INSERT:        _("<b>Left Mouse</b> to move and insert single clip between clips.\n<b>CTRL + Left Mouse</b> to select and move clip range.\n<b>Left Mouse</b> on clip ends to trim clip length."),
+                    appconsts.TLINE_TOOL_OVERWRITE:     _("<b>Left Mouse</b> to move clip into new position.\n<b>CTRL + Left Mouse</b> to select and move clip range into new position.\n<b>Left Mouse</b> on clip ends to trim clip length."),
+                    appconsts.TLINE_TOOL_TRIM:          _("<b>Left Mouse</b> to trim closest clip end.\n<b>Left or Right Arrow Key</b> to trim clloset clip end + <b>Enter Key</b> to complete edit."), 
+                    appconsts.TLINE_TOOL_ROLL:          _("<b>Left Mouse</b> to move closest edit point between 2 clips.\n<b>Left or Right Arrow Key</b> to move closest edit point between 2 clip + <b>Enter Key</b> to complete edit."), 
+                    appconsts.TLINE_TOOL_SLIP:          _("<b>Left Mouse</b> to move clip contents within clip.\n<b>Left or Right Arrow Key</b> to move clip contents within clip + <b>Enter Key</b> to complete edit."), 
                     appconsts.TLINE_TOOL_SPACER:        _("Spacer"), 
                     appconsts.TLINE_TOOL_BOX:           _("Box"), 
                     appconsts.TLINE_TOOL_RIPPLE_TRIM:   _("Ripple Trim"), 
-                    appconsts.TLINE_TOOL_CUT:           _("Cut"), 
+                    appconsts.TLINE_TOOL_CUT:           _("<b>Left Mouse</b> to cut clip under cursor.\n<b>CTRL + Left Mouse</b> to cut clips on all tracks at cursor position."), 
                     appconsts.TLINE_TOOL_KFTOOL:        _("Keyframe")
                   }
 #----------------------------------------------------- workflow presets
