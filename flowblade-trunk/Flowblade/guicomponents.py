@@ -216,6 +216,7 @@ class BinTreeView(Gtk.VBox):
         # Cell renderers
         self.icon_rend = Gtk.CellRendererPixbuf()
         self.text_rend_1 = Gtk.CellRendererText()
+        self.text_rend_1.set_property("editable", True)
         self.text_rend_1.connect("edited",
                                  bin_name_edit_cb,
                                  (self.storemodel, 1))
@@ -2225,11 +2226,6 @@ class MonitorTCDisplay:
         We get cairo contect and allocation.
         """
         x, y, w, h = allocation
-
-        # Draw bg
-        #cr.set_source_rgb(*guiutils.get_theme_bg_color())
-        #cr.rectangle(0, 0, w, h)
-        #cr.fill()
 
         # Draw round rect with gradient and stroke around for thin bezel
         self._round_rect_path(cr)
