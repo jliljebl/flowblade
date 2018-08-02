@@ -230,6 +230,13 @@ class EditorWindow:
             ('AddMediaClip', None, _('Add Media Clip...'), None, None, lambda a: projectaction.add_media_files()),
             ('AddImageSequence', None, _('Add Image Sequence...'), None, None, lambda a:projectaction.add_image_sequence()),
             ('CreateColorClip', None, _('Create Color Clip...'), None, None, lambda a:patternproducer.create_color_clip()),
+            ('BinMenu', None, _('Bin')),
+            ('AddBin', None, _('Add Bin'), None, None, lambda a:projectaction.add_new_bin()),
+            ('DeleteBin', None, _('Delete Selected Bin'), None, None, lambda a:projectaction.delete_selected_bin()),
+            ('SequenceMenu', None, _('Sequence')),
+            ('AddSequence', None, _('Add New Sequence'), None, None, lambda a:projectaction.add_new_sequence()),
+            ('EditSequence', None, _('Edit Selected Sequence'), None, None, lambda a:projectaction.change_edit_sequence()),
+            ('DeleteSequence', None, _('Delete Selected Sequence'), None, None, lambda a:projectaction.delete_selected_sequence()),
             ('PatternProducersMenu', None, _('Create Pattern Producer')),
             ('CreateNoiseClip', None, _('Noise'), None, None, lambda a:patternproducer.create_noise_clip()),
             ('CreateBarsClip', None, _('EBU Bars'), None, None, lambda a:patternproducer.create_bars_clip()),
@@ -340,6 +347,16 @@ class EditorWindow:
                 <menu action='ProjectMenu'>
                     <menuitem action='AddMediaClip'/>
                     <menuitem action='AddImageSequence'/>
+                    <separator/>
+                    <menu action='BinMenu'>
+                        <menuitem action='AddBin'/>
+                        <menuitem action='DeleteBin'/>
+                    </menu>
+                    <menu action='SequenceMenu'>
+                        <menuitem action='AddSequence'/>
+                        <menuitem action='EditSequence'/>
+                        <menuitem action='DeleteSequence'/>
+                    </menu>
                     <separator/>
                     <menuitem action='CreateColorClip'/>
                     <menu action='PatternProducersMenu'>
