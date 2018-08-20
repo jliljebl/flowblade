@@ -60,7 +60,7 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
     columns_img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "columns.png")
     columns_launcher = guicomponents.PressLaunch(col_changed_cb, columns_img, w=22, h=22)
     columns_launcher.surface_y = 6
-    #guiutils.set_margins(columns_launcher.widget, 0, 4, 0, 0)    
+    columns_launcher.widget.set_tooltip_text(_("Number of Media File columns."))
     
     all_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_all_files.png")
     audio_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_audio_files.png")
@@ -72,8 +72,9 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
     files_filter_launcher = guicomponents.ImageMenuLaunch(filtering_cb, [all_pixbuf, video_pixbuf, audio_pixbuf, graphics_pixbuf, imgseq_pixbuf, pattern_pixbuf], 24, 22)
     files_filter_launcher.surface_x  = 3
     files_filter_launcher.surface_y  = 4
+    files_filter_launcher.widget.set_tooltip_text(_("Visible Media File types."))
     gui.media_view_filter_selector = files_filter_launcher
-    #guiutils.set_margins(files_filter_launcher.widget, 0, 4, 0, 0)
+
     
     buttons_box = Gtk.HBox(False,1)
     buttons_box.pack_start(hamburger_launcher.widget, False, False, 0)
@@ -89,29 +90,11 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
     
     return panel
 
-def get_bins_panel(bin_list_view, add_cb, delete_cb):
-    # Create buttons and connect signals
-    add_b = Gtk.Button(_("Add"))
-    del_b = Gtk.Button(_("Delete"))
-    add_b.connect("clicked", add_cb, None)
-    del_b.connect("clicked", delete_cb, None)
-    add_b.set_tooltip_text(_("Add Bin to Project"))
-    del_b.set_tooltip_text(_("Delete Bin from Project"))
-    buttons_box = Gtk.HBox(True,1)
-    buttons_box.pack_start(add_b, True, True, 0)
-    buttons_box.pack_start(del_b, True, True, 0)
-    
-    panel = Gtk.VBox()
-    panel.pack_start(buttons_box, False, True, 0)
-    panel.pack_start(bin_list_view, True, True, 0)
-
-    return get_named_frame(_("Bins"), panel, 0, 0, 0)
-
 def get_bins_tree_panel(bin_list_view):   
     panel = Gtk.VBox()
     panel.pack_start(bin_list_view, True, True, 0)
 
-    return get_named_frame(_("Bins"), panel, 0, 0, 0)
+    return get_named_frame(_("Bins"), panel, 0, 0, 0, "A <b>Bin</b> is a named collection of media.")
     
 def get_sequences_panel(sequence_list_view, edit_seq_cb, add_seq_cb, del_seq_cb):
     # Create buttons and connect signals
@@ -134,7 +117,7 @@ def get_sequences_panel(sequence_list_view, edit_seq_cb, add_seq_cb, del_seq_cb)
     #panel.pack_start(buttons_box, False, True, 0)
     panel.pack_start(sequence_list_view, True, True, 0)
 
-    return get_named_frame(_("Sequences"), panel, 0)
+    return get_named_frame(_("Sequences"), panel, 0, 6, 4, _("A <b>Sequence</b> is the full contents of the timeline creating a program, a movie."))
 
 def get_thumbnail_select_panel(current_folder_path):    
     texts_panel = get_two_text_panel(_("Select folder for new thumbnails."), 
@@ -193,7 +176,7 @@ def get_motion_render_progress_panel(file_name, progress_bar):
     return alignment
 """
 
-def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_padding=4):
+def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_padding=4, tooltip_txt=None):
     """
     Gnome style named panel
     """
@@ -204,6 +187,8 @@ def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_pa
         label_box = Gtk.HBox()
         label_box.pack_start(label, False, False, 0)
         label_box.pack_start(Gtk.Label(), True, True, 0)
+        if tooltip_txt != None:        
+            label.set_tooltip_markup(tooltip_txt)
 
     guiutils.set_margins(widget, right_padding, 0, left_padding, 0)
 

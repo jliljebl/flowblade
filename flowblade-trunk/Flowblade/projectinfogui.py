@@ -70,15 +70,15 @@ def get_top_level_project_info_panel():
 
     project_name_label = Gtk.Label(label=PROJECT().name)
     name_row = guiutils.get_left_justified_box([project_name_label])
-    name_panel = guiutils.get_named_frame(_("Project"), name_row, 0)
-    
+    name_panel = guiutils.get_named_frame(_("Project"), name_row, 0, 6, 4, _("A <b>Project</b> contains one or more <b>Sequences</b> of edited media and a collection of media files stored in <b>Bins.</b>"))
+
     profile = PROJECT().profile
     desc_label = Gtk.Label(label=profile.description())
     info_box = guicomponents.get_profile_info_small_box(profile)
     vbox = Gtk.VBox()
     vbox.pack_start(guiutils.get_left_justified_box([desc_label]), False, True, 0)
     vbox.pack_start(info_box, False, True, 0)
-    profile_panel = guiutils.get_named_frame(_("Profile"), vbox, 0)
+    profile_panel = guiutils.get_named_frame(_("Profile"), vbox, 0, 6, 4, _("<b>Profile</b> determines frame rate per second, image size in pixels and pixel aspect ratio for all <b>Sequences</b> in <b>Project</b> ."))
 
     events_list = ProjectEventListView()
     events_list.fill_data_model()
@@ -88,11 +88,6 @@ def get_top_level_project_info_panel():
     project_info_vbox.pack_start(name_panel, False, True, 0)
     project_info_vbox.pack_start(profile_panel, False, True, 0)
     guiutils.set_margins(project_info_vbox, 4,4,4,4)
-    #project_info_vbox.set_size_request(250, PROJECT_INFO_PANEL_HEIGHT)
-    
-    #project_info_hbox = Gtk.HBox()
-    #project_info_hbox.pack_start(project_info_vbox, False, False, 0)
-    #project_info_hbox.pack_start(events_panel, True, True, 0)
 
     widgets.project_name_label = project_name_label
     widgets.desc_label = desc_label

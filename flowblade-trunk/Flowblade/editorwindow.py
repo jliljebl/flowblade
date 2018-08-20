@@ -481,7 +481,6 @@ class EditorWindow:
             self.mm_paned = Gtk.HPaned()
             self.mm_paned.pack1(self.bins_panel, resize=True, shrink=True)
             self.mm_paned.pack2(media_panel, resize=True, shrink=False)
-        #self.mm_paned.set_position(10)
 
         mm_panel = guiutils.set_margins(self.mm_paned, 0, 0, 0, 0)
         
@@ -567,7 +566,7 @@ class EditorWindow:
         media_log_panel = guiutils.set_margins(media_log_vbox, 6, 6, 6, 6)
         self.media_log_events_list_view = media_log_events_list_view
 
-        # Project Panel / Pop Level Project pane
+        # Project Panel
         # Sequence list
         self.sequence_list_view = guicomponents.SequenceListView(   projectaction.sequence_name_edited,
                                                                     projectaction.sequence_panel_popup_requested)
