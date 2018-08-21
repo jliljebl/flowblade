@@ -20,7 +20,7 @@
 
 """
 Module contains CairoDrawableArea2 widget. You can draw onto it using 
-Cairo by setting the raw function on ceation, and listen to its mouse and keyboard events.
+Cairo by setting the draw function on creation, and listen to its mouse and keyboard events.
 """
 
 from gi.repository import Gtk

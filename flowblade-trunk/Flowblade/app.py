@@ -255,10 +255,10 @@ def main(root_path):
     repo.producers().set('qtext', None, 0)
     repo.producers().set('kdenlivetitle', None, 0)
 
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
+    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs.
     locale.setlocale(locale.LC_NUMERIC, 'C')
 
-    # Check for codecs and formats on the system
+    # Check for codecs and formats on the system.
     mltenv.check_available_features(repo)
     renderconsumer.load_render_profiles()
 
@@ -266,13 +266,13 @@ def main(root_path):
     mltfilters.load_filters_xml(mltenv.services)
     mlttransitions.load_compositors_xml(mltenv.transitions)
     
-    # Replace some services if better replacements available
+    # Replace some services if better replacements available.
     mltfilters.replace_services(mltenv.services)
 
-    # Create list of available mlt profiles
+    # Create list of available mlt profiles.
     mltprofiles.load_profile_list()
     
-    # Save assoc file path if found in arguments
+    # Save assoc file path if found in arguments.
     global assoc_file_path
     assoc_file_path = get_assoc_file_path()
         
@@ -281,34 +281,34 @@ def main(root_path):
     editorstate.project = projectdata.get_default_project()
     check_crash = True
 
-    # Audiomonitoring being available needs to be known before GUI creation
+    # Audiomonitoring being available needs to be known before GUI creation.
     audiomonitoring.init(editorstate.project.profile)
 
-    # Set trim view mode to current default value
+    # Set trim view mode to current default value.
     editorstate.show_trim_view = editorpersistance.prefs.trim_view_default
 
-    # Check for tools and init tools integration
+    # Check for tools and init tools integration.
     gmic.test_availablity()
     toolnatron.init()
     toolsintegration.init()
     #toolsintegration.test()
     
-    # Create player object
+    # Create player object.
     create_player()
 
     # Create main window and set widget handles in gui.py for more convenient reference.
     create_gui()
 
-    # Inits widgets with project data
+    # Inits widgets with project data.
     init_project_gui()
 
-    # Inits widgets with current sequence data
+    # Inits widgets with current sequence data.
     init_sequence_gui()
 
     # Launch player now that data and gui exist
     launch_player()
 
-    # Editor and modules need some more initializing
+    # Editor and modules need some more initializing.
     init_editor_state()
 
     # Tracks need to be recentered if window is resized.
@@ -331,7 +331,7 @@ def main(root_path):
     # Every running instance has unique autosave file which is deleted at exit
     set_instance_autosave_id()
 
-    # Existance of autosave file hints that program was exited abnormally
+    # Existance of autosave file hints that program was exited abnormally.
     if check_crash == True and len(autosave_files) > 0:
         if len(autosave_files) == 1:
             GObject.timeout_add(10, autosave_recovery_dialog)
@@ -341,10 +341,10 @@ def main(root_path):
         start_autosave()
 
     # We prefer to monkeypatch some callbacks into some modules, usually to
-    # maintain a simpler and/or non-circular import structure
+    # maintain a simpler and/or non-circular import structure.
     monkeypatch_callbacks()
 
-    # File in assoc_file_path is opened after very short delay
+    # File in assoc_file_path is opened after very short delay.
     if not(check_crash == True and len(autosave_files) > 0):
         if assoc_file_path != None:
             print "Launch assoc file:", assoc_file_path
