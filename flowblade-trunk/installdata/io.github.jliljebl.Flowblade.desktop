@@ -6,7 +6,7 @@ Comment=Edit media to create movies
 Exec=env GDK_BACKEND=x11 flowblade %f
 Terminal=false
 Type=Application
-Icon=flowblade
+Icon=io.github.jliljebl.Flowblade
 Categories=GNOME;GTK;AudioVideo;AudioVideoEditing;
 MimeType=application/vnd.flowblade-project;
 X-Ubuntu-Gettext-Domain=Flowblade
