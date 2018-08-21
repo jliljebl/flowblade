@@ -1,10 +1,6 @@
 
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
-**Project on summer break until August.**
-
-**Please file Issues and comments if needed, action will be taken on those when activity resumes after the break.**
-
 **Contents:**
   1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
   1. [Features](https://github.com/jliljebl/flowblade#features)
