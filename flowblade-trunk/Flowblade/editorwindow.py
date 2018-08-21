@@ -629,7 +629,8 @@ class EditorWindow:
         self._create_monitor_row_widgets()
         
         self.player_buttons = glassbuttons.PlayerButtons()
-        self.player_buttons.widget.set_tooltip_text(_("Prev Frame - Arrow Left\nNext Frame - Arrow Right\nPlay - Space\nStop - Space\nMark In - I\nMark Out - O\nClear Marks\nTo Mark In\nTo Mark Out"))
+        tooltips = [_("Prev Frame - Arrow Left"), _("Next Frame - Arrow Right"), _("Play - Space"), _("Stop - Space"), _("Mark In - I"), _("Mark Out - O"), _("Clear Marks"), _("To Mark In"), _("To Mark Out")]
+        tooltip_runner = glassbuttons.TooltipRunner(self.player_buttons, tooltips)
         if editorpersistance.prefs.buttons_style == 2: # NO_DECORATIONS
             self.player_buttons.no_decorations = True
 

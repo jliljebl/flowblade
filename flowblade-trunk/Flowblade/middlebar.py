@@ -142,13 +142,15 @@ def _create_buttons(editor_window):
     editor_window.zoom_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "zoom_in.png"), updater.zoom_in)
     editor_window.zoom_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "zoom_out.png"), updater.zoom_out)
     editor_window.zoom_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "zoom_length.png"), updater.zoom_project_length)
-    editor_window.zoom_buttons.widget.set_tooltip_text(_("Zoom In - Mouse Middle Scroll\n Zoom Out - Mouse Middle Scroll\n Zoom Length - Mouse Middle Click"))
+    tooltips = [_("Zoom In - Mouse Middle Scroll"), _("Zoom Out - Mouse Middle Scroll"), _("Zoom Length - Mouse Middle Click")]
+    tooltip_runner = glassbuttons.TooltipRunner(editor_window.zoom_buttons, tooltips)
     editor_window.zoom_buttons.no_decorations = no_decorations
     
     editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(32, 23, 2, 5, 5)
     editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "dissolve.png"), tlineaction.add_transition_pressed)
     editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "cut.png"), tlineaction.cut_pressed)
-    editor_window.edit_buttons.widget.set_tooltip_text(_("Add Rendered Transition - 2 clips selected\nAdd Rendered Fade - 1 clip selected\nCut - X"))
+    tooltips = [_("Add Rendered Transition - 2 clips selected\nAdd Rendered Fade - 1 clip selected"), _("Cut - X")]
+    tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons, tooltips)
     editor_window.edit_buttons.no_decorations = no_decorations
         
     editor_window.edit_buttons_3 = glassbuttons.GlassButtonsGroup(46, 23, 2, 3, 5)
@@ -156,13 +158,15 @@ def _create_buttons(editor_window):
     editor_window.edit_buttons_3.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "ripple_delete.png"), tlineaction.ripple_delete_button_pressed)
     editor_window.edit_buttons_3.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "lift.png"), tlineaction.lift_button_pressed)
     editor_window.edit_buttons_3.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "delete_range.png"), tlineaction.delete_range_button_pressed)
-    editor_window.edit_buttons_3.widget.set_tooltip_text(_("Splice Out - Delete\nRipple Delete\nLift\nDelete Range"))
+    tooltips = [_("Splice Out - Delete"), _("Ripple Delete"), _("Lift"), _("Delete Range")]
+    tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_3, tooltips)
     editor_window.edit_buttons_3.no_decorations = no_decorations
 
     editor_window.edit_buttons_2 = glassbuttons.GlassButtonsGroup(44, 23, 2, 3, 5)
     editor_window.edit_buttons_2.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "resync.png"), tlineaction.resync_button_pressed)
     editor_window.edit_buttons_2.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "split_audio.png"), tlineaction.split_audio_button_pressed)
-    editor_window.edit_buttons_2.widget.set_tooltip_text(_("Resync Selected\nSplit Audio"))
+    tooltips = [_("Resync Selected"), _("Split Audio")]
+    tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_2, tooltips)
     editor_window.edit_buttons_2.no_decorations = no_decorations
     
     editor_window.monitor_insert_buttons = glassbuttons.GlassButtonsGroup(44, 23, 2, 3, 5)
@@ -170,13 +174,15 @@ def _create_buttons(editor_window):
     editor_window.monitor_insert_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "overwrite_clip.png"), tlineaction.three_point_overwrite_pressed)
     editor_window.monitor_insert_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "insert_clip.png"), tlineaction.insert_button_pressed)
     editor_window.monitor_insert_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "append_clip.png"), tlineaction.append_button_pressed)
-    editor_window.monitor_insert_buttons.widget.set_tooltip_text(_("Overwrite Range\nOverwrite Clip - T\nInsert Clip - Y\nAppend Clip - U"))
+    tooltips = [_("Overwrite Range"), _("Overwrite Clip - T"), _("Insert Clip - Y"), _("Append Clip - U")]
+    tooltip_runner = glassbuttons.TooltipRunner(editor_window.monitor_insert_buttons, tooltips)
     editor_window.monitor_insert_buttons.no_decorations = no_decorations
     
     editor_window.undo_redo = glassbuttons.GlassButtonsGroup(28, 23, 2, 2, 7)
     editor_window.undo_redo.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "undo.png"), undo.do_undo_and_repaint)
     editor_window.undo_redo.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "redo.png"), undo.do_redo_and_repaint)
-    editor_window.undo_redo.widget.set_tooltip_text(_("Undo - Ctrl + Z\nRedo - Ctrl + Y"))
+    tooltips = [_("Undo - Ctrl + Z"), _("Redo - Ctrl + Y")]
+    tooltip_runner = glassbuttons.TooltipRunner(editor_window.undo_redo, tooltips)
     editor_window.undo_redo.no_decorations = no_decorations
     
     editor_window.tools_buttons = glassbuttons.GlassButtonsGroup(30, 23, 2, 14, 7)
@@ -185,7 +191,8 @@ def _create_buttons(editor_window):
     editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_gmic.png"), gmic.launch_gmic)
     editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_natron.png"), toolnatron.launch_natron_animations_tool)
     editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_renderqueue.png"), lambda :batchrendering.launch_batch_rendering())
-    editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer\nTitler\nG'Mic Effects\nNatron Animations\nBatch Render Queue"))
+    tooltips = [_("Audio Mixer"), _("Titler"), _("G'Mic Effects"), _("Natron Animations"), _("Batch Render Queue")]
+    tooltip_runner = glassbuttons.TooltipRunner(editor_window.tools_buttons, tooltips)
     editor_window.tools_buttons.no_decorations = True
     
     if editorstate.audio_monitoring_available == False:
@@ -220,8 +227,8 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     buttons_row.pack_start(guiutils.get_pad_label(30, 10), False, True, 0)
     # buttons_row.pack_start(Gtk.Label(), True, True, 0)
     
-    #buttons_row.pack_start(_get_edit_buttons_2_panel(),False, True, 0)
-    #buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    buttons_row.pack_start(_get_edit_buttons_2_panel(),False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
     #buttons_row.pack_start(Gtk.Label(), True, True, 0)
     
     buttons_row.pack_start(_get_edit_buttons_3_panel(),False, True, 0)

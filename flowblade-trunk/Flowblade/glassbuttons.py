@@ -518,6 +518,34 @@ class GlassButtonsToggleGroup(GlassButtonsGroup):
         pass
 
 
+
+class TooltipRunner:
+    
+    def __init__(self, glassbuttons, tooltips):
+        self.glassbuttons = glassbuttons
+        self.tooltips = tooltips
+        
+        self.glassbuttons.widget.set_has_tooltip(True)
+        self.glassbuttons.widget.connect("query-tooltip", self.tooltip_query)
+        self.glassbuttons.tooltip_runner = self
+        
+        self.last_hit_code = NO_HIT
+        
+    def tooltip_query(self, widget, x, y, keyboard_tooltip, tooltip):
+        hit_code = self.glassbuttons._get_hit_code(x, y)
+        if hit_code == NO_HIT:
+            return False
+        
+        # This is needed to get better position for tooltips when tooltips have significantly different amount of text displayed 
+        if hit_code != self.last_hit_code:
+            self.last_hit_code = hit_code
+            self.glassbuttons.widget.trigger_tooltip_query()
+            return False
+        
+        tooltip.set_markup(self.tooltips[hit_code])
+        return True
+        
+
 def focus_group_has_focus(focus_group):
     group = focus_groups[focus_group]
     for widget in group:
