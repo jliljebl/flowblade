@@ -46,7 +46,7 @@ LINE_COLOR = (0.3, 0.3, 0.3)
 LINE_COUNT = 11 # Number of range lines
 BG_COLOR = (1, 1, 1)
 DISABLED_BG_COLOR = (0.7, 0.7, 0.7)
-SELECTED_RANGE_COLOR = (0.85, 0.85, 0.85)
+SELECTED_RANGE_COLOR = (0.85, 0.85, 0.85, 0.75)
 DARK_LINE_COLOR = (0.9, 0.9, 0.9)
 DARK_BG_COLOR = (0.3, 0.3, 0.3)
 DARK_DISABLED_BG_COLOR = (0.1, 0.1, 0.1)
@@ -60,6 +60,7 @@ MARK_PAD = -1
 
 MARK_COLOR = (0.3, 0.3, 0.3)
 DARK_MARK_COLOR = (0.0, 0.0, 0.0)
+FLOWBLADE_THEME_MARK_COLOR = (1, 1, 1)
 
 
 class PositionBar:
@@ -89,7 +90,7 @@ class PositionBar:
             SELECTED_RANGE_COLOR = DARK_SELECTED_RANGE_COLOR
             MARK_COLOR = DARK_MARK_COLOR
             if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
-                MARK_COLOR = (0.9, 0.9, 0.9) # This needs to be light for contrast
+                MARK_COLOR = FLOWBLADE_THEME_MARK_COLOR
     
     def set_listener(self, listener):
         self.position_listener = listener
@@ -147,10 +148,10 @@ class PositionBar:
         
         # Draw selected area if marks set
         if self.mark_in_norm >= 0 and self.mark_out_norm >= 0:
-            cr.set_source_rgb(*SELECTED_RANGE_COLOR)
+            cr.set_source_rgba(*SELECTED_RANGE_COLOR)
             m_in = self._get_panel_pos(self.mark_in_norm)
             m_out = self._get_panel_pos(self.mark_out_norm)
-            cr.rectangle(m_in, 0, m_out - m_in, h)
+            cr.rectangle(m_in + 1, 0, m_out - m_in - 2, h)
             cr.fill()
                 
         # Get area between end pads
@@ -219,7 +220,9 @@ class PositionBar:
         cr.close_path();
 
         cr.set_source_rgb(*MARK_COLOR)
-        cr.fill()
+        cr.fill_preserve()
+        cr.set_source_rgb(0,0,0)
+        cr.stroke()
 
     def draw_mark_out(self, cr, h):
         """
@@ -242,8 +245,10 @@ class PositionBar:
         cr.close_path();
 
         cr.set_source_rgb(*MARK_COLOR)
-        cr.fill()
-
+        cr.fill_preserve()
+        cr.set_source_rgb(0,0,0)
+        cr.stroke()
+        
     def _press_event(self, event):
         """
         Mouse button callback
