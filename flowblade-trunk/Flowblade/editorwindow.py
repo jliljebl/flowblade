@@ -115,6 +115,8 @@ def _toggle_image_switch(widget, icons):
         widget.set_image(not_pressed)
 
 def top_level_project_panel():
+    if editorpersistance.prefs.top_row_layout == appconsts.ALWAYS_TWO_PANELS:
+        return False
     if editorpersistance.prefs.top_level_project_panel == True and editorstate.screen_size_small_width() == False and editorstate.screen_size_large_height() == True:
         return True
     

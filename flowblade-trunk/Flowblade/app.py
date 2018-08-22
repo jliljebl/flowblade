@@ -870,10 +870,13 @@ def _shutdown_dialog_callback(dialog, response_id):
         editorpersistance.prefs.exit_allocation_window_2 = (alloc.width, alloc.height, pos_x, pos_y)       
     editorpersistance.prefs.app_v_paned_position = gui.editor_window.app_v_paned.get_position()
     editorpersistance.prefs.top_paned_position = gui.editor_window.top_paned.get_position()
-    if editorwindow.top_level_project_panel() == True:
-        editorpersistance.prefs.mm_paned_position = 200  # This is not used until user sets preference to not have top level project panel
-    else:
-        editorpersistance.prefs.mm_paned_position = gui.editor_window.mm_paned.get_position()
+    try: # This fails if preference for top row layout changed, we just ignore saving these values then.
+        if editorwindow.top_level_project_panel() == True:
+            editorpersistance.prefs.mm_paned_position = 200  # This is not used until user sets preference to not have top level project panel
+        else:
+            editorpersistance.prefs.mm_paned_position = gui.editor_window.mm_paned.get_position()
+    except: 
+        pass
     editorpersistance.save()
 
     # Block reconnecting consumer before setting window not visible

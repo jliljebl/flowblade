@@ -352,6 +352,11 @@ def _view_prefs_panel():
     tracks_combo.append_text(_("Double for HiDPI - 100px, 50px"))
     tracks_combo.set_active(prefs.double_track_hights)
 
+    top_row_layout = Gtk.ComboBoxText()
+    top_row_layout.append_text(_("3 panels if width awailable"))
+    top_row_layout.append_text(_("2 panels always"))
+    top_row_layout.set_active(prefs.top_row_layout)
+        
     # Layout
     row00 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Application window mode:")), window_mode_combo, PREFERENCES_LEFT))
     row0 =  _row(guiutils.get_checkbox_row_box(force_english_check, Gtk.Label(label=_("Use English texts on localized OS"))))
@@ -365,6 +370,8 @@ def _view_prefs_panel():
     # Feb-2017 - SvdB - For full file names
     row6 =  _row(guiutils.get_checkbox_row_box(show_full_file_names, Gtk.Label(label=_("Show Full File names"))))
 
+    row8 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Top row layout:")), top_row_layout, PREFERENCES_LEFT))
+
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row00, False, False, 0)
     vbox.pack_start(row0, False, False, 0)
@@ -376,13 +383,14 @@ def _view_prefs_panel():
     vbox.pack_start(row7, False, False, 0)
     # Feb-2017 - SvdB - For full file names
     vbox.pack_start(row6, False, False, 0)
+    vbox.pack_start(row8, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
 
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     # Feb-2017 - SvdB - Added code for full file names
     return vbox, (force_english_check, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo, 
-                  window_mode_combo, show_full_file_names, tracks_combo)
+                  window_mode_combo, show_full_file_names, tracks_combo, top_row_layout)
 
 def _performance_panel():
     # Jan-2017 - SvdB

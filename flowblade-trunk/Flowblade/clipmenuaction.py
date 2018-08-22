@@ -72,6 +72,7 @@ def display_clip_menu(y, event, frame):
         return False
     
     # Display popup
+    gui.tline_canvas.drag_on = False
     pressed_clip = track.clips[clip_index]
     if pressed_clip.is_blanck_clip == False:
         movemodes.select_clip(track.id, clip_index)

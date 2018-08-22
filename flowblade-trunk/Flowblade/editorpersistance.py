@@ -202,7 +202,8 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     auto_center_check, play_pause_button, auto_center_on_updown, \
     ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range = playback_prefs_widgets
     
-    use_english, disp_splash, buttons_style, theme, theme_combo, audio_levels_combo, window_mode_combo, full_names, double_track_hights = view_prefs_widgets
+    use_english, disp_splash, buttons_style, theme, theme_combo, audio_levels_combo, \
+    window_mode_combo, full_names, double_track_hights, top_row_layout = view_prefs_widgets
 
     # Jan-2017 - SvdB
     perf_render_threads, perf_drop_frames = performance_widgets
@@ -242,6 +243,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.double_track_hights = (double_track_hights.get_active() == 1)
     prefs.playback_follow_move_tline_range = follow_move_range.get_active()
     prefs.theme = theme.get_active()
+    prefs.top_row_layout = top_row_layout.get_active()
 
     #if prefs.shortcuts != shortcuts.shortcut_files[shortcuts_combo.get_active()]:
     #    prefs.shortcuts = shortcuts.shortcut_files[shortcuts_combo.get_active()]
@@ -345,4 +347,4 @@ class EditorPreferences:
         self.top_level_project_panel = True
         self.theme = appconsts.FLOWBLADE_THEME
         self.dnd_action = appconsts.DND_OVERWRITE_NON_V1
-    
+        self.top_row_layout = appconsts.THREE_PANELS_IF_POSSIBLE

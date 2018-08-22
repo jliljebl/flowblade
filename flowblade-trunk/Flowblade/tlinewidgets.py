@@ -1492,7 +1492,7 @@ class TimeLineCanvas:
 
         clip_index = current_sequence().get_clip_index(track, frame)
         if clip_index == -1:
-            # This gets none always afetr rack, which may not be what we want
+            # This gets none always after track, which may not be what we want
             return appconsts.POINTER_CONTEXT_NONE
 
         clip_start_frame = track.clip_start(clip_index)
