@@ -297,7 +297,7 @@ class EditorPreferences:
         self.midbar_tc_left = True
         self.default_layout = True
         self.exit_allocation = (0, 0)
-        self.media_columns = 2
+        self.media_columns = 3
         self.app_v_paned_position = 500 # Paned get/set position value
         self.top_paned_position = 600 # Paned get/set position value
         self.mm_paned_position = 260 # Paned get/set position value
@@ -315,7 +315,7 @@ class EditorPreferences:
         self.jack_output_type = appconsts.JACK_OUT_AUDIO # not used
         self.media_load_order = appconsts.LOAD_ABSOLUTE_FIRST
         self.use_english_always = False
-        self.theme_fallback_colors = 0 # index of gui._THEME_COLORS
+        self.theme_fallback_colors = 4 # index of gui._THEME_COLORS
         self.display_all_audio_levels = True
         self.overwrite_clip_drop = True # DEPRECATED, "dnd_action" used instead
         self.trans_cover_delete = True
