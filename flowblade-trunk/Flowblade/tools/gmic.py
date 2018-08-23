@@ -212,12 +212,10 @@ def main(root_path, force_launch=False):
 
     # Themes
     if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
+        respaths.apply_dark_theme()
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
         if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
             gui.apply_gtk_css()
-            
-    # Request dark them if so desired
-
 
     repo = mlt.Factory().init()
 
