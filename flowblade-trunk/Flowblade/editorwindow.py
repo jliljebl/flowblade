@@ -716,7 +716,7 @@ class EditorWindow:
         info_h = Gtk.HBox()
         info_h.pack_start(self.tline_info, False, False, 0)
         info_h.pack_start(Gtk.Label(), True, True, 0)
-        info_h.set_size_request(tlinewidgets.COLUMN_WIDTH - 22 - 22 - 22,# - 22, # room for 3 menu launch buttons 
+        info_h.set_size_request(tlinewidgets.COLUMN_WIDTH - 22 - 22 - 22,
                                       tlinewidgets.SCALE_HEIGHT)
 
         marker_surface =  cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "marker.png")
@@ -785,7 +785,6 @@ class EditorWindow:
         tline_pane = Gtk.VBox(False, 1)
         tline_pane.pack_start(self.edit_buttons_frame, False, True, 0)
         tline_pane.pack_start(self.tline_box, True, True, 0)
-        #tline_pane.override_background_color(Gtk.StateFlags.NORMAL, gui.get_bg_color())
         self.tline_pane = tline_pane
     
         # VPaned top row / timeline
@@ -804,7 +803,6 @@ class EditorWindow:
         menu_vbox.pack_start(self.monitor_source, False, False, 0)
         menu_vbox.pack_start(guiutils.pad_label(24, 10), False, False, 0)
         menu_vbox.pack_start(self.info1, False, False, 0)
-        #menu_vbox.pack_start(guiutils.pad_label(32, 10), False, False, 0)
         
         # Pane
         pane = Gtk.VBox(False, 1)
@@ -1091,12 +1089,13 @@ class EditorWindow:
     def _add_tool_tips(self):
         self.big_TC.set_tooltip_text(_("Timeline current frame timecode"))
 
-        self.view_mode_select.widget.set_tooltip_text(_("Select view mode: Video/Vectorscope/RGBParade"))
+        self.view_mode_select.widget.set_tooltip_text(_("Select view mode: Video / Vectorscope/ RGBParade"))
+        self.trim_view_select.widget.set_tooltip_text(_("Set trim view and match frames"))
         
-        self.tc.widget.set_tooltip_text(_("Monitor Sequence/Media current frame timecode"))
-        self.monitor_source.set_tooltip_text(_("Current Monitor Sequence/Media name"))
+        self.tc.widget.set_tooltip_text(_("Sequence / Media current frame timecode"))
+        self.monitor_source.set_tooltip_text(_("Current Sequence / Clip name and length"))
     
-        self.pos_bar.widget.set_tooltip_text(_("Monitor Sequence/Media current position"))
+        self.pos_bar.widget.set_tooltip_text(_("Sequence / Media current position"))
         
         #self.sequence_editor_b.set_tooltip_text(_("Display Current Sequence on Timeline"))
         #self.clip_editor_b.set_tooltip_text(_("Display Monitor Clip"))
@@ -1345,6 +1344,7 @@ class EditorWindow:
         self.info1.set_ellipsize(Pango.EllipsizeMode.END)
         self.info1.modify_font(Pango.FontDescription(font_desc))
         self.info1.set_sensitive(False)
+        self.info1.set_tooltip_text(_("In / Out / Marked Length"))
         
 def _this_is_not_used():
     print "THIS WAS USED!!!!!"
