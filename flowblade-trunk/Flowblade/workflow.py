@@ -77,6 +77,7 @@ def init_data():
 def _set_workflow_STANDARD():
     editorpersistance.prefs.active_tools = [2, 6, 8, 4, 5, 7]
     editorpersistance.prefs.dnd_action = appconsts.DND_ALWAYS_OVERWRITE
+    editorpersistance.prefs.box_for_empty_press_in_overwrite_tool = True
     editorpersistance.save()
 
     modesetting.set_default_edit_mode()
@@ -84,6 +85,7 @@ def _set_workflow_STANDARD():
 def _set_workflow_FILM_STYLE():
     editorpersistance.prefs.active_tools = [1, 2, 3, 4, 5, 6, 7]
     editorpersistance.prefs.dnd_action = appconsts.DND_OVERWRITE_NON_V1
+    editorpersistance.prefs.box_for_empty_press_in_overwrite_tool = False
     editorpersistance.save()
 
     modesetting.set_default_edit_mode()
@@ -127,7 +129,7 @@ def _get_image_menu_item(tool_icon_file, text, callback, tool_id):
     item.set_always_show_image(True)
     item.set_use_stock(False)
     item.set_label(text)
-    item.set_tooltip_markup(_TOOL_TIPS[tool_id])#"<b>ladsladsladsladsl</b>   adsladsldal")
+    item.set_tooltip_markup(_TOOL_TIPS[tool_id])
     item.show()
     return item
     
@@ -288,6 +290,15 @@ def _get_workflow_tool_submenu(callback, tool_id, position):
 
     sub_menu.add(position_item)
     
+    # Individual prefs for tools
+    if tool_id == appconsts.TLINE_TOOL_OVERWRITE:
+        pref_item = Gtk.CheckMenuItem(_("Do Box Selection and Box Move from empty press").encode('utf-8'))
+        pref_item.set_active(editorpersistance.prefs.box_for_empty_press_in_overwrite_tool)
+        pref_item.connect("toggled", _TLINE_TOOL_OVERWRITE_box_selection_pref)
+        pref_item.show()
+        sub_menu.add(pref_item)
+        guiutils.add_separetor(sub_menu)
+        
     return sub_menu
     
 def _workflow_menu_callback(widget, data):
@@ -347,3 +358,9 @@ def tline_tool_keyboard_selected(event):
         pass
         
     return False
+
+
+# -------------------------------------------------------------- tool prefs
+def _TLINE_TOOL_OVERWRITE_box_selection_pref(check_menu_item):
+    editorpersistance.prefs.box_for_empty_press_in_overwrite_tool = check_menu_item.get_active()
+    editorpersistance.save()

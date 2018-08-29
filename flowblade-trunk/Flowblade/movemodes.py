@@ -291,6 +291,13 @@ def overwrite_move_press(event, frame):
         for length in clip_lengths:
             moving_length += length
         edit_data["moving_length"] = moving_length
+    else:
+        if editorpersistance.prefs.box_for_empty_press_in_overwrite_tool == True:
+            # We now enter box mode with special flag set that we will return to overwrite after edit complete
+            editorstate.overwrite_mode_box = True
+            boxmove.entered_from_overwrite = True
+            boxmove.clear_data()
+            boxmove.mouse_press(event, frame)
 
 def overwrite_move_move(x, y, frame, state):
     """
@@ -355,8 +362,7 @@ def overwrite_move_release(x, y, frame, state):
         updater.repaint_tline()
         return
     
-    
-    # Moved lips are completely out of displayable track area, can't do edit.
+    # Moved clips are completely out of displayable track area, can't do edit.
     if over_out  < 1:
         return
         

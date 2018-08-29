@@ -22,6 +22,7 @@
 Handles Box tool functionality.
 """
 
+import gui
 import edit
 import editorstate
 from editorstate import current_sequence
@@ -30,6 +31,7 @@ import updater
 
 box_selection_data = None
 edit_data = None
+entered_from_overwrite = False
 
 def clear_data():
     # These need to cleared when box tool is activated
@@ -75,8 +77,10 @@ def mouse_move(x, y, frame):
     updater.repaint_tline()
     
 def mouse_release(x, y, frame):
-    global box_selection_data, edit_data
+    global box_selection_data, edit_data, entered_from_overwrite
     if edit_data == None:
+        if entered_from_overwrite == True:
+            _exit_to_overwrite()
         return
         
     if box_selection_data == None: # mouse action is to select
@@ -92,6 +96,11 @@ def mouse_release(x, y, frame):
                          "press_frame":-1,
                          "delta":0,
                          "box_selection_data":box_selection_data}
+            # Exit box mode if entered from overwrite  with empty selection
+            if entered_from_overwrite == True:
+                _exit_to_overwrite()
+                return 
+    
     else: # mouse action is to move
         delta = frame - edit_data["press_frame"]
         edit_data["delta"] = delta
@@ -105,8 +114,23 @@ def mouse_release(x, y, frame):
         # Back to start state
         edit_data = None
         box_selection_data = None
+        
+        # Exit box mode if entered from overwrite with empty selection
+        if entered_from_overwrite == True:
+            _exit_to_overwrite()
+            return 
     
     tlinewidgets.set_edit_mode_data(edit_data)
+    updater.repaint_tline()
+
+def _exit_to_overwrite():
+    # If we entered box mode from overwite mode empty click, this is used to enter back into overwrite mode.
+    global entered_from_overwrite
+    entered_from_overwrite = False
+    editorstate.overwrite_mode_box = False
+    tlinewidgets.set_edit_mode_data(None)
+    gui.editor_window.set_cursor_to_mode() # This gets set wrong in editevent.tline_canvas_mouse_released() and were putting it back here, 
+                                           # this could be investigated for better solution, this could cause a cursor flash, but on dev system we're not getting it.
     updater.repaint_tline()
 
 

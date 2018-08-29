@@ -1190,12 +1190,14 @@ class EditorWindow:
         self.set_tline_cursor(editorstate.EDIT_MODE())
         updater.set_trim_mode_gui()
     
+    """
     def toggle_overwrite_box_mode(self):
         editorstate.overwrite_mode_box = (editorstate.overwrite_mode_box == False)
         boxmove.clear_data()
         self.set_tool_selector_to_mode()
         self.set_tline_cursor(editorstate.EDIT_MODE())
-
+    """
+    
     def mode_selector_pressed(self, selector, event):
         workflow.get_tline_tool_popup_menu(selector, event, self.tool_selector_item_activated)
     
@@ -1231,6 +1233,7 @@ class EditorWindow:
         self.set_tool_selector_to_mode()
         
     def set_cursor_to_mode(self):
+        print "set_cursor_to_mode"
         if editorstate.cursor_on_tline == True:
             self.set_tline_cursor(editorstate.EDIT_MODE())
         else:

@@ -121,7 +121,8 @@ def box_mode_pressed():
     editorstate.edit_mode = editorstate.OVERWRITE_MOVE
     editorstate.overwrite_mode_box = True
     boxmove.clear_data()
-        
+    boxmove.entered_from_overwrite = False
+            
     tlinewidgets.set_edit_mode(None, None) # these get set later for box move
         
     _set_move_mode()

@@ -348,3 +348,4 @@ class EditorPreferences:
         self.theme = appconsts.FLOWBLADE_THEME
         self.dnd_action = appconsts.DND_OVERWRITE_NON_V1
         self.top_row_layout = appconsts.THREE_PANELS_IF_POSSIBLE
+        self.box_for_empty_press_in_overwrite_tool = False

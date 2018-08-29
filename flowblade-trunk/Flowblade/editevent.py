@@ -414,7 +414,7 @@ def tline_canvas_mouse_released(x, y, frame, button, state):
     """
     Mouse event callback from timeline canvas widget
     """
-    gui.editor_window.set_cursor_to_mode()
+    gui.editor_window.set_cursor_to_mode() # we need this for box move at least, probably trims too
      
     if editorstate.timeline_mouse_disabled == True:
         gui.editor_window.set_cursor_to_mode() # we only need this update when mode change (to active trim mode) disables mouse, so we'll only do this then
