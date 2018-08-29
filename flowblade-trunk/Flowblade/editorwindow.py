@@ -481,6 +481,7 @@ class EditorWindow:
             self.mm_paned.add(media_panel)
         else:
             self.mm_paned = Gtk.HPaned()
+            guiutils.set_margins(self.bins_panel, 6, 6, 8, 0)
             self.mm_paned.pack1(self.bins_panel, resize=True, shrink=True)
             self.mm_paned.pack2(media_panel, resize=True, shrink=False)
 
@@ -944,13 +945,6 @@ class EditorWindow:
 
         sep = Gtk.SeparatorMenuItem()
         menu.append(sep)
-
-        """
-        show_monitor_info_item = Gtk.CheckMenuItem(_("Show Monitor Sequence Profile").encode('utf-8'))
-        show_monitor_info_item.set_active(editorpersistance.prefs.show_sequence_profile)
-        show_monitor_info_item.connect("toggled", lambda w: middlebar._show_monitor_info_toggled(w))
-        menu.append(show_monitor_info_item)
-        """
         
         sep = Gtk.SeparatorMenuItem()
         menu.append(sep)
@@ -1189,15 +1183,7 @@ class EditorWindow:
         self.set_tool_selector_to_mode()
         self.set_tline_cursor(editorstate.EDIT_MODE())
         updater.set_trim_mode_gui()
-    
-    """
-    def toggle_overwrite_box_mode(self):
-        editorstate.overwrite_mode_box = (editorstate.overwrite_mode_box == False)
-        boxmove.clear_data()
-        self.set_tool_selector_to_mode()
-        self.set_tline_cursor(editorstate.EDIT_MODE())
-    """
-    
+
     def mode_selector_pressed(self, selector, event):
         workflow.get_tline_tool_popup_menu(selector, event, self.tool_selector_item_activated)
     
@@ -1233,7 +1219,6 @@ class EditorWindow:
         self.set_tool_selector_to_mode()
         
     def set_cursor_to_mode(self):
-        print "set_cursor_to_mode"
         if editorstate.cursor_on_tline == True:
             self.set_tline_cursor(editorstate.EDIT_MODE())
         else:
