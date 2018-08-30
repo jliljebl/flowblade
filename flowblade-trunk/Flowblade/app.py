@@ -771,6 +771,8 @@ def show_splash_screen():
 
     splash_screen.set_resizable(False)
 
+    #dialog = workflow.WorkflowDialog()
+
     while(Gtk.events_pending()):
         Gtk.main_iteration()
 

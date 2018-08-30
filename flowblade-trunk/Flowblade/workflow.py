@@ -31,6 +31,8 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 
 import appconsts
+import dialogs
+import dialogutils
 import edit
 import editorpersistance
 import editorstate
@@ -364,3 +366,63 @@ def tline_tool_keyboard_selected(event):
 def _TLINE_TOOL_OVERWRITE_box_selection_pref(check_menu_item):
     editorpersistance.prefs.box_for_empty_press_in_overwrite_tool = check_menu_item.get_active()
     editorpersistance.save()
+
+
+
+
+class WorkflowDialog(Gtk.Dialog):
+
+    def __init__(self):
+        Gtk.Dialog.__init__(self, _("Welcome To Flowblade 2"),  None,
+                                Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                (_("Select Preset Workflow and Continue").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+        
+        self.DEFAULT_SELECTION = 1
+
+        info_label_text_1 = _("To audio sync clips you need move action origin clip by ") # + str(data.clip_tline_media_offset - data.media_offset_frames) + _(" frames.")
+        info_label_1 = Gtk.Label(info_label_text_1)
+
+        info_label_text_2 = _("To audio sync clips you need move action origin clip by ") # + str(data.clip_tline_media_offset - data.media_offset_frames) + _(" frames.")
+        info_label_2 = Gtk.Label(info_label_text_2)
+
+        preset_workflow_text_1 = _("workflow 1 ") # + str(data.clip_tline_media_offset - data.media_offset_frames) + _(" frames.")
+        workflow_select_item_1 = self.get_workflow_select_item(1, preset_workflow_text_1)
+
+        preset_workflow_text_2 = _("workflow 2 ") # + str(data.clip_tline_media_offset - data.media_offset_frames) + _(" frames.")
+        workflow_select_item_2 = self.get_workflow_select_item(2, preset_workflow_text_1)
+        
+        panel_vbox = Gtk.VBox(False, 2)
+        panel_vbox.pack_start(guiutils.get_pad_label(24, 12), False, False, 0)
+        panel_vbox.pack_start(guiutils.get_left_justified_box([info_label_1]), False, False, 0)
+        panel_vbox.pack_start(workflow_select_item_1, False, False, 0)
+        panel_vbox.pack_start(workflow_select_item_2, False, False, 0)
+        panel_vbox.pack_start(info_label_2, False, False, 0)
+        panel_vbox.pack_start(guiutils.get_pad_label(24, 24), False, False, 0)
+
+        alignment = dialogutils.get_alignment2(panel_vbox)
+
+        self.vbox.pack_start(alignment, True, True, 0)
+        dialogutils.set_outer_margins(self.vbox)
+        dialogs._default_behaviour(self)
+        self.connect('response', self.done)
+        self.show_all()
+
+    def get_workflow_select_item(self, item_number, item_text):
+        label = Gtk.Label(item_text)
+        widget = Gtk.EventBox()
+        widget.connect("button-press-event", lambda w,e: self.selected_callback(w, item_number))
+        #widget.connect("button-release-event", lambda w,e: release_callback(self, w, e))
+        widget.set_can_focus(True)
+        widget.add_events(Gdk.EventMask.KEY_PRESS_MASK)
+
+        widget.add(label)
+        if item_number == self.DEFAULT_SELECTION:
+            widget.override_background_color(Gtk.StateType.NORMAL, Gdk.RGBA(0.1, 0.31, 0.58,1.0))
+            
+        return widget
+
+    def done(self, dialog, response_id):
+        dialog.destroy()
+
+    def selected_callback(self, w, item_number):
+        pass
