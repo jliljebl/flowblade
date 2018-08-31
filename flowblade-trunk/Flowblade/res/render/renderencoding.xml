@@ -82,9 +82,6 @@
     <encodingoption name="Lossless HuffYUV / .avi" extension="avi" audiodesc=" pcm"  type="av" resize="True" qgroup="lossless">
         <profile args="f=avi acodec=pcm_s16le ac=2 vcodec=huffyuv" />
     </encodingoption>
-    <encodingoption name="Lossless MPEG-2 / .mpg" audiodesc="mp2"  extension=" mpg" type="av" resize="True" qgroup="lossless">
-       <profile args="f=mpeg acodec=mp2 ab=384k ac=2 vcodec=mpeg2video qscale=1 qmin=1 aspect=%ASPECT% intra=1" />
-   </encodingoption>
     <encodingoption name="Lossless MPEG-4 / .mp4" extension="mp4" audiodesc=" mp3" type="av" resize="True" qgroup="lossless">
         <profile args="f=mp4 acodec=libmp3lame ab=384k ac=2 vcodec=mpeg4 qscale=1 qmin=1" />
     </encodingoption>

@@ -89,7 +89,7 @@ _FLOWBLADE_COLORS = ((0.960784, 0.964706, 0.968627), (0.266667, 0.282353, 0.3215
 
 _THEME_COLORS = (_UBUNTU_COLORS, _GNOME_COLORS, _MINT_COLORS, _ARC_COLORS, _FLOWBLADE_COLORS)
 
-_CURRENT_THEME_COLORS_FILE = "currentcolors.data"
+_CURRENT_THEME_COLORS_FILE = "currentcolors.data" # Used to communicate theme colors to tools like gmic.py running on separate process
 
 _selected_bg_color = None
 _bg_color = None
