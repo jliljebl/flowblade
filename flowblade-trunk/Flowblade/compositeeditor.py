@@ -287,6 +287,10 @@ def display_kfeditors_tline_frame(frame):
     for kf_widget in keyframe_editor_widgets:
         kf_widget.display_tline_frame(frame)
 
+def update_kfeditors_sliders(frame):
+    for kf_widget in keyframe_editor_widgets:
+        kf_widget.update_slider_value_display(frame)
+        
 def update_kfeditors_positions():
     for kf_widget in keyframe_editor_widgets:
         kf_widget.update_clip_pos()

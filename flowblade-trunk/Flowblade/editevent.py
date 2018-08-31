@@ -434,7 +434,8 @@ def tline_canvas_mouse_released(x, y, frame, button, state):
     if button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG and EDIT_MODE() != editorstate.COMPOSITOR_EDIT:
         if not timeline_visible():
             return
-        PLAYER().seek_frame(frame) 
+        PLAYER().seek_frame(frame)
+        clipeffectseditor.update_kfeditors_sliders(frame)
     # Handle mouse button edits
     elif button == 1 or button == 3:
         mode_funcs = EDIT_MODE_FUNCS[EDIT_MODE()]

@@ -2452,7 +2452,7 @@ class TimeLineFrameScale:
         if self.drag_on:
             frame = current_sequence().get_seq_range_frame(get_frame(event.x))
             PLAYER().seek_frame(frame) 
-        
+            clipeffectseditor.update_kfeditors_sliders(frame)
         self.drag_on = False
 
     # --------------------------------------------- DRAW
