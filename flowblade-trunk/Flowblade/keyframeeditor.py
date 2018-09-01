@@ -33,6 +33,7 @@ from gi.repository import Gtk, GObject
 from gi.repository import Pango
 
 import cairoarea
+import editorpersistance
 from editorstate import PLAYER
 from editorstate import current_sequence
 import gui
@@ -719,7 +720,12 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         self.pack_start(self.clip_editor.widget, False, False, 0)
         self.pack_start(self.buttons_row, False, False, 0)
 
+        orig_tline_frame = PLAYER().current_frame()
         self.active_keyframe_changed() # to do update gui to current values
+
+        if editorpersistance.prefs.kf_edit_init_affects_playhead == False:
+            self.display_tline_frame(orig_tline_frame)
+            PLAYER().seek_frame(orig_tline_frame)
 
     def slider_value_changed(self, adjustment):
         value = adjustment.get_value()        
@@ -862,8 +868,13 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.pack_start(self.clip_editor.widget, False, False, 0)
         self.pack_start(self.buttons_row, False, False, 0)
 
+        orig_tline_frame = PLAYER().current_frame()
         self.active_keyframe_changed() # to do update gui to current values
 
+        if editorpersistance.prefs.kf_edit_init_affects_playhead == False:
+            self.display_tline_frame(orig_tline_frame)
+            PLAYER().seek_frame(orig_tline_frame)
+            
         self.queue_draw()
 
     def add_pressed(self):
