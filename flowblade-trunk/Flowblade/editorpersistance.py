@@ -197,7 +197,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     
     # Jul-2016 - SvdB - Added play_pause_button
     # Apr-2017 - SvdB - Added ffwd / rev values
-    gfx_length_spin, cover_delete, mouse_scroll_action, hide_file_ext_button = edit_prefs_widgets
+    gfx_length_spin, cover_delete, mouse_scroll_action, hide_file_ext_button, hor_scroll_dir = edit_prefs_widgets
     
     auto_center_check, play_pause_button, auto_center_on_updown, \
     ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range = playback_prefs_widgets
@@ -222,6 +222,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.play_pause = play_pause_button.get_active()
     prefs.hide_file_ext = hide_file_ext_button.get_active()
     prefs.mouse_scroll_action_is_zoom = (mouse_scroll_action.get_active() == 0)
+    prefs.scroll_horizontal_dir_up_forward = (hor_scroll_dir.get_active() == 0)
     # Apr-2017 - SvdB - ffwd / rev values
     prefs.ffwd_rev_shift = int(ffwd_rev_shift_spin.get_adjustment().get_value())
     prefs.ffwd_rev_ctrl = int(ffwd_rev_ctrl_spin.get_adjustment().get_value())
@@ -349,3 +350,4 @@ class EditorPreferences:
         self.dnd_action = appconsts.DND_OVERWRITE_NON_V1
         self.top_row_layout = appconsts.THREE_PANELS_IF_POSSIBLE
         self.box_for_empty_press_in_overwrite_tool = False
+        self.scroll_horizontal_dir_up_forward = True
