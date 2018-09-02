@@ -593,10 +593,7 @@ def display_marks_tc():
     else:
         update_seqence_info_text()
 
-# ----------------------------------------------- clip editors
-def clip_removed_during_edit(clip):
-    clipeffectseditor.clip_removed_during_edit(clip)
-    
+# ----------------------------------------------- clip editors    
 def clear_clip_from_editors(clip):
     if clipeffectseditor.clip == clip:
         clipeffectseditor.clear_clip()

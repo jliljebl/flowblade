@@ -148,14 +148,6 @@ def set_clip(new_clip, new_track, new_index):
     effect_selection_changed() # This may get called twice
     gui.middle_notebook.set_current_page(filters_notebook_index) # 2 == index of clipeditor page in notebook
 
-def clip_removed_during_edit(removed_clip):
-    """
-    Called from edit.py after a clip is removed from timeline during edit
-    so that we cannot edit effects on clip that is no longer on timeline.
-    """
-    if  clip == removed_clip:
-        clear_clip()
-
 def effect_select_row_double_clicked(treeview, tree_path, col):
     add_currently_selected_effect()
 
@@ -440,7 +432,10 @@ def stack_view_pressed():
     global stack_dnd_state
     stack_dnd_state = MOUSE_PRESS_DONE
 
-def effect_selection_changed():
+def reinit_current_effect():
+    effect_selection_changed(True)
+
+def effect_selection_changed(use_current_filter_index=False):
     global keyframe_editor_widgets
 
     # Check we have clip
@@ -473,6 +468,11 @@ def effect_selection_changed():
         filter_index = max(row)
     except:
         filter_index = 0
+
+    # This isused when reiniting filter panel after every edit,
+    # use_current_filter_index == False is used when user changes edited filter or clip.
+    if use_current_filter_index == True:
+        filter_index = current_filter_index
 
     filter_object = clip.filters[filter_index]
     

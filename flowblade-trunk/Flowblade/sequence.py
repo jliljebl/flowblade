@@ -513,6 +513,15 @@ class Sequence:
         self.next_id += 1
         return self.next_id - 1
 
+    def clip_is_in_sequence(self, test_clip):
+        for i in range(1, len(self.tracks)):
+            track = self.tracks[i]
+            for clip in track.clips:
+                if clip == test_clip:
+                    return True
+        
+        return False
+
     # ------------------------------------------ blanks
     def create_and_insert_blank(self, track, index, length):
         """
