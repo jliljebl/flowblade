@@ -2510,7 +2510,23 @@ def _range_delete_redo(self):
     
     # HACK, see EditAction for details
     self.turn_on_stop_for_edit = True
+
+
+#----------------- RIPPLE DELETE 
+# "track","from_index","to_index"
+def ripple_delete_action(data):
+    action = EditAction(_ripple_delete_undo, _ripple_delete_redo, data)
+    action.stop_for_edit = True
+    return action
+
+def _ripple_delete_undo(self):
+    _multi_move_undo(self)
+    _lift_multiple_undo(self)
     
+def _ripple_delete_redo(self):
+    _lift_multiple_redo(self)
+    _multi_move_redo(self)
+
 
 #------------------- ADD CENTERED TRANSITION
 # "transition_clip","transition_index", "from_clip","to_clip","track","from_in","to_out"

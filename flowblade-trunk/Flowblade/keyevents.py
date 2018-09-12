@@ -163,7 +163,7 @@ def key_down(widget, event):
     #debug
     if event.keyval == Gdk.KEY_F12:
         if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-            pass
+            tlineaction.ripple_delete_button_pressed()
         return True
 
     # Key event was not handled here.

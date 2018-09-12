@@ -505,7 +505,43 @@ def lift_button_pressed():
 
 def ripple_delete_button_pressed():
     print "Ripple delete"
+    if movemodes.selected_track == -1:
+        return
 
+    track = get_track(movemodes.selected_track)
+    
+    delete_range_in = track.clip_start(movemodes.selected_range_in)
+    out_clip = track.clips[movemodes.selected_range_out]
+    delete_range_out = track.clip_start(movemodes.selected_range_out) + out_clip.clip_out - out_clip.clip_in + 1 # +1 out incl
+    delete_range_length = delete_range_out - delete_range_in
+    
+    ripple_data = multimovemode.MultimoveData(track, delete_range_out, True, False)
+    ripple_data.build_ripple_data(track.id, delete_range_length, movemodes.selected_range_in)
+    available_from_range_out = ripple_data.max_backwards
+
+    ripple_data = multimovemode.MultimoveData(track, delete_range_in, True, False)
+    ripple_data.build_ripple_data(track.id, delete_range_length, movemodes.selected_range_in)
+    available_from_range_in = ripple_data.max_backwards
+
+    if available_from_range_in < delete_range_length or available_from_range_out < delete_range_length:
+        overwrite_track = ripple_data.get_overwrite_data(delete_range_length)
+        primary_txt = _("Can't do Ripple Delete!")
+        secondary_txt = _("Seleted Ripple Delete would cause an overwrite and that is not permitted for this edit action.\n\nOverwrite would happen on at track <b>") + utils.get_track_name(overwrite_track, current_sequence()) + "</b>."
+        parent_window = gui.editor_window.window
+        dialogutils.info_message(primary_txt, secondary_txt, parent_window)
+        return 
+
+    # Do ripple delete
+    data = {"track":track,
+            "from_index":movemodes.selected_range_in,
+            "to_index":movemodes.selected_range_out,
+            "multi_data":ripple_data,
+            "edit_delta":-delete_range_length}
+    edit_action = edit.ripple_delete_action(data)
+    edit_action.do_edit()
+    
+    _splice_out_done_update()
+    
 def insert_button_pressed():
     track = current_sequence().get_first_active_track()
 

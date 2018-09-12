@@ -35,7 +35,7 @@ class MultimoveData:
     """
     This class collects and saves data that enables a "Multi" tool edit to be performed.
     """
-    def __init__(self, pressed_track, first_moved_frame, move_all_tracks):
+    def __init__(self, pressed_track, first_moved_frame, move_all_tracks, calculate_immediately=True):
         
         self.first_moved_frame = first_moved_frame
         self.pressed_track_id = pressed_track.id
@@ -45,6 +45,16 @@ class MultimoveData:
         self.track_edit_ops = []
         self.track_affected = []
         self.legal_edit = True
+        self.ignore_track = -1
+        
+        if calculate_immediately == True:
+            self._build_move_data()
+        
+    def build_ripple_data(self, delete_track_id, range_length, range_first_clip_index):
+        self.ignore_track = delete_track_id
+        self.range_first_clip_index = range_first_clip_index
+        self.range_length = range_length
+        
         self._build_move_data()
 
     def _build_move_data(self):
@@ -58,6 +68,12 @@ class MultimoveData:
         track_max_deltas = []
         trim_blank_indexes = []
         for i in range(1, len(tracks) - 1):
+            # When this is used to get ripple delete data we need to ingone the track that delete happens in
+            if i == self.ignore_track:
+                track_max_deltas.append(self.range_length)
+                trim_blank_indexes.append(self.range_first_clip_index)
+                continue
+                
             track = tracks[i]
             if len(track.clips) == 0:
                 track_max_deltas.append(MAX_DELTA)
@@ -117,6 +133,9 @@ class MultimoveData:
                     track_max_deltas.append(track.clips[clip_index].clip_length())
                     trim_blank_indexes.append(clip_index)
 
+        # We possibly need this for ripple delete info message on denied edit
+        self.saved_track_max_deltas = track_max_deltas
+        
         self.trim_blank_indexes = trim_blank_indexes
 
         # Pressed track max delta trim blank index is calculated differently 
@@ -142,8 +161,10 @@ class MultimoveData:
                 max_d = 0
                 trim_index = clip_index
         
-        track_max_deltas[self.pressed_track_id - 1] = max_d
-        self.trim_blank_indexes[self.pressed_track_id - 1] = trim_index
+        # We only do this when this code is not used for ripple delete edit.
+        if self.ignore_track == -1:
+            track_max_deltas[self.pressed_track_id - 1] = max_d
+            self.trim_blank_indexes[self.pressed_track_id - 1] = trim_index
     
         # Smallest track delta is the max number of frames 
         # the edit can be done backwards
@@ -157,7 +178,7 @@ class MultimoveData:
         else: # Single track moved with CTRL
             self.max_backwards = track_max_deltas[self.pressed_track_id - 1] # - 1 because black track
   
-        # Track have different ways the edit will need to be applied
+        # Tracks have different ways the edit will need to be applied
         # make a list of those
         track_edit_ops = []
         for i in range(1, len(tracks) - 1):
@@ -181,7 +202,20 @@ class MultimoveData:
             for i in range(1, len(tracks) - 1):
                 self.track_affected.append(False)
             self.track_affected[self.pressed_track_id - 1] = True
-                
+
+    def get_overwrite_data(self, delete_range_length):
+        tracks = current_sequence().tracks
+        for i in range(1, len(tracks) - 1):
+            if i == self.ignore_track:
+                continue
+            track = tracks[i]
+            if self.saved_track_max_deltas[i - 1] < delete_range_length:
+                return track
+        
+        # We should never get here and we allow this to crash
+        print "getting failed ripple delete track info in get_overwrite_data() failed"
+        return None
+            
 def mouse_press(event, frame):
     x = event.x
     y = event.y
