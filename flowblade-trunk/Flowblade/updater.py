@@ -41,8 +41,8 @@ import utils
 import respaths
 import tlinewidgets
 
-page_size = 99.0 # Gtk.Adjustment.get_page_size() wasn't there
-                 # (wft?) so use this to have page size
+page_size = 99.0 # Gtk.Adjustment.get_page_size() wasn't there (wft?)
+                 # so use this to have page size
 
 # Scale constants
 PIX_PER_FRAME_MAX = 20.0
@@ -187,7 +187,21 @@ def tline_scrolled(adjustment):
     else:
         tlinewidgets.pos = 0
     repaint_tline()
+
+def maybe_move_playback_tline_range(current_frame):
+    # Prefs check
+    if editorpersistance.prefs.playback_follow_move_tline_range == False:
+        return False
     
+    moved = False
+    last_frame = tlinewidgets.get_last_tline_view_frame()
+    if current_frame > last_frame:
+        moved = True
+        adj_value = float(last_frame + 1) / float(current_sequence().get_length()) * 100.0
+        gui.tline_scroll.set_value(adj_value)
+    
+    return moved
+ 
 def center_tline_to_current_frame():
     """
     Sets scroll widget adjustment to place current frame in the middle of display.
@@ -238,7 +252,7 @@ def zoom_in():
     repaint_tline()
     update_tline_scrollbar()
     center_tline_to_current_frame()
-    
+
 def zoom_out():
     """
     Zooms out in the timeline view.
@@ -248,8 +262,8 @@ def zoom_out():
         tlinewidgets.pix_per_frame = PIX_PER_FRAME_MIN
     repaint_tline()
     update_tline_scrollbar()
-    center_tline_to_current_frame()
-
+    tline_scrolled(gui.tline_scroll.get_adjustment())
+    
 def zoom_max():
     tlinewidgets.pix_per_frame = PIX_PER_FRAME_MAX
     repaint_tline()
@@ -272,9 +286,11 @@ def mouse_scroll_zoom(event):
         if not(event.get_state() & Gdk.ModifierType.CONTROL_MASK):
             do_zoom = False
 
-    if do_zoom == True:
+    if do_zoom == True: # Uh, were doing scroll here.
         adj = gui.tline_scroll.get_adjustment()
         incr = adj.get_step_increment()
+        if editorpersistance.prefs.scroll_horizontal_dir_up_forward == False:
+            incr = -incr
         if event.direction == Gdk.ScrollDirection.UP:
             adj.set_value(adj.get_value() + incr)
         else:
@@ -292,13 +308,22 @@ def maybe_autocenter():
 
 # ------------------------------------------ timeline shrinking
 def set_timeline_height():
-    if len(current_sequence().tracks) == 11 or PROJECT().get_project_property("tline_shrink_vertical") == False:
+    orig_pos = gui.editor_window.app_v_paned.get_position()
+    orig_height = tlinewidgets.HEIGHT 
+    
+    if len(current_sequence().tracks) == 11 or PROJECT().get_project_property(appconsts.P_PROP_TLINE_SHRINK_VERTICAL) == False:
         tlinewidgets.HEIGHT = appconsts.TLINE_HEIGHT
+        set_v_paned = False
     else:
         tlinewidgets.HEIGHT = current_sequence().get_shrunk_tline_height_min()
+        set_v_paned = True
 
     gui.tline_canvas.widget.set_size_request(tlinewidgets.WIDTH, tlinewidgets.HEIGHT)
     gui.tline_column.widget.set_size_request(tlinewidgets.COLUMN_WIDTH, tlinewidgets.HEIGHT)
+    
+    if set_v_paned == True:
+        new_pos = orig_pos + orig_height - tlinewidgets.HEIGHT
+        gui.editor_window.app_v_paned.set_position(new_pos)
     
     current_sequence().resize_tracks_to_fit(gui.tline_canvas.widget.get_allocation())
     tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
@@ -311,7 +336,6 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     Sets mltplayer producer to be video file clip and updates GUI.
     """
     if MONITOR_MEDIA_FILE() == None:
-        gui.editor_window.clip_editor_b.set_active(False)
         return
 
     global save_monitor_frame
@@ -321,7 +345,6 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     if not editorstate.current_is_move_mode():
         set_clip_edit_mode_callback()
 
-    gui.clip_editor_b.set_sensitive(True)
     editorstate._timeline_displayed = False
 
     # Save timeline pos if so directed.
@@ -341,7 +364,11 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     # Create and display clip on hidden track
     if MONITOR_MEDIA_FILE().type == appconsts.PATTERN_PRODUCER or MONITOR_MEDIA_FILE().type == appconsts.IMAGE_SEQUENCE:
         # pattern producer or image sequence
-        clip_producer = current_sequence().display_monitor_clip(None, MONITOR_MEDIA_FILE())
+        if MONITOR_MEDIA_FILE().type == appconsts.PATTERN_PRODUCER:
+            ttl = None
+        else:
+            ttl =  MONITOR_MEDIA_FILE().ttl
+        clip_producer = current_sequence().display_monitor_clip(None, MONITOR_MEDIA_FILE(), ttl)
     else:
         # File producers
         clip_producer = current_sequence().display_monitor_clip(MONITOR_MEDIA_FILE().path)
@@ -390,21 +417,19 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     gui.pos_bar.widget.grab_focus()
     gui.media_list_view.widget.queue_draw()
     
-    if editorpersistance.prefs.auto_play_in_clip_monitor == True:
-        PLAYER().start_playback()
+    # feature removed curently
+    #if editorpersistance.prefs.auto_play_in_clip_monitor == True:
+    #    PLAYER().start_playback()
     
+    gui.monitor_switch.widget.queue_draw()
     repaint_tline()
 
 def display_monitor_clip_name():#we're displaying length and range length also
-    tc_info = utils.get_tc_string(gui.pos_bar.producer.get_length()) 
-    if  MONITOR_MEDIA_FILE().mark_in != -1 and MONITOR_MEDIA_FILE().mark_out != -1:
-        clip_length = utils.get_tc_string(MONITOR_MEDIA_FILE().mark_out - MONITOR_MEDIA_FILE().mark_in + 1) #+1 out incl.
-        tc_info = tc_info + "  ][ " + str(clip_length)
-    else:
-        tc_info = tc_info + "  ][ --:--:--:--" 
+    clip_len = utils.get_tc_string(gui.pos_bar.producer.get_length())
+    range_info = _get_marks_range_info_text(MONITOR_MEDIA_FILE().mark_in, MONITOR_MEDIA_FILE().mark_out)
 
-    gui.editor_window.monitor_source.set_text(MONITOR_MEDIA_FILE().name)
-    gui.editor_window.info1.set_text(tc_info)
+    gui.editor_window.monitor_source.set_text(MONITOR_MEDIA_FILE().name + " - " + clip_len)
+    gui.editor_window.info1.set_text(range_info)
 
 def display_sequence_in_monitor():
     """
@@ -416,9 +441,9 @@ def display_sequence_in_monitor():
     
     # If this gets called without user having pressed 'Timeline' button we'll 
     # programmatically press it to recall this method to have the correct button down.
-    if gui.sequence_editor_b.get_active() == False:
-        gui.sequence_editor_b.set_active(True)
-        return
+    #if gui.sequence_editor_b.get_active() == False:
+    #    gui.sequence_editor_b.set_active(True)
+    #    return
         
     editorstate._timeline_displayed = True
 
@@ -437,38 +462,58 @@ def display_sequence_in_monitor():
     gui.pos_bar.update_display_from_producer(PLAYER().producer)
     display_marks_tc()
 
+    gui.monitor_switch.widget.queue_draw()
     repaint_tline()
 
 def update_seqence_info_text():
     name = editorstate.current_sequence().name
-    profile_desc = editorstate.current_sequence().profile.description()
-    
-    if editorpersistance.prefs.show_sequence_profile:
-        gui.editor_window.monitor_source.set_text(name + "  -  " + profile_desc)
-    else:
-        gui.editor_window.monitor_source.set_text(name)
-    
     prog_len = PLAYER().producer.get_length()
     if prog_len < 2: # # to 'fix' the single frame black frame at start, will bug for actual 1 frame sequences
         prog_len = 0
-    
-    range_len = PLAYER().producer.mark_out - PLAYER().producer.mark_in + 1 # +1, out incl.
     tc_info = utils.get_tc_string(prog_len)
-    if PLAYER().producer.mark_in != -1 and PLAYER().producer.mark_out != -1:
-        tc_info = tc_info + "  ][ " + utils.get_tc_string(range_len)
-    else:
-        tc_info = tc_info + "  ][ --:--:--:--" 
+
+    """
+    profile_desc = editorstate.current_sequence().profile.description()
+
+
         
-    gui.editor_window.info1.set_text(tc_info)
+    if editorpersistance.prefs.show_sequence_profile:
+        gui.editor_window.monitor_source.set_text(name + "  -  " + profile_desc + "  -  " + tc_info)
+    else:
+        gui.editor_window.monitor_source.set_text(name + "  -  " + tc_info)
+    """
+    gui.editor_window.monitor_source.set_text(name + "  -  " + tc_info)
+    range_info = _get_marks_range_info_text(PLAYER().producer.mark_in, PLAYER().producer.mark_out)
+    gui.editor_window.info1.set_text(range_info)
+
+def _get_marks_range_info_text(mark_in, mark_out):
+    if editorstate.screen_size_small_width() == False:
+        if mark_in != -1:
+            range_info = "] " + utils.get_tc_string(mark_in)
+        else:
+            range_info = "] --:--:--:--" 
+
+        if mark_out != -1:
+            range_info = range_info + "   [ " + utils.get_tc_string(mark_out) + "   "
+        else:
+            range_info = range_info + "   [ --:--:--:--"  + "   "
+    else:
+        range_info = ""
+
+    range_len = mark_out - mark_in + 1 # +1, out incl.
+    if mark_in != -1 and mark_out != -1:
+        range_info = range_info + "][ " + utils.get_tc_string(range_len)
+    else:
+        range_info = range_info + "][ --:--:--:--" 
+    
+    return range_info
 
 def switch_monitor_display():
     monitorevent.stop_pressed()
     if editorstate.MONITOR_MEDIA_FILE() == None:
         return
     if editorstate._timeline_displayed == True:
-        gui.editor_window.clip_editor_b.set_active(True)
-    else:
-        gui.editor_window.sequence_editor_b.set_active(True)
+        gui.monitor_switch.widget.queue_draw()
 
 def display_tline_cut_frame(track, index):
     """
@@ -498,16 +543,20 @@ def set_and_display_monitor_media_file(media_file):
     selected for display by double clicking or drag'n'drop
     """
     editorstate._monitor_media_file = media_file
+    #display_clip_in_monitor(clip_monitor_currently_active = True)
     
+    # !!???!! I'm not understandung this after new monitor switch, see if we have problems here
     # If we're already displaying clip monitor, then already button is down we call display_clip_in_monitor(..)
     # directly, but dont save position because we're not displaying now.
     #
     # If we're displaying sequence we do programmatical click on "Clip" button 
-    # to display clip via it's signal listener. 
-    if gui.editor_window.clip_editor_b.get_active() == True:
+    # to display clip via it's signal listener.
+    
+    if editorstate.timeline_visible() == True: # This was changed
         display_clip_in_monitor(clip_monitor_currently_active = True)
     else:
-        gui.editor_window.clip_editor_b.set_active(True)
+        display_clip_in_monitor()
+
 
 # --------------------------------------- frame displayes
 def update_frame_displayers(frame):
@@ -527,7 +576,7 @@ def update_frame_displayers(frame):
 
     gui.tline_scale.widget.queue_draw()
     gui.tline_canvas.widget.queue_draw()
-    gui.big_tc.widget.queue_draw()
+    gui.big_tc.queue_draw()
     clipeffectseditor.display_kfeditors_tline_frame(frame)
     compositeeditor.display_kfeditors_tline_frame(frame)
 
@@ -544,10 +593,7 @@ def display_marks_tc():
     else:
         update_seqence_info_text()
 
-# ----------------------------------------------- clip editors
-def clip_removed_during_edit(clip):
-    clipeffectseditor.clip_removed_during_edit(clip)
-    
+# ----------------------------------------------- clip editors    
 def clear_clip_from_editors(clip):
     if clipeffectseditor.clip == clip:
         clipeffectseditor.clear_clip()

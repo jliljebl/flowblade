@@ -19,9 +19,11 @@
 """
 
 """
-Module handles clip effects editing logic and gui
+Module handles clip end dragging edits.
 """
 
+
+import appconsts
 import gui
 import edit
 from editorstate import current_sequence
@@ -89,6 +91,13 @@ def maybe_init_for_mouse_press(event, frame):
 
     tlinewidgets.set_edit_mode(_edit_data, tlinewidgets.draw_clip_end_drag_overlay)
 
+    if tlinewidgets.pointer_context == appconsts.POINTER_CONTEXT_NONE:
+        # We did CTRL + Mouse Right to get here, we need to set pointer context to left or right
+        if editing_clip_end == True:
+            tlinewidgets.pointer_context = appconsts.POINTER_CONTEXT_END_DRAG_RIGHT
+        else:
+            tlinewidgets.pointer_context = appconsts.POINTER_CONTEXT_END_DRAG_LEFT
+
     gui.editor_window.set_cursor_to_mode()
 
 def mouse_press(event, frame):
@@ -141,7 +150,7 @@ def mouse_release(x, y, frame, state):
                 action = edit.clip_end_drag_replace_blank_action(data)
                 action.do_edit()
     else:# Dragging clip start
-        delta =  frame - orig_in  - 1 # -1 because..uhh..inclusive exclusive something something
+        delta = frame - orig_in  - 1 # -1 because..uhh..inclusive exclusive something something
         # prev clip is not blank or first clip
         if ((clip_index == 0) or
             (track.clips[clip_index - 1].is_blanck_clip == False)):
@@ -174,7 +183,8 @@ def _exit_clip_end_drag():
     # Go back to enter mode
     editorstate.edit_mode = _enter_mode
     tlinewidgets.set_edit_mode(None, _enter_draw_func)
-        
+    tlinewidgets.pointer_context = appconsts.POINTER_CONTEXT_NONE
+    
     gui.editor_window.set_cursor_to_mode()
     updater.repaint_tline()
 

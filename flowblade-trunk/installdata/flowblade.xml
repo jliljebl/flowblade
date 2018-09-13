@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<mime-info xmlns='http://www.freedesktop.org/standards/shared-mime-info'>
-  <mime-type type="application/flowblade">
-    <comment>Flowblade project</comment>
-    <glob pattern="*.flb"/>
-  </mime-type>
-</mime-info>
-

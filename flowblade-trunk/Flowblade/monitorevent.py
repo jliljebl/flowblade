@@ -158,7 +158,6 @@ def mark_in_pressed():
     _do_marks_update()
     updater.display_marks_tc()
 
-
 def mark_out_pressed():
     mark_out = PLAYER().producer.frame()
 

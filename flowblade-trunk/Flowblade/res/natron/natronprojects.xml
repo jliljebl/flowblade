@@ -1,0 +1,30 @@
+<natronprojects>
+
+    <!-- See propertyparse.py, propertyedit.py and propertyeditorbuilder.py modules for attr and argument keys and values explanations-->
+    <!-- NOTE: 'displayname' args values have spaces encoded as ! character so "X Scatter" becomes "X!Scatter" -->
+    <!-- NOTE: extra spaces (more than 1) between key=value pairs crash when opening filter in editor -->
+
+    <!-- -->
+    <animation>
+        <name>A to B</name>
+        <group>Text Animation</group>
+        <projectfile>flowbladetext.ntp</projectfile>
+        <length>250</length>
+        <property name="Color1" args="editor=color_select exptype=color displayname=Text!Color">#00ff00</property>
+        <property name="Color2" args="editor=color_select exptype=color displayname=BG!Color">#ff0000</property>
+        <property name="Text" args="editor=text_entry exptype=plain_string displayname=Text">Flowblade</property>
+        <propertyinterpretation name="Color1" nodename="Text1_3" natronpropertyname="color">color_hex_to_tuple</propertyinterpretation>
+        <propertyinterpretation name="Color2" nodename="Solid2" natronpropertyname="color">color_hex_to_tuple</propertyinterpretation>
+        <propertyinterpretation name="Text" nodename="Text1_3" natronpropertyname="text">quoted_string</propertyinterpretation>
+    </animation>
+
+    <animation>
+        <name>Media Test</name>
+        <group>Effect</group>
+        <projectfile>color_correct.ntp</projectfile>
+        <length>250</length>
+        <property name="FileRead1" args="editor=image_media_file_select exptype=file_resource displayname=File">##value_not_set##</property>
+        <propertyinterpretation name="FileRead1" nodename="Read1" natronpropertyname="filename" args="target_node=ColorCorrect2">create_reader</propertyinterpretation>
+    </animation>
+    
+</natronprojects>

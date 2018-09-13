@@ -1,72 +1,49 @@
 # FLOWBLADE ROADMAP
 
-Last updated: March. 2017
+Last updated: September. 2017
 
+## The 2.0 FEATURE SET
+- **New display MLT service or method**. SDL1.2 will be eventually lost as SDL2 is made default on all distros.This is part of the solution for several issues. #309 #329 
+- **Performance review and needed fixes** This needs some investigation and it needs to be made sure that the new display method is as performant as possible.
+- **Automatic Timeline Rendering** The only way to provide smooth playback in all circumstances is to do some form of timeline rendering. There are some ideas here that will be attempted, but cannot be quaranteed to work beforehand.
+- **Proxy Editing** should have all important improvements. #398 
+- **Audio scratching** on timeline. #95
+- **Dedicated masking/keying/full affine tool and/or new MLT services** to close related functionality gaps. #372 
 
-## Animation
-- MLT keyframe types *bezier* and *step* to be made available in addition to current linear type keyframes for all keyframe editors
-- 100% coverage for keyframe editing for float value paramaters. A light weight editor component needs to made for cases where keyframe editing is the secondary 
+- **Animation and compositing updates** This needs to be taken to next level for 2.0.
+- **Remove a number of preferences and options** We have so far only added options and preferences, now it is time look carefully what could be removed to simplify and clarify the UX.
+- **Translations workflow update** These need the easiest, most moders workflows available.
+- **Website update** Some existing features are missing, add *Contributing* text.
 
-## Tracks
+### 2.0 Completed items
+- **Binary packaging** At least one of Appimage, Snap, Flatpack. #453 **DONE, 1.16, we now have Flatpak, others can be added if we get contributions**
+- **Autofollow compositors** Compositors will be made to follow their origin clips automatically if user so chooses.**DONE, 1.16**
+- **Context sensitive Timeline tool cursor** This was originally part of non-features list of the design, but it seems that users prefer this, and we will look for a way to incoporate this with current design. #424 **DONE, 1.16**
+
+### Other possible developments
 - **Track filters stack** for both video and audio tracks.
-
-## Filters
-- Contribute **Cairo filters for MLT**. Spotligt, animated producer, animated overlay filter, animated alpha and affine transform filter seem most interesting. Frei0r is not an adequate platform for some of these.
+- Contribute **filters for MLT**. Spotligt, affine transform filter seem most interesting. Frei0r is not an adequate platform for some of these. may require using Cairo.
 - **Selective Filter Application**, this function allows user to apply any filter only inside an area defined by alpha filters. This can currently be simulated with two clips. Requires MLT contribution.
-
-## Compositing
-
 - **Animated Image to Alpha**, combines two images sources using luma information from a third source, probably a frame sequence
-- animated line/curve masks, this may also be best done using **Cairo**.  Requires MLT contribution.
 - add to all alpha filters composing methods union, intersection, difference and exclusion.  Requires MLT and Frei0r contribution.
-
-## Multiclip functonality
-- create Compound clips from selections and full sequences
-- make possible to combine sequences with insert and append functions
-
-## Tools development
-
-- multispeed reversed clips tool
-- Titler tool improvements: drop shadow with blur, color outline.
-- dedicated masking/keying tool
-
-## Tool integration
-- **Timeline Container Clips** with data on original media, tool program data, rendered media and rendered media offset known and saved. Combine with polling for automatic prompts for update on render completion.
+- **Configurable Keyboard Shortcuts**
 - **Media Item creation** from ready made programs for e.g. text animations with Natron
 - Gimp, Inkscape, Audacity, Krita examined as **Timeline Container Clip** media creator programs
-
-## Audio
-- audio scratching on playback
 - subbuses or virtual channels to help with mixing.
 - a 5.1 surround audio track mixing
 - synching audio with audio
 - jack integration
-
-## Editor functionality
-
-- Configurable Keyboard Shortcuts.
-- Disk Cache Manager. Data in hidden folder can become quite big eventually, and controlling it from application would be useful
-
-## Project data
-
-- import media data from one project into another project
-
-## Packaging
-
-- Appimage, Snap, Flatpack. Appimage is done first, Snap second and Flatpack is assessed last.
-
-## Communications
-
-- translations workflow update. 
-- website update
 - 5 - 10 tutorial videos on some important workflow issues
 - forum with threads
-
-
-## Technical development
 - **GPU Rendering** MLT already contains support for GPU rendering for certain filters
-- The **Wayland** transition using SDL2 or OpenGL consumer. SDL2 consumer does not exist and would need to be contributed.
 	
 
-	
+
+*Changelog*
+- *1-4-2018 Mark done items and add animations and prefs dropping for 2.0*
+- *14-11-2017 Change document focus to 2.0 feature set*
+- *20-9-2017 drop FFMpeg tool, Container clips are done, add Editing section*
+- *13-5-17 Remove undoable items related to animating property values in in MLT, require too large MLt controinutions for the time being*
+- *13-5-17 Remove completed items and items that will be in 1.14*
+- *13-5-17 Add change log*
 	

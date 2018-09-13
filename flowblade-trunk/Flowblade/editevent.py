@@ -25,17 +25,16 @@ Handles edit mode setting.
 """
 
 import os
-import time
 
-from gi.repository import Gtk
 from gi.repository import Gdk
 
 import appconsts
-import boxmove
+import audiosync
 import clipeffectseditor
 import clipenddragmode
 import compositeeditor
 import compositormodes
+import cutmode
 import dialogutils
 import edit
 import editorstate
@@ -46,21 +45,17 @@ from editorstate import EDIT_MODE
 import editorpersistance
 import gui
 import guicomponents
+import kftoolmode
 import medialog
+import modesetting
 import movemodes
 import multimovemode
 import syncsplitevent
 import tlinewidgets
 import trimmodes
-import undo
 import updater
 import utils
 
-
-# module state
-mouse_disabled = False # Used to ignore drag and release events when press doesn't start an action that can handle those events.
-repeat_event = None
-parent_selection_data = None # Held here until user presses tline again
 
 # functions are monkeypatched in at app.py 
 display_clip_menu_pop_up = None
@@ -227,302 +222,13 @@ def _display_no_audio_on_video_msg(track):
                             _("Track ")+ utils.get_track_name(track, current_sequence()) + _(" is a video track and can't display audio only material."),
                             gui.editor_window.window)
 
-# ------------------------------------- edit mode setting
-def set_default_edit_mode(disable_mouse=False):
-    """
-    This is used as global 'go to start position' exit door from
-    situations where for example user is in trim and exits it
-    without specifying which edit mode to go to.
-    
-    NOTE: As this uses 'programmed click', this method does nothing if insert mode button
-    is already down.
-    """
-    gui.editor_window.handle_insert_move_mode_button_press()
-    gui.editor_window.set_mode_selector_to_mode()
-    if disable_mouse:
-        global mouse_disabled
-        mouse_disabled = True
-
-def set_clip_monitor_edit_mode():
-    """
-    Going to clip monitor exits active trimodes into non active trimmodes.
-    """
-    if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
-        oneroll_trim_no_edit_init()
-    elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM_NO_EDIT:
-        pass
-    elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
-        tworoll_trim_no_edit_init()
-    elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM_NO_EDIT:
-        pass
-    else:
-        gui.editor_window.handle_insert_move_mode_button_press()
-        
-    gui.editor_window.set_mode_selector_to_mode()
-
-def set_post_undo_redo_edit_mode():
-    if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
-        oneroll_trim_no_edit_init()
-    if EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
-        tworoll_trim_no_edit_init()
-
-def stop_looping():
-    # Stop trim mode looping using trimmodes.py methods for it
-    # Called when entering move modes.
-    if PLAYER().looping():
-        if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
-            trimmodes.oneroll_stop_pressed()
-        if EDIT_MODE() == editorstate.TWO_ROLL_TRIM: 
-            trimmodes.tworoll_stop_pressed()
-
-# -------------------------------------------------------------- move modes
-def insert_move_mode_pressed():
-    """
-    User selects Insert tool.
-    """
-    stop_looping()
-    current_sequence().clear_hidden_track()
-
-    editorstate.edit_mode = editorstate.INSERT_MOVE
-    tlinewidgets.set_edit_mode(None, tlinewidgets.draw_insert_overlay)
-
-    _set_move_mode()
-
-def overwrite_move_mode_pressed():
-    """
-    User selects Overwrite tool.
-    """
-    stop_looping()
-    current_sequence().clear_hidden_track()
-
-    editorstate.edit_mode = editorstate.OVERWRITE_MOVE
-    # Box tool is implemeted as sub mode of OVERWRITE_MOVE so this false
-    editorstate.overwrite_mode_box = False
-    tlinewidgets.set_edit_mode(None, tlinewidgets.draw_overwrite_overlay)
-
-    _set_move_mode()
-
-def box_mode_pressed():
-    """
-    User selects Box tool.
-    """
-    stop_looping()
-    current_sequence().clear_hidden_track()
-    
-    # Box tool is implemeted as sub mode of OVERWRITE_MOVE
-    editorstate.edit_mode = editorstate.OVERWRITE_MOVE
-    editorstate.overwrite_mode_box = True
-    boxmove.clear_data()
-        
-    tlinewidgets.set_edit_mode(None, None) # these get set later for box move
-        
-    _set_move_mode()
-    
-def multi_mode_pressed():
-    """
-    User selects Spacer tool.
-    """
-    stop_looping()
-    current_sequence().clear_hidden_track()
-
-    editorstate.edit_mode = editorstate.MULTI_MOVE
-    tlinewidgets.set_edit_mode(None, tlinewidgets.draw_multi_overlay)
-    
-    updater.set_move_mode_gui()
-    updater.repaint_tline()
-
-def _set_move_mode():
-    updater.set_move_mode_gui()
-    updater.set_transition_render_edit_menu_items_sensitive(movemodes.selected_range_in, movemodes.selected_range_out)
-    updater.repaint_tline()
-
-# -------------------------------------------------------------- one roll trim
-def oneroll_trim_no_edit_init():
-    """
-    This mode is entered and this method is called when:
-    - user first selects trim tool
-    - user does cut(X) action while in trim mode
-    - user clicks empty and preference is to keep using trim tool (to not exit to INSERT_MOVE)
-    """
-    stop_looping()
-    editorstate.edit_mode = editorstate.ONE_ROLL_TRIM_NO_EDIT
-    gui.editor_window.set_cursor_to_mode()
-    tlinewidgets.set_edit_mode(None, None) # No overlays are drawn in this edit mode
-    movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
-    updater.set_trim_mode_gui()
-
-def oneroll_trim_no_edit_press(event, frame):
-    """
-    Mouse press while in ONE_ROLL_TRIM_NO_EDIT attempts to init edit and 
-    move to ONE_ROLL_TRIM mode.
-    """
-    success = oneroll_trim_mode_init(event.x, event.y)
-    if success:
-        # If not quick enter, disable edit until mouse released
-        if not editorpersistance.prefs.quick_enter_trims:
-            global mouse_disabled
-            tlinewidgets.trim_mode_in_non_active_state = True
-            mouse_disabled = True
-         # If preference is quick enter, call mouse move handler immediately 
-         # to move edit point to where mouse is
-        else:
-            trimmodes.oneroll_trim_move(event.x, event.y, frame, None)
-    else:
-        if editorpersistance.prefs.empty_click_exits_trims == True:
-            set_default_edit_mode(True)
-        else:
-            editorstate.edit_mode = editorstate.ONE_ROLL_TRIM_NO_EDIT
-
-def oneroll_trim_no_edit_move(x, y, frame, state):
-    # Only presses are handled in ONE_ROLL_TRIM_NO_EDIT mode
-    pass
-
-def oneroll_trim_no_edit_release(x, y, frame, state):
-    # Only presses are handled in ONE_ROLL_TRIM_NO_EDIT mode
-    pass
-
-def oneroll_trim_mode_init(x, y):
-    """
-    User enters ONE_ROLL_TRIM mode from ONE_ROLL_TRIM_NO_EDIT 
-    """
-    track = tlinewidgets.get_track(y)
-    if track == None:
-        return False
-
-    if track_lock_check_and_user_info(track, oneroll_trim_mode_init, "one roll trim mode"):
-        set_default_edit_mode()
-        return False
-
-    stop_looping() 
-    editorstate.edit_mode = editorstate.ONE_ROLL_TRIM
-
-    movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
-    updater.set_trim_mode_gui()
-
-    # init mode
-    press_frame = tlinewidgets.get_frame(x)
-    trimmodes.set_exit_mode_func = set_default_edit_mode
-    trimmodes.set_no_edit_mode_func = oneroll_trim_no_edit_init
-    success = trimmodes.set_oneroll_mode(track, press_frame)
-    return success
-
-# --------------------------------------------------------- two roll trim
-def tworoll_trim_no_edit_init():
-    stop_looping()
-    editorstate.edit_mode = editorstate.TWO_ROLL_TRIM_NO_EDIT
-    gui.editor_window.set_cursor_to_mode()
-    tlinewidgets.set_edit_mode(None, None) # No overlays are drawn in this edit mode
-    movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
-    updater.set_trim_mode_gui()
-
-def tworoll_trim_no_edit_press(event, frame):
-    success = tworoll_trim_mode_init(event.x, event.y)
-    if success:
-        if not editorpersistance.prefs.quick_enter_trims:
-            global mouse_disabled
-            tlinewidgets.trim_mode_in_non_active_state = True
-            mouse_disabled = True
-        else:
-            trimmodes.tworoll_trim_move(event.x, event.y, frame, None)
-    else:
-        if editorpersistance.prefs.empty_click_exits_trims == True:
-            set_default_edit_mode(True)
-        else:
-            editorstate.edit_mode = editorstate.TWO_ROLL_TRIM_NO_EDIT
-
-def tworoll_trim_no_edit_move(x, y, frame, state):
-    pass
-
-def tworoll_trim_no_edit_release(x, y, frame, state):
-    pass
-    
-def tworoll_trim_mode_init(x, y):
-    """
-    User selects two roll mode
-    """
-    track = tlinewidgets.get_track(y)
-    if track == None:
-        return False
-    
-    if track_lock_check_and_user_info(track, tworoll_trim_mode_init, "two roll trim mode",):
-        set_default_edit_mode()
-        return False
-
-    stop_looping()
-    editorstate.edit_mode = editorstate.TWO_ROLL_TRIM
-
-    movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
-    updater.set_trim_mode_gui()
-
-    press_frame = tlinewidgets.get_frame(x)
-    trimmodes.set_exit_mode_func = set_default_edit_mode
-    trimmodes.set_no_edit_mode_func = tworoll_trim_no_edit_init
-    success = trimmodes.set_tworoll_mode(track, press_frame)
-    return success
-
-# ----------------------------------------------------- slide trim
-def slide_trim_no_edit_init():
-    stop_looping() # Stops looping 
-    editorstate.edit_mode = editorstate.SLIDE_TRIM_NO_EDIT
-    gui.editor_window.set_cursor_to_mode()
-    tlinewidgets.set_edit_mode(None, None) # No overlays are drawn in this edit mode
-    movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
-    updater.set_trim_mode_gui()
-
-def slide_trim_no_edit_press(event, frame):
-    success = slide_trim_mode_init(event.x, event.y)
-    if success:
-        if not editorpersistance.prefs.quick_enter_trims:
-            global mouse_disabled
-            tlinewidgets.trim_mode_in_non_active_state = True
-            mouse_disabled = True
-        else:
-            trimmodes.edit_data["press_start"] = frame
-            trimmodes.slide_trim_move(event.x, event.y, frame, None)
-    else:
-        if editorpersistance.prefs.empty_click_exits_trims == True:
-            set_default_edit_mode(True)
-        else:
-            editorstate.edit_mode = editorstate.SLIDE_TRIM_NO_EDIT
-    
-def slide_trim_no_edit_move(x, y, frame, state):
-    pass
-    
-def slide_trim_no_edit_release(x, y, frame, state):
-    pass
-
-def slide_trim_mode_init(x, y):
-    """
-    User selects two roll mode
-    """
-    track = tlinewidgets.get_track(y)
-    if track == None:
-        return False
-    
-    if track_lock_check_and_user_info(track, tworoll_trim_mode_init, "two roll trim mode"):
-        set_default_edit_mode()
-        return False
-
-    stop_looping()
-    editorstate.edit_mode = editorstate.SLIDE_TRIM
-
-    movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
-    updater.set_trim_mode_gui()
-
-    press_frame = tlinewidgets.get_frame(x)
-    trimmodes.set_exit_mode_func = set_default_edit_mode
-    trimmodes.set_no_edit_mode_func = slide_trim_no_edit_init
-    success = trimmodes.set_slide_mode(track, press_frame)
-    return success
-
 
 # ------------------------------------ timeline mouse events
 def tline_canvas_mouse_pressed(event, frame):
     """
     Mouse event callback from timeline canvas widget
     """
-    global mouse_disabled
-
+    
     if PLAYER().looping():
         return
     elif PLAYER().is_playing():
@@ -535,11 +241,19 @@ def tline_canvas_mouse_pressed(event, frame):
     # Handle and exit parent clip selecting
     if EDIT_MODE() == editorstate.SELECT_PARENT_CLIP:
         syncsplitevent.select_sync_parent_mouse_pressed(event, frame)
-        mouse_disabled = True
+        editorstate.timeline_mouse_disabled = True
         # Set INSERT_MODE
-        set_default_edit_mode()  
+        modesetting.set_default_edit_mode()  
         return
 
+    # Handle and exit tline sync clip selecting
+    if EDIT_MODE() == editorstate.SELECT_TLINE_SYNC_CLIP:
+        audiosync.select_sync_clip_mouse_pressed(event, frame)
+        editorstate.timeline_mouse_disabled = True
+        # Set INSERT_MODE
+        modesetting.set_default_edit_mode()
+        return
+        
     # Hitting timeline in clip display mode displays timeline in
     # default mode.
     if not timeline_visible():
@@ -550,7 +264,6 @@ def tline_canvas_mouse_pressed(event, frame):
             tline_canvas_mouse_pressed(event, frame)
             return
         if (event.button == 3):
-            mouse_disabled == True
             # Right mouse + CTRL displays clip menu if we hit clip
             if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 PLAYER().seek_frame(frame)
@@ -563,7 +276,7 @@ def tline_canvas_mouse_pressed(event, frame):
 
     # If clip end drag mode is for some reason still active, exit to default edit mode
     if EDIT_MODE() == editorstate.CLIP_END_DRAG:
-        editorstate.edit_mode = editorstate.INSERT_MOVE
+        modesetting.set_default_edit_mode()
         # This shouldn't happen unless for some reason mouse release didn't hit clipenddragmode listener.
         print "EDIT_MODE() == editorstate.CLIP_END_DRAG at mouse press!"
 
@@ -574,30 +287,37 @@ def tline_canvas_mouse_pressed(event, frame):
             updater.repaint_tline()
             return
 
-    #  Check if compositor is hit and if so handle compositor editing
+    #  Check if compositor is hit and if so, handle compositor editing
     if editorstate.current_is_move_mode() and timeline_visible():
         hit_compositor = tlinewidgets.compositor_hit(frame, event.y, current_sequence().compositors)
-        if hit_compositor != None:
-            movemodes.clear_selected_clips()
-            if event.button == 1 or (event.button == 3 and event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-                compositormodes.set_compositor_mode(hit_compositor)
-                mode_funcs = EDIT_MODE_FUNCS[editorstate.COMPOSITOR_EDIT]
-                press_func = mode_funcs[TL_MOUSE_PRESS]
-                press_func(event, frame)
-            elif event.button == 3:
-                mouse_disabled == True
+        if hit_compositor != None:         
+            if editorstate.auto_follow == False or hit_compositor.obey_autofollow == False:
+                movemodes.clear_selected_clips()
+                if event.button == 1 or (event.button == 3 and event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+                    compositormodes.set_compositor_mode(hit_compositor)
+                    mode_funcs = EDIT_MODE_FUNCS[editorstate.COMPOSITOR_EDIT]
+                    press_func = mode_funcs[TL_MOUSE_PRESS]
+                    press_func(event, frame)
+                    return
+            if event.button == 3:
                 compositormodes.set_compositor_selected(hit_compositor)
                 guicomponents.display_compositor_popup_menu(event, hit_compositor,
                                                             compositor_menu_item_activated)
+                return
             elif event.button == 2:
                 updater.zoom_project_length()
-            return
+                return
 
     compositormodes.clear_compositor_selection()
 
-    # Check if we should enter clip end drag mode.
+    # Check if we should enter clip end drag mode
     if (event.button == 3 and editorstate.current_is_move_mode()
         and timeline_visible() and (event.get_state() & Gdk.ModifierType.CONTROL_MASK)):
+        # with CTRL right mouse
+        clipenddragmode.maybe_init_for_mouse_press(event, frame)
+    elif (timeline_visible() and (EDIT_MODE() == editorstate.INSERT_MOVE or EDIT_MODE() == editorstate.OVERWRITE_MOVE)
+        and (tlinewidgets.pointer_context == appconsts.POINTER_CONTEXT_END_DRAG_LEFT or tlinewidgets.pointer_context == appconsts.POINTER_CONTEXT_END_DRAG_RIGHT)):
+        # with pointer context
         clipenddragmode.maybe_init_for_mouse_press(event, frame)
 
     # Handle mouse button presses depending which button was pressed and
@@ -609,47 +329,53 @@ def tline_canvas_mouse_pressed(event, frame):
                 success = display_clip_menu_pop_up(event.y, event, frame)
                 if not success:
                     PLAYER().seek_frame(frame)
-            #else:
-            #    PLAYER().seek_frame(frame) 
         else:
             # For trim modes set <X>_NO_EDIT edit mode and seek frame. and seek frame
             trimmodes.set_no_edit_trim_mode()
             PLAYER().seek_frame(frame)
         return
     # LEFT BUTTON + CTRL: Select new trimmed clip in one roll trim mode
-    elif (event.button == 1 
+    #  This is not that relevant anymore with context sensitive cursor, look to remove.
+    elif ((event.button == 1 
           and (event.get_state() & Gdk.ModifierType.CONTROL_MASK)
-          and EDIT_MODE() == editorstate.ONE_ROLL_TRIM):
+          and EDIT_MODE() == editorstate.ONE_ROLL_TRIM) or 
+        (event.button == 1 and editorstate.cursor_is_tline_sensitive == True and EDIT_MODE() == editorstate.ONE_ROLL_TRIM)):
         track = tlinewidgets.get_track(event.y)
         if track == None:
             if editorpersistance.prefs.empty_click_exits_trims == True:
-                set_default_edit_mode(True)
+                modesetting.set_default_edit_mode(True)
             return
         success = trimmodes.set_oneroll_mode(track, frame)
         if (not success) and editorpersistance.prefs.empty_click_exits_trims == True:
-            set_default_edit_mode(True)
+            modesetting.set_default_edit_mode(True)
             return
-        gui.editor_window.set_cursor_to_mode()
-        gui.editor_window.set_mode_selector_to_mode()
+            
+        if trimmodes.edit_data["to_side_being_edited"] == True:
+            pointer_context = appconsts.POINTER_CONTEXT_TRIM_LEFT
+        else:
+            pointer_context = appconsts.POINTER_CONTEXT_TRIM_RIGHT
+        gui.editor_window.set_tline_cursor_to_context(pointer_context)
+        gui.editor_window.set_tool_selector_to_mode()
         if not editorpersistance.prefs.quick_enter_trims:
-            mouse_disabled = True
+            editorstate.timeline_mouse_disabled = True
         else:
             trimmodes.oneroll_trim_move(event.x, event.y, frame, None)
     # LEFT BUTTON + CTRL: Select new trimmed clip in two roll trim mode
+    # This is not that relevant anymore with context sensitive cursor, look to remove.
     elif (event.button == 1 
           and (event.get_state() & Gdk.ModifierType.CONTROL_MASK)
           and EDIT_MODE() == editorstate.TWO_ROLL_TRIM):
         track = tlinewidgets.get_track(event.y)
         if track == None:
             if editorpersistance.prefs.empty_click_exits_trims == True:
-                set_default_edit_mode(True)
+                modesetting.set_default_edit_mode(True)
             return
         success = trimmodes.set_tworoll_mode(track, frame)
         if (not success) and  editorpersistance.prefs.empty_click_exits_trims == True:
-            set_default_edit_mode(True)
+            modesetting.set_default_edit_mode(True)
             return
         if not editorpersistance.prefs.quick_enter_trims:
-            mouse_disabled = True
+            editorstate.timeline_mouse_disabled = True
         else:
             trimmodes.tworoll_trim_move(event.x, event.y, frame, None)
     elif event.button == 2:
@@ -668,7 +394,7 @@ def tline_canvas_mouse_moved(x, y, frame, button, state):
     # Refuse mouse events for some editor states.
     if PLAYER().looping():
         return        
-    if mouse_disabled == True:
+    if editorstate.timeline_mouse_disabled == True:
         return
     if not timeline_visible():
         return
@@ -688,14 +414,13 @@ def tline_canvas_mouse_released(x, y, frame, button, state):
     """
     Mouse event callback from timeline canvas widget
     """
-    gui.editor_window.set_cursor_to_mode()
+    gui.editor_window.set_cursor_to_mode() # we need this for box move at least, probably trims too
      
-    global mouse_disabled
-    if mouse_disabled == True:
+    if editorstate.timeline_mouse_disabled == True:
         gui.editor_window.set_cursor_to_mode() # we only need this update when mode change (to active trim mode) disables mouse, so we'll only do this then
         tlinewidgets.trim_mode_in_non_active_state = False # we only need this update when mode change (to active trim mode) disables mouse, so we'll only do this then
         gui.tline_canvas.widget.queue_draw()
-        mouse_disabled = False
+        editorstate.timeline_mouse_disabled = False
         return
 
     if not timeline_visible():
@@ -709,7 +434,8 @@ def tline_canvas_mouse_released(x, y, frame, button, state):
     if button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG and EDIT_MODE() != editorstate.COMPOSITOR_EDIT:
         if not timeline_visible():
             return
-        PLAYER().seek_frame(frame) 
+        PLAYER().seek_frame(frame)
+        clipeffectseditor.update_kfeditors_sliders(frame)
     # Handle mouse button edits
     elif button == 1 or button == 3:
         mode_funcs = EDIT_MODE_FUNCS[EDIT_MODE()]
@@ -724,7 +450,7 @@ def tline_canvas_double_click(frame, x, y):
 
     if not timeline_visible():
         updater.display_sequence_in_monitor()
-        set_default_edit_mode()
+        modesetting.set_default_edit_mode()
         return
 
     hit_compositor = tlinewidgets.compositor_hit(frame, y, current_sequence().compositors)
@@ -740,8 +466,12 @@ def tline_canvas_double_click(frame, x, y):
         return
 
     clip = track.clips[clip_index]
+    if clip.is_blanck_clip == True:
+        return
+        
     data = (clip, track, None, x)
     updater.open_clip_in_effects_editor(data)
+
 
 # -------------------------------------------------- DND release event callbacks
 def tline_effect_drop(x, y):
@@ -753,7 +483,7 @@ def tline_effect_drop(x, y):
     if track.id < 1 or track.id >= (len(current_sequence().tracks) - 1):
         return 
     if track_lock_check_and_user_info(track):
-        set_default_edit_mode()
+        modesetting.set_default_edit_mode()
         return
         
     if clip != clipeffectseditor.clip:
@@ -768,16 +498,16 @@ def tline_media_drop(media_file, x, y, use_marks=False):
     if track.id < 1 or track.id >= (len(current_sequence().tracks) - 1):
         return 
     if track_lock_check_and_user_info(track):
-        set_default_edit_mode()
+        modesetting.set_default_edit_mode()
         return
 
-    set_default_edit_mode()
+    modesetting.set_default_edit_mode()
 
     frame = tlinewidgets.get_frame(x)
     
     # Create new clip.
     if media_file.type != appconsts.PATTERN_PRODUCER:
-        new_clip = current_sequence().create_file_producer_clip(media_file.path, media_file.name)
+        new_clip = current_sequence().create_file_producer_clip(media_file.path, media_file.name, False, media_file.ttl)
     else:
         new_clip = current_sequence().create_pattern_producer(media_file)
 
@@ -806,12 +536,17 @@ def tline_media_drop(media_file, x, y, use_marks=False):
         new_clip.mark_in = in_fr
         new_clip.mark_out = out_fr
 
-    if editorpersistance.prefs.overwrite_clip_drop == True:
+    # Non-insert DND actions
+    if editorpersistance.prefs.dnd_action == appconsts.DND_OVERWRITE_NON_V1:
         if track.id != current_sequence().first_video_track().id:
             drop_done = _attempt_dnd_overwrite(track, new_clip, frame)
             if drop_done == True:
                 return
-
+    elif editorpersistance.prefs.dnd_action == appconsts.DND_ALWAYS_OVERWRITE:
+        drop_done = _attempt_dnd_overwrite(track, new_clip, frame)
+        if drop_done == True:
+            return
+            
     do_clip_insert(track, new_clip, frame)
 
 def tline_range_item_drop(rows, x, y):
@@ -821,12 +556,12 @@ def tline_range_item_drop(rows, x, y):
     if track.id < 1 or track.id >= (len(current_sequence().tracks) - 1):
         return 
     if track_lock_check_and_user_info(track):
-        set_default_edit_mode()
+        modesetting.set_default_edit_mode()
         return
         
     frame = tlinewidgets.get_frame(x)
     clips = medialog.get_clips_for_rows(rows)
-    set_default_edit_mode()
+    modesetting.set_default_edit_mode()
     do_multiple_clip_insert(track, clips, frame)
 
 # ------------------------------------ track locks handling
@@ -859,31 +594,37 @@ OVERWRITE_MOVE_FUNCS = [movemodes.overwrite_move_press,
 ONE_ROLL_TRIM_FUNCS = [trimmodes.oneroll_trim_press, 
                        trimmodes.oneroll_trim_move,
                        trimmodes.oneroll_trim_release]
-ONE_ROLL_TRIM_NO_EDIT_FUNCS = [oneroll_trim_no_edit_press, 
-                               oneroll_trim_no_edit_move,
-                               oneroll_trim_no_edit_release]
+ONE_ROLL_TRIM_NO_EDIT_FUNCS = [modesetting.oneroll_trim_no_edit_press, 
+                               modesetting.oneroll_trim_no_edit_move,
+                               modesetting.oneroll_trim_no_edit_release]
 TWO_ROLL_TRIM_FUNCS = [trimmodes.tworoll_trim_press,
                        trimmodes.tworoll_trim_move,
                        trimmodes.tworoll_trim_release]
-TWO_ROLL_TRIM_NO_EDIT_FUNCS = [tworoll_trim_no_edit_press,
-                               tworoll_trim_no_edit_move,
-                               tworoll_trim_no_edit_release]
+TWO_ROLL_TRIM_NO_EDIT_FUNCS = [modesetting.tworoll_trim_no_edit_press,
+                               modesetting.tworoll_trim_no_edit_move,
+                               modesetting.tworoll_trim_no_edit_release]
 COMPOSITOR_EDIT_FUNCS = [compositormodes.mouse_press,
                          compositormodes.mouse_move,
                          compositormodes.mouse_release]
 SLIDE_TRIM_FUNCS = [trimmodes.slide_trim_press,
                     trimmodes.slide_trim_move,
                     trimmodes.slide_trim_release]
-SLIDE_TRIM_NO_EDIT_FUNCS = [slide_trim_no_edit_press,
-                            slide_trim_no_edit_move,
-                            slide_trim_no_edit_release]
+SLIDE_TRIM_NO_EDIT_FUNCS = [modesetting.slide_trim_no_edit_press,
+                            modesetting.slide_trim_no_edit_move,
+                            modesetting.slide_trim_no_edit_release]
 MULTI_MOVE_FUNCS = [multimovemode.mouse_press,
                     multimovemode.mouse_move,
                     multimovemode.mouse_release]
 CLIP_END_DRAG_FUNCS = [clipenddragmode.mouse_press,
                        clipenddragmode.mouse_move,
                        clipenddragmode.mouse_release]
-                    
+CUT_FUNCS = [cutmode.mouse_press,
+             cutmode.mouse_move,
+             cutmode.mouse_release]
+KFTOOL_FUNCS = [kftoolmode.mouse_press,
+                kftoolmode.mouse_move,
+                kftoolmode.mouse_release]
+
 # (mode -> mouse handler function list) table
 EDIT_MODE_FUNCS = {editorstate.INSERT_MOVE:INSERT_MOVE_FUNCS,
                    editorstate.OVERWRITE_MOVE:OVERWRITE_MOVE_FUNCS,
@@ -895,5 +636,7 @@ EDIT_MODE_FUNCS = {editorstate.INSERT_MOVE:INSERT_MOVE_FUNCS,
                    editorstate.SLIDE_TRIM:SLIDE_TRIM_FUNCS,
                    editorstate.SLIDE_TRIM_NO_EDIT:SLIDE_TRIM_NO_EDIT_FUNCS,
                    editorstate.MULTI_MOVE:MULTI_MOVE_FUNCS,
-                   editorstate.CLIP_END_DRAG:CLIP_END_DRAG_FUNCS}
+                   editorstate.CLIP_END_DRAG:CLIP_END_DRAG_FUNCS,
+                   editorstate.CUT:CUT_FUNCS,
+                   editorstate.KF_TOOL:KFTOOL_FUNCS}
 

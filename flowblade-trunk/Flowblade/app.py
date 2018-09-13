@@ -63,13 +63,14 @@ import editorwindow
 import gmic
 import gui
 import keyevents
+import kftoolmode
 import medialog
-import mlt
 import mltenv
 import mltfilters
 import mltplayer
 import mltprofiles
 import mlttransitions
+import modesetting
 import movemodes
 import persistance
 import positionbar
@@ -77,12 +78,14 @@ import preferenceswindow
 import projectaction
 import projectdata
 import projectinfogui
+import propertyeditorbuilder
 import proxyediting
 import render
 import renderconsumer
 import respaths
 import resync
 import sequence
+import shortcuts
 import snapping
 import titler
 import tlinewidgets
@@ -93,6 +96,8 @@ import translations
 import undo
 import updater
 import utils
+import workflow
+
 
 import jackaudio
 
@@ -103,6 +108,7 @@ PID_FILE = "flowbladepidfile"
 BATCH_DIR = "batchrender/"
 autosave_timeout_id = -1
 recovery_dialog_id = -1
+sdl2_timeout_id = -1
 loaded_autosave_file = None
 
 splash_screen = None
@@ -145,6 +151,9 @@ def main(root_path):
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
+
+    #print "SDL version:", str(editorstate.get_sdl_version())
+    
     # passing -xdg as a flag will change the user_dir location with XDG_CONFIG_HOME
     # For full xdg-app support all the launch processes need to add this too, currently not impl.
 
@@ -175,13 +184,13 @@ def main(root_path):
         os.mkdir(user_dir + appconsts.TRIM_VIEW_DIR)
     if not os.path.exists(user_dir + appconsts.NATRON_DIR):
         os.mkdir(user_dir + appconsts.NATRON_DIR)
-        
+       
     # Set paths.
     respaths.set_paths(root_path)
 
     # Load editor prefs and list of recent projects
     editorpersistance.load()
-    if editorpersistance.prefs.dark_theme == True:
+    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
         respaths.apply_dark_theme()
     if editorpersistance.prefs.display_all_audio_levels == False:
         editorstate.display_all_audio_levels = False
@@ -195,6 +204,13 @@ def main(root_path):
     translations.load_filters_translations()
     mlttransitions.init_module()
 
+    # Apr-2017 - SvdB - Keyboard shortcuts
+    shortcuts.load_shortcut_files()
+    shortcuts.load_shortcuts()
+
+    # We respaths and translations data available so we need to init in a function.
+    workflow.init_data()
+
     # RHEL7/CentOS compatibility fix
     if gtk_version == "3.8.8":
         GObject.threads_init()
@@ -203,10 +219,12 @@ def main(root_path):
     Gdk.threads_init()
     Gdk.threads_enter()
 
-    # Request dark theme if so desired
-    if editorpersistance.prefs.dark_theme == True:
+    # Themes
+    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+            gui.apply_gtk_css()
+        
     # Load drag'n'drop images
     dnd.init()
 
@@ -233,11 +251,14 @@ def main(root_path):
 
     # Init MLT framework
     repo = mlt.Factory().init()
+    repo.producers().set('qimage', None, 0)
+    repo.producers().set('qtext', None, 0)
+    repo.producers().set('kdenlivetitle', None, 0)
 
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
+    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs.
     locale.setlocale(locale.LC_NUMERIC, 'C')
 
-    # Check for codecs and formats on the system
+    # Check for codecs and formats on the system.
     mltenv.check_available_features(repo)
     renderconsumer.load_render_profiles()
 
@@ -245,13 +266,13 @@ def main(root_path):
     mltfilters.load_filters_xml(mltenv.services)
     mlttransitions.load_compositors_xml(mltenv.transitions)
     
-    # Replace some services if better replacements available
+    # Replace some services if better replacements available.
     mltfilters.replace_services(mltenv.services)
 
-    # Create list of available mlt profiles
+    # Create list of available mlt profiles.
     mltprofiles.load_profile_list()
     
-    # Save assoc file path if found in arguments
+    # Save assoc file path if found in arguments.
     global assoc_file_path
     assoc_file_path = get_assoc_file_path()
         
@@ -260,33 +281,34 @@ def main(root_path):
     editorstate.project = projectdata.get_default_project()
     check_crash = True
 
-    # Audiomonitoring being available needs to be known before GUI creation
+    # Audiomonitoring being available needs to be known before GUI creation.
     audiomonitoring.init(editorstate.project.profile)
 
-    # Set trim view mode to current default value
+    # Set trim view mode to current default value.
     editorstate.show_trim_view = editorpersistance.prefs.trim_view_default
 
-    # Check for tools and init tools integration
+    # Check for tools and init tools integration.
     gmic.test_availablity()
     toolnatron.init()
     toolsintegration.init()
+    #toolsintegration.test()
     
-    # Create player object
+    # Create player object.
     create_player()
 
     # Create main window and set widget handles in gui.py for more convenient reference.
     create_gui()
 
-    # Inits widgets with project data
+    # Inits widgets with project data.
     init_project_gui()
 
-    # Inits widgets with current sequence data
+    # Inits widgets with current sequence data.
     init_sequence_gui()
 
     # Launch player now that data and gui exist
     launch_player()
 
-    # Editor and modules need some more initializing
+    # Editor and modules need some more initializing.
     init_editor_state()
 
     # Tracks need to be recentered if window is resized.
@@ -309,7 +331,7 @@ def main(root_path):
     # Every running instance has unique autosave file which is deleted at exit
     set_instance_autosave_id()
 
-    # Existance of autosave file hints that program was exited abnormally
+    # Existance of autosave file hints that program was exited abnormally.
     if check_crash == True and len(autosave_files) > 0:
         if len(autosave_files) == 1:
             GObject.timeout_add(10, autosave_recovery_dialog)
@@ -319,15 +341,24 @@ def main(root_path):
         start_autosave()
 
     # We prefer to monkeypatch some callbacks into some modules, usually to
-    # maintain a simpler and/or non-circular import structure
+    # maintain a simpler and/or non-circular import structure.
     monkeypatch_callbacks()
 
+    # File in assoc_file_path is opened after very short delay.
     if not(check_crash == True and len(autosave_files) > 0):
         if assoc_file_path != None:
             print "Launch assoc file:", assoc_file_path
             global assoc_timeout_id
             assoc_timeout_id = GObject.timeout_add(10, open_assoc_file)
-            
+
+
+
+    # SDL 2 consumer needs to created after Gtk.main() has run enough for window to be visble
+    #if editorstate.get_sdl_version() == editorstate.SDL_2: # needs more state considerion still
+    #    print "SDL2 timeout launch"
+    #    global sdl2_timeout_id
+    #    sdl2_timeout_id = GObject.timeout_add(1500, create_sdl_2_consumer)
+    
     # Launch gtk+ main loop
     Gtk.main()
 
@@ -344,7 +375,7 @@ def monkeypatch_callbacks():
     render.open_media_file_callback = projectaction.open_rendered_file
 
     # Set callback for undo/redo ops, batcherrender app does not need this 
-    undo.set_post_undo_redo_callback(editevent.set_post_undo_redo_edit_mode)
+    undo.set_post_undo_redo_callback(modesetting.set_post_undo_redo_edit_mode)
     undo.repaint_tline = updater.repaint_tline
 
     # # Drag'n'drop callbacks
@@ -367,7 +398,16 @@ def monkeypatch_callbacks():
     snapping._get_frame_for_x_func = tlinewidgets.get_frame
     snapping._get_x_for_frame_func = tlinewidgets._get_frame_x
 
+    # Callback to reinit to change slider <-> kf editor
+    propertyeditorbuilder.re_init_editors_for_slider_type_change_func = clipeffectseditor.effect_selection_changed
+
     # These provide clues for further module refactoring 
+
+# ---------------------------------- SDL2 consumer
+#def create_sdl_2_consumer():
+#    GObject.source_remove(sdl2_timeout_id)
+#    print "Creating SDL2 consumer..."
+#    editorstate.PLAYER().create_sdl2_video_consumer()
 
 # ---------------------------------- program, sequence and project init
 def get_assoc_file_path():
@@ -394,8 +434,9 @@ def create_gui():
     Called at app start to create gui objects and handles for them.
     """
     tlinewidgets.load_icons()
+    kftoolmode.load_icons()
 
-    updater.set_clip_edit_mode_callback = editevent.set_clip_monitor_edit_mode
+    updater.set_clip_edit_mode_callback = modesetting.set_clip_monitor_edit_mode
     updater.load_icons()
 
     # Notebook indexes are differn for 1 and 2 window layouts
@@ -423,8 +464,7 @@ def create_gui():
     # Give undo a reference to uimanager for menuitem state changes
     undo.set_menu_items(gui.editor_window.uimanager)
     
-    # Set button to display sequence in toggled state.
-    gui.sequence_editor_b.set_active(True)
+    updater.display_sequence_in_monitor()
 
 def create_player():
     """
@@ -506,7 +546,6 @@ def init_editor_state():
 
     gui.media_view_filter_selector.set_pixbuf(editorstate.media_view_filter)
 
-    gui.clip_editor_b.set_sensitive(False)
     gui.editor_window.window.set_title(editorstate.project.name + " - Flowblade")
     gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(False)
     gui.editor_window.uimanager.get_widget("/MenuBar/EditMenu/Undo").set_sensitive(False)
@@ -520,6 +559,7 @@ def init_editor_state():
 
     # Clear editors 
     clipeffectseditor.clear_clip()
+    clipeffectseditor.effect_selection_changed() # to get No Clip text
     compositeeditor.clear_compositor()
 
     # Show first pages on notebooks
@@ -529,9 +569,8 @@ def init_editor_state():
     movemodes.clear_selection_values()
 
     # Set initial edit mode
-    gui.editor_window.modes_selector.set_pixbuf(0)
-    editevent.insert_move_mode_pressed()
-
+    modesetting.set_default_edit_mode()
+    
     # Create array needed to update compositors after all edits
     editorstate.current_sequence().restack_compositors()
 
@@ -559,9 +598,9 @@ def open_project(new_project):
     audiowaveform.frames_cache = {}
 
     editorstate.project = new_project
-
     editorstate.media_view_filter = appconsts.SHOW_ALL_FILES
-    
+    editorstate.auto_follow = editorstate.project.get_project_property(appconsts.P_PROP_AUTO_FOLLOW)
+
     # Inits widgets with project data
     init_project_gui()
     
@@ -598,7 +637,7 @@ def open_project(new_project):
     if new_project.update_media_lengths_on_load == True:
         projectaction.update_media_lengths()
 
-    gui.editor_window.handle_insert_move_mode_button_press()
+    gui.editor_window.set_default_edit_tool()
     editorstate.trim_mode_ripple = False
 
     updater.set_timeline_height()
@@ -732,6 +771,8 @@ def show_splash_screen():
 
     splash_screen.set_resizable(False)
 
+    #dialog = workflow.WorkflowDialog()
+
     while(Gtk.events_pending()):
         Gtk.main_iteration()
 
@@ -744,7 +785,7 @@ def _set_draw_params():
     if editorstate.screen_size_small_width() == True:
         appconsts.NOTEBOOK_WIDTH = 450
         editorwindow.MONITOR_AREA_WIDTH = 450
-        editorwindow.MEDIA_MANAGER_WIDTH = 220
+        editorwindow.MEDIA_MANAGER_WIDTH = 100
         
     if editorstate.screen_size_small_height() == True:
         appconsts.TOP_ROW_HEIGHT = 10
@@ -753,6 +794,15 @@ def _set_draw_params():
     if editorstate.SCREEN_WIDTH < 1153 and editorstate.SCREEN_HEIGHT < 865:
         editorwindow.MONITOR_AREA_WIDTH = 400
         positionbar.BAR_WIDTH = 100
+
+    if editorpersistance.prefs.double_track_hights == True:
+        appconsts.TRACK_HEIGHT_NORMAL = 100 # track height in canvas and column
+        appconsts.TRACK_HEIGHT_SMALL = 50 # track height in canvas and column
+        appconsts.TRACK_HEIGHT_SMALLEST = 50 # maybe remove as it is no longer meaningful
+        appconsts.TLINE_HEIGHT = 520
+        sequence.TRACK_HEIGHT_NORMAL = appconsts.TRACK_HEIGHT_NORMAL # track height in canvas and column
+        sequence.TRACK_HEIGHT_SMALL = appconsts.TRACK_HEIGHT_SMALL # track height in canvas and column
+        tlinewidgets.set_tracks_double_height_consts()
 
 def _too_small_screen_exit():
     global exit_timeout_id
@@ -822,7 +872,13 @@ def _shutdown_dialog_callback(dialog, response_id):
         editorpersistance.prefs.exit_allocation_window_2 = (alloc.width, alloc.height, pos_x, pos_y)       
     editorpersistance.prefs.app_v_paned_position = gui.editor_window.app_v_paned.get_position()
     editorpersistance.prefs.top_paned_position = gui.editor_window.top_paned.get_position()
-    editorpersistance.prefs.mm_paned_position = gui.editor_window.mm_paned.get_position()
+    try: # This fails if preference for top row layout changed, we just ignore saving these values then.
+        if editorwindow.top_level_project_panel() == True:
+            editorpersistance.prefs.mm_paned_position = 200  # This is not used until user sets preference to not have top level project panel
+        else:
+            editorpersistance.prefs.mm_paned_position = gui.editor_window.mm_paned.get_position()
+    except: 
+        pass
     editorpersistance.save()
 
     # Block reconnecting consumer before setting window not visible

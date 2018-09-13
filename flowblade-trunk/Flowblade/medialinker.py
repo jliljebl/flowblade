@@ -37,6 +37,7 @@ import dialogs
 import dialogutils
 import editorstate
 import editorpersistance
+import gui
 import guiutils
 import guicomponents
 import mltenv
@@ -484,7 +485,7 @@ def _show_paths(media_asset):
     panel.pack_start(guiutils.pad_label(12, 12), False, False, 0)
     panel.pack_start(relink_path, False, False, 0)
     
-    dialogutils.panel_ok_dialog("Media Asset Paths", panel)
+    dialogutils.panel_ok_dialog(_("Media Asset Paths"), panel)
         
 def _save_project_pressed():
     if  target_project.last_save_path != None:
@@ -588,9 +589,11 @@ def main(root_path, filename):
     Gdk.threads_init()
     Gdk.threads_enter()
 
-    # Request dark them if so desired
-    if editorpersistance.prefs.dark_theme == True:
+    # Themes
+    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+            gui.apply_gtk_css()
 
     repo = mlt.Factory().init()
 

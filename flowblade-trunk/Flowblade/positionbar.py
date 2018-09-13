@@ -25,9 +25,9 @@ class PositionBar - Displays position on a clip or a sequence
 
 import cairo
 
-from gi.repository import Gtk
 from gi.repository import Gdk
 
+import appconsts
 from cairoarea import CairoDrawableArea2
 import editorpersistance
 import editorstate
@@ -38,15 +38,15 @@ trimmodes_set_no_edit_trim_mode = None # This monkey patched in app.py to avoid 
 
 
 # Draw params
-BAR_WIDTH = 200 # NOTE: DOES NOT HAVE ANY EFFECT IF OTHER WIDTHS MAKE MONITOR AREA MIN WIDTH BIGGER, AS THIS EXPANDS TO FILL
-BAR_HEIGHT = 20 # component height
+BAR_WIDTH = 200 # NOTE: DOES NOT HAVE ANY EFFECT IF OTHER WIDTHS MAKE MONITOR AREA MIN WIDTH BIGGER, THIS EXPANDS TO FILL
+BAR_HEIGHT = 10 # component height
 LINE_WIDTH = 3
 LINE_HEIGHT = 6
 LINE_COLOR = (0.3, 0.3, 0.3)
 LINE_COUNT = 11 # Number of range lines
 BG_COLOR = (1, 1, 1)
 DISABLED_BG_COLOR = (0.7, 0.7, 0.7)
-SELECTED_RANGE_COLOR = (0.85, 0.85, 0.85)
+SELECTED_RANGE_COLOR = (0.85, 0.85, 0.85, 0.75)
 DARK_LINE_COLOR = (0.9, 0.9, 0.9)
 DARK_BG_COLOR = (0.3, 0.3, 0.3)
 DARK_DISABLED_BG_COLOR = (0.1, 0.1, 0.1)
@@ -56,10 +56,11 @@ POINTER_COLOR = (1, 0.3, 0.3)
 END_PAD = 6 # empty area at both ends in pixels
 MARK_CURVE = 5
 MARK_LINE_WIDTH = 4
-MARK_PAD = 4
+MARK_PAD = -1
 
 MARK_COLOR = (0.3, 0.3, 0.3)
-DARK_MARK_COLOR = (0.1, 0.1, 0.1)
+DARK_MARK_COLOR = (0.0, 0.0, 0.0)
+FLOWBLADE_THEME_MARK_COLOR = (1, 1, 1)
 
 
 class PositionBar:
@@ -82,13 +83,15 @@ class PositionBar:
 
         self.handle_trimmodes = handle_trimmodes
 
-        if editorpersistance.prefs.dark_theme == True:
+        if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
             global LINE_COLOR, DISABLED_BG_COLOR, SELECTED_RANGE_COLOR, MARK_COLOR
             LINE_COLOR = DARK_LINE_COLOR
             DISABLED_BG_COLOR = DARK_DISABLED_BG_COLOR
             SELECTED_RANGE_COLOR = DARK_SELECTED_RANGE_COLOR
             MARK_COLOR = DARK_MARK_COLOR
-
+            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+                MARK_COLOR = FLOWBLADE_THEME_MARK_COLOR
+    
     def set_listener(self, listener):
         self.position_listener = listener
 
@@ -116,7 +119,7 @@ class PositionBar:
         self.widget.queue_draw()
 
     def set_dark_bg_color(self):
-        if editorpersistance.prefs.dark_theme == False:
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
             return
 
         r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())
@@ -145,10 +148,10 @@ class PositionBar:
         
         # Draw selected area if marks set
         if self.mark_in_norm >= 0 and self.mark_out_norm >= 0:
-            cr.set_source_rgb(*SELECTED_RANGE_COLOR)
+            cr.set_source_rgba(*SELECTED_RANGE_COLOR)
             m_in = self._get_panel_pos(self.mark_in_norm)
             m_out = self._get_panel_pos(self.mark_out_norm)
-            cr.rectangle(m_in, 0, m_out - m_in, h)
+            cr.rectangle(m_in + 1, 0, m_out - m_in - 2, h)
             cr.fill()
                 
         # Get area between end pads
@@ -217,7 +220,9 @@ class PositionBar:
         cr.close_path();
 
         cr.set_source_rgb(*MARK_COLOR)
-        cr.fill()
+        cr.fill_preserve()
+        cr.set_source_rgb(0,0,0)
+        cr.stroke()
 
     def draw_mark_out(self, cr, h):
         """
@@ -240,8 +245,10 @@ class PositionBar:
         cr.close_path();
 
         cr.set_source_rgb(*MARK_COLOR)
-        cr.fill()
-
+        cr.fill_preserve()
+        cr.set_source_rgb(0,0,0)
+        cr.stroke()
+        
     def _press_event(self, event):
         """
         Mouse button callback

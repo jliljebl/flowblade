@@ -26,20 +26,14 @@ import datetime
 import mlt
 import md5
 import os
-import shutil
-import time
 
-from gi.repository import Gtk
 from gi.repository import GdkPixbuf
 
 import appconsts
 import editorpersistance
-from editorstate import PLAYER
 from editorstate import PROJECT
 import mltprofiles
-import mltrefhold
 import patternproducer
-import projectaction
 import miscdataobjects
 import respaths
 import sequence
@@ -61,7 +55,14 @@ EVENT_SAVED_SNAPSHOT = 5
 
 thumbnailer = None
 
-_project_properties_default_values = {"tline_shrink_vertical":False}
+_project_properties_default_values = {appconsts.P_PROP_TLINE_SHRINK_VERTICAL:False, # Shink timeline max height if < 9 tracks
+                                      appconsts.P_PROP_DISSOLVE_GROUP_FADE_IN:-1, # not used, dropped feature (auto fades on creation)
+                                      appconsts.P_PROP_DISSOLVE_GROUP_FADE_OUT:-1, # not used, dropped feature (auto fades on creation)
+                                      appconsts.P_PROP_ANIM_GROUP_FADE_IN:-1, # not used, dropped feature (auto fades on creation)
+                                      appconsts.P_PROP_ANIM_GROUP_FADE_OUT:-1, # not used, dropped feature (auto fades on creation)
+                                      appconsts.P_PROP_LAST_RENDER_SELECTIONS: None, # tuple for last render selections data
+                                      appconsts.P_PROP_TRANSITION_ENCODING: None,  # tuple for last renderered transition render selections data
+                                      appconsts.P_PROP_AUTO_FOLLOW: False} # Global compositor auto follow
 
 class Project:
     """
@@ -106,10 +107,12 @@ class Project:
         thumbnailer = Thumbnailer()
         thumbnailer.set_context(self.profile)
 
-    def add_image_sequence_media_object(self, resource_path, name, length):
+    def add_image_sequence_media_object(self, resource_path, name, length, ttl):
+        print resource_path
         media_object = self.add_media_file(resource_path)
         media_object.length = length
         media_object.name = name
+        media_object.ttl = ttl
 
     def add_media_file(self, file_path, compound_clip_name=None):
         """
@@ -142,6 +145,7 @@ class Project:
         # Create media file object
         media_object = MediaFile(self.next_media_file_id, file_path, 
                                  clip_name, media_type, length, icon_path, info)
+        media_object.ttl = None
 
         self._add_media_object(media_object)
         
@@ -291,7 +295,10 @@ class Project:
             try:
                 return _project_properties_default_values[property_name]
             except:
-                print "Unknown project property ", property_name
+                return None # No default values for all properties exist, action value decided at callsite in that case
+
+    def set_project_property(self, property_name, value):
+        self.project_properties[property_name] = value
 
             
 class MediaFile:

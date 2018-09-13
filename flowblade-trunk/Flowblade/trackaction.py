@@ -23,10 +23,12 @@ This module handles track actions; mute, change active state, size change.
 """
 
 import appconsts
+import audiomonitoring
 import dialogutils
 import gui
 import guicomponents
 import editorstate
+import edit
 from editorstate import get_track
 from editorstate import current_sequence
 from editorstate import PROJECT
@@ -84,7 +86,7 @@ def set_track_small_height(track_index):
     updater.repaint_tline()
     
 def mute_track(track, new_mute_state):
-    # NOTE: THIS IS A SAVED EDIT OF SEQUENCE, BUT IS NOT AN UNDOABLE EDIT
+    # NOTE: THIS IS A SAVED EDIT OF SEQUENCE, BUT IT IS NOT AN UNDOABLE EDIT.
     current_sequence().set_track_mute_state(track.id, new_mute_state)
     gui.tline_column.widget.queue_draw()
     
@@ -124,7 +126,7 @@ def _tracks_resize_update():
     gui.tline_column.widget.queue_draw()
 
 def _tline_vertical_shrink_changed(widget):
-    PROJECT().project_properties["tline_shrink_vertical"] = widget.get_active()
+    PROJECT().project_properties[appconsts.P_PROP_TLINE_SHRINK_VERTICAL] = widget.get_active()
     updater.set_timeline_height()
 
 def _activate_all_tracks():
@@ -145,6 +147,7 @@ def _activate_only_current_top_active():
 def audio_levels_menu_launch_pressed(widget, event):
     guicomponents.get_audio_levels_popup_menu(event, _audio_levels_item_activated)
 
+# THIS HANDLES MUCH MORE NOW, NAME _audio_levels_item_activated name needs changing
 def _audio_levels_item_activated(widget, msg):
     if msg == "all":
         editorstate.display_all_audio_levels = True
@@ -155,8 +158,6 @@ def _audio_levels_item_activated(widget, msg):
         updater.repaint_tline()
     elif msg == "snapping":
         snapping.snapping_on = widget.get_active()
-    elif msg == "magnet":
-        snapping.show_magnet_icon = widget.get_active()
     else: # media thumbnails
         editorstate.display_clip_media_thumbnails = widget.get_active()
         updater.repaint_tline()
@@ -229,6 +230,8 @@ def track_center_pressed(data):
                     return 
             # Update track mute state
             current_sequence().set_track_mute_state(track.id, new_mute_state)
+            
+            audiomonitoring.update_mute_states()
             gui.tline_column.widget.queue_draw()
     
     if data.event.button == 3:

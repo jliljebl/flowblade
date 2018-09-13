@@ -115,6 +115,7 @@ def get_two_column_box_right_pad(widget1, widget2, left_width, right_pad):
 def get_checkbox_row_box(checkbox, widget2):
     hbox = Gtk.HBox()
     hbox.pack_start(checkbox, False, False, 0)
+    hbox.pack_start(get_pad_label(4, 1), False, False, 0)
     hbox.pack_start(widget2, False, False, 0)
     hbox.pack_start(Gtk.Label(), True, True, 0)
     return hbox
@@ -169,11 +170,38 @@ def get_slider_row(editable_property, listener, slider_name=None):
         name = slider_name
     name = translations.get_param_name(name)
     
-    editable_property.value_changed_ID = adjustment.connect("value-changed", listener) # patching in to make available for disconnect
+    editable_property.value_changed_ID = adjustment.connect("value-changed", listener) # saving ID to make it available for disconnect
                                                                                        # This also needs to be after adjustment is set to not loose exiting value for build dummy value 
         
     return (get_two_column_editor_row(name, hbox), hslider)
 
+def get_slider_row_and_spin_widget(editable_property, listener, slider_name=None):
+    adjustment = editable_property.get_input_range_adjustment()
+    editable_property.adjustment = adjustment # patching in to make available for disconnect
+
+    hslider = Gtk.HScale()
+    hslider.set_adjustment(adjustment)
+    hslider.set_draw_value(False)
+    
+    spin = Gtk.SpinButton()
+    spin.set_numeric(True)
+    spin.set_adjustment(adjustment)
+
+    hbox = Gtk.HBox(False, 4)
+    hbox.pack_start(hslider, True, True, 0)
+    hbox.pack_start(spin, False, False, 4)
+    
+    if slider_name == None:
+        name = editable_property.get_display_name()
+    else:
+        name = slider_name
+    name = translations.get_param_name(name)
+    
+    editable_property.value_changed_ID = adjustment.connect("value-changed", listener) # saving ID to make it available for disconnect
+                                                                                       # This also needs to be available after adjustment is set to not lose exiting value for build dummy value 
+        
+    return (get_two_column_editor_row(name, hbox), hslider, spin)
+    
 def get_non_property_slider_row(lower, upper, step, value=0, listener=None):
     hslider = Gtk.HScale()
     hslider.set_draw_value(False)
@@ -220,7 +248,7 @@ def get_named_frame_with_vbox(name, widgets, left_padding=12, right_padding=6, r
 
     return get_named_frame(name, vbox, left_padding, right_padding, right_out_padding)
     
-def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_padding=4):
+def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_padding=4, tooltip_txt=None):
     """
     Gnome style named panel
     """
@@ -231,7 +259,9 @@ def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_pa
         label_box = Gtk.HBox()
         label_box.pack_start(label, False, False, 0)
         label_box.pack_start(Gtk.Label(), True, True, 0)
-
+        if tooltip_txt != None:        
+            label.set_tooltip_markup(tooltip_txt)
+            
     alignment = set_margins(widget, right_padding, 0, left_padding, 0)
 
     frame = Gtk.VBox()
@@ -283,6 +313,23 @@ def get_menu_item(text, callback, data, sensitive=True):
     item.set_sensitive(sensitive)
     return item
 
+def get_radio_menu_items_group(menu, labels, msgs, callback, active_index):
+    first_item = Gtk.RadioMenuItem()
+    first_item.set_label(labels[0])
+    first_item.show()
+    menu.append(first_item)
+    if active_index == 0:
+        first_item.set_active(True)
+    first_item.connect("activate", callback, msgs[0])
+    
+    for i in range(1, len(labels)):
+        radio_item = Gtk.RadioMenuItem.new_with_label([first_item], labels[i])
+        menu.append(radio_item)
+        radio_item.show()
+        if active_index == i:
+            radio_item.set_active(True)
+        radio_item.connect("activate", callback, msgs[i])
+        
 def add_separetor(menu):
     sep = Gtk.SeparatorMenuItem()
     sep.show()

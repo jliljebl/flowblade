@@ -43,6 +43,7 @@ import mlttransitions
 import panels
 import renderconsumer
 import respaths
+import shortcuts
 import utils
 
 
@@ -71,8 +72,8 @@ def new_project_dialog(callback):
     profiles_vbox = guiutils.get_vbox([profile_select,profile_info_box], False)
     profiles_frame = panels.get_named_frame(_("Profile"), profiles_vbox)
 
-    tracks_select = guicomponents.TracksNumbersSelect(5, 4)
-    
+    tracks_select = guicomponents.TracksNumbersSelect(appconsts.INIT_V_TRACKS, appconsts.INIT_A_TRACKS)
+
     tracks_vbox = guiutils.get_vbox([tracks_select.widget], False)
 
     tracks_frame = panels.get_named_frame(_("Tracks"), tracks_vbox)
@@ -293,6 +294,51 @@ def save_project_as_dialog(callback, current_name, open_dir, parent=None):
     dialog.connect('response', callback)
     dialog.show()
 
+def save_effects_compositors_values(callback, default_name, saving_effect=True):
+    parent = gui.editor_window.window
+
+    if saving_effect == True:
+        title = _("Save Effect Values Data")
+    else:
+        title = _("Save Compositor Values Data")
+        
+    dialog = Gtk.FileChooserDialog(title, parent,
+                                   Gtk.FileChooserAction.SAVE,
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                                    _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+    dialog.set_action(Gtk.FileChooserAction.SAVE)
+    dialog.set_current_name(default_name)
+    dialog.set_do_overwrite_confirmation(True)
+
+    dialog.set_select_multiple(False)
+    file_filter = Gtk.FileFilter()
+    file_filter.set_name(_("Effect/Compositor Values Data"))
+    file_filter.add_pattern("*" + "data")
+    dialog.add_filter(file_filter)
+    dialog.connect('response', callback)
+    dialog.show()
+
+def load_effects_compositors_values_dialog(callback, loading_effect=True):
+    parent = gui.editor_window.window
+
+    if loading_effect == True:
+        title_text = _("Load Effect Values Data")
+    else:
+        title_text = _("Load Compositor Values Data") 
+
+    dialog = Gtk.FileChooserDialog(title_text, parent,
+                                   Gtk.FileChooserAction.OPEN,
+                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
+                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+    dialog.set_action(Gtk.FileChooserAction.OPEN)
+    dialog.set_select_multiple(False)
+    file_filter = Gtk.FileFilter()
+    file_filter.set_name(_("Effect/Compositor Values Data"))
+    file_filter.add_pattern("*" + "data")
+    dialog.add_filter(file_filter)
+    dialog.connect('response', callback)
+    dialog.show()
+    
 def export_xml_dialog(callback, project_name):
     _export_file_name_dialog(callback, project_name, _("Export Project as XML to"))
 
@@ -439,12 +485,11 @@ def about_dialog(parent_window):
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
 
-    ## Application tab
-
+    # Application tab
     img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
     flow_label = Gtk.Label(label="Flowblade Movie Editor")
-    ver_label = Gtk.Label(label="1.12.0")
-    janne_label = Gtk.Label(label="Copyright 2016 Janne Liljeblad and contributors")
+    ver_label = Gtk.Label(label="1.16.0")
+    janne_label = Gtk.Label(label="Copyright 2018 Janne Liljeblad and contributors")
     page_label = Gtk.Label(label=_("Project page:") + " " + "<a href=\"https://github.com/jliljebl/flowblade\">https://github.com/jliljebl/flowblade</a>")
     page_label.set_use_markup(True)
     flow_label.modify_font(Pango.FontDescription("sans bold 14"))
@@ -465,8 +510,7 @@ def about_dialog(parent_window):
     alignment =  dialogutils.get_default_alignment(vbox)
     alignment.set_size_request(450, 370)
 
-    ## Thanks tab
-
+    # Thanks tab
     up_label = Gtk.Label(label=_("Upstream:"))
     up_projs = Gtk.Label(label="MLT")
     up_projs2 = Gtk.Label("FFMpeg, Frei0r, LADSPA, Cairo, Gnome, Linux")
@@ -490,14 +534,12 @@ def about_dialog(parent_window):
     alignment2 = dialogutils.get_default_alignment(vbox2)
     alignment2.set_size_request(450, 370)
 
-    ## Licence tab
-
+    # Licence tab
     license_view = guicomponents.get_gpl3_scroll_widget((450, 370))
     alignment3 = dialogutils.get_default_alignment(license_view)
     alignment3.set_size_request(450, 370)
 
-    ## Developers tab
-
+    # Developers tab
     lead_label = Gtk.Label(label=_("Lead Developer:"))
     lead_label.modify_font(Pango.FontDescription("sans bold 12"))
     lead_info = Gtk.Label(label="Janne Liljeblad")
@@ -537,8 +579,7 @@ def about_dialog(parent_window):
     alignment5 = dialogutils.get_default_alignment(vbox3)
     alignment5.set_size_request(450, 370)
 
-    ## Translations tab
-
+    # Translations tab
     translations_label = Gtk.Label(label=_("Translations by:"))
     translations_label.modify_font(Pango.FontDescription("sans bold 12"))
     translations_view = guicomponents.get_translations_scroll_widget((450, 370))
@@ -851,9 +892,9 @@ def autosaves_many_recovery_dialog(response_callback, autosaves, parent_window):
     autosaves_view.set_size_request(300, 300)
     autosaves_view.fill_data_model(autosaves)
 
-    delete_all = Gtk.Button("Delete all autosaves")
+    delete_all = Gtk.Button(_("Delete all autosaves"))
     delete_all.connect("clicked", lambda w : _autosaves_delete_all_clicked(autosaves, autosaves_view, dialog))
-    delete_all_but_selected = Gtk.Button("Delete all but selected autosave")
+    delete_all_but_selected = Gtk.Button(_("Delete all but selected autosave"))
     delete_all_but_selected.connect("clicked", lambda w : _autosaves_delete_unselected(autosaves, autosaves_view))
 
     delete_buttons_vbox = Gtk.HBox()
@@ -898,15 +939,16 @@ def _autosaves_delete_unselected(autosaves, autosaves_view):
     autosaves.append(selected_autosave)
     autosaves_view.fill_data_model(autosaves)
 
-def tracks_count_change_dialog(callback):
+def tracks_count_change_dialog(callback, v_tracks, a_tracks):
     dialog = Gtk.Dialog(_("Change Sequence Tracks Count"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
                         _("Change Tracks").encode('utf-8'), Gtk.ResponseType.ACCEPT))
-    
-    tracks_select = guicomponents.TracksNumbersSelect(5, 4)
-        
-    info_text = _("Please note:\n") + \
+
+    tracks_select = guicomponents.TracksNumbersSelect(v_tracks, a_tracks)
+
+    info_text = _("Please note:\n\n") + \
+                u"\u2022" + _(" When reducing the number of tracks the top Video track and/or bottom Audio track will be removed\n") + \
                 u"\u2022" + _(" It is recommended that you save Project before completing this operation\n") + \
                 u"\u2022" + _(" There is no Undo for this operation\n") + \
                 u"\u2022" + _(" Current Undo Stack will be destroyed\n") + \
@@ -930,6 +972,28 @@ def tracks_count_change_dialog(callback):
     dialog.connect('response', callback, tracks_select)
     dialog.show_all()
 
+
+def clip_length_change_dialog(callback, clip, track):
+    dialog = Gtk.Dialog(_("Change Clip Length"),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                        _("Ok").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+    
+    length_changer = guicomponents.ClipLengthChanger(clip)
+
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(length_changer.widget, False, False, 0)
+    vbox.pack_start(guiutils.get_pad_label(24, 24), False, False, 0)
+
+    alignment = dialogutils.get_alignment2(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, clip, track, length_changer)
+    dialog.show_all()
+
+
 def new_sequence_dialog(callback, default_name):
     dialog = Gtk.Dialog(_("Create New Sequence"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -944,9 +1008,9 @@ def new_sequence_dialog(callback, default_name):
     name_select = panels.get_two_column_box(Gtk.Label(label=_("Sequence Name:")),
                                                name_entry,
                                                250)
-   
-    tracks_select = guicomponents.TracksNumbersSelect(5, 4)
-    
+
+    tracks_select = guicomponents.TracksNumbersSelect(appconsts.INIT_V_TRACKS, appconsts.INIT_A_TRACKS)
+
     open_check = Gtk.CheckButton()
     open_check.set_active(True)
     open_label = Gtk.Label(label=_("Open For Editing:"))
@@ -1090,6 +1154,71 @@ def marker_name_dialog(frame_str, callback):
     dialog.connect('response', callback, name_entry)
     dialog.show_all()
 
+def clip_marker_name_dialog(clip_frame_str, tline_frame_str, callback, data):
+    dialog = Gtk.Dialog(_("New Marker"),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Add Marker").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+
+    tline_frame_info = guiutils.get_left_justified_box([Gtk.Label(_("Timeline position: ") + tline_frame_str),Gtk.Label()])
+
+    name_entry = Gtk.Entry()
+    name_entry.set_width_chars(30)
+    name_entry.set_text("")
+    name_entry.set_activates_default(True)
+
+    name_select = panels.get_two_column_box(Gtk.Label(label=_("Name for clip marker at ") + clip_frame_str),
+                                               name_entry,
+                                               250)
+
+    rows_vbox = Gtk.VBox(False, 2)
+    rows_vbox.pack_start(tline_frame_info, False, False, 0)
+    rows_vbox.pack_start(name_select, False, False, 0)
+    #rows_vbox.pack_start(guiutils.get_pad_label(12, 2), False, False, 0)
+    
+    alignment = dialogutils.get_default_alignment(rows_vbox)
+        
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    dialog.set_default_response(Gtk.ResponseType.ACCEPT)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, name_entry, data)
+    dialog.show_all()
+
+def alpha_info_msg(callback, filter_name):
+    dialog = Gtk.Dialog(_("Alpha Filters Info"),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Ok").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+
+    line_label = Gtk.Label(_("You are adding <b>Alpha Filter '") + filter_name + _("'</b> into a clip. Here is some info on how <b>Alpha Filters</b> work on Flowblade:"))
+    line_label.set_use_markup(True)
+    row1 = guiutils.get_left_justified_box([line_label])
+    
+    info_text = u"\u2022" + _(" <b>Alpha Filters</b> work by modifying image's alpha channel.\n") + \
+                u"\u2022" + _(" To see the effect of <b>Alpha Filter</b> you need composite this clip on track below by adding a <b>Compositor like 'Dissolve'</b> into this clip.\n") + \
+                u"\u2022" + _(" <b>Alpha Filters</b> on clips on <b>Track V1</b> have no effect.")
+    info_label = Gtk.Label(label=info_text)
+    info_label.set_use_markup(True)
+    info_box = guiutils.get_left_justified_box([info_label])
+
+    dont_show_check = Gtk.CheckButton.new_with_label (_("Don't show this message again."))
+    row2 = guiutils.get_left_justified_box([dont_show_check])
+
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(row1, False, False, 0)
+    vbox.pack_start(guiutils.pad_label(24, 12), False, False, 0)
+    vbox.pack_start(info_box, False, False, 0)
+    vbox.pack_start(guiutils.pad_label(24, 24), False, False, 0)
+    vbox.pack_start(row2, False, False, 0)
+    
+    alignment = dialogutils.get_default_alignment(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    dialog.set_default_response(Gtk.ResponseType.ACCEPT)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, dont_show_check)
+    dialog.show_all()
+
 def open_image_sequence_dialog(callback, parent_window):
     cancel_str = _("Cancel").encode('utf-8')
     ok_str = _("Ok").encode('utf-8')
@@ -1155,6 +1284,48 @@ def transition_edit_dialog(callback, transition_data):
     _default_behaviour(dialog)
     dialog.show_all()
 
+def transition_re_render_dialog(callback, transition_data):
+    dialog = Gtk.Dialog(_("Rerender Transition").encode('utf-8'),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                        _("Rerender").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+
+    alignment, encodings_cb, quality_cb = panels.get_transition_re_render_panel(transition_data)
+    widgets = (encodings_cb, quality_cb)
+    dialog.connect('response', callback, widgets, transition_data)
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.show_all()
+
+def fade_re_render_dialog(callback, fade_data):
+    dialog = Gtk.Dialog(_("Rerender Fade").encode('utf-8'),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                        _("Rerender").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+
+    alignment, encodings_cb, quality_cb = panels.get_fade_re_render_panel(fade_data)
+    widgets = (encodings_cb, quality_cb)
+    dialog.connect('response', callback, widgets, fade_data)
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.show_all()
+
+def re_render_all_dialog(callback, rerender_list, unrenderable):
+    dialog = Gtk.Dialog(_("Rerender All Transitions and Fades").encode('utf-8'),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                        _("Rerender All").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+
+    alignment, encodings_cb, quality_cb = panels.get_re_render_all_panel(rerender_list, unrenderable)
+    widgets = (encodings_cb, quality_cb)
+    dialog.connect('response', callback, widgets, rerender_list)
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.show_all()
+
 def fade_edit_dialog(callback, transition_data):
     dialog = Gtk.Dialog(_("Add Fade"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -1169,75 +1340,150 @@ def fade_edit_dialog(callback, transition_data):
     _default_behaviour(dialog)
     dialog.show_all()
 
-def keyboard_shortcuts_dialog(parent_window):
+def keyboard_shortcuts_dialog(parent_window, callback):
     dialog = Gtk.Dialog(_("Keyboard Shortcuts"),
                         parent_window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Close").encode('utf-8'), Gtk.ResponseType.CLOSE))
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                        _("Apply").encode('utf-8'), Gtk.ResponseType.ACCEPT))
 
+    presets_label = guiutils.bold_label(_("Shortcuts Presets:"))
+    shortcuts_combo = guicomponents.get_shorcuts_selector()
+
+    hbox = Gtk.HBox()
+    hbox.pack_start(presets_label, False, True, 0)
+    hbox.pack_start(shortcuts_combo, True, True, 0)
+    
+    scroll_hold_panel = Gtk.HBox()
+
+    diff_label = guiutils.bold_label(_("Diffence to 'Flowblade Default' Presets:"))
+
+    diff_data = Gtk.Label()
+    diff_data.set_line_wrap(True)
+    diff_data.set_size_request(418, 58)
+    diff_data.set_text(shortcuts.get_diff_to_defaults(editorpersistance.prefs.shortcuts))
+    diff_panel =  Gtk.VBox()
+    diff_panel.pack_start(diff_data, False, False, 0)
+
+    diff_sw = Gtk.ScrolledWindow()
+    diff_sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+    diff_sw.add_with_viewport(diff_panel)
+    diff_sw.set_size_request(420, 60)
+    
+    content_panel = Gtk.VBox(False, 2)
+    content_panel.pack_start(hbox, False, False, 0)
+    content_panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
+    content_panel.pack_start(scroll_hold_panel, True, True, 0)
+    content_panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
+    content_panel.pack_start(guiutils.get_left_justified_box([diff_label]), False, False, 0)
+    content_panel.pack_start(diff_sw, False, False, 0)
+
+    scroll_window = _display_keyboard_schortcuts(editorpersistance.prefs.shortcuts, scroll_hold_panel)
+
+    shortcuts_combo.connect('changed', lambda w:_shorcuts_selection_changed(w, scroll_hold_panel, diff_data, dialog))
+    
+    guiutils.set_margins(content_panel, 12, 12, 12, 12)
+    
+    dialog.vbox.pack_start(content_panel, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, shortcuts_combo)
+    dialog.show_all()
+ 
+ 
+def _shorcuts_selection_changed(combo, scroll_hold_panel, diff_data, dialog):
+    selected_xml = shortcuts.shortcut_files[combo.get_active()]
+    _display_keyboard_schortcuts(selected_xml, scroll_hold_panel)
+    diff_data.set_text(shortcuts.get_diff_to_defaults(selected_xml))
+    dialog.show_all()
+
+def _display_keyboard_schortcuts(xml_file, scroll_hold_panel):
+    widgets = scroll_hold_panel.get_children()
+    if len(widgets) != 0:
+        scroll_hold_panel.remove(widgets[0])
+
+    shorcuts_panel = _get_dynamic_kb_shortcuts_panel(xml_file)
+
+    pad_panel = Gtk.HBox()
+    pad_panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
+    pad_panel.pack_start(shorcuts_panel, True, False, 0)
+    pad_panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
+
+    sw = Gtk.ScrolledWindow()
+    sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+    sw.add_with_viewport(pad_panel)
+    sw.set_size_request(420, 400)
+    
+    scroll_hold_panel.pack_start(sw, False, False, 0)
+    return sw
+
+def _get_dynamic_kb_shortcuts_panel(xml_file):   
+    root_node = shortcuts.get_shortcuts_xml_root_node(xml_file)
+    
     general_vbox = Gtk.VBox()
     general_vbox.pack_start(_get_kb_row(_("Control + N"), _("Create New Project")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Control + S"), _("Save Project")), False, False, 0)
-    general_vbox.pack_start(_get_kb_row(_("DELETE"), _("Delete Selected Item")), False, False, 0)
+    general_vbox.pack_start(_get_dynamic_kb_row(root_node, "delete"), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("ESCAPE"), _("Stop Rendering Audio Levels")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Control + Q"), _("Quit")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Control + Z"), _("Undo")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Control + Y"), _("Redo")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Control + O"), _("Open Project")), False, False, 0)
-    general_vbox.pack_start(_get_kb_row(_("TAB"), _("Switch Monitor Source")), False, False, 0)
+    general_vbox.pack_start(_get_dynamic_kb_row(root_node, "switch_monitor"), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Control + L"), _("Log Marked Clip Range")), False, False, 0)
-    general_vbox.pack_start(_get_kb_row(_("="), _("Zoom In")), False, False, 0)
-    general_vbox.pack_start(_get_kb_row(_("-"), _("Zoom Out")), False, False, 0)
+    general_vbox.pack_start(_get_dynamic_kb_row(root_node, "zoom_in"), False, False, 0)
+    general_vbox.pack_start(_get_dynamic_kb_row(root_node, "zoom_out"), False, False, 0)
     general = guiutils.get_named_frame(_("General"), general_vbox)
 
     tline_vbox = Gtk.VBox()
-    tline_vbox.pack_start(_get_kb_row("I", _("Set Mark In")), False, False, 0)
-    tline_vbox.pack_start(_get_kb_row("O", _("Set Mark Out")), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "mark_in"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "mark_out"), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Alt + I"), _("Go To Mark In")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Alt + O"), _("Go To Mark Out")), False, False, 0)
-    tline_vbox.pack_start(_get_kb_row("X", _("Cut Clip")), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "cut"), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("DELETE"),  _("Splice Out")), False, False, 0)
-    tline_vbox.pack_start(_get_kb_row("Y", _("Insert")), False, False, 0)
-    tline_vbox.pack_start(_get_kb_row("U", _("Append")), False, False, 0)
-    tline_vbox.pack_start(_get_kb_row("T", _("3 Point Overwrite Insert")), False, False, 0)
-    tline_vbox.pack_start(_get_kb_row("M", _("Add Mark")), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "insert"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "append"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "3_point_overwrite"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "add_marker"), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Control + C"), _("Copy Clips")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Control + V"), _("Paste Clips")), False, False, 0)
-    tline_vbox.pack_start(_get_kb_row(_("R"), _("Trim Tool Ripple Mode On/Off")), False, False, 0)
-    tline_vbox.pack_start(_get_kb_row(_("S"), _("Resync selected Clip or Compositor")), False, False, 0)
-    tline_vbox.pack_start(_get_kb_row(_("G"), _("Log Marked Clip Range")), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "toggle_ripple"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "resync"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "log_range"), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Left Arrow "), _("Prev Frame Trim Edit")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Right Arrow"), _("Next Frame Trim Edit")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Control + Left Arrow "), _("Back 10 Frames Trim Edit")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Control + Right Arrow"), _("Forward 10 Frames Trim Edit")), False, False, 0)
-    tline_vbox.pack_start(_get_kb_row(_("ENTER"), _("Complete Keyboard Trim Edit")), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "enter_edit"), False, False, 0)
     tline = guiutils.get_named_frame(_("Timeline"), tline_vbox)
 
     play_vbox = Gtk.VBox()
-    play_vbox.pack_start(_get_kb_row(_("SPACE"), _("Start / Stop Playback")), False, False, 0)
-    play_vbox.pack_start(_get_kb_row("J", _("Backwards Faster")), False, False, 0)
-    play_vbox.pack_start(_get_kb_row("K", _("Stop")), False, False, 0)
-    play_vbox.pack_start(_get_kb_row("L", _("Forward Faster")), False, False, 0)
-    play_vbox.pack_start(_get_kb_row(_("Left Arrow "), _("Prev Frame")), False, False, 0)
-    play_vbox.pack_start(_get_kb_row(_("Right Arrow"), _("Next Frame")), False, False, 0)
+    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "play_pause"), False, False, 0)
+    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "slower"), False, False, 0)
+    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "stop"), False, False, 0)
+    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "faster"), False, False, 0)
+    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "prev_frame"), False, False, 0)
+    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "next_frame"), False, False, 0)
     play_vbox.pack_start(_get_kb_row(_("Control + Left Arrow "), _("Move Back 10 Frames")), False, False, 0)
     play_vbox.pack_start(_get_kb_row(_("Control + Right Arrow"), _("Move Forward 10 Frames")), False, False, 0)
-    play_vbox.pack_start(_get_kb_row(_("Up Arrow"), _("Next Edit/Mark")), False, False, 0)
-    play_vbox.pack_start(_get_kb_row(_("Down Arrow"), _("Prev Edit/Mark")), False, False, 0)
-    play_vbox.pack_start(_get_kb_row(_("HOME"), _("Go To Start")), False, False, 0)
-    play_vbox.pack_start(_get_kb_row(_("END"), _("Go To End")), False, False, 0)
+    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "prev_cut"), False, False, 0)
+    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "next_cut"), False, False, 0)
+    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "to_start"), False, False, 0)
+    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "to_end"), False, False, 0)
     play_vbox.pack_start(_get_kb_row(_("Shift + I"), _("To Mark In")), False, False, 0)
     play_vbox.pack_start(_get_kb_row(_("Shift + O"), _("To Mark Out")), False, False, 0)
     play = guiutils.get_named_frame(_("Playback"), play_vbox)
 
     tools_vbox = Gtk.VBox()
-    tools_vbox.pack_start(_get_kb_row("1", _("Insert")), False, False, 0)
-    tools_vbox.pack_start(_get_kb_row("2", _("Overwrite")), False, False, 0)
-    tools_vbox.pack_start(_get_kb_row("3", _("Trim")), False, False, 0)
-    tools_vbox.pack_start(_get_kb_row("4", _("Roll")), False, False, 0)
-    tools_vbox.pack_start(_get_kb_row("5", _("Slip")), False, False, 0)
-    tools_vbox.pack_start(_get_kb_row("6", _("Spacer")), False, False, 0)
-    tools_vbox.pack_start(_get_kb_row("7", _("Box")), False, False, 0)
+    tools_vbox.pack_start(_get_dynamic_kb_row(root_node, "edit_mode_insert"), False, False, 0)
+    tools_vbox.pack_start(_get_dynamic_kb_row(root_node, "edit_mode_overwrite"), False, False, 0)
+    tools_vbox.pack_start(_get_dynamic_kb_row(root_node, "edit_mode_trim"), False, False, 0)
+    tools_vbox.pack_start(_get_dynamic_kb_row(root_node, "edit_mode_roll"), False, False, 0)
+    tools_vbox.pack_start(_get_dynamic_kb_row(root_node, "edit_mode_slip"), False, False, 0)
+    tools_vbox.pack_start(_get_dynamic_kb_row(root_node, "edit_mode_spacer"), False, False, 0)
+    tools_vbox.pack_start(_get_dynamic_kb_row(root_node, "edit_mode_box"), False, False, 0)
+    tools_vbox.pack_start(_get_kb_row(_("Keypad 1-7"), _("Same as 1-7")), False, False, 0)
     tools_vbox.pack_start(_get_kb_row(_("R"), _("Trim Tool Ripple Mode On/Off")), False, False, 0)
     tools = guiutils.get_named_frame(_("Tools"), tools_vbox)
 
@@ -1262,24 +1508,12 @@ def keyboard_shortcuts_dialog(parent_window):
     panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
     panel.pack_start(geom, False, False, 0)
 
-    pad_panel = Gtk.HBox()
-    pad_panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
-    pad_panel.pack_start(panel, True, False, 0)
-    pad_panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
+    return panel
 
-    sw = Gtk.ScrolledWindow()
-    sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-    sw.add_with_viewport(pad_panel)
-    sw.set_size_request(420, 400)
-
-    guiutils.set_margins(sw, 24, 24, 24, 24)
-
-    dialog.vbox.pack_start(sw, True, True, 0)
-    dialogutils.set_outer_margins(dialog.vbox)
-    _default_behaviour(dialog)
-    dialog.connect('response', _dialog_destroy)
-    dialog.show_all()
-
+def _get_dynamic_kb_row(root_node, code):
+    key_name, action_name = shortcuts.get_shortcut_info(root_node, code)
+    return _get_kb_row(key_name, action_name)
+    
 def _get_kb_row(msg1, msg2):
     label1 = Gtk.Label(label=msg1)
     label2 = Gtk.Label(label=msg2)
@@ -1287,6 +1521,7 @@ def _get_kb_row(msg1, msg2):
     KB_SHORTCUT_ROW_HEIGHT = 22
     row = guiutils.get_two_column_box(label1, label2, 170)
     row.set_size_request(KB_SHORTCUT_ROW_WIDTH, KB_SHORTCUT_ROW_HEIGHT)
+    row.show()
     return row
 
 def watermark_dialog(add_callback, remove_callback):
@@ -1303,7 +1538,7 @@ def watermark_dialog(add_callback, remove_callback):
     add_button = Gtk.Button(_("Set Watermark File"))
     remove_button = Gtk.Button(_("Remove Watermark"))
     if editorstate.current_sequence().watermark_file_path == None:
-        file_path_value_label = Gtk.Label(label="Not Set")
+        file_path_value_label = Gtk.Label(label=_("Not Set"))
         add_button.set_sensitive(True)
         remove_button.set_sensitive(False)
     else:
@@ -1510,9 +1745,10 @@ def set_fades_defaults_dialog(callback):
 
 
     group_select = Gtk.ComboBoxText()
-    group_select.append_text("Dissolve, Blend")
-    group_select.append_text("Affine Blend,  Picture-In-Picture, Region")
+    group_select.append_text(_("Dissolve, Blend"))
+    group_select.append_text(_("Affine Blend,  Picture-In-Picture, Region"))
     group_select.set_active(0)
+
     
     groups_vbox = guiutils.get_vbox([group_select], False)
     group_frame = panels.get_named_frame(_("Compositor Auto Fades Group"), groups_vbox)
@@ -1539,6 +1775,13 @@ def set_fades_defaults_dialog(callback):
     fade_out_row.pack_start(fade_out_length_label, False, False, 0)
     fade_out_row.pack_start(fade_out_spin, False, False, 0)
 
+    widgets = (group_select, fade_in_check, fade_in_spin, fade_out_check, fade_out_spin, fade_in_length_label, fade_out_length_label)
+    group_select.connect('changed', _fades_group_changed, widgets)
+    fade_in_check.connect("toggled", _fade_on_off_changed, widgets)
+    fade_out_check.connect("toggled", _fade_on_off_changed, widgets)
+
+    _fades_group_changed(group_select, widgets)
+
     fades_vbox = guiutils.get_vbox([fade_in_row, fade_out_row], False)
     fades_frame = panels.get_named_frame(_("Group Auto Fades"), fades_vbox)
     
@@ -1548,6 +1791,98 @@ def set_fades_defaults_dialog(callback):
     dialogutils.set_outer_margins(dialog.vbox)
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
-    dialog.connect('response', callback)
+    dialog.connect('response', callback, widgets)
 
     dialog.show_all()
+
+def _fades_group_changed(combo, widgets):
+
+    group_select, fade_in_check, fade_in_spin, fade_out_check, fade_out_spin, fade_in_length_label, fade_out_length_label = widgets
+    
+    if group_select.get_active() == 0:
+        fade_in_key = appconsts.P_PROP_DISSOLVE_GROUP_FADE_IN
+        fade_out_key = appconsts.P_PROP_DISSOLVE_GROUP_FADE_OUT
+    else:
+        fade_in_key = appconsts.P_PROP_ANIM_GROUP_FADE_IN
+        fade_out_key = appconsts.P_PROP_ANIM_GROUP_FADE_OUT
+    
+    fade_in = editorstate.PROJECT().get_project_property(fade_in_key)
+    fade_out = editorstate.PROJECT().get_project_property(fade_out_key)
+    
+    if fade_in < 1:
+        fade_in_check.set_active(False)
+        fade_in_spin.set_value(0)
+        fade_in_spin.set_sensitive(False)
+        fade_in_length_label.set_sensitive(False)
+    else:
+        fade_in_check.set_active(True)
+        fade_in_spin.set_value(fade_in)
+        fade_in_spin.set_sensitive(True)
+        fade_in_length_label.set_sensitive(True)
+        
+    if fade_out < 1:
+        fade_out_check.set_active(False)
+        fade_out_spin.set_value(0)
+        fade_out_spin.set_sensitive(False)
+        fade_out_length_label.set_sensitive(False)
+    else:
+        fade_out_check.set_active(True)
+        fade_out_spin.set_value(fade_out)
+        fade_out_spin.set_sensitive(True)
+        fade_out_length_label.set_sensitive(True)
+        
+def _fade_on_off_changed(check_widget, widgets):
+    group_select, fade_in_check, fade_in_spin, fade_out_check, fade_out_spin, fade_in_length_label, fade_out_length_label = widgets
+    if check_widget == fade_in_check:
+        fade_in_spin.set_value(0)
+        if fade_in_check.get_active() == True:
+            fade_in_spin.set_sensitive(True)
+            fade_in_length_label.set_sensitive(True)
+        else:
+            fade_in_spin.set_sensitive(False)
+            fade_in_length_label.set_sensitive(False)
+        
+    if check_widget == fade_out_check:
+        fade_out_spin.set_value(0)
+        if fade_out_check.get_active() == True:
+            fade_out_spin.set_sensitive(True)
+            fade_out_length_label.set_sensitive(True)
+        else:
+            fade_out_spin.set_sensitive(False)
+            fade_out_length_label.set_sensitive(False)
+
+def tline_audio_sync_dialog(callback, data):
+    dialog = Gtk.Dialog(_("Timeline Audio Sync"),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                        _("Do Audio Sync Move Edit").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+        
+    media_offsets_label = Gtk.Label(_("<b>Audio Sync Offset</b> between clips media is ") + str(data.media_offset_frames) + _(" frames."))
+    media_offsets_label.set_use_markup(True)
+    tline_offsets_label = Gtk.Label(_("<b>Timeline Media Offset</b> between clips is ") + str(data.clip_tline_media_offset) + _(" frames."))
+    tline_offsets_label.set_use_markup(True)
+    
+    action_label_text = _("To audio sync clips you need move action origin clip by ") + str(data.clip_tline_media_offset - data.media_offset_frames) + _(" frames.")
+    action_label = Gtk.Label(action_label_text)
+    
+    panel_vbox = Gtk.VBox(False, 2)
+    panel_vbox.pack_start(guiutils.get_left_justified_box([media_offsets_label]), False, False, 0)
+    panel_vbox.pack_start(guiutils.get_left_justified_box([tline_offsets_label]), False, False, 0)
+
+    panel_vbox.pack_start(guiutils.get_pad_label(24, 12), False, False, 0)
+    panel_vbox.pack_start(guiutils.get_left_justified_box([action_label]), False, False, 0)
+    panel_vbox.pack_start(guiutils.get_pad_label(24, 24), False, False, 0)
+
+    alignment = dialogutils.get_alignment2(panel_vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, data)
+    dialog.show_all()
+
+
+
+
+        
+        

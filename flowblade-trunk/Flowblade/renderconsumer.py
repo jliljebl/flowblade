@@ -23,7 +23,7 @@ Module contains objects and methods needed to create render consumers.
 """
 
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gdk
 
 import mlt
 import time
@@ -75,6 +75,9 @@ quality_option_groups = {}
 quality_option_groups_default_index = {}
 non_user_encodings = []
 proxy_encodings = None
+
+# This is used to turn performance settings off for proxy rendering
+performance_settings_enabled = True
 
 # replace empty strings with None values
 def _get_attribute(node, attr_name):
@@ -272,24 +275,48 @@ def get_img_seq_render_consumer(file_path, profile, encoding_option):
     
     consumer = mlt.Consumer(profile, "avformat", str(render_path))
     # Jan-2017 - SvdB - perf_value instead of -1
-    if editorpersistance.prefs.perf_drop_frames == True:
-        perf_value = 1 * editorpersistance.prefs.perf_render_threads
+    if performance_settings_enabled == True:
+        if editorpersistance.prefs.perf_drop_frames == True:
+            perf_value = 1 * editorpersistance.prefs.perf_render_threads
+        else:
+            perf_value = -1 * editorpersistance.prefs.perf_render_threads
+        consumer.set("real_time", perf_value)
     else:
-        perf_value = -1 * editorpersistance.prefs.perf_render_threads
-    consumer.set("real_time", perf_value)
+        consumer.set("real_time", -1)
     consumer.set("rescale", "bicubic")
     consumer.set("vcodec", str(vcodec))
-    #print "img seq render consumer created, path:" +  str(render_path) #+ ", args: " + args_msg
+
+    return consumer
+
+def get_img_seq_render_consumer_codec_ext(file_path, profile, vcodec, ext):
+    render_path = os.path.dirname(file_path) + "/" + os.path.basename(file_path).split(".")[0] + "_%05d." + ext
+    
+    consumer = mlt.Consumer(profile, "avformat", str(render_path))
+    # Jan-2017 - SvdB - perf_value instead of -1
+    if performance_settings_enabled == True:
+        if editorpersistance.prefs.perf_drop_frames == True:
+            perf_value = 1 * editorpersistance.prefs.perf_render_threads
+        else:
+            perf_value = -1 * editorpersistance.prefs.perf_render_threads
+        consumer.set("real_time", perf_value)
+    else:
+        consumer.set("real_time", -1)
+    consumer.set("rescale", "bicubic")
+    consumer.set("vcodec", str(vcodec))
+
     return consumer
     
 def get_mlt_render_consumer(file_path, profile, args_vals_list):
     consumer = mlt.Consumer(profile, "avformat", str(file_path))
     # Jan-2017 - SvdB - perf_value instead of -1
-    if editorpersistance.prefs.perf_drop_frames == True:
-        perf_value = 1 * editorpersistance.prefs.perf_render_threads
+    if performance_settings_enabled == True:
+        if editorpersistance.prefs.perf_drop_frames == True:
+            perf_value = 1 * editorpersistance.prefs.perf_render_threads
+        else:
+            perf_value = -1 * editorpersistance.prefs.perf_render_threads
+        consumer.set("real_time", perf_value)
     else:
-        perf_value = -1 * editorpersistance.prefs.perf_render_threads
-    consumer.set("real_time", perf_value)
+        consumer.set("real_time", -1)
     consumer.set("rescale", "bicubic")
 
     args_msg = ""

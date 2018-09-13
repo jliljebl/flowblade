@@ -38,6 +38,7 @@ import gui
 import guiutils
 import mltrefhold
 import persistance
+import render
 import renderconsumer
 import sequence
 import utils
@@ -87,11 +88,12 @@ class ProxyRenderRunnerThread(threading.Thread):
             # Create render objects
             proxy_file_path = media_file.create_proxy_path(proxy_w, proxy_h, proxy_encoding.extension)
             self.current_render_file_path = proxy_file_path
+            renderconsumer.performance_settings_enabled = False
             consumer = renderconsumer.get_render_consumer_for_encoding(
                                                         proxy_file_path,
                                                         self.proxy_profile, 
                                                         proxy_encoding)
-
+            renderconsumer.performance_settings_enabled = True
             # Bit rates for proxy files are counted using 2500kbs for 
             # PAL size image as starting point.
             pal_pix_count = 720.0 * 576.0
@@ -446,18 +448,30 @@ class ProxyRenderIssuesWindow:
             if is_proxy_file > 0:
                 text = _("You are trying to create proxies for ") + str(not_video_files) + _(" proxy file(s).\n")
                 rows = rows + self.issues_str() + text
-            issues_box = dialogutils.get_warning_message_dialog_panel("There are some issues with proxy render request", 
+            issues_box = dialogutils.get_warning_message_dialog_panel(_("There are some issues with proxy render request"), 
                                                                     rows,
                                                                     True)
+  
+            proxy_mode = editorstate.PROJECT().proxy_data.proxy_mode
+            if proxy_mode == appconsts.USE_PROXY_MEDIA:
+                info_label = Gtk.Label(_("<b>Rerendering proxies currently not possible!</b>\nChange to 'Use Original Media' mode to rerender proxies."))
+                info_label.set_use_markup(True)
+                info_row = guiutils.get_left_justified_box([guiutils.get_pad_label(24, 10), info_label])
+
             self.action_select = Gtk.ComboBoxText()
 
             self.action_select.append_text(_("Render Unrendered Possible & Use existing"))
-            self.action_select.append_text(_("Rerender All Possible" ))
+            if proxy_mode != appconsts.USE_PROXY_MEDIA:
+                self.action_select.append_text(_("Rerender All Possible" ))
             self.action_select.set_active(0)
+                            
             action_row = guiutils.get_left_justified_box([guiutils.get_pad_label(24, 10), Gtk.Label(label=_("Select Render Action: ")), self.action_select])
 
             info_box = Gtk.VBox()
             info_box.pack_start(issues_box, False, False, 0)
+            if proxy_mode == appconsts.USE_PROXY_MEDIA:
+                info_box.pack_start(info_row, False, False, 0)
+                info_box.pack_start(guiutils.get_pad_label(12, 24), False, False, 0)
             info_box.pack_start(action_row, False, False, 0)
 
         guiutils.set_margins(info_box, 12, 48, 12, 0)
@@ -676,10 +690,13 @@ def _convert_to_proxy_project():
     editorstate.PROJECT().proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_PROXY_MEDIA
     conv_temp_project_path = utils.get_hidden_user_dir_path() + "proxy_conv.flb"
     manager_window.convert_progress_bar.set_text(_("Converting Project to Use Proxy Media"))
-
+    
+    mark_in = editorstate.PROJECT().c_seq.tractor.mark_in
+    mark_out = editorstate.PROJECT().c_seq.tractor.mark_out
+    
     persistance.save_project(editorstate.PROJECT(), conv_temp_project_path)
     global load_thread
-    load_thread = ProxyProjectLoadThread(conv_temp_project_path, manager_window.convert_progress_bar)
+    load_thread = ProxyProjectLoadThread(conv_temp_project_path, manager_window.convert_progress_bar, mark_in, mark_out)
     load_thread.start()
 
 def _convert_to_original_media_project():
@@ -687,9 +704,12 @@ def _convert_to_original_media_project():
     conv_temp_project_path = utils.get_hidden_user_dir_path() + "proxy_conv.flb"
     manager_window.convert_progress_bar.set_text(_("Converting to Use Original Media"))
 
+    mark_in = editorstate.PROJECT().c_seq.tractor.mark_in
+    mark_out = editorstate.PROJECT().c_seq.tractor.mark_out
+    
     persistance.save_project(editorstate.PROJECT(), conv_temp_project_path)
     global load_thread
-    load_thread = ProxyProjectLoadThread(conv_temp_project_path, manager_window.convert_progress_bar)
+    load_thread = ProxyProjectLoadThread(conv_temp_project_path, manager_window.convert_progress_bar, mark_in, mark_out)
     load_thread.start()
 
 def _auto_re_convert_after_proxy_render_in_proxy_mode():
@@ -743,11 +763,13 @@ def _converting_proxy_mode_done():
 
 class ProxyProjectLoadThread(threading.Thread):
 
-    def __init__(self, proxy_project_path, progressbar):
+    def __init__(self, proxy_project_path, progressbar, mark_in, mark_out):
         threading.Thread.__init__(self)
         self.proxy_project_path = proxy_project_path
         self.progressbar = progressbar
-
+        self.mark_in = mark_in
+        self.mark_out = mark_out
+    
     def run(self):
         pulse_runner = guiutils.PulseThread(self.progressbar)
         pulse_runner.start()
@@ -764,6 +786,9 @@ class ProxyProjectLoadThread(threading.Thread):
         pulse_runner.running = False
         time.sleep(0.3) # need to be sure pulse_runner has stopped
         
+        project.c_seq.tractor.mark_in = self.mark_in
+        project.c_seq.tractor.mark_out = self.mark_out
+    
         app.stop_autosave()
 
         Gdk.threads_enter()
@@ -783,6 +808,9 @@ class ProxyProjectLoadThread(threading.Thread):
         persistance.show_messages = True
 
         Gdk.threads_enter()
+        selections = project.get_project_property(appconsts.P_PROP_LAST_RENDER_SELECTIONS)
+        if selections != None:
+            render.set_saved_gui_selections(selections)
         _converting_proxy_mode_done()
         Gdk.threads_leave()
 

@@ -28,6 +28,7 @@ import os
 import xml.dom.minidom
 
 import appconsts
+import compositorfades
 import mltrefhold
 import patternproducer
 import propertyparse
@@ -40,6 +41,7 @@ PROPERTY = appconsts.PROPERTY
 EXTRA_EDITOR = appconsts.EXTRA_EDITOR
 MLT_SERVICE = appconsts.MLT_SERVICE
 COMPOSITOR = "compositortransition"
+AUTO_FADE_COMPOSITOR = "autofadecompositor"
 
 # Property types.
 PROP_INT = appconsts.PROP_INT
@@ -68,11 +70,13 @@ not_found_transitions = []
 wipe_lumas = None # User displayed name -> resource image
 compositors = None
 blenders = None
+autofades = None
+alpha_combiners = None
 
 def init_module():
 
     # translations and module load order make us do this in method instead of at module load
-    global wipe_lumas, compositors, blenders, name_for_type, rendered_transitions, single_track_render_type_names
+    global wipe_lumas, compositors, blenders, name_for_type, rendered_transitions, single_track_render_type_names, autofades, alpha_combiners
     wipe_lumas = { \
                 _("Vertical From Center"):"bi-linear_x.pgm",
                 _("Vertical Top to Bottom"):"wipe_top_to_bottom.svg",
@@ -120,13 +124,13 @@ def init_module():
                 _("Checkerboard"):"checkerboard_small.pgm"}
 
     # name -> mlt_compositor_transition_infos key dict.
-    unsorted_compositors = [ (_("Affine"),"##affine"),
-                             (_("Dissolve"),"##opacity_kf"),
+    unsorted_compositors = [ (_("Dissolve"),"##opacity_kf"),
                              (_("Picture in Picture"),"##pict_in_pict"),
                              (_("Region"), "##region"),
                              (_("Affine Blend"), "##affineblend"),
                              (_("Blend"), "##blend"),
-                             (_("Wipe Clip Length"),"##wipe")]
+                             (_("Wipe Clip Length"),"##wipe"),
+                             (_("Transform"),"##affine")]
 
     compositors = sorted(unsorted_compositors, key=lambda comp: comp[0])   
 
@@ -151,6 +155,18 @@ def init_module():
                 (_("Subtract"),"##subtract"),
                 (_("Value"),"##value")]
 
+    autofades = [(_("Fade In"),"##auto_fade_in"),
+                (_("Fade Out"),"##auto_fade_out")]
+    
+    alpha_combiners = [ (_("Alpha XOR"),"##alphaxor"),
+                        (_("Alpha Out"),"##alphaout"),
+                        (_("Alpha In"),"##alphain")]
+
+    """ These ain't doing correct Porter-Duff
+                        (_("Alpha Over"),"##alphaover"),
+                        (_("Alpha Atop"),"##alphaatop")]
+    """
+                        
     for comp in compositors:
         name, comp_type = comp
         name_for_type[comp_type] = name
@@ -158,8 +174,16 @@ def init_module():
     for blend in blenders:
         name, comp_type = blend
         name_for_type[comp_type] = name
-    
-    # change this, tuples are not need we only need list of translatd names
+
+    for fade in autofades:
+        name, comp_type = fade
+        name_for_type[comp_type] = name
+
+    for acomb in alpha_combiners:
+        name, comp_type = acomb
+        name_for_type[comp_type] = name
+        
+    # Rendered transition names and types
     rendered_transitions = [  (_("Dissolve"), RENDERED_DISSOLVE), 
                               (_("Wipe"), RENDERED_WIPE),
                               (_("Color Dip"), RENDERED_COLOR_DIP),
@@ -174,6 +198,11 @@ class CompositorTransitionInfo:
     """
     def __init__(self, compositor_node):
         self.mlt_service_id = compositor_node.getAttribute(MLT_SERVICE)
+        if compositor_node.hasAttribute(AUTO_FADE_COMPOSITOR):
+            self.auto_fade_compositor = bool(compositor_node.getAttribute(AUTO_FADE_COMPOSITOR))
+        else:
+            self.auto_fade_compositor = False
+
         self.xml = compositor_node.toxml()
         self.name = compositor_node.getElementsByTagName(NAME).item(0).firstChild.nodeValue
         
@@ -184,7 +213,7 @@ class CompositorTransitionInfo:
         # Property args saved in propertyname -> propertyargs_string dict
         self.property_args = propertyparse.node_list_to_args_dict(p_node_list)
         
-        #  Extra editors that handle properties that have been set "no_editor"
+        #  Extra editors handle properties that have been set "no_editor"
         e_node_list = compositor_node.getElementsByTagName(EXTRA_EDITOR)
         self.extra_editors = propertyparse.node_list_to_extraeditors_array(e_node_list)  
 
@@ -195,7 +224,7 @@ class CompositorTransition:
     They wrap mlt.Transition objects that do the actual mixing.
     """
     def __init__(self, transition_info):
-        self.mlt_transition = None
+        self.mlt_transition = None # mlt.Transition object
         self.info = transition_info
         # Editable properties, usually a subset of all properties of 
         # mlt_serveice "composite", defined in compositors.xml
@@ -280,7 +309,7 @@ class CompositorTransition:
             fval = 1
         else:
             fval = 0
-        self.mlt_transition.set("force_track",str(fval))
+        self.mlt_transition.set("force_track", str(fval))
 
     def update_editable_mlt_properties(self):
         for prop in self.properties:
@@ -304,10 +333,11 @@ class CompositorObject:
         self.clip_out = -1 # ducktyping for clip for property editors
         self.planted = False
         self.compositor_index = None
-        self.name = None # ducktyping for clip for property editors
+        self.name = None # ducktyping as clip for property editors
         self.selected = False
         self.origin_clip_id = None
-        
+        self.obey_autofollow = True
+    
         self.destroy_id = os.urandom(16) # HACK, HACK, HACK - find a way to remove this stuff  
                                          # Compositors are recreated often in Sequence.restack_compositors()
                                          # and cannot be destroyd in undo/redo with object identidy.
@@ -328,7 +358,18 @@ class CompositorObject:
         self.clip_out = out_frame
         self.transition.mlt_transition.set("in", str(in_frame))
         self.transition.mlt_transition.set("out", str(out_frame))
+        self.update_autofade_keyframes()
 
+    def set_length_from_in(self, length):
+        self.clip_out = self.clip_in + length - 1
+        self.transition.mlt_transition.set("out", str(self.clip_out))
+        self.update_autofade_keyframes()
+
+    def set_length_from_out(self, length):
+        self.clip_in = self.clip_out - length + 1
+        self.transition.mlt_transition.set("in", str(self.clip_in))
+        self.update_autofade_keyframes()
+        
     def create_mlt_objects(self, mlt_profile):
         self.transition.create_mlt_transition(mlt_profile)
     
@@ -351,7 +392,15 @@ class CompositorObject:
             self.transition.properties = copy.deepcopy(properties)
             self.transition.update_editable_mlt_properties()
         
+    def update_autofade_keyframes(self):
+        if self.transition.info.auto_fade_compositor == False:
+            return
         
+        if self.transition.info.name == "##auto_fade_in":
+            compositorfades.set_auto_fade_in_keyframes(self)
+        else:
+            compositorfades.set_auto_fade_out_keyframes(self)
+            
 # -------------------------------------------------- compositor interface methods
 def load_compositors_xml(transitions):
     """
@@ -369,6 +418,7 @@ def load_compositors_xml(transitions):
             global not_found_transitions
             not_found_transitions.append(compositor_info)
             continue
+
         mlt_compositor_transition_infos[compositor_info.name] = compositor_info
 
 def get_wipe_resource_path_for_sorted_keys_index(sorted_keys_index):
@@ -389,6 +439,22 @@ def create_compositor(compositor_type):
     compositor.type_id = compositor_type # this is a string like "##add", "##affineblend", in compositors.xml it is name element: <name>##affine</name> etc...
     return compositor
 
+def is_blender(compositor_type_test):
+    for blend in blenders:
+        name, compositor_type = blend
+        if compositor_type_test == compositor_type:
+            return True
+    
+    return False
+
+def is_alpha_combiner(compositor_type_test):
+    for acomb in alpha_combiners:
+        name, compositor_type = acomb
+        if compositor_type_test == compositor_type:
+            return True
+    
+    return False
+
 
 # ------------------------------------------------------ rendered transitions
 # These are tractor objects used to create rendered transitions.
@@ -407,7 +473,7 @@ def get_rendered_transition_tractor(current_sequence,
     
     # New from clip
     if orig_from.media_type != appconsts.PATTERN_PRODUCER:
-        from_clip = current_sequence.create_file_producer_clip(orig_from.path)# File producer
+        from_clip = current_sequence.create_file_producer_clip(orig_from.path, None, False, orig_from.ttl)# File producer
     else:
         from_clip = current_sequence.create_pattern_producer(orig_from.create_data) # pattern producer
     current_sequence.clone_clip_and_filters(orig_from, from_clip)
@@ -415,7 +481,7 @@ def get_rendered_transition_tractor(current_sequence,
     # New to clip
     if not(transition_type == RENDERED_FADE_IN or transition_type == RENDERED_FADE_OUT): # fades to not use to_clip
         if orig_to.media_type != appconsts.PATTERN_PRODUCER:
-            to_clip = current_sequence.create_file_producer_clip(orig_to.path)# File producer
+            to_clip = current_sequence.create_file_producer_clip(orig_to.path, None, False, orig_to.ttl)# File producer
         else:
             to_clip = current_sequence.create_pattern_producer(orig_to.create_data) # pattern producer
         current_sequence.clone_clip_and_filters(orig_to, to_clip)
@@ -445,7 +511,7 @@ def get_rendered_transition_tractor(current_sequence,
             from_clip.clip_in = 0
             from_clip.clip_out = length
             
-    # Add clips to tracks and create keyframe string to contron mixing
+    # Add clips to tracks and create keyframe string for mixing
     if transition_type == RENDERED_DISSOLVE or transition_type == RENDERED_WIPE:
         # Add clips. Images and pattern producers always fill full track.
         if from_clip.media_type != appconsts.IMAGE and from_clip.media_type != appconsts.PATTERN_PRODUCER:

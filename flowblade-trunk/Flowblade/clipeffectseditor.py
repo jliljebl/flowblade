@@ -22,14 +22,17 @@
 Module handles clip effects editing logic and gui
 """
 
-
+import copy
 from gi.repository import GLib
 from gi.repository import Gtk
+import pickle
 import time
 
-import dnd
+import atomicfile
+import dialogs
+import dialogutils
 import edit
-import editorstate
+import editorpersistance
 from editorstate import PROJECT
 import gui
 import guicomponents
@@ -48,6 +51,7 @@ clip = None # Clip being edited
 track = None # Track of the clip being editeds
 clip_index = None # Index of clip being edited
 block_changed_update = False # Used to block unwanted callback update from "changed", hack and a broken one, look to fix
+current_filter_index = -1 # Needed to find right filter object when saving/loading effect values
 
 # This is updated when filter panel is displayed and cleared when removed.
 # Used to update kfeditors with external tline frame position changes
@@ -65,11 +69,13 @@ stack_dnd_event_info = None
 filters_notebook_index = 2
 
 def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
-    """
-    Use components created at clipeffectseditor.py.
-    """
     create_widgets()
 
+    stack_label = guiutils.bold_label(_("Clip Filters Stack"))
+    
+    label_row = guiutils.get_left_justified_box([stack_label])
+    guiutils.set_margins(label_row, 0, 4, 0, 0)
+    
     ad_buttons_box = Gtk.HBox(True,1)
     ad_buttons_box.pack_start(widgets.add_effect_b, True, True, 0)
     ad_buttons_box.pack_start(widgets.del_effect_b, True, True, 0)
@@ -96,24 +102,22 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     
     exit_button_vbox = Gtk.VBox(False, 2)
     exit_button_vbox.pack_start(widgets.exit_button, False, False, 0)
-    exit_button_vbox.pack_start(Gtk.Label(), True, True, 0)
 
     info_row = Gtk.HBox(False, 2)
+    info_row.pack_start(widgets.hamburger_launcher.widget, False, False, 0)
+    info_row.pack_start(Gtk.Label(), True, True, 0)
     info_row.pack_start(widgets.clip_info, False, False, 0)
-    info_row.pack_start(exit_button_vbox, True, True, 0)
+    info_row.pack_start(Gtk.Label(), True, True, 0)
     
     combo_row = Gtk.HBox(False, 2)
     combo_row.pack_start(group_combo_box, True, True, 0)
-    combo_row.pack_start(guiutils.get_pad_label(8, 2), False, False, 0)
 
     group_name, filters_array = mltfilters.groups[0]
     effects_list_view.fill_data_model(filters_array)
     effects_list_view.treeview.get_selection().select_path("0")
     
     effects_vbox = Gtk.VBox(False, 2)
-    effects_vbox.pack_start(info_row, False, False, 0)
-    if editorstate.screen_size_small_height() == False:
-        effects_vbox.pack_start(guiutils.get_pad_label(2, 2), False, False, 0)
+    effects_vbox.pack_start(label_row, False, False, 0)
     effects_vbox.pack_start(stack_buttons_box, False, False, 0)
     effects_vbox.pack_start(effect_stack, True, True, 0)
     effects_vbox.pack_start(combo_row, False, False, 0)
@@ -122,7 +126,7 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     widgets.group_combo.set_tooltip_text(_("Select Filter Group"))
     widgets.effect_list_view.set_tooltip_text(_("Current group Filters"))
 
-    return effects_vbox
+    return effects_vbox, info_row
 
 def _group_selection_changed(group_combo, filters_list_view):
     group_name, filters_array = mltfilters.groups[group_combo.get_active()]
@@ -143,14 +147,6 @@ def set_clip(new_clip, new_track, new_index):
     update_stack_view()
     effect_selection_changed() # This may get called twice
     gui.middle_notebook.set_current_page(filters_notebook_index) # 2 == index of clipeditor page in notebook
-
-def clip_removed_during_edit(removed_clip):
-    """
-    Called from edit.py after a clip is removed from timeline during edit
-    so that we cannot edit effects on clip that is no longer on timeline.
-    """
-    if  clip == removed_clip:
-        clear_clip()
 
 def effect_select_row_double_clicked(treeview, tree_path, col):
     add_currently_selected_effect()
@@ -203,7 +199,7 @@ def clear_clip():
     global clip
     clip = None
     _set_no_clip_info()
-    clear_effects_edit_panel()
+    effect_selection_changed()
     update_stack_view()
     set_enabled(False)
 
@@ -233,15 +229,20 @@ def create_widgets():
     widgets.value_edit_frame.set_shadow_type(Gtk.ShadowType.NONE)
     widgets.value_edit_frame.add(widgets.value_edit_box)
 
-    widgets.add_effect_b = Gtk.Button(_("Add"))
-    widgets.del_effect_b = Gtk.Button(_("Delete"))
+    widgets.add_effect_b = Gtk.Button()
+    widgets.add_effect_b.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "filter_add.png"))
+    widgets.del_effect_b = Gtk.Button()
+    widgets.del_effect_b.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "filter_delete.png"))
     widgets.toggle_all = Gtk.Button()
     widgets.toggle_all.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "filters_all_toggle.png"))
 
     widgets.add_effect_b.connect("clicked", lambda w,e: add_effect_pressed(), None)
     widgets.del_effect_b.connect("clicked", lambda w,e: delete_effect_pressed(), None)
     widgets.toggle_all.connect("clicked", lambda w: toggle_all_pressed())
-    
+
+    widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
+    guiutils.set_margins(widgets.hamburger_launcher.widget, 6, 8, 1, 0)
+
     # These are created elsewhere and then monkeypatched here
     widgets.group_combo = None
     widgets.effect_list_view = None
@@ -259,6 +260,8 @@ def set_enabled(value):
     widgets.effect_stack_view.treeview.set_sensitive(value)
     widgets.exit_button.set_sensitive(value)
     widgets.toggle_all.set_sensitive(value)
+    widgets.hamburger_launcher.set_sensitive(value)
+    widgets.hamburger_launcher.widget.queue_draw()
 
 def update_stack_view():
     if clip != None:
@@ -292,6 +295,10 @@ def add_currently_selected_effect():
 
 def get_filter_add_action(filter_info, target_clip):
     if filter_info.multipart_filter == False:
+        # Maybe show info on using alpha filters
+        if filter_info.group == "Alpha":
+            GLib.idle_add(_alpha_filter_add_maybe_info, filter_info)
+    
         data = {"clip":target_clip, 
                 "filter_info":filter_info,
                 "filter_edit_done_func":filter_edit_done}
@@ -302,6 +309,17 @@ def get_filter_add_action(filter_info, target_clip):
                 "filter_edit_done_func":filter_edit_done}
         action = edit.add_multipart_filter_action(data)
     return action
+
+def _alpha_filter_add_maybe_info(filter_info):
+    if editorpersistance.prefs.show_alpha_info_message == True:
+        dialogs.alpha_info_msg(_alpha_info_dialog_cb, translations.get_filter_name(filter_info.name))
+
+def _alpha_info_dialog_cb(dialog, response_id, dont_show_check):
+    if dont_show_check.get_active() == True:
+        editorpersistance.prefs.show_alpha_info_message = False
+        editorpersistance.save()
+
+    dialog.destroy()
 
 def get_selected_filter_info():
     # Get current selection on effects treeview - that's a vertical list.
@@ -325,17 +343,8 @@ def delete_effect_pressed():
     global edit_effect_update_blocked
     edit_effect_update_blocked = True
 
-    treeselection = widgets.effect_stack_view.treeview.get_selection()
-    (model, rows) = treeselection.get_selected_rows()
-    
-    try:
-        row = rows[0]
-    except:
-        return # This fails when there are filters but no rows are selected
-        
-    row_index = max(row)
     data = {"clip":clip,
-            "index":row_index,
+            "index":current_filter_index,
             "filter_edit_done_func":filter_edit_done}
     action = edit.remove_filter_action(data)
     action.do_edit()
@@ -345,6 +354,7 @@ def delete_effect_pressed():
     # Set last filter selected and display in editor
     edit_effect_update_blocked = False
     if len(clip.filters) == 0:
+        effect_selection_changed() # to display info text
         return
     path = str(len(clip.filters) - 1)
     # Causes edit_effect_selected() called as it is the "change" listener
@@ -422,23 +432,22 @@ def stack_view_pressed():
     global stack_dnd_state
     stack_dnd_state = MOUSE_PRESS_DONE
 
-def effect_selection_changed():
+def reinit_current_effect():
+    effect_selection_changed(True)
+
+def effect_selection_changed(use_current_filter_index=False):
     global keyframe_editor_widgets
 
     # Check we have clip
     if clip == None:
         keyframe_editor_widgets = []
+        show_text_in_edit_area(_("No Clip"))
         return
     
     # Check we actually have filters so we can display one.
     # If not, clear previous filters from view.
     if len(clip.filters) == 0:
-        vbox = Gtk.VBox(False, 0)
-        vbox.pack_start(Gtk.Label(), False, False, 0)
-        widgets.value_edit_frame.remove(widgets.value_edit_box)
-        widgets.value_edit_frame.add(vbox)
-        vbox.show_all()
-        widgets.value_edit_box = vbox
+        show_text_in_edit_area(_("Clip Has No Filters"))
         keyframe_editor_widgets = []
         return
     
@@ -460,7 +469,15 @@ def effect_selection_changed():
     except:
         filter_index = 0
 
+    # This isused when reiniting filter panel after every edit,
+    # use_current_filter_index == False is used when user changes edited filter or clip.
+    if use_current_filter_index == True:
+        filter_index = current_filter_index
+
     filter_object = clip.filters[filter_index]
+    
+    global current_filter_index
+    current_filter_index = filter_index
     
     # Create EditableProperty wrappers for properties
     editable_properties = propertyedit.get_filter_editable_properties(
@@ -498,7 +515,11 @@ def effect_selection_changed():
                 or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_RELEASE)
                 or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_CLIP)):
                     keyframe_editor_widgets.append(editor_row)
-                    
+            
+            # if slider property is being dedited as keyrame property
+            if hasattr(editor_row, "is_kf_editor"):
+                keyframe_editor_widgets.append(editor_row)
+
             vbox.pack_start(editor_row, False, False, 0)
             if not hasattr(editor_row, "no_separator"):
                 vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
@@ -517,8 +538,10 @@ def effect_selection_changed():
             vbox.pack_start(editor_row, False, False, 0)
             if not hasattr(editor_row, "no_separator"):
                 vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
+        vbox.pack_start(guiutils.pad_label(12,12), False, False, 0)
         
         vbox.pack_start(Gtk.Label(), True, True, 0)
+
     else:
         vbox.pack_start(Gtk.Label(label=_("No editable parameters")), True, True, 0)
     vbox.show_all()
@@ -533,6 +556,36 @@ def effect_selection_changed():
 
     widgets.value_edit_box = scroll_window
 
+def show_text_in_edit_area(text):
+    vbox = Gtk.VBox(False, 0)
+
+    filler = Gtk.EventBox()
+    filler.add(Gtk.Label())
+    vbox.pack_start(filler, True, True, 0)
+    
+    info = Gtk.Label(label=text)
+    info.set_sensitive(False)
+    filler = Gtk.EventBox()
+    filler.add(info)
+    vbox.pack_start(filler, False, False, 0)
+    
+    filler = Gtk.EventBox()
+    filler.add(Gtk.Label())
+    vbox.pack_start(filler, True, True, 0)
+
+    vbox.show_all()
+
+    scroll_window = Gtk.ScrolledWindow()
+    scroll_window.add_with_viewport(vbox)
+    scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+    scroll_window.show_all()
+
+    widgets.value_edit_frame.remove(widgets.value_edit_box)
+    widgets.value_edit_frame.add(scroll_window)
+
+    widgets.value_edit_box = scroll_window
+    
+        
 def clear_effects_edit_panel():
     widgets.value_edit_frame.remove(widgets.value_edit_box)
     label = Gtk.Label()
@@ -561,8 +614,113 @@ def display_kfeditors_tline_frame(frame):
     for kf_widget in keyframe_editor_widgets:
         kf_widget.display_tline_frame(frame)
 
+def update_kfeditors_sliders(frame):
+    for kf_widget in keyframe_editor_widgets:
+        kf_widget.update_slider_value_display(frame)
+        
 def update_kfeditors_positions():
     if clip == None:
         return
     for kf_widget in keyframe_editor_widgets:
         kf_widget.update_clip_pos()
+
+        
+# ------------------------------------------------ SAVE; LOAD etc. from hamburger menu
+def _hamburger_launch_pressed(widget, event):
+    guicomponents.get_clip_effects_editor_hamburger_menu(event, _clip_hamburger_item_activated)
+    
+def _clip_hamburger_item_activated(widget, msg):
+    if msg == "save":
+        filter_object = clip.filters[current_filter_index]
+        default_name = filter_object.info.name + _("_effect_values") + ".data"
+        dialogs.save_effects_compositors_values(_save_effect_values_dialog_callback, default_name)
+    elif msg == "load":
+        dialogs.load_effects_compositors_values_dialog(_load_effect_values_dialog_callback)
+    elif msg == "reset":
+        _reset_filter_values()
+    elif msg == "delete":
+        _delete_effect()
+    elif msg == "close":
+        clear_clip()
+        
+def _save_effect_values_dialog_callback(dialog, response_id):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        save_path = dialog.get_filenames()[0]
+        filter_object = clip.filters[current_filter_index]
+        effect_data = EffectValuesSaveData(filter_object)
+        effect_data.save(save_path)
+    
+    dialog.destroy()
+
+def _load_effect_values_dialog_callback(dialog, response_id):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        load_path = dialog.get_filenames()[0]
+        f = open(load_path)
+        effect_data = pickle.load(f)
+        
+        filter_object = clip.filters[current_filter_index]
+        
+        if effect_data.data_applicable(filter_object.info):
+            effect_data.set_effect_values(filter_object)
+            effect_selection_changed()
+        else:
+            # Info window
+            saved_effect_name = effect_data.info.name
+            current_effect_name = filter_object.info.name
+            primary_txt = _("Saved Filter data not applicaple for this Filter!")
+            secondary_txt = _("Saved data is for ") + saved_effect_name + " Filter,\n" + _("current edited Filter is ") + current_effect_name + "."
+            dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
+    
+    dialog.destroy()
+
+def _reset_filter_values():
+    filter_object = clip.filters[current_filter_index]
+    info = filter_object.info
+    if filter_object.info.multipart_filter == True:
+        filter_object.value = info.multipart_value
+
+    filter_object.properties = copy.deepcopy(info.properties)
+    filter_object.non_mlt_properties = copy.deepcopy(info.non_mlt_properties)
+        
+    effect_selection_changed()
+
+def _delete_effect():
+    delete_effect_pressed()
+
+
+class EffectValuesSaveData:
+    
+    def __init__(self, filter_object):
+        self.info = filter_object.info
+        self.multipart_filter = self.info.multipart_filter
+
+        # Values of these are edited by the user.
+        self.properties = copy.deepcopy(filter_object.properties)
+        try:
+            self.non_mlt_properties = copy.deepcopy(filter_object.non_mlt_properties)
+        except:
+            self.non_mlt_properties = [] # Versions prior 0.14 do not have non_mlt_properties and fail here on load
+
+        if self.multipart_filter == True:
+            self.value = filter_object.value
+        else:
+            self.value = None
+        
+    def save(self, save_path):
+        with atomicfile.AtomicFileWriter(save_path, "wb") as afw:
+            write_file = afw.get_file()
+            pickle.dump(self, write_file)
+        
+    def data_applicable(self, filter_info):
+        if isinstance(self.info, filter_info.__class__):
+            return self.info.__dict__ == filter_info.__dict__
+        return False
+        
+    def set_effect_values(self, filter_object):
+        if self.multipart_filter == True:
+            filter_object.value = self.value
+         
+        filter_object.properties = copy.deepcopy(self.properties)
+        filter_object.non_mlt_properties = copy.deepcopy(self.non_mlt_properties)
+         
+    

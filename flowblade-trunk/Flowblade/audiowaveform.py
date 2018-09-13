@@ -22,12 +22,9 @@
 Modules handles creating and caching audio waveform images for clips.
 """
 
-import math
-import md5
 import mlt
 import os
 import pickle
-import struct
 import threading
 import time
 

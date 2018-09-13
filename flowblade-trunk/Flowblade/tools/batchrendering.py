@@ -43,10 +43,13 @@ import sys
 import textwrap
 import time
 import threading
+import unicodedata
 
+import appconsts
 import dialogutils
 import editorstate
 import editorpersistance
+import gui
 import guiutils
 import mltenv
 import mltprofiles
@@ -227,6 +230,7 @@ def add_render_item(flowblade_project, render_path, args_vals_list, mark_in, mar
     project_name = flowblade_project.name
     sequence_name = flowblade_project.c_seq.name
     sequence_index = flowblade_project.sequences.index(flowblade_project.c_seq)
+
     length = flowblade_project.c_seq.get_length()
     render_item = BatchRenderItemData(project_name, sequence_name, render_path, \
                                       sequence_index, args_vals_list, timestamp, length, \
@@ -333,11 +337,13 @@ def main(root_path, force_launch=False):
     # Init gtk threads
     Gdk.threads_init()
     Gdk.threads_enter()
-
-    # Request dark them if so desired
-    if editorpersistance.prefs.dark_theme == True:
+       
+    editorpersistance.load()
+    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+            gui.apply_gtk_css()
+            
     repo = mlt.Factory().init()
 
     # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
@@ -511,7 +517,13 @@ class BatchRenderItemData:
 
     def generate_identifier(self):
         id_str = self.project_name + self.timestamp.ctime()
-        return md5.new(id_str).hexdigest()
+        try:
+            idfier = md5.new(id_str).hexdigest()
+        except:
+            ascii_pname = unicodedata.normalize('NFKD', self.project_name).encode('ascii','ignore')
+            id_str = str(ascii_pname) + self.timestamp.ctime()
+            idfier = md5.new(id_str).hexdigest()
+        return idfier
 
     def matches_identifier(self, identifier):
         if self.generate_identifier() == identifier:
@@ -1111,8 +1123,11 @@ def single_render_main(root_path):
     Gdk.threads_enter()
 
     # Request dark them if so desired
-    if editorpersistance.prefs.dark_theme == True:
+    editorpersistance.load()
+    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+            gui.apply_gtk_css()
 
     repo = mlt.Factory().init()
 
@@ -1170,9 +1185,20 @@ class SingleRenderThread(threading.Thread):
 
         producer = project.c_seq.tractor
         profile = mltprofiles.get_profile(render_item.render_data.profile_name)
-        consumer = renderconsumer.get_mlt_render_consumer(render_item.render_path, 
-                                                          profile,
-                                                          render_item.args_vals_list)
+        
+        vcodec = self.get_vcodec(render_item)
+        vformat = self.get_argval(render_item, "f")
+        
+        if self.is_frame_sequence_render(vcodec) == True and vformat == None:
+            # Frame sequence render
+            consumer = renderconsumer.get_img_seq_render_consumer_codec_ext(render_item.render_path,
+                                                                             profile,  
+                                                                             vcodec, 
+                                                                             self.get_frame_seq_ext(vcodec))
+        else: # All other renders
+            consumer = renderconsumer.get_mlt_render_consumer(render_item.render_path, 
+                                                              profile,
+                                                              render_item.args_vals_list)
 
         # Get render range
         start_frame, end_frame, wait_for_stop_render = get_render_range(render_item)
@@ -1221,7 +1247,30 @@ class SingleRenderThread(threading.Thread):
         single_render_thread = None
         # Update view for render end
         GLib.idle_add(_single_render_shutdown)
-                    
+
+    def is_frame_sequence_render(self, vcodec):
+        if vcodec in ["png","bmp","dpx","ppm","targa","tiff"]:
+            return True
+
+        return False
+
+    def get_vcodec(self, render_item):       
+        return self.get_argval(render_item, "vcodec")
+
+    def get_argval(self, render_item, arg_key):
+        for arg_val in render_item.args_vals_list:
+            arg, val = arg_val
+            if arg == arg_key:
+                return val
+        
+        return None
+        
+    def get_frame_seq_ext(self, vcodec):
+        if vcodec == "targa":
+            return "tga"
+        else:
+            return vcodec
+
     def abort(self):
         self.running = False
 

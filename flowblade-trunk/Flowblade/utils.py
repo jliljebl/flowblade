@@ -23,6 +23,8 @@ Helper functions and data
 """
 import time
 
+import gi
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 import math
@@ -47,8 +49,8 @@ class Ticker:
     Calls function repeatedly with given delay between calls.
     """
     def __init__(self, action, delay):
-        self.action = action
-        self.delay = delay
+        self.action = action # callback function
+        self.delay = delay # in seconds
         self.running = False
         self.exited = False
     
@@ -82,7 +84,15 @@ class Ticker:
             event.wait(delay)
         self.exited = True
 
+
+class LaunchThread(threading.Thread):
+    def __init__(self, data, callback):
+        threading.Thread.__init__(self)
+        self.data = data
+        self.callback = callback
         
+    def run(self):
+        self.callback(self.data)
         
 # -------------------------------- UTIL FUNCTIONS
 def fps():
@@ -116,6 +126,46 @@ def get_tc_string(frame):
     Returns timecode string for frame
     """
     return get_tc_string_with_fps(frame, fps())
+
+def get_tc_string_short(frame):
+    tc_str = get_tc_string(frame)
+    while len(tc_str) > 4:
+        if tc_str[0: 1] == "0" or tc_str[0: 1] == ":":
+            tc_str = tc_str[1: len(tc_str)]
+        else:
+            break
+    return tc_str
+            
+def get_tc_frame(frame_str):
+    """
+    Return timecode frame from string
+    """
+    return get_tc_frame_with_fps(frame_str, fps())
+
+def get_tc_frame_with_fps(frame_str, frames_per_sec):
+    # split time string hh:mm:ss:ff into integer and
+    # calculate corresponding frame
+    try:
+        times = frame_str.split(":", 4)
+    except expression as identifier:
+        return 0
+
+    # now we calculate the sum of frames that would sum up at corresponding
+    # time
+    sum = 0
+    for t in times:
+        num = int(t)
+        sum = sum * 60 + num
+
+    # but well, actually, calculated sum is wrong, because according
+    # to our calculation, that would give us 60 fps, we need to correct that
+    # last 'num' is frames already, no need to correct those
+    sum = sum - num
+    sum = int(sum / (60.0 / round(frames_per_sec)))
+    sum = sum + num
+
+    # and that is our frame, so we return sum
+    return sum
 
 def get_tc_string_with_fps(frame, frames_per_sec):
     # convert fractional frame rates (like 23.976) into integers,
@@ -190,7 +240,6 @@ def get_media_source_file_filter(include_audio=True):
     f.add_mime_type("video/annodex")
     f.add_mime_type("video/3gpp")
     f.add_mime_type("video/webm")
-    f.add_mime_type("text/xml")
     
     if include_audio == True:
         f.add_mime_type("audio/aac")
@@ -304,6 +353,15 @@ def get_file_type(file_path):
     
     return "unknown"
 
+def is_mlt_xml_file(file_path):
+    name, ext = os.path.splitext(file_path)
+    ext = ext.lstrip(".")
+    ext = ext.lower()
+    if ext == "xml" or ext == "mlt":
+        return True
+    
+    return False
+        
 def hex_to_rgb(value):
     value = value.lstrip('#')
     lv = len(value)
@@ -318,7 +376,10 @@ def int_to_hex_str(n):
 
 def int_to_hex(n):
     # Input value range 0 - 255, 00 - ff
-    return hex(n)[2:]
+    val_str = hex(n)[2:]
+    if len(val_str) == 1:
+        val_str = "0" + val_str
+    return val_str
 
 def gdk_color_str_to_mlt_color_str(gdk_color_str):
     raw_r, raw_g, raw_b = hex_to_rgb(gdk_color_str)
@@ -371,7 +432,7 @@ def get_hidden_user_dir_path():
     return os.getenv("HOME") + "/.flowblade/"
 
 def get_phantom_disk_cache_folder():
-    return get_hidden_user_dir_path() +  appconsts.NODE_COMPOSITORS_DIR + "/" + appconsts.PHANTOM_DISK_CACHE_DIR
+    return get_hidden_user_dir_path() +  appconsts.PHANTOM_DIR + "/" + appconsts.PHANTOM_DISK_CACHE_DIR
 
 def get_hidden_screenshot_dir_path():
     return get_hidden_user_dir_path() + "screenshot/"
@@ -434,16 +495,12 @@ def get_file_producer_info(file_producer):
     info["progressive"] = frame.get_int("meta.media.progressive") == 1
     info["top_field_first"] = frame.get_int("meta.media.top_field_first") == 1
     
-    #try:
     resource = clip.get("resource")
-    print "resource", resource
     name, ext = os.path.splitext(resource)
     ext = ext.lstrip(".")
     ext = ext.lower()
     if ext == "xml" or ext =="mlt":
         update_xml_file_producer_info(resource, info)
-    #except:
-        #print "getting file resource dailed in utils.get_file_producer_info()"
         
     return info
 
@@ -451,7 +508,6 @@ def update_xml_file_producer_info(resource, info):
     # xml and mlt files require reading xml file to determine producer info
     mlt_doc = xml.dom.minidom.parse(resource)
 
-    print "adasdasd..."
     mlt_node = mlt_doc.getElementsByTagName("mlt").item(0)
     profile_node = mlt_node.getElementsByTagName("profile").item(0)
 

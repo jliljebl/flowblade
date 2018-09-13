@@ -30,7 +30,6 @@ from gi.repository import Pango
 import cairo
 import locale
 import mlt
-import numpy as np
 import os
 import re
 import shutil
@@ -53,7 +52,6 @@ import mltprofiles
 import mlttransitions
 import mltfilters
 import positionbar
-import render
 import respaths
 import renderconsumer
 import toolguicomponents
@@ -73,7 +71,7 @@ PREVIEW_FILE = "preview.png"
 NO_PREVIEW_FILE = "fallback_thumb.png"
 
 _gmic_found = False
-
+_gmic_version = 1
 _session_id = None
 
 _window = None
@@ -156,19 +154,40 @@ def main(root_path, force_launch=False):
     # Set paths.
     respaths.set_paths(root_path)
 
+    # Check G'MIC version
+    cmd = "gmic -version"
+    process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
+    output, error = process.communicate()
+    tokens = output.split()
+    clended = []
+    for token in tokens:
+        str1 = token.replace('.','')
+        str2 = str1.replace(',','')
+        if str2.isdigit(): # this is based on assumtion that str2 ends up being number like "175" or 215" etc. only for version number token
+            if str2[0] == '2':
+                global _gmic_version
+                _gmic_version = 2
+                respaths.set_gmic2(root_path)
+
+    # Write stdout to log file
+    sys.stdout = open(utils.get_hidden_user_dir_path() + "log_gmic", 'w')
+    print "G'MIC version:", str(_gmic_version)
+
     # Init gmic tool session dirs
     if os.path.exists(get_session_folder()):
         shutil.rmtree(get_session_folder())
         
     os.mkdir(get_session_folder())
-    
-    init_frames_dirs()
-    
-    # Load editor prefs and list of recent projects
-    editorpersistance.load()
-    if editorpersistance.prefs.dark_theme == True:
-        respaths.apply_dark_theme()
 
+    init_frames_dirs()
+
+    # Load editor prefs and apply themes
+    editorpersistance.load()
+    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
+        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+            gui.apply_gtk_css()
+            
     # Init translations module with translations data
     translations.init_languages()
     translations.load_filters_translations()
@@ -176,14 +195,27 @@ def main(root_path, force_launch=False):
 
     # Load preset gmic scripts
     gmicscript.load_preset_scripts_xml()
-    
+
     # Init gtk threads
     Gdk.threads_init()
     Gdk.threads_enter()
 
-    # Request dark them if so desired
-    if editorpersistance.prefs.dark_theme == True:
+    # Set monitor sizes
+    scr_w = Gdk.Screen.width()
+    scr_h = Gdk.Screen.height()
+    editorstate.SCREEN_WIDTH = scr_w
+    editorstate.SCREEN_HEIGHT = scr_h
+    if editorstate.screen_size_large_height() == True and editorstate.screen_size_small_width() == False:
+        global MONITOR_WIDTH, MONITOR_HEIGHT
+        MONITOR_WIDTH = 650
+        MONITOR_HEIGHT = 400 # initial value, this gets changed when material is loaded
+
+    # Themes
+    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
+        respaths.apply_dark_theme()
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+            gui.apply_gtk_css()
 
     repo = mlt.Factory().init()
 
@@ -384,7 +416,6 @@ def load_script_dialog(callback):
     dialog.set_select_multiple(False)
     dialog.connect('response', callback)
     dialog.show()
-
 
 def _load_script_dialog_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
@@ -615,8 +646,8 @@ class GmicWindow(Gtk.Window):
         pos_bar_frame = Gtk.Frame()
         pos_bar_frame.add(self.pos_bar.widget)
         pos_bar_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
-        pos_bar_frame.set_margin_top(5)
-        pos_bar_frame.set_margin_bottom(4)
+        pos_bar_frame.set_margin_top(10)
+        pos_bar_frame.set_margin_bottom(9)
         pos_bar_frame.set_margin_left(6)
         pos_bar_frame.set_margin_right(2)
         
@@ -645,7 +676,8 @@ class GmicWindow(Gtk.Window):
         preview_panel.pack_start(control_panel, False, False, 0)
         preview_panel.set_margin_bottom(8)
 
-        # Script area
+        # Script area 
+        # Script selector menu launcher
         self.preset_label = Gtk.Label()
         self.present_event_box = Gtk.EventBox()
         self.present_event_box.add(self.preset_label)
@@ -983,36 +1015,6 @@ class GmicWindow(Gtk.Window):
  
         self.update_encode_sensitive()
 
-"""
-class PressLaunch:
-    def __init__(self, callback, w=22, h=22):
-        self.widget = cairoarea.CairoDrawableArea2( w, 
-                                                    h, 
-                                                    self._draw)
-        self.widget.press_func = self._press_event
-        self.callback = callback
-        self.sensitive = True
-
-    def set_sensitive(self, value):
-        self.sensitive = value
-        
-    def _draw(self, event, cr, allocation):      
-        cr.move_to(7, 13)
-        cr.line_to(12, 18)
-        cr.line_to(17, 13)
-        cr.close_path()
-        if editorpersistance.prefs.dark_theme == False:
-            cr.set_source_rgb(0, 0, 0)
-        else:
-            cr.set_source_rgb(0.66, 0.66, 0.66)
-        cr.fill()
-        
-    def _press_event(self, event):
-        if self.sensitive == False:
-           return 
-
-        self.callback(self.widget, event)
-"""
 
 #------------------------------------------------- global key listener
 def _global_key_down_listener(widget, event):

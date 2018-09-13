@@ -141,6 +141,10 @@ def init_for_project_load():
 
     _update_ticker.start_ticker()
 
+def update_mute_states():
+    if _monitor_window != None:
+        _monitor_window.update_tracks_mute_states()
+
 def close():
     close_audio_monitor()
     close_master_meter()
@@ -322,6 +326,7 @@ def _get_channel_value(audio_level_filter, channel_property):
     return level_float
 
 
+
 class AudioMonitorWindow(Gtk.Window):
     def __init__(self):
         GObject.GObject.__init__(self)
@@ -361,6 +366,11 @@ class AudioMonitorWindow(Gtk.Window):
         self.set_resizable(False)
         self.set_keep_above(True) # Perhaps configurable later
 
+    def update_tracks_mute_states(self):
+        for i in range(1, len(self.gain_controls)):
+            self.gain_controls[i].mute_changed()
+
+
 
 class MetersArea:
     def __init__(self, meters_count):
@@ -381,7 +391,10 @@ class MetersArea:
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
 
-        cr.set_source_rgb(*METER_BG_COLOR)
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
+            cr.set_source_rgb(*METER_BG_COLOR)
+        else:
+            cr.set_source_rgb(0.0, 0.0, 0.0)
         cr.rectangle(0, 0, w, h)
         cr.fill()
 
@@ -398,6 +411,7 @@ class MetersArea:
             l_value, r_value = _audio_levels[i]
             x = i * SLOT_W
             meter.display_value(cr, x, l_value, r_value, grad)
+
 
 
 class AudioMeter:
@@ -419,7 +433,8 @@ class AudioMeter:
         cr.set_line_width(self.meter_width)
         self.right_channel.display_value(cr, x + self.x_pad_r, value_right)
 
-        
+
+
 class ChannelMeter:
     def __init__(self, height, channel_text):
         self.height = height
@@ -514,6 +529,7 @@ class ChannelMeter:
         PangoCairo.show_layout(cr, layout)
 
 
+
 class GainControl(Gtk.Frame):
     def __init__(self, name, seq, producer, is_master=False):
         GObject.GObject.__init__(self)
@@ -571,6 +587,8 @@ class GainControl(Gtk.Frame):
         self.add(vbox)
         self.set_size_request(SLOT_W, CONTROL_SLOT_H)
 
+        self.mute_changed()
+
     def gain_changed(self, slider):
         gain = slider.get_value() / 100.0
         if self.is_master == True:
@@ -598,6 +616,18 @@ class GainControl(Gtk.Frame):
         else:
             self.seq.set_track_pan_value(self.producer, pan_value)
 
+    def mute_changed(self):
+        if self.is_master == False:
+            if hasattr(self.producer, "mute_state"):
+                if self.producer.mute_state == appconsts.TRACK_MUTE_NOTHING or self.producer.mute_state == appconsts.TRACK_MUTE_VIDEO:
+                    self.slider.set_sensitive(True)
+                    self.pan_slider.set_sensitive(True)
+                    self.pan_button.set_sensitive(True)
+                else:
+                    self.slider.set_sensitive(False)
+                    self.pan_slider.set_sensitive(False)
+                    self.pan_button.set_sensitive(False)
+                    
 
 
 class MasterVolumeMeter:
@@ -624,7 +654,11 @@ class MasterVolumeMeter:
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
 
-        cr.set_source_rgb(*METER_BG_COLOR)
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
+            cr.set_source_rgb(*METER_BG_COLOR)
+        else:
+            cr.set_source_rgb(0.0, 0.0, 0.0)
+        cr.fill_preserve()
         cr.rectangle(0, 0, w, h)
         cr.fill()
 

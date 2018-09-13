@@ -23,17 +23,14 @@ Modules handles creating and caching audio waveform images for clips.
 """
 
 import locale
-import math
-import md5
 import mlt
 import os
 import pickle
-import struct
 import subprocess
 import sys
 import threading
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gdk
 
 import appconsts
 import editorpersistance

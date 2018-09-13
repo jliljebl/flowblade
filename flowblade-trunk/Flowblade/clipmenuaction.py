@@ -28,11 +28,13 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 import mlt
+from operator import itemgetter
 import os
 import shutil
 import time
 
 import audiowaveform
+import audiosync
 import appconsts
 import clipeffectseditor
 import compositeeditor
@@ -45,6 +47,8 @@ import editevent
 from editorstate import current_sequence
 from editorstate import get_track
 from editorstate import PROJECT
+from editorstate import PLAYER
+import mlttransitions
 import movemodes
 import syncsplitevent
 import tlinewidgets
@@ -68,6 +72,7 @@ def display_clip_menu(y, event, frame):
         return False
     
     # Display popup
+    gui.tline_canvas.drag_on = False
     pressed_clip = track.clips[clip_index]
     if pressed_clip.is_blanck_clip == False:
         movemodes.select_clip(track.id, clip_index)
@@ -100,6 +105,9 @@ def _compositor_menu_item_activated(widget, data):
         action.do_edit()
     elif action_id == "sync with origin":
         tlineaction.sync_compositor(compositor)
+    elif action_id == "set auto follow":
+        compositor.obey_autofollow = widget.get_active()
+        updater.repaint_tline()
         
 def _open_clip_in_effects_editor(data):
     updater.open_clip_in_effects_editor(data)
@@ -216,12 +224,53 @@ def _add_compositor(data):
                 "out_frame":compositor_out,
                 "a_track":target_track_index,
                 "b_track":track.id,
-                "compositor_type":compositor_type}
+                "compositor_type":compositor_type,
+                "clip":clip}
     action = edit.add_compositor_action(edit_data)
     action.do_edit()
     
     updater.repaint_tline()
 
+def _add_autofade(data):
+    clip, track, item_id, item_data = data
+    x, compositor_type = item_data
+
+    frame = tlinewidgets.get_frame(x)
+    clip_index = track.get_clip_index_at(frame)
+
+    target_track_index = track.id - 1
+
+    clip_length = clip.clip_out - clip.clip_in
+    if compositor_type == "##auto_fade_in":
+        compositor_in = current_sequence().tracks[track.id].clip_start(clip_index)
+        compositor_out = compositor_in + int(utils.fps()) - 1
+    else:
+        clip_start = current_sequence().tracks[track.id].clip_start(clip_index)
+        compositor_out = clip_start + clip_length
+        compositor_in = compositor_out - int(utils.fps()) + 1
+
+    edit_data = {"origin_clip_id":clip.id,
+                "in_frame":compositor_in,
+                "out_frame":compositor_out,
+                "a_track":target_track_index,
+                "b_track":track.id,
+                "compositor_type":compositor_type,
+                "clip":clip}
+    action = edit.add_compositor_action(edit_data)
+    action.do_edit()
+    
+    updater.repaint_tline()
+
+
+def _re_render_transition_or_fade(data):
+    clip, track, item_id, item_data = data
+    from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index, color_str = clip.creation_data
+    name, type_id = mlttransitions.rendered_transitions[transition_type_index]
+    if type_id < appconsts.RENDERED_FADE_IN:
+        tlineaction.re_render_transition(data)
+    else:
+        tlineaction.re_render_fade(data)
+        
 def _mute_clip(data):
     clip, track, item_id, item_data = data
     set_clip_muted = item_data
@@ -230,11 +279,67 @@ def _mute_clip(data):
         data = {"clip":clip}
         action = edit.mute_clip(data)
         action.do_edit()
-    else:# then we're stting clip unmuted
+    else:# then we're sitting clip unmuted
         data = {"clip":clip}
         action = edit.unmute_clip(data)
         action.do_edit()
 
+def _delete_clip(data):
+    tlineaction.splice_out_button_pressed()
+    
+def _lift(data):
+    tlineaction.lift_button_pressed()
+    
+def _set_length(data):
+    clip, track, item_id, item_data = data
+    dialogs.clip_length_change_dialog(_change_clip_length_dialog_callback, clip, track)
+
+def _change_clip_length_dialog_callback(dialog, response_id, clip, track, length_changer):
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+
+    length = length_changer.get_length()
+    index = track.clips.index(clip)
+    
+    dialog.destroy()
+    
+    data = {"track":track,
+            "clip":clip,
+            "index":index,
+            "length":length}
+            
+    action = edit.set_clip_length_action(data)
+    action.do_edit()
+                
+def _stretch_next(data):
+    clip, track, item_id, item_data = data
+    try:
+        next_index = track.clips.index(clip) + 1
+        if next_index >= len( track.clips):
+            return # clip is last clip
+        if track.clips[next_index].is_blanck_clip == True:
+            # Next clip is blank so we can do this.
+            clip = track.clips[next_index]
+            data = (clip, track, item_id, item_data)
+            _cover_blank_from_prev(data, True)
+    except:
+        pass # any error means that this can't be done
+        
+def _stretch_prev(data):
+    clip, track, item_id, item_data = data
+    try:
+        prev_index = track.clips.index(clip) - 1
+        if prev_index < 0:
+            return # clip is first clip
+        if track.clips[prev_index].is_blanck_clip == True:
+            # Next clip is blank so we can do this.
+            clip = track.clips[prev_index]
+            data = (clip, track, item_id, item_data)
+            _cover_blank_from_next(data, True)
+    except:
+        pass # any error means that this can't be done
+        
 def _delete_blank(data):
     clip, track, item_id, x = data
     movemodes.select_blank_range(track, clip)
@@ -245,13 +350,17 @@ def _delete_blank(data):
     action = edit.remove_multiple_action(data)
     action.do_edit()
 
-def _cover_blank_from_prev(data):
+def _cover_blank_from_prev(data, called_from_prev_clip=False):
     clip, track, item_id, item_data = data
-    clip_index = movemodes.selected_range_in - 1
-    if clip_index < 0: # we're not getting legal clip index
-        return 
-    cover_clip = track.clips[clip_index]
-
+    if not called_from_prev_clip:
+        clip_index = movemodes.selected_range_in - 1
+        if clip_index < 0: # we're not getting legal clip index
+            return 
+        cover_clip = track.clips[clip_index]
+    else:
+        clip_index = track.clips.index(clip) - 1
+        cover_clip = track.clips[clip_index]
+        
     # Check that clip covers blank area
     total_length = 0
     for i in range(movemodes.selected_range_in,  movemodes.selected_range_out + 1):
@@ -269,14 +378,19 @@ def _cover_blank_from_prev(data):
     action = edit.trim_end_over_blanks(data)
     action.do_edit()
 
-def _cover_blank_from_next(data):
+def _cover_blank_from_next(data, called_from_next_clip=False):
     clip, track, item_id, item_data = data
-    clip_index = movemodes.selected_range_out + 1
-    blank_index = movemodes.selected_range_in
-    if clip_index < 0: # we're not getting legal clip index
-        return
-    cover_clip = track.clips[clip_index]
-    
+    if not called_from_next_clip:
+        clip_index = movemodes.selected_range_out + 1
+        blank_index = movemodes.selected_range_in
+        if clip_index < 0: # we are not getting a legal clip index
+            return
+        cover_clip = track.clips[clip_index]
+    else:
+        clip_index = track.clips.index(clip) + 1
+        blank_index = clip_index - 1
+        cover_clip = track.clips[clip_index]
+        
     # Check that clip covers blank area
     total_length = 0
     for i in range(movemodes.selected_range_in,  movemodes.selected_range_out + 1):
@@ -381,7 +495,8 @@ def _match_frame_close(data):
     tlinewidgets.set_match_frame(-1, -1, True)
     gui.monitor_widget.set_default_view_force()
     updater.repaint_tline()
-        
+
+
 class MatchFrameWriter:
     def __init__(self, clip, clip_frame, track, display_on_right):
         self.clip = clip
@@ -434,7 +549,79 @@ class MatchFrameWriter:
         # Update view
         updater.repaint_tline()
 
+
+def _add_clip_marker(data):
+    clip, track, item_id, item_data = data
+    current_frame = PLAYER().current_frame()
+
+    playhead_on_popup_clip = True
+    try:
+        current_frame_clip_index = track.get_clip_index_at(current_frame)
+        current_frame_clip = track.clips[current_frame_clip_index]
+    except:
+        current_frame_clip = None
     
+    if current_frame_clip != clip:
+        # Playhead is not on popup clip
+        
+        return
+
+    clip_start_in_tline = track.clip_start(current_frame_clip_index)
+    clip_frame = current_frame - clip_start_in_tline + clip.clip_in
+    
+    dialogs.clip_marker_name_dialog(utils.get_tc_string(clip_frame), utils.get_tc_string(current_frame), _clip_marker_add_dialog_callback, (clip, track, clip_frame))
+
+def _clip_marker_add_dialog_callback(dialog, response_id, name_entry, data):
+    clip, track, clip_frame = data
+    name = name_entry.get_text()
+    dialog.destroy()
+    
+    # remove older on same frame
+    dupl_index = -1
+    for i in range(0, len(clip.markers)):
+        marker_name, frame = clip.markers[i]
+        if frame == clip_frame:
+            dupl_index = i
+    if dupl_index != -1:
+        current_sequence().markers.pop(dupl_index)
+
+    clip.markers.append((name, clip_frame))
+    clip.markers = sorted(clip.markers, key=itemgetter(1))
+    updater.repaint_tline()
+
+def _go_to_clip_marker(data):
+    clip, track, item_id, item_data = data
+    marker = clip.markers[int(item_data)]
+    name, clip_frame = marker
+    
+    clip_start_in_tline = track.clip_start(track.clips.index(clip))
+    marker_frame = clip_start_in_tline + clip_frame - clip.clip_in
+
+    PLAYER().seek_frame(marker_frame)
+
+def _delete_clip_marker(data):
+    clip, track, item_id, item_data = data
+
+    clip_start_in_tline = track.clip_start(track.clips.index(clip))
+    current_frame = PLAYER().current_frame()
+
+    mrk_index = -1
+    for i in range(0, len(clip.markers)):
+        name, marker_clip_frame = clip.markers[i]
+        marker_tline_frame = clip_start_in_tline + marker_clip_frame - clip.clip_in
+        if marker_tline_frame == current_frame:
+            mrk_index = i
+    if mrk_index != -1:
+        clip.markers.pop(mrk_index)
+        updater.repaint_tline()
+
+def _delete_all_clip_markers(data):
+    clip, track, item_id, item_data = data
+    clip.markers = []
+    updater.repaint_tline()
+
+
+
 # Functions to handle popup menu selections for strings 
 # set as activation messages in guicomponents.py
 # activation_message -> _handler_func
@@ -465,4 +652,16 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "match_frame_start_monitor":_match_frame_start_monitor,
                   "match_frame_end_monitor":_match_frame_end_monitor,
                   "select_all_after": _select_all_after,
-                  "select_all_before":_select_all_before}
+                  "select_all_before":_select_all_before,
+                  "delete":_delete_clip,
+                  "lift":_lift, 
+                  "length":_set_length,
+                  "stretch_next":_stretch_next, 
+                  "stretch_prev":_stretch_prev,
+                  "add_autofade":_add_autofade,
+                  "set_audio_sync_clip":audiosync.init_select_tline_sync_clip,
+                  "re_render":_re_render_transition_or_fade,
+                  "add_clip_marker":_add_clip_marker,
+                  "go_to_clip_marker":_go_to_clip_marker,
+                  "delete_clip_marker":_delete_clip_marker,
+                  "deleteall_clip_markers":_delete_all_clip_markers}

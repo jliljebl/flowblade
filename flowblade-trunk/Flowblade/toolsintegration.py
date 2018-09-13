@@ -17,17 +17,23 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
+from gi.repository import GObject
+
 import copy
+import os
 
 import appconsts
 from editorstate import PROJECT
 import gmic
 import toolnatron
 import render
+import utils
 
 _tools = []
-_active_integrators = []
-
+_render_items = []
+#_active_integrators = []
+test_timeout_id = None
+           
 # --------------------------------------------------- interface
 def init():
     
@@ -48,21 +54,26 @@ def get_export_integrators():
     
     return export_integrators
 
+
+def test():
+    global test_timeout_id
+    test_timeout_id = GObject.timeout_add(4000, _do_test)
+
+def _do_test():
+    GObject.source_remove(test_timeout_id)
+    
+    natroninteg = NatronIntegrator()
+    natroninteg.render_program("/home/janne/test/natrontest.ntp", "/home/janne/test/natrontestout", ("Write2",0,100), None, None)
+    
 # --------------------------------------------------- integrator classes
 class ToolIntegrator:
     
-    def __init__(self, tool_name, supported_media_types,is_export_target):
+    def __init__(self, tool_name, supported_media_types, is_export_target):
         self.tool_name = tool_name
         self.is_export_target = is_export_target
         self.supported_media_types = supported_media_types
         self.data = None # Used at call sites to give needed info for exports
-         
-    def activate(self):
-        _active_integrators.append(self)
     
-    def deactivate(self):
-        _active_integrators.remove(self)
-
     def supports_clip_media(self, clip):
         if clip.media_type in self.supported_media_types:
             return True
@@ -72,12 +83,39 @@ class ToolIntegrator:
     def export_callback(self, widget, data):
         new_instance = copy.deepcopy(self)
         new_instance.data = data
-        new_instance.activate()
         new_instance.do_export()
         
     def do_export(self):
         print self.__class__.__name__ + " does not implement do_export()"
          
+    def render_program(self, program_file, write_file, render_data, progress_callback, completion_callback):
+        new_instance = copy.deepcopy(self)
+        new_instance.program_file = program_file
+        new_instance.write_file = write_file
+        new_instance.render_data = render_data
+        new_instance.progress_callback = progress_callback
+        new_instance.completion_callback = completion_callback
+        _render_items.append(new_instance)
+        new_instance.start_render()
+
+    def launch_render_ticker(self):
+        self.ticker = utils.Ticker(self.render_tick, 1.0)
+        self.ticker.start_ticker()
+
+    def stop_render_ticker(self):
+        self.ticker.stop_ticker()
+        
+    def start_render(self):
+        print self.__class__.__name__ + " does not implement start_render()"
+
+    def stop_render(self):
+        print self.__class__.__name__ + " does not implement start_render()"
+        
+    def render_tick(self):
+        print self.__class__.__name__ + " does not implement render_tick()"
+        
+    def create_render_ticker(self):
+        self.render_ticker = utils.Ticker(self.render_tick, 1.0)
 
 
 class GMICIntegrator(ToolIntegrator):
@@ -97,6 +135,25 @@ class NatronIntegrator(ToolIntegrator):
         clip, track = self.data
         toolnatron.export_clip(clip)
 
+    def start_render(self):
+        name, ext = os.path.splitext(self.program_file)
+        self.frame_name = name.split("/")[-1].lower()
+        self.writer, self.frame_in, self.frame_out = self.render_data
+        
+        launch_thread = utils.LaunchThread(None, self.render_launch)
+        launch_thread.start()
+        
+        self.launch_render_ticker()
+
+    def render_launch(self, data):
+        # Blocks until render complete
+        toolnatron.render_program(self.write_file, self.frame_name, self.program_file , self.writer, self.frame_in, self.frame_out)
+        self.stop_render_ticker()
+        print "renedirng done"
+
+    def render_tick(self):
+        print "tick"
+
 
 class SlowMoIntegrator(ToolIntegrator):
     
@@ -109,6 +166,7 @@ class SlowMoIntegrator(ToolIntegrator):
         media_file.mark_in = clip.clip_in
         media_file.mark_out = clip.clip_out
         render.render_frame_buffer_clip(media_file, True)
+
 
 class ReverseIntegrator(ToolIntegrator):
     

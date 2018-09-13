@@ -25,14 +25,21 @@ Module handles button edit events from buttons in the middle bar.
 
 
 from gi.repository import Gtk
+from gi.repository import Gdk
 
+import md5
 import os
 from operator import itemgetter
+import threading
+import time
 
+import app
 import appconsts
+import boxmove
 import clipeffectseditor
 import compositeeditor
 import compositormodes
+import cutmode
 import dialogs
 import dialogutils
 import glassbuttons
@@ -46,14 +53,17 @@ import editorstate
 from editorstate import get_track
 from editorstate import current_sequence
 from editorstate import PLAYER
+from editorstate import PROJECT
 from editorstate import timeline_visible
 from editorstate import MONITOR_MEDIA_FILE
 from editorstate import EDIT_MODE
 import movemodes
+import multimovemode
 import mlttransitions
 import render
 import renderconsumer
 import respaths
+import sequence
 import syncsplitevent
 import updater
 import utils
@@ -78,7 +88,7 @@ def _get_new_clip_from_clip_monitor():
         return None
     
     if MONITOR_MEDIA_FILE().type != appconsts.PATTERN_PRODUCER:
-        new_clip = current_sequence().create_file_producer_clip(MONITOR_MEDIA_FILE().path)
+        new_clip = current_sequence().create_file_producer_clip(MONITOR_MEDIA_FILE().path, None, False, MONITOR_MEDIA_FILE().ttl)
     else:
         new_clip = current_sequence().create_pattern_producer(MONITOR_MEDIA_FILE())
         
@@ -101,16 +111,22 @@ def _current_tline_frame():
 # ---------------------------------- edit button events
 def cut_pressed():
     if not timeline_visible():
-        updater.display_sequence_in_monitor()
+        updater.display_sequence_in_monitor()   
 
-    if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
-        editevent.oneroll_trim_no_edit_init()
+    # Disable whencut action when it cut clash with ongoing edits
+    if EDIT_MODE() == editorstate.ONE_ROLL_TRIM or EDIT_MODE() == editorstate.TWO_ROLL_TRIM or EDIT_MODE() == editorstate.SLIDE_TRIM:
         return
 
-    if EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
-        editevent.tworoll_trim_no_edit_init()
+    if EDIT_MODE() == editorstate.MULTI_MOVE and multimovemode.edit_data != None:
+        return
+
+    if EDIT_MODE() == editorstate.MULTI_MOVE and multimovemode.edit_data != None:
         return
         
+    if boxmove.box_selection_data != None:
+        return
+    
+    # Get cut frame
     tline_frame = PLAYER().current_frame()
 
     movemodes.clear_selected_clips()
@@ -152,6 +168,196 @@ def cut_pressed():
         action.do_edit()
    
     updater.repaint_tline()
+
+def sequence_split_pressed():
+    """
+    Intention of this method is to split a sequence at the current position,
+    reduce it to the the clips on the left side of the cut and move the remains
+    on the right side of the cut to a newly created sequence that is then
+    opened.
+    """
+    # before we start we will ask the user whether he really wants to do, what he
+    # just asked for. The intention of this is to provide some more background
+    # information
+    heading = _("Split to new Sequence at Playhead Position")
+    info = _("Do you realy want to split this sequence into two?\nThis will create a new sequence receiving righthand content of your currently active sequence. Also the same content will be removed from your currently active sequence.\nThe newly created sequence will be opened.\n\n Continue?")
+    dialogutils.warning_confirmation(split_confirmed, heading, info, gui.editor_window.window)
+
+def split_confirmed(dialog, response_id):
+    # so, does the user really want to split the sequence?
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+
+    # first we destroy the dialog and then we carry out our task
+    dialog.destroy()
+
+    # we determine the frame position
+    tline_frame = PLAYER().current_frame()
+
+    # We start with actually cutting the sequence
+    # actually this poses performance loss, as we do the track loop twice
+    # one in cut_pressed and one in this method
+    # also other operations are repeated
+    cutmode.cut_all_tracks(tline_frame)
+
+    # prepare a data structure that will receive our clips we want to move to
+    # another sequence plus all the information to actually put them at the same
+    # relative position
+    clips_to_move = []
+
+    # we collect the compositors that need to be moved
+    compositors_to_move = _collect_compositors_for_split(tline_frame)
+
+    # now we iterate over all tracks and collect the ones that provide content
+    # after the cut position
+    for i in range(1, len(current_sequence().tracks)):
+        track = get_track(i)
+
+        # Get index and clip - so basically this means, all clips in this
+        # track with this index and above are left of the cut position,
+        # so we gather required information for our new sequence
+        index = track.get_clip_index_at(int(tline_frame))
+
+        # we need to check whether the first clip at cut is a blank clip
+        blank_length = 0
+        if index < len(track.clips):
+            first_clip = track.clips[index]
+            if first_clip.is_blanck_clip == True:
+                # yes, it is a blank clip, therefore we need to modify its length
+                # but only if the clip_start lies before the current frame
+                clip_start = track.clip_start(index)
+                if tline_frame > clip_start:
+                    blank_length = first_clip.clip_out - (tline_frame - clip_start) + 1
+                else:
+                    blank_length = first_clip.clip_out - clip_start + 1
+
+        for j in range(index, len(track.clips)):
+            clip = track.clips[j]
+            data = {
+                "track_index": i,
+                "clip": clip,
+                "clip_in": clip.clip_in,
+                "clip_out": clip.clip_out,
+                "blank_length": blank_length
+            }
+
+            clips_to_move.append(data)
+            # okay, we processed this clip, go on to the next one
+
+    # so we collected all the data for this sequence, now we need to remove
+    # all the clips right hand of the current position
+    data = {
+        "tracks":current_sequence().tracks,
+        "mark_in_frame":tline_frame,
+        "mark_out_frame":PLAYER().get_active_length()
+    }
+
+    action = edit.range_delete_action(data)
+    action.do_edit()
+
+    # so we collected all the data for all tracks
+    # now we create a new sequence and will open that very sequence
+    name = _("sequence_") + str(PROJECT().next_seq_number)
+    sequence.VIDEO_TRACKS_COUNT, sequence.AUDIO_TRACKS_COUNT = current_sequence().get_track_counts()
+    PROJECT().add_named_sequence(name)
+    app.change_current_sequence(len(PROJECT().sequences) - 1)
+
+    # and now, we nee to iterate over the collected clips and add them to
+    # our newly created sequence
+    for i in range(0, len(clips_to_move) - 1):
+        collected = clips_to_move[i]
+        track_index = collected["track_index"]
+
+        # determine the track we need to put the clip in
+        clip = collected["clip"]
+        if clip.is_blanck_clip == True:
+            length = collected["blank_length"]
+            if length == 0:
+                length = clip.clip_length()
+            current_sequence().append_blank(length, get_track(track_index))
+            continue
+
+        #prepare the date and append it to the sequence
+        data = {
+            "track": get_track(track_index),
+            "clip": collected["clip"],
+            "clip_in": collected["clip_in"],
+            "clip_out": collected["clip_out"]
+        }
+
+        action = edit.append_action(data)
+        action.do_edit()
+    
+    # also, we need to add the compositors from our collection
+    _add_compositors_to_split(compositors_to_move)
+    
+    # update time line to show whole range of new sequence
+    updater.zoom_project_length()
+
+def _collect_compositors_for_split(playhead):
+    # there are basically three cases we need to take into consideration
+    # when dealing with compositors.
+    # first: the compositor lies completely before the playhead position
+    # we do not have to deal with those and leave them untouched
+    # compositor.clip_out < playhead position
+    # second: the compositor lies completly behind the playhead position
+    # the compositor needs to be removed from the split sequence and needs to
+    # be moved to the newly created one. we need to create a duplicate and modify
+    # its clip_in and clip_out properties. basically this formula should apply:
+    # new_compositor.clip_in = old_compositor.clip_in - playhead position (same
+    # for clip_out)
+    # third: the playhead position is on a compositor. In this case we need to
+    # split the compositor in two, move one part to the new sequence and leave
+    # the first part in the old one. This can probably be done by simply
+    # modifying the clip_out property of the old compositor.
+    # the new compositor will have clip_in == 0 and
+    # clip_out = oc.clip_out - playhead position.
+
+    # result structure
+    new_compositors = []
+    compositors_to_remove = []
+
+    #  we start with analyzing and collecting the compositors
+    old_compositors = current_sequence().get_compositors()
+    for index in range(0, len(old_compositors)):
+        old_compositor = old_compositors[index]
+        if old_compositor.clip_out < playhead:
+            continue
+        
+        new_compositor = current_sequence().create_compositor(old_compositor.type_id)
+        new_compositor.clone_properties(old_compositor)
+        if old_compositor.clip_in < playhead:
+            new_compositor.set_in_and_out(0, old_compositor.clip_out - playhead)
+            old_compositor.set_in_and_out(old_compositor.clip_in, playhead)
+        else:
+            new_compositor.set_in_and_out(old_compositor.clip_in - playhead, old_compositor.clip_out - playhead)
+            compositors_to_remove.append(old_compositor)
+
+        new_compositor.transition.set_tracks(old_compositor.transition.a_track, old_compositor.transition.b_track)
+        new_compositor.obey_autofollow = old_compositor.obey_autofollow
+        new_compositors.append(new_compositor)
+    
+    # done with collecting all new necessary compositors
+    # now we remove the compositors that are completly after playhead positions
+    # cut compositors have already been reduces in length
+    for index in range(0, len(compositors_to_remove)):
+        old_compositor = compositors_to_remove[index]
+        old_compositor.selected = False
+        data = {"compositor":old_compositor}
+        action = edit.delete_compositor_action(data)
+        action.do_edit()
+    
+    return new_compositors
+
+def _add_compositors_to_split(new_compositors):
+    # now we basically just need to add the compositors in the list to the
+    # right track
+    for index in range(0, len(new_compositors)):
+        new_compositor = new_compositors[index]
+        current_sequence()._plant_compositor(new_compositor)
+        current_sequence().compositors.append(new_compositor)
+    current_sequence().restack_compositors()
 
 def splice_out_button_pressed():
     """
@@ -296,6 +502,46 @@ def lift_button_pressed():
 
     updater.repaint_tline()
 
+
+def ripple_delete_button_pressed():
+    print "Ripple delete"
+    if movemodes.selected_track == -1:
+        return
+
+    track = get_track(movemodes.selected_track)
+    
+    delete_range_in = track.clip_start(movemodes.selected_range_in)
+    out_clip = track.clips[movemodes.selected_range_out]
+    delete_range_out = track.clip_start(movemodes.selected_range_out) + out_clip.clip_out - out_clip.clip_in + 1 # +1 out incl
+    delete_range_length = delete_range_out - delete_range_in
+    
+    ripple_data = multimovemode.MultimoveData(track, delete_range_out, True, False)
+    ripple_data.build_ripple_data(track.id, delete_range_length, movemodes.selected_range_in)
+    available_from_range_out = ripple_data.max_backwards
+
+    ripple_data = multimovemode.MultimoveData(track, delete_range_in, True, False)
+    ripple_data.build_ripple_data(track.id, delete_range_length, movemodes.selected_range_in)
+    available_from_range_in = ripple_data.max_backwards
+
+    if available_from_range_in < delete_range_length or available_from_range_out < delete_range_length:
+        overwrite_track = ripple_data.get_overwrite_data(delete_range_length)
+        primary_txt = _("Can't do Ripple Delete!")
+        secondary_txt = _("Seleted Ripple Delete would cause an overwrite and that is not permitted for this edit action.\n\nOverwrite would happen on at track <b>") + utils.get_track_name(overwrite_track, current_sequence()) + "</b>."
+        parent_window = gui.editor_window.window
+        dialogutils.info_message(primary_txt, secondary_txt, parent_window)
+        return 
+
+    # Do ripple delete
+    data = {"track":track,
+            "from_index":movemodes.selected_range_in,
+            "to_index":movemodes.selected_range_out,
+            "multi_data":ripple_data,
+            "edit_delta":-delete_range_length}
+    edit_action = edit.ripple_delete_action(data)
+    edit_action.do_edit()
+    
+    _splice_out_done_update()
+    
 def insert_button_pressed():
     track = current_sequence().get_first_active_track()
 
@@ -450,7 +696,7 @@ def range_overwrite_pressed():
     updater.display_tline_cut_frame(track, track.get_clip_index_at(mark_in_frame))
 
 def _show_three_poimt_edit_not_defined():
-    primary_txt = _("3 point edit not defoned!")
+    primary_txt = _("3 point edit not defined!")
     secondary_txt = _("You need to set Timeline Range using Mark In and Mark Out buttons\nto perform this edit.")
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
             
@@ -503,27 +749,64 @@ def resync_button_pressed():
 def sync_compositor(compositor):
     track = current_sequence().tracks[compositor.transition.b_track] # b_track is source track where origin clip is
     origin_clip = None
+    
     for clip in track.clips:
         if clip.id == compositor.origin_clip_id:
             origin_clip = clip
+            
     if origin_clip == None:
         dialogutils.info_message(_("Origin clip not found!"), 
                              _("Clip used to create this Compositor has been removed\nor moved to different track."), 
                              gui.editor_window.window)
         return
+        
     clip_index = track.clips.index(origin_clip)
     clip_start = track.clip_start(clip_index)
     clip_end = clip_start + origin_clip.clip_out - origin_clip.clip_in
+    
+    # Auto fades need to go to start or end of clips and maintain their lengths
+    if compositor.transition.info.auto_fade_compositor == True:
+        if compositor.transition.info.name == "##auto_fade_in":
+            clip_end = clip_start + compositor.get_length() - 1
+        else:
+            clip_start = clip_end - compositor.get_length() + 1
+            
     data = {"compositor":compositor,"clip_in":clip_start,"clip_out":clip_end}
     action = edit.move_compositor_action(data)
     action.do_edit()
-
+        
 def set_compositors_fades_defaults():
     dialogs.set_fades_defaults_dialog(_compositors_fades_defaults_callback)
 
-def _compositors_fades_defaults_callback(dialog, response_id):
+def _compositors_fades_defaults_callback(dialog, response_id, widgets):
+    group_select, fade_in_check, fade_in_spin, fade_out_check, fade_out_spin, fade_in_length_label, fade_out_length_label = widgets
+    
+    group = group_select.get_active()
+    fade_in_on = fade_in_check.get_active()
+    fade_in_length = int(fade_in_spin.get_value())
+    fade_out_on = fade_out_check.get_active()
+    fade_out_length = int(fade_out_spin.get_value())
+
     dialog.destroy()
+    
+    if group == 0:
+        fade_in_key = appconsts.P_PROP_DISSOLVE_GROUP_FADE_IN
+        fade_out_key = appconsts.P_PROP_DISSOLVE_GROUP_FADE_OUT
+    else:
+        fade_in_key = appconsts.P_PROP_ANIM_GROUP_FADE_IN
+        fade_out_key = appconsts.P_PROP_ANIM_GROUP_FADE_OUT
+
+    if fade_in_on == False or fade_in_length == 0:
+        PROJECT().set_project_property(fade_in_key, -1)
+    else:
+        PROJECT().set_project_property(fade_in_key, fade_in_length)
         
+    if fade_out_on == False or fade_out_length == 0:
+        PROJECT().set_project_property(fade_out_key, -1)
+    else:
+        PROJECT().set_project_property(fade_out_key, fade_out_length)
+
+
 def split_audio_button_pressed():
     if movemodes.selected_track == -1:
         return
@@ -539,32 +822,57 @@ def split_audio_button_pressed():
     syncsplitevent.split_audio_from_clips_list(clips, track)
 
 def sync_all_compositors():
-    # Pair all compositors with their origin clips and clip data
+    full_sync_data = edit.get_full_compositor_sync_data()
+    
+    for sync_item in full_sync_data:
+        destroy_id, orig_in, orig_out, clip_start, clip_end = sync_item
+        compositor = current_sequence().get_compositor_for_destroy_id(destroy_id)
+        data = {"compositor":compositor,"clip_in":clip_start,"clip_out":clip_end}
+        action = edit.move_compositor_action(data)
+        action.do_edit()
+
+    """
+    # Pair all compositors with their origin clips ids
     comp_clip_pairings = {}
     for compositor in current_sequence().compositors:
-        comp_clip_pairings[compositor.origin_clip_id] = compositor
+        if compositor.origin_clip_id in comp_clip_pairings:
+            comp_clip_pairings[compositor.origin_clip_id].append(compositor)
+        else:
+            comp_clip_pairings[compositor.origin_clip_id] = [compositor]
     
+    # Create resync list
+    resync_list = []
     for i in range(current_sequence().first_video_index, len(current_sequence().tracks) - 1): # -1, there is a topmost hidden track 
         track = current_sequence().tracks[i] # b_track is source track where origin clip is
         for j in range(0, len(track.clips)):
             clip = track.clips[j]
             if clip.id in comp_clip_pairings:
-                compositor = comp_clip_pairings[clip.id]
-                comp_clip_pairings[clip.id] = (clip, track, j, compositor)
-
+                compositor_list = comp_clip_pairings[clip.id]
+                for compositor in compositor_list:
+                    resync_list.append((clip, track, j, compositor))
+                    
     # Do sync
-    for origin_clip_id in comp_clip_pairings:
+    for resync_item in resync_list:
         try:
-            clip, track, clip_index, compositor = comp_clip_pairings[origin_clip_id]
+            clip, track, clip_index, compositor = resync_item
             clip_start = track.clip_start(clip_index)
             clip_end = clip_start + clip.clip_out - clip.clip_in
+            
+            # Auto fades need to go to start or end of clips and maintain their lengths
+            if compositor.transition.info.auto_fade_compositor == True:
+                if compositor.transition.info.name == "##auto_fade_in":
+                    clip_end = clip_start + compositor.get_length() - 1
+                else:
+                    clip_start = clip_end - compositor.get_length() + 1
+            
             data = {"compositor":compositor,"clip_in":clip_start,"clip_out":clip_end}
             action = edit.move_compositor_action(data)
             action.do_edit()
         except:
-            # Clip is probably  already deleted
+            # Clip is probably deleted
             pass
-
+    """
+    
 def add_transition_menu_item_selected():
     if movemodes.selected_track == -1:
         # INFOWINDOW
@@ -623,6 +931,16 @@ def _do_rendered_transition(track):
     from_clip = track.clips[movemodes.selected_range_in]
     to_clip = track.clips[movemodes.selected_range_out]
     
+    transition_data = get_transition_data_for_clips(track, from_clip, to_clip)
+    
+    if track.id >= current_sequence().first_video_index:
+        dialogs.transition_edit_dialog(_add_transition_dialog_callback, 
+                                       transition_data)
+    else:
+        _no_audio_tracks_mixing_info()
+
+def get_transition_data_for_clips(track, from_clip, to_clip):
+    
     # Get available clip handles to do transition
     from_handle = from_clip.get_length() - from_clip.clip_out
     from_clip_length = from_clip.clip_out - from_clip.clip_in                                                 
@@ -649,13 +967,8 @@ def _do_rendered_transition(track):
                        "from_handle":from_handle,
                        "to_handle":to_handle,
                        "max_length":max_length}
+    return transition_data
 
-    if track.id >= current_sequence().first_video_index:
-        dialogs.transition_edit_dialog(_add_transition_dialog_callback, 
-                                       transition_data)
-    else:
-        _no_audio_tracks_mixing_info()
-        
 def _add_transition_render_folder_select_callback(dialog, response_id, file_select):
     try:
         folder = file_select.get_filenames()[0]
@@ -695,6 +1008,9 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
         return
 
     dialog.destroy()
+
+    # Save encoding
+    PROJECT().set_project_property(appconsts.P_PROP_TRANSITION_ENCODING,(encoding_option_index,quality_option_index))
 
     from_clip = transition_data["from_clip"]
     to_clip = transition_data["to_clip"]
@@ -743,27 +1059,38 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                                                                         sorted_wipe_luma_index,
                                                                         color_str)
 
+    creation_data = (   from_clip.id,
+                        to_clip.id,
+                        from_out,
+                        from_in,
+                        to_out,
+                        to_in,
+                        transition_type_selection_index,
+                        sorted_wipe_luma_index,
+                        color_str)
+                                                
     # Save transition data into global variable to be available at render complete callback
     global transition_render_data
-    transition_render_data = (trans_index, from_clip, to_clip,  transition_data["track"], from_in, to_out, transition_type_selection_index)
+    transition_render_data = (trans_index, from_clip, to_clip, transition_data["track"], from_in, to_out, transition_type_selection_index, creation_data)
     window_text, type_id = mlttransitions.rendered_transitions[transition_type_selection_index]
     window_text = _("Rendering ") + window_text
 
-    render.render_single_track_transition_clip(producer_tractor,
-                                        encoding_option_index,
-                                        quality_option_index, 
-                                        str(extension_text), 
-                                        _transition_render_complete,
-                                        window_text)
+    render.render_single_track_transition_clip( producer_tractor,
+                                                encoding_option_index,
+                                                quality_option_index, 
+                                                str(extension_text), 
+                                                _transition_render_complete,
+                                                window_text)
 
 def _transition_render_complete(clip_path):
     print "Render complete"
 
     global transition_render_data
-    transition_index, from_clip, to_clip, track, from_in, to_out, transition_type = transition_render_data
+    transition_index, from_clip, to_clip, track, from_in, to_out, transition_type, creation_data = transition_render_data
 
     transition_clip = current_sequence().create_rendered_transition_clip(clip_path, transition_type)
-    
+    transition_clip.creation_data = creation_data
+
     data = {"transition_clip":transition_clip,
             "transition_index":transition_index,
             "from_clip":from_clip,
@@ -773,6 +1100,88 @@ def _transition_render_complete(clip_path):
             "to_out":to_out}
 
     action = edit.add_centered_transition_action(data)
+    action.do_edit()
+
+def re_render_transition(data):
+    clip, track, msg, x = data
+    if not hasattr(clip, "creation_data"):
+        _no_creation_data_dialog()
+        return
+    
+    from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \
+    sorted_wipe_luma_index, color_str = clip.creation_data
+    
+    from_clip = editorstate.current_sequence().get_clip_for_id(from_clip_id)
+    to_clip = editorstate.current_sequence().get_clip_for_id(to_clip_id)
+    if from_clip == None or to_clip == None:
+        _source_clips_not_found_dialog()
+        return
+
+    transition_data = {"track":track,
+                        "clip":clip,
+                        "from_clip":from_clip,
+                        "to_clip":to_clip}
+
+    dialogs.transition_re_render_dialog(_transition_RE_render_dialog_callback, transition_data)
+
+def _transition_RE_render_dialog_callback(dialog, response_id, selection_widgets, transition_data):
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+    
+    dialog.destroy()
+    
+    enc_combo, quality_combo = selection_widgets
+    encoding_option_index = enc_combo.get_active()
+    quality_option_index = quality_combo.get_active()
+    extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
+
+    clip = transition_data["clip"]
+    track =  transition_data["track"]
+    from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \
+    sorted_wipe_luma_index, color_str = clip.creation_data
+    
+    trans_index = track.clips.index(clip)
+
+    producer_tractor = mlttransitions.get_rendered_transition_tractor(  editorstate.current_sequence(),
+                                                                        transition_data["from_clip"],
+                                                                        transition_data["to_clip"],
+                                                                        from_out,
+                                                                        from_in,
+                                                                        to_out,
+                                                                        to_in,
+                                                                        transition_type_selection_index,
+                                                                        sorted_wipe_luma_index,
+                                                                        color_str)
+    
+
+    # Save transition data into global variable to be available at render complete callback
+    global transition_render_data
+    transition_render_data = (trans_index, track, clip, transition_type_selection_index, clip.creation_data)
+    window_text, type_id = mlttransitions.rendered_transitions[transition_type_selection_index]
+    window_text = _("Rerendering ") + window_text
+
+    render.render_single_track_transition_clip( producer_tractor,
+                                                encoding_option_index,
+                                                quality_option_index, 
+                                                str(extension_text), 
+                                                _transition_RE_render_complete,
+                                                window_text)
+
+def _transition_RE_render_complete(clip_path):
+    global transition_render_data
+    transition_index, track, orig_clip, transition_type, creation_data = transition_render_data
+
+    transition_clip = current_sequence().create_rendered_transition_clip(clip_path, transition_type)
+    transition_clip.creation_data = creation_data
+    transition_clip.clip_in = orig_clip.clip_in
+    transition_clip.clip_out = orig_clip.clip_out
+
+    data = {"track":track,
+            "transition_clip":transition_clip,
+            "transition_index":transition_index}
+
+    action = edit.replace_centered_transition_action(data)
     action.do_edit()
 
 def _check_transition_handles(from_req, from_handle, to_req, to_handle, length):
@@ -883,6 +1292,9 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
     if length == 0:
         return
 
+    # Save encoding
+    PROJECT().set_project_property(appconsts.P_PROP_TRANSITION_ENCODING,(encoding_option_index,quality_option_index))
+    
     clip = transition_data["clip"]
     
     if length > clip.clip_length():
@@ -894,7 +1306,7 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
                                  gui.editor_window.window)
         return
 
-
+    # Remember fade and transition lengths for next invocation, users prefer this over one default value
     editorstate.fade_length = length
 
     # Edit clears selection, get track index before selection is cleared
@@ -913,9 +1325,21 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
                                                                         color_str)
     print "producer_tractor length:" + str(producer_tractor.get_length())
 
+    # Creation data struct needs to have same members for transitions and fades, hence a lot of None here.
+    # Used for rerender functionality.
+    creation_data = (   clip.id,
+                        None,
+                        length,
+                        None,
+                        None,
+                        None,
+                        transition_type_selection_index,
+                        None,
+                        color_str)
+                        
     # Save transition data into global variable to be available at render complete callback
     global transition_render_data
-    transition_render_data = (clip_index, transition_type_selection_index, clip, transition_data["track"], length)
+    transition_render_data = (clip_index, transition_type_selection_index, clip, transition_data["track"], length, creation_data)
     window_text, type_id = mlttransitions.rendered_transitions[transition_type_selection_index]
     window_text = _("Rendering ") + window_text
     render.render_single_track_transition_clip(producer_tractor,
@@ -927,10 +1351,11 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
 
 def _fade_render_complete(clip_path):
     global transition_render_data
-    clip_index, fade_type, clip, track, length = transition_render_data
+    clip_index, fade_type, clip, track, length, creation_data = transition_render_data
 
     fade_clip = current_sequence().create_rendered_transition_clip(clip_path, fade_type)
-    
+    fade_clip.creation_data = creation_data
+
     data = {"fade_clip":fade_clip,
             "index":clip_index,
             "track":track,
@@ -942,7 +1367,401 @@ def _fade_render_complete(clip_path):
     else: # mlttransitions.RENDERED_FADE_OUT
         action = edit.add_rendered_fade_out_action(data)
         action.do_edit()
+
+def re_render_fade(data):
+    clip, track, msg, x = data
+    if not hasattr(clip, "creation_data"):
+        _no_creation_data_dialog()
+        return
+    
+    from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \
+    sorted_wipe_luma_index, color_str = clip.creation_data
+    
+    from_clip = editorstate.current_sequence().get_clip_for_id(from_clip_id)
+    if from_clip == None:
+        _source_clips_not_found_dialog()
+        return
+
+    fade_data = {   "track":track,
+                    "clip":clip,
+                    "from_clip":from_clip}
+
+    dialogs.fade_re_render_dialog(_fade_RE_render_dialog_callback, fade_data)
+
+def _fade_RE_render_dialog_callback(dialog, response_id, selection_widgets, fade_data):
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+    
+    # Get input data
+    enc_combo, quality_combo = selection_widgets
+    encoding_option_index = enc_combo.get_active()
+    quality_option_index = quality_combo.get_active()
+    extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
+
+    dialog.destroy()
         
+    track = fade_data["track"]
+    orig_fade_clip = fade_data["clip"]
+    from_clip = fade_data["from_clip"]
+    length = orig_fade_clip.clip_out - orig_fade_clip.clip_in + 1
+    
+    from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, \
+    sorted_wipe_luma_index, color_str = orig_fade_clip.creation_data
+
+    # We need to change fade source clip in or out point and source clip is in timeline currently
+    from_clone = editorstate.current_sequence().create_clone_clip(from_clip)
+    if transition_type_index == appconsts.RENDERED_FADE_IN:
+        from_clone.clip_in = from_clone.clip_in - length
+    else:
+        from_clone.clip_out = from_clone.clip_out + length
+    
+    # Save encoding
+    PROJECT().set_project_property(appconsts.P_PROP_TRANSITION_ENCODING,(encoding_option_index, quality_option_index))
+
+    # Remember fade and transition lengths for next invocation, users prefer this over one default value.
+    editorstate.fade_length = length
+
+    producer_tractor = mlttransitions.get_rendered_transition_tractor(  editorstate.current_sequence(),
+                                                                        from_clone,
+                                                                        None,
+                                                                        length,
+                                                                        None,
+                                                                        None,
+                                                                        None,
+                                                                        transition_type_index,
+                                                                        None,
+                                                                        color_str)
+    print "producer_tractor length:" + str(producer_tractor.get_length())
+
+    fade_clip_index = track.clips.index(orig_fade_clip)
+    
+    # Save transition data into global variable to be available at render complete callback
+    global transition_render_data
+    transition_render_data = (fade_clip_index, transition_type_index, from_clone, track, length, orig_fade_clip.creation_data)
+    window_text, type_id = mlttransitions.rendered_transitions[transition_type_index]
+    window_text = _("Rendering ") + window_text
+    render.render_single_track_transition_clip( producer_tractor,
+                                                encoding_option_index,
+                                                quality_option_index, 
+                                                str(extension_text), 
+                                                _fade_RE_render_complete,
+                                                window_text)
+
+def _fade_RE_render_complete(clip_path):    
+    global transition_render_data
+    clip_index, fade_type, from_clone, track, length, creation_data = transition_render_data
+
+    new_fade_clip = current_sequence().create_rendered_transition_clip(clip_path, fade_type)
+    new_fade_clip.creation_data = creation_data
+
+    data = {"fade_clip":new_fade_clip,
+            "index":clip_index,
+            "track":track,
+            "length":length}
+
+    action = edit.replace_rendered_fade_action(data)
+    action.do_edit()
+
+def rerender_all_rendered_transitions_and_fades():
+    seq = editorstate.current_sequence()
+    
+    # Get list of rerendered transitions and unrenderable count
+    rerender_list = []
+    unrenderable = 0
+    for i in range(1, len(seq.tracks)):
+        track = seq.tracks[i]
+        for j in range(0, len(track.clips)):
+            clip = track.clips[j]
+            if hasattr(clip, "rendered_type"):
+                if hasattr(clip, "creation_data"):
+                    from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \
+                        sorted_wipe_luma_index, color_str = clip.creation_data
+                    from_clip = editorstate.current_sequence().get_clip_for_id(from_clip_id)
+                    to_clip = editorstate.current_sequence().get_clip_for_id(to_clip_id)
+                    if clip.rendered_type < appconsts.RENDERED_FADE_IN:
+                        # transition
+                        if from_clip == None or to_clip == None:
+                             unrenderable += 1
+                        else:
+                            rerender_list.append((clip, track))
+                    else:
+                        # fade
+                        if from_clip == None:
+                             unrenderable += 1
+                        else:
+                            rerender_list.append((clip, track))
+                else:
+                    unrenderable += 1
+    
+    # Show dialog and pass data
+    dialogs.re_render_all_dialog(_RE_render_all_dialog_callback, rerender_list, unrenderable)
+
+def _RE_render_all_dialog_callback(dialog, response_id, selection_widgets, rerender_list):
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+    
+
+    # Get input data
+    enc_combo, quality_combo = selection_widgets
+    encoding_option_index = enc_combo.get_active()
+    quality_option_index = quality_combo.get_active()
+    extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
+
+    dialog.destroy()
+    
+    renrender_window = ReRenderderAllWindow((encoding_option_index, quality_option_index, extension_text), rerender_list)
+    renrender_window.create_gui()
+    renrender_window.start_render()
+
+
+class ReRenderderAllWindow:
+    
+    def __init__(self, encoding_selections, rerender_list):
+        self.rerender_list = rerender_list
+        self.rendered_items = []
+        self.encoding_selections = encoding_selections
+        self.dialog = Gtk.Dialog("Rerender all Rendered Transitions / Fades",
+                         gui.editor_window.window,
+                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT))
+        self.current_item = 0
+        self.runner_thread = None
+        self.renderer = None
+    
+    def create_gui(self):
+        text = ""
+        self.text_label = Gtk.Label(label=text)
+        self.text_label.set_use_markup(True)
+        
+        text_box = Gtk.HBox(False, 2)
+        text_box.pack_start(self.text_label,False, False, 0)
+        text_box.pack_start(Gtk.Label(), True, True, 0)
+
+        status_box = Gtk.HBox(False, 2)
+        status_box.pack_start(text_box, False, False, 0)
+        status_box.pack_start(Gtk.Label(), True, True, 0)
+
+        self.progress_bar = Gtk.ProgressBar()
+    
+        progress_vbox = Gtk.VBox(False, 2)
+        progress_vbox.pack_start(status_box, False, False, 0)
+        progress_vbox.pack_start(guiutils.get_pad_label(10, 10), False, False, 0)
+        progress_vbox.pack_start(self.progress_bar, False, False, 0)
+
+        alignment = guiutils.set_margins(progress_vbox, 12, 12, 12, 12)
+
+        self.dialog.vbox.pack_start(alignment, True, True, 0)
+        dialogutils.set_outer_margins(self.dialog.vbox)
+        self.dialog.set_default_size(500, 125)
+        alignment.show_all()
+        self.dialog.connect('response', self._cancel_pressed)
+        self.dialog.show()
+
+
+    def start_render(self):
+        self.runner_thread = ReRenderRunnerThread(self)
+        self.runner_thread.start()
+
+    def render_next(self):
+        # Update item text          
+        info_text = _("Rendering item ") + str(self.current_item + 1) + "/" + str(len(self.rerender_list))
+        Gdk.threads_enter()
+        self.text_label.set_text(info_text)
+        Gdk.threads_leave()
+        
+        # Get render data
+        clip, track = self.rerender_list[self.current_item]
+        encoding_option_index, quality_option_index, file_ext = self.encoding_selections 
+
+        # Dreate render consumer
+        profile = PROJECT().profile
+        folder = editorpersistance.prefs.render_folder
+        file_name = md5.new(str(os.urandom(32))).hexdigest()
+        self.write_file = folder + "/"+ file_name + file_ext
+        consumer = renderconsumer.get_render_consumer_for_encoding_and_quality(self.write_file, profile, encoding_option_index, quality_option_index)
+        
+        if clip.rendered_type > appconsts.RENDERED_COLOR_DIP:
+            self._render_fade(clip, track, consumer, self.write_file)
+        else:
+            self._render_transition(clip, track, consumer, self.write_file)
+
+    def _render_fade(self, orig_fade_clip, track, consumer, write_file):
+        from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, \
+        sorted_wipe_luma_index, color_str = orig_fade_clip.creation_data
+        length = orig_fade_clip.clip_out - orig_fade_clip.clip_in + 1
+        
+        # We need to change fade source clip in or out point and source clip is in timeline currently
+        from_clip = editorstate.current_sequence().get_clip_for_id(from_clip_id)
+        from_clone = editorstate.current_sequence().create_clone_clip(from_clip)
+        if transition_type_index == appconsts.RENDERED_FADE_IN:
+            from_clone.clip_in = from_clone.clip_in - length
+        else:
+            from_clone.clip_out = from_clone.clip_out + length
+
+        producer_tractor = mlttransitions.get_rendered_transition_tractor(  editorstate.current_sequence(),
+                                                                            from_clone,
+                                                                            None,
+                                                                            length,
+                                                                            None,
+                                                                            None,
+                                                                            None,
+                                                                            transition_type_index,
+                                                                            None,
+                                                                            color_str)
+
+        # start and end frames
+        start_frame = 0
+        end_frame = producer_tractor.get_length() - 1
+            
+        # Launch render
+        self.renderer = renderconsumer.FileRenderPlayer(write_file, producer_tractor, consumer, start_frame, end_frame)
+        self.renderer.start()
+
+
+    def _render_transition(self, clip, track, consumer, write_file):
+        from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \
+        sorted_wipe_luma_index, color_str = clip.creation_data
+
+        from_clip = editorstate.current_sequence().get_clip_for_id(from_clip_id)
+        to_clip = editorstate.current_sequence().get_clip_for_id(to_clip_id)
+                    
+        producer_tractor = mlttransitions.get_rendered_transition_tractor(  editorstate.current_sequence(),
+                                                                            from_clip,
+                                                                            to_clip,
+                                                                            from_out,
+                                                                            from_in,
+                                                                            to_out,
+                                                                            to_in,
+                                                                            transition_type_selection_index,
+                                                                            sorted_wipe_luma_index,
+                                                                            color_str)
+        
+        # start and end frames
+        start_frame = 0
+        end_frame = producer_tractor.get_length() - 1
+        
+        # Launch render
+        self.renderer = renderconsumer.FileRenderPlayer(write_file, producer_tractor, consumer, start_frame, end_frame)
+        self.renderer.start()
+        
+    def update_fraction(self):
+        if self.renderer == None:
+            return
+        
+        render_fraction = self.renderer.get_render_fraction()
+        
+        Gdk.threads_enter()
+        self.progress_bar.set_fraction(render_fraction)
+        pros = int(render_fraction * 100)
+        self.progress_bar.set_text(str(pros) + "%")
+        Gdk.threads_leave()
+
+    def show_full_fraction(self):
+        Gdk.threads_enter()
+        self.progress_bar.set_fraction(1.0)
+        pros = int(1.0 * 100)
+        self.progress_bar.set_text(str(pros) + "%")
+        Gdk.threads_leave()
+        
+    def item_render_complete(self):
+        clip, track = self.rerender_list[self.current_item]
+        self.rendered_items.append((clip, track, str(self.write_file)))
+        self.current_item += 1
+
+    def all_items_done(self):
+        return self.current_item == len(self.rerender_list)
+
+    def _cancel_pressed(self, dialog, response_id):
+        self.dialog.destroy()
+
+    def exit_shutdown(self):       
+        for render_item in self.rendered_items:
+            orig_clip, track, new_clip_path = render_item
+            
+            from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, \
+            sorted_wipe_luma_index, color_str = orig_clip.creation_data
+        
+            clip_index = track.clips.index(orig_clip)
+                        
+            if orig_clip.rendered_type > appconsts.RENDERED_COLOR_DIP:
+                new_fade_clip = current_sequence().create_rendered_transition_clip(new_clip_path, transition_type_index)
+                new_fade_clip.creation_data = orig_clip.creation_data
+
+                length = orig_clip.clip_out - orig_clip.clip_in + 1
+        
+                data = {"fade_clip":new_fade_clip,
+                        "index":clip_index,
+                        "track":track,
+                        "length":length}
+                
+                Gdk.threads_enter()
+                action = edit.replace_rendered_fade_action(data)
+                action.do_edit()
+                Gdk.threads_leave()
+            else:
+                transition_clip = current_sequence().create_rendered_transition_clip(new_clip_path, transition_type_index)
+                transition_clip.creation_data = orig_clip.creation_data
+                transition_clip.clip_in = orig_clip.clip_in
+                transition_clip.clip_out = orig_clip.clip_out
+
+                data = {"track":track,
+                        "transition_clip":transition_clip,
+                        "transition_index":clip_index}
+                        
+                Gdk.threads_enter()
+                action = edit.replace_centered_transition_action(data)
+                action.do_edit()
+                Gdk.threads_leave()
+
+        Gdk.threads_enter()
+        self.dialog.destroy()
+        Gdk.threads_leave()
+
+
+class ReRenderRunnerThread(threading.Thread):
+    
+    def __init__(self, rerender_window):
+        self.rerender_window = rerender_window
+        
+        threading.Thread.__init__(self)
+
+    def run(self):
+        self.running = True
+        while self.running:
+            self.rerender_window.render_next()
+            
+            item_render_ongoing = True
+            while item_render_ongoing:
+                time.sleep(0.33)
+                
+                self.rerender_window.update_fraction()
+                
+                if self.rerender_window.renderer.stopped == True:
+                    item_render_ongoing = False
+                
+            self.rerender_window.show_full_fraction()
+            
+            self.rerender_window.item_render_complete()
+            if self.rerender_window.all_items_done() == True:
+                self.running = False
+            else:
+                time.sleep(0.33)
+
+        self.rerender_window.exit_shutdown()
+
+
+def _no_creation_data_dialog():
+    primary_txt = _("Can't rerender this fade / transition.")
+    secondary_txt = _("This fade / transition was created with Flowblade <= 1.14 and does not have the necessary data embedded.\nRerendering works with fades/transitions created with Flowblade >= 1.16.")
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+
+def _source_clips_not_found_dialog():
+    primary_txt = _("Can't rerender this fade / transition.")
+    secondary_txt = _("The clip/s used to create this fade / transition are no longer available on the timeline.")
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+    
 # --------------------------------------------------------- view move setting
 def view_mode_menu_lauched(launcher, event):
     guicomponents.get_monitor_view_popupmenu(launcher, event, _view_mode_menu_item_item_activated)
@@ -1084,7 +1903,7 @@ def do_compositor_data_paste(paste_objs):
 def _timeline_has_focus(): # copied from keyevents.by. maybe put in utils?
     if(gui.tline_canvas.widget.is_focus()
        or gui.tline_column.widget.is_focus()
-       or gui.editor_window.modes_selector.widget.is_focus()
+       or gui.editor_window.tool_selector.widget.is_focus()
        or (gui.pos_bar.widget.is_focus() and timeline_visible())
        or gui.tline_scale.widget.is_focus()
        or glassbuttons.focus_group_has_focus(glassbuttons.DEFAULT_FOCUS_GROUP)):
