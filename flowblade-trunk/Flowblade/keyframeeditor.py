@@ -1172,7 +1172,7 @@ class PositionNumericalEntries(Gtk.HBox):
         entry.set_max_length (4)
         entry.set_max_width_chars (4)
         entry.connect("activate", self.enter_pressed)
-    
+        
     def enter_pressed(self, entry):
         if self.rotating_geom == True:
             try:

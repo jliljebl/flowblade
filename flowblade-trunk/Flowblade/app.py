@@ -359,6 +359,9 @@ def main(root_path):
     #    global sdl2_timeout_id
     #    sdl2_timeout_id = GObject.timeout_add(1500, create_sdl_2_consumer)
     
+    # In PositionNumericalEntries we are using Gtk.Entry objects in a way that works, but is domehow "error" for Gtk, so we just kill this.
+    Gtk.Settings.get_default().set_property("gtk-error-bell", False)
+    
     # Launch gtk+ main loop
     Gtk.main()
 

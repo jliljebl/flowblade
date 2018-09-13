@@ -407,7 +407,7 @@ class AbstractEditCanvas:
         self.current_mouse_hit = self._check_shape_hit(event.x, event.y)
         if self.current_mouse_hit == NO_HIT:
             return
-        
+            
         self.mouse_start_x = event.x
         self.mouse_start_y = event.y
 
