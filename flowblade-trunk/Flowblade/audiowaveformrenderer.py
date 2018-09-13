@@ -133,10 +133,11 @@ class AudioRenderLaunchThread(threading.Thread):
     def run(self):
         # Launch render process and wait for it to end
         FLOG = open(utils.get_hidden_user_dir_path() + "log_audio_levels_render", 'w')
-        process = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladeaudiorender", \
+        # Sep-2018 - SvdB - Added self. to be able to access the thread through 'process'
+        self.process = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladeaudiorender", \
                   self.rendered_media, self.profile_desc, respaths.ROOT_PATH], \
                   stdin=FLOG, stdout=FLOG, stderr=FLOG)
-        process.wait()
+        self.process.wait()
         
         Gdk.threads_enter()
         updater.repaint_tline()
