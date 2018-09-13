@@ -63,6 +63,7 @@ import editorwindow
 import gmic
 import gui
 import keyevents
+import keyframeeditcanvas
 import kftoolmode
 import medialog
 import mltenv
@@ -359,7 +360,7 @@ def main(root_path):
     #    global sdl2_timeout_id
     #    sdl2_timeout_id = GObject.timeout_add(1500, create_sdl_2_consumer)
     
-    # In PositionNumericalEntries we are using Gtk.Entry objects in a way that works, but is domehow "error" for Gtk, so we just kill this.
+    # In PositionNumericalEntries we are using Gtk.Entry objects in a way that works us nicely, but is somehow "error" for Gtk, so we just kill this.
     Gtk.Settings.get_default().set_property("gtk-error-bell", False)
     
     # Launch gtk+ main loop
@@ -793,6 +794,9 @@ def _set_draw_params():
     if editorstate.screen_size_small_height() == True:
         appconsts.TOP_ROW_HEIGHT = 10
         projectinfogui.PROJECT_INFO_PANEL_HEIGHT = 140
+        
+    if editorstate.screen_size_large_height() == True:
+        keyframeeditcanvas.GEOMETRY_EDITOR_HEIGHT = 300
 
     if editorstate.SCREEN_WIDTH < 1153 and editorstate.SCREEN_HEIGHT < 865:
         editorwindow.MONITOR_AREA_WIDTH = 400
