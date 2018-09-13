@@ -1092,10 +1092,10 @@ class PositionNumericalEntries(Gtk.HBox):
             self.init_for_box_geom()     
 
     def init_for_box_geom(self):
-        x_label = Gtk.Label(_("x:"))
-        y_label = Gtk.Label(_("y:"))
-        w_label = Gtk.Label(_("w:"))
-        h_label = Gtk.Label(_("h:"))
+        x_label = Gtk.Label(_("X:"))
+        y_label = Gtk.Label(_("Y:"))
+        w_label = Gtk.Label(_("Width:"))
+        h_label = Gtk.Label(_("Height:"))
         
         self.x_entry = Gtk.Entry.new()
         self.y_entry = Gtk.Entry.new()
@@ -1128,11 +1128,11 @@ class PositionNumericalEntries(Gtk.HBox):
     def init_for_roto_geom(self):
         # [960.0, 540.0, 1.0, 1.0, 0.0]
 
-        x_label = Gtk.Label(_("x:"))
-        y_label = Gtk.Label(_("y:"))
-        x_scale_label = Gtk.Label(_("x scale:"))
-        y_scale_label = Gtk.Label(_("y scale:"))
-        rotation_label = Gtk.Label(_("rotation:"))
+        x_label = Gtk.Label(_("X:"))
+        y_label = Gtk.Label(_("Y:"))
+        x_scale_label = Gtk.Label(_("X scale:"))
+        y_scale_label = Gtk.Label(_("Y scale:"))
+        rotation_label = Gtk.Label(_("Rotation:"))
         
         self.x_entry = Gtk.Entry.new()
         self.y_entry = Gtk.Entry.new()
@@ -1162,6 +1162,7 @@ class PositionNumericalEntries(Gtk.HBox):
         self.pack_start(guiutils.pad_label(6, 6), False, False, 0)
         self.pack_start(y_scale_label, False, False, 0)
         self.pack_start(self.y_scale_entry, False, False, 0)
+        self.pack_start(guiutils.pad_label(6, 6), False, False, 0)
         self.pack_start(rotation_label, False, False, 0)
         self.pack_start(self.rotation_entry, False, False, 0)
         self.pack_start(Gtk.Label(), True, True, 0)
