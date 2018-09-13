@@ -87,6 +87,8 @@ import resync
 import sequence
 import shortcuts
 import snapping
+# Sep-2018 - SvdB - added threading to stop running threads when exiting the application
+import threading
 import titler
 import tlinewidgets
 import toolsintegration
@@ -858,6 +860,14 @@ def _shutdown_dialog_callback(dialog, response_id):
 
     # --- APP SHUT DOWN --- #
     print "Exiting app..."
+    # Sep-2018 - SvdB - Stop wave form threads
+    for thread_termination in threading.enumerate():
+        # We only terminate threads with a 'process', as these are launched
+        # by the audiowaveformrenderer
+        try:
+            thread_termination.process.terminate()
+        except:
+            None
 
     # No more auto saving
     stop_autosave()
