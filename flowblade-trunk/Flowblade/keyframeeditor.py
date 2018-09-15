@@ -30,7 +30,7 @@ of callbacks to parent objects, this makes the design difficult to follow.
 import cairo
 
 from gi.repository import Gtk, GObject
-from gi.repository import Pango
+from gi.repository import Pango, PangoCairo
 
 import cairoarea
 import editorpersistance
@@ -48,8 +48,14 @@ import utils
 # Draw consts
 CLIP_EDITOR_WIDTH = 250 
 CLIP_EDITOR_HEIGHT = 21
-END_PAD = 18
+END_PAD = 28
 TOP_PAD = 2
+OUT_OF_RANGE_ICON_PAD = 20
+OUT_OF_RANGE_KF_ICON_HALF = 6
+OUT_OF_RANGE_NUMBER_Y = 5
+OUT_OF_RANGE_NUMBER_X_START = 1
+OUT_OF_RANGE_NUMBER_X_END_PAD = 7
+
 BUTTON_WIDTH = 26
 BUTTON_HEIGHT = 24
 KF_Y = 5
@@ -180,7 +186,11 @@ class ClipKeyFrameEditor:
         x, y, w, h = allocation
         active_width = w - 2 * END_PAD
         active_height = h - 2 * TOP_PAD      
-                
+
+        #cr.set_source_rgb(1,0,0)
+        #cr.rectangle(0, 0, w, h)
+        #cr.fill()
+        
         # Draw clip bg  
         cr.set_source_rgb(*CLIP_EDITOR_BG_COLOR)
         cr.rectangle(END_PAD, TOP_PAD, active_width, active_height)
@@ -200,7 +210,11 @@ class ClipKeyFrameEditor:
 
         # Draw keyframes
         for i in range(0, len(self.keyframes)):
-            frame, value = self.keyframes[i]            
+            frame, value = self.keyframes[i]
+            if frame < self.clip_in:
+                continue
+            if frame > self.clip_in + self.clip_length:
+                continue  
             if i == self.active_kf_index:
                 icon = ACTIVE_KF_ICON
             else:
@@ -212,6 +226,18 @@ class ClipKeyFrameEditor:
             cr.set_source_surface(icon, kf_pos - 6, KF_Y)
             cr.paint()
 
+        # Draw out-of-range kf icons kf counts
+        before_kfs = len(self.get_out_of_range_before_kfs())
+        after_kfs = len(self.get_out_of_range_after_kfs())
+        if before_kfs > 0:
+            cr.set_source_surface(NON_ACTIVE_KF_ICON, OUT_OF_RANGE_ICON_PAD - OUT_OF_RANGE_KF_ICON_HALF * 2, KF_Y)
+            cr.paint()
+            self.draw_kf_count_number(cr, before_kfs, OUT_OF_RANGE_NUMBER_X_START, OUT_OF_RANGE_NUMBER_Y)
+        if after_kfs > 0:
+            cr.set_source_surface(NON_ACTIVE_KF_ICON, w - OUT_OF_RANGE_ICON_PAD, KF_Y)
+            cr.paint()
+            self.draw_kf_count_number(cr, after_kfs, w - OUT_OF_RANGE_NUMBER_X_END_PAD, OUT_OF_RANGE_NUMBER_Y)
+        
         # Draw frame pointer
         try:
             panel_pos = self._get_panel_pos()
@@ -258,10 +284,28 @@ class ClipKeyFrameEditor:
         cr.rectangle(rect[0] + 0.5, rect[1] + 0.5, rect[2], rect[3])
         cr.stroke()
 
+    def draw_kf_count_number(self, cr, count, x, y):
+        # Draw track name
+        layout = PangoCairo.create_layout(cr)
+        layout.set_text(str(count), -1)
+        desc = Pango.FontDescription("Sans 8")
+        layout.set_font_description(desc)
+
+        cr.move_to(x, y)
+        cr.set_source_rgb(0.9, 0.9, 0.9)
+        PangoCairo.update_layout(cr, layout)
+        PangoCairo.show_layout(cr, layout)
+        
     def _press_event(self, event):
         """
         Mouse button callback
         """
+        if self.oor_start_kf_hit(event.x, event.y):
+            print "hit"
+
+        if self.oor_end_kf_hit(event.x, event.y):
+            print "end hit"
+        
         self.drag_on = True
 
         lx = self._legalize_x(event.x)
@@ -352,7 +396,34 @@ class ClipKeyFrameEditor:
             self.current_clip_frame = self.clip_in
         if self.current_clip_frame > self.clip_in + self.clip_length:
             self.current_clip_frame = self.clip_in + self.clip_length
-            
+
+    def get_out_of_range_before_kfs(self):
+        # returns Keyframes before current clip start
+        kfs = []
+        for i in range(0, len(self.keyframes)):
+            frame, value = self.keyframes[i]
+            if frame < self.clip_in:
+                kfs.append(self.keyframes[i])
+        return kfs
+
+    def get_out_of_range_after_kfs(self):
+        # returns Keyframes before current clip start
+        kfs = []
+        for i in range(0, len(self.keyframes)):
+            frame, value = self.keyframes[i]
+            if frame > self.clip_in + self.clip_length:
+                kfs.append(self.keyframes[i])
+        return kfs
+        
+    def get_oor_before_kfs(self):
+        # returns Keyframes before current clip start
+        kfs = []
+        for i in range(0, len(self.keyframes)):
+            frame, value = self.keyframes[i]
+            if frame < self.clip_in:
+                kfs.append(self.keyframes[i])
+        return kfs
+        
     def _get_drag_frame(self, panel_x):
         """
         Get x in range available for current drag.
@@ -374,7 +445,24 @@ class ClipKeyFrameEditor:
                 return i
             
         return None
+
+    def oor_start_kf_hit(self, x, y):
+        test_x = OUT_OF_RANGE_ICON_PAD - OUT_OF_RANGE_KF_ICON_HALF * 2
+        if y >= KF_Y and y <= KF_Y + 12: # 12 icon size
+            if x >= test_x and x <= test_x + 12:
+                return True
         
+        return False
+
+    def oor_end_kf_hit(self, x, y):
+        w = self.widget.get_allocation().width
+        test_x = w - OUT_OF_RANGE_ICON_PAD
+        if y >= KF_Y and y <= KF_Y + 12: # 12 icon size
+            if x >= test_x and x <= test_x + 12:
+                return True
+        
+        return False
+
     def add_keyframe(self, frame):
         kf_index_on_frame = self.frame_has_keyframe(frame)
         if kf_index_on_frame != -1:
@@ -713,20 +801,24 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         editable_property.value.strip('"')
         
         self.clip_editor.set_keyframes(editable_property.value, editable_property.get_in_value)
-
+        clip_editor_row = Gtk.HBox(False, 0)
+        clip_editor_row.pack_start(self.clip_editor.widget, True, True, 0)
+        clip_editor_row.pack_start(guiutils.pad_label(4, 4), False, False, 0)
+        
         self.buttons_row = ClipEditorButtonsRow(self)
         
         self.pack_start(self.value_slider_row, False, False, 0)
-        self.pack_start(self.clip_editor.widget, False, False, 0)
+        self.pack_start(clip_editor_row, False, False, 0)
         self.pack_start(self.buttons_row, False, False, 0)
 
         orig_tline_frame = PLAYER().current_frame()
+
         self.active_keyframe_changed() # to do update gui to current values
 
         if editorpersistance.prefs.kf_edit_init_affects_playhead == False:
             self.display_tline_frame(orig_tline_frame)
             PLAYER().seek_frame(orig_tline_frame)
-
+            
     def slider_value_changed(self, adjustment):
         value = adjustment.get_value()        
         # Add key frame if were not on active key frame
