@@ -89,7 +89,8 @@ NON_ACTIVE_KF_ICON = None
 DISCONNECTED_SIGNAL_HANDLER = -9999999
 
 actions_menu = Gtk.Menu()
-
+oor_before_menu = Gtk.Menu()
+oor_after_menu = Gtk.Menu()
 
 # ----------------------------------------------------- editor objects
 class ClipKeyFrameEditor:
@@ -103,6 +104,7 @@ class ClipKeyFrameEditor:
         def active_keyframe_changed(self)
         def keyframe_dragged(self, active_kf, frame)
         def update_slider_value_display(self, frame)
+        def update_property_value(self)
     """
 
     def __init__(self, editable_property, parent_editor, use_clip_in=True):
@@ -300,12 +302,16 @@ class ClipKeyFrameEditor:
         """
         Mouse button callback
         """
+        # Chcek if kf icon before or after clip range have been pressed
         if self.oor_start_kf_hit(event.x, event.y):
-            print "hit"
+            self._show_oor_before_menu(self.widget, event)
+            return
 
         if self.oor_end_kf_hit(event.x, event.y):
-            print "end hit"
+            self._show_oor_after_menu(self.widget, event)
+            return
         
+        # Handle clip range mouse events
         self.drag_on = True
 
         lx = self._legalize_x(event.x)
@@ -414,16 +420,7 @@ class ClipKeyFrameEditor:
             if frame > self.clip_in + self.clip_length:
                 kfs.append(self.keyframes[i])
         return kfs
-        
-    def get_oor_before_kfs(self):
-        # returns Keyframes before current clip start
-        kfs = []
-        for i in range(0, len(self.keyframes)):
-            frame, value = self.keyframes[i]
-            if frame < self.clip_in:
-                kfs.append(self.keyframes[i])
-        return kfs
-        
+                
     def _get_drag_frame(self, panel_x):
         """
         Get x in range available for current drag.
@@ -565,6 +562,83 @@ class ClipKeyFrameEditor:
         frame, val = self.keyframes.pop(self.active_kf_index)
         self.keyframes.insert(self.active_kf_index,(new_frame, val))
 
+    def _show_oor_before_menu(self, widget, event):
+        menu = oor_before_menu
+        guiutils.remove_children(menu)
+        before_kfs = len(self.get_out_of_range_before_kfs())
+
+        if before_kfs == 0:
+            # hit detection is active even if the kf icon is not displayed
+            return
+
+        if before_kfs > 1:
+            menu.add(self._get_menu_item(_("Delete all but first Keyframe before Clip Range"), self._oor_menu_item_activated, "delete_all_before" ))
+            sep = Gtk.SeparatorMenuItem()
+            sep.show()
+            menu.add(sep)
+
+        if len(self.keyframes) > 1:
+            menu.add(self._get_menu_item(_("Set Keyframe at Frame 0 to value of next Keyframe"), self._oor_menu_item_activated, "zero_next" ))
+        elif before_kfs == 1:
+            item = self._get_menu_item(_("No Edit Actions currently available"), self._oor_menu_item_activated, "noop" )
+            item.set_sensitive(False)
+            menu.add(item)
+
+        menu.popup(None, None, None, None, event.button, event.time)
+
+    def _show_oor_after_menu(self, widget, event):
+        menu = oor_before_menu
+        guiutils.remove_children(menu)
+        after_kfs = self.get_out_of_range_after_kfs()
+        
+        if after_kfs == 0:
+            # hit detection is active even if the kf icon is not displayed
+            return
+
+        menu.add(self._get_menu_item(_("Delete all Keyframes after Clip Range"), self._oor_menu_item_activated, "delete_all_after" ))
+        menu.popup(None, None, None, None, event.button, event.time)
+        
+    def _oor_menu_item_activated(self, widget, data):
+        if data == "delete_all_before":
+            keep_doing = True
+            while keep_doing:
+                try:
+                    frame, value = self.keyframes[1]
+                    if frame < self.clip_in:
+                        self.keyframes.pop(1)
+                    else:
+                        keep_doing = False 
+                except:
+                    keep_doing = False
+        elif data == "zero_next":
+            frame_zero, frame_zero_value = self.keyframes[0]
+            frame, value = self.keyframes[1]
+            print value
+            self.keyframes.pop(0)
+            self.keyframes.insert(0, (frame_zero, value))
+            self.parent_editor.update_property_value()
+        elif data == "delete_all_after":
+            delete_done = False
+            for i in range(0, len(self.keyframes)):
+                frame, value = self.keyframes[i]
+                if frame > self.clip_in + self.clip_length:
+                    self.keyframes.pop(i)
+                    popped = True
+                    while popped:
+                        try:
+                            self.keyframes.pop(i)
+                        except:
+                            popped = False
+                    delete_done = True
+                if delete_done:
+                    break
+        self.widget.queue_draw()
+        
+    def _get_menu_item(self, text, callback, data):
+        item = Gtk.MenuItem(text)
+        item.connect("activate", callback, data)
+        item.show()
+        return item
         
 
 # ----------------------------------------------------------- buttons objects
@@ -605,7 +679,6 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.kf_pos_label.set_text("0")
 
         self.kf_info_label = Gtk.Label()
-        #self.modify_font(Pango.FontDescription("light 8"))
         self.kf_info_label.set_text("1/1")
         
         # Build row
