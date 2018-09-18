@@ -1,7 +1,8 @@
  <!DOCTYPE html>
-<html>
+<html class="client-nojs" lang="ru" dir="ltr">
 <head>
-	<title>Proxy Editing</title>
+<meta charset="UTF-8"/>
+	<title>Редактирование прокси</title>
 	<link rel="stylesheet" href="style.css">
 	<script src="toc.js" type="text/javascript"></script>
 	<script src="../jquery.js"></script> 
@@ -24,77 +25,77 @@
 
 <div id="toccontent">
 
-<div class="subject-header">Proxy Editing</div>
+<div class="subject-header">Редактирование прокси</div>
 
 <p>
-Proxy editing is a method of editing in which original media clips are presented on timeline by proxy clips.
+Редактирование прокси — это метод редактирования, в котором оригинальные медиаклипы представлены на монтажном столе прокси-клипами.
 
 </p> 
 <div id="toc"></div>
 
-<h3>Rationale</h3>
+<h3>Обоснование</h3>
 <p>
-Proxy clips used in proxy editing usually have smaller data rate and less CPU intensive decoding. There are two main reasons to use proxy editing:
+Прокси-клипы, используемые при редактировании прокси, обычно имеют меньшую скорость передачи данных и потребляют меньше ресурсов процессора для декодирования. Для редактирования с использованием прокси есть две основные причины:
 </p>
 <ul>
-<li> Original media from which the program is edited makes too high demands for either disk bandwidth or CPU processing power for decoding to enable responsive editing </li>
-<li> Original is kept on network server, slow external disk or other media with restricted access and does not enable provide responsive editing if accessed directly.</li>
+<li> Исходный носитель, с которого выполняется редактирование, предъявляет слишком высокие требования к пропускной способности диска или к мощности процессора для декодирования, что не позволяет обеспечить комфортное редактирование в целом. </li>
+<li> Оригинал хранится на сетевом сервере, медленном внешнем диске или другом носителе с ограниченным доступом и не позволяет обеспечить комфортное редактирование при прямом доступе.</li>
 </ul>
 
 
 
-<h3>Generic Proxy Editing workflow</h3>
+<h3>Общий процесс редактирования с использованием прокси</h3>
 
 <p>
-All proxy editing workflows have the same phases:
+Все рабочие процессы редактирования с использованием прокси имеют одни и те же этапы:
 </p>
 <ol>
-<li> Render proxy media from original media </li>
-<li> Replace original media with proxy media </li>
-<li> Edit using proxy media </li>
-<li> Replace proxy media with original media </li>
-<li> Render final program using original media </li>
+<li> Сборка прокси из оригинальных клипов </li>
+<li> Замена оригинального клипа на прокси </li>
+<li> Редактирование с использованием прокси </li>
+<li> Замена прокси на оригинальные клипы </li>
+<li> Финальная сборка с использованием оригинальных клипов </li>
 </ol>
 
-<h3>Flowblade proxy editing</h3>
+<h3>Редактирование прокси во Flowblade</h3>
 <ol>
-<li> Creating Proxy Media</li>
+<li> Создание прокси-клипа</li>
 <ol>
-<li> Select <b>Project->Proxy Manager</b> in menu and set proxy file settings in <b>Proxy Encoding</b> area  </li>
-<li> Select Video Media files in <b>'Media'</b> Panel</li>
-<li> Press button with proxy file icon next Delete button in 'Media' Panel</li>
-<li> If Project is already in <b>'Using Proxy Media'</b> proxy mode, timeline clips with original media that had proxy media rendered to will be replaced with proxy media immediately</li>
+<li> В главном меню выберите <b>Проект→Менеджер прокси</b> и задайте параметры для прокси в области <b>Кодирование прокси</b>.</li>
+<li> Выберите элемент медиа во вкладке <b>«Медиа»</b>.</li>
+<li> Нажмите кнопку со значком прокси рядом кнопкой Удалить во вкладке «Медиа».</li>
+<li> Если проект уже находится в режиме прокси <b>«Использование прокси-клипов»</b> оригинальные клипы на монтажном столе, на которых были собраны прокси, будут немедленно заменены прокси-клипами.</li>
 </ol>
-<li>Converting to use Proxy media</li>
+<li>Включение режима «Использование прокси-клипов»</li>
 <ol>
-<li> Select <b>Project->Proxy Manager</b> to open Proxy Manager</li>
-<li> Press <b>Use Proxy Media</b> button</li>
+<li> В главном меню выберите <b>Проект→Менеджер прокси</b>.</li>
+<li> В открывшемся окне нажмите кнопку <b>Использование прокси-клипов</b>.</li>
 </ol>
-<li>Editing with proxy media</li>
+<li>Редактирование с использованием прокси-клипов</li>
 <ol>
-<li> Clips that use proxy media have a blue stripe indicating that status</li>
-<li> A proxy editing indicator icon is displayed at left bottom corner</li>
-<li> If new proxy media is rendered timeline clips using the original media in question will be replaced with proxy media immediately</li>
-<li> Project can be saved normally and converted after load to use original media</li>
+<li> Клипы, использующие прокси, имеют голубую полосу, указывающую на статус прокси.</li>
+<li> Значок индикатора редактирования прокси отображается в левом нижнем углу.</li>
+<li> Если на монтажном столе создаётся новый клип использующий оригинальный медиафайл, то он немедленно будет заменён на прокси-клип.</li>
+<li> Проект может быть нормально сохранён и преобразован после загрузки, для использования оригинальных клипов.</li>
 </ol>
-<li>Converting to use Original Media</li>
+<li>Включение режима «Использование оригинальных клипов»</li>
 <ol>
-<li> Select <b>Project->Proxy Manager</b> to open Proxy Manager</li>
-<li> Press <b>Use Original Media</b> button</li>
+<li> В главном меню выберите <b>Проект→Менеджер прокси</b>.</li>
+<li> В открывшемся окне нажмите кнопку <b>Использование оригинальных клипов</b>.</li>
 </ol>
 </ol>
-<h3>Important notes about Flowblade proxy editing</h3>
+<h3>Важные замечания о редактировании прокси во Flowblade</h3>
 <div class="important">
-<li> <b>DESTROYING ANY MEDIA while doing proxy editing WILL PREVENT CONVERTING BACK TO USING ORIGINAL MEDIA</b> </li>
-<li> <b>It is only possible to use all <i>existing</i> proxy media and clips or all original media</b>. It is not possible to use only some of the created proxy media.</li>
+<li> <b>УНИЧТОЖЕНИЕ ЛЮБОГО МЕДИА во время редактирования прокси СДЕЛАЕТ НЕВОЗМОЖНЫМ ПРЕОБРАЗОВАНИЕ И ВОЗВРАЩЕНИЕ К ИСПОЛЬЗОВАНИЮ ОРИГИНАЛЬНЫХ КЛИПОВ</b> </li>
+<li> <b>Можно использовать, либо все <i>существующие</i> прокси-клипы, либо все оригинальные клипы</b>. Нельзя выборочно использовать только некоторые из созданных прокси-клипов.</li>
 
 </div>
 <div class="note">
 <p>
-Flowblade uses a programming techique that changes the paths used by media items and clips to point either to hidden proxy media or original media.
+Flowblade использует технику программирования, которая изменяет пути, используемые элементами мультимедиа, чтобы указывать, либо на скрытые прокси-клипы, либо на оригинальные.
 </p>
 <p>
- Changing from one to another is implemented by writing a hidden temporary project file to disk and replacing paths when project is read back. Because of this any missing original media makes conversion back to using original media fail.
+Переход от одного к другому осуществляется путём записи скрытого временного файла проекта на диск и замены путей при чтении проекта. Из-за этого любые отсутствующие оригинальные клипы снова преобразуются в оригинальный медиафайл.
 </p>
 </div>
 
@@ -103,3 +104,4 @@ Flowblade uses a programming techique that changes the paths used by media items
 </body>
 
 </html> 
+

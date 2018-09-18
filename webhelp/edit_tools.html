@@ -1,7 +1,8 @@
  <!DOCTYPE html>
-<html>
+<html class="client-nojs" lang="ru" dir="ltr">
 <head>
-	<title>Edit Tools</title>
+<meta charset="UTF-8"/>
+	<title>Инструменты редактирования</title>
 	<link rel="stylesheet" href="style.css">
 	<script src="toc.js" type="text/javascript"></script>
 	<script src="../jquery.js"></script> 
@@ -23,13 +24,13 @@
 
 <script src="tocgen.js"></script>
 
-<div class="subject-header">Edit Tools</div>
+<div class="subject-header">Инструменты редактирования</div>
 
 <p>
-Flowblade Movie Editor has six edit tools, <b>4 move tools</b> and <b>3 trim tools</b>.
+Видеоредактор Flowblade содержит в себе семь инструментов редактирования, <b>4 инструмента перемещения</b> и <b>3 инструмента обрезки</b>.
 </p>
 <div class="note">
-<b>Use Keyboard Shortcuts!</b> It is much faster to use keys <b>1-7</b> to change tools. Note that keys 1-7 only change tools if timeline has keyboard focus. 
+<b>Используйте горячие клавиши!</b> Гораздо удобнее и быстрее использовать клавиши <b>1-7</b> для смены инструментов. Обратите внимание, что с помощью клавиш менять инструменты можно, только, если курсор находится в фокусе монтажного стола.
 </div>
 
 <div id="toccontent">
@@ -38,222 +39,224 @@ Flowblade Movie Editor has six edit tools, <b>4 move tools</b> and <b>3 trim too
 
 
 
-<h3>Insert Tool</h3>
+<h3>Инструмент «Вставка»</h3>
 
 <p>
-Splice out one or more clips and insert them at desired cut on any track.
+С помощью инструмента Вставка можно вставить клип на начало дорожки, или соединить один или несколько клипов и вставить их в нужное место на дорожке.
 </p>
 
 <ol>
-<li>Pick 'Insert' tool</li>
+<li>Выбор инструмента «Вставка»</li>
 	<ul>
-	<li> Use <b>Tool Switcher</b> button drop menu or press <b>1</b> key.</li>
+	<li> Используйте выпадающее меню <b>Переключателя инструментов</b> или нажмите клавишу <b>1</b>.</li>
 	</ul>
-<li>Select clip</li>
+<li>Выбор клипа</li>
 	<ul>
-	<li> Click <b>Left Mouse</b> on a clip.</li>
+	<li><b>Левой кнопкой мыши</b> нажмите на клип.</li>
 	</ul>
-<li>Select other end of clip range if moving multiple clips</li>
+<li>Выбор группы клипов</li>
 	<ul>
-	<li> Click <b>CTRL+Left Mouse</b> on the clip you wish to be the other end of move clip range.</li>
+	<li> Нажмите <b>Ctrl + Левой кнопкой мыши</b> по тому клипу, который будет использоваться в качестве второй стороны группы клипов для вставки.</li>
 	</ul>
-<li>Drag Clip(s) to new position</li>
+<li>Перенос клипа (группы клипов) в новое место</li>
 	<ul>
-	<li> Press <b>Left Mouse</b> on a selecetd clip and drag clip/s to a new position.</li>
-	<li> Yellow arrow displays insert point.</li>
-	<li> You can also move clips to a different track.</li>
+	<li> Нажмите <b>Левой кнопки мыши</b> на клип (группу клипов) и перенесите его в новое место.</li>
+	<li> Жёлтая стрелка указывает на место вставки.</li>
+	<li> Также можно переместить клипы на другую дорожку.</li>
 	</ul>
 </ol>
 
 <a id="overwrite"></a>
-<h3>Overwrite Tool</h3>
+<h3>Инструмент «Перезапись»</h3>
 
 <p>
-Lift out one or more clips and insert them at any point to overwrite on any track.
+С помощью инструмента перезапись можно перезаписать пустое пространство на дорожках для перемещения клипов на нужный участок дорожки.
 </p>
 
 <ol>
-<li>Pick 'Overwrite' tool</li>
+<li>Выбор инструмента «Перезапись»</li>
 	<ul>
-	<li> Use <b>Tool Switcher</b> button drop menu or press <b>2</b> key.</li>
+	<li> Используйте выпадающее меню <b>Переключателя инструментов</b> или нажмите клавишу <b>2</b>.</li>
 	</ul>
-<li>Select clip</li>
+<li>Выбор клипа</li>
 	<ul>
-	<li><b> Click </b>Left Mouse<b> on a clip.</li>
-	<li></b> Select other end of clip range if moving multiple clips. Click <b>CTRL+Left Mouse</b> on the clip you wish to be the other end of move clip range.</li>
+	<li><b>Левой кнопкой мыши</b> нажмите на клип.</li>
+<li>Выбор группы клипов</li>
+	<li> Нажмите <b>Ctrl + Левой кнопкой мыши</b> по тому клипу, который будет использоваться в качестве второй стороны группы клипов для перезаписи.</li>
 	</ul>
-<li>Drag Clip(s) to new position</li>
+<li>Перенос клипа (группы клипов) в новое место</li>
 	<ul>
-	<li> Press <b>Left Mouse</b> on a selecetd clip and drag clip/s to a new position.</li>
-	<li> Red shadow clips show overwrite area.</li>
-	<li> You can also move clips to a different track.</li>
+	<li><b>Левой кнопкой мыши </b> нажмите на клип (группу клипов) и перенесите его в новое место.</li>
+	<li> Красная стрелка показывает участок перезаписи.</li>
+	<li> Также можно переместить клипы на другую дорожку.</li>
 	</ul>
 </ol>
 
 <a id="trim"></a>
-<h3>Trim Tool</h3>
+<h3>Инструмент «Обрезка»</h3>
 <p>
-Make clip longer or shorter from either clip's end or from clip's beginning.
+ С помощью инструмента «Обрезка» можно изменять длину клипа в начале или в конце.
 </p>
 <ol>
-<li> Pick 'Trim' tool</li>
+<li> Выбор инструмента «Обрезка»</li>
 	<ul>
-	<li> Use <b>Tool Switcher</b> button drop menu or press <b>3</b> key.</li>
+	<li> Используйте выпадающее меню <b>Переключателя инструментов</b> или нажмите клавишу <b>3</b>.</li>
 	</ul>
-<li> Select trimmed cut and select new in or out frame</li>
+<li> Выбор кадра по которому нужно обрезать клип</li>
 	<ul>
-	<li> Press with <b>Left Mouse</b> on a clip near the side you wish to trim</li>
-	<li> Continue on to <b>Left drag</b> on clip to select new in or out frame</li>
+	<li> <b>Левой кнопкой мыши</b> нажмите на клип с той стороны, с которой нужно его обрезать.</li>
+	<li> Перемещайте мышь <b>в сторону обрезаемого клипа</b> до появления на мониторе нужного кадра.</li>
 	</ul>
-<li> View trimmed cut</li>
+<li> Просмотр результата обрезки</li>
 	<ul>
-	<li> Press <b>Play Loop</b> button to view edit.</li>
+	<li> Нажмите кнопку <b>Воспроизвести</b> для цикличного просмотра.</li>
 	</ul>
-<li> Select new trim from another clip</li>
+<li> Выбор другого клипа для обрезки</li>
 	<ul>
-	<li> Click with <b>Left Mouse</b> on another clip near the side you wish to trim</li>
+	<li> <b>Левой кнопкой мыши</b> нажмите на другой клип с той стороны, с которой нужно его обрезать.</li>
 	</ul>
-<li> Select other end of same clip to trim</li>
+<li> Выбор другой стороны клипа для обрезки</li>
 	<ul>
-	<li> Click on empty space on the Timeline</li>
-	<li> Click with <b>Left Mouse</b> on the original clip near the side you wish to trim</li>
+	<li> Щёлкните в пустом месте монтажного стола.</li>
+	<li> <b>Левой кнопкой мыши</b> нажмите на другую сторону клипа, для обрезки.</li>
 	</ul>
 </ol>
 
 <a id="rippletrim"></a>
-<h3>Trim Tool Multi Track Ripple Mode</h3>
+<h3>Многодорожечный режим обрезки</h3>
 <p>
-Make clip longer or shorter from either clip's end or from clip's beginning and move items on other tracks to maintain position sync with trimmed track.
+Позволяет изменять длину клипа в начале или в конце участка и перемещает клипы на других дорожках, для синхронизации с подрезаемым клипом.
 </p>
 <ol>
-<li> Pick 'Trim' tool</li>
+<li> Выбор инструмента «Обрезка»</li>
 	<ul>
-	<li> Press <b>R</b> key to switch to Multi Track Ripple mode.</li>
+	<li> Используйте выпадающее меню <b>Переключателя инструментов</b> или нажмите клавишу <b>3</b>.</li>	
+	<li> Нажмите клавишу <b>R</b>, для переключения в многодорожечный режим обрезки.</li>
 	</ul>
-<li> Select trimmed cut and select new in or out frame</li>
+<li> Выбор кадра по которому нужно обрезать клип</li>
 	<ul>
-	<li> Press with <b>Left Mouse</b> on a clip near the side you wish to trim</li>
-	<li> Continue on to <b>Left drag</b> on clip to select new in or out frame</li>
+	<li> <b>Левой кнопкой мыши</b> нажмите на клип с той стороны, с которой нужно его обрезать.</li>
+	<li> Перемещайте мышь <b>в сторону обрезаемого клипа</b> до появления на мониторе нужного кадра.</li>
 	</ul>
-<li>Items after trim point maintain position sync with trimmed track.</li>
-<li>Trim range is limited so that no overwrites can happen on other tracks.</li>
-<li> Press <b>R</b> key to exit to Multi Track Ripple mode.</li>
+<li>Клипы на других дорожках переместятся для синхронизации с обрезаемым клипом.</li>
+<li>Диапазон инструмента «Обрезка» ограничен так, чтобы на других дорожках не происходила перезапись.</li>
+<li> Нажмите клавишу <b>R</b>, для выхода из многодорожечного режима обрезки.</li>
 </ol>
 
 	
 <a id="roll"></a>
-<h3>Roll Tool</h3>
+<h3>Инструмент «Прокрутка»</h3>
 
-<p>Move edit point between two clips so that their combined length stays the same.</p>
+<p>Позволяет изменить размер первого клипа, за счёт размера второго или наоборот. Общая длина участков соседних клипов на дорожке остаётся неизменной.</p>
 
 <ol>
-<li> Pick 'Roll' tool</li>
+<li> Выбор инструмента «Прокрутка»</li>
 	<ul>
-<li> Use <b>Tool Switcher</b> button drop menu or press <b>4</b> key.</li>
+	<li> Используйте выпадающее меню <b>Переключателя инструментов</b> или нажмите клавишу <b>4</b>.</li>
 	</ul>
-<li> Select trimmed cut and select new in or out frames</li>
+<li> Выбор новой точки между двумя участками клипов</li>
 	<ul>
-<li> Press with <b>Left Mouse</b> on a clip near the cut you wish to trim on the side you wish to view while trimming</li>
-<li> Continue on to <b>Left drag</b> on the two selected clips to select in or out frames for both clips            </li>
+<li> <b>Левой кнопкой мыши</b> нажмите на клип с той стороны, с которой нужно его обрезать.</li>
+<li> Перемещайте мышь <b>в желаемом направлении</b> до вывода, на мониторе, нужных кадров из соседних участков клипов.</li>
 	</ul>
-<li> View trimmed cut</li>
+<li> Просмотр изменений</li>
 	<ul>
-<li> Press <b>Play Loop</b> button to view edit.</li>
+	<li> Нажмите кнопку <b>Воспроизвести</b> для цикличного просмотра.</li>
 	</ul>
-<li> Select new trim from another clip</li>
+<li> Выбор другого клипа для обрезки</li>
 	<ul>
-<li> Click on empty space on the Timeline</li>
-<li> Click with <b>Left Mouse</b> near the cut you wish to trim</li>
+<li> Щёлкните в пустом месте монтажного стола.</li>
+<li> <b>Левой кнопкой мыши</b> нажмите на другой клип с той стороны, которую нужно обрезать.</li>
 	</ul>
 </ol>
 
 <a id="slip"></a>
-<h3>Slip Tool</h3>
+<h3>Инструмент «Скольжение»</h3>
 
-<p>Change the displayed area of media in a clip while keeping the clip position unchanged on the timeline.</p>
+<p>Позволяет сместить отображаемые данные в участке клипа, не меняя его положения на монтажном столе.</p>
 
 <ol>
-<li>Pick 'Slip' tool</li>
+<li>Выбор инструмента «Скольжение»</li>
 	<ul>
-<li> Use <b>Tool Switcher</b> button drop menu or press <b>5</b> key.</li>
+	<li> Используйте выпадающее меню <b>Переключателя инструментов</b> или нажмите клавишу <b>5</b>.</li>
 	</ul>
-<li>Select trimmed clip and change displayed media</li>
+<li>Выбор участка клипа и смещение в нём отображаемых данных</li>
 	<ul>
-<li> Press with <b>Left Mouse</b> on a clip you wish to slip trim</li>
-<li> Continue on to <b>Left drag</b> from clip area to display different area of media</li>
+<li> <b>Левой кнопкой мыши</b> нажмите на клип, который нужно скорректировать.</li>
+<li> Перемещайте мышь <b>в желаемом направлении</b> по участку клипа, чтобы отобразить его другие данные.</li>
 	</ul>
-<li>Select new trim from another clip</li>
+<li>Выбор другого клипа для смещения в нём отображаемых данных</li>
 	<ul>
-<li> Click on empty space on the Timeline</li>
-<li> Click with <b>Left Mouse</b> on the clip you wish to trim</li>
+<li> Щёлкните в пустом месте монтажного стола.</li>
+<li> <b>Левой кнопкой мыши</b> нажмите на другой клип, который нужно скорректировать.</li>
 	</ul>
 </ol>
 
 <a id="spacer"></a>
-<h3>Spacer Tool</h3>
+<h3>Инструмент «Распорка»</h3>
 
-<p>Move all Timeline items after pressed frame on all tracks or on a single track</p>
+<p>С помощью инструмента «Распорка» можно переместить все элементы на монтажном столе сразу на всех или только на одной дорожке.</p>
 <ol>
-<li>Pick 'Spacer' tool</li>
+<li>Выбор инструмента «Распорка»</li>
 	<ul>
-<li> Use <b>Tool Switcher</b> button drop menu or press <b>6</b> key.</li>
+	<li> Используйте выпадающее меню <b>Переключателя инструментов</b> или нажмите клавишу <b>6</b>.</li>
 	</ul>
-<li>Select a clip on Timeline and move it and all items to the right of it</li>
+<li>Выбор клипа на монтажном столе и его перемещение со всеми элементами справа от него.</li>
 	<ul>
-<li> Press <b>Left Mouse</b> on a clip.</li>
-<li>  Continue on to <b>Left drag</b> clip and all clips and compositors to right of it to a new position</li>
-<li> It is not possible to move items on top of clips. Items can only be moved on top of empty space </li>
+<li> <b>Левой кнопкой мыши</b> нажмите на клип.</li>
+<li> Перемещайте мышь <b>Влево</b> и все элементы справа от него переместятся в новую позицию.</li>
+<li> Невозможно переместить элементы поверх клипов. Элементы можно перемещать только поверх пустого пространства.</li>
 	</ul>
-<li>Use <b>Control</b> button to only affect items on a single track</li>
+<li>Перемещение элементов с помощью клавиши <b>Control</b> только на одной дорожке</li>
 	<ul>
-<li> Press <b>Control</b> and use <b>Left Mouse</b> to move all items on single track to the right of the selected clip</li>
+<li> Нажмите клавишу <b>Control</b> и с помощью <b>Left Mouse</b> переместите все элементы на одной дорожке справа от выбранного клипа.</li>
 	</ul>
 </ol>
 
 <a id="box"></a>
-<h3>Box Tool</h3>
+<h3>Инструмент «Группировка и перенос»</h3>
 
-<p>Select and overwrite move all Timeline items contained in a box selection.</p>
+<p>Позволяет выбрать и перенести в другое место на монтажном столе группу медиафайлов, содержащихся в поле выбора.</p>
 <ol>
-<li>Pick 'Box' tool</li>
+<li>Выберите инструмент «Группировка и перенос»</li>
 	<ul>
-<li> Use <b>Tool Switcher</b> button drop menu or press <b>7</b> key.</li>
+	<li> Используя выпадающее меню <b>Переключателя инструментов</b> или нажмите клавишу <b>7</b>.</li>
 	</ul>
-<li>Select an area on Timeline by dragging a box selection with <b>Left Mouse</b> around all items you wish to move and release mouse button.</li>
+<li> <b>Левой кнопкой мыши</b> нажмите в пустом месте монтажного стола и перемещайте курсор так, чтобы область элементов оказалась в рамке. Отпустите кнопку мыши.</li>
 
-<li>Press <b>Left Mouse</b> inside the box selection and drag the box into new position on timeline and release mouse.</li>
-<li>Box contents are overwritten on new position and Compositors are moved.</li>
+<li> <b>Левой кнопкой мыши</b> нажмите в поле выбора и переместите область в новую позицию на монтажном столе. Отпустите кнопку мыши.</li>
+<li>Вся выделенная область переместится в новую позицию.</li>
 
 </ol>
 	
 <a id="movetrim"></a>
-<h3>Move Tool clip end trim</h3>
+<h3>Изменение сторон клипа инструментами перемещения</h3>
 
 <p>
-When an <b>Insert, Overwrite</b> or <b>Spacer</b> tool is selected the ends of clips can be dragged to lengthen or shorten the clip. 
+При включенных инструментах <b>Вставка, Перезапись</b> или <b>Распорка</b> клипы, тоже можно укорачивать или удлинять. 
 </p>
 
 <ol>
-<li>Pick 'Insert', 'Overwrite' or 'Spacer' tool</li>
+<li>Выберите инструмента «Вставка», «Перезапись» или «Распорка»</li>
 	<ul>
-	<li> Use <b>Tool Switcher</b> button drop menu or press <b>1, 2</b> or <b>6</b> key.</li>
+	<li> Используя выпадающее меню <b>Переключателя инструментов</b> или нажмите клавишу <b>1, 2</b> или <b>6</b>.</li>
 	</ul>
-<li>Select clip end to trim</li>
+<li>Выберите сторону клипа</li>
 	<ul>
-	<li> Click <b>Control + Right Mouse</b> on a clip.</li>
-	</ul>
-	<ul>
-	<li> The nearer clip end will be selected for edit.</li>
-	</ul>
-<li>Drag clip end</li>
-	<ul>
-	<li> Added clip length will perform overwrite on blanks and empty space</li>
+	<li> Нажатием клавиши <b>Control + Правой кнопкой мыши</b> по клипу.</li>
 	</ul>
 	<ul>
-	<li> Added clip length will perform insert on other clips</li>
+	<li> Для редактирования будет выбрана ближайшая сторона клипа.</li>
+	</ul>
+<li>Протяните клип в нужном направлении</li>
+	<ul>
+	<li> Действие увеличивающее длительность клипа перезапишет пустое пространство.</li>
 	</ul>
 	<ul>
-	<li> Decreased clip length will perform splice out.</li>
+	<li> Действие увеличивающее длительность клипа выполнит вставку на другие клипы.</li>
+	</ul>
+	<ul>
+	<li> Действие уменьшающее длительность клипа склеит соседние клипы.</li>
 	</ul>
 </div>
 
@@ -262,3 +265,4 @@ When an <b>Insert, Overwrite</b> or <b>Spacer</b> tool is selected the ends of c
 </body>
 
 </html> 
+	

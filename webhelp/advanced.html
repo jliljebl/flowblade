@@ -1,7 +1,8 @@
  <!DOCTYPE html>
-<html>
+<html class="client-nojs" lang="ru" dir="ltr">
 <head>
-	<title>Anvanced Editing</title>
+<meta charset="UTF-8"/>
+	<title>Расширенное редактирование</title>
 	<link rel="stylesheet" href="style.css">
 	<script src="toc.js" type="text/javascript"></script>
 	<script src="../jquery.js"></script> 
@@ -22,210 +23,209 @@
 
 <script src="tocgen.js"></script>
 
-<div class="subject-header">Anvanced Editing</div>
+<div class="subject-header">Расширенное редактирование</div>
 	
 <div id="toccontent">
 
 <div id="toc"></div>
 
-<h2>1. Advanced Project Actions </h2>
+<h2>1. Расширенные действия по проекту</h2>
 
 
-<h3>Combining Sequences</h3>
+<h3>Объединение последовательностей</h3>
 <p>
-It is possible to import full contents of another Sequence into Sequence currently being edited.
+Можно импортировать всё содержимое ещё одной последовательности в редактируемую в последовательность.
 </p>
 
 <ol>
-<li> Select <b>Project->Import Another Sequence into this Sequnce..</b></li>
-<li> Select Import action.</li>
+<li> Выберите <b>Проект→Импортировать ещё одну последовательность…</b></li>
+<li> Выберите действие для импорта.</li>
 <ul>
-<li> <b>Append Sequence</b> adds imported Sequence at the end of current Sequence</li>
-<li> <b>Insert Sequence at Playhead Position</b> creates a cut at playhead position and inserts imported Sequences at that position</li>
+<li> <b>Добавить последовательность</b>: последовательность будет добавлена в конце текущей последовательности.</li>
+<li> <b>Вставить последовательность в позицию воспроизведения</b>: создаёт надрез в позиции воспроизведения и вставляет в него импортированную последовательность.</li>
 </ul>
-<li> Select a Sequence to Import</li>
+<li> Выберите последовательность для импорта</li>
 <ul>
-<li> <b>Note that you obivously need atleast two Sequences to exist to do any import actions.</b></li>
+<li> <b>Обратите внимание, что для импорта вам, потребуется как минимум две последовательности. </b></li>
 </ul>
-<li> Press <b>Import</b> button to execute import.</li>
+<li> Нажмите на кнопку <b>Импорт</b>, для выполнения операции.</li>
 </ol>
 
-<h3>Importing Media from another Project</h3>
+<h3>Импорт медиа из другого проекта</h3>
 
 <p>
-You can import Media Items from another Project.
+Вы можете импортировать элементы мультимедиа из другого проекта.
 </p>
 
 <ol>
-<li> Select <b>Project->Import Media From Project...</b></li>
-<li> Select a Project file from file system.</li>
-<li> Media items that are not present in current Project will be opened in the current bin. Note that it takes a few seconds to load the project before new Media Items begin to appear.</li>
+<li> Выберите <b>Проект→Импортировать медиа из проекта…</b></li>
+<li> Выберите файл проекта.</li>
+<li> Пункты медиа, которые отсутствуют в текущем проекте будут открыты в корзине. Обратите внимание, что загрузка новых элементов из проекта, займёт некоторое время.</li>
 </ol>
 
 
 
-<h2>2. Compound Clips </h2>
+<h2>2. Составные клипы </h2>
 
 <p>
-A <b>Compound Clip</b> is a single clip created by combining multiple clips and compositors in to a single media item.
+A <b>Составной клип</b> представляет собой клип созданный путём объединения нескольких клипов и компоновщиков, как один элемент медиа.
 </p>
 
 <p>
-In Flowblade Compound Clips are <i>implemented by creating an MLT XML file</i> that is saved in a hidden folder. Note that it is currently not possible to unpack a Compound Clip back to its components.
+В составных клипах Flowblade <i>реализовано создание файла MLT XML</i>, который сохраняется в скрытой папке. Обратите внимание, что в настоящее время невозможно распаковать составной клип обратно на его компоненты.
 </p>
 
 <p>
-Compound Clips are useful when some complex sequence is more conveniently handled as a single unit.
+Составные клипы бывают полезны, когда сложную последовательность удобнее обрабатывать как единое целое.
 </p>
 
-<h3> Creating Compound Clip from Selection</h3>
+<h3> Создание составного клипа из выбранного</h3>
 
 <ol>
-<li> Select 2 or more adjacent clips from a single track.</li>
-<li> Select <b>Project->Create Compound Clip->From Selected Clips</b></li>
-<li> Give a name for the new Media Item in the dialog.</li>
-<li> A new Media Item appears in the current Bin.</li>
+<li> Выберите два или более соседних клипов на одной дорожке.</li>
+<li> Выберите <b>Проект→Создание составного клипа→Из выбранных клипов</b>.</li>
+<li> Присвойте имя новому элементу медиа в диалоговом окне.</li>
+<li> Новый элемент медиа появится в текущей корзине.</li>
 </ol>
 
-<h3> Creating Compound Clip from Sequence</h3>
+<h3> Создание составного клипа из последовательности</h3>
 
 <ol>
-<li> Select <b>Project->Create Compound Clip->From Current Sequence</b></li>
-<li> Give a name for the new Media Item in the dialog.</li>
-<li> A new Media Item appears in the current Bin.</li>
+<li> Выберите <b>Проект→Создание составного клипа→Из текущей последовательности</b>.</li>
+<li> Присвойте имя новому элементу медиа в диалоговом окне.</li>
+<li> Новый элемент медиа появится в текущей корзине.</li>
 </ol>
 
-<h3> Creating audio synced Compound Clip from two Media Items</h3>
+<h3> Синхронизация звука слиянием двух клипов</h3>
 
 <ol>
-<li> Select 2 Media Items in Media panel.</b></li>
+<li> Выберите два элемента мультимедиа во вкладке Медиа.</b></li>
 <ul>
-<li> The expected case is to select <b>1 Video and 1 Audio Clip</b>.</li>
-<li> If you select <b>2 Video Clips</b> then which is used as video depends on selection order.</li>
-<li> Audio from clip treated as video is muted.</li>
+<li> Предполагается, что вы выберете <b>один видео и один звуковой клип</b>.</li>
+<li> Если вы выбрали <b>два видеоклипа</b>, тогда зависит от порядка выбора, какой видеоклип будет использоваться в качестве видео.</li>
+<li> Звук из клипа, обработанного как видео, отключится. </li>
 </ul>
-<li> Select <b>Project->Create Compound Clip->Audio Sync Merge Clip From 2 Media Items</b></li>
-<li> If audio sync is successful a dialog  appers. Give a name for the new Media Item in the dialog.</li>
-<li> A new Media Item appears in the current Bin.</li>
+<li> Выберите <b>Проект→Создание составного клипа→Синхронизация звука слиянием 2 клипов</b>.</li>
+<li> Если звуковая синхронизация прошла успешно, появится диалоговое окно. В диалоговом окне, присвойте имя новому элементу мультимедиа.</li>
+<li> Новый элемент медиа появится в текущей корзине.</li>
 </ol>
 
 <div class="note">
-Audio synching looks for best matemathical match between two audio waveforms, so <b>audio syncing non-matching audio will produce random results.</b>
+Синхронизация звука ищет наилучшее математическое соответствие между двумя звуковыми сигналами, поэтому звуковая синхронизация несоответствующего звука приведёт к случайным результатам.</b>
 </div>
 
 
-<h2>3. Timeline Audio Syncing</h2>
+<h2>3. Синхронизация звука на монтажном столе</h2>
 
 <p>
-You can make a clip to move to a position in timeline in which its audio is in sync with audio of another clip on timeline.
+На монтажном столе можно сделать, так чтобы, клип на одной дорожке автоматически сместился на нужное количество кадров для синхронизации со звуком клипа на другой дорожке.
 </p>
 
 <p>
-This enables you to do simplified version of multicam editing on the timeline.
+Что позволяет, нам сделать упрощённую версию многокамерного редактирования на монтажном столе.
 </p>
 
 <ol>
-<li> Open context menu with <b>Right Mouse</b> on Clip you wish to sync with some other clip.</li>
-<li> Select menu item <b>Select Clip to Audio Sync With...</b>. The cursor changes to a targeting cross.</li>
-<li> Click on Clip you wish to audio sync with.</li>
-<li> A dialog opens giving info on the sync action that is to be done to sync clips.</li>
-<li> Press <b>Do Audio Sync Move Edit</b> button to do the syncing edit.</li>
-<li> It is usually a good idea to mute one of the synched clips</li>
+<li> Щёлкните <b>Правой кнопкой мыши</b> по клипу, который хотите синхронизировать.</li>
+<li> Выберите пункт меню <b>Выбрать звуковой клип для синхронизации…</b>. Курсор примет форму целевого креста.</li>
+<li> Нажмите на клип, с которым вы хотите синхронизировать звук.</li>
+<li> Откроется диалоговое окно с информацией о действиях синхронизации, которые необходимо выполнить для синхронизации клипов.</li>
+<li> Для выполнения синхронизации нажмите кнопку <b>Сдвинуть клип для синхронизации</b>.</li>
+<li> Обычно рекомендуется отключить один из синхронизированных клипов.</li>
 </ol>
 
 <div class="note">
-Audio synching looks for best matemathical match between two audio waveforms, so <b>audio syncing non-matching audio will produce random results.</b>
+Синхронизация звука ищет наилучшее математическое соответствие между двумя звуковыми сигналами, поэтому звуковая синхронизация несоответствующего звука приведёт к случайным результатам.</b>
 </div>
 
-<h2>4. Slow / Fast Motion and Reverse Clips</h2>
+<h2>4. Изменение скорости клипа и клип в обратном направлении</h2>
 
 <p>
-In Flowblade motion effects are achived by <b>rendering slow / fast motion  or reverse versions of video clips</b> and placing those on the timeline.
+В Flowblade эффекты движения достигаются путём <b>сборки клипа с изменением скорости или сборки клипа в обратном направлении</b> и последующем размещении их на монтажном столе.
 </p>
-<h3> Creating Motion Clips </h3>
+<h3> Сборка клипа с изменением скорости </h3>
 <ol>
-<li> Right click on a Media File and select <b>Render Slow / Fast Motion File</b> from menu</li>
-<li>Edit parameters for the new motion Clip
+<li> Щёлкните правой кнопкой мыши по видеоклипу и в выпадающем меню выберите <b>Собрать клип с изменением скорости</b>.</li>
+<li>Измените параметры сборки для нового клипа
 <ul>
-<li> Set speed</li>
-<li> Give name and location for motion Clip </li>
-<li> Select rendering parameters for motion Clip. It is probably a good idea to use a <b>lossless format</b> here to avoid any generational quality losses.</li>
-<li> Select render range, either:</li>
+<li> Установите скорость.</li>
+<li> Присвойте имя и определите место для расположения клипа.</li>
+<li> Выберите параметры сборки для клипа.</li>
+<li> Выберите длительность сборки:</li>
 <ul>
-<li> Full Source Clip</li>
-<li> From Source Clip Mark In to Mark Out</li>
+<li> Длительность оригинального клипа</li>
+<li> Участок оригинального клипа</li>
 </ul>
 </ul>
-<li> Click <b>Render</b> button to create a new motion Clip</li>
+<li> Нажмите кнопку <b>Сборка</b>, для создания нового клипа</li>
 </ol>
 
-<h3> Creating Reverse Clips </h3>
+<h3> Сборка клипа в обратном направлении </h3>
 <ol>
-<li> Right click on a Media File and select <b>Render Reverse Motion File</b> from menu</li>
-<li>Edit parameters for the new motion Clip
+<li> Щёлкните правой кнопкой мыши по видеоклипу и в выпадающем меню выберите <b>Собрать клип в обратном направлении</b>.</li>
+<li>Измените параметры сборки для нового клипа
 <ul>
-<li> Set speed</li>
-<li> Give name and location for reverse Clip </li>
-<li> Select rendering parameters for reverse Clip. It is probably a good idea to use a <b>lossless format</b> here to avoid any generational quality losses.</li>
-<li> Select render range, either:</li>
+<li> Установите скорость.</li>
+<li> Присвойте имя и определите место для расположения клипа.</li>
+<li> Выберите параметры сборки для клипа.</li>
+<li> Выберите длительность сборки:</li>
 <ul>
-<li> Full Source Clip</li>
-<li> From Source Clip Mark In to Mark Out</li>
+<li> Длительность оригинального клипа</li>
+<li> Выберите длительность сборки:</li>
 </ul>
 </ul>
-<li> Click <b>Render</b> button to create a new reverse Clip</li>
+<li> Нажмите кнопку <b>Сборка</b>, для создания нового клипа</li>
 </ol>
 
-<h2>5. Clip Parenting</h2>
+<h2>5. Родительские и дочерние клипы</h2>
 
 <p>
-In Flowblade Movie Editor you can <b>set a clip's positions to follow another clip's positions</b> on request.
+В видеоредакторе Flowblade можно <b>установить позицию клипа, так чтобы он стартовал и в дальнейшем работал с позиции другого клипа</b> по запросу.
 </p>
 
-<h3>Main points</h3>
+<h3>Основные положения</h3>
 <ul>
-<li>Sync relations are set up by selecting a <b>Sync Parent Clip</b> for a <b>Sync Child Clip</b>.</li>
-<li><b>Only clips on track V1 can be Sync Parent Clips</b>. This is done to encourage edit style in which the main body of the Sequence is on track V1 and composites and audio split edits are done relative to the clip sequence on track V1.</li>
-<li><b>Sync feature helps preserve earlier work</b> an multitrack composites and audio split edits when clips are no longer in correct positions relative to each other, because of edits elsewhere on the Sequence.</li>
-<li><b>Resyncs are only done on request</b> to avoid jumping of clips on the timeline while editing. Explicit resyncs are also better from the point of view of avoiding side effects when doing edits.
+<li>Синхронизация устанавливается путём выбора <b>синхронизирующего родительского клипа</b> и <b>синхронизируемого дочернего клипа</b>.</li>
+<li><b>Только клипы на дорожке V1 могут быть родительскими клипами</b>. Это делается для того, чтобы подчеркнуть стиль редактирования, в котором основной элемент последовательности всегда находится на дорожке V1, а композиты и разделённые звуки редактируются относительно последовательности клипов на дорожке V1.</li>
+<li><b>Функция синхронизации помогает сохранить более раннюю работу</b> многодорожечных композитов и отделённого звука, когда клипы больше не находятся в нужных положениях относительно друг друга, из-за изменений в других местах в последовательности.</li>
+<li>Для избежания перескакивания клипов на монтажном столе во время редактирования, <b>Ресинхронизация выполняется только по запросу</b> Ресинхронизация желательна для возможного предотвращения побочных эффектов при редактировании.
 </li>
 </ul>
-<h3>Setting Sync Parent</h3>
+<h3>Настройка синхронизации родительского клипа</h3>
 <ol>
-<li> Click <b>Right Mouse</b> on clip and select Select Sync Parent Clip... on any clip NOT on track V1.</li>
-<li> Cursor turns into a Target Cross. Click on clip on track V1 to select it as Sync Parent Clip.</li>
-<li> Sync Relation is established between the two clips. Cursor turns back into a default pointer.</li>
-<li> Sync State Stripe appers on the Sync Child Clip. Sync State Indicator Stripes on Clips:</li>
+<li> Щёлкните <b>Правой кнопкой мыши</b> по клипу на любой отличной от V1 дорожке и выберите пункт «Выбрать родительский клип для синхронизации…».</li>
+<li> Курсор примет форму целевого креста. Нажмите на клип на дорожке V1, чтобы выбрать его как синхронизирующий родительский клип.</li>
+<li> Между двумя клипами установиться связь синхронизации. Курсор примет форму указателя по умолчанию.</li>
+<li> Узнать состояние синхронизации можно по индикаторным линиям на синхронизируемом дочернем клипе. Цвет индикаторных линий синхронизации на клипах:</li>
 <ul>
-<li> Green means that clip is in sync with parent.</li>
-<li> Red means that clip is NOT in sync with parent.</li>
-<li> Gray means that Sync Parent Clip is no longer on track V1.</li>
+<li> Зелёный означает, что дочерний клип синхронизирован с родительским.</li>
+<li> Красный означает, что дочерний клип не синхронизирован с родительским.</li>
+<li> Серый означает, что синхронизирующий родительский клип на дорожке V1 отсутствует.</li>
 </ul>
 </ol>
 
-<h3>Resyncing Sync Child Clips</h3>
+<h3>Ресинхронизация дочерних элементов синхронизации</h3>
 <ul>
-<li> Select <b>Edit -> Resync All to resync</b> from application menu all Sync Child Clips.</li>
-<li> Select <b>Edit - >Resync Selected to resync</b> from application menu selected Sync Child Clips.</li>
-<li> Click <b>Right Mouse</b> on Sync Child Clip and select <b>Resync</b> from popoup menu to resync single clip.</li>
-<li> Press <b>Resync Selected</b> Bbtton to resync selected Sync Child Clips.</li>
+<li> В меню приложения выберите <b>Правка→Ресинхронизация</b> для повторной синхронизации выбранного дочернего клипа.</li>
+<li> Щёлкните <b>Правой кнопкой мыши</b> по дочернему клипу и выпавшем меню клипа выберите <b>Ресинхронизация</b> для повторной синхронизации дочернего клипа.</li>
+<li> Нажмите <b>Ресинхронизация</b> на панели редактирования, чтобы повторно синхронизировать выбранные синхронизируемые клипы. </li>
 </ul>
 
-<h3> Clearing Sync Parent Relations </h3>
+<h3> Удаление связи синхронизации с родительским клипом </h3>
 <ul>
-<li> Click <b>Right Mouse</b> on Sync Child Clip and select Clear Sync Relation.</li>
+<li> Щёлкните <b>Правой кнопкой мыши</b> по дочернему клипу и выберите Удалить связь синхронизации.</li>
 </ul>
 
-<h3>Syncing Composited Clips</h3>
+<h3>Синхронизация композитных клипов</h3>
 <ul>
-<li> If appropriate set all clips that are part of a multitrack composite synched to the same clip.</li>
+<li> При необходимости установите все клипы, которые являются частью многодорожечного композита, синхронизированного с одним клипом.</li>
 </ul>
 
-<h3>Audio Split Syncing</h3>
+<h3>Синхронизация отделённого звука</h3>
 <ul>
-<li> Click <b>Right Mouse</b> on clip in track V1 and select Split Audio Synched.</li>
-<li> Edit audio split using Two Roll Trim mode to maintain sync with parent clip.</li>
-<li> Resync Audio as needed.</li>
+<li> Щёлкните <b>Правой кнопкой мыши</b> по клипу на дорожке V1 и выберите «Отделить звук для синхронизации».</li>
+<li> Отредактируйте отделённый от видео звук, используя инструмент обрезка, для поддержки синхронизации с родительским клипом.</li>
+<li> Синхронизируйте звук при необходимости.</li>
 </ul>
 
 	

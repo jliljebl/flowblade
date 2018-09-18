@@ -1,7 +1,8 @@
  <!DOCTYPE html>
-<html>
+<html class="client-nojs" lang="ru" dir="ltr">
 <head>
-	<title>Rendering</title>
+<meta charset="UTF-8"/>
+	<title>Сборка</title>
 	<link rel="stylesheet" href="style.css">
 	<script src="toc.js" type="text/javascript"></script>
 	<script src="../jquery.js"></script> 
@@ -23,104 +24,96 @@
 
 <div id="toccontent">
 
-<div class="subject-header">Rendering</div>
+<div class="subject-header">Сборка</div>
 <p>
-In Flowblade there are two ways to render output:
+В Flowblade есть два способа сборки вашего фильма в файл: 
 </p>
 <ul>
-<li> <b>Render Panel</b> in the top left notebook in the main window.</li>
-<li> <b>Batch Render Queue</b> application that can launched from Render menu.</li>
+<li> Вкладка <b>«Сборка»</b> расположена слева от Монитора.</li>
+<li> Инструмент <b>«Очередь пакетной сборки»</b>, который расположен в главном меню «Сборка».</li>
 </ul>
 
 <p>
-Almost all the encodings available for FLOSS applications can used in Flowblade.
+Почти все кодировки, доступные для приложений FLOSS, могут использоваться в Flowblade. 
 </p>
 
 <div id="toc"></div>
 
-<h3>Rendering Panel</h3>
+<h3>Вкладка «Сборка»</h3>
 
-<h4>Widgets</h4>
-<h5><b>Folder</b> select button</h5> <div class="r-widget">Select folder to place the output file in.</div>
-<h5><b>Name</b> entry widget</h5> <div class="r-widget">Set the name of the output file.</div>
-<h5><b>Type</b> drop down menu</h5> <div class="r-widget">Select between rendering with user defined parameter or use preset render params and file types.</div>
-<h5><b>Presets</b> drop down menu</h5> <div class="r-widget">Select preset rendering params and file type.</div>
-<h5><b>Use Project Profile</b> check box</h5> <div class="r-widget">Uncheck to select some other then project profile to used for rendered video.</div>
-<h5><b>Profile</b> drop down menu</h5> <div class="r-widget">Select project profile for rendering</div>
-<h5><b>Encoding / File Type</b> drop down menu</h5> <div class="r-widget">Select encoding and container format for rendering.</div>
-<h5><b>Bitrate</b> drop down menu</h5> <div class="r-widget">Select bitrate for rendering.</div>
-<h5><b>Render Using Args</b> check box</h5> <div class="r-widget">Rendering using arguments set in text edit area below.</div>
-<h5><b>Args</b> text area</h5> <div class="r-widget">Set arguments for rendering.</div>
-<h5><b>Load Selection</b> button</h5> <div class="r-widget">Load rendering arguments defined in left panel into args text area.</div>
-<h5><b>Ext</b> entry widget drop down menu</h5> <div class="r-widget">Set file extension for args rendered file.</div>
-<h5><b>Open File In Bin</b> check box</h5> <div class="r-widget">Open the rendererd file as media item in current bin.</div>
-<h5><b>Render Range</b> drop down menu</h5> <div class="r-widget">Select between rending the complete program or the marked range.</div>
-<h5><b>Render</b> button</h5> <div class="r-widget">Renders timeline into a file.</div>
+<h4>Виджеты</h4>
+<h5>Выпадающее меню <b>«Папка»</b> </h5> <div class="r-widget">Выберите папку для размещения выходного файла.</div>
+<h5>Поле ввода <b>«Имя»</b></h5> <div class="r-widget"> Присвойте имя выходному файлу.</div>
+<h5>Выпадающее меню <b>«Тип»</b> сборки</h5> <div class="r-widget">Выберите между сборкой с параметрами заданными пользователем или используйте предустановленные параметры сборки и типа файла.</div>
+<h5>Выпадающее меню <b>«Предустановки»</b></h5> <div class="r-widget">Выберите предустановленные параметры сборки и тип файла.</div>
+<h5>Флажок <b>«С профилем проекта»</b></h5> <div class="r-widget">Снимите флажок с «С профилем проекта», если нужно выбрать профиль для сборки фильма, отличный от профиля вашего проекта.</div>
+<h5>Выпадающее меню <b>«Профиль»</b> сборки</h5> <div class="r-widget">Выберите профиль сборки.</div>
+<h5>Выпадающее меню <b>«Формат кодирования»</b></h5> <div class="r-widget">Выберите формат кодирования и расширение файла для сборки.</div>
+<h5>Выпадающее меню <b>«Качества сборки»</b></h5> <div class="r-widget">Выберите скорость потока для сборки.</div>
+<h5>Использование <b>«Аргументов сборки»</b></h5> <div class="r-widget">Сборка с использованием аргументов, заданных в области редактирования текста.</div>
+<h5>Кнопка <b>загрузки аргументов</b></h5></h5> <div class="r-widget">Загрузите аргументы сборки, взятые из текстового файла.</div>
+<h5>Кнопка <b>сохранения аргументов</b></h5> <div class="r-widget">Сохраните аргументы сборки в текстовом файле.</div>
+<h5>Кнопка <b>«Изменение аргументов»</b></h5> <div class="r-widget">Установите аргументы сборки в области текста.</div>
+<h5>Выбор <b>расширения</b> файла</b></h5> <div class="r-widget">Введите расширение для собираемого файла.</div>
+<h5>Выпадающее меню <b>«Участка сборки»</b></h5> <div class="r-widget">Выберите между всей последовательностью и определённым участком.</div>
+<h5>Кнопка <b>«Сборка»</b></h5> <div class="r-widget">После нажатия, содержимое монтажного стола собирётся в файл. </div>
 </ul>
 
-<h4>Rendering output</h4>
+<h4>Отображение результатов</h4>
 <ol>
-<li> Press <b>Render</b> Button to begin rendering.</li>
-<li> A Render Window will open displaying information on file path of render file, estimated time left, render time and a Progress bar widget.</li>
-<li> After rendering is complete, Render Window will close automatically.</li>
+<li> Нажмите кнопку <b>«Сборка»</b> для запуска процесса сборки.</li>
+<li> Откроется окно процесса сборки, которое отображает информацию о пути собираемого файла, предполагаемом времени, времени сборки.</li>
+<li> После завершения сборки окно процесса сборки закроется автоматически.</li>
 </ol>
 
-<h3> Batch Render Queue </h3>
+<h3> Очередь пакетной сборки </h3>
 
 <p>
-Flowblade offers a dedicated Batch Render Queue application. Batch Render Queue is a separate application to Flowblade and runs on different process, so it is possible to close Flowblade without affecting ongoing renders.
+Flowblade предлагает специализированное приложение очереди пакетной обработки. «Очередь пакетной сборки»- это автономное приложение, работающее в собственном процессе и не влияющее на проект, поэтому закрытие Flowblade, не затронет текущую пакетную сборку.
 </p>
 <p>
-Render queue is a persistent data structure of render items on disk. Each item consists of a Project file and saved render parameters. Users can add render items to render queue and then render the whole queue without any further user input.
+Пакетная сборка - это постоянная структура данных элементов сборки на диске. Каждый элемент состоит из файла проекта и сохранённых параметров сборки. Пользователи могут добавлять объекты сборки в очередь пакетной сборки, а затем собрать всю очередь без дальнейших действий пользователя.
 </p>
 
-<h4>Adding Items to Batch Render Queue</h4>
+<h4>Добавление элементов в очередь пакетной сборки</h4>
 <ul>
-<li> Press <b>To Queue</b> button in <b>Render</b> tab.</li>
-<li> Select <b>Render->Add to Batch Render Queue...</b> item from menu</li>
+<li> В главном меню выберете пункт <b>Сборка→ Добавить в очередь пакетной сборки...</b></li>
 </ul>
 
-<h4>Using Batch Render Queue application</h4>
+<h4>Использование приложения очереди пакетной сборки</h4>
 <ol>
-<li> Open Batch Render Queue application by selecting <b>Render->Batch Render Queue</b> from menu.</li>
-<li> Press <b>Reload Queue</b> button to display render items that have been added to render queue since it was opened.</li>
-<li> Use <b>Delete Selected</b> and <b>Delete Finished</b> buttons to remove items from queue.</li>
-<li> Use checkbox widget in the Render column to select which items will be rendered.</li>
-<li> Press <b>Render</b> button to begin rendering.</li>
+<li> Откройте приложение в главном меню <b>Сборка→ Очередь пакетной сборки</b>.</li>
+<li> Используйте кнопки <b>«Удалить выбранные»</b> и <b>« Удалить завершённые»</b>, чтобы удалить элементы из очереди.</li>
+<li> Используйте флажок в столбце <b>«Сборка»</b>, чтобы выбрать, какие элементы будут собираться. </li>
+<li> Нажмите кнопку <b>«Сборка»</b>, для запуска процесса сборки.</li>
 </ol>
 <p>
-UI actions:
+Дополнительные действия:
 </p>
 <ul>
-<li> <b>Right Mouse Click</b> render item to show render item context menu.</li>
-<li> <b>Save Item Project As...</b> allows th user to save the Project file of the render item into same other location</li>
-<li> <b>Render Properties</b> displays the render properties that were set when the item was added to render queue.</li>
-<li> <b>Delete</b> deletes the item from queue</li>
+<li> <b>Щёлкните правой кнопкой мыши</b> по элементу проекта, для отображения его всплывающего меню.</li>
+<li> <b>Сохранить элемент проекта как...</b> позволяет пользователю сохранять в файл проекта, выбранный элемент в другом месте.</li>
+<li> <b>Свойства сборки</b> отображает информацию о параметрах, которые были установлены, во время добавления элемента в очередь сборки.</li>
+<li> <b>Удалить</b> удаляет элемент из очереди.</li>
 </ul>
-<h3>Rendering behind the scenes: MLT and libavformat(FFMpeg)</h3>
+<h3>Сборка за кулисами: MLT и libavformat (FFMpeg)</h3>
 <p>
-Flowblade Movie Editor is a Python application interfacing to MLT multitrack media framework.
-Other video editing applications build on top of MLT include OpenShot and Kdenlive.
+Видеоредактор Flowblade - это приложение написанное на Python, взаимодействующее с мультимедийной средой MLT. Другими приложениями для редактирования видео, использующими MLT в качестве платформы, являются OpenShot и Kdenlive.
 </p>
 <p>
-MLT uses C-library libavformat(FFMpeg) to render output files, and rendering is defined by setting FFMpeg encoding parameters.
-These parameters are delivered from Flowblade Movie Editor to MLT by creating a "avformat" Consumer object for
-a  given Render Profile, and then setting its Rendering Args.
-These latter arguments are exactly the same which are used when using FFmpeg to encode video files.
+MLT использует C-library libavformat (FFMpeg) для сборки выходных файлов, а сборка определяется настройкой параметров кодирования FFMpeg. Эти параметры доставляются из видеоредактора Flowblade в MLT, с помощью потребителя «avformat» для данного профиля Сборки, а затем задаются аргументы сборки.
+Аргументы задаются точно такие же, которые используются в FFmpeg для кодирования видеофайлов.
 </p>
 <p>
-Rendering arguments for encoding different types of video files are pre-packed and can be selected using
-Encocing / Format and Quality Drop Down Menus. Arguments can be refined
-by checking Render with args Checkbox and changing args values and/or adding/removing args.
+Аргументы сборки для кодирования различных типов видеофайлов предварительно упаковывается и могут быть определены с помощью меню «Формат кодирования». Аргументы можно уточнить, проверив Сборку с помощью флажка «Использование аргументов сборки» и изменив и/или добавив/удалив значения аргументов.
 </p>
 <p>
-Any kind of video files supported by the installed version of MLT can be encoded by creating a user defined
-Render Profile and setting its Rendering Args. Google for FFMpeg encoding to find Args combinations for different video files.
+Любые видеоролики, поддерживаемые установленной версией MLT, могут быть перекодированы путём создания пользовательского профиля Сборки и установки аргументов сборки. В поисковых системах, например в Google, можно найти различные комбинации использования аргументов для кодирования видеофайлов в FFMpeg.
 </p>
 <p>
-Search web for information on encoding files with FFMpeg to get examples of Rendering Args that can be used.
+Посмотрите в интернете информацию о кодировании файлов с помощью FFMpeg, для ознакомления с примерами использования аргументов сборки.
 </p>
-<h3>Flowblade rendering pipeline</h3>
+<h3>Модель сборки в Flowblade</h3>
 
 <img src="encoding.png">
 
