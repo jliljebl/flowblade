@@ -1,0 +1,123 @@
+ <!DOCTYPE html>
+<html class="client-nojs" lang="ru" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+	<title>Flowblade - Скачать</title>
+	<link rel="stylesheet" href="style.css">
+	<script src="jquery.js"></script> 
+	<script> 
+		$(function(){
+		$("#includedHeader").load("header.html"); 
+		});
+	</script>
+	<script> 
+		$(function(){
+		$("#includedFooter").load("footer.html"); 
+		});
+	</script> 
+</head>
+
+<!-- content -->
+<body>
+
+<!-- Header -->
+<div id="includedHeader"></div>
+
+<!-- Install -->
+<div class="white-bg" >
+<div class="content-box">
+
+<div class="big-text">
+Скачать
+</div>
+
+<h3>Установка с использованием .deb</h3>
+<p>
+<b>ШАГ 1. Скачивание и установка .deb</b> 
+</p>	
+<p>
+<b>Сначала скачайте пакет .deb</b> с последней версией Flowblade <a href="https://github.com/jliljebl/flowblade/releases">отсюда.</a>
+</p>
+<p>
+Для установки дважды щёлкните по пакету <b>.deb</b>. 
+</p>
+<p>
+В некоторых системах двойной щелчок может не сработать (на Ubuntu иногда ставится старая версия из репозитория), в этом случае вам придётся установить пакет <b>.deb</b> с помощью терминала:
+</p>
+<ul>
+	<li>	<p>Откройте терминал в папке, в которой был сохранён загруженный пакет <b>.deb</b>. Задайте команду:
+	<div class="code-bg"> 
+	sudo dpkg -i ./flowblade-1.16.0-1_all.deb
+	</div>
+	</li>
+</ul>
+<p>
+<b> ШАГ 2 (ДОПОЛНИТЕЛЬНЫЙ). Дополнительные команды в терминале</b>
+</p>
+<p>	
+Возможно, вам понадобится задать дополнительные команды в терминале:
+</p>
+<ul>
+	<li>Для установки всех зависимостей:</li>
+	<div class="code-bg"> 
+	sudo apt-get install -f
+	</div>
+</ul>
+
+<p>
+Релиз был протестирован на: <b>Ubuntu 16.10</b>, <b>Ubuntu 16.04</b>, <b>Linux Mint 18</b> и <b>Debian 8</b>. Также должен работать на всех последующих дистрибутивах Debian.
+</p>
+
+
+
+
+<h3>Установка из репозитория вашего дистрибутива</h3>
+
+<p>
+Самый простой способ установки Flowblade — это использовать версию из репозитория вашего дистрибутива. Недостатком является то, что доступная версия может быть устаревшей. Если в репозитории вашего дистрибутива используется старая версия Flowblade или отсутствует вовсе, уведомите об этом его разработчиков.
+</p>
+
+<h3>Установка из исходного кода</h3>
+
+<p>
+Flowblade в настоящее время на 100% является скриптовым приложением, и все зависимости должны быть доступны в популярных дистрибутивах, поэтому в большинстве случаев Flowblade можно запустить без компиляции.
+</p>
+
+<p>
+Получить дополнительную информацию можно <a href="https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/INSTALLING.md">здесь.</a>
+</p>
+
+
+<h3>Установка разрабатываемой версии</h3>
+
+<p>
+Flowblade в настоящее время на 100% является скриптовым приложением, и все зависимости должны быть доступны в популярных дистрибутивах, поэтому в большинстве случаев Flowblade можно запустить без компиляции.
+</p> 
+
+<p>
+Однако разрабатываемая версия может быть нестабильной или иметь новые зависимости.
+</p>
+
+<p>
+Для установки разрабатываемой версии, вам нужно установить <b>git</b> и вытащить её из репозитория проекта Github. 
+</p>
+
+<p>
+Получить дополнительную информацию можно <a href="https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/INSTALLING.md">здесь.</a>
+</p>
+
+<img src="webres/white_blade.png" width="80px" class="centered-block paddingtop">
+
+<p style="margin-top:40px"><b>Windows и OS X не поддерживаются. Flowblade сосредоточен на предоставлении наилучшей поддержки в Linux и в других свободных платформах.
+</b>
+</p>
+
+</div>
+</div>
+
+<!-- Footer -->
+<div id="includedFooter"></div>
+
+<!-- end content -->
+</body>
+</html> 
