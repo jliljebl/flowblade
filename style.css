@@ -150,7 +150,7 @@ img.centered-block {
 
 .black-bg {
 	color:#ffffff;
-	background-color: #000000;
+	background-color: #10131e;
 	padding-bottom: 30px;
 	padding-top: 30px;
 }
@@ -169,16 +169,16 @@ img.centered-block {
 }
 
 .black-bg a {
-	color:#5198CC;
+	color:#5294e2;
 }
 
 .white-bg a {
-	color:#5198CC;
+	color:#5294e2;
 }
 
 .icon-black-bg {
 	color:#ffffff;
-	background-color: #000000;
+	background-color: #10131e;
 	padding-bottom: 30px;
 	padding-top: 30px;
 	background-image: url("webres/icon_bg_flat.png");
@@ -197,14 +197,14 @@ img.centered-block {
 
 .bar-bg {
 	color:#ffffff;
-	background-color: #000000;
+	background-color: #10131e;
 	padding-bottom: 50px;
 	padding-top: 1px;
 }
 
 .header-bg {
 	color:#ffffff;
-	background-color: #5198CC;
+	background-color: #2c3947;
 	height: 46px;
 	padding-bottom: 0px;
 	padding-top: 0px;
@@ -233,8 +233,8 @@ img.centered-block {
 }
 
 .footer-bg {
-	color:#5198CC;
-	background-color: #000000;
+	color:#5294e2;
+	background-color: #10131e;
 	padding-bottom: 50px;
 	padding-top: 6px;
 	margin-top: 30px;
@@ -256,7 +256,7 @@ img.centered-block {
 }
 
 .navigation ul {
-	background-color: #000000;
+	background-color: #10131e;
 	color:#ffffff;
 	list-style-type: none;
 	list-style: none;
@@ -268,7 +268,7 @@ img.centered-block {
 }
 
 .navigation li {
-	background-color: #000000;
+	background-color: #10131e;
 	color:#ffffff;
 	float: left;
 	margin: 0 1.15em;
@@ -282,7 +282,7 @@ img.centered-block {
 }
 
 .navigation {
-	background-color: #000000;
+	background-color: #10131e;
 	list-style-type: none;
 	text-align: center;
 	border: 0;
