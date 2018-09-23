@@ -498,10 +498,11 @@ def tline_media_drop(media_file, x, y, use_marks=False):
     if track.id < 1 or track.id >= (len(current_sequence().tracks) - 1):
         return 
     if track_lock_check_and_user_info(track):
-        modesetting.set_default_edit_mode()
+        #modesetting.set_default_edit_mode()
+        # Info
         return
-
-    modesetting.set_default_edit_mode()
+        
+    modesetting.stop_looping()
 
     frame = tlinewidgets.get_frame(x)
     
