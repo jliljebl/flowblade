@@ -1202,6 +1202,8 @@ def draw_cut_overlay(cr, data):
     pass
 
 def draw_kftool_overlay(cr, data):
+    if data == None:
+        return
     draw_function = data["draw_function"]
     draw_function(cr, pos)
     

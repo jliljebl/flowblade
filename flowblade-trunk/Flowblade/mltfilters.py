@@ -526,6 +526,7 @@ def print_not_found_filters():
 
 
 # ------------------------------------------------------------- mute filters
+# We have some helper functions here for muting clips
 def create_mute_volume_filter(seq):    
     mute_filter = seq.create_filter(get_volume_filters_info())
     mute_filter.mlt_filter.set("gain","0")

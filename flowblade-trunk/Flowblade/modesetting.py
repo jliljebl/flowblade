@@ -43,9 +43,6 @@ def set_default_edit_mode(disable_mouse=False):
     This is used as global 'go to start position' exit door from
     situations where for example user is in trim and exits it
     without specifying which edit mode to go to.
-    
-    NOTE: As this uses 'programmed click', this method does nothing if insert mode button
-    is already down.
     """
     gui.editor_window.set_default_edit_tool()
     if disable_mouse:

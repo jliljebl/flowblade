@@ -20,7 +20,7 @@
 
 """
 Modules provides functions that:
-- parses strings to property tuples or argument dicts
+- parse strings to property tuples or argument dicts
 - build value strings from property tuples.
 """
 from gi.repository import Gtk

@@ -21,29 +21,63 @@
 """
 Module handles Keyframe tool functionality
 """
+from gi.repository import Pango, PangoCairo
 
 import cairo
 
+import cairoarea
 from editorstate import current_sequence
+import propertyedit
+import propertyparse
 import respaths
 import tlinewidgets
 import updater
 
 CLOSE_ICON = None
 HAMBURGER_ICON = None
+ACTIVE_KF_ICON = None
+NON_ACTIVE_KF_ICON = None
+
+CLIP_EDITOR_WIDTH = 250 
+CLIP_EDITOR_HEIGHT = 21
+END_PAD = 28
+TOP_PAD = 2
+OUT_OF_RANGE_ICON_PAD = 20
+OUT_OF_RANGE_KF_ICON_HALF = 6
+OUT_OF_RANGE_NUMBER_Y = 5
+OUT_OF_RANGE_NUMBER_X_START = 1
+OUT_OF_RANGE_NUMBER_X_END_PAD = 7
+
+BUTTON_WIDTH = 26
+BUTTON_HEIGHT = 24
+KF_Y = 5
+CENTER_LINE_Y = 11
+POS_ENTRY_W = 38
+POS_ENTRY_H = 20
+KF_HIT_WIDTH = 4
+KF_DRAG_THRESHOLD = 3
+
+# Colors
+POINTER_COLOR = (1, 0.3, 0.3)
+CLIP_EDITOR_BG_COLOR = (0.7, 0.7, 0.7)
+LIGHT_MULTILPLIER = 1.14
+DARK_MULTIPLIER = 0.74
 
 OVERLAY_BG = (0.0, 0.0, 0.0, 0.8)
 OVERLAY_DRAW_COLOR = (0.0, 0.0, 0.0, 0.8)
 EDIT_AREA_HEIGHT = 200
 
 edit_data = None
+_kf_editor = None
 
 # -------------------------------------------------- init
 def load_icons():
-    global CLOSE_ICON, HAMBURGER_ICON
+    global CLOSE_ICON, HAMBURGER_ICON, ACTIVE_KF_ICON, NON_ACTIVE_KF_ICON
+
     CLOSE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "close_match.png")
     HAMBURGER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger.png")
-
+    ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active.png")
+    NON_ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active.png")    
 
 # ---------------------------------------------- mouse events
 def mouse_press(event, frame):
@@ -99,10 +133,16 @@ def mouse_press(event, frame):
                                                            i,
                                                            track,
                                                            clip_index)
-            for ep in editable_properties:
-                if ep.name == "gain":
-                    _init_for_editable_property(ep)
-            
+            for ep in editable_properties:                
+                # Volume is one of these MLT multipart filters, so we chose this way to find the editable property in filter.
+                try:
+                    if ep.args["exptype"] == "multipart_keyframe":
+                        _init_for_editable_property(ep)
+                        global _kf_editor
+                        _kf_editor = TLineKeyFrameEditor(ep, True)
+                except:
+                    pass
+                    
     tlinewidgets.set_edit_mode_data(edit_data)
     updater.repaint_tline()
     
@@ -170,6 +210,10 @@ def _tline_overlay(cr, pos):
     cr.set_source_surface(CLOSE_ICON, cx_start +  (cx_end - cx_start) - 14, cy_start + 2)
     cr.paint()
 
+
+    _kf_editor.set_allocation(cx_start, cy_start, cx_end - cx_start, height)
+    _kf_editor.draw(cr)
+
     try:
         ep = edit_data["editable_property"]
         _draw_edit_area_borders(cr, cx_start, cy_start, cx_end - cx_start, height)
@@ -181,5 +225,557 @@ def _draw_edit_area_borders(cr, x, y, w, h):
     cr.rectangle(x + 4, y + 18, w - 8, h - 24)
     cr.stroke()
 
+
+
+# ----------------------------------------------------- editor objects
+class TLineKeyFrameEditor:
+    """
+    GUI component used to add, move and remove keyframes 
+    inside a single clip. It is used as a component inside a parent editor and
+    needs the parent editor to write out keyframe values.
+    
+    Parent editor must implement callback interface:
+        def clip_editor_frame_changed(self, frame)
+        def active_keyframe_changed(self)
+        def keyframe_dragged(self, active_kf, frame)
+        def update_slider_value_display(self, frame)
+        def update_property_value(self)
+    """
+
+    def __init__(self, editable_property, use_clip_in=True):
+        """
+        self.widget = cairoarea.CairoDrawableArea2( CLIP_EDITOR_WIDTH, 
+                                                    CLIP_EDITOR_HEIGHT, 
+                                                    self._draw)
+        self.widget.press_func = self._press_event
+        self.widget.motion_notify_func = self._motion_notify_event
+        self.widget.release_func = self._release_event
+        """
+        
+        self.clip_length = editable_property.get_clip_length() - 1
+        print self.clip_length  
+        # Some filters start keyframes from *MEDIA* frame 0
+        # Some filters or compositors start keyframes from *CLIP* frame 0
+        # Filters starting from *MEDIA* 0 need offset 
+        # to clip start added to all values.
+        self.use_clip_in = use_clip_in
+        if self.use_clip_in == True:
+            self.clip_in = editable_property.clip.clip_in
+        else:
+            self.clip_in = 0
+        self.current_clip_frame = self.clip_in
+
+        self.keyframes = [(0, 0.0)]
+        self.active_kf_index = 0
+
+        self.parent_editor = self
+
+  
+        self.current_mouse_action = None
+        self.drag_on = False # Used to stop updating pos here if pos change is initiated here.
+        self.drag_min = -1
+        self.drag_max = -1
+
+        # Init keyframes
+        self.keyframe_parser = propertyparse.single_value_keyframes_string_to_kf_array
+        editable_property.value.strip('"')
+        self.set_keyframes(editable_property.value, editable_property.get_in_value)     
+
+    def set_keyframes(self, keyframes_str, out_to_in_func):
+        print "kfsstr:", keyframes_str
+        self.keyframes = self.keyframe_parser(keyframes_str, out_to_in_func)
+
+    def get_kf_info(self):
+        return (self.active_kf_index, len(self.keyframes))
+        
+    def _get_panel_pos(self):
+        return self._get_panel_pos_for_frame(self.current_clip_frame) 
+
+    def _get_panel_pos_for_frame(self, frame):
+        x, y, width, h = self.allocation
+        active_width = width - 2 * END_PAD
+        disp_frame = frame - self.clip_in 
+        return END_PAD + int((float(disp_frame) / float(self.clip_length)) * 
+                             active_width)
+
+    def _get_frame_for_panel_pos(self, panel_x):
+        active_width = self.widget.get_allocation().width - 2 * END_PAD
+        clip_panel_x = panel_x - END_PAD
+        norm_pos = float(clip_panel_x) / float(active_width)
+        return int(norm_pos * self.clip_length) + self.clip_in
+        
+    def _set_clip_frame(self, panel_x):
+        self.current_clip_frame = self._get_frame_for_panel_pos(panel_x)
+    
+    def move_clip_frame(self, delta):
+        self.current_clip_frame = self.current_clip_frame + delta
+        self._force_current_in_frame_range()
+
+    def set_and_display_clip_frame(self, clip_frame):
+        self.current_clip_frame = clip_frame
+        self._force_current_in_frame_range()
+
+    def set_allocation(self, x, y, w, h):
+        self.allocation = (x, y, w, h)
+
+    def draw(self, cr):
+        """
+        Callback for repaint from CairoDrawableArea.
+        We get cairo context and allocation.
+        """
+        x, y, w, h = self.allocation
+        active_width = w - 2 * END_PAD
+        active_height = h - 2 * TOP_PAD      
+
+        #cr.set_source_rgb(1,0,0)
+        #cr.rectangle(0, 0, w, h)
+        #cr.fill()
+        
+        # Draw clip bg  
+        cr.set_source_rgb(*CLIP_EDITOR_BG_COLOR)
+        cr.rectangle(END_PAD, TOP_PAD, active_width, active_height)
+        cr.fill()
+
+        # Clip edge and emboss
+        rect = (END_PAD, TOP_PAD, active_width, active_height)
+        self.draw_edge(cr, rect)
+        #self.draw_emboss(cr, rect, gui.get_bg_color())
+
+        # Draw center line
+        cr.set_source_rgb(0.4, 0.4, 0.4)
+        cr.set_line_width(2.0)
+        cr.move_to(END_PAD, CENTER_LINE_Y)
+        cr.line_to(END_PAD + active_width, CENTER_LINE_Y)
+        cr.stroke()
+
+        # Draw keyframes
+        for i in range(0, len(self.keyframes)):
+            frame, value = self.keyframes[i]
+            if frame < self.clip_in:
+                continue
+            if frame > self.clip_in + self.clip_length:
+                continue  
+            if i == self.active_kf_index:
+                icon = ACTIVE_KF_ICON
+            else:
+                icon = NON_ACTIVE_KF_ICON
+            try:
+                kf_pos = self._get_panel_pos_for_frame(frame)
+            except ZeroDivisionError: # math fails for 1 frame clip
+                kf_pos = END_PAD
+            cr.set_source_surface(icon, kf_pos - 6, KF_Y)
+            cr.paint()
+
+        # Draw out-of-range kf icons kf counts
+        before_kfs = len(self.get_out_of_range_before_kfs())
+        after_kfs = len(self.get_out_of_range_after_kfs())
+        if before_kfs > 0:
+            cr.set_source_surface(NON_ACTIVE_KF_ICON, OUT_OF_RANGE_ICON_PAD - OUT_OF_RANGE_KF_ICON_HALF * 2, KF_Y)
+            cr.paint()
+            self.draw_kf_count_number(cr, before_kfs, OUT_OF_RANGE_NUMBER_X_START, OUT_OF_RANGE_NUMBER_Y)
+        if after_kfs > 0:
+            cr.set_source_surface(NON_ACTIVE_KF_ICON, w - OUT_OF_RANGE_ICON_PAD, KF_Y)
+            cr.paint()
+            self.draw_kf_count_number(cr, after_kfs, w - OUT_OF_RANGE_NUMBER_X_END_PAD, OUT_OF_RANGE_NUMBER_Y)
+        
+        # Draw frame pointer
+        try:
+            panel_pos = self._get_panel_pos()
+        except ZeroDivisionError: # math fails for 1 frame clip
+            panel_pos = END_PAD
+        cr.set_line_width(2.0)
+        cr.set_source_rgb(*POINTER_COLOR)
+        cr.move_to(panel_pos, 0)
+        cr.line_to(panel_pos, CLIP_EDITOR_HEIGHT)
+        cr.stroke()
+        
+    def draw_emboss(self, cr, rect, color):
+        # Emboss, corner points
+        left = rect[0] + 1.5
+        up = rect[1] + 1.5
+        right = left + rect[2] - 2.0
+        down = up + rect[3] - 2.0
+            
+        # Draw lines
+        color_tuple = gui.unpack_gdk_color(color)
+        light_color = guiutils.get_multiplied_color(color_tuple, LIGHT_MULTILPLIER)
+        cr.set_source_rgb(*light_color)
+        cr.move_to(left, down)
+        cr.line_to(left, up)
+        cr.stroke()
+            
+        cr.move_to(left, up)
+        cr.line_to(right, up)
+        cr.stroke()
+
+        dark_color = guiutils.get_multiplied_color(color_tuple, DARK_MULTIPLIER)
+        cr.set_source_rgb(*dark_color)
+        cr.move_to(right, up)
+        cr.line_to(right, down)
+        cr.stroke()
+            
+        cr.move_to(right, down)
+        cr.line_to(left, down)
+        cr.stroke()
+
+    def draw_edge(self, cr, rect):
+        cr.set_line_width(1.0)
+        cr.set_source_rgb(0, 0, 0)
+        cr.rectangle(rect[0] + 0.5, rect[1] + 0.5, rect[2], rect[3])
+        cr.stroke()
+
+    def draw_kf_count_number(self, cr, count, x, y):
+        # Draw track name
+        layout = PangoCairo.create_layout(cr)
+        layout.set_text(str(count), -1)
+        desc = Pango.FontDescription("Sans 8")
+        layout.set_font_description(desc)
+
+        cr.move_to(x, y)
+        cr.set_source_rgb(0.9, 0.9, 0.9)
+        PangoCairo.update_layout(cr, layout)
+        PangoCairo.show_layout(cr, layout)
+        
+    def _press_event(self, event):
+        """
+        Mouse button callback
+        """
+        # Chcek if kf icon before or after clip range have been pressed
+        if self.oor_start_kf_hit(event.x, event.y):
+            self._show_oor_before_menu(self.widget, event)
+            return
+
+        if self.oor_end_kf_hit(event.x, event.y):
+            self._show_oor_after_menu(self.widget, event)
+            return
+        
+        # Handle clip range mouse events
+        self.drag_on = True
+
+        lx = self._legalize_x(event.x)
+        hit_kf = self._key_frame_hit(lx, event.y)
+
+        if hit_kf == None: # nothing was hit
+            self.current_mouse_action = POSITION_DRAG
+            self._set_clip_frame(lx)
+            self.parent_editor.clip_editor_frame_changed(self.current_clip_frame)
+            self.widget.queue_draw()
+        else: # some keyframe was pressed
+            self.active_kf_index = hit_kf
+            frame, value = self.keyframes[hit_kf]
+            self.current_clip_frame = frame
+            self.parent_editor.active_keyframe_changed()
+            if hit_kf == 0:
+                self.current_mouse_action = KF_DRAG_DISABLED
+            else:
+                self.current_mouse_action = KF_DRAG
+                
+                self.drag_start_x = event.x
+                
+                prev_frame, val = self.keyframes[hit_kf - 1]
+                self.drag_min = prev_frame  + 1
+                try:
+                    next_frame, val = self.keyframes[hit_kf + 1]
+                    self.drag_max = next_frame - 1
+                except:
+                    self.drag_max = self.clip_length
+            self.widget.queue_draw()
+
+    def _motion_notify_event(self, x, y, state):
+        """
+        Mouse move callback
+        """
+        lx = self._legalize_x(x)
+        
+        if self.current_mouse_action == POSITION_DRAG:
+            self._set_clip_frame(lx)
+            self.parent_editor.clip_editor_frame_changed(self.current_clip_frame)
+        elif self.current_mouse_action == KF_DRAG:
+            frame = self._get_drag_frame(lx)
+            self.set_active_kf_frame(frame)
+            self.current_clip_frame = frame
+            self.parent_editor.keyframe_dragged(self.active_kf_index, frame)
+            self.parent_editor.active_keyframe_changed()
+
+        self.widget.queue_draw()
+        
+    def _release_event(self, event):
+        """
+        Mouse release callback.
+        """
+        lx = self._legalize_x(event.x)
+
+        if self.current_mouse_action == POSITION_DRAG:
+            self._set_clip_frame(lx)
+            self.parent_editor.clip_editor_frame_changed(self.current_clip_frame)
+            self.parent_editor.update_slider_value_display(self.current_clip_frame)
+        elif self.current_mouse_action == KF_DRAG:
+            frame = self._get_drag_frame(lx)
+            self.set_active_kf_frame(frame)
+            self.current_clip_frame = frame
+            self.parent_editor.keyframe_dragged(self.active_kf_index, frame)
+            self.parent_editor.active_keyframe_changed()
+            self.parent_editor.update_property_value()
+            self.parent_editor.update_slider_value_display(frame)   
+
+        self.widget.queue_draw()
+        self.current_mouse_action = None
+        
+        self.drag_on = False
+        
+    def _legalize_x(self, x):
+        """
+        Get x in pixel range between end pads.
+        """
+        w = self.widget.get_allocation().width
+        if x < END_PAD:
+            return END_PAD
+        elif x > w - END_PAD:
+            return w - END_PAD
+        else:
+            return x
+    
+    def _force_current_in_frame_range(self):
+        if self.current_clip_frame < self.clip_in:
+            self.current_clip_frame = self.clip_in
+        if self.current_clip_frame > self.clip_in + self.clip_length:
+            self.current_clip_frame = self.clip_in + self.clip_length
+
+    def get_out_of_range_before_kfs(self):
+        # returns Keyframes before current clip start
+        kfs = []
+        for i in range(0, len(self.keyframes)):
+            frame, value = self.keyframes[i]
+            if frame < self.clip_in:
+                kfs.append(self.keyframes[i])
+        return kfs
+
+    def get_out_of_range_after_kfs(self):
+        # returns Keyframes before current clip start
+        kfs = []
+        for i in range(0, len(self.keyframes)):
+            frame, value = self.keyframes[i]
+            if frame > self.clip_in + self.clip_length:
+                kfs.append(self.keyframes[i])
+        return kfs
+                
+    def _get_drag_frame(self, panel_x):
+        """
+        Get x in range available for current drag.
+        """
+        frame = self._get_frame_for_panel_pos(panel_x)
+        if frame < self.drag_min:
+            frame = self.drag_min
+        if frame > self.drag_max:
+            frame = self.drag_max
+        return frame
+    
+    def _key_frame_hit(self, x, y):
+        for i in range(0, len(self.keyframes)):
+            frame, val = self.keyframes[i]
+            frame_x = self._get_panel_pos_for_frame(frame)
+            frame_y = KF_Y + 6
+            if((abs(x - frame_x) < KF_HIT_WIDTH)
+                and (abs(y - frame_y) < KF_HIT_WIDTH)):
+                return i
+            
+        return None
+
+    def oor_start_kf_hit(self, x, y):
+        test_x = OUT_OF_RANGE_ICON_PAD - OUT_OF_RANGE_KF_ICON_HALF * 2
+        if y >= KF_Y and y <= KF_Y + 12: # 12 icon size
+            if x >= test_x and x <= test_x + 12:
+                return True
+        
+        return False
+
+    def oor_end_kf_hit(self, x, y):
+        w = self.widget.get_allocation().width
+        test_x = w - OUT_OF_RANGE_ICON_PAD
+        if y >= KF_Y and y <= KF_Y + 12: # 12 icon size
+            if x >= test_x and x <= test_x + 12:
+                return True
+        
+        return False
+
+    def add_keyframe(self, frame):
+        kf_index_on_frame = self.frame_has_keyframe(frame)
+        if kf_index_on_frame != -1:
+            # Trying add on top of existing keyframe makes it active
+            self.active_kf_index = kf_index_on_frame
+            return
+
+        for i in range(0, len(self.keyframes)):
+            kf_frame, kf_value = self.keyframes[i]
+            if kf_frame > frame:
+                prev_frame, prev_value = self.keyframes[i - 1]
+                self.keyframes.insert(i, (frame, prev_value))
+                self.active_kf_index = i
+                return
+        prev_frame, prev_value = self.keyframes[len(self.keyframes) - 1]
+        self.keyframes.append((frame, prev_value))
+        self.active_kf_index = len(self.keyframes) - 1
+
+    def print_keyframes(self):
+        print "clip edit keyframes:"
+        for i in range(0, len(self.keyframes)):
+            print self.keyframes[i]
+        
+    def delete_active_keyframe(self):
+        if self.active_kf_index == 0:
+            # keyframe frame 0 cannot be removed
+            return
+        self.keyframes.pop(self.active_kf_index)
+        self.active_kf_index -= 1
+        if self.active_kf_index < 0:
+            self.active_kf_index = 0
+        self._set_pos_to_active_kf()
+
+    def set_next_active(self):
+        """
+        Activates next keyframe or keeps last active to stay in range.
+        """
+        self.active_kf_index += 1
+        if self.active_kf_index > (len(self.keyframes) - 1):
+            self.active_kf_index = len(self.keyframes) - 1
+        self._set_pos_to_active_kf()
+        
+    def set_prev_active(self):
+        """
+        Activates previous keyframe or keeps first active to stay in range.
+        """
+        self.active_kf_index -= 1
+        if self.active_kf_index < 0:
+            self.active_kf_index = 0
+        self._set_pos_to_active_kf()
+    
+    def _set_pos_to_active_kf(self):
+        frame, value = self.keyframes[self.active_kf_index]
+        self.current_clip_frame = frame
+        self._force_current_in_frame_range()
+        self.parent_editor.update_slider_value_display(self.current_clip_frame)   
+            
+    def frame_has_keyframe(self, frame):
+        """
+        Returns index of keyframe if frame has keyframe or -1 if it doesn't.
+        """
+        for i in range(0, len(self.keyframes)):
+            kf_frame, kf_value = self.keyframes[i]
+            if frame == kf_frame:
+                return i
+
+        return -1
+    
+    def get_active_kf_frame(self):
+        frame, val = self.keyframes[self.active_kf_index]
+        return frame
+
+    def get_active_kf_value(self):
+        frame, val = self.keyframes[self.active_kf_index]
+        return val
+    
+    def set_active_kf_value(self, new_value):
+        frame, val = self.keyframes.pop(self.active_kf_index)
+        self.keyframes.insert(self.active_kf_index,(frame, new_value))
+
+    def active_kf_pos_entered(self, frame):
+        if self.active_kf_index == 0:
+            return
+        
+        prev_frame, val = self.keyframes[self.active_kf_index - 1]
+        prev_frame += 1
+        try:
+            next_frame, val = self.keyframes[self.active_kf_index + 1]
+            next_frame -= 1
+        except:
+            next_frame = self.clip_length - 1
+        
+        frame = max(frame, prev_frame)
+        frame = min(frame, next_frame)
+
+        self.set_active_kf_frame(frame)
+        self.current_clip_frame = frame    
+        
+    def set_active_kf_frame(self, new_frame):
+        frame, val = self.keyframes.pop(self.active_kf_index)
+        self.keyframes.insert(self.active_kf_index,(new_frame, val))
+
+    def _show_oor_before_menu(self, widget, event):
+        menu = oor_before_menu
+        guiutils.remove_children(menu)
+        before_kfs = len(self.get_out_of_range_before_kfs())
+
+        if before_kfs == 0:
+            # hit detection is active even if the kf icon is not displayed
+            return
+
+        if before_kfs > 1:
+            menu.add(self._get_menu_item(_("Delete all but first Keyframe before Clip Range"), self._oor_menu_item_activated, "delete_all_before" ))
+            sep = Gtk.SeparatorMenuItem()
+            sep.show()
+            menu.add(sep)
+
+        if len(self.keyframes) > 1:
+            menu.add(self._get_menu_item(_("Set Keyframe at Frame 0 to value of next Keyframe"), self._oor_menu_item_activated, "zero_next" ))
+        elif before_kfs == 1:
+            item = self._get_menu_item(_("No Edit Actions currently available"), self._oor_menu_item_activated, "noop" )
+            item.set_sensitive(False)
+            menu.add(item)
+
+        menu.popup(None, None, None, None, event.button, event.time)
+
+    def _show_oor_after_menu(self, widget, event):
+        menu = oor_before_menu
+        guiutils.remove_children(menu)
+        after_kfs = self.get_out_of_range_after_kfs()
+        
+        if after_kfs == 0:
+            # hit detection is active even if the kf icon is not displayed
+            return
+
+        menu.add(self._get_menu_item(_("Delete all Keyframes after Clip Range"), self._oor_menu_item_activated, "delete_all_after" ))
+        menu.popup(None, None, None, None, event.button, event.time)
+        
+    def _oor_menu_item_activated(self, widget, data):
+        if data == "delete_all_before":
+            keep_doing = True
+            while keep_doing:
+                try:
+                    frame, value = self.keyframes[1]
+                    if frame < self.clip_in:
+                        self.keyframes.pop(1)
+                    else:
+                        keep_doing = False 
+                except:
+                    keep_doing = False
+        elif data == "zero_next":
+            frame_zero, frame_zero_value = self.keyframes[0]
+            frame, value = self.keyframes[1]
+            print value
+            self.keyframes.pop(0)
+            self.keyframes.insert(0, (frame_zero, value))
+            self.parent_editor.update_property_value()
+        elif data == "delete_all_after":
+            delete_done = False
+            for i in range(0, len(self.keyframes)):
+                frame, value = self.keyframes[i]
+                if frame > self.clip_in + self.clip_length:
+                    self.keyframes.pop(i)
+                    popped = True
+                    while popped:
+                        try:
+                            self.keyframes.pop(i)
+                        except:
+                            popped = False
+                    delete_done = True
+                if delete_done:
+                    break
+        self.widget.queue_draw()
+        
+    def _get_menu_item(self, text, callback, data):
+        item = Gtk.MenuItem(text)
+        item.connect("activate", callback, data)
+        item.show()
+        return item
 
 

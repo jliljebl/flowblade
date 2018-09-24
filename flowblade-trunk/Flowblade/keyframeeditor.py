@@ -121,6 +121,10 @@ class ClipKeyFrameEditor:
         # Some filters or compositors start keyframes from *CLIP* frame 0
         # Filters starting from *MEDIA* 0 need offset 
         # to clip start added to all values.
+        #
+        # THIS IS NAMED A BIT UNCLEARLY: when use_clip_in=True this means that keyframes are relative to media
+        # and clip in is used as first frame of edit range, use_clip_in=False means that first frame of edit range is 0 and all keyframes are relative to that
+        #
         self.use_clip_in = use_clip_in
         if self.use_clip_in == True:
             self.clip_in = editable_property.clip.clip_in
