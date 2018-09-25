@@ -2685,7 +2685,128 @@ class TimeLineFrameScale:
         grad.add_color_stop_rgba(0, r + 0.05, g + 0.05, b + 0.05, 1)
         
         return grad
+
+class KFToolFrameScale:
+    
+    def __init__(self, line_color):
+        self.line_color = line_color
+    
+    def draw(self, cr, clip_start_in_timeline, clip_length, ytop, ybottom):
+        # Get frames per second value
+        seq = current_sequence()
+        fps = seq.profile.fps()
         
+        # Get frame draw range
+        view_start_frame = clip_start_in_timeline
+        view_end_frame = clip_start_in_timeline + clip_length
+
+        # Get draw steps for marks and tc texts
+        if fps < 20:
+            spacer_mult = 2 # for fps like 15 this looks bad with out some help
+        else:
+            spacer_mult = 1
+
+        big_tick_step = -1 # this isn't rendered most ranges, -1 is flag
+      
+        # Decide on draw steps based zoom level     
+        if pix_per_frame > DRAW_THRESHOLD_1:
+            small_tick_step = 1
+            big_tick_step = fps / 2
+            tc_draw_step = (fps * spacer_mult)  / 2
+        elif pix_per_frame > DRAW_THRESHOLD_2:
+            small_tick_step = fps * spacer_mult
+            tc_draw_step = fps * spacer_mult
+        elif pix_per_frame > DRAW_THRESHOLD_3:
+            small_tick_step = fps * 2 * spacer_mult
+            tc_draw_step = fps * 2 * spacer_mult
+        elif pix_per_frame > DRAW_THRESHOLD_4:
+            small_tick_step = fps * 3 * spacer_mult
+            tc_draw_step = fps * 3 * 2
+        else:
+            end_frame = int(pos + gui.tline_canvas.widget.get_allocation().width / pix_per_frame)
+            view_length = end_frame - pos
+            small_tick_step = int(view_length / NUMBER_OF_LINES)
+            tc_draw_step = int(view_length / NUMBER_OF_LINES)
+
+        # TC font
+        cr.select_font_face ("sans-serif",
+                              cairo.FONT_SLANT_NORMAL,
+                              cairo.FONT_WEIGHT_NORMAL)
+        cr.set_font_size(11)
+
+
+        # Set line attrs for frames lines
+        cr.set_source_rgb(*self.line_color)
+        cr.set_line_width(1.0)
+        
+        # 23.98 and 29.97 need this to get drawn on even seconds with big ticks and tcs
+        if round(fps) != fps:
+            to_seconds_fix_add = 1.0
+        else:
+            to_seconds_fix_add = 0.0
+
+        # Draw lines and TC
+        # Draw big tick lines, if required
+        if big_tick_step != -1:
+            count = int(seq.get_length() / big_tick_step)
+            for i in range(1, count):
+                print "big tc"
+                x = math.floor((math.floor(i * big_tick_step) + to_seconds_fix_add) * pix_per_frame \
+                    - pos * pix_per_frame) + 0.5 
+                cr.move_to(x, ytop)
+                cr.line_to(x, ybottom)
+                cr.stroke()
+
+                #cr.move_to(x, 100)
+                #text = utils.get_tc_string(int((math.floor(i * big_tick_step)) + to_seconds_fix_add))
+                #cr.show_text(text)
+                    
+        else:
+            if tc_draw_step != small_tick_step:
+                start = int(view_start_frame / tc_draw_step)
+                # Get draw range in steps from 0
+                if start == pos:
+                    start += 1 # don't draw line on first pixel of scale display
+                # +1 to ensure coverage
+                end = int(view_end_frame / tc_draw_step) + 1 
+                for i in range(start, end):
+
+                    x = math.floor((math.floor(i * tc_draw_step) + to_seconds_fix_add) * pix_per_frame \
+                        - pos * pix_per_frame) + 0.5
+                    
+                    print "tc:", x, ytop, ybottom
+                    cr.move_to(x, ytop)
+                    cr.line_to(x, ybottom)
+                    cr.stroke()
+                    
+                    #cr.move_to(x, 100)
+                    #text = utils.get_tc_string(int(math.floor((float(i) * tc_draw_step) + to_seconds_fix_add)))
+                    #cr.show_text(text)
+                    
+
+            else:
+                # Get draw range in steps from 0
+                start = int(view_start_frame / small_tick_step)
+                if start * small_tick_step == pos:
+                    start += 1 # don't draw line on first pixel of scale display
+                # +1 to ensure coverage
+                end = int(view_end_frame / small_tick_step) + 1 
+                for i in range(start, end):
+                    print "small"
+                    x = math.floor(i * small_tick_step * pix_per_frame - pos * pix_per_frame) + 0.5 
+                    cr.move_to(x, ytop)
+                    cr.line_to(x, ybottom)
+                    cr.stroke()
+                
+                    #cr.move_to(x, 100)
+                    #text = utils.get_tc_string(int(round(float(i) * float(tc_draw_step))))
+                    #cr.show_text(text)
+                
+            
+            
+
+
+
 class TimeLineScroller(Gtk.HScrollbar):
     """
     Scrollbar for timeline.

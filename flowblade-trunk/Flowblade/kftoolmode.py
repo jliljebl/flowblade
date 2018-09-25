@@ -41,12 +41,13 @@ NON_ACTIVE_KF_ICON = None
 CLIP_EDITOR_WIDTH = 250 
 CLIP_EDITOR_HEIGHT = 21
 END_PAD = 28
-TOP_PAD = 2
-OUT_OF_RANGE_ICON_PAD = 20
+TOP_PAD = 18
+HEIGHT_PAD_PIXELS_TOTAL = 44
+OUT_OF_RANGE_ICON_PAD = 22
 OUT_OF_RANGE_KF_ICON_HALF = 6
 OUT_OF_RANGE_NUMBER_Y = 5
-OUT_OF_RANGE_NUMBER_X_START = 1
-OUT_OF_RANGE_NUMBER_X_END_PAD = 7
+OUT_OF_RANGE_NUMBER_X_START = 3
+OUT_OF_RANGE_NUMBER_X_END_PAD = 9
 
 BUTTON_WIDTH = 26
 BUTTON_HEIGHT = 24
@@ -62,6 +63,10 @@ POINTER_COLOR = (1, 0.3, 0.3)
 CLIP_EDITOR_BG_COLOR = (0.7, 0.7, 0.7)
 LIGHT_MULTILPLIER = 1.14
 DARK_MULTIPLIER = 0.74
+FRAME_SCALE_LINES = (0.07, 0.22, 0.07)
+FRAME_SCALE_LINES_BRIGHT = (0.2, 0.6, 0.2)
+
+CURVE_COLOR = (0.71, 0.13, 0.64)
 
 OVERLAY_BG = (0.0, 0.0, 0.0, 0.8)
 OVERLAY_DRAW_COLOR = (0.0, 0.0, 0.0, 0.8)
@@ -117,6 +122,7 @@ def mouse_press(event, frame):
     global edit_data #, pressed_on_selected, drag_disabled
     edit_data = {"draw_function":_tline_overlay,
                  "clip_index":clip_index,
+                 "clip_start_in_timeline":track.clip_start(clip_index),
                  "clip":clip,
                  "track":track,
                  "mouse_start_x":x,
@@ -183,7 +189,7 @@ def _init_for_editable_property(editable_property):
     edit_data["editable_property"] = editable_property
     adjustment = editable_property.get_input_range_adjustment()
     edit_data["lower"] = adjustment.get_lower()
-    edit_data["upper"] = adjustment.get_upper ()
+    edit_data["upper"] = adjustment.get_upper()
     
     
 # ----------------------------------------------------------------------- draw
@@ -193,37 +199,16 @@ def _tline_overlay(cr, pos):
         
     track = edit_data["track"]
     ty = tlinewidgets._get_track_y(track.id)
-    cx_start = tlinewidgets._get_frame_x(track.clip_start(edit_data["clip_index"]))
+    cx_start = tlinewidgets._get_frame_x(edit_data["clip_start_in_timeline"])
     clip = track.clips[edit_data["clip_index"]]
     cx_end = tlinewidgets._get_frame_x(track.clip_start(edit_data["clip_index"]) + clip.clip_out - clip.clip_in + 1)  # +1 because out inclusive
     height = EDIT_AREA_HEIGHT
     cy_start = ty - height/2
     
-    # Draw bg
-    cr.set_source_rgba(*OVERLAY_BG)
-    cr.rectangle(cx_start, cy_start, cx_end - cx_start, height)
-    cr.fill()
-
-    # Top row
-    cr.set_source_surface(HAMBURGER_ICON, cx_start, cy_start)
-    cr.paint()
-    cr.set_source_surface(CLOSE_ICON, cx_start +  (cx_end - cx_start) - 14, cy_start + 2)
-    cr.paint()
-
-
     _kf_editor.set_allocation(cx_start, cy_start, cx_end - cx_start, height)
     _kf_editor.draw(cr)
 
-    try:
-        ep = edit_data["editable_property"]
-        _draw_edit_area_borders(cr, cx_start, cy_start, cx_end - cx_start, height)
-    except:
-        _draw_edit_area_borders(cr, cx_start, cy_start, cx_end - cx_start, height)
 
-def _draw_edit_area_borders(cr, x, y, w, h):
-    cr.set_source_rgba(1,1,1,1)
-    cr.rectangle(x + 4, y + 18, w - 8, h - 24)
-    cr.stroke()
 
 
 
@@ -270,7 +255,8 @@ class TLineKeyFrameEditor:
 
         self.parent_editor = self
 
-  
+        self.frame_scale = tlinewidgets.KFToolFrameScale(FRAME_SCALE_LINES)
+
         self.current_mouse_action = None
         self.drag_on = False # Used to stop updating pos here if pos change is initiated here.
         self.drag_min = -1
@@ -295,7 +281,7 @@ class TLineKeyFrameEditor:
         x, y, width, h = self.allocation
         active_width = width - 2 * END_PAD
         disp_frame = frame - self.clip_in 
-        return END_PAD + int((float(disp_frame) / float(self.clip_length)) * 
+        return x + END_PAD + int((float(disp_frame) / float(self.clip_length)) * 
                              active_width)
 
     def _get_frame_for_panel_pos(self, panel_x):
@@ -303,7 +289,37 @@ class TLineKeyFrameEditor:
         clip_panel_x = panel_x - END_PAD
         norm_pos = float(clip_panel_x) / float(active_width)
         return int(norm_pos * self.clip_length) + self.clip_in
+
+    def _get_value_for_panel_y(self, panel_y):
+        adjustment = editable_property.get_input_range_adjustment()
+        lower = adjustment.get_lower()
+        upper = adjustment.get_upper()
+        x, y, w, h = self.allocation
         
+    def _get_panel_y_for_value(self, value):
+        editable_property = edit_data["editable_property"] 
+        adjustment = editable_property.get_input_range_adjustment()
+        lower = adjustment.get_lower()
+        upper = adjustment.get_upper()
+        value_range = upper - lower
+        value_fract = (value - lower) / value_range
+        print value_fract
+        return self._get_lower_y() - (self._get_lower_y() - self._get_upper_y()) * value_fract
+
+    def _get_lower_y(self):
+        x, y, w, h = self.allocation
+        return y + TOP_PAD + h - HEIGHT_PAD_PIXELS_TOTAL
+
+    def _get_upper_y(self):
+        x, y, w, h = self.allocation
+        return  y + TOP_PAD
+    
+    def _get_center_y(self):
+        l = self._get_lower_y()
+        u = self._get_upper_y()
+        return u + (l - u) / 2
+        
+
     def _set_clip_frame(self, panel_x):
         self.current_clip_frame = self._get_frame_for_panel_pos(panel_x)
     
@@ -324,59 +340,75 @@ class TLineKeyFrameEditor:
         We get cairo context and allocation.
         """
         x, y, w, h = self.allocation
-        active_width = w - 2 * END_PAD
-        active_height = h - 2 * TOP_PAD      
-
-        #cr.set_source_rgb(1,0,0)
-        #cr.rectangle(0, 0, w, h)
-        #cr.fill()
-        
-        # Draw clip bg  
-        cr.set_source_rgb(*CLIP_EDITOR_BG_COLOR)
-        cr.rectangle(END_PAD, TOP_PAD, active_width, active_height)
+  
+        # Draw bg
+        cr.set_source_rgba(*OVERLAY_BG)
+        cr.rectangle(x, y, w, h)
         cr.fill()
 
-        # Clip edge and emboss
-        rect = (END_PAD, TOP_PAD, active_width, active_height)
-        self.draw_edge(cr, rect)
-        #self.draw_emboss(cr, rect, gui.get_bg_color())
+        self._draw_edit_area_borders(cr)
 
-        # Draw center line
-        cr.set_source_rgb(0.4, 0.4, 0.4)
-        cr.set_line_width(2.0)
-        cr.move_to(END_PAD, CENTER_LINE_Y)
-        cr.line_to(END_PAD + active_width, CENTER_LINE_Y)
+        # Top row
+        cr.set_source_surface(HAMBURGER_ICON, x, y)
+        cr.paint()
+        cr.set_source_surface(CLOSE_ICON, x + w - 14, y + 2)
+        cr.paint()
+
+        # Frame scale and value lines
+        self.frame_scale.draw(cr, edit_data["clip_start_in_timeline"], self.clip_length, self._get_upper_y(), self._get_lower_y())
+        self._draw_value_lines(cr, x, w)
+
+        # Draw value curve
+        kf_positions = self.get_clip_kfs_and_positions()
+        
+        cr.set_source_rgb(*CURVE_COLOR)
+        cr.set_line_width(1.0)
+        
+        # value curves need to clipped into edit area
+        cr.save()
+        ex, ey, ew, eh = self._get_edit_area_rect()
+        cr.rectangle(ex, ey, ew, eh)
+        cr.clip() 
+        for i in range(0, len(kf_positions)):
+            kf, frame, kf_index, kf_pos_x, kf_pos_y = kf_positions[i]
+            if i == 0:
+                cr.move_to(kf_pos_x, kf_pos_y)
+            else:
+                cr.line_to(kf_pos_x, kf_pos_y)
         cr.stroke()
-
+        cr.restore()
+                                
         # Draw keyframes
-        for i in range(0, len(self.keyframes)):
-            frame, value = self.keyframes[i]
+        for i in range(0, len(kf_positions)):
+            kf, frame, kf_index, kf_pos_x, kf_pos_y = kf_positions[i]
+
             if frame < self.clip_in:
                 continue
             if frame > self.clip_in + self.clip_length:
                 continue  
-            if i == self.active_kf_index:
+                
+            if kf_index == self.active_kf_index:
                 icon = ACTIVE_KF_ICON
             else:
                 icon = NON_ACTIVE_KF_ICON
-            try:
-                kf_pos = self._get_panel_pos_for_frame(frame)
-            except ZeroDivisionError: # math fails for 1 frame clip
-                kf_pos = END_PAD
-            cr.set_source_surface(icon, kf_pos - 6, KF_Y)
+
+            cr.set_source_surface(icon, kf_pos_x - 6, kf_pos_y - 6) # -6 to get kf bitmap center on calculated pixel
             cr.paint()
 
         # Draw out-of-range kf icons kf counts
         before_kfs = len(self.get_out_of_range_before_kfs())
         after_kfs = len(self.get_out_of_range_after_kfs())
+        
+        KF_ICON_Y_PAD = -6
+        KF_TEXT_PAD = -7
         if before_kfs > 0:
-            cr.set_source_surface(NON_ACTIVE_KF_ICON, OUT_OF_RANGE_ICON_PAD - OUT_OF_RANGE_KF_ICON_HALF * 2, KF_Y)
+            cr.set_source_surface(NON_ACTIVE_KF_ICON, x + OUT_OF_RANGE_ICON_PAD - OUT_OF_RANGE_KF_ICON_HALF * 2, self._get_center_y() + KF_ICON_Y_PAD)
             cr.paint()
-            self.draw_kf_count_number(cr, before_kfs, OUT_OF_RANGE_NUMBER_X_START, OUT_OF_RANGE_NUMBER_Y)
+            self.draw_kf_count_number(cr, before_kfs, x + OUT_OF_RANGE_NUMBER_X_START, self._get_center_y() + KF_TEXT_PAD)
         if after_kfs > 0:
-            cr.set_source_surface(NON_ACTIVE_KF_ICON, w - OUT_OF_RANGE_ICON_PAD, KF_Y)
+            cr.set_source_surface(NON_ACTIVE_KF_ICON, x + w - OUT_OF_RANGE_ICON_PAD, self._get_center_y() + KF_ICON_Y_PAD)
             cr.paint()
-            self.draw_kf_count_number(cr, after_kfs, w - OUT_OF_RANGE_NUMBER_X_END_PAD, OUT_OF_RANGE_NUMBER_Y)
+            self.draw_kf_count_number(cr, after_kfs, x + w - OUT_OF_RANGE_NUMBER_X_END_PAD, self._get_center_y() + KF_TEXT_PAD)
         
         # Draw frame pointer
         try:
@@ -388,42 +420,80 @@ class TLineKeyFrameEditor:
         cr.move_to(panel_pos, 0)
         cr.line_to(panel_pos, CLIP_EDITOR_HEIGHT)
         cr.stroke()
+
+    def _draw_edit_area_borders(self, cr):
+        x, y, w, h = self._get_edit_area_rect()
+        cr.set_source_rgb(*FRAME_SCALE_LINES)
+        cr.rectangle(x, y, w, h)
+        cr.stroke()
+
+    def _get_edit_area_rect(self):
+        x, y, w, h = self.allocation
+        active_width = w - 2 * END_PAD
+        ly = self._get_lower_y()
+        uy = self._get_upper_y()
+        return (x + END_PAD, uy, active_width - 1, ly - uy)
         
-    def draw_emboss(self, cr, rect, color):
-        # Emboss, corner points
-        left = rect[0] + 1.5
-        up = rect[1] + 1.5
-        right = left + rect[2] - 2.0
-        down = up + rect[3] - 2.0
-            
-        # Draw lines
-        color_tuple = gui.unpack_gdk_color(color)
-        light_color = guiutils.get_multiplied_color(color_tuple, LIGHT_MULTILPLIER)
-        cr.set_source_rgb(*light_color)
-        cr.move_to(left, down)
-        cr.line_to(left, up)
-        cr.stroke()
-            
-        cr.move_to(left, up)
-        cr.line_to(right, up)
-        cr.stroke()
+    def _draw_value_lines(self, cr, x, w):
+        # Audio hard coded value lines (if extend this to work on arbitrary kf properties, we need something else for those)
+        TEXT_X_OFF = 4
+        TEXT_X_OFF_END = -28
+        TEXT_Y_OFF = 4
+        
+        active_width = w - 2 * END_PAD
+        xs = x + END_PAD
+        xe = xs + active_width
 
-        dark_color = guiutils.get_multiplied_color(color_tuple, DARK_MULTIPLIER)
-        cr.set_source_rgb(*dark_color)
-        cr.move_to(right, up)
-        cr.line_to(right, down)
-        cr.stroke()
-            
-        cr.move_to(right, down)
-        cr.line_to(left, down)
-        cr.stroke()
-
-    def draw_edge(self, cr, rect):
+        cr.select_font_face ("sans-serif",
+                              cairo.FONT_SLANT_NORMAL,
+                              cairo.FONT_WEIGHT_NORMAL)
+        cr.set_font_size(12)
+        
+        # 0
+        y = self._get_panel_y_for_value(0.0)
         cr.set_line_width(1.0)
-        cr.set_source_rgb(0, 0, 0)
-        cr.rectangle(rect[0] + 0.5, rect[1] + 0.5, rect[2], rect[3])
+        cr.set_source_rgb(*FRAME_SCALE_LINES)
+        cr.move_to(xs, y)
+        cr.line_to(xe, y)
         cr.stroke()
+        
+        cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
+        text = "0"
+        cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF)
+        cr.show_text(text)
+        cr.move_to(xe + TEXT_X_OFF_END + 16, y - TEXT_Y_OFF)
+        cr.show_text(text)
+        
+        # 100
+        y = self._get_panel_y_for_value(100)
+        cr.set_source_rgb(*FRAME_SCALE_LINES)
+        cr.move_to(xs, y)
+        cr.line_to(xe, y)
+        cr.stroke()
+        
+        cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
+        text = "100"
+        cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF)
+        cr.show_text(text)
+        cr.move_to(xe + TEXT_X_OFF_END, y - TEXT_Y_OFF)
+        cr.show_text(text)
+        
+    def get_clip_kfs_and_positions(self):
+        kf_positions = []
+        for i in range(0, len(self.keyframes)):
+            frame, value = self.keyframes[i]
 
+            try:
+                kf_pos_x = self._get_panel_pos_for_frame(frame)
+            except ZeroDivisionError: # math fails for 1 frame clip
+                kf_pos_x = END_PAD
+                
+            kf_pos_y = self._get_panel_y_for_value(value)
+            
+            kf_positions.append((self.keyframes[i], frame, i, kf_pos_x, kf_pos_y))
+
+        return kf_positions
+            
     def draw_kf_count_number(self, cr, count, x, y):
         # Draw track name
         layout = PangoCairo.create_layout(cr)
