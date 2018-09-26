@@ -31,6 +31,7 @@ from editorstate import PLAYER
 from editorstate import EDIT_MODE
 import editorpersistance
 import gui
+import kftoolmode
 import movemodes
 import tlinewidgets
 import trimmodes
@@ -333,9 +334,8 @@ def cut_mode_pressed():
     
     #_set_move_mode()
 
-# -------------------------------------- cut mode
+# -------------------------------------- kftool mode
 def kftool_mode_pressed():
-    print "kftool_mode_pressed"
     stop_looping()
     current_sequence().clear_hidden_track()
 
@@ -344,3 +344,16 @@ def kftool_mode_pressed():
         
     tlinewidgets.set_edit_mode(None, tlinewidgets.draw_kftool_overlay)
     movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
+
+def kftool_mode_from_popup_menu(clip, track):
+    stop_looping()
+    current_sequence().clear_hidden_track()
+
+    # Box tool is implemeted as sub mode of OVERWRITE_MOVE
+    editorstate.edit_mode = editorstate.KF_TOOL
+        
+    tlinewidgets.set_edit_mode(None, tlinewidgets.draw_kftool_overlay)
+    movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
+
+    kftoolmode.init_tool_for_clip(clip, track)
+    gui.editor_window.set_cursor_to_mode()

@@ -27,6 +27,7 @@ import cairo
 
 import cairoarea
 from editorstate import current_sequence
+from editorstate import PLAYER
 import propertyedit
 import propertyparse
 import respaths
@@ -91,6 +92,42 @@ def load_icons():
     ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active.png")
     NON_ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active.png")    
 
+def init_tool_for_clip(clip, track):
+    clip_index = track.clips.index(clip)
+
+    # Save data needed to do the keyframe edits.
+    global edit_data #, pressed_on_selected, drag_disabled
+    edit_data = {"draw_function":_tline_overlay,
+                 "clip_index":clip_index,
+                 "clip_start_in_timeline":track.clip_start(clip_index),
+                 "clip":clip,
+                 "track":track,
+                 "initializing":True}
+
+
+    # Init for volume editing if volume filter available
+    for i in range(0, len(clip.filters)):
+        filter_object = clip.filters[i]
+        if filter_object.info.mlt_service_id == "volume":
+            editable_properties = propertyedit.get_filter_editable_properties(
+                                                           clip, 
+                                                           filter_object,
+                                                           i,
+                                                           track,
+                                                           clip_index)
+            for ep in editable_properties:                
+                # Volume is one of these MLT multipart filters, so we chose this way to find the editable property in filter.
+                try:
+                    if ep.args["exptype"] == "multipart_keyframe":
+                        edit_data["editable_property"] = ep
+                        global _kf_editor
+                        _kf_editor = TLineKeyFrameEditor(ep, True)
+                except:
+                    pass
+                    
+    tlinewidgets.set_edit_mode_data(edit_data)
+    updater.repaint_tline()
+    
 # ---------------------------------------------- mouse events
 def mouse_press(event, frame):
 
@@ -127,39 +164,9 @@ def mouse_press(event, frame):
         return
 
     clip = track.clips[clip_index]
-    
-    # Save data needed to do the keyframe edits.
-    global edit_data #, pressed_on_selected, drag_disabled
-    edit_data = {"draw_function":_tline_overlay,
-                 "clip_index":clip_index,
-                 "clip_start_in_timeline":track.clip_start(clip_index),
-                 "clip":clip,
-                 "track":track,
-                 "initializing":True}
 
+    init_tool_for_clip(clip, track)
 
-    # Init for volume editing if volume filter available
-    for i in range(0, len(clip.filters)):
-        filter_object = clip.filters[i]
-        if filter_object.info.mlt_service_id == "volume":
-            editable_properties = propertyedit.get_filter_editable_properties(
-                                                           clip, 
-                                                           filter_object,
-                                                           i,
-                                                           track,
-                                                           clip_index)
-            for ep in editable_properties:                
-                # Volume is one of these MLT multipart filters, so we chose this way to find the editable property in filter.
-                try:
-                    if ep.args["exptype"] == "multipart_keyframe":
-                        edit_data["editable_property"] = ep
-                        global _kf_editor
-                        _kf_editor = TLineKeyFrameEditor(ep, True)
-                except:
-                    pass
-                    
-    tlinewidgets.set_edit_mode_data(edit_data)
-    updater.repaint_tline()
 
 def _handle_edit_mouse_press(event):
     _kf_editor.press_event(event)
@@ -267,10 +274,10 @@ class TLineKeyFrameEditor:
             self.clip_in = 0
         self.current_clip_frame = self.clip_in
 
+        self.clip_tline_pos = editable_property.get_clip_tline_pos()
+        
         self.keyframes = [(0, 0.0)]
         self.active_kf_index = 0
-
-        self.parent_editor = self # we need to drop this for direct reference, not needed here
 
         self.frame_scale = tlinewidgets.KFToolFrameScale(FRAME_SCALE_LINES)
 
@@ -559,14 +566,14 @@ class TLineKeyFrameEditor:
             print "no hit"
             self.current_mouse_action = POSITION_DRAG
             self._set_clip_frame(lx)
-            self.parent_editor.clip_editor_frame_changed(self.current_clip_frame)
+            self.clip_editor_frame_changed(self.current_clip_frame)
             updater.repaint_tline()
         else: # some keyframe was pressed
             print "kf hit"
             self.active_kf_index = hit_kf
             frame, value = self.keyframes[hit_kf]
             self.current_clip_frame = frame
-            self.parent_editor.active_keyframe_changed()
+            #self.active_keyframe_changed()
             if hit_kf == 0:
                 self.current_mouse_action = KF_DRAG_DISABLED
             else:
@@ -592,14 +599,13 @@ class TLineKeyFrameEditor:
         
         if self.current_mouse_action == POSITION_DRAG:
             self._set_clip_frame(lx)
-            self.parent_editor.clip_editor_frame_changed(self.current_clip_frame)
+            self.clip_editor_frame_changed(self.current_clip_frame)
         elif self.current_mouse_action == KF_DRAG:
             frame = self._get_drag_frame(lx)
             value = self._get_value_for_panel_y(ly)
             self.set_active_kf_frame_and_value(frame, value)
             self.current_clip_frame = frame
-            self.parent_editor.keyframe_dragged(self.active_kf_index, frame)
-            self.parent_editor.active_keyframe_changed()
+            self.clip_editor_frame_changed(self.current_clip_frame)
 
         updater.repaint_tline()
         
@@ -612,17 +618,16 @@ class TLineKeyFrameEditor:
         
         if self.current_mouse_action == POSITION_DRAG:
             self._set_clip_frame(lx)
-            self.parent_editor.clip_editor_frame_changed(self.current_clip_frame)
-            self.parent_editor.update_slider_value_display(self.current_clip_frame)
+            self.clip_editor_frame_changed(self.current_clip_frame)
+            self.update_slider_value_display(self.current_clip_frame)
         elif self.current_mouse_action == KF_DRAG:
             frame = self._get_drag_frame(lx)
             value = self._get_value_for_panel_y(ly)
             self.set_active_kf_frame_and_value(frame, value)
             self.current_clip_frame = frame
-            self.parent_editor.keyframe_dragged(self.active_kf_index, frame)
-            self.parent_editor.active_keyframe_changed()
-            self.parent_editor.update_property_value()
-            self.parent_editor.update_slider_value_display(frame)   
+            self.clip_editor_frame_changed(self.current_clip_frame)
+            self.update_property_value()
+            self.update_slider_value_display(frame)   
 
         updater.repaint_tline()
         self.current_mouse_action = None
@@ -769,7 +774,7 @@ class TLineKeyFrameEditor:
         frame, value = self.keyframes[self.active_kf_index]
         self.current_clip_frame = frame
         self._force_current_in_frame_range()
-        self.parent_editor.update_slider_value_display(self.current_clip_frame)   
+        self.update_slider_value_display(self.current_clip_frame)   
             
     def frame_has_keyframe(self, frame):
         """
@@ -874,7 +879,7 @@ class TLineKeyFrameEditor:
             print value
             self.keyframes.pop(0)
             self.keyframes.insert(0, (frame_zero, value))
-            self.parent_editor.update_property_value()
+            self.update_property_value()
         elif data == "delete_all_after":
             delete_done = False
             for i in range(0, len(self.keyframes)):
@@ -900,10 +905,13 @@ class TLineKeyFrameEditor:
 
     # ------------------------------------------------------ original parent editor stuff
     def clip_editor_frame_changed(self, clip_frame):
-        #self.seek_tline_frame(clip_frame)
+        self.seek_tline_frame(clip_frame)
         #self.buttons_row.set_frame(clip_frame)
         pass
 
+    def seek_tline_frame(self, clip_frame):
+        PLAYER().seek_frame(self.clip_tline_pos + clip_frame - self.clip_in)
+        
     def update_slider_value_display(self, frame):
         # This is called after frame changed or mouse release to update
         # slider value without causing 'changed' signal to update keyframes.

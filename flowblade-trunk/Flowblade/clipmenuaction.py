@@ -49,6 +49,7 @@ from editorstate import get_track
 from editorstate import PROJECT
 from editorstate import PLAYER
 import mlttransitions
+import modesetting
 import movemodes
 import syncsplitevent
 import tlinewidgets
@@ -620,7 +621,13 @@ def _delete_all_clip_markers(data):
     clip.markers = []
     updater.repaint_tline()
 
-
+def _volume_keyframes(data):
+    clip, track, item_id, item_data = data
+    modesetting.kftool_mode_from_popup_menu(clip, track)
+    
+def _brightness_keyframes(data):
+    pass
+                  
 
 # Functions to handle popup menu selections for strings 
 # set as activation messages in guicomponents.py
@@ -664,4 +671,6 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "add_clip_marker":_add_clip_marker,
                   "go_to_clip_marker":_go_to_clip_marker,
                   "delete_clip_marker":_delete_clip_marker,
-                  "deleteall_clip_markers":_delete_all_clip_markers}
+                  "deleteall_clip_markers":_delete_all_clip_markers,
+                  "volumekf":_volume_keyframes,
+                  "brightnesskf":_brightness_keyframes}

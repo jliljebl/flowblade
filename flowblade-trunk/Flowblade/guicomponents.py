@@ -1708,6 +1708,16 @@ def _get_edit_menu_item(event, clip, track, callback):
     sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
 
+    if (clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER) == False:
+        vol_item = _get_menu_item(_("Volume Keyframes"), callback, (clip, track, "volumekf", event.x))
+        sub_menu.append(vol_item)
+
+    if track.type == appconsts.VIDEO:
+        bright_item = _get_menu_item(_("Brightness Keyframes"), callback, (clip, track, "brightnesskf", event.x))
+        sub_menu.append(bright_item)
+
+    _add_separetor(sub_menu)
+    
     del_item = _get_menu_item(_("Delete"), callback, (clip, track, "delete", event.x))
     sub_menu.append(del_item)
 
